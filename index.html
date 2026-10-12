@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0;padding:0}</style></head><body><title>MIRU</title>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0;padding:0}</style><script src="config.js"></script></head><body><title>MIRU</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Manrope:wght@400;500;600;700;800&display=swap">
@@ -9656,17 +9656,21 @@ window.addEventListener("change",async e=>{if(e.target.id!=="imFile"||!e.target.
    The key is typed in by the user on their own device (Me → AI 引擎) and kept only in this browser's storage — it is never written into the page source,
    so a shared link never carries it. When LongCat is on, it replaces SAMPLE, so every live-AI feature (chat replies, creator, 换一句, import help) uses it. */
 const LC_KEY="miru.lc.key",LC_MODELS=["LongCat-2.0","LongCat-2.5-Preview"],LC_BASE="https://api.longcat.chat/openai";
-function lcCfg(){S.ai=S.ai||{provider:"claude",model:LC_MODELS[0],base:LC_BASE};return S.ai}
+/* MIRU-hosted proxy: the site owner's key lives on the server, never in the page. Same-origin /api/longcat on Vercel, or window.MIRU_PROXY. */
+const LC_PROXY=window.MIRU_PROXY||(/\.vercel\.app$/.test(location.hostname)?location.origin+"/api/longcat":"");
+function lcProxyMode(){return !!LC_PROXY&&!lcKey()}
+function lcCfg(){S.ai=S.ai||{provider:LC_PROXY?"longcat":"claude",model:LC_MODELS[0],base:LC_BASE};return S.ai}
 function lcKey(){try{return localStorage.getItem(LC_KEY)||""}catch(_){return ""}}
 function lcSetKey(k){try{k?localStorage.setItem(LC_KEY,k):localStorage.removeItem(LC_KEY)}catch(_){}}
-function lcOn(){return lcCfg().provider==="longcat"&&!!lcKey()}
+function lcOn(){return lcCfg().provider==="longcat"&&(!!lcKey()||!!LC_PROXY)}
 function lcMsgs(input){if(typeof input==="string")return [{role:"user",content:input}];return (input||[]).map(m=>({role:m.role==="assistant"?"assistant":"user",content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}))}
 function lcClean(t){return String(t||"").replace(/<think>[\s\S]*?<\/think>/g,"").replace(/^\s*<think>[\s\S]*$/,"").trim()}
-async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
+async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_PROXY)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
  const max={quick:900,default:2200,complex:4000}[opts.modelTier||"default"]||2200;const stream=typeof opts.onText==="function";
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,thinking:{type:"disabled"}};
  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
- let r;try{r=await fetch((c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},body:JSON.stringify(body),signal:ctl.signal})}
+ const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
+ let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
  if(!r.ok){clearTimeout(tm);let msg="";try{const j=await r.json();msg=(j.error&&(j.error.message||j.error.code))||j.message||""}catch(_){}
   throw {code:r.status===401||r.status===403?"bad_key":r.status===429?"rate_limited":"http_"+r.status,message:msg}}
@@ -9690,7 +9694,7 @@ const _liveWhy54=liveWhy;liveWhy=function(code){if(lcCfg().provider==="longcat")
 /* settings card on the Me page */
 function lcCardHTML(){const c=lcCfg(),k=lcKey(),on=c.provider==="longcat";
  return '<div class="card lccard"><div class="eyebrow">🤖 '+LL("AI 引擎","AI engine")+'</div><div class="seg" style="margin-top:10px"><button data-lcprov="claude" class="'+(!on?"on":"")+'">Claude</button><button data-lcprov="longcat" class="'+(on?"on":"")+'">LongCat</button></div>'+
-  (on?'<label class="lcl">API Key</label><div class="row" style="gap:6px"><input id="lcKey" type="password" autocomplete="off" class="lcin grow" placeholder="ak_…" value="'+esc(k)+'"><button class="btn btn-g btn-xs" data-lceye="1">👁</button></div>'+
+  (on&&LC_PROXY&&!k?'<p class="xs" style="margin-top:10px;line-height:1.5;color:#8bd5c4">✓ '+LL("MIRU 已提供 LongCat，不用填 Key，直接开玩。","LongCat is provided by MIRU — no key needed.")+'</p><div class="seg" style="margin-top:8px">'+LC_MODELS.map(m=>'<button data-lcmodel="'+m+'" class="'+(c.model===m?"on":"")+'">'+m.replace("LongCat-","")+'</button>').join("")+'</div><button class="btn btn-g btn-sm" style="margin-top:10px" data-livetest="1">'+LL("测试连接","Test")+'</button>':on?'<label class="lcl">API Key</label><div class="row" style="gap:6px"><input id="lcKey" type="password" autocomplete="off" class="lcin grow" placeholder="ak_…" value="'+esc(k)+'"><button class="btn btn-g btn-xs" data-lceye="1">👁</button></div>'+
    '<label class="lcl">'+LL("模型","Model")+'</label><div class="seg">'+LC_MODELS.map(m=>'<button data-lcmodel="'+m+'" class="'+(c.model===m?"on":"")+'">'+m.replace("LongCat-","")+'</button>').join("")+'</div>'+
    '<label class="lcl">'+LL("接口地址（用代理时改这里）","Base URL (change for a proxy)")+'</label><input id="lcBase" class="lcin" value="'+esc(c.base||LC_BASE)+'">'+
    '<div class="row" style="gap:8px;margin-top:10px"><button class="btn btn-p btn-sm grow" data-lcsave="1">'+LL("保存并测试","Save & test")+'</button>'+(k?'<button class="btn btn-g btn-sm" data-lcclear="1">'+LL("清除 Key","Clear key")+'</button>':'')+'</div>'+
