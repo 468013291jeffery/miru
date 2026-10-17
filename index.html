@@ -10921,6 +10921,7 @@ const _renderMe64=renderMe;renderMe=function(v){const r=_renderMe64.apply(this,a
   const h='<button class="card pf64me" data-pfopen="1"><div class="row"><div class="grow"><b>🎯 '+(zh?"我的口味":"My taste")+'</b><p class="xs faint">'+(chips.length?esc(chips.slice(0,5).join(" · ")):(zh?"还没选 · 选了推荐会更准":"Not set — pick to sharpen recommendations"))+(P.ex.length?" · 🚫 "+P.ex.length:"")+'</p></div><span>›</span></div></button>';
   const anchor=v.querySelector(".ttscard")||v.querySelector(".lccard");if(anchor)anchor.insertAdjacentHTML("afterend",h);else{const sc=v.querySelector(".scroll");if(sc)sc.insertAdjacentHTML("afterbegin",h)}}}catch(_){}return r};
 /* ---------- first run: hook dramas instead of the questionnaire ---------- */
+function hookClips(wid){const cl=(typeof CLIPS!=="undefined"&&CLIPS[wid+":1"])||null;if(!cl)return [];if(cl.film)return [cl.film.src];if(cl.full)return [cl.full.src];return [0,1].map(i=>cl[i]&&cl[i].src).filter(Boolean)}
 function firstClip(wid){const cl=(typeof CLIPS!=="undefined"&&CLIPS[wid+":1"])||null;if(!cl)return null;if(cl.film)return cl.film.src;if(cl.full)return cl.full.src;return cl[0]&&cl[0].src||null}
 function hookPicks(){const pool=packWorlds().filter(orOK).filter(w=>!w.sample);
  const sc=w=>{let m=0;try{m=obMatch(w).sc}catch(_){}return m+(firstClip(w.id)?1000:0)+(SHORTS[w.id]?200:0)};
@@ -10944,8 +10945,8 @@ function hookPlay(i){const R=$("#hkRail");if(!R)return;HK.i=i;const S0=[...R.chi
  S0.forEach((s,j)=>{const v=s.querySelector("video");if(!v)return;if(j!==i){try{v.pause()}catch(_){}return}
   const ask=s.querySelector(".hk64ask"),bar=s.querySelector(".hk64bar i");if(ask&&!ask.hidden)return;v.muted=HK.muted;try{v.currentTime=0}catch(_){}const p=v.play();if(p&&p.catch)p.catch(()=>{});
   const freeze=()=>{try{v.pause()}catch(_){}if(ask)ask.hidden=false;s.classList.add("frozen")};
-  v.onended=freeze;v.onerror=()=>{v.outerHTML='<img class="hk64v kb" src="'+(v.getAttribute("poster")||"")+'" alt="">';if(ask)ask.hidden=false};
-  const stall=setTimeout(()=>{if(!(v.currentTime>0)){v.onerror()}},3500);v.onplaying=()=>clearTimeout(stall);v.ontimeupdate=()=>{if(bar)bar.style.width=Math.min(100,v.currentTime/15*100)+"%";if(v.currentTime>=15)freeze()}});
+  const list=hookClips(s.dataset.hkw);let ci=0;v.onended=()=>{ci++;if(list[ci]){v.src=list[ci];const p2=v.play();if(p2&&p2.catch)p2.catch(()=>{})}else freeze()};v.onerror=()=>{v.outerHTML='<img class="hk64v kb" src="'+(v.getAttribute("poster")||"")+'" alt="">';if(ask)ask.hidden=false};
+  const stall=setTimeout(()=>{if(!(v.currentTime>0)){v.onerror()}},3500);v.onplaying=()=>clearTimeout(stall);v.ontimeupdate=()=>{const el=ci*8+v.currentTime;if(bar)bar.style.width=Math.min(100,el/15*100)+"%";if(el>=15)freeze()}});
  document.querySelectorAll(".hk64dots i").forEach((d,j)=>d.classList.toggle("on",j===i))}
 function hookWire(){const R=$("#hkRail");if(!R)return;let t0=null;R.addEventListener("scroll",()=>{clearTimeout(t0);t0=setTimeout(()=>{const i=Math.round(R.scrollLeft/R.clientWidth);if(i!==HK.i)hookPlay(i)},120)},{passive:true});setTimeout(()=>hookPlay(0),200)}
 function renderHook(){screen("s-ob",hookHTML());show("s-ob");hookWire()}
