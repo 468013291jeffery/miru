@@ -9335,7 +9335,7 @@ window.MIRU_BRIDGE={startTab:"guide",fresh:false,
  async ask(path,pl){if(!liveOn())return null;pl=pl||{};const proj=pl.project?JSON.stringify({title:pl.project.title,premise:pl.project.premise,genre:pl.project.genre,world:pl.project.world,hook:pl.project.hook,conflict:pl.project.conflict,secret:pl.project.secret,lead:pl.project.lead,support:pl.project.support}).slice(0,2400):"";
   try{
    if(path==="/api/guide-turn")return await crJSON(crSys(pl.project,path)+"\nThe author is on step "+(+pl.step+1)+" of a guided setup. Their answers so far: "+JSON.stringify(pl.answers||[]).slice(0,2000)+"\nCurrent project: "+proj+'\nGive ONE short, specific reaction to their latest answer and one concrete idea that would make the story stronger (max 70 Chinese characters, warm, no praise filler). JSON {"feedback":""}');
-   if(path==="/api/plan")return await crJSON(crSys(pl.project,path)+"\nTurn the author's answers into a sharp story plan. Answers: "+JSON.stringify(pl.answers||[]).slice(0,3000)+"\nCurrent draft: "+proj+'\nKeep the author\'s names and choices; make it specific (place, object, secret, stakes). JSON {"project":{"title":"≤14字","premise":"一句话梗概","hook":"开场第一句冲突（含主角动作或台词）","conflict":"","world":"具体地点和时间","vibe":"","ending":"","lead":{"name":"","role":"","personality":"","goal":"","boundary":""}}}');
+   if(path==="/api/plan")return await crJSON(crSys(pl.project,path)+"\nTurn the author's answers into a sharp story plan. Answers: "+JSON.stringify(pl.answers||[]).slice(0,3000)+"\nCurrent draft: "+proj+'\nKeep the author\'s names and choices; make it specific (place, object, secret, stakes). JSON {"project":{"title":"≤14字","premise":"一句话梗概","hook":"开场：用他的一个具体行为展示吸引力和他对你的态度，并给你一个马上能回应的点（冲突按题材安排，不必一开场就吵）","conflict":"","world":"具体地点和时间","vibe":"","ending":"","lead":{"name":"","role":"","personality":"","goal":"","boundary":""}}}');
    if(path==="/api/options")return await crJSON(crSys(pl.project,path)+"\nThe author is answering: "+(pl.question||"")+"\nCurrent options (replace them with a NEW, clearly different set): "+JSON.stringify(pl.current||[])+"\nTheir story so far: "+(pl.previous||"")+'\nGive 6 short options in Simplified Chinese (each under 18 characters), concrete and varied, fitting their story, original (no famous works). JSON {"options":["",...]}');
    if(path==="/api/rewrite")return await crJSON(crSys(pl.project,path)+"\nRewrite this line so it is more vivid and specific, same meaning, same length or shorter. Genre: "+(pl.genre||"")+". Context: "+(pl.context||"")+"\nLine: "+(pl.text||"")+'\nJSON {"text":""}');
    if(path==="/api/step-suggest")return await crJSON(crSys(pl.project,path)+"\nQuestion for the author: "+(pl.question||"")+"\nTheir story so far: "+(pl.previous||"")+"\n"+(pl.options&&pl.options.length?"Options they can pick (mode "+pl.mode+"): "+pl.options.join(" | ")+"\nIf it is a choice question, start with the best option(s) copied exactly, then one sentence why. ":"")+'Otherwise write a ready-to-use answer (max 120 Chinese characters) that fits everything they chose before. JSON {"text":""}')}
@@ -11369,7 +11369,7 @@ const AC69={
  go:{zh:"注册",en:"Sign up",ja:"登録",ko:"가입",es:"Registrarme"}};
 function ac69(k){const l=S.lang||"en";return (AC69[k]||{})[l]||(AC69[k]||{}).en||""}
 const _renderOB69=renderOB;renderOB=function(){const r=_renderOB69.apply(this,arguments);
- try{if(obStep===0&&CLOUD_EP){const go=document.querySelector("#obGo");if(go&&!document.querySelector("#obLogin"))go.insertAdjacentHTML("afterend",'<button class="lnk" id="obLogin" data-acct69="login" style="display:block;width:100%;text-align:center;margin-top:2px;padding:8px;font-size:13px;color:var(--dim)">'+esc(ac69("have"))+'</button>')}}catch(_){}return r};
+ try{if(obStep===0&&CLOUD_EP&&!(typeof au70Loggedin==="function"&&(au70Loggedin()||S.authChoice))){const go=document.querySelector("#obGo");if(go&&!document.querySelector("#obLogin"))go.insertAdjacentHTML("afterend",'<button class="lnk" id="obLogin" data-acct69="login" style="display:block;width:100%;text-align:center;margin-top:2px;padding:8px;font-size:13px;color:var(--dim)">'+esc(ac69("have"))+'</button>')}}catch(_){}return r};
 const _renderHome69=renderHome;renderHome=function(v){const r=_renderHome69.apply(this,arguments);
  try{const c=(S.cloud||{});if(CLOUD_EP&&CL0.on&&!c.email&&!c.nudgeOff&&!v.querySelector(".nudge69")){const sc=v.querySelector(".scroll")||v;
   sc.insertAdjacentHTML("afterbegin",'<div class="nudge69"><span>☁️ '+esc(ac69("nudge"))+'</span><button class="btn btn-p btn-sm" data-acct69="register">'+esc(ac69("go"))+'</button><button class="x69" data-acct69="off" aria-label="close">✕</button></div>')}}catch(_){}return r};
@@ -11432,12 +11432,15 @@ const AUT = {
   saved: { zh: "已保存", en: "Saved", ja: "保存しました", ko: "저장했어요", es: "Guardado" },
   via: { zh: "登录方式", en: "Signed in with", ja: "ログイン方法", ko: "로그인 방법", es: "Sesión con" },
   synced: { zh: "已同步", en: "synced", ja: "同期済み", ko: "동기화됨", es: "sincronizado" },
+  preview: { zh: "这是预览版，连不上账号服务器。登录请打开正式网址 miru-wheat-pi.vercel.app，或先点「先逛逛」。", en: "This is a preview that can't reach the account server. Sign in at miru-wheat-pi.vercel.app, or tap Look around first.", ja: "これはプレビュー版のためログインできません。miru-wheat-pi.vercel.app でログインするか、「まずは見てみる」を選んでください。", ko: "미리보기 버전이라 로그인할 수 없어요. miru-wheat-pi.vercel.app 에서 로그인하거나 '먼저 둘러볼게요'를 눌러 주세요.", es: "Esta vista previa no puede conectarse. Inicia sesión en miru-wheat-pi.vercel.app o explora primero." },
+  previewNote: { zh: "预览版：登录功能请在正式网址 miru-wheat-pi.vercel.app 使用", en: "Preview: sign-in works at miru-wheat-pi.vercel.app", ja: "プレビュー版：ログインは miru-wheat-pi.vercel.app で", ko: "미리보기: 로그인은 miru-wheat-pi.vercel.app 에서", es: "Vista previa: inicia sesión en miru-wheat-pi.vercel.app" },
   cancel: { zh: "取消", en: "Cancel", ja: "キャンセル", ko: "취소", es: "Cancelar" },
 };
 function au(k) { const x = AUT[k] || {}; return x[S.lang] || x.en || ""; }
 const PROV_NAME = { apple: "Apple", google: "Google", email: "Email", guest: "Guest" };
 function au70Loggedin() { const c = S.cloud || {}; return !!(c.token && (c.email || (c.provider && c.provider !== "guest"))); }
 async function au70Prov() {
+  if (!CLOUD_EP) return { google: "", apple: "", email: false, reset: false, guest: true, preview: true };
   if (AU70.prov) return AU70.prov;
   try { const r = await fetch(CLOUD_EP + "/auth?providers=1"); if (r.ok) AU70.prov = await r.json(); } catch (_) {}
   return AU70.prov || { google: "", apple: "", email: true, reset: false, guest: true };
@@ -11461,16 +11464,19 @@ function renderAuth70() {
     '<div class="row" style="justify-content:space-between"><div class="brand" style="font-size:26px">MI<b>RU</b></div>' + langPicker() + '</div>' +
     '<h1 style="font-size:26px;line-height:1.15">' + esc(au("title")) + '</h1><p class="dim" style="font-size:13.5px;line-height:1.55">' + esc(au("sub")) + '</p>' +
     '<p class="au70gift">🎁 ' + esc(au("gift")) + '</p>' + au70Buttons(false) +
-    '<button class="lnk au70guest" data-au70="guest" id="au70guest">' + esc(au("guest")) + '</button></div>');
+    '<button class="lnk au70guest" data-au70="guest" id="au70guest">' + esc(au("guest")) + '</button>' + (CLOUD_EP ? '' : '<p class="xs faint" style="text-align:center;line-height:1.5">' + esc(au("previewNote")) + '</p>') + '</div>');
+  show("s-ob");
   au70Prov().then(p => { const g = $("#au70guest"); if (g && p && p.guest === false) g.remove(); au70MountGoogle("auG"); });
   track("auth_view");
 }
 const _renderOB70 = renderOB;
 renderOB = function () {
-  if (typeof obStep !== "undefined" && obStep === 1 && !S.ob && CLOUD_EP && !au70Loggedin() && !S.authChoice) { renderAuth70(); return; }
+  if (!S.ob && !au70Loggedin() && !S.authChoice) { renderAuth70(); return; }
   return _renderOB70.apply(this, arguments);
 };
 
+const _startApp70 = startApp;
+startApp = function () { if (!au70Loggedin() && !S.authChoice) { renderAuth70(); return; } return _startApp70.apply(this, arguments); };
 /* ---------- Google: the official button is laid over ours once a client ID exists ---------- */
 async function au70MountGoogle(slotId) {
   const p = await au70Prov(); const slot = document.getElementById(slotId); if (!p.google || !slot) return;
@@ -11515,7 +11521,8 @@ async function au70Done(j, method) {
   } else {
     S.authChoice = method; save0(); await walletPull().catch(() => {}); cloudPush(true); toast(au("hi"));
   }
-  if (!S.ob) { obStep = 1; renderOB(); } else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
+  S.langChosen = true; save0();
+  if (!S.ob) { obStep = 0; renderOB(); } else if ($("#s-ob") && !$("#s-ob").hidden) startApp(); else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
 }
 
 /* ---------- email sheet: sign in · create · forgot · reset ---------- */
@@ -11544,10 +11551,11 @@ document.addEventListener("click", async e => {
   let x;
   if ((x = e.target.closest("[data-au70]"))) {
     e.preventDefault(); e.stopImmediatePropagation(); const k = x.dataset.au70;
+    if (!CLOUD_EP && k !== "guest") { toast(au("preview")); return; }
     if (k === "apple") au70Apple();
     else if (k === "google") { const p = await au70Prov(); if (!p.google) toast(au("soonG")); }
     else if (k === "email") authSheet70("login");
-    else if (k === "guest") { S.authChoice = "guest"; save(); track("login", { method: "guest" }); renderOB(); }
+    else if (k === "guest") { S.authChoice = "guest"; S.langChosen = true; save(); track("login", { method: "guest" }); if (S.ob) startApp(); else { obStep = 0; renderOB(); } }
     return;
   }
   if ((x = e.target.closest("[data-au70m]"))) { e.preventDefault(); authSheet70(x.dataset.au70m); return; }
@@ -11588,7 +11596,7 @@ document.addEventListener("click", async e => {
   if (k === "pw") { sheet('<div class="au70s"><h2>' + esc(au("chpw")) + '</h2><input id="au7o" type="password" autocomplete="current-password" placeholder="' + esc(au("oldpw")) + '" class="up66i"><input id="au7p" type="password" autocomplete="new-password" placeholder="' + esc(au("newpw")) + '" class="up66i"><button class="btn btn-p btn-block" data-au70card="pwgo">' + esc(au("chpw")) + '</button></div>'); return; }
   if (k === "pwgo") { const r = await capi("/auth", { json: { op: "password", old: ($("#au7o") || {}).value, password: ($("#au7p") || {}).value } }); if (r.ok) { cloudInfo().token = r.j.token; save0(); closeSheet(); toast(au("saved")); } else au70Err(r); return; }
   if (k === "outall") { const r = await capi("/auth", { json: { op: "logout_all" } }); if (r.ok) { cloudInfo().token = r.j.token; save0(); toast(au("saved")); } else au70Err(r); return; }
-  if (k === "out") { await cloudPush(true).catch(() => {}); const c = cloudInfo(); ["token", "email", "uid", "provider", "name", "syncedAt"].forEach(f => delete c[f]); c.ver = 0; S.authChoice = null; save0(); CL0.on = false; CL0.checked = false; toast(au("out")); try { renderTab("me"); } catch (_) {} authAll70(); cloudBoot(); return; }
+  if (k === "out") { await cloudPush(true).catch(() => {}); const c = cloudInfo(); ["token", "email", "uid", "provider", "name", "syncedAt"].forEach(f => delete c[f]); c.ver = 0; S.authChoice = null; save0(); CL0.on = false; CL0.checked = false; toast(au("out")); cloudBoot(); startApp(); return; }
   if (k === "del") {
     if (!confirm(au("delAsk"))) return;
     const r = await capi("/auth", { json: { op: "delete" } });
@@ -11821,6 +11829,42 @@ miruQA = function (w) {
 };
 
 (function () { const st = document.createElement("style"); st.textContent = ".mgwhy71{margin:0 0 8px;font-size:12.5px;color:var(--dim);line-height:1.5}"; document.head.appendChild(st); })();
+
+/* ================= v2.7.1 · 中文版只显示中文 =================
+   Audit (every onboarding step, tabs, store, taste sheet, a story) found these English labels left in the Chinese UI:
+   BL/BG/GL/GG pairing names, 「10 ch」, 「AU」, 「API Key」 and the pronoun labels he/she/they. Fixed at the source where the strings live,
+   with a small safety net that rewrites the same tokens if they show up anywhere else in Chinese mode. Character names stay as they are
+   (product decision), so do brand / product names (MIRU, Apple, Google, iPhone, Claude, LongCat). The English UI was already clean. */
+(function () {
+  try {
+    if (I18N.zh) Object.assign(I18N.zh, {
+      "ob.bl": "男男", "ob.blS": "宿敌、保镖、慢热", "ob.gl": "女女", "ob.glS": "暗恋、室友、对手", "ob.bg": "男女", "ob.nl": "男女",
+      "ob.bothS": "男男优先，也看男女", "ob.glLink": "也想看女女", "dc.makeS": "二创任意故事——平行世界、新结局、你的阵容。",
+    });
+  } catch (_) {}
+  try { if (typeof TAXN === "object") { if (TAXN.P_bl) TAXN.P_bl[1] = "男男"; if (TAXN.P_bg) TAXN.P_bg[1] = "男女"; if (TAXN.P_gl) TAXN.P_gl[1] = "女女"; } } catch (_) {}
+})();
+const ZH_FIX = [
+  [/\bM\/M\b/g, "男男"], [/\bM\/F\b/g, "男女"], [/\bF\/F\b/g, "女女"],
+  [/\bBL\b/g, "男男"], [/\bBG\b/g, "男女"], [/\bGL\b/g, "女女"], [/\bGG\b/g, "女女"],
+  [/(\d+)\s*ch\b/g, "$1 章"], [/\bAU\b/g, "平行世界"], [/API\s*(Key|密钥)/gi, "接口密钥"],
+  [/(\d+(?:\.\d+)?)([KM])\b/g, (m, n, u) => { const v = parseFloat(n) * (u === "K" ? 1e3 : 1e6); return v >= 1e4 ? (Math.round(v / 1e3) / 10) + "万" : String(Math.round(v)); }],
+  [/@miru\b/g, "MIRU 官方"],
+  [/\bhe\/him\b/g, "他"], [/\bshe\/her\b/g, "她"], [/\bthey\/them\b/g, "TA"], [/^they\b/g, "TA"], [/^she\b/g, "她"], [/^he\b/g, "他"],
+];
+function zhFixText(s) { let o = s; for (const [rx, to] of ZH_FIX) o = o.replace(rx, to); return o; }
+function zhFixTree(root) {
+  if (S.lang !== "zh" || !root) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentElement; if (!p || p.closest("script,style,textarea,input,.msg,.bubble,.mtxt,[contenteditable]")) return NodeFilter.FILTER_REJECT; return /[A-Za-z]/.test(n.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP; } });
+  const list = []; while (w.nextNode()) list.push(w.currentNode);
+  for (const n of list) { const v = zhFixText(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; }
+}
+(function () {
+  let q = null;
+  const mo = new MutationObserver(ms => { if (S.lang !== "zh") return; if (q) return; q = setTimeout(() => { q = null; zhFixTree(document.body); }, 30); });
+  mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+  setTimeout(() => zhFixTree(document.body), 300);
+})();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
