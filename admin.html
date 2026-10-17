@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MIRU 运营后台</title>
+<style>:root{--bg:#0f0d14;--fg:#eee;--mut:#9c93a8;--ac:#f0b77e}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,-apple-system,"PingFang SC",sans-serif}
+main{max-width:980px;margin:0 auto;padding:16px}h1{font-size:20px}h2{font-size:16px;margin-top:22px}input,button{font:inherit}input{padding:8px 10px;border-radius:8px;border:1px solid #3a3346;background:#1b1724;color:#fff}
+button{padding:7px 12px;border-radius:8px;border:1px solid #3a3346;background:#241f2f;color:#fff;cursor:pointer}button.ok{border-color:#7fc4a6;color:#bfe9d6}button.no{border-color:#ee6f6f;color:#ffc4c4}
+.card{border:1px solid #2c2636;border-radius:12px;padding:12px;margin:8px 0;background:#16131d}.mut{color:var(--mut);font-size:12px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.stat{border:1px solid #2c2636;border-radius:12px;padding:10px}.stat b{font-size:22px;display:block}audio,img,video{max-width:240px;max-height:160px;border-radius:8px}</style></head>
+<body><main><h1>MIRU 运营后台</h1><div class="row"><input id="k" type="password" placeholder="ADMIN_KEY"><button id="go">进入</button><span class="mut" id="st"></span></div><div id="out"></div></main>
+<script>
+const $=s=>document.querySelector(s);const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let K=sessionStorage.getItem('mk')||'';$('#k').value=K;
+async function api(path,body){const r=await fetch('/api/'+path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Admin-Key':K},body:body?JSON.stringify(body):undefined});return r.json()}
+async function load(){K=$('#k').value.trim();sessionStorage.setItem('mk',K);$('#st').textContent='加载中…';const d=await api('admin');if(d.error){$('#st').textContent=d.error;return}$('#st').textContent='';
+ const ev=await api('events?days=7');const c=d.counts||{};
+ $('#out').innerHTML='<div class="stats">'+[['用户',c.users],['已注册',c.registered],['上线作品',c.live_works],['素材',c.assets],['累计消耗钻石',c.gems_spent]].map(([a,b])=>'<div class="stat"><span class="mut">'+a+'</span><b>'+(b||0)+'</b></div>').join('')+'</div>'+
+ '<h2>待审作品（'+d.works.length+'）</h2>'+d.works.map(w=>'<div class="card"><b>'+esc(w.title)+'</b> <span class="mut">'+esc(w.author_name)+' · '+esc(w.status)+' · 举报 '+w.reports+'</span><p>'+esc(w.hook)+'</p><p class="mut">'+esc(JSON.stringify(w.qa||{}))+'</p><div class="row"><button class="ok" data-w="'+w.id+'|live">通过上线</button><button class="no" data-w="'+w.id+'|rejected">驳回</button><a href="/api/works?id='+w.id+'" target="_blank" class="mut">看原始数据</a></div></div>').join('')+
+ '<h2>待审素材（'+d.assets.length+'）</h2>'+d.assets.map(a=>'<div class="card"><b>'+esc(a.name)+'</b> <span class="mut">'+esc(a.kind)+' · '+esc(a.mime||'')+' · '+Math.round((a.size||0)/1024)+'KB · 触发词 '+esc((a.kw||[]).join(', '))+'</span><div>'+(a.url?(/^audio/.test(a.mime)?'<audio controls src="'+esc(a.url)+'"></audio>':/^video/.test(a.mime)?'<video controls src="'+esc(a.url)+'"></video>':'<img src="'+esc(a.url)+'">'):'<code>'+esc(JSON.stringify(a.meta))+'</code>')+'</div><div class="row"><button class="ok" data-a="'+a.id+'|public">公开到素材库</button><button class="no" data-a="'+a.id+'|rejected">驳回</button></div></div>').join('')+
+ '<h2>举报</h2>'+d.reports.map(r=>'<div class="card mut">'+esc(r.target_kind)+' '+esc(r.target_id)+' · '+esc(r.reason)+' · '+esc(r.at)+'</div>').join('')+
+ '<h2>近 7 天事件</h2><div class="card">'+((ev.events||[]).map(e=>esc(e.name)+'：'+e.n+' 次 / '+e.users+' 人').join('<br>')||'暂无')+'</div>'+
+ '<h2>客服：调整钻石</h2><div class="row"><input id="gu" placeholder="用户 ID"><input id="ga" placeholder="+/- 数量" style="width:100px"><input id="gr" placeholder="原因"><button id="gb">执行</button><span id="gs" class="mut"></span></div>'}
+document.addEventListener('click',async e=>{const t=e.target;if(t.id==='go')return load();
+ if(t.dataset.w){const [id,s]=t.dataset.w.split('|');await api('admin',{op:'work',id,status:s});load()}
+ if(t.dataset.a){const [id,s]=t.dataset.a.split('|');await api('admin',{op:'asset',id,status:s});load()}
+ if(t.id==='gb'){const r=await api('admin',{op:'grant',user:$('#gu').value,amount:$('#ga').value,reason:$('#gr').value});$('#gs').textContent=r.error||('余额 '+r.gems)}});
+if(K)load();
+</script></body></html>
