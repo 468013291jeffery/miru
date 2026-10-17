@@ -1,25 +1,614 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MIRU 运营后台</title>
-<style>:root{--bg:#0f0d14;--fg:#eee;--mut:#9c93a8;--ac:#f0b77e}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,-apple-system,"PingFang SC",sans-serif}
-main{max-width:980px;margin:0 auto;padding:16px}h1{font-size:20px}h2{font-size:16px;margin-top:22px}input,button{font:inherit}input{padding:8px 10px;border-radius:8px;border:1px solid #3a3346;background:#1b1724;color:#fff}
-button{padding:7px 12px;border-radius:8px;border:1px solid #3a3346;background:#241f2f;color:#fff;cursor:pointer}button.ok{border-color:#7fc4a6;color:#bfe9d6}button.no{border-color:#ee6f6f;color:#ffc4c4}
-.card{border:1px solid #2c2636;border-radius:12px;padding:12px;margin:8px 0;background:#16131d}.mut{color:var(--mut);font-size:12px}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.stat{border:1px solid #2c2636;border-radius:12px;padding:10px}.stat b{font-size:22px;display:block}audio,img,video{max-width:240px;max-height:160px;border-radius:8px}</style></head>
-<body><main><h1>MIRU 运营后台</h1><div class="row"><input id="k" type="password" placeholder="ADMIN_KEY"><button id="go">进入</button><span class="mut" id="st"></span></div><div id="out"></div></main>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIRU 运营后台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/index.css">
+<script src="https://cdn.jsdelivr.net/npm/vue@3.4.38/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/index.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/locale/zh-cn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>
+:root{--side:#14121a;--brand:#EE6F97}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:#f4f5f7;color:#1f2329}
+[v-cloak]{display:none}
+.login-wrap{min-height:100%;display:grid;place-items:center;background:radial-gradient(60% 50% at 20% 0%,#ffe1ea,transparent 70%),radial-gradient(50% 50% at 100% 100%,#e9e2ff,transparent 70%),#f7f7fa}
+.login-card{width:380px;max-width:92vw}.login-card h1{margin:0 0 4px;font-size:22px}.brand{font-weight:800;letter-spacing:4px}.brand b{color:var(--brand)}
+.layout{height:100vh}
+.aside{background:var(--side);color:#cfcbd8;overflow-y:auto;transition:width .2s}
+.aside .logo{height:56px;display:flex;align-items:center;gap:8px;padding:0 20px;color:#fff;font-size:18px;white-space:nowrap;overflow:hidden}
+.aside .el-menu{border-right:0;background:transparent}.aside .el-menu-item,.aside .el-sub-menu__title{color:#cfcbd8}
+.aside .el-menu-item.is-active{color:#fff;background:#2a2533}.aside .el-menu-item:hover,.aside .el-sub-menu__title:hover{background:#221e2a}
+.aside .el-sub-menu .el-menu{background:#100e15}
+.header{background:#fff;border-bottom:1px solid #e8e9ec;display:flex;align-items:center;gap:12px;height:56px}
+.header .title{font-size:16px;font-weight:600;flex:1}
+.main{padding:16px;overflow-y:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:12px}
+.kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #eceef1}.kpi .l{font-size:12px;color:#8a8f99}.kpi .v{font-size:24px;font-weight:700;margin-top:4px}.kpi .s{font-size:12px;color:#8a8f99;margin-top:2px}
+.kpi.warn .v{color:#e6a23c}.kpi.alert .v{color:#f56c6c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.panel{background:#fff;border-radius:10px;border:1px solid #eceef1;padding:14px 16px;margin-bottom:12px}.panel h3{margin:0 0 10px;font-size:15px}
+.chart{height:280px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.pager{display:flex;justify-content:flex-end;margin-top:12px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.muted{color:#8a8f99;font-size:12px}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.asset{background:#fff;border:1px solid #eceef1;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.asset .pv{height:150px;background:#111;display:grid;place-items:center}.asset .pv img,.asset .pv video{max-width:100%;max-height:150px}
+.asset .bd{padding:10px;font-size:13px;flex:1}.asset .ft{padding:8px 10px;border-top:1px solid #f0f0f2;display:flex;gap:6px;flex-wrap:wrap}
+.el-menu-item .el-badge{margin-left:8px;line-height:1}.el-menu-item .el-badge__content.is-fixed{position:static;transform:none}
+.chap{border-left:3px solid #f0b77e;padding:6px 10px;margin:8px 0;background:#fafafa;border-radius:4px}
+.beat{font-size:12px;color:#555;margin:2px 0}
+pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto;background:#f6f7f9;padding:8px;border-radius:6px;font-size:12px;margin:0}
+.el-descriptions__label{width:110px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/x-template" id="root-tpl"><div>
+  <!-- ========== sign in ========== -->
+  <div v-if="!token" class="login-wrap">
+    <el-card class="login-card" shadow="always">
+      <h1><span class="brand">MI<b>RU</b></span> 运营后台</h1>
+      <p class="muted" style="margin:0 0 18px">管理员登录</p>
+      <el-form @submit.prevent="login" label-position="top">
+        <el-form-item label="用户名"><el-input v-model="lf.username" autocomplete="username" placeholder="admin" /></el-form-item>
+        <el-form-item label="密码"><el-input v-model="lf.password" type="password" show-password autocomplete="current-password" @keyup.enter="login" /></el-form-item>
+        <el-button type="primary" style="width:100%" :loading="busy" @click="login">登录</el-button>
+      </el-form>
+      <p class="muted" style="margin-top:14px">首次使用：用户名 <b>admin</b>，密码为部署时设置的 ADMIN_KEY。登录后请立即在右上角修改密码，并为同事创建各自的账号。</p>
+    </el-card>
+  </div>
+
+  <!-- ========== console ========== -->
+  <el-container v-else class="layout">
+    <el-aside :width="collapsed?'64px':'220px'" class="aside">
+      <div class="logo"><span class="brand">MI<b>RU</b></span><span v-if="!collapsed" style="font-size:13px;color:#9a93a8">运营后台</span></div>
+      <el-menu :default-active="route" :collapse="collapsed" @select="go" :default-openeds="['content','money','ops','sys']">
+        <el-menu-item index="dashboard" v-if="can('dashboard')"><el-icon><DataAnalysis /></el-icon><template #title>数据看板</template></el-menu-item>
+        <el-menu-item index="users" v-if="can('users')"><el-icon><User /></el-icon><template #title>用户管理</template></el-menu-item>
+        <el-sub-menu index="content" v-if="can('works')||can('assets')||can('reports')">
+          <template #title><el-icon><Checked /></el-icon><span>内容审核</span></template>
+          <el-menu-item index="works" v-if="can('works')">作品审核 <el-badge v-if="badge.works" :value="badge.works" class="ml" /></el-menu-item>
+          <el-menu-item index="assets" v-if="can('assets')">素材审核 <el-badge v-if="badge.assets" :value="badge.assets" /></el-menu-item>
+          <el-menu-item index="reports" v-if="can('reports')">举报处理 <el-badge v-if="badge.reports" :value="badge.reports" /></el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="money" v-if="can('orders')||can('ledger')">
+          <template #title><el-icon><Wallet /></el-icon><span>订单与钻石</span></template>
+          <el-menu-item index="orders" v-if="can('orders')">充值订单</el-menu-item>
+          <el-menu-item index="ledger" v-if="can('ledger')">钻石流水</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="ops" v-if="can('notices')||can('i18n')||can('config')||can('events')">
+          <template #title><el-icon><Promotion /></el-icon><span>运营工具</span></template>
+          <el-menu-item index="notices" v-if="can('notices')">公告管理</el-menu-item>
+          <el-menu-item index="events" v-if="can('events')">行为数据</el-menu-item>
+          <el-menu-item index="i18n" v-if="can('i18n')">多语言词条</el-menu-item>
+          <el-menu-item index="config" v-if="can('config')">系统配置</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="sys" v-if="can('admins')||can('audit')">
+          <template #title><el-icon><Setting /></el-icon><span>系统管理</span></template>
+          <el-menu-item index="admins" v-if="can('admins')">管理员与权限</el-menu-item>
+          <el-menu-item index="audit" v-if="can('audit')">操作日志</el-menu-item>
+        </el-sub-menu>
+      </el-menu>
+    </el-aside>
+    <el-container>
+      <el-header class="header">
+        <el-button text @click="collapsed=!collapsed"><el-icon size="18"><Fold v-if="!collapsed"/><Expand v-else/></el-icon></el-button>
+        <div class="title">{{ titles[route] || '' }}</div>
+        <el-tag v-if="payTest" type="warning" effect="plain">支付为测试模式</el-tag>
+        <el-dropdown @command="cmd">
+          <span style="cursor:pointer;display:flex;align-items:center;gap:6px"><el-avatar :size="28" style="background:#EE6F97">{{ (me.name||me.username||'?').slice(0,1) }}</el-avatar>{{ me.name || me.username }} <el-tag size="small">{{ roleName[me.role] }}</el-tag></span>
+          <template #dropdown><el-dropdown-menu><el-dropdown-item command="pw">修改密码</el-dropdown-item><el-dropdown-item command="out" divided>退出登录</el-dropdown-item></el-dropdown-menu></template>
+        </el-dropdown>
+      </el-header>
+      <el-main class="main">
+        <component :is="'p-'+route" :key="route+'-'+reloadKey" />
+      </el-main>
+    </el-container>
+  </el-container>
+
+  <el-dialog v-model="pwDlg" title="修改密码" width="380px">
+    <el-form label-width="80px"><el-form-item label="原密码"><el-input v-model="pw.old" type="password" show-password /></el-form-item><el-form-item label="新密码"><el-input v-model="pw.password" type="password" show-password placeholder="至少 8 位" /></el-form-item></el-form>
+    <template #footer><el-button @click="pwDlg=false">取消</el-button><el-button type="primary" @click="changePw">保存</el-button></template>
+  </el-dialog>
+</div></script>
 <script>
-const $=s=>document.querySelector(s);const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let K=sessionStorage.getItem('mk')||'';$('#k').value=K;
-async function api(path,body){const r=await fetch('/api/'+path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Admin-Key':K},body:body?JSON.stringify(body):undefined});return r.json()}
-async function load(){K=$('#k').value.trim();sessionStorage.setItem('mk',K);$('#st').textContent='加载中…';const d=await api('admin');if(d.error){$('#st').textContent=d.error;return}$('#st').textContent='';
- const ev=await api('events?days=7');const c=d.counts||{};
- $('#out').innerHTML='<div class="stats">'+[['用户',c.users],['已注册',c.registered],['上线作品',c.live_works],['素材',c.assets],['累计消耗钻石',c.gems_spent]].map(([a,b])=>'<div class="stat"><span class="mut">'+a+'</span><b>'+(b||0)+'</b></div>').join('')+'</div>'+
- '<h2>待审作品（'+d.works.length+'）</h2>'+d.works.map(w=>'<div class="card"><b>'+esc(w.title)+'</b> <span class="mut">'+esc(w.author_name)+' · '+esc(w.status)+' · 举报 '+w.reports+'</span><p>'+esc(w.hook)+'</p><p class="mut">'+esc(JSON.stringify(w.qa||{}))+'</p><div class="row"><button class="ok" data-w="'+w.id+'|live">通过上线</button><button class="no" data-w="'+w.id+'|rejected">驳回</button><a href="/api/works?id='+w.id+'" target="_blank" class="mut">看原始数据</a></div></div>').join('')+
- '<h2>待审素材（'+d.assets.length+'）</h2>'+d.assets.map(a=>'<div class="card"><b>'+esc(a.name)+'</b> <span class="mut">'+esc(a.kind)+' · '+esc(a.mime||'')+' · '+Math.round((a.size||0)/1024)+'KB · 触发词 '+esc((a.kw||[]).join(', '))+'</span><div>'+(a.url?(/^audio/.test(a.mime)?'<audio controls src="'+esc(a.url)+'"></audio>':/^video/.test(a.mime)?'<video controls src="'+esc(a.url)+'"></video>':'<img src="'+esc(a.url)+'">'):'<code>'+esc(JSON.stringify(a.meta))+'</code>')+'</div><div class="row"><button class="ok" data-a="'+a.id+'|public">公开到素材库</button><button class="no" data-a="'+a.id+'|rejected">驳回</button></div></div>').join('')+
- '<h2>举报</h2>'+d.reports.map(r=>'<div class="card mut">'+esc(r.target_kind)+' '+esc(r.target_id)+' · '+esc(r.reason)+' · '+esc(r.at)+'</div>').join('')+
- '<h2>近 7 天事件</h2><div class="card">'+((ev.events||[]).map(e=>esc(e.name)+'：'+e.n+' 次 / '+e.users+' 人').join('<br>')||'暂无')+'</div>'+
- '<h2>客服：调整钻石</h2><div class="row"><input id="gu" placeholder="用户 ID"><input id="ga" placeholder="+/- 数量" style="width:100px"><input id="gr" placeholder="原因"><button id="gb">执行</button><span id="gs" class="mut"></span></div>'}
-document.addEventListener('click',async e=>{const t=e.target;if(t.id==='go')return load();
- if(t.dataset.w){const [id,s]=t.dataset.w.split('|');await api('admin',{op:'work',id,status:s});load()}
- if(t.dataset.a){const [id,s]=t.dataset.a.split('|');await api('admin',{op:'asset',id,status:s});load()}
- if(t.id==='gb'){const r=await api('admin',{op:'grant',user:$('#gu').value,amount:$('#ga').value,reason:$('#gr').value});$('#gs').textContent=r.error||('余额 '+r.gems)}});
-if(K)load();
-</script></body></html>
+const { createApp, reactive, ref, computed, onMounted, nextTick, watch, h } = Vue;
+const { ElMessage, ElMessageBox } = ElementPlus;
+const S = reactive({ token: localStorage.getItem('miru_admin_tok') || '', me: JSON.parse(localStorage.getItem('miru_admin_me') || '{}'), perms: JSON.parse(localStorage.getItem('miru_admin_perms') || '[]') });
+async function api(r, opt) {
+  opt = opt || {}; const qs = new URLSearchParams(Object.assign({ r }, Object.fromEntries(Object.entries(opt.query || {}).filter(([, v]) => v !== '' && v != null)))).toString();
+  const res = await fetch('/api/admin?' + qs, { method: opt.body ? 'POST' : 'GET', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
+  let j = {}; try { j = await res.json(); } catch (_) {}
+  if (res.status === 401 && r !== 'login' && r !== 'password') { logout(); ElMessage.error('登录已过期，请重新登录'); throw new Error('401'); }
+  if (!res.ok) { ElMessage.error(j.error || ('请求失败 ' + res.status)); throw new Error(j.error || res.status); }
+  return j;
+}
+function logout() { S.token = ''; localStorage.removeItem('miru_admin_tok'); }
+const can = p => S.perms.includes('*') || S.perms.includes(p);
+const fmt = t => t ? new Date(t).toLocaleString('zh-CN', { hour12: false }) : '—';
+const fmtD = t => t ? new Date(t).toLocaleDateString('zh-CN') : '—';
+const money = c => '$' + ((c || 0) / 100).toFixed(2);
+const size = b => !b ? '—' : b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB';
+const L = {
+  role: { owner: '超级管理员', admin: '管理员', reviewer: '审核员', support: '客服', analyst: '数据分析' },
+  roleDesc: { owner: '全部权限，含管理员账号管理', admin: '除管理员账号外的全部权限', reviewer: '作品 / 素材审核、举报处理', support: '用户管理、补发钻石（单次 ±500）、订单', analyst: '只读：数据看板、行为数据、订单' },
+  provider: { guest: '游客', email: '邮箱', google: 'Google', apple: 'Apple' },
+  ustatus: { active: '正常', banned: '已封禁', deleted: '已注销' },
+  wstatus: { pending: '待审核', live: '已上线', rejected: '已驳回', takedown: '已下架', removed: '作者已删除' },
+  astatus: { review: '待审核', public: '已公开', private: '仅作者', rejected: '已驳回', removed: '已删除' },
+  rstatus: { open: '待处理', resolved: '已处理', dismissed: '已驳回' },
+  kind: { bgm: '背景音乐', sfx: '音效', fx: '特效', mg: '小游戏' },
+  ostatus: { paid: '已支付', refunded: '已退款' },
+  action: { login: '登录后台', change_password: '修改密码', gems_grant: '补发钻石', gems_deduct: '扣除钻石', user_ban: '封禁用户', user_unban: '解封用户', user_reset_password: '重置用户密码', user_force_logout: '强制下线', user_note: '修改备注', user_rename: '修改昵称', user_email: '修改邮箱', work_approve: '作品通过', work_reject: '作品驳回', work_takedown: '作品下架', work_restore: '作品恢复', work_feature: '设为推荐', work_unfeature: '取消推荐', work_delete: '删除作品', asset_approve: '素材公开', asset_reject: '素材驳回', asset_private: '素材设为私有', asset_delete: '删除素材', report_resolve: '处理举报', report_dismiss: '驳回举报', order_refund: '订单退款', i18n_edit: '修改词条', i18n_delete: '删除词条', i18n_add: '新增词条', config_update: '修改配置', notice_create: '新建公告', notice_update: '修改公告', notice_delete: '删除公告', admin_create: '新建管理员', admin_update: '修改管理员', admin_enable: '启用管理员', admin_disable: '停用管理员', admin_reset_password: '重置管理员密码', admin_delete: '删除管理员' },
+  event: { app_open: '打开 App', auth_view: '看到登录页', login: '登录 / 注册', taste_done: '完成口味选择', hook_play: '播放引子短剧', story_start: '开始故事', chapter_done: '完成一章', talk: '自由对话', store_open: '打开商店', purchase: '充值', publish: '发布作品', register: '注册', upload: '上传素材', community_open: '打开社区' },
+};
+const tagType = s => ({ active: 'success', live: 'success', public: 'success', paid: 'success', resolved: 'success', pending: 'warning', review: 'warning', open: 'warning', banned: 'danger', rejected: 'danger', takedown: 'danger', refunded: 'info', deleted: 'info', private: 'info', dismissed: 'info', removed: 'info' }[s] || 'primary');
+
+/* ---------- reusable: paged list ---------- */
+function usePaged(route, filters, after) {
+  const st = reactive({ rows: [], total: 0, page: 1, size: 20, loading: false, extra: {} });
+  async function load(p) { if (p) st.page = p; st.loading = true; try { const j = await api(route, { query: Object.assign({ page: st.page, size: st.size }, filters) }); st.rows = j.rows || []; st.total = j.total || 0; st.extra = j; after && after(j); } finally { st.loading = false; } }
+  return { st, load };
+}
+async function promptText(title, label, opt) { const { value } = await ElMessageBox.prompt(label, title, Object.assign({ confirmButtonText: '确定', cancelButtonText: '取消', inputValidator: v => !!(v && v.trim()) || '必填' }, opt || {})); return value.trim(); }
+function chart(el, option) { if (!el) return; const c = echarts.getInstanceByDom(el) || echarts.init(el); c.setOption(option, true); window.addEventListener('resize', () => c.resize()); }
+
+/* ================= pages ================= */
+const Dashboard = {
+  setup() {
+    const d = ref(null), c1 = ref(), c2 = ref(), c3 = ref(), c4 = ref();
+    async function load() {
+      d.value = await api('dashboard'); window.__payTest.value = d.value.payTest; await nextTick();
+      const s = d.value.series, days = s.map(x => fmtD(x.day).slice(5));
+      chart(c1.value, { tooltip: { trigger: 'axis' }, legend: { data: ['新增用户', '日活 DAU'] }, grid: { left: 40, right: 20, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: { type: 'value', minInterval: 1 }, series: [{ name: '新增用户', type: 'line', smooth: true, data: s.map(x => x.new_users), color: '#EE6F97' }, { name: '日活 DAU', type: 'line', smooth: true, data: s.map(x => x.dau), color: '#7b6ad8' }] });
+      chart(c2.value, { tooltip: { trigger: 'axis' }, legend: { data: ['钻石消耗', '收入 (USD)'] }, grid: { left: 50, right: 50, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: [{ type: 'value', name: '💎' }, { type: 'value', name: '$' }], series: [{ name: '钻石消耗', type: 'bar', data: s.map(x => x.gems_spent), color: '#F0B77E' }, { name: '收入 (USD)', type: 'line', yAxisIndex: 1, data: s.map(x => x.revenue / 100), color: '#67c23a' }] });
+      const f = d.value.funnel.filter(x => x.users > 0 || ['app_open', 'login', 'story_start', 'purchase'].includes(x.name));
+      chart(c3.value, { tooltip: { formatter: p => p.name + '：' + p.value + ' 人' }, series: [{ type: 'funnel', sort: 'none', left: 20, right: 20, top: 10, bottom: 10, minSize: '8%', label: { formatter: p => p.name + '  ' + p.value }, data: f.map(x => ({ name: L.event[x.name] || x.name, value: x.users })) }], color: ['#EE6F97', '#F0B77E', '#7b6ad8', '#67c23a', '#409eff', '#e6a23c', '#909399', '#f56c6c', '#36cfc9', '#9254de', '#73d13d'] });
+      chart(c4.value, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: ['40%', '68%'], data: d.value.providers.map(x => ({ name: L.provider[x.provider] || x.provider, value: x.n })) }], color: ['#c0c4cc', '#409eff', '#EE6F97', '#1f2329'] });
+    }
+    onMounted(load);
+    const pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '—';
+    return { d, c1, c2, c3, c4, money, pct, fmtD, load };
+  },
+  template: `<div v-if="d">
+    <div class="kpis">
+      <div class="kpi"><div class="l">总用户</div><div class="v">{{d.kpi.users}}</div><div class="s">已注册 {{d.kpi.registered}} · 封禁 {{d.kpi.banned}}</div></div>
+      <div class="kpi"><div class="l">今日新增</div><div class="v">{{d.kpi.new_today}}</div><div class="s">昨日 {{d.kpi.new_yesterday}}</div></div>
+      <div class="kpi"><div class="l">日活 DAU</div><div class="v">{{d.kpi.dau}}</div><div class="s">昨日 {{d.kpi.dau_yesterday}}</div></div>
+      <div class="kpi"><div class="l">周活 / 月活</div><div class="v">{{d.kpi.wau}} / {{d.kpi.mau}}</div></div>
+      <div class="kpi"><div class="l">今日收入</div><div class="v">{{money(d.kpi.revenue_today)}}</div><div class="s">30 天 {{money(d.kpi.revenue_30d)}} · {{d.kpi.orders_30d}} 单</div></div>
+      <div class="kpi"><div class="l">付费用户</div><div class="v">{{d.kpi.payers}}</div><div class="s">付费率 {{pct(d.kpi.payers, d.kpi.users)}}<span v-if="d.kpi.test_orders"> · 含测试单 {{d.kpi.test_orders}}</span></div></div>
+      <div class="kpi"><div class="l">今日钻石消耗</div><div class="v">{{d.kpi.gems_spent_today}}</div><div class="s">用户钻石存量 {{d.kpi.gems_outstanding}}</div></div>
+      <div class="kpi"><div class="l">社区作品</div><div class="v">{{d.kpi.works_live}}</div><div class="s">已上线</div></div>
+      <div class="kpi" :class="{warn:d.kpi.works_pending}"><div class="l">待审作品</div><div class="v">{{d.kpi.works_pending}}</div></div>
+      <div class="kpi" :class="{warn:d.kpi.assets_review}"><div class="l">待审素材</div><div class="v">{{d.kpi.assets_review}}</div></div>
+      <div class="kpi" :class="{alert:d.kpi.reports_open}"><div class="l">未处理举报</div><div class="v">{{d.kpi.reports_open}}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>新增与日活（14 天）</h3><div ref="c1" class="chart"></div></div>
+      <div class="panel"><h3>钻石消耗与收入（14 天）</h3><div ref="c2" class="chart"></div></div>
+      <div class="panel"><h3>转化漏斗（近 7 天，按人数）</h3><div ref="c3" class="chart"></div></div>
+      <div class="panel"><h3>登录方式分布</h3><div ref="c4" class="chart"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>新用户留存</h3>
+        <el-table :data="d.retention.slice().reverse()" size="small" max-height="320"><el-table-column label="注册日" :formatter="r=>fmtD(r.day)" /><el-table-column prop="cohort" label="新增" width="70" /><el-table-column label="次日留存" :formatter="r=>r.cohort?pct(r.d1,r.cohort)+' ('+r.d1+')':'—'" /><el-table-column label="7 日留存" :formatter="r=>r.cohort?pct(r.d7,r.cohort)+' ('+r.d7+')':'—'" /></el-table></div>
+      <div class="panel"><h3>热门社区作品</h3>
+        <el-table :data="d.topWorks" size="small" empty-text="还没有上线的社区作品"><el-table-column prop="title" label="作品" /><el-table-column prop="author_name" label="作者" width="120" /><el-table-column prop="plays" label="播放" width="70" /><el-table-column prop="likes" label="点赞" width="70" /></el-table></div>
+    </div>
+  </div><el-skeleton v-else :rows="8" animated />`,
+};
+
+const Users = {
+  setup() {
+    const f = reactive({ q: '', status: '', provider: '', sort: 'created' });
+    const { st, load } = usePaged('users', f);
+    const det = ref(null), drawer = ref(false), tab = ref('ledger');
+    const gd = reactive({ show: false, amount: 10, reason: '' }), bd = reactive({ show: false, reason: '', days: 0, hideWorks: false });
+    async function open(id) { det.value = await api('user', { query: { id } }); drawer.value = true; }
+    async function act(op, extra) { const id = det.value.user.id; const j = await api('user', { body: Object.assign({ id, op }, extra || {}) }); await open(id); load(); return j; }
+    async function gems() { if (!gd.reason.trim()) return ElMessage.warning('请填写原因'); const j = await act('gems', { amount: gd.amount, reason: gd.reason }); gd.show = false; ElMessage.success('完成，当前余额 ' + j.gems); }
+    async function ban() { if (!bd.reason.trim()) return ElMessage.warning('请填写封禁原因'); await act('ban', { reason: bd.reason, days: bd.days, hideWorks: bd.hideWorks }); bd.show = false; ElMessage.success('已封禁'); }
+    async function unban() { await act('unban'); ElMessage.success('已解封'); }
+    async function resetpw() { await ElMessageBox.confirm('将生成一个新密码，该用户所有设备会被强制下线。', '重置密码', { type: 'warning' }); const j = await act('resetpw'); ElMessageBox.alert('新密码：<b class="mono">' + j.password + '</b><br>请通过客服渠道告知用户，并提醒其登录后修改。', '已重置', { dangerouslyUseHTMLString: true }); }
+    async function logoutAll() { await act('logout'); ElMessage.success('已强制下线'); }
+    async function note() { const v = await promptText('备注', '仅后台可见', { inputValue: det.value.user.note || '', inputValidator: null }); await act('note', { note: v }); }
+    async function rename() { const v = await promptText('修改昵称', '新昵称', { inputValue: det.value.user.name || '' }); await act('rename', { name: v }); }
+    async function email() { const v = await promptText('修改邮箱', '新邮箱（用户将用它登录）', { inputValue: det.value.user.email || '' }); await act('email', { email: v }); }
+    onMounted(() => load());
+    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, resetpw, logoutAll, note, rename, email, L, fmt, tagType, money, size, can };
+  },
+  template: `<div class="panel">
+    <div class="toolbar">
+      <el-input v-model="f.q" placeholder="ID / 邮箱 / 昵称" clearable style="width:240px" @keyup.enter="load(1)" @clear="load(1)"><template #prefix><el-icon><Search/></el-icon></template></el-input>
+      <el-select v-model="f.status" placeholder="状态" clearable style="width:120px" @change="load(1)"><el-option v-for="(v,k) in L.ustatus" :key="k" :label="v" :value="k" /></el-select>
+      <el-select v-model="f.provider" placeholder="登录方式" clearable style="width:120px" @change="load(1)"><el-option v-for="(v,k) in L.provider" :key="k" :label="v" :value="k" /></el-select>
+      <el-select v-model="f.sort" style="width:140px" @change="load(1)"><el-option label="按注册时间" value="created" /><el-option label="按最近活跃" value="last_seen" /><el-option label="按钻石余额" value="gems" /></el-select>
+      <el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 人</span>
+    </div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe @row-click="r=>open(r.id)" style="cursor:pointer">
+      <el-table-column label="用户" min-width="200"><template #default="{row}"><div><b>{{row.name||'未设置昵称'}}</b></div><div class="muted mono">{{row.id}}</div></template></el-table-column>
+      <el-table-column prop="email" label="邮箱" min-width="180" />
+      <el-table-column label="登录方式" width="100"><template #default="{row}"><el-tag size="small" :type="row.provider==='guest'?'info':'primary'">{{L.provider[row.provider]||row.provider}}</el-tag></template></el-table-column>
+      <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ustatus[row.status]||row.status}}</el-tag></template></el-table-column>
+      <el-table-column prop="gems" label="钻石" width="80" />
+      <el-table-column prop="works" label="作品" width="70" />
+      <el-table-column prop="lang" label="语言" width="70" />
+      <el-table-column label="注册时间" width="170" :formatter="r=>fmt(r.created_at)" />
+      <el-table-column label="最近活跃" width="170" :formatter="r=>fmt(r.last_seen)" />
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, sizes, prev, pager, next" :total="st.total" v-model:current-page="st.page" v-model:page-size="st.size" @current-change="load()" @size-change="load(1)" /></div>
+  </div>
+  <el-drawer v-model="drawer" size="62%" :title="det&&('用户详情 · '+(det.user.name||det.user.email||det.user.id))">
+    <template v-if="det">
+      <div class="toolbar">
+        <el-button v-if="can('gems')" type="primary" @click="gd.show=true">补发 / 扣除钻石</el-button>
+        <template v-if="can('users.write')">
+          <el-button v-if="det.user.status!=='banned'" type="danger" plain @click="bd.show=true">封禁</el-button>
+          <el-button v-else type="success" plain @click="unban">解封</el-button>
+          <el-button @click="resetpw" :disabled="!det.user.email">重置密码</el-button>
+          <el-button @click="logoutAll">强制下线</el-button>
+          <el-dropdown><el-button>更多 <el-icon><ArrowDown/></el-icon></el-button><template #dropdown><el-dropdown-menu><el-dropdown-item @click="rename">修改昵称</el-dropdown-item><el-dropdown-item @click="email">修改邮箱</el-dropdown-item><el-dropdown-item @click="note">编辑备注</el-dropdown-item></el-dropdown-menu></template></el-dropdown>
+        </template>
+      </div>
+      <el-descriptions :column="2" border size="small">
+        <el-descriptions-item label="用户 ID"><span class="mono">{{det.user.id}}</span></el-descriptions-item>
+        <el-descriptions-item label="状态"><el-tag size="small" :type="tagType(det.user.status)">{{L.ustatus[det.user.status]}}</el-tag><span v-if="det.user.ban_reason" class="muted"> {{det.user.ban_reason}}{{det.user.ban_until?'（至 '+fmt(det.user.ban_until)+'）':'（永久）'}}</span></el-descriptions-item>
+        <el-descriptions-item label="昵称">{{det.user.name||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="邮箱">{{det.user.email||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="登录方式">{{L.provider[det.user.provider]}}<span v-if="det.user.google"> · 已绑 Google</span><span v-if="det.user.apple"> · 已绑 Apple</span></el-descriptions-item>
+        <el-descriptions-item label="钻石余额"><b>{{det.user.gems}}</b><span v-if="det.user.plus_until" class="muted"> · 会员至 {{fmt(det.user.plus_until)}}</span></el-descriptions-item>
+        <el-descriptions-item label="注册时间">{{fmt(det.user.created_at)}}</el-descriptions-item>
+        <el-descriptions-item label="最近活跃">{{fmt(det.user.last_seen)}} · 活跃 {{det.user.active_days}} 天</el-descriptions-item>
+        <el-descriptions-item label="语言 / 平台">{{det.user.lang||'—'}} / {{det.user.platform||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="云存档">{{det.state?('v'+det.state.ver+' · '+size(det.state.bytes)+' · '+fmt(det.state.updated_at)):'无'}}</el-descriptions-item>
+        <el-descriptions-item label="后台备注" :span="2">{{det.user.note||'—'}}</el-descriptions-item>
+      </el-descriptions>
+      <el-tabs v-model="tab" style="margin-top:12px">
+        <el-tab-pane :label="'钻石流水 ('+det.ledger.length+')'" name="ledger"><el-table :data="det.ledger" size="small" max-height="380"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="变动" width="80"><template #default="{row}"><span :style="{color:row.delta>0?'#67c23a':'#f56c6c'}">{{row.delta>0?'+':''}}{{row.delta}}</span></template></el-table-column><el-table-column prop="reason" label="原因" /><el-table-column prop="balance" label="余额" width="80" /></el-table></el-tab-pane>
+        <el-tab-pane :label="'订单 ('+det.orders.length+')'" name="orders"><el-table :data="det.orders" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="sku" label="商品" /><el-table-column prop="gems" label="钻石" width="70" /><el-table-column label="金额" width="90" :formatter="r=>money(r.price_cents)" /><el-table-column label="状态" width="120"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ostatus[row.status]||row.status}}</el-tag> <el-tag v-if="row.test" size="small" type="warning">测试</el-tag></template></el-table-column></el-table></el-tab-pane>
+        <el-tab-pane :label="'作品 ('+det.works.length+')'" name="works"><el-table :data="det.works" size="small"><el-table-column prop="title" label="标题" /><el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.wstatus[row.status]||row.status}}</el-tag></template></el-table-column><el-table-column prop="plays" label="播放" width="70" /><el-table-column prop="reports" label="举报" width="70" /><el-table-column label="创建" width="170" :formatter="r=>fmt(r.created_at)" /></el-table></el-tab-pane>
+        <el-tab-pane :label="'素材 ('+det.assets.length+')'" name="assets"><el-table :data="det.assets" size="small"><el-table-column prop="name" label="名称" /><el-table-column label="类型" width="90" :formatter="r=>L.kind[r.kind]||r.kind" /><el-table-column label="大小" width="90" :formatter="r=>size(r.size)" /><el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.astatus[row.status]||row.status}}</el-tag></template></el-table-column><el-table-column label="文件" width="80"><template #default="{row}"><el-link v-if="row.url" :href="row.url" target="_blank">查看</el-link></template></el-table-column></el-table></el-tab-pane>
+        <el-tab-pane :label="'TA 发起的举报 ('+det.reportsBy.length+')'" name="rep"><el-table :data="det.reportsBy" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="target_id" label="对象" /><el-table-column prop="reason" label="原因" /></el-table></el-tab-pane>
+      </el-tabs>
+    </template>
+  </el-drawer>
+  <el-dialog v-model="gd.show" title="补发 / 扣除钻石" width="420px">
+    <el-form label-width="70px"><el-form-item label="数量"><el-input-number v-model="gd.amount" :min="-100000" :max="100000" /><div class="muted" style="width:100%">正数为补发，负数为扣除</div></el-form-item><el-form-item label="原因"><el-input v-model="gd.reason" placeholder="如：充值未到账补偿 / 活动奖励" /></el-form-item></el-form>
+    <template #footer><el-button @click="gd.show=false">取消</el-button><el-button type="primary" @click="gems">确定</el-button></template>
+  </el-dialog>
+  <el-dialog v-model="bd.show" title="封禁用户" width="440px">
+    <el-form label-width="80px"><el-form-item label="原因"><el-input v-model="bd.reason" type="textarea" placeholder="会展示给用户" /></el-form-item>
+      <el-form-item label="时长"><el-radio-group v-model="bd.days"><el-radio :value="1">1 天</el-radio><el-radio :value="7">7 天</el-radio><el-radio :value="30">30 天</el-radio><el-radio :value="0">永久</el-radio></el-radio-group></el-form-item>
+      <el-form-item label=""><el-checkbox v-model="bd.hideWorks">同时下架 TA 的全部已上线作品</el-checkbox></el-form-item></el-form>
+    <template #footer><el-button @click="bd.show=false">取消</el-button><el-button type="danger" @click="ban">封禁</el-button></template>
+  </el-dialog>`,
+};
+
+const Works = {
+  setup() {
+    const f = reactive({ status: 'pending', q: '', reported: '' });
+    const { st, load } = usePaged('works', f);
+    const det = ref(null), drawer = ref(false);
+    async function open(id) { det.value = await api('work', { query: { id } }); drawer.value = true; }
+    async function act(op, id, needReason) { id = id || det.value.work.id; let reason = ''; if (needReason) reason = await promptText(op === 'reject' ? '驳回作品' : op === 'takedown' ? '下架作品' : '删除作品', '原因（会展示给作者）'); else if (op === 'delete') await ElMessageBox.confirm('删除后无法恢复，确定？', '删除作品', { type: 'error' }); await api('work', { body: { id, op, reason } }); ElMessage.success('已完成'); if (drawer.value && op !== 'delete') await open(id); else drawer.value = false; load(); window.__refreshBadges && window.__refreshBadges(); }
+    function setTab(s) { f.status = s === 'reported' ? '' : s; f.reported = s === 'reported' ? '1' : ''; load(1); }
+    const tabv = ref('pending');
+    const chapters = computed(() => { const p = det.value && det.value.work.pack; if (!p || !Array.isArray(p.chapters)) return []; return p.chapters.map((c, i) => { const t = c.t ? (c.t.zh || c.t.en || c.t) : (c.title || ''); const beats = (c.beats && (c.beats.zh || c.beats.en || c.beats)) || []; return { i: i + 1, t: typeof t === 'string' ? t : JSON.stringify(t), n: Array.isArray(beats) ? beats.length : 0, lines: (Array.isArray(beats) ? beats : []).slice(0, 6).map(b => typeof b === 'string' ? b : Array.isArray(b) ? b.join(' ') : JSON.stringify(b)).map(s => s.slice(0, 120)), choices: (c.choices || []).map(x => x.t ? (x.t.zh || x.t.en || x.t) : x.k) }; }); });
+    onMounted(() => load());
+    return { f, st, load, det, drawer, open, act, setTab, tabv, chapters, L, fmt, tagType, size };
+  },
+  template: `<div class="panel">
+    <el-tabs v-model="tabv" @tab-change="setTab"><el-tab-pane label="待审核" name="pending" /><el-tab-pane label="已上线" name="live" /><el-tab-pane label="被举报" name="reported" /><el-tab-pane label="已驳回" name="rejected" /><el-tab-pane label="已下架" name="takedown" /><el-tab-pane label="全部" name="" /></el-tabs>
+    <div class="toolbar"><el-input v-model="f.q" placeholder="标题 / 作者 / ID" clearable style="width:260px" @keyup.enter="load(1)" @clear="load(1)" /><el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 部</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe>
+      <el-table-column label="作品" min-width="240"><template #default="{row}"><div><b>{{row.title||'(无标题)'}}</b> <el-tag v-if="row.featured" size="small" type="warning">推荐</el-tag></div><div class="muted">{{row.hook}}</div></template></el-table-column>
+      <el-table-column prop="author_name" label="作者" width="120" />
+      <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.wstatus[row.status]||row.status}}</el-tag></template></el-table-column>
+      <el-table-column label="自动检查" width="150"><template #default="{row}"><span v-if="row.qa&&row.qa.err&&row.qa.err.length" style="color:#f56c6c">{{row.qa.err.length}} 个问题</span><span v-else-if="row.qa&&row.qa.warn&&row.qa.warn.length" style="color:#e6a23c">{{row.qa.warn.length}} 个提醒</span><span v-else style="color:#67c23a">通过</span></template></el-table-column>
+      <el-table-column label="数据" width="150"><template #default="{row}">▶ {{row.plays}} · ♥ {{row.likes}} · <span :style="{color:row.reports?'#f56c6c':''}">⚑ {{row.reports}}</span></template></el-table-column>
+      <el-table-column label="更新时间" width="170" :formatter="r=>fmt(r.updated_at)" />
+      <el-table-column label="操作" width="230" fixed="right"><template #default="{row}">
+        <el-button size="small" @click="open(row.id)">查看</el-button>
+        <el-button v-if="row.status!=='live'" size="small" type="success" @click="act('approve',row.id)">通过</el-button>
+        <el-button v-if="row.status==='pending'" size="small" type="danger" plain @click="act('reject',row.id,1)">驳回</el-button>
+        <el-button v-if="row.status==='live'" size="small" type="danger" plain @click="act('takedown',row.id,1)">下架</el-button>
+      </template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>
+  <el-drawer v-model="drawer" size="60%" :title="det&&det.work.title">
+    <template v-if="det">
+      <div class="toolbar">
+        <el-button v-if="det.work.status!=='live'" type="success" @click="act('approve')">审核通过</el-button>
+        <el-button v-if="det.work.status==='pending'" type="danger" plain @click="act('reject',null,1)">驳回</el-button>
+        <el-button v-if="det.work.status==='live'" type="danger" plain @click="act('takedown',null,1)">下架</el-button>
+        <el-button v-if="det.work.status==='live'&&!det.work.featured" @click="act('feature')">设为推荐</el-button>
+        <el-button v-if="det.work.featured" @click="act('unfeature')">取消推荐</el-button>
+        <el-button type="danger" text @click="act('delete')">删除</el-button>
+      </div>
+      <el-alert v-if="det.safety.length" type="error" :closable="false" :title="'安全检查命中：'+det.safety.join('；')" style="margin-bottom:10px" />
+      <el-alert v-if="det.work.qa&&det.work.qa.err&&det.work.qa.err.length" type="warning" :closable="false" :title="'结构问题：'+det.work.qa.err.join('；')" style="margin-bottom:10px" />
+      <el-descriptions :column="2" border size="small">
+        <el-descriptions-item label="作品 ID"><span class="mono">{{det.work.id}}</span></el-descriptions-item>
+        <el-descriptions-item label="状态"><el-tag size="small" :type="tagType(det.work.status)">{{L.wstatus[det.work.status]}}</el-tag><span v-if="det.work.reject_reason" class="muted"> 原因：{{det.work.reject_reason}}</span></el-descriptions-item>
+        <el-descriptions-item label="作者">{{det.work.author_name}} <span class="muted mono">{{det.work.author}}</span></el-descriptions-item>
+        <el-descriptions-item label="语言 / 取向">{{det.work.lang}} / {{det.work.orient}}</el-descriptions-item>
+        <el-descriptions-item label="标签" :span="2"><el-tag v-for="t in (det.work.tags||[])" :key="t" size="small" style="margin-right:4px">{{t}}</el-tag></el-descriptions-item>
+        <el-descriptions-item label="简介" :span="2">{{det.work.hook}}</el-descriptions-item>
+        <el-descriptions-item label="审核人">{{det.work.reviewed_by||'—'}} {{det.work.reviewed_at?fmt(det.work.reviewed_at):''}}</el-descriptions-item>
+        <el-descriptions-item label="数据">播放 {{det.work.plays}} · 点赞 {{det.work.likes}} · 举报 {{det.work.reports}}</el-descriptions-item>
+      </el-descriptions>
+      <h4>章节内容（{{chapters.length}} 章）</h4>
+      <div v-for="c in chapters" :key="c.i" class="chap"><b>第 {{c.i}} 章 · {{c.t}}</b> <span class="muted">{{c.n}} 段</span>
+        <div v-for="(l,k) in c.lines" :key="k" class="beat">{{l}}</div><div v-if="c.n>6" class="muted">……</div>
+        <div v-if="c.choices.length" class="muted">选项：{{c.choices.join(' / ')}}</div></div>
+      <el-empty v-if="!chapters.length" description="没有可读的章节" :image-size="60" />
+      <h4 v-if="det.reports.length">举报记录</h4>
+      <el-table v-if="det.reports.length" :data="det.reports" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="reason" label="原因" /><el-table-column label="状态" width="90" :formatter="r=>L.rstatus[r.status||'open']" /></el-table>
+      <el-collapse style="margin-top:12px"><el-collapse-item title="原始数据 (JSON)"><pre class="json">{{JSON.stringify(det.work.pack,null,1).slice(0,20000)}}</pre></el-collapse-item></el-collapse>
+    </template>
+  </el-drawer>`,
+};
+
+const Assets = {
+  setup() {
+    const f = reactive({ status: 'review', kind: '', q: '' }); const { st, load } = usePaged('assets', f); f.size = 40;
+    const isImg = a => /^image\//.test(a.mime || ''), isVid = a => /^video\//.test(a.mime || ''), isAud = a => /^audio\//.test(a.mime || '');
+    async function act(a, op) { let reason = ''; if (op === 'reject') reason = await promptText('驳回素材', '原因'); if (op === 'delete') await ElMessageBox.confirm('将删除文件，无法恢复。', '删除素材', { type: 'error' }); await api('asset', { body: { id: a.id, op, reason } }); ElMessage.success('已完成'); load(); window.__refreshBadges && window.__refreshBadges(); }
+    onMounted(() => load());
+    return { f, st, load, act, isImg, isVid, isAud, L, fmt, tagType, size };
+  },
+  template: `<div class="panel">
+    <div class="toolbar">
+      <el-radio-group v-model="f.status" @change="load(1)"><el-radio-button value="review">待审核</el-radio-button><el-radio-button value="public">已公开</el-radio-button><el-radio-button value="private">仅作者</el-radio-button><el-radio-button value="rejected">已驳回</el-radio-button><el-radio-button value="">全部</el-radio-button></el-radio-group>
+      <el-select v-model="f.kind" placeholder="类型" clearable style="width:120px" @change="load(1)"><el-option v-for="(v,k) in L.kind" :key="k" :label="v" :value="k" /></el-select>
+      <el-input v-model="f.q" placeholder="名称 / 上传者 ID" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" /><span class="muted">共 {{st.total}} 个</span>
+    </div>
+    <div class="asset-grid" v-loading="st.loading">
+      <div v-for="a in st.rows" :key="a.id" class="asset">
+        <div class="pv"><img v-if="isImg(a)" :src="a.url" loading="lazy"><video v-else-if="isVid(a)" :src="a.url" controls preload="metadata"></video><audio v-else-if="isAud(a)" :src="a.url" controls style="width:90%"></audio><div v-else style="color:#ddd;font-size:13px;padding:10px">🎮 {{a.meta&&a.meta.tpl}}<br><span style="font-size:12px;color:#aaa">{{a.meta&&a.meta.a}}</span></div></div>
+        <div class="bd"><b>{{a.name}}</b> <el-tag size="small">{{L.kind[a.kind]||a.kind}}</el-tag> <el-tag size="small" :type="tagType(a.status)">{{L.astatus[a.status]||a.status}}</el-tag>
+          <div class="muted">关键词：{{(a.kw||[]).join('、')||'—'}}</div><div class="muted">{{size(a.size)}} · {{fmt(a.created_at)}}</div><div class="muted">上传者：{{a.owner_name||a.owner_email||a.owner}}</div><div v-if="a.reject_reason" class="muted" style="color:#f56c6c">驳回：{{a.reject_reason}}</div></div>
+        <div class="ft"><el-button v-if="a.status!=='public'" size="small" type="success" @click="act(a,'approve')">公开到素材库</el-button><el-button v-if="a.status==='review'" size="small" type="danger" plain @click="act(a,'reject')">驳回</el-button><el-button v-if="a.status==='public'" size="small" @click="act(a,'private')">撤回公开</el-button><el-button size="small" type="danger" text @click="act(a,'delete')">删除</el-button></div>
+      </div>
+    </div>
+    <el-empty v-if="!st.loading&&!st.rows.length" description="暂无素材" />
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Reports = {
+  setup() {
+    const f = reactive({ status: 'open' }); const { st, load } = usePaged('reports', f);
+    async function act(r, op) { const note = await promptText(op === 'resolve' ? '标记已处理' : '驳回举报', '处理说明', { inputValidator: null }).catch(() => null); if (note === null) return; await api('report', { body: { id: r.id, op, note } }); ElMessage.success('已完成'); load(); window.__refreshBadges && window.__refreshBadges(); }
+    async function takedown(r) { const reason = await promptText('下架作品', '原因（会展示给作者）'); await api('work', { body: { id: r.target_id, op: 'takedown', reason } }); ElMessage.success('作品已下架，相关举报已处理'); load(); }
+    onMounted(() => load());
+    return { f, st, load, act, takedown, L, fmt, tagType };
+  },
+  template: `<div class="panel">
+    <div class="toolbar"><el-radio-group v-model="f.status" @change="load(1)"><el-radio-button value="open">待处理</el-radio-button><el-radio-button value="resolved">已处理</el-radio-button><el-radio-button value="dismissed">已驳回</el-radio-button><el-radio-button value="">全部</el-radio-button></el-radio-group><span class="muted">共 {{st.total}} 条</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe>
+      <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" />
+      <el-table-column label="被举报对象" min-width="200"><template #default="{row}"><b>{{row.work_title||row.target_id}}</b><div class="muted">作品状态：{{L.wstatus[row.work_status]||row.work_status||'—'}}</div></template></el-table-column>
+      <el-table-column prop="reason" label="举报原因" min-width="200" />
+      <el-table-column label="举报人" width="180"><template #default="{row}"><span class="muted">{{row.reporter_email||row.user_id}}</span></template></el-table-column>
+      <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.rstatus[row.status]}}</el-tag></template></el-table-column>
+      <el-table-column label="处理" width="160"><template #default="{row}"><span class="muted">{{row.handled_by}} {{row.note}}</span></template></el-table-column>
+      <el-table-column label="操作" width="230" fixed="right"><template #default="{row}"><template v-if="row.status==='open'"><el-button size="small" type="danger" @click="takedown(row)" v-if="row.target_kind==='work'&&row.work_status==='live'">下架作品</el-button><el-button size="small" type="success" plain @click="act(row,'resolve')">已处理</el-button><el-button size="small" @click="act(row,'dismiss')">驳回</el-button></template></template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Orders = {
+  setup() {
+    const f = reactive({ user: '', status: '', test: '' }); const { st, load } = usePaged('orders', f);
+    async function refund(o) { const reason = await promptText('订单退款', '退款原因（会从用户余额扣回 ' + o.gems + ' 钻石）'); await api('order', { body: { id: o.id, op: 'refund', reason } }); ElMessage.success('已退款'); load(); }
+    onMounted(() => load());
+    return { f, st, load, refund, L, fmt, tagType, money, can };
+  },
+  template: `<div class="panel">
+    <el-alert type="info" :closable="false" style="margin-bottom:12px" title="目前是测试支付：接入 App Store / Google Play 正式收款后，真实订单会显示在这里（标记为非测试）。" />
+    <div class="toolbar"><el-input v-model="f.user" placeholder="用户 ID" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" />
+      <el-select v-model="f.status" placeholder="状态" clearable style="width:120px" @change="load(1)"><el-option label="已支付" value="paid" /><el-option label="已退款" value="refunded" /></el-select>
+      <el-select v-model="f.test" placeholder="测试 / 正式" clearable style="width:130px" @change="load(1)"><el-option label="仅正式订单" value="0" /><el-option label="仅测试订单" value="1" /></el-select>
+      <span class="muted">共 {{st.total}} 单 · 合计 {{money(st.extra.cents)}}</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe>
+      <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="订单号" width="200"><template #default="{row}"><span class="mono">{{row.id}}</span></template></el-table-column>
+      <el-table-column label="用户" min-width="180"><template #default="{row}">{{row.email||'游客'}}<div class="muted mono">{{row.user_id}}</div></template></el-table-column>
+      <el-table-column prop="sku" label="商品" width="120" /><el-table-column prop="gems" label="钻石" width="70" /><el-table-column label="金额" width="90" :formatter="r=>money(r.price_cents)" /><el-table-column prop="platform" label="渠道" width="80" />
+      <el-table-column label="状态" width="130"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ostatus[row.status]||row.status}}</el-tag> <el-tag v-if="row.test" size="small" type="warning">测试</el-tag></template></el-table-column>
+      <el-table-column label="操作" width="90"><template #default="{row}"><el-button v-if="row.status==='paid'&&can('gems')" size="small" type="danger" text @click="refund(row)">退款</el-button></template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Ledger = {
+  setup() {
+    const f = reactive({ user: '', reason: '', dir: '' }); const { st, load } = usePaged('ledger', f);
+    const kindName = k => ({ welcome: '新人礼', daily: '每日签到', earn: '免费领取', spend: '消费', 'upload': '上传素材', admin_grant: '后台补发', admin_deduct: '后台扣除', refund: '退款扣回', gems_10: '充值', gems_60: '充值', gems_150: '充值', gems_400: '充值' }[k] || k);
+    onMounted(() => load());
+    return { f, st, load, fmt, kindName };
+  },
+  template: `<div class="panel" v-if="st.extra.summary"><h3>近 30 天钻石来源与去向</h3><el-table :data="st.extra.summary" size="small"><el-table-column label="类型" :formatter="r=>kindName(r.kind)" /><el-table-column prop="kind" label="原始标识" /><el-table-column prop="n" label="笔数" width="90" /><el-table-column label="合计" width="120"><template #default="{row}"><span :style="{color:row.gems>0?'#67c23a':'#f56c6c'}">{{row.gems>0?'+':''}}{{row.gems}}</span></template></el-table-column></el-table></div>
+  <div class="panel">
+    <div class="toolbar"><el-input v-model="f.user" placeholder="用户 ID" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" /><el-input v-model="f.reason" placeholder="原因关键词，如 upload / admin" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" />
+      <el-select v-model="f.dir" placeholder="收支" clearable style="width:110px" @change="load(1)"><el-option label="收入" value="in" /><el-option label="支出" value="out" /></el-select><el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 笔</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe size="small">
+      <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="用户" min-width="200"><template #default="{row}">{{row.email||'游客'}} <span class="muted mono">{{row.user_id}}</span></template></el-table-column>
+      <el-table-column label="变动" width="90"><template #default="{row}"><span :style="{color:row.delta>0?'#67c23a':'#f56c6c'}">{{row.delta>0?'+':''}}{{row.delta}}</span></template></el-table-column>
+      <el-table-column prop="reason" label="原因" min-width="180" /><el-table-column prop="balance" label="余额" width="90" />
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Notices = {
+  setup() {
+    const rows = ref([]), dlg = ref(false), n = reactive({});
+    async function load() { rows.value = (await api('notices')).rows; }
+    function edit(x) { Object.keys(n).forEach(k => delete n[k]); Object.assign(n, { lang: 'all', kind: 'banner', active: true }, x || {}); dlg.value = true; }
+    async function save() { await api('notices', { body: { notice: n } }); dlg.value = false; ElMessage.success('已保存，App 内 1 分钟内生效'); load(); }
+    async function del(x) { await ElMessageBox.confirm('删除这条公告？', '确认', { type: 'warning' }); await api('notices', { body: { op: 'delete', id: x.id } }); load(); }
+    onMounted(load);
+    return { rows, dlg, n, edit, save, del, fmt };
+  },
+  template: `<div class="panel"><div class="toolbar"><el-button type="primary" @click="edit()">新建公告</el-button><span class="muted">公告会在 App 首页顶部显示（横幅）或打开 App 时弹出（弹窗）。</span></div>
+    <el-table :data="rows" stripe><el-table-column prop="title" label="标题" min-width="160" /><el-table-column prop="body" label="内容" min-width="240" show-overflow-tooltip />
+      <el-table-column label="语言" width="80" :formatter="r=>r.lang==='all'?'全部':r.lang" /><el-table-column label="形式" width="80" :formatter="r=>r.kind==='popup'?'弹窗':'横幅'" />
+      <el-table-column label="状态" width="80"><template #default="{row}"><el-tag size="small" :type="row.active?'success':'info'">{{row.active?'启用':'停用'}}</el-tag></template></el-table-column>
+      <el-table-column label="有效期" width="300" :formatter="r=>(r.starts_at?fmt(r.starts_at):'立即')+' → '+(r.ends_at?fmt(r.ends_at):'长期')" />
+      <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" @click="edit(row)">编辑</el-button><el-button size="small" type="danger" text @click="del(row)">删除</el-button></template></el-table-column></el-table></div>
+    <el-dialog v-model="dlg" :title="n.id?'编辑公告':'新建公告'" width="540px"><el-form label-width="80px">
+      <el-form-item label="标题"><el-input v-model="n.title" maxlength="80" show-word-limit /></el-form-item>
+      <el-form-item label="内容"><el-input v-model="n.body" type="textarea" :rows="4" maxlength="1000" show-word-limit /></el-form-item>
+      <el-form-item label="语言"><el-select v-model="n.lang"><el-option label="全部语言" value="all" /><el-option label="中文" value="zh" /><el-option label="English" value="en" /><el-option label="日本語" value="ja" /><el-option label="한국어" value="ko" /><el-option label="Español" value="es" /></el-select></el-form-item>
+      <el-form-item label="形式"><el-radio-group v-model="n.kind"><el-radio value="banner">首页横幅</el-radio><el-radio value="popup">打开时弹窗</el-radio></el-radio-group></el-form-item>
+      <el-form-item label="开始"><el-date-picker v-model="n.starts_at" type="datetime" placeholder="立即" /></el-form-item>
+      <el-form-item label="结束"><el-date-picker v-model="n.ends_at" type="datetime" placeholder="长期" /></el-form-item>
+      <el-form-item label="启用"><el-switch v-model="n.active" /></el-form-item></el-form>
+      <template #footer><el-button @click="dlg=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template></el-dialog>`,
+};
+
+const I18n = {
+  setup() {
+    const f = reactive({ lang: 'ja', q: '' }); const { st, load } = usePaged('i18n', f); const add = reactive({ show: false, lang: 'ja', src: '', dst: '' });
+    async function save(r) { await api('i18n', { body: { op: 'edit', h: r.h, dst: r.dst } }); ElMessage.success('已保存'); }
+    async function del(r) { await ElMessageBox.confirm('删除后会在用户下次看到时重新机器翻译。', '删除词条', { type: 'warning' }); await api('i18n', { body: { op: 'delete', h: r.h } }); load(); }
+    async function doAdd() { await api('i18n', { body: Object.assign({ op: 'add' }, add) }); add.show = false; ElMessage.success('已添加'); load(1); }
+    onMounted(() => load());
+    return { f, st, load, save, del, add, doAdd, fmt };
+  },
+  template: `<div class="panel"><div class="toolbar">
+      <el-radio-group v-model="f.lang" @change="load(1)"><el-radio-button value="ja">日本語</el-radio-button><el-radio-button value="ko">한국어</el-radio-button><el-radio-button value="es">Español</el-radio-button><el-radio-button value="en">English</el-radio-button><el-radio-button value="zh">中文</el-radio-button></el-radio-group>
+      <el-input v-model="f.q" placeholder="搜索原文或译文" clearable style="width:240px" @keyup.enter="load(1)" @clear="load(1)" /><el-button @click="add.show=true">新增词条</el-button>
+      <span class="muted">共 {{st.total}} 条 · <span v-for="l in (st.extra.langs||[])" :key="l.lang">{{l.lang}} {{l.n}}　</span></span></div>
+    <el-alert type="info" :closable="false" style="margin-bottom:10px" title="这里是界面与剧情的机器翻译缓存，所有用户共用。直接改「译文」后点保存，App 端约 10 分钟内生效。" />
+    <el-table :data="st.rows" v-loading="st.loading" stripe size="small">
+      <el-table-column prop="src" label="原文（英文）" min-width="260" />
+      <el-table-column label="译文" min-width="300"><template #default="{row}"><el-input v-model="row.dst" type="textarea" autosize size="small" /></template></el-table-column>
+      <el-table-column label="更新" width="160" :formatter="r=>fmt(r.at)" />
+      <el-table-column label="操作" width="130"><template #default="{row}"><el-button size="small" type="primary" @click="save(row)">保存</el-button><el-button size="small" type="danger" text @click="del(row)">删除</el-button></template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, sizes, prev, pager, next" :total="st.total" v-model:current-page="st.page" v-model:page-size="st.size" @current-change="load()" @size-change="load(1)" /></div></div>
+    <el-dialog v-model="add.show" title="新增词条" width="480px"><el-form label-width="60px"><el-form-item label="语言"><el-select v-model="add.lang"><el-option v-for="l in ['ja','ko','es','en','zh']" :key="l" :label="l" :value="l" /></el-select></el-form-item><el-form-item label="原文"><el-input v-model="add.src" type="textarea" /></el-form-item><el-form-item label="译文"><el-input v-model="add.dst" type="textarea" /></el-form-item></el-form>
+      <template #footer><el-button @click="add.show=false">取消</el-button><el-button type="primary" @click="doAdd">添加</el-button></template></el-dialog>`,
+};
+
+const Config = {
+  setup() {
+    const v = ref(null), meta = ref([]);
+    async function load() { const j = await api('config'); v.value = JSON.parse(JSON.stringify(j.values)); meta.value = j.meta; }
+    async function save() { await ElMessageBox.confirm('保存后立即对所有用户生效。', '确认修改配置', { type: 'warning' }); const j = await api('config', { body: { values: v.value } }); ElMessage.success('已保存 ' + Object.keys(j.changed).length + ' 项'); load(); }
+    const skuRows = computed(() => v.value ? Object.entries(v.value.skus || {}).map(([k, x]) => ({ k, x })) : []);
+    onMounted(load);
+    return { v, meta, save, load, skuRows, fmt };
+  },
+  template: `<div v-if="v">
+    <div class="panel"><h3>新用户与钻石</h3><el-form label-width="160px" style="max-width:640px">
+      <el-form-item label="新人礼（钻石）"><el-input-number v-model="v.welcome_gems" :min="0" /></el-form-item>
+      <el-form-item label="每日签到（钻石）"><el-input-number v-model="v.daily_gems" :min="0" /></el-form-item>
+      <el-form-item label="每日免费领取上限"><el-input-number v-model="v.earn_cap" :min="0" /><span class="muted">　任务、广告等免费来源每人每天最多</span></el-form-item>
+      <el-form-item label="首充双倍"><el-switch v-model="v.first_purchase_double" /></el-form-item>
+      <el-form-item label="允许游客试玩"><el-switch v-model="v.guest_allowed" /><span class="muted">　关闭后必须登录才能进入（App Store 审核一般建议保留游客）</span></el-form-item></el-form></div>
+    <div class="panel"><h3>上传素材收费（钻石 / 个）</h3><el-form label-width="160px" :inline="true">
+      <el-form-item label="音频"><el-input-number v-model="v.upload_price.audio" :min="0" /></el-form-item><el-form-item label="图片"><el-input-number v-model="v.upload_price.image" :min="0" /></el-form-item>
+      <el-form-item label="视频"><el-input-number v-model="v.upload_price.video" :min="0" /></el-form-item><el-form-item label="小游戏"><el-input-number v-model="v.upload_price.game" :min="0" /></el-form-item>
+      <el-form-item label="每人每天上传上限"><el-input-number v-model="v.upload_daily_limit" :min="0" /></el-form-item></el-form></div>
+    <div class="panel"><h3>AI 帮我想 · 换一个</h3><el-form label-width="160px" :inline="true"><el-form-item label="免费次数"><el-input-number v-model="v.reroll_free" :min="0" /></el-form-item><el-form-item label="之后每次（钻石）"><el-input-number v-model="v.reroll_price" :min="0" /></el-form-item></el-form></div>
+    <div class="panel"><h3>社区</h3><el-form label-width="160px" style="max-width:640px">
+      <el-form-item label="发布后自动上线"><el-switch v-model="v.community_auto_live" /><span class="muted">　关闭后所有新作品都要人工审核</span></el-form-item>
+      <el-form-item label="举报自动下线阈值"><el-input-number v-model="v.report_threshold" :min="1" /><span class="muted">　被举报达到该次数自动转为待审核</span></el-form-item>
+      <el-form-item label="每人每天发布上限"><el-input-number v-model="v.publish_daily_limit" :min="0" /></el-form-item></el-form></div>
+    <div class="panel"><h3>充值商品</h3><el-table :data="skuRows" size="small" style="max-width:640px"><el-table-column prop="k" label="商品 ID" /><el-table-column label="钻石"><template #default="{row}"><el-input-number v-model="row.x.gems" :min="0" size="small" /></template></el-table-column><el-table-column label="价格（美分）"><template #default="{row}"><el-input-number v-model="row.x.usd" :min="0" size="small" /></template></el-table-column></el-table>
+      <p class="muted">价格需与 App Store / Google Play 后台的商品价格保持一致。</p></div>
+    <div class="panel"><h3>维护提示</h3><el-input v-model="v.maintenance" placeholder="填写后 App 顶部会显示这条提示；留空则不显示" /></div>
+    <div class="panel" style="display:flex;gap:10px;align-items:center"><el-button type="primary" size="large" @click="save">保存全部配置</el-button><el-button @click="load">撤销修改</el-button>
+      <span class="muted">最近修改：<span v-for="m in meta" :key="m.key">{{m.key}}（{{m.updated_by}} {{fmt(m.updated_at)}}）　</span></span></div>
+  </div><el-skeleton v-else :rows="8" animated />`,
+};
+
+const Admins = {
+  setup() {
+    const rows = ref([]), dlg = reactive({ show: false, username: '', name: '', role: 'reviewer', password: '' });
+    async function load() { rows.value = (await api('admins')).rows; }
+    async function create() { await api('admins', { body: Object.assign({ op: 'create' }, dlg) }); dlg.show = false; ElMessage.success('已创建，请把用户名和初始密码交给同事，并提醒其登录后修改密码'); load(); }
+    async function op(a, o, extra) { if (o === 'delete') await ElMessageBox.confirm('删除管理员 ' + a.username + '？', '确认', { type: 'error' }); const j = await api('admins', { body: Object.assign({ op: o, id: a.id }, extra || {}) }); if (j.password) ElMessageBox.alert('新密码：<b class="mono">' + j.password + '</b>', '已重置', { dangerouslyUseHTMLString: true }); else ElMessage.success('已完成'); load(); }
+    onMounted(load);
+    return { rows, dlg, create, op, L, fmt, me: S.me };
+  },
+  template: `<div class="panel"><div class="toolbar"><el-button type="primary" @click="dlg.show=true">新建管理员</el-button></div>
+    <el-table :data="rows" stripe><el-table-column prop="username" label="用户名" width="140" /><el-table-column prop="name" label="姓名" width="140" />
+      <el-table-column label="角色" width="170"><template #default="{row}"><el-select :model-value="row.role" size="small" :disabled="row.id===me.id" @change="v=>op(row,'update',{role:v,name:row.name})"><el-option v-for="(v,k) in L.role" :key="k" :label="v" :value="k" /></el-select></template></el-table-column>
+      <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.status==='active'?'success':'info'">{{row.status==='active'?'启用':'停用'}}</el-tag></template></el-table-column>
+      <el-table-column label="最近登录" width="170" :formatter="r=>fmt(r.last_login)" /><el-table-column label="创建" width="200" :formatter="r=>fmt(r.created_at)+' · '+(r.created_by||'')" />
+      <el-table-column label="操作" min-width="230"><template #default="{row}"><template v-if="row.id!==me.id"><el-button size="small" @click="op(row,'resetpw')">重置密码</el-button><el-button size="small" v-if="row.status==='active'" @click="op(row,'disable')">停用</el-button><el-button size="small" v-else type="success" plain @click="op(row,'enable')">启用</el-button><el-button size="small" type="danger" text @click="op(row,'delete')">删除</el-button></template><span v-else class="muted">（当前账号）</span></template></el-table-column></el-table></div>
+    <div class="panel"><h3>角色说明</h3><el-table :data="Object.keys(L.role).map(k=>({k,n:L.role[k],d:L.roleDesc[k]}))" size="small"><el-table-column prop="n" label="角色" width="140" /><el-table-column prop="d" label="可以做什么" /></el-table></div>
+    <el-dialog v-model="dlg.show" title="新建管理员" width="440px"><el-form label-width="80px">
+      <el-form-item label="用户名"><el-input v-model="dlg.username" placeholder="字母数字，登录用" /></el-form-item><el-form-item label="姓名"><el-input v-model="dlg.name" /></el-form-item>
+      <el-form-item label="角色"><el-select v-model="dlg.role"><el-option v-for="(v,k) in L.role" :key="k" :label="v+' — '+L.roleDesc[k]" :value="k" /></el-select></el-form-item>
+      <el-form-item label="初始密码"><el-input v-model="dlg.password" type="password" show-password placeholder="至少 8 位" /></el-form-item></el-form>
+      <template #footer><el-button @click="dlg.show=false">取消</el-button><el-button type="primary" @click="create">创建</el-button></template></el-dialog>`,
+};
+
+const Audit = {
+  setup() { const f = reactive({ admin: '', action: '', target: '' }); const { st, load } = usePaged('audit', f); f.size = 50; onMounted(() => load()); return { f, st, load, fmt, L }; },
+  template: `<div class="panel"><div class="toolbar"><el-input v-model="f.admin" placeholder="操作人" clearable style="width:160px" @keyup.enter="load(1)" @clear="load(1)" />
+      <el-select v-model="f.action" placeholder="操作类型" clearable filterable style="width:180px" @change="load(1)"><el-option v-for="(v,k) in L.action" :key="k" :label="v" :value="k" /></el-select>
+      <el-input v-model="f.target" placeholder="对象 ID（用户 / 作品…）" clearable style="width:240px" @keyup.enter="load(1)" @clear="load(1)" /><el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 条</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="admin_name" label="操作人" width="120" />
+      <el-table-column label="操作" width="140" :formatter="r=>L.action[r.action]||r.action" /><el-table-column label="对象" width="230"><template #default="{row}"><span class="muted">{{row.target_kind}}</span> <span class="mono">{{row.target_id}}</span></template></el-table-column>
+      <el-table-column label="详情" min-width="240"><template #default="{row}"><span class="mono">{{JSON.stringify(row.detail)==='{}'?'':JSON.stringify(row.detail)}}</span></template></el-table-column><el-table-column prop="ip" label="IP" width="130" /></el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div></div>`,
+};
+
+const Events = {
+  setup() {
+    const days = ref(14), d = ref(null), el = ref();
+    async function load() { d.value = await api('events', { query: { days: days.value } }); await nextTick(); const names = [...new Set(d.value.rows.map(x => x.name))], ds = [...new Set(d.value.rows.map(x => fmtD(x.day)))]; chart(el.value, { tooltip: { trigger: 'axis' }, legend: { type: 'scroll', data: names.map(n => L.event[n] || n) }, grid: { left: 40, right: 20, top: 50, bottom: 30 }, xAxis: { type: 'category', data: ds }, yAxis: { type: 'value' }, series: names.map(n => ({ name: L.event[n] || n, type: 'line', smooth: true, data: ds.map(dd => (d.value.rows.find(x => x.name === n && fmtD(x.day) === dd) || {}).users || 0) })) }); }
+    onMounted(load); return { days, d, el, load, L };
+  },
+  template: `<div class="panel"><div class="toolbar"><el-radio-group v-model="days" @change="load"><el-radio-button :value="7">7 天</el-radio-button><el-radio-button :value="14">14 天</el-radio-button><el-radio-button :value="30">30 天</el-radio-button><el-radio-button :value="90">90 天</el-radio-button></el-radio-group></div>
+    <h3>每日人数（按事件）</h3><div ref="el" class="chart" style="height:340px"></div></div>
+    <div class="panel" v-if="d"><h3>事件汇总</h3><el-table :data="d.totals" size="small"><el-table-column label="事件" :formatter="r=>L.event[r.name]||r.name" /><el-table-column prop="name" label="标识" /><el-table-column prop="users" label="人数" width="100" /><el-table-column prop="n" label="次数" width="100" /></el-table></div>`,
+};
+
+/* ================= app shell ================= */
+const app = createApp({
+  template: '#root-tpl',
+  setup() {
+    const route = ref((location.hash || '#dashboard').slice(1)), collapsed = ref(window.innerWidth < 900), busy = ref(false), reloadKey = ref(0);
+    const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
+    const payTest = ref(false); window.__payTest = payTest;
+    const titles = { dashboard: '数据看板', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
+    function go(k) { route.value = k; location.hash = k; }
+    window.addEventListener('hashchange', () => { route.value = (location.hash || '#dashboard').slice(1); });
+    async function login() {
+      busy.value = true;
+      try { const j = await api('login', { body: { username: lf.username, password: lf.password } }); S.token = j.token; S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); lf.password = ''; ElMessage.success('欢迎，' + (j.admin.name || j.admin.username)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); }
+      catch (_) {} finally { busy.value = false; }
+    }
+    const permOf = r => ({ dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
+    const firstPage = () => Object.keys(titles).find(k => can(permOf(k))) || 'dashboard';
+    async function refreshBadges() { try { if (!can('dashboard')) return; const j = await api('dashboard'); badge.works = j.kpi.works_pending; badge.assets = j.kpi.assets_review; badge.reports = j.kpi.reports_open; payTest.value = j.payTest; } catch (_) {} }
+    window.__refreshBadges = refreshBadges;
+    async function changePw() { const j = await api('password', { body: pw }); S.token = j.token; localStorage.setItem('miru_admin_tok', j.token); pwDlg.value = false; pw.old = pw.password = ''; ElMessage.success('密码已修改'); }
+    function cmd(c) { if (c === 'pw') pwDlg.value = true; if (c === 'out') { logout(); ElMessage.success('已退出'); } }
+    onMounted(async () => { if (S.token) { try { const j = await api('me'); S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); } catch (_) {} } });
+    return { token: computed(() => S.token), me: computed(() => S.me), route, collapsed, busy, lf, login, go, titles, can, roleName: L.role, pwDlg, pw, changePw, cmd, badge, payTest, reloadKey };
+  },
+});
+app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+for (const [k, c] of Object.entries(ElementPlusIconsVue)) app.component(k, c);
+Object.entries({ dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
+app.mount('#app');
+</script>
+</body>
+</html>

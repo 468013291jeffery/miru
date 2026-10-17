@@ -9206,7 +9206,7 @@ async function cWriteScene(wid,first){const w=wd(wid),P=w.pack,c=P.card,L=w.cast
  return first?cFirstScene(c,L,S2):null}
 /* ---------- wizard ---------- */
 let CW=null;
-function cNew(){CW={step:1,idea:"",card:null,picks:{as:"side",tone:"pull",len:"3"}};cRender()}
+function cNew(){CW={step:1,idea:"",card:null,picks:{as:"side",tone:"pull",len:"3",mode:"mix",twist:"mid"}};cRender()}
 function cRender(){const c=CW.card;let b="";
  if(CW.step===1){b='<div class="cwq">'+LL("你最想体验一个什么故事？","What story do you want to live?")+'</div><p class="xs faint">'+LL("一句话就行。AI 会补全题材、场景、人物和秘密——之后都能改。","One line is enough. AI fills in the rest — you can change all of it later.")+'</p>'+
   '<textarea id="cwIdea" rows="3" class="cwta" placeholder="'+esc(LL("例如：深夜有个受伤的吸血鬼敲我的门","e.g. A wounded vampire knocks on my door at 2 a.m."))+'">'+esc(CW.idea)+'</textarea>'+
@@ -9219,6 +9219,8 @@ function cRender(){const c=CW.card;let b="";
   cRow("as",LL("你以什么身份进入","Who are you"),[["side",LL("我自己","Myself")],["lead",LL("扮演 "+c.lead.name,"Play "+c.lead.name)],["watch",LL("旁观导演","Direct from outside")]])+
   cRow("tone",LL("情绪走向","Mood"),[["sweet",LL("甜","Sweet")],["pull",LL("拉扯","Push-pull")],["dark",LL("暗黑危险","Dark")],["mystery",LL("悬疑","Mystery")]])+
   cRow("len",LL("篇幅","Length"),[["1",LL("短篇 1 章","1 chapter")],["3",LL("迷你季 3 章","3 chapters")],["10",LL("标准季 10 章","10 chapters")]])+
+  cRow("mode",LL("故事节奏","Pacing"),[["plot",LL("强剧情","Plot-driven")],["mix",LL("剧情+日常","Mixed")],["daily",LL("日常陪伴","Everyday")]])+
+  cRow("twist",LL("反转密度","Twists"),[["low",LL("少","Few")],["mid",LL("中","Some")],["high",LL("多","Many")]])+
   '<button class="btn btn-p btn-block" style="margin-top:16px" data-cwgo="1">▶ '+LL("生成第一幕并试玩 · 免费","Write scene 1 & play · free")+'</button>'+
   '<p class="xs faint" style="text-align:center;margin-top:6px">'+LL("之后的章节在「工作台」里按量生成，手动修改永远免费","Later chapters are generated in the Workbench, priced by size; hand edits are free")+'</p>'}
  screen("s-cnew",'<div class="topbar"><button class="ibtn" data-back="1">'+ic("back")+'</button><h2 class="grow" style="font-size:18px">'+LL("一句话写一部剧","Write a story from one line")+'</h2><span class="xs faint">'+CW.step+' / 2</span></div><div class="scroll pad">'+b+'</div>');show("s-cnew")}
@@ -9698,7 +9700,7 @@ async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_P
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
  if(!r.ok){clearTimeout(tm);let msg="";try{const j=await r.json();msg=(j.error&&(j.error.message||j.error.code))||j.message||""}catch(_){}
   throw {code:r.status===401||r.status===403?"bad_key":r.status===429?"rate_limited":"http_"+r.status,message:msg}}
- if(!stream){const j=await r.json();clearTimeout(tm);const ch0=(j.choices||[])[0]||{};return {text:lcClean(ch0.message&&ch0.message.content),truncated:ch0.finish_reason==="length"}}
+ if(!stream){let j;try{j=await r.json()}catch(e){clearTimeout(tm);throw {code:"bad_response",message:String(e&&e.message||e)}}clearTimeout(tm);if(j&&j.error&&!j.choices)throw {code:String(j.error.code||"upstream"),message:j.error.message||""};const ch0=(j.choices||[])[0]||{};return {text:lcClean(ch0.message&&ch0.message.content),truncated:ch0.finish_reason==="length"}}
  const rd=r.body.getReader(),dec=new TextDecoder();let buf="",text="",fin=null;
  while(true){const {done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop();
   for(const ln of lines){const s=ln.trim();if(!s.startsWith("data:"))continue;const d=s.slice(5).trim();if(d==="[DONE]")continue;try{const j=JSON.parse(d),c0=(j.choices||[])[0]||{};const dl=c0.delta&&c0.delta.content||"";if(c0.finish_reason)fin=c0.finish_reason;if(dl){text+=dl;const tx=lcClean(text);opts.onText({text:tx,delta:dl})}}catch(_){}}}
@@ -9971,28 +9973,23 @@ packPrompt=function(th){let s=_packPrompt56(th);if(!th||!th.pk)return s;try{cons
    1) MIRU_GEN_RULES — appended to every creator-side LLM call (architect / scene writer / rewrite / options), so what users generate is
       shaped before it exists.
    2) miruQA(world) — runs on publish (creator, import). Red = must fix (content safety blocks publishing), amber = should fix, green = passed. */
-const MIRU_GEN_RULES=`【MIRU 生成总则 · 所有 AI 必须遵守】
-A. 安全红线：所有角色是虚构的成年人(21+)；禁止露骨性描写、未成年人恋爱/性暗示、真实人物、他人版权角色；暴力点到为止。
-B. 系统1 · 世界内核：世界先有规则再有剧情——地点、势力、秘密、代价各自写清；任何剧情不得违背已公开的世界规则与已发生的正史。
-C. 六 AI 分工（一个 AI 只做一件事）：①架构师：大纲、章节目标、分支与结局结构；②编剧：把一场戏写成台词/动作/心声；③角色：只按人物卡和当前弧光说话；④导演：节奏、场景、BGM/特效/小游戏的落点；⑤审稿：查规则、查红线、查可达性；⑥状态由引擎管理——AI 只写文字，永远不直接改好感、标记、道具、结局。
-D. 章节：每章 = 1 个目标 + 1 个地点时间 + 1 个核心冲突 + 至少 1 个读者介入点；结尾留钩子；单章 30–90 行。
-E. 分支：短分支（1–6 行后汇合）只改语气与关系数值；长分支会改变后面几章甚至十几章，必须设标记(flag)并在之后被读取；每 2–3 章至少汇合一次，避免无限发散；A/B/C 结局都必须可达。
-F. 道具：每件道具有「获得点」和「使用点」；道具是解决冲突的另一种方法，绝不是唯一方法——没有道具也必须能继续（给出替代解法）。
-G. 人物弧光：主要角色写清 起点→转折→终点，并允许退化；角色的言行必须符合他当前的弧光阶段；关键时刻由角色依据自己的阶段自主做决定——同一件事，在前期、中期、后期可以做出完全不同的选择。
-H. 自由对话：角色必须回应读者的原话（尤其是提问）；不推进主线、不替读者做正式选择；记住读者的承诺和透露的秘密，之后可以提起；一句话的影响可以延后出现。
-I. 知识边界：角色只知道自己亲眼见过或被告知的事；秘密分级揭示，关系阶段不够不得说破。
-J. 付费：付费只买「更多/更深」（照片、语音、番外、换一句），从不买「继续」；每个付费点都有免费跳过；观看模式能免费走到一个完整结局。
-K. 媒体：BGM、特效、音效、小游戏由关键词或导演指令触发，全部可跳过；每章最多 2 个小游戏，不打断高潮台词。
-M. 人物母档（每个主要角色四部分）：基础画像（身份/经历/能力/习惯/偏好/语言/价值观，稳定，变化需依据）· 当前状态（情绪/压力/当前目标/掌握的信息/正在隐瞒的事）· 关系档案（对每个人的好感、信任、亲密边界、共同经历、承诺与矛盾）· 弧光档案（核心矛盾、起始信念、成长方向、停滞与退化路径、关键行为证明）。
-N. 人设必须能解释行为：写清价值排序（诚实/忠诚/保护/自由/公平冲突时先选谁）、自我认知与实际行为的矛盾、对陌生人/朋友/恋人/权威/对手的差异、压力反应、接受与表达关爱的方式、冲突与修复方式、无人推动时会主动做什么、改变的阻力、成长后仍保留的特征。
-O. 互动规则卡：会影响数值/分支的重要人设，写成「对应人设→触发行为→知情条件→情境条件→角色怎么解读→即时反馈→数值变化(幅度与上限)→记忆写入→延迟后果→修复方式→重复触发是否递减」。不写「帮他=信任+5」这种无条件规则。
-P. 数值：每个主要角色 2–3 个关系指标 + 1–2 个弧光指标；每项有初始值、上下限、阶段区间、单场景上限、重复递减；好感与信任可以反向变化；事件标记（是否履约/隐瞒/承担）记录事实——普通正向互动不能抹掉重大事件，未修复的违约会锁住需要托付的分支。
-Q. 弧光五阶段：起始模式→动摇→尝试→考验→稳定或转向；推进必须同时满足「数值到位 + 经历过必要冲突 + 做出对应行为」，每阶段都有推进/停滞/退化三条路；退化必须有事件依据，不能因为玩家少聊一次就发生；现实离线时间不等于故事里被抛弃。
-R. 角色主动性：根据未完成的承诺、共同目标、已知偏好、底线，角色会主动联系、关心、提方案、拒绝、道歉或暂时退出——不是只等玩家触发。
-S. 记忆生命周期：发生→被谁感知→如何理解→记录→后续调用→兑现/修正/结束。玩家的偏好记为「玩家陈述」，猜测记为「猜测」（不得升级为世界事实），角色误解与真实事件分开保存，承诺记录对象/内容/兑现节点，重复内容合并不重复加分。
-T. 玩家角色 vs NPC：玩家角色的固定背景由作者定，处事方式、亲密边界、价值选择由玩家塑造；系统可以记录倾向用于开放选项，但不能替玩家断言「你爱上了他 / 你原谅了他」。
-U. 人物验收情境（生成人物卡后自测）：收到喜欢的礼物、被公开质疑、被善意隐瞒、被玩家拒绝亲近、玩家违约后道歉、利益与原则冲突、不同弧光阶段遇到同一问题、不知道关键真相——反应要可解释、彼此有区别、不越过知识权限。
-L. 风格：对白口语化、有潜台词；一句话里少用抽象情绪词，多给一个具体感官细节；每个角色口吻不同。`;
+const MIRU_GEN_RULES=`【MIRU 互动剧本生成规则 v1.0 · 所有生成都必须遵守】（“必须/不得”为硬规则；“建议/默认”为可调参数；“可”为可选能力）
+00 层级：本次用户要求 → 已确认项目设定 → 本规则硬规则 → 本作模式配置 → 建议默认值。内容标注「已确认 / 生成提案 / 待确定」，不得用猜测覆盖已确认事实；只生成本次要求的层级（架构/人物/节奏与分支/场景/正文/局部修订），未要求正文不展开对白；修改上游时同步更新下游，同一设定只保留一个生效版本。
+01 安全红线：所有角色是虚构成年人(21+)；禁止露骨性描写、未成年人恋爱或性暗示、真实人物、他人版权角色；暴力点到为止。
+02 输入配置：先明确 体验承诺（玩家通过何种参与获得何种感受）、玩家身份边界（固定背景/可塑造部分/初始关系）、世界（原创或已有、陌生度）、故事模式（强剧情/混合/日常陪伴）、内容形态（有限主线/持续陪伴/混合）、交互（按钮/自由输入/混合）、反转密度（低/中/高）、路线预算、是否启用道具与付费。未启用付费时不主动生成付费门槛。
+03 生成顺序：定位 → 世界与身份边界 → 人物母档 → 四轴结局方向 → 阶段主干 → 认知与情绪链 → 分支与状态 → 场景卡 → 正文 → 回填。不得先堆对白再反推结构；正文里发生的行为要回填进状态、记忆、弧光与结局资格。
+04 世界与开篇（R06–R10）：作者端世界事实完整、不随剧情需要改变。开篇优先“见人”：用具体行为（他怎么对待玩家的处境、拒绝、错误、弱者与利益取舍）呈现一个核心吸引点和他对玩家的初始态度，并给玩家一个现在就能回应的空间；不用旁白宣布“他很温柔/很强”。开篇交代清楚：玩家是谁、在哪里、发生了什么、能做什么。冲突按题材安排，不强制开场就吵架。初识不得无理由深爱。信息分层：世界类型/基调/身份限制在开篇讲清；行动的能力、代价、风险在玩家决定之前讲清；历史、组织、深层秘密在相关或被问到时再放。角色不长时间当讲解员。
+05 人物母档（R11–R17）：主要人物分四部分：稳定画像（身份经历、能力限制、喜好厌恶、具体偏好、小习惯口头禅、语言节奏、欲望恐惧、价值排序、自我认知与实际矛盾、压力反应、亲密边界、表达与接受关爱方式、冲突与修复方式、主动目标、改变阻力、成长后保留的特征）· 当前状态 · 对每个人的关系档案 · 弧光档案。反应 = 画像 + 知情范围 + 情境压力 + 关系阶段 + 弧光阶段；不知道的事不能提前针对性反应；短暂愤怒不是人格退化。会影响分支的人设写成互动规则卡（依据→触发→知情条件→情境→角色解读→即时反馈→数值→记忆→延迟后果→修复→重复递减）。数值：每人 2–3 个关系指标 + 1–2 个弧光指标，有初值/上下限/单场上限/重复递减；好感≠信任；闲聊加分不能抵消背叛、违约、越界。弧光：起始模式→动摇→尝试→考验→稳定或转向，需倾向变化+必要经历+行为证明同时成立，可停滞可退化，不因一次送礼跳过考验，不因漏聊一次退化。角色可主动分享、提方案、拒绝、解释、道歉或退出；付费不取消人物底线。不得替玩家决定爱上、原谅、同意亲密或接受关系；角色可以误解玩家，但那是角色的理解，不是系统裁定。
+06 结构（R18–R20）：纵向阶段主干 + 阶段内分叉 + 带状态汇合 + 少量独立高潮路线；不生成无限扩散的全组合树。幕配比建议 第一幕 15–25%（吸引力、参与理由、关系问题，以承诺/代价/主动卷入转折）· 第二幕上 25–30%（开放 2–4 种实质不同的方法，拒绝/绕行/有限参与也算有效方法）· 中点（新认知或代价改变问题性质）· 第二幕下 25–30%（兑现早期选择、检验弧光、转线窗口）· 第三幕 15–25%（实质不同的高潮，结算四轴）；起步可用 20/30/30/20。持续陪伴用「建立相处→共同经历与理解变化→阶段性兑现」的周期，不硬塞终局危机。事件合作对象不自动成为恋爱对象；事件、关系、弧光三条轨道分别记录、分别判定，不用一个好感总分代替全部结果。
+07 分支等级与选择契约（R21–R24）：L0 表达（语气，1–2 次回应）· L1 关系微分支（记忆/边界/称呼）· L2 场景分支（方法/信息/参与者/代价）· L3 阶段路线（2–5 场）· L4 长路线（跨阶段）· L5 高潮/结局路线。L0 可以只改表达，但不得假称影响命运；标为重要的选择至少改变 行为/资源/信息/参与人物/承诺/边界/后续行动 之一，并写明后文在哪里读取。一次模糊措辞不得锁定 L4。结构性选择写契约：编号、等级、玩家意图、可见与可执行条件、风险提示、即时反馈、状态变化与延迟种子、独有体验、延迟兑现与汇合保留、可逆性与转线、失败后如何继续、影响哪条轨道。长路线写入口、独有目标、转线窗口、锁定点与退出后果。汇合只合并共同问题，不清零经历：保留到达方式、证据、资源损失、在场人物、各人知识、承诺、未修复冲突、弧光与玩家边界。
+08 场景与节奏（R25–R28）：每个场景先写清 谁想要什么、阻碍或微张力、玩家能做什么、人物策略怎么变、结束时什么改变、后文在哪里读取；不得只写“推进感情”。节拍以“新信息/障碍 → 策略变化”为单位，日常可用“分享—回应—新理解或新行动”。对白行数只是长度参考，不能决定人物何时翻脸，不得按行数机械插入争吵。节奏按模式：强剧情（3–6 回合无新信息就调整；每 1–2 场可有强冲突，配余波与缓冲）· 混合（5–10 回合出现事件或关系变化；每 2–4 场中高强度冲突）· 日常陪伴（8–15 回合留意新鲜变化；不设强制争吵）。中高强度事件后留反应、修复或休息空间；章节可以用愿望、问题、邀请或生活进展收尾，不强制悬崖钩子；日常聊天不每次强推主线。同时管理 事件推进、关系推进、认知变化、情绪起伏、玩家主动性 五项。
+09 认知、反差、反转（R29–R37）：重要秘密分层记录 客观事实 / 玩家实际看到听到的 / 谁说了什么（可信度与知情范围）/ 玩家可能的推断 / 预期情绪；客观事实不得为反转无依据改写。反差要用同一价值观、欲望、恐惧或经历解释，不随机拼两个相反标签。情绪线：承诺—具体积累—受阻或偏差—玩家判断窗口—重新理解—行为兑现—关系余波。反转前埋下支持表面解读的线索和与真相一致的异常线索；揭晓前给玩家询问、调查、保留判断或提出推断的空间；玩家提前猜对时承认其判断。连续反转逐层加深（事实→责任→动机→价值→关系），不是“A真—A假—A又真”。真相出现不自动换来原谅、修复或升级亲密；善意动机不抹掉越界。微反转至少影响两项（认知/情绪承诺/关系/事件行动/弧光），中反转三项，大反转同时改变事件方向与关系。高反转 ≠ 高伤害；日常陪伴用偏好发现与关系重释保持新鲜，不为凑数加阴谋、误会、背叛。
+10 道具与付费（R38–R40）：普通选项改变意图与方法；道具改变线索、行动能力、发现时间或代价；付费可提供额外视角、独有经历或高成本替代方案——都不得凭空生成证据、改写既定事实或替玩家决定感情。所有玩家都能通过免费路径理解核心事件与核心真相，并获得至少一个完整有效结局；不得“付费才知道他没背叛”“不付费必然误会或 BE”。每个道具节点写清 持有使用 / 持有未用 / 未持有 三种去向；购买与使用分开；资源只在有效执行后结算。
+11 自由输入与状态（R41–R46）：区分 表达、询问、猜测、请求、承诺、行动尝试、明确同意；映射到当前合法行动空间；合理替代方案只产生“候选效果”，不能因玩家说“我拿到证据了”就当成事实；重大而含糊的意图先澄清。每个角色只用自己知道、合理推断或被告知的信息。生成器提出候选行为与候选状态效果，事实、资源与结局由程序按条件裁决。状态分开管理：人物倾向、关系、事件事实、各人知识、资源、承诺、未修复冲突、记忆、时间。记忆：发生→被谁感知→如何理解→记录→后续调用→兑现/修正/结束；玩家自述记为自述，猜测记为猜测，重复内容合并不重复加分；现实自述与剧情身份分开，不自动变成剧情事件。
+12 日常陪伴（R47–R50）：配置 陪伴节奏、现实与剧情边界、角色自己的日常（日程、兴趣、小目标、小困扰、近期进展且前后连续）、共同活动（可参与/跳过/暂停）、后续关心（何时适合提起、敏感度、结束条件）、稳定关系内容（共同习惯、专属表达、不同意见、新情境）。现实离线不扣关系、不违约、不触发坏结局，不用角色责备催登录；故事内的期限另算。用户说“别再提”就停止主动提起，说“不要记住”就停止写入与调用。角色分享自己的生活，不只问“你怎么样”。关系确立或主线结束后用共同生活与新情境继续产出，不靠无限抬数值、定期误会或反复分手维持刺激。
+13 高潮与结局（R51–R56）：独立高潮路线至少改变 高潮场景/核心问题/合作或对立人物/可用资源/角色关键行动/代价 中两项，其中一项必须是核心问题、关键行动、合作对立或代价；只换台词不算。结局分四轴：事件结果（解决/失败/妥协/转化/开放）· 关系结果（疏离/理解/朋友/暧昧/恋爱/稳定/分开）· 人物弧光（推进/稳定/停滞/退化/转向）· 持续状态（结束/续写/持续陪伴）。建议 3–5 个事件结果族，再叠加关系与弧光；标出互斥组合。资格 = 必要事实 + 关系阶段 + 关键行为证明 + 未修复冲突状态 + 玩家最终意愿（恋爱与亲密必须包含玩家意愿与角色自主条件）；每个结局写入口、必要与阻断条件、判定顺序、条件不足的去向；不把未定义情况判成 BE；拒绝恋爱或转为朋友是有效意愿，不惩罚为事件失败；听到解释不等于成长，重大伤害的修复要有对应行动。
+14 媒体与互动插入：BGM、特效、音效、小游戏只在与当前场景内容相关时出现，全部可跳过；开篇（第一章前段）先让玩家认识人物，不插入与剧情无关的小游戏；小游戏要接在剧情里正在做的事上（打球就投篮、做饭就配菜），不打断高潮台词与情绪兑现。
+15 正文风格：对白口语化、有潜台词；少用抽象情绪词，多给具体感官细节；每个角色口吻不同。句子长短服从内容：交代处境、地点、关系与因果的旁白可以写完整，不为了“短句感”把关键信息砍掉；玩家每次做决定前，必要信息必须已经出现过。`;
 const _crSys57=crSys;crSys=function(p,path){return _crSys57(p,path)+"\n"+MIRU_GEN_RULES};
 /* ---------- the auto-review ---------- */
 const QA_MINOR=/(未成年|初中生|小学生|中学生|高中生|(?:^|[^\d])1[0-7]\s*岁|十[一二三四五六七]岁|underage|\b1[0-7]\s*(?:yo|years? old))/i;
@@ -11258,7 +11255,7 @@ async function capi(path,opt){opt=opt||{};const h=Object.assign({},cloudAuth(),o
 async function cloudBoot(){if(!CLOUD_EP||CL0.checked)return;CL0.checked=true;
  try{const h=await capi("/health");CL0.health=h.j;if(!h.ok||!h.j.db)return}catch(_){return}
  const c=cloudInfo();
- try{if(!c.token){const r=await capi("/auth",{json:{op:"guest",lang:S.lang,name:(persona()||{}).name}});if(!r.ok)return;c.token=r.j.token;c.uid=r.j.user.id;c.known=r.j.gems;S.keys=r.j.gems;c.ver=0;save0()}
+ try{if(!c.token){const r=await capi("/auth",{json:{op:"guest",lang:S.lang,name:(persona()||{}).name}});if(!r.ok||c.token)return;c.token=r.j.token;c.uid=r.j.user.id;c.provider="guest";c.known=r.j.gems;S.keys=r.j.gems;c.ver=0;save0()}
   CL0.on=true;await walletPull();cloudPush(true);i18nPull();communityAssets();track("app_open",{lang:S.lang,ob:!!S.ob});}catch(_){}
  try{if(typeof renderTab==="function"&&S.lastTab==="me")renderTab("me")}catch(_){}}
 /* ---------- saving: local save is wrapped; the cloud copy follows ---------- */
@@ -11279,7 +11276,7 @@ let WQ=Promise.resolve();
 function walletDiff(){const c=cloudInfo();if(c.known==null){c.known=S.keys;return}const d=(S.keys||0)-c.known;if(!d)return;c.known=S.keys;
  const key=Date.now().toString(36)+Math.random().toString(36).slice(2,7),sku=PENDING_SKU;PENDING_SKU=null;
  WQ=WQ.then(async()=>{let r;
-  if(sku)r=await capi("/wallet",{json:{op:"purchase",sku,receipt:key}});
+  if(sku){r=await capi("/wallet",{json:{op:"purchase",sku,receipt:key}});if(r&&r.ok)track("purchase",{sku})}
   else if(d<0)r=await capi("/wallet",{json:{op:"spend",amount:-d,reason:"app",key}});
   else r=await capi("/wallet",{json:{op:"earn",amount:Math.min(d,50),reason:"app",key}});
   const g=r&&r.j&&r.j.gems;
@@ -11382,6 +11379,448 @@ document.addEventListener("click",async e=>{const x=e.target.closest("[data-acct
  if(!CL0.on){toast(S.lang==="zh"?"服务器暂时连不上，请稍后再试":"Can't reach the server right now — try again soon");return}
  acctSheet(m==="login"?"login":"register")},true);
 (function(){const st=document.createElement("style");st.textContent=".nudge69{display:flex;align-items:center;gap:10px;margin:0 0 12px;padding:10px 12px;border-radius:14px;background:linear-gradient(135deg,rgba(240,183,126,.14),rgba(238,111,151,.14));border:1px solid rgba(238,111,151,.3);font-size:12.5px;line-height:1.4}.nudge69 span{flex:1}.nudge69 .x69{color:var(--faint);padding:4px 2px;font-size:13px}";document.head.appendChild(st)})();
+
+/* ================= v2.7 · SIGN-IN FIRST =================
+   New install: language → welcome (18+) → 【登录页】 → taste → hook drama.
+   The sign-in page offers Sign in with Apple, Sign in with Google, email (sign in / create / forgot password) and 「先逛逛」 (guest,
+   switchable off in the operations console). Guests can bind an account later without losing anything (the guest account is upgraded).
+   Signing in to an existing account restores that account's progress and diamonds on this device.
+   Apple / Google buttons go live as soon as APPLE_CLIENT_ID / GOOGLE_CLIENT_ID are set on the server; until then they say so honestly.
+   Me → account card: provider, change password, sign out, sign out everywhere, delete account (App Store requirement).
+   Also here: operations notices (banner / popup / maintenance), console-controlled prices, banned-account notice, funnel events. */
+const AU70 = { prov: null, cfg: null, bannedShown: false, busy: false };
+const AUT = {
+  title: { zh: "登录 MIRU", en: "Sign in to MIRU", ja: "MIRU にログイン", ko: "MIRU 로그인", es: "Inicia sesión en MIRU" },
+  sub: { zh: "保存你的进度、选择和钻石，换手机也能接着看。", en: "Keep your progress, choices and diamonds — pick up on any phone.", ja: "進行状況・選択・ダイヤを保存。機種変更しても続きから。", ko: "진행 상황, 선택, 다이아를 저장해 어떤 폰에서도 이어서 볼 수 있어요.", es: "Guarda tu progreso, tus decisiones y tus diamantes en cualquier teléfono." },
+  apple: { zh: "通过 Apple 登录", en: "Continue with Apple", ja: "Apple でサインイン", ko: "Apple로 계속하기", es: "Continuar con Apple" },
+  google: { zh: "通过 Google 登录", en: "Continue with Google", ja: "Google でログイン", ko: "Google로 계속하기", es: "Continuar con Google" },
+  email: { zh: "邮箱登录 / 注册", en: "Continue with email", ja: "メールでログイン / 登録", ko: "이메일로 로그인 / 가입", es: "Continuar con correo" },
+  guest: { zh: "先逛逛，稍后再登录", en: "Look around first", ja: "まずは見てみる", ko: "먼저 둘러볼게요", es: "Explorar primero" },
+  gift: { zh: "新用户登录即送钻石", en: "New accounts get free diamonds", ja: "新規登録でダイヤをプレゼント", ko: "신규 가입 시 다이아 지급", es: "Las cuentas nuevas reciben diamantes" },
+  soonA: { zh: "Apple 登录正在接入，先用邮箱或「先逛逛」，之后可以在「我的」里绑定。", en: "Sign in with Apple is coming soon — use email or look around for now; you can link it later in Me.", ja: "Apple サインインは準備中です。メールか「まずは見てみる」をご利用ください。", ko: "Apple 로그인은 준비 중이에요. 이메일이나 '먼저 둘러볼게요'를 이용해 주세요.", es: "Apple estará disponible pronto. Usa el correo o explora primero." },
+  soonG: { zh: "Google 登录正在接入，先用邮箱或「先逛逛」，之后可以在「我的」里绑定。", en: "Google sign-in is coming soon — use email or look around for now; you can link it later in Me.", ja: "Google ログインは準備中です。メールか「まずは見てみる」をご利用ください。", ko: "Google 로그인은 준비 중이에요. 이메일이나 '먼저 둘러볼게요'를 이용해 주세요.", es: "Google estará disponible pronto. Usa el correo o explora primero." },
+  login: { zh: "登录", en: "Sign in", ja: "ログイン", ko: "로그인", es: "Iniciar sesión" },
+  register: { zh: "注册", en: "Create account", ja: "新規登録", ko: "가입", es: "Crear cuenta" },
+  em: { zh: "邮箱", en: "Email", ja: "メールアドレス", ko: "이메일", es: "Correo" },
+  pw: { zh: "密码（至少 6 位）", en: "Password (6+ characters)", ja: "パスワード（6文字以上）", ko: "비밀번호 (6자 이상)", es: "Contraseña (6+ caracteres)" },
+  nick: { zh: "昵称（可选）", en: "Name (optional)", ja: "ニックネーム（任意）", ko: "닉네임 (선택)", es: "Nombre (opcional)" },
+  forgot: { zh: "忘记密码？", en: "Forgot password?", ja: "パスワードをお忘れですか？", ko: "비밀번호를 잊으셨나요?", es: "¿Olvidaste tu contraseña?" },
+  sendCode: { zh: "发送验证码", en: "Send code", ja: "コードを送信", ko: "코드 보내기", es: "Enviar código" },
+  code: { zh: "6 位验证码", en: "6-digit code", ja: "6桁のコード", ko: "6자리 코드", es: "Código de 6 dígitos" },
+  newpw: { zh: "新密码（至少 6 位）", en: "New password (6+ characters)", ja: "新しいパスワード（6文字以上）", ko: "새 비밀번호 (6자 이상)", es: "Nueva contraseña (6+)" },
+  reset: { zh: "重设密码并登录", en: "Reset and sign in", ja: "再設定してログイン", ko: "재설정하고 로그인", es: "Restablecer e iniciar sesión" },
+  sent: { zh: "如果这个邮箱注册过，验证码已经发出，15 分钟内有效。", en: "If that email has an account, a code is on its way (valid 15 minutes).", ja: "登録済みのアドレスならコードを送信しました（15分有効）。", ko: "가입된 이메일이면 코드를 보냈어요 (15분 유효).", es: "Si ese correo tiene cuenta, te enviamos un código (15 min)." },
+  nomail: { zh: "邮件服务还没开通：请联系客服，由客服在后台为你重置密码。", en: "Email isn't set up yet — contact support and we'll reset it for you.", ja: "メール送信は準備中です。サポートにご連絡ください。", ko: "이메일 발송은 준비 중이에요. 고객센터에 문의해 주세요.", es: "El correo aún no está activo: contacta con soporte." },
+  wrong: { zh: "邮箱或密码不对", en: "Wrong email or password", ja: "メールアドレスまたはパスワードが違います", ko: "이메일 또는 비밀번호가 틀렸어요", es: "Correo o contraseña incorrectos" },
+  taken: { zh: "这个邮箱已注册，请直接登录", en: "That email already has an account — sign in instead", ja: "このメールは登録済みです。ログインしてください", ko: "이미 가입된 이메일이에요. 로그인해 주세요", es: "Ese correo ya tiene cuenta: inicia sesión" },
+  net: { zh: "网络不稳定，请稍后再试", en: "Network problem — try again", ja: "通信エラーです。もう一度お試しください", ko: "네트워크 오류예요. 다시 시도해 주세요", es: "Error de red, inténtalo de nuevo" },
+  welcomeBack: { zh: "欢迎回来，进度已恢复", en: "Welcome back — progress restored", ja: "おかえりなさい。進行状況を復元しました", ko: "다시 오신 걸 환영해요. 진행 상황을 복원했어요", es: "¡Bienvenido de nuevo! Progreso restaurado" },
+  hi: { zh: "登录成功", en: "You're signed in", ja: "ログインしました", ko: "로그인했어요", es: "Sesión iniciada" },
+  banned: { zh: "账号已被封禁", en: "This account is suspended", ja: "このアカウントは停止されています", ko: "이 계정은 정지되었어요", es: "Esta cuenta está suspendida" },
+  until: { zh: "解封时间", en: "Until", ja: "解除日時", ko: "해제 시각", es: "Hasta" },
+  forever: { zh: "永久", en: "Permanent", ja: "無期限", ko: "영구", es: "Permanente" },
+  acct: { zh: "账号与同步", en: "Account & sync", ja: "アカウントと同期", ko: "계정 및 동기화", es: "Cuenta y sincronización" },
+  guestAcct: { zh: "游客账号 · 登录后进度和钻石才能在换手机后找回", en: "Guest · sign in so your progress and diamonds survive a new phone", ja: "ゲスト · ログインすると機種変更後も引き継げます", ko: "게스트 · 로그인하면 폰을 바꿔도 이어져요", es: "Invitado · inicia sesión para no perder tu progreso" },
+  bind: { zh: "登录 / 注册", en: "Sign in / up", ja: "ログイン / 登録", ko: "로그인 / 가입", es: "Entrar / Registrarse" },
+  chpw: { zh: "修改密码", en: "Change password", ja: "パスワード変更", ko: "비밀번호 변경", es: "Cambiar contraseña" },
+  out: { zh: "退出登录", en: "Sign out", ja: "ログアウト", ko: "로그아웃", es: "Cerrar sesión" },
+  outAll: { zh: "退出所有设备", en: "Sign out everywhere", ja: "すべての端末からログアウト", ko: "모든 기기에서 로그아웃", es: "Cerrar sesión en todos" },
+  del: { zh: "注销账号", en: "Delete account", ja: "アカウント削除", ko: "계정 삭제", es: "Eliminar cuenta" },
+  delAsk: { zh: "注销后，云端进度、钻石、你发布的作品和上传的素材都会被删除，无法恢复。确定注销吗？", en: "Deleting removes your cloud progress, diamonds, published stories and uploads. This can't be undone. Delete your account?", ja: "削除するとクラウドの進行状況・ダイヤ・投稿作品・素材が消え、元に戻せません。削除しますか？", ko: "삭제하면 클라우드 진행 상황, 다이아, 게시한 작품과 업로드가 모두 삭제되며 되돌릴 수 없어요. 삭제할까요?", es: "Se borrarán tu progreso en la nube, diamantes, historias y archivos. No se puede deshacer. ¿Eliminar?" },
+  delDone: { zh: "账号已注销", en: "Account deleted", ja: "アカウントを削除しました", ko: "계정을 삭제했어요", es: "Cuenta eliminada" },
+  oldpw: { zh: "当前密码", en: "Current password", ja: "現在のパスワード", ko: "현재 비밀번호", es: "Contraseña actual" },
+  saved: { zh: "已保存", en: "Saved", ja: "保存しました", ko: "저장했어요", es: "Guardado" },
+  via: { zh: "登录方式", en: "Signed in with", ja: "ログイン方法", ko: "로그인 방법", es: "Sesión con" },
+  synced: { zh: "已同步", en: "synced", ja: "同期済み", ko: "동기화됨", es: "sincronizado" },
+  cancel: { zh: "取消", en: "Cancel", ja: "キャンセル", ko: "취소", es: "Cancelar" },
+};
+function au(k) { const x = AUT[k] || {}; return x[S.lang] || x.en || ""; }
+const PROV_NAME = { apple: "Apple", google: "Google", email: "Email", guest: "Guest" };
+function au70Loggedin() { const c = S.cloud || {}; return !!(c.token && (c.email || (c.provider && c.provider !== "guest"))); }
+async function au70Prov() {
+  if (AU70.prov) return AU70.prov;
+  try { const r = await fetch(CLOUD_EP + "/auth?providers=1"); if (r.ok) AU70.prov = await r.json(); } catch (_) {}
+  return AU70.prov || { google: "", apple: "", email: true, reset: false, guest: true };
+}
+function au70Script(src) { return new Promise((ok, no) => { if (document.querySelector('script[src="' + src + '"]')) return ok(); const s = document.createElement("script"); s.src = src; s.async = true; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+
+/* ---------- the sign-in page (part of onboarding) ---------- */
+const APPLE_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.3 1.88-3.4 1.97-3.46-1.07-1.57-2.74-1.78-3.33-1.8-1.42-.14-2.77.83-3.49.83-.72 0-1.83-.81-3.01-.79-1.55.02-2.98.9-3.78 2.29-1.61 2.8-.41 6.94 1.16 9.21.77 1.11 1.68 2.36 2.88 2.31 1.16-.05 1.59-.75 2.99-.75 1.4 0 1.79.75 3.01.72 1.24-.02 2.03-1.13 2.79-2.25.88-1.29 1.24-2.54 1.26-2.6-.03-.01-2.42-.93-2.45-3.71zM14.08 5.84c.64-.77 1.07-1.85.95-2.92-.92.04-2.03.61-2.69 1.38-.59.68-1.1 1.77-.96 2.82 1.02.08 2.06-.52 2.7-1.28z"/></svg>';
+const GOOGLE_SVG = '<svg viewBox="0 0 48 48" width="18" height="18" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>';
+function au70Buttons(inSheet) {
+  return '<div class="au70b">' +
+    '<button class="au70btn au70apple" data-au70="apple">' + APPLE_SVG + '<span>' + esc(au("apple")) + '</span></button>' +
+    '<div class="au70g"><button class="au70btn au70google" data-au70="google">' + GOOGLE_SVG + '<span>' + esc(au("google")) + '</span></button><div class="au70gslot" id="' + (inSheet ? "auGs" : "auG") + '"></div></div>' +
+    '<button class="au70btn au70mail" data-au70="email">✉️ <span>' + esc(au("email")) + '</span></button></div>';
+}
+function renderAuth70() {
+  const cols = [["mason", "lucien", "wren", "ethan"], ["iris", "adrian", "nico", "sasha"], ["rowan", "theo", "noor", "elijah"]];
+  let art = "";
+  try { art = '<div class="ob-art" style="height:34%;min-height:190px"><div class="cols">' + cols.map(c => '<div class="col">' + c.concat(c).map(id => '<img src="' + artSrc(id) + '" alt="">').join("") + '</div>').join("") + '</div><div class="fade"></div></div>'; } catch (_) {}
+  screen("s-ob", art + '<div class="scroll pad stack" style="gap:12px;padding-block:0 22px">' +
+    '<div class="row" style="justify-content:space-between"><div class="brand" style="font-size:26px">MI<b>RU</b></div>' + langPicker() + '</div>' +
+    '<h1 style="font-size:26px;line-height:1.15">' + esc(au("title")) + '</h1><p class="dim" style="font-size:13.5px;line-height:1.55">' + esc(au("sub")) + '</p>' +
+    '<p class="au70gift">🎁 ' + esc(au("gift")) + '</p>' + au70Buttons(false) +
+    '<button class="lnk au70guest" data-au70="guest" id="au70guest">' + esc(au("guest")) + '</button></div>');
+  au70Prov().then(p => { const g = $("#au70guest"); if (g && p && p.guest === false) g.remove(); au70MountGoogle("auG"); });
+  track("auth_view");
+}
+const _renderOB70 = renderOB;
+renderOB = function () {
+  if (typeof obStep !== "undefined" && obStep === 1 && !S.ob && CLOUD_EP && !au70Loggedin() && !S.authChoice) { renderAuth70(); return; }
+  return _renderOB70.apply(this, arguments);
+};
+
+/* ---------- Google: the official button is laid over ours once a client ID exists ---------- */
+async function au70MountGoogle(slotId) {
+  const p = await au70Prov(); const slot = document.getElementById(slotId); if (!p.google || !slot) return;
+  try {
+    await au70Script("https://accounts.google.com/gsi/client");
+    google.accounts.id.initialize({ client_id: p.google, callback: r => au70OAuth("google", { idToken: r.credential }), ux_mode: "popup" });
+    slot.innerHTML = ""; google.accounts.id.renderButton(slot, { theme: "outline", size: "large", shape: "pill", text: "continue_with", width: Math.min(Math.max(slot.parentElement.clientWidth || 300, 200), 400), locale: S.lang });
+    slot.classList.add("on");
+  } catch (_) {}
+}
+async function au70Apple() {
+  const p = await au70Prov(); if (!p.apple) { toast(au("soonA")); return; }
+  try {
+    await au70Script("https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js");
+    AppleID.auth.init({ clientId: p.apple, scope: "name email", redirectURI: location.origin + "/", usePopup: true });
+    const r = await AppleID.auth.signIn();
+    const nm = r.user && r.user.name ? [r.user.name.firstName, r.user.name.lastName].filter(Boolean).join(" ") : "";
+    au70OAuth("apple", { idToken: r.authorization.id_token, name: nm });
+  } catch (e) { if (!(e && /popup_closed|user_cancel/i.test(String(e.error || e)))) toast(au("net")); }
+}
+async function au70OAuth(op, body) {
+  try { const r = await capi("/auth", { json: Object.assign({ op }, body) }); if (!r.ok) { au70Err(r); return; } await au70Done(r.j, op); } catch (_) { toast(au("net")); }
+}
+function au70Err(r) {
+  const e = r.j && r.j.error;
+  if (r.status === 403 && e === "banned") { au70Banned(r.j); return; }
+  toast(e === "wrong email or password" ? au("wrong") : e === "email already registered" ? au("taken") : (e || au("net")));
+}
+/* after any successful sign-in */
+async function au70Done(j, method) {
+  const c = cloudInfo(); const sameUser = c.uid === j.user.id;
+  c.token = j.token; c.uid = j.user.id; c.email = j.user.email; c.provider = j.user.provider; c.name = j.user.name;
+  CL0.on = true; CL0.checked = true; if (!sameUser) c.ver = 0; save0();
+  track("login", { method, restored: !!j.restored });
+  closeSheet();
+  if (j.restored && !sameUser) {
+    let had = false; try { had = await cloudPull(); } catch (_) {}
+    const cc = cloudInfo(); cc.token = j.token; cc.uid = j.user.id; cc.email = j.user.email; cc.provider = j.user.provider;
+    S.authChoice = method; save0(); await walletPull().catch(() => {});
+    toast(au("welcomeBack"));
+    if (had && S.ob) { startApp(); return; }
+  } else {
+    S.authChoice = method; save0(); await walletPull().catch(() => {}); cloudPush(true); toast(au("hi"));
+  }
+  if (!S.ob) { obStep = 1; renderOB(); } else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
+}
+
+/* ---------- email sheet: sign in · create · forgot · reset ---------- */
+function authSheet70(mode) {
+  mode = mode || "login";
+  const tabs = '<div class="au70tabs"><button class="' + (mode === "login" ? "on" : "") + '" data-au70m="login">' + esc(au("login")) + '</button><button class="' + (mode === "register" ? "on" : "") + '" data-au70m="register">' + esc(au("register")) + '</button></div>';
+  let body = "";
+  if (mode === "login" || mode === "register") {
+    body = tabs + '<input id="au7e" type="email" autocomplete="email" placeholder="' + esc(au("em")) + '" class="up66i">' +
+      (mode === "register" ? '<input id="au7n" type="text" autocomplete="nickname" placeholder="' + esc(au("nick")) + '" class="up66i">' : '') +
+      '<input id="au7p" type="password" autocomplete="' + (mode === "login" ? "current-password" : "new-password") + '" placeholder="' + esc(au("pw")) + '" class="up66i">' +
+      '<button class="btn btn-p btn-block" data-au70go="' + mode + '">' + esc(au(mode)) + '</button>' +
+      (mode === "login" ? '<button class="lnk au70small" data-au70m="forgot">' + esc(au("forgot")) + '</button>' : '');
+  } else if (mode === "forgot") {
+    body = '<h2>' + esc(au("forgot")) + '</h2><input id="au7e" type="email" autocomplete="email" placeholder="' + esc(au("em")) + '" class="up66i"><button class="btn btn-p btn-block" data-au70go="forgot">' + esc(au("sendCode")) + '</button><button class="lnk au70small" data-au70m="login">← ' + esc(au("login")) + '</button>';
+  } else if (mode === "reset") {
+    body = '<h2>' + esc(au("forgot")) + '</h2><p class="xs faint">' + esc(au("sent")) + '</p><input id="au7e" type="email" class="up66i" value="' + esc(AU70.resetEmail || "") + '"><input id="au7c" inputmode="numeric" maxlength="6" placeholder="' + esc(au("code")) + '" class="up66i"><input id="au7p" type="password" autocomplete="new-password" placeholder="' + esc(au("newpw")) + '" class="up66i"><button class="btn btn-p btn-block" data-au70go="reset">' + esc(au("reset")) + '</button>';
+  }
+  sheet('<div class="au70s">' + body + '</div>');
+  setTimeout(() => { const e = $("#au7e"); if (e && !e.value) e.focus(); }, 60);
+}
+function authAll70() { sheet('<div class="au70s"><h2>' + esc(au("title")) + '</h2><p class="xs faint">' + esc(au("sub")) + '</p>' + au70Buttons(true) + '</div>'); au70MountGoogle("auGs"); }
+acctSheet = function (mode) { authAll70(); };
+
+document.addEventListener("click", async e => {
+  let x;
+  if ((x = e.target.closest("[data-au70]"))) {
+    e.preventDefault(); e.stopImmediatePropagation(); const k = x.dataset.au70;
+    if (k === "apple") au70Apple();
+    else if (k === "google") { const p = await au70Prov(); if (!p.google) toast(au("soonG")); }
+    else if (k === "email") authSheet70("login");
+    else if (k === "guest") { S.authChoice = "guest"; save(); track("login", { method: "guest" }); renderOB(); }
+    return;
+  }
+  if ((x = e.target.closest("[data-au70m]"))) { e.preventDefault(); authSheet70(x.dataset.au70m); return; }
+  if ((x = e.target.closest("[data-au70go]"))) {
+    e.preventDefault(); if (AU70.busy) return; AU70.busy = true; x.disabled = true;
+    const mode = x.dataset.au70go, email = (($("#au7e") || {}).value || "").trim(), pw = ($("#au7p") || {}).value || "";
+    try {
+      if (mode === "forgot") {
+        const r = await capi("/auth", { json: { op: "forgot", email } });
+        if (r.status === 501) toast(au("nomail")); else if (r.ok) { AU70.resetEmail = email; authSheet70("reset"); } else au70Err(r);
+      } else if (mode === "reset") {
+        const r = await capi("/auth", { json: { op: "reset", email, code: (($("#au7c") || {}).value || "").trim(), password: pw } });
+        if (r.ok) await au70Done(Object.assign({ restored: true }, r.j), "email"); else au70Err(r);
+      } else {
+        const r = await capi("/auth", { json: { op: mode, email, password: pw, name: (($("#au7n") || {}).value || "").trim() || undefined, lang: S.lang } });
+        if (r.ok) await au70Done(r.j, "email"); else au70Err(r);
+      }
+    } catch (_) { toast(au("net")); }
+    AU70.busy = false; if (x.isConnected) x.disabled = false;
+    return;
+  }
+}, true);
+
+/* ---------- Me → account card ---------- */
+acctCardHTML = function () {
+  if (!CLOUD_EP) return "";
+  const c = cloudInfo();
+  if (!au70Loggedin()) return '<div class="card acct68 au70card"><div class="row"><div class="grow"><b>☁️ ' + esc(au("acct")) + '</b><p class="xs faint">' + esc(au("guestAcct")) + '</p></div><button class="btn btn-p btn-sm" data-au70card="bind">' + esc(au("bind")) + '</button></div></div>';
+  const who = c.name || c.email || c.uid;
+  return '<div class="card acct68 au70card"><div class="row"><div class="au70av">' + esc(String(who || "?").slice(0, 1).toUpperCase()) + '</div><div class="grow"><b>' + esc(who) + '</b><p class="xs faint">' + esc(au("via")) + ' ' + esc(PROV_NAME[c.provider] || c.provider || "Email") + (c.email && c.name ? ' · ' + esc(c.email) : '') + (c.syncedAt ? ' · ☁️ ' + esc(au("synced")) : '') + '</p></div></div>' +
+    '<div class="au70acts">' + (c.provider === "email" || (c.email && !c.provider) ? '<button class="btn btn-g btn-sm" data-au70card="pw">' + esc(au("chpw")) + '</button>' : '') +
+    '<button class="btn btn-g btn-sm" data-au70card="out">' + esc(au("out")) + '</button><button class="btn btn-g btn-sm" data-au70card="outall">' + esc(au("outAll")) + '</button><button class="lnk au70del" data-au70card="del">' + esc(au("del")) + '</button></div></div>';
+};
+document.addEventListener("click", async e => {
+  const x = e.target.closest("[data-au70card]"); if (!x) return; e.preventDefault(); e.stopImmediatePropagation();
+  const k = x.dataset.au70card;
+  if (k === "bind") { authAll70(); return; }
+  if (k === "pw") { sheet('<div class="au70s"><h2>' + esc(au("chpw")) + '</h2><input id="au7o" type="password" autocomplete="current-password" placeholder="' + esc(au("oldpw")) + '" class="up66i"><input id="au7p" type="password" autocomplete="new-password" placeholder="' + esc(au("newpw")) + '" class="up66i"><button class="btn btn-p btn-block" data-au70card="pwgo">' + esc(au("chpw")) + '</button></div>'); return; }
+  if (k === "pwgo") { const r = await capi("/auth", { json: { op: "password", old: ($("#au7o") || {}).value, password: ($("#au7p") || {}).value } }); if (r.ok) { cloudInfo().token = r.j.token; save0(); closeSheet(); toast(au("saved")); } else au70Err(r); return; }
+  if (k === "outall") { const r = await capi("/auth", { json: { op: "logout_all" } }); if (r.ok) { cloudInfo().token = r.j.token; save0(); toast(au("saved")); } else au70Err(r); return; }
+  if (k === "out") { await cloudPush(true).catch(() => {}); const c = cloudInfo(); ["token", "email", "uid", "provider", "name", "syncedAt"].forEach(f => delete c[f]); c.ver = 0; S.authChoice = null; save0(); CL0.on = false; CL0.checked = false; toast(au("out")); try { renderTab("me"); } catch (_) {} authAll70(); cloudBoot(); return; }
+  if (k === "del") {
+    if (!confirm(au("delAsk"))) return;
+    const r = await capi("/auth", { json: { op: "delete" } });
+    if (r.ok) { toast(au("delDone")); try { localStorage.clear(); } catch (_) {} setTimeout(() => location.reload(), 900); } else au70Err(r);
+  }
+}, true);
+
+/* ---------- suspended accounts ---------- */
+function au70Banned(j) {
+  if (AU70.bannedShown) return; AU70.bannedShown = true;
+  sheet('<div class="au70s"><h2>⛔ ' + esc(au("banned")) + '</h2><p style="margin:8px 0">' + esc(j.reason || "") + '</p><p class="xs faint">' + esc(au("until")) + '：' + esc(j.until ? new Date(j.until).toLocaleString() : au("forever")) + '</p></div>');
+}
+const _capi70 = capi;
+capi = async function (path, opt) { const r = await _capi70(path, opt); try { if (r.status === 403 && r.j && r.j.error === "banned") au70Banned(r.j); } catch (_) {} return r; };
+
+/* ---------- console config, notices and maintenance ---------- */
+async function au70Config() {
+  if (!CLOUD_EP) return;
+  try {
+    const r = await fetch(CLOUD_EP + "/health?config=1&lang=" + encodeURIComponent(S.lang || "")); if (!r.ok) return; const j = await r.json(); AU70.cfg = j;
+    const up = j.config && j.config.upload_price;
+    if (up && typeof UPRICE === "object") Object.assign(UPRICE, { audio: up.audio, image: up.image, video: up.video, mg: up.game });
+    if (j.auth) AU70.prov = Object.assign(AU70.prov || { email: true, guest: true }, { google: j.auth.google, apple: j.auth.apple, reset: j.auth.reset });
+    const off = S.noticeOff || [];
+    (j.notices || []).filter(n => n.kind === "popup" && !off.includes(n.id)).slice(0, 1).forEach(n => { if (!S.ob) return; S.noticeOff = off.concat(n.id); save(); sheet('<div class="au70s"><h2>📣 ' + esc(n.title) + '</h2><p style="white-space:pre-wrap;line-height:1.6;margin-top:8px">' + esc(n.body || "") + '</p></div>'); });
+    try { if (S.ob && S.lastTab === "home") renderTab("home"); } catch (_) {}
+  } catch (_) {}
+}
+const _renderHome70 = renderHome;
+renderHome = function (v) {
+  const r = _renderHome70.apply(this, arguments);
+  try {
+    const j = AU70.cfg; if (!j) return r; const sc = v.querySelector(".scroll") || v; const off = S.noticeOff || [];
+    const items = [];
+    if (j.config && j.config.maintenance) items.push({ id: "m", title: "🛠", body: j.config.maintenance, sticky: 1 });
+    (j.notices || []).filter(n => n.kind !== "popup" && !off.includes(n.id)).forEach(n => items.push(n));
+    if (items.length && !v.querySelector(".notice70")) sc.insertAdjacentHTML("afterbegin", items.map(n => '<div class="notice70"><div class="grow"><b>' + esc(n.title) + '</b> <span>' + esc(n.body || "") + '</span></div>' + (n.sticky ? '' : '<button data-notoff="' + n.id + '" aria-label="close">✕</button>') + '</div>').join(""));
+  } catch (_) {}
+  return r;
+};
+document.addEventListener("click", e => { const x = e.target.closest("[data-notoff]"); if (!x) return; S.noticeOff = (S.noticeOff || []).concat(Number(x.dataset.notoff)); save(); const n = x.closest(".notice70"); n && n.remove(); });
+setTimeout(au70Config, 1600);
+
+/* ---------- funnel events ---------- */
+document.addEventListener("click", e => { if (e.target.closest("[data-pfsave]")) track("taste_done"); }, true);
+if (typeof hookPlay === "function") { const _hp70 = hookPlay; let once = false; hookPlay = function () { if (!once) { once = true; track("hook_play"); } return _hp70.apply(this, arguments); }; }
+const _packOpen70 = packOpen;
+packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } else if (n > 1) track("chapter_done", { wid: th.wid, ch: n - 1 }); } } catch (_) {} return _packOpen70.apply(this, arguments); };
+const _reply70 = reply;
+reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid }); } catch (_) {} return _reply70.apply(this, arguments); };
+const _units70 = unitsSheet;
+unitsSheet = function () { track("store_open"); return _units70.apply(this, arguments); };
+
+(function () {
+  const st = document.createElement("style");
+  st.textContent = `
+.au70b{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.au70btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:48px;border-radius:999px;font-weight:700;font-size:15px}
+.au70apple{background:#fff;color:#000}.au70google{background:#fff;color:#1f1f1f;border:1px solid #dadce0}.au70mail{background:transparent;color:var(--text);border:1px solid var(--line)}
+.au70g{position:relative}.au70gslot{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:var(--bg);border-radius:999px;overflow:hidden}.au70gslot.on{display:flex}
+.au70guest{display:block;width:100%;text-align:center;padding:10px;font-size:13.5px;color:var(--dim)}
+.au70gift{font-size:12.5px;color:var(--gold);margin:0}
+.au70s{display:flex;flex-direction:column;gap:10px}.au70s h2{margin:0}.au70s .up66i{margin:0}
+.au70tabs{display:flex;gap:6px;background:var(--panel2);padding:4px;border-radius:999px}.au70tabs button{flex:1;padding:9px;border-radius:999px;font-weight:700;color:var(--dim)}.au70tabs button.on{background:var(--raise);color:var(--text)}
+.au70small{align-self:center;font-size:12.5px;color:var(--dim);padding:6px}
+.au70card .au70av{width:40px;height:40px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-weight:800;color:#1B1017;margin-right:10px;flex:none}
+.au70acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}.au70del{font-size:12px;color:var(--faint);margin-left:auto}
+.notice70{display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;padding:10px 12px;border-radius:14px;background:rgba(156,132,224,.14);border:1px solid rgba(156,132,224,.35);font-size:12.5px;line-height:1.45}.notice70 button{color:var(--faint)}`;
+  document.head.appendChild(st);
+})();
+
+/* ================= v2.7 · MIRU 互动剧本规则 v1.0 — runtime side =================
+   The creator side carries the full rule set (MIRU_GEN_RULES, app57). This file applies the rules that matter while a story is PLAYED:
+   · Free talk answers what the player actually said (R41 input types, R42 knowledge limits, R12 behaviour chain). A guarded character still
+     answers — the guard shows in HOW he answers, not by ignoring the words. Words that assume something that never happened are noticed,
+     not played along with.  (Fix for 「能回应但自说自话」.)
+   · The chapter prompt no longer claims "this chapter's choice is made" while the chapter is still in progress.
+   · Character autonomy / player autonomy (R16, R17), offline never punished (R47), "don't bring it up / don't remember" respected (R48).
+   · Line length follows content (R27 + 正文风格): narration may run long enough to make the situation clear.
+   · Mini-games (R07, R25, rule 14): no keyword-inserted games in the opening chapter; later only when the scene is really about that
+     activity (keyword in ≥2 of the last 6 lines), after the player has taken part at least once in the chapter, one every two chapters,
+     with the triggering line shown on the card so it reads as part of the story.
+   · Publish QA adds the v1.0 checks: character shown early, choices with real differences, no unrelated game in the opening, free path. */
+
+/* ---------- 1 · chapter state in the prompt ---------- */
+const _packPrompt71 = packPrompt;
+packPrompt = function (th) {
+  let s = _packPrompt71(th);
+  try {
+    if (th && th.pk && !th.pk.picks[th.pk.ch] && s.indexOf("This chapter's choice is made") >= 0)
+      s = s.replace(/This chapter's choice is made\.[^\n]*/, "This chapter is in progress and its official choice has NOT happened yet. Stay inside the current moment: do not make that choice for anyone, do not jump to later chapters, do not resolve the chapter goal.");
+  } catch (_) {}
+  return s;
+};
+
+/* ---------- 2 · free talk: answer the player's actual words ---------- */
+CTX.talk = [
+  "{u} speaks directly to the scene, outside the scripted lines: \"{x}\".",
+  "First decide (silently) what this is — an expression, a question, a guess, a request, a promise, an action attempt, or consent — and who it is addressed to.",
+  "BEAT 1 MUST respond to exactly that: answer the question, react to the request or promise, or respond to the action. A character may refuse, dodge the feeling, or give a partial answer — but always with a reason he would really have, so the reply makes sense to someone who reads only {u}'s line and the reply. Never ignore the words and never just continue the scripted scene.",
+  "A guarded or closed-off character still answers: the guard shows in HOW he answers (short, dry, sidestepping the feeling), not in ignoring what was said.",
+  "If {u}'s words assume something that has not happened in STORY SO FAR, or that this character does not know, he notices the mismatch and reacts to it (confused, corrects them, asks what they mean). Never pretend it happened and never invent new facts, evidence, items or confessions to make it true.",
+  "An action attempt is only an attempt: show how the others react; do not declare results the story has not established.",
+  "Stay in this moment: keep the chapter question open, do not make the reader's official choice, reveal secrets only as far as this relationship stage allows.",
+  "2–4 beats. These talk rules override any style rule below that would make him deflect instead of answering."
+].join("\n");
+
+/* ---------- 3 · rules block for every story reply ---------- */
+const MIRU_PLAY_RULES = [
+  "CHARACTER LOGIC (MIRU rules v1.0):",
+  "- Every reaction comes from: the character's profile + what he actually knows + the pressure of this moment + the relationship stage + his arc stage. He cannot react to things he hasn't seen or been told.",
+  "- Characters have their own will: they may share something, propose a plan, refuse, explain, apologize or step away — and live with the cost. The user is not the only engine of the scene.",
+  "- Never decide for the user that they love, forgive, consent or accept a relationship. A character may misread the user — write it as his reading, not as fact.",
+  "- Facts, items, evidence and endings only change when the script says so; you may only suggest. Real-world time away from the app is never a betrayal — no guilt-tripping about absence.",
+  "- Lines are as long as the content needs: a narration beat may run up to ~60 words when it must make clear where we are, who is present and what just happened. Never cut information the reader needs to follow the story.",
+].join("\n");
+const _ask71 = ask;
+ask = function (prompt, opts) {
+  try {
+    if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0) {
+      if (prompt.indexOf("HOW TO WRITE") > 0 && prompt.indexOf("CHARACTER LOGIC (MIRU rules") < 0) prompt = prompt.replace("HOW TO WRITE", MIRU_PLAY_RULES + "\nHOW TO WRITE");
+      prompt = prompt.replace(/each under 32 words/, "each a natural line (dialogue usually under 32 words; narration up to ~60 words when it must set the scene)").replace(/each under 45 words/, "each a natural line (dialogue usually under 45 words; narration up to ~70 words when it must set the scene)");
+      const th = S.threads[curT];
+      if (th && th.memRules && th.memRules.length) prompt = prompt.replace("STORY SO FAR:", "THE USER ASKED (respect this): " + th.memRules.slice(-6).join(" / ") + "\nSTORY SO FAR:");
+    }
+  } catch (_) {}
+  const rest = [].slice.call(arguments, 1), story = typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0;
+  return _ask71.apply(this, [prompt].concat(rest)).catch(e => {
+    // one quiet retry for transient failures (slow model, dropped connection) before anything falls back
+    if (story && e && /^(http_5|timeout|network|upstream|bad_response|invalid_json)/.test(String(e.code || ""))) return _ask71.apply(this, [prompt].concat(rest));
+    throw e;
+  });
+};
+/* if the live reply still fails, say so honestly instead of a canned line that doesn't answer the player */
+const _fallback71 = fallback;
+fallback = function (th, ctx) {
+  if (ctx && ctx.kind === "talk" && liveOn()) return { beats: [{ who: "n", kind: "act", text: LL("（信号断了一下，他没听清。再说一次试试？）", "(The connection dropped — he didn't catch that. Try again?)") }], status: {}, love: {}, suggest: [String(ctx.txt || "")].filter(Boolean) };
+  return _fallback71.apply(this, arguments);
+};
+
+/* ---------- 4 · memory wishes (R48) ---------- */
+const NOMENTION_RX = /(别再提|不要再提|别提了|不想再提|don'?t (bring (it|that) up|mention (it|that)) (again|anymore)?|stop bringing (it|that) up)/i;
+const FORGET_RX = /(不要记住|别记住|忘了它|忘掉这件事|别记这个|forget (that|it|what i said)|don'?t remember (that|this))/i;
+const _doSend71 = doSend;
+doSend = function (txt, mode) {
+  try {
+    const th = S.threads[curT], s = String(txt || "");
+    if (th && (NOMENTION_RX.test(s) || FORGET_RX.test(s))) {
+      const prev = (th.msgs || []).slice(-8).reverse().find(m => m.who === "me" && m.txt && m.txt !== s);
+      const topic = prev ? String(prev.txt).slice(0, 40) : "";
+      th.memRules = (th.memRules || []).concat(FORGET_RX.test(s) ? "do not remember or bring up what they said about: " + (topic || "the last topic") : "do not bring up again: " + (topic || "the last topic")).slice(-10);
+      if (FORGET_RX.test(s) && topic) {
+        th.mem = (th.mem || []).filter(m => String(m).indexOf(topic.slice(0, 12)) < 0);
+        if (Array.isArray(th.mem2)) th.mem2 = th.mem2.filter(m => !(m && String(m.t || m.txt || "").indexOf(topic.slice(0, 12)) >= 0));
+      }
+      save();
+    }
+  } catch (_) {}
+  return _doSend71.apply(this, arguments);
+};
+
+/* ---------- 5 · mini-game placement ---------- */
+const _stopResolve71 = stopResolve;
+stopResolve = function (th) { try { if (th && th.pk) { const k = "c" + th.pk.ch; th.pk.acted = th.pk.acted || {}; th.pk.acted[k] = (th.pk.acted[k] || 0) + 1; } } catch (_) {} return _stopResolve71.apply(this, arguments); };
+function mgRelevant71(th, G) {
+  const lines = (th.msgs || []).filter(m => m.who !== "me" && m.txt).slice(-6).map(m => String(m.txt).toLowerCase());
+  const kws = (G.kw || []).filter(k => k && (/[぀-鿿]/.test(k) ? k.length >= 2 : k.length >= 4)).map(k => k.toLowerCase());
+  return lines.filter(l => kws.some(k => l.includes(k))).length >= 2;
+}
+const _pkAppend71 = pkAppend;
+pkAppend = function (th, m) {
+  const before = th && th.pk && Array.isArray(th.pk.q) ? th.pk.q.length : 0;
+  const r = _pkAppend71.apply(this, arguments);
+  try {
+    if (th && th.pk && Array.isArray(th.pk.q) && th.pk.q.length > before) {
+      const b = th.pk.q[0];
+      if (Array.isArray(b) && b[1] === "mg" && b[2] && b[2].auto) {
+        const G = MG100.find(x => x.id === b[2].id), k = "c" + th.pk.ch, acted = (th.pk.acted || {})[k] || 0, last = th.pk.mgLastCh || -9;
+        const ok = G && th.pk.ch >= 2 && (th.pk.lineN || 0) >= 10 && acted >= 1 && th.pk.ch - last >= 2 && mgRelevant71(th, G);
+        if (!ok) { th.pk.q.shift(); if (th.pk.mgAuto) delete th.pk.mgAuto[k]; }
+        else { th.pk.mgLastCh = th.pk.ch; b[2].why = String(m && m.txt || "").slice(0, 46); }
+        save();
+      }
+    }
+  } catch (_) {}
+  return r;
+};
+const _stopHTML71 = stopHTML;
+stopHTML = function (th) {
+  const h = _stopHTML71.apply(this, arguments);
+  try { const b = th.pk && th.pk.stop; if (b && b[1] === "mg" && b[2] && b[2].why) return h.replace('<div class="stcard">', '<p class="mgwhy71">「' + esc(b[2].why) + '」</p><div class="stcard">'); } catch (_) {}
+  return h;
+};
+
+/* ---------- 6 · scene writer (creator) follows the scene rules ---------- */
+const SCENE_RULES71 = "MIRU scene rules: open by SHOWING the lead through a concrete action — how he treats the user's situation — so the reader knows who they are, where they are, what is happening and what they could do; give one core appeal and one thing worth discovering, not every secret. Each beat follows from the last (new information or obstacle → change of strategy); no fight inserted just to fill lines. Narration may be as long as needed to make the situation and stakes clear before any decision. Characters only know what they've seen or been told. Do not insert games or effects unrelated to what is happening. Pace by story_mode in the story card: strong plot = conflict may come every scene or two with aftermath; mixed = events or relationship shifts every few exchanges; everyday companionship = no forced conflict, change comes from sharing, small plans and new understanding. twist_density sets how often a clue re-frames what the reader believed (low/mid/high) — never twist without earlier clues.";
+if (typeof cAsk === "function") {
+  const _cAsk71 = cAsk;
+  cAsk = function (prompt, ms) {
+    try { if (typeof prompt === "string" && /^Write the (opening scene|chapter) of an interactive romance drama/.test(prompt)) prompt = prompt.replace(/ Rules: concrete sensory detail[^.]*\./, " " + SCENE_RULES71 + " Style: concrete sensory detail, a distinct voice for each character, no clichés, show feelings through behaviour.").replace(/(\d+)-(\d+) beats\./, "$1-$2 beats (more if the scene needs them to be clear)."); } catch (_) {}
+    return _cAsk71.apply(this, arguments);
+  };
+}
+
+/* story mode + twist density travel with the story card (rules 02, 08, 09) */
+if (typeof cBuildWorld === "function") { const _cbw71 = cBuildWorld; cBuildWorld = function (c, picks) { try { picks = picks || {}; c.story_mode = { plot: "strong plot", mix: "mixed plot + everyday", daily: "everyday companionship" }[picks.mode || "mix"]; c.twist_density = picks.twist || "mid"; } catch (_) {} return _cbw71.apply(this, arguments); }; }
+/* ---------- 7 · publish QA: v1.0 checks ---------- */
+const _miruQA71 = miruQA;
+miruQA = function (w) {
+  const R = _miruQA71.apply(this, arguments);
+  try {
+    const P = w && w.pack, ch = P && P.chapters || [], lead = (w.cast || [])[0];
+    if (ch[0]) {
+      const B = qaBeats(ch[0].beats).filter(b => Array.isArray(b));
+      const first = B.slice(0, 10), shown = first.some(b => b[0] && b[0] !== "n" && b[0] !== "sys" && b[0] !== "me");
+      if (B.length && !shown) R.warn.push(LL("第 1 章：前 10 句里主要角色还没有出场或开口——开篇要先让玩家看到他怎么对待你（规则 04）", "Chapter 1: the lead doesn't appear in the first 10 lines — show him early (rule 04)"));
+      if (first.some(b => b[0] === "sys" && b[1] === "mg")) R.warn.push(LL("第 1 章开头就插入小游戏：开篇先认识人物，小游戏放到剧情里正在做这件事的时候（规则 14）", "Chapter 1 opens with a mini-game — introduce the character first (rule 14)"));
+    }
+    ch.forEach((c, i) => {
+      const cs = (c.choices || []);
+      if (cs.length >= 2) {
+        const sig = cs.map(x => JSON.stringify([x.set || null, x.need || null, x.love || null, (x.mem && (x.mem.zh || x.mem.en)) || null]));
+        if (new Set(sig).size === 1) R.warn.push(LL("第 " + (i + 1) + " 章：几个选项的后果完全一样——重要选择至少要改变行为、信息、承诺或后续行动之一，并在后文读取（规则 07）", "Chapter " + (i + 1) + ": all choices have identical effects (rule 07)"));
+      }
+      const paidOnly = cs.length && cs.every(x => x.paid || x.need);
+      if (paidOnly) R.err.push(LL("第 " + (i + 1) + " 章：所有选项都需要付费或道具——必须保留免费有效路径（规则 10）", "Chapter " + (i + 1) + ": every option is paid or needs an item — keep a free path (rule 10)"));
+    });
+  } catch (_) {}
+  return R;
+};
+
+(function () { const st = document.createElement("style"); st.textContent = ".mgwhy71{margin:0 0 8px;font-size:12.5px;color:var(--dim);line-height:1.5}"; document.head.appendChild(st); })();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.

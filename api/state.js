@@ -4,7 +4,7 @@ const L = require('./_lib');
 const MAX = 900 * 1024;
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res, 'GET, PUT, OPTIONS')) return;
-  const u = L.needUser(req, res); if (!u) return;
+  const u = await L.needActive(req, res); if (!u) return;
   const sql = await L.db();
   if (req.method === 'GET') {
     const r = await sql('SELECT data, ver, updated_at FROM states WHERE user_id=$1', [u.uid]);
