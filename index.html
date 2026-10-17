@@ -2736,7 +2736,7 @@ function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys
 cleanState();
 function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(JSON.parse(JSON.stringify(DEF)),o)}}catch(e){}
  const d=JSON.parse(JSON.stringify(DEF));
- const nl=(navigator.language||"en").slice(0,2);if(["zh","ja","ko","es"].includes(nl))d.lang=nl;return d}
+ /* the app starts in English for everyone; players switch language themselves */return d}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
  /* storage full: drop oldest album frames first */
  try{if(S.album.length>4){S.album=S.album.slice(0,4);localStorage.setItem(KEY,JSON.stringify(S))}}catch(_){}}}
@@ -11434,6 +11434,7 @@ const AUT = {
   synced: { zh: "已同步", en: "synced", ja: "同期済み", ko: "동기화됨", es: "sincronizado" },
   preview: { zh: "这是预览版，连不上账号服务器。登录请打开正式网址 miru-wheat-pi.vercel.app，或先点「先逛逛」。", en: "This is a preview that can't reach the account server. Sign in at miru-wheat-pi.vercel.app, or tap Look around first.", ja: "これはプレビュー版のためログインできません。miru-wheat-pi.vercel.app でログインするか、「まずは見てみる」を選んでください。", ko: "미리보기 버전이라 로그인할 수 없어요. miru-wheat-pi.vercel.app 에서 로그인하거나 '먼저 둘러볼게요'를 눌러 주세요.", es: "Esta vista previa no puede conectarse. Inicia sesión en miru-wheat-pi.vercel.app o explora primero." },
   previewNote: { zh: "预览版：登录功能请在正式网址 miru-wheat-pi.vercel.app 使用", en: "Preview: sign-in works at miru-wheat-pi.vercel.app", ja: "プレビュー版：ログインは miru-wheat-pi.vercel.app で", ko: "미리보기: 로그인은 miru-wheat-pi.vercel.app 에서", es: "Vista previa: inicia sesión en miru-wheat-pi.vercel.app" },
+  keep: { zh: "这是你之前选的口味，都还在。想改就改，不改直接保存。", en: "These are the tastes you picked before — all kept. Change anything or just save.", ja: "以前選んだ好みはそのまま残っています。変更しても、そのまま保存してもOK。", ko: "예전에 고른 취향이 그대로 있어요. 바꾸거나 그대로 저장하세요.", es: "Estos son los gustos que elegiste antes. Cámbialos o guarda sin más." },
   cancel: { zh: "取消", en: "Cancel", ja: "キャンセル", ko: "취소", es: "Cancelar" },
 };
 function au(k) { const x = AUT[k] || {}; return x[S.lang] || x.en || ""; }
@@ -11517,12 +11518,19 @@ async function au70Done(j, method) {
     const cc = cloudInfo(); cc.token = j.token; cc.uid = j.user.id; cc.email = j.user.email; cc.provider = j.user.provider;
     S.authChoice = method; save0(); await walletPull().catch(() => {});
     toast(au("welcomeBack"));
-    if (had && S.ob) { startApp(); return; }
+    if (had && S.ob) { au70After(); return; }
   } else {
     S.authChoice = method; save0(); await walletPull().catch(() => {}); cloudPush(true); toast(au("hi"));
   }
-  S.langChosen = true; save0();
-  if (!S.ob) { obStep = 0; renderOB(); } else if ($("#s-ob") && !$("#s-ob").hidden) startApp(); else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
+  if (!S.ob || ($("#s-ob") && !$("#s-ob").hidden)) au70After(); else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
+}
+/* after the sign-in page (signed in or 「先逛逛」) the player still makes their own choices:
+   new players → language → 18+ → pairing → taste → hook drama; returning players → home, with their saved taste opened so they can
+   see their earlier choices are kept and change them. */
+function au70After() {
+  if (!S.ob) { obStep = 0; renderOB(); return; }
+  startApp();
+  setTimeout(() => { try { prefSheet(); toast(au("keep")); } catch (_) {} }, 450);
 }
 
 /* ---------- email sheet: sign in · create · forgot · reset ---------- */
@@ -11555,7 +11563,7 @@ document.addEventListener("click", async e => {
     if (k === "apple") au70Apple();
     else if (k === "google") { const p = await au70Prov(); if (!p.google) toast(au("soonG")); }
     else if (k === "email") authSheet70("login");
-    else if (k === "guest") { S.authChoice = "guest"; S.langChosen = true; save(); track("login", { method: "guest" }); if (S.ob) startApp(); else { obStep = 0; renderOB(); } }
+    else if (k === "guest") { S.authChoice = "guest"; save(); track("login", { method: "guest" }); au70After(); }
     return;
   }
   if ((x = e.target.closest("[data-au70m]"))) { e.preventDefault(); authSheet70(x.dataset.au70m); return; }
@@ -11667,6 +11675,11 @@ unitsSheet = function () { track("store_open"); return _units70.apply(this, argu
 .notice70{display:flex;gap:10px;align-items:flex-start;margin:0 0 10px;padding:10px 12px;border-radius:14px;background:rgba(156,132,224,.14);border:1px solid rgba(156,132,224,.35);font-size:12.5px;line-height:1.45}.notice70 button{color:var(--faint)}`;
   document.head.appendChild(st);
 })();
+/* while the sign-in page is up, nothing else pops over it (welcome gifts, promos, notices) */
+const _sheet70 = sheet;
+sheet = function (html) { try { const ob = $("#s-ob"); if (ob && !ob.hidden && ob.querySelector(".au70b") && String(html).indexOf("au70s") < 0 && String(html).indexOf("data-lang=") < 0) return; } catch (_) {} return _sheet70.apply(this, arguments); };
+/* switching language on the sign-in page redraws the sign-in page in that language */
+document.addEventListener("click", e => { const x = e.target.closest("[data-lang]"); if (!x) return; try { const ob = $("#s-ob"); if (ob && !ob.hidden && ob.querySelector(".au70b")) setTimeout(() => { if (!au70Loggedin() && !S.authChoice) renderAuth70(); }, 0); } catch (_) {} });
 
 /* ================= v2.7 · MIRU 互动剧本规则 v1.0 — runtime side =================
    The creator side carries the full rule set (MIRU_GEN_RULES, app57). This file applies the rules that matter while a story is PLAYED:
