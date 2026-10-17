@@ -84,7 +84,8 @@ module.exports = async (req, res) => {
   while (vec.length < 8) vec.push(0);
   try {
     const out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
-    res.setHeader('Content-Type', out.type);
+    const riff = out.buf.slice(0, 4).toString() === 'RIFF';
+    res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
     res.status(200).send(out.buf);
   } catch (e) {
