@@ -77,6 +77,17 @@ export default async function handler(req) {
   if (!list.length) return J({ error: { message: 'no LLM provider configured (LONGCAT_API_KEY / SCNET_API_KEY / GLM_API_KEY)' } }, 500, c.headers);
 
   /* ops probe: which providers answer right now */
+  if (body.probe && body.embed) { // which embedding endpoints work (no secrets returned)
+    const cands = [['scnet', env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, ''), env('SCNET_API_KEY'), ['Qwen3-Embedding-8B']], ['glm', env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, ''), env('GLM_API_KEY'), ['embedding-3', 'embedding-2']]];
+    const out = [];
+    for (const [id, base, key, models] of cands) for (const m of models) {
+      if (!key) { out.push({ id, model: m, ok: false, error: 'no key' }); continue; }
+      const t0 = Date.now();
+      try { const r = await fetch(base + '/embeddings', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key }, body: JSON.stringify({ model: m, input: ['他记得你怕打雷', '下雨天'] }) }); const j = await r.json().catch(() => ({})); const v = j.data && j.data[0] && j.data[0].embedding; out.push({ id, model: m, ok: !!v, dims: v ? v.length : 0, ms: Date.now() - t0, error: v ? undefined : JSON.stringify(j).slice(0, 200) }); }
+      catch (e) { out.push({ id, model: m, ok: false, error: String(e.message || e).slice(0, 160) }); }
+    }
+    return J({ embed: out }, 200, c.headers);
+  }
   if (body.probe) {
     const sc = list.find(p => p.id === 'scnet');
     if (sc && body.scnet_raw) { // diagnostics: raw stream head for given extra params (no secrets returned)
