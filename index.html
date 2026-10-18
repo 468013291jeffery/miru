@@ -12751,6 +12751,23 @@ function ledBlock(th) {
 }
 memBlock = (function (orig) { return function (th) { const a = orig.apply(this, arguments); let b = ""; try { b = ledBlock(th); } catch (_) {} return [b, a].filter(Boolean).join("\n\n"); }; })(memBlock);
 /* model proposals → program validation → commit */
+/* second, independent check before anything is committed: did it actually happen in this reply (not just get planned)? */
+async function ledVerify(th, props, userTxt, replyTxt) {
+  try {
+    const L = led(th); if (!th || !L) return;
+    let pr = props.filter(Boolean)[0]; if (typeof pr === "string") { const m = pr.match(/^\s*(keep|break)\s*[:：]\s*(P\d+)/i); if (!m) return; pr = { op: m[1].toLowerCase(), id: m[2].toUpperCase() }; }
+    const p = L.p.find(x => x.id === String(pr && pr.id)); if (!p || p.st !== "open") return;
+    if (typeof SAMPLE === "undefined" || !SAMPLE || !SAMPLE.json) return;
+    let v = null; try { v = await SAMPLE.json(["You audit a story's ledger. Decide strictly from the text below.",
+      "PROMISE: " + p.t, "PROPOSED: the promise was " + (pr.op === "keep" ? "FULFILLED" : "BROKEN") + " in this scene.",
+      "USER'S LAST MESSAGE: " + userTxt.slice(0, 800), "THE SCENE THAT WAS JUST WRITTEN:\n" + replyTxt,
+      "Answer yes only if the scene itself clearly shows it already happened (being there / doing it / refusing it) — not if it is still being planned, discussed or asked about.",
+      'Reply JSON only: {"yes":true|false,"why":"short reason"}'].join("\n\n"), { modelTier: "quick", cache: false }); } catch (_) { v = null; }
+    if (!v || v.yes !== true) { (L.rej = L.rej || []).push({ id: p.id, op: pr.op, why: v && v.why || "unverified", at: Date.now() }); L.rej = L.rej.slice(-20); save(); return; }
+    const ok = ledApply(th, [pr]);
+    if (ok) { appendMsg(th, { who: "sys", k: "card", title: (ok.op === "kept" ? "🤝 " + LL("约定兑现", "Promise kept") : "💔 " + LL("约定落空", "Promise broken")), txt: ok.p.t, at: Date.now() }); save(); if (curT === th.id) renderChat(); }
+  } catch (_) {}
+}
 function ledApply(th, props) {
   const L = led(th); if (!L || !Array.isArray(props)) return null;
   for (let pr of props.filter(Boolean).slice(0, 2)) {
@@ -12770,8 +12787,9 @@ ask = (function (orig) { return async function (prompt, opts) {
   } catch (_) {}
   try {
     if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && r && Array.isArray(r.ledger) && r.ledger.length) {
-      const th = S.threads[curT]; const ok = th && ledApply(th, r.ledger);
-      if (ok) setTimeout(() => { try { appendMsg(th, { who: "sys", k: "card", title: (ok.op === "kept" ? "🤝 " + LL("约定兑现", "Promise kept") : "💔 " + LL("约定落空", "Promise broken")), txt: ok.p.t, at: Date.now() }); save(); if (curT === th.id) renderChat(); } catch (_) {} }, 400);
+      const th = S.threads[curT], props = r.ledger.slice(), beats = (r.beats || []).map(b => (b.who === "n" ? "" : (ch(b.who) ? first(ch(b.who).n) + ": " : "")) + (b.text || "")).join("\n").slice(0, 2500);
+      const lastU = th && [...th.msgs].reverse().find(m => m.who === "me" && m.txt);
+      setTimeout(() => ledVerify(th, props, (lastU && lastU.txt) || "", beats), 300);
       delete r.ledger;
     }
   } catch (_) {}
