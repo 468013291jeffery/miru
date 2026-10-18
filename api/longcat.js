@@ -78,7 +78,7 @@ export default async function handler(req) {
 
   /* ops probe: which providers answer right now */
   if (body.probe && body.embed) { // which embedding endpoints work (no secrets returned)
-    const cands = [['scnet', env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, ''), env('SCNET_API_KEY'), ['Qwen3-Embedding-8B']], ['glm', env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, ''), env('GLM_API_KEY'), ['embedding-3', 'embedding-2']]];
+    const cands = [['openai', env('OPENAI_BASE_URL', 'https://api.openai.com/v1').replace(/\/+$/, ''), env('OPENAI_API_KEY'), [env('OPENAI_EMBED_MODEL', 'text-embedding-3-small')]], ['scnet', env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, ''), env('SCNET_API_KEY'), ['Qwen3-Embedding-8B']], ['glm', env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, ''), env('GLM_API_KEY'), ['embedding-3', 'embedding-2']]];
     const out = [];
     for (const [id, base, key, models] of cands) for (const m of models) {
       if (!key) { out.push({ id, model: m, ok: false, error: 'no key' }); continue; }

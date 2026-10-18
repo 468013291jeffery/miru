@@ -177,11 +177,14 @@ async function llm(messages, maxTokens, timeoutMs, order) {
 let _embDown = 0;
 function embedProviders() {
   const E = process.env, all = {
+    openai: E.OPENAI_API_KEY && { id: 'openai', url: (E.OPENAI_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '') + '/embeddings', key: E.OPENAI_API_KEY, model: E.OPENAI_EMBED_MODEL || 'text-embedding-3-small' },
     scnet: E.SCNET_API_KEY && { id: 'scnet', url: (E.SCNET_BASE_URL || 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/embeddings', key: E.SCNET_API_KEY, model: E.SCNET_EMBED_MODEL || 'Qwen3-Embedding-8B' },
     glm: E.GLM_API_KEY && { id: 'glm', url: (E.GLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/embeddings', key: E.GLM_API_KEY, model: E.GLM_EMBED_MODEL || 'embedding-3' },
   };
-  return String(E.EMBED_ORDER || 'scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
+  return String(E.EMBED_ORDER || 'openai,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
 }
+let _embLast = null; // model id of the last successful embedding call
+function embedPreferred() { const p = embedProviders()[0]; return p ? p.id + ':' + p.model : null; }
 async function embed(texts) {
   if (!texts.length || Date.now() < _embDown) return null;
   for (const p of embedProviders()) {
@@ -189,7 +192,7 @@ async function embed(texts) {
       const r = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify({ model: p.model, input: texts.map(t => String(t).slice(0, 1000)) }) });
       if (!r.ok) continue;
       const j = await r.json(); const v = (j.data || []).sort((a, b) => (a.index || 0) - (b.index || 0)).map(d => d.embedding);
-      if (v.length === texts.length && v[0] && v[0].length) return { model: p.id + ':' + p.model, vecs: v };
+      if (v.length === texts.length && v[0] && v[0].length) { _embLast = p.id + ':' + p.model; return { model: _embLast, vecs: v }; }
     } catch (_) {}
   }
   _embDown = Date.now() + 10 * 60e3; // none available: don't retry for 10 minutes
@@ -304,4 +307,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, sendMail, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, sendMail, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };

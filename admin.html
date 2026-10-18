@@ -511,18 +511,22 @@ const Config = {
     async function save() { await ElMessageBox.confirm('保存后立即对所有用户生效。', '确认修改配置', { type: 'warning' }); const j = await api('config', { body: { values: v.value } }); ElMessage.success('已保存 ' + Object.keys(j.changed).length + ' 项'); load(); }
     const skuRows = computed(() => v.value ? Object.entries(v.value.skus || {}).map(([k, x]) => ({ k, x })) : []);
     const llm = ref(null), probing = ref(false);
+    const emb = ref(null);
+    async function probeEmbed() { try { const r = await fetch('/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true, embed: true }) }); emb.value = (await r.json()).embed; } catch (e) { ElMessage.error('测试失败：' + e.message); } }
     async function probe() { probing.value = true; try { const r = await fetch('/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true }) }); llm.value = await r.json(); } catch (e) { ElMessage.error('测试失败：' + e.message); } finally { probing.value = false; } }
     onMounted(load);
-    return { v, meta, save, load, skuRows, fmt, llm, probing, probe };
+    return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed };
   },
   template: `<div v-if="v">
     <div class="panel"><h3>AI 模型（自动切换）</h3>
       <p class="muted">按顺序使用：第一个出错、超时（22 秒内没开始回复）就自动换下一个，玩家只会感觉稍慢。顺序由 Vercel 环境变量 LLM_ORDER 决定（默认 longcat,scnet,glm）；密钥只在服务器环境变量里（LONGCAT_API_KEY / SCNET_API_KEY + SCNET_MODEL / GLM_API_KEY + GLM_MODEL）。</p>
-      <div class="toolbar"><el-button type="primary" :loading="probing" @click="probe">测试所有模型</el-button><span class="muted" v-if="llm&&llm.order">当前顺序：{{llm.order.join(' → ')}}</span></div>
+      <div class="toolbar"><el-button type="primary" :loading="probing" @click="probe">测试所有模型</el-button><el-button @click="probeEmbed">测试向量接口（记忆召回）</el-button><span class="muted" v-if="llm&&llm.order">当前顺序：{{llm.order.join(' → ')}}</span></div>
       <el-table v-if="llm&&llm.providers" :data="llm.providers" size="small"><el-table-column prop="name" label="模型服务" width="120" /><el-table-column prop="model" label="模型" width="200" />
         <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.ok?'success':'danger'">{{row.ok?'可用':'不可用'}}</el-tag></template></el-table-column>
         <el-table-column label="首字耗时" width="110" :formatter="r=>r.ms+' ms'" /><el-table-column prop="error" label="错误信息" min-width="240" show-overflow-tooltip /></el-table>
       <el-alert v-if="llm&&llm.error" :title="llm.error.message" type="error" :closable="false" />
+      <el-table v-if="emb" :data="emb" size="small" style="margin-top:10px"><el-table-column prop="id" label="向量服务" width="100" /><el-table-column prop="model" label="模型" width="220" /><el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.ok?'success':'info'">{{row.ok?'可用':'不可用'}}</el-tag></template></el-table-column><el-table-column prop="dims" label="维度" width="80" /><el-table-column prop="error" label="说明" min-width="220" show-overflow-tooltip /></el-table>
+      <p class="muted" v-if="emb">记忆召回优先使用第一个可用的向量服务（默认 OpenAI → SCNet → 智谱）；都不可用时由免费模型按意思挑选。</p>
     </div>
     <div class="panel"><h3>新用户与钻石</h3><el-form label-width="160px" style="max-width:640px">
       <el-form-item label="新人礼（钻石）"><el-input-number v-model="v.welcome_gems" :min="0" /></el-form-item>

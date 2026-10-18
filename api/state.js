@@ -24,27 +24,29 @@ async function memory(req, res, u, sql) {
     if (gone.length) await sql('DELETE FROM memories WHERE user_id=$1 AND id = ANY($2::text[])', [u.uid, gone]);
     // embed rows that don't have a vector yet (best effort, small batches)
     let embedded = 0;
-    const todo = await sql('SELECT id, text FROM memories WHERE user_id=$1 AND emb IS NULL ORDER BY created_ms DESC LIMIT 32', [u.uid]);
+    const pref = L.embedPreferred(), healthy = pref && L.embedLast() === pref; // re-embed old vectors only once the preferred model is known to work
+    const todo = await sql('SELECT id, text FROM memories WHERE user_id=$1 AND (emb IS NULL OR ($2::text IS NOT NULL AND emb_model IS DISTINCT FROM $2)) ORDER BY created_ms DESC LIMIT 32', [u.uid, healthy ? pref : null]);
     if (todo.length) { const e = await L.embed(todo.map(r => r.text)); if (e) { for (let i = 0; i < todo.length; i++) await sql('UPDATE memories SET emb=$3::real[], emb_model=$4 WHERE user_id=$1 AND id=$2', [u.uid, todo[i].id, e.vecs[i], e.model]); embedded = todo.length; } }
     return L.send(res, 200, { ok: true, saved: items.length, deleted: gone.length, embedded });
   }
   if (op === 'recall') {
     const thread = String(b.thread || ''), cast = (b.cast || []).map(String), query = String(b.query || '').slice(0, 600), k = Math.max(1, Math.min(30, Number(b.k) || 8));
     if (!query.trim()) return L.send(res, 200, { mode: 'none', items: [] });
-    const rows = await sql(`SELECT id, thread_id, type, text, who, imp, emb FROM memories WHERE user_id=$1 AND hush=false AND (thread_id=$2 OR ($3 AND cast_ids ?| $4::text[])) ORDER BY created_ms DESC LIMIT 500`, [u.uid, thread, !!b.cross, cast.length ? cast : ['-']]);
+    const rows = await sql(`SELECT id, thread_id, type, text, who, imp, emb, emb_model FROM memories WHERE user_id=$1 AND hush=false AND (thread_id=$2 OR ($3 AND cast_ids ?| $4::text[])) ORDER BY created_ms DESC LIMIT 500`, [u.uid, thread, !!b.cross, cast.length ? cast : ['-']]);
     const cand = rows.filter(r => { const w = r.who || []; return !w.length || w.some(id => cast.includes(id)); }); // R42: only what these characters know
     if (!cand.length) return L.send(res, 200, { mode: 'empty', items: [] });
     const out = x => ({ id: x.id, t: x.text, type: x.type, thread: x.thread_id, score: Math.round((x._s || 0) * 1000) / 1000 });
     const withV = cand.filter(r => r.emb && r.emb.length);
     if (withV.length >= Math.min(cand.length, 5)) {
       const e = await L.embed([query]);
-      if (e) { for (const r of withV) r._s = L.cosine(e.vecs[0], r.emb) + (r.imp - 2) * 0.03 + (r.thread_id === thread ? 0.02 : 0); return L.send(res, 200, { mode: 'vector', items: withV.sort((a, b2) => b2._s - a._s).slice(0, k).map(out) }); }
+      const same = e ? withV.filter(r => r.emb_model === e.model) : [];
+      if (e && same.length >= Math.min(cand.length, 5)) { for (const r of same) r._s = L.cosine(e.vecs[0], r.emb) + (r.imp - 2) * 0.03 + (r.thread_id === thread ? 0.02 : 0); return L.send(res, 200, { mode: 'vector', model: e.model, items: same.sort((a, b2) => b2._s - a._s).slice(0, k).map(out) }); }
     }
     // no embeddings: let the model pick by meaning (cheap, short)
     const list = cand.slice(0, 80);
     try {
       const txt = await L.llm([{ role: 'system', content: 'You pick which remembered facts are relevant to what the user just said. Relevance means same topic or meaning, even with different words (e.g. "rain" ↔ "afraid of thunder"). Reply JSON only.' },
-        { role: 'user', content: 'USER JUST SAID: ' + query + '\n\nMEMORIES:\n' + list.map((r, i) => i + '. ' + r.text).join('\n') + '\n\nReturn up to ' + k + ' numbers of the relevant memories, most relevant first: {"ids":[3,0]}  (empty list if none)' }], 120, 6000);
+        { role: 'user', content: 'USER JUST SAID: ' + query + '\n\nMEMORIES:\n' + list.map((r, i) => i + '. ' + r.text).join('\n') + '\n\nReturn up to ' + k + ' numbers of the relevant memories, most relevant first: {"ids":[3,0]}  (empty list if none)' }], 120, 5000, 'scnet,longcat,glm');
       const m = txt.match(/\{[\s\S]*\}/); const ids = m ? (JSON.parse(m[0]).ids || []) : [];
       const picked = ids.map(Number).filter(i => list[i]).slice(0, k).map((i, n) => Object.assign(list[i], { _s: 1 - n * 0.05 }));
       return L.send(res, 200, { mode: 'model', items: picked.map(out) });
