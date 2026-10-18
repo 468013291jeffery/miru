@@ -2,7 +2,7 @@
 // Keys are read from environment variables only and never reach the browser:
 //   LONGCAT_API_KEY
 //   SCNET_API_KEY, SCNET_MODEL (required, e.g. the model name shown in SCNet 模型广场), SCNET_BASE_URL (default https://api.scnet.cn/api/llm/v1)
-//   GLM_API_KEY,   GLM_MODEL (default glm-4.5-air),  GLM_BASE_URL (default https://open.bigmodel.cn/api/paas/v4)
+//   GLM_API_KEY,   GLM_MODEL (default glm-4.5-flash, free tier),  GLM_BASE_URL (default https://open.bigmodel.cn/api/paas/v4)
 //   LLM_ORDER  e.g. "longcat,scnet,glm" (default) — first healthy provider wins; a provider that errors / times out before
 //              its first token is skipped and the next one answers, so players never see a broken reply.
 // POST {probe:true} → tests every configured provider with a tiny prompt and reports latency/status (for the ops console).
@@ -35,7 +35,7 @@ function providers() {
   const all = {
     longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
     scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
-    glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-air'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
+    glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
   };
   const order = String(env('LLM_ORDER', 'longcat,scnet,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
   for (const k of Object.keys(all)) if (!order.includes(k)) order.push(k);
