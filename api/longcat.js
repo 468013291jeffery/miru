@@ -87,9 +87,10 @@ export default async function handler(req) {
       }
       return J({ scnet_raw: out }, 200, c.headers);
     }
-    if (sc && Array.isArray(body.scnet_try)) {
-      const tries = await Promise.all(body.scnet_try.slice(0, 12).map(async m => { const p = { ...sc, model: () => String(m) }; const t0 = Date.now(); try { const o = await open(p, { model: '', messages: [{ role: 'user', content: '只回复：好' }], max_tokens: 8, temperature: 0 }); try { o.ctl.abort(); } catch (_) {} return { model: m, ok: true, ms: Date.now() - t0 }; } catch (e) { return { model: m, ok: false, error: String(e.message || e).slice(0, 120) }; } }));
-      return J({ scnet_try: tries }, 200, c.headers);
+    const tp = body.try_provider ? list.find(p => p.id === body.try_provider) : sc;
+    if (tp && Array.isArray(body.scnet_try || body.try_models)) {
+      const tries = await Promise.all((body.try_models || body.scnet_try).slice(0, 12).map(async m => { const p = { ...tp, model: () => String(m) }; const t0 = Date.now(); try { const o = await open(p, { model: '', messages: [{ role: 'user', content: '只回复：好' }], max_tokens: 8, temperature: 0 }); try { o.ctl.abort(); } catch (_) {} return { model: m, ok: true, ms: Date.now() - t0 }; } catch (e) { return { model: m, ok: false, error: String(e.message || e).slice(0, 120) }; } }));
+      return J({ provider: tp.id, tries }, 200, c.headers);
     }
     const res = await Promise.all(list.map(async p => {
       const t0 = Date.now();
