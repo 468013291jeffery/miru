@@ -1,5 +1,6 @@
 // MIRU → LLM proxy (Vercel Edge Function) with automatic failover: LongCat → SCNet → GLM (order via LLM_ORDER).
 // Keys are read from environment variables only and never reach the browser:
+//   DEEPSEEK_API_KEY, DEEPSEEK_MODEL (default deepseek-chat) — main text model when set (automatic prefix caching: keep the static rules first)
 //   LONGCAT_API_KEY
 //   SCNET_API_KEY, SCNET_MODEL (required, e.g. the model name shown in SCNet 模型广场), SCNET_BASE_URL (default https://api.scnet.cn/api/llm/v1)
 //   GLM_API_KEY,   GLM_MODEL (default glm-4.5-flash, free tier),  GLM_BASE_URL (default https://open.bigmodel.cn/api/paas/v4)
@@ -33,11 +34,12 @@ async function scnetResolve() {
 }
 function providers() {
   const all = {
+    deepseek: { id: 'deepseek', name: 'DeepSeek', url: env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/+$/, '') + '/chat/completions', key: env('DEEPSEEK_API_KEY'), model: () => env('DEEPSEEK_MODEL', 'deepseek-chat'), extra: {}, maxOut: 8000 },
     longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
     scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
     glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
   };
-  const order = String(env('LLM_ORDER', 'longcat,scnet,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
+  const order = String(env('LLM_ORDER', 'deepseek,longcat,scnet,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
   for (const k of Object.keys(all)) if (!order.includes(k)) order.push(k);
   return order.map(k => all[k]).filter(p => p.key && p.model(''));
 }
@@ -108,7 +110,7 @@ export default async function handler(req) {
       try { const o = await open(p, { model: '', messages: [{ role: 'user', content: '只回复：好' }], max_tokens: 8, temperature: 0 }); try { o.ctl.abort(); } catch (_) {} return { id: p.id, name: p.name, model: p.model(''), ok: true, ms: Date.now() - t0 }; }
       catch (e) { return { id: p.id, name: p.name, model: p.model(''), ok: false, ms: Date.now() - t0, error: String(e.message || e).slice(0, 200) }; }
     }));
-    return J({ order: list.map(p => p.id), providers: res, scnet_models: SCNET_LIST || undefined, scnet_auto: SCNET_AUTO || undefined, configured: { longcat: !!env('LONGCAT_API_KEY'), scnet: !!env('SCNET_API_KEY'), glm: !!env('GLM_API_KEY') } }, 200, c.headers);
+    return J({ order: list.map(p => p.id), providers: res, scnet_models: SCNET_LIST || undefined, scnet_auto: SCNET_AUTO || undefined, configured: { deepseek: !!env('DEEPSEEK_API_KEY'), longcat: !!env('LONGCAT_API_KEY'), scnet: !!env('SCNET_API_KEY'), glm: !!env('GLM_API_KEY') } }, 200, c.headers);
   }
 
   // Only pass through what MIRU uses, with hard caps so the proxy can't be used for huge jobs.

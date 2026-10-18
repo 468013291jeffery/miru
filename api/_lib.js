@@ -152,11 +152,12 @@ function structureQA(pack) {
 /* ---------- server-side model calls: same failover order as /api/longcat (LongCat → SCNet → GLM) ---------- */
 function chatProviders(order) {
   const E = process.env, all = {
+    deepseek: E.DEEPSEEK_API_KEY && { url: (E.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/+$/, '') + '/chat/completions', key: E.DEEPSEEK_API_KEY, model: E.DEEPSEEK_MODEL || 'deepseek-chat', nothink: true },
     longcat: E.LONGCAT_API_KEY && { url: 'https://api.longcat.chat/openai/v1/chat/completions', key: E.LONGCAT_API_KEY, model: 'LongCat-2.0' },
     scnet: E.SCNET_API_KEY && { url: (E.SCNET_BASE_URL || 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: E.SCNET_API_KEY, model: E.SCNET_MODEL || 'DeepSeek-V4.1-Flash' },
     glm: E.GLM_API_KEY && { url: (E.GLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: E.GLM_API_KEY, model: E.GLM_MODEL || 'glm-4.5-flash' },
   };
-  return String(order || E.LLM_ORDER || 'longcat,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
+  return String(order || E.LLM_ORDER || 'deepseek,longcat,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
 }
 async function llm(messages, maxTokens, timeoutMs, order) {
   const list = chatProviders(order); if (!list.length) throw new Error('no LLM key configured');
@@ -164,7 +165,7 @@ async function llm(messages, maxTokens, timeoutMs, order) {
   for (const p of list) {
     const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), timeoutMs || 25000);
     try {
-      const r = await fetch(p.url, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify({ model: p.model, messages, max_tokens: maxTokens || 2000, temperature: 0.3, thinking: { type: 'disabled' } }) });
+      const r = await fetch(p.url, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify(Object.assign({ model: p.model, messages, max_tokens: maxTokens || 2000, temperature: 0.3 }, p.nothink ? {} : { thinking: { type: 'disabled' } })) });
       if (!r.ok) throw new Error('llm ' + r.status);
       const j = await r.json(); const c = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
       if (c.trim()) return c;

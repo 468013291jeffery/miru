@@ -46,7 +46,7 @@ async function memory(req, res, u, sql) {
     const list = cand.slice(0, 80);
     try {
       const txt = await L.llm([{ role: 'system', content: 'You pick which remembered facts are relevant to what the user just said. Relevance means same topic or meaning, even with different words (e.g. "rain" ↔ "afraid of thunder"). Reply JSON only.' },
-        { role: 'user', content: 'USER JUST SAID: ' + query + '\n\nMEMORIES:\n' + list.map((r, i) => i + '. ' + r.text).join('\n') + '\n\nReturn up to ' + k + ' numbers of the relevant memories, most relevant first: {"ids":[3,0]}  (empty list if none)' }], 120, 5000, 'scnet,longcat,glm');
+        { role: 'user', content: 'USER JUST SAID: ' + query + '\n\nMEMORIES:\n' + list.map((r, i) => i + '. ' + r.text).join('\n') + '\n\nReturn up to ' + k + ' numbers of the relevant memories, most relevant first: {"ids":[3,0]}  (empty list if none)' }], 120, 5000, 'deepseek,scnet,longcat,glm');
       const m = txt.match(/\{[\s\S]*\}/); const ids = m ? (JSON.parse(m[0]).ids || []) : [];
       const picked = ids.map(Number).filter(i => list[i]).slice(0, k).map((i, n) => Object.assign(list[i], { _s: 1 - n * 0.05 }));
       return L.send(res, 200, { mode: 'model', items: picked.map(out) });
