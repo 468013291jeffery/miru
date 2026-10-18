@@ -12,11 +12,29 @@ const LONGCAT_MODELS = ['LongCat-2.0', 'LongCat-2.5-Preview'];
 const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
 const FIRST_TOKEN_MS = 22000; // give up on a provider that hasn't started answering by then
 
+const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
+/* SCNet: one key reaches many models. Without SCNET_MODEL we read the account's model list once and pick a good chat model. */
+let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0;
+const SCNET_PREF = [/deepseek[-_ ]?v3/i, /qwen3[-_ ]?235b/i, /qwen3/i, /deepseek/i, /qwen/i, /glm/i, /llama/i];
+async function scnetResolve() {
+  if (env('SCNET_MODEL') || !env('SCNET_API_KEY')) return;
+  if (SCNET_AUTO && Date.now() - SCNET_AT < 3600e3) return;
+  try {
+    const base = env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '');
+    const r = await fetch(base + '/models', { headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') } });
+    const j = await r.json();
+    const ids = (j.data || j.models || []).map(m => typeof m === 'string' ? m : (m.id || m.name)).filter(Boolean);
+    SCNET_LIST = ids;
+    const chat = ids.filter(id => !/embed|rerank|vision|vl\b|-vl|ocr|tts|asr|whisper|image|reason|r1\b|-r1|think/i.test(id));
+    for (const re of SCNET_PREF) { const hit = chat.find(id => re.test(id)); if (hit) { SCNET_AUTO = hit; break; } }
+    if (!SCNET_AUTO) SCNET_AUTO = chat[0] || ids[0] || null;
+    SCNET_AT = Date.now();
+  } catch (_) {}
+}
 function providers() {
-  const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
   const all = {
     longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
-    scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL'), extra: {}, maxOut: 8000 },
+    scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: {}, maxOut: 8000 },
     glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-air'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
   };
   const order = String(env('LLM_ORDER', 'longcat,scnet,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
@@ -52,6 +70,7 @@ export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: c.headers });
   if (req.method !== 'POST') return new Response('POST only', { status: 405, headers: c.headers });
   if (!c.ok) return J({ error: { message: 'origin not allowed' } }, 403, c.headers);
+  await scnetResolve();
   let body;
   try { body = await req.json(); } catch { return J({ error: { message: 'bad json' } }, 400, c.headers); }
   const list = providers();
@@ -64,7 +83,7 @@ export default async function handler(req) {
       try { const o = await open(p, { model: '', messages: [{ role: 'user', content: '只回复：好' }], max_tokens: 8, temperature: 0 }); try { o.ctl.abort(); } catch (_) {} return { id: p.id, name: p.name, model: p.model(''), ok: true, ms: Date.now() - t0 }; }
       catch (e) { return { id: p.id, name: p.name, model: p.model(''), ok: false, ms: Date.now() - t0, error: String(e.message || e).slice(0, 200) }; }
     }));
-    return J({ order: list.map(p => p.id), providers: res }, 200, c.headers);
+    return J({ order: list.map(p => p.id), providers: res, scnet_models: SCNET_LIST || undefined, scnet_auto: SCNET_AUTO || undefined, configured: { longcat: !!env('LONGCAT_API_KEY'), scnet: !!env('SCNET_API_KEY'), glm: !!env('GLM_API_KEY') } }, 200, c.headers);
   }
 
   // Only pass through what MIRU uses, with hard caps so the proxy can't be used for huge jobs.
