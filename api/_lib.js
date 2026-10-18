@@ -79,6 +79,9 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS orders (id TEXT PRIMARY KEY, user_id TEXT, sku TEXT, platform TEXT, gems INT, price_cents INT, currency TEXT, status TEXT, test BOOLEAN DEFAULT false, receipt TEXT, refunded_by TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS orders_user_idx ON orders (user_id, at DESC)`,
   `CREATE TABLE IF NOT EXISTS notices (id BIGSERIAL PRIMARY KEY, title TEXT, body TEXT, lang TEXT DEFAULT 'all', kind TEXT DEFAULT 'banner', active BOOLEAN DEFAULT true, starts_at TIMESTAMPTZ, ends_at TIMESTAMPTZ, created_by TEXT, created_at TIMESTAMPTZ DEFAULT now())`,
+  `CREATE TABLE IF NOT EXISTS scripts (id TEXT PRIMARY KEY, title TEXT, orient TEXT DEFAULT 'bl', lang TEXT DEFAULT 'zh', stage INT DEFAULT 1, status TEXT DEFAULT 'draft', config JSONB DEFAULT '{}'::jsonb, research JSONB, brief TEXT, outline TEXT, chapters JSONB DEFAULT '[]'::jsonb, qa JSONB, review JSONB DEFAULT '{}'::jsonb, work_id TEXT, created_by TEXT, updated_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now(), published_at TIMESTAMPTZ)`,
+  `CREATE TABLE IF NOT EXISTS script_versions (id BIGSERIAL PRIMARY KEY, script_id TEXT, stage INT, note TEXT, data JSONB, by_name TEXT, at TIMESTAMPTZ DEFAULT now())`,
+  `CREATE INDEX IF NOT EXISTS script_versions_idx ON script_versions (script_id, id DESC)`,
 ];
 async function db() {
   if (!hasDb()) { const e = new Error('database not configured'); e.code = 503; throw e; }
@@ -205,8 +208,9 @@ function configReset() { _cfg = null; }
 /* ---------- v2.7: operations console accounts ---------- */
 const ROLES = {
   owner: ['*'],
-  admin: ['dashboard', 'users', 'users.write', 'gems', 'works', 'assets', 'reports', 'orders', 'ledger', 'i18n', 'config', 'notices', 'audit', 'events'],
-  reviewer: ['dashboard', 'works', 'assets', 'reports', 'users'],
+  admin: ['dashboard', 'users', 'users.write', 'gems', 'works', 'scripts', 'assets', 'reports', 'orders', 'ledger', 'i18n', 'config', 'notices', 'audit', 'events'],
+  reviewer: ['dashboard', 'works', 'assets', 'reports', 'users', 'scripts'],
+  writer: ['dashboard', 'scripts'],
   support: ['dashboard', 'users', 'users.write', 'gems', 'orders', 'ledger', 'reports'],
   analyst: ['dashboard', 'events', 'orders', 'users'],
 };

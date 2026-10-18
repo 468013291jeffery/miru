@@ -1,0 +1,1142 @@
+{
+  "schema_version": "miru.research/1.0",
+  "story_id": "honor_code",
+  "setting_version": "user-config-2026-10",
+  "generation_scope": "素材研究",
+  "setting_status": "pending",
+  "assumptions": [
+    "Marlowe University为用户设定的虚构美国东北部大学，与任何真实大学无关",
+    "所有角色均为成年人(18+，大学角色建议19岁及以上)",
+    "本文件中的结构建议(章节、节奏、分支)为本次研究的创意建议，并非来自任何权威来源",
+    "趋势判断仅基于本次实际读取的来源，置信度如标注"
+  ],
+  "missing_inputs": [
+    "玩家固定身份",
+    "角色年龄与档案",
+    "故事模式",
+    "篇幅长度",
+    "互动模式",
+    "反转密度",
+    "冲突强度",
+    "路线预算",
+    "道具/付费范围",
+    "内容边界"
+  ],
+  "project_config_echo": {
+    "title": "The Honor Code｜荣誉法则",
+    "genre": "BL",
+    "tags": [
+      "美国大学BL",
+      "宿敌变恋人",
+      "三角关系",
+      "校园暴力",
+      "嫉妒",
+      "病娇"
+    ],
+    "world": "Marlowe University（虚构，美国东北部）",
+    "opening": "新生派对，主角被欺凌",
+    "ending_mode": "hybrid（混合）",
+    "note": "以上为用户提供的配置，不代表对真实大学的陈述"
+  },
+  "source_cards": [
+    {
+      "source_id": "S01",
+      "source_type": "verified",
+      "title": "5 Things You Should Know About UVA's Honor System",
+      "author_or_org": "University of Virginia (UVA Today)",
+      "locator": "https://news.virginia.edu/node/226596",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "荣誉体系1842年建立，由学生选举产生的27人荣誉委员会运行",
+        "荣誉违规为撒谎、作弊、偷窃，且须达到'理性学生应知'与'严重到容忍会破坏体系'两项门槛",
+        "流程六步：举报→知情撤回(承认并休学两学期)→全面调查→三人调查小组决定是否正式指控→听证(被告可选随机学生陪审、委员或混合)→上诉",
+        "单一制裁：定罪即永久开除；另有'良心撤回'，供尚未被怀疑者主动坦白"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "仅作机制与事实参考，不得复制原文措辞、誓词原句、机构名称或标识；如需引用须重新核对并限短引"
+    },
+    {
+      "source_id": "S02",
+      "source_type": "verified",
+      "title": "Honor crimes: Is it time for the single sanction to go?",
+      "author_or_org": "C-VILLE Weekly (Jonathan Haynes, 2019-05-15)",
+      "locator": "https://c-ville.com/honor-crimes-is-it-time-for-the-single-sanction-to-go",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "2018年荣誉审计委员会调查称约45%学生、五分之一教授会因不支持单一制裁而不愿举报",
+        "委员会无法强制作证或调取文件，也不审理性不端或身体暴力案件",
+        "2012–2017数据显示部分群体被举报比例偏高、国际学生被制裁比例偏高，开除可能牵连签证",
+        "2013年通过知情撤回：被告在阅读指控后7天内承认，可休学两学期代替开除"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "新闻报道，统计数字以报道转述为准；仅作'制度争议'参考"
+    },
+    {
+      "source_id": "S03",
+      "source_type": "verified",
+      "title": "Honor Committee — The Hearing",
+      "author_or_org": "Princeton University Honor Committee",
+      "locator": "https://honor.princeton.edu/current-procedure/hearing",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "委员会询问证人；被告可选一名非委员会成员的在校本科生作为同伴代表，全程在场并可质询证人",
+        "调查员不参与审议；证人作证后被告回应，代表与被告可作最后陈述",
+        "页面称唯一有效辩护是'行为不构成违规'，不知规则或当时压力不算辩护"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "仅作机制与事实参考，不得复制原文措辞、誓词原句、机构名称或标识；如需引用须重新核对并限短引；该页未载明证明标准与处罚，相关内容待补"
+    },
+    {
+      "source_id": "S04",
+      "source_type": "verified",
+      "title": "Honor Code",
+      "author_or_org": "Davidson College",
+      "locator": "https://davidson.edu/about/mission-and-values/honor-code",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "学生承诺不偷窃、不就学院事务撒谎、不作弊",
+        "新生入学签署誓约并参加承诺仪式",
+        "学生须举报亲眼所见的违规，不举报本身即违规",
+        "荣誉准则可追溯至1837年建校，现行荣誉委员会成立于1959年"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "仅作机制与事实参考，不得复制原文措辞、誓词原句、机构名称或标识；如需引用须重新核对并限短引"
+    },
+    {
+      "source_id": "S05",
+      "source_type": "verified",
+      "title": "What is the Code?",
+      "author_or_org": "Haverford College Honor Council",
+      "locator": "https://honorcouncil.haverford.edu/the-code/what-is-the-code/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "准则覆盖学术与社交两方面，强调信任、关怀与尊重，自称理想与期望而非条规",
+        "例：无监考考试、自排期末考、宿舍无RA",
+        "准则须每年在全体学生大会(Plenary)上辩论、修订并重新批准",
+        "由学生自治的荣誉委员会执行"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "仅作机制与事实参考，不得复制原文措辞、誓词原句、机构名称或标识；如需引用须重新核对并限短引；对质规范与审理细节未在该页读到"
+    },
+    {
+      "source_id": "S06",
+      "source_type": "verified",
+      "title": "Cadet Honor Code & Honor System",
+      "author_or_org": "United States Military Academy West Point",
+      "locator": "https://www.westpoint.edu/honor",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "核心准则含'容忍条款'：学员须拒绝包庇他人违规，应举报并当面对质",
+        "'三条自问'：是否欺骗、是否获得不当优势、若施于己是否反对",
+        "流程：举报→调查→听证(争议案或认错后的咨询委员会)→裁决→复健教育",
+        "制裁视情节可至延迟毕业或开除；留校者可参加50+小时的导师辅导发展项目"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "仅作机制与事实参考，不得复制原文措辞、誓词原句、机构名称或标识；如需引用须重新核对并限短引"
+    },
+    {
+      "source_id": "S07",
+      "source_type": "verified",
+      "title": "Stop Campus Hazing Act Signed by President Biden",
+      "author_or_org": "Bricker Graydon LLP",
+      "locator": "https://www.bricker.com/insights/publications/stop-campus-hazing-act-signed-by-president-biden",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "2024-12-23签署(Public Law 118-173)",
+        "霸凌(hazing)定义为对他人的故意、明知或轻率行为，无论对方是否自愿，发生在加入/维持学生组织成员资格过程中且造成或产生身心伤害风险",
+        "'学生组织'指两名以上在校生组成的组织，不论学校是否承认",
+        "要求：年度安全报告纳入霸凌数据；每年两次更新的'校园霸凌透明度报告'须列出组织名、认定描述(含是否涉酒/药)、处分与日期，不含个人身份信息，保留五年；网站公开政策与预防项目",
+        "时间节点：2025-01-01开始收集数据；2025-12-23前上网公示；2026年度安全报告首次纳入"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "律所解读文章，非法律文本；法条以官方文本为准；页面自身存在一处日期笔误"
+    },
+    {
+      "source_id": "S08",
+      "source_type": "verified",
+      "title": "Stop Campus Hazing Law",
+      "author_or_org": "Cornell University (hazing.cornell.edu)",
+      "locator": "https://hazing.cornell.edu/node/386",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "该法修订Clery法案并更名为Jeanne Clery Campus Safety Act",
+        "康奈尔网站设有'Violations'板块存放校园霸凌透明度报告，按学年归档，并提供举报表单"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "仅作机制与事实参考，不得复制原文措辞、誓词原句、机构名称或标识；如需引用须重新核对并限短引；具体案例内容未读取"
+    },
+    {
+      "source_id": "S09",
+      "source_type": "verified",
+      "title": "National Study of Student Hazing",
+      "author_or_org": "StopHazing",
+      "locator": "https://stophazing.org/?p=3859",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "页面称参与社团/校队/组织的大学生中55%经历过霸凌；47%在进入大学前已经历过",
+        "常见做法包括饮酒、羞辱、孤立、剥夺睡眠与性行为",
+        "研究由Elizabeth Allan与Mary Madden主导，页面称为2008原研究的重启更新版"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "样本量、识别率、举报率未在页面读到；数字须对照完整报告后再用于宣传文案"
+    },
+    {
+      "source_id": "S10",
+      "source_type": "verified",
+      "title": "A Guide to Harvard's Relationship with Final Clubs",
+      "author_or_org": "The Harvard Crimson (2016-05-06)",
+      "locator": "https://api.thecrimson.com/article/2016/5/6/final-clubs-explained",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "终极俱乐部(final clubs)为历史上单一性别的社交俱乐部，独立法人、校友运营，1984年起与校方脱钩",
+        "须大二起经'punch'邀请，多轮活动筛选后入会",
+        "2016年政策：单一性别未认可组织成员不得任认可组织领导职务、不获奖学金院长推荐",
+        "争议涉及性别排他、精英主义与性侵调查数据"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "学生报纸报道；仅作'独立于学校的精英社交组织'结构参考，不得使用真实俱乐部名"
+    },
+    {
+      "source_id": "S11",
+      "source_type": "verified",
+      "title": "Study finds legacy, athletics give wealthy an edge in Ivy admissions (NHPR/WBUR)",
+      "author_or_org": "WBUR / New Hampshire Public Radio (2023-08-04)",
+      "locator": "https://www.wbur.org/news/2023/08/04/legacy-athletics-harvard-college-admission-statistics-study",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "报道Opportunity Insights研究：在相同成绩下，前1%家庭学生被'Ivy-Plus'录取概率比中产高55%",
+        "校友子女(legacy)身份是富裕学生获优待的主要因素之一；体育特招与非学术因素亦有利于富裕申请者",
+        "公立大学未见类似偏好"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "二手新闻报道，原论文未读取(见待补来源)"
+    },
+    {
+      "source_id": "S12",
+      "source_type": "verified",
+      "title": "Societies find their secret niche",
+      "author_or_org": "Yale Daily News (mid-2000s, byline not shown)",
+      "locator": "https://yaledailynews.com/blog/2006/04/06/societies-find-their-secret-niche",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "耶鲁高年级社团多在大三末'tap'选人，Skull and Bones为'直接tap'",
+        "'墓穴社团'因无窗建筑得名，每年各收约15人",
+        "成员通常周四、周日聚会，内部活动保密；入会仪式公开，可能包含服装、唱歌与令人尴尬的任务"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "作者与日期页面未显示；仅作氛围与结构参考"
+    },
+    {
+      "source_id": "S13",
+      "source_type": "verified",
+      "title": "ToastyStats (Fanlore entry)",
+      "author_or_org": "Fanlore / Organization for Transformative Works",
+      "locator": "https://fanlore.org/wiki/ToastyStats",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "ToastyStats为同人统计博客，曾发布AO3最大CP、M/M占比、完结率、警告标签等分析(2014–2016)",
+        "该词条仅列标题，未给出具体数字，未涉及宿敌变恋人"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "只能证明'存在AO3统计分析'这一事实，不能作为任何比例或趋势依据"
+    },
+    {
+      "source_id": "S14",
+      "source_type": "verified",
+      "title": "From Sweet to Spicy, Here are the Most Popular Romantic Reads on TikTok",
+      "author_or_org": "Book Riot (Addison Ciuchta, 2022-02-03)",
+      "locator": "https://bookriot.com/most-popular-romance-books-on-tiktok/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "作者浏览约100条#RomanceBooks/#BookTok等标签视频并手工统计",
+        "至少10条视频提及或专门讨论enemies to lovers，作者认为其似乎比其他套路更受欢迎",
+        "文中主打书目以M/F为主，未列M/M作品"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "样本约100条、单人手工统计、2022年初；不能外推为市场结论"
+    },
+    {
+      "source_id": "S15",
+      "source_type": "verified",
+      "title": "New Standalone Genre: LGBTQ+",
+      "author_or_org": "Episode Interactive Forums",
+      "locator": "https://forums.episodeinteractive.com/t/new-standalone-genre-lgbtq/548611",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "Episode官方论坛公告：LGBTQ+因达到平台阈值由子类升为独立类型，进入侧边栏类型列表"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "帖子未显示日期；无具体数量；只证明该平台设有LGBTQ+独立分类"
+    },
+    {
+      "source_id": "S16",
+      "source_type": "verified",
+      "title": "界面新闻：晋江纯爱/耽改相关报道",
+      "author_or_org": "界面新闻 (2023-12-22)",
+      "locator": "https://www.jiemian.com/article/10579827.html",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "报道称近年晋江纯爱赛道表现好于言情，晋江总分榜前十中纯爱占8部",
+        "报道称耽改题材受严格管控，导致大量纯爱IP难以售出",
+        "报道称2021年以来全站收藏量逐年下降(全站数据，非纯爱专项)"
+      ],
+      "rights_status": "事实参考；文本未获转载授权",
+      "usage_limits": "媒体转述，未提供政策原文；榜单为某一时点快照"
+    },
+    {
+      "source_id": "S17",
+      "source_type": "verified",
+      "title": "What is Dark Romance and Why is BookTok Obsessed With It?",
+      "author_or_org": "Paste Magazine (Kayleigh Donaldson, 2023-11-29)",
+      "locator": "https://pastemagazine.com/books/romance/what-is-dark-romance-booktok-trend",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "暗黑罗曼(dark romance)常含绑架、BDSM、同意界限模糊，男主多出自犯罪世界",
+        "BookTok推动其热度，相关标签播放量数十万至数百万",
+        "主要批评为美化虐待、对算法推送下的年轻读者可能有害；'dubious consent'警示常见",
+        "提及Twisted Love、Deviant King等书名；文章无正式销量数据"
+      ],
+      "rights_status": "评论文章；事实参考，文本未获授权",
+      "usage_limits": "趋势证据来自TikTok播放量与个别畅销榜表现，置信度有限"
+    },
+    {
+      "source_id": "S18",
+      "source_type": "verified",
+      "title": "Consent and the Romance Genre: Why isn't There More of it?",
+      "author_or_org": "Long River Review (Sofia Tas-Castro, 2024-04-12)",
+      "locator": "https://longriverreview.com/blog/2024/consent-and-the-romance-genre-why-isnt-there-more-of-it/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "作者认为许多罗曼作品把身体反应或被动接受当作同意，二者不同",
+        "建议在对白中明确书写同意，并对非/存疑同意内容加内容警示"
+      ],
+      "rights_status": "学生刊物评论；观点参考",
+      "usage_limits": "个人评论，非研究"
+    },
+    {
+      "source_id": "S19",
+      "source_type": "verified",
+      "title": "Writing Romance and #MeToo: 5 tips for authors",
+      "author_or_org": "Write for Harlequin (Deirdre McCluskey; date not shown)",
+      "locator": "https://www.writeforharlequin.com/?p=12928",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "五项自检：人物动机是否充分；权力不对等题材是否以相互尊重而非控制为前提；对方角色能否真正感知POV角色的意愿；朗读检验是浪漫还是压迫；警惕'loom''claimed'等暗示威吓的词"
+      ],
+      "rights_status": "出版商写作指南；观点参考",
+      "usage_limits": "日期未显示；仅作写作自检清单参考"
+    },
+    {
+      "source_id": "S20",
+      "source_type": "verified",
+      "title": "Standard Patterns in Choice-Based Games (IFWiki summary)",
+      "author_or_org": "Sam Kabo Ashwell (2015-01-26), via IFWiki",
+      "locator": "https://www.ifwiki.org/Standard_Patterns_in_Choice-Based_Games",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "归纳八种结构：时间洞穴、挑战通道、分支与瓶颈、任务、开放地图、分院帽、浮动模块、循环成长",
+        "'分支与瓶颈'依靠状态追踪让前期选择在汇合后仍有影响"
+      ],
+      "rights_status": "评论/文摘；概念参考",
+      "usage_limits": "通过IFWiki摘要读取，原文未直接打开"
+    },
+    {
+      "source_id": "S21",
+      "source_type": "verified",
+      "title": "Small-Scale Structures in CYOA",
+      "author_or_org": "Emily Short (2016-11-05)",
+      "locator": "https://emshort.blog/2016/11/05/small-scale-structures-in-cyoa/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "六种小结构：需确认的选择、可换轨选择、计分选择、可重入对话节点、第一章分院帽、终局时间洞穴",
+        "可重入对话节点可按已获信息或关系状态设门槛"
+      ],
+      "rights_status": "博客文章；概念参考",
+      "usage_limits": "仅借鉴结构概念"
+    },
+    {
+      "source_id": "S22",
+      "source_type": "verified",
+      "title": "How to Write Intentional Choices",
+      "author_or_org": "Choice of Games (Becky Slitt, 2016-12-22)",
+      "locator": "https://www.choiceofgames.com/2016/12/how-to-write-intentional-choices/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "有意义的选择需'有意图'：选前通过叙述或选项文字提示可能后果、被检定的属性与相对难度",
+        "尤需注意含负面后果、难度不同、目标互相取舍的选择"
+      ],
+      "rights_status": "博客文章；概念参考",
+      "usage_limits": "仅借鉴方法"
+    },
+    {
+      "source_id": "S23",
+      "source_type": "verified",
+      "title": "7 Rules for Designing Great Stats",
+      "author_or_org": "Choice of Games (Dan Fabulich, 2011-07-27)",
+      "locator": "https://www.choiceofgames.com/2011/07/7-rules-for-designing-great-stats/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "不要只用技能类属性；加入性格、道德(多维而非单一善恶)、世界状态属性；提供可消耗资源；让选项同样诱人；属性命名要有创意"
+      ],
+      "rights_status": "博客文章；概念参考",
+      "usage_limits": "仅借鉴方法"
+    },
+    {
+      "source_id": "S24",
+      "source_type": "verified",
+      "title": "2014: 80 Days",
+      "author_or_org": "50 Years of Text Games (Aaron A. Reed, 2021-11-18)",
+      "locator": "https://if50.substack.com/p/2014-80-days",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "80 Days以频繁小选择控制节奏，并用可视地图展示分支、因果与未探索内容以解决'看不到选择影响'的问题",
+        "inkle为此开发ink脚本语言；城市为相对独立的故事模块；多数通关只读到不足10%文本"
+      ],
+      "rights_status": "评论文章；事实参考",
+      "usage_limits": "仅借鉴'后果可视化'思路"
+    },
+    {
+      "source_id": "S25",
+      "source_type": "verified",
+      "title": "What's Not Protected: Copyright for Fiction Authors",
+      "author_or_org": "Authors Alliance (2020-11-10)",
+      "locator": "https://www.authorsalliance.org/2020/11/10/whats-not-protected-copyright-for-fiction-authors/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "思想与主题不受版权保护；题材必然伴随的场景元素(scènes à faire)与类型化角色不受保护；作品标题不可注册版权",
+        "受保护的是对思想的具体原创表达"
+      ],
+      "rights_status": "法律科普；非法律意见",
+      "usage_limits": "美国法语境的科普，不构成法律意见；跨法域发行需另行咨询"
+    },
+    {
+      "source_id": "S26",
+      "source_type": "verified",
+      "title": "Red, White & Royal Blue Trailer (TVLine)",
+      "author_or_org": "TVLine",
+      "locator": "https://tvline.com/trailers/red-white-and-royal-blue-trailer-amazon-movie-video-1235001323/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "改编自Casey McQuiston小说；美国总统之子与英国王子为公开宿敌，公开冲突后被迫作秀休战，宿敌关系转为秘密恋情；Prime Video于8月11日上线(2023)"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    },
+    {
+      "source_id": "S27",
+      "source_type": "verified",
+      "title": "Heartstopper (TV series)",
+      "author_or_org": "Wikipedia",
+      "locator": "https://en.wikipedia.org/wiki/Heartstopper_(TV_series)",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "Alice Oseman据自己的网络漫画改编，Netflix；Truham文法学校Nick与Charlie由友情转恋情",
+        "整体基调温暖治愈；Charlie曾受霸凌并与Ben有秘密关系",
+        "三季分别于2022/2023/2024上线，终章电影2026-07-17"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计；维基百科为二手汇编"
+    },
+    {
+      "source_id": "S28",
+      "source_type": "verified",
+      "title": "Maxton Hall – German series (deutschland.de)",
+      "author_or_org": "deutschland.de (2025-11-05)",
+      "locator": "https://deutschland.de/en/topic/culture/maxton-hall-german-series",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "改编自Mona Kasten的Save三部曲；奖学金生Ruby在精英寄宿学校与富家继承人James相遇，围绕阶级差异与秘密展开",
+        "报道称在120多个国家登顶Prime Video、为其最高播放的国际剧集；第二季2025-11-07上线"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    },
+    {
+      "source_id": "S29",
+      "source_type": "verified",
+      "title": "Elite (TV series)",
+      "author_or_org": "Wikipedia",
+      "locator": "https://en.wikipedia.org/wiki/Elite_(TV_series)",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "西班牙Netflix剧；三名工薪阶层奖学金生进入富人学校Las Encinas，阶级、嫉妒与恋情交织",
+        "以同学遇害为核心，用审讯式闪前与主线回溯结构推进；含多条LGBT线；2018–2024共八季"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    },
+    {
+      "source_id": "S30",
+      "source_type": "verified",
+      "title": "Movie review: Saltburn",
+      "author_or_org": "The California Aggie (Elizabeth Woodhall, 2024-01-24)",
+      "locator": "https://theaggie.org/2024/1/24/movie-review-saltburn",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "2006年牛津，Oliver对富家同学Felix产生性与占有并存的执念，想得到他也想成为他",
+        "反转：Oliver谎报出身，从被同情者变为令人恐惧者"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    },
+    {
+      "source_id": "S31",
+      "source_type": "verified",
+      "title": "Bully (game wiki)",
+      "author_or_org": "Giant Bomb",
+      "locator": "https://giantbomb.com/wiki/Games/Bully",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "Rockstar Vancouver开发，2006年发行；15岁的Jimmy被送入破败私校Bullworth，校内分为霸凌者、书呆子、预科生、运动员、油头党及校外镇民等派系"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计；注意其主角为未成年人，本项目不可借用"
+    },
+    {
+      "source_id": "S32",
+      "source_type": "verified",
+      "title": "KinnPorsche",
+      "author_or_org": "Wikipedia",
+      "locator": "https://en.wikipedia.org/wiki/KinnPorsche",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "泰国BL剧，改编自Daemi网络小说；黑帮继承人Kinn雇用酒保兼地下拳手Porsche为保镖，两人相恋并卷入家族权斗与父母死因之谜",
+        "2022-04-02至07-09播出14集，iQIYI全球播出；首集登顶iQIYI 191个地区榜单"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    },
+    {
+      "source_id": "S33",
+      "source_type": "verified",
+      "title": "Twisted Love (review)",
+      "author_or_org": "Publishers Weekly (2022-08-24)",
+      "locator": "https://publishersweekly.com/9781728274867",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "Ana Huang作品；Ava与哥哥的好友Alex为邻，Alex受托'看护'她并暗中向权贵复仇",
+        "标注套路：强制同处、宿敌变恋人、哥哥的好友、冷酷受创男主、暗黑罗曼"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    },
+    {
+      "source_id": "S34",
+      "source_type": "verified",
+      "title": "God of Fury — Background",
+      "author_or_org": "SuperSummary",
+      "locator": "https://www.supersummary.com/god-of-fury/background/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "partially_verified",
+      "supported_claims": [
+        "Rina Kent《Legacy of Gods》：虚构英国岛屿上两所对立大学，三大秘密俱乐部主导校园生活",
+        "各册把不同大学的主角与恋爱对象配对，秘密、暴力与信任破裂贯穿；2022–2023出版"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计；二手摘要平台"
+    },
+    {
+      "source_id": "S35",
+      "source_type": "verified",
+      "title": "Devil's Night series",
+      "author_or_org": "Penguin Random House",
+      "locator": "https://www.penguinrandomhouse.com/series/G8F/devils-night/",
+      "retrieved_at": "2026-10-18",
+      "verification_status": "verified",
+      "supported_claims": [
+        "Penelope Douglas暗黑罗曼系列：Corrupt/Hideaway/Kill Switch/Nightfall",
+        "Corrupt：女主三年前把男主的朋友送进监狱，众人出狱后展开报复；四位好友在'恶魔之夜'作乱并承担多年后果"
+      ],
+      "rights_status": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计",
+      "usage_limits": "受版权保护作品的公开介绍/评论；仅作题材比对，不得借用情节细节、角色名、台词或视觉设计"
+    }
+  ],
+  "pending_sources": [
+    {
+      "title": "AO3 'Enemies to Lovers' tag works page (counts by category)",
+      "why_pending": "本次抓取archiveofourown.org返回服务器错误，无法读取作品数与M/M占比",
+      "how_to_get": "人工登录或稍后重试AO3标签页，记录抓取日期与筛选条件；或使用公开的AO3数据集并注明截止日期"
+    },
+    {
+      "title": "StopHazing National Study of Student Hazing — full report (2008 / relaunch)",
+      "why_pending": "只读到概述页，样本量、识别率、举报率未核实",
+      "how_to_get": "下载StopHazing官网完整报告PDF并核对方法部分"
+    },
+    {
+      "title": "Opportunity Insights: Diversifying Society's Leaders? (Chetty, Deming, Friedman, 2023)",
+      "why_pending": "仅读取新闻转述，原论文未打开",
+      "how_to_get": "从opportunityinsights.org获取工作论文并核对legacy相关表格"
+    },
+    {
+      "title": "Haverford Honor Council Charter / Case Abstracts; 2023 emergency plenary reporting",
+      "why_pending": "仅看到搜索标题，未读取正文",
+      "how_to_get": "抓取honorcouncil.haverford.edu的Charter与Abstracts页、bicollegenews.com相关报道"
+    },
+    {
+      "title": "U.S. Naval Academy Honor Concept",
+      "why_pending": "本次未检索",
+      "how_to_get": "检索usna.edu官方Honor Concept页面"
+    },
+    {
+      "title": "2gether: The Series; Given; Gossip Girl; Deviant King (Rina Kent)",
+      "why_pending": "本次未逐一抓取官方或可靠介绍，只能列为待比对作品",
+      "how_to_get": "检索官方剧集/出版社页面后补充originality比对"
+    },
+    {
+      "title": "Chapters / Choices 应用的LGBTQ+或BL品类数据",
+      "why_pending": "仅看到应用商店列表标题，未读取可量化数据",
+      "how_to_get": "查阅应用商店分类、第三方榜单(如Sensor Tower公开报告)并记录时间范围"
+    },
+    {
+      "title": "关于病娇(yandere)角色的学术或可靠评论来源",
+      "why_pending": "检索结果多为低质量聚合站，未采用",
+      "how_to_get": "检索期刊数据库(如J-STAGE、Mechademia)或可靠游戏媒体评论"
+    },
+    {
+      "title": "Stop Campus Hazing Act official text (Congress.gov, P.L. 118-173)",
+      "why_pending": "仅读取律所与高校解读",
+      "how_to_get": "从congress.gov获取法案原文核对定义与时间节点"
+    },
+    {
+      "title": "'The Honor Code' / '荣誉法则' 作品名与商标检索",
+      "why_pending": "未做标题/商标查重",
+      "how_to_get": "检索USPTO、各应用商店与国内平台同名作品"
+    }
+  ],
+  "trends": [
+    {
+      "trend_id": "T01",
+      "claim": "enemies-to-lovers在BookTok罗曼推荐中可见度较高",
+      "scope": "TikTok英语罗曼书推荐视频",
+      "time_range": "2022年初",
+      "sample_basis": "单篇评论文章作者手工浏览约100条视频；至少10条涉及该套路",
+      "source_ids": [
+        "S14"
+      ],
+      "confidence": "low",
+      "limitations": "样本小、非随机、以M/F书为主；不能说明M/M或互动故事市场；需AO3/平台数据补强"
+    },
+    {
+      "trend_id": "T02",
+      "claim": "暗黑罗曼在BookTok上热度明显，同时'美化虐待/同意模糊'是持续的主要批评",
+      "scope": "英语罗曼读者社群(TikTok)",
+      "time_range": "2023–2024",
+      "sample_basis": "两篇评论文章：标签播放量描述与个别畅销榜表现；学生刊物评论",
+      "source_ids": [
+        "S17",
+        "S18"
+      ],
+      "confidence": "medium",
+      "limitations": "无系统销量或用户数据；'批评存在'的证据比'热度规模'的证据更扎实"
+    },
+    {
+      "trend_id": "T03",
+      "claim": "男男恋爱影视作品近年在主流流媒体有多部可见的高曝光案例",
+      "scope": "Prime Video/Netflix/iQIYI个案",
+      "time_range": "2022–2026",
+      "sample_basis": "RWRB(2023)、Heartstopper(2022–2026)、KinnPorsche(2022，iQIYI 191地区首集登顶)三个案例",
+      "source_ids": [
+        "S26",
+        "S27",
+        "S32"
+      ],
+      "confidence": "medium",
+      "limitations": "个案而非市场统计；不同地区审查与平台差异大；不可推出'BL占据市场多数'"
+    },
+    {
+      "trend_id": "T04",
+      "claim": "'精英学校+阶级闯入者'题材持续产出跨国热门剧",
+      "scope": "流媒体青春剧",
+      "time_range": "2018–2025",
+      "sample_basis": "Elite(2018–2024八季)、Maxton Hall(报道称120+国家登顶)；Saltburn为电影个案",
+      "source_ids": [
+        "S28",
+        "S29",
+        "S30"
+      ],
+      "confidence": "medium",
+      "limitations": "均为欧洲背景；美国东北部大学背景的直接证据不足；热度说明题材竞争激烈，同时提高同质化风险"
+    },
+    {
+      "trend_id": "T05",
+      "claim": "晋江纯爱赛道在站内榜单表现强，但影视改编受管控",
+      "scope": "晋江文学城/中国大陆",
+      "time_range": "截至2023-12",
+      "sample_basis": "界面新闻报道：总分榜前十纯爱占8部",
+      "source_ids": [
+        "S16"
+      ],
+      "confidence": "low",
+      "limitations": "单一媒体转述、单一时点榜单；政策细节未见原文；与海外互动故事用户画像不同"
+    },
+    {
+      "trend_id": "T06",
+      "claim": "至少一家主流互动故事平台(Episode)设有LGBTQ+独立类型",
+      "scope": "Episode",
+      "time_range": "帖子未注明日期",
+      "sample_basis": "官方论坛公告",
+      "source_ids": [
+        "S15"
+      ],
+      "confidence": "low",
+      "limitations": "无日期、无数量；不能代表Chapters/Choices等平台"
+    },
+    {
+      "trend_id": "T07",
+      "claim": "美国联邦层面对校园霸凌(hazing)的报告与公示要求在2024–2026年显著收紧",
+      "scope": "参与Title IV的美国高校",
+      "time_range": "2024-12至2026",
+      "sample_basis": "法律解读与高校合规页面",
+      "source_ids": [
+        "S07",
+        "S08"
+      ],
+      "confidence": "high",
+      "limitations": "依据为律所/高校解读，法条原文待核；故事世界可借鉴但不应写成对真实学校的指控"
+    },
+    {
+      "trend_id": "T08",
+      "claim": "以单一制裁为代表的传统荣誉体系面临公平性与举报意愿方面的改革压力",
+      "scope": "UVA个案为主",
+      "time_range": "2013–2019",
+      "sample_basis": "UVA官方介绍与地方媒体报道",
+      "source_ids": [
+        "S01",
+        "S02"
+      ],
+      "confidence": "medium",
+      "limitations": "主要为单校证据；Haverford等其他学校争议尚未读取正文"
+    }
+  ],
+  "originality_risks": [
+    {
+      "risk_id": "R01",
+      "affected_element": "精英学府+奖学金/局外人主角+富家继承人宿敌",
+      "related_sources": [
+        "S28",
+        "S29"
+      ],
+      "risk_reason": "与Maxton Hall、Elite等热门作品的核心前提相近，易被观众视为同类复刻",
+      "rights_status": "题材与类型元素一般属于思想/惯用场景，不等于受保护表达(S25)；本条不构成侵权判断",
+      "original_transformation": "把冲突核心从'阶级恋爱'转为'荣誉制度下的证人困境'：主角掌握能让宿敌被单一制裁开除的证词，爱与举报义务直接对撞",
+      "unresolved_questions": [
+        "玩家固定身份是否为奖学金生/转学生尚未确定"
+      ]
+    },
+    {
+      "risk_id": "R02",
+      "affected_element": "大学秘密社团/俱乐部+暗黑罗曼+复仇",
+      "related_sources": [
+        "S34",
+        "S35",
+        "S10",
+        "S12"
+      ],
+      "risk_reason": "Legacy of Gods、Devil's Night等已形成鲜明的'俱乐部+暴力+占有欲'识别度",
+      "rights_status": "秘密社团为常见题材元素；具体社团名、仪式细节、角色关系网属于他人表达，不可借用",
+      "original_transformation": "Marlowe的社团以'荣誉守夜人'形式出现，表面是维护荣誉准则的学生精英组织，实为操控举报与陪审抽签的权力机器；不借用面具、节日之夜、岛屿双校等具体设定",
+      "unresolved_questions": [
+        "是否需要社团线；冲突强度未定"
+      ]
+    },
+    {
+      "risk_id": "R03",
+      "affected_element": "对富家同学的占有式执念+伪造出身反转",
+      "related_sources": [
+        "S30"
+      ],
+      "risk_reason": "Saltburn的'想得到他也想成为他'与出身谎言反转辨识度高",
+      "rights_status": "执念与身份谎言是通用母题；具体情节序列与场景(如浴室场景、庄园)不可复用",
+      "original_transformation": "病娇角色的执念被写成可见代价的'记录癖'(见M10)，其谎言不涉及出身，而涉及他在荣誉案件中的证词；反转须给受害方追责与选择权",
+      "unresolved_questions": [
+        "病娇角色是哪一位、在三角中的位置未定"
+      ]
+    },
+    {
+      "risk_id": "R04",
+      "affected_element": "公开宿敌→被迫合作→秘密恋情",
+      "related_sources": [
+        "S26"
+      ],
+      "risk_reason": "RWRB的'公开冲突后被迫作秀休战'结构知名度高",
+      "rights_status": "宿敌变恋人为通用套路；作秀休战的具体安排与政治设定不应借鉴",
+      "original_transformation": "'被迫合作'改为荣誉审判制度内生：两人被随机抽中进入同一陪审团或互为对方案件的同伴代表(机制参考S01/S03)",
+      "unresolved_questions": [
+        "故事模式、长度未定"
+      ]
+    },
+    {
+      "risk_id": "R05",
+      "affected_element": "受托保护者/保镖式男主",
+      "related_sources": [
+        "S32",
+        "S33"
+      ],
+      "risk_reason": "'被雇来保护'或'受托看护'的设定与KinnPorsche、Twisted Love前提相近",
+      "rights_status": "保护者为类型化角色；具体雇佣/托付关系与复仇主线不可复刻",
+      "original_transformation": "避免雇佣关系；如需保护线，改为'被指派的同伴代表'这一制度角色，其责任有边界且可被玩家解除",
+      "unresolved_questions": []
+    },
+    {
+      "risk_id": "R06",
+      "affected_element": "校园派系与霸凌玩法",
+      "related_sources": [
+        "S31",
+        "S27"
+      ],
+      "risk_reason": "Bully的派系划分具识别度且主角为未成年；Heartstopper为中学背景且基调温和",
+      "rights_status": "派系是普遍校园现象；具体派系名单与角色不可借用",
+      "original_transformation": "所有角色设定为19岁及以上大学生；派系以美国东北部大学的赛艇队、阿卡贝拉、校报、社团等组织呈现并原创命名",
+      "unresolved_questions": [
+        "角色年龄与档案待确认"
+      ]
+    },
+    {
+      "risk_id": "R07",
+      "affected_element": "真实大学荣誉制度的名称、誓词与程序",
+      "related_sources": [
+        "S01",
+        "S03",
+        "S04",
+        "S06"
+      ],
+      "risk_reason": "直接套用UVA/Princeton/Davidson/West Point名称、誓词原句或标识，可能造成对真实机构的影射或误导",
+      "rights_status": "制度事实可参考；誓词原文、机构名、徽章属于不可直接复用或存在名誉风险的内容",
+      "original_transformation": "为Marlowe原创誓词、委员会名称与程序组合(例如'七日坦白窗''三问'改写为本校原创表述)，并在作品说明中注明为虚构",
+      "unresolved_questions": [
+        "是否需要片头免责声明"
+      ]
+    },
+    {
+      "risk_id": "R08",
+      "affected_element": "作品名'The Honor Code｜荣誉法则'",
+      "related_sources": [
+        "S25"
+      ],
+      "risk_reason": "标题本身不受版权保护，但可能与既有作品/商标重名，影响检索与上架",
+      "rights_status": "未做商标与同名作品检索",
+      "original_transformation": null,
+      "unresolved_questions": [
+        "需要做USPTO/应用商店/国内平台同名检索(见pending_sources)"
+      ]
+    }
+  ],
+  "motif_cards": [
+    {
+      "motif_id": "M01",
+      "source_type": "idea",
+      "source_ids": [
+        "S04",
+        "S01"
+      ],
+      "premise": "迎新派对当晚恰是Marlowe新生签署荣誉誓约的夜晚：主角在签名前几小时被羞辱，签名后立刻背上'目击即须举报'的义务。",
+      "player_value": "开场即给玩家一个制度性两难，而非单纯受害",
+      "character_attraction": "宿敌在派对上是施压者还是旁观者，决定玩家第一印象",
+      "world_reveal": "誓约文本里有一行被涂改过的旧条款",
+      "event_relation_arc_use": "开场事件→关系起点(敌意/亏欠)",
+      "branch_use": "选择'当晚举报/沉默/私下对质'进入不同开局(分院帽式，参考S21)",
+      "emotion_twist_use": "签名仪式的庄严与派对的狼狈形成反差",
+      "pacing_use": "开场高压后用签名仪式短暂收束",
+      "chapter_expansion": "可扩展为序章+第一章",
+      "world_depth_use": "引出准则历史与被删条款之谜",
+      "interaction_use": "签名时可选择是否在誓约上留下真名缩写",
+      "dialogue_visual_use": "烛光礼堂与派对荧光灯的视觉对照；誓约原创撰写，不引用真实校誓词",
+      "item_or_free_paths": "免费：三种开局均可完整推进；付费仅可解锁派对其他视角的旁白回放，不含核心线索",
+      "ending_use": "开局选择影响混合结局中的'证人可信度'",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；派对霸凌描写避免细致的身体伤害与性内容",
+      "original_transformation": "以本校原创誓约与仪式代替Davidson/UVA真实程序"
+    },
+    {
+      "motif_id": "M02",
+      "source_type": "idea",
+      "source_ids": [
+        "S06",
+        "S04"
+      ],
+      "premise": "'不容忍条款'：看见违规而不举报本身即违规。玩家撞见宿敌作弊/被栽赃的证据，举报他或包庇他都可能让自己被审。",
+      "player_value": "把恋爱张力绑在明确规则上，选择后果可预期",
+      "character_attraction": "宿敌的骄傲在被玩家'握住把柄'后出现裂缝",
+      "world_reveal": "条款被某组织用来强迫学生互相监视",
+      "event_relation_arc_use": "宿敌线中段的核心事件：从敌对转为共谋",
+      "branch_use": "举报/包庇/当面对质三条路，汇入同一听证瓶颈(参考S20分支与瓶颈)",
+      "emotion_twist_use": "反转：证据原本是栽赃给玩家的",
+      "pacing_use": "作为中段转折点",
+      "chapter_expansion": "可扩展为2–3章案件弧",
+      "world_depth_use": "揭示准则如何被权力者武器化",
+      "interaction_use": "提供'选前提示'：告知可能被检定的关系与风险(参考S22)",
+      "dialogue_visual_use": "短信截图、借阅记录等证物作为视觉道具",
+      "item_or_free_paths": "免费：对质路径可获取全部关键证据；付费最多提供额外回忆片段",
+      "ending_use": "影响谁能出庭作证",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；不把'包庇'写成唯一浪漫正解",
+      "original_transformation": "将军校容忍条款转写为大学社交情境，原创规则文本"
+    },
+    {
+      "motif_id": "M03",
+      "source_type": "idea",
+      "source_ids": [
+        "S01",
+        "S02"
+      ],
+      "premise": "单一制裁+'七日坦白窗'：一旦定罪即开除，但在读到指控后七天内坦白可改为休学。倒计时成为章节节奏。",
+      "player_value": "强时间压力与清晰赌注",
+      "character_attraction": "被指控角色在七天内的脆弱面",
+      "world_reveal": "坦白窗曾被用于逼迫无辜者认罪",
+      "event_relation_arc_use": "三角关系中两位追求者在七天里对玩家给出不同建议",
+      "branch_use": "每天一个可选行动(计分选择，参考S21)",
+      "emotion_twist_use": "最后一天谁替谁坦白形成情感反转",
+      "pacing_use": "七天倒计时结构",
+      "chapter_expansion": "一章七节或一卷",
+      "world_depth_use": "呈现单一制裁的公平性争议(参考S02，转写为虚构数据)",
+      "interaction_use": "倒计时UI，可选择分配有限时间",
+      "dialogue_visual_use": "日历撕页视觉",
+      "item_or_free_paths": "免费：每日行动均可免费；付费不得提供'额外天数'改变核心结局",
+      "ending_use": "坦白与否分岔为不同结局倾向",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；不得以坦白窗作为情感勒索的奖励机制",
+      "original_transformation": "原创'七日'规则与名称，不照搬UVA知情撤回条文"
+    },
+    {
+      "motif_id": "M04",
+      "source_type": "idea",
+      "source_ids": [
+        "S01",
+        "S03"
+      ],
+      "premise": "随机抽签的学生陪审团：玩家可被抽中审理宿敌或情敌的案件，也可能自己成为被告并选择陪审构成。",
+      "player_value": "法庭戏的推理与说服玩法",
+      "character_attraction": "宿敌作为'同伴代表'为玩家辩护时的反差魅力",
+      "world_reveal": "抽签系统被人动过手脚",
+      "event_relation_arc_use": "关系从对手转为同盟的关键场",
+      "branch_use": "选择陪审构成(随机同学/委员/混合)影响审理倾向",
+      "emotion_twist_use": "当庭证词翻转",
+      "pacing_use": "高潮章节",
+      "chapter_expansion": "可扩展为'审判卷'",
+      "world_depth_use": "揭示学生自治的光与影",
+      "interaction_use": "证据出示+质询选项；可重入的询问节点(参考S21)",
+      "dialogue_visual_use": "圆桌听证室、证人席特写",
+      "item_or_free_paths": "免费：所有关键证据可通过剧情获取；付费仅限服装或回放",
+      "ending_use": "审判结果决定一组结局分支",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；不让任何角色因性取向被公开审判或羞辱",
+      "original_transformation": "以原创程序混合多校机制，不使用真实委员会名"
+    },
+    {
+      "motif_id": "M05",
+      "source_type": "idea",
+      "source_ids": [
+        "S07",
+        "S08",
+        "S09"
+      ],
+      "premise": "霸凌透明度公示板：Marlowe每学期两次公布被认定霸凌的组织名与处分。主角的派对遭遇能否上榜，取决于谁愿作证。",
+      "player_value": "让玩家的行动改变公开世界状态",
+      "character_attraction": "施害组织里有人暗中想帮主角",
+      "world_reveal": "一个精英组织多年从未上榜",
+      "event_relation_arc_use": "主角从受害者成长为推动问责的人",
+      "branch_use": "是否实名举报、是否联合他人作证",
+      "emotion_twist_use": "上榜的组织里有恋爱对象所在的团队",
+      "pacing_use": "每半学期一次的'公示'作为节奏节点",
+      "chapter_expansion": "可扩展为学期跨度结构",
+      "world_depth_use": "呈现霸凌的制度化与沉默文化",
+      "interaction_use": "世界状态属性(参考S23)：校园舆论值",
+      "dialogue_visual_use": "公示板、校报头条",
+      "item_or_free_paths": "免费：公示与举报全部免费",
+      "ending_use": "影响结局中校园是否改变",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；霸凌受害不作为恋爱奖励的前置条件；提供受害者支持资源提示",
+      "original_transformation": "公示机制参考联邦法律要求但写为虚构校规，不指涉真实学校"
+    },
+    {
+      "motif_id": "M06",
+      "source_type": "idea",
+      "source_ids": [
+        "S12",
+        "S10"
+      ],
+      "premise": "'提灯夜'(Lantern Night，原创)：Marlowe高年级秘密社团在春季提灯点名入会；宿敌是被点名者，玩家是唯一知道入会代价的人。",
+      "player_value": "神秘感与排他性诱惑",
+      "character_attraction": "宿敌在社团与玩家之间的撕扯",
+      "world_reveal": "社团掌握荣誉委员会的抽签名单",
+      "event_relation_arc_use": "三角关系引爆点：情敌是社团的引荐人",
+      "branch_use": "支持/阻止/潜入三路",
+      "emotion_twist_use": "入会仪式公开羞辱的真相",
+      "pacing_use": "中后段谜团揭示",
+      "chapter_expansion": "可扩展为支线卷",
+      "world_depth_use": "揭示精英网络与传承",
+      "interaction_use": "潜入时的可换轨选择(参考S21)",
+      "dialogue_visual_use": "无窗石屋、提灯光",
+      "item_or_free_paths": "免费：潜入线可免费完成；付费可选额外服装",
+      "ending_use": "社团是否被揭露影响结局",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；入会羞辱不细写；不把服从社团写成成熟",
+      "original_transformation": "原创社团名称与仪式，不借用Skull and Bones或Legacy of Gods/Devil's Night元素"
+    },
+    {
+      "motif_id": "M07",
+      "source_type": "idea",
+      "source_ids": [
+        "S11"
+      ],
+      "premise": "传承名册：宿敌是三代校友子女，玩家意外发现其录取档案被修改过；揭露它会毁掉他，也会揭开学校的交易。",
+      "player_value": "阶级张力与道德抉择",
+      "character_attraction": "宿敌对'不配'的恐惧",
+      "world_reveal": "校方与捐赠家族的交易",
+      "event_relation_arc_use": "宿敌线后段：信任考验",
+      "branch_use": "揭露/保密/与他共同揭露",
+      "emotion_twist_use": "宿敌主动先行坦白的反转",
+      "pacing_use": "后段",
+      "chapter_expansion": "可扩展为一章",
+      "world_depth_use": "呈现录取不平等(以虚构方式)",
+      "interaction_use": "道德属性多维追踪(参考S23)",
+      "dialogue_visual_use": "档案馆、旧照片",
+      "item_or_free_paths": "免费：档案线索免费获得",
+      "ending_use": "影响'共赢/各自承担'结局",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；不将真实家族或学校写成丑闻主体",
+      "original_transformation": "以研究报道的结构性事实为背景，所有个案虚构"
+    },
+    {
+      "motif_id": "M08",
+      "source_type": "idea",
+      "source_ids": [],
+      "premise": "八人赛艇的座位：玩家被迫与宿敌同艇，划桨节奏不同步即翻船；座位安排由队长(情敌)决定。",
+      "player_value": "身体协作中的张力与温度",
+      "character_attraction": "清晨河面上的沉默合作",
+      "world_reveal": "队内传统'新人洗礼'是霸凌",
+      "event_relation_arc_use": "强制同处推动关系升温",
+      "branch_use": "接受/拒绝/改变座位",
+      "emotion_twist_use": "情敌调换座位的真正目的",
+      "pacing_use": "穿插于主线之间的呼吸段",
+      "chapter_expansion": "可作日常章节模板",
+      "world_depth_use": "东北部大学文化质感",
+      "interaction_use": "节奏小游戏或计分选择",
+      "dialogue_visual_use": "晨雾、河流、船库",
+      "item_or_free_paths": "免费：训练全部免费",
+      "ending_use": "可贡献羁绊值",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；队内洗礼不细写",
+      "original_transformation": "原创队名与传统"
+    },
+    {
+      "motif_id": "M09",
+      "source_type": "idea",
+      "source_ids": [
+        "S06"
+      ],
+      "premise": "'三问'对话机制(原创改写)：关键对话前，主角心里浮现三问——我在欺骗吗？我占了不该得的便宜吗？若对我这样做我会反对吗？",
+      "player_value": "让道德选择可读且可预期",
+      "character_attraction": "不同角色对三问的态度揭示性格",
+      "world_reveal": "三问是被删旧条款的残句",
+      "event_relation_arc_use": "人物成长的可视标尺",
+      "branch_use": "选项标注三问倾向",
+      "emotion_twist_use": "最终发现宿敌一直在用三问审视自己",
+      "pacing_use": "全篇贯穿",
+      "chapter_expansion": "可作为章节结尾回顾",
+      "world_depth_use": "连接准则起源",
+      "interaction_use": "选前提示(参考S22)",
+      "dialogue_visual_use": "简洁的三格图标",
+      "item_or_free_paths": "免费",
+      "ending_use": "三问记录影响结局评语",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制",
+      "original_transformation": "不直接引用West Point'三条规则'原文，改写为Marlowe校训"
+    },
+    {
+      "motif_id": "M10",
+      "source_type": "idea",
+      "source_ids": [
+        "S17",
+        "S18",
+        "S19"
+      ],
+      "premise": "执念账本：病娇角色记录玩家的一切(课表、去向、与谁交谈)。账本被玩家发现时，故事必须让玩家拥有拒绝、对质、求助与离开的完整选项。",
+      "player_value": "危险吸引力与掌控感兼得：玩家始终握有主导权",
+      "character_attraction": "他的执念源于在旧荣誉案中被所有人抛弃",
+      "world_reveal": "账本揭示他曾目睹并隐瞒某起案件",
+      "event_relation_arc_use": "病娇线：从越界到被问责",
+      "branch_use": "拒绝并求助/对质并设界/离开；任何路线都不要求玩家'接受监视'",
+      "emotion_twist_use": "账本最后一页记录的是他自己的违规与坦白",
+      "pacing_use": "中段揭示",
+      "chapter_expansion": "可扩展为一卷",
+      "world_depth_use": "揭示制度失败如何塑造个人执念",
+      "interaction_use": "设界对话：明确说出同意与拒绝的选项(参考S18/S19)",
+      "dialogue_visual_use": "账本页面、被圈出的地图",
+      "item_or_free_paths": "免费：所有拒绝与求助路径免费；付费不得解锁'更深监视'内容",
+      "ending_use": "他接受后果(休学/求助/自首)的结局优先于'被原谅'",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制；跟踪与控制行为必须有后果，不出现以暴力换取感情的'正向'奖励；提供内容警示",
+      "original_transformation": "与Saltburn等作品区隔：执念对象不是身份而是'见证'"
+    },
+    {
+      "motif_id": "M11",
+      "source_type": "idea",
+      "source_ids": [
+        "S05"
+      ],
+      "premise": "全体大会改法：每年春季全体学生大会重新批准准则。终章玩家可提案修改单一制裁，其结果取决于整局积累的校园舆论与盟友。",
+      "player_value": "玩家改变世界规则的终极满足",
+      "character_attraction": "三位主要角色在大会上的立场",
+      "world_reveal": "旧条款为何被删的最终真相",
+      "event_relation_arc_use": "所有关系线在终章交汇",
+      "branch_use": "支持/反对/弃权与修订方案",
+      "emotion_twist_use": "关键盟友临场倒戈或站出",
+      "pacing_use": "终章",
+      "chapter_expansion": "一章",
+      "world_depth_use": "学生自治的意义",
+      "interaction_use": "投票与演说选项(终局时间洞穴，参考S21)",
+      "dialogue_visual_use": "大礼堂、举手的人群",
+      "item_or_free_paths": "免费：大会结果仅取决于免费积累的数值",
+      "ending_use": "混合结局的核心汇合点",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制",
+      "original_transformation": "以Haverford年会为灵感但原创程序"
+    },
+    {
+      "motif_id": "M12",
+      "source_type": "idea",
+      "source_ids": [
+        "S24"
+      ],
+      "premise": "信任之网：一张可视化的关系与证词网络，显示谁看见了什么、谁欠谁的证词，替代传统好感度条。",
+      "player_value": "让分支与因果可见，减少'选了没用'的挫败",
+      "character_attraction": "看到角色之间隐藏的连线带来惊喜",
+      "world_reveal": "网中一条断线指向隐藏事件",
+      "event_relation_arc_use": "全局关系管理",
+      "branch_use": "解锁新连线开启支线",
+      "emotion_twist_use": "某条连线被揭示为伪造",
+      "pacing_use": "每章结尾更新",
+      "chapter_expansion": "全篇",
+      "world_depth_use": "世界的社会结构可视化",
+      "interaction_use": "地图式UI(参考S24的后果可视化思路)",
+      "dialogue_visual_use": "节点头像与证词卡",
+      "item_or_free_paths": "免费：基础网络免费；付费不得隐藏核心连线",
+      "ending_use": "结局按网络状态评定",
+      "boundaries": "所有角色为19岁及以上成年人；亲密互动须有明确同意；病娇行为必须呈现代价与问责；不美化霸凌与控制",
+      "original_transformation": "原创UI概念，仅借鉴'可视化后果'原则"
+    }
+  ]
+}

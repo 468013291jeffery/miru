@@ -25,8 +25,8 @@ export default async function handler(req) {
   // Only pass through what MIRU uses, with hard caps so the proxy can't be used for huge jobs.
   const clean = {
     model: MODELS.includes(body.model) ? body.model : MODELS[0],
-    messages: Array.isArray(body.messages) ? body.messages.slice(-40).map(m => ({ role: m.role === 'assistant' ? 'assistant' : m.role === 'system' ? 'system' : 'user', content: String(m.content || '').slice(0, 24000) })) : [],
-    max_tokens: Math.min(Number(body.max_tokens) || 1500, 4000),
+    messages: Array.isArray(body.messages) ? body.messages.slice(-40).map(m => ({ role: m.role === 'assistant' ? 'assistant' : m.role === 'system' ? 'system' : 'user', content: String(m.content || '').slice(0, m.role === 'system' ? 80000 : 40000) })) : [],
+    max_tokens: Math.min(Number(body.max_tokens) || 1500, 8000),
     temperature: typeof body.temperature === 'number' ? body.temperature : 0.85,
     stream: !!body.stream,
     thinking: { type: 'disabled' },

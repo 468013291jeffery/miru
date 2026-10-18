@@ -340,5 +340,82 @@ module.exports = L.wrap(async (req, res) => {
     return L.send(res, 200, { days, rows, totals });
   }
 
+  /* ---------- 剧本生产 · 5-step workbench (选题素材 → 生成 → 自动检查 → 编剧审改 → 上线) ---------- */
+  if (r === 'scripts') {
+    if (!need('scripts')) return;
+    return L.send(res, 200, { rows: await sql("SELECT id, title, orient, lang, stage, status, work_id, created_by, updated_by, created_at, updated_at, published_at, jsonb_array_length(COALESCE(chapters,'[]'::jsonb))::int AS chapters FROM scripts ORDER BY updated_at DESC LIMIT 200") });
+  }
+  if (r === 'script') {
+    if (!need('scripts')) return;
+    if (req.method === 'GET') {
+      const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(q.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+      if (q.versions) return L.send(res, 200, { rows: await sql('SELECT id, stage, note, by_name, at FROM script_versions WHERE script_id=$1 ORDER BY id DESC LIMIT 100', [s.id]) });
+      if (q.version) { const v = (await sql('SELECT * FROM script_versions WHERE script_id=$1 AND id=$2', [s.id, Number(q.version)]))[0]; return L.send(res, 200, { version: v || null }); }
+      return L.send(res, 200, { script: s });
+    }
+    const op = b.op, who = A.name || A.username;
+    if (op === 'create') {
+      const title = String(b.title || '').trim().slice(0, 80); if (!title) return L.bad(res, '标题必填');
+      const id = L.newId('sc_');
+      await sql('INSERT INTO scripts (id, title, orient, lang, config, research, brief, created_by, updated_by) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,$8,$8)', [id, title, String(b.orient || 'bl').slice(0, 4), String(b.lang || 'zh').slice(0, 5), JSON.stringify(b.config || {}), b.research ? JSON.stringify(b.research) : null, b.brief ? String(b.brief).slice(0, 60000) : null, who]);
+      await log('script_create', 'script', id, { title }); return L.send(res, 200, { id });
+    }
+    const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(b.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+    if (op === 'save') {
+      const f = b.patch || {}, sets = [], args = [s.id];
+      const put = (col, v, json) => { args.push(json ? JSON.stringify(v) : v); sets.push(col + '=$' + args.length + (json ? '::jsonb' : '')); };
+      if ('title' in f) put('title', String(f.title || s.title).slice(0, 80));
+      if ('orient' in f) put('orient', String(f.orient || 'bl').slice(0, 4));
+      if ('lang' in f) put('lang', String(f.lang || 'zh').slice(0, 5));
+      if ('config' in f) put('config', f.config || {}, true);
+      if ('research' in f) put('research', f.research || null, true);
+      if ('brief' in f) put('brief', String(f.brief || '').slice(0, 60000));
+      if ('outline' in f) put('outline', String(f.outline || '').slice(0, 120000));
+      if ('chapters' in f) { const ch = Array.isArray(f.chapters) ? f.chapters.slice(0, 40).map(c => ({ n: Number(c.n) || 0, t: String(c.t || '').slice(0, 80), md: String(c.md || '').slice(0, 200000), at: c.at || Date.now(), by: c.by || who })) : []; if (JSON.stringify(ch).length > 3500000) return L.bad(res, '剧本太大（超过 3.5MB）', 413); put('chapters', ch, true); }
+      if ('qa' in f) put('qa', f.qa || null, true);
+      if ('review' in f) put('review', Object.assign({}, f.review || {}, { by: who, at: Date.now() }), true);
+      if ('stage' in f) { const st = Math.max(1, Math.min(5, Number(f.stage) || 1)); put('stage', st); }
+      if (!sets.length) return L.bad(res, '没有要保存的内容');
+      args.push(who); sets.push('updated_by=$' + args.length); sets.push('updated_at=now()');
+      const up = (await sql('UPDATE scripts SET ' + sets.join(', ') + ' WHERE id=$1 RETURNING *', args))[0];
+      if (b.snapshot) await sql('INSERT INTO script_versions (script_id, stage, note, data, by_name) VALUES ($1,$2,$3,$4::jsonb,$5)', [s.id, up.stage, String(b.snapshot).slice(0, 120), JSON.stringify({ outline: up.outline, chapters: up.chapters, config: up.config, brief: up.brief, qa: up.qa, review: up.review }), who]);
+      await log('script_save', 'script', s.id, { fields: Object.keys(f), snapshot: b.snapshot || null }); return L.send(res, 200, { script: up });
+    }
+    if (op === 'restore') {
+      const v = (await sql('SELECT * FROM script_versions WHERE script_id=$1 AND id=$2', [s.id, Number(b.version)]))[0]; if (!v) return L.bad(res, '版本不存在', 404);
+      const d = v.data || {};
+      const up = (await sql('UPDATE scripts SET outline=$2, chapters=$3::jsonb, updated_by=$4, updated_at=now() WHERE id=$1 RETURNING *', [s.id, d.outline || null, JSON.stringify(d.chapters || []), who]))[0];
+      await log('script_restore', 'script', s.id, { version: v.id }); return L.send(res, 200, { script: up });
+    }
+    if (op === 'publish') {
+      const ch = s.chapters || []; if (!ch.length) return L.bad(res, '还没有章节');
+      if (!(s.review && s.review.approved)) return L.bad(res, '第 4 步「编剧审改」还没有标记通过，不能上线');
+      if (s.qa && Array.isArray(s.qa.err) && s.qa.err.length && !b.force) return L.bad(res, '自动检查还有 ' + s.qa.err.length + ' 个错误，请先修改（或由超级管理员强制上线）');
+      if (b.force && A.role !== 'owner') return deny(res);
+      const md = '# ' + s.title + '\n\n' + ch.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n');
+      const cfg = s.config || {};
+      const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
+      const pack = { script: md, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], as: cfg.as || '' }, official: true, rules: b.rulesVersion || null };
+      await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
+        VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
+        ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,
+        [id, s.title, String(cfg.hook || '').slice(0, 240), s.lang || 'zh', s.orient || 'bl', JSON.stringify((cfg.tags || []).slice(0, 12)), cfg.cover && /^https?:/.test(cfg.cover) ? cfg.cover : null, JSON.stringify(pack), JSON.stringify(s.qa || null), who]);
+      await sql("UPDATE scripts SET work_id=$2, status='live', stage=5, published_at=now(), updated_by=$3, updated_at=now() WHERE id=$1", [s.id, id, who]);
+      await sql('INSERT INTO script_versions (script_id, stage, note, data, by_name) VALUES ($1,5,$2,$3::jsonb,$4)', [s.id, '上线', JSON.stringify({ outline: s.outline, chapters: s.chapters, config: s.config, qa: s.qa, review: s.review }), who]);
+      await log('script_publish', 'script', s.id, { work: id, chapters: ch.length }); return L.send(res, 200, { ok: true, work_id: id });
+    }
+    if (op === 'unpublish') {
+      if (s.work_id) await sql("UPDATE works SET status='takedown', reject_reason='官方剧本下线' WHERE id=$1", [s.work_id]);
+      await sql("UPDATE scripts SET status='offline', updated_by=$2, updated_at=now() WHERE id=$1", [s.id, who]);
+      await log('script_unpublish', 'script', s.id, { work: s.work_id }); return L.send(res, 200, { ok: true });
+    }
+    if (op === 'delete') {
+      if (s.status === 'live') return L.bad(res, '请先下线再删除');
+      await sql('DELETE FROM script_versions WHERE script_id=$1', [s.id]); await sql('DELETE FROM scripts WHERE id=$1', [s.id]);
+      await log('script_delete', 'script', s.id, { title: s.title }); return L.send(res, 200, { ok: true });
+    }
+    return L.bad(res, 'unknown op');
+  }
+
   L.bad(res, 'unknown route');
 });

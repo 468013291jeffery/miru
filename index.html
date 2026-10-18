@@ -12263,7 +12263,9 @@ async function exp74Enrich(wid) {
       "CHAPTERS:\n" + exp74Digest(w),
       "LANGUAGE: write every text field only in " + LANG_NAME[S.lang] + ". Keep character names as they are.",
       'Reply ONLY JSON: {"logline":"one gripping sentence","premise":"2-3 sentences","warn":"what is at stake if nobody acts (1-2 sentences)","you":"who the player is, second person, 1-2 sentences","intro_bg":["3-4 short paragraphs: where and when, what is happening now, why it matters to you"],"intro_how":["2-3 short tips: choices change trust and attraction; you can type your own words or *actions*; tap 💭 to hear what he didn\'t say"],"tags":["3-5 romance tropes"],"cast":[{"id":"<cast id>","age":27,"height":"","looks":"concrete appearance","vibe":"personality in one line","tells":["2-3 concrete visible behaviours"],"twist":"his contradiction","likes":"specific likes","secret":"a secret consistent with the story","pitch":"one line he would say to you"}],"relations":[["<id or you>","<id or you>","what they are to each other, one line"]],"features":{"game":"","date":"","gift":"","photo":"","voice":"","room":""},"director":{"allowed":["3 short director moves"],"au":["2 alternate-universe ideas"]},"endings":{"A":{"t":"","txt":"","line":""},"B":{"t":"","txt":"","line":""},"C":{"t":"","txt":"","line":""}},"mono":[{"chapter":1,"who":"<cast id>","text":"one private thought he would not say aloud in that chapter"}]}'].join("\n\n");
-    for (let a = 0; a < 2 && !r; a++) { try { r = await ask(prompt, { modelTier: "complex" }); } catch (_) { r = null; } }
+    /* never hang the player: one try, hard cap 30s, or skip button → offline packaging */
+    try { r = await Promise.race([ask(prompt, { modelTier: "complex" }), new Promise(res => setTimeout(() => res(null), 30000)), new Promise(res => { EXP74.skip = () => res(null); })]); } catch (_) { r = null; }
+    EXP74.skip = null;
   }
   const zh = S.lang === "zh", L = w.cast[0], S2 = w.cast[1];
   if (!r || typeof r !== "object") r = {
@@ -12327,20 +12329,25 @@ function exp74Media(wid) {
 function exp74Sheet(step) {
   const zh = S.lang === "zh", L4 = (a, b) => zh ? a : b;
   const items = [L4("故事背景与简介", "Background & logline"), L4("人物画像", "Character profiles"), L4("人物关系", "Relationships"), L4("匹配音乐、音效、特效和小游戏", "Matching music, sound, effects & games")];
-  sheet('<div class="exp74"><h2>✨ ' + L4("正在把你的剧做成正式版", "Building the full experience") + '</h2><p class="xs faint">' + L4("和官方剧一样：先看故事页和人物，再开始玩。", "Just like an official story: story page and cast first, then play.") + '</p><div class="exp74l">' + items.map((x, k) => '<div class="' + (k < step ? "done" : k === step ? "on" : "") + '"><i>' + (k < step ? "✓" : k === step ? "…" : "") + '</i>' + esc(x) + '</div>').join("") + '</div></div>');
+  sheet('<div class="exp74"><h2>✨ ' + L4("正在把你的剧做成正式版", "Building the full experience") + '</h2><p class="xs faint">' + L4("和官方剧一样：先看故事页和人物，再开始玩。", "Just like an official story: story page and cast first, then play.") + '</p><div class="exp74l">' + items.map((x, k) => '<div class="' + (k < step ? "done" : k === step ? "on" : "") + '"><i>' + (k < step ? "✓" : k === step ? "…" : "") + '</i>' + esc(x) + '</div>').join("") + '</div></div>' + (EXP74.showSkip && EXP74.skip ? '<button class="btn btn-g btn-block" style="margin-top:14px" data-exp74skip="1">' + L4("先用基础版开始，不等了", "Start with the basic version") + '</button>' : '') + '');
 }
 async function exp74Build(wid, force) {
   const w = wd(wid); if (!w || !w.pack) return null; if (w.pack.exp74 && !force) return w.pack.exp74;
   if (EXP74.busy) return null; EXP74.busy = true;
   try {
-    exp74Sheet(0); await exp74Enrich(wid); exp74Sheet(3);
-    const n = exp74Media(wid);
+    exp74Sheet(0);
+    let k = 0; const tick = setInterval(() => { if (k < 2) exp74Sheet(++k); }, 6000);
+    EXP74.showSkip = false; const sk = setTimeout(() => { EXP74.showSkip = true; exp74Sheet(k); }, 9000);
+    try { await exp74Enrich(wid); } catch (e) { console.warn("exp74 enrich", e); }
+    clearInterval(tick); clearTimeout(sk); EXP74.showSkip = false; exp74Sheet(3);
+    let n = { bgm: 0, fx: 0, mono: 0, mg: 0 }; try { n = exp74Media(wid); } catch (e) { console.warn("exp74 media", e); }
     w.pack.exp74 = { at: Date.now(), rules: MIRU_RULES.version, media: n }; save(); closeSheet();
     const zh = S.lang === "zh";
     toast(zh ? "已按剧情自动配好：音乐 " + n.bgm + " 段 · 特效 " + n.fx + " 处 · 心声 " + n.mono + " 段 · 小游戏 " + n.mg + " 个" : "Matched for you: " + n.bgm + " music cues · " + n.fx + " effects · " + n.mono + " inner voices · " + n.mg + " games");
     return w.pack.exp74;
-  } finally { EXP74.busy = false; }
+  } catch (e) { console.warn("exp74", e); try { closeSheet(); } catch (_) {} return null; } finally { EXP74.busy = false; }
 }
+document.addEventListener("click", e => { if (e.target.closest && e.target.closest("[data-exp74skip]") && EXP74.skip) { e.stopImmediatePropagation(); EXP74.skip(); } }, true);
 /* every user-made story opens on its story page (like official ones) the first time; later starts go straight in */
 const _packStart74 = packStart;
 packStart = function (wid, as, fromCh, picks) {
@@ -12405,6 +12412,47 @@ Object.assign(I18N.en, { "my.auto": "Auto-speak {n}" });
 .my75 .altrow button{flex:none;max-width:78%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}`;
   document.head.appendChild(st);
 })();
+
+/* ---- v2.9 · 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 ----
+   同一版本只转换一次（按 pack.ver 缓存）；第一次开始时 app74 会补齐故事页、人物画像、关系，并自动配音乐/特效/小游戏。 */
+const _installWork76 = installWork;
+installWork = async function (id) {
+  const zh = CL() === "zh";
+  const r = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
+  if (!r.ok || !r.j.pack) { toast(zh ? "打不开这部作品" : "Couldn't open this story"); return null; }
+  const P = r.j.pack;
+  if (!P.script) {
+    if (!P.world) { toast(zh ? "打不开这部作品" : "Couldn't open this story"); return null; }
+    Object.entries(P.chars || {}).forEach(([cid, c]) => { S.mine.chars[cid] = c; }); const w = P.world; w.community = id; w.mine = 0; S.mine.worlds[w.id] = w; save(); track("community_open", { id }); return w.id;
+  }
+  S.off76 = S.off76 || {};
+  const have = S.off76[id];
+  if (have && have.ver === P.ver && wd(have.wid)) { track("community_open", { id }); return have.wid; }
+  if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
+  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  const m = P.meta || {};
+  const b = imBuild(doc, m.as || doc.pov);
+  const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
+  S.works = (S.works || []).filter(x => x.id !== wid);
+  try { const ps = packSt(wid); ps.own = 0; } catch (_) {}
+  const x0 = s => ({ en: s, zh: s });
+  w.mine = 0; w.official76 = 1; w.community = id; w.author = zh ? "MIRU 官方" : "MIRU Originals";
+  w.or = r.j.orient || w.or; if (r.j.cover) w.cover = r.j.cover;
+  if (m.title || r.j.title) w.title = x0(m.title || r.j.title);
+  if (m.hook || r.j.hook) w.hook = x0(m.hook || r.j.hook);
+  if (m.premise) w.premise = x0(m.premise);
+  if (m.you) w.you = x0(m.you);
+  if ((m.tags || []).length) w.tags = m.tags.slice(0, 6);
+  S.off76[id] = { wid, ver: P.ver }; save(); track("community_open", { id, official: 1 });
+  return wid;
+};
+/* official scripts get the same full packaging as creator stories the first time they're played */
+const _packStart76 = packStart;
+packStart = function (wid, as, fromCh, picks) {
+  const w = wd(wid);
+  if (w && w.official76 && w.pack && !w.pack.exp74 && !fromCh && typeof exp74Build === "function") { exp74Build(wid).then(() => _packStart76(wid, as, fromCh, picks), () => _packStart76(wid, as, fromCh, picks)); return; }
+  return _packStart76.apply(this, arguments);
+};
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
