@@ -157,7 +157,7 @@ function chatProviders(order) {
     scnet: E.SCNET_API_KEY && { url: (E.SCNET_BASE_URL || 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: E.SCNET_API_KEY, model: E.SCNET_MODEL || 'DeepSeek-V4.1-Flash' },
     glm: E.GLM_API_KEY && { url: (E.GLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: E.GLM_API_KEY, model: E.GLM_MODEL || 'glm-4.5-flash' },
   };
-  return String(order || E.LLM_ORDER || 'deepseek,longcat,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
+  return String(order || E.LLM_ORDER || 'deepseek,scnet,longcat,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
 }
 async function llm(messages, maxTokens, timeoutMs, order) {
   const list = chatProviders(order); if (!list.length) throw new Error('no LLM key configured');

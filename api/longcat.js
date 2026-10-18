@@ -39,7 +39,7 @@ function providers() {
     scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
     glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
   };
-  const order = String(env('LLM_ORDER', 'deepseek,longcat,scnet,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
+  const order = String(env('LLM_ORDER', 'deepseek,scnet,longcat,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
   for (const k of Object.keys(all)) if (!order.includes(k)) order.push(k);
   return order.map(k => all[k]).filter(p => p.key && p.model(''));
 }
