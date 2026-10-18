@@ -12753,7 +12753,8 @@ memBlock = (function (orig) { return function (th) { const a = orig.apply(this, 
 /* model proposals → program validation → commit */
 function ledApply(th, props) {
   const L = led(th); if (!L || !Array.isArray(props)) return null;
-  for (const pr of props.slice(0, 1)) {
+  for (let pr of props.filter(Boolean).slice(0, 2)) {
+    if (typeof pr === "string") { const m = pr.match(/^\s*(keep|break)\s*[:：]\s*(P\d+)/i); if (!m) continue; pr = { op: m[1].toLowerCase(), id: m[2].toUpperCase() }; }
     const p = L.p.find(x => x.id === String(pr && pr.id)); if (!p || p.st !== "open") continue;
     const op = pr.op === "keep" ? "kept" : pr.op === "break" ? "broken" : null; if (!op) continue;
     p.st = op; p.end = Date.now(); p.byAI = 1; LED.lastChange = Date.now(); save();
@@ -12762,13 +12763,13 @@ function ledApply(th, props) {
   return null;
 }
 ask = (function (orig) { return async function (prompt, opts) {
-  try { const th0 = S.threads[curT]; if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && th0) { const op = led(th0).p.filter(p => p.st === "open"); if (op.length) prompt = prompt + "\n\nLEDGER CHECK (required): open promises are " + op.map(p => p.id + " = " + p.t).join("; ") + ". If what happens in THIS reply clearly fulfils or clearly breaks one of them, add \"ledger\":[{\"op\":\"keep\" or \"break\",\"id\":\"P#\"}] to your JSON (at most one). If not, leave it out."; arguments[0] = prompt; } } catch (_) {}
+  try { const th0 = S.threads[curT]; if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && th0) { const op = led(th0).p.filter(p => p.st === "open"); if (op.length) prompt = prompt + "\n\nLEDGER CHECK (required): open promises are " + op.map(p => p.id + " = " + p.t).join("; ") + ". If what happens in THIS reply clearly fulfils or clearly breaks one of them, add \"ledger\":[{\"op\":\"keep\" or \"break\",\"id\":\"P#\"}] to your JSON (at most one). If not, leave it out."; prompt = prompt.replace('"goals":[<indexes of quest goals completed in this reply>]}', '"goals":[<indexes of quest goals completed in this reply>],"ledger":[<"keep:P#" or "break:P#" when THIS reply clearly fulfils or breaks an open promise; otherwise leave the list empty>]}'); arguments[0] = prompt; } } catch (_) {}
   const r = await orig.apply(this, arguments);
   try { // R14: ordinary warmth can't paper over an open conflict — the app caps affinity gains while it's unresolved
     const th1 = S.threads[curT]; if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && th1 && r && r.love) { const oc = led(th1).c.filter(c => c.st === "open"); for (const cid in r.love) { if (oc.some(c => c.k.split("|").includes(cid)) && +r.love[cid] > 1) r.love[cid] = 1; } }
   } catch (_) {}
   try {
-    if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && r && r.ledger) {
+    if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && r && Array.isArray(r.ledger) && r.ledger.length) {
       const th = S.threads[curT]; const ok = th && ledApply(th, r.ledger);
       if (ok) setTimeout(() => { try { appendMsg(th, { who: "sys", k: "card", title: (ok.op === "kept" ? "🤝 " + LL("约定兑现", "Promise kept") : "💔 " + LL("约定落空", "Promise broken")), txt: ok.p.t, at: Date.now() }); save(); if (curT === th.id) renderChat(); } catch (_) {} }, 400);
       delete r.ledger;
