@@ -12659,7 +12659,7 @@ async function m78recall(th) {
   const tier = typeof memTier === "function" ? memTier(th) : "free";
   try {
     await m78sync(th);
-    const r = await Promise.race([capi("/state?r=mem", { json: { op: "recall", thread: th.id, cast: th.cast || [], query: String(u.txt).slice(0, 600), k: (MEMT[tier] || MEMT.free).mem + 4, cross: tier !== "free" } }), new Promise(res => setTimeout(() => res(null), 2500))]);
+    const r = await Promise.race([capi("/state?r=mem", { json: { op: "recall", thread: th.id, cast: th.cast || [], query: String(u.txt).slice(0, 600), k: (MEMT[tier] || MEMT.free).mem + 4, cross: tier !== "free" } }), new Promise(res => setTimeout(() => res(null), 3000))]);
     if (r && r.ok && r.j) {
       const items = r.j.items || [];
       th._m2rec = { q: u.txt, mode: r.j.mode, ids: items.filter(x => x.thread === th.id).map(x => x.id), cross: items.filter(x => x.thread !== th.id).slice(0, tier === "deep" ? 8 : 3).map(x => x.t), at: Date.now() };

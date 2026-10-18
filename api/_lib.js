@@ -150,16 +150,16 @@ function structureQA(pack) {
 
 /* ---------- LLM (LongCat, same key as the chat proxy) ---------- */
 /* ---------- server-side model calls: same failover order as /api/longcat (LongCat → SCNet → GLM) ---------- */
-function chatProviders() {
+function chatProviders(order) {
   const E = process.env, all = {
     longcat: E.LONGCAT_API_KEY && { url: 'https://api.longcat.chat/openai/v1/chat/completions', key: E.LONGCAT_API_KEY, model: 'LongCat-2.0' },
     scnet: E.SCNET_API_KEY && { url: (E.SCNET_BASE_URL || 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: E.SCNET_API_KEY, model: E.SCNET_MODEL || 'DeepSeek-V4.1-Flash' },
     glm: E.GLM_API_KEY && { url: (E.GLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: E.GLM_API_KEY, model: E.GLM_MODEL || 'glm-4.5-flash' },
   };
-  return String(E.LLM_ORDER || 'longcat,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
+  return String(order || E.LLM_ORDER || 'longcat,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
 }
-async function llm(messages, maxTokens, timeoutMs) {
-  const list = chatProviders(); if (!list.length) throw new Error('no LLM key configured');
+async function llm(messages, maxTokens, timeoutMs, order) {
+  const list = chatProviders(order); if (!list.length) throw new Error('no LLM key configured');
   let last;
   for (const p of list) {
     const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), timeoutMs || 25000);
