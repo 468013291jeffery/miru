@@ -79,6 +79,14 @@ export default async function handler(req) {
   /* ops probe: which providers answer right now */
   if (body.probe) {
     const sc = list.find(p => p.id === 'scnet');
+    if (sc && body.scnet_raw) { // diagnostics: raw stream head for given extra params (no secrets returned)
+      const out = [];
+      for (const ex of (Array.isArray(body.scnet_raw) ? body.scnet_raw : [{}]).slice(0, 4)) {
+        try { const r = await fetch(sc.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + sc.key }, body: JSON.stringify({ model: sc.model(''), messages: [{ role: 'user', content: '你好，用一句话回答：今天心情怎么样？' }], max_tokens: 200, stream: true, ...ex }) });
+          out.push({ extra: ex, status: r.status, head: (await r.text()).slice(0, 1500) }); } catch (e) { out.push({ extra: ex, error: String(e.message || e) }); }
+      }
+      return J({ scnet_raw: out }, 200, c.headers);
+    }
     if (sc && Array.isArray(body.scnet_try)) {
       const tries = await Promise.all(body.scnet_try.slice(0, 12).map(async m => { const p = { ...sc, model: () => String(m) }; const t0 = Date.now(); try { const o = await open(p, { model: '', messages: [{ role: 'user', content: '只回复：好' }], max_tokens: 8, temperature: 0 }); try { o.ctl.abort(); } catch (_) {} return { model: m, ok: true, ms: Date.now() - t0 }; } catch (e) { return { model: m, ok: false, error: String(e.message || e).slice(0, 120) }; } }));
       return J({ scnet_try: tries }, 200, c.headers);
