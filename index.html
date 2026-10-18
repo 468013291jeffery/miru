@@ -12498,9 +12498,11 @@ const M2_RULES = [
   [/(?:^|[，。！？\s])((?:你)?(?:别|不要|不许|不准|请不要)(?:再)?(?:叫我|提|说|碰|问|开)[^。！？!?\n]{1,24})/, "boundary", 3],
   [/\b((?:please )?(?:don't|do not|never|stop) (?:call me|mention|bring up|touch|ask (?:me )?about|talk about)[^.!?\n]{1,40})/i, "boundary", 3],
   [/(我(?:最)?(?:喜欢|爱吃|爱喝|爱听|讨厌|不喜欢|怕|害怕|受不了|过敏)[^。！？!?\n，,]{1,24})/, "pref", 2],
-  [/\b(I (?:really )?(?:love|like|hate|can't stand|am afraid of|am scared of|am allergic to)[^.!?\n,]{1,40})/i, "pref", 2],
+  [/\b(I(?:'m| am) (?:really |so |super |kind of )?(?:terrified|afraid|scared|allergic|obsessed|sick) (?:of|to|with)[^.!?\n,;]{1,40})/i, "pref", 2],
+  [/\b(I (?:really |honestly )?(?:love|like|hate|adore|can't stand|cannot stand|fear|dread)(?!\s+(?:that|it|this|you|him|her|them)\b)[^.!?\n,;]{1,40})/i, "pref", 2],
   [/(我(?:叫|的名字是)[^。！？!?，,\s]{1,10}|我?今年\s*\d{1,2}\s*岁|我在[^。！？，,]{1,10}(?:工作|上班|上学|读书|住)|我是(?:一名|一个)[^。！？，,]{1,12}|我养了[^。！？，,]{1,10})/, "self", 2],
-  [/\b((?:my name is|call me|I'm \d{2}\b|I work (?:as|at|in)|I study|I live in|I have a (?:dog|cat|sister|brother))[^.!?\n,]{0,40})/i, "self", 2],
+  [/\b((?:my name(?:'s| is)|(?<!(?:n't|not|never|stop) )call me|I'm \d{2}\b|I am \d{2}\b|I work (?:as|at|in|for)|I study|I live in|I grew up in|I have an? (?:dog|cat|sister|brother|little sister|little brother|kid|daughter|son))[^.!?\n,;]{0,40})/i, "self", 2],
+  [/(?:^|[.!?]\s*|,\s*)(I'm ([A-Z][a-z]{1,15}))(?=[,.!?]|\s+by the way|\s*$)/, "self", 2],
   [/((?:我们|咱们)?(?:说好了|约好了|答应你|你答应我|下次|改天)[^。！？!?\n]{2,24})/, "promise", 2],
   [/\b((?:promise me|I promise|let's|next time we)[^.!?\n]{2,40})/i, "promise", 2],
 ];
@@ -12522,7 +12524,7 @@ async function m2extract(th) {
     const have = m2(th).filter(x => !x.del).slice(-30).map(x => "- " + x.t).join("\n");
     const names = (th.cast || []).map(id => (ch(id) ? first(ch(id).n) : id));
     const r = await m2ask(["You maintain the long-term memory of characters in an interactive romance story. Extract at most 5 NEW things worth remembering from the recent conversation (skip small talk and anything already remembered).",
-      "Types: fact (happened in the story / confirmed), self (the user said it about themselves — self-reported), pref (user's like/dislike), promise (a promise or plan), boundary (something the user asked not to do/mention), guess (a character's unconfirmed inference about the user).",
+      "Types: fact (something that happened, or something a CHARACTER said about himself), self (the USER said it about themselves — self-reported), pref (the USER's like/dislike), promise (a promise or plan between the user and a character), boundary (ONLY something the USER asked a character not to do or mention — never a character's own limits), guess (a character's unconfirmed inference about the user). Never store the same thing twice in different words.",
       "Write each memory as one short sentence in " + (S.lang === "zh" ? "Chinese" : "English") + ", concrete (names, objects, places). Importance 1–3 (3 = will matter later).",
       "known_by: which characters actually witnessed or were told it (choose from: " + names.join(", ") + ").",
       "ALREADY REMEMBERED:\n" + (have || "(nothing)"), "RECENT CONVERSATION:\n" + recent,
@@ -12658,7 +12660,7 @@ async function m78recall(th) {
   if (th._m2rec && th._m2rec.q === u.txt) return;
   const tier = typeof memTier === "function" ? memTier(th) : "free";
   try {
-    await m78sync(th);
+    m78sync(th); // don't wait: recall answers from what the server already has
     const r = await Promise.race([capi("/state?r=mem", { json: { op: "recall", thread: th.id, cast: th.cast || [], query: String(u.txt).slice(0, 600), k: (MEMT[tier] || MEMT.free).mem + 4, cross: tier !== "free" } }), new Promise(res => setTimeout(() => res(null), 3000))]);
     if (r && r.ok && r.j) {
       const items = r.j.items || [];
@@ -12688,11 +12690,14 @@ m2Sheet = (function (orig) { return function () { orig.apply(this, arguments); t
    · 正史：已做的章节选择、旗标、持有道具、各对关系阶段（不给数字）。
    全部写进提示词的「STORY LEDGER」段落，并要求模型不得与之矛盾；「剧情账本」页面让玩家随时看到。 */
 const LED = { lastChange: null };
+const LED_STOP = new Set("you your me my i we our us the a an to of and for in on at with will would be is are was it that this he she they his her their said promise promised promises next".split(" "));
+function ledWords(t) { const s = String(t || "").toLowerCase(); const en = s.match(/[a-z']{3,}/g) || []; const zh = (s.match(/[\u4e00-\u9fff]/g) || []).join(""); const w = new Set(en.filter(x => !LED_STOP.has(x))); for (let i = 0; i < zh.length - 1; i++) w.add(zh.slice(i, i + 2)); return w; }
+function ledSame(a, b) { const A = ledWords(a), B = ledWords(b); if (!A.size || !B.size) return false; let n = 0; A.forEach(x => { if (B.has(x)) n++; }); return n / Math.min(A.size, B.size) >= 0.5; }
 function led(th) {
   if (!th) return null;
   th.led = th.led || { p: [], c: [], n: { p: 0, c: 0 } };
   // promises come from structured memories (type promise)
-  try { (typeof m2 === "function" ? m2(th) : []).filter(x => x.type === "promise" && !x.del).forEach(x => { if (!th.led.p.some(p => p.mem === x.id)) th.led.p.push({ id: "P" + (++th.led.n.p), t: x.t, mem: x.id, st: "open", at: x.at || Date.now(), by: x.src }); }); } catch (_) {}
+  try { (typeof m2 === "function" ? m2(th) : []).filter(x => x.type === "promise" && !x.del).forEach(x => { if (!th.led.p.some(p => p.mem === x.id || (p.st === "open" && ledSame(p.t, x.t)))) th.led.p.push({ id: "P" + (++th.led.n.p), t: x.t, mem: x.id, st: "open", at: x.at || Date.now(), by: x.src }); }); } catch (_) {}
   return th.led;
 }
 function ledSecrets(th) {
@@ -12742,7 +12747,7 @@ function ledBlock(th) {
   if (sealed.length) out.push("SECRETS NOT YET REVEALED (only the owner knows; the owner may hint through behavior but must NOT say it outright; nobody else may mention it):\n" + sealed.map(s => "- " + name(s.cid) + "'s secret: " + s.t).join("\n"));
   if (shown.length) out.push("SECRETS THE USER ALREADY KNOWS: " + shown.map(s => name(s.cid) + " — " + s.t).join(" | "));
   if (!out.length) return "";
-  return "STORY LEDGER (kept by the app — this is canon. You cannot change it and must never contradict it):\n" + out.join("\n") + (op.length ? '\nIf, in THIS reply, an open promise is clearly kept or clearly broken by what happens, add to your JSON: "ledger":[{"op":"keep"|"break","id":"P1"}] (at most one). Otherwise omit it. The app decides whether to accept it.' : "");
+  return "STORY LEDGER (kept by the app — this is canon. You cannot change it and must never contradict it):\n" + out.join("\n");
 }
 memBlock = (function (orig) { return function (th) { const a = orig.apply(this, arguments); let b = ""; try { b = ledBlock(th); } catch (_) {} return [b, a].filter(Boolean).join("\n\n"); }; })(memBlock);
 /* model proposals → program validation → commit */
@@ -12757,7 +12762,11 @@ function ledApply(th, props) {
   return null;
 }
 ask = (function (orig) { return async function (prompt, opts) {
+  try { const th0 = S.threads[curT]; if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && th0) { const op = led(th0).p.filter(p => p.st === "open"); if (op.length) prompt = prompt + "\n\nLEDGER CHECK (required): open promises are " + op.map(p => p.id + " = " + p.t).join("; ") + ". If what happens in THIS reply clearly fulfils or clearly breaks one of them, add \"ledger\":[{\"op\":\"keep\" or \"break\",\"id\":\"P#\"}] to your JSON (at most one). If not, leave it out."; arguments[0] = prompt; } } catch (_) {}
   const r = await orig.apply(this, arguments);
+  try { // R14: ordinary warmth can't paper over an open conflict — the app caps affinity gains while it's unresolved
+    const th1 = S.threads[curT]; if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && th1 && r && r.love) { const oc = led(th1).c.filter(c => c.st === "open"); for (const cid in r.love) { if (oc.some(c => c.k.split("|").includes(cid)) && +r.love[cid] > 1) r.love[cid] = 1; } }
+  } catch (_) {}
   try {
     if (typeof prompt === "string" && prompt.indexOf("You write MIRU") === 0 && r && r.ledger) {
       const th = S.threads[curT]; const ok = th && ledApply(th, r.ledger);
