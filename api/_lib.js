@@ -79,6 +79,8 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS orders (id TEXT PRIMARY KEY, user_id TEXT, sku TEXT, platform TEXT, gems INT, price_cents INT, currency TEXT, status TEXT, test BOOLEAN DEFAULT false, receipt TEXT, refunded_by TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS orders_user_idx ON orders (user_id, at DESC)`,
   `CREATE TABLE IF NOT EXISTS notices (id BIGSERIAL PRIMARY KEY, title TEXT, body TEXT, lang TEXT DEFAULT 'all', kind TEXT DEFAULT 'banner', active BOOLEAN DEFAULT true, starts_at TIMESTAMPTZ, ends_at TIMESTAMPTZ, created_by TEXT, created_at TIMESTAMPTZ DEFAULT now())`,
+  `CREATE TABLE IF NOT EXISTS memories (user_id TEXT, id TEXT, thread_id TEXT, cast_ids JSONB DEFAULT '[]'::jsonb, type TEXT, text TEXT, who JSONB DEFAULT '[]'::jsonb, imp INT DEFAULT 2, src TEXT, pin BOOLEAN DEFAULT false, hush BOOLEAN DEFAULT false, created_ms BIGINT, emb REAL[], emb_model TEXT, updated_at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, id))`,
+  `CREATE INDEX IF NOT EXISTS memories_thread_idx ON memories (user_id, thread_id)`,
   `CREATE TABLE IF NOT EXISTS scripts (id TEXT PRIMARY KEY, title TEXT, orient TEXT DEFAULT 'bl', lang TEXT DEFAULT 'zh', stage INT DEFAULT 1, status TEXT DEFAULT 'draft', config JSONB DEFAULT '{}'::jsonb, research JSONB, brief TEXT, outline TEXT, chapters JSONB DEFAULT '[]'::jsonb, qa JSONB, review JSONB DEFAULT '{}'::jsonb, work_id TEXT, created_by TEXT, updated_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now(), published_at TIMESTAMPTZ)`,
   `CREATE TABLE IF NOT EXISTS script_versions (id BIGSERIAL PRIMARY KEY, script_id TEXT, stage INT, note TEXT, data JSONB, by_name TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS script_versions_idx ON script_versions (script_id, id DESC)`,
@@ -147,17 +149,53 @@ function structureQA(pack) {
 }
 
 /* ---------- LLM (LongCat, same key as the chat proxy) ---------- */
-async function llm(messages, maxTokens) {
-  const key = process.env.LONGCAT_API_KEY;
-  if (!key) throw new Error('LONGCAT_API_KEY missing');
-  const r = await fetch('https://api.longcat.chat/openai/v1/chat/completions', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
-    body: JSON.stringify({ model: 'LongCat-2.0', messages, max_tokens: maxTokens || 2000, temperature: 0.3, thinking: { type: 'disabled' } }),
-  });
-  if (!r.ok) throw new Error('llm ' + r.status);
-  const j = await r.json();
-  return (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+/* ---------- server-side model calls: same failover order as /api/longcat (LongCat → SCNet → GLM) ---------- */
+function chatProviders() {
+  const E = process.env, all = {
+    longcat: E.LONGCAT_API_KEY && { url: 'https://api.longcat.chat/openai/v1/chat/completions', key: E.LONGCAT_API_KEY, model: 'LongCat-2.0' },
+    scnet: E.SCNET_API_KEY && { url: (E.SCNET_BASE_URL || 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: E.SCNET_API_KEY, model: E.SCNET_MODEL || 'DeepSeek-V4.1-Flash' },
+    glm: E.GLM_API_KEY && { url: (E.GLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: E.GLM_API_KEY, model: E.GLM_MODEL || 'glm-4.5-flash' },
+  };
+  return String(E.LLM_ORDER || 'longcat,scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
 }
+async function llm(messages, maxTokens, timeoutMs) {
+  const list = chatProviders(); if (!list.length) throw new Error('no LLM key configured');
+  let last;
+  for (const p of list) {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), timeoutMs || 25000);
+    try {
+      const r = await fetch(p.url, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify({ model: p.model, messages, max_tokens: maxTokens || 2000, temperature: 0.3, thinking: { type: 'disabled' } }) });
+      if (!r.ok) throw new Error('llm ' + r.status);
+      const j = await r.json(); const c = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+      if (c.trim()) return c;
+      throw new Error('empty');
+    } catch (e) { last = e; } finally { clearTimeout(t); }
+  }
+  throw last || new Error('llm failed');
+}
+/* ---------- embeddings (for memory recall). Paid on both providers; when none works we return null and callers fall back to model reranking. ---------- */
+let _embDown = 0;
+function embedProviders() {
+  const E = process.env, all = {
+    scnet: E.SCNET_API_KEY && { id: 'scnet', url: (E.SCNET_BASE_URL || 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/embeddings', key: E.SCNET_API_KEY, model: E.SCNET_EMBED_MODEL || 'Qwen3-Embedding-8B' },
+    glm: E.GLM_API_KEY && { id: 'glm', url: (E.GLM_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/embeddings', key: E.GLM_API_KEY, model: E.GLM_EMBED_MODEL || 'embedding-3' },
+  };
+  return String(E.EMBED_ORDER || 'scnet,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
+}
+async function embed(texts) {
+  if (!texts.length || Date.now() < _embDown) return null;
+  for (const p of embedProviders()) {
+    try {
+      const r = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify({ model: p.model, input: texts.map(t => String(t).slice(0, 1000)) }) });
+      if (!r.ok) continue;
+      const j = await r.json(); const v = (j.data || []).sort((a, b) => (a.index || 0) - (b.index || 0)).map(d => d.embedding);
+      if (v.length === texts.length && v[0] && v[0].length) return { model: p.id + ':' + p.model, vecs: v };
+    } catch (_) {}
+  }
+  _embDown = Date.now() + 10 * 60e3; // none available: don't retry for 10 minutes
+  return null;
+}
+function cosine(a, b) { let d = 0, x = 0, y = 0; const n = Math.min(a.length, b.length); for (let i = 0; i < n; i++) { d += a[i] * b[i]; x += a[i] * a[i]; y += b[i] * b[i]; } return x && y ? d / Math.sqrt(x * y) : 0; }
 
 /* ---------- blob ---------- */
 function hasBlob() { return !!process.env.BLOB_READ_WRITE_TOKEN; }
@@ -266,4 +304,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, sendMail, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, sendMail, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };

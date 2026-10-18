@@ -110,7 +110,7 @@ module.exports = L.wrap(async (req, res) => {
     if (op === 'profile') { const up = await sql('UPDATE users SET name=$2 WHERE id=$1 RETURNING *', [u.id, String(b.name || '').slice(0, 40) || null]); return L.send(res, 200, { user: pubUser(up[0]) }); }
     if (op === 'delete') {
       await sql("UPDATE users SET status='deleted', email=NULL, pass=NULL, name=NULL, avatar=NULL, google_sub=NULL, apple_sub=NULL, note=COALESCE(note,'')||' [deleted by user '||now()::date||']', tv=COALESCE(tv,0)+1 WHERE id=$1", [u.id]);
-      await sql('DELETE FROM states WHERE user_id=$1', [u.id]);
+      await sql('DELETE FROM states WHERE user_id=$1', [u.id]); await sql('DELETE FROM memories WHERE user_id=$1', [u.id]);
       await sql("UPDATE works SET status='removed', updated_at=now() WHERE author=$1", [u.id]);
       const a = await sql("UPDATE assets SET status='removed' WHERE owner=$1 RETURNING url", [u.id]);
       for (const x of a) if (x.url) await L.blobDel(x.url);
