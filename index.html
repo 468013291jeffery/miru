@@ -12858,13 +12858,13 @@ lcMsgs = (function (orig) { return function (input) {
   return orig.apply(this, arguments);
 }; })(lcMsgs);
 
-/* ================= v3.5 · VOICE CALLS — talk to him out loud (Qwen-Omni via /api/longcat {omni}) =================
+/* ================= v3.5 · VOICE CALLS — talk to him out loud (Qwen-Omni via POST /api/tts {omni}) =================
    · Hands-free: the mic listens, a simple voice detector cuts each thing you say (≤12s), it goes to Qwen-Omni as audio,
      and his answer streams back as speech (PCM 24 kHz) + the words, played as it arrives — ~1–3s per turn.
    · Half-duplex with barge-in: while he talks the mic only listens for you talking over him (then he stops).
    · Like a real call: no reply options on screen — you just talk. Mute = mic off.
    · If the voice model isn't reachable (no key / network), the old call flow (text model + TTS) carries on unchanged. */
-const VC={ok:null,ep:typeof LC_PROXY!=="undefined"?LC_PROXY:""};
+const VC={ok:null,ep:typeof TTS_EP!=="undefined"?TTS_EP:""};
 function vcLang(){const l=typeof CL==="function"?CL():S.lang;return ["zh","en","ja","ko","es"].includes(l)?l:"en"}
 const VC_LN={zh:"Simplified Chinese (Mandarin)",en:"English",ja:"Japanese",ko:"Korean",es:"Spanish"};
 const VC_T={zh:{first:"（电话接通了。是你打给对方的——先开口，说你为什么这么晚打来，但别一次说完。）",earlier:"（对方之前说了几句）",talk:"🎙 直接说话就行",tap:"开启麦克风就能直接和他说话",mic:"开启麦克风",listen:"……（在听）",nomic:"没拿到麦克风权限——请在浏览器里允许麦克风",down:"语音通话暂时连不上，先用文字回复",o:["嗯，我在听。","你怎么了？","我也想你。","别挂。","说清楚一点。"]},

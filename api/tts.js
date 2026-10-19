@@ -108,6 +108,40 @@ async function viaQwen(text, voice, lang) {
   throw new Error('qwen ' + last);
 }
 
+/* ---------- Qwen-Omni voice-call turn (POST /api/tts {omni:{voice, sys, msgs}}) → SSE stream passed through ----------
+   QWEN_OMNI_MODEL (default qwen3.5-omni-flash, then qwen3-omni-flash), QWEN_OMNI_VOICES='{"m1":"Ethan",…}'. */
+const OMNI_VOICES = { m1: 'Raymond', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Theo Calm', m6: 'Aiden', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
+function omniVoice(v) { let m = {}; try { m = JSON.parse(process.env.QWEN_OMNI_VOICES || '{}'); } catch (_) {} return m[v] || OMNI_VOICES[v] || (String(v)[0] === 'f' ? 'Serena' : 'Ethan'); }
+async function omni(o, res) {
+  const sites = qwenSites(), trace = [];
+  if (!sites.length) { res.status(501).json({ error: { message: 'no Qwen key' } }); return; }
+  const msgs = [{ role: 'system', content: String(o.sys || '').slice(0, 12000) }];
+  for (const m of (Array.isArray(o.msgs) ? o.msgs : []).slice(-12)) {
+    if (m.role === 'assistant') msgs.push({ role: 'assistant', content: String(m.text || '').slice(0, 1500) });
+    else if (m.audio) msgs.push({ role: 'user', content: [{ type: 'input_audio', input_audio: { data: 'data:;base64,' + String(m.audio), format: 'wav' } }] });
+    else msgs.push({ role: 'user', content: String(m.text || '').slice(0, 2000) });
+  }
+  const models = [process.env.QWEN_OMNI_MODEL || 'qwen3.5-omni-flash', 'qwen3-omni-flash'].filter((x, i, a) => a.indexOf(x) === i);
+  const fem = String(o.voice || '')[0] === 'f', t00 = Date.now();
+  for (const site of sites) for (const model of models) for (const voice of [omniVoice(o.voice), fem ? 'Cherry' : 'Ethan']) {
+    if (Date.now() - t00 > 30000) break;
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 15000), t0 = Date.now();
+    try {
+      const up = await fetch(site.base + '/compatible-mode/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+        body: JSON.stringify({ model, messages: msgs, modalities: ['text', 'audio'], audio: { voice, format: 'wav' }, stream: true, stream_options: { include_usage: true }, max_tokens: Math.min(+o.max || 300, 800) }) });
+      trace.push(site.base.slice(8, 30) + ' ' + model + ' ' + voice + ' ' + up.status + ' ' + (Date.now() - t0) + 'ms');
+      if (!up.ok) { clearTimeout(tm); const e = (await up.text().catch(() => '')).slice(0, 240); trace.push(e); if (/voice/i.test(e)) continue; break; }
+      QSITE = site.base + site.key; QBASE = site.base;
+      res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': 'qwen:' + model + ':' + voice });
+      const rd = up.body.getReader();
+      for (;;) { const x = await rd.read(); if (x.done) break; res.write(Buffer.from(x.value)); }
+      clearTimeout(tm); res.end(); return;
+    } catch (e) { clearTimeout(tm); trace.push(site.base.slice(8, 30) + ' ' + model + ' ' + (e.name === 'AbortError' ? 'timeout ' + (Date.now() - t0) + 'ms' : String(e.message || e).slice(0, 160)));
+      if (res.headersSent) { try { res.end(); } catch (_) {} return; } break; }
+  }
+  res.status(502).json({ error: { message: 'qwen omni failed', trace } });
+}
+
 /* ---------- Inworld (English) ---------- */
 const IW_WANT = { m1: ['deep', 'low', 'calm', 'serious'], m2: ['young', 'bright', 'energetic', 'youthful'], m3: ['warm', 'friendly', 'smooth', 'gentle'],
   m4: ['serious', 'authoritative', 'deep', 'cold'], m5: ['relaxed', 'laid-back', 'casual', 'soft'], m6: ['bright', 'upbeat', 'energetic', 'expressive'],
@@ -145,8 +179,12 @@ async function viaInworld(text, voice, vec) {
 
 module.exports = async (req, res) => {
   const ok = cors(req, res);
-  if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS'); res.status(204).end(); return; }
+  if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); res.status(204).end(); return; }
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
+  if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
+    res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
+    if (b.omni) return omni(b.omni, res);
+    res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
   if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();
     try { const SAY = { zh: '你终于来了。外面雨这么大，你也不带把伞？', en: 'You finally came. No umbrella?', ja: 'やっと来たね。こんな雨なのに、傘も持ってないの？', ko: '드디어 왔네. 비가 이렇게 오는데 우산도 없어?', es: 'Por fin llegaste. ¿Con esta lluvia y sin paraguas?' }; const L = SAY[q.l] ? q.l : 'zh'; const o = await viaQwen(SAY[L], String(q.v || 'm1'), L); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
