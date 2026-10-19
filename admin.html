@@ -654,13 +654,19 @@ function stuPack(chapters) {
   });
   return { chapters: out };
 }
+const STU_TAGS = [
+  ['题材', { 'Romance': '恋爱', 'Dark Romance': '暗黑言情', 'Romantasy': '奇幻言情', 'Rom-Com': '爱情喜剧', 'Angst': '虐', 'Drama': '剧情', 'Slice of Life': '日常' }],
+  ['背景', { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友' }],
+  ['套路', { 'Enemies to Lovers': '宿敌变恋人', 'Rivals to Lovers': '对手变恋人', 'Fake Dating': '假戏真做', 'Only One Bed': '只有一张床', 'Forced Proximity': '被迫同处', 'Slow Burn': '慢热', 'Grumpy x Sunshine': '暴躁×阳光', 'Bodyguard': '保镖', 'Arranged Marriage': '包办婚姻', 'Second Chance': '破镜重圆', 'Hurt/Comfort': '伤痛治愈', 'Forbidden': '禁忌', 'Why Choose': '全都要', 'Mutual Pining': '双向暗恋', 'Secret Admirer': '秘密暗恋者', 'Touch Them and Die': '碰你者死' }],
+  ['人设', { 'Possessive': '占有欲', 'Golden Retriever': '金毛型', 'Cold Prince': '高岭之花', 'Morally Grey': '灰色道德', 'Soft Giant': '温柔巨人', 'Himbo': '傻白甜', 'Genius': '天才', 'Protective': '护短', 'Chaotic': '混乱' }]];
+const STU_TAG_ZH = Object.assign({}, ...STU_TAGS.map(g => g[1]));
 const Studio = {
   setup() {
     const list = ref([]), sel = ref(null), step = ref(0), busy = ref(''), log = ref([]), vers = ref([]), curCh = ref(1), stop = ref(false);
     const R = window.MIRU_RULES || {};
     const steps = ['选题与素材', '按规则生成', '自动检查', '编剧审改', '上线'];
     const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], as: '' });
-    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '' });
+    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', tags: [] });
     const researchText = ref(''), outline = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
     async function load() { list.value = (await api('scripts')).rows; }
     async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
@@ -670,14 +676,15 @@ const Studio = {
       let research = null, brief = null, config = cfgDefault();
       if (nf.seed === 'honor') {
         try { research = await (await fetch('/research/honor_code.json')).json(); brief = await (await fetch('/research/honor_code_brief.md')).text(); } catch (_) { ElMessage.error('示例研究文件读取失败'); }
-        Object.assign(config, { hook: '迎新派对那晚，你被人按在冰冷的墙上，而他看见了——他是唯一的证人，也是你最不想欠的人。', premise: 'Marlowe University（美国东北部虚构大学）。新生派对上你被欺负，签署荣誉誓约的当晚，宿敌成了唯一的目击者。看见违规必须举报，保护一个人却意味着包庇。宿敌变恋人 · 三角关系 · 校园暴力 · 嫉妒 · 病娇（有代价、有问责）。', tags: ['宿敌变恋人', '三角关系', '校园', '病娇'], cast: '待定：宿敌（继承人/荣誉委员会成员）、执念型第三者（病娇，结局须先承担后果）。年龄全部 19+。' });
+        Object.assign(config, { hook: '迎新派对那晚，你被人按在冰冷的墙上，而他看见了——他是唯一的证人，也是你最不想欠的人。', premise: 'Marlowe University（美国东北部虚构大学）。新生派对上你被欺负，签署荣誉誓约的当晚，宿敌成了唯一的目击者。看见违规必须举报，保护一个人却意味着包庇。宿敌变恋人 · 三角关系 · 校园暴力 · 嫉妒 · 病娇（有代价、有问责）。', tags: ['Enemies to Lovers', 'Why Choose', 'Dark Romance', 'Possessive'], cast: '待定：宿敌（继承人/荣誉委员会成员）、执念型第三者（病娇，结局须先承担后果）。年龄全部 19+。' });
       }
-      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; await load(); open(j.id);
+      if (nf.tags.length) config.tags = nf.tags.slice(); if (!config.tags.length) return ElMessage.warning('请至少选一个标签（App 的搜索和筛选靠标签）');
+      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; nf.tags = []; await load(); open(j.id);
     }
     async function save(patch, snapshot) { const j = await api('script', { body: { op: 'save', id: sel.value.id, patch, snapshot } }); const cfg = sel.value.config; sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), j.script.config || cfg); if (snapshot) loadVers(); return j.script; }
     function say(s) { log.value.unshift(new Date().toLocaleTimeString('zh-CN', { hour12: false }) + '  ' + s); }
     const rulesSys = (scope) => '你是 MIRU 互动剧本生成器。严格遵守下面两份规则（终版规则为准，调试规则为执行细则）。当前任务层级：' + scope + '。\n\n【MIRU 终版规则】\n' + (R.full || R.gen || '') + '\n\n【MIRU 剧本生成 Skill 调试规则 v1.0】\n' + (R.skill || '');
-    const projectText = () => { const s = sel.value, c = s.config; const mot = (s.research && s.research.motif_cards || []).filter(m => (c.motifs || []).includes(m.motif_id)); return ['【项目】' + s.title + '（' + ({ bl: '男男', bg: '男女', gl: '女女' }[s.orient] || s.orient) + '，语言：' + (s.lang === 'en' ? '英文' : '中文') + '）', '一句话钩子：' + (c.hook || '待定'), '设定：' + (c.premise || '待定'), '玩家身份：' + (c.player || '待定（保持 pending）'), '人物：' + (c.cast || '待定'), '配置：story_mode=' + c.story_mode + ' / story_form=' + c.story_form + ' / interaction_mode=' + c.interaction_mode + ' / twist_density=' + c.twist_density + ' / 章数目标=' + c.chapters_target + ' / monetization_enabled=' + !!c.monetization, '内容边界：' + c.boundaries, mot.length ? '【选用的素材研究母题卡（研究阶段的提案，不是已确认设定）】\n' + mot.map(m => m.motif_id + '：' + m.premise + '｜原创转化：' + (m.original_transformation || '') + '｜边界：' + (m.boundaries || '')).join('\n') : '', s.brief ? '【审稿简报摘要】\n' + String(s.brief).slice(0, 5000) : ''].filter(Boolean).join('\n'); };
+    const projectText = () => { const s = sel.value, c = s.config; const mot = (s.research && s.research.motif_cards || []).filter(m => (c.motifs || []).includes(m.motif_id)); return ['【项目】' + s.title + '（' + ({ bl: '男男', bg: '男女', gl: '女女' }[s.orient] || s.orient) + '，语言：' + (s.lang === 'en' ? '英文' : '中文') + '）', '标签（必须体现）：' + ((c.tags || []).map(x => STU_TAG_ZH[x] || x).join('、') || '未选'), '一句话钩子：' + (c.hook || '待定'), '设定：' + (c.premise || '待定'), '玩家身份：' + (c.player || '待定（保持 pending）'), '人物：' + (c.cast || '待定'), '配置：story_mode=' + c.story_mode + ' / story_form=' + c.story_form + ' / interaction_mode=' + c.interaction_mode + ' / twist_density=' + c.twist_density + ' / 章数目标=' + c.chapters_target + ' / monetization_enabled=' + !!c.monetization, '内容边界：' + c.boundaries, mot.length ? '【选用的素材研究母题卡（研究阶段的提案，不是已确认设定）】\n' + mot.map(m => m.motif_id + '：' + m.premise + '｜原创转化：' + (m.original_transformation || '') + '｜边界：' + (m.boundaries || '')).join('\n') : '', s.brief ? '【审稿简报摘要】\n' + String(s.brief).slice(0, 5000) : ''].filter(Boolean).join('\n'); };
     /* ---------- step 1 ---------- */
     async function saveStep1() { let research = null; if (researchText.value.trim()) { research = stuJSON(researchText.value); if (!research) return ElMessage.error('素材研究 JSON 格式不对'); } await save({ title: sel.value.title, orient: sel.value.orient, lang: sel.value.lang, config: sel.value.config, research, brief: sel.value.brief, stage: Math.max(sel.value.stage, 2) }); ElMessage.success('已保存'); step.value = 1; }
     async function aiResearch() {
@@ -734,7 +741,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, load, fmt, stLabel, tagType, can, S };
+    return { STU_TAGS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -745,10 +752,11 @@ const Studio = {
       <el-table-column prop="updated_by" label="最后修改" width="110" /><el-table-column label="更新时间" width="170" :formatter="r=>fmt(r.updated_at)" />
       <el-table-column label="" width="80"><template #default="{row}"><el-button size="small" type="danger" text @click.stop="del(row)">删除</el-button></template></el-table-column>
     </el-table>
-    <el-dialog v-model="nf.show" title="新建剧本" width="480px"><el-form label-width="80px">
+    <el-dialog v-model="nf.show" title="新建剧本" width="760px"><el-form label-width="80px">
       <el-form-item label="标题"><el-input v-model="nf.title" placeholder="如：The Honor Code｜荣誉法则" /></el-form-item>
       <el-form-item label="类型"><el-radio-group v-model="nf.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group></el-form-item>
       <el-form-item label="语言"><el-radio-group v-model="nf.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
+<el-form-item label="标签"><div style="width:100%"><div v-for="g in STU_TAGS" :key="g[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:34px;flex:none;padding-top:4px">{{g[0]}}</span><el-checkbox-group v-model="nf.tags" size="small"><el-checkbox-button v-for="(zh,k) in g[1]" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div><div class="muted" style="font-size:12px">和 App 搜索页的「题材 / 背景 / 套路 / 人设」是同一套；上线后用户按这些标签能搜到。生成架构和正文时也会按这些标签写。</div></div></el-form-item>
       <el-form-item label="素材"><el-select v-model="nf.seed" placeholder="空白开始" clearable style="width:100%"><el-option label="载入《荣誉法则》素材研究（35 张来源卡 + 12 张母题卡 + 审稿简报）" value="honor" /></el-select></el-form-item>
     </el-form><template #footer><el-button @click="nf.show=false">取消</el-button><el-button type="primary" @click="create">创建</el-button></template></el-dialog>
   </div>
@@ -764,6 +772,7 @@ const Studio = {
       <el-form label-width="110px">
         <el-form-item label="标题"><el-input v-model="sel.title" /></el-form-item>
         <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
+<el-form-item label="标签"><div style="width:100%"><div v-for="g in STU_TAGS" :key="g[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:34px;flex:none;padding-top:4px">{{g[0]}}</span><el-checkbox-group v-model="sel.config.tags" size="small"><el-checkbox-button v-for="(zh,k) in g[1]" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div><div class="muted" style="font-size:12px">和 App 搜索页的「题材 / 背景 / 套路 / 人设」是同一套；上线后用户按这些标签能搜到。生成架构和正文时也会按这些标签写。</div></div></el-form-item>
         <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
         <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>
         <el-form-item label="玩家身份"><el-input v-model="sel.config.player" placeholder="不填 = 待定（AI 不会替你定）" /></el-form-item>
@@ -828,6 +837,11 @@ const Studio = {
       </el-descriptions>
       <p class="muted">上线后：App「发现」页社区区置顶显示（作者 MIRU 官方）。玩家第一次打开时，App 会按同一套规则自动生成故事页、人物资料，并配好音乐、特效和小游戏。再次上线会覆盖为新版本。</p>
       <div class="toolbar"><el-button type="primary" @click="publish(false)" :disabled="!(sel.review&&sel.review.approved)">{{sel.status==='live'?'更新线上版本':'一键上线'}}</el-button><el-button v-if="S.me.role==='owner'" type="warning" plain @click="publish(true)" :disabled="!(sel.review&&sel.review.approved)">强制上线（忽略自动检查错误）</el-button><el-button v-if="sel.status==='live'" type="danger" plain @click="unpublish">下线</el-button></div>
+    </div>
+    <div class="panel stunav" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <el-button :disabled="step===0" @click="step=Math.max(0,step-1)">← 上一步{{step>0?'：'+steps[step-1]:''}}</el-button>
+      <span class="muted">第 {{step+1}} / 5 步 · {{steps[step]}}</span>
+      <el-button type="primary" :disabled="step===4" @click="step=Math.min(4,step+1)">{{step<4?'下一步：'+steps[step+1]:'已是最后一步'}} →</el-button>
     </div>
   </div></div>`,
 };
