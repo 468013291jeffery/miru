@@ -704,7 +704,7 @@ const Studio = {
     async function genChapter(n) {
       const s = sel.value, chs = s.chapters || [], prev = chs.filter(c => c.n < n).sort((a, b) => a.n - b.n);
       const tail = prev.length ? String(prev[prev.length - 1].md).slice(-2500) : '';
-      const t = await stuLLM(rulesSys('逐场正文'), projectText() + '\n\n【已确认架构】\n' + String(outline.value || s.outline || '').slice(0, 30000) + (tail ? '\n\n【上一章结尾（保持连续，读取上一章选择的后果）】\n' + tail : '') + '\n\n现在写第 ' + n + ' 章的完整正文（约 4000–7000 字，2–4 个场景，至少 1 个场景中小选择，结尾 1 个关键选择 2–3 个选项；' + (n > 1 ? '开头用「#### 入口A｜…」等写出读取上一章结尾选择的差异段落；' : '开篇先见人：用具体行为呈现他的吸引力、对玩家的态度和玩家能做什么；') + '）。\n\n' + STU.fmt.replace('{n}', n), 8000);
+      const t = await stuLLM(rulesSys('逐场正文'), projectText() + '\n\n【已确认架构】\n' + String(outline.value || s.outline || '').slice(0, 30000) + (tail ? '\n\n【上一章结尾（保持连续，读取上一章选择的后果）】\n' + tail : '') + '\n\n现在写第 ' + n + ' 章的完整正文（约 4000–7000 字，2–4 个场景，至少 1 个场景中小选择，结尾 1 个关键选择 2–3 个选项；【玩家台词铁律】绝对不要替玩家写台词，正文里不得出现「你：“……”」这样的玩家对白——玩家每次要开口的地方，一律写成「# CHOICE｜（轮到你说）一句情境提示」+ 2–3 个「#### A｜“玩家可能说的话”」，每个选项下面写对方针对这句话的不同回应（App 里玩家也可以不选、自己打字或说话）；每个场景至少 2 个这样的玩家回合，对方连续说话不超过 6 句就要把话轮交给玩家；玩家的动作和心理可以用叙述/【心理】写，但不替玩家做关键决定；' + (n > 1 ? '开头用「#### 入口A｜…」等写出读取上一章结尾选择的差异段落；' : '开篇先见人：用具体行为呈现他的吸引力、对玩家的态度和玩家能做什么；') + '）。\n\n' + STU.fmt.replace('{n}', n), 8000);
       const md = t.replace(/^```\w*\n?|```\s*$/g, '').trim(); const m = md.match(/##\s*CHAPTER\s*\d+\s*[｜|]\s*(.+)/i);
       const ch = { n, t: m ? m[1].trim() : '第 ' + n + ' 章', md, at: Date.now(), by: 'AI' };
       const next = chs.filter(c => c.n !== n).concat([ch]).sort((a, b) => a.n - b.n); await save({ chapters: next, stage: Math.max(s.stage, 2) }, 'AI 生成第 ' + n + ' 章'); return ch;
@@ -718,6 +718,7 @@ const Studio = {
     async function runCheck() {
       const pack = stuPack(sel.value.chapters); const c = sel.value.config;
       const q = R.check ? R.check({ pack: Object.assign(pack, { story_mode: c.story_mode }) }, { longform: Number(c.chapters_target) >= 15 }) : { err: ['规则模块没有加载'], warn: [], ok: [], info: [] };
+      (sel.value.chapters || []).forEach(ch => { const n = (String(ch.md || '').match(/^\s*(你|您|You)\s*[:：]/gm) || []).length; if (n) q.err.push('第 ' + ch.n + ' 章：替玩家写了 ' + n + ' 句台词（「你：…」）。玩家的话要写成「# CHOICE｜（轮到你说）」+ 台词选项，由玩家自己说（App 会把这些句子转成「轮到你说」，但剧本本身要改）'); });
       const qa = Object.assign({}, sel.value.qa || {}, { err: q.err, warn: q.warn, ok: q.ok, info: q.info, estimate: q.estimate, rules: R.version, at: Date.now() });
       await save({ qa, stage: Math.max(sel.value.stage, 3) }); ElMessage.success('规则检查完成：' + q.err.length + ' 个错误，' + q.warn.length + ' 个提醒');
     }
