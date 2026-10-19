@@ -172,6 +172,40 @@ async function genImage(o) {
   throw new Error(model + ' ' + last);
 }
 
+/* ---------- Vidu image-to-video (POST /api/tts {vid:{image, prompt}} → {id}; GET /api/tts?vid=<id> → {state, url, cover}) ----------
+   VIDU_API_KEY (Authorization: Token …). VIDU_BASE_URL (default https://api.vidu.com, then https://api.vidu.cn for China accounts).
+   VIDU_MODEL (default viduq2-pro-fast — the cheapest 720p clip, then viduq2-turbo), VIDU_RES (720p), VIDU_DUR (5). */
+const VID_HITS = new Map();
+function vidAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
+  const a = (VID_HITS.get(ip) || []).filter(t => now - t < 600e3); if (a.length >= 8) return false; a.push(now); VID_HITS.set(ip, a); return true; }
+const viduBases = () => [process.env.VIDU_BASE_URL, 'https://api.vidu.com', 'https://api.vidu.cn'].filter(Boolean).map(x => x.replace(/\/+$/, '')).filter((x, i, a) => a.indexOf(x) === i);
+const viduH = () => ({ 'Content-Type': 'application/json', Authorization: 'Token ' + process.env.VIDU_API_KEY });
+async function viduStart(o) {
+  if (!process.env.VIDU_API_KEY) throw new Error('no VIDU_API_KEY');
+  const image = String(o.image || ''); if (!image) throw new Error('no image');
+  const models = [process.env.VIDU_MODEL || 'viduq2-pro-fast', 'viduq2-turbo'].filter((x, i, a) => a.indexOf(x) === i);
+  let last = '';
+  const bases = viduBases();
+  for (let bi = 0; bi < bases.length; bi++) for (const model of models) {
+    const r = await fetch(bases[bi] + '/ent/v2/img2video', { method: 'POST', headers: viduH(), body: JSON.stringify({ model, images: [image], prompt: String(o.prompt || '').slice(0, 1500),
+      duration: +(process.env.VIDU_DUR || 5), resolution: process.env.VIDU_RES || '720p', movement_amplitude: 'auto', ...(/^viduq[34]/.test(model) ? { audio: false } : {}) }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.task_id) return { id: bi + '.' + j.task_id, model, credits: j.credits };
+    last = bases[bi].slice(8) + ' ' + model + ' ' + r.status + ' ' + JSON.stringify(j).slice(0, 200);
+    if (r.status === 401 || r.status === 403) break; // key belongs to the other site
+  }
+  throw new Error('vidu ' + last);
+}
+async function viduPoll(id) {
+  const [bi, task] = String(id).split('.'); const base = viduBases()[+bi] || viduBases()[0];
+  if (!/^[\w-]{4,80}$/.test(task || '')) throw new Error('bad id');
+  const r = await fetch(base + '/ent/v2/tasks/' + task + '/creations', { headers: viduH() });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('vidu ' + r.status + ' ' + JSON.stringify(j).slice(0, 200));
+  const c = (j.creations || [])[0] || {};
+  return { state: j.state, url: c.url || null, cover: c.cover_url || null, err: j.err_code || undefined, credits: j.credits };
+}
+
 /* ---------- Inworld (English) ---------- */
 const IW_WANT = { m1: ['deep', 'low', 'calm', 'serious'], m2: ['young', 'bright', 'energetic', 'youthful'], m3: ['warm', 'friendly', 'smooth', 'gentle'],
   m4: ['serious', 'authoritative', 'deep', 'cold'], m5: ['relaxed', 'laid-back', 'casual', 'soft'], m6: ['bright', 'upbeat', 'energetic', 'expressive'],
@@ -214,10 +248,14 @@ module.exports = async (req, res) => {
   if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
     res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
     if (b.omni) return omni(b.omni, res);
+    if (b.vid) { res.setHeader('Cache-Control', 'no-store'); if (!vidAllowed(req)) { res.status(429).json({ error: 'too many videos, try again later' }); return; }
+      try { res.status(200).json(await viduStart(b.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     if (b.img) { res.setHeader('Cache-Control', 'no-store'); if (!imgAllowed(req)) { res.status(429).json({ error: 'too many images, try again later' }); return; }
       try { res.status(200).json(await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
+  if (q.vid) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await viduPoll(q.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
+  if (q.ping === 'vidu') { res.setHeader('Cache-Control', 'no-store'); res.status(200).json({ key: !!process.env.VIDU_API_KEY, bases: viduBases(), model: process.env.VIDU_MODEL || 'viduq2-pro-fast' }); return; }
   if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();
     try { const SAY = { zh: '你终于来了。外面雨这么大，你也不带把伞？', en: 'You finally came. No umbrella?', ja: 'やっと来たね。こんな雨なのに、傘も持ってないの？', ko: '드디어 왔네. 비가 이렇게 오는데 우산도 없어?', es: 'Por fin llegaste. ¿Con esta lluvia y sin paraguas?' }; const L = SAY[q.l] ? q.l : 'zh'; const o = await viaQwen(SAY[L], String(q.v || 'm1'), L); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
     catch (e) { res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 400), sites: qwenSites().map(x => x.base) }); } return; }
