@@ -13099,14 +13099,21 @@ stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),
   tm=setTimeout(go,ttsOn()?Math.max(readMs({txt:x})+400,11000):readMs({txt:x})+400)};
  el.addEventListener("click",e=>{if(e.target.closest("[data-scend]")){fin();return}try{stopVoice()}catch(_){}next()});next()})};
 /* 4) per-bubble tools: a small 🔊 read-aloud and 🖼 picture button in the bottom-right corner of every character bubble */
+function bt86Btns(i){return '<span class="bt86"><button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>'}
 function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
  root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||!ch(m.who)||m.who==="me")return;
-  const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;
-  bub.insertAdjacentHTML("beforeend",'<span class="bt86"><button data-mt="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-mt="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>')})}catch(_){}}
+  const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
+ root.querySelectorAll('.m-box[data-mi]').forEach(bx=>{const i=+bx.dataset.mi,m=th.msgs[i];if(!m||!m.parts||!m.parts.length||bx.querySelector(".bt86"))return;bx.insertAdjacentHTML("beforeend",bt86Btns(i))})}catch(_){}}
+/* clicks: capture phase, so the bubble's own tap (open tools) doesn't swallow them */
+function bt86Parts(m){return m.parts?m.parts.filter(p=>p&&p.txt).map(p=>({who:p.who==="n"||!ch(p.who)?"n":p.who,txt:String(p.txt)})):[{who:m.who,txt:String(m.txt||"")}]}
+window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x)return;e.preventDefault();e.stopImmediatePropagation();
+ const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
+ if(a==="play"){const P=bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
+ if(a==="snap"){if(m.parts){const P=bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
 const _renderChat86=renderChat;renderChat=function(){const r=_renderChat86.apply(this,arguments);bt86Decorate($("#msgs"));return r};
 (function(){let mo=null;const hook=()=>{const box=$("#msgs");if(!box||box.__bt86)return;box.__bt86=1;mo=new MutationObserver(()=>bt86Decorate(box));mo.observe(box,{childList:true})};setInterval(hook,1500);
  document.addEventListener("click",e=>{if(e.target.closest(".bt86 button"))e.stopPropagation()},false);
- const st=document.createElement("style");st.textContent=`.bt86{display:flex;justify-content:flex-end;gap:3px;margin:3px -6px -5px 0}
+ const st=document.createElement("style");st.textContent=`.bt86{display:flex;justify-content:flex-end;gap:3px;margin:3px -6px -5px 0}.m-box .bt86{margin:4px -8px -8px 0}
 .bt86 button{width:22px;height:20px;padding:0;border:0;border-radius:6px;background:rgba(255,255,255,.07);font-size:11px;line-height:20px;opacity:.6;cursor:pointer}
 .bt86 button:hover,.bt86 button:active{opacity:1;background:rgba(255,255,255,.16)}`;document.head.appendChild(st)})();
 /* 5) read-aloud on by default (once), and its 🔊/🔇 switch visible again in the chat header */
@@ -13120,6 +13127,10 @@ window.addEventListener("click",e=>{const x=e.target.closest("[data-rg73]");if(!
  if(!spend(PRICES.regen||1,"retry")){e.stopImmediatePropagation();e.preventDefault()}},true);
 try{PRICES.regen=1}catch(_){}
 reply=(function(orig){return async function(th,ctx,silent){if(typeof REDO73!=="undefined"&&REDO73&&!silent&&typeof m78recall==="function"){const r=m78recall;m78recall=async()=>{};try{return await orig.apply(this,arguments)}finally{m78recall=r}}return orig.apply(this,arguments)}})(reply);
+/* 7) longer lines get the real voice too (server accepts 400 chars), and a few failed requests no longer switch to the device voice for 5 minutes */
+ttsSpeakable=function(text){const s=String(text||"").replace(/[*()（）\s]/g,"");return s.length>=2&&s.length<=400};
+ttsUrl=(function(o){return function(text,id){return o(text,id).replace(/&t=[^&]*$/,"&t="+encodeURIComponent(String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,"").trim().slice(0,400)))}})(ttsUrl);
+setInterval(()=>{if(TTS.off&&TTS.fails<8){TTS.off=false;TTS.fails=0}},20000);
 
 /* ================= v4.2 · SIGN-UP EMAIL CODE (Amazon SES) =================
    When the server can send mail (/auth?providers=1 → verify:true), "Create account" asks for a 6-digit code sent to the
