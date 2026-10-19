@@ -13105,11 +13105,14 @@ function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
   const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
  root.querySelectorAll('.m-box[data-mi]').forEach(bx=>{const i=+bx.dataset.mi,m=th.msgs[i];if(!m||!m.parts||!m.parts.length||bx.querySelector(".bt86"))return;bx.insertAdjacentHTML("beforeend",bt86Btns(i))})}catch(_){}}
 /* clicks: capture phase, so the bubble's own tap (open tools) doesn't swallow them */
+/* boxes are often grouped at render time, so read exactly what is on screen */
+function bt86DomParts(el){const th=S.threads[curT],cast=(th&&th.cast)||[];const who=nm=>{nm=String(nm||"").replace(/[✱💭·*]/g,"").trim().split(/\s+/)[0];const id=cast.find(c=>ch(c)&&first(ch(c).n)===nm)||Object.keys(S.mine&&S.mine.chars||{}).find(c=>ch(c)&&first(ch(c).n)===nm);return id||"n"};
+ return [...el.querySelectorAll("p")].filter(p=>p.offsetParent!==null).map(p=>{const tag=p.querySelector("b,span.mt,span.tpa,span.tpt,span[class^=tp]");const txt=(p.innerText||"").replace(tag?tag.innerText:"","").trim();return {who:tag?who(tag.innerText.split("·")[0]):"n",txt}}).filter(x=>x.txt)}
 function bt86Parts(m){return m.parts?m.parts.filter(p=>p&&p.txt).map(p=>({who:p.who==="n"||!ch(p.who)?"n":p.who,txt:String(p.txt)})):[{who:m.who,txt:String(m.txt||"")}]}
 window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x)return;e.preventDefault();e.stopImmediatePropagation();
  const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
- if(a==="play"){const P=bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
- if(a==="snap"){if(m.parts){const P=bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
+ const box=x.closest(".m-box");if(a==="play"){const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
+ if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
 const _renderChat86=renderChat;renderChat=function(){const r=_renderChat86.apply(this,arguments);bt86Decorate($("#msgs"));return r};
 (function(){let mo=null;const hook=()=>{const box=$("#msgs");if(!box||box.__bt86)return;box.__bt86=1;mo=new MutationObserver(()=>bt86Decorate(box));mo.observe(box,{childList:true})};setInterval(hook,1500);
  document.addEventListener("click",e=>{if(e.target.closest(".bt86 button"))e.stopPropagation()},false);
