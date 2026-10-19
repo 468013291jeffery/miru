@@ -13121,6 +13121,28 @@ window.addEventListener("click",e=>{const x=e.target.closest("[data-rg73]");if(!
 try{PRICES.regen=1}catch(_){}
 reply=(function(orig){return async function(th,ctx,silent){if(typeof REDO73!=="undefined"&&REDO73&&!silent&&typeof m78recall==="function"){const r=m78recall;m78recall=async()=>{};try{return await orig.apply(this,arguments)}finally{m78recall=r}}return orig.apply(this,arguments)}})(reply);
 
+/* ================= v4.2 · SIGN-UP EMAIL CODE (Amazon SES) =================
+   When the server can send mail (/auth?providers=1 → verify:true), "Create account" asks for a 6-digit code sent to the
+   email first (POST /auth {op:'regcode'}), then registers with {code}. Without mail configured it stays as before. */
+const RC87={zh:{send:"发送验证码",again:"重新发送",sent:"验证码已发到邮箱，15 分钟内有效（看不到请查垃圾箱）",need:"请先获取邮箱验证码",bad:"验证码不对",exp:"验证码过期了，请重新获取",fail:"邮件没发出去，请稍后再试",em:"请先填写正确的邮箱"},
+ en:{send:"Send code",again:"Resend",sent:"Code sent — check your inbox (and spam). Valid 15 minutes.",need:"Get the email code first",bad:"Wrong code",exp:"Code expired — get a new one",fail:"Couldn't send the email — try again shortly",em:"Enter a valid email first"},
+ ja:{send:"コードを送信",again:"再送信",sent:"コードを送信しました（迷惑メールも確認）。15分間有効です。",need:"先にメールのコードを取得してください",bad:"コードが違います",exp:"期限切れです。再取得してください",fail:"メールを送れませんでした",em:"正しいメールアドレスを入力してください"},
+ ko:{send:"코드 보내기",again:"다시 보내기",sent:"코드를 보냈어요(스팸함도 확인). 15분간 유효해요.",need:"먼저 이메일 코드를 받아 주세요",bad:"코드가 틀렸어요",exp:"코드가 만료됐어요. 다시 받아 주세요",fail:"메일을 보내지 못했어요",em:"올바른 이메일을 입력해 주세요"},
+ es:{send:"Enviar código",again:"Reenviar",sent:"Código enviado (revisa spam). Válido 15 minutos.",need:"Primero pide el código del correo",bad:"Código incorrecto",exp:"El código caducó: pide otro",fail:"No se pudo enviar el correo",em:"Escribe un correo válido"}};
+function rc87(k){return (RC87[S.lang]||RC87.en)[k]}
+const _authSheet87=authSheet70;
+authSheet70=function(mode){_authSheet87(mode);if(mode!=="register")return;au70Prov().then(p=>{if(!p||!p.verify)return;const pw=$("#au7p");if(!pw||$("#au7rc"))return;
+ pw.insertAdjacentHTML("afterend",'<div class="rc87"><input id="au7rc" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="'+esc(au("code"))+'" class="up66i"><button class="btn btn-g" data-rc87="1">'+esc(rc87("send"))+'</button></div>')})};
+document.addEventListener("click",async e=>{const x=e.target.closest("[data-rc87]");if(!x)return;e.preventDefault();const email=(($("#au7e")||{}).value||"").trim();
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){toast(rc87("em"));return}if(x.disabled)return;x.disabled=true;
+ try{const r=await capi("/auth",{json:{op:"regcode",email}});
+  if(r.ok){toast(rc87("sent"));let s=60;x.textContent=s+"s";const tk=setInterval(()=>{s--;if(!x.isConnected){clearInterval(tk);return}if(s<=0){clearInterval(tk);x.disabled=false;x.textContent=rc87("again")}else x.textContent=s+"s"},1000);const c=$("#au7rc");if(c)c.focus();return}
+  x.disabled=false;const er=r.j&&r.j.error;toast(er==="email already registered"?au("taken"):r.status===429?(er||au("net")):rc87("fail"))}catch(_){x.disabled=false;toast(au("net"))}},true);
+/* register carries the code; map the new errors to friendly words */
+const _capi87=capi;capi=function(path,o){try{if(path==="/auth"&&o&&o.json&&o.json.op==="register"){const c=$("#au7rc");if(c)o.json.code=c.value.trim()}}catch(_){}return _capi87.apply(this,arguments)};
+const _au70Err87=au70Err;au70Err=function(r){const e=r&&r.j&&r.j.error;if(e==="verification code required"){toast(rc87("need"));return}if(e==="wrong code"){toast(rc87("bad"));return}if(e&&/code expired/.test(e)){toast(rc87("exp"));return}return _au70Err87(r)};
+(function(){const st=document.createElement("style");st.textContent=`.rc87{display:flex;gap:8px;align-items:stretch}.rc87 .up66i{flex:1;min-width:0}.rc87 .btn{flex:none;white-space:nowrap;padding:0 14px}`;document.head.appendChild(st)})();
+
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
    Discover = shelves (each tag with its own row), rankings, challenges and Earn; search + tag filters one tap away.

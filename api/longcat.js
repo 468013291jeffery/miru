@@ -16,7 +16,7 @@ const FIRST_TOKEN_MS = 22000; // give up on a provider that hasn't started answe
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
 /* SCNet: one key reaches many models. Without SCNET_MODEL we read the account's model list once and pick a good chat model. */
 let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0;
-const SCNET_PREF = [/^deepseek-v4[\w.-]*flash/i, /^qwen3\.\d+-flash/i, /^glm-5[\w.]*-flash$/i, /^deepseek-v4/i, /^qwen3\.\d+-plus/i, /^glm-5/i, /deepseek/i, /qwen/i, /glm/i];
+const SCNET_PREF = [/^deepseek-v4\.1-flash$/i, /^scnet-max$/i, /^deepseek-v4[\w.-]*flash/i, /^qwen3\.\d+-flash/i, /^glm-5[\w.]*-flash$/i, /^deepseek-v4/i, /^qwen3\.\d+-plus/i, /^glm-5/i, /deepseek/i, /qwen/i, /glm/i];
 async function scnetResolve() {
   if (env('SCNET_MODEL') || !env('SCNET_API_KEY')) return;
   if (SCNET_AUTO && Date.now() - SCNET_AT < 3600e3) return;

@@ -37,11 +37,14 @@ async function currentGuest(sql, req) {
   return u && !u.email && !u.google_sub && !u.apple_sub && u.status !== 'deleted' ? u : null;
 }
 
+const codeMail = (code, what) => ({ subject: 'MIRU ' + (what === 'reg' ? 'sign-up' : 'password reset') + ' code: ' + code + ' · 验证码',
+  html: `<div style="font-family:-apple-system,Segoe UI,sans-serif;max-width:420px;margin:auto;padding:24px;color:#222"><h2 style="margin:0 0 8px">MIRU</h2><p>Your ${what === 'reg' ? 'sign-up' : 'password reset'} code is</p><p style="font-size:30px;font-weight:800;letter-spacing:6px;margin:6px 0">${code}</p><p style="color:#666;font-size:13px">It expires in 15 minutes. If you didn't ask for this, you can ignore this email.</p><hr style="border:0;border-top:1px solid #eee"><p style="color:#666;font-size:13px">你的 MIRU 验证码是 <b>${code}</b>，15 分钟内有效。如果不是你本人操作，请忽略这封邮件。</p></div>`,
+  text: 'Your MIRU code: ' + code + ' (15 minutes). 你的 MIRU 验证码：' + code + '（15 分钟内有效）' });
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db(); const q = req.query || {};
   if (req.method === 'GET') {
-    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), guest: cfg.guest_allowed !== false }); }
+    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), mail: L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
     const u = await L.needActive(req, res); if (!u) return;
     const r = await sql('SELECT * FROM users WHERE id=$1', [u.uid]);
     return L.send(res, 200, { user: pubUser(r[0]) });
@@ -73,6 +76,19 @@ module.exports = L.wrap(async (req, res) => {
     return signedIn(res, sql, user, { created: true });
   }
 
+  /* sign-up code: POST {op:'regcode', email} → 6-digit code by email (needed by register whenever mail is configured) */
+  if (op === 'regcode') {
+    const email = String(b.email || '').trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return L.bad(res, 'invalid email');
+    if (!L.hasMail()) return L.send(res, 501, { error: 'mail not configured' });
+    const taken = await sql('SELECT id FROM users WHERE email=$1', [email]); if (taken[0]) return L.bad(res, 'email already registered', 409);
+    if (!(await L.bump('mail:' + email, 'regcode', 5)) || !(await L.bump('mailip:' + L.ip(req), 'regcode', 20))) return L.bad(res, 'too many requests, try later', 429);
+    const code = String(L.crypto.randomInt(100000, 1000000));
+    await sql("INSERT INTO reset_codes (email, code, exp, tries) VALUES ($1,$2, now() + interval '15 minutes', 0) ON CONFLICT (email) DO UPDATE SET code=$2, exp=now() + interval '15 minutes', tries=0", ['reg:' + email, L.hashPass(code)]);
+    const m = codeMail(code, 'reg'); const ok = await L.sendMail(email, m.subject, m.html, m.text);
+    if (!ok) return L.send(res, 502, { error: 'could not send the email', detail: L.mailLast() });
+    return L.send(res, 200, { ok: true });
+  }
   if (op === 'forgot') {
     const email = String(b.email || '').trim().toLowerCase();
     if (!L.hasMail()) return L.send(res, 501, { error: 'mail not configured', hint: 'contact support to reset your password' });
@@ -81,7 +97,7 @@ module.exports = L.wrap(async (req, res) => {
       if (!(await L.bump('mail:' + email, 'forgot', 5))) return L.bad(res, 'too many requests, try later', 429);
       const code = String(L.crypto.randomInt(100000, 1000000));
       await sql("INSERT INTO reset_codes (email, code, exp, tries) VALUES ($1,$2, now() + interval '15 minutes', 0) ON CONFLICT (email) DO UPDATE SET code=$2, exp=now() + interval '15 minutes', tries=0", [email, L.hashPass(code)]);
-      await L.sendMail(email, 'MIRU password reset code: ' + code, `<p>Your MIRU verification code is</p><h2 style="letter-spacing:4px">${code}</h2><p>It expires in 15 minutes. If you didn't ask for this, ignore this email.</p><p>你的 MIRU 验证码是 <b>${code}</b>，15 分钟内有效。</p>`);
+      const m = codeMail(code, 'reset'); await L.sendMail(email, m.subject, m.html, m.text);
     }
     return L.send(res, 200, { ok: true }); // same answer whether or not the email exists
   }
@@ -124,6 +140,13 @@ module.exports = L.wrap(async (req, res) => {
   if (op === 'register') {
     const taken = await sql('SELECT id FROM users WHERE email=$1', [email]);
     if (taken[0]) return L.bad(res, 'email already registered', 409);
+    if (L.hasMail()) { // email ownership check
+      const rc = await sql('SELECT code, exp, tries FROM reset_codes WHERE email=$1', ['reg:' + email]); const c = rc[0];
+      if (!b.code) return L.bad(res, 'verification code required', 428);
+      if (!c || new Date(c.exp) < new Date() || c.tries >= 5) return L.bad(res, 'code expired — request a new one', 400);
+      if (!L.checkPass(String(b.code).trim(), c.code)) { await sql('UPDATE reset_codes SET tries=tries+1 WHERE email=$1', ['reg:' + email]); return L.bad(res, 'wrong code', 400); }
+      await sql('DELETE FROM reset_codes WHERE email=$1', ['reg:' + email]);
+    }
     const g = await currentGuest(sql, req);
     if (g) { const up = await sql("UPDATE users SET email=$2, pass=$3, name=COALESCE($4,name), provider='email' WHERE id=$1 RETURNING *", [g.id, email, L.hashPass(pw), b.name || null]); return signedIn(res, sql, up[0], { linked: true }); }
     const { user } = await newUser(sql, { provider: 'email', email, pass: L.hashPass(pw), name: b.name || null });

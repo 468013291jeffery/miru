@@ -271,13 +271,37 @@ async function audit(sql, a, action, kind, id, detail, req) {
   try { await sql('INSERT INTO audit_log (admin_id, admin_name, action, target_kind, target_id, detail, ip) VALUES ($1,$2,$3,$4,$5,$6::jsonb,$7)', [a.id, a.name || a.username, action, kind || null, id == null ? null : String(id), JSON.stringify(detail || {}), req ? ip(req) : null]); } catch (_) {}
 }
 
-/* ---------- v2.7: email (password reset). Uses Resend when RESEND_API_KEY + MAIL_FROM are set. ---------- */
-function hasMail() { return !!(process.env.RESEND_API_KEY && process.env.MAIL_FROM); }
-async function sendMail(to, subject, html) {
-  if (!hasMail()) return false;
-  const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.RESEND_API_KEY }, body: JSON.stringify({ from: process.env.MAIL_FROM, to: [to], subject, html }) });
-  return r.ok;
+/* ---------- email (verification codes) ----------
+   Amazon SES (preferred): AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY (an IAM user allowed ses:SendEmail), AWS_REGION / SES_REGION
+   (default us-east-1), MAIL_FROM = a verified sender, e.g. "MIRU <no-reply@yourdomain.com>". Signed with SigV4 — no SDK needed.
+   Resend still works as a fallback (RESEND_API_KEY + MAIL_FROM). */
+const sesKey = () => process.env.SES_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID, sesSecret = () => process.env.SES_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
+function hasSES() { return !!(sesKey() && sesSecret() && process.env.MAIL_FROM); }
+function hasMail() { return hasSES() || !!(process.env.RESEND_API_KEY && process.env.MAIL_FROM); }
+function sigv4(method, host, path, region, service, body, key, secret) {
+  const now = new Date(), amz = now.toISOString().replace(/[:-]|\.\d{3}/g, ''), day = amz.slice(0, 8);
+  const H = (d, enc) => crypto.createHash('sha256').update(d, 'utf8').digest(enc || 'hex'), M = (k, d) => crypto.createHmac('sha256', k).update(d, 'utf8').digest();
+  const ph = H(body), canon = [method, path, '', 'content-type:application/json', 'host:' + host, 'x-amz-date:' + amz, '', 'content-type;host;x-amz-date', ph].join('\n');
+  const scope = day + '/' + region + '/' + service + '/aws4_request', sts = ['AWS4-HMAC-SHA256', amz, scope, H(canon)].join('\n');
+  const kS = M(M(M(M('AWS4' + secret, day), region), service), 'aws4_request'), sig = crypto.createHmac('sha256', kS).update(sts, 'utf8').digest('hex');
+  return { 'Content-Type': 'application/json', 'X-Amz-Date': amz, Authorization: 'AWS4-HMAC-SHA256 Credential=' + key + '/' + scope + ', SignedHeaders=content-type;host;x-amz-date, Signature=' + sig };
 }
+let MAIL_LAST = null;
+async function sendSES(to, subject, html, text) {
+  const region = process.env.SES_REGION || process.env.AWS_REGION || 'us-east-1', host = 'email.' + region + '.amazonaws.com', path = '/v2/email/outbound-emails';
+  const body = JSON.stringify({ FromEmailAddress: process.env.MAIL_FROM, Destination: { ToAddresses: [to] },
+    Content: { Simple: { Subject: { Data: subject, Charset: 'UTF-8' }, Body: { Html: { Data: html, Charset: 'UTF-8' }, Text: { Data: text || subject, Charset: 'UTF-8' } } } } });
+  const r = await fetch('https://' + host + path, { method: 'POST', headers: sigv4('POST', host, path, region, 'ses', body, sesKey(), sesSecret()), body });
+  if (!r.ok) { MAIL_LAST = 'ses ' + r.status + ' ' + (await r.text()).slice(0, 300); return false; }
+  MAIL_LAST = 'ses ok'; return true;
+}
+async function sendMail(to, subject, html, text) {
+  if (hasSES()) { try { if (await sendSES(to, subject, html, text)) return true; } catch (e) { MAIL_LAST = 'ses ' + String(e.message || e).slice(0, 200); } }
+  if (!(process.env.RESEND_API_KEY && process.env.MAIL_FROM)) return false;
+  const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.RESEND_API_KEY }, body: JSON.stringify({ from: process.env.MAIL_FROM, to: [to], subject, html }) });
+  MAIL_LAST = 'resend ' + r.status; return r.ok;
+}
+const mailLast = () => MAIL_LAST;
 
 /* ---------- v2.7: Sign in with Google / Apple (ID-token verification on the server) ---------- */
 const list = v => String(v || '').split(',').map(s => s.trim()).filter(Boolean);
@@ -308,4 +332,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, sendMail, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, sendMail, mailLast, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };

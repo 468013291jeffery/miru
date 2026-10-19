@@ -94,12 +94,13 @@ function qwenVoice(v) { let m = {}; try { m = JSON.parse(process.env.QWEN_VOICE_
 const QLANG = { zh: 'Chinese', en: 'English', ja: 'Japanese', ko: 'Korean', es: 'Spanish', fr: 'French', de: 'German', pt: 'Portuguese', it: 'Italian', ru: 'Russian' };
 async function viaQwen(text, voice, lang) {
   let last = 'no site';
-  for (const site of qwenSites()) {
+  for (const site of qwenSites()) for (let attempt = 0; attempt < 2; attempt++) {
     const r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
       body: JSON.stringify({ model: process.env.QWEN_TTS_MODEL || 'qwen3-tts-flash', input: { text, voice: qwenVoice(voice), language_type: QLANG[lang] || 'Auto' } }) });
+    if ((r.status === 429 || r.status >= 500) && attempt === 0) { await new Promise(z => setTimeout(z, 700)); continue; } // busy → one retry on the same site
     const j = await r.json().catch(() => ({}));
     const a = j.output && j.output.audio;
-    if (!r.ok || !a || (!a.url && !a.data)) { last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 160); continue; }
+    if (!r.ok || !a || (!a.url && !a.data)) { last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 160); break; }
     QSITE = site.base + site.key; QBASE = site.base;
     if (a.data) return { buf: Buffer.from(a.data, 'base64'), type: 'audio/wav' };
     const f = await fetch(a.url); if (!f.ok) throw new Error('qwen audio ' + f.status);
