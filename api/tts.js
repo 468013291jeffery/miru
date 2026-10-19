@@ -1,5 +1,6 @@
 // MIRU → character voice (TTS) proxy · Vercel Node function
 // GET /api/tts?t=<text ≤200>&v=<voice id>&e=<8 emotion weights, comma separated>&l=zh|en
+// Qwen-TTS (qwen3-tts-flash) is the main voice for every line when DASHSCOPE_INTL_API_KEY / DASHSCOPE_API_KEY is set.
 // English lines: Inworld TTS-2 when INWORLD_API_KEY is set (Basic credentials copied from the Inworld portal, used as-is).
 //   Our voice slots (m1…m7, f1, f2) are matched once to Inworld's English preset voices by their tags; override with INWORLD_VOICE_MAP='{"m1":"Edward",…}'.
 //   INWORLD_MODEL (default inworld-tts-2; inworld-tts-2-flash is cheaper/faster).
@@ -74,6 +75,38 @@ async function viaSpace(text, voice, vec) {
   throw last;
 }
 
+/* ---------- Qwen-TTS (Alibaba Model Studio) · main voice for Chinese and English when a key is set ----------
+   DASHSCOPE_INTL_API_KEY (international console) or DASHSCOPE_API_KEY (China console); optional DASHSCOPE_BASE_URL (workspace host),
+   QWEN_TTS_MODEL (default qwen3-tts-flash), QWEN_VOICE_MAP='{"m1":"Moon",…}'. Every system voice speaks both Mandarin and English. */
+const QWEN_WS = 'https://ws-cnxfgp13wlelgkbu.ap-southeast-1.maas.aliyuncs.com';
+const QV = { m1: 'Moon', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Kai', m6: 'Mochi', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
+let QSITE = null, QBASE = null;
+function qwenSites() {
+  const E = process.env, intl = E.DASHSCOPE_INTL_API_KEY, cn = E.DASHSCOPE_API_KEY || E.QWEN_API_KEY, out = [];
+  const add = (base, key) => { if (key && base) { base = base.replace(/\/+$/, '').replace(/\/(compatible-mode|api)\/.*$/, ''); if (!out.some(x => x.base === base && x.key === key)) out.push({ base, key }); } };
+  if (E.DASHSCOPE_BASE_URL) add(E.DASHSCOPE_BASE_URL, intl || cn);
+  if (intl) { add(QWEN_WS, intl); add('https://dashscope-intl.aliyuncs.com', intl); }
+  if (cn) { add('https://dashscope.aliyuncs.com', cn); add(QWEN_WS, cn); add('https://dashscope-intl.aliyuncs.com', cn); }
+  if (QSITE) out.sort((a, b) => (b.base + b.key === QSITE) - (a.base + a.key === QSITE));
+  return out;
+}
+function qwenVoice(v) { let m = {}; try { m = JSON.parse(process.env.QWEN_VOICE_MAP || '{}'); } catch (_) {} return m[v] || QV[v] || (String(v)[0] === 'f' ? 'Serena' : 'Ethan'); }
+async function viaQwen(text, voice, en) {
+  let last = 'no site';
+  for (const site of qwenSites()) {
+    const r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+      body: JSON.stringify({ model: process.env.QWEN_TTS_MODEL || 'qwen3-tts-flash', input: { text, voice: qwenVoice(voice), language_type: en ? 'English' : 'Chinese' } }) });
+    const j = await r.json().catch(() => ({}));
+    const a = j.output && j.output.audio;
+    if (!r.ok || !a || (!a.url && !a.data)) { last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 160); continue; }
+    QSITE = site.base + site.key; QBASE = site.base;
+    if (a.data) return { buf: Buffer.from(a.data, 'base64'), type: 'audio/wav' };
+    const f = await fetch(a.url); if (!f.ok) throw new Error('qwen audio ' + f.status);
+    return { buf: Buffer.from(await f.arrayBuffer()), type: f.headers.get('content-type') || 'audio/wav' };
+  }
+  throw new Error('qwen ' + last);
+}
+
 /* ---------- Inworld (English) ---------- */
 const IW_WANT = { m1: ['deep', 'low', 'calm', 'serious'], m2: ['young', 'bright', 'energetic', 'youthful'], m3: ['warm', 'friendly', 'smooth', 'gentle'],
   m4: ['serious', 'authoritative', 'deep', 'cold'], m5: ['relaxed', 'laid-back', 'casual', 'soft'], m6: ['bright', 'upbeat', 'energetic', 'expressive'],
@@ -114,8 +147,11 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS'); res.status(204).end(); return; }
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
   const q = req.query || {};
+  if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();
+    try { const o = await viaQwen(q.l === 'en' ? 'You finally came. No umbrella?' : '你终于来了。外面雨这么大，你也不带把伞？', String(q.v || 'm1'), q.l === 'en'); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
+    catch (e) { res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 400), sites: qwenSites().map(x => x.base) }); } return; }
   if (q.ping) { res.setHeader('Cache-Control', 'no-store'); let iw = null; if (q.ping === 'inworld' && process.env.INWORLD_API_KEY) { try { iw = { map: await iwVoices(), english_voices: (IW_LIST || []).map(v => v.id + ' [' + v.tags.join(',') + ']') }; } catch (e) { iw = { error: String(e.message || e) }; } }
-    res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
+    res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', qwen: qwenSites().length > 0, english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
   const text = String(q.t || '').replace(/[*（）()]/g, '').trim().slice(0, 400);
   if (!text) { res.status(400).json({ error: 'no text' }); return; }
   const voice = String(q.v || 'm1').slice(0, 12);
@@ -123,8 +159,9 @@ module.exports = async (req, res) => {
   while (vec.length < 8) vec.push(0);
   try {
     const en = q.l === 'en' || (!/[\u4e00-\u9fff]/.test(text) && q.l !== 'zh');
-    let out = null;
-    if (en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
+    let out = null, qerr = null;
+    if (qwenSites().length) { try { out = await viaQwen(text, voice, en); } catch (e) { qerr = e; out = null; } }
+    if (!out && en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
     if (!out) out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
     const riff = out.buf.slice(0, 4).toString() === 'RIFF';
     res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));

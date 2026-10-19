@@ -44,6 +44,53 @@ function providers() {
   return order.map(k => all[k]).filter(p => p.key && p.model(''));
 }
 
+/* ---------- Qwen-Omni voice calls (Alibaba Model Studio / DashScope) ----------
+   DASHSCOPE_INTL_API_KEY (Singapore / international console) or DASHSCOPE_API_KEY (Beijing / China console).
+   Optional: DASHSCOPE_BASE_URL (your workspace host, e.g. https://ws-xxxx.ap-southeast-1.maas.aliyuncs.com),
+             QWEN_OMNI_MODEL (default qwen3.5-omni-flash, then qwen3-omni-flash), QWEN_OMNI_VOICES='{"m1":"Ethan",…}'.
+   POST {omni:{voice:"m1", sys:"…", msgs:[{role:"user",audio:"<base64 wav>"}|{role:"user",text:"…"}|{role:"assistant",text:"…"}]}}
+   → the upstream SSE stream as-is (delta.audio.data = base64 PCM16 24 kHz mono, delta.audio.transcript = what he says). */
+const QWEN_WS = 'https://ws-cnxfgp13wlelgkbu.ap-southeast-1.maas.aliyuncs.com';
+let QWEN_SITE = null; // the base that answered last time
+function qwenSites() {
+  const intl = env('DASHSCOPE_INTL_API_KEY'), cn = env('DASHSCOPE_API_KEY') || env('QWEN_API_KEY'), own = env('DASHSCOPE_BASE_URL');
+  const out = [];
+  const add = (base, key) => { if (key && base && !out.some(x => x.base === base && x.key === key)) out.push({ base: base.replace(/\/+$/, '').replace(/\/(compatible-mode|api)\/.*$/, ''), key }); };
+  if (own) add(own, intl || cn);
+  if (intl) { add(QWEN_WS, intl); add('https://dashscope-intl.aliyuncs.com', intl); }
+  if (cn) { add('https://dashscope.aliyuncs.com', cn); add(QWEN_WS, cn); add('https://dashscope-intl.aliyuncs.com', cn); }
+  if (QWEN_SITE) out.sort((a, b) => (b.base + b.key === QWEN_SITE) - (a.base + a.key === QWEN_SITE));
+  return out;
+}
+const OMNI_VOICES = { m1: 'Raymond', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Theo Calm', m6: 'Aiden', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
+function omniVoice(v) { let m = {}; try { m = JSON.parse(env('QWEN_OMNI_VOICES', '{}')); } catch (_) {} return m[v] || OMNI_VOICES[v] || (String(v)[0] === 'f' ? 'Serena' : 'Ethan'); }
+async function omni(o, headers) {
+  const sites = qwenSites();
+  if (!sites.length) return J({ error: { message: 'no Qwen key (DASHSCOPE_INTL_API_KEY / DASHSCOPE_API_KEY)' } }, 501, headers);
+  const msgs = [{ role: 'system', content: String(o.sys || '').slice(0, 12000) }];
+  for (const m of (Array.isArray(o.msgs) ? o.msgs : []).slice(-12)) {
+    if (m.role === 'assistant') msgs.push({ role: 'assistant', content: String(m.text || '').slice(0, 1500) });
+    else if (m.audio) msgs.push({ role: 'user', content: [{ type: 'input_audio', input_audio: { data: 'data:;base64,' + String(m.audio), format: 'wav' } }] });
+    else msgs.push({ role: 'user', content: String(m.text || '').slice(0, 2000) });
+  }
+  const models = [env('QWEN_OMNI_MODEL', 'qwen3.5-omni-flash'), 'qwen3-omni-flash'].filter((x, i, a) => a.indexOf(x) === i);
+  const sex = String(o.voice || '')[0] === 'f';
+  let last = '';
+  for (const site of sites) for (const model of models) for (const voice of [omniVoice(o.voice), sex ? 'Cherry' : 'Ethan']) {
+    try {
+      const up = await fetch(site.base + '/compatible-mode/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + site.key },
+        body: JSON.stringify({ model, messages: msgs, modalities: ['text', 'audio'], audio: { voice, format: 'wav' }, stream: true, stream_options: { include_usage: true }, max_tokens: Math.min(+o.max || 300, 800) }) });
+      if (!up.ok) { const e = (await up.text().catch(() => '')).slice(0, 240); last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + model + ' ' + up.status + ' ' + e;
+        if (/voice/i.test(e)) continue; // try the safe voice
+        if (up.status === 401 || up.status === 403 || up.status === 404) break; // wrong region / key / model → next model or site
+        break; }
+      QWEN_SITE = site.base + site.key;
+      return new Response(up.body, { status: 200, headers: { ...headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': 'qwen:' + model + ':' + voice } });
+    } catch (e) { last = String(e.message || e).slice(0, 200); break; }
+  }
+  return J({ error: { message: 'qwen omni: ' + last } }, 502, headers);
+}
+
 function cors(origin) {
   const ok = !origin || ALLOWED.some(r => r.test(origin));
   return { ok, headers: { 'Access-Control-Allow-Origin': ok && origin ? origin : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Expose-Headers': 'X-MIRU-Provider', 'Vary': 'Origin' } };
@@ -75,6 +122,13 @@ export default async function handler(req) {
   await scnetResolve();
   let body;
   try { body = await req.json(); } catch { return J({ error: { message: 'bad json' } }, 400, c.headers); }
+  if (body.omni) return omni(body.omni, c.headers);
+  if (body.probe && body.qwen) { // is the voice-call model reachable? (tiny text turn, reports whether audio came back)
+    const t0 = Date.now(); const r = await omni({ voice: 'm2', sys: 'Reply in one short sentence.', msgs: [{ role: 'user', text: 'Say hi.' }], max: 40 }, c.headers);
+    if (r.status !== 200) return J({ qwen: { ok: false, status: r.status, error: (await r.json().catch(() => ({}))).error }, sites: qwenSites().map(x => x.base) }, 200, c.headers);
+    const txt = await r.text(); const audio = (txt.match(/"data":"/g) || []).length; const said = (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('');
+    return J({ qwen: { ok: audio > 0, provider: r.headers.get('X-MIRU-Provider'), audio_chunks: audio, said, ms: Date.now() - t0, head: audio ? undefined : txt.slice(0, 600) } }, 200, c.headers);
+  }
   const list = providers();
   if (!list.length) return J({ error: { message: 'no LLM provider configured (LONGCAT_API_KEY / SCNET_API_KEY / GLM_API_KEY)' } }, 500, c.headers);
 
