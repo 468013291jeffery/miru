@@ -3649,7 +3649,7 @@ function plusSheet(){const th=S.threads[curT],m=mainOf(th),st=stageOf(th,m);
 function csSheet(){sheet('<h2>'+t("cs.h")+'</h2><p class="sm dim" style="margin-top:4px">'+t("cs.sub")+'</p><div class="stack" style="margin-top:6px">'+
  [["natural","▶️"],["ff","⏩"],["skip","⏳"],["event","✨"],["third","👥"]].map(([k,i])=>'<button class="opt" data-csk="'+k+'"><span class="ic">'+i+'</span><span class="grow"><b>'+t("cs."+k)+'</b><span>'+t("cs."+k+"S")+'</span></span></button>').join("")+
  '<div class="row" style="margin:10px 0 2px"><span class="grow" style="height:1px;background:var(--line)"></span><span class="xs faint">'+t("cs.paid")+'</span><span class="grow" style="height:1px;background:var(--line)"></span></div>'+
- '<button class="opt" data-csk="card"><span class="ic">🎬</span><span class="grow"><b>'+t("cs.card")+' <span class="pill">💎 3</span></b><span>'+t("cs.cardS")+'</span></span></button></div>'+
+ '<button class="opt" data-csk="card"><span class="ic">🎬</span><span class="grow"><b>'+t("cs.card")+' <span class="pill">💎 '+PRICES.card+'</span></b><span>'+t("cs.cardS")+'</span></span></button></div>'+
  '<p class="xs faint" style="text-align:center;margin-top:10px">'+t("cs.note")+'</p>')}
 function menuSheet(){const th=S.threads[curT];
  sheet('<div class="stack">'+
@@ -3690,7 +3690,7 @@ function dateSheet(){sheet('<h2>'+t("date.h")+'</h2><div class="stack" style="ma
 function truthSheet(){sheet('<h2>'+t("truth.h")+'</h2><p class="sm dim" style="margin-top:6px">'+t("truth.sub")+'</p><div class="field" style="margin-top:12px"><textarea id="truthQ" rows="3" placeholder="'+esc(t("truth.ph"))+'"></textarea></div><button class="btn btn-p btn-block" style="margin-top:10px" data-truthgo="1">'+t("truth.ask")+'</button>')}
 function inviteSheet(){const th=S.threads[curT];const ids=allChars().filter(id=>!th.cast.includes(id));
  sheet('<h2>'+t("inv.h")+'</h2><p class="sm dim" style="margin-top:4px">'+t("inv.sub")+'</p>'+pickSearch("invPickQ","invPickGrid")+'<div class="pick" id="invPickGrid" style="margin-top:14px">'+ids.map(id=>'<button data-inv="'+id+'">'+avatar(id,56)+'<span>'+esc(first(ch(id).n))+'</span></button>').join("")+'</div>')}
-function cardSheet(){if(S.keys<PRICES.event){paySheet("event");return}
+function cardSheet(){if(S.keys<PRICES.card){paySheet("event");return}
  sheet('<h2>'+t("cs.card")+'</h2><div class="row" style="gap:8px;margin-top:12px">'+["romance","drama","angst"].map(k=>'<button class="chip" data-ctype="'+k+'">'+{romance:"💗 Romance",drama:"🔥 Drama",angst:"🌧 Angst"}[k]+'</button>').join("")+'</div><div id="cards" class="stack" style="gap:8px;margin-top:12px"></div>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];
  if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(g.cost&&!spend(g.cost,"gift"))return;
@@ -3704,7 +3704,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];
   appendMsg(th,{who:"sys",k:"card",title:"🚪 "+t("cs.third"),txt:t("inv.done",{n:c.n}),at:Date.now()});th.mem.push(c.n+" ("+Lz(c.role)+") walked in from another story");reply(th,{kind:"third",txt:c.n+", "+Lz(c.role)});return}
  if(x=e.target.closest("[data-ctype]")){const k=x.dataset.ctype;const pool=EVENTS.filter(v=>v.k===k).concat(EVENTS.filter(v=>v.k!==k)).slice(0,3);
   $("#cards").innerHTML=pool.map(v=>'<button class="opt" data-card="'+v.id+'"><span class="ic">🃏</span><span class="grow"><b>'+esc(Lz(v.t))+'</b><span>'+esc(Lz(v.d))+'</span></span></button>').join("");return}
- if(x=e.target.closest("[data-card]")){const v=EVENTS.find(y=>y.id===x.dataset.card);if(!spend(PRICES.event,"event"))return;closeSheet();
+ if(x=e.target.closest("[data-card]")){const v=EVENTS.find(y=>y.id===x.dataset.card);if(!spend(PRICES.card,"event"))return;closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🃏 "+Lz(v.t),txt:Lz(v.d),at:Date.now()});reply(th,{kind:"card",txt:Lz(v.t)+" — "+Lz(v.d)});return}});
 
 /* ================= QUIZ ================= */
@@ -4113,7 +4113,7 @@ function renderRemix(){const w=wd(rx.wid),a=rxAuto(),others=allChars().filter(id
    '<div class="field" style="margin-top:12px"><label>'+t("rx.fmt")+'</label></div><div class="seg" id="rxFmt">'+
     '<button data-rxfmt="text" class="'+(rx.format==="text"?"on":"")+'">'+t("rx.fmtText")+'</button>'+
     '<button data-rxfmt="image" class="'+(rx.format==="image"?"on":"")+'">'+t("rx.fmtImg")+(S.plus?"":" · 💎"+PRICES.img)+'</button>'+
-    '<button data-rxfmt="video" class="'+(rx.format==="video"?"on":"")+'">'+t("rx.fmtVid")+' · 💎5</button></div>'+
+    '<button data-rxfmt="video" class="'+(rx.format==="video"?"on":"")+'">'+t("rx.fmtVid")+' · 💎'+PRICES.video+'</button></div>'+
    (rx.format==="image"?'<button class="btn btn-g btn-sm" style="margin-top:10px" data-rxcover="1" '+(rx.coverBusy?"disabled":"")+'>✨ '+(rx.coverBusy?t("rx.coverGoing"):(rx.coverImg?t("rx.coverAgain"):t("rx.coverGo")+(S.plus?"":" · 💎"+PRICES.img)))+'</button>':"")+
    (rx.format==="video"?'<p class="xs faint" style="margin-top:10px;line-height:1.5">'+t("rx.fmtVidSoon")+'</p>':"")+'</div>'+
   '<div class="card"><div class="eyebrow">'+t("sh.split")+'</div>'+splitHTML("remix")+'<p class="xs faint" style="margin-top:8px">'+t("rx.splitS")+'</p></div>';
@@ -4597,7 +4597,11 @@ Object.assign(I18N.zh,{"voice.rec2":"专属录音声线","voice.wrongG":"本机�
    Webtoon/Tapas (Wait-Until-Free), Character.AI/Talkie (free chat is never capped; membership = memory, no locks, perks).
    UX rules: price shown on every button before you tap · balance always visible · every spend confirmed with a toast of what's left ·
    the story is never blocked with no free path · first unlock of the day is on us. */
-const PRICES={ep:2,line:1,pic:1,img:2,event:3,retry:2};/* 1💎 ≈ $0.18 (50💎 = $8.99). One AI image costs ~¥0.2 ≈ $0.03 → 2💎 ≈ $0.36 */
+/* AI-cost pricing rule (set by the owner): every ¥1 the model costs us is charged as $1 to the player, rounded UP to whole 💎 (1💎 ≈ $0.18, 50💎 = $8.99).
+   · AI picture: new z-image-turbo ¥0.1, same-face edit wan2.5-i2i ¥0.2 → $0.2 → 2💎      · AI scene/event card (text model, ~¥0.02) → 1💎
+   · voice call (Qwen-Omni ≈ ¥0.05–0.1/min) → 1💎/min      · 5s video (Vidu viduq2-pro-fast, 16 credits ≈ ¥0.58) → 4💎
+   Story unlocks (ep / line / pic / event reveals) are content prices, not model costs, and keep their own values. */
+const PRICES={ep:2,line:1,pic:1,img:2,event:3,retry:1,card:1,callMin:1,video:4};
 function today(){return new Date().toISOString().slice(0,10)}
 const FREE_EPS=3;              /* first 3 episodes of every drama are free */
 const WUF_H=23;                /* Wait-Until-Free: one locked episode per drama unlocks free every 23h */
@@ -5090,18 +5094,18 @@ const _renderChat=renderChat;renderChat=function(){_renderChat.apply(this,argume
 function callGate(cid){if(S.plus){startCall(cid);return}
  if(!S.callTrial){S.callTrial=1;save();startCall(cid,60);return}
  const c=ch(cid);sheet('<div class="eyebrow" style="color:var(--gold)">📞 '+t("call.h")+'</div><h2 style="margin-top:4px">'+esc(t("call.gateH",{n:first(c.n)}))+'</h2><p class="sm dim" style="margin-top:6px">'+t("call.gateS")+'</p>'+
-  '<button class="btn btn-p btn-block" style="margin-top:14px" data-callpay="'+cid+'">📞 '+t("call.pay",{p:3})+'</button><p class="xs faint" style="text-align:center;margin-top:6px">💎 '+S.keys+'</p>'+
+  '<button class="btn btn-p btn-block" style="margin-top:14px" data-callpay="'+cid+'">📞 '+t("call.pay",{p:PRICES.callMin})+'</button><p class="xs faint" style="text-align:center;margin-top:6px">💎 '+S.keys+'</p>'+
   '<button class="plusc mini" data-paysheet="call"><b>MIRU+</b><span>'+t("call.plus")+'</span><em>'+t("pay.trial")+'</em></button>')}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-callgo]")){callGate(x.dataset.callgo);return}
- if(x=e.target.closest("[data-callpay]")){if(S.keys<3){paySheet("call");return}closeSheet();startCall(x.dataset.callpay,0,true);return}});
-/* billing wrapper around startCall: trial seconds, or 3 💎 per started minute */
+ if(x=e.target.closest("[data-callpay]")){if(S.keys<PRICES.callMin){paySheet("call");return}closeSheet();startCall(x.dataset.callpay,0,true);return}});
+/* billing wrapper around startCall: trial seconds, or PRICES.callMin 💎 per started minute */
 const _startCall=startCall;startCall=function(cid,limit,paid){_startCall(cid);if(!call)return;call.limit=limit||0;call.paid=!!paid;call.min=0;
- if(paid){S.keys-=3;save();call.min=1}
+ if(paid){S.keys-=PRICES.callMin;save();call.min=1}
  const cap=document.createElement("div");cap.className="cv-meter";cap.id="cvM";$(".callv").appendChild(cap);
  call.bill=setInterval(()=>{if(!call){return}const s=Math.floor((Date.now()-call.t0)/1000),m=$("#cvM");
   if(call.limit){const left=call.limit-s;if(m)m.textContent=t("call.trialLeft",{s:Math.max(0,left)});if(left<=0){endCall();callGate(cid)}return}
-  if(call.paid){if(s>=call.min*60){if(S.keys>=3){S.keys-=3;call.min++;save();toast(t("pay.spent",{n:3,left:S.keys}))}else{endCall();paySheet("call");return}}if(m)m.textContent="💎 3/"+t("pay.mo2")+" · "+S.keys}},1000)};
+  if(call.paid){if(s>=call.min*60){if(S.keys>=PRICES.callMin){S.keys-=PRICES.callMin;call.min++;save();toast(t("pay.spent",{n:PRICES.callMin,left:S.keys}))}else{endCall();paySheet("call");return}}if(m)m.textContent="💎 "+PRICES.callMin+"/"+t("pay.mo2")+" · "+S.keys}},1000)};
 const _endCall=endCall;endCall=function(){if(call&&call.bill)clearInterval(call.bill);_endCall()};
 /* incoming story calls go through the same gate */
 document.addEventListener("click",e=>{const x=e.target.closest("[data-cardbtn]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.cardbtn];if(m&&m.act&&m.act.startsWith("call|")){e.stopImmediatePropagation();callGate(m.act.split("|")[1])}},true);
@@ -5229,14 +5233,14 @@ payHooks=function(th,m){if(!th.wid)return;th.aiN=(th.aiN||0)+1;const b=beatAt(th
  if(b==="del"){setTimeout(()=>{th.msgs.push({who:"sys",k:"card",title:"↩︎ "+t("bt.delH",{n:nm}),txt:t("bt.delS"),btn:t("bt.delB")+(S.plus?"":" · 💎 1"),act:"del|"+cid,at:Date.now()});save();if(curT===th.id)renderChat()},1300)}
  if(b==="cont"&&!S.plus&&m.k==="say"&&String(m.txt||"").length>12){m.locked=true}
  if(b==="call"){setTimeout(()=>callCard(th,cid),1600)}
- if(b==="pov"){setTimeout(()=>{th.msgs.push({who:"sys",k:"card",title:"💭 "+t("bt.povH",{n:nm}),txt:t("bt.povS"),btn:t("bt.povB",{n:nm})+(S.plus?"":" · 💎 "+PRICES.event),act:"pov|"+cid,at:Date.now()});save();if(curT===th.id)renderChat()},1300)}};
+ if(b==="pov"){setTimeout(()=>{th.msgs.push({who:"sys",k:"card",title:"💭 "+t("bt.povH",{n:nm}),txt:t("bt.povS"),btn:t("bt.povB",{n:nm})+(S.plus?"":" · 💎 "+PRICES.card),act:"pov|"+cid,at:Date.now()});save();if(curT===th.id)renderChat()},1300)}};
 async function beatWrite(kind,cid,th){const c=ch(cid),zh=S.lang==="zh",ctx=th.msgs.slice(-8).filter(m=>m.txt).map(m=>(m.who==="me"?"User":ch(m.who)?ch(m.who).n:"")+": "+m.txt).join("\n");
  if(SAMPLE){try{const r=await SAMPLE.json("You are writing for an interactive romance drama. Character: "+c.n+" ("+Lz(c.vibe)+"). Recent scene:\n"+ctx+"\n\n"+(kind==="del"?"Write the ONE text message he typed and then unsent/deleted right after this scene — raw, more honest than he'd ever say out loud, 1–2 sentences.":"Write his inner monologue (POV) during the last moment of this scene — what he was really thinking and hiding, first person, 2–3 short sentences, intense.")+" Reply ONLY JSON {\"text\":\"...\"} in "+(zh?"Simplified Chinese":"English")+".",{modelTier:"quick"});if(r&&r.text)return r.text}catch(_){}}
  const tells=(c.tells&&(c.tells[zh?"zh":"en"]||c.tells.en))||[];
  return kind==="del"?(zh?"算了。当我没说。……但我是认真的。":"Forget it. Pretend I didn't say anything. …I meant it though."):(tells[0]?(zh?"（"+tells[0]+"）我不能让他看出来。再一秒都不行。":"("+tells[0]+") He can't see it. Not for one more second."):Lz(c.twist))}
 document.addEventListener("click",async e=>{const x=e.target.closest("[data-cardbtn]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.cardbtn];if(!m||!m.act)return;
  const [k,cid]=m.act.split("|");if(k!=="del"&&k!=="pov")return;e.stopImmediatePropagation();
- if(!S.plus){if(k==="del"&&!(freeToday("del")||spend(1,"line")))return;if(k==="pov"&&!spend(PRICES.event,"event"))return}
+ if(!S.plus){if(k==="del"&&!(freeToday("del")||spend(1,"line")))return;if(k==="pov"&&!spend(PRICES.card,"event"))return}
  x.disabled=true;x.textContent="…";const txt=await beatWrite(k,cid,th);m.btn=null;m.act=null;m.txt=(k==="del"?"“":"")+txt+(k==="del"?"”":"");m.title=(k==="del"?"↩︎ ":"💭 ")+t(k==="del"?"bt.delDone":"bt.povDone",{n:first(ch(cid).n)});
  th.mem.push((k==="del"?"User saw the message "+ch(cid).n+" deleted: ":"User read "+ch(cid).n+"'s private thoughts: ")+txt);const p=typeof pairOf==="function"&&pairOf(th.wid);if(p)relAdd(p,3);save();renderChat()},true);
 
@@ -6085,11 +6089,11 @@ document.addEventListener("click",e=>{
 
 /* event card / gift / date: a custom line under the presets */
 function cuRow(id,ph,btn){return '<div class="drfree"><input id="'+id+'" placeholder="'+esc(ph)+'"><button class="btn btn-p btn-sm" data-'+id+'="1">'+btn+'</button></div>'}
-const _cardSheet7=cardSheet;cardSheet=function(){_cardSheet7();const c=$("#cards");if(c)c.insertAdjacentHTML("afterend",'<p class="xs dim" style="margin-top:12px">'+t("cu.cardH")+'</p>'+cuRow("cuCard",t("cu.cardPh"),"🎬 💎"+PRICES.event))};
+const _cardSheet7=cardSheet;cardSheet=function(){_cardSheet7();const c=$("#cards");if(c)c.insertAdjacentHTML("afterend",'<p class="xs dim" style="margin-top:12px">'+t("cu.cardH")+'</p>'+cuRow("cuCard",t("cu.cardPh"),"🎬 💎"+PRICES.card))};
 const _giftSheet7=giftSheet;giftSheet=function(){_giftSheet7();const c=$(".sheet-card");if(c)c.insertAdjacentHTML("beforeend",'<p class="xs dim" style="margin-top:12px">'+t("cu.giftH")+'</p>'+cuRow("cuGift",t("cu.giftPh"),"🎁 💎1"))};
 const _dateSheet7=dateSheet;dateSheet=function(){_dateSheet7();const c=$(".sheet-card");if(c)c.insertAdjacentHTML("beforeend",cuRow("cuDate",t("cu.datePh"),"🌙"))};
 document.addEventListener("click",e=>{const th=S.threads[curT];if(!th)return;let v;
- if(e.target.closest("[data-cuCard],[data-cucard]")){v=(($("#cuCard")||{}).value||"").trim();if(!v)return;if(!spend(PRICES.event,"event"))return;closeSheet();
+ if(e.target.closest("[data-cuCard],[data-cucard]")){v=(($("#cuCard")||{}).value||"").trim();if(!v)return;if(!spend(PRICES.card,"event"))return;closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🃏 "+t("cu.cardT"),txt:v,at:Date.now()});reply(th,{kind:"card",txt:v});return}
  if(e.target.closest("[data-cuGift],[data-cugift]")){v=(($("#cuGift")||{}).value||"").trim();if(!v)return;if(!spend(1,"gift"))return;const m=mainOf(th);closeSheet();
   th.love[m]=Math.min(100,(th.love[m]||0)+5);th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+v);
@@ -6661,11 +6665,11 @@ function ringEnd(answered,declined){if(!ring)return;clearTimeout(ring.tm);const 
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ringyes]")){ringEnd(true);return}
  if(e.target.closest("[data-ringno]")){ringEnd(false,true);return}
- if(x=e.target.closest("[data-mcback]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mcback];if(!m)return;if(!S.plus&&!spend(2,"event"))return;m.back=1;save();startCall(m.who,60);return}});
+ if(x=e.target.closest("[data-mcback]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mcback];if(!m)return;if(!S.plus&&!spend(PRICES.callMin,"event"))return;m.back=1;save();startCall(m.who,60);return}});
 const _msgHTML20=msgHTML;
 msgHTML=function(m,i,th){if(!m||m.k!=="missed")return _msgHTML20(m,i,th);const c=ch(m.who);if(!c)return"";
  return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+t(m.away?"mc.away":"mc.missed")+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
-  '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎2")+'</button>')+'</div></div></div>'};
+  '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'};
 /* idle trigger inside a chat */
 setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidden||!th||ring||$(".sheet")||$(".callv")){mcIdle=0;return}
  const last=th.msgs[th.msgs.length-1];if(!last||!ch(last.who)||last.k==="missed"){mcIdle=0;return}if(th.pk&&th.pk.q&&th.pk.q.length){mcIdle=0;return}
@@ -8261,7 +8265,7 @@ Object.assign(I18N.en,{"call.youT":"You call {n}","call.watchT":"On the call","c
    ["sys","recall",{who,txt}]                      — "X unsent a message" · 👀 see it (💎2, first free, members free)
    [cid,"missed",{cid,lines,then,skip}]            — he calls, hangs up before you answer → 📞 call back (💎2) to hear what he wanted to say
    [pov,"reveal",{img,img2,title,lines:[…]}]       — a high point played full-screen: image, slow push-in, lines one by one */
-if(typeof PAY!=="undefined")Object.assign(PAY,{recall:2,missed:2});
+if(typeof PAY!=="undefined")Object.assign(PAY,{recall:2,missed:PRICES.callMin});
 STOPK.add("missed");STOPK.add("reveal");
 /* 1 · unsent message */
 const _pkDir37=pkDirective;
@@ -8513,7 +8517,7 @@ const _pkDir41b=pkDirective;pkDirective=function(th,b){const r=_pkDir41b(th,b);t
    ✕ on an incoming call → hang-up tone + buzz, a "📵 已拒接" overlay with his face sliding away,
    tension rises / trust dips a little, and a card stays in the chat:
    "你拒接了X的电话 · 响了N秒" with 🎧 听他本来要说什么 (💎2, first time free) → private transcript of the lines you skipped. */
-Object.assign(PAY,{callback:2});
+Object.assign(PAY,{callback:PRICES.callMin});
 function sfxHang(){try{const c=sfxCtx();if(!c)return;for(let i=0;i<3;i++)blip(c,{f0:480,f1:480,dur:.16,type:"sine",vol:.07,at:i*.24})}catch(_){}}
 function declineFx(cid){try{if(PKSKIP[curT])return;const L=fxLayer(),o=document.createElement("div");o.className="dcov";
  o.innerHTML='<div class="dcav">'+avatar(cid,84)+'<i>📵</i></div><b>'+esc(t("dc.title"))+'</b><small>'+esc(t("dc.sub",{n:first(ch(cid).n)}))+'</small>';
@@ -9227,9 +9231,10 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))re
    Quick path: one line → story card → 3 quick picks → free first scene → play it right away.
    Workbench: story · cast · chapters · line editor. Hand edits are always free; AI output is priced by how much it writes,
    quoted before it runs and charged only when it succeeds. Output is a normal MIRU story pack (S.mine.worlds[wid].pack). */
-const CPR={card:1,first:0,line:1,char:3,outline:1,scene:5,chapter:20,tr:6,bg:3,portrait:4,cover:5,music:10,videoSec:3};
+/* AI-cost rule: ¥1 of model cost → $1 → whole 💎 rounded up. Text (DeepSeek, ~¥0.01–0.05 per scene/chapter) → 1 · new image (¥0.1) → 1 · portrait edit (¥0.2) → 2 · video ≈ ¥0.12/s → 1 per second. Music has no model connected yet. */
+const CPR={card:1,first:0,line:1,char:1,outline:1,scene:1,chapter:1,tr:1,bg:1,portrait:2,cover:1,music:10,videoSec:1};
 const CFREE={card:5,line:3};
-function cPrice(kind,qty){qty=qty||1;let p=(CPR[kind]||0)*qty;if(kind==="season")p=Math.round(CPR.chapter*qty*0.8);
+function cPrice(kind,qty){qty=qty||1;let p=(CPR[kind]||0)*qty;if(kind==="season")p=Math.max(1,Math.round(CPR.chapter*qty*0.8));
  const text=["card","line","char","outline","scene","chapter","season","tr"].includes(kind);if(S.plus)p=Math.ceil(p*(text?0.5:0.8));return p}
 function cFreeLeft(kind){const d=today();S.cfree=S.cfree&&S.cfree.d===d?S.cfree:{d,card:0,line:0};return CFREE[kind]!=null?Math.max(0,CFREE[kind]-(S.cfree[kind]||0)):0}
 function cHalf(key){const t=(S.cgen||{})[key];return t&&Date.now()-t<10*60e3}
@@ -9414,9 +9419,9 @@ function cPriceSheet(){const R=(a,b,c)=>'<tr><td>'+a+'</td><td>'+b+'</td><td>'+c
  sheet('<h2>💎 '+LL("创作价格","Creation pricing")+'</h2><p class="xs faint" style="margin-top:4px;line-height:1.5">'+LL("AI 写得越多、素材越重，价格越高。手动编辑、试玩、保存永远免费。先报价，成功才扣费。","The more AI writes, the more it costs. Editing, playing and saving are always free. Quoted first, charged only on success.")+(S.plus?LL(" 会员：文字 5 折，素材 8 折。"," Members: text 50% off, assets 20% off."):"")+'</p>'+
  '<table class="cptab"><tr><th>'+LL("内容","What")+'</th><th>'+LL("产出","Size")+'</th><th>💎</th></tr>'+
  R(LL("故事卡","Story card"),LL("1 张","1"),LL("每天 5 次免费，之后 1","5 free/day, then 1"))+R(LL("第一幕","Scene 1"),LL("约 25 句","~25 lines"),LL("免费","Free"))+R(LL("改写一句","Rewrite a line"),LL("1 句","1 line"),LL("每天 3 次免费，之后 1","3 free/day, then 1"))+
- R(LL("生成一个角色","A character"),LL("人设 + 开场","Profile + opener"),"3")+R(LL("大纲","Outline"),LL("每章","per chapter"),"1")+R(LL("一个场景","A scene"),LL("30–40 句","30–40 lines"),"5")+R(LL("一章剧本","A chapter"),LL("40–60 句","40–60 lines"),"20")+
- R(LL("整季打包","Whole season"),LL("剩余全部章节","all remaining"),LL("8 折","20% off"))+R(LL("翻译英文","Translate"),LL("每章","per chapter"),"6")+R(LL("场景图","Scene image"),LL("每张","each"),"3")+R(LL("角色形象","Portrait"),LL("每张","each"),"4")+R(LL("封面","Cover"),LL("每张","each"),"5")+
- R(LL("配乐","Music"),LL("每首","per track"),"10")+R(LL("开场视频","Opening video"),LL("每秒","per second"),"3")+R(LL("形象库 / 上传 / 系统音色 / 特效","Library / upload / system voice / effects"),"—",LL("免费","Free"))+'</table>'+
+ R(LL("生成一个角色","A character"),LL("人设 + 开场","Profile + opener"),String(CPR.char))+R(LL("大纲","Outline"),LL("每章","per chapter"),"1")+R(LL("一个场景","A scene"),LL("30–40 句","30–40 lines"),String(CPR.scene))+R(LL("一章剧本","A chapter"),LL("40–60 句","40–60 lines"),String(CPR.chapter))+
+ R(LL("整季打包","Whole season"),LL("剩余全部章节","all remaining"),LL("8 折","20% off"))+R(LL("翻译英文","Translate"),LL("每章","per chapter"),String(CPR.tr))+R(LL("场景图","Scene image"),LL("每张","each"),String(CPR.bg))+R(LL("角色形象","Portrait"),LL("每张","each"),String(CPR.portrait))+R(LL("封面","Cover"),LL("每张","each"),String(CPR.cover))+
+ R(LL("配乐","Music"),LL("每首","per track"),"10")+R(LL("开场视频","Opening video"),LL("每秒","per second"),String(CPR.videoSec))+R(LL("形象库 / 上传 / 系统音色 / 特效","Library / upload / system voice / effects"),"—",LL("免费","Free"))+'</table>'+
  '<p class="xs faint" style="margin-top:8px">'+LL("10 分钟内对同一段内容不满意重写：半价。","Redo the same piece within 10 minutes: half price.")+'</p>')}
 /* creator works open the workbench; creator pack threads get a menu entry */
 const _renderCreate49=renderCreate;renderCreate=function(v){_renderCreate49(v);try{const sc=v.querySelector(".scroll");if(sc&&!sc.querySelector("[data-cnew]"))sc.insertAdjacentHTML("afterbegin",'<button class="card cnewc" data-cnew="1"><div class="row"><span style="font-size:30px">✨</span><div class="grow"><b style="font-size:17px;display:block">'+LL("一句话写一部剧","Write a story from one line")+'</b><p class="xs faint" style="margin-top:4px;line-height:1.5">'+LL("说一句灵感 → 3 个快选 → 第一幕免费试玩。之后在工作台里慢慢写。","One line → three quick picks → play scene 1 free. Keep writing in the Workbench.")+'</p></div><span style="color:var(--gold);font-size:20px">›</span></div></button>');
@@ -12973,7 +12978,7 @@ qimgOn();setTimeout(qimgOn,0);setTimeout(qimgOn,500);
 /* ================= v3.7 · MOVING PICTURES — Vidu image-to-video (POST /api/tts {vid}, poll GET /api/tts?vid=) =================
    In the picture sheet: "🎬 Make it move · 💎5" turns the current still (AI picture or portrait) into a 5s 720p clip.
    The clip is kept on the message (m.vid) and plays in the sheet; failures refund the diamonds. */
-const VID={ep:typeof TTS_EP!=="undefined"?TTS_EP:"",price:5};
+const VID={ep:typeof TTS_EP!=="undefined"?TTS_EP:"",price:PRICES.video||4};
 const VID_T={zh:{go:"让画面动起来",wait:"正在生成视频……大约 1–2 分钟，可以先关掉，好了会留在这条消息上",done:"视频好了",fail:"视频没生成出来，钻石已退回",busy:"已经在生成了"},
  en:{go:"Make it move",wait:"Making the video… about 1–2 min. You can close this; it stays on the message",done:"Your video is ready",fail:"Couldn't make the video — diamonds refunded",busy:"Already working on it"},
  ja:{go:"動かしてみる",wait:"動画を作成中……1〜2分ほど。閉じても大丈夫、メッセージに残ります",done:"動画ができました",fail:"動画を作れませんでした。ダイヤは返却しました",busy:"作成中です"},
