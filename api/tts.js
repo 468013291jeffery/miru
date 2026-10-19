@@ -144,7 +144,7 @@ async function omni(o, res) {
 
 /* ---------- Qwen image generation (POST /api/tts {img:{prompt, w, h, image?}}) ----------
    Cheapest good models on Model Studio: text-to-image z-image-turbo (prompt rewrite off · ¥0.1/image),
-   edit-from-portrait qwen-image-2.0 (¥0.2; 3.0 was too slow for a 60s function). Override with QWEN_IMG_MODEL / QWEN_EDIT_MODEL.
+   edit-from-portrait wan2.5-i2i-preview as an async task (¥0.2; sync edit models need 50s+). Override with QWEN_IMG_MODEL / QWEN_EDIT_MODEL.
    Returns {mime, data(base64)} so the picture can be kept on the device (provider URLs expire after 24h). */
 const IMG_HITS = new Map(); // light per-IP limiter: 30 images / 10 min per instance
 function imgAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
@@ -177,6 +177,33 @@ async function genImage(o) {
     return { model, ms: Date.now() - T0, mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') };
   }
   throw new Error(model + ' ' + last);
+}
+
+/* "same face, new scene" edits take 30–60s, longer than a request should wait → async task (wan2.5-i2i-preview · ¥0.2), the page polls */
+async function editStart(o) {
+  let image = String(o.image || ''), prompt = String(o.prompt || '').slice(0, 1500);
+  if (/^https?:\/\//.test(image)) { const f = await fetch(image); if (!f.ok) throw new Error('ref image ' + f.status); const buf = Buffer.from(await f.arrayBuffer()); if (buf.length > 8e6) throw new Error('ref image too big');
+    image = 'data:' + ((f.headers.get('content-type') || 'image/jpeg').split(';')[0]) + ';base64,' + buf.toString('base64'); }
+  const model = process.env.QWEN_EDIT_MODEL || 'wan2.5-i2i-preview'; let last = 'no site';
+  for (const site of qwenSites()) {
+    const r = await fetch(site.base + '/api/v1/services/aigc/image2image/image-synthesis', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key, 'X-DashScope-Async': 'enable' },
+      body: JSON.stringify({ model, input: { prompt, images: [image] }, parameters: { n: 1, watermark: false, prompt_extend: false } }) });
+    const j = await r.json().catch(() => ({}));
+    const id = j.output && j.output.task_id;
+    if (r.ok && id) { const i = qwenSites().findIndex(x => x.base === site.base && x.key === site.key); return { task: i + '.' + id, model }; }
+    last = r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 200); if (r.status === 400) break;
+  }
+  throw new Error(model + ' ' + last);
+}
+async function editPoll(tid) {
+  const [i, id] = String(tid).split('.'); const site = qwenSites()[+i]; if (!site || !/^[\w-]{6,80}$/.test(id || '')) throw new Error('bad task');
+  const r = await fetch(site.base + '/api/v1/tasks/' + id, { headers: { Authorization: 'Bearer ' + site.key } }); const j = await r.json().catch(() => ({}));
+  const st = j.output && j.output.task_status;
+  if (st === 'SUCCEEDED') { const url = findImg(j.output); if (!url) return { state: 'failed', err: 'no url' };
+    const f = await fetch(url); if (!f.ok) throw new Error('image fetch ' + f.status);
+    return { state: 'success', mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') }; }
+  if (st === 'FAILED' || st === 'CANCELED' || st === 'UNKNOWN') return { state: 'failed', err: String((j.output && (j.output.message || j.output.code)) || st).slice(0, 200) };
+  return { state: 'run' };
 }
 
 /* ---------- Vidu image-to-video (POST /api/tts {vid:{image, prompt}} → {id}; GET /api/tts?vid=<id> → {state, url, cover}) ----------
@@ -258,9 +285,10 @@ module.exports = async (req, res) => {
     if (b.vid) { res.setHeader('Cache-Control', 'no-store'); if (!vidAllowed(req)) { res.status(429).json({ error: 'too many videos, try again later' }); return; }
       try { res.status(200).json(await viduStart(b.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     if (b.img) { res.setHeader('Cache-Control', 'no-store'); if (!imgAllowed(req)) { res.status(429).json({ error: 'too many images, try again later' }); return; }
-      try { res.status(200).json(await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
+      try { res.status(200).json(b.img.image && !b.img.model ? await editStart(b.img) : await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
+  if (q.imgtask) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await editPoll(q.imgtask)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
   if (q.vid) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await viduPoll(q.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
   if (q.ping === 'vidu') { res.setHeader('Cache-Control', 'no-store'); res.status(200).json({ key: !!process.env.VIDU_API_KEY, bases: viduBases(), model: process.env.VIDU_MODEL || 'viduq2-pro-fast' }); return; }
   if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();
