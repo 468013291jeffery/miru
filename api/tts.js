@@ -1,5 +1,8 @@
 // MIRU → character voice (TTS) proxy · Vercel Node function
 // GET /api/tts?t=<text ≤200>&v=<voice id>&e=<8 emotion weights, comma separated>&l=zh|en
+// English lines: Inworld TTS-2 when INWORLD_API_KEY is set (Basic credentials copied from the Inworld portal, used as-is).
+//   Our voice slots (m1…m7, f1, f2) are matched once to Inworld's English preset voices by their tags; override with INWORLD_VOICE_MAP='{"m1":"Edward",…}'.
+//   INWORLD_MODEL (default inworld-tts-2; inworld-tts-2-flash is cheaper/faster).
 // Providers, first one configured wins:
 //   1) TTS_URL  — your own OpenAI-compatible speech server (CosyVoice / IndexTTS / GPT-SoVITS behind /v1/audio/speech). Optional TTS_KEY, TTS_MODEL.
 //   2) Hugging Face Space IndexTTS-2 (bilibili IndexTTS2 · free for commercial use under 100M MAU / ¥100M revenue) via the Gradio API.
@@ -71,19 +74,58 @@ async function viaSpace(text, voice, vec) {
   throw last;
 }
 
+/* ---------- Inworld (English) ---------- */
+const IW_WANT = { m1: ['deep', 'low', 'calm', 'serious'], m2: ['young', 'bright', 'energetic', 'youthful'], m3: ['warm', 'friendly', 'smooth', 'gentle'],
+  m4: ['serious', 'authoritative', 'deep', 'cold'], m5: ['relaxed', 'laid-back', 'casual', 'soft'], m6: ['bright', 'upbeat', 'energetic', 'expressive'],
+  m7: ['middle-aged', 'mature', 'calm', 'smooth'], f1: ['warm', 'soft', 'gentle', 'natural'], f2: ['confident', 'professional', 'clear', 'crisp'] };
+let IW_MAP = null, IW_LIST = null;
+const iwAuth = () => ({ Authorization: 'Basic ' + process.env.INWORLD_API_KEY, 'Content-Type': 'application/json' });
+async function iwVoices() {
+  if (IW_MAP) return IW_MAP;
+  let fixed = {}; try { fixed = JSON.parse(process.env.INWORLD_VOICE_MAP || '{}'); } catch (_) {}
+  const r = await fetch('https://api.inworld.ai/tts/v1/voices?filter=language%3Den', { headers: iwAuth() });
+  const j = r.ok ? await r.json() : { voices: [] };
+  IW_LIST = (j.voices || []).filter(v => !v.isCustom).map(v => ({ id: v.voiceId, tags: (v.tags || []).map(t => String(t).toLowerCase()), desc: String(v.description || '').toLowerCase() }));
+  const used = new Set(Object.values(fixed)), map = Object.assign({}, fixed);
+  for (const slot of Object.keys(IW_WANT)) {
+    if (map[slot]) continue;
+    const g = slot[0] === 'f' ? 'female' : 'male';
+    const pool = IW_LIST.filter(v => v.tags.includes(g) || v.desc.includes(g));
+    const score = v => IW_WANT[slot].reduce((n, t) => n + (v.tags.includes(t) || v.desc.includes(t) ? 1 : 0), 0);
+    const best = pool.filter(v => !used.has(v.id)).sort((a, b) => score(b) - score(a))[0] || pool[0];
+    if (best) { map[slot] = best.id; used.add(best.id); }
+  }
+  map.m1 = map.m1 || 'Dennis'; map.f1 = map.f1 || 'Ashley';
+  IW_MAP = map; return map;
+}
+async function viaInworld(text, voice, vec) {
+  const map = await iwVoices();
+  const strong = Math.max(...vec) >= 0.5; // a charged line gets a freer delivery
+  const r = await fetch('https://api.inworld.ai/tts/v1/voice', { method: 'POST', headers: iwAuth(), body: JSON.stringify({
+    text, voiceId: map[voice] || map[voice[0] === 'f' ? 'f1' : 'm1'], modelId: process.env.INWORLD_MODEL || 'inworld-tts-2', language: 'en-US',
+    audioConfig: { audioEncoding: 'MP3', sampleRateHertz: 24000 }, deliveryMode: strong ? 'CREATIVE' : 'BALANCED', applyTextNormalization: 'ON' }) });
+  if (!r.ok) throw new Error('inworld ' + r.status + ' ' + (await r.text()).slice(0, 160));
+  const j = await r.json(); if (!j.audioContent) throw new Error('inworld: no audio');
+  return { buf: Buffer.from(j.audioContent, 'base64'), type: 'audio/mpeg' };
+}
+
 module.exports = async (req, res) => {
   const ok = cors(req, res);
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS'); res.status(204).end(); return; }
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
   const q = req.query || {};
-  if (q.ping) { res.setHeader('Cache-Control', 'no-store'); res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES) }); return; }
-  const text = String(q.t || '').replace(/[*（）()]/g, '').trim().slice(0, 200);
+  if (q.ping) { res.setHeader('Cache-Control', 'no-store'); let iw = null; if (q.ping === 'inworld' && process.env.INWORLD_API_KEY) { try { iw = { map: await iwVoices(), english_voices: (IW_LIST || []).map(v => v.id + ' [' + v.tags.join(',') + ']') }; } catch (e) { iw = { error: String(e.message || e) }; } }
+    res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
+  const text = String(q.t || '').replace(/[*（）()]/g, '').trim().slice(0, 400);
   if (!text) { res.status(400).json({ error: 'no text' }); return; }
   const voice = String(q.v || 'm1').slice(0, 12);
   const vec = String(q.e || '').split(',').slice(0, 8).map(x => Math.max(0, Math.min(1, +x || 0)));
   while (vec.length < 8) vec.push(0);
   try {
-    const out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
+    const en = q.l === 'en' || (!/[\u4e00-\u9fff]/.test(text) && q.l !== 'zh');
+    let out = null;
+    if (en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
+    if (!out) out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
     const riff = out.buf.slice(0, 4).toString() === 'RIFF';
     res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');

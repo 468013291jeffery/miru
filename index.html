@@ -10904,7 +10904,7 @@ function ttsEmo(text,id){const s=String(text||""),v=[0,0,0,0,0,0,0,0];
  if(!v.some(x=>x))v[7]=.35;return v.map(x=>x.toFixed(2)).join(",")}
 function ttsKey(text,id){return ttsVoice(id)+"|"+String(text).replace(/[*()（）]/g,"").trim()}
 function ttsUrl(text,id){const t0=String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,"").trim().slice(0,200);
- return TTS_EP+"?v="+ttsVoice(id)+"&e="+ttsEmo(t0,id)+"&l="+(S.lang==="zh"?"zh":"en")+"&t="+encodeURIComponent(t0)}
+ return TTS_EP+"?v="+ttsVoice(id)+"&e="+ttsEmo(t0,id)+"&l="+(S.lang==="zh"?"zh":"en")+(S.lang==="zh"?"":"&k=iw2")+"&t="+encodeURIComponent(t0)}
 function ttsFetch(text,id){const k=ttsKey(text,id);if(TTS.mem.has(k))return Promise.resolve(TTS.mem.get(k));if(TTS.inflight.has(k))return TTS.inflight.get(k);
  const p=fetch(ttsUrl(text,id)).then(r=>{if(!r.ok)throw new Error("tts "+r.status);return r.blob()}).then(b=>{if(!b||b.size<2000)throw new Error("empty");const u=URL.createObjectURL(b);TTS.mem.set(k,u);TTS.fails=0;TTS.ok=true;return u})
   .catch(e=>{TTS.fails++;if(TTS.fails>=4){TTS.off=true;setTimeout(()=>{TTS.off=false;TTS.fails=0},5*60e3)}throw e}).finally(()=>TTS.inflight.delete(k));
