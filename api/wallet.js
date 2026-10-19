@@ -5,7 +5,8 @@
 // POST {op:'purchase', sku, platform, receipt}  store purchases. Real Apple/Google receipt checks need the store keys
 //      (APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT); until then only PAY_TEST=1 grants (test mode, clearly labelled).
 const L = require('./_lib');
-const SKUS = { gems_10: 10, gems_60: 60, gems_150: 150, gems_400: 400, plus_month: 20, plus_year: 20, plus_week: 20 };
+// v4.0: no membership. Packs $0.99 → 5 · $4.99 → 28 · $9.99 → 60 · $19.99 → 125 · $49.99 → 330 · $99.99 → 700 (bonus included in the id)
+const SKUS = { gems_5: 5, gems_28: 28, gems_60: 60, gems_125: 125, gems_330: 330, gems_700: 700 };
 const EARN_DAY = 80; // free diamonds a device can claim per day (check-ins, tasks, rewarded ads)
 async function apply(sql, uid, delta, reason, key) {
   if (key) { const dup = await sql('SELECT balance FROM ledger WHERE key=$1', [key]); if (dup[0]) return { gems: dup[0].balance, dup: true }; }
@@ -23,7 +24,7 @@ module.exports = L.wrap(async (req, res) => {
     await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [u.uid]);
     const w = await sql('SELECT gems, plus_until FROM wallet WHERE user_id=$1', [u.uid]);
     const recent = await sql('SELECT delta, reason, balance, at FROM ledger WHERE user_id=$1 ORDER BY id DESC LIMIT 20', [u.uid]);
-    return L.send(res, 200, { gems: w[0].gems, plus: !!(w[0].plus_until && new Date(w[0].plus_until) > new Date()), plusUntil: w[0].plus_until, recent });
+    return L.send(res, 200, { gems: w[0].gems, plus: false, recent });
   }
   const b = L.jsonBody(req);
   if (b.op === 'spend') {
@@ -54,8 +55,8 @@ module.exports = L.wrap(async (req, res) => {
     if (!test) return L.send(res, 501, { error: 'store receipt verification is not configured yet (set APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT, or PAY_TEST=1 for test purchases)' });
     const key = 'buy:' + u.uid + ':' + String(b.receipt || L.newId()).slice(0, 80);
     const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND reason LIKE 'gems_%' LIMIT 1", [u.uid]);
-    if (/^plus_/.test(sku)) { await sql("UPDATE wallet SET plus_until=GREATEST(COALESCE(plus_until, now()), now()) + interval '30 days' WHERE user_id=$1", [u.uid]); }
-    const gems = (SK[sku] || SKUS[sku]) * (/^gems_/.test(sku) && !first[0] && cfg.first_purchase_double !== false ? 2 : 1);
+    const BASE = { gems_5: 5, gems_28: 25, gems_60: 50, gems_125: 100, gems_330: 250, gems_700: 500 }; // first top-up doubles the base diamonds (not the bonus)
+    const gems = (SK[sku] || SKUS[sku]) + (!first[0] && cfg.first_purchase_double !== false ? (BASE[sku] || 0) : 0);
     const r = await apply(sql, u.uid, gems, sku + '(test)', key);
     if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING', [L.newId('o_'), u.uid, sku, String(b.platform || 'web').slice(0, 12), gems, ((cfg.skus || {})[sku] || {}).usd || 0, 'USD', 'paid', true, String(b.receipt || '').slice(0, 200)]);
     return L.send(res, 200, Object.assign({ test: true }, r));
