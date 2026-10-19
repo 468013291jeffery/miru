@@ -77,18 +77,20 @@ async function omni(o, headers) {
   const sex = String(o.voice || '')[0] === 'f';
   let last = '';
   for (const site of sites) for (const model of models) for (const voice of [omniVoice(o.voice), sex ? 'Cherry' : 'Ethan']) {
+    const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), +env('QWEN_HEAD_MS', 9000)); const t0 = Date.now();
     try {
-      const up = await fetch(site.base + '/compatible-mode/v1/chat/completions', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + site.key },
+      const up = await fetch(site.base + '/compatible-mode/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + site.key },
         body: JSON.stringify({ model, messages: msgs, modalities: ['text', 'audio'], audio: { voice, format: 'wav' }, stream: true, stream_options: { include_usage: true }, max_tokens: Math.min(+o.max || 300, 800) }) });
+      clearTimeout(tm); (o.trace || []).push(site.base.slice(8, 30) + ' ' + model + ' ' + voice + ' ' + up.status + ' ' + (Date.now() - t0) + 'ms');
       if (!up.ok) { const e = (await up.text().catch(() => '')).slice(0, 240); last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + model + ' ' + up.status + ' ' + e;
         if (/voice/i.test(e)) continue; // try the safe voice
         if (up.status === 401 || up.status === 403 || up.status === 404) break; // wrong region / key / model → next model or site
         break; }
       QWEN_SITE = site.base + site.key;
       return new Response(up.body, { status: 200, headers: { ...headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': 'qwen:' + model + ':' + voice } });
-    } catch (e) { last = String(e.message || e).slice(0, 200); break; }
+    } catch (e) { clearTimeout(tm); last = site.base.slice(8, 30) + ' ' + model + ' ' + (e.name === 'AbortError' ? 'timeout ' + (Date.now() - t0) + 'ms' : String(e.message || e).slice(0, 160)); (o.trace || []).push(last); break; }
   }
-  return J({ error: { message: 'qwen omni: ' + last } }, 502, headers);
+  return J({ error: { message: 'qwen omni: ' + last, trace: o.trace } }, 502, headers);
 }
 
 function cors(origin) {
@@ -124,10 +126,12 @@ export default async function handler(req) {
   try { body = await req.json(); } catch { return J({ error: { message: 'bad json' } }, 400, c.headers); }
   if (body.omni) return omni(body.omni, c.headers);
   if (body.probe && body.qwen) { // is the voice-call model reachable? (tiny text turn, reports whether audio came back)
-    const t0 = Date.now(); const r = await omni({ voice: 'm2', sys: 'Reply in one short sentence.', msgs: [{ role: 'user', text: 'Say hi.' }], max: 40 }, c.headers);
-    if (r.status !== 200) return J({ qwen: { ok: false, status: r.status, error: (await r.json().catch(() => ({}))).error }, sites: qwenSites().map(x => x.base) }, 200, c.headers);
-    const txt = await r.text(); const audio = (txt.match(/"data":"/g) || []).length; const said = (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('');
-    return J({ qwen: { ok: audio > 0, provider: r.headers.get('X-MIRU-Provider'), audio_chunks: audio, said, ms: Date.now() - t0, head: audio ? undefined : txt.slice(0, 600) } }, 200, c.headers);
+    const t0 = Date.now(), trace = []; const r = await omni({ voice: 'm2', sys: 'Reply in one short sentence.', msgs: [{ role: 'user', text: 'Say hi.' }], max: 40, trace }, c.headers);
+    if (r.status !== 200) return J({ qwen: { ok: false, status: r.status, error: (await r.json().catch(() => ({}))).error, trace }, sites: qwenSites().map(x => x.base) }, 200, c.headers);
+    const rd = r.body.getReader(), dec = new TextDecoder(); let txt = ''; const end = Date.now() + 12000;
+    while (Date.now() < end) { const x = await Promise.race([rd.read(), new Promise(z => setTimeout(() => z({ done: true }), Math.max(1, end - Date.now())))]); if (x.done) break; txt += dec.decode(x.value, { stream: true }); if (/\[DONE\]/.test(txt)) break; }
+    try { rd.cancel(); } catch (_) {} const audio = (txt.match(/"data":"/g) || []).length; const said = (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('');
+    return J({ qwen: { ok: audio > 0, provider: r.headers.get('X-MIRU-Provider'), audio_chunks: audio, said, ms: Date.now() - t0, trace, head: audio ? undefined : txt.slice(0, 600) } }, 200, c.headers);
   }
   const list = providers();
   if (!list.length) return J({ error: { message: 'no LLM provider configured (LONGCAT_API_KEY / SCNET_API_KEY / GLM_API_KEY)' } }, 500, c.headers);
