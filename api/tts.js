@@ -144,7 +144,7 @@ async function omni(o, res) {
 
 /* ---------- Qwen image generation (POST /api/tts {img:{prompt, w, h, image?}}) ----------
    Cheapest good models on Model Studio: text-to-image z-image-turbo (prompt rewrite off · ¥0.1/image),
-   edit-from-portrait qwen-image-3.0 (¥0.18 + ¥0.02 input). Override with QWEN_IMG_MODEL / QWEN_EDIT_MODEL.
+   edit-from-portrait qwen-image-2.0 (¥0.2; 3.0 was too slow for a 60s function). Override with QWEN_IMG_MODEL / QWEN_EDIT_MODEL.
    Returns {mime, data(base64)} so the picture can be kept on the device (provider URLs expire after 24h). */
 const IMG_HITS = new Map(); // light per-IP limiter: 30 images / 10 min per instance
 function imgAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
@@ -153,21 +153,28 @@ function findImg(o) { if (!o || typeof o !== 'object') return null; for (const k
   if (typeof v === 'string' && /^https?:\/\//.test(v) && (k === 'image' || k === 'url' || /\.(png|jpe?g|webp)(\?|$)/i.test(v))) return v;
   if (v && typeof v === 'object') { const r = findImg(v); if (r) return r; } } return null; }
 async function genImage(o) {
+  const T0 = Date.now();
   const prompt = String(o.prompt || '').slice(0, 1500); if (!prompt) throw new Error('no prompt');
   const w = Math.max(512, Math.min(2048, Math.round((+o.w || 768) / 16) * 16)), h = Math.max(512, Math.min(2048, Math.round((+o.h || 1024) / 16) * 16));
-  const edit = !!o.image, model = edit ? (process.env.QWEN_EDIT_MODEL || 'qwen-image-3.0') : (process.env.QWEN_IMG_MODEL || 'z-image-turbo');
-  const content = edit ? [{ image: String(o.image) }, { text: prompt }] : [{ text: prompt }];
-  const parameters = edit ? { n: 1, watermark: false, prompt_extend: false } : { size: w + '*' + h, prompt_extend: false, watermark: false };
+  const TRY = ['qwen-image-2.0', 'qwen-image-3.0', 'wan2.7-image', 'wan2.6-image', 'z-image-turbo'];
+  const edit = !!o.image, model = TRY.includes(o.model) ? o.model : edit ? (process.env.QWEN_EDIT_MODEL || 'qwen-image-2.0') : (process.env.QWEN_IMG_MODEL || 'z-image-turbo');
+  let image = String(o.image || '');
+  if (edit && /^https?:\/\//.test(image)) { // Model Studio refuses some hosts (e.g. vercel.app resolves to an address it treats as internal) → send the bytes
+    const f = await fetch(image); if (!f.ok) throw new Error('ref image ' + f.status); const buf = Buffer.from(await f.arrayBuffer()); if (buf.length > 8e6) throw new Error('ref image too big');
+    image = 'data:' + ((f.headers.get('content-type') || 'image/jpeg').split(';')[0]) + ';base64,' + buf.toString('base64'); }
+  const content = edit ? [{ image }, { text: prompt }] : [{ text: prompt }];
+  const parameters = edit ? { n: 1, watermark: false, prompt_extend: false, size: w + '*' + h } : { size: w + '*' + h, prompt_extend: false, watermark: false };
   let last = 'no site';
   for (const site of qwenSites()) {
-    const r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
-      body: JSON.stringify({ model, input: { messages: [{ role: 'user', content }] }, parameters }) });
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), edit ? 42000 : 50000);
+    let r; try { r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+      body: JSON.stringify({ model, input: { messages: [{ role: 'user', content }] }, parameters }) }); } catch (e) { clearTimeout(tm); throw new Error(model + (e.name === 'AbortError' ? ' too slow' : ' ' + e.message)); } clearTimeout(tm);
     const j = await r.json().catch(() => ({}));
     const url = r.ok && findImg(j.output);
     if (!url) { last = r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 200); if (r.status === 400) break; continue; }
     QSITE = site.base + site.key; QBASE = site.base;
     const f = await fetch(url); if (!f.ok) throw new Error('image fetch ' + f.status);
-    return { model, mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') };
+    return { model, ms: Date.now() - T0, mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') };
   }
   throw new Error(model + ' ' + last);
 }
