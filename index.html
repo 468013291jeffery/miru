@@ -13016,7 +13016,7 @@ setTimeout(()=>{try{Object.values(S.threads||{}).forEach(th=>(th.msgs||[]).forEa
    · Recharge from $0.99; bigger packs add more bonus diamonds (+0% → +40%). First purchase still doubles the base diamonds.
    · What used to be member-only quality is now everyone's baseline: 32K memory (60 lines of transcript, 40 key moments,
      cross-story memories). Deep memory (128K) for one story stays a 💎 purchase. */
-const PACKS84=[{usd:"0.99",gems:5,bonus:0},{usd:"4.99",gems:25,bonus:3},{usd:"9.99",gems:50,bonus:10,best:1},{usd:"19.99",gems:100,bonus:25},{usd:"49.99",gems:250,bonus:80},{usd:"99.99",gems:500,bonus:200}];
+const PACKS84=[{usd:"0.99",gems:5,bonus:0},{usd:"2.99",gems:15,bonus:1},{usd:"4.99",gems:25,bonus:3},{usd:"9.99",gems:50,bonus:10,best:1},{usd:"19.99",gems:100,bonus:25},{usd:"49.99",gems:250,bonus:80},{usd:"99.99",gems:500,bonus:200}];
 function noSub84(){try{if(typeof S==="object"&&S){S.plus=false;S.plusMax=false}}catch(_){}}
 noSub84();
 const _save84=save;save=function(){noSub84();return _save84.apply(this,arguments)};
@@ -13049,7 +13049,7 @@ document.addEventListener("click",e=>{const x=e.target.closest(".packs84 [data-b
   "pay.what":"No membership — pay only for what you use. Diamonds never buy a character's feelings.","vp.unl":"pay per use","vp.plus":"Voice, pay per use","u.plus":"Top-ups this month","lk.vip":"Unlock with diamonds","lk.vipP":"Top up from $0.99",
   "hn.vip":"💎1","pay.vip":"💎","mo.hint":"See it with diamonds","mono.vip":"Peek","w2.t3":"First top-up bonus","w2.b3":"First top-up: diamonds ×2","w2.s3":"Packs from $0.99 · bigger packs add up to +40% bonus","rk.how":"• Everyone gets 3 free votes a day.\n• 1 vote = +520 🔥 heat for that character.\n• Share a “help him climb” card: +1 vote a day.\n• Out of votes? Buy more with diamonds."};
  try{Object.assign(I18N.zh,Z);Object.assign(I18N.en,E)}catch(_){}})();
-(function(){const st=document.createElement("style");st.textContent=`.plusc,[data-buyplus],[data-buymax],.plans,.lockvip,[data-paysheet="mem"],.memtiers .mt:nth-child(2){display:none!important}
+(function(){const st=document.createElement("style");st.textContent=`.plusc,[data-buyplus],[data-buymax],.plans,.lockvip,[data-paysheet="mem"]{display:none!important}
 .packs84{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.packs84 .pack{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:14px 6px 10px}
 .packs84 .pack small{font-size:10.5px;opacity:.7}.packs84 .pack u{position:static!important;transform:none!important;background:none!important;padding:0!important;text-decoration:none;font-size:10px;color:#8bd5c4}.packs84 .pack i{position:absolute;top:-8px;right:6px;font-style:normal;font-size:10px;padding:1px 6px;border-radius:999px;background:var(--gold);color:#241a10}`;document.head.appendChild(st)})();
 
@@ -13142,6 +13142,69 @@ document.addEventListener("click",async e=>{const x=e.target.closest("[data-rc87
 const _capi87=capi;capi=function(path,o){try{if(path==="/auth"&&o&&o.json&&o.json.op==="register"){const c=$("#au7rc");if(c)o.json.code=c.value.trim()}}catch(_){}return _capi87.apply(this,arguments)};
 const _au70Err87=au70Err;au70Err=function(r){const e=r&&r.j&&r.j.error;if(e==="verification code required"){toast(rc87("need"));return}if(e==="wrong code"){toast(rc87("bad"));return}if(e&&/code expired/.test(e)){toast(rc87("exp"));return}return _au70Err87(r)};
 (function(){const st=document.createElement("style");st.textContent=`.rc87{display:flex;gap:8px;align-items:stretch}.rc87 .up66i{flex:1;min-width:0}.rc87 .btn{flex:none;white-space:nowrap;padding:0 14px}`;document.head.appendChild(st)})();
+
+/* ================= v4.3 · PAID MEMORY + TURN-TAKING STORY CALLS =================
+   A) Memory is a 💎 purchase per story, priced by the AI-cost rule (¥1 of model cost = $1, rounded up to whole 💎):
+      · Standard 8K (~20 messages + 5 key moments) — free for everyone
+      · Extended 32K (60 messages + 40 key moments + memories from your other stories with him) — 💎4 per 100 replies
+        (≈3.2M prompt tokens per 100 replies, mostly cache hits → ≈¥0.7)
+      · Deep 128K (150 messages + everything) — 💎16 per 100 replies (≈¥2.8)
+      When a pack runs out, the story drops back to Standard and he says so in the memory chip — nothing breaks.
+   B) Scripted story calls ("他回来接我那天" etc.) are real conversations now: he says his first line, then waits for
+      you. You answer out loud (or tap), he answers you and works in his next scripted line — one line per turn,
+      never yours. After his last line he hangs up and the story continues. No mic / no voice service → the old
+      tap-through call, but your own lines are shown for you to say instead of being read out by him. */
+/* ---------- A) memory packs ---------- */
+const MEMX={plus:{gems:4,replies:100},deep:{gems:16,replies:100}};
+function memX(th){S.memX=S.memX||{};return th?S.memX[th.id]:null}
+memTier=function(th){if(!th)return "free";if(S.deepMem&&S.deepMem[th.id]&&!(S.memX&&S.memX[th.id]))return "deep";const x=memX(th);return x&&x.left>0?x.tier:"free"};
+function memBuy88(th,tier){const P=MEMX[tier];if(!P||!th)return;if(!spend(P.gems,"mem"))return;S.memX=S.memX||{};const x=S.memX[th.id];
+ S.memX[th.id]={tier:x&&x.tier==="deep"&&tier==="plus"&&x.left>0?"deep":tier,left:(x&&x.left>0?x.left:0)+P.replies};save();
+ toast(ttsZh()?"🧠 记忆已扩展 · 接下来 "+S.memX[th.id].left+" 句他都记得更多":"🧠 Memory extended · for the next "+S.memX[th.id].left+" replies");try{memSheet();renderChat()}catch(_){}}
+reply=(function(orig){return async function(th,ctx,silent){const r=await orig.apply(this,arguments);try{if(!silent){const x=memX(th);if(x&&x.left>0){x.left--;if(x.left===0)toast(ttsZh()?"🧠 扩展记忆用完了，已回到标准记忆":"🧠 Extended memory used up — back to standard");if(x.left===10)toast(ttsZh()?"🧠 扩展记忆还剩 10 句":"🧠 10 replies of extended memory left");save()}}}catch(_){}return r}})(reply);
+(function(){const Z={"mem.t.free":"标准 · 免费","mem.t.plus":"加强","mem.t.deep":"深度","mem.d.free":"约 20 条对话","mem.d.plus":"60 条对话 + 跨故事记忆","mem.d.deep":"150 条对话 · 什么都记得"};
+ const E={"mem.t.free":"Standard · free","mem.t.plus":"Extended","mem.t.deep":"Deep","mem.d.free":"~20 messages","mem.d.plus":"60 messages + memories across stories","mem.d.deep":"150 messages · remembers everything"};
+ try{Object.assign(I18N.zh,Z);Object.assign(I18N.en,E)}catch(_){}})();
+const _memSheet88=memSheet;memSheet=function(){_memSheet88.apply(this,arguments);try{const th=S.threads[curT],box=$(".sheet .memtiers");if(!th||!box)return;const x=memX(th),zh=ttsZh();
+ box.insertAdjacentHTML("afterend",(x&&x.left>0?'<p class="xs" style="text-align:center;color:var(--gold);margin:8px 0 0">'+(zh?"当前扩展记忆还剩 "+x.left+" 句":x.left+" replies of extended memory left")+'</p>':'')+
+  '<div class="row" style="gap:8px;margin-top:10px"><button class="btn btn-g grow" data-mem88="plus">🧠 '+(zh?"加强 32K":"Extended 32K")+'<br><small>💎'+MEMX.plus.gems+' · '+(zh?"100 句":"100 replies")+'</small></button>'+
+  '<button class="btn btn-p grow" data-mem88="deep">🧠 '+(zh?"深度 128K":"Deep 128K")+'<br><small>💎'+MEMX.deep.gems+' · '+(zh?"100 句":"100 replies")+'</small></button></div>')}catch(_){}};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-mem88]");if(!b)return;memBuy88(S.threads[curT],b.dataset.mem88)});
+(function(){const st=document.createElement("style");st.textContent=`.sheet [data-deepmem]{display:none!important}[data-mem88]{line-height:1.25;padding:10px 6px}[data-mem88] small{font-size:11px;opacity:.8;font-weight:600}`;document.head.appendChild(st)})();
+/* ---------- B) scripted calls with turn-taking ---------- */
+let PEND88=null;
+const SC88={zh:{say:"你可以说：",go:"▶ 继续",first:"（电话接通了。说你的 [NOW] 那句。）"},en:{say:"You could say: ",go:"▶ Continue",first:"(The call connects. Say your [NOW] line.)"},
+ ja:{say:"返事の例：",go:"▶ 続ける",first:"（電話がつながった。[NOW] のセリフを言って。）"},ko:{say:"이렇게 말해 보세요: ",go:"▶ 계속",first:"(전화가 연결됐다. [NOW] 대사를 말해.)"},es:{say:"Puedes decir: ",go:"▶ Seguir",first:"(La llamada conecta. Di tu línea [NOW].)"}};
+function sc88(k){return (SC88[vcLang()]||SC88.en)[k]}
+const _vcSys88=vcSys;vcSys=function(c,th){let s=_vcSys88(c,th);const X=call&&call.script;if(!X)return s;const last=X.i>=X.beats.length-1;
+ return s+"\n\nTHIS CALL IS A SCENE IN THE STORY."+(X.hint?" Situation: "+X.hint:"")+"\nYour lines in this scene, IN ORDER. Each turn say ONLY the [NOW] line — in your own voice, you may say it word for word — plus at most a few words reacting to what they just said:\n"+
+  X.beats.map((b,k)=>(k<X.i?"[done] ":k===X.i?"[NOW] ":"[later] ")+b).join("\n")+
+  "\nNever say a [later] line early. Never speak the other person's words for them. Then stop and let them answer."+(last?" The [NOW] line is your last: say it, then hang up (no goodbye speech).":"")};
+const _vcTurn88=vcTurn;vcTurn=async function(turn){const X=call&&call.script,n0=call&&call.vh?call.vh.length:0;const r=await _vcTurn88(turn);
+ try{if(r&&X&&call&&call.script===X&&call.vh&&call.vh.length>n0+1-0&&call.vh[call.vh.length-1].role==="assistant"){X.i++;vcHint();if(X.i>=X.beats.length){const wait=setInterval(()=>{if(!call||call.script!==X){clearInterval(wait);return}if(!vcTalkingNow()){clearInterval(wait);setTimeout(()=>{if(call&&call.script===X)endCall()},900)}},300)}}}catch(_){}return r};
+const _vcHint88=vcHint;vcHint=function(){_vcHint88();const X=call&&call.script,rep=$("#cvR");if(!X||!rep||X.i>=X.beats.length)return;const sg=X.sugg[X.i-1];
+ if(sg)rep.insertAdjacentHTML("beforeend",'<p class="xs vc88s">'+esc(sc88("say"))+'「'+esc(sg)+'」</p>');
+ if(!call.micOn)rep.insertAdjacentHTML("beforeend",'<button data-vc88go="1">'+esc(sc88("go"))+'</button>')};
+document.addEventListener("click",e=>{if(!e.target.closest("[data-vc88go]")||!call||!call.script)return;const X=call.script;callSay(X.sugg[X.i-1]||(vcLang()==="zh"?"嗯，我在听。":"I'm listening."))});
+const _callSay88=callSay;callSay=function(user){if(call&&PEND88&&!call.script){call.script=PEND88;PEND88=null}if(call&&call.script&&!user&&(!call.vh||!call.vh.length)){const X=call.script;
+  if(!(VC.ep&&VC.ok!==false&&S.callVoice!=="off"))return _callSay88(user);
+  vcCtx();if(!call.mic)vcMic();return vcTurn({role:"user",text:sc88("first")}).then(ok=>{if(!ok&&call&&call.script===X){call.script.fail=1;endCall()}})}
+ return _callSay88(user)};
+const _endCall88=endCall;endCall=function(){const X=call&&call.script;const said=X&&call?(call.lines||[]).filter(Boolean):[];const th=X&&X.th,cid=call&&call.cid;
+ const r=_endCall88.apply(this,arguments);
+ if(X){try{if(th)said.forEach(x=>appendMsg(th,{who:cid,k:"say",txt:"📞 "+x,at:Date.now()}));save()}catch(_){}
+  if(X.fail)X.fallback();else X.res()}return r};
+const _stopCallRun88=stopCallRun;
+stopCallRun=function(th,d){const voiceOK=VC.ep&&VC.ok!==false&&S.callVoice!=="off"&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia;
+ const cid=d.cid||mainOf(th),as=th.pk&&th.pk.as,lines=(d.lines||[]).map(x=>Array.isArray(x)?x:[cid,x]);
+ if(!voiceOK||!lines.length)return _stopCallRun88(th,d);
+ return new Promise(res=>{const beats=[],sugg={};lines.forEach(([w,x])=>{if(as&&w===as){const k=beats.length-1;sugg[k]=(sugg[k]?sugg[k]+" ":"")+x}else beats.push(x)});
+  if(!beats.length){_stopCallRun88(th,d).then(res);return}
+  PEND88={beats,sugg,i:0,hint:typeof d.hint==="string"?d.hint:(d.hint?Lz(d.hint):""),th,res,fallback:()=>_stopCallRun88(th,d).then(res)};
+  startCall(cid,0,false);if(!call){const P=PEND88;PEND88=null;P.fallback()}})};
+/* tap-through fallback: never read the player's own lines in his voice — show them for the player instead */
+const _speak88=speak;speak=function(text,id,onend){try{const th=S.threads[curT];if($(".stcallv")&&th&&th.pk&&th.pk.as&&id===th.pk.as){const L=$(".stcallv #scL");if(L)L.innerHTML='<span style="opacity:.7">'+esc(sc88("say"))+'</span>「'+esc(text)+'」';setTimeout(()=>{if(onend)onend()},Math.max(2500,String(text).length*180));return}}catch(_){}return _speak88.apply(this,arguments)};
+(function(){const st=document.createElement("style");st.textContent=`.vc88s{width:100%;text-align:center;opacity:.85;margin:2px 0 6px;color:#F6D3AE}[data-vc88go]{margin:0 auto}`;document.head.appendChild(st)})();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.

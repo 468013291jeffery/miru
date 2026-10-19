@@ -236,7 +236,7 @@ const CONFIG_DEFAULTS = {
   upload_price: { audio: 5, image: 3, video: 10, game: 2 }, reroll_free: 3, reroll_price: 1,
   community_auto_live: true, report_threshold: 5, publish_daily_limit: 30, upload_daily_limit: 40,
   guest_allowed: true, maintenance: '',
-  skus: { gems_5: { gems: 5, usd: 99 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
+  skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
 };
 let _cfg = null, _cfgAt = 0;
 async function config() {

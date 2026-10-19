@@ -435,7 +435,7 @@ const Orders = {
 const Ledger = {
   setup() {
     const f = reactive({ user: '', reason: '', dir: '' }); const { st, load } = usePaged('ledger', f);
-    const kindName = k => ({ welcome: '新人礼', daily: '每日签到', earn: '免费领取', spend: '消费', 'upload': '上传素材', admin_grant: '后台补发', admin_deduct: '后台扣除', refund: '退款扣回', gems_5: '充值', gems_28: '充值', gems_60: '充值', gems_125: '充值', gems_330: '充值', gems_700: '充值', gems_10: '充值', gems_150: '充值', gems_400: '充值' }[k] || k);
+    const kindName = k => ({ welcome: '新人礼', daily: '每日签到', earn: '免费领取', spend: '消费', 'upload': '上传素材', admin_grant: '后台补发', admin_deduct: '后台扣除', refund: '退款扣回', gems_5: '充值', gems_16: '充值', gems_28: '充值', gems_60: '充值', gems_125: '充值', gems_330: '充值', gems_700: '充值', gems_10: '充值', gems_150: '充值', gems_400: '充值' }[k] || k);
     onMounted(() => load());
     return { f, st, load, fmt, kindName };
   },
