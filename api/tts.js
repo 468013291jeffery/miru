@@ -142,6 +142,36 @@ async function omni(o, res) {
   res.status(502).json({ error: { message: 'qwen omni failed', trace } });
 }
 
+/* ---------- Qwen image generation (POST /api/tts {img:{prompt, w, h, image?}}) ----------
+   Cheapest good models on Model Studio: text-to-image z-image-turbo (prompt rewrite off · ¥0.1/image),
+   edit-from-portrait qwen-image-3.0 (¥0.18 + ¥0.02 input). Override with QWEN_IMG_MODEL / QWEN_EDIT_MODEL.
+   Returns {mime, data(base64)} so the picture can be kept on the device (provider URLs expire after 24h). */
+const IMG_HITS = new Map(); // light per-IP limiter: 30 images / 10 min per instance
+function imgAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
+  const a = (IMG_HITS.get(ip) || []).filter(t => now - t < 600e3); if (a.length >= 30) return false; a.push(now); IMG_HITS.set(ip, a); return true; }
+function findImg(o) { if (!o || typeof o !== 'object') return null; for (const k of Object.keys(o)) { const v = o[k];
+  if (typeof v === 'string' && /^https?:\/\//.test(v) && (k === 'image' || k === 'url' || /\.(png|jpe?g|webp)(\?|$)/i.test(v))) return v;
+  if (v && typeof v === 'object') { const r = findImg(v); if (r) return r; } } return null; }
+async function genImage(o) {
+  const prompt = String(o.prompt || '').slice(0, 1500); if (!prompt) throw new Error('no prompt');
+  const w = Math.max(512, Math.min(2048, Math.round((+o.w || 768) / 16) * 16)), h = Math.max(512, Math.min(2048, Math.round((+o.h || 1024) / 16) * 16));
+  const edit = !!o.image, model = edit ? (process.env.QWEN_EDIT_MODEL || 'qwen-image-3.0') : (process.env.QWEN_IMG_MODEL || 'z-image-turbo');
+  const content = edit ? [{ image: String(o.image) }, { text: prompt }] : [{ text: prompt }];
+  const parameters = edit ? { n: 1, watermark: false, prompt_extend: false } : { size: w + '*' + h, prompt_extend: false, watermark: false };
+  let last = 'no site';
+  for (const site of qwenSites()) {
+    const r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+      body: JSON.stringify({ model, input: { messages: [{ role: 'user', content }] }, parameters }) });
+    const j = await r.json().catch(() => ({}));
+    const url = r.ok && findImg(j.output);
+    if (!url) { last = r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 200); if (r.status === 400) break; continue; }
+    QSITE = site.base + site.key; QBASE = site.base;
+    const f = await fetch(url); if (!f.ok) throw new Error('image fetch ' + f.status);
+    return { model, mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') };
+  }
+  throw new Error(model + ' ' + last);
+}
+
 /* ---------- Inworld (English) ---------- */
 const IW_WANT = { m1: ['deep', 'low', 'calm', 'serious'], m2: ['young', 'bright', 'energetic', 'youthful'], m3: ['warm', 'friendly', 'smooth', 'gentle'],
   m4: ['serious', 'authoritative', 'deep', 'cold'], m5: ['relaxed', 'laid-back', 'casual', 'soft'], m6: ['bright', 'upbeat', 'energetic', 'expressive'],
@@ -184,6 +214,8 @@ module.exports = async (req, res) => {
   if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
     res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
     if (b.omni) return omni(b.omni, res);
+    if (b.img) { res.setHeader('Cache-Control', 'no-store'); if (!imgAllowed(req)) { res.status(429).json({ error: 'too many images, try again later' }); return; }
+      try { res.status(200).json(await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
   if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();

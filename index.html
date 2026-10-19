@@ -12901,8 +12901,8 @@ async function vcTurn(turn){if(!call||!VC.ep)return false;const c=ch(call.cid),l
   for(;;){const {done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});let k;
    while((k=buf.indexOf("\n"))>=0){const ln=buf.slice(0,k).trim();buf=buf.slice(k+1);if(!ln.startsWith("data:"))continue;const d=ln.slice(5).trim();if(d==="[DONE]")continue;
     let j;try{j=JSON.parse(d)}catch(_){continue}const dl=j.choices&&j.choices[0]&&j.choices[0].delta;if(!dl||call.vSeq!==my)continue;
-    if(dl.audio){if(dl.audio.data){vcPlay(dl.audio.data);gotAudio=true}if(dl.audio.transcript){said+=dl.audio.transcript;if(line)line.textContent=said}}
-    else if(typeof dl.content==="string"&&dl.content){said+=dl.content;if(line)line.textContent=said}}}
+    if(dl.audio&&dl.audio.data){vcPlay(dl.audio.data);gotAudio=true}
+    const tx=(typeof dl.content==="string"&&dl.content)||(dl.audio&&dl.audio.transcript)||"";if(tx){said+=tx;if(line)line.textContent=said}}}
  }catch(e){call&&(call.busy=false);if(e&&e.name==="AbortError")return true;call&&call.vh.pop();VC.ok=false;return false}
  if(!call||call.vSeq!==my)return true;call.busy=false;
  if(!gotAudio&&!said){call.vh.pop();VC.ok=false;return false}
@@ -12950,6 +12950,20 @@ callSay=async function(user){if(!call)return;
 const _endCall81=endCall;
 endCall=function(){if(call){vcMicOff();vcHush();try{const th=call.th,ls=(call.lines||[]).filter(Boolean);if(th&&ls.length>1&&Array.isArray(th.mem))th.mem.push("On the phone "+ch(call.cid).n+" said: "+ls.slice(-4).join(" / ").slice(0,300))}catch(_){}}return _endCall81()};
 (function(){const st=document.createElement("style");st.textContent=`.vc-hint{width:100%;text-align:center;margin:0 0 6px;opacity:.75}[data-vcmic]{margin:0 auto}`;document.head.appendChild(st)})();
+
+/* ================= v3.6 · AI PICTURES via Qwen (z-image-turbo for new pictures, qwen-image-3.0 for "same face, new scene") =================
+   Every existing picture feature (story stills, covers, creator art, photo booth) calls AIG.mcp.callTool(srv, tool, args).
+   On the MIRU site this shim answers those calls through POST /api/tts {img} instead of the claude.ai connector,
+   returning the same MCP-style result ({content:[{type:"image",data,mimeType}]}), so nothing else had to change. */
+const QIMG={ep:typeof TTS_EP!=="undefined"?TTS_EP:""};
+const QIMG_MCP={async callTool(srv,tool,a){a=a||{};
+ if(tool===AIG.tts){const e=new Error("voice via connector not available");e.code="tool_error";throw e}
+ const body={img:{prompt:String(a.prompt||""),w:a.width||768,h:a.height||1024}};if(tool===AIG.edit&&a.input_image)body.img.image=a.input_image;
+ const r=await fetch(QIMG.ep,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));
+ if(!r.ok||!j.data){const e=new Error(String(j.error||r.status));e.code=r.status===429?"rate_limited":"tool_error";throw e}
+ return {content:[{type:"image",data:j.data,mimeType:j.mime||"image/png"}]}}};
+function qimgOn(){if(QIMG.ep&&typeof AIG==="object")AIG.mcp=QIMG_MCP}
+qimgOn();setTimeout(qimgOn,0);setTimeout(qimgOn,500);
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
