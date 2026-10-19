@@ -12956,9 +12956,11 @@ endCall=function(){if(call){vcMicOff();vcHush();try{const th=call.th,ls=(call.li
    On the MIRU site this shim answers those calls through POST /api/tts {img} instead of the claude.ai connector,
    returning the same MCP-style result ({content:[{type:"image",data,mimeType}]}), so nothing else had to change. */
 const QIMG={ep:typeof TTS_EP!=="undefined"?TTS_EP:""};
+/* big uploads to the model region are slow (1MB ≈ 40s+) → send a small JPEG of the reference */
+function qimgShrink(src,max){return new Promise(ok=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{try{const s=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*s);c.height=Math.round(im.naturalHeight*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.85))}catch(_){ok(src)}};im.onerror=()=>ok(src);im.src=src})}
 const QIMG_MCP={async callTool(srv,tool,a){a=a||{};
  if(tool===AIG.tts){const e=new Error("voice via connector not available");e.code="tool_error";throw e}
- const body={img:{prompt:String(a.prompt||""),w:a.width||768,h:a.height||1024}};if(tool===AIG.edit&&a.input_image)body.img.image=a.input_image;
+ const body={img:{prompt:String(a.prompt||""),w:a.width||768,h:a.height||1024}};if(tool===AIG.edit&&a.input_image)body.img.image=await qimgShrink(a.input_image,560);
  const r=await fetch(QIMG.ep,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));
  if(r.ok&&j.task){for(let i=0;i<40;i++){await new Promise(z=>setTimeout(z,3000));let p;try{p=await fetch(QIMG.ep+"?imgtask="+encodeURIComponent(j.task)).then(x=>x.json())}catch(_){continue}
    if(p.state==="success"&&p.data)return {content:[{type:"image",data:p.data,mimeType:p.mime||"image/png"}]};if(p.state==="failed"){const e=new Error(p.err||"edit failed");e.code="tool_error";throw e}}
@@ -12978,8 +12980,8 @@ const VID_T={zh:{go:"让画面动起来",wait:"正在生成视频……大约 1�
  ko:{go:"움직이게 하기",wait:"영상 만드는 중… 1~2분 정도. 닫아도 메시지에 남아요",done:"영상이 완성됐어요",fail:"영상을 만들지 못했어요 — 다이아를 돌려드렸어요",busy:"이미 만드는 중이에요"},
  es:{go:"Dale movimiento",wait:"Creando el video… 1–2 min. Puedes cerrar; queda en el mensaje",done:"Tu video está listo",fail:"No se pudo crear el video: diamantes devueltos",busy:"Ya se está creando"}};
 function vidT(k){const l=typeof CL==="function"?CL():S.lang;return (VID_T[l]||VID_T.en)[k]}
-/* shrink the still to a JPEG ≤ 720px wide (keeps the upload small) */
-function vidShrink(src){return new Promise((ok,no)=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{try{const s=Math.min(1,720/im.naturalWidth),c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*s);c.height=Math.round(im.naturalHeight*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.86))}catch(e){/^https:/.test(src)?ok(src):no(e)}};im.onerror=()=>/^https:/.test(src)?ok(src):no(new Error("img"));im.src=src})}
+/* shrink the still to a small JPEG (long side 640px) — big uploads are slow */
+function vidShrink(src){return new Promise((ok,no)=>{const im=new Image();im.crossOrigin="anonymous";im.onload=()=>{try{const s=Math.min(1,640/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*s);c.height=Math.round(im.naturalHeight*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.84))}catch(e){/^https:/.test(src)?ok(src):no(e)}};im.onerror=()=>/^https:/.test(src)?ok(src):no(new Error("img"));im.src=src})}
 function vidPrompt(th,m){try{const b=aiPromptBase(th,m);return ("Cinematic romance drama shot. "+(fem(b.c)?"The woman":"The man")+" "+b.P+"; subtle natural motion — breathing, a blink, hair moving slightly, a small turn of the head toward the camera; slow gentle camera push-in. Setting: "+b.place+". Moody practical lighting, film look, photoreal, keep the face identical. No text.").replace(/\s+/g," ")}catch(_){return "Subtle cinematic motion, slow camera push-in, natural breathing and blinking, keep the face identical, photoreal."}}
 function vidSrcOf(th,m){if(IMG&&IMG.o&&IMG.o.im)return IMG.o.im;try{return artSrc(m.who)}catch(_){return null}}
 function vidShow(m){const pv=$("#imgPrev");if(!pv||!m||!m.vid||!m.vid.url)return;pv.innerHTML='<video src="'+esc(m.vid.url)+'" '+(m.vid.cover?'poster="'+esc(m.vid.cover)+'" ':'')+'autoplay loop muted playsinline controls style="width:100%;border-radius:14px;display:block"></video>'}
