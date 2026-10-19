@@ -12447,7 +12447,7 @@ installWork = async function (id) {
   if (m.hook || r.j.hook) w.hook = x0(m.hook || r.j.hook);
   if (m.premise) w.premise = x0(m.premise);
   if (m.you) w.you = x0(m.you);
-  if ((m.tags || []).length) w.tags = m.tags.slice(0, 6);
+  if ((m.tags || []).length) w.tags = m.tags.slice(0, 16); if (m.heat) w.heat = m.heat; w.or = r.j.orient || w.or;
   S.off76[id] = { wid, ver: P.ver, imv: 2 }; /* imv: importer version — bump to rebuild already-installed official stories */ save(); track("community_open", { id, official: 1 });
   return wid;
 };
