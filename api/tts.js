@@ -91,11 +91,12 @@ function qwenSites() {
   return out;
 }
 function qwenVoice(v) { let m = {}; try { m = JSON.parse(process.env.QWEN_VOICE_MAP || '{}'); } catch (_) {} return m[v] || QV[v] || (String(v)[0] === 'f' ? 'Serena' : 'Ethan'); }
-async function viaQwen(text, voice, en) {
+const QLANG = { zh: 'Chinese', en: 'English', ja: 'Japanese', ko: 'Korean', es: 'Spanish', fr: 'French', de: 'German', pt: 'Portuguese', it: 'Italian', ru: 'Russian' };
+async function viaQwen(text, voice, lang) {
   let last = 'no site';
   for (const site of qwenSites()) {
     const r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
-      body: JSON.stringify({ model: process.env.QWEN_TTS_MODEL || 'qwen3-tts-flash', input: { text, voice: qwenVoice(voice), language_type: en ? 'English' : 'Chinese' } }) });
+      body: JSON.stringify({ model: process.env.QWEN_TTS_MODEL || 'qwen3-tts-flash', input: { text, voice: qwenVoice(voice), language_type: QLANG[lang] || 'Auto' } }) });
     const j = await r.json().catch(() => ({}));
     const a = j.output && j.output.audio;
     if (!r.ok || !a || (!a.url && !a.data)) { last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 160); continue; }
@@ -148,7 +149,7 @@ module.exports = async (req, res) => {
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
   const q = req.query || {};
   if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();
-    try { const o = await viaQwen(q.l === 'en' ? 'You finally came. No umbrella?' : '你终于来了。外面雨这么大，你也不带把伞？', String(q.v || 'm1'), q.l === 'en'); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
+    try { const SAY = { zh: '你终于来了。外面雨这么大，你也不带把伞？', en: 'You finally came. No umbrella?', ja: 'やっと来たね。こんな雨なのに、傘も持ってないの？', ko: '드디어 왔네. 비가 이렇게 오는데 우산도 없어?', es: 'Por fin llegaste. ¿Con esta lluvia y sin paraguas?' }; const L = SAY[q.l] ? q.l : 'zh'; const o = await viaQwen(SAY[L], String(q.v || 'm1'), L); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
     catch (e) { res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 400), sites: qwenSites().map(x => x.base) }); } return; }
   if (q.ping) { res.setHeader('Cache-Control', 'no-store'); let iw = null; if (q.ping === 'inworld' && process.env.INWORLD_API_KEY) { try { iw = { map: await iwVoices(), english_voices: (IW_LIST || []).map(v => v.id + ' [' + v.tags.join(',') + ']') }; } catch (e) { iw = { error: String(e.message || e) }; } }
     res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', qwen: qwenSites().length > 0, english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
@@ -158,9 +159,10 @@ module.exports = async (req, res) => {
   const vec = String(q.e || '').split(',').slice(0, 8).map(x => Math.max(0, Math.min(1, +x || 0)));
   while (vec.length < 8) vec.push(0);
   try {
-    const en = q.l === 'en' || (!/[\u4e00-\u9fff]/.test(text) && q.l !== 'zh');
+    const en = q.l === 'en' || (!q.l && !/[\u3040-\u30ff\uac00-\ud7af\u4e00-\u9fff]/.test(text));
     let out = null, qerr = null;
-    if (qwenSites().length) { try { out = await viaQwen(text, voice, en); } catch (e) { qerr = e; out = null; } }
+    const lang = QLANG[q.l] ? q.l : (/[\u3040-\u30ff]/.test(text) ? 'ja' : /[\uac00-\ud7af]/.test(text) ? 'ko' : /[\u4e00-\u9fff]/.test(text) ? 'zh' : 'en');
+    if (qwenSites().length) { try { out = await viaQwen(text, voice, lang); } catch (e) { qerr = e; out = null; } }
     if (!out && en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
     if (!out) out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
     const riff = out.buf.slice(0, 4).toString() === 'RIFF';
