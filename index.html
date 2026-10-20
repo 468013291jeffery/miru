@@ -13514,7 +13514,7 @@ imBuild = function (doc, as) {
       return b;
     }).filter(Boolean);
     (w.pack.chapters || []).forEach(c => { const z = fix(c.beats.zh); c.beats = { zh: z, en: z }; (c.choices || []).forEach(o => { if (o.then) { const t2 = fix(o.then.zh); o.then = { zh: t2, en: t2 }; } }); });
-    if (A.cover) w.cover = A.cover;
+    if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   } catch (e) { try { console.warn("[off94]", e); } catch (_) {} }
   return r;
 };
@@ -13531,7 +13531,7 @@ async function off94Ensure(w) {
   if (!w || !w.official76 || !w.community) return {}; const A = await off94Assets(w.community); const SF = (window.SCENE_FILES = window.SCENE_FILES || {});
   (w.pack.chapters || []).forEach(c => ["zh", "en"].forEach(l => (c.beats[l] || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
   w.cast.forEach(id => { const c = ch(id); const nm = c && (c.n94 ? c.n94.zh : c.n); if (nm && A["char_" + nm]) S.art[id] = A["char_" + nm]; });
-  if (A.cover) w.cover = A.cover; return A;
+  if (A.cover || A.poster) S.art[w.id] = A.cover || A.poster; return A;
 }
 const _packStart94 = packStart;
 packStart = function (wid) { const w = wd(wid), args = arguments, self = this; if (w && w.official76) { off94Ensure(w).then(() => _packStart94.apply(self, args), () => _packStart94.apply(self, args)); return; } return _packStart94.apply(this, arguments); };
@@ -13628,6 +13628,71 @@ installWork = async function (id) {
 };
 /* searching by name finds a story even if it's outside your BL / BG / GL preference */
 (function () { const _orOK94 = orOK; orOK = function (w) { try { if (typeof disc !== "undefined" && disc.mode === "stories" && (disc.q || "").trim() && $("#discRes")) return true; } catch (_) {} return _orOK94.apply(this, arguments); }; })();
+
+/* official cards in search: real cover if there is one, otherwise the opening film plays as a silent preview */
+function off94Cards(root) {
+  (root || document).querySelectorAll("[data-cwork] .off89ph").forEach(ph => {
+    const id = ph.closest("[data-cwork]").dataset.cwork; if (ph.dataset.h94) return; ph.dataset.h94 = 1;
+    off94Assets(id).then(A => { if (!ph.isConnected) return; const art = ph.parentNode;
+      if (A.cover) { ph.outerHTML = '<img src="' + esc(A.cover) + '" alt="">'; return; }
+      if (A.vid_open) { ph.outerHTML = '<video class="v94" src="' + esc(A.vid_open) + '"' + (A.poster ? ' poster="' + esc(A.poster) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>';
+        const v = art.querySelector("video.v94"); if (v) { v.muted = true; v.play().catch(() => {}); } return; }
+      if (A.poster) ph.outerHTML = '<img src="' + esc(A.poster) + '" alt="">'; });
+  });
+}
+new MutationObserver(() => { try { if (document.querySelector("[data-cwork] .off89ph:not([data-h94])")) off94Cards(); } catch (_) {} }).observe(document.body, { childList: true, subtree: true });
+(function () { const st = document.createElement("style"); st.textContent = `[data-cwork] .art video.v94,[data-cwork] .art img{width:100%;height:100%;object-fit:cover;display:block}`; document.head.appendChild(st); })();
+/* ================= new official stories at the very front: home short-drama feed + Discover ================= */
+const OFFF94 = { list: null, at: 0 };
+async function off94Feed() {
+  if (OFFF94.list && Date.now() - OFFF94.at < 120000) return OFFF94.list;
+  let L = []; try { L = await off89Load(); } catch (_) {}
+  if (!L || !L.length) { try { const r = await capi("/works?feed=featured&limit=50"); L = ((r && r.j && r.j.works) || []).filter(w => w.featured); } catch (_) {} }
+  const out = [];
+  for (const w of (L || [])) { try { const A = await off94Assets(w.id); if (A.vid_open || A.cover || A.poster) out.push(Object.assign({}, w, { A })); } catch (_) {} }
+  OFFF94.list = out; OFFF94.at = Date.now(); return out;
+}
+function off94Title(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.title) || w.title || ""; }
+function off94Hook(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.hook) || w.hook || ""; }
+function off94FCard(w) {
+  const A = w.A, pos = A.cover || A.poster || "";
+  const bg = A.vid_open ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(A.vid_open) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
+  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
+    '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F") + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
+    '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
+    '<button class="btn btn-p btn-sm fplay94" data-off94="' + esc(w.id) + '">▶ ' + (CL() === "zh" ? "开始看" : "Play") + '</button></div></section>';
+}
+const _renderHome94 = renderHome;
+renderHome = function (v) {
+  const r = _renderHome94.apply(this, arguments);
+  try {
+    const put = L => { const feed = $("#feed"); if (!feed || feed.querySelector(".off94") || !L.length) return; feed.insertAdjacentHTML("afterbegin", L.map(off94FCard).join("")); const em = feed.querySelector(".empty"); if (em) em.remove(); feedWire(); };
+    if (OFFF94.list) put(OFFF94.list); else off94Feed().then(put);
+  } catch (_) {}
+  return r;
+};
+function off94RCard(w) {
+  const A = w.A, pos = A.cover || A.poster || "";
+  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (A.vid_open ? '<video src="' + esc(A.vid_open) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>' : '<img src="' + esc(pos) + '" alt="">') +
+    '<span class="rbadge">✦ ' + (CL() === "zh" ? "新剧" : "New") + '</span></div><b>' + esc(off94Title(w)) + '</b><span>' + esc(off94Hook(w)).slice(0, 40) + '</span></button>';
+}
+const _discMain94 = discMain;
+discMain = function () {
+  let h = _discMain94.apply(this, arguments);
+  const L = OFFF94.list;
+  if (L && L.length) { const sh = '<div class="shelf off94s"><div class="shd"><h3>✦ ' + (CL() === "zh" ? "MIRU 新剧" : "New from MIRU") + '</h3></div><div class="rail2">' + L.map(off94RCard).join("") + '</div></div>';
+    const i = h.indexOf('<div class="shelf'); h = i >= 0 ? h.slice(0, i) + sh + h.slice(i) : sh + h; }
+  else off94Feed().then(L2 => { if (L2.length && $("#htabBody") && !$(".off94s") && typeof discChip !== "undefined" && discChip === "main") { const b = $("#htabBody"); b.innerHTML = discBody(); } });
+  return h;
+};
+document.addEventListener("click", async e => {
+  const x = e.target.closest("[data-off94]"); if (!x) return; e.preventDefault(); e.stopPropagation();
+  if (x.dataset.busy) return; x.dataset.busy = 1;
+  try { const wid = await installWork(x.dataset.off94); if (wid) { try { if (typeof openStory === "function") openStory(wid); else startSheet(wid); } catch (_) { try { startSheet(wid); } catch (__) {} } } } finally { delete x.dataset.busy; }
+}, true);
+(function () { const st = document.createElement("style"); st.textContent = `.fcard.off94 .fimg{object-fit:cover}.fp.new94{background:var(--gold,#F0B77E);color:#241a10}.fhook94{margin:6px 0 10px;font-size:13.5px;line-height:1.5;color:#fffd;max-width:88%;text-shadow:0 1px 6px #000a}.fplay94{pointer-events:auto}
+.off94s .rart video{width:100%;height:100%;object-fit:cover;display:block}`; document.head.appendChild(st); })();
+setTimeout(() => { off94Feed().then(L => { try { if (L.length && S.lastTab === "home" && $("#feed") && !$("#feed .off94")) renderHome($("#tabv")); } catch (_) {} }); }, 2500);
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
