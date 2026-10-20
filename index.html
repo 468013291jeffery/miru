@@ -13626,6 +13626,8 @@ installWork = async function (id) {
     if (OFF94.play) delete OFF94.play[id]; } catch (_) {}
   return wid;
 };
+/* searching by name finds a story even if it's outside your BL / BG / GL preference */
+(function () { const _orOK94 = orOK; orOK = function (w) { try { if (typeof disc !== "undefined" && disc.mode === "stories" && (disc.q || "").trim() && $("#discRes")) return true; } catch (_) {} return _orOK94.apply(this, arguments); }; })();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
