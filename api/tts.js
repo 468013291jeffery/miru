@@ -276,9 +276,26 @@ async function viaInworld(text, voice, vec) {
   return { buf: Buffer.from(j.audioContent, 'base64'), type: 'audio/mpeg' };
 }
 
+
+/* ---------- Doubao realtime voice: short signed ticket for the Cloudflare relay (keys stay in the relay) ---------- */
+const DB_SPK_O = { m: ['zh_male_yunzhou_jupiter_bigtts', 'zh_male_xiaotian_jupiter_bigtts'], f: ['zh_female_vv_jupiter_bigtts', 'zh_female_xiaohe_jupiter_bigtts'],
+  en_m: ['en_male_tim_uranus_bigtts'], en_f: ['en_female_dacey_uranus_bigtts', 'en_female_stokie_uranus_bigtts'] };
+function doubaoTicket(req, res) {
+  const url = process.env.DOUBAO_RELAY_URL, sec = process.env.DOUBAO_RELAY_SECRET;
+  if (!url || !sec) { res.status(200).json({ off: true }); return; }
+  let u = null; try { u = require('./_lib').who(req); } catch (_) {}
+  if (!u) { res.status(401).json({ error: 'not signed in' }); return; }
+  const crypto = require('crypto'), b64u = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const body = b64u(JSON.stringify({ u: u.uid, exp: Date.now() + 2 * 60 * 1000, n: crypto.randomBytes(6).toString('hex') }));
+  const t = body + '.' + b64u(crypto.createHmac('sha256', sec).update(body).digest());
+  let spk = DB_SPK_O; try { if (process.env.DOUBAO_SPEAKERS) spk = Object.assign({}, DB_SPK_O, JSON.parse(process.env.DOUBAO_SPEAKERS)); } catch (_) {}
+  res.status(200).json({ url: url.replace(/^http/, 'ws').replace(/\/$/, '') + '/?t=' + t, model: process.env.DOUBAO_MODEL || '1.2.1.1',
+    langs: String(process.env.DOUBAO_LANGS || 'zh,en').split(/[ ,]+/).filter(Boolean), speakers: spk });
+}
+
 module.exports = async (req, res) => {
   const ok = cors(req, res);
-  if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type'); res.status(204).end(); return; }
+  if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); res.status(204).end(); return; }
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
   if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
     res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
@@ -289,6 +306,7 @@ module.exports = async (req, res) => {
       try { res.status(200).json(b.img.image && !b.img.model ? await editStart(b.img) : await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
+  if (q.doubao) { res.setHeader('Cache-Control', 'no-store'); return doubaoTicket(req, res); }
   if (q.imgtask) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await editPoll(q.imgtask)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
   if (q.vid) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await viduPoll(q.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
   if (q.ping === 'vidu') { res.setHeader('Cache-Control', 'no-store'); res.status(200).json({ key: !!process.env.VIDU_API_KEY, bases: viduBases(), model: process.env.VIDU_MODEL || 'viduq2-pro-fast' }); return; }
