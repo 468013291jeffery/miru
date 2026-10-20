@@ -280,9 +280,16 @@ async function viaInworld(text, voice, vec) {
 /* ---------- Doubao realtime voice: short signed ticket for the Cloudflare relay (keys stay in the relay) ---------- */
 const DB_SPK_O = { m: ['zh_male_yunzhou_jupiter_bigtts', 'zh_male_xiaotian_jupiter_bigtts'], f: ['zh_female_vv_jupiter_bigtts', 'zh_female_xiaohe_jupiter_bigtts'],
   en_m: ['en_male_tim_uranus_bigtts'], en_f: ['en_female_dacey_uranus_bigtts', 'en_female_stokie_uranus_bigtts'] };
+/* ticket key: DOUBAO_RELAY_SECRET when set (worker checks it locally); otherwise derived from AUTH_SECRET and the worker asks us (?doubao_check=) */
+function dbKey() { if (process.env.DOUBAO_RELAY_SECRET) return process.env.DOUBAO_RELAY_SECRET; let s = ''; try { s = require('./_lib').secret ? require('./_lib').secret() : ''; } catch (_) {} s = s || process.env.AUTH_SECRET || process.env.LONGCAT_API_KEY || 'miru'; return require('crypto').createHash('sha256').update('doubao-relay:' + s).digest('hex'); }
+function doubaoCheck(t, res) {
+  const crypto = require('crypto'), b64u = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+  let ok = false; try { const [body, mac] = String(t || '').split('.'); if (body && mac && b64u(crypto.createHmac('sha256', dbKey()).update(body).digest()) === mac) { const p = JSON.parse(Buffer.from(body.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString()); ok = p.exp > Date.now(); } } catch (_) {}
+  res.setHeader('Cache-Control', 'no-store'); res.status(ok ? 200 : 403).json({ ok });
+}
 function doubaoTicket(req, res) {
-  const url = process.env.DOUBAO_RELAY_URL, sec = process.env.DOUBAO_RELAY_SECRET;
-  if (!url || !sec) { res.status(200).json({ off: true }); return; }
+  const url = process.env.DOUBAO_RELAY_URL, sec = dbKey();
+  if (!url) { res.status(200).json({ off: true }); return; }
   let u = null; try { u = require('./_lib').who(req); } catch (_) {}
   if (!u) { res.status(401).json({ error: 'not signed in' }); return; }
   const crypto = require('crypto'), b64u = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
@@ -294,6 +301,7 @@ function doubaoTicket(req, res) {
 }
 
 module.exports = async (req, res) => {
+  if (req.method === 'GET' && req.query && req.query.doubao_check) return doubaoCheck(req.query.doubao_check, res);
   const ok = cors(req, res);
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); res.status(204).end(); return; }
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
