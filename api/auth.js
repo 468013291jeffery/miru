@@ -12,7 +12,8 @@
 // POST {op:'delete'}           → delete the account (App Store requirement): personal data removed, works taken down
 const L = require('./_lib');
 
-const pubUser = u => ({ id: u.id, email: u.email || null, name: u.name || null, avatar: u.avatar || null, provider: u.provider || (u.email ? 'email' : 'guest'), created_at: u.created_at });
+const maskPhone = p => p ? String(p).slice(0, 3) + '•••' + String(p).slice(-4) : null;
+const pubUser = u => ({ id: u.id, email: u.email || null, phone: maskPhone(u.phone), name: u.name || null, avatar: u.avatar || null, provider: u.provider || (u.email ? 'email' : u.phone ? 'phone' : 'guest'), created_at: u.created_at });
 function blocked(u) { return u.status === 'banned' && (!u.ban_until || new Date(u.ban_until) > new Date()); }
 
 async function newUser(sql, fields) {
@@ -34,7 +35,7 @@ async function signedIn(res, sql, u, extra) {
 async function currentGuest(sql, req) {
   const cur = L.who(req); if (!cur || cur.adm) return null;
   const r = await sql('SELECT * FROM users WHERE id=$1', [cur.uid]); const u = r[0];
-  return u && !u.email && !u.google_sub && !u.apple_sub && u.status !== 'deleted' ? u : null;
+  return u && !u.email && !u.phone && !u.google_sub && !u.apple_sub && u.status !== 'deleted' ? u : null;
 }
 
 const codeMail = (code, what) => ({ subject: 'MIRU ' + (what === 'reg' ? 'sign-up' : 'password reset') + ' code: ' + code + ' · 验证码',
@@ -44,7 +45,7 @@ module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db(); const q = req.query || {};
   if (req.method === 'GET') {
-    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), mail: L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
+    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), sms: L.hasSMS(), mail: L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
     const u = await L.needActive(req, res); if (!u) return;
     const r = await sql('SELECT * FROM users WHERE id=$1', [u.uid]);
     return L.send(res, 200, { user: pubUser(r[0]) });
@@ -76,6 +77,32 @@ module.exports = L.wrap(async (req, res) => {
     return signedIn(res, sql, user, { created: true });
   }
 
+  /* phone sign-in / sign-up: POST {op:'smscode', phone} → 6-digit SMS; POST {op:'sms', phone, code, name?} → signed in
+     (existing phone → that account; otherwise the current guest is upgraded, or a new account is made) */
+  if (op === 'smscode' || op === 'sms') {
+    const phone = String(b.phone || '').replace(/[\s()\-.]/g, '');
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) return L.bad(res, 'invalid phone');
+    if (!L.hasSMS()) return L.send(res, 501, { error: 'sms not configured' });
+    if (op === 'smscode') {
+      if (!(await L.bump('sms:' + phone, 'smscode', 5)) || !(await L.bump('smsip:' + L.ip(req), 'smscode', 10))) return L.bad(res, 'too many requests, try later', 429);
+      const code = String(L.crypto.randomInt(100000, 1000000));
+      await sql("INSERT INTO reset_codes (email, code, exp, tries) VALUES ($1,$2, now() + interval '10 minutes', 0) ON CONFLICT (email) DO UPDATE SET code=$2, exp=now() + interval '10 minutes', tries=0", ['sms:' + phone, L.hashPass(code)]);
+      const ok = await L.sendSMS(phone, 'MIRU code: ' + code + '. Valid 10 min. Don\'t share it. Reply STOP to opt out.');
+      if (!ok) return L.send(res, 502, { error: 'could not send the SMS', detail: L.smsLast() });
+      return L.send(res, 200, { ok: true });
+    }
+    const rc = await sql('SELECT code, exp, tries FROM reset_codes WHERE email=$1', ['sms:' + phone]); const c = rc[0];
+    if (!c || new Date(c.exp) < new Date() || c.tries >= 5) return L.bad(res, 'code expired — request a new one', 400);
+    if (!L.checkPass(String(b.code || '').trim(), c.code)) { await sql('UPDATE reset_codes SET tries=tries+1 WHERE email=$1', ['sms:' + phone]); return L.bad(res, 'wrong code', 400); }
+    await sql('DELETE FROM reset_codes WHERE email=$1', ['sms:' + phone]);
+    const ex = await sql("SELECT * FROM users WHERE phone=$1 AND status<>'deleted'", [phone]);
+    if (ex[0]) return signedIn(res, sql, ex[0], { restored: true });
+    const g = await currentGuest(sql, req);
+    if (g) { const up = await sql("UPDATE users SET phone=$2, name=COALESCE($3,name), provider='phone' WHERE id=$1 RETURNING *", [g.id, phone, b.name || null]); return signedIn(res, sql, up[0], { linked: true }); }
+    const { user } = await newUser(sql, { provider: 'phone', name: b.name || null, lang: b.lang || null });
+    const up = await sql('UPDATE users SET phone=$2 WHERE id=$1 RETURNING *', [user.id, phone]);
+    return signedIn(res, sql, up[0], { created: true });
+  }
   /* sign-up code: POST {op:'regcode', email} → 6-digit code by email (needed by register whenever mail is configured) */
   if (op === 'regcode') {
     const email = String(b.email || '').trim().toLowerCase();
@@ -125,7 +152,7 @@ module.exports = L.wrap(async (req, res) => {
     if (op === 'logout_all') { const up = await sql('UPDATE users SET tv=COALESCE(tv,0)+1 WHERE id=$1 RETURNING *', [u.id]); return signedIn(res, sql, up[0]); }
     if (op === 'profile') { const up = await sql('UPDATE users SET name=$2 WHERE id=$1 RETURNING *', [u.id, String(b.name || '').slice(0, 40) || null]); return L.send(res, 200, { user: pubUser(up[0]) }); }
     if (op === 'delete') {
-      await sql("UPDATE users SET status='deleted', email=NULL, pass=NULL, name=NULL, avatar=NULL, google_sub=NULL, apple_sub=NULL, note=COALESCE(note,'')||' [deleted by user '||now()::date||']', tv=COALESCE(tv,0)+1 WHERE id=$1", [u.id]);
+      await sql("UPDATE users SET status='deleted', email=NULL, phone=NULL, pass=NULL, name=NULL, avatar=NULL, google_sub=NULL, apple_sub=NULL, note=COALESCE(note,'')||' [deleted by user '||now()::date||']', tv=COALESCE(tv,0)+1 WHERE id=$1", [u.id]);
       await sql('DELETE FROM states WHERE user_id=$1', [u.id]); await sql('DELETE FROM memories WHERE user_id=$1', [u.id]);
       await sql("UPDATE works SET status='removed', updated_at=now() WHERE author=$1", [u.id]);
       const a = await sql("UPDATE assets SET status='removed' WHERE owner=$1 RETURNING url", [u.id]);

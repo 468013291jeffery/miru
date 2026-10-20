@@ -50,6 +50,8 @@ const SCHEMA = [
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS provider TEXT DEFAULT 'guest'`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS google_sub TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS apple_sub TEXT`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS phone TEXT`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS users_phone_idx ON users (phone) WHERE phone IS NOT NULL`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS note TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS tv INT DEFAULT 0`,
@@ -278,14 +280,34 @@ async function audit(sql, a, action, kind, id, detail, req) {
 const sesKey = () => process.env.SES_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID, sesSecret = () => process.env.SES_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
 function hasSES() { return !!(sesKey() && sesSecret() && process.env.MAIL_FROM); }
 function hasMail() { return hasSES() || !!(process.env.RESEND_API_KEY && process.env.MAIL_FROM); }
-function sigv4(method, host, path, region, service, body, key, secret) {
+function sigv4(method, host, path, region, service, body, key, secret, extra, ctype) {
   const now = new Date(), amz = now.toISOString().replace(/[:-]|\.\d{3}/g, ''), day = amz.slice(0, 8);
   const H = (d, enc) => crypto.createHash('sha256').update(d, 'utf8').digest(enc || 'hex'), M = (k, d) => crypto.createHmac('sha256', k).update(d, 'utf8').digest();
-  const ph = H(body), canon = [method, path, '', 'content-type:application/json', 'host:' + host, 'x-amz-date:' + amz, '', 'content-type;host;x-amz-date', ph].join('\n');
+  const hd = Object.assign({ 'content-type': ctype || 'application/json', host, 'x-amz-date': amz }, Object.fromEntries(Object.entries(extra || {}).map(([k, v]) => [k.toLowerCase(), v])));
+  const names = Object.keys(hd).sort(), signed = names.join(';');
+  const canon = [method, path, '', ...names.map(k => k + ':' + String(hd[k]).trim()), '', signed, H(body)].join('\n');
   const scope = day + '/' + region + '/' + service + '/aws4_request', sts = ['AWS4-HMAC-SHA256', amz, scope, H(canon)].join('\n');
   const kS = M(M(M(M('AWS4' + secret, day), region), service), 'aws4_request'), sig = crypto.createHmac('sha256', kS).update(sts, 'utf8').digest('hex');
-  return { 'Content-Type': 'application/json', 'X-Amz-Date': amz, Authorization: 'AWS4-HMAC-SHA256 Credential=' + key + '/' + scope + ', SignedHeaders=content-type;host;x-amz-date, Signature=' + sig };
+  const out = { 'Content-Type': hd['content-type'], 'X-Amz-Date': amz, Authorization: 'AWS4-HMAC-SHA256 Credential=' + key + '/' + scope + ', SignedHeaders=' + signed + ', Signature=' + sig };
+  Object.keys(extra || {}).forEach(k => { out[k] = extra[k]; }); return out;
 }
+/* ---------- SMS codes: AWS End User Messaging SMS (PinpointSMSVoiceV2.SendTextMessage) ----------
+   Uses the same AWS keys as SES (the IAM user also needs sms-voice:SendTextMessage). SMS_ORIGINATION = the registered
+   toll-free number (+1833…) or its ARN / phone-number id; SMS_REGION (default AWS_REGION / us-east-1).
+   Optional SMS_CONFIG_SET. Until a number is registered, AWS only delivers to verified destination numbers (sandbox). */
+let SMS_LAST = null;
+function hasSMS() { return !!(sesKey() && sesSecret() && process.env.SMS_ORIGINATION); }
+async function sendSMS(to, text) {
+  if (!hasSMS()) return false;
+  const region = process.env.SMS_REGION || process.env.AWS_REGION || 'us-east-1', host = 'sms-voice.' + region + '.amazonaws.com';
+  const body = JSON.stringify(Object.assign({ DestinationPhoneNumber: to, MessageBody: text, MessageType: 'TRANSACTIONAL', OriginationIdentity: process.env.SMS_ORIGINATION },
+    process.env.SMS_CONFIG_SET ? { ConfigurationSetName: process.env.SMS_CONFIG_SET } : {}));
+  try {
+    const r = await fetch('https://' + host + '/', { method: 'POST', headers: sigv4('POST', host, '/', region, 'sms-voice', body, sesKey(), sesSecret(), { 'X-Amz-Target': 'PinpointSMSVoiceV2.SendTextMessage' }, 'application/x-amz-json-1.0'), body });
+    const t = await r.text(); SMS_LAST = 'sms ' + r.status + ' ' + t.slice(0, 300); return r.ok;
+  } catch (e) { SMS_LAST = 'sms ' + String(e.message || e).slice(0, 200); return false; }
+}
+const smsLast = () => SMS_LAST;
 let MAIL_LAST = null;
 async function sendSES(to, subject, html, text) {
   const region = process.env.SES_REGION || process.env.AWS_REGION || 'us-east-1', host = 'email.' + region + '.amazonaws.com', path = '/v2/email/outbound-emails';
@@ -332,4 +354,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, sendMail, mailLast, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, sendMail, mailLast, hasSMS, sendSMS, smsLast, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
