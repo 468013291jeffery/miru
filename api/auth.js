@@ -45,7 +45,7 @@ module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db(); const q = req.query || {};
   if (req.method === 'GET') {
-    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), sms: L.hasSMS(), mail: L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
+    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), sms: L.hasSMS(), firebase: L.firebaseConfig(), mail: L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
     const u = await L.needActive(req, res); if (!u) return;
     const r = await sql('SELECT * FROM users WHERE id=$1', [u.uid]);
     return L.send(res, 200, { user: pubUser(r[0]) });
@@ -77,6 +77,18 @@ module.exports = L.wrap(async (req, res) => {
     return signedIn(res, sql, user, { created: true });
   }
 
+  /* phone sign-in through Firebase: POST {op:'firebase', idToken, name?} */
+  if (op === 'firebase') {
+    let f; try { f = await L.verifyFirebase(b.idToken); } catch (e) { return L.bad(res, String(e.message || e), 401); }
+    const phone = f.phone;
+    const ex = await sql("SELECT * FROM users WHERE phone=$1 AND status<>'deleted'", [phone]);
+    if (ex[0]) return signedIn(res, sql, ex[0], { restored: true });
+    const g = await currentGuest(sql, req);
+    if (g) { const up = await sql("UPDATE users SET phone=$2, name=COALESCE($3,name), provider='phone' WHERE id=$1 RETURNING *", [g.id, phone, b.name || null]); return signedIn(res, sql, up[0], { linked: true }); }
+    const { user } = await newUser(sql, { provider: 'phone', name: b.name || null, lang: b.lang || null });
+    const up = await sql('UPDATE users SET phone=$2 WHERE id=$1 RETURNING *', [user.id, phone]);
+    return signedIn(res, sql, up[0], { created: true });
+  }
   /* phone sign-in / sign-up: POST {op:'smscode', phone} → 6-digit SMS; POST {op:'sms', phone, code, name?} → signed in
      (existing phone → that account; otherwise the current guest is upgraded, or a new account is made) */
   if (op === 'smscode' || op === 'sms') {

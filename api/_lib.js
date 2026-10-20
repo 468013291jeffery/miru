@@ -291,6 +291,33 @@ function sigv4(method, host, path, region, service, body, key, secret, extra, ct
   const out = { 'Content-Type': hd['content-type'], 'X-Amz-Date': amz, Authorization: 'AWS4-HMAC-SHA256 Credential=' + key + '/' + scope + ', SignedHeaders=' + signed + ', Signature=' + sig };
   Object.keys(extra || {}).forEach(k => { out[k] = extra[k]; }); return out;
 }
+/* ---------- phone sign-in via Firebase Authentication (Google sends the SMS; no US carrier registration on our side) ----------
+   FIREBASE_PROJECT_ID, FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN (all public web-config values). The page does the SMS + code
+   with the Firebase SDK and sends us the Firebase ID token; we verify its RS256 signature against Google's public certs. */
+let FB_CERTS = null, FB_EXP = 0;
+function firebaseConfig() { const id = process.env.FIREBASE_PROJECT_ID; if (!id || !process.env.FIREBASE_API_KEY) return null; return { apiKey: process.env.FIREBASE_API_KEY, authDomain: process.env.FIREBASE_AUTH_DOMAIN || (id + '.firebaseapp.com'), projectId: id }; }
+async function fbCerts() {
+  if (FB_CERTS && Date.now() < FB_EXP) return FB_CERTS;
+  const r = await fetch('https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com');
+  if (!r.ok) throw new Error('firebase certs ' + r.status);
+  const m = /max-age=(\d+)/.exec(r.headers.get('cache-control') || ''); FB_EXP = Date.now() + (m ? +m[1] * 1000 : 3600e3); FB_CERTS = await r.json(); return FB_CERTS;
+}
+async function verifyFirebase(idToken) {
+  const cfg = firebaseConfig(); if (!cfg) throw new Error('phone sign-in is not configured');
+  const parts = String(idToken || '').split('.'); if (parts.length !== 3) throw new Error('bad token');
+  const dec = x => JSON.parse(Buffer.from(x.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8'));
+  const h = dec(parts[0]), p = dec(parts[1]);
+  if (h.alg !== 'RS256') throw new Error('bad token alg');
+  const certs = await fbCerts(); const pem = certs[h.kid]; if (!pem) throw new Error('unknown token key');
+  const ok = crypto.createVerify('RSA-SHA256').update(parts[0] + '.' + parts[1]).verify(pem, Buffer.from(parts[2].replace(/-/g, '+').replace(/_/g, '/'), 'base64'));
+  if (!ok) throw new Error('bad token signature');
+  const now = Math.floor(Date.now() / 1000);
+  if (p.aud !== cfg.projectId || p.iss !== 'https://securetoken.google.com/' + cfg.projectId) throw new Error('token for another project');
+  if (!(p.exp > now) || !(p.iat <= now + 60) || !p.sub) throw new Error('token expired');
+  if (!p.phone_number) throw new Error('no phone number in token');
+  return { uid: p.sub, phone: p.phone_number };
+}
+
 /* ---------- SMS codes: AWS End User Messaging SMS (PinpointSMSVoiceV2.SendTextMessage) ----------
    Uses the same AWS keys as SES (the IAM user also needs sms-voice:SendTextMessage). SMS_ORIGINATION = the registered
    toll-free number (+1833…) or its ARN / phone-number id; SMS_REGION (default AWS_REGION / us-east-1).
@@ -354,4 +381,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, sendMail, mailLast, hasSMS, sendSMS, smsLast, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
