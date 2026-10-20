@@ -1,0 +1,888 @@
+# The Crown's Last Oath
+⟦CHAR|%E5%87%AF%E5%85%B0|m|26|m1|Crown%20Prince|Twenty-six.%20Heir%20to%20Elindor%2C%20carrying%20the%20realm%27s%20safety%20on%20his%20shoulders.%20Mends%20clocks%2C%20drinks%20bitter%20tea%2C%20steps%20in%20front%20of%20risks%20meant%20for%20others%2C%20and%20never%20decides%20for%20you%20with%20his%20title.|Caelan⟧
+⟦CHAR|%E7%BD%97%E6%B8%A9|m|27|m5|Commander%20of%20the%20Royal%20Guard|Twenty-seven.%20By%20the%20book%20on%20procedure%20and%20safety%3B%20bakes%20on%20his%20days%20off.%20A%20steady%20ally.|Rowan⟧
+⟦CHAR|%E5%9F%83%E8%8E%89%E6%8B%89|f|30|f1|Commoners%27%20Council%20representative|Thirty.%20Trusts%20only%20evidence%20and%20policy%20that%20actually%20lands.%20She%20backs%20reform%20and%20calls%20out%20compromise%20in%20public.|Elira⟧
+⟦CHAR|%E9%A9%AC%E9%9B%B7%E5%85%8B|m|51|m4|Regent%20Advisor|Fifty-one.%20Afraid%20of%20the%20system%20collapsing%2C%20skilled%20at%20steering%20council%20procedure%2C%20and%20every%20move%20he%20makes%20leaves%20a%20trace.|Marek⟧
+
+# CHAPTER 1｜Before the Crown
+# SCENE｜Ceremony Out of Order
+⟦VIDEO|vid_open|⟧
+⟦BG|bg_ch01_s1|⟧
+⟦BGM|clue|Tense%20ceremonial%20strains%3B%20the%20music%20dims%20while%20you%20investigate%20the%20hall%20and%20swells%20during%20confrontations.⟧
+旁白：The coronation of the Kingdom of Elindor is under way. The great hall is steeped in candlelight and the faint glow filtered through stained glass. By a thousand years of custom, the heir apparent, Caelan, should kneel and swear succession to the Crown, and the words would be engraved by crown magic, binding the next sovereign to their duty.
+旁白：Yet Caelan stands where he is, spine straight, and does not kneel. Whispers ripple across the noble benches like rings in water. He turns, and his gaze passes over the stunned nobles to land on the side platform, on you.
+凯兰：“"Scribe, the discrepancy you found in the scrolls. Say what you think of it here."”
+旁白：The court's chief ceremonial officer beside you goes ashen. Two silver-armored guards step forward, their boots striking the marble with a dull sound, meaning to drive you from the platform. Two copies of the oath lie open at your hand: the version read aloud at the ceremony, and an old archived draft pulled from the storehouse.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Bend over the two drafts and compare the ink and the scrape marks
+#### B｜Scan the noble benches quickly and read the powerful by their faces
+#### C｜Whisper to the veteran clerk beside you and confirm a scribe's authority at this ceremony
+#### D｜Skip the investigation and answer Caelan and the officer directly
+# ·
+# CHOICE｜What do you do?
+#### A｜Accept Caelan's backing, state your position openly, and point out the doubts in the oath text
+#### B｜Raise a hand to wave Caelan back and make your case as a scribe, refusing anyone else's support
+# ·
+# SCENE｜Who Has the Right to Speak
+⟦BG|bg_ch01_s2|⟧
+⟦BGM|slow_burn|royal_ceremony_tension⟧
+旁白：Ceremonial Officer: “"Scribe, your duty is only to copy and preserve documents. At a coronation you have no authority to question an oath. This is the ceremonial rule handed down through the ages!"”
+凯兰：“"Authority comes from the text of the oath itself. Let her finish presenting her proof. To strip a scribe of the right to state doubts about a document is itself a violation of the oath."”
+旁白：The murmuring among the nobles grows louder. Some quietly side with the officer; a few hold back to watch. Now you may produce the oath copy you just finished comparing and point out the differences in wording in the legal text.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Study the ceremonial scroll in the officer's hands for signs of alteration
+#### B｜Study some nobles' bearing and expressions to judge their factions
+#### C｜Make no further observations and begin your reply
+# ·
+# CHOICE｜What do you do?
+#### A｜Produce the copy, read out the differences in wording clause by clause, and show the physical scrape marks on the page
+#### B｜Challenge the procedure: demand the previous archived oath be fetched for comparison on the spot, and ask that a clerk be sent for the records
+#### C｜Stay silent, stop arguing in public, and simply put the copy away to preserve the evidence
+# ·
+旁白：Whether you speak out or hold your tongue, what happened in the hall today has been seen by those present. The court attendants have already entered the day's disruption in the ceremony's interim log.
+# SCENE｜Whispers in the Corridor
+⟦BG|bg_ch01_s3|⟧
+⟦BGM|royal_court|Soft%20palace%20hall%20music%3B%20a%20murmur%20of%20passersby%20in%20the%20background.⟧
+旁白：The coronation is forced to a halt. The nobles must confer on how the ceremony will proceed. You step into the corridor for a breath, and Caelan follows you out alone. The tension of the ritual has slipped from him, but a deep weariness shows in his face. A few passing noble attendants deliberately slow their steps to listen.
+凯兰：“"I sense something is wrong with the oath, but I don't know the whole truth. The old crown magic reaches far, and to stir it rashly could unsettle all four domains. I can't promise you everything will end well."”
+旁白：Attendant: “"My lord, the Chief Officer summons the scribe to the clerks' waiting room."”
+# CHOICE｜How do you respond?
+#### A｜Tell the attendant you will come shortly
+#### B｜Decline, saying you need to finish this conversation here
+#### C｜Ask the attendant, obliquely, about recent irregularities among the oath records
+# ·
+# CHOICE｜What do you do?
+#### A｜Press Caelan privately for the clues behind his suspicion, and ask when he first noticed something wrong
+#### B｜Refuse a private talk, turn and follow the attendant, and go to Guard Commander Rowan to learn about the archive handover
+#### C｜Keep it brief and professional: exchange document numbers, end the talk, and leave the corridor
+# ·
+# SCENE｜The First Erasure
+⟦MG|scratch_note|The%20First%20Erasure⟧
+⟦BG|bg_ch01_s4|⟧
+⟦BGM|library_hush|archive_quiet_mystery⟧
+旁白：You return to the scriptorium and shut the door on the rumors of the corridor. You spread out the several versions of the oath once more. Comparing the handwriting line by line, you find, at the end of one clause, the mark of a blade scraped deliberately across the page. A name has been deliberately erased, leaving only a faint, hollowed scar in the paper.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Examine the scrape marks to judge roughly how long ago the alteration was made
+#### B｜Leaf through the pages around it in the same file for marginalia and small notes in the corners
+#### C｜Focus on the altered spot and skip any wider search
+# ·
+# CHOICE｜What do you do?
+#### A｜Compare closely, mark the erasure, record the remaining strokes, and try to reconstruct fragments of the deleted name
+#### B｜Set the question aside for now and put your duty first: compile the official record of the ceremony
+#### C｜If Caelan is present, show him the altered copy and trade observations
+# ·
+旁白：You confirm that the erased name belonged to a former oath-scribe. But why such a person should appear in the oath of the succeeding Crown, you have no clue. You write the physical traces you have recorded into your personal notes.
+# SCENE｜Pressure From Outside
+⟦BG|bg_ch01_s5|⟧
+⟦BGM|library_hush|archive_tense_low⟧
+旁白：Night falls. The court's factions have noticed what you found. Knocking sounds at the scriptorium door, two visitors in turn. First, a clerk sent by Regent Advisor Marek, who seeks to take back every copy of the oath; only afterward does Caelan arrive at the door.
+旁白：Clerk: “"The Regent Advisor orders that all original oath drafts from the ceremony be collected and sealed together. Please hand all copies to me for safekeeping."”
+# CHOICE｜How do you handle this?
+#### A｜Refuse to give up every copy; hand over only an unrelated copy and keep the altered version
+#### B｜Appear to comply: copy the key pages in advance, then return the file
+#### C｜Refuse outright and cite the rule that scribes keep a working copy
+# ·
+# SCENE｜Staying In
+⟦CG|cg_ch01|Staying%20In⟧
+⟦BG|bg_ch01_s6|⟧
+⟦BGM|library_hush|archive_quiet_mystery⟧
+旁白：The court has noticed your discovery, and pursuing it will carry unknown risks. Caelan arrives at the door of the record room and offers you a partnership. He knows that for a scribe with no noble patron, being drawn into this will cost dearly.
+凯兰：“"I'd like you to keep following this altered file. But it isn't an order. You're free to refuse and go back to an ordinary scribe's life. No one will hold you to account for it."”
+# CHOICE｜What do you do?
+#### A｜Accept the partnership, keep the oath copy, and state clearly that you retain your own judgment
+#### B｜Decline the partnership, but keep the copy and investigate independently, relying on no authority of the prince's
+#### C｜Refuse to be drawn in, hand the copy to the archives, and look no further into the matter
+# ·
+
+# CHAPTER 2｜The Deleted Name
+# SCENE｜An Empty Place in the Old Records
+⟦MG|find_clue|An%20Empty%20Place%20in%20the%20Old%20Records⟧
+⟦BG|bg_ch02_s1|⟧
+⟦BGM|library_hush|archive_quiet_mystery⟧
+旁白：You go to the royal archives to pull the full file of the former scribe whose name was erased. Following the index number, you find only an empty place where it should be. It is not rot or worm damage; the file was deliberately removed. The elderly archivist, who has kept watch here for decades, knows every rule of how records move.
+旁白：Archivist: “"That file was taken out several months ago. The withdrawal was logged, but the signature in the log was wiped away with a special solution."”
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Examine the scratches on the lock of the empty slot and collect trace evidence
+#### B｜Leaf through the neighboring files for a missed loose page
+#### C｜Consult the surviving pages of the archive's sign-out ledger
+#### D｜Press the archivist directly for more clues
+# ·
+# CHOICE｜What do you do?
+#### A｜Study the sign-out ledger closely to trace who took the file, and ask what court method wipes a signature with a solution
+#### B｜Look for companion copies or memoranda from the same period as corroborating material
+#### C｜If Caelan is present, ask him to use his authority to retrieve a hidden duplicate of the access log
+#### D｜Promise the archivist secrecy and ask him to recall scattered memories of that scribe
+# ·
+# SCENE｜A Fork in the City Streets
+⟦BG|bg_ch02_s2|⟧
+⟦BGM|festival|Mild%20town%20market%20sounds%3B%20the%20bustle%20of%20the%20streets.⟧
+旁白：The trail in the palace archives has gone cold. Workshop Street splits into three paths, each leading to a different kind of common memory. Stories handed down among the people may keep what the official records deliberately wiped away. But asking about old court affairs in the streets could easily draw the notice of spies.
+# CHOICE｜Where do you go first?
+#### A｜First visit the old seal restorer, who has handled many official seals and documents from the old days
+#### B｜Call on the owner of a three-generation stationery shop, who has heard plenty of street talk
+#### C｜First wander the commoners' market and gather scraps of rumor from ordinary townsfolk
+#### D｜Give up the street visits for now and go straight back to the palace to sound out inner-court officials
+# ·
+旁白：Different routes will yield different fragments of testimony. You can walk the others later, but it will cost time and change how certain people trust you.
+# SCENE｜A Witness's Fears
+⟦BG|bg_ch02_s3|⟧
+⟦BGM|standoff|town_tense_quiet⟧
+旁白：You find a commoner who has heard the story of the former scribe. In his youth he met that scribe once. But to stand up and testify publicly would bring spies to his door, and his shop and family would be dragged in. He is unwilling to face the palace openly.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Examine the old document scraps preserved on the walls of the room
+#### B｜Watch the street outside the door for anyone spying
+#### C｜Focus on the witness and ignore your surroundings
+# ·
+# CHOICE｜What do you do?
+#### A｜Do your best to persuade him to testify openly, and tell him the palace can offer protection
+#### B｜Accept his fears and take an anonymous statement only, never revealing his identity and citing only the testimony
+#### C｜Show the witness your notes on the scrape marks from before, in exchange for more detail
+#### D｜Respect his choice, press no further, and give up this testimony
+# ·
+旁白：(The speaking mirror lights up: Caelan)
+⟦CALL|%E5%87%AF%E5%85%B0|Late%20at%20night%2C%20your%20speaking%20mirror%20lights%20up.%20Caelan%20is%20on%20the%20other%20side%2C%20his%20voice%20pitched%20low%3A%20he%20heard%20you%20went%20to%20Workshop%20Street%20today.⟧
+凯兰：“"There are spies on Workshop Street. Are you all right?"”
+凯兰：“"I didn't call to ask what you found."”
+凯兰：“"I only wanted to be sure you're safe tonight."”
+⟦/CALL⟧
+# SCENE｜Who Keeps the Evidence
+⟦BG|bg_ch02_s4|⟧
+⟦BGM|royal_court|palace_hall_soft⟧
+旁白：After a full day on the move, you gather the palace archive fragments and the commoners' testimony in the record room. Now you must decide in what form to keep this sensitive evidence. Each route has its merits and costs; none is flawless.
+⟦FREE|What%20do%20you%20want%20to%20say%20now%3F⟧
+旁白：Either road advances the main story, but it will change how much Elira trusts you at the hearing later.
+# SCENE｜Fitting the Fragments
+⟦BG|bg_ch02_s5|⟧
+⟦BGM|slow_burn|night_rest_melancholy⟧
+旁白：You return to your private lodging, a safe space out of the factions' sight. You lay out all the scattered clues and try to piece the truth together. You can already reconstruct the erased scribe's name, but the truth about the Crown's cost being secretly shifted still lies hidden behind blank paper.
+# CHOICE｜What do you do?
+#### A｜Review all the clues alone and write out a list of directions for the next steps of the investigation
+#### B｜Send Caelan a message inviting him over to review the clues together and trade what you each know
+#### C｜Exhausted, rest first, set the investigation aside, and leave the clues until tomorrow
+# ·
+# SCENE｜A Warning in the Night
+⟦CG|cg_ch02|A%20Warning%20in%20the%20Night⟧
+⟦BG|bg_ch02_s6|⟧
+⟦BGM|standoff|night_tense_whisper⟧
+旁白：Late at night, just as you finish sorting the clues, something taps lightly at the window ledge. An anonymous commoner courier, sent by workshop residents you met during the day, delivers a nameless note. The note warns briefly: do not dig too deep into the old scribe's past, or disaster will follow. The courier sets it down and vanishes into the night without a trace.
+旁白：This is the first silent warning to come directly from the shadows, a sign that your investigation has touched someone's interests.
+# CHOICE｜What do you do?
+#### A｜Read the note carefully, keep it as physical evidence, and add it to your materials
+#### B｜Dismiss it as ordinary intimidation and throw the note away
+#### C｜Immediately check the doors and windows of your lodging to see whether you are being watched
+#### D｜If Caelan is here, show him the anonymous warning and compare views
+# ·
+
+# CHAPTER 3｜The Clock Tower's Secret
+# SCENE｜The Broken Clock
+⟦BG|bg_ch03_s1|⟧
+⟦BGM|slow_burn|tower_mechanical_soft⟧
+旁白：The palace clock tower's great clock has been stopped for a long time. It is where Caelan often retreats to be alone and repair clocks. Combining the clues from before, you reckon that old archives were once moved through a hidden space in the clock tower. To verify this route, you come to the tower. The aged keeper, whose family has watched over it for generations, knows everything about the tower over the past century.
+旁白：Clockkeeper: “"This great clock has been stopped half a month. Many great figures of the palace have long forgotten that the tower was more than a timekeeper. Once, it hid royal secret archives."”
+凯兰：“"This clock records each hour of the city's days. But time itself is often unfair. It records what happened, yet it cannot erase the people and pain that were deliberately wiped away."”
+旁白：You may choose which part of the repair work to take on yourself.
+旁白：Clean the dust and grime from the gears
+旁白：Sort the scattered small parts
+旁白：Record the mechanical faults you observe and write up repair notes
+旁白：Be only a bystander, take no part in the repairs, and focus on the archive clues
+旁白：Steer the conversation back to the archive investigation at once, avoiding personal closeness
+⟦FREE|What%20do%20you%20want%20to%20say%20now%3F⟧
+# SCENE｜An Old Map in the Wall
+⟦MG|code_door|An%20Old%20Map%20in%20the%20Wall⟧
+⟦BG|bg_ch03_s2|⟧
+⟦BGM|slow_burn|tower_mystery_low⟧
+旁白：While cleaning the gears and servicing the mechanism, you notice a loose stone in the wall. Prying it out, you find, resting in the hollow behind, a rolled old map of the palace that has been forgotten and sealed away for decades. The drawing details the route by which royal secret archives were once moved through the palace, and states plainly: the archives were relayed through a hidden space in the clock tower.
+旁白：(1) Study the map closely and mark each node of the archive route with a pen. (2) Compare the clues you gathered earlier with Caelan and cross-check them against the map. (3) Ask the clockkeeper where the old map came from and listen to his account of how things were done in the old days. (4) Copy the map's key details and keep the original safe.
+# CHOICE｜What do you do?
+#### A｜Study the map closely, mark the nodes along the archive route, and copy out the key route in full
+#### B｜Compare the map with the file clues in your hands together with Caelan, raising questions for each other
+#### C｜Record the map's details, keep the original safe, and save a deeper study for when you are back at your lodging
+# ·
+# SCENE｜The Pendulum and Responsibility
+⟦BG|bg_ch03_s3|⟧
+⟦BGM|slow_burn|tower_night_contemplative⟧
+旁白：The repairs inside the tower come to a pause. As the sun sets into dusk, you step out onto the open balcony. Standing at one of the highest points in the capital, Caelan lets slip, for once, the layers of royal disguise. Buried inside him is a deep fear of making the wrong decision; as a future monarch, each choice he makes tugs at the fates of thousands.
+旁白：You can ask directly about the fear inside him, or choose not to touch this heavy private wound.
+⟦FREE|What%20do%20you%20want%20to%20say%20now%3F⟧
+旁白：Whether or not you ask, this whole conversation will be kept in memory and will echo when the boundary-crossing event occurs later.
+# SCENE｜A Small Mistake
+⟦BG|bg_ch03_s4|⟧
+⟦BGM|slow_burn|tower_mechanical_soft⟧
+旁白：While you reassemble the parts, a small human error occurs. A clockwork linkage jams. Here, a trait of Caelan's surfaces: his tendency to act for others to avert risk. He instinctively wants to settle the fault entirely himself, bypassing your judgment, and fix the problem on the spot.
+旁白：Narration: Here a key thread is planted for what comes later. In his eyes, quickly avoiding risk comes first, but he overlooks other people's right to choose for themselves.
+# CHOICE｜What do you do?
+#### A｜Acquiesce, let Caelan handle the fault entirely, and watch and learn from the side
+#### B｜Insist on taking part in the adjustment steps, tell him plainly to hear your judgment, and fix the fault together
+#### C｜Halt all repair work and discuss, over this small matter, how he handles things and where the boundaries lie
+#### D｜Call the clockkeeper over and leave the fault to the experienced old man
+# ·
+# SCENE｜Thoughts Beneath the Night Sky
+⟦BG|bg_ch03_s5|⟧
+⟦BGM|slow_burn|tower_night_contemplative⟧
+旁白：Topics for idle talk, opening as your bond deepens, with no romance forced: the city's appearance, the tower's century of history, the lot of ordinary people under royal power, what mending clocks has taught him. Until your bond has deepened, talk will not turn to love or to personal wounds.
+# CHOICE｜What do you do?
+#### A｜Linger a while, gaze over the city by night with Caelan, and trade views on the investigation as it stands
+#### B｜Say a brief goodbye and leave the tower at once to return to the palace record room and press on with the investigation
+#### C｜Say what you think, then leave the tower alone, leaving Caelan on the balcony and heading back first
+# ·
+# SCENE｜After Leaving the Tower
+⟦CG|cg_ch03|After%20Leaving%20the%20Tower⟧
+⟦BG|bg_ch03_s6|⟧
+⟦BGM|slow_burn|night_rest_melancholy⟧
+旁白：You descend the winding stone stair step by step from the towering clock tower. Tonight's shared labor, the clues from the map, and the talk on the balcony have become a real shared memory. This memory does not depend on romance; even if you remain only working partners, it still holds. At the foot of the tower, by the exit, you are about to part and return to your own lodgings.
+# CHOICE｜What do you do?
+#### A｜Arrange the next meeting's time and place with Caelan (an invitation for work, not a date)
+#### B｜Make no arrangement, part politely, and meet again later through palace channels
+#### C｜At parting, selectively hand him part of the investigation notes you have recorded
+#### D｜Remind Caelan that you will keep your own investigative judgment and will not follow his ideas blindly
+# ·
+
+# CHAPTER 4｜The First Oath
+# SCENE｜The One Who Must Sign
+⟦BG|bg_ch04_s1|⟧
+⟦BGM|royal_court|royal_court_formal⟧
+旁白：A royal commission of inquiry lies before you. This legal document will directly define your identity, authority, and duties in investigating the whole case, and the price of risk you will bear. Every serious risk, restriction, and power is written in its clauses, and before choosing you have the right to read them one by one. Sign without reading, and you will shoulder responsibilities you never foresaw.
+旁白：You may read all the clauses of the commission one by one, marking the favorable and the risky, and write a list of amendments and additions you wish to make.
+# CHOICE｜What do you do?
+#### A｜Read every clause of the commission word by word, mark suspicious items, and organize your requests for changes
+#### B｜Skim quickly, attend mainly to the investigative powers you would gain, and overlook the duties
+#### C｜Propose changes to some clauses at once, discussing revisions with the officials present without reading the full text
+# ·
+# SCENE｜Meetings Before the Hearing
+⟦BG|bg_ch04_s2|⟧
+⟦BGM|royal_court|palace_hall_soft⟧
+旁白：Before the formal interim hearing opens, you have a window of time. You can meet the key figures separately, exchange information, and learn their positions in advance to prepare for the hearing. The order of your meetings will shape public opinion at the hearing later.
+# CHOICE｜What do you do?
+#### A｜Guard Commander Rowan
+#### B｜Commoners' Council Representative Elira
+#### C｜Regent Advisor Marek
+#### D｜See none of them and go straight into the hearing hall
+# ·
+旁白：After the meetings, enter the hearing hall
+# SCENE｜The Council's Questions
+⟦MG|order_vow|The%20Council%27s%20Questions⟧
+⟦BG|bg_ch04_s3|⟧
+⟦BGM|royal_court|court_hearing_tension⟧
+旁白：The interim hearing opens. Elira, the commoners' council representative, fires sharp questions at you. She will not trust you unconditionally just because the prince values you. She needs real evidence. What she cares about is this: does your stance represent the Crown, or the suffering of ordinary people?
+埃莉拉：“"You hold investigative authority, and that authority comes from the Crown. How will you prove you won't speak only for the Crown's interests? When the Crown's interests and the people's suffering collide, who answers for what ordinary people endure?"”
+# CHOICE｜What do you do?
+#### A｜Lay out all your evidence and the commoners' testimony notes in full to Elira, and volunteer to submit to outside oversight by the commoners' council
+#### B｜Dodge the pointed question about your stance and narrow the discussion to the doubts in the oath text itself, saying nothing of allegiance
+#### C｜Admit candidly that the evidence still has gaps, say you need more time to gather more, and defer answering her question
+# ·
+# SCENE｜Caelan's Outstretched Hand
+⟦BG|bg_ch04_s4|⟧
+⟦BGM|royal_court|palace_hall_soft⟧
+旁白：The hearing breaks briefly. Caelan speaks with you alone. If you refused his speaking for you in the first chapter, he will first ask your terms, rather than hand you a decision already made.
+凯兰：“"I want you on my side, to find out together what threat lies in the Crown's oath. But working together doesn't mean you give up your own limits or your own judgment. Tell me, if you choose to work with me, what are your terms? What can you never compromise on, no matter what?"”
+# CHOICE｜What do you do?
+#### A｜State your boundaries clearly, set out your bottom line in full, and only then consider accepting the partnership
+#### B｜Refuse outright to depend on the prince's apparatus, insist on staying fully independent, and decline any royal commission
+#### C｜Give no answer for now, say you need to weigh it, and keep watching how the factions move
+# ·
+# SCENE｜The First Covenant
+⟦BG|bg_ch04_s5|⟧
+⟦BGM|slow_burn|oath_ceremony_mid⟧
+旁白：Back in the hearing hall, you come to three major branching choices: Route One, Route Two, Route Three. Before you choose, the screen clearly shows each route's authority, gains, risks and costs, future opportunities, and flaws. No option is without fault.
+旁白：1. Route One: Accept appointment as interim royal advisor while writing into the record your public right to independent review. You gain access to the palace's internal files, but conservative noble factions will watch you closely and distrust you. Leads to the Chapter 5 royal alliance route.
+旁白：2. Route Two: Refuse the royal commission and choose to be an independent civic monitor. Access to the palace's most secret archives is restricted, but you earn the high trust of the commoners' council. Leads to the Chapter 5 civic investigation route.
+旁白：3. Route Three: Defer signing any commission and request an extended public hearing. Outside time pressure rises, but it will not trigger a bad ending, and in later chapters you can still choose your role anew.
+⟦FREE|What%20do%20you%20want%20to%20say%20now%3F⟧
+旁白：Your choice will profoundly change the resources, allies, and clues available to you in every chapter that follows.
+# SCENE｜After the Signing
+⟦CG|cg_ch04|After%20the%20Signing⟧
+⟦BG|bg_ch04_s6|⟧
+⟦BGM|slow_burn|transition_epic_soft⟧
+旁白：The hearing draws to a close. You have settled where you stand in this storm. The old covenant's iceberg has only begun to show its tip, and the long-pent economic and power rifts among the four domains are waiting to erupt.
+# CHOICE｜What do you do?
+#### A｜Go to Guard Commander Rowan to update him on your latest decision and seek help with security
+#### B｜Exchange information with Elira, align your stance with the commoners', and set up a channel for passing evidence to the people
+#### C｜Briefly review the whole hearing with Caelan and set the next short-term investigative goals
+#### D｜See no one, leave the palace alone, and return to your lodging to sort out all the clues and plans for the future
+# ·
+
+旁白：(The speaking mirror lights up: Caelan)
+⟦CALL|%E5%87%AF%E5%85%B0|The%20speaking%20mirror%20lights%20up%20again.%20Caelan%20has%20just%20come%20out%20of%20the%20council%20session%20and%20wants%20to%20hear%20what%20you%20make%20of%20the%20first%20oath.⟧
+凯兰：“"The council just let out. I can't stop thinking about what you said this afternoon."”
+凯兰：“"If you were the one writing this oath, how would you write it?"”
+凯兰：“"You speak, and I'll record."”
+⟦/CALL⟧
+# CHAPTER 5｜Letters From the Domains
+旁白：Following the three branches of Chapter 4 (royal interim advisor, civic independent monitor, deferring the commission), every earlier choice carries over automatically. Estimated playtime for this chapter: 120 minutes. Six pausable scenes. Each scene runs roughly nine to fourteen rounds of interaction. New secondary characters include a domain courier, a border caravan steward, and a local clerk. New sub-interactions include correcting errors in domain letters and decoding messages hidden in secret writing. All evidence, statements, and attitude marks produced by the new interactions can be reused across chapters.
+# SCENE｜A Sealed Letter From the Border
+⟦BG|bg_ch05_s1|⟧
+⟦BGM|royal_court|Soft%20sounds%20of%20the%20palace%20post%3A%20horses%20and%20distant%20voices.⟧
+旁白：Barely three days after the hearing, a batch of urgent letters from all four domains arrives together at the palace mail room. By custom, official letters pass first through the regent advisor Marek's aides for screening and summary before reaching the prince. But this time a courier who will not give his name quietly slips a clerk an extra private letter, one that appears in no official register.
+旁白：Narration: When you reach the mail room, two domain couriers are arguing in low voices. One insists that all contents must pass the Regent's office for review; the other argues that the people's hardships cannot be cut down or buried in summaries.
+旁白：Courier A: “"The grain accounts of the North, the records of miners hurt in the pits, all of it is written in here. Every time Lord Marek's aides abridge and report, they erase a part of the petitions. We have sent them for three years, and all the palace has seen is the words 'all is calm.'"”
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Examine the wax seals on several official letters and compare them for signs of forged seal impressions
+#### B｜Leaf through the stack of past domain summary copies nearby and compare their length against the full letters
+#### C｜Watch the two couriers' expressions and bearing to judge which is more willing to tell you the details
+#### D｜Skip the examination and step directly into their quarrel
+# ·
+# CHOICE｜What do you do?
+#### A｜Offer to help verify the letters, promising to keep them safe and not pass them directly to the Regent's office
+#### B｜Remind the couriers to abide by the palace's delivery rules and urge them to hand all letters to the Regent's aides
+#### C｜Draw aside the courier willing to take the risk and quietly ask what the private letter records
+#### D｜Find Caelan first, tell him of the stir over the domain letters, and decide afterward
+# ·
+# SCENE｜Two Versions of the Text
+⟦MG|slide_letter|Two%20Versions%20of%20the%20Text⟧
+⟦BG|bg_ch05_s2|⟧
+⟦BGM|library_hush|archive_quiet_mystery⟧
+旁白：If you win the courier's trust, he hands over both of the North's documents. The difference is obvious at a glance. The official version says only that mine output is steady and taxes are paid on time. The original draft is dense with records of frequent injury and illness and work stoppages, and one short line recurs again and again: each time a Crown oath is invoked, someone at the mine falls inexplicably ill and loses their strength.
+旁白：Narration: The text never mentions an oath-bearer outright, but link it to the erased scribe from the first chapter and the commoners' testimony from the second, and a faint chain begins to take shape.
+# CHOICE｜What do you do first?
+#### A｜Compare the two texts sentence by sentence, mark the lines altered, deleted, or softened, and make a list of differences
+#### B｜Warm the edges of the original gently over a candle flame to check for hidden writing in honey-water
+#### C｜Compare the commoners' fingerprints and signatures on the original and confirm which villages the witnesses come from
+#### D｜Copy only the key sentences and return the original to the courier, keeping no original in your hands
+# ·
+# CHOICE｜What do you do?
+#### A｜Complete the list of differences, keep the original as physical evidence, and seal it with a clear mark
+#### B｜Copy only the summary and return the original to the courier, so as not to draw fire by holding sensitive material
+#### C｜Contact Elira and ask the commoners' council to assign someone to transcribe the original and protect the local witnesses
+#### D｜Hand both texts directly to Caelan and leave it to him to decide how to handle them
+# ·
+旁白：This original draft is the first piece of evidence to tie the Crown magic's strange costs directly to ordinary people in the domains. Different ways of handling it will change how Elira and Marek treat you afterward.
+# SCENE｜The Caravan's Testimony
+⟦BG|bg_ch05_s3|⟧
+⟦BGM|standoff|town_tense_quiet⟧
+旁白：The River Bay domain submitted no written draft, but the steward of a caravan that has long traveled between the capital and the River Bay ferry saw, years ago, a strange thing after an oath took effect: the local clerk at the ferry who registered oath copies fell weak overnight and took to his bed, and afterward his name on the records slowly faded away. He dares not put it in an official letter and is willing only to tell it aloud.
+旁白：Narration: Watchers are not far off, and a long private talk is very risky. You must weigh the order of your questions and keep an eye on your surroundings.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Mark where the watchers in the distance are looking and judge when it is safe to question more deeply
+#### B｜Examine the River Bay ledgers the caravan carries and see whether any expenditure looks unusual
+#### C｜Chat with a caravan hand nearby to corroborate the steward's account indirectly
+#### D｜Ignore the risk around you and press the steward for details about the clerk
+# ·
+# CHOICE｜What do you do?
+#### A｜Take down the testimony quickly and in good order, and when you are done have the steward confirm it with his thumbprint
+#### B｜Warn the steward of the danger, make no written record, and keep the information only in your private notes
+#### C｜Ask whether the steward would later testify anonymously at the hearing, linking him with Elira's witness-protection channel
+#### D｜Keep it shallow so as not to draw the regent's watchers, and end the conversation
+# ·
+# SCENE｜The Regent's Explanation
+⟦BG|bg_ch05_s4|⟧
+⟦BGM|royal_court|court_tension_low⟧
+旁白：Marek soon learns that you have been in touch with the domain couriers and obtained the original draft. He invites you to talk, having prepared a self-consistent account in advance: domain unrest, famine, mining accidents, and plague are all problems of local governance and have nothing to do with the Crown oath; the couriers were egged on by local ambitious men to exaggerate the disasters in order to wring more tax exemptions from the Crown.
+马雷克：“"Scribe, you are forcing the ills of local government onto the Crown oath. Once the four domains come to believe the magic is the source of calamity, the alliance will loosen, and border conflicts will flare up again at once. We cannot afford the price of order collapsing."”
+# CHOICE｜What do you do?
+#### A｜Show him the list of differences between the two texts and demand to know why he let his aides alter the domains' original reports
+#### B｜Do not confront him directly; ask him instead where the archives on the old oath-bearing system and the early costs of the oath are kept
+#### C｜Admit that the domains do have governance problems, but propose that the matters be investigated separately, with no conclusion assumed
+#### D｜Argue no further, rise and take your leave, keeping the evidence from him
+# ·
+旁白：Whether you confront him or probe by indirection, Marek will grow more wary of you. He will not use force directly, but he will tighten your access to the old palace archives. (The change in access depends on your Chapter 4 role: on the royal advisor route, only some top-secret files are restricted; on the independent monitor route, most palace archive entrances are tightened.)
+# SCENE｜Sorting the Four Demands by Lamplight
+⟦BG|bg_ch05_s5|⟧
+⟦BGM|slow_burn|night_rest_melancholy⟧
+旁白：The four domains want different things. North Reach mine laborers fear an unexplained illness; River Bay ferry clerks have long borne the pressure of excess registrations; the mountain tribes of the West resent that the oath's rules are made wholly by the capital alone; East Coast fishermen fear that the next major oath will bring storms at sea. Their demands mix four kinds of problems: livelihood, taxes, local autonomy, and the cost of magic. They cannot be summed up simply as "for or against the oath."
+# CHOICE｜What do you do?
+#### A｜Finish the whole sorting alone and, with the list complete, decide which line of clues to pursue first
+#### B｜Invite Elira over to align on the commoners' view and plan witness protection together
+#### C｜Invite Caelan over to assess together which demands can go to the council chamber for discussion first
+#### D｜Exhausted, set the sorting aside, rest first, and carry on tomorrow
+# ·
+# SCENE｜A Secret Invitation
+⟦CG|cg_ch05|A%20Secret%20Invitation⟧
+⟦BG|bg_ch05_s6|⟧
+⟦BGM|standoff|night_tense_whisper⟧
+旁白：Near the end of your review, you find an anonymous note on the windowsill. It comes from a liaison of the West's mountain tribes, who will not enter the palace themselves and invite you to meet secretly at their temporary camp in the hills beyond the city. They hold the original agreement, passed down by word of mouth through the generations, from when the Crown oath was first made, and its rules are wholly different from the version the palace enforces now.
+旁白：Narration: The risk is clear: meeting the tribes privately outside the city will be cast by Marek's faction as private collusion with a domain, and become a handle for charging you with inciting division. But it is the only chance right now to obtain the original oath text.
+# CHOICE｜What do you do?
+#### A｜Accept the invitation, fix a time to meet, and think how to slip past the palace's watchers
+#### B｜Decline the invitation and reply asking them to send written materials anonymously to the commoners' council base held by Elira
+#### C｜Give the note to Caelan, and discuss with him whether to go and whether he can arrange guards as cover
+#### D｜Keep the note but give no reply for now, and go on looking for other clues inside the palace
+# ·
+
+# CHAPTER 6｜The Old Oath of the West
+# SCENE｜The Path Out of the City
+⟦BG|bg_ch06_s1|⟧
+⟦BGM|rooftop_wind|Wind%20through%20the%20trees%20and%20birdsong%20in%20the%20undergrowth%3A%20tense%20forest%20path%20ambience.⟧
+旁白：If you chose to go, you set out along the country path toward the West's temporary camp. If you did not, this scene shifts to you receiving, at Elira's base, copies of stone rubbings sent by the tribes. The logic is the same; only the branch of face-to-face talk with the elders is missing.
+旁白：Narration: The view through the trees is wide open, and it would be easy to be followed. You must decide how to travel and whether to bring anyone.
+旁白：Choose who goes with you: Caelan, a trusted guard arranged by Rowan, or no one.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Watch the people on the forest path and tell ordinary woodcutters from tailing spies
+#### B｜Check the roadside markers for the safe signs the West's people left in advance
+#### C｜Look for a fork and take a roundabout route to shake off any tail
+#### D｜Go straight down the main road and reach the camp as fast as you can
+# ·
+# CHOICE｜What do you do?
+#### A｜Go alone, keep a low profile, and avoid attracting notice
+#### B｜Contact Caelan, tell him where you are going, and invite him to the West's camp
+#### C｜Find Rowan and ask him to send trusted guards, who won't report to the regent's office, to cover you in secret
+#### D｜Abandon this meeting for now, turn back to the capital, and pass information by letter instead
+# ·
+# SCENE｜The Totem Slab
+⟦MG|slide_sigil|The%20Totem%20Slab⟧
+⟦BG|bg_ch06_s2|⟧
+⟦BGM|slow_burn|tribe_ancient_soft⟧
+旁白：The tribes of the West have guarded for generations an oral version of the first oath and this totem stone carving. The carving is not writing but a narrative in symbols, matching the Crown magic's original pact. The elder will not open up easily to someone from the capital; first he will study your manner to judge whether you come to seize, to interrogate, or to seek the truth.
+旁白：Tribal Elder: “"When the Crown was born, the royal house that swore the oath promised that the weight of the magic would be borne by all who hold power. Later, the capital's scrolls changed the words. But stone does not lie."”
+旁白：(1) Ask the tribe's record-keeper to explain each group of symbols and the pact it stands for, and note it down point by point. (2) Compare it with the oath copies the palace holds and mark where the two versions contradict. (3) Ask the elder in what year, and after what event, the capital began altering the oath's text. (4) Only listen, and do not record, keeping it all in memory and leaving no paper evidence.
+# CHOICE｜What do you do?
+#### A｜Record the symbols' ancient oath carefully and ask permission to take a rubbing of the slab
+#### B｜Show the elder your notes on the altered oath to prove you are tracing the tampering
+#### C｜Ask the elder whether the tribe keeps a record of the names of the first oath-bearers
+#### D｜Do not press for secrets yet; first talk simply with the tribe's people and show respect
+# ·
+旁白：You have the core of the ancient oath: the cost was always meant to fall on the royal house. This knowledge will permanently change how you see the Crown magic.
+# SCENE｜Two Promises
+⟦BG|bg_ch06_s3|⟧
+⟦BGM|slow_burn|tribe_ancient_contemplative⟧
+旁白：When the elder has finished the whole first oath, the contradiction stands plain: the palace's current version quietly shifted the cost onto lowly executors such as oath-scribes. The tribe regards this as betraying the original covenant. But the elder also reminds you of a cruel fact: if the ancient oath were forcibly restored and the cost fell back on the royal house, Caelan, as heir, would take the magic's injury directly.
+# CHOICE｜What do you do?
+#### A｜Ask the elder whether there is a third path, a compromise that shares the cost, short of restoring the ancient oath
+#### B｜If Caelan is present, talk with him alone: is he willing to bear this cost that belongs to the royal house?
+#### C｜Set aside any discussion of plans for now; copy out the ancient oath in full and carry it back to the capital to join the rest of your evidence
+#### D｜Ask the elder whether the tribe would testify at a public hearing
+# ·
+# SCENE｜Warning of the Spies' Raid
+⟦BG|bg_ch06_s4|⟧
+⟦BGM|fae_forest|forest_tension_alarm⟧
+旁白：Someone has followed you to the camp. The spies have not rushed in at once, but they have fixed on the general location. Your choices are few: hide in place, slip out by the hidden path through the woods behind, or face the spies head-on. If you are caught, the record of your private dealings with the tribe will go straight to the council chamber, and Marek will have a powerful weapon to accuse you.
+# CHOICE｜What do you do?
+#### A｜Follow the tribe's guidance down the hidden path up the back hill and leave quickly, abandoning the rest of the talk
+#### B｜Leave some rubbings and notes as bait to mislead the spies and cover the tribal witnesses' safe departure
+#### C｜If Rowan's guards are covering you, arrange a standoff and prove yourself with your lawful investigative standing
+#### D｜Caelan-accompanied branch: Caelan steps forward and declares his rank as crown prince to suppress the spies
+# ·
+旁白：However you slip away, this meeting has left traces. Marek will receive the spies' report, and the charges against you will keep piling up.
+# SCENE｜Sorting the Ancient Oath by Night
+⟦BG|bg_ch06_s5|⟧
+⟦BGM|slow_burn|night_rest_melancholy⟧
+旁白：Back within the palace's reach, you must at once organize the ancient oath materials you just obtained. They are your most important core evidence so far, but they have a weakness: they are tribal oral tradition with no official palace archive to back them, and many nobles in the council chamber will dismiss them outright as legends the tribe invented.
+# CHOICE｜What do you do?
+#### A｜Assemble the full evidence package overnight, deliver it to Elira first thing in the morning, and add it to the commoners' council's evidence archive
+#### B｜Give Caelan only the comparison documents and discuss with him how to bring them into the council chamber safely, without setting off panic among the nobles
+#### C｜Seal this body of ancient-oath evidence for now and go on to the royal archives, looking for old official records to corroborate it
+#### D｜Rest first and put off sorting the evidence until tomorrow
+# ·
+# SCENE｜Wind in the Council Chamber
+⟦CG|cg_ch06|Wind%20in%20the%20Council%20Chamber⟧
+⟦BG|bg_ch06_s6|⟧
+⟦BGM|royal_court|palace_hall_soft⟧
+旁白：News of your trip to the West's camp has spread in small circles. Opinion begins to split: conservative nobles take the regent's account; some lower-ranking officials and clerks who have seen the domains' suffering first-hand hold back, waiting for you to produce more evidence. Rowan comes to you of his own accord with a piece of intelligence: Marek is preparing to propose at the next council session that your investigative authority be suspended.
+# CHOICE｜What do you do?
+#### A｜Trade intelligence with Rowan and ask him to watch which way the voting nobles in the council chamber are leaning
+#### B｜Quicken the pace: submit the ancient oath evidence package early and make it public before your authority is suspended
+#### C｜Go to Elira and have the commoners' council speak out in advance to check the regent's office's proposal
+#### D｜Go to Caelan and discuss how to respond at the council session
+# ·
+
+# CHAPTER 7｜Secret Study of the Ritual Formations
+# SCENE｜The Council Chamber Antechamber
+⟦BG|bg_ch07_s1|⟧
+⟦BGM|royal_court|Soft%20palace%20council%20ambience%3B%20low%20talk%20in%20the%20distance.⟧
+旁白：There is half an hour before the council formally opens. The text of Marek's motion has already been distributed to every noble attending: on grounds of colluding privately with the West's tribes and spreading rumors that shake the Crown oath, it asks that all your investigative authority be frozen, that all physical evidence be seized, and that the regent's office conduct its own review.
+旁白：Narration: The antechamber is the last window to lobby. The swing votes held by neutral nobles will decide the outcome.
+旁白：Narration: As crown prince, Caelan sits to one side of the head seat. He will not decide for you, but in the debate he may choose to stand with you, to stay neutral, or to follow the regent faction's call for order (his choice is shaped by how you have treated each other so far).
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Identify the nobles' faction markers and note the key figures among the swing votes
+#### B｜Eavesdrop on the aides' talk to learn what terms Marek has promised the neutral nobles
+#### C｜Meet Elira quickly and confirm whether observer representatives will be allowed to speak in the chamber
+#### D｜Go straight to Caelan and align your lines of argument beforehand
+# ·
+# CHOICE｜What do you do?
+#### A｜Approach a few key neutral nobles first, show them part of your evidence, and win their swing votes
+#### B｜Coordinate with Elira so the commoners' observer representatives are ready to seize the chance to speak
+#### C｜Find Caelan and settle how the two of you will divide the statement and fill in for each other
+#### D｜Do not lobby; save your strength and wait to produce the evidence in public once inside the chamber
+# ·
+# SCENE｜Opening the Defense
+⟦MG|quiz_court|Opening%20the%20Defense⟧
+⟦BG|bg_ch07_s2|⟧
+⟦BGM|standoff|council_debate_tense⟧
+旁白：The council clerk reads out the motion in full. Marek rises first and sets out the charges in orderly fashion: that you went beyond the rules to contact the border domains in private and met the West's tribes; that you credited oral legend with no official corroboration; that you deliberately magnified local disasters and are tearing apart the trust between the royal house and the domains. He asks the nobles to end the investigation at once.
+马雷克：“"The Crown oath is the shackle that keeps the peace on the four domains' borders. If these rootless rumors are allowed to spread, war will flare on the borders again. The price of order must not be swept away by sympathy."”
+旁白：Now it is your turn to answer, and you may choose the order in which to present the evidence. It bears directly on how the nobles receive it.
+旁白：The evidence at your disposal depends on what you gathered in earlier chapters; anything missing cannot be chosen. It includes: the North's two letters set against the original draft, the River Bay caravan's thumbprinted statement, the West's totem rubbings and ancient-oath transcript, and the altered pages from the first chapter's file.
+# CHOICE｜What do you do first?
+#### A｜First present the evidence that the domains' documents were tampered with, proving the regent's office deliberately hid the disasters, and only then bring out the ancient oath; steadier and more likely to move the neutrals
+#### B｜Bring out the West's ancient-oath rubbings as the core and back them with testimony from the domains; forceful, but easily dismissed as tribal fabrication
+#### C｜Submit only the evidence of the domains' hardship and for now conceal the core secret that the ancient oath put the cost on the royal house, lowering the nobles' alarm
+#### D｜Argue by word alone, submit no physical evidence, and rely on logic
+# ·
+# CHOICE｜What do you do?
+#### A｜Proceed step by step: show the North and River Bay evidence of hardship first, then lead up to the West's ancient oath
+#### B｜Gamble to break the deadlock: open by presenting the totem rubbings and point straight at the tampering with the first oath
+#### C｜Hold back strategically: speak only of the domains' suffering and for now conceal that the ancient oath placed the cost on the royal house
+#### D｜Offer no evidence of your own; instead petition the chamber to set up an independent review committee rather than ending the investigation outright
+# ·
+旁白：When you finish your defense, low murmurs rise from the noble benches; Caelan's statement is next.
+# SCENE｜The Prince's Stand
+⟦BG|bg_ch07_s3|⟧
+⟦BGM|slow_burn|council_prince_moment⟧
+旁白：Caelan's words are the heaviest weight in the whole debate. He knows what the ancient oath would mean: if the review passes, the cost falls back on the royal house, on him. His stance is not a simple choice of side but a choice among the safety of the people, the royal house's responsibility, and order in the capital.
+旁白：Caelan's branch triggers by the bond you have built. Route A (high trust): Caelan looks at you, his tone calm but firm. Caelan: "I have seen these testimonies and the stone rubbings. The truth should not be sealed away. I support starting an independent review. The royal house ought to face the duty that is its own." Route B (neutral, cautious): Caelan: "The present evidence still has gaps. It is not enough to overturn the old system outright, but ending the investigation in haste would be just as unwise. I propose delaying the vote, widening access to the archives, and continuing to gather evidence." Route C (low trust, or you deliberately withheld evidence): Caelan holds to order: "The domains' suffering deserves relief, but we cannot shake the oath that holds the realm together on the word of tribal oral tradition alone. I agree to suspend this investigation and leave the regent's office to handle the domains' petitions properly."
+# CHOICE｜What do you do?
+#### A｜After Caelan's statement, add a brief remark that builds on his point and strengthens your case
+#### B｜Stay silent and let Caelan's words stand on their own, adding nothing that would spoil it
+#### C｜If Caelan chooses neutral delay, propose a compromise and negotiate the limits of the review with Marek
+#### D｜If Caelan chooses to support suspending the investigation, change course at once and fight to delay the vote, keeping a chance to turn it around
+# ·
+# SCENE｜A Private Deal for Swing Votes
+⟦BG|bg_ch07_s4|⟧
+⟦BGM|slow_burn|council_intermission_low⟧
+旁白：The recess is short. The neutral nobles have their own worries: some fear unrest on the border, some fear higher taxes, and some simply do not want to offend the regent. A few are willing to vote for you, but they ask for concessions in return: a promise that the review will not abolish the oath wholesale, that relief for the domains comes first, that officials who tampered with documents will not be prosecuted.
+旁白：Narration: You may make promises in exchange for votes, or refuse to compromise and hold to your full demands. Compromise raises the chance of passing, but puts shackles on you in the review that follows.
+# CHOICE｜What do you do?
+#### A｜Compromise within limits: promise that this review will only verify how the oath's text changed and not overturn the whole covenant at once, in exchange for swing votes
+#### B｜Refuse the deal: yield nothing, tell the nobles the truth is not a bargaining chip, and accept the risk of losing the vote
+#### C｜Find Elira and ask the commoners' side which concessions are the least it can accept
+#### D｜Give up lobbying, use the recess to find holes in your argument, and prepare a fallback for if the vote fails
+# ·
+旁白：The recess ends and everyone returns to the council chamber; the vote begins
+# SCENE｜The Show of Tokens
+⟦BG|bg_ch07_s5|⟧
+⟦BGM|slow_burn|council_vote_solemn⟧
+旁白：The clerk announces the voting rules in a loud voice and counts the tokens row by row.
+旁白：Three basic outcomes. (1) White tokens in the majority: the motion is rejected, you keep your authority, and the council chamber formally approves a cross-faction independent review panel (you, one neutral noble representative, and Elira each hold a seat; Marek may send an observer, who attends without a vote). (2) Votes nearly even: the chamber rules to postpone the vote and gives you seven days to supply a corroborating official archive document; the vote reopens after seven days. This middle branch does not unlock the review panel, but your authority is not revoked for now. (3) Black tokens in the majority: the motion passes, your investigative authority is frozen, all the evidence you gathered is handed to the regent's office and sealed, and you can no longer pull files in an official capacity.
+# CHOICE｜What do you do?
+#### A｜If the vote succeeds: immediately announce to the council the first lines of inquiry for the review panel
+#### B｜If the votes are even: lock onto your target and, within seven days, go to the palace's forbidden old archive vault to look for corroboration
+#### C｜If the vote fails: stop pursuing official channels and settle a secret plan with Elira for gathering evidence among the people
+#### D｜Whatever the result, withdraw first and do not keep arguing in the council chamber, preserving room to maneuver
+# ·
+旁白：(The speaking mirror lights up: Rowan)
+⟦CALL|%E7%BD%97%E6%B8%A9|On%20the%20eve%20of%20the%20vote%2C%20Rowan%20reaches%20you%20through%20the%20guard%27s%20speaking%20mirror%2C%20his%20tone%20as%20businesslike%20as%20ever.⟧
+罗温：“"Tomorrow's vote. I've changed the gate-watch rotation."”
+罗温：“"Someone will be waiting for you outside the council chamber. My people will follow."”
+罗温：“"If there's anything you want me to arrange ahead of time, say it now."”
+⟦/CALL⟧
+# SCENE｜The Sealed Vault
+⟦CG|cg_ch07|The%20Sealed%20Vault⟧
+⟦BG|bg_ch07_s6|⟧
+⟦BGM|royal_court|palace_vault_secret⟧
+旁白：How you enter the vault is decided by the vote. If the vote succeeded (the review panel is formed): you may apply to enter lawfully on the strength of the review writ; Marek can only send an observer to follow, and cannot block you directly. If the votes were even (the seven-day window): you need a note of permission from Caelan to enter briefly and copy extracts, and you cannot take away the originals. If the vote failed (authority frozen): the iron gate is closed to you for good; breaking in is a grave crime, and you must give up this lead.
+旁白：The vault's files are the last piece that completes the chain of evidence: they record the year the oath's text was first altered, the name of the royal who oversaw it, and the reason for the revision. But the files also hide another secret: the revision of the oath was not simply a selfish decision by the royal house alone; a buried crisis lay behind it.
+# CHOICE｜What do you do?
+#### A｜Submit your application at once, or get the note from Caelan, and enter the vault to read the first-oath files
+#### B｜Hold off on entering the vault; first go back to your lodging, sort all the records of this council session, and work out the list of factions
+#### C｜Tell Elira that the vault files exist and discuss the next arrangements for witness protection
+#### D｜First meet Marek alone and probe his attitude toward the vault files
+# ·
+
+# CHAPTER 8｜The Revision Records in the Vault
+# SCENE｜Behind the Iron Bars
+⟦BG|bg_ch08_s1|⟧
+⟦BGM|library_hush|Quiet%20vault%20archive%20ambience%3B%20the%20echo%20of%20dripping%20water.⟧
+旁白：How you are admitted was settled by the earlier vote.
+旁白：The vault keeper's family has tended these files for generations, and he has seen countless royals and officials come to read the covenant records. He says little, but sees clearly.
+旁白：**Vault Keeper (his voice hoarse and low, his eyes on the stacks of files)**
+旁白："Many people only want to find out who changed the oath, and few are willing to read the whole journal. The prince who wrote the revision was trembling as he put down his pen."
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Count the labels in the wall niches and locate three sets of files: the original first oath, the first revision draft, and the royal's private journal
+# ·
+旁白：(2) Watch the observer's note-taking habits (if present) to judge what he will report to Marek
+旁白：(3) Look for hidden marks in the file margins, the code a copyist left a hundred years ago
+旁白：(4) Chat with the vault keeper first and ask about rumors of the royal who oversaw the revision
+旁白：(5) Go straight to the target files and start reading at once.
+# CHOICE｜What do you do?
+#### A｜1. Take out the royal's private journal first, understand the reviser's own mind, and then compare it with the official revision document
+#### B｜2. Compare the original first oath with the final revised text first, mark each change one by one, and only then turn to the journal
+#### C｜3. If the observer is present, deliberately slow your pace and start with irrelevant old tax files from the domains to lower his guard
+#### D｜4. First ask the vault keeper whether any file was lost or destroyed in past years
+# ·
+# SCENE｜Fragments Pieced Together
+⟦MG|find_letter|Fragments%20Pieced%20Together⟧
+⟦BG|bg_ch08_s2|⟧
+⟦BGM|library_hush|vault_archive_puzzle⟧
+旁白：The original draft of the first revision was not properly preserved; only scattered fragments remain. The complete official announcement says only "to stabilize the covenant, the persons bearing the oath's burden are adjusted," passing over it in a single stroke and erasing all the background. Only scattered sentences in the gaps between the fragments point to a great plague that swept the whole realm.
+旁白：This sub-task asks you to piece the fragments together and read the faded ink, to restore the background of that time: in the plague, many oath-bearers of the first royal house had been worn down and weakened by the Crown's magic. Had they gone on bearing the cost alone, within a generation the royal bloodline would have died out, the Crown's power would have lost its holder, the covenant of the four domains would have collapsed at once, and war would have flared again.
+旁白：(1) Join the fragments in the order of the text, arrange the readable sentences into a coherent record, and mark the blank passages that cannot be restored
+旁白：(2) Gently wipe the writing with the weak alum water the vault keeper provides to bring back ink faded by water stains (risky: wiping too much will destroy the fragment for good)
+旁白：(3) Compare with the official final text and find the warning lines that were cut from the draft
+旁白：(4) Copy only the sentences that support your argument, skipping the passages that describe the royal house's anguish and impossible choices.
+# CHOICE｜What do you do?
+#### A｜1. Restore all the fragments in full, including the royal house's plight of a dying bloodline, without cutting anything deliberately
+#### B｜2. Excerpt only the evidence that "the oath's text was deliberately altered and the cost shifted outward," and hide the plague background
+#### C｜3. Share everything you have pieced together with Caelan, who is with you, and weigh the importance of this information together
+#### D｜4. Pause the piecing, set the fragments aside, and first consult the supporting histories that record the great plague of a hundred years ago
+# ·
+旁白：For the first time you see the whole truth: this was not simple royal greed and plunder but a cruel choice made a century ago, with no perfect option.
+# SCENE｜The Prince's Journal
+⟦BG|bg_ch08_s3|⟧
+⟦BGM|heist|vault_diary_heavy⟧
+旁白：The journal belonged to Prince Leon, who oversaw the revision of the oath. He designed the ritual that shifted the cost with his own hands, and he knew its hazard: the cost could not be cleanly stripped away and would overflow at random, making people in the domains sick and weak. In the journal he wrote his own self-reproach, and left one line of prophecy: "This device can only delay ruin. The cost drifts outward, and one day the calamity will turn back upon the Crown itself."
+旁白：Caelan's branch (triggered if he came with you)
+旁白：Caelan's fingertips brush lightly over the crossed-out lines, his voice very low:
+旁白："He knew this road was dangerous, and he chose it anyway. If it were me, between a bloodline ending and sacrificing ordinary people... I don't even know what I would choose."
+# CHOICE｜What do you do?
+#### A｜1. Copy out the entire journal, including his self-reproach, his prophecy, and his notes on the ritual's hazards, and put all of it into the evidence package
+#### B｜2. Record only the ritual's hazards and the overflow of the cost, and hide Prince Leon's struggle and dilemma
+#### C｜3. Discuss with Caelan: is there now a third option, one that neither destroys the royal house nor sacrifices the people of the domains?
+#### D｜4. Close the journal for now and take a quiet moment to absorb this heavy truth
+# ·
+# SCENE｜The Overflowing Cost
+⟦BG|bg_ch08_s4|⟧
+⟦BGM|secret|vault_secret_whisper⟧
+旁白：The side-chamber records bear out the testimony you gathered in the North and River Bay: for a century the overflow of the cost has never stopped. The mines' unexplained illnesses and the ferry clerk's sudden weakness are all natural side effects of the ritual. Prince Leon's prophecy is coming true: the magic cost that was shifted outward does not vanish into nothing but slowly accumulates. Once it reaches a critical point, it will strike back at the holder of the Crown, the present royal house.
+旁白：Marek knows of the "overflow of the cost," but has always claimed publicly that it is only local plague and work injury, deliberately cutting off any link to the oath magic. His position stems from that choice a century ago: he believes that preserving the royal house and steadying the covenant is the choice with the least loss.
+# CHOICE｜What do you do?
+#### A｜1. Copy the filed records of the overflowing cost and match them one by one with the domains' testimony to form a complete chain of evidence
+#### B｜2. Consider: does Marek know the line of backlash prophecy in Leon's journal? Look for clues in the records
+#### C｜3. If the observer is present, decide whether to hide that this batch of side-chamber filings exists and not show it to him
+#### D｜4. Stop reading and ask the vault keeper whether anyone in history has tried to reverse this revision of the oath
+# ·
+旁白：At last you connect all the clues: the tampering was not the original evil, but it is a hazard that has built up unceasingly for a hundred years.
+# SCENE｜Deadline and Evidence
+⟦BG|bg_ch08_s5|⟧
+⟦BGM|heist|vault_wrap_melancholy⟧
+旁白：You must plan in what form to carry the information out, and also work out how you will tell this story in the public debate to come. You have two narrative routes to choose from.
+旁白：Route One: the narrative centers on injustice. The oath was altered, and innocent common people keep bearing a cost that was never theirs; the ancient oath should be restored. Risk: Marek will hurl the question of the royal bloodline's extinction at you, and you must prepare an answer in advance.
+旁白：Route Two: the narrative centers on crisis. The cost keeps accumulating and the backlash is coming; royal house and domains alike will be destroyed together in the end, and we must find a new balance. Advantage: easier to win over the neutral nobles, but it weakens the commoners' claim to fairness.
+# CHOICE｜What do you do?
+#### A｜1. Settle on the crisis narrative, make the "backlash catastrophe" the core of the debate, and win the neutral nobles first
+#### B｜2. Settle on the fairness narrative, make the "injustice in who bears the cost" the core of the debate, and hold the commoners' claim
+#### C｜3. Keep both lines of argument, adapt on the spot, and shift emphasis according to what Marek says
+#### D｜4. Note down "find a third path" as the goal first; do not rush to give a final plan in the debate, and ask only that an all-domains study be opened
+# ·
+# SCENE｜The Undercurrent Beyond the Vault
+⟦CG|cg_ch08|The%20Undercurrent%20Beyond%20the%20Vault⟧
+⟦BG|bg_ch08_s6|⟧
+⟦BGM|royal_court|palace_corridor_low_tension⟧
+旁白：News spreads far faster than you expected. Marek had foreseen that you would use the journal as your core weapon. He no longer accuses you merely of inciting the domains; at the public hearing in the ninth chapter he plans to lay the century-old dilemma on the table and ask you: are you willing to bear the extinction of the royal bloodline in exchange for so-called fairness?
+旁白：This will be the hardest debate of the story so far. It is no longer a simple matter of who tampered with the documents, but the ultimate collision of morality, order, and survival.
+# CHOICE｜What do you do?
+#### A｜1. Meet Elira at once, brief the commoners' council on the journal's contents, and settle in advance the commoners' side's response
+#### B｜2. Confer with Caelan alone and prepare for Marek's question about the royal house's extinction
+#### C｜3. Go to Rowan and find out how the nobles who will attend the next round of hearings have shifted in their latest positions
+#### D｜4. Contact no one for now; go back to your lodging, review alone, and hone the core bottom line of your defense
+# ·
+
+# CHAPTER 9｜The Crown's Scales
+# SCENE｜The Hearing Platform
+⟦BG|bg_ch09_s1|⟧
+⟦BGM|neon_city|Public%20ambience%20of%20weighty%20trial%3B%20murmurs%20of%20the%20crowd%2C%20distant%20street%20sounds.⟧
+旁白：This is no longer an internal vote in a closed council chamber. The hearing is open to the whole city. Marek has dropped the shallow charge that you incited the domains and means to hurl the century-old impasse straight out, leaving everyone to face its heavy choice.
+旁白：Narration: The witnesses are in place: a North Reach miners' representative, the River Bay caravan steward, and the West's tribal elder, all waiting to be called. In the square, some among the crowd hope for change in the oath, and some dread the collapse of order.
+旁白：Narration: As crown prince, Caelan is the most important anchor of this hearing. What he says will sway the people in the square and the swing nobles directly, but he will not answer for you.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Read the mood of the crowd in the square: gauge how the groups divide among those favoring the old oath, those favoring change, and those watching from the middle
+#### B｜Check on the witnesses, calm the nervous domain witnesses, and settle the order of their testimony
+#### C｜Watch the faces of the royal elders and judge whether they know all of Leon's journal
+#### D｜Settle with Elira beforehand the commoners' bottom line once the witnesses have spoken
+# ·
+# CHOICE｜What do you do?
+#### A｜Rearrange the order of the witnesses: the people's hardships first, then the West's ancient oath, and Leon's journal last
+#### B｜Speak briefly with Caelan first and agree that he may add a statement at the right moment if you fall into a deadlock under questioning
+#### C｜Quietly ask Elira to have the commoners' council step in and steady the crowd in the square if things get out of hand
+#### D｜Make no further arrangements; wait for the clerk to ring the bell and formally open the hearing
+# ·
+# SCENE｜Marek's Question
+⟦BG|bg_ch09_s2|⟧
+⟦BGM|slow_burn|trial_confront_heavy⟧
+马雷克：“"You have all heard the secret he found. A hundred years ago, Prince Leon faced a choice: either the royal house bears the Crown's cost alone, its bloodline ends, the covenant shatters, and the four domains return to endless war; or the cost is shifted, in exchange for a century of peace. Today he tells you that shift was unjust. Then I ask everyone here one question: if the ancient oath is restored and the royal house bears the cost alone, His Highness Caelan will take the first blow, suffer the magic's erosion, and the royal house will wither. Are you willing to trade the lives of the crown prince and the royal house for this 'fairness'?"”
+旁白：The square erupts in a ripple of murmurs. This is the killing blow Marek has prepared for so long. He does not deny that the oath was altered, nor that the people suffer; he lays bare the cruel nature of the choice itself: the price of fairness may be the fall of the throne and the return of war.
+旁白：Narration: It is your turn to answer. You cannot dodge the question; to dodge is to lose the whole hearing.
+旁白：Foundations you may argue from. (1) Admit the dilemma, but point out that the old way is drinking poison to quench thirst: the cost is accumulating its backlash, royal house and domains will perish together in the end, and peace was only ever temporary. (2) Reject the binary: neither keep shifting the cost as it is nor retreat to the ancient oath with the royal house alone bearing it; propose redesigning how the cost is shared. (3) Sympathize with Leon's dilemma of a century ago, but stress that times have changed, and one generation's impossible position must not become a permanent shackle on the people who come after. (4) Face the choice squarely: if it must be one or the other, say frankly which side you believe should bear the cost.
+# CHOICE｜What do you do?
+#### A｜Argue from the backlash crisis: the old way is bound to destroy everyone, and we must find a new road rather than choose between two ruins
+#### B｜Argue from fairness: peace cannot be built on the continued sacrifice of those at the bottom, and the royal house was the one who swore the oath to begin with
+#### C｜Turn to the witnesses, call the West's elder and the North's miners to tell their suffering in the hearing itself, and answer the question with their testimony
+#### D｜Ask to delay your answer and invite Caelan, as an oath-bearer himself, to say first what he wants
+# ·
+旁白：When you finish your answer, the mood in the square will split.
+# SCENE｜Voices From Both Sides of the Scale
+⟦MG|balance_tray|Voices%20From%20Both%20Sides%20of%20the%20Scale⟧
+⟦BG|bg_ch09_s3|⟧
+⟦BGM|slow_burn|testimony_soft_grieving⟧
+旁白：Each testimony adds weight to your argument. But the royal elders will seize on the gaps: tribal oral tradition is not law, the miners' illness cannot be proven wholly to come from the Crown's magic, and rashly altering the oath would directly shake the limits that bind the domains' borders.
+旁白：Caelan's branch (triggered by the bond you have built) Caelan rises, walks to the center of the platform, and speaks, his voice calm and clear: "I am the heir to the Crown. I do not fear the duty that is mine. But neither do I want that duty quietly shifted onto ordinary people who never swore any oath. If there is a third path, I am willing to share in its risk."
+# CHOICE｜What do you do?
+#### A｜When Caelan finishes, seize the moment to put forward the new framework for sharing the oath that you have devised
+#### B｜First answer the royal elders' doubts, using the records you copied in the vault to back the testimony
+#### C｜Reassure the witnesses, telling them their voices have been heard by all and they need not endure further questioning
+#### D｜Bring the testimony phase to a close for now and turn the talk to "how to rebuild the oath," no longer dwelling on blame
+# ·
+# SCENE｜Sketch of the New Oath
+⟦BG|bg_ch09_s4|⟧
+⟦BGM|standoff|council_idea_tense⟧
+旁白：There is no perfect plan. You can design different ways to share the cost, and each has its own flaw and sacrifice.
+旁白：Plan A: the royal house and oath-bearer representatives chosen by the domains share the cost, with representatives rotating so that no single group bears it forever. Risk: the rotating representatives will still be eroded by the magic, and the domains must volunteer their candidates.
+旁白：Plan B: set up a ritual to buffer the cost and weaken the overflow, but the magic's overall power declines and its hold over the borders weakens. Risk: the ability to keep the domains' conflicts in check slips.
+旁白：Plan C: return to the ancient oath, with the royal house bearing the cost alone, while researching secret arts to slow the erosion. Risk: the royal house still wastes away slowly and needs continuing investment in research.
+旁白：Plan D: keep the current oath unchanged, only adding relief and injury compensation. It treats the symptom, not the cause, and merely delays the backlash.
+# CHOICE｜What do you do?
+#### A｜Propose the rotating shared plan: royal house and domain representatives bear the cost together, with rotation rules to protect them
+#### B｜Propose the buffering plan: lower the intensity of the magic's cost and accept that the oath's binding force will weaken
+#### C｜Choose to return to the ancient oath, with the royal house bearing the whole cost, and begin the secret-arts research at once
+#### D｜Offer no fixed plan; ask only for a standing cross-group council to negotiate slowly
+# ·
+旁白：Once you speak your plan, the square, the noble benches, and the witnesses will react in very different ways.
+旁白：(The speaking mirror lights up: Caelan)
+⟦CALL|%E5%87%AF%E5%85%B0|On%20the%20eve%20of%20the%20Crown%27s%20Scales%2C%20Caelan%27s%20mirror%20glows%20on%20your%20desk%20a%20long%20while%20before%20you%20answer.⟧
+凯兰：“"After tomorrow, I may not be able to reach you like this."”
+凯兰：“"I'm not asking you to promise anything."”
+凯兰：“"I just wanted to hear your voice before it all begins."”
+⟦/CALL⟧
+# SCENE｜The Vote and the Hearts of Men
+⟦BG|bg_ch09_s5|⟧
+⟦BGM|slow_burn|trial_vote_solemn⟧
+旁白：The vote has four main branching outcomes. (1) The new sharing plan passes: a majority of nobles accept your vision, and drafting of the New Oath and preparation of the ritual begin; Marek reserves his objections but abides by the result. (2) The votes are deadlocked and no consensus is reached: the hearing reaches no conclusion, a permanent joint council is set up to keep negotiating oath reform, the conflict is shelved for now, and the hidden danger remains. (3) The plan to keep the old oath wins: current rules stay, with only added relief; the backlash countdown keeps running. (4) All proposals for change are rejected outright: your investigation is declared wholly invalid, all evidence is seized, and further discussion of revising the oath is forbidden.
+# CHOICE｜What do you do?
+#### A｜If the plan passes smoothly: announce at once the makeup of the joint drafting committee, drawing in domain, commoner, and noble representatives
+#### B｜If the vote is deadlocked: propose a regular four-party council, to review the cost overflow every season
+#### C｜If the old oath wins: agree with Elira to keep recording the domains' injuries and illnesses through commoner channels, and wait for the next chance
+#### D｜If the plan is rejected wholesale: stop arguing in public, withdraw, and shift your strength into a secret long-term investigation
+# ·
+# SCENE｜A Pact at Dusk
+⟦CG|cg_ch09|A%20Pact%20at%20Dusk⟧
+⟦BG|bg_ch09_s6|⟧
+⟦BGM|slow_burn|sunset_trial_melancholy⟧
+旁白：The hearing draws to a close, but the Crown's story is far from its end. Whatever way the vote went, the rift is now public: the capital, the nobles, the four domains, and the royal house all know the oath has kept a hundred-year secret.
+旁白：Narration: Marek will not concede easily. Even if the vote passes the new plan, he will set obstacles as the ritual is put into place and the text is drafted; if he wins, he will tighten his grip on the archives and on speech, suppressing every discussion of the oath's cost.
+旁白：Narration: Caelan's fate is now bound fast to oath reform. On the road of change, he will become the first royal oath-bearer of the New Oath; on the road of silence, he will watch under the old covenant as the domains' pain keeps accumulating, waiting for the backlash to arrive.
+# CHOICE｜What do you do?
+#### A｜Gather the drafting representatives that night and begin writing the New Oath's text through the night
+#### B｜Meet the West's elder alone and confirm the tribe is willing to cooperate with the new ritual and offer its ancient magical knowledge
+#### C｜Speak with Marek alone to probe his next bottom line and moves
+#### D｜Walk alone with Caelan and tell him honestly your worries and hopes for the future (triggers the romance or friendship branch)
+# ·
+
+# CHAPTER 10｜The Rite of the New Oath
+# SCENE｜The Oath Altar Grounds
+⟦BG|bg_ch10_s1|⟧
+⟦BGM|rooftop_wind|Wind%2C%20and%20the%20faint%20sound%20of%20craftsmen%20tapping%20stone%20in%20the%20distance.⟧
+旁白：Only the path of change leads to the full oath altar rite. On the other branches, this scene is replaced by the council chamber or a commoners' safehouse.
+旁白：Narration: The priest's line has guarded the oath formation for generations, and he knows how perilous it is to remake the bond. The old oath's power has wound itself around the realm for a century; to pull it apart by force and rewrite the rules of sharing could easily set off a surge of magic.
+旁白：Priest: “"The patterns remember every cost that has flowed through them in a hundred years. We are not erasing the oath. We are rewriting the way it is carried. Once the formation is awakened, it cannot easily be turned back."”
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Inspect the carved patterns of the formation, mark the weathered breaks and points prone to imbalance, and have the craftsmen repair them
+#### B｜Meet each oath-bearer representative chosen by the domains in turn, make sure each understands the risk of erosion, and confirm they volunteered
+#### C｜Confirm the guest list: whether to allow Marek's observer to attend and take notes
+#### D｜Check the oath draft for vague clauses that could stir disputes later
+# ·
+# CHOICE｜What do you do?
+#### A｜Verify the formation's safety first, putting the risk check ahead of confirming the text
+#### B｜Speak with each domain's oath-bearer representative alone, tell them once more the consequences of erosion, and give them a chance to withdraw
+#### C｜Agree to let Marek's observer attend, keeping everything transparent so he has less reason to object later
+#### D｜Seal the draft for now and discuss with the priest an emergency plan for ending the rite if the formation surges out of control
+# ·
+# SCENE｜Final Reading of the Text
+⟦BG|bg_ch10_s2|⟧
+⟦BGM|slow_burn|oath_text_review_low⟧
+旁白：The core framework of the rotating shared version: the royal house and a rotating body of domain oath-bearers jointly take on the Crown's cost; an oversight council is established to record overflow illnesses at regular intervals; rotation periods are fixed; and injured oath-bearers receive treatment and compensation across all domains.
+旁白：Every word hides a contest: the length of each rotation, the council's voting rights, the priority in handling disasters when the cost overflows, and the rules for replacing an oath-bearer.
+旁白：The observer's proposed changes are mostly subtle: shortening the royal house's rotation, say, or removing the domain representatives' right to oversee the formation. You may accept, reject, or adjust them as a compromise.
+旁白：Options. (1) Hold to the original consensus: keep oversight, compensation, and rotation rules in full, and reject every change that favors the royal house. Risk: it inflames the regent's faction, and you may be deliberately obstructed afterward. (2) Compromise within limits: adjust the rotation interval slightly in exchange for the regent's side recognizing the council's legitimacy. (3) Add an emergency clause: if the formation runs out of control or the cost erupts, the council has the power to suspend the oath at once. (4) Leave the text untouched, refuse every further change, and put the version approved at the hearing straight into effect.
+# CHOICE｜What do you do?
+#### A｜Hold the line, reject the observer's biased changes, and protect the domain oath-bearers' rights
+#### B｜Make limited concessions, adjusting the rotation interval, in exchange for the regent's faction recognizing the oversight council
+#### C｜Focus on adding crisis clauses, first guarding against a formation surge and a large-scale leak of the cost
+#### D｜Pause the proofreading and ask Caelan where his bottom line lies, as a royal oath-bearer
+# ·
+旁白：Set down the final text; this document will be the legal foundation between the capital and the domains for the next hundred years
+# SCENE｜The Hearts of the Oath-Bearers
+⟦BG|bg_ch10_s3|⟧
+⟦BGM|slow_burn|oath_vow_soft⟧
+旁白："They are not royalty. They never had to carry the Crown's magic. After the hearing, they chose to step forward and take on this duty."
+旁白：Caelan's branch (triggered by a deep bond) Caelan walks into the midst of the oath-bearer representatives, his voice sincere: "I will not ask anyone to carry this weight alone. From this day on, the Crown's cost, I will take on with you. If pain comes, I will not retreat behind order."
+# CHOICE｜What do you do?
+#### A｜Offer a last word of reassurance to all the representatives, and restate that the council will keep watch over their health and safety
+#### B｜Ask about their private worries and add the concerns they raise to the council's agenda
+#### C｜Remind the priest that during the rite the representatives must be protected first, and the royal house can take more of the shock
+#### D｜Return to the center of the formation, sort out the invocation on your own, and prepare for the rite to begin
+# ·
+# SCENE｜The Formation Awakens
+⟦MG|simon_spell|The%20Formation%20Awakens⟧
+⟦BG|bg_ch10_s4|⟧
+⟦BGM|slow_burn|oath_ceremony_rise⟧
+旁白：The magic bonds begin to strip away the old oath and weave a new connection.
+旁白：Three on-the-spot events may occur at random (shaped by the earlier risk checks, formation repairs, and clause settings). (1) Steady: a faint light flows, the patterns run smooth, there is no violent tremor, and the rite advances evenly. (2) Minor instability: part of the formation trembles, a slight sting passes through all the oath-bearers, and the priest must guide the magic back to steadiness. (3) Crisis: the old oath's power resists the remaking, the patterns blaze with a harsh red light, and the cost risks leaking out at once; you must choose immediately: push through to completion, halt the rite in an emergency, or have the royal house alone absorb the shock.
+# CHOICE｜What do you do?
+#### A｜The rite is steady: recite the invocation and carry on with the oath-making
+#### B｜The formation shakes slightly: work with the priest's guidance to steady the bond and reassure the oath-bearer beside you
+#### C｜A crisis breaks: choose to let Caelan and the royal house absorb the shock first, protecting the domain representatives
+#### D｜A crisis breaks: order the priest to trigger the halting formation, postpone the oath-making, and review the safety plan again
+# ·
+旁白：As the tide of magic recedes, this very moment decides whether the new bond has taken hold
+# SCENE｜The Oath Is Spoken
+⟦BG|bg_ch10_s5|⟧
+⟦BGM|the_don|oath_done_solemn⟧
+旁白：Outcomes of the path of change:
+旁白：The rite halts midway in an emergency: the plan is shelved and returns to the long, deadlocked negotiations, with endless contest and no true change (the Unresolved ending). Other earlier branches (silence or iron rule): this scene is replaced by the corresponding story, and no oath is sealed at the altar.
+# CHOICE｜What do you do?
+#### A｜The rite succeeds: read aloud the council's first agenda before all, and promise the four domains that oversight will not fail
+#### B｜The rite is halted: settle with the priest and the elder to reassess the formation in three months and keep refining the plan
+#### C｜The New Oath is made: settle with Elira on stations for recording injuries and illnesses in the domains, and begin tracking the people's welfare at once
+#### D｜After the rite, stay at the altar with Caelan and talk alone, to settle how you will walk on together
+# ·
+# SCENE｜The Long Road Ahead
+⟦CG|cg_ch10|The%20Long%20Road%20Ahead⟧
+⟦BG|bg_ch10_s6|⟧
+⟦BGM|end_credits|epilogue_dusk_soft⟧
+旁白：If the friendship path: you and Caelan become partners in shared rule, supporting each other in the council and bearing the Crown's long duty together. If the romance path: in the afterglow at the altar, you confirm a promise to stay together, and every storm and every long watch to come you will face side by side. If the deadlocked, silent, or iron-rule path: you move toward the matching close, whether long, watchful waiting, or going underground to record in silence and wait for the right time.
+# CHOICE｜What do you do?
+#### A｜That night, hold the council's first session and begin health registration for the first oath-bearers at once
+#### B｜Agree with the West's elder to exchange ancient magical knowledge regularly and keep researching secret arts to lessen the erosion
+#### C｜Meet Marek alone and reach a minimum understanding with him: no sabotaging the oath, no deliberate stirring of unrest
+#### D｜Stay at the altar with Caelan, watch the sun go down in quiet, and speak the last promise that belongs to the two of you (the bond ending is locked in)
+# ·
+
+# CHAPTER 11｜The Crown and the Four Quarters
+# SCENE｜Spring Tidings in the Capital
+⟦BG|bg_ch11_s1|⟧
+⟦BGM|rooftop_wind|Mild%20spring%20ambience%3A%20wind%2C%20and%20the%20slow%20tolling%20of%20the%20distant%20clock%20tower.⟧
+旁白：A year has passed since the New Oath began to work. The cost no longer pours in one direction onto the domains. The oath-bearers rotate monthly, and the council reviews the records each season; erosion still exists, but every person who bears pain is registered, treated, and seen. The quarreling has never stopped: the regent's faction still tugs at the reading of the clauses and the allocation of resources, and inside the domains some people question whether the rotation is fair. The secret is gone, and the struggle has moved into the open.
+旁白：The hearing produced no New Oath. The four-party council meets on schedule, and each season's talks are long and wearying. They count overflow cases, negotiate relief, and debate revisions again and again, but never reach a pact everyone accepts. The rift is public but has not healed. The pain lingers slowly, and change is a long way off.
+旁白：The old oath stands as it was, with only added compensation. The capital no longer openly discusses the source of the oath. The commoners' record network you run with Elira works on in silence, noting one by one the illnesses of the nameless. News can pass only privately between the domains, waiting for a moment that may never come.
+旁白：All discussion of revising the oath is banned. The vault files are locked again and all related testimony is sealed. You move into the shadows and, relying on a few trusted couriers, carry records among the four domains, keeping the truth carefully safe for whoever in the future is willing to take it up again.
+# CHOICE｜Investigate the scene: where do you look first?
+#### A｜Read through letters from the domains, pick one, and write your reply
+#### B｜Look over the oath-bearers' health ledger and mark who should get healers first
+#### C｜Leaf through a copy of Prince Leon's old journal and write one line of commentary set against the present
+#### D｜Sit quietly at the window, handle no documents, and recall in silence every choice made along the way
+# ·
+# CHOICE｜What do you do?
+#### A｜Reply to the northern village that a team of healers will arrive within a fortnight
+#### B｜Annotate the council minutes and propose adjusting the rotation length first at the next session
+#### C｜Give a copy of a key testimony to a courier to be carried secretly to the tribes of the West
+#### D｜Close all the files and invite Caelan to climb to the tower terrace with you
+# ·
+# SCENE｜Where the Old Faces Went
+⟦BG|bg_ch11_s2|⟧
+⟦BGM|end_credits|epilogue_farewell_soft⟧
+旁白：Marek did not leave the capital.
+旁白：Shared-rule path: he remains regent, keeps his seat, and goes on offering cautious, conservative opinions in the council. He does not approve of the New Oath, but he abides by the rules the vote set and does not secretly undermine the bond. He understands now that order cannot be kept by burying the truth.
+旁白：Other paths: he keeps a firm grip on the capital's power, controlling the limits of the archives and of speech, and maintains the order he judges to cost least.
+旁白：Elira has put down roots among the domains and the common people. Relief stations keep spreading, and the people's voices have a steady channel to be heard. She does not seek perfection in one stroke, only that no one who suffers should vanish unheard.
+旁白：The old keeper still watches the vault below. The files lie quiet between the damp stone walls, waiting for later generations to read them and reread Prince Leon's dilemma.
+旁白：The priest and the formation craftsmen keep watch over the Crown's bond. The magic will always risk a surge; they are its long-term sentinels.
+# CHOICE｜What do you do?
+#### A｜Find Marek and have a brief, calm conversation with him, without hostility
+#### B｜Send word to Elira to confirm the date of the next survey of illness and injury among the people
+#### C｜Look out over the fields side by side with Caelan, and answer what he said just now (bond branch locked in)
+#### D｜Meet no one; stay alone on the terrace and take in every ending
+# ·
+# SCENE｜The Page Left for Later Ages
+⟦BG|bg_ch11_s3|⟧
+⟦BGM|end_credits|epilogue_writing_solemn⟧
+旁白：Special interaction (unlocked when the rite in the final rite scene went smoothly and the bond reached the needed level): you and Caelan take up the pen together and write a journal. It tells no heroic deeds, only the whole truth: the plague of a hundred years ago, Prince Leon's choice, the overflow of the cost, the question at the hearing, the tremor of the altar rite, and the limits and hidden dangers of the New Oath. You want those who come after to know that the scales always sway, and there is no easy answer.
+旁白：Not unlocked: you write this journal alone and file it in the council's archive or a secret vault; depending on the path, that decides whether ordinary people can ever read it.
+# CHOICE｜What do you do?
+#### A｜Write the journal with "sharing" at its core, recording the New Oath's responsibilities and risks
+#### B｜Write the journal with "warning" at its core, recording the prophecy of backlash and urging later ages never to take the magic's cost lightly
+#### C｜Record the whole story objectively, with no personal judgment, and leave the verdict to the future
+#### D｜Lay down the pen and write no journal, leaving the story in the memories of those who lived it
+# ·
+旁白：The parchment is rolled and sealed with wax
+# SCENE｜Epilogue: The Scales Remain
+⟦VIDEO|vid_final|⟧
+⟦CG|cg_ch11|Epilogue%3A%20The%20Scales%20Remain⟧
+⟦BG|bg_ch11_s4|⟧
+⟦BGM|end_credits|Music%20of%20the%20final%20theme%2C%20fading%20out.⟧
+旁白：The story ends here.
+旁白：If this is the ending of the New Oath and shared rule: Peace will not be flawless, and pain will not vanish entirely. But the Crown no longer hides its cost in the shadows. The royal house, the oath-bearers of the four domains, and the commoners' representatives watch over the bond together, and every tremor is borne by all. This is no fairy-tale redemption but a vigil that lasts a lifetime and spans generations.
+旁白：The Crown hangs above the four quarters. The scales sway forever. The choosing never ends.
+# CHOICE｜What do you do?
+#### A｜Accept the ending as it stands, close the story, and return to the title screen
+#### B｜Save your progress, keep this ending, and begin a second playthrough to try other branches
+#### C｜Leaf through the character index and look back on everyone you met along the way
+#### D｜Write a closing line of your own
+# ·

@@ -7,7 +7,7 @@
 // DELETE ?id=          remove my work
 const L = require('./_lib');
 const MAXPACK = 1500 * 1024;
-const pub = r => ({ id: r.id, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at });
+const pub = r => ({ id: r.id, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined });
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db();
@@ -26,7 +26,7 @@ module.exports = L.wrap(async (req, res) => {
     if (q.orient && q.orient !== 'all') { args.push(String(q.orient)); where += ` AND (orient=$${args.length} OR orient='all')`; }
     if (q.before) { args.push(new Date(Number(q.before)).toISOString()); where += ` AND created_at < $${args.length}`; }
     if (q.feed === 'featured') where += ' AND featured';
-    const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
+    const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
     return L.send(res, 200, { works: r.map(pub) });
   }
   const u = await L.needActive(req, res); if (!u) return;

@@ -395,7 +395,9 @@ module.exports = L.wrap(async (req, res) => {
       const md = '# ' + s.title + '\n\n' + ch.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n');
       const cfg = s.config || {};
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
-      const pack = { script: md, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '' }, official: true, rules: b.rulesVersion || null };
+      let mdEn = null;
+      if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
+      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null }, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,

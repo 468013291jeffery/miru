@@ -13474,7 +13474,7 @@ imParse = function (text) {
       if (m.k === "PHOTO") { out.push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
       if (m.k === "MG") { out.push(["sys", "mg", { id: a[0] }]); continue; }
       if (m.k === "FREE" && nested) continue;
-      if (m.k === "FREE") { const ex = a.slice(1).filter(Boolean); out.push({ choice: { q: a[0] || "", opts: (ex.length ? ex : ["……"]).slice(0, 3).map(t => ({ t, then: [] })) }, free94: 1 }); continue; }
+      if (m.k === "FREE") { const ex = a.slice(1).filter(Boolean); out.push({ choice: { q: "\u2063" + (a[0] || ""), opts: (ex.length ? ex : ["……"]).slice(0, 3).map(t => ({ t, then: [] })) }, free94: 1 }); continue; }
     }
     return out;
   };
@@ -13546,6 +13546,8 @@ window.addEventListener("click", e => {
   const x = e.target.closest("[data-stopline]"); if (!x) return; const th = S.threads[curT];
   if (!th || !th.pk || !th.pk.stop || th.pk.stop[1] !== "line") return; const d = th.pk.stop[2], o = d.opts[+x.dataset.stopline];
   if (!o || (o.then && o.then.length) || typeof liveOn !== "function" || !liveOn()) return;
+  const isFree = /^\u2063/.test(String(Lz(d.hint) || "")), nx = (th.pk.q || [])[1];
+  if (!isFree && Array.isArray(nx) && nx[0] !== "n" && nx[0] !== "sys" && (nx[1] === "say" || nx[1] === "act")) return; /* the script answers this line itself */
   if (typeof aiGate === "function" && !aiGate()) return;
   e.stopImmediatePropagation(); e.preventDefault();
   const txt = Lz(o.t); appendMsg(th, { who: "me", k: o.k || "say", txt, at: Date.now() }); th.rounds++; try { pkSet(th, o.set); } catch (_) {}
@@ -13553,6 +13555,64 @@ window.addEventListener("click", e => {
 }, true);
 (function () { const st = document.createElement("style"); st.textContent = `.cg94{position:absolute;inset:0;z-index:60;background:#000d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0;transition:opacity .4s;cursor:pointer;padding:18px}
 .cg94.on{opacity:1}.cg94 img,.cg94 video{max-width:100%;max-height:72%;border-radius:14px;box-shadow:0 10px 40px #0009}.cg94 p{color:#F6E7D6;font-size:14px;line-height:1.55;text-align:center;max-width:420px;margin:0}.cg94 small{color:#fff8;font-size:11px}`; document.head.appendChild(st); })();
+/* second-person stories: "your turn" without an empty "you're …" */
+(function () { const _t94 = t; t = function (k, o) { if (k === "st.yourTurn" && o && !o.n) return CL() === "zh" ? "轮到你了" : "Your turn"; return _t94.apply(this, arguments); }; })();
+/* ================= English edition: pack.script_en is built the same way and merged in as the "en" side =================
+   Same structure line for line, so chapter i / beat j match. Character names switch with the app language. */
+function off94Names() { try { const zh = CL() === "zh"; Object.values(S.mine.chars || {}).forEach(c => { if (c && c.n94) c.n = (zh ? c.n94.zh : c.n94.en) || c.n94.zh; }); } catch (_) {} }
+let OFF94_LANG = null; setInterval(() => { try { const l = CL(); if (l !== OFF94_LANG) { OFF94_LANG = l; off94Names(); } } catch (_) {} }, 1500);
+function off94MergeEn(wid, P) {
+  const wz = wd(wid); if (!wz || !P || !P.script_en) return;
+  const lang0 = S.lang; let tmp = null;
+  try {
+    S.lang = "en";
+    const docE = imParse(P.script_en); if (!docE.chapters.length) return;
+    tmp = imBuild(docE, (P.meta || {}).as || docE.pov); const we = wd(tmp && (tmp.wid || tmp)); if (!we) return;
+    /* temp ids → real ids, matched by the speaker key (same Chinese key in both scripts) */
+    const key = id => { const c = ch(id); return c && c.n94 ? c.n94.zh : c && c.n; };
+    const zid = {}; wz.cast.forEach(id => { zid[key(id)] = id; });
+    let js = JSON.stringify(we.pack.chapters);
+    we.cast.forEach(id => { const z = zid[key(id)]; if (z) js = js.split('"' + id + '"').join('"' + z + '"'); });
+    const ce = JSON.parse(js);
+    if (ce.length === wz.pack.chapters.length) wz.pack.chapters.forEach((c, i) => {
+      const e = ce[i]; c.beats.en = e.beats.zh; ["t", "goal", "ask", "place"].forEach(k => { if (c[k] && e[k]) c[k].en = e[k].zh || e[k].en; });
+      (c.choices || []).forEach((o, j) => { const oe = (e.choices || [])[j]; if (!oe) return; o.t.en = oe.t.zh || oe.t.en; if (o.then && oe.then) o.then.en = oe.then.zh; if (o.mem && oe.mem) o.mem.en = oe.mem.zh || oe.mem.en; });
+    });
+    /* names, roles, bios in English */
+    (docE.chars94 || []).forEach(a => { const id = zid[a[0]]; const c = id && S.mine.chars[id]; if (!c) return;
+      c.n94 = { zh: a[0], en: a[6] || a[0] }; if (a[4]) c.role = { zh: Lz(c.role) || "", en: a[4] }; if (a[5]) { c.looks = { zh: (c.looks && c.looks.zh) || "", en: a[5] }; c.vibe = { zh: (c.vibe && c.vibe.zh) || "", en: a[5].slice(0, 80) }; } });
+    const m = (P.meta || {}).en || {};
+    const bi = (o, v) => ({ zh: (o && (o.zh || o.en)) || "", en: v || (o && o.en) || "" });
+    if (m.title) wz.title = bi(wz.title, m.title); if (m.hook) wz.hook = bi(wz.hook, m.hook); if (m.premise) wz.premise = bi(wz.premise, m.premise); if (m.you) wz.you = bi(wz.you, m.you);
+    wz.en94 = 1;
+  } catch (e) { try { console.warn("[off94 en]", e); } catch (_) {} }
+  finally {
+    S.lang = lang0;
+    try { if (tmp) { const we = wd(tmp.wid || tmp); if (we) { (we.cast || []).forEach(id => { delete S.mine.chars[id]; delete S.art[id]; }); delete S.mine.worlds[we.id]; } S.works = (S.works || []).filter(x => x.id !== (tmp.wid || tmp)); } } catch (_) {}
+    off94Names(); save();
+  }
+}
+/* grab the play response so the English script can be merged after the Chinese build */
+const _capi94 = capi;
+capi = async function (path, o) {
+  const r = await _capi94.apply(this, arguments);
+  try {
+    if (typeof path === "string" && /^\/works/.test(path) && r && r.j) {
+      const loc = w => { if (w && w.en && CL() !== "zh") { if (w.en.title) w.title = w.en.title; if (w.en.hook) w.hook = w.en.hook; } };
+      (r.j.works || []).forEach(loc);
+      if (/play=1/.test(path)) { const m = /id=([^&]+)/.exec(path); if (m) (OFF94.play = OFF94.play || {})[decodeURIComponent(m[1])] = r; }
+    }
+  } catch (_) {}
+  return r;
+};
+const _installWork94en = installWork;
+installWork = async function (id) {
+  const wid = await _installWork94en.apply(this, arguments);
+  try { const r = (OFF94.play || {})[id], P = r && r.j && r.j.pack, w = wid && wd(wid);
+    if (P && P.script_en && w && !w.en94) { OFF94.cur = { id }; try { await off94Assets(id); off94MergeEn(wid, P); } finally { OFF94.cur = null; } }
+    if (OFF94.play) delete OFF94.play[id]; } catch (_) {}
+  return wid;
+};
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
