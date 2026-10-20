@@ -13507,8 +13507,8 @@ imBuild = function (doc, as) {
       if (!Array.isArray(b)) return b;
       if (b[1] === "call" && b[2] && b[2].who94) { const cid = byName[b[2].who94] || main; return [cid, "call", { cid, hint: b[2].hint, lines: (b[2].lines || []).map(([n, t]) => [byName[n] || cid, t]) }]; }
       if (b[0] === "sys" && b[1] === "photo94") { const d = b[2]; return [main, "photo", { cap: { zh: d.cap, en: d.cap }, prompt: d.cap + "，电影剧照，成年人，柔和光线", t: d.t }]; }
-      if (b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) { const u = A[b[2].slot]; return u ? ["sys", b[1], Object.assign({}, b[2], { src: u })] : null; }
-      if (b[0] === "sys" && b[1] === "scene" && b[2] && b[2].bg94) { const u = A[b[2].bg94] || A["bg_" + b[2].place]; if (u) { const k = "off94:" + key + ":" + b[2].bg94; (window.SCENE_FILES = window.SCENE_FILES || {})[k] = u; b[2].img = k; } return b; }
+      if (b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) { const u = A[b[2].slot]; return ["sys", b[1], Object.assign({}, b[2], u ? { src: u } : {})]; }
+      if (b[0] === "sys" && b[1] === "scene" && b[2] && b[2].bg94) { const u = A[b[2].bg94]; const k = "off94:" + key + ":" + b[2].bg94; b[2].img = k; if (u) { (window.SCENE_FILES = window.SCENE_FILES || {})[k] = u; b[2].src94 = u; } return b; }
       if (b[0] === "sys" && b[1] === "if" && b[2]) { b[2].then = fix(b[2].then); return b; }
       if (b[1] === "line" && b[2] && b[2].opts) b[2].opts.forEach(o => { o.then = fix(o.then); });
       return b;
@@ -13524,17 +13524,29 @@ const _imBuild94b = imBuild; imBuild = function () { const r = _imBuild94b.apply
 setTimeout(off94Rereg, 0);
 /* install: know which work we're building and fetch its asset list first */
 const _installWork94 = installWork;
-installWork = async function (id) { OFF94.cur = { id }; try { await off94Assets(id); } catch (_) {} try { return await _installWork94.apply(this, arguments); } finally { OFF94.cur = null; } };
+installWork = async function (id) {
+  try { const h = S.off76 && S.off76[id]; if (h && !h.v94) { h.ver = -1; } } catch (_) {} OFF94.cur = { id }; try { await off94Assets(id); } catch (_) {} try { return await _installWork94.apply(this, arguments); } finally { OFF94.cur = null; } };
+/* ---- runtime: pictures / films that were added after the story was installed ---- */
+async function off94Ensure(w) {
+  if (!w || !w.official76 || !w.community) return {}; const A = await off94Assets(w.community); const SF = (window.SCENE_FILES = window.SCENE_FILES || {});
+  (w.pack.chapters || []).forEach(c => ["zh", "en"].forEach(l => (c.beats[l] || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
+  w.cast.forEach(id => { const c = ch(id); const nm = c && (c.n94 ? c.n94.zh : c.n); if (nm && A["char_" + nm]) S.art[id] = A["char_" + nm]; });
+  if (A.cover) w.cover = A.cover; return A;
+}
+const _packStart94 = packStart;
+packStart = function (wid) { const w = wd(wid), args = arguments, self = this; if (w && w.official76) { off94Ensure(w).then(() => _packStart94.apply(self, args), () => _packStart94.apply(self, args)); return; } return _packStart94.apply(this, arguments); };
+setTimeout(() => { try { Object.values(S.mine.worlds || {}).forEach(w => { if (w && w.official76) off94Ensure(w); }); } catch (_) {} }, 1500);
 /* ---- runtime: CG / film moments ---- */
 function off94Show(d, vid) {
   const host = (typeof fxLayer === "function" ? fxLayer() : null) || $("#s-chat") || document.body; const o = document.createElement("div"); o.className = "cg94";
-  o.innerHTML = (vid ? '<video src="' + esc(d.src) + '" autoplay playsinline muted loop></video>' : '<img src="' + esc(d.src) + '" alt="">') + (d.cap ? '<p>' + esc(d.cap) + '</p>' : '') + '<small>' + (CL() === "zh" ? "点一下继续" : "Tap to continue") + '</small>';
-  host.appendChild(o); requestAnimationFrame(() => o.classList.add("on")); const bye = () => { o.classList.remove("on"); setTimeout(() => o.remove(), 400); }; o.addEventListener("click", bye); setTimeout(bye, vid ? 9000 : 4200);
+  o.innerHTML = (vid ? '<video src="' + esc(d.src) + '" autoplay playsinline muted></video>' : '<img src="' + esc(d.src) + '" alt="">') + (d.cap ? '<p>' + esc(d.cap) + '</p>' : '') + '<small>' + (CL() === "zh" ? "点一下继续" : "Tap to continue") + '</small>';
+  host.appendChild(o); requestAnimationFrame(() => o.classList.add("on")); const bye = () => { o.classList.remove("on"); setTimeout(() => o.remove(), 400); }; o.addEventListener("click", bye);
+  if (vid) { const v = o.querySelector("video"); try { v.muted = false; v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); } catch (_) {} v.addEventListener("ended", () => setTimeout(bye, 400)); setTimeout(bye, 20000); } else setTimeout(bye, 4200);
 }
 const _pkDir94 = pkDirective;
 pkDirective = function (th, b) {
   if (Array.isArray(b) && b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) {
-    th.pk.q.shift(); const d = b[2] || {};
+    th.pk.q.shift(); const d0 = b[2] || {}, w = wd(th.wid), A = (w && OFF94.assets[w.community]) || {}, d = Object.assign({}, d0, { src: d0.src || A[d0.slot] });
     if (d.src && !PKSKIP[th.id]) { if (curT === th.id) off94Show(d, b[1] === "vid94");
       if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: d.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
@@ -13608,6 +13620,7 @@ capi = async function (path, o) {
 const _installWork94en = installWork;
 installWork = async function (id) {
   const wid = await _installWork94en.apply(this, arguments);
+  try { if (S.off76 && S.off76[id]) { S.off76[id].v94 = 1; save(); } } catch (_) {}
   try { const r = (OFF94.play || {})[id], P = r && r.j && r.j.pack, w = wid && wd(wid);
     if (P && P.script_en && w && !w.en94) { OFF94.cur = { id }; try { await off94Assets(id); off94MergeEn(wid, P); } finally { OFF94.cur = null; } }
     if (OFF94.play) delete OFF94.play[id]; } catch (_) {}
