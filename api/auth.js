@@ -45,7 +45,7 @@ module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db(); const q = req.query || {};
   if (req.method === 'GET') {
-    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), sms: L.hasSMS(), firebase: L.firebaseConfig(), mail: L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
+    if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), sms: L.hasSMS(), firebase: L.firebaseConfig(), mail: L.hasBrevoMail() ? 'brevo' : L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
     const u = await L.needActive(req, res); if (!u) return;
     const r = await sql('SELECT * FROM users WHERE id=$1', [u.uid]);
     return L.send(res, 200, { user: pubUser(r[0]) });

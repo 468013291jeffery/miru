@@ -279,7 +279,15 @@ async function audit(sql, a, action, kind, id, detail, req) {
    Resend still works as a fallback (RESEND_API_KEY + MAIL_FROM). */
 const sesKey = () => process.env.SES_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID, sesSecret = () => process.env.SES_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY;
 function hasSES() { return !!(sesKey() && sesSecret() && process.env.MAIL_FROM); }
-function hasMail() { return hasSES() || !!(process.env.RESEND_API_KEY && process.env.MAIL_FROM); }
+/* Brevo (BREVO_API_KEY + a sender verified in Brevo: MAIL_FROM or BREVO_SENDER) is tried first when set — no sandbox. */
+function hasBrevoMail() { return !!(process.env.BREVO_API_KEY && (process.env.BREVO_SENDER || process.env.MAIL_FROM)); }
+function hasMail() { return hasBrevoMail() || hasSES() || !!(process.env.RESEND_API_KEY && process.env.MAIL_FROM); }
+function parseFrom(f) { const m = /^\s*(.*?)\s*<([^>]+)>\s*$/.exec(String(f || '')); return m ? { name: m[1].replace(/^"|"$/g, '') || 'MIRU', email: m[2] } : { name: 'MIRU', email: String(f || '').trim() }; }
+async function sendBrevoMail(to, subject, html, text) {
+  const r = await fetch('https://api.brevo.com/v3/smtp/email', { method: 'POST', headers: { 'api-key': process.env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify({ sender: parseFrom(process.env.BREVO_SENDER || process.env.MAIL_FROM), to: [{ email: to }], subject, htmlContent: html, textContent: text || subject, tags: ['miru-code'] }) });
+  const t = await r.text(); MAIL_LAST = 'brevo ' + r.status + ' ' + t.slice(0, 300); return r.ok;
+}
 function sigv4(method, host, path, region, service, body, key, secret, extra, ctype) {
   const now = new Date(), amz = now.toISOString().replace(/[:-]|\.\d{3}/g, ''), day = amz.slice(0, 8);
   const H = (d, enc) => crypto.createHash('sha256').update(d, 'utf8').digest(enc || 'hex'), M = (k, d) => crypto.createHmac('sha256', k).update(d, 'utf8').digest();
@@ -323,9 +331,17 @@ async function verifyFirebase(idToken) {
    toll-free number (+1833…) or its ARN / phone-number id; SMS_REGION (default AWS_REGION / us-east-1).
    Optional SMS_CONFIG_SET. Until a number is registered, AWS only delivers to verified destination numbers (sandbox). */
 let SMS_LAST = null;
-function hasSMS() { return !!(sesKey() && sesSecret() && process.env.SMS_ORIGINATION); }
+/* Brevo SMS (BREVO_API_KEY + BREVO_SMS_SENDER, ≤11 letters, e.g. MIRU). US/Canada numbers need Brevo toll-free registration first. */
+function hasBrevoSMS() { return !!(process.env.BREVO_API_KEY && process.env.BREVO_SMS_SENDER); }
+function hasSMS() { return hasBrevoSMS() || !!(sesKey() && sesSecret() && process.env.SMS_ORIGINATION); }
+async function sendBrevoSMS(to, text) {
+  const r = await fetch('https://api.brevo.com/v3/transactionalSMS/send', { method: 'POST', headers: { 'api-key': process.env.BREVO_API_KEY, 'content-type': 'application/json', accept: 'application/json' },
+    body: JSON.stringify({ sender: String(process.env.BREVO_SMS_SENDER).slice(0, 11), recipient: String(to).replace(/^\+/, ''), content: String(text).replace(/\s*Reply STOP to opt out\.?/i, ''), type: 'transactional', tag: 'miru-code' }) });
+  const t = await r.text(); SMS_LAST = 'brevo ' + r.status + ' ' + t.slice(0, 300); return r.ok;
+}
 async function sendSMS(to, text) {
   if (!hasSMS()) return false;
+  if (hasBrevoSMS()) { try { if (await sendBrevoSMS(to, text)) return true; } catch (e) { SMS_LAST = 'brevo ' + String(e.message || e).slice(0, 200); } if (!(sesKey() && process.env.SMS_ORIGINATION)) return false; }
   const region = process.env.SMS_REGION || process.env.AWS_REGION || 'us-east-1', host = 'sms-voice.' + region + '.amazonaws.com';
   const body = JSON.stringify(Object.assign({ DestinationPhoneNumber: to, MessageBody: text, MessageType: 'TRANSACTIONAL', OriginationIdentity: process.env.SMS_ORIGINATION },
     process.env.SMS_CONFIG_SET ? { ConfigurationSetName: process.env.SMS_CONFIG_SET } : {}));
@@ -345,6 +361,7 @@ async function sendSES(to, subject, html, text) {
   MAIL_LAST = 'ses ok'; return true;
 }
 async function sendMail(to, subject, html, text) {
+  if (hasBrevoMail()) { try { if (await sendBrevoMail(to, subject, html, text)) return true; } catch (e) { MAIL_LAST = 'brevo ' + String(e.message || e).slice(0, 200); } }
   if (hasSES()) { try { if (await sendSES(to, subject, html, text)) return true; } catch (e) { MAIL_LAST = 'ses ' + String(e.message || e).slice(0, 200); } }
   if (!(process.env.RESEND_API_KEY && process.env.MAIL_FROM)) return false;
   const r = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + process.env.RESEND_API_KEY }, body: JSON.stringify({ from: process.env.MAIL_FROM, to: [to], subject, html }) });
@@ -381,4 +398,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
