@@ -13429,6 +13429,131 @@ const _vcHint93=vcHint;vcHint=function(){_vcHint93();if(call&&call.db&&call.db.r
 const _endCall93=endCall;endCall=function(){try{dbBye()}catch(_){}return _endCall93.apply(this,arguments)};
 (function(){const st=document.createElement("style");st.textContent=`.vc93u{width:100%;text-align:center;opacity:.6;font-size:12.5px;margin:0 0 4px;color:#F6D3AE;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}`;document.head.appendChild(st)})();
 
+/* ================= v5.7 · OFFICIAL SCRIPTS, FULLY DRESSED =================
+   Official scripts can carry ⟦…⟧ directives (one per line, parts URI-encoded) on top of the MIRU standard format:
+     ⟦CHAR|name|g|age|voice|role|bio⟧   cast sheet (gender → TTS voice, age, role, bio)
+     ⟦BGM|cue|tag⟧ ⟦TIME|t⟧ ⟦BG|slot|place⟧   score cue · scene time · scene background slot
+     ⟦CG|slot|caption⟧ ⟦VIDEO|slot|caption⟧ art / film for this moment (shown when the asset exists)
+     ⟦PHOTO|title|caption⟧              a "photo of this moment" stop (AI still, 💎)
+     ⟦MG|game|what⟧                     a mini-game from the 100-game library
+     ⟦FREE|question|ex1|ex2…⟧           your turn — tap a suggestion or say anything; he answers live (LLM)
+     ⟦CALL|who|situation⟧ lines ⟦/CALL⟧ he calls you: a real voice call (Doubao / Qwen), the lines are only his intent
+   Assets live at art/official/<work>/… and are listed in art/official/<work>.json → {slot: url}; missing ones are skipped,
+   so pictures and films can be added later without republishing the script.
+   Also: picking a written option whose script has nothing after it gets a live reply in character (real LLM chat). */
+const OFF94 = { cur: null, assets: {} };
+const dec94 = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
+function mk94(txt) { const m = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/.exec(String(txt || "").trim()); if (!m) return null; return { k: m[1], a: m[2] ? m[2].slice(1).split("|").map(dec94) : [] }; }
+async function off94Assets(id) {
+  if (OFF94.assets[id]) return OFF94.assets[id];
+  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) map = await r.json(); } catch (_) {}
+  OFF94.assets[id] = map || {}; return OFF94.assets[id];
+}
+/* ---- parse: lift directives out of the narration ---- */
+const _imParse94 = imParse;
+imParse = function (text) {
+  const chars = [];
+  text = String(text || "").split("\n").filter(l => { const m = mk94(l); if (m && m.k === "CHAR") { chars.push(m.a); return false; } return true; }).join("\n");
+  const doc = _imParse94.call(this, text);
+  doc.chars94 = chars;
+  const walk = (arr, nested) => {
+    const out = []; let call = null;
+    for (let i = 0; i < (arr || []).length; i++) {
+      const b = arr[i];
+      if (b && b.choice) { b.choice.opts.forEach(o => { o.then = walk(o.then, 1); }); out.push(b); continue; }
+      if (b && b.variant) { b.variant.then = walk(b.variant.then, 1); out.push(b); continue; }
+      const m = Array.isArray(b) && b[0] === "n" && mk94(b[2]);
+      if (call) { if (m && m.k === "/CALL") { out.push(["@" + call.who, "call", { who94: call.who, lines: call.lines, hint: call.hint }]); call = null; continue; }
+        if (Array.isArray(b) && b[0][0] === "@" && b[0] !== "@pov") call.lines.push([b[0].slice(1), b[2]]); continue; }
+      if (!m) { out.push(b); continue; }
+      const a = m.a;
+      if (m.k === "CALL") { call = { who: a[0], hint: a[1] || "", lines: [] }; continue; }
+      if (m.k === "BGM") { out.push(["sys", "bgm", { m: a[0] }]); continue; }
+      if (m.k === "TIME" || m.k === "BG") { for (let j = out.length - 1; j >= 0; j--) { const s = out[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
+      if (m.k === "CG" || m.k === "VIDEO") { out.push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
+      if (m.k === "PHOTO") { out.push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
+      if (m.k === "MG") { out.push(["sys", "mg", { id: a[0] }]); continue; }
+      if (m.k === "FREE" && nested) continue;
+      if (m.k === "FREE") { const ex = a.slice(1).filter(Boolean); out.push({ choice: { q: a[0] || "", opts: (ex.length ? ex : ["……"]).slice(0, 3).map(t => ({ t, then: [] })) }, free94: 1 }); continue; }
+    }
+    return out;
+  };
+  (doc.chapters || []).forEach(c => {
+    c.items = walk(c.items);
+    /* a chapter-opening music cue goes after the first scene card */
+    const fi = c.items.findIndex(y => Array.isArray(y) && y[0] === "sys" && y[1] === "scene");
+    if (fi > 0 && c.items.slice(0, fi).every(y => Array.isArray(y) && y[0] === "sys")) { const sc = c.items.splice(fi, 1)[0]; c.items.unshift(sc); }
+    /* a trailing "your turn" window must not become the chapter's ending decision */
+    for (let j = c.items.length - 1; j >= 0; j--) { const y = c.items[j]; if (y && y.choice && y.free94) { c.items.push(["n", "act", "……"]); break; } if (y && y.choice) break; if (Array.isArray(y) && y[0] !== "sys") break; }
+  });
+  /* cast: everyone the sheet names comes first, in order */
+  if (chars.length) { const names = chars.map(a => a[0]); doc.cast = names.filter(n => doc.sp[n]).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)).slice(0, 9); }
+  return doc;
+};
+/* ---- build: names → ids, asset slots → urls, cast sheet → characters ---- */
+const _imBuild94 = imBuild;
+imBuild = function (doc, as) {
+  const r = _imBuild94.apply(this, arguments);
+  try {
+    const wid = r && (r.wid || r), w = wd(wid); if (!w) return r;
+    const A = (OFF94.cur && OFF94.assets[OFF94.cur.id]) || {}, key = OFF94.cur ? OFF94.cur.id : wid;
+    const byName = {}; w.cast.forEach(id => { const c = ch(id); if (c) byName[c.n] = id; });
+    (doc.chars94 || []).forEach(a => { const id = byName[a[0]]; if (!id) return; const c = S.mine.chars[id]; if (!c) return;
+      c.g = a[1] === "f" ? "f" : "m"; if (+a[2]) c.age = +a[2]; if (/^[mf]\d$/.test(a[3] || "")) c.voiceId = a[3];
+      if (a[4]) c.role = { zh: a[4], en: a[4] }; if (a[5]) { c.vibe = { zh: a[5].slice(0, 60), en: a[5].slice(0, 60) }; c.looks = { zh: a[5], en: a[5] }; }
+      if (A["char_" + a[0]]) S.art[id] = A["char_" + a[0]]; });
+    const main = w.cast[0];
+    const fix = arr => (arr || []).map(b => {
+      if (!Array.isArray(b)) return b;
+      if (b[1] === "call" && b[2] && b[2].who94) { const cid = byName[b[2].who94] || main; return [cid, "call", { cid, hint: b[2].hint, lines: (b[2].lines || []).map(([n, t]) => [byName[n] || cid, t]) }]; }
+      if (b[0] === "sys" && b[1] === "photo94") { const d = b[2]; return [main, "photo", { cap: { zh: d.cap, en: d.cap }, prompt: d.cap + "，电影剧照，成年人，柔和光线", t: d.t }]; }
+      if (b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) { const u = A[b[2].slot]; return u ? ["sys", b[1], Object.assign({}, b[2], { src: u })] : null; }
+      if (b[0] === "sys" && b[1] === "scene" && b[2] && b[2].bg94) { const u = A[b[2].bg94] || A["bg_" + b[2].place]; if (u) { const k = "off94:" + key + ":" + b[2].bg94; (window.SCENE_FILES = window.SCENE_FILES || {})[k] = u; b[2].img = k; } return b; }
+      if (b[0] === "sys" && b[1] === "if" && b[2]) { b[2].then = fix(b[2].then); return b; }
+      if (b[1] === "line" && b[2] && b[2].opts) b[2].opts.forEach(o => { o.then = fix(o.then); });
+      return b;
+    }).filter(Boolean);
+    (w.pack.chapters || []).forEach(c => { const z = fix(c.beats.zh); c.beats = { zh: z, en: z }; (c.choices || []).forEach(o => { if (o.then) { const t2 = fix(o.then.zh); o.then = { zh: t2, en: t2 }; } }); });
+    if (A.cover) w.cover = A.cover;
+  } catch (e) { try { console.warn("[off94]", e); } catch (_) {} }
+  return r;
+};
+/* scene art registered again on every load (SCENE_FILES isn't saved) */
+function off94Rereg() { try { Object.values(S.mine.worlds || {}).forEach(w => { if (!w.official76 || !w.pack) return; (w.pack.chapters || []).forEach(c => (c.beats.zh || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].img && /^off94:/.test(b[2].img) && b[2].src94) (window.SCENE_FILES = window.SCENE_FILES || {})[b[2].img] = b[2].src94; })); }); } catch (_) {} }
+const _imBuild94b = imBuild; imBuild = function () { const r = _imBuild94b.apply(this, arguments); try { const w = wd(r && (r.wid || r)); (w.pack.chapters || []).forEach(c => (c.beats.zh || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].img && /^off94:/.test(b[2].img)) b[2].src94 = window.SCENE_FILES[b[2].img]; })); } catch (_) {} return r; };
+setTimeout(off94Rereg, 0);
+/* install: know which work we're building and fetch its asset list first */
+const _installWork94 = installWork;
+installWork = async function (id) { OFF94.cur = { id }; try { await off94Assets(id); } catch (_) {} try { return await _installWork94.apply(this, arguments); } finally { OFF94.cur = null; } };
+/* ---- runtime: CG / film moments ---- */
+function off94Show(d, vid) {
+  const host = (typeof fxLayer === "function" ? fxLayer() : null) || $("#s-chat") || document.body; const o = document.createElement("div"); o.className = "cg94";
+  o.innerHTML = (vid ? '<video src="' + esc(d.src) + '" autoplay playsinline muted loop></video>' : '<img src="' + esc(d.src) + '" alt="">') + (d.cap ? '<p>' + esc(d.cap) + '</p>' : '') + '<small>' + (CL() === "zh" ? "点一下继续" : "Tap to continue") + '</small>';
+  host.appendChild(o); requestAnimationFrame(() => o.classList.add("on")); const bye = () => { o.classList.remove("on"); setTimeout(() => o.remove(), 400); }; o.addEventListener("click", bye); setTimeout(bye, vid ? 9000 : 4200);
+}
+const _pkDir94 = pkDirective;
+pkDirective = function (th, b) {
+  if (Array.isArray(b) && b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) {
+    th.pk.q.shift(); const d = b[2] || {};
+    if (d.src && !PKSKIP[th.id]) { if (curT === th.id) off94Show(d, b[1] === "vid94");
+      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: d.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
+    save(); return true;
+  }
+  return _pkDir94.apply(this, arguments);
+};
+/* ---- a written option with nothing scripted after it → he answers it live ---- */
+window.addEventListener("click", e => {
+  const x = e.target.closest("[data-stopline]"); if (!x) return; const th = S.threads[curT];
+  if (!th || !th.pk || !th.pk.stop || th.pk.stop[1] !== "line") return; const d = th.pk.stop[2], o = d.opts[+x.dataset.stopline];
+  if (!o || (o.then && o.then.length) || typeof liveOn !== "function" || !liveOn()) return;
+  if (typeof aiGate === "function" && !aiGate()) return;
+  e.stopImmediatePropagation(); e.preventDefault();
+  const txt = Lz(o.t); appendMsg(th, { who: "me", k: o.k || "say", txt, at: Date.now() }); th.rounds++; try { pkSet(th, o.set); } catch (_) {}
+  Promise.resolve(reply(th, { kind: "user", txt, mode: o.k || "say" })).then(() => stopResolve(th, d.free || []));
+}, true);
+(function () { const st = document.createElement("style"); st.textContent = `.cg94{position:absolute;inset:0;z-index:60;background:#000d;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;opacity:0;transition:opacity .4s;cursor:pointer;padding:18px}
+.cg94.on{opacity:1}.cg94 img,.cg94 video{max-width:100%;max-height:72%;border-radius:14px;box-shadow:0 10px 40px #0009}.cg94 p{color:#F6E7D6;font-size:14px;line-height:1.55;text-align:center;max-width:420px;margin:0}.cg94 small{color:#fff8;font-size:11px}`; document.head.appendChild(st); })();
+
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
    Discover = shelves (each tag with its own row), rankings, challenges and Earn; search + tag filters one tap away.
