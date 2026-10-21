@@ -1,4 +1,5 @@
 <meta charset="utf-8">
+<meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#07060A">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13693,6 +13694,12 @@ document.addEventListener("click", async e => {
 (function () { const st = document.createElement("style"); st.textContent = `.fcard.off94 .fimg{object-fit:cover}.fp.new94{background:var(--gold,#F0B77E);color:#241a10}.fhook94{margin:6px 0 10px;font-size:13.5px;line-height:1.5;color:#fffd;max-width:88%;text-shadow:0 1px 6px #000a}.fplay94{pointer-events:auto}
 .off94s .rart video{width:100%;height:100%;object-fit:cover;display:block}`; document.head.appendChild(st); })();
 setTimeout(() => { off94Feed().then(L => { try { if (L.length && S.lastTab === "home" && $("#feed") && !$("#feed .off94")) renderHome($("#tabv")); } catch (_) {} }); }, 2500);
+
+/* The app ships its own languages. Stop the browser's page translator from rewriting the UI
+   (it translated the tabs to English while new cards stayed Chinese, mixing the two). */
+function noXlate94() { const h = document.documentElement; h.setAttribute("translate", "no"); h.classList.add("notranslate"); const l = (typeof S !== "undefined" && S.lang) || "en"; h.lang = l === "zh" ? "zh-CN" : l; }
+noXlate94();
+{ const _rh = renderHome; renderHome = function () { noXlate94(); return _rh.apply(this, arguments); }; }
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
