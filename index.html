@@ -13555,6 +13555,8 @@ const _pkDir94 = pkDirective;
 pkDirective = function (th, b) {
   if (Array.isArray(b) && b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) {
     th.pk.q.shift(); const d0 = b[2] || {}, w = wd(th.wid), A = (w && OFF94.assets[w.community]) || {}, d = Object.assign({}, d0, { src: d0.src || A[d0.slot] });
+    /* the opening film already played in the feed / story page — don't show it again once you're inside */
+    if (b[1] === "vid94" && d0.slot === "vid_open") { save(); return true; }
     if (d.src && !PKSKIP[th.id]) { if (curT === th.id) off94Show(d, b[1] === "vid94");
       if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: d.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
