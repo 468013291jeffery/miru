@@ -1,0 +1,199 @@
+{
+ "title": {
+  "zh": "他回来接我那天",
+  "en": "The Heir He Came Back For"
+ },
+ "hook": {
+  "zh": "昨天你账户里只有32.18美元。今天你是一个商业帝国的继承人——而十年前差点吻你、第二天就消失的发小，回来当了你的保镖。",
+  "en": "Yesterday you had $32.18. Today you're heir to an empire nobody will put a number on — and the best friend who almost kissed you ten years ago, then vanished, is back as your bodyguard."
+ },
+ "logline": {
+  "zh": "一个穷设计师一夜之间继承了整个家族、一个联姻未婚妻和一条死亡威胁，而他唯一能信的，偏偏是当年不告而别的那个人。",
+  "en": "A broke designer inherits a dynasty, an arranged fiancée and a death threat overnight — and the only person he trusts is the man who walked out on him."
+ },
+ "premise": {
+  "zh": "你是Adrian，27岁，交不起房租的平面设计师。昨天你账户里只有32.18美元。今天早上，三辆黑色SUV停在你楼下，Roman Cross从车里走出来——十七岁那年差点吻你、第二天就消失的发小，如今是Vale家族的安保主管。你从未见过的父亲Alexander Vale昨天去世了，你是他的继承人。黑卡、私人飞机、顶层公寓、一个素未谋面的未婚妻，一天之内全砸到你面前。还有一条短信，红色准星压在Roman胸口。",
+  "en": "You're Adrian, 27, a graphic designer behind on rent. Yesterday you had $32.18 in checking. This morning three black SUVs pull up outside your building and Roman Cross steps out — the best friend who almost kissed you at seventeen and vanished the next morning, now head of Vale family security. The father you never met, Alexander Vale, died yesterday, and you're his heir. A black card, a private jet, a penthouse and a fiancée you've never met all land on you in one day. So does a text with a red dot on Roman's chest."
+ },
+ "you": {
+  "zh": "Adrian Vale（原名Hale），27岁。嘴毒、反应快，越生气越胆大。一紧张就摸左手腕——这个小习惯，你自己都没发现，Roman却记了十年。",
+  "en": "Adrian Vale (born Hale), 27. Sharp-tongued, quick, braver when he's angry. Touches his left wrist when he's nervous — a habit you never noticed, and Roman remembered for ten years."
+ },
+ "stakes": {
+  "zh": "家族内部有人不想让继承人回来，而他们认定最快的办法，是先除掉Roman。72小时后，继承投票开始。",
+  "en": "Someone inside the family doesn't want the heir home, and they've decided the fastest way is through Roman. The succession vote is in 72 hours."
+ },
+ "ready": 10,
+ "intro": {
+  "zh": {
+   "bg": [
+    "昨天，你——Adrian Hale，27岁，平面设计师——账户里只有32.18美元，房租周五到期，老板又让你中午前改稿。",
+    "十年前，你17岁。在便利店门口给最好的朋友Roman贴创可贴的时候，他差一点吻了你。差半寸。第二天早上，他就消失了，消息再没回过。",
+    "之后整整七年，你没有他的任何音讯，以为他早就把你忘了。至于最近这三年他在做什么——你很快就会知道。",
+    "关于父亲，母亲只说过一句“很复杂”。你不知道的是：你的父亲是Alexander Vale——酒店、银行、航空、媒体，那个Vale。他昨天去世了。",
+    "今天早上，三辆黑色SUV停在你楼下。从车里走出来的，是Roman。"
+   ],
+   "you": "你扮演Adrian。轮到Adrian说话时，用你自己的话说；不知道说什么，点💡提示就行。关键时刻先选态度、再决定怎么说——你的选择会改变Roman对你的信任、吸引和张力，也会改变这一章的四条结尾路线。",
+   "cast": [
+    [
+     "adrianv",
+     "你自己。昨天还在为房租发愁，今天是Vale帝国的继承人。"
+    ],
+    [
+     "roman",
+     "你的发小，28岁。十年前差点吻你，然后人间蒸发。如今是Vale家族安保主管，第一件事就是亲自来接你。"
+    ],
+    [
+     "sienna",
+     "你的联姻未婚妻，27岁，Reed家继承人。漂亮、从容，好像早就认识Roman。"
+    ]
+   ],
+   "how": [
+    "旁白和动作会整段出现；觉得慢，点一下聊天区域就能马上往下走。",
+    "轮到你时：Adrian的台词你自己说（也可以点💡提示），关键选择先选态度再说出口。",
+    "途中有监控找茬、默契问答、偷看他的手机、家族群、来电和心跳测试，都是剧情的一部分，可以跳过。",
+    "带🔒的是关键剧情加料，不解锁也不影响主线。"
+   ],
+   "voice": {
+    "roman": "（替你拉开车门，下颌绷着）上车。你父亲昨天去世了。",
+    "adrianv": "（盯着他）你消失十年，第一句话就这个？",
+    "sienna": "（替你理好衣领，视线越过你看向他）原来这就是那个Roman。"
+   },
+   "as_roman": {
+    "bg": [
+     "你是Roman Cross，28岁，Vale家族安保主管。十年前，你18岁，在布鲁克林一家便利店门口，让最好的朋友Adrian给你破了的嘴角贴创可贴——你差一点吻了他。差半寸。",
+     "第二天早上，你走了。没有告别，没有解释，消息一条都没回。原因你到现在也没对任何人说过。",
+     "最近这三年，你一直在他身边——隔着一条街、一扇车窗、一份报告。他换过三份工作、搬过一次家、在酒吧后巷打过一架，你都知道。他不知道你在。",
+     "昨天，Alexander Vale去世了。他唯一的继承人，就是Adrian。董事会投票在即，有人不想让他活着坐上那个位置。",
+     "今天早上，你带着三辆黑色SUV停在他楼下。这一次，你得亲自去敲那扇门。"
+    ],
+    "you": "你扮演Roman。轮到Roman说话时，用你自己的话说；不知道说什么，点💡提示就行。关键时刻先选态度、再决定怎么说——你给Adrian的每个反应，都会改变他对你的信任、吸引和张力，也会改变这一章的结尾。",
+    "cast": [
+     [
+      "roman",
+      "你自己。Vale家安保主管，十年前不告而别的发小。你知道的比你能说的多得多。"
+     ],
+     [
+      "adrianv",
+      "Adrian Hale，27岁。你差点吻过的那个人。昨天还在为房租发愁，今天是Vale帝国的继承人——也是别人的靶子。"
+     ],
+     [
+      "sienna",
+      "Sienna Reed，27岁，Reed家的女儿，Adrian的联姻未婚妻。你们以前见过，那次谁都没落着好。"
+     ]
+    ]
+   }
+  },
+  "en": {
+   "bg": [
+    "Yesterday you — Adrian Hale, 27, graphic designer — had $32.18 in checking, rent due Friday, and a boss who wanted revisions by noon.",
+    "Ten years ago, at seventeen, you were putting a bandage on your best friend Roman's lip outside a convenience store when he almost kissed you. Half an inch. The next morning he was gone, and he never answered a text again.",
+    "For seven years after that, nothing; you assumed he'd forgotten you. What he's been doing these last three years, you're about to find out.",
+    "About your father, your mother only ever said, \"It's complicated.\" What you didn't know: your father was Alexander Vale — hotels, banks, airlines, media. That Vale. He died yesterday.",
+    "This morning, three black SUVs pull up outside your building. The man who steps out is Roman."
+   ],
+   "you": "You play Adrian. When it's Adrian's turn to talk, say it in your own words — or tap 💡 for a hint. At key moments pick an attitude first, then how to say it. Your choices change Roman's trust, attraction and tension, and which of the four endings you reach.",
+   "cast": [
+    [
+     "adrianv",
+     "You. Worried about rent yesterday, heir to the Vale empire today."
+    ],
+    [
+     "roman",
+     "Your childhood best friend, 28. Almost kissed you ten years ago, then vanished. Now head of Vale family security — and he came to get you himself."
+    ],
+    [
+     "sienna",
+     "Your arranged fiancée, 27, heir to the Reed fortune. Beautiful, unbothered, and he seems to know Roman already."
+    ]
+   ],
+   "how": [
+    "Narration arrives in blocks; tap the chat to move on faster.",
+    "On your turn: say Adrian's lines yourself (or tap 💡), and for key choices pick an attitude, then the words.",
+    "Along the way: a CCTV puzzle, a compatibility check, his phone, the family group chat, calls and a heart-rate test — all part of the story, all skippable.",
+    "🔒 scenes are extra; skipping them never breaks the main story."
+   ],
+   "voice": {
+    "roman": "(holds the car door, jaw tight) Get in. Your father died yesterday.",
+    "adrianv": "(staring at him) You disappear for ten years and that's your first sentence?",
+    "sienna": "(fixes your collar, looking past you at him) So this is the famous Roman."
+   },
+   "as_roman": {
+    "bg": [
+     "You are Roman Cross, 28, head of security for the Vale family. Ten years ago, at 18, outside a Brooklyn convenience store, you let your best friend Adrian tape up your split lip — and you almost kissed him. Half an inch.",
+     "The next morning you were gone. No goodbye, no explanation, no replies. You still haven't told anyone why.",
+     "For the last three years you've been near him — across a street, behind a car window, inside a report. Three jobs, one move, one fight in a bar alley: you know all of it. He doesn't know you were there.",
+     "Yesterday Alexander Vale died. His only heir is Adrian. The board vote is coming, and someone doesn't want him alive to take the seat.",
+     "This morning you park three black SUVs outside his building. This time you have to knock on that door yourself."
+    ],
+    "you": "You play Roman. When it's Roman's turn to talk, say it in your own words — or tap 💡 for a hint. At key moments pick an attitude first, then how to say it. Every reaction you give Adrian changes his trust, attraction and tension — and how this chapter ends.",
+    "cast": [
+     [
+      "roman",
+      "You. Vale head of security; the friend who left without a word ten years ago. You know far more than you can say."
+     ],
+     [
+      "adrianv",
+      "Adrian Hale, 27. The one you almost kissed. Yesterday he was behind on rent; today he's heir to the Vale empire — and a target."
+     ],
+     [
+      "sienna",
+      "Sienna Reed, 27, the Reed family's daughter and Adrian's arranged fiancée. You've met before; it didn't go well for either of you."
+     ]
+    ]
+   }
+  }
+ },
+ "love": "roman",
+ "rel": [
+  [
+   "adrianv",
+   "roman",
+   {
+    "zh": "发小；十七岁差一点的吻，然后十年沉默",
+    "en": "Childhood best friends; one almost-kiss at seventeen, then ten years of silence"
+   }
+  ],
+  [
+   "adrianv",
+   "sienna",
+   {
+    "zh": "被一纸谁都没签的协议绑成未婚妻",
+    "en": "Engaged by a contract neither of them signed"
+   }
+  ],
+  [
+   "roman",
+   "sienna",
+   {
+    "zh": "以前见过，谁都不肯说在哪儿",
+    "en": "They've met before; neither will say where"
+   }
+  ]
+ ],
+ "dims": [
+  {
+   "a": "adrianv",
+   "b": "roman",
+   "main": 1,
+   "seed": {
+    "att": 52,
+    "tru": 34,
+    "jea": 10,
+    "ten": 40,
+    "gru": 18
+   }
+  },
+  {
+   "a": "roman",
+   "b": "sienna",
+   "seed": {
+    "att": 10,
+    "tru": 12,
+    "jea": 45,
+    "ten": 60,
+    "gru": 40
+   }
+  }
+ ]
+}

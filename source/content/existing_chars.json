@@ -1,0 +1,422 @@
+{
+ "mason": {
+  "name": "Mason Cole",
+  "age": 26,
+  "g": "m",
+  "a": "guard",
+  "art": "mason",
+  "world": "ice",
+  "role": "Left wing, #17 — the league's most penalized forward",
+  "looks": {
+   "en": "Ash-blond, a scar through one eyebrow, knuckles that never fully heal.",
+   "zh": "灰金发，一道疤穿过眉毛，指关节从来没好全过。"
+  },
+  "vibe": "Blunt, territorial, funny only by accident."
+ },
+ "ethan": {
+  "name": "Ethan Hayes",
+  "age": 27,
+  "g": "m",
+  "a": "charm",
+  "art": "ethan",
+  "world": "ice",
+  "role": "Center and captain — the golden boy on every poster",
+  "looks": {
+   "en": "Brown curls, a crooked front tooth he refuses to fix, dimples.",
+   "zh": "棕色卷发，一颗不肯去矫正的歪门牙，酒窝。"
+  },
+  "vibe": "Warm, strategic, too good at making people like him."
+ },
+ "lucien": {
+  "name": "Lucien Marchetti",
+  "age": "412 (looks 31)",
+  "g": "m",
+  "a": "dark",
+  "art": "lucien",
+  "world": "crimson",
+  "role": "A 400-year-old financier who owns your debt",
+  "looks": {
+   "en": "Black hair, a signet ring he turns instead of sighing, eyes that go red when he forgets.",
+   "zh": "黑发，一枚代替叹气转动的图章戒指，忘了克制时眼睛会变红。"
+  },
+  "vibe": "Unhurried, courteous, terrifyingly patient."
+ },
+ "adrian": {
+  "name": "Adrian Vale",
+  "age": 24,
+  "g": "m",
+  "a": "sun",
+  "art": "adrian",
+  "world": "crimson",
+  "role": "Night-shift bartender — the debt came with him",
+  "looks": {
+   "en": "Messy dark hair, a split lip that keeps reopening, a smile that shows up at the wrong times.",
+   "zh": "乱糟糟的黑发，嘴唇上的伤口总是裂开，笑总在不该笑的时候出现。"
+  },
+  "vibe": "Mouthy, brave to the point of stupid, secretly exhausted."
+ },
+ "nico": {
+  "name": "Nico Alvarez",
+  "age": 29,
+  "g": "m",
+  "a": "charm",
+  "art": "nico",
+  "world": "pact",
+  "role": "Creative director who needs a fake boyfriend for four days",
+  "looks": {
+   "en": "Warm brown skin, gold hoop in one ear, suits with the sleeves pushed up.",
+   "zh": "暖棕色皮肤，一只耳朵戴金环，西装袖子总挽起来。"
+  },
+  "vibe": "Charming on purpose, honest by accident."
+ },
+ "jamie": {
+  "name": "Jamie Reed",
+  "age": 28,
+  "g": "m",
+  "a": "grump",
+  "art": "jamie",
+  "world": "pact",
+  "role": "Product designer, professionally unimpressed",
+  "looks": {
+   "en": "Glasses he pushes up with one knuckle, cardigan, a jaw that clenches when he's amused.",
+   "zh": "用指节推眼镜，穿开衫，觉得好笑时会咬紧下颌。"
+  },
+  "vibe": "Dry, precise, allergic to performance — so of course he's in one."
+ },
+ "elijah": {
+  "name": "Dr. Elijah Brooks",
+  "age": 34,
+  "g": "m",
+  "a": "steady",
+  "art": "elijah",
+  "world": "night",
+  "role": "ER attending who hasn't slept properly since residency",
+  "looks": {
+   "en": "Deep brown skin, reading glasses on a cord, scrubs under a coat he never buttons.",
+   "zh": "深棕色皮肤，眼镜挂在绳上，手术服外套一件从不扣的大衣。"
+  },
+  "vibe": "Calm in a crisis, useless at his own feelings."
+ },
+ "rowan": {
+  "name": "Rowan Hale",
+  "age": 30,
+  "g": "m",
+  "a": "guard",
+  "art": "rowan",
+  "world": "night",
+  "role": "Documentary editor cutting a film about Elijah's hospital",
+  "looks": {
+   "en": "Pale, tired eyes, hoodie sleeves over his hands, headphones always around his neck.",
+   "zh": "苍白，眼神疲惫，卫衣袖子盖住手，耳机永远挂在脖子上。"
+  },
+  "vibe": "Observant, cynical out loud, soft on the timeline."
+ },
+ "wren": {
+  "name": "Wren Okafor",
+  "age": 29,
+  "g": "f",
+  "a": "charm",
+  "art": "wren",
+  "world": "light",
+  "role": "Host of the 11pm show for a town of 900",
+  "looks": {
+   "en": "Curls tied up with a pencil, oversized cardigan, a laugh that carries on air.",
+   "zh": "卷发用铅笔盘起，宽大开衫，笑声在电波里特别有感染力。"
+  },
+  "vibe": "Warm on air, lonely off it."
+ },
+ "sasha": {
+  "name": "Sasha Lind",
+  "age": 31,
+  "g": "f",
+  "a": "guard",
+  "art": "sasha",
+  "world": "light",
+  "role": "New lighthouse keeper, calls in every Thursday under a fake name",
+  "looks": {
+   "en": "Wind-burned cheeks, a braid under a knit cap, a Coast Guard jacket that isn't hers.",
+   "zh": "被风吹红的脸颊，编发塞在毛线帽里，一件不属于她的海岸警卫队外套。"
+  },
+  "vibe": "Few words, all of them meant."
+ },
+ "iris": {
+  "name": "Iris Chen",
+  "age": 24,
+  "g": "f",
+  "a": "charm",
+  "art": "iris",
+  "world": "split",
+  "role": "Captain of Nova — the most-streamed player in the league",
+  "looks": {
+   "en": "Silver-lilac hair, cat-ear headset, a grin built for thumbnails.",
+   "zh": "银紫色头发，猫耳耳机，天生适合当封面的笑。"
+  },
+  "vibe": "Chaotic, competitive, secretly sentimental."
+ },
+ "noor": {
+  "name": "Noor Haddad",
+  "age": 25,
+  "g": "f",
+  "a": "grump",
+  "art": "noor",
+  "world": "split",
+  "role": "Captain of Vanta — cold, precise, never loses her temper on stream",
+  "looks": {
+   "en": "Sleek black bob, a single silver cuff, a hoodie with her team's logo stitched over the heart.",
+   "zh": "利落的黑色短发，一只银耳骨夹，队服卫衣的队标缝在心口。"
+  },
+  "vibe": "Controlled, loyal, lethal at 2am scrims."
+ },
+ "theo": {
+  "name": "Theo Ward",
+  "age": 32,
+  "g": "m",
+  "a": "guard",
+  "art": "theo",
+  "world": "offbook",
+  "role": "Broadway lead, eight shows a week, zero patience",
+  "looks": {
+   "en": "Dark hair pushed back, stage makeup still on his jaw, a period shirt half-unbuttoned.",
+   "zh": "黑发向后梳，下颌还带着舞台妆，年代戏衬衫解开一半。"
+  },
+  "vibe": "Exacting, cutting, devastating when he's sincere."
+ },
+ "nora": {
+  "name": "Nora Vance",
+  "age": 28,
+  "g": "f",
+  "a": "sun",
+  "art": "nora",
+  "world": "offbook",
+  "role": "Understudy who waited three years for one night",
+  "looks": {
+   "en": "Red lipstick, practice skirt over leggings, a pencil behind her ear.",
+   "zh": "红唇，练功裙套在紧身裤外，耳朵后面别一支铅笔。"
+  },
+  "vibe": "Bright, stubborn, braver on stage than off."
+ },
+ "callum": {
+  "name": "Callum Reyes",
+  "age": 34,
+  "g": "m",
+  "a": "steady",
+  "art": "callum",
+  "world": "lowseason",
+  "role": "Home in Maine to sell a boat he can't sail",
+  "looks": {
+   "en": "Salt-and-pepper stubble, a fisherman sweater that was his father's.",
+   "zh": "胡茬花白，穿着父亲留下的渔夫毛衣。"
+  },
+  "vibe": "Quiet, guilty, funnier than he lets on."
+ },
+ "june": {
+  "name": "June Okada",
+  "age": 33,
+  "g": "f",
+  "a": "grump",
+  "art": "june",
+  "world": "lowseason",
+  "role": "Runs the bookshop that never closes",
+  "looks": {
+   "en": "Glasses on her head she's always looking for, ink on her fingers, a scarf in every color.",
+   "zh": "眼镜架在头顶却总在找，手指沾着墨水，每种颜色的围巾都有。"
+  },
+  "vibe": "Sharp-tongued, loyal to the bone, never left."
+ },
+ "dante": {
+  "name": "Dante Moretti",
+  "age": 29,
+  "g": "m",
+  "a": "dark",
+  "art": "dante",
+  "world": "made",
+  "role": "Heir to the Moretti family, Chicago",
+  "looks": {
+   "en": "Slicked-back black hair, a Rolex he never checks, tattoos under French cuffs.",
+   "zh": "油头黑发，一块从不看的劳力士，法式袖口下全是纹身。"
+  },
+  "vibe": "Possessive, polished, dangerous when polite."
+ },
+ "cass": {
+  "name": "Cass Reyes",
+  "age": 31,
+  "g": "m",
+  "a": "grump",
+  "art": "cass",
+  "world": "made",
+  "role": "Ex-Marine, Dante's bodyguard for eleven months",
+  "looks": {
+   "en": "Buzz cut, a scar under his jaw, a suit that fits like armor.",
+   "zh": "寸头，下颌下一道疤，西装穿得像盔甲。"
+  },
+  "vibe": "Silent, dry, will absolutely die for you and complain about it."
+ },
+ "luca": {
+  "name": "Luca Ferri",
+  "age": 25,
+  "g": "m",
+  "a": "charm",
+  "art": "luca",
+  "world": "pole",
+  "role": "F1 driver, Scuderia Rossa — the grid's golden child",
+  "looks": {
+   "en": "Tousled dark curls, a championship ring on a chain, racing gloves always in a back pocket.",
+   "zh": "凌乱黑卷发，冠军戒指挂在项链上，赛车手套总塞在后口袋。"
+  },
+  "vibe": "Flirty, reckless, cries at podium anthems."
+ },
+ "jack": {
+  "name": "Jack Whitaker",
+  "age": 27,
+  "g": "m",
+  "a": "guard",
+  "art": "jack",
+  "world": "pole",
+  "role": "British driver, two-time runner-up, cold as a qualifying lap",
+  "looks": {
+   "en": "Clean-cut blond, jaw like a press photo, a watch he checks when he's lying.",
+   "zh": "干净利落的金发，下颌像新闻照片，撒谎时会看表。"
+  },
+  "vibe": "Controlled, sarcastic, burning underneath."
+ },
+ "brody": {
+  "name": "Brody Hale",
+  "age": 22,
+  "g": "m",
+  "a": "sun",
+  "art": "brody",
+  "world": "fourth",
+  "role": "Starting QB, senior — will lose his eligibility if he fails Organic Chem",
+  "looks": {
+   "en": "Sun-bleached hair, letterman jacket, a smile that could sell trucks.",
+   "zh": "被晒淡的头发，校队夹克，笑起来能帮人卖出一辆卡车。"
+  },
+  "vibe": "Golden retriever energy with a panic button."
+ },
+ "ezra": {
+  "name": "Ezra Kim",
+  "age": 25,
+  "g": "m",
+  "a": "grump",
+  "art": "ezra",
+  "world": "fourth",
+  "role": "Chemistry grad TA, zero patience for athletes",
+  "looks": {
+   "en": "Black hair he cuts himself, wire glasses, a hoodie from a lab he hates.",
+   "zh": "自己剪的黑发，金属框眼镜，一件他讨厌的实验室的卫衣。"
+  },
+  "vibe": "Grumpy, brilliant, secretly the softest person on campus."
+ },
+ "caelan": {
+  "name": "Prince Caelan",
+  "age": "ageless (looks 27)",
+  "g": "m",
+  "a": "dark",
+  "art": "caelan",
+  "world": "unseelie",
+  "role": "Prince of the Unseelie Court — you were traded to him",
+  "looks": {
+   "en": "Silver-white hair, antlers of black thorn, eyes like a frozen lake.",
+   "zh": "银白长发，黑荆棘般的鹿角，眼睛像结冰的湖。"
+  },
+  "vibe": "Cruel by reputation, courteous by law, lonely by design."
+ },
+ "thorne": {
+  "name": "Thorne",
+  "age": "unknown (looks 30)",
+  "g": "m",
+  "a": "grump",
+  "art": "thorne",
+  "world": "unseelie",
+  "role": "Caelan's knight — assigned to watch you, hates it",
+  "looks": {
+   "en": "Russet hair in a warrior's braid, a scarred hand, wolfish grin he rarely uses.",
+   "zh": "赤褐发编成战士辫，一只带疤的手，很少露出的狼一样的笑。"
+  },
+  "vibe": "Grumbling, protective, the only one here who tells you the truth bluntly."
+ },
+ "dakota": {
+  "name": "Dakota Price",
+  "age": 26,
+  "g": "f",
+  "a": "grump",
+  "art": "dakota",
+  "world": "roomies",
+  "role": "Tattoo artist, night owl, your new roommate",
+  "looks": {
+   "en": "Shaved undercut, sleeve tattoos, reading glasses she's embarrassed about.",
+   "zh": "剃短的 undercut，花臂，一副让她不好意思的老花镜。"
+  },
+  "vibe": "Grumpy, territorial about the kitchen, secretly takes care of everyone."
+ },
+ "marisol": {
+  "name": "Marisol Vega",
+  "age": 25,
+  "g": "f",
+  "a": "sun",
+  "art": "marisol",
+  "world": "roomies",
+  "role": "Kindergarten teacher, chronically cheerful, owns 40 plants",
+  "looks": {
+   "en": "Curly hair in a scrunchie, cardigan with a pin collection, laugh you hear through walls.",
+   "zh": "卷发扎着发圈，开衫上别满徽章，笑声能穿墙。"
+  },
+  "vibe": "Sunshine with a spine of steel."
+ },
+ "nikolai": {
+  "name": "Nikolai Volkov",
+  "age": 33,
+  "g": "m",
+  "a": "dark",
+  "art": "nikolai",
+  "world": "bratva",
+  "role": "Bratva boss — your arranged husband as of tonight",
+  "looks": {
+   "en": "Pale eyes, tattooed stars on his knuckles, a wedding band he keeps turning.",
+   "zh": "浅色眼睛，指节上纹着星星，一直在转婚戒。"
+  },
+  "vibe": "Cold, ruthless, unexpectedly gentle in private."
+ },
+ "ronan": {
+  "name": "Ronan Blackwood",
+  "age": 30,
+  "g": "m",
+  "a": "steady",
+  "art": "ronan",
+  "world": "pack",
+  "role": "Alpha of the Blackwood pack, Montana",
+  "looks": {
+   "en": "Beard, flannel, eyes that flash gold, built like the mountain.",
+   "zh": "络腮胡，法兰绒衬衫，眼睛会闪金光，身材像座山。"
+  },
+  "vibe": "Protective, patient, a growl that means 'I'm listening.'"
+ },
+ "kai": {
+  "name": "Kai Nakoa",
+  "age": 26,
+  "g": "m",
+  "a": "sun",
+  "art": "kai",
+  "world": "pack",
+  "role": "Pack beta and resident troublemaker",
+  "looks": {
+   "en": "Long black hair tied back, easy grin, always shirtless for no reason.",
+   "zh": "黑长发束在脑后，笑容随意，总是莫名其妙没穿上衣。"
+  },
+  "vibe": "Flirty, loud, fiercely loyal."
+ },
+ "silas": {
+  "name": "Silas Grey",
+  "age": 29,
+  "g": "m",
+  "a": "guard",
+  "art": "silas",
+  "world": "pack",
+  "role": "The pack's healer — doesn't trust outsiders",
+  "looks": {
+   "en": "Silver-grey eyes, wire glasses, sleeves rolled, herb stains on his hands.",
+   "zh": "银灰色眼睛，金属框眼镜，袖子挽起，手上有草药渍。"
+  },
+  "vibe": "Cool, clinical, protective in the least obvious way."
+ }
+}

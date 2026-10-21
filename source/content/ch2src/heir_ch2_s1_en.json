@@ -1,0 +1,1232 @@
+{
+ "beats": {
+  "en": [
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "sys",
+    "title",
+    {
+     "t": "CHAPTER 2",
+     "sub": "The Threat Lands"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/threat",
+     "place": "Vale Tower penthouse · Foyer",
+     "time": "Wed 9:42 PM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Before the phone can go dark, Adrian touches the screen again. The photo lights back up."
+   ],
+   [
+    "n",
+    "act",
+    "A red dot sits on Roman's chest. The shot doesn't show who's holding the gun. No timestamp. Adrian spreads two fingers and the pixels break his shirt into blocks that prove nothing. The red stays put, same spot every time, like a mole about to burst."
+   ],
+   [
+    "n",
+    "act",
+    "He stares at it, and his palms go hot first. He's had his face against that chest. He's heard the heartbeat under that shirt, been hauled into that warmth when the plane dropped. The red dot and the remembered heat land on top of each other, and his stomach clenches. Danger is supposed to make you calm. His body refuses before he can."
+   ],
+   [
+    "adrianv",
+    "think",
+    "Right now I need him alive. Whatever else I want from him, I can tally later."
+   ],
+   [
+    "n",
+    "act",
+    "A soft sound outside the door. The elevator, arriving."
+   ],
+   [
+    "n",
+    "act",
+    "This morning he thought the worst thing he'd face was his boss's text: \"Revisions by noon.\" Now he's standing in a foyer he has no memory of, carpet so thick his steps make no sound, and the little screen by the lock shows him the hallway in perfect detail."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/penthouse"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Roman stands to the left of the elevator. Same dark shirt, same unsmoothed crease at the cuff. His shoulders fill the fabric, his chest barely moving as he breathes. The living man has one thing the photo doesn't: breath. And a body that runs warm, that tenses, that shifts its weight a little when it's nervous."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian watches that small rise and fall and suddenly hates his own eyes. They still remember that when Roman turns, his waist moves first and his shoulders follow. They remember the strip of collarbone at his open collar, how it looks paler under light. Danger hasn't killed the pull. It's just made it harder to admit. Like a burn hidden under a sleeve: it hurts when you touch it, and you keep touching it to check it's still there."
+   ],
+   [
+    "n",
+    "act",
+    "A voice in his earpiece."
+   ],
+   [
+    "roman",
+    "say",
+    "Away from the window. Check the lock first."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian looks at where he's standing. He's nowhere near the window. The order comes out too practiced, and suddenly the fear has somewhere to aim. Roman's voice comes from low in his chest. Low, steady, a little rough, like it's being held down."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Check yourself first. Where are you standing right now?"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman looks up into the door camera. He doesn't pretend he doesn't know he's being watched. On screen his jaw is tight, and his throat moves once as he swallows."
+   ],
+   [
+    "roman",
+    "say",
+    "East elevator. Solid wall on my left, service corridor on my right."
+   ],
+   [
+    "adrianv",
+    "say",
+    "How long are you planning to stand there?"
+   ],
+   [
+    "roman",
+    "say",
+    "Until exits and passages are cleared."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Cleared by who?"
+   ],
+   [
+    "n",
+    "act",
+    "Roman presses his earpiece and reads off the duty desk's badge number. The resonance in his chest carries down the line and hums in Adrian's ear. Adrian finds the same number on the lock screen. For the first time tonight, an answer checks out somewhere other than Roman."
+   ],
+   [
+    "roman",
+    "say",
+    "Don't open the door to prove you're not scared."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Then don't stand there to prove you can protect me."
+   ],
+   [
+    "n",
+    "act",
+    "Roman doesn't answer right away. Through the peephole, the hand at his side slowly opens. His knuckles are still white from gripping too hard. The color comes back a little at a time."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian watches that hand. It's held his waist, locked around his wrist, yanked him into Roman's arms when the plane dropped. The memory of it climbs his spine before the danger does."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "ten": 2
+     },
+     "why": "A standoff through a door"
+    }
+   ],
+   [
+    "sys",
+    "if",
+    {
+     "cond": {
+      "flag": "SHARED_DEATH_THREAT_WITH_ROMAN"
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "At the edge of the frame, Roman's phone is lit with the photo Adrian forwarded. The red dot on his chest lines up with the body in front of the camera, still breathing."
+      ],
+      [
+       "roman",
+       "say",
+       "Keep the original. Don't crop it. I've already had security pull footage for that window."
+      ],
+      [
+       "adrianv",
+       "say",
+       "So you got it, and you still walked to the elevator?"
+      ],
+      [
+       "roman",
+       "say",
+       "I'm on the fallback route. What you're seeing is me waiting for the passage to clear."
+      ],
+      [
+       "roman",
+       "act",
+       "He presses closer to the solid wall. The wall leaves a faint line in his shirt, and his back and shoulders only stand out more."
+      ],
+      [
+       "roman",
+       "say",
+       "Thank you for telling me."
+      ],
+      [
+       "adrianv",
+       "say",
+       "Thank me once you're inside."
+      ],
+      [
+       "n",
+       "act",
+       "Roman hears \"inside.\" He doesn't take it as forgiveness. His throat works, like he's swallowing something back."
+      ],
+      [
+       "roman",
+       "say",
+       "Okay. Let's finish this step first."
+      ],
+      [
+       "sys",
+       "rd",
+       {
+        "p": "adrianv|roman",
+        "d": {
+         "tru": 2
+        },
+        "why": "He sent Roman the threat right away"
+       }
+      ]
+     ],
+     "else": [
+      [
+       "sys",
+       "if",
+       {
+        "cond": {
+         "flag": "HID_THREAT_TO_PROTECT_ROMAN"
+        },
+        "then": [
+         [
+          "n",
+          "act",
+          "Adrian doesn't send the photo."
+         ],
+         [
+          "adrianv",
+          "say",
+          "I just heard the elevator."
+         ],
+         [
+          "n",
+          "act",
+          "As he says it, his left hand closes around his right wrist on its own. Outside, Roman's eyes are on the camera, steady. Steady enough that Adrian feels seen through. Not the lie. The urge to stand between the danger and the door by himself."
+         ],
+         [
+          "roman",
+          "say",
+          "Are you okay?"
+         ],
+         [
+          "adrianv",
+          "say",
+          "Didn't you already check everything?"
+         ],
+         [
+          "roman",
+          "say",
+          "No. I'm asking about the part I don't know."
+         ],
+         [
+          "n",
+          "act",
+          "It comes too late. But Adrian knows he's doing the same thing. He forwards the photo to the duty desk and copies Roman. Once it's sent, his grip on his wrist lets go. His fingertips leave shallow marks."
+         ],
+         [
+          "adrianv",
+          "say",
+          "I wanted you farther from the danger."
+         ],
+         [
+          "roman",
+          "say",
+          "You can tell me to leave. Don't delete what I need to make the call."
+         ],
+         [
+          "adrianv",
+          "say",
+          "You'd better remember that."
+         ],
+         [
+          "roman",
+          "act",
+          "Roman glances down at the image. On screen his jaw tightens, his shoulders lock for a second, and then he makes himself loosen."
+         ],
+         [
+          "roman",
+          "say",
+          "I'll remember."
+         ],
+         [
+          "n",
+          "act",
+          "His voice has cooled a degree. Every work instruction is still there. The personal part doesn't come back with them. Adrian stares at the screen and suddenly wants to reach straight through the door and touch the warmth that cold is sitting on."
+         ],
+         [
+          "sys",
+          "rd",
+          {
+           "p": "adrianv|roman",
+           "d": {
+            "tru": -1,
+            "ten": 2
+           },
+           "why": "He almost carried it alone again"
+          }
+         ]
+        ],
+        "else": [
+         [
+          "sys",
+          "if",
+          {
+           "cond": {
+            "flag": "USED_VALE_POWER_TO_TRACE_THREAT"
+           },
+           "then": [
+            [
+             "n",
+             "act",
+             "A notice from the duty desk covers the photo: Anomalous access on an internal channel. Scope not yet confirmed."
+            ],
+            [
+             "n",
+             "act",
+             "Not a name. Not a promise that everyone in this building can be trusted. Adrian's fingers tighten on the edge of the screen, knuckles going white."
+            ],
+            [
+             "adrianv",
+             "say",
+             "I already traced the source once. It came through an internal channel."
+            ],
+            [
+             "roman",
+             "say",
+             "Which one did you use?"
+            ],
+            [
+             "n",
+             "act",
+             "Adrian reads off the log number. Roman repeats it back. He doesn't tell him to undo it. He doesn't praise him for catching anyone either. On screen, Roman's breathing drops a beat, like he's pushing anger back down into his chest."
+            ],
+            [
+             "roman",
+             "say",
+             "Don't widen the share. Secure that record first."
+            ],
+            [
+             "adrianv",
+             "say",
+             "You want me to hand over my phone?"
+            ],
+            [
+             "roman",
+             "say",
+             "No. I want a separate, independent copy."
+            ],
+            [
+             "n",
+             "act",
+             "Adrian keeps the phone in his own palm and hits export. Finally, one thing in this building that doesn't have to go to Vale's people just because it's called Vale property. Still, he can feel Roman's eyes through the camera on his hand. Heavy enough to drag him through the door."
+            ],
+            [
+             "sys",
+             "rd",
+             {
+              "p": "adrianv|roman",
+              "d": {
+               "tru": 1,
+               "ten": 1
+              },
+              "why": "The trace points inside Vale"
+             }
+            ]
+           ],
+           "else": [
+            [
+             "n",
+             "act",
+             "Adrian scrolls down. The convenience store entrance. A plastic bag. Teenage Roman reaching toward the camera. The line on the back of the photo is still there: \"He never should have come back for you.\""
+            ],
+            [
+             "n",
+             "act",
+             "Suddenly he doesn't want anyone to see this photo. Not because it hides some big secret. Because someone took a thing he'd kept close and used it to prove they could get into even that small place. In the picture, Roman's shoulders haven't finished filling out, but you can already see the frame that would later fill a dress shirt."
+            ],
+            [
+             "adrianv",
+             "say",
+             "They have that old picture of us."
+            ],
+            [
+             "roman",
+             "act",
+             "Roman's face changes on screen. Briefly, but long enough for Adrian to see it: jaw locked, eyes going dark for an instant, like something hit him from the inside."
+            ],
+            [
+             "roman",
+             "say",
+             "Which one?"
+            ],
+            [
+             "adrianv",
+             "say",
+             "You're holding two drinks. Mine's still unopened."
+            ],
+            [
+             "roman",
+             "act",
+             "Roman drops his eyes for a second. The camera catches the shadow of his lashes and the curve of his collar rising with his breath."
+            ],
+            [
+             "roman",
+             "say",
+             "Keep the original for now. I'm also going to find out how they got that photo."
+            ],
+            [
+             "adrianv",
+             "say",
+             "You don't remember what I drink, but you remember which picture?"
+            ],
+            [
+             "roman",
+             "say",
+             "I remember you didn't drink it. You spent that whole night waiting for me to finish talking."
+            ],
+            [
+             "n",
+             "act",
+             "Adrian closes the photo. Something knocks softly inside his chest."
+            ],
+            [
+             "adrianv",
+             "say",
+             "Then finish tonight."
+            ],
+            [
+             "n",
+             "act",
+             "The man outside doesn't give the answer he couldn't give ten years ago. He just reports his position again. Adrian watches the living body on the screen and understands it clearly: danger makes him want to touch Roman more, not run."
+            ],
+            [
+             "sys",
+             "rd",
+             {
+              "p": "adrianv|roman",
+              "d": {
+               "att": 2,
+               "ten": 2
+              },
+              "why": "The photo from when they were seventeen"
+             }
+            ]
+           ]
+          }
+         ]
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "At the lock screen, his hand hovers over the switch. The man outside is waiting for one sentence. Send him back, let him in, or don't hang up yet?",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Don't plan around me. Walk me through the route.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian props his phone next to the lock screen. With both feeds lit side by side, he realizes he's been watching only Roman, not the hallway behind him."
+        ],
+        [
+         "adrianv",
+         "say",
+         "I can't see the right side of the frame. What's there?"
+        ],
+        [
+         "roman",
+         "say",
+         "Service room. From your end, there's no way to confirm it's empty."
+        ],
+        [
+         "adrianv",
+         "say",
+         "So you're not safe just because I can see you."
+        ],
+        [
+         "roman",
+         "say",
+         "Right."
+        ],
+        [
+         "n",
+         "act",
+         "One word, and his urge to handle everything himself goes quiet. He has the duty desk state the verified fallback route first, then has Roman repeat the next step back. No jargon. Just where to go, when to stop, and who confirms."
+        ],
+        [
+         "n",
+         "act",
+         "Roman backs off behind the solid wall as instructed. The second that broad shape leaves the frame, Adrian's hand clenches. He almost calls him back. Not out of fear. It's that in the one second the body is off-screen, there's a hole in his chest."
+        ],
+        [
+         "roman",
+         "say",
+         "Inside the safe zone. Didn't enter the service room."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Say it again."
+        ],
+        [
+         "roman",
+         "say",
+         "I'm in the safe zone. Adrian, I'm still here."
+        ],
+        [
+         "n",
+         "act",
+         "The words go straight from the earpiece into his ear, low and steady, with the hum of Roman's chest behind them. Adrian holds the talk button and closes his eyes and lets them stay in his ear half a second longer. He doesn't open the door. For the first time, he doesn't treat the closed door as proof that he can't do anything."
+        ],
+        [
+         "sys",
+         "set",
+         {
+          "flag": "CH2_DOOR_ROUTE"
+         }
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 2,
+         "ten": 1
+        }
+       },
+       "att": "press",
+       "rthink": "He asked about the route, not me. ...That's better. He's finally stopped standing in the doorway for me.",
+       "rwho": "roman",
+       "set": "CH2_DOOR_ROUTE"
+      },
+      {
+       "k": "say",
+       "t": "Don't come in tonight. Get your relief to the duty desk.",
+       "then": [
+        [
+         "roman",
+         "say",
+         "Is that not coming into this apartment tonight, or not running your personal security anymore?"
+        ],
+        [
+         "adrianv",
+         "say",
+         "The first one. The second, we discuss tomorrow. In writing."
+        ],
+        [
+         "n",
+         "act",
+         "The question is so precise it makes it harder for Adrian to stay angry. Like even a refusal only counts if Roman catches it gracefully."
+        ],
+        [
+         "adrianv",
+         "say",
+         "You don't have to act like you understand me this well."
+        ],
+        [
+         "roman",
+         "say",
+         "I'm confirming an instruction."
+        ],
+        [
+         "n",
+         "act",
+         "Roman turns his head and tells the relief to report to the duty desk and send over a badge number. Adrian's phone gets no long explanation. Just the handoff location, the confirmation time, the next security notice. Those few lines are colder than any \"I'm worried about you,\" and they make him want to reach out and touch the man who sent them."
+        ],
+        [
+         "adrianv",
+         "say",
+         "You're just going to leave?"
+        ],
+        [
+         "n",
+         "act",
+         "He regrets it as soon as it's out. Roman doesn't use it as a reason to walk back to the door."
+        ],
+        [
+         "roman",
+         "say",
+         "You told me not to come in tonight. I'm doing what you said."
+        ],
+        [
+         "n",
+         "act",
+         "The elevator doors open again. The steel slides shut over that familiar shoulder a little at a time. The shirt catches the light once more, then it's gone. He wanted distance. Now that he has it, his body isn't happy. Like someone pulled something warm out of his hand, leaving only empty, and an itch."
+        ],
+        [
+         "n",
+         "act",
+         "He presses the phone to the cold door and leaves it there a long time before he pulls it back. The cold of the door doesn't touch the heat in his fingertips."
+        ],
+        [
+         "sys",
+         "set",
+         {
+          "flag": "CH2_SENT_ROMAN_AWAY"
+         }
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -1,
+         "ten": 3
+        }
+       },
+       "att": "guard",
+       "rthink": "He said \"tonight.\" Not \"from now on.\" ...I can hear the difference. I'm right downstairs. I'm not going anywhere.",
+       "rwho": "roman",
+       "set": "CH2_SENT_ROMAN_AWAY"
+      },
+      {
+       "k": "say",
+       "t": "Come in after the passage is cleared. Don't touch me tonight.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Passage confirmation pops up on the lock screen. Adrian double-checks with the duty desk before he slides the chain."
+        ],
+        [
+         "n",
+         "act",
+         "As the chain slides free, cool night air comes in first, then Roman's scent right behind it. Gun oil, aftershave, a little sweat from nerves. Adrian breathes in before he can stop himself. His chest goes tight."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman is standing farther back than he expected, his dress shoes stopped just outside the edge of the foyer rug. There's a crease in his collar where the earpiece wire rubbed. The shadow along his jaw sits low. The voice that was so calm in his ear has a chest behind it at this distance."
+        ],
+        [
+         "roman",
+         "say",
+         "Is here okay?"
+        ],
+        [
+         "adrianv",
+         "say",
+         "I didn't let you in to stand guard."
+        ],
+        [
+         "roman",
+         "say",
+         "You didn't let me in to touch you either."
+        ],
+        [
+         "n",
+         "act",
+         "Up close, Roman is always harder to deal with than on a screen. Broader through the back, heavier breathing, more weight in his eyes. Adrian steps back. Roman waits until he's cleared a path before he comes in. His shoulder brushes Adrian's on the way past. When the fabric touches, they both go rigid. Neither one looks back."
+        ],
+        [
+         "n",
+         "act",
+         "Roman goes to the far side of the kitchen island. No reaching. No blocking the exit. But the space they've deliberately left between them is already hot, like a wire burning in the middle."
+        ],
+        [
+         "sys",
+         "set",
+         {
+          "flag": "CH2_LET_ROMAN_IN"
+         }
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "att": "guard",
+       "rthink": "\"Don't touch me.\" He was looking at my hands when he said it. ...I'll keep my hands where he can see them.",
+       "rwho": "roman",
+       "set": "CH2_LET_ROMAN_IN"
+      },
+      {
+       "k": "say",
+       "t": "I can't put a whole sentence together right now. Don't hang up yet.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian puts his back to the door. He's been giving orders and asking questions all night, like as long as there's one thing he's still arranging, tonight won't slide back into that night ten years ago when no one answered his texts. Now he's out of words. His chest goes tight, like someone is pressing on his breath through skin and muscle."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Don't tell me to breathe. Just don't hang up."
+        ],
+        [
+         "roman",
+         "say",
+         "Okay."
+        ],
+        [
+         "n",
+         "act",
+         "No \"calm down.\" No \"trust me.\" Just the faint rustle of fabric in his ear, and Roman confirming his fallback position with the duty desk. Adrian slides down the door to the floor. The carpet is soft. It's so soft it makes him angrier."
+        ],
+        [
+         "adrianv",
+         "say",
+         "I'm not seventeen anymore."
+        ],
+        [
+         "roman",
+         "say",
+         "I know."
+        ],
+        [
+         "adrianv",
+         "say",
+         "You came back too late."
+        ],
+        [
+         "n",
+         "act",
+         "Roman's breath stops for a second. That second of silence on the line says more than any explanation."
+        ],
+        [
+         "roman",
+         "say",
+         "Yes."
+        ],
+        [
+         "n",
+         "act",
+         "Adrian wipes a hand down his face. His fingertips come away dry. He didn't cry. It doesn't help much. Once the passage clears, Roman asks if he wants the duty officer to come up first. Adrian picks the duty officer. Roman stays on the line until they arrive. Then he hangs up."
+        ],
+        [
+         "n",
+         "act",
+         "The phone is still in his hand. His palm is burning, like he just held something over the line he shouldn't have."
+        ],
+        [
+         "sys",
+         "set",
+         {
+          "flag": "CH2_STAYED_ON_LINE"
+         }
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 3,
+         "att": 1
+        }
+       },
+       "att": "honest",
+       "rthink": "He said \"don't hang up yet.\" Ten years ago I hung up on him, and he still remembers. This time I'm staying on until the last second.",
+       "rwho": "roman",
+       "set": "CH2_STAYED_ON_LINE"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "sys",
+    "if",
+    {
+     "cond": {
+      "any": [
+       {
+        "flag": "CH2_SENT_ROMAN_AWAY"
+       },
+       {
+        "flag": "CH2_STAYED_ON_LINE"
+       },
+       {
+        "flag": "CH2_DOOR_ROUTE"
+       }
+      ]
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "Forty minutes later the duty desk pushes an urgent notice: Confirmed presence on the east roof. Penthouse lockdown escalated. The relief is stuck at the garage security check. Protocol says the nearest licensed guard goes inside."
+      ],
+      [
+       "n",
+       "act",
+       "The doorbell doesn't ring. On the lock screen, Roman stands outside the edge of the rug, hands at his sides, waiting for him."
+      ],
+      [
+       "n",
+       "act",
+       "Adrian looks at that face for a long time. Then he hits unlock."
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/penthouse",
+     "place": "Vale Tower penthouse · Lockdown",
+     "time": "Wed 10:25 PM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The floor-to-ceiling windows lock on their own. The heavy curtains come down one panel at a time. The room is left with the low hum of the HVAC and two people whose breathing hasn't settled."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman checks the last window. When he turns, the shirt pulls tight with the motion, and the lines of his back and waist are too clear in the low light. His sleeves are rolled to the elbow, the veins in his forearms moving as he works. A drop of sweat slides from his temple to his jaw and disappears into his collar."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian leans against the island and watches him. The danger isn't over, but his body answers first. Not fear. The need to get a little closer. Like something under his skin gave him a small push."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman walks up to him and stops one step away. No closer, no farther. Just close enough for Adrian to smell him, to see the skin at his collar rise and fall with his breath."
+   ],
+   [
+    "roman",
+    "say",
+    "From now on, outside communication goes over encrypted lines only. There'll be a threat dashboard on your phone."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🛡",
+     "title": "THREAT LEVEL: HIGH",
+     "txt": "Protection active · New: internal access logs / silent distress signal"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian doesn't look at the screen. He's looking at Roman's hand at his side. It just unclenched. The color is back in the knuckles, but it's still tight from the effort. He wants to touch that wrist. Make sure the pulse is still going."
+   ],
+   [
+    "n",
+    "act",
+    "He doesn't move. Roman catches him looking anyway. His throat moves once."
+   ],
+   [
+    "roman",
+    "say",
+    "You don't have to open the door tonight. You tell me to back off, I'll back off. But know this: what I'm backing off from isn't the responsibility. It's the distance."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian looks up. The one step of empty space between them is suddenly scorching."
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "roman",
+       "He watches my hands. Every time he's scared, he watches my hands, like as long as they're still moving, I'm still alive. ...So let him watch."
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The fight comes fast. It isn't about the threat. It's about who gets to decide for whom. Roman insists he has to accept the full security plan. Adrian won't be locked in a cage with \"protection\" printed on the side. Neither of them raises his voice. The air is tight enough to crack."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman stands on the other side of the island. At some point his top button came undone, and the line of his collarbone is sharp in the low light. The light falls along his jaw, the muscle there standing out where he's clenching it. The veins on the back of his hand run tight all the way up his forearm."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian stares at that spot. The anger and the urge to touch him are knotted together and won't come apart. The island is the only barrier left. Without it, he isn't sure he wouldn't walk around it and use his hands instead of his next question."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You disappear for ten years. Now you show up giving me orders."
+   ],
+   [
+    "roman",
+    "say",
+    "I give orders because I don't have any other way to make sure you stay alive."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Then what did you promise? Ten years ago, what did you promise?"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman's breathing drops a beat. His jaw locks, his shoulders tip forward slightly, like his body went on guard before his mouth did."
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "He's waiting for you to answer \"what did you promise ten years ago.\" You can keep pushing, you can tell the truth, or you can say nothing at all.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Answer me. One at a time. Don't hide behind \"protection.\"",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian throws the questions one after another and doesn't give Roman a chance to rename the past as \"protection.\""
+        ],
+        [
+         "adrianv",
+         "say",
+         "Where did you go that night? Who told you to leave? Before you left, did you even think about calling me?"
+        ],
+        [
+         "roman",
+         "say",
+         "...I thought about it."
+        ],
+        [
+         "adrianv",
+         "say",
+         "And?"
+        ],
+        [
+         "roman",
+         "say",
+         "And I didn't call."
+        ],
+        [
+         "n",
+         "act",
+         "Roman's answers keep getting shorter. His eyes keep getting darker. When the fight finally stops, the air between them is cold enough to burn. Not the temperature. Everything they're holding down."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -1,
+         "ten": 3
+        }
+       },
+       "att": "press",
+       "rthink": "Every question hits the same place. The shorter I answer, the more he knows I'm dodging. ...He's always known.",
+       "rwho": "roman",
+       "set": "CH2_FIGHT_PRESSED"
+      },
+      {
+       "k": "say",
+       "t": "...I'm scared. Scared you'll disappear again.",
+       "then": [
+        [
+         "adrianv",
+         "say",
+         "I'm scared. Scared you'll disappear again. Scared I'll be standing in another night where nobody answers."
+        ],
+        [
+         "n",
+         "act",
+         "Then he takes half a step forward. Roman's whole body stiffens, but he doesn't back away. Adrian's forehead nearly touches his jaw. He can feel Roman's breath on his lips. Warm."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman's hand comes up and stops in midair. In the end it just touches the outside of Adrian's arm, barely, like it hit a live wire, and pulls back."
+        ],
+        [
+         "roman",
+         "say",
+         "...Don't. If I touch you now, I won't stop."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 2,
+         "att": 3,
+         "ten": 3
+        }
+       },
+       "att": "honest",
+       "rthink": "He said he's scared. In ten years I imagined him hating me, forgetting me. I never once imagined him scared. My hand stopped in midair because one more inch and I'd have no right to the word \"protect.\"",
+       "rwho": "roman",
+       "set": "CH2_FIGHT_ADMITTED"
+      },
+      {
+       "k": "act",
+       "t": "*He stops arguing and reaches up to undo the second button on Roman's shirt.*",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian stops arguing. He reaches up and undoes the second button on Roman's shirt. His fingertips skim the collarbone, then lower, and stop on his chest. The muscle under the skin goes tight all at once."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman's breathing goes heavy and rough. He catches Adrian's wrist but doesn't pull it away. Instead he presses that hand harder against his chest, right over a heart going out of its mind."
+        ],
+        [
+         "roman",
+         "say",
+         "You know what you're doing."
+        ],
+        [
+         "adrianv",
+         "say",
+         "I know."
+        ],
+        [
+         "n",
+         "act",
+         "The next second, the small of his back hits the edge of the island. Roman's kiss is deep and heavy, ten years of unsaid things coming down with it. His palm is flat on Adrian's side, thumb pressing into the dip above his hip hard enough to almost leave a mark. Pressed this close, neither of them can hide a thing."
+        ],
+        [
+         "roman",
+         "act",
+         "But he stops before he actually crosses the line. Forehead against Adrian's, his breathing a mess."
+        ],
+        [
+         "roman",
+         "say",
+         "Not before the vote... I can't lose control."
+        ],
+        [
+         "n",
+         "act",
+         "Adrian leans in again, on purpose. Roman swears under his breath and pulls him all the way into his arms, chin resting on top of his head, and doesn't let go for a long time."
+        ],
+        [
+         "roman",
+         "say",
+         "Interrupt me like that again and whatever happens is on you."
+        ],
+        [
+         "adrianv",
+         "say",
+         "You sure that's a punishment?"
+        ],
+        [
+         "n",
+         "lock",
+         {
+          "title": "Ten Minutes at the Island",
+          "teaser": "He said he \"can't lose control,\" but he didn't let go. The ten minutes before the lights went out belong to the two of you.",
+          "price": 3,
+          "img": "heir/bedroom",
+          "then": [
+           [
+            "n",
+            "act",
+            "The curtains are down tight, the whole city shut outside. The penthouse is left with the low drone of the air and two people breathing out of rhythm."
+           ],
+           [
+            "roman",
+            "act",
+            "Roman backs him against the island. His mouth moves from Adrian's lips to his jaw, then to the pulse at the side of his neck, the one beating fastest. Every touch is slow, like he's checking that Adrian is still alive."
+           ],
+           [
+            "n",
+            "act",
+            "Shirt buttons come undone one at a time. The moment a palm meets skin, they both shiver. Everything ten years stored up finds a way out in those ten minutes."
+           ],
+           [
+            "roman",
+            "say",
+            "(against his ear) Say stop, and I'll stop."
+           ],
+           [
+            "adrianv",
+            "say",
+            "...Don't stop."
+           ],
+           [
+            "n",
+            "act",
+            "The light doesn't remember much of what comes after. Only that Roman never let go of his hand, fingers laced, knuckles pressed to the cold countertop. Only that at the very end Roman buried his face in the curve of his neck and said his name, his voice so hoarse it didn't sound like his."
+           ],
+           [
+            "roman",
+            "act",
+            "A long time later, Roman lifts his head and smooths Adrian's collar back into place, slowly. His thumb rests on Adrian's collarbone for a moment."
+           ],
+           [
+            "roman",
+            "say",
+            "Before the vote, this is the last time."
+           ],
+           [
+            "adrianv",
+            "say",
+            "You said that last time too."
+           ],
+           [
+            "roman",
+            "say",
+            "...Last time I wasn't lying to you. This time I'm lying to myself."
+           ]
+          ]
+         }
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "adrianv|roman": {
+         "att": 4,
+         "ten": 5
+        }
+       },
+       "att": "bold",
+       "rthink": "His fingers were shaking when he undid my button. He thinks I didn't notice. I held his hand there, and not to stop him. I didn't want him to notice I was shaking worse.",
+       "rwho": "roman",
+       "set": "CH2_FIGHT_KISSED"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "intimate"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The fight has stopped, but the air in the penthouse doesn't cool right away. The AC holds the temperature steady, and Adrian's skin is still hot. Heat left by everything that was just said, by the places that got touched and the ones that didn't. Like it's been pressed under his skin and won't fade yet."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman stands on the other side of the island, top two buttons still open, sweat running down the side of his neck into his collar. He's in no hurry to fix himself up, like he's decided Adrian has a right to see this."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You always stop at the edge."
+   ],
+   [
+    "roman",
+    "say",
+    "Because once I cross it, I won't give you another chance to say \"don't touch me tonight.\""
+   ],
+   [
+    "n",
+    "act",
+    "His voice is low, a little hoarse. Adrian can hear it rumble in his chest. They hold each other's eyes for a few seconds. The air is full of unfinished things and danger nobody's spelled out."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman finally does the buttons back up, one at a time, slowly, like he's giving Adrian time for one last look. At the second button his fingers pause before they go on."
+   ],
+   [
+    "roman",
+    "say",
+    "Go change. There's one more door to get through tonight."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "✉",
+     "title": "Vale Welcome Reception · Tonight, 11 PM",
+     "txt": "The board has called a last-minute reception tonight to welcome the heir. Location: the main ballroom, Vale Hotel. Your name is already on the guest list. Twice."
+    }
+   ],
+   [
+    "n",
+    "act",
+    "When Adrian turns away, he can feel that gaze land on the small of his back. It doesn't look away. It doesn't come any closer either. Like a knife back in its sheath, the edge still hot."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "att": 2,
+      "ten": 1
+     },
+     "why": "The heat after lockdown"
+    }
+   ]
+  ]
+ }
+}

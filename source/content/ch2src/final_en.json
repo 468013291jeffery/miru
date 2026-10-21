@@ -1,0 +1,443 @@
+{
+ "A": {
+  "t": "We look into it together. The personal stuff stays open for now.",
+  "set": "CH2_END_TOGETHER",
+  "mem": "Adrian and Roman agreed to investigate the two files together and leave the personal side unsettled for now; Roman sat one empty chair away.",
+  "then": [
+   [
+    "n",
+    "act",
+    "Adrian shares a read-only copy. When Roman sits down, he leaves one empty chair between them. Adrian doesn't ask him to move over."
+   ],
+   [
+    "n",
+    "act",
+    "Each of them writes down one fact that has to be verified tomorrow. The work is moving forward. The feelings aren't being forced to keep pace. The heat in the air is still there."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "tru": 2,
+      "att": 1
+     },
+     "why": "Together, nothing settled"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "On the last line of the footer, the independent intake officer finds another entry in the search history."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "📂",
+     "title": "Seven Years Ago, Someone Pulled This File Again",
+     "txt": "Witness field: M. MERCER"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "That isn't the seventh year after Roman disappeared — the seventh year was three years ago. Adrian marks the two dates separately."
+   ],
+   [
+    "n",
+    "act",
+    "Roman sees the name and doesn't deny knowing it."
+   ],
+   [
+    "roman",
+    "say",
+    "When the records didn't match, I went to Marcus."
+   ],
+   [
+    "adrianv",
+    "say",
+    "So which one did he change?"
+   ],
+   [
+    "n",
+    "act",
+    "Roman doesn't answer. Adrian's phone lights up first — Marcus has finally written back."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "💬",
+     "title": "Marcus",
+     "txt": "Before you ask him what he signed, ask me what I deleted."
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian saves the message and doesn't reply. He looks up at Roman first. Their eyes hold over the table for two seconds. Neither looks away."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Before Chapter 3 starts, you get one more chance to say everything you can."
+   ],
+   [
+    "roman",
+    "say",
+    "I know. That's why I'm still standing here."
+   ],
+   [
+    "n",
+    "act",
+    "The frame holds between the two files: one name, one for protection, one for disposal. Under them sits an original record nobody has pulled yet — it won't turn up on its own. Someone has to hand it over."
+   ],
+   [
+    "n",
+    "act",
+    "And Adrian's fingertips are still burning. The cold of the door lock, the heat through fabric, the damp of breath, those two seconds of a hand pressed to the small of his back, and the hug he almost couldn't let go of. The danger isn't over. His body hasn't calmed down either."
+   ]
+  ]
+ },
+ "B": {
+  "t": "The personal side stops here. We go through formal review.",
+  "set": "CH2_END_PAUSED",
+  "mem": "Adrian put his personal relationship with Roman on hold and had an independent officer log the old badge for formal review.",
+  "then": [
+   [
+    "n",
+    "act",
+    "Adrian has the old badge logged by an independent intake officer. Roman confirms the time of his next formal statement and leaves the lounge."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian looks at the empty spot and still wants him. His warmth, his breathing, the hand that pressed against his side."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "tru": -1,
+      "ten": 2
+     },
+     "why": "Personal side on hold"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "On the last line of the footer, the independent intake officer finds another entry in the search history."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "📂",
+     "title": "Seven Years Ago, Someone Pulled This File Again",
+     "txt": "Witness field: M. MERCER"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "That isn't the seventh year after Roman disappeared — the seventh year was three years ago. Adrian marks the two dates separately."
+   ],
+   [
+    "n",
+    "act",
+    "Roman sees the name and doesn't deny knowing it."
+   ],
+   [
+    "roman",
+    "say",
+    "When the records didn't match, I went to Marcus."
+   ],
+   [
+    "adrianv",
+    "say",
+    "So which one did he change?"
+   ],
+   [
+    "n",
+    "act",
+    "Roman doesn't answer. Adrian's phone lights up first — Marcus has finally written back."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "💬",
+     "title": "Marcus",
+     "txt": "Before you ask him what he signed, ask me what I deleted."
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian saves the message and doesn't reply. He looks up at Roman first. Their eyes hold over the table for two seconds. Neither looks away."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Before Chapter 3 starts, you get one more chance to say everything you can."
+   ],
+   [
+    "roman",
+    "say",
+    "I know. That's why I'm still standing here."
+   ],
+   [
+    "n",
+    "act",
+    "The frame holds between the two files: one name, one for protection, one for disposal. Under them sits an original record nobody has pulled yet — it won't turn up on its own. Someone has to hand it over."
+   ],
+   [
+    "n",
+    "act",
+    "And Adrian's fingertips are still burning. The cold of the door lock, the heat through fabric, the damp of breath, those two seconds of a hand pressed to the small of his back, and the hug he almost couldn't let go of. The danger isn't over. His body hasn't calmed down either."
+   ]
+  ]
+ },
+ "C": {
+  "t": "Independent verification. Sienna just hands over records.",
+  "set": "CH2_END_INDEPENDENT",
+  "mem": "Adrian gave verification to an independent party with no ties to either family; Sienna only supplied records, and Roman waited for notice like everyone else.",
+  "then": [
+   [
+    "n",
+    "act",
+    "Adrian notifies the legal intake channel and asks for an independent review that keeps both families' interests out of it."
+   ],
+   [
+    "sienna",
+    "act",
+    "Sienna writes back: she can provide the acquisition records."
+   ],
+   [
+    "n",
+    "act",
+    "On the other end, Roman waits for the same notice. Neither of them gets to own the truth."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "tru": 1,
+      "jea": 1
+     },
+     "why": "Nobody owns the truth"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "On the last line of the footer, the independent intake officer finds another entry in the search history."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "📂",
+     "title": "Seven Years Ago, Someone Pulled This File Again",
+     "txt": "Witness field: M. MERCER"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "That isn't the seventh year after Roman disappeared — the seventh year was three years ago. Adrian marks the two dates separately."
+   ],
+   [
+    "n",
+    "act",
+    "Roman sees the name and doesn't deny knowing it."
+   ],
+   [
+    "roman",
+    "say",
+    "When the records didn't match, I went to Marcus."
+   ],
+   [
+    "adrianv",
+    "say",
+    "So which one did he change?"
+   ],
+   [
+    "n",
+    "act",
+    "Roman doesn't answer. Adrian's phone lights up first — Marcus has finally written back."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "💬",
+     "title": "Marcus",
+     "txt": "Before you ask him what he signed, ask me what I deleted."
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian saves the message and doesn't reply. He looks up at Roman first. Their eyes hold over the table for two seconds. Neither looks away."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Before Chapter 3 starts, you get one more chance to say everything you can."
+   ],
+   [
+    "roman",
+    "say",
+    "I know. That's why I'm still standing here."
+   ],
+   [
+    "n",
+    "act",
+    "The frame holds between the two files: one name, one for protection, one for disposal. Under them sits an original record nobody has pulled yet — it won't turn up on its own. Someone has to hand it over."
+   ],
+   [
+    "n",
+    "act",
+    "And Adrian's fingertips are still burning. The cold of the door lock, the heat through fabric, the damp of breath, those two seconds of a hand pressed to the small of his back, and the hug he almost couldn't let go of. The danger isn't over. His body hasn't calmed down either."
+   ]
+  ]
+ },
+ "D": {
+  "t": "I'll look into it myself. I won't pretend I've forgiven anything.",
+  "set": "CH2_END_ALONE",
+  "mem": "Adrian decided to investigate alone and requested access to the historical files; Roman confirmed he was off the share.",
+  "then": [
+   [
+    "n",
+    "act",
+    "Adrian keeps a separate copy and asks intake for access to the historical files. Roman confirms he's off the share."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian sits down at a table with room for one and picks up the old keychain. Someone leaving tonight didn't take his past with them. The hollow spot in his chest is still burning."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "tru": -2,
+      "ten": 3
+     },
+     "why": "He chose to look into it alone"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "On the last line of the footer, the independent intake officer finds another entry in the search history."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "📂",
+     "title": "Seven Years Ago, Someone Pulled This File Again",
+     "txt": "Witness field: M. MERCER"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "That isn't the seventh year after Roman disappeared — the seventh year was three years ago. Adrian marks the two dates separately."
+   ],
+   [
+    "n",
+    "act",
+    "Roman sees the name and doesn't deny knowing it."
+   ],
+   [
+    "roman",
+    "say",
+    "When the records didn't match, I went to Marcus."
+   ],
+   [
+    "adrianv",
+    "say",
+    "So which one did he change?"
+   ],
+   [
+    "n",
+    "act",
+    "Roman doesn't answer. Adrian's phone lights up first — Marcus has finally written back."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "💬",
+     "title": "Marcus",
+     "txt": "Before you ask him what he signed, ask me what I deleted."
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian saves the message and doesn't reply. He looks up at Roman first. Their eyes hold over the table for two seconds. Neither looks away."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Before Chapter 3 starts, you get one more chance to say everything you can."
+   ],
+   [
+    "roman",
+    "say",
+    "I know. That's why I'm still standing here."
+   ],
+   [
+    "n",
+    "act",
+    "The frame holds between the two files: one name, one for protection, one for disposal. Under them sits an original record nobody has pulled yet — it won't turn up on its own. Someone has to hand it over."
+   ],
+   [
+    "n",
+    "act",
+    "And Adrian's fingertips are still burning. The cold of the door lock, the heat through fabric, the damp of breath, those two seconds of a hand pressed to the small of his back, and the hug he almost couldn't let go of. The danger isn't over. His body hasn't calmed down either."
+   ]
+  ]
+ }
+}

@@ -1,0 +1,2636 @@
+{
+ "beats": {
+  "zh": [
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/car",
+     "place": "Vale车队 · 去机场的路上",
+     "time": "周三 早上8:40"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "sys",
+    "if",
+    {
+     "cond": {
+      "flag": "ROMAN_WAS_FIRST_PRIORITY"
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "三年。这个数字从布鲁克林一路跟着他，上了高速。"
+      ]
+     ],
+     "else": [
+      [
+       "roman",
+       "say",
+       "所以我亲自来了。"
+      ],
+      [
+       "n",
+       "act",
+       "如果Roman今天才接到任务，他的语气为什么像早就熟悉自己的一切？"
+      ],
+      [
+       "adrianv",
+       "say",
+       "你知道我的事多久了？"
+      ],
+      [
+       "roman",
+       "line",
+       {
+        "hint": "他问到了。你可以撒谎，可以拖，也可以说实话。",
+        "opts": [
+         {
+          "k": "say",
+          "t": "（沉默半秒）三年。",
+          "then": [],
+          "love": 0,
+          "rd": {
+           "adrianv|roman": {
+            "tru": 1,
+            "ten": 1
+           }
+          },
+          "att": "honest"
+         },
+         {
+          "k": "say",
+          "t": "……够久了。",
+          "then": [
+           [
+            "adrianv",
+            "say",
+            "多久，Roman。"
+           ],
+           [
+            "roman",
+            "say",
+            "三年。"
+           ]
+          ],
+          "love": 0,
+          "rd": {
+           "adrianv|roman": {
+            "ten": 2
+           }
+          },
+          "att": "dodge"
+         },
+         {
+          "k": "act",
+          "t": "Roman没回答，把平板翻到一页：任务起始日期，三年前的今天。",
+          "then": [
+           [
+            "n",
+            "act",
+            "Adrian盯着那个日期看了很久。"
+           ]
+          ],
+          "love": 1,
+          "rd": {
+           "adrianv|roman": {
+            "tru": 2,
+            "ten": 1
+           }
+          },
+          "att": "move"
+         }
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "三年，意味着Roman知道他搬家、换工作，知道他发烧一个人去急诊。甚至可能知道他约过谁。"
+   ],
+   [
+    "n",
+    "act",
+    "被抛下其实很简单。发现他一直就在附近，反而更糟。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "你监视我。"
+   ],
+   [
+    "roman",
+    "say",
+    "保护。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "隔着老远保护。"
+   ],
+   [
+    "roman",
+    "say",
+    "任务要求。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "谁的任务？"
+   ],
+   [
+    "roman",
+    "say",
+    "今天不说。"
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "三年，他一直站在你生活的边缘，一次都没走进来。你怎么处理？",
+     "opts": [
+      {
+       "k": "say",
+       "t": "行。我暂时信你是在保护我。",
+       "then": [
+        [
+         "roman",
+         "say",
+         "你不该这么快信。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "那剩下的你自己挣。"
+        ],
+        [
+         "roman",
+         "act",
+         "Roman看了他很久。"
+        ],
+        [
+         "roman",
+         "say",
+         "公平。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "tru": 4,
+         "gru": -1
+        }
+       },
+       "set": "TRUSTED_ROMAN_BEFORE_PROOF",
+       "att": "soft"
+      },
+      {
+       "k": "say",
+       "t": "你不能因为西装穿得好看，就把跟踪改名叫保护。",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman低头看了眼自己。"
+        ],
+        [
+         "roman",
+         "say",
+         "这句话前半段差点像夸我。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "少来。"
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -5,
+         "gru": 3
+        }
+       },
+       "set": "REFUSED_ROMANS_EXPLANATION",
+       "att": "push"
+      },
+      {
+       "k": "say",
+       "t": "是我父亲雇的你？",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman的眼神动了一下。很快，但Adrian抓到了。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "刚才那个眼神，就是‘是’。"
+        ],
+        [
+         "roman",
+         "say",
+         "那是我后悔跟你对视。"
+        ],
+        [
+         "sys",
+         "event",
+         {
+          "icon": "🔎",
+          "title": "线索：父亲可能雇了Roman",
+          "txt": "Alexander Vale，在死前三年就找到了他。"
+         }
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -3,
+         "gru": 2
+        }
+       },
+       "set": "PUSHED_ROMAN_FOR_TRUTH",
+       "att": "probe"
+      },
+      {
+       "k": "say",
+       "t": "所以我约过谁，你也知道？",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman看向窗外。"
+        ],
+        [
+         "roman",
+         "say",
+         "很不幸。少到不值得讨论。"
+        ],
+        [
+         "n",
+         "act",
+         "Adrian笑了。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "你这算吃醋？"
+        ],
+        [
+         "roman",
+         "say",
+         "监控结论。……那个酒保坚持了三次约会。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "你连他都记得？"
+        ],
+        [
+         "roman",
+         "say",
+         "职业后遗症。"
+        ],
+        [
+         "roman",
+         "act",
+         "可他的下颌已经绷紧了。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 2,
+         "jea": 2,
+         "tru": 1
+        }
+       },
+       "set": "FLIRTED_USING_SURVEILLANCE",
+       "att": "tease"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "窗外从熟悉的街区换成了机场外围的路。十年前他在；然后消失七年；三年前才以“保护”的名义回来。"
+   ],
+   [
+    "n",
+    "act",
+    "中间那七年，像被人从时间轴上剪掉了。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "你还记得那一晚吗？"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman的手指在膝盖上慢慢收紧。"
+   ],
+   [
+    "roman",
+    "say",
+    "哪一晚？"
+   ],
+   [
+    "adrianv",
+    "say",
+    "别装。"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman终于看过来。"
+   ],
+   [
+    "roman",
+    "say",
+    "记得。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/cvs17"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "rain"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "memory"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "便利店空调外机嗡嗡响。Roman破掉的嘴角。创可贴贴上去的时候，两个人越靠越近。"
+   ],
+   [
+    "n",
+    "act",
+    "他的拇指擦过Adrian耳后。差半寸。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/car"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "intimate"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "成年的Roman就在不到一臂远的地方。更宽的肩，更低的嗓音，呼吸时领口下的锁骨一起一伏。"
+   ],
+   [
+    "n",
+    "act",
+    "十七岁时，想亲他是件让人困惑的事。二十七岁，麻烦在于太清楚自己在想什么。"
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "那半寸还悬在你们之间。这一次，你怎么把旧情推到现在？",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Adrian伸手，指尖碰上他腕上那道浅白旧疤。",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman本能地扣住他的手腕。动作快，力道却轻，拇指正好压在他脉搏上。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "还疼吗？"
+        ],
+        [
+         "roman",
+         "say",
+         "这道不疼。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "那哪一道疼？"
+        ],
+        [
+         "roman",
+         "say",
+         "那就说来话长了。"
+        ],
+        [
+         "roman",
+         "act",
+         "掌心的热度多停了半秒，才松开。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 2,
+         "tru": 1
+        }
+       },
+       "set": "TOUCHED_ROMANS_SCAR",
+       "att": "soft"
+      },
+      {
+       "k": "act",
+       "t": "车转弯，Adrian的膝盖贴上他的腿，没有移开。",
+       "then": [
+        [
+         "roman",
+         "act",
+         "隔着西裤，Roman腿上的肌肉绷了一瞬。他低头看了一眼。"
+        ],
+        [
+         "roman",
+         "say",
+         "你是故意的。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "证明一下。"
+        ],
+        [
+         "roman",
+         "act",
+         "Roman往后靠了靠。膝盖却没挪。"
+        ],
+        [
+         "n",
+         "act",
+         "这已经算回答了。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "set": "INITIATED_LEG_CONTACT",
+       "att": "bold"
+      },
+      {
+       "k": "act",
+       "t": "Adrian什么都没说，只是看着他的嘴。",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman说话慢了下来，喉结动了一下。"
+        ],
+        [
+         "roman",
+         "say",
+         "别。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "我什么都没做。"
+        ],
+        [
+         "roman",
+         "say",
+         "你什么都没做的时候，通常最危险。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 3,
+         "ten": 3
+        }
+       },
+       "set": "STARED_AT_ROMANS_MOUTH",
+       "att": "flirt"
+      },
+      {
+       "k": "say",
+       "t": "以后再说。先处理继承。",
+       "then": [
+        [
+         "roman",
+         "say",
+         "这倒新鲜。你居然会停。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "也许十年终于教会我边界。"
+        ],
+        [
+         "roman",
+         "act",
+         "Roman很轻地笑了一下。"
+        ],
+        [
+         "roman",
+         "say",
+         "再看看。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1,
+         "ten": -1
+        }
+       },
+       "set": "PULLED_BACK_FROM_INTIMACY",
+       "att": "cold"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/airport",
+     "place": "泰特伯勒 私人机库",
+     "time": "周三 上午9:20"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "luxury"
+    }
+   ],
+   [
+    "roman",
+    "act",
+    "SUV直接驶进私人机库。Roman先下车，回身扶住车门顶，给Adrian留出空间。"
+   ],
+   [
+    "roman",
+    "say",
+    "（擦肩时压低声音）以后再说。"
+   ],
+   [
+    "n",
+    "act",
+    "舷梯下的工作人员欠身：“早上好，Vale先生。”"
+   ],
+   [
+    "n",
+    "act",
+    "这个姓第一次不是印在DNA报告上，而是一个陌生人看着他的脸叫出来。"
+   ],
+   [
+    "n",
+    "act",
+    "昨天他错过地铁，世界连停一秒都不会。今天一架飞机因为他晚了三分钟，就在这儿等。"
+   ],
+   [
+    "roman",
+    "say",
+    "你会习惯的。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "我不想。"
+   ],
+   [
+    "roman",
+    "say",
+    "也许正因为这样，他们才需要你。"
+   ],
+   [
+    "adrianv",
+    "pick",
+    {
+     "ic": "👔",
+     "title": "造型",
+     "hint": "私人助理推来三套衣服。舷梯下待会儿会有镜头。",
+     "items": [
+      {
+       "ic": "🖤",
+       "t": "黑色高定西装",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman的视线从领口扫到袖口，停了一秒。"
+        ],
+        [
+         "roman",
+         "say",
+         "……合身。"
+        ]
+       ],
+       "sub": "像个真正的Vale",
+       "rd": {
+        "adrianv|roman": {
+         "att": 1
+        }
+       },
+       "set": "STYLE_BLACK"
+      },
+      {
+       "ic": "🤍",
+       "t": "奶油色轻奢西装",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman皱眉。"
+        ],
+        [
+         "roman",
+         "say",
+         "太显眼。镜头会第一个找到你。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "那你就站近点。"
+        ]
+       ],
+       "sub": "让镜头记住你",
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "ten": 1
+        }
+       },
+       "set": "STYLE_CREAM"
+      },
+      {
+       "ic": "🩶",
+       "t": "深灰休闲套装",
+       "then": [
+        [
+         "roman",
+         "say",
+         "像你。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "像昨天的我？"
+        ],
+        [
+         "roman",
+         "say",
+         "像我认识的那个。"
+        ]
+       ],
+       "sub": "还像昨天的自己",
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "tru": 1
+        }
+       },
+       "set": "STYLE_GREY"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/jet",
+     "place": "Vale私人飞机 · 主舱",
+     "time": "周三 上午9:45"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "godrays"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "舱门关上。没有广播，没有别的乘客。机舱像一间飞在空中的书房。"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman坐到对面，打开一只深色皮盒，把东西一样样摆上桌。"
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🗝",
+     "title": "继承包裹",
+     "txt": "黑卡 · 顶层产权 · 私人航空 · 董事会投票凭证 · 家族袖扣 · 金库钥匙"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "黑卡上几乎什么都没有，只印着名字：ADRIAN VALE。他用拇指擦过那个陌生的姓。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "额度？"
+   ],
+   [
+    "roman",
+    "say",
+    "没有什么有意义的额度。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "听起来很不负责任。"
+   ],
+   [
+    "roman",
+    "say",
+    "因为你还在用昨天只有32美元的方式理解它。"
+   ],
+   [
+    "n",
+    "act",
+    "数字一瞬间变了，他却没有。Adrian拿起那把金属钥匙。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "这开什么？"
+   ],
+   [
+    "roman",
+    "say",
+    "你父亲拒绝放进任何线上系统的东西。"
+   ],
+   [
+    "n",
+    "act",
+    "接着是家族袖扣。Roman看到它的瞬间，眼神停了一下。很短，Adrian还是抓到了。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "怎么了？"
+   ],
+   [
+    "roman",
+    "say",
+    "没什么。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "你每次说‘没什么’都特别明显。"
+   ],
+   [
+    "roman",
+    "say",
+    "收好。别给任何人。"
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🔒",
+     "title": "谜团：袖扣",
+     "txt": "金库钥匙已获得。袖扣的事，他不肯解释。"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "mystery"
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "roman",
+       "那枚袖扣我见过一次，在我父亲的旧徽章旁边。不能是今天。"
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "飞机穿过云层。Roman起身去放平板。下一秒，机身猛地下沉半拍，杯里的水晃出杯沿。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/jet_catch"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "hearts"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "intimate"
+    }
+   ],
+   [
+    "roman",
+    "act",
+    "Adrian脚下一滑。Roman已经转身，一手扣住他腰侧，一手扶住他手臂，把人拉回自己面前。"
+   ],
+   [
+    "n",
+    "act",
+    "Adrian撞进他胸口。外套滑开，衬衫下肩和胸的轮廓一下变清楚，扣在他腰后的手掌几乎盖住半侧腰。"
+   ],
+   [
+    "n",
+    "act",
+    "Roman的呼吸没乱。Adrian的乱了一拍。他低头看那只还停在自己腰上的手。"
+   ],
+   [
+    "adrianv",
+    "say",
+    "你还没松。"
+   ],
+   [
+    "roman",
+    "feature",
+    {
+     "k": "heart",
+     "cid": "roman",
+     "hint": "Roman的手还扣在你腰上。你贴着他，能听见他的心跳——它比他的表情诚实。",
+     "win": [
+      [
+       "n",
+       "act",
+       "Roman的心跳到了{bpm}，比Adrian的{mine}还快。"
+      ],
+      [
+       "roman",
+       "act",
+       "他低头，像这才意识到手还在那儿。又慢了半秒，才松开。"
+      ],
+      [
+       "roman",
+       "say",
+       "气流。"
+      ]
+     ],
+     "lose": [
+      [
+       "n",
+       "act",
+       "Roman的心跳只有{bpm}，稳得气人。可那只手还是慢了半秒才松开。"
+      ],
+      [
+       "roman",
+       "say",
+       "气流。"
+      ]
+     ],
+     "skip": [
+      [
+       "roman",
+       "act",
+       "那只手慢了半秒才松开。"
+      ],
+      [
+       "roman",
+       "say",
+       "气流。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrianv",
+    "say",
+    "当然。"
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "att": 3,
+      "ten": 4
+     },
+     "why": "气流里他没松手"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "飞机又晃了一下。Adrian伸手去扶，掌心按在了Roman胸口。隔着衬衫，心跳一下下撞着他手心。"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman握住他的手腕，没推开。拇指在他掌心停了半秒。"
+   ],
+   [
+    "roman",
+    "line",
+    {
+     "hint": "他的手按在你心口。你的心跳正在出卖你。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "（声音压得很低）下次再这样，我就不松手了。",
+       "then": [],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "ten": 2
+        }
+       },
+       "att": "flirt"
+      },
+      {
+       "k": "act",
+       "t": "Roman没松手，把Adrian的手按在自己心口，多停了两秒。",
+       "then": [
+        [
+         "n",
+         "act",
+         "两秒，够Adrian数清那几下心跳。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "att": "bold"
+      },
+      {
+       "k": "act",
+       "t": "Roman立刻松开，退后一步。“坐好，系安全带。”",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian看见了，他耳后红了。"
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1,
+         "ten": -1
+        }
+       },
+       "att": "restrain"
+      }
+     ]
+    }
+   ],
+   [
+    "roman",
+    "act",
+    "他脱下外套搭在椅背上，解开最上面一颗扣子。没了西装，衬衫把上半身的线条勾得更清楚。"
+   ],
+   [
+    "n",
+    "act",
+    "Adrian又看了一秒。"
+   ],
+   [
+    "roman",
+    "say",
+    "看上面。"
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "被他抓了个正着。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "我已经在往上看了。",
+       "then": [
+        [
+         "roman",
+         "say",
+         "看得挺慢。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "检查项目比较多。"
+        ],
+        [
+         "roman",
+         "act",
+         "Roman耳后红了一点。"
+        ],
+        [
+         "roman",
+         "say",
+         "你现在一直这么不要脸？"
+        ],
+        [
+         "adrianv",
+         "say",
+         "证据充分的时候，是。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "set": "KEPT_LOOKING_AT_ROMAN",
+       "att": "flirt"
+      },
+      {
+       "k": "act",
+       "t": "Adrian把视线转向窗外。太快了。",
+       "then": [
+        [
+         "roman",
+         "say",
+         "想看就看。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "什么？"
+        ],
+        [
+         "roman",
+         "say",
+         "我什么都没说。"
+        ],
+        [
+         "roman",
+         "act",
+         "他低头看平板，嘴角有极轻的一点笑。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "tru": 1,
+         "ten": 1
+        }
+       },
+       "set": "LOOKED_AWAY_FIRST",
+       "att": "dodge"
+      },
+      {
+       "k": "act",
+       "t": "Adrian抬手，指尖隔着衬衫落在他胸口：“确认一下伤势。”",
+       "then": [
+        [
+         "roman",
+         "act",
+         "布料下的肌肉绷了一下。Roman立刻扣住他的手腕，没推开，拇指压在他脉搏上。"
+        ],
+        [
+         "roman",
+         "say",
+         "小心。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "小心什么？"
+        ],
+        [
+         "roman",
+         "say",
+         "你很清楚。"
+        ],
+        [
+         "roman",
+         "act",
+         "他把Adrian的手从胸口拿开，慢得像舍不得。"
+        ],
+        [
+         "roman",
+         "say",
+         "检查得真仔细。"
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "adrianv|roman": {
+         "att": 3,
+         "ten": 4,
+         "tru": 2
+        }
+       },
+       "set": "TOUCHED_ROMANS_CHEST",
+       "att": "bold"
+      },
+      {
+       "k": "say",
+       "t": "十年变化挺大。",
+       "then": [
+        [
+         "roman",
+         "say",
+         "我们都变了。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "我没说我。"
+        ],
+        [
+         "roman",
+         "say",
+         "你真是没救。"
+        ],
+        [
+         "adrianv",
+         "say",
+         "我十七岁的时候你就这么说。"
+        ],
+        [
+         "roman",
+         "say",
+         "说明我看人很准。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 2,
+         "tru": 1
+        }
+       },
+       "set": "COMMENTED_ON_ROMANS_BODY",
+       "att": "tease"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "lock",
+    {
+     "title": "差一点失控的气流",
+     "teaser": "第三次颠簸，舱灯闪了一下。那三秒里发生的事，只有你们两个知道。",
+     "price": 3,
+     "then": [
+      [
+       "n",
+       "act",
+       "第三次颠簸来得毫无预兆。灯闪了一下，Adrian整个人被甩向舱壁。"
+      ],
+      [
+       "roman",
+       "act",
+       "Roman先到。他一手撑住舱壁，把Adrian整个圈在自己和墙之间。"
+      ],
+      [
+       "n",
+       "act",
+       "近到能数清他的睫毛。Roman的呼吸擦过他耳侧，是热的。"
+      ],
+      [
+       "roman",
+       "say",
+       "（贴着他耳边）别动。"
+      ],
+      [
+       "n",
+       "act",
+       "Adrian没动。他的手攥住了Roman的衬衫前襟。"
+      ],
+      [
+       "roman",
+       "act",
+       "Roman低头，鼻尖蹭过他的鼻梁，停在他嘴唇上方不到一寸。"
+      ],
+      [
+       "roman",
+       "say",
+       "你知道我在想什么吗。"
+      ],
+      [
+       "adrianv",
+       "say",
+       "想什么？"
+      ],
+      [
+       "roman",
+       "say",
+       "在想那天在便利店门口，我为什么停了。"
+      ],
+      [
+       "roman",
+       "act",
+       "他额头抵上来，闭上眼，呼吸乱了一下。"
+      ],
+      [
+       "n",
+       "act",
+       "“叮”——安全带指示灯亮了。"
+      ],
+      [
+       "roman",
+       "act",
+       "Roman退开前，拇指在他腰侧重重按了一下。"
+      ],
+      [
+       "roman",
+       "say",
+       "下次没有气流，我也不停。"
+      ]
+     ],
+     "img": "heir/lock_jet"
+    }
+   ]
+  ],
+  "en": [
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/car",
+     "place": "Vale motorcade, en route to the airfield",
+     "time": "Wednesday, 8:40 AM"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "sys",
+    "if",
+    {
+     "cond": {
+      "flag": "ROMAN_WAS_FIRST_PRIORITY"
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "Three years. The number follows him out of Brooklyn and onto the highway."
+      ]
+     ],
+     "else": [
+      [
+       "roman",
+       "say",
+       "That's why I came myself."
+      ],
+      [
+       "n",
+       "act",
+       "If Roman got this job today, why does he sound like he's known everything about Adrian for years?"
+      ],
+      [
+       "adrianv",
+       "say",
+       "How long have you known about me?"
+      ],
+      [
+       "roman",
+       "line",
+       {
+        "hint": "He asked. You can lie, you can stall, or you can tell him.",
+        "opts": [
+         {
+          "k": "say",
+          "t": "(half a second of silence) Three years.",
+          "then": [],
+          "love": 0,
+          "rd": {
+           "adrianv|roman": {
+            "tru": 1,
+            "ten": 1
+           }
+          },
+          "att": "honest"
+         },
+         {
+          "k": "say",
+          "t": "...Long enough.",
+          "then": [
+           [
+            "adrianv",
+            "say",
+            "How long, Roman."
+           ],
+           [
+            "roman",
+            "say",
+            "Three years."
+           ]
+          ],
+          "love": 0,
+          "rd": {
+           "adrianv|roman": {
+            "ten": 2
+           }
+          },
+          "att": "dodge"
+         },
+         {
+          "k": "act",
+          "t": "Roman doesn't answer. He flips the tablet to one page: ASSIGNMENT START DATE. Three years ago today.",
+          "then": [
+           [
+            "n",
+            "act",
+            "Adrian stares at the date for a long time."
+           ]
+          ],
+          "love": 1,
+          "rd": {
+           "adrianv|roman": {
+            "tru": 2,
+            "ten": 1
+           }
+          },
+          "att": "move"
+         }
+        ]
+       }
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Three years means Roman knows about the move, the job, the night he took himself to the ER with a fever. Maybe who he dated."
+   ],
+   [
+    "n",
+    "act",
+    "Being abandoned was simple. Finding out he'd been nearby the whole time is worse."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You watched me."
+   ],
+   [
+    "roman",
+    "say",
+    "Protected."
+   ],
+   [
+    "adrianv",
+    "say",
+    "From a distance."
+   ],
+   [
+    "roman",
+    "say",
+    "That was the assignment."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Whose?"
+   ],
+   [
+    "roman",
+    "say",
+    "Not today."
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "Three years at the edge of your life, and he never once stepped in. How do you handle it?",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Fine. I believe you were protecting me.",
+       "then": [
+        [
+         "roman",
+         "say",
+         "You shouldn't."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Then earn the rest."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman looks at him for a long time."
+        ],
+        [
+         "roman",
+         "say",
+         "Fair."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "tru": 4,
+         "gru": -1
+        }
+       },
+       "set": "TRUSTED_ROMAN_BEFORE_PROOF",
+       "att": "soft"
+      },
+      {
+       "k": "say",
+       "t": "You don't get to rename stalking as protection because you look good in a suit.",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman glances down at himself."
+        ],
+        [
+         "roman",
+         "say",
+         "That sounded almost complimentary."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Don't ruin it."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -5,
+         "gru": 3
+        }
+       },
+       "set": "REFUSED_ROMANS_EXPLANATION",
+       "att": "push"
+      },
+      {
+       "k": "say",
+       "t": "Was it my father?",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Something moves in Roman's eyes. Fast. Adrian catches it."
+        ],
+        [
+         "adrianv",
+         "say",
+         "That was a yes."
+        ],
+        [
+         "roman",
+         "say",
+         "That was me regretting eye contact."
+        ],
+        [
+         "sys",
+         "event",
+         {
+          "icon": "🔎",
+          "title": "Clue: Father May Have Hired Roman",
+          "txt": "Alexander Vale found him three years before he died."
+         }
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -3,
+         "gru": 2
+        }
+       },
+       "set": "PUSHED_ROMAN_FOR_TRUTH",
+       "att": "probe"
+      },
+      {
+       "k": "say",
+       "t": "So you know who I dated?",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman looks out the window."
+        ],
+        [
+         "roman",
+         "say",
+         "Unfortunately. Not enough to justify this conversation."
+        ],
+        [
+         "n",
+         "act",
+         "Adrian laughs."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Was that jealousy?"
+        ],
+        [
+         "roman",
+         "say",
+         "Surveillance. ...The bartender lasted three dates."
+        ],
+        [
+         "adrianv",
+         "say",
+         "You remember him?"
+        ],
+        [
+         "roman",
+         "say",
+         "Occupational hazard."
+        ],
+        [
+         "roman",
+         "act",
+         "His jaw is already tight."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 2,
+         "jea": 2,
+         "tru": 1
+        }
+       },
+       "set": "FLIRTED_USING_SURVEILLANCE",
+       "att": "tease"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The neighborhood gives way to airport service roads. Ten years ago he was there. Then seven years gone. Then three years of 'protection.'"
+   ],
+   [
+    "n",
+    "act",
+    "Those seven years are just cut out of the timeline."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Do you remember that night?"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman's fingers slowly tighten on his knee."
+   ],
+   [
+    "roman",
+    "say",
+    "Which one?"
+   ],
+   [
+    "adrianv",
+    "say",
+    "Don't."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman finally looks at him."
+   ],
+   [
+    "roman",
+    "say",
+    "I remember."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/cvs17"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "rain"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "memory"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The hum of the store's AC unit. Roman's split lip. Two people leaning closer while a bandage goes on."
+   ],
+   [
+    "n",
+    "act",
+    "His thumb behind Adrian's ear. Half an inch."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/car"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "intimate"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Grown-up Roman is less than an arm's length away. Wider shoulders, lower voice, his collarbone rising and falling under the open collar."
+   ],
+   [
+    "n",
+    "act",
+    "At seventeen, wanting to kiss him was confusing. At twenty-seven, the problem is clarity."
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "That half inch is still hanging between you. How do you bring the past into the present?",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Adrian reaches over and touches the pale scar on his wrist.",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman catches his wrist on instinct. Fast, but gentle. His thumb lands right on Adrian's pulse."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Does it hurt?"
+        ],
+        [
+         "roman",
+         "say",
+         "Not that one."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Which one does?"
+        ],
+        [
+         "roman",
+         "say",
+         "That's a longer conversation."
+        ],
+        [
+         "roman",
+         "act",
+         "The heat of his palm stays half a second too long before he lets go."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 2,
+         "tru": 1
+        }
+       },
+       "set": "TOUCHED_ROMANS_SCAR",
+       "att": "soft"
+      },
+      {
+       "k": "act",
+       "t": "The car turns. Adrian's knee lands against his thigh and stays.",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Through the suit fabric, the muscle in Roman's leg goes tight. He looks down."
+        ],
+        [
+         "roman",
+         "say",
+         "You're doing that on purpose."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Prove it."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman leans back. His knee doesn't move."
+        ],
+        [
+         "n",
+         "act",
+         "That was an answer."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "set": "INITIATED_LEG_CONTACT",
+       "att": "bold"
+      },
+      {
+       "k": "act",
+       "t": "Adrian says nothing. He just looks at Roman's mouth.",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman's words slow down. His throat moves."
+        ],
+        [
+         "roman",
+         "say",
+         "Don't."
+        ],
+        [
+         "adrianv",
+         "say",
+         "I didn't do anything."
+        ],
+        [
+         "roman",
+         "say",
+         "That's usually when you're most dangerous."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 3,
+         "ten": 3
+        }
+       },
+       "set": "STARED_AT_ROMANS_MOUTH",
+       "att": "flirt"
+      },
+      {
+       "k": "say",
+       "t": "Later. Inheritance first.",
+       "then": [
+        [
+         "roman",
+         "say",
+         "That's new. You stopping."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Maybe ten years taught me boundaries."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman almost laughs."
+        ],
+        [
+         "roman",
+         "say",
+         "We'll see."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1,
+         "ten": -1
+        }
+       },
+       "set": "PULLED_BACK_FROM_INTIMACY",
+       "att": "cold"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/airport",
+     "place": "Teterboro, private hangar",
+     "time": "Wednesday, 9:20 AM"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "luxury"
+    }
+   ],
+   [
+    "roman",
+    "act",
+    "The SUV rolls straight into a private hangar. Roman gets out first and turns back, one hand on the door frame, leaving Adrian room."
+   ],
+   [
+    "roman",
+    "say",
+    "(low, as Adrian passes) Later."
+   ],
+   [
+    "n",
+    "act",
+    "The crew at the foot of the stairs bows. \"Good morning, Mr. Vale.\""
+   ],
+   [
+    "n",
+    "act",
+    "For the first time the name isn't on a DNA report. A stranger is saying it to his face."
+   ],
+   [
+    "n",
+    "act",
+    "Yesterday nobody cared if he missed the train. Today an aircraft is waiting because he's three minutes late."
+   ],
+   [
+    "roman",
+    "say",
+    "You'll get used to it."
+   ],
+   [
+    "adrianv",
+    "say",
+    "I don't want to."
+   ],
+   [
+    "roman",
+    "say",
+    "That's probably why they chose you."
+   ],
+   [
+    "adrianv",
+    "pick",
+    {
+     "ic": "👔",
+     "title": "Styling",
+     "hint": "A stylist wheels out three looks. There will be cameras at the bottom of the stairs.",
+     "items": [
+      {
+       "ic": "🖤",
+       "t": "Black couture suit",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman's eyes go from collar to cuff and stop for a second."
+        ],
+        [
+         "roman",
+         "say",
+         "...It fits."
+        ]
+       ],
+       "sub": "Every inch a Vale",
+       "rd": {
+        "adrianv|roman": {
+         "att": 1
+        }
+       },
+       "set": "STYLE_BLACK"
+      },
+      {
+       "ic": "🤍",
+       "t": "Cream tailored suit",
+       "then": [
+        [
+         "roman",
+         "act",
+         "Roman frowns."
+        ],
+        [
+         "roman",
+         "say",
+         "Too visible. Every lens will find you first."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Then stand closer."
+        ]
+       ],
+       "sub": "Make the cameras remember you",
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "ten": 1
+        }
+       },
+       "set": "STYLE_CREAM"
+      },
+      {
+       "ic": "🩶",
+       "t": "Charcoal casual set",
+       "then": [
+        [
+         "roman",
+         "say",
+         "Looks like you."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Yesterday's me?"
+        ],
+        [
+         "roman",
+         "say",
+         "The one I knew."
+        ]
+       ],
+       "sub": "Still looks like yesterday's you",
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "tru": 1
+        }
+       },
+       "set": "STYLE_GREY"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/jet",
+     "place": "The Vale jet, main cabin",
+     "time": "Wednesday, 9:45 AM"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "godrays"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The door seals. No announcements, no other passengers. The cabin is a private study with wings."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman sits across from him, opens a dark leather case, and sets things on the table one by one."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🗝",
+     "title": "The Inheritance Box",
+     "txt": "Black Card · Penthouse deed · Aviation credential · Board vote pass · Family cufflink · Vault key"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The card is almost blank. Just a name: ADRIAN VALE. He runs his thumb over the unfamiliar surname."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Limit?"
+   ],
+   [
+    "roman",
+    "say",
+    "No meaningful one."
+   ],
+   [
+    "adrianv",
+    "say",
+    "That sounds irresponsible."
+   ],
+   [
+    "roman",
+    "say",
+    "That's because you're thinking like someone who had thirty-two dollars yesterday."
+   ],
+   [
+    "n",
+    "act",
+    "The number changed overnight. He didn't. Adrian picks up the metal key."
+   ],
+   [
+    "adrianv",
+    "say",
+    "What does this open?"
+   ],
+   [
+    "roman",
+    "say",
+    "Something your father refused to keep online."
+   ],
+   [
+    "n",
+    "act",
+    "Then the family cufflink. Roman's eyes catch on it. Barely. Adrian sees it anyway."
+   ],
+   [
+    "adrianv",
+    "say",
+    "What?"
+   ],
+   [
+    "roman",
+    "say",
+    "Nothing."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You're bad at 'nothing.'"
+   ],
+   [
+    "roman",
+    "say",
+    "Keep it. Don't give it to anyone."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🔒",
+     "title": "Mystery: The Cufflink",
+     "txt": "Vault key acquired. The cufflink, he won't explain."
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "mystery"
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "roman",
+       "I've seen that cufflink once. Next to my father's old badge. Not today."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "They climb through the clouds. Roman stands to stow the tablet. Then the plane drops half a beat and water jumps out of the glass."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/jet_catch"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "hearts"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "intimate"
+    }
+   ],
+   [
+    "roman",
+    "act",
+    "Adrian's feet go out. Roman has already turned: one hand on his waist, one on his arm, pulling him in."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian hits his chest. The jacket falls open; under the shirt, shoulder and chest are suddenly very clear. The hand at his back covers half his waist."
+   ],
+   [
+    "n",
+    "act",
+    "Roman's breathing doesn't change. Adrian's does. He looks down at the hand still on his waist."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Still holding me."
+   ],
+   [
+    "roman",
+    "feature",
+    {
+     "k": "heart",
+     "cid": "roman",
+     "hint": "His hand is still on your waist. Pressed this close, you can hear his heart — it's more honest than his face.",
+     "win": [
+      [
+       "n",
+       "act",
+       "Roman's heart is at {bpm}. Faster than Adrian's {mine}."
+      ],
+      [
+       "roman",
+       "act",
+       "He looks down like he's only now noticed his hand. Half a second more, then he lets go."
+      ],
+      [
+       "roman",
+       "say",
+       "Turbulence."
+      ]
+     ],
+     "lose": [
+      [
+       "n",
+       "act",
+       "Roman's heart is at {bpm}, infuriatingly steady. His hand still takes half a second too long to let go."
+      ],
+      [
+       "roman",
+       "say",
+       "Turbulence."
+      ]
+     ],
+     "skip": [
+      [
+       "roman",
+       "act",
+       "The hand takes half a second too long to let go."
+      ],
+      [
+       "roman",
+       "say",
+       "Turbulence."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrianv",
+    "say",
+    "Sure."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "att": 3,
+      "ten": 4
+     },
+     "why": "He didn't let go in the turbulence"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Another jolt. Adrian puts out a hand for balance and it lands flat on Roman's chest. Through the shirt, his heartbeat knocks against Adrian's palm."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman takes his wrist. Doesn't push him away. His thumb rests in Adrian's palm for half a second."
+   ],
+   [
+    "roman",
+    "line",
+    {
+     "hint": "His hand is flat on your heart. Your heartbeat is giving you away.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "(very low) Do that again and I won't let go.",
+       "then": [],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "ten": 2
+        }
+       },
+       "att": "flirt"
+      },
+      {
+       "k": "act",
+       "t": "Roman doesn't let go. He holds Adrian's hand against his heart for two more seconds.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Two seconds is long enough for Adrian to count the beats."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "att": "bold"
+      },
+      {
+       "k": "act",
+       "t": "Roman lets go at once and steps back. \"Sit. Seatbelt.\"",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian notices the back of his ears have gone red."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1,
+         "ten": -1
+        }
+       },
+       "att": "restrain"
+      }
+     ]
+    }
+   ],
+   [
+    "roman",
+    "act",
+    "He shrugs off his jacket, drapes it over the seat, opens his top button. Without the suit, the shirt shows exactly how he's built."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian looks for one more second."
+   ],
+   [
+    "roman",
+    "say",
+    "Eyes up."
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "Caught in the act.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "I am looking up.",
+       "then": [
+        [
+         "roman",
+         "say",
+         "Slowly."
+        ],
+        [
+         "adrianv",
+         "say",
+         "There's a lot to review."
+        ],
+        [
+         "roman",
+         "act",
+         "The back of Roman's ears go a little red."
+        ],
+        [
+         "roman",
+         "say",
+         "You always this shameless?"
+        ],
+        [
+         "adrianv",
+         "say",
+         "Only when the evidence is strong."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 3
+        }
+       },
+       "set": "KEPT_LOOKING_AT_ROMAN",
+       "att": "flirt"
+      },
+      {
+       "k": "act",
+       "t": "Adrian turns to the window. Too fast.",
+       "then": [
+        [
+         "roman",
+         "say",
+         "You can look."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Excuse me?"
+        ],
+        [
+         "roman",
+         "say",
+         "I said nothing."
+        ],
+        [
+         "roman",
+         "act",
+         "He goes back to the tablet. There's the faintest smile."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "att": 1,
+         "tru": 1,
+         "ten": 1
+        }
+       },
+       "set": "LOOKED_AWAY_FIRST",
+       "att": "dodge"
+      },
+      {
+       "k": "act",
+       "t": "Adrian lays his fingertips on Roman's chest through the shirt. \"Checking for injuries.\"",
+       "then": [
+        [
+         "roman",
+         "act",
+         "The muscle under the fabric jumps. Roman catches his wrist, doesn't push it away; thumb on his pulse."
+        ],
+        [
+         "roman",
+         "say",
+         "Careful."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Of what?"
+        ],
+        [
+         "roman",
+         "say",
+         "You know exactly what."
+        ],
+        [
+         "roman",
+         "act",
+         "He lifts Adrian's hand off his chest, slowly, like he doesn't want to."
+        ],
+        [
+         "roman",
+         "say",
+         "Very thorough."
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "adrianv|roman": {
+         "att": 3,
+         "ten": 4,
+         "tru": 2
+        }
+       },
+       "set": "TOUCHED_ROMANS_CHEST",
+       "att": "bold"
+      },
+      {
+       "k": "say",
+       "t": "Ten years did a lot.",
+       "then": [
+        [
+         "roman",
+         "say",
+         "To both of us."
+        ],
+        [
+         "adrianv",
+         "say",
+         "I wasn't talking about me."
+        ],
+        [
+         "roman",
+         "say",
+         "You're impossible."
+        ],
+        [
+         "adrianv",
+         "say",
+         "You said that when I was seventeen."
+        ],
+        [
+         "roman",
+         "say",
+         "I was right early."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 2,
+         "tru": 1
+        }
+       },
+       "set": "COMMENTED_ON_ROMANS_BODY",
+       "att": "tease"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "lock",
+    {
+     "title": "The Turbulence That Almost Won",
+     "teaser": "The third jolt, and the cabin lights flicker. Only the two of you know what happened in those three seconds.",
+     "price": 3,
+     "then": [
+      [
+       "n",
+       "act",
+       "The third drop comes out of nowhere. The lights flicker and Adrian is thrown toward the cabin wall."
+      ],
+      [
+       "roman",
+       "act",
+       "Roman gets there first. One hand braced on the wall, Adrian caged between him and the panel."
+      ],
+      [
+       "n",
+       "act",
+       "Close enough to count his eyelashes. Roman's breath is warm against his ear."
+      ],
+      [
+       "roman",
+       "say",
+       "(at his ear) Don't move."
+      ],
+      [
+       "n",
+       "act",
+       "Adrian doesn't. His hand fists in the front of Roman's shirt."
+      ],
+      [
+       "roman",
+       "act",
+       "Roman bends his head. The tip of his nose grazes Adrian's and stops less than an inch above his mouth."
+      ],
+      [
+       "roman",
+       "say",
+       "Do you know what I'm thinking."
+      ],
+      [
+       "adrianv",
+       "say",
+       "What?"
+      ],
+      [
+       "roman",
+       "say",
+       "Why I stopped, that night outside the store."
+      ],
+      [
+       "roman",
+       "act",
+       "He rests his forehead on Adrian's and shuts his eyes. His breath stumbles."
+      ],
+      [
+       "n",
+       "act",
+       "Ding. The seatbelt sign comes on."
+      ],
+      [
+       "roman",
+       "act",
+       "Before he steps back, his thumb presses hard into Adrian's side."
+      ],
+      [
+       "roman",
+       "say",
+       "Next time there's no turbulence, I won't stop."
+      ]
+     ],
+     "img": "heir/lock_jet"
+    }
+   ]
+  ]
+ }
+}

@@ -1,0 +1,1570 @@
+{
+ "beats": {
+  "zh": [
+   [
+    "sys",
+    "scene",
+    {
+     "img": "afterhours/v_party",
+     "place": "半月酒吧 吧台",
+     "time": "周五 晚上10:40"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "night"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "周五深夜，半月酒吧包场，冰块在每只杯子里慢慢化。今晚给Theo送行——他明早7:10的飞机，去纽约。"
+   ],
+   [
+    "n",
+    "act",
+    "你是Nico，这家店的合伙人兼调酒师。Theo的酒你调了五年，他这个人，你也惦记了五年。"
+   ],
+   [
+    "n",
+    "act",
+    "他没说过，你也没说过。离登机还有八个小时。"
+   ],
+   [
+    "wren",
+    "act",
+    "Wren把录音笔往吧台中间一拍，红灯亮起。她冲门口的Rowan挑了下眉。"
+   ],
+   [
+    "rowan",
+    "act",
+    "Rowan回了个眼神，低头打字。Wren的手机一亮——"
+   ],
+   [
+    "n",
+    "act",
+    "【Rowan：A计划。让他俩挨着，别让Nico躲进吧台。】"
+   ],
+   [
+    "rowan",
+    "say",
+    "Theo，坐中间。离Nico近，续杯方便——别的也方便。"
+   ],
+   [
+    "theo",
+    "say",
+    "你今晚这么贴心，我都要怀疑你在给我下套了。"
+   ],
+   [
+    "rowan",
+    "say",
+    "是套。坐吧，最后一晚了。"
+   ],
+   [
+    "n",
+    "act",
+    "角落里，Mason和Ethan各占一头，中间空着四张凳子。冷战第九天，谁的膝盖都没往那边偏一寸。"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo越过吧台，把托盘从Nico指缝里一点点抽走，搁到一边。指腹蹭过他手心，痒。"
+   ],
+   [
+    "theo",
+    "say",
+    "坐下。今晚我请——你也归我管。"
+   ],
+   [
+    "n",
+    "act",
+    "全世界只有他会拿走你手里的托盘。你就是这么栽了五年。"
+   ],
+   [
+    "wren",
+    "act",
+    "Wren凑过来，下巴搁在Nico肩上，嗓子压得只有他听得见。"
+   ],
+   [
+    "wren",
+    "say",
+    "第一年你说，等他巡演回来再说。第二年，他交了男朋友。去年分了，你说，等他缓缓。"
+   ],
+   [
+    "wren",
+    "say",
+    "Nico，你缓了五年了。"
+   ],
+   [
+    "n",
+    "act",
+    "Nico没接话。他怕的从来不是被拒绝——是说出口以后，连朋友都做不成。"
+   ],
+   [
+    "theo",
+    "act",
+    "他把一杯Negroni推过来。你去接，指尖撞上他的——两只手一起扣在了冰凉的杯壁上。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_glass"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "他没松手。拇指压着你的指节，慢慢碾过去，多停了一秒。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_thumb"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "吧台底下，他的膝盖抵上你的膝盖。隔着两层布料，烫。"
+   ],
+   [
+    "theo",
+    "say",
+    "手这么凉……一晚上光给别人调酒，就没人给你捂捂？"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "他的手还压着你的。所有人都假装没在看。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "冰块冰的。松手，酒要洒了。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo松开手，指尖却顺着你手背划了一道，才慢悠悠收回去。"
+        ],
+        [
+         "wren",
+         "say",
+         "（小声）嘴硬。"
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "nico|theo": {
+         "ten": 1
+        }
+       }
+      },
+      {
+       "k": "act",
+       "t": "Nico没抽手，小指反勾住了他的。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo喉结滚了一下。拇指在你指节上来回蹭了两遍，才一点一点松开。"
+        ],
+        [
+         "rowan",
+         "act",
+         "吧台下，Rowan踢了Wren一脚。"
+        ],
+        [
+         "wren",
+         "act",
+         "Wren咬着吸管，憋笑憋到发抖。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "嫌我手凉？那你别松啊。",
+       "then": [
+        [
+         "theo",
+         "say",
+         "这可是你说的。"
+        ],
+        [
+         "theo",
+         "act",
+         "他真没松，把你整只手包进掌心里搓了两下。热气一点点渗进你指缝。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "他手好凉。我就想多握一会儿，谁知道这一下，心跳得比开幕夜还响。"
+      ],
+      [
+       "wren",
+       "两个人手叠在一个杯子上，全场就他俩以为没人看见。我录音笔的电够撑到他们表白吗？"
+      ],
+      [
+       "mason",
+       "……为什么那俩人碰个手都比我和Ethan说话热闹。"
+      ]
+     ]
+    }
+   ],
+   [
+    "wren",
+    "say",
+    "趁人还齐，拍照！Theo，Nico，站一块儿——再近点，中间都能塞下一个Rowan了。"
+   ],
+   [
+    "theo",
+    "say",
+    "就我俩？Wren，你这摆明了是拍结婚照。"
+   ],
+   [
+    "wren",
+    "say",
+    "送别照。你非要当结婚照，我也不拦着。"
+   ],
+   [
+    "theo",
+    "feature",
+    {
+     "k": "snap",
+     "cid": "theo",
+     "with": "nico",
+     "frames": [
+      {
+       "img": "afterhours/ch1_snap1"
+      },
+      {
+       "img": "afterhours/ch1_snap2"
+      },
+      {
+       "img": "afterhours/ch1_snap3"
+      },
+      {
+       "img": "afterhours/ch1_snap4"
+      }
+     ],
+     "hint": "Wren把拍立得塞进Theo手里，又往你后腰推了一把。你一头撞进他怀里。四连拍，没得躲。",
+     "win": [
+      [
+       "n",
+       "act",
+       "第四张慢慢显影：Nico冲镜头比耶，Theo没看镜头。他下巴快蹭着Nico的发顶，在看他。"
+      ],
+      [
+       "wren",
+       "act",
+       "Wren一把抢过第四张，谁也没给看，直接塞进Nico围裙口袋。"
+      ],
+      [
+       "wren",
+       "say",
+       "这张归你。贴身放好，别问为什么。"
+      ],
+      [
+       "theo",
+       "act",
+       "Theo耳根红透，伸手就往Nico围裙口袋里掏，被Rowan一胳膊挡了回去。"
+      ]
+     ],
+     "lose": [
+      [
+       "n",
+       "act",
+       "第四张慢慢显影：Nico冲镜头比耶，Theo没看镜头。他下巴快蹭着Nico的发顶，在看他。"
+      ],
+      [
+       "wren",
+       "act",
+       "Wren一把抢过第四张，谁也没给看，直接塞进Nico围裙口袋。"
+      ],
+      [
+       "wren",
+       "say",
+       "这张归你。贴身放好，别问为什么。"
+      ],
+      [
+       "theo",
+       "act",
+       "Theo耳根红透，伸手就往Nico围裙口袋里掏，被Rowan一胳膊挡了回去。"
+      ]
+     ],
+     "skip": [
+      [
+       "wren",
+       "say",
+       "不拍？行，录音笔替我记着。"
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "十一点差五分。Theo突然踩上吧台椅，举起杯子。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_toast"
+    }
+   ],
+   [
+    "theo",
+    "say",
+    "都安静一下！有件事，今晚必须说。"
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🎭",
+     "title": "他不回来了",
+     "txt": "“纽约那边要签我五年。我不回来了。”"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "sad"
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "nico|theo",
+     "d": {
+      "ten": 10,
+      "tru": -6,
+      "gru": 5
+     },
+     "why": "他要走五年"
+    }
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_shock"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "整间酒吧静了。只有Wren的录音笔还在转。"
+   ],
+   [
+    "n",
+    "act",
+    "Nico手里的冰勺掉进冰桶。你想说别走——可留他，就是拖住他。"
+   ],
+   [
+    "theo",
+    "say",
+    "Nico。全场就你没吭声——你不留留我？"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "所有人都在看你。他站在椅子上，在等你一句话。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "恭喜。纽约配得上你。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo笑着点头，杯子却迟迟没举起来。"
+        ],
+        [
+         "theo",
+         "say",
+         "……谢谢。你永远最懂事。"
+        ],
+        [
+         "wren",
+         "act",
+         "Wren闭了闭眼，像在看一场车祸。"
+        ]
+       ],
+       "love": -1,
+       "rd": {
+        "nico|theo": {
+         "tru": -5,
+         "ten": -2,
+         "gru": 4
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "五年？你先下来再宣布。摔了，我可不送你去急诊。",
+       "then": [
+        [
+         "theo",
+         "say",
+         "你会送的。还会一路攥着我的手，跟护士说你是家属。"
+        ],
+        [
+         "theo",
+         "act",
+         "他从椅子上跳下来，正落在你跟前。鼻尖差点撞上你，呼吸里全是金巴利的苦橙味。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      },
+      {
+       "k": "act",
+       "t": "Nico放下冰勺，抬头看着他。一个字也没说。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo和你对视，一秒，两秒，三秒。他喉结滚了一下，先移开了眼。"
+        ],
+        [
+         "theo",
+         "say",
+         "……别这么看我。我会走不了的。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Theo坐回来，膝盖碰上Nico的，没挪开。Wren和Rowan同时低头看手机。"
+   ],
+   [
+    "n",
+    "act",
+    "【Wren：五年合同？？你怎么没说！】【Rowan：我也刚知道。A计划作废，上B计划。】"
+   ],
+   [
+    "wren",
+    "say",
+    "Theo，你和Nico认识这么久，第一次见面是哪天来着？"
+   ],
+   [
+    "theo",
+    "say",
+    "五年前。我演砸的那晚。"
+   ],
+   [
+    "n",
+    "act",
+    "小剧场，中场后观众走光，只剩第三排靠过道一个人。那个人是Nico。"
+   ],
+   [
+    "theo",
+    "say",
+    "那天你在第三排。我在台上一抬眼就是你，还以为你走错场了。"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "五年来，他第一次当着所有人提起那晚。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "没走错。我是专门去看你的。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo握杯的手停住了，指节一点点收紧。"
+        ],
+        [
+         "theo",
+         "say",
+         "……专门？那你后来每一场都坐那个位子，也是专门？"
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "nico|theo": {
+         "att": 6,
+         "ten": 3,
+         "tru": 3
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "票是Wren送的，不看浪费。",
+       "then": [
+        [
+         "wren",
+         "say",
+         "我可从来没送过。"
+        ],
+        [
+         "theo",
+         "act",
+         "Theo低头笑了，没拆穿你。吧台底下，他的膝盖往你那边撞了一下。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "你演得不差。是那天观众不识货。",
+       "then": [
+        [
+         "theo",
+         "say",
+         "全场就你一个观众。"
+        ],
+        [
+         "theo",
+         "say",
+         "所以就你识货。……那识货的人，今晚要不要看场私人加演？"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 2,
+         "tru": 2
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "mason",
+    "say",
+    "第三排，浪漫啊。Ethan，你不也说过要去看我比——"
+   ],
+   [
+    "ethan",
+    "say",
+    "别跟我说话。"
+   ],
+   [
+    "n",
+    "act",
+    "Mason的笑僵在脸上。他把Ethan的膝伤告诉了教练，Ethan到现在没原谅他。"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo绕进吧台，说拿片柠檬。从Nico身后擦过去时，胸口贴着他的背，手在他围裙口袋边停了半秒。"
+   ],
+   [
+    "n",
+    "act",
+    "Nico后颈一阵发烫，只顾低头擦杯子。没人看见那只手——除了Rowan。"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo回到吧台外，手肘撑着台面往前倾，嗓音压低，只够Nico一个人听见。"
+   ],
+   [
+    "theo",
+    "say",
+    "Nico，走之前问你一句。你对谁都这么好？还是……只对我？"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "他离你很近，近到能闻见他杯沿的柑橘皮。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "对谁都好。你别多想。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo点点头，靠回椅背，像被人轻轻推了一把。"
+        ],
+        [
+         "rowan",
+         "act",
+         "Rowan在桌下狠狠掐了一下自己的手。"
+        ]
+       ],
+       "love": -2,
+       "rd": {
+        "nico|theo": {
+         "tru": -6,
+         "ten": -3,
+         "att": -2
+        }
+       }
+      },
+      {
+       "k": "act",
+       "t": "Nico也往前倾。两人之间，只隔一个杯口。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo呼吸停了半拍，视线落到你嘴唇上，又慢慢抬回来。"
+        ],
+        [
+         "theo",
+         "say",
+         "……这样算犯规。我要的是答案。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "你再凑近点，我就告诉你。",
+       "then": [
+        [
+         "theo",
+         "say",
+         "就这点要求？行。"
+        ],
+        [
+         "theo",
+         "act",
+         "他真凑了过来，鼻尖离你只剩一指，呼吸里是苦橙和酒：“说啊。我猜了五年了。”"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "问出口就后悔了。可他要是说“对谁都好”……那这五年算什么。我飞机七点十分，我等不起第二个五年。"
+      ],
+      [
+       "rowan",
+       "口袋里那张纸条我看见了。Theo你个怂货，写得出来，说不出口。"
+      ],
+      [
+       "wren",
+       "录音笔开着呢，Nico。你今晚要是再缩回去，我就把这段剪进节目，标题叫《一个胆小鬼的五年》。"
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "⚡",
+     "title": "暴雨红色预警",
+     "txt": "一道闪电劈亮整条街，所有人手机同时尖叫：暴雨红色预警，地铁全线停运。"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "nico|theo",
+     "d": {
+      "ten": 6
+     },
+     "why": "谁都走不了了"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "雨砸在玻璃上，像有人在外面拼命敲门。"
+   ],
+   [
+    "rowan",
+    "say",
+    "走不了了。今晚谁都别想走。"
+   ],
+   [
+    "wren",
+    "act",
+    "Wren盯着手机，嘴角压都压不住。"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo没看手机。他的视线还落在Nico嘴唇上，等那句没说出口的答案。"
+   ]
+  ],
+  "en": [
+   [
+    "sys",
+    "scene",
+    {
+     "img": "afterhours/v_party",
+     "place": "The Halfmoon · The Bar",
+     "time": "Friday, 10:40 PM"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "night"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Friday, late. The Halfmoon is closed for a private party, ice going soft in every glass. Theo's send-off—his flight to New York leaves at 7:10 a.m."
+   ],
+   [
+    "n",
+    "act",
+    "You're Nico, co-owner and bartender. You've been making Theo's drinks for five years. You've wanted him for exactly as long."
+   ],
+   [
+    "n",
+    "act",
+    "He's never said a word. Neither have you. Eight hours till boarding."
+   ],
+   [
+    "wren",
+    "act",
+    "Wren slaps her recorder down mid-bar. Red light on. She arches a brow at Rowan by the door."
+   ],
+   [
+    "rowan",
+    "act",
+    "Rowan returns the look and types. Wren's phone lights up—"
+   ],
+   [
+    "n",
+    "act",
+    "[Rowan: Plan A. Get them side by side. Don't let Nico hide behind the bar.]"
+   ],
+   [
+    "rowan",
+    "say",
+    "Theo, middle seat. Closer to Nico. Faster refills—faster everything."
+   ],
+   [
+    "theo",
+    "say",
+    "You're being so sweet tonight I'm starting to think it's a trap."
+   ],
+   [
+    "rowan",
+    "say",
+    "It is. Sit. It's your last night."
+   ],
+   [
+    "n",
+    "act",
+    "Down the bar, Mason at one end, Ethan at the other, four empty stools between them. Day nine of the cold war. Neither knee has drifted an inch."
+   ],
+   [
+    "theo",
+    "act",
+    "Theo leans over the bar and eases the tray out of Nico's fingers, inch by inch, and sets it aside. His fingertips graze Nico's palm on the way. It tickles."
+   ],
+   [
+    "theo",
+    "say",
+    "Sit. Tonight's on me—and so are you."
+   ],
+   [
+    "n",
+    "act",
+    "He's the only person alive who takes the tray out of your hands. That's how you fell. Five years ago."
+   ],
+   [
+    "wren",
+    "act",
+    "Wren leans in, chin on Nico's shoulder, voice pitched for him alone."
+   ],
+   [
+    "wren",
+    "say",
+    "Year one, you'd tell him when he got back from tour. Year two, he had a boyfriend. Last year they broke up, and you said give him time."
+   ],
+   [
+    "wren",
+    "say",
+    "Nico. You've been giving him time for five years."
+   ],
+   [
+    "n",
+    "act",
+    "Nico doesn't answer. He was never afraid of a no. He was afraid of losing the friend."
+   ],
+   [
+    "theo",
+    "act",
+    "He slides a Negroni across. You reach for it and your fingers bump his—both hands locked around the same cold glass."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_glass"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "He doesn't let go. His thumb presses into your knuckles and drags across them, slow. One second too long."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_thumb"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Under the bar, his knee presses against yours. Two layers of fabric between you. Still hot."
+   ],
+   [
+    "theo",
+    "say",
+    "Hands this cold... all night making drinks for everyone, and nobody's warmed you up?"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "His hand is still on yours. Everyone's pretending not to look.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "It's the ice. Let go, you'll spill it.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo lets go—but trails a fingertip down the back of your hand first, taking his time."
+        ],
+        [
+         "wren",
+         "say",
+         "(under her breath) Coward."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "nico|theo": {
+         "ten": 1
+        }
+       }
+      },
+      {
+       "k": "act",
+       "t": "Nico doesn't pull away. His pinky hooks back around Theo's.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo's throat bobs. His thumb strokes your knuckles twice, back and forth, before he lets go, bit by bit."
+        ],
+        [
+         "rowan",
+         "act",
+         "Under the bar, Rowan kicks Wren's ankle."
+        ],
+        [
+         "wren",
+         "act",
+         "Wren bites her straw, shaking with silent laughter."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "Too cold for you? Then don't let go.",
+       "then": [
+        [
+         "theo",
+         "say",
+         "You said it. Not me."
+        ],
+        [
+         "theo",
+         "act",
+         "He doesn't. He folds your whole hand into his palm and rubs, twice. Heat seeps slowly in between your fingers."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "His hands are freezing. I just wanted to hold on a little longer. My heart's louder than on opening night."
+      ],
+      [
+       "wren",
+       "Two hands on one glass and they think nobody noticed. Will my recorder battery last until one of them confesses?"
+      ],
+      [
+       "mason",
+       "...Why do those two touching hands have more going on than me and Ethan talking."
+      ]
+     ]
+    }
+   ],
+   [
+    "wren",
+    "say",
+    "Photo while we're all here! Theo, Nico, together—closer. I could fit Rowan between you."
+   ],
+   [
+    "theo",
+    "say",
+    "Just us? Wren, that's a wedding photo and you know it."
+   ],
+   [
+    "wren",
+    "say",
+    "It's a send-off photo. If you want to call it a wedding photo, I won't stop you."
+   ],
+   [
+    "theo",
+    "feature",
+    {
+     "k": "snap",
+     "cid": "theo",
+     "with": "nico",
+     "frames": [
+      {
+       "img": "afterhours/ch1_snap1"
+      },
+      {
+       "img": "afterhours/ch1_snap2"
+      },
+      {
+       "img": "afterhours/ch1_snap3"
+      },
+      {
+       "img": "afterhours/ch1_snap4"
+      }
+     ],
+     "hint": "Wren shoves the Polaroid into Theo's hands, then pushes you in the small of the back. You stumble right into his chest. Four shots. No escape.",
+     "win": [
+      [
+       "n",
+       "act",
+       "The fourth one develops slowly: Nico throwing a peace sign at the lens. Theo isn't looking at the lens. His chin's almost in Nico's hair. He's looking at Nico."
+      ],
+      [
+       "wren",
+       "act",
+       "Wren snatches the fourth one before anyone else sees it and shoves it into Nico's apron pocket."
+      ],
+      [
+       "wren",
+       "say",
+       "This one's yours. Keep it close. Don't ask why."
+      ],
+      [
+       "theo",
+       "act",
+       "Theo goes red to the ears and reaches straight for Nico's apron pocket. Rowan blocks him with one arm."
+      ]
+     ],
+     "lose": [
+      [
+       "n",
+       "act",
+       "The fourth one develops slowly: Nico throwing a peace sign at the lens. Theo isn't looking at the lens. His chin's almost in Nico's hair. He's looking at Nico."
+      ],
+      [
+       "wren",
+       "act",
+       "Wren snatches the fourth one before anyone else sees it and shoves it into Nico's apron pocket."
+      ],
+      [
+       "wren",
+       "say",
+       "This one's yours. Keep it close. Don't ask why."
+      ],
+      [
+       "theo",
+       "act",
+       "Theo goes red to the ears and reaches straight for Nico's apron pocket. Rowan blocks him with one arm."
+      ]
+     ],
+     "skip": [
+      [
+       "wren",
+       "say",
+       "No photos? Fine. The recorder's got it."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Five to eleven. Theo climbs onto a barstool and raises his glass."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_toast"
+    }
+   ],
+   [
+    "theo",
+    "say",
+    "Everybody, quiet! There's something I have to say tonight."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🎭",
+     "title": "He's Not Coming Back",
+     "txt": "\"New York wants to sign me for five years. I'm not coming back.\""
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "sad"
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "nico|theo",
+     "d": {
+      "ten": 10,
+      "tru": -6,
+      "gru": 5
+     },
+     "why": "He's leaving for five years"
+    }
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_shock"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The whole bar goes silent. Only Wren's recorder keeps running."
+   ],
+   [
+    "n",
+    "act",
+    "The ice scoop slips from Nico's hand into the bin. You want to say don't go. But keeping him means holding him back."
+   ],
+   [
+    "theo",
+    "say",
+    "Nico. You're the only one who hasn't said a word. Aren't you going to ask me to stay?"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "Everyone's looking at you. He's up on that stool, waiting for one sentence.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Congrats. New York's lucky to have you.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo smiles and nods. His glass never quite goes up."
+        ],
+        [
+         "theo",
+         "say",
+         "...Thanks. You always say the right thing."
+        ],
+        [
+         "wren",
+         "act",
+         "Wren closes her eyes like she's watching a car crash."
+        ]
+       ],
+       "love": -1,
+       "rd": {
+        "nico|theo": {
+         "tru": -5,
+         "ten": -2,
+         "gru": 4
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "Five years? Get down before you announce that. You fall, I'm not driving you to the ER.",
+       "then": [
+        [
+         "theo",
+         "say",
+         "You would. You'd hold my hand the whole way and tell the nurse you're family."
+        ],
+        [
+         "theo",
+         "act",
+         "He hops down off the stool and lands right in front of you, nose nearly bumping yours, his breath all bitter orange and Campari."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      },
+      {
+       "k": "act",
+       "t": "Nico sets down the scoop and looks up at him. Says nothing.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo holds your gaze. One second. Two. Three. His throat moves, and he's the one who looks away."
+        ],
+        [
+         "theo",
+         "say",
+         "...Don't look at me like that. I won't be able to leave."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Theo sits back down. His knee bumps Nico's and stays there. Wren and Rowan both look down at their phones."
+   ],
+   [
+    "n",
+    "act",
+    "[Wren: FIVE YEARS?? You didn't tell me!] [Rowan: Just found out. Plan A's dead. Go to Plan B.]"
+   ],
+   [
+    "wren",
+    "say",
+    "Theo, you two go way back. When did you first meet?"
+   ],
+   [
+    "theo",
+    "say",
+    "Five years ago. The night I bombed."
+   ],
+   [
+    "n",
+    "act",
+    "A tiny black box theater. By intermission, everyone left except one guy, third row, on the aisle. Nico."
+   ],
+   [
+    "theo",
+    "say",
+    "You were in the third row that night. Every time I looked up, there you were. I thought you'd walked into the wrong show."
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "For the first time in five years, he's bringing up that night in front of everyone.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Wrong show? I went there for you.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo's hand freezes on the glass. His knuckles tighten, slowly."
+        ],
+        [
+         "theo",
+         "say",
+         "...For me? So every show since, same seat—that was for me too?"
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "nico|theo": {
+         "att": 6,
+         "ten": 3,
+         "tru": 3
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "Wren gave me the ticket. Didn't want to waste it.",
+       "then": [
+        [
+         "wren",
+         "say",
+         "I have never given you a ticket in my life."
+        ],
+        [
+         "theo",
+         "act",
+         "Theo ducks his head and smiles and doesn't call you on it. Under the bar, his knee knocks against yours."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "You weren't bad. The audience just didn't get it.",
+       "then": [
+        [
+         "theo",
+         "say",
+         "You were the whole audience."
+        ],
+        [
+         "theo",
+         "say",
+         "So you're the only one with taste. ...Then how about a private encore tonight?"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 2,
+         "tru": 2
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "mason",
+    "say",
+    "Third row. Romantic. Ethan, didn't you say you'd come watch me—"
+   ],
+   [
+    "ethan",
+    "say",
+    "Don't talk to me."
+   ],
+   [
+    "n",
+    "act",
+    "Mason's grin dies. He told the coach about Ethan's knee. Ethan still hasn't forgiven him."
+   ],
+   [
+    "theo",
+    "act",
+    "Theo ducks behind the bar for a lemon slice. Squeezing past behind Nico, his chest brushes Nico's back, and his hand lingers at the apron pocket for half a second."
+   ],
+   [
+    "n",
+    "act",
+    "The back of Nico's neck goes hot and he keeps his eyes on the glass he's polishing. Nobody sees that hand—except Rowan."
+   ],
+   [
+    "theo",
+    "act",
+    "Theo comes back around, elbows on the bar, leaning in. His voice drops low enough that only Nico can hear."
+   ],
+   [
+    "theo",
+    "say",
+    "Nico, one question before I go. Are you this good to everyone? Or... just me?"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "He's close. Close enough to smell the orange peel on his glass.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Everyone. Don't read into it.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo nods and sits back, like someone gave him a small push."
+        ],
+        [
+         "rowan",
+         "act",
+         "Under the bar, Rowan digs his nails into his own palm."
+        ]
+       ],
+       "love": -2,
+       "rd": {
+        "nico|theo": {
+         "tru": -6,
+         "ten": -3,
+         "att": -2
+        }
+       }
+      },
+      {
+       "k": "act",
+       "t": "Nico leans in too. Nothing between them but the rim of a glass.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo's breath catches. His eyes drop to your mouth, then slowly climb back up."
+        ],
+        [
+         "theo",
+         "say",
+         "...That's cheating. I asked for an answer."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       }
+      },
+      {
+       "k": "say",
+       "t": "Come a little closer and I'll tell you.",
+       "then": [
+        [
+         "theo",
+         "say",
+         "That's all it takes? Fine."
+        ],
+        [
+         "theo",
+         "act",
+         "He actually does. His nose stops a finger's width from yours, his breath all bitter orange and gin. \"So tell me. I've been guessing for five years.\""
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       }
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "Regretted it the second I asked. But if he says 'I'm nice to everyone'... then what were the last five years? I fly at 7:10. I can't wait another five."
+      ],
+      [
+       "rowan",
+       "I saw the note go in his pocket. Theo, you coward. You can write it, you just can't say it."
+      ],
+      [
+       "wren",
+       "Recorder's on, Nico. Back out tonight and this goes in the show. Episode title: Five Years of Chickening Out."
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "⚡",
+     "title": "Red Alert: Flash Flood",
+     "txt": "Lightning splits the street white. Every phone screams at once: flash flood warning, all subway lines suspended."
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "nico|theo",
+     "d": {
+      "ten": 6
+     },
+     "why": "No one can leave now"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Rain hammers the windows like someone desperate to get in."
+   ],
+   [
+    "rowan",
+    "say",
+    "Nobody's leaving. Not tonight."
+   ],
+   [
+    "wren",
+    "act",
+    "Wren stares at her phone, failing to hide her grin."
+   ],
+   [
+    "theo",
+    "act",
+    "Theo doesn't check his phone. His eyes are still on Nico's mouth, waiting for the answer it hasn't given."
+   ]
+  ]
+ }
+}

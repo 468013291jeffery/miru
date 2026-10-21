@@ -1,0 +1,417 @@
+{
+ "title": {
+  "zh": "打烊之后：他明早七点的飞机",
+  "en": "After Hours: His Flight Leaves at Seven"
+ },
+ "hook": {
+  "zh": "你暗恋他五年，一句都没说过。他明早七点飞纽约，合同一签就是五年。今晚暴雨，所有人都被困在了你的酒吧里。",
+  "en": "Five years in love with him and you've never said a word. He flies to New York at seven, on a five-year contract. Tonight a storm traps everyone inside your bar."
+ },
+ "logline": {
+  "zh": "送别局遇上暴雨夜：六个朋友被困在打烊后的酒吧，有人要走，有人在冷战，有人藏了五年的话。",
+  "en": "A going-away party meets a flood: six friends stuck in a closed bar overnight — one leaving, two not speaking, one hiding five years of feelings."
+ },
+ "premise": {
+  "zh": "Theo拿到了纽约一部戏的主演，明早7点10分的飞机，合同一签就是五年。今晚，朋友们在你开的半月酒吧给他送行。你是Nico，暗恋Theo整整五年，从来没说出口。今晚过了零点，也是你的生日——你谁都没告诉。暴雨红色预警，地铁停运，地下室开始进水，所有人都走不了了。天亮之前，你要决定：要不要让他知道。",
+  "en": "Theo landed the lead in a New York play — 7:10 a.m. flight, five-year contract. Tonight his friends are sending him off at the Halfmoon, the bar you run. You're Nico. You've been in love with Theo for five years and never told him. At midnight it's also your birthday — and you haven't told anyone. Then a flash-flood warning shuts the subway, the basement starts taking water, and nobody can leave. Before sunrise, you have to decide whether he finds out."
+ },
+ "you": {
+  "zh": "Nico，27岁，半月酒吧的合伙人兼调酒师。嘴快爱开玩笑，朋友聚会全靠你张罗，唯独在Theo面前，什么真心话都说不出口。",
+  "en": "Nico, 27 — co-owner and bartender at the Halfmoon. Quick mouth, quicker jokes, the one who organizes every get-together. The only person you can't be honest with is Theo."
+ },
+ "stakes": {
+  "zh": "天一亮他就要走了。这一晚不说，可能就再也没机会说了。",
+  "en": "He's gone at sunrise. If you don't say it tonight, you may never get the chance."
+ },
+ "ready": 1,
+ "intro": {
+  "zh": {
+   "bg": [
+    "渡口街有家小酒吧，叫半月。老板是你，Nico。",
+    "今晚是周五，你们一帮老朋友在这儿给Theo送行——他拿到了纽约一部话剧的主演，明天早上7点10分的飞机，合同一签五年。",
+    "你喜欢Theo，已经五年了。五年前他在小剧场演砸了一场戏，台下只剩你一个观众——从那晚起就喜欢。这件事，除了你的老朋友Wren，没人知道。",
+    "天气预报说今晚有暴雨。你们谁都没太当回事。"
+   ],
+   "you": "你扮演Nico。轮到你说话的时候，屏幕上会出现几个选项——你选什么，Nico就说什么、做什么。不同的选择，会让后面的剧情和结局真的不一样。",
+   "cast": [
+    [
+     "nico",
+     "你自己。酒吧合伙人，朋友圈的“组局王”。暗恋Theo五年。"
+    ],
+    [
+     "theo",
+     "今晚的主角。话剧演员，30岁，爱热闹、嘴贫，总抢着给所有人买单。明早就要飞纽约了。"
+    ],
+    [
+     "wren",
+     "你大学时最好的朋友，做深夜情感播客。今晚录音笔一直开着。全场唯一知道你喜欢Theo的人。"
+    ],
+    [
+     "mason",
+     "业余冰球队的前锋，话少，力气大。最近和室友Ethan在冷战。"
+    ],
+    [
+     "ethan",
+     "冰球队的门将，Mason的室友。上周膝盖受伤，被教练按在替补席上，错过了决赛——他怀疑是Mason告的密。"
+    ],
+    [
+     "rowan",
+     "医院夜班护士，Theo的室友。刚下班就赶过来，全场最靠谱的人。他好像知道一些Theo没说的事。"
+    ]
+   ],
+   "how": [
+    "故事会一句一句自动往下走。觉得慢，点一下聊天区域就能马上看下一句。",
+    "出现粉色气泡时，就是轮到你说话了，选一个就行；也可以自己打字。",
+    "途中会有送礼物、小游戏、解锁照片、接电话，都是剧情的一部分，可以跳过。",
+    "右上角的🔇可以打开朗读，打开后每句话都会读出来。"
+   ],
+   "voice": {
+    "theo": "（把最后一杯推到你面前，指尖在杯沿多停了一秒）喝完这杯我就走了。你……就没什么想跟我说的？",
+    "nico": "（低头擦着同一只杯子，擦了十分钟）走就走呗。谁还拦着你了。",
+    "wren": "（按下录音键，冲你挑了挑眉）今晚这期节目，就叫《五年》。你猜他听不听得懂？",
+    "mason": "（把冰球手套摔在吧台上）……别看我。我跟他没什么好说的。",
+    "ethan": "（揉着缠了绷带的膝盖，冷笑一声）谁告的密，谁自己心里清楚。",
+    "rowan": "（伸手替Theo挡下第三杯酒，压低声音）他明早要飞。有些话今晚不说，就真没机会了。"
+   }
+  },
+  "en": {
+   "bg": [
+    "There's a small bar on Ferry Street called the Halfmoon. You run it. You're Nico.",
+    "It's Friday night, and your old crew is here to send Theo off — he got the lead in a New York play. His flight leaves at 7:10 tomorrow morning, and the contract is for five years.",
+    "You've been in love with Theo for five years — since the night he bombed a tiny black-box show and you were the only one left in the audience. Nobody knows except your oldest friend, Wren.",
+    "The forecast said heavy rain tonight. Nobody really paid attention."
+   ],
+   "you": "You play Nico. When it's your turn to talk, a few options pop up — whatever you pick is what Nico says or does. Different choices really do change what happens next, and how it ends.",
+   "cast": [
+    [
+     "nico",
+     "You. Co-owner of the bar, the friend who organizes everything. In love with Theo for five years."
+    ],
+    [
+     "theo",
+     "Tonight's guest of honor. Stage actor, 30, loud, funny, always grabbing the check. Flying to New York in the morning."
+    ],
+    [
+     "wren",
+     "Your best friend since college; hosts a late-night podcast. Her recorder is on all night. The only one who knows how you feel about Theo."
+    ],
+    [
+     "mason",
+     "Forward on the rec-league hockey team. Quiet, strong. Not speaking to his roommate Ethan."
+    ],
+    [
+     "ethan",
+     "The team's goalie and Mason's roommate. Hurt his knee last week, got benched for the final — and thinks Mason is the one who told the coach."
+    ],
+    [
+     "rowan",
+     "Night-shift nurse, Theo's roommate. Came straight from work. The most sensible person in the room — and he seems to know something Theo isn't saying."
+    ]
+   ],
+   "how": [
+    "The story plays line by line. Too slow? Tap the chat to see the next line right away.",
+    "When pink bubbles appear, it's your turn — pick one, or type your own line.",
+    "Along the way you'll give gifts, play mini-games, unlock photos and take calls. They're part of the story, and you can skip any of them.",
+    "Tap 🔇 at the top right to have every line read aloud."
+   ],
+   "voice": {
+    "theo": "(slides the last glass toward you, fingers lingering on the rim) One more and I'm gone. You really don't have anything to tell me?",
+    "nico": "(polishing the same glass for ten minutes) So go. Who's stopping you.",
+    "wren": "(hits record, raises an eyebrow at you) Tonight's episode is called Five Years. Think he'll get it?",
+    "mason": "(drops his hockey gloves on the bar) ...Don't look at me. I've got nothing to say to him.",
+    "ethan": "(rubbing his taped knee, a short laugh) Whoever snitched knows who they are.",
+    "rowan": "(catches Theo's third shot before it lands, quietly) He flies at seven. Whatever isn't said tonight won't get said."
+   }
+  }
+ },
+ "au_role": {
+  "nico": {
+   "zh": "你：半月酒吧合伙人，暗恋Theo五年",
+   "en": "You: the Halfmoon's co-owner, five years in love with Theo"
+  },
+  "theo": {
+   "zh": "话剧演员，明早7点飞纽约",
+   "en": "Stage actor, flying to New York at seven"
+  },
+  "wren": {
+   "zh": "深夜播客主持人，你最好的朋友",
+   "en": "Late-night podcaster, your best friend"
+  },
+  "mason": {
+   "zh": "冰球队前锋，和Ethan冷战中",
+   "en": "Hockey forward, not speaking to Ethan"
+  },
+  "ethan": {
+   "zh": "冰球队门将，膝盖受伤被按在替补席",
+   "en": "Hockey goalie, benched with a bad knee"
+  },
+  "rowan": {
+   "zh": "夜班护士，Theo的室友",
+   "en": "Night-shift nurse, Theo's roommate"
+  }
+ },
+ "chapters": [
+  {
+   "t": {
+    "zh": "口袋里的纸条",
+    "en": "The Note in Your Pocket"
+   },
+   "goal": {
+    "zh": "撑过送别局，在他登机前让他知道",
+    "en": "Get through the farewell party and let him know before he boards"
+   },
+   "place": {
+    "zh": "半月酒吧",
+    "en": "The Halfmoon"
+   },
+   "time": {
+    "zh": "周五 晚上10:40",
+    "en": "Friday, 10:40 PM"
+   },
+   "ask": {
+    "zh": "这张纸条，你打算怎么办？",
+    "en": "What do you do with the note?"
+   },
+   "choices": [
+    {
+     "k": "A",
+     "t": {
+      "zh": "拿着纸条，走过去当面问Theo",
+      "en": "Take the note and ask Theo, face to face"
+     },
+     "set": "asked_theo",
+     "mem": {
+      "zh": "Nico拿着围裙口袋里的生日纸条当面问了Theo；Theo承认是他写的、偷偷塞进去的，也承认一直记得Nico的生日。两人之间的气氛变了。",
+      "en": "Nico showed Theo the birthday note from his apron pocket; Theo admitted he wrote it and slipped it in, and that he's always remembered Nico's birthday. Something shifted between them."
+     }
+    },
+    {
+     "k": "B",
+     "t": {
+      "zh": "先揣回口袋，装作什么都没看见",
+      "en": "Pocket it and act like you never saw it"
+     },
+     "set": "kept_tab",
+     "mem": {
+      "zh": "Nico把Theo写的生日纸条悄悄揣回围裙口袋，什么都没说；Theo看见了，也什么都没说。",
+      "en": "Nico quietly pocketed Theo's birthday note and said nothing; Theo saw, and said nothing either."
+     }
+    },
+    {
+     "k": "C",
+     "t": {
+      "zh": "当着所有人的面念出来",
+      "en": "Read it out loud in front of everyone"
+     },
+     "set": "read_aloud",
+     "mem": {
+      "zh": "Nico当众念了Theo塞进他围裙口袋的生日纸条；大家才知道今天是Nico生日，热闹地给他庆祝，Theo却躲进了后厨。",
+      "en": "Nico read Theo's birthday note out loud; everyone found out it was his birthday and celebrated, but Theo slipped off into the kitchen."
+     }
+    }
+   ]
+  },
+  {
+   "t": {
+    "zh": "地下室进水了",
+    "en": "Water in the Basement"
+   },
+   "goal": {
+    "zh": "保住地下室的货，也保住Theo赶飞机的希望",
+    "en": "Save the stock — and Theo's chance of making his flight"
+   },
+   "place": {
+    "zh": "半月酒吧 地下室楼梯口",
+    "en": "The Halfmoon, basement stairs"
+   },
+   "time": {
+    "zh": "周六 凌晨12:20",
+    "en": "Saturday, 12:20 AM"
+   }
+  },
+  {
+   "t": {
+    "zh": "录音笔一直开着",
+    "en": "The Recorder Was On"
+   },
+   "goal": {
+    "zh": "决定Wren录下的那些真心话怎么处理",
+    "en": "Decide what happens to everything Wren's recorder caught"
+   },
+   "place": {
+    "zh": "烛光下的吧台",
+    "en": "The bar, by candlelight"
+   },
+   "time": {
+    "zh": "周六 凌晨1:30",
+    "en": "Saturday, 1:30 AM"
+   }
+  },
+  {
+   "t": {
+    "zh": "后门的雨",
+    "en": "Rain at the Back Door"
+   },
+   "goal": {
+    "zh": "让Mason和Ethan把话说开，也找一个和Theo单独说话的机会",
+    "en": "Get Mason and Ethan talking — and find a moment alone with Theo"
+   },
+   "place": {
+    "zh": "酒吧后门的屋檐下",
+    "en": "Under the awning by the back door"
+   },
+   "time": {
+    "zh": "周六 凌晨2:40",
+    "en": "Saturday, 2:40 AM"
+   }
+  },
+  {
+   "t": {
+    "zh": "航班取消了",
+    "en": "Flight Canceled"
+   },
+   "goal": {
+    "zh": "Theo的航班改到了明晚——你要劝他走，还是开口让他留下",
+    "en": "Theo's flight moved to tomorrow night — do you push him to go, or ask him to stay?"
+   },
+   "place": {
+    "zh": "收银台后面",
+    "en": "Behind the register"
+   },
+   "time": {
+    "zh": "周六 凌晨4:00",
+    "en": "Saturday, 4:00 AM"
+   }
+  },
+  {
+   "t": {
+    "zh": "雨停了",
+    "en": "The Rain Stops"
+   },
+   "goal": {
+    "zh": "天亮了，给每个人一个体面的告别",
+    "en": "It's morning — give everyone a decent goodbye"
+   },
+   "place": {
+    "zh": "半月酒吧 临街窗边",
+    "en": "The Halfmoon, by the front window"
+   },
+   "time": {
+    "zh": "周六 早上6:10",
+    "en": "Saturday, 6:10 AM"
+   }
+  },
+  {
+   "t": {
+    "zh": "去机场的路",
+    "en": "The Road to the Airport"
+   },
+   "goal": {
+    "zh": "送他去机场，或者不送",
+    "en": "Drive him to the airport — or don't"
+   },
+   "place": {
+    "zh": "你的旧车里",
+    "en": "Your old car"
+   },
+   "time": {
+    "zh": "周六 晚上6:30",
+    "en": "Saturday, 6:30 PM"
+   }
+  },
+  {
+   "t": {
+    "zh": "一年以后",
+    "en": "A Year Later"
+   },
+   "goal": {
+    "zh": "看看你们最后成了什么样子",
+    "en": "See where you all ended up"
+   },
+   "place": {
+    "zh": "半月酒吧",
+    "en": "The Halfmoon"
+   },
+   "time": {
+    "zh": "一年后的周五",
+    "en": "A Friday, one year later"
+   }
+  }
+ ],
+ "love": "theo",
+ "rel": [
+  [
+   "nico",
+   "theo",
+   {
+    "zh": "暗恋五年，谁都没说破",
+    "en": "Five years in love; neither says it"
+   }
+  ],
+  [
+   "wren",
+   "nico",
+   {
+    "zh": "大学死党，只有她知道",
+    "en": "Best friend; the only one who knows"
+   }
+  ],
+  [
+   "rowan",
+   "theo",
+   {
+    "zh": "室友，替他守着秘密",
+    "en": "Roommate; keeps his secret"
+   }
+  ],
+  [
+   "wren",
+   "rowan",
+   {
+    "zh": "今晚的同谋，联手做局",
+    "en": "Tonight's co-conspirators"
+   }
+  ],
+  [
+   "mason",
+   "ethan",
+   {
+    "zh": "室友兼队友，冷战第九天",
+    "en": "Roommates, day 9 of a cold war"
+   }
+  ],
+  [
+   "nico",
+   "mason",
+   {
+    "zh": "酒吧常客",
+    "en": "Regular at the bar"
+   }
+  ]
+ ],
+ "dims": [
+  {
+   "a": "nico",
+   "b": "theo",
+   "main": 1,
+   "seed": {
+    "att": 46,
+    "tru": 40,
+    "jea": 12,
+    "ten": 30,
+    "gru": 8
+   }
+  },
+  {
+   "a": "mason",
+   "b": "ethan",
+   "seed": {
+    "att": 44,
+    "tru": 18,
+    "jea": 20,
+    "ten": 66,
+    "gru": 72
+   }
+  }
+ ]
+}

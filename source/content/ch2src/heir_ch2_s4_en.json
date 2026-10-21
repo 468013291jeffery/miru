@@ -1,0 +1,698 @@
+{
+ "beats": {
+  "en": [
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "sad"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/files",
+     "place": "Vale Hotel · Lounge",
+     "time": "Wed 11:52 PM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Folding chairs are stacked in the corner of the lounge. The air smells like cleaning fluid. Adrian sits, shoulder blades against the hard chair back, and makes himself not lean forward."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman stands on the other side of the table. From here Adrian can see everything: the rise and fall at his collar, the locked jaw, the fingers on the table's edge, white from pressing down."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You recognized it."
+   ],
+   [
+    "roman",
+    "say",
+    "The format. Not the whole file."
+   ],
+   [
+    "adrianv",
+    "say",
+    "When?"
+   ],
+   [
+    "roman",
+    "act",
+    "Roman writes down the one year he can confirm: ten years ago. Three years ago was his reassignment back to protection — it doesn't get to cover for this answer. His voice is steady when he says the year. His throat works twice anyway."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian watches that spot and remembers his mouth there — on the plane, in the study, on every night that almost got away from them. The memory of it reaches his tongue before the next question does."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You keep answering the question you'd rather answer."
+   ],
+   [
+    "roman",
+    "say",
+    "Yes."
+   ],
+   [
+    "n",
+    "act",
+    "The admission is short. He's known for a while that this man was holding something back. Watching him admit it still hurts. He still wants to come around the table and touch that tight jaw — to check by touch that he's still here, instead of pushing him away with questions."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Don't make knowing you the reason I didn't protect myself."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman looks up. He doesn't come closer. His shoulders are tight, his breathing heavy."
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "The year is on paper. He admitted it, but half of it is still unsaid. How do you keep the relationship and the work apart?",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Give me a written statement tomorrow. Tonight, we keep working.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian writes down tomorrow's intake time and tells Roman to lay it out: the facts, what's missing, what can't be verified."
+        ],
+        [
+         "n",
+         "act",
+         "Roman keeps doing the work he's cleared for. The half step he took on the personal side doesn't get handed back to him. The air between them is still warm."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1,
+         "ten": 2
+        }
+       },
+       "att": "press",
+       "rthink": "He gave me a deadline, not a closed door. ...By noon tomorrow, I have to decide how many pages I tell him.",
+       "rwho": "roman",
+       "set": "CH2_LOUNGE_WRITTEN"
+      },
+      {
+       "k": "say",
+       "t": "I'm pulling your close-protection clearance. We do a formal handover.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Roman follows shift protocol and hands over his gear and access, one item at a time."
+        ],
+        [
+         "adrianv",
+         "say",
+         "This isn't a verdict. It's a limit on access."
+        ],
+        [
+         "roman",
+         "act",
+         "When the new officer shows up at the door, Roman's eyes stay on Adrian's face for two seconds before they move. In those two seconds, wanting and holding back are knotted so tight they almost spill over."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -1,
+         "ten": 3,
+         "gru": 1
+        }
+       },
+       "att": "guard",
+       "rthink": "He said \"not a verdict.\" I know. But the earpiece I just handed over was the only thing in ten years that let me hear him breathe.",
+       "rwho": "roman",
+       "set": "CH2_LOUNGE_REVOKED"
+      },
+      {
+       "k": "say",
+       "t": "From now on, it's Mr. Vale. Official channels only.",
+       "then": [
+        [
+         "adrianv",
+         "say",
+         "From now on, it's Mr. Vale. Official channels only."
+        ],
+        [
+         "roman",
+         "say",
+         "Understood, Mr. Vale."
+        ],
+        [
+         "n",
+         "act",
+         "Hearing the name, Adrian knows he really did just shut something off. His chest goes hollow, and it aches."
+        ]
+       ],
+       "love": -1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": -2,
+         "gru": 2,
+         "att": -1
+        }
+       },
+       "att": "cold",
+       "rthink": "Mr. Vale. ...I practiced those words. Every day for three years. Saying them for real was harder than I thought.",
+       "rwho": "roman",
+       "set": "CH2_LOUNGE_FORMAL"
+      },
+      {
+       "k": "say",
+       "t": "I want a hug. I still want the answers.",
+       "then": [
+        [
+         "adrianv",
+         "say",
+         "I want a hug. And I still want the answers."
+        ],
+        [
+         "roman",
+         "say",
+         "You can have both."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman checks once before he moves in. His steps are steady. His breathing already isn't. His arms close around him hard enough to almost hurt, but they leave a gap he could step out of any time."
+        ],
+        [
+         "n",
+         "act",
+         "Adrian's forehead meets his shoulder. The heat under the fabric is real. Chest to chest, two heartbeats lose their rhythm together. This close, neither of them can hide what his body is doing — they both notice, and neither of them lets a hand drift lower."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman's hand lands on his back, palm open, and goes no further. Like he's using everything he has to keep all that want inside the word \"hug.\""
+        ],
+        [
+         "adrianv",
+         "say",
+         "(barely a breath) You..."
+        ],
+        [
+         "roman",
+         "say",
+         "(just as quiet) I know. Don't come any closer. I won't be able to stop."
+        ],
+        [
+         "n",
+         "act",
+         "Adrian lets go first. When they separate, they both stay one second longer before they get their breathing back. The tips of Roman's ears are red. So are Adrian's. The year is still on the paper on the table, a line body heat didn't melt."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "att": 4,
+         "tru": 1,
+         "ten": 3
+        }
+       },
+       "att": "soft",
+       "rthink": "He said \"I still want the answers.\" So the hug isn't forgiveness. It's interest. ...I held on too tight. He didn't push me away.",
+       "rwho": "roman",
+       "set": "CH2_LOUNGE_HUG"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "memory"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "rain"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/cvs17",
+     "place": "Brooklyn · Record store",
+     "time": "Thu 12:08 AM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The record store's roll-down gate is halfway shut. The light inside is yellow. Rain drips off the gate's edge. A real address doesn't mean a safe store — the intake team clears the meeting area first, and only then does Adrian duck under."
+   ],
+   [
+    "n",
+    "act",
+    "Marcus isn't there. On a chair: an intake form, and an evidence sleeve with the corner of an old photo showing."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "heir/album17"
+    }
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "📷",
+     "title": "A Photo You've Never Seen",
+     "txt": "Outside a convenience store. Young Roman, his right arm hurt. You're at the edge of the frame. Photographer unknown."
+    }
+   ],
+   [
+    "adrianv",
+    "say",
+    "I remember that bag. I don't remember this angle."
+   ],
+   [
+    "sys",
+    "if",
+    {
+     "cond": {
+      "not": "CH2_LOUNGE_FORMAL"
+     },
+     "then": [
+      [
+       "roman",
+       "act",
+       "Roman looks only at the shared copy. He doesn't reach for the original."
+      ],
+      [
+       "roman",
+       "say",
+       "I didn't take this."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian looks at the kid in the photo. Ten years isn't a montage that cuts him into the man he is now — there are too many days in between, and Adrian didn't see a single one. Still, in grown Roman's shoulders, his breathing, his restraint, he can find the boy who almost kissed him."
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "The photo's in your hands. Next —",
+     "opts": [
+      {
+       "k": "say",
+       "t": "The original stays here. I want to know who took it.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian asks the source to explain how they got it. He puts what he remembers on a personal page and the sourcing questions on an evidence page. Two pages, kept apart."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1
+        }
+       },
+       "att": "probe",
+       "rthink": "He put memory and evidence on separate pages. ...He's better at protecting himself than I am.",
+       "rwho": "roman",
+       "set": "CH2_PHOTO_SOURCE"
+      },
+      {
+       "k": "say",
+       "t": "Roman. Only what you actually remember.",
+       "then": [
+        [
+         "adrianv",
+         "say",
+         "Just what you remember. Don't fill in the rest of the scene for me."
+        ],
+        [
+         "roman",
+         "say",
+         "That day I walked you home. The arm had already been taken care of. Whatever came after isn't in the photo."
+        ],
+        [
+         "n",
+         "act",
+         "At \"walked you home,\" Adrian's throat moves."
+        ],
+        [
+         "adrianv",
+         "say",
+         "That part, you did right."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman doesn't say he always did right. The injury in the photo doesn't buy forgiveness for leaving later. But when his eyes land on Adrian's face, there's a heat in them he can barely keep down."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 2,
+         "att": 2
+        }
+       },
+       "att": "honest",
+       "rthink": "\"You did right.\" ...I've told myself ten thousand things in ten years. That was never one of them.",
+       "rwho": "roman",
+       "set": "CH2_PHOTO_ROMAN"
+      },
+      {
+       "k": "say",
+       "t": "I'm done looking tonight. Marcus first.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian hands the evidence sleeve to the custodian and sends Marcus a message. No answer right away."
+        ],
+        [
+         "sys",
+         "rd",
+         {
+          "p": "adrianv|roman",
+          "d": {
+           "ten": 1
+          },
+          "why": "He went around Roman, straight to Marcus"
+         }
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "ten": 2,
+         "jea": 1
+        }
+       },
+       "att": "guard",
+       "rthink": "He asked Marcus. Not me. ...I earned that.",
+       "rwho": "roman",
+       "set": "CH2_PHOTO_MARCUS"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/cctv",
+     "place": "Vale Hotel · Intake room",
+     "time": "Thu 12:21 AM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The plan gets settled in the intake room. Adrian will use an approved test notice to map the leak: an \"equipment transfer\" message with no real person's location in it, sent through the suspect internal channel, pointing at a closed loading dock nobody will be at."
+   ],
+   [
+    "adrianv",
+    "say",
+    "I want to know which channel is leaking. I don't need to stand in it to find out."
+   ],
+   [
+    "n",
+    "act",
+    "The notice goes out. First minute, nothing. Second minute, a car at the intersection changes direction. The independent team logs its route. In the access system, a new exterior-door request appears — under the same credential name as that bad entry code from before."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🚗",
+     "title": "Someone Took the Bait",
+     "txt": "An unplated car heading for an empty loading dock. The request credential has the same name as the \"wrong door.\""
+    }
+   ],
+   [
+    "adrianv",
+    "line",
+    {
+     "hint": "The car's moving. Next —",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Preserve the route. Nobody gets closer.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian has the spotters end the tail and pull the footage and raw timestamps. The full report is saved."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1
+        }
+       },
+       "att": "guard",
+       "rthink": "He didn't chase. ...He knows what they want.",
+       "rwho": "roman",
+       "set": "CH2_BAIT_STOP"
+      },
+      {
+       "k": "say",
+       "t": "Hand it to the independent investigation channel.",
+       "then": [
+        [
+         "n",
+         "act",
+         "The intake officer logs the case material. A few minutes later, they submit a lawfully obtained photo of a visitor badge."
+        ],
+        [
+         "sys",
+         "event",
+         {
+          "icon": "🪪",
+          "title": "Visitor Badge · ROMAN CROSS",
+          "txt": "The photo shows a grown man's face. A stranger. Someone is using Roman's name to get in and out of Vale."
+         }
+        ],
+        [
+         "roman",
+         "act",
+         "Roman stares at the badge. His jaw locks, one notch at a time."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 2,
+         "ten": 2
+        }
+       },
+       "att": "probe",
+       "rthink": "Someone's wearing my name. ...They did this ten years ago. This time I won't let it come down on him.",
+       "rwho": "roman",
+       "set": "CH2_BAIT_ID"
+      },
+      {
+       "k": "say",
+       "t": "Shut the bad channel first. History after.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian requests a freeze on the credentials tied to the evidence. Freezing them doesn't erase the history — the search comes back with a link to an old file."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "adrianv|roman": {
+         "tru": 1,
+         "ten": 2
+        }
+       },
+       "att": "press",
+       "rthink": "He shuts the door first, then goes through the old books. ...My name is in those books.",
+       "rwho": "roman",
+       "set": "CH2_BAIT_CUT"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "mystery"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/files",
+     "place": "Vale Hotel · Lounge",
+     "time": "Thu 12:40 AM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Just past midnight. In the lounge, the only light is the one over the table. Adrian lays the two files on the same sheet of blotter paper."
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "🗂",
+     "title": "Two Files, One Name",
+     "txt": "A: ROMAN CROSS — PROTECTIVE DETAIL (close protection)\nB: ROMAN CROSS — ASSET DISPOSAL APPROVED (asset disposal · approved)"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "B's approval date is the day after Roman disappeared, ten years ago. Not seven years ago. Not three. Adrian circles the date. The pen makes a faint sound on the paper, and Roman's breathing drops with it."
+   ],
+   [
+    "adrianv",
+    "say",
+    "That morning. Where were you?"
+   ],
+   [
+    "roman",
+    "say",
+    "I left town with someone I didn't know."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Did you sign anything?"
+   ],
+   [
+    "n",
+    "act",
+    "The second before he answers is longer than any blackout tonight. Roman's breathing goes deep, his shoulders tighten, and the fingers on the table's edge whiten bit by bit, like he's trying not to crush something."
+   ],
+   [
+    "roman",
+    "say",
+    "An isolation agreement. Not this disposal authorization."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Then we verify them separately. Both of them."
+   ],
+   [
+    "n",
+    "act",
+    "In B's approval box, initials: R.C. Two letters can't prove whose signature it is. They're enough to make Adrian remember how Roman held a pen — seventeen, a smudge of blue ink on his knuckles, complaining that the pen Adrian lent him was too slippery, then signing his name on the most ordinary scrap of paper anyway. Now that familiarity is dangerous."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You don't get to pick which part of the past is worth checking for me."
+   ],
+   [
+    "roman",
+    "say",
+    "I won't."
+   ],
+   [
+    "adrianv",
+    "say",
+    "That's another promise. Write it down."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman writes it on his own statement page, not next to the unverified authorization. As he writes, the effort pulls his shoulders tight and draws a faint crease across his shirt. His throat moves. He keeps his breathing low."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian watches his lowered lashes and suddenly knows exactly what he wants to touch, and it isn't the file. It's him. He wants his fingers on that pulse. He wants his mouth on every sentence Roman hasn't finished. He wants to press \"you're still here\" into both their skin."
+   ],
+   [
+    "n",
+    "act",
+    "He doesn't move. He just sets the pen down. His fingertips rest on the table for two seconds, like he's holding himself back from reaching out."
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "roman",
+       "I didn't sign R.C. But I can't prove it. ...All I can do is still be standing here tonight, and let him watch me write."
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "ten": 3,
+      "tru": 1
+     },
+     "why": "Two Files, One Name"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The light only reaches the table. Before Chapter 3 begins, Adrian has to decide who gets to sit beside him."
+   ]
+  ]
+ }
+}

@@ -1,0 +1,393 @@
+{
+ "beats": {
+  "en": [
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "warm"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/penthouse",
+     "place": "Vale Tower penthouse · Kitchen island",
+     "time": "Wed 10:40 PM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Once the lockdown is done, the penthouse goes quiet except for the low hum of the AC and two men whose breathing hasn't quite settled."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman finishes his last sweep of the doors and windows. His shirt has gone damp in places, sticking to his shoulders and chest. He comes over to the island and, without a word, slides a bottle of water toward Adrian. His fingers stay on it half a second too long, like he's checking whether he's still allowed this close."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian takes the water. His fingertips brush Roman's knuckles. They both go still."
+   ],
+   [
+    "adrianv",
+    "say",
+    "Your heart rate was way up back in that hallway."
+   ],
+   [
+    "roman",
+    "say",
+    "You were watching the monitor."
+   ],
+   [
+    "adrianv",
+    "say",
+    "I was watching you."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman's Adam's apple bobs. He doesn't step back. He doesn't step closer either. The one pace of air between them runs hot."
+   ],
+   [
+    "roman",
+    "say",
+    "If there's another round tonight, pick staying alive first. Right and wrong can wait."
+   ],
+   [
+    "adrianv",
+    "say",
+    "And you? What do you pick?"
+   ],
+   [
+    "roman",
+    "say",
+    "You. Where I can see you."
+   ],
+   [
+    "n",
+    "act",
+    "When he's said it, his eyes drop to Adrian's mouth for a beat before he makes himself look away."
+   ],
+   [
+    "sys",
+    "recall",
+    {
+     "who": "roman",
+     "txt": "It's not that I don't want to finish the sentence. It's that once I do, you'll know I owe you more than you think."
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "att": 1,
+      "tru": 1
+     },
+     "why": "You. Where I can see you"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "luxury"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/towel",
+     "place": "Vale Tower penthouse · Dressing room",
+     "time": "Wed 10:55 PM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The stylist wheels in three options: a dark suit, a white tux, and the old jacket Adrian refused to give up. A mirror takes up the whole wall, lit from all around the frame, so bright it leaves no shadows."
+   ],
+   [
+    "roman",
+    "act",
+    "Roman stands three steps back, arms crossed, chin slightly down. His eyes don't stay down. They move from the back of Adrian's neck to his shoulder blades, to where the shirt pulls in at his waist, then come back up to his face with careful control. Two seconds, tops. Enough to make the tips of Adrian's ears burn."
+   ],
+   [
+    "n",
+    "act",
+    "\"Enough room to move in that one?\" the stylist asks."
+   ],
+   [
+    "adrianv",
+    "say",
+    "It's fine."
+   ],
+   [
+    "n",
+    "act",
+    "He says it to Roman in the mirror. Roman doesn't look away. He lets out a breath, barely, like he's pushing something back down, and for a second you can see his chest rise and fall."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian lifts a hand to fix his cuff, on purpose, and the shirt hem rides up half an inch, showing a strip of skin at his side. In the mirror, Roman's throat moves. His fingers tighten on his arm until the knuckles go white."
+   ],
+   [
+    "adrianv",
+    "say",
+    "(low, just for him) Seen enough?"
+   ],
+   [
+    "roman",
+    "say",
+    "(just as low) No. So you'd better finish getting dressed."
+   ],
+   [
+    "n",
+    "act",
+    "It sounds like an order, but his voice goes rough at the end. Adrian's knees give, just slightly. In the mirror, Roman's eyes go darker for that one second. Then he wrenches them toward the door, like the job is the only thing holding him at a safe distance."
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "roman",
+       "He's doing it on purpose. He had this move down at seventeen. He'd borrow my jacket, sleeves too long, and roll them up one turn at a time right in front of me. ...I didn't hold out then, either."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrianv",
+    "pick",
+    {
+     "ic": "👔",
+     "title": "Tonight's Look",
+     "hint": "Three outfits hang in front of the mirror. Tonight there'll be cameras, board members, and a \"wrong door.\" How do you want to walk in?",
+     "items": [
+      {
+       "ic": "🖤",
+       "t": "Dark suit",
+       "sub": "Fix the collar yourself",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian buttons it all the way up, decides it's too tight, and undoes the top one. In the mirror, Roman's eyes follow that small patch of bare neck, then pull back up, under control."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Eyes up, Cross."
+        ],
+        [
+         "roman",
+         "say",
+         "They are up."
+        ],
+        [
+         "n",
+         "act",
+         "Adrian's hand stalls at his collar. Neither of them is allowed to turn the joke into reaching out. But the heat in the room says enough."
+        ]
+       ],
+       "rd": {
+        "adrianv|roman": {
+         "att": 2,
+         "ten": 1
+        }
+       },
+       "set": "CH2_STYLE_DARK"
+      },
+      {
+       "ic": "🤍",
+       "t": "White tux",
+       "sub": "Ask him to do the cuffs",
+       "then": [
+        [
+         "adrianv",
+         "say",
+         "Cufflinks. You do it."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman looks at him first, like he's making sure this is allowed, then comes over. He only holds the cuff, but when his fingertips graze the bone of Adrian's wrist, they both tense. His fingertips are lightly callused, and even held back, a little of his strength leaks through."
+        ],
+        [
+         "n",
+         "act",
+         "Roman's breath lands by his ear, low, almost a sigh. The cuff is done. Adrian's wrist still feels where he touched it, like an invisible stamp."
+        ],
+        [
+         "roman",
+         "say",
+         "This one won't sign anything for you."
+        ],
+        [
+         "adrianv",
+         "say",
+         "Don't let the cufflinks apologize for you, either."
+        ]
+       ],
+       "rd": {
+        "adrianv|roman": {
+         "att": 3,
+         "tru": 1,
+         "ten": 2
+        }
+       },
+       "set": "CH2_STYLE_WHITE"
+      },
+      {
+       "ic": "🧥",
+       "t": "Old jacket",
+       "sub": "Just safe and presentable",
+       "then": [
+        [
+         "n",
+         "act",
+         "The stylist checks that the pockets aren't torn and the shoes are good for walking, and brushes off the collar of the old jacket. When Adrian shrugs it on, the fabric pulls softly at his shoulders. It's his. Nobody bought it for him."
+        ],
+        [
+         "roman",
+         "act",
+         "Roman looks at the old jacket, and something complicated crosses his face, like he's seeing the kid who used to wait for him outside the convenience store ten years ago."
+        ],
+        [
+         "adrianv",
+         "say",
+         "I don't have to look like them to get to ask questions."
+        ],
+        [
+         "roman",
+         "say",
+         "I know."
+        ],
+        [
+         "n",
+         "act",
+         "His voice is low, with a hurt in it he's almost managed to bury."
+        ]
+       ],
+       "rd": {
+        "adrianv|roman": {
+         "tru": 2,
+         "att": 1
+        }
+       },
+       "set": "CH2_STYLE_OLD"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "intimate"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "rain"
+    }
+   ],
+   [
+    "sys",
+    "scene",
+    {
+     "img": "heir/car",
+     "place": "En route to the Vale Hotel",
+     "time": "Wed 11:05 PM"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "In the car, Roman sits beside him again instead of up front. A fine rain has started outside, stretching the city lights into wet streaks."
+   ],
+   [
+    "n",
+    "act",
+    "Their knees have been touching since they pulled out. He can feel the warmth through the fabric. Every turn presses their legs together a little harder. Adrian doesn't move away. Neither does Roman, as if they've both agreed this is one of the few things allowed tonight."
+   ],
+   [
+    "roman",
+    "act",
+    "Two minutes in, the fingers resting on Roman's own knee shift, and his hand settles lightly over the back of Adrian's. Not laced together. Just the warmth of his palm. His thumb moves slowly along the side of Adrian's hand. Once. A half-second pause. Again. Like he's counting a pulse. Or like the touch is standing in for the words he can't say: I'm here."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian stares at the lights sliding past the window. Roman's warmth climbs from the back of his hand up his arm and into the side of his neck. He doesn't say anything. Neither does Roman. In the dark, there's just the knee and the hand, still giving off heat."
+   ],
+   [
+    "adrianv",
+    "say",
+    "If somebody actually makes a move tonight, you're planning to step in front of me?"
+   ],
+   [
+    "roman",
+    "say",
+    "Yes."
+   ],
+   [
+    "adrianv",
+    "say",
+    "You ever think maybe I don't want to watch you bleed again?"
+   ],
+   [
+    "roman",
+    "say",
+    "I have. So I'll try to keep the blood where it belongs."
+   ],
+   [
+    "roman",
+    "act",
+    "Then his thumb presses a little harder into the back of Adrian's hand. Adrian turns his head and sees the hard set of Roman's jaw, his collar rising and falling with each breath."
+   ],
+   [
+    "n",
+    "act",
+    "The thumb doesn't stop until Adrian's breathing catches. Even then, the hand stays."
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "adrianv|roman",
+     "d": {
+      "att": 2,
+      "tru": 1
+     },
+     "why": "In the car, the hand stayed"
+    }
+   ],
+   [
+    "sys",
+    "fx",
+    {
+     "k": "none"
+    }
+   ]
+  ]
+ }
+}

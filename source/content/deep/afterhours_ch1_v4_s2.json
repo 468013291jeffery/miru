@@ -1,0 +1,2162 @@
+{
+ "beats": {
+  "zh": [
+   [
+    "sys",
+    "scene",
+    {
+     "img": "afterhours/s3",
+     "place": "半月酒吧 地下室",
+     "time": "周五 晚上11:20"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "地下室的木楼梯踩一脚吱一声，第五级往下，就没进了水里。黑水泛着油光，凉得像刀片，一下子咬透了袜子。"
+   ],
+   [
+    "n",
+    "act",
+    "十几箱酒歪在水里，纸箱泡得发软，边角翻卷，标签一张张浮起来，像死鱼翻出的白肚皮。"
+   ],
+   [
+    "n",
+    "act",
+    "墙角的排水泵哑着嗓子嗡嗡转，抽一口，吐一口，根本赶不上墙缝里往外渗的雨水。"
+   ],
+   [
+    "n",
+    "act",
+    "头顶的灯管滋滋作响，一明一灭。每灭一次，水面就跟着黑一回，像有什么东西在底下眨眼。"
+   ],
+   [
+    "n",
+    "act",
+    "空气又潮又沉，湿木头的霉味混着打翻的红酒，甜里发酸，吸一口，舌根都是涩的。"
+   ],
+   [
+    "n",
+    "act",
+    "水还在涨，一指节一指节地往上爬。得赶在它没过膝盖之前，把这些全扛上楼。"
+   ],
+   [
+    "rowan",
+    "act",
+    "Rowan站在第三级台阶上，黑色工装夹克拉链拉到下巴，裤腿卷到小腿肚，手里攥着写字板，笔帽咬在嘴里。"
+   ],
+   [
+    "rowan",
+    "say",
+    "听我分工。Mason、Ethan，那只啤酒桶，你俩一人一头。"
+   ],
+   [
+    "mason",
+    "act",
+    "Mason已经蹚进了水里。灰色连帽衫袖子撸到肘弯，小臂粗得像船缆，腕上一圈黑色运动手环，青筋一路爬到手背。"
+   ],
+   [
+    "n",
+    "act",
+    "Ethan慢半拍跟过来，右膝套着黑色护膝，走一步顿一下。下巴绷得死紧，胡茬底下那块咬肌一跳一跳。"
+   ],
+   [
+    "mason",
+    "act",
+    "两人对视一眼，同时别开脸。可两只大手扣上冰凉的桶沿时，指节撞在一起，谁都没挪开。"
+   ],
+   [
+    "mason",
+    "act",
+    "桶一离水，Mason手腕一翻，不声不响把大半分量揽到了自己那头。"
+   ],
+   [
+    "ethan",
+    "say",
+    "我膝盖没废。用不着你让。"
+   ],
+   [
+    "mason",
+    "say",
+    "没让。我这头本来就沉。"
+   ],
+   [
+    "n",
+    "act",
+    "Ethan没再吭声。只是下一步，那条右腿踩得比刚才稳了些。"
+   ],
+   [
+    "rowan",
+    "say",
+    "Theo，Nico，最里面那条窄道，两箱红酒。你们俩去。"
+   ],
+   [
+    "wren",
+    "say",
+    "那条道就一个人宽，两个人怎么——"
+   ],
+   [
+    "rowan",
+    "say",
+    "所以才要两个人。一个照灯，一个搬——挤一挤，还暖和。"
+   ],
+   [
+    "wren",
+    "act",
+    "Wren缩在楼梯拐角，格纹西装外套的肩头湿透了，胸前口袋里露出半截录音笔，红灯亮着。她低着头，拇指飞快地戳屏幕。"
+   ],
+   [
+    "n",
+    "act",
+    "下一秒，Nico后裤兜里的手机嗡地一震，隔着湿透的西裤，震得他后腰一麻。"
+   ],
+   [
+    "n",
+    "act",
+    "【Wren：A计划炸了，B计划——地下室。黑灯瞎火，该碰就碰。别怂。】"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo从Rowan脚边抄起两支手电，一支抛进Nico怀里，自己拎着另一支往里走。旧切尔西靴每一步都踩出一圈涟漪。"
+   ],
+   [
+    "n",
+    "act",
+    "白衬衫湿了半截，袖口挽到小臂，左腕那根褪色红绳压着旧表。手电光一晃，照出他宽肩把湿衬衫撑紧的那道背线。"
+   ],
+   [
+    "n",
+    "act",
+    "Nico盯着那道背影，心里骂了一句：七点十分的飞机，这人居然还在这儿替我搬酒。"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "Wren和Rowan明摆着在做局。Theo的手电光已经晃进了窄道深处，水声一路跟着他。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "把手机塞回裤兜，跟上Theo，故意贴得很近。",
+       "then": [
+        [
+         "theo",
+         "say",
+         "跟这么紧？老板，你是怕黑，还是想趁黑干点什么？"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 2
+        }
+       },
+       "rthink": "他贴得这么近，我反倒不敢回头。七点十分的飞机，这条窄道是我今晚最后一个借口。",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "Rowan，我搬外面的，让Mason跟他去。",
+       "then": [
+        [
+         "rowan",
+         "say",
+         "Mason在抬桶。去。"
+        ],
+        [
+         "wren",
+         "act",
+         "Wren从后面一掌拍在Nico背上，雨衣袖子甩出一串水，力气大得能推倒一个前锋。"
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "nico|theo": {
+         "jea": 6,
+         "ten": -2
+        },
+        "mason|ethan": {
+         "ten": 3
+        }
+       },
+       "rthink": "让Mason去？那人昨晚写纸条写废了半本便签。今晚你就是爬，也得给我爬进那条道。",
+       "rwho": "rowan"
+      },
+      {
+       "k": "say",
+       "t": "你俩做局，能不能做得专业点？",
+       "then": [
+        [
+         "wren",
+         "say",
+         "能啊。所以你现在就进去。"
+        ],
+        [
+         "rowan",
+         "act",
+         "Rowan冲Wren比了个OK，写字板都举歪了。Theo恰好回头，手电光直直打在两人脸上。"
+        ],
+        [
+         "theo",
+         "say",
+         "……你们仨在干嘛？"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       },
+       "rthink": "专业？我这录音笔五年前就开着了。你俩的素材我能剪三集，就差个结局。",
+       "rwho": "wren"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "窄道比看上去还窄，两侧铁货架冰凉，硌着肩膀，锈渣蹭了一袖子。头顶的水管滴答滴答，砸在后颈上。"
+   ],
+   [
+    "n",
+    "act",
+    "走到一半，Theo手里的光抖了两下，像喘不上气，然后噗地灭了。黑暗一下子压下来，近得能摸到。"
+   ],
+   [
+    "theo",
+    "say",
+    "……完了，我这支没电了。真的，不是故意的。"
+   ],
+   [
+    "n",
+    "act",
+    "只剩Nico手里这一支。光圈小得可怜，照出前面一堵酒瓶墙。两个人得侧过身，一前一后错开。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_aisle"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "先是铁货架响了一声——Theo的肩膀从后面擦过去，整排酒瓶跟着轻轻一磕。然后是他的胸口，整片贴上了Nico的背。"
+   ],
+   [
+    "n",
+    "act",
+    "湿衬衫是冰的，底下那具身体却烫得吓人。他肩膀比Nico宽出一截，把窄道剩下那点空当填得满满当当。"
+   ],
+   [
+    "n",
+    "act",
+    "再往里，是心跳。又重又沉，一下一下撞在Nico的肩胛骨上，像有人在门外敲门——不急，也不走。"
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_squeeze"
+    }
+   ],
+   [
+    "theo",
+    "say",
+    "别动。……衣服勾货架上了。"
+   ],
+   [
+    "n",
+    "act",
+    "他一只手越过Nico腰侧，摸黑去找那颗勾住衣摆的螺栓。小臂横在Nico身前，手背绷出青筋，铁架子吱地一声——人就这么被圈在了中间。"
+   ],
+   [
+    "n",
+    "act",
+    "下巴搁在Nico耳边，胡茬擦过耳廓，又糙又痒。呼吸热烘烘的，一下下扫过颈侧那根筋。"
+   ],
+   [
+    "n",
+    "act",
+    "手电的光圈在一排酒瓶上乱晃，琥珀色、暗红色，碎成一片。Nico过了两秒才反应过来：晃的是他自己的手。"
+   ],
+   [
+    "n",
+    "act",
+    "他咬住后槽牙。开店五年，醉汉砸杯、房东涨租、供货商卷钱跑路，哪样没扛过。偏偏扛不住后背上这一颗心跳。"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "Theo卡在你背后，正摸黑解那颗螺栓，呼吸就在你耳边。手电在你手里，光在抖。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "不动。让他就这么贴着，多一秒。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo也没动。过了好半天，他的嘴唇几乎碰着Nico耳廓，嗓子压得又低又哑：“你心跳好快。”"
+        ],
+        [
+         "theo",
+         "say",
+         "……我贴着你后背呢，数得清。"
+        ],
+        [
+         "theo",
+         "act",
+         "话一出口，他自己先挪开了半寸，低头去拧那颗螺栓：“……水太凉，冻的吧。”"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       },
+       "rthink": "螺栓两秒前就解开了。我手还搁在这儿，是因为他没让开——他没让开。",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "你是真卡住了，还是不想动？",
+       "then": [
+        [
+         "theo",
+         "say",
+         "……都有。你要我选一个？"
+        ],
+        [
+         "theo",
+         "act",
+         "他没退，反而往前压了半寸，结实的胸膛把Nico抵死在货架上。整排酒瓶叮当乱撞，后背烫得像贴着炉子。"
+        ],
+        [
+         "theo",
+         "say",
+         "……开玩笑的。螺栓解开了，走。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       },
+       "rthink": "‘都有’是实话，我只敢说成玩笑。这五年，我所有真话都是这么说出口的。",
+       "rwho": "theo"
+      },
+      {
+       "k": "act",
+       "t": "把手电往后递：“你先走。”",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo接手电时，连Nico的手指一起握住了。他的手大，指腹粗糙，在Nico掌心按了一下，停了停，才把手电抽走。"
+        ],
+        [
+         "theo",
+         "say",
+         "你总是让我先走。"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 2
+        }
+       },
+       "rthink": "打烊让我先走，下雨让我先走。这回去纽约，他大概也要让我先走。",
+       "rwho": "theo"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "螺栓是真勾住了——就是解得慢了点。他后颈烫得要命，一股柠檬味。……七点十分的飞机，我在这儿干什么。"
+      ],
+      [
+       "wren",
+       "楼梯口这儿都听得见瓶子叮当乱响。录音笔我没关。这局，成了一半。"
+      ],
+      [
+       "ethan",
+       "地下室那俩挤成那样还嘴硬。Mason当年也是这么侧着身挤过来帮我扛器材，汗味蹭我一身……算了，不想他。"
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "回程时，窄道口那根水管崩开一道口子，冰水直往下浇。Theo侧过身拿肩膀顶住那股水，冲Nico一偏头：先过。"
+   ],
+   [
+    "n",
+    "act",
+    "等两箱红酒都抱出来，Nico的箱子一滴没沾，Theo从头发湿到了靴子。"
+   ],
+   [
+    "theo",
+    "act",
+    "他把箱子往台阶上一撂，箱底的水哗地淌下来。他甩了甩头，水珠溅了Nico一脸。"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo打了个喷嚏，又一个，肩膀跟着一缩。湿衬衫整片贴在身上，透出锁骨的形状和胸口的起伏。"
+   ],
+   [
+    "theo",
+    "act",
+    "额前的头发一绺绺黏着，水顺着鼻梁往下滴。嘴唇冻得发白，下颌却还绷着，硬撑出一个笑。"
+   ],
+   [
+    "theo",
+    "say",
+    "没事，飞机上睡一觉就好。……老板，看够了没？"
+   ],
+   [
+    "theo",
+    "gift",
+    {
+     "who": "theo",
+     "hint": "他七点十分的飞机，十几个小时的航程，带着一身湿衣服上去，落地就得烧起来。你那件灰色加绒卫衣就挂在楼梯口的铁钩上，还是干的。",
+     "by": {
+      "coffee": [
+       [
+        "theo",
+        "act",
+        "Theo没去接杯子，两只大手连杯子带Nico的手一起捂住了。掌心冰凉，指节却收得很紧，热气从指缝里往上冒。"
+       ],
+       [
+        "theo",
+        "say",
+        "地下室都淹了，你还能变出热咖啡？……这杯先欠着。去了纽约拿什么还，再说。"
+       ]
+      ],
+      "flower": [
+       [
+        "theo",
+        "say",
+        "地下室里送玫瑰？……Wren教你的吧。"
+       ],
+       [
+        "theo",
+        "act",
+        "他嘴上嫌弃，手却把那支红玫瑰别进了湿衬衫胸前的口袋，花瓣上的水珠滚下来。他用掌心按了按，正压在心口上。"
+       ]
+      ],
+      "hoodie": [
+       [
+        "theo",
+        "act",
+        "Theo背过身，三两下解开湿衬衫，拧出一股水甩在台阶上。卫衣从头顶罩下来，袖子长出一截，盖住了指尖。"
+       ],
+       [
+        "theo",
+        "act",
+        "他低头把领口拉到鼻子底下，吸了一口，喉结滚了一下，才抬眼看Nico。"
+       ],
+       [
+        "sys",
+        "bg",
+        {
+         "img": "afterhours/v_collar"
+        }
+       ],
+       [
+        "theo",
+        "say",
+        "……一股吧台抹布味。穿走了，不还。"
+       ],
+       [
+        "sys",
+        "set",
+        {
+         "flag": "wore_hoodie"
+        }
+       ]
+      ],
+      "letter": [
+       [
+        "theo",
+        "say",
+        "现在就写信？我人还在这儿呢，有话不能当面说？"
+       ],
+       [
+        "theo",
+        "act",
+        "Theo没拆，把信折了一道，揣进贴着胸口的口袋，隔着湿布按了一下，像按住一个要往外跳的东西。"
+       ]
+      ],
+      "ring": [
+       [
+        "theo",
+        "say",
+        "戒指？……你们店送行，规格挺高啊。"
+       ],
+       [
+        "theo",
+        "act",
+        "他没还回来，往小指上一套，大小正好。拇指在戒圈上转了一圈，又一圈。"
+       ],
+       [
+        "theo",
+        "say",
+        "先替你保管。哪天回来，还你。"
+       ]
+      ]
+     },
+     "then": [],
+     "skip": [
+      [
+       "theo",
+       "act",
+       "Theo抱着胳膊发抖，牙关磕得咯咯响，还硬撑着笑：“真没事。”"
+      ]
+     ]
+    }
+   ],
+   [
+    "rowan",
+    "act",
+    "Rowan从楼梯上蹚下来，写字板夹在腋下。他看了一眼Theo发白的嘴唇，眉头一拧，把腕上那块电子表解了下来。"
+   ],
+   [
+    "rowan",
+    "say",
+    "运动表，能测心率。人一失温，心跳会往下掉。伸手，先看一眼。"
+   ],
+   [
+    "wren",
+    "act",
+    "Wren跟着跳下最后一级台阶，顺手从Mason腕上薅下那只运动手环，啪地扣在了Nico手腕上。"
+   ],
+   [
+    "wren",
+    "say",
+    "对照组。Nico，站近点——离远了测不准。我押一百五。"
+   ],
+   [
+    "theo",
+    "say",
+    "测就测。……七十二，比你们谁都稳。"
+   ],
+   [
+    "theo",
+    "feature",
+    {
+     "k": "heart",
+     "cid": "theo",
+     "hint": "表盘上跳着72。Wren要你站近点——五秒之内，每点一下，你就往他跟前凑近一寸。看那个数字能不能冲过她押的一百五。",
+     "win": [
+      [
+       "n",
+       "act",
+       "表盘的冷光映着两个人的下巴。数字一路往上蹿，蹿得Rowan都低头多看了一眼，最后停在了{bpm}。"
+      ],
+      [
+       "wren",
+       "say",
+       "{bpm}！Nico才{mine}！Theo，你冻的？"
+      ],
+      [
+       "theo",
+       "say",
+       "……冻的。"
+      ],
+      [
+       "rowan",
+       "say",
+       "失温，心跳是往下掉的。我刚说过。"
+      ],
+      [
+       "theo",
+       "act",
+       "Theo抬起胳膊挡住脸，耳根红得透亮。另一只手攥着Nico的袖口，攥了两秒，才像被烫着似的松开，把表摘下来扔回给Rowan。"
+      ],
+      [
+       "theo",
+       "say",
+       "……你这表该换了。"
+      ]
+     ],
+     "lose": [
+      [
+       "n",
+       "act",
+       "数字刚跳到{bpm}，Theo就退开一步，溅起一片水花，一把把表摘下来扔回给Rowan。"
+      ],
+      [
+       "theo",
+       "say",
+       "测什么测。刚扛完两箱酒，跳多少都正常。搬箱子。"
+      ],
+      [
+       "wren",
+       "act",
+       "Wren啧了一声，把手环抛回给Mason：“{bpm}也不低了好吗。”"
+      ]
+     ],
+     "skip": [
+      [
+       "theo",
+       "say",
+       "我没事。别闹了Wren，搬完再说。"
+      ]
+     ]
+    }
+   ],
+   [
+    "theo",
+    "photo",
+    {
+     "img": "afterhours/ch1_p1",
+     "cap": "周五 23:24 · 水漫到脚踝，他回头看你",
+     "prompt": "Dim flooded bar basement at night, two men in their late twenties standing close in ankle-deep water holding boxes, flashlight, no text",
+     "then": [
+      [
+       "wren",
+       "say",
+       "别动！这张我留着，婚礼上放。"
+      ]
+     ],
+     "skip": []
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Rowan冲Wren一偏头。两个人一前一后上了楼，脚步在木台阶上踩得格外响，生怕底下的人听不见。"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo坐在一只倒扣的空酒箱上，两肘撑着膝盖，湿发还在滴水，顺着下颌线滑进领口。"
+   ],
+   [
+    "n",
+    "act",
+    "他盯着黑水看。左腕那块旧表的指针一格一格往前走，走向七点十分。他半天没说话。"
+   ],
+   [
+    "theo",
+    "say",
+    "Nico。说真的，你觉得我该去吗？"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "他在等你一句话。灯管在他头顶滋滋响。你一开口，他可能就不走了——这正是你怕的。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "去。你等了五年的机会，别为任何人留下。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo点点头，嘴角扬起一个标准的弧度，像站在台上谢幕——灯一灭就收。"
+        ],
+        [
+         "theo",
+         "say",
+         "……嗯。你一直都这么说。"
+        ]
+       ],
+       "love": 0,
+       "set": "told_go",
+       "rd": {
+        "nico|theo": {
+         "ten": 1
+        }
+       },
+       "rthink": "合同还没签，笔我都揣着。他一句‘任何人’，把他自己也划出去了。",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "去吧。就是第三排靠过道那个位子，以后空了。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo猛地抬头，湿发甩出一道水线，眼睛亮得吓人。"
+        ],
+        [
+         "theo",
+         "say",
+         "你每场都坐那儿。我在台上，每次都先找那个位子。"
+        ],
+        [
+         "theo",
+         "say",
+         "找到了，我才敢开口。"
+        ],
+        [
+         "theo",
+         "act",
+         "说完他先别开了脸，抹了一把脸上的水：“……台词背多了，嘴顺。”"
+        ]
+       ],
+       "love": 3,
+       "set": "hinted_stay",
+       "rd": {
+        "nico|theo": {
+         "att": 6,
+         "ten": 3,
+         "tru": 3
+        }
+       },
+       "rthink": "纽约每家剧场的座位图，我都查过。哪一家的第三排靠过道，都不会坐着他。",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "去啊。你走了，终于没人跟我抢托盘了。",
+       "then": [
+        [
+         "theo",
+         "say",
+         "……你就惦记这个？"
+        ],
+        [
+         "theo",
+         "act",
+         "Theo笑了一下，笑没到眼睛里，拇指在表盘上来回蹭。"
+        ],
+        [
+         "theo",
+         "say",
+         "行。那以后，你自己端吧。"
+        ]
+       ],
+       "love": -1,
+       "set": "joked",
+       "rd": {
+        "nico|theo": {
+         "gru": 5,
+         "tru": -3,
+         "ten": 2
+        }
+       },
+       "rthink": "我抢那只托盘，是因为只有他手空了，才肯坐下来跟我喝一杯。五年了，他还没想明白。",
+       "rwho": "theo"
+      }
+     ]
+    }
+   ],
+   [
+    "theo",
+    "act",
+    "Theo站起来，往前一步，又一步。黑水在他靴边推开一圈圈波纹。他停在离Nico一拳远的地方。"
+   ],
+   [
+    "n",
+    "act",
+    "近到Nico能看清他睫毛上挂的水珠，闻得见他身上冷雨混着苦橙和金酒的味道。他的喉结滚了一下。"
+   ],
+   [
+    "theo",
+    "say",
+    "Nico，其实我——"
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "⚡",
+     "title": "全店停电",
+     "txt": "啪——所有灯同时灭了。排水泵咳了一声，断了气。整栋楼一起哑了，黑暗灌下来，比水还快。"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "nico|theo",
+     "d": {
+      "ten": 12,
+      "att": 4
+     },
+     "why": "黑暗里只剩彼此"
+    }
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_dark"
+    }
+   ],
+   [
+    "wren",
+    "say",
+    "都别动！水里泡着插线板！"
+   ],
+   [
+    "rowan",
+    "say",
+    "我上去拉总闸。来电之前，谁也别碰水。"
+   ],
+   [
+    "n",
+    "act",
+    "搁在酒箱上的那支手电被谁的胳膊肘一带，咕咚一声沉进水里。光在水底晃了晃，像一只眼睛闭上，彻底黑了。"
+   ],
+   [
+    "n",
+    "act",
+    "Nico第一反应是往前探手——一拳之外就是Theo，脚底下是水，水里有电线。"
+   ],
+   [
+    "n",
+    "act",
+    "黑得伸手不见五指。只剩水声、远处闷闷的雨声，还有近处一个人怎么也压不住的呼吸。"
+   ],
+   [
+    "n",
+    "act",
+    "一只手先一步摸到了Nico的手腕。冰凉，湿漉漉的，掌心粗糙，带着一层薄茧。"
+   ],
+   [
+    "n",
+    "act",
+    "它没松开。顺着腕骨慢慢往上爬，停在小臂内侧最软、最薄的那块皮肤上。"
+   ],
+   [
+    "n",
+    "act",
+    "拇指在那儿轻轻蹭了一下。就一下。Nico整条胳膊过电似的麻了，汗毛一根根竖起来。"
+   ],
+   [
+    "n",
+    "act",
+    "有人的呼吸靠了过来，很近，近得能听见吞咽的声音。那点热气，就落在他嘴角。"
+   ],
+   [
+    "n",
+    "act",
+    "Nico没动。心跳撞着耳膜，咚，咚，咚。他脑子里冒出一句：这要是来电了，头一个被电死的，八成是他自己。"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "黑暗里，一只粗糙的手停在你小臂内侧，拇指压着你的脉。你看不见是谁。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "……Theo？",
+       "then": [
+        [
+         "theo",
+         "say",
+         "是我。"
+        ],
+        [
+         "theo",
+         "act",
+         "那只手没走，反而收紧了，五根手指扣住小臂，拇指正压在他突突乱跳的脉搏上。"
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 2,
+         "tru": 2
+        }
+       },
+       "rthink": "他没犹豫，头一个就叫我。黑成这样，他认得出我的手——那我还在怕什么。",
+       "rwho": "theo"
+      },
+      {
+       "k": "act",
+       "t": "反手扣住那只手，手指一根根扣进去。",
+       "then": [
+        [
+         "theo",
+         "act",
+         "黑暗里，对方的呼吸乱了一拍，手指猛地回扣，指节硌着Nico的指缝。热气扑在他鼻尖上。"
+        ],
+        [
+         "theo",
+         "say",
+         "……是我。别松。"
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "nico|theo": {
+         "att": 6,
+         "ten": 6
+        }
+       },
+       "rthink": "他扣住了。我在台上演过一百次牵手，没有一次，手心出这么多汗。",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "谁？",
+       "then": [
+        [
+         "theo",
+         "act",
+         "那只手顿了一下，指尖往回缩，像要抽走——又停住了，重新贴了回来。"
+        ],
+        [
+         "theo",
+         "say",
+         "是我。……你以为还能是谁？"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       },
+       "rthink": "一个‘谁’，差点把我推回黑里当没这回事。可这屋里，还有谁能摸黑找到他的手腕？",
+       "rwho": "theo"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "lock",
+    {
+     "title": "黑暗里的47秒",
+     "teaser": "停电那47秒，地下室里发生的事，只有你们两个知道。",
+     "price": 3,
+     "then": [
+      [
+       "n",
+       "act",
+       "黑暗里，谁都看不见谁。只有那只手，扣着Nico的手指，一根一根收紧，掌心慢慢焐热了。"
+      ],
+      [
+       "theo",
+       "act",
+       "Theo的额头抵上来，湿发蹭着Nico的眉骨。鼻尖擦过他的鼻梁，停在他嘴唇上方一寸。"
+      ],
+      [
+       "theo",
+       "say",
+       "（压得极低，只够两个人听见）……你知道我刚才在窄道里想什么吗。"
+      ],
+      [
+       "n",
+       "act",
+       "他的呼吸是热的，带着苦橙和金酒的味道。Nico往后退了半寸，后背撞上墙边冰凉的铁货架，瓶子轻轻一磕。"
+      ],
+      [
+       "n",
+       "act",
+       "退无可退。Nico索性不退了。"
+      ],
+      [
+       "theo",
+       "say",
+       "我在想，要是这时候停电就好了。"
+      ],
+      [
+       "n",
+       "act",
+       "他的拇指从Nico手腕内侧一路滑进掌心，画了一个圈。很慢，慢得像故意要他记住。"
+      ],
+      [
+       "theo",
+       "say",
+       "……现在真停了。你说，这算不算老天帮我。"
+      ],
+      [
+       "n",
+       "act",
+       "Nico的嘴唇擦过了什么——扎人的胡茬，还是温热的嘴角，分不清。"
+      ],
+      [
+       "theo",
+       "act",
+       "Theo整个人僵住，胸口剧烈起伏，呼吸乱成一团，却一寸都没有退。"
+      ],
+      [
+       "n",
+       "act",
+       "楼梯上传来噔噔的脚步声。那只手松开之前，在Nico掌心里重重按了一下，像盖了个章。"
+      ],
+      [
+       "n",
+       "act",
+       "下一秒，Theo的声音已经在一臂开外，稳得像什么都没发生：“……手电谁捞一下？”"
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "黑成这样他都没躲。我摸到他脉搏了，跳得比我还乱。兜里那张行程单，现在烫得像块烙铁。"
+      ],
+      [
+       "wren",
+       "我就在楼梯口，啥也看不见，但我听见了——有人呼吸乱成一团，录音笔全录下来了。好耶，停电万岁。"
+      ],
+      [
+       "rowan",
+       "这个真不是我安排的。摸黑上楼拉闸，一脚踩空，写字板差点喂了水。……但老天爷，干得漂亮。"
+      ]
+     ]
+    }
+   ],
+   [
+    "rowan",
+    "act",
+    "楼梯上噔噔一阵响，Rowan摸黑下来半截，喘着粗气，手机电筒的光在台阶上乱扫。"
+   ],
+   [
+    "rowan",
+    "say",
+    "总闸拉了。都站原地，别乱动。"
+   ],
+   [
+    "wren",
+    "say",
+    "Rowan……停电也是你安排的？"
+   ],
+   [
+    "rowan",
+    "say",
+    "……这个真不是。"
+   ],
+   [
+    "n",
+    "act",
+    "黑暗里，有人压着嗓子低低笑了一声。水还在涨，没有一个人去管。"
+   ]
+  ],
+  "en": [
+   [
+    "sys",
+    "scene",
+    {
+     "img": "afterhours/s3",
+     "place": "The Halfmoon · Basement",
+     "time": "Friday, 11:20 PM"
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "tense"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The wooden stairs groan under every step, and from the fifth one down they vanish into water. Black, oil-slick, cold enough to bite straight through his socks."
+   ],
+   [
+    "n",
+    "act",
+    "A dozen cases of liquor list in the water, cardboard gone soft as bread, corners peeling, labels lifting off and floating belly-up like dead fish."
+   ],
+   [
+    "n",
+    "act",
+    "In the corner the sump pump grinds and coughs, gulping and spitting, nowhere near fast enough for the rain seeping through the brick."
+   ],
+   [
+    "n",
+    "act",
+    "The fluorescent tube overhead hisses and stutters. Every time it blinks out, the water goes black with it, like something underneath is blinking back."
+   ],
+   [
+    "n",
+    "act",
+    "The air is thick and wet, mildewed wood tangled with spilled red wine — sweet gone sour, so heavy it furs the back of the tongue."
+   ],
+   [
+    "n",
+    "act",
+    "And it's still rising, a knuckle's width at a time. Everything has to go upstairs before it reaches their knees."
+   ],
+   [
+    "rowan",
+    "act",
+    "Rowan stands on the third step, black work jacket zipped to the chin, trousers rolled to the calf, clipboard in one fist and a pen cap clamped between his teeth."
+   ],
+   [
+    "rowan",
+    "say",
+    "Okay, assignments. Mason, Ethan — that keg. One end each."
+   ],
+   [
+    "mason",
+    "act",
+    "Mason's already wading in. Grey hoodie shoved to the elbows, forearms thick as mooring rope, a black fitness band on one wrist, veins climbing all the way to the backs of his hands."
+   ],
+   [
+    "n",
+    "act",
+    "Ethan follows half a beat behind, the black brace on his right knee, a hitch in every step. His jaw is locked tight, the muscle under the stubble jumping."
+   ],
+   [
+    "mason",
+    "act",
+    "They glance at each other and both look away. But when their big hands close on the icy rim of the keg, knuckle knocks knuckle, and neither one moves."
+   ],
+   [
+    "mason",
+    "act",
+    "The second the keg clears the water, Mason turns his wrist and quietly takes most of the weight onto his end."
+   ],
+   [
+    "ethan",
+    "say",
+    "My knee's not wrecked. I don't need you carrying it for me."
+   ],
+   [
+    "mason",
+    "say",
+    "I'm not. My end's just heavier."
+   ],
+   [
+    "n",
+    "act",
+    "Ethan doesn't answer. But the next step, his right leg lands a little steadier."
+   ],
+   [
+    "rowan",
+    "say",
+    "Theo, Nico — back aisle, two cases of red. You two."
+   ],
+   [
+    "wren",
+    "say",
+    "That aisle's one person wide, how are two people supposed to—"
+   ],
+   [
+    "rowan",
+    "say",
+    "That's why it takes two. One holds the light, one carries. Squeeze in. It's warmer."
+   ],
+   [
+    "wren",
+    "act",
+    "Wren's tucked into the bend of the stairs, the shoulders of her plaid blazer soaked through, half a recorder poking out of her breast pocket, red light on. Head down, thumbs stabbing at her screen."
+   ],
+   [
+    "n",
+    "act",
+    "A second later Nico's phone buzzes in his back pocket, right through his soaked trousers, a jolt that runs up the small of his back."
+   ],
+   [
+    "n",
+    "act",
+    "[Wren: Plan A's dead. Plan B — the basement. It's dark down there. Chance to touch him, take it. Don't chicken out.]"
+   ],
+   [
+    "theo",
+    "act",
+    "Theo scoops two flashlights off the step by Rowan's feet, lobs one into Nico's chest, and heads in with the other. His old Chelsea boots send out a ring of ripples with every step."
+   ],
+   [
+    "n",
+    "act",
+    "White shirt soaked halfway up, sleeves rolled to the forearm, the faded red cord on his left wrist pinning down the old watch. The beam swings and catches the line of his back, broad shoulders pulling the wet shirt tight."
+   ],
+   [
+    "n",
+    "act",
+    "Nico stares at that back and swears under his breath. Flight at 7:10, and the idiot's still down here hauling crates for him."
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "Wren and Rowan are obviously running a play. Theo's beam is already bobbing deep into the aisle, the slosh of water trailing after him.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Shove the phone in your pocket and follow Theo. Close. On purpose.",
+       "then": [
+        [
+         "theo",
+         "say",
+         "Following this close, boss? Are you scared of the dark, or planning something in it?"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 2
+        }
+       },
+       "rthink": "He's this close and I don't dare turn around. Seven-ten flight. This aisle is the last excuse I've got tonight.",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "Rowan, I'll take the front. Send Mason back there with him.",
+       "then": [
+        [
+         "rowan",
+         "say",
+         "Mason's on the keg. Go."
+        ],
+        [
+         "wren",
+         "act",
+         "Wren slams a palm into Nico's back, raincoat sleeve flinging water — hard enough to topple a forward."
+        ]
+       ],
+       "love": 0,
+       "rd": {
+        "nico|theo": {
+         "jea": 6,
+         "ten": -2
+        },
+        "mason|ethan": {
+         "ten": 3
+        }
+       },
+       "rthink": "Send Mason? That guy burned through half a notepad last night writing to you. You're going down that aisle if I have to drag you.",
+       "rwho": "rowan"
+      },
+      {
+       "k": "say",
+       "t": "You two could at least try to be subtle.",
+       "then": [
+        [
+         "wren",
+         "say",
+         "We could. Now get in there."
+        ],
+        [
+         "rowan",
+         "act",
+         "Rowan flashes Wren an OK sign, clipboard tilting. Theo turns at exactly that moment, his beam landing square on both their faces."
+        ],
+        [
+         "theo",
+         "say",
+         "...What are you three doing?"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       },
+       "rthink": "Subtle? My recorder's been running for five years. I could cut three episodes out of you two. I'm just missing the ending.",
+       "rwho": "wren"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The aisle is tighter than it looked — steel shelving cold on both shoulders, rust flaking onto his sleeves, a pipe overhead dripping, tick, tick, onto the back of his neck."
+   ],
+   [
+    "n",
+    "act",
+    "Halfway in, Theo's light shudders twice, like it's out of breath, then dies with a soft click. The dark drops on them, close enough to touch."
+   ],
+   [
+    "theo",
+    "say",
+    "...Great, mine's dead. Honestly. Not on purpose."
+   ],
+   [
+    "n",
+    "act",
+    "Only Nico's flashlight left, its circle pathetically small, lighting a wall of bottles ahead. They'll have to turn sideways and squeeze past each other."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_aisle"
+    }
+   ],
+   [
+    "n",
+    "act",
+    "First the shelving creaks — Theo's shoulder scraping past from behind, a whole row of bottles ticking against each other. Then his chest, flat against Nico's back."
+   ],
+   [
+    "n",
+    "act",
+    "The wet shirt is ice-cold; the body under it is scalding. His shoulders run wider than Nico's, and they fill every inch the aisle had left."
+   ],
+   [
+    "n",
+    "act",
+    "And under that, his heartbeat. Heavy, slow, landing against Nico's shoulder blade like someone knocking at a door — not in a hurry, not leaving."
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_squeeze"
+    }
+   ],
+   [
+    "theo",
+    "say",
+    "Don't move. ...My shirt's caught on the shelf."
+   ],
+   [
+    "n",
+    "act",
+    "One arm reaches past Nico's hip, feeling in the dark for the bolt snagging his shirt. His forearm lies across Nico's front, veins standing out on the back of his hand; the steel creaks, and just like that Nico is boxed in."
+   ],
+   [
+    "n",
+    "act",
+    "His chin settles by Nico's ear, stubble scraping the rim of it, rough and maddening. His breath runs hot down the tendon in Nico's neck, again and again."
+   ],
+   [
+    "n",
+    "act",
+    "The flashlight beam skitters over a row of bottles, amber and oxblood, broken into pieces of light. It takes Nico two full seconds to realize it's his own hand shaking."
+   ],
+   [
+    "n",
+    "act",
+    "He sets his back teeth. Five years running this bar — drunks smashing glasses, the landlord jacking the rent, a supplier skipping town with his money. He's eaten all of it. Turns out he can't eat one heartbeat against his back."
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "Theo's caught behind you, working at that bolt blind, breathing right at your ear. The flashlight's in your hand, and the beam is shaking.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Don't move. Let him stay there. One more second.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo doesn't move either. After a long beat, lips all but touching the rim of Nico's ear, he says it low and rough: \"Your heart's going fast.\""
+        ],
+        [
+         "theo",
+         "say",
+         "...I'm right up against your back. I can count it."
+        ],
+        [
+         "theo",
+         "act",
+         "The second it's out, he's the one who eases back half an inch, head down over the bolt. \"...Water's freezing. Must be the cold.\""
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 4
+        }
+       },
+       "rthink": "The bolt came loose two seconds ago. My hand's still there because he hasn't moved. He hasn't moved.",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "Are you actually stuck, or do you just not want to move?",
+       "then": [
+        [
+         "theo",
+         "say",
+         "...Both. Want me to pick one?"
+        ],
+        [
+         "theo",
+         "act",
+         "He doesn't back off. He leans in half an inch more, his solid chest pinning Nico to the shelf. A whole row of bottles chimes and clatters; Nico's back burns like he's up against a stove."
+        ],
+        [
+         "theo",
+         "say",
+         "...Kidding. Bolt's loose. Move."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       },
+       "rthink": "'Both' was the truth. I could only say it as a joke. That's how every true thing I've said in five years got out.",
+       "rwho": "theo"
+      },
+      {
+       "k": "act",
+       "t": "Pass the flashlight back. \"You go first.\"",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo takes the flashlight — and Nico's fingers with it. Big hand, rough fingertips; he presses once into Nico's palm, lingers, and only then slides the light free."
+        ],
+        [
+         "theo",
+         "say",
+         "You always let me go first."
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 2
+        }
+       },
+       "rthink": "Closing time, he sends me first. Rain, he sends me first. Now New York—he's going to wave me through that too.",
+       "rwho": "theo"
+      }
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "The bolt really was caught. I just took my time with it. The back of his neck was burning up, and he smelled like lemons. ...Flight's at 7:10. What the hell am I doing."
+      ],
+      [
+       "wren",
+       "I could hear the bottles rattling all the way from the stairs. Didn't switch the recorder off. Half the plan's done."
+      ],
+      [
+       "ethan",
+       "Those two jammed in there and still pretending. Mason used to squeeze past me like that hauling gear, his sweat rubbing off on me... forget it. Not thinking about him."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "On the way back, the pipe at the mouth of the aisle splits and ice water comes sheeting down. Theo turns and takes it on the shoulder, jerking his chin at Nico: go."
+   ],
+   [
+    "n",
+    "act",
+    "By the time both cases are out, Nico's hasn't taken a drop. Theo's soaked from his hair to his boots."
+   ],
+   [
+    "theo",
+    "act",
+    "He drops the cases on the step and water pours from the bottom of them. He shakes his head like a dog; the spray catches Nico full in the face."
+   ],
+   [
+    "theo",
+    "act",
+    "Theo sneezes. Then again, shoulders jerking with it. The wet shirt is plastered to him, showing the ridge of his collarbones, the rise and fall of his chest."
+   ],
+   [
+    "theo",
+    "act",
+    "Wet hair hangs in strands across his forehead, water dripping off the bridge of his nose. His lips have gone white with cold, but his jaw stays set, forcing out a grin."
+   ],
+   [
+    "theo",
+    "say",
+    "I'm fine. I'll sleep it off on the plane. ...Done staring yet, boss?"
+   ],
+   [
+    "theo",
+    "gift",
+    {
+     "who": "theo",
+     "hint": "His flight's at 7:10 — a dozen-plus hours in the air in soaked clothes and he'll land with a fever. Your grey fleece-lined hoodie is hanging on the iron hook by the stairs, still dry.",
+     "by": {
+      "coffee": [
+       [
+        "theo",
+        "act",
+        "Theo doesn't take the cup. His big hands close over it and Nico's hands both — palms ice-cold, knuckles tightening, steam curling up between their fingers."
+       ],
+       [
+        "theo",
+        "say",
+        "The basement's flooding and you conjure hot coffee? ...Put it on my tab. What I pay it back with from New York, we'll figure out."
+       ]
+      ],
+      "flower": [
+       [
+        "theo",
+        "say",
+        "A rose? In a flooded basement? ...Wren put you up to this."
+       ],
+       [
+        "theo",
+        "act",
+        "He grumbles, but his hand tucks the red rose into the chest pocket of his soaked shirt anyway, water rolling off the petals. He presses it flat with his palm, right over his heart."
+       ]
+      ],
+      "hoodie": [
+       [
+        "theo",
+        "act",
+        "Theo turns his back, gets the wet shirt open in three quick moves, wrings a rope of water out onto the step. The hoodie drops over his head; the sleeves swallow his fingertips."
+       ],
+       [
+        "theo",
+        "act",
+        "He drags the collar up over his nose and breathes in. His throat works once before he lifts his eyes to Nico."
+       ],
+       [
+        "sys",
+        "bg",
+        {
+         "img": "afterhours/v_collar"
+        }
+       ],
+       [
+        "theo",
+        "say",
+        "...Smells like a bar rag. I'm keeping it."
+       ],
+       [
+        "sys",
+        "set",
+        {
+         "flag": "wore_hoodie"
+        }
+       ]
+      ],
+      "letter": [
+       [
+        "theo",
+        "say",
+        "A letter? Now? I'm standing right here. Can't you say it to my face?"
+       ],
+       [
+        "theo",
+        "act",
+        "He doesn't open it. Folds it once, slides it into the pocket over his chest, and presses a hand flat over the wet cloth, like he's holding down something that wants to jump."
+       ]
+      ],
+      "ring": [
+       [
+        "theo",
+        "say",
+        "A ring? ...Your bar does send-offs in style."
+       ],
+       [
+        "theo",
+        "act",
+        "He doesn't hand it back. He slides it onto his little finger — a perfect fit — and turns it with his thumb, once, then again."
+       ],
+       [
+        "theo",
+        "say",
+        "I'll hold onto it for you. Whenever I'm back, you'll get it."
+       ]
+      ]
+     },
+     "then": [],
+     "skip": [
+      [
+       "theo",
+       "act",
+       "Theo hugs himself, shivering, teeth clicking, still forcing a smile. \"Really. I'm fine.\""
+      ]
+     ]
+    }
+   ],
+   [
+    "rowan",
+    "act",
+    "Rowan wades down off the stairs, clipboard under one arm. One look at Theo's white lips and his brow knots; he unstraps the digital watch from his wrist."
+   ],
+   [
+    "rowan",
+    "say",
+    "Sports watch, it reads heart rate. When you're going hypothermic, it drops. Arm out. Let's check."
+   ],
+   [
+    "wren",
+    "act",
+    "Wren hops off the last step, yanks the fitness band off Mason's wrist on her way past, and snaps it onto Nico's."
+   ],
+   [
+    "wren",
+    "say",
+    "Control group. Nico, get closer — too far and it won't read right. I've got a hundred and fifty on it."
+   ],
+   [
+    "theo",
+    "say",
+    "Fine, check it. ...Seventy-two. Steadier than any of you."
+   ],
+   [
+    "theo",
+    "feature",
+    {
+     "k": "heart",
+     "cid": "theo",
+     "hint": "The watch face reads 72. Wren wants you closer — five seconds, and every tap moves you an inch nearer to him. See if the number breaks the 150 she bet on.",
+     "win": [
+      [
+       "n",
+       "act",
+       "The watch face throws cold light up under both their jaws. The number climbs and keeps climbing — even Rowan leans in for a second look — and stops at {bpm}."
+      ],
+      [
+       "wren",
+       "say",
+       "{bpm}! Nico's only at {mine}! Theo, is that the cold?"
+      ],
+      [
+       "theo",
+       "say",
+       "...It's the cold."
+      ],
+      [
+       "rowan",
+       "say",
+       "Hypothermia makes it drop. I just said that."
+      ],
+      [
+       "theo",
+       "act",
+       "Theo throws an arm over his face, ears glowing red. His other hand has a fistful of Nico's sleeve; it holds on two seconds longer, then lets go like it got burned. He strips the watch off and tosses it back to Rowan."
+      ],
+      [
+       "theo",
+       "say",
+       "...Your watch is broken."
+      ]
+     ],
+     "lose": [
+      [
+       "n",
+       "act",
+       "The number hits {bpm} and Theo steps back in a splash, strips the watch off and tosses it back to Rowan."
+      ],
+      [
+       "theo",
+       "say",
+       "Enough. I just hauled two cases of wine, any number's normal. Boxes."
+      ],
+      [
+       "wren",
+       "act",
+       "Wren clicks her tongue and lobs the band back to Mason. \"{bpm} isn't nothing, you know.\""
+      ]
+     ],
+     "skip": [
+      [
+       "theo",
+       "say",
+       "I'm fine. Not now, Wren. After the boxes."
+      ]
+     ]
+    }
+   ],
+   [
+    "theo",
+    "photo",
+    {
+     "img": "afterhours/ch1_p1",
+     "cap": "Fri 11:24 PM · Ankle-deep in water, he looks back at you",
+     "prompt": "Dim flooded bar basement at night, two men in their late twenties standing close in ankle-deep water holding boxes, flashlight, no text",
+     "then": [
+      [
+       "wren",
+       "say",
+       "Freeze! I'm keeping this one. For the wedding slideshow."
+      ]
+     ],
+     "skip": []
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Rowan jerks his head at Wren. The two of them head upstairs single file, stomping the wooden steps extra loud, just so nobody down here can miss that they're gone."
+   ],
+   [
+    "theo",
+    "act",
+    "Theo sits on an upturned empty crate, elbows on his knees, hair still dripping, water tracing his jawline down into his collar."
+   ],
+   [
+    "n",
+    "act",
+    "He stares at the black water. On his left wrist the old watch ticks forward, notch by notch, toward 7:10. For a long time he says nothing."
+   ],
+   [
+    "theo",
+    "say",
+    "Nico. Seriously. Do you think I should go?"
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "He's waiting on one sentence from you. The tube light hisses over his head. Say the word and he might stay. That's exactly what scares you.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Go. You waited five years for this. Don't stay for anybody.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo nods. A perfect smile, measured to the millimeter — a curtain-call smile, the kind that drops the second the lights go down."
+        ],
+        [
+         "theo",
+         "say",
+         "...Yeah. You always say that."
+        ]
+       ],
+       "love": 0,
+       "set": "told_go",
+       "rd": {
+        "nico|theo": {
+         "ten": 1
+        }
+       },
+       "rthink": "The contract's still unsigned; I've got the pen on me. One 'anybody' and he's crossed himself out too.",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "Go. It's just... third row, aisle seat. It'll be empty now.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "Theo's head snaps up, wet hair flinging a line of water, his eyes suddenly, frighteningly bright."
+        ],
+        [
+         "theo",
+         "say",
+         "You sat there every show. Every single time, that's the first seat I looked for."
+        ],
+        [
+         "theo",
+         "say",
+         "Once I found you, I could start."
+        ],
+        [
+         "theo",
+         "act",
+         "Then he's the first to look away, wiping water off his face. \"...Too many lines memorized. They just slip out.\""
+        ]
+       ],
+       "love": 3,
+       "set": "hinted_stay",
+       "rd": {
+        "nico|theo": {
+         "att": 6,
+         "ten": 3,
+         "tru": 3
+        }
+       },
+       "rthink": "I've pulled the seating chart for every theater in New York. None of their aisle seats in row three come with him.",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "Go. Finally nobody fighting me for my own tray.",
+       "then": [
+        [
+         "theo",
+         "say",
+         "...That's what you'll miss?"
+        ],
+        [
+         "theo",
+         "act",
+         "Theo laughs. It doesn't reach his eyes. His thumb rubs back and forth over the watch face."
+        ],
+        [
+         "theo",
+         "say",
+         "Fine. Carry it yourself, then."
+        ]
+       ],
+       "love": -1,
+       "set": "joked",
+       "rd": {
+        "nico|theo": {
+         "gru": 5,
+         "tru": -3,
+         "ten": 2
+        }
+       },
+       "rthink": "I took that tray because only with empty hands would he sit down and drink with me. Five years, and he still hasn't figured it out.",
+       "rwho": "theo"
+      }
+     ]
+    }
+   ],
+   [
+    "theo",
+    "act",
+    "Theo stands. One step forward, then another, black water rippling out from his boots. He stops a fist's width from Nico."
+   ],
+   [
+    "n",
+    "act",
+    "Close enough that Nico can see the water caught in his lashes, smell cold rain on him and the bitter orange and gin underneath. His throat bobs."
+   ],
+   [
+    "theo",
+    "say",
+    "Nico, the truth is, I—"
+   ],
+   [
+    "sys",
+    "event",
+    {
+     "icon": "⚡",
+     "title": "Blackout",
+     "txt": "Snap. Every light dies at once. The pump coughs and chokes off. The whole building goes mute, and the dark pours in faster than the water."
+    }
+   ],
+   [
+    "sys",
+    "bgm",
+    {
+     "m": "danger"
+    }
+   ],
+   [
+    "sys",
+    "rd",
+    {
+     "p": "nico|theo",
+     "d": {
+      "ten": 12,
+      "att": 4
+     },
+     "why": "Only each other in the dark"
+    }
+   ],
+   [
+    "sys",
+    "bg",
+    {
+     "img": "afterhours/v_dark"
+    }
+   ],
+   [
+    "wren",
+    "say",
+    "Nobody move! There's a power strip in the water!"
+   ],
+   [
+    "rowan",
+    "say",
+    "I'm going up to kill the main. Till then, nobody touches the water."
+   ],
+   [
+    "n",
+    "act",
+    "The flashlight propped on a crate gets clipped by somebody's elbow and goes under with a heavy plunk. The light wobbles on the bottom like an eye closing — then nothing."
+   ],
+   [
+    "n",
+    "act",
+    "Nico's first move is to reach forward — Theo's a fist's width away, there's water underfoot, and live wire somewhere in it."
+   ],
+   [
+    "n",
+    "act",
+    "Dark so complete Nico can't see his own hand. Only the water, the muffled drumming of rain, and close by, someone's breath he can't quite hold steady."
+   ],
+   [
+    "n",
+    "act",
+    "A hand gets to Nico's wrist first. Cold. Wet. The palm rough, a thin ridge of callus across it."
+   ],
+   [
+    "n",
+    "act",
+    "It doesn't let go. It climbs slowly past the wrist bone and stops on the softest, thinnest skin on the inside of his forearm."
+   ],
+   [
+    "n",
+    "act",
+    "A thumb strokes once, right there. Just once. Nico's whole arm goes electric, every hair standing on end."
+   ],
+   [
+    "n",
+    "act",
+    "Someone's breath comes closer. Close enough to hear a swallow. That warmth lands right at the corner of his mouth."
+   ],
+   [
+    "n",
+    "act",
+    "Nico doesn't move. His pulse slams against his eardrums — thud, thud, thud. One thought surfaces: if the power comes back now, the first guy fried is probably him."
+   ],
+   [
+    "nico",
+    "line",
+    {
+     "hint": "In the dark, a rough hand rests on the inside of your forearm, thumb over your pulse. You can't see whose.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "...Theo?",
+       "then": [
+        [
+         "theo",
+         "say",
+         "It's me."
+        ],
+        [
+         "theo",
+         "act",
+         "The hand doesn't leave. It tightens, all five fingers locking around his forearm, thumb pressed right over Nico's racing pulse."
+        ]
+       ],
+       "love": 2,
+       "rd": {
+        "nico|theo": {
+         "att": 4,
+         "ten": 2,
+         "tru": 2
+        }
+       },
+       "rthink": "No hesitation; my name came first. Pitch black, and he knows my hand. So what exactly am I still scared of?",
+       "rwho": "theo"
+      },
+      {
+       "k": "act",
+       "t": "Turn your hand over and lace your fingers through his, one by one.",
+       "then": [
+        [
+         "theo",
+         "act",
+         "In the dark his breath stutters, and his fingers clamp back hard, knuckles digging between Nico's. Heat gusts across Nico's face."
+        ],
+        [
+         "theo",
+         "say",
+         "...It's me. Don't let go."
+        ]
+       ],
+       "love": 3,
+       "rd": {
+        "nico|theo": {
+         "att": 6,
+         "ten": 6
+        }
+       },
+       "rthink": "He laced in. I've held hands on stage a hundred times. Never once with palms this wet.",
+       "rwho": "theo"
+      },
+      {
+       "k": "say",
+       "t": "Who's there?",
+       "then": [
+        [
+         "theo",
+         "act",
+         "The hand freezes, fingertips drawing back like it's about to pull away. Then it stops, and settles back."
+        ],
+        [
+         "theo",
+         "say",
+         "It's me. ...Who else did you think it would be?"
+        ]
+       ],
+       "love": 1,
+       "rd": {
+        "nico|theo": {
+         "att": 2,
+         "ten": 1,
+         "tru": 1
+        }
+       },
+       "rthink": "'Who' nearly sent me back into the dark like none of it happened. But who else in here could find his wrist blind?",
+       "rwho": "theo"
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "lock",
+    {
+     "title": "47 Seconds in the Dark",
+     "teaser": "What happened in the basement during those 47 seconds of blackout — only the two of you know.",
+     "price": 3,
+     "then": [
+      [
+       "n",
+       "act",
+       "In the dark, no one can see anyone. Only that hand, laced into Nico's fingers, tightening one by one, the palm slowly warming."
+      ],
+      [
+       "theo",
+       "act",
+       "Theo's forehead comes to rest against his, wet hair brushing Nico's brow. His nose grazes the bridge of Nico's and stops an inch above his lips."
+      ],
+      [
+       "theo",
+       "say",
+       "(so low only the two of them could hear) ...You know what I was thinking back in that aisle?"
+      ],
+      [
+       "n",
+       "act",
+       "His breath is warm, bitter orange and gin. Nico eases back half an inch and his spine meets the cold steel shelving along the wall; one bottle ticks softly against another."
+      ],
+      [
+       "n",
+       "act",
+       "Nowhere left to back up to. So Nico stops backing up."
+      ],
+      [
+       "theo",
+       "say",
+       "I was thinking — I wish the lights would go out."
+      ],
+      [
+       "n",
+       "act",
+       "His thumb slides from the inside of Nico's wrist down into his palm and draws a circle. Slowly. Slow like he wants Nico to remember it."
+      ],
+      [
+       "theo",
+       "say",
+       "...And now they did. Call it a favor from upstairs?"
+      ],
+      [
+       "n",
+       "act",
+       "Nico's lips graze something — rough stubble, or the warm corner of a mouth. He can't tell which."
+      ],
+      [
+       "theo",
+       "act",
+       "Theo goes completely rigid, chest heaving, breathing in pieces — and doesn't give back a single inch."
+      ],
+      [
+       "n",
+       "act",
+       "Footsteps thud down the stairs. Before the hand lets go, it presses hard into Nico's palm, once, like a seal stamped there."
+      ],
+      [
+       "n",
+       "act",
+       "A second later Theo's voice is an arm's length off, steady as if nothing happened: \"...Somebody fish out that flashlight?\""
+      ]
+     ]
+    }
+   ],
+   [
+    "sys",
+    "mono",
+    {
+     "t": [
+      [
+       "theo",
+       "Pitch black and he didn't pull away. I found his pulse — it was worse than mine. The itinerary in my pocket feels like a branding iron now."
+      ],
+      [
+       "wren",
+       "I'm right at the bottom of the stairs, can't see a thing, but I heard it — someone's breathing falling apart, and the recorder got every second. Long live the blackout."
+      ],
+      [
+       "rowan",
+       "I really didn't plan this one. Went up in the dark to kill the main, missed a step, nearly fed my clipboard to the water. ...Good work, universe."
+      ]
+     ]
+    }
+   ],
+   [
+    "rowan",
+    "act",
+    "Feet pound on the stairs. Rowan comes halfway down in the dark, breathing hard, a phone light skittering over the steps."
+   ],
+   [
+    "rowan",
+    "say",
+    "Main's off. Everybody stay put."
+   ],
+   [
+    "wren",
+    "say",
+    "Rowan... did you plan the blackout too?"
+   ],
+   [
+    "rowan",
+    "say",
+    "...That one wasn't me."
+   ],
+   [
+    "n",
+    "act",
+    "Somewhere in the dark, someone laughs low under his breath. The water's still rising. Nobody pays it any attention."
+   ]
+  ]
+ }
+}

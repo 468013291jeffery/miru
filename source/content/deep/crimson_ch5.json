@@ -1,0 +1,2944 @@
+{
+ "beats": {
+  "en": [
+   [
+    "n",
+    "act",
+    "The Harbor Court keeps its table in the old customs house at the end of Pier Nine. Members go in through the front doors. Holdings go in through the back, and wait."
+   ],
+   [
+    "n",
+    "act",
+    "The cloakroom smells of cedar and wet wool. Coats worth more than the Tidewater hang in silent rows. Around Adrian's wrist, someone has tied a brass tag on a red string: No. 7 — MARCHETTI."
+   ],
+   [
+    "n",
+    "act",
+    "Nobody mentioned a tag. In the car Lucien said three things: wear something dark, don't eat anything you can't name, and don't let them see you check the clock."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian buttoned his good shirt wrong twice on the way here. Lucien watched him do it and didn't offer to help — the most respectful thing anyone has done for him all week."
+   ],
+   [
+    "n",
+    "act",
+    "He checks the clock anyway. 12:41. Five hours and change to sunrise. Old habit. It doesn't care where he is."
+   ],
+   [
+    "n",
+    "act",
+    "He left his father's camera at home on purpose. Some things in his life shouldn't be anywhere near a room where things get counted."
+   ],
+   [
+    "lucien",
+    "voice",
+    {
+     "who": "lucien",
+     "txt": "They'll bring you in at one and stand you behind my chair. Don't take that as an instruction. And Adrian — the car is outside until dawn. You can still leave. That isn't a test.",
+     "hint": "Lucien went in first — members are seated before the holdings are brought. At 12:39 he left you a voice note.",
+     "then": [
+      [
+       "n",
+       "act",
+       "He plays it twice. The second time he hears it: the half-second gap before his own name. About as long as it takes to turn a ring once."
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "He doesn't play it. He knows what it says. It says leave, in a nicer voice than most people would use."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "The tag on your wrist. Someone tied it on while you were handing over your coat.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Snap the string. Pocket the tag — evidence.",
+       "then": [
+        [
+         "n",
+         "act",
+         "The string gives on the second pull. The brass is warm from his own skin, which is somehow worse."
+        ],
+        [
+         "n",
+         "act",
+         "He pockets it next to his keys. Later, someone is going to explain this to him in writing."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Leave it on. Turn the number face-out so they can read it.",
+       "then": [
+        [
+         "n",
+         "act",
+         "He turns the tag so the 7 shows. If they want to count him, they can read it off his wrist like a price."
+        ],
+        [
+         "n",
+         "act",
+         "The brass clicks against his watch every time he moves. Let it."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "think",
+       "t": "(Seven. Six other things in this building got numbered before me.)",
+       "then": [
+        [
+         "n",
+         "act",
+         "Through the wall, someone laughs. It sounds like a coin dropped down a well."
+        ],
+        [
+         "n",
+         "act",
+         "He doesn't touch the tag. He doesn't stop looking at it, either."
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Beyond the cloakroom wall, silver touches china. The voices stay low, the way voices do in a church before a funeral."
+   ],
+   [
+    "n",
+    "act",
+    "Down the rack, the other tags hang from the other coats: a fur, an oilskin, something in black silk whose tag reads simply No. 1."
+   ],
+   [
+    "lucien",
+    "call",
+    {
+     "cid": "lucien",
+     "hint": "12:52. Members may not visit their holdings before the count. Lucien steps into the corridor and calls instead.",
+     "lines": [
+      [
+       "lucien",
+       "You're still there. I heard the brass. They make the tags heavy on purpose, so you hear yourself every time you move."
+      ],
+      [
+       "lucien",
+       "I have four minutes, so listen. The woman at the far end, in gray pearls — Ysolde Achterberg. She has sat across from my chair for two hundred years and wanted it for every one of them."
+      ],
+      [
+       "lucien",
+       "At one they bring the holdings in. She'll ask me to show what I hold. It's customary. Members lay what they own on the cloth. Deeds. Keys. Sometimes people."
+      ],
+      [
+       "lucien",
+       "(A door opens somewhere behind him. He waits until it shuts.) If I do what I came here to do, the sigil over my chair goes out. After that I'm a guest. Guests stay at the Court's pleasure. The Court has never once been pleased."
+      ],
+      [
+       "lucien",
+       "I'm not telling you so you'll stop me. I'm telling you so that nobody at that table knows one thing about tonight that you don't."
+      ],
+      [
+       "lucien",
+       "They're ringing the bell. Walk in like you own the building. You'd be surprised how few of them do."
+      ]
+     ],
+     "then": [
+      [
+       "n",
+       "act",
+       "The line clicks dead. Adrian is still holding the phone to his ear when the cloakroom door opens behind him."
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "The phone buzzes four times against his ribs and stops. A text follows, three words: Gray pearls. Careful."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He's already decided. You have maybe ten seconds before they come for you.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Text him one word: Don't.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Delivered. Then: Read 12:56. No reply. Of course no reply."
+        ],
+        [
+         "n",
+         "act",
+         "The word looks smaller on the screen than it felt in his thumb."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Text him: I'm walking in. Not behind you.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Read 12:56. Three dots appear, vanish, appear again. Then nothing."
+        ],
+        [
+         "n",
+         "act",
+         "But the nothing took him eleven seconds."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "(He called to tell me before they could. Not to ask me. That's either respect or a very good con.)",
+       "then": [
+        [
+         "n",
+         "act",
+         "Maybe both. Four hundred years is long enough to get good at both."
+        ],
+        [
+         "n",
+         "act",
+         "He puts the phone away without answering. The not-answering is its own reply."
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The steward wears white gloves and a face that has been ironed. He doesn't look at Adrian's face. He looks at the wrist."
+   ],
+   [
+    "n",
+    "act",
+    "\"Holdings enter last,\" he says. \"Holdings do not sit until counted. Holdings do not speak unless their holder permits.\""
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "Rules for things. You're not a thing. You're also not stupid.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Then I'll need that in writing. I hear the Court reads paper.",
+       "then": [
+        [
+         "n",
+         "act",
+         "The steward's ironed face creases exactly once. He opens the doors without answering."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Say nothing. Walk past him to the doors before he can lead.",
+       "then": [
+        [
+         "n",
+         "act",
+         "For a step and a half, Adrian is in front. The steward has to hurry to catch up — something nobody at the Court has made him do in years."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "think",
+       "t": "(Don't speak unless permitted. Lucien has never once told me to be quiet. Let's see if he starts tonight.)",
+       "then": [
+        [
+         "n",
+         "act",
+         "The steward opens the double doors."
+        ],
+        [
+         "n",
+         "act",
+         "Warm air rolls out, wax and wine and something under both that Adrian decides not to name."
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The hall is long and low and lit by more candles than Adrian can count. Twelve chairs. No mirrors — only the gilt frames where mirrors used to hang, empty as windows onto nothing."
+   ],
+   [
+    "n",
+    "act",
+    "Twelve faces turn. Some of them are old in a way skin can't hide: in the stillness, in how long they go without blinking."
+   ],
+   [
+    "lucien",
+    "think",
+    "They look at him the way they look at my wine: something I keep in front of me and never touch. Tonight that ends, one way or the other."
+   ],
+   [
+    "n",
+    "act",
+    "Above each member's chair, a small red sigil burns in the plaster like a coal that never cools. The one over Lucien's seat is the brightest in the room."
+   ],
+   [
+    "n",
+    "act",
+    "Behind four of the chairs stand small brass easels with place cards. Behind Lucien's: MARCHETTI — ASSET, in a hand so elegant it ought to be ashamed of itself."
+   ],
+   [
+    "lucien",
+    "act",
+    "I see him come in. For a second I forget to keep my eyes the right color, and the candle in front of me goes red at the edges."
+   ],
+   [
+    "lucien",
+    "think",
+    "I told him the car would wait. I told him it wasn't a test. I have never in my life been so glad to be ignored."
+   ],
+   [
+    "lucien",
+    "photo",
+    {
+     "cap": "1:00 AM. The head of the long table. He hasn't looked away since the doors opened.",
+     "prompt": "a long candlelit banquet table in a vaulted old stone customs hall at night, a pale dark-haired man in a black tailored suit seated at it with a signet ring on his hand, an untouched full glass of red wine before him, a small glowing red sigil set into the plaster wall above his chair, empty gilt mirror frames on the walls, other diners as soft dark silhouettes, moody amber and crimson light, cinematic",
+     "then": [
+      [
+       "n",
+       "act",
+       "Behind his chair, the brass easel waits for Adrian like a coat hook."
+      ]
+     ],
+     "skip": []
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "The card. Your name isn't even on it. His is.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Stand behind his chair, exactly where they put you. Hands at your sides.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He stands where they've put him. His jaw says everything his mouth isn't allowed to."
+        ],
+        [
+         "lucien",
+         "think",
+         "Good. Let them look at the jaw."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Pick up the card. Read it out loud: Marchetti. Asset.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Two members laugh. Lucien doesn't."
+        ],
+        [
+         "lucien",
+         "say",
+         "Put it back, please. I'd like to be the one who touches it next."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "(low, at his ear) Nice handwriting. Yours?",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Theirs. Mine would have been worse news."
+        ],
+        [
+         "lucien",
+         "act",
+         "I don't turn around. I can feel exactly where he's standing, the way you feel a window left open behind you."
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Down the table, holdings stand behind other chairs. An old woman with a ledger on her knees, hands folded over it as if it might bolt. A ring of iron keys on a velvet cushion."
+   ],
+   [
+    "n",
+    "act",
+    "Behind Ysolde Achterberg stands a young man with frayed cuffs and a brass tag at his wrist. ACHTERBERG — ASSET. ACQUIRED 1983. He hasn't looked up once."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He looks your age. He can't be.",
+     "opts": [
+      {
+       "k": "think",
+       "t": "(That's what forty years looks like. Standing. Waiting to be counted.)",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian's hand goes to his own wrist without asking him first."
+        ],
+        [
+         "lucien",
+         "act",
+         "I see his hand go to his wrist. I know exactly what he's touching. I put it there, in a way."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Catch the young man's eye. Hold it.",
+       "then": [
+        [
+         "n",
+         "act",
+         "He looks up for half a second — then down again, fast, like someone taught him exactly what looking costs."
+        ],
+        [
+         "lucien",
+         "act",
+         "I see Adrian do it. I see what it costs the boy. I enter both in the ledger I keep behind my ribs."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "(under his breath, to Lucien) How long has he been standing there?",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Since before you were born. He has never been seated. Not once."
+        ],
+        [
+         "lucien",
+         "act",
+         "I turn my ring. It doesn't help. It has never helped."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "One by one, the members lay their holdings on the cloth. A deed to the lighthouse at Gull Point. The iron keys. The clerk names each aloud, and each time the sigil over its owner's chair flares a little brighter."
+   ],
+   [
+    "n",
+    "act",
+    "The old woman with the ledger is named aloud too: NORTHCOTE — ARCHIVIST, ON LOAN. She doesn't flinch. She's had practice."
+   ],
+   [
+    "n",
+    "act",
+    "Soup arrives for the members — something clear and gold in shallow bowls. Wine goes into every glass. Lucien's fills to the line and stays there."
+   ],
+   [
+    "n",
+    "act",
+    "Nothing comes for the holdings. Holdings, apparently, don't get hungry."
+   ],
+   [
+    "lucien",
+    "act",
+    "I watch Adrian not look at the soup. He'd rather go hungry in front of them than be fed by them. I've known that about him for years."
+   ],
+   [
+    "n",
+    "act",
+    "At the far end, Ysolde taps her spoon once against her glass. Her pearls are the color of fog just before it turns to rain."
+   ],
+   [
+    "n",
+    "act",
+    "\"Before the soup goes cold,\" she says, smiling all the way down the table. \"Show us what you hold, Marchetti. It's customary.\""
+   ],
+   [
+    "lucien",
+    "act",
+    "I don't stand. I turn my ring once and leave the wine where it is."
+   ],
+   [
+    "lucien",
+    "think",
+    "Two hundred years she has waited for me to need something from this table. Tonight she gets to watch me stop."
+   ],
+   [
+    "n",
+    "act",
+    "\"Then I'll help,\" says Ysolde. \"Let's hear how you came by him. For the record.\" The clerk at her elbow opens a book bound in something that was once alive."
+   ],
+   [
+    "lucien",
+    "think",
+    "She wants it told cold, so he hears it cold. Fine. I'll tell it. I just won't tell it her way."
+   ],
+   [
+    "lucien",
+    "game",
+    {
+     "k": "remember",
+     "hint": "The clerk reads the Court's record of the night your father signed. Then Lucien tells it his way. One night, two versions — and a lie bent into each. Find the bends.",
+     "then": [
+      [
+       "lucien",
+       "act",
+       "He finds my lie first. Years ago I told this table that the Vale mornings came cheap. They were the most I have ever paid for anything."
+      ],
+      [
+       "lucien",
+       "say",
+       "And correct your book. It says Mr. Vale came begging. He didn't beg. He bargained, and he bargained well. Write that down."
+      ],
+      [
+       "n",
+       "act",
+       "The clerk looks at Ysolde. Ysolde nods, amused. The pen scratches."
+      ]
+     ],
+     "skip": [
+      [
+       "lucien",
+       "say",
+       "Your book says Mr. Vale came begging. He didn't. He bargained, and he bargained well. Correct it."
+      ],
+      [
+       "n",
+       "act",
+       "The clerk looks at Ysolde. Ysolde nods, amused. The pen scratches."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He just defended your father. In front of them. To a book.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "He bargained well? He sold my mornings.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "He sold them to the one buyer at this table who would never resell them. That was the bargain. He knew exactly who else was bidding."
+        ],
+        [
+         "lucien",
+         "act",
+         "I don't look down the table when I say it. I don't need to."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Look at the book, not at him. Your father's name, in their ink.",
+       "then": [
+        [
+         "n",
+         "act",
+         "VALE, in the same elegant hand as the place card. His father wrote his name like a man late for a bus. This hand has never been late for anything."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "think",
+       "t": "(Dad bargained. Nobody ever told me he bargained. They only ever told me he lost.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "Something in Adrian's shoulders changes. I don't know what I just gave him. I'd give it again."
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "\"Since we're correcting the record,\" says Ysolde, setting down her spoon. \"Every year at this table, I make Marchetti an offer for the Vale dawns. Every year since the ink dried, he declines.\""
+   ],
+   [
+    "n",
+    "act",
+    "A murmur goes around the candles. Adrian didn't know. From the way Lucien's ring has stopped turning, Lucien never meant for him to."
+   ],
+   [
+    "n",
+    "act",
+    "\"My offer stands. Sanctuary for life, Lucien, guaranteed by my own seat — and I take the asset off your books.\" She looks past his shoulder, straight at Adrian, the way you'd look at a lamp you might buy. \"He'd be kept well. Mine always are.\""
+   ],
+   [
+    "n",
+    "act",
+    "At the next chair, a man with a sea captain's beard leans back to enjoy it. Bidding at dinner is the best entertainment the Court has had in a decade."
+   ],
+   [
+    "lucien",
+    "think",
+    "Sanctuary for life. She means it. Ysolde has never once offered anything she couldn't take back later."
+   ],
+   [
+    "n",
+    "act",
+    "Behind her chair, the young man with the frayed cuffs doesn't move at all."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "She's pricing you. To your face. While you stand.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "I'm standing right here.",
+       "then": [
+        [
+         "n",
+         "act",
+         "\"Yes, dear,\" says Ysolde. \"That's where we keep them.\""
+        ],
+        [
+         "lucien",
+         "act",
+         "The red comes up into my eyes, and this time I let it stay."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Don't look at her. Look at the back of Lucien's head, and wait.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I can feel him not looking at her. It is the loudest thing in the room."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "(quiet, to Lucien) Say yes and I'll never forgive you. Say no just to keep your seat, and I won't either.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "(not turning) I know. I've known since the cellar."
+        ],
+        [
+         "lucien",
+         "act",
+         "My ring is still. I leave it still."
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "say",
+    "Declined, Ysolde. For the last time. After tonight there won't be anything left to decline."
+   ],
+   [
+    "n",
+    "act",
+    "Ysolde smiles as if he's paid her a compliment. \"Nothing left to decline? Then what, exactly, are you holding?\""
+   ],
+   [
+    "n",
+    "act",
+    "The steward sets a small empty silver dish on the ledge behind each member's chair, at a holding's hip. Custom: a holding presents its holder a token, so the table can see it is kept well."
+   ],
+   [
+    "lucien",
+    "gift",
+    {
+     "who": "lucien",
+     "hint": "An empty silver dish, and twelve people waiting to see what the asset offers its owner. Give him something — or give them nothing.",
+     "by": {
+      "coffee": [
+       [
+        "lucien",
+        "act",
+        "A coffee, in a room where nobody has drunk anything in a century. I lift it off the silver with both hands and hold it, because it's warm."
+       ],
+       [
+        "lucien",
+        "say",
+        "(to the table) Put it in the book: a gift. Not tribute. Your clerk knows the difference, even if the rest of you have forgotten."
+       ]
+      ],
+      "flower": [
+       [
+        "lucien",
+        "act",
+        "A single rose on a silver dish. Someone at the table actually sighs."
+       ],
+       [
+        "lucien",
+        "say",
+        "A gift. Not tribute. Strike the word tribute wherever your clerk just wrote it."
+       ]
+      ],
+      "hoodie": [
+       [
+        "lucien",
+        "act",
+        "He folds his hoodie onto the silver like a dare. I lift it off the dish and lay it over the back of my chair, the only honest thing at this table."
+       ],
+       [
+        "lucien",
+        "say",
+        "It's a gift. Write that down."
+       ]
+      ],
+      "letter": [
+       [
+        "lucien",
+        "act",
+        "A letter, folded small. I don't open it. I slide it inside my coat, against the contract, where no one at this table will ever get to read it."
+       ]
+      ],
+      "ring": [
+       [
+        "lucien",
+        "act",
+        "A ring, on a dish, in front of these people. For the first time tonight my hands don't know where to go."
+       ],
+       [
+        "lucien",
+        "say",
+        "(low, only for him) Not on silver. Not here. Ask me somewhere they can't hear, and I'll answer you somewhere they can't hear."
+       ]
+      ]
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "Ysolde's smile thins to a line. Gifts aren't customary. Custom is what she keeps instead of feelings."
+      ]
+     ],
+     "skip": [
+      [
+       "lucien",
+       "act",
+       "The dish stays empty. A holding that offers nothing — the table murmurs as if he's spat on the cloth."
+      ],
+      [
+       "lucien",
+       "say",
+       "Good. Give them nothing."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "The card is still on its easel. Marchetti — Asset. Every eye at the table is on Lucien now.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Your move.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Yes. It has been for some time."
+        ],
+        [
+         "lucien",
+         "act",
+         "I say it to him, not to the table. The table can listen."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Take the card off the easel and set it face-up beside his untouched wine.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He sets it beside the glass I'll never drink. Two things I hold that I shouldn't, side by side."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "(Do it or don't. But don't make me stand here while you decide.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I've already decided. I decided in a cellar, under a bare bulb, with him on the stairs above me."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "I pick up Adrian's card and tear it in half. Then I take his chair — the low one that waits behind mine, that holdings never get to use — carry it around the table, and set it directly across from me. Two members have to move their chairs. They do."
+   ],
+   [
+    "lucien",
+    "say",
+    "He isn't on the inventory."
+   ],
+   [
+    "n",
+    "act",
+    "Somebody laughs. Nobody joins in. The laugh dies alone, halfway to the ceiling."
+   ],
+   [
+    "n",
+    "act",
+    "\"Words, Lucien,\" says Ysolde, very gently. \"The Court reads paper.\""
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "She wants paper. Give him the push.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Then sign it where they can see.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I'm already reaching into my coat."
+        ],
+        [
+         "n",
+         "act",
+         "Down the table, Ysolde's spoon stops halfway to her mouth."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "Paper, then. Here. Not upstairs, not tomorrow. Sign it where they can see.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Where they can see."
+        ],
+        [
+         "lucien",
+         "act",
+         "I'm already reaching into my coat."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "Don't sit. Stand behind the chair across from him, and don't move until he signs it where they can see.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He won't sit until it's on paper. Of course he won't. I reach into my coat."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "I take out my copy of the Court contract and unfold it on the cloth. Old vellum, older seals. Clause nine, the asset schedule. One line: the Vale dawns, held in trust."
+   ],
+   [
+    "lucien",
+    "think",
+    "It's already creased there. I've folded it at that line every night for years, just to read it. Paper remembers."
+   ],
+   [
+    "lucien",
+    "act",
+    "I tear the asset clause off at the fold. Above my seat, the sigil goes dark, like a candle pinched between two fingers."
+   ],
+   [
+    "lucien",
+    "video",
+    {
+     "clip": 6,
+     "cap": "Not tonight. But some dawn, with no Court to shelter him, the sun will come looking — and Adrian will get there first.",
+     "hint": "Flash-forward · what losing sanctuary might one day mean",
+     "then": [
+      [
+       "n",
+       "act",
+       "Back at the table, the plaster over Lucien's chair is only plaster now. A thread of smoke, thin as a hair, and nothing else."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The table goes very quiet. Somewhere, a chair scrapes back. Lucien doesn't look away from Adrian once."
+   ],
+   [
+    "n",
+    "act",
+    "One by one, the members glance up at their own sigils, as if to make sure."
+   ],
+   [
+    "n",
+    "act",
+    "Ysolde is the first to speak. She says it softly, almost kindly, tasting a new word: \"Guest Marchetti.\""
+   ],
+   [
+    "n",
+    "act",
+    "\"You have until the next full sitting to find yourself a new reason to stay in our city,\" she adds. \"Do let us know how that goes.\""
+   ],
+   [
+    "n",
+    "act",
+    "The bearded captain reaches over, unhurried, and moves his own glass an inch away from Lucien's. Etiquette. A guest doesn't share a member's reach."
+   ],
+   [
+    "n",
+    "act",
+    "Behind her chair, the young man with the frayed cuffs looks up. Not at Ysolde. At the torn half of a place card on the cloth."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "The sigil's out. He isn't looking at any of them. Only at you.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Hold his gaze. Don't be the one who blinks.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He doesn't blink. Neither do I. Four hundred years, and this is the first staring contest I'd be glad to lose."
+        ],
+        [
+         "n",
+         "act",
+         "Somewhere down the table, someone clears their throat. Neither of them hears it."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "You could've done that upstairs. On a desk. With nobody watching.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Upstairs, they'd have said I sold you quietly. Here, they watched me not do it."
+        ],
+        [
+         "lucien",
+         "act",
+         "And I wanted you to watch, too. I don't say that part. He hears it anyway."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Look at the dark patch of plaster. Then back at him.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He looks at what I lost, then at me, like a man checking a receipt. Let him. It's correct."
+        ],
+        [
+         "lucien",
+         "say",
+         "It was never much of a light to read by."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "I pick up my wine glass for the first time tonight and set it down on the torn card, like a paperweight. I still don't drink."
+   ],
+   [
+    "n",
+    "act",
+    "Across the room, the young man with frayed cuffs has gone very still in a new way — the stillness of someone listening for the first time in years."
+   ],
+   [
+    "lucien",
+    "say",
+    "(low, across the candles) The chair's yours. Sit in it or don't. It's the only chair at this table nobody can order you into."
+   ],
+   [
+    "lucien",
+    "think",
+    "There are eleven people at this table who would cheerfully see me at dawn. I'm only looking at the one who wouldn't."
+   ],
+   [
+    "n",
+    "act",
+    "The steward, after one look from Lucien, sets a bowl of soup before the empty chair. Clear, gold, still steaming."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "Twelve faces. One dark sigil. Every one of them waiting to see what the asset does, now that he isn't one.",
+     "opts": [
+      {
+       "k": "think",
+       "t": "(He just made himself a guest in his own city. In front of everyone. Over a seating chart.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I watch him do the math. I already know the total. I paid it."
+        ],
+        [
+         "lucien",
+         "act",
+         "If he wants a receipt, I'll write one. I'll even let him check my handwriting."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "(Nobody here has to protect him now. Nobody here ever protected me. For once, we're even.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "Something in his face settles, like a ledger closing. I have no idea which way it balanced."
+        ],
+        [
+         "lucien",
+         "think",
+         "Even. He'd hate the word kind. Even, he can live with."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "think",
+       "t": "(Five hours to sunrise. For the first time, I'm not counting down for me.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "His eyes flick to where a clock would be, if this room allowed clocks. I know that look. I've watched it across my bar for years."
+        ],
+        [
+         "lucien",
+         "think",
+         "Five hours. He's counting them for me. Nobody has counted anything for me in a very long time."
+        ]
+       ],
+       "love": 3
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The candles lean all at once, as if the room itself is holding its breath. The chair across from Lucien waits. So does the door."
+   ]
+  ],
+  "zh": [
+   [
+    "n",
+    "act",
+    "港庭的长桌设在九号码头尽头那栋旧海关楼里。成员走正门。被“持有”的东西走后门，然后等着。"
+   ],
+   [
+    "n",
+    "act",
+    "衣帽间里一股雪松木混着湿羊毛的味道。一排排大衣静静挂着，随便拎一件出来都比潮水酒吧值钱。Adrian手腕上不知被谁系了根红绳，坠着块黄铜牌：七号——MARCHETTI。"
+   ],
+   [
+    "n",
+    "act",
+    "没人提过还有牌子这回事。车上Lucien只交代了三句：穿深色；叫不出名字的东西别吃；别让他们看见你看表。"
+   ],
+   [
+    "n",
+    "act",
+    "来的路上，Adrian那件像样的衬衫扣错了两回。Lucien就那么看着，一句“我来”都没说——这是这礼拜别人给过他的最大的尊重。"
+   ],
+   [
+    "n",
+    "act",
+    "他还是看了表。12:41。离日出还有五个多钟头。老毛病，不管人在哪儿都改不掉。"
+   ],
+   [
+    "n",
+    "act",
+    "他特意把父亲的相机留在了家里。有些东西，不该靠近一间专门点数的屋子。"
+   ],
+   [
+    "lucien",
+    "voice",
+    {
+     "who": "lucien",
+     "txt": "一点整，他们会把你领进来，让你站在我椅子后面。别把那当成命令。还有，Adrian——车在外面，等到天亮。你现在走还来得及。这不是考验。",
+     "hint": "Lucien先进去了——成员要先落座，才轮到“持有物”被领进去。12:39，他给你留了条语音。",
+     "then": [
+      [
+       "n",
+       "act",
+       "他听了两遍。第二遍才听出来：叫他名字之前，有半秒的停顿。差不多刚好够转一圈戒指。"
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "他没点开。用不着听也知道——无非是叫他走，语气比一般人客气点罢了。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "手腕上那块牌子。是你递外套的那几秒里，被人系上的。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "扯断红绳，把牌子揣进兜里——留作证据。",
+       "then": [
+        [
+         "n",
+         "act",
+         "扯到第二下才断。黄铜已经被他自己的体温焐热了，这一点反而更叫人恶心。"
+        ],
+        [
+         "n",
+         "act",
+         "他把牌子跟钥匙揣在一起。回头总得有人把这玩意儿白纸黑字地给他解释清楚。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "不摘。把号码翻到外面，让他们看个清楚。",
+       "then": [
+        [
+         "n",
+         "act",
+         "他把牌子翻过来，让那个“7”朝外。想点他的数，就照着手腕念吧，跟念价签一样。"
+        ],
+        [
+         "n",
+         "act",
+         "他每动一下，铜牌就磕一下表壳。磕吧。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "think",
+       "t": "（七号。这楼里还有六样东西，排在我前面。）",
+       "then": [
+        [
+         "n",
+         "act",
+         "墙那边有人笑了一声，像一枚硬币掉进井里。"
+        ],
+        [
+         "n",
+         "act",
+         "他没去碰那块牌子，可眼睛也没离开过它。"
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "衣帽间的墙那边，银器轻碰瓷盘。说话声压得很低，像葬礼开始前的教堂。"
+   ],
+   [
+    "n",
+    "act",
+    "架子那头，别的大衣上也挂着牌子：一件皮草，一件油布雨衣，还有一件黑丝的，牌子上只写着：一号。"
+   ],
+   [
+    "lucien",
+    "call",
+    {
+     "cid": "lucien",
+     "hint": "12:52。规矩是：清点之前，成员不得探视自己的“持有物”。Lucien走到走廊里，打了过来。",
+     "lines": [
+      [
+       "lucien",
+       "你还在。我听见铜牌响了。他们故意把牌子做得那么沉，好让你每动一下都听见自己。"
+      ],
+      [
+       "lucien",
+       "我只有四分钟，你听着。长桌那头戴灰珍珠的女人，叫Ysolde Achterberg。她坐在我对面两百年了，这两百年里没有一天不惦记我那把椅子。"
+      ],
+      [
+       "lucien",
+       "一点整，持有物进场。她会让我亮出我手里的东西，这是惯例。成员把自己拥有的东西摆上桌布——地契、钥匙。有时候，是人。"
+      ],
+      [
+       "lucien",
+       "（他身后某处有扇门开了。他等它关上才接着说。）如果我做了我今晚来要做的事，我座位上方的印记就会熄灭。从那一刻起，我只是个客人。客人能不能留下，看港庭高不高兴。港庭从来没高兴过。"
+      ],
+      [
+       "lucien",
+       "我不是要你拦我。我只是不想让那张桌子上的任何人，知道一件你不知道的事。"
+      ],
+      [
+       "lucien",
+       "他们在摇铃了。走进来的时候，就当这栋楼是你的。你会惊讶的——他们当中真没几个人敢这么走。"
+      ]
+     ],
+     "then": [
+      [
+       "n",
+       "act",
+       "电话咔哒一声断了。衣帽间的门在他身后打开时，Adrian还把手机贴在耳边。"
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "手机贴着肋骨震了四下，停了。随后进来一条短信，就几个字：灰珍珠。当心。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他已经决定了。离他们来领你，大概还剩十秒。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "给他发两个字：别做。",
+       "then": [
+        [
+         "n",
+         "act",
+         "已送达。接着：12:56 已读。没回。当然不会回。"
+        ],
+        [
+         "n",
+         "act",
+         "那两个字落在屏幕上，比按下去的时候显得小多了。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "给他发：我自己走进去。不站你身后。",
+       "then": [
+        [
+         "n",
+         "act",
+         "12:56 已读。“对方正在输入”闪了一下，没了，又闪了一下。然后什么都没有。"
+        ],
+        [
+         "n",
+         "act",
+         "可这个“什么都没有”，他斟酌了十一秒。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "（他抢在他们前面告诉我，而不是来问我。这要么是尊重，要么是一手好骗术。）",
+       "then": [
+        [
+         "n",
+         "act",
+         "也许两者都是。四百年，足够把两样都练到家了。"
+        ],
+        [
+         "n",
+         "act",
+         "他没回，把手机揣了回去。不回，本身也是一种回答。"
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "领路的侍者戴着白手套，一张脸像是熨过的。他不看Adrian的脸，只看手腕。"
+   ],
+   [
+    "n",
+    "act",
+    "“持有物最后入场。”他说，“清点之前，持有物不得落座。未经持有人允许，持有物不得开口。”"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "这是给物件定的规矩。你不是物件。可你也不傻。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "那麻烦给我一份书面的。听说港庭只认纸。",
+       "then": [
+        [
+         "n",
+         "act",
+         "侍者那张熨平的脸，皱了一下，就一下。他没接话，推开了门。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "一句话不说，抢在他前面走到门口。",
+       "then": [
+        [
+         "n",
+         "act",
+         "有那么一步半，Adrian走在了前面。侍者只好快走两步追上来——这么多年，港庭里还没人让他这么赶过。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "think",
+       "t": "（未经允许不得开口。Lucien可从来没叫我闭过嘴。看他今晚开不开这个头。）",
+       "then": [
+        [
+         "n",
+         "act",
+         "侍者推开了那两扇对开的门。"
+        ],
+        [
+         "n",
+         "act",
+         "一股暖气扑面而来，蜡油味、酒味，底下还压着一种味道，Adrian决定不去叫出它的名字。"
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "大厅又长又矮，烛火多得数不过来。十二把椅子。没有镜子——墙上只剩一副副描金的空框，原本挂镜子的地方，像一扇扇开向虚无的窗。"
+   ],
+   [
+    "n",
+    "act",
+    "十二张脸转过来。有几张老得藏不住——不在皮肤上，在那种一动不动里，在他们能多久不眨一下眼。"
+   ],
+   [
+    "lucien",
+    "think",
+    "他们看他的眼神，跟看我那杯酒一样：一样我摆在面前、却从来不碰的东西。过了今晚，这种看法总要有个了断。"
+   ],
+   [
+    "n",
+    "act",
+    "每位成员的椅子上方，灰泥墙里都嵌着一枚红色印记，像一块永远不会凉的炭。Lucien座位上方那一枚，是整间屋子里最亮的。"
+   ],
+   [
+    "n",
+    "act",
+    "其中四把椅子后面，各立着一个小小的黄铜架子，架上放着座位卡。Lucien椅子后面那张写着：MARCHETTI——资产。字漂亮得过分，漂亮得该替自己害臊。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我看见他进来。有那么一秒，我忘了让眼睛保持该有的颜色，面前那支蜡烛的火苗边缘，被我看成了红的。"
+   ],
+   [
+    "lucien",
+    "think",
+    "我跟他说了车会等着。我跟他说了这不是考验。活了这么久，我头一回被人当耳旁风还这么高兴。"
+   ],
+   [
+    "lucien",
+    "photo",
+    {
+     "cap": "凌晨1:00。长桌一端。从门开那一刻起，他的视线就没挪开过。",
+     "prompt": "a long candlelit banquet table in a vaulted old stone customs hall at night, a pale dark-haired man in a black tailored suit seated at it with a signet ring on his hand, an untouched full glass of red wine before him, a small glowing red sigil set into the plaster wall above his chair, empty gilt mirror frames on the walls, other diners as soft dark silhouettes, moody amber and crimson light, cinematic",
+     "then": [
+      [
+       "n",
+       "act",
+       "他椅子后头，那个黄铜架子等着Adrian，像一只挂衣钩。"
+      ]
+     ],
+     "skip": []
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "那张卡。上面连你的名字都没有。只有他的。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "站到他椅子后面，就站在他们指定的位置。双手垂在身侧。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他站在他们给他划好的地方。嘴不许说的，下颌线全替他说了。"
+        ],
+        [
+         "lucien",
+         "think",
+         "很好。让他们好好看看那条下颌线。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "拿起那张卡，大声念出来：Marchetti。资产。",
+       "then": [
+        [
+         "n",
+         "act",
+         "有两位成员笑了。Lucien没笑。"
+        ],
+        [
+         "lucien",
+         "say",
+         "放回去吧。下一个碰它的人，我想是我。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "（压低声音，贴着他耳边）字不错。你写的？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "他们写的。要是我写的，那才是坏消息。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我没回头。他站在哪儿，我一清二楚——就像你能感觉到身后有扇窗没关。"
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "长桌那一溜，别的椅子后面也站着持有物。一个老太太膝上搁着账本，两手死死压在上面，像怕它跑了。一圈铁钥匙躺在丝绒垫子上。"
+   ],
+   [
+    "n",
+    "act",
+    "Ysolde Achterberg身后站着个年轻人，袖口磨起了毛，手腕上也坠着块铜牌：ACHTERBERG——资产。1983年购入。他一次都没抬过头。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他看着跟你差不多大。可不可能。",
+     "opts": [
+      {
+       "k": "think",
+       "t": "（这就是四十年后的样子。站着。等着被点数。）",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian的手没经过他同意，自己摸上了手腕。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我看见他的手摸上手腕。我知道他在摸什么。某种意义上，是我系上去的。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "去找那个年轻人的眼睛。对上，别躲。",
+       "then": [
+        [
+         "n",
+         "act",
+         "他抬了半秒眼——又飞快地垂下去，像是有人一笔一笔教过他，看人一眼要付多少代价。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我看见Adrian那么做了，也看见那孩子为此付了什么。两笔我都记下了，记在肋骨后面那本账上。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "（低声问Lucien）他在那儿站了多久了？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "从你出生之前就站着了。一次都没坐下过。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我转了转戒指。没用。从来就没用过。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "成员们一个接一个，把手里的东西摆上桌布。鸥角灯塔的地契。那圈铁钥匙。书记员一样一样报出名目，每报一样，物主头顶的印记就亮上一分。"
+   ],
+   [
+    "n",
+    "act",
+    "抱账本的老太太也被报了名：NORTHCOTE——档案员，外借中。她眼皮都没动一下。练出来了。"
+   ],
+   [
+    "n",
+    "act",
+    "汤上来了，只给成员——浅口碗里清亮的金色汤汁。每只杯子都斟了酒。Lucien那杯斟到线，然后就一直停在那儿。"
+   ],
+   [
+    "n",
+    "act",
+    "持有物什么都没有。看来持有物是不会饿的。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我看着Adrian偏不往汤上看。他宁可当着他们的面饿着，也不肯被他们喂。这一点，我好些年前就知道了。"
+   ],
+   [
+    "n",
+    "act",
+    "长桌尽头，Ysolde用汤匙在杯沿上轻轻一敲。她那串珍珠的颜色，像雾气马上要变成雨之前的那种灰。"
+   ],
+   [
+    "n",
+    "act",
+    "“趁汤还没凉，”她笑着，那笑意一路铺到长桌这头，“给我们看看你手里有什么，Marchetti。这是惯例。”"
+   ],
+   [
+    "lucien",
+    "act",
+    "我没起身。转了一圈戒指，酒照旧不碰。"
+   ],
+   [
+    "lucien",
+    "think",
+    "两百年，她一直在等我有求于这张桌子的那一天。今晚，她能亲眼看着我不再求了。"
+   ],
+   [
+    "n",
+    "act",
+    "“那我帮你一把，”Ysolde说，“说说你是怎么得到他的吧。记录在案嘛。”她手边的书记员翻开一本册子，封皮用的东西，曾经是活的。"
+   ],
+   [
+    "lucien",
+    "think",
+    "她想让这故事讲得冷冰冰的，好让他听得心凉。行。我讲。只是不照她的讲法。"
+   ],
+   [
+    "lucien",
+    "game",
+    {
+     "k": "remember",
+     "hint": "书记员念出港庭记录里，你父亲签字的那一夜。接着Lucien讲他的版本。同一个夜晚，两种说法——每一种里都拐着一个谎。把拐弯的地方找出来。",
+     "then": [
+      [
+       "lucien",
+       "act",
+       "他先揪出了我的谎。很多年前，我对这张桌子说，Vale家的清晨来得很便宜。其实那是我这辈子付过的最高的价。"
+      ],
+      [
+       "lucien",
+       "say",
+       "另外，把你们的册子改一改。上面写Vale先生是来求人的。他没求。他是来谈的，而且谈得很好。记下来。"
+      ],
+      [
+       "n",
+       "act",
+       "书记员看向Ysolde。Ysolde饶有兴味地点点头。笔尖沙沙作响。"
+      ]
+     ],
+     "skip": [
+      [
+       "lucien",
+       "say",
+       "你们册子上写Vale先生是来求人的。他没有。他是来谈的，而且谈得很好。改过来。"
+      ],
+      [
+       "n",
+       "act",
+       "书记员看向Ysolde。Ysolde饶有兴味地点点头。笔尖沙沙作响。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他刚刚替你父亲说了话。当着他们的面。对着一本册子。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "谈得很好？他卖了我的清晨。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "他卖给了这张桌上唯一一个绝不会转手的买家。这就是他谈下来的东西。还有谁在出价，他心里一清二楚。"
+        ],
+        [
+         "lucien",
+         "act",
+         "说这话时我没往长桌那头看。用不着看。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "不看他，看那本册子。父亲的名字，写在他们的墨水里。",
+       "then": [
+        [
+         "n",
+         "act",
+         "VALE，跟座位卡出自同一手漂亮的字。父亲签名时总像在赶公交。而这手字，这辈子大概没赶过任何东西。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "think",
+       "t": "（爸是去谈的。从来没人告诉过我他谈过。他们只告诉我，他输了。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "Adrian的肩膀起了点变化。我不知道自己刚才给了他什么。再来一次，我还会给。"
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "“既然说到更正记录，”Ysolde放下汤匙，“每年在这张桌上，我都会向Marchetti出价，买Vale家的黎明。从墨迹干透那年起，他年年都回绝。”"
+   ],
+   [
+    "n",
+    "act",
+    "烛光间响起一阵低语。Adrian不知道这件事。看Lucien的戒指忽然不转了，就知道他压根没打算让Adrian知道。"
+   ],
+   [
+    "n",
+    "act",
+    "“我的价码不变。终身庇护，Lucien，拿我自己的席位担保——这项资产，我替你从账上拿走。”她的目光越过他的肩，直直落在Adrian身上，像在打量一盏也许会买的台灯，“他会被照顾得很好。我的东西向来如此。”"
+   ],
+   [
+    "n",
+    "act",
+    "隔壁座位上，一个留着船长胡子的男人往椅背上一靠，准备看戏。饭桌上竞价——这是港庭十年来最好的余兴节目。"
+   ],
+   [
+    "lucien",
+    "think",
+    "终身庇护。她是认真的。Ysolde这辈子开出的价，从来都留着日后收回去的余地。"
+   ],
+   [
+    "n",
+    "act",
+    "她椅子后面，那个袖口起毛的年轻人，纹丝不动。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "她在给你估价。当着你的面。而你只能站着。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "我就站在这儿。",
+       "then": [
+        [
+         "n",
+         "act",
+         "“是啊，亲爱的，”Ysolde说，“我们一向把它们放在那儿。”"
+        ],
+        [
+         "lucien",
+         "act",
+         "红色漫上我的眼睛。这一次，我由它去了。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "不看她。只看着Lucien的后脑勺，等。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我能感觉到他偏不看她。那是整间屋子里最响的声音。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "（低声对Lucien）你要是答应，我这辈子不原谅你。你要是为了保住座位才拒绝，我也一样。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "（没有回头）我知道。从地窖那晚起我就知道。"
+        ],
+        [
+         "lucien",
+         "act",
+         "戒指停着。我没再去转它。"
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "say",
+    "不卖，Ysolde。这是最后一次回绝你。过了今晚，就没什么可回绝的了。"
+   ],
+   [
+    "n",
+    "act",
+    "Ysolde笑了，像是他刚恭维了她一句。“没什么可回绝的了？那你手里，究竟握着什么？”"
+   ],
+   [
+    "n",
+    "act",
+    "侍者在每位成员椅背后的窄台上放了一只空银碟，高度正好在持有物腰间。惯例：持有物要向持有人献上一样信物，好让满桌人看看，它被照顾得多好。"
+   ],
+   [
+    "lucien",
+    "gift",
+    {
+     "who": "lucien",
+     "hint": "一只空银碟，十二双眼睛等着看这件资产给主人献上什么。给他点什么——或者，什么都不给他们看。",
+     "by": {
+      "coffee": [
+       [
+        "lucien",
+        "act",
+        "一杯咖啡，在这间一百年没人喝过东西的屋子里。我双手把它从银碟上端起来，捧着，因为它是热的。"
+       ],
+       [
+        "lucien",
+        "say",
+        "（对满桌人）记进册子：这是礼物，不是贡品。你们忘了这两者的分别，书记员可没忘。"
+       ]
+      ],
+      "flower": [
+       [
+        "lucien",
+        "act",
+        "银碟上一枝玫瑰。桌边居然有人叹了口气。"
+       ],
+       [
+        "lucien",
+        "say",
+        "是礼物，不是贡品。书记员刚才在哪儿写了“贡品”，划掉。"
+       ]
+      ],
+      "hoodie": [
+       [
+        "lucien",
+        "act",
+        "他把卫衣叠好放上银碟，像在下战书。我把它拿起来，搭在我的椅背上——这桌上唯一一样老实东西。"
+       ],
+       [
+        "lucien",
+        "say",
+        "这是礼物。记下来。"
+       ]
+      ],
+      "letter": [
+       [
+        "lucien",
+        "act",
+        "一封信，折得很小。我没拆，把它塞进大衣内袋，贴着那份契约——这桌上谁也别想读到。"
+       ]
+      ],
+      "ring": [
+       [
+        "lucien",
+        "act",
+        "一枚戒指，放在银碟上，当着这些人的面。今晚头一回，我的手不知道该往哪儿放。"
+       ],
+       [
+        "lucien",
+        "say",
+        "（压低声音，只说给他听）别放在银器上。别在这儿。换个他们听不见的地方问我，我也在他们听不见的地方回答你。"
+       ]
+      ]
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "Ysolde的笑抿成了一条线。送礼可不在惯例里。惯例，是她拿来代替感情的东西。"
+      ]
+     ],
+     "skip": [
+      [
+       "lucien",
+       "act",
+       "银碟空着。一件什么都不献的持有物——满桌窃窃私语，像他往桌布上啐了一口。"
+      ],
+      [
+       "lucien",
+       "say",
+       "很好。什么都别给他们。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "那张卡还立在架子上。Marchetti——资产。现在满桌的眼睛都盯着Lucien。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "该你了。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "是。其实早就该我了。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我是对他说的，不是对这张桌子。桌子爱听就听。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "把卡从架子上取下来，正面朝上，搁在他那杯没碰过的酒旁边。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他把它放在那杯我永远不会喝的酒旁边。两样我本不该占着的东西，并排摆着。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "（做也好，不做也好。别让我站在这儿等你拿主意。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我早就决定了。在地窖里，在那只光秃秃的灯泡底下，他站在我上面的台阶上。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "我拿起Adrian的座位卡，撕成两半。然后搬起他那把椅子——我身后那把矮椅，持有物从来没资格坐的那把——绕过长桌，放在我的正对面。两位成员只好挪开椅子。他们挪了。"
+   ],
+   [
+    "lucien",
+    "say",
+    "他不在清单上。"
+   ],
+   [
+    "n",
+    "act",
+    "有人笑了一声。没人跟着笑。那声笑孤零零地，升到半空就死了。"
+   ],
+   [
+    "n",
+    "act",
+    "“这只是话，Lucien，”Ysolde说得极温柔，“港庭只认纸。”"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "她要的是纸。推他一把。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "那就当着他们的面签。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我的手已经伸进大衣里了。"
+        ],
+        [
+         "n",
+         "act",
+         "长桌那头，Ysolde的汤匙停在了半空。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "那就拿纸来。就在这儿。不去楼上，不等明天。当着他们的面签。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "当着他们的面。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我的手已经伸进大衣里了。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "不坐。站在他对面那把椅子后面——他不当众签字，你就不动。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "不落到纸上，他就不肯坐。当然了。我把手伸进大衣。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "我取出我那份港庭契约，摊在桌布上。陈年的羊皮纸，更陈年的封印。第九条，资产清单。只有一行：Vale家的黎明，代为保管。"
+   ],
+   [
+    "lucien",
+    "think",
+    "那一行早就有折痕了。这些年，我每晚都把它折在那一行，就为了看一眼。纸是记得的。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我沿着折痕撕下资产条款。我座位上方的印记熄灭了，像一支被两根手指掐灭的蜡烛。"
+   ],
+   [
+    "lucien",
+    "video",
+    {
+     "clip": 6,
+     "cap": "不是今晚。但总有那么一个清晨，没有港庭庇护的他，会被太阳找上门——而Adrian会抢先一步。",
+     "hint": "闪前 · 失去庇护，终有一天意味着什么",
+     "then": [
+      [
+       "n",
+       "act",
+       "回到长桌。Lucien椅子上方的灰泥，如今只是灰泥。一缕烟，细得像根头发，别的什么都没有。"
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "长桌安静得可怕。不知哪里，有把椅子往后挪了一下。Lucien的目光一次都没离开过Adrian。"
+   ],
+   [
+    "n",
+    "act",
+    "成员们一个接一个，抬眼看了看自己头顶的印记，像是确认它们还亮着。"
+   ],
+   [
+    "n",
+    "act",
+    "Ysolde第一个开口。她说得很轻，近乎和善，像在品一个新词：“Marchetti——客人。”"
+   ],
+   [
+    "n",
+    "act",
+    "“到下一次全体例会之前，你得给自己另找一个留在这座城里的理由，”她又补了一句，“找到了，记得告诉我们一声。”"
+   ],
+   [
+    "n",
+    "act",
+    "那个船长胡子不紧不慢地伸手，把自己的酒杯从Lucien的杯子旁挪开了一寸。礼数。客人不配跟成员挨得那么近。"
+   ],
+   [
+    "n",
+    "act",
+    "她身后，那个袖口起毛的年轻人抬起了头。不是看Ysolde。是看桌布上那半张撕开的座位卡。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "印记灭了。他谁都不看，只看你。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "迎着他的目光。别先眨眼。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他不眨眼。我也不。四百年了，这是头一场我输了也心甘情愿的对视。"
+        ],
+        [
+         "n",
+         "act",
+         "长桌某处，有人清了清嗓子。他俩谁都没听见。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "你大可以在楼上办。在书桌上。没人看着。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "在楼上办，他们会说我把你悄悄卖了。在这儿，他们亲眼看着我没卖。"
+        ],
+        [
+         "lucien",
+         "act",
+         "而且我也想让你亲眼看着。这半句我没说出口。他还是听见了。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "看一眼那块熄了的灰泥。再看回他。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他看看我丢了什么，又看看我，像在核对一张收据。让他核。账是对的。"
+        ],
+        [
+         "lucien",
+         "say",
+         "那盏灯，本来也照不亮什么。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "今晚头一回，我端起酒杯——然后把它压在那半张撕开的卡上，当镇纸用。照旧没喝。"
+   ],
+   [
+    "n",
+    "act",
+    "长桌那头，袖口起毛的年轻人静得跟先前不一样了——那是一个人多年来头一回竖起耳朵听的那种静。"
+   ],
+   [
+    "lucien",
+    "say",
+    "（隔着烛火，低声）椅子是你的。坐不坐随你。这张桌上，只有这一把椅子，谁也没法命令你坐。"
+   ],
+   [
+    "lucien",
+    "think",
+    "这桌上有十一个人，乐得看我撞上黎明。我眼里只有那个不会的。"
+   ],
+   [
+    "n",
+    "act",
+    "Lucien只看了侍者一眼，侍者便在那把空椅子前摆上一碗汤。清亮，金黄，还冒着热气。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "十二张脸。一枚熄灭的印记。所有人都在等——看这件资产不再是资产之后，会做什么。",
+     "opts": [
+      {
+       "k": "think",
+       "t": "（他刚刚让自己在自己的城里成了客人。当着所有人的面。就为了一张座位表。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我看着他在心里算账。总数我早就知道。是我付的。"
+        ],
+        [
+         "lucien",
+         "act",
+         "他要收据，我就给他开一张。字迹随他验。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "（从今往后，这里没人得护着他了。这里也从来没人护过我。头一回，我们扯平了。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他脸上有什么东西落定了，像一本账合上。我不知道最后是哪边对上了。"
+        ],
+        [
+         "lucien",
+         "think",
+         "扯平。他会讨厌“好心”这个词。“扯平”，他还受得住。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "think",
+       "t": "（离日出还有五个钟头。头一回，我不是在为自己倒数。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他的视线往墙上一扫——那是钟该挂的位置，如果这屋子允许挂钟的话。这个眼神我认得。隔着吧台，我看了好几年。"
+        ],
+        [
+         "lucien",
+         "think",
+         "五个钟头。他在替我数。很久很久没人替我数过什么了。"
+        ]
+       ],
+       "love": 3
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "满屋的烛火同时一斜，像整间屋子都屏住了呼吸。Lucien对面那把椅子在等。门也在等。"
+   ]
+  ]
+ },
+ "then": {
+  "A": {
+   "en": [
+    [
+     "n",
+     "act",
+     "Adrian looks at the door. Then at the chair."
+    ],
+    [
+     "adrian",
+     "act",
+     "I sit down across from him. The chair's too low — it was built for something that isn't supposed to sit. I sit in it anyway, straight as I can."
+    ],
+    [
+     "n",
+     "act",
+     "Eleven members watch an asset pick up a spoon."
+    ],
+    [
+     "adrian",
+     "act",
+     "I eat the soup, which is excellent, and stare back at every one of them."
+    ],
+    [
+     "adrian",
+     "think",
+     "Saffron. Something smoked. I'm going to be furious later that it was this good."
+    ],
+    [
+     "n",
+     "act",
+     "Ysolde holds his eyes for a long moment. She looks away first, to signal the clerk for the next course."
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "Behind Ysolde's chair, the young man with frayed cuffs is watching you eat.",
+      "opts": [
+       {
+        "k": "act",
+        "t": "Lift your spoon to him, just slightly. A toast.",
+        "then": [
+         [
+          "n",
+          "act",
+          "He doesn't lift anything back. But for the rest of the dinner, he doesn't look at the floor."
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "act",
+        "t": "Push the bread basket an inch down the table, toward his end.",
+        "then": [
+         [
+          "n",
+          "act",
+          "Nobody passes it on. It sits there all night, an inch closer to him than it was."
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "think",
+        "t": "(Forty years behind a chair. I'm going to remember his face.)",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "I watch Adrian memorize the boy. I don't interrupt. Someone at this table should."
+         ]
+        ],
+        "love": 0
+       }
+      ]
+     }
+    ],
+    [
+     "n",
+     "act",
+     "Five courses. Lucien touches none of them. Adrian finishes all of them."
+    ],
+    [
+     "n",
+     "act",
+     "By three the members leave in pairs, giving Lucien's chair a wide berth, as if being a guest might be catching."
+    ],
+    [
+     "lucien",
+     "photo",
+     {
+      "cap": "3:12 AM. The last candles. Two men facing each other across a table no one else is left at.",
+      "prompt": "a long banquet table in a vaulted stone hall late at night, almost all candles burned down, two men seated facing each other at the far end, one pale and dark-haired in a black suit with a signet ring and an untouched wine glass, the other younger with messy dark hair and a split lip, an empty soup bowl before him, empty chairs pushed back along the table, dark plaster wall above, warm low amber light",
+      "then": [
+       [
+        "n",
+        "act",
+        "The steward begins pinching out the candles, one by one, from the far end. He leaves theirs for last."
+       ]
+      ],
+      "skip": []
+     }
+    ],
+    [
+     "lucien",
+     "say",
+     "You didn't have to stay."
+    ],
+    [
+     "adrian",
+     "say",
+     "I know. That's why it counts."
+    ],
+    [
+     "lucien",
+     "act",
+     "I reach for my ring out of habit. Then I stop, and let him see my hands lying still on the cloth."
+    ]
+   ],
+   "zh": [
+    [
+     "n",
+     "act",
+     "Adrian看了一眼门。又看了一眼椅子。"
+    ],
+    [
+     "adrian",
+     "act",
+     "我在他对面坐下。椅子太矮了——本来就是给不该坐的东西做的。我照样坐，腰杆挺得笔直。"
+    ],
+    [
+     "n",
+     "act",
+     "十一位成员，看着一件资产拿起了汤匙。"
+    ],
+    [
+     "adrian",
+     "act",
+     "我喝汤——汤非常好喝——然后一个一个地瞪回去。"
+    ],
+    [
+     "adrian",
+     "think",
+     "藏红花，还有点烟熏味。回头想起这汤居然这么好喝，我肯定要气死。"
+    ],
+    [
+     "n",
+     "act",
+     "Ysolde跟他对视了很久。先移开目光的是她——转头示意书记员上下一道菜。"
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "Ysolde椅子后面，那个袖口起毛的年轻人正看着你吃。",
+      "opts": [
+       {
+        "k": "act",
+        "t": "朝他微微举一下汤匙。算是敬他。",
+        "then": [
+         [
+          "n",
+          "act",
+          "他什么也没举。可那顿饭剩下的时间里，他没再盯着地板。"
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "act",
+        "t": "把面包篮往长桌那头推了一寸，推向他那边。",
+        "then": [
+         [
+          "n",
+          "act",
+          "没人接着往下传。它就在那儿放了一整晚，比原来离他近了一寸。"
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "think",
+        "t": "（在椅子后面站了四十年。我要记住这张脸。）",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "我看着Adrian把那孩子的脸记进心里。我没打断。这桌上总该有个人记得。"
+         ]
+        ],
+        "love": 0
+       }
+      ]
+     }
+    ],
+    [
+     "n",
+     "act",
+     "五道菜。Lucien一口没动。Adrian一道不剩。"
+    ],
+    [
+     "n",
+     "act",
+     "到了三点，成员们三三两两地离席，经过Lucien的椅子时都绕得远远的，好像“客人”这个病会传染。"
+    ],
+    [
+     "lucien",
+     "photo",
+     {
+      "cap": "凌晨3:12。最后几支蜡烛。长桌边只剩下两个人，面对面坐着。",
+      "prompt": "a long banquet table in a vaulted stone hall late at night, almost all candles burned down, two men seated facing each other at the far end, one pale and dark-haired in a black suit with a signet ring and an untouched wine glass, the other younger with messy dark hair and a split lip, an empty soup bowl before him, empty chairs pushed back along the table, dark plaster wall above, warm low amber light",
+      "then": [
+       [
+        "n",
+        "act",
+        "侍者从长桌那头开始，一支一支掐灭蜡烛。他们俩面前那几支，他留到了最后。"
+       ]
+      ],
+      "skip": []
+     }
+    ],
+    [
+     "lucien",
+     "say",
+     "你不必留下的。"
+    ],
+    [
+     "adrian",
+     "say",
+     "我知道。所以才算数。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我习惯性地去摸戒指。又停住了，让他看见我的手静静搁在桌布上。"
+    ]
+   ]
+  },
+  "B": {
+   "en": [
+    [
+     "adrian",
+     "act",
+     "I stand, walk around the table, and hold the door open."
+    ],
+    [
+     "adrian",
+     "say",
+     "We're leaving. Walk, don't run."
+    ],
+    [
+     "n",
+     "act",
+     "Eleven sigils burning. One dark. Every eye in the room on the back of Lucien's coat."
+    ],
+    [
+     "lucien",
+     "act",
+     "I walk. Behind us nobody laughs, which in this company is very nearly a compliment."
+    ],
+    [
+     "lucien",
+     "think",
+     "He came around the table for me. Assets don't come around tables."
+    ],
+    [
+     "n",
+     "act",
+     "The steward doesn't open the front doors for a guest. Adrian opens them himself, with his shoulder."
+    ],
+    [
+     "n",
+     "act",
+     "Pier Nine. Fog off the harbor, thick enough to lean on. The car is where Lucien said it would be, engine idling."
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "Outside. He's quieter than you've ever heard him.",
+      "opts": [
+       {
+        "k": "say",
+        "t": "You okay?",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "I have no idea. Ask me again at the car."
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "act",
+        "t": "Fall in on his streetlamp side, so the light hits you first.",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "He moves to the lamp side without a word. The light is only electric. He does it anyway."
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "say",
+        "t": "That was the stupidest, best thing I've ever watched anyone do.",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "Write that down. I'd like it in a book somewhere."
+         ]
+        ],
+        "love": 2
+       }
+      ]
+     }
+    ],
+    [
+     "lucien",
+     "say",
+     "That's the first time in two hundred years I've walked out of that hall without the sigil at my back. It's lighter than I expected."
+    ],
+    [
+     "adrian",
+     "say",
+     "Don't get used to it. Lighter usually means something's missing."
+    ],
+    [
+     "lucien",
+     "act",
+     "I laugh. Out loud, on a pier, at half past one in the morning. Nobody from the Court is close enough to hear it. That's the point."
+    ],
+    [
+     "n",
+     "act",
+     "They walk the length of the pier without touching. Twice, their shoulders almost do."
+    ]
+   ],
+   "zh": [
+    [
+     "adrian",
+     "act",
+     "我起身，绕过长桌，替他拉开门。"
+    ],
+    [
+     "adrian",
+     "say",
+     "我们走。用走的，别跑。"
+    ],
+    [
+     "n",
+     "act",
+     "十一枚印记亮着，一枚熄着。满屋的眼睛都钉在Lucien的大衣后背上。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我走了。身后没有一个人笑——在这种场合，这几乎算是恭维了。"
+    ],
+    [
+     "lucien",
+     "think",
+     "他绕过整张长桌来接我。资产是不会绕过桌子的。"
+    ],
+    [
+     "n",
+     "act",
+     "侍者不会替客人开正门。Adrian用肩膀自己顶开了。"
+    ],
+    [
+     "n",
+     "act",
+     "九号码头。港口的雾浓得能靠上去。车就停在Lucien说的地方，引擎还转着。"
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "出来了。他安静得你从没见过。",
+      "opts": [
+       {
+        "k": "say",
+        "t": "你还好吧？",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "不知道。走到车边再问我一次。"
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "act",
+        "t": "走到他靠路灯的那一侧，让灯光先照到你身上。",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "他一声不吭地换到了路灯那边。不过是电灯而已。他还是换了。"
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "say",
+        "t": "这是我见过最蠢、也最漂亮的一件事。",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "记下来。我希望它能被写进哪本册子里。"
+         ]
+        ],
+        "love": 2
+       }
+      ]
+     }
+    ],
+    [
+     "lucien",
+     "say",
+     "两百年来，这是我第一次走出那间大厅，背后没有印记。比我想的要轻。"
+    ],
+    [
+     "adrian",
+     "say",
+     "别习惯。轻，通常意味着少了点什么。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我笑出了声。在码头上，凌晨一点半。港庭的人谁也离得不够近，听不见。这正是关键。"
+    ],
+    [
+     "n",
+     "act",
+     "他们走完了整条码头，谁也没碰谁。有两回，肩膀差一点就碰上了。"
+    ]
+   ]
+  },
+  "C": {
+   "en": [
+    [
+     "adrian",
+     "say",
+     "You did it. Good. That part's yours to finish."
+    ],
+    [
+     "lucien",
+     "act",
+     "I nod. He's right. I didn't tear it so he'd owe me an escort."
+    ],
+    [
+     "n",
+     "act",
+     "Adrian doesn't take the chair. He leaves it there, empty, across from Lucien — so the whole table has to look at it all night."
+    ],
+    [
+     "adrian",
+     "act",
+     "I walk out alone. At the curb my hands are shaking and I can't tell whose fear it is."
+    ],
+    [
+     "adrian",
+     "think",
+     "The car's still idling. He said it would wait until dawn. I take the night bus instead."
+    ],
+    [
+     "n",
+     "act",
+     "Inside, Lucien finishes the dinner unprotected: five courses served to a man who eats none of them, under a patch of plaster that used to glow."
+    ],
+    [
+     "lucien",
+     "think",
+     "Ysolde watches me all night, waiting for me to look at the door. I don't. I look at the empty chair. That, at least, is mine to look at."
+    ],
+    [
+     "n",
+     "act",
+     "At 3:20 the members leave in pairs. Lucien leaves last, and asks no one to walk him home."
+    ],
+    [
+     "lucien",
+     "voice",
+     {
+      "who": "lucien",
+      "txt": "I'm home. Nobody followed. I'm only telling you so you won't check the harbor news at noon. You don't have to answer this.",
+      "hint": "4:02 AM. Your phone lights up on the nightstand.",
+      "then": [
+       [
+        "adrian",
+        "act",
+        "I listen to it once. I don't answer. I don't delete it, either."
+       ]
+      ],
+      "skip": [
+       [
+        "n",
+        "act",
+        "The screen glows for a while, then goes dark on its own. Adrian is still awake to see it go."
+       ]
+      ]
+     }
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "You're home. So is he. Neither of you is asleep.",
+      "opts": [
+       {
+        "k": "think",
+        "t": "(I didn't owe him a walk home. I keep telling myself that, like it needs saying.)",
+        "then": [
+         [
+          "n",
+          "act",
+          "He rubs his wrist where the red string sat. There's no mark. He keeps rubbing it anyway."
+         ]
+        ],
+        "love": 0
+       },
+       {
+        "k": "act",
+        "t": "Set an alarm for 5:40. Just to know when it is.",
+        "then": [
+         [
+          "n",
+          "act",
+          "He sets it. He doesn't know whose dawn he's keeping watch for. Maybe that's the point."
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "think",
+        "t": "(He did it in front of all of them. I walked out in front of all of them. We're both on the record now.)",
+        "then": [
+         [
+          "n",
+          "act",
+          "Somewhere across the harbor, a ship sounds its horn once and goes quiet."
+         ]
+        ],
+        "love": 1
+       }
+      ]
+     }
+    ]
+   ],
+   "zh": [
+    [
+     "adrian",
+     "say",
+     "你做到了。很好。剩下的部分你自己收尾。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我点头。他说得对。我撕它，不是为了让他欠我一程护送。"
+    ],
+    [
+     "n",
+     "act",
+     "Adrian没坐那把椅子。他就让它空着，摆在Lucien对面——让满桌人一整晚都不得不看着它。"
+    ],
+    [
+     "adrian",
+     "act",
+     "我独自走出去。站在路边，手在发抖，我分不清那是谁的恐惧。"
+    ],
+    [
+     "adrian",
+     "think",
+     "车还在那儿怠速。他说过会等到天亮。我还是去坐了夜班车。"
+    ],
+    [
+     "n",
+     "act",
+     "大厅里，Lucien在失去庇护的状态下吃完了那顿饭：五道菜端到一个一口不动的人面前，他头顶那块灰泥，从前是亮的。"
+    ],
+    [
+     "lucien",
+     "think",
+     "Ysolde盯了我一整晚，等着我往门口看。我没看。我看着那把空椅子。至少这个，我还有资格看。"
+    ],
+    [
+     "n",
+     "act",
+     "三点二十，成员们三三两两地走了。Lucien最后一个离开，没有请任何人送他回家。"
+    ],
+    [
+     "lucien",
+     "voice",
+     {
+      "who": "lucien",
+      "txt": "我到家了。没人跟着。告诉你，只是免得你中午去翻港口新闻。这条不用回。",
+      "hint": "凌晨4:02。床头的手机亮了。",
+      "then": [
+       [
+        "adrian",
+        "act",
+        "我听了一遍。没回。也没删。"
+       ]
+      ],
+      "skip": [
+       [
+        "n",
+        "act",
+        "屏幕亮了一阵，自己暗了下去。它暗下去的时候，Adrian还醒着。"
+       ]
+      ]
+     }
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "你到家了。他也是。谁都没睡。",
+      "opts": [
+       {
+        "k": "think",
+        "t": "（我不欠他一程。我一遍遍跟自己说，好像这句话非说不可。）",
+        "then": [
+         [
+          "n",
+          "act",
+          "他揉了揉手腕，红绳系过的地方。什么印子都没有。他还是一直在揉。"
+         ]
+        ],
+        "love": 0
+       },
+       {
+        "k": "act",
+        "t": "定一个5:40的闹钟。只是想知道那个时刻。",
+        "then": [
+         [
+          "n",
+          "act",
+          "他定好了。他不知道自己在替谁守这个黎明。也许，这就是意义所在。"
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "think",
+        "t": "（他当着所有人做了那件事。我当着所有人走了。现在，我们俩都记录在案了。）",
+        "then": [
+         [
+          "n",
+          "act",
+          "港湾对面，一艘船鸣了一声笛，又安静了。"
+         ]
+        ],
+        "love": 1
+       }
+      ]
+     }
+    ]
+   ]
+  }
+ }
+}

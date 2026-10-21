@@ -1,0 +1,3020 @@
+{
+ "beats": {
+  "en": [
+   [
+    "n",
+    "act",
+    "Thursday, 11:38 PM. The Tidewater is half asleep: two regulars at the far end, a ballgame nobody's watching on mute, fog breathing against the windows."
+   ],
+   [
+    "n",
+    "act",
+    "The folder came at ten, carried in by Lucien's clerk — a narrow woman in a raincoat who wouldn't sit, wouldn't drink, and left a dry patch on the wet doormat where she'd stood."
+   ],
+   [
+    "n",
+    "act",
+    "The paperwork comes bound in gray ribbon. Adrian has read the heading twice. Temporary Permission."
+   ],
+   [
+    "n",
+    "act",
+    "Under it, in the clerk's flawless copperplate: the grantee may, at the holder's pleasure, observe the dawn."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "At the holder's pleasure. Your morning — on loan.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Read it a third time, slower, like it might change.",
+       "then": [
+        [
+         "n",
+         "act",
+         "It doesn't. The word pleasure sits there in perfect ink, smug as a cat."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Fold it back into its ribbon and shove it under the register.",
+       "then": [
+        [
+         "n",
+         "act",
+         "The drawer won't close over it. Adrian slams it twice before it gives."
+        ],
+        [
+         "n",
+         "act",
+         "One of the regulars looks up from his beer, then wisely back down."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "think",
+       "t": "(He doesn't write pleasure by accident. Not him. Not in ink.)",
+       "then": [
+        [
+         "n",
+         "act",
+         "Two floors up, a chair scrapes once across a floor and goes still, as if someone up there heard the thought."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "One regular asks for his tab. Adrian runs the card, says goodnight, and checks the clock over the door without meaning to. 11:46. Six hours and change until a sunrise that still isn't his."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian pours the dregs of a beer nobody finished down the sink. Then another. His hands want something to do."
+   ],
+   [
+    "lucien",
+    "call",
+    {
+     "cid": "lucien",
+     "hint": "The landline behind the bar rings. Only one person calls that line after eleven.",
+     "lines": [
+      [
+       "lucien",
+       "You've read it."
+      ],
+      [
+       "adrian",
+       "Twice."
+      ],
+      [
+       "lucien",
+       "And?"
+      ],
+      [
+       "adrian",
+       "And I'm deciding whether to come up there or set it on fire in the sink."
+      ],
+      [
+       "lucien",
+       "Come up. The sink has suffered enough this week."
+      ],
+      [
+       "lucien",
+       "(A pause. Paper moving on his end.) Bring it with you. Left staircase. The third step complains — step over it."
+      ],
+      [
+       "lucien",
+       "And Adrian. Don't knock. I'll hear you coming."
+      ]
+     ],
+     "then": [
+      [
+       "n",
+       "act",
+       "The line clicks. Adrian looks at the receiver a second too long before he hangs it up."
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "The phone rings itself out. Thirty seconds later, a text: I'll wait. I'm good at it. Bring the page."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "He tells the last regular he has ten minutes and the honor system, takes the folder, and climbs."
+   ],
+   [
+    "n",
+    "act",
+    "Halfway up, the bar's noise falls away behind him like a coat taken off."
+   ],
+   [
+    "n",
+    "act",
+    "The third stair complains. Adrian steps on it on purpose."
+   ],
+   [
+    "n",
+    "act",
+    "Lucien's office is long and low and lined with ledgers so old their spines have gone the color of tea. No mirrors. Heavy shutters bolted over the harbor windows. One brass lamp, and a desk the size of a small boat."
+   ],
+   [
+    "lucien",
+    "act",
+    "I don't look up when he comes in. I've been listening to him climb since the second floor. Looking up would be redundant — and he'd see that I'd been waiting."
+   ],
+   [
+    "n",
+    "act",
+    "On the near corner of the desk, in front of the empty visitor's chair, sits a glass of rye. Poured. Untouched. The ice is mostly water."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He poured a drink for a chair. For you, or for the habit?",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Ordering drinks you won't touch in your own office now?",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "It isn't mine. It's for whoever sits there and needs a reason to stay longer than they meant to."
+        ],
+        [
+         "lucien",
+         "act",
+         "I turn the ring. Once."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Pick up the glass and pour it into the potted fern by the door.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I watch the fern take it. That plant has been drinking my guests' rye for forty years. It has never looked better."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Ignore it. Drop the folder on the desk, ribbon and all.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "The ribbon slides loose. I let it lie where it fell."
+        ],
+        [
+         "lucien",
+         "say",
+         "Sit, or don't. The chair doesn't charge."
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian takes out the page and reads the heading one more time, so there'll be no argument later about who misread what."
+   ],
+   [
+    "n",
+    "act",
+    "Then he pushes it back across the desk with one finger."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "Tell him what's wrong with it. Exactly.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "A permission can be taken back.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I look at his finger, still resting on the page, before I look at him."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "At the holder's pleasure. Whose pleasure, Lucien?",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Mine. On paper."
+        ],
+        [
+         "lucien",
+         "act",
+         "I keep the rest of that sentence in my mouth."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "say",
+       "t": "You handed me a leash and called it a morning.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "My jaw sets. Not at him. At the word — because it's accurate."
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "say",
+    "The clerk used the old form."
+   ],
+   [
+    "lucien",
+    "act",
+    "I say it to the page, not to him."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "The old form. As if it were a typo.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Then use a new one.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I reach for the pen. My hand stops halfway there, which it has not done in a very long time."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "Your clerk doesn't strike me as someone who uses the wrong anything.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "She isn't. She used the form she's required to use."
+        ],
+        [
+         "lucien",
+         "act",
+         "I hear what I've just admitted a beat after he does."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "Check the date on the page. Then check his face.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Dated today. Witnessed by the clerk. And in the corner, a small embossed seal Adrian has seen exactly once before — on the second contract in the cellar lockbox."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The pen stays where it is. Lucien's hand comes back to the desk and lies flat beside it."
+   ],
+   [
+    "lucien",
+    "say",
+    "Required. That's the honest word. The Court keeps a registrar. Whatever I hold, she counts. A permission is still a holding. A return is not."
+   ],
+   [
+    "lucien",
+    "say",
+    "Write permission, and on her books your morning stays in my column. Write return, and it walks out."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian thinks of the lockbox, the second contract, the seal. Sanctuary, for as long as he holds a human's dawns in trust. Held. Not returned."
+   ],
+   [
+    "lucien",
+    "act",
+    "I could have let him go on believing the clerk. It would have held for a week. I find I don't want anything between us that only holds for a week."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "So the heading wasn't a mistake. It was his sanctuary, in two words.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "So you were going to give it to me and keep it at the same time.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "I was going to let you have it and let them think I hadn't. Yes. It seemed elegant at four this afternoon."
+        ],
+        [
+         "lucien",
+         "say",
+         "It looks different with you standing there."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "What does one morning cost you? In their math.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "One morning? A raised eyebrow at dinner. Questions. It's the precedent that costs. Once one leaves my column, they'll want to know why the rest haven't."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "(He told me. He didn't have to. He could have let the clerk take the fall.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He's gone quiet. I've learned to fear that from him more than shouting."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Downstairs, faint through two floors, the bell over the Tidewater's door rings. Then rings again, longer — someone holding it open."
+   ],
+   [
+    "lucien",
+    "act",
+    "I'm on my feet before the second ring ends. My eyes have gone the wrong color. I can feel it, like heat behind glass."
+   ],
+   [
+    "lucien",
+    "say",
+    "That isn't your regular. Stay here. Don't open the shutters, don't come down, and don't touch the third drawer."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He's going down to your bar. Without you.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "It's my bar. I'm coming.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "It's my building, and it isn't your name he's here to say. Not tonight. Please."
+        ],
+        [
+         "n",
+         "act",
+         "Please. Adrian has never once heard him use the word."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "Who is it?",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Someone who counts things for a living."
+        ],
+        [
+         "lucien",
+         "act",
+         "I'm already on the stairs. I step over the third one."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Step into the doorway. Make him go around you.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I stop. For one second I let myself look at him the way I'm not supposed to. Then I go around."
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "His footsteps go down. The third stair doesn't make a sound. The office settles back into the hum of the lamp."
+   ],
+   [
+    "n",
+    "act",
+    "Don't touch the third drawer. Said by a man who has never once in his life told anyone what not to do by accident."
+   ],
+   [
+    "lucien",
+    "game",
+    {
+     "k": "keepsake",
+     "hint": "Three drawers. He named one. Find what Lucien has kept that belongs to you — three things.",
+     "then": [
+      [
+       "n",
+       "act",
+       "An empty film canister — Adrian's, the one he swore he lost behind the bar two winters ago. A Tidewater coaster with his own handwriting on the back: an IOU for a glass he broke and forgot. And a ledger page: every drink Lucien has ordered and never touched, three years of them, each priced, each paid."
+      ],
+      [
+       "n",
+       "act",
+       "At the bottom, in the same hand, a running total. And under it, smaller: not owed."
+      ],
+      [
+       "n",
+       "act",
+       "Under the ledger, one more sheet: a heading in Lucien's own hand, struck out and rewritten five times. Return. Return of — . Return. Drafts. Weeks of them, by the dust."
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "Adrian leaves the drawer shut. Some things you don't take off a man without asking — even this man."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "Not owed. He wrote it for nobody to read.",
+     "opts": [
+      {
+       "k": "think",
+       "t": "(Three years of paying for drinks he can't taste. Not one of them on my father's tab.)",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian puts everything back exactly where it was. Then moves the canister half an inch, so Lucien will know."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "Pocket the film canister. It was yours first.",
+       "then": [
+        [
+         "n",
+         "act",
+         "It weighs nothing. It still feels like evidence."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "say",
+       "t": "(Out loud, to the empty room) You absolute idiot.",
+       "then": [
+        [
+         "n",
+         "act",
+         "The lamp hums. The ledgers, four hundred years of them, decline to disagree."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "voice",
+    {
+     "who": "lucien",
+     "hint": "Your phone buzzes. A voice note from Lucien — eleven seconds, recorded two floors down, where a phone call would be overheard.",
+     "txt": "He's asking what I hold. I haven't told him. Lock the office door — not because he'd come up. Because I'd like to stop picturing it.",
+     "then": [
+      [
+       "n",
+       "act",
+       "Under Lucien's voice, in the background: ice in a glass, and a stranger laughing like a man reading a menu."
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "Adrian doesn't play it. The little waveform sits on the screen — eleven seconds of Lucien, unheard."
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He's down there with the man who counts. You're up here behind a door.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Lock the door. The way he asked.",
+       "then": [
+        [
+         "n",
+         "act",
+         "The bolt is old and heavy, and it slides home with a sound like a decision."
+        ],
+        [
+         "n",
+         "act",
+         "Downstairs, a stranger's laugh stops mid-breath, as if it heard."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Go to the top of the stairs and listen.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Two floors of old wood carry voices badly. Adrian catches exactly one word: Vale. It isn't Lucien who says it."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Text him back: Five minutes. Then I'm coming down.",
+       "then": [
+        [
+         "n",
+         "act",
+         "Delivered. Read. No reply — which, from Lucien, means yes."
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian puts his palm flat on the bolted shutter. The wood is cold. In six hours the other side of it will be warm."
+   ],
+   [
+    "n",
+    "act",
+    "And he has the thought he never lets himself finish: a creditor who can't stand in sunlight would be very easy to end, at the right hour."
+   ],
+   [
+    "lucien",
+    "video",
+    {
+     "clip": 1,
+     "cap": "Do it. Your debt dies with me.",
+     "hint": "What he's picturing · a dawn that hasn't come",
+     "then": [
+      [
+       "n",
+       "act",
+       "Adrian blinks, and it's only the office again: the lamp, the ledgers, the shutters bolted over the harbor. 12:07 AM."
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "He takes his hand off the shutter like it burned him."
+   ],
+   [
+    "n",
+    "act",
+    "Footsteps on the stairs. The third one doesn't complain."
+   ],
+   [
+    "lucien",
+    "act",
+    "I knock on my own door, because he may have locked it, and I'd rather he choose to open it."
+   ],
+   [
+    "n",
+    "act",
+    "Adrian lets him in."
+   ],
+   [
+    "n",
+    "act",
+    "Lucien's collar is crooked. His eyes haven't finished fading back from red."
+   ],
+   [
+    "lucien",
+    "say",
+    "He's gone. He wanted to know what I hold, and whether it's still breathing. I told him to ask me at the table, like a civilized person."
+   ],
+   [
+    "lucien",
+    "say",
+    "He asked after your health. Fondly. That's how they price things."
+   ],
+   [
+    "lucien",
+    "act",
+    "I set a gray calling card on the desk, one corner folded down. At the Court, the fold means I'll be back."
+   ],
+   [
+    "lucien",
+    "say",
+    "He'd heard there was paperwork. My clerk files with the registrar at dawn. Whatever heading is on that page, the Court reads it by breakfast."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "His hands aren't quite steady. He'd hate that you noticed.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Are you hurt?",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Insulted. It heals slower."
+        ],
+        [
+         "lucien",
+         "act",
+         "I straighten my collar so he'll stop looking at it."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "So that's who you've been keeping me from.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "That's who I've been keeping you for. On paper. I'd like to stop."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Pour him a glass of water he can't drink. Set it in front of him anyway.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I look at the water for a long moment. Somebody finally poured me something for no reason at all."
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "gift",
+    {
+     "who": "lucien",
+     "hint": "He's back, and he still hasn't sat down in his own office. Give him something?",
+     "by": {
+      "coffee": [
+       [
+        "lucien",
+        "act",
+        "Coffee, very strong, the way he likes it — so he can at least smell it from across the desk. He brewed it on my own hot plate while I was downstairs."
+       ],
+       [
+        "lucien",
+        "act",
+        "I hold it until it stops being warm. Eleven minutes. I don't put it down once."
+       ]
+      ],
+      "flower": [
+       [
+        "lucien",
+        "act",
+        "A single rose, from the bucket behind the bar he keeps for anniversaries nobody celebrates."
+       ],
+       [
+        "lucien",
+        "say",
+        "If anyone downstairs saw you carry a rose up to my office, they'll talk."
+       ],
+       [
+        "lucien",
+        "act",
+        "I put it in the rye glass. It's the first useful thing that glass has done all night."
+       ]
+      ],
+      "hoodie": [
+       [
+        "lucien",
+        "act",
+        "He drops his hoodie over the back of my chair. Gray, frayed at the cuffs, smelling of limes and bar soap."
+       ],
+       [
+        "lucien",
+        "say",
+        "I don't get cold."
+       ],
+       [
+        "lucien",
+        "act",
+        "I don't take it off the chair either. Later I'll notice I've been leaning back against it."
+       ]
+      ],
+      "letter": [
+       [
+        "lucien",
+        "act",
+        "A bar order slip, folded twice. On the back, in his handwriting: You didn't have to tell me about the registrar. You did. Noted."
+       ],
+       [
+        "lucien",
+        "say",
+        "Noted. You're learning my vocabulary. I'm not sure that's good for you."
+       ],
+       [
+        "lucien",
+        "act",
+        "I put it in the third drawer. He watches me do it."
+       ]
+      ],
+      "ring": [
+       [
+        "lucien",
+        "act",
+        "A ring. Cheap steel, out of the lost-and-found jar — and he says no pressure like he actually means it."
+       ],
+       [
+        "lucien",
+        "say",
+        "I've been handed rings by princes and paid for every one. This is the first that came with no pressure."
+       ],
+       [
+        "lucien",
+        "act",
+        "I put it on my little finger, beside the signet. It doesn't match. I don't care."
+       ]
+      ]
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "Lucien finally sits. The chair takes his weight as if it's been waiting all night, too."
+      ]
+     ],
+     "skip": [
+      [
+       "lucien",
+       "act",
+       "He gives me nothing, which is correct. I sit down on my own."
+      ]
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "I pull the page back to my side of the desk. Then I uncap the pen."
+   ],
+   [
+    "lucien",
+    "say",
+    "You said use a new one. There isn't a new one. Every form the Court owns runs in one direction — into somebody's column. Nobody ever needed a form for giving something back."
+   ],
+   [
+    "n",
+    "act",
+    "The nib hovers over the heading. Adrian realizes he's holding his breath and makes himself stop."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "No such form exists. So what now?",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Then write one.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "Yes. I thought you might say that."
+        ],
+        [
+         "lucien",
+         "act",
+         "The way I'd say it if I'd been hoping."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "Or keep your column, and stop pretending this is about paperwork.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "That one lands. I deserve it landing."
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "Take the pen out of his hand and hold it out to him, cap first. Make him take it back.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I take it back by the cap. Our fingers don't touch. It's very deliberate, on both sides."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "I strike through the heading — one clean line, so the old words can still be read underneath. Then I write above it by hand, slowly, the way I learned when ink was expensive."
+   ],
+   [
+    "lucien",
+    "photo",
+    {
+     "cap": "The heading struck through, his pen moving above it. 12:19 AM.",
+     "prompt": "close view of a pale man's hand wearing a heavy gold signet ring, writing slowly with an old fountain pen on aged cream paper under a brass desk lamp, a printed heading crossed out with a single clean ink line, dark wood desk, walls of old leather ledgers in shadow, bolted wooden shutters behind, warm low amber light, late night",
+     "then": [
+      [
+       "n",
+       "act",
+       "Adrian watches the letters arrive. Each one is finished completely before the next begins, like a man laying bricks."
+      ]
+     ],
+     "skip": []
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "He writes like it costs something. It does.",
+     "opts": [
+      {
+       "k": "act",
+       "t": "Lean over the desk to read it upside down as he writes.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He's close enough that I can hear his pulse. I keep writing. I'm proud of that."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "(If he stops halfway, I'll know. If he doesn't — I won't know what to do.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I don't stop."
+        ],
+        [
+         "n",
+         "act",
+         "Not once. Not even at the word ownership."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "Your handwriting is ridiculous.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "It's from a century when you had one chance at a letter."
+        ],
+        [
+         "lucien",
+         "act",
+         "I don't smudge it. I've never smudged anything I meant."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "say",
+    "Return of ownership."
+   ],
+   [
+    "n",
+    "act",
+    "Three words, in ink so black it looks wet even where it has dried."
+   ],
+   [
+    "n",
+    "act",
+    "He sets the pen down and turns the page toward Adrian. His fingertip stays on the corner."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "Words on paper are one thing. Make him say it.",
+     "opts": [
+      {
+       "k": "say",
+       "t": "Read it aloud.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "Nobody has made me read my own terms aloud in two hundred years. I find I don't mind."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "Out loud. So it's on the record somewhere besides paper.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "On the record. In your ears, you mean."
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "Push the page back to him. Say nothing. Wait.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He's going to make me say it. Of course he is. He's right to."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "I clear my throat, which I do not need to do."
+   ],
+   [
+    "lucien",
+    "say",
+    "The morning is yours. No renewal required."
+   ],
+   [
+    "lucien",
+    "act",
+    "My voice does something on yours that I didn't authorize."
+   ],
+   [
+    "n",
+    "act",
+    "Seven words. Adrian's whole life the shutters have locked at five, and it comes down to seven words and a line of wet ink."
+   ],
+   [
+    "lucien",
+    "act",
+    "I don't add anything. Every instinct I have wants a clause after it — provided that, except where. I leave it bare."
+   ],
+   [
+    "lucien",
+    "say",
+    "That's all it says. No pleasure. No holder. And no signature yet."
+   ],
+   [
+    "lucien",
+    "act",
+    "I lay the pen between us, uncapped, exactly in the middle of the desk. I've measured. I won't touch it again until he tells me what this is."
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "The pen. The page. A return — or a fight you keep open.",
+     "opts": [
+      {
+       "k": "think",
+       "t": "(Signed, it's real. Unsigned, it's still mine to argue about.)",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "I wait. I'm extraordinarily good at it. Tonight it's harder."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "Check the clock. Out of habit. 12:31.",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "He's counting toward a dawn. For once I'm not the thing standing between him and it. I'm only the man across the desk with a pen."
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "Don't look at me like that. I haven't decided.",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "I know. In four hundred years, that's the first time I've been glad to hear it."
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "The ink on the new heading is still wet. In the visitor's glass, the ice has finished melting."
+   ],
+   [
+    "n",
+    "act",
+    "Behind the shutters, a foghorn calls once across the harbor and gets no answer."
+   ]
+  ],
+  "zh": [
+   [
+    "n",
+    "act",
+    "周四，晚上十一点三十八分。Tidewater半睡半醒：吧台尽头坐着两个熟客，电视里一场没人看的球赛开着静音，雾气贴着窗玻璃一呼一吸。"
+   ],
+   [
+    "n",
+    "act",
+    "文件夹是十点钟送来的。送件的是Lucien的书记员——一个瘦削的女人，穿着雨衣，不坐，也不喝，走后湿漉漉的门垫上只留下一块她站过的干印子。"
+   ],
+   [
+    "n",
+    "act",
+    "文件系着灰色缎带。标题Adrian已经读了两遍：临时许可。"
+   ],
+   [
+    "n",
+    "act",
+    "下面是书记员一丝不苟的花体字：经持有人准许，受让人得以观看黎明。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "“经持有人准许。”你的清晨，是借给你的。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "再读第三遍，读得更慢，好像它自己会变。",
+       "then": [
+        [
+         "n",
+         "act",
+         "没变。“准许”两个字端端正正，墨色饱满，得意得像只猫。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "把它塞回缎带里，压到收银机底下。",
+       "then": [
+        [
+         "n",
+         "act",
+         "收银机抽屉卡着合不上。Adrian连撞了两下，它才认输。"
+        ],
+        [
+         "n",
+         "act",
+         "一个熟客从啤酒杯上抬起眼，又识相地低了回去。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "think",
+       "t": "（他不会随手写下“准许”这种词。他不会。何况是落成墨的字。）",
+       "then": [
+        [
+         "n",
+         "act",
+         "楼上两层，有把椅子在地板上刮了一下，随即没了动静，好像上面有人听见了这个念头。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "一个熟客要结账。Adrian刷了卡，道了声晚安，下意识瞥了一眼门上的钟。11点46分。离那个依旧不属于他的日出，还有六个多钟头。"
+   ],
+   [
+    "n",
+    "act",
+    "Adrian把一杯没人喝完的啤酒倒进水槽。又倒了一杯。他的手总得找点事干。"
+   ],
+   [
+    "lucien",
+    "call",
+    {
+     "cid": "lucien",
+     "hint": "吧台后面的座机响了。过了十一点还会打这条线的，只有一个人。",
+     "lines": [
+      [
+       "lucien",
+       "看过了。"
+      ],
+      [
+       "adrian",
+       "两遍。"
+      ],
+      [
+       "lucien",
+       "然后？"
+      ],
+      [
+       "adrian",
+       "然后我在想，是上楼找你，还是在水槽里一把火烧了它。"
+      ],
+      [
+       "lucien",
+       "上来吧。那个水槽这礼拜已经够遭罪了。"
+      ],
+      [
+       "lucien",
+       "（停顿。那头有纸张翻动的声音。）带上它。走左边的楼梯。第三级会叫，跨过去。"
+      ],
+      [
+       "lucien",
+       "还有，Adrian。别敲门。你上来我听得见。"
+      ]
+     ],
+     "then": [
+      [
+       "n",
+       "act",
+       "电话咔哒一声断了。Adrian盯着听筒多看了一秒，才把它挂回去。"
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "铃声响到自己停了。半分钟后来了条短信：我等。我很擅长等。把那页纸带上来。"
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "他跟最后一个熟客说，再给你十分钟，钱自觉放吧台上。然后拿起文件夹，上了楼。"
+   ],
+   [
+    "n",
+    "act",
+    "上到一半，酒吧的嘈杂就从身后褪了下去，像脱掉了一件外套。"
+   ],
+   [
+    "n",
+    "act",
+    "第三级楼梯果然叫了一声。Adrian是故意踩上去的。"
+   ],
+   [
+    "n",
+    "act",
+    "Lucien的办公室又长又矮，四壁全是账册，书脊老得泛出了茶色。没有镜子。临港的几扇窗钉着厚重的遮光板。一盏黄铜台灯，一张大得像条小船的书桌。"
+   ],
+   [
+    "lucien",
+    "act",
+    "他进门的时候，我没抬头。从二楼起我就在听他上楼了。再抬头就多余了——而且会让他看出来，我一直在等。"
+   ],
+   [
+    "n",
+    "act",
+    "书桌靠门那一角，空着的访客椅前，摆着一杯黑麦威士忌。倒好了，没人碰。冰已经化得差不多了。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他给一把椅子倒了杯酒。是给你的，还是给他那个老习惯的？",
+     "opts": [
+      {
+       "k": "say",
+       "t": "现在连在自己办公室，都要摆一杯不喝的酒了？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "那杯不是我的。是给坐那儿的人的——给一个想多留一会儿、又缺个理由的人。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我转了一下戒指。就一下。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "端起那杯酒，倒进门边那盆蕨里。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我看着那盆蕨把酒喝下去。四十年了，它一直替我的客人喝黑麦威士忌，长势从没这么好过。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "不理那杯酒，把文件夹连带缎带往桌上一摔。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "缎带滑开了。我任它掉在那儿。"
+        ],
+        [
+         "lucien",
+         "say",
+         "坐不坐随你。那把椅子不收钱。"
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian抽出那页纸，又把标题读了一遍——省得以后扯皮，谁看错了谁。"
+   ],
+   [
+    "n",
+    "act",
+    "然后，他用一根手指，把它推回了桌子那头。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "说出它错在哪儿。一个字都别含糊。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "许可是可以收回的。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我先看他还按在纸上的那根手指，然后才看他。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "“经持有人准许。”谁准许，Lucien？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "我。纸面上。"
+        ],
+        [
+         "lucien",
+         "act",
+         "这句话的后半截，我咽了回去。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "say",
+       "t": "你递给我一根狗绳，管它叫清晨。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我咬紧了牙。不是冲他。是冲那个词——因为它说得没错。"
+        ]
+       ],
+       "love": 0
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "say",
+    "书记员用了旧表格。"
+   ],
+   [
+    "lucien",
+    "act",
+    "这句话，我是对着纸说的，没看他。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "旧表格。说得跟笔误似的。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "那就换新的。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我伸手去拿笔。手伸到一半停住了——这种事，已经很多很多年没有过了。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "你那位书记员，看着可不像会用错任何东西的人。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "她不会。她用的是她必须用的表格。"
+        ],
+        [
+         "lucien",
+         "act",
+         "他先听懂了。我慢了一拍，才意识到自己承认了什么。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "看一眼纸上的日期，再看一眼他的脸。",
+       "then": [
+        [
+         "n",
+         "act",
+         "落款是今天，书记员见证。角上压着一枚小小的钢印——Adrian只见过一次，在地窖那只锁盒里的第二份契约上。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "笔没动。Lucien把手收回来，平放在笔旁边。"
+   ],
+   [
+    "lucien",
+    "say",
+    "“必须”。这才是老实话。议会有个登记官。我手里握着的东西，她一样一样都要点数。“许可”，仍算我持有。“归还”，就不算了。"
+   ],
+   [
+    "lucien",
+    "say",
+    "写“许可”，你的清晨在她的账上就还记在我名下。写“归还”，它就走了。"
+   ],
+   [
+    "n",
+    "act",
+    "Adrian想起那只锁盒，那第二份契约，那枚钢印。只要他代为保管一个人类的黎明，庇护便一直有效。保管。不是归还。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我本可以让他继续以为是书记员的错。这个说法能撑一个礼拜。可我发现，我不想在我们之间放任何只撑得了一个礼拜的东西。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "所以标题不是写错了。那两个字，就是他的庇护所。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "所以你打算一边把它给我，一边把它留着。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "我打算让你拿着它，同时让他们以为我没给。对。下午四点的时候，这主意听着还挺漂亮。"
+        ],
+        [
+         "lucien",
+         "say",
+         "你往这儿一站，它就不是那个样子了。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "一个清晨，按他们的算法，你得赔多少？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "一个清晨？晚宴上有人挑一挑眉毛。问几句。真正要命的是开了先例。一个从我名下走了，他们就要问，剩下的凭什么还没走。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "（他告诉我了。他用不着说的。他完全可以让书记员背这个锅。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他不说话了。他的沉默，我早就学会了比他吼我更怕。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "楼下，隔着两层楼，Tidewater门上的铃铛隐约响了一声。接着又响，响得更久——有人把门撑着没关。"
+   ],
+   [
+    "lucien",
+    "act",
+    "第二声铃还没响完，我已经站起来了。我的眼睛变了颜色。我感觉得到，像玻璃后面透过来的热。"
+   ],
+   [
+    "lucien",
+    "say",
+    "那不是你的熟客。待在这儿。别开遮光板，别下楼，别碰第三个抽屉。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他要下楼，去你的吧台。不带你。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "那是我的吧台。我跟你去。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "那是我的楼，而且他来，不是为了念你的名字。至少今晚不是。拜托。"
+        ],
+        [
+         "n",
+         "act",
+         "拜托。Adrian从没听他用过这个词。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "来的是谁？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "一个靠点数过日子的人。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我已经在楼梯上了。第三级，我跨了过去。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "往门口一站。让他绕过你走。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我停住了。有那么一秒，我放任自己用不该有的眼神看着他。然后，我绕了过去。"
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "他的脚步声往下去了。第三级楼梯一声没吭。办公室又只剩下台灯的嗡鸣。"
+   ],
+   [
+    "n",
+    "act",
+    "“别碰第三个抽屉。”说这话的人，这辈子从没“不小心”告诉过谁不该碰什么。"
+   ],
+   [
+    "lucien",
+    "game",
+    {
+     "k": "keepsake",
+     "hint": "三个抽屉，他偏偏点了一个。找出Lucien藏着的、属于你的东西——三件。",
+     "then": [
+      [
+       "n",
+       "act",
+       "一个空胶卷盒——是Adrian的，他发誓两年前那个冬天在吧台后面弄丢了。一张Tidewater的杯垫，背面是他自己的字：打碎一只杯子的欠条，他早忘了。还有一页账：Lucien点过、从没碰过的每一杯酒，整整三年，一杯一杯标着价，一杯一杯付清了。"
+      ],
+      [
+       "n",
+       "act",
+       "最底下，同样的笔迹，记着累计总数。下面还有一行更小的字：不计入债务。"
+      ],
+      [
+       "n",
+       "act",
+       "账页底下还有一张纸：一行标题，是Lucien亲笔，划掉、重写，一共五遍。归还。归还——。归还。全是草稿。看那层灰，写了好几个礼拜了。"
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "Adrian没去拉那个抽屉。有些东西，不问一声就不该拿——哪怕对方是他。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "不计入债务。这行字，他根本没打算给任何人看。",
+     "opts": [
+      {
+       "k": "think",
+       "t": "（三年，花钱买他尝不出味道的酒。一杯都没记到我爸的账上。）",
+       "then": [
+        [
+         "n",
+         "act",
+         "Adrian把东西原样放了回去。然后把胶卷盒挪了半寸——好让Lucien知道。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "把胶卷盒揣进兜里。它本来就是你的。",
+       "then": [
+        [
+         "n",
+         "act",
+         "轻得几乎没有分量。揣着却还是像揣了件证物。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "say",
+       "t": "（对着空房间）你这个彻头彻尾的傻子。",
+       "then": [
+        [
+         "n",
+         "act",
+         "台灯嗡嗡响。满墙四百年的账册，没有一本出声反对。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "voice",
+    {
+     "who": "lucien",
+     "hint": "手机震了一下。Lucien发来一条语音——十一秒，从两层楼下录的。打电话会被人听见。",
+     "txt": "他在问我手里握着什么。我还没说。把办公室的门锁上——不是怕他上去。是我想停下来，别再去想那个画面。",
+     "then": [
+      [
+       "n",
+       "act",
+       "录音里，Lucien的声音底下：冰块碰着杯壁，还有一个陌生人在笑，笑得像在翻菜单。"
+      ]
+     ],
+     "skip": [
+      [
+       "n",
+       "act",
+       "Adrian没点开。那截小小的声波就停在屏幕上——十一秒的Lucien，没人听。"
+      ]
+     ]
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他在楼下，跟那个点数的人在一起。你在楼上，隔着一扇门。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "锁上门。照他说的。",
+       "then": [
+        [
+         "n",
+         "act",
+         "门闩又老又沉，推到底的那一声，像一个决定落了地。"
+        ],
+        [
+         "n",
+         "act",
+         "楼下，一个陌生人的笑声戛然而止，好像听见了。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "走到楼梯口，听。",
+       "then": [
+        [
+         "n",
+         "act",
+         "两层老木头楼板，传声极差。Adrian只听清了一个词：Vale。说这个词的，不是Lucien。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "回他一条：五分钟。到点我就下去。",
+       "then": [
+        [
+         "n",
+         "act",
+         "已送达。已读。没有回复——在Lucien那儿，这就是答应了。"
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "Adrian把手掌平贴在钉死的遮光板上。木头是凉的。六个钟头以后，它的另一面会被晒暖。"
+   ],
+   [
+    "n",
+    "act",
+    "然后，那个他从不允许自己想完的念头又冒了出来：一个见不得太阳的债主，只要挑对时辰，要了结他，再容易不过。"
+   ],
+   [
+    "lucien",
+    "video",
+    {
+     "clip": 1,
+     "cap": "动手吧。你的债，跟我一起死。",
+     "hint": "他脑子里的画面 · 一个还没来的黎明",
+     "then": [
+      [
+       "n",
+       "act",
+       "Adrian眨了下眼，眼前又只是这间办公室：台灯，账册，钉死在港口那边的遮光板。凌晨十二点零七分。"
+      ]
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "他把手从遮光板上拿开，像是被烫了一下。"
+   ],
+   [
+    "n",
+    "act",
+    "楼梯上响起脚步声。第三级没叫。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我敲了门。敲我自己的门——因为他可能锁了，而我宁愿是他自己选择开门。"
+   ],
+   [
+    "n",
+    "act",
+    "Adrian给他开了门。"
+   ],
+   [
+    "n",
+    "act",
+    "Lucien的领口歪了。眼底的红还没褪干净。"
+   ],
+   [
+    "lucien",
+    "say",
+    "走了。他想知道我手里握着什么，还喘不喘气。我让他到了桌上再问，像个文明人那样。"
+   ],
+   [
+    "lucien",
+    "say",
+    "他还问起你身体好不好。问得很亲切。他们就是这么估价的。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我把一张灰色名片放在桌上，一角折了下去。在议会，折角的意思是：我还会再来。"
+   ],
+   [
+    "lucien",
+    "say",
+    "他听说有文件了。我的书记员天一亮就要去登记官那儿备案。这页纸上是什么标题，议会早饭前就会知道。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他的手不太稳。他要是知道你注意到了，会恨死的。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "你受伤了没有？",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "受辱了。那个好得更慢。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我把领口扶正，好让他别再盯着看。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "原来你一直替我挡着的，就是这种人。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "是我一直在替这种人“持有”着你。纸面上。我想停了。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "给他倒一杯他喝不了的水，照样放到他面前。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我盯着那杯水看了很久。终于有人无缘无故，给我倒了点什么。"
+        ]
+       ],
+       "love": 2
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "gift",
+    {
+     "who": "lucien",
+     "hint": "他回来了，却还没在自己的办公室里坐下。给他点什么吗？",
+     "by": {
+      "coffee": [
+       [
+        "lucien",
+        "act",
+        "咖啡，煮得很浓，正合他的口味——浓到隔着一张桌子也闻得见。是他趁我在楼下，用我自己的电炉煮的。"
+       ],
+       [
+        "lucien",
+        "act",
+        "我捧着它，直到它不再温热。十一分钟。一次都没放下。"
+       ]
+      ],
+      "flower": [
+       [
+        "lucien",
+        "act",
+        "一枝玫瑰，从吧台后面那只桶里抽的——那桶花是为没人过的纪念日准备的。"
+       ],
+       [
+        "lucien",
+        "say",
+        "楼下要是有人看见你拿着玫瑰上我办公室，会传闲话的。"
+       ],
+       [
+        "lucien",
+        "act",
+        "我把它插进那杯黑麦威士忌里。这只杯子今晚总算派上了点用场。"
+       ]
+      ],
+      "hoodie": [
+       [
+        "lucien",
+        "act",
+        "他把自己的卫衣搭在我的椅背上。灰色，袖口磨毛了，一股青柠和吧台洗手液的味道。"
+       ],
+       [
+        "lucien",
+        "say",
+        "我不会冷。"
+       ],
+       [
+        "lucien",
+        "act",
+        "我也没把它拿开。过了好一阵，我才发现自己一直靠着它。"
+       ]
+      ],
+      "letter": [
+       [
+        "lucien",
+        "act",
+        "一张点单小票，对折了两次。背面是他的字：登记官的事，你本不必告诉我。你说了。记下了。"
+       ],
+       [
+        "lucien",
+        "say",
+        "“记下了”。你开始学我说话了。我不确定这对你是好事。"
+       ],
+       [
+        "lucien",
+        "act",
+        "我把它放进第三个抽屉。他看着我放。"
+       ]
+      ],
+      "ring": [
+       [
+        "lucien",
+        "act",
+        "一枚戒指。廉价的钢圈，从失物招领罐里翻出来的——他说“没压力”，听起来居然是真心的。"
+       ],
+       [
+        "lucien",
+        "say",
+        "我从王公手里接过戒指，每一枚都付了代价。这是头一枚，什么都不要的。"
+       ],
+       [
+        "lucien",
+        "act",
+        "我把它戴在小指上，挨着那枚印戒。一点都不配。我不在乎。"
+       ]
+      ]
+     },
+     "then": [
+      [
+       "n",
+       "act",
+       "Lucien终于坐下了。椅子接住他的分量，好像它也等了一整晚。"
+      ]
+     ],
+     "skip": [
+      [
+       "lucien",
+       "act",
+       "他什么也没给我。这才对。我自己坐下了。"
+      ]
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "我把那页纸拉回我这边，拧开了笔帽。"
+   ],
+   [
+    "lucien",
+    "say",
+    "你说换新的。没有新的。议会所有的表格都只朝一个方向走——记进某个人的名下。从来没人需要一张“归还”用的表。"
+   ],
+   [
+    "n",
+    "act",
+    "笔尖悬在标题上方。Adrian发觉自己屏住了呼吸，逼着自己松开。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "根本没有这种表格。那现在怎么办？",
+     "opts": [
+      {
+       "k": "say",
+       "t": "那就写一份。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "对。我就猜你会这么说。"
+        ],
+        [
+         "lucien",
+         "act",
+         "说这话的语气，像我一直盼着他说。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "要么你就守着你的账本，别再假装这是表格的问题。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "这句扎中了。扎得活该。"
+        ]
+       ],
+       "love": 0
+      },
+      {
+       "k": "act",
+       "t": "把笔从他手里抽出来，笔帽朝前递回去。让他自己接。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我捏着笔帽接了回来。我们的手指没碰到。两边都刻意得很。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "我划掉标题——一道干净的线，让底下的旧字还认得出来。然后在上方亲手重写。写得很慢——那是墨水还很贵的年代养成的习惯。"
+   ],
+   [
+    "lucien",
+    "photo",
+    {
+     "cap": "旧标题被一笔划掉，他的笔在上方走着。凌晨12:19。",
+     "prompt": "close view of a pale man's hand wearing a heavy gold signet ring, writing slowly with an old fountain pen on aged cream paper under a brass desk lamp, a printed heading crossed out with a single clean ink line, dark wood desk, walls of old leather ledgers in shadow, bolted wooden shutters behind, warm low amber light, late night",
+     "then": [
+      [
+       "n",
+       "act",
+       "Adrian看着那些字母一个一个落下来。每一个都写完整了，下一个才开始，像有人在一块一块砌砖。"
+      ]
+     ],
+     "skip": []
+    }
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "他写得像每一笔都要付钱。确实要。",
+     "opts": [
+      {
+       "k": "act",
+       "t": "俯身过去，倒着看他写。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他近得我能听见他的脉搏。我继续往下写。这一点，我挺骄傲的。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "think",
+       "t": "（他要是写到一半停下，我就全明白了。他要是不停——我就不知道该怎么办了。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我没停。"
+        ],
+        [
+         "n",
+         "act",
+         "一次都没停。写到“所有权”三个字时也没有。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "你这字写得也太夸张了。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "那个年代，一封信只有一次机会。"
+        ],
+        [
+         "lucien",
+         "act",
+         "我没写花。我当真写下的东西，从来没写花过。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "say",
+    "所有权归还。"
+   ],
+   [
+    "n",
+    "act",
+    "五个字。墨黑得发亮，干了的地方看着也像是湿的。"
+   ],
+   [
+    "n",
+    "act",
+    "他放下笔，把纸转向Adrian。指尖还压在纸角上，没松开。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "纸上的字是一回事。让他亲口说出来。",
+     "opts": [
+      {
+       "k": "say",
+       "t": "念出来。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "两百年来，没人逼我把自己定的条款念出声过。我发现我并不介意。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "say",
+       "t": "大声念。让它除了纸上，在别处也留个底。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "留个底。你是说，留在你耳朵里。"
+        ]
+       ],
+       "love": 2
+      },
+      {
+       "k": "act",
+       "t": "把纸推回给他。什么都不说。等。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他要我亲口说。当然了。他是对的。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "lucien",
+    "act",
+    "我清了清嗓子——其实根本用不着。"
+   ],
+   [
+    "lucien",
+    "say",
+    "清晨归你所有。无需续期。"
+   ],
+   [
+    "lucien",
+    "act",
+    "念到“你”字的时候，我的声音擅自变了样。"
+   ],
+   [
+    "n",
+    "act",
+    "就这么一句话。Adrian这辈子，遮光板每天五点准时锁死，到头来，只换了这么一句话，和一行没干的墨。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我什么都没往后加。我每一根神经都想在后面补一条——“但书如下”，“除非”。我让它光秃秃地留在那儿。"
+   ],
+   [
+    "lucien",
+    "say",
+    "就这些。没有“准许”。没有“持有人”。也还没签字。"
+   ],
+   [
+    "lucien",
+    "act",
+    "我把笔放在我们中间，笔帽没盖，正好在桌子正中。我量过的。在他告诉我这算什么之前，我不会再碰它。"
+   ],
+   [
+    "adrian",
+    "line",
+    {
+     "hint": "笔。纸。一份归还——还是一场你不肯收尾的仗。",
+     "opts": [
+      {
+       "k": "think",
+       "t": "（签了，它就是真的。不签，它就还是我能吵的东西。）",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "我等着。我极其擅长等。今晚却难了些。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "act",
+       "t": "看一眼钟。老习惯。12点31分。",
+       "then": [
+        [
+         "lucien",
+         "act",
+         "他在倒数一个黎明。头一回，挡在他和黎明中间的不是我。我只是桌子对面一个拿着笔的人。"
+        ]
+       ],
+       "love": 1
+      },
+      {
+       "k": "say",
+       "t": "别那样看我。我还没决定。",
+       "then": [
+        [
+         "lucien",
+         "say",
+         "我知道。四百年来，这是我头一回听到这句话，还觉得高兴。"
+        ]
+       ],
+       "love": 1
+      }
+     ]
+    }
+   ],
+   [
+    "n",
+    "act",
+    "新标题上的墨还没干。访客杯里的冰，已经化完了。"
+   ],
+   [
+    "n",
+    "act",
+    "遮光板外，港口上一声雾笛响过，没有回应。"
+   ]
+  ]
+ },
+ "then": {
+  "A": {
+   "en": [
+    [
+     "adrian",
+     "say",
+     "Sign it. Here. Now. Before your clerk wakes up and before I talk myself out of it."
+    ],
+    [
+     "lucien",
+     "say",
+     "Before the registrar reads it, you mean."
+    ],
+    [
+     "adrian",
+     "say",
+     "I mean before anybody gets a vote but us."
+    ],
+    [
+     "lucien",
+     "act",
+     "I sign. The ink doesn't dry right away. Neither of us moves until it does."
+    ],
+    [
+     "n",
+     "act",
+     "Forty seconds. Adrian counts them the way he counts the minutes before a sunrise."
+    ],
+    [
+     "n",
+     "act",
+     "The signature sits under the struck-through heading: Marchetti, in full, without any of the flourish he puts on everything else."
+    ],
+    [
+     "lucien",
+     "photo",
+     {
+      "cap": "Signed. 12:36 AM. Neither of them touching the page.",
+      "prompt": "an aged contract page on a dark wooden desk under a brass lamp, a fresh glossy black ink signature beneath a crossed-out heading, an uncapped fountain pen beside it, two men's hands resting close to the page but not touching it, one wearing a gold signet ring, one with bar-worn knuckles, a glass of melted-ice whiskey nearby, intimate late-night amber light",
+      "then": [],
+      "skip": []
+     }
+    ],
+    [
+     "adrian",
+     "say",
+     "That's the first thing you've given me that I can't give back."
+    ],
+    [
+     "lucien",
+     "say",
+     "Then don't try. I'd only refuse it, and we'd be here until dawn — which, I'm told, is yours now."
+    ],
+    [
+     "adrian",
+     "act",
+     "I fold the page once, along a line he didn't put there, and slide it inside my jacket."
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "He's watching the page disappear into your jacket. Say something before you go.",
+      "opts": [
+       {
+        "k": "say",
+        "t": "Your registrar's going to have a bad breakfast.",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "So will I. I'll survive it. Probably."
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "say",
+        "t": "Thank you. Don't get used to hearing it.",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "I won't. I'll get used to remembering it instead."
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "act",
+        "t": "Tip the watered rye into the fern on your way out.",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "The fern takes it. So do I."
+         ]
+        ],
+        "love": 1
+       }
+      ]
+     }
+    ],
+    [
+     "lucien",
+     "think",
+     "For four hundred years I've signed things to keep them. That's the first one I've signed to lose. My hand can still feel it."
+    ],
+    [
+     "n",
+     "act",
+     "On the way down, the third stair complains. Adrian lets it."
+    ]
+   ],
+   "zh": [
+    [
+     "adrian",
+     "say",
+     "签吧。就在这儿，现在。趁你的书记员还没醒，也趁我还没把自己劝回去。"
+    ],
+    [
+     "lucien",
+     "say",
+     "你是说，趁登记官还没看到。"
+    ],
+    [
+     "adrian",
+     "say",
+     "我是说，趁除了我们俩，还没别人能插嘴。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我签了。墨没有马上干。干透之前，我们谁都没动。"
+    ],
+    [
+     "n",
+     "act",
+     "四十秒。Adrian一秒一秒地数，像他数日出前的那几分钟。"
+    ],
+    [
+     "n",
+     "act",
+     "签名落在被划掉的旧标题下面：Marchetti，全名，一点都没有他平日那些花哨的笔锋。"
+    ],
+    [
+     "lucien",
+     "photo",
+     {
+      "cap": "签好了。凌晨12:36。两个人谁都没碰那页纸。",
+      "prompt": "an aged contract page on a dark wooden desk under a brass lamp, a fresh glossy black ink signature beneath a crossed-out heading, an uncapped fountain pen beside it, two men's hands resting close to the page but not touching it, one wearing a gold signet ring, one with bar-worn knuckles, a glass of melted-ice whiskey nearby, intimate late-night amber light",
+      "then": [],
+      "skip": []
+     }
+    ],
+    [
+     "adrian",
+     "say",
+     "这是你给我的东西里，头一件我没法还回去的。"
+    ],
+    [
+     "lucien",
+     "say",
+     "那就别试。我只会拒收，然后我们俩就得在这儿耗到天亮——听说，天亮现在归你了。"
+    ],
+    [
+     "adrian",
+     "act",
+     "我把那页纸对折一次，折在一道他没写过字的地方，塞进外套内袋。"
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "他看着那页纸消失在你的外套里。走之前，说点什么。",
+      "opts": [
+       {
+        "k": "say",
+        "t": "你那位登记官，明天的早饭怕是吃不香了。",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "我也一样。我扛得住。大概吧。"
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "say",
+        "t": "谢谢。别听习惯了。",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "不会的。我会习惯的，是记着它。"
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "act",
+        "t": "出门时，顺手把那杯化了冰的酒倒进蕨里。",
+        "then": [
+         [
+          "lucien",
+          "act",
+          "那盆蕨收下了。我也收下了。"
+         ]
+        ],
+        "love": 1
+       }
+      ]
+     }
+    ],
+    [
+     "lucien",
+     "think",
+     "四百年来，我签字都是为了留住什么。这是头一回，我签字是为了放手。我的手到现在还记得那种感觉。"
+    ],
+    [
+     "n",
+     "act",
+     "下楼的时候，第三级楼梯又叫了。Adrian由它叫。"
+    ]
+   ]
+  },
+  "B": {
+   "en": [
+    [
+     "adrian",
+     "act",
+     "I slide the page off the desk before the pen can get anywhere near it."
+    ],
+    [
+     "adrian",
+     "say",
+     "I'll read it by daylight. My daylight. Then I'll decide."
+    ],
+    [
+     "lucien",
+     "say",
+     "That's rather the point of it."
+    ],
+    [
+     "n",
+     "act",
+     "The page goes into Adrian's jacket, still warm from the desk lamp. The dispute stays open, on purpose."
+    ],
+    [
+     "lucien",
+     "act",
+     "I cap the pen. I don't argue. On the registrar's desk at dawn there will be a heading with a line through it and nothing signed beneath."
+    ],
+    [
+     "lucien",
+     "say",
+     "You understand they'll read the strike-through. They'll know I tried."
+    ],
+    [
+     "adrian",
+     "say",
+     "Good. Let them wonder whether I said no."
+    ],
+    [
+     "lucien",
+     "act",
+     "I laugh — once, short, surprised out of me."
+    ],
+    [
+     "n",
+     "act",
+     "Downstairs the bar is empty. The last regular has left exact change under his glass and a napkin: honor system works."
+    ],
+    [
+     "lucien",
+     "voice",
+     {
+      "who": "lucien",
+      "hint": "4:58 AM. You're home. Two minutes before your shutters lock, your phone lights up.",
+      "txt": "I'm not asking you to sign. I'm asking you to read it slowly. Every word on that page is one I'll have to stand behind.",
+      "then": [
+       [
+        "n",
+        "act",
+        "At five the shutters lock, same as every morning of his life. The page lies on the kitchen table, waiting for light."
+       ]
+      ],
+      "skip": [
+       [
+        "n",
+        "act",
+        "He lets it sit unplayed. At five the shutters lock, same as always. The page waits on the kitchen table for light."
+       ]
+      ]
+     }
+    ],
+    [
+     "adrian",
+     "think",
+     "My daylight. I said it like I already had some."
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "The shutters are locked. The page is on the table. Do you read it in the dark?",
+      "opts": [
+       {
+        "k": "act",
+        "t": "Turn it face-down until the shutters open.",
+        "then": [
+         [
+          "n",
+          "act",
+          "Hours later, when the slats finally let the light in, it's the first thing Adrian looks at."
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "act",
+        "t": "Read it once by the light of the open fridge. Just once.",
+        "then": [
+         [
+          "n",
+          "act",
+          "The words don't change in the dark. That's somehow worse. And somehow better."
+         ]
+        ],
+        "love": 0
+       },
+       {
+        "k": "think",
+        "t": "(He wrote it like it cost him. I want to see if it still looks that way in daylight.)",
+        "then": [
+         [
+          "n",
+          "act",
+          "It does. Adrian reads it at 7:40 with coffee, twice, and still doesn't sign."
+         ]
+        ],
+        "love": 2
+       }
+      ]
+     }
+    ],
+    [
+     "lucien",
+     "think",
+     "Unsigned, in his kitchen. That page has never been safer."
+    ]
+   ],
+   "zh": [
+    [
+     "adrian",
+     "act",
+     "我赶在那支笔够着之前，把纸从桌上抽了过来。"
+    ],
+    [
+     "adrian",
+     "say",
+     "我要在白天读它。我自己的白天。然后再决定。"
+    ],
+    [
+     "lucien",
+     "say",
+     "这本来就是它的意义所在。"
+    ],
+    [
+     "n",
+     "act",
+     "那页纸进了Adrian的外套，还带着台灯的余温。争议没了结——是故意留着的。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我盖上笔帽，没争。天亮时，登记官的桌上会出现一页纸：旧标题被一笔划掉，下面空着，没有签名。"
+    ],
+    [
+     "lucien",
+     "say",
+     "你明白的，他们会看见那道划线。他们会知道我试过。"
+    ],
+    [
+     "adrian",
+     "say",
+     "那正好。让他们猜去，是不是我拒绝了。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我笑了一声——短促的一声，是被他惊出来的。"
+    ],
+    [
+     "n",
+     "act",
+     "楼下已经空了。最后那个熟客在杯子底下压了正好的零钱，外加一张餐巾纸：自觉付款，管用。"
+    ],
+    [
+     "lucien",
+     "voice",
+     {
+      "who": "lucien",
+      "hint": "凌晨4:58。你到家了。离遮光板落锁还有两分钟，手机亮了。",
+      "txt": "我不是要你签。我只是想让你慢慢读。那页纸上的每一个字，我都得为它站出来担着。",
+      "then": [
+       [
+        "n",
+        "act",
+        "五点，遮光板照旧落了锁，跟他这辈子每一个早晨一样。那页纸躺在厨房桌上，等着光。"
+       ]
+      ],
+      "skip": [
+       [
+        "n",
+        "act",
+        "他没点开。五点，遮光板照旧落锁。那页纸在厨房桌上等着光。"
+       ]
+      ]
+     }
+    ],
+    [
+     "adrian",
+     "think",
+     "“我自己的白天”。我说得好像我已经有了似的。"
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "遮光板锁着。纸在桌上。你要在黑暗里读它吗？",
+      "opts": [
+       {
+        "k": "act",
+        "t": "把它扣过去，等遮光板打开再说。",
+        "then": [
+         [
+          "n",
+          "act",
+          "几个钟头后，百叶终于放进了光。Adrian第一眼看的就是它。"
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "act",
+        "t": "借着冰箱门里的光读一遍。就一遍。",
+        "then": [
+         [
+          "n",
+          "act",
+          "字在黑暗里也没变。不知怎么的，这更糟了。也不知怎么的，更好了。"
+         ]
+        ],
+        "love": 0
+       },
+       {
+        "k": "think",
+        "t": "（他写的时候，像在掏自己的血。我想看看到了白天，它还是不是那个样子。）",
+        "then": [
+         [
+          "n",
+          "act",
+          "还是。七点四十，Adrian就着咖啡读了两遍，依旧没签。"
+         ]
+        ],
+        "love": 2
+       }
+      ]
+     }
+    ],
+    [
+     "lucien",
+     "think",
+     "没签字，躺在他的厨房里。那页纸从没这么安全过。"
+    ]
+   ]
+  },
+  "C": {
+   "en": [
+    [
+     "adrian",
+     "act",
+     "I don't touch the pen. I don't touch the page either."
+    ],
+    [
+     "adrian",
+     "say",
+     "Not while the Court contract still lists me as your asset. Fix that first."
+    ],
+    [
+     "lucien",
+     "act",
+     "I set down the pen. That clause is the one that keeps me in this city. He knows it. So do I."
+    ],
+    [
+     "lucien",
+     "say",
+     "You understand what you're asking."
+    ],
+    [
+     "adrian",
+     "say",
+     "I'm asking you to stop owning me in a room I'm not allowed into."
+    ],
+    [
+     "lucien",
+     "act",
+     "I turn the ring. Three full turns. He has never seen me need three."
+    ],
+    [
+     "lucien",
+     "say",
+     "Saturday, then. The Court dinner. You'll see what it costs."
+    ],
+    [
+     "adrian",
+     "say",
+     "Is that an invitation or a warning?"
+    ],
+    [
+     "lucien",
+     "say",
+     "In that company there's no difference. Wear black. They dislike being reminded what color things are underneath."
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "He's inviting you into the room where you're counted.",
+      "opts": [
+       {
+        "k": "say",
+        "t": "I'll be there. Sitting, not standing.",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "We'll see where they put you. Then we'll see where I do."
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "say",
+        "t": "I'm not going as your anything.",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "Good. Then don't let them seat you as one."
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "act",
+        "t": "Pick up the gray calling card and turn it over in your fingers.",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "Keep it. He'll recognize the fold. I'd like him nervous."
+         ]
+        ],
+        "love": 1
+       }
+      ]
+     }
+    ],
+    [
+     "n",
+     "act",
+     "The page with the new heading stays on the desk, unsigned. Lucien slides it into the third drawer, on top of three years of drinks he never touched."
+    ],
+    [
+     "lucien",
+     "think",
+     "He didn't take the morning. He asked for the clause. He wants the whole room to watch me let go — not just him."
+    ],
+    [
+     "n",
+     "act",
+     "Downstairs, the Tidewater's clock strikes one. Adrian checks it out of habit. Hours to a sunrise. Two days to a dinner."
+    ]
+   ],
+   "zh": [
+    [
+     "adrian",
+     "act",
+     "我没碰那支笔。也没碰那页纸。"
+    ],
+    [
+     "adrian",
+     "say",
+     "只要议会那份契约上还把我列成你的资产，我就不签。先把那个改了。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我放下了笔。让我留在这座城里的，就是那一条。他知道。我也知道。"
+    ],
+    [
+     "lucien",
+     "say",
+     "你明白你在要什么。"
+    ],
+    [
+     "adrian",
+     "say",
+     "我在要你别再在一间我进不去的屋子里，把我当成你的东西。"
+    ],
+    [
+     "lucien",
+     "act",
+     "我转动戒指。整整三圈。他从没见过我需要转三圈。"
+    ],
+    [
+     "lucien",
+     "say",
+     "那就周六。议会的晚宴。你会亲眼看到它的代价。"
+    ],
+    [
+     "adrian",
+     "say",
+     "这是邀请，还是警告？"
+    ],
+    [
+     "lucien",
+     "say",
+     "在那帮人中间，两者没区别。穿黑的。他们不喜欢被人提醒，东西底下是什么颜色。"
+    ],
+    [
+     "adrian",
+     "line",
+     {
+      "hint": "他在邀请你，走进那间把你当筹码清点的屋子。",
+      "opts": [
+       {
+        "k": "say",
+        "t": "我会去。坐着，不是站着。",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "先看他们把你安排在哪儿。再看我把你安排在哪儿。"
+         ]
+        ],
+        "love": 2
+       },
+       {
+        "k": "say",
+        "t": "我不会以你的任何什么身份去。",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "很好。那就别让他们照那个身份给你排座。"
+         ]
+        ],
+        "love": 1
+       },
+       {
+        "k": "act",
+        "t": "拿起那张灰色名片，在指间翻过来。",
+        "then": [
+         [
+          "lucien",
+          "say",
+          "留着吧。他认得那个折角。我想让他紧张紧张。"
+         ]
+        ],
+        "love": 1
+       }
+      ]
+     }
+    ],
+    [
+     "n",
+     "act",
+     "写着新标题的那页纸留在桌上，没签。Lucien把它放进第三个抽屉，压在三年来他一杯没碰过的那些酒上面。"
+    ],
+    [
+     "lucien",
+     "think",
+     "他没要那个清晨。他要的是那一条。他要整间屋子的人都看着我放手——而不只是他一个人看见。"
+    ],
+    [
+     "n",
+     "act",
+     "楼下，Tidewater的钟敲了一点。Adrian习惯性地看了一眼。离日出还有几个钟头。离晚宴，还有两天。"
+    ]
+   ]
+  }
+ }
+}
