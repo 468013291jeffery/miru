@@ -185,3 +185,35 @@ function startFree97(wid) {
     return r; }; }
 document.addEventListener("click", e => { const x = e.target.closest("[data-free97]"); if (!x) return; e.stopPropagation(); startFree97(x.dataset.free97); }, true);
 (function () { const st = document.createElement("style"); st.textContent = `.fr97{border-color:rgba(238,111,151,.55)!important;background:linear-gradient(135deg,rgba(238,111,151,.16),rgba(240,183,126,.08))!important}.tg97{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#EE6F97;color:#1B1017}`; document.head.appendChild(st); })();
+
+/* ================= v6.3.1 · old copies after a story update =================
+   When a published story is updated, the app rebuilds it under a new id. Threads started on the old copy pointed at a world that
+   no longer exists — no backgrounds, no music, and the role list fell back to 「导演视角」. Now: remember old → new, and opening an
+   old thread sends you to the new copy's start sheet (free-mode threads are carried over, characters matched by name). */
+{ const _iw = installWork; installWork = async function (id) {
+    const old = S.off76 && S.off76[id] && S.off76[id].wid; const wid = await _iw.apply(this, arguments);
+    try { if (old && wid && old !== wid) { S.wmap97 = S.wmap97 || {}; S.wmap97[old] = wid; save(); } } catch (_) {} return wid; }; }
+function newWid97(wid) { let w = wid, n = 0; const M = S.wmap97 || {}; while (M[w] && n++ < 10) w = M[w]; return w !== wid && wd(w) ? w : null; }
+function carryAgent97(th, nw) {
+  const w = wd(nw), byName = {}; w.cast.forEach(c => { const x = ch(c); if (x) byName[key97(x)] = c; });
+  const map = {}; th.cast.forEach(c => { const x = ch(c); const n = x && byName[key97(x)]; if (n) map[c] = n; });
+  const sw = id => map[id] || id;
+  th.wid = nw; th.cast = th.cast.map(sw); const L = {}; Object.keys(th.love).forEach(k => L[sw(k)] = th.love[k]); th.love = L;
+  const C = {}; Object.keys(th.agent97.cards).forEach(k => C[sw(k)] = th.agent97.cards[k]); th.agent97.cards = C;
+  th.msgs.forEach(m => { if (map[m.who]) m.who = map[m.who]; }); save();
+}
+{ const _ot = openThread; openThread = function (id) {
+    const th = S.threads[id];
+    if (th && th.wid && !wd(th.wid)) { const nw = newWid97(th.wid);
+      if (nw && th.agent97) { carryAgent97(th, nw); return _ot.apply(this, arguments); }
+      if (nw) { delete S.threads[id]; save(); toast(L97("这部剧更新了新版本，请重新选择怎么玩", "This story was updated — pick how you want to play")); try { startSheet(nw); } catch (_) {} return; }
+      delete S.threads[id]; save(); toast(L97("这部剧已更新，请从故事页重新开始", "This story was updated — start again from its page")); return; }
+    return _ot.apply(this, arguments); }; }
+/* free mode right on the story page, next to 开始故事 */
+{ const _os = openStory; openStory = function (id) { const r = _os.apply(this, arguments);
+    try { const w = wd(id), b = document.querySelector('#s-story [data-pkstart]'); if (agOn97(w) && b && !document.querySelector('#s-story [data-free97]'))
+      b.insertAdjacentHTML("beforebegin", '<button class="btn btn-block fr97b" data-free97="' + esc(id) + '">🎭 ' + L97("自由模式（测试版）· 角色各有想法，剧情围着你走", "Free mode (beta) · the story follows you") + '</button>'); } catch (_) {}
+    return r; }; }
+(function () { const st = document.createElement("style"); st.textContent = `.fr97b{margin:0 0 8px;border:1px solid rgba(238,111,151,.6);background:linear-gradient(135deg,rgba(238,111,151,.22),rgba(240,183,126,.12));color:#fff;font-weight:700;font-size:13.5px}`; document.head.appendChild(st); })();
+/* the lead first, director's view last — so nobody lands in 导演视角 by accident */
+{ const _pm = packModes; packModes = function (w) { const L = _pm.apply(this, arguments); if (!w || !w.official76) return L; const watch = L.filter(m => m.as === "watch"); return L.filter(m => m.as !== "watch").concat(watch); }; }
