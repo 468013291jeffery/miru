@@ -13701,6 +13701,63 @@ function noXlate94() { const h = document.documentElement; h.setAttribute("trans
 noXlate94();
 { const _rh = renderHome; renderHome = function () { noXlate94(); return _rh.apply(this, arguments); }; }
 
+/* ================= v5.9.4 · play any role =================
+   The official scripts are written in second person: "你" is the scripted protagonist (the rookie / the scribe / Gu Zhao).
+   The importer used to guess the reader's role from who speaks after choices, so the sheet offered only "Play Evan".
+   Now: the protagonist is a real character (default role, owns the choices), and every named character can be played —
+   their lines become your turns (say the written line or improvise; the cast answers live). */
+const YOU94 = [["埃文", "新队员", "The Rookie", "m"], ["凯兰", "记录员", "The Scribe", "f"], ["陆识野", "顾昭", "Gu Zhao", "f"]];
+function you94Of(doc) { const names = (doc.chars94 || []).map(a => a[0]); return YOU94.find(y => names.includes(y[0])) || ["", "主角", "The Lead", "f"]; }
+const _imParse96 = imParse;
+imParse = function () {
+  const doc = _imParse96.apply(this, arguments);
+  if ((doc.chars94 || []).length) { doc.you94 = 1; doc.sp["你"] = Math.max(doc.sp["你"] || 0, 1); doc.cast = (doc.cast || []).filter(n => n !== "你").concat(["你"]); doc.pov = "你"; }
+  return doc;
+};
+const _imBuild96 = imBuild;
+imBuild = function (doc, as) {
+  const r = _imBuild96.call(this, doc, doc && doc.you94 ? "你" : as);
+  try {
+    if (!doc || !doc.you94) return r;
+    const w = wd(r && (r.wid || r)); if (!w) return r;
+    const yid = w.cast.find(id => ch(id) && ch(id).n === "你"); if (!yid) return r;
+    const Y = you94Of(doc), c = S.mine.chars[yid];
+    c.n = Y[1]; c.n94 = { zh: Y[1], en: Y[2] }; c.g = Y[3]; c.you94 = 1; c.role = { zh: "主角 · 你", en: "Lead · you" };
+    w.you94 = yid; w.pack.pov = yid;
+    const zh = s => ({ zh: s, en: s });
+    const others = w.cast.filter(id => id !== yid && ch(id) && !["医院"].includes(ch(id).n) && (doc.chars94 || []).some(a => a[0] === (ch(id).n94 ? ch(id).n94.zh : ch(id).n)));
+    w.pack.join = [{ as: yid, t: { zh: "剧本原定的主角视角：每个关键选择都由你来做", en: "The story's own lead: every key choice is yours" } }]
+      .concat(others.map(id => { const n = ch(id).n; return { as: id, t: { zh: "轮到" + n + "时由你来说——照剧本说，或者自由发挥，其他人会接着你演", en: "When it's " + n + "'s turn, you speak — follow the script or improvise; the cast plays off you" } }; }));
+    w.cast = w.cast.filter(id => id !== yid).concat([yid]);
+  } catch (e) { try { console.warn("[off96]", e); } catch (_) {} }
+  return r;
+};
+/* names for "扮演 X" on the sheet follow the app language */
+(function () { const _pan = packAsName; packAsName = function (w, as) { try { off94Names(); } catch (_) {}
+  const c = w && w.official76 && as && as !== "watch" && as !== "side" && ch(as); if (c) return t("pk.as", { n: c.n }); return _pan.apply(this, arguments); }; })();
+/* playing someone other than the lead: second-person narration is about the lead, so name her/him */
+function you94Swap(th, txt) {
+  try {
+    const w = th && wd(th.wid); if (!w || !w.you94 || !th.pk || th.pk.as === w.you94 || typeof txt !== "string") return txt;
+    const c = ch(w.you94); if (!c) return txt; const zh = /[一-鿿]/.test(txt);
+    if (zh) { const n = (c.n94 && c.n94.zh) || c.n; return txt.replace(/你们/g, "他们").replace(/你/g, n); }
+    const n = (c.n94 && c.n94.en) || c.n;
+    return txt.replace(/\bYou're\b/g, n + " is").replace(/\byou're\b/g, n + " is").replace(/\bYour\b/g, n + "'s").replace(/\byour\b/g, n + "'s").replace(/\bYou\b/g, n).replace(/\byou\b/g, n);
+  } catch (_) { return txt; }
+}
+(function () { const _mh = msgHTML; msgHTML = function (m, i, th) {
+  if (m && th && th.pk && (m.who === "n" || m.k === "act") && typeof m.txt === "string") { const s = you94Swap(th, m.txt); if (s !== m.txt) m = Object.assign({}, m, { txt: s }); }
+  if (m && th && th.pk && m.k === "box" && Array.isArray(m.parts)) { const P = m.parts.map(p => p && typeof p.txt === "string" && (!p.who || p.who === "n") ? Object.assign({}, p, { txt: you94Swap(th, p.txt) }) : p); m = Object.assign({}, m, { parts: P }); }
+  return _mh.call(this, m, i, th); }; })();
+/* installs made before v5.9.4 are rebuilt once so they get the new roles */
+const _installWork96 = installWork;
+installWork = async function (id) {
+  try { const h = S.off76 && S.off76[id]; if (h && !h.v96) { h.ver = -1; } } catch (_) {}
+  const wid = await _installWork96.apply(this, arguments);
+  try { if (S.off76 && S.off76[id]) { S.off76[id].v96 = 1; save(); } } catch (_) {}
+  return wid;
+};
+
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
    Discover = shelves (each tag with its own row), rankings, challenges and Earn; search + tag filters one tap away.
