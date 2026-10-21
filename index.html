@@ -11317,7 +11317,10 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
 function trKey(){return "miru_tr_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}
- const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})}
+ const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})
+ let bad=0;Object.keys(TR.map).forEach(k=>{if(!needsTr(k)||!trFits(TR.map[k])){delete TR.map[k];bad++}});if(bad)trSave()}
+/* a translation must be written in the target language's script */
+function trFits(v){v=String(v||"");const L=S.lang;if(L==="zh")return RX.han.test(v);if(L==="en")return !RX.han.test(v)&&!RX.kana.test(v)&&!RX.hang.test(v);if(L==="ja")return RX.kana.test(v)||RX.han.test(v);if(L==="ko")return RX.hang.test(v);if(L==="es")return !RX.han.test(v);return true}
 function trSave(){try{const keys=Object.keys(TR.map);if(keys.length>6000)keys.slice(0,keys.length-6000).forEach(k=>delete TR.map[k]);localStorage.setItem(trKey(),JSON.stringify(TR.map))}catch(_){}}
 const RX={han:/[一-鿿]/,kana:/[぀-ヿ]/,hang:/[가-힯]/,words:/[A-Za-z]{2,}[^\n]*\s+[A-Za-z]{2,}/};
 function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一-鿿]/.test(t))return false;const L=S.lang;
@@ -11329,23 +11332,24 @@ function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一
  ;return false}
 function trSkip(el){return !el||el.closest&&el.closest("[data-notr],textarea,input,script,style,code,.m.me,.mine,.mb-me,[contenteditable]")}
 function trNode(n){const raw=n.nodeValue,t=raw.trim();if(!t||(TR.me&&TR.me.has(t)))return;const o=TR.orig.get(n);const src=o&&o.tr===raw?o.src:t;
- if(TR.map[src]!=null){const out=raw.replace(t,TR.map[src]);if(out!==raw){TR.orig.set(n,{src,tr:out});n.nodeValue=out}return}
+ if(TR.map[src]!=null&&needsTr(src)&&trFits(TR.map[src])){const out=raw.replace(t,TR.map[src]);if(out!==raw){TR.orig.set(n,{src,tr:out});n.nodeValue=out}return}
  if(needsTr(src))TR.q.add(src)}
-function trAttr(el,a){const v=el.getAttribute(a);if(!v)return;const o=el["__tro_"+a]||v;if(TR.map[o]!=null){el["__tro_"+a]=o;el.setAttribute(a,TR.map[o])}else if(needsTr(o))TR.q.add(o)}
+function trAttr(el,a){const v=el.getAttribute(a);if(!v)return;const o=el["__tro_"+a]||v;if(TR.map[o]!=null&&needsTr(o)&&trFits(TR.map[o])){el["__tro_"+a]=o;el.setAttribute(a,TR.map[o])}else if(needsTr(o))TR.q.add(o)}
 function meTexts(){const th=S.threads&&S.threads[curT];const set=new Set();if(th)(th.msgs||[]).forEach(m=>{if(m.who==="me"&&m.txt)set.add(String(m.txt).trim())});return set}
 function trScan(root){trLoad();TR.me=meTexts();const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>trSkip(n.parentElement)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
  let n;while((n=w.nextNode()))trNode(n);(root||document.body).querySelectorAll&&(root||document.body).querySelectorAll("[placeholder],[title]").forEach(el=>{if(trSkip(el.parentElement))return;trAttr(el,"placeholder");trAttr(el,"title")});trFlush()}
 function trEP(){const p=typeof TTS_EP!=="undefined"&&TTS_EP?TTS_EP.replace(/\/api\/tts$/,"/api/translate"):"";return p}
 let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
- const batch=[...TR.q].slice(0,40);batch.forEach(x=>TR.q.delete(x));TR.busy=true;
+ const batch=[...TR.q].slice(0,40);batch.forEach(x=>TR.q.delete(x));TR.busy=true;const lang0=S.lang;
  try{const r=await fetch(ep,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},typeof cloudAuth==="function"?cloudAuth():{}),body:JSON.stringify({to:S.lang,texts:batch})});const j=await r.json();
-  if(j&&j.map){Object.assign(TR.map,j.map);trSave();TR.fail=0;trScan()}else TR.fail++}catch(_){TR.fail++}TR.busy=false;if(TR.q.size)trFlush()},350)}
+  if(S.lang!==lang0||TR.lang!==lang0){TR.busy=false;return}
+  if(j&&j.map){Object.keys(j.map).forEach(k=>{if(!needsTr(k)||!trFits(j.map[k]))delete j.map[k]});Object.assign(TR.map,j.map);trSave();TR.fail=0;trScan()}else TR.fail++}catch(_){TR.fail++}TR.busy=false;if(TR.q.size)trFlush()},350)}
 function trRestore(){document.querySelectorAll("*").forEach(el=>{["placeholder","title"].forEach(a=>{if(el["__tro_"+a]){el.setAttribute(a,el["__tro_"+a]);delete el["__tro_"+a]}})});
  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while((n=w.nextNode())){const o=TR.orig.get(n);if(o&&n.nodeValue===o.tr){n.nodeValue=o.tr.replace(o.tr.trim(),o.src);TR.orig.delete(n)}}}
 function trStart(){if(TR.obs)return;let pend=new Set(),tm=null;
  TR.obs=new MutationObserver(ms=>{ms.forEach(m=>{if(m.type==="characterData")pend.add(m.target.parentElement);else m.addedNodes.forEach(x=>pend.add(x.nodeType===1?x:x.parentElement))});clearTimeout(tm);tm=setTimeout(()=>{const P=[...pend];pend=new Set();P.forEach(el=>{if(el&&el.isConnected)trScan(el)})},60)});
  TR.obs.observe(document.body,{childList:true,subtree:true,characterData:true});setTimeout(()=>trScan(),300)}
-const _toast67=toast;toast=function(msg){try{trLoad();const s=String(msg||"");if(TR.map[s]!=null)msg=TR.map[s];else if(needsTr(s)){TR.q.add(s);trFlush()}}catch(_){}return _toast67(msg)};
+const _toast67=toast;toast=function(msg){try{trLoad();const s=String(msg||"");if(TR.map[s]!=null&&needsTr(s)&&trFits(TR.map[s]))msg=TR.map[s];else if(needsTr(s)){TR.q.add(s);trFlush()}}catch(_){}return _toast67(msg)};
 /* language switches: restore originals, then localize again */
 let LANG67=S.lang;setInterval(()=>{if(S.lang!==LANG67){LANG67=S.lang;trRestore();TR.lang=null;setTimeout(()=>trScan(),200)}},700);
 if(document.body)trStart();else document.addEventListener("DOMContentLoaded",trStart);
@@ -13611,7 +13615,7 @@ capi = async function (path, o) {
   const r = await _capi94.apply(this, arguments);
   try {
     if (typeof path === "string" && /^\/works/.test(path) && r && r.j) {
-      const loc = w => { if (w && w.en && CL() !== "zh") { if (w.en.title) w.title = w.en.title; if (w.en.hook) w.hook = w.en.hook; } };
+      const loc = w => { if (!w) return; if (w.en && CL() !== "zh") { if (w.en.title) w.title = w.en.title; if (w.en.hook) w.hook = w.en.hook; } else if (CL() === "zh" && typeof w.title === "string") w.title = zh94(w.title); };
       (r.j.works || []).forEach(loc);
       if (/play=1/.test(path)) { const m = /id=([^&]+)/.exec(path); if (m) (OFF94.play = OFF94.play || {})[decodeURIComponent(m[1])] = r; }
     }
@@ -13653,7 +13657,9 @@ async function off94Feed() {
   for (const w of (L || [])) { try { const A = await off94Assets(w.id); if (A.vid_open || A.cover || A.poster) out.push(Object.assign({}, w, { A })); } catch (_) {} }
   OFFF94.list = out; OFFF94.at = Date.now(); return out;
 }
-function off94Title(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.title) || w.title || ""; }
+/* a Chinese title must not carry its English name ("冰场之外 Off the Ice" → "冰场之外") */
+function zh94(s) { s = String(s || ""); return /[\u4e00-\u9fff]/.test(s) ? s.replace(/\s+[A-Za-z][A-Za-z0-9'’:&,!?. -]*$/, "").replace(/^[A-Za-z][A-Za-z0-9'’:&,!?. -]*\s+(?=[\u4e00-\u9fff])/, "").trim() : s; }
+function off94Title(w) { const zh = CL() === "zh"; return zh ? zh94(w.title || "") : ((w.en && w.en.title) || w.title || ""); }
 function off94Hook(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.hook) || w.hook || ""; }
 function off94FCard(w) {
   const A = w.A, pos = A.cover || A.poster || "";
@@ -13757,6 +13763,10 @@ installWork = async function (id) {
   try { if (S.off76 && S.off76[id]) { S.off76[id].v96 = 1; save(); } } catch (_) {}
   return wid;
 };
+
+/* installed official stories: Chinese side of the title/hook has no English tail */
+{ const _iw97 = installWork; installWork = async function () { const wid = await _iw97.apply(this, arguments);
+  try { const w = wid && wd(wid); if (w && w.official76) ["title", "hook", "premise"].forEach(k => { if (w[k] && typeof w[k] === "object" && w[k].zh) w[k].zh = zh94(w[k].zh); }); } catch (_) {} return wid; }; }
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
