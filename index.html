@@ -13821,6 +13821,54 @@ async function aiIdeasGo97(btn) {
   const st = document.createElement("style"); st.textContent = `.ai97{margin:10px 0 0;text-align:center}.ai97>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px}.ai97>button:disabled{opacity:.6}.ai97o{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ai97o button{text-align:left;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:9px 12px;font-size:14px}`; document.head.appendChild(st);
 })();
 
+/* ================= v6.0 · your-turn dock =================
+   When it's your turn, the choice card and the input bar become one panel at the bottom:
+   one header line (who you are + the question), compact options, preview / AI-help as small chips, then the input. */
+const GENERIC97 = /^(轮到你说|你怎么做？?|你想怎么回他？?|Your turn|What do you do\??|How do you answer\??)$/i;
+function dock97() {
+  try {
+    const pw = $("#pkwrap"), comp = $(".composer"), box = $("#msgs"); if (!pw || !comp || !box) return;
+    const panel = pw.querySelector(".pkpanel.stop");
+    const mine = panel && (panel.querySelector(".chatt") || panel.querySelector(".pkopts") || panel.querySelector("[data-ai97]")) && panel.querySelector(".sttag.you, [data-ai97]");
+    const sg = $("#sugg");
+    if (!mine) { if (pw.classList.contains("dock97")) { pw.classList.remove("dock97"); box.appendChild(pw); } if (sg) sg.style.display = ""; return; }
+    if (pw.nextElementSibling !== comp) comp.parentNode.insertBefore(pw, comp);
+    pw.classList.add("dock97"); if (sg) sg.style.display = "none";
+    if (panel.dataset.d97) return; panel.dataset.d97 = "1";
+    /* one header line */
+    const tag = panel.querySelector(".sttag.you"), ask = panel.querySelector(".pkask"), chq = panel.querySelector(".chq");
+    let q = ask && !GENERIC97.test(ask.textContent.trim()) ? ask.textContent.trim() : (chq ? chq.textContent.trim() : (ask ? ask.textContent.trim() : ""));
+    const hd = document.createElement("div"); hd.className = "dk97h";
+    hd.innerHTML = (tag ? '<span class="dk97who">' + tag.innerHTML + '</span>' : '') + (q ? '<b>' + esc(q) + '</b>' : '');
+    [tag, ask, chq].forEach(x => x && x.remove());
+    panel.insertBefore(hd, panel.firstChild);
+    panel.querySelectorAll(".pkhint").forEach(x => x.remove());
+    /* preview + AI help side by side */
+    const pv = panel.querySelector(".paybtn.pv"), ai = panel.querySelector(".ai97"), aib = ai && ai.querySelector("[data-ai97]");
+    if (pv || aib) { const row = document.createElement("div"); row.className = "dk97row"; if (pv) row.appendChild(pv); if (aib) row.appendChild(aib); (ai || panel).parentNode === panel && ai ? panel.insertBefore(row, ai) : panel.appendChild(row); }
+  } catch (e) { try { console.warn("[dock97]", e); } catch (_) {} }
+}
+{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); dock97(); return r; };
+  const _pr = packRefresh; packRefresh = function () { const r = _pr.apply(this, arguments); dock97(); return r; }; }
+(function () { const st = document.createElement("style"); st.textContent = `
+#pkwrap.dock97{flex:none;align-self:stretch;margin:0;max-height:48vh;overflow-y:auto;background:rgba(12,11,16,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08);border-radius:20px 20px 0 0;padding:12px 12px 6px}
+#pkwrap.dock97+.composer{border-top:0;padding-top:4px;background:rgba(12,11,16,.86)}
+#pkwrap.dock97 .pkpanel{margin:0;padding:0;background:transparent;border:0;box-shadow:none;backdrop-filter:none}
+#pkwrap.dock97 .pkhd{display:none}
+.dk97h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 2px 10px;font-size:14px;line-height:1.4}
+.dk97h .dk97who{flex:none;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}
+.dk97h b{color:#fff;font-weight:700}
+#pkwrap.dock97 .chatt{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+#pkwrap.dock97 .chatt button{padding:9px 11px;border-radius:14px}
+#pkwrap.dock97 .chatt button span{font-size:13px;line-height:1.4}
+#pkwrap.dock97 .pkopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:0}
+#pkwrap.dock97 .pkopt{margin:0;padding:9px 11px;font-size:13px}
+.dk97row{display:flex;gap:8px;margin:10px 0 2px;padding-right:76px;overflow-x:auto;scrollbar-width:none}
+.dk97row [data-ai97]{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;font-weight:700}
+.dk97row>button{flex:1 1 0;min-width:max-content;margin:0!important;padding:7px 12px!important;font-size:12px!important;border-radius:999px!important}
+#pkwrap.dock97 .ai97{margin:0}#pkwrap.dock97 .ai97o:empty{display:none}#pkwrap.dock97 .ai97o{margin-top:8px}
+#pkwrap.dock97 .ai97o button{font-size:13px;padding:8px 11px}`; document.head.appendChild(st); })();
+
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
    Discover = shelves (each tag with its own row), rankings, challenges and Earn; search + tag filters one tap away.
