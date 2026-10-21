@@ -13668,7 +13668,7 @@ function off94FCard(w) {
   const A = w.A, pos = A.cover || A.poster || "";
   const bg = A.vid_open ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(A.vid_open) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
   return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
-    '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F") + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
+    '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (CL() === "zh" ? (w.orient === "bl" ? "男男" : w.orient === "gl" ? "女女" : "男女") : (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F")) + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
     '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
     '<button class="btn btn-p btn-sm fplay94" data-off94="' + esc(w.id) + '">▶ ' + (CL() === "zh" ? "开始看" : "Play") + '</button></div></section>';
 }
