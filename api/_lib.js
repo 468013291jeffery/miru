@@ -234,7 +234,7 @@ async function needActive(req, res) {
 
 /* ---------- v2.7: operations config (editable in the console; defaults below) ---------- */
 const CONFIG_DEFAULTS = {
-  welcome_gems: 30, daily_gems: 3, earn_cap: 80, first_purchase_double: true,
+  welcome_gems: 10000, daily_gems: 3, earn_cap: 80, first_purchase_double: true,
   upload_price: { audio: 5, image: 3, video: 10, game: 2 }, reroll_free: 3, reroll_price: 1,
   community_auto_live: true, report_threshold: 5, publish_daily_limit: 30, upload_daily_limit: 40,
   guest_allowed: false, maintenance: '',
