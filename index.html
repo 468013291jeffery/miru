@@ -4226,7 +4226,7 @@ function renderMe(v){const p=persona();S.account=S.account||{email:null,pwSet:fa
   '<div class="eyebrow" style="margin-top:14px">'+t("me.live")+'</div><p class="sm" id="liveRes" style="margin-top:6px;line-height:1.5">'+(SAMPLE&&!LIVE_ERR?"✓ "+t("live.ok"):liveWhy(LIVE_ERR||(SAMPLE?"":LIVE_STATE)))+'</p><button class="btn btn-g btn-sm" style="margin-top:10px" data-livetest="1">'+t("live.test")+'</button></div>'+
   '<div class="card"><div class="eyebrow">'+t("me.voice")+'</div><p class="xs dim" style="margin-top:6px">'+t("me.voiceS")+'</p>'+pickSearch("voiceQ","voiceList")+'<div class="stack" style="gap:6px;margin-top:10px" id="voiceList">'+
    (["m","f"].some(g=>!hasGenderVoice(g))?'<p class="xs" style="margin-top:8px;color:var(--gold);line-height:1.5">'+t(hasGenderVoice("m")?"voice.needF":"voice.needM")+'</p>':'')+
-   allChars().map(id=>{const c=ch(id),vv=voiceFor(id),rl=recLineOf(id);return '<div class="row" style="gap:6px"><button class="task grow" data-vtest="'+id+'">'+avatar(id,26)+'<span class="grow">'+esc(c.n)+'<span class="xs faint" style="display:block">'+(rl?'🎙 '+t("voice.rec2"):esc(vv?vv.name.replace(/\s*\(.*\)/,""):"—")+(vv&&(c.g==="f")!==FEM.test(vv.name)?' · ⚠ '+t("voice.wrongG"):''))+'</span></span>▶</button>'+
+   allChars().map(id=>{const c=ch(id),vv=voiceFor(id),rl=recLineOf(id);return '<div class="row" style="gap:6px"><button class="task grow" data-vtest="'+id+'">'+avatar(id,26)+'<span class="grow">'+esc(c.n)+'<span class="xs faint" style="display:block">'+(rl?'🎙 '+t("voice.rec2"):esc(vv?voiceLabel97(vv):"—")+(vv&&(c.g==="f")!==FEM.test(vv.name)?' · ⚠ '+t("voice.wrongG"):''))+'</span></span>▶</button>'+
     '<button class="btn btn-g btn-xs" data-vai="'+id+'" style="flex:none">✨ '+t("voice.aiBtn")+'</button></div>'}).join("")+'</div></div>'+
   '<div class="card"><div class="eyebrow">'+t("voice.my")+'</div><p class="xs dim" style="margin-top:6px">'+t("voice.myS")+'</p><div class="row" style="margin-top:10px;gap:8px">'+
    (S.myVoice?'<audio id="myVoiceAud" controls style="height:34px;flex:1" src="'+S.myVoice+'"></audio><button class="btn btn-q btn-sm" data-vdel="1">'+t("voice.del")+'</button>':
@@ -4587,6 +4587,8 @@ Object.assign(I18N.zh,{"cre.topicH":"本周创作主题","cre.topicS":"点一下
 
 Object.assign(I18N.en,{"voice.rec2":"His own recorded voice","voice.wrongG":"no matching voice on this device","voice.needM":"This device has no male voice for this language, so he'll sound wrong. iPhone: Settings → Accessibility → Spoken Content → Voices → pick the language → download a male voice (e.g. Chinese: Li-Mu; English: Aaron or Nathan). Then reopen this page.","voice.needF":"This device has no female voice for this language. iPhone: Settings → Accessibility → Spoken Content → Voices → download one, then reopen this page."});
 Object.assign(I18N.zh,{"voice.rec2":"专属录音声线","voice.wrongG":"本机没有对应性别的声音","voice.needM":"这台手机没有中文男声，所以男角色都会用「婷婷」的女声来读。iPhone：设置 → 辅助功能 → 朗读内容 → 声音 → 中文（普通话）→ 下载「李牧」（选「增强版」更自然）。下载后重新打开本页，每个男角色就会换成男声。","voice.needF":"这台手机没有中文女声。iPhone：设置 → 辅助功能 → 朗读内容 → 声音 → 中文 → 下载一个女声，然后重新打开本页。"});
+
+function voiceLabel97(v){return String(v&&v.name||"").replace(/\s*\(.*\)/,"").replace(/^(Microsoft|Google|Apple)\s+/i,"").replace(/\s+-\s+.*$/,"").replace(/\s+(Online|Natural|Neural)$/i,"").trim()||"—"}
 
 /* ================= MONEY, MEMORY, DAILY POSTS =================
    What people pay for is the story, not "AI": the next episode, what he says next, the photo he sent, and being remembered.
@@ -6373,7 +6375,7 @@ if(I18N.ko)Object.assign(I18N.ko,{"lg.h":"언어 및 지역","lg.s":"언어를 �
 if(I18N.es)Object.assign(I18N.es,{"lg.h":"Idioma y región","lg.s":"Elige tu idioma. Historias, personajes y voces cambian a esa región.","lg.ok":"Confirmar"});
 
 /* moments live inside Chats → 动态: my composer + my posts on top of the characters' posts */
-function meAv(n){const p=persona();return '<div class="av meav" style="width:'+n+'px;height:'+n+'px;font-size:'+Math.round(n*.42)+'px">'+esc(((p&&p.name)||"我")[0])+'</div>'}
+function meAv(n){const p=persona();return '<div class="av meav" style="width:'+n+'px;height:'+n+'px;font-size:'+Math.round(n*.42)+'px">'+esc(((p&&p.name)||(S.lang==="zh"?"我":S.lang==="ja"?"私":S.lang==="ko"?"나":"Me"))[0])+'</div>'}
 function myPostHTML(p){const cm=momCm(p);return '<div class="post mypost"><div class="hd">'+meAv(34)+'<div class="grow"><b class="sm">'+esc((persona()||{}).name||t("mom.you"))+'</b><div class="xs faint">'+ago(p.at)+'</div></div></div>'+
  (p.txt?'<p class="cap" style="font-size:14.5px">'+esc(p.txt)+'</p>':'')+(p.img?'<img class="momimg" style="margin:8px 16px 0" src="'+p.img+'" alt="">':'')+
  '<div class="acts"><span class="xs faint">♥ '+(p.likes||0)+'</span><button data-mom="'+p.id+'">'+ic("msg")+'<span class="num">'+cm.length+'</span></button></div>'+
@@ -11320,7 +11322,7 @@ function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map
  const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})
  let bad=0;Object.keys(TR.map).forEach(k=>{if(!needsTr(k)||!trFits(TR.map[k])){delete TR.map[k];bad++}});if(bad)trSave()}
 /* a translation must be written in the target language's script */
-function trFits(v){v=String(v||"");const L=S.lang;if(L==="zh")return RX.han.test(v);if(L==="en")return !RX.han.test(v)&&!RX.kana.test(v)&&!RX.hang.test(v);if(L==="ja")return RX.kana.test(v)||RX.han.test(v);if(L==="ko")return RX.hang.test(v);if(L==="es")return !RX.han.test(v);return true}
+function trFits(v){v=String(v||"");const L=S.lang;if(L==="zh")return RX.han.test(v)&&!/[一-鿿][a-z]|[a-z][一-鿿]/.test(v);if(L==="en")return !RX.han.test(v)&&!RX.kana.test(v)&&!RX.hang.test(v);if(L==="ja")return RX.kana.test(v)||RX.han.test(v);if(L==="ko")return RX.hang.test(v);if(L==="es")return !RX.han.test(v);return true}
 function trSave(){try{const keys=Object.keys(TR.map);if(keys.length>6000)keys.slice(0,keys.length-6000).forEach(k=>delete TR.map[k]);localStorage.setItem(trKey(),JSON.stringify(TR.map))}catch(_){}}
 const RX={han:/[一-鿿]/,kana:/[぀-ヿ]/,hang:/[가-힯]/,words:/[A-Za-z]{2,}[^\n]*\s+[A-Za-z]{2,}/};
 function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一-鿿]/.test(t))return false;const L=S.lang;
