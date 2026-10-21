@@ -50,14 +50,33 @@ user,session,work,chapter,event,choice,ms,client_at,server_at,props
 
 ## 4. 怎么导出
 
+### 4.1 后台点按钮（给人用）
+
+管理后台 → **用户池** → 点某一行 → 抽屉里的 **「玩法数据」** 标签：
+
+- 每部剧一行标题（会话数 / 事件数），下面一张表：**章 · 进章 · 完成 · 完成率 · 中位时长 · 选项分布**
+- 右上角下拉：`最近 50 / 200 / 500 / 1000 / 5000 条` + **「下载对话 txt」** 按钮
+  → 导出这个人的对话（`.txt`，带时间戳、角色名、线程标题；`think` 标成「（心里）」，卡片和图片变成 `[标签]`）
+- 每次导出会写一条后台审计日志 `export_transcript`（谁、导了谁、多少条）——这是隐私红线，不能静默
+
+### 4.2 命令行（给脚本用）
+
 ```bash
-# 明细（CSV）
+# 单个人的玩法数据
 curl -H "X-Admin-Key: $ADMIN_KEY" \
-  "https://miru-wheat-pi.vercel.app/api/events?export=csv&days=30"           # 全部
-  # &work=ice  只导一部剧；&limit=500000 上限
-# 汇总（JSON，直接看）
+  "https://miru-wheat-pi.vercel.app/api/admin?r=user_ledger&id=<uid>&days=90"
+
+# 单个人的对话 txt（最近 N 条）
+curl -H "X-Admin-Key: $ADMIN_KEY" \
+  "https://miru-wheat-pi.vercel.app/api/admin?r=user_transcript&id=<uid>&limit=200" -o who.txt
+
+# 全体明细（CSV）/ 汇总（JSON）
+curl -H "X-Admin-Key: $ADMIN_KEY" "https://miru-wheat-pi.vercel.app/api/events?export=csv&days=30"
 curl -H "X-Admin-Key: $ADMIN_KEY" "https://miru-wheat-pi.vercel.app/api/events?summary=1&days=30&work=ice"
 ```
+
+**对话从哪来**：`/api/state` 存的云存档（`states.data`，≤900 KB）里的 `threads[].msgs`。
+也就是说——**没有云存档的账号读不到对话**（本地未登录 / 没同步的人），那时会明确回「这个账号还没有云存档」，不是空文件。
 
 导出来的 CSV 现在能回答：
 
@@ -84,5 +103,8 @@ node tools/ledger-selftest.mjs     # 18 条，2026-10-22 全绿
 2. **`chapter_done` 的语义要先定**：是「翻到下一章」还是「看完结算页」？定错了完成率会一直偏高。
 3. **没有留存/回访口径**（D1/D7）——需要 `user_id` 跨天聚合，`events` 表已经有了，但要写查询。
 4. **付费相关只有 `purchase` 一个点**：第 3 章开锁率、钱包消耗曲线都还没有。
-5. **线上一次都没跑过**：本机没有数据库，`/api/events` 的两个新分支**只在自检里验过纯函数**，没有对着真库跑过。
+5. **线上一次都没跑过**：本机没有数据库。
+   - `_ledger.js` / `_transcript.js`（纯函数）已由自检覆盖（28 条）；
+   - `admin.js` 两条新路由只做过语法检查，**没有对着真库跑过**；
+   - `admin.html` 只验到**能启动到登录页**（Vue / Element Plus 都挂上了，说明新标签页的模板没有语法错），**用户抽屉里那一栏没有在登录态下真点过**。
 6. **数据量**：`export=csv` 默认上限 20 万行；超过就得按 `work` 分批导。

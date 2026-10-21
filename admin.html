@@ -212,8 +212,40 @@ const Users = {
     const f = reactive({ q: '', status: '', provider: '', sort: 'created' });
     const { st, load } = usePaged('users', f);
     const det = ref(null), drawer = ref(false), tab = ref('ledger');
+    const play = ref(null), txN = ref(200), txBusy = ref(false);
     const gd = reactive({ show: false, amount: 10, reason: '' }), bd = reactive({ show: false, reason: '', days: 0, hideWorks: false });
-    async function open(id) { det.value = await api('user', { query: { id } }); drawer.value = true; }
+    async function open(id) { det.value = await api('user', { query: { id } }); drawer.value = true; play.value = null; if (tab.value === 'play') loadPlay(); }
+    // ---- one player's gameplay ledger (funnel / choice mix / chapter duration) ----
+    async function loadPlay() {
+      if (!det.value) return;
+      try { play.value = await api('user_ledger', { query: { id: det.value.user.id, days: 90 } }); }
+      catch (_) { play.value = { works: [], rows: 0, days: 90 }; }
+    }
+    function tabChanged(name) { if (name === 'play' && !play.value) loadPlay(); }
+    function chRows(w) {
+      return Object.keys(w.chapters || {}).sort((a, b) => Number(a) - Number(b)).map(ch => {
+        const c = w.chapters[ch] || {}, ks = Object.keys(c.choices || {});
+        return { ch, opened: c.opened, done: c.done, done_rate: c.done_rate, median_ms: c.median_ms, choices: ks.length ? ks.map(k => k + ':' + c.choices[k].n).join('  ') : '—' };
+      });
+    }
+    const msfmt = v => { if (v == null) return '—'; const s = Math.round(v / 1000); return s < 60 ? s + ' 秒' : Math.floor(s / 60) + ' 分 ' + (s % 60) + ' 秒'; };
+    // ---- dialogue export: server renders the txt, we just download it ----
+    async function dlTx() {
+      const id = det.value.user.id;
+      txBusy.value = true;
+      try {
+        const qs = new URLSearchParams({ r: 'user_transcript', id, limit: String(txN.value) }).toString();
+        const res = await fetch('/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
+        if (!res.ok) { let j = {}; try { j = await res.json(); } catch (_) {} ElMessage.error(j.error || ('导出失败 ' + res.status)); return; }
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'miru-' + id + '-' + txN.value + 'lines.txt';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+        ElMessage.success('已导出（最多 ' + txN.value + ' 条）');
+      } finally { txBusy.value = false; }
+    }
     async function act(op, extra) { const id = det.value.user.id; const j = await api('user', { body: Object.assign({ id, op }, extra || {}) }); await open(id); load(); return j; }
     async function gems() { if (!gd.reason.trim()) return ElMessage.warning('请填写原因'); const j = await act('gems', { amount: gd.amount, reason: gd.reason }); gd.show = false; ElMessage.success('完成，当前余额 ' + j.gems); }
     async function ban() { if (!bd.reason.trim()) return ElMessage.warning('请填写封禁原因'); await act('ban', { reason: bd.reason, days: bd.days, hideWorks: bd.hideWorks }); bd.show = false; ElMessage.success('已封禁'); }
@@ -224,7 +256,7 @@ const Users = {
     async function rename() { const v = await promptText('修改昵称', '新昵称', { inputValue: det.value.user.name || '' }); await act('rename', { name: v }); }
     async function email() { const v = await promptText('修改邮箱', '新邮箱（用户将用它登录）', { inputValue: det.value.user.email || '' }); await act('email', { email: v }); }
     onMounted(() => load());
-    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, resetpw, logoutAll, note, rename, email, L, fmt, tagType, money, size, can };
+    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, resetpw, logoutAll, note, rename, email, play, txN, txBusy, loadPlay, tabChanged, chRows, msfmt, dlTx, L, fmt, tagType, money, size, can };
   },
   template: `<div class="panel">
     <div class="toolbar">
@@ -272,7 +304,32 @@ const Users = {
         <el-descriptions-item label="云存档">{{det.state?('v'+det.state.ver+' · '+size(det.state.bytes)+' · '+fmt(det.state.updated_at)):'无'}}</el-descriptions-item>
         <el-descriptions-item label="后台备注" :span="2">{{det.user.note||'—'}}</el-descriptions-item>
       </el-descriptions>
-      <el-tabs v-model="tab" style="margin-top:12px">
+      <el-tabs v-model="tab" style="margin-top:12px" @tab-change="tabChanged">
+        <el-tab-pane :label="'玩法数据'+(play?(' · '+play.rows+' 条'):'')" name="play">
+          <div class="toolbar" style="margin-bottom:10px">
+            <el-button size="small" @click="loadPlay" :loading="txBusy">刷新</el-button>
+            <el-select v-model="txN" size="small" style="width:140px">
+              <el-option v-for="n in [50,200,500,1000,5000]" :key="n" :label="'最近 ' + n + ' 条'" :value="n" />
+            </el-select>
+            <el-button size="small" type="primary" :loading="txBusy" @click="dlTx">下载对话 txt</el-button>
+            <span class="muted">导出会记进后台审计日志</span>
+          </div>
+          <template v-if="play">
+            <div v-if="!play.works || !play.works.length" class="muted">这个账号还没有玩法事件（事件表里没有带 wid 的记录）</div>
+            <div v-for="w in play.works" :key="w.work" style="margin-bottom:14px">
+              <div style="margin-bottom:4px"><b>{{w.work}}</b> <span class="muted">{{w.sessions}} 个会话 · {{w.events}} 条事件</span></div>
+              <el-table :data="chRows(w)" size="small" max-height="260">
+                <el-table-column prop="ch" label="章" width="60" />
+                <el-table-column prop="opened" label="进章" width="70" />
+                <el-table-column prop="done" label="完成" width="70" />
+                <el-table-column label="完成率" width="90"><template #default="{row}">{{row.done_rate==null?'—':Math.round(row.done_rate*100)+'%'}}</template></el-table-column>
+                <el-table-column label="中位时长" width="110"><template #default="{row}">{{msfmt(row.median_ms)}}</template></el-table-column>
+                <el-table-column prop="choices" label="选项分布（次数）" />
+              </el-table>
+            </div>
+            <div class="muted" style="margin-top:8px">窗口 {{play.days}} 天 · 共 {{play.rows}} 条事件</div>
+          </template>
+        </el-tab-pane>
         <el-tab-pane :label="'钻石流水 ('+det.ledger.length+')'" name="ledger"><el-table :data="det.ledger" size="small" max-height="380"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="变动" width="80"><template #default="{row}"><span :style="{color:row.delta>0?'#67c23a':'#f56c6c'}">{{row.delta>0?'+':''}}{{row.delta}}</span></template></el-table-column><el-table-column prop="reason" label="原因" /><el-table-column prop="balance" label="余额" width="80" /></el-table></el-tab-pane>
         <el-tab-pane :label="'订单 ('+det.orders.length+')'" name="orders"><el-table :data="det.orders" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="sku" label="商品" /><el-table-column prop="gems" label="钻石" width="70" /><el-table-column label="金额" width="90" :formatter="r=>money(r.price_cents)" /><el-table-column label="状态" width="120"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ostatus[row.status]||row.status}}</el-tag> <el-tag v-if="row.test" size="small" type="warning">测试</el-tag></template></el-table-column></el-table></el-tab-pane>
         <el-tab-pane :label="'作品 ('+det.works.length+')'" name="works"><el-table :data="det.works" size="small"><el-table-column prop="title" label="标题" /><el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.wstatus[row.status]||row.status}}</el-tag></template></el-table-column><el-table-column prop="plays" label="播放" width="70" /><el-table-column prop="reports" label="举报" width="70" /><el-table-column label="创建" width="170" :formatter="r=>fmt(r.created_at)" /></el-table></el-tab-pane>

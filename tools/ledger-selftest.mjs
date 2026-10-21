@@ -101,6 +101,35 @@ ok('done_rate must NOT move (a choice change is not a completion change)', s2.wo
 const dropped = rows.filter(r => !(r.name === 'chapter_done' && r.props.sess === 's3' && r.props.ch === 1));
 ok('removing one chapter_done lowers done_rate', LED.summary(dropped).works[0].chapters['1'].done_rate, 0.667);
 
+console.log('4) Transcript (.txt export of one player)');
+const TR = require('../api/_transcript.js');
+const state = {
+  threads: {
+    t1: { wid: 'ice', cast: ['ethan', 'mason'], msgs: [
+      { who: 'n', k: 'say', txt: '旁白一句', at: T0 + 1000 },
+      { who: 'mason', k: 'say', txt: "I'll take the floor.", at: T0 + 2000 },
+      { who: 'me', k: 'say', txt: '不用。', at: T0 + 3000 },
+    ] },
+    t2: { wid: 'dog', cast: ['ben'], msgs: [
+      { who: 'ben', k: 'think', txt: '他今天没来。', at: T0 + 5000 },
+      { who: 'sys', k: 'card', title: '章节', txt: '第2章', at: T0 + 6000 },
+      { who: 'ben', k: 'pic', src: 'art/x.jpg', at: T0 + 7000 },
+    ] },
+  },
+};
+const full = TR.transcript(state, 500);
+ok('counts every message', full.lines, 6);
+ok('counts threads', full.threads, 2);
+ok('dialogue line format', /mason：I'll take the floor\./.test(full.text), true);
+ok('think is marked, not dropped', /ben（心里）：他今天没来。/.test(full.text), true);
+ok('cards and pictures become tags', /\[sys\] \[章节\] 第2章/.test(full.text) && /\[ben\] \[图片\] art\/x\.jpg/.test(full.text), true);
+const capped = TR.transcript(state, 4);
+ok('limit keeps the MOST RECENT lines', capped.lines, 4);
+ok('the oldest line is the one dropped', /旁白一句/.test(capped.text), false);
+ok('still chronological inside the kept slice', capped.text.indexOf('不用。') < capped.text.indexOf('他今天没来。'), true);
+ok('header states kept / total / threads', /导出 4 条（存档共 6 条，2 个线程）/.test(capped.text), true);
+ok('no state at all is honest, not empty', /没有可读的云存档/.test(TR.transcript(null, 10).text), true);
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('ledger self-test OK');
