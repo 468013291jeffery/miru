@@ -2,6 +2,8 @@
 
 仓库根目录就是线上站点（Vercel 自动部署 `main` 分支）。
 
+> 构建怎么跑、判据是什么 → 仓库根 `BUILD.md` · 什么该放本地什么该放线上 → `ARCHITECTURE.md` · 还耦合着什么 → `DECOUPLING.md`
+
 | 位置 | 是什么 | 改了之后 |
 |---|---|---|
 | `source/src/*.js` | App 前端源码，按模块拆分（`app1_core.js` … `app94_official2.js`），顺序见 `source/build.py` 里的 `parts` | 跑 `python source/build.py`，生成仓库根的 `index.html` |

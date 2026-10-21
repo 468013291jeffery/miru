@@ -95,7 +95,7 @@ git rev-parse HEAD:source/src/content_36.js    # 必须完全相同
 | 谁来解析 | 构建期 `gen_content.py` | 运行时 `imParse` / `imBuild`（`app76_official.js`、`app94_official2.js`） |
 | 缺图片会怎样 | 构建期没有 `<id>.jpg` 就当没有立绘 | 运行时 `art/official/<work>.json` 里没有的槽位**直接跳过**，剧本不用重发 |
 
-⇒ **本地生成剧本、网站只做展示，走的应该是 B**（见 `DECOUPLING.md`）。A 是「内置商品」，不需要热更。
+⇒ **本地生成剧本、网站只做展示，走的应该是 B**（见 `DECOUPLING.md`；每一格该放本地还是线上，见 `ARCHITECTURE.md`）。A 是「内置商品」，不需要热更。
 
 ## 8. 已知限制
 
