@@ -13891,6 +13891,19 @@ function photoSrc98(th) {
 /* rebuild once so installed copies pick up the game ids */
 { const _iw98 = installWork; installWork = async function (id) { try { const h = S.off76 && S.off76[id]; if (h && !h.v98) h.ver = -1; } catch (_) {} const wid = await _iw98.apply(this, arguments); try { if (S.off76 && S.off76[id]) { S.off76[id].v98 = 1; save(); } } catch (_) {} return wid; }; }
 
+/* community rail on Discover: official works get their opening film (or cover) instead of the 📖 placeholder */
+function off94Rail() {
+  document.querySelectorAll(".comm68r [data-cwork] .cph:not([data-h94])").forEach(ph => {
+    ph.dataset.h94 = 1; const id = ph.closest("[data-cwork]").dataset.cwork;
+    off94Assets(id).then(A => { if (!ph.isConnected) return; const pos = A.cover || A.poster || "";
+      if (A.vid_open) { ph.outerHTML = '<video class="v94r" src="' + esc(A.vid_open) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>';
+        document.querySelectorAll(".comm68r video.v94r").forEach(v => { v.muted = true; v.play().catch(() => {}); }); }
+      else if (pos) ph.outerHTML = '<img src="' + esc(pos) + '" alt="">'; });
+  });
+}
+new MutationObserver(() => { try { if (document.querySelector(".comm68r .cph:not([data-h94])")) off94Rail(); } catch (_) {} }).observe(document.body, { childList: true, subtree: true });
+(function () { const st = document.createElement("style"); st.textContent = `.comm68r video.v94r,.comm68r button>img{width:132px;height:176px;object-fit:cover;border-radius:12px;display:block;background:#1A1622}`; document.head.appendChild(st); })();
+
 /* ================= v6.1 · App Store 1.2 (user-generated content): report · block · terms · contact =================
    · Report: a community story, its author, a library item, or an AI reply (chat menu ⋯). Goes to the admin console 「举报处理」 with a
      snapshot of the reported content; stories / library items reported by several people are hidden until reviewed (server side).
