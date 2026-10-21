@@ -13785,6 +13785,42 @@ const OFF94_EN = { "陆识野": "Lu Shiye", "方叙": "Fang Xu", "林小满": "L
   try { const zh = CL() === "zh"; Object.values(S.mine.worlds || {}).forEach(w => { if (w && w.official76) w.author = zh ? "MIRU 官方" : "MIRU Originals"; }); } catch (_) {}
   return _on.apply(this, arguments); }; off94Names(); })();
 
+/* ================= v5.9.9 · “AI 帮我想”: real in-context reply ideas on your turn ================= */
+async function aiIdeas97(th) {
+  const zh = CL() === "zh";
+  const as = th.pk && th.pk.as, c = as && ch(as), who = c ? first(c.n) : (me() || (zh ? "你" : "You"));
+  const st = th.pk && th.pk.stop, hint = st && st[2] && (Lz(st[2].hint) || st[2].q || "");
+  const line = m => { const w = m.who === "me" ? who : m.who === "n" || m.who === "sys" ? "" : (ch(m.who) ? first(ch(m.who).n) : ""); const t = String(m.txt || (m.parts || []).map(p => p.txt).join(" ") || "").replace(/\s+/g, " ").slice(0, 200); return t ? (w ? w + ": " : "") + t : ""; };
+  const hist = (th.msgs || []).slice(-14).map(line).filter(Boolean).join("\n");
+  const p = (zh ? "你在帮一位读者玩互动剧。读者现在扮演「" + who + "」。根据最近的剧情，替读者想 3 句此刻可以说的话：符合人物、口语、每句不超过 30 字，三句态度要不同（比如一句强硬、一句试探、一句柔软）。不要替别人说话，不要旁白。"
+                : "You help a reader play an interactive drama. The reader is playing \"" + who + "\". From the recent scene, write 3 things they could say right now: in character, spoken, under 20 words each, three different attitudes (firm / probing / soft). No narration, nobody else's lines.")
+    + (hint ? (zh ? "\n此刻的问题：" : "\nThe moment: ") + hint : "") + "\n\n" + hist
+    + '\n\nReply with ONLY JSON: {"replies":["...","...","..."]} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+  const r = await ask(p, { maxTokens: 300 });
+  return ((r && r.replies) || []).map(s => String(s).trim()).filter(Boolean).slice(0, 3);
+}
+async function aiIdeasGo97(btn) {
+  const th = S.threads[curT]; if (!th) return; const zh = CL() === "zh";
+  if (btn) { btn.disabled = true; btn.dataset.t0 = btn.textContent; btn.textContent = zh ? "✨ 正在想…" : "✨ Thinking…"; }
+  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => '<button data-sg="' + esc(x) + '">' + esc(x) + '</button>').join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
+  catch (e) { toast(zh ? (e && e.code === "na" ? "AI 现在不可用" : "没想出来，再点一次试试") : (e && e.code === "na" ? "AI isn't available right now" : "Nothing came up — try again")); }
+  finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
+}
+(function () {
+  const _sh = stopHTML;
+  stopHTML = function (th) {
+    const h = _sh.apply(this, arguments);
+    try { const b = th && th.pk && th.pk.stop; if (!b || !h) return h;
+      const k = b[1], mine = k === "myline" || (k === "line" && th.pk.as && th.pk.as === (ch(b[0]) ? b[0] : null)) || th.pk.talk || (b[2] && typeof Lz(b[2].hint) === "string" && Lz(b[2].hint).indexOf("⁣") === 0);
+      if (!mine && k !== "line") return h; const zh = CL() === "zh";
+      return h + '<div class="ai97"><button data-ai97="1">✨ ' + (zh ? "AI 帮我想怎么说" : "Help me say it") + '</button><div id="ai97o" class="ai97o"></div></div>';
+    } catch (_) { return h; } };
+  document.addEventListener("click", e => { const b = e.target.closest("[data-ai97]"); if (b) { e.stopPropagation(); aiIdeasGo97(b); } }, true);
+  /* the ✦ ideas tool asks the AI too instead of canned lines */
+  document.addEventListener("click", e => { const b = e.target.closest("[data-ideas]"); if (!b) return; const th = S.threads[curT]; if (!th || !th.pk) return; e.stopPropagation(); aiIdeasGo97(null); }, true);
+  const st = document.createElement("style"); st.textContent = `.ai97{margin:10px 0 0;text-align:center}.ai97>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px}.ai97>button:disabled{opacity:.6}.ai97o{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ai97o button{text-align:left;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:9px 12px;font-size:14px}`; document.head.appendChild(st);
+})();
+
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
    Discover = shelves (each tag with its own row), rankings, challenges and Earn; search + tag filters one tap away.
