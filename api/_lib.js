@@ -72,6 +72,8 @@ const SCHEMA = [
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS handled_by TEXT`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS handled_at TIMESTAMPTZ`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS note TEXT`,
+  `ALTER TABLE reports ADD COLUMN IF NOT EXISTS snap TEXT`,
+  `CREATE TABLE IF NOT EXISTS blocks (user_id TEXT, author_id TEXT, author_name TEXT, at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, author_id))`,
   `CREATE TABLE IF NOT EXISTS user_days (user_id TEXT, day DATE, PRIMARY KEY (user_id, day))`,
   `CREATE INDEX IF NOT EXISTS user_days_day_idx ON user_days (day)`,
   `CREATE TABLE IF NOT EXISTS admins (id TEXT PRIMARY KEY, username TEXT UNIQUE, pass TEXT, name TEXT, role TEXT DEFAULT 'reviewer', status TEXT DEFAULT 'active', tv INT DEFAULT 0, created_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), last_login TIMESTAMPTZ)`,
