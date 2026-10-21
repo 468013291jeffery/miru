@@ -11561,6 +11561,7 @@ const AUT = {
 };
 function au(k) { const x = AUT[k] || {}; return x[S.lang] || x.en || ""; }
 const PROV_NAME = { apple: "Apple", google: "Google", email: "Email", guest: "Guest" };
+function provName70(p) { p = p || "email"; const zh = S.lang === "zh"; if (p === "email") return zh ? "邮箱" : S.lang === "ja" ? "メール" : S.lang === "ko" ? "이메일" : S.lang === "es" ? "Correo" : "Email"; if (p === "guest") return zh ? "游客" : "Guest"; return PROV_NAME[p] || p; }
 function au70Loggedin() { const c = S.cloud || {}; return !!(c.token && (c.email || (c.provider && c.provider !== "guest"))); }
 async function au70Prov() {
   if (!CLOUD_EP) return { google: "", apple: "", email: false, reset: false, guest: true, preview: true };
@@ -11715,7 +11716,7 @@ acctCardHTML = function () {
   const c = cloudInfo();
   if (!au70Loggedin()) return '<div class="card acct68 au70card"><div class="row"><div class="grow"><b>☁️ ' + esc(au("acct")) + '</b><p class="xs faint">' + esc(au("guestAcct")) + '</p></div><button class="btn btn-p btn-sm" data-au70card="bind">' + esc(au("bind")) + '</button></div></div>';
   const who = c.name || c.email || c.uid;
-  return '<div class="card acct68 au70card"><div class="row"><div class="au70av">' + esc(String(who || "?").slice(0, 1).toUpperCase()) + '</div><div class="grow"><b>' + esc(who) + '</b><p class="xs faint">' + esc(au("via")) + ' ' + esc(PROV_NAME[c.provider] || c.provider || "Email") + (c.email && c.name ? ' · ' + esc(c.email) : '') + (c.syncedAt ? ' · ☁️ ' + esc(au("synced")) : '') + '</p></div></div>' +
+  return '<div class="card acct68 au70card"><div class="row"><div class="au70av">' + esc(String(who || "?").slice(0, 1).toUpperCase()) + '</div><div class="grow"><b>' + esc(who) + '</b><p class="xs faint">' + esc(au("via")) + ' ' + esc(provName70(c.provider)) + (c.email && c.name ? ' · ' + esc(c.email) : '') + (c.syncedAt ? ' · ☁️ ' + esc(au("synced")) : '') + '</p></div></div>' +
     '<div class="au70acts">' + (c.provider === "email" || (c.email && !c.provider) ? '<button class="btn btn-g btn-sm" data-au70card="pw">' + esc(au("chpw")) + '</button>' : '') +
     '<button class="btn btn-g btn-sm" data-au70card="out">' + esc(au("out")) + '</button><button class="btn btn-g btn-sm" data-au70card="outall">' + esc(au("outAll")) + '</button><button class="lnk au70del" data-au70card="del">' + esc(au("del")) + '</button></div></div>';
 };
@@ -13615,7 +13616,7 @@ capi = async function (path, o) {
   const r = await _capi94.apply(this, arguments);
   try {
     if (typeof path === "string" && /^\/works/.test(path) && r && r.j) {
-      const loc = w => { if (!w) return; if (w.en && CL() !== "zh") { if (w.en.title) w.title = w.en.title; if (w.en.hook) w.hook = w.en.hook; } else if (CL() === "zh" && typeof w.title === "string") w.title = zh94(w.title); };
+      const loc = w => { if (!w) return; Object.keys(w).forEach(k => { if (typeof w[k] === "string" && /^MIRU (官方|Originals)$/.test(w[k])) w[k] = CL() === "zh" ? "MIRU 官方" : "MIRU Originals"; }); if (w.en && CL() !== "zh") { if (w.en.title) w.title = w.en.title; if (w.en.hook) w.hook = w.en.hook; } else if (CL() === "zh" && typeof w.title === "string") w.title = zh94(w.title); };
       (r.j.works || []).forEach(loc);
       if (/play=1/.test(path)) { const m = /id=([^&]+)/.exec(path); if (m) (OFF94.play = OFF94.play || {})[decodeURIComponent(m[1])] = r; }
     }
@@ -13767,6 +13768,20 @@ installWork = async function (id) {
 /* installed official stories: Chinese side of the title/hook has no English tail */
 { const _iw97 = installWork; installWork = async function () { const wid = await _iw97.apply(this, arguments);
   try { const w = wid && wd(wid); if (w && w.official76) ["title", "hook", "premise"].forEach(k => { if (w[k] && typeof w[k] === "object" && w[k].zh) w[k].zh = zh94(w[k].zh); }); } catch (_) {} return wid; }; }
+
+/* stories installed before v5.9.5 keep "冰场之外 Off the Ice" in their Chinese title — clean them once on load */
+setTimeout(() => { try { let n = 0; Object.values(S.mine.worlds || {}).forEach(w => { if (!w || !w.official76) return; ["title", "hook", "premise"].forEach(k => { if (w[k] && typeof w[k] === "object" && w[k].zh) { const v = zh94(w[k].zh); if (v !== w[k].zh) { w[k].zh = v; n++; } } }); }); if (n) save(); } catch (_) {} }, 0);
+
+/* ================= v5.9.5 · one language per screen =================
+   Chinese UI: no English except people's names. English UI: no Chinese. */
+(function () { const _me = me; me = function () { try { const p = persona(); if (p && p.name) return p.name; } catch (_) {} return ({ zh: "你", ja: "あなた", ko: "나", es: "Tú" })[S.lang] || "You"; }; })();
+const OFF94_EN = { "陆识野": "Lu Shiye", "方叙": "Fang Xu", "林小满": "Lin Xiaoman", "老周": "Director Zhou", "顾母": "Mom", "医院": "Hospital", "顾昭": "Gu Zhao",
+  "凯兰": "Caelan", "罗温": "Rowan", "埃莉拉": "Elira", "马雷克": "Marek", "埃文": "Evan", "马特奥": "Mateo", "丹娜": "Dana", "哈珀": "Harper", "梅森": "Mason",
+  "新队员": "The Rookie", "记录员": "The Scribe" };
+(function () { const _on = off94Names; off94Names = function () {
+  try { Object.values(S.mine.chars || {}).forEach(c => { if (c && !c.n94 && OFF94_EN[c.n]) c.n94 = { zh: c.n, en: OFF94_EN[c.n] }; }); } catch (_) {}
+  try { const zh = CL() === "zh"; Object.values(S.mine.worlds || {}).forEach(w => { if (w && w.official76) w.author = zh ? "MIRU 官方" : "MIRU Originals"; }); } catch (_) {}
+  return _on.apply(this, arguments); }; off94Names(); })();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
