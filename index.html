@@ -5590,15 +5590,32 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  return h+'</div>'}
 function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=packPanel(th)}
 
+/* ---- ledger telemetry for the pack flow (contract: LEDGER.md §2) ----
+   Four events, no gameplay change: chapter_open / choice_pick / chapter_done / story_end.
+   Everything hangs off th.pk, so a replay or a second device starts a new session id. */
+function pkSess(th){if(!th.pk._sess){th.pk._sess=Date.now().toString(36)+Math.random().toString(36).slice(2,7)}return th.pk._sess}
+function pkTrack(th,name,extra){try{track(name,Object.assign({wid:th.wid,sess:pkSess(th),t:Date.now()},extra||{}))}catch(_){}}
+function pkOpenMark(th,n){try{
+  // a genuinely new run = chapter 1 with no session yet, right after an ending, or after having
+  // been past chapter 1 (replay). Re-entering the SAME chapter must not count as a second open.
+  if(n===1&&(!th.pk._sess||th.pk.st==="end"||th.pk._opened>1)){th.pk._sess=null;th.pk._opened=0}
+  if(th.pk._opened===n)return                          // same chapter re-entered: one opening, not two
+  th.pk._opened=n;th.pk._chAt=Date.now();
+  pkTrack(th,"chapter_open",{ch:n});
+}catch(_){}}
+function pkDone(th,n){try{pkTrack(th,"chapter_done",{ch:n,ms:th.pk._chAt?Date.now()-th.pk._chAt:null})}catch(_){}}
 function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
+ pkTrack(th,"choice_pick",{ch:n,key:k,ms:th.pk._chAt?Date.now()-th.pk._chAt:null});
  th.pk.picks[n]=k;pkSet(th,x.set);th.pk.st="busy";th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
  appendMsg(th,{who:"sys",k:"dec",n,c:k,txt:Lz(x.t),at:Date.now()});
  th.pk.q=packBeats(x.then).slice();th.pk.after="pick:"+k;save();packRefresh(th);packRun(th)}
 function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  th.mem.push(Lz(x.mem));packLove(th,k);th.rounds++;
+ pkDone(th,n);
  if(n===PCN(w)){th.pk.st="end";th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
+  pkTrack(th,"story_end",{ch:n,ending:k});
   if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>th.love[cid]=Math.max(th.love[cid]||0,80));
   appendMsg(th,{who:"sys",k:"end",e:k,at:Date.now()});
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
@@ -11777,7 +11794,7 @@ setTimeout(au70Config, 1600);
 document.addEventListener("click", e => { if (e.target.closest("[data-pfsave]")) track("taste_done"); }, true);
 if (typeof hookPlay === "function") { const _hp70 = hookPlay; let once = false; hookPlay = function () { if (!once) { once = true; track("hook_play"); } return _hp70.apply(this, arguments); }; }
 const _packOpen70 = packOpen;
-packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } else if (n > 1) track("chapter_done", { wid: th.wid, ch: n - 1 }); } } catch (_) {} return _packOpen70.apply(this, arguments); };
+packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } if (typeof pkOpenMark === "function") pkOpenMark(th, n); } } catch (_) {} return _packOpen70.apply(this, arguments); };
 const _reply70 = reply;
 reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid }); } catch (_) {} return _reply70.apply(this, arguments); };
 const _units70 = unitsSheet;
