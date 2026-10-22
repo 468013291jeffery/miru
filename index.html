@@ -14696,10 +14696,10 @@ async function director98(th, mode, act) {
     (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
     (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
-    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；不让所有人都围着玩家转；不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
-           : "Never write the player's words, actions or decisions; not everyone revolves around the player; no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
+    "\n" + (zh ? "旁白用小说式的文学叙述（第二人称，可写声音、气味、温度、人物细微的反应和气氛），不要写成镜头脚本（不出现“镜头”“画面”“特写”“视野”等词）；旁白绝不包含任何人说的话（不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is literary prose (second person: sound, smell, small reactions, mood), not a camera script; never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；不让所有人都围着玩家转；不安排剧本没有的电话；不剧透后面的事。options：给玩家 3 个下一步建议，态度各不相同，格式 {\"k\":\"say|act|think\",\"t\":\"...\"}——say 写玩家要说出口的原话（第一人称台词，像真人说话，≤20 字，不写“问他…”“告诉她…”这种描述）；act 写玩家的动作（不写主语，从动词写起，≤14 字）；think 写玩家心里的一句话（≤16 字）。三条里至少一条 say。item：如果这一刻玩家拿到、看到或被递来一份能读的东西（信件、密信、文件、纸条、短信、报纸、证物上的字），必须在 item 里给出玩家能读到的完整内容 {\"title\":\"物品名\",\"text\":\"内容全文，≤220 字，符合世界设定，不剧透后面\"}；没有就 null。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
+           : "Never write the player's words, actions or decisions; not everyone revolves around the player; no calls the script doesn't have; no spoilers. options: 3 suggestions with different attitudes, each {\"k\":\"say|act|think\",\"t\":\"...\"} — say = the exact words the player would say aloud (first person, natural, ≤14 words, never a description like 'ask him…'); act = an action without a subject (≤8 words); think = an inner line (≤10 words). At least one say. item: if the player receives or sees something readable right now (letter, document, note, text message, newspaper, writing on evidence), give its full readable text {\"title\":\"...\",\"text\":\"≤140 words, consistent with the world, no spoilers\"}; else null. player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}],"item":null,"player_obs":"","state":"","summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -14711,16 +14711,16 @@ async function actor98(th, cid, intent) {
     (k.voice ? "\n" + (zh ? "说话方式：" : "How you talk: ") + k.voice : "") + (k.personality ? "\n" + (zh ? "性格机制：" : "Personality: ") + String(k.personality).slice(0, 600) : "") +
     (k.want ? "\n" + (zh ? "你想要：" : "You want: ") + k.want : "") + (k.fear ? "\n" + (zh ? "你害怕：" : "You fear: ") + k.fear : "") +
     (k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
-    (k.toward_player ? "\n" + (zh ? "你对" + you + "的初始态度：" : "Your starting attitude toward " + you + ": ") + k.toward_player : "") + (k.hooks ? "\n" + (zh ? "你的吸引点 / 高光行为：" : "What makes you magnetic: ") + String(k.hooks).slice(0, 500) : "") +
+    (k.toward_player ? "\n" + (zh ? "你对" + you + "的初始态度：" : "Your starting attitude toward " + you + ": ") + k.toward_player : "") + (k.hooks ? "\n" + (zh ? "你的吸引点 / 高光行为：" : "What makes you magnetic: ") + String(k.hooks).slice(0, 500) : "") + (k.looks ? "\n" + (zh ? "你的外形（可在动作里自然体现）：" : "Your look (show it naturally in actions): ") + String(k.looks).slice(0, 300) : "") + (k.spice ? "\n" + (zh ? "你的撩人特征与亲密互动方式（按当前感觉阶段和对方意愿分寸使用）：" : "Your allure and how you flirt (scale it to the current stage and their consent): ") + String(k.spice).slice(0, 600) : "") +
     "\n" + (zh ? "你现在对" + you + "的感觉：" : "How you feel about " + you + " now: ") + stage98(th.love[cid] || 0) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
     (cd.mem.length ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + cd.mem.slice(-22).map(m => "- " + m).join("\n") : "") +
     (k.sample_lines && k.sample_lines.length ? "\n" + (zh ? "你说话的样子（参考语气，不要照抄）：" : "How you sound (tone only, don't copy): ") + k.sample_lines.slice(0, 5).map(z => "「" + z + "」").join(" ") : "") +
     "\n" + (zh ? "世界里的规矩：" : "Rules of your world: ") + String(b.world || "").slice(0, 500) +
     "\n\n" + (zh ? "此刻在：" : "You're at: ") + LZ98(s && s.place) + "\n" + (zh ? "眼前：\n" : "Right here:\n") + (tail98(th, 12) || "") +
     "\n\n" + (zh ? "导演的提示（你可以有自己的主意）：" : "Director's note (you may have your own idea): ") + (intent || "") +
-    "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（第一人称「我…」，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
-           : "Your turn. Only yourself: an optional action (first person, ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
-    '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
+    "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作描写 act（不写主语，直接从动词写起，例如「把军刀往门边挪了挪，指节还沾着灰」；有文学感，可写神态和细节，≤30 字；绝不出现“我”）和一句台词 say（≤45 字，像真人说话，符合你的口吻）。to：这句话是对谁说的（填对方的名字；对玩家说就填“你”；自言自语填空）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
+           : "Your turn. Only yourself: an optional action with no subject, starting from the verb (e.g. 'shifts the saber toward the door'), literary, ≤18 words, never 'I'; to: who you're speaking to (their name, 'you' for the player, empty if to yourself); and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
+    '\nReply with ONLY JSON: {"act":"","say":"...","to":"","feel":0,"remember":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 320 });
 }
 /* ---------- one beat ---------- */
@@ -14734,14 +14734,19 @@ async function beat98(th, mode, act) {
     if (d.narration) { const n0 = String(d.narration).trim(); }
     if (act && act.mode !== "think") mem98(th, pres.length ? pres : th.cast, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
     let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && th.cast.includes(x.id)); if (mode === "exit") spk = spk.slice(0, 1);
-    let nar = String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
-    if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
+    /* after the player acts / thinks / picks, somebody answers in words — never only scenery */
+    if (!spk.length && (mode === "talk" || mode === "choice")) { const c0 = (act && act.to && th.cast.includes(act.to)) ? act.to : (pres[0] || th.cast[0]); if (c0) spk.push({ id: c0, intent: act && act.mode === "think" ? L98("玩家没开口，你只看得到对方的神情；自然地回应这一刻", "The player said nothing aloud; respond to the moment") : "" }); }
+    let nar = clean98(d.narration); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
+    if (/[「」“”"]/.test(nar)) nar = nar.replace(/[^。！？.!?]*[「“"][^」”"]*[」”"][^。！？.!?]*[。！？.!?]?/g, "").trim();
+    if (nar) await show98(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
+    if (d.item && typeof d.item === "object" && d.item.text) { const it = { title: String(d.item.title || L98("物品", "Item")).slice(0, 30), text: String(d.item.text).slice(0, 600), ch: A.ch }; (A.items = A.items || []).push(it); await show98(th, { who: "sys", k: "card", title: "📜 " + it.title, txt: it.text, item98: 1, at: Date.now() }); }
     if (act && act.to && th.cast.includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
     for (const sp of spk.slice(0, mode === "talk" ? 2 : 3)) {
       let r = null; try { r = await actor98(th, sp.id, sp.intent); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", "")); if (r2 && r2.say) r = r2; } } catch (_) {} if (!r) continue;
-      r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
-      if (r.act) appendMsg(th, { who: sp.id, k: "act", txt: String(r.act).slice(0, 140), at: Date.now() });
-      if (r.say) appendMsg(th, { who: sp.id, k: "say", txt: String(r.say).slice(0, 220), at: Date.now(), ai: 1 });
+      r.act = actFix98(th, sp.id, r.act); r.say = clean98(r.say).replace(/^[「“"]|[」”"]$/g, ""); if (!r.act && !r.say) continue;
+      const to = to98(th, sp.id, r.to);
+      if (r.act) await show98(th, { who: sp.id, k: "act", txt: String(r.act).slice(0, 140), at: Date.now() });
+      if (r.say) await show98(th, { who: sp.id, k: "say", txt: String(r.say).slice(0, 220), to98: to, at: Date.now(), ai: 1 });
       const f = Math.max(-5, Math.min(5, +r.feel || 0)); th.love[sp.id] = Math.max(0, Math.min(100, (th.love[sp.id] || 0) + f * 1.6));
       if (r.remember) mem98(th, [sp.id], r.remember);
       if (r.say) mem98(th, (pres.length ? pres : th.cast).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
@@ -14750,7 +14755,7 @@ async function beat98(th, mode, act) {
     if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
     if (d.state) A.flags.push(String(d.state).slice(0, 60));
-    if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
+    if (Array.isArray(d.options)) setSugg(opts98(d.options));
     useUnits(aiCost() * (mode === "talk" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
     if (items.length && typeof chg96 === "function") chg96(items);
@@ -14841,6 +14846,91 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
 document.addEventListener("click", e => { if (!e.target.closest("[data-fd97]")) return; S.fold97 = !S.fold97; save(); const th = S.threads[curT]; if (th) packRefresh(th); });
 
 function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自由输入|备注|注：)[^）)]*[）)]/g,'').replace(/\s+$/,'').trim();}
+
+/* ================= v7.2 · 10.23 meeting fixes =================
+   suggestions say exactly what you'd say · literary actions without "我" · readable items (letters) pushed as cards ·
+   synopsis + cast up front · lines revealed one by one, each voiced in turn · "A → B" labels · quick say/act/think chips */
+function clean98(t) { return String(t || "").replace(/【[^】]*】/g, "").replace(/\{[^}]*\}/g, "").replace(/\b(?:b98_\w+|speakers?|narration|intent)\b/g, "").replace(/\s+/g, " ").trim(); }
+function actFix98(th, cid, a) {
+  a = clean98(a).replace(/^[*（(]+|[*）)]+$/g, ""); if (!a) return "";
+  const c = ch(cid), k = cardOf98(wd(th.wid), cid) || {}, names = [c && first(c.n), c && c.n, k.short && LZ98(k.short), k.name && LZ98(k.name)].filter(Boolean);
+  names.forEach(n => { if (a.startsWith(n)) a = a.slice(n.length); }); a = a.replace(/^[\s,，:：]+/, "");
+  if (Z98()) { const pr = k.gender === "f" ? "她" : "他"; a = a.replace(/^(我|他|她)(?=[^们])/, "").replace(/我的/g, pr + "的").replace(/我/g, pr); }
+  else a = a.replace(/^(I|He|She)\s+/i, "").replace(/\bmy\b/gi, k.gender === "f" ? "her" : "his");
+  return a.trim();
+}
+function to98(th, cid, to) {
+  to = String(to || "").trim(); if (!to) return "";
+  if (/^(你|您|玩家|you|player)$/i.test(to) || to === yn98(th)) return L98("你", "you");
+  const hit = th.cast.find(c => c !== cid && ch(c) && (to.includes(first(ch(c).n)) || first(ch(c).n).includes(to)));
+  return hit ? first(ch(hit).n) : "";
+}
+function opts98(list) {
+  return (list || []).map(o => {
+    let k = "say", t = o; if (o && typeof o === "object") { k = o.k || o.kind || "say"; t = o.t || o.text || ""; }
+    t = clean98(t).replace(/^[*（(「“"]+|[*）)」”"]+$/g, ""); if (!t || t.length > 40 || /[{}<>\[\]=_]|json|null/i.test(t)) return null;
+    return k === "act" ? "*" + t + "*" : k === "think" ? "（" + t + "）" : t;
+  }).filter(Boolean).slice(0, 3);
+}
+/* one by one: each line waits for the previous one to be read / voiced */
+let PACE98 = Promise.resolve(), NOSPEAK98 = 0;
+{ const _sp = speak; speak = function (text, id, onend) { if (NOSPEAK98) return; return _sp.apply(this, arguments); }; }
+function show98(th, m) {
+  const run = PACE98.then(() => {
+    NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
+    const len = String(m.txt || "").length;
+    if (m.k === "say" && S.autoVoice && curT === th.id && ch(m.who)) return new Promise(res => { let ok = false; const f = () => { if (!ok) { ok = true; setTimeout(res, 250); } }; try { speak(m.txt, m.who, f); } catch (_) { f(); } setTimeout(f, Math.min(20000, 3000 + len * 260)); });
+    return new Promise(res => setTimeout(res, curT === th.id ? Math.max(650, Math.min(2200, len * 45)) : 0));
+  });
+  PACE98 = run.catch(() => {}); return Promise.resolve();
+}
+/* message rendering: wrapper (for the clean screen), fade-in for new lines, "A → B" and "对 X 说" labels */
+{ const _mh = msgHTML; msgHTML = function (m, i, th) { let h = _mh.apply(this, arguments); if (!th || !th.b98 || !h) return h;
+  if (m.to98 && ch(m.who)) { const nm = esc(first(ch(m.who).n)); h = h.replace(">" + nm + "</div>", ">" + nm + ' <span class="to98">→ ' + esc(m.to98) + "</span></div>").replace(">" + nm + "</b>", ">" + nm + ' <span class="to98">→ ' + esc(m.to98) + "</span></b>"); if (h.indexOf("to98") < 0) h = h.replace('<div class="bub">', '<div class="m-who to98w">' + nm + ' <span class="to98">→ ' + esc(m.to98) + '</span></div><div class="bub">'); }
+  if (m.who === "me" && m.to98) h = h.replace('<div class="bub">', '<small class="to98m">' + esc(L98("对 " + m.to98 + " 说", "to " + m.to98)) + '</small><div class="bub">');
+  const nw = m.at && Date.now() - m.at < 2500 ? " nw98" : "";
+  return '<div class="mw98' + nw + '" data-mi98="' + i + '">' + h + '</div>'; }; }
+/* the player's own line gets its addressee */
+{ const _ds = doSend; doSend = function (txt, mode) { const th = S.threads[curT]; if (th && th.b98) { const n0 = th.msgs.length; const r = _ds.apply(this, arguments); const m = th.msgs[n0]; if (m && m.who === "me" && th.addr && ch(th.addr) && th.cast.includes(th.addr)) { m.to98 = first(ch(th.addr).n); save(); const el = $('#msgs [data-mi98="' + n0 + '"]'); if (el) el.outerHTML = msgHTML(m, n0, th); } return r; } return _ds.apply(this, arguments); }; }
+/* clean screen: keep the whole current beat on screen (since your last move or the last scene card), not just 2 lines */
+{ const _cm = cleanMark; cleanMark = function () { _cm.apply(this, arguments); try { const th = S.threads[curT], m = $("#msgs"); if (!th || !th.b98 || !m || !cleanOn() || HIST_OPEN) return;
+  let from = th.msgs.length - 1; while (from > 0 && !(th.msgs[from].who === "me" || (th.msgs[from].k === "card" && !th.msgs[from].item98))) from--;
+  from = Math.max(from, th.msgs.length - 10, 0); if (th.msgs.length - from < 3) from = Math.max(0, th.msgs.length - 3);
+  if (th.b98.ch === 1 && th.b98.sc === 0 && th.b98.turns <= 1) from = 0; /* first beat: synopsis + cast stay on screen */
+  let n = 0; [...m.children].forEach(c => { if (!c.classList.contains("mw98")) return; const i = +c.dataset.mi98; const cold = i < from; c.classList.toggle("cold", cold); if (cold) n++; });
+  const hb = $("#histBtn"); if (hb) hb.querySelector("em").textContent = n > 0 ? n : ""; } catch (_) {} }; }
+/* suggestions show what kind they are */
+function sgDeco98() { const th = S.threads[curT]; if (!th || !th.b98) return; $$("#sugg [data-sg]").forEach(b => { const v = b.dataset.sg; const k = /^\*.*\*$/.test(v) ? "act" : /^[(（].*[)）]$/.test(v) ? "think" : "say"; b.innerHTML = '<i class="sg98">' + (k === "act" ? "✱ " + L98("动作", "Do") : k === "think" ? "💭 " + L98("心声", "Think") : "💬 " + L98("说", "Say")) + "</i>" + esc(v.replace(/^[*（(]|[*）)]$/g, "")); }); }
+{ const _ss = setSugg; setSugg = function () { const r = _ss.apply(this, arguments); try { sgDeco98(); } catch (_) {} return r; }; }
+/* synopsis + who's who, up front and on demand */
+function intro98(th) { const w = wd(th.wid), b = bOf98(w); if (!b) return ""; return LZ98(b.intro) || LZ98(b.premise) || ""; }
+function castL98(th) { const w = wd(th.wid), b = bOf98(w); if (!b) return []; return th.cast.map(id => { const k = cardOf98(w, id) || {}; return { id, n: first(ch(id).n), r: LZ98(k.role), t: LZ98(k.tagline) || "", tier: k.tier }; }).filter(x => x.n).sort((a, z) => ({ lead: 0, main: 1 }[a.tier] ?? 2) - ({ lead: 0, main: 1 }[z.tier] ?? 2)); }
+{ const _n = new98; new98 = function (wid, k) { const th = _n.apply(this, arguments); try { const it = intro98(th); if (it) th.msgs.push({ who: "sys", k: "card", title: "📖 " + L98("前情提要", "The story so far"), txt: it, at: Date.now() - 5000 });
+  const cl = castL98(th).filter(x => x.tier !== "support").slice(0, 6); if (cl.length) th.msgs.push({ who: "sys", k: "card", title: "👥 " + L98("登场人物", "Who's who"), txt: cl.map(x => "· " + (x.t || x.n + " — " + x.r)).join("\n"), at: Date.now() - 5000 }); save(); } catch (_) {} return th; }; }
+function info98(th) { const A = th.b98, items = A.items || [];
+  sheet('<div class="eyebrow">📖 ' + L98("前情提要", "The story so far") + '</div><p class="sm" style="line-height:1.65;margin-top:6px;white-space:pre-line">' + esc(intro98(th)) + '</p>' +
+    '<div class="eyebrow" style="margin-top:14px">👥 ' + L98("人物", "Characters") + '</div><div class="stack" style="gap:6px;margin-top:6px">' + castL98(th).map(x => '<div class="row" style="gap:8px;align-items:flex-start">' + avatar(x.id, 34) + '<div><b>' + esc(x.n) + '</b> <span class="xs faint">' + esc(x.r) + '</span><div class="xs" style="opacity:.85;margin-top:2px">' + esc(x.t) + '</div></div></div>').join("") + '</div>' +
+    '<div class="eyebrow" style="margin-top:14px">📜 ' + L98("线索与物品", "Clues & items") + '</div>' + (items.length ? items.map(it => '<details style="margin-top:6px"><summary><b>' + esc(it.title) + '</b> <span class="xs faint">' + L98("第 " + it.ch + " 章", "Ch " + it.ch) + '</span></summary><p class="sm" style="white-space:pre-line;line-height:1.6;margin-top:4px">' + esc(it.text) + '</p></details>').join("") : '<p class="xs faint" style="margin-top:6px">' + L98("还没有拿到可以读的东西。", "Nothing to read yet.") + '</p>') +
+    (A.sum.length ? '<div class="eyebrow" style="margin-top:14px">🧭 ' + L98("你走过的路", "What you've done") + '</div><p class="xs" style="line-height:1.6;margin-top:6px">' + A.sum.slice(-8).map(esc).join("<br>") + '</p>' : ''));
+}
+{ const _d = dock98; dock98 = function () { _d.apply(this, arguments); const th = S.threads[curT], el = $("#dk98"); if (!th || !th.b98 || !el || el.querySelector("[data-b98info]")) return; const n = (th.b98.items || []).length; const r = el.querySelector(".dk98r") || el; r.insertAdjacentHTML("afterbegin", '<button class="dk98i" data-b98info="1">📖' + (n ? '<em>' + n + '</em>' : '') + '</button>'); }; }
+document.addEventListener("click", e => { if (!e.target.closest("[data-b98info]")) return; const th = S.threads[curT]; if (th && th.b98) info98(th); }, true);
+/* quick chips above the input: wrap what you typed as 台词 / 动作 / 心声 with one tap */
+{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { const th = S.threads[curT]; sgDeco98(); const sc = $("#s-chat"); if (sc) sc.classList.toggle("b98", !!(th && th.b98)); if (th && th.b98 && !$("#qm98")) { const ir = $("#s-chat .composer .inrow"); if (ir) ir.insertAdjacentHTML("beforebegin", '<div id="qm98">' + [["say", "💬 " + L98("台词", "Say")], ["act", "✱ " + L98("动作", "Action")], ["think", "💭 " + L98("心声", "Thought")]].map(([k, l]) => '<button data-qm98="' + k + '" class="' + (cmode === k ? "on" : "") + '">' + l + '</button>').join("") + '<span>' + L98("不用加括号或引号", "no brackets or quotes needed") + '</span></div>'); } } catch (_) {} return r; }; }
+document.addEventListener("click", e => { const x = e.target.closest("[data-qm98]"); if (!x) return; e.preventDefault(); e.stopPropagation(); cmode = x.dataset.qm98; $$("[data-qm98]").forEach(b => b.classList.toggle("on", b === x)); $$("[data-mode]").forEach(b => b.classList.toggle("on", b.dataset.mode === cmode)); const mb = $(".modebtn"); if (mb) mb.textContent = x.textContent.trim().slice(0, 4) + " ▴"; const ta = $("#cin"); if (ta) { ta.placeholder = t("cx.ph." + cmode); ta.focus(); } }, true);
+/* typed markers still work: "*…*" / "(…)" switch the mode and are stripped */
+{ const _ds2 = doSend; doSend = function (txt, mode) { const th = S.threads[curT]; if (th && th.b98 && txt && !mode) { const v = String(txt).trim(); if (/^\*.+\*$/.test(v)) return _ds2.call(this, v.slice(1, -1), "act"); if (/^[(（].+[)）]$/.test(v)) return _ds2.call(this, v.slice(1, -1), "think"); if (/^[「“"].+[」”"]$/.test(v)) return _ds2.call(this, v.slice(1, -1), "say"); } return _ds2.apply(this, arguments); }; }
+(function () { const st = document.createElement("style"); st.textContent = `
+.mw98{display:contents}.mw98.nw98>*{animation:in98 .5s ease both}@keyframes in98{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.to98{font-weight:600;opacity:.75;font-size:11px}.to98w{font-size:11px;margin-bottom:2px}.to98m{display:block;text-align:right;font-size:11px;opacity:.7;margin-bottom:2px}
+#msgs .m-card p{white-space:pre-line}
+#sugg .sg98{font-style:normal;font-size:10px;font-weight:800;opacity:.7;margin-right:5px;padding:1px 5px;border-radius:6px;background:rgba(255,255,255,.12)}
+.dk98i{flex:none;position:relative;height:34px;min-width:38px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:16px;margin-right:6px}
+.dk98i em{position:absolute;top:-5px;right:-5px;font-style:normal;font-size:10px;font-weight:800;background:var(--rose,#EE6F97);border-radius:99px;padding:0 5px}
+#qm98{display:flex;gap:6px;align-items:center;margin:0 0 6px;overflow-x:auto}#qm98 button{flex:none;height:28px;padding:0 10px;border-radius:99px;font-size:12px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#ddd}
+#s-chat.b98 .modebtn{display:none!important}
+#qm98 button.on{background:rgba(240,183,126,.2);border-color:var(--gold,#F0B77E);color:#F7D2A8}#qm98 span{font-size:10px;opacity:.55;white-space:nowrap}
+`; document.head.appendChild(st); })();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
