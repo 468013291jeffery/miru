@@ -14897,7 +14897,8 @@ function show98(th, m) {
 { const _cm = cleanMark; cleanMark = function () { _cm.apply(this, arguments); try { const th = S.threads[curT], m = $("#msgs"); if (!th || !th.b98 || !m || !cleanOn() || HIST_OPEN) return;
   let from = th.msgs.length - 1; while (from > 0 && !(th.msgs[from].who === "me" || (th.msgs[from].k === "card" && !th.msgs[from].item98))) from--;
   from = Math.max(from, th.msgs.length - 10, 0); if (th.msgs.length - from < 3) from = Math.max(0, th.msgs.length - 3);
-  if (th.b98.ch === 1 && th.b98.sc === 0 && th.b98.turns <= 1) from = 0; /* first beat: synopsis + cast stay on screen */
+  if (!th.msgs.some(m => m.who === "me")) from = Math.max(0, th.msgs.length - 6); /* before your first move: synopsis + cast */
+  from = Math.max(from, th.msgs.length - 4);
   let n = 0; [...m.children].forEach(c => { if (!c.classList.contains("mw98")) return; const i = +c.dataset.mi98; const cold = i < from; c.classList.toggle("cold", cold); if (cold) n++; });
   const hb = $("#histBtn"); if (hb) hb.querySelector("em").textContent = n > 0 ? n : ""; } catch (_) {} }; }
 /* suggestions show what kind they are */
@@ -14958,7 +14959,10 @@ function jump98(th, n) { const b = bOf98(wd(th.wid)); if (!b || busy || n < 1 ||
 document.addEventListener("click", e => { const x = e.target.closest("[data-b98jump]"); if (!x) return; const th = S.threads[curT]; if (th && th.b98) jump98(th, +x.dataset.b98jump); }, true);
 (function () { const st = document.createElement("style"); st.textContent = `
 #s-chat.b98 .m-narr{align-self:flex-start;text-align:left;max-width:100%;font-style:normal;font-family:inherit;font-size:14px;color:#e8e2ea;padding:8px 12px;border-radius:12px;background:rgba(10,9,14,.55)}
-#s-chat.b98 .m-card{text-align:left}#s-chat.b98 .m-card .eyebrow{text-align:left}
+#s-chat.b98 .m-card{text-align:left}
+#s-chat.b98 .m-act:not(.me){align-self:flex-start;max-width:92%;padding:8px 12px;border-radius:12px;background:rgba(10,9,14,.72);color:#f1edf3;font-size:14px;line-height:1.55;text-shadow:none}
+#s-chat.b98 .m-act:not(.me) b{color:#f5b8cf!important}
+#s-chat.b98 .m-card{background:rgba(10,9,14,.72)}#s-chat.b98 .m-card .eyebrow{text-align:left}
 #s-chat.b98 #sugg button{background:rgba(255,255,255,.06)!important;border:1px dashed rgba(255,255,255,.28)!important;color:#ddd!important;box-shadow:none!important}
 #sugg .sgl98{font-size:10px;font-weight:800;opacity:.55;align-self:center;margin-right:2px;flex:none}
 #s-chat.b98 .rg73,#s-chat.b98 #toolBtn,#s-chat.b98 .composer .plus{display:none!important}
@@ -15083,11 +15087,11 @@ function spoken100(text) {
 }
 { const _sp = speak; speak = function (text, id, onend) {
   const c = id && id !== "n" && id !== "me" ? ch(id) : null;
-  const s = c ? spoken100(text) : "";
+  const s = (c || id === "me") ? spoken100(text) : "";
   if (!s || !/[\p{L}\p{N}]/u.test(s)) { if (onend) setTimeout(onend, 30); return; }   /* narration / pure action: silent */
-  return _sp.call(this, s, id, onend); }; }
+  return _sp.call(this, s, id === "me" ? null : id, onend); }; }
 { const _mh = msgHTML; msgHTML = function (m, i, th) { let h = _mh.apply(this, arguments); if (!h || !m) return h;
-  if (m.k === "say" && ch(m.who) && m.who !== "me" && spoken100(m.txt) && !m.locked) {
+  if ((m.k === "say" || (m.who === "me" && !m.k)) && (ch(m.who) || m.who === "me") && spoken100(m.txt) && !m.locked) {
     const k = h.indexOf('<div class="bub">'); if (k >= 0) { const e = h.indexOf("</div>", k); if (e > 0) h = h.slice(0, e) + '<button class="vi100" data-mt="play|' + i + '" aria-label="play">·))</button>' + h.slice(e); } }
   return h; }; }
 (function () { const st = document.createElement("style"); st.textContent = `
