@@ -14900,7 +14900,7 @@ function show98(th, m) {
   let n = 0; [...m.children].forEach(c => { if (!c.classList.contains("mw98")) return; const i = +c.dataset.mi98; const cold = i < from; c.classList.toggle("cold", cold); if (cold) n++; });
   const hb = $("#histBtn"); if (hb) hb.querySelector("em").textContent = n > 0 ? n : ""; } catch (_) {} }; }
 /* suggestions show what kind they are */
-function sgDeco98() { const th = S.threads[curT]; if (!th || !th.b98) return; $$("#sugg [data-sg]").forEach(b => { const v = b.dataset.sg; const k = /^\*.*\*$/.test(v) ? "act" : /^[(（].*[)）]$/.test(v) ? "think" : "say"; b.innerHTML = '<i class="sg98">' + (k === "act" ? "✱ " + L98("动作", "Do") : k === "think" ? "💭 " + L98("心声", "Think") : "💬 " + L98("说", "Say")) + "</i>" + esc(v.replace(/^[*（(]|[*）)]$/g, "")); }); }
+function sgDeco98() { const th = S.threads[curT]; if (!th || !th.b98) return; const sg = $("#sugg"); if (sg && sg.querySelector("[data-sg]") && !sg.querySelector(".sgl98")) sg.insertAdjacentHTML("afterbegin", '<span class="sgl98">' + L98("建议", "Ideas") + "</span>"); $$("#sugg [data-sg]").forEach(b => { const v = b.dataset.sg; const k = /^\*.*\*$/.test(v) ? "act" : /^[(（].*[)）]$/.test(v) ? "think" : "say"; b.innerHTML = '<i class="sg98">' + (k === "act" ? "✱ " + L98("动作", "Do") : k === "think" ? "💭 " + L98("心声", "Think") : "💬 " + L98("说", "Say")) + "</i>" + esc(v.replace(/^[*（(]|[*）)]$/g, "")); }); }
 { const _ss = setSugg; setSugg = function () { const r = _ss.apply(this, arguments); try { sgDeco98(); } catch (_) {} return r; }; }
 /* synopsis + who's who, up front and on demand */
 function intro98(th) { const w = wd(th.wid), b = bOf98(w); if (!b) return ""; return LZ98(b.intro) || LZ98(b.premise) || ""; }
@@ -14930,6 +14930,38 @@ document.addEventListener("click", e => { const x = e.target.closest("[data-qm98
 #qm98{display:flex;gap:6px;align-items:center;margin:0 0 6px;overflow-x:auto}#qm98 button{flex:none;height:28px;padding:0 10px;border-radius:99px;font-size:12px;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#ddd}
 #s-chat.b98 .modebtn{display:none!important}
 #qm98 button.on{background:rgba(240,183,126,.2);border-color:var(--gold,#F0B77E);color:#F7D2A8}#qm98 span{font-size:10px;opacity:.55;white-space:nowrap}
+`; document.head.appendChild(st); })();
+
+/* ================= v7.3 · 10.23 meeting, round 2 =================
+   tap to read on (one line at a time, no flood) · narration left-aligned · 「对谁说」 only lists who's in this scene ·
+   jump to any chapter · suggestions look like suggestions, not like your own message · fewer buttons in story mode */
+/* tap the conversation to show the next line now (otherwise it comes after reading time / voice) */
+let SKIP98 = null;
+show98 = function (th, m) {
+  const run = PACE98.then(() => {
+    NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
+    const len = String(m.txt || "").length; let done; const p = new Promise(r => { done = r; });
+    const voiced = m.k === "say" && S.autoVoice && curT === th.id && ch(m.who);
+    SKIP98 = () => { if (voiced) { try { stopVoice(); } catch (_) {} } done(); };
+    if (voiced) { let ok = false; const f = () => { if (!ok) { ok = true; setTimeout(done, 250); } }; try { speak(m.txt, m.who, f); } catch (_) { f(); } setTimeout(f, Math.min(20000, 3000 + len * 260)); }
+    else setTimeout(done, curT === th.id ? Math.max(650, Math.min(2200, len * 45)) : 0);
+    return p.then(() => { SKIP98 = null; });
+  });
+  PACE98 = run.catch(() => {}); return Promise.resolve();
+};
+document.addEventListener("click", e => { const th = S.threads[curT]; if (!th || !th.b98 || !SKIP98) return; if (!e.target.closest("#msgs") || e.target.closest("button,a,details,input,textarea")) return; const f = SKIP98; SKIP98 = null; f(); });
+/* only people in the current scene can be addressed */
+{ const _so = speakersOf; speakersOf = function (th) { if (th && th.b98) { try { const { s } = scene98(th), p = present98(th, s); if (p.length) return p; } catch (_) {} } return _so.apply(this, arguments); }; }
+/* jump to a chapter (from 📖) */
+function jump98(th, n) { const b = bOf98(wd(th.wid)); if (!b || busy || n < 1 || n > b.chapters.length) return; const A = th.b98; A.ch = n; A.sc = 0; A.phase = "enter"; A.ended = false; A.sum.push(L98("（跳到第 " + n + " 章）", "(jumped to chapter " + n + ")")); save(); closeSheet(); enter98(th); }
+{ const _i = info98; info98 = function (th) { _i.apply(this, arguments); try { const b = bOf98(wd(th.wid)), st = $(".sheet .sheet-body") || $(".sheet > div:last-child") || $(".sheet"); if (!b || !st) return; st.insertAdjacentHTML("beforeend", '<div class="eyebrow" style="margin-top:14px">⏭ ' + L98("章节（可直接跳转）", "Chapters (jump to any)") + '</div><div class="stack" style="gap:6px;margin-top:6px">' + b.chapters.map((c, i) => '<button class="opt" data-b98jump="' + (i + 1) + '"' + (i + 1 === th.b98.ch ? ' style="border-color:var(--gold)"' : '') + '><span class="grow"><b>' + L98("第 " + (i + 1) + " 章 · ", "Ch " + (i + 1) + " · ") + esc(LZ98(c.title)) + '</b><span>' + esc(String(c.goal || "").slice(0, 46)) + '</span></span>' + (i + 1 === th.b98.ch ? L98("当前", "now") : "›") + '</button>').join("") + '</div>'); } catch (_) {} }; }
+document.addEventListener("click", e => { const x = e.target.closest("[data-b98jump]"); if (!x) return; const th = S.threads[curT]; if (th && th.b98) jump98(th, +x.dataset.b98jump); }, true);
+(function () { const st = document.createElement("style"); st.textContent = `
+#s-chat.b98 .m-narr{align-self:flex-start;text-align:left;max-width:100%;font-style:normal;font-family:inherit;font-size:14px;color:#e8e2ea;padding:8px 12px;border-radius:12px;background:rgba(10,9,14,.55)}
+#s-chat.b98 .m-card{text-align:left}#s-chat.b98 .m-card .eyebrow{text-align:left}
+#s-chat.b98 #sugg button{background:rgba(255,255,255,.06)!important;border:1px dashed rgba(255,255,255,.28)!important;color:#ddd!important;box-shadow:none!important}
+#sugg .sgl98{font-size:10px;font-weight:800;opacity:.55;align-self:center;margin-right:2px;flex:none}
+#s-chat.b98 .rg73,#s-chat.b98 #toolBtn,#s-chat.b98 .composer .plus{display:none!important}
 `; document.head.appendChild(st); })();
 
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
