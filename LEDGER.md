@@ -97,10 +97,11 @@ node tools/ledger-selftest.mjs     # 18 条，2026-10-22 全绿
 
 ## 6. 还缺什么（明写，不装绿）
 
-1. **埋点还没接进 app**：`choice_pick` / `chapter_open` / `chapter_done` / `story_end` 现在**一条都不会发**。
-   挂点已经找到：`app70_login.js:274` 的 `packOpen` 包装（`story_start` 就是在那儿发的）、`app70_login.js:276` 的 `reply` 包装。
-   **这是下一步最该做的一刀**，而且它比改 bundle 安全：只加 `track()` 调用，不改玩法逻辑。
-2. **`chapter_done` 的语义要先定**：是「翻到下一章」还是「看完结算页」？定错了完成率会一直偏高。
+1. ~~埋点还没接~~ → **已接（`814a2fb`）**：四个事件在 `app14_pack.js` 的 `packPick` / `packAfterPick` / `pkOpenMark` 里发出，
+   自检三条覆盖（`events-contract` 8 条 · `events-selftest` 11 条 · `pack-flow-selftest` 11 条，全部**跑在从构建产物里切出来的真函数**上）。
+   **未验**：没在真浏览器里点完一局（本机没有后端，账号/存档都走不通）。
+2. **`chapter_done` 的语义已定**：**选项的后果演完**（`packAfterPick`）才算这一章完成，不是"翻到下一章"。
+   那条老的代理埋点（打开第 n 章就报第 n-1 章完成）**已删除**——它会和精确事件重复计数，而且永远报不出最后一章。
 3. **没有留存/回访口径**（D1/D7）——需要 `user_id` 跨天聚合，`events` 表已经有了，但要写查询。
 4. **付费相关只有 `purchase` 一个点**：第 3 章开锁率、钱包消耗曲线都还没有。
 5. **线上一次都没跑过**：本机没有数据库。
