@@ -3,3 +3,6 @@ source/all.js
 
 # 依赖
 node_modules/
+
+# 本地假后端收下来的事件（tools/flush-e2e.mjs 运行时会重写）
+tools/_events.ndjson

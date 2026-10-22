@@ -99,18 +99,27 @@ curl -H "X-Admin-Key: $ADMIN_KEY" "https://miru-wheat-pi.vercel.app/api/events?s
 ## 5. 自检（数字得能自己证明自己）
 
 ```bash
-node tools/ledger-selftest.mjs     # 39 条，2026-10-22 全绿
+node tools/ledger-selftest.mjs      # 43 条 · 纯函数：CSV / 漏斗 / 选项 / 时长 / 留存 / 门槛 / 对话导出
+node tools/events-selftest.mjs      # 11 条 · 从构建产物切出埋点 helper，验 dedupe / 会话稳定 / 重玩
+node tools/events-contract.mjs      # 10 条 · 构建产物里五个事件都在、payload 形状对、老代理已删（--selftest 会变异一次，必须被抓）
+node tools/pack-flow-selftest.mjs   # 15 条 · 跑真实 packPick/packAfterPick/packPaywall，验整章事件顺序
+node tools/fake-api.mjs &           # 假后端：/health /auth /wallet /state /events（落到 tools/_events.ndjson）
+node tools/flush-e2e.mjs            #  8 条 · 真 HTTP：app 自己的 track→evFlush→capi 把事件写进文件，含 CLO0.on 开关
 ```
 
-它先给一张**手算得出的假账本**（3 个会话、两部剧、一次中途退出），再断言每个读数；
+`ledger-selftest` 先给一张**手算得出的假账本**（3 个会话、两部剧、一次中途退出），再断言每个读数；
 最后跑**五条变异对照**：把 u2 的 A 改成 C ⇒ 选项占比必须变；删一条 `chapter_done` ⇒ 完成率必须降；
 改选项 ⇒ 完成率**不许**动；让 b 多回访一天 ⇒ D1 必须从 2/3 变 3/3；让 u2 走完第 3 章 ⇒ 门槛通过率必须从 0.5 变 1。
+
+**为什么不用浏览器跑这些**：`index.html` 是 10 MB，headless 里一次 eval 要一分多钟（实测连卡三次）。
+所以所有断言都跑**从构建产物里切出来的真函数**——同一份字节，100 毫秒，可重跑。
+浏览器只剩一件事没验：**UI 上真点**（见 §6）。
 
 ## 6. 还缺什么（明写，不装绿）
 
 1. ~~埋点还没接~~ → **已接（`814a2fb`）**：四个事件在 `app14_pack.js` 的 `packPick` / `packAfterPick` / `pkOpenMark` 里发出，
    自检四条覆盖（`events-contract` 10 条 · `events-selftest` 11 条 · `pack-flow-selftest` 15 条 · `ledger-selftest` 43 条，**全部跑在从构建产物里切出来的真函数**上）。
-   **未验**：没在真浏览器里点完一局（本机没有后端，账号/存档都走不通）。
+   **未验**：没在真浏览器 UI 上点完一局（本机没有后端）。**已验**：传输链路（`track → 队列 → 每 15 秒 flush → HTTP → 落文件`）由 `tools/flush-e2e.mjs` 用真 fetch 跑通，**不是**只在隔离里跑的 helper。
 2. **`chapter_done` 的语义已定**：**选项的后果演完**（`packAfterPick`）才算这一章完成，不是"翻到下一章"。
    那条老的代理埋点（打开第 n 章就报第 n-1 章完成）**已删除**——它会和精确事件重复计数，而且永远报不出最后一章。
 3. ~~没有留存/回访口径~~ → **已加（`retention()`）**：队列按「窗口内第一次出现那天」算，且**队列日 +1 / +7 不在窗口内的人不进分母**（否则 7 天窗口会报 D7=0，而那是未来还没发生）。自检里有一个变异对照专盯这条。
