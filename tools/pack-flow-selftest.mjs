@@ -13,6 +13,11 @@ const start = html.indexOf('function pkSess(th)');
 const end = html.indexOf('function packNext()');
 if (start < 0 || end < 0 || end < start) { console.error('pack block not found in ' + file); process.exit(2); }
 const block = html.slice(start, end);
+// the paywall lives further down the same file; cut it separately and glue it after the block
+const payStart = html.indexOf('function packPaywall(wid,n)');
+const payEnd = payStart < 0 ? -1 : html.indexOf('\nfunction ', payStart + 10);
+if (payStart < 0 || payEnd < 0) { console.error('paywall block not found in ' + file); process.exit(2); }
+const payBlock = html.slice(payStart, payEnd);
 
 const events = [];
 let curT = 't1', busy = false;
@@ -41,11 +46,13 @@ const stubs = {
   packLove: noop, packSt: () => ({ end: {} }), taskClaimOnce: () => false,
   renderChat: noop, scrollChat: noop, levelUpCheck: noop,
   $: () => ({ hidden: true }),
+  esc: (s) => String(s == null ? '' : s),
+  sheet: noop, PACK_UNITS: 6, PACK_PRICE: 300,
   track: (name, props) => events.push({ name, props }),
 };
 
-const api = new Function(...Object.keys(stubs), block + '\nreturn { pkOpenMark, packPick, packAfterPick, pkDone };')(...Object.values(stubs));
-const { pkOpenMark, packPick, packAfterPick } = api;
+const api = new Function(...Object.keys(stubs), block + '\n' + payBlock + '\nreturn { pkOpenMark, packPick, packAfterPick, pkDone, packPaywall };')(...Object.values(stubs));
+const { pkOpenMark, packPick, packAfterPick, packPaywall } = api;
 
 let pass = 0; const fails = [];
 const ok = (name, got, want) => {
@@ -84,6 +91,17 @@ packPick('Z');                       // no such option -> must not emit
 ok('picking a non-existent option emits nothing', events.length - before, 0);
 pkOpenMark(th, 3);                   // re-entering chapter 3 -> already counted
 ok('re-entering a chapter does not re-open it', events.filter(e => e.name === 'chapter_open' && e.props.ch === 3).length, 1);
+
+console.log('the paid gate');
+const g0 = events.length;
+packPaywall('ice', 3);
+const pay = events.slice(g0);
+ok('showing the wall emits exactly one paywall event', pay.length, 1);
+ok('it carries ch + wid + sess', [pay[0].props.ch, pay[0].props.wid, typeof pay[0].props.sess], [3, 'ice', 'string']);
+ok('it belongs to the run that is being played', pay[0].props.sess === events[0].props.sess, true);
+const g1 = events.length;
+packPaywall('dog', 3);               // a wall for some other story while this thread is open
+ok('a wall for another story is not attributed to this run', events.length - g1, 0);
 
 console.log('replay');
 th.pk.st = 'end';

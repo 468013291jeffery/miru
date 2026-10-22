@@ -191,6 +191,8 @@ function stepInSheet(){const th=S.threads[curT];if(!th||!th.pk)return;const w=wd
 
 /* ---------- Story Pack purchase ---------- */
 function packPaywall(wid,n){const w=wd(wid),c=w.pack.chapters[(n||3)-1];
+ // the gate, measured: unlike "opened chapter 3", this tells "the wall was shown" from "they walked"
+ try{const _th=S.threads[curT];if(_th&&_th.wid===wid)pkTrack(_th,"paywall",{ch:n||3})}catch(_){}
  sheet('<div class="eyebrow" style="color:var(--gold)">'+t("pk.packEyebrow",{m:PCN(w)})+'</div><h2 style="margin-top:6px">'+esc(t("pk.keepGoing",{t:Lz(c.t)}))+'</h2>'+
   '<p class="sm dim" style="margin-top:6px;line-height:1.55">'+esc(Lz(c.goal))+'</p>'+
   '<ul class="pkbuyl"><li>'+t("pk.b1",{k:PCN(w)-2})+'</li><li>'+t("pk.b2",{n:PACK_UNITS})+'</li><li>'+t("pk.b3")+'</li><li>'+t("pk.b4")+'</li></ul>'+

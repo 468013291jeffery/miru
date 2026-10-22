@@ -177,18 +177,23 @@ function gates(rows, chapter) {
   for (const r of rows) {
     const n = norm(r);
     if (!n.work || Number(n.chapter) !== ch) continue;
-    if (n.event !== 'chapter_open' && n.event !== 'chapter_done') continue;
+    if (n.event !== 'chapter_open' && n.event !== 'chapter_done' && n.event !== 'paywall') continue;
     const k = n.work + '|' + (n.session || n.user || 'anon');
-    if (!s.has(k)) s.set(k, { open: false, done: false });
+    if (!s.has(k)) s.set(k, { open: false, done: false, wall: false });
     const o = s.get(k);
-    if (n.event === 'chapter_open') o.open = true; else o.done = true;
+    if (n.event === 'chapter_open') o.open = true;
+    else if (n.event === 'chapter_done') o.done = true;
+    else o.wall = true;
   }
-  let opened = 0, passed = 0;
-  for (const o of s.values()) if (o.open) { opened++; if (o.done) passed++; }
+  let opened = 0, passed = 0, wall = 0;
+  for (const o of s.values()) if (o.open) { opened++; if (o.done) passed++; if (o.wall) wall++; }
   return {
-    chapter: ch, opened, passed,
+    chapter: ch, opened, passed, wall,
     rate: opened ? +(passed / opened).toFixed(3) : null,
-    note: 'passed = finished this chapter; add a paywall event to tell "did not buy" from "left"',
+    // shown the wall and did not come through it: the only honest "the paywall cost us this one"
+    left_at_wall: wall ? wall - passed : null,
+    note: wall ? 'wall = the paywall was shown; left_at_wall = shown but never finished this chapter'
+      : 'no paywall events in range: rate still mixes "did not buy" with "left for the bus"',
   };
 }
 

@@ -26,6 +26,7 @@
 | `choice_pick` | `{wid, ch, sess, key:"A"\|"B"\|"C", t}` | 点了选项 |
 | `chapter_done` | `{wid, ch, sess}` | 第 ch 章走完（不是"点到最后一句"，是"结算/进下一章"） |
 | `story_end` | `{wid, sess, ending:"A"\|"B"\|"C"}` | 到达结局或退出 |
+| `paywall` | `{wid, ch, sess}` | 付费墙**被展示**（走不走得过另算） |
 
 `t` = 客户端 epoch ms（只作漂移诊断），`sess` = 一次「开始到退出」的随机 id。
 
@@ -92,7 +93,8 @@ curl -H "X-Admin-Key: $ADMIN_KEY" "https://miru-wheat-pi.vercel.app/api/events?s
 | 读数 | 怎么算 | 什么时候不能信 |
 |---|---|---|
 | `retention.d1` / `.d7` | 队列 = 该用户**在窗口内第一次出现的那一天**；只有「队列日 +1 / +7 仍在窗口内」的人才进分母 | 窗口太短 ⇒ 分母 0（返回 `null`，不是 0）。**D7 在 7 天窗口里永远是 null**，那是对的 |
-| `gates.rate` | 进过第 3 章且**走完**第 3 章的会话 / 进过第 3 章的会话 | 现在没有 `paywall` 事件 ⇒「没买」和「去坐公交了」同形。所以它是**转化的上界**、**付费墙劝退的下界**；要分开就得补一个 `paywall` 事件 |
+| `gates.rate` | 进过第 3 章且**走完**第 3 章的会话 / 进过第 3 章的会话 | 它只回答「有多少人过关」，不回答「墙有多贵」。要看墙本身看 `gates.left_at_wall`（被展示过墙、却没走完的人），那个数在补了 `paywall` 事件之后才有 |
+| `gates.left_at_wall` | `wall - passed`（只数被展示过墙的会话） | 没有 `paywall` 事件时它返回 `null` 而**不是 0** —— 「没量到」与「没有人卡在墙前」必须能分开 |
 
 ## 5. 自检（数字得能自己证明自己）
 
@@ -107,12 +109,13 @@ node tools/ledger-selftest.mjs     # 39 条，2026-10-22 全绿
 ## 6. 还缺什么（明写，不装绿）
 
 1. ~~埋点还没接~~ → **已接（`814a2fb`）**：四个事件在 `app14_pack.js` 的 `packPick` / `packAfterPick` / `pkOpenMark` 里发出，
-   自检三条覆盖（`events-contract` 8 条 · `events-selftest` 11 条 · `pack-flow-selftest` 11 条，全部**跑在从构建产物里切出来的真函数**上）。
+   自检四条覆盖（`events-contract` 10 条 · `events-selftest` 11 条 · `pack-flow-selftest` 15 条 · `ledger-selftest` 43 条，**全部跑在从构建产物里切出来的真函数**上）。
    **未验**：没在真浏览器里点完一局（本机没有后端，账号/存档都走不通）。
 2. **`chapter_done` 的语义已定**：**选项的后果演完**（`packAfterPick`）才算这一章完成，不是"翻到下一章"。
    那条老的代理埋点（打开第 n 章就报第 n-1 章完成）**已删除**——它会和精确事件重复计数，而且永远报不出最后一章。
 3. ~~没有留存/回访口径~~ → **已加（`retention()`）**：队列按「窗口内第一次出现那天」算，且**队列日 +1 / +7 不在窗口内的人不进分母**（否则 7 天窗口会报 D7=0，而那是未来还没发生）。自检里有一个变异对照专盯这条。
-4. **付费只有 `purchase` 一个点**：`gates()` 现在给的是「进第 3 章 → 走完第 3 章」的通过率，能当转化上界；**要分开「没买」和「走了」还得补一个 `paywall` 事件**（`app14_pack.js` 的 `packPaywall` 是被调用的那个点）。钱包消耗曲线没有。
+4. ~~付费只有 `purchase` 一个点~~ → **已补 `paywall`（`packPaywall` 展示时发）**：`gates()` 现在给出 `wall`（墙被展示的会话数）与 `left_at_wall`（展示了却没走完）。
+   **仍然缺**：钱包消耗曲线；以及「点了购买但没付成功」这一段（现在只有 `purchase` 成功那一个点）。
 5. **线上一次都没跑过**：本机没有数据库。
    - `_ledger.js` / `_transcript.js`（纯函数）已由自检覆盖（39 条）；
    - `admin.js` 两条新路由只做过语法检查，**没有对着真库跑过**；

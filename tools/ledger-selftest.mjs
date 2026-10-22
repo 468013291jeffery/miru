@@ -158,7 +158,16 @@ const gate = [
 const G = LED.gates(gate, 3);
 ok('gate counts only chapter 3', [G.opened, G.passed], [2, 1]);
 ok('gate rate', G.rate, 0.5);
-ok('gate names its own blind spot', /paywall/.test(G.note), true);
+ok('with no paywall events it says so instead of guessing', /no paywall events/.test(G.note), true);
+ok('…and leaves left_at_wall null', G.left_at_wall, null);
+const withWall = gate.concat([
+  { user_id: 'u2', name: 'paywall', props: { wid: 'ice', ch: 3, sess: 'g2' }, at: D(1, 11) },
+  { user_id: 'u1', name: 'paywall', props: { wid: 'ice', ch: 3, sess: 'g1' }, at: D(1, 10) },
+]);
+const GW = LED.gates(withWall, 3);
+ok('wall shown counts sessions, not events', GW.wall, 2);
+ok('one was shown the wall and never finished', GW.left_at_wall, 1);
+ok('…and the note changes once walls are known', /left_at_wall/.test(GW.note), true);
 const gateMoved = gate.concat([{ user_id: 'u2', name: 'chapter_done', props: { wid: 'ice', ch: 3, sess: 'g2' }, at: D(1, 12) }]);
 ok('MUTATION: u2 finishing ch3 raises the gate to 1', LED.gates(gateMoved, 3).rate, 1);
 
