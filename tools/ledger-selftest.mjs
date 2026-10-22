@@ -130,6 +130,38 @@ ok('still chronological inside the kept slice', capped.text.indexOf('不用。')
 ok('header states kept / total / threads', /导出 4 条（存档共 6 条，2 个线程）/.test(capped.text), true);
 ok('no state at all is honest, not empty', /没有可读的云存档/.test(TR.transcript(null, 10).text), true);
 
+console.log('5) Retention (D1/D7) and the paid gate');
+const D = (day, h) => new Date('2026-10-' + String(day).padStart(2, '0') + 'T' + String(h || 10).padStart(2, '0') + ':00:00Z');
+const day = (u, d, h) => ({ user_id: u, name: 'app_open', props: {}, at: D(d, h) });
+const ret = [
+  day('a', 1), day('a', 2),          // came back next day
+  day('b', 1),                       // did not
+  day('c', 3), day('c', 4),          // came back
+  day('d', 5),                       // cohort on the last day -> D1 not decidable yet
+];
+const R = LED.retention(ret);
+ok('4 users seen', R.users, 4);
+ok('D1 denominator excludes the last-day cohort', R.d1_den, 3);
+ok('D1 = 2 of 3', R.d1, 0.667);
+ok('D7 has no decidable cohort in a 5-day window', R.d7, null);
+ok('D7 says why: denominator 0', R.d7_den, 0);
+const retMoved = ret.concat([day('b', 2, 9)]);
+ok('MUTATION: b coming back a second day flips D1 to 3 of 3', LED.retention(retMoved).d1, 1);
+ok('…and b still cohorts on day 1 (the cohort is the FIRST day, not the latest)', LED.retention(retMoved).d1_den, 3);
+
+const gate = [
+  { user_id: 'u1', name: 'chapter_open', props: { wid: 'ice', ch: 3, sess: 'g1' }, at: D(1) },
+  { user_id: 'u1', name: 'chapter_done', props: { wid: 'ice', ch: 3, sess: 'g1' }, at: D(1, 11) },
+  { user_id: 'u2', name: 'chapter_open', props: { wid: 'ice', ch: 3, sess: 'g2' }, at: D(1) },
+  { user_id: 'u3', name: 'chapter_open', props: { wid: 'ice', ch: 2, sess: 'g3' }, at: D(1) },
+];
+const G = LED.gates(gate, 3);
+ok('gate counts only chapter 3', [G.opened, G.passed], [2, 1]);
+ok('gate rate', G.rate, 0.5);
+ok('gate names its own blind spot', /paywall/.test(G.note), true);
+const gateMoved = gate.concat([{ user_id: 'u2', name: 'chapter_done', props: { wid: 'ice', ch: 3, sess: 'g2' }, at: D(1, 12) }]);
+ok('MUTATION: u2 finishing ch3 raises the gate to 1', LED.gates(gateMoved, 3).rate, 1);
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('ledger self-test OK');

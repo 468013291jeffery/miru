@@ -133,4 +133,63 @@ function summary(rows) {
   return { works };
 }
 
-module.exports = { COLS, csv, summary, norm, median };
+/**
+ * Retention (D1 / D7) over the same rows. Cohort = the first day a user shows up IN THIS WINDOW,
+ * and a user only counts toward D1/D7 if that later day is inside the window — otherwise a
+ * 7-day window would report D7 = 0 for everyone simply because the future has not happened yet.
+ */
+function retention(rows) {
+  const dayOf = iso => String(iso).slice(0, 10);
+  const plus = (d, k) => { const t = new Date(d + 'T00:00:00Z'); t.setUTCDate(t.getUTCDate() + k); return t.toISOString().slice(0, 10); };
+  const byUser = new Map();
+  for (const r of rows) {
+    const n = norm(r);
+    if (!n.user || !n.server_at) continue;
+    if (!byUser.has(n.user)) byUser.set(n.user, new Set());
+    byUser.get(n.user).add(dayOf(n.server_at));
+  }
+  const allDays = [...new Set([...byUser.values()].flatMap(s => [...s]))].sort();
+  const lastDay = allDays[allDays.length - 1] || null;
+  let d1n = 0, d1d = 0, d7n = 0, d7d = 0;
+  for (const set of byUser.values()) {
+    const first = [...set].sort()[0];
+    const one = plus(first, 1), seven = plus(first, 7);
+    if (lastDay && one <= lastDay) { d1d++; if (set.has(one)) d1n++; }
+    if (lastDay && seven <= lastDay) { d7d++; if (set.has(seven)) d7n++; }
+  }
+  return {
+    users: byUser.size, days: allDays.length, first_day: allDays[0] || null, last_day: lastDay,
+    d1: d1d ? +(d1n / d1d).toFixed(3) : null, d1_n: d1n, d1_den: d1d,
+    d7: d7d ? +(d7n / d7d).toFixed(3) : null, d7_n: d7n, d7_den: d7d,
+  };
+}
+
+/**
+ * The paid gate: of the sessions that ENTERED a chapter, how many finished it.
+ * With today's events this is the only unlock signal we have — finishing ch3 means the paywall
+ * was passed, but "didn't buy" and "left for the bus" look the same. A `paywall` event would
+ * separate them; until then this number is an upper bound on conversion and a lower bound on
+ * the drop caused by the wall.
+ */
+function gates(rows, chapter) {
+  const ch = Number(chapter) || 3;
+  const s = new Map();
+  for (const r of rows) {
+    const n = norm(r);
+    if (!n.work || Number(n.chapter) !== ch) continue;
+    if (n.event !== 'chapter_open' && n.event !== 'chapter_done') continue;
+    const k = n.work + '|' + (n.session || n.user || 'anon');
+    if (!s.has(k)) s.set(k, { open: false, done: false });
+    const o = s.get(k);
+    if (n.event === 'chapter_open') o.open = true; else o.done = true;
+  }
+  let opened = 0, passed = 0;
+  for (const o of s.values()) if (o.open) { opened++; if (o.done) passed++; }
+  return {
+    chapter: ch, opened, passed,
+    rate: opened ? +(passed / opened).toFixed(3) : null,
+    note: 'passed = finished this chapter; add a paywall event to tell "did not buy" from "left"',
+  };
+}
+
+module.exports = { COLS, csv, summary, retention, gates, norm, median };

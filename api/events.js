@@ -45,7 +45,9 @@ module.exports = L.wrap(async (req, res) => {
         res.setHeader('Cache-Control', 'no-store');
         return res.status(200).send(LED.csv(rows));
       }
-      return L.send(res, 200, Object.assign({ days, work: wid, rows: rows.length }, LED.summary(rows)));
+      return L.send(res, 200, Object.assign({ days, work: wid, rows: rows.length },
+        LED.summary(rows),
+        { retention: LED.retention(rows), gates: LED.gates(rows, Number(q.chapter) || 3) }));
     }
 
     const r = await sql(`SELECT name, count(*)::int AS n, count(DISTINCT user_id)::int AS users FROM events WHERE at > now() - ($1 || ' days')::interval GROUP BY name ORDER BY n DESC`, [String(days)]);
