@@ -14699,7 +14699,7 @@ async function director98(th, mode, act) {
     "\n" + (zh ? "旁白用小说式的文学叙述（第二人称，可写声音、气味、温度、人物细微的反应和气氛），不要写成镜头脚本（不出现“镜头”“画面”“特写”“视野”等词）；旁白绝不包含任何人说的话（不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is literary prose (second person: sound, smell, small reactions, mood), not a camera script; never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；不让所有人都围着玩家转；不安排剧本没有的电话；不剧透后面的事。options：给玩家 3 个下一步建议，态度各不相同，格式 {\"k\":\"say|act|think\",\"t\":\"...\"}——say 写玩家要说出口的原话（第一人称台词，像真人说话，≤20 字，不写“问他…”“告诉她…”这种描述）；act 写玩家的动作（不写主语，从动词写起，≤14 字）；think 写玩家心里的一句话（≤16 字）。三条里至少一条 say。item：如果这一刻玩家拿到、看到或被递来一份能读的东西（信件、密信、文件、纸条、短信、报纸、证物上的字），必须在 item 里给出玩家能读到的完整内容 {\"title\":\"物品名\",\"text\":\"内容全文，≤220 字，符合世界设定，不剧透后面\"}；没有就 null。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; not everyone revolves around the player; no calls the script doesn't have; no spoilers. options: 3 suggestions with different attitudes, each {\"k\":\"say|act|think\",\"t\":\"...\"} — say = the exact words the player would say aloud (first person, natural, ≤14 words, never a description like 'ask him…'); act = an action without a subject (≤8 words); think = an inner line (≤10 words). At least one say. item: if the player receives or sees something readable right now (letter, document, note, text message, newspaper, writing on evidence), give its full readable text {\"title\":\"...\",\"text\":\"≤140 words, consistent with the world, no spoilers\"}; else null. player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}],"item":null,"player_obs":"","state":"","summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (mode === "enter" ? briefReq98(th, s) : "") + '\n\nReply with ONLY JSON: {"briefs":{},"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}],"item":null,"player_obs":"","state":"","summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -14730,6 +14730,7 @@ async function beat98(th, mode, act) {
   try {
     const { s } = scene98(th), pres = present98(th, s);
     let d = null; try { d = await director98(th, mode, act); } catch (_) {}
+    if (d && d.briefs && typeof d.briefs === "object" && s) { const sb = (A.sb = A.sb || {}); sb[s.id] = {}; Object.keys(d.briefs).forEach(id => { if (th.cast.includes(id)) { const v = d.briefs[id] || {}; sb[s.id][id] = { goal: String(v.goal || "").slice(0, 80), avoid: String(v.avoid || "").slice(0, 60) }; if (v.learn) kn98(th, [id], v.learn); } }); }
     if (!d) { toast(L98("剧情智能体走神了，再试一次", "The story agent lost the thread — try again")); return; }
     if (d.narration) { const n0 = String(d.narration).trim(); }
     if (act && act.mode !== "think") mem98(th, pres.length ? pres : th.cast, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
@@ -14971,6 +14972,104 @@ function ia98(th) { const w = wd(th.wid), rank = { lead: 0, main: 1 }; const c =
 function sup98(th) { const ia = ia98(th); return th.cast.filter(id => ch(id) && !ia.includes(id)).map(id => first(ch(id).n)).join("、") || L98("无", "none"); }
 { const _so = speakersOf; speakersOf = function (th) { const r = _so.apply(this, arguments); if (th && th.b98) { const ia = ia98(th); const f = r.filter(id => ia.includes(id)); return f.length ? f : ia.slice(0, 1); } return r; }; }
 (function () { const st = document.createElement("style"); st.textContent = `#tap98{position:absolute;left:50%;transform:translateX(-50%);bottom:150px;z-index:44;padding:6px 14px;border-radius:99px;background:rgba(10,9,14,.75);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:700;pointer-events:none;animation:tp98 1.4s ease-in-out infinite}@keyframes tp98{50%{opacity:.45}}`; document.head.appendChild(st); })();
+
+/* ================= v7.6 · every character is a separate person =================
+   payload per character = 不变的人 (6 lines, distilled once) + 他知道什么 (knowledge-gated) + 他站在哪一拍 (his own goal in this scene,
+   set by the story agent at scene start, no future) + 此刻的状态 (mood / closeness / trust) + 只有他亲眼看到、听到的记录 + 对方刚对他说的话 */
+function st98(th, cid) { const c = th.b98.cards[cid] || (th.b98.cards[cid] = { mem: [] }); if (c.trust == null) c.trust = 20; if (!c.knows) c.knows = []; if (!c.mood) c.mood = ""; return c; }
+function kn98(th, ids, fact) { if (!fact) return; ids.forEach(id => { const c = st98(th, id); const f = String(fact).slice(0, 80); if (!c.knows.includes(f)) c.knows.push(f); if (c.knows.length > 30) c.knows.shift(); }); }
+/* who witnessed each line: the people present in the scene at that moment (+ the speaker); thoughts are private */
+{ const _am = appendMsg; appendMsg = function (th, m) { try { if (th && th.b98 && m && !m.seen) { if (m.who === "me" && m.k === "think") m.seen = []; else { const { s } = scene98(th), pr = present98(th, s); m.seen = (pr.length ? pr : th.cast.slice()).concat(ch(m.who) && !pr.includes(m.who) ? [m.who] : []); } if (m.item98) kn98(th, m.seen, (m.title || "").replace(/^📜\s*/, "") + "：" + String(m.txt || "").slice(0, 60)); } } catch (_) {} return _am.apply(this, arguments); }; }
+function saw98(th, cid, n) { return th.msgs.filter(m => !m.seen || m.seen.includes(cid)).slice(-(n || 12)).map(m => line98(th, m)).filter(Boolean).join("\n"); }
+/* the fixed person: distilled once from the card and cached */
+async function core98(th, cid) { const w = wd(th.wid), key = (w && w.community) + ":" + cid; S.core98 = S.core98 || {}; if (S.core98[key]) return S.core98[key];
+  const k = cardOf98(w, cid) || {}; const src = ["voice", "personality", "want", "fear", "boundaries", "hooks", "bio", "sample_lines"].map(f => k[f] ? f + "：" + String(Array.isArray(k[f]) ? k[f].join(" / ") : k[f]).slice(0, 500) : "").filter(Boolean).join("\n");
+  let r = null; try { r = await ask("把下面这个角色压缩成 6 条永远不变的人格要点，每条一句话、具体可执行（写他真的会怎么做，不写形容词堆砌），用简体中文：\n" + src + '\n\nReply with ONLY JSON: {"speech":"他怎么说话（句长、口头禅、称呼、生气时什么样）","want":"他真正要什么","fear":"他怕什么","never":"他绝不做什么","retreat":"他被逼到时怎么退（按顺序 2-3 步）","body":"他的身体习惯（决定动作怎么写）"}', { maxTokens: 500 }); } catch (_) {}
+  const c = r && r.speech ? r : { speech: String(k.voice || "").slice(0, 120), want: String(k.want || "").slice(0, 100), fear: String(k.fear || "").slice(0, 100), never: String(k.boundaries || "").slice(0, 100), retreat: "", body: "" };
+  if (r && r.speech) { S.core98[key] = c; save(); } return c; }
+function briefReq98(th, s) { const pr = present98(th, s); if (!pr.length) return ""; return "\n\n" + L98("另外，为这一场在场的每个角色写一份只给他自己看的「这一拍」briefs：goal=他这一场想要什么（具体、可做），avoid=他这一场回避或隐瞒什么，learn=他进场时新知道的事（只能是此刻之前已经发生的，没有就空）。绝不写后面的剧情。键用角色 id：", "Also write private per-character briefs for this scene: goal / avoid / learn (only past facts; never future plot), keyed by id: ") + pr.join("、"); }
+actor98 = async function (th, cid, intent) {
+  const w = wd(th.wid), b = bOf98(w), x = ch(cid), k = cardOf98(w, cid) || {}, cd = st98(th, cid), zh = Z98(), { s } = scene98(th), you = yn98(th), A = th.b98;
+  const core = await core98(th, cid), sb = ((A.sb || {})[s && s.id] || {})[cid] || {}, nm = (k.name && LZ98(k.name)) || x.n;
+  const last = [...th.msgs].reverse().find(m => m.who === "me" && m.k !== "think"); const toMe = last && (!last.to98 || last.to98 === first(x.n));
+  const p = (zh ? "你是「" + nm + "」。你是一个独立的人，只用你自己的眼睛看世界。" : "You are " + nm + ", a separate person who sees the world only through your own eyes.") +
+    "\n\n【" + L98("不变的你 · 每一句都必须符合", "Who you are — every line must fit") + "】\n1. " + L98("你怎么说话：", "How you talk: ") + (core.speech || "") + "\n2. " + L98("你要什么：", "What you want: ") + (core.want || "") + "\n3. " + L98("你怕什么：", "What you fear: ") + (core.fear || "") + "\n4. " + L98("你绝不做什么：", "What you never do: ") + (core.never || "") + (core.retreat ? "\n5. " + L98("你被逼到时怎么退：", "How you retreat: ") + core.retreat : "") + (core.body ? "\n6. " + L98("你的身体习惯：", "Your body habit: ") + core.body : "") +
+    "\n" + L98("身份：", "Role: ") + LZ98(k.role) + (k.age ? "，" + k.age + L98("岁", "") : "") + (k.spice ? "\n" + L98("你的撩人方式（按亲密度分寸使用）：", "How you flirt (scale to closeness): ") + String(k.spice).slice(0, 300) : "") +
+    "\n\n【" + L98("你知道的 · 只有这些", "What you know — only this") + "】\n" + [...cd.knows.map(f => "- " + f), ...cd.mem.slice(-14).map(f => "- " + f)].filter(Boolean).join("\n") +
+    "\n" + L98("不在上面、也不在下面你亲眼看到的记录里的事，你一概不知道——包括别人心里想什么、你不在场时发生的事、以后会发生的事。被问到不知道的事，就说不知道或岔开。", "Anything not listed here or in what you witnessed below, you don't know — others' thoughts, scenes you weren't in, the future. If asked, say you don't know or deflect.") +
+    "\n\n【" + L98("你站在这一拍", "Your beat right now") + "】\n" + L98("地点：", "Place: ") + LZ98(s && s.place) + (sb.goal ? "\n" + L98("这一场你想要：", "This scene you want: ") + sb.goal : "") + (sb.avoid ? "\n" + L98("这一场你回避：", "This scene you avoid: ") + sb.avoid : "") + (intent ? "\n" + L98("此刻的冲动（可不理）：", "Impulse right now (optional): ") + intent : "") +
+    "\n" + L98("只演这一刻。不推进到下一件事，不替剧情做决定，不预告。", "Play only this moment. Don't jump ahead, don't decide plot, don't foreshadow.") +
+    "\n\n【" + L98("此刻的你", "Your state now") + "】\n" + L98("心情：", "Mood: ") + (cd.mood || L98("（还没定）", "(unset)")) + "\n" + L98("对" + you + "的亲密度 / 信任：", "Closeness / trust toward " + you + ": ") + Math.round(th.love[cid] || 0) + " / " + Math.round(cd.trust) + "（" + stage98(th.love[cid] || 0) + "）" +
+    "\n\n【" + L98("你亲眼看到、听到的（最近）", "What you saw and heard (recent)") + "】\n" + (saw98(th, cid, 12) || "—") +
+    (last && toMe ? "\n\n【" + L98("对方刚对你说/做", "What they just said/did to you") + "】" + you + "：" + last.txt + "\n" + L98("先直接回应这一句：问你问题就正面回答，或者明确不答（用你的方式）；不要自说自话。", "Respond to this first: answer the question directly, or clearly refuse in your way. Don't talk past it.") : "") +
+    "\n\n" + (zh ? "（" + you + gx98(th) + "）只写你自己：act=一个动作（不写主语，从动词写起，用上你的身体习惯，≤30 字，可空），say=一句话（≤45 字，简体中文，符合【你怎么说话】）。不写别人，不写旁白。" : "(" + you + gx98(th) + ") Only yourself: act = one action without subject (≤18 words, may be empty), say = one line (≤30 words, in your voice). Nothing about others, no narration.") +
+    '\nReply with ONLY JSON: {"act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","ideas":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}]} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；ideas：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
+  const r = await ask(p, { maxTokens: 360 });
+  if (r) { if (r.mood) cd.mood = String(r.mood).slice(0, 12); if (r.trust) cd.trust = Math.max(0, Math.min(100, cd.trust + Math.max(-5, Math.min(5, +r.trust || 0)) * 1.5)); if (r.learned) kn98(th, [cid], r.learned); }
+  return r;
+};
+
+/* ================= v7.6b · the world changes by the table, not by the model =================
+   · choice → its scripted result is applied by the program (memory to everyone present, flag, numbers parsed from the effect);
+     characters only REACT to it, they can't change the numbers.
+   · free talk → no story agent per line: the person you address (or the scene's first core character) answers, one at a time.
+     Closeness / trust may drift at most ±2 per line.
+   · story agent = side advisor, every 4 talk turns: continue / conflict / tender / wrap + reason + one change.
+     The program decides: wrap → highlights 继续剧情; conflict / tender → a private impulse for the next speaker. */
+function eff98(th, o) { const out = []; String(o.effect || "").replace(/([一-龥A-Za-z_]{1,12})\s*([+＋\-－])\s*(\d{1,2})/g, (_, k, sg, n) => { out.push([k, (sg === "-" || sg === "－" ? -1 : 1) * +n]); return ""; }); return out; }
+function who98(th) { const { s } = scene98(th), pr = present98(th, s), ia = ia98(th); const pool = pr.filter(c => ia.includes(c)); if (th.addr && th.cast.includes(th.addr)) return th.addr; const lastNpc = [...th.msgs].reverse().find(m => ch(m.who) && m.k === "say" && pool.includes(m.who)); return (lastNpc && lastNpc.who) || pool[0] || ia[0]; }
+async function talk98(th, act, choiceO) {
+  const A = th.b98; if (busy) return; if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
+  busy = true; typing(true); BEAT98 = 0;
+  try {
+    const { s } = scene98(th), pr = present98(th, s), cid = (act && act.to && th.cast.includes(act.to)) ? act.to : who98(th);
+    if (act && act.mode !== "think") mem98(th, pr.length ? pr : [cid], yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
+    let impulse = A.adv ? A.adv : ""; A.adv = "";
+    if (choiceO) { /* the table decides */
+      const fx = eff98(th, choiceO); A.flags.push(s.id + "→" + String(choiceO.effect || "").slice(0, 50));
+      kn98(th, pr.length ? pr : th.cast, yn98(th) + L98("选择了：", " chose: ") + choiceO.t);
+      if (choiceO.effect) kn98(th, pr.length ? pr : th.cast, L98("结果：", "Result: ") + String(choiceO.effect).slice(0, 70));
+      const items = []; fx.forEach(([k, n]) => { const hit = th.cast.find(c => ch(c) && (k.includes(first(ch(c).n)) || first(ch(c).n).includes(k))); if (hit) { th.love[hit] = Math.max(0, Math.min(100, (th.love[hit] || 0) + n)); items.push(["💗", first(ch(hit).n) + L98(" 好感", " affection"), (n > 0 ? "+" : "") + n]); } else items.push(["📌", k, (n > 0 ? "+" : "") + n]); });
+      if (items.length && typeof chg96 === "function") chg96(items);
+      impulse = L98("对方刚做了选择，结果已经发生：", "The choice is made and its result has happened: ") + (choiceO.effect || choiceO.t) + L98("。你只对它作出反应，不改变它。", ". React to it; don't change it.");
+    }
+    const before = th.love[cid] || 0, cd = st98(th, cid), tb = cd.trust;
+    let r = null; try { r = await actor98(th, cid, impulse); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, cid, impulse + L98("（务必用简体中文）", "")); if (r2 && r2.say) r = r2; } } catch (_) {}
+    if (!r) { toast(L98("对方走神了，再说一次试试", "They drifted off — try again")); return; }
+    r.act = actFix98(th, cid, r.act); r.say = clean98(r.say).replace(/^[「“"]|[」”"]$/g, "");
+    if (r.act) await show98(th, { who: cid, k: "act", txt: r.act.slice(0, 140), at: Date.now() });
+    if (r.say) await show98(th, { who: cid, k: "say", txt: r.say.slice(0, 220), to98: to98(th, cid, r.to), at: Date.now(), ai: 1 });
+    if (r.remember) mem98(th, [cid], r.remember);
+    if (r.say) mem98(th, (pr.length ? pr : th.cast).filter(c => c !== cid), first(ch(cid).n) + L98("说：", " said: ") + r.say.slice(0, 60));
+    if (choiceO) { th.love[cid] = Math.max(before, th.love[cid] || 0); cd.trust = tb; }   /* numbers only from the table */
+    else { const f = Math.max(-2, Math.min(2, Math.round(+r.feel || 0))); th.love[cid] = Math.max(0, Math.min(100, before + f)); cd.trust = Math.max(0, Math.min(100, tb + Math.max(-2, Math.min(2, Math.round(+r.trust || 0))))); }
+    if (Array.isArray(r.ideas)) setSugg(opts98(r.ideas));
+    A.turns++; th.rounds++; A.talkN = (A.talkN || 0) + (choiceO ? 0 : 1); useUnits(aiCost());
+    if (A.talkN && A.talkN % 4 === 0) adv98(th).catch(() => {});
+    th.at = Date.now(); save();
+  } finally { busy = false; typing(false); try { renderChat(); } catch (_) {} }
+}
+/* side advisor */
+async function adv98(th) {
+  const { c } = scene98(th), A = th.b98; const rel = ia98(th).map(id => first(ch(id).n) + " " + Math.round(th.love[id] || 0) + "/" + Math.round(st98(th, id).trust)).join("，");
+  const d = await ask(L98("你是互动剧的旁路顾问，不写台词、不下命令。看最近的对话和关系值，判断这一场接下来该怎么走。", "You are a side advisor for an interactive drama. No lines, no orders.") + "\n" + L98("本章目标：", "Chapter goal: ") + (c && c.goal || "") + "\n" + L98("关系（亲密/信任）：", "Relations: ") + rel + "\n" + L98("最近：\n", "Recent:\n") + tail98(th, 10) +
+    '\n\nReply with ONLY JSON: {"advice":"continue|conflict|tender|wrap","reason":"' + L98("一句理由", "one line") + '","change":"' + L98("一个具体改法（给下一个开口的人的内心冲动，一句）", "one concrete change: an impulse for the next speaker") + '"} in ' + LANG98() + ".", { maxTokens: 200 });
+  if (!d || !d.advice) return; A.advLog = (A.advLog || []).concat([{ t: Date.now(), a: d.advice, r: String(d.reason || "").slice(0, 60) }]).slice(-20);
+  if (d.advice === "conflict" || d.advice === "tender") A.adv = String(d.change || "").slice(0, 80);
+  if (d.advice === "wrap") { A.wrap = 1; dock98(); }
+  save();
+}
+{ const _d = dock98; dock98 = function () { _d.apply(this, arguments); const th = S.threads[curT]; const b = $("[data-b98next]"); if (b && th && th.b98) b.classList.toggle("glow98", !!th.b98.wrap); }; }
+{ const _n = next98; next98 = function (th) { if (th && th.b98) th.b98.wrap = 0; return _n.apply(this, arguments); }; }
+/* routing: talk / choice go through the table; exit only asks the story agent on the very last scene */
+{ const _b = beat98; beat98 = function (th, mode, act) {
+  if (th && th.b98) {
+    if (mode === "talk") return talk98(th, act, null);
+    if (mode === "choice") { const { s } = scene98(th), o = s && s.choice && s.choice.options.find(x => x.t === (act && act.txt)); return talk98(th, null, o || { t: act && act.txt, effect: act && act.effect }); }
+    if (mode === "exit") { const { b, c } = scene98(th), A = th.b98; if (!(A.ch >= b.chapters.length && A.sc >= c.scenes.length - 1)) return Promise.resolve(); }
+  }
+  return _b.apply(this, arguments); }; }
+(function () { const st = document.createElement("style"); st.textContent = `.glow98{box-shadow:0 0 0 2px var(--gold,#F0B77E),0 0 14px rgba(240,183,126,.6)!important;animation:tp98 1.6s ease-in-out infinite}`; document.head.appendChild(st); })();
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
