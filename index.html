@@ -14672,7 +14672,7 @@ const LANG98 = () => Z98() ? "Simplified Chinese" : "English";
 /* ---------- the story agent (director) ---------- */
 async function director98(th, mode, act) {
   const { b, c, s } = scene98(th), A = th.b98, zh = Z98(), w = wd(th.wid);
-  const castL = th.cast.map(id => { const k = cardOf98(w, id); return "- id=" + id + " · " + first(ch(id).n) + "（" + LZ98(k && k.role) + "，" + (k ? k.tier : "") + "）"; }).join("\n");
+  const castL = ia98(th).map(id => { const k = cardOf98(w, id); return "- id=" + id + " · " + first(ch(id).n) + "（" + LZ98(k && k.role) + "，" + (k ? k.tier : "") + "）"; }).join("\n");
   const sceneL = c.scenes.map((x, i) => (i === A.sc ? "▶ " : (i < A.sc ? "✓ " : "· ")) + (i + 1) + ". " + LZ98(x.place) + (i === A.sc ? "：" + x.beat : "")).join("\n");
   const rel = th.cast.slice(0, 8).map(id => first(ch(id).n) + " " + Math.round(th.love[id] || 0)).join("，");
   const last = A.ch === b.chapters.length && A.sc === c.scenes.length - 1;
@@ -14685,7 +14685,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "世界（后台）：\n" : "World (backstage):\n") + String(b.world || "").slice(0, 1600) +
     "\n\n" + (zh ? "规则：\n" : "Rules:\n") + String(b.style || "").slice(0, 1300) +
     "\n\n" + (zh ? "玩家：" : "Player: ") + yn98(th) + gx98(th) + "（" + LZ98((A.as === b.player.key ? b.player : cardOf98(w, A.you) || {}).role) + "）" + (A.profile.length ? (zh ? "；玩家自己表现出的样子：" : "; how the player has shown themselves: ") + A.profile.slice(-6).join("；") : "") +
-    "\n" + (zh ? "角色（只有这些 id 能开口）：\n" : "Cast (only these ids may speak):\n") + castL +
+    "\n" + (zh ? "其他配角（" + sup98(th) + "）不开口，只在旁白里出现。\n角色（只有这些 id 能开口）：\n" : "Cast (only these ids may speak):\n") + castL +
     "\n" + (zh ? "他们对玩家的好感：" : "Their feeling toward the player: ") + rel +
     "\n\n" + (zh ? "第 " + A.ch + " / " + b.chapters.length + " 章「" + LZ98(c.title) + "」目标：" : "Chapter " + A.ch + " / " + b.chapters.length + " “" + LZ98(c.title) + "” goal: ") + (c.goal || "") +
     "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
@@ -14733,7 +14733,7 @@ async function beat98(th, mode, act) {
     if (!d) { toast(L98("剧情智能体走神了，再试一次", "The story agent lost the thread — try again")); return; }
     if (d.narration) { const n0 = String(d.narration).trim(); }
     if (act && act.mode !== "think") mem98(th, pres.length ? pres : th.cast, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
-    let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && th.cast.includes(x.id)); if (mode === "exit") spk = spk.slice(0, 1);
+    let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && ia98(th).includes(x.id)); if (mode === "exit") spk = spk.slice(0, 1);
     /* after the player acts / thinks / picks, somebody answers in words — never only scenery */
     if (!spk.length && (mode === "talk" || mode === "choice")) { const c0 = (act && act.to && th.cast.includes(act.to)) ? act.to : (pres[0] || th.cast[0]); if (c0) spk.push({ id: c0, intent: act && act.mode === "think" ? L98("玩家没开口，你只看得到对方的神情；自然地回应这一刻", "The player said nothing aloud; respond to the moment") : "" }); }
     let nar = clean98(d.narration); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
@@ -14876,8 +14876,8 @@ function opts98(list) {
 let PACE98 = Promise.resolve(), NOSPEAK98 = 0;
 { const _sp = speak; speak = function (text, id, onend) { if (NOSPEAK98) return; return _sp.apply(this, arguments); }; }
 function show98(th, m) {
-  const run = PACE98.then(() => {
-    NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
+  const run = PACE98.then(() => (BEAT98 > 0 && curT === th.id) ? new Promise(r => { SKIP98 = () => { try { stopVoice(); } catch (_) {} r(); }; tap98(true); }) : null).then(() => {
+    SKIP98 = null; tap98(false); BEAT98++; NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
     const len = String(m.txt || "").length;
     if (m.k === "say" && S.autoVoice && curT === th.id && ch(m.who)) return new Promise(res => { let ok = false; const f = () => { if (!ok) { ok = true; setTimeout(res, 250); } }; try { speak(m.txt, m.who, f); } catch (_) { f(); } setTimeout(f, Math.min(20000, 3000 + len * 260)); });
     return new Promise(res => setTimeout(res, curT === th.id ? Math.max(650, Math.min(2200, len * 45)) : 0));
@@ -14938,18 +14938,17 @@ document.addEventListener("click", e => { const x = e.target.closest("[data-qm98
 /* tap the conversation to show the next line now (otherwise it comes after reading time / voice) */
 let SKIP98 = null;
 show98 = function (th, m) {
-  const run = PACE98.then(() => {
-    NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
+  const run = PACE98.then(() => (BEAT98 > 0 && curT === th.id) ? new Promise(r => { SKIP98 = () => { try { stopVoice(); } catch (_) {} r(); }; tap98(true); }) : null).then(() => {
+    SKIP98 = null; tap98(false); BEAT98++; NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
     const len = String(m.txt || "").length; let done; const p = new Promise(r => { done = r; });
     const voiced = m.k === "say" && S.autoVoice && curT === th.id && ch(m.who);
-    SKIP98 = () => { if (voiced) { try { stopVoice(); } catch (_) {} } done(); };
-    if (voiced) { let ok = false; const f = () => { if (!ok) { ok = true; setTimeout(done, 250); } }; try { speak(m.txt, m.who, f); } catch (_) { f(); } setTimeout(f, Math.min(20000, 3000 + len * 260)); }
-    else setTimeout(done, curT === th.id ? Math.max(650, Math.min(2200, len * 45)) : 0);
-    return p.then(() => { SKIP98 = null; });
+    if (voiced) { try { speak(m.txt, m.who, () => {}); } catch (_) {} }
+    setTimeout(done, 200);
+    return p;
   });
   PACE98 = run.catch(() => {}); return Promise.resolve();
 };
-document.addEventListener("click", e => { const th = S.threads[curT]; if (!th || !th.b98 || !SKIP98) return; if (!e.target.closest("#msgs") || e.target.closest("button,a,details,input,textarea")) return; const f = SKIP98; SKIP98 = null; f(); });
+document.addEventListener("click", e => { const th = S.threads[curT]; if (!th || !th.b98 || !SKIP98) return; if (!e.target.closest("#s-chat") || e.target.closest("button,a,details,input,textarea,.composer,#dk98,.chead,.sheet")) return; const f = SKIP98; SKIP98 = null; f(); });
 /* only people in the current scene can be addressed */
 { const _so = speakersOf; speakersOf = function (th) { if (th && th.b98) { try { const { s } = scene98(th), p = present98(th, s); if (p.length) return p; } catch (_) {} } return _so.apply(this, arguments); }; }
 /* jump to a chapter (from 📖) */
@@ -14963,6 +14962,15 @@ document.addEventListener("click", e => { const x = e.target.closest("[data-b98j
 #sugg .sgl98{font-size:10px;font-weight:800;opacity:.55;align-self:center;margin-right:2px;flex:none}
 #s-chat.b98 .rg73,#s-chat.b98 #toolBtn,#s-chat.b98 .composer .plus{display:none!important}
 `; document.head.appendChild(st); })();
+
+/* ================= v7.5 · tap to continue; 3-4 interactive characters ================= */
+let BEAT98 = 0;
+{ const _b = beat98; beat98 = function () { BEAT98 = 0; return _b.apply(this, arguments); }; }
+function tap98(on) { const sc = $("#s-chat"); if (!sc) return; let h = $("#tap98"); if (on && !h) { sc.insertAdjacentHTML("beforeend", '<div id="tap98">' + esc(L98("点击屏幕继续 ▾", "Tap to continue ▾")) + '</div>'); } else if (!on && h) h.remove(); }
+function ia98(th) { const w = wd(th.wid), rank = { lead: 0, main: 1 }; const c = th.cast.filter(id => ch(id)).map(id => ({ id, t: (cardOf98(w, id) || {}).tier })); const core = c.filter(x => x.t === "lead" || x.t === "main").sort((a, b) => (rank[a.t] ?? 2) - (rank[b.t] ?? 2)).slice(0, 4).map(x => x.id); return core.length ? core : th.cast.slice(0, 4); }
+function sup98(th) { const ia = ia98(th); return th.cast.filter(id => ch(id) && !ia.includes(id)).map(id => first(ch(id).n)).join("、") || L98("无", "none"); }
+{ const _so = speakersOf; speakersOf = function (th) { const r = _so.apply(this, arguments); if (th && th.b98) { const ia = ia98(th); const f = r.filter(id => ia.includes(id)); return f.length ? f : ia.slice(0, 1); } return r; }; }
+(function () { const st = document.createElement("style"); st.textContent = `#tap98{position:absolute;left:50%;transform:translateX(-50%);bottom:150px;z-index:44;padding:6px 14px;border-radius:99px;background:rgba(10,9,14,.75);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:12px;font-weight:700;pointer-events:none;animation:tp98 1.4s ease-in-out infinite}@keyframes tp98{50%{opacity:.45}}`; document.head.appendChild(st); })();
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
