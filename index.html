@@ -14964,6 +14964,31 @@ document.addEventListener("click", e => { const x = e.target.closest("[data-b98j
 #s-chat.b98 .rg73,#s-chat.b98 #toolBtn,#s-chat.b98 .composer .plus{display:none!important}
 `; document.head.appendChild(st); })();
 
+/* ================= v7.4 · voice reads only spoken lines =================
+   Like Tipsy: narration and actions are never read aloud; only what a character actually says.
+   Each spoken line gets a small ·)) button right after it; the old 🔊 under narration/actions is gone. */
+function spoken100(text) {
+  let s = String(text || "");
+  const q = s.match(/[「“"][^」”"]+[」”"]/g);              /* if the line quotes speech, read only the quoted parts */
+  if (q && q.length) s = q.map(x => x.slice(1, -1)).join(" ");
+  s = s.replace(/[（(][^）)]*[）)]/g, " ").replace(/\*[^*]*\*/g, " ").replace(/【[^】]*】/g, " ").replace(/\[[^\]]*\]/g, " ").replace(/^📞\s*/, "");
+  return s.replace(/\s+/g, " ").trim();
+}
+{ const _sp = speak; speak = function (text, id, onend) {
+  const c = id && id !== "n" && id !== "me" ? ch(id) : null;
+  const s = c ? spoken100(text) : "";
+  if (!s || !/[\p{L}\p{N}]/u.test(s)) { if (onend) setTimeout(onend, 30); return; }   /* narration / pure action: silent */
+  return _sp.call(this, s, id, onend); }; }
+{ const _mh = msgHTML; msgHTML = function (m, i, th) { let h = _mh.apply(this, arguments); if (!h || !m) return h;
+  if (m.k === "say" && ch(m.who) && m.who !== "me" && spoken100(m.txt) && !m.locked) {
+    const k = h.indexOf('<div class="bub">'); if (k >= 0) { const e = h.indexOf("</div>", k); if (e > 0) h = h.slice(0, e) + '<button class="vi100" data-mt="play|' + i + '" aria-label="play">·))</button>' + h.slice(e); } }
+  return h; }; }
+(function () { const st = document.createElement("style"); st.textContent = `
+.mquick [data-mt^="play|"],.bt86 [data-b86^="play|"]{display:none!important}
+.vi100{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-left:6px;min-width:30px;height:22px;padding:0 7px;border-radius:99px;background:rgba(255,255,255,.14);color:inherit;font-size:11px;font-weight:800;letter-spacing:-1px;opacity:.85}
+.vi100:active{transform:scale(.94)}
+`; document.head.appendChild(st); })();
+
 /* ================= HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PICKS =================
    Home   = one full-screen story at a time, swipe up for the next; mood tabs across the top.
    Discover = shelves (each tag with its own row), rankings, challenges and Earn; search + tag filters one tap away.
