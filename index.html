@@ -15733,7 +15733,7 @@ if(S.ob)startApp();else renderOB();
 (function(){
  document.addEventListener("click",e=>{const x=e.target.closest(".vi100");if(!x)return;e.preventDefault();e.stopPropagation();
   try{const th=S.threads[curT],i=+String(x.dataset.mt||"").split("|")[1],m=th&&th.msgs[i];if(!m)return;try{stopVoice()}catch(_){}
-   x.classList.add("on98");const done=()=>x.classList.remove("on98");speak(m.txt,m.who,done);setTimeout(done,15000)}catch(_){}},true);
+   x.classList.add("on98");const done=()=>x.classList.remove("on98");try{const sp=spoken100(m.txt);if(typeof TTS!=="undefined"&&TTS.mem&&!TTS.mem.has(ttsKey(sp,m.who)))toast(L98("语音生成中…","Loading voice…"))}catch(_){}speak(m.txt,m.who,done);setTimeout(done,20000)}catch(_){}},true);
  document.addEventListener("click",e=>{const x=e.target.closest("[data-hint98]");if(!x)return;e.preventDefault();e.stopPropagation();
   const th=S.threads[curT];if(!th)return;let list=(th.sugg||[]).filter(Boolean);
   if(!list.length&&th.b98){try{const {s}=scene98(th);const o=(s&&(s.opts||s.sugg))||[];if(o.length)list=opts98(o)}catch(_){}}
@@ -15759,7 +15759,7 @@ if(S.ob)startApp();else renderOB();
  /* 2. any call (incoming ring, live call, scripted call) stops the current voice line first */
  ["ringIn","startCall","stopCallRun","callGate"].forEach(n=>{try{const f=window[n];if(typeof f!=="function")return;window[n]=function(){try{stopVoice()}catch(_){}return f.apply(this,arguments)};try{eval(n+"=window[n]")}catch(_){}}catch(_){}});
  /* 3. no in-story "Trending" button and no feed generation (breaks immersion, costs a model call) */
- try{feedBtn96=function(){};gen96=async function(){return null}}catch(_){}
+ try{const _fb=feedBtn96;feedBtn96=function(){const th=S.threads[curT];if(!th||!th.feed96||!((th.feed96.posts||[]).length||(th.feed96.trends||[]).length))return;return _fb.apply(this,arguments)}}catch(_){}
  /* 7. "tap to continue" sits in the message flow, under the last line — never on top of text */
  try{tap98=function(on){let h=document.getElementById("tap98");if(on){const box=document.getElementById("msgs");if(!box)return;if(!h){box.insertAdjacentHTML("beforeend",'<div id="tap98">'+esc(L98("点击屏幕继续 ▾","Tap to continue ▾"))+'</div>');}else if(h.parentNode!==box||h!==box.lastElementChild)box.appendChild(h);try{scrollChat()}catch(_){}}else if(h)h.remove()}}catch(_){}
  /* 8. Chinese players never get English suggestions */
@@ -15769,7 +15769,6 @@ if(S.ob)startApp();else renderOB();
    if(A.phase==="talk"&&!A.ended){const n=(A.items||[]).length;q.insertAdjacentHTML("beforeend",'<button class="qx98" data-b98info="1">📖'+(n?'<em>'+n+'</em>':'')+'</button><button class="qx98 nx98'+(A.wrap?' glow98':'')+'" data-b98next="1">▶ '+L98("继续剧情","Continue")+'</button>')}}catch(_){}};
  try{const _d=dock98;dock98=function(){const r=_d.apply(this,arguments);dock();return r};const _rc=renderChat;renderChat=function(){const r=_rc.apply(this,arguments);dock();return r}}catch(_){}
  const st=document.createElement("style");st.textContent=`
-#fd96b{display:none!important}
 #dk98:has([data-b98next]){display:none!important}
 #tap98{position:static!important;transform:none!important;align-self:center;margin:6px auto 2px;display:table;padding:5px 14px;border-radius:99px;background:rgba(10,9,14,.6);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:12px;font-weight:700;pointer-events:none;animation:tp98 1.4s ease-in-out infinite}
 #qm98{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}#qm98::-webkit-scrollbar{display:none}
@@ -15785,4 +15784,8 @@ if(S.ob)startApp();else renderOB();
 #s-chat.b98 .chead .ibtn svg{width:15px;height:15px}
 `;document.head.appendChild(st);
 })();
+</script>
+<script>
+/* v8.0.3 · warm the voice of each new spoken line in the background, so tapping ·)) plays at once */
+(function(){try{const _a=appendMsg;appendMsg=function(th,m){const r=_a.apply(this,arguments);try{if(th&&th.b98&&m&&m.k==="say"&&ch(m.who)&&typeof ttsFetch==="function"&&ttsOn()){const sp=spoken100(m.txt);if(sp)setTimeout(()=>{if(!busy)ttsFetch(sp,m.who).catch(()=>{})},1200)}}catch(_){}return r}}catch(_){}})();
 </script>
