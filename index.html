@@ -7,7 +7,7 @@
 <title>MIRU</title>
 <style>html,body{background:#07060A;margin:0}#boot0{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:#07060A;color:#F6D3AE;font:600 15px/1.4 -apple-system,system-ui,"PingFang SC",sans-serif;transition:opacity .4s}#boot0 b{font:700 34px/1 Georgia,serif;letter-spacing:.18em;color:#F0B77E}#boot0 i{width:120px;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden;position:relative}#boot0 i:after{content:"";position:absolute;left:-40%;top:0;bottom:0;width:40%;background:linear-gradient(90deg,#F0B77E,#E86F97);animation:b0 1.1s ease-in-out infinite}@keyframes b0{to{left:100%}}#boot0 small{opacity:.55;font-weight:500;font-size:12px}</style>
 <div id="boot0"><b>MIRU</b><i></i><small>正在载入…</small></div>
-<script>(function(){var t0=Date.now();function bye(){var e=document.getElementById("boot0");if(!e)return;e.style.opacity="0";setTimeout(function(){e&&e.remove()},450)}window.addEventListener("load",function(){setTimeout(bye,200)});setTimeout(function(){var e=document.getElementById("boot0");if(e)e.querySelector("small").textContent="网络较慢，仍在载入…"},8000);setTimeout(bye,45000)})();</script>
+<script>(function(){var t0=Date.now();function bye(){var e=document.getElementById("boot0");if(!e)return;e.style.opacity="0";setTimeout(function(){e&&e.remove()},450)}document.addEventListener("DOMContentLoaded",function(){setTimeout(bye,300)});setTimeout(function(){var e=document.getElementById("boot0");if(e)e.querySelector("small").textContent="网络较慢，仍在载入…"},8000);setTimeout(bye,45000)})();</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15813,5 +15813,27 @@ if(S.ob)startApp();else renderOB();
   const add=(rel?"\n· 已共同经历的事实（只有这些算已发生；不要把期待的未来关系写成已经发生）："+rel:"\n· 你们之前没有共同经历，初始关系从开场这一刻开始")+(line?"\n· 他的底线（必须写进 boundaries，任何章节都不能违背）："+line:"")+(must?"\n· 一定要有 / 一定不要："+must:"")+"\n· 角色卡要求：他的喜好、恐惧和说话方式要能从他的经历解释；他不知道玩家没说过的事；不替玩家决定感情、接受邀请或原谅。";
   return _g.call(this,you,him,start+add,or)}}catch(_){}
  const st=document.createElement("style");st.textContent=".my98more{margin-top:10px;border:1px dashed rgba(255,255,255,.2);border-radius:12px;padding:8px 10px}.my98more summary{font-size:13px;font-weight:700;opacity:.85;cursor:pointer}";document.head.appendChild(st);
+})();
+</script>
+<script>
+/* v8.1.3 · 官方剧本（后台「剧本生产」发布）的角色卡接入运行时：基础卡核心 + 当前章节卡，进入每个角色的提示词 */
+(function(){
+ const KEY="miru.cards98";let C={};try{C=JSON.parse(localStorage.getItem(KEY)||"{}")}catch(_){}
+ const keep=()=>{try{localStorage.setItem(KEY,JSON.stringify(C))}catch(_){try{const k=Object.keys(C);delete C[k[0]];localStorage.setItem(KEY,JSON.stringify(C))}catch(__){}}};
+ /* 1. remember the cards that ride along in a published work's pack */
+ try{const _c=capi;capi=async function(path){const r=await _c.apply(this,arguments);try{const m=/^\/works\?id=([^&]+)/.exec(path||"");if(m&&r&&r.ok&&r.j&&r.j.pack){const id=decodeURIComponent(m[1]),cc=r.j.pack.cards98;if(cc&&Array.isArray(cc.characters)&&cc.characters.length){C[id]={ver:r.j.pack.ver||0,cards:cc};keep()}else if(C[id]){delete C[id];keep()}}}catch(_){}return r}}catch(_){}
+ const norm=x=>String(x||"").replace(/[\s·・.\-]/g,"").toLowerCase();
+ function cardFor(wid,cid){try{const w=wd(wid),cc=w&&w.community&&C[w.community];if(!cc)return null;const c=ch(cid);if(!c)return null;const n=norm(c.n),f=norm(first(c.n));
+  return cc.cards.characters.find(k=>{const a=norm(k.name),b=norm((k.base&&k.base.identity&&k.base.identity.name)||"");return (a&&(a===n||n.includes(a)||a.includes(f)))||(b&&(b===n||n.includes(b)))})||null}catch(_){return null}}
+ const J=x=>Array.isArray(x)?x.join("；"):(x&&typeof x==="object"?Object.values(x).filter(Boolean).join("；"):String(x||""));
+ function cardText(k,n){const b=k.base||{},co=b.core||{},pt=b.patterns||{},chp=(k.chapters||{})[n]||{};const L=(a,x)=>{const v=J(x);return v?a+v:""};
+  return ["【你的角色卡（不变的核心）】",L("价值观：",co.values),L("你最怕：",co.fear),L("底线（任何时候都不越过）：",co.boundaries),L("说话：",pt.speech),L("被逼到时：",pt.defense),L("你怎么喜欢一个人：",pt.romance),L("你的盲区：",pt.blind_spots),
+   "【第"+n+"章的你】",L("此刻知道：",chp.knows),L("还不知道（不能装作知道）：",chp.unknown),L("你相信（可能是错的）：",chp.beliefs),L("你对对方：",chp.relation),L("这一章想要：",chp.goal),L("说话的变化：",chp.speech),L("你为什么变了：",chp.growth)].filter(Boolean).join("\n")}
+ const chOf=th=>(th&&((th.pk&&th.pk.ch)||(th.agent97&&th.agent97.ch)))||1;
+ /* 2. narrator mode: each cast line carries that character's card */
+ try{const _cc=castCard;castCard=function(th,cid){const r=_cc.apply(this,arguments);try{const k=cardFor(th.wid,cid);if(k)return r+"\n  CHARACTER CARD ("+first(ch(cid).n)+", chapter "+chOf(th)+"): "+cardText(k,chOf(th)).replace(/\n/g," | ")}catch(_){}return r}}catch(_){}
+ /* 3. per-character actor prompts (「你是「X」…」): the card goes right after the first line */
+ try{const _a=ask;ask=function(prompt){try{const th=S.threads[curT];if(typeof prompt==="string"&&th&&th.wid&&!th.b98){const m=/^你是「([^」]+)」/.exec(prompt)||/^You are ([^,.\n]+)[,.]/.exec(prompt);if(m){const cid=(th.cast||[]).find(id=>ch(id)&&(ch(id).n===m[1]||first(ch(id).n)===m[1]||m[1].includes(first(ch(id).n))));const k=cid&&cardFor(th.wid,cid);if(k){const i=prompt.indexOf("\n");prompt=prompt.slice(0,i)+"\n\n"+cardText(k,chOf(th))+"\n"+prompt.slice(i);arguments[0]=prompt}}}}catch(_){}return _a.apply(this,arguments)}}catch(_){}
+ window.MIRU_CARDS98={get:()=>C,cardFor,cardText};
 })();
 </script>
