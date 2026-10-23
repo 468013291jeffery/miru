@@ -8311,7 +8311,7 @@ function revealOpen(th){if(RV&&!document.body.contains(RV.o)){clearTimeout(RV.tm
  fxLayer().appendChild(o);RV={th,o,i:0,lines,img2:!!img2};requestAnimationFrame(()=>o.classList.add("on"));try{window.emoFx&&emoFx("bloom")}catch(_){}revealStep()}
 function revealStep(){if(!RV)return;const {o,lines}=RV;if(RV.i>=lines.length){revealClose();return}
  const box=o.querySelector(".rvlines");box.insertAdjacentHTML("beforeend",'<p>'+esc(lines[RV.i])+'</p>');const ps=box.querySelectorAll("p");if(ps.length>3)ps[0].remove();
- if(RV.img2&&RV.i===Math.floor(lines.length/2))o.classList.add("two");RV.i++;clearTimeout(RV.tm);RV.tm=setTimeout(revealStep,3400)}
+ if(RV.img2&&RV.i===Math.floor(lines.length/2))o.classList.add("two");RV.i++;clearTimeout(RV.tm)}
 function revealClose(){if(!RV)return;const {th,o,lines}=RV;clearTimeout(RV.tm);RV=null;o.classList.remove("on");setTimeout(()=>o.remove(),500);
  if(th.pk.stop&&th.pk.stop[1]==="reveal")stopResolve(th,lines.map(x=>["n","act",x]))}
 document.addEventListener("click",e=>{if(RV&&e.target.closest(".rvov"))revealStep()});
@@ -13553,7 +13553,7 @@ function off94Show(d, vid) {
   const host = (typeof fxLayer === "function" ? fxLayer() : null) || $("#s-chat") || document.body; const o = document.createElement("div"); o.className = "cg94";
   o.innerHTML = (vid ? '<video src="' + esc(d.src) + '" autoplay playsinline muted></video>' : '<img src="' + esc(d.src) + '" alt="">') + (d.cap ? '<p>' + esc(d.cap) + '</p>' : '') + '<small>' + (CL() === "zh" ? "点一下继续" : "Tap to continue") + '</small>';
   host.appendChild(o); requestAnimationFrame(() => o.classList.add("on")); const bye = () => { o.classList.remove("on"); setTimeout(() => o.remove(), 400); }; o.addEventListener("click", bye);
-  if (vid) { const v = o.querySelector("video"); try { v.muted = false; v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); } catch (_) {} v.addEventListener("ended", () => setTimeout(bye, 400)); setTimeout(bye, 20000); } else setTimeout(bye, 4200);
+  if (vid) { const v = o.querySelector("video"); try { v.muted = false; v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); } catch (_) {} v.addEventListener("ended", () => setTimeout(bye, 400)); }
 }
 const _pkDir94 = pkDirective;
 pkDirective = function (th, b) {
@@ -14922,7 +14922,7 @@ function info98(th) { const A = th.b98, items = A.items || [];
 { const _d = dock98; dock98 = function () { _d.apply(this, arguments); const th = S.threads[curT], el = $("#dk98"); if (!th || !th.b98 || !el || el.querySelector("[data-b98info]")) return; const n = (th.b98.items || []).length; const r = el.querySelector(".dk98r") || el; r.insertAdjacentHTML("afterbegin", '<button class="dk98i" data-b98info="1">📖' + (n ? '<em>' + n + '</em>' : '') + '</button>'); }; }
 document.addEventListener("click", e => { if (!e.target.closest("[data-b98info]")) return; const th = S.threads[curT]; if (th && th.b98) info98(th); }, true);
 /* quick chips above the input: wrap what you typed as 台词 / 动作 / 心声 with one tap */
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { const th = S.threads[curT]; sgDeco98(); const sc = $("#s-chat"); if (sc) sc.classList.toggle("b98", !!(th && th.b98)); if (th && th.b98 && !$("#qm98")) { const ir = $("#s-chat .composer .inrow"); if (ir) ir.insertAdjacentHTML("beforebegin", '<div id="qm98">' + [["say", "💬 " + L98("台词", "Say")], ["act", "✱ " + L98("动作", "Action")], ["think", "💭 " + L98("心声", "Thought")]].map(([k, l]) => '<button data-qm98="' + k + '" class="' + (cmode === k ? "on" : "") + '">' + l + '</button>').join("") + '<span>' + L98("不用加括号或引号", "no brackets or quotes needed") + '</span></div>'); } } catch (_) {} return r; }; }
+{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { const th = S.threads[curT]; sgDeco98(); const sc = $("#s-chat"); if (sc) sc.classList.toggle("b98", !!(th && th.b98)); if (th && th.b98 && !$("#qm98")) { const ir = $("#s-chat .composer .inrow"); if (ir) ir.insertAdjacentHTML("beforebegin", '<div id="qm98">' + [["say", "💬 " + L98("台词", "Say")], ["act", "✱ " + L98("动作", "Action")], ["think", "💭 " + L98("心声", "Thought")]].map(([k, l]) => '<button data-qm98="' + k + '" class="' + (cmode === k ? "on" : "") + '">' + l + '</button>').join("") + '<button data-hint98="1" class="hint98">💡 ' + L98("不知道怎么回？", "Stuck?") + '</button></div>'); } } catch (_) {} return r; }; }
 document.addEventListener("click", e => { const x = e.target.closest("[data-qm98]"); if (!x) return; e.preventDefault(); e.stopPropagation(); cmode = x.dataset.qm98; $$("[data-qm98]").forEach(b => b.classList.toggle("on", b === x)); $$("[data-mode]").forEach(b => b.classList.toggle("on", b.dataset.mode === cmode)); const mb = $(".modebtn"); if (mb) mb.textContent = x.textContent.trim().slice(0, 4) + " ▴"; const ta = $("#cin"); if (ta) { ta.placeholder = t("cx.ph." + cmode); ta.focus(); } }, true);
 /* typed markers still work: "*…*" / "(…)" switch the mode and are stripped */
 { const _ds2 = doSend; doSend = function (txt, mode) { const th = S.threads[curT]; if (th && th.b98 && txt && !mode) { const v = String(txt).trim(); if (/^\*.+\*$/.test(v)) return _ds2.call(this, v.slice(1, -1), "act"); if (/^[(（].+[)）]$/.test(v)) return _ds2.call(this, v.slice(1, -1), "think"); if (/^[「“"].+[」”"]$/.test(v)) return _ds2.call(this, v.slice(1, -1), "say"); } return _ds2.apply(this, arguments); }; }
@@ -15011,7 +15011,7 @@ actor98 = async function (th, cid, intent) {
     "\n\n【" + L98("你亲眼看到、听到的（最近）", "What you saw and heard (recent)") + "】\n" + (saw98(th, cid, 12) || "—") +
     (last && toMe ? "\n\n【" + L98("对方刚对你说/做", "What they just said/did to you") + "】" + you + "：" + last.txt + "\n" + L98("先直接回应这一句：问你问题就正面回答，或者明确不答（用你的方式）；不要自说自话。", "Respond to this first: answer the question directly, or clearly refuse in your way. Don't talk past it.") : "") +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）只写你自己：act=一个动作（不写主语，从动词写起，用上你的身体习惯，≤30 字，可空），say=一句话（≤45 字，简体中文，符合【你怎么说话】）。不写别人，不写旁白。" : "(" + you + gx98(th) + ") Only yourself: act = one action without subject (≤18 words, may be empty), say = one line (≤30 words, in your voice). Nothing about others, no narration.") +
-    tools98p(th, cid) + '\nReply with ONLY JSON: {"wish":"","act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","idea_say":"","idea_act":"","idea_think":""} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；idea_say/idea_act/idea_think：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
+    tools98p(th, cid) + '\nReply with ONLY JSON: {"wish":"","act":"","say":"...","to":"","intent":"' + L98("这句话想达到的效果，≤12 字", "what this line is for, ≤12 words") + '","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","idea_say":"","idea_act":"","idea_think":""} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；idea_say/idea_act/idea_think：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
   const r = await ask(p, { maxTokens: 440 });
   if (r) { if (r.mood) cd.mood = String(r.mood).slice(0, 12); if (r.trust) cd.trust = Math.max(0, Math.min(100, cd.trust + Math.max(-5, Math.min(5, +r.trust || 0)) * 1.5)); if (r.learned) kn98(th, [cid], r.learned); }
   return r;
@@ -15701,4 +15701,88 @@ Object.assign(I18N.en,{"hf.restart":"Start over from Chapter 1","hf.restartS":"R
 /* ---- BOOT (keep last) ---- */
 if(S.ob)startApp();else renderOB();
 
+</script>
+
+<script>
+/* ===== v8.0 P0 · Fast Path: an ordinary turn = ONE model call (the actor). Everything else is local, cached, or deferred to idle time. ===== */
+(function(){
+ const LS="miru.plan98";let PL={};try{PL=JSON.parse(localStorage.getItem(LS)||"{}")}catch(_){}
+ const plSave=()=>{try{const k=Object.keys(PL);if(k.length>200)k.slice(0,k.length-200).forEach(x=>delete PL[x]);localStorage.setItem(LS,JSON.stringify(PL))}catch(_){}};
+ window.MIRU_CALLS=window.MIRU_CALLS||[];
+ /* 1. persona core: no distillation call on the reply path — the raw card is the core; a cached distillation is still used if one exists */
+ try{const _c=core98;core98=function(th,cid){const w=wd(th.wid),key=(w&&w.community)+":"+cid;if(S.core98&&S.core98[key])return Promise.resolve(S.core98[key]);const k=cardOf98(w,cid)||{};
+  return Promise.resolve({speech:String(k.voice||"").slice(0,160),want:String(k.want||"").slice(0,120),fear:String(k.fear||"").slice(0,120),never:String(k.boundaries||"").slice(0,120),retreat:"",body:String(k.habits||k.body||"").slice(0,80)})}}catch(_){}
+ /* 2. scene plan cache (v7.9.6 §6.15): entering a scene reuses the validated plan; the director is called only on a cache miss */
+ try{const _d=director98;director98=async function(th,mode,act){if(mode!=="enter")return _d.apply(this,arguments);
+  const w=wd(th.wid),{s}=scene98(th),A=th.b98;const key=[w&&w.community,A.ch,s&&s.id,Z98()?"zh":"en",yn98(th),(th.cast||[]).join("+")].join("|");
+  if(PL[key]){MIRU_CALLS.push({mode:"plot",reason:"enter",cache_hit:1,at:Date.now()});return JSON.parse(JSON.stringify(PL[key]))}
+  const t0=Date.now();const d=await _d.apply(this,arguments);MIRU_CALLS.push({mode:"plot",reason:"enter",cache_hit:0,ms:Date.now()-t0,at:Date.now()});
+  if(d&&(d.narration||d.speakers)){PL[key]=d;plSave()}return d}}catch(_){}
+ /* 3. side advisor: local stall check instead of a model call (v7.9.6 §6.14) — nudge toward the chapter goal only when nothing has moved */
+ try{adv98=async function(th){const A=th.b98,{c}=scene98(th);if(!c||!c.goal)return;const lv=ia98(th).map(id=>Math.round(th.love[id]||0)).join(",");
+  A._stall=(A._lv===lv)?(A._stall||0)+1:0;A._lv=lv;if(A._stall>=2&&!A.adv){A.adv=L98("（你心里记着这一章想要的："+c.goal+"。找一个自然的机会，往那边带一句，不要生硬。）","(Keep this chapter's aim in mind: "+c.goal+". Find a natural moment to lean that way.)");A._stall=0}}}catch(_){}
+ /* 4. long-term memory extraction / summaries: never on the reply path — run when the player has been idle 20 s */
+ try{const idle=(fn)=>function(th){const self=this,args=arguments;if(!th||!th.b98)return fn.apply(self,args);const go=()=>{if(busy||Date.now()-(th.at||0)<20000)return setTimeout(go,10000);fn.apply(self,args)};setTimeout(go,20000)};
+  if(typeof m2extract==="function")m2extract=idle(m2extract);if(typeof m2summary==="function")m2summary=idle(m2summary)}catch(_){}
+ /* 5. keep the actor's intent (private control field, never shown) */
+ try{const _a=actor98;actor98=async function(th,cid){const r=await _a.apply(this,arguments);try{if(r&&r.intent)st98(th,cid).intent=String(r.intent).slice(0,40)}catch(_){}MIRU_CALLS.push({mode:"actor",ok:!!r,at:Date.now()});if(MIRU_CALLS.length>200)MIRU_CALLS.splice(0,100);return r}}catch(_){}
+})();
+</script>
+<script>
+/* v8.0.1 · ·)) plays the line right away; 💡 gives reply ideas without an extra model call */
+(function(){
+ document.addEventListener("click",e=>{const x=e.target.closest(".vi100");if(!x)return;e.preventDefault();e.stopPropagation();
+  try{const th=S.threads[curT],i=+String(x.dataset.mt||"").split("|")[1],m=th&&th.msgs[i];if(!m)return;try{stopVoice()}catch(_){}
+   x.classList.add("on98");const done=()=>x.classList.remove("on98");speak(m.txt,m.who,done);setTimeout(done,15000)}catch(_){}},true);
+ document.addEventListener("click",e=>{const x=e.target.closest("[data-hint98]");if(!x)return;e.preventDefault();e.stopPropagation();
+  const th=S.threads[curT];if(!th)return;let list=(th.sugg||[]).filter(Boolean);
+  if(!list.length&&th.b98){try{const {s}=scene98(th);const o=(s&&(s.opts||s.sugg))||[];if(o.length)list=opts98(o)}catch(_){}}
+  if(!list.length){const nm=(()=>{try{const c=ia98(th)[0];return first(ch(c).n)}catch(_){return ""}})();
+   list=opts98([{k:"say",t:L98("你今天看起来有点不一样。","You look different today.")},{k:"act",t:L98("走近一点，看着"+nm,"Step closer and look at "+nm)},{k:"think",t:L98("他是不是在等我开口？","Is he waiting for me to speak?")}])}
+  setSugg(list);const el=$("#sugg");if(el){el.hidden=false;el.style.display="";el.scrollIntoView({block:"nearest"});el.classList.add("flash98");setTimeout(()=>el.classList.remove("flash98"),900)}},true);
+ const st=document.createElement("style");st.textContent=".hint98{margin-left:auto;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,214,120,.55);background:rgba(255,214,120,.14);color:#ffe3a3;font-size:12px;font-weight:700}.vi100.on98{background:rgba(255,120,160,.45)!important}#sugg.flash98{outline:2px solid rgba(255,214,120,.7);border-radius:12px}";document.head.appendChild(st);
+})();
+</script>
+<script>
+/* v8.0.1 · read-then-tap: after you send, only the reply's first line appears on its own; every further line waits for your tap.
+   A flush credit can never leak into later lines, and the tap hint sits above the suggestion row. */
+(function(){setInterval(()=>{try{if(!busy&&PEND98===0)FLUSH98=0}catch(_){}},400);
+ })();
+</script>
+<script>
+/* ===== v8.0.2 · feedback round (10/24) ===== */
+(function(){
+ const strip=t=>String(t||"").replace(/[（(【\[][^）)】\]]{0,80}[）)】\]]/g,"").replace(/\s{2,}/g," ").trim();
+ /* 4. no stage notes (brackets) in CG captions or highlight lines */
+ try{const _o=off94Show;off94Show=function(d,vid){if(d&&d.cap)d=Object.assign({},d,{cap:strip(d.cap)});return _o.call(this,d,vid)}}catch(_){}
+ try{const _r=revealStep;revealStep=function(){try{if(RV&&RV.lines)RV.lines=RV.lines.map(strip)}catch(_){}return _r.apply(this,arguments)}}catch(_){}
+ /* 2. any call (incoming ring, live call, scripted call) stops the current voice line first */
+ ["ringIn","startCall","stopCallRun","callGate"].forEach(n=>{try{const f=window[n];if(typeof f!=="function")return;window[n]=function(){try{stopVoice()}catch(_){}return f.apply(this,arguments)};try{eval(n+"=window[n]")}catch(_){}}catch(_){}});
+ /* 3. no in-story "Trending" button and no feed generation (breaks immersion, costs a model call) */
+ try{feedBtn96=function(){};gen96=async function(){return null}}catch(_){}
+ /* 7. "tap to continue" sits in the message flow, under the last line — never on top of text */
+ try{tap98=function(on){let h=document.getElementById("tap98");if(on){const box=document.getElementById("msgs");if(!box)return;if(!h){box.insertAdjacentHTML("beforeend",'<div id="tap98">'+esc(L98("点击屏幕继续 ▾","Tap to continue ▾"))+'</div>');}else if(h.parentNode!==box||h!==box.lastElementChild)box.appendChild(h);try{scrollChat()}catch(_){}}else if(h)h.remove()}}catch(_){}
+ /* 8. Chinese players never get English suggestions */
+ try{const _s=setSugg;setSugg=function(list){try{if(Z98()&&Array.isArray(list))list=list.filter(x=>/[一-鿿]/.test(String(x)))}catch(_){}return _s.call(this,list)}}catch(_){}
+ /* 5. "继续剧情" joins the input toolbar instead of a separate strip */
+ const dock=()=>{try{const th=S.threads[curT],q=document.getElementById("qm98");if(!th||!th.b98||!q)return;const A=th.b98;q.querySelectorAll(".qx98").forEach(b=>b.remove());
+   if(A.phase==="talk"&&!A.ended){const n=(A.items||[]).length;q.insertAdjacentHTML("beforeend",'<button class="qx98" data-b98info="1">📖'+(n?'<em>'+n+'</em>':'')+'</button><button class="qx98 nx98'+(A.wrap?' glow98':'')+'" data-b98next="1">▶ '+L98("继续剧情","Continue")+'</button>')}}catch(_){}};
+ try{const _d=dock98;dock98=function(){const r=_d.apply(this,arguments);dock();return r};const _rc=renderChat;renderChat=function(){const r=_rc.apply(this,arguments);dock();return r}}catch(_){}
+ const st=document.createElement("style");st.textContent=`
+#fd96b{display:none!important}
+#dk98:has([data-b98next]){display:none!important}
+#tap98{position:static!important;transform:none!important;align-self:center;margin:6px auto 2px;display:table;padding:5px 14px;border-radius:99px;background:rgba(10,9,14,.6);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:12px;font-weight:700;pointer-events:none;animation:tp98 1.4s ease-in-out infinite}
+#qm98{display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}#qm98::-webkit-scrollbar{display:none}
+#qm98 button{flex:none}
+.hint98{margin-left:auto}
+.qx98{padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.08);color:#fff;font-size:12px;font-weight:700;position:relative}
+.qx98 em{position:absolute;top:-6px;right:-4px;font-style:normal;font-size:9px;background:#e86f97;border-radius:99px;padding:0 4px}
+.nx98{background:linear-gradient(135deg,#F0B77E,#E86F97)!important;border:0!important;color:#2a1620!important}
+/* 9. story header: full title, smaller tools */
+#s-chat.b98 .chead .grow{min-width:0;flex:1}
+#s-chat.b98 .chead b{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:14px;line-height:1.25}
+#s-chat.b98 .chead .ibtn:not([data-back]){width:28px!important;height:28px!important;min-width:28px!important;padding:0!important;opacity:.75}
+#s-chat.b98 .chead .ibtn svg{width:15px;height:15px}
+`;document.head.appendChild(st);
+})();
 </script>
