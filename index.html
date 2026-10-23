@@ -15100,7 +15100,7 @@ function toolsOpen98(th, cid) {
   const pr = present98(th, s); if (pr.length && !pr.includes(cid)) return [];
   if ((A.talkN || 0) - T.last < 3) return []; if ((T.scene[s.id] || 0) >= 2) return [];
   if (th.msgs.slice(-6).some(m => m.k === "tool98" && m.st === "open")) return [];
-  const love = th.love[cid] || 0; return Object.keys(TOOLS98).filter(k => love >= TOOLS98[k].need && (k !== "game" || typeof GAMEF === "object"));
+  const love = th.love[cid] || 0, phone = typeof callsOK97 !== "function" || callsOK97(th); return Object.keys(TOOLS98).filter(k => love >= TOOLS98[k].need && (k !== "game" || typeof GAMEF === "object") && (phone || (k !== "call" && k !== "voice")));
 }
 function tools98p(th, cid) {
   const ok = toolsOpen98(th, cid); if (!ok.length) return "";
