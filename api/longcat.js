@@ -118,6 +118,23 @@ async function open(p, clean) {
   } catch (e) { clearTimeout(t); try { ctl.abort(); } catch (_) {} throw e.name === 'AbortError' ? new Error(p.name + ' timeout') : e; }
 }
 
+/* hedged start: if the first provider hasn't started answering within HEDGE_MS, the next one starts in parallel; the first to answer wins,
+   the others are aborted. A provider that fails fast hands over at once. (SCNet sometimes queues for 20 s+ under parallel load.) */
+const HEDGE_MS = 4500;
+function openRace(chain, clean, errs) {
+  return new Promise((resolve, reject) => {
+    let i = 0, live = 0, done = false;
+    const fail = () => { if (!done && live === 0 && i >= chain.length) { done = true; reject(new Error(errs.join(' | ') || 'no provider')); } };
+    const next = () => {
+      if (done || i >= chain.length) return fail();
+      const p = chain[i++]; live++; const hedge = setTimeout(next, HEDGE_MS);
+      open(p, clean).then(o => { clearTimeout(hedge); live--; if (done) { try { o.ctl.abort(); } catch (_) {} return; } done = true; resolve({ p, o }); },
+        e => { clearTimeout(hedge); live--; errs.push(String(e.message || e)); if (done) return; if (i < chain.length) next(); else fail(); });
+    };
+    next();
+  });
+}
+
 export default async function handler(req) {
   const origin = req.headers.get('origin');
   const c = cors(origin);
@@ -188,14 +205,11 @@ export default async function handler(req) {
   /* streaming callers: hand back the first provider that starts answering (SSE passes straight through) */
   if (body.stream) {
     const errs = [];
-    for (const p of chain) {
-      try {
-        const o = await open(p, clean);
-        const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.rd.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); } });
-        return new Response(rs, { status: 200, headers: { ...c.headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': p.id } });
-      } catch (e) { errs.push(String(e.message || e)); }
-    }
-    return J({ error: { code: 'all_providers_failed', message: errs.join(' | ').slice(0, 600) } }, 502, c.headers);
+    try {
+      const { p, o } = await openRace(chain, clean, errs);
+      const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.rd.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); } });
+      return new Response(rs, { status: 200, headers: { ...c.headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': p.id } });
+    } catch (e) { return J({ error: { code: 'all_providers_failed', message: errs.join(' | ').slice(0, 600) } }, 502, c.headers); }
   }
 
   // Non-streaming callers: answer at once and keep the connection alive with whitespace while the model writes, so a slow reply
@@ -204,19 +218,20 @@ export default async function handler(req) {
   (async () => {
     const ka = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 4000);
     let out = null; const errs = [];
-    for (const p of chain) {
-      let content = '', finish = null, buf = '';
+    let pool = chain.slice();
+    for (let round = 0; round < 2 && pool.length && !out; round++) {
+      let content = '', finish = null, buf = '', p = null;
       const eat = chunk => {
         buf += dec.decode(chunk, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
         for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
       };
       try {
-        const o = await open(p, clean); eat(o.first);
+        const won = await openRace(pool, clean, errs); p = won.p; const o = won.o; pool = pool.filter(x => x !== p); eat(o.first);
         for (;;) { const { done, value } = await o.rd.read(); if (done) break; eat(value); }
         if (!content.trim()) throw new Error(p.name + ' returned no text');
         out = { provider: p.id, model: p.model(clean.model), choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
         break;
-      } catch (e) { errs.push(String(e.message || e)); if (content.trim().length > 200) { out = { provider: p.id, partial: true, choices: [{ index: 0, finish_reason: 'length', message: { role: 'assistant', content } }] }; break; } }
+      } catch (e) { errs.push(String(e.message || e)); if (!p) break; if (content.trim().length > 200) { out = { provider: p.id, partial: true, choices: [{ index: 0, finish_reason: 'length', message: { role: 'assistant', content } }] }; break; } }
     }
     clearInterval(ka);
     if (!out) out = { error: { code: 'all_providers_failed', message: errs.join(' | ').slice(0, 600) } };
