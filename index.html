@@ -15797,3 +15797,17 @@ if(S.ob)startApp();else renderOB();
  const t=["【本章的你 · 第"+(th.b98.ch||1)+"章】",L("此刻你知道：",cc.knows),L("你还不知道（不能装作知道）：",cc.unknown),L("你相信（可能是错的）：",cc.beliefs),L("你对对方：",cc.relation),L("你这一章想要：",cc.goal),L("你现在说话：",cc.speech),L("你为什么变了：",cc.growth)].filter(Boolean).join("\n");
  return Object.assign({},k,{rules:t+"\n\n"+(LZ98(k.rules)||"")})}catch(_){return k}}}catch(_){}})();
 </script>
+<script>
+/* v8.1.1 · 写我的故事：按角色卡规范 §11.1 补三项选填输入（已共同经历的事实 / 他的底线 / 一定要有·一定不要） */
+(function(){
+ try{const _m=mySheet98;mySheet98=function(){const r=_m.apply(this,arguments);try{const st=document.getElementById("my98start");if(st&&!document.getElementById("my98rel")){st.insertAdjacentHTML("afterend",
+  '<details class="my98more"><summary>'+L98("更多设定（选填，让他更像你想要的那个人）","More (optional)")+'</summary>'+
+  '<label class="up66l">'+L98("你们之间已经发生过的事","What has already happened between you")+'</label><input id="my98rel" class="up66i" maxlength="80" placeholder="'+esc(L98("比如：合租三个月，只在厨房说过几句话","e.g. roommates for 3 months, barely talked"))+'">'+
+  '<label class="up66l">'+L98("他绝不会做的事","What he would never do")+'</label><input id="my98line" class="up66i" maxlength="80" placeholder="'+esc(L98("比如：不会骗你，也不会拿别人的隐私开玩笑","e.g. never lies to you"))+'">'+
+  '<label class="up66l">'+L98("一定要有 / 一定不要","Must have / must avoid")+'</label><input id="my98must" class="up66i" maxlength="80" placeholder="'+esc(L98("比如：要有吃醋；不要分手虐","e.g. jealousy yes; breakup angst no"))+'"></details>')}}catch(_){}return r}}catch(_){}
+ try{const _g=gen98;gen98=function(you,him,start,or){const v=id=>{const e=document.getElementById(id);return e?String(e.value||"").trim():""};const rel=v("my98rel"),line=v("my98line"),must=v("my98must");
+  const add=(rel?"\n· 已共同经历的事实（只有这些算已发生；不要把期待的未来关系写成已经发生）："+rel:"\n· 你们之前没有共同经历，初始关系从开场这一刻开始")+(line?"\n· 他的底线（必须写进 boundaries，任何章节都不能违背）："+line:"")+(must?"\n· 一定要有 / 一定不要："+must:"")+"\n· 角色卡要求：他的喜好、恐惧和说话方式要能从他的经历解释；他不知道玩家没说过的事；不替玩家决定感情、接受邀请或原谅。";
+  return _g.call(this,you,him,start+add,or)}}catch(_){}
+ const st=document.createElement("style");st.textContent=".my98more{margin-top:10px;border:1px dashed rgba(255,255,255,.2);border-radius:12px;padding:8px 10px}.my98more summary{font-size:13px;font-weight:700;opacity:.85;cursor:pointer}";document.head.appendChild(st);
+})();
+</script>
