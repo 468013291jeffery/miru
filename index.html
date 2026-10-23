@@ -15869,8 +15869,41 @@ if(S.ob)startApp();else renderOB();
  try{const _r=actor98;actor98=async function(th,cid){const r=await _r.apply(this,arguments);try{if(r&&(r.say||r.act)&&th&&th.b98){const cd=dims(th)(cid),A=th.b98,turn=(A.talkN||0)+":"+cid;if(A._lastEv!==turn){A._lastEv=turn;
    const cl=v=>Math.max(-2,Math.min(2,Math.round(+v||0)));cd.attr=Math.max(0,Math.min(100,cd.attr+cl(r.attract)));cd.susp=Math.max(0,Math.min(100,cd.susp+cl(r.suspect)));
    A.events=A.events||[];A.events.push({id:"ev_"+Date.now().toString(36),ch:A.ch,turn:A.talkN||0,type:"reply",who:cid,mood:r.mood||"",intent:r.intent||"",d:{attr:cl(r.attract),susp:cl(r.suspect),feel:Math.round(+r.feel||0),trust:Math.round(+r.trust||0)}});if(A.events.length>300)A.events.splice(0,A.events.length-300);
-   if(r.learned&&String(r.learned).length>3)cd.growth.push("第"+A.ch+"章："+String(r.learned).slice(0,40))}}}catch(_){}return r}}catch(_){}
+   if(r.learned&&String(r.learned).length>3){const g="第"+A.ch+"章："+String(r.learned).slice(0,40);if(!cd.growth.includes(g))cd.growth.push(g);if(cd.growth.length>20)cd.growth.splice(0,cd.growth.length-20)}}}}catch(_){}return r}}catch(_){}
  /* growth from choices: a table choice writes a dated growth line for everyone present */
  try{const _t=talk98;talk98=async function(th,act,choiceO){const r=await _t.apply(this,arguments);try{if(choiceO&&th&&th.b98){const {s}=scene98(th),pr=present98(th,s);(pr.length?pr:ia98(th)).forEach(id=>{const cd=dims(th)(id);cd.growth.push("第"+th.b98.ch+"章：对方选择了「"+String(choiceO.t).slice(0,24)+"」"+(choiceO.effect?"——"+String(choiceO.effect).slice(0,30):""))});th.b98.events=th.b98.events||[];th.b98.events.push({id:"ev_"+Date.now().toString(36),ch:th.b98.ch,type:"choice",t:choiceO.t,effect:choiceO.effect||""});save()}}catch(_){}return r}}catch(_){}
+})();
+</script>
+<script>
+/* v8.1.6 · ① 官方剧本演完后继续写新章节（跟着你的选择走） ② 剧情停滞时才调一次导演规划（按场景缓存） ③ 每次模型调用上报埋点，后台「事件」页可看 */
+(function(){
+ /* ① continuation for official (solo98) bibles: generated chapters live on the thread, merged into the bible view */
+ const MZ={};
+ try{const _b=bOf98;bOf98=function(w){const b=_b.apply(this,arguments);try{const th=S.threads[curT];if(!b||b.user98||!th||!th.b98||!w||th.wid!==w.id)return b;const x=th.b98.xch||[];if(!x.length)return b;const k=w.id+":"+x.length+":"+b.chapters.length;if(MZ[w.id]&&MZ[w.id].k===k)return MZ[w.id].b;const m=Object.assign({},b,{chapters:b.chapters.concat(x)});MZ[w.id]={k,b:m};return m}catch(_){return b}}}catch(_){}
+ async function more98(th){const w=wd(th.wid),b=bOf98(w),A=th.b98;if(!b||b.user98||busy)return false;
+  if(!S.plus&&!spend(1,"ch98"))return false;
+  busy=true;typing(true);toast(L98("正在根据你的选择写下一章…","Writing the next chapter from your choices…"));let nc=null;
+  try{nc=await genCh98(th,A.steerNext||"")}catch(_){}finally{busy=false;typing(false)}
+  if(!nc){toast(L98("下一章没写好，再点一次","Couldn't write it — try again"));return false}
+  try{const last=[...b.chapters].reverse().find(c=>c.card98);if(last&&!nc.card98){nc.card98=JSON.parse(JSON.stringify(last.card98));Object.values(nc.card98).forEach(cc=>{cc.goal=String(nc.goal||cc.goal||"");cc.growth=[].concat(cc.growth||[]).concat(["第"+(b.chapters.length)+"章结束时：你做过的选择——"+A.flags.slice(-2).join("；")]).slice(-4)})}}catch(_){}
+  nc.n=b.chapters.length+1;A.xch=(A.xch||[]).concat([nc]);A.steerNext="";A.ended=false;MIRU_CALLS.push({mode:"pack",reason:"continue",at:Date.now()});try{track("llm_pack",{reason:"continue"})}catch(_){}save();return true}
+ try{const _n=next98;next98=async function(th){try{const w=th&&wd(th.wid),b=w&&bOf98(w);if(b&&!b.user98&&b.solo98&&th.b98&&!busy){const A=th.b98,{c,s}=scene98(th);
+   const pending=s&&s.choice&&s.choice.options&&s.choice.options.length&&!(s.id in A.picked);
+   if(!pending&&!A.ended&&c&&A.sc>=c.scenes.length-1&&A.ch>=b.chapters.length){const ok=await more98(th);if(!ok)return}}}catch(_){}return _n.apply(this,arguments)}}catch(_){}
+ /* finished stories get a "keep going" button */
+ document.addEventListener("click",async e=>{const x=e.target.closest("[data-b98more]");if(!x)return;e.preventDefault();e.stopPropagation();const th=S.threads[curT];if(!th||!th.b98)return;const b=bOf98(wd(th.wid));if(!b||b.user98)return;
+  const A=th.b98;const ok=await more98(th);if(!ok)return;A.ch=bOf98(wd(th.wid)).chapters.length;A.sc=0;A.phase="enter";save();try{appendMsg(th,{who:"sys",k:"card",title:"📖 "+L98("故事继续","The story goes on"),txt:"",at:Date.now()})}catch(_){}enter98(th)},true);
+ try{const _d=dock98;dock98=function(){const r=_d.apply(this,arguments);try{const th=S.threads[curT],el=document.getElementById("dk98");if(th&&th.b98&&th.b98.ended&&el&&!el.querySelector("[data-b98more]")){const b=bOf98(wd(th.wid));if(b&&!b.user98){const row=el.querySelector(".dk98r")||el;row.insertAdjacentHTML("beforeend",'<button data-b98more="1">▶ '+L98("继续写下去","Keep going")+'</button>')}}}catch(_){}return r}}catch(_){}
+ /* ② stall: local check first; only a real stall calls the planner once per scene, result cached and reused */
+ try{const _adv=adv98;adv98=async function(th){await _adv.apply(this,arguments);try{const A=th.b98,{c,s}=scene98(th);if(!s||!c)return;A.plan98=A.plan98||{};
+   const lv=ia98(th).map(id=>Math.round(th.love[id]||0)).join(",");A._st2=(A._lv2===lv)?(A._st2||0)+1:0;A._lv2=lv;
+   if(A._st2<2)return;A._st2=0;
+   if(A.plan98[s.id]){A.adv=A.adv||A.plan98[s.id].nudge;MIRU_CALLS.push({mode:"plot",reason:"stall",cache_hit:1,at:Date.now()});try{track("llm_plot",{reason:"stall",hit:1})}catch(_){}return}
+   const t0=Date.now();let d=null;try{d=await ask(L98("你是互动剧的剧情导演，只做规划，不写台词，不替玩家决定。对话已经停滞了好几轮。根据本章目标和最近对话，给在场角色一个自然的、只用他已知信息就能做的推进动作。","You are the plot director. The conversation has stalled. Suggest one natural move the character can make using only what he knows.")+"\n本章目标："+(c.goal||"")+"\n这一场："+(s.beat||"")+"\n最近：\n"+tail98(th,8)+'\n\nReply with ONLY JSON: {"nudge":"给角色的一句内心冲动（≤40字，可执行，不泄露他不知道的事）","reason":"一句理由"}',{maxTokens:200})}catch(_){}
+   MIRU_CALLS.push({mode:"plot",reason:"stall",cache_hit:0,ms:Date.now()-t0,at:Date.now()});try{track("llm_plot",{reason:"stall",hit:0,ms:Date.now()-t0})}catch(_){}
+   if(d&&d.nudge){A.plan98[s.id]={nudge:String(d.nudge).slice(0,80),at:Date.now()};A.adv=A.plan98[s.id].nudge;save()}}catch(_){}}}catch(_){}
+ /* ③ telemetry for every model call (admin → 事件 shows llm_actor / llm_plot / llm_pack) */
+ try{const P=MIRU_CALLS.push.bind(MIRU_CALLS);MIRU_CALLS.push=function(x){try{if(x&&x.mode==="actor")track("llm_actor",{ok:x.ok?1:0});if(x&&x.mode==="plot"&&x.reason==="enter")track("llm_plot",{reason:"enter",hit:x.cache_hit?1:0,ms:x.ms||0})}catch(_){}return P(x)}}catch(_){}
+ try{const _ds=doSend;doSend=function(){try{const th=S.threads[curT];if(th&&th.b98)track("turn98",{})}catch(_){}return _ds.apply(this,arguments)}}catch(_){}
 })();
 </script>
