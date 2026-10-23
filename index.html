@@ -15444,6 +15444,10 @@ function salvage98(t) {
 { const IN = {}; const _c = core98; core98 = function (th, cid) { const w = wd(th.wid), key = (w && w.community) + ":" + cid; if (S.core98 && S.core98[key]) return Promise.resolve(S.core98[key]); if (IN[key]) return IN[key]; const p = _c.apply(this, arguments).finally(() => { delete IN[key]; }); IN[key] = p; return p; }; }
 { const _e = enter98; enter98 = function (th) { try { const { s } = scene98(th), ia = ia98(th); present98(th, s).filter(c => ia.includes(c)).forEach(c => core98(th, c).catch(() => {})); } catch (_) {} return _e.apply(this, arguments); }; }
 
+/* v7.9.2 — never let the one-time persona distillation block a reply: wait at most 2.5 s, then answer with the raw card (distillation keeps going in the background and is cached for later turns) */
+{ const _c2 = core98; core98 = function (th, cid) { const p = _c2.apply(this, arguments); const w = wd(th.wid), k = cardOf98(w, cid) || {};
+  const fb = { speech: String(k.voice || "").slice(0, 120), want: String(k.want || "").slice(0, 100), fear: String(k.fear || "").slice(0, 100), never: String(k.boundaries || "").slice(0, 100), retreat: "", body: "" };
+  return Promise.race([p.catch(() => fb), new Promise(r => setTimeout(() => r(fb), 2500))]); }; }
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
