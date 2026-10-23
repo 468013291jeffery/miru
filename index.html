@@ -15461,6 +15461,8 @@ show98 = function (th, m) {
   PACE98 = run.catch(() => {}); return Promise.resolve();
 };
 { const _ds3 = doSend; doSend = function () { const th = S.threads[curT]; if (th && th.b98) { FLUSH98 = PEND98 + 1; if (SKIP98) { const f = SKIP98; SKIP98 = null; FLUSH98 = Math.max(0, FLUSH98 - 1); f(); } } return _ds3.apply(this, arguments); }; }
+/* v7.9.2 — a message sent while the scene is still opening (busy) is not dropped: it waits until the opening finishes, then goes out */
+{ const _ds4 = doSend; let Q = null; doSend = function (txt, mode) { const th = S.threads[curT]; if (th && th.b98 && busy && txt && String(txt).trim()) { if (SKIP98) { const f = SKIP98; SKIP98 = null; f(); } FLUSH98 = PEND98 + 1; const tid = curT, t0 = Date.now(); if (Q) clearInterval(Q); try { const ta = $("#cin"); if (ta) ta.value = ""; } catch (_) {} try { toast(L98("等开场演完就发出…", "Sending after the opening…")); } catch (_) {} Q = setInterval(() => { if (curT !== tid || Date.now() - t0 > 90000) { clearInterval(Q); Q = null; return; } if (!busy) { clearInterval(Q); Q = null; _ds4.call(this, txt, mode); } }, 300); return; } return _ds4.apply(this, arguments); }; }
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
