@@ -15268,8 +15268,7 @@ document.addEventListener("click", async e => { let x;
     b.at = Date.now(); b.seed = { you, him, start }; b.player.brief = you; saveMy98(b); useUnits(aiCost());
     closeSheet(); const wid = await install98my(id); start98(wid); return; }
 }, true);
-/* home: the entry card on top of the feed + a shelf on discover */
-{ const _rh = renderHome; renderHome = function (v) { const r = _rh.apply(this, arguments); try { const feed = $("#feed"); if (feed && !feed.querySelector(".my98h")) feed.insertAdjacentHTML("afterbegin", '<button class="my98h" data-my98sheet="1"><i>✍️</i><span><b>' + L98("写我的故事", "Write my story") + '</b><small>' + L98("你是主角：写一句开场，他就会接住你", "You're the lead: write one opening line and he'll take it from there") + '</small></span><em>›</em></button>'); } catch (_) {} return r; }; }
+/* home: the entry lives in the tab bar (never inside the snap-scrolling feed) */
 /* the story keeps going: new chapters are written from what you did */
 { const _n = next98; next98 = async function (th) {
   const w = th && wd(th.wid), b = w && bOf98(w); if (!b || !b.user98) return _n.apply(this, arguments);
@@ -15318,6 +15317,55 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
 .my98o{display:flex;gap:6px;margin-top:12px}.my98o button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:transparent;color:inherit;font-size:13px}.my98o button.on{border-color:#F0B77E;background:rgba(240,183,126,.16);font-weight:700}
 .st98b{background:rgba(255,255,255,.1)!important;color:#fff!important;padding:8px 11px!important}
 `; document.head.appendChild(st); })();
+
+/* ================= v7.8.2 · home: new dramas first, no swap, no flashing =================
+   · the official list is remembered (S.off94L) and drawn immediately on every visit; it refreshes quietly in the background
+     and the feed is redrawn only if the list really changed and you're still at the top of the feed
+   · first visit ever (nothing remembered yet): the old cards stay hidden behind a loader until the list arrives (≤ 5 s)
+   · assets for the official works load in parallel, not one by one
+   · a failed / empty refresh (cloud not ready yet) never wipes a good list
+   · 「写我的故事」 moved from inside the feed (it broke the full-screen snap scrolling) to a ✍️ button in the top bar */
+{ const keep = w => ({ id: w.id, title: w.title, hook: w.hook, orient: w.orient, en: w.en, author: w.author, tags: w.tags, plays: w.plays, likes: w.likes, featured: 1, A: w.A });
+  if (!OFFF94.list && Array.isArray(S.off94L) && S.off94L.length) { OFFF94.list = S.off94L; OFFF94.at = 0; }
+  let busy94 = null;
+  off94Feed = async function () {
+    if (OFFF94.list && OFFF94.list.length && Date.now() - OFFF94.at < 120000) return OFFF94.list;
+    if (busy94) return busy94;
+    busy94 = (async () => {
+      let L = []; try { L = await off89Load(); } catch (_) {}
+      if (!L || !L.length) { try { const r = await capi("/works?feed=featured&limit=50"); L = ((r && r.j && r.j.works) || []).filter(w => w.featured); } catch (_) {} }
+      const out = (await Promise.all((L || []).map(async w => { try { const A = await off94Assets(w.id); return (A.vid_open || A.cover || A.poster) ? Object.assign({}, w, { A }) : null; } catch (_) { return null; } }))).filter(Boolean);
+      if (!out.length) return OFFF94.list || [];   /* keep what we had */
+      const before = (OFFF94.list || []).map(w => w.id).join(","), now = out.map(w => w.id).join(",");
+      OFFF94.list = out; OFFF94.at = Date.now(); try { S.off94L = out.map(keep); save(); } catch (_) {}
+      if (before !== now) { const f = $("#feed"); if (S.lastTab === "home" && f && f.scrollTop < 40 && typeof renderHome === "function" && $("#tabv")) renderHome($("#tabv")); }
+      return out;
+    })().finally(() => { busy94 = null; });
+    return busy94;
+  };
+  /* refresh in the background as soon as the cloud is up */
+  setTimeout(function tick() { if (typeof CL0 !== "undefined" && CL0.on) off94Feed().catch(() => {}); else setTimeout(tick, 400); }, 300);
+}
+{ const _rh = renderHome; renderHome = function (v) { const r = _rh.apply(this, arguments);
+  try {
+    const tabs = v.querySelector(".ftabs"), snd = tabs && tabs.querySelector("[data-fsound]");
+    if (tabs && !tabs.querySelector("[data-my98sheet]")) { const b = '<button class="ftico my98t" data-my98sheet="1" aria-label="' + esc(L98("写我的故事", "Write my story")) + '">✍️</button>'; if (snd) snd.insertAdjacentHTML("beforebegin", b); else tabs.insertAdjacentHTML("beforeend", b); }
+    const feed = v.querySelector("#feed");
+    if (feed && !(OFFF94.list && OFFF94.list.length) && !feed.querySelector(".off94")) {
+      feed.classList.add("wait94"); feed.insertAdjacentHTML("afterbegin", '<div class="wait94l">' + esc(L98("正在加载新剧…", "Loading new stories…")) + '</div>');
+      const done = () => { const f = $("#feed"); if (!f) return; f.classList.remove("wait94"); const l = f.querySelector(".wait94l"); if (l) l.remove(); };
+      Promise.race([off94Feed(), new Promise(z => setTimeout(z, 5000))]).then(() => { if (OFFF94.list && OFFF94.list.length && $("#feed") && !$("#feed .off94") && $("#tabv")) renderHome($("#tabv")); else done(); }).catch(done);
+    }
+  } catch (_) {}
+  return r; }; }
+(function () { const st = document.createElement("style"); st.textContent = `
+.my98t{font-size:18px;line-height:1}
+#feed.wait94>.fcard:not(.off94){visibility:hidden}
+.wait94l{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#cfc6d3;font-size:13px;letter-spacing:.04em;pointer-events:none}
+.wait94l::before{content:"";width:18px;height:18px;margin-right:10px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#F0B77E;animation:sp94 .8s linear infinite}
+@keyframes sp94{to{transform:rotate(360deg)}}
+`; document.head.appendChild(st); })();
+
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
