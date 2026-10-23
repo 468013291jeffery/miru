@@ -15,14 +15,16 @@ const FIRST_TOKEN_MS = 22000; // give up on a provider that hasn't started answe
 
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
 /* SCNet: one key reaches many models. Without SCNET_MODEL we read the account's model list once and pick a good chat model. */
-let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0;
+let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0, SCNET_FAIL = 0; // a failed lookup is not retried for 10 min
 const SCNET_PREF = [/^deepseek-v4\.1-flash$/i, /^scnet-max$/i, /^deepseek-v4[\w.-]*flash/i, /^qwen3\.\d+-flash/i, /^glm-5[\w.]*-flash$/i, /^deepseek-v4/i, /^qwen3\.\d+-plus/i, /^glm-5/i, /deepseek/i, /qwen/i, /glm/i];
 async function scnetResolve() {
   if (env('SCNET_MODEL') || !env('SCNET_API_KEY')) return;
   if (SCNET_AUTO && Date.now() - SCNET_AT < 3600e3) return;
+  if (!SCNET_AUTO && Date.now() - SCNET_FAIL < 600e3) return;
   try {
     const base = env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '');
-    const r = await fetch(base + '/models', { headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') } });
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 2500); // never let the model list hold up a reply
+    const r = await fetch(base + '/models', { headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') }, signal: ctl.signal }).finally(() => clearTimeout(tm));
     const j = await r.json();
     const ids = (j.data || j.models || []).map(m => typeof m === 'string' ? m : (m.id || m.name)).filter(Boolean);
     SCNET_LIST = ids;
@@ -31,6 +33,7 @@ async function scnetResolve() {
     if (!SCNET_AUTO) SCNET_AUTO = chat[0] || ids[0] || null;
     SCNET_AT = Date.now();
   } catch (_) {}
+  if (!SCNET_AUTO) SCNET_FAIL = Date.now();
 }
 function providers() {
   const all = {
@@ -121,7 +124,7 @@ export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: c.headers });
   if (req.method !== 'POST') return new Response('POST only', { status: 405, headers: c.headers });
   if (!c.ok) return J({ error: { message: 'origin not allowed' } }, 403, c.headers);
-  await scnetResolve();
+  if (SCNET_AUTO || !env('SCNET_API_KEY') || env('SCNET_MODEL')) await scnetResolve(); else scnetResolve().catch(() => {}); // first lookup runs in the background, never on the reply path
   let body;
   try { body = await req.json(); } catch { return J({ error: { message: 'bad json' } }, 400, c.headers); }
   if (body.omni) return omni(body.omni, c.headers);
