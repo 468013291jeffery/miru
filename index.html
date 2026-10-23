@@ -15854,3 +15854,23 @@ if(S.ob)startApp();else renderOB();
    if(items.length&&typeof chg96==="function")try{chg96(items)}catch(_){}}}}catch(_){}return _k.apply(this,arguments)}}catch(_){}
 })();
 </script>
+<script>
+/* v8.1.5 · 关系四维（好感/信任/吸引/怀疑）+ 本地成长记录 + 事件日志（剧情模式 b98；不增加模型调用） */
+(function(){
+ const dims=th=>cid=>{const cd=st98(th,cid);if(cd.attr==null)cd.attr=Math.round((th.love[cid]||0)*.8);if(cd.susp==null)cd.susp=15;cd.growth=cd.growth||[];return cd};
+ const word=(v,a)=>v>=75?a[3]:v>=50?a[2]:v>=25?a[1]:a[0];
+ function relText(th,cid){const cd=dims(th)(cid),love=Math.round(th.love[cid]||0);
+  return "【你此刻对"+yn98(th)+"（四个维度互相独立，不能互相代替）】\n- 好感 "+love+"："+word(love,["还谈不上在意","有善意","在意","很在意"])+"\n- 信任 "+Math.round(cd.trust)+"："+word(cd.trust,["不愿说私事","日常可以相处","愿意说一部分心事","可以托付"])+"\n- 吸引 "+Math.round(cd.attr)+"："+word(cd.attr,["没有特别感觉","偶尔会注意到","会被吸引但不承认","很难移开视线"])+"\n- 怀疑 "+Math.round(cd.susp)+"："+word(cd.susp,["基本放心","有一点保留","会核实对方的话","处处提防"])+
+  (cd.growth.length?"\n【你最近的变化（有事件依据，台词和行为要体现）】\n"+cd.growth.slice(-3).map(g=>"- "+g).join("\n"):"")}
+ /* prompt: add the 4 dims + growth, ask for two extra deltas */
+ try{const _a=ask;ask=function(prompt){try{const th=S.threads[curT];if(th&&th.b98&&typeof prompt==="string"&&/^你是「/.test(prompt)){const nm=prompt.slice(3,prompt.indexOf("」"));const cid=th.cast.find(id=>ch(id)&&(prompt.indexOf("你是「"+((cardOf98(wd(th.wid),id)||{}).name&&LZ98(cardOf98(wd(th.wid),id).name)||ch(id).n))===0||nm.includes(first(ch(id).n))));
+   if(cid){prompt=prompt.replace('"feel":0,"trust":0','"feel":0,"trust":0,"attract":0,"suspect":0');const k=prompt.lastIndexOf("\nReply with ONLY JSON");const add="\n\n"+relText(th,cid)+"\n（attract / suspect：这一刻吸引和怀疑的变化，-2..2；没有依据就填 0，不要每轮都加）\n";prompt=k>0?prompt.slice(0,k)+add+prompt.slice(k):prompt+add;arguments[0]=prompt;th._cid98=cid}}}catch(_){}return _a.apply(this,arguments)}}catch(_){}
+ /* apply deltas once per committed reply + event log (retries don't double count) */
+ try{const _r=actor98;actor98=async function(th,cid){const r=await _r.apply(this,arguments);try{if(r&&(r.say||r.act)&&th&&th.b98){const cd=dims(th)(cid),A=th.b98,turn=(A.talkN||0)+":"+cid;if(A._lastEv!==turn){A._lastEv=turn;
+   const cl=v=>Math.max(-2,Math.min(2,Math.round(+v||0)));cd.attr=Math.max(0,Math.min(100,cd.attr+cl(r.attract)));cd.susp=Math.max(0,Math.min(100,cd.susp+cl(r.suspect)));
+   A.events=A.events||[];A.events.push({id:"ev_"+Date.now().toString(36),ch:A.ch,turn:A.talkN||0,type:"reply",who:cid,mood:r.mood||"",intent:r.intent||"",d:{attr:cl(r.attract),susp:cl(r.suspect),feel:Math.round(+r.feel||0),trust:Math.round(+r.trust||0)}});if(A.events.length>300)A.events.splice(0,A.events.length-300);
+   if(r.learned&&String(r.learned).length>3)cd.growth.push("第"+A.ch+"章："+String(r.learned).slice(0,40))}}}catch(_){}return r}}catch(_){}
+ /* growth from choices: a table choice writes a dated growth line for everyone present */
+ try{const _t=talk98;talk98=async function(th,act,choiceO){const r=await _t.apply(this,arguments);try{if(choiceO&&th&&th.b98){const {s}=scene98(th),pr=present98(th,s);(pr.length?pr:ia98(th)).forEach(id=>{const cd=dims(th)(id);cd.growth.push("第"+th.b98.ch+"章：对方选择了「"+String(choiceO.t).slice(0,24)+"」"+(choiceO.effect?"——"+String(choiceO.effect).slice(0,30):""))});th.b98.events=th.b98.events||[];th.b98.events.push({id:"ev_"+Date.now().toString(36),ch:th.b98.ch,type:"choice",t:choiceO.t,effect:choiceO.effect||""});save()}}catch(_){}return r}}catch(_){}
+})();
+</script>
