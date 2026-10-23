@@ -14998,7 +14998,7 @@ actor98 = async function (th, cid, intent) {
   const last = [...th.msgs].reverse().find(m => m.who === "me" && m.k !== "think"); const toMe = last && (!last.to98 || last.to98 === first(x.n));
   const p = (zh ? "你是「" + nm + "」。你是一个独立的人，只用你自己的眼睛看世界。" : "You are " + nm + ", a separate person who sees the world only through your own eyes.") +
     "\n\n【" + L98("不变的你 · 每一句都必须符合", "Who you are — every line must fit") + "】\n1. " + L98("你怎么说话：", "How you talk: ") + (core.speech || "") + "\n2. " + L98("你要什么：", "What you want: ") + (core.want || "") + "\n3. " + L98("你怕什么：", "What you fear: ") + (core.fear || "") + "\n4. " + L98("你绝不做什么：", "What you never do: ") + (core.never || "") + (core.retreat ? "\n5. " + L98("你被逼到时怎么退：", "How you retreat: ") + core.retreat : "") + (core.body ? "\n6. " + L98("你的身体习惯：", "Your body habit: ") + core.body : "") +
-    "\n" + L98("身份：", "Role: ") + LZ98(k.role) + (k.age ? "，" + k.age + L98("岁", "") : "") + (k.spice ? "\n" + L98("你的撩人方式（按亲密度分寸使用）：", "How you flirt (scale to closeness): ") + String(k.spice).slice(0, 300) : "") + (k.rules ? "\n\n【" + L98("你的规则 · 每一句都必须遵守", "Your rules — always") + "】\n" + String(LZ98(k.rules)).slice(0, 1200) : "") +
+    "\n" + L98("身份：", "Role: ") + LZ98(k.role) + (k.age ? "，" + k.age + L98("岁", "") : "") + (k.spice ? "\n" + L98("你的撩人方式（按亲密度分寸使用）：", "How you flirt (scale to closeness): ") + String(k.spice).slice(0, 300) : "") + (k.rules ? "\n\n【" + L98("你必须遵守的规则", "Rules you must follow") + "】\n" + String(k.rules).slice(0, 1200) : "") + (k.rules ? "\n\n【" + L98("你的规则 · 每一句都必须遵守", "Your rules — always") + "】\n" + String(LZ98(k.rules)).slice(0, 1200) : "") +
     "\n\n【" + L98("你知道的 · 只有这些", "What you know — only this") + "】\n" + [...cd.knows.map(f => "- " + f), ...cd.mem.slice(-14).map(f => "- " + f)].filter(Boolean).join("\n") +
     "\n" + L98("不在上面、也不在下面你亲眼看到的记录里的事，你一概不知道——包括别人心里想什么、你不在场时发生的事、以后会发生的事。被问到不知道的事，就说不知道或岔开。", "Anything not listed here or in what you witnessed below, you don't know — others' thoughts, scenes you weren't in, the future. If asked, say you don't know or deflect.") +
     "\n\n【" + L98("你站在这一拍", "Your beat right now") + "】\n" + L98("地点：", "Place: ") + LZ98(s && s.place) + (sb.goal ? "\n" + L98("这一场你想要：", "This scene you want: ") + sb.goal : "") + (sb.avoid ? "\n" + L98("这一场你回避：", "This scene you avoid: ") + sb.avoid : "") + (intent ? "\n" + L98("此刻的冲动（可不理）：", "Impulse right now (optional): ") + intent : "") +
@@ -15007,7 +15007,7 @@ actor98 = async function (th, cid, intent) {
     "\n\n【" + L98("你亲眼看到、听到的（最近）", "What you saw and heard (recent)") + "】\n" + (saw98(th, cid, 12) || "—") +
     (last && toMe ? "\n\n【" + L98("对方刚对你说/做", "What they just said/did to you") + "】" + you + "：" + last.txt + "\n" + L98("先直接回应这一句：问你问题就正面回答，或者明确不答（用你的方式）；不要自说自话。", "Respond to this first: answer the question directly, or clearly refuse in your way. Don't talk past it.") : "") +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）只写你自己：act=一个动作（不写主语，从动词写起，用上你的身体习惯，≤30 字，可空），say=一句话（≤45 字，简体中文，符合【你怎么说话】）。不写别人，不写旁白。" : "(" + you + gx98(th) + ") Only yourself: act = one action without subject (≤18 words, may be empty), say = one line (≤30 words, in your voice). Nothing about others, no narration.") +
-    tools98p(th, cid) + '\nReply with ONLY JSON: {"wish":"","act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","ideas":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}]} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；ideas：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
+    tools98p(th, cid) + '\nReply with ONLY JSON: {"wish":"","act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","idea_say":"","idea_act":"","idea_think":""} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；idea_say/idea_act/idea_think：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
   const r = await ask(p, { maxTokens: 440 });
   if (r) { if (r.mood) cd.mood = String(r.mood).slice(0, 12); if (r.trust) cd.trust = Math.max(0, Math.min(100, cd.trust + Math.max(-5, Math.min(5, +r.trust || 0)) * 1.5)); if (r.learned) kn98(th, [cid], r.learned); }
   return r;
@@ -15318,6 +15318,12 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
 .st98b{background:rgba(255,255,255,.1)!important;color:#fff!important;padding:8px 11px!important}
 `; document.head.appendChild(st); })();
 
+/* ================= v7.9 · single-lead dramas (2026-10-23 batch): listed first in the official feed ================= */
+const SOLO98 = [{"id": "w_mr_lucienveyrane", "featured": 1, "A": {"cover": "art/official/w_mr_lucienveyrane/v3/cover.jpg", "poster": "art/official/w_mr_lucienveyrane/v3/cover.jpg"}, "title": "午夜契约：卢西安", "hook": "下班回家，那位三百七十二岁的室友正端着红酒等你：“要我买下你们公司把他炒了，还是……让我咬一小口？”", "orient": "bg", "tags": ["吸血鬼", "同居", "年上", "Old Money", "供血契约"], "en": {"title": "Midnight Contract: Lucien", "hook": "You come home from work and your 372-year-old roommate is waiting with a glass of wine: buy your company and fire your boss — or a little bite?"}}, {"id": "w_mr_dreamreunion", "featured": 1, "A": {"cover": "art/official/w_mr_dreamreunion/v3/cover.jpg", "poster": "art/official/w_mr_dreamreunion/v3/cover.jpg"}, "title": "梦境与你重逢", "hook": "全校都以为他的人生完美无缺，只有他知道，自己已经在梦里寻找你很多年。", "orient": "bg", "tags": ["校园", "命定", "梦境", "慢热", "游泳队"], "en": {"title": "Dream Reunion", "hook": "Everyone thinks his life is perfect. Only he knows he's been looking for you in his dreams for years."}}, {"id": "w_mr_dangerousdist", "featured": 1, "A": {"cover": "art/official/w_mr_dangerousdist/v3/cover.jpg", "poster": "art/official/w_mr_dangerousdist/v3/cover.jpg"}, "title": "危险距离", "hook": "他受过训练，知道如何从任何危险里脱身，却从没学过如何面对一个让他宁愿停下来的人。", "orient": "bg", "tags": ["谍战", "危险共生", "秘密", "成年人", "雨夜"], "en": {"title": "Dangerous Distance", "hook": "Trained to get out of anything — never trained for someone who makes him want to stay."}}, {"id": "w_mr_moonlitvow", "featured": 1, "A": {"cover": "art/official/w_mr_moonlitvow/v3/cover.jpg", "poster": "art/official/w_mr_moonlitvow/v3/cover.jpg"}, "title": "月下遗忘的誓约", "hook": "他记得你们曾经相爱，也记得未完成的婚约；可当他终于找到你，你看他的眼神却像看一个陌生人。", "orient": "bg", "tags": ["狼族", "失忆重逢", "宿命伴侣", "小镇", "慢热"], "en": {"title": "The Forgotten Moonlit Vow", "hook": "He remembers your love and your unfinished engagement. When he finally finds you, you look at him like a stranger."}}];
+const SOLOK98 = {};   /* a drama is listed only once its cover image is really there */
+SOLO98.forEach(w => { try { fetch(w.A.cover, { method: "HEAD", cache: "no-store" }).then(r => { if (r.ok) SOLOK98[w.id] = 1; }).catch(() => {}); } catch (_) {} });
+function solo98(L) { L = (L || []).filter(w => !SOLO98.some(x => x.id === w.id)); return SOLO98.filter(x => SOLOK98[x.id]).concat(L); }
+
 /* ================= v7.8.2 · home: new dramas first, no swap, no flashing =================
    · the official list is remembered (S.off94L) and drawn immediately on every visit; it refreshes quietly in the background
      and the feed is redrawn only if the list really changed and you're still at the top of the feed
@@ -15326,7 +15332,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
    · a failed / empty refresh (cloud not ready yet) never wipes a good list
    · 「写我的故事」 moved from inside the feed (it broke the full-screen snap scrolling) to a ✍️ button in the top bar */
 { const keep = w => ({ id: w.id, title: w.title, hook: w.hook, orient: w.orient, en: w.en, author: w.author, tags: w.tags, plays: w.plays, likes: w.likes, featured: 1, A: w.A });
-  if (!OFFF94.list && Array.isArray(S.off94L) && S.off94L.length) { OFFF94.list = S.off94L; OFFF94.at = 0; }
+  if (!OFFF94.list && Array.isArray(S.off94L) && S.off94L.length) { OFFF94.list = solo98(S.off94L); OFFF94.at = 0; }
   let busy94 = null;
   off94Feed = async function () {
     if (OFFF94.list && OFFF94.list.length && Date.now() - OFFF94.at < 120000) return OFFF94.list;
@@ -15334,8 +15340,9 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
     busy94 = (async () => {
       let L = []; try { L = await off89Load(); } catch (_) {}
       if (!L || !L.length) { try { const r = await capi("/works?feed=featured&limit=50"); L = ((r && r.j && r.j.works) || []).filter(w => w.featured); } catch (_) {} }
-      const out = (await Promise.all((L || []).map(async w => { try { const A = await off94Assets(w.id); return (A.vid_open || A.cover || A.poster) ? Object.assign({}, w, { A }) : null; } catch (_) { return null; } }))).filter(Boolean);
-      if (!out.length) return OFFF94.list || [];   /* keep what we had */
+      let out = (await Promise.all((L || []).map(async w => { try { const A = await off94Assets(w.id); return (A.vid_open || A.cover || A.poster) ? Object.assign({}, w, { A }) : null; } catch (_) { return null; } }))).filter(Boolean);
+      if (!out.length && OFFF94.list && OFFF94.list.length > SOLO98.length) return OFFF94.list;   /* keep a good cloud list */
+      out = solo98(out);
       const before = (OFFF94.list || []).map(w => w.id).join(","), now = out.map(w => w.id).join(",");
       OFFF94.list = out; OFFF94.at = Date.now(); try { S.off94L = out.map(keep); save(); } catch (_) {}
       if (before !== now) { const f = $("#feed"); if (S.lastTab === "home" && f && f.scrollTop < 40 && typeof renderHome === "function" && $("#tabv")) renderHome($("#tabv")); }
@@ -15395,6 +15402,47 @@ async function local98() { const out = []; await Promise.all(LOCAL98.map(async i
   return out; }; }
 /* characters without a portrait get a clean placeholder instead of a broken image */
 { const _i = install98; install98 = async function (id) { const wid = await _i.apply(this, arguments); try { const w = wd(wid); if (w && LOCAL98.includes(id)) { w.cast.forEach((cid, i) => { if (!S.art[cid]) S.art[cid] = avSvg98((ch(cid) || {}).n, i + 1); }); save(); } } catch (_) {} return wid; }; }
+
+/* ================= v7.9 · fixed openings played word for word; starting closeness from the card =================
+   A scene may carry `script` (the writer's opening, line by line: narration / his action / his words) — it is played exactly as written,
+   then the scene goes straight to free talk with the scene's `opts` as suggestions. No director call, nothing rewritten. */
+{ const _b = beat98; beat98 = async function (th, mode, act) {
+  try { const { s } = scene98(th), A = th.b98;
+    if (th && th.b98 && mode === "enter" && s && Array.isArray(s.script) && s.script.length && !(A.played98 || {})[s.id]) {
+      A.played98 = Object.assign(A.played98 || {}, { [s.id]: 1 }); save(); typing(false);
+      const pr = present98(th, s), zh = Z98();
+      for (const ln of s.script) { const txt = String((zh ? ln.zh : ln.en) || ln.zh || "").trim(); if (!txt) continue;
+        const who = ln.who === "n" ? "n" : cid98(th.wid, ln.who); if (who !== "n" && !ch(who)) continue;
+        await show98(th, who === "n" ? { who: "n", k: "act", txt, at: Date.now() } : ln.k === "say" ? { who, k: "say", txt, at: Date.now(), ai: 1 } : { who, k: "act", txt, at: Date.now() }); }
+      kn98(th, pr.length ? pr : th.cast, L98("开场：", "Opening: ") + String(s.beat || "").slice(0, 70));
+      A.sum.push(L98("第" + A.ch + "章开场：", "Ch" + A.ch + " opening: ") + String(s.beat || "").slice(0, 60));
+      if (Array.isArray(s.opts)) setSugg(opts98(s.opts)); save(); return; } } catch (_) {}
+  return _b.apply(this, arguments); }; }
+{ const _n = new98; new98 = function (wid, asKey) { const th = _n.apply(this, arguments); try { const w = wd(wid); th.cast.forEach(c => { const k = cardOf98(w, c) || {}; if (k.love0 != null) th.love[c] = +k.love0; if (k.trust0 != null) { const cd = th.b98.cards[c] || (th.b98.cards[c] = { mem: [] }); cd.trust = +k.trust0; } }); save(); } catch (_) {} return th; }; }
+
+/* ================= v7.9.1 · replies that don't get lost, and scenes that open faster =================
+   · lenient JSON: a reply with a malformed part (the model often fumbles the nested suggestion list) is salvaged field by field
+     instead of being thrown away — before, one in three character replies could vanish this way
+   · suggestions are asked for as three flat fields (idea_say / idea_act / idea_think), which the model gets right
+   · a character that still fails is asked once more before the player sees "they drifted off"
+   · entering a scene: each present character's fixed summary is prepared in parallel with the director, not after it */
+{ const _jl = jsonLoose; jsonLoose = function (t) { const r = _jl(t); if (r != null) return r; return salvage98(t); }; }
+function salvage98(t) {
+  t = String(t || "").replace(/```(?:json)?/g, ""); if (!/[{]/.test(t)) return null; const o = {}; let n = 0;
+  t.replace(/"([a-zA-Z_][\w]{0,24})"\s*:\s*"((?:[^"\\]|\\.)*)"/g, (_, k, v) => { if (!(k in o) && k !== "k" && k !== "t") { try { o[k] = JSON.parse('"' + v + '"'); } catch (_) { o[k] = v; } n++; } return ""; });
+  t.replace(/"([a-zA-Z_][\w]{0,24})"\s*:\s*(-?\d+(?:\.\d+)?)/g, (_, k, v) => { if (!(k in o)) { o[k] = +v; n++; } return ""; });
+  const ideas = []; t.replace(/\{\s*"k"\s*:\s*"(say|act|think)"\s*[,:]\s*(?:"t"\s*:\s*)?"((?:[^"\\]|\\.)+)"/g, (_, k, v) => { ideas.push({ k, t: v }); return ""; });
+  if (ideas.length) { o.ideas = ideas; o.options = o.options || ideas; }
+  return n >= 2 ? o : null;
+}
+{ const _a = ask; ask = async function () { const r = await _a.apply(this, arguments);
+  try { if (r && typeof r === "object" && !Array.isArray(r)) {
+    if (!Array.isArray(r.ideas) && (r.idea_say || r.idea_act || r.idea_think)) r.ideas = [["say", r.idea_say], ["act", r.idea_act], ["think", r.idea_think]].filter(x => x[1]).map(([k, t]) => ({ k, t: String(t) }));
+  } } catch (_) {} return r; }; }
+{ const _a = actor98; actor98 = async function () { let r = null; try { r = await _a.apply(this, arguments); } catch (_) {} if (r && (r.say || r.act)) return r;
+  try { return await _a.apply(this, arguments); } catch (e) { return r; } }; }
+{ const IN = {}; const _c = core98; core98 = function (th, cid) { const w = wd(th.wid), key = (w && w.community) + ":" + cid; if (S.core98 && S.core98[key]) return Promise.resolve(S.core98[key]); if (IN[key]) return IN[key]; const p = _c.apply(this, arguments).finally(() => { delete IN[key]; }); IN[key] = p; return p; }; }
+{ const _e = enter98; enter98 = function (th) { try { const { s } = scene98(th), ia = ia98(th); present98(th, s).filter(c => ia.includes(c)).forEach(c => core98(th, c).catch(() => {})); } catch (_) {} return _e.apply(this, arguments); }; }
 
 
 /* ================= v7.4 · voice reads only spoken lines =================
