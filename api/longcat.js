@@ -219,7 +219,7 @@ export default async function handler(req) {
     const ka = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 4000);
     let out = null; const errs = [];
     let pool = chain.slice();
-    for (let round = 0; round < 2 && pool.length && !out; round++) {
+    for (let round = 0; round < 3 && pool.length && !out; round++) {
       let content = '', finish = null, buf = '', p = null;
       const eat = chunk => {
         buf += dec.decode(chunk, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
@@ -227,7 +227,10 @@ export default async function handler(req) {
       };
       try {
         const won = await openRace(pool, clean, errs); p = won.p; const o = won.o; pool = pool.filter(x => x !== p); eat(o.first);
-        for (;;) { const { done, value } = await o.rd.read(); if (done) break; eat(value); }
+        const t0 = Date.now(); // a stream that stalls (no bytes for 9 s) or runs past 35 s is cut: keep what came, or move on to the next provider
+        for (;;) { let tm; const r = await Promise.race([o.rd.read(), new Promise(z => { tm = setTimeout(() => z({ stall: 1 }), 9000); })]); clearTimeout(tm);
+          if (r.stall || Date.now() - t0 > 35000) { try { o.ctl.abort(); } catch (_) {} if (content.trim().length > 40) { finish = 'length'; break; } throw new Error(p.name + ' stalled'); }
+          if (r.done) break; eat(r.value); }
         if (!content.trim()) throw new Error(p.name + ' returned no text');
         out = { provider: p.id, model: p.model(clean.model), choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
         break;
