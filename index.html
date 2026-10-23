@@ -15448,6 +15448,19 @@ function salvage98(t) {
 { const _c2 = core98; core98 = function (th, cid) { const p = _c2.apply(this, arguments); const w = wd(th.wid), k = cardOf98(w, cid) || {};
   const fb = { speech: String(k.voice || "").slice(0, 120), want: String(k.want || "").slice(0, 100), fear: String(k.fear || "").slice(0, 100), never: String(k.boundaries || "").slice(0, 100), retreat: "", body: "" };
   return Promise.race([p.catch(() => fb), new Promise(r => setTimeout(() => r(fb), 2500))]); }; }
+/* v7.9.2 — sending a message never waits behind "tap to continue": every line still queued (e.g. the scripted opening) is shown at once, and the first reply line appears without a tap */
+let PEND98 = 0, FLUSH98 = 0;
+show98 = function (th, m) {
+  PEND98++;
+  const run = PACE98.then(() => { if (FLUSH98 > 0) { FLUSH98--; return null; } return (BEAT98 > 0 && curT === th.id) ? new Promise(r => { SKIP98 = () => { try { stopVoice(); } catch (_) {} r(); }; tap98(true); }) : null; }).then(() => {
+    PEND98 = Math.max(0, PEND98 - 1); SKIP98 = null; tap98(false); BEAT98++; NOSPEAK98 = 1; try { appendMsg(th, m); } finally { NOSPEAK98 = 0; }
+    const voiced = m.k === "say" && S.autoVoice && curT === th.id && ch(m.who) && !FLUSH98;
+    if (voiced) { try { speak(m.txt, m.who, () => {}); } catch (_) {} }
+    return new Promise(r => setTimeout(r, FLUSH98 > 0 ? 60 : 200));
+  });
+  PACE98 = run.catch(() => {}); return Promise.resolve();
+};
+{ const _ds3 = doSend; doSend = function () { const th = S.threads[curT]; if (th && th.b98) { FLUSH98 = PEND98 + 1; if (SKIP98) { const f = SKIP98; SKIP98 = null; FLUSH98 = Math.max(0, FLUSH98 - 1); f(); } } return _ds3.apply(this, arguments); }; }
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
