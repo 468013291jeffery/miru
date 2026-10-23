@@ -9833,7 +9833,7 @@ function lcClean(t){return String(t||"").replace(/<think>[\s\S]*?<\/think>/g,"")
 async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_PROXY)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
  const max={quick:900,default:2200,complex:4000}[opts.modelTier||"default"]||2200;const stream=typeof opts.onText==="function";
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,thinking:{type:"disabled"}};
- const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||(stream?60000:25000));if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
+ const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||(stream?60000:45000));if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
  const direct=key&&!LC_PROXY,url=direct?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(direct)hd.Authorization="Bearer "+key;
  let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
@@ -11345,7 +11345,7 @@ function meTexts(){const th=S.threads&&S.threads[curT];const set=new Set();if(th
 function trScan(root){trLoad();TR.me=meTexts();const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>trSkip(n.parentElement)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
  let n;while((n=w.nextNode()))trNode(n);(root||document.body).querySelectorAll&&(root||document.body).querySelectorAll("[placeholder],[title]").forEach(el=>{if(trSkip(el.parentElement))return;trAttr(el,"placeholder");trAttr(el,"title")});trFlush()}
 function trEP(){const p=typeof TTS_EP!=="undefined"&&TTS_EP?TTS_EP.replace(/\/api\/tts$/,"/api/translate"):"";return p}
-let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
+let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(typeof busy!=="undefined"&&busy){trFlush();return}if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
  const batch=[...TR.q].slice(0,40);batch.forEach(x=>TR.q.delete(x));TR.busy=true;const lang0=S.lang;
  try{const r=await fetch(ep,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},typeof cloudAuth==="function"?cloudAuth():{}),body:JSON.stringify({to:S.lang,texts:batch})});const j=await r.json();
   if(S.lang!==lang0||TR.lang!==lang0){TR.busy=false;return}
@@ -11391,8 +11391,8 @@ const _save68=save;function save0(){_save68()}
 save=function(){const r=_save68.apply(this,arguments);try{if(CL0.on){walletDiff();clearTimeout(CL0.timer);CL0.timer=setTimeout(()=>cloudPush(false),8000)}}catch(_){}return r};
 function stateForCloud(){const copy=JSON.parse(JSON.stringify(S));delete copy.cloud;
  const strip=o=>{if(!o||typeof o!=="object")return;for(const k of Object.keys(o)){const v=o[k];if(typeof v==="string"&&v.length>60000&&/^data:/.test(v))o[k]=null;else if(v&&typeof v==="object")strip(v)}};strip(copy);
- let s=JSON.stringify(copy);if(s.length>850000){delete copy.art;s=JSON.stringify(copy)}if(s.length>850000){Object.values(copy.threads||{}).forEach(th=>{th.msgs=(th.msgs||[]).slice(-80)});s=JSON.stringify(copy)}return copy}
-async function cloudPush(force){if(!CL0.on||CL0.busy)return;CL0.busy=true;const c=cloudInfo();
+ let s=JSON.stringify(copy);if(s.length>850000){delete copy.art;s=JSON.stringify(copy)}if(s.length>400000){Object.values(copy.threads||{}).forEach(th=>{th.msgs=(th.msgs||[]).slice(-40)});s=JSON.stringify(copy)}if(s.length>400000){Object.values(copy.threads||{}).forEach(th=>{th.msgs=(th.msgs||[]).slice(-12)});s=JSON.stringify(copy)}return copy}
+async function cloudPush(force){if(!CL0.on||CL0.busy)return;if(!force&&typeof busy!=="undefined"&&busy){clearTimeout(CL0.timer);CL0.timer=setTimeout(()=>cloudPush(false),8000);return}CL0.busy=true;const c=cloudInfo();
  try{const r=await capi("/state",{method:"PUT",json:{data:stateForCloud(),ver:c.ver||0,force:!!force&&!c.ver}});
   if(r.ok){c.ver=r.j.ver;c.syncedAt=Date.now();save0()}else if(r.status===409&&r.j.data){c.conflict={ver:r.j.ver,at:Date.now()};c.ver=r.j.ver;save0()}}catch(_){}CL0.busy=false}
 async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,data);S.cloud=keep;S.cloud.ver=r.j.ver;save0();return true}
