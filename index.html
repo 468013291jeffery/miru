@@ -15837,3 +15837,20 @@ if(S.ob)startApp();else renderOB();
  window.MIRU_CARDS98={get:()=>C,cardFor,cardText};
 })();
 </script>
+<script>
+/* v8.1.4 · 剧本里的「【效果】好感 X+3；信任 X+1；标记 FLAG；记忆 …」由程序直接执行（架构 v7.9.5 §9：不再靠 effect 文字猜） */
+(function(){
+ const FX=/^【效果】\s*(.+)$/;
+ function parseFx(t){const fx={love:[],trust:[],set:[],mem:""};String(t).split(/[；;]/).forEach(p=>{p=p.trim();let m;
+  if((m=p.match(/^好感\s*(.+?)\s*([+\-－]\s*\d+)$/)))fx.love.push([m[1].trim(),parseInt(m[2].replace(/[－\s]/g,s=>s==="－"?"-":""))]);
+  else if((m=p.match(/^信任\s*(.+?)\s*([+\-－]\s*\d+)$/)))fx.trust.push([m[1].trim(),parseInt(m[2].replace(/[－\s]/g,s=>s==="－"?"-":""))]);
+  else if((m=p.match(/^标记\s*([A-Za-z0-9_]+)/)))fx.set.push(m[1]);
+  else if((m=p.match(/^记忆\s*(.+)$/)))fx.mem=m[1].trim()});return fx}
+ try{const _p=imParse;imParse=function(text){const doc=_p.apply(this,arguments);try{(doc.chapters||[]).forEach(c=>(c.items||[]).forEach(x=>{if(!x||!x.choice)return;x.choice.opts.forEach(o=>{const keep=[];(o.then||[]).forEach(b=>{const t=Array.isArray(b)?String(b[2]||""):"";const m=t.match(FX);if(m){o.fx98=parseFx(m[1])}else keep.push(b)});o.then=keep})}))}catch(_){}return doc}}catch(_){}
+ try{const _b=imBuild;imBuild=function(doc){const r=_b.apply(this,arguments);try{const wid=r&&(r.wid||r),w=wd(wid);if(w&&w.pack&&Array.isArray(w.pack.chapters))w.pack.chapters.forEach((c,i)=>{const src=doc.chapters[i];if(!src)return;const items=src.items||[];const endC=[...items].reverse().find(x=>x&&x.choice);if(!endC)return;const opts=endC.choice.opts.filter(o=>o.t).slice(0,4);(c.choices||[]).forEach((x,j)=>{const o=opts[j];if(!o||!o.fx98)return;x.fx98=o.fx98;if(o.fx98.mem)x.mem={zh:o.fx98.mem,en:o.fx98.mem};if(o.fx98.set.length)x.set=[].concat(x.set||[],o.fx98.set)})})}catch(_){}return r}}catch(_){}
+ try{const _k=packPick;packPick=function(k){try{const th=S.threads[curT];if(th&&th.pk&&th.pk.st==="choose"&&!busy){const w=wd(th.wid),c=w.pack.chapters[th.pk.ch-1],x=c&&c.choices.find(y=>y.k===k);const fx=x&&x.fx98;if(fx){const find=n=>th.cast.find(id=>ch(id)&&(ch(id).n===n||first(ch(id).n)===n||ch(id).n.includes(n)));const items=[];
+   fx.love.forEach(([n,d])=>{const id=find(n);if(id){th.love[id]=Math.max(0,Math.min(100,(th.love[id]||0)+Math.max(-5,Math.min(5,d))));items.push(["💗",first(ch(id).n)+L98(" 好感"," affection"),(d>0?"+":"")+d])}});
+   fx.trust.forEach(([n,d])=>{const id=find(n);if(id){th.trust98=th.trust98||{};th.trust98[id]=Math.max(0,Math.min(100,(th.trust98[id]||30)+Math.max(-5,Math.min(5,d))));items.push(["🤝",first(ch(id).n)+L98(" 信任"," trust"),(d>0?"+":"")+d])}});
+   if(items.length&&typeof chg96==="function")try{chg96(items)}catch(_){}}}}catch(_){}return _k.apply(this,arguments)}}catch(_){}
+})();
+</script>
