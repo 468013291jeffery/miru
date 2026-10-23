@@ -14998,7 +14998,7 @@ actor98 = async function (th, cid, intent) {
   const last = [...th.msgs].reverse().find(m => m.who === "me" && m.k !== "think"); const toMe = last && (!last.to98 || last.to98 === first(x.n));
   const p = (zh ? "你是「" + nm + "」。你是一个独立的人，只用你自己的眼睛看世界。" : "You are " + nm + ", a separate person who sees the world only through your own eyes.") +
     "\n\n【" + L98("不变的你 · 每一句都必须符合", "Who you are — every line must fit") + "】\n1. " + L98("你怎么说话：", "How you talk: ") + (core.speech || "") + "\n2. " + L98("你要什么：", "What you want: ") + (core.want || "") + "\n3. " + L98("你怕什么：", "What you fear: ") + (core.fear || "") + "\n4. " + L98("你绝不做什么：", "What you never do: ") + (core.never || "") + (core.retreat ? "\n5. " + L98("你被逼到时怎么退：", "How you retreat: ") + core.retreat : "") + (core.body ? "\n6. " + L98("你的身体习惯：", "Your body habit: ") + core.body : "") +
-    "\n" + L98("身份：", "Role: ") + LZ98(k.role) + (k.age ? "，" + k.age + L98("岁", "") : "") + (k.spice ? "\n" + L98("你的撩人方式（按亲密度分寸使用）：", "How you flirt (scale to closeness): ") + String(k.spice).slice(0, 300) : "") +
+    "\n" + L98("身份：", "Role: ") + LZ98(k.role) + (k.age ? "，" + k.age + L98("岁", "") : "") + (k.spice ? "\n" + L98("你的撩人方式（按亲密度分寸使用）：", "How you flirt (scale to closeness): ") + String(k.spice).slice(0, 300) : "") + (k.rules ? "\n\n【" + L98("你的规则 · 每一句都必须遵守", "Your rules — always") + "】\n" + String(LZ98(k.rules)).slice(0, 1200) : "") +
     "\n\n【" + L98("你知道的 · 只有这些", "What you know — only this") + "】\n" + [...cd.knows.map(f => "- " + f), ...cd.mem.slice(-14).map(f => "- " + f)].filter(Boolean).join("\n") +
     "\n" + L98("不在上面、也不在下面你亲眼看到的记录里的事，你一概不知道——包括别人心里想什么、你不在场时发生的事、以后会发生的事。被问到不知道的事，就说不知道或岔开。", "Anything not listed here or in what you witnessed below, you don't know — others' thoughts, scenes you weren't in, the future. If asked, say you don't know or deflect.") +
     "\n\n【" + L98("你站在这一拍", "Your beat right now") + "】\n" + L98("地点：", "Place: ") + LZ98(s && s.place) + (sb.goal ? "\n" + L98("这一场你想要：", "This scene you want: ") + sb.goal : "") + (sb.avoid ? "\n" + L98("这一场你回避：", "This scene you avoid: ") + sb.avoid : "") + (intent ? "\n" + L98("此刻的冲动（可不理）：", "Impulse right now (optional): ") + intent : "") +
@@ -15365,6 +15365,36 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
 .wait94l::before{content:"";width:18px;height:18px;margin-right:10px;border-radius:50%;border:2px solid rgba(255,255,255,.25);border-top-color:#F0B77E;animation:sp94 .8s linear infinite}
 @keyframes sp94{to{transform:rotate(360deg)}}
 `; document.head.appendChild(st); })();
+
+/* ================= v7.9 · single-character dramas: scripted openings, character rules, built-in works =================
+   · a scene may carry `script`: the opening is played word for word, line by line (tap to continue), then free talk starts
+     with the scene's own suggestions; the director is skipped for that scene, and the lines become what he witnessed
+   · a character card may carry `rules` (how he responds to what you do, consent, nicknames) — read on every line he speaks
+   · four built-in single-character works ship with the app (bible + art in art/official/), shown first in the new-drama feed */
+const LOCAL98 = ["w_solo_lucien", "w_solo_alex", "w_solo_walker", "w_solo_kael"];
+{ const _e = enter98; enter98 = async function (th) {
+  const { c, s } = scene98(th), A = th.b98; if (!s || !Array.isArray(s.script) || !s.script.length || (A.played98 || {})[s.id]) return _e.apply(this, arguments);
+  A.phase = "enter"; A.played98 = Object.assign({}, A.played98, { [s.id]: 1 }); save();
+  if (A.sc === 0) appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · ", "Chapter " + A.ch + " · ") + LZ98(c.title), txt: c.teaser || "", at: Date.now() });
+  appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
+  const As = OFF94.assets[wd(th.wid).community] || {}, bg = As["bg_" + s.id];
+  if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; try { sceneBg(th, key); } catch (_) {} }
+  BEAT98 = 0;
+  for (const L of s.script) { const who = L.who === "n" ? "n" : byKey98(th, L.who); if (who !== "n" && !ch(who)) continue;
+    await show98(th, { who, k: L.k || (who === "n" ? "act" : "say"), txt: LZ98(L), at: Date.now() }); }
+  try { await PACE98; } catch (_) {}
+  if (Array.isArray(s.sugg)) setSugg(opts98(s.sugg));
+  A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(s.beat || "").slice(0, 60));
+  A.phase = "talk"; save(); dock98();
+}; }
+/* built-in works in the new-drama feed, first */
+async function local98() { const out = []; await Promise.all(LOCAL98.map(async id => { try { const b = await bible98(id), A = await off94Assets(id); if (b && (A.cover || A.poster)) out.push({ id, featured: 1, title: LZ98(b.title), hook: LZ98(b.hook), orient: b.orient, en: { title: (b.title || {}).en, hook: (b.hook || {}).en }, tags: b.tags || [], A, local98: 1 }); } catch (_) {} })); return LOCAL98.map(id => out.find(w => w.id === id)).filter(Boolean); }
+{ const _f = off94Feed; off94Feed = async function () { const [loc, L] = await Promise.all([local98().catch(() => []), _f.apply(this, arguments).catch(() => OFFF94.list || [])]);
+  const rest = (L || []).filter(w => !LOCAL98.includes(w.id)), out = loc.concat(rest);
+  if (out.length) { const before = (OFFF94.list || []).map(w => w.id).join(","); OFFF94.list = out; if (!OFFF94.at) OFFF94.at = Date.now(); if (before && before !== out.map(w => w.id).join(",") && S.lastTab === "home" && $("#feed") && $("#feed").scrollTop < 40 && $("#tabv")) renderHome($("#tabv")); }
+  return out; }; }
+/* characters without a portrait get a clean placeholder instead of a broken image */
+{ const _i = install98; install98 = async function (id) { const wid = await _i.apply(this, arguments); try { const w = wd(wid); if (w && LOCAL98.includes(id)) { w.cast.forEach((cid, i) => { if (!S.art[cid]) S.art[cid] = avSvg98((ch(cid) || {}).n, i + 1); }); save(); } } catch (_) {} return wid; }; }
 
 
 /* ================= v7.4 · voice reads only spoken lines =================
