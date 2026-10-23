@@ -14768,7 +14768,7 @@ async function beat98(th, mode, act) {
 /* ---------- scene flow: enter → talk → (choice) → next ---------- */
 async function enter98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (!s) return; A.phase = "enter";
-  if (A.sc === 0) appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · ", "Chapter " + A.ch + " · ") + LZ98(c.title), txt: "", at: Date.now() });
+  if (A.sc === 0) appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · ", "Chapter " + A.ch + " · ") + LZ98(c.title), txt: c.teaser || "", at: Date.now() });
   appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
   const As = OFF94.assets[wd(th.wid).community] || {};
   const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; try { sceneBg(th, key); } catch (_) {} }
@@ -15007,7 +15007,7 @@ actor98 = async function (th, cid, intent) {
     "\n\n【" + L98("你亲眼看到、听到的（最近）", "What you saw and heard (recent)") + "】\n" + (saw98(th, cid, 12) || "—") +
     (last && toMe ? "\n\n【" + L98("对方刚对你说/做", "What they just said/did to you") + "】" + you + "：" + last.txt + "\n" + L98("先直接回应这一句：问你问题就正面回答，或者明确不答（用你的方式）；不要自说自话。", "Respond to this first: answer the question directly, or clearly refuse in your way. Don't talk past it.") : "") +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）只写你自己：act=一个动作（不写主语，从动词写起，用上你的身体习惯，≤30 字，可空），say=一句话（≤45 字，简体中文，符合【你怎么说话】）。不写别人，不写旁白。" : "(" + you + gx98(th) + ") Only yourself: act = one action without subject (≤18 words, may be empty), say = one line (≤30 words, in your voice). Nothing about others, no narration.") +
-    tools98p(th, cid) + '\nReply with ONLY JSON: {"tool":null,"act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","ideas":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}]} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；ideas：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
+    tools98p(th, cid) + '\nReply with ONLY JSON: {"push":"","act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","ideas":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}]} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；ideas：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
   const r = await ask(p, { maxTokens: 440 });
   if (r) { if (r.mood) cd.mood = String(r.mood).slice(0, 12); if (r.trust) cd.trust = Math.max(0, Math.min(100, cd.trust + Math.max(-5, Math.min(5, +r.trust || 0)) * 1.5)); if (r.learned) kn98(th, [cid], r.learned); }
   return r;
@@ -15048,7 +15048,7 @@ async function talk98(th, act, choiceO) {
     if (choiceO) { th.love[cid] = Math.max(before, th.love[cid] || 0); cd.trust = tb; }   /* numbers only from the table */
     else { const f = Math.max(-2, Math.min(2, Math.round(+r.feel || 0))); th.love[cid] = Math.max(0, Math.min(100, before + f)); cd.trust = Math.max(0, Math.min(100, tb + Math.max(-2, Math.min(2, Math.round(+r.trust || 0))))); }
     if (Array.isArray(r.ideas)) setSugg(opts98(r.ideas));
-    if (!choiceO && r.tool) { try { tool98(th, cid, r.tool); } catch (_) {} }
+    if (!choiceO && (r.push || r.tool)) { try { push98(th, cid, r.push || r.tool); } catch (_) {} }
     A.turns++; th.rounds++; A.talkN = (A.talkN || 0) + (choiceO ? 0 : 1); useUnits(aiCost());
     if (A.talkN && A.talkN % 4 === 0) adv98(th).catch(() => {});
     th.at = Date.now(); save();
@@ -15103,10 +15103,10 @@ function toolsOpen98(th, cid) {
   const love = th.love[cid] || 0, phone = typeof callsOK97 !== "function" || callsOK97(th); return Object.keys(TOOLS98).filter(k => love >= TOOLS98[k].need && (k !== "game" || typeof GAMEF === "object") && (phone || (k !== "call" && k !== "voice")));
 }
 function tools98p(th, cid) {
-  const ok = toolsOpen98(th, cid); if (!ok.length) return "";
-  return "\n\n【" + L98("你可以用的互动（可选，大多数时候 tool 为 null）", "Interactions you may use (optional; usually tool = null)") + "】\n" +
-    ok.map(k => "- " + k + "：" + L98(TOOLS98[k].zh, TOOLS98[k].en) + "；" + TOOLS98[k].hint).join("\n") +
-    "\n" + L98("只有当这一刻自然、符合你的人格和你这一场想要的东西时才用一个，写成 \"tool\":{\"name\":\"ask\",\"q\":\"...\",\"opts\":[\"...\",\"...\"]}。不要为了用而用，不要连续用。", "Use one only when it fits this moment, who you are and what you want this scene, as \"tool\":{\"name\":\"ask\",...}. Never for its own sake.");
+  if (!pushOpen98(th, cid).length) return "";
+  return "\n\n【" + L98("你想对对方做点什么吗（可选，大多数时候留空）", "Want to do something for them? (optional; usually empty)") + "】\n" +
+    L98("如果此刻你真的会主动做一件事——比如打个电话、发条消息、送个东西、发张照片、发段语音、拉对方玩点什么——就在 push 里用一句话写出来，格式「方式：内容」，例如「发消息：睡了吗」「送东西：一枝白玫瑰」「打电话：想听你的声音」。只在符合你的人格、你这一场想要的、你们现在的关系时才写；不要为了写而写。",
+        "If right now you'd genuinely reach out — a call, a message, a gift, a photo, a voice note, an invitation to play — write it in push as \"how: what\", e.g. \"message: you up?\", \"gift: a white rose\". Only when it fits who you are and where you two are; otherwise leave it empty.");
 }
 function tool98(th, cid, t) {
   if (!t || typeof t !== "object") return; const name = String(t.name || t.tool || "").toLowerCase(); if (!TOOLS98[name] || !toolsOpen98(th, cid).includes(name)) return;
@@ -15177,6 +15177,199 @@ document.addEventListener("click", async e => {
 .t98ph{margin-top:8px;height:120px;border-radius:10px;background-size:cover;background-position:center 20%;filter:blur(6px) brightness(.7);display:flex;align-items:center;justify-content:center}.t98ph i{filter:none;font-size:26px;font-style:normal}
 .t98d{margin:8px 0 0;font-size:12px;color:#bdb3c2}
 `; document.head.appendChild(st); })();
+
+/* ================= v7.8 · 写我的故事 (your own story, like writing fanfic about yourself and him) =================
+   Learned from Tipsy: the player writes the premise ("I'm the oblivious beauty who moved in with a streamer…"),
+   the AI turns it into a small story bible (you, him, a rival — characters with wants and tension) and chapter 1,
+   then the story keeps unfolding from what you do: every new chapter is written from your choices so far.
+   · same engine as the official dramas: per-character agents, table-driven choices, tools, tap-to-read
+   · ✒️ 改写走向: at any moment, say where it should go next ("让他女友冲进来") — a new scene is written and played now
+   · a chapter ends on a hook; chapters 1–2 free, then 💎1 per new chapter (MIRU+ free) */
+const MY98_STYLE = "女性向互动小说。写法：\n- 被偏爱、被争夺：他（们）的注意力围着玩家转，但每个人都有自己的欲望和立场，不是工具人。\n- 暧昧要有张力：靠细节、距离、停顿、没说完的话，而不是直接表白；冲突和反转要来得合理。\n- 女生不只要知道他爱不爱你，还要知道他爱你什么、为什么、会怎么做：多写他为你做了什么（行动），少写空话。\n- 玩家的设定（比如「美而不自知」「绿茶」）要被世界当真：别人会被她影响，她不用自夸。\n- 每一场结尾留一个钩子（一句话、一个眼神、一条消息），让人想知道下一步。\n- 尺度：暗示和氛围，不露骨。\n- 旁白第二人称，像小说，不像剧本。";
+const MY98_IDEAS = [
+  { t: "重生之我是绿茶", you: "美而不自知的「普通女生」，说话软、心里门儿清", him: "住在一起的网红大帅哥，有个正牌女友", start: "我住进他家当室友，他直播时我从镜头后面经过，直播间炸了；他女友知道后跟他大吵，我轻轻问了一句「你女友还好吗？」" },
+  { t: "契约室友是我上司", you: "刚入职的新人，表面乖巧，其实很会拿捏人", him: "冷脸的部门总监，私下是我的合租室友", start: "第一天上班，我发现昨晚在厨房穿着我围裙煮面的男人，是面试我的总监。" },
+  { t: "前男友的哥哥", you: "被劈腿后决定好好过日子的设计师", him: "前男友的哥哥，成熟克制，一直看不惯弟弟", start: "前男友的订婚宴上，他哥哥替我挡了一杯酒，低声说「我送你回去」。" },
+  { t: "死对头的竹马", you: "学生会长，嘴硬心软", him: "跟我从小斗到大的竹马，篮球队队长", start: "毕业晚会抽签，我和他被分到一起跳开场舞，全校都在等我们吵起来。" }
+];
+function my98() { S.myb98 = S.myb98 || {}; return S.myb98; }
+{ const _b = bible98; bible98 = async function (id) { const M = my98(); if (M[id]) { B98.cache[id] = M[id]; return M[id]; } return _b.apply(this, arguments); }; }
+const T98 = x => (x && typeof x === "object") ? { zh: String(x.zh || x.en || ""), en: String(x.en || x.zh || "") } : { zh: String(x || ""), en: String(x || "") };
+function avSvg98(name, i) { const P = [["#F0B77E", "#E86F97"], ["#8E6CF0", "#4D3BA8"], ["#5E9E96", "#2C5A66"], ["#E86F97", "#7A2E52"]][i % 4], ch1 = esc(String(name || "?").trim().slice(0, 1));
+  return "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + P[0] + '"/><stop offset="1" stop-color="' + P[1] + '"/></linearGradient></defs><rect width="400" height="600" fill="url(#g)"/><text x="200" y="350" font-size="200" text-anchor="middle" fill="rgba(255,255,255,.9)" font-family="serif">' + ch1 + '</text></svg>'); }
+function norm98(r, seed) {
+  if (!r || !r.player || !Array.isArray(r.cast) || !r.cast.length || !r.chapter || !Array.isArray(r.chapter.scenes) || !r.chapter.scenes.length) return null;
+  const keyOf = (k, i) => (String(k || "").toLowerCase().replace(/[^a-z0-9]/g, "") || "c" + i).slice(0, 12);
+  const player = Object.assign({}, r.player, { key: "me", name: T98(r.player.name || L98("我", "Me")), short: T98(r.player.short || r.player.name || L98("我", "Me")), role: T98(r.player.role || ""), gender: r.player.gender === "m" ? "m" : "f" });
+  const seen = new Set(["me"]); const cast = r.cast.slice(0, 4).map((c, i) => { let k = keyOf(c.key, i); while (seen.has(k)) k += "x"; seen.add(k);
+    return Object.assign({}, c, { key: k, name: T98(c.name), short: T98(c.short || c.name), role: T98(c.role || ""), gender: c.gender === "f" ? "f" : "m", tier: i === 0 ? "lead" : (c.tier === "side" ? "side" : "main"), romanceable: i === 0 || !!c.romanceable }); });
+  const map = {}; r.cast.slice(0, 4).forEach((c, i) => { map[String(c.key || "").toLowerCase()] = cast[i].key; map[LZ98(T98(c.name))] = cast[i].key; map[LZ98(T98(c.short || c.name))] = cast[i].key; });
+  const b = { key: seed, user98: 1, title: T98(r.title || L98("我的故事", "My story")), hook: T98(r.hook || ""), premise: T98(r.premise || ""), intro: T98(r.premise || ""), orient: ["bg", "bl", "gl"].includes(r.orient) ? r.orient : "bg", tags: (r.tags || []).slice(0, 6),
+    world: String(r.world || "").slice(0, 1600), style: MY98_STYLE + (r.style ? "\n" + String(r.style).slice(0, 300) : ""), player, playable: ["me"], cast, relations: r.relations || [], state: {}, chapters: [], endings: [], games_on: false, seedIdea: r.seedIdea || null };
+  b.chapters.push(chap98(b, r.chapter, 1, map)); return b;
+}
+function chap98(b, c, n, map) {
+  const fix = k => { const s = String(k || "").toLowerCase().replace(/[^a-z0-9]/g, ""); return (map && (map[s] || map[k])) || (b.cast.find(x => x.key === s) || {}).key || (b.cast.find(x => LZ98(x.short) === k || LZ98(x.name) === k) || {}).key; };
+  const scenes = (c.scenes || []).slice(0, 4).map((s, i) => { const o = { id: "c" + String(n).padStart(2, "0") + "s" + String(i + 1).padStart(2, "0"), place: T98(s.place || L98("某处", "Somewhere")), beat: String(s.beat || "").slice(0, 400), present: (s.present || []).map(fix).filter(Boolean) };
+    if (!o.present.length) o.present = [b.cast[0].key]; o.present = ["me"].concat(o.present.filter(k => k !== "me"));
+    if (s.choice && Array.isArray(s.choice.options) && s.choice.options.length >= 2) o.choice = { q: String(s.choice.q || "").slice(0, 60), options: s.choice.options.slice(0, 3).map(x => ({ t: String(x.t || x).slice(0, 40), effect: String(x.effect || "").slice(0, 60) })) };
+    return o; });
+  return { n, title: T98(String(c.title || "").replace(/^第\s*[0-9一二三四五六七八九十]+\s*章\s*[·：:]?\s*/, "") || L98("新的一章", "A new chapter")), goal: String(c.goal || "").slice(0, 160), teaser: String(c.teaser || "").slice(0, 80), scenes };
+}
+const SCH98 = '{"title":"章节名（4-10字，不要写第几章）","goal":"这一章要发生的变化（一句）","teaser":"一句钩子，让人想点开这一章","scenes":[{"place":"地点（2-6字）","beat":"这一场发生什么、谁在推动、张力在哪（不替玩家说话或做决定，60-120字）","present":["角色key"],"choice":null}]}';
+async function gen98(you, him, start, orient) {
+  const p = "你是女性向互动小说的主编。根据玩家写的设定，做一部可以立刻开玩的互动故事的设定 + 第一章。\n\n玩家写的：\n· 我是：" + you + "\n· 他是：" + him + "\n· 开场：" + start + "\n\n要求：\n" + MY98_STYLE +
+    "\n- 角色 2-4 个：第一个是男主（他），其余制造张力（情敌、他的正牌女友/前任、另一个在意你的人、损友……），每个人都有自己想要的东西和弱点。\n- 玩家的设定原样保留，不要改写她是谁；不要替她说话。\n- 第一章 3 场，第一场就进入开场写的那一刻；最后一场给一个选择（2-3 个选项，每个写 effect，如「" + "他名字 +5」或「女友 -3」）。\n- 所有文字简体中文；key 用英文小写。\n\n" +
+    'Reply with ONLY JSON: {"title":"故事名（像网文标题）","hook":"一句话钩子","premise":"2-3句简介，第二人称","orient":"' + (orient || "bg") + '","tags":["3-5个标签"],"world":"世界与人物关系背景（≤300字，后台用）","player":{"name":"你","gender":"f","role":"一句客观身份","brief":"玩家设定原文的整理"},"cast":[{"key":"","name":"","short":"","gender":"m","age":26,"tier":"lead","role":"一句身份","bio":"背景（≤120字）","personality":"性格","voice":"他怎么说话（句长、口头禅、怎么称呼你）","want":"他真正要什么","fear":"他怕什么","boundaries":"他绝不做什么","spice":"他怎么撩人/怎么表达在意","knows":"一开始他知道关于你的什么"}],"chapter":' + SCH98 + "}";
+  return ask(p, { maxTokens: 2200 });
+}
+async function genCh98(th, steer) {
+  const w = wd(th.wid), b = bOf98(w), A = th.b98, n = b.chapters.length + 1;
+  const castL = b.cast.map(c => "- key=" + c.key + " · " + LZ98(c.short || c.name) + "（" + LZ98(c.role) + "）对你 " + Math.round(th.love[cid98(th.wid, c.key)] || 0)).join("\n");
+  const p = "你是女性向互动小说的主编，要写这部故事的第 " + n + " 章。故事不预设结局，完全跟着玩家走。\n\n《" + LZ98(b.title) + "》\n" + LZ98(b.premise) + "\n世界：" + b.world + "\n\n玩家：" + yn98(th) + "（" + (b.player.brief || LZ98(b.player.role)) + "）" + (A.profile.length ? "；她一路表现出来的样子：" + A.profile.slice(-8).join("；") : "") +
+    "\n角色（和他们对你的好感）：\n" + castL + "\n\n前情（玩家做过的事）：\n" + (A.sum.slice(-12).join("\n") || "—") + "\n选择记录：" + A.flags.slice(-12).join("；") + "\n最近：\n" + tail98(th, 10) +
+    (steer ? "\n\n玩家希望接下来：" + steer + "（按她说的方向写，但要写得合理、有张力）" : "") +
+    "\n\n要求：\n" + MY98_STYLE + "\n- 3 场；接住上一章的钩子；推进关系（更近、或更乱）；至少一处反转或新的争夺；最后一场给一个选择（2-3 个选项，每个写 effect）。\n- present 只能用上面的 key。所有文字简体中文。\n\nReply with ONLY JSON: " + SCH98;
+  const r = await ask(p, { maxTokens: 1400 }); if (!r || !Array.isArray(r.scenes) || !r.scenes.length) return null; return chap98(b, r, n);
+}
+function saveMy98(b) { my98()[b.key] = b; B98.cache[b.key] = b; save(); }
+async function install98my(id) { const wid = await install98(id); const w = wd(wid), b = my98()[id]; if (!w || !b) return wid;
+  w.mine = 1; w.my98 = 1; w.author = L98("我写的", "Mine"); w.official76 = 0; w.calls = true;
+  w.cast.forEach((cid, i) => { if (!S.art[cid] || /^data:image\/svg/.test(S.art[cid])) S.art[cid] = avSvg98((ch(cid) || {}).n, i); }); save(); return wid; }
+/* the sheet: write your premise */
+function mySheet98() {
+  const M = my98(), mine = Object.values(M).sort((a, b) => (b.at || 0) - (a.at || 0));
+  sheet('<div class="eyebrow">✍️ ' + L98("写我的故事", "Write my story") + '</div><h2 style="margin-top:4px">' + L98("你是主角，也是作者", "You're the lead — and the author") + '</h2><p class="xs faint" style="margin-top:4px;line-height:1.55">' + L98("写下你是谁、他是谁、故事从哪一刻开始。AI 会把它变成一部有人物、有张力的互动故事；你的每个回应都会改变接下来的剧情，也可以随时改写走向。", "Say who you are, who he is, and where it starts. The AI turns it into an interactive story with real tension — every reply shapes what comes next, and you can rewrite the direction anytime.") + '</p>' +
+    (mine.length ? '<div class="eyebrow" style="margin-top:12px">' + L98("我的故事", "My stories") + '</div><div class="my98l">' + mine.map(b => '<button class="my98c" data-my98open="' + esc(b.key) + '"><b>' + esc(LZ98(b.title)) + '</b><span>' + L98("第 " + b.chapters.length + " 章", "Ch. " + b.chapters.length) + '</span></button>').join("") + '</div>' : '') +
+    '<div class="eyebrow" style="margin-top:14px">' + L98("灵感（点一下填进去）", "Ideas (tap to fill)") + '</div><div class="my98i">' + MY98_IDEAS.map((x, i) => '<button data-my98idea="' + i + '">' + esc(x.t) + '</button>').join("") + '</div>' +
+    '<label class="up66l">' + L98("我是", "I am") + '</label><input id="my98you" class="up66i" maxlength="60" placeholder="' + esc(L98("比如：美而不自知的普通女生", "e.g. an oblivious beauty")) + '">' +
+    '<label class="up66l">' + L98("他是", "He is") + '</label><input id="my98him" class="up66i" maxlength="60" placeholder="' + esc(L98("比如：有正牌女友的网红室友", "e.g. my streamer roommate, who has a girlfriend")) + '">' +
+    '<label class="up66l">' + L98("故事从这一刻开始", "It starts when") + '</label><textarea id="my98start" class="up66i" rows="3" maxlength="200" placeholder="' + esc(L98("比如：他直播时我从镜头后面经过，直播间炸了……", "e.g. I walked behind him on his livestream and chat exploded…")) + '"></textarea>' +
+    '<div class="my98o">' + [["bg", "男女"], ["bl", "男男"], ["gl", "女女"]].map(([k, l], i) => '<button data-my98or="' + k + '" class="' + (i === 0 ? "on" : "") + '">' + l + '</button>').join("") + '</div>' +
+    '<button class="btn btn-p btn-block" style="margin-top:14px" data-my98go="1">✨ ' + L98("生成我的故事", "Create my story") + '</button>');
+}
+document.addEventListener("click", async e => { let x;
+  if (e.target.closest("[data-my98sheet]")) { e.preventDefault(); e.stopPropagation(); mySheet98(); return; }
+  if ((x = e.target.closest("[data-my98idea]"))) { const d = MY98_IDEAS[+x.dataset.my98idea]; $("#my98you").value = d.you; $("#my98him").value = d.him; $("#my98start").value = d.start; S.my98idea = d.t; return; }
+  if ((x = e.target.closest("[data-my98or]"))) { $$("[data-my98or]").forEach(b => b.classList.toggle("on", b === x)); return; }
+  if ((x = e.target.closest("[data-my98open]"))) { e.stopPropagation(); const id = x.dataset.my98open; closeSheet(); const wid = await install98my(id); start98(wid); return; }
+  if ((x = e.target.closest("[data-my98go]"))) {
+    const you = ($("#my98you").value || "").trim(), him = ($("#my98him").value || "").trim(), start = ($("#my98start").value || "").trim(), or = ($("[data-my98or].on") || {}).dataset ? $("[data-my98or].on").dataset.my98or : "bg";
+    if (!you || !him || !start) { toast(L98("三项都写一句就好", "Fill in all three — one line each")); return; }
+    if (!liveOn()) { toast(L98("这个功能需要 AI 在线", "This needs the AI online")); return; }
+    x.disabled = true; x.textContent = "✍️ " + L98("正在写设定和第一章…（约 20 秒）", "Writing the setup and chapter 1… (~20s)");
+    let r = null; try { r = await gen98(you, him, start, or); } catch (_) {}
+    const id = "my_" + Date.now().toString(36); const b = norm98(r, id);
+    if (!b) { x.disabled = false; x.textContent = "✨ " + L98("再试一次", "Try again"); toast(L98("没写好，再点一次试试", "That didn't come out right — try again")); return; }
+    b.at = Date.now(); b.seed = { you, him, start }; b.player.brief = you; saveMy98(b); useUnits(aiCost());
+    closeSheet(); const wid = await install98my(id); start98(wid); return; }
+}, true);
+/* home: the entry card on top of the feed + a shelf on discover */
+{ const _rh = renderHome; renderHome = function (v) { const r = _rh.apply(this, arguments); try { const feed = $("#feed"); if (feed && !feed.querySelector(".my98h")) feed.insertAdjacentHTML("afterbegin", '<button class="my98h" data-my98sheet="1"><i>✍️</i><span><b>' + L98("写我的故事", "Write my story") + '</b><small>' + L98("你是主角：写一句开场，他就会接住你", "You're the lead: write one opening line and he'll take it from there") + '</small></span><em>›</em></button>'); } catch (_) {} return r; }; }
+/* the story keeps going: new chapters are written from what you did */
+{ const _n = next98; next98 = async function (th) {
+  const w = th && wd(th.wid), b = w && bOf98(w); if (!b || !b.user98) return _n.apply(this, arguments);
+  const A = th.b98, { c, s } = scene98(th); if (busy || A.ended) return;
+  if (s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) return _n.apply(this, arguments);
+  if (A.sc >= c.scenes.length - 1 && A.ch >= b.chapters.length) {
+    if (A.ch >= 2 && !S.plus && !spend(1, "ch98")) return;
+    busy = true; typing(true); toast(L98("正在根据你的选择写下一章…", "Writing the next chapter from your choices…"));
+    let nc = null; try { nc = await genCh98(th, (A.steerNext || "")); } catch (_) {} finally { busy = false; typing(false); }
+    if (!nc) { toast(L98("下一章没写好，再点一次「继续剧情」", "Couldn't write the next chapter — tap Continue again")); return; }
+    A.steerNext = ""; b.chapters.push(nc); saveMy98(b); useUnits(aiCost());
+  }
+  return _n.apply(this, arguments); }; }
+/* ✒️ rewrite the direction: a new scene is written from your wish and played right now */
+async function steer98(th, wish) {
+  const w = wd(th.wid), b = bOf98(w), A = th.b98, { c, s } = scene98(th); if (!b || busy || !wish) return;
+  busy = true; typing(true); let r = null;
+  try { r = await ask("你是女性向互动小说的主编。玩家想改写接下来的走向：「" + wish + "」。\n故事：" + LZ98(b.premise) + "\n角色：" + b.cast.map(x => x.key + "=" + LZ98(x.short || x.name) + "（" + LZ98(x.role) + "）").join("，") + "\n现在在：" + LZ98(s && s.place) + "\n最近：\n" + tail98(th, 10) +
+      "\n\n按她的意思写紧接着的一场：要合理、有张力，可以有反转，但不替她说话或做决定。\n" + MY98_STYLE + '\n\nReply with ONLY JSON: {"place":"","beat":"这一场发生什么（60-120字）","present":["key"]}', { maxTokens: 500 }); } catch (_) {}
+  finally { busy = false; typing(false); }
+  if (!r || !r.beat) { toast(L98("没写好，换个说法试试", "Didn't work — try wording it differently")); return; }
+  const tmp = chap98(b, { scenes: [r] }, A.ch).scenes[0]; tmp.id = (s ? s.id : "x") + "w" + Date.now().toString(36).slice(-4);
+  c.scenes.splice(A.sc + 1, 0, tmp); if (s && s.choice) A.picked[s.id] = -1; A.flags.push("改写:" + wish.slice(0, 30)); A.steers = (A.steers || []).concat([wish]).slice(-10); saveMy98(b); save();
+  appendMsg(th, { who: "sys", k: "card", title: "✒️ " + L98("你改写了走向", "You changed the course"), txt: wish, at: Date.now() });
+  await next98(th);
+}
+function steerSheet98(th) {
+  const chips = [L98("让他吃醋", "Make him jealous"), L98("他女友/前任找上门", "His girlfriend/ex shows up"), L98("来一场误会", "A misunderstanding"), L98("他终于说出口", "He finally says it"), L98("另一个人也开始追我", "Someone else starts pursuing me"), L98("反转：原来他早就知道", "Twist: he knew all along")];
+  sheet('<div class="eyebrow">✒️ ' + L98("改写走向", "Rewrite the course") + '</div><h2 style="margin-top:4px">' + L98("接下来你想发生什么？", "What should happen next?") + '</h2><div class="my98i" style="margin-top:10px">' + chips.map(t => '<button data-st98c="' + esc(t) + '">' + esc(t) + '</button>').join("") + '</div><textarea id="st98" class="up66i" rows="3" maxlength="120" style="margin-top:10px" placeholder="' + esc(L98("用一句话说你想看的发展", "Say it in one line")) + '"></textarea>' +
+    '<button class="btn btn-p btn-block" style="margin-top:12px" data-st98go="now">▶ ' + L98("现在就发生", "Make it happen now") + '</button><button class="btn btn-g btn-block" style="margin-top:8px" data-st98go="later">📖 ' + L98("写进下一章", "Save it for the next chapter") + '</button>');
+}
+document.addEventListener("click", e => { let x; const th = S.threads[curT];
+  if (e.target.closest("[data-st98open]")) { if (th && th.b98) steerSheet98(th); return; }
+  if ((x = e.target.closest("[data-st98c]"))) { const t = $("#st98"); if (t) t.value = x.dataset.st98c; return; }
+  if ((x = e.target.closest("[data-st98go]"))) { const t = $("#st98"), v = t ? String(t.value || "").trim().slice(0, 120) : ""; if (!v || !th || !th.b98) { toast(L98("写一句你想看的发展", "Write one line first")); return; } closeSheet();
+    if (x.dataset.st98go === "later") { th.b98.steerNext = v; save(); toast(L98("记下了，下一章会往这个方向写", "Noted — the next chapter will go there")); return; } steer98(th, v); return; }
+}, true);
+{ const _d = dock98; dock98 = function () { _d.apply(this, arguments); const th = S.threads[curT], el = $("#dk98"); if (!th || !th.b98 || !el || el.querySelector("[data-st98open]")) return; const b = bOf98(wd(th.wid)); if (!b || !b.user98 || th.b98.ended) return; const r = el.querySelector(".dk98r"); if (r) r.insertAdjacentHTML("afterbegin", '<button class="dk98i st98b" data-st98open="1">✒️</button>'); }; }
+/* user stories never "end" by themselves; the start sheet skips the role picker */
+{ const _s = start98; start98 = async function (wid) { const w = wd(wid), b = await ensure98(w); if (b && b.user98) { const ex = Object.values(S.threads).filter(t => t.wid === wid && t.b98).sort((a, b2) => b2.at - a.at)[0]; if (ex) { openThread(ex.id); return; } const th = new98(wid, "me"); openThread(th.id); setTimeout(() => enter98(th), 300); return; } return _s.apply(this, arguments); }; }
+(function () { const st = document.createElement("style"); st.textContent = `
+.my98h{display:flex;align-items:center;gap:12px;width:100%;margin:0 0 12px;padding:14px 16px;border-radius:18px;border:1px solid rgba(240,183,126,.45);background:linear-gradient(135deg,rgba(240,183,126,.16),rgba(232,111,151,.16));color:inherit;text-align:left}
+.my98h i{font-style:normal;font-size:26px}.my98h span{flex:1;display:flex;flex-direction:column;gap:3px}.my98h b{font-size:16px}.my98h small{font-size:12.5px;opacity:.75;line-height:1.4}.my98h em{font-style:normal;font-size:22px;opacity:.6}
+.my98i{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.my98i button{padding:7px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit;font-size:13px}
+.my98l{display:flex;flex-direction:column;gap:6px;margin-top:6px}.my98c{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:inherit;text-align:left}.my98c span{font-size:12px;opacity:.7}
+.my98o{display:flex;gap:6px;margin-top:12px}.my98o button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:transparent;color:inherit;font-size:13px}.my98o button.on{border-color:#F0B77E;background:rgba(240,183,126,.16);font-weight:700}
+.st98b{background:rgba(255,255,255,.1)!important;color:#fff!important;padding:8px 11px!important}
+`; document.head.appendChild(st); })();
+
+/* ================= v7.7.2 · the character says what he wants to do; the program recognizes it and renders the push =================
+   No tool menu in the prompt. The actor may write one free line in `push` ("发消息：睡了吗", "送东西：一枝白玫瑰", "打电话：想听你声音").
+   The program classifies it (call / voice / photo / message / gift-to-you / game), checks the gates (closeness, cooldown, ≤2 per scene,
+   phone switch for period works), and renders it as a push card the player can act on. Unrecognized or gated lines are dropped. */
+Object.assign(TOOLS98, {
+  msg:  { ic: "📩", need: 0,  zh: "发来一条消息", en: "sent you a message" },
+  give: { ic: "🎁", need: 10, zh: "送了你一样东西", en: "sent you something" }
+});
+const PUSHK98 = [
+  ["call", /电话|来电|视频通话|拨给|\bcall\b|phone/i], ["voice", /语音|voice/i], ["photo", /照片|自拍|拍给|发图|photo|picture|selfie/i],
+  ["msg", /消息|短信|微信|私信|留言|纸条|便签|信|message|text|note/i], ["give", /送|递给|塞给|带给|礼物|花|gift|bring/i], ["game", /玩|游戏|打赌|比一比|game|play/i]];
+function pushOpen98(th, cid) { const phone = typeof callsOK97 !== "function" || callsOK97(th); return toolsOpen98(th, cid).filter(k => ["call", "voice", "photo", "msg", "give", "game"].includes(k) && (phone || k !== "msg")); }
+function push98(th, cid, raw) {
+  let line = typeof raw === "object" && raw ? [raw.name || raw.how || "", raw.what || raw.txt || raw.hint || raw.cap || raw.q || ""].join("：") : String(raw || "");
+  line = clean98(line).slice(0, 80); if (!line.replace(/[：:\s]/g, "")) return;
+  const m = line.match(/^([^：:]{1,8})[：:]\s*(.*)$/), how = m ? m[1] : line, what = (m ? m[2] : "").replace(/^[「“"]|[」”"]$/g, "").trim();
+  const hit = PUSHK98.find(([, re]) => re.test(how)) || PUSHK98.find(([, re]) => re.test(line)); if (!hit) return;
+  const k = hit[0]; if (!pushOpen98(th, cid).includes(k)) return;
+  const a = {};
+  if (k === "call") a.why = what.slice(0, 30);
+  if (k === "voice") { a.txt = (what || "").slice(0, 60); if (!a.txt) return; }
+  if (k === "photo") a.cap = what.slice(0, 30) || L98("此刻", "this moment");
+  if (k === "msg") { a.txt = what.slice(0, 80); if (!a.txt) return; }
+  if (k === "give") { a.item = what.replace(/^(你|给你)/, "").slice(0, 24); if (!a.item) return; }
+  if (k === "game") { a.k = /节拍|默契|sync/i.test(what) ? "sync" : /点单|order/i.test(what) ? "order" : /记得|remember/i.test(what) ? "remember" : "keepsake"; a.why = what.slice(0, 30); }
+  const T = tl98(th), { s } = scene98(th); T.last = th.b98.talkN || 0; T.scene[s.id] = (T.scene[s.id] || 0) + 1; T.log.push({ at: Date.now(), cid, name: k, raw: line, st: "open" }); if (T.log.length > 40) T.log.shift();
+  appendMsg(th, { who: "sys", k: "tool98", tool: k, cid, a, st: "open", at: Date.now() }); save();
+  try { const c = ch(cid); if (typeof chg96 === "function") chg96([[TOOLS98[k].ic, first(c.n) + " " + L98(TOOLS98[k].zh, TOOLS98[k].en), ""]]); } catch (_) {}
+}
+/* render + actions for the two new kinds (the others reuse v7.7) */
+{ const _th = toolHTML98; toolHTML98 = function (m, i, th) {
+  if (m.tool !== "msg" && m.tool !== "give") return _th.apply(this, arguments);
+  const D = TOOLS98[m.tool], c = ch(m.cid), nm = c ? esc(first(c.n)) : "", a = m.a || {}, open = m.st === "open";
+  const b = (act, label, cls) => '<button class="t98b' + (cls ? " " + cls : "") + '" data-t98="' + i + "|" + act + '">' + label + "</button>";
+  const head = '<div class="t98h">' + (c ? avatar(m.cid, 26) : "") + '<b>' + nm + '</b><span>' + D.ic + " " + esc(L98(D.zh, D.en)) + '</span><small class="t98t">' + L98("刚刚", "now") + '</small></div>';
+  const body = m.tool === "msg" ? '<p class="t98m">' + esc(a.txt || "") + '</p>' : '<p class="t98q">' + esc(a.item || "") + '</p>';
+  const btns = m.tool === "msg" ? b("re", "↩ " + L98("回复他", "Reply"), "p") + b("no", L98("已读不回", "Leave on read"), "q") : b("take", "💗 " + L98("收下", "Accept"), "p") + b("no", L98("婉拒", "Decline"), "q");
+  const done = m.st === "done" ? '<p class="t98d">✓ ' + esc(m.res || "") + "</p>" : m.st === "skip" ? '<p class="t98d">· ' + esc(m.res || "") + "</p>" : "";
+  return '<div class="mw98" data-mi98="' + i + '"><div class="t98 push' + (open ? " on" : "") + '">' + head + body + (open ? '<div class="t98bs">' + btns + "</div>" : done) + "</div></div>"; }; }
+document.addEventListener("click", e => {
+  const x = e.target.closest("[data-t98]"); if (!x) return; const th = S.threads[curT]; if (!th || !th.b98 || busy) return;
+  const [is, act] = x.dataset.t98.split("|"), i = +is, m = th.msgs[i]; if (!m || m.k !== "tool98" || m.st !== "open" || (m.tool !== "msg" && m.tool !== "give")) return;
+  e.stopImmediatePropagation(); const cid = m.cid, nm = first(ch(cid).n), a = m.a || {}, { s } = scene98(th), pr = present98(th, s), wit = pr.length ? pr : [cid], you = yn98(th);
+  const react = txt => talk98(th, { mode: "act", txt, to: cid }, null);
+  if (m.tool === "msg") {
+    if (act === "re") { toolEnd98(th, i, "done", L98("回复了", "replied")); kn98(th, [cid], you + L98("看了你的消息：", " read your message: ") + a.txt); th.addr = cid; save(); const inp = $("#s-chat .composer textarea,#s-chat .composer input"); if (inp) inp.focus(); return; }
+    toolEnd98(th, i, "skip", L98("已读不回", "left on read")); kn98(th, [cid], you + L98("已读了你的消息，没有回", " read your message and didn't reply")); return;
+  }
+  if (act === "take") { const g = 3; th.love[cid] = Math.max(0, Math.min(100, (th.love[cid] || 0) + g)); if (typeof chg96 === "function") chg96([["💗", nm + L98(" 好感", " affection"), "+" + g]]);
+    toolEnd98(th, i, "done", L98("收下了", "accepted") + " · " + a.item); kn98(th, wit, you + L98("收下了 " + nm + " 送的：", " accepted " + nm + "'s gift: ") + a.item);
+    const t = L98("收下了" + a.item, "accepts the " + a.item); appendMsg(th, { who: "me", k: "act", txt: t, at: Date.now() }); return react(t); }
+  toolEnd98(th, i, "skip", L98("婉拒了", "declined")); kn98(th, wit, you + L98("婉拒了 " + nm + " 送的：", " declined " + nm + "'s gift: ") + a.item);
+  const t = L98("把" + a.item + "推了回去", "hands the " + a.item + " back"); appendMsg(th, { who: "me", k: "act", txt: t, at: Date.now() }); return react(t);
+}, true);
+(function () { const st = document.createElement("style"); st.textContent = `.t98.push .t98t{margin-left:auto;font-size:11px;color:#a99fb0}.t98m{margin:8px 0 2px;padding:9px 12px;border-radius:14px 14px 14px 4px;background:rgba(255,255,255,.1);font-size:14.5px;line-height:1.5}`; document.head.appendChild(st); })();
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
