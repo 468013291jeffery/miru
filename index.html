@@ -15007,7 +15007,7 @@ actor98 = async function (th, cid, intent) {
     "\n\n【" + L98("你亲眼看到、听到的（最近）", "What you saw and heard (recent)") + "】\n" + (saw98(th, cid, 12) || "—") +
     (last && toMe ? "\n\n【" + L98("对方刚对你说/做", "What they just said/did to you") + "】" + you + "：" + last.txt + "\n" + L98("先直接回应这一句：问你问题就正面回答，或者明确不答（用你的方式）；不要自说自话。", "Respond to this first: answer the question directly, or clearly refuse in your way. Don't talk past it.") : "") +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）只写你自己：act=一个动作（不写主语，从动词写起，用上你的身体习惯，≤30 字，可空），say=一句话（≤45 字，简体中文，符合【你怎么说话】）。不写别人，不写旁白。" : "(" + you + gx98(th) + ") Only yourself: act = one action without subject (≤18 words, may be empty), say = one line (≤30 words, in your voice). Nothing about others, no narration.") +
-    tools98p(th, cid) + '\nReply with ONLY JSON: {"push":"","act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","ideas":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}]} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；ideas：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
+    tools98p(th, cid) + '\nReply with ONLY JSON: {"wish":"","act":"","say":"...","to":"","mood":"' + L98("此刻心情 2-4 字", "mood in 2-4 words") + '","feel":0,"trust":0,"remember":"","learned":"","ideas":[{"k":"say","t":"..."},{"k":"act","t":"..."},{"k":"think","t":"..."}]} (feel/trust: -5..5; learned: ' + L98("这一刻你新知道的事实，没有就空；ideas：替" + you + "想 3 个接下来可以做的事，态度不同——say 是" + you + "会说出口的原话（第一人称，≤20 字），act 是动作（不写主语，≤14 字），think 是心里话（≤16 字）", "a fact you just learned, or empty; ideas: 3 different things " + you + " could do next — say = exact words, act = action without subject, think = inner line") + ') in ' + LANG98() + ".";
   const r = await ask(p, { maxTokens: 440 });
   if (r) { if (r.mood) cd.mood = String(r.mood).slice(0, 12); if (r.trust) cd.trust = Math.max(0, Math.min(100, cd.trust + Math.max(-5, Math.min(5, +r.trust || 0)) * 1.5)); if (r.learned) kn98(th, [cid], r.learned); }
   return r;
@@ -15048,7 +15048,7 @@ async function talk98(th, act, choiceO) {
     if (choiceO) { th.love[cid] = Math.max(before, th.love[cid] || 0); cd.trust = tb; }   /* numbers only from the table */
     else { const f = Math.max(-2, Math.min(2, Math.round(+r.feel || 0))); th.love[cid] = Math.max(0, Math.min(100, before + f)); cd.trust = Math.max(0, Math.min(100, tb + Math.max(-2, Math.min(2, Math.round(+r.trust || 0))))); }
     if (Array.isArray(r.ideas)) setSugg(opts98(r.ideas));
-    if (!choiceO && (r.push || r.tool)) { try { push98(th, cid, r.push || r.tool); } catch (_) {} }
+    if (!choiceO && (r.wish || r.push || r.tool)) { try { tool98(th, cid, r.wish || r.push || r.tool); } catch (_) {} }
     A.turns++; th.rounds++; A.talkN = (A.talkN || 0) + (choiceO ? 0 : 1); useUnits(aiCost());
     if (A.talkN && A.talkN % 4 === 0) adv98(th).catch(() => {});
     th.at = Date.now(); save();
@@ -15076,92 +15076,93 @@ async function adv98(th) {
   return _b.apply(this, arguments); }; }
 (function () { const st = document.createElement("style"); st.textContent = `.glow98{box-shadow:0 0 0 2px var(--gold,#F0B77E),0 0 14px rgba(240,183,126,.6)!important;animation:tp98 1.6s ease-in-out infinite}`; document.head.appendChild(st); })();
 
-/* ================= v7.7 · characters can call tools =================
-   The character agent may attach ONE tool to a reply: tool = {"name": ..., ...args}. The tools are the interactive stops
-   we already designed for the story packs (line / gift / photo / voice / call / game), now usable in free play.
-   The model only PROPOSES; the program decides: a tool is offered in the prompt only when its gate is open
-   (closeness ≥ threshold, cooldown of 3 talk turns, ≤ 2 per scene, not on a scripted-choice turn), it is re-checked before it runs,
-   and every number it changes comes from the table (gift love values, prices), never from the model.
-   Whatever the player does with it (answer, give, unlock, hang up, skip) is written into what the people present know,
-   and the character reacts to it on the next line. */
-const TOOLS98 = {
-  ask:   { ic: "🎭", need: 0,  zh: "点名要你回答", en: "puts you on the spot", hint: "q=你问对方的问题(≤24字)，opts=2-3 个对方可以说的原话(每个≤16字，态度不同)" },
-  gift:  { ic: "🎁", need: 15, zh: "在等你送点什么", en: "is hoping for a gift", hint: "hint=你暗示想要什么(≤20字，用你的方式说)" },
-  photo: { ic: "📷", need: 25, zh: "发来一张照片", en: "sends you a photo", paid: 2, hint: "cap=照片里拍的是什么(≤20字，此刻、此地)" },
-  voice: { ic: "🎙", need: 30, zh: "发来一条语音", en: "sends you a voice note", paid: 1, hint: "txt=语音里你说的原话(≤40字，只给对方听的话)" },
-  call:  { ic: "📞", need: 45, zh: "打来电话", en: "is calling you", hint: "why=你为什么打这个电话(≤20字)" },
-  game:  { ic: "🎮", need: 20, zh: "拉你玩个小游戏", en: "wants to play a game", hint: "k=sync|order|keepsake|remember 之一，why=为什么现在玩(≤20字)" }
+/* ================= v7.7.2 · characters say what they want to do; the program turns it into a pushed action =================
+   No tool menu in the prompt. The character may add one plain sentence — wish = what he feels like doing to you right now
+   ("想打个电话给你" / "想发消息：今晚别等我" / "想送你一朵花" / "想约你明晚看电影"). The PROGRAM recognises it (keywords, no model),
+   picks the action type, pulls out the content, and renders it as a push: a phone-style banner + a card with what you can do.
+   The program also decides whether it shows at all: one at a time, ≥ 3 talk turns apart, ≤ 2 per scene, never on a scripted-choice turn,
+   phone / voice only where the work has phones. Every number (closeness for accepting a gift, unlock prices) comes from the table. */
+const ACT98 = {
+  call:  { ic: "📞", zh: "来电", en: "is calling" },
+  voice: { ic: "🎙", zh: "发来一条语音", en: "sent a voice note", paid: 1 },
+  msg:   { ic: "💬", zh: "发来一条消息", en: "sent you a message" },
+  photo: { ic: "📷", zh: "发来一张照片", en: "sent you a photo", paid: 2 },
+  gift:  { ic: "🎁", zh: "送你一样东西", en: "has something for you", love: 1 },
+  date:  { ic: "📅", zh: "约你", en: "asked you out" },
+  game:  { ic: "🎮", zh: "拉你玩个小游戏", en: "wants to play a game" },
+  other: { ic: "🔔", zh: "", en: "" }
 };
-const GAMES98 = { sync: "默契节拍", order: "点单记忆", keepsake: "纪念物", remember: "记得我吗" };
 function kind98(o) { const k = o && (o.k || o.kind); if (k === "say" || k === "act" || k === "think") return k; const t = String((o && o.t) || ""); return /[「“"？?！!]/.test(t) || /^(我|你)/.test(t) ? "say" : "act"; }
 function tl98(th) { const A = th.b98; A.tools = A.tools || { last: -9, log: [], scene: {} }; return A.tools; }
-function toolsOpen98(th, cid) {
-  const A = th.b98, T = tl98(th), { s } = scene98(th); if (!s || s.tools === false) return [];
-  const pr = present98(th, s); if (pr.length && !pr.includes(cid)) return [];
-  if ((A.talkN || 0) - T.last < 3) return []; if ((T.scene[s.id] || 0) >= 2) return [];
-  if (th.msgs.slice(-6).some(m => m.k === "tool98" && m.st === "open")) return [];
-  const love = th.love[cid] || 0, phone = typeof callsOK97 !== "function" || callsOK97(th); return Object.keys(TOOLS98).filter(k => love >= TOOLS98[k].need && (k !== "game" || typeof GAMEF === "object") && (phone || (k !== "call" && k !== "voice")));
+function phone98(th) { return typeof callsOK97 !== "function" || callsOK97(th); }
+function wishOpen98(th, cid) { const A = th.b98, T = tl98(th), { s } = scene98(th); if (!s || s.tools === false) return false;
+  const pr = present98(th, s); if (pr.length && !pr.includes(cid) && !phone98(th)) return false;
+  if ((A.talkN || 0) - T.last < 3 || (T.scene[s.id] || 0) >= 2) return false; return !th.msgs.slice(-6).some(m => m.k === "tool98" && m.st === "open"); }
+function tools98p(th, cid) { if (!wishOpen98(th, cid)) return "";
+  return "\n\n【" + L98("此刻你想对对方做的事（可选）", "Something you want to do to them now (optional)") + "】\n" + L98("如果此刻你自然地想对对方做点什么——打个电话、发条消息、送样东西、拍张照给对方、约对方出来……就在 wish 里用一句话写出来；说话类把内容也写上（比如「想发消息：今晚别等我」）。大多数时候留空，不要为了做而做。", "If right now you naturally want to do something to them — call, text, give a small thing, send a photo, ask them out — write it in one sentence in wish; include the words if it's a message (e.g. \"text: don't wait up\"). Usually leave it empty."); }
+function parse98(w) {
+  const t = clean98(String(w || "")).replace(/^[「“"]|[」”"]$/g, "").slice(0, 80); if (!t) return null;
+  const said = (t.match(/[：:]\s*[「“"]?([^」”"]{1,60})/) || t.match(/[「“"]([^」”"]{1,60})[」”"]/) || [])[1] || "";
+  const R = (k, x) => Object.assign({ k, wish: t }, x || {});
+  if (/语音|voice/i.test(t)) return R("voice", { txt: said });
+  if (/电话|打给|打过去|拨|视频通话|call/i.test(t)) return R("call", { why: said || t });
+  if (/消息|短信|微信|私信|发.{0,3}(句|条)|留言|text|message|dm/i.test(t)) return R("msg", { txt: said || t.replace(/^(想|我想)?(给你|给她|给他)?(发|回)(一)?(条)?(消息|短信|微信|私信)[，,：:]?/, "") });
+  if (/照片|自拍|拍(给|张)|发张图|photo|selfie|picture/i.test(t)) return R("photo", { cap: said || t });
+  const g = t.match(/(?:送|递给|塞给|带给|买给|给你带了?|给你买了?)(?:你|她|他)?\s*((?:一|两|几)?[朵束杯个份件条盒瓶张本只支把块颗串袋罐]?[^，。！!,.；;]{1,10})/); if (g || /\b(give|gift|bring)\b/i.test(t)) return R("gift", { item: g ? g[1].replace(/^(你|她|他)/, "") : t });
+  if (/约(你|她|他)|见面|出去|吃(个)?饭|看电影|散步|兜风|喝一杯|date|go out|dinner/i.test(t)) return R("date", { plan: said || t.replace(/^(想|我想)/, "") });
+  if (/游戏|玩一?(局|把)|比一比|game/i.test(t)) return R("game", { k: /记|remember/.test(t) ? "remember" : /点单|order/.test(t) ? "order" : "sync" });
+  return R("other", {});
 }
-function tools98p(th, cid) {
-  if (!pushOpen98(th, cid).length) return "";
-  return "\n\n【" + L98("你想对对方做点什么吗（可选，大多数时候留空）", "Want to do something for them? (optional; usually empty)") + "】\n" +
-    L98("如果此刻你真的会主动做一件事——比如打个电话、发条消息、送个东西、发张照片、发段语音、拉对方玩点什么——就在 push 里用一句话写出来，格式「方式：内容」，例如「发消息：睡了吗」「送东西：一枝白玫瑰」「打电话：想听你的声音」。只在符合你的人格、你这一场想要的、你们现在的关系时才写；不要为了写而写。",
-        "If right now you'd genuinely reach out — a call, a message, a gift, a photo, a voice note, an invitation to play — write it in push as \"how: what\", e.g. \"message: you up?\", \"gift: a white rose\". Only when it fits who you are and where you two are; otherwise leave it empty.");
+const GAMES98 = { sync: "默契节拍", order: "点单记忆", keepsake: "纪念物", remember: "记得我吗" };
+function tool98(th, cid, wish) {
+  if (!wishOpen98(th, cid)) return; const a = parse98(typeof wish === "object" && wish ? (wish.wish || wish.name || "") : wish); if (!a) return;
+  if ((a.k === "call" || a.k === "voice") && !phone98(th)) return; if (a.k === "voice" && !a.txt) a.k = "msg", a.txt = a.wish; if (a.k === "msg" && !a.txt) return; if (a.k === "game" && typeof GAMEF !== "object") a.k = "other";
+  const T = tl98(th), { s } = scene98(th); T.last = th.b98.talkN || 0; T.scene[s.id] = (T.scene[s.id] || 0) + 1; T.log.push({ at: Date.now(), cid, k: a.k, wish: a.wish, st: a.k === "other" ? "shown" : "open" }); if (T.log.length > 40) T.log.shift();
+  if (a.k === "msg") kn98(th, [cid], L98("你给对方发了消息：", "You texted them: ") + a.txt);
+  appendMsg(th, { who: "sys", k: "tool98", tool: a.k, cid, a, st: a.k === "other" ? "done" : "open", at: Date.now() }); save(); push98(th, cid, a);
 }
-function tool98(th, cid, t) {
-  if (!t || typeof t !== "object") return; const name = String(t.name || t.tool || "").toLowerCase(); if (!TOOLS98[name] || !toolsOpen98(th, cid).includes(name)) return;
-  const c1 = x => clean98(String(x || "")).replace(/^[「“"]|[」”"]$/g, "");
-  const a = {};
-  if (name === "ask") { a.q = c1(t.q).slice(0, 40); a.opts = (Array.isArray(t.opts) ? t.opts : []).map(x => c1(typeof x === "object" ? x.t : x).slice(0, 24)).filter(Boolean).slice(0, 3); if (a.opts.length < 2) return; }
-  if (name === "gift") a.hint = c1(t.hint).slice(0, 30);
-  if (name === "photo") a.cap = c1(t.cap).slice(0, 30) || L98("此刻", "this moment");
-  if (name === "voice") { a.txt = c1(t.txt).slice(0, 60); if (!a.txt) return; }
-  if (name === "call") a.why = c1(t.why).slice(0, 30);
-  if (name === "game") { a.k = GAMES98[t.k] ? t.k : "sync"; a.why = c1(t.why).slice(0, 30); }
-  const T = tl98(th), { s } = scene98(th); T.last = th.b98.talkN || 0; T.scene[s.id] = (T.scene[s.id] || 0) + 1; T.log.push({ at: Date.now(), cid, name, st: "open" }); if (T.log.length > 40) T.log.shift();
-  appendMsg(th, { who: "sys", k: "tool98", tool: name, cid, a, st: "open", at: Date.now() }); save();
-}
+function push98(th, cid, a) { const c = ch(cid); if (!c || curT !== th.id) return; const D = ACT98[a.k] || ACT98.other, sc = $("#dev") || document.body; if (!$("#s-chat") || $("#s-chat").hidden) return; const old = $("#push98"); if (old) old.remove();
+  const line = a.k === "msg" ? a.txt : a.k === "gift" ? a.item : a.k === "date" ? a.plan : a.k === "other" ? a.wish : L98(D.zh, D.en);
+  sc.insertAdjacentHTML("beforeend", '<div id="push98">' + avatar(cid, 34) + '<span><b>' + esc(first(c.n)) + ' <i>' + D.ic + " " + esc(L98(D.zh, D.en)) + '</i></b><small>' + esc(String(line || "").slice(0, 40)) + '</small></span></div>');
+  const el = $("#push98"); setTimeout(() => el && el.classList.add("in"), 20); setTimeout(() => { if (el) { el.classList.remove("in"); setTimeout(() => el.remove(), 400); } }, 4200); }
 function toolHTML98(m, i, th) {
-  const D = TOOLS98[m.tool] || {}, c = ch(m.cid), nm = c ? esc(first(c.n)) : "", a = m.a || {}, open = m.st === "open";
+  const D = ACT98[m.tool] || ACT98.other, c = ch(m.cid), nm = c ? esc(first(c.n)) : "", a = m.a || {}, open = m.st === "open";
   const head = '<div class="t98h">' + (c ? avatar(m.cid, 26) : "") + '<b>' + nm + '</b><span>' + D.ic + " " + esc(L98(D.zh, D.en)) + '</span></div>';
   const b = (act, label, cls) => '<button class="t98b' + (cls ? " " + cls : "") + '" data-t98="' + i + "|" + act + '">' + label + "</button>";
   const price = n => S.plus ? L98("免费", "free") : "💎 " + n; let body = "", btns = "";
-  if (m.tool === "ask") { body = '<p class="t98q">「' + esc(a.q || "") + '」</p>'; btns = (a.opts || []).map((o, k) => b("o" + k, "💬 " + esc(o))).join("") + b("own", "✎ " + L98("我自己说", "Say my own"), "q"); }
-  if (m.tool === "gift") { body = a.hint ? '<p class="t98q">「' + esc(a.hint) + '」</p>' : ""; btns = GIFTS.map(g => b("g" + g.id, g.ic + " " + esc(Lz(g.n)) + ' <small>' + (g.cost ? "💎 " + g.cost : L98("免费", "free")) + "</small>")).join("") + b("no", L98("不送", "Not now"), "q"); }
-  if (m.tool === "photo") { body = '<div class="t98ph" style="background-image:url(' + artSrc(m.cid) + ')"><i>🔒</i></div><p class="t98s">' + esc(a.cap || "") + "</p>"; btns = b("go", "📷 " + L98("看照片", "Open") + " · " + price(STOP_PRICE.photo), "p") + b("no", L98("稍后", "Later"), "q"); }
+  if (m.tool === "msg") { body = '<p class="t98m">' + esc(a.txt || "") + '</p>'; btns = b("go", "↩︎ " + L98("回他", "Reply"), "p") + b("no", L98("已读不回", "Leave on read"), "q"); }
+  if (m.tool === "call") { body = a.why && a.why !== a.wish ? '<p class="t98s">' + esc(a.why) + "</p>" : ""; btns = b("go", "📞 " + L98("接听", "Answer"), "p") + b("no", "✕ " + L98("挂断", "Decline"), "q"); }
   if (m.tool === "voice") { body = '<div class="stwave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>'; btns = b("go", "🔓 " + L98("听语音", "Listen") + " · " + price(STOP_PRICE.voice), "p") + b("no", L98("稍后", "Later"), "q"); }
-  if (m.tool === "call") { body = a.why ? '<p class="t98s">' + esc(a.why) + "</p>" : ""; btns = b("go", "📞 " + L98("接听", "Answer"), "p") + b("no", "✕ " + L98("挂断", "Decline"), "q"); }
-  if (m.tool === "game") { body = '<p class="t98s">' + esc(L98(GAMES98[a.k] || "", a.k)) + (a.why ? " · " + esc(a.why) : "") + "</p>"; btns = b("go", "🎮 " + L98("开始", "Play"), "p") + b("no", L98("下次", "Next time"), "q"); }
-  const done = m.st === "done" ? '<p class="t98d">✓ ' + esc(m.res || L98("已回应", "answered")) + "</p>" : m.st === "skip" ? '<p class="t98d">· ' + esc(m.res || L98("跳过了", "skipped")) + "</p>" : "";
+  if (m.tool === "photo") { body = '<div class="t98ph" style="background-image:url(' + artSrc(m.cid) + ')"><i>🔒</i></div><p class="t98s">' + esc(a.cap || "") + "</p>"; btns = b("go", "📷 " + L98("看照片", "Open") + " · " + price(STOP_PRICE.photo), "p") + b("no", L98("稍后", "Later"), "q"); }
+  if (m.tool === "gift") { body = '<p class="t98q">' + esc(a.item || "") + '</p>'; btns = b("go", "🤍 " + L98("收下", "Accept"), "p") + b("no", L98("婉拒", "Decline"), "q"); }
+  if (m.tool === "date") { body = '<p class="t98q">' + esc(a.plan || "") + '</p>'; btns = b("go", "✓ " + L98("赴约", "Go"), "p") + b("no", L98("改天吧", "Another time"), "q"); }
+  if (m.tool === "game") { body = '<p class="t98s">' + esc(L98(GAMES98[a.k] || "", a.k)) + "</p>"; btns = b("go", "🎮 " + L98("开始", "Play"), "p") + b("no", L98("下次", "Next time"), "q"); }
+  if (m.tool === "other") body = '<p class="t98s">' + esc(a.wish || "") + "</p>";
+  const done = m.res ? '<p class="t98d">' + (m.st === "skip" ? "· " : "✓ ") + esc(m.res) + "</p>" : "";
   return '<div class="mw98" data-mi98="' + i + '"><div class="t98' + (open ? " on" : "") + '">' + head + body + (open ? '<div class="t98bs">' + btns + "</div>" : done) + "</div></div>";
 }
 { const _mh = msgHTML; msgHTML = function (m, i, th) { if (m && m.k === "tool98" && th && th.b98) return toolHTML98(m, i, th); return _mh.apply(this, arguments); }; }
 function toolRe98(th, i) { const el = $('#msgs [data-mi98="' + i + '"]'); if (el) el.outerHTML = msgHTML(th.msgs[i], i, th); }
-function toolEnd98(th, i, st, res) { const m = th.msgs[i]; m.st = st; m.res = res; const L = tl98(th).log.slice().reverse().find(x => x.cid === m.cid && x.name === m.tool && x.st === "open"); if (L) L.st = st; save(); toolRe98(th, i); }
+function toolEnd98(th, i, st, res) { const m = th.msgs[i]; m.st = st; m.res = res; const L = tl98(th).log.slice().reverse().find(x => x.cid === m.cid && x.k === m.tool && x.st === "open"); if (L) L.st = st; save(); toolRe98(th, i); }
 document.addEventListener("click", async e => {
+  if (e.target.closest("#push98")) { const el = $("#push98"); if (el) el.remove(); const m = $("#msgs"); if (m) m.scrollTop = m.scrollHeight; return; }
   const x = e.target.closest("[data-t98]"); if (!x) return; const th = S.threads[curT]; if (!th || !th.b98 || busy) return;
   const [is, act] = x.dataset.t98.split("|"), i = +is, m = th.msgs[i]; if (!m || m.k !== "tool98" || m.st !== "open") return;
   const cid = m.cid, nm = first(ch(cid).n), a = m.a || {}, { s } = scene98(th), pr = present98(th, s), wit = pr.length ? pr : [cid], you = yn98(th);
+  const me = (t, mode) => appendMsg(th, { who: "me", k: mode || "act", txt: t, at: Date.now() });
   const react = (txt, mode) => talk98(th, { mode: mode || "act", txt, to: cid }, null);
-  if (m.tool === "ask") {
-    if (act === "own") { toolEnd98(th, i, "done", L98("自己回答", "answered in own words")); th.addr = cid; const inp = $("#s-chat .composer textarea,#s-chat .composer input"); if (inp) inp.focus(); return; }
-    const o = a.opts[+act.slice(1)]; if (!o) return; toolEnd98(th, i, "done", o); th.addr = cid; doSend(o, "say"); return;
-  }
-  if (m.tool === "gift") {
-    if (act === "no") { toolEnd98(th, i, "skip", L98("没有送", "no gift")); kn98(th, wit, you + L98("没有接 " + nm + " 的暗示", " ignored " + nm + "'s hint")); appendMsg(th, { who: "me", k: "act", txt: L98("装作没听懂", "pretends not to get it"), at: Date.now() }); return react(L98("装作没听懂他的暗示", "pretended not to get the hint")); }
-    const g = GIFTS.find(y => "g" + y.id === act); if (!g) return; if (g.cost && !spend(g.cost, "gift")) return;
-    th.love[cid] = Math.max(0, Math.min(100, (th.love[cid] || 0) + g.love)); if (typeof chg96 === "function") chg96([["💗", nm + L98(" 好感", " affection"), "+" + g.love]]);
-    toolEnd98(th, i, "done", g.ic + " " + Lz(g.n)); kn98(th, wit, you + L98("送给 " + nm + "：", " gave " + nm + ": ") + Lz(g.n));
-    const t = L98("把" + Lz(g.n) + "递给" + nm, "hands " + nm + " " + Lz(g.n)); appendMsg(th, { who: "me", k: "act", txt: t, at: Date.now() }); return react(t);
-  }
   if (act === "no") {
-    const res = { photo: L98("先不看", "not now"), voice: L98("先不听", "not now"), call: L98("挂断了", "declined"), game: L98("下次再玩", "next time") }[m.tool];
-    toolEnd98(th, i, "skip", res); if (m.tool === "call") { kn98(th, wit, you + L98("挂断了 " + nm + " 的电话", " declined " + nm + "'s call")); appendMsg(th, { who: "me", k: "act", txt: L98("按掉了来电", "declines the call"), at: Date.now() }); return react(L98("按掉了他的来电", "declined his call")); } return;
-  }
-  if (m.tool === "photo") { if (!stopPay(STOP_PRICE.photo, "img")) return; x.disabled = true; x.textContent = "✨ " + t("ai.painting"); await stopPhoto(th, { who: cid, cap: a.cap }); toolEnd98(th, i, "done", L98("看了照片", "opened")); kn98(th, [cid], you + L98("看了你发的照片：", " saw your photo: ") + a.cap); return; }
-  if (m.tool === "voice") { if (!stopPay(STOP_PRICE.voice, "line")) return; toolEnd98(th, i, "done", L98("听了语音", "listened")); appendMsg(th, { who: cid, k: "say", txt: "🎙 " + a.txt, at: Date.now() }); try { speak(a.txt, cid); } catch (_) {} kn98(th, [cid], you + L98("听了你的语音：", " heard your voice note: ") + a.txt); return; }
+    const R = { msg: [L98("已读不回", "left on read"), L98("看了他的消息，没有回", "read the message and didn't reply")], call: [L98("挂断了", "declined"), L98("按掉了他的来电", "declined his call")], gift: [L98("婉拒了", "declined"), L98("把" + a.item + "推了回去", "handed " + a.item + " back")], date: [L98("改天", "another time"), L98("说改天吧", "said another time")], photo: [L98("先不看", "not now"), ""], voice: [L98("先不听", "not now"), ""], game: [L98("下次", "next time"), ""] }[m.tool] || ["", ""];
+    toolEnd98(th, i, "skip", R[0]); if (R[1]) { kn98(th, [cid], you + R[1]); if (m.tool !== "msg") { me(R[1]); return react(R[1]); } } return; }
+  if (m.tool === "msg") { toolEnd98(th, i, "done", L98("回了", "replied")); th.addr = cid; const inp = $("#s-chat .composer textarea,#s-chat .composer input"); if (inp) { inp.focus(); } toast(L98("在下面打字回他", "Type your reply below")); return; }
   if (m.tool === "call") { toolEnd98(th, i, "done", L98("接了电话", "answered")); kn98(th, wit, you + L98("接了 " + nm + " 的电话", " answered " + nm + "'s call")); callGate(cid); return; }
-  if (m.tool === "game") { const f = GAMEF[a.k]; toolEnd98(th, i, "done", L98("一起玩了", "played") + " " + (GAMES98[a.k] || "")); kn98(th, wit, you + L98("和 " + nm + " 玩了「" + (GAMES98[a.k] || a.k) + "」", " played a game with " + nm)); if (f) { const o2 = ia98(th).find(c => c !== cid) || cid, pid = th.wid + ":" + cid + "+" + o2; if (!BLP.find(b2 => b2[0] === pid)) BLP.push([pid, cid, o2]); S.gpair = pid; save(); f(); } return; }
+  if (m.tool === "voice") { if (!stopPay(STOP_PRICE.voice, "line")) return; toolEnd98(th, i, "done", L98("听了语音", "listened")); appendMsg(th, { who: cid, k: "say", txt: "🎙 " + a.txt, at: Date.now() }); try { speak(a.txt, cid); } catch (_) {} kn98(th, [cid], you + L98("听了你的语音：", " heard your voice note: ") + a.txt); return; }
+  if (m.tool === "photo") { if (!stopPay(STOP_PRICE.photo, "img")) return; x.disabled = true; x.textContent = "✨ " + t("ai.painting"); await stopPhoto(th, { who: cid, cap: a.cap }); toolEnd98(th, i, "done", L98("看了照片", "opened")); kn98(th, [cid], you + L98("看了你发的照片：", " saw your photo: ") + a.cap); return; }
+  if (m.tool === "gift") { const n = ACT98.gift.love; th.love[cid] = Math.max(0, Math.min(100, (th.love[cid] || 0) + n)); if (typeof chg96 === "function") chg96([["💗", nm + L98(" 好感", " affection"), "+" + n]]);
+    toolEnd98(th, i, "done", L98("收下了", "accepted")); kn98(th, wit, you + L98("收下了 " + nm + " 送的" + a.item, " accepted " + a.item + " from " + nm)); const t2 = L98("收下了" + a.item, "accepts " + a.item); me(t2); return react(t2); }
+  if (m.tool === "date") { toolEnd98(th, i, "done", L98("答应了", "said yes")); kn98(th, wit, you + L98("答应了 " + nm + " 的约：", " said yes to " + nm + ": ") + a.plan); const b = bOf98(wd(th.wid));
+    if (b && b.user98 && typeof steer98 === "function") return steer98(th, L98("和" + nm + "赴约：", "Going out with " + nm + ": ") + a.plan); const t2 = L98("答应了他的约", "says yes"); me(t2); return react(t2); }
+  if (m.tool === "game") { const f = GAMEF[a.k]; toolEnd98(th, i, "done", L98("一起玩了", "played")); kn98(th, wit, you + L98("和 " + nm + " 玩了「" + (GAMES98[a.k] || a.k) + "」", " played a game with " + nm)); if (f) { const o2 = ia98(th).find(c => c !== cid) || cid, pid = th.wid + ":" + cid + "+" + o2; if (!BLP.find(b2 => b2[0] === pid)) BLP.push([pid, cid, o2]); S.gpair = pid; save(); f(); } return; }
 });
 (function () { const st = document.createElement("style"); st.textContent = `
 #s-chat.b98 .m-act.me,#s-chat.b98 .m-think.me{background:rgba(10,9,14,.78)!important;border:1px solid rgba(240,183,126,.55)!important;color:#fff1e2!important;text-shadow:none}
@@ -15171,11 +15172,14 @@ document.addEventListener("click", async e => {
 .t98.on{border-color:rgba(240,183,126,.7);box-shadow:0 0 0 1px rgba(240,183,126,.25)}
 .t98h{display:flex;align-items:center;gap:8px;font-size:13px}.t98h b{font-weight:800}.t98h span{color:#f0b77e;font-weight:700}
 .t98q{margin:8px 0 2px;font-size:15px;line-height:1.5}.t98s{margin:6px 0 0;font-size:13px;color:#d9d2dc}
+.t98m{margin:8px 0 2px;display:inline-block;max-width:90%;padding:8px 12px;border-radius:16px 16px 16px 4px;background:#2b2733;font-size:14.5px;line-height:1.5}
 .t98bs{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .t98b{padding:7px 11px;border-radius:99px;background:rgba(255,255,255,.1);color:#fff;font-size:13px;font-weight:700;border:1px solid rgba(255,255,255,.18)}
-.t98b.p{background:linear-gradient(135deg,#f0b77e,#e86f97);border:0;color:#1a1016}.t98b.q{background:transparent;color:#cfc6d3}.t98b small{opacity:.7;font-weight:600;margin-left:3px}
+.t98b.p{background:linear-gradient(135deg,#f0b77e,#e86f97);border:0;color:#1a1016}.t98b.q{background:transparent;color:#cfc6d3}
 .t98ph{margin-top:8px;height:120px;border-radius:10px;background-size:cover;background-position:center 20%;filter:blur(6px) brightness(.7);display:flex;align-items:center;justify-content:center}.t98ph i{filter:none;font-size:26px;font-style:normal}
 .t98d{margin:8px 0 0;font-size:12px;color:#bdb3c2}
+#push98{position:absolute;left:12px;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:60;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:18px;background:rgba(28,26,34,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.45);transform:translateY(-140%);transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+#push98.in{transform:translateY(0)}#push98 span{display:flex;flex-direction:column;min-width:0}#push98 b{font-size:13.5px}#push98 b i{font-style:normal;font-weight:600;color:#f0b77e;margin-left:4px}#push98 small{font-size:13px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 `; document.head.appendChild(st); })();
 
 /* ================= v7.8 · 写我的故事 (your own story, like writing fanfic about yourself and him) =================
@@ -15314,62 +15318,6 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
 .my98o{display:flex;gap:6px;margin-top:12px}.my98o button{flex:1;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:transparent;color:inherit;font-size:13px}.my98o button.on{border-color:#F0B77E;background:rgba(240,183,126,.16);font-weight:700}
 .st98b{background:rgba(255,255,255,.1)!important;color:#fff!important;padding:8px 11px!important}
 `; document.head.appendChild(st); })();
-
-/* ================= v7.7.2 · the character says what he wants to do; the program recognizes it and renders the push =================
-   No tool menu in the prompt. The actor may write one free line in `push` ("发消息：睡了吗", "送东西：一枝白玫瑰", "打电话：想听你声音").
-   The program classifies it (call / voice / photo / message / gift-to-you / game), checks the gates (closeness, cooldown, ≤2 per scene,
-   phone switch for period works), and renders it as a push card the player can act on. Unrecognized or gated lines are dropped. */
-Object.assign(TOOLS98, {
-  msg:  { ic: "📩", need: 0,  zh: "发来一条消息", en: "sent you a message" },
-  give: { ic: "🎁", need: 10, zh: "送了你一样东西", en: "sent you something" }
-});
-const PUSHK98 = [
-  ["call", /电话|来电|视频通话|拨给|\bcall\b|phone/i], ["voice", /语音|voice/i], ["photo", /照片|自拍|拍给|发图|photo|picture|selfie/i],
-  ["msg", /消息|短信|微信|私信|留言|纸条|便签|信|message|text|note/i], ["give", /送|递给|塞给|带给|礼物|花|gift|bring/i], ["game", /玩|游戏|打赌|比一比|game|play/i]];
-function pushOpen98(th, cid) { const phone = typeof callsOK97 !== "function" || callsOK97(th); return toolsOpen98(th, cid).filter(k => ["call", "voice", "photo", "msg", "give", "game"].includes(k) && (phone || k !== "msg")); }
-function push98(th, cid, raw) {
-  let line = typeof raw === "object" && raw ? [raw.name || raw.how || "", raw.what || raw.txt || raw.hint || raw.cap || raw.q || ""].join("：") : String(raw || "");
-  line = clean98(line).slice(0, 80); if (!line.replace(/[：:\s]/g, "")) return;
-  const m = line.match(/^([^：:]{1,8})[：:]\s*(.*)$/), how = m ? m[1] : line, what = (m ? m[2] : "").replace(/^[「“"]|[」”"]$/g, "").trim();
-  const hit = PUSHK98.find(([, re]) => re.test(how)) || PUSHK98.find(([, re]) => re.test(line)); if (!hit) return;
-  const k = hit[0]; if (!pushOpen98(th, cid).includes(k)) return;
-  const a = {};
-  if (k === "call") a.why = what.slice(0, 30);
-  if (k === "voice") { a.txt = (what || "").slice(0, 60); if (!a.txt) return; }
-  if (k === "photo") a.cap = what.slice(0, 30) || L98("此刻", "this moment");
-  if (k === "msg") { a.txt = what.slice(0, 80); if (!a.txt) return; }
-  if (k === "give") { a.item = what.replace(/^(你|给你)/, "").slice(0, 24); if (!a.item) return; }
-  if (k === "game") { a.k = /节拍|默契|sync/i.test(what) ? "sync" : /点单|order/i.test(what) ? "order" : /记得|remember/i.test(what) ? "remember" : "keepsake"; a.why = what.slice(0, 30); }
-  const T = tl98(th), { s } = scene98(th); T.last = th.b98.talkN || 0; T.scene[s.id] = (T.scene[s.id] || 0) + 1; T.log.push({ at: Date.now(), cid, name: k, raw: line, st: "open" }); if (T.log.length > 40) T.log.shift();
-  appendMsg(th, { who: "sys", k: "tool98", tool: k, cid, a, st: "open", at: Date.now() }); save();
-  try { const c = ch(cid); if (typeof chg96 === "function") chg96([[TOOLS98[k].ic, first(c.n) + " " + L98(TOOLS98[k].zh, TOOLS98[k].en), ""]]); } catch (_) {}
-}
-/* render + actions for the two new kinds (the others reuse v7.7) */
-{ const _th = toolHTML98; toolHTML98 = function (m, i, th) {
-  if (m.tool !== "msg" && m.tool !== "give") return _th.apply(this, arguments);
-  const D = TOOLS98[m.tool], c = ch(m.cid), nm = c ? esc(first(c.n)) : "", a = m.a || {}, open = m.st === "open";
-  const b = (act, label, cls) => '<button class="t98b' + (cls ? " " + cls : "") + '" data-t98="' + i + "|" + act + '">' + label + "</button>";
-  const head = '<div class="t98h">' + (c ? avatar(m.cid, 26) : "") + '<b>' + nm + '</b><span>' + D.ic + " " + esc(L98(D.zh, D.en)) + '</span><small class="t98t">' + L98("刚刚", "now") + '</small></div>';
-  const body = m.tool === "msg" ? '<p class="t98m">' + esc(a.txt || "") + '</p>' : '<p class="t98q">' + esc(a.item || "") + '</p>';
-  const btns = m.tool === "msg" ? b("re", "↩ " + L98("回复他", "Reply"), "p") + b("no", L98("已读不回", "Leave on read"), "q") : b("take", "💗 " + L98("收下", "Accept"), "p") + b("no", L98("婉拒", "Decline"), "q");
-  const done = m.st === "done" ? '<p class="t98d">✓ ' + esc(m.res || "") + "</p>" : m.st === "skip" ? '<p class="t98d">· ' + esc(m.res || "") + "</p>" : "";
-  return '<div class="mw98" data-mi98="' + i + '"><div class="t98 push' + (open ? " on" : "") + '">' + head + body + (open ? '<div class="t98bs">' + btns + "</div>" : done) + "</div></div>"; }; }
-document.addEventListener("click", e => {
-  const x = e.target.closest("[data-t98]"); if (!x) return; const th = S.threads[curT]; if (!th || !th.b98 || busy) return;
-  const [is, act] = x.dataset.t98.split("|"), i = +is, m = th.msgs[i]; if (!m || m.k !== "tool98" || m.st !== "open" || (m.tool !== "msg" && m.tool !== "give")) return;
-  e.stopImmediatePropagation(); const cid = m.cid, nm = first(ch(cid).n), a = m.a || {}, { s } = scene98(th), pr = present98(th, s), wit = pr.length ? pr : [cid], you = yn98(th);
-  const react = txt => talk98(th, { mode: "act", txt, to: cid }, null);
-  if (m.tool === "msg") {
-    if (act === "re") { toolEnd98(th, i, "done", L98("回复了", "replied")); kn98(th, [cid], you + L98("看了你的消息：", " read your message: ") + a.txt); th.addr = cid; save(); const inp = $("#s-chat .composer textarea,#s-chat .composer input"); if (inp) inp.focus(); return; }
-    toolEnd98(th, i, "skip", L98("已读不回", "left on read")); kn98(th, [cid], you + L98("已读了你的消息，没有回", " read your message and didn't reply")); return;
-  }
-  if (act === "take") { const g = 3; th.love[cid] = Math.max(0, Math.min(100, (th.love[cid] || 0) + g)); if (typeof chg96 === "function") chg96([["💗", nm + L98(" 好感", " affection"), "+" + g]]);
-    toolEnd98(th, i, "done", L98("收下了", "accepted") + " · " + a.item); kn98(th, wit, you + L98("收下了 " + nm + " 送的：", " accepted " + nm + "'s gift: ") + a.item);
-    const t = L98("收下了" + a.item, "accepts the " + a.item); appendMsg(th, { who: "me", k: "act", txt: t, at: Date.now() }); return react(t); }
-  toolEnd98(th, i, "skip", L98("婉拒了", "declined")); kn98(th, wit, you + L98("婉拒了 " + nm + " 送的：", " declined " + nm + "'s gift: ") + a.item);
-  const t = L98("把" + a.item + "推了回去", "hands the " + a.item + " back"); appendMsg(th, { who: "me", k: "act", txt: t, at: Date.now() }); return react(t);
-}, true);
-(function () { const st = document.createElement("style"); st.textContent = `.t98.push .t98t{margin-left:auto;font-size:11px;color:#a99fb0}.t98m{margin:8px 0 2px;padding:9px 12px;border-radius:14px 14px 14px 4px;background:rgba(255,255,255,.1);font-size:14.5px;line-height:1.5}`; document.head.appendChild(st); })();
 
 /* ================= v7.4 · voice reads only spoken lines =================
    Like Tipsy: narration and actions are never read aloud; only what a character actually says.
