@@ -15789,3 +15789,11 @@ if(S.ob)startApp();else renderOB();
 /* v8.0.3 · warm the voice of each new spoken line in the background, so tapping ·)) plays at once */
 (function(){try{const _a=appendMsg;appendMsg=function(th,m){const r=_a.apply(this,arguments);try{if(th&&th.b98&&m&&m.k==="say"&&ch(m.who)&&typeof ttsFetch==="function"&&ttsOn()){const sp=spoken100(m.txt);if(sp)setTimeout(()=>{if(!busy)ttsFetch(sp,m.who).catch(()=>{})},1200)}}catch(_){}return r}}catch(_){}})();
 </script>
+<script>
+/* v8.1 · chapter character cards: base card + this chapter's state (what he knows, believes, wants, how he talks now, and why he changed) */
+(function(){try{const _c=cardOf98;cardOf98=function(w,cid){const k=_c.apply(this,arguments);try{const b=bOf98(w),th=S.threads[curT];if(!k||!b||!th||!th.b98||th.wid!==(w&&w.id))return k;
+ const ch=b.chapters[(th.b98.ch||1)-1],cc=ch&&ch.card98&&ch.card98[k.key];if(!cc)return k;
+ const L=(a,x)=>(x&&(Array.isArray(x)?x.length:String(x).length))?a+(Array.isArray(x)?x.join("；"):x):"";
+ const t=["【本章的你 · 第"+(th.b98.ch||1)+"章】",L("此刻你知道：",cc.knows),L("你还不知道（不能装作知道）：",cc.unknown),L("你相信（可能是错的）：",cc.beliefs),L("你对对方：",cc.relation),L("你这一章想要：",cc.goal),L("你现在说话：",cc.speech),L("你为什么变了：",cc.growth)].filter(Boolean).join("\n");
+ return Object.assign({},k,{rules:t+"\n\n"+(LZ98(k.rules)||"")})}catch(_){return k}}}catch(_){}})();
+</script>
