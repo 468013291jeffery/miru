@@ -9829,7 +9829,7 @@ function lcClean(t){return String(t||"").replace(/<think>[\s\S]*?<\/think>/g,"")
 async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_PROXY)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
  const max={quick:900,default:2200,complex:4000}[opts.modelTier||"default"]||2200;const stream=typeof opts.onText==="function";
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,thinking:{type:"disabled"}};
- const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
+ const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||(stream?60000:25000));if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
  const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
  let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
