@@ -2851,8 +2851,13 @@ function ic(name){const P={
    Official portraits ship as files in art/. Characters without one get a generated poster
    (gradient + monogram) until the user uploads a portrait or the image server draws one. */
 const POSTER={};
+/* 立绘可能已经不是 base64 而是 {__m:id} 引用（见 app92_media.js）：
+   拿得到就返回 URL；拿不到先给 1×1 占位，后台取到再把带 data-art 的 img 补上。 */
+function refreshArtImgs(id){try{const u=mediaUrl("art:"+id);if(!u)return;document.querySelectorAll('img[data-art="'+id+'"]').forEach(im=>{if(im.src!==u)im.src=u})}catch(_){}}
 function artSrc(id){
- if(S.art[id])return S.art[id];
+ const v0=S.art[id];
+ if(typeof mediaIsRef==="function"&&mediaIsRef(v0)){const u=mediaUrl(v0.__m);if(u)return u;mediaUrlAsync(v0.__m,()=>refreshArtImgs(id));return (typeof MEDIA_BLANK!=="undefined")?MEDIA_BLANK:"";}
+ if(typeof v0==="string"&&v0)return v0;
  const c=ch(id),w=wd(id);
  if(w&&w.mine&&!w.cover)return "art/world_default.jpg";
  const f=(c&&c.art)||(w&&w.cover);
@@ -2880,8 +2885,8 @@ function poster(id){
  x.fillStyle="rgba(240,183,126,.9)";x.font="800 12px Manrope, Helvetica, sans-serif";x.fillText((c?(c.n.split(" ").slice(1).join(" ")||"MIRU"):"MIRU").toUpperCase().split("").join(" "),34,Ht-28);
  const d=x.getImageData(0,0,Wd,Ht),p=d.data;for(let k=0;k<p.length;k+=4){const n=(Math.random()-.5)*16;p[k]+=n;p[k+1]+=n;p[k+2]+=n}x.putImageData(d,0,0);
  return POSTER[id]=cv.toDataURL("image/jpeg",.84);}
-function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" alt="" loading="lazy"></div>'}
-function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" alt=""></div>'}
+function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" data-art="'+id+'" alt="" loading="lazy"></div>'}
+function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" data-art="'+id+'" alt=""></div>'}
 function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
 
 /* ================= VOICE =================
@@ -4161,7 +4166,7 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-like-c]")){x.style.color="var(--rose)";toast("♥");return}});
 document.addEventListener("change",e=>{if(e.target.id!=="artUp")return;const f=e.target.files&&e.target.files[0];if(!f)return;
  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const cv=document.createElement("canvas"),sc=Math.min(1,560/im.width);cv.width=im.width*sc;cv.height=im.height*sc;
-  cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);S.art[curChar]=cv.toDataURL("image/jpeg",.84);save();toast(t("ch.saved"));openChar(curChar,true)};im.src=fr.result};fr.readAsDataURL(f)});
+  cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);S.art[curChar]=mediaWrap("art:"+curChar,cv.toDataURL("image/jpeg",.84));save();toast(t("ch.saved"));openChar(curChar,true)};im.src=fr.result};fr.readAsDataURL(f)});
 Object.assign(I18N.en,{"ch.remix":"Remix"});
 Object.assign(I18N.zh,{"ch.remix":"二创TA"});
 
@@ -4632,7 +4637,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-keep]")){const cid=x.dataset.keep,th=S.threads[curT];
   const W0=640,cv=document.createElement("canvas");cv.width=W0;cv.height=W0;const g=cv.getContext("2d");g.fillStyle="#0c0a10";g.fillRect(0,0,W0,W0);
   bFrames.forEach((f,i)=>{if(f)g.drawImage(f,(i%2)*(W0/2)+6,Math.floor(i/2)*(W0/2)+6,W0/2-12,W0/2-12)});
-  const aid="a"+Date.now();S.album.unshift({id:aid,cid,src:cv.toDataURL("image/jpeg",.72),at:Date.now()});if(S.album.length>12)S.album.length=12;th.tasks.snap=1;loveWrite(th,cid,5,"photobooth");th.mem.push("Took a photo-booth strip with "+ch(cid).n);closeSheet();
+  const aid="a"+Date.now();S.album.unshift({id:aid,cid,src:mediaWrap("album:"+aid,cv.toDataURL("image/jpeg",.72)),at:Date.now()});if(S.album.length>12)S.album.length=12;th.tasks.snap=1;loveWrite(th,cid,5,"photobooth");th.mem.push("Took a photo-booth strip with "+ch(cid).n);closeSheet();
   appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"));reply(th,{kind:"user",txt:"(We just took a four-frame photo-booth strip together. React to seeing the photos.)"});}});
 /* 生图: a 9:16 scene still built from this story's real footage (or the portrait) + the line as a subtitle.
    Works with no network/AI; if the canvas can't be exported it falls back to a live DOM card. */
@@ -4682,7 +4687,7 @@ document.addEventListener("click",e=>{
 /* image messages are a fixed-size box painted with two layers — the photo, and the character's portrait underneath —
    so even if the photo can't be shown in this viewer, the card is never an empty strip */
 function albumHtml(a){const fb=esc(artSrc(a.cid||""));
- if(a.src)return '<div class="mimg" style="background-image:url(&quot;'+esc(a.src)+'&quot;),url(&quot;'+fb+'&quot;)"></div>';
+ if(a&&a.src)return '<div class="mimg" data-amid="'+a.id+'" style="background-image:url(&quot;'+esc(albumSrc(a))+'&quot;),url(&quot;'+fb+'&quot;)"></div>';
  if(a.v)return '<div class="alv"><video muted playsinline autoplay loop preload="auto" poster="'+fb+'" src="'+esc(vidSrc(a.v))+'#t='+(+a.tm||2)+'"></video><span>'+esc(a.cap||"")+'</span></div>';
  return '<div class="mimg" style="background-image:url(&quot;'+fb+'&quot;)"></div>'}
 /* ---------- real AI image generation (FLUX.1 Krea via the viewer's "flux" Hugging Face connector) ---------- */
@@ -4755,7 +4760,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-aigen]")){aiGen
 async function snapMoment(th,m){try{const cv=await frame(m.who,hash(m.txt)%4,480),x=cv.getContext("2d");
  x.fillStyle="rgba(0,0,0,.55)";x.fillRect(0,cv.height-86,cv.width,86);x.fillStyle="#fff";x.font="17px Georgia, serif";x.textAlign="left";
  const words=m.txt.split(/(\s+)/);let line="",y=cv.height-58;for(const wd0 of words){if(x.measureText(line+wd0).width>cv.width-28){x.fillText(line,14,y);line="";y+=22;if(y>cv.height-8)break}line+=wd0}if(y<=cv.height-8)x.fillText(line,14,y);
- const aid="a"+Date.now();S.album.unshift({id:aid,cid:m.who,src:cv.toDataURL("image/jpeg",.74),at:Date.now()});if(S.album.length>12)S.album.length=12;
+ const aid="a"+Date.now();S.album.unshift({id:aid,cid:m.who,src:mediaWrap("album:"+aid,cv.toDataURL("image/jpeg",.74)),at:Date.now()});if(S.album.length>12)S.album.length=12;
  appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"))}catch(e){}}
 
 /* ================= COUPLE / QUEST ================= */
@@ -5425,7 +5430,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-shline]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.shline];if(!m)return;const c=ch(m.who),w=th.wid?wd(th.wid):null;
   openShare({tag:w?Lz(w.title):"",who:c?c.n:"",title:"",quote:m.txt,bg:artSrc(m.who||th.cast[0]),text:(c?first(c.n)+": ":"")+"“"+m.txt+"” — MIRU",link:shareURL("m",th.id+"-"+x.dataset.shline)});return}
  if(x=e.target.closest("[data-shimg]")){const a=S.album.find(y=>y.id===x.dataset.shimg);if(!a)return;const c=ch(a.cid);
-  openShare({photo:1,tag:c?c.n:"",bg:a.src||artSrc(a.cid),quote:a.cap||"",text:t("shr.imgtxt",{c:c?first(c.n):""}),link:shareURL("i",a.id)});return}
+  openShare({photo:1,tag:c?c.n:"",bg:albumSrc(a)||artSrc(a.cid),quote:a.cap||"",text:t("shr.imgtxt",{c:c?first(c.n):""}),link:shareURL("i",a.id)});return}
  if(x=e.target.closest("[data-shcm]")){const [wid,i]=x.dataset.shcm.split("|"),cm=COMMENTS[+i],w=wd(wid);if(!cm)return;
   openShare({tag:w?Lz(w.title):"",who:cm[0],quote:cm[1],bg:w?artSrc(w.cover?w.id:w.cast[0]):"",text:cm[0]+": “"+cm[1]+"”",link:shareURL("c",wid+"-"+i)});return}
  if(e.target.closest("[data-imgshare]")&&IMG.cv){const c=ch(IMG.m.who);openShare({photo:1,tag:c?c.n:"",bg:IMG.url||artSrc(IMG.m.who),quote:"",text:t("shr.imgtxt",{c:c?first(c.n):""})+" “"+IMG.m.txt+"”",link:shareURL("i",Date.now())});return}});
@@ -6699,7 +6704,7 @@ async function stopPhoto(th,d){const who=stopWho(th,d),cap=Lz(d.cap)||"";const p
  let src=null;if(d.img&&await imgOk("art/scenes/"+d.img+".jpg"))src="art/scenes/"+d.img+".jpg";
  if(!src&&AIG.mcp&&d.prompt){try{const res=await AIG.mcp.callTool(AIG.srv,AIG.tool,{prompt:(d.prompt.en||d.prompt)+", cinematic film still, moody low light, 35mm, photorealistic, adult characters",width:576,height:1024,num_inference_steps:24,randomize_seed:true},{cache:false});src=aiImgFrom(res)}catch(_){src=null}}
  let url=null;try{const cv=await sceneStill(th,{who,txt:cap},src?{im:src}:{im:artSrc(who)});url=cv.toDataURL("image/jpeg",.8)}catch(_){url=src||artSrc(who)}
- const aid="a"+Date.now();S.album.unshift({id:aid,cid:who,src:url,at:Date.now()});if(S.album.length>24)S.album.length=24;
+ const aid="a"+Date.now();S.album.unshift({id:aid,cid:who,src:mediaWrap("album:"+aid,url),at:Date.now()});if(S.album.length>24)S.album.length=24;
  appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});save()}
 function stopVideo(th,d){return new Promise(res=>{const src=stopClip(th,d);const el=document.createElement("div");el.className="stvid";
  el.innerHTML='<video playsinline autoplay src="'+esc(vidSrc(src))+'"></video><div class="stvcap">'+esc(Lz(d.cap)||"")+'</div><button class="stvx" aria-label="close">✕</button>';
@@ -7555,7 +7560,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-btf]")){BT.fr=BFR[+x.dataset.btf];boothEdit();return}
  if(e.target.closest("[data-booth]")){boothOpen(e.target.closest("[data-booth]").dataset.booth||null);return}
  if(!BT.out)return;
- if(e.target.closest("[data-btsave]")){S.album.unshift({id:"a"+Date.now(),cid:BT.cid,src:BT.out.toDataURL("image/jpeg",.72),at:Date.now()});if(S.album.length>12)S.album.length=12;save();toast(t("bt.saved"));return}
+ if(e.target.closest("[data-btsave]")){S.album.unshift({id:"a"+Date.now(),cid:BT.cid,src:mediaWrap("album:"+("a"+Date.now()),BT.out.toDataURL("image/jpeg",.72)),at:Date.now()});if(S.album.length>12)S.album.length=12;save();toast(t("bt.saved"));return}
  if(e.target.closest("[data-btdl]")){const name="MIRU_"+BT.cid+"_"+Date.now()+".jpg";BT.out.toBlob(async b=>{if(DL){try{await DL.save({filename:name,data:b});return}catch(_){}}const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove()},"image/jpeg",.9);return}
  if(e.target.closest("[data-btpost]")){const p={id:"m"+Date.now(),txt:t("bt.cap",{n:first(ch(BT.cid).n)}),img:BT.out.toDataURL("image/jpeg",.7),at:Date.now(),likes:0,cm:[],day:today()};
   S.moments=[p].concat(S.moments||[]).slice(0,40);save();closeSheet();const ids=[BT.cid].concat(myCircle().filter(i=>i!==BT.cid)).slice(0,6);addComments(p,ids);chatSeg="moments";show("s-main");renderTab("chats");toast(t("mom.posted"));return}});
@@ -14501,7 +14506,7 @@ pkDirective = function (th, b) {
     if (b[1] === "vid94" && d0.slot === "vid_open") { save(); return true; }
     if (b[1] === "cg94" && d.src) th.pk.lastCg98 = d.src;
     if (d.src && !PKSKIP[th.id]) { if (curT === th.id) off94Show(d, b[1] === "vid94");
-      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: d.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
+      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: mediaWrap("album:"+aid, d.src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
   }
   return _pkDir94.apply(this, arguments);
@@ -14826,7 +14831,7 @@ function photoSrc98(th) {
 }
 { const _sp = stopPhoto; stopPhoto = async function (th, d) {
     const src = photoSrc98(th); if (!src) return _sp.apply(this, arguments);
-    const who = stopWho(th, d), aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: who, src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
+    const who = stopWho(th, d), aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: who, src: mediaWrap("album:"+aid, src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
     appendMsg(th, { who: ch(who) && who !== th.pk.as ? who : "me", k: "img", aid, at: Date.now() }); save(); }; }
 { const _hp = stopHTML; stopHTML = function (th) { let h = _hp.apply(this, arguments);
     try { const b = th.pk.stop; if (b && b[1] === "photo") { const u = photoSrc98(th); if (u) h = h.replace(/(class="stthumb" style="background-image:url\()[^)]*\)/, '$1' + u + ')'); } } catch (_) {} return h; }; }
@@ -15035,6 +15040,182 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-pkrestart]
  startSheet(wid,true)},true);
 Object.assign(I18N.en,{"hf.restart":"Start over from Chapter 1","hf.restartS":"Restart"});Object.assign(I18N.zh,{"hf.restart":"从第 1 章重新玩","hf.restartS":"重玩"});
 
+/* ================= 媒体库（2026-10-25）=================
+   问题：图片以前是 base64 字符串存在**存档对象 S 里**（S.art 每角色一张、S.album 最多 12 张）。
+   而 save() 是 `localStorage.setItem(KEY, JSON.stringify(S))`，全仓 384 个调用点 ——
+   每次保存都要把 3~4 MB 的 base64 重新拼一遍，同步写盘；线上已经撞过 5 MB 配额，
+   兜底是把玩家相册砍掉（app1_core.js:19）。
+
+   现在：媒体（图、以后的视频/音频）存 IndexedDB 的 **Blob**，S 里只留一个引用 `{__m:id}`。
+     · Blob 比 base64 省 33%（base64 是 4/3 膨胀）
+     · 视频/音频根本不可能塞进 localStorage —— 这条路现在一次铺好
+     · save() 只剩 KB 级
+
+   三条保命性质（改玩家数据，必须有）：
+     ① **迁移不先删**：先把 Blob 写进去、**读回来核对字节数**，一致才把 S 里那格换成引用；
+     ② 中途崩了不会更糟：已换成引用的读得到，没换的还是老样子，下次启动继续迁（幂等）；
+     ③ 库打不开（隐私模式/旧浏览器）就**什么都不迁**，一切按老路径走，页面照常。
+*/
+
+const MEDIA = { db: null, blobs: new Map(), urls: new Map(), ready: null, stats: { migrated: 0, failed: 0, bytes: 0 } };
+const MEDIA_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+function mediaOpen() {
+  return new Promise((res) => {
+    try {
+      if (typeof indexedDB === "undefined") return res(null);
+      const rq = indexedDB.open("miru-media", 1);
+      rq.onupgradeneeded = () => { try { rq.result.createObjectStore("b") } catch (_) {} };
+      rq.onsuccess = () => { MEDIA.db = rq.result; res(MEDIA.db) };
+      rq.onerror = () => res(null);
+      rq.onblocked = () => res(null);
+    } catch (_) { res(null) }
+  });
+}
+
+/** "data:image/jpeg;base64,xxxx" → Blob（内存里只存在一瞬） */
+function mediaDataToBlob(u) {
+  try {
+    const s = String(u || "");
+    const i = s.indexOf(",");
+    if (i < 0) return null;
+    const head = s.slice(0, i), body = s.slice(i + 1);
+    const mime = (head.match(/data:([^;]+)/) || [])[1] || "application/octet-stream";
+    if (!/;base64/i.test(head)) return new Blob([decodeURIComponent(body)], { type: mime });
+    const bin = atob(body);
+    const arr = new Uint8Array(bin.length);
+    for (let k = 0; k < bin.length; k++) arr[k] = bin.charCodeAt(k);
+    return new Blob([arr], { type: mime });
+  } catch (_) { return null }
+}
+
+function mediaTx(mode) {
+  try { return MEDIA.db.transaction("b", mode).objectStore("b") } catch (_) { return null }
+}
+
+/** 存一段媒体。成功返回 true（**已经读回核对过**）。 */
+async function mediaPut(id, data) {
+  if (!MEDIA.db) return false;
+  try {
+    const blob = (data instanceof Blob) ? data : mediaDataToBlob(data);
+    if (!blob || !blob.size) return false;
+    const store = mediaTx("readwrite");
+    if (!store) return false;
+    await new Promise((res, rej) => {
+      const rq = store.put(blob, id);
+      rq.onsuccess = () => res();
+      rq.onerror = () => rej(rq.error || new Error("put failed"));
+    });
+    const back = await mediaGet(id);                      // ① 读回来核对
+    if (!back || back.size !== blob.size) return false;    //    不一致 ⇒ 当作没存成功
+    MEDIA.blobs.set(id, back);
+    MEDIA.stats.bytes += blob.size;
+    if (!MEDIA.urls.get(id)) { try { MEDIA.urls.set(id, URL.createObjectURL(back)) } catch (_) {} }
+    return true;
+  } catch (_) { return false }
+}
+
+async function mediaGet(id) {
+  if (MEDIA.blobs.has(id)) return MEDIA.blobs.get(id);
+  if (!MEDIA.db) return null;
+  try {
+    const store = mediaTx("readonly");
+    if (!store) return null;
+    return await new Promise((res) => {
+      const rq = store.get(id);
+      rq.onsuccess = () => res(rq.result || null);
+      rq.onerror = () => res(null);
+    });
+  } catch (_) { return null }
+}
+
+/** 同步拿 URL：拿不到返回 null（调用方去用异步版，回来再重画）。 */
+function mediaUrl(id) { return MEDIA.urls.get(id) || null }
+
+/** 后台取一次，取到就通知重画。 */
+function mediaUrlAsync(id, onReady) {
+  if (MEDIA.urls.get(id)) { try { onReady && onReady() } catch (_) {} return }
+  mediaGet(id).then((blob) => {
+    if (!blob) return;
+    MEDIA.blobs.set(id, blob);
+    try { MEDIA.urls.set(id, URL.createObjectURL(blob)) } catch (_) {}
+    try { onReady && onReady() } catch (_) {}
+  });
+}
+
+function mediaRef(id) { return { __m: id } }
+function mediaIsRef(v) { return !!(v && typeof v === "object" && typeof v.__m === "string") }
+
+/** 把 S 里所有 base64 媒体搬到 IndexedDB。幂等；失败一律保留原值。 */
+async function mediaMigrate() {
+  if (!MEDIA.db) return MEDIA.stats;
+  const jobs = [];
+  try {
+    S.art = S.art || {};
+    for (const id of Object.keys(S.art)) {
+      const v = S.art[id];
+      if (typeof v !== "string" || v.slice(0, 5) !== "data:") continue;
+      jobs.push((async () => {
+        const key = "art:" + id;
+        if (await mediaPut(key, v)) { S.art[id] = mediaRef(key); MEDIA.stats.migrated++ }
+        else MEDIA.stats.failed++;
+      })());
+    }
+    (S.album || []).forEach((a) => {
+      if (!a || !a.id) return;
+      const v = a.src;
+      if (typeof v !== "string" || v.slice(0, 5) !== "data:") return;
+      jobs.push((async () => {
+        const key = "album:" + a.id;
+        if (await mediaPut(key, v)) { a.src = mediaRef(key); MEDIA.stats.migrated++ }
+        else MEDIA.stats.failed++;
+      })());
+    });
+    await Promise.all(jobs);
+    if (MEDIA.stats.migrated) { try { save() } catch (_) {} }
+  } catch (_) {}
+  return MEDIA.stats;
+}
+
+/** 启动时跑一遍：开库 → 迁移 → 预热相册缩略图。失败不影响启动。 */
+function mediaBoot() {
+  if (!MEDIA.ready) {
+    MEDIA.ready = (async () => {
+      await mediaOpen();
+      try { await mediaMigrate() } catch (_) {}
+      return MEDIA;
+    })();
+  }
+  return MEDIA.ready;
+}
+
+/** 相册一格的图片地址（同步）。引用型就返回缓存 URL 或占位，并后台补齐。 */
+function albumSrc(a) {
+  if (!a) return MEDIA_BLANK;
+  const v = a.src;
+  if (mediaIsRef(v)) {
+    const u = mediaUrl(v.__m);
+    if (u) return u;
+    mediaUrlAsync(v.__m, () => {
+      try {
+        const uu = mediaUrl(v.__m); if (!uu) return;
+        document.querySelectorAll('img[data-amid="' + a.id + '"]').forEach(im => { if (im.src !== uu) im.src = uu });
+      } catch (_) {}
+    });
+    return MEDIA_BLANK;
+  }
+  return (typeof v === "string" && v) ? v : MEDIA_BLANK;
+}
+
+/** 写一格媒体：data: 就去 IndexedDB 并返回引用；其它（路径/已有引用）原样返回。 */
+function mediaWrap(key, data) {
+  if (typeof data === "string" && data.slice(0, 5) === "data:") {
+    try { mediaPut(key, data) } catch (_) {}
+    return mediaRef(key);
+  }
+  return data;
+}
+
 /* ================= 年龄门（T08）· 首启一次确认 =================
    开关：MIRU_TUNE.tools.ageGate（默认 true）。
    未确认（S.ageOk 不是 true）时，heat 上限被 heatGated() 压到 slow —— 那是 app98_emotion.js 的活。
@@ -15080,6 +15261,23 @@ document.addEventListener("click", function (e) {
 setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
 
 /* ---- BOOT (keep last) ---- */
-if(S.ob)startApp();else renderOB();
+/* 媒体库先跑：开 IndexedDB → 把老存档里的 base64 迁出去（保命：迁不成功就保留原值）→ 再启动。
+   库打不开（隐私模式 / 旧浏览器）也照常启动 —— mediaBoot 内部对失败是吞掉的，页面按老路径走。
+   1.5 秒兜底：迁移不能把白屏拖出来。 */
+(function boot(){
+  function go(){ try{ if(S.ob)startApp();else renderOB(); }catch(e){ try{console.error(e)}catch(_){} } }
+  try{
+    if(typeof mediaBoot==="function"){
+      var t=setTimeout(go,1500);
+      mediaBoot().then(function(m){
+        try{ if(t)clearTimeout(t) }catch(_){}
+        try{ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) }catch(_){}
+        go();
+      },function(){ try{ if(t)clearTimeout(t) }catch(_){} go(); });
+      return;
+    }
+  }catch(_){}
+  go();
+})();
 
 </script>
