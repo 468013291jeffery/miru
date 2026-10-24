@@ -269,8 +269,8 @@ async function playBeats(th,r,ctx,silent){
  for(const b of beats){const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:String(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,380));appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
  if(r.status){th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
- if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null)loveWrite(th,id,Math.max(0,Math.min(6,+r.love[id]||0)),"model:proposal")});
- if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);loveWrite(th,m,1,"model:implicit")}
+ if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
+ if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
  if(!silent)setSugg(r.suggest);else th.sugg=(r.suggest||[]).slice(0,3);
  /* quest goals */
  if(th.quest&&Array.isArray(r.goals)){r.goals.forEach(i=>{i=+i;if(th.quest.goals[i]&&!th.quest.goals[i].done){th.quest.goals[i].done=true;appendMsg(th,{who:"sys",k:"card",title:"🎯 "+t("q.goals"),txt:t("q.found",{g:th.quest.goals[i].t}),at:Date.now()})}
