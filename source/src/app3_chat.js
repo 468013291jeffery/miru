@@ -177,7 +177,8 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
-  " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
+  " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+"."+
+  (function(){try{const chNow=(th.pk&&th.pk.ch)||th.ch||1;const memo=(typeof cardMemo==="function")?cardMemo(th,cid,chNow):"";return memo?" He remembers: "+memo+".":""}catch(_){return ""}})();}
 function castCardPublic(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
  const w0=th.wid&&wd(th.wid),au=w0&&w0.pack&&w0.pack.au&&w0.pack.au[cid];
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
