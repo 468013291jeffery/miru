@@ -172,6 +172,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
  else th.pk.st="next";
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
+ try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
  const before=th.pk.before||{};delete th.pk.before;save();
  if(curT===th.id&&!$("#s-chat").hidden){renderChat();scrollChat()}
  levelUpCheck(th,before)}
