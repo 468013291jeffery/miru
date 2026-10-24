@@ -15,11 +15,12 @@ const CHARS = {
   mason: { n: 'Mason', age: 26, role: { en: 'forward' }, looks: { en: 'tall' }, vibe: { en: 'cold' }, tells: { en: ['jaw'] }, twist: { en: 'kind' }, likes: { en: 'ice' }, secret: { en: 'THE-PUCK' } },
   luca:  { n: 'Luca',  age: 27, role: { en: 'driver'  }, looks: { en: 'sharp' }, vibe: { en: 'warm' }, tells: { en: ['ears'] }, twist: { en: 'ruthless' }, likes: { en: 'cars' }, secret: { en: 'THE-LET-IN' } }
 };
-const api = new Function('ch', 'wd', 'stageOf', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo };')((id) => CHARS[id], () => ({ pack: { chapters: [
-    { choices: [{ k: 'A', then: [['n','act','他退了一步。'],['mason','say','“别问了。”']] },
-                { k: 'B', then: [['luca','say','“让他说完。”']] }] },
-    { choices: [{ k: 'A', then: [['mason','say','“我留着那个球。”']] }] }
-  ] } }), (th, cid) => 1);
+const MARKS = { gala: JSON.parse(fs.readFileSync('source/content/marks/gala.json', 'utf8')) };
+const api = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo };')((id) => CHARS[id], () => ({ pack: { chapters: [
+    { choices: [{ k: 'A', then: { en: [['n','act','he steps back'],['mason','say','“别问了。”']], zh: [['n','act','他退了一步。'],['mason','say','“别问了。”']] } },
+                { k: 'B', then: { en: [['luca','say','“让他说完。”']], zh: [['luca','say','“让他说完。”']] } }] },
+    { choices: [{ k: 'A', then: { en: [['mason','say','“我留着那个球。”']], zh: [['mason','say','“我留着那个球。”']] } }] }
+  ] } }), (th, cid) => 1, MARKS, () => 'zh');
 const { cardCommit, cardAt, cardDiff } = api;
 
 let pass = 0; const fails = [];
@@ -86,6 +87,28 @@ ok('可变快照记下当前好感', api.cardAt(th2, 'mason', 1).mutable.love ==
 ok('同一章重复提交不再加', api.cardCommitChapter(th2, 1, 'A') === 0);
 ok('第 2 章能追加，且第 1 章看不到它', api.cardCommitChapter(th2, 2, 'A') === 2 && api.cardAt(th2, 'mason', 1).said.length === 1);
 ok('cardMemo 能给出"他记得什么"', /他说过：/.test(api.cardMemo(th2, 'mason', 2)), api.cardMemo(th2, 'mason', 2));
+
+console.log('⑨ 夹具与真数据同形（第一版夹具用数组、真数据是本地化对象，测试通过而线上永远空）');
+{
+  const live = JSON.parse(fs.readFileSync('source/content/out/s18.json', 'utf8'));
+  const liveThen = live.chapters[0].choices[0].then;
+  const fxThen = { en: [], zh: [] };
+  ok('真数据 then 是对象，夹具也是对象', !Array.isArray(liveThen) && !Array.isArray(fxThen), typeof liveThen);
+  ok('真数据 then 有语言键', Object.keys(liveThen).includes('zh') && Object.keys(fxThen).includes('zh'));
+  ok('标记旁档存在（④⑤ 的来源）', fs.existsSync('source/content/marks/gala.json'));
+}
+
+console.log('⑩ 内容标记 → ④立场 / ⑤揭示');
+{
+  const tm = { cast: ['mason', 'noor'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 30, noor: 20 }, cardLog: {} };
+  api.cardCommitChapter(tm, 3, 'A');     // 第 3 章：noor 的 promised（旁档里标的）
+  ok('标记写出了立场', api.cardAt(tm, 'noor', 3).stance.promised === 1, JSON.stringify(api.cardAt(tm, 'noor', 3).stance));
+  ok('没被标的人不受影响', api.cardAt(tm, 'mason', 3).stance.promised === undefined);
+  api.cardCommitChapter(tm, 5, 'A');     // 第 5 章：mason 的 secret 被揭示
+  ok('标记写出了揭示', api.cardAt(tm, 'mason', 5).revealed.secret === 'self', JSON.stringify(api.cardAt(tm, 'mason', 5).revealed));
+  ok('揭示之后秘密原文一字未改', JSON.stringify(api.cardAt(tm, 'mason', 5).secret) === JSON.stringify(api.cardBase('mason').secret));
+  ok('第 4 章还看不到第 5 章的揭示', api.cardAt(tm, 'mason', 4).revealed.secret === undefined);
+}
 
 if (process.argv.includes('--selftest')) {
   // 变异：让"只看这一章及以前"失效（把 > 改成 >=，等于把未来的补丁也算进来）

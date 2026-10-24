@@ -110,11 +110,23 @@ function cardCommitChapter(th, n, k) {
         mutable: { love: Number(th.love && th.love[cid]) || 0, stage: (typeof stageOf === "function" ? stageOf(th, cid) : 0) },
         firsts: { ["ch" + n]: k }
       };
-      if (pick && Array.isArray(pick.then)) {
+      // ⚠️ 真实数据里 c.then 是**本地化对象** {en,zh,ja,ko,es}，不是数组（第一版写错了，
+      //    夹具也用数组，于是测试通过而线上永远是空的）
+      const branch = pick && pick.then && (pick.then[(typeof CL === "function" ? CL() : "en")] || pick.then.zh || pick.then.en) || [];
+      if (Array.isArray(branch)) {
         const said = [];
-        for (const b of pick.then) if (b && b[1] === "say" && b[2]) said.push(String(b[2]).slice(0, 80));
+        for (const b of branch) if (b && b[1] === "say" && b[2]) said.push(String(b[2]).slice(0, 80));
         if (said.length) delta.said = said;
       }
+      // 内容标记（旁档 MIRU_MARKS）：④立场 与 ⑤揭示 只有作者标了才算数，不猜
+      try {
+        const MK = (typeof MIRU_MARKS !== "undefined" && MIRU_MARKS[th.wid]) || null;
+        const one = MK && MK.chapters && MK.chapters[String(n)];
+        if (one) {
+          if (one.breaks && one.breaks[cid] && typeof one.breaks[cid] === "object") delta.stance = Object.assign({}, one.breaks[cid]);
+          if (one.reveals && one.reveals[cid]) delta.revealed = { secret: one.reveals[cid] };
+        }
+      } catch (_) {}
       if (cardCommit(th, cid, n, delta).ok) done++;
     }
     return done;
