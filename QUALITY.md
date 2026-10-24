@@ -1,6 +1,6 @@
 # 质量闸（QUALITY）
 
-> **一句话**：改完跑 `node tools/check-all.mjs`。十一套、215 个用例，全绿才提交。
+> **一句话**：改完跑 `node tools/check-all.mjs`。十二套、215 个用例 + §14.1 映射 25 条，全绿才提交。
 > 这一页是给**接手这个仓库的人**看的：哪条闸在管什么、它怎么变红、你改哪里会踩到它。
 
 ## 一条命令
@@ -24,6 +24,13 @@ node tools/check-all.mjs          # 八套全跑
 | `stage-report` | 4 | `node tools/stage-report.mjs --selftest` | 关系阶段是派生的，**升降两条路都要出声**（降级原来完全无声） |
 | `castcard-selftest` | 10 | `node tools/castcard-selftest.mjs --selftest` | 角色卡分面：只有这一拍上场的人带秘密，其余人一个字不漏 |
 | `card-selftest` | 47 | `node tools/card-selftest.mjs --selftest` | **每章一份角色卡**：可变折叠 · 只增不回退 · 立场只加码 · 揭示不改秘密 · 可回放 |
+| `regression-25` | 5 PASS / 20 NOT-YET | `node tools/regression-25.mjs` | 文档 §14.1 的 25 条现状映射：能跑的跑，跑不了的写明缺什么 |
+
+## 一条元规则：新闸必须真在册
+
+`check-all` 每次先跑**在册检查**：`tools/` 里每个 `*-selftest.mjs` / `*-contract.mjs` / `regression-N.mjs` 都必须在 suites 列表里，否则红；反过来，登记了但文件不存在也红。
+
+这条是踩出来的：`card-selftest` 曾经**以为接了其实没接**——我拿 `includes('card-selftest')` 核对，而那个子串同时命中 `castcard-selftest` ⇒ 那道闸整整一轮没跑，`check-all` 一直是绿的。
 
 ## 四条红线（不变量）
 

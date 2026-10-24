@@ -4,6 +4,7 @@
 // The end-to-end one needs the fake backend, so it is probed rather than assumed: if it is not
 // running this runner says so (and how to start it) instead of quietly passing.
 import { spawnSync } from 'node:child_process';
+import { readdirSync, existsSync } from 'node:fs';
 
 const api = 'http://127.0.0.1:8130/api/health';
 let apiUp = false;
@@ -20,9 +21,30 @@ const suites = [
   ['cache-split-contract.mjs', ['tools/cache-split-contract.mjs', '--selftest'], true],
   ['stage-report.mjs', ['tools/stage-report.mjs', '--selftest'], true],
   ['castcard-selftest.mjs', ['tools/castcard-selftest.mjs', '--selftest'], true],
+  ['card-selftest.mjs', ['tools/card-selftest.mjs', '--selftest'], true],
+  ['regression-25.mjs', ['tools/regression-25.mjs'], true],
 ];
 
 let failed = 0;
+
+// 在册检查：tools/ 里凡是能被当闸用的文件，必须真的在 suites 里。
+// 为什么加这条：card-selftest 曾经"以为接了其实没接"——我拿 includes('card-selftest') 去核对，
+// 而那个子串同时命中 castcard-selftest，于是闸整整一轮没跑，check-all 一直是绿的。
+{
+  const registered = new Set(suites.map(s => s[1][0].replace(/^tools\//, '')));
+  const shouldBe = readdirSync('tools').filter(f =>
+    /-(selftest|contract)\.mjs$/.test(f) || /^regression-\d+\.mjs$/.test(f));
+  const missing = shouldBe.filter(f => !registered.has(f));
+  if (missing.length) {
+    failed++;
+    console.log(`✗ 在册检查: 这些闸没接进 check-all → ${missing.join(', ')}`);
+  } else {
+    console.log(`✓ 在册检查: ${shouldBe.length} 个闸全部在册`);
+  }
+  const ghosts = suites.filter(s => !existsSync(s[1][0])).map(s => s[1][0]);
+  if (ghosts.length) { failed++; console.log(`✗ 在册检查: 登记了但文件不存在 → ${ghosts.join(', ')}`); }
+}
+
 for (const [name, args, enabled] of suites) {
   if (!enabled) { console.log(`— ${name}: skipped (fake api not on 8130 — run: node tools/fake-api.mjs)`); continue; }
   const r = spawnSync(process.execPath, args, { encoding: 'utf8' });
