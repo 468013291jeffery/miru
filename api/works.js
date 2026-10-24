@@ -6,7 +6,7 @@
 // POST {op:'like'|'unlike'|'report', id, reason}
 // DELETE ?id=          remove my work
 const L = require('./_lib');
-const MAXPACK = 1500 * 1024;
+const MAXPACK_FALLBACK = 1500 * 1024;   // 真正的上限读 config.max_pack_kb
 const pub = r => ({ id: r.id, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined });
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
@@ -37,7 +37,8 @@ module.exports = L.wrap(async (req, res) => {
     if (!(await L.bump(u.uid, 'publish', Number(cfg.publish_daily_limit) || 30))) return L.bad(res, 'daily publish limit reached', 429);
     const w = b.work || {};
     const raw = JSON.stringify(w.pack || null);
-    if (raw.length > MAXPACK) return L.bad(res, 'story too large', 413);
+    const MAXPACK = (Number(cfg.max_pack_kb) || 1500) * 1024;
+    if (raw.length > MAXPACK) return L.bad(res, 'story too large (' + Math.round(raw.length / 1024) + 'KB, limit ' + Math.round(MAXPACK / 1024) + 'KB)', 413);
     const safety = L.safety([w.title, w.hook, w.pack]);
     if (safety.length) return L.send(res, 422, { error: 'blocked by safety review', reasons: safety });
     const s = L.structureQA(w.pack);

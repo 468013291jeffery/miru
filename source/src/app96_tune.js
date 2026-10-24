@@ -33,12 +33,14 @@ var MIRU_TUNE = (function () {
     },
     chat: {
       transcript: 20,       // STORY SO FAR 带多少条（普通）
-      transcriptPlus: 60    // 同上（Plus）
+      transcriptPlus: 60,   // 同上（Plus）
+      partMergeMax: 5       // 同一段文字合并成几块为止（原来是字面量 5）
     },
     love: {
       deltaCap: 12,         // 单次好感变动上限
       min: 0,               // 好感下限（关系冷却那条路会传 -60 覆盖）
       max: 100,             // 好感上限
+      cooldownMin: -60,     // 关系冷却那次写入的下限（原来是字面量 -60）
       stageMin: [0, 20, 40, 60, 80]   // 关系阶段门槛（closeness → stage）
     },
     affinity: {

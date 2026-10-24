@@ -32,8 +32,10 @@ window.MIRU_TUNE_OVERRIDE = {
 | `pay.endingNeed` | 4 | 到结局需要几次 A 选项 | 太低 ⇒ 结局容易拿到；太高 ⇒ 玩家觉得不可达 |
 | `ai.costNormal` / `costDeep` | 1 / 3 | 每轮消耗的单位 | 与「一轮几次调用」相乘才是真成本 |
 | `chat.transcript` / `transcriptPlus` | 20 / 60 | `STORY SO FAR` 带多少条消息 | 调大 ⇒ 上下文更长更连贯，也更贵；**调小到 1–2 条会明显失忆** |
+| `chat.partMergeMax` | 5 | 同一段文字合并成几块为止 | 调大 ⇒ 更少气泡、更连贯；调小 ⇒ 更像即时聊天但更碎 |
 | `love.deltaCap` | 12 | 单次好感变动上限 | 大于剧本里最大的一处（目前 A 选项 +9）才不起作用 |
-| `love.min` / `love.max` | 0 / 100 | 好感范围 | 关系冷却那条路会显式传 `min:-60`，不受这里影响 |
+| `love.min` / `love.max` | 0 / 100 | 好感范围 | 关系冷却那条路会显式传 `min: cooldownMin`，不受这里影响 |
+| `love.cooldownMin` | -60 | 关系「冷下来」那次写入的下限 | 调浅 ⇒ 关系崩不了；调深 ⇒ 一次翻脸就归零 |
 | `love.stageMin` | [0,20,40,60,80] | 关系阶段门槛（closeness → stage） | 改了会改变角色说话的"熟悉度"档位 |
 | `affinity.cap` | 15 | 每天"额外好感"的上限 | 防刷的闸，调大等于放开 |
 | `affinity.mind` / `gems` | [1,2,3,5,5] / [0,5,10,15,20] | 各档位的心智/钻石 | 与 `cap` 一起读才有意义 |
@@ -58,3 +60,27 @@ node tools/tune-selftest.mjs      # 24 条：默认值 / 覆盖生效 / 拼错�
 1. **`tune.js` 是部署级的，不是用户级的。** 同一份部署的所有用户共享它 —— 它不能拿来做 A/B 实验；要做实验得走另一条路（按用户分流 + 埋点）。
 2. **服务端有自己的一整套。** `api/*` 里的阈值（比如举报下架阈值）读的是数据库配置与环境变量，**不受这里影响**，要分别改。
 3. **改了价格不等于改了历史账。** 已经买过的用户、已经发出去的钻石不会被重算；账本里会同时存在两个价格时代 —— 报数时要把 `created_at` 切开。
+
+## 服务端那一套（机制不同，别混）
+
+前端滑钮改 `tune.js` 就生效；**服务端不行**，它有两套机制：
+
+| 机制 | 用在哪 | 怎么改 |
+|---|---|---|
+| **数据库配置**（`config` 表） | 能查库的接口 | 管理后台 → 配置（`/api/admin?r=config`）；改完 30 秒内生效（`config()` 有 30s 缓存） |
+| **环境变量** | edge 热路径 | Vercel → Settings → Environment Variables；要重新部署 |
+
+目前这几格：
+
+| 键 | 默认 | 在哪读 | 改它影响什么 |
+|---|---|---|---|
+| `state_max_kb` | 900 | `api/state.js` | 云存档单账号上限；超了返回 413 并**报出当前上限** |
+| `max_pack_kb` | 1500 | `api/works.js` | 发布作品时的 pack 上限；超了 413 |
+| `first_token_ms` | 22000 | `api/longcat.js`（**env `MIRU_FIRST_TOKEN_MS`**） | 等上游第一个 token 多久放弃并换下一个 provider |
+| `earn_cap` | 80 | `api/wallet.js` | 每天免费钻石上限（原来这里还有第二个写死的 80，已清掉） |
+| `report_threshold` / `publish_daily_limit` / `upload_daily_limit` / `skus` / `upload_price` / `welcome_gems` … | 见 `api/_lib.js` 的 `CONFIG_DEFAULTS` | 各接口 | 老早就外置了，只是以前没人列出来 |
+
+**为什么 `first_token_ms` 走 env 而不是库**：它在 edge 运行时、每次请求都要读，为它多查一次库不值得。
+代价是改它要重新部署 —— 这一格是"便宜"换"不灵活"的自觉选择。
+
+**没外置的**：`api/state.js` 的 `TYPES`（七类记忆类型，改了要动语义）、`app31` 里的乐理参数（bpm/音阶，那是内容不是旋钮）、`app21` 的五维取整系数（0.5，改了等于换一套成长曲线）。这些**故意留成字面量**，理由写在这里，避免下次有人"顺手外置"。

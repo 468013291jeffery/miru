@@ -1,7 +1,7 @@
 // /api/state — cloud save of the app state (progress, choices, memories, settings) per account
 // GET → {data, ver}   PUT {data, ver} → {ver}   (409 + newer copy when another device saved in between)
 const L = require('./_lib');
-const MAX = 900 * 1024;
+const MAX_FALLBACK = 900 * 1024;   // 真正的上限读 config.state_max_kb
 const TYPES = ['boundary', 'promise', 'pref', 'self', 'fact', 'event', 'guess'];
 /* /api/state?r=mem — long-term memory store (phase 2): structured rows per account + semantic recall.
    POST {op:'sync', thread, cast, items:[{id,t,type,imp,who,src,pin,hush,at}], gone:[ids]}  → upsert/delete, embeds new rows when an embedding API is available
@@ -68,7 +68,9 @@ module.exports = L.wrap(async (req, res) => {
   if (req.method !== 'PUT') return L.bad(res, 'GET or PUT', 405);
   const b = L.jsonBody(req);
   const raw = JSON.stringify(b.data || null);
-  if (raw.length > MAX) return L.bad(res, 'state too large (' + Math.round(raw.length / 1024) + 'KB)', 413);
+  const _cfg = await L.config();
+  const MAX = (Number(_cfg.state_max_kb) || 900) * 1024;
+  if (raw.length > MAX) return L.bad(res, 'state too large (' + Math.round(raw.length / 1024) + 'KB, limit ' + Math.round(MAX / 1024) + 'KB)', 413);
   const base = Number(b.ver) || 0, force = !!b.force;
   const cur = await sql('SELECT ver FROM states WHERE user_id=$1', [u.uid]);
   if (cur[0] && !force && cur[0].ver > base) {
