@@ -10,7 +10,7 @@
 export const config = { runtime: 'edge' };
 
 const LONGCAT_MODELS = ['LongCat-2.0', 'LongCat-2.5-Preview'];
-const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
+const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^https:\/\/(www\.)?miru\.plus$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
 const FIRST_TOKEN_MS = 22000; // give up on a provider that hasn't started answering by then
 
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
