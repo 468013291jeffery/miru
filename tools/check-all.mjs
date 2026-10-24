@@ -15,6 +15,7 @@ const suites = [
   ['events-contract.mjs', ['tools/events-contract.mjs', 'index.html', '--selftest'], true],
   ['pack-flow-selftest.mjs', ['tools/pack-flow-selftest.mjs', 'index.html'], true],
   ['flush-e2e.mjs', ['tools/flush-e2e.mjs'], apiUp],
+  ['status-contract.mjs', ['tools/status-contract.mjs', '--selftest'], true],
 ];
 
 let failed = 0;

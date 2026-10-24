@@ -12,4 +12,6 @@ AI engine: Claude or LongCat (enter your own API key in 我的 → AI 引擎; ke
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | 什么在本地、什么在线上：判据 · 能力对照表 · 五条链（带 `file:line`）· 开关 · 未验项 |
 | [`DECOUPLING.md`](DECOUPLING.md) | 还耦合着什么、已经拆开什么、下一步的顺序 |
 | [`LEDGER.md`](LEDGER.md) | 可导出的玩法账本：事件 → CSV（10 列）→ 汇总（完成率 / 选项分布 / 时长），含口径铁律 |
+| [`STATUS-LAYER.md`](STATUS-LAYER.md) | 状态写入层：唯一写入口、夹值、留痕、棘轮（29 → 25，只降不升） |
+| [`SPEC-AUDIT.md`](SPEC-AUDIT.md) | 规格 v7.11 vs 代码：19 条逐条对账（已实现 1 / 部分 9 / 没有 9） |
 | [`source/README.md`](source/README.md) | 源码目录地图（改哪儿 → 跑什么） |

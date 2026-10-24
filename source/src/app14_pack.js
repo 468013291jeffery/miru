@@ -107,7 +107,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))}
 function stopResolve(th,extra){if(!th||!th.pk||!th.pk.stop)return;if(PKWAIT[th.id]){PKWAIT[th.id](extra||[]);return}
  th.pk.q=th.pk.q||[];th.pk.q.shift();th.pk.q.unshift(...(extra||[]));th.pk.stop=null;th.pk.go=0;save();packRun(th)}
-function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk.as).forEach(c=>{th.love[c]=Math.max(0,Math.min(100,(th.love[c]||5)+d))})}
+function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk.as).forEach(c=>{loveWrite(th,c,d,"pack:"+k)})}
 function aCount(th){const L=PCN(wd(th.wid));return Object.entries(th.pk.picks).filter(([n,k])=>+n<L&&k==="A").length}
 function EN(th){return Math.min(ENDING_NEED,Math.max(0,PCN(wd(th.wid))-1))}
 
@@ -158,7 +158,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
  pkDone(th,n);
  if(n===PCN(w)){th.pk.st="end";th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
   pkTrack(th,"story_end",{ch:n,ending:k});
-  if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>th.love[cid]=Math.max(th.love[cid]||0,80));
+  if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>loveWrite(th,cid,0,"ending:A",{floor:80}));
   appendMsg(th,{who:"sys",k:"end",e:k,at:Date.now()});
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
  else th.pk.st="next";
