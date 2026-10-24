@@ -45,7 +45,7 @@ playBeats = async function (th, r, ctx, silent) {
     Object.keys(th.love || {}).forEach(cid => {
       const gain = (th.love[cid] || 0) - (before[cid] || 0); if (gain <= 0) return;
       const used = th.afDay.g[cid] || 0, allow = Math.max(0, AF_CAP - used);
-      if (gain > allow) { th.love[cid] = (before[cid] || 0) + allow; if (!th.afDay.told[cid] && ch(cid)) { th.afDay.told[cid] = 1; setTimeout(() => toast(t73("cap", { n: first(ch(cid).n) })), 1200); } }
+      if (gain > allow) { loveWrite(th, cid, 0, "af:cap", { absolute: (before[cid] || 0) + allow }); if (!th.afDay.told[cid] && ch(cid)) { th.afDay.told[cid] = 1; setTimeout(() => toast(t73("cap", { n: first(ch(cid).n) })), 1200); } }
       th.afDay.g[cid] = used + Math.min(gain, allow);
     });
     af73Rewards(th, st0);
@@ -71,7 +71,7 @@ doSend = function (txt, mode) {
       delete th.vers;
       const cid = th.addr && ch(th.addr) ? th.addr : mainOf(th), c = ch(cid), d = day73();
       if (c && th.love && th.love[cid] != null && (th.afBonus || {})[cid] !== d && mode !== "dir") {
-        th.afBonus = th.afBonus || {}; th.afBonus[cid] = d; th.love[cid] = Math.min(100, (th.love[cid] || 0) + 2); save();
+        th.afBonus = th.afBonus || {}; th.afBonus[cid] = d; loveWrite(th, cid, 2, "af:bonus"); save();
         setTimeout(() => toast(t73("daily", { n: first(c.n) })), 300);
       }
     }

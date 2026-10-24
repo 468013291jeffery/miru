@@ -33,9 +33,11 @@ function loveWrite(th, id, delta, reason, opts) {
     if (!th || !id) return null;
     th.love = th.love || {};
     const o = opts || {};
+    // 关系模块允许负值（冷到 -60），默认仍是 0..100；下限用 opts.min 显式放开
+    const LO = o.min == null ? LOVE_MIN : Number(o.min);
     // 初始化：这个角色还没有数值时，absolute 直接落值（原来那句 th.love[c]=5）
     if (th.love[id] == null && o.absolute != null) {
-      const v = Math.max(LOVE_MIN, Math.min(LOVE_MAX, Math.round(Number(o.absolute))));
+      const v = Math.max(LO, Math.min(LOVE_MAX, Math.round(Number(o.absolute))));
       th.love[id] = v;
       loveLog(th, { id, from: null, to: v, delta: 0, reason: String(reason || ''), at: Date.now() });
       return { before: null, after: v, delta: 0 };
@@ -51,7 +53,7 @@ function loveWrite(th, id, delta, reason, opts) {
       after = before + d;
       if (o.floor != null) after = Math.max(after, Number(o.floor));
     }
-    after = Math.max(LOVE_MIN, Math.min(LOVE_MAX, Math.round(after)));
+    after = Math.max(LO, Math.min(LOVE_MAX, Math.round(after)));
     if (after === before) return { before, after, delta: 0, skipped: 'no-change' };
     th.love[id] = after;
     loveLog(th, { id, from: before, to: after, delta: after - before, reason: String(reason || ''), at: Date.now() });
