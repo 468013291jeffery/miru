@@ -276,7 +276,8 @@ async function playBeats(th,r,ctx,silent){
  if(th.quest&&Array.isArray(r.goals)){r.goals.forEach(i=>{i=+i;if(th.quest.goals[i]&&!th.quest.goals[i].done){th.quest.goals[i].done=true;appendMsg(th,{who:"sys",k:"card",title:"🎯 "+t("q.goals"),txt:t("q.found",{g:th.quest.goals[i].t}),at:Date.now()})}
   else if(i===th.quest.goals.length&&!th.quest.hidden.done){th.quest.hidden.done=true;appendMsg(th,{who:"sys",k:"card",title:"✨ "+t("q.hidden"),txt:t("q.hiddenF")+" "+th.quest.hidden.t,at:Date.now()})}})}
  /* stage-ups and the couple moment */
- th.cast.forEach(c=>{const s=stageOf(th,c);if(s>before[c])appendMsg(th,{who:"sys",k:"card",title:first(ch(c).n)+" · "+t("stage."+s),txt:t("stage."+s+"w"),at:Date.now()})});
+ th.cast.forEach(c=>{const s=stageOf(th,c);if(s>before[c]){if(th._stDown)delete th._stDown[c];appendMsg(th,{who:"sys",k:"card",title:first(ch(c).n)+" · "+t("stage."+s),txt:t("stage."+s+"w"),at:Date.now()})}
+  else if(s<before[c]){th._stDown=th._stDown||{};if(th._stDown[c]!==s){th._stDown[c]=s;appendMsg(th,{who:"sys",k:"card",title:first(ch(c).n)+" · "+t("stage."+s),txt:t("st.down",{s:t("stage."+s)}),at:Date.now()})}}});
  if(!silent)levelUpCheck(th,before);
  const m=mainOf(th);
  if(th.rounds>=30&&(th.love[m]||0)>=60&&!S.couples[m]&&!th.cpAsked){th.cpAsked=1;appendMsg(th,{who:"sys",k:"card",title:"💞 "+t("cp.ready"),txt:t("cp.readyS"),btn:t("cp.go"),act:"couple|"+m,at:Date.now()})}
