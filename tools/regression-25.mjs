@@ -10,6 +10,7 @@
 //   FAIL      —— 有这个机制，但行为不对（会让 check-all 红）
 //   NOT-YET   —— 机制还不存在，写明缺什么、指向对账的哪一条
 import fs from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
 const html = fs.readFileSync('index.html', 'utf8');
 const src = {};
@@ -37,6 +38,13 @@ const results = [];
 const add = (id, what, verdict, detail) => results.push({ id, what, verdict, detail });
 
 // ---- 能真跑的几条 ----
+try {
+  const r = spawnSync(process.execPath, ['tools/pack-flow-selftest.mjs', 'index.html'], { encoding: 'utf8' });
+  const ran = r.status === 0 && /does not advance the chapter by itself/.test(r.stdout || '');
+  add('T14', '玩家不点继续 → 不自动跳场', ran ? 'PASS' : 'FAIL',
+    '断言在 pack-flow-selftest（选完不推进章节、结算完停在 next/end）；这里跨套核对它真的跑了');
+} catch (e) { add('T14', '玩家不点继续 → 不自动跳场', 'FAIL', e.message); }
+
 try {
   const code = cutFn('loveAllowed');
   const fn = new Function(code + '; return loveAllowed;')();
@@ -120,13 +128,12 @@ const NY = [
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
   ['T12', '角色错误信念 → 不把猜测说成事实', '四类认知（fact/guess/misbelief/author_only）不存在（对账 #8）'],
   ['T13', '玩家普通问题 → 先回答不硬推进', '这是 prompt 规则，没有可断言的行为；需真实对话样本'],
-  ['T14', '玩家不点继续 → 不自动跳场', '剧本流程靠玩家点选项推进，但没有断言；需 pack-flow 扩展'],
   ['T16', 'Plot98 返回旧 revision → 丢弃', '没有 Plot98（对账 #12）'],
   ['T17', '普通对话有有效计划 → 不频繁调 Plot98', '同上'],
   ['T18', '新场景无计划 → 按需一次并缓存', '同上'],
   ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '没有续写流程（对账 #14）'],
-  ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '有 content/validate.py，但没有 canon 冲突检查'],
-  ['T21', '未授权通知/静默时段 → 不发召回', '没有通知系统'],
+  ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
+  ['T21', '未授权通知/静默时段 → 不发召回', '查过了：全库无 serviceWorker / push 订阅 / requestPermission；app20 那条“一天一次来电”是应用内提示，不是推送'],
   ['T23', '工具冷却/本场上限 → 非法工具不展示', '只有 loveAllowed（在场校验），没有工具冷却与上限'],
   ['T25', 'Plot98 失败 → 角色仍可回答', '没有 Plot98（对账 #12）'],
 ];
