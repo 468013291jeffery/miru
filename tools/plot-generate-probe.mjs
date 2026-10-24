@@ -18,8 +18,19 @@ const wid = args.find(a => !a.startsWith('--')) || 'gala';
 const model = (args.find(a => a.startsWith('--model=')) || '--model=deepseek-v4.1-flash').split('=')[1];
 const MAXTOK = Number((args.find(a => a.startsWith('--maxtokens=')) || '--maxtokens=3000').split('=')[1]) || 3000;
 const EFFORT = (args.find(a => a.startsWith('--effort=')) || '').split('=')[1] || '';
-const KEY = process.env.OPENCODE_KEY || '';
-if (!KEY) { console.error('需要环境变量 OPENCODE_KEY'); process.exit(2); }
+const KEY = (() => {
+  if (process.env.OPENCODE_API_KEY) return process.env.OPENCODE_API_KEY;
+  if (process.env.OPENCODE_KEY) return process.env.OPENCODE_KEY;
+  // 公共 key：测试用的便宜 key，存在 ~/.dsh/.credentials.yaml，**不进仓库**
+  try {
+    const home = process.env.USERPROFILE || process.env.HOME || '';
+    const f = home + '/.dsh/.credentials.yaml';
+    const line = fs.readFileSync(f, 'utf8').split(/\r?\n/).find(l => /^\s*OPENCODE_API_KEY\s*:/.test(l));
+    if (line) return line.replace(/^\s*OPENCODE_API_KEY\s*:\s*/, '').trim().replace(/^['"]|['"]$/g, '');
+  } catch (_) {}
+  return '';
+})();
+if (!KEY) { console.error('没有 key：设 OPENCODE_API_KEY，或写进 ~/.dsh/.credentials.yaml'); process.exit(2); }
 
 const pack = fs.readdirSync(OUT).filter(f => /^s\d+\.json$/.test(f))
   .map(f => JSON.parse(fs.readFileSync(path.join(OUT, f), 'utf8'))).find(p => p.wid === wid);
