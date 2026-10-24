@@ -62,11 +62,16 @@ function loveWrite(th, id, delta, reason, opts) {
 }
 
 /** 「这个角色现在能不能被改好感」——前置验证，不是夹值。
- *  有在场名单（th.present）时：不在名单里的人一律不许动；没有名单就放行（旧行为）。
- *  为什么只拦模型提议：剧本里的数值是作者写的，作者知道谁在场；模型不知道。 */
+ *  ① 不是恋爱对象（romanceable === false）⇒ 一律不许动（文档 §14.1 T07）
+ *  ② 有在场名单（th.present）时：不在名单里的人不许动；没有名单就放行（旧行为）
+ *  为什么只拦模型提议：剧本里的数值是作者写的，作者知道谁在场、谁不是恋爱对象；模型不知道。 */
 function loveAllowed(th, id) {
   try {
     if (!th || !id) return false;
+    if (typeof ch === "function") {
+      const c = ch(id);
+      if (c && c.romanceable === false) return false;      // 非恋爱对象：好感根本不参与
+    }
     const p = th.present;
     if (!Array.isArray(p) || !p.length) return true;
     return p.indexOf(id) >= 0;

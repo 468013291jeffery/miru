@@ -17,7 +17,7 @@
 
 | 类 | 能不能改 | 谁能写 | 例子（对应现有字段） |
 |---|---|---|---|
-| **① 不可变 IMMUTABLE** | 永不改 | 只有作者 | `role` `age` `looks` `vibe` `tells` `twist` `likes` `boundary` |
+| **① 不可变 IMMUTABLE** | 永不改 | 只有作者 | `role` `age` `looks` `vibe` `tells` `twist` `likes` `boundary` `romanceable` |
 | **② 可变 MUTABLE** | 每章都变 | 只走写入口（`loveWrite` / `dimAdd`） | `love` `stage` `mood` `place` `lastSeenAt` |
 | **③ 只增 MONOTONIC**（不可逆事实） | **只增不减** | 只由事件追加 | `knows[]`（知道了什么）`gave[]`（给过什么）`lost[]`（失去什么）`firsts{}`（第一次做了什么）`said[]`（说过的关键话） |
 | **④ 立场 STANCE**（不可逆立场） | 只能**加码**，不能回到从前 | 只由标志性事件 | 背叛 / 原谅 / 承诺 / 决裂 —— 一旦发生，后续所有语气都受它约束 |
