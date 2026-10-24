@@ -13,7 +13,9 @@ function lcOn(){return lcCfg().provider==="longcat"&&(!!lcKey()||!!LC_PROXY)}
 function lcMsgs(input){if(typeof input==="string")return [{role:"user",content:input}];return (input||[]).map(m=>({role:m.role==="assistant"?"assistant":"user",content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}))}
 function lcClean(t){return String(t||"").replace(/<think>[\s\S]*?<\/think>/g,"").replace(/^\s*<think>[\s\S]*$/,"").trim()}
 async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_PROXY)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
- const max={quick:900,default:2200,complex:4000}[opts.modelTier||"default"]||2200;const stream=typeof opts.onText==="function";
+ // 输出预算（2026-10-25 Ann：正常 prompt 就 1 万 token，上限给到 2–3 万）
+ // 三轮加起来：普通档 8k 够一句正常回复；复杂档 20k 才养得起推理型模型的思考 + 正文
+ const max={quick:2048,default:8192,complex:20000}[opts.modelTier||"default"]||8192;const stream=typeof opts.onText==="function";
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,thinking:{type:"disabled"}};
  const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
  const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
