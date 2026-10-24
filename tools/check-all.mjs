@@ -25,6 +25,7 @@ const suites = [
   ['regression-25.mjs', ['tools/regression-25.mjs'], true],
   ['rev-selftest.mjs', ['tools/rev-selftest.mjs'], true],
   ['plan-valid-selftest.mjs', ['tools/plan-valid-selftest.mjs'], true],
+  ['replyguard-selftest.mjs', ['tools/replyguard-selftest.mjs'], true],
 ];
 
 let failed = 0;
