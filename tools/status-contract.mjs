@@ -70,7 +70,31 @@ console.log(`dims 直写 ${dims.total} 处（模块外应为 0）· dimAdd 存�
 ok('dims 的写入口存在（dimAdd）', /function dimAdd\(/.test(files[DIM_MODULE] || ''));
 ok('dims 没有模块外的直写', dims.total === 0, `${dims.total} 处：${Object.keys(dims.perFile).join(',')}`);
 ok('至少 4 处已经走写入口', calls >= 5, `${calls} < 5`);
-ok('模型那条提议已经走写入口', /loveWrite\(th,id,Math\.max\(0,Math\.min\(6,/.test(files['app3_chat.js'] || ''));
+ok('模型那条提议走写入口', /loveWrite\(th,id,d,"model:proposal"\)/.test(files['app3_chat.js'] || ''));
+ok('模型那条提议带在场验证', /loveAllowed\(th,id\)/.test(files['app3_chat.js'] || ''));
+
+// ---- 前置验证（loveAllowed）：从产物里切出真函数跑一遍 ----
+// 为什么必须跑真函数：这条规则的价值全在「不在名单里就拦下来」，
+// 而它只是一行 indexOf —— 说它对没有意义，得看它对。
+let bundle = '';
+try { bundle = fs.readFileSync('index.html', 'utf8'); } catch (_) {}
+const li = bundle.indexOf('function loveAllowed(');
+if (li >= 0) {
+  let depth = 0, j = bundle.indexOf('{', li);
+  const start2 = j;
+  for (; j < bundle.length; j++) {
+    if (bundle[j] === '{') depth++;
+    else if (bundle[j] === '}') { depth--; if (!depth) break; }
+  }
+  const fn = new Function(bundle.slice(li, j + 1) + '; return loveAllowed;')();
+  ok('没有在场名单 ⇒ 放行（旧行为不变）', fn({ love: {} }, 'ethan') === true);
+  ok('在场名单里没有他 ⇒ 拦下', fn({ present: ['luca'] }, 'ethan') === false);
+  ok('在场名单里有他 ⇒ 放行', fn({ present: ['ethan', 'luca'] }, 'ethan') === true);
+  ok('空名单等同没有名单', fn({ present: [] }, 'ethan') === true);
+  ok('拿不到 th 时不崩', fn(null, 'ethan') === false);
+} else {
+  ok('产物理应有 loveAllowed', false, '在 index.html 里找不到');
+}
 
 if (process.argv.includes('--selftest')) {
   const mutated = Object.assign({}, files, { 'app3_chat.js': (files['app3_chat.js'] || '') + '\nth.love["x"] = 99;\n' });
