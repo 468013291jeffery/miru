@@ -24,7 +24,8 @@ module.exports = L.wrap(async (req, res) => {
     await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [u.uid]);
     const w = await sql('SELECT gems, plus_until FROM wallet WHERE user_id=$1', [u.uid]);
     const recent = await sql('SELECT delta, reason, balance, at FROM ledger WHERE user_id=$1 ORDER BY id DESC LIMIT 20', [u.uid]);
-    return L.send(res, 200, { gems: w[0].gems, plus: false, recent });
+    const A = Object.assign({}, L.CONFIG_DEFAULTS.ads, cfg.ads || {}); const ad = await sql("SELECT n FROM usage WHERE user_id=$1 AND day=CURRENT_DATE AND kind='ad'", [u.uid]);
+    return L.send(res, 200, { gems: w[0].gems, plus: false, recent, ads: { provider: A.provider, gam_unit: A.gam_unit, adsense_client: A.adsense_client, h5_test: !!A.h5_test, reward_gems: Number(A.reward_gems) || 1, daily_cap: Number(A.daily_cap) || 5, ep_ads: Number(A.ep_ads) || 2, used: ad[0] ? ad[0].n : 0 } });
   }
   const b = L.jsonBody(req);
   if (b.op === 'spend') {
@@ -41,6 +42,23 @@ module.exports = L.wrap(async (req, res) => {
     if (used[0].n > (Number(cfg.earn_cap) || EARN_DAY)) { await sql(`UPDATE usage SET n = n - $2 WHERE user_id=$1 AND day=CURRENT_DATE AND kind='earn'`, [u.uid, n]); const w = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.uid]); return L.send(res, 429, { error: 'daily free-diamond limit reached', gems: w[0] ? w[0].gems : 0 }); }
     const r = await apply(sql, u.uid, n, 'earn:' + String(b.reason || '').slice(0, 30), b.key ? 'earn:' + u.uid + ':' + String(b.key).slice(0, 80) : null);
     return L.send(res, 200, r);
+  }
+  /* v8.2 · rewarded ad completed: server-side daily cap, minimum gap, idempotent by nonce; only 'gem' pays diamonds here
+     (episode / vote rewards are applied on the device after this call succeeds, so they share the same cap) */
+  if (b.op === 'ad') {
+    const A = Object.assign({}, L.CONFIG_DEFAULTS.ads, cfg.ads || {}); if (A.provider === 'off') return L.bad(res, 'ads are off', 403);
+    const kind = ['gem', 'ep', 'vote'].includes(b.kind) ? b.kind : 'gem', nonce = String(b.nonce || '').slice(0, 60); if (!nonce) return L.bad(res, 'nonce required');
+    const dup = await sql('SELECT balance FROM ledger WHERE key=$1', ['ad:' + u.uid + ':' + nonce]); if (dup[0]) return L.send(res, 200, { ok: true, dup: true, gems: dup[0].balance });
+    const gap = Number(A.min_gap_sec) || 20; const last = await sql("SELECT extract(epoch from (now() - at))::int AS s FROM ledger WHERE user_id=$1 AND reason LIKE 'ad:%' ORDER BY id DESC LIMIT 1", [u.uid]);
+    if (last[0] && last[0].s < gap) return L.send(res, 429, { error: 'too fast', wait: gap - last[0].s });
+    const cap = Number(A.daily_cap) || 5;
+    const used = await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, 'ad', 1) ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + 1 RETURNING n`, [u.uid]);
+    if (used[0].n > cap) { await sql(`UPDATE usage SET n = n - 1 WHERE user_id=$1 AND day=CURRENT_DATE AND kind='ad'`, [u.uid]); return L.send(res, 429, { error: 'daily ad limit reached', used: cap, cap }); }
+    const amt = kind === 'gem' ? (Number(A.reward_gems) || 1) : 0;
+    let r;
+    if (amt > 0) r = await apply(sql, u.uid, amt, 'ad:' + kind + ':' + String(A.provider).slice(0, 8), 'ad:' + u.uid + ':' + nonce);
+    else { await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [u.uid]); const g = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.uid]); await sql('INSERT INTO ledger (user_id, delta, reason, key, balance) VALUES ($1,0,$2,$3,$4) ON CONFLICT (key) DO NOTHING', [u.uid, 'ad:' + kind + ':' + String(A.provider).slice(0, 8), 'ad:' + u.uid + ':' + nonce, g[0].gems]); r = { gems: g[0].gems }; }
+    return L.send(res, 200, Object.assign({ ok: true, used: used[0].n, cap, reward: amt }, r || {}));
   }
   if (b.op === 'daily') {
     const day = new Date().toISOString().slice(0, 10);
