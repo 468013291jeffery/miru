@@ -29,12 +29,26 @@ function cardBase(cid) {
   };
 }
 
+/** 一条「他知道的事」归一成 {t, kind}。字符串视为既成事实（旧数据的兼容路径）。
+ *  kind: fact（事实）/ guess（他以为）/ self（你告诉他的，本人自述）—— 与记忆层 M2T 对齐。 */
+function knowsNorm(x) {
+  if (x == null) return null;
+  if (typeof x === "string") return { t: x, kind: "fact" };
+  const t = String(x.t == null ? "" : x.t);
+  if (!t) return null;
+  const k = String(x.kind || "fact");
+  return { t: t, kind: (k === "guess" || k === "self") ? k : "fact" };
+}
+
 function cardPatch(ch0, delta) {
   const d = delta || {};
   const p = { ch: ch0 };
   if (d.mutable) p.mutable = Object.assign({}, d.mutable);
   const added = {};
-  for (const k of CARD_MONO) if (Array.isArray(d[k]) && d[k].length) added[k] = d[k].slice();
+  for (const k of CARD_MONO) {
+    if (!Array.isArray(d[k]) || !d[k].length) continue;
+    added[k] = (k === "knows") ? d[k].map(knowsNorm).filter(Boolean) : d[k].slice();
+  }
   if (d[CARD_FIRSTS] && typeof d[CARD_FIRSTS] === "object") added[CARD_FIRSTS] = Object.assign({}, d[CARD_FIRSTS]);
   if (Object.keys(added).length) p.added = added;
   if (d.stance && typeof d.stance === "object") {
@@ -132,6 +146,7 @@ function cardCommitChapter(th, n, k) {
         if (one) {
           if (one.breaks && one.breaks[cid] && typeof one.breaks[cid] === "object") delta.stance = Object.assign({}, one.breaks[cid]);
           if (one.reveals && one.reveals[cid]) delta.revealed = { secret: one.reveals[cid] };
+          if (one.knows && one.knows[cid]) delta.knows = [].concat(one.knows[cid]).map(knowsNorm).filter(Boolean);   // knows 是按角色 id 的对象
         }
       } catch (_) {}
       if (!delta.firsts) delete delta.firsts;
@@ -146,7 +161,13 @@ function cardMemo(th, cid, ch0) {
   try {
     const c = cardAt(th, cid, ch0);
     const parts = [];
-    if (c.knows.length) parts.push("知道：" + c.knows.slice(-3).join(" / "));
+    if (c.knows.length) {
+      const by = { fact: [], guess: [], self: [] };
+      for (const x of c.knows) { const n = knowsNorm(x); if (n) by[n.kind].push(n.t); }
+      if (by.fact.length) parts.push("知道：" + by.fact.slice(-3).join(" / "));
+      if (by.guess.length) parts.push("他以为（未确认）：" + by.guess.slice(-3).join(" / "));
+      if (by.self.length) parts.push("你告诉过他（本人自述）：" + by.self.slice(-2).join(" / "));
+    }
     if (c.said.length) parts.push("他说过：" + c.said.slice(-2).map(s => "“" + s + "”").join(" "));
     const st = Object.keys(c.stance || {});
     if (st.length) parts.push("立场：" + st.map(k => k + "×" + c.stance[k]).join(" "));

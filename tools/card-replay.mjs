@@ -88,12 +88,14 @@ console.log('   没标却变了（噪声）：    ' + (extra.length ? extra.map(
 console.log('② 只有好感在动、没有别的事的章（这些不该弹卡）：' + (noisy.length ? noisy.map(r => 'ch' + r.n).join(',') : '没有'));
 console.log('   其余章没有卡级变化是**预期**的：只有标了 breaks/reveals 的章才会有。');
 
-const who = pack.cast.find(c => c.id !== pack.pov)?.id || pack.cast[0].id;
+const whoArg = (process.argv.find(a => a.startsWith('--who=')) || '').split('=')[1];
+const who = whoArg || pack.cast.find(c => c.id !== pack.pov)?.id || pack.cast[0].id;
 const card = api.cardAt(th, who, pack.chapters.length);
 console.log(`\n③ 第 ${pack.chapters.length} 章时 ${who} 的卡：`);
 console.log('   好感/阶段快照:', JSON.stringify(card.mutable));
 console.log('   firsts:', JSON.stringify(card.firsts));
 console.log('   said:', JSON.stringify(card.said).slice(0, 200));
+console.log('   knows:', JSON.stringify(card.knows));
 console.log('   立场:', JSON.stringify(card.stance));
 console.log('   揭示:', JSON.stringify(card.revealed));
 console.log('   cardMemo:', api.cardMemo(th, who, pack.chapters.length) || '（空）');

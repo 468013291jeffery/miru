@@ -51,7 +51,7 @@ try {
   // 角色卡那边还是一个平铺的 knows（没有类型）——这一点如实记在 detail 里，不假装它已经好了
   const cardKnowsTyped = /knows:s*\[\]/.test(fs.readFileSync('source/src/app97_card.js', 'utf8')) === false;
   add('T12', '角色错误信念 → 不把猜测说成客观事实', (hasGuess && hasFact && saysUnconfirmed && distinct) ? 'PASS' : 'FAIL',
-    `记忆层：fact/guess 两栏 ${distinct} · guess 标注"未确认、别当事实" ${saysUnconfirmed} · 角色卡的 knows 仍是无类型数组 ${!cardKnowsTyped}`);
+    `记忆层：fact/guess 两栏 ${distinct} · guess 标注"未确认、别当事实" ${saysUnconfirmed} · 角色卡的 knows 已带 kind ${!cardKnowsTyped}`);
 } catch (e) { add('T12', '角色错误信念 → 不把猜测说成客观事实', 'FAIL', e.message); }
 
 try {
