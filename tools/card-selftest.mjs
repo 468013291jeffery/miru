@@ -16,7 +16,7 @@ const CHARS = {
   luca:  { n: 'Luca',  age: 27, role: { en: 'driver'  }, looks: { en: 'sharp' }, vibe: { en: 'warm' }, tells: { en: ['ears'] }, twist: { en: 'ruthless' }, likes: { en: 'cars' }, secret: { en: 'THE-LET-IN' } }
 };
 const MARKS = { gala: JSON.parse(fs.readFileSync('source/content/marks/gala.json', 'utf8')) };
-const api = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo };')((id) => CHARS[id], () => ({ pack: { chapters: [
+const api = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo, cardChanges };')((id) => CHARS[id], () => ({ pack: { chapters: [
     { choices: [{ k: 'A', then: { en: [['n','act','he steps back'],['mason','say','“别问了。”']], zh: [['n','act','他退了一步。'],['mason','say','“别问了。”']] } },
                 { k: 'B', then: { en: [['luca','say','“让他说完。”']], zh: [['luca','say','“让他说完。”']] } }] },
     { choices: [{ k: 'A', then: { en: [['mason','say','“我留着那个球。”']], zh: [['mason','say','“我留着那个球。”']] } }] }
@@ -108,6 +108,27 @@ console.log('⑩ 内容标记 → ④立场 / ⑤揭示');
   ok('标记写出了揭示', api.cardAt(tm, 'mason', 5).revealed.secret === 'self', JSON.stringify(api.cardAt(tm, 'mason', 5).revealed));
   ok('揭示之后秘密原文一字未改', JSON.stringify(api.cardAt(tm, 'mason', 5).secret) === JSON.stringify(api.cardBase('mason').secret));
   ok('第 4 章还看不到第 5 章的揭示', api.cardAt(tm, 'mason', 4).revealed.secret === undefined);
+}
+
+console.log('⑪ 章末那张「他变了什么」的卡（cardChanges）');
+{
+  const tc = { cast: ['mason', 'noor', 'luca'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 30, noor: 20, luca: 10 }, cardLog: {} };
+  api.cardCommitChapter(tc, 1, 'A');
+  const c1 = api.cardChanges(tc, 1);
+  ok('三个人都有变化（好感快照 from 空 → 有值）', c1.length === 3, c1.length);
+  ok('没人被揭示', c1.every(x => !x.revealed));
+  api.cardCommitChapter(tc, 3, 'A');    // noor 的 promised
+  const c3 = api.cardChanges(tc, 3);
+  ok('第 3 章 noor 有立场变化', c3.some(x => x.cid === 'noor' && x.stance.promised === 1), JSON.stringify(c3));
+  ok('这一章 mason 没有立场变化', !c3.some(x => x.cid === 'mason' && Object.keys(x.stance).length));
+  api.cardCommitChapter(tc, 5, 'A');    // mason 的 revealed
+  const c5 = api.cardChanges(tc, 5);
+  ok('第 5 章 mason 有揭示', c5.some(x => x.cid === 'mason' && x.revealed === 1), JSON.stringify(c5));
+  // 指针里的验收条件：揭示之后，**后面每一章的卡里都应该看得到**
+  ok('第 6 章的卡里 revealed 还在（揭示是永久的）', api.cardAt(tc, 'mason', 6).revealed.secret === 'self', JSON.stringify(api.cardAt(tc, 'mason', 6).revealed));
+  ok('第 6 章的 cardMemo 能说出这件事', /立场|他说过|知道/.test(api.cardMemo(tc, 'mason', 6)) || api.cardMemo(tc, 'mason', 6) !== '', api.cardMemo(tc, 'mason', 6));
+  ok('没变化的章返回空', api.cardChanges(tc, 9).length === 0);
+  ok('玩家自己不出现在卡里', !api.cardChanges(tc, 5).some(x => x.cid === 'jack'));
 }
 
 if (process.argv.includes('--selftest')) {
