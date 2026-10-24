@@ -15907,3 +15907,49 @@ if(S.ob)startApp();else renderOB();
  try{const _ds=doSend;doSend=function(){try{const th=S.threads[curT];if(th&&th.b98)track("turn98",{})}catch(_){}return _ds.apply(this,arguments)}}catch(_){}
 })();
 </script>
+<script>
+/* ================= v8.2 · 激励视频广告（不付钱的用户看广告换钻石 / 解锁本集 / 投票） =================
+   provider（后台「配置」→ ads 可改，不用改代码）：
+   · gam  = Google Ad Manager 网页激励广告（GPT：rewardedSlotReady → makeRewardedVisible → rewardedSlotGranted）
+   · h5   = Google H5 Games Ads（Ad Placement API：adBreak({type:'reward'})，需 AdSense 账号 + H5 游戏广告资格）
+   · demo = 15 秒模拟广告（未开通广告账号前用，清楚标注「广告位预览」）  · off = 关闭
+   发奖：广告网络确认看完 → 服务端 /wallet op:'ad'（每日上限、最小间隔、按 nonce 幂等）→ 才给钻石 / 计数。 */
+(function(){
+ const AC=()=>Object.assign({provider:"demo",reward_gems:1,daily_cap:5,ep_ads:2,used:0},S.adsCfg||{});
+ try{const _wp=walletPull;walletPull=async function(){const r=await _wp.apply(this,arguments);try{const x=await capi("/wallet");if(x.ok&&x.j.ads){S.adsCfg=x.j.ads;ADS.cap=x.j.ads.daily_cap||ADS.cap;ADS.val=x.j.ads.reward_gems||ADS.val;save();loadSdk()}}catch(_){}return r}}catch(_){}
+ try{const _al=adLeft;adLeft=function(){if(AC().provider==="off")return 0;return _al.apply(this,arguments)}}catch(_){}
+ let sdk=null;
+ function addScript(src,attrs){return new Promise((ok,no)=>{const e=document.createElement("script");e.async=true;e.src=src;Object.entries(attrs||{}).forEach(([k,v])=>e.setAttribute(k,v));e.onload=ok;e.onerror=no;document.head.appendChild(e)})}
+ function loadSdk(){const c=AC();if(sdk)return sdk;
+  if(c.provider==="gam"&&c.gam_unit){window.googletag=window.googletag||{cmd:[]};sdk=addScript("https://securepubads.g.doubleclick.net/tag/js/gpt.js").catch(()=>{sdk=null})}
+  else if(c.provider==="h5"&&c.adsense_client){window.adsbygoogle=window.adsbygoogle||[];window.adBreak=window.adConfig=function(o){adsbygoogle.push(o)};
+   sdk=addScript("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client="+encodeURIComponent(c.adsense_client),Object.assign({"data-ad-client":c.adsense_client,crossorigin:"anonymous"},c.h5_test?{"data-adbreak-test":"on"}:{})).then(()=>{try{adConfig({preloadAdBreaks:"on",sound:"on"})}catch(_){}}).catch(()=>{sdk=null})}
+  return sdk}
+ /* each provider resolves to true only when the network says the reward is earned */
+ function showGam(){const c=AC();return new Promise(res=>{let slot=null,granted=false,done=false;const fin=v=>{if(done)return;done=true;try{slot&&googletag.destroySlots([slot])}catch(_){}res(v)};
+  const tm=setTimeout(()=>fin(null),12000);
+  googletag.cmd.push(()=>{slot=googletag.defineOutOfPageSlot(c.gam_unit,googletag.enums.OutOfPageFormat.REWARDED);if(!slot){clearTimeout(tm);fin(null);return}slot.addService(googletag.pubads());
+   googletag.pubads().addEventListener("rewardedSlotReady",e=>{clearTimeout(tm);e.makeRewardedVisible()});
+   googletag.pubads().addEventListener("rewardedSlotGranted",()=>{granted=true});
+   googletag.pubads().addEventListener("rewardedSlotClosed",()=>fin(granted));
+   googletag.pubads().addEventListener("slotRenderEnded",e=>{if(e.slot===slot&&e.isEmpty){clearTimeout(tm);fin(null)}});
+   googletag.enableServices();googletag.display(slot)})})}
+ function showH5(){return new Promise(res=>{let viewed=false,done=false;const fin=v=>{if(!done){done=true;res(v)}};const tm=setTimeout(()=>fin(null),12000);
+  try{adBreak({type:"reward",name:"miru_reward",beforeAd(){try{stopVoice()}catch(_){}},beforeReward(show){clearTimeout(tm);show()},adViewed(){viewed=true},adDismissed(){viewed=false},adBreakDone(i){clearTimeout(tm);fin(viewed?true:(i&&/viewed/.test(i.breakStatus)?true:(i&&i.breakStatus==="notReady"||i&&i.breakStatus==="noAdPreloaded"?null:false)))}})}catch(_){fin(null)}})}
+ const demoPlay=watchAd;
+ watchAd=function(done){if(!adLeft()){toast(t("ad.none"));return}const c=AC();
+  const finish=async()=>{const nonce=Date.now().toString(36)+Math.random().toString(36).slice(2,8);let r=null;
+   try{r=await capi("/wallet",{json:{op:"ad",kind:watchAd._kind||"gem",nonce}})}catch(_){}
+   if(r&&r.status===429){toast(r.j&&r.j.wait?L98("刚看完一条，"+r.j.wait+" 秒后再来","Wait "+r.j.wait+"s"):t("ad.none"));return}
+   if(r&&r.ok&&r.j){if(typeof r.j.gems==="number"){S.keys=r.j.gems;try{const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys}catch(_){}}if(r.j.used!=null&&S.adsCfg)S.adsCfg.used=r.j.used}
+   done&&done(r&&r.ok?r.j:null)};
+  if(c.provider==="demo"||(!c.gam_unit&&!c.adsense_client)){return demoPlay(()=>finish())}
+  closeSheet();try{stopVoice()}catch(_){}const p=loadSdk();toast(L98("广告加载中…","Loading ad…"));
+  Promise.resolve(p).then(()=>c.provider==="gam"?showGam():showH5()).then(ok=>{if(ok===true){const st=adState();st.n++;save();finish()}else if(ok===false)toast(t("ad.keep"));else toast(L98("暂时没有可播放的广告，稍后再试","No ad available right now — try later"))}).catch(()=>toast(L98("广告没加载出来","The ad didn't load")))};
+ /* the click passes which reward it is for, so the server can count and pay correctly */
+ document.addEventListener("click",e=>{const x=e.target.closest("[data-ad]");if(!x)return;watchAd._kind=String(x.dataset.ad).split("|")[0]},true);
+ /* diamonds from ads come from the server balance (no local +1 on top) */
+ try{const _g=adGrant;adGrant=function(kind,arg){if(kind==="gem"){toast(t("ad.got",{n:ADS.val,left:S.keys}));save();return}return _g.apply(this,arguments)}}catch(_){}
+ try{if(S.adsCfg)loadSdk()}catch(_){}
+})();
+</script>
