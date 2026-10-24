@@ -10,7 +10,7 @@
    ⚠️ 这一层只做「夹值 + 记账」，不改变任何现有数值走向；
       剧本/游戏原来加多少还是加多少，超过单次上限才会被拦。 */
 
-const LOVE_MIN = 0, LOVE_MAX = 100, LOVE_DELTA_CAP = 12;
+const LOVE_MIN = MIRU_TUNE.love.min, LOVE_MAX = MIRU_TUNE.love.max, LOVE_DELTA_CAP = MIRU_TUNE.love.deltaCap;
 
 function loveLog(th, ev) {
   try {
