@@ -142,6 +142,8 @@
 5. **不要**用 `index.html` 反向覆盖 `source/` —— 它是产物（见下方合并注意）
 
 
+**发现：整条计划层是死代码**（2026-10-25）：`planDecide`/`planGet`/`planSet`/`planTried` 定义齐全、单测全过，但**全仓没有任何一处调用** ⇒ 映射表上 T17/T18/T25 的 PASS 是假的：行为对 ≠ 接上了。新增闸 `tools/wiring-check.mjs`（检查 22 个机制函数有没有调用点，基线每条带理由、接上线必须从基线删掉），映射表加第五态 **UNWIRED**：18 PASS / 3 UNWIRED / 2 NOT-YET / 2 N/A。**没接线的原因不是漏写，是 T19 第④步还没拍**（自动续故事是产品决定）。
+
 **ageGate 已开（当免责声明）+ T19② 实测**：
 
 - **年龄门**：`source/src/app93_agegate.js` —— 首启问一次「是否满 18」（五语），答**是**就解除压制、答**未满**就把 heat 上限压在 slow，**答过就不重复问**（记在 `S.ageOk`）。`MIRU_TUNE.tools.ageGate` 默认已改为 **true**（Ann 2026-10-25 拍：等于我们的免责声明）。
