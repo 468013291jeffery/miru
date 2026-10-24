@@ -97,6 +97,19 @@ cardLog = [ patch@ch1, patch@ch2, … ]   ← 每章一条，只追加
   别人的卡 = 只给 ① 的公开面（`castCardPublic`，已实现）
 ```
 
+## 章末那张卡（给玩家看）
+
+每章结束，如果这一章**真的**改变了他，就弹一张 sys 卡（最多三条，没变化就不弹）：
+
+```
+🃏 这一章他变了什么
+mason · 好感 +12 · 新知道 2 件事
+noor · promised
+```
+
+文案五语（`cd.title` / `cd.love` / `cd.stance` / `cd.knows` / `cd.revealed`）。
+数据来自 `cardChanges(th, 章号)`——它只返回**真的有变化**的角色，所以这张卡不会变成流水账。
+
 ## 和现有的东西怎么接
 
 | 现有 | 关系 |

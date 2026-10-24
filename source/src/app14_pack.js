@@ -173,6 +173,20 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
  else th.pk.st="next";
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
  try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
+ try{
+  if(typeof cardChanges==="function"){
+    const d=cardChanges(th,n), lines=[];
+    for (const x of d.slice(0,3)) {
+      const bits=[];
+      if (x.loveDelta) bits.push(t("cd.love",{d:(x.loveDelta>0?"+":"")+x.loveDelta}));
+      if (x.stance) Object.keys(x.stance).forEach(s=>bits.push(t("cd.stance",{s:s})));
+      if (x.knows) bits.push(t("cd.knows",{n:x.knows}));
+      if (x.revealed) bits.push(t("cd.revealed",{n:x.revealed}));
+      if (bits.length) lines.push(first(ch(x.cid).n)+" · "+bits.join(" · "));
+    }
+    if (lines.length) appendMsg(th,{who:"sys",k:"card",title:"🃏 "+t("cd.title"),txt:lines.join("\n"),at:Date.now()});
+  }
+ }catch(_){}
  const before=th.pk.before||{};delete th.pk.before;save();
  if(curT===th.id&&!$("#s-chat").hidden){renderChat();scrollChat()}
  levelUpCheck(th,before)}

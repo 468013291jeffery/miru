@@ -145,3 +145,23 @@ function cardMemo(th, cid, ch0) {
     return parts.join(" · ");
   } catch (_) { return "" }
 }
+
+/** 这一章每个角色"变了什么"（纯数据，不含文案；给章末那张卡用）。只返回真的有变化的。 */
+function cardChanges(th, ch0) {
+  const out = [];
+  try {
+    for (const cid of (th.cast || [])) {
+      if (th.pk && cid === th.pk.as) continue;
+      const d = cardDiff(th, cid, ch0);
+      const love = d.mutable && d.mutable.love;
+      const dl = love ? (Number(love.to) || 0) - (Number(love.from) || 0) : 0;
+      const stance = Object.keys(d.stance || {}).length;
+      const knows = (d.added && d.added.knows ? d.added.knows.length : 0);
+      const revealed = Object.keys(d.revealed || {}).length;
+      if (dl || stance || knows || revealed) {
+        out.push({ cid: cid, loveDelta: dl, loveTo: love ? love.to : undefined, stance: d.stance || {}, knows: knows, revealed: revealed });
+      }
+    }
+  } catch (_) {}
+  return out;
+}
