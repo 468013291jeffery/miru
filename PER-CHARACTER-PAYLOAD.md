@@ -101,6 +101,9 @@ node tools/payload-preview.mjs gala 3 mason      # 他不在场：这份根本�
 ```
 
 草稿用**真实角色数据**（`content_chars.js`）与**真实在场名单**（`present/gala.json`）拼出来，可以直接拿给作者看形状。
+`node tools/leak-experiment.mjs gala 5 mason` 会把两种 prompt 的**信息差**列出来（免费）：第 5 章这场戏，
+共享版上下文里同时装着 **5 个人的秘密**，每人份只剩 mason 自己那 1 个 —— 差出来的 4 个就是泄漏面。
+
 一个已经暴露出来的细节：**单 prompt 时"私密面"归 `mainOf(th)`；改成每人一份后，它必须归"这一份要写的那个人"**——两者不是一回事，工具里已经注明。
 
 ## 落地顺序（每一步都能单独上线、单独回滚）
