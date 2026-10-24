@@ -83,4 +83,45 @@ function planValid(pack) {
   return { ok: errors.length === 0, errors };
 }
 
-module.exports = { planValid, textOk, LANGS };
+/** 校验**一份候选章节**（续写生成器吐出来的东西），不是整包。
+ *  规则与整包里的章一致：拍数 4–8、恰好 3 个选项、each 有 t 与 then、说话人必须在 cast 里。 */
+function planValidChapter(cand, castIds) {
+  const errors = [];
+  const bad = (path, why) => errors.push({ path, why });
+  const ids = new Set(castIds || []);
+  if (!cand || typeof cand !== 'object') return { ok: false, errors: [{ path: 'candidate', why: 'not an object' }] };
+
+  const sc = cand.scene || {};
+  const beats = Array.isArray(sc.beats) ? sc.beats : [];
+  if (beats.length < 4 || beats.length > 8) bad('scene.beats', '4 to 8 beats (got ' + beats.length + ')');
+  const checkBeat = (b, at) => {
+    if (!Array.isArray(b) || b.length < 3) return bad(at, 'needs [who, kind, text]');
+    const [who, kind, text] = b;
+    if (who !== 'n' && ids.size && !ids.has(who)) bad(at + '.who', 'unknown speaker "' + who + '"');
+    if (!['say', 'act', 'think'].includes(kind)) bad(at + '.kind', '"' + kind + '" is not say/act/think');
+    const t = textOk(text);
+    if (!t.ok) bad(at + '.text', t.why || 'empty');
+  };
+  beats.forEach((b, i) => checkBeat(b, 'scene.beats[' + i + ']'));
+
+  const choices = Array.isArray(cand.choices) ? cand.choices : [];
+  if (choices.length !== 3) bad('choices', 'exactly 3 choices (got ' + choices.length + ')');
+  const keys = choices.map(c => c && c.k).join('');
+  if (choices.length === 3 && keys !== 'ABC') bad('choices[].k', 'keys must be A,B,C (got "' + keys + '")');
+  choices.forEach((c, i) => {
+    const at = 'choices[' + i + ']';
+    if (!c || typeof c !== 'object') return bad(at, 'not an object');
+    const t = textOk(c.t);
+    if (!t.ok) bad(at + '.t', t.why || 'empty');
+    if (!Array.isArray(c.then)) return bad(at + '.then', 'needs an array');
+    c.then.forEach((b, j) => checkBeat(b, at + '.then[' + j + ']'));
+  });
+
+  if (cand.goal != null) {
+    const g = textOk(cand.goal);
+    if (!g.ok) bad('goal', g.why || 'empty');
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+module.exports = { planValid, planValidChapter, textOk, LANGS };
