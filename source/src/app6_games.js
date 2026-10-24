@@ -103,7 +103,7 @@ async function callSay(user){if(!call)return;const c=ch(call.cid),L=S.lang==="zh
  call.n++;line.textContent=say;speak(say,call.cid,()=>{const w=$("#cvW");w&&w.classList.remove("on")});
  rep.innerHTML=opts.slice(0,3).map(o=>'<button data-cvo="'+esc(o)+'">'+esc(o)+'</button>').join("");call.last=say}
 function endCall(){if(!call)return;clearInterval(call.tk);stopVoice();const s=Math.floor((Date.now()-call.t0)/1000),c=ch(call.cid),th=call.th;
- if(th){th.msgs.push({who:"sys",k:"card",title:"📞 "+t("call.ended",{n:first(c.n)}),txt:String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")+(call.last?" · “"+call.last+"”":""),at:Date.now()});th.mem.push("Late-night phone call with "+c.n+" ("+s+"s). Last thing he said: "+(call.last||""));th.love[call.cid]=Math.min(100,(th.love[call.cid]||0)+4);save();if(curT===th.id)renderChat()}
+ if(th){th.msgs.push({who:"sys",k:"card",title:"📞 "+t("call.ended",{n:first(c.n)}),txt:String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")+(call.last?" · “"+call.last+"”":""),at:Date.now()});th.mem.push("Late-night phone call with "+c.n+" ("+s+"s). Last thing he said: "+(call.last||""));loveWrite(th,call.cid,4,"call");save();if(curT===th.id)renderChat()}
  $(".callv")&&$(".callv").remove();call=null}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-cvo]")){callSay(x.dataset.cvo);return}

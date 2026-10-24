@@ -10,7 +10,7 @@ import path from 'node:path';
 
 const SRC = 'source/src';
 const MODULE = 'app95_status.js';
-const BASELINE = 11;          // 2026-10-25：29 → 25（第一批）→ 11（第二批：礼物/约会/真话/心率/真心话/匿名/邀请/初始化）
+const BASELINE = 0;           // 2026-10-25：29 → 25 → 11 → 0。任何一处新的直写都会红。
 const WRITE_RE = /th\.love\[[^\]]+\]\s*(?:=(?!=)|\+=|-=)/g;
 
 export function scan(files) {
