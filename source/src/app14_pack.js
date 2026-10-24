@@ -358,7 +358,7 @@ async function stopPhoto(th,d){const who=stopWho(th,d),cap=Lz(d.cap)||"";const p
  let src=null;if(d.img&&await imgOk("art/scenes/"+d.img+".jpg"))src="art/scenes/"+d.img+".jpg";
  if(!src&&AIG.mcp&&d.prompt){try{const res=await AIG.mcp.callTool(AIG.srv,AIG.tool,{prompt:(d.prompt.en||d.prompt)+", cinematic film still, moody low light, 35mm, photorealistic, adult characters",width:576,height:1024,num_inference_steps:24,randomize_seed:true},{cache:false});src=aiImgFrom(res)}catch(_){src=null}}
  let url=null;try{const cv=await sceneStill(th,{who,txt:cap},src?{im:src}:{im:artSrc(who)});url=cv.toDataURL("image/jpeg",.8)}catch(_){url=src||artSrc(who)}
- const aid="a"+Date.now();S.album.unshift({id:aid,cid:who,src:url,at:Date.now()});if(S.album.length>24)S.album.length=24;
+ const aid="a"+Date.now();S.album.unshift({id:aid,cid:who,src:mediaWrap("album:"+aid,url),at:Date.now()});if(S.album.length>24)S.album.length=24;
  appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});save()}
 function stopVideo(th,d){return new Promise(res=>{const src=stopClip(th,d);const el=document.createElement("div");el.className="stvid";
  el.innerHTML='<video playsinline autoplay src="'+esc(vidSrc(src))+'"></video><div class="stvcap">'+esc(Lz(d.cap)||"")+'</div><button class="stvx" aria-label="close">✕</button>';

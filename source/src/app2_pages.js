@@ -284,6 +284,6 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-like-c]")){x.style.color="var(--rose)";toast("♥");return}});
 document.addEventListener("change",e=>{if(e.target.id!=="artUp")return;const f=e.target.files&&e.target.files[0];if(!f)return;
  const fr=new FileReader();fr.onload=()=>{const im=new Image();im.onload=()=>{const cv=document.createElement("canvas"),sc=Math.min(1,560/im.width);cv.width=im.width*sc;cv.height=im.height*sc;
-  cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);S.art[curChar]=cv.toDataURL("image/jpeg",.84);save();toast(t("ch.saved"));openChar(curChar,true)};im.src=fr.result};fr.readAsDataURL(f)});
+  cv.getContext("2d").drawImage(im,0,0,cv.width,cv.height);S.art[curChar]=mediaWrap("art:"+curChar,cv.toDataURL("image/jpeg",.84));save();toast(t("ch.saved"));openChar(curChar,true)};im.src=fr.result};fr.readAsDataURL(f)});
 Object.assign(I18N.en,{"ch.remix":"Remix"});
 Object.assign(I18N.zh,{"ch.remix":"二创TA"});

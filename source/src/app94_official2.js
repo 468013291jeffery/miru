@@ -120,7 +120,7 @@ pkDirective = function (th, b) {
     if (b[1] === "vid94" && d0.slot === "vid_open") { save(); return true; }
     if (b[1] === "cg94" && d.src) th.pk.lastCg98 = d.src;
     if (d.src && !PKSKIP[th.id]) { if (curT === th.id) off94Show(d, b[1] === "vid94");
-      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: d.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
+      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: mediaWrap("album:"+aid, d.src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
   }
   return _pkDir94.apply(this, arguments);
@@ -445,7 +445,7 @@ function photoSrc98(th) {
 }
 { const _sp = stopPhoto; stopPhoto = async function (th, d) {
     const src = photoSrc98(th); if (!src) return _sp.apply(this, arguments);
-    const who = stopWho(th, d), aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: who, src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
+    const who = stopWho(th, d), aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: who, src: mediaWrap("album:"+aid, src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
     appendMsg(th, { who: ch(who) && who !== th.pk.as ? who : "me", k: "img", aid, at: Date.now() }); save(); }; }
 { const _hp = stopHTML; stopHTML = function (th) { let h = _hp.apply(this, arguments);
     try { const b = th.pk.stop; if (b && b[1] === "photo") { const u = photoSrc98(th); if (u) h = h.replace(/(class="stthumb" style="background-image:url\()[^)]*\)/, '$1' + u + ')'); } } catch (_) {} return h; }; }

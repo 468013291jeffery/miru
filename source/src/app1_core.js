@@ -59,8 +59,13 @@ function ic(name){const P={
    Official portraits ship as files in art/. Characters without one get a generated poster
    (gradient + monogram) until the user uploads a portrait or the image server draws one. */
 const POSTER={};
+/* 立绘可能已经不是 base64 而是 {__m:id} 引用（见 app92_media.js）：
+   拿得到就返回 URL；拿不到先给 1×1 占位，后台取到再把带 data-art 的 img 补上。 */
+function refreshArtImgs(id){try{const u=mediaUrl("art:"+id);if(!u)return;document.querySelectorAll('img[data-art="'+id+'"]').forEach(im=>{if(im.src!==u)im.src=u})}catch(_){}}
 function artSrc(id){
- if(S.art[id])return S.art[id];
+ const v0=S.art[id];
+ if(typeof mediaIsRef==="function"&&mediaIsRef(v0)){const u=mediaUrl(v0.__m);if(u)return u;mediaUrlAsync(v0.__m,()=>refreshArtImgs(id));return (typeof MEDIA_BLANK!=="undefined")?MEDIA_BLANK:"";}
+ if(typeof v0==="string"&&v0)return v0;
  const c=ch(id),w=wd(id);
  if(w&&w.mine&&!w.cover)return "art/world_default.jpg";
  const f=(c&&c.art)||(w&&w.cover);
@@ -88,8 +93,8 @@ function poster(id){
  x.fillStyle="rgba(240,183,126,.9)";x.font="800 12px Manrope, Helvetica, sans-serif";x.fillText((c?(c.n.split(" ").slice(1).join(" ")||"MIRU"):"MIRU").toUpperCase().split("").join(" "),34,Ht-28);
  const d=x.getImageData(0,0,Wd,Ht),p=d.data;for(let k=0;k<p.length;k+=4){const n=(Math.random()-.5)*16;p[k]+=n;p[k+1]+=n;p[k+2]+=n}x.putImageData(d,0,0);
  return POSTER[id]=cv.toDataURL("image/jpeg",.84);}
-function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" alt="" loading="lazy"></div>'}
-function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" alt=""></div>'}
+function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" data-art="'+id+'" alt="" loading="lazy"></div>'}
+function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" data-art="'+id+'" alt=""></div>'}
 function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
 
 /* ================= VOICE =================

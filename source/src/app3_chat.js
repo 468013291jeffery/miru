@@ -465,7 +465,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-keep]")){const cid=x.dataset.keep,th=S.threads[curT];
   const W0=640,cv=document.createElement("canvas");cv.width=W0;cv.height=W0;const g=cv.getContext("2d");g.fillStyle="#0c0a10";g.fillRect(0,0,W0,W0);
   bFrames.forEach((f,i)=>{if(f)g.drawImage(f,(i%2)*(W0/2)+6,Math.floor(i/2)*(W0/2)+6,W0/2-12,W0/2-12)});
-  const aid="a"+Date.now();S.album.unshift({id:aid,cid,src:cv.toDataURL("image/jpeg",.72),at:Date.now()});if(S.album.length>12)S.album.length=12;th.tasks.snap=1;loveWrite(th,cid,5,"photobooth");th.mem.push("Took a photo-booth strip with "+ch(cid).n);closeSheet();
+  const aid="a"+Date.now();S.album.unshift({id:aid,cid,src:mediaWrap("album:"+aid,cv.toDataURL("image/jpeg",.72)),at:Date.now()});if(S.album.length>12)S.album.length=12;th.tasks.snap=1;loveWrite(th,cid,5,"photobooth");th.mem.push("Took a photo-booth strip with "+ch(cid).n);closeSheet();
   appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"));reply(th,{kind:"user",txt:"(We just took a four-frame photo-booth strip together. React to seeing the photos.)"});}});
 /* 生图: a 9:16 scene still built from this story's real footage (or the portrait) + the line as a subtitle.
    Works with no network/AI; if the canvas can't be exported it falls back to a live DOM card. */
@@ -515,7 +515,7 @@ document.addEventListener("click",e=>{
 /* image messages are a fixed-size box painted with two layers — the photo, and the character's portrait underneath —
    so even if the photo can't be shown in this viewer, the card is never an empty strip */
 function albumHtml(a){const fb=esc(artSrc(a.cid||""));
- if(a.src)return '<div class="mimg" style="background-image:url(&quot;'+esc(a.src)+'&quot;),url(&quot;'+fb+'&quot;)"></div>';
+ if(a&&a.src)return '<div class="mimg" data-amid="'+a.id+'" style="background-image:url(&quot;'+esc(albumSrc(a))+'&quot;),url(&quot;'+fb+'&quot;)"></div>';
  if(a.v)return '<div class="alv"><video muted playsinline autoplay loop preload="auto" poster="'+fb+'" src="'+esc(vidSrc(a.v))+'#t='+(+a.tm||2)+'"></video><span>'+esc(a.cap||"")+'</span></div>';
  return '<div class="mimg" style="background-image:url(&quot;'+fb+'&quot;)"></div>'}
 /* ---------- real AI image generation (FLUX.1 Krea via the viewer's "flux" Hugging Face connector) ---------- */
@@ -588,7 +588,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-aigen]")){aiGen
 async function snapMoment(th,m){try{const cv=await frame(m.who,hash(m.txt)%4,480),x=cv.getContext("2d");
  x.fillStyle="rgba(0,0,0,.55)";x.fillRect(0,cv.height-86,cv.width,86);x.fillStyle="#fff";x.font="17px Georgia, serif";x.textAlign="left";
  const words=m.txt.split(/(\s+)/);let line="",y=cv.height-58;for(const wd0 of words){if(x.measureText(line+wd0).width>cv.width-28){x.fillText(line,14,y);line="";y+=22;if(y>cv.height-8)break}line+=wd0}if(y<=cv.height-8)x.fillText(line,14,y);
- const aid="a"+Date.now();S.album.unshift({id:aid,cid:m.who,src:cv.toDataURL("image/jpeg",.74),at:Date.now()});if(S.album.length>12)S.album.length=12;
+ const aid="a"+Date.now();S.album.unshift({id:aid,cid:m.who,src:mediaWrap("album:"+aid,cv.toDataURL("image/jpeg",.74)),at:Date.now()});if(S.album.length>12)S.album.length=12;
  appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"))}catch(e){}}
 
 /* ================= COUPLE / QUEST ================= */

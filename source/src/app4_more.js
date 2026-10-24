@@ -548,7 +548,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-shline]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.shline];if(!m)return;const c=ch(m.who),w=th.wid?wd(th.wid):null;
   openShare({tag:w?Lz(w.title):"",who:c?c.n:"",title:"",quote:m.txt,bg:artSrc(m.who||th.cast[0]),text:(c?first(c.n)+": ":"")+"“"+m.txt+"” — MIRU",link:shareURL("m",th.id+"-"+x.dataset.shline)});return}
  if(x=e.target.closest("[data-shimg]")){const a=S.album.find(y=>y.id===x.dataset.shimg);if(!a)return;const c=ch(a.cid);
-  openShare({photo:1,tag:c?c.n:"",bg:a.src||artSrc(a.cid),quote:a.cap||"",text:t("shr.imgtxt",{c:c?first(c.n):""}),link:shareURL("i",a.id)});return}
+  openShare({photo:1,tag:c?c.n:"",bg:albumSrc(a)||artSrc(a.cid),quote:a.cap||"",text:t("shr.imgtxt",{c:c?first(c.n):""}),link:shareURL("i",a.id)});return}
  if(x=e.target.closest("[data-shcm]")){const [wid,i]=x.dataset.shcm.split("|"),cm=COMMENTS[+i],w=wd(wid);if(!cm)return;
   openShare({tag:w?Lz(w.title):"",who:cm[0],quote:cm[1],bg:w?artSrc(w.cover?w.id:w.cast[0]):"",text:cm[0]+": “"+cm[1]+"”",link:shareURL("c",wid+"-"+i)});return}
  if(e.target.closest("[data-imgshare]")&&IMG.cv){const c=ch(IMG.m.who);openShare({photo:1,tag:c?c.n:"",bg:IMG.url||artSrc(IMG.m.who),quote:"",text:t("shr.imgtxt",{c:c?first(c.n):""})+" “"+IMG.m.txt+"”",link:shareURL("i",Date.now())});return}});
