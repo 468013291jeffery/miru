@@ -39,6 +39,16 @@ const add = (id, what, verdict, detail) => results.push({ id, what, verdict, det
 
 // ---- 能真跑的几条 ----
 try {
+  // T13：prompt 里「先回答玩家说的那句话」这条规则还在不在（app71_narrative.js:29）
+  const rule = 'BEAT 1 MUST respond to exactly that';
+  const free = 'Free talk answers what the player actually said';
+  const inBundle = html.includes(rule) && html.includes(free);
+  const inSrc = (src['app71_narrative.js'] || '').includes(rule);
+  add('T13', '玩家普通问题 → 先回答，不强制剧情推进', (inBundle && inSrc) ? 'PASS' : 'FAIL',
+    'prompt 级规则（app71_narrative.js:29）；行为级只能靠真实对话样本，这里只保证规则不被改掉');
+} catch (e) { add('T13', '玩家普通问题 → 先回答，不强制剧情推进', 'FAIL', e.message); }
+
+try {
   // 记忆层的类型表 M2T：fact 与 guess 是两栏，且 guess 明确写着"未确认，不要当成事实"
   const i0 = html.indexOf('const M2T = {');
   let d0 = 0, j0 = html.indexOf('{', i0);
@@ -192,14 +202,13 @@ const NY = [
   ['T02', '显式 fluff + cozy → 不混入 steamy/angst', '同上：没有 emotion 标签系统'],
   ['T03', 'emotion=[angst,cozy] → 去重与主辅顺序稳定', '同上'],
   ['T04', 'heat 非法或情绪超过两个 → 明确校验错误', '同上：没有校验层'],
-  ['T05', 'trope.slow + heat.slow → 不互相覆盖', 'TROPE_MAP 存在但没有"慢燃"这一维的合并规则'],
-  ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '没有 revision 概念（对账 #6）'],
+  ['T05', 'trope.slow + heat.slow → 不互相覆盖', '读过 TROPE_MAP：它是**推荐标签**（37 部，"Slow Burn" 只是标签字符串），heat 是包上的独立字段（ice 的 heat="slow"）；两者之间没有任何合并逻辑 —— 所以不是「会互相覆盖」，是这套合并根本不存在'],
+  ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '读过全库：revision 只出现在数据行的字符串里，没有 revision 字段、没有失效逻辑（对账 #6）；app80_cache 靠**文本不变**侥幸命中，改一个字就整段失效'],
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
-  ['T13', '玩家普通问题 → 先回答不硬推进', '这是 prompt 规则，没有可断言的行为；需真实对话样本'],
   ['T16', 'Plot98 返回旧 revision → 丢弃', '没有 Plot98（对账 #12）'],
   ['T17', '普通对话有有效计划 → 不频繁调 Plot98', '同上'],
-  ['T18', '新场景无计划 → 按需一次并缓存', '同上'],
-  ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '没有续写流程（对账 #14）'],
+  ['T18', '新场景无计划 → 按需一次并缓存', '读过 app25_dir.js（52 行）：换场景是有设计的——剧本包跳到脚本里的下一幕，实时 AI 走「故事时钟 +2h + 过渡卡」；缺的是 Plot98 那层「按需生成一次并缓存计划」'],
+  ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '读过 app50_creator2.js：作者侧有「继续写…」的创作流（草稿→发布）；**运行时**剧本耗尽后没有自动续写，对账 #14 记的是这一半'],
   ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
   ['T21', '未授权通知/静默时段 → 不发召回', '查过了：全库无 serviceWorker / push 订阅 / requestPermission；app20 那条“一天一次来电”是应用内提示，不是推送'],
   ['T25', 'Plot98 失败 → 角色仍可回答', '没有 Plot98（对账 #12）'],
