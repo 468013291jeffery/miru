@@ -39,7 +39,7 @@
 | 第④步 17 项交稿必测清单 | ❌ 没有 |
 | 角色卡「调情的四种写法」「成长弧」 | ⚠️ 部分：角色卡有五类字段（`app97_card.js`），但**没有专写这两项** |
 | 规划"卡住时给 2-3 种回应" | ❌ 没有（`PLOT98` 的计划只是候选章节，不生成引导话术） |
-| 续写带"已发生不可推翻"清单 | ❌ 没有（我们的 `canon` 只有各章 `mem` 一句话，没有全局事实表） |
+| 续写带"已发生不可推翻"清单 | ✅ 有（2026-10-25 补） | `source/src/app94_replyguard.js` 的 `canonFacts(wid,ch)`：只取**已经过去**章节的 reveals/breaks（未来章节的同一批词是禁区，同源反向）+ 已有的各章 `mem` 合成 `app14_pack.js` 的 WHAT HAS HAPPENED 块；`tools/plot-generate-probe.mjs --dry` 可零成本核对它进没进去 |
 | 台词检查（说了不该知道的 → 重写一次 → 保守回答） | ✅ 有（2026-10-25 补） | `source/src/app94_replyguard.js`（`marksForbidden` 取未来章节的 reveals/breaks + 卡片 secret/twist → `guardReply` 重写一次 → 仍命中落保守句）+ `app3_chat.js:257` 接进对话流 + 开关 `chat.replyGuard`；15 条自检 |
 | 默认尺度 暧昧→微辣 | ❌ 不适用（我们没有那个新建表单） |
 

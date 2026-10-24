@@ -24,7 +24,7 @@ const sandbox = {
   ch: (id) => ({ noor: { secret: { zh: '他和球的那件事' } }, mason: { twist: { zh: '他其实早就知道' } } }[id] || null),
 };
 vm.createContext(sandbox);
-vm.runInContext(src + '\nthis.API={marksForbidden,cardForbidden,leakHits,beatsText,guardReply};', sandbox);
+vm.runInContext(src + '\nthis.API={marksForbidden,cardForbidden,leakHits,beatsText,guardReply,canonFacts};', sandbox);
 const A = sandbox.API;
 
 let pass = 0; const fails = [];
@@ -69,6 +69,14 @@ ok('两次命中的词都记下来了', r3.leaked.length >= 1);
 console.log('②b 重写返回空 → 也算失败，走保守句');
 const r4 = await A.guardReply({ reply: leaky, words, ask: async () => null, fallback: () => safeReply });
 ok('空回复不冒充成功', r4.reply === safeReply && r4.fellBack === true);
+
+console.log('⑥ canon 清单：已发生的进、未来的不进');
+const c2 = A.canonFacts('demo', 2);
+const c5 = A.canonFacts('demo', 5);
+ok('ch2 时 canon 为空（前面的章节没有标记）', c2.length === 0, c2);
+ok('ch5 时 ch3 与 ch5 的都算已发生', c5.length >= 2, c5);
+ok('canon 里出现 Ch3 那条', c5.some(x => /^Ch3:/.test(x)), c5);
+ok('canon 里不出现比当前章更晚的', !c5.some(x => /^Ch[7-9]:/.test(x)), c5);
 
 function leaksNamed(prompt, leaked) {
   if (!prompt || !leaked.length) return false;

@@ -118,3 +118,35 @@ async function guardReply(o) {
   const safe = (typeof opts.fallback === "function") ? opts.fallback() : null;
   return { reply: safe, retried: true, leaked: hits1.concat(hits2), fellBack: true };
 }
+
+/** 已发生、不可推翻的事实（他们 v8.2.3「续写要带 canon 清单」）。
+ *  口径：**只取已经过去的章节**（at <= 当前章）的 reveals / breaks —— 那是"已经发生"；
+ *  未来章节的同一批词是**禁区**（见 marksForbidden），两者用同一个数据源、相反的方向。
+ *  @returns {string[]} 例：["Ch3: noor 违背了承诺(promised)"]
+ */
+function canonFacts(wid, ch) {
+  const out = [];
+  try {
+    if (typeof MIRU_MARKS === "undefined" || !MIRU_MARKS) return out;
+    const w = MIRU_MARKS[wid];
+    if (!w || !w.chapters) return out;
+    const cur = Math.max(1, Number(ch) || 1);
+    for (const k of Object.keys(w.chapters).map(Number).sort((a, b) => a - b)) {
+      if (!(k <= cur)) continue;                      // 只有"已经过去"的才是事实
+      const box = w.chapters[String(k)] || {};
+      const push = (o, tag) => {
+        if (!o || typeof o !== "object") return;
+        for (const who of Object.keys(o)) {
+          const v = o[who];
+          if (typeof v === "string") { out.push("Ch" + k + ": " + who + " " + tag + " " + v); continue }
+          if (v && typeof v === "object") {
+            for (const kk of Object.keys(v)) out.push("Ch" + k + ": " + who + " " + tag + " " + kk);
+          }
+        }
+      };
+      push(box.reveals, "revealed");
+      push(box.breaks, "broke");
+    }
+  } catch (_) {}
+  return out;
+}

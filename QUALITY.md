@@ -26,7 +26,7 @@ node tools/check-all.mjs          # 八套全跑
 | `card-selftest` | 55 | `node tools/card-selftest.mjs --selftest` | **每章一份角色卡**：可变折叠 · 只增不回退 · 立场只加码 · 揭示不改秘密 · 可回放 |
 | `regression-25` | 21 PASS / 2 NOT-YET / 2 N-A | `node tools/regression-25.mjs` | 文档 §14.1 的 25 条现状映射：能跑的跑，跑不了的写明缺什么。自带表结构闸（必须 25 行、ID 不重复） |
 | `plan-valid-selftest` | 16 | `node tools/plan-valid-selftest.mjs` | 发布前的结构校验（T19/T20 前置）：章节/节拍/选项/说话人/结局，单语可用 |
-| `replyguard-selftest` | 15 | `node tools/replyguard-selftest.mjs` | 台词守门：说了本章不该知道的事 ⇒ 重写一次 ⇒ 仍犯就换保守句 |
+| `replyguard-selftest` | 19 | `node tools/replyguard-selftest.mjs` | 台词守门：说了本章不该知道的事 ⇒ 重写一次 ⇒ 仍犯就换保守句 |
 | `rev-selftest` | 9 | `node tools/rev-selftest.mjs` | 内容版本号（T06）：改一字节必变 · 与 Python 同口径 · 旧计划按版本丢弃（T16） |
 
 ## 一条元规则：新闸必须真在册
