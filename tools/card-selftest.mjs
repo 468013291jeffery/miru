@@ -16,7 +16,7 @@ const CHARS = {
   luca:  { n: 'Luca',  age: 27, role: { en: 'driver'  }, looks: { en: 'sharp' }, vibe: { en: 'warm' }, tells: { en: ['ears'] }, twist: { en: 'ruthless' }, likes: { en: 'cars' }, secret: { en: 'THE-LET-IN' } }
 };
 const MARKS = { gala: JSON.parse(fs.readFileSync('source/content/marks/gala.json', 'utf8')) };
-const api = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo, cardChanges };')((id) => CHARS[id], () => ({ pack: { chapters: [
+const api = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo, cardChanges, knowsNorm };')((id) => CHARS[id], () => ({ pack: { chapters: [
     { choices: [{ k: 'A', then: { en: [['n','act','he steps back'],['mason','say','“别问了。”']], zh: [['n','act','他退了一步。'],['mason','say','“别问了。”']] } },
                 { k: 'B', then: { en: [['luca','say','“让他说完。”']], zh: [['luca','say','“让他说完。”']] } }] },
     { choices: [{ k: 'A', then: { en: [['mason','say','“我留着那个球。”']], zh: [['mason','say','“我留着那个球。”']] } }] }
@@ -130,6 +130,33 @@ console.log('⑪ 章末那张「他变了什么」的卡（cardChanges）');
   ok('第 6 章的 cardMemo 能说出这件事', /立场|他说过|知道/.test(api.cardMemo(tc, 'mason', 6)) || api.cardMemo(tc, 'mason', 6) !== '', api.cardMemo(tc, 'mason', 6));
   ok('没变化的章返回空', api.cardChanges(tc, 9).length === 0);
   ok('玩家自己不出现在卡里', !api.cardChanges(tc, 5).some(x => x.cid === 'jack'));
+}
+
+console.log('⑫ knows 带类型：事实 / 他以为 / 你告诉他的');
+{
+  const tk = { cast: ['mason'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 10 }, cardLog: {} };
+  api.cardCommit(tk, 'mason', 1, { knows: [
+    '他亲眼看到的事',                                  // 字符串 ⇒ 事实（兼容旧数据）
+    { t: '他以为你骗了他', kind: 'guess' },
+    { t: '你说你怕打雷', kind: 'self' },
+    { t: 'unknown-kind 归到事实', kind: 'nonsense' }
+  ] });
+  const c1 = api.cardAt(tk, 'mason', 1);
+  ok('四个条目都归一成功', c1.knows.length === 4, c1.knows.length);
+  ok('字符串按事实处理', c1.knows[0].kind === 'fact');
+  ok('未知 kind 归到事实（不吞数据）', c1.knows[3].kind === 'fact', c1.knows[3].kind);
+  const memo = api.cardMemo(tk, 'mason', 1);
+  ok('**猜测不会被说成"知道"**', !/知道：[^·]*他以为你骗了他/.test(memo), memo);
+  ok('猜测单独标"他以为（未确认）"', /他以为（未确认）：[^·]*他以为你骗了他/.test(memo), memo);
+  ok('自述单独标"你告诉过他"', /你告诉过他[^·]*怕打雷/.test(memo), memo);
+  ok('事实那一栏里有它', /知道：[^·]*他亲眼看到的事/.test(memo), memo);
+  // 标记旁档也能写 knows（和 breaks / reveals 同一套规则）
+  const tm = { cast: ['mason'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 10 }, cardLog: {} };
+  const marksWithKnows = { gala: { chapters: { '2': { knows: { mason: [{ t: '他还不知道录像的事', kind: 'guess' }] } } } } };
+  const api2 = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardCommitChapter, cardAt };')((id) => CHARS[id], () => ({ pack: { chapters: [{ choices: [] }, { choices: [] }] } }), () => 1, marksWithKnows, () => 'zh');
+  api2.cardCommitChapter(tm, 2, 'A');
+  const k2 = api2.cardAt(tm, 'mason', 2).knows;
+  ok('标记旁档能写 knows', k2.length === 1 && k2[0].kind === 'guess', JSON.stringify(k2));
 }
 
 if (process.argv.includes('--selftest')) {
