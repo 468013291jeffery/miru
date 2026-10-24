@@ -70,3 +70,23 @@ function emotionLine(input) {
   if (r.notes.length) bits.push("");
   return bits.filter(Boolean).join(" · ");
 }
+
+/** 年龄门（文档 §14.1 T08）：未确认成年时，把 heat 上限压到 slow。
+ *  开关是 MIRU_TUNE.tools.ageGate，**默认关** —— 要不要对现有用户强制确认，是产品决定，
+ *  不是我能替他定的。开着的时候，没确认（S.ageOk !== true）就压到 slow。 */
+function ageAllowed() {
+  try {
+    if (typeof MIRU_TUNE === "undefined" || !MIRU_TUNE.tools || !MIRU_TUNE.tools.ageGate) return true; // 开关没开 ⇒ 不限制
+    if (typeof S === "undefined") return true;
+    return S.ageOk === true;
+  } catch (_) { return true }
+}
+
+/** 按年龄门把 heat 降级：未确认 ⇒ steamy/mature 一律回到 slow（fluff 不动，它本来就不露骨）。 */
+function heatGated(heat) {
+  try {
+    const h = String(heat || "steamy").toLowerCase();
+    if (ageAllowed()) return h;
+    return (h === "steamy" || h === "mature") ? "slow" : h;
+  } catch (_) { return "slow" }
+}

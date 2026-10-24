@@ -39,7 +39,8 @@ var MIRU_TUNE = (function () {
     },
     tools: {
       // 每个工具本场可用几次（0 = 不限，即保持旧行为）与冷却毫秒（0 = 无冷却）
-      giftPerScene: 0, datePerScene: 0, truthPerScene: 0, cooldownMs: 0
+      giftPerScene: 0, datePerScene: 0, truthPerScene: 0, cooldownMs: 0,
+      ageGate: false        // true 时：未确认成年 ⇒ heat 上限压到 slow（默认关，要不要强制是产品决定）
     },
     love: {
       deltaCap: 12,         // 单次好感变动上限
