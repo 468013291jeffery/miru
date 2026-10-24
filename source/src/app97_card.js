@@ -108,14 +108,21 @@ function cardCommitChapter(th, n, k) {
       if (th.pk && cid === th.pk.as) continue;          // 玩家自己那个不是"角色卡"
       const delta = {
         mutable: { love: Number(th.love && th.love[cid]) || 0, stage: (typeof stageOf === "function" ? stageOf(th, cid) : 0) },
-        firsts: { ["ch" + n]: k }
+        firsts: (function () {
+          // 只记"第一次做了这件事"；每章一条等于没信息（第 n 章选 k 本身没有意义）
+          const done = [];
+          const log = (th.cardLog && th.cardLog[cid]) || [];
+          if (!log.some(x => x.added && x.added.firsts && x.added.firsts[k])) done.push([k, 1]);
+          return done.length ? Object.fromEntries(done) : null;
+        })()
       };
       // ⚠️ 真实数据里 c.then 是**本地化对象** {en,zh,ja,ko,es}，不是数组（第一版写错了，
       //    夹具也用数组，于是测试通过而线上永远是空的）
       const branch = pick && pick.then && (pick.then[(typeof CL === "function" ? CL() : "en")] || pick.then.zh || pick.then.en) || [];
       if (Array.isArray(branch)) {
         const said = [];
-        for (const b of branch) if (b && b[1] === "say" && b[2]) said.push(String(b[2]).slice(0, 80));
+        // 只收**他自己**说的话（第一版把整支台词都收了，于是每个人的"他说过"里都有别人的话）
+        for (const b of branch) if (b && b[0] === cid && b[1] === "say" && b[2]) said.push(String(b[2]).slice(0, 80));
         if (said.length) delta.said = said;
       }
       // 内容标记（旁档 MIRU_MARKS）：④立场 与 ⑤揭示 只有作者标了才算数，不猜
@@ -127,6 +134,7 @@ function cardCommitChapter(th, n, k) {
           if (one.reveals && one.reveals[cid]) delta.revealed = { secret: one.reveals[cid] };
         }
       } catch (_) {}
+      if (!delta.firsts) delete delta.firsts;
       if (cardCommit(th, cid, n, delta).ok) done++;
     }
     return done;
@@ -155,11 +163,15 @@ function cardChanges(th, ch0) {
       const d = cardDiff(th, cid, ch0);
       const love = d.mutable && d.mutable.love;
       const dl = love ? (Number(love.to) || 0) - (Number(love.from) || 0) : 0;
+      const fromStage = love ? (Number(love.fromStage) || 0) : 0;
+      const stageMoved = !!(d.mutable && d.mutable.stage && d.mutable.stage.from !== d.mutable.stage.to);
       const stance = Object.keys(d.stance || {}).length;
       const knows = (d.added && d.added.knows ? d.added.knows.length : 0);
       const revealed = Object.keys(d.revealed || {}).length;
-      if (dl || stance || knows || revealed) {
-        out.push({ cid: cid, loveDelta: dl, loveTo: love ? love.to : undefined, stance: d.stance || {}, knows: knows, revealed: revealed });
+      // 纯好感涨跌不进这张卡（每章都会涨，报了就是流水账，见 tools/card-replay.mjs 的实测）
+      // 阶段跨档不进这张卡：它已经有自己的升级卡（stage.N），重复报等于一晚上弹两次
+      if (stance || knows || revealed) {
+        out.push({ cid: cid, loveDelta: dl, loveTo: love ? love.to : undefined, stageMoved: stageMoved, stance: d.stance || {}, knows: knows, revealed: revealed });
       }
     }
   } catch (_) {}
