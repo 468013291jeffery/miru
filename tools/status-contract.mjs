@@ -104,6 +104,22 @@ if (process.argv.includes('--selftest')) {
   if (!caught) { console.log('SELFTEST FAILED'); process.exit(1); }
 }
 
+// 非恋爱对象（2026-10-25 Ann 改）：只关恋爱线，不关掉人的魅力。
+// 这条臂盯的是**prompt 里那句注入文本**，不是注释 —— 所以从产物里取三元式那一支。
+{
+  const html = fs.readFileSync('index.html', 'utf8');
+  const m = html.match(/\(c\.romanceable===false\?"([^"]*)":""\)/);
+  const line = m ? m[1] : '';
+  const okRoute = /Not a romance route/.test(line);
+  const okIntimacy = /affection and intimacy do not progress/.test(line);
+  const keepsPerson = /magnetism, teasing, banter/.test(line);
+  const noCold = /Do not make them cold, flat or sexless/.test(line);
+  const noBan = !/never flirt/i.test(line);
+  const c = okRoute && okIntimacy && keepsPerson && noCold && noBan;
+  if (c) { pass++; console.log('  ✓ 非恋爱对象：只关恋爱线，不关魅力（且没有「不许调情」）'); }
+  else { fails.push('romanceable 注入文本'); console.log('  ✗ 非恋爱对象注入文本不对 → ' + (line || '(没取到)')); }
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('status contract OK');

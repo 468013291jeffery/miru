@@ -13,7 +13,7 @@
 | 角色说话带尺度与情绪基调 | ✅ 有 | `source/src/app3_chat.js:240`（HEAT CEILING 行，过 `emotionNorm` 白名单） |
 | 尺度按关系阶段取最低档 | ✅ 有 | `source/src/app3_chat.js:2` + `app98_emotion.js`（`heatGated` / 阶段下限） |
 | 未确认成年 → 保守一档 | ✅ 有（今天刚开） | `source/src/app93_agegate.js`（首启五语确认 + `S.ageOk`） |
-| 不可恋爱的角色不调情 | ✅ 有 | `source/src/app95_status.js:65,68`（`loveAllowed`：在场 + `romanceable`） |
+| ~~不可恋爱的角色不调情~~ | ⚠️ **我们改了，改得对** | 原来照他们的写（`app3_chat.js:182` 注入 "never flirt"）——**2026-10-25 Ann 否掉**：关恋爱线 ≠ 关掉人的魅力。现在注入的是「不进恋爱线、不给好感、不做亲密戏；但斗嘴、撩、被撩的反应全在；不许因为路线关闭把人写得冷淡无性」。`source/src/app95_status.js:65,68` 只管好感不涨 |
 | 玩家拒绝不加好感、之后不主动靠近 | ✅ 有 | `source/src/app95_status.js:13`（`loveWrite` 的唯一写口，含 `opts.min` 冷却） |
 | 好感/信任每轮 ±2 | ✅ 有（上限可调，默认 12） | `source/src/app96_tune.js`（`love.deltaCap`）+ `app95_status.js:13` |
 | 工具解锁门槛 15/20/25/30/45 | ✅ 有（默认 0 = 不限，需设值） | `source/src/app95_status.js:84,88`（`toolGate`/`toolUse`，按场景限次 + 冷却 + 换章重置） |
