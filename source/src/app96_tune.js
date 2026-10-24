@@ -34,7 +34,8 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 20,       // STORY SO FAR 带多少条（普通）
       transcriptPlus: 60,   // 同上（Plus）
-      partMergeMax: 5       // 同一段文字合并成几块为止（原来是字面量 5）
+      partMergeMax: 5,      // 同一段文字合并成几块为止（原来是字面量 5）
+      privateCards: 1       // CAST 里带私密面（secret/twist）的角色数：1=只有这一拍上场的那个；调大即放开
     },
     love: {
       deltaCap: 12,         // 单次好感变动上限

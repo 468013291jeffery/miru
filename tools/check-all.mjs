@@ -19,6 +19,7 @@ const suites = [
   ['tune-selftest.mjs', ['tools/tune-selftest.mjs'], true],
   ['cache-split-contract.mjs', ['tools/cache-split-contract.mjs', '--selftest'], true],
   ['stage-report.mjs', ['tools/stage-report.mjs', '--selftest'], true],
+  ['castcard-selftest.mjs', ['tools/castcard-selftest.mjs', '--selftest'], true],
 ];
 
 let failed = 0;

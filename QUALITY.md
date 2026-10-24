@@ -1,6 +1,6 @@
 # 质量闸（QUALITY）
 
-> **一句话**：改完跑 `node tools/check-all.mjs`。九套、162 个用例，全绿才提交。
+> **一句话**：改完跑 `node tools/check-all.mjs`。十套、172 个用例，全绿才提交。
 > 这一页是给**接手这个仓库的人**看的：哪条闸在管什么、它怎么变红、你改哪里会踩到它。
 
 ## 一条命令
@@ -22,6 +22,7 @@ node tools/check-all.mjs          # 八套全跑
 | `tune-selftest` | 37 | `node tools/tune-selftest.mjs` | 可调参数（滑钮）默认值、覆盖生效、拼错被忽略 |
 | `cache-split-contract` | 17 | `node tools/cache-split-contract.mjs --selftest` | prompt 的 system/user 切分还在正确工作（**坏了会静默烧钱**） |
 | `stage-report` | 4 | `node tools/stage-report.mjs --selftest` | 关系阶段是派生的，**升降两条路都要出声**（降级原来完全无声） |
+| `castcard-selftest` | 10 | `node tools/castcard-selftest.mjs --selftest` | 角色卡分面：只有这一拍上场的人带秘密，其余人一个字不漏 |
 
 ## 四条红线（不变量）
 
@@ -43,6 +44,7 @@ node tools/check-all.mjs          # 八套全跑
 | 改剧本流程（进章 / 选项 / 结局） | `pack-flow-selftest` | 它是把真函数切出来跑的 |
 | 改账本口径（分母、留存、空值） | `ledger-selftest` | 43 条，含「空值必须是 null 不是 0」 |
 | 改关系阶段的判定或提示 | `stage-report` | 它会检查降级分支和去重还在不在 |
+| 改角色卡 / CAST 组装 | `castcard-selftest` | 它会把三张卡切出来真跑，断言公开面不含秘密 |
 | 改埋点刷写时机 | `events-selftest` / `flush-e2e` | 队列满/超时/失败重试三条路 |
 
 ## 为什么这些闸里有一半带 `--selftest`
