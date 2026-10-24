@@ -148,3 +148,52 @@ MIRU_RULES.checkCards = function (cards, chapters) {
   });
   return R;
 };
+
+/* ===== 剧本与角色编写规范 v7.12（2026-10-24）：生成器读 ws712，第③步用 checkStandards，第④步用 ws712checks ===== */
+var MIRU_WS712="MIRU 剧本与角色编写规范 v7.12（编剧交付合同 · 生成器执行版）\n00 运行链：作品标签 → 固定角色人格/尺度（Heat Charter）与固定导演情绪（Emotion Charter）→ 当前合法场景计划 → 角色可知的动态信息 → 角色生成台词/动作/工具提议 → 程序验证并提交真实事件 → 下一轮状态和记忆。导演只在需要新计划、重大转折、真正停滞或合法续写时工作。交付必须回答：世界里什么是真的；每个人是谁；故事为什么发生；玩家怎么参与；AI 能发挥到哪里。禁止两类偷懒：只写“霸道、很撩、很虐”不给可演行为；给角色完整剧透、让角色自行决定事件和加分。\n01 最小交付包：A 作品总卡；B 故事圣经；C 角色总卡；D 章节卡；E 场景节拍与选择；F 资源互动清单（有工具才需要）；G 续写素材（持续陪伴必需）；H 审核与版本记录。必需字段缺失不得让 AI 猜测后直接上线。\n02 标签硬约束：取向 bl/bg/gl；世界最多 2；关系桥段最多 4；人物类型最多 2；尺度 heat 恰好 1 个（fluff/slow/steamy），未填默认 steamy；情绪 emotion 1–2 个（cozy/romcom/angst/dark/thrill），未填默认 angst，两项时首项为主。trope.slow（慢热桥段）与 heat.slow（暧昧尺度）不能串值。显式选了 fluff、cozy 不得偷偷叠加 steamy、angst。\n02.2 Heat Charter：fluff=偏爱、呵护、分享秘密、共同生活、关系修复（不能完全无恋爱张力）；slow=双关、调侃、克制的接近、欲言又止、互相试探，给玩家可接的对话球（不能每句冷淡或故意拖）；steamy=成年且玩家愿意时尽早自然心动、主动示好、想念、距离感、拥抱/亲吻愿望等非露骨吸引（不能未经同意接触、强制升级、重复欲望套话）。\nEmotion Charter：cozy 靠近→困难→理解→修复；romcom 相遇→尴尬→斗嘴→转折→亲近（有因果的笑点和澄清机会）；angst 吸引→希望→裂痕→抉择→修复/遗憾（真实恐惧、失去代价、强弱交替，不无休止虐）；dark 秘密→压力→两难→代价（不等于允许胁迫亲密）；thrill 疑点→线索→调查→反转→揭露（已定义线索与真相链）。\n总卡写一句“本作承诺的核心体验”（具体，不要“甜虐交织”）；写清标题、logline、世界与时间、玩家身份及行动自由度、标签、总主线问题、关键角色、世界级禁区、故事形态、内容排除、是否允许续写、开始场景。romanceable=false 角色不得启动恋爱机制；年龄未确认或无浪漫授权时保守表达，玩家拒绝时当轮下调。\n03 故事圣经（导演能看，角色不能全看）：世界法则（不得为转折临时发明规则）、主线命题（玩家想解决什么、阻力、为什么在乎）、时间线、核心真相（谁知道/谁误解/何时揭露）、伏笔台账（伏笔ID｜首次出现｜线索载体｜揭露条件｜回收场景）、高潮与结局四轴（事件/关系/人物弧光/持续状态）、续写边界。作者秘密逐条写 secret_id / objective_truth / knows_initially / discoverable_via / reveal_conditions / prohibited_before / resolution_scene。\n04 角色卡：唯一 ID、身份、年龄、职业、履历、外貌；tier（lead/main/support/side）、romanceable、入场条件、与玩家关系。开局关系旧值 love0/trust0 与四维 affection/trust/attraction/suspicion 不得凭空等同。六项人格锚点（价值内核/底层需求/恐惧旧伤/关系依恋/冲突防御/独特表达）每项写“定义 + 行为证据 + 压力下的反应”，不能写成六个形容词；固定的是基线与历史事实，不是“永不道歉”。\n04.3 romanceable=true 的角色写四种调情素材：主动示好方式、情感需求表达、非露骨身体吸引、被拒绝后的反应（尊重、转移话题、保留体面，不责怪、不威胁、不反复试探）；每项 2 条行为示例 + 1 条禁止的失真台词。“角色想靠近”和“玩家已同意靠近”是两个事件。\n04.4 知识边界四类分开：fact/known（经历/听到/读到，带来源，可进入角色）；belief/misbelief（主观判断，作为相信/猜测）；unknown（作者知道角色不知道，不进入角色）；author_only（反转、他人秘密、未来情节，只给导演和校验）。每章更新 knows/unknown/beliefs/goal/relation/speech/growth。\n04.5 成长：初始行为 → 冲突触发（事件ID）→ 一次尝试 → 关键抉择 → 改变后的可观察行为 → 可能回退的条件；不能一句“从此变温柔”。\n05 章节卡：CH_ID；章目标（一个新问题/选择）；主情绪+辅情绪及节奏位置（吸引/缓和/冲突/反转/回报，强弱交替）；冲突因果（谁的目标撞上什么障碍，真相与误解区分）；必须发生/可选/禁止提前发生的事件ID；各角色本章认知更新范围；伏笔和道具；分支与出章条件及玩家不推进时如何继续对话。章节不代表导演可以自动出章：没有合法选择、已确认事件或“继续剧情”不能硬跳。\n06 场景 14 项：ID；时间地点；在场/可互动；开场事实；当前冲突与代价；角色短目标（goal/avoid/learn）；玩家入口（至少一个可回应/拒绝的问题或行为）；2–5 个功能性节拍；软引导（至少一个，设触发与过期）；明确选择（可延后/不参与，选项不能代替玩家同意）；结构化效果（set/mem/relationship/then，程序执行）；线索与禁止泄露；工具；结束与退路（不点继续仍可自由聊）。\n06.2 软引导写清：触发原因、主导角色、方式、可用已确认线索、不能透露的信息、玩家 2–3 种回应方向、完成条件、失效条件；玩家追问、推迟或换题都不被惩罚。\n06.3 每场给“可聊话题池”；关键场景 1–3 个软引导种子；离题、挂电话、拒绝送礼、调整浪漫偏好、导演超时都有替代台词和回主线路径。\n06.4 恋爱主线场景至少一个价值交付点（被理解/被保护/被认真回应/共同秘密/幽默反差）和一个可选择的亲近机会（例：“如果你愿意，我想坐近一点” → 靠近 / 保持距离 / 换个话题）；玩家失落、拒绝或问正事时先答题和支持，不强行调情。\n07 选择：choice_id、可见文字、前置条件、正式效果、角色看到什么、后继节拍。四维关系独立，写实际原因而非“说对了 +10”；关系阶段 0 陌生人 1 熟起来 2 暧昧 3 摊牌 4 在一起（必须有被确认的关系事件）。玩家拒绝亲密或换题不自动扣信任/好感，不当作欲擒故纵。FLAG 大写英文，写设置/清除/失效条件；事件ID与选择ID不共用；奖励不能每次点按钮重复发放。每轮候选变化约 ±2，剧本结果约 ±5。\n08 工具只用 ask/gift/game/photo/voice/call（date、msg 不是现有工具）；历史门槛 ask0/gift15/game20/photo25/voice30/call45；每句最多 1 工具、间隔 3 轮、每场最多 2 个、不在剧本选择当轮触发。必须写无工具也成立的剧情，核心真相不得只放在付费照片后。\n09 持续陪伴：canon 不可改列表；每位主要角色至少 3 类续写支线；互动钩子（不用假紧急、嫉妒威胁、内疚催促）；禁止重复列表；有限主线不得自动开新主线；沉默不等于同意推进。\n11.3 上线否决项：角色读到未揭露的秘密；选项或工具重复执行；无权限硬跳剧情；未确认扣费；玩家明确拒绝后仍反复施压；新生成剧情推翻 canon；关键分支走不通。\n12 分工：编剧确认真相、人物核心、关键事件、合法分支结果、内容边界、重大成长节点；AI 只扩写台词、软引导、日常话题和合法支线候选；程序负责版本、标签校验、世界状态、可知事实、场景权限、关系结算、支付与去重。";
+MIRU_RULES.ws712 = MIRU_WS712;
+MIRU_RULES.version = MIRU_RULES.version + " + 编写规范 v7.12";
+MIRU_RULES.ws712checks = ["作品的取向 / 世界 / 桥段 / 角色类型合法；未填 heat、emotion 时默认值正确（steamy / angst）", "同时存在 trope.slow 与 heat.slow 时不串值", "故事主线、关键真相、时间线、至少一个合乎逻辑的结局已定义", "主角和主要角色有完整六项人格、亲密表达风格和「被拒绝后的反应」", "tier / romanceable 正确；不可恋爱角色没有恋爱推进", "角色已知、未知、推测和作者秘密分开，关键线索有来源", "每章有目标、情绪节奏、冲突因果、信息变化和出章条件", "每场有在场名单、目标、玩家入口、至少一个软引导或可讨论线索", "软引导有前提、可用线索、禁止泄露、完成信号和拒绝 / 过期处理", "每个关键选择有 ID、前置条件、效果及合法后继", "关系阶段、正式恋爱确立只在合法条件和玩家明确选择后发生", "每个角色成长节点有事件证据和新行为，不是一句「从此变温柔」", "工具只写受支持类型，价格 / 门槛由程序执行；未解锁时剧情仍完整", "玩家拒绝、掉线、导演超时、不点「继续」均不会自动跳场或惩罚", "允许主线结束后续写时，有 canon 禁改清单和新支线池", "面向美国市场时专门审查语言自然度、文化语境和年龄 / 浪漫授权", "story_revision / tag_revision / content_status 与主编审核记录完整"];
+MIRU_RULES.checkStandards = function (cfg, cards, chapters, outline) {
+  const R = { err: [], warn: [] }; cfg = cfg || {}; const T = cfg.taste || {}; const O = String(outline || ""); const tag = "（编写规范 v7.12 ";
+  const lim = [["world", "世界", 2], ["trope", "关系桥段", 4], ["him", "人物类型", 2], ["vibe", "情绪", 2]];
+  lim.forEach(([k, n, m]) => { if ((T[k] || []).length > m) R.err.push(n + "标签最多 " + m + " 个，现在 " + T[k].length + " 个" + tag + "§02.1）"); });
+  if (!["fluff", "slow", "steamy"].includes(cfg.heat)) R.warn.push((cfg.heat ? "尺度「" + cfg.heat + "」不是 fluff/slow/steamy" : "尺度未填") + "，按默认 steamy 执行" + tag + "§02.1）");
+  if (!(T.vibe || []).length) R.warn.push("情绪未选，按默认 angst 执行；如果不是虐向请明确选择" + tag + "§02.1）");
+  if (!String(cfg.hook || "").trim()) R.err.push("作品总卡缺 logline（一句话主冲突 + 角色吸引点）" + tag + "§02.3）");
+  if (!String(cfg.core_promise || "").trim()) R.warn.push("没写「本作承诺的核心体验」" + tag + "§02.2）"); else if (/甜虐交织|又甜又虐|甜虐/.test(cfg.core_promise)) R.warn.push("核心体验承诺太泛（如“甜虐交织”），要写具体人物和变化" + tag + "§02.2）");
+  if (!String(cfg.player || "").trim()) R.warn.push("玩家身份未定" + tag + "§02.3）");
+  if (!String(cfg.main_question || "").trim()) R.warn.push("没写总主线问题（玩家最终要面对的选择）" + tag + "§02.3）");
+  if (!String(cfg.canon_rules || "").trim() && !/canon|不可改|不可更改/.test(O)) R.warn.push("没有 canon 不可改规则" + tag + "§03）");
+  if (O) {
+    if (!/secret_id|作者秘密/.test(O)) R.warn.push("架构里没有作者秘密台账（secret_id / reveal_conditions / prohibited_before…）" + tag + "§03）");
+    if (!/伏笔/.test(O)) R.warn.push("架构里没有伏笔台账" + tag + "§03）");
+    if (!/forbidden_reveals|禁止提前|不能透露/.test(O)) R.warn.push("章节没有写禁止提前揭露的信息（forbidden_reveals）" + tag + "§05）");
+    if (!/软引导|soft_nudge/.test(O)) R.warn.push("关键场景没有软引导" + tag + "§06.2）");
+    if (!/出章|exit_conditions/.test(O)) R.warn.push("章节没有出章条件" + tag + "§05）");
+    if (/持续陪伴/.test(cfg.story_form || "") && cfg.continuation_allowed !== false && !/续写/.test(O)) R.warn.push("故事形态含持续陪伴，但没有续写素材（canon 禁改清单 / 支线池 / 禁止重复）" + tag + "§09）");
+    if (/\b(date|msg)\b\s*工具|约会工具|消息工具/.test(O)) R.warn.push("出现了现有工具执行器不支持的工具（date / msg）；只用 ask/gift/game/photo/voice/call" + tag + "§08）");
+    if (/付费照片[^。\n]{0,30}(真相|秘密)|(真相|秘密)[^。\n]{0,30}付费照片/.test(O)) R.err.push("核心真相放在付费照片后，未付费玩家无法理解主线" + tag + "§08）");
+  }
+  const blank = v => v == null || (Array.isArray(v) ? !v.filter(x => String(x || "").trim()).length : (typeof v === "object" ? !Object.keys(v).length : !String(v).trim()));
+  const list = (cards && cards.characters) || [];
+  list.forEach(c => {
+    const n = c.name || c.key || "?", lead = c.tier === "lead" || c.tier === "main"; const rom = c.romanceable !== false;
+    if (c.romanceable == null) R.warn.push(n + "：没有标明 romanceable" + tag + "§04.1）");
+    const f = c.flirt_signature || {};
+    if (rom && lead) {
+      ["approach", "emotional_desire", "physical_attraction_non_explicit", "rejection_response"].forEach(k => { if (blank(f[k])) R[k === "rejection_response" ? "err" : "warn"].push(n + "：调情素材缺「" + ({ approach: "主动示好方式", emotional_desire: "情感需求表达", physical_attraction_non_explicit: "非露骨身体吸引", rejection_response: "被拒绝后的反应" })[k] + "」" + tag + "§04.3）"); });
+      const rj = JSON.stringify(f.rejection_response || ""); if (/威胁|逼|不准|不许|由不得|必须|再问一次|继续试探|欲擒故纵/.test(rj)) R.err.push(n + "：被拒绝后的反应里有施压 / 威胁 / 反复试探（上线否决项）" + tag + "§04.3 / §11.3）");
+    }
+    if (!rom && !blank((c.base && c.base.patterns && c.base.patterns.romance) || f.approach)) R.warn.push(n + "：romanceable=false 却写了恋爱推进素材" + tag + "§04.1）");
+    const g = c.growth_arc || {}; if (lead && (blank(g.trigger_event_ids) || blank(g.new_behavior))) R.warn.push(n + "：成长弧缺触发事件 ID 或改变后的可观察行为" + tag + "§04.5）");
+    if (/从此变(得)?(温柔|成熟|坦诚)/.test(JSON.stringify(g) + JSON.stringify(c.chapters || {}))) R.warn.push(n + "：成长写成了一句「从此变…」，要写事件证据和新行为" + tag + "§04.5）");
+    const ki = c.knowledge_ids || {}; const ao = [].concat(ki.author_only || []).map(x => String(x).trim()).filter(x => x.length > 2);
+    const sec = String((c.base && c.base.author_only && c.base.author_only.secret) || "").trim();
+    const knowAll = JSON.stringify([].concat(ki.known || [], ...Object.values(c.chapters || {}).map(x => (x && x.knows) || [])));
+    ao.forEach(id => { if (knowAll.includes(id)) R.err.push(n + "：作者秘密「" + id + "」进入了角色已知（上线否决项：角色读到未揭露的秘密）" + tag + "§04.4 / §11.3）"); });
+    if (sec.length > 8 && knowAll.includes(sec.slice(0, 12))) R.err.push(n + "：author_only 秘密原文出现在某章 knows 里（上线否决项）" + tag + "§11.3）");
+  });
+  (chapters || []).forEach(ch => { const md = String(ch.md || ""); if (/你没有选择|不许拒绝|由不得你|你必须答应/.test(md)) R.err.push("第 " + ch.n + " 章：玩家拒绝后被施压或被替玩家决定（上线否决项）" + tag + "§11.3）"); if (/#\s*CHOICE/.test(md) && /(抱|吻|亲|靠近)/.test(md) && !/(保持距离|换个话题|不了|先不)/.test(md)) R.warn.push("第 " + ch.n + " 章：有亲近场面，但选项里没有“保持距离 / 换个话题”这类退路" + tag + "§06.4）"); });
+  return R;
+};

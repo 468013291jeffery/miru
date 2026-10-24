@@ -2819,6 +2819,27 @@ function poster(id){
  x.fillStyle="rgba(240,183,126,.9)";x.font="800 12px Manrope, Helvetica, sans-serif";x.fillText((c?(c.n.split(" ").slice(1).join(" ")||"MIRU"):"MIRU").toUpperCase().split("").join(" "),34,Ht-28);
  const d=x.getImageData(0,0,Wd,Ht),p=d.data;for(let k=0;k<p.length;k+=4){const n=(Math.random()-.5)*16;p[k]+=n;p[k+1]+=n;p[k+2]+=n}x.putImageData(d,0,0);
  return POSTER[id]=cv.toDataURL("image/jpeg",.84);}
+/* v8.2.2 · iPhone Safari 崩溃保护：换新域名后从云端恢复的存档没有头像图（art 太大没同步），
+   每个角色都要现画一张海报（canvas + 逐像素噪点），角色一多 iOS 内存吃不消，整页崩溃（“重复出现问题”）。
+   ① 前 6 张照旧画，之后改用极轻量 SVG 海报（不占 canvas 内存）② 画完立刻释放 canvas
+   ③ 启动打点：上一次没启动完就记一条 crash98 事件（带存档规模），连续两次没起来就进安全模式（全部用 SVG 海报） */
+(function(){
+ const BK="miru.boot98";let bc={n:0};try{bc=JSON.parse(localStorage.getItem(BK)||"{}")||{n:0}}catch(_){}
+ const crashed=bc.stage&&bc.stage!=="ok";const safe=crashed&&(bc.n||0)>=1;
+ try{localStorage.setItem(BK,JSON.stringify({stage:"load",n:crashed?(bc.n||0)+1:0,at:Date.now()}))}catch(_){}
+ const mark=st=>{try{localStorage.setItem(BK,JSON.stringify({stage:st,n:st==="ok"?0:(crashed?(bc.n||0)+1:0),at:Date.now()}))}catch(_){}};
+ setTimeout(()=>mark("ok"),9000);
+ if(crashed)setTimeout(()=>{try{track("crash98",{prev:bc.stage,n:bc.n||0,safe:safe?1:0,art:Object.keys(S.art||{}).length,chars:Object.keys((S.mine&&S.mine.chars)||{}).length,threads:Object.keys(S.threads||{}).length,kb:Math.round(JSON.stringify(S).length/1024),ua:navigator.userAgent.slice(0,80)})}catch(_){}},4000);
+ const esc2=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ function svgPoster(id){const c=ch(id),w=wd(id),pal=(c&&c.pal)||(w&&w.pal)||["#8C7AA8","#141019"];const name=(c?c.n:w?Lz(w.title):String(id)).replace(/^(Dr\.|Prince)\s+/,"");
+  const s='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 540"><defs><radialGradient id="g" cx="40%" cy="25%" r="95%"><stop offset="0" stop-color="'+pal[0]+'"/><stop offset=".45" stop-color="'+pal[1]+'"/><stop offset="1" stop-color="#050407"/></radialGradient></defs><rect width="420" height="540" fill="url(#g)"/><text x="218" y="430" font-family="Georgia,serif" font-style="italic" font-size="400" fill="'+pal[0]+'" fill-opacity=".85" text-anchor="middle">'+esc2(name[0]||"M")+'</text><rect x="16" y="16" width="388" height="508" fill="none" stroke="rgba(240,183,126,.55)" stroke-width="1.5"/><rect x="16" y="448" width="388" height="76" fill="rgba(5,4,7,.55)"/><text x="34" y="490" font-family="Georgia,serif" font-size="30" fill="#F4EFF5">'+esc2(name.split(" ")[0])+'</text></svg>';
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(s)}
+ let drawn=0;
+ try{const _p=poster;poster=function(id){if(POSTER[id])return POSTER[id];if(safe||drawn>=6)return POSTER[id]=svgPoster(id);drawn++;return _p.apply(this,arguments)}}catch(_){}
+ /* free each canvas right after it is turned into an image (iOS keeps canvas memory until GC) */
+ try{const _ce=document.createElement.bind(document);const _td=HTMLCanvasElement.prototype.toDataURL;HTMLCanvasElement.prototype.toDataURL=function(){const u=_td.apply(this,arguments);try{if(this.width===420&&this.height===540&&!this.isConnected){this.width=0;this.height=0}}catch(_){}return u}}catch(_){}
+})();
+
 function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" alt="" loading="lazy"></div>'}
 function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" alt=""></div>'}
 function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
@@ -15798,7 +15819,7 @@ if(S.ob)startApp();else renderOB();
 (function(){try{const _c=cardOf98;cardOf98=function(w,cid){const k=_c.apply(this,arguments);try{const b=bOf98(w),th=S.threads[curT];if(!k||!b||!th||!th.b98||th.wid!==(w&&w.id))return k;
  const ch=b.chapters[(th.b98.ch||1)-1],cc=ch&&ch.card98&&ch.card98[k.key];if(!cc)return k;
  const L=(a,x)=>(x&&(Array.isArray(x)?x.length:String(x).length))?a+(Array.isArray(x)?x.join("；"):x):"";
- const t=["【本章的你 · 第"+(th.b98.ch||1)+"章】",L("此刻你知道：",cc.knows),L("你还不知道（不能装作知道）：",cc.unknown),L("你相信（可能是错的）：",cc.beliefs),L("你对对方：",cc.relation),L("你这一章想要：",cc.goal),L("你现在说话：",cc.speech),L("你为什么变了：",cc.growth)].filter(Boolean).join("\n");
+ const t=["【本章的你 · 第"+(th.b98.ch||1)+"章】",L("此刻你知道：",cc.knows),((Array.isArray(cc.unknown)?cc.unknown.length:cc.unknown)?"有些事你还不知道：被问到就说不知道或自己去猜，不能猜中你没有依据的真相":""),L("你相信（可能是错的）：",cc.beliefs),L("你对对方：",cc.relation),L("你这一章想要：",cc.goal),L("你现在说话：",cc.speech),L("你为什么变了：",cc.growth)].filter(Boolean).join("\n");
  return Object.assign({},k,{rules:t+"\n\n"+(LZ98(k.rules)||"")})}catch(_){return k}}}catch(_){}})();
 </script>
 <script>
@@ -15828,7 +15849,7 @@ if(S.ob)startApp();else renderOB();
  const J=x=>Array.isArray(x)?x.join("；"):(x&&typeof x==="object"?Object.values(x).filter(Boolean).join("；"):String(x||""));
  function cardText(k,n){const b=k.base||{},co=b.core||{},pt=b.patterns||{},chp=(k.chapters||{})[n]||{};const L=(a,x)=>{const v=J(x);return v?a+v:""};
   return ["【你的角色卡（不变的核心）】",L("价值观：",co.values),L("你最怕：",co.fear),L("底线（任何时候都不越过）：",co.boundaries),L("说话：",pt.speech),L("被逼到时：",pt.defense),L("你怎么喜欢一个人：",pt.romance),L("你的盲区：",pt.blind_spots),
-   "【第"+n+"章的你】",L("此刻知道：",chp.knows),L("还不知道（不能装作知道）：",chp.unknown),L("你相信（可能是错的）：",chp.beliefs),L("你对对方：",chp.relation),L("这一章想要：",chp.goal),L("说话的变化：",chp.speech),L("你为什么变了：",chp.growth)].filter(Boolean).join("\n")}
+   "【第"+n+"章的你】",L("此刻知道：",chp.knows),(J(chp.unknown)?"有些事你还不知道：被问到就说不知道或自己去猜，不能猜中你没有依据的真相":""),L("你相信（可能是错的）：",chp.beliefs),L("你对对方：",chp.relation),L("这一章想要：",chp.goal),L("说话的变化：",chp.speech),L("你为什么变了：",chp.growth)].filter(Boolean).join("\n")}
  const chOf=th=>(th&&((th.pk&&th.pk.ch)||(th.agent97&&th.agent97.ch)))||1;
  /* 2. narrator mode: each cast line carries that character's card */
  try{const _cc=castCard;castCard=function(th,cid){const r=_cc.apply(this,arguments);try{const k=cardFor(th.wid,cid);if(k)return r+"\n  CHARACTER CARD ("+first(ch(cid).n)+", chapter "+chOf(th)+"): "+cardText(k,chOf(th)).replace(/\n/g," | ")}catch(_){}return r}}catch(_){}
@@ -15952,4 +15973,44 @@ if(S.ob)startApp();else renderOB();
  try{const _g=adGrant;adGrant=function(kind,arg){if(kind==="gem"){toast(t("ad.got",{n:ADS.val,left:S.keys}));save();return}return _g.apply(this,arguments)}}catch(_){}
  try{if(S.adsCfg)loadSdk()}catch(_){}
 })();
+</script>
+<script>
+/* v8.2.1 · 剧本与角色编写规范 v7.12 运行时落地（剧情模式 b98，不增加模型调用）
+   ① 每个角色的提示词带上本作固定合同：Heat Charter（尺度，未填=steamy）+ Emotion Charter（情绪，未填=angst）+ 同意原则
+   ② 玩家拒绝 / 想换话题：本轮不扣好感·信任·吸引、不涨怀疑；之后 3 轮角色不再主动靠近（§07.1 / §11.3「拒绝后反复施压」）
+   ③ 不可恋爱角色（romanceable=false）不启动调情（§02.3） */
+(function(){
+ const HEAT={fluff:["清水：偏爱、呵护、分享秘密、共同生活、关系修复；有在意，但不写身体吸引","Fluff: care, favoritism, shared secrets, everyday closeness, repair — warmth without physical heat"],
+  slow:["暧昧：双关、调侃、克制的接近、欲言又止、互相试探；每轮给对方一个能接住的话头，不要冷淡也不要故意拖","Slow burn: double meanings, teasing, restrained closeness, unfinished sentences; always leave a line they can pick up"],
+  steamy:["微辣：可以自然地心动、主动示好、说想念、在意距离、表达想拥抱/想靠近的愿望（非露骨）；任何靠近先问对方愿不愿意","Steamy: let attraction show early — open interest, missing them, awareness of distance, wanting a hug or to be closer (non-explicit); ask before any closeness"]};
+ const EMO={cozy:["温柔：靠近→困难→理解→修复，互相照顾，不无故变残酷","Cozy: closeness → difficulty → understanding → repair"],
+  romcom:["轻松：有因果的笑点、斗嘴和反差，给澄清误会的机会","Rom-com: earned jokes, banter, contrast, chances to clear things up"],
+  angst:["虐：真实的恐惧和失去的代价，强弱交替，不无休止地伤人","Angst: real fear and the cost of loss, strong and soft beats alternate, never endless cruelty"],
+  dark:["暗：秘密、压力、两难和代价，但绝不胁迫亲密","Dark: secrets, pressure, hard choices with a cost — never coerced intimacy"],
+  thrill:["悬疑：只用已经出现的线索，不凭空揭露真相","Thriller: only use clues already on the table; never reveal the truth out of nowhere"]};
+ const VMAP={"Cozy":"cozy","Slice of Life":"cozy","Rom-Com":"romcom","Bittersweet":"angst","Hurt/Comfort":"angst","Drama":"angst","Dark Romance":"dark","Mystery":"thrill"};
+ const NO=/(不要|别)(这样|碰我|碰|靠(这么)?近|过来|亲|抱|说了|再说|问了)|不想(聊|说|谈|这样|被|跟你)|算了吧?|不用了|保持距离|离我远|换个话题|聊点别的|先不要|还没准备好|我拒绝|别闹|请你停|no thanks|not now|stop (it|that)|don'?t touch|back off|change the subject|talk about something else|i'?d rather not|i'?m not ready|leave me alone/i;
+ const ix=(a,i)=>Z98()?a[0]:a[1];
+ function charter(w){const h=HEAT[w&&w.heat]?w.heat:"steamy";
+  let em=((w&&w.taste&&w.taste.vibe)||[]).filter(x=>EMO[x]);if(!em.length)em=[...new Set(((w&&w.tags)||[]).map(t=>VMAP[t]).filter(Boolean))];em=em.slice(0,2);if(!em.length)em=["angst"];return {h,em}}
+ function lastMe(th){for(let i=th.msgs.length-1;i>=0&&i>=th.msgs.length-6;i--){const m=th.msgs[i];if(m&&m.who==="me")return String(m.txt||"")}return ""}
+ function block(th,k){const w=wd(th.wid),{h,em}=charter(w),A=th.b98||{},rom=!(k&&k.romanceable===false);
+  const refused=NO.test(lastMe(th)),cool=(A.noflirt98||0)>(A.talkN||0);
+  const L=[Z98()?"【本作固定合同（编写规范 v7.12）】":"[Fixed contract for this story]"];
+  if(rom)L.push((Z98()?"尺度 · ":"Heat · ")+ix(HEAT[h]));else L.push(Z98()?"你不是可恋爱角色：不调情、不暧昧，只做朋友/同伴/对手该做的事":"You are not a romance option: no flirting, stay friend / ally / rival");
+  L.push((Z98()?"情绪 · ":"Emotion · ")+em.map(e=>ix(EMO[e])).join(Z98()?"；辅：":"; secondary: "));
+  L.push(Z98()?"同意：你想靠近 ≠ 对方已经同意。想靠近就先问（例如“如果你愿意，我想坐近一点”），对方没答应之前，不要写成已经发生。对方失落、拒绝或在问正事时，先回答和支持，不强行调情。":"Consent: wanting to get closer is not the same as them agreeing. Ask first; don't act as if it happened. If they're down, refusing, or asking something serious, answer and support first — no forced flirting.");
+  if(refused)L.push(Z98()?"⚠ 对方刚刚拒绝了 / 想换个方向：体面地退一步，尊重并接住对方想聊的，不追问、不再试探、不责怪，也不要把拒绝当成欲擒故纵。":"⚠ They just said no / want a different direction: step back gracefully, follow their lead, no pushing, no guilt, don't read it as playing hard to get.");
+  else if(cool)L.push(Z98()?"（对方前不久拒绝过靠近：这几轮不要主动调情或提靠近）":"(They turned down closeness recently: don't initiate flirting for a few turns.)");
+  return {txt:L.join("\n"),refused}}
+ /* ① + ②: per-character actor prompts in story mode */
+ try{const _a=ask;ask=async function(prompt){let ref=false,th=null;try{th=S.threads[curT];if(th&&th.b98&&typeof prompt==="string"&&/^(你是「|You are )/.test(prompt)&&/Reply with ONLY JSON/.test(prompt)){
+   const nm=/^你是「([^」]+)」/.exec(prompt);const cid=nm&&th.cast.find(id=>ch(id)&&(nm[1].includes(first(ch(id).n))||ch(id).n.includes(nm[1])));const k=cid?cardOf98(wd(th.wid),cid):null;
+   const b=block(th,k);ref=b.refused;const i=prompt.lastIndexOf("\nReply with ONLY JSON");prompt=prompt.slice(0,i)+"\n\n"+b.txt+prompt.slice(i);arguments[0]=prompt;
+   if(ref&&th.b98){th.b98.noflirt98=(th.b98.talkN||0)+3}}}catch(_){}
+  const r=await _a.apply(this,arguments);
+  try{if(ref&&r&&typeof r==="object"){["feel","trust","attract"].forEach(f=>{if(+r[f]<0)r[f]=0});if(+r.suspect>0)r.suspect=0;try{track("refuse98",{})}catch(_){}}}catch(_){}
+  return r}}catch(_){}
+})();
+
 </script>
