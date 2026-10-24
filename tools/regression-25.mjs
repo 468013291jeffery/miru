@@ -39,6 +39,22 @@ const add = (id, what, verdict, detail) => results.push({ id, what, verdict, det
 
 // ---- 能真跑的几条 ----
 try {
+  // 记忆层的类型表 M2T：fact 与 guess 是两栏，且 guess 明确写着"未确认，不要当成事实"
+  const i0 = html.indexOf('const M2T = {');
+  let d0 = 0, j0 = html.indexOf('{', i0);
+  for (; j0 < html.length; j0++) { if (html[j0] === '{') d0++; else if (html[j0] === '}') { d0--; if (!d0) break; } }
+  const M2T = new Function(html.slice(i0, j0 + 1) + '; return M2T;')();
+  const hasGuess = !!M2T.guess, hasFact = !!M2T.fact;
+  const guessLine = hasGuess ? String(M2T.guess.p || '') : '';
+  const saysUnconfirmed = /unconfirmed/i.test(guessLine) && /do not state/i.test(guessLine);
+  const distinct = hasGuess && hasFact && M2T.guess.p !== M2T.fact.p;
+  // 角色卡那边还是一个平铺的 knows（没有类型）——这一点如实记在 detail 里，不假装它已经好了
+  const cardKnowsTyped = /knows:s*\[\]/.test(fs.readFileSync('source/src/app97_card.js', 'utf8')) === false;
+  add('T12', '角色错误信念 → 不把猜测说成客观事实', (hasGuess && hasFact && saysUnconfirmed && distinct) ? 'PASS' : 'FAIL',
+    `记忆层：fact/guess 两栏 ${distinct} · guess 标注"未确认、别当事实" ${saysUnconfirmed} · 角色卡的 knows 仍是无类型数组 ${!cardKnowsTyped}`);
+} catch (e) { add('T12', '角色错误信念 → 不把猜测说成客观事实', 'FAIL', e.message); }
+
+try {
   const wsrc = fs.readFileSync('api/wallet.js', 'utf8');
   const a0 = wsrc.indexOf('async function apply(');
   let d0 = 0, j0 = wsrc.indexOf('{', a0);
@@ -179,7 +195,6 @@ const NY = [
   ['T05', 'trope.slow + heat.slow → 不互相覆盖', 'TROPE_MAP 存在但没有"慢燃"这一维的合并规则'],
   ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '没有 revision 概念（对账 #6）'],
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
-  ['T12', '角色错误信念 → 不把猜测说成事实', '四类认知（fact/guess/misbelief/author_only）不存在（对账 #8）'],
   ['T13', '玩家普通问题 → 先回答不硬推进', '这是 prompt 规则，没有可断言的行为；需真实对话样本'],
   ['T16', 'Plot98 返回旧 revision → 丢弃', '没有 Plot98（对账 #12）'],
   ['T17', '普通对话有有效计划 → 不频繁调 Plot98', '同上'],
