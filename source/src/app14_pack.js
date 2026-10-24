@@ -146,6 +146,15 @@ function pkOpenMark(th,n){try{
   pkTrack(th,"chapter_open",{ch:n});
 }catch(_){}}
 function pkDone(th,n){try{pkTrack(th,"chapter_done",{ch:n,ms:th.pk._chAt?Date.now()-th.pk._chAt:null})}catch(_){}}
+/* 每幕在场名单（03.6）：优先用章节自带的 present，其次用旁档 MIRU_PRESENT，都没有就 null
+   （null ⇒ appendMsg 退回 th.cast，与加这个字段之前完全一致）。 */
+function pkSetPresent(th,n){try{
+  const ch=wd(th.wid).pack.chapters[n-1];
+  let list=null;
+  if(ch&&Array.isArray(ch.present)&&ch.present.length)list=ch.present.slice();
+  else if(typeof MIRU_PRESENT!=="undefined"&&MIRU_PRESENT[th.wid])list=(MIRU_PRESENT[th.wid][n-1]||null);
+  th.present=(list&&list.length)?list:null;
+}catch(_){th.present=null}}
 function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
