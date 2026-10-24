@@ -24,6 +24,7 @@ const suites = [
   ['card-selftest.mjs', ['tools/card-selftest.mjs', '--selftest'], true],
   ['regression-25.mjs', ['tools/regression-25.mjs'], true],
   ['rev-selftest.mjs', ['tools/rev-selftest.mjs'], true],
+  ['plan-valid-selftest.mjs', ['tools/plan-valid-selftest.mjs'], true],
 ];
 
 let failed = 0;

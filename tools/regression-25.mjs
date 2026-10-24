@@ -280,8 +280,8 @@ add('T09', '玩家明确拒绝 → 降档并停止试探', has(/dimAdd\(th,as\+"
 
 // ---- 机制还不存在的：写明缺什么 ----
 const NY = [
-  ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '拆开看：①「判断该不该续」= app99_plan.js 已能给（planDecide）；②「生成候选」缺 ◯ 计划生成 prompt；③「核验」可复用 content/validate.py 的结构规则；④「发布」需人工确认。前三步都是小件，第四步是产品决定'],
-  ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
+  ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '①「判断该不该续」= app99_plan.js 的 planDecide ✅；②「生成候选」缺 ◯ 计划生成 prompt；③「核验」= api/_plan.js 的 planValid ✅（已接发布路径，11 条自检）；④「发布」需人工确认 ⇒ 就卡在 ②'],
+  ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '结构校验已就位（planValid：章节/节拍/选项/说话人在 cast 里/至少一个结局，发布路径接上，失败返 400 并点名哪一条）；**canon 冲突**仍没有——那需要一份「已发生事实」的权威表，就是 §15 的 World State（对账 #15）'],
 ];
 for (const [id, what, why] of NY) add(id, what, 'NOT-YET', why);
 
