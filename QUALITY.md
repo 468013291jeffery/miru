@@ -26,6 +26,7 @@ node tools/check-all.mjs          # 八套全跑
 | `card-selftest` | 55 | `node tools/card-selftest.mjs --selftest` | **每章一份角色卡**：可变折叠 · 只增不回退 · 立场只加码 · 揭示不改秘密 · 可回放 |
 | `regression-25` | 19 PASS / 2 UNWIRED / 2 NOT-YET / 2 N-A | `node tools/regression-25.mjs` | 文档 §14.1 的 25 条现状映射：能跑的跑，跑不了的写明缺什么。自带表结构闸（必须 25 行、ID 不重复） |
 | `plan-valid-selftest` | 16 | `node tools/plan-valid-selftest.mjs` | 发布前的结构校验（T19/T20 前置）：章节/节拍/选项/说话人/结局，单语可用 |
+| `account-check` | 19 行 | `node tools/account-check.mjs` | **结构账自检**：文档说「有」代码里必须找得到（带 file:line），说「没有」必须真扫不到 |
 | `plan-gate-selftest` | 14 | `node tools/plan-gate-selftest.mjs` | 计划层入口：只观测（记 plot_would_continue）、开关能关、返回值里不许出现产物 |
 | `wiring-check` | 23 个函数 | `node tools/wiring-check.mjs` | **接线**：机制函数有没有人调用（基线 `tools/wiring-baseline.json`，每条带理由；接上线就必须从基线删掉） |
 | `replyguard-selftest` | 19 | `node tools/replyguard-selftest.mjs` | 台词守门：说了本章不该知道的事 ⇒ 重写一次 ⇒ 仍犯就换保守句 |

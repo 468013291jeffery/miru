@@ -1,0 +1,124 @@
+{
+  "_why": "STRUCTURE-ACCOUNT.md 每一行「我们有 / 我们没有」的机械依据。checker 会做两件事：① 文档里那一行的『我们』格还写着说法 ② 代码里确实有/确实没有。两边任一不符就红 —— 否则这张表就是新的夸夸。",
+  "claims": [
+    {
+      "row": "编剧后台四步流程",
+      "our": "❌ 没有",
+      "check": "absent",
+      "file": "source/src",
+      "pattern": "writerSteps|stepOneFields|交稿必测"
+    },
+    {
+      "row": "角色说话带尺度/情绪/同意原则",
+      "our": "✅ 有",
+      "file": "source/src/app3_chat.js",
+      "pattern": "HEAT CEILING"
+    },
+    {
+      "row": "尺度按关系阶段取最低档",
+      "our": "✅ 有",
+      "file": "source/src/app98_emotion.js",
+      "pattern": "function heatGated"
+    },
+    {
+      "row": "不可恋爱角色**不调情**",
+      "our": "⚠️ **我们改了**",
+      "file": "source/src/app3_chat.js",
+      "pattern": "Not a romance route"
+    },
+    {
+      "row": "玩家拒绝不扣好感、之后不主动靠近",
+      "our": "✅ 有",
+      "file": "source/src/app95_status.js",
+      "pattern": "function loveWrite"
+    },
+    {
+      "row": "好感每轮 ±2",
+      "our": "✅ 有",
+      "file": "source/src/app96_tune.js",
+      "pattern": "deltaCap"
+    },
+    {
+      "row": "工具解锁门槛 + 不在场不能触发",
+      "our": "✅ 有",
+      "file": "source/src/app95_status.js",
+      "pattern": "function toolGate"
+    },
+    {
+      "row": "\"不知道的事\"不写进提示词",
+      "our": "✅ 有",
+      "file": "source/src/app3_chat.js",
+      "pattern": "function castCardPublic"
+    },
+    {
+      "row": "台词检查",
+      "our": "✅ 有",
+      "file": "source/src/app94_replyguard.js",
+      "pattern": "function guardReply",
+      "wired": "guardReply"
+    },
+    {
+      "row": "先回答再推进",
+      "our": "✅ 有",
+      "file": "source/src/app71_narrative.js",
+      "pattern": "BEAT 1 MUST respond"
+    },
+    {
+      "row": "规则校验不合法直接报错",
+      "our": "✅ 有",
+      "file": "source/src/app98_emotion.js",
+      "pattern": "function emotionNorm"
+    },
+    {
+      "row": "续写先校验再发布",
+      "our": "✅ 结构层有",
+      "file": "api/_plan.js",
+      "pattern": "function planValid"
+    },
+    {
+      "row": "续写带\"已发生不可推翻\"清单",
+      "our": "✅ 有",
+      "file": "source/src/app94_replyguard.js",
+      "pattern": "function canonFacts",
+      "wired": "canonFacts"
+    },
+    {
+      "row": "剧本标签改了缓存计划作废",
+      "our": "✅ 有",
+      "file": "source/src/app99_plan.js",
+      "pattern": "MIRU_REV"
+    },
+    {
+      "row": "剧情事件账本（选择/出章/换场/赠送/拒绝都记）",
+      "our": "✅ 有",
+      "file": "api/events.js",
+      "pattern": "INSERT INTO events"
+    },
+    {
+      "row": "重复提交只算一次（幂等）",
+      "our": "⚠️ **只有一半**",
+      "file": "api/wallet.js",
+      "pattern": "ON CONFLICT \\(key\\)|idempotent by key"
+    },
+    {
+      "row": "多设备冲突拦截",
+      "our": "✅ 有",
+      "file": "api/state.js",
+      "pattern": "newer copy on server|409"
+    },
+    {
+      "row": "token 用量记录",
+      "our": "❌ **没有**",
+      "file": "api/_ledger.js",
+      "pattern": "prompt_tokens|completion_tokens",
+      "check": "absent"
+    },
+    {
+      "row": "AI 自动续写进玩家这一局",
+      "our": "⚠️ 只留了入口",
+      "file": "source/src/app99_plan.js",
+      "pattern": "function plotGate"
+    }
+  ]
+}
+
