@@ -9,7 +9,7 @@
 |---|---|---|---|---|
 | 1 | **02.4 Heat Charter 固定到每个角色** | 🟡 | `app1_core.js:177` `HEAT_RULE`，`S.heat` 默认 `slow` | 是**用户全局设置**，不是"作品编译进角色"；换故事不换尺度 |
 | 2 | **02.5 Emotion Charter → Plot98** | 🔴 | 无 Plot98 模块 | 情绪没有任何固定合同 |
-| 3 | **03.1 六项稳定人格** | 🟡 | `cast` 16 字段：role/vibe/tells/twist/likes/secret/pitch/want/fear/boundary/solo… | 字段够多，但**不是六锚点结构**；没有"可成长的是什么"那一列 |
+| 3 | **03.1 六项稳定人格** | 🟡 | `cast` 16 字段：role/vibe/tells/twist/likes/secret/pitch/want/fear/boundary/solo… | 字段够多，但**不是六锚点结构**；没有"可成长的是什么"那一列  · **2026-10-25 加测**：69 个角色里 **22 个跨本复用**，而 `secret` 只有一条、跨本共用（mason 在 ice/afterhours/gala 三本同一条秘密）⇒ 卡缺的是**本作覆盖层**，不是字段 |
 | 4 | **03.2 Reply Charter（含优先级）** | 🟡 | `app3_chat.js:221` "React to the exact words just used" | 只有一条埋在 8 条风格建议中间；**没有优先级顺序**，也不是硬约束 |
 | 5 | **03.3 七段 Payload** | 🟡 | `app3_chat.js:205-231` | 7 段对上 5；**缺 `knowledge`（他有权知道什么）**、`tool_policy` 只有 suggest |
 | 6 | **03.3 固定字段用引用/revision，不全量重传** | 🟡 | 稳定段进 system（`app80_cache.js`） | 没有 revision/引用概念，靠"文本不变"侥幸命中缓存 |
