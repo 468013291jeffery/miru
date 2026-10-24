@@ -20,4 +20,6 @@ AI engine: Claude or LongCat (enter your own API key in 我的 → AI 引擎; ke
 | [`QUALITY.md`](QUALITY.md) | 质量闸：八套 158 个用例各查什么 · 四条不变量 · 改哪会红 · 红臂 · 已知没覆盖的 |
 | [`TUNING.md`](TUNING.md) | 可调参数（滑钮）：14 格默认值 · 改 `tune.js` 免构建生效 · 每格的风险 |
 | [`SPEC-AUDIT.md`](SPEC-AUDIT.md) | 规格 v7.11 vs 代码：19 条逐条对账（已实现 1 / 部分 9 / 没有 9） |
+| [`SPEC-v712-MAP.md`](SPEC-v712-MAP.md) | 他们 v7.12 / v8.2.4 的清单 ↔ 我们源码：逐条带 `file:line`，含"没有"的那半 |
+| [`STRUCTURE-ACCOUNT.md`](STRUCTURE-ACCOUNT.md) | **结构账**：谁有什么、谁欠谁 —— 一页，给过会用（含我们补的三个洞与我们的欠账） |
 | [`source/README.md`](source/README.md) | 源码目录地图（改哪儿 → 跑什么） |
