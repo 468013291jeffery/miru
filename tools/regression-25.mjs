@@ -39,6 +39,26 @@ const add = (id, what, verdict, detail) => results.push({ id, what, verdict, det
 
 // ---- 能真跑的几条 ----
 try {
+  const code = [cutFn('toolGate'), cutFn('toolUse')].join('\n');
+  const A = new Function(code + '\nreturn { toolGate, toolUse };')();
+  const th = { pk: { ch: 1 } };
+  const off = A.toolGate(th, 'gift', {}).ok;                       // 默认不限 ⇒ 旧行为
+  const g4 = i => A.toolGate(th, 'gift', { perScene: 4 });
+  A.toolUse(th, 'gift'); A.toolUse(th, 'gift'); A.toolUse(th, 'gift');
+  const third = g4().ok;                                          // 第 3 次还应放行
+  A.toolUse(th, 'gift');
+  const fifth = g4();                                             // 第 4 次之后应拦
+  th.pk.ch = 2;                                                   // 换章 ⇒ 计数重置
+  const nextScene = g4().ok;
+  const cd = A.toolGate(th, 'date', { cooldownMs: 60000 });
+  A.toolUse(th, 'date');
+  const inCd = A.toolGate(th, 'date', { cooldownMs: 60000 });
+  const ok = off && third && fifth.ok === false && nextScene && cd.ok && inCd.ok === false;
+  add('T23', '工具冷却 / 本场上限 → 非法工具不展示不执行', ok ? 'PASS' : 'FAIL',
+    `默认不限 ${off} · 第3次放行 ${third} · 第4次后拦 ${fifth.ok === false} · 换章重置 ${nextScene} · 冷却生效 ${inCd.ok === false}`);
+} catch (e) { add('T23', '工具冷却 / 本场上限', 'FAIL', e.message); }
+
+try {
   const r = spawnSync(process.execPath, ['tools/pack-flow-selftest.mjs', 'index.html'], { encoding: 'utf8' });
   const ran = r.status === 0 && /does not advance the chapter by itself/.test(r.stdout || '');
   add('T14', '玩家不点继续 → 不自动跳场', ran ? 'PASS' : 'FAIL',
@@ -134,7 +154,6 @@ const NY = [
   ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '没有续写流程（对账 #14）'],
   ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
   ['T21', '未授权通知/静默时段 → 不发召回', '查过了：全库无 serviceWorker / push 订阅 / requestPermission；app20 那条“一天一次来电”是应用内提示，不是推送'],
-  ['T23', '工具冷却/本场上限 → 非法工具不展示', '只有 loveAllowed（在场校验），没有工具冷却与上限'],
   ['T25', 'Plot98 失败 → 角色仍可回答', '没有 Plot98（对账 #12）'],
 ];
 for (const [id, what, why] of NY) add(id, what, 'NOT-YET', why);

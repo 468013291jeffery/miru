@@ -2984,6 +2984,10 @@ var MIRU_TUNE = (function () {
       partMergeMax: 5,      // 同一段文字合并成几块为止（原来是字面量 5）
       privateCards: 1       // CAST 里带私密面（secret/twist）的角色数：1=只有这一拍上场的那个；调大即放开
     },
+    tools: {
+      // 每个工具本场可用几次（0 = 不限，即保持旧行为）与冷却毫秒（0 = 无冷却）
+      giftPerScene: 0, datePerScene: 0, truthPerScene: 0, cooldownMs: 0
+    },
     love: {
       deltaCap: 12,         // 单次好感变动上限
       min: 0,               // 好感下限（关系冷却那条路会传 -60 覆盖）
@@ -3094,6 +3098,44 @@ function loveAllowed(th, id) {
     if (!Array.isArray(p) || !p.length) return true;
     return p.indexOf(id) >= 0;
   } catch (_) { return true }
+}
+
+/** 工具的闸：本场次数上限 + 冷却（文档 §14.1 T23）。
+ *  默认 **0 = 不限**，所以加这个函数不改变今天任何行为；要收紧由 MIRU_TUNE.tools 决定。
+ *  用法：先 gate 再动手，动了再 use —— 顺序反了就会出现"拦下了但效果已经发生"。
+ *    if (!toolGate(th,'gift',{perScene:4,cooldownMs:60000}).ok) return;
+ *    ...真正做事...
+ *    toolUse(th,'gift');
+ *  「每章重置」用的是 th.pk.ch（剧本章号），自由聊天没有 pk 就用 th.ch，都没有就当第 1 章。 */
+function toolGate(th, key, opts) {
+  try {
+    if (!th || !key) return { ok: true };
+    const o = opts || {};
+    const per = Number(o.perScene) || 0;
+    const cd = Number(o.cooldownMs) || 0;
+    if (!per && !cd) return { ok: true, used: 0 };          // 不限：连记账都不用
+    th.toolUse = th.toolUse || {};
+    const r = th.toolUse[key] = th.toolUse[key] || { n: 0, at: 0, scene: null };
+    const scene = Number((th.pk && th.pk.ch) || th.ch || 1);
+    if (r.scene !== scene) { r.scene = scene; r.n = 0; }
+    const now = Date.now();
+    if (cd && r.at && now - r.at < cd) return { ok: false, why: "cooldown", waitMs: cd - (now - r.at) };
+    if (per && r.n >= per) return { ok: false, why: "scene-limit", used: r.n };
+    return { ok: true, used: r.n };
+  } catch (_) { return { ok: true } }
+}
+
+/** 记账：真的用掉一次。 */
+function toolUse(th, key) {
+  try {
+    if (!th || !key) return;
+    th.toolUse = th.toolUse || {};
+    const r = th.toolUse[key] = th.toolUse[key] || { n: 0, at: 0, scene: null };
+    const scene = Number((th.pk && th.pk.ch) || th.ch || 1);
+    if (r.scene !== scene) { r.scene = scene; r.n = 0; }
+    r.n++;
+    r.at = Date.now();
+  } catch (_) {}
 }
 
 /** 本局一共改了多少次、每个角色净变化多少（复核用） */
@@ -4091,12 +4133,12 @@ function inviteSheet(){const th=S.threads[curT];const ids=allChars().filter(id=>
 function cardSheet(){if(S.keys<PRICES.card){paySheet("event");return}
  sheet('<h2>'+t("cs.card")+'</h2><div class="row" style="gap:8px;margin-top:12px">'+["romance","drama","angst"].map(k=>'<button class="chip" data-ctype="'+k+'">'+{romance:"💗 Romance",drama:"🔥 Drama",angst:"🌧 Angst"}[k]+'</button>').join("")+'</div><div id="cards" class="stack" style="gap:8px;margin-top:12px"></div>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];
- if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(g.cost&&!spend(g.cost,"gift"))return;
-  const m=mainOf(th);loveWrite(th,m,g.love,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
+ if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(!toolGate(th,'gift',{perScene:MIRU_TUNE.tools.giftPerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;if(g.cost&&!spend(g.cost,"gift"))return;
+  const m=mainOf(th);loveWrite(th,m,g.love,"gift");toolUse(th,'gift');th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});reply(th,{kind:"gift",txt:Lz(g.n),cid:m});return}
- if(x=e.target.closest("[data-date]")){const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;loveWrite(th,m,6,"date");th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
+ if(x=e.target.closest("[data-date]")){if(!toolGate(th,'date',{perScene:MIRU_TUNE.tools.datePerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;toolUse(th,'date');loveWrite(th,m,6,"date");th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🌙 "+t("cx.m.date"),txt:t("date.go",{n:first(ch(m).n),p:pl}),at:Date.now()});reply(th,{kind:"date",txt:pl,cid:m});return}
- if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;const m=mainOf(th);th.tasks.truth=1;loveWrite(th,m,5,"truth");closeSheet();
+ if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;if(!toolGate(th,'truth',{perScene:MIRU_TUNE.tools.truthPerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;const m=mainOf(th);th.tasks.truth=1;toolUse(th,'truth');loveWrite(th,m,5,"truth");closeSheet();
   appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;th.mem.push(me()+" asked "+ch(m).n+" an honest question: "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
  if(x=e.target.closest("[data-inv]")){const id=x.dataset.inv,c=ch(id);th.cast.push(id);loveWrite(th,id,0,"invite",{absolute:5});closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🚪 "+t("cs.third"),txt:t("inv.done",{n:c.n}),at:Date.now()});th.mem.push(c.n+" ("+Lz(c.role)+") walked in from another story");reply(th,{kind:"third",txt:c.n+", "+Lz(c.role)});return}
