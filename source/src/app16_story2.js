@@ -66,7 +66,7 @@ msgHTML=function(m,i,th){
  return _msgHTML2(m,i,th).replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")};
 
 /* 5) the panel lives INSIDE the conversation (choices look like replies), not as a big box over the screen */
-appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
+appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  const box=$("#msgs");if(curT===th.id&&box&&!$("#s-chat").hidden){const pw=$("#pkwrap"),html=msgHTML(m,th.msgs.length-1,th);
   if(pw&&pw.parentNode===box)pw.insertAdjacentHTML("beforebegin",html);else box.insertAdjacentHTML("beforeend",html);scrollChat()}
  if(S.autoVoice&&m.ai&&ch(m.who)&&curT===th.id)speak(m.txt,m.who)};

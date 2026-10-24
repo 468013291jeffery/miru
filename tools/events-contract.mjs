@@ -19,6 +19,7 @@ export function check(html) {
     ['chapter_done emitted', has('"chapter_done"')],
     ['story_end emitted', has('"story_end"')],
     ['paywall emitted (the paid gate)', has('"paywall"')],
+    ['messages carry a seen[] roster (03.6 scaffold)', has('m.seen===undefined') && has('th.present||th.cast')],
     ['paywall is attributed to the open thread', has('_th.wid===wid)pkTrack(_th,"paywall"')],
     ['emit helper carries wid+sess+t', has('{wid:th.wid,sess:pkSess(th),t:Date.now()}')],
     ['chapter_open is deduped per chapter', has('if(th.pk._opened===n)return')],
