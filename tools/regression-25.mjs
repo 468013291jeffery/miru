@@ -38,10 +38,32 @@ const results = [];
 const add = (id, what, verdict, detail) => results.push({ id, what, verdict, detail });
 
 // ---- 能真跑的几条 ----
+// T05：不是欠账，是风险本身不存在（与 T21 同类）
+add('T05', 'trope.slow + heat.slow → 不互相覆盖', 'N/A', `TROPE_MAP 是推荐标签表（"Slow Burn" 只是标签字符串，37 部），heat 是包上的独立字段；两者从来没有合并逻辑，所以「互相覆盖」这个风险不存在。`);
+
 // T21：当前没有任何推送渠道，所以「未授权推送」这个风险暂时不存在 —— 这是 N/A，
 // 既不是通过，也不是欠账。
 add('T21', '未授权通知/静默时段 → 不发召回', 'N/A',
   `全库无 sw.js / manifest.json / serviceWorker / requestPermission；唯一的「一天一次来电」是应用内提示（app20）。加了推送那天要先把静默时段做上。`);
+
+try {
+  // T08：年龄门（开关默认关；开着时未确认 ⇒ heat 压到 slow）
+  const src98 = fs.readFileSync('source/src/app98_emotion.js', 'utf8');
+  const mk = (ageGate, ageOk) => {
+    const sb = { MIRU_TUNE: { tools: { ageGate: ageGate } }, S: { ageOk: ageOk, heat: 'steamy' } };
+    return new Function('MIRU_TUNE', 'S', src98 + '\nreturn { ageAllowed, heatGated };')(sb.MIRU_TUNE, sb.S);
+  };
+  const off = mk(false, false);
+  const onUnconfirmed = mk(true, undefined);
+  const onConfirmed = mk(true, true);
+  const c1 = off.heatGated('steamy') === 'steamy';
+  const c2 = onUnconfirmed.heatGated('steamy') === 'slow' && onUnconfirmed.heatGated('mature') === 'slow';
+  const c3 = onUnconfirmed.heatGated('fluff') === 'fluff';
+  const c4 = onConfirmed.heatGated('steamy') === 'steamy';
+  add('T08', '未确认成年 → 保守表达（机制）', (c1 && c2 && c3 && c4) ? 'PASS' : 'FAIL',
+    `开关关着不限 ${c1} · 开着未确认压到 slow（steamy+mature）${c2} · fluff 不动 ${c3} · 确认后不压 ${c4}；` +
+    `**开关默认关，要不要对现有用户强制是产品决定**`);
+} catch (e) { add('T08', '未确认成年 → 保守表达', 'FAIL', e.message); }
 
 try {
   // T06 / T16：内容版本号与旧计划丢弃（tools/rev-selftest.mjs 已单独跑，这里核对产物）
@@ -258,8 +280,6 @@ add('T09', '玩家明确拒绝 → 降档并停止试探', has(/dimAdd\(th,as\+"
 
 // ---- 机制还不存在的：写明缺什么 ----
 const NY = [
-  ['T05', 'trope.slow + heat.slow → 不互相覆盖', '读过 TROPE_MAP：它是**推荐标签**（37 部，"Slow Burn" 只是标签字符串），heat 是包上的独立字段（ice 的 heat="slow"）；两者之间没有任何合并逻辑 —— 所以不是「会互相覆盖」，是这套合并根本不存在'],
-  ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
   ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '拆开看：①「判断该不该续」= app99_plan.js 已能给（planDecide）；②「生成候选」缺 ◯ 计划生成 prompt；③「核验」可复用 content/validate.py 的结构规则；④「发布」需人工确认。前三步都是小件，第四步是产品决定'],
   ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
 ];
