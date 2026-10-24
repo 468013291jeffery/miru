@@ -40,6 +40,14 @@ const refs = (html.match(/"pdfjs_embed\.js"/g) || []).length;
 ok('index.html 里只引用一次（加载器，带引号那条）', refs === 1, refs);
 ok('index.html 里没有内联的 PDFJS_SRC 赋值', !/PDFJS_SRC\s*=/.test(html));
 
+// ④ 不许有阻塞式的外部样式表（2026-10-25 实测：一个 Google Fonts 外链让 domInteractive 1,708 → 133 ms）
+{
+  const noJs = html.replace(/<noscript[\s\S]*?<\/noscript>/gi, '');   // noscript 里的不算（只在禁用 JS 时生效）
+  const blocking = (noJs.match(/<link[^>]+rel=["']stylesheet["'][^>]*>/gi) || [])
+    .filter(tag => /https?:\/\//i.test(tag) && !/media=["']print["']/i.test(tag));
+  ok('没有阻塞式外部样式表（国内网络会卡住启动）', blocking.length === 0, blocking.join(' | ').slice(0, 160));
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('perf budget OK');
