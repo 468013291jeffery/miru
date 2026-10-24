@@ -78,6 +78,44 @@ function loveAllowed(th, id) {
   } catch (_) { return true }
 }
 
+/** 工具的闸：本场次数上限 + 冷却（文档 §14.1 T23）。
+ *  默认 **0 = 不限**，所以加这个函数不改变今天任何行为；要收紧由 MIRU_TUNE.tools 决定。
+ *  用法：先 gate 再动手，动了再 use —— 顺序反了就会出现"拦下了但效果已经发生"。
+ *    if (!toolGate(th,'gift',{perScene:4,cooldownMs:60000}).ok) return;
+ *    ...真正做事...
+ *    toolUse(th,'gift');
+ *  「每章重置」用的是 th.pk.ch（剧本章号），自由聊天没有 pk 就用 th.ch，都没有就当第 1 章。 */
+function toolGate(th, key, opts) {
+  try {
+    if (!th || !key) return { ok: true };
+    const o = opts || {};
+    const per = Number(o.perScene) || 0;
+    const cd = Number(o.cooldownMs) || 0;
+    if (!per && !cd) return { ok: true, used: 0 };          // 不限：连记账都不用
+    th.toolUse = th.toolUse || {};
+    const r = th.toolUse[key] = th.toolUse[key] || { n: 0, at: 0, scene: null };
+    const scene = Number((th.pk && th.pk.ch) || th.ch || 1);
+    if (r.scene !== scene) { r.scene = scene; r.n = 0; }
+    const now = Date.now();
+    if (cd && r.at && now - r.at < cd) return { ok: false, why: "cooldown", waitMs: cd - (now - r.at) };
+    if (per && r.n >= per) return { ok: false, why: "scene-limit", used: r.n };
+    return { ok: true, used: r.n };
+  } catch (_) { return { ok: true } }
+}
+
+/** 记账：真的用掉一次。 */
+function toolUse(th, key) {
+  try {
+    if (!th || !key) return;
+    th.toolUse = th.toolUse || {};
+    const r = th.toolUse[key] = th.toolUse[key] || { n: 0, at: 0, scene: null };
+    const scene = Number((th.pk && th.pk.ch) || th.ch || 1);
+    if (r.scene !== scene) { r.scene = scene; r.n = 0; }
+    r.n++;
+    r.at = Date.now();
+  } catch (_) {}
+}
+
 /** 本局一共改了多少次、每个角色净变化多少（复核用） */
 function loveReport(th) {
   const log = (th && th.loveLog) || [];

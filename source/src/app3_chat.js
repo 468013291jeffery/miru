@@ -384,12 +384,12 @@ function inviteSheet(){const th=S.threads[curT];const ids=allChars().filter(id=>
 function cardSheet(){if(S.keys<PRICES.card){paySheet("event");return}
  sheet('<h2>'+t("cs.card")+'</h2><div class="row" style="gap:8px;margin-top:12px">'+["romance","drama","angst"].map(k=>'<button class="chip" data-ctype="'+k+'">'+{romance:"💗 Romance",drama:"🔥 Drama",angst:"🌧 Angst"}[k]+'</button>').join("")+'</div><div id="cards" class="stack" style="gap:8px;margin-top:12px"></div>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];
- if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(g.cost&&!spend(g.cost,"gift"))return;
-  const m=mainOf(th);loveWrite(th,m,g.love,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
+ if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(!toolGate(th,'gift',{perScene:MIRU_TUNE.tools.giftPerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;if(g.cost&&!spend(g.cost,"gift"))return;
+  const m=mainOf(th);loveWrite(th,m,g.love,"gift");toolUse(th,'gift');th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});reply(th,{kind:"gift",txt:Lz(g.n),cid:m});return}
- if(x=e.target.closest("[data-date]")){const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;loveWrite(th,m,6,"date");th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
+ if(x=e.target.closest("[data-date]")){if(!toolGate(th,'date',{perScene:MIRU_TUNE.tools.datePerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;toolUse(th,'date');loveWrite(th,m,6,"date");th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🌙 "+t("cx.m.date"),txt:t("date.go",{n:first(ch(m).n),p:pl}),at:Date.now()});reply(th,{kind:"date",txt:pl,cid:m});return}
- if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;const m=mainOf(th);th.tasks.truth=1;loveWrite(th,m,5,"truth");closeSheet();
+ if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;if(!toolGate(th,'truth',{perScene:MIRU_TUNE.tools.truthPerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;const m=mainOf(th);th.tasks.truth=1;toolUse(th,'truth');loveWrite(th,m,5,"truth");closeSheet();
   appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;th.mem.push(me()+" asked "+ch(m).n+" an honest question: "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
  if(x=e.target.closest("[data-inv]")){const id=x.dataset.inv,c=ch(id);th.cast.push(id);loveWrite(th,id,0,"invite",{absolute:5});closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🚪 "+t("cs.third"),txt:t("inv.done",{n:c.n}),at:Date.now()});th.mem.push(c.n+" ("+Lz(c.role)+") walked in from another story");reply(th,{kind:"third",txt:c.n+", "+Lz(c.role)});return}

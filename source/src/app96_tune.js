@@ -37,6 +37,10 @@ var MIRU_TUNE = (function () {
       partMergeMax: 5,      // 同一段文字合并成几块为止（原来是字面量 5）
       privateCards: 1       // CAST 里带私密面（secret/twist）的角色数：1=只有这一拍上场的那个；调大即放开
     },
+    tools: {
+      // 每个工具本场可用几次（0 = 不限，即保持旧行为）与冷却毫秒（0 = 无冷却）
+      giftPerScene: 0, datePerScene: 0, truthPerScene: 0, cooldownMs: 0
+    },
     love: {
       deltaCap: 12,         // 单次好感变动上限
       min: 0,               // 好感下限（关系冷却那条路会传 -60 覆盖）
