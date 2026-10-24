@@ -257,6 +257,24 @@ async function reply(th,ctx,silent){
  let r=null;
  if(liveOn()){try{r=await ask(prompt,{modelTier:deep?"complex":"default"})}catch(e){r=null}
   if(r&&Array.isArray(r.beats)&&r.beats.length)useUnits(aiCost());}
+ // 台词守门（他们 v8.2.3 的「台词检查」）：说了本章他还不该知道的事 ⇒ 带约束重写一次 ⇒ 仍不行就换保守句。
+ // 禁区词 = 未来章节的 reveals/breaks + 在场角色卡上还没揭露的 secret/twist。开关见 MIRU_TUNE.chat.replyGuard。
+ if(r&&Array.isArray(r.beats)&&r.beats.length&&typeof guardReply==="function"&&
+    !(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.replyGuard===false)){
+  try{
+   const _chNo=(th.pk&&th.pk.ch)||th.ch||1;
+   const _ids=(typeof speakersOf==="function"?speakersOf(th):[]);
+   const _words=(typeof marksForbidden==="function"?marksForbidden(th.wid,_chNo):[])
+     .concat(typeof cardForbidden==="function"?cardForbidden(th,_ids):[]);
+   if(_words.length){
+    const _g=await guardReply({reply:r,words:_words,
+      ask:async(extra)=>await ask(prompt+"\n\n"+extra,{modelTier:"default"}),
+      fallback:()=>fallback(th,ctx)});
+    if(_g.retried){try{track&&track("reply_guard",{wid:th.wid,ch:_chNo,leaks:_g.leaked.length,fellBack:!!_g.fellBack})}catch(_){}}
+    if(_g.reply&&Array.isArray(_g.reply.beats)&&_g.reply.beats.length)r=_g.reply;
+   }
+  }catch(_){}
+ }
  if(!r||!Array.isArray(r.beats)||!r.beats.length)r=fallback(th,ctx);
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
