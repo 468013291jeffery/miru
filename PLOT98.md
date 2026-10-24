@@ -134,3 +134,28 @@
 - ❌ 它在玩家手里读起来好不好 —— 那要真跑一章才知道
 
 所以回归映射表里 **T19 仍标 NOT-YET**：链路通了不等于需求满足了。
+
+## 怎么再跑一次（一条命令）
+
+```bash
+node tools/plot-generate-probe.mjs gala --model=glm-5.3-flash --maxtokens=14000
+```
+
+- **key 不写在仓库里**：工具按 `OPENCODE_API_KEY` 环境变量 → `~/.dsh/.credentials.yaml` 的 `OPENCODE_API_KEY` 依次找。
+  那是一把**测试用的便宜 key**（Ann 2026-10-25 明确说可以进公共 key），所以不用每次导出环境变量。
+- **模型**：默认 `deepseek-v4.1-flash`；实测能完整吐出候选的是 `glm-5.3-flash`，代价是推理预算。
+- **预算**：`--maxtokens` 至少 **12000**。低于这个数，推理型模型会把额度全烧在思考上，只吐出半份 JSON。
+- **成本**：一次约 **$0.004**（约 3 分钱人民币），失败重试也在这个量级。
+- **判据**：脚本最后一行是 `planValidChapter` 的结论。`✓ 结构合法` 才算过；`✗` 会点名是哪一条。
+- **只读不写**：这个脚本不会碰玩家存档，也不会写 `planTried` —— 它只证明「生成器写得出能被核验的候选」。
+
+### 第二次跑的时候（2026-10-25 复核）
+
+不带任何环境变量、直接读公共凭据又跑了一次：**HTTP 200 · 8 拍 + 3 选项 · planValidChapter 判结构合法 · $0.0048**。
+所以「一条命令即可复现」是真的，不是写在文档里的愿望。
+
+### 想换成别的 provider
+
+`message.content` 在有的 provider 上是字符串、有的是 `[{type:'thinking'},…]` 数组；
+工具已经做了归一（只取 `text` 块）。如果换到一个新 provider 返回空内容，
+**先看 `usage.completion_tokens_details.reasoning_tokens`**，别急着怀疑 prompt。
