@@ -17,6 +17,7 @@ const suites = [
   ['flush-e2e.mjs', ['tools/flush-e2e.mjs'], apiUp],
   ['status-contract.mjs', ['tools/status-contract.mjs', '--selftest'], true],
   ['tune-selftest.mjs', ['tools/tune-selftest.mjs'], true],
+  ['cache-split-contract.mjs', ['tools/cache-split-contract.mjs', '--selftest'], true],
 ];
 
 let failed = 0;
