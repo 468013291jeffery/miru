@@ -142,6 +142,11 @@
 5. **不要**用 `index.html` 反向覆盖 `source/` —— 它是产物（见下方合并注意）
 
 
+**ageGate 已开（当免责声明）+ T19② 实测**：
+
+- **年龄门**：`source/src/app93_agegate.js` —— 首启问一次「是否满 18」（五语），答**是**就解除压制、答**未满**就把 heat 上限压在 slow，**答过就不重复问**（记在 `S.ageOk`）。`MIRU_TUNE.tools.ageGate` 默认已改为 **true**（Ann 2026-10-25 拍：等于我们的免责声明）。
+- **T19② 真发了一次**：4 次调用共 **$0.019**。glm-5.3-flash 给 14k 预算后吐出完整候选（8 拍 + 3 选项），`planValidChapter` 判**结构合法**。两条经验：**推理型模型会烧光 max_tokens**（判据看 `reasoning_tokens`，8k 只够想到一半）· **`message.content` 形状随 provider 变**（字符串 vs thinking 块数组）。**T19 仍标 NOT-YET**：链路证明了，玩家体验没证明。
+
 **planValid 已落地（T19/T20 的共同前置）**：`api/_plan.js` 查「能不能播出来」——章节、节拍、选项 ≥2、说话人必须在 cast 里、至少一个结局；单语内容允许（玩家写自己的剧本，不强制中英双语）。已接在发布路径 `api/works.js` 上，失败返 400 并**点名哪一条**。11 条自检。⚠️ 它不是 `content/validate.py` 的替代品：后者查的是内部作者约定（looks 必须复制、n 与 wid 对应）。
 
 **T05 归位 + T08 机制（年龄门）**：T05 改成 **N/A**（`TROPE_MAP` 是推荐标签、`heat` 是包字段，从不合并 ⇒ 覆盖不存在）；T08 做出机制——`ageAllowed()` / `heatGated()`，开关 `MIRU_TUNE.tools.ageGate` **默认关**，开着时未确认成年会把 steamy/mature 压到 slow（fluff 不动）。**要不要对现有用户强制确认是产品决定**。缺口 4 → 2。
