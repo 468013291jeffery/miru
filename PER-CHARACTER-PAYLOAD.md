@@ -93,6 +93,16 @@ NOW: …
 
 所以真正的成本口径是：**8 部多人本，每部从 1× 变成约 2×；其余 29 部不动。**
 
+## 先看效果（不动运行时）
+
+```bash
+node tools/payload-preview.mjs gala 5 mason      # 给第 5 章的 mason 生成一份草稿
+node tools/payload-preview.mjs gala 3 mason      # 他不在场：这份根本不会发出
+```
+
+草稿用**真实角色数据**（`content_chars.js`）与**真实在场名单**（`present/gala.json`）拼出来，可以直接拿给作者看形状。
+一个已经暴露出来的细节：**单 prompt 时"私密面"归 `mainOf(th)`；改成每人一份后，它必须归"这一份要写的那个人"**——两者不是一回事，工具里已经注明。
+
 ## 落地顺序（每一步都能单独上线、单独回滚）
 
 1. **✅ 已完成**：`present` 旁档 + 构建注入 + 进章接线 + `loveAllowed` 前置验证 + 报告脚本
