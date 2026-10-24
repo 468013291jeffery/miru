@@ -39,6 +39,28 @@ const add = (id, what, verdict, detail) => results.push({ id, what, verdict, det
 
 // ---- 能真跑的几条 ----
 try {
+  // T01–T04：情绪合同（source/src/app98_emotion.js）
+  const emo = new Function(fs.readFileSync('source/src/app98_emotion.js', 'utf8') + '\nreturn { emotionNorm };')().emotionNorm;
+  const e1 = emo({});                                            // T01 什么都没有
+  const e2 = emo({ heat: 'slow', emotions: ['cozy', 'angst'] });  // T02 暖烈混用
+  const e3 = emo({ heat: 'slow', emotions: ['angst', 'angst', 'cozy', 'cozy'] }); // T03 去重
+  const e4 = emo({ heat: 'extreme', emotions: ['a', 'b', 'c'] }); // T04 非法 + 超两个
+  add('T01', '没有任何 heat/emotion → 缺省 steamy / [angst]',
+    (e1.heat === 'steamy' && e1.emotions.length === 1 && e1.emotions[0] === 'angst' && !e1.errors.length) ? 'PASS' : 'FAIL',
+    `heat=${e1.heat} emotions=${e1.emotions.join(',')}（现有 37 部都写了 heat，所以这条对它们无影响）`);
+  add('T02', 'fluff/cozy 不与 steamy/angst 混用', (e2.errors.some(x => /暖与烈混用/.test(x))) ? 'PASS' : 'FAIL',
+    e2.errors.join(' | '));
+  add('T03', '多标签去重、主辅顺序稳定', (e3.emotions.join(',') === 'angst,cozy') ? 'PASS' : 'FAIL',
+    '去重后 = ' + e3.emotions.join(','));
+  const e4heat = e4.errors.some(x => /heat 非法/.test(x));
+  const e4bad = e4.errors.filter(x => /情绪标签非法/.test(x)).length === 3;
+  const e4max = emo({ heat: 'slow', emotions: ['angst', 'cozy', 'dark'] }).errors.some(x => /最多两个/.test(x));
+  add('T04', '非法取值 → 明确校验错误（不静默吞）',
+    (e4heat && e4bad && e4max) ? 'PASS' : 'FAIL',
+    `heat 报错 ${e4heat} · 三个非法标签各报一条 ${e4bad} · 超两个报错 ${e4max}（非法标签被丢弃后回落到缺省 angst）`);
+} catch (e) { add('T01', '情绪合同', 'FAIL', e.message); }
+
+try {
   // T13：prompt 里「先回答玩家说的那句话」这条规则还在不在（app71_narrative.js:29）
   const rule = 'BEAT 1 MUST respond to exactly that';
   const free = 'Free talk answers what the player actually said';
@@ -198,10 +220,6 @@ add('T09', '玩家明确拒绝 → 降档并停止试探', has(/dimAdd\(th,as\+"
 
 // ---- 机制还不存在的：写明缺什么 ----
 const NY = [
-  ['T01', '没有任何 heat/emotion → 缺省 steamy/[angst]', '没有 emotion 合同（对账 #2）；heat 只有用户全局档（#1）'],
-  ['T02', '显式 fluff + cozy → 不混入 steamy/angst', '同上：没有 emotion 标签系统'],
-  ['T03', 'emotion=[angst,cozy] → 去重与主辅顺序稳定', '同上'],
-  ['T04', 'heat 非法或情绪超过两个 → 明确校验错误', '同上：没有校验层'],
   ['T05', 'trope.slow + heat.slow → 不互相覆盖', '读过 TROPE_MAP：它是**推荐标签**（37 部，"Slow Burn" 只是标签字符串），heat 是包上的独立字段（ice 的 heat="slow"）；两者之间没有任何合并逻辑 —— 所以不是「会互相覆盖」，是这套合并根本不存在'],
   ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '读过全库：revision 只出现在数据行的字符串里，没有 revision 字段、没有失效逻辑（对账 #6）；app80_cache 靠**文本不变**侥幸命中，改一个字就整段失效'],
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],

@@ -44,6 +44,11 @@ window.MIRU_TUNE_OVERRIDE = {
 | `affinity.mind` / `gems` | [1,2,3,5,5] / [0,5,10,15,20] | 各档位的心智/钻石 | 与 `cap` 一起读才有意义 |
 | `report.omniscienceThreshold` | 0.10 | **只给分析脚本用**：缺口超过多少才值得做"每角色一份 payload" | 不影响运行时 |
 
+## 情绪合同（不在 tune.js 里，在 `app98_emotion.js`）
+
+`emotionNorm({heat, emotions})` 返回 `{heat, emotions, errors, notes}`：缺省 `steamy/[angst]`、白名单、去重、暖烈冲突报错、超两个截断。
+**合法值原样通过**，所以它不影响现有 37 部剧本；它的价值在于「非法值不会静默变成别的东西」。
+
 ## 规矩（新增一个可调数字时）
 
 1. 先加进 `app96_tune.js` 的 `DEFAULTS`，**再**在调用处读 `MIRU_TUNE.<段>.<键>`；
