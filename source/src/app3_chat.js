@@ -178,6 +178,24 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
+function castCardPublic(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
+ const w0=th.wid&&wd(th.wid),au=w0&&w0.pack&&w0.pack.au&&w0.pack.au[cid];
+ return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
+  " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Likes: "+A(c.likes)+
+  
+  " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
+/* 谁的卡带私密面：默认只给这一拍上场的那个人（mainOf 优先，否则第一个开口的）。
+   为什么：共享 prompt 下如果所有人都带秘密，等于同屋全知 —— 把跨场景的全知换了个位置。
+   数量由 MIRU_TUNE.chat.privateCards 控制（1 = 收敛版；调大即放开）。 */
+function castCardFace(th,id){try{
+  const sp=speakersOf(th);
+  const self=(typeof mainOf==="function")?mainOf(th):null;
+  const lead=(self&&sp.includes(self))?self:sp[0];
+  const n=Math.max(1,Number(MIRU_TUNE.chat.privateCards)||1);
+  if(id===lead) return castCard(th,id);
+  if(sp.slice(0,n).includes(id)) return castCard(th,id);
+  return castCardPublic(th,id);
+}catch(_){return castCard(th,id)}}
 function transcript(th){return th.msgs.slice(S.plus?-MIRU_TUNE.chat.transcriptPlus:-MIRU_TUNE.chat.transcript).map(m=>{
  if(m.k==="card")return "[EVENT] "+(m.title||"")+": "+(m.txt||"");if(m.k==="chap")return "[CHAPTER "+m.n+": "+(m.title||"")+" — goal: "+(m.txt||"")+"]";if(m.k==="dec")return "[OFFICIAL CHOICE "+m.c+"] "+m.txt;if(m.k==="end")return "[ENDING "+m.e+" reached]";if(m.k==="img")return "[A photo was taken]";
  if(m.who==="n")return "(narration) "+m.txt;if(m.k==="dir")return "[DIRECTOR NOTE from "+me()+"] "+m.txt;
@@ -208,7 +226,7 @@ async function reply(th,ctx,silent){
   w?("THE USER'S ROLE: "+Lz(w.you)):("THE USER'S ROLE: "+(th.you||"themselves")),
   w?("WHAT'S AT STAKE: "+Lz(w.warn)):"",
   "STATUS: "+(th.status.time||"")+" · "+(th.status.place||""),
-  "CAST (only these ids may speak):\n"+speakersOf(th).map(id=>castCard(th,id)).join("\n"),
+  "CAST (only these ids may speak):\n"+speakersOf(th).map(id=>castCardFace(th,id)).join("\n"),
   packPrompt(th),
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+(p.name||"the user")+" ("+(p.pron==="he"?"he/him":p.pron==="she"?"she/her":"they/them")+")"+(p.look?". "+p.look:"")+". Never write the user's lines, actions or feelings.",
   memBlock(th),

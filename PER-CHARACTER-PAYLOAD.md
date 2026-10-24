@@ -97,7 +97,7 @@ NOW: …
 
 1. **✅ 已完成**：`present` 旁档 + 构建注入 + 进章接线 + `loveAllowed` 前置验证 + 报告脚本
 2. **作者审名单**：`derived: true` → `false`（零成本，等剧本作者）
-3. **卡分面**：`castCard()` 拆成 `castCardPublic()` / `castCardPrivate()`，**先只改 prompt 组装，不改调用次数**——单 prompt 下用"全部公开 + 主角私密"，仍是 1×
+3. **✅ 已完成｜卡分面**：`castCardPublic()`（无 secret/twist）+ `castCardFace()` 决定谁拿私密面；默认**只有这一拍上场的那个人**带秘密（`chat.privateCards`，调大即回到旧行为）。**调用次数不变，仍是 1×**；`castcard-selftest` 10 条盯着它
 4. **每人一份**：调度器 + `speakersPerBeat` 旋钮，只对缺口 > 10% 的 7 部开启
 
 第 3 步单独就有收益：即使不做每人一份，**把别人的 secret 从共享 prompt 里拿出去**也已经解决了一半的"全知"。

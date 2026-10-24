@@ -33,6 +33,7 @@ window.MIRU_TUNE_OVERRIDE = {
 | `ai.costNormal` / `costDeep` | 1 / 3 | 每轮消耗的单位 | 与「一轮几次调用」相乘才是真成本 |
 | `chat.transcript` / `transcriptPlus` | 20 / 60 | `STORY SO FAR` 带多少条消息 | 调大 ⇒ 上下文更长更连贯，也更贵；**调小到 1–2 条会明显失忆** |
 | `chat.partMergeMax` | 5 | 同一段文字合并成几块为止 | 调大 ⇒ 更少气泡、更连贯；调小 ⇒ 更像即时聊天但更碎 |
+| `chat.privateCards` | 1 | **CAST 里带私密面（秘密/矛盾点）的角色数** | 调大 = 更多人带着秘密上场（更像旧行为）；调小到 1 = 只有这一拍上场的那个。**这一格直接决定“同屋全知”有多严重** |
 | `love.deltaCap` | 12 | 单次好感变动上限 | 大于剧本里最大的一处（目前 A 选项 +9）才不起作用 |
 | `love.min` / `love.max` | 0 / 100 | 好感范围 | 关系冷却那条路会显式传 `min: cooldownMin`，不受这里影响 |
 | `love.cooldownMin` | -60 | 关系「冷下来」那次写入的下限 | 调浅 ⇒ 关系崩不了；调深 ⇒ 一次翻脸就归零 |
