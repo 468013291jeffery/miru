@@ -11,7 +11,7 @@ export const config = { runtime: 'edge' };
 
 const LONGCAT_MODELS = ['LongCat-2.0', 'LongCat-2.5-Preview'];
 const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
-const FIRST_TOKEN_MS = 22000; // give up on a provider that hasn't started answering by then
+const FIRST_TOKEN_MS = Number(process.env.MIRU_FIRST_TOKEN_MS) || 22000; // edge 热路径：读 env 不读 DB（每次请求查一次库不值得）
 
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
 /* SCNet: one key reaches many models. Without SCNET_MODEL we read the account's model list once and pick a good chat model. */

@@ -7,7 +7,7 @@
 const L = require('./_lib');
 // v4.0: no membership. Packs $0.99 → 5 · $2.99 → 16 · $4.99 → 28 · $9.99 → 60 · $19.99 → 125 · $49.99 → 330 · $99.99 → 700 (bonus included in the id)
 const SKUS = { gems_5: 5, gems_16: 16, gems_28: 28, gems_60: 60, gems_125: 125, gems_330: 330, gems_700: 700 };
-const EARN_DAY = 80; // free diamonds a device can claim per day (check-ins, tasks, rewarded ads)
+const EARN_DAY_FALLBACK = 80; // 真正生效的是 config.earn_cap
 async function apply(sql, uid, delta, reason, key) {
   if (key) { const dup = await sql('SELECT balance FROM ledger WHERE key=$1', [key]); if (dup[0]) return { gems: dup[0].balance, dup: true }; }
   await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [uid]);
@@ -38,7 +38,7 @@ module.exports = L.wrap(async (req, res) => {
     const n = Math.floor(Number(b.amount));
     if (!(n > 0 && n <= 50)) return L.bad(res, 'bad amount');
     const used = await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, 'earn', $2) ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + $2 RETURNING n`, [u.uid, n]);
-    if (used[0].n > (Number(cfg.earn_cap) || EARN_DAY)) { await sql(`UPDATE usage SET n = n - $2 WHERE user_id=$1 AND day=CURRENT_DATE AND kind='earn'`, [u.uid, n]); const w = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.uid]); return L.send(res, 429, { error: 'daily free-diamond limit reached', gems: w[0] ? w[0].gems : 0 }); }
+    if (used[0].n > (Number(cfg.earn_cap) || EARN_DAY_FALLBACK)) { await sql(`UPDATE usage SET n = n - $2 WHERE user_id=$1 AND day=CURRENT_DATE AND kind='earn'`, [u.uid, n]); const w = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.uid]); return L.send(res, 429, { error: 'daily free-diamond limit reached', gems: w[0] ? w[0].gems : 0 }); }
     const r = await apply(sql, u.uid, n, 'earn:' + String(b.reason || '').slice(0, 30), b.key ? 'earn:' + u.uid + ':' + String(b.key).slice(0, 80) : null);
     return L.send(res, 200, r);
   }

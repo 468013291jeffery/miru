@@ -142,7 +142,7 @@ const _ask45=ask;ask=function(prompt,opts){let chat=false,th=null,cid=null;try{t
   prompt=prompt.replace("STORY SO FAR:",add.join("\n")+"\nSTORY SO FAR:").replace('"love":{"<cast id>":0-6}','"love":{"<cast id>":-8 to 6},"rd":{"att":0,"tru":0,"jea":0,"ten":0,"gru":0}')}}catch(_){}
  const pr=_ask45(prompt,opts);if(!chat)return pr;
  return pr.then(r=>{try{if(r&&r.love){const neg={};Object.keys(r.love).forEach(id=>{const v=+r.love[id]||0;if(v<0){neg[id]=Math.max(-8,v);r.love[id]=0}});
-   if(Object.keys(neg).length)setTimeout(()=>{Object.keys(neg).forEach(id=>{if(th.love[id]!=null){loveWrite(th,id,neg[id],"cooldown",{min:-60});try{dimFloat&&0}catch(_){}}});save();lineCheck(th);if(curT===th.id)toast("↘ "+LL(first(ch(cid).n)+"和你之间冷了一点",first(ch(cid).n)+" just cooled toward you"))},900)}
+   if(Object.keys(neg).length)setTimeout(()=>{Object.keys(neg).forEach(id=>{if(th.love[id]!=null){loveWrite(th,id,neg[id],"cooldown",{min:MIRU_TUNE.love.cooldownMin});try{dimFloat&&0}catch(_){}}});save();lineCheck(th);if(curT===th.id)toast("↘ "+LL(first(ch(cid).n)+"和你之间冷了一点",first(ch(cid).n)+" just cooled toward you"))},900)}
   if(r&&r.rd&&typeof r.rd==="object"){const p=dimMain(th);if(p){const d={};DIMK.forEach(k=>{const v=Math.max(-6,Math.min(6,+r.rd[k]||0));if(v)d[k]=v});if(Object.keys(d).length)setTimeout(()=>{dimAdd(th,dimKey(p.a,p.b),d,"chat");lineCheck(th)},1200)}}}catch(_){}return r})};
 
 /* ---------- character moments that remember ---------- */

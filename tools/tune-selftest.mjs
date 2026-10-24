@@ -47,6 +47,8 @@ ok('app3_chat 窗口来自 MIRU_TUNE', has('app3_chat.js', 'MIRU_TUNE.chat.trans
 ok('app3_chat 阶段门槛来自 MIRU_TUNE', has('app3_chat.js', 'MIRU_TUNE.love.stageMin'));
 ok('app73 每日上限来自 MIRU_TUNE', has('app73_features.js', 'MIRU_TUNE.affinity.cap'));
 ok('app95 步长上限来自 MIRU_TUNE', has('app95_status.js', 'MIRU_TUNE.love.deltaCap'));
+ok('app45 冷却下限来自 MIRU_TUNE', has('app45_rel.js', 'MIRU_TUNE.love.cooldownMin'));
+ok('app16 合并块数来自 MIRU_TUNE', has('app16_story2.js', 'MIRU_TUNE.chat.partMergeMax'));
 
 console.log('4) 旧字面量已经不在那儿（变异：塞回去必须被抓）');
 const literals = [
@@ -54,12 +56,28 @@ const literals = [
   ['app3_chat.js', 'const STAGE_MIN=[0,20,40,60,80];'],
   ['app73_features.js', 'const AF_CAP = 15,'],
   ['app95_status.js', 'const LOVE_MIN = 0, LOVE_MAX = 100, LOVE_DELTA_CAP = 12;'],
+  ['app45_rel.js', '"cooldown",{min:-60}'],
+  ['app16_story2.js', 'L.parts.length<5'],
 ];
 for (const [f, lit] of literals) ok(`${f} 里不再是字面量`, !has(f, lit));
 const mutated = Object.assign({}, files, { 'app95_status.js': files['app95_status.js'] + '\nconst LOVE_MIN = 0, LOVE_MAX = 100, LOVE_DELTA_CAP = 12;\n' });
 const caught = literals.some(([f, lit]) => (mutated[f] || '').includes(lit));
 console.log(`  · 变异（把字面量塞回去）：${caught ? '已抓住 ✓' : '没抓住 ✗'}`);
 if (!caught) { console.log('SELFTEST FAILED'); process.exit(1); }
+
+console.log('5) 服务端那一套（另一条机制：数据库配置 / 环境变量）');
+const api = {};
+for (const f of fs.readdirSync('api')) if (f.endsWith('.js')) api[f] = fs.readFileSync('api/' + f, 'utf8');
+const ahas = (f, s) => (api[f] || '').includes(s);
+ok('CONFIG_DEFAULTS 里有 state_max_kb', ahas('_lib.js', 'state_max_kb: 900'));
+ok('CONFIG_DEFAULTS 里有 max_pack_kb', ahas('_lib.js', 'max_pack_kb: 1500'));
+ok('CONFIG_DEFAULTS 里有 first_token_ms', ahas('_lib.js', 'first_token_ms: 22000'));
+ok('state.js 读 config.state_max_kb', ahas('state.js', 'state_max_kb'));
+ok('works.js 读 config.max_pack_kb', ahas('works.js', 'max_pack_kb'));
+ok('wallet.js 用 config.earn_cap（不再有第二个 80）', ahas('wallet.js', 'cfg.earn_cap') && !ahas('wallet.js', '|| EARN_DAY)'));
+ok('longcat 走 env（edge 热路径不查库）', ahas('longcat.js', 'MIRU_FIRST_TOKEN_MS'));
+ok('state.js 的上限由配置算出（不是常量）', ahas('state.js', 'const MAX = (Number(_cfg.state_max_kb)'));
+ok('works.js 的上限由配置算出（不是常量）', ahas('works.js', 'const MAXPACK = (Number(cfg.max_pack_kb)'));
 
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }

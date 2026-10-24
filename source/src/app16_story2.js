@@ -35,7 +35,7 @@ function isNarr(m){return m&&m.pk&&(m.who==="n"||m.k==="act"||m.k==="think")&&m.
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(!isNarr(m)){appendMsg(th,m);return}
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
- if(L&&L.k==="box"&&L.pk&&L.parts.length<5){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
+ if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
  appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()})}
 function boxHTML(m,i,th){return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p>'+esc(p.txt)+'</p>';const c=ch(p.who);
