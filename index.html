@@ -16014,3 +16014,71 @@ if(S.ob)startApp();else renderOB();
 })();
 
 </script>
+<script>
+/* v8.2.3 · 智能体按《剧本与角色编写规范 v7.12》补齐（导演 / 停滞规划 / 续写 / 关系结算），不增加模型调用
+   ① 导演（Plot98）每次规划都带上本作 Emotion Charter + Heat Charter，并遵守：只用已确认线索、不泄露未揭露真相、不自动跳章、玩家不同意就不推进
+   ② 停滞时的软引导必须可检验：触发原因、可用线索、不能透露、给玩家 2–3 种回应方向，玩家推迟或换题不惩罚
+   ③ 续写（模式 B/C）：canon 禁改清单（已发生的章节和选择）、禁止重复已收束的冲突、不丢已完成的成长、只用 ask/gift/game/photo/voice/call
+   ④ 每轮候选关系变化 ±2（§07.2：独立情感语句不直接大幅加减分） */
+(function(){
+ const EM={cozy:"靠近→困难→理解→修复（温柔矛盾、互相照顾，避免无因残酷升级）",romcom:"相遇→尴尬→斗嘴→转折→亲近（有因果的笑点和澄清机会）",angst:"吸引→希望→裂痕→抉择→修复/遗憾（真实恐惧与失去代价，强弱交替，不无休止虐）",dark:"秘密→压力→两难→代价（不等于允许胁迫亲密）",thrill:"疑点→线索→调查→反转→揭露（只用已出现的线索）"};
+ const HT={fluff:"清水：偏爱、呵护、分享秘密、关系修复，不写身体吸引",slow:"暧昧：双关、调侃、克制接近、互相试探，给玩家可接的话头",steamy:"微辣：可尽早安排自然的心动和非露骨吸引，但任何靠近都要玩家确认"};
+ const VM={"Cozy":"cozy","Slice of Life":"cozy","Rom-Com":"romcom","Bittersweet":"angst","Hurt/Comfort":"angst","Drama":"angst","Dark Romance":"dark","Mystery":"thrill"};
+ function ch712(w){const h=HT[w&&w.heat]?w.heat:"steamy";let e=((w&&w.taste&&w.taste.vibe)||[]).filter(x=>EM[x]);if(!e.length)e=[...new Set(((w&&w.tags)||[]).map(t=>VM[t]).filter(Boolean))];e=e.slice(0,2);if(!e.length)e=["angst"];
+  return "【本作固定合同（编写规范 v7.12）】\n- 情绪 Emotion Charter："+e.map(x=>x+" "+EM[x]).join("；辅：")+"\n- 尺度 Heat Charter："+h+" "+HT[h]}
+ const DIR_RULES="\n\n【导演规则（编写规范 v7.12 §05–§07，必须遵守）】\n- 只用已经在剧情里出现、玩家或角色已确认的线索；后台真相、作者秘密、角色不知道的事一律不写进任何人的 goal / learn / 台词\n- 不自动出章、不硬跳场：没有玩家选择、已确认事件或“继续剧情”时，留在这一场\n- 角色“想靠近”和玩家“同意靠近”是两件事：亲近只能提议（让角色先问），不能写成已经发生\n- 玩家拒绝、离题、失落或在问正事时，先回应和支持；不施压、不惩罚，不把拒绝当欲擒故纵\n- 沉默或不回复不等于同意推进\n- 强弱交替：不要每一拍都把冲突推到最大";
+ const NUDGE_RULES="\n\n【软引导要求（§06.2）】nudge 只能用角色已知、已确认的线索；不得透露他不知道或尚未揭露的事；要让玩家可以追问、推迟或换题（这三种都不能被惩罚）。另外在 JSON 里加 \"player_options\":[\"玩家可能的 2–3 种回应方向\"] 和 \"expire_turns\":3。";
+ function canon(th){try{const w=wd(th.wid),b=bOf98(w),A=th.b98;const done=(b.chapters||[]).slice(0,Math.max(0,(A.ch||1))).map((c,i)=>"第"+(i+1)+"章「"+LZ98(c.title||c.t||"")+"」"+(c.goal?"："+String(LZ98(c.goal)).slice(0,40):"")).join("\n");
+  return "\n\n【canon 禁改清单（已经发生，续写不得推翻）】\n"+(done||"—")+"\n已做的选择："+(A.flags||[]).slice(-16).join("；")+"\n\n【续写规则（编写规范 v7.12 §09）】\n- 不推翻上面任何已发生的事件、已揭露的秘密和已确认的关系\n- 不重复使用已经收束的误会或主冲突；人物不丢掉已经完成的成长\n- 新冲突要有因果（谁的目标撞上什么障碍）；只给合法的新支线\n- 互动钩子不用假紧急、嫉妒威胁、内疚催促\n- 道具 / 工具只用 ask、gift、game、photo、voice、call；剧情不靠工具也成立\n- 最后一场的选择里给玩家一个可以“暂不决定 / 保持距离”的选项"}catch(_){return ""}}
+ try{const _a=ask;ask=async function(prompt){try{const th=S.threads[curT];if(th&&th.b98&&typeof prompt==="string"){const w=wd(th.wid);let add="";
+   if(/^(你是互动剧的剧情智能体|You are the story agent)/.test(prompt))add=ch712(w)+DIR_RULES;
+   else if(/^(你是互动剧的剧情导演|You are the plot director)/.test(prompt))add=ch712(w)+DIR_RULES+NUDGE_RULES;
+   else if(/^你是女性向互动小说的主编/.test(prompt))add=ch712(w)+canon(th);
+   if(add){const i=prompt.lastIndexOf("\nReply with ONLY JSON");prompt=i>0?prompt.slice(0,i)+"\n"+add+"\n"+prompt.slice(i):prompt+"\n"+add;arguments[0]=prompt}}}catch(_){}
+  const r=await _a.apply(this,arguments);
+  /* ④ actor replies: per-turn relationship candidates stay within ±2 */
+  try{const th=S.threads[curT];if(th&&th.b98&&r&&typeof r==="object"&&"say" in r&&"feel" in r){["feel","trust","attract","suspect"].forEach(f=>{if(r[f]!=null&&isFinite(+r[f]))r[f]=Math.max(-2,Math.min(2,Math.round(+r[f])))})}}catch(_){}
+  return r}}catch(_){}
+})();
+/* v8.2.4 · 智能体按《MIRU v7.11 完整设计说明书》补齐（actor98 / Plot98 / 校验门），仍是每轮一次模型调用
+   §03.2 Reply Charter 常驻：先正面回应最后一句 → 识别对方需要（解释/安慰/好奇/调情）→ 合适时抛一个具体可回应的问题或机会；优先级 真实回答 > 人设与对方需要 > 主动与浪漫 > 工具
+   §04.2 关系阶段约束：阶段 0–1 不因 steamy 自动升暧昧；阶段 4「在一起」只有玩家明确确认的事件才算
+   §06.3 effective_heat = min(作品尺度, 拒绝, 可恋爱, 关系阶段, 场景)：只给演员最终那一档
+   §05.3 玩家明确拒绝 → 立即作废当前软引导和本场缓存计划（不为“劝回”再调导演）
+   §05.6/05.7 Plot98 校验门：结果回来时场景已变 → 丢弃；引导里出现角色不知道的内容 → 丢弃
+   §08.2 第10步 演员输出校验：台词里说出了本章“不知道”的内容 → 修复重试一次，仍不行就换成保守回答；超长截断 */
+(function(){
+ const NO=/(不要|别)(这样|碰我|碰|靠(这么)?近|过来|亲|抱|说了|再说|问了)|不想(聊|说|谈|这样|被|跟你)|算了吧?|不用了|保持距离|离我远|换个话题|聊点别的|先不要|还没准备好|我拒绝|别闹|请你停|no thanks|not now|stop (it|that)|don'?t touch|back off|change the subject|talk about something else|i'?d rather not|i'?m not ready|leave me alone/i;
+ const Q=/[?？]\s*$|(吗|呢|什么|怎么|为什么|为何|哪|几|多少|是不是|有没有|能不能|会不会)[^，。,.!！]{0,6}$/;
+ const TOGETHER=/TOGETHER|COUPLE|DATING|在一起|交往|恋人/i;
+ const stageOf=(th,cid)=>{const v=Math.round(th.love[cid]||0),A=th.b98||{};const tog=(A.flags||[]).some(f=>TOGETHER.test(String(f)));const conf=(A.flags||[]).some(f=>/CONFESS|告白|摊牌|表白/i.test(String(f)));return tog?4:conf&&v>=55?3:v>=30?2:v>=12?1:0};
+ const SN=["陌生人","熟起来","暧昧","摊牌","在一起"];
+ function unknownOf(th,cid){try{const w=wd(th.wid),b=bOf98(w),c=b&&b.chapters[(th.b98.ch||1)-1],k=cardOf98(w,cid);const cc=c&&c.card98&&k&&c.card98[k.key];return [].concat((cc&&cc.unknown)||[]).map(x=>String(x).replace(/[（(].*?[)）]/g,"").trim()).filter(x=>x.length>=4)}catch(_){return []}}
+ const leak=(txt,un)=>{const t=String(txt||"");return un.find(u=>{const key=u.slice(0,Math.min(8,u.length));return key.length>=4&&t.includes(key)})||""};
+ function lastMe(th){for(let i=th.msgs.length-1;i>=0&&i>=th.msgs.length-6;i--){const m=th.msgs[i];if(m&&m.who==="me"&&m.k!=="think")return String(m.txt||"")}return ""}
+ /* §05.3: an explicit refusal cancels the current soft nudge and this scene's cached plan */
+ try{const _ds=doSend;doSend=function(txt){try{const th=S.threads[curT];if(th&&th.b98&&NO.test(String(txt||""))){const A=th.b98,{s}=scene98(th);A.adv="";if(A.plan98&&s)delete A.plan98[s.id];A.nudgeOff98=(A.talkN||0)+4;try{track("nudge_cancel98",{})}catch(_){}}}catch(_){}return _ds.apply(this,arguments)}}catch(_){}
+ try{const _a=ask;ask=async function(prompt,opt){let th=null,cid=null,isActor=false,isPlan=false,snap="";
+  try{th=S.threads[curT];if(th&&th.b98&&typeof prompt==="string"){
+   if(/^你是「/.test(prompt)&&/Reply with ONLY JSON/.test(prompt)){const nm=prompt.slice(3,prompt.indexOf("」"));cid=th.cast.find(id=>ch(id)&&(nm.includes(first(ch(id).n))||ch(id).n.includes(nm)));
+    if(cid){isActor=true;const st=stageOf(th,cid),k=cardOf98(wd(th.wid),cid)||{},last=lastMe(th),asked=Q.test(last.trim()),refused=NO.test(last);
+     const cap=refused?"克制：只做支持和尊重，不调情":k.romanceable===false?"不调情（你不是可恋爱角色）":st<=1?"可以表现在意和被吸引，但不主动升到暧昧，不提身体靠近":st===2?"可以明显但非露骨地暧昧，靠近前先问":"可以直接表达心动和想靠近，仍须对方确认";
+     const add="\n\n【回复合同 Reply Charter（v7.11 §03.2）】\n"+(asked?"- 对方刚问了一个问题：这一句必须先正面回答，再说别的\n":"- 先正面回应对方刚说/做的事\n")+"- 判断对方此刻要的是解释、安慰、好奇还是调情，用你的方式给足情绪价值\n- 合适时抛出一个具体、容易回应的问题或行动机会；不要只答不问，也不要用内疚或施压逼对方回复\n- 优先级：真实回答 > 人设一致与对方需要 > 主动与浪漫张力 > 道具/工具\n【此刻有效尺度（effective_heat）】关系阶段 "+st+" "+SN[st]+"；"+cap+(st<4?"。阶段 4「在一起」只有对方明确确认才算，不要说成已经在一起":"");
+     const i=prompt.lastIndexOf("\nReply with ONLY JSON");prompt=prompt.slice(0,i)+add+prompt.slice(i);arguments[0]=prompt}}
+   else if(/^(你是互动剧的剧情导演|You are the plot director)/.test(prompt)){isPlan=true;const A=th.b98;if((A.nudgeOff98||0)>(A.talkN||0))return null;snap=A.ch+":"+A.sc}
+   else if(/^(你是互动剧的剧情智能体|You are the story agent)/.test(prompt)){snap=th.b98.ch+":"+th.b98.sc;isPlan=true}}}catch(_){}
+  let r=await _a.apply(this,arguments);
+  try{
+   /* §05.6/05.7 validator: stale or leaking plans are dropped */
+   if(isPlan&&r&&typeof r==="object"){const A=th.b98;if(snap&&A.ch+":"+A.sc!==snap&&r.nudge){try{track("plot_drop98",{why:"stale"})}catch(_){}return null}
+    if(r.nudge){const un=[].concat(...th.cast.map(id=>unknownOf(th,id)));const lk=leak(r.nudge,un);if(lk){try{track("plot_drop98",{why:"leak"})}catch(_){}return null}}}
+   /* §08.2 step 10: actor output check — knowledge leak → one repair, then a safe line */
+   if(isActor&&r&&typeof r==="object"&&r.say){const un=unknownOf(th,cid);let lk=leak(r.say+" "+(r.act||""),un);
+    if(lk){try{track("actor_leak98",{})}catch(_){}const p2=arguments[0].replace(/\nReply with ONLY JSON/,"\n【修正】你刚才说出了你并不知道的事（"+lk.slice(0,12)+"…）。重写这一句：只用你知道的；不知道就说不知道或去猜。\nReply with ONLY JSON");
+     let r2=null;try{r2=await _a.call(this,p2,opt)}catch(_){}
+     if(r2&&r2.say&&!leak(r2.say+" "+(r2.act||""),un))r=r2;else{r.say=L98("这个……我现在还说不准。","I can't say for sure yet.");r.act=""}}
+    r.say=String(r.say).slice(0,Z98()?60:220);if(r.act)r.act=String(r.act).slice(0,Z98()?40:160)}
+  }catch(_){}
+  return r}}catch(_){}
+})();
+</script>
