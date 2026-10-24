@@ -160,6 +160,23 @@ function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(
 function setSugg(list){sugg=(list||[]).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
  const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
 function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x=>x.remove());if(on){el.insertAdjacentHTML("beforeend",'<div class="typing"><i></i><i></i><i></i></div>');scrollChat()}}
+/* 流式预览（2026-10-25）：等整段最长要 ~9.5 秒，而首字 ~2.0 秒就到了（LATENCY.md 实测 4.8×）。
+   这里把已到达的片段先塞进"正在输入"那一行，让玩家 2 秒内就看见有东西在动。
+   只影响观感：解析仍然等完整 JSON（ask 的 json() 会在流结束时统一解析）。
+   ⚠️ 必须容错 —— 任何一个 DOM 错误都不能把整轮回复弄丢。 */
+let STREAM_TXT="";
+function streamPreview(piece){
+  try{
+    STREAM_TXT+=String(piece||"");
+    const el=$("#msgs");if(!el)return;
+    const box=$(".typing",el);if(!box)return;
+    const tail=STREAM_TXT.replace(/\s+/g," ").slice(-46);
+    let s=box.querySelector(".spv");
+    if(!s){s=document.createElement("span");s.className="spv";s.style.cssText="margin-left:8px;opacity:.6;font-size:12px";box.appendChild(s)}
+    s.textContent=tail;
+    try{scrollChat()}catch(_){}
+  }catch(_){}
+}
 
 /* send from composer */
 function doSend(txt,mode){
@@ -255,7 +272,13 @@ async function reply(th,ctx,silent){
   "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: 3 short things the user could say or do next, in first person, varied (one line of dialogue, one action starting with *, one bold move)."
  ].filter(Boolean).join("\n");
  let r=null;
- if(liveOn()){try{r=await ask(prompt,{modelTier:deep?"complex":"default"})}catch(e){r=null}
+ if(liveOn()){
+  // 流式预览：首字 ~2s 就到，整段要 ~9.5s（LATENCY.md）。开关见 MIRU_TUNE.chat.streamPreview。
+  const _prev=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.streamPreview!==false&&typeof streamPreview==="function");
+  try{
+   STREAM_TXT="";
+   r=await ask(prompt,{modelTier:deep?"complex":"default",onText:_prev?(function(x){streamPreview(x)}):undefined});
+  }catch(e){r=null}
   if(r&&Array.isArray(r.beats)&&r.beats.length)useUnits(aiCost());}
  // 台词守门（他们 v8.2.3 的「台词检查」）：说了本章他还不该知道的事 ⇒ 带约束重写一次 ⇒ 仍不行就换保守句。
  // 禁区词 = 未来章节的 reveals/breaks + 在场角色卡上还没揭露的 secret/twist。开关见 MIRU_TUNE.chat.replyGuard。

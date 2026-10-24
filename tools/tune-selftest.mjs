@@ -79,6 +79,14 @@ ok('longcat 走 env（edge 热路径不查库）', ahas('longcat.js', 'MIRU_FIRS
 ok('state.js 的上限由配置算出（不是常量）', ahas('state.js', 'const MAX = (Number(_cfg.state_max_kb)'));
 ok('works.js 的上限由配置算出（不是常量）', ahas('works.js', 'const MAXPACK = (Number(cfg.max_pack_kb)'));
 
+
+// 流式预览开关（2026-10-25）：默认开；能被覆盖关掉；拼错了不影响
+{
+  const a = load().chat;
+  ok('streamPreview 默认开', a.streamPreview === true, a.streamPreview);
+  const b = load({ chat: { streamPreview: false } }).chat;
+  ok('streamPreview 可被关掉', b.streamPreview === false, b.streamPreview);
+}
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('tune selftest OK');
