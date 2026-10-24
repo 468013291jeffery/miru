@@ -8,7 +8,7 @@
 //   这里是**玩家发布的剧本**要过的最小结构关：能不能被运行时正确播出来。
 import { createRequire } from 'node:module';
 const require = createRequire(import.meta.url);
-const { planValid } = require('../api/_plan.js');
+const { planValid, planValidChapter } = require('../api/_plan.js');
 
 let pass = 0; const fails = [];
 const ok = (n, c, d) => { if (c) { pass++; console.log('  ✓ ' + n); } else { fails.push(n); console.log('  ✗ ' + n, d === undefined ? '' : '→ ' + JSON.stringify(d).slice(0, 160)); } };
@@ -65,6 +65,23 @@ let threw = false;
 try { planValid(null); } catch (_) { threw = true; }
 ok('传 null 不抛异常', threw === false);
 ok('传 null 返回 not ok', planValid(null).ok === false);
+
+console.log('⑤ 候选章节（续写生成器吐出来的东西）');
+const castIds = ['a', 'b'];
+const cand = {
+  scene: { beats: [['n', 'act', { zh: '一' }], ['a', 'say', { zh: '二' }], ['b', 'think', { zh: '三' }], ['n', 'act', { zh: '四' }]] },
+  choices: ['A', 'B', 'C'].map(k => ({ k, t: { zh: '选' + k }, then: [['a', 'say', { zh: '后' + k }]] })),
+  goal: { zh: '目标' },
+};
+ok('合法候选通过', planValidChapter(cand, castIds).ok === true, planValidChapter(cand, castIds).errors);
+const few = JSON.parse(JSON.stringify(cand)); few.scene.beats = few.scene.beats.slice(0, 2);
+ok('拍数不足 → 报错', planValidChapter(few, castIds).errors.some(e => /4 to 8/.test(e.why)));
+const two = JSON.parse(JSON.stringify(cand)); two.choices = two.choices.slice(0, 2);
+ok('选项不是 3 个 → 报错', planValidChapter(two, castIds).errors.some(e => /exactly 3/.test(e.why)));
+const wrongKey = JSON.parse(JSON.stringify(cand)); wrongKey.choices[0].k = 'D';
+ok('选项键不是 ABC → 报错', planValidChapter(wrongKey, castIds).errors.some(e => /A,B,C/.test(e.why)));
+const ghost = JSON.parse(JSON.stringify(cand)); ghost.scene.beats[1][0] = 'zzz';
+ok('说话人不在 cast → 报错', planValidChapter(ghost, castIds).errors.some(e => /unknown speaker/.test(e.why)));
 
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
