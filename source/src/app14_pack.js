@@ -343,7 +343,7 @@ document.addEventListener("click",async e=>{let x;const th=S.threads[curT];if(!t
   pkSet(th,o.set);if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}if(o.love)th.cast.filter(c=>c!==th.pk.as).forEach(c=>th.love[c]=Math.max(0,Math.min(100,(th.love[c]||5)+o.love)));
   stopResolve(th,o.then||[]);return}
  if(x=e.target.closest("[data-stopgift]")){const g=GIFTS.find(y=>y.id===x.dataset.stopgift);if(!g)return;if(g.cost&&!spend(g.cost,"gift"))return;
-  const m=stopWho(th,d);th.love[m]=Math.min(100,(th.love[m]||0)+g.love);th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));
+  const m=stopWho(th,d);loveWrite(th,m,g.love,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});
   stopResolve(th,(d.by&&d.by[g.id])||d.then||[]);return}
  if(e.target.closest("[data-stopphoto]")){if(!stopPay(STOP_PRICE.photo,"img"))return;const btn=e.target.closest("button");btn.disabled=true;btn.textContent="✨ "+t("ai.painting");

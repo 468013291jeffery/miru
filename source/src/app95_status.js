@@ -33,6 +33,13 @@ function loveWrite(th, id, delta, reason, opts) {
     if (!th || !id) return null;
     th.love = th.love || {};
     const o = opts || {};
+    // 初始化：这个角色还没有数值时，absolute 直接落值（原来那句 th.love[c]=5）
+    if (th.love[id] == null && o.absolute != null) {
+      const v = Math.max(LOVE_MIN, Math.min(LOVE_MAX, Math.round(Number(o.absolute))));
+      th.love[id] = v;
+      loveLog(th, { id, from: null, to: v, delta: 0, reason: String(reason || ''), at: Date.now() });
+      return { before: null, after: v, delta: 0 };
+    }
     const before = th.love[id] == null ? 5 : th.love[id];
     let after;
     if (o.absolute != null) {

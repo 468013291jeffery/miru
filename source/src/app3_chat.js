@@ -11,11 +11,11 @@ function newThread(kind,id,openId,extra){
   th={id:"c:"+id,kind:"solo",wid:c.w,cast:[id],title:c.n,msgs:[],love:{[id]:5},rounds:0,status:w?{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}}:{time:"",place:"",mood:{}},tasks:{},mem:[],created:now,at:now};
   parseSolo(Lz(c.solo||T("*"+first(c.n)+" looks up.* Hey. You came.","*"+first(c.n)+" 抬起头。* 嘿，你来了。"))).forEach(([k,x])=>th.msgs.push({who:id,k,txt:x,at:now}));}
  else if(kind==="group"){th=Object.assign({id:"g:"+now,kind:"group",wid:null,msgs:[],love:{},rounds:0,status:{time:"",place:"",mood:{}},tasks:{},mem:[],created:now,at:now},extra);
-  th.cast.forEach(c=>th.love[c]=5);th.msgs.push({who:"n",k:"act",txt:extra.setting,at:now});}
+  th.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5}));th.msgs.push({who:"n",k:"act",txt:extra.setting,at:now});}
  else{const w=wd(id),quest=kind==="quest";const op=(w.openings||[]).find(o=>o.id===openId)||(w.openings||[])[0];
   th={id:(quest?"q:":"w:")+id+":"+now,kind:quest?"quest":w.kind==="ensemble"?"group":"story",wid:id,cast:w.cast.slice(),title:quest?Lz(w.quest.qtitle):Lz(w.title),msgs:[],love:{},rounds:0,
    status:{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}},tasks:{},mem:[],created:now,at:now};
-  w.cast.forEach(c=>th.love[c]=5);
+  w.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5}));
   if(w.pack&&!quest)packInit(th,w,extra);
   else if(op)(op.beats[CL()]||op.beats.en).forEach(([who,k,x])=>th.msgs.push({who,k:who==="n"?"act":k,txt:x,at:now}));
   if(quest)th.quest={turns:w.quest.turns,goals:w.quest.goals.map(g=>({t:Lz(g),done:false})),hidden:{t:Lz(w.quest.hidden),done:false},over:false};}
@@ -364,13 +364,13 @@ function cardSheet(){if(S.keys<PRICES.card){paySheet("event");return}
  sheet('<h2>'+t("cs.card")+'</h2><div class="row" style="gap:8px;margin-top:12px">'+["romance","drama","angst"].map(k=>'<button class="chip" data-ctype="'+k+'">'+{romance:"💗 Romance",drama:"🔥 Drama",angst:"🌧 Angst"}[k]+'</button>').join("")+'</div><div id="cards" class="stack" style="gap:8px;margin-top:12px"></div>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];
  if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(g.cost&&!spend(g.cost,"gift"))return;
-  const m=mainOf(th);th.love[m]=Math.min(100,(th.love[m]||0)+g.love);th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
+  const m=mainOf(th);loveWrite(th,m,g.love,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});reply(th,{kind:"gift",txt:Lz(g.n),cid:m});return}
- if(x=e.target.closest("[data-date]")){const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;th.love[m]=Math.min(100,(th.love[m]||0)+6);th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
+ if(x=e.target.closest("[data-date]")){const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;loveWrite(th,m,6,"date");th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🌙 "+t("cx.m.date"),txt:t("date.go",{n:first(ch(m).n),p:pl}),at:Date.now()});reply(th,{kind:"date",txt:pl,cid:m});return}
- if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;const m=mainOf(th);th.tasks.truth=1;th.love[m]=Math.min(100,(th.love[m]||0)+5);closeSheet();
+ if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;const m=mainOf(th);th.tasks.truth=1;loveWrite(th,m,5,"truth");closeSheet();
   appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;th.mem.push(me()+" asked "+ch(m).n+" an honest question: "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
- if(x=e.target.closest("[data-inv]")){const id=x.dataset.inv,c=ch(id);th.cast.push(id);th.love[id]=5;closeSheet();
+ if(x=e.target.closest("[data-inv]")){const id=x.dataset.inv,c=ch(id);th.cast.push(id);loveWrite(th,id,0,"invite",{absolute:5});closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🚪 "+t("cs.third"),txt:t("inv.done",{n:c.n}),at:Date.now()});th.mem.push(c.n+" ("+Lz(c.role)+") walked in from another story");reply(th,{kind:"third",txt:c.n+", "+Lz(c.role)});return}
  if(x=e.target.closest("[data-ctype]")){const k=x.dataset.ctype;const pool=EVENTS.filter(v=>v.k===k).concat(EVENTS.filter(v=>v.k!==k)).slice(0,3);
   $("#cards").innerHTML=pool.map(v=>'<button class="opt" data-card="'+v.id+'"><span class="ic">🃏</span><span class="grow"><b>'+esc(Lz(v.t))+'</b><span>'+esc(Lz(v.d))+'</span></span></button>').join("");return}
@@ -381,7 +381,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];
 let qz=null;
 function quiz(cid){qz={cid,i:0,score:0};quizStep()}
 function quizStep(){const c=ch(qz.cid);
- if(qz.i>=QUIZ.length){const th=S.threads[curT];th.tasks.quiz=1;th.love[qz.cid]=Math.min(100,(th.love[qz.cid]||0)+qz.score*2);th.mem.push("Sync quiz with "+c.n+": "+qz.score+"/5 matched");closeSheet();
+ if(qz.i>=QUIZ.length){const th=S.threads[curT];th.tasks.quiz=1;loveWrite(th,qz.cid,qz.score*2,"quiz");th.mem.push("Sync quiz with "+c.n+": "+qz.score+"/5 matched");closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"💞 "+t("quiz.h"),txt:t("quiz.res",{n:qz.score}),at:Date.now()});reply(th,{kind:"user",txt:"(We just finished a sync quiz: "+qz.score+"/5 answers matched. React to that.)"});return}
  const q=QUIZ[qz.i];
  sheet('<div class="row"><div class="eyebrow grow">'+t("quiz.h")+' · '+(qz.i+1)+'/5</div><span class="xs faint">'+t("quiz.res",{n:qz.score})+'</span></div><h2 style="margin-top:10px;font-size:22px">'+esc(Lz(q[0]))+'</h2>'+
@@ -580,12 +580,12 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];
  if(x=e.target.closest("[data-gask]")){const m=mainOf(th),q=x.dataset.gask;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🍾 "+t("g.bottle"),txt:t("g.himTruth",{n:first(ch(m).n)}),at:Date.now()});appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;th.love[m]=Math.min(100,(th.love[m]||0)+3);th.mem.push("Truth or dare: "+me()+" asked "+ch(m).n+": "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
  if(x=e.target.closest("[data-gdare]")){const m=mainOf(th),v=($("#dareIn").value||"").trim();if(!v){toast(t("g.dareIn"));return}closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🍾 "+t("g.yourDare"),txt:x.dataset.gdare,at:Date.now()});appendMsg(th,{who:"me",k:"say",txt:v,at:Date.now()});th.rounds++;th.love[m]=Math.min(100,(th.love[m]||0)+4);th.mem.push(me()+" did a dare for "+ch(m).n+": "+v);reply(th,{kind:"user",txt:"(Truth-or-dare: "+me()+" did this dare — \""+x.dataset.gdare+"\" — and said: "+v+". React to it.)"});return}
  if(x=e.target.closest("[data-lie]")){const ok=x.dataset.lie===lieGame.ans,m=lieGame.m,c=ch(m);$$("[data-lie]").forEach(b=>{b.disabled=true;b.classList.toggle("right",b.dataset.lie===lieGame.ans);b.classList.toggle("wrong",b===x&&!ok)});
-  th.love[m]=Math.min(100,(th.love[m]||0)+(ok?6:1));th.mem.push("Two truths and a lie with "+c.n+": "+(ok?"guessed right":"guessed wrong"));save();
+  loveWrite(th,m,ok?6:1,"twotruths");th.mem.push("Two truths and a lie with "+c.n+": "+(ok?"guessed right":"guessed wrong"));save();
   $("#lieOut").innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:'+(ok?"var(--mint)":"var(--rose)")+'">'+(ok?t("g.lieWin"):t("g.lieLose"))+' · ♥ +'+(ok?6:1)+'</div><button class="btn btn-p btn-sm" style="margin-top:10px" data-gback="'+(ok?"win":"lose")+'">'+t("g.backChat")+'</button></div>';return}
  if(x=e.target.closest("[data-gback]")){const m=lieGame.m;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🕵️ "+t("g.lie"),txt:x.dataset.gback==="win"?t("g.lieWin"):t("g.lieLose"),at:Date.now()});reply(th,{kind:"user",txt:"(We just played two truths and a lie. "+me()+(x.dataset.gback==="win"?" caught your lie immediately.":" fell for your lie.")+" React, teasing.)"});return}
  if(e.target.closest("[data-hgtap]")&&hg){if(!hg.t0){hg.t0=Date.now();hg.timer=setInterval(()=>{hg.left--;const l=$("#hgLeft");if(l)l.textContent=hg.left+"s";if(hg.left<=0){clearInterval(hg.timer);heartEnd()}},1000)}
   hg.score++;const bpm=Math.min(190,72+hg.score*5),b=$("#hgBpm"),bar=$("#hgBar");if(b)b.textContent=bpm+" bpm";if(bar)bar.style.width=Math.min(100,(bpm-72)/1.18)+"%";const av=$(".hgav");if(av){av.classList.remove("beat");void av.offsetWidth;av.classList.add("beat")}return}});
-function heartEnd(){const th=S.threads[curT],m=hg.m,c=ch(m),bpm=Math.min(190,72+hg.score*5),win=bpm>=150;th.love[m]=Math.min(100,(th.love[m]||0)+(win?6:2));th.mem.push(me()+" made "+c.n+"'s heart race to "+bpm+" bpm");save();
+function heartEnd(){const th=S.threads[curT],m=hg.m,c=ch(m),bpm=Math.min(190,72+hg.score*5),win=bpm>=150;loveWrite(th,m,win?6:2,"heart");th.mem.push(me()+" made "+c.n+"'s heart race to "+bpm+" bpm");save();
  const btn=$("[data-hgtap]");if(btn){btn.outerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:var(--gold)">'+bpm+' bpm · ♥ +'+(win?6:2)+'</div><p class="sm" style="margin-top:6px">'+t(win?"g.heartWin":"g.heartLose",{n:first(c.n)})+'</p><button class="btn btn-p btn-sm" style="margin-top:10px" data-hgback="'+bpm+'">'+t("g.backChat")+'</button></div>'}}
 document.addEventListener("click",e=>{const x=e.target.closest("[data-hgback]");if(!x)return;const th=S.threads[curT],m=hg.m;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"💓 "+t("g.heart"),txt:x.dataset.hgback+" bpm",at:Date.now()});reply(th,{kind:"user",txt:"(Heartbeat game: "+me()+" got "+ch(m).n+"'s heart up to "+x.dataset.hgback+" bpm just by leaning closer and closer. If you mention the number it is exactly "+x.dataset.hgback+" bpm — never another number. React — flustered, trying to hide it.)"})});
 
@@ -640,7 +640,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)retu
  if(e.target.closest("[data-nvnext]")){neverGame.done=false;neverGame();return}
  if(x=e.target.closest("[data-nvback]")){const [d,mine]=x.dataset.nvback.split("|"),dr=d?d.split(","):[];closeSheet();neverGame.done=false;
   appendMsg(th,{who:"sys",k:"card",title:"🥂 "+t("gh.never"),txt:t("nv.pre")+" "+neverGame.q+" — 🥂 "+(dr.map(id=>first(ch(id).n)).concat(mine==="1"?[me()]:[]).join(", ")||"—"),at:Date.now()});
-  dr.forEach(id=>th.love[id]=Math.min(100,(th.love[id]||0)+2));th.mem.push("Never have I ever: \""+neverGame.q+"\" — drank: "+(dr.map(id=>ch(id).n).join(", ")||"nobody")+(mine==="1"?", and "+me():""));
+  dr.forEach(id=>loveWrite(th,id,2,"never"));th.mem.push("Never have I ever: \""+neverGame.q+"\" — drank: "+(dr.map(id=>ch(id).n).join(", ")||"nobody")+(mine==="1"?", and "+me():""));
   reply(th,{kind:"user",txt:"(Party game 'Never have I ever — "+neverGame.q+"'. Who drank: "+(dr.map(id=>ch(id).n).join(", ")||"nobody")+(mine==="1"?" and "+me():"")+". The others react — tease, accuse, get defensive, reveal a little.)"});return}
  if(x=e.target.closest("[data-lk]")){if(likelyGame.done)return;likelyGame.done=true;const pick=x.dataset.lk,cs=castOf(th),votes={};cs.forEach(id=>votes[id]=0);votes[pick]++;
   cs.forEach(v=>{const others=cs.filter(o=>o!==v);const to=others[hash(v+likelyGame.q)%others.length]||pick;votes[to]++});const tot=cs.length+1,top=Object.keys(votes).sort((a,b)=>votes[b]-votes[a])[0];
@@ -650,7 +650,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)retu
   appendMsg(th,{who:"sys",k:"card",title:"🗳️ "+t("gh.likely"),txt:t("lk.pre")+" "+likelyGame.q+"? → "+ch(top).n,at:Date.now()});th.mem.push("Most-likely-to vote: \""+likelyGame.q+"\" → "+ch(top).n+" (the user voted "+ch(pick).n+")");
   reply(th,{kind:"user",txt:"(Party game 'Who's most likely to "+likelyGame.q+"?' The table voted "+ch(top).n+"; "+me()+" voted "+ch(pick).n+". "+ch(top).n+" protests, the others pile on.)"});return}
  if(x=e.target.closest("[data-an]")){const g=x.dataset.an,w=anonGame.w,ok=g===w;$$("[data-an]").forEach(b=>{b.disabled=true;b.classList.toggle("drink",b.dataset.an===w);b.classList.toggle("dry",b===x&&!ok)});
-  th.love[w]=Math.min(100,(th.love[w]||0)+(ok?7:3));save();$("#anOut").innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:'+(ok?"var(--mint)":"var(--rose)")+'">'+(ok?t("an.win",{n:first(ch(w).n)}):t("an.lose",{n:first(ch(w).n)}))+' · ♥ +'+(ok?7:3)+'</div><button class="btn btn-p btn-sm" style="margin-top:10px" data-anback="'+w+'|'+(ok?1:0)+'">'+t("g.backChat")+'</button></div>';return}
+  loveWrite(th,w,ok?7:3,"anon");save();$("#anOut").innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:'+(ok?"var(--mint)":"var(--rose)")+'">'+(ok?t("an.win",{n:first(ch(w).n)}):t("an.lose",{n:first(ch(w).n)}))+' · ♥ +'+(ok?7:3)+'</div><button class="btn btn-p btn-sm" style="margin-top:10px" data-anback="'+w+'|'+(ok?1:0)+'">'+t("g.backChat")+'</button></div>';return}
  if(x=e.target.closest("[data-anback]")){const [w,ok]=x.dataset.anback.split("|"),note=($("#anTxt")||{}).textContent||"";closeSheet();th.focus=w;
   appendMsg(th,{who:"sys",k:"card",title:"💌 "+t("gh.anon"),txt:"“"+note+"” — "+ch(w).n,at:Date.now()});th.mem.push(ch(w).n+" wrote the user an anonymous note: "+note);
   reply(th,{kind:"user",txt:"(Anonymous-note game: "+ch(w).n+" wrote \""+note+"\" and "+me()+(ok==="1"?" guessed it was them.":" guessed wrong, so it was revealed.")+" "+ch(w).n+" reacts, exposed; the others react to that.)"});return}});
