@@ -3,7 +3,18 @@
    .doc (Word 97–2003) → a small compound-file reader that walks the piece table of the WordDocument stream. */
 let PDFJS_P=null;
 function imRunSrc(src){return new Promise((res,rej)=>{try{const u=URL.createObjectURL(new Blob([src],{type:"text/javascript"}));const sc=document.createElement("script");sc.src=u;sc.onload=()=>res();sc.onerror=()=>{try{(0,eval)(src);res()}catch(e){rej(e)}};document.head.appendChild(sc)}catch(e){try{(0,eval)(src);res()}catch(e2){rej(e2)}}})}
-function imPdfLib(){if(!PDFJS_P)PDFJS_P=(async()=>{if(!window.pdfjsLib)await imRunSrc(window.PDFJS_SRC);if(!window.pdfjsWorker)await imRunSrc(window.PDFJS_WORKER_SRC);const L=window.pdfjsLib||window["pdfjs-dist/build/pdf"];if(!L)throw "pdfjs";return L})();return PDFJS_P}
+/* PDF.js 的 1.4 MB 不再进主包（2026-10-25）：只有真的要导入 PDF 时才去取 pdfjs_embed.js。
+   它只是给 window 挂两个字符串，取回来再走原来的 imRunSrc，行为与以前一模一样。
+   取不到（离线/文件没部署）时把错误抛给调用方，导入面板会照常提示「读不了这个文件」。 */
+function imLoadPdfjs(done, fail){
+  if(window.PDFJS_SRC) return done();
+  const sc=document.createElement("script");
+  sc.src="pdfjs_embed.js";
+  sc.onload=()=>done();
+  sc.onerror=()=>fail(new Error("pdfjs not available"));
+  document.head.appendChild(sc);
+}
+function imPdfLib(){if(!PDFJS_P)PDFJS_P=new Promise((res,rej)=>{imLoadPdfjs(async()=>{try{if(!window.pdfjsLib)await imRunSrc(window.PDFJS_SRC);if(!window.pdfjsWorker)await imRunSrc(window.PDFJS_WORKER_SRC);const L=window.pdfjsLib||window["pdfjs-dist/build/pdf"];if(!L)throw "pdfjs";res(L)}catch(e){rej(e)}},rej)});return PDFJS_P}
 async function imPdf(buf){const L=await imPdfLib();const pdf=await L.getDocument({data:new Uint8Array(buf),isEvalSupported:false,useSystemFonts:true}).promise;const out=[];
  for(let i=1;i<=pdf.numPages;i++){const pg=await pdf.getPage(i),tc=await pg.getTextContent();const rows=[];tc.items.forEach(it=>{if(!it.str)return;const x=it.transform[4],y=it.transform[5];let r=rows.find(r2=>Math.abs(r2.y-y)<=Math.max(2,(it.height||10)*0.35));if(!r){r={y,its:[]};rows.push(r)}r.its.push({x,s:it.str})});
   rows.sort((r1,r2)=>r2.y-r1.y).forEach(r=>out.push(r.its.sort((a1,a2)=>a1.x-a2.x).map(z=>z.s).join("").replace(/\s+([，。！？：；、”」）])/g,"$1").replace(/([“「（])\s+/g,"$1").replace(/\s*“\s*”\s*/g,"").replace(/\s*「\s*」\s*/g,"")));out.push("")}
