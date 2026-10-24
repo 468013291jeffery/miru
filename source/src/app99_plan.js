@@ -24,7 +24,14 @@ function planKey(th) {
 function planGet(th) {
   try {
     const c = (th && th.planCache) || {};
-    return c[planKey(th)] || null;
+    const p = c[planKey(th)] || null;
+    if (!p) return null;
+    // T16：计划里带的剧本版本与当前不一致 ⇒ 当作没有（旧计划不许覆盖新剧本）
+    try {
+      const cur = (typeof MIRU_REV !== "undefined" && th && th.wid) ? MIRU_REV[th.wid] : null;
+      if (cur && p.rev && p.rev !== cur) { delete c[planKey(th)]; return null; }
+    } catch (_) {}
+    return p;
   } catch (_) { return null }
 }
 
@@ -62,6 +69,11 @@ function planSet(th, plan) {
     if (!plan || typeof plan !== "object") return false;
     const key = planKey(th);
     th.planCache = th.planCache || {};
+    // T16：写的时候记下当前剧本版本，取用时（planGet）比对
+    try {
+      const cur = (typeof MIRU_REV !== "undefined" && th && th.wid) ? MIRU_REV[th.wid] : null;
+      if (cur && !plan.rev) plan = Object.assign({}, plan, { rev: cur });
+    } catch (_) {}
     th.planCache[key] = plan;
     return true;
   } catch (_) { return false }

@@ -44,6 +44,17 @@ add('T21', '未授权通知/静默时段 → 不发召回', 'N/A',
   `全库无 sw.js / manifest.json / serviceWorker / requestPermission；唯一的「一天一次来电」是应用内提示（app20）。加了推送那天要先把静默时段做上。`);
 
 try {
+  // T06 / T16：内容版本号与旧计划丢弃（tools/rev-selftest.mjs 已单独跑，这里核对产物）
+  const hasTable = /const MIRU_REV=\{/.test(html);
+  const hasLine = /script rev /.test(html);
+  const hasCheck = /旧计划不许覆盖新剧本/.test(html);
+  add('T06', '编剧更新内容 → 固定缓存与计划失效', (hasTable && hasLine) ? 'PASS' : 'FAIL',
+    `产物里有版本号表 ${hasTable} · PACK 行带 rev ${hasLine}（内容一改，固定段就变）`);
+  add('T16', 'Plot98 返回旧版本的旧计划 → 丢弃', (hasCheck) ? 'PASS' : 'FAIL',
+    'planGet 比对剧本版本，不一致就当没有并清掉（rev-selftest 有 8 条真跑）');
+} catch (e) { add('T06', '内容版本号', 'FAIL', e.message); }
+
+try {
   // T17 / T18 / T25：计划层的判断与缓存（source/src/app99_plan.js）
   const P = new Function(fs.readFileSync('source/src/app99_plan.js', 'utf8') +
     '\nreturn { planKey, planGet, planDecide, planTried, planSet };')();
@@ -248,9 +259,7 @@ add('T09', '玩家明确拒绝 → 降档并停止试探', has(/dimAdd\(th,as\+"
 // ---- 机制还不存在的：写明缺什么 ----
 const NY = [
   ['T05', 'trope.slow + heat.slow → 不互相覆盖', '读过 TROPE_MAP：它是**推荐标签**（37 部，"Slow Burn" 只是标签字符串），heat 是包上的独立字段（ice 的 heat="slow"）；两者之间没有任何合并逻辑 —— 所以不是「会互相覆盖」，是这套合并根本不存在'],
-  ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '读过全库：revision 只出现在数据行的字符串里，没有 revision 字段、没有失效逻辑（对账 #6）；app80_cache 靠**文本不变**侥幸命中，改一个字就整段失效'],
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
-  ['T16', 'Plot98 返回旧 revision → 丢弃', '没有 Plot98（对账 #12）'],
   ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '拆开看：①「判断该不该续」= app99_plan.js 已能给（planDecide）；②「生成候选」缺 ◯ 计划生成 prompt；③「核验」可复用 content/validate.py 的结构规则；④「发布」需人工确认。前三步都是小件，第四步是产品决定'],
   ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
 ];

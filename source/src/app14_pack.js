@@ -238,7 +238,9 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-close]"))closeS
 /* ---------- AI prompt context for a story pack ---------- */
 function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chapters[th.pk.ch-1];if(!c)return "";
  const as=th.pk.as,lead=ch(as),past=Object.entries(th.pk.picks).map(([n,k])=>"Ch"+n+": "+P.chapters[n-1].choices.find(x=>x.k===k).mem.en).join(" | ");
- return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+".",
+ return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+"."+
+  // 内容版本号（T06）：内容一改，这一行就变 ⇒ 固定段失效 ⇒ 缓存不会拿旧剧本的上下文继续讲故事
+  ((typeof MIRU_REV!=="undefined"&&MIRU_REV[th.wid])?" [script rev "+MIRU_REV[th.wid]+"]":""),
   past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:"",
   th.pk.st==="choose"?"The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal.":
    "This chapter's choice is made. Play the aftermath of it; do not start the next chapter's events.",
