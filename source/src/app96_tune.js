@@ -36,6 +36,7 @@ var MIRU_TUNE = (function () {
       transcriptPlus: 60,   // 同上（Plus）
       partMergeMax: 5,      // 同一段文字合并成几块为止（原来是字面量 5）
       privateCards: 1,
+      planGate: true,         // 计划层入口：只观测「这一场本来会不会需要续写」，不改写这一场
       replyGuard: true       // 台词守门：说了本章不该知道的事 ⇒ 重写一次 ⇒ 仍不行换保守句       // CAST 里带私密面（secret/twist）的角色数：1=只有这一拍上场的那个；调大即放开
     },
     tools: {

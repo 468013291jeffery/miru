@@ -276,6 +276,9 @@ async function reply(th,ctx,silent){
   }catch(_){}
  }
  if(!r||!Array.isArray(r.beats)||!r.beats.length)r=fallback(th,ctx);
+ // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
+ // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
+ try{ if(typeof plotGate==="function") plotGate(th); }catch(_){}
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
  if(!silent)busy=false;}
