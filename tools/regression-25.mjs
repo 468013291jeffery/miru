@@ -100,16 +100,19 @@ try {
     try {
       const src = ['source/src', 'api'].flatMap(d => fs.readdirSync(d).filter(f => f.endsWith('.js')).map(f => path.join(d, f)))
         .map(f => fs.readFileSync(f, 'utf8')).join('\n');
-      return !/(?<![\w.$])planDecide\s*\(/.test(src.replace(/function\s+planDecide\s*\(/g, ''));
+      // 分两条：判断层（planDecide）已接线；缓存层（planGet/planSet）还没有
+      const wiredPlanDecide = /(?<![\w.$])planDecide\s*\(/.test(src.replace(/function\s+planDecide\s*\(/g, ''));
+      const wiredPlanGet = /(?<![\w.$])planGet\s*\(/.test(src.replace(/function\s+planGet\s*\(/g, ''));
+      return { decide: !wiredPlanDecide, cache: !wiredPlanGet };
     } catch (_) { return false }
   })();
-  const V = (behaviour) => (unwired ? 'UNWIRED' : (behaviour ? 'PASS' : 'FAIL'));
-  add('T17', '普通对话有有效计划 → 不额外频繁调用', V(second.call === false && third.call === false && third.why === 'reuse'),
-    `有缓存时 why=${third.why} · 试过一次后 why=${second.why}` + (unwired ? ' · **但 planDecide 无人调用（wiring-check）**' : ''));
-  add('T18', '新场景无计划 → 按需一次，结果可缓存', V(first.call === true && other.call === true),
-    `首次 ${first.call}（${first.why}）· 换场景后 ${other.call}（${other.why}）` + (unwired ? ' · **未接线**' : ''));
-  add('T25', '计划层失败 → 角色仍可正常回答', V(crashed && crashed.call === false),
-    '拿不到 thread 时 planDecide 返回 ' + JSON.stringify(crashed) + '（调用方拿 false 就照常回复）' + (unwired ? ' · **未接线**' : ''));
+  const V = (behaviour, needCache) => ((needCache ? unwired.cache : unwired.decide) ? 'UNWIRED' : (behaviour ? 'PASS' : 'FAIL'));
+  add('T17', '普通对话有有效计划 → 不额外频繁调用', V(second.call === false && third.call === false && third.why === 'reuse', true),
+    `有缓存时 why=${third.why} · 试过一次后 why=${second.why}` + (unwired.cache ? ' · **缓存层未接线**' : ''));
+  add('T18', '新场景无计划 → 按需一次，结果可缓存', V(first.call === true && other.call === true, true),
+    `首次 ${first.call}（${first.why}）· 换场景后 ${other.call}（${other.why}）` + (unwired.cache ? ' · **缓存层未接线**' : ''));
+  add('T25', '计划层失败 → 角色仍可正常回答', V(crashed && crashed.call === false, false),
+    '拿不到 thread 时 planDecide 返回 ' + JSON.stringify(crashed) + '（调用方拿 false 就照常回复）' + (unwired.cache ? ' · **缓存层未接线**' : ''));
 } catch (e) { add('T17', '计划层', 'FAIL', e.message); }
 
 try {

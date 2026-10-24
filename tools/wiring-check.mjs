@@ -22,7 +22,7 @@ const WATCH = [
   'loveWrite', 'toolGate', 'toolUse', 'loveAllowed',
   'emotionNorm', 'heatGated', 'ageAllowed', 'ageGateAsk',
   'cardAt', 'cardCommitChapter', 'cardChanges', 'cardMemo',
-  'planDecide', 'planGet', 'planSet', 'planTried',
+  'plotGate', 'planDecide', 'planGet', 'planSet', 'planTried',
   'guardReply', 'marksForbidden', 'canonFacts',
   'castCardPublic', 'castCardFace', 'pkSetPresent',
 ];

@@ -53,6 +53,37 @@ function planDecide(th) {
   }
 }
 
+/** **计划层的入口（2026-10-25 Ann 拍：留个入口位置，先不动玩家看得见的东西）**
+ *
+ *  这是"以后要接生成器"的唯一接口。今天它**只观测**：
+ *    · 调 planDecide 判断这一场本来会不会需要续写；
+ *    · 需要就记一条 `plot_would_continue` 事件；
+ *    · **不生成、不改写、不影响这一场怎么写**（返回值目前无人消费）。
+ *
+ *  为什么要有它（而不是留着四个没人调的函数）：死代码和"还没接的接口"在 grep 里长得一样，
+ *  而 `tools/wiring-check.mjs` 只认调用点。有了这个入口，计划层就是**接上线但不产生行为**，
+ *  闸能看着它；等 Ann 要 B（真生成）时，改这里一处即可。
+ */
+function plotGate(th) {
+  try {
+    if (typeof MIRU_TUNE !== "undefined" && MIRU_TUNE.chat && MIRU_TUNE.chat.planGate === false) {
+      return { ok: false, skipped: true, call: false, why: "tune-off" };
+    }
+    const d = planDecide(th);
+    const call = !!(d && d.call);
+    if (call) {
+      try {
+        track && track("plot_would_continue", {
+          wid: (th && th.wid) || "",
+          ch: (th && th.pk && th.pk.ch) || 0,
+          key: (d && d.key) || "",
+        });
+      } catch (_) {}
+    }
+    return { ok: true, call: call, why: (d && d.why) || "", key: (d && d.key) || "" };
+  } catch (_) { return { ok: false, call: false, why: "error" } }
+}
+
 /** 记一次尝试（无论成功失败），保证同一场景不会被反复触发。 */
 function planTried(th, ok) {
   try {
