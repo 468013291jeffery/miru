@@ -108,6 +108,21 @@ th.pk.st = 'end';
 th.pk.ch = 1;
 pkOpenMark(th, 1);
 const last = events[events.length - 1];
+// ---- T14（文档 §14.1）：不点继续，章节不会自己往前走 ----
+{
+  // ⚠️ 必须复用测试自己的 th：stubs 里的 curT 是构造时按值传进去的，
+  // 改外层的 curT 不会影响 packPick 看到的值 —— 上一版因此断言了一个没被操作的对象（假绿）。
+  th.pk.st = 'choose'; th.pk.ch = 1; th.pk.picks = {};
+  const chBefore = th.pk.ch;
+  packPick('A');
+  const stAfterPick = th.pk.st;
+  ok('choosing does not advance the chapter by itself', [th.pk.ch, chBefore], [chBefore, chBefore]);
+  ok('it parks in a non-choose state until the consequence is done', stAfterPick !== 'choose', true);
+  packAfterPick(th, 'A');
+  ok('still the same chapter after the consequence', th.pk.ch, chBefore);
+  ok('the game asks for the next step instead of taking it', th.pk.st === 'next' || th.pk.st === 'end', true);
+}
+
 ok('a replay opens chapter 1 again', last.name === 'chapter_open' && last.props.ch === 1, true);
 ok('and starts a new session', last.props.sess !== events[0].props.sess, true);
 
