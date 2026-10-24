@@ -7,7 +7,7 @@
    Rules: an official choice never costs anything; an AI turn = one successful reply to free input, however many lines;
    a failed or offline reply is never charged; running out of turns never blocks the official story; love is never sold. */
 function PCN(w){return (w&&w.pack&&w.pack.chapters&&w.pack.chapters.length)||8}
-const PACK_PRICE=50,TOPUP={n:100,cost:24},TRIAL_UNITS=24,PLUS_UNITS=250,PACK_UNITS=120,FREE_CH=2,ENDING_NEED=4;
+const PACK_PRICE=MIRU_TUNE.pay.packPrice,TOPUP={n:MIRU_TUNE.pay.topupUnits,cost:MIRU_TUNE.pay.topupCost},TRIAL_UNITS=MIRU_TUNE.pay.trialUnits,PLUS_UNITS=MIRU_TUNE.pay.plusUnits,PACK_UNITS=MIRU_TUNE.pay.packUnits,FREE_CH=MIRU_TUNE.pay.freeChapters,ENDING_NEED=MIRU_TUNE.pay.endingNeed;
 function isPack(w){return !!(w&&w.pack)}
 function packSt(wid){S.packs=S.packs||{};return S.packs[wid]=S.packs[wid]||{own:0,end:{}}}
 function owns(wid){return !!(S.packs&&S.packs[wid]&&S.packs[wid].own)}
@@ -21,7 +21,7 @@ function unitsLeft(){const u=uState();return u.trial+u.pack+u.pl}
 /* spend the turns that expire first: this month's MIRU+ turns, then the free trial, then purchased turns (never expire) */
 function useUnits(n){const u=uState();let k=n;for(const f of ["pl","trial","pack"]){const d=Math.min(u[f],k);u[f]-=d;k-=d}save();unitChip();return k===0}
 function unitChip(){$$(".uchip").forEach(el=>el.textContent="✦ "+unitsLeft())}
-function aiCost(){return S.tier==="deep"?3:1}
+function aiCost(){return S.tier==="deep"?MIRU_TUNE.ai.costDeep:MIRU_TUNE.ai.costNormal}
 /* checked BEFORE the user's message is added, so nothing is left hanging */
 function aiGate(){if(!liveOn())return true;if(unitsLeft()>=aiCost())return true;unitsSheet(true);return false}
 function unitsSheet(out){const u=uState();

@@ -34,7 +34,7 @@ function day73() { return new Date().toISOString().slice(0, 10); }
 function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k >= 0 && th.msgs[k].who !== "me" && !th.msgs[k].ai) k--; if (k < 0 || !th.msgs[k].ai) return -1; let j = k; while (j > 0 && th.msgs[j - 1].ai) j--; return j; }
 
 /* ---------- 1 · affinity ---------- */
-const AF_CAP = 15, AF_MIND = [1, 2, 3, 5, 5], AF_GEMS = [0, 5, 10, 15, 20];
+const AF_CAP = MIRU_TUNE.affinity.cap, AF_MIND = MIRU_TUNE.affinity.mind, AF_GEMS = MIRU_TUNE.affinity.gems;
 const _playBeats73 = playBeats;
 playBeats = async function (th, r, ctx, silent) {
   const before = JSON.parse(JSON.stringify(th.love || {})), st0 = {};

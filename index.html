@@ -1490,6 +1490,7 @@ p{margin:0}
 .orRow3 .orC{top:8px;right:8px;width:22px;height:22px;font-size:12px}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
+<script src="tune.js"></script>
 
 <script>
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
@@ -2913,6 +2914,74 @@ function pickSearch(inputId,gridId){return '<div class="field" style="margin-top
 document.addEventListener("input",e=>{const x=e.target.closest(".pickq");if(!x)return;const sel=x.dataset.pickfor,q=x.value.trim().toLowerCase();
  $$(sel+" > *").forEach(b=>{const nm=(b.querySelector("span")||b).textContent.toLowerCase();b.style.display=(!q||nm.includes(q))?"":"none"})});
 
+/* ================= 可调参数（外置滑钮）=================
+   为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、
+   关系阶段门槛、每日好感上限、单次好感步长…）。改一个要翻代码、改完要重新构建，
+   而且没人知道"一共有几个旋钮"。
+   现在：默认值全在这里，**可以在 tune.js 里覆盖、不用重建**：
+
+     // tune.js（部署时手改，刷新即生效）
+     window.MIRU_TUNE_OVERRIDE = {
+       pay:  { packPrice: 60, endingNeed: 5 },
+       love: { deltaCap: 20 },
+       chat: { transcript: 30 }
+     };
+
+   规矩：
+   1. 新增可调数字 → 先加进这里的 DEFAULTS，再在调用处读 MIRU_TUNE.xxx；
+   2. 读取方一律写 MIRU_TUNE.<section>.<key>，不写字面量（tools/tune-selftest.mjs 会盯着）；
+   3. 每一格在 TUNING.md 里有一句"改它会影响什么"。 */
+var MIRU_TUNE = (function () {
+  var DEFAULTS = {
+    pay: {
+      packPrice: 50,        // 解锁整包要多少钻石
+      topupUnits: 100,      // 一次充值的单位数
+      topupCost: 24,        // 一次充值要多少钻石
+      trialUnits: 24,       // 试用单位
+      plusUnits: 250,       // MIRU+ 每月单位
+      packUnits: 120,       // 整包单位
+      freeChapters: 2,      // 免费章节数（第 3 章起收费）
+      endingNeed: 4         // 到达结局所需的 A 选项次数
+    },
+    ai: {
+      costNormal: 1,        // 普通档每轮消耗的单位
+      costDeep: 3           // 深度档每轮消耗的单位
+    },
+    chat: {
+      transcript: 20,       // STORY SO FAR 带多少条（普通）
+      transcriptPlus: 60    // 同上（Plus）
+    },
+    love: {
+      deltaCap: 12,         // 单次好感变动上限
+      min: 0,               // 好感下限（关系冷却那条路会传 -60 覆盖）
+      max: 100,             // 好感上限
+      stageMin: [0, 20, 40, 60, 80]   // 关系阶段门槛（closeness → stage）
+    },
+    affinity: {
+      cap: 15,              // 每天"额外好感"的上限
+      mind: [1, 2, 3, 5, 5],        // 各档心智/能力
+      gems: [0, 5, 10, 15, 20]      // 各档钻石
+    },
+    report: {
+      omniscienceThreshold: 0.10    // 「缺口大于这个比例才值得做 B 方案」的分析阈值
+    }
+  };
+
+  var O = (typeof window !== "undefined" && window.MIRU_TUNE_OVERRIDE) || {};
+  var out = {};
+  Object.keys(DEFAULTS).forEach(function (sec) {
+    out[sec] = Object.assign({}, DEFAULTS[sec]);
+    if (O[sec] && typeof O[sec] === "object") {
+      Object.keys(O[sec]).forEach(function (k) {
+        if (k in DEFAULTS[sec]) out[sec][k] = O[sec][k];   // 只接受已声明的键，避免拼错静默生效
+      });
+    }
+  });
+  out._defaults = DEFAULTS;      // 核查用：现值与默认值的差 = 这一版被改过什么
+  out._overridden = O;
+  return out;
+})();
+
 /* ================= 状态写入层 v1（唯一写入口）=================
    规格 v7.11 §04.6「状态投影的唯一写入点」：
      模型和剧情都只能"提议"，真正的写入只在这里发生。
@@ -2925,7 +2994,7 @@ document.addEventListener("input",e=>{const x=e.target.closest(".pickq");if(!x)r
    ⚠️ 这一层只做「夹值 + 记账」，不改变任何现有数值走向；
       剧本/游戏原来加多少还是加多少，超过单次上限才会被拦。 */
 
-const LOVE_MIN = 0, LOVE_MAX = 100, LOVE_DELTA_CAP = 12;
+const LOVE_MIN = MIRU_TUNE.love.min, LOVE_MAX = MIRU_TUNE.love.max, LOVE_DELTA_CAP = MIRU_TUNE.love.deltaCap;
 
 function loveLog(th, ev) {
   try {
@@ -3406,7 +3475,7 @@ Object.assign(I18N.en,{"ch.remix":"Remix"});
 Object.assign(I18N.zh,{"ch.remix":"二创TA"});
 
 /* ================= THREADS ================= */
-const STAGE_MIN=[0,20,40,60,80];
+const STAGE_MIN=MIRU_TUNE.love.stageMin;
 function stageOf(th,cid){const lv=(th&&th.love&&th.love[cid])||0;let k=0;STAGE_MIN.forEach((m,i)=>{if(lv>=m)k=i});return k}
 function mainOf(th){return th.focus&&th.cast.includes(th.focus)?th.focus:th.cast[0]}
 function parseSolo(txt){/* "*act* say (think)" → beats */
@@ -3585,7 +3654,7 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
-function transcript(th){return th.msgs.slice(S.plus?-60:-20).map(m=>{
+function transcript(th){return th.msgs.slice(S.plus?-MIRU_TUNE.chat.transcriptPlus:-MIRU_TUNE.chat.transcript).map(m=>{
  if(m.k==="card")return "[EVENT] "+(m.title||"")+": "+(m.txt||"");if(m.k==="chap")return "[CHAPTER "+m.n+": "+(m.title||"")+" — goal: "+(m.txt||"")+"]";if(m.k==="dec")return "[OFFICIAL CHOICE "+m.c+"] "+m.txt;if(m.k==="end")return "[ENDING "+m.e+" reached]";if(m.k==="img")return "[A photo was taken]";
  if(m.who==="n")return "(narration) "+m.txt;if(m.k==="dir")return "[DIRECTOR NOTE from "+me()+"] "+m.txt;
  const nm=m.who==="me"?(th.pk&&ch(th.pk.as)?ch(th.pk.as).n+" (the user)":me()):ch(m.who)?ch(m.who).n:m.who;
@@ -5541,7 +5610,7 @@ Object.assign(I18N.zh,{"ad.left":"今天还剩 {n}/{c} 次","ad.none":"今天的
    Rules: an official choice never costs anything; an AI turn = one successful reply to free input, however many lines;
    a failed or offline reply is never charged; running out of turns never blocks the official story; love is never sold. */
 function PCN(w){return (w&&w.pack&&w.pack.chapters&&w.pack.chapters.length)||8}
-const PACK_PRICE=50,TOPUP={n:100,cost:24},TRIAL_UNITS=24,PLUS_UNITS=250,PACK_UNITS=120,FREE_CH=2,ENDING_NEED=4;
+const PACK_PRICE=MIRU_TUNE.pay.packPrice,TOPUP={n:MIRU_TUNE.pay.topupUnits,cost:MIRU_TUNE.pay.topupCost},TRIAL_UNITS=MIRU_TUNE.pay.trialUnits,PLUS_UNITS=MIRU_TUNE.pay.plusUnits,PACK_UNITS=MIRU_TUNE.pay.packUnits,FREE_CH=MIRU_TUNE.pay.freeChapters,ENDING_NEED=MIRU_TUNE.pay.endingNeed;
 function isPack(w){return !!(w&&w.pack)}
 function packSt(wid){S.packs=S.packs||{};return S.packs[wid]=S.packs[wid]||{own:0,end:{}}}
 function owns(wid){return !!(S.packs&&S.packs[wid]&&S.packs[wid].own)}
@@ -5555,7 +5624,7 @@ function unitsLeft(){const u=uState();return u.trial+u.pack+u.pl}
 /* spend the turns that expire first: this month's MIRU+ turns, then the free trial, then purchased turns (never expire) */
 function useUnits(n){const u=uState();let k=n;for(const f of ["pl","trial","pack"]){const d=Math.min(u[f],k);u[f]-=d;k-=d}save();unitChip();return k===0}
 function unitChip(){$$(".uchip").forEach(el=>el.textContent="✦ "+unitsLeft())}
-function aiCost(){return S.tier==="deep"?3:1}
+function aiCost(){return S.tier==="deep"?MIRU_TUNE.ai.costDeep:MIRU_TUNE.ai.costNormal}
 /* checked BEFORE the user's message is added, so nothing is left hanging */
 function aiGate(){if(!liveOn())return true;if(unitsLeft()>=aiCost())return true;unitsSheet(true);return false}
 function unitsSheet(out){const u=uState();
@@ -12147,7 +12216,7 @@ function day73() { return new Date().toISOString().slice(0, 10); }
 function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k >= 0 && th.msgs[k].who !== "me" && !th.msgs[k].ai) k--; if (k < 0 || !th.msgs[k].ai) return -1; let j = k; while (j > 0 && th.msgs[j - 1].ai) j--; return j; }
 
 /* ---------- 1 · affinity ---------- */
-const AF_CAP = 15, AF_MIND = [1, 2, 3, 5, 5], AF_GEMS = [0, 5, 10, 15, 20];
+const AF_CAP = MIRU_TUNE.affinity.cap, AF_MIND = MIRU_TUNE.affinity.mind, AF_GEMS = MIRU_TUNE.affinity.gems;
 const _playBeats73 = playBeats;
 playBeats = async function (th, r, ctx, silent) {
   const before = JSON.parse(JSON.stringify(th.love || {})), st0 = {};

@@ -1,5 +1,5 @@
 /* ================= THREADS ================= */
-const STAGE_MIN=[0,20,40,60,80];
+const STAGE_MIN=MIRU_TUNE.love.stageMin;
 function stageOf(th,cid){const lv=(th&&th.love&&th.love[cid])||0;let k=0;STAGE_MIN.forEach((m,i)=>{if(lv>=m)k=i});return k}
 function mainOf(th){return th.focus&&th.cast.includes(th.focus)?th.focus:th.cast[0]}
 function parseSolo(txt){/* "*act* say (think)" → beats */
@@ -178,7 +178,7 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
-function transcript(th){return th.msgs.slice(S.plus?-60:-20).map(m=>{
+function transcript(th){return th.msgs.slice(S.plus?-MIRU_TUNE.chat.transcriptPlus:-MIRU_TUNE.chat.transcript).map(m=>{
  if(m.k==="card")return "[EVENT] "+(m.title||"")+": "+(m.txt||"");if(m.k==="chap")return "[CHAPTER "+m.n+": "+(m.title||"")+" — goal: "+(m.txt||"")+"]";if(m.k==="dec")return "[OFFICIAL CHOICE "+m.c+"] "+m.txt;if(m.k==="end")return "[ENDING "+m.e+" reached]";if(m.k==="img")return "[A photo was taken]";
  if(m.who==="n")return "(narration) "+m.txt;if(m.k==="dir")return "[DIRECTOR NOTE from "+me()+"] "+m.txt;
  const nm=m.who==="me"?(th.pk&&ch(th.pk.as)?ch(th.pk.as).n+" (the user)":me()):ch(m.who)?ch(m.who).n:m.who;
