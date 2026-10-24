@@ -39,6 +39,12 @@ module.exports = L.wrap(async (req, res) => {
     const raw = JSON.stringify(w.pack || null);
     const MAXPACK = (Number(cfg.max_pack_kb) || 1500) * 1024;
     if (raw.length > MAXPACK) return L.bad(res, 'story too large (' + Math.round(raw.length / 1024) + 'KB, limit ' + Math.round(MAXPACK / 1024) + 'KB)', 413);
+    // 结构校验（T19/T20 的前置）：播不出来的剧本不该进库。点名是哪一条错，别只说 invalid。
+    const v = L.planValid ? L.planValid(w.pack) : { ok: true, errors: [] };
+    if (!v.ok) {
+      const head = v.errors.slice(0, 3).map(e => e.path + ': ' + e.why).join('; ');
+      return L.bad(res, 'pack invalid (' + v.errors.length + '): ' + head, 400);
+    }
     const safety = L.safety([w.title, w.hook, w.pack]);
     if (safety.length) return L.send(res, 422, { error: 'blocked by safety review', reasons: safety });
     const s = L.structureQA(w.pack);
