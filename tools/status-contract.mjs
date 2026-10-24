@@ -13,12 +13,27 @@ const MODULE = 'app95_status.js';
 const BASELINE = 0;           // 2026-10-25：29 → 25 → 11 → 0。任何一处新的直写都会红。
 const WRITE_RE = /th\.love\[[^\]]+\]\s*(?:=(?!=)|\+=|-=)/g;
 
+/** 第二套投影：dims（五维）——它自己的写入口是 dimAdd，不归 loveWrite 管 */
+const DIM_RE = /th\.rdv\[[^\]]+\]\s*(?:=(?!=)|\+=|-=)/g;
+const DIM_MODULE = 'app21_dims.js';
+
 export function scan(files) {
   const perFile = {};
   let total = 0;
   for (const [name, text] of Object.entries(files)) {
     if (name === MODULE) continue;
     const n = (text.match(WRITE_RE) || []).length;
+    if (n) { perFile[name] = n; total += n; }
+  }
+  return { total, perFile };
+}
+
+export function scanDims(files) {
+  const perFile = {};
+  let total = 0;
+  for (const [name, text] of Object.entries(files)) {
+    if (name === DIM_MODULE) continue;          // dimState 在那里初始化，dimAdd 在那里改值
+    const n = (text.match(DIM_RE) || []).length;
     if (n) { perFile[name] = n; total += n; }
   }
   return { total, perFile };
@@ -48,6 +63,12 @@ ok('写入口存在', /function loveWrite\(/.test(mod));
 ok('写入口做夹值', /LOVE_MIN/.test(mod) && /LOVE_MAX/.test(mod) && /LOVE_DELTA_CAP/.test(mod));
 ok('写入口留痕', /loveLog\(th,/.test(mod));
 ok('直接写入不超过基线（棘轮只降不升）', total <= BASELINE, `${total} > ${BASELINE}`);
+
+// ---- 第二套投影：dims（五维）。它本来就有单一入口 dimAdd，这条臂是把它钉住 ----
+const dims = scanDims(files);
+console.log(`dims 直写 ${dims.total} 处（模块外应为 0）· dimAdd 存在=${/function dimAdd\(/.test(files[DIM_MODULE] || '')}`);
+ok('dims 的写入口存在（dimAdd）', /function dimAdd\(/.test(files[DIM_MODULE] || ''));
+ok('dims 没有模块外的直写', dims.total === 0, `${dims.total} 处：${Object.keys(dims.perFile).join(',')}`);
 ok('至少 4 处已经走写入口', calls >= 5, `${calls} < 5`);
 ok('模型那条提议已经走写入口', /loveWrite\(th,id,Math\.max\(0,Math\.min\(6,/.test(files['app3_chat.js'] || ''));
 
