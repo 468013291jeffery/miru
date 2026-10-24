@@ -10,6 +10,7 @@
 //   FAIL      —— 有这个机制，但行为不对（会让 check-all 红）
 //   NOT-YET   —— 机制还不存在，写明缺什么、指向对账的哪一条
 import fs from 'node:fs';
+import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 const html = fs.readFileSync('index.html', 'utf8');
@@ -92,12 +93,23 @@ try {
   const other = P.planDecide(th);                       // 换场景 ⇒ 重新触发一次
   let crashed = null;
   try { crashed = P.planDecide(null); } catch (e) { crashed = { call: true, why: 'threw' }; }
-  add('T17', '普通对话有有效计划 → 不额外频繁调用', (second.call === false && third.call === false && third.why === 'reuse') ? 'PASS' : 'FAIL',
-    `有缓存时 why=${third.why} · 试过一次后 why=${second.why}`);
-  add('T18', '新场景无计划 → 按需一次，结果可缓存', (first.call === true && other.call === true) ? 'PASS' : 'FAIL',
-    `首次 ${first.call}（${first.why}）· 换场景后 ${other.call}（${other.why}）`);
-  add('T25', '计划层失败 → 角色仍可正常回答', (crashed && crashed.call === false) ? 'PASS' : 'FAIL',
-    '拿不到 thread 时 planDecide 返回 ' + JSON.stringify(crashed) + '（调用方拿 false 就照常回复）');
+  // 2026-10-25：这三条的**行为**是对的（函数级判据全过），但 `wiring-check` 发现整条计划层
+  // 在产品里**没有任何调用点** —— 行为对 ≠ 接上了。所以判 UNWIRED：不算通过、也不算欠账，
+  // 缺的是「谁来调它」这个产品决定（T19 第④步）。
+  const unwired = (() => {
+    try {
+      const src = ['source/src', 'api'].flatMap(d => fs.readdirSync(d).filter(f => f.endsWith('.js')).map(f => path.join(d, f)))
+        .map(f => fs.readFileSync(f, 'utf8')).join('\n');
+      return !/(?<![\w.$])planDecide\s*\(/.test(src.replace(/function\s+planDecide\s*\(/g, ''));
+    } catch (_) { return false }
+  })();
+  const V = (behaviour) => (unwired ? 'UNWIRED' : (behaviour ? 'PASS' : 'FAIL'));
+  add('T17', '普通对话有有效计划 → 不额外频繁调用', V(second.call === false && third.call === false && third.why === 'reuse'),
+    `有缓存时 why=${third.why} · 试过一次后 why=${second.why}` + (unwired ? ' · **但 planDecide 无人调用（wiring-check）**' : ''));
+  add('T18', '新场景无计划 → 按需一次，结果可缓存', V(first.call === true && other.call === true),
+    `首次 ${first.call}（${first.why}）· 换场景后 ${other.call}（${other.why}）` + (unwired ? ' · **未接线**' : ''));
+  add('T25', '计划层失败 → 角色仍可正常回答', V(crashed && crashed.call === false),
+    '拿不到 thread 时 planDecide 返回 ' + JSON.stringify(crashed) + '（调用方拿 false 就照常回复）' + (unwired ? ' · **未接线**' : ''));
 } catch (e) { add('T17', '计划层', 'FAIL', e.message); }
 
 try {
@@ -315,13 +327,14 @@ for (const r of results) {
   console.log('  ' + r.id.padEnd(5) + r.verdict.padEnd(10) + r.what);
   if (r.detail) console.log('        └ ' + r.detail);
 }
-console.log(`\nPASS ${count('PASS')} · FAIL ${count('FAIL')} · NOT-YET ${count('NOT-YET')} · N/A ${count('N/A')} · 共 ${results.length}`);
+console.log(`\nPASS ${count('PASS')} · FAIL ${count('FAIL')} · UNWIRED ${count('UNWIRED')} · NOT-YET ${count('NOT-YET')} · N/A ${count('N/A')} · 共 ${results.length}`);
+console.log('UNWIRED = 行为对但产品里没人调用（见 tools/wiring-check.mjs）');
 console.log('N/A = 这个风险在当前形态下不存在（不是通过，也不是欠账）');
 console.log('说明：NOT-YET 不是"通过"，是"这条依赖的机制还不存在"——写清楚了缺什么、指向对账哪条。');
 
 const fails = results.filter(r => r.verdict === 'FAIL');
 if (fails.length) { console.log('\nFAILED: ' + fails.map(r => r.id).join(', ')); process.exit(1); }
-if (process.argv.includes('--strict') && count('NOT-YET')) {
+if (process.argv.includes('--strict') && (count('NOT-YET') || count('UNWIRED'))) {
   console.log(`\nSTRICT: 还有 ${count('NOT-YET')} 条跑不了`); process.exit(1);
 }
 console.log('\nregression map OK（没有 FAIL）');
