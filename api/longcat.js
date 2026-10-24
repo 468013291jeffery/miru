@@ -34,10 +34,10 @@ async function scnetResolve() {
 }
 function providers() {
   const all = {
-    deepseek: { id: 'deepseek', name: 'DeepSeek', url: env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/+$/, '') + '/chat/completions', key: env('DEEPSEEK_API_KEY'), model: () => env('DEEPSEEK_MODEL', 'deepseek-chat'), extra: {}, maxOut: 8000 },
-    longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
-    scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
-    glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
+    deepseek: { id: 'deepseek', name: 'DeepSeek', url: env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/+$/, '') + '/chat/completions', key: env('DEEPSEEK_API_KEY'), model: () => env('DEEPSEEK_MODEL', 'deepseek-chat'), extra: {}, maxOut: 32000 },
+    longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 32000 },
+    scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 32000 },
+    glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 32000 },
   };
   const order = String(env('LLM_ORDER', 'deepseek,scnet,longcat,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
   for (const k of Object.keys(all)) if (!order.includes(k)) order.push(k);
@@ -175,7 +175,7 @@ export default async function handler(req) {
   const clean = {
     model: String(body.model || ''),
     messages: Array.isArray(body.messages) ? body.messages.slice(-40).map(m => ({ role: m.role === 'assistant' ? 'assistant' : m.role === 'system' ? 'system' : 'user', content: String(m.content || '').slice(0, m.role === 'system' ? 80000 : 40000) })) : [],
-    max_tokens: Math.min(Number(body.max_tokens) || 1500, 8000),
+    max_tokens: Math.min(Number(body.max_tokens) || 8192, 32000),
     temperature: typeof body.temperature === 'number' ? body.temperature : 0.85,
   };
   if (!clean.messages.length) return J({ error: { message: 'no messages' } }, 400, c.headers);
