@@ -10,7 +10,7 @@ import path from 'node:path';
 
 const SRC = 'source/src';
 const MODULE = 'app95_status.js';
-const BASELINE = 25;          // 2026-10-25 实测：29 处 → 收敛 4 处后 25 处
+const BASELINE = 11;          // 2026-10-25：29 → 25（第一批）→ 11（第二批：礼物/约会/真话/心率/真心话/匿名/邀请/初始化）
 const WRITE_RE = /th\.love\[[^\]]+\]\s*(?:=(?!=)|\+=|-=)/g;
 
 export function scan(files) {

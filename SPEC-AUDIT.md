@@ -17,7 +17,7 @@
 | 8 | **03.6 知情四类 + 消息级 `seen` 名单** | 🔴 | 全库无 `seen` 字段（grep 只命中无关局部变量） | **最大缺口**：记忆全局一份 ⇒ 角色全知 |
 | 9 | **04.1 关系四维五阶段** | 🟡 | `app21_dims.js:2` `pack.dims` = att/tru/jea/ten/gru | 五维有；**关系阶段没有**（只有 `love` 0–100 一个数） |
 | 10 | **04.2 阶段转移规则** | 🔴 | 无 | 关系升级靠什么触发，代码里没有定义 |
-| 11 | **04.6 状态投影的唯一写入点** | 🟡 | 2026-10-25 起：新增 `source/src/app95_status.js`（`loveWrite` 唯一写入口 + `loveLog` + 夹值），已收敛 4 处；**直接写入 29 → 25**，`tools/status-contract.mjs` 用棘轮盯着（只降不升，含变异自测） | 仍是 25 处直写（`app3_chat`14 / `app45_rel`3 / `app14_pack`2 / `app17_custom`2 / `app73_features`2 / `app4_more`1 / `app6_games`1）；`dims` 五维还没走这一层。契约见 `STATUS-LAYER.md` |
+| 11 | **04.6 状态投影的唯一写入点** | 🟡 | 2026-10-25 起：新增 `source/src/app95_status.js`（`loveWrite` 唯一写入口 + `loveLog` + 夹值），已收敛 18 处；**直接写入 29 → 11**，`tools/status-contract.mjs` 用棘轮盯着（只降不升，含变异自测） | 仍是 11 处直写（`app3_chat`3 / `app45_rel`3 / `app14_pack`1 / `app73_features`2 / `app4_more`1 / `app6_games`1），其中 3–4 处是 `_undo` 快照之类并非真写入；`dims` 五维还没走这一层。契约见 `STATUS-LAYER.md` |
 | 12 | **05 Plot98（三模式 / 软引导 / 校验门）** | 🔴 | 无 | 导演层整块缺失 |
 | 13 | **06.4 工具白名单与 pending 结果** | 🟡 | 礼物/小游戏/通话各有模块（app38/app60/app81） | 没有"本轮合法工具白名单"，工具由模型随口提 |
 | 14 | **07 Story Manifest / Scene Pack（带 revision）** | 🟡 | 剧本侧有 schema：`content/out/sNN.json` + `validate.py`（118 行） | 没有 manifest/revision；改版与存档版本无关联 |
