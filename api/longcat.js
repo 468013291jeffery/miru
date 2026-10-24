@@ -106,8 +106,9 @@ const J = (o, status, h) => new Response(JSON.stringify(o), { status, headers: {
 async function open(p, clean) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), FIRST_TOKEN_MS);
   try {
-    const body = { ...clean, ...p.extra, model: p.model(clean.model), max_tokens: Math.min(clean.max_tokens, p.maxOut), stream: true };
-    const up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal });
+    const body = { ...clean, ...p.extra, model: p.model(clean.model), max_tokens: Math.min(clean.max_tokens, p.maxOut), stream: true, stream_options: { include_usage: true } };
+    let up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal });
+    if (!up.ok && up.status === 400 && body.stream_options) { delete body.stream_options; up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal }); } // provider without usage-in-stream support
     if (!up.ok) { const e = await up.text().catch(() => ''); throw new Error(p.name + ' ' + up.status + ' ' + e.slice(0, 200)); }
     const rd = up.body.getReader(); const first = await rd.read(); // waits for the first bytes (still under the timer)
     clearTimeout(t);
@@ -220,10 +221,10 @@ export default async function handler(req) {
     let out = null; const errs = [];
     let pool = chain.slice();
     for (let round = 0; round < 3 && pool.length && !out; round++) {
-      let content = '', finish = null, buf = '', p = null;
+      let content = '', finish = null, buf = '', p = null, usage = null;
       const eat = chunk => {
         buf += dec.decode(chunk, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
-        for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
+        for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; if (j.usage) usage = j.usage; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
       };
       try {
         const won = await openRace(pool, clean, errs); p = won.p; const o = won.o; pool = pool.filter(x => x !== p); eat(o.first);
@@ -232,7 +233,7 @@ export default async function handler(req) {
           if (r.stall || Date.now() - t0 > 35000) { try { o.ctl.abort(); } catch (_) {} if (content.trim().length > 40) { finish = 'length'; break; } throw new Error(p.name + ' stalled'); }
           if (r.done) break; eat(r.value); }
         if (!content.trim()) throw new Error(p.name + ' returned no text');
-        out = { provider: p.id, model: p.model(clean.model), choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
+        out = { provider: p.id, model: p.model(clean.model), usage: usage || undefined, choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
         break;
       } catch (e) { errs.push(String(e.message || e)); if (!p) break; if (content.trim().length > 200) { out = { provider: p.id, partial: true, choices: [{ index: 0, finish_reason: 'length', message: { role: 'assistant', content } }] }; break; } }
     }

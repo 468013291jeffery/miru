@@ -88,6 +88,11 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS scripts (id TEXT PRIMARY KEY, title TEXT, orient TEXT DEFAULT 'bl', lang TEXT DEFAULT 'zh', stage INT DEFAULT 1, status TEXT DEFAULT 'draft', config JSONB DEFAULT '{}'::jsonb, research JSONB, brief TEXT, outline TEXT, chapters JSONB DEFAULT '[]'::jsonb, qa JSONB, review JSONB DEFAULT '{}'::jsonb, work_id TEXT, created_by TEXT, updated_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now(), published_at TIMESTAMPTZ)`,
   `CREATE TABLE IF NOT EXISTS script_versions (id BIGSERIAL PRIMARY KEY, script_id TEXT, stage INT, note TEXT, data JSONB, by_name TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS script_versions_idx ON script_versions (script_id, id DESC)`,
+  // v8.2.5 — trusted world events (v7.11 §08.1), per-thread revisions (§09.3), scene-pack publish transaction (§05.8)
+  `CREATE TABLE IF NOT EXISTS world_events (user_id TEXT, idem TEXT, event_id TEXT, story_id TEXT, thread_id TEXT, scene_id TEXT, type TEXT, actor_id TEXT, visible_to JSONB, payload JSONB, base_rev INT, rev INT, at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, idem))`,
+  `CREATE INDEX IF NOT EXISTS world_events_thread_idx ON world_events (user_id, thread_id, rev DESC)`,
+  `CREATE TABLE IF NOT EXISTS story_revs (user_id TEXT, thread_id TEXT, rev INT DEFAULT 0, updated_at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, thread_id))`,
+  `CREATE TABLE IF NOT EXISTS scene_packs (id TEXT PRIMARY KEY, user_id TEXT, thread_id TEXT, story_id TEXT, rev INT, status TEXT, reasons JSONB, pack JSONB, at TIMESTAMPTZ DEFAULT now())`,
 ];
 async function db() {
   if (!hasDb()) { const e = new Error('database not configured'); e.code = 503; throw e; }
