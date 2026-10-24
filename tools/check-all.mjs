@@ -28,6 +28,7 @@ const suites = [
   ['replyguard-selftest.mjs', ['tools/replyguard-selftest.mjs'], true],
   ['wiring-check.mjs', ['tools/wiring-check.mjs'], true],
   ['plan-gate-selftest.mjs', ['tools/plan-gate-selftest.mjs'], true],
+  ['account-check.mjs', ['tools/account-check.mjs'], true],
 ];
 
 let failed = 0;
