@@ -48,6 +48,26 @@ try {
 } catch (e) { add('T10', '角色不在场不能发言/触发工具', 'FAIL', 'loveAllowed 切不出来：' + e.message); }
 
 try {
+  const code = cutFn('loveAllowed');
+  // 注入角色表：mason 是恋爱对象，coach 不是
+  const CH = { mason: { n: 'M' }, coach: { n: 'C', romanceable: false } };
+  const fn = new Function('ch', code + '; return loveAllowed;')((id) => CH[id]);
+  const noRomance = fn({}, 'coach') === false;      // 非恋爱对象：即使没有在场名单也不许动
+  const romance = fn({}, 'mason') === true;
+  const inRoom = fn({ present: ['coach'] }, 'coach') === false;   // 在场也不行
+  let cardOk = false;
+  try {
+    const cc = [cutFn('castCard'), cutFn('castCardPublic')].join('\n');
+    const card = new Function('ch', 'Lz', 'CL', 'me', 'stageOf', 'wd', 'I18N', cc + '\nreturn castCard;')(
+      () => ({ n: 'C', age: 40, role: { en: 'r' }, looks: { en: 'l' }, vibe: { en: 'v' }, tells: { en: [] }, twist: { en: 'w' }, likes: { en: 'k' }, secret: { en: 's' }, romanceable: false }),
+      x => (x && (x.en || x)) || '', () => 'en', () => 'you', () => 0, () => ({ pack: {} }), { en: { 'stage.0': 's' } });
+    cardOk = card({ love: {}, status: { mood: {} } }, 'coach').includes('Not a romance option');
+  } catch (_) {}
+  add('T07', 'romanceable=false → 不自动调情/不涨好感', (noRomance && romance && inRoom && cardOk) ? 'PASS' : 'FAIL',
+    `非恋爱对象被拦 ${noRomance} · 恋爱对象放行 ${romance} · 在场也拦 ${inRoom} · 卡面写明 ${cardOk}`);
+} catch (e) { add('T07', 'romanceable=false → 不自动调情', 'FAIL', e.message); }
+
+try {
   const code = [cutFn('castCard'), cutFn('castCardPublic')].join('\n');
   const CH = { n: 'M', age: 26, role: { en: 'r' }, looks: { en: 'l' }, vibe: { en: 'v' }, tells: { en: ['t'] }, twist: { en: 'TWIST-X' }, likes: { en: 'k' }, secret: { en: 'SECRET-X' } };
   const f = new Function('ch', 'Lz', 'CL', 'me', 'stageOf', 'wd', 'I18N', code + '\nreturn { castCard, castCardPublic };')(
@@ -97,7 +117,6 @@ const NY = [
   ['T04', 'heat 非法或情绪超过两个 → 明确校验错误', '同上：没有校验层'],
   ['T05', 'trope.slow + heat.slow → 不互相覆盖', 'TROPE_MAP 存在但没有"慢燃"这一维的合并规则'],
   ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '没有 revision 概念（对账 #6）'],
-  ['T07', 'romanceable=false → 不自动调情', '全库 0 处 romanceable 字段'],
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
   ['T12', '角色错误信念 → 不把猜测说成事实', '四类认知（fact/guess/misbelief/author_only）不存在（对账 #8）'],
   ['T13', '玩家普通问题 → 先回答不硬推进', '这是 prompt 规则，没有可断言的行为；需真实对话样本'],

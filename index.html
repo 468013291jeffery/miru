@@ -3080,11 +3080,16 @@ function loveWrite(th, id, delta, reason, opts) {
 }
 
 /** 「这个角色现在能不能被改好感」——前置验证，不是夹值。
- *  有在场名单（th.present）时：不在名单里的人一律不许动；没有名单就放行（旧行为）。
- *  为什么只拦模型提议：剧本里的数值是作者写的，作者知道谁在场；模型不知道。 */
+ *  ① 不是恋爱对象（romanceable === false）⇒ 一律不许动（文档 §14.1 T07）
+ *  ② 有在场名单（th.present）时：不在名单里的人不许动；没有名单就放行（旧行为）
+ *  为什么只拦模型提议：剧本里的数值是作者写的，作者知道谁在场、谁不是恋爱对象；模型不知道。 */
 function loveAllowed(th, id) {
   try {
     if (!th || !id) return false;
+    if (typeof ch === "function") {
+      const c = ch(id);
+      if (c && c.romanceable === false) return false;      // 非恋爱对象：好感根本不参与
+    }
     const p = th.present;
     if (!Array.isArray(p) || !p.length) return true;
     return p.indexOf(id) >= 0;
@@ -3880,7 +3885,8 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+"."+
-  (function(){try{const chNow=(th.pk&&th.pk.ch)||th.ch||1;const memo=(typeof cardMemo==="function")?cardMemo(th,cid,chNow):"";return memo?" He remembers: "+memo+".":""}catch(_){return ""}})();}
+  (function(){try{const chNow=(th.pk&&th.pk.ch)||th.ch||1;const memo=(typeof cardMemo==="function")?cardMemo(th,cid,chNow):"";return memo?" He remembers: "+memo+".":""}catch(_){return ""}})()+
+  (c.romanceable===false?" Not a romance option: never flirt with them or imply attraction — keep it as a friend/colleague/antagonist.":"");}
 function castCardPublic(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
  const w0=th.wid&&wd(th.wid),au=w0&&w0.pack&&w0.pack.au&&w0.pack.au[cid];
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
