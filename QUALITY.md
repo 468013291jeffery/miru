@@ -24,7 +24,7 @@ node tools/check-all.mjs          # 八套全跑
 | `stage-report` | 4 | `node tools/stage-report.mjs --selftest` | 关系阶段是派生的，**升降两条路都要出声**（降级原来完全无声） |
 | `castcard-selftest` | 10 | `node tools/castcard-selftest.mjs --selftest` | 角色卡分面：只有这一拍上场的人带秘密，其余人一个字不漏 |
 | `card-selftest` | 55 | `node tools/card-selftest.mjs --selftest` | **每章一份角色卡**：可变折叠 · 只增不回退 · 立场只加码 · 揭示不改秘密 · 可回放 |
-| `regression-25` | 11 PASS / 14 NOT-YET | `node tools/regression-25.mjs` | 文档 §14.1 的 25 条现状映射：能跑的跑，跑不了的写明缺什么。自带表结构闸（必须 25 行、ID 不重复） |
+| `regression-25` | 15 PASS / 10 NOT-YET | `node tools/regression-25.mjs` | 文档 §14.1 的 25 条现状映射：能跑的跑，跑不了的写明缺什么。自带表结构闸（必须 25 行、ID 不重复） |
 
 ## 一条元规则：新闸必须真在册
 
