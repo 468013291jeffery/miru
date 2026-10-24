@@ -23,6 +23,7 @@ const suites = [
   ['castcard-selftest.mjs', ['tools/castcard-selftest.mjs', '--selftest'], true],
   ['card-selftest.mjs', ['tools/card-selftest.mjs', '--selftest'], true],
   ['regression-25.mjs', ['tools/regression-25.mjs'], true],
+  ['rev-selftest.mjs', ['tools/rev-selftest.mjs'], true],
 ];
 
 let failed = 0;
