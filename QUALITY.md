@@ -34,6 +34,10 @@ node tools/check-all.mjs          # 八套全跑
 
 这条是踩出来的：`card-selftest` 曾经**以为接了其实没接**——我拿 `includes('card-selftest')` 核对，而那个子串同时命中 `castcard-selftest` ⇒ 那道闸整整一轮没跑，`check-all` 一直是绿的。
 
+## 量体量的小工具（不是闸）
+
+- `node tools/plot-prompt-sizing.mjs gala` —— 续写一次的输入/输出体量（≈717 进 / 351 出），**只算不调**
+
 ## 四条红线（不变量）
 
 改动时只要破一条，对应的闸就会红：
