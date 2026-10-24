@@ -38,6 +38,11 @@ const results = [];
 const add = (id, what, verdict, detail) => results.push({ id, what, verdict, detail });
 
 // ---- 能真跑的几条 ----
+// T21：当前没有任何推送渠道，所以「未授权推送」这个风险暂时不存在 —— 这是 N/A，
+// 既不是通过，也不是欠账。
+add('T21', '未授权通知/静默时段 → 不发召回', 'N/A',
+  `全库无 sw.js / manifest.json / serviceWorker / requestPermission；唯一的「一天一次来电」是应用内提示（app20）。加了推送那天要先把静默时段做上。`);
+
 try {
   // T17 / T18 / T25：计划层的判断与缓存（source/src/app99_plan.js）
   const P = new Function(fs.readFileSync('source/src/app99_plan.js', 'utf8') +
@@ -248,7 +253,6 @@ const NY = [
   ['T16', 'Plot98 返回旧 revision → 丢弃', '没有 Plot98（对账 #12）'],
   ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '拆开看：①「判断该不该续」= app99_plan.js 已能给（planDecide）；②「生成候选」缺 ◯ 计划生成 prompt；③「核验」可复用 content/validate.py 的结构规则；④「发布」需人工确认。前三步都是小件，第四步是产品决定'],
   ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
-  ['T21', '未授权通知/静默时段 → 不发召回', '查过了：全库无 serviceWorker / push 订阅 / requestPermission；app20 那条“一天一次来电”是应用内提示，不是推送'],
 ];
 for (const [id, what, why] of NY) add(id, what, 'NOT-YET', why);
 
@@ -274,7 +278,8 @@ for (const r of results) {
   console.log('  ' + r.id.padEnd(5) + r.verdict.padEnd(10) + r.what);
   if (r.detail) console.log('        └ ' + r.detail);
 }
-console.log(`\nPASS ${count('PASS')} · FAIL ${count('FAIL')} · NOT-YET ${count('NOT-YET')} · 共 ${results.length}`);
+console.log(`\nPASS ${count('PASS')} · FAIL ${count('FAIL')} · NOT-YET ${count('NOT-YET')} · N/A ${count('N/A')} · 共 ${results.length}`);
+console.log('N/A = 这个风险在当前形态下不存在（不是通过，也不是欠账）');
 console.log('说明：NOT-YET 不是"通过"，是"这条依赖的机制还不存在"——写清楚了缺什么、指向对账哪条。');
 
 const fails = results.filter(r => r.verdict === 'FAIL');
