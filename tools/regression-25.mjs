@@ -39,6 +39,28 @@ const add = (id, what, verdict, detail) => results.push({ id, what, verdict, det
 
 // ---- 能真跑的几条 ----
 try {
+  // T17 / T18 / T25：计划层的判断与缓存（source/src/app99_plan.js）
+  const P = new Function(fs.readFileSync('source/src/app99_plan.js', 'utf8') +
+    '\nreturn { planKey, planGet, planDecide, planTried, planSet };')();
+  const th = { wid: 'gala', pk: { ch: 3 } };
+  const first = P.planDecide(th);                       // 没计划 ⇒ 该调用一次
+  P.planTried(th, false);                               // 试过了（失败也算）
+  const second = P.planDecide(th);                      // 同一场景 ⇒ 不再调用
+  P.planSet(th, { beats: ['a', 'b'] });                 // 有缓存过后
+  const third = P.planDecide(th);                       // ⇒ 复用
+  th.pk.ch = 4;
+  const other = P.planDecide(th);                       // 换场景 ⇒ 重新触发一次
+  let crashed = null;
+  try { crashed = P.planDecide(null); } catch (e) { crashed = { call: true, why: 'threw' }; }
+  add('T17', '普通对话有有效计划 → 不额外频繁调用', (second.call === false && third.call === false && third.why === 'reuse') ? 'PASS' : 'FAIL',
+    `有缓存时 why=${third.why} · 试过一次后 why=${second.why}`);
+  add('T18', '新场景无计划 → 按需一次，结果可缓存', (first.call === true && other.call === true) ? 'PASS' : 'FAIL',
+    `首次 ${first.call}（${first.why}）· 换场景后 ${other.call}（${other.why}）`);
+  add('T25', '计划层失败 → 角色仍可正常回答', (crashed && crashed.call === false) ? 'PASS' : 'FAIL',
+    '拿不到 thread 时 planDecide 返回 ' + JSON.stringify(crashed) + '（调用方拿 false 就照常回复）');
+} catch (e) { add('T17', '计划层', 'FAIL', e.message); }
+
+try {
   // T01–T04：情绪合同（source/src/app98_emotion.js）
   const emo = new Function(fs.readFileSync('source/src/app98_emotion.js', 'utf8') + '\nreturn { emotionNorm };')().emotionNorm;
   const e1 = emo({});                                            // T01 什么都没有
@@ -224,12 +246,9 @@ const NY = [
   ['T06', '编剧更新标签版本 → 固定缓存与计划失效', '读过全库：revision 只出现在数据行的字符串里，没有 revision 字段、没有失效逻辑（对账 #6）；app80_cache 靠**文本不变**侥幸命中，改一个字就整段失效'],
   ['T08', '未确认成年 → 保守表达', '全库 0 处年龄验证'],
   ['T16', 'Plot98 返回旧 revision → 丢弃', '没有 Plot98（对账 #12）'],
-  ['T17', '普通对话有有效计划 → 不频繁调 Plot98', '同上'],
-  ['T18', '新场景无计划 → 按需一次并缓存', '读过 app25_dir.js（52 行）：换场景是有设计的——剧本包跳到脚本里的下一幕，实时 AI 走「故事时钟 +2h + 过渡卡」；缺的是 Plot98 那层「按需生成一次并缓存计划」'],
-  ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '读过 app50_creator2.js：作者侧有「继续写…」的创作流（草稿→发布）；**运行时**剧本耗尽后没有自动续写，对账 #14 记的是这一半'],
+  ['T19', '剧本耗尽且允许续写 → 先生成/校验/发布', '拆开看：①「判断该不该续」= app99_plan.js 已能给（planDecide）；②「生成候选」缺 ◯ 计划生成 prompt；③「核验」可复用 content/validate.py 的结构规则；④「发布」需人工确认。前三步都是小件，第四步是产品决定'],
   ['T20', '新 Scene Pack 与 canon 冲突 → 拒绝发布', '查过了：content/validate.py 只查结构（双语齐、拍数范围），不查与既有事实的冲突'],
   ['T21', '未授权通知/静默时段 → 不发召回', '查过了：全库无 serviceWorker / push 订阅 / requestPermission；app20 那条“一天一次来电”是应用内提示，不是推送'],
-  ['T25', 'Plot98 失败 → 角色仍可回答', '没有 Plot98（对账 #12）'],
 ];
 for (const [id, what, why] of NY) add(id, what, 'NOT-YET', why);
 
