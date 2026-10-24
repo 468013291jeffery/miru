@@ -156,6 +156,18 @@ if os.path.isdir(_pdir):
         except Exception as _e:
             print("!! present sidecar skipped:", _f, _e)
 js.append("const MIRU_PRESENT=" + json.dumps(_pres, ensure_ascii=False) + ";")
+# 内容标记（④立场 / ⑤揭示）：和在场名单一样走旁档，pack 正文不动
+_marks = {}
+_mdir = P("content/marks")
+if os.path.isdir(_mdir):
+    for _f in sorted(glob.glob(os.path.join(_mdir, "*.json"))):
+        try:
+            _d = json.load(RD(_f))
+            if _d.get("wid"):
+                _marks[_d["wid"]] = _d
+        except Exception as _e:
+            print("!! marks sidecar skipped:", _f, _e)
+js.append("const MIRU_MARKS=" + json.dumps(_marks, ensure_ascii=False) + ";")
 WR(P("src/content_36.js"), "\n".join(js) + "\n")
 print("content_36.js", sum(len(x) for x in js), "bytes ·", len(W_out), "worlds ·", len(C_out), "characters ·",
       sum(1 for c in C_out.values() if c["_art"]), "with portraits ·", sum(1 for w in W_out if w["_cover"]), "with covers")

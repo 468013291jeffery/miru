@@ -82,7 +82,9 @@ cardLog = [ patch@ch1, patch@ch2, … ]   ← 每章一条，只追加
 - **章末**：`packAfterPick` 末尾调 `cardCommitChapter(th, 章号, 选项)`，为每个非玩家角色各追加一条补丁
 - **规则算，不猜**：②可变快照（当前 love/stage）· ③`said`（该选项 `then` 里的 say 台词）· ③`firsts`（第 n 章选了 k）
 - **渲染**：`castCard` 在私密卡末尾追加一句 `He remembers: …`（来自 `cardMemo`，最多三样）
-- **还没接**：④立场 / ⑤揭示 —— 它们要内容里有标记（某个 beat 标"揭示"、某个选项标"决裂"）才算得出来，**不猜**
+- **④⑤ 已接（走内容标记）**：`source/content/marks/<wid>.json` 旁档，形如
+  `{"3":{"breaks":{"noor":{"promised":1}}},"5":{"reveals":{"mason":"self"}}}` —— 章号 → 立场加码 / 揭示。
+  gala 已有一份**示例**（`sample: true`），作者照形状改即可；没标就什么都不发生（不猜）。
 
 ## 渲染
 

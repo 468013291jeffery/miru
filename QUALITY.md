@@ -1,6 +1,6 @@
 # 质量闸（QUALITY）
 
-> **一句话**：改完跑 `node tools/check-all.mjs`。十一套、199 个用例，全绿才提交。
+> **一句话**：改完跑 `node tools/check-all.mjs`。十一套、207 个用例，全绿才提交。
 > 这一页是给**接手这个仓库的人**看的：哪条闸在管什么、它怎么变红、你改哪里会踩到它。
 
 ## 一条命令
@@ -23,7 +23,7 @@ node tools/check-all.mjs          # 八套全跑
 | `cache-split-contract` | 17 | `node tools/cache-split-contract.mjs --selftest` | prompt 的 system/user 切分还在正确工作（**坏了会静默烧钱**） |
 | `stage-report` | 4 | `node tools/stage-report.mjs --selftest` | 关系阶段是派生的，**升降两条路都要出声**（降级原来完全无声） |
 | `castcard-selftest` | 10 | `node tools/castcard-selftest.mjs --selftest` | 角色卡分面：只有这一拍上场的人带秘密，其余人一个字不漏 |
-| `card-selftest` | 29 | `node tools/card-selftest.mjs --selftest` | **每章一份角色卡**：可变折叠 · 只增不回退 · 立场只加码 · 揭示不改秘密 · 可回放 |
+| `card-selftest` | 37 | `node tools/card-selftest.mjs --selftest` | **每章一份角色卡**：可变折叠 · 只增不回退 · 立场只加码 · 揭示不改秘密 · 可回放 |
 
 ## 四条红线（不变量）
 
