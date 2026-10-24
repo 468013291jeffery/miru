@@ -60,9 +60,11 @@ try {
   const c2 = onUnconfirmed.heatGated('steamy') === 'slow' && onUnconfirmed.heatGated('mature') === 'slow';
   const c3 = onUnconfirmed.heatGated('fluff') === 'fluff';
   const c4 = onConfirmed.heatGated('steamy') === 'steamy';
-  add('T08', '未确认成年 → 保守表达（机制）', (c1 && c2 && c3 && c4) ? 'PASS' : 'FAIL',
-    `开关关着不限 ${c1} · 开着未确认压到 slow（steamy+mature）${c2} · fluff 不动 ${c3} · 确认后不压 ${c4}；` +
-    `**开关默认关，要不要对现有用户强制是产品决定**`);
+  const gateOn = /ageGate:\s*true/.test(fs.readFileSync('source/src/app96_tune.js', 'utf8'));
+  const askInBundle = html.includes('function ageGateAsk') && html.includes('data-agok') && html.includes('ag.yes');
+  const remembersNo = /S\.ageOk === false/.test(fs.readFileSync('source/src/app93_agegate.js', 'utf8'));
+  add('T08', '未确认成年 → 保守表达（机制 + 首启确认）', (c1 && c2 && c3 && c4 && gateOn && askInBundle && remembersNo) ? 'PASS' : 'FAIL',
+    `关着不限 ${c1} · 开着未确认压 slow ${c2} · fluff 不动 ${c3} · 确认后不压 ${c4} · 开关已开 ${gateOn} · 首启界面进产物 ${askInBundle} · 未满也记住 ${remembersNo}`);
 } catch (e) { add('T08', '未确认成年 → 保守表达', 'FAIL', e.message); }
 
 try {
