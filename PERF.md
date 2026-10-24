@@ -74,6 +74,37 @@ setInterval 45 处 · clearInterval 24 处
 `app22_fx2` / `app24_gl`（WebGL）/ `app30_fx3` / `app3_chat` / `app4_more`。
 **两路同时跑就是双份 GPU/CPU**，而它们各自都不知道别人在跑。
 
+## 三·补：定时器台账（2026-10-25 量出来的）
+
+`node tools/timer-audit.mjs` 把 46 个 `setInterval` 逐个分类：
+
+```
+确定常驻（没人关 且 ≤3s）  10 个
+可能已统一清理            6 个
+有明确 clear              30 个
+```
+
+**10 个确定常驻**（每条理由写在 `tools/timers-baseline.json`）：
+
+| 间隔 | 位置 | 在干什么 |
+|---|---|---|
+| 100ms | `app31_score.js:241` | 得分滚动 tick |
+| 120ms | `app19_bgm.js:52` | BGM 调度（**不能盲关**，要跟「有没有声音在播」绑） |
+| 400ms | `app4_more.js:441` | 第二套音频调度（与 app19 重复，历史遗留） |
+| 600ms | `app48_clean.js:26` | 找 `#msgs` 挂 MutationObserver，挂上后仍每秒跑 |
+| 700ms | `app67_i18n.js:110` | 语言切换轮询 |
+| 1s | `app18_promo.js:10` | 活动倒计时扫全页 |
+| 1s | `app54_longcat.js:1?` | 每秒应用一次模型配置 |
+| 1.5s | `app86_voicefix.js:62` | 语音修复钩子 |
+| 1.5s | `app94_official2.js:147` | 语言轮询（与 app67 重复） |
+| 3s | `app84_nosub.js:10` | 订阅状态检查 |
+
+**风险最低、可以先动的三个**（都在台账里标了）：`app48_clean`（挂上 observer 后自己 clearInterval）、
+`app67_i18n`（切语言的地方直接调，不必轮询）、`app18_promo`（页面没有 promo 直接 return）。
+
+⚠️ 这台尺子**修过三次**，三次都是它自己撒谎（间隔正则把 `reduce(...,0)` 当成 0ms、只看 `clearInterval(` 就算「有关」、
+数组句柄被改名传进别的函数统一清理被判成泄漏）。现在输出三档：**确定 / 可能 / 有关**。
+
 ## 四、修法（按「收益 ÷ 风险」排序）
 
 | # | 做什么 | 收益 | 风险 | 量 |
