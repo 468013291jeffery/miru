@@ -2736,7 +2736,7 @@ const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
-function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
+function cleanState(hard){try{for(const k in DEF)if(S[k]==null)S[k]=JSON.parse(JSON.stringify(DEF[k]));S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
   if(!th.cast.length&&hard)delete S.threads[k]}
  S.album=(S.album||[]).filter(a=>a&&a.id);S.follow=S.follow||{};S.mine=S.mine||{chars:{},worlds:{}};S.mine.worlds=S.mine.worlds||{};S.mine.chars=S.mine.chars||{};
@@ -11399,7 +11399,7 @@ function stateForCloud(){const copy=JSON.parse(JSON.stringify(S));delete copy.cl
 async function cloudPush(force){if(!CL0.on||CL0.busy)return;if(!force&&typeof busy!=="undefined"&&busy){clearTimeout(CL0.timer);CL0.timer=setTimeout(()=>cloudPush(false),8000);return}CL0.busy=true;const c=cloudInfo();
  try{const r=await capi("/state",{method:"PUT",json:{data:stateForCloud(),ver:c.ver||0,force:!!force&&!c.ver}});
   if(r.ok){c.ver=r.j.ver;c.syncedAt=Date.now();save0()}else if(r.status===409&&r.j.data){c.conflict={ver:r.j.ver,at:Date.now()};c.ver=r.j.ver;save0()}}catch(_){}CL0.busy=false}
-async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,data);S.cloud=keep;S.cloud.ver=r.j.ver;save0();return true}
+async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,JSON.parse(JSON.stringify(DEF)),data);S.cloud=keep;S.cloud.ver=r.j.ver;save0();return true}
 /* ---------- wallet ---------- */
 let PENDING_SKU=null;
 async function walletPull(){const r=await capi("/wallet");if(r.ok){const c=cloudInfo();c.known=r.j.gems;S.keys=r.j.gems;if(r.j.plus)S.plus=true;save0();keysChip()}}
