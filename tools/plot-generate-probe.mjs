@@ -43,6 +43,27 @@ const CHARS = (() => {
 })();
 const zh = (v) => (!v ? '' : (typeof v === 'string' ? v : (v.zh || v.en || '')));
 
+// canon：已发生、不可推翻（与 app94_replyguard.js 的 canonFacts 同口径，直接读 marks 源文件）
+const marksPath = path.join('source/content/marks', wid + '.json');
+const MARKS = fs.existsSync(marksPath) ? JSON.parse(fs.readFileSync(marksPath, 'utf8')).chapters : null;
+const canonFacts = (ch) => {
+  const out = [];
+  if (!MARKS) return out;
+  for (const k of Object.keys(MARKS).map(Number).sort((a, b) => a - b)) {
+    if (!(k <= ch)) continue;
+    const box = MARKS[String(k)] || {};
+    for (const [tag, o] of [['revealed', box.reveals], ['broke', box.breaks]]) {
+      if (!o || typeof o !== 'object') continue;
+      for (const who of Object.keys(o)) {
+        const v = o[who];
+        if (typeof v === 'string') out.push('Ch' + k + ': ' + who + ' ' + tag + ' ' + v);
+        else if (v && typeof v === 'object') for (const kk of Object.keys(v)) out.push('Ch' + k + ': ' + who + ' ' + tag + ' ' + kk);
+      }
+    }
+  }
+  return out;
+};
+
 const present = (() => {
   const p = path.join(PRESENT, wid + '.json');
   return fs.existsSync(p) ? JSON.parse(fs.readFileSync(p, 'utf8')).chapters : null;
@@ -73,6 +94,9 @@ const prompt = [
   '',
   'WHAT JUST HAPPENED (canon — never contradict):',
   recent,
+  ...(canonFacts(pack.chapters.length).length
+    ? ['', 'ESTABLISHED FACTS (settled, never re-open these conflicts):', canonFacts(pack.chapters.length).join('\n')]
+    : []),
   '',
   'Write the NEXT chapter. Hard rules:',
   '- 4 to 8 beats in the scene; every beat is ["<cast id or n>","say|act|think","<text>"]',
@@ -85,6 +109,14 @@ const prompt = [
 
 console.log(`=== ${wid} · 续写候选 · model=${model} ===`);
 console.log(`prompt ${prompt.length} 字符\n`);
+
+if (args.includes('--dry')) {
+  const cf = canonFacts(pack.chapters.length);
+  console.log('--- dry run（不调用模型）---');
+  console.log('prompt ' + prompt.length + ' 字符 · 含 canon 块: ' + /ESTABLISHED FACTS/.test(prompt) + ' · canon 条数: ' + cf.length);
+  if (cf.length) console.log('  例: ' + cf.slice(0, 3).join(' / '));
+  process.exit(/ESTABLISHED FACTS/.test(prompt) === (cf.length > 0) ? 0 : 1);
+}
 
 const body = {
   model,

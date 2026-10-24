@@ -3179,6 +3179,38 @@ async function guardReply(o) {
   return { reply: safe, retried: true, leaked: hits1.concat(hits2), fellBack: true };
 }
 
+/** 已发生、不可推翻的事实（他们 v8.2.3「续写要带 canon 清单」）。
+ *  口径：**只取已经过去的章节**（at <= 当前章）的 reveals / breaks —— 那是"已经发生"；
+ *  未来章节的同一批词是**禁区**（见 marksForbidden），两者用同一个数据源、相反的方向。
+ *  @returns {string[]} 例：["Ch3: noor 违背了承诺(promised)"]
+ */
+function canonFacts(wid, ch) {
+  const out = [];
+  try {
+    if (typeof MIRU_MARKS === "undefined" || !MIRU_MARKS) return out;
+    const w = MIRU_MARKS[wid];
+    if (!w || !w.chapters) return out;
+    const cur = Math.max(1, Number(ch) || 1);
+    for (const k of Object.keys(w.chapters).map(Number).sort((a, b) => a - b)) {
+      if (!(k <= cur)) continue;                      // 只有"已经过去"的才是事实
+      const box = w.chapters[String(k)] || {};
+      const push = (o, tag) => {
+        if (!o || typeof o !== "object") return;
+        for (const who of Object.keys(o)) {
+          const v = o[who];
+          if (typeof v === "string") { out.push("Ch" + k + ": " + who + " " + tag + " " + v); continue }
+          if (v && typeof v === "object") {
+            for (const kk of Object.keys(v)) out.push("Ch" + k + ": " + who + " " + tag + " " + kk);
+          }
+        }
+      };
+      push(box.reveals, "revealed");
+      push(box.breaks, "broke");
+    }
+  } catch (_) {}
+  return out;
+}
+
 /* ================= 状态写入层 v1（唯一写入口）=================
    规格 v7.11 §04.6「状态投影的唯一写入点」：
      模型和剧情都只能"提议"，真正的写入只在这里发生。
@@ -6515,7 +6547,11 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
  return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+"."+
   // 内容版本号（T06）：内容一改，这一行就变 ⇒ 固定段失效 ⇒ 缓存不会拿旧剧本的上下文继续讲故事
   ((typeof MIRU_REV!=="undefined"&&MIRU_REV[th.wid])?" [script rev "+MIRU_REV[th.wid]+"]":""),
-  past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:"",
+   (function(){try{
+    const _canon=(typeof canonFacts==="function")?canonFacts(th.wid,th.pk.ch):[];
+    const _all=[past].concat(_canon).filter(Boolean).join(" | ");
+    return _all?"WHAT HAS HAPPENED (official, canon — never contradict, never re-open a settled conflict): "+_all:"";
+  }catch(_){return past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:""}})(),
   th.pk.st==="choose"?"The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal.":
    "This chapter's choice is made. Play the aftermath of it; do not start the next chapter's events.",
   as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
