@@ -59,4 +59,21 @@ console.log(`   0 → ${total}（满档）最少 ${Math.ceil(total / per)} 轮�
 console.log('\n结论：阶段是**派生量**（不存、不迁移、每次由 love 算），所以「转移规则」目前等于');
 console.log('      「love 越过阈值即变」——升的那一下有卡，降的那一下什么都没发生。');
 console.log('      要不要补规则是产品决定；但不补的话，至少要知道降级是无声的。');
-process.exit(0);
+
+// ---- 降级那条分支必须真的在（不然这份读数只是描述历史） ----
+let pass = 0; const fails = [];
+const ok = (n, c) => { if (c) { pass++; console.log('  ✓ ' + n); } else { fails.push(n); console.log('  ✗ ' + n); } };
+console.log('\n④ 降级反馈（本轮补的）');
+const chat = files['app3_chat.js'] || '';
+ok('有降级分支', /else if\(s<before\[c\]\)/.test(chat));
+ok('降级有去重（不会反复弹）', /th\._stDown/.test(chat));
+ok('升级会清掉去重记录', /delete th\._stDown\[c\]/.test(chat));
+ok('文案有五语', (Object.values(files).join('\n').match(/"st\.down"/g) || []).length >= 5);
+if (process.argv.includes('--selftest')) {
+  const mut = chat.replace(/else if\(s<before\[c\]\)/, 'else if(false)');
+  const caught = !/else if\(s<before\[c\]\)/.test(mut);
+  console.log('  · 变异（把降级分支废掉）：' + (caught ? '已抓住 ✓' : '没抓住 ✗'));
+  if (!caught) { console.log('SELFTEST FAILED'); process.exit(1); }
+}
+console.log('\n' + pass + ' passed, ' + fails.length + ' failed');
+if (fails.length) process.exit(1);

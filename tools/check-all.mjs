@@ -18,6 +18,7 @@ const suites = [
   ['status-contract.mjs', ['tools/status-contract.mjs', '--selftest'], true],
   ['tune-selftest.mjs', ['tools/tune-selftest.mjs'], true],
   ['cache-split-contract.mjs', ['tools/cache-split-contract.mjs', '--selftest'], true],
+  ['stage-report.mjs', ['tools/stage-report.mjs', '--selftest'], true],
 ];
 
 let failed = 0;
