@@ -9826,7 +9826,7 @@ window.addEventListener("change",async e=>{if(e.target.id!=="imFile"||!e.target.
    so a shared link never carries it. When LongCat is on, it replaces SAMPLE, so every live-AI feature (chat replies, creator, 换一句, import help) uses it. */
 const LC_KEY="miru.lc.key",LC_MODELS=["LongCat-2.0","LongCat-2.5-Preview"],LC_BASE="https://api.longcat.chat/openai";
 /* MIRU-hosted proxy: the site owner's key lives on the server, never in the page. Same-origin /api/longcat on Vercel, or window.MIRU_PROXY. */
-const LC_PROXY=window.MIRU_PROXY||(/\.vercel\.app$/.test(location.hostname)?location.origin+"/api/longcat":"");
+const LC_PROXY=window.MIRU_PROXY||(/(\.vercel\.app|(^|\.)miru\.plus)$/.test(location.hostname)?location.origin+"/api/longcat":"");
 function lcProxyMode(){return !!LC_PROXY&&!lcKey()}
 function lcCfg(){S.ai=S.ai||{provider:LC_PROXY?"longcat":"claude",model:LC_MODELS[0],base:LC_BASE};return S.ai}
 function lcKey(){try{return localStorage.getItem(LC_KEY)||""}catch(_){return ""}}
@@ -10904,7 +10904,7 @@ const _artSrc61=artSrc;artSrc=function(id){return HONOR_ART[id]||_artSrc61(id)};
    · Emotion comes from the line itself (angry / sad / afraid / surprised / tender / calm) and is sent as IndexTTS2 emotion weights.
    · Audio is cached on Vercel's CDN (each line synthesised once for everyone) and in memory here; the next lines are prefetched
      while you read, so read-aloud doesn't wait. If the server is slow (>7s) or down, that line falls back to the device voice. */
-const TTS_EP=window.MIRU_TTS!==undefined?window.MIRU_TTS:(/\.vercel\.app$/.test(location.hostname)?"/api/tts":(window.MIRU_PROXY?String(window.MIRU_PROXY).replace(/\/api\/longcat.*$/,"/api/tts"):""));
+const TTS_EP=window.MIRU_TTS!==undefined?window.MIRU_TTS:(/(\.vercel\.app|(^|\.)miru\.plus)$/.test(location.hostname)?"/api/tts":(window.MIRU_PROXY?String(window.MIRU_PROXY).replace(/\/api\/longcat.*$/,"/api/tts"):""));
 const TTS={mem:new Map(),inflight:new Map(),fails:0,off:false,ok:null};
 const TTS_VOICES={m:["m1","m2","m3","m4","m5","m6","m7"],f:["f1","f2"]};
 const TTS_VNAME={m1:"低沉克制",m2:"清朗少年感",m3:"温和学长",m4:"冷硬",m5:"慵懒",m6:"明亮",m7:"成熟沉稳",f1:"温柔",f2:"干练"};
