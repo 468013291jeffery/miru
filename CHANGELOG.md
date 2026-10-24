@@ -115,11 +115,13 @@
 
 | 结果 | 条数 | 含义 |
 |---|---|---|
-| PASS | **10** | T09 拒绝降档 · T10 不在场不能发言 · T11 秘密不外泄 · T15 重复请求只执行一次 · T24 成长不改核心人格 |
+| PASS | **11** | T09 拒绝降档 · T10 不在场不能发言 · T11 秘密不外泄 · T15 重复请求只执行一次 · T24 成长不改核心人格 |
 | FAIL | 0 | —— |
-| NOT-YET | **15** | 机制还不存在，每条写明缺什么、指向对账哪一条 |
+| NOT-YET | **14** | 机制还不存在，每条写明缺什么、指向对账哪一条 |
 
 真正的价值在 NOT-YET 那一列：它把"我们离文档还差哪 20 件事"变成可读的清单，而不是一句"还没做完"。
+
+**T13 已落地**：`app71_narrative.js:29` 早就有「BEAT 1 MUST respond to exactly that: answer the question…」这条规则，断言它仍在产物里（prompt 级，行为级只能靠真实对话样本）。缺口 15 → 14。
 
 **T12 已落地（而且是我找错了地方）**：我以为「事实/猜测」这层不存在，实际 `app77_memory2.js` 的 `M2T` 表早就有七类，其中 `guess` 的提示词逐字写着 *"YOUR OWN GUESSES ABOUT THE USER (unconfirmed — do not state them as fact)"*，`self` 标着 self-reported。缺口 16 → 15。
 
