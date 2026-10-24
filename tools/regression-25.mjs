@@ -229,16 +229,22 @@ try {
   const romance = fn({}, 'mason') === true;
   const inRoom = fn({ present: ['coach'] }, 'coach') === false;   // 在场也不行
   let cardOk = false;
+  let cardNoBan = false;   // 2026-10-25：还要断言「没有不许调情」
   try {
     const cc = [cutFn('castCard'), cutFn('castCardPublic')].join('\n');
     const card = new Function('ch', 'Lz', 'CL', 'me', 'stageOf', 'wd', 'I18N', cc + '\nreturn castCard;')(
       () => ({ n: 'C', age: 40, role: { en: 'r' }, looks: { en: 'l' }, vibe: { en: 'v' }, tells: { en: [] }, twist: { en: 'w' }, likes: { en: 'k' }, secret: { en: 's' }, romanceable: false }),
       x => (x && (x.en || x)) || '', () => 'en', () => 'you', () => 0, () => ({ pack: {} }), { en: { 'stage.0': 's' } });
-    cardOk = card({ love: {}, status: { mood: {} } }, 'coach').includes('Not a romance option');
+    // 2026-10-25 Ann 改了这条的**含义**：关的是恋爱线，不是人的魅力。
+    // 所以卡面判据从「写着 Not a romance option（旧句）」改成「写着 route 关闭 + 明确不许把人写得冷淡」，
+    // 并且反过来要求**不能**出现「不许调情」。
+    const cardText = (() => { try { return card({ love: {}, status: { mood: {} } }, 'coach'); } catch (_) { return ''; } })();
+    cardOk = /Not a romance route/.test(cardText) && /Do not make them cold, flat or sexless/.test(cardText);
+    cardNoBan = !/never flirt/i.test(cardText);
   } catch (_) {}
-  add('T07', 'romanceable=false → 不自动调情/不涨好感', (noRomance && romance && inRoom && cardOk) ? 'PASS' : 'FAIL',
-    `非恋爱对象被拦 ${noRomance} · 恋爱对象放行 ${romance} · 在场也拦 ${inRoom} · 卡面写明 ${cardOk}`);
-} catch (e) { add('T07', 'romanceable=false → 不自动调情', 'FAIL', e.message); }
+  add('T07', 'romanceable=false → 恋爱线关闭、好感不涨（但人照样有魅力）', (noRomance && romance && inRoom && cardOk && cardNoBan) ? 'PASS' : 'FAIL',
+    `好感被拦 ${noRomance} · 恋爱对象放行 ${romance} · 在场也拦 ${inRoom} · 卡面写明关的是恋爱线 ${cardOk} · 无「不许调情」${cardNoBan}（Ann 2026-10-25 改）`);
+} catch (e) { add('T07', 'romanceable=false → 恋爱线关闭', 'FAIL', e.message); }
 
 try {
   const code = [cutFn('castCard'), cutFn('castCardPublic')].join('\n');
