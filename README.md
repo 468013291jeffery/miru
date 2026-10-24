@@ -14,6 +14,7 @@ AI engine: Claude or LongCat (enter your own API key in 我的 → AI 引擎; ke
 | [`LEDGER.md`](LEDGER.md) | 可导出的玩法账本：事件 → CSV（10 列）→ 汇总（完成率 / 选项分布 / 时长），含口径铁律 |
 | [`STATUS-LAYER.md`](STATUS-LAYER.md) | 状态写入层：唯一写入口、夹值、留痕、棘轮（29 → 25，只降不升） |
 | [`CHANGELOG.md`](CHANGELOG.md) | **先看这份**：这条分支改了什么 · 规格 19 条对账进度 · 合并注意 · 待拍板 |
+| [`CHARACTER-CARD.md`](CHARACTER-CARD.md) | 角色卡：五类字段（不可变/可变/只增/立场/揭示）· 每章一份补丁 · 可回放 |
 | [`PER-CHARACTER-PAYLOAD.md`](PER-CHARACTER-PAYLOAD.md) | 每角色一份 payload 的设计：在场跟章走 · 卡分公开/私密面 · 调度规则 · 成本口径 · 四步落地 |
 | [`QUALITY.md`](QUALITY.md) | 质量闸：八套 158 个用例各查什么 · 四条不变量 · 改哪会红 · 红臂 · 已知没覆盖的 |
 | [`TUNING.md`](TUNING.md) | 可调参数（滑钮）：14 格默认值 · 改 `tune.js` 免构建生效 · 每格的风险 |
