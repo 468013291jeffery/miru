@@ -16082,3 +16082,72 @@ if(S.ob)startApp();else renderOB();
   return r}}catch(_){}
 })();
 </script>
+<script>
+/* v8.2.5 · 智能体 v7.11 收尾：可信事件账本 + 版本冲突 + 续写发布事务 + 工具门槛 + 真实 Token 记账
+   ① 剧情选择 / 工具回执 / 出章 / 玩家边界 → /api/state?r=ev 幂等提交（同一选项重复提交只算一次），带 base_rev 乐观锁；
+      另一台设备已经推进过 → 服务器返回 conflict → 拉取最新存档并重新进入（§09.3）
+   ② 续写新章节（模式 B）先送服务器校验（schema / 版本 / 知识 / 工具白名单 / 内容 / canon），不通过就带着原因重写一次，仍不通过就不发布（§05.8，T19/T20）
+   ③ 工具沿用原 v7.7 亲密度门槛：ask 0 / gift 15 / game 20 / photo 25 / voice 30 / call 45（msg 0、date 20），判定值仍是现有好感 th.love（§06.4：不擅自改成四维）
+   ④ 每次模型调用把真实 usage（prompt / cached / completion tokens、提供方、模型）记进事件表 llm_usage（§10.2 第 17 条） */
+(function(){
+ const on=()=>{try{return typeof CL0!=="undefined"&&CL0.on&&typeof capi==="function"}catch(_){return false}};
+ const Q=[];let flushing=false;
+ function ev(th,e){try{if(!th||!th.b98)return;const A=th.b98;e.base_rev=A.rev98||0;e.story_id=th.wid;Q.push({thread:curT,e});flush()}catch(_){}}
+ async function flush(){if(flushing||!on()||!Q.length)return;flushing=true;
+  try{while(Q.length){const x=Q[0];let r=null;try{r=await capi("/state?r=ev",{json:{op:"commit",thread:x.thread,events:[x.e]}})}catch(_){}
+    if(!r||!r.ok){break}Q.shift();const th=S.threads[x.thread];const res=(r.j.results||[])[0]||{};
+    if(th&&th.b98){th.b98.rev98=Math.max(th.b98.rev98||0,+r.j.rev||0);save()}
+    if(res.conflict){try{track("rev_conflict98",{type:x.e.type})}catch(_){}conflict(x.thread)}}}
+  finally{flushing=false;if(Q.length)setTimeout(flush,8000)}}
+ let synced=0;async function conflict(tid){if(Date.now()-synced<30000||busy)return;synced=Date.now();
+  toast(L98("另一台设备刚推进过剧情，正在同步最新进度…","Another device moved the story on — syncing…"));
+  try{if(typeof cloudPull==="function"&&await cloudPull()){if(S.threads[tid]&&typeof openThread==="function")openThread(tid);else if(typeof render==="function")render()}}catch(_){}}
+ const sid=th=>{try{const {s}=scene98(th);return s&&s.id||""}catch(_){return ""}};
+ const pres=th=>{try{const {s}=scene98(th);const p=present98(th,s);return p.length?p:ia98(th)}catch(_){return []}};
+ /* choices (story mode) */
+ try{const _t=talk98;talk98=async function(th,act,choiceO){const before=th&&th.b98?th.b98.ch:0,s0=th?sid(th):"";const r=await _t.apply(this,arguments);
+  try{if(choiceO&&th&&th.b98)ev(th,{type:"choice",idem:"choice:"+curT+":"+s0+":"+String(choiceO.k||choiceO.t||"").slice(0,40),scene_id:s0,visible_to:pres(th),payload:{t:String(choiceO.t||"").slice(0,60),effect:String(choiceO.effect||"").slice(0,80)}});
+   if(th&&th.b98&&th.b98.ch>before)ev(th,{type:"chapter",idem:"chapter:"+curT+":"+th.b98.ch,payload:{ch:th.b98.ch}})}catch(_){}return r}}catch(_){}
+ try{const _n=next98;next98=async function(th){const before=th&&th.b98?th.b98.ch+":"+th.b98.sc:"";const r=await _n.apply(this,arguments);
+  try{if(th&&th.b98){const now=th.b98.ch+":"+th.b98.sc;if(now!==before)ev(th,{type:"scene",idem:"scene:"+curT+":"+now,scene_id:sid(th),payload:{from:before,to:now}})}}catch(_){}return r}}catch(_){}
+ /* choices (pack mode) */
+ try{const _k=packPick;packPick=function(k){try{const th=S.threads[curT];if(th&&th.pk&&th.pk.st==="choose"&&!busy){const A=th.b98||(th.b98p=th.b98p||{});const idem="pk:"+curT+":"+th.pk.ch+":"+k;
+   if(on())capi("/state?r=ev",{json:{op:"commit",thread:curT,events:[{type:"choice",idem,story_id:th.wid,scene_id:"pk"+th.pk.ch,payload:{k}}]}}).then(r=>{const x=r&&r.ok&&(r.j.results||[])[0];if(x&&x.dup)try{track("dup_choice98",{})}catch(_){}}).catch(()=>{})}}catch(_){}return _k.apply(this,arguments)}}catch(_){}
+ /* tool receipts */
+ try{const _e=toolEnd98;toolEnd98=function(th,i,st,res){const m=th&&th.msgs[i];const r=_e.apply(this,arguments);try{if(m&&m.k==="tool98")ev(th,{type:"tool_result",idem:"tool:"+curT+":"+(m.at||i)+":"+st,actor_id:m.cid,scene_id:sid(th),visible_to:[m.cid],payload:{tool:m.tool,st}})}catch(_){}return r}}catch(_){}
+ /* player boundaries (a refusal is remembered as a boundary, never punished) */
+ const NO=/(不要|别)(这样|碰我|碰|靠(这么)?近|过来|亲|抱)|保持距离|离我远|我拒绝|还没准备好|don'?t touch|back off|i'?m not ready/i;
+ try{const _ds=doSend;doSend=function(txt){try{const th=S.threads[curT];if(th&&th.b98&&NO.test(String(txt||"")))ev(th,{type:"boundary",idem:"bd:"+curT+":"+(th.b98.talkN||0),scene_id:sid(th),visible_to:pres(th),payload:{txt:String(txt).slice(0,60)}})}catch(_){}return _ds.apply(this,arguments)}}catch(_){}
+ /* ③ legacy tool thresholds on the existing affection value */
+ const GATE={ask:0,msg:0,gift:15,game:20,date:20,photo:25,voice:30,call:45,other:0};
+ try{const _t9=tool98;tool98=function(th,cid,wish){try{const a=parse98(typeof wish==="object"&&wish?(wish.wish||wish.name||""):wish);if(a){const need=GATE[a.k]!=null?GATE[a.k]:0;if((th.love[cid]||0)<need){try{track("tool_gate98",{k:a.k,need})}catch(_){}return}}}catch(_){}return _t9.apply(this,arguments)}}catch(_){}
+ /* ② continuation goes through the server publish transaction */
+ const TOOLS=["ask","gift","game","photo","voice","call"];
+ function forbidden(th){try{const w=wd(th.wid),b=bOf98(w);const out=[];(b.chapters||[]).forEach(c=>Object.values(c.card98||{}).forEach(cc=>[].concat(cc.unknown||[]).forEach(x=>out.push(String(x).replace(/[（(].*?[)）]/g,"").trim()))));return [...new Set(out)].filter(x=>x.length>=4).slice(0,60)}catch(_){return []}}
+ function localCheck(th,nc){const R=[];const txt=JSON.stringify(nc||{});forbidden(th).forEach(f=>{if(txt.includes(f.slice(0,8)))R.push("knowledge: "+f.slice(0,12))});(nc.scenes||[]).forEach(s=>(Array.isArray(s.tools)?s.tools:[]).forEach(t=>{if(!TOOLS.includes(t))R.push("tools: "+t)}));if(!(nc.scenes||[]).length)R.push("schema: no scenes");return R}
+ try{const _g=genCh98;genCh98=async function(th,steer){let nc=await _g.apply(this,arguments);if(!nc)return nc;
+  for(let tries=0;tries<2;tries++){const w=wd(th.wid),b=bOf98(w),A=th.b98;let reasons=localCheck(th,nc),ok=!reasons.length;
+   if(ok&&on()){try{const r=await capi("/state?r=pack",{json:{op:"validate",thread:curT,story_id:th.wid,base_rev:A.rev98||0,pack:nc,cast_keys:b.cast.map(c=>c.key).concat(["me"]),forbidden:forbidden(th),canon:{chapters:(b.chapters||[]).map((c,i)=>"第"+(i+1)+"章「"+LZ98(c.title||"")+"」"+(c.goal?"："+String(LZ98(c.goal)).slice(0,60):"")),flags:(A.flags||[]).slice(-20)}}});
+     if(r&&r.status===409){A.rev98=+(r.j&&r.j.rev)||A.rev98;try{track("pack98",{ok:0,why:"stale"})}catch(_){}conflict(curT);return null}
+     if(r&&r.ok&&r.j){if(r.j.ok){A.rev98=Math.max(A.rev98||0,+r.j.rev||0);nc.pack_id=r.j.id;try{track("pack98",{ok:1,warn:(r.j.warn||[]).length})}catch(_){}return nc}reasons=r.j.reasons||["rejected"];ok=false}}catch(_){}}
+   if(ok)return nc; /* offline / not signed in: local checks passed → degrade gracefully */
+   try{track("pack98",{ok:0,why:String(reasons[0]||"").slice(0,40)})}catch(_){}
+   if(tries===0){nc=await _g.call(this,th,(steer?steer+"；":"")+"上一稿没通过校验，必须避免："+reasons.slice(0,3).join("；"));if(!nc)return null}}
+  return null}}catch(_){}
+ /* ④ real token usage for every LLM call (the proxy now returns usage) */
+ try{const _f=window.fetch;window.fetch=function(u,o){const p=_f.apply(this,arguments);try{const url=String(u&&u.url||u);if(/\/api\/longcat/.test(url)&&o&&o.body&&!/"stream":true/.test(String(o.body))&&!/"probe"/.test(String(o.body))){p.then(r=>r.clone().text()).then(t=>{const j=JSON.parse(t.trim());const g=j&&j.usage;if(g)track("llm_usage",{provider:j.provider||"",model:j.model||"",p:+g.prompt_tokens||0,c:+g.completion_tokens||0,cached:+(g.prompt_cache_hit_tokens||(g.prompt_tokens_details&&g.prompt_tokens_details.cached_tokens)||0)})}).catch(()=>{})}}catch(_){}return p}}catch(_){}
+ try{setTimeout(flush,5000)}catch(_){}
+})();
+/* v8.2.6 · effective_heat 补上“年龄与开启浪漫”“玩家偏好”两道上限（§06.3），以及标签版本变化时作废缓存计划（§02.3 / T06） */
+(function(){
+ const ORD={fluff:0,slow:1,steamy:2,mature:2};
+ const TXT={0:"清水：只写在意、偏爱、照顾，不写身体吸引",1:"暧昧：可以试探、调侃、克制地想靠近，不写身体接触",2:"微辣：可以表达心动和想靠近（非露骨），仍须对方确认"};
+ try{const _a=ask;ask=async function(prompt){try{const th=S.threads[curT];if(th&&th.b98&&typeof prompt==="string"){const w=wd(th.wid)||{};
+   const sig=(w.heat||"")+"|"+(((w.taste||{}).vibe||[]).join(","))+"|"+(w.tag_revision||w.rev||"");const A=th.b98;if(A.tagsig98!==undefined&&A.tagsig98!==sig){A.plan98={};A.adv="";try{localStorage.removeItem("miru.plan98")}catch(_){}try{track("tag_rev98",{})}catch(_){}}A.tagsig98=sig;
+   if(/^你是「/.test(prompt)&&/Reply with ONLY JSON/.test(prompt)){const story=ORD[w.heat]!=null?ORD[w.heat]:2,user=ORD[S.heat]!=null?ORD[S.heat]:2,adult=S.ob?2:0;const eff=Math.min(story,user,adult);
+    if(eff<story){const add="\n【玩家这边的上限（优先于作品尺度）】"+(adult===0?"还没确认成年 / 没开启浪漫体验：保守表达。":"玩家选的口味更收敛：")+TXT[eff];const i=prompt.lastIndexOf("\nReply with ONLY JSON");prompt=prompt.slice(0,i)+add+prompt.slice(i);arguments[0]=prompt}}}}catch(_){}
+  return _a.apply(this,arguments)}}catch(_){}
+})();
+/* v8.2.6b · 角色不在场：不能现场发言，也不能触发工具（v7.11 §06.5 / T10） */
+(function(){try{const _w=wishOpen98;wishOpen98=function(th,cid){try{const {s}=scene98(th),pr=present98(th,s);if(pr.length&&!pr.includes(cid))return false}catch(_){}return _w.apply(this,arguments)}}catch(_){}})();
+</script>
