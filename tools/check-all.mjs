@@ -31,6 +31,7 @@ const suites = [
   ['account-check.mjs', ['tools/account-check.mjs'], true],
   ['perf-budget.mjs', ['tools/perf-budget.mjs'], true],
   ['timer-audit.mjs', ['tools/timer-audit.mjs', '--check'], true],
+  ['ask-retry-selftest.mjs', ['tools/ask-retry-selftest.mjs'], true],
 ];
 
 let failed = 0;

@@ -2968,9 +2968,22 @@ function jsonLoose(t){if(!t)return null;t=String(t).replace(/```(?:json)?/g,"");
 async function ask(prompt,opts){
  opts=opts||{};
  if(!liveOn())throw {code:"na"};
+ const _tier=opts.modelTier||"default";
  try{let r;try{r=await SAMPLE.json(prompt,Object.assign({modelTier:"default",cache:false},opts))}
   catch(e0){if(!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
    if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({modelTier:"default",cache:false},opts));r=jsonLoose(t2&&t2.text)}
+   /* 自适应预算（2026-10-25 · Ann「你看着办」）：
+      同一档位仍解析不出来，多半是两种情形之一 ——
+        ① 输出被预算掐断（JSON 少半截）② 推理型模型把预算全烧在思考上、正文为空。
+      这两种都不是"再问一遍就会好"，而是"预算不够"。
+      ⇒ 用更大的档位（complex）重试**一次**。只升一次，不循环；已经是 complex 就不再升。
+      为什么不是"一律给大预算"：实测模型会跑满上限才停（LATENCY.md），一律给大 = 每次都慢。
+      为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
+   if(r==null&&_tier!=="complex"){
+    try{track&&track("llm_escalate",{from:_tier,to:"complex"})}catch(_){}
+    const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
+    r=jsonLoose(t3&&t3.text);
+   }
    if(r==null)throw e0}
   LIVE_ERR=null;refreshLive();return r}
  catch(e){LIVE_ERR=(e&&e.code)||"error";refreshLive();
@@ -2991,6 +3004,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-back]")){back()
 function pickSearch(inputId,gridId){return '<div class="field" style="margin-top:10px"><input class="pickq" id="'+inputId+'" data-pickfor="#'+gridId+'" placeholder="'+esc(t("g.searchChar"))+'"></div>'}
 document.addEventListener("input",e=>{const x=e.target.closest(".pickq");if(!x)return;const sel=x.dataset.pickfor,q=x.value.trim().toLowerCase();
  $$(sel+" > *").forEach(b=>{const nm=(b.querySelector("span")||b).textContent.toLowerCase();b.style.display=(!q||nm.includes(q))?"":"none"})});
+
 
 /* ================= 可调参数（外置滑钮）=================
    为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、
