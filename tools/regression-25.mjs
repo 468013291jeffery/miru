@@ -39,6 +39,41 @@ const add = (id, what, verdict, detail) => results.push({ id, what, verdict, det
 
 // ---- 能真跑的几条 ----
 try {
+  const wsrc = fs.readFileSync('api/wallet.js', 'utf8');
+  const a0 = wsrc.indexOf('async function apply(');
+  let d0 = 0, j0 = wsrc.indexOf('{', a0);
+  for (; j0 < wsrc.length; j0++) { if (wsrc[j0] === '{') d0++; else if (wsrc[j0] === '}') { d0--; if (!d0) break; } }
+  const applySrc = wsrc.slice(a0, j0 + 1);
+  // 假库：内存里一张 wallet + 一张 ledger，行为按 apply 里那几条 SQL 的语义对齐
+  const db = { gems: {}, ledger: {} };
+  const fakeSql = async (q, args) => {
+    if (/SELECT balance FROM ledger WHERE key/.test(q)) { const v = db.ledger[args[0]]; return v == null ? [] : [{ balance: v }]; }
+    if (/INSERT INTO wallet/.test(q)) { if (db.gems[args[0]] == null) db.gems[args[0]] = 0; return []; }
+    if (/UPDATE wallet SET gems/.test(q)) {
+      const next = (db.gems[args[0]] || 0) + args[1];
+      if (next < 0) return [];
+      db.gems[args[0]] = next; return [{ gems: next }];
+    }
+    if (/INSERT INTO ledger/.test(q)) {
+      const [uid, delta, reason, key, balance] = args;
+      if (key == null) { db.ledger['auto' + Math.random()] = balance; return []; }
+      if (db.ledger[key] == null) db.ledger[key] = balance;
+      return [];
+    }
+    return [];
+  };
+  const apply = new Function('return ' + applySrc + ';')();
+  const uid = 'u1';
+  const r1 = await apply(fakeSql, uid, 100, 'sku', 'order-42');
+  const after1 = db.gems[uid];
+  const r2 = await apply(fakeSql, uid, 100, 'sku', 'order-42');   // 同一回执再来一次
+  const after2 = db.gems[uid];
+  const ok = r1 && r1.gems === 100 && after1 === 100 && r2 && r2.dup === true && after2 === 100;
+  add('T22', '两次同一支付回执不重复扣费/加分', ok ? 'PASS' : 'FAIL',
+    `第一次余额 ${after1} · 第二次 ${after2} · 第二次判为重复 ${!!(r2 && r2.dup)}`);
+} catch (e) { add('T22', '两次同一支付回执不重复扣费/加分', 'FAIL', e.message); }
+
+try {
   const code = [cutFn('toolGate'), cutFn('toolUse')].join('\n');
   const A = new Function(code + '\nreturn { toolGate, toolUse };')();
   const th = { pk: { ch: 1 } };
@@ -134,8 +169,6 @@ try {
 const has = (re) => re.test(all);
 add('T09', '玩家明确拒绝 → 降档并停止试探', has(/dimAdd\(th,as\+"\|\"\+cid,\{ten:6,tru:-4\},"decline"\)/) ? 'PASS' : 'FAIL',
   '拒绝路径写 dims：张力 +6 / 信任 −4（app42_decline.js）');
-add('T22', '两次同一支付回执不重复扣费', /r\.dup|dup\b/.test(src['api/wallet.js'] || '') ? 'PASS' : 'NOT-YET',
-  'api/wallet.js 有 dup 幂等键；前端礼物重复点击暂无幂等（礼物走 local spend）');
 
 // ---- 机制还不存在的：写明缺什么 ----
 const NY = [
@@ -159,6 +192,17 @@ const NY = [
 for (const [id, what, why] of NY) add(id, what, 'NOT-YET', why);
 
 // ---- 打印 ----
+// 表必须正好 25 行、ID 不重复 —— 我一度把 T22 写成两行（一条 PASS 一条 NOT-YET），
+// 于是"通过 9 / 缺口 16"合计 26，看起来像进度多了一条。这条闸专治那种自我美化。
+{
+  const ids = results.map(r => r.id);
+  const dup = ids.filter((x, i) => ids.indexOf(x) !== i);
+  if (results.length !== 25 || dup.length) {
+    console.log(`✗ 映射表本身不对：行数 ${results.length}（应为 25）· 重复 ID ${dup.join(',') || '无'}`);
+    process.exit(1);
+  }
+}
+
 const order = { PASS: 0, FAIL: 1, 'NOT-YET': 2 };
 results.sort((a, b) => (a.id < b.id ? -1 : 1));
 const count = k => results.filter(r => r.verdict === k).length;
