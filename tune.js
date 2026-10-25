@@ -12,3 +12,22 @@
    };
 ------------------------------------------------------------------------ */
 window.MIRU_TUNE_OVERRIDE = window.MIRU_TUNE_OVERRIDE || {};
+/* AdSense web bootstrap: production only; separate from rewarded ads. */
+(function () {
+  function loadWebAds() {
+    if (!['miru.plus', 'www.miru.plus'].includes(location.hostname)) return;
+    if (typeof S !== 'undefined' && S.plus) return;
+    if (document.getElementById('miru-adsense')) return;
+    var script = document.createElement('script');
+    script.id = 'miru-adsense';
+    script.async = true;
+    script.crossOrigin = 'anonymous';
+    script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1779576119248059';
+    document.head.appendChild(script);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadWebAds, { once: true });
+  } else {
+    loadWebAds();
+  }
+})();
