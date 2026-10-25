@@ -159,9 +159,17 @@ function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
  /* 玩家原话单独留档（2026-10-25 Ann）：模型生成的内容可以随窗口滑走，但**玩家自己说的话**要留住。
     这里逐字收进 th.said（去掉 *动作* 的星号噪音），按 chat.saidKeep 截断。 */
  try{ if(m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()){
-   th.said=Array.isArray(th.said)?th.said:[];th.said.push(String(m.txt).trim());
+   const line=String(m.txt).trim();
+   th.said=Array.isArray(th.said)?th.said:[];th.said.push(line);
    const cap=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.saidKeep)||50;
    if(th.said.length>cap)th.said=th.said.slice(-cap);
+   /* 手打的单独一档（Ann 2026-10-25）：系统给的候选句也算"玩家说的"，但**不是玩家写的**。
+      珍贵的是亲手敲的 —— 这些单独存，存得更多，进 prompt 时排在"我们自己的话"那一段。 */
+   if(m.typed){
+     th.typed=Array.isArray(th.typed)?th.typed:[];th.typed.push(line);
+     const capT=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.typedKeep)||120;
+     if(th.typed.length>capT)th.typed=th.typed.slice(-capT);
+   }
  }}catch(_){}
 if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
@@ -187,13 +195,13 @@ function streamPreview(piece){
 }
 
 /* send from composer */
-function doSend(txt,mode){
+function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩家自己敲的才算「珍贵」
  const th=S.threads[curT];if(!th||busy)return;txt=(txt||"").trim();if(!txt)return;
  if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
- if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,at:Date.now()});reply(th,{kind:"dir",txt});return}
- appendMsg(th,{who:"me",k:mode,txt,at:Date.now()});th.rounds++;
+ if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
+ appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
  reply(th,{kind:"user",txt,mode});}
 
 /* ================= AI ENGINE ================= */
@@ -265,6 +273,15 @@ async function reply(th,ctx,silent){
   "STORY SO FAR:\n"+transcript(th),
   // 玩家原话（2026-10-25）：窗口会滑走，但"你说过什么"要一直在。
   // 只放玩家自己的话，逐字，不加工；空的时候整行不出现（不让模型看见空标题）。
+  // 手打的那一档（Ann 2026-10-25）：系统的候选句也是"玩家说的"，但不是"玩家写的"。
+  // 这一块只放亲手敲的 —— 语气、用词、习惯都在里面，比任何状态字段都更能让角色认得这个人。
+  // 手打的那一档（Ann 2026-10-25）：系统的候选句也是"玩家说的"，但不是"玩家写的"。
+  // 这一块只放亲手敲的 —— 语气、用词、习惯都在里面，比任何状态字段都更能让角色认得这个人。
+  (function(){try{
+    const arr=(Array.isArray(th.typed)?th.typed:[]);
+    if(!arr.length)return "";
+    return "THE PLAYER TYPED THESE THEMSELVES (their own voice and word choice \u2014 weigh these above the rest; a character who knows them would notice how they write):\n"+arr.slice(-40).map((s,i)=>(i+1)+". "+s).join("\n");
+  }catch(_){return ""}})(),
   (function(){try{
     const arr=(Array.isArray(th.said)?th.said:[]);
     if(!arr.length)return "";
@@ -373,7 +390,7 @@ function speakQueue(list){let i=0;const next=()=>{if(i>=list.length)return;const
 /* ================= COMPOSER EVENTS ================= */
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-mode]")){cmode=x.dataset.mode;$$("[data-mode]").forEach(y=>y.classList.toggle("on",y===x));const ta=$("#cin");ta.placeholder=t("cx.ph."+cmode);ta.classList.toggle("dir",cmode==="dir");if(cmode==="dir")toast(t("cx.dirOn"));ta.focus();return}
- if(e.target.closest("[data-send]")){const ta=$("#cin");const v=ta.value;ta.value="";doSend(v);return}
+ if(e.target.closest("[data-send]")){const ta=$("#cin");const v=ta.value;ta.value="";doSend(v,null,true);return}
  if(x=e.target.closest("[data-sg]")){let v=x.dataset.sg,m="say";if(/^\*.*\*$/.test(v)){m="act";v=v.slice(1,-1)}else if(/^[(（].*[)）]$/.test(v)){m="think";v=v.slice(1,-1)}setSugg([]);doSend(v,m);return}
  if(e.target.closest("[data-ideas]")){const th=S.threads[curT];if(sugg.length){setSugg(sugg);return}
   const lang=CL();setSugg([0,1,2].map(()=>pickNR(SUGG_FB[lang],"sg")));return}
@@ -392,7 +409,7 @@ document.addEventListener("click",e=>{let x;
   if(a==="redo"){let j=th.msgs.length;while(j>0&&th.msgs[j-1].ai)j--;th.msgs=th.msgs.slice(0,j);openTools=-1;save();renderChat();reply(th,{kind:"redo"})}
   return}
  if(x=e.target.closest("[data-cardbtn]")){const th=S.threads[curT],m=th.msgs[+x.dataset.cardbtn];if(m&&m.act&&m.act.startsWith("couple|"))makeCouple(m.act.split("|")[1],th);if(m&&m.act&&m.act.startsWith("call|"))startCall(m.act.split("|")[1]);return}});
-document.addEventListener("keydown",e=>{if(e.target.id==="cin"&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();const v=e.target.value;e.target.value="";doSend(v)}});
+document.addEventListener("keydown",e=>{if(e.target.id==="cin"&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();const v=e.target.value;e.target.value="";doSend(v,null,true)}});
 document.addEventListener("input",e=>{if(e.target.id==="cin"){e.target.style.height="auto";e.target.style.height=Math.min(120,e.target.scrollHeight)+"px"}});
 
 /* ================= SHEETS: + menu, continue-story, menu, relationship path ================= */
