@@ -1,3 +1,7 @@
+/* Use the same-origin backend on MIRU production domains. */
+if (['miru.plus', 'www.miru.plus'].includes(location.hostname)) {
+  window.MIRU_TTS = '/api/tts';
+}
 /* ---- MIRU 可调参数（外置滑钮）-----------------------------------------
    改这里**不用重新构建**：保存后刷新页面就生效。只写你想改的键，其余保持默认。
    拼错的键会被忽略（不会静默生效）。每一格的含义与风险见 TUNING.md。
