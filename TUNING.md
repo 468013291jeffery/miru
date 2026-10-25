@@ -31,7 +31,7 @@ window.MIRU_TUNE_OVERRIDE = {
 | `pay.freeChapters` | 2 | 免费章节数（第 3 章起收费） | **改动会改变付费墙位置**，也影响 `gates` 那套读数的分母 |
 | `pay.endingNeed` | 4 | 到结局需要几次 A 选项 | 太低 ⇒ 结局容易拿到；太高 ⇒ 玩家觉得不可达 |
 | `ai.costNormal` / `costDeep` | 1 / 3 | 每轮消耗的单位 | 与「一轮几次调用」相乘才是真成本 |
-| `chat.transcript` / `transcriptPlus` | 20 / 60 | `STORY SO FAR` 带多少条消息 | 调大 ⇒ 上下文更长更连贯，也更贵；**调小到 1–2 条会明显失忆** |
+| `chat.transcript` / `transcriptPlus` | 20 / 60 | `STORY SO FAR` 带多少条消息 | 调大 ⇒ 上下文更长更连贯，也更贵；**调小到 1–2 条会明显失忆**。**实测口径**（`node tools/transcript-size.mjs gala`）：一条消息 ≈ 0.22 轮，所以 **20 条 ≈ 4.4 轮对话 ≈ 760 字符 ≈ 507 tokens**；一章按 18 轮算，20 条只覆盖**本章最近 25%**。40 条约 1,000 tokens（+500/轮 ≈ +5% 上下文） |
 | `chat.partMergeMax` | 5 | 同一段文字合并成几块为止 | 调大 ⇒ 更少气泡、更连贯；调小 ⇒ 更像即时聊天但更碎 |
 | `tools.giftPerScene` / `datePerScene` / `truthPerScene` | 0 | 每个工具**本场**可用几次（0=不限，旧行为） | 调成 1 ⇒ 一章只能送一次礼物；玩家会感觉到「被限制」，但能挡住刷好感 |
 | `tools.ageGate` | **true** | 年龄门：开着时**未确认成年**把 heat 上限压到 slow（fluff 不动） | 2026-10-25 起默认**开**（Ann 拍：等于免责声明）。未确认 ⇒ heat 上限压到 slow，首启问一次并存下答案 |
