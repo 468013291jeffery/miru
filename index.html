@@ -10820,7 +10820,7 @@ async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_P
  // 三轮加起来：普通档 8k 够一句正常回复；复杂档 20k 才养得起推理型模型的思考 + 正文
  const max={quick:2048,default:8192,complex:20000}[opts.modelTier||"default"]||8192;const stream=typeof opts.onText==="function";
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,thinking:{type:"disabled"}};
- const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
+ const t0=Date.now();const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
  const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
  let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
@@ -10830,7 +10830,17 @@ async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_P
  const rd=r.body.getReader(),dec=new TextDecoder();let buf="",text="",fin=null;
  while(true){const {done,value}=await rd.read();if(done)break;buf+=dec.decode(value,{stream:true});const lines=buf.split("\n");buf=lines.pop();
   for(const ln of lines){const s=ln.trim();if(!s.startsWith("data:"))continue;const d=s.slice(5).trim();if(d==="[DONE]")continue;try{const j=JSON.parse(d),c0=(j.choices||[])[0]||{};const dl=c0.delta&&c0.delta.content||"";if(c0.finish_reason)fin=c0.finish_reason;if(dl){text+=dl;const tx=lcClean(text);opts.onText({text:tx,delta:dl})}}catch(_){}}}
- clearTimeout(tm);return {text:lcClean(text),truncated:fin==="length"}}
+  const sent=JSON.stringify(input||"").length;   // 发出去多少字符（口径：字符，不是 token）
+ clearTimeout(tm);
+ /* 用量记账（2026-10-25 · 规范第 10 章「每轮用了多少」的预留口子）：
+    真实 token 只有 provider 会报，而我们这条流里目前拿不到（代理直通字节）。
+    所以这里记的是**可得的真数**：输入字符、输出字符、耗时、是否被截断。不估算 token。
+    想看 token：等代理侧接上 provider 的 usage 帧，或在后台按字符/4 折算（口径要写明是折算）。 */
+ try{ if(typeof track==="function"){
+   const ms=Math.round(Date.now()-t0);
+   track("llm_usage",{charsIn:sent,charsOut:String(text||"").length,ms:ms,truncated:fin==="length",tier:(opts&&opts.modelTier)||"default"});
+ }}catch(_){}
+ return {text:lcClean(text),truncated:fin==="length"}}
 const LC_SAMPLE=Object.assign((input,opts)=>lcCall(input,opts),{
  json:async(input,opts)=>{const r=await lcCall(typeof input==="string"?input+"\n\nReply with valid JSON only — no prose, no code fences.":input,opts);const j=jsonLoose(r.text);if(j==null)throw {code:"invalid_json",text:r.text};return j},
  limits:async()=>({images:false})});

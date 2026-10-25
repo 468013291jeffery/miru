@@ -56,7 +56,16 @@ module.exports = L.wrap(async (req, res) => {
 
   const u = L.who(req), b = L.jsonBody(req);
   const evs = (Array.isArray(b.events) ? b.events : []).slice(0, 50);
-  for (const e of evs) await sql('INSERT INTO events (user_id, name, props) VALUES ($1,$2,$3::jsonb)',
-    [u ? u.uid : null, String(e.name || '').slice(0, 40), propsFor(e.props)]);
-  L.send(res, 200, { n: evs.length });
+  /* 幂等（2026-10-25）：事件可以带一个 `idem` 键（例如 `choice:gala:3:A`）。
+     同一个键重复上报只落一条 —— 客户端重试、多设备同时上报都不会把流水写花。
+     没带键的事件照旧全收（`key` 为 NULL 的事件之间不会互相冲突）。
+     DDL（key 列 + 部分唯一索引）在 _lib.js 的建表清单里，老库下次请求时自动补上。 */
+  let dupes = 0;
+  for (const e of evs) {
+    const k = (e && e.idem) ? String(e.idem).slice(0, 120) : null;
+    const r = await sql('INSERT INTO events (user_id, name, props, key) VALUES ($1,$2,$3::jsonb,$4) ON CONFLICT (key) DO NOTHING RETURNING id',
+      [u ? u.uid : null, String(e.name || '').slice(0, 40), propsFor(e.props), k]);
+    if (k && (!r || !r.length)) dupes++;
+  }
+  L.send(res, 200, { n: evs.length, dupes });
 });
