@@ -43,6 +43,9 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS works_status_idx ON works (status, created_at DESC)`,
   `CREATE INDEX IF NOT EXISTS assets_owner_idx ON assets (owner)`,
   `CREATE INDEX IF NOT EXISTS events_name_idx ON events (name, at)`,
+  // 事件幂等（2026-10-25）：可选 key 列 + 部分唯一索引。老库靠这两句自动补齐，不需要手工迁移。
+  `ALTER TABLE events ADD COLUMN IF NOT EXISTS key TEXT`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS events_key_idx ON events (key) WHERE key IS NOT NULL`,
   // v2.7 — accounts, moderation, operations console
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active'`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason TEXT`,
@@ -123,6 +126,21 @@ async function bump(uid, kind, max) {
   const sql = await db();
   const r = await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, $2, 1) ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + 1 RETURNING n`, [uid, kind]);
   return (r[0] && r[0].n) <= max;
+}
+
+/* token 记账（2026-10-25）：沿用上面这张 usage 表，只是把 n 累加实际用量而不是次数。
+   规范第 10 章要的是"每轮用了多少 token"，这里就是那个口子 —— 已经接进 /api/longcat，
+   用的是 provider 返回的 usage 字段（流式要 provider 在最后一帧带 usage 才有；没有就不记，不编数）。
+   读法：SELECT kind, sum(n) FROM usage WHERE day = CURRENT_DATE GROUP BY kind。 */
+async function addUsage(uid, kind, n) {
+  const v = Math.round(Number(n) || 0);
+  if (!uid || !v || v < 0) return false;
+  try {
+    const sql = await db();
+    await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, $2, $3)
+               ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + EXCLUDED.n`, [uid, kind, v]);
+    return true;
+  } catch (_) { return false }
 }
 
 /* ---------- content safety (mirrors the client QA hard rules) ---------- */
@@ -400,4 +418,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
+module.exports = { needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
