@@ -20,6 +20,7 @@ AI engine: Claude or LongCat (enter your own API key in 我的 → AI 引擎; ke
 | [`QUALITY.md`](QUALITY.md) | 质量闸：八套 158 个用例各查什么 · 四条不变量 · 改哪会红 · 红臂 · 已知没覆盖的 |
 | [`TUNING.md`](TUNING.md) | 可调参数（滑钮）：14 格默认值 · 改 `tune.js` 免构建生效 · 每格的风险 |
 | [`SPEC-AUDIT.md`](SPEC-AUDIT.md) | 规格 v7.11 vs 代码：19 条逐条对账（已实现 1 / 部分 9 / 没有 9） |
+| [`MIRU-规范与现状-合并版.md`](MIRU-规范与现状-合并版.md) | **交给团队的那一份**：按他们规范的章节顺序，逐章写清规范要求、我们现状、差距；含实测读数与需要他们配合的三件事（转 docx：`python tools/md2docx.py`） |
 | [`SPEC-v712-MAP.md`](SPEC-v712-MAP.md) | 他们 v7.12 / v8.2.4 的清单 ↔ 我们源码：逐条带 `file:line`，含"没有"的那半 |
 | [`LATENCY.md`](LATENCY.md) | 一次回合要多久：首字 2.0 s / 整段 9.5 s（实测）· 为什么他们那边 20 多秒 · 抬 max_tokens 的副作用 |
 | [`PERF.md`](PERF.md) | 卡顿与内存：量到的三件事（10.4 MB 单文件 · 图片进存档 · 45 个常驻定时器）+ 按收益排序的修法 |
