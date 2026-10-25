@@ -7,7 +7,8 @@ let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
 function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
-  if(!th.cast.length&&hard)delete S.threads[k]}
+  if(!Array.isArray(th.said)){th.said=th.msgs.filter(m=>m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()).map(m=>String(m.txt).trim()).slice(-60)}
+ if(!th.cast.length&&hard)delete S.threads[k]}
  S.album=(S.album||[]).filter(a=>a&&a.id);S.follow=S.follow||{};S.mine=S.mine||{chars:{},worlds:{}};S.mine.worlds=S.mine.worlds||{};S.mine.chars=S.mine.chars||{};
  for(const k of Object.keys(S.mine.worlds)){const w=S.mine.worlds[k];if(!w||!Array.isArray(w.cast)||!w.title){delete S.mine.worlds[k]}}
  if(S.daily&&!Array.isArray(S.daily.p))S.daily=null;if(hard)save()}catch(_){}}
@@ -59,8 +60,13 @@ function ic(name){const P={
    Official portraits ship as files in art/. Characters without one get a generated poster
    (gradient + monogram) until the user uploads a portrait or the image server draws one. */
 const POSTER={};
+/* 立绘可能已经不是 base64 而是 {__m:id} 引用（见 app92_media.js）：
+   拿得到就返回 URL；拿不到先给 1×1 占位，后台取到再把带 data-art 的 img 补上。 */
+function refreshArtImgs(id){try{const u=mediaUrl("art:"+id);if(!u)return;document.querySelectorAll('img[data-art="'+id+'"]').forEach(im=>{if(im.src!==u)im.src=u})}catch(_){}}
 function artSrc(id){
- if(S.art[id])return S.art[id];
+ const v0=S.art[id];
+ if(typeof mediaIsRef==="function"&&mediaIsRef(v0)){const u=mediaUrl(v0.__m);if(u)return u;mediaUrlAsync(v0.__m,()=>refreshArtImgs(id));return (typeof MEDIA_BLANK!=="undefined")?MEDIA_BLANK:"";}
+ if(typeof v0==="string"&&v0)return v0;
  const c=ch(id),w=wd(id);
  if(w&&w.mine&&!w.cover)return "art/world_default.jpg";
  const f=(c&&c.art)||(w&&w.cover);
@@ -88,8 +94,8 @@ function poster(id){
  x.fillStyle="rgba(240,183,126,.9)";x.font="800 12px Manrope, Helvetica, sans-serif";x.fillText((c?(c.n.split(" ").slice(1).join(" ")||"MIRU"):"MIRU").toUpperCase().split("").join(" "),34,Ht-28);
  const d=x.getImageData(0,0,Wd,Ht),p=d.data;for(let k=0;k<p.length;k+=4){const n=(Math.random()-.5)*16;p[k]+=n;p[k+1]+=n;p[k+2]+=n}x.putImageData(d,0,0);
  return POSTER[id]=cv.toDataURL("image/jpeg",.84);}
-function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" alt="" loading="lazy"></div>'}
-function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" alt=""></div>'}
+function img(id,cls,style){return '<div class="'+(cls||"art")+'"'+(style?' style="'+style+'"':"")+'><img src="'+artSrc(id)+'" data-art="'+id+'" alt="" loading="lazy"></div>'}
+function avatar(id,size){return '<div class="av" style="width:'+size+'px;height:'+size+'px"><img src="'+artSrc(id)+'" data-art="'+id+'" alt=""></div>'}
 function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
 
 /* ================= VOICE =================
@@ -165,9 +171,22 @@ function jsonLoose(t){if(!t)return null;t=String(t).replace(/```(?:json)?/g,"");
 async function ask(prompt,opts){
  opts=opts||{};
  if(!liveOn())throw {code:"na"};
+ const _tier=opts.modelTier||"default";
  try{let r;try{r=await SAMPLE.json(prompt,Object.assign({modelTier:"default",cache:false},opts))}
   catch(e0){if(!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
    if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({modelTier:"default",cache:false},opts));r=jsonLoose(t2&&t2.text)}
+   /* 自适应预算（2026-10-25 · Ann「你看着办」）：
+      同一档位仍解析不出来，多半是两种情形之一 ——
+        ① 输出被预算掐断（JSON 少半截）② 推理型模型把预算全烧在思考上、正文为空。
+      这两种都不是"再问一遍就会好"，而是"预算不够"。
+      ⇒ 用更大的档位（complex）重试**一次**。只升一次，不循环；已经是 complex 就不再升。
+      为什么不是"一律给大预算"：实测模型会跑满上限才停（LATENCY.md），一律给大 = 每次都慢。
+      为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
+   if(r==null&&_tier!=="complex"){
+    try{track&&track("llm_escalate",{from:_tier,to:"complex"})}catch(_){}
+    const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
+    r=jsonLoose(t3&&t3.text);
+   }
    if(r==null)throw e0}
   LIVE_ERR=null;refreshLive();return r}
  catch(e){LIVE_ERR=(e&&e.code)||"error";refreshLive();
@@ -188,3 +207,4 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-back]")){back()
 function pickSearch(inputId,gridId){return '<div class="field" style="margin-top:10px"><input class="pickq" id="'+inputId+'" data-pickfor="#'+gridId+'" placeholder="'+esc(t("g.searchChar"))+'"></div>'}
 document.addEventListener("input",e=>{const x=e.target.closest(".pickq");if(!x)return;const sel=x.dataset.pickfor,q=x.value.trim().toLowerCase();
  $$(sel+" > *").forEach(b=>{const nm=(b.querySelector("span")||b).textContent.toLowerCase();b.style.display=(!q||nm.includes(q))?"":"none"})});
+

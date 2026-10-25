@@ -98,7 +98,7 @@ installWork = async function (id) {
 /* ---- runtime: pictures / films that were added after the story was installed ---- */
 async function off94Ensure(w) {
   if (!w || !w.official76 || !w.community) return {}; const A = await off94Assets(w.community); const SF = (window.SCENE_FILES = window.SCENE_FILES || {});
-  ((w.pack && w.pack.chapters) || []).forEach(c => ["zh", "en"].forEach(l => (c.beats[l] || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
+  (w.pack.chapters || []).forEach(c => ["zh", "en"].forEach(l => (c.beats[l] || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
   w.cast.forEach(id => { const c = ch(id); const nm = c && (c.n94 ? c.n94.zh : c.n); if (nm && A["char_" + nm]) S.art[id] = A["char_" + nm]; });
   if (A.cover || A.poster) S.art[w.id] = A.cover || A.poster; return A;
 }
@@ -120,7 +120,7 @@ pkDirective = function (th, b) {
     if (b[1] === "vid94" && d0.slot === "vid_open") { save(); return true; }
     if (b[1] === "cg94" && d.src) th.pk.lastCg98 = d.src;
     if (d.src && !PKSKIP[th.id]) { if (curT === th.id) off94Show(d, b[1] === "vid94");
-      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: d.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
+      if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: mediaWrap("album:"+aid, d.src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
   }
   return _pkDir94.apply(this, arguments);
@@ -445,22 +445,9 @@ function photoSrc98(th) {
 }
 { const _sp = stopPhoto; stopPhoto = async function (th, d) {
     const src = photoSrc98(th); if (!src) return _sp.apply(this, arguments);
-    const who = stopWho(th, d), aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: who, src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
+    const who = stopWho(th, d), aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: who, src: mediaWrap("album:"+aid, src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
     appendMsg(th, { who: ch(who) && who !== th.pk.as ? who : "me", k: "img", aid, at: Date.now() }); save(); }; }
 { const _hp = stopHTML; stopHTML = function (th) { let h = _hp.apply(this, arguments);
     try { const b = th.pk.stop; if (b && b[1] === "photo") { const u = photoSrc98(th); if (u) h = h.replace(/(class="stthumb" style="background-image:url\()[^)]*\)/, '$1' + u + ')'); } } catch (_) {} return h; }; }
 /* rebuild once so installed copies pick up the game ids */
 { const _iw98 = installWork; installWork = async function (id) { try { const h = S.off76 && S.off76[id]; if (h && !h.v98) h.ver = -1; } catch (_) {} const wid = await _iw98.apply(this, arguments); try { if (S.off76 && S.off76[id]) { S.off76[id].v98 = 1; save(); } } catch (_) {} return wid; }; }
-
-/* community rail on Discover: official works get their opening film (or cover) instead of the 📖 placeholder */
-function off94Rail() {
-  document.querySelectorAll(".comm68r [data-cwork] .cph:not([data-h94])").forEach(ph => {
-    ph.dataset.h94 = 1; const id = ph.closest("[data-cwork]").dataset.cwork;
-    off94Assets(id).then(A => { if (!ph.isConnected) return; const pos = A.cover || A.poster || "";
-      if (A.vid_open) { ph.outerHTML = '<video class="v94r" src="' + esc(A.vid_open) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>';
-        document.querySelectorAll(".comm68r video.v94r").forEach(v => { v.muted = true; v.play().catch(() => {}); }); }
-      else if (pos) ph.outerHTML = '<img src="' + esc(pos) + '" alt="">'; });
-  });
-}
-new MutationObserver(() => { try { if (document.querySelector(".comm68r .cph:not([data-h94])")) off94Rail(); } catch (_) {} }).observe(document.body, { childList: true, subtree: true });
-(function () { const st = document.createElement("style"); st.textContent = `.comm68r video.v94r,.comm68r button>img{width:132px;height:176px;object-fit:cover;border-radius:12px;display:block;background:#1A1622}`; document.head.appendChild(st); })();

@@ -463,7 +463,7 @@ document.addEventListener("click",e=>{
   const seen=sp.beats.slice(0,upto);
   const th={id:"w:"+w.id+":"+now,kind:w.kind==="ensemble"?"group":"story",wid:w.id,cast:w.cast.slice(),title:Lz(w.title)+" · EP "+sp.ep,msgs:[],love:{},rounds:0,status:{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}},tasks:{},
    mem:["The user just watched episode "+sp.ep+" (\""+sp.title+"\"): "+seen.map(b=>(b[0]==="n"?"":ch(b[0]).n+": ")+b[1]).join(" / ")+(sp.done?" / "+sp.cliff:"")],created:now,at:now,persona:Object.assign({},persona())};
-  w.cast.forEach(c=>th.love[c]=5+ (sp.ep-1)*15);seen.forEach(([wh,x2])=>th.msgs.push({who:wh,k:wh==="n"?"act":"say",txt:x2,at:now}));if(sp.done)th.msgs.push({who:"n",k:"act",txt:sp.cliff,at:now});
+  w.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5+(sp.ep-1)*15}));seen.forEach(([wh,x2])=>th.msgs.push({who:wh,k:wh==="n"?"act":"say",txt:x2,at:now}));if(sp.done)th.msgs.push({who:"n",k:"act",txt:sp.cliff,at:now});
   S.threads[th.id]=th;save();spClose();openThread(th.id);return}
  if(e.target.closest("[data-spadv]")&&!e.target.closest("#spBar")){if(sp.done)return;const k=sp.i+1;if(k>=sp.segs.length){spSeek(spDur()-1);return}spSeek(sp.segs[k].at)}});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-short]");if(x&&!e.target.closest(".shortp"))openShort(x.dataset.short)});
@@ -548,7 +548,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-shline]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.shline];if(!m)return;const c=ch(m.who),w=th.wid?wd(th.wid):null;
   openShare({tag:w?Lz(w.title):"",who:c?c.n:"",title:"",quote:m.txt,bg:artSrc(m.who||th.cast[0]),text:(c?first(c.n)+": ":"")+"“"+m.txt+"” — MIRU",link:shareURL("m",th.id+"-"+x.dataset.shline)});return}
  if(x=e.target.closest("[data-shimg]")){const a=S.album.find(y=>y.id===x.dataset.shimg);if(!a)return;const c=ch(a.cid);
-  openShare({photo:1,tag:c?c.n:"",bg:a.src||artSrc(a.cid),quote:a.cap||"",text:t("shr.imgtxt",{c:c?first(c.n):""}),link:shareURL("i",a.id)});return}
+  openShare({photo:1,tag:c?c.n:"",bg:albumSrc(a)||artSrc(a.cid),quote:a.cap||"",text:t("shr.imgtxt",{c:c?first(c.n):""}),link:shareURL("i",a.id)});return}
  if(x=e.target.closest("[data-shcm]")){const [wid,i]=x.dataset.shcm.split("|"),cm=COMMENTS[+i],w=wd(wid);if(!cm)return;
   openShare({tag:w?Lz(w.title):"",who:cm[0],quote:cm[1],bg:w?artSrc(w.cover?w.id:w.cast[0]):"",text:cm[0]+": “"+cm[1]+"”",link:shareURL("c",wid+"-"+i)});return}
  if(e.target.closest("[data-imgshare]")&&IMG.cv){const c=ch(IMG.m.who);openShare({photo:1,tag:c?c.n:"",bg:IMG.url||artSrc(IMG.m.who),quote:"",text:t("shr.imgtxt",{c:c?first(c.n):""})+" “"+IMG.m.txt+"”",link:shareURL("i",Date.now())});return}});

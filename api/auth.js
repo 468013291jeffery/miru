@@ -45,16 +45,6 @@ module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db(); const q = req.query || {};
   if (req.method === 'GET') {
-    if (q.maildiag) { /* admin: Brevo delivery events for one address (key stays on the server) */
-      if (!(await L.whoAdmin(req))) return L.bad(res, 'admin only', 403);
-      if (!process.env.BREVO_API_KEY) return L.send(res, 200, { error: 'no brevo key' });
-      const em = String(q.maildiag).trim().toLowerCase(); const out = {};
-      try { const r = await fetch('https://api.brevo.com/v3/smtp/statistics/events?limit=50&sort=desc&days=7' + (em === 'all' ? '' : '&email=' + encodeURIComponent(em)), { headers: { 'api-key': process.env.BREVO_API_KEY, accept: 'application/json' } }); out.events = r.ok ? ((await r.json()).events || []).map(e => ({ event: e.event, date: e.date, email: e.email, reason: e.reason || '', subject: (e.subject || '').slice(0, 60), from: e.from || '' })) : { status: r.status, t: (await r.text()).slice(0, 300) }; } catch (e) { out.events = String(e.message || e); }
-      try { const r = await fetch('https://api.brevo.com/v3/smtp/blockedContacts?limit=50', { headers: { 'api-key': process.env.BREVO_API_KEY, accept: 'application/json' } }); const j = r.ok ? await r.json() : {}; out.blocked = (j.contacts || []).filter(c => String(c.email).toLowerCase() === em); } catch (_) {}
-      if (q.unblock && out.blocked && out.blocked.length) { try { const r = await fetch('https://api.brevo.com/v3/smtp/blockedContacts/' + encodeURIComponent(em), { method: 'DELETE', headers: { 'api-key': process.env.BREVO_API_KEY } }); out.unblocked = r.status; } catch (e) { out.unblocked = String(e.message || e); } }
-      const fr = process.env.BREVO_SENDER || process.env.MAIL_FROM || ''; out.sender_domain = (fr.match(/@([^>\s]+)/) || [])[1] || ''; out.last = L.mailLast();
-      return L.send(res, 200, out);
-    }
     if (q.providers) { const cfg = await L.config(); const o = L.oauthConfig(); return L.send(res, 200, { google: o.google, apple: o.apple, email: true, reset: L.hasMail(), verify: L.hasMail(), sms: L.hasSMS(), firebase: L.firebaseConfig(), mail: L.hasBrevoMail() ? 'brevo' : L.hasSES() ? 'ses' : L.hasMail() ? 'resend' : null, guest: cfg.guest_allowed !== false }); }
     const u = await L.needActive(req, res); if (!u) return;
     const r = await sql('SELECT * FROM users WHERE id=$1', [u.uid]);

@@ -1,5 +1,5 @@
 /* ================= THREADS ================= */
-const STAGE_MIN=[0,20,40,60,80];
+const STAGE_MIN=MIRU_TUNE.love.stageMin;
 function stageOf(th,cid){const lv=(th&&th.love&&th.love[cid])||0;let k=0;STAGE_MIN.forEach((m,i)=>{if(lv>=m)k=i});return k}
 function mainOf(th){return th.focus&&th.cast.includes(th.focus)?th.focus:th.cast[0]}
 function parseSolo(txt){/* "*act* say (think)" → beats */
@@ -11,11 +11,11 @@ function newThread(kind,id,openId,extra){
   th={id:"c:"+id,kind:"solo",wid:c.w,cast:[id],title:c.n,msgs:[],love:{[id]:5},rounds:0,status:w?{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}}:{time:"",place:"",mood:{}},tasks:{},mem:[],created:now,at:now};
   parseSolo(Lz(c.solo||T("*"+first(c.n)+" looks up.* Hey. You came.","*"+first(c.n)+" 抬起头。* 嘿，你来了。"))).forEach(([k,x])=>th.msgs.push({who:id,k,txt:x,at:now}));}
  else if(kind==="group"){th=Object.assign({id:"g:"+now,kind:"group",wid:null,msgs:[],love:{},rounds:0,status:{time:"",place:"",mood:{}},tasks:{},mem:[],created:now,at:now},extra);
-  th.cast.forEach(c=>th.love[c]=5);th.msgs.push({who:"n",k:"act",txt:extra.setting,at:now});}
+  th.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5}));th.msgs.push({who:"n",k:"act",txt:extra.setting,at:now});}
  else{const w=wd(id),quest=kind==="quest";const op=(w.openings||[]).find(o=>o.id===openId)||(w.openings||[])[0];
   th={id:(quest?"q:":"w:")+id+":"+now,kind:quest?"quest":w.kind==="ensemble"?"group":"story",wid:id,cast:w.cast.slice(),title:quest?Lz(w.quest.qtitle):Lz(w.title),msgs:[],love:{},rounds:0,
    status:{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}},tasks:{},mem:[],created:now,at:now};
-  w.cast.forEach(c=>th.love[c]=5);
+  w.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5}));
   if(w.pack&&!quest)packInit(th,w,extra);
   else if(op)(op.beats[CL()]||op.beats.en).forEach(([who,k,x])=>th.msgs.push({who,k:who==="n"?"act":k,txt:x,at:now}));
   if(quest)th.quest={turns:w.quest.turns,goals:w.quest.goals.map(g=>({t:Lz(g),done:false})),hidden:{t:Lz(w.quest.hidden),done:false},over:false};}
@@ -155,11 +155,36 @@ function msgHTML(m,i,th){
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
  return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe||th.cast.length<2?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
-function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
+function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
+ /* 玩家原话单独留档（2026-10-25 Ann）：模型生成的内容可以随窗口滑走，但**玩家自己说的话**要留住。
+    这里逐字收进 th.said（去掉 *动作* 的星号噪音），按 chat.saidKeep 截断。 */
+ try{ if(m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()){
+   th.said=Array.isArray(th.said)?th.said:[];th.said.push(String(m.txt).trim());
+   const cap=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.saidKeep)||50;
+   if(th.said.length>cap)th.said=th.said.slice(-cap);
+ }}catch(_){}
+if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
 function setSugg(list){sugg=(list||[]).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
  const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
 function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x=>x.remove());if(on){el.insertAdjacentHTML("beforeend",'<div class="typing"><i></i><i></i><i></i></div>');scrollChat()}}
+/* 流式预览（2026-10-25）：等整段最长要 ~9.5 秒，而首字 ~2.0 秒就到了（LATENCY.md 实测 4.8×）。
+   这里把已到达的片段先塞进"正在输入"那一行，让玩家 2 秒内就看见有东西在动。
+   只影响观感：解析仍然等完整 JSON（ask 的 json() 会在流结束时统一解析）。
+   ⚠️ 必须容错 —— 任何一个 DOM 错误都不能把整轮回复弄丢。 */
+let STREAM_TXT="";
+function streamPreview(piece){
+  try{
+    STREAM_TXT+=String(piece||"");
+    const el=$("#msgs");if(!el)return;
+    const box=$(".typing",el);if(!box)return;
+    const tail=STREAM_TXT.replace(/\s+/g," ").slice(-46);
+    let s=box.querySelector(".spv");
+    if(!s){s=document.createElement("span");s.className="spv";s.style.cssText="margin-left:8px;opacity:.6;font-size:12px";box.appendChild(s)}
+    s.textContent=tail;
+    try{scrollChat()}catch(_){}
+  }catch(_){}
+}
 
 /* send from composer */
 function doSend(txt,mode){
@@ -177,8 +202,32 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
+  " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+"."+
+  (function(){try{const chNow=(th.pk&&th.pk.ch)||th.ch||1;const memo=(typeof cardMemo==="function")?cardMemo(th,cid,chNow):"";return memo?" He remembers: "+memo+".":""}catch(_){return ""}})()+
+  // 非恋爱对象（2026-10-25 Ann 改）：**只关掉恋爱线，不关掉人的魅力**。
+  // 原来这句写的是 "never flirt with them or imply attraction"——那是把角色的性张力当成了一个开关，
+  // 而「一个因为标签就突然变得没有魅力的人」正是这个项目一开始要修的病（人不能变成另一个人）。
+  // 现在明确分开：不给好感、不进恋爱阶段、不做亲密戏；但斗嘴、撩、被人撩时的反应，全都在。
+  (c.romanceable===false?" Not a romance route: affection and intimacy do not progress with them, and this never becomes a love story. But they are still fully a person — their own magnetism, teasing, banter and reactions to being wanted stay exactly as they are. Do not make them cold, flat or sexless just because the route is closed.":"");}
+function castCardPublic(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
+ const w0=th.wid&&wd(th.wid),au=w0&&w0.pack&&w0.pack.au&&w0.pack.au[cid];
+ return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
+  " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Likes: "+A(c.likes)+
+  
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
-function transcript(th){return th.msgs.slice(S.plus?-60:-20).map(m=>{
+/* 谁的卡带私密面：默认只给这一拍上场的那个人（mainOf 优先，否则第一个开口的）。
+   为什么：共享 prompt 下如果所有人都带秘密，等于同屋全知 —— 把跨场景的全知换了个位置。
+   数量由 MIRU_TUNE.chat.privateCards 控制（1 = 收敛版；调大即放开）。 */
+function castCardFace(th,id){try{
+  const sp=speakersOf(th);
+  const self=(typeof mainOf==="function")?mainOf(th):null;
+  const lead=(self&&sp.includes(self))?self:sp[0];
+  const n=Math.max(1,Number(MIRU_TUNE.chat.privateCards)||1);
+  if(id===lead) return castCard(th,id);
+  if(sp.slice(0,n).includes(id)) return castCard(th,id);
+  return castCardPublic(th,id);
+}catch(_){return castCard(th,id)}}
+function transcript(th){return th.msgs.slice(S.plus?-MIRU_TUNE.chat.transcriptPlus:-MIRU_TUNE.chat.transcript).map(m=>{
  if(m.k==="card")return "[EVENT] "+(m.title||"")+": "+(m.txt||"");if(m.k==="chap")return "[CHAPTER "+m.n+": "+(m.title||"")+" — goal: "+(m.txt||"")+"]";if(m.k==="dec")return "[OFFICIAL CHOICE "+m.c+"] "+m.txt;if(m.k==="end")return "[ENDING "+m.e+" reached]";if(m.k==="img")return "[A photo was taken]";
  if(m.who==="n")return "(narration) "+m.txt;if(m.k==="dir")return "[DIRECTOR NOTE from "+me()+"] "+m.txt;
  const nm=m.who==="me"?(th.pk&&ch(th.pk.as)?ch(th.pk.as).n+" (the user)":me()):ch(m.who)?ch(m.who).n:m.who;
@@ -208,15 +257,23 @@ async function reply(th,ctx,silent){
   w?("THE USER'S ROLE: "+Lz(w.you)):("THE USER'S ROLE: "+(th.you||"themselves")),
   w?("WHAT'S AT STAKE: "+Lz(w.warn)):"",
   "STATUS: "+(th.status.time||"")+" · "+(th.status.place||""),
-  "CAST (only these ids may speak):\n"+speakersOf(th).map(id=>castCard(th,id)).join("\n"),
+  "CAST (only these ids may speak):\n"+speakersOf(th).map(id=>castCardFace(th,id)).join("\n"),
   packPrompt(th),
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+(p.name||"the user")+" ("+(p.pron==="he"?"he/him":p.pron==="she"?"she/her":"they/them")+")"+(p.look?". "+p.look:"")+". Never write the user's lines, actions or feelings.",
   memBlock(th),
   goals?("QUEST GOALS (the user is trying to achieve these; only mark one done if it clearly happened in THIS reply):\n"+goals):"",
   "STORY SO FAR:\n"+transcript(th),
+  // 玩家原话（2026-10-25）：窗口会滑走，但"你说过什么"要一直在。
+  // 只放玩家自己的话，逐字，不加工；空的时候整行不出现（不让模型看见空标题）。
+  (function(){try{
+    const arr=(Array.isArray(th.said)?th.said:[]);
+    if(!arr.length)return "";
+    return "THE PLAYER'S OWN WORDS (verbatim, oldest first — some are from much earlier than STORY SO FAR; treat them as things this person really said):\n"+arr.map((s,i)=>(i+1)+". "+s).join("\n");
+  }catch(_){return ""}})(),
   "",
   "NOW: "+inst,
-  "HEAT CEILING — "+S.heat.toUpperCase()+": "+HEAT_RULE[S.heat],
+  // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
+  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
@@ -230,9 +287,36 @@ async function reply(th,ctx,silent){
   "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: 3 short things the user could say or do next, in first person, varied (one line of dialogue, one action starting with *, one bold move)."
  ].filter(Boolean).join("\n");
  let r=null;
- if(liveOn()){try{r=await ask(prompt,{modelTier:deep?"complex":"default"})}catch(e){r=null}
+ if(liveOn()){
+  // 流式预览：首字 ~2s 就到，整段要 ~9.5s（LATENCY.md）。开关见 MIRU_TUNE.chat.streamPreview。
+  const _prev=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.streamPreview!==false&&typeof streamPreview==="function");
+  try{
+   STREAM_TXT="";
+   r=await ask(prompt,{modelTier:deep?"complex":"default",onText:_prev?(function(x){streamPreview(x)}):undefined});
+  }catch(e){r=null}
   if(r&&Array.isArray(r.beats)&&r.beats.length)useUnits(aiCost());}
+ // 台词守门（他们 v8.2.3 的「台词检查」）：说了本章他还不该知道的事 ⇒ 带约束重写一次 ⇒ 仍不行就换保守句。
+ // 禁区词 = 未来章节的 reveals/breaks + 在场角色卡上还没揭露的 secret/twist。开关见 MIRU_TUNE.chat.replyGuard。
+ if(r&&Array.isArray(r.beats)&&r.beats.length&&typeof guardReply==="function"&&
+    !(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.replyGuard===false)){
+  try{
+   const _chNo=(th.pk&&th.pk.ch)||th.ch||1;
+   const _ids=(typeof speakersOf==="function"?speakersOf(th):[]);
+   const _words=(typeof marksForbidden==="function"?marksForbidden(th.wid,_chNo):[])
+     .concat(typeof cardForbidden==="function"?cardForbidden(th,_ids):[]);
+   if(_words.length){
+    const _g=await guardReply({reply:r,words:_words,
+      ask:async(extra)=>await ask(prompt+"\n\n"+extra,{modelTier:"default"}),
+      fallback:()=>fallback(th,ctx)});
+    if(_g.retried){try{track&&track("reply_guard",{wid:th.wid,ch:_chNo,leaks:_g.leaked.length,fellBack:!!_g.fellBack})}catch(_){}}
+    if(_g.reply&&Array.isArray(_g.reply.beats)&&_g.reply.beats.length)r=_g.reply;
+   }
+  }catch(_){}
+ }
  if(!r||!Array.isArray(r.beats)||!r.beats.length)r=fallback(th,ctx);
+ // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
+ // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
+ try{ if(typeof plotGate==="function") plotGate(th); }catch(_){}
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
  if(!silent)busy=false;}
@@ -269,14 +353,15 @@ async function playBeats(th,r,ctx,silent){
  for(const b of beats){const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:String(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,380));appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
  if(r.status){th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
- if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null)th.love[id]=Math.min(100,th.love[id]+Math.max(0,Math.min(6,+r.love[id]||0)))});
- if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);th.love[m]=Math.min(100,(th.love[m]||0)+1)}
+ if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
+ if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
  if(!silent)setSugg(r.suggest);else th.sugg=(r.suggest||[]).slice(0,3);
  /* quest goals */
  if(th.quest&&Array.isArray(r.goals)){r.goals.forEach(i=>{i=+i;if(th.quest.goals[i]&&!th.quest.goals[i].done){th.quest.goals[i].done=true;appendMsg(th,{who:"sys",k:"card",title:"🎯 "+t("q.goals"),txt:t("q.found",{g:th.quest.goals[i].t}),at:Date.now()})}
   else if(i===th.quest.goals.length&&!th.quest.hidden.done){th.quest.hidden.done=true;appendMsg(th,{who:"sys",k:"card",title:"✨ "+t("q.hidden"),txt:t("q.hiddenF")+" "+th.quest.hidden.t,at:Date.now()})}})}
  /* stage-ups and the couple moment */
- th.cast.forEach(c=>{const s=stageOf(th,c);if(s>before[c])appendMsg(th,{who:"sys",k:"card",title:first(ch(c).n)+" · "+t("stage."+s),txt:t("stage."+s+"w"),at:Date.now()})});
+ th.cast.forEach(c=>{const s=stageOf(th,c);if(s>before[c]){if(th._stDown)delete th._stDown[c];appendMsg(th,{who:"sys",k:"card",title:first(ch(c).n)+" · "+t("stage."+s),txt:t("stage."+s+"w"),at:Date.now()})}
+  else if(s<before[c]){th._stDown=th._stDown||{};if(th._stDown[c]!==s){th._stDown[c]=s;appendMsg(th,{who:"sys",k:"card",title:first(ch(c).n)+" · "+t("stage."+s),txt:t("st.down",{s:t("stage."+s)}),at:Date.now()})}}});
  if(!silent)levelUpCheck(th,before);
  const m=mainOf(th);
  if(th.rounds>=30&&(th.love[m]||0)>=60&&!S.couples[m]&&!th.cpAsked){th.cpAsked=1;appendMsg(th,{who:"sys",k:"card",title:"💞 "+t("cp.ready"),txt:t("cp.readyS"),btn:t("cp.go"),act:"couple|"+m,at:Date.now()})}
@@ -363,14 +448,14 @@ function inviteSheet(){const th=S.threads[curT];const ids=allChars().filter(id=>
 function cardSheet(){if(S.keys<PRICES.card){paySheet("event");return}
  sheet('<h2>'+t("cs.card")+'</h2><div class="row" style="gap:8px;margin-top:12px">'+["romance","drama","angst"].map(k=>'<button class="chip" data-ctype="'+k+'">'+{romance:"💗 Romance",drama:"🔥 Drama",angst:"🌧 Angst"}[k]+'</button>').join("")+'</div><div id="cards" class="stack" style="gap:8px;margin-top:12px"></div>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];
- if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(g.cost&&!spend(g.cost,"gift"))return;
-  const m=mainOf(th);th.love[m]=Math.min(100,(th.love[m]||0)+g.love);th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
+ if(x=e.target.closest("[data-gift]")){const g=GIFTS.find(y=>y.id===x.dataset.gift);if(!toolGate(th,'gift',{perScene:MIRU_TUNE.tools.giftPerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;if(g.cost&&!spend(g.cost,"gift"))return;
+  const m=mainOf(th);loveWrite(th,m,g.love,"gift");toolUse(th,'gift');th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});reply(th,{kind:"gift",txt:Lz(g.n),cid:m});return}
- if(x=e.target.closest("[data-date]")){const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;th.love[m]=Math.min(100,(th.love[m]||0)+6);th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
+ if(x=e.target.closest("[data-date]")){if(!toolGate(th,'date',{perScene:MIRU_TUNE.tools.datePerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;const m=mainOf(th),pl=t("date."+x.dataset.date);th.tasks.date=1;toolUse(th,'date');loveWrite(th,m,6,"date");th.status.place=pl;th.mem.push(me()+" took "+ch(m).n+" to "+pl);closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🌙 "+t("cx.m.date"),txt:t("date.go",{n:first(ch(m).n),p:pl}),at:Date.now()});reply(th,{kind:"date",txt:pl,cid:m});return}
- if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;const m=mainOf(th);th.tasks.truth=1;th.love[m]=Math.min(100,(th.love[m]||0)+5);closeSheet();
+ if(e.target.closest("[data-truthgo]")){const q=($("#truthQ").value||"").trim();if(!q)return;if(!toolGate(th,'truth',{perScene:MIRU_TUNE.tools.truthPerScene,cooldownMs:MIRU_TUNE.tools.cooldownMs}).ok)return;const m=mainOf(th);th.tasks.truth=1;toolUse(th,'truth');loveWrite(th,m,5,"truth");closeSheet();
   appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;th.mem.push(me()+" asked "+ch(m).n+" an honest question: "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
- if(x=e.target.closest("[data-inv]")){const id=x.dataset.inv,c=ch(id);th.cast.push(id);th.love[id]=5;closeSheet();
+ if(x=e.target.closest("[data-inv]")){const id=x.dataset.inv,c=ch(id);th.cast.push(id);loveWrite(th,id,0,"invite",{absolute:5});closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🚪 "+t("cs.third"),txt:t("inv.done",{n:c.n}),at:Date.now()});th.mem.push(c.n+" ("+Lz(c.role)+") walked in from another story");reply(th,{kind:"third",txt:c.n+", "+Lz(c.role)});return}
  if(x=e.target.closest("[data-ctype]")){const k=x.dataset.ctype;const pool=EVENTS.filter(v=>v.k===k).concat(EVENTS.filter(v=>v.k!==k)).slice(0,3);
   $("#cards").innerHTML=pool.map(v=>'<button class="opt" data-card="'+v.id+'"><span class="ic">🃏</span><span class="grow"><b>'+esc(Lz(v.t))+'</b><span>'+esc(Lz(v.d))+'</span></span></button>').join("");return}
@@ -381,7 +466,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];
 let qz=null;
 function quiz(cid){qz={cid,i:0,score:0};quizStep()}
 function quizStep(){const c=ch(qz.cid);
- if(qz.i>=QUIZ.length){const th=S.threads[curT];th.tasks.quiz=1;th.love[qz.cid]=Math.min(100,(th.love[qz.cid]||0)+qz.score*2);th.mem.push("Sync quiz with "+c.n+": "+qz.score+"/5 matched");closeSheet();
+ if(qz.i>=QUIZ.length){const th=S.threads[curT];th.tasks.quiz=1;loveWrite(th,qz.cid,qz.score*2,"quiz");th.mem.push("Sync quiz with "+c.n+": "+qz.score+"/5 matched");closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"💞 "+t("quiz.h"),txt:t("quiz.res",{n:qz.score}),at:Date.now()});reply(th,{kind:"user",txt:"(We just finished a sync quiz: "+qz.score+"/5 answers matched. React to that.)"});return}
  const q=QUIZ[qz.i];
  sheet('<div class="row"><div class="eyebrow grow">'+t("quiz.h")+' · '+(qz.i+1)+'/5</div><span class="xs faint">'+t("quiz.res",{n:qz.score})+'</span></div><h2 style="margin-top:10px;font-size:22px">'+esc(Lz(q[0]))+'</h2>'+
@@ -418,7 +503,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-keep]")){const cid=x.dataset.keep,th=S.threads[curT];
   const W0=640,cv=document.createElement("canvas");cv.width=W0;cv.height=W0;const g=cv.getContext("2d");g.fillStyle="#0c0a10";g.fillRect(0,0,W0,W0);
   bFrames.forEach((f,i)=>{if(f)g.drawImage(f,(i%2)*(W0/2)+6,Math.floor(i/2)*(W0/2)+6,W0/2-12,W0/2-12)});
-  const aid="a"+Date.now();S.album.unshift({id:aid,cid,src:cv.toDataURL("image/jpeg",.72),at:Date.now()});if(S.album.length>12)S.album.length=12;th.tasks.snap=1;th.love[cid]=Math.min(100,(th.love[cid]||0)+5);th.mem.push("Took a photo-booth strip with "+ch(cid).n);closeSheet();
+  const aid="a"+Date.now();S.album.unshift({id:aid,cid,src:mediaWrap("album:"+aid,cv.toDataURL("image/jpeg",.72)),at:Date.now()});if(S.album.length>12)S.album.length=12;th.tasks.snap=1;loveWrite(th,cid,5,"photobooth");th.mem.push("Took a photo-booth strip with "+ch(cid).n);closeSheet();
   appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"));reply(th,{kind:"user",txt:"(We just took a four-frame photo-booth strip together. React to seeing the photos.)"});}});
 /* 生图: a 9:16 scene still built from this story's real footage (or the portrait) + the line as a subtitle.
    Works with no network/AI; if the canvas can't be exported it falls back to a live DOM card. */
@@ -468,7 +553,7 @@ document.addEventListener("click",e=>{
 /* image messages are a fixed-size box painted with two layers — the photo, and the character's portrait underneath —
    so even if the photo can't be shown in this viewer, the card is never an empty strip */
 function albumHtml(a){const fb=esc(artSrc(a.cid||""));
- if(a.src)return '<div class="mimg" style="background-image:url(&quot;'+esc(a.src)+'&quot;),url(&quot;'+fb+'&quot;)"></div>';
+ if(a&&a.src)return '<div class="mimg" data-amid="'+a.id+'" style="background-image:url(&quot;'+esc(albumSrc(a))+'&quot;),url(&quot;'+fb+'&quot;)"></div>';
  if(a.v)return '<div class="alv"><video muted playsinline autoplay loop preload="auto" poster="'+fb+'" src="'+esc(vidSrc(a.v))+'#t='+(+a.tm||2)+'"></video><span>'+esc(a.cap||"")+'</span></div>';
  return '<div class="mimg" style="background-image:url(&quot;'+fb+'&quot;)"></div>'}
 /* ---------- real AI image generation (FLUX.1 Krea via the viewer's "flux" Hugging Face connector) ---------- */
@@ -541,7 +626,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-aigen]")){aiGen
 async function snapMoment(th,m){try{const cv=await frame(m.who,hash(m.txt)%4,480),x=cv.getContext("2d");
  x.fillStyle="rgba(0,0,0,.55)";x.fillRect(0,cv.height-86,cv.width,86);x.fillStyle="#fff";x.font="17px Georgia, serif";x.textAlign="left";
  const words=m.txt.split(/(\s+)/);let line="",y=cv.height-58;for(const wd0 of words){if(x.measureText(line+wd0).width>cv.width-28){x.fillText(line,14,y);line="";y+=22;if(y>cv.height-8)break}line+=wd0}if(y<=cv.height-8)x.fillText(line,14,y);
- const aid="a"+Date.now();S.album.unshift({id:aid,cid:m.who,src:cv.toDataURL("image/jpeg",.74),at:Date.now()});if(S.album.length>12)S.album.length=12;
+ const aid="a"+Date.now();S.album.unshift({id:aid,cid:m.who,src:mediaWrap("album:"+aid,cv.toDataURL("image/jpeg",.74)),at:Date.now()});if(S.album.length>12)S.album.length=12;
  appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"))}catch(e){}}
 
 /* ================= COUPLE / QUEST ================= */
@@ -577,15 +662,15 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];
   setTimeout(()=>{const m=mainOf(th),c=ch(m),L=gLang(),out=$("#btlOut");if(!out)return;
    if(him){const q=TRUTHS[L][hash(m+Date.now())%5];out.innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:var(--gold)">'+t("g.himTruth",{n:first(c.n)})+'</div><p class="sm" style="margin-top:6px">“'+esc(q)+'”</p><button class="btn btn-p btn-sm" style="margin-top:10px" data-gask="'+esc(q)+'">'+t("g.askHim")+'</button></div>'}
    else{const d=DARES[L][hash(me()+Date.now())%5];out.innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:var(--rose)">'+t("g.yourDare")+'</div><p class="sm" style="margin-top:6px">'+esc(d)+'</p><textarea id="dareIn" class="imgpr" placeholder="'+esc(t("g.dareIn"))+'"></textarea><button class="btn btn-p btn-sm" style="margin-top:8px" data-gdare="'+esc(d)+'">'+t("g.send")+'</button></div>'}},2300);return}
- if(x=e.target.closest("[data-gask]")){const m=mainOf(th),q=x.dataset.gask;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🍾 "+t("g.bottle"),txt:t("g.himTruth",{n:first(ch(m).n)}),at:Date.now()});appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;th.love[m]=Math.min(100,(th.love[m]||0)+3);th.mem.push("Truth or dare: "+me()+" asked "+ch(m).n+": "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
- if(x=e.target.closest("[data-gdare]")){const m=mainOf(th),v=($("#dareIn").value||"").trim();if(!v){toast(t("g.dareIn"));return}closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🍾 "+t("g.yourDare"),txt:x.dataset.gdare,at:Date.now()});appendMsg(th,{who:"me",k:"say",txt:v,at:Date.now()});th.rounds++;th.love[m]=Math.min(100,(th.love[m]||0)+4);th.mem.push(me()+" did a dare for "+ch(m).n+": "+v);reply(th,{kind:"user",txt:"(Truth-or-dare: "+me()+" did this dare — \""+x.dataset.gdare+"\" — and said: "+v+". React to it.)"});return}
+ if(x=e.target.closest("[data-gask]")){const m=mainOf(th),q=x.dataset.gask;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🍾 "+t("g.bottle"),txt:t("g.himTruth",{n:first(ch(m).n)}),at:Date.now()});appendMsg(th,{who:"me",k:"say",txt:q,at:Date.now()});th.rounds++;loveWrite(th,m,3,"truth:dare");th.mem.push("Truth or dare: "+me()+" asked "+ch(m).n+": "+q);reply(th,{kind:"truth",txt:q,cid:m});return}
+ if(x=e.target.closest("[data-gdare]")){const m=mainOf(th),v=($("#dareIn").value||"").trim();if(!v){toast(t("g.dareIn"));return}closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🍾 "+t("g.yourDare"),txt:x.dataset.gdare,at:Date.now()});appendMsg(th,{who:"me",k:"say",txt:v,at:Date.now()});th.rounds++;loveWrite(th,m,4,"dare");th.mem.push(me()+" did a dare for "+ch(m).n+": "+v);reply(th,{kind:"user",txt:"(Truth-or-dare: "+me()+" did this dare — \""+x.dataset.gdare+"\" — and said: "+v+". React to it.)"});return}
  if(x=e.target.closest("[data-lie]")){const ok=x.dataset.lie===lieGame.ans,m=lieGame.m,c=ch(m);$$("[data-lie]").forEach(b=>{b.disabled=true;b.classList.toggle("right",b.dataset.lie===lieGame.ans);b.classList.toggle("wrong",b===x&&!ok)});
-  th.love[m]=Math.min(100,(th.love[m]||0)+(ok?6:1));th.mem.push("Two truths and a lie with "+c.n+": "+(ok?"guessed right":"guessed wrong"));save();
+  loveWrite(th,m,ok?6:1,"twotruths");th.mem.push("Two truths and a lie with "+c.n+": "+(ok?"guessed right":"guessed wrong"));save();
   $("#lieOut").innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:'+(ok?"var(--mint)":"var(--rose)")+'">'+(ok?t("g.lieWin"):t("g.lieLose"))+' · ♥ +'+(ok?6:1)+'</div><button class="btn btn-p btn-sm" style="margin-top:10px" data-gback="'+(ok?"win":"lose")+'">'+t("g.backChat")+'</button></div>';return}
  if(x=e.target.closest("[data-gback]")){const m=lieGame.m;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"🕵️ "+t("g.lie"),txt:x.dataset.gback==="win"?t("g.lieWin"):t("g.lieLose"),at:Date.now()});reply(th,{kind:"user",txt:"(We just played two truths and a lie. "+me()+(x.dataset.gback==="win"?" caught your lie immediately.":" fell for your lie.")+" React, teasing.)"});return}
  if(e.target.closest("[data-hgtap]")&&hg){if(!hg.t0){hg.t0=Date.now();hg.timer=setInterval(()=>{hg.left--;const l=$("#hgLeft");if(l)l.textContent=hg.left+"s";if(hg.left<=0){clearInterval(hg.timer);heartEnd()}},1000)}
   hg.score++;const bpm=Math.min(190,72+hg.score*5),b=$("#hgBpm"),bar=$("#hgBar");if(b)b.textContent=bpm+" bpm";if(bar)bar.style.width=Math.min(100,(bpm-72)/1.18)+"%";const av=$(".hgav");if(av){av.classList.remove("beat");void av.offsetWidth;av.classList.add("beat")}return}});
-function heartEnd(){const th=S.threads[curT],m=hg.m,c=ch(m),bpm=Math.min(190,72+hg.score*5),win=bpm>=150;th.love[m]=Math.min(100,(th.love[m]||0)+(win?6:2));th.mem.push(me()+" made "+c.n+"'s heart race to "+bpm+" bpm");save();
+function heartEnd(){const th=S.threads[curT],m=hg.m,c=ch(m),bpm=Math.min(190,72+hg.score*5),win=bpm>=150;loveWrite(th,m,win?6:2,"heart");th.mem.push(me()+" made "+c.n+"'s heart race to "+bpm+" bpm");save();
  const btn=$("[data-hgtap]");if(btn){btn.outerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:var(--gold)">'+bpm+' bpm · ♥ +'+(win?6:2)+'</div><p class="sm" style="margin-top:6px">'+t(win?"g.heartWin":"g.heartLose",{n:first(c.n)})+'</p><button class="btn btn-p btn-sm" style="margin-top:10px" data-hgback="'+bpm+'">'+t("g.backChat")+'</button></div>'}}
 document.addEventListener("click",e=>{const x=e.target.closest("[data-hgback]");if(!x)return;const th=S.threads[curT],m=hg.m;closeSheet();appendMsg(th,{who:"sys",k:"card",title:"💓 "+t("g.heart"),txt:x.dataset.hgback+" bpm",at:Date.now()});reply(th,{kind:"user",txt:"(Heartbeat game: "+me()+" got "+ch(m).n+"'s heart up to "+x.dataset.hgback+" bpm just by leaning closer and closer. If you mention the number it is exactly "+x.dataset.hgback+" bpm — never another number. React — flustered, trying to hide it.)"})});
 
@@ -640,7 +725,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)retu
  if(e.target.closest("[data-nvnext]")){neverGame.done=false;neverGame();return}
  if(x=e.target.closest("[data-nvback]")){const [d,mine]=x.dataset.nvback.split("|"),dr=d?d.split(","):[];closeSheet();neverGame.done=false;
   appendMsg(th,{who:"sys",k:"card",title:"🥂 "+t("gh.never"),txt:t("nv.pre")+" "+neverGame.q+" — 🥂 "+(dr.map(id=>first(ch(id).n)).concat(mine==="1"?[me()]:[]).join(", ")||"—"),at:Date.now()});
-  dr.forEach(id=>th.love[id]=Math.min(100,(th.love[id]||0)+2));th.mem.push("Never have I ever: \""+neverGame.q+"\" — drank: "+(dr.map(id=>ch(id).n).join(", ")||"nobody")+(mine==="1"?", and "+me():""));
+  dr.forEach(id=>loveWrite(th,id,2,"never"));th.mem.push("Never have I ever: \""+neverGame.q+"\" — drank: "+(dr.map(id=>ch(id).n).join(", ")||"nobody")+(mine==="1"?", and "+me():""));
   reply(th,{kind:"user",txt:"(Party game 'Never have I ever — "+neverGame.q+"'. Who drank: "+(dr.map(id=>ch(id).n).join(", ")||"nobody")+(mine==="1"?" and "+me():"")+". The others react — tease, accuse, get defensive, reveal a little.)"});return}
  if(x=e.target.closest("[data-lk]")){if(likelyGame.done)return;likelyGame.done=true;const pick=x.dataset.lk,cs=castOf(th),votes={};cs.forEach(id=>votes[id]=0);votes[pick]++;
   cs.forEach(v=>{const others=cs.filter(o=>o!==v);const to=others[hash(v+likelyGame.q)%others.length]||pick;votes[to]++});const tot=cs.length+1,top=Object.keys(votes).sort((a,b)=>votes[b]-votes[a])[0];
@@ -650,7 +735,7 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)retu
   appendMsg(th,{who:"sys",k:"card",title:"🗳️ "+t("gh.likely"),txt:t("lk.pre")+" "+likelyGame.q+"? → "+ch(top).n,at:Date.now()});th.mem.push("Most-likely-to vote: \""+likelyGame.q+"\" → "+ch(top).n+" (the user voted "+ch(pick).n+")");
   reply(th,{kind:"user",txt:"(Party game 'Who's most likely to "+likelyGame.q+"?' The table voted "+ch(top).n+"; "+me()+" voted "+ch(pick).n+". "+ch(top).n+" protests, the others pile on.)"});return}
  if(x=e.target.closest("[data-an]")){const g=x.dataset.an,w=anonGame.w,ok=g===w;$$("[data-an]").forEach(b=>{b.disabled=true;b.classList.toggle("drink",b.dataset.an===w);b.classList.toggle("dry",b===x&&!ok)});
-  th.love[w]=Math.min(100,(th.love[w]||0)+(ok?7:3));save();$("#anOut").innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:'+(ok?"var(--mint)":"var(--rose)")+'">'+(ok?t("an.win",{n:first(ch(w).n)}):t("an.lose",{n:first(ch(w).n)}))+' · ♥ +'+(ok?7:3)+'</div><button class="btn btn-p btn-sm" style="margin-top:10px" data-anback="'+w+'|'+(ok?1:0)+'">'+t("g.backChat")+'</button></div>';return}
+  loveWrite(th,w,ok?7:3,"anon");save();$("#anOut").innerHTML='<div class="card" style="margin-top:12px"><div class="eyebrow" style="color:'+(ok?"var(--mint)":"var(--rose)")+'">'+(ok?t("an.win",{n:first(ch(w).n)}):t("an.lose",{n:first(ch(w).n)}))+' · ♥ +'+(ok?7:3)+'</div><button class="btn btn-p btn-sm" style="margin-top:10px" data-anback="'+w+'|'+(ok?1:0)+'">'+t("g.backChat")+'</button></div>';return}
  if(x=e.target.closest("[data-anback]")){const [w,ok]=x.dataset.anback.split("|"),note=($("#anTxt")||{}).textContent||"";closeSheet();th.focus=w;
   appendMsg(th,{who:"sys",k:"card",title:"💌 "+t("gh.anon"),txt:"“"+note+"” — "+ch(w).n,at:Date.now()});th.mem.push(ch(w).n+" wrote the user an anonymous note: "+note);
   reply(th,{kind:"user",txt:"(Anonymous-note game: "+ch(w).n+" wrote \""+note+"\" and "+me()+(ok==="1"?" guessed it was them.":" guessed wrong, so it was revealed.")+" "+ch(w).n+" reacts, exposed; the others react to that.)"});return}});

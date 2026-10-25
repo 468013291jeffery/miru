@@ -3,7 +3,7 @@
 // Auth: signed bearer tokens (HMAC-SHA256 with AUTH_SECRET). Guest accounts are created silently; email+password upgrades them.
 const crypto = require('crypto');
 
-const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^https:\/\/(www\.)?miru\.plus$/, /^http:\/\/localhost(:\d+)?$/, /^http:\/\/127\.0\.0\.1(:\d+)?$/, /^null$/];
+const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^http:\/\/127\.0\.0\.1(:\d+)?$/, /^null$/];
 function cors(req, res, methods) {
   const o = req.headers.origin;
   const ok = !o || ALLOWED.some(r => r.test(o));
@@ -43,6 +43,9 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS works_status_idx ON works (status, created_at DESC)`,
   `CREATE INDEX IF NOT EXISTS assets_owner_idx ON assets (owner)`,
   `CREATE INDEX IF NOT EXISTS events_name_idx ON events (name, at)`,
+  // 事件幂等（2026-10-25）：可选 key 列 + 部分唯一索引。老库靠这两句自动补齐，不需要手工迁移。
+  `ALTER TABLE events ADD COLUMN IF NOT EXISTS key TEXT`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS events_key_idx ON events (key)`,
   // v2.7 — accounts, moderation, operations console
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active'`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason TEXT`,
@@ -72,8 +75,6 @@ const SCHEMA = [
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS handled_by TEXT`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS handled_at TIMESTAMPTZ`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS note TEXT`,
-  `ALTER TABLE reports ADD COLUMN IF NOT EXISTS snap TEXT`,
-  `CREATE TABLE IF NOT EXISTS blocks (user_id TEXT, author_id TEXT, author_name TEXT, at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, author_id))`,
   `CREATE TABLE IF NOT EXISTS user_days (user_id TEXT, day DATE, PRIMARY KEY (user_id, day))`,
   `CREATE INDEX IF NOT EXISTS user_days_day_idx ON user_days (day)`,
   `CREATE TABLE IF NOT EXISTS admins (id TEXT PRIMARY KEY, username TEXT UNIQUE, pass TEXT, name TEXT, role TEXT DEFAULT 'reviewer', status TEXT DEFAULT 'active', tv INT DEFAULT 0, created_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), last_login TIMESTAMPTZ)`,
@@ -88,11 +89,6 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS scripts (id TEXT PRIMARY KEY, title TEXT, orient TEXT DEFAULT 'bl', lang TEXT DEFAULT 'zh', stage INT DEFAULT 1, status TEXT DEFAULT 'draft', config JSONB DEFAULT '{}'::jsonb, research JSONB, brief TEXT, outline TEXT, chapters JSONB DEFAULT '[]'::jsonb, qa JSONB, review JSONB DEFAULT '{}'::jsonb, work_id TEXT, created_by TEXT, updated_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now(), published_at TIMESTAMPTZ)`,
   `CREATE TABLE IF NOT EXISTS script_versions (id BIGSERIAL PRIMARY KEY, script_id TEXT, stage INT, note TEXT, data JSONB, by_name TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS script_versions_idx ON script_versions (script_id, id DESC)`,
-  // v8.2.5 — trusted world events (v7.11 §08.1), per-thread revisions (§09.3), scene-pack publish transaction (§05.8)
-  `CREATE TABLE IF NOT EXISTS world_events (user_id TEXT, idem TEXT, event_id TEXT, story_id TEXT, thread_id TEXT, scene_id TEXT, type TEXT, actor_id TEXT, visible_to JSONB, payload JSONB, base_rev INT, rev INT, at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, idem))`,
-  `CREATE INDEX IF NOT EXISTS world_events_thread_idx ON world_events (user_id, thread_id, rev DESC)`,
-  `CREATE TABLE IF NOT EXISTS story_revs (user_id TEXT, thread_id TEXT, rev INT DEFAULT 0, updated_at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, thread_id))`,
-  `CREATE TABLE IF NOT EXISTS scene_packs (id TEXT PRIMARY KEY, user_id TEXT, thread_id TEXT, story_id TEXT, rev INT, status TEXT, reasons JSONB, pack JSONB, at TIMESTAMPTZ DEFAULT now())`,
 ];
 async function db() {
   if (!hasDb()) { const e = new Error('database not configured'); e.code = 503; throw e; }
@@ -130,6 +126,21 @@ async function bump(uid, kind, max) {
   const sql = await db();
   const r = await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, $2, 1) ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + 1 RETURNING n`, [uid, kind]);
   return (r[0] && r[0].n) <= max;
+}
+
+/* token 记账（2026-10-25）：沿用上面这张 usage 表，只是把 n 累加实际用量而不是次数。
+   规范第 10 章要的是"每轮用了多少 token"，这里就是那个口子 —— 已经接进 /api/longcat，
+   用的是 provider 返回的 usage 字段（流式要 provider 在最后一帧带 usage 才有；没有就不记，不编数）。
+   读法：SELECT kind, sum(n) FROM usage WHERE day = CURRENT_DATE GROUP BY kind。 */
+async function addUsage(uid, kind, n) {
+  const v = Math.round(Number(n) || 0);
+  if (!uid || !v || v < 0) return false;
+  try {
+    const sql = await db();
+    await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, $2, $3)
+               ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + EXCLUDED.n`, [uid, kind, v]);
+    return true;
+  } catch (_) { return false }
 }
 
 /* ---------- content safety (mirrors the client QA hard rules) ---------- */
@@ -245,8 +256,8 @@ const CONFIG_DEFAULTS = {
   upload_price: { audio: 5, image: 3, video: 10, game: 2 }, reroll_free: 3, reroll_price: 1,
   community_auto_live: true, report_threshold: 5, publish_daily_limit: 30, upload_daily_limit: 40,
   guest_allowed: false, maintenance: '',
-  /* rewarded ads (v8.2): provider = demo | gam (Google Ad Manager web rewarded) | h5 (Google H5 Games Ads / Ad Placement API) | off */
-  ads: { provider: 'demo', gam_unit: '', adsense_client: '', h5_test: true, reward_gems: 1, daily_cap: 5, ep_ads: 2, min_gap_sec: 20 },
+  // 容量/超时类（原来写死在各自文件里，挪进来才能不改代码就调）
+  state_max_kb: 900, max_pack_kb: 1500, first_token_ms: 22000,
   skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
 };
 let _cfg = null, _cfgAt = 0;
@@ -407,4 +418,4 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto };
+module.exports = { needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };

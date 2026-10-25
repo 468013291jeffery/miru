@@ -1,0 +1,27 @@
+{
+ "wid": "gala",
+ "sample": true,
+ "note": "示例标记：作者的正式标记请照这个形状写，写完把 sample 改成 false。",
+ "chapters": {
+  "3": {
+   "breaks": {
+    "noor": {
+     "promised": 1
+    }
+   }
+  },
+  "5": {
+   "reveals": {
+    "mason": "self"
+   },
+   "knows": {
+    "mason": [
+     {
+      "t": "他一直以为那个球是你扔掉的",
+      "kind": "guess"
+     }
+    ]
+   }
+  }
+ }
+}

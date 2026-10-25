@@ -34,7 +34,7 @@ function day73() { return new Date().toISOString().slice(0, 10); }
 function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k >= 0 && th.msgs[k].who !== "me" && !th.msgs[k].ai) k--; if (k < 0 || !th.msgs[k].ai) return -1; let j = k; while (j > 0 && th.msgs[j - 1].ai) j--; return j; }
 
 /* ---------- 1 · affinity ---------- */
-const AF_CAP = 15, AF_MIND = [1, 2, 3, 5, 5], AF_GEMS = [0, 5, 10, 15, 20];
+const AF_CAP = MIRU_TUNE.affinity.cap, AF_MIND = MIRU_TUNE.affinity.mind, AF_GEMS = MIRU_TUNE.affinity.gems;
 const _playBeats73 = playBeats;
 playBeats = async function (th, r, ctx, silent) {
   const before = JSON.parse(JSON.stringify(th.love || {})), st0 = {};
@@ -45,7 +45,7 @@ playBeats = async function (th, r, ctx, silent) {
     Object.keys(th.love || {}).forEach(cid => {
       const gain = (th.love[cid] || 0) - (before[cid] || 0); if (gain <= 0) return;
       const used = th.afDay.g[cid] || 0, allow = Math.max(0, AF_CAP - used);
-      if (gain > allow) { th.love[cid] = (before[cid] || 0) + allow; if (!th.afDay.told[cid] && ch(cid)) { th.afDay.told[cid] = 1; setTimeout(() => toast(t73("cap", { n: first(ch(cid).n) })), 1200); } }
+      if (gain > allow) { loveWrite(th, cid, 0, "af:cap", { absolute: (before[cid] || 0) + allow }); if (!th.afDay.told[cid] && ch(cid)) { th.afDay.told[cid] = 1; setTimeout(() => toast(t73("cap", { n: first(ch(cid).n) })), 1200); } }
       th.afDay.g[cid] = used + Math.min(gain, allow);
     });
     af73Rewards(th, st0);
@@ -71,7 +71,7 @@ doSend = function (txt, mode) {
       delete th.vers;
       const cid = th.addr && ch(th.addr) ? th.addr : mainOf(th), c = ch(cid), d = day73();
       if (c && th.love && th.love[cid] != null && (th.afBonus || {})[cid] !== d && mode !== "dir") {
-        th.afBonus = th.afBonus || {}; th.afBonus[cid] = d; th.love[cid] = Math.min(100, (th.love[cid] || 0) + 2); save();
+        th.afBonus = th.afBonus || {}; th.afBonus[cid] = d; loveWrite(th, cid, 2, "af:bonus"); save();
         setTimeout(() => toast(t73("daily", { n: first(c.n) })), 300);
       }
     }

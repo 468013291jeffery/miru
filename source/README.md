@@ -2,9 +2,11 @@
 
 仓库根目录就是线上站点（Vercel 自动部署 `main` 分支）。
 
+> 构建怎么跑、判据是什么 → 仓库根 `BUILD.md` · 什么该放本地什么该放线上 → `ARCHITECTURE.md` · 还耦合着什么 → `DECOUPLING.md`
+
 | 位置 | 是什么 | 改了之后 |
 |---|---|---|
-| `source/src/*.js` | App 前端源码，按模块拆分（`app1_core.js` … `app94_official2.js`），顺序见 `source/build.py` 里的 `parts` | 运行 `bash source/build.sh`，生成根目录的 `index.html` |
+| `source/src/*.js` | App 前端源码，按模块拆分（`app1_core.js` … `app94_official2.js`），顺序见 `source/build.py` 里的 `parts` | 跑 `python source/build.py`，生成仓库根的 `index.html` |
 | `source/src/shell.html` | 页面外壳（head / CSS 入口） | 同上 |
 | `source/content/` | 37 部内置剧本数据，`gen_content.py` 生成 `src/content_36.js` | 同上 |
 | `api/*.js` | 后端（Vercel Serverless Functions）：登录、钱包、作品、TTS、翻译、管理后台接口 | 直接改，push 即部署 |
@@ -23,6 +25,12 @@
 ## 本地预览
 
 ```bash
-bash source/build.sh
-python3 -m http.server 8080   # 打开 http://localhost:8080/index.html（后端接口需要线上环境）
+python source/build.py        # Windows / macOS / Linux 都一样（详见仓库根 BUILD.md）
+python -m http.server 8080    # 打开 http://localhost:8080/index.html（后端接口需要线上环境）
+```
+
+构建的判据是「产物与已提交的 blob 完全一致」：
+
+```bash
+git hash-object index.html && git rev-parse HEAD:index.html   # 两行必须相同
 ```

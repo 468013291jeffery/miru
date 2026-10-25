@@ -41,10 +41,10 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th)return;let
  if(e.target.closest("[data-cuCard],[data-cucard]")){v=(($("#cuCard")||{}).value||"").trim();if(!v)return;if(!spend(PRICES.card,"event"))return;closeSheet();
   appendMsg(th,{who:"sys",k:"card",title:"🃏 "+t("cu.cardT"),txt:v,at:Date.now()});reply(th,{kind:"card",txt:v});return}
  if(e.target.closest("[data-cuGift],[data-cugift]")){v=(($("#cuGift")||{}).value||"").trim();if(!v)return;if(!spend(1,"gift"))return;const m=mainOf(th);closeSheet();
-  th.love[m]=Math.min(100,(th.love[m]||0)+5);th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+v);
+  loveWrite(th,m,5,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+v);
   appendMsg(th,{who:"sys",k:"card",title:"🎁 "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:v}),at:Date.now()});reply(th,{kind:"gift",txt:v,cid:m});return}
  if(e.target.closest("[data-cuDate],[data-cudate]")){v=(($("#cuDate")||{}).value||"").trim();if(!v)return;const m=mainOf(th);closeSheet();
-  th.tasks.date=1;th.love[m]=Math.min(100,(th.love[m]||0)+6);th.status.place=v;th.mem.push(me()+" took "+ch(m).n+" to "+v);
+  th.tasks.date=1;loveWrite(th,m,6,"date");th.status.place=v;th.mem.push(me()+" took "+ch(m).n+" to "+v);
   appendMsg(th,{who:"sys",k:"card",title:"🌙 "+t("cx.m.date"),txt:t("date.go",{n:first(ch(m).n),p:v}),at:Date.now()});reply(th,{kind:"date",txt:v,cid:m});return}});
 Object.assign(I18N.en,{"cu.how":"Tap a suggestion, write exactly what happens, or leave it empty and let the story surprise you.","cu.go":"Action","cu.surprise":"Surprise me","cu.place":"Or type any place…","cu.third":"Or describe someone new: who, and why they're here",
  "cu.cardH":"Or write your own twist","cu.cardPh":"e.g. His ex walks in holding a ring","cu.cardT":"Your twist","cu.giftH":"Or give something only you would think of","cu.giftPh":"e.g. The coaster I kept from our first night","cu.datePh":"Or anywhere you like…"});

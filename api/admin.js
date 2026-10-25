@@ -3,6 +3,8 @@
 //       X-Admin-Key: <ADMIN_KEY> also works (owner, for scripts).
 // Roles: owner · admin · reviewer · support · analyst (see L.ROLES). Every write is recorded in audit_log.
 const L = require('./_lib');
+const LED = require('./_ledger');
+const TR = require('./_transcript');
 
 const PAGE = q => { const size = Math.min(Math.max(Number(q.size) || 20, 1), 200), page = Math.max(Number(q.page) || 1, 1); return { size, page, off: (page - 1) * size }; };
 const like = s => '%' + String(s || '').replace(/[%_\\]/g, m => '\\' + m) + '%';
@@ -107,6 +109,34 @@ module.exports = L.wrap(async (req, res) => {
     const total = (await sql(`SELECT count(*)::int AS n FROM users u WHERE ${w}`, args))[0].n;
     const rows = await sql(`SELECT u.*, w.gems, (SELECT count(*) FROM works x WHERE x.author=u.id)::int AS works FROM users u LEFT JOIN wallet w ON w.user_id=u.id WHERE ${w} ORDER BY ${order} LIMIT ${p.size} OFFSET ${p.off}`, args);
     return L.send(res, 200, { total, rows: rows.map(userOut) });
+  }
+  /* ---------- one player: gameplay ledger + dialogue export ---------- */
+  // ?r=user_ledger&id=&days=   → funnel / choice mix / chapter duration for ONE account
+  // ?r=user_transcript&id=&limit=  → their dialogue as a .txt download (most recent N lines)
+  if (r === 'user_ledger') {
+    if (!need('users')) return;
+    const id = String(q.id || '');
+    if (!id) return L.bad(res, '缺少 id');
+    const days = Math.min(Number(q.days) || 90, 365);
+    const rows = await sql(`SELECT user_id, name, props, at FROM events WHERE user_id=$1 AND at > now() - ($2 || ' days')::interval ORDER BY at DESC LIMIT 5000`, [id, String(days)]);
+    const sum = LED.summary(rows);
+    return L.send(res, 200, Object.assign({ id, days, rows: rows.length }, sum, {
+      recent: rows.slice(0, 60).map(x => ({ at: x.at, name: x.name, props: x.props })),
+    }));
+  }
+  if (r === 'user_transcript') {
+    if (!need('users')) return;
+    const id = String(q.id || '');
+    if (!id) return L.bad(res, '缺少 id');
+    const limit = Math.min(Math.max(Number(q.limit) || 200, 1), 20000);
+    const st = (await sql('SELECT data FROM states WHERE user_id=$1', [id]))[0];
+    if (!st || st.data == null) return L.bad(res, '这个账号还没有云存档，读不到对话', 404);
+    const t = TR.transcript(st.data, limit);
+    await log('export_transcript', 'user', id, { limit, lines: t.lines, threads: t.threads });
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="miru-${id}-${t.lines}lines.txt"`);
+    res.setHeader('Cache-Control', 'no-store');
+    return res.status(200).send(t.text);
   }
   if (r === 'user') {
     if (req.method === 'GET') {
@@ -397,7 +427,7 @@ module.exports = L.wrap(async (req, res) => {
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
-      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null }, official: true, rules: b.rulesVersion || null, cards98: cfg.cards98 || null };
+      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null }, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,

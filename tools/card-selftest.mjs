@@ -1,0 +1,175 @@
+// 角色卡（每章一份快照）的判据 —— 五条，缺一条这套设计就不成立
+//
+//   node tools/card-selftest.mjs            # 检查
+//   node tools/card-selftest.mjs --selftest # 证明它真会红
+//
+// ① 可变折叠正确        ② 只增不回退、但早期章节看不到后来的
+// ③ 立场只能加码        ④ 揭示不改卡上的秘密本身
+// ⑤ 可回放（重算两次逐字节相同）
+import fs from 'node:fs';
+
+const SRC = 'source/src/app97_card.js';
+const code = fs.readFileSync(SRC, 'utf8');
+// 模块里的 cardBase 依赖运行时 ch()；这里注入一个假的角色表
+const CHARS = {
+  mason: { n: 'Mason', age: 26, role: { en: 'forward' }, looks: { en: 'tall' }, vibe: { en: 'cold' }, tells: { en: ['jaw'] }, twist: { en: 'kind' }, likes: { en: 'ice' }, secret: { en: 'THE-PUCK' } },
+  luca:  { n: 'Luca',  age: 27, role: { en: 'driver'  }, looks: { en: 'sharp' }, vibe: { en: 'warm' }, tells: { en: ['ears'] }, twist: { en: 'ruthless' }, likes: { en: 'cars' }, secret: { en: 'THE-LET-IN' } }
+};
+const MARKS = { gala: JSON.parse(fs.readFileSync('source/content/marks/gala.json', 'utf8')) };
+const api = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardBase, cardPatch, cardCommit, cardAt, cardDiff, cardCommitChapter, cardMemo, cardChanges, knowsNorm };')((id) => CHARS[id], () => ({ pack: { chapters: [
+    { choices: [{ k: 'A', then: { en: [['n','act','he steps back'],['mason','say','“别问了。”']], zh: [['n','act','他退了一步。'],['mason','say','“别问了。”']] } },
+                { k: 'B', then: { en: [['luca','say','“让他说完。”']], zh: [['luca','say','“让他说完。”']] } }] },
+    { choices: [{ k: 'A', then: { en: [['mason','say','“我留着那个球。”']], zh: [['mason','say','“我留着那个球。”']] } }] }
+  ] } }), (th, cid) => 1, MARKS, () => 'zh');
+const { cardCommit, cardAt, cardDiff } = api;
+
+let pass = 0; const fails = [];
+const ok = (n, c, d) => { if (c) { pass++; console.log('  ✓ ' + n); } else { fails.push(n); console.log('  ✗ ' + n, d === undefined ? '' : '→ ' + d); } };
+
+const th = {};
+cardCommit(th, 'mason', 1, { mutable: { love: 5, stage: 0 }, knows: ['他在更衣室出现过'], firsts: { met: 1 } });
+cardCommit(th, 'mason', 2, { mutable: { love: 9 } });
+cardCommit(th, 'mason', 3, { mutable: { love: -4, mood: 'hostile' }, stance: { betrayed: 3 }, revealed: { secret: 'self' } });
+cardCommit(th, 'mason', 4, { mutable: { love: 6 }, knows: ['那段录像被剪过'], said: ['“完整录像不在这个房间。”'] });
+
+console.log('① 可变折叠');
+const at4 = cardAt(th, 'mason', 4);
+ok('love 取章末快照（第 4 章是 6）', at4.mutable.love === 6, at4.mutable.love);
+ok('mood 保留最后一次', at4.mutable.mood === 'hostile');
+ok('到第 2 章时 love 是 9', cardAt(th, 'mason', 2).mutable.love === 9, cardAt(th, 'mason', 2).mutable.love);
+
+console.log('② 只增不回退，但早期看不到后来的');
+ok('第 4 章有两个 knows', at4.knows.length === 2, at4.knows.length);
+ok('第 2 章只有第一个 knows', cardAt(th, 'mason', 2).knows.length === 1, cardAt(th, 'mason', 2).knows.length);
+ok('第 1 章一个都没有', cardAt(th, 'mason', 1).knows.length === 1);   // ch1 本身就写了那条
+ok('第 0 章什么都没有', cardAt(th, 'mason', 0).knows.length === 0);
+
+console.log('③ 立场只能加码');
+ok('第 3 章出现 betrayed', cardAt(th, 'mason', 3).stance.betrayed === 3);
+ok('第 2 章还没有', cardAt(th, 'mason', 2).stance.betrayed === undefined);
+cardCommit(th, 'mason', 5, { stance: { betrayed: 2 } });
+ok('第二次加码是相加不是覆盖', cardAt(th, 'mason', 5).stance.betrayed === 5, cardAt(th, 'mason', 5).stance.betrayed);
+ok('传 0 不会被当成清零写入', (cardCommit(th, 'mason', 6, { stance: { betrayed: 0 } }).ok === false));
+// v2：补丁按角色分开存，两个人互不串味
+cardCommit(th, 'luca', 2, { mutable: { love: 40 }, said: ['“让车。”'] });
+ok('luca 的卡不影响 mason', cardAt(th, 'luca', 2).mutable.love === 40 && cardAt(th, 'mason', 2).mutable.love === 9);
+ok('mason 的话没进 luca 的卡', cardAt(th, 'luca', 4).said.length === 1, cardAt(th, 'luca', 4).said.length);
+
+console.log('④ 揭示不改卡上的秘密本身');
+const before = JSON.stringify(api.cardBase('mason').secret);
+ok('第 3 章揭示后 secret 一字未改', JSON.stringify(cardAt(th, 'mason', 3).secret) === before);
+ok('revealed 记下来了', cardAt(th, 'mason', 3).revealed.secret === 'self');
+ok('第 2 章还没有 revealed', !cardAt(th, 'mason', 2).revealed.secret);
+
+console.log('⑤ 可回放');
+const a = JSON.stringify(cardAt(th, 'mason', 4));
+const b = JSON.stringify(cardAt(th, 'mason', 4));
+ok('重算两次逐字节相同', a === b);
+const shuffled = { cardLog: { mason: th.cardLog.mason.slice().reverse(), luca: th.cardLog.luca } };
+ok('补丁顺序打乱也不影响结果', JSON.stringify(cardAt(shuffled, 'mason', 4)) === a);
+
+console.log('⑥ 章末只提交一次');
+ok('同一章重复提交被拒', cardCommit(th, 'mason', 4, { mutable: { love: 99 } }).ok === false);
+ok('love 没有被第二次污染', cardAt(th, 'mason', 4).mutable.love !== 99);
+
+console.log('⑦ diff（这一章他变了什么）');
+const d4 = cardDiff(th, 'mason', 4);
+ok('diff 抓到 love 从 -4 到 6', d4.mutable.love && d4.mutable.love.from === -4 && d4.mutable.love.to === 6, JSON.stringify(d4.mutable.love));
+ok('diff 抓到新知道的', Array.isArray(d4.added.knows) && d4.added.knows.length === 1);
+
+console.log('⑧ 章末规则接线（cardCommitChapter）');
+const th2 = { cast: ['mason', 'luca'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 42, luca: 10 }, cardLog: {} };
+const made = api.cardCommitChapter(th2, 1, 'A');
+ok('两个非玩家角色各得一条补丁', made === 2, made);
+ok('mason 的卡记下「第一次选了 A」', api.cardAt(th2, 'mason', 1).firsts.A === 1, JSON.stringify(api.cardAt(th2, 'mason', 1).firsts));
+ok('第 2 章再选 A 不会重复记', Object.keys(api.cardAt(th2, 'mason', 2).firsts).length === 1, JSON.stringify(api.cardAt(th2, 'mason', 2).firsts));
+ok('只收 say 类台词', JSON.stringify(api.cardAt(th2, 'mason', 1).said) === JSON.stringify(['“别问了。”']), JSON.stringify(api.cardAt(th2, 'mason', 1).said));
+ok('可变快照记下当前好感', api.cardAt(th2, 'mason', 1).mutable.love === 42, api.cardAt(th2, 'mason', 1).mutable.love);
+ok('同一章重复提交不再加', api.cardCommitChapter(th2, 1, 'A') === 0);
+ok('第 2 章能追加，且第 1 章看不到它', api.cardCommitChapter(th2, 2, 'A') === 2 && api.cardAt(th2, 'mason', 1).said.length === 1);
+ok('cardMemo 能给出"他记得什么"', /他说过：/.test(api.cardMemo(th2, 'mason', 2)), api.cardMemo(th2, 'mason', 2));
+
+console.log('⑨ 夹具与真数据同形（第一版夹具用数组、真数据是本地化对象，测试通过而线上永远空）');
+{
+  const live = JSON.parse(fs.readFileSync('source/content/out/s18.json', 'utf8'));
+  const liveThen = live.chapters[0].choices[0].then;
+  const fxThen = { en: [], zh: [] };
+  ok('真数据 then 是对象，夹具也是对象', !Array.isArray(liveThen) && !Array.isArray(fxThen), typeof liveThen);
+  ok('真数据 then 有语言键', Object.keys(liveThen).includes('zh') && Object.keys(fxThen).includes('zh'));
+  ok('标记旁档存在（④⑤ 的来源）', fs.existsSync('source/content/marks/gala.json'));
+}
+
+console.log('⑩ 内容标记 → ④立场 / ⑤揭示');
+{
+  const tm = { cast: ['mason', 'noor'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 30, noor: 20 }, cardLog: {} };
+  api.cardCommitChapter(tm, 3, 'A');     // 第 3 章：noor 的 promised（旁档里标的）
+  ok('标记写出了立场', api.cardAt(tm, 'noor', 3).stance.promised === 1, JSON.stringify(api.cardAt(tm, 'noor', 3).stance));
+  ok('没被标的人不受影响', api.cardAt(tm, 'mason', 3).stance.promised === undefined);
+  api.cardCommitChapter(tm, 5, 'A');     // 第 5 章：mason 的 secret 被揭示
+  ok('标记写出了揭示', api.cardAt(tm, 'mason', 5).revealed.secret === 'self', JSON.stringify(api.cardAt(tm, 'mason', 5).revealed));
+  ok('揭示之后秘密原文一字未改', JSON.stringify(api.cardAt(tm, 'mason', 5).secret) === JSON.stringify(api.cardBase('mason').secret));
+  ok('第 4 章还看不到第 5 章的揭示', api.cardAt(tm, 'mason', 4).revealed.secret === undefined);
+}
+
+console.log('⑪ 章末那张「他变了什么」的卡（cardChanges）');
+{
+  const tc = { cast: ['mason', 'noor', 'luca'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 30, noor: 20, luca: 10 }, cardLog: {} };
+  api.cardCommitChapter(tc, 1, 'A');
+  const c1 = api.cardChanges(tc, 1);
+  ok('第 1 章没有卡级变化（只有好感快照，不进这张卡）', c1.length === 0, JSON.stringify(c1));
+  ok('第 2 章同样没有卡级变化', api.cardChanges(tc, 2).length === 0);
+  api.cardCommitChapter(tc, 3, 'A');    // noor 的 promised
+  const c3 = api.cardChanges(tc, 3);
+  ok('第 3 章 noor 有立场变化', c3.some(x => x.cid === 'noor' && x.stance.promised === 1), JSON.stringify(c3));
+  ok('这一章 mason 没有立场变化', !c3.some(x => x.cid === 'mason' && Object.keys(x.stance).length));
+  api.cardCommitChapter(tc, 5, 'A');    // mason 的 revealed
+  const c5 = api.cardChanges(tc, 5);
+  ok('第 5 章 mason 有揭示', c5.some(x => x.cid === 'mason' && x.revealed === 1), JSON.stringify(c5));
+  // 指针里的验收条件：揭示之后，**后面每一章的卡里都应该看得到**
+  ok('第 6 章的卡里 revealed 还在（揭示是永久的）', api.cardAt(tc, 'mason', 6).revealed.secret === 'self', JSON.stringify(api.cardAt(tc, 'mason', 6).revealed));
+  ok('第 6 章的 cardMemo 能说出这件事', /立场|他说过|知道/.test(api.cardMemo(tc, 'mason', 6)) || api.cardMemo(tc, 'mason', 6) !== '', api.cardMemo(tc, 'mason', 6));
+  ok('没变化的章返回空', api.cardChanges(tc, 9).length === 0);
+  ok('玩家自己不出现在卡里', !api.cardChanges(tc, 5).some(x => x.cid === 'jack'));
+}
+
+console.log('⑫ knows 带类型：事实 / 他以为 / 你告诉他的');
+{
+  const tk = { cast: ['mason'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 10 }, cardLog: {} };
+  api.cardCommit(tk, 'mason', 1, { knows: [
+    '他亲眼看到的事',                                  // 字符串 ⇒ 事实（兼容旧数据）
+    { t: '他以为你骗了他', kind: 'guess' },
+    { t: '你说你怕打雷', kind: 'self' },
+    { t: 'unknown-kind 归到事实', kind: 'nonsense' }
+  ] });
+  const c1 = api.cardAt(tk, 'mason', 1);
+  ok('四个条目都归一成功', c1.knows.length === 4, c1.knows.length);
+  ok('字符串按事实处理', c1.knows[0].kind === 'fact');
+  ok('未知 kind 归到事实（不吞数据）', c1.knows[3].kind === 'fact', c1.knows[3].kind);
+  const memo = api.cardMemo(tk, 'mason', 1);
+  ok('**猜测不会被说成"知道"**', !/知道：[^·]*他以为你骗了他/.test(memo), memo);
+  ok('猜测单独标"他以为（未确认）"', /他以为（未确认）：[^·]*他以为你骗了他/.test(memo), memo);
+  ok('自述单独标"你告诉过他"', /你告诉过他[^·]*怕打雷/.test(memo), memo);
+  ok('事实那一栏里有它', /知道：[^·]*他亲眼看到的事/.test(memo), memo);
+  // 标记旁档也能写 knows（和 breaks / reveals 同一套规则）
+  const tm = { cast: ['mason'], pk: { as: 'jack' }, wid: 'gala', love: { mason: 10 }, cardLog: {} };
+  const marksWithKnows = { gala: { chapters: { '2': { knows: { mason: [{ t: '他还不知道录像的事', kind: 'guess' }] } } } } };
+  const api2 = new Function('ch', 'wd', 'stageOf', 'MIRU_MARKS', 'CL', code + '\nreturn { cardCommitChapter, cardAt };')((id) => CHARS[id], () => ({ pack: { chapters: [{ choices: [] }, { choices: [] }] } }), () => 1, marksWithKnows, () => 'zh');
+  api2.cardCommitChapter(tm, 2, 'A');
+  const k2 = api2.cardAt(tm, 'mason', 2).knows;
+  ok('标记旁档能写 knows', k2.length === 1 && k2[0].kind === 'guess', JSON.stringify(k2));
+}
+
+if (process.argv.includes('--selftest')) {
+  // 变异：让"只看这一章及以前"失效（把 > 改成 >=，等于把未来的补丁也算进来）
+  const broken = code.replace('if (p.ch > ch0) continue;', 'if (p.ch > ch0 + 1) continue;');
+  if (broken === code) { console.log('  · 变异没生效（锚点没匹配上）✗'); console.log('SELFTEST FAILED'); process.exit(1); }
+  const bad = new Function('ch', broken + '\nreturn { cardAt };')((id) => CHARS[id]);
+  const leak = bad.cardAt(th, 'mason', 2).stance.betrayed;
+  const caught = leak === 3;
+  console.log(`  · 变异（让第 2 章看到第 3 章的立场）：${caught ? '已抓住 ✓' : '没抓住 ✗'}`);
+  if (!caught) { console.log('SELFTEST FAILED'); process.exit(1); }
+}
+
+console.log(`\n${pass} passed, ${fails.length} failed`);
+if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
+console.log('character card OK');

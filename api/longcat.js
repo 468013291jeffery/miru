@@ -10,21 +10,19 @@
 export const config = { runtime: 'edge' };
 
 const LONGCAT_MODELS = ['LongCat-2.0', 'LongCat-2.5-Preview'];
-const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^https:\/\/(www\.)?miru\.plus$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
-const FIRST_TOKEN_MS = 22000; // give up on a provider that hasn't started answering by then
+const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
+const FIRST_TOKEN_MS = Number(process.env.MIRU_FIRST_TOKEN_MS) || 22000; // edge 热路径：读 env 不读 DB（每次请求查一次库不值得）
 
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
 /* SCNet: one key reaches many models. Without SCNET_MODEL we read the account's model list once and pick a good chat model. */
-let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0, SCNET_FAIL = 0; // a failed lookup is not retried for 10 min
+let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0;
 const SCNET_PREF = [/^deepseek-v4\.1-flash$/i, /^scnet-max$/i, /^deepseek-v4[\w.-]*flash/i, /^qwen3\.\d+-flash/i, /^glm-5[\w.]*-flash$/i, /^deepseek-v4/i, /^qwen3\.\d+-plus/i, /^glm-5/i, /deepseek/i, /qwen/i, /glm/i];
 async function scnetResolve() {
   if (env('SCNET_MODEL') || !env('SCNET_API_KEY')) return;
   if (SCNET_AUTO && Date.now() - SCNET_AT < 3600e3) return;
-  if (!SCNET_AUTO && Date.now() - SCNET_FAIL < 600e3) return;
   try {
     const base = env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '');
-    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 2500); // never let the model list hold up a reply
-    const r = await fetch(base + '/models', { headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') }, signal: ctl.signal }).finally(() => clearTimeout(tm));
+    const r = await fetch(base + '/models', { headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') } });
     const j = await r.json();
     const ids = (j.data || j.models || []).map(m => typeof m === 'string' ? m : (m.id || m.name)).filter(Boolean);
     SCNET_LIST = ids;
@@ -33,14 +31,13 @@ async function scnetResolve() {
     if (!SCNET_AUTO) SCNET_AUTO = chat[0] || ids[0] || null;
     SCNET_AT = Date.now();
   } catch (_) {}
-  if (!SCNET_AUTO) SCNET_FAIL = Date.now();
 }
 function providers() {
   const all = {
-    deepseek: { id: 'deepseek', name: 'DeepSeek', url: env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/+$/, '') + '/chat/completions', key: env('DEEPSEEK_API_KEY'), model: () => env('DEEPSEEK_MODEL', 'deepseek-chat'), extra: {}, maxOut: 8000 },
-    longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
-    scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
-    glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 8000 },
+    deepseek: { id: 'deepseek', name: 'DeepSeek', url: env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com').replace(/\/+$/, '') + '/chat/completions', key: env('DEEPSEEK_API_KEY'), model: () => env('DEEPSEEK_MODEL', 'deepseek-chat'), extra: {}, maxOut: 32000 },
+    longcat: { id: 'longcat', name: 'LongCat', url: 'https://api.longcat.chat/openai/v1/chat/completions', key: env('LONGCAT_API_KEY'), model: m => (LONGCAT_MODELS.includes(m) ? m : LONGCAT_MODELS[0]), extra: { thinking: { type: 'disabled' } }, maxOut: 32000 },
+    scnet: { id: 'scnet', name: 'SCNet', url: env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '') + '/chat/completions', key: env('SCNET_API_KEY'), model: () => env('SCNET_MODEL') || SCNET_AUTO, extra: { thinking: { type: 'disabled' } }, maxOut: 32000 },
+    glm: { id: 'glm', name: 'GLM', url: env('GLM_BASE_URL', 'https://open.bigmodel.cn/api/paas/v4').replace(/\/+$/, '') + '/chat/completions', key: env('GLM_API_KEY'), model: () => env('GLM_MODEL', 'glm-4.5-flash'), extra: { thinking: { type: 'disabled' } }, maxOut: 32000 },
   };
   const order = String(env('LLM_ORDER', 'deepseek,scnet,longcat,glm')).split(',').map(s => s.trim().toLowerCase()).filter(k => all[k]);
   for (const k of Object.keys(all)) if (!order.includes(k)) order.push(k);
@@ -106,9 +103,8 @@ const J = (o, status, h) => new Response(JSON.stringify(o), { status, headers: {
 async function open(p, clean) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), FIRST_TOKEN_MS);
   try {
-    const body = { ...clean, ...p.extra, model: p.model(clean.model), max_tokens: Math.min(clean.max_tokens, p.maxOut), stream: true, stream_options: { include_usage: true } };
-    let up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal });
-    if (!up.ok && up.status === 400 && body.stream_options) { delete body.stream_options; up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal }); } // provider without usage-in-stream support
+    const body = { ...clean, ...p.extra, model: p.model(clean.model), max_tokens: Math.min(clean.max_tokens, p.maxOut), stream: true };
+    const up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal });
     if (!up.ok) { const e = await up.text().catch(() => ''); throw new Error(p.name + ' ' + up.status + ' ' + e.slice(0, 200)); }
     const rd = up.body.getReader(); const first = await rd.read(); // waits for the first bytes (still under the timer)
     clearTimeout(t);
@@ -119,30 +115,13 @@ async function open(p, clean) {
   } catch (e) { clearTimeout(t); try { ctl.abort(); } catch (_) {} throw e.name === 'AbortError' ? new Error(p.name + ' timeout') : e; }
 }
 
-/* hedged start: if the first provider hasn't started answering within HEDGE_MS, the next one starts in parallel; the first to answer wins,
-   the others are aborted. A provider that fails fast hands over at once. (SCNet sometimes queues for 20 s+ under parallel load.) */
-const HEDGE_MS = 4500;
-function openRace(chain, clean, errs) {
-  return new Promise((resolve, reject) => {
-    let i = 0, live = 0, done = false;
-    const fail = () => { if (!done && live === 0 && i >= chain.length) { done = true; reject(new Error(errs.join(' | ') || 'no provider')); } };
-    const next = () => {
-      if (done || i >= chain.length) return fail();
-      const p = chain[i++]; live++; const hedge = setTimeout(next, HEDGE_MS);
-      open(p, clean).then(o => { clearTimeout(hedge); live--; if (done) { try { o.ctl.abort(); } catch (_) {} return; } done = true; resolve({ p, o }); },
-        e => { clearTimeout(hedge); live--; errs.push(String(e.message || e)); if (done) return; if (i < chain.length) next(); else fail(); });
-    };
-    next();
-  });
-}
-
 export default async function handler(req) {
   const origin = req.headers.get('origin');
   const c = cors(origin);
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: c.headers });
   if (req.method !== 'POST') return new Response('POST only', { status: 405, headers: c.headers });
   if (!c.ok) return J({ error: { message: 'origin not allowed' } }, 403, c.headers);
-  if (SCNET_AUTO || !env('SCNET_API_KEY') || env('SCNET_MODEL')) await scnetResolve(); else scnetResolve().catch(() => {}); // first lookup runs in the background, never on the reply path
+  await scnetResolve();
   let body;
   try { body = await req.json(); } catch { return J({ error: { message: 'bad json' } }, 400, c.headers); }
   if (body.omni) return omni(body.omni, c.headers);
@@ -196,7 +175,7 @@ export default async function handler(req) {
   const clean = {
     model: String(body.model || ''),
     messages: Array.isArray(body.messages) ? body.messages.slice(-40).map(m => ({ role: m.role === 'assistant' ? 'assistant' : m.role === 'system' ? 'system' : 'user', content: String(m.content || '').slice(0, m.role === 'system' ? 80000 : 40000) })) : [],
-    max_tokens: Math.min(Number(body.max_tokens) || 1500, 8000),
+    max_tokens: Math.min(Number(body.max_tokens) || 8192, 32000),
     temperature: typeof body.temperature === 'number' ? body.temperature : 0.85,
   };
   if (!clean.messages.length) return J({ error: { message: 'no messages' } }, 400, c.headers);
@@ -206,11 +185,14 @@ export default async function handler(req) {
   /* streaming callers: hand back the first provider that starts answering (SSE passes straight through) */
   if (body.stream) {
     const errs = [];
-    try {
-      const { p, o } = await openRace(chain, clean, errs);
-      const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.rd.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); } });
-      return new Response(rs, { status: 200, headers: { ...c.headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': p.id } });
-    } catch (e) { return J({ error: { code: 'all_providers_failed', message: errs.join(' | ').slice(0, 600) } }, 502, c.headers); }
+    for (const p of chain) {
+      try {
+        const o = await open(p, clean);
+        const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.rd.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); } });
+        return new Response(rs, { status: 200, headers: { ...c.headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': p.id } });
+      } catch (e) { errs.push(String(e.message || e)); }
+    }
+    return J({ error: { code: 'all_providers_failed', message: errs.join(' | ').slice(0, 600) } }, 502, c.headers);
   }
 
   // Non-streaming callers: answer at once and keep the connection alive with whitespace while the model writes, so a slow reply
@@ -219,23 +201,19 @@ export default async function handler(req) {
   (async () => {
     const ka = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 4000);
     let out = null; const errs = [];
-    let pool = chain.slice();
-    for (let round = 0; round < 3 && pool.length && !out; round++) {
-      let content = '', finish = null, buf = '', p = null, usage = null;
+    for (const p of chain) {
+      let content = '', finish = null, buf = '';
       const eat = chunk => {
         buf += dec.decode(chunk, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
-        for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; if (j.usage) usage = j.usage; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
+        for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
       };
       try {
-        const won = await openRace(pool, clean, errs); p = won.p; const o = won.o; pool = pool.filter(x => x !== p); eat(o.first);
-        const t0 = Date.now(); // a stream that stalls (no bytes for 9 s) or runs past 35 s is cut: keep what came, or move on to the next provider
-        for (;;) { let tm; const r = await Promise.race([o.rd.read(), new Promise(z => { tm = setTimeout(() => z({ stall: 1 }), 9000); })]); clearTimeout(tm);
-          if (r.stall || Date.now() - t0 > 35000) { try { o.ctl.abort(); } catch (_) {} if (content.trim().length > 40) { finish = 'length'; break; } throw new Error(p.name + ' stalled'); }
-          if (r.done) break; eat(r.value); }
+        const o = await open(p, clean); eat(o.first);
+        for (;;) { const { done, value } = await o.rd.read(); if (done) break; eat(value); }
         if (!content.trim()) throw new Error(p.name + ' returned no text');
-        out = { provider: p.id, model: p.model(clean.model), usage: usage || undefined, choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
+        out = { provider: p.id, model: p.model(clean.model), choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
         break;
-      } catch (e) { errs.push(String(e.message || e)); if (!p) break; if (content.trim().length > 200) { out = { provider: p.id, partial: true, choices: [{ index: 0, finish_reason: 'length', message: { role: 'assistant', content } }] }; break; } }
+      } catch (e) { errs.push(String(e.message || e)); if (content.trim().length > 200) { out = { provider: p.id, partial: true, choices: [{ index: 0, finish_reason: 'length', message: { role: 'assistant', content } }] }; break; } }
     }
     clearInterval(ka);
     if (!out) out = { error: { code: 'all_providers_failed', message: errs.join(' | ').slice(0, 600) } };

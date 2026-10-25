@@ -7,7 +7,7 @@
    Rules: an official choice never costs anything; an AI turn = one successful reply to free input, however many lines;
    a failed or offline reply is never charged; running out of turns never blocks the official story; love is never sold. */
 function PCN(w){return (w&&w.pack&&w.pack.chapters&&w.pack.chapters.length)||8}
-const PACK_PRICE=50,TOPUP={n:100,cost:24},TRIAL_UNITS=24,PLUS_UNITS=250,PACK_UNITS=120,FREE_CH=2,ENDING_NEED=4;
+const PACK_PRICE=MIRU_TUNE.pay.packPrice,TOPUP={n:MIRU_TUNE.pay.topupUnits,cost:MIRU_TUNE.pay.topupCost},TRIAL_UNITS=MIRU_TUNE.pay.trialUnits,PLUS_UNITS=MIRU_TUNE.pay.plusUnits,PACK_UNITS=MIRU_TUNE.pay.packUnits,FREE_CH=MIRU_TUNE.pay.freeChapters,ENDING_NEED=MIRU_TUNE.pay.endingNeed;
 function isPack(w){return !!(w&&w.pack)}
 function packSt(wid){S.packs=S.packs||{};return S.packs[wid]=S.packs[wid]||{own:0,end:{}}}
 function owns(wid){return !!(S.packs&&S.packs[wid]&&S.packs[wid].own)}
@@ -21,7 +21,7 @@ function unitsLeft(){const u=uState();return u.trial+u.pack+u.pl}
 /* spend the turns that expire first: this month's MIRU+ turns, then the free trial, then purchased turns (never expire) */
 function useUnits(n){const u=uState();let k=n;for(const f of ["pl","trial","pack"]){const d=Math.min(u[f],k);u[f]-=d;k-=d}save();unitChip();return k===0}
 function unitChip(){$$(".uchip").forEach(el=>el.textContent="✦ "+unitsLeft())}
-function aiCost(){return S.tier==="deep"?3:1}
+function aiCost(){return S.tier==="deep"?MIRU_TUNE.ai.costDeep:MIRU_TUNE.ai.costNormal}
 /* checked BEFORE the user's message is added, so nothing is left hanging */
 function aiGate(){if(!liveOn())return true;if(unitsLeft()>=aiCost())return true;unitsSheet(true);return false}
 function unitsSheet(out){const u=uState();
@@ -107,7 +107,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))}
 function stopResolve(th,extra){if(!th||!th.pk||!th.pk.stop)return;if(PKWAIT[th.id]){PKWAIT[th.id](extra||[]);return}
  th.pk.q=th.pk.q||[];th.pk.q.shift();th.pk.q.unshift(...(extra||[]));th.pk.stop=null;th.pk.go=0;save();packRun(th)}
-function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk.as).forEach(c=>{th.love[c]=Math.max(0,Math.min(100,(th.love[c]||5)+d))})}
+function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk.as).forEach(c=>{loveWrite(th,c,d,"pack:"+k)})}
 function aCount(th){const L=PCN(wd(th.wid));return Object.entries(th.pk.picks).filter(([n,k])=>+n<L&&k==="A").length}
 function EN(th){return Math.min(ENDING_NEED,Math.max(0,PCN(wd(th.wid))-1))}
 
@@ -132,20 +132,61 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  return h+'</div>'}
 function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=packPanel(th)}
 
+/* ---- ledger telemetry for the pack flow (contract: LEDGER.md §2) ----
+   Four events, no gameplay change: chapter_open / choice_pick / chapter_done / story_end.
+   Everything hangs off th.pk, so a replay or a second device starts a new session id. */
+function pkSess(th){if(!th.pk._sess){th.pk._sess=Date.now().toString(36)+Math.random().toString(36).slice(2,7)}return th.pk._sess}
+function pkTrack(th,name,extra){try{track(name,Object.assign({wid:th.wid,sess:pkSess(th),t:Date.now()},extra||{}))}catch(_){}}
+function pkOpenMark(th,n){try{
+  // a genuinely new run = chapter 1 with no session yet, right after an ending, or after having
+  // been past chapter 1 (replay). Re-entering the SAME chapter must not count as a second open.
+  if(n===1&&(!th.pk._sess||th.pk.st==="end"||th.pk._opened>1)){th.pk._sess=null;th.pk._opened=0}
+  if(th.pk._opened===n)return                          // same chapter re-entered: one opening, not two
+  th.pk._opened=n;th.pk._chAt=Date.now();
+  pkTrack(th,"chapter_open",{ch:n});
+}catch(_){}}
+function pkDone(th,n){try{pkTrack(th,"chapter_done",{ch:n,ms:th.pk._chAt?Date.now()-th.pk._chAt:null})}catch(_){}}
+/* 每幕在场名单（03.6）：优先用章节自带的 present，其次用旁档 MIRU_PRESENT，都没有就 null
+   （null ⇒ appendMsg 退回 th.cast，与加这个字段之前完全一致）。 */
+function pkSetPresent(th,n){try{
+  const ch=wd(th.wid).pack.chapters[n-1];
+  let list=null;
+  if(ch&&Array.isArray(ch.present)&&ch.present.length)list=ch.present.slice();
+  else if(typeof MIRU_PRESENT!=="undefined"&&MIRU_PRESENT[th.wid])list=(MIRU_PRESENT[th.wid][n-1]||null);
+  th.present=(list&&list.length)?list:null;
+}catch(_){th.present=null}}
 function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
+ pkTrack(th,"choice_pick",{ch:n,key:k,ms:th.pk._chAt?Date.now()-th.pk._chAt:null});
  th.pk.picks[n]=k;pkSet(th,x.set);th.pk.st="busy";th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
  appendMsg(th,{who:"sys",k:"dec",n,c:k,txt:Lz(x.t),at:Date.now()});
  th.pk.q=packBeats(x.then).slice();th.pk.after="pick:"+k;save();packRefresh(th);packRun(th)}
 function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  th.mem.push(Lz(x.mem));packLove(th,k);th.rounds++;
+ pkDone(th,n);
  if(n===PCN(w)){th.pk.st="end";th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
-  if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>th.love[cid]=Math.max(th.love[cid]||0,80));
+  pkTrack(th,"story_end",{ch:n,ending:k});
+  if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>loveWrite(th,cid,0,"ending:A",{floor:80}));
   appendMsg(th,{who:"sys",k:"end",e:k,at:Date.now()});
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
  else th.pk.st="next";
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
+ try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
+ try{
+  if(typeof cardChanges==="function"){
+    const d=cardChanges(th,n), lines=[];
+    for (const x of d.slice(0,3)) {
+      const bits=[];
+      if (x.loveDelta) bits.push(t("cd.love",{d:(x.loveDelta>0?"+":"")+x.loveDelta}));
+      if (x.stance) Object.keys(x.stance).forEach(s=>bits.push(t("cd.stance",{s:s})));
+      if (x.knows) bits.push(t("cd.knows",{n:x.knows}));
+      if (x.revealed) bits.push(t("cd.revealed",{n:x.revealed}));
+      if (bits.length) lines.push(first(ch(x.cid).n)+" · "+bits.join(" · "));
+    }
+    if (lines.length) appendMsg(th,{who:"sys",k:"card",title:"🃏 "+t("cd.title"),txt:lines.join("\n"),at:Date.now()});
+  }
+ }catch(_){}
  const before=th.pk.before||{};delete th.pk.before;save();
  if(curT===th.id&&!$("#s-chat").hidden){renderChat();scrollChat()}
  levelUpCheck(th,before)}
@@ -174,6 +215,8 @@ function stepInSheet(){const th=S.threads[curT];if(!th||!th.pk)return;const w=wd
 
 /* ---------- Story Pack purchase ---------- */
 function packPaywall(wid,n){const w=wd(wid),c=w.pack.chapters[(n||3)-1];
+ // the gate, measured: unlike "opened chapter 3", this tells "the wall was shown" from "they walked"
+ try{const _th=S.threads[curT];if(_th&&_th.wid===wid)pkTrack(_th,"paywall",{ch:n||3})}catch(_){}
  sheet('<div class="eyebrow" style="color:var(--gold)">'+t("pk.packEyebrow",{m:PCN(w)})+'</div><h2 style="margin-top:6px">'+esc(t("pk.keepGoing",{t:Lz(c.t)}))+'</h2>'+
   '<p class="sm dim" style="margin-top:6px;line-height:1.55">'+esc(Lz(c.goal))+'</p>'+
   '<ul class="pkbuyl"><li>'+t("pk.b1",{k:PCN(w)-2})+'</li><li>'+t("pk.b2",{n:PACK_UNITS})+'</li><li>'+t("pk.b3")+'</li><li>'+t("pk.b4")+'</li></ul>'+
@@ -195,8 +238,14 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-close]"))closeS
 /* ---------- AI prompt context for a story pack ---------- */
 function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chapters[th.pk.ch-1];if(!c)return "";
  const as=th.pk.as,lead=ch(as),past=Object.entries(th.pk.picks).map(([n,k])=>"Ch"+n+": "+P.chapters[n-1].choices.find(x=>x.k===k).mem.en).join(" | ");
- return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+".",
-  past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:"",
+ return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+"."+
+  // 内容版本号（T06）：内容一改，这一行就变 ⇒ 固定段失效 ⇒ 缓存不会拿旧剧本的上下文继续讲故事
+  ((typeof MIRU_REV!=="undefined"&&MIRU_REV[th.wid])?" [script rev "+MIRU_REV[th.wid]+"]":""),
+   (function(){try{
+    const _canon=(typeof canonFacts==="function")?canonFacts(th.wid,th.pk.ch):[];
+    const _all=[past].concat(_canon).filter(Boolean).join(" | ");
+    return _all?"WHAT HAS HAPPENED (official, canon — never contradict, never re-open a settled conflict): "+_all:"";
+  }catch(_){return past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:""}})(),
   th.pk.st==="choose"?"The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal.":
    "This chapter's choice is made. Play the aftermath of it; do not start the next chapter's events.",
   as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
@@ -309,7 +358,7 @@ async function stopPhoto(th,d){const who=stopWho(th,d),cap=Lz(d.cap)||"";const p
  let src=null;if(d.img&&await imgOk("art/scenes/"+d.img+".jpg"))src="art/scenes/"+d.img+".jpg";
  if(!src&&AIG.mcp&&d.prompt){try{const res=await AIG.mcp.callTool(AIG.srv,AIG.tool,{prompt:(d.prompt.en||d.prompt)+", cinematic film still, moody low light, 35mm, photorealistic, adult characters",width:576,height:1024,num_inference_steps:24,randomize_seed:true},{cache:false});src=aiImgFrom(res)}catch(_){src=null}}
  let url=null;try{const cv=await sceneStill(th,{who,txt:cap},src?{im:src}:{im:artSrc(who)});url=cv.toDataURL("image/jpeg",.8)}catch(_){url=src||artSrc(who)}
- const aid="a"+Date.now();S.album.unshift({id:aid,cid:who,src:url,at:Date.now()});if(S.album.length>24)S.album.length=24;
+ const aid="a"+Date.now();S.album.unshift({id:aid,cid:who,src:mediaWrap("album:"+aid,url),at:Date.now()});if(S.album.length>24)S.album.length=24;
  appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});save()}
 function stopVideo(th,d){return new Promise(res=>{const src=stopClip(th,d);const el=document.createElement("div");el.className="stvid";
  el.innerHTML='<video playsinline autoplay src="'+esc(vidSrc(src))+'"></video><div class="stvcap">'+esc(Lz(d.cap)||"")+'</div><button class="stvx" aria-label="close">✕</button>';
@@ -321,10 +370,10 @@ document.addEventListener("click",async e=>{let x;const th=S.threads[curT];if(!t
  if(e.target.closest("[data-stopskip]")){stopResolve(th,d.skip||[]);return}
  if(e.target.closest("[data-stopdone]")){stopResolve(th,d.then||[]);return}
  if(x=e.target.closest("[data-stopline]")){const o=d.opts[+x.dataset.stopline];appendMsg(th,{who:"me",k:o.k||"say",txt:Lz(o.t),at:Date.now()});th.rounds++;
-  pkSet(th,o.set);if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}if(o.love)th.cast.filter(c=>c!==th.pk.as).forEach(c=>th.love[c]=Math.max(0,Math.min(100,(th.love[c]||5)+o.love)));
+  pkSet(th,o.set);if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}if(o.love)th.cast.filter(c=>c!==th.pk.as).forEach(c=>loveWrite(th,c,o.love,"choice:love"));
   stopResolve(th,o.then||[]);return}
  if(x=e.target.closest("[data-stopgift]")){const g=GIFTS.find(y=>y.id===x.dataset.stopgift);if(!g)return;if(g.cost&&!spend(g.cost,"gift"))return;
-  const m=stopWho(th,d);th.love[m]=Math.min(100,(th.love[m]||0)+g.love);th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));
+  const m=stopWho(th,d);loveWrite(th,m,g.love,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});
   stopResolve(th,(d.by&&d.by[g.id])||d.then||[]);return}
  if(e.target.closest("[data-stopphoto]")){if(!stopPay(STOP_PRICE.photo,"img"))return;const btn=e.target.closest("button");btn.disabled=true;btn.textContent="✨ "+t("ai.painting");

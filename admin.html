@@ -212,8 +212,40 @@ const Users = {
     const f = reactive({ q: '', status: '', provider: '', sort: 'created' });
     const { st, load } = usePaged('users', f);
     const det = ref(null), drawer = ref(false), tab = ref('ledger');
+    const play = ref(null), txN = ref(200), txBusy = ref(false);
     const gd = reactive({ show: false, amount: 10, reason: '' }), bd = reactive({ show: false, reason: '', days: 0, hideWorks: false });
-    async function open(id) { det.value = await api('user', { query: { id } }); drawer.value = true; }
+    async function open(id) { det.value = await api('user', { query: { id } }); drawer.value = true; play.value = null; if (tab.value === 'play') loadPlay(); }
+    // ---- one player's gameplay ledger (funnel / choice mix / chapter duration) ----
+    async function loadPlay() {
+      if (!det.value) return;
+      try { play.value = await api('user_ledger', { query: { id: det.value.user.id, days: 90 } }); }
+      catch (_) { play.value = { works: [], rows: 0, days: 90 }; }
+    }
+    function tabChanged(name) { if (name === 'play' && !play.value) loadPlay(); }
+    function chRows(w) {
+      return Object.keys(w.chapters || {}).sort((a, b) => Number(a) - Number(b)).map(ch => {
+        const c = w.chapters[ch] || {}, ks = Object.keys(c.choices || {});
+        return { ch, opened: c.opened, done: c.done, done_rate: c.done_rate, median_ms: c.median_ms, choices: ks.length ? ks.map(k => k + ':' + c.choices[k].n).join('  ') : '—' };
+      });
+    }
+    const msfmt = v => { if (v == null) return '—'; const s = Math.round(v / 1000); return s < 60 ? s + ' 秒' : Math.floor(s / 60) + ' 分 ' + (s % 60) + ' 秒'; };
+    // ---- dialogue export: server renders the txt, we just download it ----
+    async function dlTx() {
+      const id = det.value.user.id;
+      txBusy.value = true;
+      try {
+        const qs = new URLSearchParams({ r: 'user_transcript', id, limit: String(txN.value) }).toString();
+        const res = await fetch('/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
+        if (!res.ok) { let j = {}; try { j = await res.json(); } catch (_) {} ElMessage.error(j.error || ('导出失败 ' + res.status)); return; }
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'miru-' + id + '-' + txN.value + 'lines.txt';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+        ElMessage.success('已导出（最多 ' + txN.value + ' 条）');
+      } finally { txBusy.value = false; }
+    }
     async function act(op, extra) { const id = det.value.user.id; const j = await api('user', { body: Object.assign({ id, op }, extra || {}) }); await open(id); load(); return j; }
     async function gems() { if (!gd.reason.trim()) return ElMessage.warning('请填写原因'); const j = await act('gems', { amount: gd.amount, reason: gd.reason }); gd.show = false; ElMessage.success('完成，当前余额 ' + j.gems); }
     async function ban() { if (!bd.reason.trim()) return ElMessage.warning('请填写封禁原因'); await act('ban', { reason: bd.reason, days: bd.days, hideWorks: bd.hideWorks }); bd.show = false; ElMessage.success('已封禁'); }
@@ -224,7 +256,7 @@ const Users = {
     async function rename() { const v = await promptText('修改昵称', '新昵称', { inputValue: det.value.user.name || '' }); await act('rename', { name: v }); }
     async function email() { const v = await promptText('修改邮箱', '新邮箱（用户将用它登录）', { inputValue: det.value.user.email || '' }); await act('email', { email: v }); }
     onMounted(() => load());
-    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, resetpw, logoutAll, note, rename, email, L, fmt, tagType, money, size, can };
+    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, resetpw, logoutAll, note, rename, email, play, txN, txBusy, loadPlay, tabChanged, chRows, msfmt, dlTx, L, fmt, tagType, money, size, can };
   },
   template: `<div class="panel">
     <div class="toolbar">
@@ -272,7 +304,32 @@ const Users = {
         <el-descriptions-item label="云存档">{{det.state?('v'+det.state.ver+' · '+size(det.state.bytes)+' · '+fmt(det.state.updated_at)):'无'}}</el-descriptions-item>
         <el-descriptions-item label="后台备注" :span="2">{{det.user.note||'—'}}</el-descriptions-item>
       </el-descriptions>
-      <el-tabs v-model="tab" style="margin-top:12px">
+      <el-tabs v-model="tab" style="margin-top:12px" @tab-change="tabChanged">
+        <el-tab-pane :label="'玩法数据'+(play?(' · '+play.rows+' 条'):'')" name="play">
+          <div class="toolbar" style="margin-bottom:10px">
+            <el-button size="small" @click="loadPlay" :loading="txBusy">刷新</el-button>
+            <el-select v-model="txN" size="small" style="width:140px">
+              <el-option v-for="n in [50,200,500,1000,5000]" :key="n" :label="'最近 ' + n + ' 条'" :value="n" />
+            </el-select>
+            <el-button size="small" type="primary" :loading="txBusy" @click="dlTx">下载对话 txt</el-button>
+            <span class="muted">导出会记进后台审计日志</span>
+          </div>
+          <template v-if="play">
+            <div v-if="!play.works || !play.works.length" class="muted">这个账号还没有玩法事件（事件表里没有带 wid 的记录）</div>
+            <div v-for="w in play.works" :key="w.work" style="margin-bottom:14px">
+              <div style="margin-bottom:4px"><b>{{w.work}}</b> <span class="muted">{{w.sessions}} 个会话 · {{w.events}} 条事件</span></div>
+              <el-table :data="chRows(w)" size="small" max-height="260">
+                <el-table-column prop="ch" label="章" width="60" />
+                <el-table-column prop="opened" label="进章" width="70" />
+                <el-table-column prop="done" label="完成" width="70" />
+                <el-table-column label="完成率" width="90"><template #default="{row}">{{row.done_rate==null?'—':Math.round(row.done_rate*100)+'%'}}</template></el-table-column>
+                <el-table-column label="中位时长" width="110"><template #default="{row}">{{msfmt(row.median_ms)}}</template></el-table-column>
+                <el-table-column prop="choices" label="选项分布（次数）" />
+              </el-table>
+            </div>
+            <div class="muted" style="margin-top:8px">窗口 {{play.days}} 天 · 共 {{play.rows}} 条事件</div>
+          </template>
+        </el-tab-pane>
         <el-tab-pane :label="'钻石流水 ('+det.ledger.length+')'" name="ledger"><el-table :data="det.ledger" size="small" max-height="380"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="变动" width="80"><template #default="{row}"><span :style="{color:row.delta>0?'#67c23a':'#f56c6c'}">{{row.delta>0?'+':''}}{{row.delta}}</span></template></el-table-column><el-table-column prop="reason" label="原因" /><el-table-column prop="balance" label="余额" width="80" /></el-table></el-tab-pane>
         <el-tab-pane :label="'订单 ('+det.orders.length+')'" name="orders"><el-table :data="det.orders" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="sku" label="商品" /><el-table-column prop="gems" label="钻石" width="70" /><el-table-column label="金额" width="90" :formatter="r=>money(r.price_cents)" /><el-table-column label="状态" width="120"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ostatus[row.status]||row.status}}</el-tag> <el-tag v-if="row.test" size="small" type="warning">测试</el-tag></template></el-table-column></el-table></el-tab-pane>
         <el-tab-pane :label="'作品 ('+det.works.length+')'" name="works"><el-table :data="det.works" size="small"><el-table-column prop="title" label="标题" /><el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.wstatus[row.status]||row.status}}</el-tag></template></el-table-column><el-table-column prop="plays" label="播放" width="70" /><el-table-column prop="reports" label="举报" width="70" /><el-table-column label="创建" width="170" :formatter="r=>fmt(r.created_at)" /></el-table></el-tab-pane>
@@ -398,7 +455,7 @@ const Reports = {
     <div class="toolbar"><el-radio-group v-model="f.status" @change="load(1)"><el-radio-button value="open">待处理</el-radio-button><el-radio-button value="resolved">已处理</el-radio-button><el-radio-button value="dismissed">已驳回</el-radio-button><el-radio-button value="">全部</el-radio-button></el-radio-group><span class="muted">共 {{st.total}} 条</span></div>
     <el-table :data="st.rows" v-loading="st.loading" stripe>
       <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" />
-      <el-table-column label="被举报对象" min-width="200"><template #default="{row}"><el-tag size="small" effect="plain">{{({work:'作品',user:'作者',asset:'素材',message:'AI 回复'})[row.target_kind]||row.target_kind}}</el-tag> <b>{{row.work_title||row.target_id}}</b><div class="muted" v-if="row.target_kind==='work'">作品状态：{{L.wstatus[row.work_status]||row.work_status||'—'}}</div><div class="muted" v-if="row.target_kind==='user'">用户 ID：{{row.target_id}}（到「用户管理」搜索可封禁）</div><details v-if="row.snap" style="margin-top:4px"><summary class="muted" style="cursor:pointer">查看被举报内容</summary><pre style="white-space:pre-wrap;font-size:12px;max-height:220px;overflow:auto">{{row.snap}}</pre></details></template></el-table-column>
+      <el-table-column label="被举报对象" min-width="200"><template #default="{row}"><b>{{row.work_title||row.target_id}}</b><div class="muted">作品状态：{{L.wstatus[row.work_status]||row.work_status||'—'}}</div></template></el-table-column>
       <el-table-column prop="reason" label="举报原因" min-width="200" />
       <el-table-column label="举报人" width="180"><template #default="{row}"><span class="muted">{{row.reporter_email||row.user_id}}</span></template></el-table-column>
       <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.rstatus[row.status]}}</el-tag></template></el-table-column>
@@ -620,7 +677,6 @@ const STU = {
 # CHOICE｜本章结尾的关键问题（每章最后必须有一个）
 #### A｜选项文字
 （选 A 之后的后果：1–3 行）
-【效果】好感 角色名+3；信任 角色名+1；标记 FLAG_英文大写；记忆 他会记住的一句话   ← 结尾关键选择的每个选项都必须有这一行（数值范围 -5～+5；程序直接执行，不靠正则猜）；场景中的小选择可以没有
 #### B｜……
 #### C｜……
 #### 入口A｜（写在下一章开头：只有上一章结尾选了 A 才会出现的段落）
@@ -669,10 +725,6 @@ const STU_TAX={
  world:{t:["Setting","世界"],max:2,items:[["contemp","Contemporary","都市",["Coworkers","Small Town","Apartment Life","Hospital","Radio","Broadway","Kitchen","Bakery","Jazz Club","Billionaire"]],["college","College","校园",["Campus","College Football","Military Academy","Roommates"]],
   ["sports","Sports Romance","体育",["Hockey","F1","Esports","Roller Derby","College Football"]],["fantasy","Romantasy & Paranormal","奇幻 · 超自然",["Romantasy","Fae","Vampires","Werewolves","Dragons","Ghosts","Castle Life"]],["mafia","Mafia & Crime","黑帮",["Mafia","Bratva","Secret Heir"]],["scifi","Sci-Fi","科幻",["Sci-Fi","Space Station","Androids"]]]}};
 const STU_LAYERS = [['world', '世界', 2], ['trope', '关系桥段', 4], ['him', '他是什么样的人', 2], ['vibe', '情绪', 2]];
-const STU_HEAT_CH = { fluff: '清水：偏爱、呵护、分享秘密、共同生活、内心的喜欢与关系修复（不能写成完全无恋爱张力）', slow: '暧昧：双关、调侃、克制的接近、欲言又止、互相试探；给出玩家可以接住的对话球（不能每句都冷淡或故意拖进度）', steamy: '微辣：成年且玩家愿意时，尽早安排自然的心动、主动示好、想念、距离感、拥抱/亲吻愿望等非露骨身体吸引（不能未经同意身体接触、强制升级关系、重复欲望套话）' };
-const STU_EMO_CH = { cozy: '靠近→困难→理解→修复｜温柔矛盾、互相照顾、情绪回报，避免无因残酷升级', romcom: '相遇→尴尬→斗嘴→转折→亲近｜有因果的笑点、性格反差和澄清机会', angst: '吸引→希望→裂痕→抉择→修复/遗憾｜人物真实恐惧、失去代价、强弱交替；避免无休止虐待', dark: '秘密→压力→两难→代价｜世界危险与伦理抉择，不等于允许胁迫亲密', thrill: '疑点→线索→调查→反转→揭露｜已定义线索、误导范围、真相链和玩家调查行为' };
-/* v7.12 §02.2：尺度和情绪写成固定合同（未填才用默认 steamy / angst） */
-const stuCharter = c => { const h = STU_HEAT_CH[c.heat] ? c.heat : 'steamy'; const em = ((c.taste || {}).vibe || []).filter(x => STU_EMO_CH[x]).slice(0, 2); const E = em.length ? em : ['angst']; return '【固定合同（编写规范 v7.12 §02.2）】\nHeat Charter（尺度 ' + h + (STU_HEAT_CH[c.heat] ? '' : '，未填按默认') + '）：' + STU_HEAT_CH[h] + '\nEmotion Charter（' + E[0] + ' 为主' + (E[1] ? '，' + E[1] + ' 为辅' : '') + (em.length ? '' : '，未填按默认') + '）：\n' + E.map(x => '- ' + x + '：' + STU_EMO_CH[x]).join('\n') + '\n同意原则：角色“想靠近”和玩家“已经同意靠近”是两个事件；玩家拒绝、失落或在问正事时，先回答和支持，不强行调情、不扣好感/信任、不把拒绝当欲擒故纵。'; };
 const STU_HEATS = [['fluff', '清水 · 不越界'], ['slow', '暧昧 · 有张力'], ['steamy', '微辣']];
 /* 具体元素（职业、种族、运动……）是故事事实，不在口味页，只用于搜索 */
 const STU_FACTS = { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友', 'Campus': '校园', 'Billionaire': '亿万富翁', 'Secret Heir': '隐藏继承人', 'Coworkers': '同事' };
@@ -685,11 +737,11 @@ const Studio = {
     const list = ref([]), sel = ref(null), step = ref(0), busy = ref(''), log = ref([]), vers = ref([]), curCh = ref(1), stop = ref(false);
     const R = window.MIRU_RULES || {};
     const steps = ['选题与素材', '按规则生成', '自动检查', '编剧审改', '上线'];
-    const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'steamy', facts: [], as: '', core_promise: '', main_question: '', player_freedom: '', canon_rules: '', content_exclusions: '', continuation_allowed: true });
-    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'steamy', facts: [] });
-    const researchText = ref(''), outline = ref(''), cardsText = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
+    const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], as: '' });
+    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [] });
+    const researchText = ref(''), outline = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
     async function load() { list.value = (await api('scripts')).rows; }
-    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; cardsText.value = sel.value.config.cards98 ? JSON.stringify(sel.value.config.cards98, null, 1) : ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
+    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
     async function loadVers() { if (!sel.value) return; vers.value = (await api('script', { query: { id: sel.value.id, versions: 1 } })).rows; }
     async function create() {
       if (!nf.title.trim()) return ElMessage.warning('请填写标题');
@@ -699,12 +751,12 @@ const Studio = {
         Object.assign(config, { hook: '迎新派对那晚，你被人按在冰冷的墙上，而他看见了——他是唯一的证人，也是你最不想欠的人。', premise: 'Marlowe University（美国东北部虚构大学）。新生派对上你被欺负，签署荣誉誓约的当晚，宿敌成了唯一的目击者。看见违规必须举报，保护一个人却意味着包庇。宿敌变恋人 · 三角关系 · 校园暴力 · 嫉妒 · 病娇（有代价、有问责）。', taste: { world: ['college'], trope: ['e2l', 'forbid'], him: ['mg'], vibe: ['angst', 'thrill'] }, heat: 'slow', facts: ['Campus'], tags: [], cast: '待定：宿敌（继承人/荣誉委员会成员）、执念型第三者（病娇，结局须先承担后果）。年龄全部 19+。' });
       }
       config.taste = JSON.parse(JSON.stringify(nf.taste)); config.heat = nf.heat; config.facts = nf.facts.slice(); if (!(config.taste.world.length && config.taste.trope.length)) return ElMessage.warning('请至少选 1 个「世界」和 1 个「关系桥段」（推荐和搜索靠这些）'); config.tags = stuTagsOf(config);
-      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; Object.assign(nf, { taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'steamy', facts: [] }); await load(); open(j.id);
+      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; Object.assign(nf, { taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [] }); await load(); open(j.id);
     }
     async function save(patch, snapshot) { const j = await api('script', { body: { op: 'save', id: sel.value.id, patch, snapshot } }); const cfg = sel.value.config; sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), j.script.config || cfg); if (snapshot) loadVers(); return j.script; }
     function say(s) { log.value.unshift(new Date().toLocaleTimeString('zh-CN', { hour12: false }) + '  ' + s); }
-    const rulesSys = (scope) => '你是 MIRU 互动剧本生成器。严格遵守下面两份规则（终版规则为准，调试规则为执行细则）。当前任务层级：' + scope + '。\n\n【MIRU 终版规则】\n' + (R.full || R.gen || '') + '\n\n【MIRU 剧本生成 Skill 调试规则 v1.0】\n' + (R.skill || '') + (R.ws712 ? '\n\n【MIRU 剧本与角色编写规范 v7.12（编剧交付合同）】\n' + R.ws712 : '');
-    const projectText = () => { const s = sel.value, c = s.config; const mot = (s.research && s.research.motif_cards || []).filter(m => (c.motifs || []).includes(m.motif_id)); return ['【项目】' + s.title + '（' + ({ bl: '男男', bg: '男女', gl: '女女' }[s.orient] || s.orient) + '，语言：' + (s.lang === 'en' ? '英文' : '中文') + '）', '口味定位（必须体现，这是推给哪类用户的依据）：' + stuTasteText(c), '一句话钩子：' + (c.hook || '待定'), '设定：' + (c.premise || '待定'), '玩家身份：' + (c.player || '待定（保持 pending）'), '人物：' + (c.cast || '待定'), '配置：story_mode=' + c.story_mode + ' / story_form=' + c.story_form + ' / interaction_mode=' + c.interaction_mode + ' / twist_density=' + c.twist_density + ' / 章数目标=' + c.chapters_target + ' / monetization_enabled=' + !!c.monetization, '玩家可决定的事（行动自由度）：' + (c.player_freedom || '待定'), '本作承诺的核心体验：' + (c.core_promise || '待定（要具体，如“外冷内热的竞技明星在逐渐信任玩家的过程中学会表达脆弱”，不要写“甜虐交织”）'), '总主线问题（玩家最终要面对的选择）：' + (c.main_question || '待定'), 'canon 不可改规则：' + (c.canon_rules || '待定'), '内容排除：' + (c.content_exclusions || '无'), '主线结束后续写：' + (c.continuation_allowed === false ? '不允许' : '允许（须有 canon 禁改清单与续写支线池）'), stuCharter(c), '内容边界：' + c.boundaries, mot.length ? '【选用的素材研究母题卡（研究阶段的提案，不是已确认设定）】\n' + mot.map(m => m.motif_id + '：' + m.premise + '｜原创转化：' + (m.original_transformation || '') + '｜边界：' + (m.boundaries || '')).join('\n') : '', s.brief ? '【审稿简报摘要】\n' + String(s.brief).slice(0, 5000) : ''].filter(Boolean).join('\n'); };
+    const rulesSys = (scope) => '你是 MIRU 互动剧本生成器。严格遵守下面两份规则（终版规则为准，调试规则为执行细则）。当前任务层级：' + scope + '。\n\n【MIRU 终版规则】\n' + (R.full || R.gen || '') + '\n\n【MIRU 剧本生成 Skill 调试规则 v1.0】\n' + (R.skill || '');
+    const projectText = () => { const s = sel.value, c = s.config; const mot = (s.research && s.research.motif_cards || []).filter(m => (c.motifs || []).includes(m.motif_id)); return ['【项目】' + s.title + '（' + ({ bl: '男男', bg: '男女', gl: '女女' }[s.orient] || s.orient) + '，语言：' + (s.lang === 'en' ? '英文' : '中文') + '）', '口味定位（必须体现，这是推给哪类用户的依据）：' + stuTasteText(c), '一句话钩子：' + (c.hook || '待定'), '设定：' + (c.premise || '待定'), '玩家身份：' + (c.player || '待定（保持 pending）'), '人物：' + (c.cast || '待定'), '配置：story_mode=' + c.story_mode + ' / story_form=' + c.story_form + ' / interaction_mode=' + c.interaction_mode + ' / twist_density=' + c.twist_density + ' / 章数目标=' + c.chapters_target + ' / monetization_enabled=' + !!c.monetization, '内容边界：' + c.boundaries, mot.length ? '【选用的素材研究母题卡（研究阶段的提案，不是已确认设定）】\n' + mot.map(m => m.motif_id + '：' + m.premise + '｜原创转化：' + (m.original_transformation || '') + '｜边界：' + (m.boundaries || '')).join('\n') : '', s.brief ? '【审稿简报摘要】\n' + String(s.brief).slice(0, 5000) : ''].filter(Boolean).join('\n'); };
     /* ---------- step 1 ---------- */
     async function saveStep1() { sel.value.config.tags = stuTagsOf(sel.value.config); let research = null; if (researchText.value.trim()) { research = stuJSON(researchText.value); if (!research) return ElMessage.error('素材研究 JSON 格式不对'); } await save({ title: sel.value.title, orient: sel.value.orient, lang: sel.value.lang, config: sel.value.config, research, brief: sel.value.brief, stage: Math.max(sel.value.stage, 2) }); ElMessage.success('已保存'); step.value = 1; }
     async function aiResearch() {
@@ -717,38 +769,14 @@ const Studio = {
     /* ---------- step 2 ---------- */
     async function genOutline() {
       busy.value = 'outline'; say('生成架构（generation_scope=架构）…');
-      try { const t = await stuLLM(rulesSys('架构'), projectText() + '\n\n请按调试规则第 14 节「架构」交付：输入摘要与假设、体验承诺、世界边界、人物核心（每个主要人物：吸引点、画像、底线、矛盾、变化方向；全部成年）、四轴结局方向、阶段与分支地图（按 ' + sel.value.config.chapters_target + ' 章列出每章：章节标题｜本章目标/核心问题｜关键事件｜结尾选择及各选项后果与后文读取点）、节奏与反转配置。另外按《角色卡生成规范 V1.0》§10 与架构 v7.9.6 的 Scene Pack，每章再写四项：open_loops（本章新增或推进的 Hook：来源｜当前状态｜相关人物｜已展示线索｜推进条件）、allowed_reveals（本章允许揭露的事实；其余后台真相不得进入角色认知）、exit_conditions（本章什么情况算自然收束）、人物认知变化（每个主要人物本章开始时知道 / 相信 / 想要什么，变化由前面哪件事引起）；角色卡（人物是谁）、当前场景、剧情状态三者分开写，不要把未来剧情写进人物设定；结尾关键选择的后果写成可执行效果（好感 / 信任 / 标记 / 记忆）。区分「已确认 / 生成提案 / 待确定」。最后按《剧本与角色编写规范 v7.12》补齐（只补缺的，不重复）：A 作品总卡（logline、玩家身份与行动自由度、本作承诺的核心体验、总主线问题、canon_rules、内容排除、first_scene）；B 故事圣经（世界法则、事件时间线、作者秘密台账：每条 secret_id / objective_truth / knows_initially / discoverable_via / reveal_conditions / prohibited_before / resolution_scene；伏笔台账：伏笔ID｜首次出现｜线索载体｜揭露条件｜回收场景；结局四轴；续写边界）；每章按 §05 加：主/辅情绪与节奏位置（吸引/缓和/冲突/反转/回报）、冲突因果（真相与误解分开）、required_events / optional_events / forbidden_reveals（大写英文 ID）、玩家不推进时如何继续对话（不得自动硬跳）；每个关键场景按 §06 加：在场与可互动、玩家入口（至少一个可回应或拒绝的问题）、可聊话题池、1–3 个软引导（触发原因｜主导角色｜方式｜可用线索｜不能透露｜玩家 2–3 种回应方向｜完成条件｜失效条件）、一个可选择的亲近机会（如“如果你愿意，我想坐近一点”→ 靠近 / 保持距离 / 换个话题）和一个价值交付点。工具只用 ask/gift/game/photo/voice/call，剧情不靠工具也成立，核心真相不得只放在付费照片后。' + (/持续陪伴/.test(sel.value.config.story_form) && sel.value.config.continuation_allowed !== false ? '最后写 G 续写素材：canon 禁改清单、每位主要角色至少 3 类续写支线、互动钩子（不用假紧急/嫉妒威胁/内疚催促）、禁止重复列表。' : '') + '用中文 Markdown 输出。', 9000);
+      try { const t = await stuLLM(rulesSys('架构'), projectText() + '\n\n请按调试规则第 14 节「架构」交付：输入摘要与假设、体验承诺、世界边界、人物核心（每个主要人物：吸引点、画像、底线、矛盾、变化方向；全部成年）、四轴结局方向、阶段与分支地图（按 ' + sel.value.config.chapters_target + ' 章列出每章：章节标题｜本章目标/核心问题｜关键事件｜结尾选择及各选项后果与后文读取点）、节奏与反转配置。区分「已确认 / 生成提案 / 待确定」。用中文 Markdown 输出。', 7000);
         outline.value = t; await save({ outline: t, stage: Math.max(sel.value.stage, 2) }, 'AI 生成架构'); say('架构完成，' + t.length + ' 字'); } catch (e) { ElMessage.error(e.message); say('失败：' + e.message); } finally { busy.value = ''; }
     }
-    /* ---------- v8.1 · 角色卡（角色卡生成规范 V1.0）：架构之后、正文之前 ---------- */
-    const cardSys = () => '你是 MIRU 角色卡生成器。严格遵守《MIRU AI陪伴角色卡生成规范 V1.0》与《剧本与角色编写规范 v7.12》§04，并与终版规则一致。\n\n【角色卡生成规范 V1.0】\n' + (R.card || '') + (R.ws712 ? '\n\n【剧本与角色编写规范 v7.12】\n' + R.ws712 : '');
-    const CARD_SCHEMA = '{"key":"英文小写id","name":"姓名","tier":"lead|main|support","romanceable":true,"entry_condition":"","base":{"identity":{"name":"","age":0,"occupation":"","living_context":"","initial_player_relation":"只写已共同经历的事实与尚未建立的关系","social_ties":[]},"appearance":{"features":[],"voice":"","habitual_gestures":[]},"clothing":{"everyday_style":"","color_preferences":[],"occasion_variation":""},"preferences":{"food":{"fruits":[],"dishes":[],"drinks":[],"dislikes":[],"habits":[],"allergies":{"status":"未设定|有|无","items":[]}},"reading":"","films":"","music":"","lifestyle":"","social":""},"experiences":[{"id":"exp_1","event":"","interpretation":"当时的理解","consequences":[],"blind_spot":"容易发生的误判"}],"knowledge":{"practiced":[],"general":[],"unknown":[],"misbelief":[]},"core":{"values":[],"self_worth":"","shame_source":"","desire":{"self_claimed":"","underlying":"","unacknowledged":""},"fear":"","boundaries":["可判断的行为约束"],"love_belief":"","betrayal_belief":""},"patterns":{"speech":{"baseline":"","embarrassed":"","angry":"","avoid":[]},"behavior":[{"trigger":"","interpretation":"","default":"","exception":""}],"defense":"","romance":"","favoritism":"","competition":"","vulnerability":"","blind_spots":[]},"author_only":{"secret":"","note":"底层动机只约束行为，不作为台词"}},"relationship0":{"affection":{"value":null,"state":""},"attraction":{"value":null,"state":""},"trust":{"value":null,"state":""},"suspicion":{"value":null,"state":""},"respect":{"value":null,"state":""},"fear_of_loss":{"value":null,"state":""}},"chapters":{"1":{"knows":[],"unknown":[],"beliefs":["内容（确信程度）"],"relation":"他此刻如何看待玩家","goal":"本章想要什么","speech":"本章说话方式的变化","growth":["因第N章的哪件事而变"]}},"flirt_signature":{"approach":["行为示例1","行为示例2"],"emotional_desire":["",""],"physical_attraction_non_explicit":["",""],"rejection_response":["尊重、转移话题、保留体面的示例1","示例2"],"forbidden_lines":["每项 1 条禁止的失真台词"]},"heat_charter":"本作尺度下他的可演表现","growth_arc":{"initial_pattern":"","trigger_event_ids":["EVENT_ID"],"evidence":"哪些事件累计才算成长","new_behavior":"可观察的新行为","validation":"需要做出的困难选择","regression_conditions":[]},"knowledge_ids":{"known":["FACT_ID（来源）"],"beliefs":[],"unknown":["FACT_ID"],"author_only":["SECRET_ID"]},"pending":["待确认项"]}';
-    async function genCards() {
-      if (!String(outline.value || '').trim()) return ElMessage.warning('先生成或填写架构'); busy.value = 'cards';
-      try {
-        const N = Number(sel.value.config.chapters_target || 12);
-        say('角色卡：识别主要人物…');
-        const lt = await stuLLM(cardSys(), projectText() + '\n\n【已确认架构】\n' + String(outline.value).slice(0, 20000) + '\n\n列出需要完整角色卡的主要人物（可互动、可恋爱或推动主线的人；背景人物不要），只输出 JSON：[{"key":"英文小写id","name":"姓名","tier":"lead|main"}]，最多 4 人。', 800);
-        const people = (stuJSON(lt) || []).filter(p => p && p.name).slice(0, 4); if (!people.length) throw new Error('没有识别出主要人物');
-        const out = [];
-        for (const p of people) {
-          say('角色卡：' + p.name + '（六模块 + ' + N + ' 章章节卡）…');
-          const t = await stuLLM(cardSys(), projectText() + '\n\n【已确认架构】\n' + String(outline.value).slice(0, 20000) + '\n\n按规范 §11.2 的 8 步顺序，为「' + p.name + '」生成单人角色卡。要求：\n- 六个模块写全；经历用「经历→当时的理解→信念/防御→当前偏好与行为→容易发生的误判」因果链；偏好要有来源；过敏未知写「未设定」\n- 人格写成可观察行为（触发→解释→默认反应→例外），不要形容词堆砌\n- 知识/观察/信念/误解分开；误解与秘密放 author_only，不进入他的已知\n- 关系 value 一律 null（量表未配置），只写文字 state；不预支未来情感，不替玩家决定任何感情或选择\n- chapters 写满第 1–' + N + ' 章：每章他此刻知道/不知道什么、相信什么、对玩家的看法、本章目标、说话方式变化、以及由第几章哪件事引起的变化（第 1 章 growth 为空）；人格核心不随章节改写\n- 按编写规范 v7.12 §04：六项人格每项写「定义 + 行为证据 + 压力下的反应」；romanceable=true 时 flirt_signature 四项各 2 条行为示例 + 1 条禁止的失真台词，rejection_response 必须尊重、转移话题、保留体面，不责怪、不威胁、不反复试探；romanceable=false 不写恋爱推进；growth_arc 写 起点→触发事件ID→证据→新行为→验证→回退；knowledge_ids.author_only 只给导演，绝不进入 known 或任何一章的 knows\n- 无法确定的写进 pending\n只输出一个 JSON 对象，结构如下（字段可按需扩充，不可删减）：\n' + CARD_SCHEMA, 8000);
-          const c = stuJSON(t); if (!c || !c.base) { say(p.name + ' 的角色卡格式不对，已跳过（可重试）'); continue; } c.key = c.key || p.key; c.tier = c.tier || p.tier; out.push(c);
-        }
-        const cards = { spec: 'MIRU 角色卡生成规范 V1.0', at: Date.now(), characters: out };
-        cardsText.value = JSON.stringify(cards, null, 1);
-        await save({ config: Object.assign({}, sel.value.config, { cards98: cards }), stage: Math.max(sel.value.stage, 2) }, 'AI 生成角色卡');
-        say('角色卡完成：' + out.map(c => c.name).join('、'));
-      } catch (e) { ElMessage.error(e.message); say('角色卡失败：' + e.message); } finally { busy.value = ''; }
-    }
-    async function saveCards() { let c = null; try { c = JSON.parse(cardsText.value || '{}'); } catch (e) { return ElMessage.error('角色卡 JSON 格式有误：' + e.message); } await save({ config: Object.assign({}, sel.value.config, { cards98: c }) }, '修改角色卡'); ElMessage.success('角色卡已保存'); }
-    const cardsFor = n => { const L = (sel.value.config.cards98 && sel.value.config.cards98.characters) || []; if (!L.length) return ''; return '\n\n【角色卡（规范 V1.0）· 第 ' + n + ' 章时的人物状态——台词与行为必须符合；不得让角色说出他不知道的事】\n' + L.map(c => { const b = c.base || {}, co = b.core || {}, pt = b.patterns || {}, ch = (c.chapters || {})[n] || {}; return '◆ ' + c.name + '\n- 不变的核心：价值观 ' + (co.values || []).join('/') + '；恐惧 ' + (co.fear || '') + '；底线 ' + (co.boundaries || []).join('；') + '\n- 说话：' + JSON.stringify(pt.speech || {}).slice(0, 300) + '\n- 防御：' + (pt.defense || '') + '；恋爱方式：' + (pt.romance || '') + '\n- 本章：知道 ' + (ch.knows || []).join('；') + '｜不知道 ' + (ch.unknown || []).join('；') + '｜相信 ' + (ch.beliefs || []).join('；') + '｜对玩家 ' + (ch.relation || '') + '｜目标 ' + (ch.goal || '') + '｜说话变化 ' + (ch.speech || '') + '｜变化来由 ' + (ch.growth || []).join('；'); }).join('\n'); };
     async function saveOutline() { await save({ outline: outline.value }, '修改架构'); ElMessage.success('架构已保存'); }
     async function genChapter(n) {
       const s = sel.value, chs = s.chapters || [], prev = chs.filter(c => c.n < n).sort((a, b) => a.n - b.n);
       const tail = prev.length ? String(prev[prev.length - 1].md).slice(-2500) : '';
-      const t = await stuLLM(rulesSys('逐场正文'), projectText() + '\n\n【已确认架构】\n' + String(outline.value || s.outline || '').slice(0, 30000) + (tail ? '\n\n【上一章结尾（保持连续，读取上一章选择的后果）】\n' + tail : '') + cardsFor(n) + '\n\n现在写第 ' + n + ' 章的完整正文（约 4000–7000 字，2–4 个场景，至少 1 个场景中小选择，结尾 1 个关键选择 2–3 个选项；【玩家台词铁律】绝对不要替玩家写台词，正文里不得出现「你：“……”」这样的玩家对白——玩家每次要开口的地方，一律写成「# CHOICE｜（轮到你说）一句情境提示」+ 2–3 个「#### A｜“玩家可能说的话”」，每个选项下面写对方针对这句话的不同回应（App 里玩家也可以不选、自己打字或说话）；每个场景至少 2 个这样的玩家回合，对方连续说话不超过 6 句就要把话轮交给玩家；【编写规范 v7.12】每个场景至少一个价值交付点和一个可选择的亲近机会（角色想靠近时先问，选项里要有“保持距离 / 换个话题”，玩家没确认之前不写成已经发生）；玩家拒绝、离题或在问正事时，角色先回应和支持、体面地退一步，不施压，并留一条回到主线的路；不让角色说出本章 forbidden_reveals 和他不知道的事；玩家的动作和心理可以用叙述/【心理】写，但不替玩家做关键决定；' + (n > 1 ? '开头用「#### 入口A｜…」等写出读取上一章结尾选择的差异段落；' : '开篇先见人：用具体行为呈现他的吸引力、对玩家的态度和玩家能做什么；') + '）。\n\n' + STU.fmt.replace('{n}', n), 8000);
+      const t = await stuLLM(rulesSys('逐场正文'), projectText() + '\n\n【已确认架构】\n' + String(outline.value || s.outline || '').slice(0, 30000) + (tail ? '\n\n【上一章结尾（保持连续，读取上一章选择的后果）】\n' + tail : '') + '\n\n现在写第 ' + n + ' 章的完整正文（约 4000–7000 字，2–4 个场景，至少 1 个场景中小选择，结尾 1 个关键选择 2–3 个选项；【玩家台词铁律】绝对不要替玩家写台词，正文里不得出现「你：“……”」这样的玩家对白——玩家每次要开口的地方，一律写成「# CHOICE｜（轮到你说）一句情境提示」+ 2–3 个「#### A｜“玩家可能说的话”」，每个选项下面写对方针对这句话的不同回应（App 里玩家也可以不选、自己打字或说话）；每个场景至少 2 个这样的玩家回合，对方连续说话不超过 6 句就要把话轮交给玩家；玩家的动作和心理可以用叙述/【心理】写，但不替玩家做关键决定；' + (n > 1 ? '开头用「#### 入口A｜…」等写出读取上一章结尾选择的差异段落；' : '开篇先见人：用具体行为呈现他的吸引力、对玩家的态度和玩家能做什么；') + '）。\n\n' + STU.fmt.replace('{n}', n), 8000);
       const md = t.replace(/^```\w*\n?|```\s*$/g, '').trim(); const m = md.match(/##\s*CHAPTER\s*\d+\s*[｜|]\s*(.+)/i);
       const ch = { n, t: m ? m[1].trim() : '第 ' + n + ' 章', md, at: Date.now(), by: 'AI' };
       const next = chs.filter(c => c.n !== n).concat([ch]).sort((a, b) => a.n - b.n); await save({ chapters: next, stage: Math.max(s.stage, 2) }, 'AI 生成第 ' + n + ' 章'); return ch;
@@ -762,7 +790,7 @@ const Studio = {
     async function runCheck() {
       const pack = stuPack(sel.value.chapters); const c = sel.value.config;
       const q = R.check ? R.check({ pack: Object.assign(pack, { story_mode: c.story_mode }) }, { longform: Number(c.chapters_target) >= 15 }) : { err: ['规则模块没有加载'], warn: [], ok: [], info: [] };
-      if (R.checkCards) { const cq = R.checkCards(sel.value.config.cards98, sel.value.chapters); q.err = q.err.concat(cq.err); q.warn = q.warn.concat(cq.warn); } if (R.checkStandards) { const sq = R.checkStandards(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(sq.err); q.warn = q.warn.concat(sq.warn); } (sel.value.chapters || []).forEach(ch => { const n = (String(ch.md || '').match(/^\s*(你|您|You)\s*[:：]/gm) || []).length; if (n) q.err.push('第 ' + ch.n + ' 章：替玩家写了 ' + n + ' 句台词（「你：…」）。玩家的话要写成「# CHOICE｜（轮到你说）」+ 台词选项，由玩家自己说（App 会把这些句子转成「轮到你说」，但剧本本身要改）'); });
+      (sel.value.chapters || []).forEach(ch => { const n = (String(ch.md || '').match(/^\s*(你|您|You)\s*[:：]/gm) || []).length; if (n) q.err.push('第 ' + ch.n + ' 章：替玩家写了 ' + n + ' 句台词（「你：…」）。玩家的话要写成「# CHOICE｜（轮到你说）」+ 台词选项，由玩家自己说（App 会把这些句子转成「轮到你说」，但剧本本身要改）'); });
       const qa = Object.assign({}, sel.value.qa || {}, { err: q.err, warn: q.warn, ok: q.ok, info: q.info, estimate: q.estimate, rules: R.version, at: Date.now() });
       await save({ qa, stage: Math.max(sel.value.stage, 3) }); ElMessage.success('规则检查完成：' + q.err.length + ' 个错误，' + q.warn.length + ' 个提醒');
     }
@@ -786,7 +814,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { stdList: (R.ws712checks || []), STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genCards, saveCards, cardsText, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, load, fmt, stLabel, tagType, can, S };
+    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -820,11 +848,6 @@ const Studio = {
 <el-form-item label="口味标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和用户第一次进 App 选口味（带照片那页）是同一套：选什么，就推给选了这些口味的用户；也用于搜索。</div><div v-for="L in STU_LAYERS" :key="L[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{L[1]}}<br><small>最多 {{L[2]}} 个</small></span><el-checkbox-group v-model="sel.config.taste[L[0]]" :max="L[2]" size="small"><el-checkbox-button v-for="it in STU_TAX[L[0]].items" :key="it[0]" :value="it[0]">{{it[2]}}</el-checkbox-button></el-checkbox-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">尺度</span><el-radio-group v-model="sel.config.heat" size="small"><el-radio-button v-for="h in STU_HEATS" :key="h[0]" :value="h[0]">{{h[1]}}</el-radio-button></el-radio-group></div><div style="display:flex;gap:8px;align-items:flex-start"><span class="muted" style="width:92px;flex:none;padding-top:4px">具体元素<br><small>可选 · 搜索用</small></span><el-checkbox-group v-model="sel.config.facts" size="small"><el-checkbox-button v-for="(zh,k) in STU_FACTS" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div></div></el-form-item>
         <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
         <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>
-        <el-form-item label="核心体验承诺"><el-input v-model="sel.config.core_promise" placeholder="一句具体的承诺，如：外冷内热的竞技明星，在逐渐信任玩家的过程中学会表达脆弱（不要写“甜虐交织”）" /></el-form-item>
-        <el-form-item label="总主线问题"><el-input v-model="sel.config.main_question" placeholder="玩家最终需要面对什么选择" /></el-form-item>
-        <el-form-item label="玩家行动自由度"><el-input v-model="sel.config.player_freedom" placeholder="玩家可以决定哪些事（追问、拒绝、选择谁、是否揭露…）" /></el-form-item>
-        <el-form-item label="canon 不可改"><el-input v-model="sel.config.canon_rules" type="textarea" :rows="2" placeholder="不可更改的世界规则与已发生事实，一行一条" /></el-form-item>
-        <el-form-item label="内容排除 / 续写"><el-input v-model="sel.config.content_exclusions" placeholder="不写的题材（可空）" style="width:60%" />&nbsp;&nbsp;<el-switch v-model="sel.config.continuation_allowed" active-text="主线结束后允许续写" /></el-form-item>
         <el-form-item label="玩家身份"><el-input v-model="sel.config.player" placeholder="不填 = 待定（AI 不会替你定）" /></el-form-item>
         <el-form-item label="主要人物"><el-input v-model="sel.config.cast" type="textarea" :rows="2" placeholder="角色名（英文）、年龄（成年）、吸引点、底线…" /></el-form-item>
         <el-form-item label="故事配置"><el-select v-model="sel.config.story_mode" style="width:120px"><el-option v-for="x in STU.modes" :key="x" :value="x" /></el-select>&nbsp;<el-select v-model="sel.config.story_form" style="width:180px"><el-option v-for="x in STU.forms" :key="x" :value="x" /></el-select>&nbsp;<el-select v-model="sel.config.interaction_mode" style="width:110px"><el-option v-for="x in STU.inter" :key="x" :value="x" /></el-select>&nbsp;反转<el-select v-model="sel.config.twist_density" style="width:80px"><el-option v-for="x in STU.twist" :key="x" :value="x" /></el-select>&nbsp;章数 <el-input-number v-model="sel.config.chapters_target" :min="1" :max="40" size="small" />&nbsp;<el-switch v-model="sel.config.monetization" active-text="含付费道具" /></el-form-item>
@@ -838,13 +861,9 @@ const Studio = {
 
     <!-- 2 生成 -->
     <div class="panel" v-show="step===1"><h3>② 按终版规则生成</h3>
-      <p class="muted">AI 读取的是终版规则全文 + 生成 Skill 调试规则 v1.0 + 剧本与角色编写规范 v7.12（与 App 同一份），先出架构，编剧确认后再逐章写正文。每次生成都会自动存一个版本。</p>
+      <p class="muted">AI 读取的是终版规则全文 + 生成 Skill 调试规则 v1.0（与 App 同一份），先出架构，编剧确认后再逐章写正文。每次生成都会自动存一个版本。</p>
       <div class="toolbar"><el-button type="primary" :loading="busy==='outline'" :disabled="!!busy&&busy!=='outline'" @click="genOutline">{{outline?'重新生成架构':'生成架构'}}</el-button><el-button @click="saveOutline" :disabled="!!busy">保存架构修改</el-button></div>
       <el-input v-model="outline" type="textarea" :rows="14" placeholder="架构：体验承诺、世界边界、人物核心、四轴结局方向、每章目标与结尾选择…（可直接手写）" />
-      <h3 style="margin-top:18px">角色卡（角色卡生成规范 V1.0 · 六模块 + 每章章节卡）</h3>
-      <p class="muted">架构确认后生成。每个主要人物一张基础卡（身份生活 / 经历知识 / 人格表达 / POV 认知 / 关系 / 记忆成长）+ 每章的章节卡（这一章他知道什么、相信什么、想要什么、说话怎么变、因为哪件事变）。写正文和 App 运行时都会读取它。</p>
-      <div class="toolbar"><el-button type="primary" :loading="busy==='cards'" :disabled="!!busy&&busy!=='cards'" @click="genCards">{{cardsText?'重新生成角色卡':'生成角色卡'}}</el-button><el-button @click="saveCards" :disabled="!!busy">保存角色卡修改</el-button></div>
-      <el-input v-model="cardsText" type="textarea" :rows="10" placeholder="角色卡 JSON（可直接编辑）" />
       <h3 style="margin-top:18px">逐章正文（目标 {{sel.config.chapters_target}} 章）</h3>
       <div class="toolbar"><el-button type="primary" :loading="busy==='batch'" :disabled="!!busy&&busy!=='batch'" @click="genRest">按顺序写完剩余章节</el-button><el-button v-if="busy==='batch'" @click="stop=true">停止</el-button></div>
       <div style="display:flex;flex-wrap:wrap;gap:8px"><el-button v-for="n in Number(sel.config.chapters_target)" :key="n" size="small" :type="(sel.chapters||[]).some(c=>c.n===n)?'success':'default'" :loading="busy==='ch'+n" :disabled="!!busy&&busy!=='ch'+n" @click="genOne(n)">第 {{n}} 章{{(sel.chapters||[]).some(c=>c.n===n)?' ✓ 重写':''}}</el-button></div>
@@ -873,7 +892,6 @@ const Studio = {
       <div class="toolbar" style="margin-top:8px"><el-button type="primary" @click="saveCh" :disabled="!chObj">保存本章（存版本）</el-button></div>
       <h3>审稿清单</h3>
       <el-checkbox-group v-model="review.checks.list"><div v-for="d in debugTable" :key="d.k"><el-checkbox :value="d.k">没有「{{d.k}}」（{{d.v}}）</el-checkbox></div></el-checkbox-group>
-      <h3 style="margin-top:12px">交稿必测清单（编写规范 v7.12 §11.2）</h3><el-checkbox-group v-model="review.checks.list"><div v-for="d in stdList" :key="d"><el-checkbox :value="d">{{d}}</el-checkbox></div></el-checkbox-group><el-alert type="error" :closable="false" style="margin-top:8px" title="上线否决项（§11.3）：角色读到未揭露的秘密 · 选项或工具重复执行 · 无权限硬跳剧情 · 未确认扣费 · 玩家拒绝后仍反复施压 · 续写推翻 canon · 关键分支走不通——任一出现都退回修改" />
       <el-input v-model="review.notes" type="textarea" :rows="4" placeholder="审稿意见（会记录审稿人和时间）" style="margin-top:10px" />
       <div class="toolbar" style="margin-top:10px"><el-switch v-model="review.approved" active-text="审核通过，可以上线" /><el-button type="primary" @click="saveReview">保存审稿</el-button><span class="muted" v-if="sel.review&&sel.review.by">上次审稿：{{sel.review.by}} · {{fmt(sel.review.at)}}</span></div>
       <h3>版本记录</h3>

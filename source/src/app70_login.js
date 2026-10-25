@@ -271,7 +271,7 @@ setTimeout(au70Config, 1600);
 document.addEventListener("click", e => { if (e.target.closest("[data-pfsave]")) track("taste_done"); }, true);
 if (typeof hookPlay === "function") { const _hp70 = hookPlay; let once = false; hookPlay = function () { if (!once) { once = true; track("hook_play"); } return _hp70.apply(this, arguments); }; }
 const _packOpen70 = packOpen;
-packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } else if (n > 1) track("chapter_done", { wid: th.wid, ch: n - 1 }); } } catch (_) {} return _packOpen70.apply(this, arguments); };
+packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } if (typeof pkSetPresent === "function") pkSetPresent(th, n); if (typeof pkOpenMark === "function") pkOpenMark(th, n); } } catch (_) {} return _packOpen70.apply(this, arguments); };
 const _reply70 = reply;
 reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid }); } catch (_) {} return _reply70.apply(this, arguments); };
 const _units70 = unitsSheet;

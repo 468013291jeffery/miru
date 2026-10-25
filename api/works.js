@@ -6,7 +6,7 @@
 // POST {op:'like'|'unlike'|'report', id, reason}
 // DELETE ?id=          remove my work
 const L = require('./_lib');
-const MAXPACK = 1500 * 1024;
+const MAXPACK_FALLBACK = 1500 * 1024;   // 真正的上限读 config.max_pack_kb
 const pub = r => ({ id: r.id, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined });
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
@@ -20,14 +20,12 @@ module.exports = L.wrap(async (req, res) => {
       if (q.play) await sql('UPDATE works SET plays=plays+1 WHERE id=$1', [w.id]);
       return L.send(res, 200, Object.assign(pub(w), { pack: w.pack, qa: w.qa }));
     }
-    if (q.blocked) { const u = await L.needActive(req, res); if (!u) return; const r = await sql('SELECT author_id, author_name, at FROM blocks WHERE user_id=$1 ORDER BY at DESC', [u.uid]); return L.send(res, 200, { blocked: r }); }
     if (q.mine) { const u = await L.needActive(req, res); if (!u) return; const r = await sql('SELECT * FROM works WHERE author=$1 ORDER BY updated_at DESC LIMIT 100', [u.uid]); return L.send(res, 200, { works: r.map(w => Object.assign(pub(w), { qa: w.qa })) }); }
     const lim = Math.min(Number(q.limit) || 20, 50), hot = q.feed === 'hot';
     const args = [lim]; let where = "status='live'";
     if (q.orient && q.orient !== 'all') { args.push(String(q.orient)); where += ` AND (orient=$${args.length} OR orient='all')`; }
     if (q.before) { args.push(new Date(Number(q.before)).toISOString()); where += ` AND created_at < $${args.length}`; }
     if (q.feed === 'featured') where += ' AND featured';
-    { const v = L.who(req); if (v && v.uid) { args.push(v.uid); where += ` AND author NOT IN (SELECT author_id FROM blocks WHERE user_id=$${args.length})`; } }
     const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
     return L.send(res, 200, { works: r.map(pub) });
   }
@@ -39,7 +37,14 @@ module.exports = L.wrap(async (req, res) => {
     if (!(await L.bump(u.uid, 'publish', Number(cfg.publish_daily_limit) || 30))) return L.bad(res, 'daily publish limit reached', 429);
     const w = b.work || {};
     const raw = JSON.stringify(w.pack || null);
-    if (raw.length > MAXPACK) return L.bad(res, 'story too large', 413);
+    const MAXPACK = (Number(cfg.max_pack_kb) || 1500) * 1024;
+    if (raw.length > MAXPACK) return L.bad(res, 'story too large (' + Math.round(raw.length / 1024) + 'KB, limit ' + Math.round(MAXPACK / 1024) + 'KB)', 413);
+    // 结构校验（T19/T20 的前置）：播不出来的剧本不该进库。点名是哪一条错，别只说 invalid。
+    const v = L.planValid ? L.planValid(w.pack) : { ok: true, errors: [] };
+    if (!v.ok) {
+      const head = v.errors.slice(0, 3).map(e => e.path + ': ' + e.why).join('; ');
+      return L.bad(res, 'pack invalid (' + v.errors.length + '): ' + head, 400);
+    }
     const safety = L.safety([w.title, w.hook, w.pack]);
     if (safety.length) return L.send(res, 422, { error: 'blocked by safety review', reasons: safety });
     const s = L.structureQA(w.pack);
@@ -63,25 +68,9 @@ module.exports = L.wrap(async (req, res) => {
     const c = await sql('SELECT likes FROM works WHERE id=$1', [id]);
     return L.send(res, 200, { likes: c[0] ? c[0].likes : 0 });
   }
-  /* Guideline 1.2: report anything (a work, its author, a library item, an AI reply) · block an author */
-  if (b.op === 'report' && b.kind && b.kind !== 'work') {
-    const kind = ['user', 'asset', 'message'].includes(b.kind) ? b.kind : 'other'; let tid = String(b.id || '').slice(0, 120);
-    if (kind === 'user') { const w = await sql('SELECT author FROM works WHERE id=$1', [tid]); if (w[0]) tid = w[0].author; }
-    await sql('INSERT INTO reports (user_id, target_kind, target_id, reason, snap) VALUES ($1,$2,$3,$4,$5)', [u.uid, kind, tid, String(b.reason || '').slice(0, 300), String(b.snap || '').slice(0, 4000)]);
-    if (kind === 'asset') await sql("UPDATE assets SET status=CASE WHEN status='public' AND (SELECT count(*) FROM reports WHERE target_kind='asset' AND target_id=$1 AND coalesce(status,'open')='open')>=$2 THEN 'review' ELSE status END WHERE id=$1", [tid, Number(cfg.report_threshold) || 5]);
-    return L.send(res, 200, { ok: true });
-  }
-  if (b.op === 'block' || b.op === 'unblock') {
-    let aid = String(b.author || ''), name = '';
-    if (b.id) { const w = await sql('SELECT author, author_name FROM works WHERE id=$1', [String(b.id)]); if (!w[0]) return L.bad(res, 'not found', 404); aid = w[0].author; name = w[0].author_name || ''; }
-    if (!aid || aid === 'miru' || aid === u.uid) return L.bad(res, 'cannot block this author');
-    if (b.op === 'block') await sql('INSERT INTO blocks (user_id, author_id, author_name) VALUES ($1,$2,$3) ON CONFLICT DO NOTHING', [u.uid, aid, name]);
-    else await sql('DELETE FROM blocks WHERE user_id=$1 AND author_id=$2', [u.uid, aid]);
-    return L.send(res, 200, { ok: true, author: aid, name });
-  }
   if (b.op === 'report') {
     const id = String(b.id || '');
-    await sql('INSERT INTO reports (user_id, target_kind, target_id, reason, snap) VALUES ($1,$2,$3,$4,$5)', [u.uid, 'work', id, String(b.reason || '').slice(0, 300), String(b.snap || '').slice(0, 4000)]);
+    await sql('INSERT INTO reports (user_id, target_kind, target_id, reason) VALUES ($1,$2,$3,$4)', [u.uid, 'work', id, String(b.reason || '').slice(0, 300)]);
     const r = await sql("UPDATE works SET reports=reports+1, status=CASE WHEN reports+1>=$2 AND status='live' THEN 'pending' ELSE status END WHERE id=$1 RETURNING status", [id, Number(cfg.report_threshold) || 5]);
     return L.send(res, 200, { ok: true, status: r[0] && r[0].status });
   }

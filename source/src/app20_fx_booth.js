@@ -103,7 +103,7 @@ document.addEventListener("click",async e=>{let x;
  if(x=e.target.closest("[data-btf]")){BT.fr=BFR[+x.dataset.btf];boothEdit();return}
  if(e.target.closest("[data-booth]")){boothOpen(e.target.closest("[data-booth]").dataset.booth||null);return}
  if(!BT.out)return;
- if(e.target.closest("[data-btsave]")){S.album.unshift({id:"a"+Date.now(),cid:BT.cid,src:BT.out.toDataURL("image/jpeg",.72),at:Date.now()});if(S.album.length>12)S.album.length=12;save();toast(t("bt.saved"));return}
+ if(e.target.closest("[data-btsave]")){S.album.unshift({id:"a"+Date.now(),cid:BT.cid,src:mediaWrap("album:"+("a"+Date.now()),BT.out.toDataURL("image/jpeg",.72)),at:Date.now()});if(S.album.length>12)S.album.length=12;save();toast(t("bt.saved"));return}
  if(e.target.closest("[data-btdl]")){const name="MIRU_"+BT.cid+"_"+Date.now()+".jpg";BT.out.toBlob(async b=>{if(DL){try{await DL.save({filename:name,data:b});return}catch(_){}}const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();a.remove()},"image/jpeg",.9);return}
  if(e.target.closest("[data-btpost]")){const p={id:"m"+Date.now(),txt:t("bt.cap",{n:first(ch(BT.cid).n)}),img:BT.out.toDataURL("image/jpeg",.7),at:Date.now(),likes:0,cm:[],day:today()};
   S.moments=[p].concat(S.moments||[]).slice(0,40);save();closeSheet();const ids=[BT.cid].concat(myCircle().filter(i=>i!==BT.cid)).slice(0,6);addComments(p,ids);chatSeg="moments";show("s-main");renderTab("chats");toast(t("mom.posted"));return}});

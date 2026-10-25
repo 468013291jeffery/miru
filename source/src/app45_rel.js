@@ -62,7 +62,7 @@ function rewindSheet(){const th=S.threads[curT];if(!th)return;
  sheet('<div style="text-align:center"><div style="font-size:34px">⏪</div><h2 style="margin-top:6px">'+LL("回到初遇","Back to the first meeting")+'</h2><p class="sm dim" style="margin-top:8px;line-height:1.6">'+LL("回到你们第一次见面的那一刻。聊天和关系值清空，角色设定和你给的反馈都保留。这一次，换个方式开口。","Go back to the moment you first met. Messages and meters reset; the character and your feedback stay. Try it differently this time.")+'</p></div>'+
   '<button class="btn btn-p btn-block" style="margin-top:14px" data-rewind0="1">⏪ '+LL("回到初遇","Go back")+'</button>')}
 document.addEventListener("click",e=>{if(!e.target.closest("[data-rewind0]"))return;const th=S.threads[curT];if(!th)return;let i=th.msgs.findIndex(m=>m.who==="me");if(i<0)i=th.msgs.length;
- th._undo={msgs:th.msgs,love:th.love,mem:th.mem,rounds:th.rounds,rdv:th.rdv};th.msgs=th.msgs.slice(0,i);th.rounds=0;Object.keys(th.love).forEach(c=>th.love[c]=5);th.mem=[];delete th.rdv;delete th.rdlog;delete th._stg;delete th.lnk;th.tasks={};
+ th._undo={msgs:th.msgs,love:th.love,mem:th.mem,rounds:th.rounds,rdv:th.rdv};th.msgs=th.msgs.slice(0,i);th.rounds=0;Object.keys(th.love).forEach(c=>loveWrite(th,c,0,"rewind",{absolute:5}));th.mem=[];delete th.rdv;delete th.rdlog;delete th._stg;delete th.lnk;th.tasks={};
  th.msgs.push({who:"sys",k:"card",title:"⏪ "+LL("回到了初遇","Back to the beginning"),txt:LL("一切还没发生。这一次，你想怎么开口？","Nothing has happened yet. How do you open this time?"),at:Date.now()});save();closeSheet();renderChat()});
 
 /* ---------- 🛠 feedback on how a character is played ---------- */
@@ -126,7 +126,7 @@ const _menuSheet45=menuSheet;menuSheet=function(){_menuSheet45.apply(this,argume
 document.addEventListener("click",e=>{if(e.target.closest("[data-pswitch]")){personaSwitch();return}if(e.target.closest("[data-rewind]")){rewindSheet();return}if(e.target.closest("[data-fixsheet]")){fixSheet();return}if(e.target.closest("[data-shsnip]")){shareSnip();return}});
 
 /* ---------- supporting character joins solo chats; narrator voice ---------- */
-const _newThread45=newThread;newThread=function(kind,id,openId,extra){const th=_newThread45(kind,id,openId,extra);try{const c=ch(id);if(kind==="solo"&&c&&c.side&&ch(c.side)&&!th.cast.includes(c.side)){th.cast.push(c.side);th.love[c.side]=5;
+const _newThread45=newThread;newThread=function(kind,id,openId,extra){const th=_newThread45(kind,id,openId,extra);try{const c=ch(id);if(kind==="solo"&&c&&c.side&&ch(c.side)&&!th.cast.includes(c.side)){th.cast.push(c.side);loveWrite(th,c.side,0,"init",{absolute:5});
  if(c.sideLine)th.msgs.push({who:c.side,k:"say",txt:String(c.sideLine).replace(/^\*[^*]*\*\s*/,""),at:Date.now()+1});const m=String(c.sideLine||"").match(/^\*([^*]*)\*/);if(m)th.msgs.splice(th.msgs.length-1,0,{who:"n",k:"act",txt:m[1],at:Date.now()});save()}}catch(_){}return th};
 const NV_P={radio:{pitch:.92,rate:.94},film:{pitch:.97,rate:.96},soft:{pitch:1.08,rate:.97},noir:{pitch:.9,rate:.92}};
 const _speak45=speak;speak=function(text,id,onend){try{const th=S.threads[curT],w=th&&wd(th.wid),nv=w&&w.nv;if((!id||id==="n")&&nv){if(nv==="off"){if(onend)setTimeout(onend,50);return}const P=NV_P[nv];if(P&&"speechSynthesis" in window&&!recorded(text,id)){stopVoice();const u=new SpeechSynthesisUtterance(String(text).replace(/[*()（）]/g,""));u.lang=LTAG[S.lang];u.pitch=P.pitch;u.rate=P.rate;if(onend)u.onend=onend;speechSynthesis.speak(u);return}}}catch(_){}return _speak45(text,id,onend)};
@@ -142,7 +142,7 @@ const _ask45=ask;ask=function(prompt,opts){let chat=false,th=null,cid=null;try{t
   prompt=prompt.replace("STORY SO FAR:",add.join("\n")+"\nSTORY SO FAR:").replace('"love":{"<cast id>":0-6}','"love":{"<cast id>":-8 to 6},"rd":{"att":0,"tru":0,"jea":0,"ten":0,"gru":0}')}}catch(_){}
  const pr=_ask45(prompt,opts);if(!chat)return pr;
  return pr.then(r=>{try{if(r&&r.love){const neg={};Object.keys(r.love).forEach(id=>{const v=+r.love[id]||0;if(v<0){neg[id]=Math.max(-8,v);r.love[id]=0}});
-   if(Object.keys(neg).length)setTimeout(()=>{Object.keys(neg).forEach(id=>{if(th.love[id]!=null){th.love[id]=Math.max(-60,th.love[id]+neg[id]);try{dimFloat&&0}catch(_){}}});save();lineCheck(th);if(curT===th.id)toast("↘ "+LL(first(ch(cid).n)+"和你之间冷了一点",first(ch(cid).n)+" just cooled toward you"))},900)}
+   if(Object.keys(neg).length)setTimeout(()=>{Object.keys(neg).forEach(id=>{if(th.love[id]!=null){loveWrite(th,id,neg[id],"cooldown",{min:MIRU_TUNE.love.cooldownMin});try{dimFloat&&0}catch(_){}}});save();lineCheck(th);if(curT===th.id)toast("↘ "+LL(first(ch(cid).n)+"和你之间冷了一点",first(ch(cid).n)+" just cooled toward you"))},900)}
   if(r&&r.rd&&typeof r.rd==="object"){const p=dimMain(th);if(p){const d={};DIMK.forEach(k=>{const v=Math.max(-6,Math.min(6,+r.rd[k]||0));if(v)d[k]=v});if(Object.keys(d).length)setTimeout(()=>{dimAdd(th,dimKey(p.a,p.b),d,"chat");lineCheck(th)},1200)}}}catch(_){}return r})};
 
 /* ---------- character moments that remember ---------- */
