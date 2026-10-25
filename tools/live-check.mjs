@@ -59,12 +59,12 @@ try {
 console.log('\n=== ② 取回线上页面，自己算指纹 ===');
 {
   const ctl = new AbortController();
-  const tm = setTimeout(() => ctl.abort(), STAMP_ONLY ? 60000 : 600000);
+  const tm = setTimeout(() => ctl.abort(), STAMP_ONLY ? 300000 : 900000);
   try {
-    const r = await fetch(PAGES, { signal: ctl.signal, headers: STAMP_ONLY ? { Range: 'bytes=0-400000' } : {} });
+    const r = await fetch(PAGES, { signal: ctl.signal, headers: STAMP_ONLY ? { Range: 'bytes=-1100000' } : {} });
     const html = await r.text();
     clearTimeout(tm);
-    console.log(`     HTTP ${r.status} · 取回 ${(html.length / 1024).toFixed(0)} KB` + (STAMP_ONLY ? '（只取了头部）' : ''));
+    console.log(`     HTTP ${r.status} · 取回 ${(html.length / 1024).toFixed(0)} KB` + (STAMP_ONLY ? '（只取了尾部 1.5 MB）' : ''));
     const m = html.match(/window\.MIRU_BUILD="([0-9a-f]{12}) ([^"]+)"/);
     ok('线上页面带构建指纹', !!m, m ? '' : '没有 MIRU_BUILD（可能是旧版或还没部署）');
     if (m) {
