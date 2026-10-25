@@ -155,7 +155,15 @@ function msgHTML(m,i,th){
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
  return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe||th.cast.length<2?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
-function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
+function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
+ /* 玩家原话单独留档（2026-10-25 Ann）：模型生成的内容可以随窗口滑走，但**玩家自己说的话**要留住。
+    这里逐字收进 th.said（去掉 *动作* 的星号噪音），按 chat.saidKeep 截断。 */
+ try{ if(m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()){
+   th.said=Array.isArray(th.said)?th.said:[];th.said.push(String(m.txt).trim());
+   const cap=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.saidKeep)||50;
+   if(th.said.length>cap)th.said=th.said.slice(-cap);
+ }}catch(_){}
+if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
 function setSugg(list){sugg=(list||[]).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
  const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
@@ -255,6 +263,13 @@ async function reply(th,ctx,silent){
   memBlock(th),
   goals?("QUEST GOALS (the user is trying to achieve these; only mark one done if it clearly happened in THIS reply):\n"+goals):"",
   "STORY SO FAR:\n"+transcript(th),
+  // 玩家原话（2026-10-25）：窗口会滑走，但"你说过什么"要一直在。
+  // 只放玩家自己的话，逐字，不加工；空的时候整行不出现（不让模型看见空标题）。
+  (function(){try{
+    const arr=(Array.isArray(th.said)?th.said:[]);
+    if(!arr.length)return "";
+    return "THE PLAYER'S OWN WORDS (verbatim, oldest first — some are from much earlier than STORY SO FAR; treat them as things this person really said):\n"+arr.map((s,i)=>(i+1)+". "+s).join("\n");
+  }catch(_){return ""}})(),
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）

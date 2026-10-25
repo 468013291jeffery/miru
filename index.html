@@ -2805,7 +2805,8 @@ let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
 function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
-  if(!th.cast.length&&hard)delete S.threads[k]}
+  if(!Array.isArray(th.said)){th.said=th.msgs.filter(m=>m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()).map(m=>String(m.txt).trim()).slice(-60)}
+ if(!th.cast.length&&hard)delete S.threads[k]}
  S.album=(S.album||[]).filter(a=>a&&a.id);S.follow=S.follow||{};S.mine=S.mine||{chars:{},worlds:{}};S.mine.worlds=S.mine.worlds||{};S.mine.chars=S.mine.chars||{};
  for(const k of Object.keys(S.mine.worlds)){const w=S.mine.worlds[k];if(!w||!Array.isArray(w.cast)||!w.title){delete S.mine.worlds[k]}}
  if(S.daily&&!Array.isArray(S.daily.p))S.daily=null;if(hard)save()}catch(_){}}
@@ -3040,8 +3041,9 @@ var MIRU_TUNE = (function () {
       costDeep: 3           // 深度档每轮消耗的单位
     },
     chat: {
-      transcript: 20,       // STORY SO FAR 带多少条（普通）
-      transcriptPlus: 60,   // 同上（Plus）
+      transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
+      transcriptPlus: 80,   // 同上（Plus）
+      saidKeep: 50,          // 玩家自己说过的话单独留多少条（原话逐字，不受窗口裁剪）
       partMergeMax: 5,      // 同一段文字合并成几块为止（原来是字面量 5）
       privateCards: 1,
       planGate: true,         // 计划层入口：只观测「这一场本来会不会需要续写」，不改写这一场
@@ -4348,7 +4350,15 @@ function msgHTML(m,i,th){
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
  return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe||th.cast.length<2?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
-function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
+function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
+ /* 玩家原话单独留档（2026-10-25 Ann）：模型生成的内容可以随窗口滑走，但**玩家自己说的话**要留住。
+    这里逐字收进 th.said（去掉 *动作* 的星号噪音），按 chat.saidKeep 截断。 */
+ try{ if(m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()){
+   th.said=Array.isArray(th.said)?th.said:[];th.said.push(String(m.txt).trim());
+   const cap=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.saidKeep)||50;
+   if(th.said.length>cap)th.said=th.said.slice(-cap);
+ }}catch(_){}
+if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
 function setSugg(list){sugg=(list||[]).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
  const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
@@ -4448,6 +4458,13 @@ async function reply(th,ctx,silent){
   memBlock(th),
   goals?("QUEST GOALS (the user is trying to achieve these; only mark one done if it clearly happened in THIS reply):\n"+goals):"",
   "STORY SO FAR:\n"+transcript(th),
+  // 玩家原话（2026-10-25）：窗口会滑走，但"你说过什么"要一直在。
+  // 只放玩家自己的话，逐字，不加工；空的时候整行不出现（不让模型看见空标题）。
+  (function(){try{
+    const arr=(Array.isArray(th.said)?th.said:[]);
+    if(!arr.length)return "";
+    return "THE PLAYER'S OWN WORDS (verbatim, oldest first — some are from much earlier than STORY SO FAR; treat them as things this person really said):\n"+arr.map((s,i)=>(i+1)+". "+s).join("\n");
+  }catch(_){return ""}})(),
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）

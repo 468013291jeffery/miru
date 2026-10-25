@@ -7,7 +7,8 @@ let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
 function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
-  if(!th.cast.length&&hard)delete S.threads[k]}
+  if(!Array.isArray(th.said)){th.said=th.msgs.filter(m=>m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()).map(m=>String(m.txt).trim()).slice(-60)}
+ if(!th.cast.length&&hard)delete S.threads[k]}
  S.album=(S.album||[]).filter(a=>a&&a.id);S.follow=S.follow||{};S.mine=S.mine||{chars:{},worlds:{}};S.mine.worlds=S.mine.worlds||{};S.mine.chars=S.mine.chars||{};
  for(const k of Object.keys(S.mine.worlds)){const w=S.mine.worlds[k];if(!w||!Array.isArray(w.cast)||!w.title){delete S.mine.worlds[k]}}
  if(S.daily&&!Array.isArray(S.daily.p))S.daily=null;if(hard)save()}catch(_){}}
