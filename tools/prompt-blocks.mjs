@@ -46,6 +46,16 @@ const mk = html.slice(html.indexOf("(function(){try{"), idxBlock + 400);
 ok('块由 th.said 生成', /Array\.isArray\(th\.said\)/.test(html), '');
 ok('空数组时返回空串', /if\(!arr\.length\)return ""/.test(html), '');
 
+console.log('D. 手打那一档（与"玩家说过的话"分开）');
+{
+  const iTyped = html.indexOf('THE PLAYER TYPED THESE THEMSELVES');
+  const iSaid = html.indexOf("THE PLAYER'S OWN WORDS");
+  ok('手打块存在', iTyped > 0);
+  ok('它排在"玩家说过的话"之前（更近的上下文放前面）', iTyped > 0 && iSaid > 0 && iTyped < iSaid, iTyped + ' vs ' + iSaid);
+  ok('只读 th.typed，不读 th.said', /Array\.isArray\(th\.typed\)/.test(html), '');
+  ok('空的时候整块不出现', /if\(!arr\.length\)return ""/.test(html), '');
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('prompt blocks OK');
