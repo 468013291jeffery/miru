@@ -10873,7 +10873,8 @@ async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_P
     想看 token：等代理侧接上 provider 的 usage 帧，或在后台按字符/4 折算（口径要写明是折算）。 */
  try{ if(typeof track==="function"){
    const ms=Math.round(Date.now()-t0);
-   track("llm_usage",{charsIn:sent,charsOut:String(text||"").length,ms:ms,truncated:fin==="length",tier:(opts&&opts.modelTier)||"default"});
+   let prov="";try{prov=(r.headers&&r.headers.get&&r.headers.get("X-MIRU-Provider"))||""}catch(_){}
+   track("llm_usage",{charsIn:sent,charsOut:String(text||"").length,ms:ms,truncated:fin==="length",tier:(opts&&opts.modelTier)||"default",provider:prov});
  }}catch(_){}
  return {text:lcClean(text),truncated:fin==="length"}}
 const LC_SAMPLE=Object.assign((input,opts)=>lcCall(input,opts),{
