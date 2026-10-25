@@ -21,7 +21,7 @@ console.log('1) 默认值');
 const d = load();
 ok('pay.packPrice = 50', d.pay.packPrice === 50, d.pay.packPrice);
 ok('pay.endingNeed = 4', d.pay.endingNeed === 4, d.pay.endingNeed);
-ok('chat.transcript = 20 / plus 60', d.chat.transcript === 20 && d.chat.transcriptPlus === 60);
+ok('chat.transcript = 50 / plus 80（2026-10-25 Ann 拍：20 条只有 4.4 轮）', d.chat.transcript === 50 && d.chat.transcriptPlus === 80, [d.chat.transcript, d.chat.transcriptPlus]);
 ok('love.deltaCap = 12', d.love.deltaCap === 12, d.love.deltaCap);
 ok('love.stageMin 是 5 档', Array.isArray(d.love.stageMin) && d.love.stageMin.length === 5);
 ok('report.omniscienceThreshold = 0.10', d.report.omniscienceThreshold === 0.10, d.report.omniscienceThreshold);
@@ -31,7 +31,7 @@ const o = load({ pay: { packPrice: 60 }, love: { deltaCap: 20 } });
 ok('覆盖生效（packPrice 60）', o.pay.packPrice === 60, o.pay.packPrice);
 ok('覆盖生效（deltaCap 20）', o.love.deltaCap === 20, o.love.deltaCap);
 ok('同段其它键保持默认', o.pay.endingNeed === 4, o.pay.endingNeed);
-ok('其它段保持默认', o.chat.transcript === 20, o.chat.transcript);
+ok('其它段保持默认（覆盖 love 不应动 chat）', o.chat.transcript === 50, o.chat.transcript);
 ok('拼错的键被忽略（不会静默生效）', load({ pay: { packprice: 99 } }).pay.packPrice === 50);
 ok('拼错也不会新增键', load({ pay: { packprice: 99 } }).pay.packprice === undefined);
 ok('未声明的段被忽略', load({ nonsense: { x: 1 } }).nonsense === undefined);
@@ -87,6 +87,14 @@ ok('works.js 的上限由配置算出（不是常量）', ahas('works.js', 'cons
   const b = load({ chat: { streamPreview: false } }).chat;
   ok('streamPreview 可被关掉', b.streamPreview === false, b.streamPreview);
 }
+// 历史窗口（2026-10-25 Ann：20 条太薄 ⇒ 50）
+{
+  const c = load().chat;
+  ok('transcript 默认 50', c.transcript === 50, c.transcript);
+  ok('transcriptPlus 默认 80', c.transcriptPlus === 80, c.transcriptPlus);
+  ok('saidKeep 默认 50（玩家原话单独保留）', c.saidKeep === 50, c.saidKeep);
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('tune selftest OK');
