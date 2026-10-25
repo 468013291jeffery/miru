@@ -35,6 +35,8 @@ node tools/check-all.mjs          # 八套全跑
 | `ask-retry-selftest` | 15 | `node tools/ask-retry-selftest.mjs` | 自适应预算：同档位两次解析不出来才升 complex 一次，只升一次、非 invalid_json 不升 |
 | `account-check` | 19 行 | `node tools/account-check.mjs` | 结构账逐行复核（说「有」代码里必须找得到，说「没有」必须真扫不到） |
 
+| `live-check` | 5 | `node tools/live-check.mjs --stamp` | **线上是不是我们这一版**：Pages 构建提交 = main 头 + 取回线上页面自算指纹（两个独立证据源） |
+
 ## 一条元规则：新闸必须真在册
 
 `check-all` 每次先跑**在册检查**：`tools/` 里每个 `*-selftest.mjs` / `*-contract.mjs` / `regression-N.mjs` 都必须在 suites 列表里，否则红；反过来，登记了但文件不存在也红。
