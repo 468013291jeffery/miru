@@ -79,10 +79,8 @@ import hashlib, datetime
 _h = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
 _ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
 _stamp = '<script>window.MIRU_BUILD="' + _h + " " + _ts + '";</script>'
-if "</head>" in html:
-    html = html.replace("</head>", _stamp + "</head>", 1)
-else:
-    html = _stamp + html
+# Prefix the stamp: shell has no explicit head; embedded HTML strings may have one.
+html = _stamp + html
 out=os.path.join(ROOT,"index.html")
 open(out,"w",encoding="utf8",newline="\n").write(html)
 print(len(html), "chars ->", out, "| split" if SPLIT else "| single file")
