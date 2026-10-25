@@ -31,6 +31,9 @@ node tools/check-all.mjs          # 八套全跑
 | `wiring-check` | 23 个函数 | `node tools/wiring-check.mjs` | **接线**：机制函数有没有人调用（基线 `tools/wiring-baseline.json`，每条带理由；接上线就必须从基线删掉） |
 | `replyguard-selftest` | 19 | `node tools/replyguard-selftest.mjs` | 台词守门：说了本章不该知道的事 ⇒ 重写一次 ⇒ 仍犯就换保守句 |
 | `rev-selftest` | 9 | `node tools/rev-selftest.mjs` | 内容版本号（T06）：改一字节必变 · 与 Python 同口径 · 旧计划按版本丢弃（T16） |
+| `prompt-blocks` | 11 | `node tools/prompt-blocks.mjs` | prompt 的两块记忆：历史窗口 50 条 · 玩家原话块 · **手打块**（只读 `th.typed`、排在原话块之前、空时整块不出现） |
+| `ask-retry-selftest` | 15 | `node tools/ask-retry-selftest.mjs` | 自适应预算：同档位两次解析不出来才升 complex 一次，只升一次、非 invalid_json 不升 |
+| `account-check` | 19 行 | `node tools/account-check.mjs` | 结构账逐行复核（说「有」代码里必须找得到，说「没有」必须真扫不到） |
 
 ## 一条元规则：新闸必须真在册
 
