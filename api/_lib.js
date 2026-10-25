@@ -45,7 +45,7 @@ const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS events_name_idx ON events (name, at)`,
   // 事件幂等（2026-10-25）：可选 key 列 + 部分唯一索引。老库靠这两句自动补齐，不需要手工迁移。
   `ALTER TABLE events ADD COLUMN IF NOT EXISTS key TEXT`,
-  `CREATE UNIQUE INDEX IF NOT EXISTS events_key_idx ON events (key) WHERE key IS NOT NULL`,
+  `CREATE UNIQUE INDEX IF NOT EXISTS events_key_idx ON events (key)`,
   // v2.7 — accounts, moderation, operations console
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'active'`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS ban_reason TEXT`,
