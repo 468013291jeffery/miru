@@ -72,6 +72,17 @@ if SPLIT:
     out=os.path.join(ROOT,"index.split.html")
 else:
     html=shell+"\n<script>\n"+assets+js+"\n</script>\n"
-    out=os.path.join(ROOT,"index.html")
+    # 构建指纹（2026-10-25）：没有它，就永远无法回答「线上跑的是哪一版」。
+# 指纹 = 页面内容（不含指纹本身）的 sha256 前 12 位 + UTC 构建时间；
+# tools/live-check.mjs 会把线上那一页取回来、剥掉指纹、重算 sha256 对一遍 —— 可验证，不是自说自话。
+import hashlib, datetime
+_h = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
+_ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
+_stamp = '<script>window.MIRU_BUILD="' + _h + " " + _ts + '";</script>'
+if "</head>" in html:
+    html = html.replace("</head>", _stamp + "</head>", 1)
+else:
+    html = _stamp + html
+out=os.path.join(ROOT,"index.html")
 open(out,"w",encoding="utf8",newline="\n").write(html)
 print(len(html), "chars ->", out, "| split" if SPLIT else "| single file")
