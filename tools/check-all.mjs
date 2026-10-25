@@ -32,6 +32,7 @@ const suites = [
   ['perf-budget.mjs', ['tools/perf-budget.mjs'], true],
   ['timer-audit.mjs', ['tools/timer-audit.mjs', '--check'], true],
   ['ask-retry-selftest.mjs', ['tools/ask-retry-selftest.mjs'], true],
+  ['prompt-blocks.mjs', ['tools/prompt-blocks.mjs'], true],
 ];
 
 let failed = 0;

@@ -70,7 +70,14 @@ const server = http.createServer(async (req, res) => {
       if (lines) fs.appendFileSync(LOG, lines + '\n');
       return json(res, 200, { n: (b.events || []).length });
     }
-    if (route === 'longcat' && req.method === 'POST') return json(res, 200, { choices: [{ message: { content: '（local stub reply）' } }] });
+    if (route === 'longcat' && req.method === 'POST') {
+    // 把这一轮真正收到的 prompt 记下来（排查"模型到底看到了什么"时用；只在本地假接口里做）
+    try {
+      const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
+      fs.writeFileSync('tools/_last-longcat.json', JSON.stringify({ at: Date.now(), model: body.model, messages: body.messages }, null, 1));
+    } catch (_) {}
+    return json(res, 200, { choices: [{ message: { content: '（local stub reply）' } }] });
+  }
     if (route === 'i18n') return json(res, 200, { dict: {} });
     return json(res, 404, { error: 'no such endpoint in the fake api: ' + route });
   }
