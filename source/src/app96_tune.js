@@ -34,7 +34,6 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
-      lens: true,            // 卡上带「他拿什么尺子读这件事」（借 Mythica 的角色核心=阅读器）
       publicWants: true,      // 每个在场角色的卡上都给他「自己想要什么」（别人不知道）——有动机才推得动场景
       characterMeta: false,   // true = 旧文案（角色知道第几章/本章目标/下一步要选什么）；false = 角色只知道此刻与已发生
       chapterAdvance: true,  // 章内允许推进时间/场景（不替玩家做官方选择）；false = 旧行为，每轮钉在同一幕
