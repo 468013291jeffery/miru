@@ -187,6 +187,31 @@ async function main() {
         return "spy on";
       })()`;
       say('      ' + await evaluate(spy));
+
+      /* 第二层：(b) 真正放出去的那段音频。录音包是 data: URI，我可以用「长度+前缀」反查它属于哪句台词。 */
+      const audSpy = `(function(){
+        if(window.__AUDSPY) return "already";
+        window.__AUDSPY=1; window.__AUD=[];
+        try{
+          const op=HTMLMediaElement.prototype.play;
+          HTMLMediaElement.prototype.play=function(){
+            try{const s=String(this.src||this.currentSrc||"");
+              window.__AUD.push({t:Math.round(performance.now()),kind:/^data:/.test(s)?"data":(/^blob:/.test(s)?"blob":(s?"url":"empty")),len:s.length,head:s.slice(0,44),tail:s.slice(-24)});
+            }catch(e){}
+            let p; try{p=op.apply(this,arguments)}catch(e){return Promise.resolve()}
+            if(p&&p.catch)p.catch(()=>{});
+            return p;
+          };
+        }catch(e){}
+        try{
+          if(typeof speechSynthesis!=="undefined"){
+            const os=speechSynthesis.speak.bind(speechSynthesis);
+            speechSynthesis.speak=function(u){try{window.__AUD.push({t:Math.round(performance.now()),kind:"device",len:0,head:String((u&&u.text)||"").slice(0,44),tail:""})}catch(e){} return os(u)};
+          }
+        }catch(e){}
+        return "aud spy on";
+      })()`;
+      say('      ' + await evaluate(audSpy));
     }
 
     if (flag('novoice')) {
@@ -329,6 +354,31 @@ async function main() {
       say('路径分布：录音包命中 ' + rows.filter(r => r.rec).length + ' · 服务器TTS可用 ' + rows.filter(r => r.tts).length + ' · AVDEAD=' + (rows.length ? rows[rows.length - 1].avdead : '-'));
       for (const r of rows.slice(0, 14)) {
         say('  ' + (r.same ? '✓' : '✗') + ' [' + r.id + '] 念「' + r.text.slice(0, 34) + '」' + (r.rec ? ' (录音)' : '') + ' | 屏幕上「' + r.last.slice(0, 34) + '」' + (r.lastWho ? ' · ' + r.lastWho : ''));
+      }
+
+      /* ---- 音频侧：放出来的到底是哪句（录音包指纹反查）---- */
+      const audRaw = await evaluate(`JSON.stringify(window.__AUD||[])`);
+      const aud = JSON.parse(audRaw);
+      result.aud = aud;
+      // 录音包指纹：长度 → 文本
+      const packs = [];
+      for (const f of ['audio/zh.json', 'audio/en.json']) {
+        try { const j = JSON.parse(fs.readFileSync(f, 'utf8')); for (const k of Object.keys(j)) packs.push({ len: j[k].length, text: k.split('|').slice(1).join('|'), who: k.split('|')[0], pack: f }); } catch (_) {}
+      }
+      const byLen = new Map();
+      for (const p of packs) { if (!byLen.has(p.len)) byLen.set(p.len, []); byLen.get(p.len).push(p) }
+      say('\n=== 实际播放的音频（' + aud.length + ' 次）===');
+      const kinds = {};
+      for (const a of aud) kinds[a.kind] = (kinds[a.kind] || 0) + 1;
+      say('来源分布：' + JSON.stringify(kinds));
+      for (const a of aud.slice(0, 16)) {
+        let whose = '';
+        if (a.kind === 'data') {
+          const cand = byLen.get(a.len) || [];
+          whose = cand.length === 1 ? ('录音包 · ' + cand[0].who + '「' + cand[0].text.slice(0, 40) + '」') : (cand.length ? ('录音包 · ' + cand.length + ' 个同长度候选') : 'data URI（非录音包 / 服务器 TTS 缓存）');
+        } else if (a.kind === 'device') whose = '设备语音「' + a.head + '」';
+        else whose = a.kind + ' ' + a.head.slice(0, 30);
+        say('  [' + a.kind + '] len=' + a.len + ' → ' + whose);
       }
     }
 
