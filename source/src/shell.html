@@ -295,7 +295,13 @@ p{margin:0}
 .chatscreen .composer{background:rgba(12,11,16,.82);backdrop-filter:blur(14px)}
 .chatscreen .m-narr,.chatscreen .m-act{text-shadow:0 1px 10px rgba(0,0,0,.9)}
 .chatscreen .m-who{display:inline-block;background:rgba(12,11,16,.7);padding:2px 7px;border-radius:6px;filter:brightness(1.35)}
-.chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur(8px)}
+/* 2026-10-27 · Ann：「浏览器整个卡死，连字都打不进去」。
+   backdrop-filter 是合成器杀手：**每一个**气泡都要对自己的背景做一次模糊快照，
+   一屏 6–8 个、滚动列表里 60+ 个 ⇒ Windows/Edge 上是已知的合成器停摆（页面不再响应输入，
+   而 JS 长任务还是 0 —— 和我们量到的「长任务 0 / 60fps」完全吻合）。
+   ⇒ 默认**关**，只留便宜的半透明底；想要毛玻璃就把 body 加上 heavyfx 类。 */
+.chatscreen .bub{background:rgba(22,20,28,.82)}
+body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur(8px)}
 .chatscreen .m-think{background:rgba(22,20,28,.5);border-radius:0 10px 10px 0}
 .mquick{display:flex;gap:4px;margin:3px 0 0 40px}.mquick.c{justify-content:center;margin-left:0}
 .mquick button{width:28px;height:24px;border-radius:8px;font-size:12px;background:rgba(22,20,28,.6);border:1px solid var(--line2);display:grid;place-items:center}
