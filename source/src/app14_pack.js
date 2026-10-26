@@ -142,8 +142,10 @@ function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=
 function pkBusy(th){try{
  /* ⚠️ th.pk.stop 有值时 = 游戏正**等玩家动作**（等 PKWAIT）⇒ 这时绝不能锁输入框，
     否则「锁着输入框等玩家输入」= 死锁。 */
+ /* 2026-10-27 Ann 收窄：只在**必须几选一**的时候关输入框；
+    普通剧情播放不该关（她还要边看边说话）。 */
  if(th&&th.pk&&th.pk.stop)return false;
- return !!(th&&th.pk&&th.pk.q&&th.pk.q.length&&PKPLAY[th.id]===2)
+ return !!(th&&th.pk&&th.pk.st==="choose")
 }catch(_){return false}}
 function pkLockComposer(th){
  if(!th||curT!==th.id)return;
