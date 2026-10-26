@@ -347,6 +347,11 @@ async function reply(th,ctx,silent){
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
   "- One concrete sensory detail from THIS world per reply. No abstract emotion words.",
+  /* 2026-10-27 Ann：第三人称经常用错。把「人称」写成硬契约，三条，每条可判。 */
+  "PERSON (never drift, every reply):",
+  "- Every line a character speaks, and every action a character takes, is FIRST PERSON (\"I …\"). Never \"he …\" / \"she …\" for someone who is in the scene.",
+  "- Narration beats (who:\"n\") are third-person scene description: weather, room, sound, other people's faces. Narration must NEVER use \"I\" and must never explain anyone's thoughts.",
+  "- The USER is always \"you\" (or their name). NEVER call the user he/she/they, and NEVER narrate the user's feelings, decisions or actions. Their beats are written by the app, not by you.",
   "- Each character sounds different, follows their profile, wants something, and may disagree or interrupt.",
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
