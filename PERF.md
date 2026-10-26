@@ -232,6 +232,9 @@ node tools/perf-ingame.mjs --chapters 3 --voice on    # 开朗读的真速（这
 ⚠️ 浏览器会话用 `--session miru-perf`，**不要用 `dsh`**：那是所有 dsh 窗口共用的会话，
 两个窗口同时驱动会把对方的页面导航走（2026-10-27 凌晨实测，一轮 9 分钟的基线测量就这样作废）。
 
+⚠️ 另一个小坑：`python source/build.py` **每次都会改 1 行** —— `window.MIRU_BUILD` 里带时间戳。
+所以「重建之后树变脏」**不等于**产物和源不同步；判据是 `git diff index.html` **只在那一行**，别去追别的差异。
+
 ### 一、8 章全走一遍：工作量的账（`--fast`，把「按阅读速度放行」的等待去掉）
 
 | 项 | 读数 |
