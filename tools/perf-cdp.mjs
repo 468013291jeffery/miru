@@ -339,14 +339,33 @@ async function main() {
         S.packs=S.packs||{};S.packs["${WORLD}"]={own:1,end:{}};S.pkSpd=1;
         Object.keys(S.threads).filter(function(id){return S.threads[id].wid==="${WORLD}"}).forEach(function(id){delete S.threads[id]});
         save();
+        /* 探针：packRun 到底有没有被叫起来（只观测，不改行为） */
+        if(!window.__RUNS){window.__RUNS=[];const _pr=window.packRun;
+          window.packRun=function(th){try{window.__RUNS.push({t:Date.now(),id:th&&th.id,pk:(typeof PKPLAY!=="undefined")?PKPLAY[th.id]:null,q:(th&&th.pk&&th.pk.q||[]).length})}catch(e){}
+            return _pr.apply(this,arguments)}}
+        /* 再上一层：pkWait 进/出、pkDirective 判定、readMs 取值 —— 把「卡在哪个 await」钉住 */
+        if(!window.__WAITLOG){window.__WAITLOG=[];
+          var _pw=window.pkWait; window.pkWait=function(th,prev,spd,ms){var id=th&&th.id;
+            window.__WAITLOG.push({ev:"enter",ms:Math.round(ms||0),spd:String(spd),pk:prev&&prev.k});
+            var p=_pw.apply(this,arguments);
+            try{p.then(function(){window.__WAITLOG.push({ev:"exit"})},function(e){window.__WAITLOG.push({ev:"reject",m:String(e&&e.message||e).slice(0,40)})})}catch(e){}
+            return p};
+          var _pd=window.pkDirective; window.pkDirective=function(th,b){var r=_pd.apply(this,arguments);
+            try{if(Array.isArray(b)&&b[0]==="sys")window.__WAITLOG.push({ev:"directive",k:b[1],r:!!r})}catch(e){}
+            return r};
+        }
         var t=packStart("${WORLD}","watch",1);
-        /* 2026-10-27：新章节的第一拍是 ["sys","start",{}] = **「点一下再播放」**（isStop 认它、stopAuto 对它返回 null）
-           ⇒ 播放器停下来等玩家点。量尺必须替玩家点这一下，否则永远看到 msgs=4 / st=busy。 */
         var taps=0;
-        await new Promise(r=>setTimeout(r,1200));
+        await new Promise(r=>setTimeout(r,1500));
         while(t.pk&&t.pk.stop&&taps<4){ try{PKWAIT[t.id]([])}catch(e){} taps++; await new Promise(r=>setTimeout(r,700)) }
         return JSON.stringify({id:t.id,ch:t.pk.ch,st:t.pk.st,msgs:t.msgs.length,taps:taps,
-          q:((t.pk.q||[]).length), live:(curT===t.id), scHidden:(function(){var e=$("#s-chat");return e?!!e.hidden:"no-el"})()});
+          q:((t.pk.q||[]).length), live:(curT===t.id),
+          pkplay:(typeof PKPLAY!=="undefined")?PKPLAY[t.id]:null,
+          stop:(t.pk.stop?String(t.pk.stop[0]+"/"+t.pk.stop[1]):null),
+          runs:(window.__RUNS||[]).length,
+          runIds:(window.__RUNS||[]).slice(0,4).map(function(x){return x.pk+":"+x.q}),
+          waitlog:(window.__WAITLOG||[]).slice(-6),
+          scHidden:(function(){var e=$("#s-chat");return e?!!e.hidden:"no-el"})()});
       }catch(e){return "ERR "+e.message}})()`);
       say('      ' + setup);
       if (String(setup).startsWith('ERR')) throw new Error(setup);
