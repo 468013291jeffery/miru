@@ -153,7 +153,7 @@ function msgHTML(m,i,th){
  if(th.pk&&m.who===th.pk.as&&th.pk.as!=="watch"&&th.pk.as!=="side"&&m.who!=="me"){const c0=ch(m.who),lab='<small class="asme">'+esc(t("pk.youAre",{n:first(c0.n)}))+'</small>';
   if(m.k==="act")return '<div class="m-act me" data-mi="'+i+'">'+lab+esc(m.txt)+'</div>';
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
-  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="bub">'+esc(m.txt)+'</div></div></div>'}
+  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
  const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
  const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
   '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
@@ -167,7 +167,7 @@ function msgHTML(m,i,th){
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
- return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
+ return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
 /* 2026-10-27 补的三条视觉（Ann 试玩反馈）：
    ① 每个角色一条他自己的色条 + 淡底（原来只有名字颜色，认不出谁在说）
    ② 点过的选项反色（原来点下去毫无反馈）
@@ -200,6 +200,11 @@ function msgHTML(m,i,th){
   '#msgs .m-box .bac,#msgs .m-box .bth{max-width:92%}',
   /* 角色气泡套上「框」：名字在上、左侧角色色、半透明深底（Ann 2026-10-27 对截图） */
   '#msgs .m-row[data-wc]{background:none;border-left:0;padding-left:0;border-radius:0}',
+  /* 2026-10-27：模型那条也用 .m-box 的框（与剧本台词同一个外观） */
+  '#msgs .m-row .m-box.lb{margin:0;padding:10px 13px;border-radius:16px;background:rgba(12,11,16,.62)}',
+  '#msgs .m-row .m-box.lb p{margin:0}',
+  '#msgs .m-row.me .m-box.lb{background:var(--grad);color:#1B1017}',
+  '#msgs .m-row.me .m-box.lb p,#msgs .m-row.me .m-box.lb p b{color:#1B1017}',
   '#msgs .m-row[data-wc] .bub{border-left:3px solid var(--wc);background:rgba(22,20,28,.86);backdrop-filter:blur(8px);border-radius:16px;padding:10px 13px}',
   '#msgs .m-row.me[data-wc] .bub{border-left:0;border-right:3px solid var(--fg);background:var(--grad);color:#1B1017}',
   '#msgs .m-who{display:block!important;margin-bottom:4px;font-size:11px;letter-spacing:.04em;opacity:.9}',
