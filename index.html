@@ -1499,7 +1499,7 @@ p{margin:0}
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="3a3fad6f9286 2026-10-26T18:28Z";
+window.MIRU_BUILD="9dbf50bc772f 2026-10-26T18:33Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -8583,7 +8583,9 @@ stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="line")return _stopHTML27
   '<div class="chstep" style="--ac:'+x.c+'"><div class="chh"><button class="chback" data-chback="1">‹ '+t("ch27.back")+'</button><b>'+x.i+' '+x[lang]+'</b></div>'+
   (acts.length?'<p class="chl">'+t("ch27.add")+'</p><div class="chacts">'+acts.map((s,j)=>'<button data-chact="'+j+'" class="'+(CH.act===j?"on":"")+'">✱ '+esc(s)+'</button>').join("")+'</div>':'')+
   '<p class="chl">'+t("ch27.words")+'</p><textarea id="chTxt" rows="2" maxlength="80">'+esc(CH.txt)+'</textarea>'+
-  '<div class="chprev" id="chPrev">'+chPreview(th)+'</div>'+
+  /* 2026-10-27 Ann：这一行和上面的输入框是同一句，看着重复 ⇒ 去掉；
+   chPreview 保留（别处还在用），只是这里不再渲染。 */
+
   '<button class="btn btn-p btn-block chgo" data-chgo="1">'+t("ch27.go")+' →</button><p class="pkhint">'+t("ch27.note")+'</p></div>'};
 function chText(th){const d=th.pk.stop[2],a=attList(th,d).find(z=>z.i===CH.i),x=ATT[a.k],lang=S.lang==="zh"?"zh":"en";
  const act=x.act&&CH.act!=null?x.act[lang][CH.act]:"";const w=(CH.txt||"").trim()||Lz(a.o.t);return (act?"*"+act+"* ":"")+w}
@@ -15104,12 +15106,18 @@ async function aiIdeasGo97(btn) {
     try { const b = th && th.pk && th.pk.stop; if (!b || !h) return h;
       const k = b[1], mine = k === "myline" || (k === "line" && th.pk.as && th.pk.as === (ch(b[0]) ? b[0] : null)) || th.pk.talk || (b[2] && typeof Lz(b[2].hint) === "string" && Lz(b[2].hint).indexOf("⁣") === 0);
       if (!mine && k !== "line") return h; const zh = CL() === "zh";
-      return h + '<div class="ai97"><button data-ai97="1">✨ ' + (zh ? "AI 帮我想怎么说" : "Help me say it") + '</button><div id="ai97o" class="ai97o"></div></div>';
+      /* 2026-10-27 Ann：按钮挪到标题行右上角（原来在最下面，和「就这么说」挤在一起）。
+   标题行是 <div class="chh">…</div>，把按钮塞到它闭合之前；结果气泡框 #ai97o 仍留在面板末尾。 */
+ const BTN = '<span class="ai97h"><button data-ai97="1">✨ ' + (zh ? "AI 帮我想" : "Help me say it") + '</button></span>';
+ let out = h;
+ if (/<div class="chh">[\s\S]*?<\/div>/.test(out)) out = out.replace(/(<div class="chh">[\s\S]*?)<\/div>/, '$1' + BTN + '</div>');
+ else out = out + BTN;
+ return out + '<div class="ai97o" id="ai97o"></div>';
     } catch (_) { return h; } };
   document.addEventListener("click", e => { const b = e.target.closest("[data-ai97]"); if (b) { e.stopPropagation(); aiIdeasGo97(b); } }, true);
   /* the ✦ ideas tool asks the AI too instead of canned lines */
   document.addEventListener("click", e => { const b = e.target.closest("[data-ideas]"); if (!b) return; const th = S.threads[curT]; if (!th || !th.pk) return; e.stopPropagation(); aiIdeasGo97(null); }, true);
-  const st = document.createElement("style"); st.textContent = `.ai97{margin:10px 0 0;text-align:center}.ai97>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px}.ai97>button:disabled{opacity:.6}.ai97o{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ai97o button{text-align:left;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:9px 12px;font-size:14px}`; document.head.appendChild(st);
+  const st = document.createElement("style"); st.textContent = `.ai97h{margin-left:auto;display:flex;align-items:center}.ai97h>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}.ai97{margin:10px 0 0;text-align:center}.ai97>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px}.ai97>button:disabled{opacity:.6}.ai97o{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ai97o button{text-align:left;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:9px 12px;font-size:14px}`; document.head.appendChild(st);
 })();
 
 /* ================= v6.0 · your-turn dock =================
