@@ -134,7 +134,12 @@ function audPack(lang){if(AUDP[lang]!==undefined)return;AUDP[lang]=null;
  if(window.AUDPACK&&AUDPACK[lang]){AUDP[lang]=AUDPACK[lang];return}
  fetch("audio/"+lang+".json").then(r=>r.ok?r.json():null).then(j=>{AUDP[lang]=j||{}}).catch(()=>{AUDP[lang]={}})}
 function audLang(){return S.lang==="zh"?"zh":S.lang==="en"?"en":null}
-function recorded(text,id){const l=audLang();if(!l)return null;audPack(l);const P=AUDP[l];if(!P)return null;
+function recorded(text,id){
+ /* 2026-10-27 Ann：「虽然现在删不合适，但是可以不用吗？」—— 可以。语言包**保留在仓库**，
+    但默认**不启用**（S.voice.pack 未开就完全不走这条路：不下载、不查表、不参与判断）。
+    实测她那条线程 10 次发声命中 0 次，而它要 11 MB 预取。想用的时候把开关打开即可。 */
+ if(!(typeof S!=="undefined"&&S.voice&&S.voice.pack))return null;
+ const l=audLang();if(!l)return null;audPack(l);const P=AUDP[l];if(!P)return null;
  const k=(id||"n")+"|"+String(text).replace(/[*()（）]/g,"").trim();return P[k]||(ch(id)?null:P["n|"+k.split("|").slice(1).join("|")])||null}
 function hasVoice(text,id){return !!recorded(text,id)}
 function speak(text,id,onend){
@@ -153,7 +158,10 @@ function speak(text,id,onend){
   if(onend)u.onend=onend;speechSynthesis.speak(u);
  }catch(e){}}
 function stopVoice(){try{speechSynthesis.cancel()}catch(e){}try{if(AUD_CUR){AUD_CUR.pause();AUD_CUR=null}}catch(e){}}
-setTimeout(()=>{const l=audLang();if(l)audPack(l)},600);
+/* 2026-10-27 Ann：「语言包说实话也是没什么用的」——实测她那条线程 10 次发声里命中录音包 0 次。
+   而它在启动 600ms 后就把 audio/<lang>.json（zh 11 MB）整份拉下来。⇒ 改成**按需**：
+   第一次真要念某句时由 recorded() 自己去调 audPack()，启动不再预取。 */
+
 
 /* ================= LIVE AI ================= */
 let SAMPLE=null,LIVE_ERR=null,LIVE_STATE="pending";

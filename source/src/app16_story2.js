@@ -32,6 +32,15 @@ function statusSync(th){const s=$(".status");if(!s)return;const sp=[...s.childre
 
 /* 3) narration, actions and thoughts that belong to the same moment go into ONE box instead of a string of separate lines */
 function isNarr(m){return m&&m.pk&&(m.who==="n"||m.k==="act"||m.k==="think")&&m.who!=="me"}
+/* 剧本台词去元信息（2026-10-27）：角色不该说出「第几章」「chapter N」这类给作者看的坐标。
+   只做最小改写，不删句子 —— 那句话里的「最后一次机会」是剧情钩子。 */
+function deMeta(s){
+ let x=String(s==null?"":s);
+ x=x.replace(/第[一二三四五六七八九十百零\d]+章\s*(开始)?\s*之前[，,、]?\s*/g,"在这之前，");
+ x=x.replace(/第[一二三四五六七八九十百零\d]+章[，,、]?\s*/g,"");
+ x=x.replace(/\bchapter\s*\d+\b[,\s]*/gi,"");
+ return x;
+}
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
@@ -40,6 +49,7 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
    speakQueue([{txt:m.txt,who:m.who}]);
  }catch(_){}
  if(!isNarr(m)){appendMsg(th,m);return}
+ try{ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } }catch(_){}
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
@@ -86,8 +96,14 @@ const _packRefresh2=packRefresh;
 packRefresh=function(th){_packRefresh2(th);if(curT===th.id){const pw=$("#pkwrap"),box=$("#msgs");if(pw&&box&&pw.parentNode!==box)box.appendChild(pw);scrollChat()}};
 
 /* 6) read aloud: ONE switch in the header. On = every line is read in its speaker's voice, one after another. Off = silent. */
-function speakLine(m,done){if(!m){done();return}const who=m.k==="box"?(m.lastWho||"n"):m.who==="me"?null:m.who,txt=m.k==="box"?(m.last||m.txt):m.txt;
- if(!txt||m.k==="scene"||m.k==="chap"||m.k==="card"||m.k==="intro"){done();return}try{speak(String(txt).replace(/^📞\s*/,""),who||"n",done)}catch(_){done()}}
+/* 2026-10-27 Ann：「语音不要读动作、背景、环境之类的」。
+   ⇒ **白名单**：只念 k==="say" 的角色台词。旁白（who==="n"，在 beatMsg 里 k 会被改成 act）、
+   动作、环境、卡片、章节标题一律不念。以前这里只排除了 scene/chap/card/intro，
+   而旁白在队列里是 act ⇒ 全被念了出来。 */
+function speakLine(m,done){if(!m){done();return}
+ const who=m.k==="box"?(m.lastWho||"n"):(m.who==="me"?null:m.who),txt=m.k==="box"?(m.last||m.txt):m.txt;
+ if(!txt||m.k!=="say"||!who||who==="n"||who==="sys"||!ch(who)){done();return}
+ try{speak(String(txt).replace(/^📞\s*/,""),who,done)}catch(_){done()}}
 /* 2026-10-27 · 朗读那条等是「换章之后好卡」的一张脸（进游戏后实测见 PERF.md）
    剧本每放一句都走 pkWait；开朗读时等的是「这句读完了」。原来的兜底是
    `max(ms*3, 14000)` —— 也就是**朗读一旦交不出声音，每一句都白等 14 秒**。
@@ -99,19 +115,29 @@ function speakLine(m,done){if(!m){done();return}const who=m.k==="box"?(m.lastWho
    才认定这段时间朗读不可用、按阅读速度往下走；而且只认一次（每段会话一次），
    朗读恢复（用 🔊 开关来回切一次）就重新给机会。
    朗读正常时这一段永远不会触发 —— onend 会先到，行为与改前完全一致。 */
-let AVDEAD=0;
+let AVSILENT=0, AVSKIP=0;
 function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesis.speaking||speechSynthesis.pending))return false}catch(_){}
  try{if(typeof TTS!=="undefined"&&TTS.inflight&&TTS.inflight.size)return false}catch(_){}   // 服务器配音还在路上（慢 ≠ 没有）
  try{if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false}catch(_){}
  return true}
+/* 2026-10-27 Ann：「这个语音怎么加强保护，好像经常坏」。
+   原来是一刀切：第一次没声音就把 AVDEAD 置 1，**整段会话再也不念**（还会把后续每句都变成静音），
+   而只要有一次网络抖/设备忙，就会被判死刑。改成**有退路的重试**：
+   · 连续 2 句没声音 ⇒ 先跳过 8 句（不拖节奏），之后**自动再给一次机会**，响了一声就把计数清零；
+   · 不再有「永久关闭」这个状态。
+   ⚠️ 同时修掉一个真的会卡死的分支：以前 `else if(spd)` —— 朗读被判死（AVDEAD=1）而 spd 为 0 时，
+   **没有任何东西会 resolve**，整条剧本停在这一句上（这就是「忽然不动了」）。现在每个分支都保证 resolve。 */
 function pkWait(th,prev,spd,ms){return new Promise(r=>{let ok=false;const go=()=>{if(ok)return;ok=true;r()};PKNEXT[th.id]=go;
- if(S.autoVoice&&!AVDEAD){
-  speakLine(prev,()=>setTimeout(go,300));
-  setTimeout(()=>{if(!ok&&avSilent()){AVDEAD=1;go()}},3000);      // 3 秒还没响 ⇒ 这段会话不再为朗读等
+ if(S.autoVoice&&AVSKIP<=0){
+  speakLine(prev,()=>{AVSILENT=0;setTimeout(go,300)});
+  setTimeout(()=>{if(!ok&&avSilent()){AVSILENT++;if(AVSILENT>=2){AVSKIP=8;AVSILENT=0}go()}},3000);   // 3 秒还没响 ⇒ 这一句不等朗读
   setTimeout(go,Math.max(ms*3,14000));                          // 老兜底保留（朗读很慢但确实在读时靠它）
- }else if(spd)setTimeout(go,ms)})}
+ }else{
+  if(AVSKIP>0)AVSKIP--;
+  if(spd)setTimeout(go,ms);else go();
+ }})}
 document.addEventListener("click",e=>{let x;
- if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;AVDEAD=0;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
+ if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;AVSILENT=0;AVSKIP=0;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
   if(!S.autoVoice){stopVoice()}toast(t(S.autoVoice?"st2.vOn":"st2.vOff"));if(PKNEXT[curT]&&!S.autoVoice)PKNEXT[curT]();return}
  if(x=e.target.closest("[data-intro]")){introSheet(x.dataset.intro);return}
  if(e.target.closest("[data-pknext],[data-pknextl],[data-stopline],[data-pkpick]"))stopVoice()},true);

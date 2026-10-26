@@ -405,7 +405,7 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
+  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
@@ -419,10 +419,9 @@ async function reply(th,ctx,silent){
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
-  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. For two suggestions, choose two of those formats. Vary the intentions: clarify, propose a next step supported by visible facts, or defer/change topic. All are optional; never assume consent or promise success. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: exactly 3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
  if(liveOn()){
@@ -499,11 +498,26 @@ async function playBeats(th,r,ctx,silent){
  const valid=new Set(speakersOf(th).concat(["n"]));
  const beats=r.beats.filter(b=>b&&b.text&&valid.has(b.who)).slice(0,10);
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
- const toSpeak=[];
+ const toSpeak=[];let INLINE_SPOKE=false,silentStrikes=0;
+ const canSpeak=(()=>{try{return !!(S.voice&&S.voice.auto&&(typeof voiceAutoOK!=="function"||voiceAutoOK()))}catch(_){return false}})();
  for(const b of beats){if(!String(b.text||"").trim())continue;   // 空拍不播（2026-10-27：存档里出现过一条空台词）
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
-  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
+  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
+  /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
+    可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
+    ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
+    ③ 连续两句「4 秒半都没出声」就退回原来的定时节奏，绝不让一个坏掉的 TTS 把整轮对话拖住。 */
+  if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
+   INLINE_SPOKE=true;
+   const cap=Math.min(14000,Math.max(4500,String(m.txt||"").length*170));
+   await new Promise(res=>{let spoke=false,fin=false;
+    const go=()=>{if(fin)return;fin=true;clearTimeout(tm);res()};
+    const tm=setTimeout(()=>{if(!spoke)silentStrikes++;go()},cap);
+    try{speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
+   });
+  }
+ }
  if(r.status){if(typeof r.status.time==="object")r.status.time=asText70(r.status.time);if(typeof r.status.place==="object")r.status.place=asText70(r.status.place);th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
@@ -531,7 +545,7 @@ async function playBeats(th,r,ctx,silent){
   }
  }catch(_){}
  if(curT===th.id&&!silent){const cur=$("#s-chat");if(cur&&!cur.hidden){const sc=$("#msgs").scrollTop;renderChat();scrollChat()}}
- if(S.voice.auto&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
+ if(!INLINE_SPOKE&&S.voice.auto&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
 let VOICE_BUSY=0;   // 正在播/正在生成的语音条数（2026-10-27）
 function speakQueue(list){VOICE_BUSY++;let i=0;const next=()=>{if(i>=list.length){VOICE_BUSY=Math.max(0,VOICE_BUSY-1);return}const m=list[i++];speak(m.txt,m.who,next)};next()}
 
