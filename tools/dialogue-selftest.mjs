@@ -70,3 +70,5 @@ console.log('production domain CORS, spoofed origins, and same-origin proxy pass
 
 assert.ok(html.includes('src="config.js"') && html.indexOf('src="config.js"') < html.indexOf("const LC_PROXY"), "load proxy configuration before the AI client");
 console.log("proxy configuration loads before the AI client");
+
+assert.ok(build.includes('"app100_fixes.js"') && html.includes("v8.4 · 体验修复"), "keep the concurrently uploaded experience fixes");
