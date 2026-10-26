@@ -67,3 +67,6 @@ for(const hostname of ['www.miru.plus','miru.plus','miru-wheat-pi.vercel.app']) 
  assert.equal(configContext.window.MIRU_PROXY,'https://'+hostname+'/api/longcat');
 }
 console.log('production domain CORS, spoofed origins, and same-origin proxy passed');
+
+assert.ok(html.includes('src="config.js"') && html.indexOf('src="config.js"') < html.indexOf("const LC_PROXY"), "load proxy configuration before the AI client");
+console.log("proxy configuration loads before the AI client");
