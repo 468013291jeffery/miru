@@ -178,6 +178,13 @@ function msgHTML(m,i,th){
      面板本身是 #msgs 的子节点（设计上就这么排的），所以给它一个高度上限 + 自己滚，
      把它上面那些对话空间还回去。 */
   '#msgs>#pkwrap,#msgs>#pkwrap.inl{max-height:46vh;overflow-y:auto;flex:none;position:sticky;bottom:0;z-index:3}',
+  /* 紧凑模式（2026-10-27）：让一屏能装 4–6 条，而不是一人一句 */
+  '#msgs{gap:6px;padding:10px 12px 6px}',
+  '#msgs .m-row{max-width:92%}',
+  '#msgs .bub{padding:8px 11px;font-size:13.5px;line-height:1.5}',
+  '#msgs .m-pic img,#msgs .m-img img,#msgs .m-card img,#msgs .m-scene img{max-height:30vh;object-fit:cover;width:auto}',
+  '#msgs .m-card,#msgs .m-scene{padding:8px 10px}',
+  '#msgs .m-row img{max-height:34px}',
   '#msgs{min-height:60%}',
   '.chstep,.myline,.sttag.you{max-height:38vh;overflow-y:auto}',
   '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%)}',
