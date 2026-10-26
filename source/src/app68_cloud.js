@@ -33,7 +33,7 @@ function stateForCloud(){const copy=JSON.parse(JSON.stringify(S));delete copy.cl
 async function cloudPush(force){if(!CL0.on||CL0.busy)return;CL0.busy=true;const c=cloudInfo();
  try{const r=await capi("/state",{method:"PUT",json:{data:stateForCloud(),ver:c.ver||0,force:!!force&&!c.ver}});
   if(r.ok){c.ver=r.j.ver;c.syncedAt=Date.now();save0()}else if(r.status===409&&r.j.data){c.conflict={ver:r.j.ver,at:Date.now()};c.ver=r.j.ver;save0()}}catch(_){}CL0.busy=false}
-async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,data);S.cloud=keep;S.cloud.ver=r.j.ver;save0();return true}
+async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,data);S.cloud=keep;try{cleanState()}catch(_){}S.cloud.ver=r.j.ver;save0();return true}
 /* ---------- wallet ---------- */
 let PENDING_SKU=null;
 async function walletPull(){const r=await capi("/wallet");if(r.ok){const c=cloudInfo();c.known=r.j.gems;S.keys=r.j.gems;if(r.j.plus)S.plus=true;save0();keysChip()}}
