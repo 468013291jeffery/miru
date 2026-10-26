@@ -172,6 +172,10 @@ function msgHTML(m,i,th){
   '.modeTog:active{transform:scale(.96)}',
   /* Ann 2026-10-27：对话要能往上累积到 80% 再滚；顶部只留一小段渐隐，别把整块吃掉 */
   /* Ann 2026-10-27 实测：max-height:80% 把可视区压成两句 ⇒ 撤掉，只留 7% 渐隐 */
+  /* 2026-10-27 Ann：一转到我说话，面板就把对话挤到只剩两行。
+     对话区至少占 60% 高度，超出的部分由面板自己滚。 */
+  '#msgs{min-height:60%}',
+  '.chstep,.myline,.sttag.you{max-height:38vh;overflow-y:auto}',
   '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
