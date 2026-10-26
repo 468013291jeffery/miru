@@ -137,9 +137,10 @@ console.log('G. 公共卡不泄露底牌（原有闸，留在这里做第二道�
 
 console.log('H. suggest 是玩家的选项，不是角色台词（2026-10-28 有人反馈漂了）');
 {
-  ok('说明里点名 PLAYER', /suggest = what the PLAYER/.test(html), '');
-  ok('明确禁止角色台词', /NEVER a line said by a character/.test(html), '');
-  ok('三种力度都点名（说/做/不吭声）', /could SAY/.test(html) && /could DO/.test(html) && /WITHOUT speaking/.test(html), '');
+  ok('说明里点名 PLAYER', /3 items the PLAYER could tap/.test(html), '');
+  ok('明确禁止角色台词', /never a line, a decision, or anything only a character could do/.test(html), '');
+  ok('三种力度都点名（说/做/不吭声）', /Punctuation alone carries the type/.test(html) && /starting with \*/.test(html) && /parentheses/.test(html), '');
+  ok('禁止贴类型标签（模型曾输出「台词：」「动作：」）', /Do NOT label them/.test(html), '');
   ok('schema 里有 reaction（看得见的反馈）', /"reaction"/.test(html), '');
   ok('tune 默认 reaction=true', /reaction:\s*true/.test(html), (html.match(/reaction:\s*\w+/) || [''])[0]);
 }
