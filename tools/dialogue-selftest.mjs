@@ -56,3 +56,14 @@ assert.match(build, /"app94_official2.js","app100_dialogue.js"/);
 assert.ok(html.indexOf('window.MIRU_BUILD') >= 0 && html.indexOf('window.MIRU_BUILD') < html.indexOf('window.CREATOR_HTML')); 
 for (const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)) new vm.Script(m[1]);
 console.log("build wiring and classic script syntax passed");
+const proxySource = fs.readFileSync('api/longcat.js','utf8');
+const corsContext = vm.createContext({});
+vm.runInContext(proxySource.split('\n').find(l=>l.startsWith('const ALLOWED = '))+'\n'+proxySource.match(/function cors\(origin\) \{[\s\S]*?\n\}/)[0],corsContext);
+for(const origin of ['https://miru.plus','https://www.miru.plus','https://468013291jeffery.github.io','https://miru-wheat-pi.vercel.app']) assert.equal(corsContext.cors(origin).headers['Access-Control-Allow-Origin'],origin);
+for(const origin of ['https://miru.plus.evil.example','https://evil.example','http://www.miru.plus']) assert.equal(corsContext.cors(origin).ok,false);
+for(const hostname of ['www.miru.plus','miru.plus','miru-wheat-pi.vercel.app']) {
+ const configContext=vm.createContext({window:{},location:{hostname,origin:'https://'+hostname}});
+ vm.runInContext(fs.readFileSync('config.js','utf8'),configContext);
+ assert.equal(configContext.window.MIRU_PROXY,'https://'+hostname+'/api/longcat');
+}
+console.log('production domain CORS, spoofed origins, and same-origin proxy passed');
