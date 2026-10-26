@@ -221,7 +221,17 @@ function packNext(){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="next"||
  th.pk.st="busy";packRefresh(th);packOpen(th,n,false)}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pkpick]")){packPick(x.dataset.pkpick);return}
- if(e.target.closest("[data-pknext]")){packNext();return}
+ if(x=e.target.closest("[data-pknext]")){
+  /* 2026-10-27 Ann：上一章刚完结、她还在和角色聊天，点一下就整章翻过去了。
+     改成两步：第一次点只是「确认要开始下一章吗」，再点一次才真的换。5 秒内没点就复位。 */
+  if(!x.dataset.armed){
+   x.dataset.armed="1";
+   x.textContent=(S.lang==="zh"?"再点一次确认进入下一章":(S.lang==="ja"?"もう一度押すと次の章へ":"Tap again to start the next chapter"));
+   setTimeout(()=>{try{if(x.dataset.armed){delete x.dataset.armed;packRefresh(S.threads[curT])}}catch(_){}},5000);
+   return
+  }
+  delete x.dataset.armed; packNext(); return
+ }
  if(x=e.target.closest("[data-pkmin]")){const th=S.threads[curT];if(th&&th.pk){th.pk.min=x.dataset.pkmin==="1";save();packRefresh(th)}return}
  if(e.target.closest("[data-pkreplay]")){replaySheet(S.threads[curT]);return}
  if(x=e.target.closest("[data-pkfrom]")){const th=S.threads[curT],n=+x.dataset.pkfrom;if(!th)return;if(chLocked(th.wid,n)){packPaywall(th.wid,n);return}packStart(th.wid,th.pk.as,n,th.pk.picks);return}
