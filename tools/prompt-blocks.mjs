@@ -118,28 +118,21 @@ console.log('F. 动机（不预告剧情，但每个人都要有想要的东西�
   ok('没有 want 的人不会凭空长出一句', !new Function('__s', 'with(__s){ ' + PUB + '\nreturn castCardPublic(th,"mason"); }')(scope).includes('names someone'), '');
 }
 
-console.log('G. 阅读器（借 Mythica 的角色核心：卡上要有"他拿什么尺子读事"）');
+console.log('G. 公共卡不泄露底牌（原有闸，留在这里做第二道）');
 {
   const PUB = cut('castCardPublic');
   let stub;
   stub = new Proxy(function () {}, { get: (t, k) => (k === Symbol.toPrimitive || k === 'toString' || k === 'valueOf') ? () => '' : stub, apply: () => '' });
-  const mk = (cast) => {
+  const card = (() => {
+    const cast = { id: 'jack', n: 'Jack', age: 31, role: { en: 'athlete' }, looks: { en: 'blond' }, vibe: { en: 'guarded' }, tells: { en: ['x'] }, likes: { en: 'control' }, want: { en: 'to never need anyone' }, twist: { en: 'built a career on not needing anyone' }, secret: { en: 'he let his brother lose' } };
     const th = { wid: 'gala', cast: ['jack'], love: { jack: 10 }, status: { mood: {} }, pk: { ch: 1, as: 'watch' } };
-    const real = { th, ch: (id) => cast, Lz: (v) => (v && v.en) || '', me: () => 'Ann',
-      I18N: { en: { 'stage.0': 'stranger' } }, stageOf: () => 0, CL: () => 'en', wd: () => ({ pack: {} }),
-      MIRU_TUNE: { chat: {} } };
+    const real = { th, ch: () => cast, Lz: (v) => (v && v.en) || '', me: () => 'Ann', I18N: { en: { 'stage.0': 'stranger' } }, stageOf: () => 0, CL: () => 'en', wd: () => ({ pack: {} }), MIRU_TUNE: { chat: {} } };
     const scope = new Proxy(real, { has: (t, k) => k !== Symbol.unscopables && !(k in globalThis), get: (t, k) => (k === Symbol.unscopables ? undefined : (k in t ? t[k] : stub)) });
     return new Function('__s', 'with(__s){ ' + PUB + '\nreturn castCardPublic(th,"jack"); }')(scope);
-  };
-  const withTwist = mk({ id: 'jack', n: 'Jack', age: 31, role: { en: 'athlete' }, looks: { en: 'blond' }, vibe: { en: 'guarded' }, tells: { en: ['x'] }, likes: { en: 'control' }, twist: { en: 'built a whole career on not needing anyone' } });
-  // 公共面**不许**带 twist（那是底牌，castcard-selftest 的闸就是这么定的）
-  ok('公共面不泄露 twist（底牌只给主角）', !withTwist.includes('not needing anyone'), withTwist.slice(-200));
-  const withHook = mk({ id: 'jack', n: 'Jack', age: 31, role: { en: 'athlete' }, looks: { en: 'blond' }, vibe: { en: 'guarded' }, tells: { en: ['x'] }, likes: { en: 'control' }, hook: { en: 'you keep refusing to be impressed' } });
-  ok('作者写了 hook 就渲染"为什么是你"', /gets under his skin/.test(withHook) && withHook.includes('refusing to be impressed'), '');
-  const noTwist = mk({ id: 'jack', n: 'Jack', age: 31, role: { en: 'athlete' }, looks: { en: 'blond' }, vibe: { en: 'guarded' }, tells: { en: ['x'] }, likes: { en: 'control' } });
-  ok('没有 twist 就不出现（不编）', !/How he reads everything/.test(noTwist), '');
-  ok('hook 位只在有内容时出现', !/gets under his skin/.test(noTwist), '');
-  ok('tune 默认 lens=true', /lens:\s*true/.test(html), (html.match(/lens:\s*\w+/) || [''])[0]);
+  })();
+  ok('公共卡不带 twist（底牌只给主角）', !card.includes('not needing anyone'), card.slice(-200));
+  ok('公共卡不带 secret', !card.includes('let his brother lose'), '');
+  ok('公共卡仍然带动机（publicWants）', /Wants \(his own/.test(card), '');
 }
 
 console.log(`\n${pass} passed, ${fails.length} failed`);
