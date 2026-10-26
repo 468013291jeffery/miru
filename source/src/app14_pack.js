@@ -106,7 +106,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
     await pkWait(th,prev,spd,ms);delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue}
    th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
- const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
+ const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();try{pkLockComposer(th)}catch(_){}
  if(a==="choose"){th.pk.st="choose";save();packRefresh(th);if(curT===th.id)scrollChat()}
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))}
 function stopResolve(th,extra){if(!th||!th.pk||!th.pk.stop)return;if(PKWAIT[th.id]){PKWAIT[th.id](extra||[]);return}
@@ -134,7 +134,28 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  else if(th.pk.st==="end"){const e=P.endings[th.pk.end];
   h+='<p class="pkask">🏁 '+esc(Lz(e.t))+' · '+t("pk.endN",{a:endingsFound(th.wid),b:3})+'</p><div class="row" style="gap:8px"><button class="btn btn-g btn-sm grow" data-pkreplay="1">⟲ '+t("pk.replay")+'</button><button class="btn btn-g btn-sm grow" data-pkbonus="'+th.wid+'">✦ '+t("pk.bonus")+'</button></div>'}
  return h+'</div>'}
-function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=packPanel(th)}
+function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=packPanel(th);try{pkLockComposer(th)}catch(_){}}
+
+/* 2026-10-27 Ann 的设计：**剧情段里不让打字**。
+   「里面有强制对话的选项。出现强制对话走剧情，把底下的输入框熄灭。」
+   ⇒ 剧本队列在播时，输入框熄灭并显示「剧情进行中」；队列走完（或进入等玩家决定）再亮回来。 */
+function pkBusy(th){try{
+ /* ⚠️ th.pk.stop 有值时 = 游戏正**等玩家动作**（等 PKWAIT）⇒ 这时绝不能锁输入框，
+    否则「锁着输入框等玩家输入」= 死锁。 */
+ if(th&&th.pk&&th.pk.stop)return false;
+ return !!(th&&th.pk&&th.pk.q&&th.pk.q.length&&PKPLAY[th.id]===2)
+}catch(_){return false}}
+function pkLockComposer(th){
+ if(!th||curT!==th.id)return;
+ const cin=$("#cin"),box=cin&&cin.closest?cin.closest(".composer,form,div"):null;
+ const lock=pkBusy(th);
+ if(cin){
+  cin.disabled=lock;
+  cin.placeholder=lock?(S.lang==="zh"?"剧情进行中……":(S.lang==="ja"?"物語進行中……":(S.lang==="ko"?"이야기 진행 중……":"Story in progress…"))):t("cx.ph."+cmode);
+ }
+ const send=document.querySelector("[data-send]");if(send)send.disabled=lock;
+ if(box)box.classList.toggle("pk-locked",lock);
+}
 
 /* ---- ledger telemetry for the pack flow (contract: LEDGER.md §2) ----
    Four events, no gameplay change: chapter_open / choice_pick / chapter_done / story_end.
