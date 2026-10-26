@@ -174,6 +174,10 @@ function msgHTML(m,i,th){
   /* Ann 2026-10-27 实测：max-height:80% 把可视区压成两句 ⇒ 撤掉，只留 7% 渐隐 */
   /* 2026-10-27 Ann：一转到我说话，面板就把对话挤到只剩两行。
      对话区至少占 60% 高度，超出的部分由面板自己滚。 */
+  /* 2026-10-27 Ann：一轮到我说话，面板把对话挤到只剩两句。
+     面板本身是 #msgs 的子节点（设计上就这么排的），所以给它一个高度上限 + 自己滚，
+     把它上面那些对话空间还回去。 */
+  '#msgs>#pkwrap,#msgs>#pkwrap.inl{max-height:46vh;overflow-y:auto;flex:none;position:sticky;bottom:0;z-index:3}',
   '#msgs{min-height:60%}',
   '.chstep,.myline,.sttag.you{max-height:38vh;overflow-y:auto}',
   '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%)}',
