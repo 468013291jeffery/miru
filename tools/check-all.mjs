@@ -11,6 +11,7 @@ let apiUp = false;
 try { const r = await fetch(api, { signal: AbortSignal.timeout(1500) }); apiUp = r.ok; } catch (_) { apiUp = false; }
 
 const suites = [
+  ['dialogue-selftest.mjs', ['tools/dialogue-selftest.mjs'], true],
   ['ledger-selftest.mjs', ['tools/ledger-selftest.mjs'], true],
   ['events-selftest.mjs', ['tools/events-selftest.mjs', 'index.html'], true],
   ['events-contract.mjs', ['tools/events-contract.mjs', 'index.html', '--selftest'], true],
