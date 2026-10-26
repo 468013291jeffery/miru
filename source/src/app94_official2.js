@@ -366,7 +366,7 @@ async function aiIdeas97(th) {
 async function aiIdeasGo97(btn) {
   const th = S.threads[curT]; if (!th) return; const zh = CL() === "zh";
   if (btn) { btn.disabled = true; btn.dataset.t0 = btn.textContent; btn.textContent = zh ? "✨ 正在想…" : "✨ Thinking…"; }
-  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => '<button data-sg="' + esc(x) + '">' + esc(x) + '</button>').join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
+  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => (typeof objGuard70 === "function" ? objGuard70(x) : String(x))).filter(Boolean).map(x => '<button data-sg="' + esc(x) + '">' + esc(x) + '</button>').join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
   catch (e) { toast(zh ? (e && e.code === "na" ? "AI 现在不可用" : "没想出来，再点一次试试") : (e && e.code === "na" ? "AI isn't available right now" : "Nothing came up — try again")); }
   finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
 }

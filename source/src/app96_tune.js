@@ -85,3 +85,42 @@ var MIRU_TUNE = (function () {
   out._overridden = O;
   return out;
 })();
+
+/* ================= 语音黑匣子（2026-10-27 Ann：「为什么有时候不生成语音，要记录吗」）=================
+   她说得对：这条路每次失败都不留痕，于是「有时候没声音」只能靠感觉，谁也没法回答为什么。
+   这里给 `speak()` 装一层观测：每次调用记一条，**判据是 onend 有没有真的回来** ——
+   12 秒内没回来就算「没出声」，因为三级来源（录音包 / 服务器 TTS / 设备语音）里任何一级都可能静默失败。
+   记录落 `S._voiceLog`（最近 40 条，导出存档就能看），并且**连续两次没出声就弹一句提示**，
+   不让它继续无声失败。这一层只观测，不改变任何发声行为。 */
+(function(){
+  var tries=0;
+  function rec(e){try{S._voiceLog=S._voiceLog||[];S._voiceLog.push(e);if(S._voiceLog.length>40)S._voiceLog.shift();try{save()}catch(_){}}catch(_){}}
+  function wrap(){
+    if(typeof window.speak!=="function"){ if(tries++<40) setTimeout(wrap,500); return }
+    if(window.speak.__voicelog) return;
+    var orig=window.speak;
+    var dead=0;
+    window.speak=function(text,id,onend){
+      var t0=Date.now(), fired=false, len=String(text||"").length, who=String(id||"");
+      rec({t:t0,ev:"start",who:who,len:len});
+      function done(){
+        if(fired)return; fired=true;
+        rec({t:Date.now(),ev:"end",who:who,ms:Date.now()-t0,len:len}); dead=0;
+        if(onend)try{onend()}catch(_){}
+      }
+      var r;
+      try{ r=orig.call(this,text,id,done) }catch(e){ rec({t:Date.now(),ev:"throw",who:who,msg:String(e&&e.message||e).slice(0,80)}); if(onend)try{onend()}catch(_){}; return r }
+      setTimeout(function(){
+        if(fired)return;
+        dead++;
+        rec({t:Date.now(),ev:"silent",who:who,ms:Date.now()-t0,len:len,streak:dead,
+             why:(typeof ttsOn==="function"&&ttsOn()?"server":"device")});
+        if(dead===2)try{toast((S.lang==="zh"?"语音没出来（已记日志）":"Voice produced no sound (logged)"))}catch(_){}
+        if(onend)try{onend()}catch(_){}
+      },12000);
+      return r;
+    };
+    window.speak.__voicelog=1;
+  }
+  wrap();
+})();

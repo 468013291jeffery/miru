@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="5f5b81521023 2026-10-26T20:16Z";
+window.MIRU_BUILD="ae9f6746deba 2026-10-26T20:28Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3110,6 +3110,45 @@ var MIRU_TUNE = (function () {
   return out;
 })();
 
+/* ================= 语音黑匣子（2026-10-27 Ann：「为什么有时候不生成语音，要记录吗」）=================
+   她说得对：这条路每次失败都不留痕，于是「有时候没声音」只能靠感觉，谁也没法回答为什么。
+   这里给 `speak()` 装一层观测：每次调用记一条，**判据是 onend 有没有真的回来** ——
+   12 秒内没回来就算「没出声」，因为三级来源（录音包 / 服务器 TTS / 设备语音）里任何一级都可能静默失败。
+   记录落 `S._voiceLog`（最近 40 条，导出存档就能看），并且**连续两次没出声就弹一句提示**，
+   不让它继续无声失败。这一层只观测，不改变任何发声行为。 */
+(function(){
+  var tries=0;
+  function rec(e){try{S._voiceLog=S._voiceLog||[];S._voiceLog.push(e);if(S._voiceLog.length>40)S._voiceLog.shift();try{save()}catch(_){}}catch(_){}}
+  function wrap(){
+    if(typeof window.speak!=="function"){ if(tries++<40) setTimeout(wrap,500); return }
+    if(window.speak.__voicelog) return;
+    var orig=window.speak;
+    var dead=0;
+    window.speak=function(text,id,onend){
+      var t0=Date.now(), fired=false, len=String(text||"").length, who=String(id||"");
+      rec({t:t0,ev:"start",who:who,len:len});
+      function done(){
+        if(fired)return; fired=true;
+        rec({t:Date.now(),ev:"end",who:who,ms:Date.now()-t0,len:len}); dead=0;
+        if(onend)try{onend()}catch(_){}
+      }
+      var r;
+      try{ r=orig.call(this,text,id,done) }catch(e){ rec({t:Date.now(),ev:"throw",who:who,msg:String(e&&e.message||e).slice(0,80)}); if(onend)try{onend()}catch(_){}; return r }
+      setTimeout(function(){
+        if(fired)return;
+        dead++;
+        rec({t:Date.now(),ev:"silent",who:who,ms:Date.now()-t0,len:len,streak:dead,
+             why:(typeof ttsOn==="function"&&ttsOn()?"server":"device")});
+        if(dead===2)try{toast((S.lang==="zh"?"语音没出来（已记日志）":"Voice produced no sound (logged)"))}catch(_){}
+        if(onend)try{onend()}catch(_){}
+      },12000);
+      return r;
+    };
+    window.speak.__voicelog=1;
+  }
+  wrap();
+})();
+
 /* ================= 台词守门（他们 v8.2.3 的「角色台词检查」）=================
    玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事。
 
@@ -4456,6 +4495,7 @@ function appendMsg(th,m){
     直接落进去就成了「[object Object]」。取不出可读文本的整条丢弃。 */
  try{
   if(m&&typeof m.txt!=="string")m.txt=asText70(m.txt);
+  if(m&&m.txt==="[object Object]")m.txt="";   // 对象被字符串化的痕迹，绝不上屏
   if(m&&!m.txt&&m.k!=="react"&&m.k!=="card")return;
  }catch(_){}
 
@@ -4490,6 +4530,11 @@ if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m
  if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
 /* 2026-10-27：模型偶尔把 suggest 返成对象（{text:…} / {say:…}），直接 String() 就会显示
    「[object Object]」，而且点击时会把那串字发出去。统一在这里取成人话。 */
+/* 把任何东西变成人话；万一是对象被字符串化了（"[object Object]"），一律当空 */
+function objGuard70(x){
+  const s = asText70(x);
+  return (s === "[object Object]" || s === "undefined" || s === "null") ? "" : s;
+}
 function asText70(x){
  if(x==null)return "";
  if(typeof x==="string")return x;
@@ -4497,7 +4542,7 @@ function asText70(x){
  if(typeof x==="object")return String(x.text||x.line||x.t||x.say||x.act||x.value||"");
  return String(x);
 }
-function setSugg(list){sugg=(list||[]).map(asText70).map(s=>s.trim()).filter(Boolean).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
+function setSugg(list){sugg=(list||[]).map(objGuard70).map(s=>s.trim()).filter(Boolean).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
  const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
 function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x=>x.remove());if(on){el.insertAdjacentHTML("beforeend",'<div class="typing"><i></i><i></i><i></i></div>');scrollChat()}}
 /* 流式预览（2026-10-25）：等整段最长要 ~9.5 秒，而首字 ~2.0 秒就到了（LATENCY.md 实测 4.8×）。
@@ -4507,7 +4552,9 @@ function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x
 let STREAM_TXT="";
 function streamPreview(piece){
   try{
-    STREAM_TXT+=String(piece||"");
+    const _pc = (piece && typeof piece === "object") ? "" : String(piece || "");
+  STREAM_TXT += _pc;
+  if (STREAM_TXT.indexOf("[object Object]") >= 0) STREAM_TXT = STREAM_TXT.split("[object Object]").join("");   // 永不让它出现
     const el=$("#msgs");if(!el)return;
     const box=$(".typing",el);if(!box)return;
     const tail=STREAM_TXT.replace(/\s+/g," ").slice(-46);
@@ -4765,8 +4812,9 @@ async function playBeats(th,r,ctx,silent){
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
     ③ 连续两句「4 秒半都没出声」就退回原来的定时节奏，绝不让一个坏掉的 TTS 把整轮对话拖住。 */
+  let WAITED=false;
   if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
-   INLINE_SPOKE=true;
+   INLINE_SPOKE=true;WAITED=true;
    try{voiceCount(1)}catch(_){}
    /* ⚠️ 上限必须 **比 TTS 自己的回退时限长**：服务器 TTS 要 7~8 秒才认「这次没声、转设备语音」，
       而下一句的 speak() 会先 stopVoice() 把上一句掐掉。上限设 4.5 秒时（第一版）每句都在出声前
@@ -4778,7 +4826,14 @@ async function playBeats(th,r,ctx,silent){
     try{speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
    });
   }
- }
+  /* 2026-10-27 · **节奏不能依赖朗读**（Ann：「为什么刷得那么快，一下就过去了」）。
+     朗读不成立时（额度用完 / TTS 不响 / 被判死），上面那段一次都不执行 ⇒ 回复以 700ms/句
+     一口气刷完。这里补上：**不念也按阅读速度停一下**（按字数，0.5–8 秒），让眼睛跟得上。 */
+  if(!silent&&!WAITED){
+   const _r=(typeof readMs==="function")?readMs(m):1800;
+   await new Promise(res=>setTimeout(res,Math.min(8000,Math.max(500,_r*0.75))));
+  }
+  }
  if(r.status){if(typeof r.status.time==="object")r.status.time=asText70(r.status.time);if(typeof r.status.place==="object")r.status.place=asText70(r.status.place);th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
@@ -15279,7 +15334,7 @@ async function aiIdeas97(th) {
 async function aiIdeasGo97(btn) {
   const th = S.threads[curT]; if (!th) return; const zh = CL() === "zh";
   if (btn) { btn.disabled = true; btn.dataset.t0 = btn.textContent; btn.textContent = zh ? "✨ 正在想…" : "✨ Thinking…"; }
-  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => '<button data-sg="' + esc(x) + '">' + esc(x) + '</button>').join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
+  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => (typeof objGuard70 === "function" ? objGuard70(x) : String(x))).filter(Boolean).map(x => '<button data-sg="' + esc(x) + '">' + esc(x) + '</button>').join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
   catch (e) { toast(zh ? (e && e.code === "na" ? "AI 现在不可用" : "没想出来，再点一次试试") : (e && e.code === "na" ? "AI isn't available right now" : "Nothing came up — try again")); }
   finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
 }

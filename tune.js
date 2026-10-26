@@ -12,6 +12,10 @@
    };
 ------------------------------------------------------------------------ */
 window.MIRU_TUNE_OVERRIDE = window.MIRU_TUNE_OVERRIDE || {};
+/* 2026-10-27 Ann：「速度还可以慢 2 秒」。
+   `chat.beatMs` 是「一句亮出来到下一句亮出来」的间隔（默认 700）。
+   ⇒ 700 → 2700，等于每句多停 2 秒。改这里**不用重建**，刷新即生效。 */
+window.MIRU_TUNE_OVERRIDE.chat = Object.assign({ beatMs: 2700 }, window.MIRU_TUNE_OVERRIDE.chat || {});
 
 /* ---- 本地真 AI（2026-10-27 加）------------------------------------------------
    本地页面原来**没有 AI**：既没有 miru.lc.key，hostname 也不是 *.vercel.app，
