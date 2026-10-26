@@ -59,15 +59,23 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
  appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()})}
+/* 一句话的唯一渲染入口（2026-10-27）。boxHTML 与 msgHTML 都调它 ——
+   以后改一次样式，剧本台词和模型台词一起变。 */
+function lineHTML(p, th, opts) {
+  try {
+    const who = p && p.who, k = (p && p.k) || "say", txt = (p && p.txt) != null ? p.txt : "";
+    if (who === "n") return '<p class="bdn">' + esc(txt) + '</p>';
+    if (who === "me") return '<p class="' + (k === "think" ? "bth" : "bac") + ' me"><b>' + esc(me()) + '</b>' + esc(txt) + '</p>';
+    const c = ch(who), nm = c ? first(c.n) : "";
+    /* msgHTML 已经在上方单独渲染了名字（.m-who），这里就不再重复 */
+    const nameBit = (opts && opts.noName) ? "" : ('<b style="color:' + (c ? c.pal[0] : "") + '">' + esc(nm) + (k === "think" ? " · " + t("st2.thinks") : "") + '</b>');
+    return '<p class="' + (k === "think" ? "bth" : "bac") + '">' + nameBit + esc(txt) + '</p>';
+  } catch (_) { return '<p class="bac">' + esc((p && p.txt) || "") + '</p>'; }
+}
 function boxHTML(m,i,th){
- /* 2026-10-27 Ann：合并块里没有左右分流 —— 玩家自己那句也被当成无名角色。
-    按「谁说的」分边：玩家靠右、角色靠左、旁白整行。 */
- return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{
-  if(p.who==="n")return '<p class="bdn">'+esc(p.txt)+'</p>';
-  if(p.who==="me")return '<p class="'+(p.k==="think"?"bth":"bac")+' me"><b>'+esc(me())+'</b>'+esc(p.txt)+'</p>';
-  const c=ch(p.who), nm=c?first(c.n):"";
-  return '<p class="'+(p.k==="think"?"bth":"bac")+'"><b style="color:'+(c?c.pal[0]:"")+'">'+esc(nm)+(p.k==="think"?' · '+t("st2.thinks"):'')+'</b>'+esc(p.txt)+'</p>'
- }).join("")+'</div>'}
+  /* 结构交给 lineHTML；.m-box 才是那个「框」 */
+  return '<div class="m-box" data-mi="'+i+'">' + m.parts.map(p => lineHTML(p, th)).join("") + '</div>';
+}
 
 /* 4) the story intro: background, who you are, who everyone is, how to play */
 function introHTML(th){const w=wd(th.wid);let I=Lz(w.pack.intro)||{};if(th&&th.pk&&th.pk.as&&I["as_"+th.pk.as])I=Object.assign({},I,I["as_"+th.pk.as]);const L=x=>esc(x||"");

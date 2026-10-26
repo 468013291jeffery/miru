@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="1ae3cfd2d72c 2026-10-26T20:05Z";
+window.MIRU_BUILD="5f5b81521023 2026-10-26T20:16Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4371,7 +4371,7 @@ function msgHTML(m,i,th){
  if(th.pk&&m.who===th.pk.as&&th.pk.as!=="watch"&&th.pk.as!=="side"&&m.who!=="me"){const c0=ch(m.who),lab='<small class="asme">'+esc(t("pk.youAre",{n:first(c0.n)}))+'</small>';
   if(m.k==="act")return '<div class="m-act me" data-mi="'+i+'">'+lab+esc(m.txt)+'</div>';
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
-  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="bub">'+esc(m.txt)+'</div></div></div>'}
+  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
  const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
  const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
   '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
@@ -4385,7 +4385,7 @@ function msgHTML(m,i,th){
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
- return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
+ return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
 /* 2026-10-27 补的三条视觉（Ann 试玩反馈）：
    ① 每个角色一条他自己的色条 + 淡底（原来只有名字颜色，认不出谁在说）
    ② 点过的选项反色（原来点下去毫无反馈）
@@ -4418,6 +4418,11 @@ function msgHTML(m,i,th){
   '#msgs .m-box .bac,#msgs .m-box .bth{max-width:92%}',
   /* 角色气泡套上「框」：名字在上、左侧角色色、半透明深底（Ann 2026-10-27 对截图） */
   '#msgs .m-row[data-wc]{background:none;border-left:0;padding-left:0;border-radius:0}',
+  /* 2026-10-27：模型那条也用 .m-box 的框（与剧本台词同一个外观） */
+  '#msgs .m-row .m-box.lb{margin:0;padding:10px 13px;border-radius:16px;background:rgba(12,11,16,.62)}',
+  '#msgs .m-row .m-box.lb p{margin:0}',
+  '#msgs .m-row.me .m-box.lb{background:var(--grad);color:#1B1017}',
+  '#msgs .m-row.me .m-box.lb p,#msgs .m-row.me .m-box.lb p b{color:#1B1017}',
   '#msgs .m-row[data-wc] .bub{border-left:3px solid var(--wc);background:rgba(22,20,28,.86);backdrop-filter:blur(8px);border-radius:16px;padding:10px 13px}',
   '#msgs .m-row.me[data-wc] .bub{border-left:0;border-right:3px solid var(--fg);background:var(--grad);color:#1B1017}',
   '#msgs .m-who{display:block!important;margin-bottom:4px;font-size:11px;letter-spacing:.04em;opacity:.9}',
@@ -7228,15 +7233,23 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
  appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()})}
+/* 一句话的唯一渲染入口（2026-10-27）。boxHTML 与 msgHTML 都调它 ——
+   以后改一次样式，剧本台词和模型台词一起变。 */
+function lineHTML(p, th, opts) {
+  try {
+    const who = p && p.who, k = (p && p.k) || "say", txt = (p && p.txt) != null ? p.txt : "";
+    if (who === "n") return '<p class="bdn">' + esc(txt) + '</p>';
+    if (who === "me") return '<p class="' + (k === "think" ? "bth" : "bac") + ' me"><b>' + esc(me()) + '</b>' + esc(txt) + '</p>';
+    const c = ch(who), nm = c ? first(c.n) : "";
+    /* msgHTML 已经在上方单独渲染了名字（.m-who），这里就不再重复 */
+    const nameBit = (opts && opts.noName) ? "" : ('<b style="color:' + (c ? c.pal[0] : "") + '">' + esc(nm) + (k === "think" ? " · " + t("st2.thinks") : "") + '</b>');
+    return '<p class="' + (k === "think" ? "bth" : "bac") + '">' + nameBit + esc(txt) + '</p>';
+  } catch (_) { return '<p class="bac">' + esc((p && p.txt) || "") + '</p>'; }
+}
 function boxHTML(m,i,th){
- /* 2026-10-27 Ann：合并块里没有左右分流 —— 玩家自己那句也被当成无名角色。
-    按「谁说的」分边：玩家靠右、角色靠左、旁白整行。 */
- return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{
-  if(p.who==="n")return '<p class="bdn">'+esc(p.txt)+'</p>';
-  if(p.who==="me")return '<p class="'+(p.k==="think"?"bth":"bac")+' me"><b>'+esc(me())+'</b>'+esc(p.txt)+'</p>';
-  const c=ch(p.who), nm=c?first(c.n):"";
-  return '<p class="'+(p.k==="think"?"bth":"bac")+'"><b style="color:'+(c?c.pal[0]:"")+'">'+esc(nm)+(p.k==="think"?' · '+t("st2.thinks"):'')+'</b>'+esc(p.txt)+'</p>'
- }).join("")+'</div>'}
+  /* 结构交给 lineHTML；.m-box 才是那个「框」 */
+  return '<div class="m-box" data-mi="'+i+'">' + m.parts.map(p => lineHTML(p, th)).join("") + '</div>';
+}
 
 /* 4) the story intro: background, who you are, who everyone is, how to play */
 function introHTML(th){const w=wd(th.wid);let I=Lz(w.pack.intro)||{};if(th&&th.pk&&th.pk.as&&I["as_"+th.pk.as])I=Object.assign({},I,I["as_"+th.pk.as]);const L=x=>esc(x||"");
