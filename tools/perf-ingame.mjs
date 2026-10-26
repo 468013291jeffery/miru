@@ -57,16 +57,21 @@ function evalJs(js, label) {
 const say = (...a) => console.log(...a);
 
 // ---------- 0. 起页面 ----------
+// ⚠️ 不用 reload：reload 会把已经注入的探针全丢掉（实际代价：一轮 9 分钟的基线测量因此作废，
+//    因为另一个窗口也在驱动同一个浏览器会话）。改成「直接在活页面上把 app 叫起来」。
 if (!REUSE) {
-  say('[1/5] 打开页面 ' + URL);
+  say('[1/5] 打开页面 ' + URL + '（session=' + SESSION + '）');
   ab(['open', URL], { timeout: 180000 });
-  ab(['wait', '2500']);
-  // 跳过引导 + 进访客态（否则停在 s-ob / 登录页，进不去游戏）
-  evalJs(`(function(){try{S.ob=true;S.authChoice="guest";S.lang="zh";save()}catch(e){}
-    return JSON.stringify({ob:S.ob,ac:S.authChoice});})()`, 'seed-flags');
-  ab(['reload'], { timeout: 180000 });
-  ab(['wait', '3500']);
 }
+say('[1.5] 确保进了 app');
+const boot = evalJs(`JSON.stringify((function(){
+  if(typeof S==="undefined")return {err:"no S on page"};
+  if(!S.ob||!S.authChoice){S.ob=true;S.authChoice=S.authChoice||"guest";S.lang=S.lang||"zh";save()}
+  const main=document.getElementById("s-main");
+  if(!main||main.hidden){try{startApp()}catch(e){}}
+  return {ob:!!S.ob,ac:S.authChoice,screens:[...document.querySelectorAll("[id^=s-]")].map(e=>e.id+":"+(e.hidden?"h":"V"))}
+})())`, 'boot');
+say('      ' + boot);
 
 // ---------- 1. 注入探针 ----------
 say('[2/5] 注入探针 tools/perf-ingame.js');

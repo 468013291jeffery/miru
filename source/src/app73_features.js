@@ -139,7 +139,10 @@ document.addEventListener("click", async e => {
     renderChat(); return;
   }
   if ((x = e.target.closest("[data-mind73]"))) { e.stopImmediatePropagation(); mind73(th, +x.dataset.mind73); return; }
-  if ((x = e.target.closest("[data-addr73]"))) { e.stopImmediatePropagation(); th.addr = x.dataset.addr73 || null; save(); $$("[data-addr73]").forEach(b => b.classList.toggle("on", b === x)); return; }
+  (function(){try{const st=document.createElement("style");
+  st.textContent='.addr73 button.me73{opacity:.32;filter:grayscale(1);cursor:default;pointer-events:none;border-style:dashed}';
+  document.head.appendChild(st)}catch(_){}})();
+ if ((x = e.target.closest("[data-addr73]"))) { e.stopImmediatePropagation(); th.addr = x.dataset.addr73 || null; save(); $$("[data-addr73]").forEach(b => b.classList.toggle("on", b === x)); return; }
 }, true);
 
 /* ---------- 2 · 心声 ---------- */
@@ -210,7 +213,13 @@ renderChat = function () {
     const sp = speakersOf(th).filter(id => ch(id)), comp = document.querySelector(".composer");
     if (comp && sp.length > 1 && !(th.pk && th.pk.as === "watch") && !comp.querySelector(".addr73")) {
       if (th.addr && !sp.includes(th.addr)) th.addr = null;
-      comp.insertAdjacentHTML("afterbegin", '<div class="addr73"><span>' + esc(t73("addr")) + '</span><button class="' + (th.addr ? "" : "on") + '" data-addr73="">' + esc(t73("all")) + '</button>' + sp.map(id => '<button class="' + (th.addr === id ? "on" : "") + '" data-addr73="' + id + '">' + esc(first(ch(id).n)) + '</button>').join("") + '</div>');
+      comp.insertAdjacentHTML("afterbegin", '<div class="addr73"><span>' + esc(t73("addr")) + '</span><button class="' + (th.addr ? "" : "on") + '" data-addr73="">' + esc(t73("all")) + '</button>' + sp.map(id => {
+      /* 玩家扮演的那个人（th.pk.as）不该是「对谁说」的选项 —— 渲染成熄灭、点不动的牌，
+         免得她选到自己、或者在选项里找不到「我在跟谁说话」。 */
+      const addrMe73 = !!(th.pk && th.pk.as && id === th.pk.as);
+      if (addrMe73) return '<button class="me73" disabled data-addr73="" aria-disabled="true">' + esc(first(ch(id).n)) + ' · ' + (S.lang==="zh"?"（你）":S.lang==="ja"?"（あなた）":S.lang==="ko"?"（본인）":" (you)") + '</button>';
+      return '<button class="' + (th.addr === id ? "on" : "") + '" data-addr73="' + id + '">' + esc(first(ch(id).n)) + '</button>';
+    }).join("") + '</div>');
     }
   } catch (_) {}
   return r;
