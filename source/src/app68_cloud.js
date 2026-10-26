@@ -11,7 +11,14 @@
      uploads join everybody's library.
    · Translations: /api/i18n preloads the shared dictionary for the reader's language.
    · Analytics: a small event queue (open → taste → hook → role → chapter → pay → publish). */
-const CLOUD_EP=(()=>{if(typeof TTS_EP==="string"&&TTS_EP)return TTS_EP.replace(/\/tts$/,"");return ""})();
+/* 2026-10-27：本机只有 AI 代理、没有账号服务器时，用 window.MIRU_ACCOUNT=false 明说。
+   否则 MIRU_PROXY 一设，TTS_EP 就有值 ⇒ CLOUD_EP 有值 ⇒ MUST92() 为真 ⇒ 游客入口被藏、登录又不可能
+   ⇒ 又变成死路一条。这一点我今晚已经踩过一次。 */
+const CLOUD_EP=(()=>{
+ if(window.MIRU_ACCOUNT===false)return "";
+ if(typeof TTS_EP==="string"&&TTS_EP)return TTS_EP.replace(/\/tts$/,"");
+ return "";
+})();
 const CL0={on:false,checked:false,health:null,busy:false,timer:null,lastPush:0};
 function cloudInfo(){S.cloud=S.cloud||{};return S.cloud}
 function cloudAuth(){const c=cloudInfo();return c.token?{Authorization:"Bearer "+c.token}:{}}
