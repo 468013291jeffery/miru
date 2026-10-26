@@ -26,4 +26,6 @@ AI engine: Claude or LongCat (enter your own API key in 我的 → AI 引擎; ke
 | [`LATENCY.md`](LATENCY.md) | 一次回合要多久：首字 2.0 s / 整段 9.5 s（实测）· 为什么他们那边 20 多秒 · 抬 max_tokens 的副作用 |
 | [`PERF.md`](PERF.md) | 卡顿与内存：量到的三件事（10.4 MB 单文件 · 图片进存档 · 45 个常驻定时器）+ 按收益排序的修法 |
 | [`STRUCTURE-ACCOUNT.md`](STRUCTURE-ACCOUNT.md) | **结构账**：谁有什么、谁欠谁 —— 一页，给过会用（含我们补的三个洞与我们的欠账） |
+| [`VOICE.md`](VOICE.md) | **语音链**：三级来源（录音包 / 服务器 TTS / 设备语音）· 七处缺陷与读数 · 改过的文件 · 仍未解决的格 |
+| [`MERGE-RULES.md`](MERGE-RULES.md) | ⚠️ **合并前必读**：先拉最新版、不许用自己分支覆盖；`api/_lib.js`·`api/tts.js`·`api/longcat.js` 的 `miru.plus` 放行与 `source/build.py` 里 `app100_fixes`/`app101_you`/`app100_dialogue` 三支引用不许动（附实测分叉数） |
 | [`source/README.md`](source/README.md) | 源码目录地图（改哪儿 → 跑什么） |
