@@ -50,3 +50,9 @@ assert.match(chat,/typeof DIALOGUE_REPLY_CHARTER/);
 assert.match(chat,/HEAT CEILING — .*dialogueHeat\(th\)/);
 const html=fs.readFileSync('index.html','utf8');assert.match(html,/REPLY CHARTER \(v7.11\/v7.12/);
 console.log('dialogue regression passed: request wiring, heat cap, help intent, deduplication, no state writes, editable choices, request coalescing, stale response, offline fallback, stall detection');
+
+const build=fs.readFileSync("source/build.py","utf8");
+assert.match(build, /"app94_official2.js","app100_dialogue.js"/);
+assert.ok(html.startsWith('<script>window.MIRU_BUILD='));
+for (const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)) new vm.Script(m[1]);
+console.log("build wiring and classic script syntax passed");
