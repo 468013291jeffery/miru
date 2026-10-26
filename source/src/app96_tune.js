@@ -34,6 +34,7 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
+      characterMeta: false,   // true = 旧文案（角色知道第几章/本章目标/下一步要选什么）；false = 角色只知道此刻与已发生
       chapterAdvance: true,  // 章内允许推进时间/场景（不替玩家做官方选择）；false = 旧行为，每轮钉在同一幕
       saidKeep: 50,          // 玩家说过的话留多少条（含点建议发的）
       typedKeep: 120,        // **亲手打的**留多少条（系统候选句不算；这些最珍贵，留更多）
