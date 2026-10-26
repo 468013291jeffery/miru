@@ -124,10 +124,23 @@ async function au70Apple() {
 async function au70OAuth(op, body) {
   try { const r = await capi("/auth", { json: Object.assign({ op }, body) }); if (!r.ok) { au70Err(r); return; } await au70Done(r.j, op); } catch (_) { toast(au("net")); }
 }
+/* 2026-10-27 修：错误对象直接丢进 toast 会渲成「[object Object]」（Ann 注册后看到的就是它）。
+   先取成人话；本地没有账号服务器时给一句明确的话，而不是一个字符串化的对象。 */
+function au70ErrText(e) {
+ if (!e) return "";
+ if (typeof e === "string") return e;
+ if (typeof e === "object") return String(e.message || e.code || e.error || JSON.stringify(e));
+ return String(e);
+}
 function au70Err(r) {
-  const e = r.j && r.j.error;
-  if (r.status === 403 && e === "banned") { au70Banned(r.j); return; }
-  toast(e === "wrong email or password" ? au("wrong") : e === "email already registered" ? au("taken") : (e || au("net")));
+ const e0 = r.j && r.j.error;
+ const e = au70ErrText(e0);
+ if (r.status === 403 && (e0 === "banned" || e === "banned")) { au70Banned(r.j); return; }
+ if (r.status === 503 || (e0 && e0.code === "no_backend")) {
+  toast(S.lang === "zh" ? "本地预览没有账号服务器 —— 点最上面的「先逛逛」就能玩" : "No account server in this preview - tap Look around at the top");
+  return;
+ }
+ toast(e === "wrong email or password" ? au("wrong") : e === "email already registered" ? au("taken") : (e || au("net")));
 }
 /* after any successful sign-in */
 async function au70Done(j, method) {
