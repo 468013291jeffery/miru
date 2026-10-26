@@ -1,6 +1,52 @@
 // 极简静态服务器（本地测 index.html 用）：node tools/serve.mjs 8131
 import http from 'node:http';
 import fs from 'node:fs';
+import https from 'node:https';
+import os from 'node:os';
+
+/* ---- 本地真 AI 转发（只在开发服里，线上没有这一层）---- */
+function dsKey() {
+  try {
+    const f = os.homedir() + '/.dsh/.credentials.yaml';
+    for (const line of fs.readFileSync(f, 'utf8').split(/\r?\n/)) {
+      const m = /^\s*DEEPSEEK_API_KEY:\s*(.+)$/.exec(line);
+      if (m) return m[1].trim().replace(/^['"]|['"]$/g, '');
+    }
+  } catch (_) {}
+  return '';
+}
+const DS_KEY = dsKey();
+
+function proxyDeepSeek(req, res, bodyText) {
+  let body = {};
+  try { body = JSON.parse(bodyText || '{}') } catch (_) {}
+  const payload = JSON.stringify({
+    model: 'deepseek-chat',
+    messages: body.messages || [],
+    max_tokens: Math.min(Number(body.max_tokens) || 4000, 8000),
+    temperature: typeof body.temperature === 'number' ? body.temperature : 0.85,
+    stream: true,
+  });
+  const up = https.request({
+    hostname: 'api.deepseek.com', path: '/v1/chat/completions', method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: 'Bearer ' + DS_KEY,
+      'content-length': Buffer.byteLength(payload),
+      accept: 'text/event-stream',
+    },
+  }, r2 => {
+    res.writeHead(r2.statusCode || 502, {
+      'content-type': r2.headers['content-type'] || 'text/event-stream',
+      'cache-control': 'no-store',
+    });
+    r2.pipe(res);
+  });
+  up.on('error', e => {
+    try { res.writeHead(502, { 'content-type': 'application/json' }).end(JSON.stringify({ error: { code: 'upstream', message: String(e.message || e) } })) } catch (_) {}
+  });
+  up.end(payload);
+}
 
 // 1×1 透明 PNG
 const PLACEHOLDER_PNG = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==';
@@ -16,6 +62,21 @@ http.createServer((req, res) => {
   // 为什么需要它：存档存在浏览器 localStorage 里（key=miru_v2），浏览器压缩存盘，
   // 从磁盘直接读 leveldb 拿不到明文；而 DevTools 默认禁止粘贴代码。
   // 所以由同源的 export.html 读出来 POST 给我 —— 她只要打开一个网址，不用输入任何东西。
+  // POST /api/longcat —— 本地真 AI（转发到 DeepSeek）。线上走 Vercel 的 /api/longcat，不经过这里。
+  if (u === '/api/longcat' && req.method === 'POST') {
+    let b = '';
+    req.setEncoding('utf8');
+    req.on('data', c => { b += c });
+    req.on('end', () => {
+      if (!DS_KEY) {
+        res.writeHead(503, { 'content-type': 'application/json' })
+           .end(JSON.stringify({ error: { code: 'no_key', message: '本机没有 DEEPSEEK_API_KEY' } }));
+        return;
+      }
+      proxyDeepSeek(req, res, b);
+    });
+    return;
+  }
   if (u === '/__save' && req.method === 'POST') {
     let body = '';
     req.setEncoding('utf8');
