@@ -162,6 +162,10 @@ async function main() {
     say('      ' + await evaluate(fs.readFileSync('tools/perf-ingame.js', 'utf8')));
     say('      ' + await evaluate(fs.readFileSync('tools/perf-ingame-run.js', 'utf8')));
 
+    if (flag('novoice')) {
+      say('      关朗读（对照组）: ' + await evaluate(`S.autoVoice=false; save(); "autoVoice="+S.autoVoice`));
+    }
+
     say('[4/5] 三格微基准（用存档里最长的那条线程 = 真实游玩现场）');
     const quick = await evaluate(`(function(){
       var out={};

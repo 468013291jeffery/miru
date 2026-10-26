@@ -47,7 +47,9 @@ stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="line")return _stopHTML27
   '<div class="chstep" style="--ac:'+x.c+'"><div class="chh"><button class="chback" data-chback="1">‹ '+t("ch27.back")+'</button><b>'+x.i+' '+x[lang]+'</b></div>'+
   (acts.length?'<p class="chl">'+t("ch27.add")+'</p><div class="chacts">'+acts.map((s,j)=>'<button data-chact="'+j+'" class="'+(CH.act===j?"on":"")+'">✱ '+esc(s)+'</button>').join("")+'</div>':'')+
   '<p class="chl">'+t("ch27.words")+'</p><textarea id="chTxt" rows="2" maxlength="80">'+esc(CH.txt)+'</textarea>'+
-  '<div class="chprev" id="chPrev">'+chPreview(th)+'</div>'+
+  /* 2026-10-27 Ann：这一行和上面的输入框是同一句，看着重复 ⇒ 去掉；
+   chPreview 保留（别处还在用），只是这里不再渲染。 */
+
   '<button class="btn btn-p btn-block chgo" data-chgo="1">'+t("ch27.go")+' →</button><p class="pkhint">'+t("ch27.note")+'</p></div>'};
 function chText(th){const d=th.pk.stop[2],a=attList(th,d).find(z=>z.i===CH.i),x=ATT[a.k],lang=S.lang==="zh"?"zh":"en";
  const act=x.act&&CH.act!=null?x.act[lang][CH.act]:"";const w=(CH.txt||"").trim()||Lz(a.o.t);return (act?"*"+act+"* ":"")+w}

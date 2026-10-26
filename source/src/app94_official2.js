@@ -377,12 +377,18 @@ async function aiIdeasGo97(btn) {
     try { const b = th && th.pk && th.pk.stop; if (!b || !h) return h;
       const k = b[1], mine = k === "myline" || (k === "line" && th.pk.as && th.pk.as === (ch(b[0]) ? b[0] : null)) || th.pk.talk || (b[2] && typeof Lz(b[2].hint) === "string" && Lz(b[2].hint).indexOf("⁣") === 0);
       if (!mine && k !== "line") return h; const zh = CL() === "zh";
-      return h + '<div class="ai97"><button data-ai97="1">✨ ' + (zh ? "AI 帮我想怎么说" : "Help me say it") + '</button><div id="ai97o" class="ai97o"></div></div>';
+      /* 2026-10-27 Ann：按钮挪到标题行右上角（原来在最下面，和「就这么说」挤在一起）。
+   标题行是 <div class="chh">…</div>，把按钮塞到它闭合之前；结果气泡框 #ai97o 仍留在面板末尾。 */
+ const BTN = '<span class="ai97h"><button data-ai97="1">✨ ' + (zh ? "AI 帮我想" : "Help me say it") + '</button></span>';
+ let out = h;
+ if (/<div class="chh">[\s\S]*?<\/div>/.test(out)) out = out.replace(/(<div class="chh">[\s\S]*?)<\/div>/, '$1' + BTN + '</div>');
+ else out = out + BTN;
+ return out + '<div class="ai97o" id="ai97o"></div>';
     } catch (_) { return h; } };
   document.addEventListener("click", e => { const b = e.target.closest("[data-ai97]"); if (b) { e.stopPropagation(); aiIdeasGo97(b); } }, true);
   /* the ✦ ideas tool asks the AI too instead of canned lines */
   document.addEventListener("click", e => { const b = e.target.closest("[data-ideas]"); if (!b) return; const th = S.threads[curT]; if (!th || !th.pk) return; e.stopPropagation(); aiIdeasGo97(null); }, true);
-  const st = document.createElement("style"); st.textContent = `.ai97{margin:10px 0 0;text-align:center}.ai97>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px}.ai97>button:disabled{opacity:.6}.ai97o{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ai97o button{text-align:left;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:9px 12px;font-size:14px}`; document.head.appendChild(st);
+  const st = document.createElement("style"); st.textContent = `.ai97h{margin-left:auto;display:flex;align-items:center}.ai97h>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}.ai97{margin:10px 0 0;text-align:center}.ai97>button{border:1px solid rgba(240,183,126,.55);background:rgba(240,183,126,.12);color:#F6D3AE;border-radius:999px;padding:8px 16px;font-weight:700;font-size:13px}.ai97>button:disabled{opacity:.6}.ai97o{display:flex;flex-direction:column;gap:6px;margin-top:8px}.ai97o button{text-align:left;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:#fff;border-radius:12px;padding:9px 12px;font-size:14px}`; document.head.appendChild(st);
 })();
 
 /* ================= v6.0 · your-turn dock =================
