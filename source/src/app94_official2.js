@@ -383,7 +383,14 @@ async function aiIdeasGo97(btn) {
  let out = h;
  if (/<div class="chh">[\s\S]*?<\/div>/.test(out)) out = out.replace(/(<div class="chh">[\s\S]*?)<\/div>/, '$1' + BTN + '</div>');
  else out = out + BTN;
- return out + '<div class="ai97o" id="ai97o"></div>';
+ /* 2026-10-27 Ann：候选句放上面。插在「用你自己的话说」那一段之前。 */
+ const AIBOX = '<div class="ai97o" id="ai97o"></div>';
+ const wordsMark = out.indexOf('ch27.words');
+ if (wordsMark > 0) {
+  const pStart = out.lastIndexOf('<p class="chl">', wordsMark);
+  if (pStart > 0) return out.slice(0, pStart) + AIBOX + out.slice(pStart);
+ }
+ return out + AIBOX;
     } catch (_) { return h; } };
   document.addEventListener("click", e => { const b = e.target.closest("[data-ai97]"); if (b) { e.stopPropagation(); aiIdeasGo97(b); } }, true);
   /* the ✦ ideas tool asks the AI too instead of canned lines */
@@ -399,7 +406,9 @@ function dock97() {
   try {
     const pw = $("#pkwrap"), comp = $(".composer"), box = $("#msgs"); if (!pw || !comp || !box) return;
     const panel = pw.querySelector(".pkpanel.stop");
-    const mine = panel && (panel.querySelector(".chatt") || panel.querySelector(".pkopts") || panel.querySelector("[data-ai97]")) && panel.querySelector(".sttag.you, [data-ai97]");
+    /* 2026-10-27 Ann：对话框样式没套上 —— 原来要求同时有「态度选项」和「你的回合标签」，
+       缺一个就不 dock。现在只要面板里有玩家输入框或 AI 按钮，就按「轮到你了」处理。 */
+ const mine = panel && (panel.querySelector("#chTxt") || panel.querySelector("[data-ai97]") || panel.querySelector(".chatt") || panel.querySelector(".pkopts")) && (panel.querySelector(".sttag.you") || panel.querySelector("[data-ai97]") || panel.querySelector("#chTxt"));
     const sg = $("#sugg");
     if (!mine) { if (pw.classList.contains("dock97")) { pw.classList.remove("dock97"); box.appendChild(pw); } if (sg) sg.style.display = ""; return; }
     if (pw.nextElementSibling !== comp) comp.parentNode.insertBefore(pw, comp);
