@@ -280,7 +280,7 @@ async function swipe96(kind) {
   const top = $("#sw96 .sc96:last-child"); if (top) { top.style.transform = "translateX(" + (kind === "nope" ? -600 : 600) + "px) rotate(" + (kind === "nope" ? -25 : 25) + "deg)"; top.style.opacity = "0"; }
   DECK96.shift(); if (!DECK96.length) DECK96 = deck96();
   if (kind === "nope") { setTimeout(renderSwipe96, 260); return; }
-  st.liked.push(id); save(); const th = dmThread96(id); th.love = th.love || {}; th.love[id] = Math.max(th.love[id] || 0, kind === "super" ? 18 : 8);
+  st.liked.push(id); save(); const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
   if (kind === "super") { const c = ch(id); const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
   setTimeout(() => matchSheet96(id, kind === "super"), 280);
 }

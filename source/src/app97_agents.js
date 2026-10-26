@@ -63,7 +63,7 @@ function newAgentThread97(wid) {
   const cast = w.cast.filter(c => c !== you && ch(c) && !/^(医院|Hospital)$/.test(key97(ch(c))));
   const th = { id: "a:" + wid + ":" + now, kind: "group", wid, cast, title: Lz(w.title), msgs: [], love: {}, rounds: 0, status: { time: "", place: "", mood: {} }, tasks: {}, mem: [], created: now, at: now,
     setting: "", you: Lz(w.you) || "", agent97: { ch: 1, turns: 0, hit: [], cards: {}, sum: [], ended: false } };
-  cast.forEach(c => { th.love[c] = 5; th.agent97.cards[c] = { mem: [] }; });
+  cast.forEach(c => { loveWrite(th, c, 0, "agent97:init", {absolute:5}); th.agent97.cards[c] = { mem: [] }; });
   th.persona = Object.assign({}, persona()); S.threads[th.id] = th; save(); return th;
 }
 function youName97(th) { const w = wd(th.wid), y = yid97(w); return (y && ch(y) && first(ch(y).n)) || L97("你", "you"); }
@@ -142,7 +142,7 @@ async function agentTurn97(th, act) {
       let r = null; try { r = await actor97(th, cid, sp.intent, act); } catch (_) { r = null; } if (!r) continue;
       if (r.act) appendMsg(th, { who: cid, k: "act", txt: String(r.act).slice(0, 120), at: Date.now() });
       if (r.say) appendMsg(th, { who: cid, k: "say", txt: String(r.say).slice(0, 200), at: Date.now(), ai: 1 });
-      const f = Math.max(-5, Math.min(5, +r.feel || 0)); th.love[cid] = Math.max(0, Math.min(100, (th.love[cid] || 0) + f * 1.6));
+      const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, cid)) loveWrite(th, cid, f * 1.6, "agent97:model");
       if (r.remember) remember97(th, [cid], r.remember);
       if (r.say) remember97(th, (present.length ? present : th.cast).filter(c => c !== cid), first(ch(cid).n) + L97("说：", " said: ") + String(r.say).slice(0, 50));
     }

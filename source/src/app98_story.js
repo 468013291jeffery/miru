@@ -63,7 +63,7 @@ function new98(wid, asKey) {
   const cast = w.cast.filter(c => c !== you && ch(c));
   const th = { id: "b:" + wid + ":" + now, kind: "group", wid, cast, title: LZ98(b.title), msgs: [], love: {}, rounds: 0, status: { time: "", place: "", mood: {} }, tasks: {}, mem: [], created: now, at: now, setting: "", you: "",
     b98: { as: asKey, you, ch: 1, sc: 0, phase: "enter", turns: 0, sum: [], cards: {}, flags: [], profile: [], ended: false, picked: {} } };
-  cast.forEach(c => { th.love[c] = 5; const card = cardOf98(w, c); th.b98.cards[c] = { mem: card && card.knows ? [L98("（初始知道）", "(known from the start) ") + String(card.knows).slice(0, 160)] : [] }; });
+  cast.forEach(c => { loveWrite(th, c, 0, "story98:init", {absolute:5}); const card = cardOf98(w, c); th.b98.cards[c] = { mem: card && card.knows ? [L98("（初始知道）", "(known from the start) ") + String(card.knows).slice(0, 160)] : [] }; });
   th.persona = Object.assign({}, persona()); S.threads[th.id] = th; save(); return th;
 }
 document.addEventListener("click", e => { let x;
@@ -164,7 +164,7 @@ async function beat98(th, mode, act) {
       r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
       if (r.act) appendMsg(th, { who: sp.id, k: "act", txt: String(r.act).slice(0, 140), at: Date.now() });
       if (r.say) appendMsg(th, { who: sp.id, k: "say", txt: String(r.say).slice(0, 220), at: Date.now(), ai: 1 });
-      const f = Math.max(-5, Math.min(5, +r.feel || 0)); th.love[sp.id] = Math.max(0, Math.min(100, (th.love[sp.id] || 0) + f * 1.6));
+      const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
       if (r.remember) mem98(th, [sp.id], r.remember);
       if (r.say) mem98(th, (pres.length ? pres : th.cast).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
     }

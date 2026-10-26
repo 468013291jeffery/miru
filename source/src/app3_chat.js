@@ -290,7 +290,7 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
+  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
@@ -299,9 +299,10 @@ async function reply(th,ctx,silent){
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
+  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: 3 short things the user could say or do next, in first person, varied (one line of dialogue, one action starting with *, one bold move)."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: 2–3 optional, distinct first-person replies grounded in the visible scene. Include a way to defer or change topic; never assume consent or force a bold/intimate move."
  ].filter(Boolean).join("\n");
  let r=null;
  if(liveOn()){
