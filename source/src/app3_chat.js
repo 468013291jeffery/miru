@@ -24,7 +24,19 @@ function sendDM(cid,txt){const th=S.threads["c:"+cid]||newThread("solo",cid);th.
  reply(th,{kind:"user"},true);toast(t("post.sent",{n:first(ch(cid).n)}));}
 
 /* ================= CHAT SCREEN ================= */
-let curT=null,cmode="say",sugg=[],busy=false,openTools=-1;
+let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
+/* 2026-10-27 · 「经常卡死」的看门狗。
+   病灶：`busy=true`（reply 开头）与 `busy=false`（playBeats 之后）**不在 try/finally 里** ——
+   两行之间任何一处抛错，`busy` 就永远是 true ⇒「发不出去、界面没反应」，看起来就是卡死。
+   它的形状不是慢，是**锁没放**。这里兜一层：45 秒还没放开就强制放开，并记一条现场。
+   判据（导出存档可见）：`S._stallTrace` 里出现 busy>45s。 */
+setInterval(()=>{try{
+ if(!busy||!BUSY_T||Date.now()-BUSY_T<45000)return;
+ busy=false;BUSY_T=0;try{typing(false)}catch(_){}
+ S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s"});if(S._stallTrace.length>20)S._stallTrace.shift();
+ try{save()}catch(_){}
+ try{toast(S.lang==="zh"?"刚才那一轮卡住了，已经放开 —— 可以再发一次":"That turn got stuck; it is released — send again")}catch(_){}
+}catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
 function renderChat(){
@@ -362,7 +374,7 @@ const CTX={
  redo:"Rewrite the last reply differently: different angle, different first line."};
 async function reply(th,ctx,silent){
  let LLMERR=null;   // 这一轮 AI 失败的原因（给玩家看，不要吞）
- if(!silent){if(busy)return;if(!aiGate())return;busy=true;typing(true)}
+ if(!silent){if(busy)return;if(!aiGate())return;busy=true;BUSY_T=Date.now();typing(true)}
  const mid=mainOf(th),c=ch(ctx.cid||mid),w=th.wid?wd(th.wid):null,p=th.persona||persona();
  const goals=th.quest?th.quest.goals.map((g,i)=>i+": "+g.t+(g.done?" (done)":"")).concat([th.quest.goals.length+": HIDDEN — "+th.quest.hidden.t+(th.quest.hidden.done?" (done)":"")]).join("\n"):"";
  const inst=(CTX[ctx.kind]||CTX.user).split("{u}").join(p.name||"the user").split("{x}").join(ctx.txt||"").split("{c}").join(c?c.n:"them");
@@ -475,7 +487,7 @@ async function reply(th,ctx,silent){
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
- if(!silent){busy=false;
+ if(!silent){busy=false;BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
   try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed)}catch(_){}},60)}}catch(_){}
  }}
