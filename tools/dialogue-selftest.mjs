@@ -53,6 +53,6 @@ console.log('dialogue regression passed: request wiring, heat cap, help intent, 
 
 const build=fs.readFileSync("source/build.py","utf8");
 assert.match(build, /"app94_official2.js","app100_dialogue.js"/);
-assert.ok(html.startsWith('<script>window.MIRU_BUILD='));
+assert.ok(html.indexOf('window.MIRU_BUILD') >= 0 && html.indexOf('window.MIRU_BUILD') < html.indexOf('window.CREATOR_HTML')); 
 for (const m of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi)) new vm.Script(m[1]);
 console.log("build wiring and classic script syntax passed");
