@@ -1499,7 +1499,7 @@ p{margin:0}
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="5cf34ec5761b 2026-10-26T16:16Z";
+window.MIRU_BUILD="4ea0845ee97f 2026-10-26T16:33Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4226,6 +4226,7 @@ function sendDM(cid,txt){const th=S.threads["c:"+cid]||newThread("solo",cid);th.
 
 /* ================= CHAT SCREEN ================= */
 let curT=null,cmode="say",sugg=[],busy=false,openTools=-1;
+const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
 function renderChat(){
  const th=S.threads[curT];if(!th)return;const mid=mainOf(th),st=stageOf(th,mid);
@@ -4341,7 +4342,7 @@ function msgHTML(m,i,th){
  if(th.pk&&m.who===th.pk.as&&th.pk.as!=="watch"&&th.pk.as!=="side"&&m.who!=="me"){const c0=ch(m.who),lab='<small class="asme">'+esc(t("pk.youAre",{n:first(c0.n)}))+'</small>';
   if(m.k==="act")return '<div class="m-act me" data-mi="'+i+'">'+lab+esc(m.txt)+'</div>';
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
-  return '<div class="m-row me" data-mi="'+i+'"><div>'+lab+'<div class="bub">'+esc(m.txt)+'</div></div></div>'}
+  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="bub">'+esc(m.txt)+'</div></div></div>'}
  const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
  const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
   '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
@@ -4355,7 +4356,21 @@ function msgHTML(m,i,th){
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
- return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe||th.cast.length<2?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
+ return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe||th.cast.length<2?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
+/* 2026-10-27 补的三条视觉（Ann 试玩反馈）：
+   ① 每个角色一条他自己的色条 + 淡底（原来只有名字颜色，认不出谁在说）
+   ② 点过的选项反色（原来点下去毫无反馈）
+   ③ AI 失败那行是警告色，不能和正常叙述混在一起 */
+(function(){try{
+ const st=document.createElement("style");
+ st.textContent=[
+  '.m-row[data-wc]{border-left:3px solid var(--wc);background:color-mix(in srgb,var(--wc) 9%,transparent);border-radius:12px;padding-left:9px}',
+  '.m-row.me[data-wc]{border-left:3px solid var(--fg);background:color-mix(in srgb,var(--fg) 10%,transparent)}',
+  '.suggest button.sel{background:var(--fg)!important;color:var(--bg)!important;border-color:var(--fg)!important}',
+  '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}'
+ ].join('\n');
+ document.head.appendChild(st);
+}catch(_){}})();
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
  /* 玩家原话单独留档（2026-10-25 Ann）：模型生成的内容可以随窗口滑走，但**玩家自己说的话**要留住。
@@ -4398,7 +4413,10 @@ function streamPreview(piece){
 
 /* send from composer */
 function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩家自己敲的才算「珍贵」
- const th=S.threads[curT];if(!th||busy)return;txt=(txt||"").trim();if(!txt)return;
+ const th=S.threads[curT];if(!th)return;txt=(txt||"").trim();if(!txt)return;
+ /* 2026-10-27 Ann 试玩：上一轮还没说完时点选项，原来**静默丢弃**（选项已清空、话没发出）。
+    她看到的就是「我选了，他毫无反应」。改成排队，等这一轮结束自动发出去。 */
+ if(busy){SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed});try{toast(S.lang==="zh"?"记下了，这一轮说完就发":"Queued - sends after this reply")}catch(_){}return}
  if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
@@ -4466,6 +4484,7 @@ const CTX={
  truth:"{u} asks {c} an honest question and {c} MUST answer truthfully, no jokes or deflection. The question: \"{x}\". The answer can cost them something; let a piece of their secret show.",
  redo:"Rewrite the last reply differently: different angle, different first line."};
 async function reply(th,ctx,silent){
+ let LLMERR=null;   // 这一轮 AI 失败的原因（给玩家看，不要吞）
  if(!silent){if(busy)return;if(!aiGate())return;busy=true;typing(true)}
  const mid=mainOf(th),c=ch(ctx.cid||mid),w=th.wid?wd(th.wid):null,p=th.persona||persona();
  const goals=th.quest?th.quest.goals.map((g,i)=>i+": "+g.t+(g.done?" (done)":"")).concat([th.quest.goals.length+": HIDDEN — "+th.quest.hidden.t+(th.quest.hidden.done?" (done)":"")]).join("\n"):"";
@@ -4513,7 +4532,7 @@ async function reply(th,ctx,silent){
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest = what the PLAYER (the user) could tap next. These are the user's own options, NEVER a line said by a character. Write each one exactly as the user would type it. Three of them, covering three different strengths:   (a) something the user could SAY - plain text, the user's own voice, no name prefix;   (b) something the user could DO - starts with * and describes the user doing it (*I push the card across the table.*);   (c) something the user could do WITHOUT speaking - starts with ( or （ and describes the silence, waiting, looking away, or leaving. Never put a character's reply, a character's decision, or anything only a character could do into suggest. reaction = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest = what the PLAYER (the user) could tap next. These are the user's own options, NEVER a line said by a character. Write each one exactly as the user would type it. Three of them, covering three different strengths:   (a) something the user could SAY - plain text, the user's own voice, no name prefix;   (b) something the user could DO - starts with * and describes the user doing it (*I push the card across the table.*);   (c) something the user could do WITHOUT speaking - starts with ( or （ and describes the silence, waiting, looking away, or leaving. Never put a character's reply, a character's decision, or anything only a character could do into suggest. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
  if(liveOn()){
@@ -4522,7 +4541,7 @@ async function reply(th,ctx,silent){
   try{
    STREAM_TXT="";
    r=await ask(prompt,{modelTier:deep?"complex":"default",onText:_prev?(function(x){streamPreview(x)}):undefined});
-  }catch(e){r=null}
+  }catch(e){r=null;LLMERR=e||{code:"unknown"};try{track&&track("llm_fail",{code:(e&&(e.code||e.message))||"unknown"})}catch(_){}}
   if(r&&Array.isArray(r.beats)&&r.beats.length)useUnits(aiCost());}
  // 台词守门（他们 v8.2.3 的「台词检查」）：说了本章他还不该知道的事 ⇒ 带约束重写一次 ⇒ 仍不行就换保守句。
  // 禁区词 = 未来章节的 reveals/breaks + 在场角色卡上还没揭露的 secret/twist。开关见 MIRU_TUNE.chat.replyGuard。
@@ -4542,13 +4561,24 @@ async function reply(th,ctx,silent){
    }
   }catch(_){}
  }
- if(!r||!Array.isArray(r.beats)||!r.beats.length)r=fallback(th,ctx);
+ if(!r||!Array.isArray(r.beats)||!r.beats.length){
+  r=fallback(th,ctx);
+  /* 2026-10-27 Ann 试玩：AI 挂了，界面**一个字都不说**，她读到的是「他不理我」。
+     沉默不等于正常 —— 失败必须带原因露出来，而且要说明下方是兜底文案。 */
+  if(liveOn()&&!silent){
+   try{const why=(LLMERR&&(LLMERR.code||LLMERR.message))||"unknown";
+    appendMsg(th,{who:"sys",k:"warn",txt:"⚠︎ AI 没接通（"+why+"）· 下面这轮是兜底文案，不是他在敷衍你",at:Date.now()})}catch(_){}
+  }
+ }
  // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
  // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
  try{ if(typeof plotGate==="function") plotGate(th); }catch(_){}
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
- if(!silent)busy=false;}
+ if(!silent){busy=false;
+  /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
+  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed)}catch(_){}},60)}}catch(_){}
+ }}
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
  zh:["你到底为什么来？","*我在你旁边坐下，靠得比需要的近。*","再说一遍。慢一点。","（我不该想要这个的。）","就这一次，说实话。","*我伸手去牵你，停在半路。*","你又来了。","如果我留下会怎样？","*我接过你手里的咖啡。*"]};
@@ -4604,7 +4634,17 @@ function speakQueue(list){let i=0;const next=()=>{if(i>=list.length)return;const
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-mode]")){cmode=x.dataset.mode;$$("[data-mode]").forEach(y=>y.classList.toggle("on",y===x));const ta=$("#cin");ta.placeholder=t("cx.ph."+cmode);ta.classList.toggle("dir",cmode==="dir");if(cmode==="dir")toast(t("cx.dirOn"));ta.focus();return}
  if(e.target.closest("[data-send]")){const ta=$("#cin");const v=ta.value;ta.value="";doSend(v,null,true);return}
- if(x=e.target.closest("[data-sg]")){let v=x.dataset.sg,m="say";if(/^\*.*\*$/.test(v)){m="act";v=v.slice(1,-1)}else if(/^[(（].*[)）]$/.test(v)){m="think";v=v.slice(1,-1)}setSugg([]);doSend(v,m);return}
+ if(x=e.target.closest("[data-sg]")){
+  /* 2026-10-27：① 点下去立刻反色（原来点完毫无反馈）② （…）是玩家「不吭声」，属于动作，不是内心话
+     ③ 先落消息再清选项；忙则排队（见 doSend），绝不静默丢 */
+  let v=String(x.dataset.sg||"").trim(),m="say";
+  if(/^\*[\s\S]*\*$/.test(v)){m="act";v=v.slice(1,-1)}
+  else if(/^[(（][\s\S]*[)）]$/.test(v)){m="act";v=v.slice(1,-1)}
+  v=v.trim(); if(!v)return;
+  x.classList.add("sel");
+  setSugg([]);
+  doSend(v,m,false);
+  return}
  if(e.target.closest("[data-ideas]")){const th=S.threads[curT];if(sugg.length){setSugg(sugg);return}
   const lang=CL();setSugg([0,1,2].map(()=>pickNR(SUGG_FB[lang],"sg")));return}
  if(e.target.closest("[data-cont]")){const th=S.threads[curT];th.rounds++;reply(th,{kind:"cont"});return}
