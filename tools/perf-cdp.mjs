@@ -376,6 +376,13 @@ async function main() {
       let last = '';
       while (Date.now() - t0 < 20 * 60000) {
         await sleep(6000);
+        /* 2026-10-27：**替玩家点一下**。
+           app101_you.js 的 tapMode 默认开着（S.pkTap101 未定义 ⇒ true），它把内层 pkWait 的 ms 设成 864e5（24 小时）
+           ⇒ **每一句都等一次点击**，而点击处理器（app14_pack.js:501）调的是 `PKNEXT[curT]`，不是 `PKWAIT`。
+           量尺不点这一下，就永远看到 msgs 不动 —— 那不是产品故障，是「点一下再播放」。 */
+        try {
+          await evaluate(`(function(){try{if(typeof PKNEXT!=="undefined"&&PKNEXT[curT]){PKNEXT[curT]();return "tapped"}return "no-latch"}catch(e){return "err"}})()`);
+        } catch (_) {}
         let st;
         try { st = JSON.parse(await evaluate('__PERFRUN.status()')) } catch (e) { say('      poll err ' + e.message); continue }
         const line = `      ${Math.round((Date.now() - t0) / 1000)}s ch=${st.ch} st=${st.st} msgs=${st.msgs} runs=${st.runs} ${st.err || ''}`;
