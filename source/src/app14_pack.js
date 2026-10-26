@@ -246,7 +246,10 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
     const _all=[past].concat(_canon).filter(Boolean).join(" | ");
     return _all?"WHAT HAS HAPPENED (official, canon — never contradict, never re-open a settled conflict): "+_all:"";
   }catch(_){return past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:""}})(),
-  th.pk.st==="choose"?"The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal.":
+  th.pk.st==="choose"?("The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). "
+   +((typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.chapterAdvance===false)
+     ? "Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal."
+     : "Do NOT make that decision for anyone and do NOT resolve the chapter goal — but you MAY move this chapter forward: end the beat, let minutes or hours pass, change rooms, bring someone in. A chapter lasts many minutes; do not freeze the same instant across replies.")):
    "This chapter's choice is made. Play the aftermath of it; do not start the next chapter's events.",
   as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
   lead?"THE USER PLAYS "+lead.n+" ("+Lz(lead.role)+"). Never write "+first(lead.n)+"'s lines, actions or thoughts — only react to them. The user's private thoughts are never known by anyone.":"",
