@@ -171,7 +171,11 @@ function msgHTML(m,i,th){
  document.head.appendChild(st);
 }catch(_){}})();
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
-function appendMsg(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
+function appendMsg(th,m){
+ /* 2026-10-27：同一个人、同一句、4 秒内，只落一次。
+    存档里出现过「我（动作）: 我接过你手里的咖啡。」连续两条 —— 点击被派发了两次。 */
+ try{const last=th.msgs&&th.msgs[th.msgs.length-1];
+  if(last&&last.who===m.who&&last.txt===m.txt&&(Date.now()-(last.at||0))<4000)return}catch(_){}if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}
  /* 玩家原话单独留档（2026-10-25 Ann）：模型生成的内容可以随窗口滑走，但**玩家自己说的话**要留住。
     这里逐字收进 th.said（去掉 *动作* 的星号噪音），按 chat.saidKeep 截断。 */
  try{ if(m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()){
@@ -408,8 +412,10 @@ async function playBeats(th,r,ctx,silent){
  const beats=r.beats.filter(b=>b&&b.text&&valid.has(b.who)).slice(0,10);
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
  const toSpeak=[];
- for(const b of beats){const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:String(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
-  if(!silent)await new Promise(res=>setTimeout(res,380));appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
+ for(const b of beats){if(!String(b.text||"").trim())continue;   // 空拍不播（2026-10-27：存档里出现过一条空台词）
+  const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:String(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
+  if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
+  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
  if(r.status){th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
