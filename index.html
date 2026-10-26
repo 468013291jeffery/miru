@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="0ec0e70ffe16 2026-10-26T19:49Z";
+window.MIRU_BUILD="667907f7fb69 2026-10-26T19:57Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -16023,6 +16023,1137 @@ document.addEventListener('click', e => {
   const input = $('#cin'); if (!input) return;
   input.value = b.dataset.dialogueIdea; input.focus(); input.dispatchEvent(new Event('input', {bubbles:true}));
 }, true);
+
+/* ================= v6.1 · App Store 1.2 (user-generated content): report · block · terms · contact =================
+   · Report: a community story, its author, a library item, or an AI reply (chat menu ⋯). Goes to the admin console 「举报处理」 with a
+     snapshot of the reported content; stories / library items reported by several people are hidden until reviewed (server side).
+   · Block: any community author — their works disappear from the feed, Discover and search (server filters the feed; the device filters too).
+   · Terms: /terms.html (zero tolerance, 17+, 24h handling); agreed to on the sign-in screen.
+   · Me → 安全与举报: terms, blocked authors (unblock), contact us. */
+const ZH95 = () => CL() === "zh";
+const T95 = (zh, en) => ZH95() ? zh : en;
+function blk95() { S.blk95 = S.blk95 || { works: [], names: [] }; return S.blk95; }
+const REASONS95 = [["sex", "色情或露骨内容", "Sexual or explicit content"], ["minor", "涉及未成年人", "Involves minors"], ["hate", "仇恨、骚扰或霸凌", "Hate, harassment or bullying"],
+  ["violence", "暴力或自残", "Violence or self-harm"], ["illegal", "违法、诈骗或垃圾信息", "Illegal, scam or spam"], ["ip", "侵权或泄露隐私", "Copyright or privacy"], ["other", "其他", "Something else"]];
+function report95(kind, id, snap, title) {
+  const zh = ZH95();
+  sheet('<h2>⚑ ' + T95("举报", "Report") + (title ? ' · ' + esc(title) : '') + '</h2><p class="xs faint" style="margin:4px 0 10px">' +
+    T95("我们会在 24 小时内处理。违规内容会被删除，发布者会被封禁。", "We act within 24 hours. Violating content is removed and the person who posted it is banned.") + '</p>' +
+    '<div class="stack" style="gap:6px">' + REASONS95.map(r => '<label class="opt rp95"><input type="radio" name="rp95" value="' + r[0] + '"' + (r[0] === "sex" ? " checked" : "") + '> <span class="grow"><b>' + esc(zh ? r[1] : r[2]) + '</b></span></label>').join("") + '</div>' +
+    '<textarea id="rp95n" rows="2" maxlength="280" placeholder="' + esc(T95("补充说明（可选）", "Anything to add? (optional)")) + '" style="width:100%;margin-top:10px;border-radius:12px;padding:10px;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14)"></textarea>' +
+    '<button class="btn btn-p btn-block" style="margin-top:10px" id="rp95go">' + T95("提交举报", "Send report") + '</button>');
+  const go = $("#rp95go"); if (!go) return;
+  go.onclick = async () => {
+    const r = (document.querySelector('input[name="rp95"]:checked') || {}).value || "other", n = ($("#rp95n") || {}).value || "";
+    const lab = (REASONS95.find(x => x[0] === r) || [, "", ""]); go.disabled = true;
+    let ok = false; try { const res = await capi("/works", { json: { op: "report", kind, id, reason: lab[1] + " / " + lab[2] + (n ? " — " + n : ""), snap: String(snap || "").slice(0, 4000) } }); ok = res.ok; } catch (_) {}
+    closeSheet(); toast(ok ? T95("已收到举报，我们会在 24 小时内处理", "Report sent — we'll act within 24 hours") : T95("提交失败，请联网后再试", "Couldn't send — check your connection"));
+    if (ok && kind === "message") { try { const th = S.threads[curT]; if (th) { th.msgs = th.msgs.filter(m => !m.rp95pending); save(); } } catch (_) {} }
+  };
+}
+async function block95(workId, name) {
+  if (!confirm(T95("拉黑「" + name + "」？你将不再看到 TA 的任何作品。", "Block “" + name + "”? You won't see any of their works."))) return;
+  let ok = false; try { const r = await capi("/works", { json: { op: "block", id: workId } }); ok = r.ok; if (ok && r.j && r.j.name) name = r.j.name; } catch (_) {}
+  const b = blk95(); if (!b.works.includes(workId)) b.works.push(workId); if (name && !b.names.includes(name)) b.names.push(name); save();
+  toast(ok ? T95("已拉黑，TA 的作品不会再出现", "Blocked — their works won't appear again") : T95("已在本机拉黑；联网后会同步", "Blocked on this device; it syncs when you're online"));
+  try { if (typeof go === "function") go("home"); else if (typeof renderMain === "function") renderMain(); } catch (_) {}
+}
+/* snapshot of what's on screen in a chat (the AI replies being reported) */
+function chatSnap95(th) {
+  return (th.msgs || []).slice(-10).map(m => { const w = m.who === "me" ? "[user]" : m.who === "n" || m.who === "sys" ? "[narration]" : "[" + ((ch(m.who) && first(ch(m.who).n)) || m.who) + "]";
+    const t = String(m.txt || (m.parts || []).map(p => p.txt).join(" ") || "").replace(/\s+/g, " ").slice(0, 400); return t ? w + " " + t : ""; }).filter(Boolean).join("\n");
+}
+/* which community work (UGC, not a MIRU original) a world came from */
+function ugc95(w) { return w && w.community && !w.official76 ? w : null; }
+function authorName95(w) { return (w && (w.authorName || w.author)) || T95("这位作者", "this author"); }
+
+/* ---- story page: report / block ---- */
+{ const _os = openStory; openStory = function (id) { const r = _os.apply(this, arguments);
+    try { const w = wd(id), sc = $("#s-story"); if (!w || !sc || sc.querySelector(".sf95")) return r;
+      const u = ugc95(w), host = sc.querySelector(".scroll") || sc;
+      host.insertAdjacentHTML("beforeend", '<div class="sf95"><button data-rp95w="' + esc(id) + '">⚑ ' + T95("举报这部作品", "Report this story") + '</button>' +
+        (u ? '<button data-bk95w="' + esc(id) + '">🚫 ' + T95("拉黑作者", "Block author") + '</button>' : '') + '</div>'); } catch (_) {}
+    return r; }; }
+/* ---- chat menu ⋯: report AI replies / this story · block author ---- */
+{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
+    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r; const w = th.wid && wd(th.wid), u = ugc95(w);
+      st.insertAdjacentHTML("beforeend", '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
+        (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '')); } catch (_) {}
+    return r; }; }
+document.addEventListener("click", e => {
+  let x;
+  if ((x = e.target.closest("[data-rp95w]"))) { e.preventDefault(); e.stopPropagation(); const w = wd(x.dataset.rp95w); report95("work", (w && w.community) || x.dataset.rp95w, w ? Lz(w.title) + "\n" + Lz(w.hook || "") : "", w && Lz(w.title)); return; }
+  if ((x = e.target.closest("[data-bk95w]"))) { e.preventDefault(); e.stopPropagation(); const w = wd(x.dataset.bk95w); if (w && w.community) { closeSheet(); block95(w.community, authorName95(w)); } return; }
+  if ((x = e.target.closest("[data-rp95c]"))) { e.preventDefault(); e.stopPropagation(); const th = S.threads[curT]; if (!th) return; closeSheet(); const w = th.wid && wd(th.wid);
+    setTimeout(() => report95("message", (w && w.community) || th.id, chatSnap95(th), T95("AI 回复", "AI reply")), 150); return; }
+  if ((x = e.target.closest("[data-rp95a]"))) { e.preventDefault(); e.stopPropagation(); report95("asset", x.dataset.rp95a, x.dataset.n || "", x.dataset.n); return; }
+}, true);
+
+/* ---- library: community items (🌐) can be reported ---- */
+{ const _rl = typeof renderLib === "function" ? renderLib : null;
+  function libMark95() { document.querySelectorAll(".lib65i[data-libtry]").forEach(b => { const n = (b.querySelector("b") || {}).textContent || ""; if (!/^🌐/.test(n) || b.querySelector("[data-rp95a]")) return;
+    b.insertAdjacentHTML("beforeend", '<span class="lb95" role="button" data-rp95a="' + esc(b.dataset.libtry) + '" data-n="' + esc(n.replace(/^🌐\s*/, "")) + '" aria-label="report">⚑</span>'); }); }
+  new MutationObserver(() => { if (document.querySelector(".lib65list")) libMark95(); }).observe(document.body, { childList: true, subtree: true }); }
+
+/* ---- blocked authors never show up (server filters the feed for signed-in users; this covers cached lists) ---- */
+{ const _ca = capi; capi = async function (path) { const r = await _ca.apply(this, arguments);
+    try { if (typeof path === "string" && /^\/works/.test(path) && r && r.j && Array.isArray(r.j.works)) { const b = blk95(); if (b.works.length || b.names.length) r.j.works = r.j.works.filter(w => !b.works.includes(w.id) && !(w.author && b.names.includes(w.author) && w.author !== "MIRU 官方")); } } catch (_) {}
+    return r; }; }
+
+/* ---- sign-in screen: terms + zero tolerance ---- */
+function terms95Link(t) { return '<a href="terms.html' + (ZH95() ? "" : "#en") + '" target="_blank" rel="noopener" style="color:#F0B77E">' + t + '</a>'; }
+{ const _ra = renderAuth70; renderAuth70 = function () { const r = _ra.apply(this, arguments);
+    try { const b = document.querySelector("#s-ob .au70b"); if (b && !document.querySelector(".tm95")) b.insertAdjacentHTML("afterend", '<p class="tm95">' +
+      (ZH95() ? "继续即表示你已年满 17 周岁，并同意" + terms95Link("《用户协议与社区规范》") + "。MIRU 对违规内容和辱骂行为零容忍。"
+              : "By continuing you confirm you're 17+ and agree to the " + terms95Link("Terms & Community Guidelines") + ". MIRU has zero tolerance for objectionable content and abusive users.") + '</p>'); } catch (_) {}
+    return r; }; }
+
+/* ---- Me → 安全与举报 ---- */
+async function blockedSheet95() {
+  let L = []; try { const r = await capi("/works?blocked=1"); if (r.ok) L = r.j.blocked || []; } catch (_) {}
+  sheet('<h2>🚫 ' + T95("已拉黑的作者", "Blocked authors") + '</h2>' + (L.length ? '<div class="stack" style="gap:6px;margin-top:10px">' + L.map(a => '<div class="opt"><span class="grow"><b>' + esc(a.author_name || a.author_id) + '</b></span><button class="btn btn-sm" data-ub95="' + esc(a.author_id) + '">' + T95("解除", "Unblock") + '</button></div>').join("") + '</div>'
+    : '<p class="dim" style="margin-top:10px">' + T95("还没有拉黑任何人。", "You haven't blocked anyone.") + '</p>'));
+}
+function contactSheet95() {
+  sheet('<h2>✉️ ' + T95("联系我们", "Contact us") + '</h2><p class="xs faint" style="margin:4px 0 10px">' + T95("问题、建议、申诉都可以，我们会在 24 小时内回复到你的注册邮箱。", "Questions, feedback or appeals — we reply to your sign-in email within 24 hours.") + '</p>' +
+    '<textarea id="ct95" rows="5" maxlength="1500" style="width:100%;border-radius:12px;padding:10px;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14)"></textarea><button class="btn btn-p btn-block" style="margin-top:10px" id="ct95go">' + T95("发送", "Send") + '</button>');
+  const b = $("#ct95go"); if (b) b.onclick = async () => { const v = ($("#ct95") || {}).value || ""; if (v.trim().length < 2) return; b.disabled = true; let ok = false;
+    try { const r = await capi("/works", { json: { op: "report", kind: "other", id: "contact", reason: T95("联系我们", "Contact us"), snap: v } }); ok = r.ok; } catch (_) {}
+    closeSheet(); toast(ok ? T95("已发送，我们会尽快回复", "Sent — we'll get back to you soon") : T95("发送失败，请联网后再试", "Couldn't send — check your connection")); };
+}
+document.addEventListener("click", async e => { let x;
+  if ((x = e.target.closest("[data-ub95]"))) { const id = x.dataset.ub95; try { await capi("/works", { json: { op: "unblock", author: id } }); } catch (_) {} const b = blk95(); b.works = []; b.names = []; save(); toast(T95("已解除拉黑", "Unblocked")); blockedSheet95(); return; }
+  if (e.target.closest("[data-sf95b]")) { blockedSheet95(); return; }
+  if (e.target.closest("[data-sf95c]")) { contactSheet95(); return; }
+});
+{ const _rm = renderMe; renderMe = function (v) { const r = _rm.apply(this, arguments);
+    try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".me95")) host.insertAdjacentHTML("beforeend",
+      '<div class="card me95"><div class="eyebrow">🛡 ' + T95("安全与举报", "Safety & reporting") + '</div>' +
+      '<a class="opt" href="terms.html' + (ZH95() ? "" : "#en") + '" target="_blank" rel="noopener"><span class="ic">📜</span><span class="grow"><b>' + T95("用户协议与社区规范", "Terms & Community Guidelines") + '</b><span>' + T95("零容忍 · 24 小时处理举报", "Zero tolerance · reports handled within 24h") + '</span></span></a>' +
+      '<button class="opt" data-sf95b="1"><span class="ic">🚫</span><span class="grow"><b>' + T95("已拉黑的作者", "Blocked authors") + '</b></span></button>' +
+      '<button class="opt" data-sf95c="1"><span class="ic">✉️</span><span class="grow"><b>' + T95("联系我们", "Contact us") + '</b></span></button></div>'); } catch (_) {}
+    return r; }; }
+
+(function () { const st = document.createElement("style"); st.textContent = `
+.sf95{display:flex;gap:8px;justify-content:center;margin:18px 0 8px}.sf95 button{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.05);color:#C9C1D2;border-radius:999px;padding:7px 14px;font-size:12px}
+.tm95{font-size:11.5px;line-height:1.55;color:#9C93A6;text-align:center;margin:4px 6px 0}
+.me95{margin-top:14px;display:grid;gap:6px}.me95 a.opt{text-decoration:none;color:inherit}
+.rp95 input{accent-color:#EE6F97}
+.lb95{margin-left:auto;padding:4px 8px;font-size:13px;color:#9C93A6;align-self:center}`; document.head.appendChild(st); })();
+
+/* ================= v6.2 · 世界围着你转 — lessons from Status & Heyyyy, all paid with 💎 (no membership) =================
+   ① 圈内热搜：每部剧一个剧中社交平台（营销号 / 路人 / 粉丝 / 黑粉 / 角色本人），AI 围绕剧情写帖子；你每做一个关键选择，热搜和评论跟着变。
+      你可以点赞（免费）、评论（1💎）、自己发帖（1💎）——整个世界都会回应你。
+   ② 语音消息：先看字幕，付 1💎 听原声（剧情里的语音、角色主动发来的语音、超级喜欢的打招呼语音）。
+   ③ 你的恋爱人格：按你在剧里的选择和说过的话，分 6 个维度分析；每读完一章解锁一项，读完整部拿到完整报告和分享卡片。
+   ④ 看得见的结果：每次选择后弹出变化卡片——好感 +8、上热搜第 3、粉丝 +1,204、新角色登场。
+   ⑤ 让 TA 主动找你：花 💎 为某个角色打开「主动联系」（永久），之后 TA 会在你不在时发来消息或语音，最多每天 2 条。
+   ⑥ 遇见：发现页的滑卡——左滑跳过、右滑开始聊天、⭐ 超级喜欢（TA 先发一条语音）。每天免费滑 30 次。 */
+const P96 = { comment: 1, post: 1, voice: 1, contact: 10, superlike: 2, swipes: 2, freeSwipes: 30 };
+const Z96 = () => CL() === "zh";
+const L96 = (zh, en) => Z96() ? zh : en;
+const now96 = () => Date.now();
+const fmtN96 = n => n >= 10000 ? (Z96() ? (n / 10000).toFixed(1) + "万" : (n / 1000).toFixed(1) + "K") : String(n);
+function hash96(s) { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) | 0; return Math.abs(h); }
+function nameOf96(cid) { const c = ch(cid); return c ? first(c.n) : ""; }
+function youName96(th) { const as = th && th.pk && th.pk.as; if (as && as !== "watch" && as !== "side" && ch(as)) return first(ch(as).n); try { const p = persona(); if (p && p.name) return p.name; } catch (_) {} return L96("你", "you"); }
+function recent96(th, n) {
+  return (th.msgs || []).slice(-(n || 16)).map(m => { const w = m.who === "me" ? youName96(th) : m.who === "n" || m.who === "sys" ? "" : nameOf96(m.who);
+    const x = String(m.txt || (m.parts || []).map(p => p.txt).join(" ") || "").replace(/\s+/g, " ").slice(0, 160); return x ? (w ? w + ": " : "") + x : ""; }).filter(Boolean).join("\n");
+}
+function castLine96(th) { return (th.cast || []).filter(c => ch(c)).map(c => { const x = ch(c); return first(x.n) + (Lz(x.role) ? "（" + Lz(x.role) + "）" : ""); }).join("、"); }
+async function ask96(p, max) { if (!liveOn()) throw { code: "na" }; return ask(p, { maxTokens: max || 900 }); }
+
+/* ================= ④ 变化卡片 ================= */
+function chg96(items) {
+  items = (items || []).filter(Boolean).slice(0, 4); if (!items.length) return;
+  const dev = $("#dev") || document.body; let box = $("#chg96"); if (!box) { box = document.createElement("div"); box.id = "chg96"; dev.appendChild(box); }
+  const el = document.createElement("div"); el.className = "chg96c"; el.innerHTML = items.map(x => '<div><i>' + x[0] + '</i><span>' + esc(x[1]) + '</span>' + (x[2] ? '<b class="' + (String(x[2])[0] === "-" ? "dn" : "up") + '">' + esc(x[2]) + '</b>' : '') + '</div>').join("");
+  box.appendChild(el); setTimeout(() => el.classList.add("out"), 2600); setTimeout(() => el.remove(), 3200);
+}
+/* love before → after around any choice */
+function loveSnap96(th) { const o = {}; (th.cast || []).forEach(c => o[c] = Math.round((th.love || {})[c] || 0)); return o; }
+function loveDiff96(th, before) {
+  const out = []; (th.cast || []).forEach(c => { if (!ch(c) || (th.pk && c === th.pk.as)) return; const d = Math.round((th.love[c] || 0) - (before[c] || 0)); if (d) out.push([d > 0 ? "💗" : "💔", L96(nameOf96(c) + " 好感", nameOf96(c) + " affection"), (d > 0 ? "+" : "") + d]); });
+  return out;
+}
+let PEND96 = null;
+document.addEventListener("click", e => {
+  if (!e.target.closest("[data-chatt],[data-pkpick],[data-stopline],[data-pkopt],[data-chq],[data-sg]")) return;
+  const th = S.threads[curT]; if (!th || !th.love) return; const before = loveSnap96(th), id = th.id; clearTimeout(PEND96);
+  PEND96 = setTimeout(() => { const t2 = S.threads[id]; if (t2) chg96(loveDiff96(t2, before)); }, 1800);
+}, true);
+/* a new face in the story */
+{ const _am = appendMsg; appendMsg = function (th, m) { const r = _am.apply(this, arguments);
+    try { if (th && th.pk && m && ch(m.who) && th.msgs.length > 3) { th.met96 = th.met96 || []; if (!th.met96.includes(m.who)) { const first0 = th.met96.length === 0; th.met96.push(m.who); if (!first0 && m.who !== th.pk.as && curT === th.id) chg96([["🔓", L96("新角色登场：" + nameOf96(m.who), "New character: " + nameOf96(m.who))]]); } } } catch (_) {}
+    return r; }; }
+
+/* ================= ① 圈内热搜 ================= */
+function feed96(th) { th.feed96 = th.feed96 || { posts: [], trends: [], fans: 1000 + (hash96(th.id) % 9000), unread: 0, platform: "" }; return th.feed96; }
+function platform96(w) { const s = (Lz(w && w.title) || "") + (Lz(w && w.premise) || ""); if (/王冠|王国|王储|Crown|kingdom/i.test(s)) return L96("王城传声板", "The Crier's Board"); if (/冰|hockey|球队|校园|campus/i.test(s)) return L96("校园圈", "Campus Buzz"); return L96("热搜", "Trending"); }
+async function gen96(th, event) {
+  const w = wd(th.wid); if (!w) return null; const F = feed96(th), zh = Z96();
+  const p = (zh ? "你是一个互动剧里的「剧中社交平台」编辑。为这部剧的世界生成一轮新的社交媒体内容，围绕玩家刚刚发生的剧情。玩家是主角，整个世界都在关注他/她。"
+               : "You write the in-world social feed for an interactive drama. Generate a fresh round of posts reacting to what just happened. The player is the protagonist; the whole world is watching them.")
+    + "\n\n" + (zh ? "剧名：" : "Story: ") + Lz(w.title) + "\n" + (zh ? "简介：" : "Premise: ") + (Lz(w.premise) || Lz(w.hook) || "") + "\n" + (zh ? "角色：" : "Cast: ") + castLine96(th) + "\n" + (zh ? "玩家扮演：" : "Player plays: ") + youName96(th)
+    + "\n" + (zh ? "刚刚发生：" : "Just happened: ") + (event || (zh ? "故事开篇" : "the story begins")) + "\n\n" + (zh ? "最近剧情：\n" : "Recent scene:\n") + recent96(th, 14)
+    + "\n\n" + (zh ? "要求：平台风格贴合世界观（现代娱乐圈像微博、校园像校园论坛、奇幻王国像王城告示板）。账号类型混合：media（营销号/媒体）、fan（粉丝/CP粉）、anti（黑粉/唯粉）、passerby（路人）、char（剧中角色本人，用角色真名，语气要像本人且话里有话）。每条不超过 60 字，口语、有梗、有情绪。至少一条提到玩家。热搜词 4 个，第一个最热。rankMe 是关于玩家的热搜排名（1-4），没有就 null。"
+           : "Rules: the platform fits the world (celebrity Weibo/X for modern showbiz, a campus forum for college, a town crier board for a fantasy kingdom). Mix account kinds: media, fan, anti, passerby, char (a cast member by their real name, in their voice, with subtext). Each post under 40 words, punchy, emotional. At least one post is about the player. 4 trending tags, hottest first. rankMe = rank (1-4) of the tag about the player, or null.")
+    + '\n\nReply with ONLY JSON: {"trends":["..."],"rankMe":2,"posts":[{"kind":"media|fan|anti|passerby|char","name":"display name","handle":"@id","text":"..."}]} — 5 to 7 posts, in ' + (zh ? "Simplified Chinese" : "English") + ".";
+  let r = null; try { r = await ask96(p, 1100); } catch (_) { return null; }
+  if (!r || !Array.isArray(r.posts)) return null;
+  const byName = {}; (th.cast || []).forEach(c => { if (ch(c)) { byName[first(ch(c).n)] = c; byName[ch(c).n] = c; } });
+  const posts = r.posts.slice(0, 7).map((x, i) => ({ id: "p" + now96() + i, kind: String(x.kind || "passerby"), name: String(x.name || "").slice(0, 24), handle: String(x.handle || "").slice(0, 24),
+    cid: x.kind === "char" ? (byName[x.name] || byName[first(x.name || "")] || null) : null, text: String(x.text || "").slice(0, 240), likes: 30 + (hash96(x.text) % (x.kind === "media" ? 90000 : 9000)), cm: [], at: now96() }));
+  F.posts = posts.concat(F.posts).slice(0, 60); if (Array.isArray(r.trends) && r.trends.length) F.trends = r.trends.slice(0, 4).map(String);
+  F.platform = F.platform || platform96(w); F.unread = (F.unread || 0) + posts.length;
+  const gain = 200 + (hash96(event || "") % 3000); F.fans += gain; save(); feedBadge96();
+  const rank = +r.rankMe; const items = [];
+  if (rank >= 1 && rank <= 4) items.push(["🔥", L96("你上了热搜第 " + rank, "You're trending #" + rank)]);
+  items.push(["👥", L96("粉丝", "Followers"), "+" + fmtN96(gain)]);
+  return items;
+}
+/* the chapter's key choice → the world reacts */
+{ const _pap = packAfterPick; packAfterPick = function (th, k) { const before = loveSnap96(th); const r = _pap.apply(this, arguments);
+    try { const w = wd(th.wid), n = th.pk.ch, c = w && w.pack.chapters[n - 1], x = c && (c.choices || []).find(y => y.k === k);
+      const items = loveDiff96(th, before); clearTimeout(PEND96);
+      const ev = (Z96() ? "第 " + n + " 章，玩家的关键选择：" : "Chapter " + n + ", the player's key choice: ") + (x ? Lz(x.t) : k);
+      gen96(th, ev).then(more => { chg96(items.concat(more || [])); }).catch(() => chg96(items)); } catch (_) {}
+    return r; }; }
+function feedBadge96() { const th = S.threads[curT], b = $("#fd96b"); if (!b || !th) return; const n = (th.feed96 && th.feed96.unread) || 0; const em = b.querySelector("em"); if (em) em.textContent = n ? (n > 99 ? "99+" : n) : ""; }
+function feedBtn96() { const th = S.threads[curT]; if (!th || !th.pk || !th.wid) return; const col = $("#s-chat .rcol"); if (!col || $("#fd96b")) return;
+  col.insertAdjacentHTML("afterbegin", '<button id="fd96b" class="histbtn" data-fd96="1"><i>🔥</i><small>' + esc(L96("热搜", "Trending")) + '</small><em></em></button>'); feedBadge96(); }
+{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { feedBtn96(); } catch (_) {} return r; }; }
+function postHTML96(p, th) {
+  const kindL = { media: L96("媒体", "Media"), fan: L96("粉丝", "Fan"), anti: L96("黑粉", "Hater"), passerby: L96("路人", "Passerby"), char: L96("本人", "Cast"), me: L96("你", "You") }[p.kind] || "";
+  const av = p.cid ? '<img src="' + esc(artSrc(p.cid)) + '" alt="">' : '<span style="background:hsl(' + (hash96(p.name) % 360) + ' 45% 38%)">' + esc((p.name || "?").slice(0, 1)) + '</span>';
+  return '<div class="fp96" data-pid="' + p.id + '"><div class="fa96">' + av + '</div><div class="grow"><div class="fh96"><b>' + esc(p.name) + '</b>' + (p.kind === "char" || p.kind === "me" ? '<i class="vf96">✓</i>' : '') + '<small>' + esc(p.handle || "") + '</small><em class="k-' + esc(p.kind) + '">' + esc(kindL) + '</em></div>' +
+    '<p>' + esc(p.text) + '</p>' + (p.cm && p.cm.length ? '<div class="fc96">' + p.cm.map(c => '<div><b>' + esc(c.name) + '：</b>' + esc(c.text) + '</div>').join("") + '</div>' : '') +
+    '<div class="fx96"><button data-fl96="' + p.id + '" class="' + (p.liked ? "on" : "") + '">♥ ' + fmtN96(p.likes + (p.liked ? 1 : 0)) + '</button><button data-fcm96="' + p.id + '">💬 ' + (p.cm ? p.cm.length : 0) + ' · ' + P96.comment + '💎</button></div></div></div>';
+}
+function openFeed96() {
+  const th = S.threads[curT]; if (!th) return; const F = feed96(th), w = wd(th.wid); F.platform = F.platform || platform96(w); F.unread = 0; save(); feedBadge96();
+  let el = $("#fd96"); if (!el) { el = document.createElement("div"); el.id = "fd96"; ($("#dev") || document.body).appendChild(el); }
+  el.innerHTML = '<div class="fdh96"><button data-fdx96="1" aria-label="close">✕</button><div class="grow"><b>' + esc(F.platform) + '</b><small>' + esc(Lz(w && w.title) || "") + ' · ' + L96("你的粉丝 ", "Your followers ") + fmtN96(F.fans) + '</small></div><button data-fdr96="1" class="fdr96">↻</button></div>' +
+    '<div class="fds96">' + (F.trends.length ? '<div class="ft96"><div class="ftt96">🔥 ' + L96("热搜榜", "Trending now") + '</div>' + F.trends.map((x, i) => '<div><i>' + (i + 1) + '</i><span>' + esc(x) + '</span>' + (i === 0 ? '<em>' + L96("爆", "HOT") + '</em>' : '') + '</div>').join("") + '</div>' : '') +
+    '<div class="fw96"><textarea id="fdt96" rows="2" maxlength="140" placeholder="' + esc(L96("以 " + youName96(th) + " 的身份发一条…全世界都会看到", "Post as " + youName96(th) + "… the whole world will see it")) + '"></textarea><button data-fdp96="1">' + L96("发布", "Post") + ' · ' + P96.post + '💎</button></div>' +
+    '<div id="fdl96">' + (F.posts.length ? F.posts.map(p => postHTML96(p, th)).join("") : '<p class="fe96">' + L96("世界还在醒来……", "The world is waking up…") + '</p>') + '</div></div>';
+  el.hidden = false;
+  if (!F.posts.length) refreshFeed96(L96("故事开篇，玩家刚刚登场", "The story begins; the player just arrived"));
+}
+async function refreshFeed96(ev) {
+  const th = S.threads[curT]; if (!th) return; const L = $("#fdl96"); if (L) L.insertAdjacentHTML("afterbegin", '<p class="fe96" id="fdw96">✨ ' + L96("正在刷新……", "Refreshing…") + '</p>');
+  const items = await gen96(th, ev || L96("玩家打开了社交平台，看看大家在聊什么", "The player opened the app to see what everyone's saying"));
+  const wv = $("#fdw96"); if (wv) wv.remove(); if (!items) { toast(L96("AI 现在不可用，稍后再试", "AI isn't available right now")); return; }
+  if ($("#fd96") && !$("#fd96").hidden) openFeed96(); chg96(items);
+}
+async function postFeed96() {
+  const th = S.threads[curT], ta = $("#fdt96"); if (!th || !ta) return; const txt = ta.value.trim(); if (txt.length < 2) return; if (!spend(P96.post, "card")) return;
+  const F = feed96(th); const p = { id: "m" + now96(), kind: "me", name: youName96(th), handle: "@" + L96("我", "me"), text: txt, likes: 0, cm: [], at: now96() };
+  F.posts.unshift(p); save(); openFeed96(); const items = await gen96(th, L96("玩家亲自发了一条动态：「" + txt + "」——大家都在回应这条", "The player posted: “" + txt + "” — everyone reacts to it"));
+  p.likes = 300 + (hash96(txt) % 20000); save(); if ($("#fd96") && !$("#fd96").hidden) openFeed96(); chg96([["❤️", L96("你的动态", "Your post"), "+" + fmtN96(p.likes)]].concat(items || []));
+}
+async function commentFeed96(pid) {
+  const th = S.threads[curT]; if (!th) return; const F = feed96(th), p = F.posts.find(x => x.id === pid); if (!p) return;
+  const txt = prompt(L96("回复 " + p.name + "：", "Reply to " + p.name + ":")); if (!txt || !txt.trim()) return; if (!spend(P96.comment, "card")) return;
+  p.cm = p.cm || []; p.cm.push({ name: youName96(th), text: txt.trim().slice(0, 140) }); save(); openFeed96();
+  try { const r = await ask96((Z96() ? "剧中社交平台。帖子：" : "In-world social feed. Post: ") + p.name + ": " + p.text + "\n" + (Z96() ? "玩家（" + youName96(th) + "）回复：" : "The player (" + youName96(th) + ") replied: ") + txt +
+      "\n" + (Z96() ? "角色：" : "Cast: ") + castLine96(th) + "\n" + (Z96() ? "写 2 条别人对玩家回复的回复（可以是原帖作者、粉丝或剧中角色），每条不超过 40 字。" : "Write 2 replies to the player's reply (the poster, a fan, or a cast member), each under 25 words.") +
+      '\nReply with ONLY JSON: {"replies":[{"name":"...","text":"..."}]} in ' + (Z96() ? "Simplified Chinese" : "English") + ".", 400);
+    (r && r.replies || []).slice(0, 2).forEach(x => p.cm.push({ name: String(x.name || "").slice(0, 24), text: String(x.text || "").slice(0, 160) })); p.likes += 50; save(); if ($("#fd96") && !$("#fd96").hidden) openFeed96(); } catch (_) {}
+}
+document.addEventListener("click", e => { let x;
+  if (e.target.closest("[data-fd96]")) { e.stopPropagation(); openFeed96(); return; }
+  if (e.target.closest("[data-fdx96]")) { const el = $("#fd96"); if (el) el.hidden = true; return; }
+  if (e.target.closest("[data-fdr96]")) { refreshFeed96(); return; }
+  if (e.target.closest("[data-fdp96]")) { postFeed96(); return; }
+  if ((x = e.target.closest("[data-fl96]"))) { const th = S.threads[curT]; const p = th && feed96(th).posts.find(y => y.id === x.dataset.fl96); if (p) { p.liked = !p.liked; save(); x.classList.toggle("on", p.liked); x.textContent = "♥ " + fmtN96(p.likes + (p.liked ? 1 : 0)); } return; }
+  if ((x = e.target.closest("[data-fcm96]"))) { commentFeed96(x.dataset.fcm96); return; }
+}, true);
+
+/* ================= ② 语音消息：先看字幕，付 💎 听原声 ================= */
+function vnHTML96(m, i) {
+  const dur = Math.max(3, Math.min(59, Math.round(String(m.txt || "").length / (Z96() ? 4.5 : 14))));
+  return '<div class="msg vn96' + (m.paid ? " paid" : "") + '">' + avatar(m.who, 32) + '<div class="vb96"><button data-vn96="' + i + '"><i>' + (m.paid ? "▶" : "🔒") + '</i><span class="wv96">' + "<s></s>".repeat(14) + '</span><em>' + dur + '″</em></button>' +
+    '<p>' + esc(m.txt || "") + '</p>' + (m.paid ? '' : '<small>' + L96("听 " + nameOf96(m.who) + " 的原声 · " + P96.voice + "💎", "Hear " + nameOf96(m.who) + "'s voice · " + P96.voice + "💎") + '</small>') + '</div></div>';
+}
+{ const _mh = msgHTML; msgHTML = function (m, i, th) { if (m && m.k === "vn96") return vnHTML96(m, i); return _mh.apply(this, arguments); }; }
+document.addEventListener("click", e => { const x = e.target.closest("[data-vn96]"); if (!x) return; e.stopPropagation();
+  const th = S.threads[curT]; const m = th && th.msgs[+x.dataset.vn96]; if (!m) return;
+  if (!m.paid) { if (!spend(P96.voice, "line")) return; m.paid = true; save(); try { renderChat(); } catch (_) {} }
+  try { speak(m.txt, m.who); } catch (_) {} }, true);
+/* the story's own voice moments: show the words first, the voice costs 💎 */
+STOP_PRICE.voice = P96.voice;
+{ const _sh = stopHTML; stopHTML = function (th) { let h = _sh.apply(this, arguments);
+    try { const b = th.pk.stop; if (b && b[1] === "voice" && b[2] && b[2].txt) h = h.replace('<div class="stwave">', '<p class="vt96">“' + esc(Lz(b[2].txt)) + '”</p><div class="stwave">'); } catch (_) {} return h; }; }
+
+/* ================= ⑤ 让 TA 主动找你（💎，永久） ================= */
+function pc96() { S.pc96 = S.pc96 || {}; return S.pc96; }
+function contactSheet96(cids) {
+  cids = (cids || []).filter(c => ch(c)); if (!cids.length) return;
+  sheet('<h2>💌 ' + L96("让 TA 主动找你", "Let them reach out") + '</h2><p class="xs faint" style="margin:4px 0 12px">' + L96("打开后，你不在的时候 TA 会主动发消息或语音给你（每天最多 2 条）。一次付费，永久有效。", "Once on, they'll message or send voice notes while you're away (up to 2 a day). Pay once, keep it forever.") + '</p><div class="stack" style="gap:8px">' +
+    cids.map(c => { const on = pc96()[c]; return '<div class="opt">' + avatar(c, 40) + '<span class="grow"><b>' + esc(nameOf96(c)) + '</b><span>' + esc(Lz(ch(c).role) || "") + '</span></span>' + (on ? '<span class="pill96">✓ ' + L96("已开启", "On") + '</span>' : '<button class="btn btn-p btn-sm" data-pc96="' + c + '">' + P96.contact + '💎</button>') + '</div>'; }).join("") + '</div>');
+}
+document.addEventListener("click", e => { const x = e.target.closest("[data-pc96]"); if (!x) return; const c = x.dataset.pc96; if (!spend(P96.contact, "card")) return;
+  pc96()[c] = { on: 1, since: now96(), last: 0, day: "", n: 0 }; save(); closeSheet(); chg96([["💌", L96(nameOf96(c) + " 会主动找你了", nameOf96(c) + " will reach out to you")]]); setTimeout(() => reach96(c, true), 4000); });
+function dmThread96(cid) { return S.threads["c:" + cid] || newThread("solo", cid); }
+async function reach96(cid, force) {
+  const o = pc96()[cid]; if (!o || !ch(cid)) return; const day = new Date().toDateString(); if (o.day !== day) { o.day = day; o.n = 0; }
+  if (!force && (o.n >= 2 || now96() - (o.last || 0) < 3 * 3600e3)) return;
+  const c = ch(cid), zh = Z96(), src = Object.values(S.threads).filter(t => (t.cast || []).includes(cid)).sort((a, b) => (b.at || 0) - (a.at || 0))[0];
+  let r = null; try { r = await ask96((zh ? "你是「" + c.n + "」，" + (Lz(c.role) || "") + "。" + (Lz(c.vibe) || Lz(c.looks) || "") + "\n你和对方最近的经历：\n" + (src ? recent96(src, 12) : "（刚认识）") +
+      "\n\n现在对方不在线，你主动给对方发一条消息：像真人一样自然、贴合人设、带一点想念或钩子，不超过 50 字。选择用文字还是语音（语音更亲密）。"
+    : "You are " + c.n + ", " + (Lz(c.role) || "") + ". " + (Lz(c.vibe) || Lz(c.looks) || "") + "\nWhat happened between you recently:\n" + (src ? recent96(src, 12) : "(you just met)") +
+      "\n\nThey're offline. Reach out first: natural, in character, a little longing or a hook, under 35 words. Choose text or a voice note (voice is more intimate).") +
+    '\nReply with ONLY JSON: {"kind":"text|voice","text":"..."} in ' + (zh ? "Simplified Chinese" : "English") + ".", 300); } catch (_) {}
+  const text = (r && r.text) || (zh ? ["在干嘛？", "刚刚路过那个地方，想起你了。", "今天的事……你还好吗？"] : ["What are you up to?", "Walked past that place and thought of you.", "About today… you okay?"])[hash96(cid + day) % 3];
+  const th = dmThread96(cid); const voice = r ? r.kind === "voice" : (hash96(text) % 2 === 0);
+  th.msgs.push(voice ? { who: cid, k: "vn96", txt: String(text).slice(0, 200), at: now96() } : { who: cid, k: "say", txt: String(text).slice(0, 200), at: now96() });
+  th.unread = true; th.at = now96(); o.last = now96(); o.n++; save();
+  banner96(cid, voice ? L96(nameOf96(cid) + " 给你发来一条语音", nameOf96(cid) + " sent you a voice note") : L96(nameOf96(cid) + "：" + text, nameOf96(cid) + ": " + text));
+}
+function banner96(cid, txt) {
+  const dev = $("#dev") || document.body; const b = document.createElement("button"); b.className = "bn96"; b.innerHTML = avatar(cid, 34) + '<span>' + esc(String(txt).slice(0, 60)) + '</span>';
+  b.onclick = () => { b.remove(); try { openThread("c:" + cid); } catch (_) {} }; dev.appendChild(b); setTimeout(() => b.classList.add("in"), 30); setTimeout(() => b.remove(), 7000);
+}
+function tick96() { try { Object.keys(pc96()).forEach((c, i) => setTimeout(() => reach96(c), 2500 + i * 4000)); } catch (_) {} }
+setTimeout(tick96, 6000); document.addEventListener("visibilitychange", () => { if (!document.hidden) tick96(); }); setInterval(tick96, 20 * 60e3);
+
+/* ================= ③ 你的恋爱人格 ================= */
+const DIMS96 = [["move", "主动出击", "Making the move"], ["true", "真实本色", "Being yourself"], ["line", "边界感", "Boundaries"], ["feel", "共情力", "Empathy"], ["dream", "浪漫想象", "Romantic imagination"], ["safe", "安全感", "Security"]];
+function done96(th) { const w = wd(th.wid); if (!w || !w.pack) return 0; const n = Object.keys((th.pk && th.pk.picks) || {}).length; return Math.min(n, (w.pack.chapters || []).length); }
+function total96(th) { const w = wd(th.wid); return (w && w.pack && w.pack.chapters.length) || 1; }
+async function lp96(th) {
+  const w = wd(th.wid), n = done96(th); if (!w || !n) return null; th.lp96 = th.lp96 || {}; if (th.lp96.n === n && th.lp96.dims) return th.lp96;
+  const picks = Object.entries(th.pk.picks || {}).map(([k, v]) => { const c = w.pack.chapters[k - 1], x = c && (c.choices || []).find(y => y.k === v); return (Z96() ? "第" + k + "章：" : "Ch" + k + ": ") + (x ? Lz(x.t) : v); }).join("\n");
+  const said = (th.msgs || []).filter(m => m.who === "me" && m.txt).slice(-25).map(m => "- " + String(m.txt).slice(0, 100)).join("\n");
+  const zh = Z96(); let r = null;
+  try { r = await ask96((zh ? "根据一位读者在互动恋爱剧《" + Lz(w.title) + "》里的选择和亲口说的话，分析 TA 在亲密关系里是怎样的人。温暖、具体、像懂 TA 的朋友，不要说教，不要做心理诊断。"
+                            : "From a reader's choices and own words in the interactive romance “" + Lz(w.title) + "”, describe who they are in love. Warm, specific, like a friend who gets them — no lecturing, no diagnosis.") +
+    "\n\n" + (zh ? "关键选择：\n" : "Key choices:\n") + picks + "\n\n" + (zh ? "TA 说过的话：\n" : "Things they said:\n") + (said || (zh ? "（很少打字）" : "(rarely typed)")) +
+    "\n\n" + (zh ? "6 个维度，每个给 0-100 分和一句 30 字以内的解读：" : "Six dimensions, each a 0-100 score and a reading under 20 words: ") + DIMS96.map(d => d[0] + "=" + (zh ? d[1] : d[2])).join(", ") +
+    '\nAlso a 4-character (or 2-3 word) love-type name and a one-line tagline.\nReply with ONLY JSON: {"type":"...","tagline":"...","dims":{"move":{"score":70,"text":"..."},...}} in ' + (zh ? "Simplified Chinese" : "English") + ".", 900); } catch (_) { return th.lp96.dims ? th.lp96 : null; }
+  if (!r || !r.dims) return th.lp96.dims ? th.lp96 : null;
+  th.lp96 = { n, type: String(r.type || "").slice(0, 20), tagline: String(r.tagline || "").slice(0, 80), dims: DIMS96.map(d => ({ k: d[0], score: Math.max(0, Math.min(100, +((r.dims[d[0]] || {}).score) || 50)), text: String((r.dims[d[0]] || {}).text || "").slice(0, 80) })) }; save(); return th.lp96;
+}
+async function lpSheet96(tid) {
+  const th = S.threads[tid]; if (!th) return; const w = wd(th.wid), n = done96(th), tot = total96(th), open = Math.min(6, Math.max(n, n >= tot ? 6 : 0) || n), full = n >= tot;
+  if (!n) { sheet('<h2>💘 ' + L96("你的恋爱人格", "Your love type") + '</h2><p class="dim" style="margin-top:8px">' + L96("读完第 1 章就能解锁第一项分析。", "Finish chapter 1 to unlock the first reading.") + '</p>'); return; }
+  sheet('<h2>💘 ' + L96("你的恋爱人格", "Your love type") + '</h2><p class="xs faint">' + esc(Lz(w.title)) + '</p><p class="fe96" id="lpw96">✨ ' + L96("正在读懂你……", "Reading you…") + '</p>');
+  const r = await lp96(th); const box = $(".sheet"); if (!box) return;
+  if (!r) { const x = $("#lpw96"); if (x) x.textContent = L96("AI 现在不可用，稍后再试", "AI isn't available right now"); return; }
+  const shown = Math.min(6, Math.max(1, Math.round(6 * n / tot)));
+  box.querySelector("#lpw96").outerHTML = (full ? '<div class="lpt96"><b>' + esc(r.type) + '</b><span>' + esc(r.tagline) + '</span></div>' : '<div class="lpt96 lk"><b>？？？？</b><span>' + L96("读完整部剧揭晓你的恋爱人格", "Finish the story to reveal your type") + '</span></div>') +
+    '<div class="lpd96">' + r.dims.map((d, i) => { const dn = DIMS96[i]; const ok = i < shown; return '<div class="' + (ok ? "" : "lk") + '"><div class="lph96"><b>' + esc(Z96() ? dn[1] : dn[2]) + '</b><em>' + (ok ? d.score : "🔒") + '</em></div><div class="lpb96"><i style="width:' + (ok ? d.score : 30) + '%"></i></div><p>' + (ok ? esc(d.text) : L96("再读 " + Math.ceil((i + 1) * tot / 6 - n) + " 章解锁", "Unlocks in " + Math.ceil((i + 1) * tot / 6 - n) + " more chapters")) + '</p></div>'; }).join("") + '</div>' +
+    (full ? '<button class="btn btn-p btn-block" data-lpshare96="' + esc(tid) + '">📤 ' + L96("生成分享卡片", "Make a share card") + '</button>' : '<p class="xs faint" style="text-align:center;margin-top:8px">' + L96("已读 " + n + " / " + tot + " 章 · 解锁 " + shown + " / 6 项", n + " / " + tot + " chapters · " + shown + " / 6 unlocked") + '</p>');
+}
+async function lpShare96(tid) {
+  const th = S.threads[tid], r = th && th.lp96, w = th && wd(th.wid); if (!r) return;
+  const cv = document.createElement("canvas"); cv.width = 1080; cv.height = 1440; const g = cv.getContext("2d");
+  const gr = g.createLinearGradient(0, 0, 1080, 1440); gr.addColorStop(0, "#2A1530"); gr.addColorStop(1, "#0C0B10"); g.fillStyle = gr; g.fillRect(0, 0, 1080, 1440);
+  try { const im = new Image(); im.crossOrigin = "anonymous"; im.src = artSrc(mainOf(th)); await new Promise(res => { im.onload = res; im.onerror = res; setTimeout(res, 2500); }); if (im.width) { g.globalAlpha = .35; g.drawImage(im, 0, 0, 1080, 1080 * im.height / im.width); g.globalAlpha = 1; } } catch (_) {}
+  const F = "-apple-system,'PingFang SC',sans-serif"; g.fillStyle = "#F6D3AE"; g.font = "600 40px " + F; g.fillText(L96("我的恋爱人格", "My love type"), 80, 140);
+  g.fillStyle = "#fff"; g.font = "800 110px " + F; g.fillText(r.type, 80, 280); g.font = "400 40px " + F; g.fillStyle = "#E9E4EE"; g.fillText(r.tagline.slice(0, 26), 80, 350);
+  r.dims.forEach((d, i) => { const y = 470 + i * 140; g.fillStyle = "#fff"; g.font = "700 42px " + F; g.fillText(Z96() ? DIMS96[i][1] : DIMS96[i][2], 80, y); g.fillText(String(d.score), 920, y);
+    g.fillStyle = "rgba(255,255,255,.15)"; g.fillRect(80, y + 22, 920, 18); const bg = g.createLinearGradient(80, 0, 1000, 0); bg.addColorStop(0, "#F0B77E"); bg.addColorStop(1, "#EE6F97"); g.fillStyle = bg; g.fillRect(80, y + 22, 920 * d.score / 100, 18); });
+  g.fillStyle = "#9C93A6"; g.font = "400 34px " + F; g.fillText(L96("来自《" + Lz(w.title) + "》· MIRU", "From “" + Lz(w.title) + "” · MIRU"), 80, 1370);
+  const url = cv.toDataURL("image/png");
+  try { const blob = await (await fetch(url)).blob(); const file = new File([blob], "miru-love-type.png", { type: "image/png" }); if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "MIRU" }); return; } } catch (_) {}
+  sheet('<h2>📤 ' + L96("长按图片保存或分享", "Long-press to save or share") + '</h2><img src="' + url + '" style="width:100%;border-radius:16px;margin-top:10px" alt=""><a class="btn btn-p btn-block" style="margin-top:10px" download="miru-love-type.png" href="' + url + '">' + L96("保存图片", "Save image") + '</a>');
+}
+function lpList96() {
+  const L = Object.values(S.threads).filter(t => t.pk && t.wid && wd(t.wid)).sort((a, b) => (b.at || 0) - (a.at || 0));
+  sheet('<h2>💘 ' + L96("你的恋爱人格", "Your love type") + '</h2><p class="xs faint" style="margin:4px 0 10px">' + L96("每读完一章解锁一项，读完整部剧拿到完整报告。", "Each chapter unlocks a reading; finish a story for the full report.") + '</p><div class="stack" style="gap:8px">' +
+    (L.length ? L.map(t => '<button class="opt" data-lp96="' + esc(t.id) + '"><span class="ic">📖</span><span class="grow"><b>' + esc(Lz(wd(t.wid).title)) + '</b><span>' + done96(t) + ' / ' + total96(t) + L96(" 章", " chapters") + (t.lp96 && t.lp96.type && done96(t) >= total96(t) ? ' · ' + esc(t.lp96.type) : '') + '</span></span>›</button>').join("") : '<p class="dim">' + L96("先去读一部剧吧。", "Start a story first.") + '</p>') + '</div>');
+}
+document.addEventListener("click", e => { let x;
+  if ((x = e.target.closest("[data-lp96]"))) { lpSheet96(x.dataset.lp96); return; }
+  if ((x = e.target.closest("[data-lpshare96]"))) { lpShare96(x.dataset.lpshare96); return; }
+  if (e.target.closest("[data-lplist96]")) { lpList96(); return; }
+  if ((x = e.target.closest("[data-pcs96]"))) { const th = S.threads[curT]; closeSheet(); setTimeout(() => contactSheet96(th ? th.cast.filter(c => !(th.pk && c === th.pk.as)) : [x.dataset.pcs96]), 150); return; }
+});
+/* chapter finished → a nudge to the reading */
+{ const _ap = packAfterPick; packAfterPick = function (th) { const r = _ap.apply(this, arguments); try { const n = done96(th); if (n && curT === th.id) setTimeout(() => chg96([["💘", L96("恋爱人格解锁新一项", "A new love-type reading unlocked")]]), 3400); } catch (_) {} return r; }; }
+/* chat menu ⋯: love type · let them reach out */
+{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
+    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r;
+      st.insertAdjacentHTML("afterbegin", (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
+        '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>'); } catch (_) {}
+    return r; }; }
+/* Me page entry */
+{ const _rm = renderMe; renderMe = function (v) { const r = _rm.apply(this, arguments);
+    try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".lp96me")) { const at = host.querySelector(".me95"); const h = '<button class="card lp96me" data-lplist96="1"><span style="font-size:26px">💘</span><span class="grow"><b>' + L96("你的恋爱人格", "Your love type") + '</b><span class="xs dim">' + L96("从你在剧里的每个选择，看见你是怎样爱人的", "See how you love, from every choice you've made") + '</span></span>›</button>'; if (at) at.insertAdjacentHTML("beforebegin", h); else host.insertAdjacentHTML("beforeend", h); } } catch (_) {}
+    return r; }; }
+
+/* ================= ⑥ 遇见：滑卡 ================= */
+function sw96() { S.sw96 = S.sw96 || { day: "", used: 0, extra: 0, seen: [], liked: [] }; const d = new Date().toDateString(); if (S.sw96.day !== d) { S.sw96.day = d; S.sw96.used = 0; S.sw96.extra = 0; } return S.sw96; }
+function deck96() {
+  const st = sw96(), pool = allChars().filter(id => { const c = ch(id); if (!c || !artSrc(id)) return false; const w = wd(c.w); if (w && typeof orOK === "function" && !orOK(w)) return false; return !st.seen.includes(id); });
+  if (!pool.length) { st.seen = []; save(); return allChars().filter(id => ch(id)).slice(0, 40); }
+  return pool.sort((a, b) => hash96(a + st.day) - hash96(b + st.day)).slice(0, 40);
+}
+function cardHTML96(id) {
+  const c = ch(id), w = wd(c.w), tags = ((w && w.tags) || []).slice(0, 3);
+  return '<div class="sc96" data-sc96="' + esc(id) + '"><img src="' + esc(artSrc(id)) + '" alt="" draggable="false"><div class="sci96"><b>' + esc(first(c.n)) + (c.age ? '<small>' + c.age + '</small>' : '') + '</b><span>' + esc(Lz(c.role) || "") + '</span><p>' + esc((Lz(c.pitch) || Lz(c.vibe) || "").slice(0, 70)) + '</p><div>' + tags.map(x => '<i>' + esc(typeof TAG_ZH !== "undefined" && Z96() && TAG_ZH[x] ? TAG_ZH[x] : x) + '</i>').join("") + '</div></div><em class="lk96">LIKE</em><em class="np96">NOPE</em></div>';
+}
+let DECK96 = [];
+function openSwipe96() {
+  DECK96 = deck96(); let el = $("#sw96"); if (!el) { el = document.createElement("div"); el.id = "sw96"; ($("#dev") || document.body).appendChild(el); }
+  el.hidden = false; renderSwipe96();
+}
+function swLeft96() { const st = sw96(); return Math.max(0, P96.freeSwipes + st.extra - st.used); }
+function renderSwipe96() {
+  const el = $("#sw96"); if (!el) return; const left = swLeft96();
+  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>' + L96("今日剩余 ", "Left today ") + left + '</small></div><div class="swd96">' +
+    (left <= 0 ? '<div class="swo96"><p>' + L96("今天的免费滑动用完了", "You're out of swipes for today") + '</p><button class="btn btn-p" data-swmore96="1">' + L96("再滑 30 次 · ", "30 more swipes · ") + P96.swipes + '💎</button></div>'
+      : DECK96.slice(0, 2).reverse().map(cardHTML96).join("")) + '</div>' +
+    '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥</button></div>';
+  wireSwipe96();
+}
+function wireSwipe96() {
+  const top = $("#sw96 .sc96:last-child"); if (!top) return; let x0 = 0, dx = 0, on = false;
+  top.onpointerdown = e => { on = true; x0 = e.clientX; top.setPointerCapture(e.pointerId); top.style.transition = "none"; };
+  top.onpointermove = e => { if (!on) return; dx = e.clientX - x0; top.style.transform = "translateX(" + dx + "px) rotate(" + dx / 18 + "deg)"; top.classList.toggle("l", dx > 40); top.classList.toggle("r", dx < -40); };
+  top.onpointerup = () => { if (!on) return; on = false; top.style.transition = ""; if (dx > 110) swipe96("like"); else if (dx < -110) swipe96("nope"); else { top.style.transform = ""; top.classList.remove("l", "r"); } dx = 0; };
+}
+async function swipe96(kind) {
+  const id = DECK96[0]; if (!id) return; if (swLeft96() <= 0) { renderSwipe96(); return; }
+  if (kind === "super" && !spend(P96.superlike, "card")) return;
+  const st = sw96(); st.used++; st.seen.push(id); if (st.seen.length > 400) st.seen = st.seen.slice(-200); save();
+  const top = $("#sw96 .sc96:last-child"); if (top) { top.style.transform = "translateX(" + (kind === "nope" ? -600 : 600) + "px) rotate(" + (kind === "nope" ? -25 : 25) + "deg)"; top.style.opacity = "0"; }
+  DECK96.shift(); if (!DECK96.length) DECK96 = deck96();
+  if (kind === "nope") { setTimeout(renderSwipe96, 260); return; }
+  st.liked.push(id); save(); const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
+  if (kind === "super") { const c = ch(id); const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
+  setTimeout(() => matchSheet96(id, kind === "super"), 280);
+}
+function matchSheet96(id, sup) {
+  const el = $("#sw96 .swd96"); if (!el) return;
+  el.innerHTML = '<div class="mt96"><b>' + (sup ? "⭐ " : "") + L96("匹配成功！", "It's a match!") + '</b><div class="mta96">' + meAv(84) + avatar(id, 84) + '</div><p>' + L96(nameOf96(id) + " 也在等你开口。", nameOf96(id) + " is waiting for you to say something.") + '</p><button class="btn btn-p btn-block" data-swchat96="' + esc(id) + '">💬 ' + L96("开始聊天", "Say hi") + '</button><button class="lnk" data-swgo96="1">' + L96("继续滑", "Keep swiping") + '</button></div>';
+}
+document.addEventListener("click", e => { let x;
+  if (e.target.closest("[data-swopen96]")) { openSwipe96(); return; }
+  if (e.target.closest("[data-swx96]")) { const el = $("#sw96"); if (el) el.hidden = true; return; }
+  if (e.target.closest("[data-swn96]")) { swipe96("nope"); return; }
+  if (e.target.closest("[data-swy96]")) { swipe96("like"); return; }
+  if (e.target.closest("[data-sws96]")) { swipe96("super"); return; }
+  if (e.target.closest("[data-swgo96]")) { renderSwipe96(); return; }
+  if (e.target.closest("[data-swmore96]")) { if (!spend(P96.swipes, "card")) return; sw96().extra += 30; save(); renderSwipe96(); return; }
+  if ((x = e.target.closest("[data-swchat96]"))) { const id = x.dataset.swchat96; const el = $("#sw96"); if (el) el.hidden = true; dmThread96(id); try { openThread("c:" + id); } catch (_) {} return; }
+}, true);
+/* Discover: entry banner */
+{ const _dm = discMain; discMain = function () { let h = _dm.apply(this, arguments);
+    try { h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + allChars().filter(id => ch(id)).slice(0, 3).map(id => '<img src="' + esc(artSrc(id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + L96("左滑跳过，右滑开始聊天", "Swipe left to pass, right to start chatting") + '</span></span>›</button>' + h; } catch (_) {}
+    return h; }; }
+
+(function () { const st = document.createElement("style"); st.textContent = `
+#chg96{position:absolute;left:0;right:0;top:86px;z-index:80;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.chg96c{background:rgba(20,16,26,.92);border:1px solid rgba(240,183,126,.45);border-radius:16px;padding:8px 14px;box-shadow:0 10px 30px #0008;animation:chg96 .35s ease;display:grid;gap:4px;min-width:200px;transition:opacity .5s,transform .5s}
+.chg96c.out{opacity:0;transform:translateY(-10px)}.chg96c div{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#fff}.chg96c i{font-style:normal}.chg96c span{flex:1}.chg96c b.up{color:#7FE0A8}.chg96c b.dn{color:#FF8A8A}
+@keyframes chg96{from{opacity:0;transform:translateY(-14px) scale(.96)}}
+#fd96,#sw96{position:absolute;inset:0;z-index:70;background:#0C0B10;display:flex;flex-direction:column}#fd96[hidden],#sw96[hidden]{display:none}
+.fdh96{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;border-bottom:1px solid rgba(255,255,255,.08)}.fdh96 button{background:none;border:0;color:#fff;font-size:20px;width:36px}.fdh96 b{display:block;font-size:16px}.fdh96 small{color:#9C93A6;font-size:12px}
+.fds96{flex:1;overflow-y:auto;padding:10px 12px 30px}.ft96{background:rgba(255,255,255,.05);border-radius:14px;padding:10px 12px;margin-bottom:10px}.ftt96{font-weight:800;font-size:13px;color:#FF9A6B;margin-bottom:6px}
+.ft96>div:not(.ftt96){display:flex;gap:10px;align-items:center;padding:5px 0;font-size:14px}.ft96 i{font-style:normal;color:#F0B77E;font-weight:800;width:16px}.ft96 span{flex:1}.ft96 em{font-style:normal;font-size:10px;background:#EE4F6F;color:#fff;border-radius:4px;padding:1px 4px}
+.fw96{display:flex;gap:8px;align-items:flex-end;margin-bottom:10px}.fw96 textarea{flex:1;border-radius:12px;padding:9px 10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#fff;font-size:14px;resize:none}.fw96 button{border:0;border-radius:999px;padding:9px 14px;font-weight:800;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017;font-size:13px}
+.fp96{display:flex;gap:10px;padding:12px 2px;border-bottom:1px solid rgba(255,255,255,.06)}.fa96 img,.fa96 span{width:40px;height:40px;border-radius:50%;object-fit:cover;display:grid;place-items:center;color:#fff;font-weight:800}
+.fh96{display:flex;align-items:center;gap:5px;flex-wrap:wrap}.fh96 b{font-size:14px}.fh96 small{color:#8A8194;font-size:12px}.fh96 em{font-style:normal;font-size:10px;padding:1px 6px;border-radius:999px;background:rgba(255,255,255,.08);color:#C9C1D2;margin-left:auto}.fh96 em.k-char,.fh96 em.k-me{background:rgba(240,183,126,.2);color:#F6D3AE}.fh96 em.k-anti{background:rgba(255,90,90,.15);color:#FF9C9C}.vf96{font-style:normal;color:#6FB6FF;font-size:12px}
+.fp96 p{margin:4px 0 6px;font-size:14.5px;line-height:1.5;color:#EDE8F2}.fc96{background:rgba(255,255,255,.04);border-radius:10px;padding:6px 9px;font-size:13px;color:#CFC7D8;display:grid;gap:3px;margin-bottom:6px}.fc96 b{color:#fff}
+.fx96{display:flex;gap:16px}.fx96 button{background:none;border:0;color:#9C93A6;font-size:12.5px;padding:0}.fx96 button.on{color:#FF6F91}.fe96{color:#9C93A6;text-align:center;font-size:13px;margin:16px 0}
+.vn96{display:flex;gap:8px;align-items:flex-start;margin:6px 0}.vb96{max-width:76%;background:rgba(24,20,32,.88);border-radius:16px;padding:9px 12px;border:1px solid rgba(255,255,255,.08)}.vb96 button{display:flex;align-items:center;gap:8px;background:none;border:0;color:#fff;padding:0;width:100%}
+.vb96 button i{font-style:normal;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017;font-size:12px}.wv96{display:flex;gap:2px;align-items:center;flex:1}.wv96 s{display:block;width:3px;border-radius:2px;background:#F6D3AE;height:8px}.wv96 s:nth-child(3n){height:16px}.wv96 s:nth-child(4n){height:11px}.vb96 em{font-style:normal;font-size:12px;color:#9C93A6}
+.vb96 p{margin:6px 0 0;font-size:13.5px;color:#D7CFE0;line-height:1.5}.vb96 small{display:block;margin-top:4px;color:#F0B77E;font-size:11.5px}.vt96{margin:0 0 6px;font-size:14px;color:#fff;line-height:1.5}
+.bn96{position:absolute;left:12px;right:12px;top:-80px;z-index:90;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:16px;background:rgba(28,22,36,.96);border:1px solid rgba(240,183,126,.4);color:#fff;text-align:left;font-size:14px;transition:top .35s;box-shadow:0 10px 30px #0009}.bn96.in{top:calc(10px + env(safe-area-inset-top,0px))}
+.pill96{font-size:12px;color:#7FE0A8}
+.lpt96{text-align:center;margin:14px 0 6px}.lpt96 b{display:block;font-size:30px;background:linear-gradient(135deg,#F0B77E,#EE6F97);-webkit-background-clip:text;color:transparent}.lpt96 span{color:#CFC7D8;font-size:13px}.lpt96.lk b{color:#6B6375;background:none}
+.lpd96{display:grid;gap:12px;margin:14px 0}.lpd96 .lk{opacity:.55}.lph96{display:flex;justify-content:space-between;font-size:14px}.lph96 em{font-style:normal;color:#F6D3AE;font-weight:800}.lpb96{height:8px;background:rgba(255,255,255,.1);border-radius:6px;margin:5px 0}.lpb96 i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#F0B77E,#EE6F97)}.lpd96 .lk .lpb96 i{background:rgba(255,255,255,.18)}.lpd96 p{margin:0;font-size:12.5px;color:#BDB4C7}
+.lp96me{display:flex;gap:12px;align-items:center;width:100%;text-align:left;margin-top:14px}.lp96me b{display:block}
+.sw96e{display:flex;gap:12px;align-items:center;width:100%;text-align:left;margin:0 0 14px;padding:12px 14px;border-radius:18px;border:1px solid rgba(238,111,151,.35);background:linear-gradient(135deg,rgba(238,111,151,.16),rgba(240,183,126,.10));color:#fff}.sw96e b{display:block;font-size:15px}.sw96e .grow span{font-size:12px;color:#CFC7D8}.sw96ea{display:flex}.sw96ea img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #0C0B10;margin-left:-10px}.sw96ea img:first-child{margin-left:0}
+.swh96{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 8px}.swh96 button{background:none;border:0;color:#fff;font-size:20px}.swh96 b{flex:1;font-size:16px}.swh96 small{color:#9C93A6}
+.swd96{flex:1;position:relative;margin:4px 14px}.sc96{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#1A1622;touch-action:none;transition:transform .3s,opacity .3s;box-shadow:0 14px 40px #0009}.sc96 img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.sci96{position:absolute;left:0;right:0;bottom:0;padding:60px 18px 18px;background:linear-gradient(transparent,rgba(0,0,0,.85))}.sci96 b{font-size:28px;display:flex;align-items:baseline;gap:8px}.sci96 b small{font-size:20px;font-weight:400}.sci96 span{display:block;color:#F6D3AE;font-size:14px}.sci96 p{margin:6px 0 8px;font-size:14px;color:#E9E4EE;line-height:1.45}.sci96 i{font-style:normal;font-size:11.5px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.14);margin-right:5px}
+.lk96,.np96{position:absolute;top:28px;font-style:normal;font-weight:900;font-size:30px;padding:4px 12px;border:4px solid;border-radius:10px;opacity:0;transition:opacity .15s}.lk96{left:20px;color:#7FE0A8;transform:rotate(-14deg)}.np96{right:20px;color:#FF6F7F;transform:rotate(14deg)}.sc96.l .lk96,.sc96.r .np96{opacity:1}
+.swb96{display:flex;justify-content:center;gap:22px;padding:14px 0 calc(16px + env(safe-area-inset-bottom,0px))}.swb96 button{width:62px;height:62px;border-radius:50%;border:0;font-size:26px;display:grid;place-items:center;background:#1E1A26;color:#fff;box-shadow:0 6px 18px #0008}.swb96 .n{color:#FF6F7F}.swb96 .y{color:#7FE0A8}.swb96 .s{color:#6FB6FF;width:52px;height:52px;align-self:center;font-size:20px;line-height:1}.swb96 .s small{font-size:10px;color:#9C93A6}
+.swo96,.mt96{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}.mt96 b{font-size:30px;background:linear-gradient(135deg,#F0B77E,#EE6F97);-webkit-background-clip:text;color:transparent}.mta96{display:flex;gap:-10px}.mta96 .av{margin:0 -8px;border:3px solid #0C0B10}.mt96 p{color:#CFC7D8}.mt96 .btn{max-width:260px}.mt96 .lnk{background:none;border:0;color:#9C93A6}`; document.head.appendChild(st); })();
+
+/* ================= v6.3 · 自由模式（角色智能体）+ 电话开关 =================
+   自由模式（先在《王不见王》试点）：
+   · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘密）+ 自己的记忆。
+     角色只知道自己在场时发生的事；不知道剧情走向，也不知道你心里在想什么。
+   · 一个看不见的「导演」：只知道世界设定和「这一章必须发生的几件事」（锚点，取自编剧原剧本的场景），不知道结局。
+     它根据你的言行决定下一场戏、谁出场、谁接话，然后把每个角色的「意图」交给角色本人去说。
+   · 每一轮：你 → 导演 → 1~3 个角色依次开口（可以互相接话）→ 停下来等你。好感、记忆、结局都由你一路的言行决定。
+   · 编剧写好的台词变成角色的「语气参考」，不再照念。场景背景、剧情 CG 跟着锚点出现；热搜、恋爱人格照常可用。
+   电话开关：古风 / 奇幻题材不出现电话——顶部 📞 隐藏，剧本里的来电改成普通对话场景（《王冠的最后誓言》默认关闭）。 */
+const AG97 = { works: ["w_scmvgzd2sneff0fa38ae"], noCall: ["w_scmvgzcvbef7c6a40707"] };
+const Z97 = () => CL() === "zh";
+const L97 = (zh, en) => Z97() ? zh : en;
+
+/* ================= 电话开关 ================= */
+function callsOK97(th) {
+  const w = th && th.wid && wd(th.wid); if (!w) return true;
+  if (w.calls === false) return false; if (AG97.noCall.includes(w.community)) return false;
+  const tags = (w.tags || []).join(" "); return !/Romantasy|Fae|Fantasy|Historical|Regency|Medieval|Dragon|Royal Court|古风|奇幻/i.test(tags);
+}
+{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments);
+    try { const th = S.threads[curT]; if (th && !callsOK97(th)) document.querySelectorAll("#s-chat .callbtn").forEach(b => b.remove()); } catch (_) {} return r; }; }
+{ const _sc = startCall; startCall = function (cid) { const th = S.threads[curT]; if (th && !callsOK97(th)) { toast(L97("这个世界没有电话。", "There are no phones in this world.")); return; } return _sc.apply(this, arguments); }; }
+/* a scripted call in a no-phone world plays as an ordinary scene */
+{ const _sa = stopAuto; stopAuto = function (th, b) {
+    if (b && b[1] === "call" && !callsOK97(th)) { const d = b[2] || {}; const out = []; if (d.hint) out.push(["n", "act", Lz(d.hint).replace(/传声铜镜|铜镜|电话|来电/g, L97("夜色", "the night"))]);
+      (d.lines || []).forEach(([cid, t]) => out.push([cid, "say", t])); return out; }
+    return _sa.apply(this, arguments); }; }
+
+/* ================= 自由模式 ================= */
+const CARD97 = {
+  "陆识野": { zh: { voice: "话少，句子短，能用动作就不用嘴；从不叫她的名字；被逼急了反而更安静。", want: "让这部电影成为两个人都站得住的作品，而不是谁压谁。", fear: "被说成靠资本压人；在人前失控。", secret: "那块慢十二分钟的旧表，是他刻意不调的。他不会主动解释。" },
+             en: { voice: "Few words, short sentences, acts instead of talking; never says her name; gets quieter when pushed.", want: "A film both leads can stand on, not one where somebody wins.", fear: "Being called the one who bought his way to the top; losing control in public.", secret: "He keeps the old watch twelve minutes slow on purpose. He won't explain it unasked." } },
+  "方叙": { zh: { voice: "语速快，句句在算账，电话不离手，笑着说狠话。", want: "话题、票房，番位之争对他是流量。", fear: "项目黄掉。", secret: "他给两边团队都留了退路，谁赢他都不亏。" },
+           en: { voice: "Fast, always doing the math, phone glued to his ear, says harsh things with a smile.", want: "Buzz and box office; the billing fight is free publicity to him.", fear: "The project collapsing.", secret: "He left both camps a way out; whoever wins, he doesn't lose." } },
+  "林小满": { zh: { voice: "急性子、护短，句尾爱带吐槽，紧张时语速更快。", want: "护住你，不让你被欺负，也不让你冲动。", fear: "你在镜头前吃亏。", secret: "她手里有一份对方团队的黑稿，一直压着没用。" },
+             en: { voice: "Quick-tempered, fiercely protective, ends sentences with a jab, talks faster when nervous.", want: "To shield you — from them, and from your own temper.", fear: "You getting burned on camera.", secret: "She's sitting on a hit piece about the other team and hasn't used it." } },
+  "老周": { zh: { voice: "慢，惜字如金，口头禅是「再来一条」，偶尔一句话点破所有人。", want: "拍出真东西，不管谁在海报上面。", fear: "演员在戏里撒谎。", secret: "他选你们俩，是因为多年前看过一段你们各自的试镜录像。" },
+           en: { voice: "Slow, economical, “one more take” is his catchphrase; now and then one line cuts through everyone.", want: "Something true on film, whoever tops the poster.", fear: "Actors lying on camera.", secret: "He cast you both because of two old audition tapes he watched years ago." } },
+  "顾母": { zh: { voice: "话不多，关心都藏在唠叨里，总在新闻之后才打电话。", want: "你别受委屈。", fear: "你一个人扛。", secret: "她其实每部戏都看了三遍。" },
+           en: { voice: "Says little; her care hides inside nagging; only calls after the news breaks.", want: "For you not to get hurt.", fear: "You carrying everything alone.", secret: "She has watched every one of your films three times." } }
+};
+function key97(c) { return (c && c.n94 && c.n94.zh) || (c && c.n) || ""; }
+function card97(cid) { const c = ch(cid); const k = CARD97[key97(c)]; return k ? (Z97() ? k.zh : k.en) : null; }
+function agOn97(w) { return w && (AG97.works.includes(w.community) || w.agent97); }
+function yid97(w) { return w && w.you94; }
+function anchors97(w, n) {
+  const c = w.pack.chapters[n - 1]; if (!c) return [];
+  const out = []; let cur = null;
+  (c.beats.zh || []).forEach((b, i) => { if (!Array.isArray(b)) return; const en = (c.beats.en || [])[i];
+    if (b[0] === "sys" && b[1] === "scene") { cur = { place: (Z97() || !en ? b[2].place : (en[2] || {}).place) || b[2].place || "", img: b[2].img || "", bgm: null, cap: "", idx: out.length + 1 }; out.push(cur); return; }
+    if (!cur) return;
+    if (b[0] === "sys" && b[1] === "bgm" && !cur.bgm) cur.bgm = (b[2] || {}).m;
+    if (b[0] === "sys" && b[1] === "cg94") { cur.cg = b[2].slot; cur.cap = (Z97() || !en ? b[2].cap : (en[2] || {}).cap) || b[2].cap || ""; }
+  });
+  return out;
+}
+function voiceRef97(w, n, cid) {
+  const c = w.pack.chapters[n - 1]; if (!c) return []; const side = Z97() ? c.beats.zh : (c.beats.en || c.beats.zh);
+  return (side || []).filter(b => Array.isArray(b) && b[0] === cid && b[1] === "say" && typeof b[2] === "string").map(b => b[2]).slice(0, 5);
+}
+function newAgentThread97(wid) {
+  const w = wd(wid), now = Date.now(), you = yid97(w);
+  const cast = w.cast.filter(c => c !== you && ch(c) && !/^(医院|Hospital)$/.test(key97(ch(c))));
+  const th = { id: "a:" + wid + ":" + now, kind: "group", wid, cast, title: Lz(w.title), msgs: [], love: {}, rounds: 0, status: { time: "", place: "", mood: {} }, tasks: {}, mem: [], created: now, at: now,
+    setting: "", you: Lz(w.you) || "", agent97: { ch: 1, turns: 0, hit: [], cards: {}, sum: [], ended: false } };
+  cast.forEach(c => { loveWrite(th, c, 0, "agent97:init", {absolute:5}); th.agent97.cards[c] = { mem: [] }; });
+  th.persona = Object.assign({}, persona()); S.threads[th.id] = th; save(); return th;
+}
+function youName97(th) { const w = wd(th.wid), y = yid97(w); return (y && ch(y) && first(ch(y).n)) || L97("你", "you"); }
+function line97(th, m) {
+  const who = m.who === "me" ? youName97(th) : m.who === "n" || m.who === "sys" ? "" : (ch(m.who) ? first(ch(m.who).n) : "");
+  if (m.who === "me" && m.k === "think") return ""; /* your thoughts are yours */
+  const x = String(m.txt || "").replace(/\s+/g, " ").slice(0, 200); if (!x || m.k === "card" || m.k === "img") return "";
+  return who ? who + (m.k === "act" ? L97("（动作）", " (action)") : "") + ": " + x : L97("［场景］", "[scene] ") + x;
+}
+function tail97(th, n) { return th.msgs.slice(-(n || 18)).map(m => line97(th, m)).filter(Boolean).join("\n"); }
+function stageWord97(v) { return v >= 80 ? L97("深深在意", "deeply attached") : v >= 55 ? L97("心动", "drawn in") : v >= 30 ? L97("开始在意", "starting to care") : v >= 12 ? L97("有点好奇", "curious") : L97("戒备 / 不熟", "guarded / strangers"); }
+
+async function director97(th, act) {
+  const w = wd(th.wid), A = th.agent97, n = A.ch, tot = w.pack.chapters.length, an = anchors97(w, n), c = w.pack.chapters[n - 1], zh = Z97();
+  const castL = th.cast.map(id => { const x = ch(id), k = card97(id); return "- id=" + id + " · " + first(x.n) + "（" + (Lz(x.role) || "") + "）" + (Lz(x.looks) ? "：" + Lz(x.looks).slice(0, 80) : "") + (k ? (zh ? " 想要：" : " Wants: ") + k.want : ""); }).join("\n");
+  const anL = an.map(a => a.idx + ". " + a.place + (a.cap ? " — " + a.cap.slice(0, 50) : "") + (A.hit.includes(a.idx) ? (zh ? "（已发生）" : " (done)") : "")).join("\n");
+  const rel = th.cast.map(id => first(ch(id).n) + " " + Math.round(th.love[id] || 0) + "/100").join("，");
+  const last = n === tot;
+  const p = (zh ? "你是互动剧的隐形导演。你不替任何人说话，只安排下一刻：在哪、谁在场、谁开口、他们此刻想干什么。玩家是主角，世界围着玩家的言行转。你不知道结局，也不预设剧情走向；玩家的选择必须真的改变接下来发生的事。"
+                : "You are the invisible director of an interactive drama. You never speak for anyone; you only decide the next moment: where, who's present, who speaks, what they want right now. The player is the protagonist and the world turns on what they do. You don't know the ending and don't pre-plan it; the player's choices must genuinely change what happens next.") +
+    "\n\n" + (zh ? "故事：" : "Story: ") + Lz(w.title) + " — " + (Lz(w.premise) || "") +
+    "\n" + (zh ? "玩家扮演：" : "The player is: ") + youName97(th) + (Lz(w.you) ? "（" + Lz(w.you) + "）" : "") +
+    "\n" + (zh ? "角色（只有这些 id 能开口）：\n" : "Cast (only these ids may speak):\n") + castL +
+    "\n" + (zh ? "玩家和他们的关系：" : "How they feel about the player: ") + rel +
+    "\n\n" + (zh ? "第 " + n + " / " + tot + " 章「" + Lz(c.t) + "」。这一章要发生的几件事（顺序和方式由玩家的言行决定，可以改写细节，但不要跳到后面的章节）：\n"
+                  : "Chapter " + n + " / " + tot + " “" + Lz(c.t) + "”. Things that happen this chapter (order and manner follow the player; adapt details, never jump ahead):\n") + anL +
+    "\n" + (zh ? "本章已进行 " + A.turns + " 轮。节奏：每 2~4 轮推进到一件新的事；全部发生或超过 20 轮时 chapterDone=true。" : "Turns so far this chapter: " + A.turns + ". Pace: move to a new thing every 2-4 turns; set chapterDone=true when all have happened or after 20 turns.") +
+    (A.sum.length ? "\n" + (zh ? "前情（玩家做过的事）：\n" : "Earlier (what the player did):\n") + A.sum.slice(-6).join("\n") : "") +
+    "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail97(th, 16) || (zh ? "（故事刚开始）" : "(the story is just starting)")) +
+    (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色们不知道）" : "(a private thought — the characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt : "") +
+    "\n\n" + (zh ? "规则：绝不替玩家说话、做动作、做决定；角色可以拒绝、可以互相冲突、可以误会；不要让所有人都围着玩家献殷勤；没有电话就不要安排来电。narration 用第二人称写给玩家，最多 2 句，不含对白。options 给玩家 3 个下一步可以做的事（各不超过 14 字，态度不同）。"
+           : "Rules: never write the player's words, actions or decisions; characters may refuse, clash and misread each other; not everyone fawns over the player. narration is second person to the player, max 2 sentences, no dialogue. options: 3 different things the player might do next (under 8 words each).") +
+    (last ? (zh ? "\n这是最后一章。chapterDone=true 时给出 ending：A=两人并肩（关系好、彼此信任）/ B=各自安好 / C=反目，取决于玩家一路的言行；并写 endingText（3 句以内）。" : "\nThis is the last chapter. When chapterDone=true also give ending: A = side by side / B = apart and okay / C = enemies, earned by the player's whole run, plus endingText (max 3 sentences).") : "") +
+    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+  return ask(p, { maxTokens: 900 });
+}
+async function actor97(th, cid, intent, act) {
+  const w = wd(th.wid), A = th.agent97, x = ch(cid), k = card97(cid), cd = A.cards[cid] || (A.cards[cid] = { mem: [] }), zh = Z97();
+  const ref = voiceRef97(w, A.ch, cid);
+  const p = (zh ? "你是「" + x.n + "」，" + (Lz(x.role) || "") + "。你是一个有自己想法的人，不是剧情的工具。你只知道你亲身经历过的事（下面的记忆）；你不知道剧情会怎么发展，也不知道" + youName97(th) + "心里在想什么。"
+                : "You are " + x.n + ", " + (Lz(x.role) || "") + ". You are a person with your own mind, not a plot device. You only know what you lived through (your memories below); you don't know where the story goes or what " + youName97(th) + " is thinking.") +
+    "\n" + (zh ? "你是谁：" : "Who you are: ") + (Lz(x.looks) || "") +
+    (k ? "\n" + (zh ? "说话方式：" : "How you talk: ") + k.voice + "\n" + (zh ? "你想要：" : "You want: ") + k.want + "\n" + (zh ? "你害怕：" : "You fear: ") + k.fear + "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") +
+    "\n" + (zh ? "你对" + youName97(th) + "的感觉：" : "How you feel about " + youName97(th) + ": ") + stageWord97(th.love[cid] || 0) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
+    (cd.mem.length ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + cd.mem.slice(-20).map(m => "- " + m).join("\n") : "") +
+    (ref.length ? "\n" + (zh ? "你平时说话的样子（参考语气，不要照抄）：\n" : "How you usually sound (tone reference, don't copy):\n") + ref.map(s => "「" + s + "」").join("\n") : "") +
+    "\n\n" + (zh ? "眼前：\n" : "Right here:\n") + (tail97(th, 12) || "") +
+    "\n\n" + (zh ? "导演的提示（你可以不完全照做，你有自己的主意）：" : "Director's note (you may not follow it exactly; you have your own mind): ") + (intent || "") +
+    "\n\n" + (zh ? "现在轮到你。只写你自己：一个可选的动作（第一人称，不超过 25 字）和一句台词（不超过 45 字）。不要替别人说话，不要旁白。feel：这一刻你对" + youName97(th) + "的感觉变化 -5~5。remember：你会记住的一件事（不超过 25 字，可为空）。"
+           : "Your turn. Write only yourself: an optional action (first person, under 15 words) and one line (under 30 words). Nobody else's lines, no narration. feel: how this moment changed your feeling toward " + youName97(th) + ", -5..5. remember: one thing you'll remember (under 15 words, may be empty).") +
+    '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+  return ask(p, { maxTokens: 300 });
+}
+function remember97(th, cids, fact) { if (!fact) return; cids.forEach(c => { const cd = th.agent97.cards[c] || (th.agent97.cards[c] = { mem: [] }); cd.mem.push(String(fact).slice(0, 90)); if (cd.mem.length > 30) cd.mem.splice(0, cd.mem.length - 30); }); }
+async function agentTurn97(th, act) {
+  const A = th.agent97, w = wd(th.wid); if (!w || A.ended) return;
+  if (!liveOn()) { toast(L97("自由模式需要 AI 在线", "Free mode needs the AI to be online")); return; }
+  busy = true; typing(true); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
+  try {
+    let d = null; try { d = await director97(th, act); } catch (e) { d = null; }
+    if (!d) { toast(L97("导演走神了，再说一次试试", "The director lost the thread — try again")); return; }
+    const present = (Array.isArray(d.present) ? d.present : []).filter(c => th.cast.includes(c));
+    /* the scene moves */
+    const an = anchors97(w, A.ch), aIdx = +d.anchor, a = an.find(x => x.idx === aIdx);
+    if (a && !A.hit.includes(aIdx)) { A.hit.push(aIdx);
+      if (a.img) { th.status.place = a.place; try { sceneBg(th, a.img); } catch (_) {} }
+      appendMsg(th, { who: "sys", k: "card", title: "📍 " + a.place, txt: "", at: Date.now() });
+      if (a.bgm) { try { if (typeof bgmFollow === "function") bgmFollow({ id: th.id, wid: th.wid, pk: { bgm: a.bgm } }, true); } catch (_) {} }
+      if (a.cg) { const As = OFF94.assets[w.community] || {}; const src = As[a.cg]; if (src) { try { off94Show({ src, cap: a.cap }, false); } catch (_) {} const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: th.cast[0], src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } } }
+    if (d.narration) appendMsg(th, { who: "n", k: "act", txt: String(d.narration).slice(0, 300), at: Date.now() });
+    /* the player's public move is witnessed by whoever is in the room */
+    if (act && act.mode !== "think") remember97(th, present.length ? present : th.cast, youName97(th) + (act.mode === "act" ? "：" : L97("说：", " said: ")) + String(act.txt).slice(0, 60));
+    /* characters, one by one — each sees what the one before just said */
+    for (const sp of (Array.isArray(d.speakers) ? d.speakers : []).slice(0, 3)) {
+      const cid = sp && sp.id; if (!th.cast.includes(cid)) continue;
+      let r = null; try { r = await actor97(th, cid, sp.intent, act); } catch (_) { r = null; } if (!r) continue;
+      if (r.act) appendMsg(th, { who: cid, k: "act", txt: String(r.act).slice(0, 120), at: Date.now() });
+      if (r.say) appendMsg(th, { who: cid, k: "say", txt: String(r.say).slice(0, 200), at: Date.now(), ai: 1 });
+      const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, cid)) loveWrite(th, cid, f * 1.6, "agent97:model");
+      if (r.remember) remember97(th, [cid], r.remember);
+      if (r.say) remember97(th, (present.length ? present : th.cast).filter(c => c !== cid), first(ch(cid).n) + L97("说：", " said: ") + String(r.say).slice(0, 50));
+    }
+    A.turns++; th.rounds++; if (d.summary) A.sum.push((Z97() ? "第" + A.ch + "章：" : "Ch" + A.ch + ": ") + String(d.summary).slice(0, 80)); if (A.sum.length > 40) A.sum.splice(0, A.sum.length - 40);
+    if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
+    useUnits(aiCost() * 2);
+    /* changes the player can see */
+    const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L97(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
+    if (items.length && typeof chg96 === "function") chg96(items);
+    /* chapter / ending */
+    if (d.chapterDone) {
+      const tot = w.pack.chapters.length;
+      if (A.ch >= tot) { A.ended = true; const main = th.cast[0], lv = th.love[main] || 0; const e = /^[ABC]$/.test(d.ending) ? d.ending : lv >= 70 ? "A" : lv >= 40 ? "B" : "C";
+        appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L97("结局 ", "Ending ") + e, txt: String(d.endingText || "").slice(0, 400), at: Date.now() }); A.end = e; }
+      else { appendMsg(th, { who: "sys", k: "card", title: L97("第 " + A.ch + " 章 · 完", "Chapter " + A.ch + " · end"), txt: L97("下一章：", "Next: ") + Lz(w.pack.chapters[A.ch].t), at: Date.now() });
+        const ev = L97("第 " + A.ch + " 章结束。玩家这一章：", "Chapter " + A.ch + " ended. What the player did: ") + A.sum.slice(-3).join("；");
+        A.ch++; A.turns = 0; A.hit = []; if (typeof gen96 === "function") gen96(th, ev).then(m => m && chg96(m)).catch(() => {}); }
+    }
+    th.at = Date.now(); save();
+  } finally { busy = false; typing(false); try { renderChat(); } catch (_) {} }
+}
+/* sending in a free-mode thread goes to the director, not the one-shot writer */
+{ const _rp = reply; reply = function (th, ctx, silent) { if (th && th.agent97) { if (ctx && ctx.kind === "user") return agentTurn97(th, { txt: ctx.txt, mode: ctx.mode || "say" }); if (ctx && ctx.kind === "dir") return agentTurn97(th, { txt: L97("（导演建议）", "(stage note) ") + ctx.txt, mode: "act" }); return agentTurn97(th, null); } return _rp.apply(this, arguments); }; }
+/* love type & feed work in free mode too */
+{ const _d = done96; done96 = function (th) { if (th && th.agent97) return Math.max(0, th.agent97.ch - 1 + (th.agent97.ended ? 1 : 0)); return _d.apply(this, arguments); }; }
+{ const _l = lp96; lp96 = async function (th) { if (th && th.agent97 && !(th.pk && th.pk.picks)) { th.pk = { picks: {} }; const r = await _l.apply(this, arguments); delete th.pk; return r; } return _l.apply(this, arguments); }; }
+{ const _fb = feedBtn96; feedBtn96 = function () { const th = S.threads[curT]; if (th && th.agent97 && !$("#fd96b")) { const col = $("#s-chat .rcol"); if (col) { col.insertAdjacentHTML("afterbegin", '<button id="fd96b" class="histbtn" data-fd96="1"><i>🔥</i><small>' + esc(L97("热搜", "Trending")) + '</small><em></em></button>'); feedBadge96(); } return; } return _fb.apply(this, arguments); }; }
+
+/* entry: the start sheet offers free mode for pilot works */
+function startFree97(wid) {
+  const ex = Object.values(S.threads).filter(t => t.wid === wid && t.agent97 && !t.agent97.ended).sort((a, b) => b.at - a.at)[0];
+  const th = ex || newAgentThread97(wid); closeSheet(); openThread(th.id);
+  if (!ex) { appendMsg(th, { who: "sys", k: "card", title: "🎭 " + L97("自由模式", "Free mode"), txt: L97("每个角色都有自己的想法和记忆，不知道剧情会怎么走。你说什么、做什么，世界就怎么变。", "Every character has their own mind and memory and doesn't know where this goes. What you say and do changes the world."), at: Date.now() });
+    setTimeout(() => agentTurn97(th, null), 300); }
+}
+{ const _ss = startSheet; startSheet = function (wid) { const r = _ss.apply(this, arguments);
+    try { const w = wd(wid), st = document.querySelector(".sheet .stack"); if (agOn97(w) && st && !st.querySelector("[data-free97]")) {
+      const ex = Object.values(S.threads).some(t => t.wid === wid && t.agent97 && !t.agent97.ended);
+      st.insertAdjacentHTML("afterbegin", '<button class="opt fr97" data-free97="' + esc(wid) + '"><span class="ic">🎭</span><span class="grow"><b>' + (ex ? L97("继续自由模式", "Continue free mode") : L97("自由模式（测试版）", "Free mode (beta)")) + '</b><span>' + L97("角色各有想法、不知道剧情，故事围着你的选择走", "Characters have their own minds and don't know the plot — the story follows you") + '</span></span><span class="tg97">' + L97("新", "New") + '</span></button>'); } } catch (_) {}
+    return r; }; }
+document.addEventListener("click", e => { const x = e.target.closest("[data-free97]"); if (!x) return; e.stopPropagation(); startFree97(x.dataset.free97); }, true);
+(function () { const st = document.createElement("style"); st.textContent = `.fr97{border-color:rgba(238,111,151,.55)!important;background:linear-gradient(135deg,rgba(238,111,151,.16),rgba(240,183,126,.08))!important}.tg97{font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#EE6F97;color:#1B1017}`; document.head.appendChild(st); })();
+
+/* ================= v6.3.1 · old copies after a story update =================
+   When a published story is updated, the app rebuilds it under a new id. Threads started on the old copy pointed at a world that
+   no longer exists — no backgrounds, no music, and the role list fell back to 「导演视角」. Now: remember old → new, and opening an
+   old thread sends you to the new copy's start sheet (free-mode threads are carried over, characters matched by name). */
+{ const _iw = installWork; installWork = async function (id) {
+    const old = S.off76 && S.off76[id] && S.off76[id].wid; const wid = await _iw.apply(this, arguments);
+    try { if (old && wid && old !== wid) { S.wmap97 = S.wmap97 || {}; S.wmap97[old] = wid; save(); } } catch (_) {} return wid; }; }
+function newWid97(wid) { let w = wid, n = 0; const M = S.wmap97 || {}; while (M[w] && n++ < 10) w = M[w]; return w !== wid && wd(w) ? w : null; }
+function carryAgent97(th, nw) {
+  const w = wd(nw), byName = {}; w.cast.forEach(c => { const x = ch(c); if (x) byName[key97(x)] = c; });
+  const map = {}; th.cast.forEach(c => { const x = ch(c); const n = x && byName[key97(x)]; if (n) map[c] = n; });
+  const sw = id => map[id] || id;
+  th.wid = nw; th.cast = th.cast.map(sw); const L = {}; Object.keys(th.love).forEach(k => L[sw(k)] = th.love[k]); th.love = L;
+  const C = {}; Object.keys(th.agent97.cards).forEach(k => C[sw(k)] = th.agent97.cards[k]); th.agent97.cards = C;
+  th.msgs.forEach(m => { if (map[m.who]) m.who = map[m.who]; }); save();
+}
+{ const _ot = openThread; openThread = function (id) {
+    const th = S.threads[id];
+    if (th && th.wid && !wd(th.wid)) { const nw = newWid97(th.wid);
+      if (nw && th.agent97) { carryAgent97(th, nw); return _ot.apply(this, arguments); }
+      if (nw) { delete S.threads[id]; save(); toast(L97("这部剧更新了新版本，请重新选择怎么玩", "This story was updated — pick how you want to play")); try { startSheet(nw); } catch (_) {} return; }
+      delete S.threads[id]; save(); toast(L97("这部剧已更新，请从故事页重新开始", "This story was updated — start again from its page")); return; }
+    return _ot.apply(this, arguments); }; }
+/* free mode right on the story page, next to 开始故事 */
+{ const _os = openStory; openStory = function (id) { const r = _os.apply(this, arguments);
+    try { const w = wd(id), b = document.querySelector('#s-story [data-pkstart]'); if (agOn97(w) && b && !document.querySelector('#s-story [data-free97]'))
+      b.insertAdjacentHTML("beforebegin", '<button class="btn btn-block fr97b" data-free97="' + esc(id) + '">🎭 ' + L97("自由模式（测试版）· 角色各有想法，剧情围着你走", "Free mode (beta) · the story follows you") + '</button>'); } catch (_) {}
+    return r; }; }
+(function () { const st = document.createElement("style"); st.textContent = `.fr97b{margin:0 0 8px;border:1px solid rgba(238,111,151,.6);background:linear-gradient(135deg,rgba(238,111,151,.22),rgba(240,183,126,.12));color:#fff;font-weight:700;font-size:13.5px}`; document.head.appendChild(st); })();
+/* the lead first, director's view last — so nobody lands in 导演视角 by accident */
+{ const _pm = packModes; packModes = function (w) { const L = _pm.apply(this, arguments); if (!w || !w.official76) return L; const watch = L.filter(m => m.as === "watch"); return L.filter(m => m.as !== "watch").concat(watch); }; }
+
+/* ================= v7.0 · 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） =================
+   作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界、风格规则、玩家身份卡（A）、角色卡（B/C）、章节 → 场景锚点、选择、结局条件。
+   运行：
+   · 剧情智能体（导演）：只读世界、当前章节的场景锚点和玩家行为；负责进场、调度谁开口、给建议行动；不知道后面的章节和结局。
+   · 角色智能体：每个角色只读自己的角色卡、自己的记忆（亲历 / 被告知）、眼前发生的事；不知道剧情走向，不知道玩家心里想什么。
+   · 每个场景：进场（锚点演出）→ 自由对话（想聊多久聊多久，角色在场景里回应你）→ 你点「继续剧情」→ 场景选择（如有）→ 下一场。
+     剧情只在你点「继续」或做出选择时推进 —— 不会自己跳走。
+   · 电话只在作品设定里真的有电话的场景出现；小游戏默认关闭（版本 1：无玩法），作品资料里 games_on=true 才开启（版本 2）。
+   · 玩家身份卡只有客观身份；玩家的性格、喜好由你的发言和选择累积（动态画像），不预设。 */
+const B98 = { cache: {}, ids: {} };
+const Z98 = () => CL() === "zh";
+const L98 = (zh, en) => Z98() ? zh : en;
+const LZ98 = o => (o && typeof o === "object") ? ((Z98() ? o.zh : o.en) || o.zh || o.en || "") : String(o || "");
+async function bible98(id) {
+  if (id in B98.cache) return B98.cache[id];
+  let b = null; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".bible.json?v=" + Math.floor(Date.now() / 3e5)); if (r.ok) b = await r.json(); } catch (_) {}
+  B98.cache[id] = b; return b;
+}
+function cid98(wid, key) { return "b98_" + wid.replace(/[^a-z0-9]/gi, "").slice(-10) + "_" + key; }
+function bOf98(w) { return w && w.bible98 && B98.cache[w.community]; }
+function cardOf98(w, cid) { const b = bOf98(w); if (!b) return null; const k = (S.mine.chars[cid] || {}).bkey; return b.cast.find(c => c.key === k) || (b.player.key === k ? Object.assign({ tier: "lead" }, b.player) : null); }
+/* build / refresh the local world from the bible */
+async function install98(id) {
+  const b = await bible98(id); if (!b) return null;
+  let A = {}; try { A = await off94Assets(id); } catch (_) {}
+  const wid = "bw_" + id.replace(/[^a-z0-9]/gi, "").slice(-12), keys = new Set(b.cast.map(c => c.key)); keys.add(b.player.key);
+  const all = b.cast.slice(); if (!b.cast.some(c => c.key === b.player.key)) all.unshift(Object.assign({ tier: "lead", short: b.player.name }, b.player));
+  const pals = [["#C98A6B", "#1B1520"], ["#7A63C9", "#141024"], ["#5E9E96", "#13212A"], ["#B0607A", "#21131B"]];
+  all.forEach((c, i) => { const id2 = cid98(wid, c.key), sh0 = c.short || c.name || { zh: c.key, en: c.key }, cut = v => String(v || "").split(/\s*[\/／]\s*/)[0].replace(/[（(].*$/, "").trim(), sh = { zh: cut(sh0.zh) || cut(sh0.en), en: cut(sh0.en) || cut(sh0.zh) };
+    const x = S.mine.chars[id2] || {};
+    S.mine.chars[id2] = Object.assign(x, { n: LZ98(sh), n94: { zh: sh.zh || sh.en, en: sh.en || sh.zh }, full: c.name, bkey: c.key, age: +c.age || 0, g: c.gender === "f" ? "f" : "m", w: wid, pal: pals[i % 4], a: "charm", v: x.v || { pitch: 1, rate: 1 },
+      role: { zh: (c.role && (c.role.zh || c.role.en)) || "", en: (c.role && (c.role.en || c.role.zh)) || "" }, looks: { zh: c.bio || c.brief || "", en: c.bio || c.brief || "" }, vibe: { zh: (c.personality || "").slice(0, 80), en: (c.personality || "").slice(0, 80) },
+      tells: { en: [], zh: [] }, twist: { en: "", zh: "" }, likes: { en: "", zh: "" }, secret: { en: "", zh: "" }, pitch: { en: "", zh: "" }, solo: { en: "…", zh: "…" }, by: "@miru" });
+    const art = A["char_" + c.key] || (sh.zh && A["char_" + sh.zh]) || (c.name && c.name.zh && A["char_" + c.name.zh]); if (art) S.art[id2] = art; });
+  const cast = all.map(c => cid98(wid, c.key));
+  const w = S.mine.worlds[wid] || {};
+  S.mine.worlds[wid] = Object.assign(w, { id: wid, kind: "story", bible98: 1, official76: 1, community: id, mine: 0, author: Z98() ? "MIRU 官方" : "MIRU Originals",
+    title: { zh: b.title.zh, en: b.title.en }, hook: { zh: b.hook.zh, en: b.hook.en }, premise: { zh: b.premise.zh, en: b.premise.en },
+    you: { zh: LZ98(b.player.name) + " · " + (b.player.role ? (b.player.role.zh || "") : "") , en: (b.player.name.en || "") + " · " + (b.player.role ? (b.player.role.en || "") : "") },
+    warn: { zh: "", en: "" }, rel: [], openings: null, tags: (b.tags || []).slice(0, 8), or: b.orient || "bl", cast, stats: [0, 0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } }, cover: A.cover ? wid : null, calls: !!b.chapters.some(c => c.scenes.some(s => s.call)) });
+  if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
+  S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save(); return wid;
+}
+{ const _iw = installWork; installWork = async function (id) { try { const b = await bible98(id); if (b) return await install98(id); } catch (e) { try { console.warn("[b98]", e); } catch (_) {} } return _iw.apply(this, arguments); }; }
+/* worlds loaded from a previous session need their bible back in memory */
+setTimeout(() => { try { Object.values(S.mine.worlds || {}).forEach(w => { if (w && w.bible98) bible98(w.community); }); } catch (_) {} }, 0);
+async function ensure98(w) { if (w && w.bible98 && !(w.community in B98.cache)) await bible98(w.community); return bOf98(w); }
+
+/* ---------- start: pick who you are ---------- */
+async function start98(wid) {
+  const w = wd(wid), b = await ensure98(w); if (!b) return;
+  const ex = Object.values(S.threads).filter(t => t.wid === wid && t.b98 && !t.b98.ended).sort((a, b2) => b2.at - a.at)[0];
+  const opts = (b.playable && b.playable.length ? b.playable : [b.player.key]).map(k => { const c = k === b.player.key ? b.player : b.cast.find(x => x.key === k); return c ? { k, n: LZ98(c.short || c.name), r: LZ98(c.role), main: k === b.player.key } : null; }).filter(Boolean);
+  sheet('<div class="eyebrow">' + L98("你想怎么玩？", "How do you want to play?") + '</div><h2 style="margin-top:4px">' + esc(LZ98(b.title)) + '</h2><p class="xs faint" style="margin-top:4px">' + esc(oriL98(b.orient)) + ' · ' + b.chapters.length + L98(" 章", " chapters") + '</p>' +
+    (ex ? '<button class="btn btn-p btn-block" style="margin-top:12px" data-b98open="' + esc(ex.id) + '">▶ ' + L98("继续 · 第 " + ex.b98.ch + " 章", "Continue · chapter " + ex.b98.ch) + '</button><div class="eyebrow" style="margin-top:14px">' + L98("重新开始", "Start over") + '</div>' : '') +
+    '<label class="xs faint" style="display:block;margin-top:12px">' + L98("你的名字（扮演主角时使用，可不填）", "Your name (used when you play the lead; optional)") + '</label><input id="b98nm" class="up66i" maxlength="16" style="margin-top:4px" value="' + esc(S.b98name || "") + '" placeholder="' + esc(dn98(b)) + '">' +
+    '<div class="stack" style="gap:8px;margin-top:10px">' + opts.map(o => '<button class="opt" data-b98go="' + esc(wid) + '|' + esc(o.k) + '"><span class="ic">🎭</span><span class="grow"><b>' + L98("扮演 ", "Play ") + esc(o.n) + (o.main ? L98("（主角）", " (lead)") : "") + '</b><span>' + esc(o.r) + '</span></span>›</button>').join("") + '</div>' +
+    '<p class="xs faint" style="margin-top:12px;line-height:1.55">' + L98("每个角色都有自己的想法和记忆，不知道剧情会怎么走。你可以在每个场景里自由聊天，想推进时点「继续剧情」。", "Every character has their own mind and memory and doesn't know where this goes. Talk freely in each scene; tap “Continue” when you want the story to move.") + '</p>');
+}
+function oriL98(o) { return Z98() ? ({ bl: "男男", gl: "女女", bg: "男女" }[o] || "") : ({ bl: "BL · M/M", gl: "GL · F/F", bg: "M/F" }[o] || ""); }
+function new98(wid, asKey) {
+  const w = wd(wid), b = bOf98(w), now = Date.now(), you = cid98(wid, asKey);
+  const cast = w.cast.filter(c => c !== you && ch(c));
+  const th = { id: "b:" + wid + ":" + now, kind: "group", wid, cast, title: LZ98(b.title), msgs: [], love: {}, rounds: 0, status: { time: "", place: "", mood: {} }, tasks: {}, mem: [], created: now, at: now, setting: "", you: "",
+    b98: { as: asKey, you, ch: 1, sc: 0, phase: "enter", turns: 0, sum: [], cards: {}, flags: [], profile: [], ended: false, picked: {} } };
+  cast.forEach(c => { loveWrite(th, c, 0, "story98:init", {absolute:5}); const card = cardOf98(w, c); th.b98.cards[c] = { mem: card && card.knows ? [L98("（初始知道）", "(known from the start) ") + String(card.knows).slice(0, 160)] : [] }; });
+  th.persona = Object.assign({}, persona()); S.threads[th.id] = th; save(); return th;
+}
+document.addEventListener("click", e => { let x;
+  if ((x = e.target.closest("[data-b98go]"))) { e.stopPropagation(); const [wid, k] = x.dataset.b98go.split("|"); const nmI = $("#b98nm"), nm = nmI ? String(nmI.value || "").replace(/[<>"]/g, "").trim().slice(0, 16) : ""; S.b98name = nm; const th = new98(wid, k); const bb = bOf98(wd(wid)); if (nm && bb && k === bb.player.key) { th.b98.pname = nm; save(); } closeSheet(); openThread(th.id); setTimeout(() => enter98(th), 300); return; }
+  if ((x = e.target.closest("[data-b98open]"))) { e.stopPropagation(); closeSheet(); openThread(x.dataset.b98open); return; }
+  if ((x = e.target.closest("[data-newt],[data-pkstart]"))) { const w = wd(x.dataset.newt || x.dataset.pkstart); if (w && w.bible98) { e.preventDefault(); e.stopPropagation(); start98(w.id); } return; }
+}, true);
+{ const _ss = startSheet; startSheet = function (wid) { const w = wd(wid); if (w && w.bible98) return start98(wid); return _ss.apply(this, arguments); }; }
+
+/* ---------- helpers ---------- */
+function scene98(th) { const b = bOf98(wd(th.wid)), c = b && b.chapters[th.b98.ch - 1]; return { b, c, s: c && c.scenes[th.b98.sc] }; }
+function byKey98(th, key) { return cid98(th.wid, key); }
+function dn98(b) { const n = b && b.player && LZ98(b.player.short || b.player.name); return !n || /你|You/.test(n) ? L98("不填就叫“你”", "leave empty to be “you”") : L98("默认：", "Default: ") + n; }
+function yn98(th) { if (th.b98.pname) return th.b98.pname; const c = ch(th.b98.you); const n = c && first(c.n); if (th.b98.as === "heir" || !n || /你|You/.test(n)) { try { const p = persona(); if (p && p.name) return p.name; } catch (_) {} return L98("你", "you"); } return n; }
+function gx98(th) { const w = wd(th.wid), b = bOf98(w); const g = (cardOf98(w, th.b98.you) || (b && b.player) || {}).gender; return g === "f" ? L98("（女性，用“她”指代）", " (female — she/her)") : L98("（男性，用“他”指代）", " (male — he/him)"); }
+function zhOK98(t) { return !Z98() || /[\u4e00-\u9fff]/.test(String(t || "")); }
+function line98(th, m) {
+  if (m.who === "me" && m.k === "think") return ""; const x = String(m.txt || "").replace(/\s+/g, " ").slice(0, 220); if (!x || m.k === "card" || m.k === "img") return "";
+  const who = m.who === "me" ? yn98(th) : m.who === "n" || m.who === "sys" ? "" : (ch(m.who) ? first(ch(m.who).n) : "");
+  return who ? who + (m.k === "act" ? L98("（动作）", " (action)") : "") + ": " + x : L98("［场景］", "[scene] ") + x;
+}
+function tail98(th, n) { return th.msgs.slice(-(n || 16)).map(m => line98(th, m)).filter(Boolean).join("\n"); }
+function present98(th, s) { return ((s && s.present) || []).map(k => byKey98(th, k)).filter(c => th.cast.includes(c)); }
+function stage98(v) { return v >= 80 ? L98("深深在意", "deeply attached") : v >= 55 ? L98("心动", "drawn in") : v >= 30 ? L98("开始在意", "starting to care") : v >= 12 ? L98("有点好奇", "curious") : L98("戒备 / 不熟", "guarded / strangers"); }
+function mem98(th, cids, fact) { if (!fact) return; cids.forEach(c => { const cd = th.b98.cards[c] || (th.b98.cards[c] = { mem: [] }); cd.mem.push(String(fact).slice(0, 100)); if (cd.mem.length > 36) cd.mem.splice(1, cd.mem.length - 36); }); }
+const LANG98 = () => Z98() ? "Simplified Chinese" : "English";
+
+/* ---------- the story agent (director) ---------- */
+async function director98(th, mode, act) {
+  const { b, c, s } = scene98(th), A = th.b98, zh = Z98(), w = wd(th.wid);
+  const castL = th.cast.map(id => { const k = cardOf98(w, id); return "- id=" + id + " · " + first(ch(id).n) + "（" + LZ98(k && k.role) + "，" + (k ? k.tier : "") + "）"; }).join("\n");
+  const sceneL = c.scenes.map((x, i) => (i === A.sc ? "▶ " : (i < A.sc ? "✓ " : "· ")) + (i + 1) + ". " + LZ98(x.place) + (i === A.sc ? "：" + x.beat : "")).join("\n");
+  const rel = th.cast.slice(0, 8).map(id => first(ch(id).n) + " " + Math.round(th.love[id] || 0)).join("，");
+  const last = A.ch === b.chapters.length && A.sc === c.scenes.length - 1;
+  const task = mode === "enter" ? (zh ? "现在进入这一场。写进场旁白（第二人称，≤3 句，交代你在哪、眼前发生什么），并安排在场角色把这一场的锚点演出来（1-3 人依次开口）。" : "Enter this scene now. Write an entrance narration (second person, ≤3 sentences: where you are, what's happening) and have present characters play this scene's anchor (1-3 speak in turn).")
+    : mode === "choice" ? (zh ? "玩家刚做出这一场的选择，后果见下。让在场角色真实地回应这个选择（1-2 人），旁白最多 1 句。" : "The player just made this scene's choice; its consequence is below. Have present characters respond for real (1-2), narration at most 1 sentence.")
+    : mode === "exit" ? (zh ? "玩家要推进剧情：用 1 句旁白收束这一场（可不写），不要有人再长篇说话；speakers 可为空。" : "The player wants to move on: close this scene in one sentence of narration (or none); speakers may be empty.")
+    : (zh ? "这是自由对话：玩家在这一场里和角色相处。不要推进到下一场，不要强行制造事件；让被对话的人或最自然的人回应（1-2 人），角色可以拒绝、沉默、反问。" : "Free talk: the player is spending time in this scene. Don't move to the next scene or force events; let whoever is addressed or most natural respond (1-2); characters may refuse, go quiet, or ask back.");
+  const p = (zh ? "你是互动剧的剧情智能体（导演）。你不替任何人说话；你只安排这一刻：谁开口、他们此刻想干什么。玩家是主角。你只知道下面列出的这一章，不知道后面的章节和结局。"
+                : "You are the story agent (director) of an interactive drama. You never speak for anyone; you arrange this moment: who speaks and what they want right now. The player is the protagonist. You only know this chapter, not later chapters or the ending.") +
+    "\n\n" + (zh ? "世界（后台）：\n" : "World (backstage):\n") + String(b.world || "").slice(0, 1600) +
+    "\n\n" + (zh ? "规则：\n" : "Rules:\n") + String(b.style || "").slice(0, 1300) +
+    "\n\n" + (zh ? "玩家：" : "Player: ") + yn98(th) + gx98(th) + "（" + LZ98((A.as === b.player.key ? b.player : cardOf98(w, A.you) || {}).role) + "）" + (A.profile.length ? (zh ? "；玩家自己表现出的样子：" : "; how the player has shown themselves: ") + A.profile.slice(-6).join("；") : "") +
+    "\n" + (zh ? "角色（只有这些 id 能开口）：\n" : "Cast (only these ids may speak):\n") + castL +
+    "\n" + (zh ? "他们对玩家的好感：" : "Their feeling toward the player: ") + rel +
+    "\n\n" + (zh ? "第 " + A.ch + " / " + b.chapters.length + " 章「" + LZ98(c.title) + "」目标：" : "Chapter " + A.ch + " / " + b.chapters.length + " “" + LZ98(c.title) + "” goal: ") + (c.goal || "") +
+    "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
+    "\n" + (zh ? "当前场景在场：" : "Present now: ") + (present98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
+    (s.ref_lines && s.ref_lines.length && mode === "enter" ? "\n" + (zh ? "锚点台词（角色可以用，可改写，不必照念）：\n" : "Anchor lines (characters may use or adapt them):\n") + s.ref_lines.map(r => (ch(byKey98(th, r.who)) ? first(ch(byKey98(th, r.who)).n) : r.who) + "：" + r.line).join("\n") : "") +
+    (A.sum.length ? "\n" + (zh ? "前情：\n" : "So far:\n") + A.sum.slice(-8).join("\n") : "") +
+    "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail98(th, 14) || (zh ? "（刚开始）" : "(just starting)")) +
+    (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
+    (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
+    "\n\n" + (zh ? "任务：" : "Task: ") + task +
+    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；不让所有人都围着玩家转；不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
+           : "Never write the player's words, actions or decisions; not everyone revolves around the player; no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
+    (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+  return ask(p, { maxTokens: 900 });
+}
+/* ---------- a character agent ---------- */
+async function actor98(th, cid, intent) {
+  const w = wd(th.wid), b = bOf98(w), x = ch(cid), k = cardOf98(w, cid) || {}, cd = th.b98.cards[cid] || (th.b98.cards[cid] = { mem: [] }), zh = Z98(), { s } = scene98(th), you = yn98(th);
+  const p = (zh ? "你是「" + ((k.name && LZ98(k.name)) || x.n) + "」。你是一个有自己想法的人，不是剧情工具。你只知道自己经历过或被告知的事（见你的记忆）；不知道剧情会怎么走，不知道" + you + "心里在想什么。"
+                : "You are " + ((k.name && LZ98(k.name)) || x.n) + ". You're a person with your own mind, not a plot device. You only know what you lived through or were told (your memories); you don't know where the story goes or what " + you + " is thinking.") +
+    "\n" + (zh ? "身份：" : "Who you are: ") + LZ98(k.role) + "，" + (k.age ? k.age + (zh ? "岁" : " y/o") : "") + "\n" + (k.bio || "") +
+    (k.voice ? "\n" + (zh ? "说话方式：" : "How you talk: ") + k.voice : "") + (k.personality ? "\n" + (zh ? "性格机制：" : "Personality: ") + String(k.personality).slice(0, 600) : "") +
+    (k.want ? "\n" + (zh ? "你想要：" : "You want: ") + k.want : "") + (k.fear ? "\n" + (zh ? "你害怕：" : "You fear: ") + k.fear : "") +
+    (k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
+    (k.toward_player ? "\n" + (zh ? "你对" + you + "的初始态度：" : "Your starting attitude toward " + you + ": ") + k.toward_player : "") + (k.hooks ? "\n" + (zh ? "你的吸引点 / 高光行为：" : "What makes you magnetic: ") + String(k.hooks).slice(0, 500) : "") +
+    "\n" + (zh ? "你现在对" + you + "的感觉：" : "How you feel about " + you + " now: ") + stage98(th.love[cid] || 0) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
+    (cd.mem.length ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + cd.mem.slice(-22).map(m => "- " + m).join("\n") : "") +
+    (k.sample_lines && k.sample_lines.length ? "\n" + (zh ? "你说话的样子（参考语气，不要照抄）：" : "How you sound (tone only, don't copy): ") + k.sample_lines.slice(0, 5).map(z => "「" + z + "」").join(" ") : "") +
+    "\n" + (zh ? "世界里的规矩：" : "Rules of your world: ") + String(b.world || "").slice(0, 500) +
+    "\n\n" + (zh ? "此刻在：" : "You're at: ") + LZ98(s && s.place) + "\n" + (zh ? "眼前：\n" : "Right here:\n") + (tail98(th, 12) || "") +
+    "\n\n" + (zh ? "导演的提示（你可以有自己的主意）：" : "Director's note (you may have your own idea): ") + (intent || "") +
+    "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（第一人称「我…」，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
+           : "Your turn. Only yourself: an optional action (first person, ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
+    '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
+  return ask(p, { maxTokens: 320 });
+}
+/* ---------- one beat ---------- */
+async function beat98(th, mode, act) {
+  const A = th.b98; if (A.ended) return; if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
+  if (busy) return; busy = true; typing(true); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
+  try {
+    const { s } = scene98(th), pres = present98(th, s);
+    let d = null; try { d = await director98(th, mode, act); } catch (_) {}
+    if (!d) { toast(L98("剧情智能体走神了，再试一次", "The story agent lost the thread — try again")); return; }
+    if (d.narration) { const n0 = String(d.narration).trim(); }
+    if (act && act.mode !== "think") mem98(th, pres.length ? pres : th.cast, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
+    let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && th.cast.includes(x.id)); if (mode === "exit") spk = spk.slice(0, 1);
+    let nar = String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
+    if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
+    if (act && act.to && th.cast.includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
+    for (const sp of spk.slice(0, mode === "talk" ? 2 : 3)) {
+      let r = null; try { r = await actor98(th, sp.id, sp.intent); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", "")); if (r2 && r2.say) r = r2; } } catch (_) {} if (!r) continue;
+      r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
+      if (r.act) appendMsg(th, { who: sp.id, k: "act", txt: String(r.act).slice(0, 140), at: Date.now() });
+      if (r.say) appendMsg(th, { who: sp.id, k: "say", txt: String(r.say).slice(0, 220), at: Date.now(), ai: 1 });
+      const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
+      if (r.remember) mem98(th, [sp.id], r.remember);
+      if (r.say) mem98(th, (pres.length ? pres : th.cast).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
+    }
+    A.turns++; th.rounds++;
+    if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
+    if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
+    if (d.state) A.flags.push(String(d.state).slice(0, 60));
+    if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
+    useUnits(aiCost() * (mode === "talk" ? 1 : 2));
+    const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
+    if (items.length && typeof chg96 === "function") chg96(items);
+    if (d.ending && mode === "exit") { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
+      appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L98("结局", "Ending") + " · " + (e ? LZ98(e.name) : A.end), txt: String(d.endingText || (e && e.text) || "").slice(0, 500), at: Date.now() }); }
+    th.at = Date.now(); save();
+  } finally { busy = false; typing(false); try { renderChat(); } catch (_) {} }
+}
+/* ---------- scene flow: enter → talk → (choice) → next ---------- */
+async function enter98(th) {
+  const { b, c, s } = scene98(th), A = th.b98; if (!s) return; A.phase = "enter";
+  if (A.sc === 0) appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · ", "Chapter " + A.ch + " · ") + LZ98(c.title), txt: "", at: Date.now() });
+  appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
+  const As = OFF94.assets[wd(th.wid).community] || {};
+  const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; try { sceneBg(th, key); } catch (_) {} }
+  if (s.bgm) { A.bgm = "m_" + String(s.bgm).replace(/^m_/, ""); try { if (typeof bgmPlay === "function" && bgmOn()) bgmPlay(A.bgm, th.wid); } catch (_) {} }
+  const cg = As["cg_" + s.id]; if (cg) { try { off94Show({ src: cg, cap: s.cg_cap || "" }, false); } catch (_) {} }
+  if (s.social && typeof gen96 === "function") gen96(th, s.social).then(m => m && chg96(m)).catch(() => {});
+  await beat98(th, "enter", null);
+  A.phase = "talk"; save();
+  if (s.call && callsOK97(th)) { const cid = byKey98(th, s.call.who); if (ch(cid)) appendMsg(th, { who: "sys", k: "card", title: "📞 " + L98(first(ch(cid).n) + " 来电", first(ch(cid).n) + " is calling"), txt: "", call98: cid, at: Date.now() }); }
+  dock98();
+}
+async function next98(th) {
+  const { b, c, s } = scene98(th), A = th.b98; if (busy || A.ended) return;
+  if (s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) { A.phase = "choice"; save(); dock98(); return; }
+  const lastScene = A.sc >= c.scenes.length - 1, lastCh = A.ch >= b.chapters.length;
+  await beat98(th, "exit", null); if (A.ended) { dock98(); return; }
+  if (!lastScene) A.sc++;
+  else if (!lastCh) { appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · 完", "Chapter " + A.ch + " · end"), txt: "", at: Date.now() });
+    const ev = L98("第 " + A.ch + " 章结束，玩家这一章：", "Chapter " + A.ch + " ended. The player: ") + A.sum.slice(-3).join("；"); if (typeof gen96 === "function") gen96(th, ev).then(m => m && chg96(m)).catch(() => {});
+    A.ch++; A.sc = 0; }
+  else { A.ended = true; save(); dock98(); return; }
+  save(); await enter98(th);
+}
+async function pick98(th, i) {
+  const { s } = scene98(th), A = th.b98, o = s && s.choice && s.choice.options[i]; if (!o || busy) return;
+  A.picked[s.id] = i; A.flags.push(s.id + ":" + String(o.t).slice(0, 24)); appendMsg(th, { who: "me", k: "act", txt: o.t, at: Date.now() }); A.phase = "talk"; save(); dock98();
+  await beat98(th, "choice", { txt: o.t, mode: "act", effect: o.effect }); dock98();
+}
+/* sending a message in a b98 thread = free talk inside the current scene */
+{ const _rp = reply; reply = function (th, ctx, silent) { if (th && th.b98) { if (ctx && (ctx.kind === "user" || ctx.kind === "dir")) return beat98(th, "talk", { txt: ctx.txt, mode: ctx.kind === "dir" ? "act" : (ctx.mode || "say"), to: th.addr && th.cast.includes(th.addr) ? th.addr : null }); return Promise.resolve(); } return _rp.apply(this, arguments); }; }
+
+/* ---------- compact dock: 继续剧情 / scene choices (never a big window) ---------- */
+function dock98() {
+  const th = S.threads[curT]; const old = $("#dk98"); if (!th || !th.b98) { if (old) old.remove(); return; }
+  const comp = $("#s-chat .composer"); if (!comp) return; const A = th.b98, { s } = scene98(th);
+  let h = '';
+  if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.") + '</span></div>';
+  else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(cq98(o.t)) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
+  else if (A.phase === "talk") h = '<div class="dk98r"><span class="dk98t">💬 ' + L98("自由对话中 · ", "Talking · ") + esc(LZ98(s && s.place)) + '</span><button data-b98next="1">▶ ' + L98("继续剧情", "Continue") + '</button></div>';
+  if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
+}
+{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); if (s && As["bg_" + s.id]) { window.SCENE_FILES[th.b98.bg] = As["bg_" + s.id]; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} return r; }; }
+document.addEventListener("click", e => { let x; const th = S.threads[curT];
+  if (e.target.closest("[data-b98next]")) { if (th && th.b98) next98(th); return; }
+  if ((x = e.target.closest("[data-b98pick]"))) { if (th && th.b98) pick98(th, +x.dataset.b98pick); return; }
+  if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
+}, true);
+/* a call card gets an answer button */
+{ const _mh = msgHTML; msgHTML = function (m, i, th) { const h = _mh.apply(this, arguments); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); return h; }; }
+/* free mode needs its world's assets loaded on reopen */
+{ const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) renderChat(); }); } } return _ot.apply(this, arguments); }; }
+/* love type + feed work here too */
+{ const _d = done96; done96 = function (th) { if (th && th.b98) return Math.max(0, th.b98.ch - 1 + (th.b98.ended ? 1 : 0)); return _d.apply(this, arguments); }; }
+{ const _t = total96; total96 = function (th) { if (th && th.b98) { const b = bOf98(wd(th.wid)); return (b && b.chapters.length) || 12; } return _t.apply(this, arguments); }; }
+{ const _l = lp96; lp96 = async function (th) { if (th && th.b98 && !th.pk) { th.pk = { picks: {} }; try { return await _l.apply(this, arguments); } finally { delete th.pk; } } return _l.apply(this, arguments); }; }
+{ const _fb = feedBtn96; feedBtn96 = function () { const th = S.threads[curT]; if (th && th.b98 && !$("#fd96b")) { const col = $("#s-chat .rcol"); if (col) { col.insertAdjacentHTML("afterbegin", '<button id="fd96b" class="histbtn" data-fd96="1"><i>🔥</i><small>' + esc(L98("热搜", "Trending")) + '</small><em></em></button>'); feedBadge96(); } return; } return _fb.apply(this, arguments); }; }
+/* the old pilot free mode steps aside for works that have a bible */
+{ const _ag = agOn97; agOn97 = function (w) { if (w && w.bible98) return false; return _ag.apply(this, arguments); }; }
+{ const _co = callsOK97; callsOK97 = function (th) { const w = th && th.wid && wd(th.wid); if (w && w.bible98) return !!w.calls; return _co.apply(this, arguments); }; }
+
+/* ---------- meeting fixes for the script mode (康康 4 / 5 / 6) ---------- */
+/* ⑥ reading pace: lines stay on screen longer */
+{ const _rm = readMs; readMs = function (m) { return Math.min(9500, Math.round(_rm.apply(this, arguments) * 1.45)); }; }
+/* ⑤ no keyword-triggered mini-games inside official stories */
+{ const _mm = typeof mgMatch === "function" ? mgMatch : null; if (_mm) mgMatch = function (txt) { const th = S.threads[curT], w = th && wd(th.wid); if (w && w.official76) return null; return _mm.apply(this, arguments); }; }
+/* ④ the your-turn dock can fold to one line */
+(function () { const st = document.createElement("style"); st.textContent = `
+#dk98{flex:none;margin:0;padding:8px 12px 6px;background:rgba(12,11,16,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08)}
+#dk98+.composer{border-top:0}
+.dk98r{display:flex;align-items:center;gap:10px;padding-right:74px}.dk98t{flex:1;font-size:12.5px;color:#BDB4C7;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dk98r button{flex:none;border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}
+.dk98q{font-size:13.5px;font-weight:700;color:#fff;margin:0 2px 8px}.dk98o{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px}.dk98o button{text-align:left;border:1px solid rgba(240,183,126,.5);background:rgba(18,16,26,.85);color:#fff;border-radius:12px;padding:8px 10px;font-size:13px;line-height:1.4}
+.dk98h{margin:6px 2px 0;font-size:11px;color:#8A8194}
+#pkwrap.dock97.fold97 .pkpanel>*:not(.dk97h){display:none}#pkwrap.dock97.fold97{padding-bottom:10px}.dk97h .fd97{margin-left:auto;background:none;border:0;color:#BDB4C7;font-size:12px}`; document.head.appendChild(st); })();
+{ const _pr = packRefresh; packRefresh = function () { const r = _pr.apply(this, arguments); try { const h = $("#pkwrap.dock97 .dk97h"); if (h && !h.querySelector(".fd97")) h.insertAdjacentHTML("beforeend", '<button class="fd97" data-fd97="1">' + (S.fold97 ? "▴ " + L98("展开", "Show") : "▾ " + L98("收起", "Hide")) + '</button>'); const pw = $("#pkwrap"); if (pw) pw.classList.toggle("fold97", !!S.fold97); } catch (_) {} return r; }; }
+document.addEventListener("click", e => { if (!e.target.closest("[data-fd97]")) return; S.fold97 = !S.fold97; save(); const th = S.threads[curT]; if (th) packRefresh(th); });
+
+function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自由输入|备注|注：)[^）)]*[）)]/g,'').replace(/\s+$/,'').trim();}
+
+/* ================= v8.5 · 2026-10-27 用户反馈第二轮 =================
+   1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」。
+   3 特效：只在「进入新场景」时按场景描写切换，剧情事件（标题/提示卡）不再临时触发天气；切换时淡出淡入，不再突然出现。
+   4 道具：剧本里写 ⟦ITEM|名称|说明|图标⟧，剧情会停在一张道具卡上，你点一下才「拿起来看」，卡片翻开后收进随身物品，剧情继续。
+   5 进入作品前：作品页「介绍」只保留作品简介和男主头像；剧情开头的介绍卡只保留封面、简介和男主头像。
+     人物关系图（跟着你的选择变化）移到作品页「角色」标签最上面。 */
+(function () {
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  /* ---------- 1 · 玩家 = 你 ---------- */
+  function povOf(th, w) {
+    let as = th && th.pk && th.pk.as;
+    if (!as || as === "watch" || as === "side") as = w && w.pack && w.pack.pov;
+    return as && ch(as) ? as : null;
+  }
+  function namesOf(cid) {
+    const c = ch(cid); if (!c) return [];
+    const L = new Set();
+    const add = v => { if (!v) return; if (typeof v === "object") { add(v.zh); add(v.en); return; } v = String(v).trim(); if (v.length >= 2 && v !== "你") { L.add(v); const f = v.split(/[\s·・]/)[0]; if (f && f.length >= 2 && f !== v) L.add(f); } };
+    add(c.n); add(c.n94); add(c.full); add(c.studio && c.studio.name);
+    return [...L].sort((a, b) => b.length - a.length);
+  }
+  function youify(s, names) {
+    if (!s || !names.length) return s;
+    let o = s;
+    names.forEach(n => {
+      const e = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      o = o.replace(new RegExp("你是" + e + "[，,、]", "g"), "你，").replace(new RegExp("你——" + e + "[^，,—]*[，,]", "g"), "你，").replace(new RegExp("你扮演" + e, "g"), "你扮演的是你自己");
+      o = o.replace(new RegExp(e + "(?![A-Za-z])", "g"), "你");
+    });
+    return o.replace(/你你/g, "你").replace(/轮到你说话时/g, "轮到你说话时");
+  }
+  window.miruYouify = youify;
+  function walkText(root, names) {
+    if (!root || !names.length) return;
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => { const p = n.parentElement; if (!p || /^(SCRIPT|STYLE|TEXTAREA|INPUT)$/.test(p.tagName) || p.closest("[contenteditable]")) return NodeFilter.FILTER_REJECT; return NodeFilter.FILTER_ACCEPT; } });
+    const L = []; while (tw.nextNode()) L.push(tw.currentNode);
+    L.forEach(n => { const v = youify(n.nodeValue, names); if (v !== n.nodeValue) n.nodeValue = v; });
+  }
+  let YOU_BUSY = false;
+  function youPass() {
+    if (YOU_BUSY) return; YOU_BUSY = true;
+    try {
+      const chat = $("#s-chat"); const th = curT && S.threads[curT];
+      if (chat && !chat.hidden && th) { const p = povOf(th, wd(th.wid)); if (p) walkText(chat, namesOf(p)); }
+      const st = $("#s-story"); if (st && !st.hidden && typeof curStory !== "undefined" && curStory) { const w = wd(curStory); const run = typeof lastRun === "function" ? lastRun(curStory) : null; const p = povOf(run, w); if (p) walkText(st, namesOf(p)); }
+    } catch (_) {} finally { YOU_BUSY = false; }
+  }
+  const mo = new MutationObserver(() => { if (!YOU_BUSY) requestAnimationFrame(youPass); });
+  setTimeout(() => { try { mo.observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (_) {} youPass(); }, 0);
+
+
+  /* ---------- 2026-10-27 · 剧情默认「点一下才继续」（没手动选过自动播放的人都按这个） ---------- */
+  const tapMode = () => S.pkTap101 !== false || S.pkSpd === 0;
+  if (typeof pkWait === "function") {
+    const _pw = pkWait;
+    pkWait = function (th, prev, spd, ms) {
+      if (!tapMode()) return _pw.apply(this, arguments);
+      const av = S.autoVoice; S.autoVoice = false;
+      let p; try { p = _pw.call(this, th, prev, 1, 864e5); } finally { S.autoVoice = av; }
+      if (av && prev && typeof speakLine === "function") { try { speakLine(prev, () => {}); } catch (_) {} }
+      return p;
+    };
+  }
+  document.addEventListener("click", e => { if (e.target.closest("[data-pkspd],[data-spdcyc],[data-spd]")) { S.pkTap101 = false; save(); } }, true);
+  /* ---------- 3 · 特效：只跟场景走，淡入淡出 ---------- */
+  if (typeof pkDirective === "function") {
+    const _pd = pkDirective;
+    pkDirective = function (th, b) {
+      const evt = Array.isArray(b) && b[0] === "sys" && (b[1] === "event" || b[1] === "bg");
+      if (evt) window.__noFx101 = 1;
+      try { return _pd.apply(this, arguments); } finally { window.__noFx101 = 0; }
+    };
+  }
+  if (typeof fxSet === "function") {
+    const _fs = fxSet;
+    fxSet = function (th, k) { if (window.__noFx101 && k !== "none") return; return _fs.apply(this, arguments); };
+  }
+  if (typeof fxRun === "function") {
+    const _fr = fxRun;
+    let cur = null, tm = 0;
+    fxRun = function (kind) {
+      const cv = $("#cbFx"); if (!cv || kind === cur) return _fr.apply(this, arguments);
+      const args = arguments, self = this; cur = kind;
+      cv.style.transition = "opacity .7s ease"; cv.style.opacity = "0"; clearTimeout(tm);
+      tm = setTimeout(() => { try { _fr.apply(self, args); } catch (_) {} requestAnimationFrame(() => { cv.style.opacity = kind === "none" ? "0" : "1"; }); }, 700);
+    };
+  }
+
+  /* ---------- 4 · 交互道具 ⟦ITEM|名称|说明|图标⟧ ---------- */
+  const IMARK = "⁤ITEM|";
+  if (typeof imParse === "function") {
+    const _ip = imParse;
+    imParse = function (text) {
+      text = String(text || "").split("\n").map(l => { const m = /^\s*⟦ITEM((?:\|[^|⟧]*)*)⟧\s*$/.exec(l); return m ? "旁白：" + IMARK + m[1].slice(1) : l; }).join("\n");
+      return _ip.call(this, text);
+    };
+  }
+  const dec = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
+  if (typeof pkDirective === "function") {
+    const _pd2 = pkDirective;
+    pkDirective = function (th, b) {
+      if (Array.isArray(b) && typeof b[2] === "string" && b[2].indexOf(IMARK) === 0) {
+        const a = b[2].slice(IMARK.length).split("|").map(dec);
+        th.pk.q.shift();
+        const m = { who: "sys", k: "item101", n: a[0] || "", d: a[1] || "", ic: a[2] || "📦", open: 0, at: Date.now() };
+        th.msgs.push(m); save();
+        if (typeof PKPAUSE !== "undefined") PKPAUSE[th.id] = "item";
+        if (curT === th.id) { renderChat(); try { scrollChat(); } catch (_) {} }
+        return true;
+      }
+      return _pd2.apply(this, arguments);
+    };
+  }
+  if (typeof msgHTML === "function") {
+    const _mh = msgHTML;
+    msgHTML = function (m, i, th) {
+      if (!m || m.k !== "item101") return _mh.apply(this, arguments);
+      return '<div class="it101' + (m.open ? " open" : "") + '" data-mi="' + i + '"><button class="it101c" data-it101="' + i + '">' +
+        '<span class="it101f"><i>' + esc(m.ic) + '</i><b>' + esc(zh() ? "你发现了：" : "You found: ") + esc(m.n) + '</b><small>' + esc(zh() ? "点一下，拿起来看看" : "Tap to pick it up") + '</small></span>' +
+        '<span class="it101b"><i>' + esc(m.ic) + '</i><b>' + esc(m.n) + '</b><em>' + esc(m.d) + '</em><small>' + esc(zh() ? "✓ 已收进随身物品" : "✓ Added to your things") + '</small></span></button></div>';
+    };
+  }
+  document.addEventListener("click", e => {
+    const x = e.target.closest("[data-it101]"); if (!x) return;
+    const th = S.threads[curT]; if (!th) return; const m = th.msgs[+x.dataset.it101]; if (!m || m.k !== "item101" || m.open) return;
+    m.open = 1; try { if (typeof pkItems === "function" && th.pk) pkItems(th)[m.n] = (pkItems(th)[m.n] || 0) + 1; } catch (_) {}
+    save(); x.parentElement.classList.add("open"); try { navigator.vibrate && navigator.vibrate(20); } catch (_) {}
+    setTimeout(() => { if (typeof PKPAUSE !== "undefined" && PKPAUSE[th.id] === "item") delete PKPAUSE[th.id]; }, 900);
+  });
+
+  /* ---------- 5 · 进入作品前只留简介和男主 ---------- */
+  function leadsOf(w) {
+    if (!w || !Array.isArray(w.cast)) return [];
+    const run = typeof lastRun === "function" ? lastRun(w.id) : null, pov = povOf(run, w);
+    let L = w.cast.filter(id => id !== pov && ch(id) && ch(id).g === "m");
+    const top = w.cast.slice(0, 4); const near = L.filter(id => top.includes(id)); if (near.length) L = near;
+    return L.slice(0, 4);
+  }
+  function leadsHTML(w) {
+    const L = leadsOf(w); if (!L.length) return "";
+    return '<div class="ld101"><div class="eyebrow">' + (zh() ? "男主" : "The leads") + '</div><div class="ld101r">' + L.map(id => '<div class="ld101c"><img src="' + esc(artSrc(id)) + '" alt=""><b>' + esc(first(ch(id).n)) + '</b></div>').join("") + '</div></div>';
+  }
+  function simplifyStory() {
+    const st = $("#s-story"); if (!st || st.hidden || typeof curStory === "undefined") return;
+    const w = wd(curStory); if (!w) return;
+    const sc = st.querySelector(".scroll"); if (!sc) return;
+    const pad = sc.querySelector(":scope > .pad:not(.stack)"); if (pad) pad.style.display = "none";
+    const tabs = sc.querySelector(".tabs"); const body = tabs && tabs.nextElementSibling; if (!body) return;
+    const on = tabs.querySelector("button.on"); const k = on && on.dataset.stab;
+    if (k === "intro") {
+      if (body.dataset.s101) return; body.dataset.s101 = 1;
+      const kids = [...body.children]; const syn = kids.find(c => c.tagName === "P");
+      kids.forEach(c => { if (c !== syn) c.style.display = "none"; });
+      body.insertAdjacentHTML("beforeend", leadsHTML(w));
+    } else if (k === "cast") {
+      if (body.dataset.g101) return; body.dataset.g101 = 1;
+      try { const g = relGraph(w); if (g) body.insertAdjacentHTML("afterbegin", g); } catch (_) {}
+    }
+  }
+  function simplifyIntro() {
+    const m = document.querySelector("#msgs .m-intro"); if (!m || m.dataset.s101) return;
+    const th = curT && S.threads[curT]; const w = th && wd(th.wid); if (!w) return;
+    m.dataset.s101 = 1;
+    const secs = [...m.querySelectorAll(".mi-sec")];
+    secs.forEach((s, i) => { if (i > 0) s.style.display = "none"; });
+    const first0 = secs[0];
+    if (first0) { const ps = [...first0.querySelectorAll("p")]; ps.forEach((p, i) => { if (i > 0) p.style.display = "none"; });
+      if (ps.length > 1) first0.insertAdjacentHTML("beforeend", '<button class="mi101more" data-mi101more="1">' + (zh() ? "展开全部背景 ⌄" : "Show the full background ⌄") + '</button>'); }
+    (first0 || m).insertAdjacentHTML("afterend", leadsHTML(w));
+  }
+  document.addEventListener("click", e => { const x = e.target.closest("[data-mi101more]"); if (!x) return; const s = x.closest(".mi-sec"); if (s) s.querySelectorAll("p").forEach(p => p.style.display = ""); x.remove(); });
+  const mo2 = new MutationObserver(() => requestAnimationFrame(() => { try { simplifyStory(); simplifyIntro(); } catch (_) {} }));
+  setTimeout(() => { try { mo2.observe(document.body, { childList: true, subtree: true }); } catch (_) {} }, 0);
+
+  const stl = document.createElement("style");
+  stl.textContent = `
+.it101{display:flex;justify-content:center;margin:10px 0;perspective:900px}
+.it101c{position:relative;width:min(78%,300px);height:170px;border:0;background:none;padding:0;cursor:pointer;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+.it101.open .it101c{transform:rotateY(180deg);cursor:default}
+.it101f,.it101b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:14px;text-align:center;box-shadow:0 10px 30px #0008}
+.it101f{background:linear-gradient(160deg,#3a2a3f,#1b1420);border:1px solid #F0B77E66;animation:it101p 1.8s ease-in-out infinite}
+.it101b{background:linear-gradient(160deg,#F7E7D2,#E9CFB0);color:#2a1d14;transform:rotateY(180deg)}
+.it101f i,.it101b i{font-size:34px;font-style:normal}.it101f b{color:#F0B77E;font-size:15px}.it101f small{color:#fffa;font-size:12px}
+.it101b b{font-size:15px}.it101b em{font-style:normal;font-size:13px;line-height:1.5;opacity:.85}.it101b small{font-size:11px;opacity:.6}
+@keyframes it101p{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.ld101{margin-top:12px}.ld101r{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px}
+.ld101c{display:flex;flex-direction:column;align-items:center;gap:6px;width:76px}.ld101c img{width:68px;height:68px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #F0B77E88}
+.ld101c b{font-size:13px;text-align:center}
+.m-intro .ld101{padding:0 14px 12px}
+.mi101more{margin-top:6px;background:none;border:0;color:var(--gold,#F0B77E);font-size:13px;padding:0}`;
+  document.head.appendChild(stl);
+})();
 
 /* ---- BOOT (keep last) ---- */
 /* 媒体库先跑：开 IndexedDB → 把老存档里的 base64 迁出去（保命：迁不成功就保留原值）→ 再启动。
