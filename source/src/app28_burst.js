@@ -32,9 +32,11 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
     if(!extra){delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();
      extra=await new Promise(r=>PKWAIT[th.id]=r);if(dead())return;delete PKWAIT[th.id]}
     th.pk.stop=null;th.pk.go=0;th.pk.q.shift();th.pk.q.unshift(...(extra||[]));save();packRefresh(th);continue}
-   while(!live())await new Promise(r=>setTimeout(r,500));if(dead())return;
+   /* 2026-10-27：打开「历史」时剧情暂停，收起后继续 */
+   while(!live()||(typeof HIST_OPEN!=="undefined"&&HIST_OPEN))await new Promise(r=>setTimeout(r,500));if(dead())return;
    if(!PKSKIP[th.id]){const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);
-    await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue}
+    await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue;
+    if(typeof HIST_OPEN!=="undefined"&&HIST_OPEN)continue}
    th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
