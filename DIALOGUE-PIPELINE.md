@@ -83,6 +83,24 @@ idle ──post/begin──▶ streaming ──done──▶ playing ──每�
 
 ---
 
+## 五·补 做到哪一步（2026-10-27 06:0x）
+
+| 步 | 状态 | 落地物 | 判据 |
+|---|---|---|---|
+| ② `D.say` | **已做** | `app102_pipeline.js` 的 `D.say()`：上限、`{ok,why}`、永不 reject、写 `S._voiceLog` | 失败必带 `why`（`timeout` / `no-speak` / `throw:…`） |
+| ① `D.pace` | **已做（同文件）** | 纯函数：`readMs*0.75 + linePause` | 与声音无关（`D.pace` 不看 `canSpeak`） |
+| ③ 兜底挂钩 | **已做** | `appendMsg` 见到「角色 + `k=say` + 没标 `_voiced`」就念；`D.line` / `playBeats` / `pkAppend` 在 append 前标 `_voiced`，不重复 | 审计 20 个 say 产生点里 14 个原本没挂语音 —— 现在由这一层覆盖 |
+| ④ 状态机接管 `busy` | **未做** | —— | 90 秒长回合中途不放行第二条 |
+
+**审计工具**：`node tools/say-voice-audit.mjs`（静态：每个 say 产生点前后 25 行有没有发声调用）。
+现状读数：**20 个 say 产生点 / 14 个没有显式挂钩**（其中 4 个是真缺口：自由模式 agent、剧本直接 push、sideLine；其余是玩家自己那句，本就不该念）。
+⭐ **静态审计 + 运行时兜底是互补的两把尺**：静态告诉你「谁没挂」，兜底保证「没挂的也会响」。
+
+**⚠️ 一个在这一轮里发现、但与本次改动无关的开着的格**（A/B 验过）：
+把兜底挂钩关掉，剧本章节**照样**停在 `msgs=4 / st=busy` 不动（48–288 秒零推进）；
+而且在我今晚动手**之前**就已经如此。⇒ 病灶在 02:44–02:49 那批改动（`minRoundsPerChapter: 20` 门槛 / 剧本转向），
+**不是**对话流这一层。下一步要查的是「门槛不满足时，`packRun` 为什么一条 beat 都不放」。
+
 ## 六、明确不做
 
 - 不重写 `renderChat`（它现在 12–25 ms / 次，不是瓶颈 —— 见 `ARCHITECTURE.md` 链 F 的读数）

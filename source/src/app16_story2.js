@@ -42,6 +42,9 @@ function deMeta(s){
  return x;
 }
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
+ /* 2026-10-27：这一条下面会自己把 say 推进语音队列 ⇒ 先打 `_voiced`，
+    免得 `appendMsg` 的兜底挂钩（app102_pipeline.js）再念一遍（那是双声）。 */
+ if(m&&m.k==="say")m._voiced=1;
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
  try{
