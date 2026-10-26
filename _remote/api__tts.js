@@ -1,0 +1,346 @@
+// MIRU → character voice (TTS) proxy · Vercel Node function
+// GET /api/tts?t=<text ≤200>&v=<voice id>&e=<8 emotion weights, comma separated>&l=zh|en
+// Qwen-TTS (qwen3-tts-flash) is the main voice for every line when DASHSCOPE_INTL_API_KEY / DASHSCOPE_API_KEY is set.
+// English lines: Inworld TTS-2 when INWORLD_API_KEY is set (Basic credentials copied from the Inworld portal, used as-is).
+//   Our voice slots (m1…m7, f1, f2) are matched once to Inworld's English preset voices by their tags; override with INWORLD_VOICE_MAP='{"m1":"Edward",…}'.
+//   INWORLD_MODEL (default inworld-tts-2; inworld-tts-2-flash is cheaper/faster).
+// Providers, first one configured wins:
+//   1) TTS_URL  — your own OpenAI-compatible speech server (CosyVoice / IndexTTS / GPT-SoVITS behind /v1/audio/speech). Optional TTS_KEY, TTS_MODEL.
+//   2) Hugging Face Space IndexTTS-2 (bilibili IndexTTS2 · free for commercial use under 100M MAU / ¥100M revenue) via the Gradio API.
+//      Set HF_TOKEN for a personal GPU quota (without it the Space treats every call as anonymous and the free quota runs out fast).
+// Voice references are real, consented Mandarin speakers from AISHELL-3 (Apache-2.0), adults only (age groups 26-40 / 41+).
+// Successful audio is cached on Vercel's CDN for a year, so each line is synthesised once for everyone.
+const SPACE = process.env.TTS_SPACE_URL || 'https://indexteam-indextts-2-demo.hf.space';
+const A3 = 'https://huggingface.co/datasets/AISHELL/AISHELL-3/resolve/main/train/wav/';
+const VOICES = {
+  m1: A3 + 'SSB0784/SSB07840004.wav', m2: A3 + 'SSB0609/SSB06090002.wav', m3: A3 + 'SSB0590/SSB05900005.wav',
+  m4: A3 + 'SSB0710/SSB07100005.wav', m5: A3 + 'SSB0261/SSB02610003.wav', m6: A3 + 'SSB0407/SSB04070004.wav',
+  m7: A3 + 'SSB0434/SSB04340001.wav',
+  f1: A3 + 'SSB0534/SSB05340001.wav', f2: A3 + 'SSB0599/SSB05990003.wav',
+};
+const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
+const LABELS = { same: ['Same as the voice reference', '与音色参考音频相同'], vec: ['Use emotion vectors', '使用情感向量控制'] };
+
+function cors(req, res) {
+  const o = req.headers.origin;
+  const ok = !o || ALLOWED.some(r => r.test(o));
+  res.setHeader('Access-Control-Allow-Origin', ok && o ? o : '*');
+  res.setHeader('Vary', 'Origin');
+  return ok;
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function viaOpenAI(text, voice) {
+  const r = await fetch(process.env.TTS_URL.replace(/\/$/, '') + '/v1/audio/speech', {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...(process.env.TTS_KEY ? { Authorization: 'Bearer ' + process.env.TTS_KEY } : {}) },
+    body: JSON.stringify({ model: process.env.TTS_MODEL || 'tts-1', input: text, voice, response_format: 'mp3' }),
+  });
+  if (!r.ok) throw new Error('tts server ' + r.status);
+  return { buf: Buffer.from(await r.arrayBuffer()), type: r.headers.get('content-type') || 'audio/mpeg' };
+}
+
+async function gradioOnce(label, ref, text, vec, deadline) {
+  const H = { 'Content-Type': 'application/json', ...(process.env.HF_TOKEN ? { Authorization: 'Bearer ' + process.env.HF_TOKEN } : {}) };
+  const file = { path: ref, url: ref, orig_name: 'ref.wav', meta: { _type: 'gradio.FileData' } };
+  const data = [label, file, text, null, 0.8, ...vec, '', false, 120, true, 0.8, 30, 0.8, 0.0, 3, 10.0, 1500];
+  const s = await fetch(SPACE + '/gradio_api/call/gen_single', { method: 'POST', headers: H, body: JSON.stringify({ data }) });
+  if (!s.ok) throw new Error('space submit ' + s.status);
+  const { event_id } = await s.json();
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), Math.max(1000, deadline - Date.now()));
+  let txt = '';
+  try { const r = await fetch(SPACE + '/gradio_api/call/gen_single/' + event_id, { headers: H, signal: ctl.signal }); txt = await r.text(); }
+  finally { clearTimeout(tm); }
+  const blocks = txt.split(/\n\n+/);
+  const done = blocks.find(b => /^event:\s*complete/m.test(b));
+  if (!done) { const err = blocks.find(b => /^event:\s*error/m.test(b)); throw new Error('space ' + (err ? err.replace(/\s+/g, ' ').slice(0, 200) : 'no result')); }
+  const json = JSON.parse(done.split(/\ndata:\s*/)[1]);
+  const out = Array.isArray(json) ? json[0] : json;
+  const f = (out && out.value) || out;
+  const url = f && (f.url || (f.path && SPACE + '/gradio_api/file=' + f.path));
+  if (!url) throw new Error('no audio url');
+  const a = await fetch(url, { headers: H });
+  if (!a.ok) throw new Error('audio ' + a.status);
+  return { buf: Buffer.from(await a.arrayBuffer()), type: a.headers.get('content-type') || 'audio/wav' };
+}
+
+async function viaSpace(text, voice, vec) {
+  const ref = VOICES[voice] || VOICES.m1;
+  const useVec = vec.some(x => x > 0);
+  const deadline = Date.now() + 55000;
+  let last;
+  for (const label of (useVec ? LABELS.vec : LABELS.same)) {
+    try { return await gradioOnce(label, ref, text, useVec ? vec : [0, 0, 0, 0, 0, 0, 0, 0], deadline); }
+    catch (e) { last = e; if (!/choice|not in|value/i.test(String(e.message))) break; }
+  }
+  throw last;
+}
+
+/* ---------- Qwen-TTS (Alibaba Model Studio) · main voice for Chinese and English when a key is set ----------
+   DASHSCOPE_INTL_API_KEY (international console) or DASHSCOPE_API_KEY (China console); optional DASHSCOPE_BASE_URL (workspace host),
+   QWEN_TTS_MODEL (default qwen3-tts-flash), QWEN_VOICE_MAP='{"m1":"Moon",…}'. Every system voice speaks both Mandarin and English. */
+const QWEN_WS = 'https://ws-cnxfgp13wlelgkbu.ap-southeast-1.maas.aliyuncs.com';
+const QV = { m1: 'Moon', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Kai', m6: 'Mochi', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
+let QSITE = null, QBASE = null;
+function qwenSites() {
+  const E = process.env, intl = E.DASHSCOPE_INTL_API_KEY, cn = E.DASHSCOPE_API_KEY || E.QWEN_API_KEY, out = [];
+  const add = (base, key) => { if (key && base) { base = base.replace(/\/+$/, '').replace(/\/(compatible-mode|api)\/.*$/, ''); if (!out.some(x => x.base === base && x.key === key)) out.push({ base, key }); } };
+  if (E.DASHSCOPE_BASE_URL) add(E.DASHSCOPE_BASE_URL, intl || cn);
+  if (intl) { add(QWEN_WS, intl); add('https://dashscope-intl.aliyuncs.com', intl); }
+  if (cn) { add('https://dashscope.aliyuncs.com', cn); add(QWEN_WS, cn); add('https://dashscope-intl.aliyuncs.com', cn); }
+  if (QSITE) out.sort((a, b) => (b.base + b.key === QSITE) - (a.base + a.key === QSITE));
+  return out;
+}
+function qwenVoice(v) { let m = {}; try { m = JSON.parse(process.env.QWEN_VOICE_MAP || '{}'); } catch (_) {} return m[v] || QV[v] || (String(v)[0] === 'f' ? 'Serena' : 'Ethan'); }
+const QLANG = { zh: 'Chinese', en: 'English', ja: 'Japanese', ko: 'Korean', es: 'Spanish', fr: 'French', de: 'German', pt: 'Portuguese', it: 'Italian', ru: 'Russian' };
+async function viaQwen(text, voice, lang) {
+  let last = 'no site';
+  for (const site of qwenSites()) for (let attempt = 0; attempt < 2; attempt++) {
+    const r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+      body: JSON.stringify({ model: process.env.QWEN_TTS_MODEL || 'qwen3-tts-flash', input: { text, voice: qwenVoice(voice), language_type: QLANG[lang] || 'Auto' } }) });
+    if ((r.status === 429 || r.status >= 500) && attempt === 0) { await new Promise(z => setTimeout(z, 700)); continue; } // busy → one retry on the same site
+    const j = await r.json().catch(() => ({}));
+    const a = j.output && j.output.audio;
+    if (!r.ok || !a || (!a.url && !a.data)) { last = site.base.replace(/^https:\/\//, '').slice(0, 24) + ' ' + r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 160); break; }
+    QSITE = site.base + site.key; QBASE = site.base;
+    if (a.data) return { buf: Buffer.from(a.data, 'base64'), type: 'audio/wav' };
+    const f = await fetch(a.url); if (!f.ok) throw new Error('qwen audio ' + f.status);
+    return { buf: Buffer.from(await f.arrayBuffer()), type: f.headers.get('content-type') || 'audio/wav' };
+  }
+  throw new Error('qwen ' + last);
+}
+
+/* ---------- Qwen-Omni voice-call turn (POST /api/tts {omni:{voice, sys, msgs}}) → SSE stream passed through ----------
+   QWEN_OMNI_MODEL (default qwen3.5-omni-flash, then qwen3-omni-flash), QWEN_OMNI_VOICES='{"m1":"Ethan",…}'. */
+const OMNI_VOICES = { m1: 'Raymond', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Theo Calm', m6: 'Aiden', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
+function omniVoice(v) { let m = {}; try { m = JSON.parse(process.env.QWEN_OMNI_VOICES || '{}'); } catch (_) {} return m[v] || OMNI_VOICES[v] || (String(v)[0] === 'f' ? 'Serena' : 'Ethan'); }
+async function omni(o, res) {
+  const sites = qwenSites(), trace = [];
+  if (!sites.length) { res.status(501).json({ error: { message: 'no Qwen key' } }); return; }
+  const msgs = [{ role: 'system', content: String(o.sys || '').slice(0, 12000) }];
+  for (const m of (Array.isArray(o.msgs) ? o.msgs : []).slice(-12)) {
+    if (m.role === 'assistant') msgs.push({ role: 'assistant', content: String(m.text || '').slice(0, 1500) });
+    else if (m.audio) msgs.push({ role: 'user', content: [{ type: 'input_audio', input_audio: { data: 'data:;base64,' + String(m.audio), format: 'wav' } }] });
+    else msgs.push({ role: 'user', content: String(m.text || '').slice(0, 2000) });
+  }
+  const models = [process.env.QWEN_OMNI_MODEL || 'qwen3.5-omni-flash', 'qwen3-omni-flash'].filter((x, i, a) => a.indexOf(x) === i);
+  const fem = String(o.voice || '')[0] === 'f', t00 = Date.now();
+  for (const site of sites) for (const model of models) for (const voice of [omniVoice(o.voice), fem ? 'Cherry' : 'Ethan']) {
+    if (Date.now() - t00 > 30000) break;
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 15000), t0 = Date.now();
+    try {
+      const up = await fetch(site.base + '/compatible-mode/v1/chat/completions', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+        body: JSON.stringify({ model, messages: msgs, modalities: ['text', 'audio'], audio: { voice, format: 'wav' }, stream: true, stream_options: { include_usage: true }, max_tokens: Math.min(+o.max || 300, 800) }) });
+      trace.push(site.base.slice(8, 30) + ' ' + model + ' ' + voice + ' ' + up.status + ' ' + (Date.now() - t0) + 'ms');
+      if (!up.ok) { clearTimeout(tm); const e = (await up.text().catch(() => '')).slice(0, 240); trace.push(e); if (/voice/i.test(e)) continue; break; }
+      QSITE = site.base + site.key; QBASE = site.base;
+      res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': 'qwen:' + model + ':' + voice });
+      const rd = up.body.getReader();
+      for (;;) { const x = await rd.read(); if (x.done) break; res.write(Buffer.from(x.value)); }
+      clearTimeout(tm); res.end(); return;
+    } catch (e) { clearTimeout(tm); trace.push(site.base.slice(8, 30) + ' ' + model + ' ' + (e.name === 'AbortError' ? 'timeout ' + (Date.now() - t0) + 'ms' : String(e.message || e).slice(0, 160)));
+      if (res.headersSent) { try { res.end(); } catch (_) {} return; } break; }
+  }
+  res.status(502).json({ error: { message: 'qwen omni failed', trace } });
+}
+
+/* ---------- Qwen image generation (POST /api/tts {img:{prompt, w, h, image?}}) ----------
+   Cheapest good models on Model Studio: text-to-image z-image-turbo (prompt rewrite off · ¥0.1/image),
+   edit-from-portrait wan2.5-i2i-preview as an async task (¥0.2; sync edit models need 50s+). Override with QWEN_IMG_MODEL / QWEN_EDIT_MODEL.
+   Returns {mime, data(base64)} so the picture can be kept on the device (provider URLs expire after 24h). */
+const IMG_HITS = new Map(); // light per-IP limiter: 30 images / 10 min per instance
+function imgAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
+  const a = (IMG_HITS.get(ip) || []).filter(t => now - t < 600e3); if (a.length >= 30) return false; a.push(now); IMG_HITS.set(ip, a); return true; }
+function findImg(o) { if (!o || typeof o !== 'object') return null; for (const k of Object.keys(o)) { const v = o[k];
+  if (typeof v === 'string' && /^https?:\/\//.test(v) && (k === 'image' || k === 'url' || /\.(png|jpe?g|webp)(\?|$)/i.test(v))) return v;
+  if (v && typeof v === 'object') { const r = findImg(v); if (r) return r; } } return null; }
+async function genImage(o) {
+  const T0 = Date.now();
+  const prompt = String(o.prompt || '').slice(0, 1500); if (!prompt) throw new Error('no prompt');
+  const w = Math.max(512, Math.min(2048, Math.round((+o.w || 768) / 16) * 16)), h = Math.max(512, Math.min(2048, Math.round((+o.h || 1024) / 16) * 16));
+  const TRY = ['qwen-image-2.0', 'qwen-image-3.0', 'wan2.7-image', 'wan2.6-image', 'z-image-turbo'];
+  const edit = !!o.image, model = TRY.includes(o.model) ? o.model : edit ? (process.env.QWEN_EDIT_MODEL || 'qwen-image-2.0') : (process.env.QWEN_IMG_MODEL || 'z-image-turbo');
+  let image = String(o.image || '');
+  if (edit && /^https?:\/\//.test(image)) { // Model Studio refuses some hosts (e.g. vercel.app resolves to an address it treats as internal) → send the bytes
+    const f = await fetch(image); if (!f.ok) throw new Error('ref image ' + f.status); const buf = Buffer.from(await f.arrayBuffer()); if (buf.length > 8e6) throw new Error('ref image too big');
+    image = 'data:' + ((f.headers.get('content-type') || 'image/jpeg').split(';')[0]) + ';base64,' + buf.toString('base64'); }
+  const content = edit ? [{ image }, { text: prompt }] : [{ text: prompt }];
+  const parameters = edit ? { n: 1, watermark: false, prompt_extend: false, size: w + '*' + h } : { size: w + '*' + h, prompt_extend: false, watermark: false };
+  let last = 'no site';
+  for (const site of qwenSites()) {
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), edit ? 42000 : 50000);
+    let r; try { r = await fetch(site.base + '/api/v1/services/aigc/multimodal-generation/generation', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key },
+      body: JSON.stringify({ model, input: { messages: [{ role: 'user', content }] }, parameters }) }); } catch (e) { clearTimeout(tm); throw new Error(model + (e.name === 'AbortError' ? ' too slow' : ' ' + e.message)); } clearTimeout(tm);
+    const j = await r.json().catch(() => ({}));
+    const url = r.ok && findImg(j.output);
+    if (!url) { last = r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 200); if (r.status === 400) break; continue; }
+    QSITE = site.base + site.key; QBASE = site.base;
+    const f = await fetch(url); if (!f.ok) throw new Error('image fetch ' + f.status);
+    return { model, ms: Date.now() - T0, mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') };
+  }
+  throw new Error(model + ' ' + last);
+}
+
+/* "same face, new scene" edits take 30–60s, longer than a request should wait → async task (wan2.5-i2i-preview · ¥0.2), the page polls */
+async function editStart(o) {
+  let image = String(o.image || ''), prompt = String(o.prompt || '').slice(0, 1500);
+  if (/^https?:\/\//.test(image)) { const f = await fetch(image); if (!f.ok) throw new Error('ref image ' + f.status); const buf = Buffer.from(await f.arrayBuffer()); if (buf.length > 8e6) throw new Error('ref image too big');
+    image = 'data:' + ((f.headers.get('content-type') || 'image/jpeg').split(';')[0]) + ';base64,' + buf.toString('base64'); }
+  const model = process.env.QWEN_EDIT_MODEL || 'wan2.5-i2i-preview'; let last = 'no site';
+  for (const site of qwenSites()) {
+    const r = await fetch(site.base + '/api/v1/services/aigc/image2image/image-synthesis', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + site.key, 'X-DashScope-Async': 'enable' },
+      body: JSON.stringify({ model, input: { prompt, images: [image] }, parameters: { n: 1, watermark: false, prompt_extend: false } }) });
+    const j = await r.json().catch(() => ({}));
+    const id = j.output && j.output.task_id;
+    if (r.ok && id) { const i = qwenSites().findIndex(x => x.base === site.base && x.key === site.key); return { task: i + '.' + id, model }; }
+    last = r.status + ' ' + (j.code || '') + ' ' + String(j.message || '').slice(0, 200); if (r.status === 400) break;
+  }
+  throw new Error(model + ' ' + last);
+}
+async function editPoll(tid) {
+  const [i, id] = String(tid).split('.'); const site = qwenSites()[+i]; if (!site || !/^[\w-]{6,80}$/.test(id || '')) throw new Error('bad task');
+  const r = await fetch(site.base + '/api/v1/tasks/' + id, { headers: { Authorization: 'Bearer ' + site.key } }); const j = await r.json().catch(() => ({}));
+  const st = j.output && j.output.task_status;
+  if (st === 'SUCCEEDED') { const url = findImg(j.output); if (!url) return { state: 'failed', err: 'no url' };
+    const f = await fetch(url); if (!f.ok) throw new Error('image fetch ' + f.status);
+    return { state: 'success', mime: (f.headers.get('content-type') || 'image/png').split(';')[0], data: Buffer.from(await f.arrayBuffer()).toString('base64') }; }
+  if (st === 'FAILED' || st === 'CANCELED' || st === 'UNKNOWN') return { state: 'failed', err: String((j.output && (j.output.message || j.output.code)) || st).slice(0, 200) };
+  return { state: 'run' };
+}
+
+/* ---------- Vidu image-to-video (POST /api/tts {vid:{image, prompt}} → {id}; GET /api/tts?vid=<id> → {state, url, cover}) ----------
+   VIDU_API_KEY (Authorization: Token …). VIDU_BASE_URL (default https://api.vidu.com, then https://api.vidu.cn for China accounts).
+   VIDU_MODEL (default viduq2-pro-fast — the cheapest 720p clip, then viduq2-turbo), VIDU_RES (720p), VIDU_DUR (5). */
+const VID_HITS = new Map();
+function vidAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
+  const a = (VID_HITS.get(ip) || []).filter(t => now - t < 600e3); if (a.length >= 8) return false; a.push(now); VID_HITS.set(ip, a); return true; }
+const viduBases = () => [process.env.VIDU_BASE_URL, 'https://api.vidu.com', 'https://api.vidu.cn'].filter(Boolean).map(x => x.replace(/\/+$/, '')).filter((x, i, a) => a.indexOf(x) === i);
+const viduH = () => ({ 'Content-Type': 'application/json', Authorization: 'Token ' + process.env.VIDU_API_KEY });
+async function viduStart(o) {
+  if (!process.env.VIDU_API_KEY) throw new Error('no VIDU_API_KEY');
+  const image = String(o.image || ''); if (!image) throw new Error('no image');
+  const models = [process.env.VIDU_MODEL || 'viduq2-pro-fast', 'viduq2-turbo'].filter((x, i, a) => a.indexOf(x) === i);
+  let last = '';
+  const bases = viduBases();
+  for (let bi = 0; bi < bases.length; bi++) for (const model of models) {
+    const r = await fetch(bases[bi] + '/ent/v2/img2video', { method: 'POST', headers: viduH(), body: JSON.stringify({ model, images: [image], prompt: String(o.prompt || '').slice(0, 1500),
+      duration: +(process.env.VIDU_DUR || 5), resolution: process.env.VIDU_RES || '720p', movement_amplitude: 'auto', ...(/^viduq[34]/.test(model) ? { audio: false } : {}) }) });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok && j.task_id) return { id: bi + '.' + j.task_id, model, credits: j.credits };
+    last = bases[bi].slice(8) + ' ' + model + ' ' + r.status + ' ' + JSON.stringify(j).slice(0, 200);
+    if (r.status === 401 || r.status === 403) break; // key belongs to the other site
+  }
+  throw new Error('vidu ' + last);
+}
+async function viduPoll(id) {
+  const [bi, task] = String(id).split('.'); const base = viduBases()[+bi] || viduBases()[0];
+  if (!/^[\w-]{4,80}$/.test(task || '')) throw new Error('bad id');
+  const r = await fetch(base + '/ent/v2/tasks/' + task + '/creations', { headers: viduH() });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error('vidu ' + r.status + ' ' + JSON.stringify(j).slice(0, 200));
+  const c = (j.creations || [])[0] || {};
+  return { state: j.state, url: c.url || null, cover: c.cover_url || null, err: j.err_code || undefined, credits: j.credits };
+}
+
+/* ---------- Inworld (English) ---------- */
+const IW_WANT = { m1: ['deep', 'low', 'calm', 'serious'], m2: ['young', 'bright', 'energetic', 'youthful'], m3: ['warm', 'friendly', 'smooth', 'gentle'],
+  m4: ['serious', 'authoritative', 'deep', 'cold'], m5: ['relaxed', 'laid-back', 'casual', 'soft'], m6: ['bright', 'upbeat', 'energetic', 'expressive'],
+  m7: ['middle-aged', 'mature', 'calm', 'smooth'], f1: ['warm', 'soft', 'gentle', 'natural'], f2: ['confident', 'professional', 'clear', 'crisp'] };
+let IW_MAP = null, IW_LIST = null;
+const iwAuth = () => ({ Authorization: 'Basic ' + process.env.INWORLD_API_KEY, 'Content-Type': 'application/json' });
+async function iwVoices() {
+  if (IW_MAP) return IW_MAP;
+  let fixed = {}; try { fixed = JSON.parse(process.env.INWORLD_VOICE_MAP || '{}'); } catch (_) {}
+  const r = await fetch('https://api.inworld.ai/tts/v1/voices?filter=language%3Den', { headers: iwAuth() });
+  const j = r.ok ? await r.json() : { voices: [] };
+  IW_LIST = (j.voices || []).filter(v => !v.isCustom).map(v => ({ id: v.voiceId, tags: (v.tags || []).map(t => String(t).toLowerCase()), desc: String(v.description || '').toLowerCase() }));
+  const used = new Set(Object.values(fixed)), map = Object.assign({}, fixed);
+  for (const slot of Object.keys(IW_WANT)) {
+    if (map[slot]) continue;
+    const g = slot[0] === 'f' ? 'female' : 'male';
+    const pool = IW_LIST.filter(v => v.tags.includes(g) || v.desc.includes(g));
+    const score = v => IW_WANT[slot].reduce((n, t) => n + (v.tags.includes(t) || v.desc.includes(t) ? 1 : 0), 0);
+    const best = pool.filter(v => !used.has(v.id)).sort((a, b) => score(b) - score(a))[0] || pool[0];
+    if (best) { map[slot] = best.id; used.add(best.id); }
+  }
+  map.m1 = map.m1 || 'Dennis'; map.f1 = map.f1 || 'Ashley';
+  IW_MAP = map; return map;
+}
+async function viaInworld(text, voice, vec) {
+  const map = await iwVoices();
+  const strong = Math.max(...vec) >= 0.5; // a charged line gets a freer delivery
+  const r = await fetch('https://api.inworld.ai/tts/v1/voice', { method: 'POST', headers: iwAuth(), body: JSON.stringify({
+    text, voiceId: map[voice] || map[voice[0] === 'f' ? 'f1' : 'm1'], modelId: process.env.INWORLD_MODEL || 'inworld-tts-2', language: 'en-US',
+    audioConfig: { audioEncoding: 'MP3', sampleRateHertz: 24000 }, deliveryMode: strong ? 'CREATIVE' : 'BALANCED', applyTextNormalization: 'ON' }) });
+  if (!r.ok) throw new Error('inworld ' + r.status + ' ' + (await r.text()).slice(0, 160));
+  const j = await r.json(); if (!j.audioContent) throw new Error('inworld: no audio');
+  return { buf: Buffer.from(j.audioContent, 'base64'), type: 'audio/mpeg' };
+}
+
+
+/* ---------- Doubao realtime voice: short signed ticket for the Cloudflare relay (keys stay in the relay) ---------- */
+const DB_SPK_O = { m: ['zh_male_yunzhou_jupiter_bigtts', 'zh_male_xiaotian_jupiter_bigtts'], f: ['zh_female_vv_jupiter_bigtts', 'zh_female_xiaohe_jupiter_bigtts'],
+  en_m: ['en_male_tim_uranus_bigtts'], en_f: ['en_female_dacey_uranus_bigtts', 'en_female_stokie_uranus_bigtts'] };
+/* ticket key: DOUBAO_RELAY_SECRET when set (worker checks it locally); otherwise derived from AUTH_SECRET and the worker asks us (?doubao_check=) */
+function dbKey() { if (process.env.DOUBAO_RELAY_SECRET) return process.env.DOUBAO_RELAY_SECRET; let s = ''; try { s = require('./_lib').secret ? require('./_lib').secret() : ''; } catch (_) {} s = s || process.env.AUTH_SECRET || process.env.LONGCAT_API_KEY || 'miru'; return require('crypto').createHash('sha256').update('doubao-relay:' + s).digest('hex'); }
+function doubaoCheck(t, res) {
+  const crypto = require('crypto'), b64u = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+  let ok = false; try { const [body, mac] = String(t || '').split('.'); if (body && mac && b64u(crypto.createHmac('sha256', dbKey()).update(body).digest()) === mac) { const p = JSON.parse(Buffer.from(body.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString()); ok = p.exp > Date.now(); } } catch (_) {}
+  res.setHeader('Cache-Control', 'no-store'); res.status(ok ? 200 : 403).json({ ok });
+}
+function doubaoTicket(req, res) {
+  const url = process.env.DOUBAO_RELAY_URL, sec = dbKey();
+  if (!url) { res.status(200).json({ off: true }); return; }
+  let u = null; try { u = require('./_lib').who(req); } catch (_) {}
+  if (!u) { res.status(401).json({ error: 'not signed in' }); return; }
+  const crypto = require('crypto'), b64u = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+  const body = b64u(JSON.stringify({ u: u.uid, exp: Date.now() + 2 * 60 * 1000, n: crypto.randomBytes(6).toString('hex') }));
+  const t = body + '.' + b64u(crypto.createHmac('sha256', sec).update(body).digest());
+  let spk = DB_SPK_O; try { if (process.env.DOUBAO_SPEAKERS) spk = Object.assign({}, DB_SPK_O, JSON.parse(process.env.DOUBAO_SPEAKERS)); } catch (_) {}
+  res.status(200).json({ url: url.replace(/^http/, 'ws').replace(/\/$/, '') + '/?t=' + t, model: process.env.DOUBAO_MODEL || '1.2.1.1',
+    langs: String(process.env.DOUBAO_LANGS || 'zh,en').split(/[ ,]+/).filter(Boolean), speakers: spk });
+}
+
+module.exports = async (req, res) => {
+  if (req.method === 'GET' && req.query && req.query.doubao_check) return doubaoCheck(req.query.doubao_check, res);
+  const ok = cors(req, res);
+  if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); res.status(204).end(); return; }
+  if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return; }
+  if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
+    res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
+    if (b.omni) return omni(b.omni, res);
+    if (b.vid) { res.setHeader('Cache-Control', 'no-store'); if (!vidAllowed(req)) { res.status(429).json({ error: 'too many videos, try again later' }); return; }
+      try { res.status(200).json(await viduStart(b.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
+    if (b.img) { res.setHeader('Cache-Control', 'no-store'); if (!imgAllowed(req)) { res.status(429).json({ error: 'too many images, try again later' }); return; }
+      try { res.status(200).json(b.img.image && !b.img.model ? await editStart(b.img) : await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
+    res.status(400).json({ error: 'bad request' }); return; }
+  const q = req.query || {};
+  if (q.doubao) { res.setHeader('Cache-Control', 'no-store'); return doubaoTicket(req, res); }
+  if (q.imgtask) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await editPoll(q.imgtask)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
+  if (q.vid) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await viduPoll(q.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
+  if (q.ping === 'vidu') { res.setHeader('Cache-Control', 'no-store'); res.status(200).json({ key: !!process.env.VIDU_API_KEY, bases: viduBases(), model: process.env.VIDU_MODEL || 'viduq2-pro-fast' }); return; }
+  if (q.ping === 'qwen') { res.setHeader('Cache-Control', 'no-store'); const t0 = Date.now();
+    try { const SAY = { zh: '你终于来了。外面雨这么大，你也不带把伞？', en: 'You finally came. No umbrella?', ja: 'やっと来たね。こんな雨なのに、傘も持ってないの？', ko: '드디어 왔네. 비가 이렇게 오는데 우산도 없어?', es: 'Por fin llegaste. ¿Con esta lluvia y sin paraguas?' }; const L = SAY[q.l] ? q.l : 'zh'; const o = await viaQwen(SAY[L], String(q.v || 'm1'), L); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
+    catch (e) { res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 400), sites: qwenSites().map(x => x.base) }); } return; }
+  if (q.ping) { res.setHeader('Cache-Control', 'no-store'); let iw = null; if (q.ping === 'inworld' && process.env.INWORLD_API_KEY) { try { iw = { map: await iwVoices(), english_voices: (IW_LIST || []).map(v => v.id + ' [' + v.tags.join(',') + ']') }; } catch (e) { iw = { error: String(e.message || e) }; } }
+    res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', qwen: qwenSites().length > 0, english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
+  const text = String(q.t || '').replace(/[*（）()]/g, '').trim().slice(0, 400);
+  if (!text) { res.status(400).json({ error: 'no text' }); return; }
+  const voice = String(q.v || 'm1').slice(0, 12);
+  const vec = String(q.e || '').split(',').slice(0, 8).map(x => Math.max(0, Math.min(1, +x || 0)));
+  while (vec.length < 8) vec.push(0);
+  try {
+    const en = q.l === 'en' || (!q.l && !/[\u3040-\u30ff\uac00-\ud7af\u4e00-\u9fff]/.test(text));
+    let out = null, qerr = null;
+    const lang = QLANG[q.l] ? q.l : (/[\u3040-\u30ff]/.test(text) ? 'ja' : /[\uac00-\ud7af]/.test(text) ? 'ko' : /[\u4e00-\u9fff]/.test(text) ? 'zh' : 'en');
+    if (qwenSites().length) { try { out = await viaQwen(text, voice, lang); } catch (e) { qerr = e; out = null; } }
+    if (!out && en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
+    if (!out) out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
+    const riff = out.buf.slice(0, 4).toString() === 'RIFF';
+    res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));
+    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
+    res.status(200).send(out.buf);
+  } catch (e) {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(502).json({ error: String(e && e.message || e).slice(0, 300) });
+  }
+};
