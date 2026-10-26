@@ -48,7 +48,7 @@ function renderChat(){
   '<button class="tool" data-modemore="1" id="modeMoreBtn">⋯ '+t("cx.more")+'</button></div>'+
   '<div class="modes2" id="modes2" hidden>'+
    '<button class="tool gamebtn" data-games="1">🎮 '+t("gh.btn")+'</button><button class="tool" data-ideas="1">✦ '+t("cx.suggest")+'</button><button class="tool" data-cont="1">⏩ '+t("cx.cont")+'</button><button class="tool" data-cs="1">📖 '+t("cs.h")+'</button></div>'+
-  '<div class="inrow"><button class="plus" data-plus="1">'+ic("plus")+'</button><textarea id="cin" rows="1" class="'+(cmode==="dir"?"dir":"")+'" placeholder="'+esc(t("cx.ph."+cmode))+'"></textarea><button class="send" data-send="1">'+ic("send")+'</button></div></div>';
+  '<div class="inrow"><button class="plus" data-plus="1">'+ic("plus")+'</button><textarea id="cin" rows="1" class="'+(cmode==="dir"?"dir":"")+'" placeholder="'+esc(cmode==="dir"?t("cx.ph.dir"):t("cx.ph.say"))+'"></textarea><button class="send" data-send="1">'+ic("send")+'</button></div></div>';
  const lastWho=([...th.msgs].reverse().find(m=>ch(m.who))||{}).who||mainOf(th);
  h='<div class="chatbg" id="chatBg"><div class="cbimg" id="cbImg"></div><canvas id="cbFx"></canvas><div class="cbveil"></div></div>'+h;
  screen("s-chat",h,"chatscreen");refreshLive();setTimeout(()=>chatFx(th),30);const lm=[...th.msgs].reverse().find(m=>ch(m.who));/* the scene is alive from the first second, before anyone speaks */if(lm)chatBgSet(lm.who,poseOf(lm));else{const c0=(th.cast||[]).find(x=>ch(x));if(c0)chatBgSet(c0,"idle")}}
@@ -170,7 +170,8 @@ function msgHTML(m,i,th){
   '.pk-locked{opacity:.45;pointer-events:none}',
   '.modeTog{border:1px solid var(--line2);background:var(--panel);color:var(--fg);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer}',
   '.modeTog:active{transform:scale(.96)}',
-  '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%)}',
+  /* Ann 2026-10-27：对话要能往上累积到 80% 再滚；顶部只留一小段渐隐，别把整块吃掉 */
+  '#msgs{max-height:80%;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,#000 7%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
      MIRU_TUNE.chat.playerSide = "left" 时整盘翻过来：玩家在左、角色在右。 */
@@ -359,7 +360,7 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
+  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
@@ -373,10 +374,9 @@ async function reply(th,ctx,silent){
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
-  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. For two suggestions, choose two of those formats. Vary the intentions: clarify, propose a next step supported by visible facts, or defer/change topic. All are optional; never assume consent or promise success. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: exactly 3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
  if(liveOn()){

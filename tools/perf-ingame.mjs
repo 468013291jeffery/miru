@@ -21,7 +21,10 @@ const opt = (name, dflt) => {
 const flag = name => args.includes('--' + name);
 
 const URL = opt('url', 'http://127.0.0.1:8131/');
-const SESSION = opt('session', 'dsh');
+// ⚠️ 不要用 `dsh` 当默认 session：那是所有 dsh 窗口共用的浏览器会话，两个窗口同时驱动
+// 会互相把对方的页面导航走（2026-10-27 实测：一轮跑了 9 分钟的基线测量就这样被打掉）。
+// 每个窗口用自己的名字。
+const SESSION = opt('session', 'miru-perf');
 const CHAPTERS = Number(opt('chapters', 8));
 const CHOICE = opt('choice', 'B');
 const WORLD = opt('world', 'ice');
@@ -75,8 +78,15 @@ const runner = fs.readFileSync('tools/perf-ingame-run.js', 'utf8');
 say('      ' + evalJs(runner, 'runner'));
 
 // ---------- 2. 准备一个可复现的起点 ----------
+/* --fast：把「按阅读速度放行」的等待去掉（S.pkSpd 缩到 1/50 + 关掉朗读），于是墙钟 ≈ 真正的
+   主线程工作。为什么需要它：真速播一章 60–90 秒，其中 99% 是定时器在等 —— 那部分不是「卡」，
+   改代码也动不了它。A/B 要比的是工作，不是等。真速的读数另外单独留一份（不加 --fast）。 */
+const FAST = flag('fast');
 const setup = evalJs(`JSON.stringify((function(){
-  S.packs=S.packs||{};S.packs["${WORLD}"]={own:1,end:{}};S.pkSpd=1;save();
+  S.packs=S.packs||{};S.packs["${WORLD}"]={own:1,end:{}};save();
+  ${FAST ? 'S.pkSpd=0.02;S.autoVoice=false;' : 'S.pkSpd=1;'}
+  try{if(typeof MIRU_TUNE==="object"&&MIRU_TUNE.chat)MIRU_TUNE.chat.minRoundsPerChapter=0}catch(e){}   // 节奏门槛不是性能，量性能时关掉
+  save();
   const th=Object.values(S.threads).filter(t=>t.wid==="${WORLD}"&&t.pk).sort((a,b)=>b.at-a.at)[0];
   if(th&&th.pk&&th.pk.st!=="end"){openThread(th.id);return{resume:true,id:th.id,ch:th.pk.ch,st:th.pk.st,msgs:th.msgs.length}}
   if(th){delete S.threads[th.id];save()}
@@ -106,7 +116,7 @@ const runReport = JSON.parse(evalJs('__PERFRUN.report()', 'report'));
 const probeReport = JSON.parse(evalJs('__MIRUPERF.report()', 'probe-report'));
 const out = {
   when: new Date().toISOString(),
-  url: URL, world: WORLD, chapters: CHAPTERS, choice: CHOICE,
+  url: URL, world: WORLD, chapters: CHAPTERS, choice: CHOICE, fast: FAST,
   setup: JSON.parse(setup),
   runs: runReport.runs,
   err: runReport.err,
