@@ -75,14 +75,18 @@ else:
     # 构建指纹（2026-10-25）：没有它，就永远无法回答「线上跑的是哪一版」。
 # 指纹 = 页面内容（不含指纹本身）的 sha256 前 12 位 + UTC 构建时间；
 # tools/live-check.mjs 会把线上那一页取回来、剥掉指纹、重算 sha256 对一遍 —— 可验证，不是自说自话。
+# 构建指纹（2026-10-26 修正）：**不要再往 HTML 的 </head> 里插**。
+# 教训：window.CREATOR_HTML 那个字符串里自带一段 </head>，replace(...,1) 命中的是**字符串内部**那个，
+# 结果指纹里的 </script> 把真正的脚本块提前截断 ⇒ 第 10497 行 SyntaxError ⇒ 应用起不来（黑框）。
+# 现在改成：先算出页面内容的 sha256，再把它作为**JS 第一行**塞进 bundle —— 不碰任何 HTML 结构。
 import hashlib, datetime
 _h = hashlib.sha256(html.encode("utf-8")).hexdigest()[:12]
 _ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
-_stamp = '<script>window.MIRU_BUILD="' + _h + " " + _ts + '";</script>'
-if "</head>" in html:
-    html = html.replace("</head>", _stamp + "</head>", 1)
-else:
-    html = _stamp + html
+JS_STAMP = 'window.MIRU_BUILD="' + _h + " " + _ts + '";'
+# 指纹作为脚本第一行（在 <script> 之后），不改变文档结构
+_si = html.find("<script>")
+if _si >= 0:
+    html = html[:_si + len("<script>")] + "\n" + JS_STAMP + html[_si + len("<script>"):]
 out=os.path.join(ROOT,"index.html")
 open(out,"w",encoding="utf8",newline="\n").write(html)
 print(len(html), "chars ->", out, "| split" if SPLIT else "| single file")

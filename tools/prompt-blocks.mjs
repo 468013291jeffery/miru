@@ -135,6 +135,15 @@ console.log('G. 公共卡不泄露底牌（原有闸，留在这里做第二道�
   ok('公共卡仍然带动机（publicWants）', /Wants \(his own/.test(card), '');
 }
 
+console.log('H. suggest 是玩家的选项，不是角色台词（2026-10-28 有人反馈漂了）');
+{
+  ok('说明里点名 PLAYER', /suggest = what the PLAYER/.test(html), '');
+  ok('明确禁止角色台词', /NEVER a line said by a character/.test(html), '');
+  ok('三种力度都点名（说/做/不吭声）', /could SAY/.test(html) && /could DO/.test(html) && /WITHOUT speaking/.test(html), '');
+  ok('schema 里有 reaction（看得见的反馈）', /"reaction"/.test(html), '');
+  ok('tune 默认 reaction=true', /reaction:\s*true/.test(html), (html.match(/reaction:\s*\w+/) || [''])[0]);
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('prompt blocks OK');
