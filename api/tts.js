@@ -18,7 +18,7 @@ const VOICES = {
   m7: A3 + 'SSB0434/SSB04340001.wav',
   f1: A3 + 'SSB0534/SSB05340001.wav', f2: A3 + 'SSB0599/SSB05990003.wav',
 };
-const ALLOWED = [/^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
+const ALLOWED = [/^https:\/\/(www\.)?miru\.plus$/, /^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
 const LABELS = { same: ['Same as the voice reference', '与音色参考音频相同'], vec: ['Use emotion vectors', '使用情感向量控制'] };
 
 function cors(req, res) {
