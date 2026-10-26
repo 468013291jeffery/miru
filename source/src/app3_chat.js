@@ -209,7 +209,10 @@ function msgHTML(m,i,th){
   '#msgs .m-row img{max-height:34px}',
   '#msgs{min-height:60%}',
   '.chstep,.myline,.sttag.you{max-height:38vh;overflow-y:auto}',
-  '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%)}',
+  /* 2026-10-27 · 这条 mask 也是合成器杀手：它对**整个滚动层**做一次掩膜，
+     消息越多、滚一下就要重做一次 —— 在 Windows/Edge 上和 backdrop-filter 一起能把页面拖到不响应输入
+     （而 JS 长任务仍然是 0）。⇒ 默认关，`body.heavyfx` 时再开。视觉上少一点顶部渐隐，换来能打字。 */
+  'body.heavyfx #msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
      MIRU_TUNE.chat.playerSide = "left" 时整盘翻过来：玩家在左、角色在右。 */
