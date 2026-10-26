@@ -364,6 +364,23 @@ async function reply(th,ctx,silent){
   w?("WHAT'S AT STAKE: "+Lz(w.warn)):"",
   "STATUS: "+(th.status.time||"")+" · "+(th.status.place||""),
   "CAST (only these ids may speak):\n"+speakersOf(th).map(id=>castCardFace(th,id)).join("\n"),
+  (function(){try{
+   /* 把接下来的剧本 beat 变成「方向」，而不是照念（2026-10-27 Ann） */
+   if(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.scriptAsHint===false)return "";
+   const q=(th&&th.pk&&Array.isArray(th.pk.q))?th.pk.q:[];
+   if(!q.length)return "";
+   const take=q.splice(0,Math.min(2,q.length));   // 从队列取走：不播了
+   try{save()}catch(_){}
+   const lines=take.map(b=>{
+     const w=b&&b[0], txt=(b&&(b[2]&&(b[2].t||b[2].text)))||(b&&b[2])||"";
+     const s=(typeof Lz==="function")?Lz(txt):String(txt||"");
+     const who=(w&&typeof ch==="function"&&ch(w))?(ch(w).n||w):(w||"narration");
+     return "- "+who+": "+String(s).slice(0,160);
+   }).filter(x=>x.length>6).join("\n");
+   try{track&&track("script_as_hint",{wid:th.wid,ch:th.pk&&th.pk.ch,n:take.length})}catch(_){}
+   if(!lines)return "";
+   return "SCENE DIRECTION (where this scene needs to go next — bring it there IN YOUR OWN WORDS, through what the characters do and say. NEVER recite these sentences, never quote them, never announce the plot):\n"+lines;
+  }catch(_){return ""}})()||"",
   packPrompt(th),
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+(p.name||"the user")+" ("+(p.pron==="he"?"he/him":p.pron==="she"?"she/her":"they/them")+")"+(p.look?". "+p.look:"")+". Never write the user's lines, actions or feelings.",
   memBlock(th),
