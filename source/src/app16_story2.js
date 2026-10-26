@@ -36,7 +36,7 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
  try{
-  if(m&&m.txt&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
+  if(m&&m.txt&&m.who!=="n"&&m.who!=="sys"&&m.k!=="act"&&m.k!=="think"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
    speakQueue([{txt:m.txt,who:m.who}]);
  }catch(_){}
  if(!isNarr(m)){appendMsg(th,m);return}
