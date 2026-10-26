@@ -277,6 +277,20 @@ async function main() {
       result.probe = JSON.parse(await evaluate('__MIRUPERF.report()'));
     }
 
+    /* 用和 Ann 存档同一把尺收尾：消息间隔分布。她存档里 21 段间隔精确落在 14 秒档，
+       修好之后这一档应该消失（剧情句之间只剩阅读节奏 ~2 秒）。 */
+    if (CHAPTERS > 0) {
+      const gaps = await evaluate(`(function(){
+        var th=S.threads[curT]; if(!th||!th.msgs) return "{}";
+        var d=[]; for(var i=1;i<th.msgs.length;i++){var a=th.msgs[i-1].at,b=th.msgs[i].at; if(a&&b)d.push(+((b-a)/1000).toFixed(1))}
+        var b={}; d.forEach(function(g){var k=Math.round(g/2)*2; b[k]=(b[k]||0)+1});
+        var near=d.filter(function(g){return g>=12&&g<=16}).length;
+        return JSON.stringify({msgs:th.msgs.length, near14:near, hist:b});
+      })()`);
+      say('\n间隔分布（和她存档同一把尺）: ' + gaps);
+      result.gaps = JSON.parse(gaps);
+    }
+
     fs.mkdirSync(path.dirname(OUT), { recursive: true });
     fs.writeFileSync(OUT, JSON.stringify(result, null, 2), 'utf8');
     say('\n写到 ' + OUT);
