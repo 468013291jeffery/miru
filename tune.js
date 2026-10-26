@@ -12,3 +12,16 @@
    };
 ------------------------------------------------------------------------ */
 window.MIRU_TUNE_OVERRIDE = window.MIRU_TUNE_OVERRIDE || {};
+
+/* ---- 本地真 AI（2026-10-27 加）------------------------------------------------
+   本地页面原来**没有 AI**：既没有 miru.lc.key，hostname 也不是 *.vercel.app，
+   于是 LC_PROXY 为空 ⇒ 每一轮回复都是 fallback 模板（模板会复读你最后几个字）。
+   本地开发服 tools/serve.mjs 现在把 /api/longcat 转发到 DeepSeek，这里把客户端指过去。
+   只在 127.0.0.1 / localhost 生效；线上（*.vercel.app、github.io）一行都不碰。 */
+(function(){
+  try{
+    if(window.MIRU_PROXY) return;
+    const h=location.hostname;
+    if(h==="127.0.0.1"||h==="localhost") window.MIRU_PROXY="/api/longcat";
+  }catch(_){}
+})();

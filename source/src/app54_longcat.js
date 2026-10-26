@@ -9,7 +9,9 @@ function lcProxyMode(){return !!LC_PROXY&&!lcKey()}
 function lcCfg(){S.ai=S.ai||{provider:LC_PROXY?"longcat":"claude",model:LC_MODELS[0],base:LC_BASE};return S.ai}
 function lcKey(){try{return localStorage.getItem(LC_KEY)||""}catch(_){return ""}}
 function lcSetKey(k){try{k?localStorage.setItem(LC_KEY,k):localStorage.removeItem(LC_KEY)}catch(_){}}
-function lcOn(){return lcCfg().provider==="longcat"&&(!!lcKey()||!!LC_PROXY)}
+/* 2026-10-27：有代理、没 key 时，**代理就是 provider**。
+   原来还要求 S.ai.provider==="longcat"，而老存档里存的是 "claude" ⇒ 本地永远判成「没有 AI」⇒ 每轮都是兜底模板。 */
+function lcOn(){return (!!lcKey()||!!LC_PROXY)&&(lcCfg().provider==="longcat"||lcProxyMode())}
 function lcMsgs(input){if(typeof input==="string")return [{role:"user",content:input}];return (input||[]).map(m=>({role:m.role==="assistant"?"assistant":"user",content:typeof m.content==="string"?m.content:JSON.stringify(m.content)}))}
 function lcClean(t){return String(t||"").replace(/<think>[\s\S]*?<\/think>/g,"").replace(/^\s*<think>[\s\S]*$/,"").trim()}
 async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_PROXY)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
