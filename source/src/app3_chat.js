@@ -164,7 +164,9 @@ function msgHTML(m,i,th){
  if(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.playerSide==="left")document.body.classList.add("miru-player-left");
  const st=document.createElement("style");
  st.textContent=[
-  '.m-row[data-wc]{border-left:3px solid var(--wc);background:color-mix(in srgb,var(--wc) 9%,transparent);border-radius:12px;padding-left:9px}',
+  '.msgs .m-row{align-self:flex-start}',
+  '.msgs .m-row.me{align-self:flex-end;flex-direction:row-reverse}',
+  '.msgs .m-row[data-wc]{border-left:3px solid var(--wc);background:color-mix(in srgb,var(--wc) 9%,transparent);border-radius:12px;padding-left:9px}',
   '.m-row.me[data-wc]{border-left:3px solid var(--fg);background:color-mix(in srgb,var(--fg) 10%,transparent)}',
   '.suggest button.sel{background:var(--fg)!important;color:var(--bg)!important;border-color:var(--fg)!important}',
   '.pk-locked{opacity:.45;pointer-events:none}',
@@ -179,6 +181,10 @@ function msgHTML(m,i,th){
      把它上面那些对话空间还回去。 */
   '#msgs>#pkwrap,#msgs>#pkwrap.inl{max-height:46vh;overflow-y:auto;flex:none;position:sticky;bottom:0;z-index:3}',
   /* 紧凑模式（2026-10-27）：让一屏能装 4–6 条，而不是一人一句 */
+  /* 玩家靠右 / 角色靠左（2026-10-27）：不依赖父容器是不是 flex，margin auto 都能成立 */
+  '#msgs .m-row.me{margin-left:auto;align-self:flex-end;flex-direction:row-reverse}',
+  '#msgs .m-row:not(.me):not(.m-narr){margin-right:auto;align-self:flex-start}',
+  '#msgs .m-act.me,#msgs .m-think.me{margin-left:auto;text-align:right}',
   '#msgs{gap:6px;padding:10px 12px 6px}',
   '#msgs .m-row{max-width:92%}',
   '#msgs .bub{padding:8px 11px;font-size:13.5px;line-height:1.5}',
@@ -405,7 +411,7 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
+  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
@@ -419,10 +425,9 @@ async function reply(th,ctx,silent){
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
-  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. For two suggestions, choose two of those formats. Vary the intentions: clarify, propose a next step supported by visible facts, or defer/change topic. All are optional; never assume consent or promise success. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: exactly 3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
  if(liveOn()){
@@ -511,7 +516,11 @@ async function playBeats(th,r,ctx,silent){
     ③ 连续两句「4 秒半都没出声」就退回原来的定时节奏，绝不让一个坏掉的 TTS 把整轮对话拖住。 */
   if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
    INLINE_SPOKE=true;
-   const cap=Math.min(14000,Math.max(4500,String(m.txt||"").length*170));
+   try{voiceCount(1)}catch(_){}
+   /* ⚠️ 上限必须 **比 TTS 自己的回退时限长**：服务器 TTS 要 7~8 秒才认「这次没声、转设备语音」，
+      而下一句的 speak() 会先 stopVoice() 把上一句掐掉。上限设 4.5 秒时（第一版）每句都在出声前
+      被掐死 ⇒ 整轮一句都没有 —— 2026-10-27 实测。现在给到 9 秒起。 */
+   const cap=Math.min(20000,Math.max(9000,String(m.txt||"").length*170));
    await new Promise(res=>{let spoke=false,fin=false;
     const go=()=>{if(fin)return;fin=true;clearTimeout(tm);res()};
     const tm=setTimeout(()=>{if(!spoke)silentStrikes++;go()},cap);

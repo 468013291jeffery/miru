@@ -11,7 +11,14 @@
      uploads join everybody's library.
    · Translations: /api/i18n preloads the shared dictionary for the reader's language.
    · Analytics: a small event queue (open → taste → hook → role → chapter → pay → publish). */
-const CLOUD_EP=(()=>{if(typeof TTS_EP==="string"&&TTS_EP)return TTS_EP.replace(/\/tts$/,"");return ""})();
+/* 2026-10-27：本机只有 AI 代理、没有账号服务器时，用 window.MIRU_ACCOUNT=false 明说。
+   否则 MIRU_PROXY 一设，TTS_EP 就有值 ⇒ CLOUD_EP 有值 ⇒ MUST92() 为真 ⇒ 游客入口被藏、登录又不可能
+   ⇒ 又变成死路一条。这一点我今晚已经踩过一次。 */
+const CLOUD_EP=(()=>{
+ if(window.MIRU_ACCOUNT===false)return "";
+ if(typeof TTS_EP==="string"&&TTS_EP)return TTS_EP.replace(/\/tts$/,"");
+ return "";
+})();
 const CL0={on:false,checked:false,health:null,busy:false,timer:null,lastPush:0};
 function cloudInfo(){S.cloud=S.cloud||{};return S.cloud}
 function cloudAuth(){const c=cloudInfo();return c.token?{Authorization:"Bearer "+c.token}:{}}
@@ -33,7 +40,7 @@ function stateForCloud(){const copy=JSON.parse(JSON.stringify(S));delete copy.cl
 async function cloudPush(force){if(!CL0.on||CL0.busy)return;CL0.busy=true;const c=cloudInfo();
  try{const r=await capi("/state",{method:"PUT",json:{data:stateForCloud(),ver:c.ver||0,force:!!force&&!c.ver}});
   if(r.ok){c.ver=r.j.ver;c.syncedAt=Date.now();save0()}else if(r.status===409&&r.j.data){c.conflict={ver:r.j.ver,at:Date.now()};c.ver=r.j.ver;save0()}}catch(_){}CL0.busy=false}
-async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,data);S.cloud=keep;try{cleanState()}catch(_){}S.cloud.ver=r.j.ver;save0();return true}
+async function cloudPull(){const r=await capi("/state");if(!r.ok||!r.j.data)return false;const keep=cloudInfo();const data=r.j.data;Object.keys(S).forEach(k=>{if(k!=="cloud")delete S[k]});Object.assign(S,data);S.cloud=keep;S.cloud.ver=r.j.ver;save0();return true}
 /* ---------- wallet ---------- */
 let PENDING_SKU=null;
 async function walletPull(){const r=await capi("/wallet");if(r.ok){const c=cloudInfo();c.known=r.j.gems;S.keys=r.j.gems;if(r.j.plus)S.plus=true;save0();keysChip()}}

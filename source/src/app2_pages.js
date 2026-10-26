@@ -66,7 +66,7 @@ function renderTab(k){S.lastTab=k;save();
  $$(".tabbar button").forEach(b=>b.classList.toggle("on",b.dataset.tab===k));
  const v=$("#tabv");if(!v)return;
  try{({home:renderHome,discover:renderDiscover,chats:renderChats,create:renderCreate,me:renderMe}[k]||renderHome)(v)}
- catch(e){try{console.error(e)}catch(_){}v.innerHTML='<div class="empty" style="padding-top:80px">'+t("err.page")+'<br><code style="font-size:10px;opacity:.6">'+esc(String(e&&e.message||e).slice(0,140))+'</code><br><code style="font-size:9px;opacity:.45;display:block;max-width:92%;margin:4px auto 0;word-break:break-all">'+esc(String(e&&e.stack||'').split('\n').slice(1,4).map(x=>x.trim().replace(/https?:\/\/[^ )]*\//g,'')).join(' | ').slice(0,300))+'</code><br><button class="btn btn-g btn-sm" style="margin-top:12px" data-fixdata="1">'+t("err.fix")+'</button></div>'}}
+ catch(e){try{console.error(e)}catch(_){}v.innerHTML='<div class="empty" style="padding-top:80px">'+t("err.page")+'<br><code style="font-size:10px;opacity:.6">'+esc(String(e&&e.message||e).slice(0,140))+'</code><br><button class="btn btn-g btn-sm" style="margin-top:12px" data-fixdata="1">'+t("err.fix")+'</button></div>'}}
 document.addEventListener("click",e=>{if(e.target.closest("[data-fixdata]")){cleanState(true);renderTab(S.lastTab||"home")}});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-tab]");if(b){renderTab(b.dataset.tab);show("s-main")}});
 function orOK(w){return S.or==="all"||w.or===S.or||w.or==="all"}

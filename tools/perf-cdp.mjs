@@ -260,6 +260,17 @@ async function main() {
       for(var k=0;k<20;k++){var s3=performance.now();try{chatBgSet(cw,"idle")}catch(e){};c.push(performance.now()-s3)}
       out.chatBgSet={n:c.length,ms:+(c.reduce(function(x,y){return x+y},0)/c.length).toFixed(2),max:+Math.max.apply(null,c).toFixed(2)};
       out.scale={msgs:best.msgs.length, domNodes:document.querySelectorAll("*").length, msgsNodes:document.querySelectorAll("#msgs > *").length};
+      /* 左右分栏还在不在：数一数 .m-row 与 .m-row.me，并量它们离左边缘多远 */
+      try{
+        const box=document.querySelector("#msgs");
+        const rows=[...document.querySelectorAll("#msgs .m-row")];
+        const lefts=rows.map(r=>Math.round(r.getBoundingClientRect().left-(box?box.getBoundingClientRect().left:0)));
+        const me=document.querySelectorAll("#msgs .m-row.me").length;
+        const av=document.querySelectorAll("#msgs .m-row .av").length;
+        out.layout={rows:rows.length, me:me, avatars:av,
+          distinctLefts:Array.from(new Set(lefts)).sort((a,b)=>a-b).slice(0,6),
+          sampleAlign:rows.slice(0,3).map(r=>getComputedStyle(r).alignSelf+"/"+getComputedStyle(r).flexDirection)};
+      }catch(e){out.layout={err:String(e.message)}}
       // ⑤ 这次导航本身的耗时（回答「进入游戏时卡」——first paint 之前发生了什么）
       var pt=performance.timing||{}; var n0=pt.navigationStart||0;
       out.timing=n0?{ttfb:pt.responseStart-n0, html:pt.responseEnd-n0, domInteractive:pt.domInteractive-n0, dcl:pt.domContentLoadedEventStart-n0, load:pt.loadEventEnd-n0, transferKB:Math.round(((performance.getEntriesByType&&performance.getEntriesByType("navigation")[0]||{}).transferSize||0)/1024)}:{};
