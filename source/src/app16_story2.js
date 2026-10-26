@@ -36,7 +36,7 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
  try{
-  if(m&&m.txt&&m.who!=="n"&&m.who!=="sys"&&m.k!=="act"&&m.k!=="think"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
+  if(m&&m.txt&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
    speakQueue([{txt:m.txt,who:m.who}]);
  }catch(_){}
  if(!isNarr(m)){appendMsg(th,m);return}
@@ -88,10 +88,30 @@ packRefresh=function(th){_packRefresh2(th);if(curT===th.id){const pw=$("#pkwrap"
 /* 6) read aloud: ONE switch in the header. On = every line is read in its speaker's voice, one after another. Off = silent. */
 function speakLine(m,done){if(!m){done();return}const who=m.k==="box"?(m.lastWho||"n"):m.who==="me"?null:m.who,txt=m.k==="box"?(m.last||m.txt):m.txt;
  if(!txt||m.k==="scene"||m.k==="chap"||m.k==="card"||m.k==="intro"){done();return}try{speak(String(txt).replace(/^📞\s*/,""),who||"n",done)}catch(_){done()}}
+/* 2026-10-27 · 朗读那条等是「换章之后好卡」的一张脸（进游戏后实测见 PERF.md）
+   剧本每放一句都走 pkWait；开朗读时等的是「这句读完了」。原来的兜底是
+   `max(ms*3, 14000)` —— 也就是**朗读一旦交不出声音，每一句都白等 14 秒**。
+   实测（tools/perf-ingame.mjs，headless Chrome）：/api/tts 503、设备语音 not-allowed ⇒
+   speak 的回调 15 秒内一次都没来；于是三章从 48 秒变成 190 秒，而主线程全程 0 长任务。
+   ⇒ 不是「算得慢」，是「在等一件不会发生的事」。
+
+   改法：3 秒后**先确认真的什么都没有在响**（既没有 speechSynthesis 在排队，也没有音频在放），
+   才认定这段时间朗读不可用、按阅读速度往下走；而且只认一次（每段会话一次），
+   朗读恢复（用 🔊 开关来回切一次）就重新给机会。
+   朗读正常时这一段永远不会触发 —— onend 会先到，行为与改前完全一致。 */
+let AVDEAD=0;
+function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesis.speaking||speechSynthesis.pending))return false}catch(_){}
+ try{if(typeof TTS!=="undefined"&&TTS.inflight&&TTS.inflight.size)return false}catch(_){}   // 服务器配音还在路上（慢 ≠ 没有）
+ try{if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false}catch(_){}
+ return true}
 function pkWait(th,prev,spd,ms){return new Promise(r=>{let ok=false;const go=()=>{if(ok)return;ok=true;r()};PKNEXT[th.id]=go;
- if(S.autoVoice){speakLine(prev,()=>setTimeout(go,300));setTimeout(go,Math.max(ms*3,14000))}else if(spd)setTimeout(go,ms)})}
+ if(S.autoVoice&&!AVDEAD){
+  speakLine(prev,()=>setTimeout(go,300));
+  setTimeout(()=>{if(!ok&&avSilent()){AVDEAD=1;go()}},3000);      // 3 秒还没响 ⇒ 这段会话不再为朗读等
+  setTimeout(go,Math.max(ms*3,14000));                          // 老兜底保留（朗读很慢但确实在读时靠它）
+ }else if(spd)setTimeout(go,ms)})}
 document.addEventListener("click",e=>{let x;
- if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
+ if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;AVDEAD=0;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
   if(!S.autoVoice){stopVoice()}toast(t(S.autoVoice?"st2.vOn":"st2.vOff"));if(PKNEXT[curT]&&!S.autoVoice)PKNEXT[curT]();return}
  if(x=e.target.closest("[data-intro]")){introSheet(x.dataset.intro);return}
  if(e.target.closest("[data-pknext],[data-pknextl],[data-stopline],[data-pkpick]"))stopVoice()},true);

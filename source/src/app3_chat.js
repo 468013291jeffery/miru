@@ -171,7 +171,8 @@ function msgHTML(m,i,th){
   '.modeTog{border:1px solid var(--line2);background:var(--panel);color:var(--fg);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer}',
   '.modeTog:active{transform:scale(.96)}',
   /* Ann 2026-10-27：对话要能往上累积到 80% 再滚；顶部只留一小段渐隐，别把整块吃掉 */
-  '#msgs{max-height:80%;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,#000 7%)}',
+  /* Ann 2026-10-27 实测：max-height:80% 把可视区压成两句 ⇒ 撤掉，只留 7% 渐隐 */
+  '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.4) 3%,#000 7%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
      MIRU_TUNE.chat.playerSide = "left" 时整盘翻过来：玩家在左、角色在右。 */
@@ -477,10 +478,10 @@ async function playBeats(th,r,ctx,silent){
  /* 2026-10-27 Ann：语音还在生成/播放时，界面就已经结束这一轮了 —— 读没读完、听没听完都不管。
     现在把「生成中」多留一会儿：直到语音队列播完（最多再等 25 秒，防止卡死）。 */
  try{
-  if(!silent && S.voice && S.voice.auto && typeof voiceAutoOK==="function" && voiceAutoOK()){
+  if(!silent && S.voice && S.voice.auto){   // 不再依赖 voiceAutoOK：本地 /api/tts 是 503，它会给出假结论
    typing(true);
    const t0=Date.now();
-   const tick=()=>{ const done=VOICE_BUSY<=0; if(done||Date.now()-t0>25000){typing(false);return} setTimeout(tick,250) };
+   const tick=()=>{ const done=VOICE_BUSY<=0; if(done||Date.now()-t0>8000){typing(false);return} setTimeout(tick,250) };
    setTimeout(tick,250);
   }
  }catch(_){}
