@@ -1499,7 +1499,7 @@ p{margin:0}
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="6a811490c2c2 2026-10-26T16:54Z";
+window.MIRU_BUILD="01b5c355e985 2026-10-26T17:04Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -12743,10 +12743,23 @@ async function au70Apple() {
 async function au70OAuth(op, body) {
   try { const r = await capi("/auth", { json: Object.assign({ op }, body) }); if (!r.ok) { au70Err(r); return; } await au70Done(r.j, op); } catch (_) { toast(au("net")); }
 }
+/* 2026-10-27 修：错误对象直接丢进 toast 会渲成「[object Object]」（Ann 注册后看到的就是它）。
+   先取成人话；本地没有账号服务器时给一句明确的话，而不是一个字符串化的对象。 */
+function au70ErrText(e) {
+ if (!e) return "";
+ if (typeof e === "string") return e;
+ if (typeof e === "object") return String(e.message || e.code || e.error || JSON.stringify(e));
+ return String(e);
+}
 function au70Err(r) {
-  const e = r.j && r.j.error;
-  if (r.status === 403 && e === "banned") { au70Banned(r.j); return; }
-  toast(e === "wrong email or password" ? au("wrong") : e === "email already registered" ? au("taken") : (e || au("net")));
+ const e0 = r.j && r.j.error;
+ const e = au70ErrText(e0);
+ if (r.status === 403 && (e0 === "banned" || e === "banned")) { au70Banned(r.j); return; }
+ if (r.status === 503 || (e0 && e0.code === "no_backend")) {
+  toast(S.lang === "zh" ? "本地预览没有账号服务器 —— 点最上面的「先逛逛」就能玩" : "No account server in this preview - tap Look around at the top");
+  return;
+ }
+ toast(e === "wrong email or password" ? au("wrong") : e === "email already registered" ? au("taken") : (e || au("net")));
 }
 /* after any successful sign-in */
 async function au70Done(j, method) {
