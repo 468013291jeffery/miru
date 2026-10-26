@@ -208,7 +208,7 @@ function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩�
 function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
  const w0=th.wid&&wd(th.wid),au=w0&&w0.pack&&w0.pack.au&&w0.pack.au[cid];
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
-  " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" Likes: "+A(c.likes)+
+  " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Contradiction: "+A(c.twist)+" — that contradiction is how he reads everything, including "+me()+". Likes: "+A(c.likes)+
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+"."+
   (function(){try{const chNow=(th.pk&&th.pk.ch)||th.ch||1;const memo=(typeof cardMemo==="function")?cardMemo(th,cid,chNow):"";return memo?" He remembers: "+memo+".":""}catch(_){return ""}})()+
@@ -229,10 +229,20 @@ function castCardPublic(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   if(!w&&!f)return "";
   return " Wants (his own — other characters do not know this): "+(w||"\u2014")+(f?" Afraid of: "+f:"")+".";
  }catch(_){return ""}})();
+ const _lens=(function(){try{
+  /* 2026-10-28：借自 Mythica 的角色核心 ——「它不是记忆，它是**所有记忆的阅读器**」。
+     MIRU 的卡是资料表：他长什么样、脾气如何、想要什么。缺的是**他拿什么尺子读这件事**。
+     数据里最接近信念的是 twist（他的矛盾/自我定义），先用它；hook（为什么是你）留空等作者填，我不编。 */
+  if(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.lens===false)return "";
+  // ⚠️ 公共面**不许**用 twist：castcard-selftest 的「其他人卡里没有矛盾点」是有意设的闸（底牌只给 lead）。
+  // 公共面只用作者写的 hook（可公开的那一句）；twist 作为"尺子"只出现在私有面（那里本来就有）。
+  const h=c.hook?A(c.hook):"";
+  return h?" Why this one gets under his skin (he would not admit it): "+h+".":"";
+ }catch(_){return ""}})();
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
   " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Likes: "+A(c.likes)+_wants+
   
-  " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
+  _lens+" · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
 /* 谁的卡带私密面：默认只给这一拍上场的那个人（mainOf 优先，否则第一个开口的）。
    为什么：共享 prompt 下如果所有人都带秘密，等于同屋全知 —— 把跨场景的全知换了个位置。
    数量由 MIRU_TUNE.chat.privateCards 控制（1 = 收敛版；调大即放开）。 */
