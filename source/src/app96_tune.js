@@ -34,7 +34,7 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
-      minRoundsPerChapter: 6,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
+      minRoundsPerChapter: 20,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
       reaction: true,         // 每轮末尾给一行「看得见的反应」（不是数字）
       publicWants: true,      // 每个在场角色的卡上都给他「自己想要什么」（别人不知道）——有动机才推得动场景
       characterMeta: false,   // true = 旧文案（角色知道第几章/本章目标/下一步要选什么）；false = 角色只知道此刻与已发生

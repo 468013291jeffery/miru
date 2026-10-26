@@ -182,11 +182,18 @@ function msgHTML(m,i,th){
 }catch(_){}})();
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){
+ /* 2026-10-27：任何文本进 UI 之前都过一道 asText70 —— 模型偶尔把字段返成对象，
+    直接落进去就成了「[object Object]」。取不出可读文本的整条丢弃。 */
+ try{
+  if(m&&typeof m.txt!=="string")m.txt=asText70(m.txt);
+  if(m&&!m.txt&&m.k!=="react"&&m.k!=="card")return;
+ }catch(_){}
+
  /* 2026-10-27 节奏门槛：记本章玩家说了几轮；攒够门槛就把挂起的官方选择弹出来。 */
  try{
   if(m&&m.who==="me"&&th&&th.pk){
    th.pk.chRounds=(th.pk.chRounds||0)+1;
-   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:6;
+   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
    if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;th.pk.st="choose";try{packRefresh(th)}catch(_){}}
   }
  }catch(_){}
@@ -450,10 +457,10 @@ async function playBeats(th,r,ctx,silent){
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
   appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
- if(r.status){th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
+ if(r.status){if(typeof r.status.time==="object")r.status.time=asText70(r.status.time);if(typeof r.status.place==="object")r.status.place=asText70(r.status.place);th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
- if(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.reaction!==false){try{if(r&&r.reaction&&String(r.reaction).trim()&&!silent)appendMsg(th,{who:"sys",k:"react",txt:String(r.reaction).slice(0,160),at:Date.now()})}catch(_){}}
+ if(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.reaction!==false){try{if(r&&r.reaction&&asText70(r.reaction).trim()&&!silent)appendMsg(th,{who:"sys",k:"react",txt:String(r.reaction).slice(0,160),at:Date.now()})}catch(_){}}
  if(!silent)setSugg(r.suggest);else th.sugg=(r.suggest||[]).slice(0,3);
  /* quest goals */
  if(th.quest&&Array.isArray(r.goals)){r.goals.forEach(i=>{i=+i;if(th.quest.goals[i]&&!th.quest.goals[i].done){th.quest.goals[i].done=true;appendMsg(th,{who:"sys",k:"card",title:"🎯 "+t("q.goals"),txt:t("q.found",{g:th.quest.goals[i].t}),at:Date.now()})}
