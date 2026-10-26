@@ -71,7 +71,8 @@ const STOPK=new Set(["line","gift","photo","video","game","call","voice","start"
 function isStop(b){return Array.isArray(b)&&STOPK.has(b[1])&&b[2]&&typeof b[2]==="object"}
 function beatMsg(b){return Array.isArray(b)?{who:b[0],k:b[0]==="n"?"act":b[1],txt:b[2],at:Date.now(),pk:1}:b}
 function packPov(th){const w=wd(th.wid);return (w.pack&&w.pack.pov)||w.cast[w.cast.length-1]}
-function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();th.pk.ch=n;th.pk.st="busy";th.pk.min=false;th.pk.stop=null;
+function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
+ th.pk.st="busy";th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
  const beats=packBeats(c.beats).slice();
@@ -107,7 +108,14 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
    th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();try{pkLockComposer(th)}catch(_){}
- if(a==="choose"){th.pk.st="choose";save();packRefresh(th);if(curT===th.id)scrollChat()}
+ if(a==="choose"){
+  /* 2026-10-27：不再「剧本播完就弹官方选择」。本章玩家至少说过 N 轮，才允许把选择摆出来；
+     不够就挂起（afterPendingChoose），等轮数攒够的那一轮结束时再弹。 */
+  const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:6;
+  const had=(th.pk.chRounds||0);
+  if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
+  else{th.pk.st="choose";th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
+ }
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))}
 function stopResolve(th,extra){if(!th||!th.pk||!th.pk.stop)return;if(PKWAIT[th.id]){PKWAIT[th.id](extra||[]);return}
  th.pk.q=th.pk.q||[];th.pk.q.shift();th.pk.q.unshift(...(extra||[]));th.pk.stop=null;th.pk.go=0;save();packRun(th)}

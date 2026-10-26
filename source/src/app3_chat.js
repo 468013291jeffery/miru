@@ -43,7 +43,7 @@ function renderChat(){
  const watch=th.pk&&th.pk.as==="watch";if(watch)cmode="dir";
  /* primary row: the 3–4 ways to talk, always full-size, never wraps. Everything else (watch, games, ideas, continue, script library)
     lives in a collapsible tray below (#modes2) opened with the ⋯ toggle — fixes the squished/wrapped buttons on narrow phones. */
- h+='<div class="composer"><div class="modes">'+(watch?'<button data-mode="dir" class="dir on">🎬 '+t("pk.direct")+'</button><button class="tool" data-cont="1">⏩ '+t("cx.cont")+'</button><button class="tool" data-stepin="1">🚪 '+t("pk.stepIn")+'</button><span class="sp"></span>':[["say","cx.say"],["act","cx.act"],["think","cx.think"]].map(([k,l])=>'<button data-mode="'+k+'" class="'+(cmode===k?"on":"")+'">'+(k==="act"?"✱ ":k==="think"?"💭 ":"")+t(l)+'</button>').join("")+
+ h+='<div class="composer"><div class="modes">'+(watch?'<button data-mode="dir" class="dir on">🎬 '+t("pk.direct")+'</button><button class="tool" data-cont="1">⏩ '+t("cx.cont")+'</button><button class="tool" data-stepin="1">🚪 '+t("pk.stepIn")+'</button><span class="sp"></span>':(['<button id="modeToggle" class="modeTog" data-modetog="1">'+(cmode==="act"?"✱ "+t("cx.act"):cmode==="think"?"💭 "+t("cx.think"):"💬 "+t("cx.say"))+'</button>'])+
   '<button data-mode="dir" class="dir '+(cmode==="dir"?"on":"")+'">🎬 '+t("cx.dir")+'</button>'+(th.pk?'<button class="tool" data-stepin="1">🚪</button>':'')+'<span class="sp"></span>')+
   '<button class="tool" data-modemore="1" id="modeMoreBtn">⋯ '+t("cx.more")+'</button></div>'+
   '<div class="modes2" id="modes2" hidden>'+
@@ -168,6 +168,8 @@ function msgHTML(m,i,th){
   '.m-row.me[data-wc]{border-left:3px solid var(--fg);background:color-mix(in srgb,var(--fg) 10%,transparent)}',
   '.suggest button.sel{background:var(--fg)!important;color:var(--bg)!important;border-color:var(--fg)!important}',
   '.pk-locked{opacity:.45;pointer-events:none}',
+  '.modeTog{border:1px solid var(--line2);background:var(--panel);color:var(--fg);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer}',
+  '.modeTog:active{transform:scale(.96)}',
   '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
@@ -180,6 +182,14 @@ function msgHTML(m,i,th){
 }catch(_){}})();
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){
+ /* 2026-10-27 节奏门槛：记本章玩家说了几轮；攒够门槛就把挂起的官方选择弹出来。 */
+ try{
+  if(m&&m.who==="me"&&th&&th.pk){
+   th.pk.chRounds=(th.pk.chRounds||0)+1;
+   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:6;
+   if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;th.pk.st="choose";try{packRefresh(th)}catch(_){}}
+  }
+ }catch(_){}
  /* 2026-10-27：同一个人、同一句、4 秒内，只落一次。
     存档里出现过「我（动作）: 我接过你手里的咖啡。」连续两条 —— 点击被派发了两次。 */
  try{const last=th.msgs&&th.msgs[th.msgs.length-1];
@@ -342,16 +352,20 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
+  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
   "- One concrete sensory detail from THIS world per reply. No abstract emotion words.",
+  /* 2026-10-27 Ann：第三人称经常用错。把「人称」写成硬契约，三条，每条可判。 */
+  "PERSON (never drift, every reply):",
+  "- Every line a character speaks, and every action a character takes, is FIRST PERSON (\"I …\"). Never \"he …\" / \"she …\" for someone who is in the scene.",
+  "- Narration beats (who:\"n\") are third-person scene description: weather, room, sound, other people's faces. Narration must NEVER use \"I\" and must never explain anyone's thoughts.",
+  "- The USER is always \"you\" (or their name). NEVER call the user he/she/they, and NEVER narrate the user's feelings, decisions or actions. Their beats are written by the app, not by you.",
   "- Each character sounds different, follows their profile, wants something, and may disagree or interrupt.",
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
-  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
   "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: exactly 3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
@@ -469,6 +483,12 @@ function speakQueue(list){VOICE_BUSY++;let i=0;const next=()=>{if(i>=list.length
 
 /* ================= COMPOSER EVENTS ================= */
 document.addEventListener("click",e=>{let x;
+ if(e.target.closest("[data-modetog]")){
+  /* 一个按钮轮换三种说话方式（Ann：不要三个并排） */
+  cmode = cmode==="say" ? "act" : cmode==="act" ? "think" : "say";
+  try{renderChat()}catch(_){}
+  return
+ }
  if(x=e.target.closest("[data-mode]")){cmode=x.dataset.mode;$$("[data-mode]").forEach(y=>y.classList.toggle("on",y===x));const ta=$("#cin");ta.placeholder=t("cx.ph."+cmode);ta.classList.toggle("dir",cmode==="dir");if(cmode==="dir")toast(t("cx.dirOn"));ta.focus();return}
  if(e.target.closest("[data-send]")){const ta=$("#cin");const v=ta.value;ta.value="";doSend(v,null,true);return}
  if(x=e.target.closest("[data-sg]")){

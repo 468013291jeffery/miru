@@ -1,0 +1,131 @@
+// 进游戏之后的卡顿：**自动复现 + 记账**。
+//
+//   node tools/perf-ingame.mjs                 # 8 章全走一遍，读数落到 reports/perf-ingame.json
+//   node tools/perf-ingame.mjs --chapters 4    # 只走 4 章
+//   node tools/perf-ingame.mjs --reuse         # 不重启页面（接着上一轮的状态继续）
+//
+// 它做的事：起 agent-browser（--session dsh）→ 打开 8131 → 注入探针 → 真的从第 1 章走到第 8 章
+// （每章都是 packPick → packNext → packOpen → packRun，和玩家按键完全同一条路）→ 逐章记账。
+//
+// 为什么不用「手动点一遍 + 抄数」：读数的分母是这个仓库里最贵的东西 —— PERF.md 里每一条
+// 都写着自己的复现命令。进游戏这一段以前没有人量过，所以先把尺子做成能一条命令重跑的。
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+
+const args = process.argv.slice(2);
+const opt = (name, dflt) => {
+  const i = args.indexOf('--' + name);
+  return i >= 0 && args[i + 1] && !args[i + 1].startsWith('--') ? args[i + 1] : dflt;
+};
+const flag = name => args.includes('--' + name);
+
+const URL = opt('url', 'http://127.0.0.1:8131/');
+const SESSION = opt('session', 'dsh');
+const CHAPTERS = Number(opt('chapters', 8));
+const CHOICE = opt('choice', 'B');
+const WORLD = opt('world', 'ice');
+const OUT = opt('out', 'reports/perf-ingame.json');
+const REUSE = flag('reuse');
+const POLL_MS = Number(opt('poll', 8000));
+const MAX_MIN = Number(opt('maxmin', 25));
+
+function ab(cmdArgs, { timeout = 120000, input = undefined } = {}) {
+  const r = spawnSync('agent-browser', ['--session', SESSION, ...cmdArgs], {
+    shell: true, encoding: 'utf8', timeout, maxBuffer: 64 * 1024 * 1024, input,
+  });
+  const stdout = r.stdout || '';
+  const out = stdout + (r.stderr || '');
+  let json = null;
+  // ⚠️ agent-browser 的 stderr 上永远压着一行 Node inspector 的 "Debugger listening on ..."
+  // ⇒ 只解析 stdout；解析不了再退回「整段当错误文本」。
+  try { json = JSON.parse(stdout); } catch (_) {}
+  return { out, json, status: r.status, result: json && json.data ? json.data.result : undefined, error: json ? json.error : (out.slice(0, 400) || null) };
+}
+
+// ⚠️ 不能把 payload 塞进命令行：Windows 的 cmd 行上限是 8191 字符，探针 base64 之后 11 KB
+// ⇒ 报「The command line is too long.」。走 --stdin（脚本从标准输入进）。
+function evalJs(js, label) {
+  const r = ab(['eval', '--stdin', '--json'], { input: js });
+  if (r.error) throw new Error((label || 'eval') + ' failed: ' + JSON.stringify(r.error).slice(0, 500));
+  return r.result;
+}
+
+const say = (...a) => console.log(...a);
+
+// ---------- 0. 起页面 ----------
+if (!REUSE) {
+  say('[1/5] 打开页面 ' + URL);
+  ab(['open', URL], { timeout: 180000 });
+  ab(['wait', '2500']);
+  // 跳过引导 + 进访客态（否则停在 s-ob / 登录页，进不去游戏）
+  evalJs(`(function(){try{S.ob=true;S.authChoice="guest";S.lang="zh";save()}catch(e){}
+    return JSON.stringify({ob:S.ob,ac:S.authChoice});})()`, 'seed-flags');
+  ab(['reload'], { timeout: 180000 });
+  ab(['wait', '3500']);
+}
+
+// ---------- 1. 注入探针 ----------
+say('[2/5] 注入探针 tools/perf-ingame.js');
+const probe = fs.readFileSync('tools/perf-ingame.js', 'utf8');
+say('      ' + evalJs(probe, 'probe'));
+
+say('[3/5] 注入驱动器 tools/perf-ingame-run.js');
+const runner = fs.readFileSync('tools/perf-ingame-run.js', 'utf8');
+say('      ' + evalJs(runner, 'runner'));
+
+// ---------- 2. 准备一个可复现的起点 ----------
+const setup = evalJs(`JSON.stringify((function(){
+  S.packs=S.packs||{};S.packs["${WORLD}"]={own:1,end:{}};S.pkSpd=1;save();
+  const th=Object.values(S.threads).filter(t=>t.wid==="${WORLD}"&&t.pk).sort((a,b)=>b.at-a.at)[0];
+  if(th&&th.pk&&th.pk.st!=="end"){openThread(th.id);return{resume:true,id:th.id,ch:th.pk.ch,st:th.pk.st,msgs:th.msgs.length}}
+  if(th){delete S.threads[th.id];save()}
+  const t2=packStart("${WORLD}","watch",1);
+  return{resume:false,id:t2.id,ch:t2.pk.ch,st:t2.pk.st,msgs:t2.msgs.length}
+})())`, 'setup');
+say('      起点：' + setup);
+
+// ---------- 3. 走章 ----------
+say('[4/5] 开始走 ' + CHAPTERS + ' 章（真的换章，靠页面自己的定时器播）');
+say('      ' + evalJs(`__MIRUPERF.reset(); __PERFRUN.start({chapters:${CHAPTERS},choice:"${CHOICE}"})`, 'start-run'));
+
+const t0 = Date.now();
+let last = '';
+while (Date.now() - t0 < MAX_MIN * 60000) {
+  await new Promise(r => setTimeout(r, POLL_MS));
+  let st;
+  try { st = JSON.parse(evalJs('__PERFRUN.status()', 'status')); } catch (e) { say('      poll err: ' + e.message); continue; }
+  const line = `      ${Math.round((Date.now() - t0) / 1000)}s  ch=${st.ch} st=${st.st} msgs=${st.msgs} runs=${st.runs} ${st.err || ''}`;
+  if (line !== last) { say(line); last = line; }
+  if (st.done) break;
+}
+
+// ---------- 4. 收数 ----------
+say('[5/5] 收读数');
+const runReport = JSON.parse(evalJs('__PERFRUN.report()', 'report'));
+const probeReport = JSON.parse(evalJs('__MIRUPERF.report()', 'probe-report'));
+const out = {
+  when: new Date().toISOString(),
+  url: URL, world: WORLD, chapters: CHAPTERS, choice: CHOICE,
+  setup: JSON.parse(setup),
+  runs: runReport.runs,
+  err: runReport.err,
+  log: runReport.log,
+  probe: probeReport,
+};
+fs.mkdirSync(path.dirname(OUT), { recursive: true });
+fs.writeFileSync(OUT, JSON.stringify(out, null, 2), 'utf8');
+say('      写到 ' + OUT);
+
+// ---------- 5. 打一张人看的表 ----------
+const f = n => (typeof n === 'number' ? n.toFixed(1) : String(n));
+say('\n章 | 墙钟(ms) | save 次数/累计(ms) | renderChat 次数/累计(ms) | 长任务 n/ms/max | 掉帧 | msgs 前→后 | DOM 前→后');
+say('---|---------:|--------------------:|------------------------:|-----------------:|-----:|-----------:|-----------:');
+for (const r of runReport.runs) {
+  if (r.phase !== 'main' && r.phase !== 'openThread') continue;
+  if (r.phase === 'openThread') {
+    say(`进thread(msgs=${r.msgs}) | ${f(r.openMs)} | ${r.saveCalls}/${f(r.saveMs)} | ${r.renderChatCalls}/${f(r.renderChatMs)} | ${r.ltN}/${f(r.ltMs)}/${f(r.ltMax)} | ${r.framesDropped} | - | -`);
+    continue;
+  }
+  say(`${r.ch} | ${f(r.wallMs)} | ${r.saveCalls}/${f(r.saveMs)} | ${r.renderChatCalls}/${f(r.renderChatMs)} | ${r.ltN}/${f(r.ltMs)}/${f(r.ltMax)} | ${r.framesDropped} | ${r.msgsBefore}→${r.msgsAfter} | ${r.domBefore}→${r.domAfter}`);
+}
