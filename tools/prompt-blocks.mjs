@@ -95,6 +95,29 @@ console.log('D. 手打那一档（与"玩家说过的话"分开）');
   ok('空的时候整块不出现', /if\(!arr\.length\)return ""/.test(html), '');
 }
 
+console.log('F. 动机（不预告剧情，但每个人都要有想要的东西）');
+{
+  const PUB = cut('castCardPublic');
+  const th = { wid: 'gala', cast: ['jack', 'mason'], love: { jack: 10, mason: 4 }, status: { mood: { jack: 'tense' } }, pk: { ch: 1, as: 'watch' } };
+  const cast = { jack: { id: 'jack', n: 'Jack', age: 31, role: { en: 'athlete' }, looks: { en: 'blond' }, vibe: { en: 'guarded' }, tells: { en: ['looks at his watch'] }, likes: { en: 'control' }, want: { en: 'to not be the one who names someone' }, fear: { en: 'being owed' } },
+                 mason: { id: 'mason', n: 'Mason', age: 33, role: { en: 'coach' }, looks: { en: 'scar' }, vibe: { en: 'blunt' }, tells: { en: ['cracks knuckles'] }, likes: { en: 'straight talk' }, want: { en: 'to leave before the speeches' } } };
+  let stub;
+  stub = new Proxy(function () {}, { get: (t, k) => (k === Symbol.toPrimitive || k === 'toString' || k === 'valueOf') ? () => '' : stub, apply: () => '' });
+  const real = {
+    th, ch: (id) => cast[id] || { n: id }, Lz: (v) => (v && v.en) || '', me: () => 'Ann',
+    I18N: { en: { 'stage.0': 'stranger', 'stage.1': 'acquaintance', 'stage.2': 'warm', 'stage.3': 'close', 'stage.4': 'lover' } },
+    stageOf: () => 0, CL: () => 'en', wd: () => ({ pack: {} }), MIRU_TUNE: { chat: {} },
+  };
+  const scope = new Proxy(real, { has: (t, k) => k !== Symbol.unscopables && !(k in globalThis), get: (t, k) => (k === Symbol.unscopables ? undefined : (k in t ? t[k] : stub)) });
+  // 这条验分支；"默认值有没有被关掉"要读产物里的那一个字（变异实测：改 tune ⇒ 这条红）
+  ok('tune 默认 publicWants=true', /publicWants:\s*true/.test(html), (html.match(/publicWants:\s*\w+/) || [''])[0]);
+  const card = new Function('__s', 'with(__s){ ' + PUB + '\nreturn castCardPublic(th,"jack"); }')(scope);
+  ok('公共面里有他自己的动机', /Wants \(his own/.test(card), card.slice(0, 200));
+  ok('动机标明"别人不知道"（防全场全知）', /other characters do not know this/i.test(card), '');
+  ok('动机来自 want 字段（不是编的）', card.includes('not be the one who names someone'), '');
+  ok('没有 want 的人不会凭空长出一句', !new Function('__s', 'with(__s){ ' + PUB + '\nreturn castCardPublic(th,"mason"); }')(scope).includes('names someone'), '');
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('prompt blocks OK');

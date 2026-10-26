@@ -219,8 +219,18 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   (c.romanceable===false?" Not a romance route: affection and intimacy do not progress with them, and this never becomes a love story. But they are still fully a person — their own magnetism, teasing, banter and reactions to being wanted stay exactly as they are. Do not make them cold, flat or sexless just because the route is closed.":"");}
 function castCardPublic(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
  const w0=th.wid&&wd(th.wid),au=w0&&w0.pack&&w0.pack.au&&w0.pack.au[cid];
+ const _wants=(function(){try{
+  /* 2026-10-28 Ann 问：「要不要把下面要发生的事情告诉他？」——答法：不预告事件，给他**想要的**。
+     现状：只有 lead 那张卡带 want/fear（privateCards 默认 1），其余在场的人只有长相/性格/雷点
+     ⇒ 一屋子人没有一个有理由动，场景当然原地打转（实测 5/5 轮同一张桌子）。
+     所以每个在场角色的卡上都补一句他自己的动机，并写明"别人不知道"——给推力，但不让全场全知。 */
+  if(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.publicWants===false)return "";
+  const w=c.want?A(c.want):"",f=c.fear?A(c.fear):"";
+  if(!w&&!f)return "";
+  return " Wants (his own — other characters do not know this): "+(w||"\u2014")+(f?" Afraid of: "+f:"")+".";
+ }catch(_){return ""}})();
  return "- id="+cid+" · "+c.n+", "+c.age+", "+(au?"in this story: "+A(au):A(c.role))+". Looks: "+A(c.looks)+" Personality: "+A(c.vibe)+
-  " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Likes: "+A(c.likes)+
+  " How feelings show: "+(c.tells?(c.tells[CL()]||c.tells.en).join(" / "):"")+" Likes: "+A(c.likes)+_wants+
   
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+".";}
 /* 谁的卡带私密面：默认只给这一拍上场的那个人（mainOf 优先，否则第一个开口的）。
