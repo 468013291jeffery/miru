@@ -43,7 +43,7 @@ function renderChat(){
  const watch=th.pk&&th.pk.as==="watch";if(watch)cmode="dir";
  /* primary row: the 3–4 ways to talk, always full-size, never wraps. Everything else (watch, games, ideas, continue, script library)
     lives in a collapsible tray below (#modes2) opened with the ⋯ toggle — fixes the squished/wrapped buttons on narrow phones. */
- h+='<div class="composer"><div class="modes">'+(watch?'<button data-mode="dir" class="dir on">🎬 '+t("pk.direct")+'</button><button class="tool" data-cont="1">⏩ '+t("cx.cont")+'</button><button class="tool" data-stepin="1">🚪 '+t("pk.stepIn")+'</button><span class="sp"></span>':[["say","cx.say"],["act","cx.act"],["think","cx.think"]].map(([k,l])=>'<button data-mode="'+k+'" class="'+(cmode===k?"on":"")+'">'+(k==="act"?"✱ ":k==="think"?"💭 ":"")+t(l)+'</button>').join("")+
+ h+='<div class="composer"><div class="modes">'+(watch?'<button data-mode="dir" class="dir on">🎬 '+t("pk.direct")+'</button><button class="tool" data-cont="1">⏩ '+t("cx.cont")+'</button><button class="tool" data-stepin="1">🚪 '+t("pk.stepIn")+'</button><span class="sp"></span>':(['<button id="modeToggle" class="modeTog" data-modetog="1">'+(cmode==="act"?"✱ "+t("cx.act"):cmode==="think"?"💭 "+t("cx.think"):"💬 "+t("cx.say"))+'</button>'])+
   '<button data-mode="dir" class="dir '+(cmode==="dir"?"on":"")+'">🎬 '+t("cx.dir")+'</button>'+(th.pk?'<button class="tool" data-stepin="1">🚪</button>':'')+'<span class="sp"></span>')+
   '<button class="tool" data-modemore="1" id="modeMoreBtn">⋯ '+t("cx.more")+'</button></div>'+
   '<div class="modes2" id="modes2" hidden>'+
@@ -168,6 +168,8 @@ function msgHTML(m,i,th){
   '.m-row.me[data-wc]{border-left:3px solid var(--fg);background:color-mix(in srgb,var(--fg) 10%,transparent)}',
   '.suggest button.sel{background:var(--fg)!important;color:var(--bg)!important;border-color:var(--fg)!important}',
   '.pk-locked{opacity:.45;pointer-events:none}',
+  '.modeTog{border:1px solid var(--line2);background:var(--panel);color:var(--fg);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer}',
+  '.modeTog:active{transform:scale(.96)}',
   '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
@@ -180,6 +182,14 @@ function msgHTML(m,i,th){
 }catch(_){}})();
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){
+ /* 2026-10-27 节奏门槛：记本章玩家说了几轮；攒够门槛就把挂起的官方选择弹出来。 */
+ try{
+  if(m&&m.who==="me"&&th&&th.pk){
+   th.pk.chRounds=(th.pk.chRounds||0)+1;
+   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:6;
+   if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;th.pk.st="choose";try{packRefresh(th)}catch(_){}}
+  }
+ }catch(_){}
  /* 2026-10-27：同一个人、同一句、4 秒内，只落一次。
     存档里出现过「我（动作）: 我接过你手里的咖啡。」连续两条 —— 点击被派发了两次。 */
  try{const last=th.msgs&&th.msgs[th.msgs.length-1];
@@ -473,6 +483,12 @@ function speakQueue(list){VOICE_BUSY++;let i=0;const next=()=>{if(i>=list.length
 
 /* ================= COMPOSER EVENTS ================= */
 document.addEventListener("click",e=>{let x;
+ if(e.target.closest("[data-modetog]")){
+  /* 一个按钮轮换三种说话方式（Ann：不要三个并排） */
+  cmode = cmode==="say" ? "act" : cmode==="act" ? "think" : "say";
+  try{renderChat()}catch(_){}
+  return
+ }
  if(x=e.target.closest("[data-mode]")){cmode=x.dataset.mode;$$("[data-mode]").forEach(y=>y.classList.toggle("on",y===x));const ta=$("#cin");ta.placeholder=t("cx.ph."+cmode);ta.classList.toggle("dir",cmode==="dir");if(cmode==="dir")toast(t("cx.dirOn"));ta.focus();return}
  if(e.target.closest("[data-send]")){const ta=$("#cin");const v=ta.value;ta.value="";doSend(v,null,true);return}
  if(x=e.target.closest("[data-sg]")){
