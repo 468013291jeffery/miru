@@ -342,20 +342,16 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
+  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
   "- One concrete sensory detail from THIS world per reply. No abstract emotion words.",
-  /* 2026-10-27 Ann：第三人称经常用错。把「人称」写成硬契约，三条，每条可判。 */
-  "PERSON (never drift, every reply):",
-  "- Every line a character speaks, and every action a character takes, is FIRST PERSON (\"I …\"). Never \"he …\" / \"she …\" for someone who is in the scene.",
-  "- Narration beats (who:\"n\") are third-person scene description: weather, room, sound, other people's faces. Narration must NEVER use \"I\" and must never explain anyone's thoughts.",
-  "- The USER is always \"you\" (or their name). NEVER call the user he/she/they, and NEVER narrate the user's feelings, decisions or actions. Their beats are written by the app, not by you.",
   "- Each character sounds different, follows their profile, wants something, and may disagree or interrupt.",
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
   "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
+  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
   "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: exactly 3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
