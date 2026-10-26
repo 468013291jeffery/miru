@@ -1,0 +1,40 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>导出存档</title>
+<style>
+  body{background:#0c0b12;color:#e8e6f0;font:16px/1.6 system-ui,"Microsoft YaHei",sans-serif;padding:40px;max-width:720px;margin:0 auto}
+  h1{font-size:20px;margin:0 0 12px}
+  .ok{color:#7ee08a}.bad{color:#ff8a8a}
+  pre{background:#16151f;padding:14px;border-radius:10px;overflow:auto;max-height:45vh;font-size:12px}
+  button{background:#e8e6f0;color:#0c0b12;border:0;border-radius:10px;padding:12px 20px;font-size:15px;cursor:pointer;margin-top:14px}
+</style>
+<h1>导出 MIRU 存档</h1>
+<p id="msg">正在读取…</p>
+<pre id="out"></pre>
+<button id="go" hidden>再发一次</button>
+<script>
+async function run(){
+  const msg=document.getElementById('msg'), out=document.getElementById('out');
+  let raw=null;
+  try { raw = localStorage.getItem('miru_v2') } catch(e) {}
+  if(!raw){
+    msg.innerHTML='<span class="bad">这个地址下没有存档。</span>请先打开 <b>http://127.0.0.1:8131/</b> 玩一会儿，再回到这一页。';
+    return;
+  }
+  let obj=null;
+  try { obj = JSON.parse(raw) } catch(e) {}
+  const th = obj && obj.threads ? Object.keys(obj.threads) : [];
+  out.textContent = '存档大小 ' + (raw.length/1024).toFixed(0) + ' KB · 线程 ' + th.length + ' 个：' + th.join(', ');
+  msg.textContent = '正在发送到本机…';
+  try {
+    const r = await fetch('/__save', { method:'POST', headers:{'content-type':'application/json'}, body: raw });
+    const j = await r.json();
+    msg.innerHTML = j.ok ? '<span class="ok">✓ 已保存到本机：' + j.file + '（' + (j.bytes/1024).toFixed(0) + ' KB）</span>'
+                         : '<span class="bad">✗ 服务器拒绝：' + (j.error||'未知') + '</span>';
+  } catch(e) {
+    msg.innerHTML = '<span class="bad">✗ 发送失败：' + e.message + '</span>';
+  }
+}
+document.getElementById('go').onclick = run;
+run();
+</script>
