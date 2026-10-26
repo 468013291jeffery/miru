@@ -28,7 +28,7 @@
 | 场景图 / 分镜 | **本地（仓库）** | `art/scenes/**` → `build.py` 的 `SCENE_FILES`；官方剧走 `art/official/<id>.json` → `app94_official2.js:16`（`off94Assets`） | 否 | **槽位直接跳过**，剧本不用重发 |
 | BGM | 本地文件 **或** 现场合成 | `app19_bgm.js:47` 读 `BGM_FILES`；没有就 Web Audio 实时合成 | 否 | 合成兜底，静音 |
 | AI 出图 | **线上** | `app82_qwenimg.js:11` → `/api/image` | 按张计费 | 这一张失败/占位，剧情继续 |
-| 语音·固定台词 | **本地预生成** | `audio/en.json` / `zh.json`：361 条 `说话人\|台词 → base64 mp3`；`app62_tts.js:2` **第一优先就查它** | 否 | 落到第 2 级（服务器合成） |
+| 语音·固定台词 | **本地预生成** | `audio/en.json` / `zh.json`：361 条 `说话人\|台词 → base64 mp3`；`app62_tts.js:31` 原本第一优先查它 —— **2026-10-27 起默认不启用**（实测 10 次发声命中 0 次，却要预取 11 MB；开关 `S.voice.pack`，见链 D） | 否 | 落到第 2 级（服务器合成） |
 | 语音·动态台词 | **线上** | `app62_tts.js:7` → `/api/tts`（`api/tts.js:12`：CDN 缓存一年「每句对所有人只合成一次」） | 每句一次 | 服务器 >7 秒或挂了 ⇒ 退回设备语音 |
 | 翻译 | **编译期优先 + 线上兜底** | `tr_ja.js` / `tr_ko.js` / `tr_es.js` 已备好；缺的走 `app67_i18n.js:5` → `/api/translate`（结果写 DB，下次不再调） | 每句一次 | 回落英文 |
 | 自由对话 `⟦FREE⟧` | **线上** | `app54_longcat.js:7` → `/api/longcat`（`api/longcat.js:1`：LongCat → SCNet → GLM 自动切换） | 每轮 token | 换下一个 provider，玩家不该看见断 |
@@ -73,20 +73,63 @@ app94_official2.js  资产映射 art/official/<work>.json（槽位 → url，缺
 - Key 只在环境变量里（`api/longcat.js:3-8`），页面里没有 key。
 - 静态规则放最前面是为了**前缀缓存**（`api/longcat.js:3` 的注释明写）。
 
-### 链 D · 语音（三级回退，**已经是「本地优先」的样板**）
+### 链 D · 语音（三级回退，**现在是「默认不走第 1 级」**）
 ```
-台词 → 1) 剧本包里预录的音频（audio/*.json：speaker|text → base64）
-     → 2) /api/tts 合成（api/tts.js：DASHSCOPE / INWORLD / 自建 TTS_URL，哪个配了用哪个）
-     → 3) 设备语音
+台词 → 1) 录音包 audio/*.json（speaker|text → base64）   ← 默认关闭（S.voice.pack）
+     → 2) /api/tts 合成（api/tts.js：DASHSCOPE / INWORLD / 自建 TTS_URL）
+     → 3) 设备语音 speechSynthesis
 ```
-- 判据：`app62_tts.js:11` `ttsOn()`——`S.ttsMode==="device"` 或服务端失败过 ⇒ 关掉第 2 级。
-- 也就是说：**「固定台词预生成」这条你们已经在跑**，只是还没覆盖全部台词。
+**⚠️ 三个会让这条链「看起来有、其实不通」的事实（2026-10-27 实测）**：
+
+1. **本地页面也走线上 TTS**：`config.js` 把 `window.MIRU_PROXY` 指到 `https://miru-wheat-pi.vercel.app/api/longcat`，
+   而 `app62_tts.js:7` 从它推出 `TTS_EP = …/api/tts`。所以「本机 `/api/tts` 是 503」这个说法只对**相对路径的探针**成立，
+   **真代码请求的是线上端点**。（探查时用 `fetch("/api/tts")` 会得出相反结论。）
+2. **录音包命中率极低**：362 条覆盖的是开场/介绍那类固定句，正文 beat 基本不在里面 ——
+   她那条线程 **10 次发声命中 0 次**，而启动要下 11 MB ⇒ 已改默认不启用（文件保留，`S.voice.pack` 可开）。
+3. **三级之外还有一个"等"**：`pkWait()`（`app16_story2.js:118`）每放一句都要等「这句念完了」。
+   服务器 TTS 要 7–8 秒才肯认输转设备语音，而兜底原本是 `max(ms*3, 14000)` ⇒ **每句白等 14 秒**，
+   三章从 48 秒变 190 秒，而主线程长任务 **0 个**（是等，不是算）。
+
+**这一级的判据（想知道「这一刻卡在哪」就看这三格）**：
+- 有没有声音：`avSilent()` 三项（`speechSynthesis.speaking/pending` · `TTS.inflight.size` · `AUD_CUR` 是否在放）
+- 还要不要等：`AVSILENT` / `AVSKIP`（连续 2 句没声音 ⇒ 跳 8 句 ⇒ 自动再试）
+- 走的是哪一级：`recorded()` 是否非空（第 1 级）· `ttsOn()`（第 2 级）· 否则第 3 级
+
+**逐句串行（2026-10-27 新增，`app3_chat.js` 的 `playBeats`）**：模型一轮回了 4–5 句时，
+不再「先按 700ms/句刷完再整批念」，而是**亮一句 → 念完 → 亮下一句**；
+三条保命：每句上限 9–20 秒 · 连续 2 句没出声退回定时节奏 · 不念的句子（旁白/动作）不等。
 
 ### 链 E · 状态
 ```
 app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wallet）
 ```
 - 剧本正文可以版本化、可回滚；**玩家状态不行**——它是唯一真相，只能一份。
+
+### 链 F · 一次回合（「她按下去 → 听见声音」中间经过哪几站）
+
+```
+玩家按发送
+ → appendMsg({who:"me"})           app3_chat.js:293   ← 她的话先落、先显示
+ → reply(th,{kind:"user"})         app3_chat.js:355
+     → 召回记忆 / 组 prompt / 调模型  /api/longcat（线上）
+     → 解析 JSON → playBeats()      app3_chat.js:499
+         每句：appendMsg → speak(onend) → 等念完 → 下一句（链 D 的逐句串行）
+ → setSugg / 状态条 / 关系 / 任务卡
+ → save()                          整份 S 序列化（466 KB 时 ≈ 2.5 ms）
+```
+
+**每站实测**（同一台机器、无降频；尺子 `tools/perf-cdp.mjs`）：
+
+| 站 | 读数 |
+|---|---|
+| 进线程（`openThread`：save → 整屏重建 → 显示 → 滚到底） | **12–30 ms**（154 条消息的线程） |
+| 整屏重建（`renderChat`，整条列表拼 HTML 再 `innerHTML=`） | **12–25 ms / 次**；斜率 ≈ **0.05 ms/条**（要 2,000 条才到 100 ms） |
+| 单次 `save()`（整份 S 序列化 + localStorage 同步写） | **0.6–3 ms**（存档 268–466 KB） |
+| 帧率（聊天页 idle，背景特效在跑） | **60 fps** · 掉帧 0–1% |
+| 换章真速（一章正文 + 选择 + 进下一章） | **15–25 秒**，其中**主线程工作 ≈ 8 ms**、长任务 **0** |
+
+⇒ **这一节的结论要写死**：这条链上「慢」的地方几乎**都不是 CPU，是等**（等模型、等朗读回调、等定时器）。
+所以以后要加一个能力，先问它会不会在**等待链**上多加一站 —— 那比把一次 DOM 重建从 25 ms 优化到 12 ms 值钱得多。
 
 ---
 
@@ -105,7 +148,9 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 ## 4. 判「现在走的是哪一条」看哪里
 
 - **这部剧本是内置还是官方剧**：`w.id` 是否有 `official76` / `community` 字段（`app76_official.js` 会写）。
-- **这句语音是预录还是合成**：`app62_tts.js` 第 2 级的 `TTS.mem` / `TTS.fails`；`fails > 0` 说明合成失败过。
+- **这句语音是预录还是合成**：先看 `recorded()` 有没有值 —— **默认它是 null**（`S.voice.pack` 未开，录音包不启用）；
+  再看 `ttsOn()` 与 `TTS.fails`（`fails > 0` 说明合成失败过）。⚠️ 别用 `fetch("/api/tts")` 探查：
+  那是**相对路径**，打的是本地服（503），而真代码走的是 `config.js` 推出的**线上端点**（见链 D 第 1 条）。
 - **这句译文是编译期还是现翻**：`app67_i18n.js:97` `trEP()` 拿到的端点是否为空——为空说明当前环境没有翻译服务，走的是本地表。
 - **LLM 是不是在降级**：`/api/longcat` 的 `{probe:true}`（`api/longcat.js:9`）会在后台报每个 provider 的延迟/状态。
 - **发布为什么没上线**：`works.qa`（`api/works.js:55` 返回的 `qa`）里就是 `safety` / `structureQA` 的理由。
@@ -133,3 +178,12 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 2. 本机没有后端（`/api/*` 在本地 404），所以所有在线链路的**失败模样**都是从代码注释与分支读出来的，**没有实测**。
 3. 「固定台词预生成」目前只有 `audio/en.json` / `zh.json` 两份（361 条，各约 10 MB），**没有按剧分目录**——新剧要预生成时得先定一个目录约定。
 4. 仓库体积没有预算闸：`art` 91 MB + `video` 51 MB + `audio` 20 MB。建议**一部剧 ≤ 15 MB**（8 章：图 20–40 张 + 音 300–600 条），超了换存法，别靠删内容。
+
+**2026-10-27 新增的开着的格**（别当已完成）：
+
+5. **左右分栏在两个窗口之间来回坏**：一次实测 `#msgs` 里 61 条 `.m-row` **全在同一左边距**，
+   加 `.m-row.me{align-self:flex-end}` 后**规则生效（computed 变了）但位置不变** ⇒ 容器不是 flex 列。
+   远端随后有一条 `de93773 left and right, without depending on the parent being a flex column` 是朝这个方向走的，
+   **但两边都还没在同一棵树上共验**。判据：数 `#msgs .m-row` 的 `distinctLefts`，**必须 ≥ 2**。
+6. **章节会自己从第 1 章重开**：能重开的入口只有 `packStart()` / `packOpen(th,n)` / `cpRestore()`。
+   三者现在都往 `S._pkTrace` 记一条（最近 20 条，含调用栈）⇒ 下次复发**导出存档**就能定位，不用猜。
