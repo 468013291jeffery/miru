@@ -31,7 +31,7 @@ function statusSync(th){const s=$(".status");if(!s)return;const sp=[...s.childre
  if(sp[0]&&th.status.time)sp[0].innerHTML='🕰 <span>'+esc(th.status.time)+'</span>';if(sp[1]&&th.status.place)sp[1].innerHTML='📍 <span>'+esc(th.status.place)+'</span>'}
 
 /* 3) narration, actions and thoughts that belong to the same moment go into ONE box instead of a string of separate lines */
-function isNarr(m){return m&&m.pk&&(m.who==="n"||m.k==="act"||m.k==="think")&&m.who!=="me"}
+function isNarr(m){return m&&m.pk&&m.k!=="say"&&(m.who==="n"||m.k==="act"||m.k==="think")&&m.who!=="me"}
 /* 剧本台词去元信息（2026-10-27）：角色不该说出「第几章」「chapter N」这类给作者看的坐标。
    只做最小改写，不删句子 —— 那句话里的「最后一次机会」是剧情钩子。 */
 function deMeta(s){
@@ -48,6 +48,11 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
   if(m&&m.txt&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
    speakQueue([{txt:m.txt,who:m.who}]);
  }catch(_){}
+ /* 2026-10-27 Ann：把 say 解耦出来 —— **一条角色台词永远单独成气泡**，不并进 box。
+    两个后果都是她想要的：
+    ① 台词不会再被吞进上方那块灰段落（「剧情里那句对话不见了」的成因之一）；
+    ② **一次 say 对一条语音**（朗读按消息走），文字和声音从此一一对应，不会再错位。 */
+ if(m&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"){appendMsg(th,m);return}
  if(!isNarr(m)){appendMsg(th,m);return}
  try{ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } }catch(_){}
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
