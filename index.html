@@ -1499,7 +1499,7 @@ p{margin:0}
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="bbbef6e230f3 2026-10-26T18:06Z";
+window.MIRU_BUILD="8bbb1b02ef01 2026-10-26T18:08Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3044,7 +3044,7 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
-      minRoundsPerChapter: 6,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
+      minRoundsPerChapter: 20,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
       reaction: true,         // 每轮末尾给一行「看得见的反应」（不是数字）
       publicWants: true,      // 每个在场角色的卡上都给他「自己想要什么」（别人不知道）——有动机才推得动场景
       characterMeta: false,   // true = 旧文案（角色知道第几章/本章目标/下一步要选什么）；false = 角色只知道此刻与已发生
@@ -4384,11 +4384,18 @@ function msgHTML(m,i,th){
 }catch(_){}})();
 function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){
+ /* 2026-10-27：任何文本进 UI 之前都过一道 asText70 —— 模型偶尔把字段返成对象，
+    直接落进去就成了「[object Object]」。取不出可读文本的整条丢弃。 */
+ try{
+  if(m&&typeof m.txt!=="string")m.txt=asText70(m.txt);
+  if(m&&!m.txt&&m.k!=="react"&&m.k!=="card")return;
+ }catch(_){}
+
  /* 2026-10-27 节奏门槛：记本章玩家说了几轮；攒够门槛就把挂起的官方选择弹出来。 */
  try{
   if(m&&m.who==="me"&&th&&th.pk){
    th.pk.chRounds=(th.pk.chRounds||0)+1;
-   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:6;
+   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
    if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;th.pk.st="choose";try{packRefresh(th)}catch(_){}}
   }
  }catch(_){}
@@ -4652,10 +4659,10 @@ async function playBeats(th,r,ctx,silent){
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
   appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
- if(r.status){th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
+ if(r.status){if(typeof r.status.time==="object")r.status.time=asText70(r.status.time);if(typeof r.status.place==="object")r.status.place=asText70(r.status.place);th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
- if(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.reaction!==false){try{if(r&&r.reaction&&String(r.reaction).trim()&&!silent)appendMsg(th,{who:"sys",k:"react",txt:String(r.reaction).slice(0,160),at:Date.now()})}catch(_){}}
+ if(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.reaction!==false){try{if(r&&r.reaction&&asText70(r.reaction).trim()&&!silent)appendMsg(th,{who:"sys",k:"react",txt:String(r.reaction).slice(0,160),at:Date.now()})}catch(_){}}
  if(!silent)setSugg(r.suggest);else th.sugg=(r.suggest||[]).slice(0,3);
  /* quest goals */
  if(th.quest&&Array.isArray(r.goals)){r.goals.forEach(i=>{i=+i;if(th.quest.goals[i]&&!th.quest.goals[i].done){th.quest.goals[i].done=true;appendMsg(th,{who:"sys",k:"card",title:"🎯 "+t("q.goals"),txt:t("q.found",{g:th.quest.goals[i].t}),at:Date.now()})}
@@ -6653,7 +6660,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
  if(a==="choose"){
   /* 2026-10-27：不再「剧本播完就弹官方选择」。本章玩家至少说过 N 轮，才允许把选择摆出来；
      不够就挂起（afterPendingChoose），等轮数攒够的那一轮结束时再弹。 */
-  const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:6;
+  const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
   const had=(th.pk.chRounds||0);
   if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
   else{th.pk.st="choose";th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
