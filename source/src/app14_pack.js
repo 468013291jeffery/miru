@@ -47,7 +47,7 @@ function startSheet(wid,fresh){const w=wd(wid);if(!w)return;
   (ex?'<button class="btn btn-p btn-block" style="margin-top:14px" data-open="'+ex.id+'">▶ '+t("pk.continue",{n:ex.pk.ch,m:packAsName(w,ex.pk.as)})+'</button><div class="eyebrow" style="margin-top:14px">'+t("pk.newRun")+'</div>':'')+
   '<div class="stack" style="gap:8px;margin-top:10px">'+packModes(w).map(m=>'<button class="opt" data-pkgo="'+wid+'|'+m.as+'"><span class="ic">'+(m.as==="watch"?"👁":m.as==="side"?"🚪":"▶")+'</span><span class="grow"><b>'+esc(packAsName(w,m.as))+'</b><span>'+esc(Lz(m.t))+'</span></span><span style="color:var(--gold)">›</span></button>').join("")+'</div>'+
   '<p class="xs faint" style="margin-top:12px;line-height:1.5">'+t("pk.modesNote")+'</p>')}
-function packStart(wid,as,fromCh,picks){const w=wd(wid);const th=newThread(null,wid,null,{as,fromCh,picks});closeSheet();openThread(th.id);return th}
+function packStart(wid,as,fromCh,picks){pkTrace("packStart",fromCh);const w=wd(wid);const th=newThread(null,wid,null,{as,fromCh,picks});closeSheet();openThread(th.id);return th}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pkstart]")){startSheet(x.dataset.pkstart);return}
  if(x=e.target.closest("[data-pkgo]")){const[w,as]=x.dataset.pkgo.split("|");packStart(w,as);return}});
@@ -69,9 +69,25 @@ function packBeats(o){return (o&&(o[CL()]||o.en))||[]}
    voice → a locked voice note.  Each stop carries "then" (what happens after) and "skip" (if you pass). */
 const STOPK=new Set(["line","gift","photo","video","game","call","voice","start"]);
 function isStop(b){return Array.isArray(b)&&STOPK.has(b[1])&&b[2]&&typeof b[2]==="object"}
-function beatMsg(b){return Array.isArray(b)?{who:b[0],k:b[0]==="n"?"act":b[1],txt:b[2],at:Date.now(),pk:1}:b}
+/* 2026-10-27 · beat 的 payload 不一定是字符串：剧本里有 `{"t":"一句台词"}` 这种把台词包成对象的写法
+   （实测她那条线程 327 条待播里 93 条 payload 是对象）。以前 beatMsg 把对象原样塞进 txt ——
+   显示侧靠 asText70 救回来，**发声侧不过那道**，于是念的可能是 [object Object]；而认不出的对象
+   还会让播放器卡在队头不动（实测 48 秒 0 条新消息、队列 327→327）。
+   ⇒ 这里统一取一次文本；取不到的返回 null，由 packRun 跳过而不是卡死。 */
+/* 2026-10-27 · 黑匣子：谁把这一章开起来的。
+   症状是「章节自己从第一章重开」，而能重开的入口只有三个（packStart / packOpen / cpRestore）。
+   记最近 20 次「谁调的、第几章、从哪一行调」，落在存档里 ⇒ 导出存档就能看。 */
+function pkTrace(fn,ch){try{const st=String((new Error()).stack||"").split("\n").slice(2,5).map(s=>s.trim().slice(0,90));
+ S._pkTrace=S._pkTrace||[];S._pkTrace.push({t:Date.now(),fn:fn,ch:ch,frames:st});if(S._pkTrace.length>20)S._pkTrace.shift()}catch(_){}}
+function beatMsg(b){
+ if(!Array.isArray(b))return b;
+ let t=b[2];
+ if(t&&typeof t==="object"){try{t=(typeof asText70==="function")?asText70(t):String(t.t||t.text||t.line||"")}catch(_){t=""}}
+ if(typeof t!=="string")t=(t==null?"":String(t));
+ return {who:b[0],k:b[0]==="n"?"act":b[1],txt:t,at:Date.now(),pk:1};
+}
 function packPov(th){const w=wd(th.wid);return (w.pack&&w.pack.pov)||w.cast[w.cast.length-1]}
-function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
+function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
  th.pk.st="busy";th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};

@@ -27,7 +27,7 @@ rewindSheet=function(){const th=S.threads[curT];if(!th)return;const tag=S.plus?t
  else{const cps=(th.cps||[]).filter(c=>c.kind==="chat");if(!cps.length)h+='<p class="empty">'+LL("还没有可以回去的节点——先聊几句。","Nothing to go back to yet — talk a little first.")+'</p>';
   cps.forEach(cp=>{h+='<button class="cprow" data-cpgo2="'+th.cps.indexOf(cp)+'"><i class="ph">'+(cp.idx===0?"✦":cp.idx)+'</i><span class="grow"><b>'+cpLabel(th,cp)+'</b><small>'+esc(ago(cp.at))+'</small></span><em>⟲</em></button>'})}
  h+='</div>'+(th.pk&&th.wid?'<button class="btn btn-g btn-block" style="margin-top:12px" data-cprestart="1">'+LL("从头开始，重新选身份（免费）","Start over and pick a role (free)")+'</button>':'');sheet(h)};
-function cpRestore(th,cp){const snap=JSON.parse(JSON.stringify(cp.s)),msgs=th.msgs.slice(0,cp.n),cps=(th.cps||[]).filter(c=>c.at<=cp.at),g=(th._gen||0)+1,w=PKWAIT[th.id],nx=typeof PKNEXT!=="undefined"?PKNEXT[th.id]:null;
+function cpRestore(th,cp){try{if(typeof pkTrace==="function")pkTrace("cpRestore",cp&&cp.ch)}catch(_){}const snap=JSON.parse(JSON.stringify(cp.s)),msgs=th.msgs.slice(0,cp.n),cps=(th.cps||[]).filter(c=>c.at<=cp.at),g=(th._gen||0)+1,w=PKWAIT[th.id],nx=typeof PKNEXT!=="undefined"?PKNEXT[th.id]:null;
  Object.keys(th).forEach(k=>delete th[k]);Object.assign(th,snap,{msgs,cps});th._gen=g;delete PKWAIT[th.id];try{delete PKNEXT[th.id]}catch(_){}try{CH=null}catch(_){}if(w)w([]);if(nx)nx();
  try{const L=$("#fxLayer");if(L)L.innerHTML=""}catch(_){}
  if(th.pk&&cp.kind==="start"){th.pk.q=[];th.pk.stop=null;save();renderChat();th._cpRestoring=1;setTimeout(()=>{delete PKPLAY[th.id];packOpen(th,cp.ch);delete th._cpRestoring},150)}

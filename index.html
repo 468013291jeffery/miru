@@ -1499,7 +1499,7 @@ p{margin:0}
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="c375a1a767e8 2026-10-26T18:49Z";
+window.MIRU_BUILD="d8df98d9a987 2026-10-26T19:10Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -2933,7 +2933,12 @@ function audPack(lang){if(AUDP[lang]!==undefined)return;AUDP[lang]=null;
  if(window.AUDPACK&&AUDPACK[lang]){AUDP[lang]=AUDPACK[lang];return}
  fetch("audio/"+lang+".json").then(r=>r.ok?r.json():null).then(j=>{AUDP[lang]=j||{}}).catch(()=>{AUDP[lang]={}})}
 function audLang(){return S.lang==="zh"?"zh":S.lang==="en"?"en":null}
-function recorded(text,id){const l=audLang();if(!l)return null;audPack(l);const P=AUDP[l];if(!P)return null;
+function recorded(text,id){
+ /* 2026-10-27 Ann：「虽然现在删不合适，但是可以不用吗？」—— 可以。语言包**保留在仓库**，
+    但默认**不启用**（S.voice.pack 未开就完全不走这条路：不下载、不查表、不参与判断）。
+    实测她那条线程 10 次发声命中 0 次，而它要 11 MB 预取。想用的时候把开关打开即可。 */
+ if(!(typeof S!=="undefined"&&S.voice&&S.voice.pack))return null;
+ const l=audLang();if(!l)return null;audPack(l);const P=AUDP[l];if(!P)return null;
  const k=(id||"n")+"|"+String(text).replace(/[*()（）]/g,"").trim();return P[k]||(ch(id)?null:P["n|"+k.split("|").slice(1).join("|")])||null}
 function hasVoice(text,id){return !!recorded(text,id)}
 function speak(text,id,onend){
@@ -2952,7 +2957,10 @@ function speak(text,id,onend){
   if(onend)u.onend=onend;speechSynthesis.speak(u);
  }catch(e){}}
 function stopVoice(){try{speechSynthesis.cancel()}catch(e){}try{if(AUD_CUR){AUD_CUR.pause();AUD_CUR=null}}catch(e){}}
-setTimeout(()=>{const l=audLang();if(l)audPack(l)},600);
+/* 2026-10-27 Ann：「语言包说实话也是没什么用的」——实测她那条线程 10 次发声里命中录音包 0 次。
+   而它在启动 600ms 后就把 audio/<lang>.json（zh 11 MB）整份拉下来。⇒ 改成**按需**：
+   第一次真要念某句时由 recorded() 自己去调 audPack()，启动不再预取。 */
+
 
 /* ================= LIVE AI ================= */
 let SAMPLE=null,LIVE_ERR=null,LIVE_STATE="pending";
@@ -4702,11 +4710,26 @@ async function playBeats(th,r,ctx,silent){
  const valid=new Set(speakersOf(th).concat(["n"]));
  const beats=r.beats.filter(b=>b&&b.text&&valid.has(b.who)).slice(0,10);
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
- const toSpeak=[];
+ const toSpeak=[];let INLINE_SPOKE=false,silentStrikes=0;
+ const canSpeak=(()=>{try{return !!(S.voice&&S.voice.auto&&(typeof voiceAutoOK!=="function"||voiceAutoOK()))}catch(_){return false}})();
  for(const b of beats){if(!String(b.text||"").trim())continue;   // 空拍不播（2026-10-27：存档里出现过一条空台词）
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
-  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);}
+  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
+  /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
+    可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
+    ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
+    ③ 连续两句「4 秒半都没出声」就退回原来的定时节奏，绝不让一个坏掉的 TTS 把整轮对话拖住。 */
+  if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
+   INLINE_SPOKE=true;
+   const cap=Math.min(14000,Math.max(4500,String(m.txt||"").length*170));
+   await new Promise(res=>{let spoke=false,fin=false;
+    const go=()=>{if(fin)return;fin=true;clearTimeout(tm);res()};
+    const tm=setTimeout(()=>{if(!spoke)silentStrikes++;go()},cap);
+    try{speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
+   });
+  }
+ }
  if(r.status){if(typeof r.status.time==="object")r.status.time=asText70(r.status.time);if(typeof r.status.place==="object")r.status.place=asText70(r.status.place);th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
@@ -4734,7 +4757,7 @@ async function playBeats(th,r,ctx,silent){
   }
  }catch(_){}
  if(curT===th.id&&!silent){const cur=$("#s-chat");if(cur&&!cur.hidden){const sc=$("#msgs").scrollTop;renderChat();scrollChat()}}
- if(S.voice.auto&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
+ if(!INLINE_SPOKE&&S.voice.auto&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
 let VOICE_BUSY=0;   // 正在播/正在生成的语音条数（2026-10-27）
 function speakQueue(list){VOICE_BUSY++;let i=0;const next=()=>{if(i>=list.length){VOICE_BUSY=Math.max(0,VOICE_BUSY-1);return}const m=list[i++];speak(m.txt,m.who,next)};next()}
 
@@ -6644,7 +6667,7 @@ function startSheet(wid,fresh){const w=wd(wid);if(!w)return;
   (ex?'<button class="btn btn-p btn-block" style="margin-top:14px" data-open="'+ex.id+'">▶ '+t("pk.continue",{n:ex.pk.ch,m:packAsName(w,ex.pk.as)})+'</button><div class="eyebrow" style="margin-top:14px">'+t("pk.newRun")+'</div>':'')+
   '<div class="stack" style="gap:8px;margin-top:10px">'+packModes(w).map(m=>'<button class="opt" data-pkgo="'+wid+'|'+m.as+'"><span class="ic">'+(m.as==="watch"?"👁":m.as==="side"?"🚪":"▶")+'</span><span class="grow"><b>'+esc(packAsName(w,m.as))+'</b><span>'+esc(Lz(m.t))+'</span></span><span style="color:var(--gold)">›</span></button>').join("")+'</div>'+
   '<p class="xs faint" style="margin-top:12px;line-height:1.5">'+t("pk.modesNote")+'</p>')}
-function packStart(wid,as,fromCh,picks){const w=wd(wid);const th=newThread(null,wid,null,{as,fromCh,picks});closeSheet();openThread(th.id);return th}
+function packStart(wid,as,fromCh,picks){pkTrace("packStart",fromCh);const w=wd(wid);const th=newThread(null,wid,null,{as,fromCh,picks});closeSheet();openThread(th.id);return th}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pkstart]")){startSheet(x.dataset.pkstart);return}
  if(x=e.target.closest("[data-pkgo]")){const[w,as]=x.dataset.pkgo.split("|");packStart(w,as);return}});
@@ -6666,9 +6689,25 @@ function packBeats(o){return (o&&(o[CL()]||o.en))||[]}
    voice → a locked voice note.  Each stop carries "then" (what happens after) and "skip" (if you pass). */
 const STOPK=new Set(["line","gift","photo","video","game","call","voice","start"]);
 function isStop(b){return Array.isArray(b)&&STOPK.has(b[1])&&b[2]&&typeof b[2]==="object"}
-function beatMsg(b){return Array.isArray(b)?{who:b[0],k:b[0]==="n"?"act":b[1],txt:b[2],at:Date.now(),pk:1}:b}
+/* 2026-10-27 · beat 的 payload 不一定是字符串：剧本里有 `{"t":"一句台词"}` 这种把台词包成对象的写法
+   （实测她那条线程 327 条待播里 93 条 payload 是对象）。以前 beatMsg 把对象原样塞进 txt ——
+   显示侧靠 asText70 救回来，**发声侧不过那道**，于是念的可能是 [object Object]；而认不出的对象
+   还会让播放器卡在队头不动（实测 48 秒 0 条新消息、队列 327→327）。
+   ⇒ 这里统一取一次文本；取不到的返回 null，由 packRun 跳过而不是卡死。 */
+/* 2026-10-27 · 黑匣子：谁把这一章开起来的。
+   症状是「章节自己从第一章重开」，而能重开的入口只有三个（packStart / packOpen / cpRestore）。
+   记最近 20 次「谁调的、第几章、从哪一行调」，落在存档里 ⇒ 导出存档就能看。 */
+function pkTrace(fn,ch){try{const st=String((new Error()).stack||"").split("\n").slice(2,5).map(s=>s.trim().slice(0,90));
+ S._pkTrace=S._pkTrace||[];S._pkTrace.push({t:Date.now(),fn:fn,ch:ch,frames:st});if(S._pkTrace.length>20)S._pkTrace.shift()}catch(_){}}
+function beatMsg(b){
+ if(!Array.isArray(b))return b;
+ let t=b[2];
+ if(t&&typeof t==="object"){try{t=(typeof asText70==="function")?asText70(t):String(t.t||t.text||t.line||"")}catch(_){t=""}}
+ if(typeof t!=="string")t=(t==null?"":String(t));
+ return {who:b[0],k:b[0]==="n"?"act":b[1],txt:t,at:Date.now(),pk:1};
+}
 function packPov(th){const w=wd(th.wid);return (w.pack&&w.pack.pov)||w.cast[w.cast.length-1]}
-function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
+function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
  th.pk.st="busy";th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
@@ -7118,6 +7157,15 @@ function statusSync(th){const s=$(".status");if(!s)return;const sp=[...s.childre
 
 /* 3) narration, actions and thoughts that belong to the same moment go into ONE box instead of a string of separate lines */
 function isNarr(m){return m&&m.pk&&(m.who==="n"||m.k==="act"||m.k==="think")&&m.who!=="me"}
+/* 剧本台词去元信息（2026-10-27）：角色不该说出「第几章」「chapter N」这类给作者看的坐标。
+   只做最小改写，不删句子 —— 那句话里的「最后一次机会」是剧情钩子。 */
+function deMeta(s){
+ let x=String(s==null?"":s);
+ x=x.replace(/第[一二三四五六七八九十百零\d]+章\s*(开始)?\s*之前[，,、]?\s*/g,"在这之前，");
+ x=x.replace(/第[一二三四五六七八九十百零\d]+章[，,、]?\s*/g,"");
+ x=x.replace(/\bchapter\s*\d+\b[,\s]*/gi,"");
+ return x;
+}
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
@@ -7126,6 +7174,7 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
    speakQueue([{txt:m.txt,who:m.who}]);
  }catch(_){}
  if(!isNarr(m)){appendMsg(th,m);return}
+ try{ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } }catch(_){}
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
@@ -7172,8 +7221,14 @@ const _packRefresh2=packRefresh;
 packRefresh=function(th){_packRefresh2(th);if(curT===th.id){const pw=$("#pkwrap"),box=$("#msgs");if(pw&&box&&pw.parentNode!==box)box.appendChild(pw);scrollChat()}};
 
 /* 6) read aloud: ONE switch in the header. On = every line is read in its speaker's voice, one after another. Off = silent. */
-function speakLine(m,done){if(!m){done();return}const who=m.k==="box"?(m.lastWho||"n"):m.who==="me"?null:m.who,txt=m.k==="box"?(m.last||m.txt):m.txt;
- if(!txt||m.k==="scene"||m.k==="chap"||m.k==="card"||m.k==="intro"){done();return}try{speak(String(txt).replace(/^📞\s*/,""),who||"n",done)}catch(_){done()}}
+/* 2026-10-27 Ann：「语音不要读动作、背景、环境之类的」。
+   ⇒ **白名单**：只念 k==="say" 的角色台词。旁白（who==="n"，在 beatMsg 里 k 会被改成 act）、
+   动作、环境、卡片、章节标题一律不念。以前这里只排除了 scene/chap/card/intro，
+   而旁白在队列里是 act ⇒ 全被念了出来。 */
+function speakLine(m,done){if(!m){done();return}
+ const who=m.k==="box"?(m.lastWho||"n"):(m.who==="me"?null:m.who),txt=m.k==="box"?(m.last||m.txt):m.txt;
+ if(!txt||m.k!=="say"||!who||who==="n"||who==="sys"||!ch(who)){done();return}
+ try{speak(String(txt).replace(/^📞\s*/,""),who,done)}catch(_){done()}}
 /* 2026-10-27 · 朗读那条等是「换章之后好卡」的一张脸（进游戏后实测见 PERF.md）
    剧本每放一句都走 pkWait；开朗读时等的是「这句读完了」。原来的兜底是
    `max(ms*3, 14000)` —— 也就是**朗读一旦交不出声音，每一句都白等 14 秒**。
@@ -7185,19 +7240,29 @@ function speakLine(m,done){if(!m){done();return}const who=m.k==="box"?(m.lastWho
    才认定这段时间朗读不可用、按阅读速度往下走；而且只认一次（每段会话一次），
    朗读恢复（用 🔊 开关来回切一次）就重新给机会。
    朗读正常时这一段永远不会触发 —— onend 会先到，行为与改前完全一致。 */
-let AVDEAD=0;
+let AVSILENT=0, AVSKIP=0;
 function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesis.speaking||speechSynthesis.pending))return false}catch(_){}
  try{if(typeof TTS!=="undefined"&&TTS.inflight&&TTS.inflight.size)return false}catch(_){}   // 服务器配音还在路上（慢 ≠ 没有）
  try{if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false}catch(_){}
  return true}
+/* 2026-10-27 Ann：「这个语音怎么加强保护，好像经常坏」。
+   原来是一刀切：第一次没声音就把 AVDEAD 置 1，**整段会话再也不念**（还会把后续每句都变成静音），
+   而只要有一次网络抖/设备忙，就会被判死刑。改成**有退路的重试**：
+   · 连续 2 句没声音 ⇒ 先跳过 8 句（不拖节奏），之后**自动再给一次机会**，响了一声就把计数清零；
+   · 不再有「永久关闭」这个状态。
+   ⚠️ 同时修掉一个真的会卡死的分支：以前 `else if(spd)` —— 朗读被判死（AVDEAD=1）而 spd 为 0 时，
+   **没有任何东西会 resolve**，整条剧本停在这一句上（这就是「忽然不动了」）。现在每个分支都保证 resolve。 */
 function pkWait(th,prev,spd,ms){return new Promise(r=>{let ok=false;const go=()=>{if(ok)return;ok=true;r()};PKNEXT[th.id]=go;
- if(S.autoVoice&&!AVDEAD){
-  speakLine(prev,()=>setTimeout(go,300));
-  setTimeout(()=>{if(!ok&&avSilent()){AVDEAD=1;go()}},3000);      // 3 秒还没响 ⇒ 这段会话不再为朗读等
+ if(S.autoVoice&&AVSKIP<=0){
+  speakLine(prev,()=>{AVSILENT=0;setTimeout(go,300)});
+  setTimeout(()=>{if(!ok&&avSilent()){AVSILENT++;if(AVSILENT>=2){AVSKIP=8;AVSILENT=0}go()}},3000);   // 3 秒还没响 ⇒ 这一句不等朗读
   setTimeout(go,Math.max(ms*3,14000));                          // 老兜底保留（朗读很慢但确实在读时靠它）
- }else if(spd)setTimeout(go,ms)})}
+ }else{
+  if(AVSKIP>0)AVSKIP--;
+  if(spd)setTimeout(go,ms);else go();
+ }})}
 document.addEventListener("click",e=>{let x;
- if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;AVDEAD=0;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
+ if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;AVSILENT=0;AVSKIP=0;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
   if(!S.autoVoice){stopVoice()}toast(t(S.autoVoice?"st2.vOn":"st2.vOff"));if(PKNEXT[curT]&&!S.autoVoice)PKNEXT[curT]();return}
  if(x=e.target.closest("[data-intro]")){introSheet(x.dataset.intro);return}
  if(e.target.closest("[data-pknext],[data-pknextl],[data-stopline],[data-pkpick]"))stopVoice()},true);
@@ -10365,7 +10430,7 @@ rewindSheet=function(){const th=S.threads[curT];if(!th)return;const tag=S.plus?t
  else{const cps=(th.cps||[]).filter(c=>c.kind==="chat");if(!cps.length)h+='<p class="empty">'+LL("还没有可以回去的节点——先聊几句。","Nothing to go back to yet — talk a little first.")+'</p>';
   cps.forEach(cp=>{h+='<button class="cprow" data-cpgo2="'+th.cps.indexOf(cp)+'"><i class="ph">'+(cp.idx===0?"✦":cp.idx)+'</i><span class="grow"><b>'+cpLabel(th,cp)+'</b><small>'+esc(ago(cp.at))+'</small></span><em>⟲</em></button>'})}
  h+='</div>'+(th.pk&&th.wid?'<button class="btn btn-g btn-block" style="margin-top:12px" data-cprestart="1">'+LL("从头开始，重新选身份（免费）","Start over and pick a role (free)")+'</button>':'');sheet(h)};
-function cpRestore(th,cp){const snap=JSON.parse(JSON.stringify(cp.s)),msgs=th.msgs.slice(0,cp.n),cps=(th.cps||[]).filter(c=>c.at<=cp.at),g=(th._gen||0)+1,w=PKWAIT[th.id],nx=typeof PKNEXT!=="undefined"?PKNEXT[th.id]:null;
+function cpRestore(th,cp){try{if(typeof pkTrace==="function")pkTrace("cpRestore",cp&&cp.ch)}catch(_){}const snap=JSON.parse(JSON.stringify(cp.s)),msgs=th.msgs.slice(0,cp.n),cps=(th.cps||[]).filter(c=>c.at<=cp.at),g=(th._gen||0)+1,w=PKWAIT[th.id],nx=typeof PKNEXT!=="undefined"?PKNEXT[th.id]:null;
  Object.keys(th).forEach(k=>delete th[k]);Object.assign(th,snap,{msgs,cps});th._gen=g;delete PKWAIT[th.id];try{delete PKNEXT[th.id]}catch(_){}try{CH=null}catch(_){}if(w)w([]);if(nx)nx();
  try{const L=$("#fxLayer");if(L)L.innerHTML=""}catch(_){}
  if(th.pk&&cp.kind==="start"){th.pk.q=[];th.pk.stop=null;save();renderChat();th._cpRestoring=1;setTimeout(()=>{delete PKPLAY[th.id];packOpen(th,cp.ch);delete th._cpRestoring},150)}
@@ -12230,7 +12295,11 @@ speak=function(text,id,onend){try{
 const _stopVoice62=stopVoice;stopVoice=function(){TTS.seq=(TTS.seq||0)+1;return _stopVoice62()};
 /* prefetch the next spoken lines while the current one plays (only when read-aloud is on) */
 function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
- for(const b of th.pk.q.slice(0,8)){if(n>=2)break;if(!Array.isArray(b)||b[0]==="sys")continue;const txt=typeof b[2]==="string"?b[2]:null;if(!txt||b[0]===th.pk.as)continue;
+ for(const b of th.pk.q.slice(0,10)){if(n>=3)break;if(!Array.isArray(b)||b[0]==="sys")continue;
+  /* 2026-10-27：待播里的 payload 有 28% 是对象（`{"t":"一句台词"}`），原来 `typeof b[2]==="string"` 直接把
+     这些句子**跳过了** ⇒ 预取形同虚设，播放时只能现场合成（这就是「语音变慢」的一部分）。这里先归一化成文本。 */
+  const txt=(typeof b[2]==="string")?b[2]:(typeof asText70==="function"?asText70(b[2]):String(b[2]||""));
+  if(!txt||b[0]===th.pk.as)continue;
   if(!ttsSpeakable(txt)||(typeof recorded==="function"&&recorded(txt,b[0])))continue;n++;ttsFetch(txt,b[0]==="n"?"n":b[0]).catch(()=>{})}}
 const _pkAppend62=pkAppend;pkAppend=function(th,m){const r=_pkAppend62(th,m);try{if(curT===th.id)ttsPrefetch(th)}catch(_){}return r};
 /* settings: the AI-engine card on the Me page gets a voice row */

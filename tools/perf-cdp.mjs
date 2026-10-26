@@ -215,6 +215,24 @@ async function main() {
         return "aud spy on";
       })()`;
       say('      ' + await evaluate(audSpy));
+
+      /* 第三层：每一句「等多久」。pkWait 的同步耗时≈0，真正的时间在它的 promise 里 ——
+         所以量的是从进函数到 resolve 的墙钟，和它本该等的 ms 比。比值 >> 1 就是节奏被拖住了。 */
+      const waitSpy = `(function(){
+        if(window.__WAITSPY) return "already";
+        window.__WAITSPY=1; window.__WAIT=[];
+        try{
+          const o=pkWait;
+          pkWait=function(th,prev,spd,ms){
+            const t0=performance.now();
+            const p=o.apply(this,arguments);
+            try{p.then(function(){window.__WAIT.push({ms:Math.round(ms||0),actual:Math.round(performance.now()-t0),av:(typeof AVDEAD!=="undefined"?AVDEAD:-1),txt:String((prev&&prev.txt)||"").slice(0,40)})})}catch(e){}
+            return p;
+          };
+        }catch(e){}
+        return "wait spy on";
+      })()`;
+      say('      ' + await evaluate(waitSpy));
     }
 
     if (flag('novoice')) {
@@ -360,7 +378,21 @@ async function main() {
         say('  ' + (r.same ? '✓' : '✗') + ' [' + r.id + '] 念「' + r.text.slice(0, 30) + '」' + (r.rec ? ' (录音)' : '') + ' | 屏幕「' + r.last.slice(0, 30) + '」·' + r.lastWho + ' | 队头「' + String(r.qhead || '').slice(0, 30) + '」q=' + r.qlen);
       }
 
-      /* ---- 音频侧：放出来的到底是哪句（录音包指纹反查）---- */
+      /* ---- 每句等多久 ---- */
+      const wRaw = await evaluate(`JSON.stringify(window.__WAIT||[])`);
+      const waits = JSON.parse(wRaw);
+      result.waits = waits;
+      if (waits.length) {
+        const ratios = waits.map(w => (w.ms ? w.actual / w.ms : 0)).sort((a, b) => a - b);
+        const at = p => ratios[Math.min(ratios.length - 1, Math.round((ratios.length - 1) * p))];
+        const over = waits.filter(w => w.actual > w.ms + 500).length;
+        say('\n=== 每句等多久（' + waits.length + ' 句）===');
+        say('实际/应等 比值：p50 ' + at(.5).toFixed(2) + ' · p95 ' + at(.95).toFixed(2) + ' · 最大 ' + ratios[ratios.length - 1].toFixed(2)
+          + ' · **超出应等 0.5 s 的 ' + over + ' 句**');
+        for (const w of waits.slice(0, 12)) {
+          say('  应等 ' + w.ms + 'ms → 实等 ' + w.actual + 'ms (x' + (w.ms ? (w.actual / w.ms).toFixed(2) : '-') + ') avdead=' + w.av + ' 「' + w.txt + '」');
+        }
+      }
       const audRaw = await evaluate(`JSON.stringify(window.__AUD||[])`);
       const aud = JSON.parse(audRaw);
       result.aud = aud;
