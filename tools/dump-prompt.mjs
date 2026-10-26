@@ -13,11 +13,13 @@ const args = process.argv.slice(2);
 const WID = args[0] || 'gala';
 const CH = Number(args[1] || 5);
 const SOLO = (args.find(a => a.startsWith('--solo='))) ? args.find(a => a.startsWith('--solo=')).split('=')[1] : '';
-const OUT = SOLO
+const OUT_ARG = (args.find(a => a.startsWith('--out=')) || '').split('=').slice(1).join('=');
+const OUT = OUT_ARG || (SOLO
   ? (process.env.USERPROFILE + '\\Desktop\\MIRU-prompt-单人版.md')
-  : (args[2] || (process.env.USERPROFILE + '\\Desktop\\MIRU-prompt-梳理版.md'));
+  : (process.env.USERPROFILE + '\\Desktop\\MIRU-prompt-梳理版.md'));
 
-const html = fs.readFileSync('index.html', 'utf8');
+const FROM = (args.find(a => a.startsWith('--from=')) || '').split('=').slice(1).join('=');
+const html = fs.readFileSync(FROM || 'index.html', 'utf8');
 const cut = (name) => {
   const at = html.indexOf('function ' + name + '(');
   if (at < 0) return '';
@@ -129,6 +131,7 @@ const BLOCKS = [
 
 const md = [];
 md.push(SOLO ? '# MIRU · 单人对话的 prompt（一回合）' : '# MIRU · 一次真实回合的 prompt（梳理版）');
+if (FROM) md.push('', `> ⚠️ **这一份来自历史产物** \`${FROM}\`（不是当前 index.html），用于对比改动前后。`);
 md.push('');
 md.push(SOLO
   ? `> **单人对话**（私聊 ${(castById[SOLO] || {}).n || SOLO}）· 剧本 \`${WID}\` · 没有章节块（\`pk\` 不存在）· 语言 zh`
