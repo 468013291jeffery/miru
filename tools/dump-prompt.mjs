@@ -12,7 +12,10 @@ import path from 'node:path';
 const args = process.argv.slice(2);
 const WID = args[0] || 'gala';
 const CH = Number(args[1] || 5);
-const OUT = args[2] || (process.env.USERPROFILE + '\\Desktop\\MIRU-prompt-梳理版.md');
+const SOLO = (args.find(a => a.startsWith('--solo='))) ? args.find(a => a.startsWith('--solo=')).split('=')[1] : '';
+const OUT = SOLO
+  ? (process.env.USERPROFILE + '\\Desktop\\MIRU-prompt-单人版.md')
+  : (args[2] || (process.env.USERPROFILE + '\\Desktop\\MIRU-prompt-梳理版.md'));
 
 const html = fs.readFileSync('index.html', 'utf8');
 const cut = (name) => {
@@ -53,14 +56,24 @@ const castLib = (() => {
 const castById = {}; pack.cast.forEach(c => { const id = typeof c === 'string' ? c : c.id; if (castLib[id]) castById[id] = castLib[id] });
 const ids = pack.cast.map(c => c.id).slice(0, 5);
 
-const th = {
-  id: 't1', wid: WID, cast: ids, love: {}, mem: [], said: [], typed: [], msgs: [], status: { time: '', place: '', mood: {} },
-  pk: { ch: CH, as: 'watch', st: 'choose', picks: {} },
-};
-ids.forEach(id => th.love[id] = 12);
-th.mem.push('Ann asked Jack a direct question about the headline; he did not answer it.');
-th.msgs.push({ who: 'me', k: 'say', txt: '我把它挪到中间吧。' });
-th.said.push('我把它挪到中间吧。'); th.typed.push('我把它挪到中间吧。');
+const th = SOLO
+  ? { id: 'c:' + SOLO, kind: 'solo', wid: WID, cast: [SOLO], title: (castById[SOLO] || {}).n || SOLO,
+      love: { [SOLO]: 5 }, rounds: 2, mem: [], said: [], typed: [], msgs: [], status: { time: '', place: '', mood: {} } }
+  : { id: 't1', wid: WID, cast: ids, love: {}, mem: [], said: [], typed: [], msgs: [], status: { time: '', place: '', mood: {} },
+      pk: { ch: CH, as: 'watch', st: 'choose', picks: {} } };
+if (!SOLO) ids.forEach(id => th.love[id] = 12);
+if (SOLO) {
+  const nm = (castById[SOLO] || {}).n || SOLO;
+  th.mem.push('She asked why he went quiet after the race; he changed the subject.');
+  th.msgs.push({ who: SOLO, k: 'say', txt: '你今天话很少。' });
+  th.msgs.push({ who: 'me', k: 'say', txt: '因为我不想解释我为什么还在这儿。' });
+  th.said.push('因为我不想解释我为什么还在这儿。');
+  th.typed.push('因为我不想解释我为什么还在这儿。');
+} else {
+  th.mem.push('Ann asked Jack a direct question about the headline; he did not answer it.');
+  th.msgs.push({ who: 'me', k: 'say', txt: '我把它挪到中间吧。' });
+  th.said.push('我把它挪到中间吧。'); th.typed.push('我把它挪到中间吧。');
+}
 const chArr = pack.chapters[CH - 1];
 th.status.time = (chArr.time && (chArr.time.zh || chArr.time.en)) || '';
 th.status.place = (chArr.place && (chArr.place.zh || chArr.place.en)) || '';
@@ -115,9 +128,11 @@ const BLOCKS = [
 ];
 
 const md = [];
-md.push('# MIRU · 一次真实回合的 prompt（梳理版）');
+md.push(SOLO ? '# MIRU · 单人对话的 prompt（一回合）' : '# MIRU · 一次真实回合的 prompt（梳理版）');
 md.push('');
-md.push(`> 剧本 \`${WID}\` 第 ${CH} 章 · 模式 **watch**（旁观 / 协调员） · 章节状态 **choose** · 语言 zh`);
+md.push(SOLO
+  ? `> **单人对话**（私聊 ${(castById[SOLO] || {}).n || SOLO}）· 剧本 \`${WID}\` · 没有章节块（\`pk\` 不存在）· 语言 zh`
+  : `> 剧本 \`${WID}\` 第 ${CH} 章 · 模式 **watch**（旁观 / 协调员） · 章节状态 **choose** · 语言 zh`);
 md.push('>');
 md.push('> **这份是怎么来的**：从构建产物 `index.html` 里把真的 `packPrompt` / `packTail` / `castCard` / `castCardPublic` / `memBlock` / `transcript` 切出来，');
 md.push('> 用真实剧本数据 + 一小段假历史渲染。**规则段、卡片、块顺序都是线上那一份逐字**；只有"历史对话"是我造的样例。');
