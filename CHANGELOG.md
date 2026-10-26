@@ -150,6 +150,19 @@
 
 **发现：整条计划层是死代码**（2026-10-25）：`planDecide`/`planGet`/`planSet`/`planTried` 定义齐全、单测全过，但**全仓没有任何一处调用** ⇒ 映射表上 T17/T18/T25 的 PASS 是假的：行为对 ≠ 接上了。新增闸 `tools/wiring-check.mjs`（检查 22 个机制函数有没有调用点，基线每条带理由、接上线必须从基线删掉），映射表加第五态 **UNWIRED**：18 PASS / 3 UNWIRED / 2 NOT-YET / 2 N/A。**没接线的原因不是漏写，是 T19 第④步还没拍**（自动续故事是产品决定）。
 
+**角色视角：把 chapter 那套编排语从角色脑子里删掉**（2026-10-28，Ann 拍）：
+
+> 原话：「这句子删掉，只给他本节剧情做打底和背景，不要提到别的章…他一个对话者，需要知道这么多吗？未卜先知吗？他就是他，这种 chapter 的角色扮演给去掉」
+
+- **删掉三样**（都是编剧/系统视角）：第几章共几章 · `Chapter goal` · 「读者接下来要做本章官方选择（A/B）」+「不许跳到后面的章」。
+  角色一旦知道自己"该推进到哪"，就会提前朝那个方向使劲，甚至说出还没发生的事——这就是"未卜先知"的来源。
+- **留下两样**（他真能知道的）：`WHERE YOU ARE`（地点+时间，注明是背景、别念出来）· `ALREADY HAPPENED`（不许推翻已发生的）。
+- **加一句**：`Time passes in real scenes… you may end a beat, let minutes go by, move… or let something new happen that nobody announced. You do not know what comes next.`
+  ⇒ 允许世界自己往前走，但**不给他坐标**。
+- 开关 `chat.characterMeta`（默认 false = 新口径；true 一字不改回到旧文案）。
+- 判据 `prompt-blocks.mjs` E 组 4 条：默认**不许**出现 Chapter goal / official choice / CHAPTER n/m；必须出现"此刻在哪"；必须写明"你不知道接下来会怎样"；**tune 默认值必须是 false**。
+  变异验过：把 tune 默认改回 true ⇒ 第 4 条当场红。
+
 **回复延迟：开流式 + 自适应预算**（2026-10-25，Ann 拍）：
 
 | | 接手前（他们的读数） | 现在 |

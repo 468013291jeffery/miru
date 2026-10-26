@@ -238,22 +238,36 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-close]"))closeS
 /* ---------- AI prompt context for a story pack ---------- */
 function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chapters[th.pk.ch-1];if(!c)return "";
  const as=th.pk.as,lead=ch(as),past=Object.entries(th.pk.picks).map(([n,k])=>"Ch"+n+": "+P.chapters[n-1].choices.find(x=>x.k===k).mem.en).join(" | ");
- return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+"."+
-  // 内容版本号（T06）：内容一改，这一行就变 ⇒ 固定段失效 ⇒ 缓存不会拿旧剧本的上下文继续讲故事
-  ((typeof MIRU_REV!=="undefined"&&MIRU_REV[th.wid])?" [script rev "+MIRU_REV[th.wid]+"]":""),
-   (function(){try{
-    const _canon=(typeof canonFacts==="function")?canonFacts(th.wid,th.pk.ch):[];
-    const _all=[past].concat(_canon).filter(Boolean).join(" | ");
-    return _all?"WHAT HAS HAPPENED (official, canon — never contradict, never re-open a settled conflict): "+_all:"";
-  }catch(_){return past?"WHAT HAS HAPPENED (official, canon — never contradict): "+past:""}})(),
-  th.pk.st==="choose"?("The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). "
-   +((typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.chapterAdvance===false)
-     ? "Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal."
-     : "Do NOT make that decision for anyone and do NOT resolve the chapter goal — but you MAY move this chapter forward: end the beat, let minutes or hours pass, change rooms, bring someone in. A chapter lasts many minutes; do not freeze the same instant across replies.")):
-   "This chapter's choice is made. Play the aftermath of it; do not start the next chapter's events.",
-  as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
+ /* 2026-10-28 Ann 原话：「这句子删掉，只给他本节剧情做打底和背景，不要提到别的章…他一个对话者，需要知道这么多吗？未卜先知吗？他就是他，这种 chapter 的角色扮演给去掉」。
+    删掉的三样都是**编剧视角**：第几章/共几章、Chapter goal、"读者接下来要做本章官方选择"。
+    角色一旦知道自己"该推进到哪"，就会提前朝那个方向使劲，甚至说出还没发生的事。
+    留下他真能知道的两样：① 此刻在哪、什么时间（背景，别念出来） ② 已经发生过的事（不许推翻）。
+    开关 chat.characterMeta=true 回到旧文案（下面那条分支，一字未改）。 */
+ const _canon=function(){try{const k=(typeof canonFacts==="function")?canonFacts(th.wid,th.pk.ch):[];return [past].concat(k).filter(Boolean).join(" | ")}catch(_){return past||""}};
+ if(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.characterMeta===true){
+  const _all=_canon();
+  return ["CHAPTER "+th.pk.ch+"/"+P.chapters.length+" — \""+c.t.en+"\". Chapter goal: "+c.goal.en+". Place: "+c.place.en+", "+c.time.en+"."+((typeof MIRU_REV!=="undefined"&&MIRU_REV[th.wid])?" [script rev "+MIRU_REV[th.wid]+"]":""),
+   _all?"WHAT HAS HAPPENED (official, canon — never contradict, never re-open a settled conflict): "+_all:"",
+   th.pk.st==="choose"?("The reader is about to make this chapter's official choice ("+c.choices.map(x=>x.k+": "+x.t.en).join(" / ")+"). "
+    +((typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.chapterAdvance===false)
+      ? "Stay inside this moment: do NOT make that decision for anyone, do NOT jump to later chapters, do NOT resolve the chapter goal."
+      : "Do NOT make that decision for anyone and do NOT resolve the chapter goal — but you MAY move this chapter forward: end the beat, let minutes or hours pass, change rooms, bring someone in.")):
+    "This chapter's choice is made. Play the aftermath of it; do not start the next chapter's events."
+  ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");
+ }
+ const _all=_canon();
+ return [
+  "WHERE YOU ARE: "+c.place.en+", "+c.time.en+". This is background for you to stand in — do not recite it back to the reader, just be in it.",
+  _all?"ALREADY HAPPENED (you were there for these or heard about them; never contradict them, never re-open a settled argument): "+_all:"",
+  "Time passes in real scenes: you may end a beat, let minutes go by, move to another corner of this place, or let something new happen that nobody announced. You do not know what comes next, and you must not act as if you do."
+ ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");
+}
+/* 与"章节"无关的共用尾部：谁在场 / 玩家扮演谁 / 边界。两种口径都走这里，避免两份漂移。 */
+function packTail(th,as,lead){return [
+ as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
   lead?"THE USER PLAYS "+lead.n+" ("+Lz(lead.role)+"). Never write "+first(lead.n)+"'s lines, actions or thoughts — only react to them. The user's private thoughts are never known by anyone.":"",
-  "Respect every character's boundary: a refusal is a real answer. Nothing — gifts, money, persistence — buys consent or love."].filter(Boolean).join("\n")}
+  "Respect every character's boundary: a refusal is a real answer. Nothing — gifts, money, persistence — buys consent or love."
+];}
 function speakersOf(th){return th.cast.filter(c=>!(th.pk&&c===th.pk.as))}
 
 /* ---------- relationship level-up moment ---------- */
