@@ -48,7 +48,7 @@ function renderChat(){
   '<button class="tool" data-modemore="1" id="modeMoreBtn">⋯ '+t("cx.more")+'</button></div>'+
   '<div class="modes2" id="modes2" hidden>'+
    '<button class="tool gamebtn" data-games="1">🎮 '+t("gh.btn")+'</button><button class="tool" data-ideas="1">✦ '+t("cx.suggest")+'</button><button class="tool" data-cont="1">⏩ '+t("cx.cont")+'</button><button class="tool" data-cs="1">📖 '+t("cs.h")+'</button></div>'+
-  '<div class="inrow"><button class="plus" data-plus="1">'+ic("plus")+'</button><textarea id="cin" rows="1" class="'+(cmode==="dir"?"dir":"")+'" placeholder="'+esc(t("cx.ph."+cmode))+'"></textarea><button class="send" data-send="1">'+ic("send")+'</button></div></div>';
+  '<div class="inrow"><button class="plus" data-plus="1">'+ic("plus")+'</button><textarea id="cin" rows="1" class="'+(cmode==="dir"?"dir":"")+'" placeholder="'+esc(cmode==="dir"?t("cx.ph.dir"):t("cx.ph.say"))+'"></textarea><button class="send" data-send="1">'+ic("send")+'</button></div></div>';
  const lastWho=([...th.msgs].reverse().find(m=>ch(m.who))||{}).who||mainOf(th);
  h='<div class="chatbg" id="chatBg"><div class="cbimg" id="cbImg"></div><canvas id="cbFx"></canvas><div class="cbveil"></div></div>'+h;
  screen("s-chat",h,"chatscreen");refreshLive();setTimeout(()=>chatFx(th),30);const lm=[...th.msgs].reverse().find(m=>ch(m.who));/* the scene is alive from the first second, before anyone speaks */if(lm)chatBgSet(lm.who,poseOf(lm));else{const c0=(th.cast||[]).find(x=>ch(x));if(c0)chatBgSet(c0,"idle")}}
@@ -170,7 +170,8 @@ function msgHTML(m,i,th){
   '.pk-locked{opacity:.45;pointer-events:none}',
   '.modeTog{border:1px solid var(--line2);background:var(--panel);color:var(--fg);border-radius:999px;padding:7px 14px;font-size:13.5px;font-weight:600;cursor:pointer}',
   '.modeTog:active{transform:scale(.96)}',
-  '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%)}',
+  /* Ann 2026-10-27：对话要能往上累积到 80% 再滚；顶部只留一小段渐隐，别把整块吃掉 */
+  '#msgs{max-height:80%;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%);mask-image:linear-gradient(to bottom,transparent 0,#000 7%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
      MIRU_TUNE.chat.playerSide = "left" 时整盘翻过来：玩家在左、角色在右。 */
