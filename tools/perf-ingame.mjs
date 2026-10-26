@@ -87,14 +87,21 @@ say('      ' + evalJs(runner, 'runner'));
    主线程工作。为什么需要它：真速播一章 60–90 秒，其中 99% 是定时器在等 —— 那部分不是「卡」，
    改代码也动不了它。A/B 要比的是工作，不是等。真速的读数另外单独留一份（不加 --fast）。 */
 const FAST = flag('fast');
+/* 朗读开关是「换章一张一合」的单一最大项：剧本每句都等 `pkWait`，而开朗读时那段等的是
+   「这句话读完」。所以它必须能被显式指定，否则两次测量比的是两个不同的东西。 */
+const VOICE = opt('voice', FAST ? 'off' : 'keep');   // on | off | keep
+const VOICE_JS = VOICE === 'on' ? 'S.autoVoice=true;' : VOICE === 'off' ? 'S.autoVoice=false;' : '';
 const setup = evalJs(`JSON.stringify((function(){
   S.packs=S.packs||{};S.packs["${WORLD}"]={own:1,end:{}};save();
-  ${FAST ? 'S.pkSpd=0.02;S.autoVoice=false;' : 'S.pkSpd=1;'}
+  ${FAST ? 'S.pkSpd=0.02;' : 'S.pkSpd=1;'}${VOICE_JS}
   try{if(typeof MIRU_TUNE==="object"&&MIRU_TUNE.chat)MIRU_TUNE.chat.minRoundsPerChapter=0}catch(e){}   // 节奏门槛不是性能，量性能时关掉
   save();
   const th=Object.values(S.threads).filter(t=>t.wid==="${WORLD}"&&t.pk).sort((a,b)=>b.at-a.at)[0];
-  if(th&&th.pk&&th.pk.st!=="end"){openThread(th.id);return{resume:true,id:th.id,ch:th.pk.ch,st:th.pk.st,msgs:th.msgs.length}}
-  if(th){delete S.threads[th.id];save()}
+  const FRESH=${flag('fresh') ? 1 : 0};
+  if(FRESH&&th){delete S.threads[th.id];save()}
+  const th2=FRESH?null:th;
+  if(th2&&th2.pk&&th2.pk.st!=="end"){openThread(th2.id);return{resume:true,id:th2.id,ch:th2.pk.ch,st:th2.pk.st,msgs:th2.msgs.length}}
+  if(th2){delete S.threads[th2.id];save()}
   const t2=packStart("${WORLD}","watch",1);
   return{resume:false,id:t2.id,ch:t2.pk.ch,st:t2.pk.st,msgs:t2.msgs.length}
 })())`, 'setup');

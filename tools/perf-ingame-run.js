@@ -88,6 +88,13 @@
       setTimeout(loop, 200);
       return "started";
     }
+    if (t.pk.st === "next") {
+      /* 起跑时上一章已经收尾、正等玩家按「下一章」⇒ 直接推进，这一章的窗口从推进之后开始记 */
+      note("ch" + t.pk.ch + " at next (pre-finished, no window); advancing");
+      F.runs.push({ ch: t.pk.ch, phase: "main", note: "pre-finished", msgsAfter: t.msgs.length });
+      measureOpenThenAdvance();
+      return "started(next)";
+    }
     F.phase = "play-main";
     note("start at ch=" + t.pk.ch + " msgs=" + t.msgs.length);
     loop();

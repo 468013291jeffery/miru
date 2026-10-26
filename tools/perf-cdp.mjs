@@ -26,6 +26,8 @@ const WORLD = opt('world', 'ice');
 const CHOICE = opt('choice', 'B');
 const CHAPTERS = Number(opt('chapters', 0));
 const OUT = opt('out', 'reports/perf-cdp.json');
+const CPU = Number(opt('cpu', 0));            // CPU 降频倍数（模拟手机：4~6）
+const NET = opt('net', '');                    // 形如 1.6/150 = 1.6 Mbps 下行 / 150ms RTT
 const EDGE = opt('edge', 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -130,6 +132,27 @@ async function main() {
       var o=null; try{o=JSON.parse(v)}catch(e){}
       return {len:v.length, parsed:!!o, threads:o&&o.threads?Object.keys(o.threads).length:"-", lang:o?o.lang:"-"};
     })())`));
+    /* ---- 把靶子换成「手机」：CPU 降频 + 网络限速，然后重新导航一次，
+       这样 performance.timing 量到的就是**手机上的加载**，而不是本机 localhost。---- */
+    if (CPU > 1) { await send('Emulation.setCPUThrottlingRate', { rate: CPU }); say('      CPU 降频 x' + CPU) }
+    if (NET) {
+      const [mbps, rtt] = String(NET).split('/').map(Number);
+      await send('Network.enable');
+      await send('Network.emulateNetworkConditions', {
+        offline: false, latency: rtt || 150,
+        downloadThroughput: (mbps || 1.6) * 1024 * 1024 / 8,
+        uploadThroughput: 750 * 1024 / 8,
+        connectionType: 'cellular3g',
+      });
+      say('      网络 ' + (mbps || 1.6) + ' Mbps · RTT ' + (rtt || 150) + ' ms');
+    }
+    if (CPU > 1 || NET) {
+      await send('Page.navigate', { url: URL0 });
+      await waitFor('document.readyState === "complete" && typeof S !== "undefined" && typeof renderChat === "function"', 60000);
+      say('      降级条件下重新加载完成');
+      say('      ' + await evaluate(fs.readFileSync('tools/perf-ingame.js', 'utf8')));
+      say('      ' + await evaluate(fs.readFileSync('tools/perf-ingame-run.js', 'utf8')));
+    }
     const st0 = await evaluate(`JSON.stringify({lang:S.lang, ob:!!S.ob, threads:Object.keys(S.threads).length, lens:Object.keys(S.threads).map(function(k){return (S.threads[k].msgs||[]).length}), lastTab:S.lastTab})`);
     say('      存档生效 = ' + st0);
     const nThreads = JSON.parse(st0).threads;
@@ -163,12 +186,64 @@ async function main() {
       // ⑤ 这次导航本身的耗时（回答「进入游戏时卡」——first paint 之前发生了什么）
       var pt=performance.timing||{}; var n0=pt.navigationStart||0;
       out.timing=n0?{ttfb:pt.responseStart-n0, html:pt.responseEnd-n0, domInteractive:pt.domInteractive-n0, dcl:pt.domContentLoadedEventStart-n0, load:pt.loadEventEnd-n0, transferKB:Math.round(((performance.getEntriesByType&&performance.getEntriesByType("navigation")[0]||{}).transferSize||0)/1024)}:{};
+      out.pending={msgs:best.msgs.length};
       return JSON.stringify(out);
     })()`);
     say('      ' + quick);
     if (JSON.parse(quick).err) throw new Error('没有可量的线程: ' + quick);
 
     const result = { when: new Date().toISOString(), url: URL0, save: SAVE, world: WORLD, quick: JSON.parse(quick) };
+
+    /* ---- 帧率：这才是玩家嘴里的「卡」----
+       停在聊天页、播着的特效循环在跑，然后采 3 秒 requestAnimationFrame 的间隔。
+       判据：p95 > 33ms 或 掉帧率 > 5% ⇒ 玩家能看出来在卡。 */
+    say('[4b] 3 秒帧采样（特效在跑）');
+    const framesRaw = await evaluate(`(function(){
+      try{ openThread(Object.keys(S.threads).reduce(function(b,k){var t=S.threads[k];return (!b||(t.msgs||[]).length>(S.threads[b].msgs||[]).length)?k:b},null)); }catch(e){}
+      return new Promise(function(res){
+        var d=[],last=performance.now(),t0=last;
+        function step(now){ d.push(now-last); last=now;
+          if(now-t0<3000){ requestAnimationFrame(step) }
+          else { var s=d.slice().sort(function(a,b){return a-b});
+            var at=function(p){return s[Math.min(s.length-1,Math.max(0,Math.round((s.length-1)*p)))]};
+            var over=d.filter(function(x){return x>33.4}).length;
+            res(JSON.stringify({n:d.length, p50:+at(.5).toFixed(1), p95:+at(.95).toFixed(1), max:+Math.max.apply(null,d).toFixed(1), dropped:over, dropPct:+(100*over/d.length).toFixed(1), fps:+(1000/(d.reduce(function(a,b){return a+b},0)/d.length)).toFixed(0)}));
+          }
+        }
+        requestAnimationFrame(step);
+      });
+    })()`, 20000);
+    say('      ' + framesRaw);
+    result.frames = JSON.parse(framesRaw);
+
+    /* ---- 真发一轮：玩家打字 → 等 AI 回复。这是唯一还没量过的路径。---- */
+    if (flag('send')) {
+      say('[4c] 真发一轮（打字 → 等回复，期间采帧）');
+      const sent = await evaluate(`(function(){
+        try{
+          var c=document.querySelector("#cin"); if(!c) return "no #cin";
+          c.value="我拿起杯子，看着你。"; c.dispatchEvent(new Event("input",{bubbles:true}));
+          var b=document.querySelector("[data-send]"); if(!b) return "no send btn";
+          b.click(); return "sent";
+        }catch(e){ return "ERR "+e.message }
+      })()`);
+      say('      ' + sent);
+      const round = await evaluate(`new Promise(function(res){
+        var d=[],last=performance.now(),t0=last,busySince=0;
+        function step(now){ d.push(now-last); last=now;
+          if(now-t0<25000){ requestAnimationFrame(step) }
+          else { var s=d.slice().sort(function(a,b){return a-b});
+            var at=function(p){return s[Math.min(s.length-1,Math.max(0,Math.round((s.length-1)*p)))]};
+            var over=d.filter(function(x){return x>33.4}).length;
+            var th=S.threads[curT];
+            res(JSON.stringify({n:d.length,p50:+at(.5).toFixed(1),p95:+at(.95).toFixed(1),max:+Math.max.apply(null,d).toFixed(1),dropped:over,dropPct:+(100*over/d.length).toFixed(1),fps:+(1000/(d.reduce(function(a,b){return a+b},0)/d.length)).toFixed(0),msgs:th?th.msgs.length:-1}));
+          }
+        }
+        requestAnimationFrame(step);
+      })`);
+      say('      ' + round);
+      result.round = JSON.parse(round);
+    }
 
     if (CHAPTERS > 0) {
       say('[5/6] 起点（强制新开一章，别接着上次半播的状态）');
@@ -204,12 +279,16 @@ async function main() {
 
     const f = n => (typeof n === 'number' ? n.toFixed(1) : String(n));
     say('\n=== 三格 ===');
+    const tm = result.quick.timing || {};
+    say('页面加载（本次导航）: TTFB ' + tm.ttfb + 'ms · HTML ' + tm.html + 'ms · DOMInteractive ' + tm.domInteractive + 'ms · DCL ' + tm.dcl + 'ms · load ' + tm.load + 'ms · 传输 ' + tm.transferKB + ' KB'
+      + (CPU > 1 ? '（CPU x' + CPU + '）' : '') + (NET ? '（网络 ' + NET + '）' : ''));
     say('线程: ' + result.quick.thread.wid + ' · 消息 ' + result.quick.thread.msgs + ' 条');
     say('进 thread（打开一条已有的 30-55 条消息的线程）: ' + f(result.quick.openThreadMs) + ' ms');
     say('renderChat 单次（整屏重建）: 均 ' + f(result.quick.renderChat.ms) + ' ms / 峰 ' + f(result.quick.renderChat.max) + ' ms');
     say('save 单次（整份 S 序列化 + 同步写盘）: 均 ' + f(result.quick.save.ms) + ' ms / 峰 ' + f(result.quick.save.max) + ' ms · 存档 ' + result.quick.save.bytes + ' B');
     say('chatBgSet 单次（每落一条消息都调，内含强制重排）: 均 ' + f(result.quick.chatBgSet.ms) + ' ms / 峰 ' + f(result.quick.chatBgSet.max) + ' ms');
     say('规模: DOM ' + result.quick.scale.domNodes + ' 节点 · #msgs 子节点 ' + result.quick.scale.msgsNodes);
+    if (result.frames) say('帧率: ' + result.frames.fps + ' fps · p50 ' + result.frames.p50 + 'ms · p95 ' + result.frames.p95 + 'ms · 最长 ' + result.frames.max + 'ms · 掉帧 ' + result.frames.dropped + '/' + result.frames.n + ' (' + result.frames.dropPct + '%)');
 
     if (result.runs && result.runs.length) {
       say('\n章 | 墙钟 | save 次数/累计 | renderChat 次数/累计 | 长任务 n/ms/max | 掉帧 | msgs 前→后');
