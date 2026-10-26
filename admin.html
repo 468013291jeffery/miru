@@ -125,7 +125,7 @@ const { ElMessage, ElMessageBox } = ElementPlus;
 const S = reactive({ token: localStorage.getItem('miru_admin_tok') || '', me: JSON.parse(localStorage.getItem('miru_admin_me') || '{}'), perms: JSON.parse(localStorage.getItem('miru_admin_perms') || '[]') });
 async function api(r, opt) {
   opt = opt || {}; const qs = new URLSearchParams(Object.assign({ r }, Object.fromEntries(Object.entries(opt.query || {}).filter(([, v]) => v !== '' && v != null)))).toString();
-  const res = await fetch('/api/admin?' + qs, { method: opt.body ? 'POST' : 'GET', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
+  const res = await fetch((location.hostname === '468013291jeffery.github.io' ? 'https://www.miru.plus' : '') + '/api/admin?' + qs, { method: opt.body ? 'POST' : 'GET', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
   let j = {}; try { j = await res.json(); } catch (_) {}
   if (res.status === 401 && r !== 'login' && r !== 'password') { logout(); ElMessage.error('登录已过期，请重新登录'); throw new Error('401'); }
   if (!res.ok) { ElMessage.error(j.error || ('请求失败 ' + res.status)); throw new Error(j.error || res.status); }
@@ -235,7 +235,7 @@ const Users = {
       txBusy.value = true;
       try {
         const qs = new URLSearchParams({ r: 'user_transcript', id, limit: String(txN.value) }).toString();
-        const res = await fetch('/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
+        const res = await fetch((location.hostname === '468013291jeffery.github.io' ? 'https://www.miru.plus' : '') + '/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
         if (!res.ok) { let j = {}; try { j = await res.json(); } catch (_) {} ElMessage.error(j.error || ('导出失败 ' + res.status)); return; }
         const blob = await res.blob();
         const a = document.createElement('a');
@@ -729,7 +729,7 @@ const STU_HEATS = [['fluff', '清水 · 不越界'], ['slow', '暧昧 · 有张�
 /* 具体元素（职业、种族、运动……）是故事事实，不在口味页，只用于搜索 */
 const STU_FACTS = { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友', 'Campus': '校园', 'Billionaire': '亿万富翁', 'Secret Heir': '隐藏继承人', 'Coworkers': '同事' };
 const stuTaxTags = taste => { const out = new Set(); Object.entries(STU_TAX).forEach(([g, G]) => G.items.forEach(([k, , , tags]) => { if (((taste || {})[g] || []).includes(k)) tags.forEach(t => out.add(t)); })); return [...out]; };
-const stuTagsOf = c => [...new Set(stuTaxTags(c.taste).concat(c.facts || []))];
+const stuTagsOf = c => [...new Set(stuTaxTags(c.taste).concat(c.facts || [], (c.tags || []).filter(t => !Object.values(STU_TAX).some(g => g.items.some(i => i[3].includes(t))) && !Object.prototype.hasOwnProperty.call(STU_FACTS, t))))];
 const STU_TAG_ZH = Object.assign({}, STU_FACTS, ...Object.values(STU_TAX).map(G => Object.fromEntries(G.items.map(i => [i[1], i[2]]))));
 const stuTasteText = c => { const T = c.taste || {}; return STU_LAYERS.map(([g, nm]) => nm + '：' + ((T[g] || []).map(k => { const it = STU_TAX[g].items.find(i => i[0] === k); return it ? it[2] + '（' + it[1] + '）' : k; }).join('、') || '未选')).join('；') + '；尺度：' + ((STU_HEATS.find(h => h[0] === c.heat) || [, '未选'])[1]) + (c.facts && c.facts.length ? '；具体元素：' + c.facts.map(x => STU_FACTS[x] || x).join('、') : ''); };
 const Studio = {
@@ -846,7 +846,8 @@ const Studio = {
         <el-form-item label="标题"><el-input v-model="sel.title" /></el-form-item>
         <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
 <el-form-item label="口味标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和用户第一次进 App 选口味（带照片那页）是同一套：选什么，就推给选了这些口味的用户；也用于搜索。</div><div v-for="L in STU_LAYERS" :key="L[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{L[1]}}<br><small>最多 {{L[2]}} 个</small></span><el-checkbox-group v-model="sel.config.taste[L[0]]" :max="L[2]" size="small"><el-checkbox-button v-for="it in STU_TAX[L[0]].items" :key="it[0]" :value="it[0]">{{it[2]}}</el-checkbox-button></el-checkbox-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">尺度</span><el-radio-group v-model="sel.config.heat" size="small"><el-radio-button v-for="h in STU_HEATS" :key="h[0]" :value="h[0]">{{h[1]}}</el-radio-button></el-radio-group></div><div style="display:flex;gap:8px;align-items:flex-start"><span class="muted" style="width:92px;flex:none;padding-top:4px">具体元素<br><small>可选 · 搜索用</small></span><el-checkbox-group v-model="sel.config.facts" size="small"><el-checkbox-button v-for="(zh,k) in STU_FACTS" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div></div></el-form-item>
-        <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
+        <el-form-item label="玩法标签"><el-checkbox-group v-model="sel.config.tags"><el-checkbox-button value="单人">单人</el-checkbox-button></el-checkbox-group></el-form-item>
+<el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
         <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>
         <el-form-item label="玩家身份"><el-input v-model="sel.config.player" placeholder="不填 = 待定（AI 不会替你定）" /></el-form-item>
         <el-form-item label="主要人物"><el-input v-model="sel.config.cast" type="textarea" :rows="2" placeholder="角色名（英文）、年龄（成年）、吸引点、底线…" /></el-form-item>
