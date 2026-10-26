@@ -54,8 +54,15 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
  appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()})}
-function boxHTML(m,i,th){return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p>'+esc(p.txt)+'</p>';const c=ch(p.who);
-  const nm=c?first(c.n):"";return '<p class="'+(p.k==="think"?"bth":"bac")+'"><b style="color:'+(c?c.pal[0]:"")+'">'+esc(nm)+(p.k==="think"?' · '+t("st2.thinks"):'')+'</b>'+esc(p.txt)+'</p>'}).join("")+'</div>'}
+function boxHTML(m,i,th){
+ /* 2026-10-27 Ann：合并块里没有左右分流 —— 玩家自己那句也被当成无名角色。
+    按「谁说的」分边：玩家靠右、角色靠左、旁白整行。 */
+ return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{
+  if(p.who==="n")return '<p class="bdn">'+esc(p.txt)+'</p>';
+  if(p.who==="me")return '<p class="'+(p.k==="think"?"bth":"bac")+' me"><b>'+esc(me())+'</b>'+esc(p.txt)+'</p>';
+  const c=ch(p.who), nm=c?first(c.n):"";
+  return '<p class="'+(p.k==="think"?"bth":"bac")+'"><b style="color:'+(c?c.pal[0]:"")+'">'+esc(nm)+(p.k==="think"?' · '+t("st2.thinks"):'')+'</b>'+esc(p.txt)+'</p>'
+ }).join("")+'</div>'}
 
 /* 4) the story intro: background, who you are, who everyone is, how to play */
 function introHTML(th){const w=wd(th.wid);let I=Lz(w.pack.intro)||{};if(th&&th.pk&&th.pk.as&&I["as_"+th.pk.as])I=Object.assign({},I,I["as_"+th.pk.as]);const L=x=>esc(x||"");
