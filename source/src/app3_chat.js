@@ -397,14 +397,18 @@ async function reply(th,ctx,silent){
    const take=q.splice(0,Math.min(2,q.length));   // 从队列取走：不播了
    try{save()}catch(_){}
    const lines=take.map(b=>{
-     const w=b&&b[0], txt=(b&&(b[2]&&(b[2].t||b[2].text)))||(b&&b[2])||"";
-     const s=(typeof Lz==="function")?Lz(txt):String(txt||"");
-     const who=(w&&typeof ch==="function"&&ch(w))?(ch(w).n||w):(w||"narration");
-     return "- "+who+": "+String(s).slice(0,160);
-   }).filter(x=>x.length>6).join("\n");
+     /* 只给「谁 + 性质」，不给原文。原文一进 prompt，模型就会把那几个词写回来。 */
+     const w=b&&b[0];
+     const kind=(b&&b[1])||"say";
+     const whoName=(w&&typeof ch==="function"&&ch(w))?(ch(w).n||w):(w||"the scene");
+     if(kind==="n")return "- the scene should shift a little here (place, weather, or who is present)";
+     if(kind==="think")return "- "+whoName+" has something he is not saying out loud";
+     if(kind==="act")return "- "+whoName+" does something small and physical";
+     return "- "+whoName+" has something he needs to bring up";
+   }).filter(Boolean).join("\n");
    try{track&&track("script_as_hint",{wid:th.wid,ch:th.pk&&th.pk.ch,n:take.length})}catch(_){}
    if(!lines)return "";
-   return "SCENE DIRECTION (where this scene needs to go next — bring it there IN YOUR OWN WORDS, through what the characters do and say. NEVER recite these sentences, never quote them, never announce the plot):\n"+lines;
+   return "SCENE DIRECTION (what this moment needs, not what to say. NO PRE-WRITTEN WORDING is given to you — invent it, in your own words, from where the conversation actually is right now. Never announce plot, never repeat a phrase you used earlier):\n"+lines;
   }catch(_){return ""}})()||"",
   packPrompt(th),
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+(p.name||"the user")+" ("+(p.pron==="he"?"he/him":p.pron==="she"?"she/her":"they/them")+")"+(p.look?". "+p.look:"")+". Never write the user's lines, actions or feelings.",
