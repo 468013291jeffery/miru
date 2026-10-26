@@ -175,9 +175,12 @@ async function main() {
             const last=th&&th.msgs&&th.msgs.length?th.msgs[th.msgs.length-1]:null;
             let rec=false; try{rec=!!(typeof recorded==="function"&&recorded(text,id))}catch(e){}
             let tts=false; try{tts=!!(typeof ttsOn==="function"&&ttsOn())}catch(e){}
+            let qlen=-1,qhead=""; try{const q=(th&&th.pk&&th.pk.q)||[];qlen=q.length;qhead=q[0]?(Array.isArray(q[0])?String(q[0][2]):String(q[0])):""}catch(e){}
             window.__SPY.push({t:Math.round(performance.now()),id:String(id||""),
               text:String(text||"").slice(0,90),
               rec:rec, tts:tts, avdead:(typeof AVDEAD!=="undefined"?AVDEAD:-1),
+              qlen:qlen, qhead:String(qhead||"").slice(0,90),
+              qsame:!!(qhead&&String(qhead).trim()===String(text||"").trim()),
               last:last?String(last.txt||"").slice(0,90):"",
               lastWho:last?String(last.who||""):"",
               same:last?!!(String(last.txt||"").trim()&&String(last.txt||"").trim()===String(text||"").trim()):false});
@@ -349,11 +352,12 @@ async function main() {
       const rows = JSON.parse(raw);
       result.spy = rows;
       const same = rows.filter(r => r.same).length;
-      say('\n=== speak 对账（念的 vs 屏幕最后一条）===');
-      say('共 ' + rows.length + ' 次 · 与屏幕最后一条**一致** ' + same + ' · **不一致** ' + (rows.length - same));
+      const qSame = rows.filter(r => r.qsame).length;
+      say('\n=== speak 对账（念的 vs 屏幕最后一条 / vs 待播队头）===');
+      say('共 ' + rows.length + ' 次 · 与屏幕最后一条**一致** ' + same + ' · **不一致** ' + (rows.length - same) + ' · 与待播队头一致 ' + qSame);
       say('路径分布：录音包命中 ' + rows.filter(r => r.rec).length + ' · 服务器TTS可用 ' + rows.filter(r => r.tts).length + ' · AVDEAD=' + (rows.length ? rows[rows.length - 1].avdead : '-'));
-      for (const r of rows.slice(0, 14)) {
-        say('  ' + (r.same ? '✓' : '✗') + ' [' + r.id + '] 念「' + r.text.slice(0, 34) + '」' + (r.rec ? ' (录音)' : '') + ' | 屏幕上「' + r.last.slice(0, 34) + '」' + (r.lastWho ? ' · ' + r.lastWho : ''));
+      for (const r of rows.slice(0, 20)) {
+        say('  ' + (r.same ? '✓' : '✗') + ' [' + r.id + '] 念「' + r.text.slice(0, 30) + '」' + (r.rec ? ' (录音)' : '') + ' | 屏幕「' + r.last.slice(0, 30) + '」·' + r.lastWho + ' | 队头「' + String(r.qhead || '').slice(0, 30) + '」q=' + r.qlen);
       }
 
       /* ---- 音频侧：放出来的到底是哪句（录音包指纹反查）---- */
@@ -380,6 +384,25 @@ async function main() {
         else whose = a.kind + ' ' + a.head.slice(0, 30);
         say('  [' + a.kind + '] len=' + a.len + ' → ' + whose);
       }
+    }
+
+    /* ---- 复现模式：接着她存档里某条线程的待播队列跑，不新开章 ----
+       用法：--resume <线程id> --secs 60 */
+    if (opt('resume')) {
+      const tid = opt('resume');
+      const secs = Number(opt('secs', 60));
+      say('[4r] 接着跑线程 ' + tid + '（不新开章）');
+      const st = await evaluate(`(function(){try{
+        const th=S.threads[${JSON.stringify(tid)}]; if(!th) return "no thread";
+        openThread(th.id);
+        const q=(th.pk&&th.pk.q)||[];
+        const head=q[0]?(Array.isArray(q[0])?String(q[0][2]):String(q[0])):"";
+        try{packRun(th)}catch(e){return "packRun threw: "+e.message}
+        return JSON.stringify({id:th.id,wid:th.wid,ch:th.pk&&th.pk.ch,st:th.pk&&th.pk.st,q:q.length,msgs:th.msgs.length,head:head.slice(0,60)});
+      }catch(e){return "ERR "+e.message}})()`);
+      say('      ' + st);
+      const t0 = Date.now();
+      while (Date.now() - t0 < secs * 1000) { await sleep(4000); say('      ' + Math.round((Date.now() - t0) / 1000) + 's ...') }
     }
 
     fs.mkdirSync(path.dirname(OUT), { recursive: true });
