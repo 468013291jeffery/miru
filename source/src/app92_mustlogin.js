@@ -8,4 +8,6 @@ if(MUST92()&&S.authChoice==="guest"&&!loggedIn92()){S.authChoice=null;try{save0(
 const _startApp92=startApp;startApp=function(){if(MUST92()&&!loggedIn92()){S.authChoice=null;renderAuth70();return}return _startApp92.apply(this,arguments)};
 window.addEventListener("click",e=>{if(MUST92()&&e.target.closest("[data-au70='guest'],#obLogin+.lnk[data-guest]")){e.preventDefault();e.stopImmediatePropagation()}},true);
 const _au70Prov92=au70Prov;au70Prov=async function(){const p=await _au70Prov92.apply(this,arguments);if(p&&MUST92())p.guest=false;return p};
-(function(){const st=document.createElement("style");st.textContent=`.au70guest,[data-au70="guest"]{display:none!important}`;document.head.appendChild(st)})();
+/* 2026-10-27 修：这条 CSS 原来是无条件注入的 ⇒ 在没有账号服务器的环境（预览 / github.io / 本地）里
+   登录根本不可用，而游客入口又被藏掉 = 死路一条。只在真有账号服务器时才藏。 */
+if(MUST92())(function(){const st=document.createElement("style");st.textContent='.au70guest,[data-au70="guest"]{display:none!important}';document.head.appendChild(st)})();
