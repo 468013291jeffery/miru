@@ -182,6 +182,10 @@ function msgHTML(m,i,th){
   '#msgs>#pkwrap,#msgs>#pkwrap.inl{max-height:46vh;overflow-y:auto;flex:none;position:sticky;bottom:0;z-index:3}',
   /* 紧凑模式（2026-10-27）：让一屏能装 4–6 条，而不是一人一句 */
   /* 玩家靠右 / 角色靠左（2026-10-27）：不依赖父容器是不是 flex，margin auto 都能成立 */
+  /* 合并块（剧本/叙事）里的左右分流：玩家那句靠右 */
+  '#msgs .m-box .bac.me{text-align:right;margin-left:auto;max-width:88%}',
+  '#msgs .m-box .bac.me b{display:block;font-size:11px;opacity:.75}',
+  '#msgs .m-box .bac,#msgs .m-box .bth{max-width:92%}',
   '#msgs .m-row.me{margin-left:auto;align-self:flex-end;flex-direction:row-reverse}',
   '#msgs .m-row:not(.me):not(.m-narr){margin-right:auto;align-self:flex-start}',
   '#msgs .m-act.me,#msgs .m-think.me{margin-left:auto;text-align:right}',

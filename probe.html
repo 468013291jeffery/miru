@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>probe</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:760px;border:0"></iframe>
+<script>
+const out = document.getElementById('out');
+const log = (s) => { out.textContent += '\n' + s };
+
+function run() {
+  const f = document.getElementById('f');
+  let doc;
+  try { doc = f.contentDocument } catch (e) { out.textContent = 'iframe 跨域：' + e.message; return }
+  if (!doc) { out.textContent = '拿不到 iframe document'; return }
+
+  // ① 我的样式块在不在
+  const styles = [...doc.head.querySelectorAll('style')];
+  const mine = styles.filter(s => s.textContent.includes('m-row'));
+  log('style 标签总数: ' + styles.length + ' · 含 m-row 的: ' + mine.length);
+
+  // ② 造一条玩家消息，量它的计算样式
+  let box = doc.getElementById('msgs');
+  let made = false;
+  if (!box) {
+    box = doc.createElement('div');
+    box.id = 'msgs';
+    box.className = 'msgs';
+    doc.body.appendChild(box);
+    made = true;
+  }
+  const row = doc.createElement('div');
+  row.className = 'm-row me';
+  row.innerHTML = '<div><div class="bub">测试</div></div>';
+  box.appendChild(row);
+
+  const cs = doc.defaultView.getComputedStyle(row);
+  const boxCs = doc.defaultView.getComputedStyle(box);
+  log('#msgs 存在: ' + !made + ' · display=' + boxCs.display + ' · flexDirection=' + boxCs.flexDirection);
+  log('.m-row.me → alignSelf=' + cs.alignSelf + ' · marginLeft=' + cs.marginLeft + ' · flexDirection=' + cs.flexDirection);
+  log('父容器 width=' + boxCs.width + ' · 行 offsetLeft=' + row.offsetLeft + ' · 行 width=' + row.offsetWidth);
+
+  // ③ 直接看包里有没有那条规则
+  const hasMargin = styles.some(s => s.textContent.includes('margin-left:auto;align-self:flex-end'));
+  log('规则「margin-left:auto;align-self:flex-end」在 <style> 里: ' + hasMargin);
+  out.setAttribute('data-done', '1');
+}
+
+setTimeout(run, 9000);
+</script>
