@@ -33,6 +33,12 @@ function statusSync(th){const s=$(".status");if(!s)return;const sp=[...s.childre
 /* 3) narration, actions and thoughts that belong to the same moment go into ONE box instead of a string of separate lines */
 function isNarr(m){return m&&m.pk&&(m.who==="n"||m.k==="act"||m.k==="think")&&m.who!=="me"}
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
+ /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
+    这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
+ try{
+  if(m&&m.txt&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
+   speakQueue([{txt:m.txt,who:m.who}]);
+ }catch(_){}
  if(!isNarr(m)){appendMsg(th,m);return}
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
