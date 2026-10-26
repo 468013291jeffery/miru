@@ -167,7 +167,7 @@ function msgHTML(m,i,th){
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
- return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe||th.cast.length<2?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
+ return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="bub">'+esc(m.txt)+'</div></div></div>'+tools;}
 /* 2026-10-27 补的三条视觉（Ann 试玩反馈）：
    ① 每个角色一条他自己的色条 + 淡底（原来只有名字颜色，认不出谁在说）
    ② 点过的选项反色（原来点下去毫无反馈）
@@ -198,6 +198,11 @@ function msgHTML(m,i,th){
   '#msgs .m-box .bac.me{text-align:right;margin-left:auto;max-width:88%}',
   '#msgs .m-box .bac.me b{display:block;font-size:11px;opacity:.75}',
   '#msgs .m-box .bac,#msgs .m-box .bth{max-width:92%}',
+  /* 角色气泡套上「框」：名字在上、左侧角色色、半透明深底（Ann 2026-10-27 对截图） */
+  '#msgs .m-row[data-wc]{background:none;border-left:0;padding-left:0;border-radius:0}',
+  '#msgs .m-row[data-wc] .bub{border-left:3px solid var(--wc);background:rgba(22,20,28,.86);backdrop-filter:blur(8px);border-radius:16px;padding:10px 13px}',
+  '#msgs .m-row.me[data-wc] .bub{border-left:0;border-right:3px solid var(--fg);background:var(--grad);color:#1B1017}',
+  '#msgs .m-who{display:block!important;margin-bottom:4px;font-size:11px;letter-spacing:.04em;opacity:.9}',
   '#msgs .m-row.me{margin-left:auto;align-self:flex-end;flex-direction:row-reverse}',
   '#msgs .m-row:not(.me):not(.m-narr){margin-right:auto;align-self:flex-start}',
   '#msgs .m-act.me,#msgs .m-think.me{margin-left:auto;text-align:right}',
