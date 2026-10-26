@@ -90,8 +90,12 @@ function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"
  if(k==="video"&&!stopClip(th,d))return d.then||[];
  if(k==="game"&&!GAMEF[d.k])return d.skip||[];
  return null}
+const PKPAUSE={};   // 每个线程：玩家正在说话 ⇒ 剧本队列暂停
 async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-chat").hidden;if(PKPLAY[th.id]===2)return;PKPLAY[th.id]=2;packRefresh(th);
  try{while(th.pk.q&&th.pk.q.length){const b=th.pk.q[0];
+  /* 2026-10-27 Ann：玩家一开口，剧本队列先停 —— 他得先接住她的话，
+     而不是自己按定时器往下念。回完（PKPAUSE 清掉）再继续。 */
+  while(PKPAUSE[th.id])await new Promise(r=>setTimeout(r,250));
    if(pkDirective(th,b))continue;
    if(isStop(b)){let extra=stopAuto(th,b);
     if(!extra){delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();

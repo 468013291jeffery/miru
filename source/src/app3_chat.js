@@ -167,6 +167,7 @@ function msgHTML(m,i,th){
   '.m-row[data-wc]{border-left:3px solid var(--wc);background:color-mix(in srgb,var(--wc) 9%,transparent);border-radius:12px;padding-left:9px}',
   '.m-row.me[data-wc]{border-left:3px solid var(--fg);background:color-mix(in srgb,var(--fg) 10%,transparent)}',
   '.suggest button.sel{background:var(--fg)!important;color:var(--bg)!important;border-color:var(--fg)!important}',
+  '#msgs{-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%);mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.15) 6%,#000 20%,#000 100%)}',
   '.m-warn{margin:6px 0 10px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,#ff8a5b 16%,transparent);border-left:3px solid #ff8a5b;font-size:12.5px;opacity:.95}',
   /* 「玩家在哪一侧」开关（默认：玩家在右、角色在左，聊天软件惯例）。
      MIRU_TUNE.chat.playerSide = "left" 时整盘翻过来：玩家在左、角色在右。 */
@@ -238,6 +239,7 @@ function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩�
  if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
+ try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1}catch(_){}
  if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
  appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
  reply(th,{kind:"user",txt,mode});}
@@ -393,6 +395,7 @@ async function reply(th,ctx,silent){
  try{ if(typeof plotGate==="function") plotGate(th); }catch(_){}
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
+ try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
  if(!silent){busy=false;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
   try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed)}catch(_){}},60)}}catch(_){}
