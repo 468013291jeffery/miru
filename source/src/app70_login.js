@@ -83,8 +83,12 @@ function renderAuth70() {
   screen("s-ob", art + '<div class="scroll pad stack" style="gap:12px;padding-block:0 22px">' +
     '<div class="row" style="justify-content:space-between"><div class="brand" style="font-size:26px">MI<b>RU</b></div>' + langPicker() + '</div>' +
     '<h1 style="font-size:26px;line-height:1.15">' + esc(au("title")) + '</h1><p class="dim" style="font-size:13.5px;line-height:1.55">' + esc(au("sub")) + '</p>' +
-    '<p class="au70gift">🎁 ' + esc(au("gift")) + '</p>' + au70Buttons(false) +
-    '<button class="lnk au70guest" data-au70="guest" id="au70guest">' + esc(au("guest")) + '</button>' + (CLOUD_EP ? '' : '<p class="xs faint" style="text-align:center;line-height:1.5">' + esc(au("previewNote")) + '</p>') + '</div>');
+    /* 2026-10-27 Ann：把「先逛逛」提到最上面。
+       它是唯一**不依赖账号服务器**的入口（而登录用的 Vercel 那条腿在国内不通），
+       之前却排在最底下、折叠之外 —— 玩家看不到，就以为整个应用进不去。 */
+    '<button class="btn btn-p btn-block" data-au70="guest" id="au70guest" style="margin-top:2px">' + esc(au("guest")) + '</button>' +
+    (CLOUD_EP ? '' : '<p class="xs faint" style="text-align:center;line-height:1.5;margin-top:-2px">' + esc(au("previewNote")) + '</p>') +
+    '<p class="au70gift" style="margin-top:10px">🎁 ' + esc(au("gift")) + '</p>' + au70Buttons(false) + '</div>');
   show("s-ob");
   au70Prov().then(p => { const g = $("#au70guest"); if (g && p && p.guest === false) g.remove(); au70MountGoogle("auG"); });
   track("auth_view");
