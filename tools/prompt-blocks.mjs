@@ -118,6 +118,23 @@ console.log('F. 动机（不预告剧情，但每个人都要有想要的东西�
   ok('没有 want 的人不会凭空长出一句', !new Function('__s', 'with(__s){ ' + PUB + '\nreturn castCardPublic(th,"mason"); }')(scope).includes('names someone'), '');
 }
 
+console.log('G. 公共卡不泄露底牌（原有闸，留在这里做第二道）');
+{
+  const PUB = cut('castCardPublic');
+  let stub;
+  stub = new Proxy(function () {}, { get: (t, k) => (k === Symbol.toPrimitive || k === 'toString' || k === 'valueOf') ? () => '' : stub, apply: () => '' });
+  const card = (() => {
+    const cast = { id: 'jack', n: 'Jack', age: 31, role: { en: 'athlete' }, looks: { en: 'blond' }, vibe: { en: 'guarded' }, tells: { en: ['x'] }, likes: { en: 'control' }, want: { en: 'to never need anyone' }, twist: { en: 'built a career on not needing anyone' }, secret: { en: 'he let his brother lose' } };
+    const th = { wid: 'gala', cast: ['jack'], love: { jack: 10 }, status: { mood: {} }, pk: { ch: 1, as: 'watch' } };
+    const real = { th, ch: () => cast, Lz: (v) => (v && v.en) || '', me: () => 'Ann', I18N: { en: { 'stage.0': 'stranger' } }, stageOf: () => 0, CL: () => 'en', wd: () => ({ pack: {} }), MIRU_TUNE: { chat: {} } };
+    const scope = new Proxy(real, { has: (t, k) => k !== Symbol.unscopables && !(k in globalThis), get: (t, k) => (k === Symbol.unscopables ? undefined : (k in t ? t[k] : stub)) });
+    return new Function('__s', 'with(__s){ ' + PUB + '\nreturn castCardPublic(th,"jack"); }')(scope);
+  })();
+  ok('公共卡不带 twist（底牌只给主角）', !card.includes('not needing anyone'), card.slice(-200));
+  ok('公共卡不带 secret', !card.includes('let his brother lose'), '');
+  ok('公共卡仍然带动机（publicWants）', /Wants \(his own/.test(card), '');
+}
+
 console.log(`\n${pass} passed, ${fails.length} failed`);
 if (fails.length) { console.log('FAILED: ' + fails.join(' | ')); process.exit(1); }
 console.log('prompt blocks OK');
