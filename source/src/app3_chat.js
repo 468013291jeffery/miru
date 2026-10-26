@@ -275,6 +275,18 @@ function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩�
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1}catch(_){}
+ /* 2026-10-27（Ann：他死活要念剧情，我接的不是这句他也照念）：
+    玩家一开口，剩下的**预写队列整体作废** —— 剧本让位给对话，由模型接她的话。
+    本章的官方选择不受影响：队列空了 packRun 自然结束，选择按 20 轮门槛照常弹。
+    开关：MIRU_TUNE.chat.dropScriptOnInput=false 可回到旧行为。 */
+ try{
+  const dropOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.dropScriptOnInput!==false);
+  if(dropOn&&th&&th.pk&&Array.isArray(th.pk.q)&&th.pk.q.length){
+   th.pk.q=[];save();
+   try{packRefresh(th)}catch(_){}
+   try{track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})}catch(_){}
+  }
+ }catch(_){}
  if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
  appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
  reply(th,{kind:"user",txt,mode});}

@@ -1499,7 +1499,7 @@ p{margin:0}
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="47ee70c71741 2026-10-26T18:44Z";
+window.MIRU_BUILD="4a33fc2db263 2026-10-26T18:46Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3044,6 +3044,7 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
+      dropScriptOnInput: true,   // 玩家一开口，剩下的预写剧本作废（false = 照念）
       minRoundsPerChapter: 20,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
       reaction: true,         // 每轮末尾给一行「看得见的反应」（不是数字）
       publicWants: true,      // 每个在场角色的卡上都给他「自己想要什么」（别人不知道）——有动机才推得动场景
@@ -4477,6 +4478,18 @@ function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩�
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1}catch(_){}
+ /* 2026-10-27（Ann：他死活要念剧情，我接的不是这句他也照念）：
+    玩家一开口，剩下的**预写队列整体作废** —— 剧本让位给对话，由模型接她的话。
+    本章的官方选择不受影响：队列空了 packRun 自然结束，选择按 20 轮门槛照常弹。
+    开关：MIRU_TUNE.chat.dropScriptOnInput=false 可回到旧行为。 */
+ try{
+  const dropOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.dropScriptOnInput!==false);
+  if(dropOn&&th&&th.pk&&Array.isArray(th.pk.q)&&th.pk.q.length){
+   th.pk.q=[];save();
+   try{packRefresh(th)}catch(_){}
+   try{track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})}catch(_){}
+  }
+ }catch(_){}
  if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
  appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
  reply(th,{kind:"user",txt,mode});}
