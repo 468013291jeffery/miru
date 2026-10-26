@@ -22,6 +22,6 @@ window.MIRU_TUNE_OVERRIDE = window.MIRU_TUNE_OVERRIDE || {};
   try{
     if(window.MIRU_PROXY) return;
     const h=location.hostname;
-    if(h==="127.0.0.1"||h==="localhost") window.MIRU_PROXY="/api/longcat";
+    if(h==="127.0.0.1"||h==="localhost"){ window.MIRU_PROXY="/api/longcat"; window.MIRU_ACCOUNT=false; }
   }catch(_){}
 })();
