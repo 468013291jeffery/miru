@@ -335,12 +335,18 @@ async function main() {
 
     if (CHAPTERS > 0) {
       say('[5/6] 起点（强制新开一章，别接着上次半播的状态）');
-      const setup = await evaluate(`(function(){try{
+      const setup = await evaluate(`(async function(){try{
         S.packs=S.packs||{};S.packs["${WORLD}"]={own:1,end:{}};S.pkSpd=1;
         Object.keys(S.threads).filter(function(id){return S.threads[id].wid==="${WORLD}"}).forEach(function(id){delete S.threads[id]});
         save();
         var t=packStart("${WORLD}","watch",1);
-        return JSON.stringify({id:t.id,ch:t.pk.ch,st:t.pk.st,msgs:t.msgs.length});
+        /* 2026-10-27：新章节的第一拍是 ["sys","start",{}] = **「点一下再播放」**（isStop 认它、stopAuto 对它返回 null）
+           ⇒ 播放器停下来等玩家点。量尺必须替玩家点这一下，否则永远看到 msgs=4 / st=busy。 */
+        var taps=0;
+        await new Promise(r=>setTimeout(r,1200));
+        while(t.pk&&t.pk.stop&&taps<4){ try{PKWAIT[t.id]([])}catch(e){} taps++; await new Promise(r=>setTimeout(r,700)) }
+        return JSON.stringify({id:t.id,ch:t.pk.ch,st:t.pk.st,msgs:t.msgs.length,taps:taps,
+          q:((t.pk.q||[]).length), live:(curT===t.id), scHidden:(function(){var e=$("#s-chat");return e?!!e.hidden:"no-el"})()});
       }catch(e){return "ERR "+e.message}})()`);
       say('      ' + setup);
       if (String(setup).startsWith('ERR')) throw new Error(setup);
@@ -445,7 +451,21 @@ async function main() {
       }catch(e){return "ERR "+e.message}})()`);
       say('      ' + st);
       const t0 = Date.now();
-      while (Date.now() - t0 < secs * 1000) { await sleep(4000); say('      ' + Math.round((Date.now() - t0) / 1000) + 's ...') }
+      while (Date.now() - t0 < secs * 1000) {
+        await sleep(4000);
+        /* 调试读数：为什么不放 beat —— live / 播放器状态 / 队头 / 已显示条数 */
+        const dbg = await evaluate(`JSON.stringify((function(){try{
+          var th=S.threads[${JSON.stringify(tid)}]; var q=(th&&th.pk&&th.pk.q)||[];
+          var head=q[0]?(Array.isArray(q[0])?(q[0][0]+"/"+q[0][1]):String(q[0])):"-";
+          var sc=(typeof $==="function")?$("#s-chat"):null;
+          return {live:!!(curT===th.id&&sc&&!sc.hidden), curT:curT, wid:th&&th.wid,
+            pk:{ch:th.pk&&th.pk.ch,st:th.pk&&th.pk.st,q:q.length,unread:th._unread,held:th._held,after:th.pk&&th.pk.after},
+            pkplay:(typeof PKPLAY!=="undefined")?PKPLAY[th.id]:null,
+            pknext:!!(typeof PKNEXT!=="undefined"&&PKNEXT[th.id]), pkwait:!!(typeof PKWAIT!=="undefined"&&PKWAIT[th.id]),
+            msgs:th.msgs.length, avskip:(typeof AVSKIP!=="undefined"?AVSKIP:-1), avdeadsilent:(typeof AVSILENT!=="undefined"?AVSILENT:-1),
+            head:head};}catch(e){return {err:String(e.message)}}})())`);
+        say('      ' + Math.round((Date.now() - t0) / 1000) + 's  ' + dbg);
+      }
     }
 
     fs.mkdirSync(path.dirname(OUT), { recursive: true });
