@@ -238,6 +238,7 @@ function appendMsg(th,m){
     直接落进去就成了「[object Object]」。取不出可读文本的整条丢弃。 */
  try{
   if(m&&typeof m.txt!=="string")m.txt=asText70(m.txt);
+  if(m&&m.txt==="[object Object]")m.txt="";   // 对象被字符串化的痕迹，绝不上屏
   if(m&&!m.txt&&m.k!=="react"&&m.k!=="card")return;
  }catch(_){}
 
@@ -272,6 +273,11 @@ if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m
  if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
 /* 2026-10-27：模型偶尔把 suggest 返成对象（{text:…} / {say:…}），直接 String() 就会显示
    「[object Object]」，而且点击时会把那串字发出去。统一在这里取成人话。 */
+/* 把任何东西变成人话；万一是对象被字符串化了（"[object Object]"），一律当空 */
+function objGuard70(x){
+  const s = asText70(x);
+  return (s === "[object Object]" || s === "undefined" || s === "null") ? "" : s;
+}
 function asText70(x){
  if(x==null)return "";
  if(typeof x==="string")return x;
@@ -279,7 +285,7 @@ function asText70(x){
  if(typeof x==="object")return String(x.text||x.line||x.t||x.say||x.act||x.value||"");
  return String(x);
 }
-function setSugg(list){sugg=(list||[]).map(asText70).map(s=>s.trim()).filter(Boolean).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
+function setSugg(list){sugg=(list||[]).map(objGuard70).map(s=>s.trim()).filter(Boolean).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
  const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
 function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x=>x.remove());if(on){el.insertAdjacentHTML("beforeend",'<div class="typing"><i></i><i></i><i></i></div>');scrollChat()}}
 /* 流式预览（2026-10-25）：等整段最长要 ~9.5 秒，而首字 ~2.0 秒就到了（LATENCY.md 实测 4.8×）。
@@ -289,7 +295,9 @@ function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x
 let STREAM_TXT="";
 function streamPreview(piece){
   try{
-    STREAM_TXT+=String(piece||"");
+    const _pc = (piece && typeof piece === "object") ? "" : String(piece || "");
+  STREAM_TXT += _pc;
+  if (STREAM_TXT.indexOf("[object Object]") >= 0) STREAM_TXT = STREAM_TXT.split("[object Object]").join("");   // 永不让它出现
     const el=$("#msgs");if(!el)return;
     const box=$(".typing",el);if(!box)return;
     const tail=STREAM_TXT.replace(/\s+/g," ").slice(-46);
@@ -547,8 +555,9 @@ async function playBeats(th,r,ctx,silent){
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
     ③ 连续两句「4 秒半都没出声」就退回原来的定时节奏，绝不让一个坏掉的 TTS 把整轮对话拖住。 */
+  let WAITED=false;
   if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
-   INLINE_SPOKE=true;
+   INLINE_SPOKE=true;WAITED=true;
    try{voiceCount(1)}catch(_){}
    /* ⚠️ 上限必须 **比 TTS 自己的回退时限长**：服务器 TTS 要 7~8 秒才认「这次没声、转设备语音」，
       而下一句的 speak() 会先 stopVoice() 把上一句掐掉。上限设 4.5 秒时（第一版）每句都在出声前
@@ -560,7 +569,14 @@ async function playBeats(th,r,ctx,silent){
     try{speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
    });
   }
- }
+  /* 2026-10-27 · **节奏不能依赖朗读**（Ann：「为什么刷得那么快，一下就过去了」）。
+     朗读不成立时（额度用完 / TTS 不响 / 被判死），上面那段一次都不执行 ⇒ 回复以 700ms/句
+     一口气刷完。这里补上：**不念也按阅读速度停一下**（按字数，0.5–8 秒），让眼睛跟得上。 */
+  if(!silent&&!WAITED){
+   const _r=(typeof readMs==="function")?readMs(m):1800;
+   await new Promise(res=>setTimeout(res,Math.min(8000,Math.max(500,_r*0.75))));
+  }
+  }
  if(r.status){if(typeof r.status.time==="object")r.status.time=asText70(r.status.time);if(typeof r.status.place==="object")r.status.place=asText70(r.status.place);th.status.time=r.status.time||th.status.time;th.status.place=r.status.place||th.status.place;th.status.mood=Object.assign(th.status.mood||{},r.status.mood||{})}
  if(r.love)Object.keys(r.love).forEach(id=>{if(th.love[id]!=null){const d=Math.max(0,Math.min(6,+r.love[id]||0));if(!loveAllowed(th,id)){loveLog(th,{id,from:th.love[id],to:th.love[id],delta:0,reason:"model:absent",at:Date.now()});return}loveWrite(th,id,d,"model:proposal")}});
  if(ctx.kind==="user"&&!Object.keys(r.love||{}).length){const m=mainOf(th);if(loveAllowed(th,m))loveWrite(th,m,1,"model:implicit")}
