@@ -98,8 +98,8 @@ installWork = async function (id) {
 /* ---- runtime: pictures / films that were added after the story was installed ---- */
 async function off94Ensure(w) {
   if (!w || !w.official76 || !w.community) return {}; const A = await off94Assets(w.community); const SF = (window.SCENE_FILES = window.SCENE_FILES || {});
-  (w.pack.chapters || []).forEach(c => ["zh", "en"].forEach(l => (c.beats[l] || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
-  w.cast.forEach(id => { const c = ch(id); const nm = c && (c.n94 ? c.n94.zh : c.n); if (nm && A["char_" + nm]) S.art[id] = A["char_" + nm]; });
+  ((w.pack && w.pack.chapters) || []).forEach(c => ["zh", "en"].forEach(l => ((c.beats && c.beats[l]) || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
+  (w.cast || []).forEach(id => { const c = ch(id); const nm = c && (c.n94 ? c.n94.zh : c.n); if (nm && A["char_" + nm]) S.art[id] = A["char_" + nm]; });
   if (A.cover || A.poster) S.art[w.id] = A.cover || A.poster; return A;
 }
 const _packStart94 = packStart;
