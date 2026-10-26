@@ -162,6 +162,33 @@ async function main() {
     say('      ' + await evaluate(fs.readFileSync('tools/perf-ingame.js', 'utf8')));
     say('      ' + await evaluate(fs.readFileSync('tools/perf-ingame-run.js', 'utf8')));
 
+    /* ---- speak 监听器：把「念的是什么」和「屏幕上是什么」逐条对账 ----
+       装在 app45/app62/app86 三次覆盖之后，所以看到的是**最终生效**的那个 speak。 */
+    if (flag('spy')) {
+      const spy = `(function(){
+        if(window.__SPY_WRAPPED) return "already";
+        window.__SPY_WRAPPED=1; window.__SPY=[];
+        const orig=window.speak;
+        window.speak=function(text,id,onend){
+          try{
+            const th=(typeof curT!=="undefined"&&curT&&S.threads[curT])||null;
+            const last=th&&th.msgs&&th.msgs.length?th.msgs[th.msgs.length-1]:null;
+            let rec=false; try{rec=!!(typeof recorded==="function"&&recorded(text,id))}catch(e){}
+            let tts=false; try{tts=!!(typeof ttsOn==="function"&&ttsOn())}catch(e){}
+            window.__SPY.push({t:Math.round(performance.now()),id:String(id||""),
+              text:String(text||"").slice(0,90),
+              rec:rec, tts:tts, avdead:(typeof AVDEAD!=="undefined"?AVDEAD:-1),
+              last:last?String(last.txt||"").slice(0,90):"",
+              lastWho:last?String(last.who||""):"",
+              same:last?!!(String(last.txt||"").trim()&&String(last.txt||"").trim()===String(text||"").trim()):false});
+          }catch(e){}
+          return orig.apply(this,arguments);
+        };
+        return "spy on";
+      })()`;
+      say('      ' + await evaluate(spy));
+    }
+
     if (flag('novoice')) {
       say('      关朗读（对照组）: ' + await evaluate(`S.autoVoice=false; save(); "autoVoice="+S.autoVoice`));
     }
@@ -289,6 +316,20 @@ async function main() {
       })()`);
       say('\n间隔分布（和她存档同一把尺）: ' + gaps);
       result.gaps = JSON.parse(gaps);
+    }
+
+    /* ---- speak 对账表 ---- */
+    if (flag('spy')) {
+      const raw = await evaluate(`JSON.stringify(window.__SPY||[])`);
+      const rows = JSON.parse(raw);
+      result.spy = rows;
+      const same = rows.filter(r => r.same).length;
+      say('\n=== speak 对账（念的 vs 屏幕最后一条）===');
+      say('共 ' + rows.length + ' 次 · 与屏幕最后一条**一致** ' + same + ' · **不一致** ' + (rows.length - same));
+      say('路径分布：录音包命中 ' + rows.filter(r => r.rec).length + ' · 服务器TTS可用 ' + rows.filter(r => r.tts).length + ' · AVDEAD=' + (rows.length ? rows[rows.length - 1].avdead : '-'));
+      for (const r of rows.slice(0, 14)) {
+        say('  ' + (r.same ? '✓' : '✗') + ' [' + r.id + '] 念「' + r.text.slice(0, 34) + '」' + (r.rec ? ' (录音)' : '') + ' | 屏幕上「' + r.last.slice(0, 34) + '」' + (r.lastWho ? ' · ' + r.lastWho : ''));
+      }
     }
 
     fs.mkdirSync(path.dirname(OUT), { recursive: true });
