@@ -21,9 +21,9 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];const isBox=L&&L.k
    这一层（外层）认「剧本模式 + 说话的就是你扮演的人」→ 右手气泡；别人说的交给内层 app17。
    ⚠️ 这里的 `.bub` 是**产出**（它自己写这个 div），不是选择器 —— 与 app16/app18 那两处失效的
    「找 `.bub`」不同族，别一起删。 */
-MSGKIND.inline("app26_turns.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
-  return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+fmtMix(esc(m.txt))+'</div></div>'}
- return next(m,i,th)});
+/* 2026-10-27：say 的认领已收进 app3_chat.js 的 speakerOf/sayHTML（Ann：三句都走 .bub）。
+   这一层退场 —— 它的输出（.m-row.me.pkme + .pkmen 标签）现在由 sayHTML 的 self 分支一字不差地产生。 */
+/* (原 MSGKIND.inline 注册已移除) */
 Object.assign(I18N.en,{"pk26.you":"you"});Object.assign(I18N.zh,{"pk26.you":"你"});
 
 /* ---- opening short for THE HEIR: the 72-hours-later warehouse cold open now lives here, not in the chat ---- */

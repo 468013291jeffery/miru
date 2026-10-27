@@ -48,10 +48,10 @@ const EXPECT = [
   ['剧情事件卡（event）', 'app16_story2.js#pk', 'fires', 'm-event', 'kind 类：认领 event'],
   ['玩家的动作行', 'app16_story2.js#pk', 'fires', 'm-act me', 'kind 类：认领 act，但只认「你扮演的人」那一支（who==="me" 且本局有 pk）'],
   ['玩家的心声行', 'app16_story2.js#pk', 'fires', 'm-think me', 'kind 类：认领 think，同上只认你那一支'],
-  ['别人说话 · 剧本模式成气泡', 'app17_custom.js', 'fires', 'm-turn',
-    'kind 类：认领 say，条件是 m.pk 且说话的不是你（也不是 me）', { mustNot: ['app26_turns.js'] }],
-  ['我自己的剧本台词 · 右手气泡', 'app26_turns.js', 'fires', 'm-row me pkme',
-    'kind 类：认领 say，条件是 m.pk 且说话的就是你 —— 与 app17 条件互斥，是接力不是抢', { mustNot: ['app17_custom.js'] }],
+  /* 2026-10-27：say 的认领已收进 app3_chat.js 的 speakerOf/sayHTML（Ann：三句都走 .bub）。
+     app17 / app26 这两层**退场**，所以这里不再有它们的 fires 断言 —— 它们原先证的那两件事
+     （别人的台词成气泡、你扮演的台词是右手气泡）现在由 render-snapshot 的 npc-say / say 两张
+     逐字节快照守着，那比「某层命中过」更硬：形状一变就红。 */
   ['内心独白卡（mono）', 'app19_bgm.js', 'fires', 'm-mono', 'kind 类：认领 mono'],
   ['章节标题（xtitle）', 'app23_heir.js', 'fires', 'xtitle', 'kind 类：认领 x* 四种'],
   ['遗产金额 · 已解锁（交给内层）', 'app23_heir.js', 'fires', ['xmoney', '!sealed'],

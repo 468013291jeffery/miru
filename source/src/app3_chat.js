@@ -192,6 +192,25 @@ function msgHTML(m,i,th){
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
  if(m.who==="n")return '<div class="m-narr" data-mi="'+i+'">'+esc(m.txt)+'</div>'+tools;
  if(m.k==="dir")return '<div class="m-dir">🎬 '+esc(m.txt)+'</div>';
+/* ===== 说话人分派：`say` 只有一处决定「长什么样」（2026-10-27，Ann 定）=====
+   以前 k:`say` 被两层抢认领（app17 管别人、app26 管你扮演的角色），条件是互相排除写成的，
+   而 who===`me` 靠「两边各排除一次」隐式落到 base ⇒ 三套外壳（m-box.lb / bub / m-turn）。
+   Ann 看图后定：三句都用 .bub，只差左右。
+   接口：speakerOf 是派生的（不存盘），渲染器按它查表 —— 以后加「旁白/内心」只加一个值。 */
+function speakerOf(m,th){
+ if(!m)return "other";
+ if(m.who==="me")return "me";
+ if(m.pk&&th&&th.pk&&m.who===th.pk.as&&ch(m.who))return "self";
+ return "other";
+}
+function sayHTML(m,i,th){
+ const sp=speakerOf(m,th),c=(m.who==="me")?null:ch(m.who);
+ const body=(typeof lineHTML==="function")?lineHTML({who:m.who,k:"say",txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>');
+ if(sp==="me")return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub">'+body+'</div></div>';
+ if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
+ return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'"><div class="bub"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
+}
+ if(m.k==="say")return sayHTML(m,i,th)+tools;
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;

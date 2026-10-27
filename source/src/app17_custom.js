@@ -80,7 +80,7 @@ Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per li
 /* plain story lines use the same bubble as lines with context
    2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app26 共有 say：这一层是**内层**，
    条件是「剧本模式 + 说话的不是你（也不是 me）」；「就是你」那一支在外层 app26 —— 接力，不是抢。 */
-MSGKIND.inline("app17_custom.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return next(m,i,th)});
+/* 2026-10-27：say 的认领已收进 app3_chat.js 的 speakerOf/sayHTML。这一层退场 —— 原来它把别人的台词转成 boxHTML(.m-turn)，现在统一走 .bub（Ann 定）。 */
 
 /* ================= games really feed the story =================
    1) the result of a game is written into the lines that follow ({bpm}, {mine}, {score} are filled with what you actually got)

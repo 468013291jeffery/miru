@@ -1359,6 +1359,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .chatscreen .m-row.me .bub{background:var(--grad)!important;color:#1B1017!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
 .chatscreen .m-row.me .bub *{color:#1B1017}
 .pkme .pkmen{display:block;font-size:10px;font-weight:800;opacity:.7;margin-bottom:2px;letter-spacing:.04em}
+/* 2026-10-27：`say` 三种说话人统一走 .bub 之后，「别人说的」在气泡里用这一行标名字
+   （原来是气泡外的 .m-who + 左边头像；Ann 定：三句话长得一样，只差左右）。 */
+.bub .bubn{display:block;font-size:10px;font-weight:800;opacity:.72;margin-bottom:3px;letter-spacing:.04em;color:var(--dim)}
 #s-story .tabs{padding-left:56px}
 .mi-short{display:flex;align-items:center;gap:8px;justify-content:center;width:calc(100% - 24px);margin:12px;padding:12px;border-radius:14px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017;font-weight:800;font-size:14px;border:0}
 .mi-short small{font-weight:600;opacity:.75}
