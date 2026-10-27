@@ -50,7 +50,24 @@ setInterval(()=>{try{
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
-function renderChat(){
+/* 2026-10-27：渲染前的唯一净化。th.msgs 有 30 处直接 push（卡片/瞬时播种），
+   都绕过了 appendMsg 的文本闸；这里在**上屏前**统一补一次 —— 不依赖调用方自觉。 */
+function sanitizeMsgs(th){
+  try{
+    if(!th||!Array.isArray(th.msgs))return;
+    for(const m of th.msgs){
+      if(!m)continue;
+      if(m.txt!=null&&typeof m.txt!=="string")m.txt=asText70(m.txt);
+      if(m.title!=null&&typeof m.title!=="string")m.title=asText70(m.title);
+      if(m.sideLine!=null&&typeof m.sideLine!=="string")m.sideLine=asText70(m.sideLine);
+      if(m.txt==="[object Object]")m.txt="";
+      if(m.title==="[object Object]")m.title="";
+    }
+    if(th.pk&&Array.isArray(th.pk.q)){/* 剧本队列里的 beat 也顺手过一遍文本 */ }
+  }catch(_){}
+}
+
+function renderChat(){sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
  const th=S.threads[curT];if(!th)return;const mid=mainOf(th),st=stageOf(th,mid);
  const avs=th.cast.length>1?'<div class="row chavs" style="gap:0;flex:none">'+th.cast.slice(0,3).map((c,i)=>'<div style="flex:0 0 auto;margin-left:'+(i?-9:0)+'px;border-radius:50%;box-shadow:0 0 0 2px var(--bg)">'+avatar(c,30)+'</div>').join("")+'</div>':avatar(th.cast[0],32);
  let h='<div class="chead"><div class="row" style="gap:10px;align-items:center;margin-bottom:10px"><button class="ibtn" data-back="1">'+ic("back")+'</button>'+avs+'<div class="grow" data-us="1" style="cursor:pointer"><b>'+esc(th.title)+'</b></div><button class="ibtn" data-cmenu="1">'+ic("dots")+'</button></div>'+
@@ -293,7 +310,18 @@ function asText70(x){
  if(x==null)return "";
  if(typeof x==="string")return x;
  if(typeof x==="number"||typeof x==="boolean")return String(x);
- if(typeof x==="object")return String(x.text||x.line||x.t||x.say||x.act||x.value||"");
+ if(typeof x==="object"){
+  /* 已知形状优先 */
+  const known=x.text||x.line||x.t||x.say||x.act||x.value;
+  if(known!=null&&known!=="")return String(typeof known==="object"?asText70(known):known);
+  /* 2026-10-27 兜底：不认识的形状（模型偶尔换了键名，如 {h:"关系变了"}）取第一个非空字符串值。
+     只取一层、只取字符串/数字，避免大对象被拼成噪音。 */
+  for(const k in x){ if(!Object.prototype.hasOwnProperty.call(x,k))continue;
+   const v=x[k];
+   if(typeof v==="string"&&v.trim())return v;
+  }
+  return "";
+ }
  return String(x);
 }
 function setSugg(list){sugg=(list||[]).map(objGuard70).map(s=>s.trim()).filter(Boolean).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
