@@ -219,15 +219,18 @@ const __body73 = function () {
     if (j >= 0 && box && !busy && !box.querySelector(".rg73")) {
       const lastSay = (() => { for (let k = th.msgs.length - 1; k >= j; k--) { const m = th.msgs[k]; if (ch(m.who) && m.k === "say" && m.who !== (th.pk && th.pk.as) && !(th.msgs[k + 1] && th.msgs[k + 1].mind)) return k; } return -1; })();
       const V = th.vers && th.vers.at === j ? th.vers : null;
-      /* 2026-10-27：挂进**气泡内部**，宽度跟气泡走 —— 这样「右对齐」是对话框的右边，
-     不是整屏幕的右边。取最后一个 m-row 的内层 div；没有就退回 #msgs。 */
+      /* 2026-10-27（Ann 看图指出「这条 bar 应该在框的外面」）：
+         原来的取法是「.m-row 的最后一个子元素」——那时 .m-row = 头像 + 包着 .m-box 的 div，
+         所以落点在气泡**外**。`say` 统一成 .bub 之后 .m-row 只剩「头像 + 气泡」，
+         最后一个子元素就是气泡本身 ⇒ 这排按钮整个掉进了气泡里面。
+         现在挂到 .m-row 上（它的第三个子元素），配合 shell.html 的
+         .m-row{flex-wrap:wrap} + .m-row>.rg73{flex-basis:100%} 独占一行、落在气泡下方。 */
  const _host = (function(){
    try{
      const rows = box.querySelectorAll(".m-row");
      const last = rows[rows.length - 1];
-     const inner = last && last.lastElementChild;
-     if (inner && inner !== last) return inner;
-     const bx = box.querySelectorAll(".m-box");
+     if (last) return last;
+     const bx = box.querySelectorAll(".m-box,.bub");
      if (bx.length) return bx[bx.length - 1].parentNode;
    }catch(_){}
    return box;

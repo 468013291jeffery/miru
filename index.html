@@ -230,7 +230,12 @@ p{margin:0}
 .status span b{color:var(--text)}
 .msgs{flex:1;min-height:0;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}.msgs::-webkit-scrollbar{display:none}
 .m-narr{align-self:center;max-width:94%;text-align:center;font-family:var(--serif);font-style:italic;font-size:var(--msg-fs);color:var(--dim);line-height:1.65}
-.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%;flex-wrap:wrap}
+/* 2026-10-27：`say` 统一成 .bub 之后，app73 的「重新生成 / 编辑 / 他在想什么」这条 bar
+   原来靠「取 .m-row 的最后一个子元素」定位，而 .m-row 现在只剩气泡一个子元素 ⇒ 它落进了
+   **气泡里面**（Ann 看图指出：应该在框的外面）。现在它作为 .m-row 的第三个子元素插入，
+   靠下面这两条让它独占一行、落在气泡下方。 */
+.m-row > .rg73{flex-basis:100%;width:100%}
 .m-row .av{width:30px;height:30px}
 .m-row.me{align-self:flex-end;flex-direction:row-reverse}
 .m-who{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin:0 0 4px 2px}
@@ -1422,7 +1427,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="220dcc3f94ec 2026-10-27T09:36Z";
+window.MIRU_BUILD="bb98e6cb4ed5 2026-10-27T09:48Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4825,7 +4830,7 @@ function sayHTML(m,i,th){
  const body=(typeof lineHTML==="function")?lineHTML({who:m.who,k:"say",txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>');
  if(sp==="me")return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub">'+body+'</div></div>';
  if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
- return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'"><div class="bub"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
+ return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
  if(m.k==="say")return sayHTML(m,i,th)+tools;
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
@@ -14513,15 +14518,18 @@ const __body73 = function () {
     if (j >= 0 && box && !busy && !box.querySelector(".rg73")) {
       const lastSay = (() => { for (let k = th.msgs.length - 1; k >= j; k--) { const m = th.msgs[k]; if (ch(m.who) && m.k === "say" && m.who !== (th.pk && th.pk.as) && !(th.msgs[k + 1] && th.msgs[k + 1].mind)) return k; } return -1; })();
       const V = th.vers && th.vers.at === j ? th.vers : null;
-      /* 2026-10-27：挂进**气泡内部**，宽度跟气泡走 —— 这样「右对齐」是对话框的右边，
-     不是整屏幕的右边。取最后一个 m-row 的内层 div；没有就退回 #msgs。 */
+      /* 2026-10-27（Ann 看图指出「这条 bar 应该在框的外面」）：
+         原来的取法是「.m-row 的最后一个子元素」——那时 .m-row = 头像 + 包着 .m-box 的 div，
+         所以落点在气泡**外**。`say` 统一成 .bub 之后 .m-row 只剩「头像 + 气泡」，
+         最后一个子元素就是气泡本身 ⇒ 这排按钮整个掉进了气泡里面。
+         现在挂到 .m-row 上（它的第三个子元素），配合 shell.html 的
+         .m-row{flex-wrap:wrap} + .m-row>.rg73{flex-basis:100%} 独占一行、落在气泡下方。 */
  const _host = (function(){
    try{
      const rows = box.querySelectorAll(".m-row");
      const last = rows[rows.length - 1];
-     const inner = last && last.lastElementChild;
-     if (inner && inner !== last) return inner;
-     const bx = box.querySelectorAll(".m-box");
+     if (last) return last;
+     const bx = box.querySelectorAll(".m-box,.bub");
      if (bx.length) return bx[bx.length - 1].parentNode;
    }catch(_){}
    return box;
