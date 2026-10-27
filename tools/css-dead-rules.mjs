@@ -111,6 +111,72 @@ console.log('  ① 有些类名是**服务端返回的 HTML** 里带的（`/api/
 console.log('  ② 逐条确认之后才能删，删前后各跑一次 tools/style-computed-snapshot.mjs --check；');
 console.log('  ③ 删之前先跑一次变异（把一条活规则的选择器改成不存在的类），确认这把尺会把它判死。');
 
+/* ---- 基线：「别新增死样式」的闸（同 patch-registry / timer-audit 那个形状）----
+      node tools/css-dead-rules.mjs --freeze              把当前真死候选整批冻成基线
+      node tools/css-dead-rules.mjs --check               出现基线之外的新真死候选 ⇒ 红
+      node tools/css-dead-rules.mjs --accept <选择器> --why "<理由>"   显式加一条
+      node tools/css-dead-rules.mjs --prune <选择器>                  从基线里拿掉一条
+
+   ⚠️ **两个方向都要红**：新增死样式要红；基线里那条**不再死了**也要红 ——
+   否则基线会安静地烂下去（那条规则早活了，而账上还写着它是死的）。
+   ⚠️ 抖动风险写在明处：这把尺量的是**首页这一刻**。如果哪天首页结构变了（或 App 启动落在别的屏），
+   死候选会整体漂 ⇒ `--check` 红了要先分辨三种：真新增 / 首页变了 / 那一条活过来了。
+   第三种和第一种同样要红，因为它们的处理方式相反（一个要删代码，一个要改基线）。 */
+const BASE = path.join(ROOT, 'tools', 'css-dead-baseline.json');
+const curDead = truly.map(x => x.sel);
+const arg = (flag) => { const i = process.argv.indexOf(flag); return i > 0 ? process.argv[i + 1] : null };
+function readBase() {
+  try { return JSON.parse(fs.readFileSync(BASE, 'utf8')) }
+  catch (e) { return { v: 1, at: '', entries: [] } }
+}
+function writeBase(b) { fs.writeFileSync(BASE, JSON.stringify(b, null, 1) + '\n', 'utf8') }
+
+if (process.argv.includes('--freeze')) {
+  const b = { v: 1, at: new Date().toISOString(), entries: curDead.map(s => ({ sel: s, why: '首屏暂不判：有活的兄弟类，可能是还没做的变体（不是真死）' })) };
+  writeBase(b);
+  console.log('✓ 基线已冻：' + b.entries.length + ' 条 → tools/css-dead-baseline.json');
+  process.exit(0);
+}
+const acc = arg('--accept'), why = arg('--why');
+if (acc) {
+  if (!why) { console.log('✗ --accept 必须带 --why "<理由>"（没有理由的基线条目就是未来的假绿）'); process.exit(2) }
+  const b = readBase();
+  if (b.entries.some(e => e.sel === acc)) { console.log('· 已在基线里：' + acc) }
+  else { b.entries.push({ sel: acc, why }); writeBase(b); console.log('✓ 已加：' + acc) }
+  process.exit(0);
+}
+const pr = arg('--prune');
+if (pr) {
+  const b = readBase(); const n0 = b.entries.length;
+  b.entries = b.entries.filter(e => e.sel !== pr);
+  writeBase(b);
+  console.log('✓ 已从基线拿掉：' + pr + '（' + n0 + ' → ' + b.entries.length + '）');
+  process.exit(0);
+}
+if (process.argv.includes('--check')) {
+  const b = readBase();
+  const baseSet = new Set(b.entries.map(e => e.sel));
+  const curSet = new Set(curDead);
+  const added = [...curSet].filter(s => !baseSet.has(s));
+  const revived = [...baseSet].filter(s => !curSet.has(s));
+  console.log('  死样式基线：' + baseSet.size + ' 条 · 当前真死候选 ' + curSet.size + ' 条');
+  let bad = 0;
+  if (added.length) {
+    bad++;
+    console.log('  ✗ 新增死样式 ' + added.length + ' 条（没有任何代码能造出这些类名）：');
+    for (const s of added.slice(0, 12)) console.log('      ' + s);
+    console.log('    ⇒ 要么删掉这条 CSS，要么 `--accept <选择器> --why "<为什么它现在没元素>"`');
+  }
+  if (revived.length) {
+    bad++;
+    console.log('  ✗ 基线里 ' + revived.length + ' 条**不再死了**（样式活过来了，账上还写着死）：');
+    for (const s of revived.slice(0, 12)) console.log('      ' + s);
+    console.log('    ⇒ `--prune <选择器>` 从基线里拿掉');
+  }
+  if (!bad) console.log('  ✓ 没有新增死样式，基线也没过期');
+  process.exit(bad ? 1 : 0);
+}
+
 /* ---- --triage：给每条真死候选「一个说法」，三个假阳性源逐个查 ----
    ① 服务端返回的 HTML 里带的类名（`api/**`）——元素由后端产生，源码里当然搜不到
    ② 章节内容里带的类名（`source/content/**`）——只在某章剧情渲染时才出现

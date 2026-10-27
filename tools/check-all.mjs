@@ -36,6 +36,8 @@ const suites = [
   ['msgkind-probe.mjs', ['tools/msgkind-probe.mjs'], true],
   /* 样式版的对拍：文本对拍在 CSS 上不成立（合并重复定义必然改文本），只能比生效值 */
   ['style-computed-snapshot.mjs', ['tools/style-computed-snapshot.mjs','--check'], true],
+  /* 死样式「别新增」：基线在 tools/css-dead-baseline.json，新增或复活都红 */
+  ['css-dead-rules.mjs', ['tools/css-dead-rules.mjs','--check'], true],
   ['doc-ref-check.mjs', ['tools/doc-ref-check.mjs'], true],
   ['pkdirective-check.mjs', ['tools/pkdirective-check.mjs'], true],
   ['on-assign-check.mjs', ['tools/on-assign-check.mjs','--check'], true],
