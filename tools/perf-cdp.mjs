@@ -235,6 +235,26 @@ async function main() {
       say('      ' + await evaluate(waitSpy));
     }
 
+    /* --send "<一句话>"：直接走 doSend，看它到底有没有把玩家那句落进对话。
+       判据：n0 → n1 有没有 +1；没 +1 就把拦下它的那一格（busy / aiGate / quest / 异常）打出来。 */
+    if (opt('send')) {
+      const txt = opt('send');
+      const r = await evaluate(`(async function(){try{
+        var t0=Date.now(); var th=S.threads[curT]; if(!th) return "no-th";
+        var n0=th.msgs.length, ai=null, err="";
+        try{ ai = (typeof aiGate==="function")? aiGate() : undefined }catch(e){ err="aiGate:"+e.message }
+        var busy0 = (typeof busy!=="undefined")? busy : undefined;
+        try{ doSend(${JSON.stringify(txt)},"say",false) }catch(e){ err+=" doSend:"+e.message }
+        await new Promise(r=>setTimeout(r,900));
+        var th2=S.threads[curT], n1=th2.msgs.length;
+        return JSON.stringify({n0:n0,n1:n1,busy0:busy0,aiGate:ai,err:err,
+          last:th2.msgs.slice(-3).map(function(m){return m.who+"/"+m.k+" len="+String(m.txt||"").length}),
+          cin:(function(){var e=$("#cin");return e?("hidden="+!!e.hidden+" val="+String(e.value||"").slice(0,20)):"no-el"})(),
+          toast:(function(){var e=$(".toast,.x-toast,#toast");return e?String(e.textContent||"").slice(0,60):"none"})()});
+      }catch(e){return "ERR "+e.message}})()`);
+      say('      send: ' + r);
+    }
+
     if (flag('novoice')) {
       say('      关朗读（对照组）: ' + await evaluate(`S.autoVoice=false; save(); "autoVoice="+S.autoVoice`));
     }

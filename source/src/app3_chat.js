@@ -656,8 +656,10 @@ document.addEventListener("click",e=>{let x;
   v=v.trim(); if(!v)return;
   x.classList.add("sel");
   setSugg([]);
-  /* 2026-10-27 Ann：「点一项，还是什么都不显示」。⇒ 不允许再出现「点了没反应」这种无信息状态：
-     300ms 后如果对话一条都没涨，就当场说出来（并提示导出存档），别让她对着屏幕猜。 */
+  /* 2026-10-27：**点下去必须有回声**。① 立刻 toast「已选：…」（证明点击到达了处理器）
+     ② 300ms 后核对对话有没有涨，没涨就说清原因并提示导出存档。
+     这两条只为分清「发了但没显示」与「压根没发」——今晚在无声失败上吃亏太多次。 */
+  try{toast(S.lang==="zh"?("已选："+v.slice(0,14)):("Picked: "+v.slice(0,14)))}catch(_){}
   const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
   setTimeout(()=>{try{
