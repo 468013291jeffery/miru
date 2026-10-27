@@ -76,7 +76,22 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
 
 http.createServer((req, res) => {
   const u = decodeURIComponent((req.url || '/').split('?')[0]);
-  // POST /__save —— 接收浏览器导出的存档，落盘到 .browser-save.json
+  // POST /__health —— 运行时健康汇报落盘（来自 app107_health.js）。
+  // 为什么要它：所有计数器原来只活在内存/控制台里，她玩的时候没人看；落盘之后 grep 就能发现异常。
+  if (u === '/__health' && req.method === 'POST') {
+    let b = '';
+    req.setEncoding('utf8');
+    req.on('data', c => { b += c });
+    req.on('end', () => {
+      try {
+        fs.writeFileSync(path.join(root, '.browser-health.json'), b, 'utf8');
+        res.writeHead(200, { 'content-type': 'application/json' }); res.end('{"ok":true}');
+      } catch (e) {
+        res.writeHead(500, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(e && e.message || e) }));
+      }
+    });
+    return;
+  }  // POST /__save —— 接收浏览器导出的存档，落盘到 .browser-save.json
   // 为什么需要它：存档存在浏览器 localStorage 里（key=miru_v2），浏览器压缩存盘，
   // 从磁盘直接读 leveldb 拿不到明文；而 DevTools 默认禁止粘贴代码。
   // 所以由同源的 export.html 读出来 POST 给我 —— 她只要打开一个网址，不用输入任何东西。

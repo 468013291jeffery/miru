@@ -32,6 +32,7 @@ const suites = [
   ['perf-budget.mjs', ['tools/perf-budget.mjs'], true],
   ['timer-audit.mjs', ['tools/timer-audit.mjs', '--check'], true],
   ['ask-retry-selftest.mjs', ['tools/ask-retry-selftest.mjs'], true],
+  ['empty-catch-check.mjs', ['tools/empty-catch-check.mjs','--check'], true],
   ['ui-entry-check.mjs', ['tools/ui-entry-check.mjs'], true],
   ['patch-registry.mjs', ['tools/patch-registry.mjs','--check'], true],
   ['sanitize-selftest.mjs', ['tools/sanitize-selftest.mjs'], true],
