@@ -210,7 +210,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 
 ```
 猴补丁      147 个函数 / 331 处   （当天起点 382 ⇒ −51；最后 9 处是 msgHTML 别名、7 处是 menuSheet 的包装）
-空 catch    567 处 / 99 个文件    （当天起点 616 ⇒ −41）
+空 catch    569 处 / 99 个文件    （当天起点 616 ⇒ −41）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
 消息渲染    18 层 = kind 10 / post 6 / wrap 2（`say` 收口后从 20 层减 2）· 17 个类型

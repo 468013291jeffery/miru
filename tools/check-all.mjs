@@ -58,6 +58,9 @@ const suites = [
   ['turn-wiring-check.mjs', ['tools/turn-wiring-check.mjs'], true],
   ['bundle-integrity.mjs', ['tools/bundle-integrity.mjs'], true],
   ['prompt-blocks.mjs', ['tools/prompt-blocks.mjs'], true],
+  /* 2026-10-27：语音探针**暂不挂这里** —— 它需要一个跑着 tools/serve.mjs 的本地服务（8131），
+     而全量环境不保证有；硬挂会把整套拖红。用法：先起服务，再 node tools/voice-probe.mjs。
+     （它已经抓到并守住了两个真 bug：解码失败被当成「播完了」、TTS 卡死时每条等 8 秒。） */
 ];
 
 let failed = 0;

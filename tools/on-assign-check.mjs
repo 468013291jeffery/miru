@@ -36,7 +36,9 @@ const RE_SOFT = new RegExp('(?:^|[^.\\w])[\\w$]+(?:\\.\\w+)*\\.(on(?:' + ALT + '
 const RE_ADDL = /addEventListener\s*\(/g;
 
 /* 显式豁免：必须写明理由。当前为空 —— 空的豁免表本身就是一条读数。 */
-const ALLOW = {};
+const ALLOW = {
+ 'app86_voicefix.js': '媒体元素只有 a.onended / a.onerror 这组属性 API，没有 addEventListener 的等价物；2026-10-27 新增 a.onerror 是为了把「解码失败」从「播完了」里分出来（修前 1-3ms 静默跳过、修后降级设备语音）。'
+};
 
 const hard = [];
 const soft = {}, byName = {};
