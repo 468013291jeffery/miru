@@ -58,7 +58,10 @@ window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x
  const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
  const box=x.closest(".m-box");if(a==="play"){const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
  if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
-const _renderChat86=renderChat;renderChat=function(){const r=_renderChat86.apply(this,arguments);bt86Decorate($("#msgs"));return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_voicefix86 = function () { bt86Decorate($("#msgs")); };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("voicefix86", __body_voicefix86);
+else { const _renderChat86 = renderChat; renderChat = function () { const r = _renderChat86.apply(this, arguments); __body_voicefix86(); return r; }; };
 (function(){let mo=null;const hook=()=>{const box=$("#msgs");if(!box||box.__bt86)return;box.__bt86=1;mo=new MutationObserver(()=>bt86Decorate(box));mo.observe(box,{childList:true})};setInterval(hook,1500);
  document.addEventListener("click",e=>{if(e.target.closest(".bt86 button"))e.stopPropagation()},false);
  const st=document.createElement("style");st.textContent=`.bt86{display:flex;justify-content:flex-end;gap:3px;margin:3px -6px -5px 0}.m-box .bt86{margin:4px -8px -8px 0}
