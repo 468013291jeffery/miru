@@ -37,7 +37,7 @@ speak=function(text,id,onend){try{
 const _stopVoice62=stopVoice;stopVoice=function(){TTS.seq=(TTS.seq||0)+1;return _stopVoice62()};
 /* prefetch the next spoken lines while the current one plays (only when read-aloud is on) */
 function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
- for(const b of th.pk.q.slice(0,10)){if(n>=3)break;if(!Array.isArray(b)||b[0]==="sys")continue;
+ for(const b of th.pk.q.slice(0,12)){if(n>=6)break;if(!Array.isArray(b)||b[0]==="sys")continue;
   /* 2026-10-27：待播里的 payload 有 28% 是对象（`{"t":"一句台词"}`），原来 `typeof b[2]==="string"` 直接把
      这些句子**跳过了** ⇒ 预取形同虚设，播放时只能现场合成（这就是「语音变慢」的一部分）。这里先归一化成文本。 */
   const txt=(typeof b[2]==="string")?b[2]:(typeof asText70==="function"?asText70(b[2]):String(b[2]||""));

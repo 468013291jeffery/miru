@@ -328,8 +328,18 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
   SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
   try{toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")}catch(_){}
   return}
- if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
- if(th.quest&&th.quest.over){questEnd(th);return}
+ if(!aiGate()){
+  /* 2026-10-27 Ann：点了选项只有「已选」的提示、对话里没有她那句。
+     额度不够时旧代码把文字塞回输入框就 return ⇒ **她的话从对话里消失**。
+     现在：**先落进对话**（她说的话属于她，不该因为没有额度就消失），再说明「他这轮接不上」。 */
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  const ta=$("#cin");if(ta)ta.value="";
+  try{toast(S.lang==="zh"?"这句记下了；他这轮接不上（额度不够）":"Saved — he can't answer this turn (out of units)")}catch(_){}
+  return}
+ if(th.quest&&th.quest.over){
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  try{toast(S.lang==="zh"?"这段剧情已经结束，这句我记在对话里了":"This story is over — I kept your line anyway")}catch(_){}
+  questEnd(th);return}
  mode=mode||cmode;
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1}catch(_){}
  /* 2026-10-27（Ann：他死活要念剧情，我接的不是这句他也照念）：
@@ -564,7 +574,7 @@ async function playBeats(th,r,ctx,silent){
  try{
   if(typeof ttsOn==="function"&&ttsOn()&&S.voice&&S.voice.auto&&typeof ttsFetch==="function"){
    let warm=0;
-   for(const b of beats){ if(warm>=2)break; if(!b||!b.text)continue;
+   for(const b of beats){ if(warm>=4)break; if(!b||!b.text)continue;
     const txt=asText70(b.text); if(!txt)continue;
     if(th.pk&&b.who===th.pk.as)continue;
     if(typeof ttsSpeakable==="function"&&!ttsSpeakable(txt))continue;
