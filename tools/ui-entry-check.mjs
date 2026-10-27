@@ -12,6 +12,7 @@ t('UI 模块在产物里', /window\.UI = U/.test(h));
 t('UI.render 会先净化', /U\.render = function[\s\S]{0,400}sanitizeMsgs/.test(h));
 t('UI.render 调用主渲染', /U\.render = function[\s\S]{0,600}renderChat\(\)/.test(h));
 t('每个 hook 单独 try/catch', /for \(const h of U\.hooks\)[\s\S]{0,200}try \{ h\.fn\(th\)/.test(h));
+ t('钩子只在调度器里跑一次（U.render 不重复跑）', !/U\.render = function[\s\S]{0,900}for \(const h of U\.hooks\)/.test(h));
 
 // ③ 行为验证：把模块单独求值，塞两个 hook，第一个抛错，第二个必须跑
 const src = fs.readFileSync('source/src/app106_ui.js', 'utf8');
@@ -22,7 +23,8 @@ try {
   const UI = fn(sandbox.window, sandbox.console, sandbox.performance, () => {}, () => {});
   UI.add('炸弹', () => { throw new Error('boom') });
   UI.add('后面那个', () => { ran = true });
-  UI.render({});
+  /* 钩子只在调度器里跑；这里直接验 afterRender 的隔离性 */
+  UI.afterRender({});
   isolated = ran === true && UI.hooks[0].errs === 1;
 } catch (e) { console.log('  ⚠ 行为验证无法求值: ' + e.message) }
 
