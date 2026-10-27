@@ -1,0 +1,61 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>render snapshot</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+/* 消息渲染快照：对每种消息类型各渲染一次，把 HTML 原样吐出来。
+   用途 = 迁移 msgHTML 之前/之后的**逐字节对拍**（见 docs/msg-render-registry.md §4）。 */
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow;
+  if (!w || typeof w.msgHTML !== 'function') { out.textContent = 'ERR no msgHTML'; return }
+
+  /* STUB：把角色/世界查询固定成桩 —— 快照测的是 msgHTML 的**分支与结构**，
+     不是内容。真实的 C/W/S 是 bundle 里的 const，从外面取不到；
+     打桩能让每一种消息都渲染出来，且**每一次跑都一样**（这正是对拍需要的）。 */
+  try {
+    w.ch = function (id) { return { id: id, n: '测试角色', pal: ['#EE6F97', '#F6B4C9'], face: null } };
+    w.first = function (s) { return String(s || '').split(/[·s]/)[0] };
+    w.wd = function (wid) { return { id: wid || 'w_snap', cast: ['c'], pack: { intro: { bg: [], you: '', cast: [] }, chapters: [], endings: {} }, cover: 0, title: { zh: '样例世界' }, premise: '' } };
+    w.me = function () { return '你' };
+  } catch (e) {}
+
+  var KINDS = [
+    ['say',    { who: 'c', k: 'say',   txt: '样例台词一句话。' }],
+    ['act',    { who: 'c', k: 'act',   txt: '他把杯子挪到一边。' }],
+    ['think',  { who: 'c', k: 'think', txt: '他没说出口的那半句。' }],
+    ['narr',   { who: 'n', k: 'say',   txt: '街灯把水洼照亮。' }],
+    ['box',    { who: 'c', k: 'box',   parts: [{ who: 'c', k: 'say', txt: '块里的台词。' }] }],
+    ['scene',  { who: 'sys', k: 'scene', place: '后巷', time: '夜里' }],
+    ['event',  { who: 'sys', k: 'event', icon: '⚡', title: '事件标题', txt: '事件说明' }],
+    ['intro',  { who: 'sys', k: 'intro' }],
+    ['card',   { who: 'sys', k: 'card', title: '卡片标题', txt: '卡片正文' }],
+    ['warn',   { who: 'sys', k: 'warn', txt: '提示一句' }],
+    ['react',  { who: 'c', k: 'react', txt: '反应一句' }],
+    ['dir',    { who: 'sys', k: 'dir', txt: '导演指令' }],
+    ['vn96',   { who: 'c', k: 'vn96', txt: '视觉小说行' }],
+    ['xtitle', { who: 'sys', k: 'xtitle', title: '章节标题', txt: '副标题' }],
+    ['xmoney', { who: 'sys', k: 'xmoney', n: 100, txt: '钱' }],
+    ['xpost',  { who: 'sys', k: 'xpost', title: '帖子', txt: '正文' }],
+    ['xanchor',{ who: 'sys', k: 'xanchor', title: '锚点', txt: '正文' }],
+    ['me-say', { who: 'me', k: 'say',   txt: '玩家自己说的一句。' }],
+    ['me-act', { who: 'me', k: 'act',   txt: '玩家做了一个动作。' }]
+  ];
+
+  var result = {};
+  for (var n = 0; n < KINDS.length; n++) {
+    var name = KINDS[n][0], m = KINDS[n][1];
+    var th = {
+      id: 'snap', wid: 'w_snap', cast: ['c'], msgs: [m],
+      pk: { as: 'c', ch: 1, q: [], stop: null, picks: {} },
+      love: { c: 10 }, addr: null, said: []
+    };
+    var html = '';
+    try { html = String(w.msgHTML(m, 0, th) || '') } catch (e) { html = 'ERR ' + (e && e.message) }
+    result[name] = html;
+  }
+  out.textContent = 'SNAPSHOT_JSON:' + JSON.stringify(result);
+  out.setAttribute('data-done', '1');
+}, 9000);
+</script>

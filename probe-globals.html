@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><pre id="out">…</pre>
+<iframe id="f" src="/index.html" style="width:400px;height:600px"></iframe>
+<script>
+setTimeout(function(){
+  var w=document.getElementById('f').contentWindow,o=document.getElementById('out'),L=[];
+  ['C','W','S','ch','first','PK_C','PACK_C'].forEach(function(k){ L.push(k+': '+typeof w[k]) });
+  try{ var ck=w.C?Object.keys(w.C).slice(0,5):[]; L.push('C keys: '+ck.join(',')) }catch(e){ L.push('C keys err') }
+  try{ L.push('W[0].id: '+(w.W&&w.W[0]&&w.W[0].id)) }catch(e){}
+  try{ L.push('W[0].cast: '+(w.W&&w.W[0]&&w.W[0].cast)) }catch(e){}
+  try{ L.push('ch(ck): '+JSON.stringify(w.ch(ck[0]))) }catch(e){ L.push('ch err '+e.message) }
+  o.textContent=L.join('\n');
+},9000);
+</script>
