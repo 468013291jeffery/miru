@@ -38,5 +38,5 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
    th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
- if(a==="choose"){th.pk.st="choose";save();packRefresh(th);if(curT===th.id)scrollChat()}
+ if(a==="choose"){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','burst');save();packRefresh(th);if(curT===th.id)scrollChat()}
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))};

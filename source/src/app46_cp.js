@@ -31,7 +31,7 @@ function cpRestore(th,cp){try{if(typeof pkTrace==="function")pkTrace("cpRestore"
  Object.keys(th).forEach(k=>delete th[k]);Object.assign(th,snap,{msgs,cps});th._gen=g;delete PKWAIT[th.id];try{delete PKNEXT[th.id]}catch(_){}try{CH=null}catch(_){}if(w)w([]);if(nx)nx();
  try{const L=$("#fxLayer");if(L)L.innerHTML=""}catch(_){}
  if(th.pk&&cp.kind==="start"){th.pk.q=[];th.pk.stop=null;save();renderChat();th._cpRestoring=1;setTimeout(()=>{delete PKPLAY[th.id];packOpen(th,cp.ch);delete th._cpRestoring},150)}
- else if(th.pk){th.pk.q=cpChapBeats(th,cp.ch).slice(cp.idx);th.pk.stop=null;th.pk.st="busy";th.pk.after="choose";save();renderChat();setTimeout(()=>{delete PKPLAY[th.id];packRun(th)},150)}
+ else if(th.pk){th.pk.q=cpChapBeats(th,cp.ch).slice(cp.idx);th.pk.stop=null;(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','restore');th.pk.after="choose";save();renderChat();setTimeout(()=>{delete PKPLAY[th.id];packRun(th)},150)}
  else{save();renderChat()}
  appendMsg(th,{who:"sys",k:"card",title:"⏪ "+LL("回到了这里","Back to this point"),txt:(th.pk?LL("第 "+cp.ch+" 章 · ","Chapter "+cp.ch+" · "):"")+cpLabel(th,cp)+LL("。这一次，换个方式走。"," — try it differently this time."),at:Date.now()})}
 document.addEventListener("click",e=>{let x;
