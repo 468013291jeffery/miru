@@ -43,6 +43,9 @@
     return new Promise(res => {
       let done = false;
       const t0 = Date.now();
+      /* 先记一条 `try`：**发起**与**完成**是两件事 —— 没有声音的环境里每条都要等到上限，
+         只看 `said` 会把「已经在念」误读成「一条都没念」。对账时用 try 当分母。 */
+      log({ t: t0, ev: "try", who: who, k: String((msg && msg.k) || ""), len: txt.length });
       const fin = (ok, why) => {
         if (done) return; done = true; clearTimeout(tm);
         log({ t: Date.now(), ev: ok ? "said" : "silent", who: who, k: String((msg && msg.k) || ""), len: txt.length, ms: Date.now() - t0, why: why || "" });
@@ -100,8 +103,11 @@
       appendMsg = function (th, m) {
         const r = orig.apply(this, arguments);
         try {
-          const isSay = m && m.k === "say" && m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys"
-                        && (typeof ch === "function" && ch(m.who));
+          /* 2026-10-27：**不要用全局角色表 `ch()` 当门槛**。
+             实测：一部剧自带的角色（ice 里的 mason / ethan）在 `th.cast` 里，但 `ch(id)` 查不到
+             ⇒ 四条台词全被判成「不是角色」⇒ 不念、也不记（`unvoiced` 都是 0，无从统计）。
+             判据改成「有 who 且不是玩家/旁白/系统」，剩下的交给 `D.say` 自己失败留痕。 */
+          const isSay = m && m.k === "say" && !!m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys";
           if (isSay && !m._voiced) {
             if (voiceOn()) {
               m._voiced = 1;
