@@ -136,6 +136,22 @@ function spec(sel) {
 function classTokens(sel) {
   return new Set((String(sel).match(/\.[\w-]+/g) || []).map(x => x.slice(1)));
 }
+/* 类名的「泛化度」：有多少条不同的选择器用到它（在 rules 建好之后才算，见下面）。
+   `.on` / `.me` / `.big` 这种状态类被上百条规则共用 ⇒ 两个选择器**共享它并不说明**它们能匹配同一个元素
+   （`.dkc.on` 与 `.wtki.on` 只是都有个 on）。不加这一条，`.dkc.on` 会被判成「中间夹着 .wtki.on」——
+   而现实中没人会把 dkc 和 wtki 两类挂到同一个元素上。 */
+const TOKEN_USE = new Map();
+const GENERIC = 12;
+function tokenUse() {
+  if (TOKEN_USE.size) return TOKEN_USE;
+  for (const r of rules) for (const t of classTokens(r.sel)) TOKEN_USE.set(t, (TOKEN_USE.get(t) || 0) + 1);
+  return TOKEN_USE;
+}
+function sharesIdentityClass(a, b) {
+  const ta = classTokens(a), tb = classTokens(b), use = tokenUse();
+  for (const t of ta) if (tb.has(t) && (use.get(t) || 0) < GENERIC) return true;
+  return false;
+}
 
 const html = fs.readFileSync(FILE, 'utf8');
 const sm = /<style>([\s\S]*?)<\/style>/.exec(html);
@@ -152,11 +168,20 @@ for (const r of rules) {
 const dups = [...groups.entries()].filter(([, v]) => v.length > 1)
   .sort((a, b) => b[1].length - a[1].length || b[1][0].body.length - a[1][0].body.length);
 
-const A = [], B = [];
+const A = [], B = [], C = [];
 for (const [sel, list] of dups) {
   const reasons = [];
   const ctxs = new Set(list.map(r => r.ctx.join(' ')));
-  if (ctxs.size > 1) reasons.push('上下文不同：' + [...ctxs].map(x => x || '(顶层)').join(' / '));
+
+  /* 上下文不同 ⇒ **不是重复，是条件变体**：同一选择器在不同 `@media`/`@supports` 下各写一份，
+     是设计（窄屏换个 bottom、reduce-motion 关掉动画）。这类要**列出来给人查**，但不是待办 ——
+     第一版把它们塞进「需人看」，于是 14 个待办里有 7 个根本不该动。
+     判据：只要出现两种以上上下文，就是变体；同上下文里再谈能不能并。 */
+  if (ctxs.size > 1) {
+    C.push({ sel, n: list.length, at: list.map(r => 'line ' + r.line), ctxs: [...ctxs].map(x => x || '顶层'),
+      props: list.map(r => Object.keys(decls(r.body)).join('+')) });
+    continue;
+  }
 
   const propSets = list.map(r => Object.keys(decls(r.body)));
   const allProps = [...new Set(propSets.flat())];
@@ -174,8 +199,7 @@ for (const [sel, list] of dups) {
     const mySpec = spec(sel), myCls = classTokens(sel);
     const touched = between.filter(r => {
       if (spec(r.sel) !== mySpec) return false;
-      const other = classTokens(r.sel);
-      if (![...other].some(c => myCls.has(c))) return false;
+      if (!sharesIdentityClass(sel, r.sel)) return false;
       /* 尾巴上的标签名不同 ⇒ 不可能匹配到同一个元素（`.dkc p` 与 `.dkc h2`）。
          不加这一条，`.dkc p` 会被 `.dkc h2` 判成「夹着同名属性规则」—— 又是自己造的噪声。 */
       const tagOf = (s) => { const m = /([a-z][\w-]*)\s*$/i.exec(s.replace(/[)\]]+$/, '')); return m ? m[1].toLowerCase() : '' };
@@ -196,6 +220,15 @@ for (const [sel, list] of dups) {
 
 if (process.argv.includes('--json')) {
   console.log(JSON.stringify({ A, B: B.map(x => ({ sel: x.sel, n: x.n, reasons: x.reasons })) }, null, 1));
+  process.exit(0);
+}
+
+if (process.argv.includes('--where')) {
+  /* 查一条选择器到底在哪几处、各自什么上下文 —— 处理 B 档时要逐个看现场 */
+  const want = process.argv[process.argv.indexOf('--where') + 1];
+  const hit = rules.filter(r => r.sel === want);
+  if (!hit.length) { console.log('没找到 ' + want); process.exit(0) }
+  for (const r of hit) console.log('line ' + r.line + '  [' + (r.ctx.join(' > ') || '顶层') + ']\n   ' + r.body.trim().slice(0, 200));
   process.exit(0);
 }
 
@@ -238,7 +271,10 @@ console.log('A 档（可机械并）' + A.length + ' 个 —— 并掉能省 ' +
 for (const x of A.slice(0, 40)) console.log('  ×' + x.n + '  ' + x.sel.slice(0, 56) + (x.ctx ? '  [' + x.ctx + ']' : '') + '  ' + x.at.join(', '));
 if (A.length > 40) console.log('  … 还有 ' + (A.length - 40) + ' 个');
 console.log('');
-console.log('B 档（需人看）' + B.length + ' 个：');
+console.log('B 档（同上下文、需人看）' + B.length + ' 个：');
 for (const x of B.slice(0, 40)) console.log('  ×' + x.n + '  ' + x.sel.slice(0, 48) + '  ← ' + x.reasons.join(' · '));
 if (B.length > 40) console.log('  … 还有 ' + (B.length - 40) + ' 个');
+console.log('');
+console.log('C 档（条件变体，**不是待办**）' + C.length + ' 个 —— 同一选择器在不同 @media/@supports 下各一份，故意如此：');
+for (const x of C) console.log('  ×' + x.n + '  ' + x.sel.slice(0, 36) + '  ' + x.ctxs.join(' / ') + '   ' + x.at.join(', '));
 process.exit(0);
