@@ -76,7 +76,43 @@ closeSheet     app1_core.js:45 · 被包过 1 层（app64_entry.js:62）· 直�
 只有 `app45_rel.js:122` 写的是裸 `return;` ⇒ 它的守卫一旦命中，**整条链的返回值变成 undefined**。
 这不影响菜单显示（没人用返回值），但它让「这个函数返回什么」变成一个取决于运行时条件的谜。
 
-## 四、附带读数：32 处绕过入口
+## 四、快照闸（已造好并挂进 check-all，第 41 套）
+
+```
+node tools/sheet-snapshot.mjs            # 拍基线 → tools/sheet-baseline.json
+node tools/sheet-snapshot.mjs --check    # check-all 里跑这个
+```
+
+7 个弹层各开一次，`.sheet` 的 `outerHTML` 逐字节比：
+
+```
+menuSheet 2929 · memSheet 2110 · usSheet 3278 · dirSheet 1558
+cardSheet 630  · startSheet 1844 · paySheet-promo 2387   （字符数）
+```
+
+**怎么让弹层真的画出东西**（这是整件事唯一的难点，也是判据②存在的理由）：
+
+- `curT` 是 `let`（`app3_chat.js:27`）⇒ **不是 window 属性，从外面改不了**；
+- `S` 同样；但 **`openThread(id)` 是函数声明**、在 window 上，它内部会设 `curT` ⇒ 走它；
+- 各层要看 `th.pk` 才动手 ⇒ 造完线程后**直接给那个对象挂 `th.pk`**（app 读的就是同一个对象）；
+- 角色 id 不能用编的：`newThread('solo','c')` 会在 `wd(c.w)` 上抛
+  `Cannot read properties of null (reading 'w')` ⇒ 探针先试几个真名，再退回 `S.mine.chars` 的第一个键。
+
+不这么做的话，`menuSheet()` 里 `S.threads[curT]` 拿到 `undefined`，所有层被 `if(!th)` 挡掉
+⇒ **快照全空且"一致"**。所以判据②（每个弹层必须有内容）是这条闸的主心骨，不是补充。
+
+**三条判据全部验过**：
+
+| 判据 | 结果 |
+|---|---|
+| ① 逐字节一致 | 两次独立浏览器跑 → 7 个弹层全部相同 |
+| ② 必须非空 | 第一版就全非空（630–3278 字符）；空的话立刻报「那一刻没弹出来」 |
+| ③ 变异要红 | 给 `app48` 那层的 `beforeend` 串前插 `<!--m48-->` ⇒ **只有 `menuSheet` 那张红**（2929 → 2939，并打印首个差异位置与上下文）；还原后复绿 |
+
+**射程（写在明处）**：只覆盖上面 7 个弹层、且只用一个「带 pk 的 solo 线程」造场景。
+需要真实消息对象/真实章节的（`imgSheet` 之类）**不在快照里** —— 别把它读成"弹层都验过了"。
+
+## 五、附带读数：32 处绕过入口
 
 它们不调用 `sheet()`，而是自己去摸弹层内部结构（`.sheet-card` / `.sheet .plans` / `$("#cards")`）。
 这跟 `msgHTML` 那边 `.bub` 的故事同族：**入口就在那儿，但它们选择了绕过它** ——

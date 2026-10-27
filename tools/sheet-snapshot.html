@@ -1,0 +1,65 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>sheet snapshot</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:760px;border:0"></iframe>
+<script>
+/* 弹层快照（2026-10-27）：把每个具名弹层开一次，存它渲染出来的 HTML。
+   用途 = 搬那 7 层包装之前/之后的**逐字节对拍**（同 render-snapshot 的做法）。
+
+   怎么让弹层真的画出东西（这是整件事的难点）：
+     · `curT` 是 `let`（app3_chat.js:27）⇒ **不是 window 属性，从外面改不了**；
+     · 但 `openThread(id)` 是函数声明（⇒ 在 window 上），它内部会设 curT ⇒ 用它是唯一正路；
+     · `S` 也是 `let`，可**我们不需要它**：newThread 会把线程放进 S.threads；
+     · 各层要看 `th.pk` 才动手 ⇒ 造完线程后**直接给它挂一个 pk**（同一个对象，app 读的就是它）。
+
+   ⚠️ 不这么做的话，`menuSheet()` 里 `const th=S.threads[curT]` 拿到 undefined，
+   所有层都被 `if(!th)` 挡掉 ⇒ 快照全空且"一致" —— 那正是判据②（必须非空）要防的假绿。 */
+var SHEETS = [
+  ['menuSheet', function (w, th) { w.menuSheet() }],
+  ['memSheet', function (w, th) { w.memSheet() }],
+  ['usSheet', function (w, th) { w.usSheet() }],
+  ['dirSheet', function (w, th) { w.dirSheet() }],
+  ['cardSheet', function (w, th) { w.cardSheet() }],
+  ['startSheet', function (w, th) { w.startSheet(th.wid) }],
+  ['paySheet-promo', function (w, th) { w.paySheet('promo') }]
+];
+
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow;
+  if (!w || typeof w.menuSheet !== 'function') { out.textContent = 'ERR no menuSheet'; return }
+  var log = [], rows = [];
+  try {
+    /* ① 先找一个**真**角色 id：`ch()` 不认识的名字会让 newThread 里 `wd(c.w)` 直接抛
+       （第一次我硬编了 'c'，报的就是 Cannot read properties of null (reading 'w')）。 */
+    var cands = ['roman', 'adrian', 'lucien', 'kael', 'theo', 'alex', 'rowan', 'walker', 'noah', 'luca'];
+    var cid = null;
+    for (var q = 0; q < cands.length; q++) { try { if (w.ch(cands[q])) { cid = cands[q]; break } } catch (e) { } }
+    if (!cid && w.S && w.S.mine && w.S.mine.chars) cid = Object.keys(w.S.mine.chars)[0] || null;
+    if (!cid) throw new Error('找不到任何可用角色（ch() 全空）');
+    log.push('char=' + cid);
+    /* ② 造一个线程并把 curT 切过去 */
+    var th = w.newThread('solo', cid);
+    if (!th) throw new Error('newThread 没返回线程');
+    th.pk = { as: cid, ch: 1, q: [], stop: null, picks: {} };
+    th.cast = [cid]; th.love = {}; th.love[cid] = 5; th.msgs = th.msgs || [];
+    w.openThread(th.id);
+    log.push('thread=' + th.id + ' wid=' + th.wid);
+  } catch (e) { out.textContent = 'ERR 造线程失败：' + e.message; return }
+
+  for (var i = 0; i < SHEETS.length; i++) {
+    var name = SHEETS[i][0], fn = SHEETS[i][1], html = '', err = '';
+    try {
+      w.closeSheet();
+      fn(w, th);
+      var el = w.document.querySelector('.sheet');
+      html = el ? el.outerHTML : '';
+    } catch (e) { err = String(e && e.message || e).slice(0, 80) }
+    rows.push({ name: name, len: html.length, html: html.slice(0, 4000), err: err });
+  }
+  try { w.closeSheet() } catch (e) { }
+  out.textContent = 'SHEET_SNAP_JSON:' + JSON.stringify({ at: Date.now(), log: log, rows: rows });
+  out.setAttribute('data-done', '1');
+}, 6000);
+</script>
