@@ -238,6 +238,7 @@ on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 | **存档** `SAVE` | `app105_save.js` | `save()` 397 个调用点无归因 | `__save()`：最慢 · **最烧调用点（文件:行）** | `save-instrument-check` |
 | **渲染入口** `UI` | `app106_ui.js` | 渲染后的动作：25 层匿名包装 → **1 调度 + 22 具名钩子** | `__ui()`：钩子名 · **失败数** · 最近错误 | `ui-entry-check` |
 | **剧本指令** `PKREG` | `app110_pkreg.js` | 26 层 `pkDirective` 包装 → **一张注册表** | `__pkreg()`：注册层 · 分发次数 · **层内抛错** | `pkdirective-check` |
+| **弹层块** `SHEET` | `app112_sheet.js` | `menuSheet` 的 8 层包装 → **注册表里 7 个具名块 + 1 个改文字的包装**（`memSheet`/`m2Sheet` 判定不该搬：各层锚点不同） | `__sheet()`：每层有哪几块、插前还是插后 · `SHEET.stats()`：插入次数 · 抛错次数 | `sheet-snapshot`（7 张快照逐字节）· `sheet-census`（包装层数两向红） |
 | **文本进 UI** | `app3_chat.js:sanitizeMsgs` | `th.msgs` 30 处直写绕过的文本净化 | `__soft()` | `sanitize-selftest` |
 | **静默失败** | `app3_chat.js:soft` | 空 `catch` → 有名字、有次数的吞 | `__soft()`：位置 · 次数 | `empty-catch-check` |
 | **错误日志** `ERRLOG` | `app108_errlog.js` | `onerror` / `unhandledrejection` / `console.error` 三源合一，**2 分钟窗口淘汰** | `__errlog()`：窗口内条数 · 已淘汰 | `errlog-selftest` |

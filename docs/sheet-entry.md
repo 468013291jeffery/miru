@@ -3,7 +3,20 @@
 > Ann 那句「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口」。
 > 渲染链（`docs/msg-render-registry.md`）和样式（`docs/style-entry.md`）已经收口，这是**第三块**。
 >
-> 这一份**只有读数，一条都没改**。复跑：`node tools/sheet-census.mjs`（只读、静态、不用浏览器）。
+> 复跑：`node tools/sheet-census.mjs`（只读、静态、不用浏览器）· `node tools/sheet-snapshot.mjs`（真浏览器，7 张快照）。
+
+## 结论先行（只读这三句就够）
+
+1. **入口本身是好的**：`sheet()` 只有一个（`app1_core.js:42`），定义体第一句就是 `closeSheet()`
+   ⇒ **结构上不可能同时开两个弹层**。它被包过 1 层，`closeSheet` 被包过 1 层。
+   一开始我猜痛点是「119 处直连 `sheet()`」——**量完否掉了**。
+2. **真接缝在它上面一层**：具名弹层（`menuSheet` / `memSheet` …）各自被后来的文件一层层包。
+   `menuSheet` 真实是 **8 层**（这个数字我报错过三次，见 §二）。
+3. **已收口到哪一步**：
+   - `menuSheet` 8 层里 **7 层搬进了 `SHEET` 注册表**，只剩 `app46`（它是「改别人刚建的块」，不是加块）；
+   - `memSheet` / `m2Sheet` 量完判定 **不该搬**（各层吊在不同锚点，不是同一个栈，见 §四之二）；
+   - 两道闸在守：`sheet-snapshot --check`（7 张快照逐字节）· `sheet-census --check`（包装层数，两个方向都红）。
+   - **还没动的**：32 处绕过入口直接摸 `.sheet-card` / `.sheet .plans` 的地方（§五）。
 
 ---
 
