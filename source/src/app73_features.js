@@ -164,7 +164,22 @@ async function mind73(th, i) {
         "HIS LINE: \"" + m.txt + "\"",
         "Write what he is thinking but did NOT say at that moment — the feeling or motive under the line. First person, 1–2 sentences, under 45 words. Consistent with his profile, what he actually knows and the current relationship stage. No new plot facts; a secret he protects can only be hinted at.",
         "LANGUAGE: write only in " + LANG_NAME[S.lang] + ".", 'Reply with ONLY JSON {"thought":"..."}'].join("\n");
-      const r = await ask(p, { modelTier: "quick" }); txt = r && r.thought;
+      const r = await ask(p, { modelTier: "quick" });
+ /* 2026-10-27：模型偶尔换个键（text / t / line）、或直接回字符串 —— 原来只认 thought，
+    取不到就悄悄落回预置句，看起来像「没接 AI」。这里把已知形状全兜住。 */
+ const pick = (v) => {
+   if (v == null) return "";
+   if (typeof v === "string") return v;
+   if (typeof v === "object") {
+     for (const k of ["thought", "text", "t", "line", "say", "inner", "content"]) {
+       if (typeof v[k] === "string" && v[k].trim()) return v[k];
+     }
+     for (const k in v) { if (typeof v[k] === "string" && v[k].trim()) return v[k] }
+   }
+   return "";
+ };
+ txt = pick(r) || "";
+ if (!txt && r) try { console.warn("[mind73] 取不到文本，返回形状:", Object.keys(r).join(",") || typeof r) } catch (_) {}
     } catch (_) {}
   }
   if (!txt) { const pool = MIND_FB[S.lang === "zh" ? "zh" : "en"]; txt = pool[(th.msgs.length + i) % pool.length]; }
@@ -230,7 +245,7 @@ renderChat = function () {
   st.textContent = `
 .af73{display:inline-flex;align-items:center;gap:4px;margin-top:3px;font-size:11px;font-weight:700;color:#F6B4C9;position:relative;padding-bottom:3px}
 .af73 i{position:absolute;left:0;bottom:0;height:2px;border-radius:2px;background:var(--grad);max-width:100%}
-.rg73{display:flex;width:max-content;max-width:calc(100% - 46px);align-items:stretch;margin:-2px 0 8px 38px;border:1px solid var(--line2);background:rgba(22,20,28,.72);border-radius:4px 4px 14px 14px;overflow:hidden}
+.rg73{display:flex;width:max-content;max-width:calc(100% - 46px);align-items:stretch;align-self:flex-end;margin:-2px 4px 8px 0;border-radius:14px 14px 4px 14px;border:1px solid var(--line2);background:rgba(22,20,28,.72);border-radius:4px 4px 14px 14px;overflow:hidden}
 .rg73>button,.rg73>.vs73{font-size:11.5px;font-weight:700;color:var(--dim);background:none;border:0;border-radius:0;padding:6px 11px;white-space:nowrap}
 .rg73>*+*{border-left:1px solid var(--line2)!important}
 .rg73>button:active{background:rgba(255,255,255,.06)}
