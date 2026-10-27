@@ -102,8 +102,10 @@ stopHTML=function(th){const h=_stopHTML55(th);const b=talkStop(th);if(!b||!th.pk
 /* ================= composer: free input + 2–3 quick options; director is an advanced tool, not a peer of "say" =================
    Product feedback: 台词/动作/心声/导演 side by side is too flat. Now one box — start with * for an action, wrap in （） for a thought —
    with up to 3 quick replies above it. 🎬 导演 and 🚪 moved into the ⋯ tray. Watch mode is untouched. */
-const _renderChat55=renderChat;
-renderChat=function(){const r=_renderChat55.apply(this,arguments);try{composer55()}catch(_){}return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_composer55 = function () { try{composer55()}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("composer55", __body_composer55);
+else { const _renderChat55 = renderChat; renderChat = function () { const r = _renderChat55.apply(this, arguments); __body_composer55(); return r; }; };
 function composer55(){const th=S.threads[curT];if(!th||(th.pk&&th.pk.as==="watch"))return;const box=$(".composer");if(!box||box.dataset.c55)return;box.dataset.c55=1;
  const modes=box.querySelector(".modes"),tray=box.querySelector("#modes2");if(!modes||!tray)return;
  ["say","act","think"].forEach(k=>{const b=modes.querySelector('[data-mode="'+k+'"]');if(b)b.remove()});

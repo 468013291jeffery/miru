@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="300c623f9465 2026-10-27T05:58Z";
+window.MIRU_BUILD="f43cea67b142 2026-10-27T06:00Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -10434,7 +10434,10 @@ function myMode(){const th=S.threads[curT];return !!(th&&th.pk&&th.pk.stop&&th.p
 function mySync(){const sc=$(".chatscreen");if(!sc)return;const on=myMode();sc.classList.toggle("mymode",on);const ta=$("#cin");
  if(ta){if(on){if(!ta.dataset.ph0)ta.dataset.ph0=ta.placeholder;const th=S.threads[curT],c=ch(th.pk.as);ta.placeholder=t("my.ph2",{n:c?first(c.n):""})}else if(ta.dataset.ph0){ta.placeholder=ta.dataset.ph0;delete ta.dataset.ph0}}}
 const _packRefresh41=packRefresh;packRefresh=function(th){const r=_packRefresh41.apply(this,arguments);try{mySync()}catch(_){}return r};
-const _renderChat41=renderChat;renderChat=function(){_renderChat41.apply(this,arguments);try{mySync()}catch(_){}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_merge41 = function () { try{mySync()}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("merge41", __body_merge41);
+else { const _renderChat41 = renderChat; renderChat = function () { const r = _renderChat41.apply(this, arguments); __body_merge41(); return r; }; };
 /* the bottom box sends your line while it's your turn */
 function myFromComposer(e){if(!myMode())return false;const ta=$("#cin");const v=(ta&&ta.value||"").trim();const th=S.threads[curT];
  e.preventDefault();e.stopImmediatePropagation();if(!v){toast(t("my.empty"));return true}ta.value="";mySay(th,v);return true}
@@ -11944,8 +11947,10 @@ stopHTML=function(th){const h=_stopHTML55(th);const b=talkStop(th);if(!b||!th.pk
 /* ================= composer: free input + 2–3 quick options; director is an advanced tool, not a peer of "say" =================
    Product feedback: 台词/动作/心声/导演 side by side is too flat. Now one box — start with * for an action, wrap in （） for a thought —
    with up to 3 quick replies above it. 🎬 导演 and 🚪 moved into the ⋯ tray. Watch mode is untouched. */
-const _renderChat55=renderChat;
-renderChat=function(){const r=_renderChat55.apply(this,arguments);try{composer55()}catch(_){}return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_composer55 = function () { try{composer55()}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("composer55", __body_composer55);
+else { const _renderChat55 = renderChat; renderChat = function () { const r = _renderChat55.apply(this, arguments); __body_composer55(); return r; }; };
 function composer55(){const th=S.threads[curT];if(!th||(th.pk&&th.pk.as==="watch"))return;const box=$(".composer");if(!box||box.dataset.c55)return;box.dataset.c55=1;
  const modes=box.querySelector(".modes"),tray=box.querySelector("#modes2");if(!modes||!tray)return;
  ["say","act","think"].forEach(k=>{const b=modes.querySelector('[data-mode="'+k+'"]');if(b)b.remove()});
@@ -13110,7 +13115,10 @@ document.addEventListener("input",e=>{if(e.target&&e.target.id==="libQ"){LIBQ=e.
 const _renderMe65=renderMe;renderMe=function(v){const r=_renderMe65.apply(this,arguments);try{if(!v.querySelector(".lib65me")){const zh=CL()==="zh";
  const h='<button class="card lib65me" data-libopen="1"><div class="row"><div class="grow"><b>🎛 '+(zh?"素材库":"Library")+'</b><p class="xs faint">🎮 '+MG100.length+(zh?" 游戏":" games")+' · 🎵 '+BGM100.length+' BGM · ✨ '+FX100.length+(zh?" 特效":" FX")+' · 🔊 '+SFX100.length+(zh?" 音效":" SFX")+'</p></div><span>›</span></div></button>';
  const a=v.querySelector(".pf64me")||v.querySelector(".ttscard")||v.querySelector(".lccard");if(a)a.insertAdjacentHTML("afterend",h);else{const sc=v.querySelector(".scroll");if(sc)sc.insertAdjacentHTML("afterbegin",h)}}}catch(_){}return r};
-const _renderChat65=renderChat;renderChat=function(){const r=_renderChat65.apply(this,arguments);try{const t2=$("#modes2");if(t2&&!t2.querySelector("[data-libopen]"))t2.insertAdjacentHTML("beforeend",'<button class="tool" data-libopen="1">🎛 '+(CL()==="zh"?"素材库":"Library")+'</button>')}catch(_){}return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_lib65 = function () { try{const t2=$("#modes2");if(t2&&!t2.querySelector("[data-libopen]"))t2.insertAdjacentHTML("beforeend",'<button class="tool" data-libopen="1">🎛 '+(CL()==="zh"?"素材库":"Library")+'</button>')}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("lib65", __body_lib65);
+else { const _renderChat65 = renderChat; renderChat = function () { const r = _renderChat65.apply(this, arguments); __body_lib65(); return r; }; };
 (function(){const st=document.createElement("style");st.textContent=`
 .lib65tabs{display:flex;gap:6px;padding:4px 16px 0}.lib65tabs button{flex:1;padding:9px 4px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#ddd;font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:2px}
 .lib65tabs button small{font-size:10.5px;color:#9C93A8}.lib65tabs button.on{border-color:#F0B77E;background:rgba(240,183,126,.14);color:#F6D3AE}
@@ -15163,7 +15171,10 @@ window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x
  const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
  const box=x.closest(".m-box");if(a==="play"){const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
  if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
-const _renderChat86=renderChat;renderChat=function(){const r=_renderChat86.apply(this,arguments);bt86Decorate($("#msgs"));return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_voicefix86 = function () { bt86Decorate($("#msgs")); };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("voicefix86", __body_voicefix86);
+else { const _renderChat86 = renderChat; renderChat = function () { const r = _renderChat86.apply(this, arguments); __body_voicefix86(); return r; }; };
 (function(){let mo=null;const hook=()=>{const box=$("#msgs");if(!box||box.__bt86)return;box.__bt86=1;mo=new MutationObserver(()=>bt86Decorate(box));mo.observe(box,{childList:true})};setInterval(hook,1500);
  document.addEventListener("click",e=>{if(e.target.closest(".bt86 button"))e.stopPropagation()},false);
  const st=document.createElement("style");st.textContent=`.bt86{display:flex;justify-content:flex-end;gap:3px;margin:3px -6px -5px 0}.m-box .bt86{margin:4px -8px -8px 0}

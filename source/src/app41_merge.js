@@ -4,7 +4,10 @@ function myMode(){const th=S.threads[curT];return !!(th&&th.pk&&th.pk.stop&&th.p
 function mySync(){const sc=$(".chatscreen");if(!sc)return;const on=myMode();sc.classList.toggle("mymode",on);const ta=$("#cin");
  if(ta){if(on){if(!ta.dataset.ph0)ta.dataset.ph0=ta.placeholder;const th=S.threads[curT],c=ch(th.pk.as);ta.placeholder=t("my.ph2",{n:c?first(c.n):""})}else if(ta.dataset.ph0){ta.placeholder=ta.dataset.ph0;delete ta.dataset.ph0}}}
 const _packRefresh41=packRefresh;packRefresh=function(th){const r=_packRefresh41.apply(this,arguments);try{mySync()}catch(_){}return r};
-const _renderChat41=renderChat;renderChat=function(){_renderChat41.apply(this,arguments);try{mySync()}catch(_){}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_merge41 = function () { try{mySync()}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("merge41", __body_merge41);
+else { const _renderChat41 = renderChat; renderChat = function () { const r = _renderChat41.apply(this, arguments); __body_merge41(); return r; }; };
 /* the bottom box sends your line while it's your turn */
 function myFromComposer(e){if(!myMode())return false;const ta=$("#cin");const v=(ta&&ta.value||"").trim();const th=S.threads[curT];
  e.preventDefault();e.stopImmediatePropagation();if(!v){toast(t("my.empty"));return true}ta.value="";mySay(th,v);return true}

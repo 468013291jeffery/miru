@@ -28,7 +28,10 @@ document.addEventListener("input",e=>{if(e.target&&e.target.id==="libQ"){LIBQ=e.
 const _renderMe65=renderMe;renderMe=function(v){const r=_renderMe65.apply(this,arguments);try{if(!v.querySelector(".lib65me")){const zh=CL()==="zh";
  const h='<button class="card lib65me" data-libopen="1"><div class="row"><div class="grow"><b>🎛 '+(zh?"素材库":"Library")+'</b><p class="xs faint">🎮 '+MG100.length+(zh?" 游戏":" games")+' · 🎵 '+BGM100.length+' BGM · ✨ '+FX100.length+(zh?" 特效":" FX")+' · 🔊 '+SFX100.length+(zh?" 音效":" SFX")+'</p></div><span>›</span></div></button>';
  const a=v.querySelector(".pf64me")||v.querySelector(".ttscard")||v.querySelector(".lccard");if(a)a.insertAdjacentHTML("afterend",h);else{const sc=v.querySelector(".scroll");if(sc)sc.insertAdjacentHTML("afterbegin",h)}}}catch(_){}return r};
-const _renderChat65=renderChat;renderChat=function(){const r=_renderChat65.apply(this,arguments);try{const t2=$("#modes2");if(t2&&!t2.querySelector("[data-libopen]"))t2.insertAdjacentHTML("beforeend",'<button class="tool" data-libopen="1">🎛 '+(CL()==="zh"?"素材库":"Library")+'</button>')}catch(_){}return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
+const __body_lib65 = function () { try{const t2=$("#modes2");if(t2&&!t2.querySelector("[data-libopen]"))t2.insertAdjacentHTML("beforeend",'<button class="tool" data-libopen="1">🎛 '+(CL()==="zh"?"素材库":"Library")+'</button>')}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("lib65", __body_lib65);
+else { const _renderChat65 = renderChat; renderChat = function () { const r = _renderChat65.apply(this, arguments); __body_lib65(); return r; }; };
 (function(){const st=document.createElement("style");st.textContent=`
 .lib65tabs{display:flex;gap:6px;padding:4px 16px 0}.lib65tabs button{flex:1;padding:9px 4px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);color:#ddd;font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:2px}
 .lib65tabs button small{font-size:10.5px;color:#9C93A8}.lib65tabs button.on{border-color:#F0B77E;background:rgba(240,183,126,.14);color:#F6D3AE}
