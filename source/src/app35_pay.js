@@ -22,12 +22,14 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-chgo]");if
  const o=th.pk.stop[2].opts[CH.i];const copy=Object.assign({},th);delete copy._snap;th._snap=JSON.stringify(copy);th._snapId=(th._snapId||0)+1;
  PAYPICK={th,o,n:th.msgs.length,sid:th._snapId};
  setTimeout(()=>{const p=PAYPICK;PAYPICK=null;if(!p)return;const m=p.th.msgs.slice(p.n).find(z=>z.who==="me");if(!m)return;m.snapId=p.sid;if(p.o.rthink){m.rthink=p.o.rthink;m.rwho=p.o.rwho||mainOf(p.th)}save();if(curT===p.th.id)renderChat()},0)},true);
-const _msgHTML35=msgHTML;msgHTML=function(m,i,th){const h=_msgHTML35(m,i,th);if(!m||m.who!=="me"||!th||!th.pk||(!m.rthink&&m.snapId!==th._snapId))return h;
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.post（后处理类）—— 拿到已渲染的 HTML 再挂付款行。
+   逻辑原样：不满足条件就原样返回 h（post 类的约定是「返回非字符串 = 不改」）。 */
+MSGKIND.post("app35_pay.js",function(h,m,i,th){if(!m||m.who!=="me"||!th||!th.pk||(!m.rthink&&m.snapId!==th._snapId))return h;
  let x='<div class="payrow">';
  if(m.rthink){const c=ch(m.rwho),nm=c?first(c.n):"";x+=m.rtOpen?'<div class="rtk open">'+avatar(m.rwho,22)+'<p><small>💭 '+esc(t("pay.rtH",{n:nm}))+'</small>'+esc(m.rthink)+'</p></div>'
   :'<button class="rtk" data-payrt="'+i+'">'+avatar(m.rwho,22)+'<p><small>💭 '+esc(t("pay.rtH",{n:nm}))+' · '+payTag("rthink")+'</small><span class="blur">'+esc(m.rthink)+'</span></p></button>'}
  if(m.snapId===th._snapId&&th._snap)x+='<button class="paybtn rw" data-payrw="1">⟲ '+t("pay.rw")+' · '+payTag("rewind")+'</button>';
- return h+x+'</div>'};
+ return h+x+'</div>'});
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)return;
  if(x=e.target.closest("[data-paypv]")){if(!payGo("preview"))return;th._pv=th._pv||{};th._pv[stopKey(th)]=1;save();packRefresh(th);return}
  if(x=e.target.closest("[data-payrt]")){const m=th.msgs[+x.dataset.payrt];if(!m||!payGo("rthink"))return;m.rtOpen=1;save();renderChat();try{window.emoFx&&emoFx("ink")}catch(_){}return}

@@ -188,10 +188,10 @@ async function mind73(th, i) {
 }
 
 /* ---------- UI: tools on any message, bar under the latest reply, header chip, address chips ---------- */
-const _msgHTML73 = msgHTML;
-msgHTML = function (m, i, th) {
-  let h = _msgHTML73.apply(this, arguments);
-  try {
+/* 2026-10-27：从「手写包装 + 自带空 catch」搬成 MSGKIND.post（后处理类）。
+   逻辑一行没改；差别是**抛错不再被无声吞掉** —— post 类统一记次数并走 console.error（errlog 收）。 */
+MSGKIND.post("app73_features.js", function (h, m, i, th) {
+  {
     if (typeof openTools !== "undefined" && openTools === i && h.indexOf('<div class="mtools">') >= 0 && m.txt && m.k !== "card") {
       let add = "";
       if (m.ai || m.who === "me") add += '<button data-ed73="' + i + '">✎ ' + esc(t73("edit")) + '</button>';
@@ -200,9 +200,9 @@ msgHTML = function (m, i, th) {
     }
     if (m.edited) h += '<div class="ed73tag' + (m.who === "me" ? " me" : "") + '">✎ ' + esc(t73("edited")) + '</div>';
     if (m.mind) h = h.replace(/(class="m-think[^"]*")/, '$1 data-mind="1"');
-  } catch (_) {}
-  return h;
-};
+    return h;
+  }
+});
 /* 2026-10-27：这一层从「包 renderChat」搬成「UI.add 钩子」—— 第一个样板。
    理由：猴补丁是隐式接口，包了几十层之后任何一层抛错都会掐掉后面所有层；
    UI.add 的钩子每个单独 try/catch，一个炸不连累别人。逻辑本身一行没改。 */

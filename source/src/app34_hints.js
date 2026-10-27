@@ -23,4 +23,6 @@ Object.assign(I18N.en,{"hn.think":"AI hint","hn.none":"This one tests how well y
 /* in written lines, （…） is a stage direction (an action), not inner voice: show it with the ✱ action marker */
 function stageDir(s){return String(s||"").replace(/（([^）]{1,60})）/g,"*$1*").replace(/\(([^)]{1,60})\)/g,"*$1*")}
 const _boxHTML34=boxHTML;boxHTML=function(m,i,th){if(m&&m.say&&m.pk!==0){m=Object.assign({},m,{say:Object.assign({},m.say,{txt:stageDir(m.say.txt)})})}return _boxHTML34(m,i,th)};
-const _msgHTML34=msgHTML;msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as)m=Object.assign({},m,{txt:stageDir(m.txt)});return _msgHTML34(m,i,th)};
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.wrap（改入参类）—— 逻辑原样，形状统一。
+   这一层只改 m.txt：把（…）写成的舞台指令换成 *…*，真正的加粗由 app16 的 fmtMix（post 类）负责。 */
+MSGKIND.wrap("app34_hints.js",function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as)return Object.assign({},m,{txt:stageDir(m.txt)});return null});

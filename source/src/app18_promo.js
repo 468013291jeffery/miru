@@ -78,10 +78,13 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-emoins]")){const ta=$("#cin");if(!ta)return;const s=ta.selectionStart??ta.value.length;ta.value=ta.value.slice(0,s)+x.dataset.emoins+ta.value.slice(s);ta.dispatchEvent(new Event("input"));return}
  if(x=e.target.closest("[data-stk]")){const s=STK[+x.dataset.stk],ta=$("#cin");if(!ta)return;ta.value=s[0]+" "+(S.lang==="zh"?s[1]:s[2]);const o=$(".emop");if(o)o.remove();const b=$(".composer [data-send]");if(b)b.click();return}});
 const STK_RE=new RegExp("^("+STK.map(s=>s[0].replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+") (.{1,30})$");
-const _msgHTML18=msgHTML;
-msgHTML=function(m,i,th){const h=_msgHTML18(m,i,th);if(!m||!m.txt||typeof m.txt!=="string")return h;const mt=m.txt.match(STK_RE);
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.post（后处理类）。**逻辑原样**，包括它的选择器 ——
+   它找的是 `<div class="bub">`，而现在的气泡是 `<div class="m-box lb"><p class="bac">`；
+   也就是说这两个分支（贴纸 / 纯表情放大）**此刻是死的**。这里先原样搬（对拍要逐字节一致），
+   死没死由 tools/msgkind-probe.mjs 的命中读数报出来，别在这一步顺手改样式。 */
+MSGKIND.post("app18_promo.js", function (h, m, i, th) { if(!m||!m.txt||typeof m.txt!=="string")return h;const mt=m.txt.match(STK_RE);
  if(mt)return h.replace(/<div class="bub">[\s\S]*?<\/div>/,'<div class="bub stk"><span>'+mt[1]+'</span><small>'+esc(mt[2])+'</small></div>');
- if(/^(\p{Extended_Pictographic}|‍|️|\s){1,8}$/u.test(m.txt))return h.replace('<div class="bub">','<div class="bub bigemo">');return h};
+ if(/^(\p{Extended_Pictographic}|\u200d|\ufe0f|\s){1,8}$/u.test(m.txt))return h.replace('<div class="bub">','<div class="bub bigemo">');return h});
 
 /* ---------- MY MOMENTS: post, and the people you've talked to come comment ---------- */
 function myCircle(){const seen={};Object.values(S.threads||{}).sort((a,b)=>(b.at||0)-(a.at||0)).forEach(th=>{const me=th.pk&&th.pk.as;(th.cast||[]).forEach(id=>{if(id!==me&&ch(id)&&!seen[id])seen[id]=th.at||1})});

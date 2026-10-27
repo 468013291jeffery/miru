@@ -2,6 +2,7 @@
 <meta charset="utf-8">
 <title>render snapshot</title>
 <pre id="out">running…</pre>
+<pre id="probe">probe…</pre>
 <iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
 <script>
 /* 消息渲染快照：对每种消息类型各渲染一次，把 HTML 原样吐出来。
@@ -57,5 +58,56 @@ setTimeout(function () {
   }
   out.textContent = 'SNAPSHOT_JSON:' + JSON.stringify(result);
   out.setAttribute('data-done', '1');
+
+  /* ================= 第二块：msgHTML 各层「有没有真的干活」=================
+     为什么需要它：19 种消息的逐字节对拍只能证明「结构没变」，证不了「某一层还活着」。
+     `app16` 的 fmtMix 和 `app18` 的贴纸分支找的是 `<div class="bub">`，而气泡早就换成
+     `.m-box` 了 —— 对拍永远绿，功能一直是死的。这一块直接问每一层：**你改过东西吗**。 */
+  (function () {
+    var probe = document.getElementById('probe');
+    if (!probe) return;
+    var MK = w.MSGKIND;
+    if (!MK || !MK.items) { probe.textContent = 'MSGKIND_JSON:{"error":"no MSGKIND"}'; return }
+
+    function hitMap() { var o = {}; MK.items.forEach(function (x) { o[x.name] = x.hit }); return o }
+    function delta(a, b) { var r = []; MK.items.forEach(function (x) { if ((b[x.name] || 0) > (a[x.name] || 0)) r.push(x.name) }); return r }
+
+    /* [探针名, 看哪个层, 消息, 线程补丁] —— 每条探针只为一层准备，好让「谁动了」可归因 */
+    var PROBES = [
+      ['对照：普通一句台词', null, { who: 'c', k: 'say', txt: '普通一句话。' }, {}],
+      ['行内 *动作* 高亮', 'app16_story2.js', { who: 'c', k: 'say', txt: '*把他拉近* 别走。' }, {}],
+      ['（舞台指令）改入参', 'app34_hints.js', { who: 'c', k: 'say', pk: 1, txt: '（他把杯子挪开）我在。' }, {}],
+      ['付款行 · 没说出口的话', 'app35_pay.js', { who: 'me', k: 'say', txt: '我选这个。', rthink: '其实我想说……' }, { _snapId: 1 }],
+      ['电话卡 · 接听按钮', 'app98_story.js', { who: 'c', k: 'say', txt: '（电话响了）', call98: 'c' }, {}],
+      ['编辑过 · 小标签', 'app73_features.js', { who: 'c', k: 'say', txt: '改过的一句。', edited: 1 }, {}],
+      ['贴纸 / 纯表情放大', 'app18_promo.js', { who: 'c', k: 'say', txt: '🌙' }, {}],
+      ['未接来电', 'app20_fx_booth.js', { who: 'c', k: 'missed', txt: '未接来电' }, {}],
+      ['撤回', 'app37_hooks.js', { who: 'c', k: 'xrecall', rw: 'c', txt: '撤回' }, {}],
+      ['拒绝', 'app42_decline.js', { who: 'c', k: 'declined', cid: 'c', txt: '拒绝' }, {}],
+      ['视觉小说行', 'app96_social.js', { who: 'c', k: 'vn96', txt: '视觉小说行' }, {}]
+    ];
+
+    var outP = [];
+    for (var p = 0; p < PROBES.length; p++) {
+      var name = PROBES[p][0], layer = PROBES[p][1], m = PROBES[p][2], patch = PROBES[p][3] || {};
+      var th = {
+        id: 'probe', wid: 'w_snap', cast: ['c'], msgs: [m],
+        pk: { as: 'c', ch: 1, q: [], stop: null, picks: {} },
+        love: { c: 10 }, addr: null, said: []
+      };
+      Object.keys(patch).forEach(function (k) { th[k] = patch[k] });
+      var before = hitMap(), html = '';
+      try { html = String(w.msgHTML(m, 0, th) || '') } catch (e) { html = 'ERR ' + (e && e.message) }
+      outP.push({ name: name, layer: layer, fired: delta(before, hitMap()), html: html.slice(0, 500) });
+    }
+
+    probe.textContent = 'MSGKIND_JSON:' + JSON.stringify({
+      probes: outP,
+      layers: MK.items.map(function (x) {
+        return { name: x.name, cls: x.cls, kinds: x.kinds, hit: x.hit, nextCalled: x.nextCalled, err: x.err }
+      })
+    });
+    probe.setAttribute('data-done', '1');
+  })();
 }, 9000);
 </script>
