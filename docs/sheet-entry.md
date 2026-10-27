@@ -43,41 +43,46 @@ closeSheet     app1_core.js:45 · 被包过 1 层（app64_entry.js:62）· 直�
 | `paySheet` / `shareSheet` / `m2Sheet` 等其余 | 0 | 3–11 |
 
 **`menuSheet` 被 8 个文件各包一层**。它不是最大的那个数（`msgHTML` 是 20 层、剧本指令是 26 层），
-但它是**同一个具名函数上的最多层**，而且这 7 层是同一种形状：
+但它是**同一个具名函数上的最多层**，而且这 8 层里有 7 层是同一种形状：
 `const _menuSheetNN=menuSheet; menuSheet=function(){_menuSheetNN(); …加一块 UI…}`。
 
 ⇒ 于是「菜单里到底有哪些项」这件事，**没有任何一处能回答**。
 要改菜单得读 8 个文件；要删一个项得先确认没有第 5 层又把它加回来。
 （8 层还没到该惊慌的量级 —— 它的价值在于**形状**：再加 5 个功能就变成 12 层，而那时再拆要贵得多。）
 
-## 三、7 层逐层分类（已做完，只读）
+## 三、10 个层逐个定性（已做完，只读）
 
-| 层 | 它动的是什么 | 方式与位置 | 提前 return |
-|---|---|---|---|
-| `app45_rel.js:122` | `.sheet .stack` | `insertAdjacentHTML` **afterbegin**：人设 + 回退按钮 | `if(!th||!st)return;` ← **返回 undefined** |
-| `app46_cp.js:44` | `.sheet [data-rewind]` **里面**的 `<b>` 与 `.grow span` | 改**已有块的文字** | 无 |
-| `app47_chapters.js:33` | `.sheet .stack` | **afterbegin**：章节目录 | 无（条件不满足就跳过） |
-| `app48_clean.js:38` | `.sheet .stack` | **beforeend**：沉浸模式开关 | 无 |
-| `app49_creator.js:200` | `.sheet .stack` | **afterbegin**：回工作台 | 无 |
-| `app95_safety.js:52` | `.sheet .stack` | **beforeend**：举报 AI 回复 / 拉黑 | `if(!th||!st)return r;` ← 返回对了 |
-| `app96_social.js:238` | `.sheet .stack` | **afterbegin**：我的恋爱人格 / 私信 | `if(!th||!st)return r;` ← 返回对了 |
+`grep 'menuSheet\s*='` 一共 10 处。2 处已搬进注册表（`app48` / `app95`，都是 `beforeend`），
+剩下 8 处逐个读完，**动作只有三种**：
 
-三条结论，都不是"感觉"，是逐行读出来的：
+| # | 文件:行 | 动作 | 位置 | 备注 |
+|---|---|---|---|---|
+| 1 | `app11_memory.js:35` | 插「记忆空间」按钮 | **afterbegin** | IIFE 形态（普查曾整族漏） |
+| 2 | `app45_rel.js:122` | 人设 + 回退 + 反馈 + 分享 + 打磨（3 个按钮拼一串） | **afterbegin** | 曾经裸 `return;` 吞返回值 |
+| 3 | `app46_cp.js:44` | **改** `app45` 刚建的 `[data-rewind]` 里的文字 | 改已有块 | **不是加块** ⇒ 不进注册表 |
+| 4 | `app47_chapters.js:33` | 章节目录 | **afterbegin** | |
+| 5 | `app49_creator.js:200` | 回工作台 | **afterbegin** | |
+| 6 | `app77_memory2.js:171` | 记忆 2 按钮 | **afterbegin** | 幂等守卫 `!s.querySelector("[data-m2open]")` |
+| 7 | `app79_ledger.js:138` | 台账按钮 | **afterbegin** | 幂等守卫 `!s.querySelector("[data-ledopen]")` |
+| 8 | `app96_social.js:238` | 恋爱人格 + 私信 | **afterbegin** | |
 
-**① 6 层都往同一个容器 `.sheet .stack` 里塞，而且插入位置分两派。**
-`afterbegin` × 4（app45 / app47 / app49 / app96）· `beforeend` × 2（app48 / app95）。
-四个 `afterbegin` 意味着**每来一个新的就排到最前面** ⇒ 菜单的最终顺序是**加载顺序的倒序**，
-而这件事没有任何一处写着。想调顺序，只能靠调 `parts` 里的文件顺序 —— 或者改某一层用 beforeend。
+⇒ **7 层是 `afterbegin`、1 层是「改别人建的东西」**。这个比例本身就是结论：
+注册表只需要管「按序插」这一件事，`app46` 不属于它。
 
-**② 有一层是"改别人刚建的东西"。**
-`app45` 建出 `[data-rewind]` 那个按钮，`app46` 随后改它里面的文字。
-⇒ 两者是**隐式耦合**：`app45` 的守卫（`if(!th||!st)return`）一旦不成立，`app46` 就安静地什么都不做。
-这种"靠前一层留下 DOM 才能工作"的写法，正是 14 层（更正：7 层）叠起来之后最难查的东西。
+### 执行顺序怎么定（上一轮就栽在这里）
 
-**③ 一处真的 bug：`return;` 吞掉了返回值。**
-6 层里的 5 层写 `const r = _ms.apply(...)` 并在守卫处 `return r`；
-只有 `app45_rel.js:122` 写的是裸 `return;` ⇒ 它的守卫一旦命中，**整条链的返回值变成 undefined**。
-这不影响菜单显示（没人用返回值），但它让「这个函数返回什么」变成一个取决于运行时条件的谜。
+不是文件名顺序，而是**包装 post-work 的顺序 = 注册（加载）顺序**：最外层的包装最先被调用，
+但**最后**才做自己的活 ⇒ post-work 从最内层往外跑。`parts` 里的相对顺序是
+`app11 → app45 → app46 → app47 → app48 → app49 → app77 → app79 → app95 → app96`。
+
+**有一个实证，不是推的**：上一轮把 `45/47/49/96` 搬进注册表后，**`app79` 的按钮跑到了最前面**
+（快照 diff 直接指出来）。这只有在「`app79` 比它们更晚执行」时成立，与 parts 顺序一致。
+
+⇒ 搬的时候按这个顺序登记，7 个 `afterbegin` 逐块插，最终 top→bottom 就是
+`app96 → app79 → app77 → app49 → app47 → app45 → app11`，与今天逐字节相同。
+
+**② 「改别人刚建的东西」那层的隐式耦合**（`app46` 依赖 `app45`）：`app45` 的守卫一不成立，
+`app46` 就安静地什么都不做。这类「靠前一层留下 DOM 才能工作」的写法，是这些层叠起来之后最难查的。
 
 ## 四、快照闸（已造好并挂进 check-all，第 41 套）
 
