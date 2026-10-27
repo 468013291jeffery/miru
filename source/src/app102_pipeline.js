@@ -45,7 +45,7 @@
       const t0 = Date.now();
       const fin = (ok, why) => {
         if (done) return; done = true; clearTimeout(tm);
-        log({ t: Date.now(), ev: ok ? "said" : "silent", who: who, len: txt.length, ms: Date.now() - t0, why: why || "" });
+        log({ t: Date.now(), ev: ok ? "said" : "silent", who: who, k: String((msg && msg.k) || ""), len: txt.length, ms: Date.now() - t0, why: why || "" });
         if (ok) D.stats.said++; else D.stats.silent++;
         res({ ok: !!ok, why: why || "", ms: Date.now() - t0 });
       };

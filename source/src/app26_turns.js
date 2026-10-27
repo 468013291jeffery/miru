@@ -11,7 +11,7 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];const isBox=L&&L.k
   if(isBox&&!L.say){let j=L.parts.length;while(j>0&&L.parts[j-1].who===m.who&&L.parts[j-1].k!=="event")j--;
    if(j>0){const mine=L.parts.slice(j);L.parts=L.parts.slice(0,j);L.txt=L.parts.map(p=>p.txt||"").join(" ");save();boxRedraw(th,i);
     appendMsg(th,{who:"n",k:"box",pk:1,parts:mine,say:{who:m.who,txt:m.txt},txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});
-    if(curT===th.id){try{chatBgSet(m.who,poseOf(m))}catch(_){}if(S.autoVoice)speak(m.txt,m.who)}return}}
+    if(curT===th.id){try{chatBgSet(m.who,poseOf(m))}catch(_){}if(S.autoVoice&&m.k==="say"&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}}return}}
   return _pkAppend26(th,m)}
  if(m&&isNarr(m)&&isBox&&L.say){const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
   appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});return}
