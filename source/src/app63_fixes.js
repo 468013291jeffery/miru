@@ -16,6 +16,6 @@ function momDedupe(){const L=S.moments||[];if(L.length<2)return;const keep=[],by
   /* merge comments into the copy we keep (the newer one comes first in the list) */
   const ids=new Set((o.cm||[]).map(c=>c.id));(p.cm||[]).forEach(c=>{if(!ids.has(c.id))(o.cm=o.cm||[]).push(c)});o.likes=Math.max(o.likes||0,p.likes||0)});
  if(keep.length!==L.length){S.moments=keep;save()}}
-try{momDedupe()}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app63_fixes:L19",function(){momDedupe()});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xpsave]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xpsave];if(!m)return;
  const txt=String(Lz(m.txt)||"").trim();if((S.moments||[]).some(p=>String(p.txt||"").trim()===txt)){m.saved=1;save();e.stopImmediatePropagation();toast(CL()==="zh"?"已经在你的动态里了":"Already in your moments");renderChat()}},true);

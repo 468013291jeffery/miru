@@ -68,7 +68,7 @@ else { const _renderChat86 = renderChat; renderChat = function () { const r = _r
 .bt86 button{width:22px;height:20px;padding:0;border:0;border-radius:6px;background:rgba(255,255,255,.07);font-size:11px;line-height:20px;opacity:.6;cursor:pointer}
 .bt86 button:hover,.bt86 button:active{opacity:1;background:rgba(255,255,255,.16)}`;document.head.appendChild(st)})();
 /* 5) read-aloud on by default (once), and its 🔊/🔇 switch visible again in the chat header */
-try{if(!S.av86){S.av86=1;S.autoVoice=true;save()}}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app86_voicefix:L71",function(){if(!S.av86){S.av86=1;S.autoVoice=true;save()}});
 (function(){const st=document.createElement("style");st.textContent=`#s-chat.clean .chead .vtog{display:grid!important;place-items:center}`;document.head.appendChild(st)})();
 /* 6) regenerate a reply: 3 free a day, then 1💎 (one text-model call ≈ ¥0.01–0.02 → rounded up to 1💎);
       and faster — a redo reuses the memories already recalled for this turn instead of waiting up to 2.5s again */
@@ -76,7 +76,7 @@ const RG_FREE=3;
 window.addEventListener("click",e=>{const x=e.target.closest("[data-rg73]");if(!x||busy)return;const d=today();S.rgDay=S.rgDay&&S.rgDay.d===d?S.rgDay:{d,n:0};
  if(S.rgDay.n<RG_FREE){S.rgDay.n++;save();const left=RG_FREE-S.rgDay.n;toast(ttsZh()?"↻ 重新生成 · 今天还剩 "+left+" 次免费":"↻ Regenerating · "+left+" free left today");return}
  if(!spend(PRICES.regen||1,"retry")){e.stopImmediatePropagation();e.preventDefault()}},true);
-try{PRICES.regen=1}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app86_voicefix:L79",function(){PRICES.regen=1});
 reply=(function(orig){return async function(th,ctx,silent){if(typeof REDO73!=="undefined"&&REDO73&&!silent&&typeof m78recall==="function"){const r=m78recall;m78recall=async()=>{};try{return await orig.apply(this,arguments)}finally{m78recall=r}}return orig.apply(this,arguments)}})(reply);
 /* 7) longer lines get the real voice too (server accepts 400 chars), and a few failed requests no longer switch to the device voice for 5 minutes */
 ttsSpeakable=function(text){const s=String(text||"").replace(/[*()（）\s]/g,"");return s.length>=2&&s.length<=400};

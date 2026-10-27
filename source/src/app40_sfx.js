@@ -2,10 +2,10 @@
 /* 0 · iPhone silent switch mutes Web Audio unless an <audio> element is playing → start a silent loop on the first tap */
 let AU_OK=false;
 function audioUnlock(){if(AU_OK)return;AU_OK=true;
- try{if(navigator.audioSession)navigator.audioSession.type="playback"}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app40_sfx:L5",function(){if(navigator.audioSession)navigator.audioSession.type="playback"});
  try{const a=document.createElement("audio");a.setAttribute("playsinline","");a.loop=true;a.volume=.01;
   a.src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";document.body.appendChild(a);const p=a.play();if(p&&p.catch)p.catch(()=>{})}catch(_){}
- try{if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();if(BGM.ctx&&BGM.ctx.state!=="running")BGM.ctx.resume()}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app40_sfx:L8",function(){if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();if(BGM.ctx&&BGM.ctx.state!=="running")BGM.ctx.resume()});
  try{const th=S.threads[curT];if(th&&bgmOn()&&$("#s-chat")&&!$("#s-chat").hidden&&typeof bgmForThread==="function")bgmForThread(th)}catch(_){}}
 ["pointerdown","touchend","click","keydown"].forEach(ev=>document.addEventListener(ev,()=>{audioUnlock();try{if(BGM.ctx&&BGM.ctx.state==="suspended")BGM.ctx.resume()}catch(_){}},{capture:true,passive:true}));
 /* first time in a chat: a small hint that the music is on and can be turned off */

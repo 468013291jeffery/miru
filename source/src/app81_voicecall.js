@@ -16,9 +16,9 @@ function vcT(k){return (VC_T[vcLang()]||VC_T.en)[k]}
 function vcSys(c,th){const zh=vcLang()==="zh",L=[];
  L.push("You are "+c.n+(c.vibe?" ("+Lz(c.vibe)+")":"")+", on a private phone call with "+(me()||"the user")+". This is a voice call: everything you output is spoken aloud by your own voice.");
  if(c.bio)L.push("WHO YOU ARE: "+String(Lz(c.bio)).slice(0,600));
- try{if(th&&th.sum&&th.sum.t)L.push("STORY SO FAR: "+String(th.sum.t).slice(0,1200))}catch(_){}
- try{if(th&&typeof memBlock==="function")L.push(String(memBlock(th)).slice(0,1800))}catch(_){}
- try{if(th){const last=th.msgs.filter(m=>m.k==="say"&&m.txt).slice(-8).map(m=>(m.who==="me"?(me()||"User"):(ch(m.who)?ch(m.who).n:m.who))+": "+String(m.txt).slice(0,160));if(last.length)L.push("LAST THINGS SAID IN THE STORY:\n"+last.join("\n"))}}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L19",function(){if(th&&th.sum&&th.sum.t)L.push("STORY SO FAR: "+String(th.sum.t).slice(0,1200))});
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L20",function(){if(th&&typeof memBlock==="function")L.push(String(memBlock(th)).slice(0,1800))});
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L21",function(){if(th){const last=th.msgs.filter(m=>m.k==="say"&&m.txt).slice(-8).map(m=>(m.who==="me"?(me()||"User"):(ch(m.who)?ch(m.who).n:m.who))+": "+String(m.txt).slice(0,160));if(last.length)L.push("LAST THINGS SAID IN THE STORY:\n"+last.join("\n"))}});
  L.push("HOW TO TALK: stay fully in character. Speak like a real late-night phone call — 1 to 3 short sentences, natural pauses, contractions, a little guarded. No narration, no stage directions, no actions in brackets, no emoji, no lists. React to what they actually said (you hear their voice — tone matters). Ask something back sometimes. Never say you are an AI or a model. Keep it PG-13: tender and charged is fine, nothing explicit; if they push past that, deflect in character.");
  L.push("Speak "+VC_LN[vcLang()]+" only.");return L.join("\n\n")}
 /* ---------- audio out: schedule PCM16 chunks ---------- */

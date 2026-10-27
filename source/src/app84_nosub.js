@@ -9,7 +9,7 @@ noSub84();
 const _save84=save;save=function(){noSub84();return _save84.apply(this,arguments)};
 setInterval(noSub84,3000);
 /* memory: the old member tier is the baseline for everyone; deep memory per story is cheap (its extra prompt costs pennies) */
-try{memTier=function(th){if(th&&S.deepMem&&S.deepMem[th.id])return "deep";return "plus"}}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app84_nosub:L12",function(){memTier=function(th){if(th&&S.deepMem&&S.deepMem[th.id])return "deep";return "plus"}});
 transcript=(function(orig){return function(th){const p=S.plus;S.plus=true;try{return orig.apply(this,arguments)}finally{S.plus=p}}})(transcript);
 /* the recharge sheet */
 paySheet=function(why){const head=why?t("pay.why."+why):t("pay.h"),zh=CL()==="zh";const first=!S.firstBuy;
