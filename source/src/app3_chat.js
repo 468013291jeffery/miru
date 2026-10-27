@@ -643,14 +643,17 @@ async function playBeats(th,r,ctx,silent){
  for(const b of beats){if(!String(b.text||"").trim())continue;   // 空拍不播（2026-10-27：存档里出现过一条空台词）
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
-  m._voiced=1;appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
+  /* 2026-10-27（第二次修）：**别在这里无条件打 `_voiced`**。真正念不念由下面那段判断
+     （`canSpeak` / 是不是 say / 是不是角色 / 退避计数），这里先打标会让兜底挂钩跳过它
+     ⇒ 条件不满足时这条台词永远不发声、也不留痕。改成：**下面真念了才打标**。 */
+  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
   /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
     ③ 连续两句「4 秒半都没出声」就退回原来的定时节奏，绝不让一个坏掉的 TTS 把整轮对话拖住。 */
   let WAITED=false;
   if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
-   INLINE_SPOKE=true;WAITED=true;
+   INLINE_SPOKE=true;WAITED=true;if(m)m._voiced=1;   // 真要念了才打标（兜底挂钩就不再重复念）
    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L630",function(){voiceCount(1)});
    /* ⚠️ 上限必须 **比 TTS 自己的回退时限长**：服务器 TTS 要 7~8 秒才认「这次没声、转设备语音」，
       而下一句的 speak() 会先 stopVoice() 把上一句掐掉。上限设 4.5 秒时（第一版）每句都在出声前
