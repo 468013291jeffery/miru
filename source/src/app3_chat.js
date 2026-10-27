@@ -178,20 +178,19 @@ function msgHTML(m,i,th){
  if(m.k==="end"){const w=wd(th.wid),e=w&&w.pack&&w.pack.endings[m.e];if(!e)return "";const ln=e.line;
   return '<div class="m-end"><div class="eyebrow" style="color:var(--gold)">🏁 '+t("pk.endingH",{k:m.e})+'</div><h3>'+esc(Lz(e.t))+'</h3><p>'+esc(Lz(e.txt))+'</p>'+
    (ln&&ch(ln.who)?'<div class="m-endl">'+avatar(ln.who,30)+'<q>'+esc(S.lang==="zh"?ln.zh:ln.en)+'</q></div>':'')+'<p class="xs faint" style="margin-top:10px">'+t("pk.endFound",{a:endingsFound(th.wid),b:3})+'</p></div>'}
- const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
- const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
-  '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
- if(m.who==="n")return '<div class="m-narr" data-mi="'+i+'">'+esc(m.txt)+'</div>'+tools;
- if(m.k==="say")return sayHTML(m,i,th)+tools;  /* 顺序是量出来的：旁白必须在它上面（旁白也是 k:"say"），pk 段必须在它下面（否则 self 走不到这里）。 */
  if(th.pk&&m.who===th.pk.as&&th.pk.as!=="watch"&&th.pk.as!=="side"&&m.who!=="me"){const c0=ch(m.who),lab='<small class="asme">'+esc(t("pk.youAre",{n:first(c0.n)}))+'</small>';
   if(m.k==="act")return '<div class="m-act me" data-mi="'+i+'">'+lab+esc(m.txt)+'</div>';
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
   return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
+ const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
+ const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
+  '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
  if(m.k==="react")return '<div class="m-react" style="margin:6px 0 10px;padding-left:10px;border-left:2px solid var(--line);opacity:.72;font-size:13px">'+esc(m.txt)+'</div>';
  if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+'</div>';
  if(m.k==="pic")return '<div class="m-pic'+(m.locked?" lk":"")+'"><img src="'+esc(m.src)+'" alt="">'+(m.locked?'<button class="pk" data-unpic="'+i+'"><b>📷 '+t("pay.pic",{n:who(m,th)})+'</b><span>💎 1 · '+t("pay.unlock")+'</span></button>':'')+'</div>';
  if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub bubble lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
+ if(m.who==="n")return '<div class="m-narr" data-mi="'+i+'">'+esc(m.txt)+'</div>'+tools;
  if(m.k==="dir")return '<div class="m-dir">🎬 '+esc(m.txt)+'</div>';
 /* ===== 说话人分派：`say` 只有一处决定「长什么样」（2026-10-27，Ann 定）=====
    以前 k:`say` 被两层抢认领（app17 管别人、app26 管你扮演的角色），条件是互相排除写成的，
@@ -211,6 +210,7 @@ function sayHTML(m,i,th){
  if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub bubble"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
+ if(m.k==="say")return sayHTML(m,i,th)+tools;
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
@@ -551,7 +551,8 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
-  "HEAT CEILING — "+(function(){try{const raw=(typeof emotionNorm==="function"?emotionNorm({heat:S.heat}).heat:String(S.heat||"steamy"));const g=(typeof heatGated==="function")?heatGated(raw):raw;return String(g).toUpperCase()}catch(_){return String(S.heat||"steamy").toUpperCase()}})()+": "+HEAT_RULE[(typeof emotionNorm==="function"?(function(){try{return emotionNorm({heat:S.heat}).heat}catch(_){return S.heat}})():S.heat)],
+  "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
+  typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
   "HOW TO WRITE (this is what makes it feel human):",
   "- React to the exact words just used; quote or twist one. Never a generic reply that would fit any message.",
   "- What a character says and what they feel should not match: the spoken line guards, the private thought gives them away.",
@@ -567,7 +568,7 @@ async function reply(th,ctx,silent){
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: exactly 3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
  if(liveOn()){

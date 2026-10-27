@@ -5,7 +5,7 @@ const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
-function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
+function cleanState(hard){try{/* 云端存档缺默认项时补齐，首页不会因 S.xxx.heir 读空崩溃 */for(const k of Object.keys(DEF)){if(S[k]==null)S[k]=JSON.parse(JSON.stringify(DEF[k]))}S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
   if(!Array.isArray(th.said)){th.said=th.msgs.filter(m=>m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()).map(m=>String(m.txt).trim()).slice(-60)}
  if(!th.cast.length&&hard)delete S.threads[k]}
