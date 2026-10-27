@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="ae9f6746deba 2026-10-26T20:28Z";
+window.MIRU_BUILD="7b3f6f92b7e0 2026-10-27T04:59Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3058,6 +3058,7 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
+      suggestAfterPick: true,   // 选完官方选项后补一个模型回合，产出新的可选对话
       scriptAsHint: true,        // 预写剧本转成「方向提示」由模型走到那儿（false = 照播）
       dropScriptOnInput: true,   // 玩家一开口，剩下的预写剧本作废（false = 照念）
       minRoundsPerChapter: 20,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
@@ -4288,11 +4289,19 @@ let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
    它的形状不是慢，是**锁没放**。这里兜一层：45 秒还没放开就强制放开，并记一条现场。
    判据（导出存档可见）：`S._stallTrace` 里出现 busy>45s。 */
 setInterval(()=>{try{
- if(!busy||!BUSY_T||Date.now()-BUSY_T<45000)return;
+ if(!busy||!BUSY_T)return;
+ /* ⚠️ 2026-10-27（Ann：「对话没生成完，怎么就开始继续生成对话了」）——
+    第一版只看「锁了多久」，而一轮长回复**本来就可能超过 45 秒**（逐句 2.7 秒 + 等朗读），
+    于是看门狗在一轮跑到一半时把锁解了 ⇒ 她还能再发一条 ⇒ **两个回合叠在一起**。
+    现在改成**看有没有进展**：只要这一轮还在往对话里落新消息（最后一条消息的 at 在 45 秒内），
+    就把计时的起点往前推，不开锁。真正「卡住不动」才开。 */
+ const th=S.threads[curT];
+ const lastAt=(th&&th.msgs&&th.msgs.length)?(th.msgs[th.msgs.length-1].at||0):0;
+ if(Date.now()-Math.max(BUSY_T,lastAt)<45000)return;
  busy=false;BUSY_T=0;try{typing(false)}catch(_){}
- S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s"});if(S._stallTrace.length>20)S._stallTrace.shift();
+ S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s (no new message)"});if(S._stallTrace.length>20)S._stallTrace.shift();
  try{save()}catch(_){}
- try{toast(S.lang==="zh"?"刚才那一轮卡住了，已经放开 —— 可以再发一次":"That turn got stuck; it is released — send again")}catch(_){}
+ try{toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")}catch(_){}
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
@@ -4566,11 +4575,17 @@ function streamPreview(piece){
 }
 
 /* send from composer */
-function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩家自己敲的才算「珍贵」
+function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对话里（避免重复）
  const th=S.threads[curT];if(!th)return;txt=(txt||"").trim();if(!txt)return;
  /* 2026-10-27 Ann 试玩：上一轮还没说完时点选项，原来**静默丢弃**（选项已清空、话没发出）。
     她看到的就是「我选了，他毫无反应」。改成排队，等这一轮结束自动发出去。 */
- if(busy){SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed});try{toast(S.lang==="zh"?"记下了，这一轮说完就发":"Queued - sends after this reply")}catch(_){}return}
+ if(busy){
+  /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
+     现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
+  try{toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")}catch(_){}
+  return}
  if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
@@ -4771,7 +4786,7 @@ async function reply(th,ctx,silent){
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
  if(!silent){busy=false;BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed)}catch(_){}},60)}}catch(_){}
+  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}}catch(_){}
  }}
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
@@ -4801,13 +4816,27 @@ function fallback(th,ctx){
 async function playBeats(th,r,ctx,silent){
  const valid=new Set(speakersOf(th).concat(["n"]));
  const beats=r.beats.filter(b=>b&&b.text&&valid.has(b.who)).slice(0,10);
+ /* 2026-10-27（Ann：「生成语音大概晚了 2 秒」）——预取以前只接在剧本行（pkAppend→ttsPrefetch），
+    **AI 生成的台词从来没有预取**：走到 playBeats 时才一句一句现场请求服务器 TTS，
+    每句都要等首字 ≈ 2 秒。这里在**第一句出现之前**先把前两句取起来（失败静默，不挡任何流程）。 */
+ try{
+  if(typeof ttsOn==="function"&&ttsOn()&&S.voice&&S.voice.auto&&typeof ttsFetch==="function"){
+   let warm=0;
+   for(const b of beats){ if(warm>=2)break; if(!b||!b.text)continue;
+    const txt=asText70(b.text); if(!txt)continue;
+    if(th.pk&&b.who===th.pk.as)continue;
+    if(typeof ttsSpeakable==="function"&&!ttsSpeakable(txt))continue;
+    warm++; try{ ttsFetch(txt,b.who==="n"?"n":b.who) }catch(_){}
+   }
+  }
+ }catch(_){}
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
  const toSpeak=[];let INLINE_SPOKE=false,silentStrikes=0;
  const canSpeak=(()=>{try{return !!(S.voice&&S.voice.auto&&(typeof voiceAutoOK!=="function"||voiceAutoOK()))}catch(_){return false}})();
  for(const b of beats){if(!String(b.text||"").trim())continue;   // 空拍不播（2026-10-27：存档里出现过一条空台词）
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
-  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
+  m._voiced=1;appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
   /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
@@ -4823,7 +4852,7 @@ async function playBeats(th,r,ctx,silent){
    await new Promise(res=>{let spoke=false,fin=false;
     const go=()=>{if(fin)return;fin=true;clearTimeout(tm);res()};
     const tm=setTimeout(()=>{if(!spoke)silentStrikes++;go()},cap);
-    try{speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
+    try{(typeof D!=="undefined"&&D.say)?D.say(m).then(r=>{if(r&&r.ok)spoke=true;go()}):speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
    });
   }
   /* 2026-10-27 · **节奏不能依赖朗读**（Ann：「为什么刷得那么快，一下就过去了」）。
@@ -4885,7 +4914,17 @@ document.addEventListener("click",e=>{let x;
   v=v.trim(); if(!v)return;
   x.classList.add("sel");
   setSugg([]);
+  /* 2026-10-27 Ann：「点一项，还是什么都不显示」。⇒ 不允许再出现「点了没反应」这种无信息状态：
+     300ms 后如果对话一条都没涨，就当场说出来（并提示导出存档），别让她对着屏幕猜。 */
+  const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
+  setTimeout(()=>{try{
+    const th2=S.threads[curT];const n1=(th2&&th2.msgs)?th2.msgs.length:-1;
+    if(n1===_n0){
+      const why=(typeof unitsLeft==="function"&&typeof aiCost==="function"&&unitsLeft()<aiCost())?"（额度不够，可能弹了充值面板）":"";
+      toast(S.lang==="zh"?("这句没进对话"+why+" —— 麻烦导出一次存档，我按记录查"):("That line didn't land"+why+" — export a save so I can trace it"));
+    }
+  }catch(_){}},300);
   return}
  if(e.target.closest("[data-ideas]")){const th=S.threads[curT];if(sugg.length){setSugg(sugg);return}
   const lang=CL();setSugg([0,1,2].map(()=>pickNR(SUGG_FB[lang],"sg")));return}
@@ -6856,7 +6895,18 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
   if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
   else{th.pk.st="choose";th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
  }
- else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))}
+ else if(a&&a.indexOf("pick:")===0){
+  packAfterPick(th,a.slice(5));
+  /* 2026-10-27 Ann：选完之后没有新的可选对话 —— 因为这一段全程不找模型。
+     这里补一个回合，让角色接住这个选择并给出新的三条建议。 */
+  try{
+   const on=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.suggestAfterPick!==false);
+   const live=(typeof liveOn==="function")&&liveOn();
+   if(on&&live&&!busy&&typeof reply==="function"){
+    setTimeout(()=>{try{ if(!busy&&curT===th.id) reply(th,{kind:"cont"}); }catch(_){}},450);
+   }
+  }catch(_){}
+ }}
 function stopResolve(th,extra){if(!th||!th.pk||!th.pk.stop)return;if(PKWAIT[th.id]){PKWAIT[th.id](extra||[]);return}
  th.pk.q=th.pk.q||[];th.pk.q.shift();th.pk.q.unshift(...(extra||[]));th.pk.stop=null;th.pk.go=0;save();packRun(th)}
 function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk.as).forEach(c=>{loveWrite(th,c,d,"pack:"+k)})}
@@ -7271,6 +7321,9 @@ function deMeta(s){
  return x;
 }
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
+ /* 2026-10-27：这一条下面会自己把 say 推进语音队列 ⇒ 先打 `_voiced`，
+    免得 `appendMsg` 的兜底挂钩（app102_pipeline.js）再念一遍（那是双声）。 */
+ if(m&&m.k==="say")m._voiced=1;
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
  try{
@@ -7334,7 +7387,9 @@ msgHTML=function(m,i,th){
 appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  const box=$("#msgs");if(curT===th.id&&box&&!$("#s-chat").hidden){const pw=$("#pkwrap"),html=msgHTML(m,th.msgs.length-1,th);
   if(pw&&pw.parentNode===box)pw.insertAdjacentHTML("beforebegin",html);else box.insertAdjacentHTML("beforeend",html);scrollChat()}
- if(S.autoVoice&&m.ai&&ch(m.who)&&curT===th.id)speak(m.txt,m.who)};
+ /* 2026-10-27 Ann：「动作还是会读语音」—— 这里以前对**任何** AI 消息发声（只看 who 是角色），
+    于是 act/think（动作、环境、内心）也被念。现在只念 say，并打 `_voiced` 免得兜底挂钩再念一遍。 */
+ if(S.autoVoice&&m.ai&&m.k==="say"&&ch(m.who)&&curT===th.id&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}};
 const _renderChat2=renderChat;
 renderChat=function(){_renderChat2.apply(this,arguments);const th=S.threads[curT];if(!th)return;
  const box=$("#msgs"),pw=$("#pkwrap");if(box&&pw){box.appendChild(pw);pw.classList.add("inl")}
@@ -7584,7 +7639,7 @@ function pkPart(th,part,txt){const i=th.msgs.length-1,L=th.msgs[i];
 const _pkAppend8=pkAppend;
 pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&L&&L.k==="box"&&L.pk&&!L.say){L.say={who:m.who,txt:m.txt};L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
-  if(curT===th.id){chatBgSet(m.who,poseOf(m));const el=$('#msgs [data-mi="'+i+'"]');if(el){el.outerHTML=msgHTML(L,i,th);scrollChat()}if(S.autoVoice)speak(m.txt,m.who)}return}
+  if(curT===th.id){chatBgSet(m.who,poseOf(m));const el=$('#msgs [data-mi="'+i+'"]');if(el){el.outerHTML=msgHTML(L,i,th);scrollChat()}if(S.autoVoice&&m.k==="say"&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}}return}
  return _pkAppend8(th,m)};
 const _pkDir8=pkDirective;
 pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
@@ -8745,7 +8800,7 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];const isBox=L&&L.k
   if(isBox&&!L.say){let j=L.parts.length;while(j>0&&L.parts[j-1].who===m.who&&L.parts[j-1].k!=="event")j--;
    if(j>0){const mine=L.parts.slice(j);L.parts=L.parts.slice(0,j);L.txt=L.parts.map(p=>p.txt||"").join(" ");save();boxRedraw(th,i);
     appendMsg(th,{who:"n",k:"box",pk:1,parts:mine,say:{who:m.who,txt:m.txt},txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});
-    if(curT===th.id){try{chatBgSet(m.who,poseOf(m))}catch(_){}if(S.autoVoice)speak(m.txt,m.who)}return}}
+    if(curT===th.id){try{chatBgSet(m.who,poseOf(m))}catch(_){}if(S.autoVoice&&m.k==="say"&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}}return}}
   return _pkAppend26(th,m)}
  if(m&&isNarr(m)&&isBox&&L.say){const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
   appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});return}
@@ -17255,6 +17310,121 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
     }
   }catch(_){}
   go();
+})();
+
+/* ================= 对话流：一道缝（2026-10-27 · 设计见 DIALOGUE-PIPELINE.md）=================
+   Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧。」
+   ⇒ 这条链原来被六个文件各自改：显示（appendMsg / app11）· 节奏（pkWait / app28 / playBeats 各一套）·
+   发声（speak 被 app45/app62/app86 各覆盖一次）· 预取（只挂剧本行）。
+
+   这里立三个动词，谁都不必再自己拼：
+     D.pace(msg)          这句该停多久 —— **纯函数**，只依赖文本与设置，不依赖有没有声音
+     D.say(msg)          让它发声 —— 返回 Promise<{ok,why}>，**永不 reject、永不阻塞对话**
+     D.line(th,msg,opt)  一整句：出现 → 发声（say 台词）→ 收尾节奏
+
+   一条铁律写进代码而不是注释：**声音决定"什么时候翻页"，但绝不允许决定"翻不翻页"。**
+   ============================================================= */
+(function(){
+  const D = (window.D = window.D || {});
+  if (D.v === 1) return;
+
+  const S_ = () => (typeof S !== "undefined" ? S : null);
+  function log(e) {
+    try { const s = S_(); if (!s) return; s._voiceLog = s._voiceLog || []; s._voiceLog.push(e); if (s._voiceLog.length > 60) s._voiceLog.shift() } catch (_) {}
+  }
+  function tune(k, dflt) {
+    try { const t = (typeof MIRU_TUNE !== "undefined" && MIRU_TUNE.chat) || {}; return (k in t) ? t[k] : dflt } catch (_) { return dflt }
+  }
+  const voiceOn = () => { try { const s = S_(); return !!(s && s.voice && s.voice.auto && (typeof voiceAutoOK !== "function" || voiceAutoOK())) } catch (_) { return false } };
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- ① 节奏：纯函数 ---------- */
+  D.pace = function (msg) {
+    let read = 1800;
+    try { if (typeof readMs === "function") read = readMs(msg) } catch (_) {}
+    const extra = tune("linePause", 2000);          // Ann：每句再慢一点
+    return Math.min(14000, Math.max(600, read * 0.75 + extra));
+  };
+
+  /* ---------- ② 发声：永不 reject ---------- */
+  D.state = "idle";                                  // idle | playing | speaking
+  D.stats = { lines: 0, said: 0, silent: 0 };
+  D.say = function (msg, opt) {
+    const o = opt || {};
+    const txt = String((msg && msg.txt) || "");
+    const who = String((msg && msg.who) || "n");
+    const cap = Math.min(20000, Math.max(6000, txt.length * 170));
+    return new Promise(res => {
+      let done = false;
+      const t0 = Date.now();
+      const fin = (ok, why) => {
+        if (done) return; done = true; clearTimeout(tm);
+        log({ t: Date.now(), ev: ok ? "said" : "silent", who: who, k: String((msg && msg.k) || ""), len: txt.length, ms: Date.now() - t0, why: why || "" });
+        if (ok) D.stats.said++; else D.stats.silent++;
+        res({ ok: !!ok, why: why || "", ms: Date.now() - t0 });
+      };
+      const tm = setTimeout(() => fin(false, "timeout"), cap);
+      try {
+        if (typeof speak !== "function") return fin(false, "no-speak");
+        speak(txt, who, () => fin(true));
+      } catch (e) { fin(false, "throw:" + String((e && e.message) || e).slice(0, 40)) }
+    });
+  };
+
+  /* ---------- ③ 一整句：出现 → 发声 → 收尾 ----------
+     规则（Ann 要的挂钩）：
+       · 能念 ⇒ **念完才结束这一句**，语音结束对话才继续；念完后再停 linePause，
+       · 不能念 ⇒ 按**阅读速度**停 `D.pace`（关语音就按这套速度走），
+       · 任何情况都不许因为语音失败而卡住。 */
+  D.line = async function (th, msg, opt) {
+    const o = opt || {};
+    if (o.silent) { try { appendMsg(th, msg) } catch (_) {} return { ok: true, said: false, why: "silent" } }
+
+    D.state = "playing";
+    if (o.preDelay) await sleep(o.preDelay);
+    if (msg) msg._voiced = 1;            // 这一条由 D.line 负责发声 ⇒ 别让 appendMsg 的兜底再念一遍
+    try { appendMsg(th, msg) } catch (_) {}
+    D.stats.lines++;
+
+    let said = false, why = "";
+    const speakable = msg && msg.k === "say" && msg.who !== "n" && msg.who !== "sys" && (() => { try { return !!ch(msg.who) } catch (_) { return false } })();
+    if (speakable && voiceOn()) {
+      D.state = "speaking";
+      const r = await D.say(msg);
+      said = r.ok; why = r.why;
+      D.state = "playing";
+      if (said) { const extra = tune("linePause", 2000); if (extra > 0) await sleep(extra) }
+    }
+    if (!said) await sleep(D.pace(msg));
+    return { ok: true, said: said, why: why };
+  };
+
+  D.v = 1;
+
+  /* ---------- ④ 兜底挂钩：任何「角色说的一句话」落进来，只要没人声明已经念过，就由这里念 ----------
+     审计（`tools/say-voice-audit.mjs`）时发现 20 个产生 say 的位置里 14 个没挂语音：
+     自由模式的 agent（app97/app98）、剧本直接 push（app12）、sideLine（app45）……
+     **逐个补是补不完的** —— 他们各自都在正确的时机 appendMsg，缺的只是"顺手念一声"。
+     ⇒ 把这件事收到唯一入口上：`appendMsg` 见到「角色 + k=say + 没被标 _voiced」就念。
+     已经自己念过的路径（`D.line` / `playBeats` / `pkAppend`）在 append 之前打 `_voiced=1`，不会重复。 */
+  (function () {
+    try {
+      if (typeof appendMsg !== "function" || appendMsg.__dvoiced) return;
+      const orig = appendMsg;
+      appendMsg = function (th, m) {
+        const r = orig.apply(this, arguments);
+        try {
+          if (m && m.k === "say" && !m._voiced && m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys"
+              && (typeof ch === "function" && ch(m.who)) && voiceOn()) {
+            m._voiced = 1;
+            D.say(m).catch(function () {});
+          }
+        } catch (_) {}
+        return r;
+      };
+      appendMsg.__dvoiced = 1;
+    } catch (_) {}
+  })();
 })();
 
 </script>

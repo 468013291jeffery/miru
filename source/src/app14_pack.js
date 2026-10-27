@@ -132,7 +132,18 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
   if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
   else{th.pk.st="choose";th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
  }
- else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))}
+ else if(a&&a.indexOf("pick:")===0){
+  packAfterPick(th,a.slice(5));
+  /* 2026-10-27 Ann：选完之后没有新的可选对话 —— 因为这一段全程不找模型。
+     这里补一个回合，让角色接住这个选择并给出新的三条建议。 */
+  try{
+   const on=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.suggestAfterPick!==false);
+   const live=(typeof liveOn==="function")&&liveOn();
+   if(on&&live&&!busy&&typeof reply==="function"){
+    setTimeout(()=>{try{ if(!busy&&curT===th.id) reply(th,{kind:"cont"}); }catch(_){}},450);
+   }
+  }catch(_){}
+ }}
 function stopResolve(th,extra){if(!th||!th.pk||!th.pk.stop)return;if(PKWAIT[th.id]){PKWAIT[th.id](extra||[]);return}
  th.pk.q=th.pk.q||[];th.pk.q.shift();th.pk.q.unshift(...(extra||[]));th.pk.stop=null;th.pk.go=0;save();packRun(th)}
 function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk.as).forEach(c=>{loveWrite(th,c,d,"pack:"+k)})}

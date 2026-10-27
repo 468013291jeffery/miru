@@ -42,6 +42,9 @@ function deMeta(s){
  return x;
 }
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
+ /* 2026-10-27：这一条下面会自己把 say 推进语音队列 ⇒ 先打 `_voiced`，
+    免得 `appendMsg` 的兜底挂钩（app102_pipeline.js）再念一遍（那是双声）。 */
+ if(m&&m.k==="say")m._voiced=1;
  /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
     这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
  try{
@@ -105,7 +108,9 @@ msgHTML=function(m,i,th){
 appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
  const box=$("#msgs");if(curT===th.id&&box&&!$("#s-chat").hidden){const pw=$("#pkwrap"),html=msgHTML(m,th.msgs.length-1,th);
   if(pw&&pw.parentNode===box)pw.insertAdjacentHTML("beforebegin",html);else box.insertAdjacentHTML("beforeend",html);scrollChat()}
- if(S.autoVoice&&m.ai&&ch(m.who)&&curT===th.id)speak(m.txt,m.who)};
+ /* 2026-10-27 Ann：「动作还是会读语音」—— 这里以前对**任何** AI 消息发声（只看 who 是角色），
+    于是 act/think（动作、环境、内心）也被念。现在只念 say，并打 `_voiced` 免得兜底挂钩再念一遍。 */
+ if(S.autoVoice&&m.ai&&m.k==="say"&&ch(m.who)&&curT===th.id&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}};
 const _renderChat2=renderChat;
 renderChat=function(){_renderChat2.apply(this,arguments);const th=S.threads[curT];if(!th)return;
  const box=$("#msgs"),pw=$("#pkwrap");if(box&&pw){box.appendChild(pw);pw.classList.add("inl")}

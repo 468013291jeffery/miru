@@ -31,11 +31,19 @@ let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
    它的形状不是慢，是**锁没放**。这里兜一层：45 秒还没放开就强制放开，并记一条现场。
    判据（导出存档可见）：`S._stallTrace` 里出现 busy>45s。 */
 setInterval(()=>{try{
- if(!busy||!BUSY_T||Date.now()-BUSY_T<45000)return;
+ if(!busy||!BUSY_T)return;
+ /* ⚠️ 2026-10-27（Ann：「对话没生成完，怎么就开始继续生成对话了」）——
+    第一版只看「锁了多久」，而一轮长回复**本来就可能超过 45 秒**（逐句 2.7 秒 + 等朗读），
+    于是看门狗在一轮跑到一半时把锁解了 ⇒ 她还能再发一条 ⇒ **两个回合叠在一起**。
+    现在改成**看有没有进展**：只要这一轮还在往对话里落新消息（最后一条消息的 at 在 45 秒内），
+    就把计时的起点往前推，不开锁。真正「卡住不动」才开。 */
+ const th=S.threads[curT];
+ const lastAt=(th&&th.msgs&&th.msgs.length)?(th.msgs[th.msgs.length-1].at||0):0;
+ if(Date.now()-Math.max(BUSY_T,lastAt)<45000)return;
  busy=false;BUSY_T=0;try{typing(false)}catch(_){}
- S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s"});if(S._stallTrace.length>20)S._stallTrace.shift();
+ S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s (no new message)"});if(S._stallTrace.length>20)S._stallTrace.shift();
  try{save()}catch(_){}
- try{toast(S.lang==="zh"?"刚才那一轮卡住了，已经放开 —— 可以再发一次":"That turn got stuck; it is released — send again")}catch(_){}
+ try{toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")}catch(_){}
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
@@ -309,11 +317,17 @@ function streamPreview(piece){
 }
 
 /* send from composer */
-function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩家自己敲的才算「珍贵」
+function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对话里（避免重复）
  const th=S.threads[curT];if(!th)return;txt=(txt||"").trim();if(!txt)return;
  /* 2026-10-27 Ann 试玩：上一轮还没说完时点选项，原来**静默丢弃**（选项已清空、话没发出）。
     她看到的就是「我选了，他毫无反应」。改成排队，等这一轮结束自动发出去。 */
- if(busy){SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed});try{toast(S.lang==="zh"?"记下了，这一轮说完就发":"Queued - sends after this reply")}catch(_){}return}
+ if(busy){
+  /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
+     现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
+  try{toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")}catch(_){}
+  return}
  if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
@@ -514,7 +528,7 @@ async function reply(th,ctx,silent){
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
  if(!silent){busy=false;BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed)}catch(_){}},60)}}catch(_){}
+  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}}catch(_){}
  }}
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
@@ -544,13 +558,27 @@ function fallback(th,ctx){
 async function playBeats(th,r,ctx,silent){
  const valid=new Set(speakersOf(th).concat(["n"]));
  const beats=r.beats.filter(b=>b&&b.text&&valid.has(b.who)).slice(0,10);
+ /* 2026-10-27（Ann：「生成语音大概晚了 2 秒」）——预取以前只接在剧本行（pkAppend→ttsPrefetch），
+    **AI 生成的台词从来没有预取**：走到 playBeats 时才一句一句现场请求服务器 TTS，
+    每句都要等首字 ≈ 2 秒。这里在**第一句出现之前**先把前两句取起来（失败静默，不挡任何流程）。 */
+ try{
+  if(typeof ttsOn==="function"&&ttsOn()&&S.voice&&S.voice.auto&&typeof ttsFetch==="function"){
+   let warm=0;
+   for(const b of beats){ if(warm>=2)break; if(!b||!b.text)continue;
+    const txt=asText70(b.text); if(!txt)continue;
+    if(th.pk&&b.who===th.pk.as)continue;
+    if(typeof ttsSpeakable==="function"&&!ttsSpeakable(txt))continue;
+    warm++; try{ ttsFetch(txt,b.who==="n"?"n":b.who) }catch(_){}
+   }
+  }
+ }catch(_){}
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
  const toSpeak=[];let INLINE_SPOKE=false,silentStrikes=0;
  const canSpeak=(()=>{try{return !!(S.voice&&S.voice.auto&&(typeof voiceAutoOK!=="function"||voiceAutoOK()))}catch(_){return false}})();
  for(const b of beats){if(!String(b.text||"").trim())continue;   // 空拍不播（2026-10-27：存档里出现过一条空台词）
   const m={who:b.who,k:b.who==="n"?"act":(["say","act","think"].includes(b.kind)?b.kind:"say"),txt:asText70(b.text).slice(0,500),at:Date.now(),ai:1};if(b.pose&&POSES.includes(b.pose))m.pose=b.pose;
   if(!silent)await new Promise(res=>setTimeout(res,(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.beatMs)||700));  // 380 → 700（2026-10-27 Ann：全闪过去）
-  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
+  m._voiced=1;appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
   /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
@@ -566,7 +594,7 @@ async function playBeats(th,r,ctx,silent){
    await new Promise(res=>{let spoke=false,fin=false;
     const go=()=>{if(fin)return;fin=true;clearTimeout(tm);res()};
     const tm=setTimeout(()=>{if(!spoke)silentStrikes++;go()},cap);
-    try{speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
+    try{(typeof D!=="undefined"&&D.say)?D.say(m).then(r=>{if(r&&r.ok)spoke=true;go()}):speak(m.txt,m.who,()=>{spoke=true;go()})}catch(_){go()}
    });
   }
   /* 2026-10-27 · **节奏不能依赖朗读**（Ann：「为什么刷得那么快，一下就过去了」）。
@@ -628,7 +656,17 @@ document.addEventListener("click",e=>{let x;
   v=v.trim(); if(!v)return;
   x.classList.add("sel");
   setSugg([]);
+  /* 2026-10-27 Ann：「点一项，还是什么都不显示」。⇒ 不允许再出现「点了没反应」这种无信息状态：
+     300ms 后如果对话一条都没涨，就当场说出来（并提示导出存档），别让她对着屏幕猜。 */
+  const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
+  setTimeout(()=>{try{
+    const th2=S.threads[curT];const n1=(th2&&th2.msgs)?th2.msgs.length:-1;
+    if(n1===_n0){
+      const why=(typeof unitsLeft==="function"&&typeof aiCost==="function"&&unitsLeft()<aiCost())?"（额度不够，可能弹了充值面板）":"";
+      toast(S.lang==="zh"?("这句没进对话"+why+" —— 麻烦导出一次存档，我按记录查"):("That line didn't land"+why+" — export a save so I can trace it"));
+    }
+  }catch(_){}},300);
   return}
  if(e.target.closest("[data-ideas]")){const th=S.threads[curT];if(sugg.length){setSugg(sugg);return}
   const lang=CL();setSugg([0,1,2].map(()=>pickNR(SUGG_FB[lang],"sg")));return}

@@ -34,6 +34,7 @@ var MIRU_TUNE = (function () {
     chat: {
       transcript: 50,       // STORY SO FAR 带多少条（普通）——2026-10-25 Ann 拍：20 条只有 4.4 轮，太薄
       transcriptPlus: 80,   // 同上（Plus）
+      suggestAfterPick: true,   // 选完官方选项后补一个模型回合，产出新的可选对话
       scriptAsHint: true,        // 预写剧本转成「方向提示」由模型走到那儿（false = 照播）
       dropScriptOnInput: true,   // 玩家一开口，剩下的预写剧本作废（false = 照念）
       minRoundsPerChapter: 20,   // 本章至少走过几轮玩家发言，才允许弹官方选择（0 = 旧行为）
