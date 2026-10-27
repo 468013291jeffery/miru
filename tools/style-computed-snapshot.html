@@ -1,0 +1,98 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>style computed snapshot</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+/* 样式「生效值」快照（2026-10-27）
+   为什么不能用文本对拍：把 `shell.html` 里 5 次 `.dkwrap` 并成 1 次，**必然改变 CSS 文本**，
+   而那可能正是对的。样式版的判据只能是「生效值不变」= getComputedStyle 的结果逐字节一致。
+
+   做法：**造探针元素**（不依赖 App 当前显示哪一屏，所以不受登录态/章节进度影响），
+   塞进一个离屏但**参与布局**的宿主里，读计算值。合成元素还有个好处：
+   同一条选择器在「相同上下文」下比较，上下文变了才是真变化。
+
+   ⚠️ 三个坑（写的时候就避开）：
+     ① 宿主不能 `display:none` —— 那样所有计算值都是空串，闸会「全空但一致」地假绿。
+     ② 不读 width / height —— 它们依赖字体度量；本机有一条字体请求失败（woff2 ERR_CONNECTION_CLOSED）
+        时它们会变，那是环境抖动，不是样式回归。
+     ③ background-image 里的 data URI 截断，否则基线里有几百 KB 的一次性串。 */
+var PROPS = ['display', 'position', 'color', 'background-color', 'background-image',
+  'font-size', 'font-weight', 'line-height', 'letter-spacing', 'text-align', 'white-space',
+  'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+  'margin-top', 'margin-left', 'border-top-width', 'border-top-color', 'border-top-left-radius',
+  'opacity', 'transform', 'z-index', 'flex-direction', 'gap', 'overflow'];
+
+/* [探针名, 选择器(取这个片段里的哪个元素), 片段] —— 覆盖 census 里重复定义的重灾区 + 主路径 */
+var PROBES = [
+  ['dkwrap', '.dkwrap', '<div class="dkwrap"></div>'],
+  ['dk', '.dk', '<div class="dkwrap"><div class="dk"></div></div>'],
+  ['dkc', '.dkc', '<div class="dkwrap"><div class="dk"><div class="dkc"></div></div></div>'],
+  ['dkc-h2', '.dkc h2', '<div class="dkwrap"><div class="dk"><div class="dkc"><h2>x</h2></div></div></div>'],
+  ['dkc-p', '.dkc p', '<div class="dkwrap"><div class="dk"><div class="dkc"><p>x</p></div></div></div>'],
+  ['dkwrap-big', '.dkwrap.big .dk', '<div class="dkwrap big"><div class="dk"></div></div>'],
+  ['story', '.story', '<div class="stories"><div class="story"><div class="ring"></div><div class="av"></div><b>x</b></div></div>'],
+  ['status', '.status', '<div class="status"></div>'],
+  ['tabbar', '.tabbar', '<div class="tabbar"></div>'],
+  ['chh', '.chh', '<div id="s-chat"><div class="chead"><div class="chh"></div></div></div>'],
+  ['chlist', '.chlist', '<div id="s-chat"><div class="chlist"></div></div>'],
+  ['cam', '.cam', '<div class="cam"></div>'],
+  ['fxshake', '.fxshake', '<div class="fxshake"></div>'],
+  ['m-row', '.m-row', '<div class="msgs"><div class="m-row"></div></div>'],
+  ['m-row-me', '.m-row.me', '<div class="msgs"><div class="m-row me"></div></div>'],
+  ['m-box-lb', '.m-box.lb', '<div class="msgs"><div class="m-row"><div class="m-box lb"><p class="bac">x</p></div></div></div>'],
+  ['bac', '.m-box.lb p.bac', '<div class="msgs"><div class="m-row"><div class="m-box lb"><p class="bac">x</p></div></div></div>'],
+  ['bub', '.bub', '<div class="msgs"><div class="m-row me pkme"><div class="bub">x</div></div></div>'],
+  ['mquick', '.mquick', '<div class="msgs"><div class="m-row"><div class="mquick"></div></div></div>'],
+  ['sheet', '.sheet', '<div class="sheet"><div class="sheet-card"></div></div>'],
+  ['btn-p', '.btn.btn-p', '<div class="btn btn-p">x</div>'],
+  ['relrow', '.relrow', '<div class="relrow"><button class="relc main"><span class="relv num">0</span></button></div>'],
+  ['xmoney', '.xmoney', '<div class="msgs"><div class="xmoney"><div class="xm1"></div></div></div>'],
+  ['xmoney-sealed', '.xmoney.sealed', '<div class="msgs"><div class="xmoney sealed"><b class="num xmblur">$?</b></div></div>'],
+  ['xtitle', '.xtitle', '<div class="msgs"><div class="xtitle"><b>x</b></div></div>'],
+  ['m-event', '.m-event', '<div class="msgs"><div class="m-event"><i>⚡</i><b>x</b></div></div>'],
+  ['m-scene', '.m-scene', '<div class="msgs"><div class="m-scene"><span>x</span></div></div>'],
+  ['m-mono', '.m-mono', '<div class="msgs"><div class="m-mono"><div class="mmh">x</div></div></div>'],
+  ['it101', '.it101', '<div class="msgs"><div class="it101"><button class="it101c"></button></div></div>'],
+  ['m-card', '.m-card', '<div class="msgs"><div class="m-card"><p>x</p></div></div>']
+];
+
+function norm(v) {
+  var s = String(v == null ? '' : v);
+  if (s.length > 160) s = s.slice(0, 160);
+  return s.replace(/url\("?data:[^")]*"?\)/g, 'url(data:…)').replace(/\s+/g, ' ').trim();
+}
+
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow;
+  if (!w || !w.document) { out.textContent = 'ERR no iframe'; return }
+  var d = w.document;
+  var host = d.createElement('div');
+  host.id = '__css_probe_host';
+  /* 离屏但参与布局：display 必须保留，否则计算值是空串 */
+  host.setAttribute('style', 'position:absolute;left:-10000px;top:0;width:360px;height:1200px');
+  d.body.appendChild(host);
+
+  var rows = [], missing = [];
+  for (var p = 0; p < PROBES.length; p++) {
+    var name = PROBES[p][0], sel = PROBES[p][1], frag = PROBES[p][2];
+    var box = d.createElement('div');
+    box.innerHTML = frag;
+    var el = box.querySelector(sel);
+    if (!el) { missing.push(name + ' (片段里找不到 ' + sel + ')'); continue }
+    host.appendChild(box);
+    var cs = w.getComputedStyle(el), vals = {}, empty = [];
+    for (var i = 0; i < PROPS.length; i++) {
+      var v = norm(cs.getPropertyValue(PROPS[i]));
+      vals[PROPS[i]] = v;
+      /* 空串 = 这个属性在这个元素上根本没算出来（多半是 display:none 的祖先） */
+      if (v === '') empty.push(PROPS[i]);
+    }
+    if (empty.length) missing.push(name + ' (空值属性: ' + empty.join(',') + ')');
+    rows.push({ name: name, sel: sel, vals: vals });
+  }
+  out.textContent = 'CSS_SNAP_JSON:' + JSON.stringify({ at: Date.now(), count: rows.length, rows: rows, missing: missing });
+  out.setAttribute('data-done', '1');
+}, 4000);
+</script>

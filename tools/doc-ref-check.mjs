@@ -16,6 +16,8 @@ const files = [
   'tools/check-all.mjs', 'tools/read-health.mjs', 'tools/read-errlog.mjs',
   'tools/render-snapshot.mjs', 'tools/msgkind-probe.mjs',
   'tools/style-inject-census.mjs', 'tools/style-inject-census.html',
+  'tools/style-computed-snapshot.mjs', 'tools/style-computed-snapshot.html',
+  'tools/style-computed-baseline.json',
   'docs/message-renderers.md', 'docs/msg-render-registry.md', 'docs/style-entry.md'
 ];
 let bad = 0;
@@ -26,7 +28,7 @@ const checkAll = fs.readFileSync('tools/check-all.mjs', 'utf8');
 const gates = ['turn-wiring-check', 'pkstate-check', 'save-instrument-check', 'ui-entry-check',
   'pkdirective-check', 'empty-catch-check', 'on-assign-check', 'errlog-selftest',
   'sanitize-selftest', 'wiring-order-check', 'patch-registry',
-  'render-snapshot', 'msgkind-probe'];
+  'render-snapshot', 'msgkind-probe', 'style-computed-snapshot'];
 for (const g of gates) {
   const mentioned = doc.includes(g);
   const registered = checkAll.includes(g);
