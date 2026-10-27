@@ -15,7 +15,7 @@ pkWait=function(th,prev,spd,ms){const nx=th.pk&&th.pk.q&&th.pk.q[0];
 /* a long block gets time to be read (tap the chat to move on sooner) */
 const _readMs28=readMs;readMs=function(m){if(m&&m.k==="box"&&!m.say){const x=String(m.txt||""),cjk=/[㐀-鿿]/.test(x);return Math.min(14000,Math.max(1800,cjk?900+x.length*80:900+x.length*26))}return _readMs28(m)};
 /* a change of place or picture (scene / bg / title) closes the current block */
-PKREG.add("app28_burst.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","title"].includes(b[1]))th._brk=1;return next(th,b)});;
+const _pkDir28=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","title"].includes(b[1]))th._brk=1;return _pkDir28(th,b)};
 /* a tall block is shown from its first line, not scrolled to its last */
 let _bt=0;function burstTop(th,i){clearTimeout(_bt);_bt=setTimeout(()=>{if(curT!==th.id)return;const box=$("#msgs"),el=$('#msgs [data-mi="'+i+'"]');if(!box||!el)return;
  if(el.offsetHeight>box.clientHeight*.55){const top=el.getBoundingClientRect().top-box.getBoundingClientRect().top+box.scrollTop-10;box.scrollTop=top}},30)}
@@ -32,11 +32,13 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
     if(!extra){delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();
      extra=await new Promise(r=>PKWAIT[th.id]=r);if(dead())return;delete PKWAIT[th.id]}
     th.pk.stop=null;th.pk.go=0;th.pk.q.shift();th.pk.q.unshift(...(extra||[]));save();packRefresh(th);continue}
-   while(!live())await new Promise(r=>setTimeout(r,500));if(dead())return;
+   /* 2026-10-27：打开「历史」时剧情暂停，收起后继续 */
+   while(!live()||(typeof HIST_OPEN!=="undefined"&&HIST_OPEN))await new Promise(r=>setTimeout(r,500));if(dead())return;
    if(!PKSKIP[th.id]){const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);
-    await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue}
+    await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue;
+    if(typeof HIST_OPEN!=="undefined"&&HIST_OPEN)continue}
    th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
- if(a==="choose"){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','burst');save();packRefresh(th);if(curT===th.id)scrollChat()}
+ if(a==="choose"){th.pk.st="choose";save();packRefresh(th);if(curT===th.id)scrollChat()}
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))};
