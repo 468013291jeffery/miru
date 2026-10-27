@@ -42,14 +42,16 @@ function deMeta(s){
  return x;
 }
 function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
- /* 2026-10-27：这一条下面会自己把 say 推进语音队列 ⇒ 先打 `_voiced`，
-    免得 `appendMsg` 的兜底挂钩（app102_pipeline.js）再念一遍（那是双声）。 */
- if(m&&m.k==="say")m._voiced=1;
- /* 2026-10-27 Ann：强制剧情的台词没有接入语音 —— 剧本段一条都没念。
-    这里补上：非旁白、且开了自动语音时，把这一条推进同一个语音队列（和模型回复共用 VOICE_BUSY 计数）。 */
+ /* 2026-10-27（第二次修这条）：**不能无条件打 `_voiced`**。
+    上一版在函数入口就 `m._voiced=1`，而下面真正发声要满足一串条件（autoVoice / 额度 / speakQueue 在）
+    ⇒ 条件不满足时，标记已经打上，`appendMsg` 的兜底挂钩以为「念过了」就跳过 ⇒ **这条 say 永远不发声、也不留痕**。
+    实测：一章 4 条台词、0 条发声、`unvoiced` 也是 0 —— 正是这个形状（Ann：「say 类不发声」）。
+    ⇒ 现在只有**真的要念**时才打标；没念的留给兜底挂钩（它若也不念，会记一条 `unvoiced`，可数）。 */
  try{
-  if(m&&m.txt&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK())
+  if(m&&m.txt&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK()){
+   m._voiced=1;
    speakQueue([{txt:m.txt,who:m.who}]);
+  }
  }catch(_){}
  /* 2026-10-27 Ann：把 say 解耦出来 —— **一条角色台词永远单独成气泡**，不并进 box。
     两个后果都是她想要的：

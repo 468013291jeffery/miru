@@ -5,7 +5,7 @@ const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
-function cleanState(hard){try{/* 云端存档缺默认项时补齐，首页不会因 S.xxx.heir 读空崩溃 */for(const k of Object.keys(DEF)){if(S[k]==null)S[k]=JSON.parse(JSON.stringify(DEF[k]))}S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
+function cleanState(hard){try{S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
   if(!Array.isArray(th.said)){th.said=th.msgs.filter(m=>m&&m.who==="me"&&(m.k==="say"||m.k==="act"||m.k==="think"||m.k==="dir")&&String(m.txt||"").trim()).map(m=>String(m.txt).trim()).slice(-60)}
  if(!th.cast.length&&hard)delete S.threads[k]}
@@ -16,9 +16,11 @@ cleanState();
 function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(JSON.parse(JSON.stringify(DEF)),o)}}catch(e){}
  const d=JSON.parse(JSON.stringify(DEF));
  /* the app starts in English for everyone; players switch language themselves */return d}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
+function saveRaw(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
  /* storage full: drop oldest album frames first */
  try{if(S.album.length>4){S.album=S.album.slice(0,4);localStorage.setItem(KEY,JSON.stringify(S))}}catch(_){}}}
+/* 2026-10-27：save 的唯一入口（观测见 app105_save.js）。沙箱里没有 SAVE 就直接写。 */
+function save(){ try{ if(window.SAVE&&window.SAVE.go) return window.SAVE.go(saveRaw) }catch(_){} return saveRaw() }
 const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>[...(r||document).querySelectorAll(s)];
 function t(k,v){let s=(I18N[S.lang]&&I18N[S.lang][k])||I18N.en[k]||k;if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s}
 function L(o){if(o==null)return"";if(typeof o==="string")return o;return o[S.lang]||o.en||o.zh||""}
@@ -103,7 +105,7 @@ function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
    their gender and language, plus their own pitch and speed.                                     */
 let VOICES=[];
 function loadVoices(){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){VOICES=[]}}
-try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L108",function(){loadVoices();speechSynthesis.onvoiceschanged=loadVoices});
 const FEM=/female|woman|yu-?shu|lili|mei-?jia|li-?na|xiaoyi|yaoyao|samantha|victoria|karen|moira|tessa|zira|susan|fiona|allison|ava|serena|kate|ting|mei|sin-ji|kyoko|yuna|sora|paulina|monica|helena|lucia|google.*(uk english female|us english)|siri.*female|xiaoxiao|hanhan|huihui|nanami|sunhi|elvira/i;
 const MAL=/\bmale\b|li-?mu|yunxi|yunjian|yunze|kangkang|zhiwei|daniel|nathan|evan|tom\b|alex|fred|david|mark|james|thomas|oliver|arthur|aaron|gordon|rishi|jorge|diego|juan|otoya|hattori|injoon|yunjhe|kangkang|yunyang|keita|google uk english male/i;
 const LTAG={en:"en",zh:"zh",ja:"ja",ko:"ko",es:"es"};
@@ -191,7 +193,7 @@ async function ask(prompt,opts){
       为什么不是"一律给大预算"：实测模型会跑满上限才停（LATENCY.md），一律给大 = 每次都慢。
       为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
    if(r==null&&_tier!=="complex"){
-    try{track&&track("llm_escalate",{from:_tier,to:"complex"})}catch(_){}
+    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L196",function(){track&&track("llm_escalate",{from:_tier,to:"complex"})});
     const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
     r=jsonLoose(t3&&t3.text);
    }
