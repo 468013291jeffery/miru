@@ -181,14 +181,14 @@ function msgHTML(m,i,th){
  if(th.pk&&m.who===th.pk.as&&th.pk.as!=="watch"&&th.pk.as!=="side"&&m.who!=="me"){const c0=ch(m.who),lab='<small class="asme">'+esc(t("pk.youAre",{n:first(c0.n)}))+'</small>';
   if(m.k==="act")return '<div class="m-act me" data-mi="'+i+'">'+lab+esc(m.txt)+'</div>';
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
-  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
+  return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
  const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
  const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
   '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
  if(m.k==="react")return '<div class="m-react" style="margin:6px 0 10px;padding-left:10px;border-left:2px solid var(--line);opacity:.72;font-size:13px">'+esc(m.txt)+'</div>';
  if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+'</div>';
  if(m.k==="pic")return '<div class="m-pic'+(m.locked?" lk":"")+'"><img src="'+esc(m.src)+'" alt="">'+(m.locked?'<button class="pk" data-unpic="'+i+'"><b>📷 '+t("pay.pic",{n:who(m,th)})+'</b><span>💎 1 · '+t("pay.unlock")+'</span></button>':'')+'</div>';
- if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
+ if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub bubble lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
  if(m.who==="n")return '<div class="m-narr" data-mi="'+i+'">'+esc(m.txt)+'</div>'+tools;
  if(m.k==="dir")return '<div class="m-dir">🎬 '+esc(m.txt)+'</div>';
@@ -206,16 +206,16 @@ function speakerOf(m,th){
 function sayHTML(m,i,th){
  const sp=speakerOf(m,th),c=(m.who==="me")?null:ch(m.who);
  const body=(typeof lineHTML==="function")?lineHTML({who:m.who,k:"say",txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>');
- if(sp==="me")return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub">'+body+'</div></div>';
- if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
- return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
+ if(sp==="me")return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub bubble">'+body+'</div></div>';
+ if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub bubble"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
+ return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
  if(m.k==="say")return sayHTML(m,i,th)+tools;
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
- if(isMe)return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub">'+((typeof lineHTML==="function")?lineHTML({who:"me",k:m.k,txt:m.txt},th,{noName:true}):esc(m.txt))+'</div></div>'+tools;
- return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div><div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div><div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
+ if(isMe)return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub bubble">'+((typeof lineHTML==="function")?lineHTML({who:"me",k:m.k,txt:m.txt},th,{noName:true}):esc(m.txt))+'</div></div>'+tools;
+ return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div><div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div><div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
 /* 2026-10-27 补的三条视觉（Ann 试玩反馈）：
    ① 每个角色一条他自己的色条 + 淡底（原来只有名字颜色，认不出谁在说）
    ② 点过的选项反色（原来点下去毫无反馈）

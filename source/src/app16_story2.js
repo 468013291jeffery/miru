@@ -79,7 +79,7 @@ function lineHTML(p, th, opts) {
 }
 function boxHTML(m,i,th){
   /* 结构交给 lineHTML；.m-box 才是那个「框」 */
-  return '<div class="m-box" data-mi="'+i+'">' + m.parts.map(p => lineHTML(p, th)).join("") + '</div>';
+  return '<div class="m-box bubble" data-mi="'+i+'">' + m.parts.map(p => lineHTML(p, th)).join("") + '</div>';
 }
 
 /* 4) the story intro: background, who you are, who everyone is, how to play */
@@ -213,7 +213,7 @@ MSGKIND.inline("app16_story2.js#pk",["event","act","think"],function(m,i,th,next
  if(isPkMe&&m.k==="act")return '<div class="m-act me" data-mi="'+i+'"><small class="mt act">✱ '+t("st3.yourAct")+'</small>'+esc(m.txt)+'</div>';
  if(isPkMe&&m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small class="mt think">💭 '+t("st3.yourThink")+'</small>'+esc(m.txt)+'</div>';
  return next(m,i,th)});
-boxHTML=function(m,i,th){return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p class="bn">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
+boxHTML=function(m,i,th){return '<div class="m-box bubble" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p class="bn">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
   return p.k==="think"?'<p class="bth"><span class="mt think">💭 '+esc(nm)+' · '+t("st2.thinks")+'</span>'+esc(p.txt)+'</p>':'<p class="bac"><span class="mt act">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}).join("")+'</div>'};
 
 /* speed: 慢速 / 标准 / 2倍速 / 点一下才继续 */
