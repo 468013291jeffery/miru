@@ -70,9 +70,9 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-bgm]"))return;
 const _show19=show;show=function(id){_show19(id);if(id!=="s-chat")bgmStop()};
 const _sceneBg19=sceneBg;sceneBg=function(th,img){_sceneBg19.apply(this,arguments);if(curT===th.id&&bgmOn()&&(BGM.timer||BGM.file)){const w=bgmForThread(th);if(w)bgmPlay(w.mood,w.wid)}};
 /* duck under voice lines */
-const _speak19=speak;speak=function(text,id,onend){BGM.duck=.35;if(BGM.timer)bgmGain(bgmLevel(),.3);if(BGM.file)BGM.file.volume=.35*BGM.duck;
+VOICE.use('bgm-19',function(next,text,id,onend){BGM.duck=.35;if(BGM.timer)bgmGain(bgmLevel(),.3);if(BGM.file)BGM.file.volume=.35*BGM.duck;
  const back=()=>{BGM.duck=1;if(BGM.timer)bgmGain(bgmLevel(),1.2);if(BGM.file)BGM.file.volume=.35};const est=setTimeout(back,Math.max(2500,String(text||"").length*(S.lang==="zh"?260:75)));
- return _speak19(text,id,()=>{clearTimeout(est);back();if(onend)onend()})};
+ return next(text,id,()=>{clearTimeout(est);back();if(onend)onend()})});
 document.addEventListener("visibilitychange",()=>{if(!BGM.ctx)return;if(document.hidden)BGM.ctx.suspend().catch(()=>{});else if(BGM.timer)BGM.ctx.resume().catch(()=>{})});
 Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign(I18N.zh,{"bgm.on":"背景音乐已开启","bgm.off":"背景音乐已关闭"});
 
