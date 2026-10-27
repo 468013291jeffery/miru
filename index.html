@@ -408,7 +408,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .story.hot .ring .av{animation:hotspin 3s linear infinite reverse}
 .story.hot b{color:var(--gold)}
 @keyframes hotspin{to{transform:rotate(360deg)}}
-.dkwrap{position:relative;margin-top:6px}
 .dk{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 16px;scrollbar-width:none;scroll-padding:0 16px}.dk::-webkit-scrollbar{display:none}
 .dkc{position:relative;flex:none;width:calc(100% - 32px);height:460px;border-radius:24px;overflow:hidden;scroll-snap-align:start;background:var(--panel2);border:1px solid var(--line2)}
 .dkc .dkv,.dkc .dkimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -506,7 +505,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .cid{display:grid;justify-items:center;gap:2px;padding:7px 0;border-radius:10px;background:var(--panel);border:1px solid var(--line2);font-size:10.5px}.cid small{color:var(--faint);font-size:9px}.cid.got{background:rgba(127,196,166,.15);border-color:rgba(127,196,166,.5)}.cid.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(240,183,126,.25)}
 .wufbox{margin-top:10px;padding:12px;border-radius:14px;background:var(--panel2);text-align:center;font-size:13px;font-weight:700}
 /* ---- compact drama carousel ---- */
-.dkwrap{position:relative;margin-top:8px;padding:10px 0 4px;background:radial-gradient(60% 70% at 50% 45%,rgba(156,132,224,.22),transparent 70%)}
 .dk{padding:0 21%;scroll-padding:0;gap:12px}
 .dkc{width:100%;flex:0 0 58%;height:auto;aspect-ratio:3/4;scroll-snap-align:center;text-align:left;display:block;transform:scale(.9);opacity:.55;transition:transform .35s,opacity .35s;border-radius:20px}
 .dkc.on{transform:none;opacity:1;box-shadow:0 14px 40px rgba(0,0,0,.55)}
@@ -731,7 +729,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .story .sdot{width:10px;height:10px;right:4px}
 .hchips{gap:6px;padding:2px 16px 6px}
 .hchip{padding:5px 11px;font-size:11.5px}
-.dkwrap{margin-top:2px;padding:14px 0 8px}
 .dk{padding:0 16%;gap:0}
 .dkc{flex:0 0 68%;transform:scale(.8);opacity:.4;filter:brightness(.7);transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .35s,filter .35s;z-index:1}
 .dkc.on{transform:scale(1.04);opacity:1;filter:none;z-index:2;box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1.5px rgba(240,183,126,.45);animation:dkpop .5s cubic-bezier(.34,1.56,.64,1)}
@@ -856,7 +853,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .mt b{font-size:11.5px}.mt em{font-style:normal;font-size:20px;font-weight:900}.mt span{font-size:10px;color:var(--dim);line-height:1.3}
 .mt.on{border-color:var(--rose);background:rgba(238,111,151,.1)}
 
-.dkwrap{container-type:inline-size}
 .dk{padding:0 16cqw}
 .dkc{flex:0 0 68cqw}
 .callbtn{padding:6px 9px;font-size:11px;white-space:nowrap;flex:none}
@@ -878,7 +874,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .story.hot .ring{box-shadow:0 0 8px rgba(238,111,151,.6)}
 .wtk{height:26px;margin:4px 16px 4px}.wtki{font-size:11px}
 .hchips{padding:2px 16px 2px}.hchip{padding:4px 10px;font-size:11px}
-.dkwrap{margin-top:0;padding:0}
+.dkwrap{position:relative;margin-top:0;padding:0;background:radial-gradient(60% 70% at 50% 45%,rgba(156,132,224,.22),transparent 70%);container-type:inline-size}
 .dk{padding:12px calc(50cqw - var(--cw)/2) 14px;--cw:min(46cqw,calc(clamp(170px,30vh,250px)*.75))}
 .dkc{flex:0 0 var(--cw);width:var(--cw);height:auto;aspect-ratio:3/4;transform:scale(.86);border-radius:16px;cursor:pointer}
 .dkc.on{transform:scale(1);animation:dkpop2 .45s cubic-bezier(.34,1.56,.64,1)}
@@ -1505,7 +1501,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="d80c888c5918 2026-10-27T08:04Z";
+window.MIRU_BUILD="71edf32d8998 2026-10-27T08:07Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
