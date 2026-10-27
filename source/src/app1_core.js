@@ -16,9 +16,11 @@ cleanState();
 function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(JSON.parse(JSON.stringify(DEF)),o)}}catch(e){}
  const d=JSON.parse(JSON.stringify(DEF));
  /* the app starts in English for everyone; players switch language themselves */return d}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
+function saveRaw(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
  /* storage full: drop oldest album frames first */
  try{if(S.album.length>4){S.album=S.album.slice(0,4);localStorage.setItem(KEY,JSON.stringify(S))}}catch(_){}}}
+/* 2026-10-27：save 的唯一入口（观测见 app105_save.js）。沙箱里没有 SAVE 就直接写。 */
+function save(){ try{ if(window.SAVE&&window.SAVE.go) return window.SAVE.go(saveRaw) }catch(_){} return saveRaw() }
 const $=(s,r)=>(r||document).querySelector(s),$$=(s,r)=>[...(r||document).querySelectorAll(s)];
 function t(k,v){let s=(I18N[S.lang]&&I18N[S.lang][k])||I18N.en[k]||k;if(v)for(const x in v)s=s.split("{"+x+"}").join(v[x]);return s}
 function L(o){if(o==null)return"";if(typeof o==="string")return o;return o[S.lang]||o.en||o.zh||""}

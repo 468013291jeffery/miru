@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>save probe (seeded)</title>
+<pre id="out">running…</pre>
+<div id="seed" hidden></div>
+<script>
+const out = document.getElementById('out');
+out.textContent = 'seeding…';
+
+// 先把真实的存档塞进同源 localStorage，再打开游戏 —— 这样统计的是「她那一局」的 save 行为
+fetch('/.browser-save.json').then(r => r.text()).then(txt => {
+  let data = txt;
+  try {
+    const j = JSON.parse(txt);
+    // 文件可能是 {key, value} 或直接是 S
+    data = j && j.value ? (typeof j.value === 'string' ? j.value : JSON.stringify(j.value)) : txt;
+  } catch (_) {}
+  try { localStorage.setItem('miru_v2', data) } catch (e) { out.textContent = 'seed failed: ' + e.message; return }
+  out.textContent = 'seeded ' + Math.round(data.length / 1024) + ' KB · loading…';
+  const f = document.createElement('iframe');
+  f.id = 'f';
+  f.src = '/index.html';
+  f.style.cssText = 'width:420px;height:760px;border:0';
+  document.body.appendChild(f);
+
+  setTimeout(() => {
+    try {
+      const w = f.contentWindow;
+      if (!w || !w.__save) { out.textContent += '\nno __save'; return }
+      const s = w.__save(true);
+      out.textContent = 'SUMMARY\n' + JSON.stringify(s.汇总, null, 1)
+        + '\n\nTOP CALLERS\n' + (s.最烧调用点 || []).map(x => x.调用点 + '  ×' + x.抽样次数).join('\n')
+        + '\n\nSLOW\n' + (s.慢写 || []).map(x => x.ms + 'ms ' + x.at).join('\n');
+    } catch (e) { out.textContent += '\nprobe error: ' + e.message }
+  }, 12000);
+}).catch(e => { out.textContent = 'fetch failed: ' + e.message });
+</script>

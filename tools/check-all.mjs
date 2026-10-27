@@ -32,6 +32,7 @@ const suites = [
   ['perf-budget.mjs', ['tools/perf-budget.mjs'], true],
   ['timer-audit.mjs', ['tools/timer-audit.mjs', '--check'], true],
   ['ask-retry-selftest.mjs', ['tools/ask-retry-selftest.mjs'], true],
+  ['save-instrument-check.mjs', ['tools/save-instrument-check.mjs'], true],
   ['pkstate-check.mjs', ['tools/pkstate-check.mjs'], true],
   ['wiring-order-check.mjs', ['tools/wiring-order-check.mjs'], true],
   ['turn-wiring-check.mjs', ['tools/turn-wiring-check.mjs'], true],
