@@ -15,9 +15,9 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
  appendMsg(th,{who:"sys",k:"declined",cid,secs:4+hash(String(Lz(d.hint)||cid))%9,lines,at:Date.now()});
  const as=th.pk.as;setTimeout(()=>{try{if(as&&ch(as))dimAdd(th,as+"|"+cid,{ten:6,tru:-4},"decline")}catch(_){}},2000);
 },true);
-const _msgHTML42=msgHTML;msgHTML=function(m,i,th){if(!m||m.k!=="declined")return _msgHTML42(m,i,th);const c=ch(m.cid);if(!c)return"";
+MSGKIND.inline("app42_decline.js", ["declined"], function(m,i,th, next){if(!m||m.k!=="declined")return next(m,i,th);const c=ch(m.cid);if(!c)return"";
  return '<div class="msg sysm"><div class="dccard">'+avatar(m.cid,30)+'<div class="dcbody"><b>📵 '+esc(t("dc.card",{n:first(c.n)}))+'</b><span>'+esc(t("dc.rang",{s:m.secs}))+'</span>'+
-  (m.lines&&m.lines.length?(m.heard?'<button class="dcbtn" data-dcread="'+i+'">🎧 '+t("dc.again")+'</button>':'<button class="dcbtn" data-dcbuy="'+i+'">🎧 '+t("dc.buy")+' · '+payTag("callback")+'</button>'):'')+'</div></div></div>'};
+  (m.lines&&m.lines.length?(m.heard?'<button class="dcbtn" data-dcread="'+i+'">🎧 '+t("dc.again")+'</button>':'<button class="dcbtn" data-dcbuy="'+i+'">🎧 '+t("dc.buy")+' · '+payTag("callback")+'</button>'):'')+'</div></div></div>'});;
 function dcShow(m){const c=ch(m.cid);sheet('<div class="eyebrow" style="color:var(--gold)">🎧 '+t("dc.vm")+'</div><h2 style="margin-top:4px">'+esc(t("dc.vmH",{n:first(c.n)}))+'</h2>'+
  '<div class="dcvm">'+m.lines.map(([w,x])=>'<p><b>'+esc(first((ch(w)||c).n))+'</b>“'+esc(x)+'”</p>').join("")+'</div><p class="xs faint" style="margin-top:10px">'+t("dc.note")+'</p>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)return;

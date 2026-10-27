@@ -137,7 +137,7 @@ function vnHTML96(m, i) {
   return '<div class="msg vn96' + (m.paid ? " paid" : "") + '">' + avatar(m.who, 32) + '<div class="vb96"><button data-vn96="' + i + '"><i>' + (m.paid ? "▶" : "🔒") + '</i><span class="wv96">' + "<s></s>".repeat(14) + '</span><em>' + dur + '″</em></button>' +
     '<p>' + esc(m.txt || "") + '</p>' + (m.paid ? '' : '<small>' + L96("听 " + nameOf96(m.who) + " 的原声 · " + P96.voice + "💎", "Hear " + nameOf96(m.who) + "'s voice · " + P96.voice + "💎") + '</small>') + '</div></div>';
 }
-{ const _mh = msgHTML; msgHTML = function (m, i, th) { if (m && m.k === "vn96") return vnHTML96(m, i); return _mh.apply(this, arguments); }; }
+{ MSGKIND.inline("app96_social.js", ["vn96"], function(m, i, th, next){ if (m && m.k === "vn96") return vnHTML96(m, i); return next.apply(this, arguments); });; }
 document.addEventListener("click", e => { const x = e.target.closest("[data-vn96]"); if (!x) return; e.stopPropagation();
   const th = S.threads[curT]; const m = th && th.msgs[+x.dataset.vn96]; if (!m) return;
   if (!m.paid) { if (!spend(P96.voice, "line")) return; m.paid = true; save(); try { renderChat(); } catch (_) {} }

@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="55ba435e5fa2 2026-10-27T07:09Z";
+window.MIRU_BUILD="f8d0c95701fc 2026-10-27T07:17Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7791,6 +7791,70 @@ Object.assign(I18N.zh,{"pk.spdNorm":"自动播放","pk.spdSlow":"自动 · 慢�
   };
 })();
 
+/* ================= 消息渲染：登记 + 冲突检测（2026-10-27）=================
+   背景：`msgHTML` 被 **19 层**包装（`tools/msghtml-triage.mjs`），其中 10 层是「按 m.k 认领渲染」。
+   四类消息被多层认领（act / box / think / say），另有 **后处理层**（app73 给每条消息挂工具条、
+   app98 改写收尾）—— 所以**不能**把认领层统一挪到最外层，那会让后处理看不到它们。
+
+   ## 这一版做什么
+   **保留原位安装**（顺序一字不改），但把「谁认领了哪些类型」写进一张表：
+       MSGKIND.inline('app42_decline.js', ['declined'], function(m, i, th, next){ …body…; return next(m,i,th) })
+   `inline` 干三件事：
+     ① 立刻按原位置装一个包装（与手写包装逐字等价）
+     ② 把 { 名字, 认领类型 } 记进 MSGKIND.items
+     ③ **重复认领当场记一笔**（同一个 m.k 被两个层认领 —— 从前只有靠加载顺序才知道谁赢）
+
+   ## 读数
+       __msgkind()           注册层 · 认领类型数 · **冲突类型**
+       __msgkind(true)       冲突明细（哪个类型、哪几层）
+
+   ## 为什么不是"一次搬成一张类型表"
+   因为后处理层要看到所有消息的 HTML。真正扁平化需要先有 **post/wrap 两类独立注册**（见
+   `docs/msg-render-registry.md` 第 3 节），那是一步更大的改动。这一版先让"谁认领什么"可见、可查重。
+================================================================================== */
+(function () {
+  'use strict';
+
+  const M = { v: 1, items: [], claims: {}, conflicts: [], installed: 0 };
+
+  M.inline = function (name, kinds, fn) {
+    if (typeof fn !== 'function') return false;
+    const list = Array.isArray(kinds) ? kinds.slice() : [kinds];
+
+    /* ① 原位安装：与手写包装等价 */
+    const prev = window.msgHTML;
+    window.msgHTML = function (m, i, th) {
+      return fn.call(this, m, i, th, function (a, b, c) { return prev.apply(this, arguments) });
+    };
+    M.installed++;
+
+    /* ② 登记 */
+    M.items.push({ name: String(name || '?'), kinds: list });
+
+    /* ③ 查重：同一个 m.k 被两层认领时，谁赢只由加载顺序决定 —— 把它记下来 */
+    for (const k of list) {
+      (M.claims[k] = M.claims[k] || []).push(String(name || '?'));
+      if (M.claims[k].length === 2) M.conflicts.push(k);
+    }
+    return true;
+  };
+
+  window.MSGKIND = M;
+  window.__msgkind = function (detail) {
+    const sum = {
+      注册层: M.items.length,
+      认领类型: Object.keys(M.claims).length,
+      冲突类型: M.conflicts.length
+    };
+    if (!detail) return sum;
+    return {
+      汇总: sum,
+      冲突明细: M.conflicts.map(k => ({ 类型: k, 认领层: M.claims[k] })),
+      层: M.items.map(x => x.name + ' → ' + x.kinds.join(','))
+    };
+  };
+})();
+
 /* ================= STORY v2 — clear intro, merged narration boxes, choices inside the chat, scene photos, real branching, read-aloud ================= */
 /* 1) Chat background = a photo of the current scene (no video for now). Scene beats: ["sys","scene",{img,place,time}] */
 const NO_VIDEO_BG=true;
@@ -8711,10 +8775,9 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ringyes]")){ringEnd(true);return}
  if(e.target.closest("[data-ringno]")){ringEnd(false,true);return}
  if(x=e.target.closest("[data-mcback]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mcback];if(!m)return;if(!S.plus&&!spend(PRICES.callMin,"event"))return;m.back=1;save();startCall(m.who,60);return}});
-const _msgHTML20=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="missed")return _msgHTML20(m,i,th);const c=ch(m.who);if(!c)return"";
+MSGKIND.inline("app20_fx_booth.js", ["missed"], function(m,i,th, next){if(!m||m.k!=="missed")return next(m,i,th);const c=ch(m.who);if(!c)return"";
  return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+t(m.away?"mc.away":"mc.missed")+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
-  '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'};
+  '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'});;
 /* idle trigger inside a chat */
 setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidden||!th||ring||$(".sheet")||$(".callv")){mcIdle=0;return}
  const last=th.msgs[th.msgs.length-1];if(!last||!ch(last.who)||last.k==="missed"){mcIdle=0;return}if(th.pk&&th.pk.q&&th.pk.q.length){mcIdle=0;return}
@@ -10323,10 +10386,9 @@ if(typeof PAY!=="undefined")Object.assign(PAY,{recall:2,missed:PRICES.callMin});
 STOPK.add("missed");STOPK.add("reveal");
 /* 1 · unsent message */
 PKREG.add("app37_hooks.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="recall"){th.pk.q.shift();const d=b[2]||{};appendMsg(th,{who:"sys",k:"xrecall",rw:d.who,txt:Lz(d.txt)||d.txt,at:Date.now()});save();return true}return next(th,b)});;
-const _msgHTML37=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="xrecall")return _msgHTML37(m,i,th);const c=ch(m.rw),nm=c?first(c.n):"";
+MSGKIND.inline("app37_hooks.js", ["xrecall"], function(m,i,th, next){if(!m||m.k!=="xrecall")return next(m,i,th);const c=ch(m.rw),nm=c?first(c.n):"";
  if(m.open)return '<div class="xrc open" data-mi="'+i+'">'+avatar(m.rw,30)+'<div class="xrcb"><small>'+esc(t("rc.was",{n:nm}))+'</small><p>'+esc(m.txt)+'</p></div></div>';
- return '<div class="xrc" data-mi="'+i+'"><span class="xrcl">'+esc(t("rc.unsent",{n:nm}))+'</span><button data-xrc="'+i+'">👀 '+t("rc.see")+' · '+(typeof payTag==="function"?payTag("recall"):"💎2")+'</button></div>'};
+ return '<div class="xrc" data-mi="'+i+'"><span class="xrcl">'+esc(t("rc.unsent",{n:nm}))+'</span><button data-xrc="'+i+'">👀 '+t("rc.see")+' · '+(typeof payTag==="function"?payTag("recall"):"💎2")+'</button></div>'});;
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xrc]");if(!x)return;const th=S.threads[curT];const m=th&&th.msgs[+x.dataset.xrc];if(!m)return;if(typeof payGo==="function"&&!payGo("recall"))return;m.open=1;save();renderChat();try{window.emoFx&&emoFx("ink")}catch(_){}});
 /* 2 · missed call → call back */
 const _stopAuto37=stopAuto;
@@ -10586,9 +10648,9 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
  appendMsg(th,{who:"sys",k:"declined",cid,secs:4+hash(String(Lz(d.hint)||cid))%9,lines,at:Date.now()});
  const as=th.pk.as;setTimeout(()=>{try{if(as&&ch(as))dimAdd(th,as+"|"+cid,{ten:6,tru:-4},"decline")}catch(_){}},2000);
 },true);
-const _msgHTML42=msgHTML;msgHTML=function(m,i,th){if(!m||m.k!=="declined")return _msgHTML42(m,i,th);const c=ch(m.cid);if(!c)return"";
+MSGKIND.inline("app42_decline.js", ["declined"], function(m,i,th, next){if(!m||m.k!=="declined")return next(m,i,th);const c=ch(m.cid);if(!c)return"";
  return '<div class="msg sysm"><div class="dccard">'+avatar(m.cid,30)+'<div class="dcbody"><b>📵 '+esc(t("dc.card",{n:first(c.n)}))+'</b><span>'+esc(t("dc.rang",{s:m.secs}))+'</span>'+
-  (m.lines&&m.lines.length?(m.heard?'<button class="dcbtn" data-dcread="'+i+'">🎧 '+t("dc.again")+'</button>':'<button class="dcbtn" data-dcbuy="'+i+'">🎧 '+t("dc.buy")+' · '+payTag("callback")+'</button>'):'')+'</div></div></div>'};
+  (m.lines&&m.lines.length?(m.heard?'<button class="dcbtn" data-dcread="'+i+'">🎧 '+t("dc.again")+'</button>':'<button class="dcbtn" data-dcbuy="'+i+'">🎧 '+t("dc.buy")+' · '+payTag("callback")+'</button>'):'')+'</div></div></div>'});;
 function dcShow(m){const c=ch(m.cid);sheet('<div class="eyebrow" style="color:var(--gold)">🎧 '+t("dc.vm")+'</div><h2 style="margin-top:4px">'+esc(t("dc.vmH",{n:first(c.n)}))+'</h2>'+
  '<div class="dcvm">'+m.lines.map(([w,x])=>'<p><b>'+esc(first((ch(w)||c).n))+'</b>“'+esc(x)+'”</p>').join("")+'</div><p class="xs faint" style="margin-top:10px">'+t("dc.note")+'</p>')}
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)return;
@@ -17002,7 +17064,7 @@ function vnHTML96(m, i) {
   return '<div class="msg vn96' + (m.paid ? " paid" : "") + '">' + avatar(m.who, 32) + '<div class="vb96"><button data-vn96="' + i + '"><i>' + (m.paid ? "▶" : "🔒") + '</i><span class="wv96">' + "<s></s>".repeat(14) + '</span><em>' + dur + '″</em></button>' +
     '<p>' + esc(m.txt || "") + '</p>' + (m.paid ? '' : '<small>' + L96("听 " + nameOf96(m.who) + " 的原声 · " + P96.voice + "💎", "Hear " + nameOf96(m.who) + "'s voice · " + P96.voice + "💎") + '</small>') + '</div></div>';
 }
-{ const _mh = msgHTML; msgHTML = function (m, i, th) { if (m && m.k === "vn96") return vnHTML96(m, i); return _mh.apply(this, arguments); }; }
+{ MSGKIND.inline("app96_social.js", ["vn96"], function(m, i, th, next){ if (m && m.k === "vn96") return vnHTML96(m, i); return next.apply(this, arguments); });; }
 document.addEventListener("click", e => { const x = e.target.closest("[data-vn96]"); if (!x) return; e.stopPropagation();
   const th = S.threads[curT]; const m = th && th.msgs[+x.dataset.vn96]; if (!m) return;
   if (!m.paid) { if (!spend(P96.voice, "line")) return; m.paid = true; save(); try { renderChat(); } catch (_) {} }
