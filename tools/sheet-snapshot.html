@@ -22,7 +22,12 @@ var SHEETS = [
   ['dirSheet', function (w, th) { w.dirSheet() }],
   ['cardSheet', function (w, th) { w.cardSheet() }],
   ['startSheet', function (w, th) { w.startSheet(th.wid) }],
-  ['paySheet-promo', function (w, th) { w.paySheet('promo') }]
+  ['paySheet-promo', function (w, th) { w.paySheet('promo') }],
+  /* 2026-10-27 扩样：这三张在「绕过入口」的 19 处里各被摸过（giftSheet/dateSheet 被 app17 摸、
+     ledSheet 被 app79 自己的链摸），原来不在快照里 ⇒ 那几处改动**没有闸看得见**。 */
+  ['giftSheet', function (w, th) { w.giftSheet() }],
+  ['dateSheet', function (w, th) { w.dateSheet() }],
+  ['ledSheet', function (w, th) { w.ledSheet() }]
 ];
 
 setTimeout(function () {
