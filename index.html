@@ -394,7 +394,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .dkc .dkv,.dkc .dkimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .dkc .veil{background:linear-gradient(180deg,rgba(8,7,11,.05) 35%,rgba(8,7,11,.95))}
 .dkc .dkin{background:rgba(20,18,26,.6);backdrop-filter:blur(8px)}
-.dkdots{display:flex;gap:5px;justify-content:center;margin-top:10px}.dkdots i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .3s}.dkdots i.on{width:18px;background:var(--rose)}
+.dkdots i.on{width:18px;background:var(--rose)}
 .htabs{display:flex;gap:4px;padding:18px 16px 0;border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--bg);z-index:4}
 .htabs button.on{color:var(--text);border-color:var(--rose)}
 .rank{padding:6px 16px}.rrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px 0;border-bottom:1px solid var(--line2)}
@@ -824,7 +824,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .dkc h2{font-size:15px;line-height:1.15}
 .dkc p{font-size:10px;line-height:1.5;opacity:.9;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .dkc .dramab{font-size:9px;padding:3px 7px;top:7px;left:7px}
-.dkbtns{display:none;gap:6px;margin-top:7px}
 .dkc.on .dkbtns{display:flex}
 .btn-xs{padding:5px 10px!important;font-size:11px!important;min-height:0!important;border-radius:999px}
 .dkn{position:absolute;top:14px;right:12px;z-index:3;font-size:10px;font-weight:800;background:rgba(10,8,14,.6);backdrop-filter:blur(6px);padding:3px 7px;border-radius:999px}
@@ -863,8 +862,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* ---- 今夜上映: one big line for dramas + Playroom ---- */
 .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:10px 16px 0}
 .shead h2{font-size:19px;margin-top:1px}
-.hfseg{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:3px}
-.hfseg button{padding:5px 10px;border-radius:999px;font-size:11.5px;font-weight:800;color:var(--dim);white-space:nowrap}
 .hfseg button.on{background:var(--grad);color:#1B1017}
 /* sized so the quest/rank/earn tab strip below still peeks onto the first screen on a phone, without scrolling
    (the "my points" bar was moved to the bottom of the quest tab, which freed up room to size this back up a bit) */
@@ -896,16 +893,11 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .finfo{position:relative;z-index:3;margin:0 10px 10px;padding:16px 16px 14px;border-radius:22px;background:rgba(28,24,36,.62);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.08)}
 .frow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line2);font-size:13px}.ftitle{flex:1;text-align:left;font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.2;color:#fff}
 .fheart{font-size:24px;line-height:1;color:#fff;width:34px;height:34px;flex:none}.fheart.on{color:var(--rose)}
-.fpills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .fp{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.88)}
 .fp.top{background:#F07A3A;color:#fff}.fp.new{background:var(--mint);color:#0B1A14}.fp.or.bl{background:#4FA88A;color:#fff}.fp.or.gl{background:#C46FB0;color:#fff}.fp.or.bg{background:#6C8FC4;color:#fff}.fp.or.ens{background:#9C84E0;color:#fff}
 .fhook{margin-top:12px;font-weight:800;font-size:15px;line-height:1.4;color:#fff}
-.fdesc{display:flex;gap:8px;align-items:flex-start;text-align:left;margin-top:6px;color:rgba(255,255,255,.72);font-size:13px;line-height:1.55;width:100%}
-.fdesc span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}.fdesc i{font-style:normal;transition:transform .2s}
 .fdesc.open span{-webkit-line-clamp:12}.fdesc.open i{transform:rotate(180deg)}
-.fmeta{display:flex;gap:12px;margin-top:10px;font-size:11.5px;color:rgba(255,255,255,.6);font-weight:600}
-.fcta{margin-top:12px;padding:15px!important;font-size:15.5px!important;border-radius:999px!important;background:linear-gradient(135deg,#F0B77E,#EE6F97)!important;box-shadow:0 10px 26px rgba(238,111,151,.3)}
-@media(max-height:700px){.fdesc{display:none}.fside{bottom:260px}}
+@media(max-height:700px){.fside{bottom:260px}}
 /* discover */
 .dtop{gap:6px}.dmode{display:flex;gap:16px;align-items:baseline}.dmode button{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--faint)}.dmode button.on{color:var(--text)}
 .dchips{display:flex;gap:8px;overflow-x:auto;padding:4px 16px 10px;scrollbar-width:none;flex:none}.dchips::-webkit-scrollbar{display:none}
@@ -977,14 +969,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* onboarding picks */
 .obrec{padding:8px 0 0;text-align:center}.obrec>h1{font-size:28px;padding:0 20px}.obrec>p{margin-top:8px;font-size:14px}
 .obr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:22px;scrollbar-width:none}.obr::-webkit-scrollbar{display:none}
-.obc{flex:none;width:100%;scroll-snap-align:center;padding:0 22px}
-.obimg{position:relative;border-radius:24px 24px 0 0;overflow:hidden;aspect-ratio:4/3.4}.obimg img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .obv{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.85))}
-.obcap{position:absolute;left:18px;right:18px;bottom:14px;text-align:left}.obcap span{font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--rose)}.obcap h2{font-size:22px;color:#fff;margin-top:4px}
-.obtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.obtags em{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff}
-.obtxt{background:var(--panel);padding:16px 18px 6px;text-align:left;font-size:13.5px;line-height:1.65;color:var(--dim);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
-.obbtns{display:flex;gap:10px;background:var(--panel);padding:12px 18px 18px;border-radius:0 0 24px 24px}.obnext{width:52px;height:46px;border-radius:999px;background:var(--raise);font-size:18px}
-.obdots{display:flex;gap:8px;justify-content:center;margin-top:18px}.obdots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.obdots i.on{background:var(--rose)}
+.obnext{width:52px;height:46px;border-radius:999px;background:var(--raise);font-size:18px}
+.obdots i.on{background:var(--rose)}
 .obskip{display:block;margin:18px auto 0;font-size:13px;color:var(--faint);text-decoration:underline}
 .fmin{padding-bottom:14px}.fmin .ftitle{font-size:18px;text-shadow:0 1px 8px rgba(0,0,0,.7)}.fmin .ftitle small{font-family:var(--sans,inherit);font-size:13px;font-weight:700;color:var(--gold);opacity:.95}
 .dtags{padding:6px 16px 8px;gap:8px}.dtags button{padding:7px 12px;border-radius:999px;font-size:13px}.dtags button.blt{border:1.5px solid var(--gold);color:var(--gold);font-weight:800}
@@ -1255,11 +1242,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .dimrow{display:flex;gap:8px;overflow-x:auto;padding:6px 10px 4px;scrollbar-width:none}.dimrow::-webkit-scrollbar{display:none}
 .dimc{flex:none;border:1px solid rgba(255,255,255,.12);background:rgba(20,16,26,.62);backdrop-filter:blur(10px);border-radius:14px;padding:6px 9px;color:#fff;text-align:left;display:flex;flex-direction:column;gap:5px;position:relative}
 .dimc.pulse{box-shadow:0 0 0 2px rgba(238,111,151,.55)}
-.dimh .av+.av{margin-left:-8px}.ds-fire,.ds-pull{color:#ff9db0;background:rgba(238,111,151,.18)!important}.ds-sync,.ds-warm{color:#ffd59a;background:rgba(255,196,110,.15)!important}.ds-gru,.ds-guard{color:#b9c3d6}.ds-jea{color:#9fe3a7;background:rgba(120,220,140,.14)!important}
-.dimm span{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dimh .av+.av{margin-left:-8px}.dimm span{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0}
 .dimm u{display:block;height:100%;border-radius:3px;transition:width .8s}
 .dimm b{font-size:11px;font-weight:700}.dimm.mini{grid-template-columns:repeat(4,auto);gap:8px}.dimm.mini span{flex-direction:row;gap:3px;align-items:baseline}
-.dm-att u{background:#ff7aa2}.dm-tru u{background:#7cc8ff}.dm-jea u{background:#8be08f}.dm-ten u{background:#ffb35c}.dm-gru u{background:#9aa3b5}
 .dimf{position:absolute;left:50%;top:-4px;transform:translateX(-50%);font-size:11px;font-weight:800;pointer-events:none;animation:dimf 1.6s ease-out forwards}.dimf.up{color:#7dffb0}.dimf.down{color:#ff8a8a}
 @keyframes dimf{0%{opacity:0;transform:translate(-50%,4px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-18px)}}
 .dimline i{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}.dimline u{display:block;height:100%}.dimline b{font-size:12.5px;text-align:right}
@@ -1387,7 +1372,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .chacts button{font-size:12px;padding:5px 10px;border-radius:99px;background:rgba(240,183,126,.12);border:1px solid rgba(240,183,126,.35);color:#F0B77E}
 .chacts button.on{background:#F0B77E;color:#1B1017;font-weight:700}
 #chTxt{width:100%;box-sizing:border-box;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;padding:9px 10px;font-size:14.5px;line-height:1.45;resize:none;font-family:inherit}
-.chprev{font-size:14px;color:#fff;line-height:1.5}.chprev small{display:block;font-size:10.5px;color:#B7AEC2;margin-bottom:2px}
 
 .scurt{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(6,5,9,.0);backdrop-filter:blur(0);pointer-events:none;transition:background .6s ease,backdrop-filter .6s ease}
 .scurt.on{background:rgba(6,5,9,.62);backdrop-filter:blur(6px)}
@@ -1431,7 +1415,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="1e6c65aa39de 2026-10-27T08:20Z";
+window.MIRU_BUILD="a7f810a5e2a5 2026-10-27T08:23Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};

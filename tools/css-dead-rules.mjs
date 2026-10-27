@@ -110,4 +110,58 @@ console.log('  真死候选合计 ' + bytes + ' 字符 —— 仍然**不是"删
 console.log('  ① 有些类名是**服务端返回的 HTML** 里带的（`/api/works` 之类），源码里造不出来；');
 console.log('  ② 逐条确认之后才能删，删前后各跑一次 tools/style-computed-snapshot.mjs --check；');
 console.log('  ③ 删之前先跑一次变异（把一条活规则的选择器改成不存在的类），确认这把尺会把它判死。');
+
+/* ---- --triage：给每条真死候选「一个说法」，三个假阳性源逐个查 ----
+   ① 服务端返回的 HTML 里带的类名（`api/**`）——元素由后端产生，源码里当然搜不到
+   ② 章节内容里带的类名（`source/content/**`）——只在某章剧情渲染时才出现
+   ③ 命名邻居：同一前缀的兄弟类有没有活的 —— 整族都死 = 真的整块死；有活的兄弟 = 可能是还没做的变体
+   ⚠️ 这个模式必须放在文件**最后**：它依赖上面算好的 `truly` / `corpus`。 */
+if (process.argv.includes('--triage')) {
+  const readAll = (dir, filter) => {
+    const out = [];
+    const walkDir = (d) => {
+      for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+        const p = path.join(d, e.name);
+        if (e.isDirectory()) { if (!/node_modules|\.git/.test(e.name)) walkDir(p) }
+        else if (filter(p)) out.push({ p: path.relative(ROOT, p), t: fs.readFileSync(p, 'utf8') });
+      }
+    };
+    try { walkDir(dir) } catch (e) { }
+    return out;
+  };
+  const apiCorpus = readAll(path.join(ROOT, 'api'), p => /\.js$/.test(p));
+  const contentCorpus = readAll(path.join(ROOT, 'source', 'content'), p => /\.(json|md|txt)$/.test(p));
+  const cssTokens = new Set((fs.readFileSync(path.join(ROOT, 'source', 'src', 'shell.html'), 'utf8')
+    .match(/\.[a-zA-Z][\w-]*/g) || []).map(m => m.slice(1)));
+  const hits = (corp, k) => corp.filter(x => x.t.indexOf(k) >= 0).map(x => x.p);
+  const keysOf = (sel) => (sel.match(/#[\w-]+/g) || []).map(s => s.slice(1))
+    .concat((sel.match(/\.[\w-]+/g) || []).map(s => s.slice(1)));
+
+  const tally = {};
+  const deadFam = [];
+  for (const x of truly) {
+    const keys = keysOf(x.sel);
+    if (!keys.length) continue;
+    const k = keys[0];
+    const inApi = hits(apiCorpus, k), inContent = hits(contentCorpus, k), inJs = hits(corpus, k);
+    const fam = k.slice(0, 3);
+    const siblings = [...cssTokens].filter(t => t !== k && t.startsWith(fam));
+    const aliveSib = siblings.filter(t => corpus.some(f => f.t.indexOf(t) >= 0));
+    let verdict, why;
+    if (inApi.length) { verdict = '假阳性·服务端'; why = inApi.slice(0, 2).join(' ') }
+    else if (inContent.length) { verdict = '假阳性·内容里'; why = inContent.slice(0, 2).join(' ') }
+    else if (inJs.length) { verdict = '假阳性·JS里其实有'; why = inJs.slice(0, 2).join(' ') }
+    else if (aliveSib.length === 0) { verdict = '整族死'; why = '前缀 ' + fam + '* 共 ' + siblings.length + ' 个兄弟，一个都不在 JS 里' }
+    else { verdict = '暂不判'; why = '兄弟活着 ' + aliveSib.length + ' 个（' + aliveSib.slice(0, 4).join(' ') + '）' }
+    tally[verdict] = (tally[verdict] || 0) + 1;
+    if (verdict === '整族死') deadFam.push(x.sel);
+    console.log('  [' + x.len + '] ' + x.sel.slice(0, 58).padEnd(58) + ' → ' + verdict + '   ' + why);
+  }
+  console.log('\n' + Object.entries(tally).map(([k, v]) => k + ' ' + v).join(' · '));
+  /* 把「整族死」那一档原样写出来，给删除脚本吃（选择器必须与 CSS 里逐字一致） */
+  const outFile = path.join(process.env.TEMP || '.', 'dead-family.txt');
+  fs.writeFileSync(outFile, deadFam.join('\n') + '\n', 'utf8');
+  console.log('已写 ' + outFile + '（' + deadFam.length + ' 条）');
+  process.exit(0);
+}
 process.exit(0);
