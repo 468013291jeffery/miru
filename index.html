@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="6279543abd55 2026-10-27T05:18Z";
+window.MIRU_BUILD="fc63d53dc763 2026-10-27T05:25Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -2802,6 +2802,167 @@ es:{
 }};
 const LANG_NAME={en:"English",zh:"Simplified Chinese (简体中文)",ja:"Japanese (日本語)",ko:"Korean (한국어)",es:"Spanish (español)"};
 const LANGS=[["en","English"],["zh","中文"],["ja","日本語"],["ko","한국어"],["es","Español"]];
+
+/* ================= 回合状态机 v0.1（2026-10-27 · Ann 定的第二件事）=================
+   Ann：「这是解耦之后应该做的第二件事，统一接口之类的，没有这个谈不上代码质量。」
+
+   ## 病
+   `busy` 只是一个 boolean（`app3_chat.js` 里的 `let busy=false`），有四拨人各自解释它：
+     reply()      置真/置假
+     packRun()    完全不理它
+     doSend()     读它决定「丢弃还是排队」
+     dock97/UI    另算一套「轮到你了」
+
+   同一个动作（比如「我正在说话时点了一个选项」）因此在四个地方得到四种答案 ——
+   这就是「一会好一会坏」的机械原因。
+
+   ## 这一步做什么（小、可回滚、不改行为）
+   给它一个**唯一持有人**：谁拿的、什么时候拿的、有没有第二个人同时拿。
+     TURN.acquire('reply')   置忙（同时记 owner 与起点）
+     TURN.release('reply')   置闲（只有持有者能放）
+     TURN.state()            给 UI 读的唯一状态
+     __turn()                控制台读数：此刻谁持有、历史冲突几次
+
+   ## 刻意没做
+   没有把 `busy` 换成 getter（那要改几十处读点，风险大且不是这一步的目的）。
+   这一版只保证：**置真/置假只有一个入口，且第二个人抢会被记下来。**
+   等冲突读数归零，再谈把 UI 全部改成读 TURN.state()。
+================================================================================== */
+(function () {
+  'use strict';
+
+  const T = {
+    v: 1,
+    owner: '',            // 当前持有者
+    since: 0,             // 何时拿到的
+    total: 0,             // 累计回合数
+    conflicts: [],        // 两个人同时要忙 ⇒ 竞态的形状
+    history: [],          // 最近 50 次 acquire/release
+    _set: null            // 由 app3_chat 注册：把 busy 真正改掉的那个人
+  };
+
+  function stamp(kind, owner, extra) {
+    T.history.push({ at: Date.now(), kind, owner, extra: extra || '' });
+    if (T.history.length > 50) T.history.shift();
+  }
+
+  T.bind = function (setter) { T._set = setter };
+
+  T.acquire = function (owner) {
+    if (!T._set) return false;
+    if (T.owner && T.owner !== owner) {
+      // 有人还拿着就又来了一个 —— 不是"排队"，是两个人在同一时刻都以为自己是唯一
+      T.conflicts.push({ at: Date.now(), holder: T.owner, wanted: owner, heldMs: Date.now() - T.since });
+      if (T.conflicts.length > 50) T.conflicts.shift();
+    }
+    if (!T.owner) { T.owner = owner || '?'; T.since = Date.now(); T.total++; }
+    stamp('acquire', owner || '?', T.owner !== (owner || '?') ? ('held by ' + T.owner) : '');
+    try { T._set(true) } catch (_) {}
+    return true;
+  };
+
+  T.release = function (owner) {
+    if (!T._set) return false;
+    if (T.owner && owner && T.owner !== owner) {
+      // 不是持有者却来放 —— 会把别人的忙状态误清掉，这是最危险的一种
+      T.conflicts.push({ at: Date.now(), holder: T.owner, wanted: 'release:' + owner, heldMs: Date.now() - T.since });
+      return false;
+    }
+    T.owner = ''; T.since = 0;
+    stamp('release', owner || '?');
+    try { T._set(false) } catch (_) {}
+    return true;
+  };
+
+  T.state = function () {
+    if (!T.owner) return 'idle';
+    const ms = Date.now() - T.since;
+    return ms > 60000 ? 'stuck' : 'busy';
+  };
+
+  T.heldMs = function () { return T.owner ? Date.now() - T.since : 0 };
+
+  window.TURN = T;
+  window.__turn = function (detail) {
+    const s = {
+      现在: T.state(), 持有者: T.owner || '(无)', 已持ms: T.heldMs(),
+      累计回合: T.total, 冲突次数: T.conflicts.length
+    };
+    if (!detail) return s;
+    return { 汇总: s, 冲突: T.conflicts.slice(-20), 最近: T.history.slice(-20) };
+  };
+})();
+
+/* ================= 章节状态机 v0.1（2026-10-27 · 第三件）=================
+   Ann：「继续做吧，副作用都能修，但增强稳健性、做软件工程上的升级是最重要的事。」
+
+   ## 病
+   `th.pk.st` 的取值只有四个（busy / choose / next / end），但**有 10 个写点散在 4 个文件里**：
+     app14_pack.js  6 处 · app28_burst.js 1 处 · app3_chat.js 1 处 · app46_cp.js 1 处
+   每个写点都自己顺手做（或不顺手做）save() / packRefresh() / scrollChat()。
+   ⇒ 「自动换章」「选完状态不对」「复档回来卡住」这些，全是**一次转移没按规矩走**。
+
+   ## 这一版做什么
+   给四个状态一个**迁移表**，并让「写 st」只有一个门：
+     pkGo(th, to, why)     合法就照做（save + 刷新），非法就**记一笔再照做**
+     __pkst()              控制台读数：各状态计数 · 非法迁移明细
+
+   没做：没有禁止非法迁移（那会让玩家卡死在旧版本存档里），只把它变成**可数的**。
+   等非法计数归零，再谈把非法迁移改成拒绝。
+
+   ## 迁移表（照着今晚的真实流程写的）
+     busy   → choose | next | end | busy
+     choose → busy | choose
+     next   → busy | next
+     end    → busy            （重玩 / 复档）
+   其余（如 choose→next、end→choose）算非法。
+====================================================================== */
+(function () {
+  'use strict';
+
+  const LEGAL = {
+    busy: ['busy', 'choose', 'next', 'end'],
+    choose: ['choose', 'busy'],
+    next: ['next', 'busy'],
+    end: ['end', 'busy']
+  };
+
+  const M = {
+    v: 1,
+    n: 0,                    // 总转移次数
+    byState: {},             // 落到每个状态的次数
+    byEdge: {},              // "from→to" 次数
+    violations: [],          // 非法迁移（保留最近 50）
+    _write: null             // 由 app14 注册：真正写 th.pk.st 的那一个
+  };
+
+  M.bind = function (fn) { M._write = fn };
+
+  M.go = function (th, to, why) {
+    if (!th || !th.pk) return false;
+    const from = th.pk.st || '(none)';
+    const ok = from === '(none)' || (LEGAL[from] && LEGAL[from].indexOf(to) >= 0);
+    M.n++;
+    M.byState[to] = (M.byState[to] || 0) + 1;
+    const edge = from + '→' + to;
+    M.byEdge[edge] = (M.byEdge[edge] || 0) + 1;
+    if (!ok) {
+      M.violations.push({ at: Date.now(), from, to, why: why || '', ch: th.pk.ch });
+      if (M.violations.length > 50) M.violations.shift();
+      try { console.warn('[pkst] 非法迁移 ' + edge + '（' + (why || '') + '）'); } catch (_) {}
+    }
+    try { if (M._write) M._write(th, to); else th.pk.st = to; } catch (_) { try { th.pk.st = to } catch (_) {} }
+    return ok;
+  };
+
+  window.PKST = M;
+  window.pkGo = M.go;
+  window.__pkst = function (detail) {
+    const sum = { 总转移: M.n, 各状态: M.byState, 非法次数: M.violations.length };
+    if (!detail) return sum;
+    return { 汇总: sum, 边: M.byEdge, 非法明细: M.violations.slice(-20) };
+  };
+})();
 
 /* ================= CORE ================= */
 const KEY="miru_v2";
@@ -4516,7 +4677,7 @@ function appendMsg(th,m){
   if(m&&m.who==="me"&&th&&th.pk){
    th.pk.chRounds=(th.pk.chRounds||0)+1;
    const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
-   if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;th.pk.st="choose";try{packRefresh(th)}catch(_){}}
+   if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','rounds-gate');try{packRefresh(th)}catch(_){}}
   }
  }catch(_){}
  /* 2026-10-27：同一个人、同一句、4 秒内，只落一次。
@@ -6865,8 +7026,15 @@ function beatMsg(b){
  return {who:b[0],k:b[0]==="n"?"act":b[1],txt:t,at:Date.now(),pk:1};
 }
 function packPov(th){const w=wd(th.wid);return (w.pack&&w.pack.pov)||w.cast[w.cast.length-1]}
+/* 2026-10-27：状态机存在时用它，不存在（自检沙箱 / 旧环境）就直接赋值。
+   绝不能直接引用全局 pkGo —— 那会让 tools/pack-flow-selftest.mjs 这类沙箱炸掉。 */
+const pkGo = (typeof window !== "undefined" && window.PKST && typeof window.PKST.go === "function")
+  ? function (th, to, why) { return window.PKST.go(th, to, why) }
+  : function (th, to) { if (th && th.pk) th.pk.st = to };
+/* 2026-10-27：th.pk.st 的唯一写入者就在这儿注册给状态机（app104_pkstate.js） */
+try{ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); }catch(_){}
 function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
- th.pk.st="busy";th.pk.min=false;th.pk.stop=null;
+ (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
  const beats=packBeats(c.beats).slice();
@@ -6908,7 +7076,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
   const had=(th.pk.chRounds||0);
   if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
-  else{th.pk.st="choose";th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
+  else{(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','queue-drained');th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
  }
  else if(a&&a.indexOf("pick:")===0){
   packAfterPick(th,a.slice(5));
@@ -6930,7 +7098,7 @@ function EN(th){return Math.min(ENDING_NEED,Math.max(0,PCN(wd(th.wid))-1))}
 
 /* ---------- the panel under the scene ---------- */
 function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!(th.pk.q&&th.pk.q.length);
- if(th.pk.st==="busy"&&!running&&!hasQ&&!th.pk.stop&&!busy)th.pk.st="choose";const w=wd(th.wid),P=w.pack,n=th.pk.ch,c=P.chapters[n-1];if(!c)return "";
+ if(th.pk.st==="busy"&&!running&&!hasQ&&!th.pk.stop&&!busy)(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','panel-recover');const w=wd(th.wid),P=w.pack,n=th.pk.ch,c=P.chapters[n-1];if(!c)return "";
  if(th.pk.min&&!th.pk.stop)return '<button class="pkmini" data-pkmin="0">📖 '+t("pk.chShort",{n})+' · '+(th.pk.st==="choose"?t("pk.yourMove"):th.pk.st==="end"?t("pk.ended"):t("pk.nextUp"))+' ▴</button>';
  let h='<div class="pkpanel'+(th.pk.stop?" stop":"")+'"><div class="pkhd"><span class="eyebrow">'+t("pk.chShort",{n})+' / '+P.chapters.length+' · '+esc(Lz(c.t))+'</span>'+(th.pk.stop?'':'<button class="pkx" data-pkmin="1" aria-label="hide">▾</button>')+'</div>';
  if(th.pk.stop)h+=stopHTML(th);
@@ -6999,18 +7167,18 @@ function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
  pkTrack(th,"choice_pick",{ch:n,key:k,ms:th.pk._chAt?Date.now()-th.pk._chAt:null});
- th.pk.picks[n]=k;pkSet(th,x.set);th.pk.st="busy";th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
+ th.pk.picks[n]=k;pkSet(th,x.set);(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','pick');th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
  appendMsg(th,{who:"sys",k:"dec",n,c:k,txt:Lz(x.t),at:Date.now()});
  th.pk.q=packBeats(x.then).slice();th.pk.after="pick:"+k;save();packRefresh(th);packRun(th)}
 function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  th.mem.push(Lz(x.mem));packLove(th,k);th.rounds++;
  pkDone(th,n);
- if(n===PCN(w)){th.pk.st="end";th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
+ if(n===PCN(w)){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'end','ending');th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
   pkTrack(th,"story_end",{ch:n,ending:k});
   if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>loveWrite(th,cid,0,"ending:A",{floor:80}));
   appendMsg(th,{who:"sys",k:"end",e:k,at:Date.now()});
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
- else th.pk.st="next";
+ else (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'next','chapter-done');
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
  try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
  try{
@@ -7033,7 +7201,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
 function packNext(){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="next"||busy)return;const n=th.pk.ch+1;
  if(chLocked(th.wid,n)){packPaywall(th.wid,n);return}
  const w=wd(th.wid);if(w.pack.ready&&n>w.pack.ready){toast(t("st2.soon",{n}));return}
- th.pk.st="busy";packRefresh(th);packOpen(th,n,false)}
+ (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packNext');packRefresh(th);packOpen(th,n,false)}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pkpick]")){packPick(x.dataset.pkpick);return}
  if(x=e.target.closest("[data-pknext]")){
@@ -8945,7 +9113,7 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
    th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
- if(a==="choose"){th.pk.st="choose";save();packRefresh(th);if(curT===th.id)scrollChat()}
+ if(a==="choose"){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','burst');save();packRefresh(th);if(curT===th.id)scrollChat()}
  else if(a&&a.indexOf("pick:")===0)packAfterPick(th,a.slice(5))};
 
 /* ---- v129 writing rules for live AI (male/male stories) + "look back" unlocks ---- */
@@ -10628,7 +10796,7 @@ function cpRestore(th,cp){try{if(typeof pkTrace==="function")pkTrace("cpRestore"
  Object.keys(th).forEach(k=>delete th[k]);Object.assign(th,snap,{msgs,cps});th._gen=g;delete PKWAIT[th.id];try{delete PKNEXT[th.id]}catch(_){}try{CH=null}catch(_){}if(w)w([]);if(nx)nx();
  try{const L=$("#fxLayer");if(L)L.innerHTML=""}catch(_){}
  if(th.pk&&cp.kind==="start"){th.pk.q=[];th.pk.stop=null;save();renderChat();th._cpRestoring=1;setTimeout(()=>{delete PKPLAY[th.id];packOpen(th,cp.ch);delete th._cpRestoring},150)}
- else if(th.pk){th.pk.q=cpChapBeats(th,cp.ch).slice(cp.idx);th.pk.stop=null;th.pk.st="busy";th.pk.after="choose";save();renderChat();setTimeout(()=>{delete PKPLAY[th.id];packRun(th)},150)}
+ else if(th.pk){th.pk.q=cpChapBeats(th,cp.ch).slice(cp.idx);th.pk.stop=null;(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','restore');th.pk.after="choose";save();renderChat();setTimeout(()=>{delete PKPLAY[th.id];packRun(th)},150)}
  else{save();renderChat()}
  appendMsg(th,{who:"sys",k:"card",title:"⏪ "+LL("回到了这里","Back to this point"),txt:(th.pk?LL("第 "+cp.ch+" 章 · ","Chapter "+cp.ch+" · "):"")+cpLabel(th,cp)+LL("。这一次，换个方式走。"," — try it differently this time."),at:Date.now()})}
 document.addEventListener("click",e=>{let x;

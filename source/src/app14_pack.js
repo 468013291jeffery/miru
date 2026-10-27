@@ -87,8 +87,15 @@ function beatMsg(b){
  return {who:b[0],k:b[0]==="n"?"act":b[1],txt:t,at:Date.now(),pk:1};
 }
 function packPov(th){const w=wd(th.wid);return (w.pack&&w.pack.pov)||w.cast[w.cast.length-1]}
+/* 2026-10-27：状态机存在时用它，不存在（自检沙箱 / 旧环境）就直接赋值。
+   绝不能直接引用全局 pkGo —— 那会让 tools/pack-flow-selftest.mjs 这类沙箱炸掉。 */
+const pkGo = (typeof window !== "undefined" && window.PKST && typeof window.PKST.go === "function")
+  ? function (th, to, why) { return window.PKST.go(th, to, why) }
+  : function (th, to) { if (th && th.pk) th.pk.st = to };
+/* 2026-10-27：th.pk.st 的唯一写入者就在这儿注册给状态机（app104_pkstate.js） */
+try{ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); }catch(_){}
 function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
- th.pk.st="busy";th.pk.min=false;th.pk.stop=null;
+ (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
  const beats=packBeats(c.beats).slice();
@@ -130,7 +137,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
   const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
   const had=(th.pk.chRounds||0);
   if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
-  else{th.pk.st="choose";th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
+  else{(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','queue-drained');th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
  }
  else if(a&&a.indexOf("pick:")===0){
   packAfterPick(th,a.slice(5));
@@ -152,7 +159,7 @@ function EN(th){return Math.min(ENDING_NEED,Math.max(0,PCN(wd(th.wid))-1))}
 
 /* ---------- the panel under the scene ---------- */
 function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!(th.pk.q&&th.pk.q.length);
- if(th.pk.st==="busy"&&!running&&!hasQ&&!th.pk.stop&&!busy)th.pk.st="choose";const w=wd(th.wid),P=w.pack,n=th.pk.ch,c=P.chapters[n-1];if(!c)return "";
+ if(th.pk.st==="busy"&&!running&&!hasQ&&!th.pk.stop&&!busy)(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','panel-recover');const w=wd(th.wid),P=w.pack,n=th.pk.ch,c=P.chapters[n-1];if(!c)return "";
  if(th.pk.min&&!th.pk.stop)return '<button class="pkmini" data-pkmin="0">📖 '+t("pk.chShort",{n})+' · '+(th.pk.st==="choose"?t("pk.yourMove"):th.pk.st==="end"?t("pk.ended"):t("pk.nextUp"))+' ▴</button>';
  let h='<div class="pkpanel'+(th.pk.stop?" stop":"")+'"><div class="pkhd"><span class="eyebrow">'+t("pk.chShort",{n})+' / '+P.chapters.length+' · '+esc(Lz(c.t))+'</span>'+(th.pk.stop?'':'<button class="pkx" data-pkmin="1" aria-label="hide">▾</button>')+'</div>';
  if(th.pk.stop)h+=stopHTML(th);
@@ -221,18 +228,18 @@ function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
  pkTrack(th,"choice_pick",{ch:n,key:k,ms:th.pk._chAt?Date.now()-th.pk._chAt:null});
- th.pk.picks[n]=k;pkSet(th,x.set);th.pk.st="busy";th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
+ th.pk.picks[n]=k;pkSet(th,x.set);(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','pick');th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
  appendMsg(th,{who:"sys",k:"dec",n,c:k,txt:Lz(x.t),at:Date.now()});
  th.pk.q=packBeats(x.then).slice();th.pk.after="pick:"+k;save();packRefresh(th);packRun(th)}
 function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
  th.mem.push(Lz(x.mem));packLove(th,k);th.rounds++;
  pkDone(th,n);
- if(n===PCN(w)){th.pk.st="end";th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
+ if(n===PCN(w)){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'end','ending');th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
   pkTrack(th,"story_end",{ch:n,ending:k});
   if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>loveWrite(th,cid,0,"ending:A",{floor:80}));
   appendMsg(th,{who:"sys",k:"end",e:k,at:Date.now()});
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
- else th.pk.st="next";
+ else (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'next','chapter-done');
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
  try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
  try{
@@ -255,7 +262,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
 function packNext(){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="next"||busy)return;const n=th.pk.ch+1;
  if(chLocked(th.wid,n)){packPaywall(th.wid,n);return}
  const w=wd(th.wid);if(w.pack.ready&&n>w.pack.ready){toast(t("st2.soon",{n}));return}
- th.pk.st="busy";packRefresh(th);packOpen(th,n,false)}
+ (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packNext');packRefresh(th);packOpen(th,n,false)}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pkpick]")){packPick(x.dataset.pkpick);return}
  if(x=e.target.closest("[data-pknext]")){

@@ -258,7 +258,7 @@ function appendMsg(th,m){
   if(m&&m.who==="me"&&th&&th.pk){
    th.pk.chRounds=(th.pk.chRounds||0)+1;
    const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
-   if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;th.pk.st="choose";try{packRefresh(th)}catch(_){}}
+   if(th.pk.afterPendingChoose&&th.pk.chRounds>=MIN){th.pk.afterPendingChoose=0;(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','rounds-gate');try{packRefresh(th)}catch(_){}}
   }
  }catch(_){}
  /* 2026-10-27：同一个人、同一句、4 秒内，只落一次。
