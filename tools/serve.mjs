@@ -76,7 +76,21 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
 
 http.createServer((req, res) => {
   const u = decodeURIComponent((req.url || '/').split('?')[0]);
-  // POST /__health —— 运行时健康汇报落盘（来自 app107_health.js）。
+  // POST /__errlog —— 错误日志落盘（来自 app108_errlog.js）。保留 2 分钟窗口，文件本身只保留窗口内的条目。
+  if (u === '/__errlog' && req.method === 'POST') {
+    let b = '';
+    req.setEncoding('utf8');
+    req.on('data', c => { b += c });
+    req.on('end', () => {
+      try {
+        fs.writeFileSync(path.join(root, '.browser-errlog.json'), b, 'utf8');
+        res.writeHead(200, { 'content-type': 'application/json' }); res.end('{"ok":true}');
+      } catch (e) {
+        res.writeHead(500, { 'content-type': 'application/json' }); res.end(JSON.stringify({ ok: false, error: String(e && e.message || e) }));
+      }
+    });
+    return;
+  }  // POST /__health —— 运行时健康汇报落盘（来自 app107_health.js）。
   // 为什么要它：所有计数器原来只活在内存/控制台里，她玩的时候没人看；落盘之后 grep 就能发现异常。
   if (u === '/__health' && req.method === 'POST') {
     let b = '';
