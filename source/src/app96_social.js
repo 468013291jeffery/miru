@@ -80,7 +80,10 @@ async function gen96(th, event) {
 function feedBadge96() { const th = S.threads[curT], b = $("#fd96b"); if (!b || !th) return; const n = (th.feed96 && th.feed96.unread) || 0; const em = b.querySelector("em"); if (em) em.textContent = n ? (n > 99 ? "99+" : n) : ""; }
 function feedBtn96() { const th = S.threads[curT]; if (!th || !th.pk || !th.wid) return; const col = $("#s-chat .rcol"); if (!col || $("#fd96b")) return;
   col.insertAdjacentHTML("afterbegin", '<button id="fd96b" class="histbtn" data-fd96="1"><i>🔥</i><small>' + esc(L96("热搜", "Trending")) + '</small><em></em></button>'); feedBadge96(); }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { feedBtn96(); } catch (_) {} return r; }; }
+{ /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_social96 = function () { try { feedBtn96(); } catch (_) {} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("social96", __body_social96);
+else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_social96(); return r; }; }; }
 function postHTML96(p, th) {
   const kindL = { media: L96("媒体", "Media"), fan: L96("粉丝", "Fan"), anti: L96("黑粉", "Hater"), passerby: L96("路人", "Passerby"), char: L96("本人", "Cast"), me: L96("你", "You") }[p.kind] || "";
   const av = p.cid ? '<img src="' + esc(artSrc(p.cid)) + '" alt="">' : '<span style="background:hsl(' + (hash96(p.name) % 360) + ' 45% 38%)">' + esc((p.name || "?").slice(0, 1)) + '</span>';

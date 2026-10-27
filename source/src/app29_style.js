@@ -23,4 +23,7 @@ const _pkDir29=pkDirective;pkDirective=function(th,b){const isScene=Array.isArra
 const _pkWait29=pkWait;pkWait=function(th,prev,spd,ms){if(th._sceneHold){th._sceneHold=0;ms=Math.max(ms,3400)}return _pkWait29(th,prev,spd,ms)};
 Object.assign(I18N.zh,{"sc29.next":"下一幕"});Object.assign(I18N.en,{"sc29.next":"NEXT SCENE"});
 /* the free-chat quick lines don't belong to a written story */
-const _renderChat29=renderChat;renderChat=function(){_renderChat29.apply(this,arguments);const th=S.threads[curT];if(th&&th.pk){$$(".composer .qchips > button").forEach(b=>b.remove())}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_style29 = function () { const th=S.threads[curT];if(th&&th.pk){$$(".composer .qchips > button").forEach(b=>b.remove())} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("style29", __body_style29);
+else { const _renderChat29 = renderChat; renderChat = function () { const r = _renderChat29.apply(this, arguments); __body_style29(); return r; }; };

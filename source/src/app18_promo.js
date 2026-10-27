@@ -61,9 +61,11 @@ const STK=[["🥺","求你了","please?"],["😤","哼","hmph"],["🙈","不看�
 const KAO=["(｡•́︿•̀｡)","(⁄ ⁄•⁄ω⁄•⁄ ⁄)","(*/ω＼*)","ヽ(•̀ω•́ )ゝ","(￣▽￣)~*","(｡♥‿♥｡)","(っ˘з(˘⌣˘ )","( ˘ ³˘)♥","(╯°□°）╯︵ ┻━┻","¯\\_(ツ)_/¯","(；′⌒`)","(｀へ´)","(๑•̀ㅂ•́)و✧","(=^･ω･^=)","ʕ•ᴥ•ʔ","(づ｡◕‿‿◕｡)づ",
  "(〃∀〃)","(｡ŏ﹏ŏ)","(ಥ﹏ಥ)","(¬‿¬)","(°ロ°) !","(ง •̀_•́)ง","( ´ ▽ ` )ﾉ","(⊙_⊙)？","(´-ω-`)","(✿◠‿◠)","(ノ°ο°)ノ","(*≧ω≦)","(￣ε￣＠)","( ͡° ͜ʖ ͡°)","(/ω＼)","(｡･ω･｡)ﾉ♡"];
 const STK_CUTE=36;
-const _renderChat18=renderChat;
-renderChat=function(){_renderChat18.apply(this,arguments);const ir=$(".composer .inrow");if(!ir||ir.querySelector("[data-emo]"))return;
- const sd=ir.querySelector("[data-send]");if(sd)sd.insertAdjacentHTML("beforebegin",'<button class="emobtn" data-emo="1" aria-label="emoji">😊</button>')};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_promo18 = function () { const ir=$(".composer .inrow");if(!ir||ir.querySelector("[data-emo]"))return;
+ const sd=ir.querySelector("[data-send]");if(sd)sd.insertAdjacentHTML("beforebegin",'<button class="emobtn" data-emo="1" aria-label="emoji">😊</button>') };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("promo18", __body_promo18);
+else { const _renderChat18 = renderChat; renderChat = function () { const r = _renderChat18.apply(this, arguments); __body_promo18(); return r; }; };
 let emoTab="stk";
 function emoPanel(){const tabs=[["stk","emo.stk"],["flirt","emo.flirt"],["emo","emo.emo"],["kao","emo.kao"]];
  const st=(a,b)=>'<div class="stkg">'+STK.slice(a,b).map((s,j)=>'<button data-stk="'+(a+j)+'"><span>'+s[0]+'</span><small>'+esc((S.lang==="zh"?s[1]:s[2]))+'</small></button>').join("")+'</div>';

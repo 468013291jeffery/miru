@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="e0d61a4f93f7 2026-10-27T06:05Z";
+window.MIRU_BUILD="24716351128a 2026-10-27T06:09Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -8107,10 +8107,12 @@ function relSync(th){if(!th||curT!==th.id)return;const r=$(".relrow");const old=
  const h=relRowHTML(th);if(r)r.outerHTML=h;else{const s=$(".status");if(s)s.insertAdjacentHTML("beforebegin",h)}
  Object.keys(old).forEach(c=>{const d=Math.round(th.love[c]||0)-old[c];if(!d)return;const b=$('.relc[data-relc="'+c+'"]');if(!b)return;
   b.classList.add(d>0?"up":"down");b.insertAdjacentHTML("beforeend",'<span class="relf '+(d>0?"up":"down")+'">'+(d>0?"+":"")+d+'</span>');setTimeout(()=>{b.classList.remove("up","down");const f=$(".relf",b);if(f)f.remove()},1600)})}
-const _renderChat10=renderChat;
-renderChat=function(){_renderChat10.apply(this,arguments);const th=S.threads[curT];if(!th||!th.pk)return;
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_custom17 = function () { const th=S.threads[curT];if(!th||!th.pk)return;
  const s=$(".status");if(s){[...s.children].forEach(x=>{if(!x.classList.contains("pairchip")&&/♥/.test(x.textContent))x.remove()});const pc=s.querySelector(".pairchip");if(pc)pc.remove()}
- relSync(th)};
+ relSync(th) };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("custom17", __body_custom17);
+else { const _renderChat10 = renderChat; renderChat = function () { const r = _renderChat10.apply(this, arguments); __body_custom17(); return r; }; };
 const _stopResolve10=stopResolve;stopResolve=function(th,extra){const r=_stopResolve10(th,extra);setTimeout(()=>relSync(th),60);return r};
 const _packAfterPick10=packAfterPick;packAfterPick=function(th,k){const r=_packAfterPick10(th,k);setTimeout(()=>relSync(th),60);return r};
 document.addEventListener("click",e=>{const x=e.target.closest("[data-relc]");if(!x)return;const th=S.threads[curT];if(!th)return;const c=x.dataset.relc,v=Math.round(th.love[c]||0),st=stageOf(th,c),nx=STAGE_MIN[st+1];
@@ -8202,9 +8204,11 @@ const STK=[["🥺","求你了","please?"],["😤","哼","hmph"],["🙈","不看�
 const KAO=["(｡•́︿•̀｡)","(⁄ ⁄•⁄ω⁄•⁄ ⁄)","(*/ω＼*)","ヽ(•̀ω•́ )ゝ","(￣▽￣)~*","(｡♥‿♥｡)","(っ˘з(˘⌣˘ )","( ˘ ³˘)♥","(╯°□°）╯︵ ┻━┻","¯\\_(ツ)_/¯","(；′⌒`)","(｀へ´)","(๑•̀ㅂ•́)و✧","(=^･ω･^=)","ʕ•ᴥ•ʔ","(づ｡◕‿‿◕｡)づ",
  "(〃∀〃)","(｡ŏ﹏ŏ)","(ಥ﹏ಥ)","(¬‿¬)","(°ロ°) !","(ง •̀_•́)ง","( ´ ▽ ` )ﾉ","(⊙_⊙)？","(´-ω-`)","(✿◠‿◠)","(ノ°ο°)ノ","(*≧ω≦)","(￣ε￣＠)","( ͡° ͜ʖ ͡°)","(/ω＼)","(｡･ω･｡)ﾉ♡"];
 const STK_CUTE=36;
-const _renderChat18=renderChat;
-renderChat=function(){_renderChat18.apply(this,arguments);const ir=$(".composer .inrow");if(!ir||ir.querySelector("[data-emo]"))return;
- const sd=ir.querySelector("[data-send]");if(sd)sd.insertAdjacentHTML("beforebegin",'<button class="emobtn" data-emo="1" aria-label="emoji">😊</button>')};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_promo18 = function () { const ir=$(".composer .inrow");if(!ir||ir.querySelector("[data-emo]"))return;
+ const sd=ir.querySelector("[data-send]");if(sd)sd.insertAdjacentHTML("beforebegin",'<button class="emobtn" data-emo="1" aria-label="emoji">😊</button>') };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("promo18", __body_promo18);
+else { const _renderChat18 = renderChat; renderChat = function () { const r = _renderChat18.apply(this, arguments); __body_promo18(); return r; }; };
 let emoTab="stk";
 function emoPanel(){const tabs=[["stk","emo.stk"],["flirt","emo.flirt"],["emo","emo.emo"],["kao","emo.kao"]];
  const st=(a,b)=>'<div class="stkg">'+STK.slice(a,b).map((s,j)=>'<button data-stk="'+(a+j)+'"><span>'+s[0]+'</span><small>'+esc((S.lang==="zh"?s[1]:s[2]))+'</small></button>').join("")+'</div>';
@@ -8754,7 +8758,10 @@ const _fxRun21=fxRun;fxRun=function(kind){drops=[];frost=0;_fxRun21(kind);const 
   requestAnimationFrame(over)};requestAnimationFrame(over)};
 /* manual pick also works outside stories */
 const _chatFx21=chatFx;chatFx=function(th){if(th&&th.fxm&&th.fxm!=="auto"){cancelAnimationFrame(fxRaf);fxRun(th.fxm);return}_chatFx21(th)};
-const _renderChat21=renderChat;renderChat=function(){_renderChat21.apply(this,arguments);const s=$(".status");if(s&&!s.querySelector("[data-fxpick]"))s.insertAdjacentHTML("beforeend",'<button class="fxchip" data-fxpick="1">✨ '+t("fx.chip")+'</button>');const th=S.threads[curT];if(th)dimSync(th)};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_dims21 = function () { const s=$(".status");if(s&&!s.querySelector("[data-fxpick]"))s.insertAdjacentHTML("beforeend",'<button class="fxchip" data-fxpick="1">✨ '+t("fx.chip")+'</button>');const th=S.threads[curT];if(th)dimSync(th) };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("dims21", __body_dims21);
+else { const _renderChat21 = renderChat; renderChat = function () { const r = _renderChat21.apply(this, arguments); __body_dims21(); return r; }; };
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)return;
  if(e.target.closest("[data-fxpick]")){const cur=th.fxm||"auto";sheet('<h2>✨ '+t("fx.h")+'</h2><p class="xs faint" style="margin-top:4px">'+t("fx.s")+'</p><div class="fxgrid">'+FXLIST.map(([k,i])=>'<button data-fxk="'+k+'" class="'+(k===cur?"on":"")+'"><span>'+i+'</span><b>'+t("fx."+k)+'</b></button>').join("")+'</div>');return}
  if(x=e.target.closest("[data-fxk]")){th.fxm=x.dataset.fxk;save();closeSheet();chatFx(th);bgmFollow(th,true);return}});
@@ -9374,7 +9381,10 @@ const _pkDir29=pkDirective;pkDirective=function(th,b){const isScene=Array.isArra
 const _pkWait29=pkWait;pkWait=function(th,prev,spd,ms){if(th._sceneHold){th._sceneHold=0;ms=Math.max(ms,3400)}return _pkWait29(th,prev,spd,ms)};
 Object.assign(I18N.zh,{"sc29.next":"下一幕"});Object.assign(I18N.en,{"sc29.next":"NEXT SCENE"});
 /* the free-chat quick lines don't belong to a written story */
-const _renderChat29=renderChat;renderChat=function(){_renderChat29.apply(this,arguments);const th=S.threads[curT];if(th&&th.pk){$$(".composer .qchips > button").forEach(b=>b.remove())}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_style29 = function () { const th=S.threads[curT];if(th&&th.pk){$$(".composer .qchips > button").forEach(b=>b.remove())} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("style29", __body_style29);
+else { const _renderChat29 = renderChat; renderChat = function () { const r = _renderChat29.apply(this, arguments); __body_style29(); return r; }; };
 
 /* ================= v130 FX3 — ice that creeps along the frame + an EMOTION layer =================
    ICE ("ice" / "iceshatter")
@@ -9987,8 +9997,10 @@ pkAppend=function(th,m){const r=_pkAppend31.apply(this,arguments);
   if(n>=(zh?45:120)){const was=SC.narr;SC.narr=Date.now()+Math.min(12000,n*(zh?170:55));if(!was)bgmGain(bgmLevel(),.9)}}}catch(_){}
  return r};
 
-const _renderChat31=renderChat;renderChat=function(){const r=_renderChat31.apply(this,arguments);
- try{if(bgmOn()&&!BGM.timer&&!BGM.ctx&&S.threads[curT]&&typeof bgmInit==="function"&&bgmInit()&&BGM.ctx.state==="running"){const w=bgmForThread(S.threads[curT]);if(w)bgmPlay(w.mood,w.wid)}}catch(_){}return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_score31 = function () { try{if(bgmOn()&&!BGM.timer&&!BGM.ctx&&S.threads[curT]&&typeof bgmInit==="function"&&bgmInit()&&BGM.ctx.state==="running"){const w=bgmForThread(S.threads[curT]);if(w)bgmPlay(w.mood,w.wid)}}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("score31", __body_score31);
+else { const _renderChat31 = renderChat; renderChat = function () { const r = _renderChat31.apply(this, arguments); __body_score31(); return r; }; };
 /* files keep playing in a hidden tab unless paused */
 document.addEventListener("visibilitychange",()=>{SC.voices.forEach(V=>{if(V.kind!=="file"||!V.alive)return;const a=V.els[V.ix];if(!a)return;if(document.hidden)a.pause();else a.play().catch(()=>{})})});
 
@@ -16831,7 +16843,10 @@ async function gen96(th, event) {
 function feedBadge96() { const th = S.threads[curT], b = $("#fd96b"); if (!b || !th) return; const n = (th.feed96 && th.feed96.unread) || 0; const em = b.querySelector("em"); if (em) em.textContent = n ? (n > 99 ? "99+" : n) : ""; }
 function feedBtn96() { const th = S.threads[curT]; if (!th || !th.pk || !th.wid) return; const col = $("#s-chat .rcol"); if (!col || $("#fd96b")) return;
   col.insertAdjacentHTML("afterbegin", '<button id="fd96b" class="histbtn" data-fd96="1"><i>🔥</i><small>' + esc(L96("热搜", "Trending")) + '</small><em></em></button>'); feedBadge96(); }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { feedBtn96(); } catch (_) {} return r; }; }
+{ /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_social96 = function () { try { feedBtn96(); } catch (_) {} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("social96", __body_social96);
+else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_social96(); return r; }; }; }
 function postHTML96(p, th) {
   const kindL = { media: L96("媒体", "Media"), fan: L96("粉丝", "Fan"), anti: L96("黑粉", "Hater"), passerby: L96("路人", "Passerby"), char: L96("本人", "Cast"), me: L96("你", "You") }[p.kind] || "";
   const av = p.cid ? '<img src="' + esc(artSrc(p.cid)) + '" alt="">' : '<span style="background:hsl(' + (hash96(p.name) % 360) + ' 45% 38%)">' + esc((p.name || "?").slice(0, 1)) + '</span>';
@@ -17103,8 +17118,10 @@ function callsOK97(th) {
   if (w.calls === false) return false; if (AG97.noCall.includes(w.community)) return false;
   const tags = (w.tags || []).join(" "); return !/Romantasy|Fae|Fantasy|Historical|Regency|Medieval|Dragon|Royal Court|古风|奇幻/i.test(tags);
 }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments);
-    try { const th = S.threads[curT]; if (th && !callsOK97(th)) document.querySelectorAll("#s-chat .callbtn").forEach(b => b.remove()); } catch (_) {} return r; }; }
+{ /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_agents97 = function () { try { const th = S.threads[curT]; if (th && !callsOK97(th)) document.querySelectorAll("#s-chat .callbtn").forEach(b => b.remove()); } catch (_) {} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("agents97", __body_agents97);
+else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_agents97(); return r; }; }; }
 { const _sc = startCall; startCall = function (cid) { const th = S.threads[curT]; if (th && !callsOK97(th)) { toast(L97("这个世界没有电话。", "There are no phones in this world.")); return; } return _sc.apply(this, arguments); }; }
 /* a scripted call in a no-phone world plays as an ordinary scene */
 { const _sa = stopAuto; stopAuto = function (th, b) {

@@ -113,10 +113,12 @@ function relSync(th){if(!th||curT!==th.id)return;const r=$(".relrow");const old=
  const h=relRowHTML(th);if(r)r.outerHTML=h;else{const s=$(".status");if(s)s.insertAdjacentHTML("beforebegin",h)}
  Object.keys(old).forEach(c=>{const d=Math.round(th.love[c]||0)-old[c];if(!d)return;const b=$('.relc[data-relc="'+c+'"]');if(!b)return;
   b.classList.add(d>0?"up":"down");b.insertAdjacentHTML("beforeend",'<span class="relf '+(d>0?"up":"down")+'">'+(d>0?"+":"")+d+'</span>');setTimeout(()=>{b.classList.remove("up","down");const f=$(".relf",b);if(f)f.remove()},1600)})}
-const _renderChat10=renderChat;
-renderChat=function(){_renderChat10.apply(this,arguments);const th=S.threads[curT];if(!th||!th.pk)return;
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_custom17 = function () { const th=S.threads[curT];if(!th||!th.pk)return;
  const s=$(".status");if(s){[...s.children].forEach(x=>{if(!x.classList.contains("pairchip")&&/♥/.test(x.textContent))x.remove()});const pc=s.querySelector(".pairchip");if(pc)pc.remove()}
- relSync(th)};
+ relSync(th) };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("custom17", __body_custom17);
+else { const _renderChat10 = renderChat; renderChat = function () { const r = _renderChat10.apply(this, arguments); __body_custom17(); return r; }; };
 const _stopResolve10=stopResolve;stopResolve=function(th,extra){const r=_stopResolve10(th,extra);setTimeout(()=>relSync(th),60);return r};
 const _packAfterPick10=packAfterPick;packAfterPick=function(th,k){const r=_packAfterPick10(th,k);setTimeout(()=>relSync(th),60);return r};
 document.addEventListener("click",e=>{const x=e.target.closest("[data-relc]");if(!x)return;const th=S.threads[curT];if(!th)return;const c=x.dataset.relc,v=Math.round(th.love[c]||0),st=stageOf(th,c),nx=STAGE_MIN[st+1];

@@ -322,8 +322,10 @@ pkAppend=function(th,m){const r=_pkAppend31.apply(this,arguments);
   if(n>=(zh?45:120)){const was=SC.narr;SC.narr=Date.now()+Math.min(12000,n*(zh?170:55));if(!was)bgmGain(bgmLevel(),.9)}}}catch(_){}
  return r};
 
-const _renderChat31=renderChat;renderChat=function(){const r=_renderChat31.apply(this,arguments);
- try{if(bgmOn()&&!BGM.timer&&!BGM.ctx&&S.threads[curT]&&typeof bgmInit==="function"&&bgmInit()&&BGM.ctx.state==="running"){const w=bgmForThread(S.threads[curT]);if(w)bgmPlay(w.mood,w.wid)}}catch(_){}return r};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_score31 = function () { try{if(bgmOn()&&!BGM.timer&&!BGM.ctx&&S.threads[curT]&&typeof bgmInit==="function"&&bgmInit()&&BGM.ctx.state==="running"){const w=bgmForThread(S.threads[curT]);if(w)bgmPlay(w.mood,w.wid)}}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("score31", __body_score31);
+else { const _renderChat31 = renderChat; renderChat = function () { const r = _renderChat31.apply(this, arguments); __body_score31(); return r; }; };
 /* files keep playing in a hidden tab unless paused */
 document.addEventListener("visibilitychange",()=>{SC.voices.forEach(V=>{if(V.kind!=="file"||!V.alive)return;const a=V.els[V.ix];if(!a)return;if(document.hidden)a.pause();else a.play().catch(()=>{})})});
 
