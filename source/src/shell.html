@@ -230,13 +230,7 @@ p{margin:0}
 .status span b{color:var(--text)}
 .msgs{flex:1;min-height:0;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}.msgs::-webkit-scrollbar{display:none}
 .m-narr{align-self:center;max-width:94%;text-align:center;font-family:var(--serif);font-style:italic;font-size:var(--msg-fs);color:var(--dim);line-height:1.65}
-.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%}
-/* 2026-10-27（Ann：「头像和语句分成两段」）：上一版为了 app73 那排按钮把 wrap 开在所有行上，
-   结果气泡一宽、头像就被折到下一行。改成**只有挂了按钮条（.rg73）的行**才折行。
-   `:has()` 在目标浏览器（Chromium/Firefox 121+/Safari 15.4+）都支持；不支持时退化成不折行，
-   那排按钮会挤在气泡右边 —— 比头像掉下去好。 */
-.m-row:has(> .rg73){flex-wrap:wrap}
-.m-row > .av{flex:0 0 auto}  /* 头像永不被压缩、也不参与折行 */
+.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%;flex-wrap:wrap}
 /* 2026-10-27：`say` 统一成 .bub 之后，app73 的「重新生成 / 编辑 / 他在想什么」这条 bar
    原来靠「取 .m-row 的最后一个子元素」定位，而 .m-row 现在只剩气泡一个子元素 ⇒ 它落进了
    **气泡里面**（Ann 看图指出：应该在框的外面）。现在它作为 .m-row 的第三个子元素插入，
