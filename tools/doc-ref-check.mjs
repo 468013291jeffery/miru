@@ -15,7 +15,8 @@ const files = [
   'tools/wiring-order-check.mjs', 'tools/patch-registry.mjs', 'tools/line2file.mjs',
   'tools/check-all.mjs', 'tools/read-health.mjs', 'tools/read-errlog.mjs',
   'tools/render-snapshot.mjs', 'tools/msgkind-probe.mjs',
-  'docs/message-renderers.md', 'docs/msg-render-registry.md'
+  'tools/style-inject-census.mjs', 'tools/style-inject-census.html',
+  'docs/message-renderers.md', 'docs/msg-render-registry.md', 'docs/style-entry.md'
 ];
 let bad = 0;
 for (const f of files) if (!fs.existsSync(f)) { console.log('  ✗ 不存在: ' + f); bad++ }

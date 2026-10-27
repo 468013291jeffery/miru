@@ -1,0 +1,67 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>style inject census</title>
+<pre id="early">early…</pre>
+<pre id="late">late…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+/* 样式注入面：**只量不改**（2026-10-27）
+   问三个问题，一个都不改页面：
+     1 载入完成后，页面里有几个 <style>？按**文档顺序**列出来（谁在前谁在后 = 后面的赢）
+     2 隔 10 秒再看一次 —— 有没有**晚到**的注入（晚到 = 按需注入，不能拼成静态表）
+     3 同一个选择器出现在几个 sheet 里？**重复定义**才是「改了这里坏那里」的真正机制
+   ⚠️ 只数 DOM 里的 <style> 元素，不去 grep 打包后的文本：
+      creator_embed.js 里有一整段 "<style>…" 是**字符串**，按文本数会把它当成一个样式表。 */
+function hash(s) {
+  var h = 5381, i = s.length;
+  while (i) h = (h * 33 ^ s.charCodeAt(--i)) >>> 0;
+  return h.toString(16);
+}
+/* 中段切片必须**不改一个字符**：源码里那段 CSS 是原样的，压空白/裁剪之后就对不上了
+   （第一版压了空白，归因率卡在 57/65，多出来的 8 个「找不到来源」是尺子的错，不是代码的）。
+   取一个不含换行、首尾无空格的 36 字符窗口。 */
+function cleanSlice(t, from, len) {
+  for (var i = from; i + len <= t.length; i++) {
+    var s = t.slice(i, i + len);
+    if (!/[\n\r]/.test(s) && s.charAt(0) !== ' ' && s.charAt(len - 1) !== ' ') return s;
+  }
+  return '';
+}
+function snap() {
+  var w = document.getElementById('f').contentWindow, d = w.document;
+  var nodes = d.querySelectorAll('style'), sheets = [], rules = [], seen = {};
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i], t = n.textContent || '', nRules = -1;
+    try { nRules = (n.sheet && n.sheet.cssRules) ? n.sheet.cssRules.length : -1 } catch (e) { nRules = -2 }
+    sheets.push({
+      i: i, id: n.id || '', parent: (n.parentNode && n.parentNode.nodeName) || '',
+      len: t.length, rules: nRules,
+      head: t.replace(/\s+/g, ' ').trim().slice(0, 64),
+      /* 两段中段切片：给静态归因用。头 64 字符只够对上「字面量直取」那种写法，
+         而很多注入是数组 join / 拼接出来的 —— 那时头一段对不上，中段照样在源码里逐字存在。 */
+      mid: cleanSlice(t, (t.length * 0.25) | 0, 36),
+      mid2: cleanSlice(t, (t.length * 0.6) | 0, 36),
+      hash: hash(t)
+    });
+    try {
+      var cr = n.sheet && n.sheet.cssRules;
+      if (cr) for (var r = 0; r < cr.length; r++) {
+        var sel = cr[r].selectorText; if (!sel) continue;
+        rules.push({ sel: sel, sheet: i });
+        (seen[sel] = seen[sel] || []).push(i);
+      }
+    } catch (e) { }
+  }
+  var dups = Object.keys(seen).filter(function (k) { return seen[k].length > 1; })
+    .map(function (k) { return { sel: k, n: seen[k].length, sheets: seen[k] } })
+    .sort(function (a, b) { return b.n - a.n });
+  return {
+    at: Date.now(), count: nodes.length, ruleTotal: rules.length,
+    seqHash: hash(sheets.map(function (s) { return s.hash }).join('|')),
+    dupKinds: dups.length, dups: dups, sheets: sheets
+  };
+}
+function emit(el, obj) { el.textContent = 'STYLE_JSON:' + JSON.stringify(obj); el.setAttribute('data-done', '1') }
+setTimeout(function () { try { emit(document.getElementById('early'), snap()) } catch (e) { document.getElementById('early').textContent = 'ERR ' + e.message } }, 2500);
+setTimeout(function () { try { emit(document.getElementById('late'), snap()) } catch (e) { document.getElementById('late').textContent = 'ERR ' + e.message } }, 14000);
+</script>
