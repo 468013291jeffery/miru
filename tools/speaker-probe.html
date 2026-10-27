@@ -1,0 +1,108 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>speaker probe</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+/* 说话人分派 + 装饰位覆盖探针（2026-10-27 · 只读）
+   两个问题一起量：
+     ① 谁在说 → 归哪一层画（命中/抛错增量，抛错要带原文，否则「吞了」和「没画」同形）
+     ② 画出来的东西，**装饰位齐不齐** —— 这正是「都是 say、却各走各的路」的可见后果
+   装饰位（用户能看见的东西）：
+       av      头像        who      名字标签     wc      角色色条
+       bub/m-box/m-turn   用哪种气泡容器         quick   右侧快捷按钮
+       tools   工具条      ma       行内 *动作* 高亮
+   判据：同一类「say」，这些格子应该一样齐 —— 不齐的就是需要统一的那几处。 */
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow;
+  if (!w || typeof w.msgHTML !== 'function') { out.textContent = 'ERR no msgHTML'; return }
+
+  try {
+    w.ch = function (id) {
+      if (id === 'ghost') return null;
+      return { id: id, n: id === 'lead' ? '主角' : '配角', pal: ['#EE6F97', '#F6B4C9'], face: null };
+    };
+    w.first = function (s) { return String(s || '').split(/[·s]/)[0] };
+    w.wd = function (wid) { return { id: wid || 'w_speak', cast: ['lead', 'npc'], pack: { intro: { bg: [], you: '', cast: [] }, chapters: [], endings: {} }, cover: 0, title: { zh: '样例世界' }, premise: '' } };
+    w.me = function () { return '你' };
+  } catch (e) {}
+
+  var ERRS = [];
+  try {
+    var _ce = w.console.error;
+    w.console.error = function () {
+      try { ERRS.push([].slice.call(arguments).join(' ')) } catch (e) {}
+      try { _ce.apply(w.console, arguments) } catch (e) {}
+    };
+  } catch (e) {}
+
+  var th = {
+    id: 'speak', wid: 'w_speak', cast: ['lead', 'npc'], msgs: [],
+    pk: { as: 'lead', ch: 1, q: [], stop: null, picks: {} },
+    love: { lead: 10, npc: 5 }, addr: null, said: []
+  };
+
+  /* 样例里带 `*动作*` 与（停顿）—— 否则行内高亮那一格恒为 0，
+     会把「样例没触发」读成「这条路没有高亮」。 */
+  var CASES = [
+    ['me', 'me', '玩家说 *把杯子挪到一边*（停了一下）'],
+    ['self', 'lead', '你扮演的角色说 *把杯子挪到一边*（停了一下）'],
+    ['other', 'npc', '别的角色说 *把杯子挪到一边*（停了一下）'],
+    ['missing', 'ghost', '角色卡查不到的人说 *把杯子挪到一边*']
+  ];
+
+  function snap() {
+    var d = {};
+    try {
+      var g = w.__msgkind(true);
+      for (var i = 0; i < g.层.length; i++) { d['h:' + g.层[i].名字] = g.层[i].命中; d['e:' + g.层[i].名字] = g.层[i].抛错 }
+    } catch (e) {}
+    return d;
+  }
+
+  function count(h, s) { var n = 0, i = 0; while ((i = h.indexOf(s, i)) >= 0) { n++; i += s.length } return n }
+
+  /* ⚠️ 第一版这里用 `class="m-box"` 精确匹配，而实际是 `class="m-box lb"`
+     ⇒ me 那行被读成「没有气泡」。判据词要按**词边界**找，不按精确串。 */
+  function hasCls(h, c) { return new RegExp('class="[^"]*(^|\\s)' + c + '(\\s|")').test(h) }
+
+  function deco(h) {
+    return {
+      头像: count(h, 'class="av"'),
+      名字: count(h, 'm-who'),
+      色条: count(h, 'data-wc'),
+      气泡: hasCls(h, 'bub') ? 'bub' : (hasCls(h, 'm-box') ? 'm-box' : (hasCls(h, 'm-turn') ? 'm-turn' : '(无)')),
+      工具: count(h, 'mtools'),
+      动作高亮: count(h, '<em class="ma"'),
+      /* 快捷按钮（mquick）故意**不列**：有一个层（app16#mquick）专门删它，
+         所以它在最终 HTML 里恒为 0 —— 把它当缺口会把「设计」读成「缺失」。 */
+      快捷已删: hasCls(h, 'mquick') ? '还在' : '已删'
+    };
+  }
+
+  var rows = [], fatal = '';
+  try {
+    for (var n = 0; n < CASES.length; n++) {
+      var name = CASES[n][0], who = CASES[n][1], txt = CASES[n][2];
+      var m = { who: who, k: 'say', txt: txt, pk: 1 };
+      var before = snap(), html = '', terr = '';
+      ERRS.length = 0;
+      try { html = String(w.msgHTML(m, 0, th) || '') } catch (e) { terr = String((e && e.message) || e) }
+      var after = snap(), moved = [], threw = [];
+      for (var k in after) {
+        if (after[k] > (before[k] || 0)) { if (k.charAt(0) === 'h') moved.push(k.slice(2)); else threw.push(k.slice(2)) }
+      }
+      var r = deco(html);
+      r.谁在说 = name; r.who = who;
+      r.归哪层画 = moved.length ? moved.join(' + ') : '（没有层改东西）';
+      r.长度 = html.length;
+      r.层内抛错 = threw.join(' + ');
+      r.错文 = ERRS.join(' | ').slice(0, 160);
+      rows.push(r);
+    }
+  } catch (e2) { fatal = String((e2 && e2.message) || e2) }
+
+  out.textContent = 'SPEAKER_JSON:' + JSON.stringify({ fatal: fatal, rows: rows });
+}, 6000);
+</script>

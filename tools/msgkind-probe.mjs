@@ -163,6 +163,37 @@ const liveRows = EXPECT.filter(e => e[2] === 'fires').length;
 const liveLayers = new Set(EXPECT.filter(e => e[2] === 'fires').map(e => e[1])).size;
 const dead = new Set(EXPECT.filter(e => e[2] === 'silent' && e[1] !== '*').map(e => e[1])).size;
 
+/* 文档里写着的层数必须等于运行时层数（2026-10-27 加）
+   为什么要这一臂：这条线上「文档里那个数」已经**四次**悄悄过期 —— menuSheet 的层数 14→7→8、
+   绕过入口 32→33→30、渲染层 20→18。而 `doc-ref-check` 只比猴补丁 / 空 catch / 闸套数三个数，
+   渲染层不在它射程里 ⇒ 文档过时了**没有任何闸会红**。
+   两个方向都要红：数字对不上，以及**那行口径被删了**（口径行不许悄悄消失 —— 删掉它就等于
+   以后所有数字都不受管，而届时屏幕上仍然是绿的）。 */
+{
+  let docTxt = '', docErr = '';
+  /* ⚠️ 这里不能用 `new URL(...)` —— 本文件第 21 行把 `URL` 定义成了端口串，
+     全局的 URL 被**遮蔽**了。2026-10-27 实测报的是 `URL is not a constructor`，
+     而空 catch 把这条信息吃掉了一轮。用 import.meta.dirname 拼路径。 */
+  try { docTxt = fs.readFileSync(import.meta.dirname + '/../ARCHITECTURE.md', 'utf8') }
+  catch (e) { docErr = (e && (e.code || e.message)) || String(e) }
+  if (!docTxt) bad.push('读不到 ARCHITECTURE.md（' + docErr + '），层数口径无法核对');
+  else {
+    const m = /消息渲染\s+(\d+)\s*层\s*=\s*kind\s*(\d+)\s*\/\s*post\s*(\d+)\s*\/\s*wrap\s*(\d+)/.exec(docTxt);
+    if (!m) bad.push('ARCHITECTURE.md 里找不到「消息渲染 N 层 = kind a / post b / wrap c」这一行 —— 口径行被删了？');
+    else {
+      const cnt = c => layers.filter(x => x.cls === c).length;
+      const rows = [
+        ['总层数', Number(m[1]), layers.length],
+        ['kind', Number(m[2]), cnt('kind')],
+        ['post', Number(m[3]), cnt('post')],
+        ['wrap', Number(m[4]), cnt('wrap')]
+      ];
+      const off = rows.filter(r => r[1] !== r[2]).map(r => r[0] + '：文档 ' + r[1] + ' / 运行时 ' + r[2]);
+      if (off.length) bad.push('文档里的层数与运行时不符 → ' + off.join(' · ') + '（去改 ARCHITECTURE 那行，别改嘴）');
+    }
+  }
+}
+
 if (bad.length) {
   console.log('✗ msgkind 探针 ' + bad.length + ' 处不符：');
   bad.slice(0, 12).forEach(x => console.log('   ' + x));
