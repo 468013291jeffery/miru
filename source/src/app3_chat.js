@@ -27,7 +27,7 @@ function sendDM(cid,txt){const th=S.threads["c:"+cid]||newThread("solo",cid);th.
 let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
 /* 2026-10-27：busy 的唯一入口交给 TURN（app103_turn.js）。
    读点不变，只保证「置真置假只有一个门」。 */
-try{ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); }catch(_){}
+soft("chat:L30",function(){ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); })
 /* 2026-10-27 · 「经常卡死」的看门狗。
    病灶：`busy=true`（reply 开头）与 `busy=false`（playBeats 之后）**不在 try/finally 里** ——
    两行之间任何一处抛错，`busy` 就永远是 true ⇒「发不出去、界面没反应」，看起来就是卡死。
@@ -45,8 +45,8 @@ setInterval(()=>{try{
  if(Date.now()-Math.max(BUSY_T,lastAt)<45000)return;
  busy=false;BUSY_T=0;try{typing(false)}catch(_){}
  S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s (no new message)"});if(S._stallTrace.length>20)S._stallTrace.shift();
- try{save()}catch(_){}
- try{toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")}catch(_){}
+ soft("chat:L48",function(){save()})
+ soft("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")})
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
@@ -302,6 +302,30 @@ if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m
 /* 2026-10-27：模型偶尔把 suggest 返成对象（{text:…} / {say:…}），直接 String() 就会显示
    「[object Object]」，而且点击时会把那串字发出去。统一在这里取成人话。 */
 /* 把任何东西变成人话；万一是对象被字符串化了（"[object Object]"），一律当空 */
+/* 2026-10-27：静默失败的统一出口（Mythica 第 7 条「裸 except 禁止」的 JS 版）。
+   捕获后不刷控制台，但记「哪一处、什么原因」—— 用 __soft() 或健康汇报读。
+   ⚠️ 它仍然吞异常（这些位置本来就是「失败了也别打断玩家」），
+   区别是：**吞掉的东西现在可数、可归因**。 */
+const SOFT = { n: 0, byName: {}, last: [] };
+function soft(name, fn) {
+  try { return fn() } catch (e) {
+    SOFT.n++;
+    const k = String(name || '?');
+    SOFT.byName[k] = (SOFT.byName[k] || 0) + 1;
+    SOFT.last.push({ at: Date.now(), where: k, msg: String((e && (e.code || e.message)) || e).slice(0, 160) });
+    if (SOFT.last.length > 50) SOFT.last.shift();
+    return undefined;
+  }
+}
+try {
+  window.__soft = function (detail) {
+    const by = Object.entries(SOFT.byName).sort((a, b) => b[1] - a[1]).slice(0, 15).map(([k, v]) => ({ 位置: k, 次数: v }));
+    if (!detail) return { 总数: SOFT.n, 分类数: by.length, 前十: by.slice(0, 10) };
+    return { 总数: SOFT.n, 前十: by, 最近: SOFT.last.slice(-20) };
+  };
+  window.__softStats = SOFT;
+} catch (_) {}
+
 function objGuard70(x){
   const s = asText70(x);
   return (s === "[object Object]" || s === "undefined" || s === "null") ? "" : s;
@@ -343,7 +367,7 @@ function streamPreview(piece){
     let s=box.querySelector(".spv");
     if(!s){s=document.createElement("span");s.className="spv";s.style.cssText="margin-left:8px;opacity:.6;font-size:12px";box.appendChild(s)}
     s.textContent=tail;
-    try{scrollChat()}catch(_){}
+    soft("chat:L346",function(){scrollChat()})
   }catch(_){}
 }
 
@@ -355,24 +379,24 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
  if(busy){
   /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
      现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
-  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  soft("chat:L358",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})})
   SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
-  try{toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")}catch(_){}
+  soft("chat:L360",function(){toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")})
   return}
  if(!aiGate()){
   /* 2026-10-27 Ann：点了选项只有「已选」的提示、对话里没有她那句。
      额度不够时旧代码把文字塞回输入框就 return ⇒ **她的话从对话里消失**。
      现在：**先落进对话**（她说的话属于她，不该因为没有额度就消失），再说明「他这轮接不上」。 */
-  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  soft("chat:L366",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})})
   const ta=$("#cin");if(ta)ta.value="";
-  try{toast(S.lang==="zh"?"这句记下了；他这轮接不上（额度不够）":"Saved — he can't answer this turn (out of units)")}catch(_){}
+  soft("chat:L368",function(){toast(S.lang==="zh"?"这句记下了；他这轮接不上（额度不够）":"Saved — he can't answer this turn (out of units)")})
   return}
  if(th.quest&&th.quest.over){
-  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
-  try{toast(S.lang==="zh"?"这段剧情已经结束，这句我记在对话里了":"This story is over — I kept your line anyway")}catch(_){}
+  soft("chat:L371",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})})
+  soft("chat:L372",function(){toast(S.lang==="zh"?"这段剧情已经结束，这句我记在对话里了":"This story is over — I kept your line anyway")})
   questEnd(th);return}
  mode=mode||cmode;
- try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1}catch(_){}
+ soft("chat:L375",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1})
  /* 2026-10-27（Ann：他死活要念剧情，我接的不是这句他也照念）：
     玩家一开口，剩下的**预写队列整体作废** —— 剧本让位给对话，由模型接她的话。
     本章的官方选择不受影响：队列空了 packRun 自然结束，选择按 20 轮门槛照常弹。
@@ -381,8 +405,8 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
   const dropOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.dropScriptOnInput!==false);
   if(dropOn&&th&&th.pk&&Array.isArray(th.pk.q)&&th.pk.q.length){
    th.pk.q=[];save();
-   try{packRefresh(th)}catch(_){}
-   try{track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})}catch(_){}
+   soft("chat:L384",function(){packRefresh(th)})
+   soft("chat:L385",function(){track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})})
   }
  }catch(_){}
  if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
@@ -468,7 +492,7 @@ async function reply(th,ctx,silent){
    const q=(th&&th.pk&&Array.isArray(th.pk.q))?th.pk.q:[];
    if(!q.length)return "";
    const take=q.splice(0,Math.min(2,q.length));   // 从队列取走：不播了
-   try{save()}catch(_){}
+   soft("chat:L471",function(){save()})
    const lines=take.map(b=>{
      /* 只给「谁 + 性质」，不给原文。原文一进 prompt，模型就会把那几个词写回来。 */
      const w=b&&b[0];
@@ -479,7 +503,7 @@ async function reply(th,ctx,silent){
      if(kind==="act")return "- "+whoName+" does something small and physical";
      return "- "+whoName+" has something he needs to bring up";
    }).filter(Boolean).join("\n");
-   try{track&&track("script_as_hint",{wid:th.wid,ch:th.pk&&th.pk.ch,n:take.length})}catch(_){}
+   soft("chat:L482",function(){track&&track("script_as_hint",{wid:th.wid,ch:th.pk&&th.pk.ch,n:take.length})})
    if(!lines)return "";
    return "SCENE DIRECTION (what this moment needs, not what to say. NO PRE-WRITTEN WORDING is given to you — invent it, in your own words, from where the conversation actually is right now. Never announce plot, never repeat a phrase you used earlier):\n"+lines;
   }catch(_){return ""}})()||"",
@@ -563,13 +587,13 @@ async function reply(th,ctx,silent){
  }
  // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
  // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
- try{ if(typeof plotGate==="function") plotGate(th); }catch(_){}
+ soft("chat:L566",function(){ if(typeof plotGate==="function") plotGate(th); })
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
- try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
+ soft("chat:L569",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0})
  if(!silent){try{(window.TURN&&window.TURN.release)?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}}catch(_){}
+  soft("chat:L572",function(){if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}})
  }}
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
@@ -627,7 +651,7 @@ async function playBeats(th,r,ctx,silent){
   let WAITED=false;
   if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
    INLINE_SPOKE=true;WAITED=true;
-   try{voiceCount(1)}catch(_){}
+   soft("chat:L630",function(){voiceCount(1)})
    /* ⚠️ 上限必须 **比 TTS 自己的回退时限长**：服务器 TTS 要 7~8 秒才认「这次没声、转设备语音」，
       而下一句的 speak() 会先 stopVoice() 把上一句掐掉。上限设 4.5 秒时（第一版）每句都在出声前
       被掐死 ⇒ 整轮一句都没有 —— 2026-10-27 实测。现在给到 9 秒起。 */
@@ -682,7 +706,7 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-modetog]")){
   /* 一个按钮轮换三种说话方式（Ann：不要三个并排） */
   cmode = cmode==="say" ? "act" : cmode==="act" ? "think" : "say";
-  try{renderChat()}catch(_){}
+  soft("chat:L685",function(){renderChat()})
   return
  }
  if(x=e.target.closest("[data-mode]")){cmode=x.dataset.mode;$$("[data-mode]").forEach(y=>y.classList.toggle("on",y===x));const ta=$("#cin");ta.placeholder=t("cx.ph."+cmode);ta.classList.toggle("dir",cmode==="dir");if(cmode==="dir")toast(t("cx.dirOn"));ta.focus();return}
@@ -700,7 +724,7 @@ document.addEventListener("click",e=>{let x;
   /* 2026-10-27：**点下去必须有回声**。① 立刻 toast「已选：…」（证明点击到达了处理器）
      ② 300ms 后核对对话有没有涨，没涨就说清原因并提示导出存档。
      这两条只为分清「发了但没显示」与「压根没发」——今晚在无声失败上吃亏太多次。 */
-  try{toast(S.lang==="zh"?("已选："+v.slice(0,14)):("Picked: "+v.slice(0,14)))}catch(_){}
+  soft("chat:L703",function(){toast(S.lang==="zh"?("已选："+v.slice(0,14)):("Picked: "+v.slice(0,14)))})
   const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
   setTimeout(()=>{try{
