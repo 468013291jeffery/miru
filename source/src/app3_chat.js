@@ -195,7 +195,8 @@ function msgHTML(m,i,th){
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
- return '<div class="m-row'+(isMe?" me":"")+'" data-mi="'+i+'" data-wc style="--wc:'+(isMe?"var(--fg)":((c&&c.pal&&c.pal[0])||"var(--line)"))+'">'+(isMe?"":avatar(m.who,30))+'<div>'+(isMe?"":'<div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div>')+'<div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
+ if(isMe)return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub">'+((typeof lineHTML==="function")?lineHTML({who:"me",k:m.k,txt:m.txt},th,{noName:true}):esc(m.txt))+'</div></div>'+tools;
+ return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div><div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div><div class="m-box lb">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
 /* 2026-10-27 补的三条视觉（Ann 试玩反馈）：
    ① 每个角色一条他自己的色条 + 淡底（原来只有名字颜色，认不出谁在说）
    ② 点过的选项反色（原来点下去毫无反馈）
@@ -724,10 +725,9 @@ document.addEventListener("click",e=>{let x;
   v=v.trim(); if(!v)return;
   x.classList.add("sel");
   setSugg([]);
-  /* 2026-10-27：**点下去必须有回声**。① 立刻 toast「已选：…」（证明点击到达了处理器）
-     ② 300ms 后核对对话有没有涨，没涨就说清原因并提示导出存档。
-     这两条只为分清「发了但没显示」与「压根没发」——今晚在无声失败上吃亏太多次。 */
-  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L703",function(){toast(S.lang==="zh"?("已选："+v.slice(0,14)):("Picked: "+v.slice(0,14)))});
+  /* 2026-10-27 晚：**成功的那声回声删掉了**（Ann：「已选…这个应该删掉」）。
+     玩家自己的话就在上面那条气泡里，再弹一条「已选：…」是重复。
+     诊断能力一点没丢 —— 下面那段「没进对话才说话」才是真正有用的那半。 */
   const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
   setTimeout(()=>{try{
