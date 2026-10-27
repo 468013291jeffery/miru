@@ -230,7 +230,13 @@ p{margin:0}
 .status span b{color:var(--text)}
 .msgs{flex:1;min-height:0;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}.msgs::-webkit-scrollbar{display:none}
 .m-narr{align-self:center;max-width:94%;text-align:center;font-family:var(--serif);font-style:italic;font-size:var(--msg-fs);color:var(--dim);line-height:1.65}
-.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%;flex-wrap:wrap}
+.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+/* 2026-10-27（Ann：「头像和语句分成两段」）：上一版为了 app73 那排按钮把 wrap 开在所有行上，
+   结果气泡一宽、头像就被折到下一行。改成**只有挂了按钮条（.rg73）的行**才折行。
+   `:has()` 在目标浏览器（Chromium/Firefox 121+/Safari 15.4+）都支持；不支持时退化成不折行，
+   那排按钮会挤在气泡右边 —— 比头像掉下去好。 */
+.m-row:has(> .rg73){flex-wrap:wrap}
+.m-row > .av{flex:0 0 auto}  /* 头像永不被压缩、也不参与折行 */
 /* 2026-10-27：`say` 统一成 .bub 之后，app73 的「重新生成 / 编辑 / 他在想什么」这条 bar
    原来靠「取 .m-row 的最后一个子元素」定位，而 .m-row 现在只剩气泡一个子元素 ⇒ 它落进了
    **气泡里面**（Ann 看图指出：应该在框的外面）。现在它作为 .m-row 的第三个子元素插入，
@@ -1428,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="7ee7a1897e6a 2026-10-27T10:10Z";
+window.MIRU_BUILD="45b033a5d0a0 2026-10-27T14:09Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4963,19 +4969,20 @@ function msgHTML(m,i,th){
  if(m.k==="end"){const w=wd(th.wid),e=w&&w.pack&&w.pack.endings[m.e];if(!e)return "";const ln=e.line;
   return '<div class="m-end"><div class="eyebrow" style="color:var(--gold)">🏁 '+t("pk.endingH",{k:m.e})+'</div><h3>'+esc(Lz(e.t))+'</h3><p>'+esc(Lz(e.txt))+'</p>'+
    (ln&&ch(ln.who)?'<div class="m-endl">'+avatar(ln.who,30)+'<q>'+esc(S.lang==="zh"?ln.zh:ln.en)+'</q></div>':'')+'<p class="xs faint" style="margin-top:10px">'+t("pk.endFound",{a:endingsFound(th.wid),b:3})+'</p></div>'}
+ const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
+ const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
+  '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
+ if(m.who==="n")return '<div class="m-narr" data-mi="'+i+'">'+esc(m.txt)+'</div>'+tools;
+ if(m.k==="say")return sayHTML(m,i,th)+tools;  /* 顺序是量出来的：旁白必须在它上面（旁白也是 k:"say"），pk 段必须在它下面（否则 self 走不到这里）。 */
  if(th.pk&&m.who===th.pk.as&&th.pk.as!=="watch"&&th.pk.as!=="side"&&m.who!=="me"){const c0=ch(m.who),lab='<small class="asme">'+esc(t("pk.youAre",{n:first(c0.n)}))+'</small>';
   if(m.k==="act")return '<div class="m-act me" data-mi="'+i+'">'+lab+esc(m.txt)+'</div>';
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
   return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
- const quick=(m.who!=="me"&&m.txt&&m.k!=="card"&&m.k!=="img"&&m.k!=="dir")?'<div class="mquick'+(m.who==="n"?" c":"")+'"><button data-mt="play|'+i+'" title="'+t("msg.play")+'">🔊'+(hasVoice(m.txt,m.who)?'':'')+'</button>'+(m.who!=="n"?'<button data-mt="snap|'+i+'" title="'+t("msg.img")+'">🖼</button>':"")+'<button data-shline="'+i+'" title="'+t("shr.h")+'">📤</button></div>':"";
- const tools=quick+(openTools===i?'<div class="mtools">'+(m.who!=="me"&&m.who!=="n"?'<button data-mt="play|'+i+'">🔊 '+t("msg.play")+'</button><button data-mt="snap|'+i+'">📷 '+t("msg.snap")+'</button>':"")+
-  '<button data-mt="save|'+i+'">🔖 '+t("msg.save")+'</button>'+(i>=th.msgs.length-4&&m.who!=="me"&&m.ai?'<button data-mt="redo|'+i+'">↻ '+t("msg.redo")+'</button>':"")+'</div>':"");
  if(m.k==="react")return '<div class="m-react" style="margin:6px 0 10px;padding-left:10px;border-left:2px solid var(--line);opacity:.72;font-size:13px">'+esc(m.txt)+'</div>';
  if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+'</div>';
  if(m.k==="pic")return '<div class="m-pic'+(m.locked?" lk":"")+'"><img src="'+esc(m.src)+'" alt="">'+(m.locked?'<button class="pk" data-unpic="'+i+'"><b>📷 '+t("pay.pic",{n:who(m,th)})+'</b><span>💎 1 · '+t("pay.unlock")+'</span></button>':'')+'</div>';
  if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub bubble lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
- if(m.who==="n")return '<div class="m-narr" data-mi="'+i+'">'+esc(m.txt)+'</div>'+tools;
  if(m.k==="dir")return '<div class="m-dir">🎬 '+esc(m.txt)+'</div>';
 /* ===== 说话人分派：`say` 只有一处决定「长什么样」（2026-10-27，Ann 定）=====
    以前 k:`say` 被两层抢认领（app17 管别人、app26 管你扮演的角色），条件是互相排除写成的，
@@ -4995,7 +5002,6 @@ function sayHTML(m,i,th){
  if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub bubble"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
- if(m.k==="say")return sayHTML(m,i,th)+tools;
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
  if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
@@ -8496,8 +8502,8 @@ function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe"
 const _boxHTML8=boxHTML;
 boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx bubble" data-mi="'+i+'">'+m.parts.map(partHTML).join("")+'</div>';
  const c=ch(m.say.who);
- return '<div class="m-turn" data-mi="'+i+'">'+avatar(m.say.who,32)+'<div class="tb"><div class="tn" style="color:'+(c?c.pal[0]:"")+'">'+esc(c?first(c.n):"")+'</div>'+
-  (m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<div class="tsay">'+fmtMix(esc(m.say.txt))+'</div></div></div>'};
+ /* 2026-10-27（Ann：「头像和语句分成两段」「还是以前的样式」）：真实路径上，别人说的台词是被 app26 包成 k:"box" + m.say 再走这里的，**根本到不了 sayHTML**。原来它渲染 .m-turn（头像 + 名字 + 上下文 + 台词，天然分段），现在改成和 sayHTML 的 other 分支**同一套** .m-row + .bub。 */
+ return '<div class="m-row" data-mi="'+i+'">'+avatar(m.say.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(c?first(c.n):"")+'</small>'+(m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<p class="bac">'+fmtMix(esc(m.say.txt))+'</p></div></div>'};
 const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
