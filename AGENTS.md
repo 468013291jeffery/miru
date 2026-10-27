@@ -147,6 +147,7 @@ node tools/on-assign-check.mjs --check  # 闸（check-all 里已挂）
 | 调参键 | `TUNING.md` |
 | 判据 / 评测 | `QUALITY.md` / `SPEC-AUDIT.md` |
 | 新增闸 | `tools/check-all.mjs`（**必须出现在输出里**）+ `docs/ENGINEERING.md` |
+| 任何改变§7读数的改动 | `ARCHITECTURE.md` §7 的数字（`doc-ref-check` 会对账，过期就红） |
 | 与别的 agent 约定 | 本文件 |
 
 ---

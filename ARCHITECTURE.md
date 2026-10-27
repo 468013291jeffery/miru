@@ -200,81 +200,121 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 
 ---
 
-## 7. 工程结构：八个入口 / 状态机（2026-10-27 晚新增）
+## 7. 工程结构：入口、状态机、注册表（2026-10-27 全天）
 
-> 这一节回答的是**另一个问题**：不是「能力放哪」，而是「**同一个东西有几条路能改它**」。
-> Ann 的原话：「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」
-> 下面每一条都配了**读数命令**与**闸**；闸都在 `tools/check-all.mjs` 里，且都做过变异测试。
-
-### 7.1 为什么需要这一层（读数）
+> 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
+> 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
+>
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**36 套**），且每道都做过变异测试。
+> 截至本日收盘的全部读数：
 
 ```
-tools/patch-registry.mjs
-  被覆盖的函数 148 个 · 覆盖点 382 处
-  renderChat   ← 被 25 处包过      ← 界面「一会儿好一会儿坏」的机械原因
-  pkDirective  ← 被 27 处包过
-  msgHTML      ← 被 19 处
-  stopHTML     ← 被 16 处
+猴补丁      148 个函数 / 357 处   （当天起点 382 ⇒ −25）
+空 catch    576 处 / 99 个文件    （当天起点 616 ⇒ −40）
+on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
+剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
+渲染钩子    22 个（每个 0 失败）
+错误日志    2 分钟窗口
 ```
 
-每一处都是 `const _x = x; x = function(){ … _x.apply(this,arguments) … }` —— **一个没有契约的接口**。
-更糟的是：**任何一层抛异常，它后面所有层都不再执行**，界面上只表现为「少了一块」。
+### 7.1 起点：一条链被 26 个文件分别改过
 
-### 7.2 八个入口
+`tools/patch-registry.mjs` 在当天早上量到的是 **382 处** `const _x = x; x = function(){ … }`。
+每一处都是**没有契约的接口**，而最要命的是：**任何一层抛异常，它后面所有层都不再执行**——
+界面上只表现为「少了一块」，控制台里一条没人看的错。
 
-| 入口 | 文件 | 它把「什么」变成唯一 | 读数 | 闸 |
+⇒ 于是把「一个东西几条路」逐个收成一个入口。**收的顺序按「今晚哪类 bug 归它」排**，不是按代码多少。
+
+### 7.2 十个入口
+
+| 入口 | 文件 | 把「什么」变成唯一 | 读数 | 闸 |
 |---|---|---|---|---|
-| **回合** `TURN` | `app103_turn.js` | `busy` 这个 boolean（原来四拨人各自解释） | `__turn()`：持有者 · 已持ms · **冲突次数** | `turn-wiring-check.mjs` |
-| **章节状态** `PKST` | `app104_pkstate.js` | `th.pk.st` 四个值 / 10 个写点 | `__pkst()`：各状态 · 纹路 · **非法迁移** | `pkstate-check.mjs` |
-| **存档** `SAVE` | `app105_save.js` | `save()` 397 个调用点无归因 | `__save()`：次数 · 最慢 · **最烧调用点（文件:行）** | `save-instrument-check.mjs` |
-| **渲染入口** `UI` | `app106_ui.js` | 渲染后的动作（原 25 层包装 → 1 调度 + N 具名钩子） | `__ui()`：钩子名 · 执行数 · **失败数** · 最近错误 | `ui-entry-check.mjs` |
-| **文本进 UI** | `app3_chat.js` `sanitizeMsgs` | `th.msgs` 30 处直写绕过的文本净化 | `__ui()`/控制台 | `sanitize-selftest.mjs` |
-| **加载顺序** | `tools/wiring-order-check.mjs` | 状态机必须先于「绑定它的那一行」出现 | 位置比较 | 同左 |
-| **猴补丁基线** | `tools/patch-registry.mjs --check` | 新增包装 = 需要显式确认 | 148 函数 / 382 处 | 同左 |
-| **剧本指令分发** `PKREG` | `app110_pkreg.js` | 26 层 `pkDirective` 包装 → **一张注册表**（顺序 = 数组下标，不再靠文件名） | `__pkreg()`：注册层 · 分发次数 · **层内抛错** | `pkdirective-check.mjs` |
-| **错误日志** `ERRLOG` | `app108_errlog.js` | `window.onerror` / `unhandledrejection` / `console.error` 三源合一，**保留 2 分钟窗口** | `__errlog()`：窗口内条数 · 已淘汰 | `errlog-selftest.mjs` |
-| **行号归位** | `tools/line2file.mjs` | `index.html:6833` → `app12_beats.js:25` | 130/130 块可定位 | — |
+| **回合** `TURN` | `app103_turn.js` | `busy` 这个 boolean（原来四拨人各自解释） | `__turn()`：持有者 · 已持ms · **冲突次数** | `turn-wiring-check` |
+| **章节状态** `PKST` | `app104_pkstate.js` | `th.pk.st` 四值 / 10 个写点在 4 个文件 | `__pkst()`：每条纹路 · **非法迁移** | `pkstate-check` |
+| **存档** `SAVE` | `app105_save.js` | `save()` 397 个调用点无归因 | `__save()`：最慢 · **最烧调用点（文件:行）** | `save-instrument-check` |
+| **渲染入口** `UI` | `app106_ui.js` | 渲染后的动作：25 层匿名包装 → **1 调度 + 22 具名钩子** | `__ui()`：钩子名 · **失败数** · 最近错误 | `ui-entry-check` |
+| **剧本指令** `PKREG` | `app110_pkreg.js` | 26 层 `pkDirective` 包装 → **一张注册表** | `__pkreg()`：注册层 · 分发次数 · **层内抛错** | `pkdirective-check` |
+| **文本进 UI** | `app3_chat.js:sanitizeMsgs` | `th.msgs` 30 处直写绕过的文本净化 | `__soft()` | `sanitize-selftest` |
+| **静默失败** | `app3_chat.js:soft` | 空 `catch` → 有名字、有次数的吞 | `__soft()`：位置 · 次数 | `empty-catch-check` |
+| **错误日志** `ERRLOG` | `app108_errlog.js` | `onerror` / `unhandledrejection` / `console.error` 三源合一，**2 分钟窗口淘汰** | `__errlog()`：窗口内条数 · 已淘汰 | `errlog-selftest` |
+| **on\* 绑定** | `tools/on-assign-check.mjs` | `el.onclick=` 静默覆盖别人的处理器 | 硬类 0 · 软类 93 | 同左 |
+| **加载顺序 / 猴补丁基线 / 行号归位** | `wiring-order-check` · `patch-registry --check` · `line2file` | 状态机必须先于绑定点；新增包装要显式确认；`index.html:6833` → 源文件 | 位置比较 / 148 函数 / 130 块 | 同左 |
 
 ### 7.3 渲染入口的形状（最容易看错的一条）
 
 ```
 renderChat（主渲染）
       ↓
-UI 调度器  ← 只装这一层，职责唯一：跑完主渲染后逐个跑钩子
+UI 调度器  ← 只装这一层：跑完主渲染后逐个跑钩子
       ↓      每个钩子**单独** try/catch ⇒ 一个炸不连累别人
-  UI.add("features73")  ← 关系条 / 那排按钮 / 对谁说
-  UI.add("mydock75")    ← 输入框上方浮条
-  UI.add("dock97")      ← 回合面板停靠
-  UI.add("merge41")   UI.add("composer55")  UI.add("voicefix86")  UI.add("lib65")
-  UI.add("story10")   UI.add("story16")     UI.add("story162")    UI.add("custom17")
-  UI.add("promo18")   UI.add("bgm19")       UI.add("dims21")      UI.add("style29")
-  UI.add("score31")   UI.add("recs33")      UI.add("rel45")       UI.add("clean48")
-  UI.add("social96")  UI.add("agents97")    UI.add("story98")
+  features73 关系条/那排按钮 · mydock75 浮条 · dock97 回合面板
+  merge41 · composer55 · voicefix86 · lib65 · story10 · story16 · story162
+  custom17 · promo18 · bgm19 · dims21 · style29 · score31 · recs33 · rel45
+  clean48 · social96 · agents97 · story98
 ```
 
-**判据（浏览器里量，不看源码）**：`__ui()` 应报 `调度已装: true`、`hook 数: 22`、**每个钩子失败 0**。
-（2026-10-27 收尾时 `renderChat` 上已**没有任何功能层包装在运行时安装** —— 全部走钩子；源码里的 `else` 兜底仍在，但那一支不执行。）
-搬一层包装的固定动作：`UI.add(名字, body)` + 保留 `else` 兜底（UI 不在时退化成原包装）。
-**兜底会留在源码里**，所以静态计数不降 —— 变的是**哪一支在跑**，别拿静态计数当进度。
+**判据（浏览器里量，不看源码）**：`__ui()` 报 `调度已装: true`、`hook 数: 22`、**每个钩子失败 0**。
+搬一层的固定动作：`UI.add(名字, body)` + 保留 `else` 兜底（UI 不在时退化成原包装）。
+**兜底留在源码里 ⇒ 静态计数不降**；变的是**哪一支在跑**。别拿静态计数当进度。
 
-### 7.4 这一层治什么 / 不治什么
+### 7.4 剧本指令：26 层包装 → 一张表
 
-- **治**：改一处坏另一处（包装层互相踩）、静默失败（空 catch 把硬错误变成无操作）、
-  「查不到是谁改的」（存档/章节/回合都有归因读数）。
-- **不治**：界面**长什么样**。样式仍散在 `shell.html` 与各文件的注入 `<style>` 里；
-  两个渲染器已于 2026-10-27 合并（见 `docs/message-renderers.md`），但视觉仍由多处 CSS 决定。
+`pkDirective` 原来被 26 层这样包着，**谁先生效由文件名加载顺序决定**：
 
-### 7.5 闸的自我检查（这一节是给下一个人的）
+```js
+const _pkDirX = pkDirective;
+pkDirective = function(th, b){ …认领某类型…; return _pkDirX(th, b) };
+```
 
-**写闸最大的坑不是写错，是「写了但从没跑」。** 当晚实测到三次，每次形状都一样：
+现在每层注册一行（**形状不变**，仍然拿着"下一层"）：
 
-1. `turn-wiring-check` 只看产物里有没有 `TURN.bind(` 这串字 —— 字符串在，绑定却从未执行
-   （模块排在建表末尾 ⇒ 绑定时对象还不存在 ⇒ 静默跳过）。⇒ 于是有了 `wiring-order-check`（比位置，不比字符串）。
-2. `ui-entry-check` 与 `wiring-order-check` **根本没挂进 `tools/check-all.mjs`** —— 跑 `check-all` 永远绿，
-   而单独跑 `ui-entry-check` 是**红的**（钩子被执行了两次）。⇒ 判据：**新闸必须在 check-all 的输出里看得见**，看不见就是装饰。
-3. `ui-entry-check` 的行为臂自己也需要「不能自证」：它验的是 `U.afterRender` 里一个钩子抛错后**后面的钩子照跑**，
-   这必须真的执行一次，不能只 grep 源码。
+```js
+PKREG.add('app17_custom.js', function(th, b, next){
+  if(Array.isArray(b) && b[1]==="event"){ …; return true }
+  return next(th, b);
+});
+```
 
-⇒ 三条固定动作：**写完闸 → 跑一次看它绿 → 造一次变异看它红 → 确认它出现在 `check-all` 的输出里**。
+装配只有一处（`install()`），顺序 = 数组下标。**逐字等价**，区别只是「谁赢」从文件名变成了可读的一行。
+
+`source/src/app109_pkdirect.js` 里写死了**谁在处理哪个类型**（21 个），以及**1 处死代码**：
+
+> `app16_story2` 的 `event` 处理**从不执行** —— 它被 `app17_custom` 的 `pkPart` 版从外层包住。
+> Ann 确认：现在用的就是后者（B 方案）。
+
+闸 `pkdirective-check` 三向对账：**有消费型必登记** · **表的赢家 = 最外层消费型** · **声明的死代码不许复活**。
+
+### 7.5 静默失败的三条出口
+
+以前失败只有一条路：`catch(_){}` → 消失。现在分三层：
+
+| 出口 | 收什么 | 怎么看 |
+|---|---|---|
+| `soft(位置, fn)` | **主动**吞掉的失败（本来是"失败了别打断玩家"的地方） | `__soft()`：哪一处、几次 |
+| `ERRLOG` | **没人接**的：`onerror` / 未处理的 Promise / `console.error` | `tools/read-errlog.mjs`（2 分钟窗口，非空即红） |
+| `HEALTH` | 四个入口的计数，每 30 秒落盘 | `tools/read-health.mjs`（冲突/失败/非法迁移，非零即红） |
+
+**错误日志有启动心跳**（3 秒后先落一次盘，哪怕零错误）——否则「零错误」和「日志器根本没跑」在磁盘上完全同形。
+
+### 7.6 这一层治什么 / 不治什么
+
+- **治**：改一处坏另一处（包装层互相踩）· 静默失败（空 catch 把硬错误变成无操作）·
+  「查不到是谁改的」（存档/章节/回合/指令都有归因读数）· 「谁赢由文件名决定」（改成了表）。
+- **不治**：界面**长什么样**。样式仍散在 `shell.html` 与各文件注入的 `<style>` 里（69 处 / 57 文件）。
+  两个渲染器已于当天合并（`docs/message-renderers.md`），但视觉仍由多处 CSS 决定。
+
+### 7.7 闸的自我检查（这一节是给下一个人的）
+
+**写闸最大的坑不是写错，是「写了但从没跑」。** 当天实测到**四种**：
+
+1. **只查字符串**：`turn-wiring-check` 看产物里有没有 `TURN.bind(` —— 字符串在，绑定却从未执行
+   （模块排在建表末尾 ⇒ 绑定时对象还不存在 ⇒ 静默跳过）。⇒ 于是有了 `wiring-order-check`（比**位置**）。
+2. **根本没登记**：`ui-entry-check` 与 `wiring-order-check` 没挂进 `check-all` ⇒ 十几轮「全绿」对它们一句都不算数，
+   而单独跑 `ui-entry-check` 是**红的**（钩子被执行两次）。
+3. **行为臂自证**：隔离性必须**真的执行一次**（塞一个抛错的钩子，验后面那个照跑），不能只 grep 源码。
+4. **尺子本身误判**：`empty-catch-check` 把生成的兜底垫片里的空 catch 也算成债务 ⇒ **代码对、闸红**。
+   修法是显式 `ALLOW` 表 + 每条写理由（现在只列了 3 个文件：errlog / pkreg / pkdirect）。
+
+⇒ 四条固定动作：**写完闸 → 跑一次看绿 → 造一次变异看红 → 确认它在 `check-all` 的输出里看得见**。
 
 ---
