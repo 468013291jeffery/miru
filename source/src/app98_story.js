@@ -226,7 +226,10 @@ function dock98() {
   else if (A.phase === "talk") h = '<div class="dk98r"><span class="dk98t">💬 ' + L98("自由对话中 · ", "Talking · ") + esc(LZ98(s && s.place)) + '</span><button data-b98next="1">▶ ' + L98("继续剧情", "Continue") + '</button></div>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); if (s && As["bg_" + s.id]) { window.SCENE_FILES[th.b98.bg] = As["bg_" + s.id]; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} return r; }; }
+{ /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story98 = function () { try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); if (s && As["bg_" + s.id]) { window.SCENE_FILES[th.b98.bg] = As["bg_" + s.id]; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story98", __body_story98);
+else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_story98(); return r; }; }; }
 document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if (e.target.closest("[data-b98next]")) { if (th && th.b98) next98(th); return; }
   if ((x = e.target.closest("[data-b98pick]"))) { if (th && th.b98) pick98(th, +x.dataset.b98pick); return; }
