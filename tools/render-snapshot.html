@@ -23,7 +23,8 @@ setTimeout(function () {
   } catch (e) {}
 
   var KINDS = [
-    ['say',    { who: 'c', k: 'say',   txt: '样例台词一句话。' }],
+    /* 2026-10-27 补 pk:1 —— 没有它 speakerOf 判不出 self，这条样例其实一直在测「别人说」，您扮演的角色 那条分支从未被这条快照覆盖过。 */
+  ['say',    { who: 'c', k: 'say', pk: 1, txt: '样例台词一句话。' }],
     ['act',    { who: 'c', k: 'act',   txt: '他把杯子挪到一边。' }],
     ['think',  { who: 'c', k: 'think', txt: '他没说出口的那半句。' }],
     ['narr',   { who: 'n', k: 'say',   txt: '街灯把水洼照亮。' }],
