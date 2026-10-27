@@ -53,7 +53,6 @@ p{margin:0}
 .brand b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600}
 .ibtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line2);background:var(--panel);display:grid;place-items:center;color:var(--dim);flex:none;font-size:15px}
 .ibtn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
-.tabbar{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line2);background:rgba(12,11,16,.96);backdrop-filter:blur(18px);padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));flex:none;z-index:5}
 .tabbar button{display:grid;gap:3px;justify-items:center;color:var(--faint);font-size:10px;font-weight:700;padding:3px 0}
 .tabbar svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6}
 .tabbar button.on{color:var(--text)}.tabbar button.on svg{stroke:var(--rose)}
@@ -117,12 +116,9 @@ p{margin:0}
 .progress{height:3px;background:var(--line2);border-radius:2px;overflow:hidden;flex:1}
 .progress i{display:block;height:100%;background:var(--grad);transition:width .3s}
 /* home */
-.stories{display:flex;gap:12px;overflow-x:auto;padding:4px 16px 8px;scrollbar-width:none}.stories::-webkit-scrollbar{display:none}
-.story{display:grid;gap:5px;justify-items:center;width:68px;flex:none}
-.story .ring{padding:2.5px;border-radius:50%;background:var(--line)}
+.stories::-webkit-scrollbar{display:none}
 .story.new .ring{background:conic-gradient(from 200deg,#F0B77E,#EE6F97,#9C84E0,#F0B77E)}
 .story .av{width:60px;height:60px;border:2.5px solid var(--bg)}
-.story b{font-size:10.5px;font-weight:700;color:var(--dim);max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .story.new b{color:var(--text)}
 .cont{display:flex;gap:12px;align-items:center;padding:10px;border-radius:18px;background:linear-gradient(120deg,rgba(238,111,151,.13),transparent 65%),var(--panel);border:1px solid var(--line2);width:100%;text-align:left}
 .cont .art{width:54px;height:66px;border-radius:12px;flex:none}
@@ -199,7 +195,6 @@ p{margin:0}
 .reltable div:last-child{border-bottom:0}
 .reltable b{background:var(--panel2);padding:10px 12px;font-size:12px}
 .reltable span{padding:10px 12px;font-size:12px;color:var(--dim);line-height:1.45}
-.startbar{flex:none;border-top:1px solid var(--line2);background:rgba(12,11,16,.97);padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px}
 .selrow{display:flex;gap:8px}
 .sel{flex:1;min-width:0;display:flex;align-items:center;justify-content:space-between;gap:6px;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:9px 12px;font-size:12.5px;font-weight:700;text-align:left}
 .sel small{display:block;font-size:9.5px;color:var(--faint);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
@@ -223,7 +218,6 @@ p{margin:0}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--rose);flex:none}
 .stagechip{font-size:9.5px;font-weight:800;color:var(--gold);border:1px solid rgba(240,183,126,.35);border-radius:999px;padding:2px 7px;white-space:nowrap}
 /* chat */
-.chead{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;border-bottom:1px solid var(--line2);background:rgba(12,11,16,.95);backdrop-filter:blur(16px);flex:none;z-index:4}
 .chead .av{width:38px;height:38px}
 .chead b{display:block;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chead span{font-size:10.5px;color:var(--faint);display:flex;gap:6px;align-items:center}
@@ -239,14 +233,12 @@ p{margin:0}
 .bub{padding:10px 13px;border-radius:18px;font-size:14px;line-height:1.55;background:var(--panel);border:1px solid var(--line2);border-bottom-left-radius:6px;white-space:pre-wrap}
 .m-row.me .bub{background:var(--grad);color:#1B1017;font-weight:600;border:0;border-bottom-left-radius:18px;border-bottom-right-radius:6px}
 .m-act{font-size:13.5px;line-height:1.6;color:#DCD3DE;max-width:92%;align-self:flex-start;padding-left:38px}
-.m-act.me{align-self:flex-end;text-align:right;padding-left:0;color:#F3D2C1}
 .m-think{font-style:italic;font-size:13px;color:#C6B3E6;border-left:2px solid rgba(156,132,224,.55);padding:1px 0 1px 10px;margin-left:38px;max-width:86%;align-self:flex-start}
 .m-think.me{align-self:flex-end;margin-left:0;margin-right:4px;border-left:0;border-right:2px solid rgba(240,183,126,.5);padding:1px 10px 1px 0;color:#E8CDB9;text-align:right}
 .m-think small{display:block;font-style:normal;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}
 .m-dir{align-self:center;font-size:11.5px;color:var(--gold);border:1px dashed rgba(240,183,126,.4);border-radius:10px;padding:6px 10px;max-width:90%}
 .m-card{align-self:center;width:88%;border-radius:16px;background:var(--panel);border:1px solid var(--line);padding:12px 14px;text-align:center}
 .m-card .eyebrow{color:var(--gold)}
-.m-img{align-self:center;width:72%;border-radius:14px;overflow:hidden;border:6px solid #F2EEE8;border-bottom-width:26px;box-shadow:0 10px 30px rgba(0,0,0,.4);transform:rotate(-1.5deg)}
 .m-img img{display:block;width:100%;min-height:160px;object-fit:cover;background:#1a1720}
 .mtools{display:flex;gap:4px;margin:4px 0 0 38px}
 .mtools button{font-size:11px;color:var(--faint);border:1px solid var(--line2);border-radius:8px;padding:4px 8px;font-weight:700}
@@ -278,8 +270,7 @@ p{margin:0}
 .chatscreen>.chatbg{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 .cbimg img{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;object-position:50% 20%;opacity:0;transition:opacity 1.2s ease;animation:cbdrift 26s ease-in-out infinite alternate;filter:saturate(.9)}
 .cbimg img.on{opacity:.85}
-.cbimg .cbv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}.cbimg .cbv.on{opacity:.9}
-#cbImg.duo img{width:78%;inset:auto;top:0;height:100%;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.2,.8,.2,1),filter 1.2s ease;animation:none}
+.cbimg .cbv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s ease}#cbImg.duo img{width:78%;inset:auto;top:0;height:100%;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.2,.8,.2,1),filter 1.2s ease;animation:none}
 #cbImg.duo img.sideL{left:-8%}#cbImg.duo img.sideR{left:30%}
 #cbImg.duo img.front{z-index:2;filter:none;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 14%,#000 86%,transparent 100%);transform:scale(1.04)}
 #cbImg.duo img.back{z-index:1;filter:brightness(.4) blur(1.5px);transform:scale(.94) translateY(3%);-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 80%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 80%,transparent 100%)}
@@ -291,18 +282,13 @@ p{margin:0}
 #cbFx{position:absolute;inset:0;width:100%;height:100%}
 .cbveil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,11,16,.45) 0%,rgba(12,11,16,.1) 28%,rgba(12,11,16,.5) 62%,rgba(12,11,16,.9) 100%)}
 .chatscreen .msgs{background:transparent}
-.chatscreen .chead,.chatscreen .status{background:rgba(12,11,16,.55);backdrop-filter:blur(14px)}
-.chatscreen .composer{background:rgba(12,11,16,.82);backdrop-filter:blur(14px)}
 .chatscreen .m-narr,.chatscreen .m-act{text-shadow:0 1px 10px rgba(0,0,0,.9)}
-.chatscreen .m-who{display:inline-block;background:rgba(12,11,16,.7);padding:2px 7px;border-radius:6px;filter:brightness(1.35)}
 /* 2026-10-27 · Ann：「浏览器整个卡死，连字都打不进去」。
    backdrop-filter 是合成器杀手：**每一个**气泡都要对自己的背景做一次模糊快照，
    一屏 6–8 个、滚动列表里 60+ 个 ⇒ Windows/Edge 上是已知的合成器停摆（页面不再响应输入，
    而 JS 长任务还是 0 —— 和我们量到的「长任务 0 / 60fps」完全吻合）。
    ⇒ 默认**关**，只留便宜的半透明底；想要毛玻璃就把 body 加上 heavyfx 类。 */
-.chatscreen .bub{background:rgba(22,20,28,.82)}
 body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur(8px)}
-.chatscreen .m-think{background:rgba(22,20,28,.5);border-radius:0 10px 10px 0}
 .mquick{display:flex;gap:4px;margin:3px 0 0 40px}.mquick.c{justify-content:center;margin-left:0}
 .mquick button{width:28px;height:24px;border-radius:8px;font-size:12px;background:rgba(22,20,28,.6);border:1px solid var(--line2);display:grid;place-items:center}
 .m-row+.mquick{margin-left:40px}
@@ -392,39 +378,29 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .livebanner{flex:none;display:block;width:100%;text-align:left;font-size:11.5px;color:#F3C8A0;background:rgba(240,183,126,.08);border-bottom:1px solid rgba(240,183,126,.25);padding:7px 14px}.livebanner b{color:var(--gold)}
 .livechip.off{color:var(--faint)!important}
 .empty{text-align:center;color:var(--faint);font-size:12.5px;padding:34px 20px;line-height:1.6}
-.imgprev{margin:12px auto 0;width:min(72%,280px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 34px rgba(0,0,0,.45)}
 .imgprev img{width:100%;height:100%;object-fit:cover;display:block}
 .imgprev .spin{width:26px;height:26px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;animation:rot .8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 .imgpr{width:100%;margin-top:10px;min-height:96px;font-size:12px;line-height:1.45;background:rgba(255,255,255,.06);color:inherit;border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px}
 .alv{position:relative;height:320px;background:#111}.alv video{display:block;width:100%;height:100%;object-fit:cover}.alv span{position:absolute;left:8px;right:8px;bottom:10px;text-align:center;color:#fff;font-size:12px;text-shadow:0 1px 4px #000}
-.m-img{width:58%}
-.imgprev{position:relative}.imgprev.gen::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.14) 50%,transparent 70%);background-size:220% 100%;animation:shim 1.6s linear infinite}@keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
+.m-img{align-self:center;width:58%;border-radius:14px;overflow:hidden;border:6px solid #F2EEE8;border-bottom-width:26px;box-shadow:0 10px 30px rgba(0,0,0,.4);transform:rotate(-1.5deg)}
+.imgprev{margin:12px auto 0;width:min(72%,280px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;background:#111;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 34px rgba(0,0,0,.45);position:relative}.imgprev.gen::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.14) 50%,transparent 70%);background-size:220% 100%;animation:shim 1.6s linear infinite}@keyframes shim{from{background-position:120% 0}to{background-position:-120% 0}}
 .aibadge{font-size:10px;font-weight:800;padding:2px 6px;border-radius:6px;background:var(--grad);color:#1B1017}
-.story{position:relative}.story .sdot{position:absolute;top:2px;right:6px;width:12px;height:12px;border-radius:50%;background:var(--rose);border:2px solid var(--bg)}
-.story .sbub{position:absolute;top:44px;right:2px;font-size:11px;font-style:normal;background:var(--panel2);border:2px solid var(--bg);border-radius:50%;width:22px;height:22px;display:grid;place-items:center}
 .story.chat .ring{background:linear-gradient(135deg,#7FC4A6,#9C84E0)}
-.story.hot .ring{background:conic-gradient(from 0deg,#F0B77E,#EE6F97,#9C84E0,#7FC4A6,#F0B77E);animation:hotspin 3s linear infinite;box-shadow:0 0 14px rgba(238,111,151,.75),0 0 28px rgba(240,183,126,.35)}
 .story.hot .ring .av{animation:hotspin 3s linear infinite reverse}
 .story.hot b{color:var(--gold)}
 @keyframes hotspin{to{transform:rotate(360deg)}}
-.dkwrap{position:relative;margin-top:6px}
-.dk{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 16px;scrollbar-width:none;scroll-padding:0 16px}.dk::-webkit-scrollbar{display:none}
-.dkc{position:relative;flex:none;width:calc(100% - 32px);height:460px;border-radius:24px;overflow:hidden;scroll-snap-align:start;background:var(--panel2);border:1px solid var(--line2)}
+.dk::-webkit-scrollbar{display:none}
 .dkc .dkv,.dkc .dkimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .dkc .veil{background:linear-gradient(180deg,rgba(8,7,11,.05) 35%,rgba(8,7,11,.95))}
-.dkc .cap{position:absolute;left:18px;right:18px;bottom:18px;z-index:2}.dkc h2{font-size:26px}.dkc p{font-size:12.5px;line-height:1.5;opacity:.9;margin-top:6px}
 .dkc .dkin{background:rgba(20,18,26,.6);backdrop-filter:blur(8px)}
-.dkn{position:absolute;top:12px;right:28px;z-index:3;font-size:11px;font-weight:800;background:rgba(10,8,14,.6);backdrop-filter:blur(6px);padding:4px 9px;border-radius:999px}
-.dkdots{display:flex;gap:5px;justify-content:center;margin-top:10px}.dkdots i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .3s}.dkdots i.on{width:18px;background:var(--rose)}
+.dkdots i.on{width:18px;background:var(--rose)}
 .htabs{display:flex;gap:4px;padding:18px 16px 0;border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--bg);z-index:4}
-.htabs button{padding:10px 12px;font-size:15px;font-weight:800;color:var(--faint);border-bottom:2.5px solid transparent}.htabs button.on{color:var(--text);border-color:var(--rose)}
+.htabs button.on{color:var(--text);border-color:var(--rose)}
 .rank{padding:6px 16px}.rrow{display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:10px 0;border-bottom:1px solid var(--line2)}
 .rrow b{display:block;font-size:14px}.rrow p{font-size:11.5px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rn{width:24px;text-align:center;font-family:var(--serif);font-size:18px;font-weight:700;color:var(--faint)}.rn.top{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:22px}
-.tabbar{grid-template-columns:repeat(4,1fr)}
-.hchips{display:flex;gap:8px;overflow-x:auto;padding:2px 16px 12px;scrollbar-width:none}.hchips::-webkit-scrollbar{display:none}
-.hchip{flex:none;border:1px solid var(--line);background:transparent;color:var(--text);padding:8px 14px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
+.hchips::-webkit-scrollbar{display:none}
 .hchip.srch{border-color:rgba(240,183,126,.5)}
 .qcard{margin:12px 16px 0;padding:12px;border-radius:20px;background:var(--panel);border:1px solid var(--line2)}
 .qhd{display:flex;gap:12px;align-items:center;width:100%;text-align:left}.qhd .qart{width:56px;height:70px;border-radius:12px;flex:none}
@@ -463,14 +439,13 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .prav{display:flex;align-items:center;margin-top:8px}.prav .av{margin-right:-8px;border:2px solid var(--bg)}.prav span{margin-left:14px;font-size:11px;font-weight:800;color:var(--dim)}
 .prnew{height:auto}.prnew span{display:grid;place-items:center;height:230px;border-radius:18px;font-size:40px;background:linear-gradient(135deg,rgba(156,132,224,.25),rgba(238,111,151,.2));border:1px dashed var(--line)}
 .screen>.backbtn{position:absolute;z-index:8}
-.startbar{position:relative;z-index:6}
+.startbar{flex:none;border-top:1px solid var(--line2);background:rgba(12,11,16,.97);padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:8px;position:relative;z-index:6}
 .chatnow{margin-top:14px;display:flex;flex-direction:column;gap:8px}.chatnow .btn-p{padding:15px 18px;font-size:15px;box-shadow:0 10px 26px rgba(238,111,151,.35)}
 .lastl{display:flex;gap:10px;align-items:center;text-align:left;padding:10px 12px;border-radius:16px;background:var(--panel);border:1px solid rgba(240,183,126,.3);font-size:13px;line-height:1.45}.lastl small{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--gold);text-transform:uppercase;margin-bottom:2px}
-.mimg{display:block;width:100%;height:0;padding-top:150%;background-color:#1a1720;background-size:cover,cover;background-position:center,center;background-repeat:no-repeat}
 .album .mimg{padding-top:100%;border-radius:8px}
 /* the chat list scrolls: nothing in it may be squeezed (an image card with overflow:hidden would shrink to an empty strip) */
 .msgs>*{flex-shrink:0}
-.mimg{padding-top:133%}
+.mimg{display:block;width:100%;height:0;padding-top:133%;background-color:#1a1720;background-size:cover,cover;background-position:center,center;background-repeat:no-repeat}
 .btl{position:relative;height:220px;margin:14px 0;border-radius:20px;background:radial-gradient(circle at 50% 50%,rgba(240,183,126,.15),transparent 70%),var(--panel2)}
 .btl-p{position:absolute;left:50%;transform:translateX(-50%);display:grid;justify-items:center;gap:4px;font-size:12px;font-weight:800}.btl-p.him{top:10px}.btl-p.me{bottom:12px;padding:6px 12px;border-radius:999px;background:var(--grad);color:#1B1017}
 .bottle{position:absolute;left:50%;top:50%;margin:-26px 0 0 -26px;width:52px;height:52px;font-size:44px;line-height:52px;text-align:center}
@@ -506,22 +481,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .cid{display:grid;justify-items:center;gap:2px;padding:7px 0;border-radius:10px;background:var(--panel);border:1px solid var(--line2);font-size:10.5px}.cid small{color:var(--faint);font-size:9px}.cid.got{background:rgba(127,196,166,.15);border-color:rgba(127,196,166,.5)}.cid.cur{border-color:var(--gold);box-shadow:0 0 0 2px rgba(240,183,126,.25)}
 .wufbox{margin-top:10px;padding:12px;border-radius:14px;background:var(--panel2);text-align:center;font-size:13px;font-weight:700}
 /* ---- compact drama carousel ---- */
-.dkwrap{position:relative;margin-top:8px;padding:10px 0 4px;background:radial-gradient(60% 70% at 50% 45%,rgba(156,132,224,.22),transparent 70%)}
-.dk{padding:0 21%;scroll-padding:0;gap:12px}
-.dkc{width:100%;flex:0 0 58%;height:auto;aspect-ratio:3/4;scroll-snap-align:center;text-align:left;display:block;transform:scale(.9);opacity:.55;transition:transform .35s,opacity .35s;border-radius:20px}
-.dkc.on{transform:none;opacity:1;box-shadow:0 14px 40px rgba(0,0,0,.55)}
-.dkc .cap{left:12px;right:12px;bottom:12px}
-.dkc h2{font-size:19px;line-height:1.15}
-.dkc p{font-size:11px;margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.dkc .dramab{font-size:10px;padding:4px 8px}
-.dkn{top:18px;right:16px}
-.dkar{position:absolute;top:calc(50% - 18px);z-index:3;width:34px;height:34px;border-radius:50%;background:rgba(10,8,14,.55);backdrop-filter:blur(6px);font-size:22px;line-height:30px;color:#fff;border:1px solid rgba(255,255,255,.12)}
 .dkar.l{left:10px}.dkar.r{right:10px}
-.dkact{display:flex;gap:8px;justify-content:center;padding:10px 16px 0}
-.dkact .btn{min-width:120px}
 .htabs{overflow-x:auto;scrollbar-width:none;padding-top:14px}
 .htabs::-webkit-scrollbar{display:none}
-.htabs button{white-space:nowrap;flex:none}
 /* ---- weekly vote board ---- */
 .rkhd{display:flex;gap:12px;align-items:center;padding:14px 16px 4px}
 .rkhd b{font-size:17px;display:block;margin-top:2px}
@@ -699,7 +661,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .f3.r1{background:linear-gradient(180deg,rgba(240,183,126,.2),var(--panel));padding-top:16px}
 .f3 span{font-size:20px}.f3 b{font-size:11.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.f3 em{font-style:normal;font-size:11px;color:var(--gold)}
 .f3.me{outline:1.5px solid var(--rose)}
-.frow{display:flex;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line2);font-size:13px}
 .frow .rk{width:22px;text-align:center;color:var(--faint);font-weight:800}
 .frow em{font-style:normal;font-size:12px;color:var(--dim)}
 .frow.me{background:rgba(238,111,151,.1);border-radius:10px;padding-inline:6px}
@@ -722,23 +683,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .adv-bar i{display:block;height:100%;width:0;background:var(--mint);transition:width 1s linear}
 
 /* ---- home v3: smaller circles/chips, bigger drama, centre card pops ---- */
-.stories{gap:8px;padding:2px 16px 4px}
-.story{width:54px;gap:3px}
 .story .av{width:46px;height:46px;border-width:2px}
-.story .ring{padding:2px}
-.story b{font-size:9.5px;max-width:54px}
-.story .sbub{top:32px;width:18px;height:18px;font-size:9px}
-.story .sdot{width:10px;height:10px;right:4px}
-.hchips{gap:6px;padding:2px 16px 6px}
-.hchip{padding:5px 11px;font-size:11.5px}
-.dkwrap{margin-top:2px;padding:14px 0 8px}
-.dk{padding:0 16%;gap:0}
-.dkc{flex:0 0 68%;transform:scale(.8);opacity:.4;filter:brightness(.7);transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .35s,filter .35s;z-index:1}
-.dkc.on{transform:scale(1.04);opacity:1;filter:none;z-index:2;box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1.5px rgba(240,183,126,.45);animation:dkpop .5s cubic-bezier(.34,1.56,.64,1)}
+.story .sdot{position:absolute;top:2px;right:4px;width:10px;height:10px;border-radius:50%;background:var(--rose);border:2px solid var(--bg)}
 @keyframes dkpop{0%{transform:scale(.86)}60%{transform:scale(1.09)}100%{transform:scale(1.04)}}
-.dkc h2{font-size:22px}
-.dkc p{font-size:12px}
-.dkar{top:calc(50% - 17px)}
 /* ---- onboarding big-image chooser ---- */
 .orT{position:relative;display:block;width:100%;height:210px;margin-top:16px;border-radius:22px;overflow:hidden;text-align:left;border:2px solid transparent;transition:transform .2s,border-color .2s}
 .orT:active{transform:scale(.98)}
@@ -773,10 +720,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .coach-skip{font-size:12px;color:var(--faint);padding:6px 4px}
 
 /* ---- story link layer ---- */
-.pairchip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:999px;background:linear-gradient(135deg,rgba(240,183,126,.16),rgba(238,111,151,.16));border:1px solid rgba(238,111,151,.4);font-size:11px;white-space:nowrap}
-.pairchip .av{margin-right:-8px;border:1.5px solid var(--bg)}
-.pairchip b{margin-left:8px;color:var(--gold)}.pairchip span{color:var(--dim)}.pairchip em{font-style:normal}
-.callbtn{display:flex;align-items:center;gap:4px;padding:7px 11px;border-radius:999px;background:linear-gradient(135deg,#5FD39A,#2FA66E);color:#062015;font-weight:900;font-size:12px;box-shadow:0 4px 14px rgba(47,166,110,.45);margin-right:4px;animation:cbp 2.4s infinite}
+.pairchip b{margin-left:8px;color:var(--gold)}.pairchip em{font-style:normal}
 @keyframes cbp{0%,100%{box-shadow:0 4px 14px rgba(47,166,110,.45)}50%{box-shadow:0 4px 22px rgba(95,211,154,.8)}}
 .cv-meter{position:relative;margin-top:10px;font-size:11.5px;font-weight:800;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.12)}
 .pz{margin-top:14px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,rgba(156,132,224,.14),rgba(20,18,26,.9));border:1px solid rgba(156,132,224,.35)}
@@ -829,12 +773,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .gh-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
 .gh-quick button{position:relative;height:110px;border-radius:14px;overflow:hidden;text-align:left}
 .gh-quick img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 20%}
-.gh-quick b{position:absolute;left:8px;right:8px;bottom:8px;font-size:12px;text-shadow:0 1px 6px #000}
 .gh-quick button::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.85))}
-.gh-quick b{z-index:1}
+.gh-quick b{position:absolute;left:8px;right:8px;bottom:8px;font-size:12px;text-shadow:0 1px 6px #000;z-index:1}
 .relcard{margin:14px 16px 0}
-.wtk{position:relative;height:30px;margin:0 16px 6px;border-radius:10px;background:var(--panel);border:1px solid var(--line2);overflow:hidden}
-.wtki{position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 10px;font-size:11.5px;opacity:0;transform:translateY(100%);transition:opacity .4s,transform .4s;text-align:left}
 .wtki.on{opacity:1;transform:none}
 .wtki i{width:7px;height:7px;border-radius:50%;background:var(--rose);flex:none;animation:cbp 1.6s infinite}
 .wtki b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wtki span{color:var(--faint);font-size:10.5px;flex:none}
@@ -852,14 +793,10 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .memlay>div{position:relative;padding:10px 12px;border-radius:12px;border:1px solid var(--line2);display:grid;gap:3px}
 .memlay b{font-size:13px}.memlay span{font-size:11.5px;color:var(--dim);line-height:1.4}.memlay em{position:absolute;top:10px;right:10px;font-style:normal;font-size:10px;color:var(--faint)}
 .memtiers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0}
-.mt{padding:10px 6px;border-radius:12px;background:var(--panel);border:1px solid var(--line2);display:grid;justify-items:center;text-align:center;gap:2px}
 .mt b{font-size:11.5px}.mt em{font-style:normal;font-size:20px;font-weight:900}.mt span{font-size:10px;color:var(--dim);line-height:1.3}
 .mt.on{border-color:var(--rose);background:rgba(238,111,151,.1)}
 
-.dkwrap{container-type:inline-size}
-.dk{padding:0 16cqw}
-.dkc{flex:0 0 68cqw}
-.callbtn{padding:6px 9px;font-size:11px;white-space:nowrap;flex:none}
+.callbtn{display:flex;align-items:center;gap:4px;padding:6px 9px;border-radius:999px;background:linear-gradient(135deg,#5FD39A,#2FA66E);color:#062015;font-weight:900;font-size:11px;box-shadow:0 4px 14px rgba(47,166,110,.45);margin-right:4px;animation:cbp 2.4s infinite;white-space:nowrap;flex:none}
 .callbtn span{max-width:64px;overflow:hidden;text-overflow:ellipsis}
 .chead .grow{min-width:0}.chead .grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chead .grow>span{display:flex;flex-wrap:nowrap;overflow:hidden;gap:4px}
@@ -869,32 +806,31 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .tline em{font-style:normal;color:var(--gold);width:48px;flex:none}
 
 /* ---- home v4: compact, nothing clipped, Playroom visible on first screen ---- */
-.stories{gap:10px;padding:2px 16px 2px}
-.story{width:50px;gap:2px}
+.stories{display:flex;gap:10px;overflow-x:auto;padding:2px 16px 2px;scrollbar-width:none}
+.story{display:grid;gap:2px;justify-items:center;width:50px;flex:none;position:relative}
 .story .av{width:42px!important;height:42px!important;border-width:2px}
-.story .ring{padding:2px}
-.story b{font-size:9.5px;max-width:52px}
-.story .sbub{top:28px;right:-2px;width:16px;height:16px;font-size:8px}
-.story.hot .ring{box-shadow:0 0 8px rgba(238,111,151,.6)}
-.wtk{height:26px;margin:4px 16px 4px}.wtki{font-size:11px}
-.hchips{padding:2px 16px 2px}.hchip{padding:4px 10px;font-size:11px}
-.dkwrap{margin-top:0;padding:0}
-.dk{padding:12px calc(50cqw - var(--cw)/2) 14px;--cw:min(46cqw,calc(clamp(170px,30vh,250px)*.75))}
-.dkc{flex:0 0 var(--cw);width:var(--cw);height:auto;aspect-ratio:3/4;transform:scale(.86);border-radius:16px;cursor:pointer}
-.dkc.on{transform:scale(1);animation:dkpop2 .45s cubic-bezier(.34,1.56,.64,1)}
+.story .ring{padding:2px;border-radius:50%;background:var(--line)}
+.story b{font-size:9.5px;font-weight:700;color:var(--dim);max-width:52px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.story .sbub{position:absolute;top:28px;right:-2px;font-size:8px;font-style:normal;background:var(--panel2);border:2px solid var(--bg);border-radius:50%;width:16px;height:16px;display:grid;place-items:center}
+.story.hot .ring{background:conic-gradient(from 0deg,#F0B77E,#EE6F97,#9C84E0,#7FC4A6,#F0B77E);animation:hotspin 3s linear infinite;box-shadow:0 0 8px rgba(238,111,151,.6)}
+.wtk{position:relative;height:26px;margin:4px 16px 4px;border-radius:10px;background:var(--panel);border:1px solid var(--line2);overflow:hidden}.wtki{position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 10px;font-size:11px;opacity:0;transform:translateY(100%);transition:opacity .4s,transform .4s;text-align:left}
+.hchips{display:flex;gap:6px;overflow-x:auto;padding:2px 16px 2px;scrollbar-width:none}.hchip{flex:none;border:1px solid var(--line);background:transparent;color:var(--text);padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.dkwrap{position:relative;margin-top:0;padding:0;background:radial-gradient(60% 70% at 50% 45%,rgba(156,132,224,.22),transparent 70%);container-type:inline-size}
+.dk{display:flex;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px calc(50cqw - var(--cw)/2) 14px;scrollbar-width:none;scroll-padding:0;--cw:min(46cqw,calc(clamp(170px,30vh,250px)*.75))}
+.dkc{position:relative;flex:0 0 var(--cw);width:var(--cw);height:auto;border-radius:16px;overflow:hidden;scroll-snap-align:center;background:var(--panel2);border:1px solid var(--line2);aspect-ratio:3/4;text-align:left;display:block;transform:scale(.86);opacity:.4;transition:transform .45s cubic-bezier(.34,1.56,.64,1),opacity .35s,filter .35s;filter:brightness(.7);z-index:1;cursor:pointer}
+.dkc.on{transform:scale(1);opacity:1;box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 1.5px rgba(240,183,126,.45);filter:none;z-index:2;animation:dkpop2 .45s cubic-bezier(.34,1.56,.64,1)}
 @keyframes dkpop2{0%{transform:scale(.88)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
-.dkc .cap{left:9px;right:9px;bottom:9px}
+.dkc .cap{position:absolute;left:9px;right:9px;bottom:9px;z-index:2}
 .dkc h2{font-size:15px;line-height:1.15}
-.dkc p{font-size:10px;-webkit-line-clamp:2;margin-top:3px}
-.dkc .dramab{top:7px;left:7px;font-size:9px;padding:3px 7px}
-.dkbtns{display:none;gap:6px;margin-top:7px}
+.dkc p{font-size:10px;line-height:1.5;opacity:.9;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dkc .dramab{font-size:9px;padding:3px 7px;top:7px;left:7px}
 .dkc.on .dkbtns{display:flex}
 .btn-xs{padding:5px 10px!important;font-size:11px!important;min-height:0!important;border-radius:999px}
-.dkn{top:14px;right:12px;font-size:10px;padding:3px 7px}
-.dkar{width:28px;height:28px;line-height:24px;font-size:18px;top:calc(50% - 14px)}
-.dkact{padding:2px 16px 0}
+.dkn{position:absolute;top:14px;right:12px;z-index:3;font-size:10px;font-weight:800;background:rgba(10,8,14,.6);backdrop-filter:blur(6px);padding:3px 7px;border-radius:999px}
+.dkar{position:absolute;top:calc(50% - 14px);z-index:3;width:28px;height:28px;border-radius:50%;background:rgba(10,8,14,.55);backdrop-filter:blur(6px);font-size:18px;line-height:24px;color:#fff;border:1px solid rgba(255,255,255,.12)}
+.dkact{display:flex;gap:8px;justify-content:center;padding:2px 16px 0}
 .dkact .btn{min-width:0;padding:6px 14px;font-size:12px}
-.htabs{padding-top:6px}.htabs button{padding:8px 10px;font-size:14px}
+.htabs{padding-top:6px}.htabs button{padding:8px 10px;font-size:14px;font-weight:800;color:var(--faint);border-bottom:2.5px solid transparent;white-space:nowrap;flex:none}
 
 /* ---- relationship engine / watch / director ---- */
 .rdb{display:grid;gap:7px;margin-top:10px}
@@ -926,8 +862,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* ---- 今夜上映: one big line for dramas + Playroom ---- */
 .shead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:10px 16px 0}
 .shead h2{font-size:19px;margin-top:1px}
-.hfseg{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line2);border-radius:999px;padding:3px}
-.hfseg button{padding:5px 10px;border-radius:999px;font-size:11.5px;font-weight:800;color:var(--dim);white-space:nowrap}
 .hfseg button.on{background:var(--grad);color:#1B1017}
 /* sized so the quest/rank/earn tab strip below still peeks onto the first screen on a phone, without scrolling
    (the "my points" bar was moved to the bottom of the quest tab, which freed up room to size this back up a bit) */
@@ -941,8 +875,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .dramab.pr{background:rgba(92,64,170,.8)}
 .dkc .dkimg.wcast{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr}
 /* ===== v3: short-drama home feed · discover shelves · story packs ===== */
-.tabbar{grid-template-columns:repeat(5,1fr)!important}
-.feedwrap{position:relative;flex:1;min-height:0;background:#000}
+.tabbar{display:grid;grid-template-columns:repeat(5,1fr)!important;border-top:1px solid var(--line2);background:rgba(12,11,16,.96);backdrop-filter:blur(18px);padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));flex:none;z-index:5}
 .feed{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain}.feed::-webkit-scrollbar{display:none}
 .fcard{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
 .fvid,.fimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 22s ease-in-out infinite alternate}
@@ -958,18 +891,13 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .fside button{display:grid;justify-items:center;gap:3px;color:#fff}.fside i{font-style:normal;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(20,18,26,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14);font-size:16px}
 .fside small{font-size:10px;font-weight:700;text-shadow:0 1px 4px #000}
 .finfo{position:relative;z-index:3;margin:0 10px 10px;padding:16px 16px 14px;border-radius:22px;background:rgba(28,24,36,.62);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2);border:1px solid rgba(255,255,255,.08)}
-.frow{display:flex;gap:10px;align-items:flex-start}.ftitle{flex:1;text-align:left;font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.2;color:#fff}
+.frow{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line2);font-size:13px}.ftitle{flex:1;text-align:left;font-family:var(--serif);font-size:21px;font-weight:600;line-height:1.2;color:#fff}
 .fheart{font-size:24px;line-height:1;color:#fff;width:34px;height:34px;flex:none}.fheart.on{color:var(--rose)}
-.fpills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .fp{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.88)}
 .fp.top{background:#F07A3A;color:#fff}.fp.new{background:var(--mint);color:#0B1A14}.fp.or.bl{background:#4FA88A;color:#fff}.fp.or.gl{background:#C46FB0;color:#fff}.fp.or.bg{background:#6C8FC4;color:#fff}.fp.or.ens{background:#9C84E0;color:#fff}
 .fhook{margin-top:12px;font-weight:800;font-size:15px;line-height:1.4;color:#fff}
-.fdesc{display:flex;gap:8px;align-items:flex-start;text-align:left;margin-top:6px;color:rgba(255,255,255,.72);font-size:13px;line-height:1.55;width:100%}
-.fdesc span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}.fdesc i{font-style:normal;transition:transform .2s}
 .fdesc.open span{-webkit-line-clamp:12}.fdesc.open i{transform:rotate(180deg)}
-.fmeta{display:flex;gap:12px;margin-top:10px;font-size:11.5px;color:rgba(255,255,255,.6);font-weight:600}
-.fcta{margin-top:12px;padding:15px!important;font-size:15.5px!important;border-radius:999px!important;background:linear-gradient(135deg,#F0B77E,#EE6F97)!important;box-shadow:0 10px 26px rgba(238,111,151,.3)}
-@media(max-height:700px){.fdesc{display:none}.fside{bottom:260px}}
+@media(max-height:700px){.fside{bottom:260px}}
 /* discover */
 .dtop{gap:6px}.dmode{display:flex;gap:16px;align-items:baseline}.dmode button{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--faint)}.dmode button.on{color:var(--text)}
 .dchips{display:flex;gap:8px;overflow-x:auto;padding:4px 16px 10px;scrollbar-width:none;flex:none}.dchips::-webkit-scrollbar{display:none}
@@ -990,7 +918,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* story page */
 .chlist{display:flex;flex-direction:column;gap:8px}.chrow{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line2);border-radius:14px;background:var(--panel)}
 .chrow.cur{border-color:rgba(238,111,151,.5)}.chrow b{font-size:14px}.chrow p{font-size:12px;color:var(--faint);margin-top:3px;line-height:1.45}
-.chn{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--raise);font-size:12px;font-weight:800;flex:none}.chl{font-size:14px}.chf{font-size:10.5px;font-weight:800;color:var(--mint);border:1px solid rgba(127,196,166,.4);padding:2px 7px;border-radius:999px}
+.chn{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--raise);font-size:12px;font-weight:800;flex:none}.chf{font-size:10.5px;font-weight:800;color:var(--mint);border:1px solid rgba(127,196,166,.4);padding:2px 7px;border-radius:999px}
 .endl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.endl div{padding:12px 10px;border-radius:12px;border:1px dashed var(--line);text-align:center}.endl div.got{border-style:solid;border-color:rgba(240,183,126,.5)}
 .endl b{display:block;font-family:var(--serif);font-size:20px}.endl span{display:block;font-size:11.5px;color:var(--dim);margin-top:4px}
 .feats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.feats div{padding:12px;border-radius:14px;background:var(--panel);border:1px solid var(--line2)}.feats span{font-size:18px}.feats b{display:block;font-size:12.5px;margin-top:4px}.feats p{font-size:11.5px;color:var(--faint);line-height:1.45;margin-top:3px}
@@ -1041,20 +969,15 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* onboarding picks */
 .obrec{padding:8px 0 0;text-align:center}.obrec>h1{font-size:28px;padding:0 20px}.obrec>p{margin-top:8px;font-size:14px}
 .obr{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin-top:22px;scrollbar-width:none}.obr::-webkit-scrollbar{display:none}
-.obc{flex:none;width:100%;scroll-snap-align:center;padding:0 22px}
-.obimg{position:relative;border-radius:24px 24px 0 0;overflow:hidden;aspect-ratio:4/3.4}.obimg img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
 .obv{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(0,0,0,.85))}
-.obcap{position:absolute;left:18px;right:18px;bottom:14px;text-align:left}.obcap span{font-size:12px;font-weight:900;letter-spacing:.08em;color:var(--rose)}.obcap h2{font-size:22px;color:#fff;margin-top:4px}
-.obtags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.obtags em{font-style:normal;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.18);color:#fff}
-.obtxt{background:var(--panel);padding:16px 18px 6px;text-align:left;font-size:13.5px;line-height:1.65;color:var(--dim);display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
-.obbtns{display:flex;gap:10px;background:var(--panel);padding:12px 18px 18px;border-radius:0 0 24px 24px}.obnext{width:52px;height:46px;border-radius:999px;background:var(--raise);font-size:18px}
-.obdots{display:flex;gap:8px;justify-content:center;margin-top:18px}.obdots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.obdots i.on{background:var(--rose)}
+.obnext{width:52px;height:46px;border-radius:999px;background:var(--raise);font-size:18px}
+.obdots i.on{background:var(--rose)}
 .obskip{display:block;margin:18px auto 0;font-size:13px;color:var(--faint);text-decoration:underline}
 .fmin{padding-bottom:14px}.fmin .ftitle{font-size:18px;text-shadow:0 1px 8px rgba(0,0,0,.7)}.fmin .ftitle small{font-family:var(--sans,inherit);font-size:13px;font-weight:700;color:var(--gold);opacity:.95}
 .dtags{padding:6px 16px 8px;gap:8px}.dtags button{padding:7px 12px;border-radius:999px;font-size:13px}.dtags button.blt{border:1.5px solid var(--gold);color:var(--gold);font-weight:800}
 .dfilt{border-bottom:1px solid var(--line2);margin-top:4px}.dfilt .tagrow{border-bottom:1px solid var(--line2)}.dfilt .tagrow b{font-size:12px;padding-left:16px;color:var(--dim)}.dfilt .hs{display:flex;gap:6px;overflow-x:auto;padding:8px 16px 8px 0;scrollbar-width:none}.dfilt .hs::-webkit-scrollbar{display:none}.dfilt .hs .chip{flex:none}.dor{margin:8px 16px}.dor .blt{color:var(--gold);font-weight:800}
 /* chat header v2: two stacked rows, nothing runs off the right edge */
-.chead{flex-direction:column;align-items:stretch;gap:6px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px}
+.chead{display:flex;align-items:stretch;gap:6px;padding:calc(8px + env(safe-area-inset-top,0px)) 12px 8px;border-bottom:1px solid var(--line2);background:rgba(12,11,16,.95);backdrop-filter:blur(16px);flex:none;z-index:4;flex-direction:column}
 .chead>.row{margin:0!important;min-width:0;width:100%}
 .chead>.row:first-child{gap:8px!important}
 .chead>.row:first-child .ibtn{width:34px;height:34px}
@@ -1066,9 +989,9 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .status{gap:6px;padding:6px 12px;align-items:center}
 .status>span{padding:4px 9px;font-size:10.5px;border-radius:999px;flex:none}
 .status span span,.status .pairchip span{background:none;padding:0;border-radius:0}
-.pairchip{padding:3px 10px 3px 3px;font-size:10.5px;flex:none;gap:5px}
-.pairchip .av{width:20px!important;height:20px!important}
-.pairchip span{font-size:10px}
+.pairchip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 3px;border-radius:999px;background:linear-gradient(135deg,rgba(240,183,126,.16),rgba(238,111,151,.16));border:1px solid rgba(238,111,151,.4);font-size:10.5px;white-space:nowrap;flex:none}
+.pairchip .av{margin-right:-8px;border:1.5px solid var(--bg);width:20px!important;height:20px!important}
+.pairchip span{color:var(--dim);font-size:10px}
 .status{-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent);padding-right:28px}
 .chead>.row:first-child .grow b{font-size:14px}
 .pkskip{display:block;margin:2px auto 0;font-size:11.5px;font-weight:700;color:var(--dim);padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--panel2)}
@@ -1120,7 +1043,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .m-box{align-self:stretch;margin:2px 4px;padding:12px 14px;border-radius:16px;background:rgba(12,11,16,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;gap:7px}
 .m-box p{font-size:14.5px;line-height:1.7;color:#E9E2EC}
 .m-box p b{font-size:11.5px;font-weight:800;margin-right:6px;letter-spacing:.02em}
-.m-box p.bth{color:#C9C0D6;font-style:italic}
 .m-scene{align-self:center;display:flex;gap:8px;align-items:center;margin:10px 0 2px;padding:6px 14px;border-radius:999px;background:rgba(12,11,16,.7);border:1px solid rgba(240,183,126,.35);font-size:12px;font-weight:800;color:var(--gold)}
 .m-scene em{font-style:normal;color:var(--dim);font-weight:700}
 .m-intro{align-self:stretch;margin:4px;border-radius:20px;overflow:hidden;background:rgba(16,14,22,.9);border:1px solid var(--line);backdrop-filter:blur(12px)}
@@ -1150,13 +1072,13 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #pkwrap.inl .pkplay{padding:2px 0}
 .vtog{font-size:15px}.vtog.on{border-color:rgba(240,183,126,.5);background:rgba(240,183,126,.12)}
 .cbimg img.scimg{opacity:0;object-position:center 40%;filter:saturate(.95) brightness(.85)}.cbimg img.scimg.on{opacity:.9}
-.mt{display:inline-block;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.02em;padding:2px 8px;border-radius:999px;margin:0 7px 0 0;vertical-align:1px;white-space:nowrap}
+.mt{padding:2px 8px;border-radius:999px;background:var(--panel);border:1px solid var(--line2);display:inline-block;justify-items:center;text-align:center;gap:2px;font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.02em;margin:0 7px 0 0;vertical-align:1px;white-space:nowrap}
 .mt.act{color:#2A1606;background:#F0B77E}.mt.think{color:#fff;background:#8C6FE0}
 .m-box p.bn{color:#ECE6F0}
 .m-box p.bac{color:#F6DDBE}
 .m-box p.bth{color:#D7CBF6;font-style:italic}
 .m-act.me,.m-think.me{align-self:flex-end;max-width:86%;text-align:left;padding:10px 13px;border-radius:16px 16px 6px 16px;font-size:14px;line-height:1.6}
-.m-act.me{background:rgba(240,183,126,.16);border:1px solid rgba(240,183,126,.45);color:#F6DDBE}
+.m-act.me{align-self:flex-end;text-align:right;padding-left:0;color:#F6DDBE;background:rgba(240,183,126,.16);border:1px solid rgba(240,183,126,.45)}
 .m-think.me{background:rgba(140,111,224,.16);border:1px dashed rgba(170,145,240,.6);color:#D7CBF6;font-style:italic}
 .m-act.me small.mt,.m-think.me small.mt{display:table;margin:0 0 4px}
 .m-event{align-self:stretch;margin:10px 6px;padding:14px 16px;border-radius:16px;text-align:center;background:linear-gradient(135deg,rgba(227,106,106,.28),rgba(238,111,151,.18));border:1px solid rgba(238,111,151,.55);animation:evin .5s cubic-bezier(.2,.9,.3,1.3)}
@@ -1203,7 +1125,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 @keyframes relf{0%{transform:translateY(6px);opacity:0}20%{opacity:1}100%{transform:translateY(-14px);opacity:0}}
 .rgraph{border-radius:18px;padding:12px 6px 4px;background:radial-gradient(120% 90% at 50% 40%,rgba(156,132,224,.28),rgba(22,18,34,.9));border:1px solid var(--line)}.rgraph .eyebrow{padding-left:10px;color:var(--gold)}
 .rge{stroke:rgba(238,111,151,.55);stroke-width:1.4;stroke-dasharray:5 5}.rge.main{stroke:#EE6F97;stroke-width:2.4;stroke-dasharray:none}
-.rgl{font-size:9.5px;line-height:1.25;text-align:center;color:#F2E4EA;background:rgba(16,13,24,.88);border:1px solid rgba(238,111,151,.35);border-radius:8px;padding:2px 5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .rgl.main{border-color:#EE6F97;color:#fff;font-weight:800}
 .rgn{display:grid;justify-items:center;gap:2px}.rgn img{width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:center 20%;border:2px solid rgba(255,255,255,.25)}
 .rgn.lv img{border-color:#EE6F97;box-shadow:0 0 12px rgba(238,111,151,.7)}.rgn.you img{border-color:var(--gold)}
@@ -1223,7 +1144,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .welsub{background:none;color:var(--dim);margin-top:6px}
 .pack s,.plan s{opacity:.5;font-size:.9em}.pp{color:#ffcf73}
 .promochip{position:absolute;left:12px;top:58px;z-index:6;border:0;border-radius:999px;padding:6px 11px;font-size:12px;font-weight:600;color:#2a1600;background:linear-gradient(90deg,#ffd36b,#ff9fb9);box-shadow:0 4px 16px rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
-.feedwrap{position:relative}
+.feedwrap{position:relative;flex:1;min-height:0;background:#000}
 /* opening-line voice */
 .mi-q{font-size:12.5px;color:var(--dim);margin:6px 0 6px;line-height:1.55}.mi-q .ma{font-style:italic;opacity:.75}
 .vpill{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:12px;padding:6px 12px;background:rgba(160,120,255,.16);color:#b9a2ff;font-size:12px}
@@ -1231,8 +1152,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .vpill.on u{animation:vp 0.8s ease-in-out infinite}.vpill.on i{color:#fff}@keyframes vp{50%{opacity:.35}}
 /* stickers */
 .emobtn{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:var(--panel);font-size:20px}
-.emop{margin-top:8px;border-top:1px solid var(--line2);padding-top:6px;max-height:230px;overflow:auto}
-.emotabs{display:flex;gap:6px;margin-bottom:6px}.emotabs button{border:0;background:none;color:var(--dim);font-size:13px;padding:4px 10px;border-radius:999px}.emotabs .on{background:var(--panel);color:var(--ink,#fff)}
+.emotabs button{border:0;background:none;color:var(--dim);font-size:13px;padding:4px 10px;border-radius:999px}.emotabs .on{background:var(--panel);color:var(--ink,#fff)}
 .emog{display:grid;grid-template-columns:repeat(8,1fr);gap:2px}.emog button{border:0;background:none;font-size:24px;padding:5px 0}
 .stkg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stkg button{border:0;border-radius:14px;background:var(--panel);padding:8px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:2px}
 .stkg span{font-size:34px;line-height:1.1}.stkg small{font-size:11px;color:var(--dim)}
@@ -1309,7 +1229,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .lockin .stskip{align-self:center}
 
 /* fx above the veil; second layer for glass drops / frost */
-.chatbg .cbveil{z-index:1}.chatbg #cbFx{z-index:2}.chatbg #cbFx2{position:absolute;inset:0;width:100%;height:100%;z-index:3}
+.chatbg #cbFx{z-index:2}.chatbg #cbFx2{position:absolute;inset:0;width:100%;height:100%;z-index:3}
 .fxshake{animation:fxsh .35s linear}@keyframes fxsh{20%{transform:translate(-4px,2px)}40%{transform:translate(4px,-2px)}60%{transform:translate(-3px,1px)}80%{transform:translate(2px,-1px)}}
 @media(prefers-reduced-motion:reduce){.fxshake{animation:none}}
 .fxchip{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:inherit;border-radius:999px;padding:4px 10px;font-size:12px;white-space:nowrap}
@@ -1321,22 +1241,17 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* relationship dimensions bar */
 .dimrow{display:flex;gap:8px;overflow-x:auto;padding:6px 10px 4px;scrollbar-width:none}.dimrow::-webkit-scrollbar{display:none}
 .dimc{flex:none;border:1px solid rgba(255,255,255,.12);background:rgba(20,16,26,.62);backdrop-filter:blur(10px);border-radius:14px;padding:6px 9px;color:#fff;text-align:left;display:flex;flex-direction:column;gap:5px;position:relative}
-.dimc.main{width:min(78vw,330px)}.dimc.pulse{box-shadow:0 0 0 2px rgba(238,111,151,.55)}
-.dimh{display:flex;align-items:center;gap:4px;min-width:0}.dimh .av+.av{margin-left:-8px}.dimh b{font-size:12.5px;margin-left:4px;white-space:nowrap}.dimh em{font-style:normal;font-size:10.5px;padding:1px 7px;border-radius:999px;margin-left:auto;white-space:nowrap;background:rgba(255,255,255,.1)}
-.ds-fire,.ds-pull{color:#ff9db0;background:rgba(238,111,151,.18)!important}.ds-sync,.ds-warm{color:#ffd59a;background:rgba(255,196,110,.15)!important}.ds-gru,.ds-guard{color:#b9c3d6}.ds-jea{color:#9fe3a7;background:rgba(120,220,140,.14)!important}
-.dimm{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.dimm span{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0}
-.dimm small{font-size:9.5px;opacity:.7}.dimm i{display:block;height:3px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}.dimm u{display:block;height:100%;border-radius:3px;transition:width .8s}
+.dimc.pulse{box-shadow:0 0 0 2px rgba(238,111,151,.55)}
+.dimh .av+.av{margin-left:-8px}.dimm span{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dimm u{display:block;height:100%;border-radius:3px;transition:width .8s}
 .dimm b{font-size:11px;font-weight:700}.dimm.mini{grid-template-columns:repeat(4,auto);gap:8px}.dimm.mini span{flex-direction:row;gap:3px;align-items:baseline}
-.dm-att u{background:#ff7aa2}.dm-tru u{background:#7cc8ff}.dm-jea u{background:#8be08f}.dm-ten u{background:#ffb35c}.dm-gru u{background:#9aa3b5}
 .dimf{position:absolute;left:50%;top:-4px;transform:translateX(-50%);font-size:11px;font-weight:800;pointer-events:none;animation:dimf 1.6s ease-out forwards}.dimf.up{color:#7dffb0}.dimf.down{color:#ff8a8a}
 @keyframes dimf{0%{opacity:0;transform:translate(-50%,4px)}20%{opacity:1}100%{opacity:0;transform:translate(-50%,-18px)}}
-.dimsh{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px;display:flex;flex-direction:column;gap:6px}
-.dimline{display:grid;grid-template-columns:3em 1fr 2.2em;align-items:center;gap:8px}.dimline small{font-size:12px;color:var(--dim)}.dimline i{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}.dimline u{display:block;height:100%}.dimline b{font-size:12.5px;text-align:right}
+.dimline i{height:6px;border-radius:6px;background:rgba(255,255,255,.08);overflow:hidden}.dimline u{display:block;height:100%}.dimline b{font-size:12.5px;text-align:right}
 .dimlog{font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line2);display:flex;flex-wrap:wrap;gap:6px;align-items:baseline}.dimlog .up{color:#7dffb0}.dimlog .down{color:#ff8a8a}.dimlog em{color:var(--dim);font-size:11.5px;width:100%}
-.emop{max-height:290px}.kaog{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.kaog button{border:0;border-radius:10px;background:var(--panel);color:inherit;padding:8px 2px;font-size:12.5px;white-space:nowrap;overflow:hidden}.emotabs{position:sticky;top:0;background:var(--bg);z-index:1;padding-bottom:4px}
-.dimc.main{width:calc(100vw - 20px);max-width:420px}.dimm{gap:8px}.dimm small{font-size:10.5px;opacity:.92;white-space:nowrap;display:flex;gap:3px;align-items:baseline}.dimm small b{font-size:11px;margin-left:auto}
-.dimm i{height:4px}.dimh b{font-size:13px}.dimh em{font-size:11px;font-weight:700}
-.dimm.mini small{font-size:11px}.dimc:not(.main){min-width:150px}
+.emop{margin-top:8px;border-top:1px solid var(--line2);padding-top:6px;max-height:290px;overflow:auto}.kaog{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.kaog button{border:0;border-radius:10px;background:var(--panel);color:inherit;padding:8px 2px;font-size:12.5px;white-space:nowrap;overflow:hidden}.emotabs{display:flex;gap:6px;margin-bottom:6px;position:sticky;top:0;background:var(--bg);z-index:1;padding-bottom:4px}
+.dimc.main{width:calc(100vw - 20px);max-width:420px}.dimm{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.dimm small{font-size:10.5px;opacity:.92;white-space:nowrap;display:flex;gap:3px;align-items:baseline}.dimm small b{font-size:11px;margin-left:auto}
+.dimm i{display:block;height:4px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden}.dimh b{font-size:13px;margin-left:4px;white-space:nowrap}.dimm.mini small{font-size:11px}.dimc:not(.main){min-width:150px}
 .fxtop{position:absolute!important;inset:0;width:100%;height:100%;z-index:6;pointer-events:none}
 #fxGL{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none;transition:opacity .6s}
 .pkgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}.pkgrid.five{grid-template-columns:repeat(2,1fr)}
@@ -1364,8 +1279,8 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .xm2{background:rgba(255,207,115,.08)}.xm2 b{font-size:40px;font-weight:900;color:#ffd38a;text-shadow:0 0 24px rgba(255,200,100,.45);font-variant-numeric:tabular-nums}.xmw{padding:10px 16px;text-align:center;font:700 14px Georgia,serif;letter-spacing:.14em;color:#fff;border-top:1px solid rgba(255,207,115,.25)}
 .xpost{align-self:stretch;margin:10px 8px;border-radius:16px;background:rgba(255,255,255,.95);color:#111;padding:12px 14px}.xph{display:flex;justify-content:space-between}.xph small{color:#e5364f;font-weight:700}.xpost p{margin:6px 0;font-size:14px}
 .xpi{height:180px;border-radius:12px;background-size:cover;background-position:center;background-color:#ddd}.xpm{font-size:12px;color:#666;margin:6px 0}.xpc{font-size:12.5px;padding:3px 0;border-top:1px solid #eee}.xpsave{margin-top:8px;width:100%;border:0;border-radius:10px;padding:8px;background:#111;color:#fff;font-weight:700}
-.rgl{font-size:10px;line-height:1.3;padding:3px 6px;-webkit-line-clamp:2}
-.dimsh{min-width:0;overflow:hidden}.dimline{grid-template-columns:4.4em minmax(0,1fr) 2.2em!important}.dimline small{white-space:nowrap}.dimh{flex-wrap:nowrap}.dimh em{flex:none}
+.rgl{font-size:10px;line-height:1.3;text-align:center;color:#F2E4EA;background:rgba(16,13,24,.88);border:1px solid rgba(238,111,151,.35);border-radius:8px;padding:3px 6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dimsh{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px;display:flex;flex-direction:column;gap:6px;min-width:0;overflow:hidden}.dimline{display:grid;grid-template-columns:4.4em minmax(0,1fr) 2.2em!important;align-items:center;gap:8px}.dimline small{font-size:12px;color:var(--dim);white-space:nowrap}.dimh{display:flex;align-items:center;gap:4px;min-width:0;flex-wrap:nowrap}.dimh em{font-style:normal;font-size:11px;padding:1px 7px;border-radius:999px;margin-left:auto;white-space:nowrap;background:rgba(255,255,255,.1);font-weight:700;flex:none}
 .sheet .dimh b{overflow:hidden;text-overflow:ellipsis}
 .pkspeed .spdcyc{min-width:72px;font-variant-numeric:tabular-nums;font-weight:800}
 .xmoney.sealed .xmblur{filter:blur(9px);user-select:none}.xmopen{display:block;width:calc(100% - 28px);margin:10px 14px 4px;border:0;border-radius:12px;padding:11px;font-weight:800;font-size:14px;color:#2a1600;background:linear-gradient(90deg,#ffd36b,#ffb347);box-shadow:0 0 20px rgba(255,200,100,.35);animation:xmg 1.6s ease-in-out infinite}
@@ -1375,18 +1290,14 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .cbimg img.on,.cbimg img.scimg.on{opacity:1!important}
 .cbimg img,.cbimg img.scimg{filter:saturate(1.08) brightness(1.08) contrast(1.04)!important}
 .cbimg .cbv.on{opacity:1!important}
-.chatbg .cbveil{background:linear-gradient(180deg,rgba(8,7,11,.38) 0%,rgba(8,7,11,0) 22%,rgba(8,7,11,0) 70%,rgba(8,7,11,.32) 100%)!important}
+.chatbg .cbveil{z-index:1;background:linear-gradient(180deg,rgba(8,7,11,.38) 0%,rgba(8,7,11,0) 22%,rgba(8,7,11,0) 70%,rgba(8,7,11,.32) 100%)!important}
 .chatscreen .chead,.chatscreen .status{background:rgba(10,9,14,.28)!important;backdrop-filter:blur(10px)}
-.chatscreen .livebanner{background:rgba(10,9,14,.18)!important}
 .chatscreen .dimc{background:rgba(14,12,20,.32)!important;backdrop-filter:blur(8px)}
-.chatscreen .composer{background:transparent!important;backdrop-filter:none!important;border-top:0!important}
-.chatscreen .composer .tool,.chatscreen .composer .plus,.chatscreen .composer .emobtn,.chatscreen .composer textarea,.chatscreen .composer button.on{background:rgba(14,12,20,.42)!important;backdrop-filter:blur(8px);border-color:rgba(255,255,255,.18)!important}
 .chatscreen .m-box,.chatscreen .m-scene{background:rgba(10,9,14,.36)!important;backdrop-filter:blur(3px)}
 .chatscreen .m-box.ctx{background:transparent!important;backdrop-filter:none}
-.chatscreen .pkspeed{background:rgba(10,9,14,.4)!important}
 .chatscreen .pkskip{background:rgba(14,12,20,.5)!important}
 .chatscreen .bub{background:rgba(18,16,24,.5)!important;backdrop-filter:blur(6px)}
-.chatscreen .m-think{background:rgba(18,16,24,.38)!important}
+.chatscreen .m-think{background:rgba(18,16,24,.38)!important;border-radius:0 10px 10px 0}
 .chatscreen .m-intro{background:rgba(14,12,20,.6)!important}
 .chatscreen .msgs .m-narr,.chatscreen .msgs .m-act,.chatscreen .msgs .m-scene,.chatscreen .msgs .m-chap,.chatscreen .msgs .tiny{text-shadow:0 1px 2px rgba(0,0,0,.9)}
 .chatscreen .msgs .m-narr,.chatscreen .msgs .m-act{color:#fff}
@@ -1400,7 +1311,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .chatscreen .pkspeed{background:rgba(14,12,20,.72)!important;backdrop-filter:none!important}
 .chatscreen .pkskip,.chatscreen .msgs .m-box.ctx button:not(.spdcyc){background:rgba(18,16,26,.78)!important;backdrop-filter:none!important;color:#fff}
 .chatscreen .spdcyc.on{color:#1a1208!important;font-weight:800}
-.chatscreen .composer .tool,.chatscreen .composer .plus,.chatscreen .composer .emobtn,.chatscreen .composer textarea,.chatscreen .composer button.on{background:rgba(14,12,20,.66)!important;backdrop-filter:none!important}
+.chatscreen .composer .tool,.chatscreen .composer .plus,.chatscreen .composer .emobtn,.chatscreen .composer textarea,.chatscreen .composer button.on{background:rgba(14,12,20,.66)!important;backdrop-filter:none!important;border-color:rgba(255,255,255,.18)!important}
 
 /* v123 readable text panels: frosted dark glass behind text, text stays crisp */
 .chatscreen .msgs .m-box,.chatscreen .msgs .m-box.ctx{background:rgba(10,9,14,.6)!important;-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1)!important;border:1px solid rgba(255,255,255,.1)}
@@ -1413,12 +1324,12 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .chatscreen .msgs .mi-h,.chatscreen .msgs .tiny{display:inline-block;background:rgba(10,9,14,.55);padding:3px 10px;border-radius:99px;text-shadow:none!important;color:#EDE7F1!important}
 .chatscreen .livebanner{background:rgba(10,9,14,.55)!important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)!important}
 .chatscreen .livebanner *{text-shadow:none!important}
-.chatscreen .composer{background:linear-gradient(180deg,rgba(10,9,14,0),rgba(10,9,14,.55) 40%)!important}
+.chatscreen .composer{background:linear-gradient(180deg,rgba(10,9,14,0),rgba(10,9,14,.55) 40%)!important;backdrop-filter:none!important;border-top:0!important}
 .chatscreen .composer .qchips span,.chatscreen .composer .livechip{color:#fff!important}
 .chatscreen .composer .qchips>span{background:rgba(10,9,14,.5);padding:3px 8px;border-radius:8px}
 
 .chatscreen .msgs *,.chatscreen .chead *,.chatscreen .composer *,.chatscreen .status *{text-shadow:none!important}
-.chatscreen .m-who{filter:none!important;background:rgba(10,9,14,.72)!important}
+.chatscreen .m-who{display:inline-block;background:rgba(10,9,14,.72)!important;padding:2px 7px;border-radius:6px;filter:none!important}
 
 .chatscreen .pkask{background:rgba(10,9,14,.66);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);padding:8px 12px;border-radius:12px;color:#FFE2C4!important}
 .chatscreen .xmhint,.chatscreen .pkpanel>p:not(.pkask),.chatscreen .pkpanel>.tiny{display:inline-block;background:rgba(10,9,14,.55);padding:3px 10px;border-radius:99px;color:#EDE7F1!important}
@@ -1461,7 +1372,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .chacts button{font-size:12px;padding:5px 10px;border-radius:99px;background:rgba(240,183,126,.12);border:1px solid rgba(240,183,126,.35);color:#F0B77E}
 .chacts button.on{background:#F0B77E;color:#1B1017;font-weight:700}
 #chTxt{width:100%;box-sizing:border-box;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;padding:9px 10px;font-size:14.5px;line-height:1.45;resize:none;font-family:inherit}
-.chprev{font-size:14px;color:#fff;line-height:1.5}.chprev small{display:block;font-size:10.5px;color:#B7AEC2;margin-bottom:2px}
 
 .scurt{position:absolute;inset:0;z-index:30;display:grid;place-items:center;background:rgba(6,5,9,.0);backdrop-filter:blur(0);pointer-events:none;transition:background .6s ease,backdrop-filter .6s ease}
 .scurt.on{background:rgba(6,5,9,.62);backdrop-filter:blur(6px)}
@@ -1505,7 +1415,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="62b7452e04ed 2026-10-27T07:29Z";
+window.MIRU_BUILD="011be4a3e87a 2026-10-27T09:01Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3387,6 +3297,82 @@ function pickSearch(inputId,gridId){return '<div class="field" style="margin-top
 document.addEventListener("input",e=>{const x=e.target.closest(".pickq");if(!x)return;const sel=x.dataset.pickfor,q=x.value.trim().toLowerCase();
  $$(sel+" > *").forEach(b=>{const nm=(b.querySelector("span")||b).textContent.toLowerCase();b.style.display=(!q||nm.includes(q))?"":"none"})});
 
+
+/* ================= 弹层里的「块」登记表（2026-10-27）=================
+   为什么不再用「包一层」：`menuSheet` 被 7 个文件各包一层，而它们做的事只有一件 ——
+   往 `.sheet .stack` 里塞一块 HTML。包一层看不出「一共几块、什么顺序」，注册表能。
+
+   与 `app111_msgkind.js`（渲染链）的**关键差别**：那边必须给 `next()` 语义（认领 / 后处理 /
+   改入参三类各自要答不同问题）；这边**一个都不需要** —— 没有哪一层是"认领整张弹层"，
+   它们全是往同一个容器里追加。所以这里只存两件事：**顺序**与**插在前面还是后面**。
+
+   ## 用法（在各自的源文件里）
+       SHEET.add('menu', 'app48_clean.js', 'bottom', function(){ return '<button …>' });
+       SHEET.add('menu', 'app45_rel.js',  'top',    function(){ … return '…' });
+
+   ## 顺序怎么保住的（这条最容易搬错）
+   今天是「包一层」：每层在 `_inner()` **返回之后**才插，所以最后的 DOM 顺序是
+   **加载顺序**决定的 —— 而 `afterbegin` 那几层，后加载的会插到更前面。
+   ⇒ 注册表按**加载顺序**登记、`render()` 也按登记顺序逐块插，结果与今天逐字节相同。
+   ⚠️ 谁要改成"按视觉顺序登记"，菜单会整个反过来。
+
+   ## 读数
+       __sheet()     每个弹层：有哪几块、各自插在前面还是后面
+       SHEET.stats() 渲染了几次、每个块命中几回（用来发现"登记了但从不插"的死块）
+
+   闸：`tools/sheet-snapshot.mjs --check`（7 个弹层逐字节 + 每条必须有内容）。
+   ================================================================== */
+(function () {
+  'use strict';
+  const M = { v: 1, order: {}, hits: {}, renders: {} };
+
+  M.add = function (sheetName, blockName, at, fn) {
+    if (typeof fn !== 'function') return false;
+    const k = String(sheetName);
+    (M.order[k] = M.order[k] || []).push({
+      name: String(blockName || '?'),
+      at: at === 'top' ? 'top' : 'bottom',
+      fn: fn, hit: 0, err: 0
+    });
+    return true;
+  };
+
+  M.render = function (sheetName, stack) {
+    const list = M.order[sheetName] || [];
+    if (!stack || !list.length) return 0;
+    M.renders[sheetName] = (M.renders[sheetName] || 0) + 1;
+    let n = 0;
+    for (const b of list) {
+      let h = '';
+      /* 块抛错不许打断后面的块，也不许静默：记次数 + 走 console.error（errlog 会接住）*/
+      try { h = b.fn() } catch (e) {
+        b.err++;
+        try { console.error('[sheet] ' + b.name + ' 抛错：' + ((e && (e.code || e.message)) || e)); } catch (_) { }
+        continue;
+      }
+      if (typeof h === 'string' && h) {
+        stack.insertAdjacentHTML(b.at === 'top' ? 'afterbegin' : 'beforeend', h);
+        b.hit++; n++;
+      }
+    }
+    return n;
+  };
+
+  M.stats = function () {
+    const o = {};
+    for (const k of Object.keys(M.order)) {
+      o[k] = M.order[k].map(b => ({ 块: b.name, 位置: b.at, 插入: b.hit, 抛错: b.err }));
+    }
+    return { 渲染: M.renders, 块: o };
+  };
+
+  window.SHEET = M;
+  window.__sheet = function () {
+    const o = {};
+    for (const k of Object.keys(M.order)) o[k] = M.order[k].map(b => b.name + '(' + b.at + ')');
+    return o;
+  };
+})();
 
 /* ================= 可调参数（外置滑钮）=================
    为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、
@@ -5399,7 +5385,7 @@ function menuSheet(){const th=S.threads[curT];
   (th.wid&&wd(th.wid)?'<button class="opt" data-rxfork="1"><span class="ic">⑂</span><span class="grow"><b>'+t("rx.fromHere")+'</b><span>'+t("rx.fromHereS")+'</span></span></button>':"")+'<button class="opt" data-guide="1"><span class="ic">📘</span><span class="grow"><b>'+t("cx.m.guide")+'</b></span></button>'+
   '<button class="opt" data-voiceplay="1"><span class="ic">🔊</span><span class="grow"><b>'+t("cx.m.voice")+'</b></span><span class="check'+(S.voice.auto?" on":"")+'">'+(S.voice.auto?"✓":"")+'</span></button>'+
   '<button class="opt" data-tier="1"><span class="ic">✦</span><span class="grow"><b>'+(S.tier==="deep"?t("cx.deep"):t("cx.std"))+'</b><span>'+t("cx.deepS")+'</span></span><span class="check'+(S.tier==="deep"?" on":"")+'">'+(S.tier==="deep"?"✓":"")+'</span></button>'+
-  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>')}
+  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>');try{SHEET.render("menu",$(".sheet .stack"))}catch(e){console.error("[sheet] menu 渲染失败："+((e&&(e.code||e.message))||e))}}
 function pathTasks(th,cid){const r=th.rounds,tk=th.tasks||{};return [
  {st:0,k:"chat",done:r>=10,l:t("task.chat",{a:Math.min(r,10)})},{st:0,k:"quiz",done:!!tk.quiz,l:t("task.quiz")},
  {st:1,k:"date",done:!!tk.date,l:t("task.date")},{st:1,k:"gift",done:!!tk.gift,l:t("task.gift")},
@@ -6952,7 +6938,8 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-buymax]")){S.plus=true;S.plusMax=true;S.plusSince=Date.now();save();toast(t("mem.maxOn"));memSheet();return}});
 /* chip in the chat status row + menu entry + one-time "he's starting to forget" nudge at 85% */
 renderChat=(function(orig){return function(){orig.apply(this,arguments);const th=S.threads[curT];if(!th)return;const st=$(".status");if(st&&!st.querySelector(".memchip"))st.insertAdjacentHTML("beforeend",memChip(th))}})(renderChat);
-menuSheet=(function(orig){return function(){orig.apply(this,arguments);const s=$(".sheet .stack");if(s)s.insertAdjacentHTML("afterbegin",'<button class="opt" data-memsheet="1"><span class="ic">🧠</span><span class="grow"><b>'+t("mem.h")+'</b><span>'+t("mem.menuS")+'</span></span></button>')}})(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app11_memory.js","top",function(){return '<button class="opt" data-memsheet="1"><span class="ic">🧠</span><span class="grow"><b>'+t("mem.h")+'</b><span>'+t("mem.menuS")+'</span></span></button>'});
 appendMsg=(function(orig){return function(th,m){orig.apply(this,arguments);if(!th||th.memWarn||memTier(th)==="deep")return;const T=MEMT[memTier(th)];if(memUsed(th)>=T.cap*.85){th.memWarn=1;th.msgs.push({who:"sys",k:"card",title:"🧠 "+t("mem.warnH",{n:first((ch(mainOf(th))||{n:""}).n)}),txt:t("mem.warnS"),btn:t("mem.warnB"),act:"mem|",at:Date.now()});save();if(curT===th.id)renderChat()}}})(appendMsg);
 document.addEventListener("click",e=>{const x=e.target.closest("[data-cardbtn]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.cardbtn];if(m&&m.act==="mem|"){e.stopImmediatePropagation();memSheet()}},true);
 Object.assign(I18N.en,{"mem.h":"Memory space","mem.menuS":"How much he remembers","mem.used":"used","mem.t.free":"Free","mem.t.plus":"MIRU+","mem.t.deep":"Deep","mem.fixed":"always","mem.on":"on","mem.none":"Nothing yet — make a moment he'll keep.",
@@ -8024,13 +8011,18 @@ function introHTML(th){const w=wd(th.wid);let I=Lz(w.pack.intro)||{};if(th&&th.p
    '<div><span class="lg-ev">⚡ '+t("st3.lgEv")+'</span><em>'+t("st3.lgEvD")+'</em></div></div></div></div>'}
 function introSheet(wid){const th=S.threads[curT];if(!th||!wd(wid).pack.intro)return;sheet(introHTML(th))}
 
-/* message rendering: new kinds + no per-line speaker/share buttons */
-const _msgHTML2=msgHTML;
-msgHTML=function(m,i,th){
+/* message rendering: new kinds + no per-line speaker/share buttons
+   2026-10-27：这里原来一个函数干两件事，现在拆成两层登记（链位置逐字不变：先 post 后 inline）——
+     · 删掉每行右侧的 🔊/🖼/📤 一排（app3_chat 还在发它）= **后处理**：拿到内层 HTML 再改
+     · box / scene / intro = **认领**
+   拆开的好处：「去按钮」这一件是可数的（以前混在认领层里，hit 永远看不见）。 */
+MSGKIND.post("app16_story2.js#mquick",function(h){
+ return h.replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")});
+MSGKIND.inline("app16_story2.js#kinds",["box","scene","intro"],function(m,i,th,next){
  if(m.k==="box")return boxHTML(m,i,th);
  if(m.k==="scene")return '<div class="m-scene" data-mi="'+i+'"><span>📍 '+esc(m.place)+'</span>'+(m.time?'<em>'+esc(m.time)+'</em>':'')+'</div>';
  if(m.k==="intro")return introHTML(th);
- return _msgHTML2(m,i,th).replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")};
+ return next(m,i,th)});
 
 /* 5) the panel lives INSIDE the conversation (choices look like replies), not as a big box over the screen */
 appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
@@ -8126,13 +8118,14 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
 PKREG.add("app16_story2.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   appendMsg(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||"",at:Date.now()});try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
  return next(th,b)});;
-const _msgHTML3=msgHTML;
-msgHTML=function(m,i,th){
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记。三个认领：event 无条件；
+   act / think 只认「你扮演的那个人」（who==="me" 且本局有 pk）—— 别人做的动作不归这里。 */
+MSGKIND.inline("app16_story2.js#pk",["event","act","think"],function(m,i,th,next){
  if(m.k==="event")return '<div class="m-event" data-mi="'+i+'"><i>'+esc(m.icon)+'</i><b>'+esc(m.title)+'</b>'+(m.txt?'<span>'+esc(m.txt)+'</span>':'')+'</div>';
  const isPkMe=m.who==="me"&&th&&th.pk;
  if(isPkMe&&m.k==="act")return '<div class="m-act me" data-mi="'+i+'"><small class="mt act">✱ '+t("st3.yourAct")+'</small>'+esc(m.txt)+'</div>';
  if(isPkMe&&m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small class="mt think">💭 '+t("st3.yourThink")+'</small>'+esc(m.txt)+'</div>';
- return _msgHTML3(m,i,th)};
+ return next(m,i,th)});
 boxHTML=function(m,i,th){return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p class="bn">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
   return p.k==="think"?'<p class="bth"><span class="mt think">💭 '+esc(nm)+' · '+t("st2.thinks")+'</span>'+esc(p.txt)+'</p>':'<p class="bac"><span class="mt act">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}).join("")+'</div>'};
 
@@ -8311,9 +8304,10 @@ boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx" data-mi="'+i+'
 const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
-/* plain story lines use the same bubble as lines with context */
-const _msgHTML9=msgHTML;
-msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return _msgHTML9(m,i,th)};
+/* plain story lines use the same bubble as lines with context
+   2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app26 共有 say：这一层是**内层**，
+   条件是「剧本模式 + 说话的不是你（也不是 me）」；「就是你」那一支在外层 app26 —— 接力，不是抢。 */
+MSGKIND.inline("app17_custom.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return next(m,i,th)});
 
 /* ================= games really feed the story =================
    1) the result of a game is written into the lines that follow ({bpm}, {mine}, {score} are filled with what you actually got)
@@ -8664,11 +8658,11 @@ Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign
 PKREG.add("app19_bgm.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
   if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return next(th,b)});;
 function monoFree(){const d=today();if((S.monoDay||{}).d!==d)S.monoDay={d,n:0};return S.monoDay.n<2}
-const _msgHTML19=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="mono")return _msgHTML19(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 mono）。渲染逻辑逐字未改。 */
+MSGKIND.inline("app19_bgm.js",["mono"],function(m,i,th,next){if(!m||m.k!=="mono")return next(m,i,th);
  return '<div class="m-mono'+(m.open?" open":"")+'"><div class="mmh">💜 '+t("mono.h")+'</div>'+
   (m.open?m.t.filter(([w])=>ch(w)).map(([w,x])=>'<p><b>'+esc(first(ch(w).n))+'：</b>'+esc(x)+'</p>').join(""):
-   '<div class="mmlock">'+m.t.filter(([w])=>ch(w)).map(([w])=>avatar(w,26)).join("")+'<span>'+t("mono.peek")+'</span></div><button class="mmbtn" data-mono="'+i+'">'+(S.plus?t("mono.vip"):"💎 1 · "+t("mono.read"))+'</button>')+'</div>'};
+   '<div class="mmlock">'+m.t.filter(([w])=>ch(w)).map(([w])=>avatar(w,26)).join("")+'<span>'+t("mono.peek")+'</span></div><button class="mmbtn" data-mono="'+i+'">'+(S.plus?t("mono.vip"):"💎 1 · "+t("mono.read"))+'</button>')+'</div>'});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-mono]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mono];if(!m||m.open)return;
  if(!S.plus&&!spend(1,"line"))return;m.open=true;save();renderChat()});
 Object.assign(I18N.en,{"mono.h":"Inner monologue","mono.peek":"What they're really thinking right now","mono.free":"Read (free today)","mono.vip":"Read · members free","mono.read":"Read"});
@@ -9213,13 +9207,14 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-grp]");if(
 Object.assign(FEATK,{feed:{ic:"📹",run:()=>feedRun(),t:"pk2.feedH"},phone:{ic:"📱",run:()=>phoneRun(),t:"pk2.phH"},match:{ic:"💞",run:()=>matchRun(),t:"pk2.mqH"},group:{ic:"👥",run:()=>groupRun(),t:"pk2.grH"}});
 /* ---------- directives with their own cards ---------- */
 PKREG.add("app23_heir.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return next(th,b)});;
-const _msgHTML23=msgHTML;
-msgHTML=function(m,i,th){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return _msgHTML23(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 x* 四种）。⚠️ 与 app24 共有 xmoney：
+   这一层是**内层**，只在「已解锁 / 会员」时被叫到；封口那一支由外层的 app24 直接答。 */
+MSGKIND.inline("app23_heir.js",["xtitle","xmoney","xpost","xanchor"],function(m,i,th,next){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return next(m,i,th);
  if(m.k==="xtitle")return '<div class="xtitle"><b>'+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
  if(m.k==="xanchor")return '<div class="xanchor"><b>⚓ '+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
  if(m.k==="xmoney")return '<div class="xmoney" data-mi="'+i+'"><div class="xm1"><small>'+t("pk2.yday")+'</small><s>'+esc(L(m.from))+'</s></div><div class="xm2"><small>'+t("pk2.today")+' · '+esc(L(m.label)||"")+'</small><b class="num" data-count="'+esc(L(m.to))+'">'+esc(L(m.to))+'</b></div>'+(m.welcome?'<div class="xmw">'+esc(L(m.welcome))+'</div>':'')+'</div>';
  if(m.k==="xpost"){const c=(L(m.cm)||m.cm||[]);return '<div class="xpost"><div class="xph"><b>'+esc(L(m.handle))+'</b><small>🔥 '+t("pk2.trend")+'</small></div><p>'+esc(L(m.txt))+'</p>'+(m.img?'<div class="xpi" style="background-image:url('+(SCENE_FILES[m.img]||"")+')"></div>':'')+
-  '<div class="xpm">♥ '+esc(String(m.likes||"12.4K"))+' · 💬 '+c.length+'</div>'+c.slice(0,4).map(([n,x])=>'<div class="xpc"><b>'+esc(n)+'</b> '+esc(x)+'</div>').join("")+'<button class="xpsave" data-xpsave="'+i+'">'+(m.saved?"✓ "+t("pk2.saved"):"＋ "+t("pk2.saveMom"))+'</button></div>'}};
+  '<div class="xpm">♥ '+esc(String(m.likes||"12.4K"))+' · 💬 '+c.length+'</div>'+c.slice(0,4).map(([n,x])=>'<div class="xpc"><b>'+esc(n)+'</b> '+esc(x)+'</div>').join("")+'<button class="xpsave" data-xpsave="'+i+'">'+(m.saved?"✓ "+t("pk2.saved"):"＋ "+t("pk2.saveMom"))+'</button></div>'}});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xpsave]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xpsave];if(!m||m.saved)return;m.saved=1;
  const p={id:"m"+Date.now(),txt:L(m.txt),img:SCENE_FILES[m.img]||null,at:Date.now(),likes:0,cm:[],day:today()};S.moments=[p].concat(S.moments||[]).slice(0,40);save();if(typeof addComments==="function")addComments(p,[mainOf(th)].filter(Boolean));renderChat();toast(t("mom.posted"))});
 /* money counter animation */
@@ -9389,9 +9384,12 @@ document.addEventListener("click",e=>{let x;
 
 /* ===== inheritance reveal is a paid moment: the number stays sealed until you pay 💎2 (members see it free) ===== */
 const MONEY_PRICE=2;
-const _msgHTML24=msgHTML;msgHTML=function(m,i,th){if(!m||m.k!=="xmoney"||m.open||S.plus)return _msgHTML24(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记。⚠️ xmoney **两个层**认领：
+   这一层在最外层、只答「还没解锁且不是会员」；解锁后它把活交回内层，由 app23 画正常金额。
+   静态扫源码的图漏记过这一条（它的条件是取反写法 m.k!=="xmoney"），运行时认领表补上了。 */
+MSGKIND.inline("app24_gl.js",["xmoney"],function(m,i,th,next){if(!m||m.k!=="xmoney"||m.open||S.plus)return next(m,i,th);
  return '<div class="xmoney sealed" data-mi="'+i+'"><div class="xm1"><small>'+t("pk2.yday")+'</small><s>'+esc(Lz(m.from)||m.from)+'</s></div><div class="xm2"><small>'+t("pk2.today")+' · '+esc(Lz(m.label)||m.label||"")+'</small><b class="num xmblur">$?.?B+</b></div>'+
-  '<button class="xmopen" data-xmopen="'+i+'">🔓 '+t("mo.open",{n:MONEY_PRICE})+'</button><p class="xmhint">'+t("mo.hint")+'</p></div>'};
+  '<button class="xmopen" data-xmopen="'+i+'">🔓 '+t("mo.open",{n:MONEY_PRICE})+'</button><p class="xmhint">'+t("mo.hint")+'</p></div>'});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xmopen]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xmopen];if(!m||m.open)return;
  if(!S.plus&&!spend(MONEY_PRICE,"event"))return;m.open=1;save();renderChat();try{navigator.vibrate&&navigator.vibrate([30,40,60])}catch(_){}
  if(typeof glFx!=="undefined"&&th.pk&&curT===th.id){const prev=th.pk.fx;fxSet(th,"godrays")}});
@@ -9468,11 +9466,14 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];const isBox=L&&L.k
  if(m&&isNarr(m)&&isBox&&L.say){const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
   appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});return}
  return _pkAppend26(th,m)};
-/* scripted lines of the character you play: the same right-hand bubble as the lines you choose */
-const _msgHTML26=msgHTML;
-msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
+/* scripted lines of the character you play: the same right-hand bubble as the lines you choose
+   2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app17 共有 say，条件互斥：
+   这一层（外层）认「剧本模式 + 说话的就是你扮演的人」→ 右手气泡；别人说的交给内层 app17。
+   ⚠️ 这里的 `.bub` 是**产出**（它自己写这个 div），不是选择器 —— 与 app16/app18 那两处失效的
+   「找 `.bub`」不同族，别一起删。 */
+MSGKIND.inline("app26_turns.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
   return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+fmtMix(esc(m.txt))+'</div></div>'}
- return _msgHTML26(m,i,th)};
+ return next(m,i,th)});
 Object.assign(I18N.en,{"pk26.you":"you"});Object.assign(I18N.zh,{"pk26.you":"你"});
 
 /* ---- opening short for THE HEIR: the 72-hours-later warehouse cold open now lives here, not in the chat ---- */
@@ -11178,13 +11179,13 @@ document.addEventListener("click",async e=>{let x;
   if(k==="discord")open("https://discord.com/channels/@me");shReward()}});
 
 /* ---------- chat menu: new entries on top ---------- */
-const _menuSheet45=menuSheet;menuSheet=function(){_menuSheet45.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack");if(!th||!st)return;const p=th.persona||persona(),cid=mainOf(th),mine=S.mine.chars[cid];
- st.insertAdjacentHTML("afterbegin",
-  '<button class="opt" data-pswitch="1"><span class="ic">🎭</span><span class="grow"><b>'+LL("我的人设","My persona")+'</b><span>'+esc(pLabel(p))+'</span></span><span style="color:var(--gold)">⇄</span></button>'+
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app45_rel.js","top",function(){try{const th=S.threads[curT];if(!th)return "";const p=th.persona||persona(),cid=mainOf(th),mine=S.mine.chars[cid];
+ return   '<button class="opt" data-pswitch="1"><span class="ic">🎭</span><span class="grow"><b>'+LL("我的人设","My persona")+'</b><span>'+esc(pLabel(p))+'</span></span><span style="color:var(--gold)">⇄</span></button>'+
   '<button class="opt" data-rewind="1"><span class="ic">⏪</span><span class="grow"><b>'+(th.pk?LL("重新开始（重选身份）","Restart (pick your role)"):LL("回到初遇","Back to the first meeting"))+'</b><span>'+LL("选错了也没关系，从头再来","Took a wrong turn? Start over")+'</span></span></button>'+
   '<button class="opt" data-fixsheet="1"><span class="ic">🛠</span><span class="grow"><b>'+LL("反馈角色表现","Feedback on the character")+'</b><span>'+LL("记忆混乱、逻辑不通、无聊、不像他……","Memory, logic, boring, out of character…")+'</span></span></button>'+
   '<button class="opt" data-shsnip="1"><span class="ic">📤</span><span class="grow"><b>'+LL("分享聊天片段","Share a snippet")+'</b><span>X · Facebook · WhatsApp · Instagram · TikTok · Discord</span></span></button>'+
-  (mine?'<button class="opt" data-sdedit="'+cid+'"><span class="ic">✏️</span><span class="grow"><b>'+LL("打磨这个角色","Polish this character")+'</b></span></button>':''))}catch(_){}};
+  (mine?'<button class="opt" data-sdedit="'+cid+'"><span class="ic">✏️</span><span class="grow"><b>'+LL("打磨这个角色","Polish this character")+'</b></span></button>':'')}catch(_){return ""}});
 document.addEventListener("click",e=>{if(e.target.closest("[data-pswitch]")){personaSwitch();return}if(e.target.closest("[data-rewind]")){rewindSheet();return}if(e.target.closest("[data-fixsheet]")){fixSheet();return}if(e.target.closest("[data-shsnip]")){shareSnip();return}});
 
 /* ---------- supporting character joins solo chats; narrator voice ---------- */
@@ -11339,7 +11340,8 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-chjump]")){const [wid,n0,as]=x.dataset.chjump.split("|"),n=+n0;const th=S.threads[curT];const picks=th&&th.wid===wid&&th.pk?th.pk.picks:{};closeSheet();packStart(wid,as,n,picks);return}},true);
 /* entry points: the start sheet and the chat menu */
 const _startSheet47=startSheet;startSheet=function(wid,fresh){_startSheet47(wid,fresh);try{const w=wd(wid);if(w&&w.pack){const st=$(".sheet .stack");if(st)st.insertAdjacentHTML("afterend",'<button class="btn btn-g btn-block" style="margin-top:10px" data-chmap="'+wid+'">📖 '+LL("章节目录 · 跳到任意一章","Chapters · jump to any chapter")+'</button>')}}catch(_){}};
-const _menuSheet47=menuSheet;menuSheet=function(){_menuSheet47.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack");if(th&&th.pk&&st)st.insertAdjacentHTML("afterbegin",'<button class="opt" data-chmap="'+th.wid+'"><span class="ic">📖</span><span class="grow"><b>'+LL("章节目录","Chapters")+'</b><span>'+LL("第 "+th.pk.ch+" 章 / 共 "+PCN(wd(th.wid))+" 章 · 跳到任意一章","Chapter "+th.pk.ch+" of "+PCN(wd(th.wid))+" · jump anywhere")+'</span></span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app47_chapters.js","top",function(){try{const th=S.threads[curT];if(!(th&&th.pk))return "";return '<button class="opt" data-chmap="'+th.wid+'"><span class="ic">📖</span><span class="grow"><b>'+LL("章节目录","Chapters")+'</b><span>'+LL("第 "+th.pk.ch+" 章 / 共 "+PCN(wd(th.wid))+" 章 · 跳到任意一章","Chapter "+th.pk.ch+" of "+PCN(wd(th.wid))+" · jump anywhere")+'</span></span></button>'}catch(_){return ""}});
 (function(){const st=document.createElement("style");st.textContent=`
 .chlist{display:flex;flex-direction:column;gap:6px;margin-top:12px;max-height:58vh;overflow:auto}
 .chrow.spch{width:100%;text-align:left;cursor:pointer}.chrow.spch .chl{white-space:nowrap;font-size:12px;font-weight:800;color:#F7D2A8}.chrow.spch .chf{white-space:nowrap}
@@ -11386,7 +11388,8 @@ document.addEventListener("click",e=>{let x;
  if((x=e.target.closest("#s-chat .composer .modes button"))){setTimeout(()=>{const c=$("#s-chat .composer");if(c)c.classList.remove("showmodes");const mb=$(".modebtn");if(mb)mb.textContent=x.textContent.trim().slice(0,4)+" ▴"},30)}
  if(HD_OPEN&&!e.target.closest(".chead,.status,.livebanner")&&$("#s-chat")&&!$("#s-chat").hidden&&!e.target.closest(".sheet")){HD_OPEN=false;const b=$(".hdx");if(b)b.textContent="⌄";cleanMark()}});
 /* settings toggle in the chat menu */
-const _menuSheet48=menuSheet;menuSheet=function(){_menuSheet48.apply(this,arguments);try{const st=$(".sheet .stack");if(st)st.insertAdjacentHTML("beforeend",'<button class="opt" data-cleantog="1"><span class="ic">🧘</span><span class="grow"><b>'+LL("沉浸模式","Clean screen")+'</b><span>'+LL("只留最新几句，其余收进「历史」","Keep only the latest lines; the rest folds into History")+'</span></span><span class="check'+(cleanOn()?" on":"")+'">'+(cleanOn()?"✓":"")+'</span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块。HTML 一字未改 —— 判据是弹层快照逐字节一致。 */
+SHEET.add("menu","app48_clean.js","bottom",function(){return '<button class="opt" data-cleantog="1"><span class="ic">🧘</span><span class="grow"><b>'+LL("沉浸模式","Clean screen")+'</b><span>'+LL("只留最新几句，其余收进「历史」","Keep only the latest lines; the rest folds into History")+'</span></span><span class="check'+(cleanOn()?" on":"")+'">'+(cleanOn()?"✓":"")+'</span></button>'});
 document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))return;S.clean=!cleanOn();save();closeSheet();HIST_OPEN=false;renderChat()});
 (function(){const st=document.createElement("style");st.textContent=`
 #s-chat.clean .chead{padding-bottom:6px;background:linear-gradient(rgba(8,7,11,.72),rgba(8,7,11,0))!important;border:0!important;box-shadow:none!important}
@@ -11630,7 +11633,8 @@ function cPriceSheet(){const R=(a,b,c)=>'<tr><td>'+a+'</td><td>'+b+'</td><td>'+c
 /* creator works open the workbench; creator pack threads get a menu entry */
 const _renderCreate49=renderCreate;renderCreate=function(v){_renderCreate49(v);try{const sc=v.querySelector(".scroll");if(sc&&!sc.querySelector("[data-cnew]"))sc.insertAdjacentHTML("afterbegin",'<button class="card cnewc" data-cnew="1"><div class="row"><span style="font-size:30px">✨</span><div class="grow"><b style="font-size:17px;display:block">'+LL("一句话写一部剧","Write a story from one line")+'</b><p class="xs faint" style="margin-top:4px;line-height:1.5">'+LL("说一句灵感 → 3 个快选 → 第一幕免费试玩。之后在工作台里慢慢写。","One line → three quick picks → play scene 1 free. Keep writing in the Workbench.")+'</p></div><span style="color:var(--gold);font-size:20px">›</span></div></button>');
  v.querySelectorAll("[data-share]").forEach(b=>{const wk=S.works.find(k=>k.id===b.dataset.share);if(wk&&wk.kind==="story"&&!b.parentElement.querySelector("[data-cwork]"))b.insertAdjacentHTML("beforebegin",'<button class="btn btn-p btn-sm" data-cwork="'+wk.id+'" style="margin-right:6px">🛠 '+LL("工作台","Workbench")+'</button>')})}catch(_){}};
-const _menuSheet49=menuSheet;menuSheet=function(){_menuSheet49.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack"),w=th&&wd(th.wid);if(w&&w.pack&&w.pack.mine&&st)st.insertAdjacentHTML("afterbegin",'<button class="opt" data-cwork="'+w.id+'"><span class="ic">🛠</span><span class="grow"><b>'+LL("回到工作台","Back to the Workbench")+'</b><span>'+LL("改剧本、写下一章","Edit the script, write the next chapter")+'</span></span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app49_creator.js","top",function(){try{const th=S.threads[curT],w=th&&wd(th.wid);if(!(w&&w.pack&&w.pack.mine))return "";return '<button class="opt" data-cwork="'+w.id+'"><span class="ic">🛠</span><span class="grow"><b>'+LL("回到工作台","Back to the Workbench")+'</b><span>'+LL("改剧本、写下一章","Edit the script, write the next chapter")+'</span></span></button>'}catch(_){return ""}});
 (function(){const st=document.createElement("style");st.textContent=`
 .cnewc{text-align:left;border-color:rgba(238,111,151,.5)!important;background:linear-gradient(135deg,rgba(238,111,151,.18),rgba(240,183,126,.1))!important}
 .cwq{font-size:17px;font-weight:800;margin-bottom:6px}.cwta{width:100%;margin-top:10px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;color:inherit;font-size:15px;line-height:1.6;outline:none}
@@ -14942,7 +14946,11 @@ document.addEventListener("click", e => {
 document.addEventListener("change", e => { const x = e.target.closest && e.target.closest("[data-m2off]"); if (!x) return; S.m2off = !x.checked; save(); toast(S.m2off ? LL("已关闭自动记忆（已记下的仍保留，可以手动删）", "Auto-memory off (saved ones stay; you can delete them)") : LL("已开启自动记忆", "Auto-memory on")); });
 /* entry points: memory-space sheet gets a "what he remembers" button; menu gets a row */
 memSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const th = S.threads[curT]; if (!th) return; const n = m2(th).filter(x => !x.del).length; const s = document.querySelector(".sheet .memlay"); if (s && !document.querySelector("[data-m2open]")) s.insertAdjacentHTML("afterend", '<button class="btn btn-g btn-block" style="margin-top:10px" data-m2open="1">📖 ' + LL("他记得的事 · " + n + " 条（可查看、删除）", "What he remembers · " + n + " (view & delete)") + '</button>'); } catch (_) {} }; })(memSheet);
-menuSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const s = document.querySelector(".sheet .stack"); if (s && !s.querySelector("[data-m2open]")) s.insertAdjacentHTML("afterbegin", '<button class="opt" data-m2open="1"><span class="ic">📖</span><span class="grow"><b>' + LL("他记得的事", "What he remembers") + '</b><span>' + LL("查看、置顶、别再提、忘掉", "View, pin, mute or forget") + '</span></span></button>'); } catch (_) {} }; })(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。
+   幂等守卫（`!s.querySelector("[data-m2open]")`）不再需要：注册表每次开弹层只渲染一遍。 */
+SHEET.add("menu", "app77_memory2.js", "top", function () {
+  return '<button class="opt" data-m2open="1"><span class="ic">📖</span><span class="grow"><b>' + LL("他记得的事", "What he remembers") + '</b><span>' + LL("查看、置顶、别再提、忘掉", "View, pin, mute or forget") + '</span></span></button>';
+});
 (function () { const st = document.createElement("style"); st.textContent = `
 .m2s{display:flex;flex-direction:column;gap:10px}
 .m2sum{background:rgba(240,183,126,.08);border:1px solid rgba(240,183,126,.3);border-radius:14px;padding:10px 12px}.m2sum b{font-size:12.5px;color:var(--gold)}.m2sum p{margin:4px 0 0;font-size:13px;line-height:1.55;color:var(--text)}
@@ -15135,7 +15143,13 @@ document.addEventListener("click", e => {
   if (x = e.target.closest("[data-ldt]")) { ledSheet(x.dataset.ldt); return; }
   if (x = e.target.closest("[data-ldp]")) { const [id, st] = x.dataset.ldp.split("|"); const p = led(th).p.find(y => y.id === id); if (p) { p.st = st; p.byAI = 0; p.end = st === "open" ? null : Date.now(); save(); toast(st === "kept" ? LL("记下了：约定兑现", "Marked as kept") : st === "broken" ? LL("记下了：约定落空", "Marked as broken") : LL("已改回进行中", "Reopened")); } ledSheet("p"); return; }
 }, true);
-menuSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const s = document.querySelector(".sheet .stack"); if (s && !s.querySelector("[data-ledopen]")) { const th = S.threads[curT]; const L = led(th), n = L ? L.p.filter(p => p.st === "open").length + L.c.filter(c => c.st === "open").length : 0; s.insertAdjacentHTML("afterbegin", '<button class="opt" data-ledopen="1"><span class="ic">📜</span><span class="grow"><b>' + LL("剧情账本", "Story ledger") + (n ? ' · ' + n : '') + '</b><span>' + LL("约定、未解决的冲突、秘密、已做的选择", "Promises, open conflicts, secrets, choices made") + '</span></span></button>'); } } catch (_) {} }; })(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。
+   它依赖 `th`（数未结项），所以守卫保留为 `!th → 空串`；幂等守卫不再需要。 */
+SHEET.add("menu", "app79_ledger.js", "top", function () {
+  const th = S.threads[curT]; if (!th) return "";
+  const L = led(th), n = L ? L.p.filter(p => p.st === "open").length + L.c.filter(c => c.st === "open").length : 0;
+  return '<button class="opt" data-ledopen="1"><span class="ic">📜</span><span class="grow"><b>' + LL("剧情账本", "Story ledger") + (n ? ' · ' + n : '') + '</b><span>' + LL("约定、未解决的冲突、秘密、已做的选择", "Promises, open conflicts, secrets, choices made") + '</span></span></button>';
+});
 m2Sheet = (function (orig) { return function () { orig.apply(this, arguments); try { const b = document.querySelector(".m2s"); if (b && !b.querySelector("[data-ledopen]")) b.insertAdjacentHTML("beforeend", '<button class="lnk" data-ledopen="1" style="display:block;margin:2px auto 0">📜 ' + LL("剧情账本", "Story ledger") + '</button>'); } catch (_) {} }; })(m2Sheet);
 (function () { const st = document.createElement("style"); st.textContent = `
 .lds{display:flex;flex-direction:column;gap:10px}.ldl{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}
@@ -16066,10 +16080,11 @@ function you94Swap(th, txt) {
     return txt.replace(/\bYou're\b/g, n + " is").replace(/\byou're\b/g, n + " is").replace(/\bYour\b/g, n + "'s").replace(/\byour\b/g, n + "'s").replace(/\bYou\b/g, n).replace(/\byou\b/g, n);
   } catch (_) { return txt; }
 }
-(function () { const _mh = msgHTML; msgHTML = function (m, i, th) {
+(function () { /* 2026-10-27：msgHTML 包装 → MSGKIND 登记（wrap 类：换入参再交给内层）。逻辑逐字未改。 */
+  MSGKIND.wrap("app94_official2.js", function (m, i, th) {
   if (m && th && th.pk && (m.who === "n" || m.k === "act") && typeof m.txt === "string") { const s = you94Swap(th, m.txt); if (s !== m.txt) m = Object.assign({}, m, { txt: s }); }
   if (m && th && th.pk && m.k === "box" && Array.isArray(m.parts)) { const P = m.parts.map(p => p && typeof p.txt === "string" && (!p.who || p.who === "n") ? Object.assign({}, p, { txt: you94Swap(th, p.txt) }) : p); m = Object.assign({}, m, { parts: P }); }
-  return _mh.call(this, m, i, th); }; })();
+  return m; }); })();
 /* installs made before v5.9.4 are rebuilt once so they get the new roles */
 const _installWork96 = installWork;
 installWork = async function (id) {
@@ -16939,11 +16954,14 @@ function authorName95(w) { return (w && (w.authorName || w.author)) || T95("这�
         (u ? '<button data-bk95w="' + esc(id) + '">🚫 ' + T95("拉黑作者", "Block author") + '</button>' : '') + '</div>'); } catch (_) {}
     return r; }; }
 /* ---- chat menu ⋯: report AI replies / this story · block author ---- */
-{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
-    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r; const w = th.wid && wd(th.wid), u = ugc95(w);
-      st.insertAdjacentHTML("beforeend", '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
-        (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '')); } catch (_) {}
-    return r; }; }
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块。HTML 一字未改；守卫从 `!st` 变成不需要
+   （注册表只在 stack 存在时才渲染），`!th` 保留为返回空串。 */
+SHEET.add("menu", "app95_safety.js", "bottom", function () {
+  const th = S.threads[curT]; if (!th) return '';
+  const w = th.wid && wd(th.wid), u = ugc95(w);
+  return '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
+    (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '');
+});
 document.addEventListener("click", e => {
   let x;
   if ((x = e.target.closest("[data-rp95w]"))) { e.preventDefault(); e.stopPropagation(); const w = wd(x.dataset.rp95w); report95("work", (w && w.community) || x.dataset.rp95w, w ? Lz(w.title) + "\n" + Lz(w.hook || "") : "", w && Lz(w.title)); return; }
@@ -17242,11 +17260,14 @@ document.addEventListener("click", e => { let x;
 /* chapter finished → a nudge to the reading */
 { const _ap = packAfterPick; packAfterPick = function (th) { const r = _ap.apply(this, arguments); try { const n = done96(th); if (n && curT === th.id) setTimeout(() => chg96([["💘", L96("恋爱人格解锁新一项", "A new love-type reading unlocked")]]), 3400); } catch (_) {} return r; }; }
 /* chat menu ⋯: love type · let them reach out */
-{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
-    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r;
-      st.insertAdjacentHTML("afterbegin", (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
-        '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>'); } catch (_) {}
-    return r; }; }
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu", "app96_social.js", "top", function () {
+  try {
+    const th = S.threads[curT]; if (!th) return "";
+    return (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
+      '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>';
+  } catch (_) { return "" }
+});
 /* Me page entry */
 { const _rm = renderMe; renderMe = function (v) { const r = _rm.apply(this, arguments);
     try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".lp96me")) { const at = host.querySelector(".me95"); const h = '<button class="card lp96me" data-lplist96="1"><span style="font-size:26px">💘</span><span class="grow"><b>' + L96("你的恋爱人格", "Your love type") + '</b><span class="xs dim">' + L96("从你在剧里的每个选择，看见你是怎样爱人的", "See how you love, from every choice you've made") + '</span></span>›</button>'; if (at) at.insertAdjacentHTML("beforebegin", h); else host.insertAdjacentHTML("beforeend", h); } } catch (_) {}
@@ -17945,14 +17966,14 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
       return next.apply(this, arguments);
     });;
   }
-  if (typeof msgHTML === "function") {
-    const _mh = msgHTML;
-    msgHTML = function (m, i, th) {
-      if (!m || m.k !== "item101") return _mh.apply(this, arguments);
+  if (window.MSGKIND) {
+    /* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 item101）。渲染逻辑逐字未改。 */
+    MSGKIND.inline("app101_you.js", ["item101"], function (m, i, th, next) {
+      if (!m || m.k !== "item101") return next(m, i, th);
       return '<div class="it101' + (m.open ? " open" : "") + '" data-mi="' + i + '"><button class="it101c" data-it101="' + i + '">' +
         '<span class="it101f"><i>' + esc(m.ic) + '</i><b>' + esc(zh() ? "你发现了：" : "You found: ") + esc(m.n) + '</b><small>' + esc(zh() ? "点一下，拿起来看看" : "Tap to pick it up") + '</small></span>' +
         '<span class="it101b"><i>' + esc(m.ic) + '</i><b>' + esc(m.n) + '</b><em>' + esc(m.d) + '</em><small>' + esc(zh() ? "✓ 已收进随身物品" : "✓ Added to your things") + '</small></span></button></div>';
-    };
+    });
   }
   document.addEventListener("click", e => {
     const x = e.target.closest("[data-it101]"); if (!x) return;

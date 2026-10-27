@@ -317,10 +317,11 @@ function you94Swap(th, txt) {
     return txt.replace(/\bYou're\b/g, n + " is").replace(/\byou're\b/g, n + " is").replace(/\bYour\b/g, n + "'s").replace(/\byour\b/g, n + "'s").replace(/\bYou\b/g, n).replace(/\byou\b/g, n);
   } catch (_) { return txt; }
 }
-(function () { const _mh = msgHTML; msgHTML = function (m, i, th) {
+(function () { /* 2026-10-27：msgHTML 包装 → MSGKIND 登记（wrap 类：换入参再交给内层）。逻辑逐字未改。 */
+  MSGKIND.wrap("app94_official2.js", function (m, i, th) {
   if (m && th && th.pk && (m.who === "n" || m.k === "act") && typeof m.txt === "string") { const s = you94Swap(th, m.txt); if (s !== m.txt) m = Object.assign({}, m, { txt: s }); }
   if (m && th && th.pk && m.k === "box" && Array.isArray(m.parts)) { const P = m.parts.map(p => p && typeof p.txt === "string" && (!p.who || p.who === "n") ? Object.assign({}, p, { txt: you94Swap(th, p.txt) }) : p); m = Object.assign({}, m, { parts: P }); }
-  return _mh.call(this, m, i, th); }; })();
+  return m; }); })();
 /* installs made before v5.9.4 are rebuilt once so they get the new roles */
 const _installWork96 = installWork;
 installWork = async function (id) {

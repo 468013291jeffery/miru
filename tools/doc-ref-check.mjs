@@ -15,7 +15,10 @@ const files = [
   'tools/wiring-order-check.mjs', 'tools/patch-registry.mjs', 'tools/line2file.mjs',
   'tools/check-all.mjs', 'tools/read-health.mjs', 'tools/read-errlog.mjs',
   'tools/render-snapshot.mjs', 'tools/msgkind-probe.mjs',
-  'docs/message-renderers.md', 'docs/msg-render-registry.md'
+  'tools/style-inject-census.mjs', 'tools/style-inject-census.html',
+  'tools/style-computed-snapshot.mjs', 'tools/style-computed-snapshot.html',
+  'tools/style-computed-baseline.json', 'tools/css-dead-rules.mjs', 'tools/css-dead-baseline.json', 'tools/sheet-snapshot.mjs', 'tools/sheet-snapshot.html', 'tools/sheet-baseline.json', 'tools/sheet-census.mjs', 'tools/sheet-wrappers-baseline.json', 'docs/sheet-entry.md',
+  'docs/message-renderers.md', 'docs/msg-render-registry.md', 'docs/style-entry.md'
 ];
 let bad = 0;
 for (const f of files) if (!fs.existsSync(f)) { console.log('  ✗ 不存在: ' + f); bad++ }
@@ -25,7 +28,7 @@ const checkAll = fs.readFileSync('tools/check-all.mjs', 'utf8');
 const gates = ['turn-wiring-check', 'pkstate-check', 'save-instrument-check', 'ui-entry-check',
   'pkdirective-check', 'empty-catch-check', 'on-assign-check', 'errlog-selftest',
   'sanitize-selftest', 'wiring-order-check', 'patch-registry',
-  'render-snapshot', 'msgkind-probe'];
+  'render-snapshot', 'msgkind-probe', 'style-computed-snapshot', 'css-dead-rules', 'sheet-snapshot', 'sheet-census'];
 for (const g of gates) {
   const mentioned = doc.includes(g);
   const registered = checkAll.includes(g);
@@ -38,10 +41,17 @@ const run = (c) => { try { return execFileSync(process.execPath, c, { encoding: 
 const patch = run(['tools/patch-registry.mjs', '--check']);
 const m = /(\d+) 函数 \/ (\d+) 处/.exec(patch);
 if (m) {
-  const sites = Number(m[2]);
-  const claimed = Number((/猴补丁\s+148 个函数 \/ (\d+) 处/.exec(doc) || [])[1] || 0);
-  console.log('  猴补丁实测 ' + sites + ' · 文档写 ' + claimed + (sites === claimed ? ' ✓' : ' ✗ 过期'));
-  if (sites !== claimed) bad++;
+  const fns = Number(m[1]), sites = Number(m[2]);
+  /* ⚠️ 2026-10-27：这里原来把**函数个数**写死在正则里（`猴补丁\s+148 个函数 \/ (\d+) 处`），
+     于是函数数一变（147）就解析不到，报出「文档写 0」—— 一条会误报的判据。
+     现在两个数都解析、都核；解析不到就是 0 ⇒ 照样红，不会静默放过。 */
+  const dm = /猴补丁\s+(\d+) 个函数 \/ (\d+) 处/.exec(doc);
+  const cf = Number((dm || [])[1] || 0), cs = Number((dm || [])[2] || 0);
+  const ok = fns === cf && sites === cs;
+  console.log('  猴补丁实测 ' + fns + ' 函数 / ' + sites + ' 处 · 文档写 ' + cf + ' 函数 / ' + cs + ' 处' + (ok ? ' ✓' : ' ✗ 过期'));
+  if (!ok) bad++;
+} else {
+  console.log('  · 读不到 patch-registry 的读数（跳过猴补丁一项）：' + patch.slice(0, 60));
 }
 
 /* ③b 空 catch 存量同样要对得上（文档写数字、代码是事实，两边不一致就红） */

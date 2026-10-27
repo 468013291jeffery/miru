@@ -1,0 +1,75 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>css dead rules</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+/* 死样式普查（2026-10-27）：每条 CSS 规则的选择器，在当前页面上**匹配到几个元素**。
+   和「死层」是同一个形状 —— 结构对拍永远绿，而那段代码一次都没被执行过。
+
+   三档判法（关键在**两次查询**）：
+     raw     = 原样 querySelectorAll(sel).length          —— 语法不合（含 ::after 之类）会抛
+     relaxed = 剥掉伪类/伪元素之后再查一次                  —— 用来区分「死了」和「只在某个状态才有」
+     · raw > 0            ⇒ 活
+     · raw = 0, relaxed>0 ⇒ **状态型**（:hover / :disabled / ::after / :has 之类）—— 不是死
+     · raw = 0, relaxed=0 ⇒ 死候选（还要人工确认：有些元素只在某个弹层/某个章节才存在）
+
+   ⚠️ 只统计**页面里真的有的 sheet**；`creator_embed.js` 那段是另一个页面的 HTML 字符串，
+   它不在 DOM 里，所以天然不会被算进来。 */
+function relax(sel) {
+  return sel
+    .replace(/::?[a-zA-Z-]+(\((?:[^()]|\([^()]*\))*\))?/g, '')  // 伪类/伪元素（含括号参数）
+    .replace(/\s*([>+~])\s*/g, '$1')
+    .replace(/\s+/g, ' ').trim();
+}
+function walk(rules, out, ctx) {
+  for (var i = 0; i < rules.length; i++) {
+    var r = rules[i];
+    if (r.selectorText) { out.push({ sel: r.selectorText, ctx: ctx, css: (r.style && r.style.cssText || '').slice(0, 200), len: (r.style && r.style.cssText || '').length }); continue }
+    if (r.cssRules) {                       // @media / @supports / @layer 里还有规则
+      var inner = [];
+      walk(r.cssRules, inner, (ctx ? ctx + ' > ' : '') + (r.conditionText || r.name || r.cssText.slice(0, 24)));
+      for (var k = 0; k < inner.length; k++) out.push(inner[k]);
+    }
+  }
+  return out;
+}
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow, d = w.document;
+  if (!d) { out.textContent = 'ERR no iframe'; return }
+  var all = [];
+  var sheets = d.querySelectorAll('style');
+  for (var s = 0; s < sheets.length; s++) {
+    var sheet = sheets[s].sheet;
+    if (!sheet) continue;
+    var rules = [];
+    try { walk(sheet.cssRules, rules, '') } catch (e) { continue }
+    for (var j = 0; j < rules.length; j++) {
+      var sel = rules[j].sel;
+      /* 一条规则可能是一串选择器（a,b,c）—— 只要**有一个**分片能匹配就算活 */
+      var parts = sel.split(',').map(function (x) { return x.trim() }).filter(Boolean);
+      var nRaw = 0, nRelaxed = 0, best = '';
+      for (var p = 0; p < parts.length; p++) {
+        var part = parts[p], a = 0, b = 0;
+        try { a = d.querySelectorAll(part).length } catch (e) { a = -1 }
+        var rel = relax(part);
+        try { b = rel ? d.querySelectorAll(rel).length : 0 } catch (e) { b = -1 }
+        if (a > nRaw) { nRaw = a; best = part }
+        if (b > nRelaxed) nRelaxed = b;
+      }
+      all.push({ sheet: s, sel: sel, ctx: rules[j].ctx, nRaw: nRaw, nRelaxed: nRelaxed, best: best,
+        css: rules[j].css, len: rules[j].len });
+    }
+  }
+  var dead = all.filter(function (x) { return x.nRaw <= 0 && x.nRelaxed <= 0 });
+  var state = all.filter(function (x) { return x.nRaw <= 0 && x.nRelaxed > 0 });
+  var live = all.filter(function (x) { return x.nRaw > 0 });
+  out.textContent = 'CSS_DEAD_JSON:' + JSON.stringify({
+    at: Date.now(), sheets: sheets.length, rules: all.length,
+    live: live.length, state: state.length, dead: dead.length,
+    deadList: dead.sort(function (a, b) { return (b.len || 0) - (a.len || 0) })
+  });
+  out.setAttribute('data-done', '1');
+}, 5000);
+</script>

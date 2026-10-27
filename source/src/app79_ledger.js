@@ -135,7 +135,13 @@ document.addEventListener("click", e => {
   if (x = e.target.closest("[data-ldt]")) { ledSheet(x.dataset.ldt); return; }
   if (x = e.target.closest("[data-ldp]")) { const [id, st] = x.dataset.ldp.split("|"); const p = led(th).p.find(y => y.id === id); if (p) { p.st = st; p.byAI = 0; p.end = st === "open" ? null : Date.now(); save(); toast(st === "kept" ? LL("记下了：约定兑现", "Marked as kept") : st === "broken" ? LL("记下了：约定落空", "Marked as broken") : LL("已改回进行中", "Reopened")); } ledSheet("p"); return; }
 }, true);
-menuSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const s = document.querySelector(".sheet .stack"); if (s && !s.querySelector("[data-ledopen]")) { const th = S.threads[curT]; const L = led(th), n = L ? L.p.filter(p => p.st === "open").length + L.c.filter(c => c.st === "open").length : 0; s.insertAdjacentHTML("afterbegin", '<button class="opt" data-ledopen="1"><span class="ic">📜</span><span class="grow"><b>' + LL("剧情账本", "Story ledger") + (n ? ' · ' + n : '') + '</b><span>' + LL("约定、未解决的冲突、秘密、已做的选择", "Promises, open conflicts, secrets, choices made") + '</span></span></button>'); } } catch (_) {} }; })(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。
+   它依赖 `th`（数未结项），所以守卫保留为 `!th → 空串`；幂等守卫不再需要。 */
+SHEET.add("menu", "app79_ledger.js", "top", function () {
+  const th = S.threads[curT]; if (!th) return "";
+  const L = led(th), n = L ? L.p.filter(p => p.st === "open").length + L.c.filter(c => c.st === "open").length : 0;
+  return '<button class="opt" data-ledopen="1"><span class="ic">📜</span><span class="grow"><b>' + LL("剧情账本", "Story ledger") + (n ? ' · ' + n : '') + '</b><span>' + LL("约定、未解决的冲突、秘密、已做的选择", "Promises, open conflicts, secrets, choices made") + '</span></span></button>';
+});
 m2Sheet = (function (orig) { return function () { orig.apply(this, arguments); try { const b = document.querySelector(".m2s"); if (b && !b.querySelector("[data-ledopen]")) b.insertAdjacentHTML("beforeend", '<button class="lnk" data-ledopen="1" style="display:block;margin:2px auto 0">📜 ' + LL("剧情账本", "Story ledger") + '</button>'); } catch (_) {} }; })(m2Sheet);
 (function () { const st = document.createElement("style"); st.textContent = `
 .lds{display:flex;flex-direction:column;gap:10px}.ldl{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}

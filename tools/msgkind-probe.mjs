@@ -22,9 +22,14 @@ const URL = 'http://127.0.0.1:' + PORT + '/tools/render-snapshot.html';
 const EDGE = process.env.MIRU_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 
 /* 期望表。fires = 这一层必须真的改动 HTML；silent = 这一层此刻确实动不了东西（必须写原因）。
+   `contains`：一个字符串或数组；`!xxx` = **必须不出现**（唯一一个「靠删除干活」的层要它）。
+   第 6 格 opts：目前只有 `allow`（对照探针允许被哪些层动 —— 那条层是设计上每行都动的）。
    ⚠️ 这张表是**判据**，不是现状抄写：改代码后它变绿/变红都要回来改这里。 */
 const EXPECT = [
-  ['对照：普通一句台词', '*', 'silent', '', '普通 do 没触发任何条件层'],
+  ['对照：普通一句台词', '*', 'silent', '', '普通一句台词没触发任何条件层',
+    { allow: ['app16_story2.js#mquick'] }],
+  ['去快捷按钮 · 普通台词', 'app16_story2.js#mquick', 'fires', '!mquick',
+    'post 类：删掉每行右侧的 🔊/🖼/📤 一排 —— app3_chat 一直在发，这一层一直在删，所以对照探针允许它动'],
   ['行内 *动作* 高亮', 'app16_story2.js', 'fires', '<em class="ma">', 'post 类：把 *…* /（…）换成 <em class="ma">（2026-10-27 修好：原来找 .bub，气泡早换成 .m-box）'],
   ['（舞台指令）改入参', 'app34_hints.js', 'fires', '', 'wrap 类：把（…）换成 *…*'],
   ['付款行 · 没说出口的话', 'app35_pay.js', 'fires', 'payrow', 'post 类：挂付款行'],
@@ -35,6 +40,28 @@ const EXPECT = [
   ['撤回', 'app37_hooks.js', 'fires', '', 'kind 类：认领 xrecall'],
   ['拒绝', 'app42_decline.js', 'fires', '', 'kind 类：认领 declined'],
   ['视觉小说行', 'app96_social.js', 'fires', '', 'kind 类：认领 vn96'],
+
+  /* —— 第 3 步：条件型认领层 —— */
+  ['块里有台词（box）', 'app16_story2.js#kinds', 'fires', 'm-box ctx', 'kind 类：认领 box（没有 m.say 的上下文盒）'],
+  ['场景卡（scene）', 'app16_story2.js#kinds', 'fires', 'm-scene', 'kind 类：认领 scene'],
+  ['开场介绍（intro）', 'app16_story2.js#kinds', 'fires', 'm-intro', 'kind 类：认领 intro'],
+  ['剧情事件卡（event）', 'app16_story2.js#pk', 'fires', 'm-event', 'kind 类：认领 event'],
+  ['玩家的动作行', 'app16_story2.js#pk', 'fires', 'm-act me', 'kind 类：认领 act，但只认「你扮演的人」那一支（who==="me" 且本局有 pk）'],
+  ['玩家的心声行', 'app16_story2.js#pk', 'fires', 'm-think me', 'kind 类：认领 think，同上只认你那一支'],
+  ['别人说话 · 剧本模式成气泡', 'app17_custom.js', 'fires', 'm-turn',
+    'kind 类：认领 say，条件是 m.pk 且说话的不是你（也不是 me）', { mustNot: ['app26_turns.js'] }],
+  ['我自己的剧本台词 · 右手气泡', 'app26_turns.js', 'fires', 'm-row me pkme',
+    'kind 类：认领 say，条件是 m.pk 且说话的就是你 —— 与 app17 条件互斥，是接力不是抢', { mustNot: ['app17_custom.js'] }],
+  ['内心独白卡（mono）', 'app19_bgm.js', 'fires', 'm-mono', 'kind 类：认领 mono'],
+  ['章节标题（xtitle）', 'app23_heir.js', 'fires', 'xtitle', 'kind 类：认领 x* 四种'],
+  ['遗产金额 · 已解锁（交给内层）', 'app23_heir.js', 'fires', ['xmoney', '!sealed'],
+    'xmoney 有两个认领层：app24 在最外层只认「没解锁且非会员」，解锁后它把活交回内层 → app23 画',
+    { mustNot: ['app24_gl.js'] }],
+  ['遗产金额 · 未解锁封口', 'app24_gl.js', 'fires', ['xmblur', 'sealed'],
+    '同上：这一支由外层的 app24 直接答，内层 app23 根本不跑（所以它在这条探针里必须 0 命中）',
+    { mustNot: ['app23_heir.js'] }],
+  ['旁白换人称（扮演别人）', 'app94_official2.js', 'fires', '测试角色推开门', 'wrap 类：扮演的不是主角时，把旁白里的「你」换成主角名'],
+  ['捡到东西（item101）', 'app101_you.js', 'fires', 'it101', 'kind 类：认领 item101'],
 ];
 
 function read() {
@@ -57,6 +84,18 @@ if (data.error) { console.log('✗ ' + data.error); process.exit(2) }
 
 if (process.argv.includes('--json')) { console.log(JSON.stringify(data, null, 2)); process.exit(0) }
 
+/* `--graph`：把「类型 → 认领层」从**运行时**打出来。以前这张图靠 `tools/msghtml-kinds.mjs`
+   静态扫源码（按正则猜 `m.k===` 的形状），它漏掉了 app24 的 xmoney（条件是 `m.k!=="xmoney"` 取反写）。
+   认领是运行期才知道的事，图就该从运行期读。 */
+if (process.argv.includes('--graph')) {
+  const g = {};
+  for (const x of (data.layers || [])) for (const k of (x.kinds || [])) (g[k] = g[k] || []).push(x.name);
+  for (const k of Object.keys(g).sort()) {
+    console.log('  ' + k.padEnd(9) + g[k].join(' · ') + (g[k].length > 1 ? '   ← 多层认领（顺序接力）' : ''));
+  }
+  process.exit(0);
+}
+
 const layers = data.layers || [];
 const probes = new Map((data.probes || []).map(p => [p.name, p]));
 const bad = [];
@@ -70,15 +109,29 @@ function unesc(s) {
   return String(s).replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, '&');
 }
 
-for (const [probeName, layer, want, contains, reason] of EXPECT) {
+/* 标记检查：`!xxx` = 必须**不**出现。唯一靠删除干活的层（app16 的 mquick）只能这样验 ——
+   「改了东西」证明它动了，证明不了删对了东西。 */
+function checkMarkers(label, html, contains) {
+  const list = contains == null ? [] : (Array.isArray(contains) ? contains : [contains]);
+  for (const c of list) {
+    if (!c) continue;
+    const neg = c.charAt(0) === '!', want = neg ? c.slice(1) : c;
+    const has = html.includes(want);
+    if (neg && has) bad.push('「' + label + '」：不该出现 `' + want + '` 却出现了');
+    if (!neg && !has) bad.push('「' + label + '」：命中了但 HTML 里没有 `' + want + '`');
+  }
+}
+
+for (const [probeName, layer, want, contains, reason, opts] of EXPECT) {
   const p = probes.get(probeName);
   if (!p) { bad.push('探针「' + probeName + '」在页面上没有产出'); continue }
   p.html = unesc(p.html);
   if (p.html.startsWith('ERR ')) bad.push('探针「' + probeName + '」渲染抛错：' + p.html.slice(0, 80));
 
   if (layer === '*') {
-    /* 对照：一个后处理/wrap 层都不许动它 */
-    const moved = p.fired.filter(n => (layers.find(x => x.name === n) || {}).cls !== 'kind');
+    /* 对照：一个后处理/wrap 层都不许动它（`allow` 里点名的层除外 —— 那是设计上每行都动的） */
+    const allow = (opts && opts.allow) || [];
+    const moved = p.fired.filter(n => (layers.find(x => x.name === n) || {}).cls !== 'kind' && allow.indexOf(n) < 0);
     if (moved.length) bad.push('对照探针被这些层改动了 → ' + moved.join(', '));
     continue;
   }
@@ -87,9 +140,14 @@ for (const [probeName, layer, want, contains, reason] of EXPECT) {
   const fired = p.fired.indexOf(layer) >= 0;
   if (want === 'fires') {
     if (!fired) bad.push('「' + probeName + '」：' + layer + ' 该动而没动（命中 0）');
-    if (contains && !p.html.includes(contains)) bad.push('「' + probeName + '」：命中了但 HTML 里没有 `' + contains + '`');
+    checkMarkers(probeName, p.html, contains);
   } else {
     if (fired) bad.push('「' + probeName + '」：' + layer + ' 登记为【已知死】却动了起来 —— 底下改了，回来改这张表与原因');
+  }
+  /* 「接力」要两边都断言：外层答了、内层就必须没跑。只查一边的话，
+     顺序反了（内层先答）照样绿 —— 而那正是这一类最容易出的错。 */
+  for (const n of (opts && opts.mustNot) || []) {
+    if (p.fired.indexOf(n) >= 0) bad.push('「' + probeName + '」：' + n + ' 本该把活交出去，却自己动了（顺序或条件变了）');
   }
 }
 
@@ -101,8 +159,9 @@ if (unprobed.length) bad.push('注册了但没有探针点名 → ' + unprobed.j
 const thrown = layers.filter(x => x.err > 0).map(x => x.name + ' ×' + x.err);
 if (thrown.length) bad.push('探针期间有层抛错 → ' + thrown.join(', '));
 
-const live = EXPECT.filter(e => e[2] === 'fires').length;
-const dead = EXPECT.filter(e => e[2] === 'silent' && e[1] !== '*').length;
+const liveRows = EXPECT.filter(e => e[2] === 'fires').length;
+const liveLayers = new Set(EXPECT.filter(e => e[2] === 'fires').map(e => e[1])).size;
+const dead = new Set(EXPECT.filter(e => e[2] === 'silent' && e[1] !== '*').map(e => e[1])).size;
 
 if (bad.length) {
   console.log('✗ msgkind 探针 ' + bad.length + ' 处不符：');
@@ -111,5 +170,6 @@ if (bad.length) {
   process.exit(1);
 }
 console.log('✓ msgkind-probe: ' + layers.length + ' 层在册 · ' + EXPECT.length + ' 条探针 —— ' +
-  live + ' 层证明活着 · ' + dead + ' 层登记为已知死 · 对照未被扰动');
+  liveLayers + '/' + layers.length + ' 层被证明活着（' + liveRows + ' 条命中判据）· ' +
+  dead + ' 层登记为已知死 · 对照未被扰动');
 process.exit(0);

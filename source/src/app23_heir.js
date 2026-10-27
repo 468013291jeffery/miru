@@ -80,13 +80,14 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-grp]");if(
 Object.assign(FEATK,{feed:{ic:"📹",run:()=>feedRun(),t:"pk2.feedH"},phone:{ic:"📱",run:()=>phoneRun(),t:"pk2.phH"},match:{ic:"💞",run:()=>matchRun(),t:"pk2.mqH"},group:{ic:"👥",run:()=>groupRun(),t:"pk2.grH"}});
 /* ---------- directives with their own cards ---------- */
 PKREG.add("app23_heir.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return next(th,b)});;
-const _msgHTML23=msgHTML;
-msgHTML=function(m,i,th){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return _msgHTML23(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 x* 四种）。⚠️ 与 app24 共有 xmoney：
+   这一层是**内层**，只在「已解锁 / 会员」时被叫到；封口那一支由外层的 app24 直接答。 */
+MSGKIND.inline("app23_heir.js",["xtitle","xmoney","xpost","xanchor"],function(m,i,th,next){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return next(m,i,th);
  if(m.k==="xtitle")return '<div class="xtitle"><b>'+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
  if(m.k==="xanchor")return '<div class="xanchor"><b>⚓ '+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
  if(m.k==="xmoney")return '<div class="xmoney" data-mi="'+i+'"><div class="xm1"><small>'+t("pk2.yday")+'</small><s>'+esc(L(m.from))+'</s></div><div class="xm2"><small>'+t("pk2.today")+' · '+esc(L(m.label)||"")+'</small><b class="num" data-count="'+esc(L(m.to))+'">'+esc(L(m.to))+'</b></div>'+(m.welcome?'<div class="xmw">'+esc(L(m.welcome))+'</div>':'')+'</div>';
  if(m.k==="xpost"){const c=(L(m.cm)||m.cm||[]);return '<div class="xpost"><div class="xph"><b>'+esc(L(m.handle))+'</b><small>🔥 '+t("pk2.trend")+'</small></div><p>'+esc(L(m.txt))+'</p>'+(m.img?'<div class="xpi" style="background-image:url('+(SCENE_FILES[m.img]||"")+')"></div>':'')+
-  '<div class="xpm">♥ '+esc(String(m.likes||"12.4K"))+' · 💬 '+c.length+'</div>'+c.slice(0,4).map(([n,x])=>'<div class="xpc"><b>'+esc(n)+'</b> '+esc(x)+'</div>').join("")+'<button class="xpsave" data-xpsave="'+i+'">'+(m.saved?"✓ "+t("pk2.saved"):"＋ "+t("pk2.saveMom"))+'</button></div>'}};
+  '<div class="xpm">♥ '+esc(String(m.likes||"12.4K"))+' · 💬 '+c.length+'</div>'+c.slice(0,4).map(([n,x])=>'<div class="xpc"><b>'+esc(n)+'</b> '+esc(x)+'</div>').join("")+'<button class="xpsave" data-xpsave="'+i+'">'+(m.saved?"✓ "+t("pk2.saved"):"＋ "+t("pk2.saveMom"))+'</button></div>'}});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xpsave]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xpsave];if(!m||m.saved)return;m.saved=1;
  const p={id:"m"+Date.now(),txt:L(m.txt),img:SCENE_FILES[m.img]||null,at:Date.now(),likes:0,cm:[],day:today()};S.moments=[p].concat(S.moments||[]).slice(0,40);save();if(typeof addComments==="function")addComments(p,[mainOf(th)].filter(Boolean));renderChat();toast(t("mom.posted"))});
 /* money counter animation */

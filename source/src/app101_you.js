@@ -109,14 +109,14 @@
       return next.apply(this, arguments);
     });;
   }
-  if (typeof msgHTML === "function") {
-    const _mh = msgHTML;
-    msgHTML = function (m, i, th) {
-      if (!m || m.k !== "item101") return _mh.apply(this, arguments);
+  if (window.MSGKIND) {
+    /* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 item101）。渲染逻辑逐字未改。 */
+    MSGKIND.inline("app101_you.js", ["item101"], function (m, i, th, next) {
+      if (!m || m.k !== "item101") return next(m, i, th);
       return '<div class="it101' + (m.open ? " open" : "") + '" data-mi="' + i + '"><button class="it101c" data-it101="' + i + '">' +
         '<span class="it101f"><i>' + esc(m.ic) + '</i><b>' + esc(zh() ? "你发现了：" : "You found: ") + esc(m.n) + '</b><small>' + esc(zh() ? "点一下，拿起来看看" : "Tap to pick it up") + '</small></span>' +
         '<span class="it101b"><i>' + esc(m.ic) + '</i><b>' + esc(m.n) + '</b><em>' + esc(m.d) + '</em><small>' + esc(zh() ? "✓ 已收进随身物品" : "✓ Added to your things") + '</small></span></button></div>';
-    };
+    });
   }
   document.addEventListener("click", e => {
     const x = e.target.closest("[data-it101]"); if (!x) return;

@@ -32,7 +32,8 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-buymax]")){S.plus=true;S.plusMax=true;S.plusSince=Date.now();save();toast(t("mem.maxOn"));memSheet();return}});
 /* chip in the chat status row + menu entry + one-time "he's starting to forget" nudge at 85% */
 renderChat=(function(orig){return function(){orig.apply(this,arguments);const th=S.threads[curT];if(!th)return;const st=$(".status");if(st&&!st.querySelector(".memchip"))st.insertAdjacentHTML("beforeend",memChip(th))}})(renderChat);
-menuSheet=(function(orig){return function(){orig.apply(this,arguments);const s=$(".sheet .stack");if(s)s.insertAdjacentHTML("afterbegin",'<button class="opt" data-memsheet="1"><span class="ic">🧠</span><span class="grow"><b>'+t("mem.h")+'</b><span>'+t("mem.menuS")+'</span></span></button>')}})(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app11_memory.js","top",function(){return '<button class="opt" data-memsheet="1"><span class="ic">🧠</span><span class="grow"><b>'+t("mem.h")+'</b><span>'+t("mem.menuS")+'</span></span></button>'});
 appendMsg=(function(orig){return function(th,m){orig.apply(this,arguments);if(!th||th.memWarn||memTier(th)==="deep")return;const T=MEMT[memTier(th)];if(memUsed(th)>=T.cap*.85){th.memWarn=1;th.msgs.push({who:"sys",k:"card",title:"🧠 "+t("mem.warnH",{n:first((ch(mainOf(th))||{n:""}).n)}),txt:t("mem.warnS"),btn:t("mem.warnB"),act:"mem|",at:Date.now()});save();if(curT===th.id)renderChat()}}})(appendMsg);
 document.addEventListener("click",e=>{const x=e.target.closest("[data-cardbtn]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.cardbtn];if(m&&m.act==="mem|"){e.stopImmediatePropagation();memSheet()}},true);
 Object.assign(I18N.en,{"mem.h":"Memory space","mem.menuS":"How much he remembers","mem.used":"used","mem.t.free":"Free","mem.t.plus":"MIRU+","mem.t.deep":"Deep","mem.fixed":"always","mem.on":"on","mem.none":"Nothing yet — make a moment he'll keep.",

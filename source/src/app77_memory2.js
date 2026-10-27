@@ -168,7 +168,11 @@ document.addEventListener("click", e => {
 document.addEventListener("change", e => { const x = e.target.closest && e.target.closest("[data-m2off]"); if (!x) return; S.m2off = !x.checked; save(); toast(S.m2off ? LL("已关闭自动记忆（已记下的仍保留，可以手动删）", "Auto-memory off (saved ones stay; you can delete them)") : LL("已开启自动记忆", "Auto-memory on")); });
 /* entry points: memory-space sheet gets a "what he remembers" button; menu gets a row */
 memSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const th = S.threads[curT]; if (!th) return; const n = m2(th).filter(x => !x.del).length; const s = document.querySelector(".sheet .memlay"); if (s && !document.querySelector("[data-m2open]")) s.insertAdjacentHTML("afterend", '<button class="btn btn-g btn-block" style="margin-top:10px" data-m2open="1">📖 ' + LL("他记得的事 · " + n + " 条（可查看、删除）", "What he remembers · " + n + " (view & delete)") + '</button>'); } catch (_) {} }; })(memSheet);
-menuSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const s = document.querySelector(".sheet .stack"); if (s && !s.querySelector("[data-m2open]")) s.insertAdjacentHTML("afterbegin", '<button class="opt" data-m2open="1"><span class="ic">📖</span><span class="grow"><b>' + LL("他记得的事", "What he remembers") + '</b><span>' + LL("查看、置顶、别再提、忘掉", "View, pin, mute or forget") + '</span></span></button>'); } catch (_) {} }; })(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。
+   幂等守卫（`!s.querySelector("[data-m2open]")`）不再需要：注册表每次开弹层只渲染一遍。 */
+SHEET.add("menu", "app77_memory2.js", "top", function () {
+  return '<button class="opt" data-m2open="1"><span class="ic">📖</span><span class="grow"><b>' + LL("他记得的事", "What he remembers") + '</b><span>' + LL("查看、置顶、别再提、忘掉", "View, pin, mute or forget") + '</span></span></button>';
+});
 (function () { const st = document.createElement("style"); st.textContent = `
 .m2s{display:flex;flex-direction:column;gap:10px}
 .m2sum{background:rgba(240,183,126,.08);border:1px solid rgba(240,183,126,.3);border-radius:14px;padding:10px 12px}.m2sum b{font-size:12.5px;color:var(--gold)}.m2sum p{margin:4px 0 0;font-size:13px;line-height:1.55;color:var(--text)}

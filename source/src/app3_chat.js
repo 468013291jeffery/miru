@@ -775,7 +775,7 @@ function menuSheet(){const th=S.threads[curT];
   (th.wid&&wd(th.wid)?'<button class="opt" data-rxfork="1"><span class="ic">⑂</span><span class="grow"><b>'+t("rx.fromHere")+'</b><span>'+t("rx.fromHereS")+'</span></span></button>':"")+'<button class="opt" data-guide="1"><span class="ic">📘</span><span class="grow"><b>'+t("cx.m.guide")+'</b></span></button>'+
   '<button class="opt" data-voiceplay="1"><span class="ic">🔊</span><span class="grow"><b>'+t("cx.m.voice")+'</b></span><span class="check'+(S.voice.auto?" on":"")+'">'+(S.voice.auto?"✓":"")+'</span></button>'+
   '<button class="opt" data-tier="1"><span class="ic">✦</span><span class="grow"><b>'+(S.tier==="deep"?t("cx.deep"):t("cx.std"))+'</b><span>'+t("cx.deepS")+'</span></span><span class="check'+(S.tier==="deep"?" on":"")+'">'+(S.tier==="deep"?"✓":"")+'</span></button>'+
-  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>')}
+  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>');try{SHEET.render("menu",$(".sheet .stack"))}catch(e){console.error("[sheet] menu 渲染失败："+((e&&(e.code||e.message))||e))}}
 function pathTasks(th,cid){const r=th.rounds,tk=th.tasks||{};return [
  {st:0,k:"chat",done:r>=10,l:t("task.chat",{a:Math.min(r,10)})},{st:0,k:"quiz",done:!!tk.quiz,l:t("task.quiz")},
  {st:1,k:"date",done:!!tk.date,l:t("task.date")},{st:1,k:"gift",done:!!tk.gift,l:t("task.gift")},

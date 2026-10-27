@@ -82,11 +82,11 @@ Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign
 PKREG.add("app19_bgm.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
   if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return next(th,b)});;
 function monoFree(){const d=today();if((S.monoDay||{}).d!==d)S.monoDay={d,n:0};return S.monoDay.n<2}
-const _msgHTML19=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="mono")return _msgHTML19(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 mono）。渲染逻辑逐字未改。 */
+MSGKIND.inline("app19_bgm.js",["mono"],function(m,i,th,next){if(!m||m.k!=="mono")return next(m,i,th);
  return '<div class="m-mono'+(m.open?" open":"")+'"><div class="mmh">💜 '+t("mono.h")+'</div>'+
   (m.open?m.t.filter(([w])=>ch(w)).map(([w,x])=>'<p><b>'+esc(first(ch(w).n))+'：</b>'+esc(x)+'</p>').join(""):
-   '<div class="mmlock">'+m.t.filter(([w])=>ch(w)).map(([w])=>avatar(w,26)).join("")+'<span>'+t("mono.peek")+'</span></div><button class="mmbtn" data-mono="'+i+'">'+(S.plus?t("mono.vip"):"💎 1 · "+t("mono.read"))+'</button>')+'</div>'};
+   '<div class="mmlock">'+m.t.filter(([w])=>ch(w)).map(([w])=>avatar(w,26)).join("")+'<span>'+t("mono.peek")+'</span></div><button class="mmbtn" data-mono="'+i+'">'+(S.plus?t("mono.vip"):"💎 1 · "+t("mono.read"))+'</button>')+'</div>'});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-mono]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mono];if(!m||m.open)return;
  if(!S.plus&&!spend(1,"line"))return;m.open=true;save();renderChat()});
 Object.assign(I18N.en,{"mono.h":"Inner monologue","mono.peek":"What they're really thinking right now","mono.free":"Read (free today)","mono.vip":"Read · members free","mono.read":"Read"});
