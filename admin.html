@@ -729,7 +729,7 @@ const STU_TAX={
 const STU_LAYERS = [['world', '世界', 2], ['trope', '关系桥段', 4], ['him', '他是什么样的人', 2], ['vibe', '情绪', 2]];
 const STU_HEATS = [['fluff', '清水 · 不越界'], ['slow', '暧昧 · 有张力'], ['steamy', '微辣']];
 /* 具体元素（职业、种族、运动……）是故事事实，不在口味页，只用于搜索 */
-const STU_FACTS = { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友', 'Campus': '校园', 'Billionaire': '亿万富翁', 'Secret Heir': '隐藏继承人', 'Coworkers': '同事' };
+const STU_FACTS = { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友', 'Campus': '校园', 'Billionaire': '亿万富翁', 'Secret Heir': '隐藏继承人', 'Coworkers': '同事', '单人': '单人' };
 const stuTaxTags = taste => { const out = new Set(); Object.entries(STU_TAX).forEach(([g, G]) => G.items.forEach(([k, , , tags]) => { if (((taste || {})[g] || []).includes(k)) tags.forEach(t => out.add(t)); })); return [...out]; };
 const stuTagsOf = c => [...new Set(stuTaxTags(c.taste).concat(c.facts || []))];
 const STU_TAG_ZH = Object.assign({}, STU_FACTS, ...Object.values(STU_TAX).map(G => Object.fromEntries(G.items.map(i => [i[1], i[2]]))));
