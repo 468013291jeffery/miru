@@ -49,11 +49,14 @@ function authorName95(w) { return (w && (w.authorName || w.author)) || T95("这�
         (u ? '<button data-bk95w="' + esc(id) + '">🚫 ' + T95("拉黑作者", "Block author") + '</button>' : '') + '</div>'); } catch (_) {}
     return r; }; }
 /* ---- chat menu ⋯: report AI replies / this story · block author ---- */
-{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
-    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r; const w = th.wid && wd(th.wid), u = ugc95(w);
-      st.insertAdjacentHTML("beforeend", '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
-        (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '')); } catch (_) {}
-    return r; }; }
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块。HTML 一字未改；守卫从 `!st` 变成不需要
+   （注册表只在 stack 存在时才渲染），`!th` 保留为返回空串。 */
+SHEET.add("menu", "app95_safety.js", "bottom", function () {
+  const th = S.threads[curT]; if (!th) return '';
+  const w = th.wid && wd(th.wid), u = ugc95(w);
+  return '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
+    (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '');
+});
 document.addEventListener("click", e => {
   let x;
   if ((x = e.target.closest("[data-rp95w]"))) { e.preventDefault(); e.stopPropagation(); const w = wd(x.dataset.rp95w); report95("work", (w && w.community) || x.dataset.rp95w, w ? Lz(w.title) + "\n" + Lz(w.hook || "") : "", w && Lz(w.title)); return; }

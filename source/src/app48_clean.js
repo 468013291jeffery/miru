@@ -35,7 +35,8 @@ document.addEventListener("click",e=>{let x;
  if((x=e.target.closest("#s-chat .composer .modes button"))){setTimeout(()=>{const c=$("#s-chat .composer");if(c)c.classList.remove("showmodes");const mb=$(".modebtn");if(mb)mb.textContent=x.textContent.trim().slice(0,4)+" ▴"},30)}
  if(HD_OPEN&&!e.target.closest(".chead,.status,.livebanner")&&$("#s-chat")&&!$("#s-chat").hidden&&!e.target.closest(".sheet")){HD_OPEN=false;const b=$(".hdx");if(b)b.textContent="⌄";cleanMark()}});
 /* settings toggle in the chat menu */
-const _menuSheet48=menuSheet;menuSheet=function(){_menuSheet48.apply(this,arguments);try{const st=$(".sheet .stack");if(st)st.insertAdjacentHTML("beforeend",'<button class="opt" data-cleantog="1"><span class="ic">🧘</span><span class="grow"><b>'+LL("沉浸模式","Clean screen")+'</b><span>'+LL("只留最新几句，其余收进「历史」","Keep only the latest lines; the rest folds into History")+'</span></span><span class="check'+(cleanOn()?" on":"")+'">'+(cleanOn()?"✓":"")+'</span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块。HTML 一字未改 —— 判据是弹层快照逐字节一致。 */
+SHEET.add("menu","app48_clean.js","bottom",function(){return '<button class="opt" data-cleantog="1"><span class="ic">🧘</span><span class="grow"><b>'+LL("沉浸模式","Clean screen")+'</b><span>'+LL("只留最新几句，其余收进「历史」","Keep only the latest lines; the rest folds into History")+'</span></span><span class="check'+(cleanOn()?" on":"")+'">'+(cleanOn()?"✓":"")+'</span></button>'});
 document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))return;S.clean=!cleanOn();save();closeSheet();HIST_OPEN=false;renderChat()});
 (function(){const st=document.createElement("style");st.textContent=`
 #s-chat.clean .chead{padding-bottom:6px;background:linear-gradient(rgba(8,7,11,.72),rgba(8,7,11,0))!important;border:0!important;box-shadow:none!important}

@@ -1415,7 +1415,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="3f92a7c8c8db 2026-10-27T08:35Z";
+window.MIRU_BUILD="172728e90d10 2026-10-27T08:39Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -5309,7 +5309,7 @@ function menuSheet(){const th=S.threads[curT];
   (th.wid&&wd(th.wid)?'<button class="opt" data-rxfork="1"><span class="ic">⑂</span><span class="grow"><b>'+t("rx.fromHere")+'</b><span>'+t("rx.fromHereS")+'</span></span></button>':"")+'<button class="opt" data-guide="1"><span class="ic">📘</span><span class="grow"><b>'+t("cx.m.guide")+'</b></span></button>'+
   '<button class="opt" data-voiceplay="1"><span class="ic">🔊</span><span class="grow"><b>'+t("cx.m.voice")+'</b></span><span class="check'+(S.voice.auto?" on":"")+'">'+(S.voice.auto?"✓":"")+'</span></button>'+
   '<button class="opt" data-tier="1"><span class="ic">✦</span><span class="grow"><b>'+(S.tier==="deep"?t("cx.deep"):t("cx.std"))+'</b><span>'+t("cx.deepS")+'</span></span><span class="check'+(S.tier==="deep"?" on":"")+'">'+(S.tier==="deep"?"✓":"")+'</span></button>'+
-  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>')}
+  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>');try{SHEET.render("menu",$(".sheet .stack"))}catch(_){}}
 function pathTasks(th,cid){const r=th.rounds,tk=th.tasks||{};return [
  {st:0,k:"chat",done:r>=10,l:t("task.chat",{a:Math.min(r,10)})},{st:0,k:"quiz",done:!!tk.quiz,l:t("task.quiz")},
  {st:1,k:"date",done:!!tk.date,l:t("task.date")},{st:1,k:"gift",done:!!tk.gift,l:t("task.gift")},
@@ -7831,6 +7831,82 @@ Object.assign(I18N.zh,{"pk.spdNorm":"自动播放","pk.spdSlow":"自动 · 慢�
       冲突明细: M.conflicts.map(k => ({ 类型: k, 认领层: M.claims[k] })),
       层: M.items.map(x => ({ 名字: x.name, 类: x.cls, 认领: x.kinds.join(','), 命中: x.hit, 交内层: x.nextCalled, 抛错: x.err }))
     };
+  };
+})();
+
+/* ================= 弹层里的「块」登记表（2026-10-27）=================
+   为什么不再用「包一层」：`menuSheet` 被 7 个文件各包一层，而它们做的事只有一件 ——
+   往 `.sheet .stack` 里塞一块 HTML。包一层看不出「一共几块、什么顺序」，注册表能。
+
+   与 `app111_msgkind.js`（渲染链）的**关键差别**：那边必须给 `next()` 语义（认领 / 后处理 /
+   改入参三类各自要答不同问题）；这边**一个都不需要** —— 没有哪一层是"认领整张弹层"，
+   它们全是往同一个容器里追加。所以这里只存两件事：**顺序**与**插在前面还是后面**。
+
+   ## 用法（在各自的源文件里）
+       SHEET.add('menu', 'app48_clean.js', 'bottom', function(){ return '<button …>' });
+       SHEET.add('menu', 'app45_rel.js',  'top',    function(){ … return '…' });
+
+   ## 顺序怎么保住的（这条最容易搬错）
+   今天是「包一层」：每层在 `_inner()` **返回之后**才插，所以最后的 DOM 顺序是
+   **加载顺序**决定的 —— 而 `afterbegin` 那几层，后加载的会插到更前面。
+   ⇒ 注册表按**加载顺序**登记、`render()` 也按登记顺序逐块插，结果与今天逐字节相同。
+   ⚠️ 谁要改成"按视觉顺序登记"，菜单会整个反过来。
+
+   ## 读数
+       __sheet()     每个弹层：有哪几块、各自插在前面还是后面
+       SHEET.stats() 渲染了几次、每个块命中几回（用来发现"登记了但从不插"的死块）
+
+   闸：`tools/sheet-snapshot.mjs --check`（7 个弹层逐字节 + 每条必须有内容）。
+   ================================================================== */
+(function () {
+  'use strict';
+  const M = { v: 1, order: {}, hits: {}, renders: {} };
+
+  M.add = function (sheetName, blockName, at, fn) {
+    if (typeof fn !== 'function') return false;
+    const k = String(sheetName);
+    (M.order[k] = M.order[k] || []).push({
+      name: String(blockName || '?'),
+      at: at === 'top' ? 'top' : 'bottom',
+      fn: fn, hit: 0, err: 0
+    });
+    return true;
+  };
+
+  M.render = function (sheetName, stack) {
+    const list = M.order[sheetName] || [];
+    if (!stack || !list.length) return 0;
+    M.renders[sheetName] = (M.renders[sheetName] || 0) + 1;
+    let n = 0;
+    for (const b of list) {
+      let h = '';
+      /* 块抛错不许打断后面的块，也不许静默：记次数 + 走 console.error（errlog 会接住）*/
+      try { h = b.fn() } catch (e) {
+        b.err++;
+        try { console.error('[sheet] ' + b.name + ' 抛错：' + ((e && (e.code || e.message)) || e)); } catch (_) { }
+        continue;
+      }
+      if (typeof h === 'string' && h) {
+        stack.insertAdjacentHTML(b.at === 'top' ? 'afterbegin' : 'beforeend', h);
+        b.hit++; n++;
+      }
+    }
+    return n;
+  };
+
+  M.stats = function () {
+    const o = {};
+    for (const k of Object.keys(M.order)) {
+      o[k] = M.order[k].map(b => ({ 块: b.name, 位置: b.at, 插入: b.hit, 抛错: b.err }));
+    }
+    return { 渲染: M.renders, 块: o };
+  };
+
+  window.SHEET = M;
+  window.__sheet = function () {
+    const o = {};
+    for (const k of Object.keys(M.order)) o[k] = M.order[k].map(b => b.name + '(' + b.at + ')');
+    return o;
   };
 })();
 
@@ -11310,7 +11386,8 @@ document.addEventListener("click",e=>{let x;
  if((x=e.target.closest("#s-chat .composer .modes button"))){setTimeout(()=>{const c=$("#s-chat .composer");if(c)c.classList.remove("showmodes");const mb=$(".modebtn");if(mb)mb.textContent=x.textContent.trim().slice(0,4)+" ▴"},30)}
  if(HD_OPEN&&!e.target.closest(".chead,.status,.livebanner")&&$("#s-chat")&&!$("#s-chat").hidden&&!e.target.closest(".sheet")){HD_OPEN=false;const b=$(".hdx");if(b)b.textContent="⌄";cleanMark()}});
 /* settings toggle in the chat menu */
-const _menuSheet48=menuSheet;menuSheet=function(){_menuSheet48.apply(this,arguments);try{const st=$(".sheet .stack");if(st)st.insertAdjacentHTML("beforeend",'<button class="opt" data-cleantog="1"><span class="ic">🧘</span><span class="grow"><b>'+LL("沉浸模式","Clean screen")+'</b><span>'+LL("只留最新几句，其余收进「历史」","Keep only the latest lines; the rest folds into History")+'</span></span><span class="check'+(cleanOn()?" on":"")+'">'+(cleanOn()?"✓":"")+'</span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块。HTML 一字未改 —— 判据是弹层快照逐字节一致。 */
+SHEET.add("menu","app48_clean.js","bottom",function(){return '<button class="opt" data-cleantog="1"><span class="ic">🧘</span><span class="grow"><b>'+LL("沉浸模式","Clean screen")+'</b><span>'+LL("只留最新几句，其余收进「历史」","Keep only the latest lines; the rest folds into History")+'</span></span><span class="check'+(cleanOn()?" on":"")+'">'+(cleanOn()?"✓":"")+'</span></button>'});
 document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))return;S.clean=!cleanOn();save();closeSheet();HIST_OPEN=false;renderChat()});
 (function(){const st=document.createElement("style");st.textContent=`
 #s-chat.clean .chead{padding-bottom:6px;background:linear-gradient(rgba(8,7,11,.72),rgba(8,7,11,0))!important;border:0!important;box-shadow:none!important}
@@ -16864,11 +16941,14 @@ function authorName95(w) { return (w && (w.authorName || w.author)) || T95("这�
         (u ? '<button data-bk95w="' + esc(id) + '">🚫 ' + T95("拉黑作者", "Block author") + '</button>' : '') + '</div>'); } catch (_) {}
     return r; }; }
 /* ---- chat menu ⋯: report AI replies / this story · block author ---- */
-{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
-    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r; const w = th.wid && wd(th.wid), u = ugc95(w);
-      st.insertAdjacentHTML("beforeend", '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
-        (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '')); } catch (_) {}
-    return r; }; }
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块。HTML 一字未改；守卫从 `!st` 变成不需要
+   （注册表只在 stack 存在时才渲染），`!th` 保留为返回空串。 */
+SHEET.add("menu", "app95_safety.js", "bottom", function () {
+  const th = S.threads[curT]; if (!th) return '';
+  const w = th.wid && wd(th.wid), u = ugc95(w);
+  return '<button class="opt" data-rp95c="1"><span class="ic">⚑</span><span class="grow"><b>' + T95("举报 AI 回复", "Report an AI reply") + '</b><span>' + T95("内容不当？告诉我们，24 小时内处理", "Something inappropriate? We act within 24 hours") + '</span></span></button>' +
+    (u ? '<button class="opt" data-bk95w="' + esc(w.id) + '"><span class="ic">🚫</span><span class="grow"><b>' + T95("拉黑这部作品的作者", "Block this story's author") + '</b></span></button>' : '');
+});
 document.addEventListener("click", e => {
   let x;
   if ((x = e.target.closest("[data-rp95w]"))) { e.preventDefault(); e.stopPropagation(); const w = wd(x.dataset.rp95w); report95("work", (w && w.community) || x.dataset.rp95w, w ? Lz(w.title) + "\n" + Lz(w.hook || "") : "", w && Lz(w.title)); return; }
