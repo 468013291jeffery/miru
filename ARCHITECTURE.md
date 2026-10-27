@@ -214,7 +214,8 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
 消息渲染    18 层 = kind 10 / post 6 / wrap 2（`say` 收口后从 20 层减 2）· 17 个类型
-            **1 个类型**被两层认领（xmoney，顺序接力不是抢）· 1 层登记为已知死
+            **1 个类型**被两层认领（xmoney，顺序接力不是抢）· **0 层已知死**（28 条探针，18/18 层被证活着）
+            逐字节快照 **21 种**消息（`box+say` 那条真实路径原先不在表里，2026-10-27 补上）
 渲染钩子    22 个（每个 0 失败）
 样式        65 个 <style> 生效 / **2691** 条规则 · 重复定义 **17 个选择器**（同 sheet 叠层 8 · 跨 sheet 抢 9）
             （当天起点 2818 条 / 81 个重复 ⇒ 合并 63 条、删 35 条；另 4 个重复**故意不合并**。
@@ -333,7 +334,29 @@ say      **（无认领层）** —— base 的 `sayHTML` 按 `speakerOf` 派生
 xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 app24 答，解锁后交回 app23
 ```
 
-**这 2 处「两层认领」不是冲突，但也不能靠读代码相信它**：两条都写成探针对，
+### say 的接口位置（2026-10-27 收口后，全部实测）
+
+一句话：**`say` 只有一处决定「长什么样」，但有两条入口**（`k:"say"`，以及真实的 `k:"box"` + `m.say`）。
+
+| 是什么 | 位置 | 说明 |
+|---|---|---|
+| 旁白分流 | `source/src/app3_chat.js:184` | `who==="n"` → `.m-narr`。**必须排在 say 分派之前** —— 旁白也带 `k:"say"`，放后面会被当成「别人说」（实测 narr 从 58 字符变 307） |
+| **say 分派** | `source/src/app3_chat.js:185` | `if(m.k==="say")return sayHTML(m,i,th)+tools;` |
+| 「你扮演的人」旧分支 | `source/src/app3_chat.js:186` | `who===pk.as` 的 `.m-box lb` + `.asme`。**必须排在分派之后** —— 排前面时 `self` 永远走不到 sayHTML |
+| 说话人判定 | `source/src/app3_chat.js:201` `speakerOf(m,th)` | 派生、不存盘：`me` / `self`（需 `m.pk && who===th.pk.as`）/ `other` |
+| **唯一的渲染器** | `source/src/app3_chat.js:207` `sayHTML(m,i,th)` | 三个分支共用 `.m-row` + `.bub` + `<p class="bac">` |
+| 正文标记 | `source/src/app16_story2.js:69` `lineHTML` | 产 `<p class="bac">`；行内 `+…+` → `<em class="mt">` |
+| 行内 `*动作*` | `source/src/app16_story2.js:294` `fmtMix` | 产 `<em class="ma">`，由 `:300` 的 post 层套用 |
+| **真实第二条入口** | `source/src/app17_custom.js:73/76` `boxHTML` | `app26` 把连续台词包成 `k:"box"` + `m.say` ⇒ **别人的台词实际走这里**，不是 `k:"say"`。`:76` 已改成同一套 `.m-row` + `.bub` |
+| 气泡钩子 | `source/src/shell.html:238` `.m-row:has(> .rg73)` | 折行只给挂了按钮条的行（否则头像被折到下一行） |
+| 名字标签 | `source/src/shell.html:1372` `.pkmen`（self）· `:1375` `.bubn`（other） | 都在气泡**内** |
+| 重生成按钮条 | `source/src/app73_features.js:193` post → 挂到 `.m-row` | 必须在气泡**外**（`.m-row > .rg73{flex-basis:100%}`） |
+
+**两条入口的坑（实测，值得单独记）**：只改 `sayHTML` 时，逐字节对拍**一格都不会动** ——
+因为原来的 20 种快照里没有 `box+say` 这一种，**真实路径根本没被覆盖**。
+补上 `box-say` 之后才有读数（现在 21 种）。
+
+**这 1 处「两层认领」不是冲突，但也不能靠读代码相信它**：写成探针对，
 而且**两边都断言** —— 外层答了，内层必须 0 命中（`mustNot`）。
 只查一边的话，顺序反了照样绿，而顺序反了正是这一类最容易出的错。
 

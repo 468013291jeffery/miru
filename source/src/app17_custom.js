@@ -72,8 +72,8 @@ function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe"
 const _boxHTML8=boxHTML;
 boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx bubble" data-mi="'+i+'">'+m.parts.map(partHTML).join("")+'</div>';
  const c=ch(m.say.who);
- return '<div class="m-turn" data-mi="'+i+'">'+avatar(m.say.who,32)+'<div class="tb"><div class="tn" style="color:'+(c?c.pal[0]:"")+'">'+esc(c?first(c.n):"")+'</div>'+
-  (m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<div class="tsay">'+fmtMix(esc(m.say.txt))+'</div></div></div>'};
+ /* 2026-10-27（Ann：「头像和语句分成两段」「还是以前的样式」）：真实路径上，别人说的台词是被 app26 包成 k:"box" + m.say 再走这里的，**根本到不了 sayHTML**。原来它渲染 .m-turn（头像 + 名字 + 上下文 + 台词，天然分段），现在改成和 sayHTML 的 other 分支**同一套** .m-row + .bub。 */
+ return '<div class="m-row" data-mi="'+i+'">'+avatar(m.say.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(c?first(c.n):"")+'</small>'+(m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<p class="bac">'+fmtMix(esc(m.say.txt))+'</p></div></div>'};
 const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
