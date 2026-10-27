@@ -20,10 +20,14 @@ const BASE = 'tools/empty-catch-baseline.json';
 // catch 之后：可选参数 + 块内容只含空白与注释
 const RE = /catch\s*(?:\([^)]*\))?\s*\{((?:\s|\/\/[^\n]*|\/\*[\s\S]*?\*\/)*)\}/g;
 
+/* 生成的 soft 调用里带一个**兜底垫片**：function(n,f){try{return f()}catch(e){}}
+   它那个空 catch 是设计的一部分（沙箱里没有 soft 时就地吞掉），不该算进债务。 */
+const SHIM = 'function(n,f){try{return f()}catch(e){}}';
+
 const per = {};
 let total = 0;
 for (const f of fs.readdirSync(SRC).filter(x => x.endsWith('.js'))) {
-  const t = fs.readFileSync(SRC + '/' + f, 'utf8');
+  const t = fs.readFileSync(SRC + '/' + f, 'utf8').split(SHIM).join('');
   const n = (t.match(RE) || []).length;
   if (n) { per[f] = n; total += n }
 }

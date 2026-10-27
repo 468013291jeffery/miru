@@ -8,8 +8,8 @@
     if(typeof mediaBoot==="function"){
       var t=setTimeout(go,1500);
       mediaBoot().then(function(m){
-        try{ if(t)clearTimeout(t) }catch(_){}
-        try{ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) }catch(_){}
+        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L11",function(){ if(t)clearTimeout(t) });
+        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L12",function(){ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) });
         go();
       },function(){ try{ if(t)clearTimeout(t) }catch(_){} go(); });
       return;

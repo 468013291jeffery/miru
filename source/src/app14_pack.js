@@ -93,7 +93,7 @@ const pkGo = (typeof window !== "undefined" && window.PKST && typeof window.PKST
   ? function (th, to, why) { return window.PKST.go(th, to, why) }
   : function (th, to) { if (th && th.pk) th.pk.st = to };
 /* 2026-10-27：th.pk.st 的唯一写入者就在这儿注册给状态机（app104_pkstate.js） */
-try{ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); }catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L96",function(){ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); });
 function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
@@ -241,7 +241,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
  else (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'next','chapter-done');
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
- try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L244",function(){if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)});
  try{
   if(typeof cardChanges==="function"){
     const d=cardChanges(th,n), lines=[];
@@ -295,7 +295,7 @@ function stepInSheet(){const th=S.threads[curT];if(!th||!th.pk)return;const w=wd
 /* ---------- Story Pack purchase ---------- */
 function packPaywall(wid,n){const w=wd(wid),c=w.pack.chapters[(n||3)-1];
  // the gate, measured: unlike "opened chapter 3", this tells "the wall was shown" from "they walked"
- try{const _th=S.threads[curT];if(_th&&_th.wid===wid)pkTrack(_th,"paywall",{ch:n||3})}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L298",function(){const _th=S.threads[curT];if(_th&&_th.wid===wid)pkTrack(_th,"paywall",{ch:n||3})});
  sheet('<div class="eyebrow" style="color:var(--gold)">'+t("pk.packEyebrow",{m:PCN(w)})+'</div><h2 style="margin-top:6px">'+esc(t("pk.keepGoing",{t:Lz(c.t)}))+'</h2>'+
   '<p class="sm dim" style="margin-top:6px;line-height:1.55">'+esc(Lz(c.goal))+'</p>'+
   '<ul class="pkbuyl"><li>'+t("pk.b1",{k:PCN(w)-2})+'</li><li>'+t("pk.b2",{n:PACK_UNITS})+'</li><li>'+t("pk.b3")+'</li><li>'+t("pk.b4")+'</li></ul>'+

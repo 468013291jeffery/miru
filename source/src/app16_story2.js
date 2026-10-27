@@ -57,7 +57,7 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
     ② **一次 say 对一条语音**（朗读按消息走），文字和声音从此一一对应，不会再错位。 */
  if(m&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"){appendMsg(th,m);return}
  if(!isNarr(m)){appendMsg(th,m);return}
- try{ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } }catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app16_story2:L60",function(){ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } });
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
@@ -145,7 +145,7 @@ function speakLine(m,done){if(!m){done();return}
 let AVSILENT=0, AVSKIP=0;
 function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesis.speaking||speechSynthesis.pending))return false}catch(_){}
  try{if(typeof TTS!=="undefined"&&TTS.inflight&&TTS.inflight.size)return false}catch(_){}   // 服务器配音还在路上（慢 ≠ 没有）
- try{if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app16_story2:L148",function(){if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false});
  return true}
 /* 2026-10-27 Ann：「这个语音怎么加强保护，好像经常坏」。
    原来是一刀切：第一次没声音就把 AVDEAD 置 1，**整段会话再也不念**（还会把后续每句都变成静音），

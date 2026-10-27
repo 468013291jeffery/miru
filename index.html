@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="07f6a575e63d 2026-10-27T06:23Z";
+window.MIRU_BUILD="afcb730c4829 2026-10-27T06:29Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3274,7 +3274,7 @@ function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
    their gender and language, plus their own pitch and speed.                                     */
 let VOICES=[];
 function loadVoices(){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){VOICES=[]}}
-try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L108",function(){loadVoices();speechSynthesis.onvoiceschanged=loadVoices});
 const FEM=/female|woman|yu-?shu|lili|mei-?jia|li-?na|xiaoyi|yaoyao|samantha|victoria|karen|moira|tessa|zira|susan|fiona|allison|ava|serena|kate|ting|mei|sin-ji|kyoko|yuna|sora|paulina|monica|helena|lucia|google.*(uk english female|us english)|siri.*female|xiaoxiao|hanhan|huihui|nanami|sunhi|elvira/i;
 const MAL=/\bmale\b|li-?mu|yunxi|yunjian|yunze|kangkang|zhiwei|daniel|nathan|evan|tom\b|alex|fred|david|mark|james|thomas|oliver|arthur|aaron|gordon|rishi|jorge|diego|juan|otoya|hattori|injoon|yunjhe|kangkang|yunyang|keita|google uk english male/i;
 const LTAG={en:"en",zh:"zh",ja:"ja",ko:"ko",es:"es"};
@@ -3362,7 +3362,7 @@ async function ask(prompt,opts){
       为什么不是"一律给大预算"：实测模型会跑满上限才停（LATENCY.md），一律给大 = 每次都慢。
       为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
    if(r==null&&_tier!=="complex"){
-    try{track&&track("llm_escalate",{from:_tier,to:"complex"})}catch(_){}
+    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L196",function(){track&&track("llm_escalate",{from:_tier,to:"complex"})});
     const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
     r=jsonLoose(t3&&t3.text);
    }
@@ -4651,7 +4651,7 @@ function sendDM(cid,txt){const th=S.threads["c:"+cid]||newThread("solo",cid);th.
 let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
 /* 2026-10-27：busy 的唯一入口交给 TURN（app103_turn.js）。
    读点不变，只保证「置真置假只有一个门」。 */
-soft("chat:L30",function(){ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); })
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L30",function(){ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); });
 /* 2026-10-27 · 「经常卡死」的看门狗。
    病灶：`busy=true`（reply 开头）与 `busy=false`（playBeats 之后）**不在 try/finally 里** ——
    两行之间任何一处抛错，`busy` 就永远是 true ⇒「发不出去、界面没反应」，看起来就是卡死。
@@ -4669,8 +4669,8 @@ setInterval(()=>{try{
  if(Date.now()-Math.max(BUSY_T,lastAt)<45000)return;
  busy=false;BUSY_T=0;try{typing(false)}catch(_){}
  S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s (no new message)"});if(S._stallTrace.length>20)S._stallTrace.shift();
- soft("chat:L48",function(){save()})
- soft("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")})
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L48",function(){save()});
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")});
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
@@ -4991,7 +4991,7 @@ function streamPreview(piece){
     let s=box.querySelector(".spv");
     if(!s){s=document.createElement("span");s.className="spv";s.style.cssText="margin-left:8px;opacity:.6;font-size:12px";box.appendChild(s)}
     s.textContent=tail;
-    soft("chat:L346",function(){scrollChat()})
+    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L346",function(){scrollChat()});
   }catch(_){}
 }
 
@@ -5003,24 +5003,24 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
  if(busy){
   /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
      现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
-  soft("chat:L358",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L358",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})});
   SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
-  soft("chat:L360",function(){toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L360",function(){toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")});
   return}
  if(!aiGate()){
   /* 2026-10-27 Ann：点了选项只有「已选」的提示、对话里没有她那句。
      额度不够时旧代码把文字塞回输入框就 return ⇒ **她的话从对话里消失**。
      现在：**先落进对话**（她说的话属于她，不该因为没有额度就消失），再说明「他这轮接不上」。 */
-  soft("chat:L366",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L366",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})});
   const ta=$("#cin");if(ta)ta.value="";
-  soft("chat:L368",function(){toast(S.lang==="zh"?"这句记下了；他这轮接不上（额度不够）":"Saved — he can't answer this turn (out of units)")})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L368",function(){toast(S.lang==="zh"?"这句记下了；他这轮接不上（额度不够）":"Saved — he can't answer this turn (out of units)")});
   return}
  if(th.quest&&th.quest.over){
-  soft("chat:L371",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})})
-  soft("chat:L372",function(){toast(S.lang==="zh"?"这段剧情已经结束，这句我记在对话里了":"This story is over — I kept your line anyway")})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L371",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})});
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L372",function(){toast(S.lang==="zh"?"这段剧情已经结束，这句我记在对话里了":"This story is over — I kept your line anyway")});
   questEnd(th);return}
  mode=mode||cmode;
- soft("chat:L375",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1})
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L375",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1});
  /* 2026-10-27（Ann：他死活要念剧情，我接的不是这句他也照念）：
     玩家一开口，剩下的**预写队列整体作废** —— 剧本让位给对话，由模型接她的话。
     本章的官方选择不受影响：队列空了 packRun 自然结束，选择按 20 轮门槛照常弹。
@@ -5029,8 +5029,8 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
   const dropOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.dropScriptOnInput!==false);
   if(dropOn&&th&&th.pk&&Array.isArray(th.pk.q)&&th.pk.q.length){
    th.pk.q=[];save();
-   soft("chat:L384",function(){packRefresh(th)})
-   soft("chat:L385",function(){track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})})
+   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L384",function(){packRefresh(th)});
+   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L385",function(){track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})});
   }
  }catch(_){}
  if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
@@ -5116,7 +5116,7 @@ async function reply(th,ctx,silent){
    const q=(th&&th.pk&&Array.isArray(th.pk.q))?th.pk.q:[];
    if(!q.length)return "";
    const take=q.splice(0,Math.min(2,q.length));   // 从队列取走：不播了
-   soft("chat:L471",function(){save()})
+   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L471",function(){save()});
    const lines=take.map(b=>{
      /* 只给「谁 + 性质」，不给原文。原文一进 prompt，模型就会把那几个词写回来。 */
      const w=b&&b[0];
@@ -5127,7 +5127,7 @@ async function reply(th,ctx,silent){
      if(kind==="act")return "- "+whoName+" does something small and physical";
      return "- "+whoName+" has something he needs to bring up";
    }).filter(Boolean).join("\n");
-   soft("chat:L482",function(){track&&track("script_as_hint",{wid:th.wid,ch:th.pk&&th.pk.ch,n:take.length})})
+   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L482",function(){track&&track("script_as_hint",{wid:th.wid,ch:th.pk&&th.pk.ch,n:take.length})});
    if(!lines)return "";
    return "SCENE DIRECTION (what this moment needs, not what to say. NO PRE-WRITTEN WORDING is given to you — invent it, in your own words, from where the conversation actually is right now. Never announce plot, never repeat a phrase you used earlier):\n"+lines;
   }catch(_){return ""}})()||"",
@@ -5211,13 +5211,13 @@ async function reply(th,ctx,silent){
  }
  // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
  // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
- soft("chat:L566",function(){ if(typeof plotGate==="function") plotGate(th); })
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L566",function(){ if(typeof plotGate==="function") plotGate(th); });
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
- soft("chat:L569",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0})
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L569",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0});
  if(!silent){try{(window.TURN&&window.TURN.release)?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  soft("chat:L572",function(){if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L572",function(){if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}});
  }}
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
@@ -5275,7 +5275,7 @@ async function playBeats(th,r,ctx,silent){
   let WAITED=false;
   if(!silent&&canSpeak&&m.k==="say"&&ch(m.who)&&silentStrikes<2){
    INLINE_SPOKE=true;WAITED=true;
-   soft("chat:L630",function(){voiceCount(1)})
+   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L630",function(){voiceCount(1)});
    /* ⚠️ 上限必须 **比 TTS 自己的回退时限长**：服务器 TTS 要 7~8 秒才认「这次没声、转设备语音」，
       而下一句的 speak() 会先 stopVoice() 把上一句掐掉。上限设 4.5 秒时（第一版）每句都在出声前
       被掐死 ⇒ 整轮一句都没有 —— 2026-10-27 实测。现在给到 9 秒起。 */
@@ -5330,7 +5330,7 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-modetog]")){
   /* 一个按钮轮换三种说话方式（Ann：不要三个并排） */
   cmode = cmode==="say" ? "act" : cmode==="act" ? "think" : "say";
-  soft("chat:L685",function(){renderChat()})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L685",function(){renderChat()});
   return
  }
  if(x=e.target.closest("[data-mode]")){cmode=x.dataset.mode;$$("[data-mode]").forEach(y=>y.classList.toggle("on",y===x));const ta=$("#cin");ta.placeholder=t("cx.ph."+cmode);ta.classList.toggle("dir",cmode==="dir");if(cmode==="dir")toast(t("cx.dirOn"));ta.focus();return}
@@ -5348,7 +5348,7 @@ document.addEventListener("click",e=>{let x;
   /* 2026-10-27：**点下去必须有回声**。① 立刻 toast「已选：…」（证明点击到达了处理器）
      ② 300ms 后核对对话有没有涨，没涨就说清原因并提示导出存档。
      这两条只为分清「发了但没显示」与「压根没发」——今晚在无声失败上吃亏太多次。 */
-  soft("chat:L703",function(){toast(S.lang==="zh"?("已选："+v.slice(0,14)):("Picked: "+v.slice(0,14)))})
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L703",function(){toast(S.lang==="zh"?("已选："+v.slice(0,14)):("Picked: "+v.slice(0,14)))});
   const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
   setTimeout(()=>{try{
@@ -7292,7 +7292,7 @@ const pkGo = (typeof window !== "undefined" && window.PKST && typeof window.PKST
   ? function (th, to, why) { return window.PKST.go(th, to, why) }
   : function (th, to) { if (th && th.pk) th.pk.st = to };
 /* 2026-10-27：th.pk.st 的唯一写入者就在这儿注册给状态机（app104_pkstate.js） */
-try{ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); }catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L96",function(){ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); });
 function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
@@ -7440,7 +7440,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
  else (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'next','chapter-done');
  if(n===1&&typeof taskClaimOnce==="function"&&taskClaimOnce("firstCh",2))setTimeout(()=>toast(t("pk.firstBonus")),700);
- try{if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L244",function(){if(typeof cardCommitChapter==="function")cardCommitChapter(th,n,k)});
  try{
   if(typeof cardChanges==="function"){
     const d=cardChanges(th,n), lines=[];
@@ -7494,7 +7494,7 @@ function stepInSheet(){const th=S.threads[curT];if(!th||!th.pk)return;const w=wd
 /* ---------- Story Pack purchase ---------- */
 function packPaywall(wid,n){const w=wd(wid),c=w.pack.chapters[(n||3)-1];
  // the gate, measured: unlike "opened chapter 3", this tells "the wall was shown" from "they walked"
- try{const _th=S.threads[curT];if(_th&&_th.wid===wid)pkTrack(_th,"paywall",{ch:n||3})}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L298",function(){const _th=S.threads[curT];if(_th&&_th.wid===wid)pkTrack(_th,"paywall",{ch:n||3})});
  sheet('<div class="eyebrow" style="color:var(--gold)">'+t("pk.packEyebrow",{m:PCN(w)})+'</div><h2 style="margin-top:6px">'+esc(t("pk.keepGoing",{t:Lz(c.t)}))+'</h2>'+
   '<p class="sm dim" style="margin-top:6px;line-height:1.55">'+esc(Lz(c.goal))+'</p>'+
   '<ul class="pkbuyl"><li>'+t("pk.b1",{k:PCN(w)-2})+'</li><li>'+t("pk.b2",{n:PACK_UNITS})+'</li><li>'+t("pk.b3")+'</li><li>'+t("pk.b4")+'</li></ul>'+
@@ -7779,7 +7779,7 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
     ② **一次 say 对一条语音**（朗读按消息走），文字和声音从此一一对应，不会再错位。 */
  if(m&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"){appendMsg(th,m);return}
  if(!isNarr(m)){appendMsg(th,m);return}
- try{ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } }catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app16_story2:L60",function(){ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } });
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
  if(L&&L.k==="box"&&L.pk&&L.parts.length<MIRU_TUNE.chat.partMergeMax){L.parts.push(part);L.txt+=" "+m.txt;L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   const el=$('#msgs [data-mi="'+i+'"]');if(el&&curT===th.id){el.outerHTML=msgHTML(L,i,th);scrollChat()}return}
@@ -7867,7 +7867,7 @@ function speakLine(m,done){if(!m){done();return}
 let AVSILENT=0, AVSKIP=0;
 function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesis.speaking||speechSynthesis.pending))return false}catch(_){}
  try{if(typeof TTS!=="undefined"&&TTS.inflight&&TTS.inflight.size)return false}catch(_){}   // 服务器配音还在路上（慢 ≠ 没有）
- try{if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app16_story2:L148",function(){if(typeof AUD_CUR!=="undefined"&&AUD_CUR&&!AUD_CUR.paused&&!AUD_CUR.ended)return false});
  return true}
 /* 2026-10-27 Ann：「这个语音怎么加强保护，好像经常坏」。
    原来是一刀切：第一次没声音就把 AVDEAD 置 1，**整段会话再也不念**（还会把后续每句都变成静音），
@@ -9928,7 +9928,7 @@ function synthVoice(G,mood){const M=SC_M[mood]||SC_M.warm,V=mkVoice(G,M.rev);V.k
 function synthSched(V,until){const M=V.M,d16=60/M.bpm/4,spb=M.spb||16,hold=M.hold||1;
  if(V.next<V.G.ctx.currentTime-.25)V.next=V.G.ctx.currentTime+.05;/* woke up after a suspend: don't replay the past */
  while(V.next<until){const i=V.step%spb,bar=Math.floor(V.step/spb),ci=Math.floor(bar/hold)%M.prog.length;
-  try{M.play.call(M,{V,t:V.next,i,bar,ci,c:M.prog[ci],nc:M.prog[(ci+1)%M.prog.length],d16,sw:(i%4===2&&M.sw)?M.sw*d16:0})}catch(e){}
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app31_score:L223",function(){M.play.call(M,{V,t:V.next,i,bar,ci,c:M.prog[ci],nc:M.prog[(ci+1)%M.prog.length],d16,sw:(i%4===2&&M.sw)?M.sw*d16:0})});
   V.next+=d16;V.step++}}
 
 /* ---------- real files ---------- */
@@ -10381,10 +10381,10 @@ const _dimBar39=dimBarHTML;dimBarHTML=function(th){return _dimBar39(th).replace(
 /* 0 · iPhone silent switch mutes Web Audio unless an <audio> element is playing → start a silent loop on the first tap */
 let AU_OK=false;
 function audioUnlock(){if(AU_OK)return;AU_OK=true;
- try{if(navigator.audioSession)navigator.audioSession.type="playback"}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app40_sfx:L5",function(){if(navigator.audioSession)navigator.audioSession.type="playback"});
  try{const a=document.createElement("audio");a.setAttribute("playsinline","");a.loop=true;a.volume=.01;
   a.src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";document.body.appendChild(a);const p=a.play();if(p&&p.catch)p.catch(()=>{})}catch(_){}
- try{if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();if(BGM.ctx&&BGM.ctx.state!=="running")BGM.ctx.resume()}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app40_sfx:L8",function(){if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();if(BGM.ctx&&BGM.ctx.state!=="running")BGM.ctx.resume()});
  try{const th=S.threads[curT];if(th&&bgmOn()&&$("#s-chat")&&!$("#s-chat").hidden&&typeof bgmForThread==="function")bgmForThread(th)}catch(_){}}
 ["pointerdown","touchend","click","keydown"].forEach(ev=>document.addEventListener(ev,()=>{audioUnlock();try{if(BGM.ctx&&BGM.ctx.state==="suspended")BGM.ctx.resume()}catch(_){}},{capture:true,passive:true}));
 /* first time in a chat: a small hint that the music is on and can be turned off */
@@ -11081,7 +11081,7 @@ rewindSheet=function(){const th=S.threads[curT];if(!th)return;const tag=S.plus?t
  h+='</div>'+(th.pk&&th.wid?'<button class="btn btn-g btn-block" style="margin-top:12px" data-cprestart="1">'+LL("从头开始，重新选身份（免费）","Start over and pick a role (free)")+'</button>':'');sheet(h)};
 function cpRestore(th,cp){try{if(typeof pkTrace==="function")pkTrace("cpRestore",cp&&cp.ch)}catch(_){}const snap=JSON.parse(JSON.stringify(cp.s)),msgs=th.msgs.slice(0,cp.n),cps=(th.cps||[]).filter(c=>c.at<=cp.at),g=(th._gen||0)+1,w=PKWAIT[th.id],nx=typeof PKNEXT!=="undefined"?PKNEXT[th.id]:null;
  Object.keys(th).forEach(k=>delete th[k]);Object.assign(th,snap,{msgs,cps});th._gen=g;delete PKWAIT[th.id];try{delete PKNEXT[th.id]}catch(_){}try{CH=null}catch(_){}if(w)w([]);if(nx)nx();
- try{const L=$("#fxLayer");if(L)L.innerHTML=""}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app46_cp:L32",function(){const L=$("#fxLayer");if(L)L.innerHTML=""});
  if(th.pk&&cp.kind==="start"){th.pk.q=[];th.pk.stop=null;save();renderChat();th._cpRestoring=1;setTimeout(()=>{delete PKPLAY[th.id];packOpen(th,cp.ch);delete th._cpRestoring},150)}
  else if(th.pk){th.pk.q=cpChapBeats(th,cp.ch).slice(cp.idx);th.pk.stop=null;(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','restore');th.pk.after="choose";save();renderChat();setTimeout(()=>{delete PKPLAY[th.id];packRun(th)},150)}
  else{save();renderChat()}
@@ -12994,7 +12994,7 @@ function momDedupe(){const L=S.moments||[];if(L.length<2)return;const keep=[],by
   /* merge comments into the copy we keep (the newer one comes first in the list) */
   const ids=new Set((o.cm||[]).map(c=>c.id));(p.cm||[]).forEach(c=>{if(!ids.has(c.id))(o.cm=o.cm||[]).push(c)});o.likes=Math.max(o.likes||0,p.likes||0)});
  if(keep.length!==L.length){S.moments=keep;save()}}
-try{momDedupe()}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app63_fixes:L19",function(){momDedupe()});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xpsave]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xpsave];if(!m)return;
  const txt=String(Lz(m.txt)||"").trim();if((S.moments||[]).some(p=>String(p.txt||"").trim()===txt)){m.saved=1;save();e.stopImmediatePropagation();toast(CL()==="zh"?"已经在你的动态里了":"Already in your moments");renderChat()}},true);
 
@@ -14990,9 +14990,9 @@ function vcT(k){return (VC_T[vcLang()]||VC_T.en)[k]}
 function vcSys(c,th){const zh=vcLang()==="zh",L=[];
  L.push("You are "+c.n+(c.vibe?" ("+Lz(c.vibe)+")":"")+", on a private phone call with "+(me()||"the user")+". This is a voice call: everything you output is spoken aloud by your own voice.");
  if(c.bio)L.push("WHO YOU ARE: "+String(Lz(c.bio)).slice(0,600));
- try{if(th&&th.sum&&th.sum.t)L.push("STORY SO FAR: "+String(th.sum.t).slice(0,1200))}catch(_){}
- try{if(th&&typeof memBlock==="function")L.push(String(memBlock(th)).slice(0,1800))}catch(_){}
- try{if(th){const last=th.msgs.filter(m=>m.k==="say"&&m.txt).slice(-8).map(m=>(m.who==="me"?(me()||"User"):(ch(m.who)?ch(m.who).n:m.who))+": "+String(m.txt).slice(0,160));if(last.length)L.push("LAST THINGS SAID IN THE STORY:\n"+last.join("\n"))}}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L19",function(){if(th&&th.sum&&th.sum.t)L.push("STORY SO FAR: "+String(th.sum.t).slice(0,1200))});
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L20",function(){if(th&&typeof memBlock==="function")L.push(String(memBlock(th)).slice(0,1800))});
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L21",function(){if(th){const last=th.msgs.filter(m=>m.k==="say"&&m.txt).slice(-8).map(m=>(m.who==="me"?(me()||"User"):(ch(m.who)?ch(m.who).n:m.who))+": "+String(m.txt).slice(0,160));if(last.length)L.push("LAST THINGS SAID IN THE STORY:\n"+last.join("\n"))}});
  L.push("HOW TO TALK: stay fully in character. Speak like a real late-night phone call — 1 to 3 short sentences, natural pauses, contractions, a little guarded. No narration, no stage directions, no actions in brackets, no emoji, no lists. React to what they actually said (you hear their voice — tone matters). Ask something back sometimes. Never say you are an AI or a model. Keep it PG-13: tender and charged is fine, nothing explicit; if they push past that, deflect in character.");
  L.push("Speak "+VC_LN[vcLang()]+" only.");return L.join("\n\n")}
 /* ---------- audio out: schedule PCM16 chunks ---------- */
@@ -15131,7 +15131,7 @@ noSub84();
 const _save84=save;save=function(){noSub84();return _save84.apply(this,arguments)};
 setInterval(noSub84,3000);
 /* memory: the old member tier is the baseline for everyone; deep memory per story is cheap (its extra prompt costs pennies) */
-try{memTier=function(th){if(th&&S.deepMem&&S.deepMem[th.id])return "deep";return "plus"}}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app84_nosub:L12",function(){memTier=function(th){if(th&&S.deepMem&&S.deepMem[th.id])return "deep";return "plus"}});
 transcript=(function(orig){return function(th){const p=S.plus;S.plus=true;try{return orig.apply(this,arguments)}finally{S.plus=p}}})(transcript);
 /* the recharge sheet */
 paySheet=function(why){const head=why?t("pay.why."+why):t("pay.h"),zh=CL()==="zh";const first=!S.firstBuy;
@@ -15232,7 +15232,7 @@ else { const _renderChat86 = renderChat; renderChat = function () { const r = _r
 .bt86 button{width:22px;height:20px;padding:0;border:0;border-radius:6px;background:rgba(255,255,255,.07);font-size:11px;line-height:20px;opacity:.6;cursor:pointer}
 .bt86 button:hover,.bt86 button:active{opacity:1;background:rgba(255,255,255,.16)}`;document.head.appendChild(st)})();
 /* 5) read-aloud on by default (once), and its 🔊/🔇 switch visible again in the chat header */
-try{if(!S.av86){S.av86=1;S.autoVoice=true;save()}}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app86_voicefix:L71",function(){if(!S.av86){S.av86=1;S.autoVoice=true;save()}});
 (function(){const st=document.createElement("style");st.textContent=`#s-chat.clean .chead .vtog{display:grid!important;place-items:center}`;document.head.appendChild(st)})();
 /* 6) regenerate a reply: 3 free a day, then 1💎 (one text-model call ≈ ¥0.01–0.02 → rounded up to 1💎);
       and faster — a redo reuses the memories already recalled for this turn instead of waiting up to 2.5s again */
@@ -15240,7 +15240,7 @@ const RG_FREE=3;
 window.addEventListener("click",e=>{const x=e.target.closest("[data-rg73]");if(!x||busy)return;const d=today();S.rgDay=S.rgDay&&S.rgDay.d===d?S.rgDay:{d,n:0};
  if(S.rgDay.n<RG_FREE){S.rgDay.n++;save();const left=RG_FREE-S.rgDay.n;toast(ttsZh()?"↻ 重新生成 · 今天还剩 "+left+" 次免费":"↻ Regenerating · "+left+" free left today");return}
  if(!spend(PRICES.regen||1,"retry")){e.stopImmediatePropagation();e.preventDefault()}},true);
-try{PRICES.regen=1}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app86_voicefix:L79",function(){PRICES.regen=1});
 reply=(function(orig){return async function(th,ctx,silent){if(typeof REDO73!=="undefined"&&REDO73&&!silent&&typeof m78recall==="function"){const r=m78recall;m78recall=async()=>{};try{return await orig.apply(this,arguments)}finally{m78recall=r}}return orig.apply(this,arguments)}})(reply);
 /* 7) longer lines get the real voice too (server accepts 400 chars), and a few failed requests no longer switch to the device voice for 5 minutes */
 ttsSpeakable=function(text){const s=String(text||"").replace(/[*()（）\s]/g,"");return s.length>=2&&s.length<=400};
@@ -15413,7 +15413,7 @@ window.addEventListener("click",async e=>{let x;
 const _au70Buttons91=au70Buttons;au70Buttons=function(inSheet){const h=_au70Buttons91.apply(this,arguments);const p=AU70.prov;if(!(p&&p.sms))return h;
  return h.replace(/<\/div>$/,'<button class="au70btn au70mail" data-au70="phone">📱 <span>'+esc(ph91("btn"))+'</span></button></div>')};
 const _au70Prov91=au70Prov;au70Prov=async function(){const p=await _au70Prov91.apply(this,arguments);try{if(p&&p.sms){document.querySelectorAll(".au70b").forEach(b=>{if(!b.querySelector("[data-au70='phone']"))b.insertAdjacentHTML("beforeend",'<button class="au70btn au70mail" data-au70="phone">📱 <span>'+esc(ph91("btn"))+'</span></button>')})}}catch(_){}return p};
-try{PROV_NAME.phone="Phone"}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app91_phone:L27",function(){PROV_NAME.phone="Phone"});
 /* ---- v5.1: Firebase Authentication does the SMS when configured (no carrier registration, ≈$0.01 per US text) ---- */
 const FB91={app:null,conf:null,rv:null};
 function fb91Load(){if(window.firebase&&firebase.auth)return Promise.resolve();const v="10.14.1",u=n=>"https://www.gstatic.com/firebasejs/"+v+"/firebase-"+n+"-compat.js";
@@ -17835,8 +17835,8 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
     if(typeof mediaBoot==="function"){
       var t=setTimeout(go,1500);
       mediaBoot().then(function(m){
-        try{ if(t)clearTimeout(t) }catch(_){}
-        try{ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) }catch(_){}
+        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L11",function(){ if(t)clearTimeout(t) });
+        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L12",function(){ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) });
         go();
       },function(){ try{ if(t)clearTimeout(t) }catch(_){} go(); });
       return;

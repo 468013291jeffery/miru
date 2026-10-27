@@ -29,7 +29,7 @@ rewindSheet=function(){const th=S.threads[curT];if(!th)return;const tag=S.plus?t
  h+='</div>'+(th.pk&&th.wid?'<button class="btn btn-g btn-block" style="margin-top:12px" data-cprestart="1">'+LL("从头开始，重新选身份（免费）","Start over and pick a role (free)")+'</button>':'');sheet(h)};
 function cpRestore(th,cp){try{if(typeof pkTrace==="function")pkTrace("cpRestore",cp&&cp.ch)}catch(_){}const snap=JSON.parse(JSON.stringify(cp.s)),msgs=th.msgs.slice(0,cp.n),cps=(th.cps||[]).filter(c=>c.at<=cp.at),g=(th._gen||0)+1,w=PKWAIT[th.id],nx=typeof PKNEXT!=="undefined"?PKNEXT[th.id]:null;
  Object.keys(th).forEach(k=>delete th[k]);Object.assign(th,snap,{msgs,cps});th._gen=g;delete PKWAIT[th.id];try{delete PKNEXT[th.id]}catch(_){}try{CH=null}catch(_){}if(w)w([]);if(nx)nx();
- try{const L=$("#fxLayer");if(L)L.innerHTML=""}catch(_){}
+ (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app46_cp:L32",function(){const L=$("#fxLayer");if(L)L.innerHTML=""});
  if(th.pk&&cp.kind==="start"){th.pk.q=[];th.pk.stop=null;save();renderChat();th._cpRestoring=1;setTimeout(()=>{delete PKPLAY[th.id];packOpen(th,cp.ch);delete th._cpRestoring},150)}
  else if(th.pk){th.pk.q=cpChapBeats(th,cp.ch).slice(cp.idx);th.pk.stop=null;(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','restore');th.pk.after="choose";save();renderChat();setTimeout(()=>{delete PKPLAY[th.id];packRun(th)},150)}
  else{save();renderChat()}

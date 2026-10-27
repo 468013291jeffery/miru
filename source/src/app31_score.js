@@ -220,7 +220,7 @@ function synthVoice(G,mood){const M=SC_M[mood]||SC_M.warm,V=mkVoice(G,M.rev);V.k
 function synthSched(V,until){const M=V.M,d16=60/M.bpm/4,spb=M.spb||16,hold=M.hold||1;
  if(V.next<V.G.ctx.currentTime-.25)V.next=V.G.ctx.currentTime+.05;/* woke up after a suspend: don't replay the past */
  while(V.next<until){const i=V.step%spb,bar=Math.floor(V.step/spb),ci=Math.floor(bar/hold)%M.prog.length;
-  try{M.play.call(M,{V,t:V.next,i,bar,ci,c:M.prog[ci],nc:M.prog[(ci+1)%M.prog.length],d16,sw:(i%4===2&&M.sw)?M.sw*d16:0})}catch(e){}
+  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app31_score:L223",function(){M.play.call(M,{V,t:V.next,i,bar,ci,c:M.prog[ci],nc:M.prog[(ci+1)%M.prog.length],d16,sw:(i%4===2&&M.sw)?M.sw*d16:0})});
   V.next+=d16;V.step++}}
 
 /* ---------- real files ---------- */

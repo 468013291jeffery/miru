@@ -1,0 +1,17 @@
+<!doctype html><meta charset="utf-8"><pre id="out">…</pre>
+<script>
+window.addEventListener('error', function(e){
+  var p = document.getElementById('out');
+  p.textContent = 'MSG: ' + e.message + '\nAT: ' + (e.filename||'') + ':' + e.lineno + ':' + e.colno + '\nSTACK:\n' + (e.error && e.error.stack ? e.error.stack.slice(0,900) : '(no stack)');
+});
+</script>
+<iframe src="/index.html" style="width:420px;height:700px"></iframe>
+<script>
+setTimeout(function(){
+  var f=document.querySelector('iframe');
+  f.contentWindow.addEventListener('error', function(e){
+    var p=document.getElementById('out');
+    p.textContent = 'MSG: ' + e.message + '\nAT: ' + (e.filename||'') + ':' + e.lineno + ':' + e.colno + '\nSTACK:\n' + (e.error && e.error.stack ? e.error.stack.slice(0,1200) : '(no stack)');
+  });
+}, 2000);
+</script>

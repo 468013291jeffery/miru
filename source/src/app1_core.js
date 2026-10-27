@@ -105,7 +105,7 @@ function hasOfficial(id){const c=ch(id);return !!(S.art[id]||(c&&c.art))}
    their gender and language, plus their own pitch and speed.                                     */
 let VOICES=[];
 function loadVoices(){try{VOICES=speechSynthesis.getVoices()||[]}catch(e){VOICES=[]}}
-try{loadVoices();speechSynthesis.onvoiceschanged=loadVoices}catch(e){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L108",function(){loadVoices();speechSynthesis.onvoiceschanged=loadVoices});
 const FEM=/female|woman|yu-?shu|lili|mei-?jia|li-?na|xiaoyi|yaoyao|samantha|victoria|karen|moira|tessa|zira|susan|fiona|allison|ava|serena|kate|ting|mei|sin-ji|kyoko|yuna|sora|paulina|monica|helena|lucia|google.*(uk english female|us english)|siri.*female|xiaoxiao|hanhan|huihui|nanami|sunhi|elvira/i;
 const MAL=/\bmale\b|li-?mu|yunxi|yunjian|yunze|kangkang|zhiwei|daniel|nathan|evan|tom\b|alex|fred|david|mark|james|thomas|oliver|arthur|aaron|gordon|rishi|jorge|diego|juan|otoya|hattori|injoon|yunjhe|kangkang|yunyang|keita|google uk english male/i;
 const LTAG={en:"en",zh:"zh",ja:"ja",ko:"ko",es:"es"};
@@ -193,7 +193,7 @@ async function ask(prompt,opts){
       为什么不是"一律给大预算"：实测模型会跑满上限才停（LATENCY.md），一律给大 = 每次都慢。
       为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
    if(r==null&&_tier!=="complex"){
-    try{track&&track("llm_escalate",{from:_tier,to:"complex"})}catch(_){}
+    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L196",function(){track&&track("llm_escalate",{from:_tier,to:"complex"})});
     const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
     r=jsonLoose(t3&&t3.text);
    }

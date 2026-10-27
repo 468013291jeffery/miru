@@ -24,7 +24,7 @@ window.addEventListener("click",async e=>{let x;
 const _au70Buttons91=au70Buttons;au70Buttons=function(inSheet){const h=_au70Buttons91.apply(this,arguments);const p=AU70.prov;if(!(p&&p.sms))return h;
  return h.replace(/<\/div>$/,'<button class="au70btn au70mail" data-au70="phone">📱 <span>'+esc(ph91("btn"))+'</span></button></div>')};
 const _au70Prov91=au70Prov;au70Prov=async function(){const p=await _au70Prov91.apply(this,arguments);try{if(p&&p.sms){document.querySelectorAll(".au70b").forEach(b=>{if(!b.querySelector("[data-au70='phone']"))b.insertAdjacentHTML("beforeend",'<button class="au70btn au70mail" data-au70="phone">📱 <span>'+esc(ph91("btn"))+'</span></button>')})}}catch(_){}return p};
-try{PROV_NAME.phone="Phone"}catch(_){}
+(typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app91_phone:L27",function(){PROV_NAME.phone="Phone"});
 /* ---- v5.1: Firebase Authentication does the SMS when configured (no carrier registration, ≈$0.01 per US text) ---- */
 const FB91={app:null,conf:null,rv:null};
 function fb91Load(){if(window.firebase&&firebase.auth)return Promise.resolve();const v="10.14.1",u=n=>"https://www.gstatic.com/firebasejs/"+v+"/firebase-"+n+"-compat.js";
