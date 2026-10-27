@@ -25,6 +25,9 @@ function sendDM(cid,txt){const th=S.threads["c:"+cid]||newThread("solo",cid);th.
 
 /* ================= CHAT SCREEN ================= */
 let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
+/* 2026-10-27：busy 的唯一入口交给 TURN（app103_turn.js）。
+   读点不变，只保证「置真置假只有一个门」。 */
+try{ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); }catch(_){}
 /* 2026-10-27 · 「经常卡死」的看门狗。
    病灶：`busy=true`（reply 开头）与 `busy=false`（playBeats 之后）**不在 try/finally 里** ——
    两行之间任何一处抛错，`busy` 就永远是 true ⇒「发不出去、界面没反应」，看起来就是卡死。
@@ -328,8 +331,18 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
   SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
   try{toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")}catch(_){}
   return}
- if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
- if(th.quest&&th.quest.over){questEnd(th);return}
+ if(!aiGate()){
+  /* 2026-10-27 Ann：点了选项只有「已选」的提示、对话里没有她那句。
+     额度不够时旧代码把文字塞回输入框就 return ⇒ **她的话从对话里消失**。
+     现在：**先落进对话**（她说的话属于她，不该因为没有额度就消失），再说明「他这轮接不上」。 */
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  const ta=$("#cin");if(ta)ta.value="";
+  try{toast(S.lang==="zh"?"这句记下了；他这轮接不上（额度不够）":"Saved — he can't answer this turn (out of units)")}catch(_){}
+  return}
+ if(th.quest&&th.quest.over){
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  try{toast(S.lang==="zh"?"这段剧情已经结束，这句我记在对话里了":"This story is over — I kept your line anyway")}catch(_){}
+  questEnd(th);return}
  mode=mode||cmode;
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=1}catch(_){}
  /* 2026-10-27（Ann：他死活要念剧情，我接的不是这句他也照念）：
@@ -409,7 +422,7 @@ const CTX={
  redo:"Rewrite the last reply differently: different angle, different first line."};
 async function reply(th,ctx,silent){
  let LLMERR=null;   // 这一轮 AI 失败的原因（给玩家看，不要吞）
- if(!silent){if(busy)return;if(!aiGate())return;busy=true;BUSY_T=Date.now();typing(true)}
+ if(!silent){if(busy)return;if(!aiGate())return;try{(window.TURN&&window.TURN.acquire)?window.TURN.acquire('reply'):(busy=true)}catch(_){busy=true}BUSY_T=Date.now();typing(true)}
  const mid=mainOf(th),c=ch(ctx.cid||mid),w=th.wid?wd(th.wid):null,p=th.persona||persona();
  const goals=th.quest?th.quest.goals.map((g,i)=>i+": "+g.t+(g.done?" (done)":"")).concat([th.quest.goals.length+": HIDDEN — "+th.quest.hidden.t+(th.quest.hidden.done?" (done)":"")]).join("\n"):"";
  const inst=(CTX[ctx.kind]||CTX.user).split("{u}").join(p.name||"the user").split("{x}").join(ctx.txt||"").split("{c}").join(c?c.n:"them");
@@ -526,7 +539,7 @@ async function reply(th,ctx,silent){
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
- if(!silent){busy=false;BUSY_T=0;
+ if(!silent){try{(window.TURN&&window.TURN.release)?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
   try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}}catch(_){}
  }}
@@ -564,7 +577,7 @@ async function playBeats(th,r,ctx,silent){
  try{
   if(typeof ttsOn==="function"&&ttsOn()&&S.voice&&S.voice.auto&&typeof ttsFetch==="function"){
    let warm=0;
-   for(const b of beats){ if(warm>=2)break; if(!b||!b.text)continue;
+   for(const b of beats){ if(warm>=4)break; if(!b||!b.text)continue;
     const txt=asText70(b.text); if(!txt)continue;
     if(th.pk&&b.who===th.pk.as)continue;
     if(typeof ttsSpeakable==="function"&&!ttsSpeakable(txt))continue;
