@@ -20,12 +20,16 @@ const DS_KEY = dsKey();
 function proxyDeepSeek(req, res, bodyText) {
   let body = {};
   try { body = JSON.parse(bodyText || '{}') } catch (_) {}
+  /* 2026-10-27：原来**无条件** stream:true —— 于是所有「要 JSON」的调用（心声 / 建议 / 结构化回复）
+     都收到一条 SSE 流，r.json() 失败 ⇒ 客户端报 bad_response ⇒ 界面显示「AI 没有反应」。
+     现在尊重调用方的 stream 意图：不要求流式就走上游非流式，并把整段 JSON 原样转回。 */
+  const wantStream = body.stream === true;
   const payload = JSON.stringify({
     model: 'deepseek-chat',
     messages: body.messages || [],
     max_tokens: Math.min(Number(body.max_tokens) || 4000, 8000),
     temperature: typeof body.temperature === 'number' ? body.temperature : 0.85,
-    stream: true,
+    stream: wantStream,
   });
   const up = https.request({
     hostname: 'api.deepseek.com', path: '/v1/chat/completions', method: 'POST',
@@ -33,15 +37,29 @@ function proxyDeepSeek(req, res, bodyText) {
       'content-type': 'application/json',
       authorization: 'Bearer ' + DS_KEY,
       'content-length': Buffer.byteLength(payload),
-      accept: 'text/event-stream',
+      accept: wantStream ? 'text/event-stream' : 'application/json',
     },
   }, r2 => {
-    res.writeHead(r2.statusCode || 502, {
-      'content-type': r2.headers['content-type'] || 'text/event-stream',
-      'cache-control': 'no-store',
+    if (wantStream) {
+      res.writeHead(r2.statusCode || 502, {
+        'content-type': r2.headers['content-type'] || 'text/event-stream',
+        'cache-control': 'no-store',
+      });
+      r2.pipe(res);
+      return;
+    }
+    const chunks = [];
+    r2.on('data', c => chunks.push(c));
+    r2.on('end', () => {
+      try {
+        res.writeHead(r2.statusCode || 502, {
+          'content-type': 'application/json; charset=utf-8',
+          'cache-control': 'no-store',
+        }).end(Buffer.concat(chunks));
+      } catch (_) {}
     });
-    r2.pipe(res);
   });
+
   up.on('error', e => {
     try { res.writeHead(502, { 'content-type': 'application/json' }).end(JSON.stringify({ error: { code: 'upstream', message: String(e.message || e) } })) } catch (_) {}
   });
