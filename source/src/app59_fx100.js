@@ -293,6 +293,6 @@ function fxAuto(th,txt){if(!th||curT!==th.id||(typeof PKSKIP!=="undefined"&&PKSK
  if(now-FXT.sfx>3000){const s=fxMatch(SFX100,txt);if(s){FXT.sfx=now;sfx100(s.id,.7)}}}
 const _appendMsg59=appendMsg;appendMsg=function(th,m){const r=_appendMsg59(th,m);try{if(m&&m.who!=="me"&&m.who!=="sys"&&(m.txt||m.parts))fxAuto(th,m.txt||(m.parts||[]).map(p=>p.txt).join(" "))}catch(_){}return r};
 const _pkAppend59=pkAppend;pkAppend=function(th,m){const r=_pkAppend59(th,m);try{if(m&&m.who!=="me"&&isNarr(m))fxAuto(th,m.txt)}catch(_){}return r};
-const _pkDir59=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else fx100(d.id)}return true}
+PKREG.add("app59_fx100.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else fx100(d.id)}return true}
  if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="fx"&&FX100.some(x=>x.id===(b[2]||{}).id)){th.pk.q.shift();if(curT===th.id&&!PKSKIP[th.id])fx100(b[2].id);return true}
- return _pkDir59(th,b)};
+ return next(th,b)});;

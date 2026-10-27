@@ -79,9 +79,8 @@ Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign
 /* ================= 内心独白 · inner monologue =================
    At key moments the story drops ["sys","mono",{t:[[who,text],…]}]: what each person in the room is secretly thinking.
    It arrives sealed. Tap to read — 2 free a day, then 💎1 (it's the one thing you can't get by watching). */
-const _pkDir19=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
-  if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return _pkDir19(th,b)};
+PKREG.add("app19_bgm.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
+  if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return next(th,b)});;
 function monoFree(){const d=today();if((S.monoDay||{}).d!==d)S.monoDay={d,n:0};return S.monoDay.n<2}
 const _msgHTML19=msgHTML;
 msgHTML=function(m,i,th){if(!m||m.k!=="mono")return _msgHTML19(m,i,th);

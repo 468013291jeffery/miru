@@ -63,10 +63,9 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&L&&L.k==="box"&&L.pk&&!L.say){L.say={who:m.who,txt:m.txt};L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   if(curT===th.id){chatBgSet(m.who,poseOf(m));const el=$('#msgs [data-mi="'+i+'"]');if(el){el.outerHTML=msgHTML(L,i,th);scrollChat()}if(S.autoVoice&&m.k==="say"&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}}return}
  return _pkAppend8(th,m)};
-const _pkDir8=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
+PKREG.add("app17_custom.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   pkPart(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||""},(d.title||"")+" "+(d.txt||""));try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
- return _pkDir8(th,b)};
+ return next(th,b)});;
 function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe">'+esc(p.icon)+' '+esc(p.title)+'</span>'+(p.txt?esc(p.txt):'')+'</p>';
  if(p.who==="n")return '<p class="tp n">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
  return p.k==="think"?'<p class="tp th"><span class="tpt">💭 '+esc(nm)+'</span>'+esc(p.txt)+'</p>':'<p class="tp ac"><span class="tpa">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}

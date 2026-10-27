@@ -298,16 +298,15 @@ function scScene(th,d){if(!bgmOn()||!SC.G||!BGM.timer)return;const lock=nextCue(
  if(old&&old.alive&&old.mood===nxt){bedDip(.4,1.3,1.6);sting("transition",(d&&(Lz(d.place)||d.place))||"");slog("scene",(d&&(Lz(d.place)||d.place))||"",{from:old.mood,next:nxt,keep:1});return}
  if(old){scKill(old,1.4);SC.cur=null}sting("transition",(d&&(Lz(d.place)||d.place))||"");
  SC.hold={until:Date.now()+1700,lock};slog("scene",(d&&(Lz(d.place)||d.place))||"",{from:old&&old.mood,next:lock||(bgmForThread(th)||{}).mood})}
-const _pkDir31=pkDirective;
-pkDirective=function(th,b){const sys=Array.isArray(b)&&b[0]==="sys"?b[1]:null,d=(sys&&b[2])||{},hadScene=sys==="scene"&&th.msgs.some(m=>m.k==="scene");
- const r=_pkDir31.apply(this,arguments);
+PKREG.add("app31_score.js", function(th,b, next){const sys=Array.isArray(b)&&b[0]==="sys"?b[1]:null,d=(sys&&b[2])||{},hadScene=sys==="scene"&&th.msgs.some(m=>m.k==="scene");
+ const r=next.apply(this,arguments);
  try{if(r&&sys&&curT===th.id&&!PKSKIP[th.id]&&bgmOn()){
   if(sys==="scene"&&hadScene)scScene(th,d);
   else if(sys==="title")sting("reveal","title");
   else if(sys==="money"&&S.plus)sting("reveal","money");
   else if(sys==="event"){const k=EV_STING[String(d.icon||"").replace(/️/g,"")];if(k)sting(k,d.title&&(Lz(d.title)||d.title));
    if(d.icon==="🔇")bedDip(.08,3.5,2.5)}}}catch(e){}
- return r};
+ return r});;
 /* the sealed inheritance number: the reveal plays when it opens */
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xmopen]");if(!x)return;const th=S.threads[curT],i=+x.dataset.xmopen;setTimeout(()=>{const m=th&&th.msgs[i];if(m&&m.open)sting("reveal","money")},60)});
 /* intimate choices: flirt / bold / kiss / soft / tease → heart; a kiss also pulls the score down to almost nothing for a moment */

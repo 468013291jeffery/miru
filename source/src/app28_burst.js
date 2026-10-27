@@ -15,7 +15,7 @@ pkWait=function(th,prev,spd,ms){const nx=th.pk&&th.pk.q&&th.pk.q[0];
 /* a long block gets time to be read (tap the chat to move on sooner) */
 const _readMs28=readMs;readMs=function(m){if(m&&m.k==="box"&&!m.say){const x=String(m.txt||""),cjk=/[㐀-鿿]/.test(x);return Math.min(14000,Math.max(1800,cjk?900+x.length*80:900+x.length*26))}return _readMs28(m)};
 /* a change of place or picture (scene / bg / title) closes the current block */
-const _pkDir28=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","title"].includes(b[1]))th._brk=1;return _pkDir28(th,b)};
+PKREG.add("app28_burst.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","title"].includes(b[1]))th._brk=1;return next(th,b)});;
 /* a tall block is shown from its first line, not scrolled to its last */
 let _bt=0;function burstTop(th,i){clearTimeout(_bt);_bt=setTimeout(()=>{if(curT!==th.id)return;const box=$("#msgs"),el=$('#msgs [data-mi="'+i+'"]');if(!box||!el)return;
  if(el.offsetHeight>box.clientHeight*.55){const top=el.getBoundingClientRect().top-box.getBoundingClientRect().top+box.scrollTop-10;box.scrollTop=top}},30)}

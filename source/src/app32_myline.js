@@ -8,10 +8,9 @@ function mySelf(){return S.selfSpeak!==false}
 const _stopAuto32=stopAuto;
 stopAuto=function(th,b){if(b&&b[1]==="myline"){if(!mySelf()||th.pk.as!==b[0])return [[b[0],"say",b[2].t,1]];return null}return _stopAuto32(th,b)};
 /* turn a written line of the character you play into your turn (packRun reads th.pk.q[0] fresh every loop) */
-const _pkDir32=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[1]==="say"&&!b[3]&&th.pk&&th.pk.as&&b[0]===th.pk.as&&mySelf()&&!PKSKIP[th.id]&&typeof b[2]==="string"){
+PKREG.add("app32_myline.js", function(th,b, next){if(Array.isArray(b)&&b[1]==="say"&&!b[3]&&th.pk&&th.pk.as&&b[0]===th.pk.as&&mySelf()&&!PKSKIP[th.id]&&typeof b[2]==="string"){
   th.pk.q[0]=[b[0],"myline",{t:b[2]}];MYL.sug=null;return true}
- return _pkDir32(th,b)};
+ return next(th,b)});;
 const _stopHTML32=stopHTML;
 stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="myline")return _stopHTML32(th);const d=b[2],c=ch(th.pk.as),nm=c?first(c.n):"";
  const prev=[...th.msgs].reverse().find(m=>m.k==="box"&&m.say||m.k==="say"&&m.who!==th.pk.as);const cue=prev?(prev.say?prev.say.txt:prev.txt):"";

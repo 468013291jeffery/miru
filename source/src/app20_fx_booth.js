@@ -9,13 +9,12 @@ const FX_RULES=[[/暴雨|雷|storm|thunder|downpour/i,"storm"],[/停电|断电|�
  [/生日|派对|birthday|confetti/i,"confetti"],[/花瓣|樱花|petal|blossom/i,"petals"],[/nearkiss|forehead|差一点|kiss/i,"hearts"]];
 function fxFrom(s){s=String(s||"");const r=FX_RULES.find(([re])=>re.test(s));return r?r[1]:null}
 function fxSet(th,k){if(!th.pk||!k||th.pk.fx===k)return;th.pk.fx=k;save();if(curT===th.id)chatFx(th)}
-const _pkDir20=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"){const x=b[2]||{};
+PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"){const x=b[2]||{};
   if(b[1]==="fx"){th.pk.q.shift();fxSet(th,x.k);return true}
   if(b[1]==="event")fxSet(th,fxFrom((x.title||"")+" "+(x.txt||"")));
   if(b[1]==="scene"){const k=fxFrom((x.place||"")+" "+(x.time||"")+" "+(x.img||""));if(k)fxSet(th,k)}
   if(b[1]==="bg"&&/nearkiss|forehead/.test(x.img||""))fxSet(th,"hearts")}
- return _pkDir20(th,b)};
+ return next(th,b)});;
 const _chatFx20=chatFx;
 chatFx=function(th){const k=th&&th.pk&&th.pk.fx;if(!k||!FX2.includes(k)){fxState.k=null;return _chatFx20(th)}cancelAnimationFrame(fxRaf);fxRun(k)};
 const fxState={k:null};
@@ -162,7 +161,7 @@ setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidde
 const _openThread20=openThread;openThread=function(id){const th=S.threads[id],d=today();
  if(th&&th.at&&Date.now()-th.at>3*36e5&&th.mcAway!==d&&ch(mainOf(th))){th.mcAway=d;const cid=mainOf(th);th.msgs.push({who:cid,k:"missed",secs:6+hash(id+d)%20,line:(S.lang==="zh"?MC_LINE.zh:MC_LINE.en)[hash(d+id)%7],away:true,at:Date.now()-36e5});save()}
  _openThread20(id)};
-const _pkDir20b=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th)),600);return true}return _pkDir20b(th,b)};
+PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th)),600);return true}return next(th,b)});;
 Object.assign(I18N.en,{"mc.calling":"is calling you…","mc.answer":"Answer","mc.decline":"Decline","mc.missed":"Missed call","mc.away":"He called while you were away","mc.rang":"Rang {s}s, then hung up","mc.back":"Call back","mc.called":"You called back"});
 Object.assign(I18N.zh,{"mc.calling":"邀请你语音通话…","mc.answer":"接听","mc.decline":"拒绝","mc.missed":"未接来电","mc.away":"你不在的时候，他打来过","mc.rang":"响了 {s} 秒，对方已取消","mc.back":"回拨","mc.called":"你已回拨"});
 

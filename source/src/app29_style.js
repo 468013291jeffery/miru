@@ -18,8 +18,8 @@ const _fxSet29=fxSet;fxSet=function(th,k){_fxSet29(th,k);if(k==="flashes"){clear
 function sceneCurtain(place,time,img){const host=(typeof fxLayer==="function"?fxLayer():null)||$("#s-chat")||document.body;const o=document.createElement("div");o.className="scurt"+(img?" pic":"");const src=img&&(window.SCENE_FILES||{})[img];
  o.innerHTML=(src?'<div class="scimg"><img src="'+src+'" alt=""></div><div class="scshade"></div>':'')+'<div class="scin"><small>'+t("sc29.next")+'</small><b>'+esc(place||"")+'</b>'+(time?'<em>'+esc(time)+'</em>':'')+'</div>';host.appendChild(o);
  requestAnimationFrame(()=>o.classList.add("on"));const T=img?2600:1700;setTimeout(()=>o.classList.remove("on"),T);setTimeout(()=>o.remove(),T+700)}
-const _pkDir29=pkDirective;pkDirective=function(th,b){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const n=th.msgs.length;const r=_pkDir29(th,b);
- if(isScene&&r&&curT===th.id&&th.msgs.length>n&&th.msgs.some((m,i)=>i<n&&m.k==="scene")&&!PKSKIP[th.id]){const d=b[2]||{};sceneCurtain(Lz(d.place)||d.place,Lz(d.time)||d.time,d.img);th._sceneHold=1}return r};
+PKREG.add("app29_style.js", function(th,b, next){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const n=th.msgs.length;const r=next(th,b);
+ if(isScene&&r&&curT===th.id&&th.msgs.length>n&&th.msgs.some((m,i)=>i<n&&m.k==="scene")&&!PKSKIP[th.id]){const d=b[2]||{};sceneCurtain(Lz(d.place)||d.place,Lz(d.time)||d.time,d.img);th._sceneHold=1}return r});;
 const _pkWait29=pkWait;pkWait=function(th,prev,spd,ms){if(th._sceneHold){th._sceneHold=0;ms=Math.max(ms,3400)}return _pkWait29(th,prev,spd,ms)};
 Object.assign(I18N.zh,{"sc29.next":"下一幕"});Object.assign(I18N.en,{"sc29.next":"NEXT SCENE"});
 /* the free-chat quick lines don't belong to a written story */

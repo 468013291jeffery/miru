@@ -275,9 +275,8 @@ const _pkAppend30=pkAppend;
 pkAppend=function(th,m){const r=_pkAppend30.apply(this,arguments);
  try{if(th&&curT===th.id&&m&&m.pk&&!skipping()){if(m.k==="think"){const n=Date.now();if(n-(EMO.lastInk||0)>6000){EMO.lastInk=n;requestAnimationFrame(()=>emoFx("ink",{weak:true}))}}else if(isNarr(m)&&/吻|kiss/i.test(String(m.txt||"")))emoFx("bloom")}}catch(_){}return r};
 /* events: a jolt (or warmth, when the event is a kiss / embrace / confession). The "unlocked" event belongs to the lock bloom. */
-const _pkDir30=pkDirective;
-pkDirective=function(th,b){const ev=Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"?(b[2]||{}):null;const r=_pkDir30.apply(this,arguments);
- try{if(ev&&th&&curT===th.id&&!skipping()&&ev.icon!=="🔓"){const s=Lz(ev.title)+" "+Lz(ev.txt);if(/吻|kiss|拥抱|抱住|hug|告白|confess/i.test(s)||/💋|❤|💗|💞|💕|🌹|💘/.test(ev.icon||""))emoFx("bloom");else emoFx("shock",{weak:true})}}catch(_){}return r};
+PKREG.add("app30_fx3.js", function(th,b, next){const ev=Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"?(b[2]||{}):null;const r=next.apply(this,arguments);
+ try{if(ev&&th&&curT===th.id&&!skipping()&&ev.icon!=="🔓"){const s=Lz(ev.title)+" "+Lz(ev.txt);if(/吻|kiss|拥抱|抱住|hug|告白|confess/i.test(s)||/💋|❤|💗|💞|💕|🌹|💘/.test(ev.icon||""))emoFx("bloom");else emoFx("shock",{weak:true})}}catch(_){}return r});;
 /* a key scene opening */
 document.addEventListener("click",e=>{if(!e.target.closest||!e.target.closest("[data-lockgo]"))return;
  try{const th=S.threads[curT];if(!th||!th.pk||!th.pk.stop||th.pk.stop[1]!=="lock")return;const k=lockKey(th,th.pk.stop[2]);setTimeout(()=>{if((S.unlocked||{})[k]||S.plus)emoFx("bloom")},120)}catch(_){}},true);

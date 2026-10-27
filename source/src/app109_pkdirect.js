@@ -65,6 +65,10 @@
     'app100_fixes.js', 'app101_you.js'
   ];
 
+  /* 装配：把所有 PKREG.add 过的层串成一条链（与原来的加载顺序逐字等价）。
+     这一步必须放在**所有注册之后** —— 它此刻才接管 window.pkDirective。 */
+  try { if (window.PKREG && !window.PKREG.installed) window.PKREG.install() } catch (_) {}
+
   window.PKDIRECT = DIRECT;
   window.PKDEAD = DEAD;
   window.PKOBSERVE = OBSERVE;

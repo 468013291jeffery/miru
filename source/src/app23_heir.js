@@ -79,8 +79,7 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-grp]");if(
  appendMsg(f.th,{who:"me",k:"act",txt:"💬 "+L(o.t),at:Date.now()});PKFEAT=null;closeSheet();setTimeout(()=>stopResolve(f.th,L(o.then)||o.then||[]),300)});
 Object.assign(FEATK,{feed:{ic:"📹",run:()=>feedRun(),t:"pk2.feedH"},phone:{ic:"📱",run:()=>phoneRun(),t:"pk2.phH"},match:{ic:"💞",run:()=>matchRun(),t:"pk2.mqH"},group:{ic:"👥",run:()=>groupRun(),t:"pk2.grH"}});
 /* ---------- directives with their own cards ---------- */
-const _pkDir23=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return _pkDir23(th,b)};
+PKREG.add("app23_heir.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return next(th,b)});;
 const _msgHTML23=msgHTML;
 msgHTML=function(m,i,th){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return _msgHTML23(m,i,th);
  if(m.k==="xtitle")return '<div class="xtitle"><b>'+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';

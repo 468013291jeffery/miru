@@ -150,8 +150,7 @@ function bgmPick(text){const s=String(text||"").toLowerCase();let best=null,bs=0
 function bgmName(id){const m=BGM100.find(x=>x.id===id);return m?(CL()==="zh"?m.zh:m.en):(typeof BGM_NAME!=="undefined"&&BGM_NAME[id])||id}
 function bgmAhead(th){const q=(th.pk&&th.pk.q)||[];for(let i=0;i<Math.min(q.length,10);i++){const b=q[i];if(!Array.isArray(b)||b[0]!=="sys")continue;if(b[1]==="scene")break;if(b[1]==="bgm")return true}return false}
 /* when a scene opens and the author gave no cue, choose one from the scene's own words */
-const _pkDir58=pkDirective;
-pkDirective=function(th,b){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const r=_pkDir58(th,b);
+PKREG.add("app58_bgm100.js", function(th,b, next){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const r=next(th,b);
  if(isScene&&r&&th.pk&&!bgmAhead(th)){try{const d=b[2]||{};const ahead=(th.pk.q||[]).slice(0,14).map(x=>Array.isArray(x)?(typeof x[2]==="string"?x[2]:Lz((x[2]||{}).txt)||""):"").join(" ");
   const m=bgmPick([d.place,d.time,ahead].join(" "));if(m&&th.pk.bgm!==m.id){th.pk.bgm=m.id;th.pk.bgmAuto=1;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true)}}catch(_){}}
- return r};
+ return r});;

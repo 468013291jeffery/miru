@@ -34,7 +34,7 @@ function dimFloat(key,ch0){const c=$('.dimc[data-dimk="'+key+'"]');if(!c)return;
  ch0.forEach(([x,dd],i)=>{const sp=c.querySelector('[data-dimx="'+x+'"]')||c;sp.insertAdjacentHTML("beforeend",'<span class="dimf '+(dd>0?"up":"down")+'" style="animation-delay:'+(i*.12)+'s">'+(dd>0?"+":"")+dd+'</span>');setTimeout(()=>{const f=sp.querySelector(".dimf");if(f)f.remove()},1800)})}
 /* replace the old single-number bar for stories that have dimensions */
 const _relSync21=relSync;relSync=function(th){if(th&&dimPairs(th)){dimHeader(th);const r=$(".relrow");if(r)r.remove();dimSync(th);return}_relSync21(th)};
-const _pkDir21=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="rd"){th.pk.q.shift();const x=b[2]||{};dimAdd(th,x.p,x.d||{},Lz(x.why));return true}return _pkDir21(th,b)};
+PKREG.add("app21_dims.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="rd"){th.pk.q.shift();const x=b[2]||{};dimAdd(th,x.p,x.d||{},Lz(x.why));return true}return next(th,b)});;
 /* games & unlocks move the main pair */
 const _featDone21=featDone;featDone=function(th,ctx){const f=PKFEAT;const r=_featDone21(th,ctx);if(r&&f&&f.th===th){const m=dimMain(th);if(m){const k=dimKey(m.a,m.b),txt=String(ctx&&ctx.txt||"");
   if(f.k==="heart"){const mm=txt.match(/to (\d+) bpm/),bpm=mm?+mm[1]:0;dimAdd(th,k,bpm>=150?{att:6,ten:8}:{ten:3},t("dm.w.heart",{n:bpm}))}
