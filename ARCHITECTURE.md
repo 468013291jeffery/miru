@@ -213,8 +213,8 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 空 catch    567 处 / 99 个文件    （当天起点 616 ⇒ −41）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
-消息渲染    20 层 = kind 12 / post 6 / wrap 2（19 处包装，app16 那处拆成两层）· 17 个类型
-            2 个类型被两层认领（say / xmoney，都是顺序接力不是抢）· 1 层登记为已知死
+消息渲染    18 层 = kind 10 / post 6 / wrap 2（`say` 收口后从 20 层减 2）· 17 个类型
+            **1 个类型**被两层认领（xmoney，顺序接力不是抢）· 1 层登记为已知死
 渲染钩子    22 个（每个 0 失败）
 样式        65 个 <style> 生效 / **2691** 条规则 · 重复定义 **17 个选择器**（同 sheet 叠层 8 · 跨 sheet 抢 9）
             （当天起点 2818 条 / 81 个重复 ⇒ 合并 63 条、删 35 条；另 4 个重复**故意不合并**。
@@ -329,7 +329,7 @@ PKREG.add('app17_custom.js', function(th, b, next){
 ```
 act/app16 · box/app16 · declined/app42 · event/app16 · intro/app16 · item101/app101
 missed/app20 · mono/app19 · scene/app16 · think/app16 · vn96/app96 · xanchor/xpost/xtitle/app23
-say      app17_custom · app26_turns      ← 条件互斥：别人说的走 app17，你说的走 app26
+say      **（无认领层）** —— base 的 `sayHTML` 按 `speakerOf` 派生 me/self/other（2026-10-27 收口）
 xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 app24 答，解锁后交回 app23
 ```
 
@@ -342,7 +342,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 10-27 白天那次渲染器合并里已经换成了 `<div class="m-box lb"><p class="bac">`。
 ⇒ **走那条路径的消息上，这两层一直是死的，而逐字节对拍永远是绿的**
 （基线是合并之后拍的，它拍不到自己出生前就坏掉的东西）。
-说准一点：`.bub` 并不是全仓库消失 —— `app26_turns.js` 的玩家回合包装、`app3_chat.js` 的「未解锁台词」
+说准一点：`.bub` 现在是 **`say` 唯一的壳**（三种说话人共用）—— 不再有 `.m-box.lb` 那句玩家台词，也不再走 `.m-turn`。
 按钮还自己产出 `.bub`，所以这两层在少数路径上仍会命中；死的是**主路径**（模型台词 / 玩家台词），
 而主路径就是全部日常对话。
 `app16` 那层当晚修好（改指向 `.m-box` 的 `p.bac`，`p.bdn`/`p.bth` 不碰），探针从 `silent` 转 `fires`；
