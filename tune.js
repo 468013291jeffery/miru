@@ -29,21 +29,3 @@ window.MIRU_TUNE_OVERRIDE.chat = Object.assign({ linePause: 2000 }, window.MIRU_
     if(h==="127.0.0.1"||h==="localhost"){ window.MIRU_PROXY="/api/longcat"; window.MIRU_ACCOUNT=false; }
   }catch(_){}
 })();
-
-
-/* Production proxy and dialogue runtime; loaded before the application bundle. */
-(function () {
-  if (/^(?:www\.)?miru\.plus$/.test(location.hostname) && !window.MIRU_PROXY) {
-    window.MIRU_PROXY = location.origin + "/api/longcat";
-  }
-  function loadDialogueRuntime() {
-    if (document.querySelector('script[data-miru-dialogue-runtime]')) return;
-    var script = document.createElement("script");
-    script.src = "miru_dialogue_runtime.js?v=20261027a";
-    script.dataset.miruDialogueRuntime = "1";
-    document.head.appendChild(script);
-  }
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", loadDialogueRuntime, {once:true});
-  else loadDialogueRuntime();
-})();
-

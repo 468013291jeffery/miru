@@ -53,11 +53,8 @@
     /* ② 主渲染 —— 它自己失败也要能被看见，而不是整页白 */
     try { if (typeof renderChat === 'function') renderChat() }
     catch (e) { pushErr('renderChat', e) }
-    /* ③ 逐个 hook：一个炸不连累别人 */
-    for (const h of U.hooks) {
-      try { h.fn(th); h.n++ }
-      catch (e) { h.errs++; pushErr(h.name, e) }
-    }
+    /* ③ 钩子**只在调度器里跑一次**（U.afterRender）。
+       这里再跑一遍会让每个钩子执行两次 —— 曾经的写法就是这样，闸当场照出来了。 */
     U.lastMs = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - t0;
     return U.lastMs;
   };
