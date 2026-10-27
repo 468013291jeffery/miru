@@ -243,10 +243,15 @@ UI 调度器  ← 只装这一层，职责唯一：跑完主渲染后逐个跑�
   UI.add("features73")  ← 关系条 / 那排按钮 / 对谁说
   UI.add("mydock75")    ← 输入框上方浮条
   UI.add("dock97")      ← 回合面板停靠
-  UI.add("merge41")  UI.add("composer55")  UI.add("voicefix86")  UI.add("lib65")
+  UI.add("merge41")   UI.add("composer55")  UI.add("voicefix86")  UI.add("lib65")
+  UI.add("story10")   UI.add("story16")     UI.add("story162")    UI.add("custom17")
+  UI.add("promo18")   UI.add("bgm19")       UI.add("dims21")      UI.add("style29")
+  UI.add("score31")   UI.add("recs33")      UI.add("rel45")       UI.add("clean48")
+  UI.add("social96")  UI.add("agents97")    UI.add("story98")
 ```
 
-**判据（浏览器里量，不看源码）**：`__ui()` 应报 `调度已装: true`、`hook 数: 7`、**每个钩子失败 0**。
+**判据（浏览器里量，不看源码）**：`__ui()` 应报 `调度已装: true`、`hook 数: 22`、**每个钩子失败 0**。
+（2026-10-27 收尾时 `renderChat` 上已**没有任何功能层包装在运行时安装** —— 全部走钩子；源码里的 `else` 兜底仍在，但那一支不执行。）
 搬一层包装的固定动作：`UI.add(名字, body)` + 保留 `else` 兜底（UI 不在时退化成原包装）。
 **兜底会留在源码里**，所以静态计数不降 —— 变的是**哪一支在跑**，别拿静态计数当进度。
 

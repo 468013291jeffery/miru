@@ -27,5 +27,8 @@ fmtMix=function(h){return String(h).replace(/\*([^*<]{1,80})\*/g,'<em class="ma"
 .chatscreen .tsay em.ma{color:#F0B77E!important}
 .chatscreen .tsay em.mt{color:#C3B2F5!important}`;document.head.appendChild(st)})();
 /* before the story starts, show the intro from its top: background first, not the how-to at the bottom */
-const _renderChat33=renderChat;renderChat=function(){_renderChat33.apply(this,arguments);const th=S.threads[curT];if(th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start"){const m=$("#msgs");if(m&&!th._introShown){const go=()=>{const it=$("#msgs .m-intro");if(it)m.scrollTop=Math.max(0,it.offsetTop-8)};[60,350,900].forEach(d=>setTimeout(go,d));setTimeout(()=>{th._introShown=1},950)}}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_recs33 = function () { const th=S.threads[curT];if(th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start"){const m=$("#msgs");if(m&&!th._introShown){const go=()=>{const it=$("#msgs .m-intro");if(it)m.scrollTop=Math.max(0,it.offsetTop-8)};[60,350,900].forEach(d=>setTimeout(go,d));setTimeout(()=>{th._introShown=1},950)}} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("recs33", __body_recs33);
+else { const _renderChat33 = renderChat; renderChat = function () { const r = _renderChat33.apply(this, arguments); __body_recs33(); return r; }; };
 const _packRefresh33=packRefresh;packRefresh=function(th){const r=_packRefresh33.apply(this,arguments);try{if(th&&th.id===curT&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start"&&!th._introShown){const m=$("#msgs");const go=()=>{const it=$("#msgs .m-intro");if(m&&it)m.scrollTop=Math.max(0,it.offsetTop-8)};[30,300,800].forEach(d=>setTimeout(go,d));setTimeout(()=>{th._introShown=1},850)}}catch(_){}return r};

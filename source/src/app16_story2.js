@@ -111,12 +111,14 @@ appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(
  /* 2026-10-27 Ann：「动作还是会读语音」—— 这里以前对**任何** AI 消息发声（只看 who 是角色），
     于是 act/think（动作、环境、内心）也被念。现在只念 say，并打 `_voiced` 免得兜底挂钩再念一遍。 */
  if(S.autoVoice&&m.ai&&m.k==="say"&&ch(m.who)&&curT===th.id&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}};
-const _renderChat2=renderChat;
-renderChat=function(){_renderChat2.apply(this,arguments);const th=S.threads[curT];if(!th)return;
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story16 = function () { const th=S.threads[curT];if(!th)return;
  const box=$("#msgs"),pw=$("#pkwrap");if(box&&pw){box.appendChild(pw);pw.classList.add("inl")}
  const hd=$(".chead [data-cmenu]");if(hd&&!$(".chead .vtog"))hd.insertAdjacentHTML("beforebegin",'<button class="ibtn vtog'+(S.autoVoice?" on":"")+'" data-vtog="1" aria-label="voice">'+(S.autoVoice?"🔊":"🔇")+'</button>');
  const ti=$(".chead [data-us]");if(ti&&th.pk&&wd(th.wid).pack.intro){ti.dataset.us="";ti.setAttribute("data-intro",th.wid)}
- if(th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);scrollChat()};
+ if(th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);scrollChat() };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story16", __body_story16);
+else { const _renderChat2 = renderChat; renderChat = function () { const r = _renderChat2.apply(this, arguments); __body_story16(); return r; }; };
 const _packRefresh2=packRefresh;
 packRefresh=function(th){_packRefresh2(th);if(curT===th.id){const pw=$("#pkwrap"),box=$("#msgs");if(pw&&box&&pw.parentNode!==box)box.appendChild(pw);scrollChat()}};
 
@@ -286,9 +288,11 @@ function fmtMix(h){return h.replace(/\*([^*<]{1,80})\*/g,'<em class="ma">$1</em>
 const _msgHTML6=msgHTML;
 msgHTML=function(m,i,th){const h=_msgHTML6(m,i,th);if(!m||!m.txt||m.k==="box"||m.k==="act"||m.k==="think")return h;
  return h.replace(/<div class="bub">([\s\S]*?)<\/div>/,(a,b)=>'<div class="bub">'+fmtMix(b)+'</div>')};
-const _renderChat6=renderChat;
-renderChat=function(){_renderChat6.apply(this,arguments);const ir=$(".composer .inrow");if(!ir||$(".qchips"))return;
- ir.insertAdjacentHTML("beforebegin",'<div class="qchips"><button data-insact="1">✱ '+t("st6.act")+'</button><button data-insthink="1">💭 '+t("st6.think")+'</button><span>'+t("st6.tip")+'</span></div>')};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story162 = function () { const ir=$(".composer .inrow");if(!ir||$(".qchips"))return;
+ ir.insertAdjacentHTML("beforebegin",'<div class="qchips"><button data-insact="1">✱ '+t("st6.act")+'</button><button data-insthink="1">💭 '+t("st6.think")+'</button><span>'+t("st6.tip")+'</span></div>') };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story162", __body_story162);
+else { const _renderChat6 = renderChat; renderChat = function () { const r = _renderChat6.apply(this, arguments); __body_story162(); return r; }; };
 function insWrap(o,c,ph){const ta=$("#cin");if(!ta)return;const s=ta.selectionStart??ta.value.length,e=ta.selectionEnd??s,sel=ta.value.slice(s,e)||ph;
  ta.value=ta.value.slice(0,s)+o+sel+c+(ta.value.slice(e).startsWith(" ")?"":" ")+ta.value.slice(e);ta.focus();ta.setSelectionRange(s+o.length,s+o.length+sel.length);ta.dispatchEvent(new Event("input"))}
 document.addEventListener("click",e=>{

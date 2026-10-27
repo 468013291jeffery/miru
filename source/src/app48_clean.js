@@ -21,7 +21,10 @@ function cleanDecor(){const scr=$("#s-chat");if(!scr||!cleanOn())return;
  const ir=scr.querySelector(".composer .inrow"),modes=scr.querySelector(".composer .modes");
  if(ir&&modes&&!ir.querySelector(".modebtn")){const on=modes.querySelector(".on")||modes.querySelector("button");ir.insertAdjacentHTML("afterbegin",'<button class="modebtn" data-modebtn="1">'+esc((on&&on.textContent||LL("台词","Say")).trim().slice(0,4))+' ▴</button>')}
  cleanMark()}
-const _renderChat48=renderChat;renderChat=function(){_renderChat48.apply(this,arguments);try{cleanDecor();if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_clean48 = function () { try{cleanDecor();if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("clean48", __body_clean48);
+else { const _renderChat48 = renderChat; renderChat = function () { const r = _renderChat48.apply(this, arguments); __body_clean48(); return r; }; };
 /* new messages appended without a full re-render */
 let CLEAN_MO=null;setInterval(()=>{const m=$("#msgs");if(!m||m._cleanObs)return;m._cleanObs=1;CLEAN_MO=new MutationObserver(()=>{if(cleanOn())requestAnimationFrame(cleanMark)});CLEAN_MO.observe(m,{childList:true})},600);
 document.addEventListener("click",e=>{let x;

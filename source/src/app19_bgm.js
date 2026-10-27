@@ -56,10 +56,12 @@ function bgmForThread(th){if(!th)return null;const wid=th.wid||((ch(th.cast[0])|
  if(th.pk&&th.pk.bg){const hit=BGM_SCENE.find(([re])=>re.test(th.pk.bg));if(hit)mood=hit[1]}return {mood,wid}}
 function bgmChip(){const b=$(".chead .bgmtog");if(!b)return;b.classList.toggle("on",bgmOn());b.textContent=bgmOn()?"🎵":"🎵̸";b.title=bgmOn()&&BGM.mood?BGM_NAME[BGM.mood]||"":""}
 /* header button */
-const _renderChat19=renderChat;
-renderChat=function(){_renderChat19.apply(this,arguments);const hd=$(".chead .vtog")||$(".chead [data-cmenu]");
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_bgm19 = function () { const hd=$(".chead .vtog")||$(".chead [data-cmenu]");
  if(hd&&!$(".chead .bgmtog"))hd.insertAdjacentHTML("beforebegin",'<button class="ibtn bgmtog'+(bgmOn()?" on":"")+'" data-bgm="1" aria-label="music">🎵</button>');bgmChip();
- const th=S.threads[curT],w=bgmForThread(th);if(w&&bgmOn()){if(BGM.ctx&&BGM.ctx.state==="running"||BGM.file)bgmPlay(w.mood,w.wid);else BGM.want=w}};
+ const th=S.threads[curT],w=bgmForThread(th);if(w&&bgmOn()){if(BGM.ctx&&BGM.ctx.state==="running"||BGM.file)bgmPlay(w.mood,w.wid);else BGM.want=w} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("bgm19", __body_bgm19);
+else { const _renderChat19 = renderChat; renderChat = function () { const r = _renderChat19.apply(this, arguments); __body_bgm19(); return r; }; };
 document.addEventListener("click",e=>{if(!e.target.closest("[data-bgm]"))return;S.bgm=!bgmOn();save();
  if(bgmOn()){const w=bgmForThread(S.threads[curT]);if(w)bgmPlay(w.mood,w.wid);toast("🎵 "+(BGM_NAME[BGM.mood]||t("bgm.on")))}else{bgmStop();toast(t("bgm.off"))}bgmChip()});
 /* first tap anywhere in the chat unlocks audio (mobile autoplay rules) */

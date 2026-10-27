@@ -35,8 +35,11 @@ function lnTrackHTML(th,cid){const cur=relLine(th,cid),L=LINES[cur.k],love=Math.
   '<div class="eyebrow" style="margin-top:12px">'+LL("可能的走向","Where this could go")+'</div><div class="lnalt">'+Object.entries(LINES).filter(([k])=>k!==cur.k).map(([k,x])=>'<div class="'+((th.lnSeen||{})[k]?"seen":"")+'" style="--lc:'+x.c+'"><b>'+x.ic+' '+esc(LL(x.n[0],x.n[1]))+'</b><span>'+esc(LL(x.st.map(s=>s[0]).join("→"),x.st.map(s=>s[1]).join(" → ")))+'</span><em>'+esc(LL(x.when[0],x.when[1]))+'</em></div>').join("")+'</div></div>'}
 const _usSheet45=usSheet;usSheet=function(){_usSheet45.apply(this,arguments);try{const th=S.threads[curT],sh=$(".sheet .sh-body")||$(".sheet>div:last-child")||$(".sheet");if(th&&sh){const at=sh.querySelector(".steps");const h=lnTrackHTML(th,mainOf(th));if(at)at.insertAdjacentHTML("beforebegin",h);else sh.insertAdjacentHTML("afterbegin",h)}}catch(_){}};
 /* header chip with the current line */
-const _renderChat45=renderChat;renderChat=function(){_renderChat45.apply(this,arguments);try{const th=S.threads[curT];if(!th)return;lineCheck(th);const cid=mainOf(th);if(!ch(cid))return;const cur=relLine(th,cid),L=LINES[cur.k];
- const host=$(".chead .dimslim")||$(".chead");if(host&&!$(".chead .lnchip"))host.insertAdjacentHTML("beforeend",'<button class="lnchip" data-us="1" style="--lc:'+L.c+'">'+L.ic+' '+esc(LL(L.st[cur.i][0],L.st[cur.i][1]))+'</button>')}catch(_){}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_rel45 = function () { try{const th=S.threads[curT];if(!th)return;lineCheck(th);const cid=mainOf(th);if(!ch(cid))return;const cur=relLine(th,cid),L=LINES[cur.k];
+ const host=$(".chead .dimslim")||$(".chead");if(host&&!$(".chead .lnchip"))host.insertAdjacentHTML("beforeend",'<button class="lnchip" data-us="1" style="--lc:'+L.c+'">'+L.ic+' '+esc(LL(L.st[cur.i][0],L.st[cur.i][1]))+'</button>')}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("rel45", __body_rel45);
+else { const _renderChat45 = renderChat; renderChat = function () { const r = _renderChat45.apply(this, arguments); __body_rel45(); return r; }; };
 const _dimFloat45=dimFloat;dimFloat=function(){_dimFloat45.apply(this,arguments);try{const th=S.threads[curT];lineCheck(th);const ch0=$(".chead .lnchip");if(ch0&&th){const c=relLine(th,mainOf(th)),L=LINES[c.k];ch0.style.setProperty("--lc",L.c);ch0.textContent=L.ic+" "+LL(L.st[c.i][0],L.st[c.i][1])}}catch(_){}};
 
 /* ---------- personas: personality + about me, chosen per chat ---------- */

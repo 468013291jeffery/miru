@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="24716351128a 2026-10-27T06:09Z";
+window.MIRU_BUILD="d2f47ee47359 2026-10-27T06:14Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -6805,9 +6805,12 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-ord]");if(
  if(st.pick.length===3){const n=st.pick.filter(Boolean).length;$$("[data-ord]").forEach(b=>b.disabled=true);gResult(st.p,n*3,S.lang==="zh"?(n===3?"你记住了 "+ch(st.p[1]).n+" 每天替 "+ch(st.p[2]).n+" 点的那杯。":"差一点——"+ch(st.p[2]).n+" 喝了一口，皱了下眉。"):(n===3?"You remembered the exact drink "+ch(st.p[1]).n+" orders for "+ch(st.p[2]).n+".":"Close — "+ch(st.p[2]).n+" took a sip and frowned."),'<p class="sm">☕ '+n+' / 3</p>')}});
 
 /* ---------- chat: 📞 call button + pair chip ---------- */
-const _renderChat=renderChat;renderChat=function(){_renderChat.apply(this,arguments);const th=S.threads[curT];if(!th)return;const hd=$(".chead"),mid=mainOf(th);
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story10 = function () { const th=S.threads[curT];if(!th)return;const hd=$(".chead"),mid=mainOf(th);
  if(hd&&ch(mid)&&!hd.querySelector(".callbtn"))hd.querySelector("[data-cmenu]").insertAdjacentHTML("beforebegin",'<button class="callbtn" data-callgo="'+mid+'">📞<span>'+(S.plus?t("call.btn"):!S.callTrial?t("call.trial"):t("call.btn"))+'</span></button>');
- const p=pairOf(th.wid),stt=$(".status");if(p&&stt&&!stt.querySelector(".pairchip"))stt.insertAdjacentHTML("afterbegin",pairChip(p))};
+ const p=pairOf(th.wid),stt=$(".status");if(p&&stt&&!stt.querySelector(".pairchip"))stt.insertAdjacentHTML("afterbegin",pairChip(p)) };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story10", __body_story10);
+else { const _renderChat = renderChat; renderChat = function () { const r = _renderChat.apply(this, arguments); __body_story10(); return r; }; };
 function callGate(cid){if(S.plus){startCall(cid);return}
  if(!S.callTrial){S.callTrial=1;save();startCall(cid,60);return}
  const c=ch(cid);sheet('<div class="eyebrow" style="color:var(--gold)">📞 '+t("call.h")+'</div><h2 style="margin-top:4px">'+esc(t("call.gateH",{n:first(c.n)}))+'</h2><p class="sm dim" style="margin-top:6px">'+t("call.gateS")+'</p>'+
@@ -7806,12 +7809,14 @@ appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(
  /* 2026-10-27 Ann：「动作还是会读语音」—— 这里以前对**任何** AI 消息发声（只看 who 是角色），
     于是 act/think（动作、环境、内心）也被念。现在只念 say，并打 `_voiced` 免得兜底挂钩再念一遍。 */
  if(S.autoVoice&&m.ai&&m.k==="say"&&ch(m.who)&&curT===th.id&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}};
-const _renderChat2=renderChat;
-renderChat=function(){_renderChat2.apply(this,arguments);const th=S.threads[curT];if(!th)return;
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story16 = function () { const th=S.threads[curT];if(!th)return;
  const box=$("#msgs"),pw=$("#pkwrap");if(box&&pw){box.appendChild(pw);pw.classList.add("inl")}
  const hd=$(".chead [data-cmenu]");if(hd&&!$(".chead .vtog"))hd.insertAdjacentHTML("beforebegin",'<button class="ibtn vtog'+(S.autoVoice?" on":"")+'" data-vtog="1" aria-label="voice">'+(S.autoVoice?"🔊":"🔇")+'</button>');
  const ti=$(".chead [data-us]");if(ti&&th.pk&&wd(th.wid).pack.intro){ti.dataset.us="";ti.setAttribute("data-intro",th.wid)}
- if(th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);scrollChat()};
+ if(th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);scrollChat() };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story16", __body_story16);
+else { const _renderChat2 = renderChat; renderChat = function () { const r = _renderChat2.apply(this, arguments); __body_story16(); return r; }; };
 const _packRefresh2=packRefresh;
 packRefresh=function(th){_packRefresh2(th);if(curT===th.id){const pw=$("#pkwrap"),box=$("#msgs");if(pw&&box&&pw.parentNode!==box)box.appendChild(pw);scrollChat()}};
 
@@ -7981,9 +7986,11 @@ function fmtMix(h){return h.replace(/\*([^*<]{1,80})\*/g,'<em class="ma">$1</em>
 const _msgHTML6=msgHTML;
 msgHTML=function(m,i,th){const h=_msgHTML6(m,i,th);if(!m||!m.txt||m.k==="box"||m.k==="act"||m.k==="think")return h;
  return h.replace(/<div class="bub">([\s\S]*?)<\/div>/,(a,b)=>'<div class="bub">'+fmtMix(b)+'</div>')};
-const _renderChat6=renderChat;
-renderChat=function(){_renderChat6.apply(this,arguments);const ir=$(".composer .inrow");if(!ir||$(".qchips"))return;
- ir.insertAdjacentHTML("beforebegin",'<div class="qchips"><button data-insact="1">✱ '+t("st6.act")+'</button><button data-insthink="1">💭 '+t("st6.think")+'</button><span>'+t("st6.tip")+'</span></div>')};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story162 = function () { const ir=$(".composer .inrow");if(!ir||$(".qchips"))return;
+ ir.insertAdjacentHTML("beforebegin",'<div class="qchips"><button data-insact="1">✱ '+t("st6.act")+'</button><button data-insthink="1">💭 '+t("st6.think")+'</button><span>'+t("st6.tip")+'</span></div>') };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story162", __body_story162);
+else { const _renderChat6 = renderChat; renderChat = function () { const r = _renderChat6.apply(this, arguments); __body_story162(); return r; }; };
 function insWrap(o,c,ph){const ta=$("#cin");if(!ta)return;const s=ta.selectionStart??ta.value.length,e=ta.selectionEnd??s,sel=ta.value.slice(s,e)||ph;
  ta.value=ta.value.slice(0,s)+o+sel+c+(ta.value.slice(e).startsWith(" ")?"":" ")+ta.value.slice(e);ta.focus();ta.setSelectionRange(s+o.length,s+o.length+sel.length);ta.dispatchEvent(new Event("input"))}
 document.addEventListener("click",e=>{
@@ -8396,10 +8403,12 @@ function bgmForThread(th){if(!th)return null;const wid=th.wid||((ch(th.cast[0])|
  if(th.pk&&th.pk.bg){const hit=BGM_SCENE.find(([re])=>re.test(th.pk.bg));if(hit)mood=hit[1]}return {mood,wid}}
 function bgmChip(){const b=$(".chead .bgmtog");if(!b)return;b.classList.toggle("on",bgmOn());b.textContent=bgmOn()?"🎵":"🎵̸";b.title=bgmOn()&&BGM.mood?BGM_NAME[BGM.mood]||"":""}
 /* header button */
-const _renderChat19=renderChat;
-renderChat=function(){_renderChat19.apply(this,arguments);const hd=$(".chead .vtog")||$(".chead [data-cmenu]");
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_bgm19 = function () { const hd=$(".chead .vtog")||$(".chead [data-cmenu]");
  if(hd&&!$(".chead .bgmtog"))hd.insertAdjacentHTML("beforebegin",'<button class="ibtn bgmtog'+(bgmOn()?" on":"")+'" data-bgm="1" aria-label="music">🎵</button>');bgmChip();
- const th=S.threads[curT],w=bgmForThread(th);if(w&&bgmOn()){if(BGM.ctx&&BGM.ctx.state==="running"||BGM.file)bgmPlay(w.mood,w.wid);else BGM.want=w}};
+ const th=S.threads[curT],w=bgmForThread(th);if(w&&bgmOn()){if(BGM.ctx&&BGM.ctx.state==="running"||BGM.file)bgmPlay(w.mood,w.wid);else BGM.want=w} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("bgm19", __body_bgm19);
+else { const _renderChat19 = renderChat; renderChat = function () { const r = _renderChat19.apply(this, arguments); __body_bgm19(); return r; }; };
 document.addEventListener("click",e=>{if(!e.target.closest("[data-bgm]"))return;S.bgm=!bgmOn();save();
  if(bgmOn()){const w=bgmForThread(S.threads[curT]);if(w)bgmPlay(w.mood,w.wid);toast("🎵 "+(BGM_NAME[BGM.mood]||t("bgm.on")))}else{bgmStop();toast(t("bgm.off"))}bgmChip()});
 /* first tap anywhere in the chat unlocks audio (mobile autoplay rules) */
@@ -10097,7 +10106,10 @@ fmtMix=function(h){return String(h).replace(/\*([^*<]{1,80})\*/g,'<em class="ma"
 .chatscreen .tsay em.ma{color:#F0B77E!important}
 .chatscreen .tsay em.mt{color:#C3B2F5!important}`;document.head.appendChild(st)})();
 /* before the story starts, show the intro from its top: background first, not the how-to at the bottom */
-const _renderChat33=renderChat;renderChat=function(){_renderChat33.apply(this,arguments);const th=S.threads[curT];if(th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start"){const m=$("#msgs");if(m&&!th._introShown){const go=()=>{const it=$("#msgs .m-intro");if(it)m.scrollTop=Math.max(0,it.offsetTop-8)};[60,350,900].forEach(d=>setTimeout(go,d));setTimeout(()=>{th._introShown=1},950)}}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_recs33 = function () { const th=S.threads[curT];if(th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start"){const m=$("#msgs");if(m&&!th._introShown){const go=()=>{const it=$("#msgs .m-intro");if(it)m.scrollTop=Math.max(0,it.offsetTop-8)};[60,350,900].forEach(d=>setTimeout(go,d));setTimeout(()=>{th._introShown=1},950)}} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("recs33", __body_recs33);
+else { const _renderChat33 = renderChat; renderChat = function () { const r = _renderChat33.apply(this, arguments); __body_recs33(); return r; }; };
 const _packRefresh33=packRefresh;packRefresh=function(th){const r=_packRefresh33.apply(this,arguments);try{if(th&&th.id===curT&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start"&&!th._introShown){const m=$("#msgs");const go=()=>{const it=$("#msgs .m-intro");if(m&&it)m.scrollTop=Math.max(0,it.offsetTop-8)};[30,300,800].forEach(d=>setTimeout(go,d));setTimeout(()=>{th._introShown=1},850)}}catch(_){}return r};
 
 /* ---- v133 games give you something to go on ----
@@ -10852,8 +10864,11 @@ function lnTrackHTML(th,cid){const cur=relLine(th,cid),L=LINES[cur.k],love=Math.
   '<div class="eyebrow" style="margin-top:12px">'+LL("可能的走向","Where this could go")+'</div><div class="lnalt">'+Object.entries(LINES).filter(([k])=>k!==cur.k).map(([k,x])=>'<div class="'+((th.lnSeen||{})[k]?"seen":"")+'" style="--lc:'+x.c+'"><b>'+x.ic+' '+esc(LL(x.n[0],x.n[1]))+'</b><span>'+esc(LL(x.st.map(s=>s[0]).join("→"),x.st.map(s=>s[1]).join(" → ")))+'</span><em>'+esc(LL(x.when[0],x.when[1]))+'</em></div>').join("")+'</div></div>'}
 const _usSheet45=usSheet;usSheet=function(){_usSheet45.apply(this,arguments);try{const th=S.threads[curT],sh=$(".sheet .sh-body")||$(".sheet>div:last-child")||$(".sheet");if(th&&sh){const at=sh.querySelector(".steps");const h=lnTrackHTML(th,mainOf(th));if(at)at.insertAdjacentHTML("beforebegin",h);else sh.insertAdjacentHTML("afterbegin",h)}}catch(_){}};
 /* header chip with the current line */
-const _renderChat45=renderChat;renderChat=function(){_renderChat45.apply(this,arguments);try{const th=S.threads[curT];if(!th)return;lineCheck(th);const cid=mainOf(th);if(!ch(cid))return;const cur=relLine(th,cid),L=LINES[cur.k];
- const host=$(".chead .dimslim")||$(".chead");if(host&&!$(".chead .lnchip"))host.insertAdjacentHTML("beforeend",'<button class="lnchip" data-us="1" style="--lc:'+L.c+'">'+L.ic+' '+esc(LL(L.st[cur.i][0],L.st[cur.i][1]))+'</button>')}catch(_){}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_rel45 = function () { try{const th=S.threads[curT];if(!th)return;lineCheck(th);const cid=mainOf(th);if(!ch(cid))return;const cur=relLine(th,cid),L=LINES[cur.k];
+ const host=$(".chead .dimslim")||$(".chead");if(host&&!$(".chead .lnchip"))host.insertAdjacentHTML("beforeend",'<button class="lnchip" data-us="1" style="--lc:'+L.c+'">'+L.ic+' '+esc(LL(L.st[cur.i][0],L.st[cur.i][1]))+'</button>')}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("rel45", __body_rel45);
+else { const _renderChat45 = renderChat; renderChat = function () { const r = _renderChat45.apply(this, arguments); __body_rel45(); return r; }; };
 const _dimFloat45=dimFloat;dimFloat=function(){_dimFloat45.apply(this,arguments);try{const th=S.threads[curT];lineCheck(th);const ch0=$(".chead .lnchip");if(ch0&&th){const c=relLine(th,mainOf(th)),L=LINES[c.k];ch0.style.setProperty("--lc",L.c);ch0.textContent=L.ic+" "+LL(L.st[c.i][0],L.st[c.i][1])}}catch(_){}};
 
 /* ---------- personas: personality + about me, chosen per chat ---------- */
@@ -11127,7 +11142,10 @@ function cleanDecor(){const scr=$("#s-chat");if(!scr||!cleanOn())return;
  const ir=scr.querySelector(".composer .inrow"),modes=scr.querySelector(".composer .modes");
  if(ir&&modes&&!ir.querySelector(".modebtn")){const on=modes.querySelector(".on")||modes.querySelector("button");ir.insertAdjacentHTML("afterbegin",'<button class="modebtn" data-modebtn="1">'+esc((on&&on.textContent||LL("台词","Say")).trim().slice(0,4))+' ▴</button>')}
  cleanMark()}
-const _renderChat48=renderChat;renderChat=function(){_renderChat48.apply(this,arguments);try{cleanDecor();if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){}};
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_clean48 = function () { try{cleanDecor();if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("clean48", __body_clean48);
+else { const _renderChat48 = renderChat; renderChat = function () { const r = _renderChat48.apply(this, arguments); __body_clean48(); return r; }; };
 /* new messages appended without a full re-render */
 let CLEAN_MO=null;setInterval(()=>{const m=$("#msgs");if(!m||m._cleanObs)return;m._cleanObs=1;CLEAN_MO=new MutationObserver(()=>{if(cleanOn())requestAnimationFrame(cleanMark)});CLEAN_MO.observe(m,{childList:true})},600);
 document.addEventListener("click",e=>{let x;
@@ -17549,7 +17567,10 @@ function dock98() {
   else if (A.phase === "talk") h = '<div class="dk98r"><span class="dk98t">💬 ' + L98("自由对话中 · ", "Talking · ") + esc(LZ98(s && s.place)) + '</span><button data-b98next="1">▶ ' + L98("继续剧情", "Continue") + '</button></div>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); if (s && As["bg_" + s.id]) { window.SCENE_FILES[th.b98.bg] = As["bg_" + s.id]; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} return r; }; }
+{ /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story98 = function () { try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); if (s && As["bg_" + s.id]) { window.SCENE_FILES[th.b98.bg] = As["bg_" + s.id]; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story98", __body_story98);
+else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_story98(); return r; }; }; }
 document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if (e.target.closest("[data-b98next]")) { if (th && th.b98) next98(th); return; }
   if ((x = e.target.closest("[data-b98pick]"))) { if (th && th.b98) pick98(th, +x.dataset.b98pick); return; }

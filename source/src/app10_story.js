@@ -108,9 +108,12 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-ord]");if(
  if(st.pick.length===3){const n=st.pick.filter(Boolean).length;$$("[data-ord]").forEach(b=>b.disabled=true);gResult(st.p,n*3,S.lang==="zh"?(n===3?"你记住了 "+ch(st.p[1]).n+" 每天替 "+ch(st.p[2]).n+" 点的那杯。":"差一点——"+ch(st.p[2]).n+" 喝了一口，皱了下眉。"):(n===3?"You remembered the exact drink "+ch(st.p[1]).n+" orders for "+ch(st.p[2]).n+".":"Close — "+ch(st.p[2]).n+" took a sip and frowned."),'<p class="sm">☕ '+n+' / 3</p>')}});
 
 /* ---------- chat: 📞 call button + pair chip ---------- */
-const _renderChat=renderChat;renderChat=function(){_renderChat.apply(this,arguments);const th=S.threads[curT];if(!th)return;const hd=$(".chead"),mid=mainOf(th);
+/* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
+const __body_story10 = function () { const th=S.threads[curT];if(!th)return;const hd=$(".chead"),mid=mainOf(th);
  if(hd&&ch(mid)&&!hd.querySelector(".callbtn"))hd.querySelector("[data-cmenu]").insertAdjacentHTML("beforebegin",'<button class="callbtn" data-callgo="'+mid+'">📞<span>'+(S.plus?t("call.btn"):!S.callTrial?t("call.trial"):t("call.btn"))+'</span></button>');
- const p=pairOf(th.wid),stt=$(".status");if(p&&stt&&!stt.querySelector(".pairchip"))stt.insertAdjacentHTML("afterbegin",pairChip(p))};
+ const p=pairOf(th.wid),stt=$(".status");if(p&&stt&&!stt.querySelector(".pairchip"))stt.insertAdjacentHTML("afterbegin",pairChip(p)) };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("story10", __body_story10);
+else { const _renderChat = renderChat; renderChat = function () { const r = _renderChat.apply(this, arguments); __body_story10(); return r; }; };
 function callGate(cid){if(S.plus){startCall(cid);return}
  if(!S.callTrial){S.callTrial=1;save();startCall(cid,60);return}
  const c=ch(cid);sheet('<div class="eyebrow" style="color:var(--gold)">📞 '+t("call.h")+'</div><h2 style="margin-top:4px">'+esc(t("call.gateH",{n:first(c.n)}))+'</h2><p class="sm dim" style="margin-top:6px">'+t("call.gateS")+'</p>'+
