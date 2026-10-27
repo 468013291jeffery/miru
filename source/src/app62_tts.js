@@ -26,14 +26,14 @@ function ttsFetch(text,id){const k=ttsKey(text,id);if(TTS.mem.has(k))return Prom
   .catch(e=>{TTS.fails++;if(TTS.fails>=4){TTS.off=true;setTimeout(()=>{TTS.off=false;TTS.fails=0},5*60e3)}throw e}).finally(()=>TTS.inflight.delete(k));
  TTS.inflight.set(k,p);return p}
 function ttsSpeakable(text){const s=String(text||"").replace(/[*()（）\s]/g,"");return s.length>=2&&s.length<=200}
-const _speak62=speak;
-speak=function(text,id,onend){try{
- if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return _speak62(text,id,onend);
+
+VOICE.use('tts-62',function(next,text,id,onend){try{
+ if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return next(text,id,onend);
  stopVoice();const my=(TTS.seq=(TTS.seq||0)+1);let done=false;
  const fallback=()=>{if(done||TTS.seq!==my)return;done=true;_speak62(text,id,onend)};
  const tm=setTimeout(fallback,TTS.mem.has(ttsKey(text,id))?1500:7000);
  ttsFetch(text,id).then(u=>{if(done||TTS.seq!==my)return;done=true;clearTimeout(tm);const a=new Audio(u);AUD_CUR=a;a.onended=()=>{if(onend)onend()};a.onerror=()=>{if(onend)onend()};a.play().catch(()=>{if(onend)onend()})}).catch(()=>{clearTimeout(tm);fallback()});
-}catch(_){return _speak62(text,id,onend)}};
+}catch(_){return next(text,id,onend)}});
 const _stopVoice62=stopVoice;stopVoice=function(){TTS.seq=(TTS.seq||0)+1;return _stopVoice62()};
 /* prefetch the next spoken lines while the current one plays (only when read-aloud is on) */
 function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;

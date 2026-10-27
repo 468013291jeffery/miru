@@ -209,7 +209,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      147 个函数 / 331 处   （当天起点 382 ⇒ −51；最后 9 处是 msgHTML 别名、7 处是 menuSheet 的包装）
+猴补丁      147 个函数 / 328 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3）
 空 catch    569 处 / 99 个文件    （当天起点 616 ⇒ −41）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码

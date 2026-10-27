@@ -144,7 +144,7 @@ function recorded(text,id){
  const l=audLang();if(!l)return null;audPack(l);const P=AUDP[l];if(!P)return null;
  const k=(id||"n")+"|"+String(text).replace(/[*()（）]/g,"").trim();return P[k]||(ch(id)?null:P["n|"+k.split("|").slice(1).join("|")])||null}
 function hasVoice(text,id){return !!recorded(text,id)}
-function speak(text,id,onend){
+function baseSpeak(text,id,onend){
  try{
   stopVoice();
   const rec=recorded(text,id);
@@ -160,6 +160,27 @@ function speak(text,id,onend){
   if(onend)u.onend=onend;speechSynthesis.speak(u);
  }catch(e){}}
 function stopVoice(){try{speechSynthesis.cancel()}catch(e){}try{if(AUD_CUR){AUD_CUR.pause();AUD_CUR=null}}catch(e){}}
+/* ===== VOICE：speak 的注册表（2026-10-27） =====
+   原来是 5 个文件各自 `const _speakNN=speak; speak=function(...)` 层层包。能跑，但两件事没人管得住：
+     ① 加第 6 层时忘了把 onend 传下去 ⇒ speakQueue 静默停住，而没有任何东西会喊；
+     ② 出问题只能看见「一条 5 层闭包组成的链」，说不清卡在哪层。
+   现在每层 VOICE.use(名字, fn)，fn(next, text, id, onend)：
+     · 要往下传就调 next(text,id,onend) —— 它就是原来那层的 _speakNN；
+     · 不调就是想自己处理掉这条（app45 的旁白风格、app88 的通话拦截就是这种）。
+   执行顺序 = 注册顺序的**倒序**（后注册的在外层），与原来的闭包嵌套一致；
+   VOICE.below(名字) = 「该层注册之前的那条链」，逐层语义对齐。 */
+const VOICE=(function(){
+ const layers=[];
+ function run(k,text,id,onend){
+  if(k<0)return baseSpeak(text,id,onend);
+  const L=layers[k];
+  return L.fn(function(t,i,o){return run(k-1,t===undefined?text:t,i===undefined?id:i,o===undefined?onend:o)},text,id,onend)}
+ return{
+  use:function(name,fn){layers.push({name:name,fn:fn})},
+  below:function(name){const k=layers.findIndex(function(l){return l.name===name});return function(text,id,onend){return run(k-1,text,id,onend)}},
+  run:function(text,id,onend){return run(layers.length-1,text,id,onend)},
+  layers:layers}})();
+function speak(text,id,onend){return VOICE.run(text,id,onend)}
 /* 2026-10-27 Ann：「语言包说实话也是没什么用的」——实测她那条线程 10 次发声里命中录音包 0 次。
    而它在启动 600ms 后就把 audio/<lang>.json（zh 11 MB）整份拉下来。⇒ 改成**按需**：
    第一次真要念某句时由 recorded() 自己去调 audPack()，启动不再预取。 */

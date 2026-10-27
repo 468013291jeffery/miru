@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="b776d25abc0d 2026-10-27T15:02Z";
+window.MIRU_BUILD="354527c61e21 2026-10-27T15:27Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3242,7 +3242,7 @@ function recorded(text,id){
  const l=audLang();if(!l)return null;audPack(l);const P=AUDP[l];if(!P)return null;
  const k=(id||"n")+"|"+String(text).replace(/[*()（）]/g,"").trim();return P[k]||(ch(id)?null:P["n|"+k.split("|").slice(1).join("|")])||null}
 function hasVoice(text,id){return !!recorded(text,id)}
-function speak(text,id,onend){
+function baseSpeak(text,id,onend){
  try{
   stopVoice();
   const rec=recorded(text,id);
@@ -3258,6 +3258,27 @@ function speak(text,id,onend){
   if(onend)u.onend=onend;speechSynthesis.speak(u);
  }catch(e){}}
 function stopVoice(){try{speechSynthesis.cancel()}catch(e){}try{if(AUD_CUR){AUD_CUR.pause();AUD_CUR=null}}catch(e){}}
+/* ===== VOICE：speak 的注册表（2026-10-27） =====
+   原来是 5 个文件各自 `const _speakNN=speak; speak=function(...)` 层层包。能跑，但两件事没人管得住：
+     ① 加第 6 层时忘了把 onend 传下去 ⇒ speakQueue 静默停住，而没有任何东西会喊；
+     ② 出问题只能看见「一条 5 层闭包组成的链」，说不清卡在哪层。
+   现在每层 VOICE.use(名字, fn)，fn(next, text, id, onend)：
+     · 要往下传就调 next(text,id,onend) —— 它就是原来那层的 _speakNN；
+     · 不调就是想自己处理掉这条（app45 的旁白风格、app88 的通话拦截就是这种）。
+   执行顺序 = 注册顺序的**倒序**（后注册的在外层），与原来的闭包嵌套一致；
+   VOICE.below(名字) = 「该层注册之前的那条链」，逐层语义对齐。 */
+const VOICE=(function(){
+ const layers=[];
+ function run(k,text,id,onend){
+  if(k<0)return baseSpeak(text,id,onend);
+  const L=layers[k];
+  return L.fn(function(t,i,o){return run(k-1,t===undefined?text:t,i===undefined?id:i,o===undefined?onend:o)},text,id,onend)}
+ return{
+  use:function(name,fn){layers.push({name:name,fn:fn})},
+  below:function(name){const k=layers.findIndex(function(l){return l.name===name});return function(text,id,onend){return run(k-1,text,id,onend)}},
+  run:function(text,id,onend){return run(layers.length-1,text,id,onend)},
+  layers:layers}})();
+function speak(text,id,onend){return VOICE.run(text,id,onend)}
 /* 2026-10-27 Ann：「语言包说实话也是没什么用的」——实测她那条线程 10 次发声里命中录音包 0 次。
    而它在启动 600ms 后就把 audio/<lang>.json（zh 11 MB）整份拉下来。⇒ 改成**按需**：
    第一次真要念某句时由 recorded() 自己去调 audPack()，启动不再预取。 */
@@ -8849,9 +8870,9 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-bgm]"))return;
 const _show19=show;show=function(id){_show19(id);if(id!=="s-chat")bgmStop()};
 const _sceneBg19=sceneBg;sceneBg=function(th,img){_sceneBg19.apply(this,arguments);if(curT===th.id&&bgmOn()&&(BGM.timer||BGM.file)){const w=bgmForThread(th);if(w)bgmPlay(w.mood,w.wid)}};
 /* duck under voice lines */
-const _speak19=speak;speak=function(text,id,onend){BGM.duck=.35;if(BGM.timer)bgmGain(bgmLevel(),.3);if(BGM.file)BGM.file.volume=.35*BGM.duck;
+VOICE.use('bgm-19',function(next,text,id,onend){BGM.duck=.35;if(BGM.timer)bgmGain(bgmLevel(),.3);if(BGM.file)BGM.file.volume=.35*BGM.duck;
  const back=()=>{BGM.duck=1;if(BGM.timer)bgmGain(bgmLevel(),1.2);if(BGM.file)BGM.file.volume=.35};const est=setTimeout(back,Math.max(2500,String(text||"").length*(S.lang==="zh"?260:75)));
- return _speak19(text,id,()=>{clearTimeout(est);back();if(onend)onend()})};
+ return next(text,id,()=>{clearTimeout(est);back();if(onend)onend()})});
 document.addEventListener("visibilitychange",()=>{if(!BGM.ctx)return;if(document.hidden)BGM.ctx.suspend().catch(()=>{});else if(BGM.timer)BGM.ctx.resume().catch(()=>{})});
 Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign(I18N.zh,{"bgm.on":"背景音乐已开启","bgm.off":"背景音乐已关闭"});
 
@@ -11397,7 +11418,7 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-pswitch]")){per
 const _newThread45=newThread;newThread=function(kind,id,openId,extra){const th=_newThread45(kind,id,openId,extra);try{const c=ch(id);if(kind==="solo"&&c&&c.side&&ch(c.side)&&!th.cast.includes(c.side)){th.cast.push(c.side);loveWrite(th,c.side,0,"init",{absolute:5});
  if(c.sideLine)th.msgs.push({who:c.side,k:"say",txt:String(c.sideLine).replace(/^\*[^*]*\*\s*/,""),at:Date.now()+1});const m=String(c.sideLine||"").match(/^\*([^*]*)\*/);if(m)th.msgs.splice(th.msgs.length-1,0,{who:"n",k:"act",txt:m[1],at:Date.now()});save()}}catch(_){}return th};
 const NV_P={radio:{pitch:.92,rate:.94},film:{pitch:.97,rate:.96},soft:{pitch:1.08,rate:.97},noir:{pitch:.9,rate:.92}};
-const _speak45=speak;speak=function(text,id,onend){try{const th=S.threads[curT],w=th&&wd(th.wid),nv=w&&w.nv;if((!id||id==="n")&&nv){if(nv==="off"){if(onend)setTimeout(onend,50);return}const P=NV_P[nv];if(P&&"speechSynthesis" in window&&!recorded(text,id)){stopVoice();const u=new SpeechSynthesisUtterance(String(text).replace(/[*()（）]/g,""));u.lang=LTAG[S.lang];u.pitch=P.pitch;u.rate=P.rate;if(onend)u.onend=onend;speechSynthesis.speak(u);return}}}catch(_){}return _speak45(text,id,onend)};
+VOICE.use('rel-45',function(next,text,id,onend){try{const th=S.threads[curT],w=th&&wd(th.wid),nv=w&&w.nv;if((!id||id==="n")&&nv){if(nv==="off"){if(onend)setTimeout(onend,50);return}const P=NV_P[nv];if(P&&"speechSynthesis" in window&&!recorded(text,id)){stopVoice();const u=new SpeechSynthesisUtterance(String(text).replace(/[*()（）]/g,""));u.lang=LTAG[S.lang];u.pitch=P.pitch;u.rate=P.rate;if(onend)u.onend=onend;speechSynthesis.speak(u);return}}}catch(_){}return next(text,id,onend)});
 
 /* ---------- everything above, written into the live prompt ---------- */
 const _ask45=ask;ask=function(prompt,opts){let chat=false,th=null,cid=null;try{th=S.threads[curT];if(typeof prompt==="string"&&prompt.indexOf("You write MIRU")===0&&th){chat=true;cid=mainOf(th);const c=ch(cid),p=th.persona||persona(),add=[];
@@ -13351,14 +13372,14 @@ function ttsFetch(text,id){const k=ttsKey(text,id);if(TTS.mem.has(k))return Prom
   .catch(e=>{TTS.fails++;if(TTS.fails>=4){TTS.off=true;setTimeout(()=>{TTS.off=false;TTS.fails=0},5*60e3)}throw e}).finally(()=>TTS.inflight.delete(k));
  TTS.inflight.set(k,p);return p}
 function ttsSpeakable(text){const s=String(text||"").replace(/[*()（）\s]/g,"");return s.length>=2&&s.length<=200}
-const _speak62=speak;
-speak=function(text,id,onend){try{
- if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return _speak62(text,id,onend);
+
+VOICE.use('tts-62',function(next,text,id,onend){try{
+ if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return next(text,id,onend);
  stopVoice();const my=(TTS.seq=(TTS.seq||0)+1);let done=false;
  const fallback=()=>{if(done||TTS.seq!==my)return;done=true;_speak62(text,id,onend)};
  const tm=setTimeout(fallback,TTS.mem.has(ttsKey(text,id))?1500:7000);
  ttsFetch(text,id).then(u=>{if(done||TTS.seq!==my)return;done=true;clearTimeout(tm);const a=new Audio(u);AUD_CUR=a;a.onended=()=>{if(onend)onend()};a.onerror=()=>{if(onend)onend()};a.play().catch(()=>{if(onend)onend()})}).catch(()=>{clearTimeout(tm);fallback()});
-}catch(_){return _speak62(text,id,onend)}};
+}catch(_){return next(text,id,onend)}});
 const _stopVoice62=stopVoice;stopVoice=function(){TTS.seq=(TTS.seq||0)+1;return _stopVoice62()};
 /* prefetch the next spoken lines while the current one plays (only when read-aloud is on) */
 function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
@@ -15611,10 +15632,10 @@ const _ttsFetch86=ttsFetch;
 ttsFetch=function(text,id){const k=ttsKey(text,id),had=TTS.mem.has(k)||TTS.inflight.has(k);const p=_ttsFetch86(text,id);
  if(!had)p.then(()=>{if(!(TTS.billed=TTS.billed||new Set()).has(k)){TTS.billed.add(k);ttsBill(String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,""))}}).catch(()=>{});return p};
 /* speak through the shared element */
-speak=function(text,id,onend){try{
- if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return _speak62(text,id,onend);
+VOICE.use('voicefix-86',function(next,text,id,onend){try{
+ if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return VOICE.below('tts-62')(text,id,onend);
  stopVoice();const my=(TTS.seq=(TTS.seq||0)+1);let done=false;
- const fallback=()=>{if(done||TTS.seq!==my)return;done=true;_speak62(text,id,onend)};
+ const fallback=()=>{if(done||TTS.seq!==my)return;done=true;VOICE.below('tts-62')(text,id,onend)};
  /* 2026-10-27 两处实测修正（探针 tools/voice-probe.mjs 抓出来的，不是猜的）：
     ① **解码失败被当成「播完了」**：原来 `a.onerror=()=>{if(onend)onend()}` 与 onended 同路。
        坏音频实测 1–3ms 就把这一条"播完"，队列照常推进 —— 用户什么也没听见，而所有计数器正常。
@@ -15625,10 +15646,10 @@ speak=function(text,id,onend){try{
  ttsFetch(text,id).then(u=>{if(done||TTS.seq!==my)return;done=true;clearTimeout(tm);const a=TTSEL;let ended=false;
   const once=(fn)=>{if(ended)return;ended=true;try{fn()}catch(_){}};
   a.onended=()=>once(()=>{if(onend)onend()});
-  a.onerror=()=>once(()=>{TTS.fails=(TTS.fails||0)+1;try{a.onended=null;a.onerror=null}catch(_){}_speak62(text,id,onend)});
-  a.src=u;AUD_CUR=a;a.play().catch(()=>{once(()=>{TTS.fails=(TTS.fails||0)+1;const b=new Audio(u);AUD_CUR=b;b.onended=()=>{if(onend)onend()};b.play().catch(()=>{_speak62(text,id,onend)})})})
+  a.onerror=()=>once(()=>{TTS.fails=(TTS.fails||0)+1;try{a.onended=null;a.onerror=null}catch(_){}VOICE.below('tts-62')(text,id,onend)});
+  a.src=u;AUD_CUR=a;a.play().catch(()=>{once(()=>{TTS.fails=(TTS.fails||0)+1;const b=new Audio(u);AUD_CUR=b;b.onended=()=>{if(onend)onend()};b.play().catch(()=>{VOICE.below('tts-62')(text,id,onend)})})})
  }).catch(()=>{clearTimeout(tm);fallback()});
-}catch(_){return _speak62(text,id,onend)}};
+}catch(_){return VOICE.below('tts-62')(text,id,onend)}});
 /* scripted calls: prefetch every line, then let the voice set the pace */
 stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),c=ch(cid),lines=d.lines.map(x=>Array.isArray(x)?x:[cid,x]);let i=0,done=false;const t0=Date.now();
  const who=w=>ch(w)?w:cid;
@@ -15781,7 +15802,7 @@ stopCallRun=function(th,d){const voiceOK=VC.ep&&VC.ok!==false&&S.callVoice!=="of
   PEND88={beats,sugg,i:0,max:Math.min(8,Math.max(4,beats.length+2)),hint:typeof d.hint==="string"?d.hint:(d.hint?Lz(d.hint):""),th,res,fallback:()=>_stopCallRun88(th,d).then(res)};
   startCall(cid,0,false);if(!call){const P=PEND88;PEND88=null;P.fallback()}})};
 /* tap-through fallback: never read the player's own lines in his voice — show them for the player instead */
-const _speak88=speak;speak=function(text,id,onend){try{const th=S.threads[curT];if($(".stcallv")&&th&&th.pk&&th.pk.as&&id===th.pk.as){const L=$(".stcallv #scL");if(L)L.innerHTML='<span style="opacity:.7">'+esc(sc88("say"))+'</span>「'+esc(text)+'」';setTimeout(()=>{if(onend)onend()},Math.max(2500,String(text).length*180));return}}catch(_){}return _speak88.apply(this,arguments)};
+VOICE.use('memcall-88',function(next,text,id,onend){try{const th=S.threads[curT];if($(".stcallv")&&th&&th.pk&&th.pk.as&&id===th.pk.as){const L=$(".stcallv #scL");if(L)L.innerHTML='<span style="opacity:.7">'+esc(sc88("say"))+'</span>「'+esc(text)+'」';setTimeout(()=>{if(onend)onend()},Math.max(2500,String(text).length*180));return}}catch(_){}return next(text,id,onend)});
 (function(){const st=document.createElement("style");st.textContent=`.vc88s{width:100%;text-align:center;opacity:.85;margin:2px 0 6px;color:#F6D3AE}[data-vc88go]{margin:0 auto}`;document.head.appendChild(st)})();
 
 /* ================= v4.7 · OFFICIAL STORIES IN SEARCH =================
