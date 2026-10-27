@@ -1,0 +1,7 @@
+<!doctype html><meta charset="utf-8"><pre id="out">…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px"></iframe>
+<script>
+setTimeout(()=>{const w=document.getElementById('f').contentWindow;const o=document.getElementById('out');
+ try{ o.textContent = 'soft: ' + JSON.stringify(w.__soft ? w.__soft() : 'not installed') }catch(e){ o.textContent='err '+e.message }
+},9000);
+</script>

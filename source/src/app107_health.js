@@ -30,6 +30,7 @@
     try { if (window.UI && window.__ui) { const s = window.__ui(); out.ui = { 渲染: s.渲染次数, 钩子: s.hook数, 失败: s.总失败 } } } catch (_) {}
     try { if (window.PKST && window.__pkst) { const s = window.__pkst(); out.pkst = { 转移: s.总转移, 非法: s.非法次数, 各状态: s.各状态 } } } catch (_) {}
     try { if (window.__uiErr) out.uiErr = String(window.__uiErr) } catch (_) {}
+    try { if (window.__soft) { const s = window.__soft(); out.soft = { 静默失败: s.总数, 位置数: s.分类数 }; } } catch (_) {}
     return out;
   }
 

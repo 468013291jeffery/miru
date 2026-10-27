@@ -41,6 +41,7 @@ if (h.pkst) {
   line('非法迁移', h.pkst.非法 + ' 次', h.pkst.非法 > 0);
 }
 if (h.uiErr) line('UI 安装错误', h.uiErr, true);
+if (h.soft) line('静默失败', h.soft.静默失败 + ' 次 / ' + h.soft.位置数 + ' 个位置', h.soft.静默失败 > 0 && h.soft.位置数 > 0);
 
 console.log('');
 if (warn.length) { console.log('✗ 有 ' + warn.length + ' 项异常：' + warn.join(' / ')); process.exit(1) }
