@@ -27,8 +27,7 @@
   };
   /* ---------- 3 · 天气跟着场景走 ---------- */
   if (typeof pkDirective === "function" && typeof fxFrom === "function") {
-    const _pd = pkDirective;
-    pkDirective = function (th, b) {
+    PKREG.add("app100_fixes.js", function(th, b, next){
       try {
         if (Array.isArray(b) && b[0] === "sys" && b[1] === "scene" && th && th.pk) {
           const x = b[2] || {}; let txt = (x.place || "") + " " + (x.time || "") + " " + (x.img || "");
@@ -38,8 +37,8 @@
           fxSet(th, k || "none");
         }
       } catch (_) {}
-      return _pd.apply(this, arguments);
-    };
+      return next.apply(this, arguments);
+    });;
   }
   if (typeof chatFx === "function") {
     const _cf = chatFx;

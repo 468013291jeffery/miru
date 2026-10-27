@@ -231,6 +231,7 @@ tools/patch-registry.mjs
 | **文本进 UI** | `app3_chat.js` `sanitizeMsgs` | `th.msgs` 30 处直写绕过的文本净化 | `__ui()`/控制台 | `sanitize-selftest.mjs` |
 | **加载顺序** | `tools/wiring-order-check.mjs` | 状态机必须先于「绑定它的那一行」出现 | 位置比较 | 同左 |
 | **猴补丁基线** | `tools/patch-registry.mjs --check` | 新增包装 = 需要显式确认 | 148 函数 / 382 处 | 同左 |
+| **剧本指令分发** `PKREG` | `app110_pkreg.js` | 26 层 `pkDirective` 包装 → **一张注册表**（顺序 = 数组下标，不再靠文件名） | `__pkreg()`：注册层 · 分发次数 · **层内抛错** | `pkdirective-check.mjs` |
 | **错误日志** `ERRLOG` | `app108_errlog.js` | `window.onerror` / `unhandledrejection` / `console.error` 三源合一，**保留 2 分钟窗口** | `__errlog()`：窗口内条数 · 已淘汰 | `errlog-selftest.mjs` |
 | **行号归位** | `tools/line2file.mjs` | `index.html:6833` → `app12_beats.js:25` | 130/130 块可定位 | — |
 

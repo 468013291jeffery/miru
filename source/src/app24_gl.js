@@ -138,7 +138,7 @@ bgmTick=function(){const M=BGM_MOODS[BGM.mood];if(!M||!BGM.ctx)return;const c=BG
   if(M.bell&&k===6&&bar%2===0)bgmNote(ch[ch.length-1]+36,t,eighth*10,{wave:"sine",cut:5000,vel:.03});
   if(M.brush){if(k%2===1)bgmNoise(t+(M.sw?eighth*M.sw:0),.08,.035,7000);if(k===2||k===6)bgmNoise(t,.18,.05,3500)}
   BGM.next+=eighth;BGM.step++}};
-const _pkDir24=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="bgm"){th.pk.q.shift();th.pk.bgm=(b[2]||{}).m||null;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true);return true}return _pkDir24(th,b)};
+PKREG.add("app24_gl.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="bgm"){th.pk.q.shift();th.pk.bgm=(b[2]||{}).m||null;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true);return true}return next(th,b)});;
 const _bgmFor24=bgmForThread;bgmForThread=function(th){const r=_bgmFor24(th);if(r&&th&&th.pk&&th.pk.bgm&&BGM_MOODS[th.pk.bgm]&&!(th.fxm&&th.fxm!=="auto"))r.mood=th.pk.bgm;return r};
 /* restarting a chapter clears the cue */
 const _packOpen24=packOpen;packOpen=function(th,n,instant){if(th&&th.pk)th.pk.bgm=null;return _packOpen24.apply(this,arguments)};

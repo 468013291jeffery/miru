@@ -47,8 +47,8 @@ function sfxOne(k){const c=sfxCtx();if(!c)return;
  if(k==="ring"){for(let i=0;i<2;i++){blip(c,{f0:880,f1:880,dur:.35,type:"sine",vol:.08,at:i*.5});blip(c,{f0:660,f1:660,dur:.35,type:"sine",vol:.06,at:i*.5+.05})}}
  if(k==="msg"){blip(c,{f0:1320,f1:1320,dur:.12,vol:.07});blip(c,{f0:1760,f1:1760,dur:.14,vol:.06,at:.1})}
  if(k==="unsend"){blip(c,{f0:900,f1:300,dur:.25,type:"triangle",vol:.07})}}
-const _pkDir40=pkDirective;pkDirective=function(th,b){try{if(Array.isArray(b)&&b[0]==="sys"&&curT===th.id&&!PKSKIP[th.id]){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||""));
-  if(b[1]==="event"&&/枪|gunshot|shot|💥/.test(tx+(d.icon||"")))sfxOne("gun");else if(b[1]==="event"&&/🔔|📱|消息|message/.test(tx+(d.icon||"")))sfxOne("msg");if(b[1]==="recall")sfxOne("unsend")}}catch(_){}return _pkDir40(th,b)};
+PKREG.add("app40_sfx.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&curT===th.id&&!PKSKIP[th.id]){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||""));
+  if(b[1]==="event"&&/枪|gunshot|shot|💥/.test(tx+(d.icon||"")))sfxOne("gun");else if(b[1]==="event"&&/🔔|📱|消息|message/.test(tx+(d.icon||"")))sfxOne("msg");if(b[1]==="recall")sfxOne("unsend")}}catch(_){}return next(th,b)});;
 Object.assign(I18N.zh,{"sfx.tip":"🎵 本剧有配乐和音效 · 右上角 🎵 可关闭"});Object.assign(I18N.en,{"sfx.tip":"🎵 This story has music and sound · tap 🎵 at the top to turn it off"});
 /* 2 · intense effects belong to their moment: they fade back to calm on their own */
 const FX_LIFE={danger:7000,flashes:1500,blackout:6000,fireworks:6000,iceshatter:4000};
@@ -61,7 +61,7 @@ function popOut(kind,imgId){try{if(PKSKIP[curT])return;const im=$(".cbimg img.on
  L.appendChild(o);setTimeout(()=>o.remove(),kind==="gun"?1800:2800);try{navigator.vibrate&&navigator.vibrate(kind==="gun"?[60,40,120]:[30])}catch(_){}
  try{if(kind==="gun")sfxOne("gun")}catch(_){}}catch(_){}}
 window.popOut=popOut;
-const _pkDir40b=pkDirective;pkDirective=function(th,b){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"&&curT===th.id){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||"")+(d.icon||""));if(/枪|gunshot|shot|💥|撞开/.test(tx))setTimeout(()=>popOut("gun"),50);else if(/吻|kiss|抱|hug|💞|🔥/.test(tx))setTimeout(()=>popOut("kiss"),50)}}catch(_){}return _pkDir40b(th,b)};
+PKREG.add("app40_sfx.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"&&curT===th.id){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||"")+(d.icon||""));if(/枪|gunshot|shot|💥|撞开/.test(tx))setTimeout(()=>popOut("gun"),50);else if(/吻|kiss|抱|hug|💞|🔥/.test(tx))setTimeout(()=>popOut("kiss"),50)}}catch(_){}return next(th,b)});;
 document.addEventListener("click",e=>{const x=e.target.closest("[data-chgo]");if(!x)return;try{const th=S.threads[curT],o=th.pk.stop[2].opts[CH.i];if(o&&["kiss","bold"].includes(o.att))setTimeout(()=>popOut("kiss"),700)}catch(_){}},true);
 document.addEventListener("click",e=>{if(e.target.closest("[data-lockgo],[data-lockbuy]"))setTimeout(()=>popOut("kiss"),900)},true);
 (function(){const st=document.createElement("style");st.textContent=`

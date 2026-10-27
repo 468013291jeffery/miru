@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><title>pkreg probe</title>
+<pre id="out">…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+setTimeout(()=>{
+  const w=document.getElementById('f').contentWindow, o=document.getElementById('out');
+  try{
+    const s = w.__pkreg ? w.__pkreg(true) : 'no __pkreg';
+    const lines = [];
+    lines.push('已安装: ' + (s.汇总 && s.汇总.已安装));
+    lines.push('注册层: ' + (s.汇总 && s.汇总.注册层));
+    lines.push('分发次数: ' + (s.汇总 && s.汇总.分发次数) + ' · 被消费: ' + (s.汇总 && s.汇总.被消费) + ' · 层内抛错: ' + (s.汇总 && s.汇总.层内抛错));
+    // 直接喂一个假指令，验证链路真的能跑
+    try{
+      const th = { pk:{q:[[ 'sys','nothing',{} ]], ch:1}, msgs:[], wid:'x' };
+      const before = w.__pkreg().分发次数;
+      w.pkDirective(th, ['sys','nothing',{}]);
+      const after = w.__pkreg().分发次数;
+      lines.push('喂一个未知指令 → 分发次数 ' + before + ' → ' + after + '（应当增加）');
+    }catch(e){ lines.push('喂指令抛错: '+e.message) }
+    o.textContent = lines.join('\n');
+  }catch(e){ o.textContent='err '+e.message }
+}, 10000);
+</script>

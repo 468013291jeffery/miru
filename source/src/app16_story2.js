@@ -195,10 +195,9 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
  if(e.target.closest("[data-featgo]")){const F=FEATK[d.k];if(!F){stopResolve(th,d.then||[]);return}PKFEAT={th,cid:d.cid,d,k:d.k};th.pk.go=1;save();packRefresh(th);F.run(d.cid||mainOf(th));return}
  if(e.target.closest("[data-featback]")){PKFEAT=null;stopResolve(th,d.then||d.win||[]);return}});
 /* dramatic event card: ["sys","event",{icon,title,txt}] — the moment the story turns (power cut, someone bursts in, a big reveal) */
-const _pkDir3=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
+PKREG.add("app16_story2.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   appendMsg(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||"",at:Date.now()});try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
- return _pkDir3(th,b)};
+ return next(th,b)});;
 const _msgHTML3=msgHTML;
 msgHTML=function(m,i,th){
  if(m.k==="event")return '<div class="m-event" data-mi="'+i+'"><i>'+esc(m.icon)+'</i><b>'+esc(m.title)+'</b>'+(m.txt?'<span>'+esc(m.txt)+'</span>':'')+'</div>';

@@ -5,8 +5,7 @@
 if(typeof PAY!=="undefined")Object.assign(PAY,{recall:2,missed:PRICES.callMin});
 STOPK.add("missed");STOPK.add("reveal");
 /* 1 · unsent message */
-const _pkDir37=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="recall"){th.pk.q.shift();const d=b[2]||{};appendMsg(th,{who:"sys",k:"xrecall",rw:d.who,txt:Lz(d.txt)||d.txt,at:Date.now()});save();return true}return _pkDir37(th,b)};
+PKREG.add("app37_hooks.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="recall"){th.pk.q.shift();const d=b[2]||{};appendMsg(th,{who:"sys",k:"xrecall",rw:d.who,txt:Lz(d.txt)||d.txt,at:Date.now()});save();return true}return next(th,b)});;
 const _msgHTML37=msgHTML;
 msgHTML=function(m,i,th){if(!m||m.k!=="xrecall")return _msgHTML37(m,i,th);const c=ch(m.rw),nm=c?first(c.n):"";
  if(m.open)return '<div class="xrc open" data-mi="'+i+'">'+avatar(m.rw,30)+'<div class="xrcb"><small>'+esc(t("rc.was",{n:nm}))+'</small><p>'+esc(m.txt)+'</p></div></div>';

@@ -27,7 +27,9 @@ const SHIM = 'function(n,f){try{return f()}catch(e){}}';
 /* 显式豁免：**写清理由**才允许有。没有理由的空 catch 一律算债务。 */
 const ALLOW = {
   // 日志器自己绝不能再抛（否则记日志这件事本身会把页面带崩）；它的健康由 errlog 文件本身证明
-  'app108_errlog.js': '日志器自身的兜底，不允许抛；它的失败由 .browser-errlog.json 是否存在来证明'
+  'app108_errlog.js': '日志器自身的兜底，不允许抛；它的失败由 .browser-errlog.json 是否存在来证明',
+  'app110_pkreg.js': '分发器对每一层单独 try/catch：一层炸不许连累整条链（它会把失败计入 __pkreg().层内抛错）',
+  'app109_pkdirect.js': '装配兜底：install() 失败时不许让页面崩，失败另由 __pkreg().已安装=false 暴露'
 };
 
 const per = {};

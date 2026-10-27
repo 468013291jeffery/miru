@@ -10,9 +10,9 @@ function cpAdd(th,cp){th.cps=th.cps||[];const k=cp.kind+"|"+cp.ch+"|"+cp.idx;th.
 /* chapter starts */
 const _packOpen46=packOpen;packOpen=function(th,n,instant){try{if(th&&th.pk&&!th._cpRestoring)cpAdd(th,{kind:"start",ch:n,idx:0,n:th.msgs.length})}catch(_){}return _packOpen46.apply(this,arguments)};
 /* scenes */
-const _pkDir46=pkDirective;pkDirective=function(th,b){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&th.pk&&th.pk.ch){const key=JSON.stringify(b),last=(th.cps||[]).filter(c=>c.ch===th.pk.ch&&c.kind==="scene").map(c=>c.idx);const from=last.length?Math.max(...last)+1:0;
+PKREG.add("app46_cp.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&th.pk&&th.pk.ch){const key=JSON.stringify(b),last=(th.cps||[]).filter(c=>c.ch===th.pk.ch&&c.kind==="scene").map(c=>c.idx);const from=last.length?Math.max(...last)+1:0;
   const sc=cpScenes(th,th.pk.ch).find(([x,i])=>i>=from&&JSON.stringify(x)===key)||cpScenes(th,th.pk.ch).find(([x])=>JSON.stringify(x)===key);
-  if(sc&&!(th.cps||[]).some(c=>c.kind==="scene"&&c.ch===th.pk.ch&&c.idx===sc[1]))cpAdd(th,{kind:"scene",ch:th.pk.ch,idx:sc[1],n:th.msgs.length})}}catch(_){}return _pkDir46(th,b)};
+  if(sc&&!(th.cps||[]).some(c=>c.kind==="scene"&&c.ch===th.pk.ch&&c.idx===sc[1]))cpAdd(th,{kind:"scene",ch:th.pk.ch,idx:sc[1],n:th.msgs.length})}}catch(_){}return next(th,b)});;
 /* free chats: the first meeting + every 8 turns */
 const _appendMsg46=appendMsg;appendMsg=function(th,m){try{if(th&&!th.pk&&m&&m.who==="me"){const mine=th.msgs.filter(x=>x.who==="me").length;if(mine===0||mine%8===0)cpAdd(th,{kind:"chat",ch:0,idx:mine,n:th.msgs.length})}}catch(_){}return _appendMsg46.apply(this,arguments)};
 function cpLabel(th,cp){if(cp.kind==="chat")return cp.idx===0?LL("初遇","First meeting"):LL("第 "+cp.idx+" 回合","Turn "+cp.idx);const sc=cpScenes(th,cp.ch),j=sc.findIndex(([,i])=>i===cp.idx);return cp.kind==="start"?LL("开头","Opening"):LL("第 "+(j+1)+" 节","Section "+(j+1))}

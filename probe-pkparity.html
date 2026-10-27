@@ -1,0 +1,24 @@
+<!doctype html><meta charset="utf-8"><title>pk parity</title>
+<pre id="out">…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+setTimeout(()=>{
+  const w=document.getElementById('f').contentWindow,o=document.getElementById('out'),L=[];
+  try{
+    L.push('已安装 '+w.__pkreg().已安装+' · 注册 '+w.__pkreg().注册层+' 层');
+    // 造一批指令，跑一遍，记录每种类型是否"被消费"
+    const types=['scene','bg','title','money','post','anchor','mono','bgm','rd','ring','recall','say','item','branch','join','decide','arc','cg94','vid94','fx','fx100','sfx','event','nothing'];
+    const res={};
+    for(const ty of types){
+      const th={pk:{q:[['sys',ty,{}]],ch:1},msgs:[],wid:'w',cast:[]};
+      let consumed=null;
+      try{ consumed = w.pkDirective(th,['sys',ty,{}]); }catch(e){ consumed='ERR:'+e.message }
+      res[ty]=consumed;
+    }
+    L.push('每种类型是否被消费：');
+    types.forEach(t=>L.push('  '+t.padEnd(8)+res[t]));
+    L.push('分发次数 '+w.__pkreg().分发次数+' · 层内抛错 '+w.__pkreg().层内抛错);
+    o.textContent=L.join('\n');
+  }catch(e){ o.textContent='err '+e.message }
+},10000);
+</script>

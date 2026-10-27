@@ -14,7 +14,7 @@ function myFromComposer(e){if(!myMode())return false;const ta=$("#cin");const v=
 document.addEventListener("click",e=>{if(e.target.closest("[data-send]"))myFromComposer(e)},true);
 document.addEventListener("keydown",e=>{if(e.target&&e.target.id==="cin"&&e.key==="Enter"&&!e.shiftKey)myFromComposer(e)},true);
 /* "let him speak" applies to this stretch only: it switches back on at the next scene or the next choice */
-const _pkDir41=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&S.selfSpeak===false){S.selfSpeak=true}return _pkDir41(th,b)};
+PKREG.add("app41_merge.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&S.selfSpeak===false){S.selfSpeak=true}return next(th,b)});;
 document.addEventListener("click",e=>{if(e.target.closest("[data-chgo],[data-pkpick2]")&&S.selfSpeak===false)S.selfSpeak=true},true);
 const _save41=save;save=function(){const v=S.selfSpeak;try{S.selfSpeak=true;return _save41.apply(this,arguments)}finally{S.selfSpeak=v}};
 Object.assign(I18N.zh,{"my.ph2":"以{n}的身份说……","my.empty":"先写一句，或者点上面的💡提示"});
@@ -28,4 +28,4 @@ Object.assign(I18N.en,{"my.ph2":"Your turn — say it as {n}…","my.empty":"Typ
 .mymode .composer .send{box-shadow:0 0 0 3px rgba(240,183,126,.25)}`;document.head.appendChild(st)})();
 /* the off-the-page effect fires on its own at the story's big pictures */
 const POP_AT={"heir/jet_catch":"kiss","heir/kiss_warehouse":"kiss","heir/bedroom":"kiss","heir/towel":"kiss","heir/lock_jet":"kiss","heir/lock_bedroom":"kiss","heir/press":"kiss","heir/threat":"gun","heir/warehouse":"gun","heir/fiancee":"kiss","afterhours/ch1_p2":"kiss"};
-const _pkDir41b=pkDirective;pkDirective=function(th,b){const r=_pkDir41b(th,b);try{if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="bg"||b[1]==="scene")&&curT===th.id&&!PKSKIP[th.id]){const img=(b[2]||{}).img;const k=POP_AT[img];th._popped=th._popped||{};if(k&&!th._popped[img]){th._popped[img]=1;save();setTimeout(()=>popOut(k,img),b[1]==="scene"?3200:700)}}}catch(_){}return r};
+PKREG.add("app41_merge.js", function(th,b, next){const r=next(th,b);try{if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="bg"||b[1]==="scene")&&curT===th.id&&!PKSKIP[th.id]){const img=(b[2]||{}).img;const k=POP_AT[img];th._popped=th._popped||{};if(k&&!th._popped[img]){th._popped[img]=1;save();setTimeout(()=>popOut(k,img),b[1]==="scene"?3200:700)}}}catch(_){}return r});;

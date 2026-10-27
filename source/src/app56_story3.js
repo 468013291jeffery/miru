@@ -46,8 +46,7 @@ pkCond=function(th,c){if(!c)return false;const I=pkItems(th),r=pairRow(th,th.pk.
  if(c.any)return c.any.some(x=>pkCond(th,x));if(c.all)return c.all.every(x=>pkCond(th,x));
  return _pkCond56(th,c)};
 /* ---- directives ---- */
-const _pkDir56=pkDirective;
-pkDirective=function(th,b){if(!(Array.isArray(b)&&b[0]==="sys"))return _pkDir56(th,b);const d=b[2]||{},zh=CL()==="zh";
+PKREG.add("app56_story3.js", function(th,b, next){if(!(Array.isArray(b)&&b[0]==="sys"))return next(th,b);const d=b[2]||{},zh=CL()==="zh";
  if(b[1]==="item"){th.pk.q.shift();const I=pkItems(th);
   if(d.give){I[d.give]=(I[d.give]||0)+(d.n||1);if(d.name||d.icon){const w=wd(th.wid);if(w&&w.pack){w.pack.items=w.pack.items||{};w.pack.items[d.give]=w.pack.items[d.give]||{name:d.name,icon:d.icon,desc:d.desc}}}
    appendMsg(th,{who:"sys",k:"card",title:(zh?"🎒 获得道具":"🎒 New item"),txt:itemName(th,d.give)+(d.desc?" · "+Lz(d.desc):""),at:Date.now()})}
@@ -59,7 +58,7 @@ pkDirective=function(th,b){if(!(Array.isArray(b)&&b[0]==="sys"))return _pkDir56(
   if(ch(who))appendMsg(th,{who:"sys",k:"card",title:"⚖ "+first(ch(who).n)+(zh?" 自己做了决定":" decides for himself"),txt:(zh?"因为他现在是「":"Because right now he is \"")+(s?Lz(s.name):"")+(zh?"」":"\""),at:Date.now()});
   th.pk.q.unshift(...path);save();return true}
  if(b[1]==="arc"){th.pk.q.shift();arcCheck(th);save();return true}
- return _pkDir56(th,b)};
+ return next(th,b)});;
 /* the "use an item" stop */
 STOPK.add("use");
 const _stopAuto56=stopAuto;

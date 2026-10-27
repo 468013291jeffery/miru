@@ -64,12 +64,11 @@
   document.addEventListener("click", e => { if (e.target.closest("[data-pkspd],[data-spdcyc],[data-spd]")) { S.pkTap101 = false; save(); } }, true);
   /* ---------- 3 · 特效：只跟场景走，淡入淡出 ---------- */
   if (typeof pkDirective === "function") {
-    const _pd = pkDirective;
-    pkDirective = function (th, b) {
+    PKREG.add("app101_you.js", function(th, b, next){
       const evt = Array.isArray(b) && b[0] === "sys" && (b[1] === "event" || b[1] === "bg");
       if (evt) window.__noFx101 = 1;
-      try { return _pd.apply(this, arguments); } finally { window.__noFx101 = 0; }
-    };
+      try { return next.apply(this, arguments); } finally { window.__noFx101 = 0; }
+    });;
   }
   if (typeof fxSet === "function") {
     const _fs = fxSet;
@@ -97,8 +96,7 @@
   }
   const dec = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
   if (typeof pkDirective === "function") {
-    const _pd2 = pkDirective;
-    pkDirective = function (th, b) {
+    PKREG.add("app101_you.js", function(th, b, next){
       if (Array.isArray(b) && typeof b[2] === "string" && b[2].indexOf(IMARK) === 0) {
         const a = b[2].slice(IMARK.length).split("|").map(dec);
         th.pk.q.shift();
@@ -108,8 +106,8 @@
         if (curT === th.id) { renderChat(); try { scrollChat(); } catch (_) {} }
         return true;
       }
-      return _pd2.apply(this, arguments);
-    };
+      return next.apply(this, arguments);
+    });;
   }
   if (typeof msgHTML === "function") {
     const _mh = msgHTML;

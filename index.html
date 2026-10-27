@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="aa9d8d17c9ee 2026-10-27T06:51Z";
+window.MIRU_BUILD="516c81db17f0 2026-10-27T06:55Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7720,6 +7720,74 @@ document.addEventListener("click",e=>{if(e.target.closest("[data-pkskip]")&&PKNE
 Object.assign(I18N.en,{"pk.spdNorm":"Auto","pk.spdSlow":"Auto · slow","pk.spdTap":"Tap to continue","pk.nextLine":"Next","pk.tapHint":"Tap the story to see the next line sooner."});
 Object.assign(I18N.zh,{"pk.spdNorm":"自动播放","pk.spdSlow":"自动 · 慢速","pk.spdTap":"点一下才继续","pk.nextLine":"下一句","pk.tapHint":"点一下聊天区域，就能马上看下一句。"});
 
+/* ================= 剧本指令：26 层包装 → 一张表（2026-10-27）=================
+   Ann：「我感觉没有太多问题，你动吧」。
+
+   ## 之前
+       const _pkDirX = pkDirective;
+       pkDirective = function(th, b){ …认领某类型…; return _pkDirX(th, b) };
+   26 层这样叠着 ⇒ 谁先生效由**文件名加载顺序**决定；同类型两个实现时另一个永远不跑且无报错。
+
+   ## 现在
+   每层改成往里注册一行，形状**完全不变**（仍然持有"下一层"）：
+       PKREG.add('app17_custom.js', function(th, b, next){
+         if(Array.isArray(b) && b[0]==="sys" && b[1]==="event"){ …; return true }
+         return next(th, b);
+       });
+   分发器按**注册顺序**把 26 层串成一条链（后注册的在外层）—— 与原来"后加载的在外层"逐字等价。
+
+   ## 为什么这样就够
+   原来"谁赢"写在**文件名**里；现在写在**数组下标**里。装配只有一处（`install()`），
+   所以顺序是**可读的一行**，而不是需要推演加载顺序才能知道的结果。
+
+   ## 不变量
+   · 每层仍然拿到 `next`（语义不变：它可以选择继续往下、也可以吃掉）
+   · 一层抛异常不再连累整条链：捕获后当作"没消费"，继续往下（原来会直接崩）
+================================================================================== */
+(function () {
+  'use strict';
+
+  const R = { v: 1, items: [], runs: 0, consumed: 0, byType: {}, errors: 0, installed: false };
+
+  R.add = function (name, fn) {
+    if (typeof fn !== 'function') return false;
+    R.items.push({ name: String(name || '?'), fn: fn });
+    return true;
+  };
+
+  R.install = function () {
+    const chain = R.items.slice();
+    /* 从内往外装配：chain[0] 是最早注册的（最内层），最后注册的最外层 */
+    let base = function () { return false };
+    for (let i = 0; i < chain.length; i++) {
+      const fn = chain[i].fn, inner = base, nm = chain[i].name;
+      base = function (th, b) {
+        R.runs++;
+        const rec = { name: nm };
+        try {
+          const r = fn(th, b, function (t2, b2) { return inner(t2, b2) });
+          if (r === true) { R.consumed++; const ty = (Array.isArray(b) && b[1]) || '?'; R.byType[ty] = nm }
+          return r;
+        } catch (e) {
+          R.errors++;
+          try { console.warn('[pkreg] 层抛错（已隔离，继续往下）: ' + nm, e && e.message) } catch (_) {}
+          return inner(th, b);
+        }
+      };
+    }
+    window.pkDirective = base;
+    R.installed = true;
+    return true;
+  };
+
+  window.PKREG = R;
+  window.__pkreg = function (detail) {
+    const s = { 注册层: R.items.length, 分发次数: R.runs, 被消费: R.consumed, 层内抛错: R.errors, 已安装: !!R.installed };
+    if (!detail) return s;
+    return { 汇总: s, 类型赢家: R.byType, 层: R.items.map(x => x.name) };
+  };
+})();
+
 /* ================= STORY v2 — clear intro, merged narration boxes, choices inside the chat, scene photos, real branching, read-aloud ================= */
 /* 1) Chat background = a photo of the current scene (no video for now). Scene beats: ["sys","scene",{img,place,time}] */
 const NO_VIDEO_BG=true;
@@ -7917,10 +7985,9 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
  if(e.target.closest("[data-featgo]")){const F=FEATK[d.k];if(!F){stopResolve(th,d.then||[]);return}PKFEAT={th,cid:d.cid,d,k:d.k};th.pk.go=1;save();packRefresh(th);F.run(d.cid||mainOf(th));return}
  if(e.target.closest("[data-featback]")){PKFEAT=null;stopResolve(th,d.then||d.win||[]);return}});
 /* dramatic event card: ["sys","event",{icon,title,txt}] — the moment the story turns (power cut, someone bursts in, a big reveal) */
-const _pkDir3=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
+PKREG.add("app16_story2.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   appendMsg(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||"",at:Date.now()});try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
- return _pkDir3(th,b)};
+ return next(th,b)});;
 const _msgHTML3=msgHTML;
 msgHTML=function(m,i,th){
  if(m.k==="event")return '<div class="m-event" data-mi="'+i+'"><i>'+esc(m.icon)+'</i><b>'+esc(m.title)+'</b>'+(m.txt?'<span>'+esc(m.txt)+'</span>':'')+'</div>';
@@ -8088,10 +8155,9 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&L&&L.k==="box"&&L.pk&&!L.say){L.say={who:m.who,txt:m.txt};L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
   if(curT===th.id){chatBgSet(m.who,poseOf(m));const el=$('#msgs [data-mi="'+i+'"]');if(el){el.outerHTML=msgHTML(L,i,th);scrollChat()}if(S.autoVoice&&m.k==="say"&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}}return}
  return _pkAppend8(th,m)};
-const _pkDir8=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
+PKREG.add("app17_custom.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   pkPart(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||""},(d.title||"")+" "+(d.txt||""));try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
- return _pkDir8(th,b)};
+ return next(th,b)});;
 function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe">'+esc(p.icon)+' '+esc(p.title)+'</span>'+(p.txt?esc(p.txt):'')+'</p>';
  if(p.who==="n")return '<p class="tp n">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
  return p.k==="think"?'<p class="tp th"><span class="tpt">💭 '+esc(nm)+'</span>'+esc(p.txt)+'</p>':'<p class="tp ac"><span class="tpa">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}
@@ -8450,9 +8516,8 @@ Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign
 /* ================= 内心独白 · inner monologue =================
    At key moments the story drops ["sys","mono",{t:[[who,text],…]}]: what each person in the room is secretly thinking.
    It arrives sealed. Tap to read — 2 free a day, then 💎1 (it's the one thing you can't get by watching). */
-const _pkDir19=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
-  if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return _pkDir19(th,b)};
+PKREG.add("app19_bgm.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
+  if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return next(th,b)});;
 function monoFree(){const d=today();if((S.monoDay||{}).d!==d)S.monoDay={d,n:0};return S.monoDay.n<2}
 const _msgHTML19=msgHTML;
 msgHTML=function(m,i,th){if(!m||m.k!=="mono")return _msgHTML19(m,i,th);
@@ -8502,13 +8567,12 @@ const FX_RULES=[[/暴雨|雷|storm|thunder|downpour/i,"storm"],[/停电|断电|�
  [/生日|派对|birthday|confetti/i,"confetti"],[/花瓣|樱花|petal|blossom/i,"petals"],[/nearkiss|forehead|差一点|kiss/i,"hearts"]];
 function fxFrom(s){s=String(s||"");const r=FX_RULES.find(([re])=>re.test(s));return r?r[1]:null}
 function fxSet(th,k){if(!th.pk||!k||th.pk.fx===k)return;th.pk.fx=k;save();if(curT===th.id)chatFx(th)}
-const _pkDir20=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"){const x=b[2]||{};
+PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"){const x=b[2]||{};
   if(b[1]==="fx"){th.pk.q.shift();fxSet(th,x.k);return true}
   if(b[1]==="event")fxSet(th,fxFrom((x.title||"")+" "+(x.txt||"")));
   if(b[1]==="scene"){const k=fxFrom((x.place||"")+" "+(x.time||"")+" "+(x.img||""));if(k)fxSet(th,k)}
   if(b[1]==="bg"&&/nearkiss|forehead/.test(x.img||""))fxSet(th,"hearts")}
- return _pkDir20(th,b)};
+ return next(th,b)});;
 const _chatFx20=chatFx;
 chatFx=function(th){const k=th&&th.pk&&th.pk.fx;if(!k||!FX2.includes(k)){fxState.k=null;return _chatFx20(th)}cancelAnimationFrame(fxRaf);fxRun(k)};
 const fxState={k:null};
@@ -8655,7 +8719,7 @@ setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidde
 const _openThread20=openThread;openThread=function(id){const th=S.threads[id],d=today();
  if(th&&th.at&&Date.now()-th.at>3*36e5&&th.mcAway!==d&&ch(mainOf(th))){th.mcAway=d;const cid=mainOf(th);th.msgs.push({who:cid,k:"missed",secs:6+hash(id+d)%20,line:(S.lang==="zh"?MC_LINE.zh:MC_LINE.en)[hash(d+id)%7],away:true,at:Date.now()-36e5});save()}
  _openThread20(id)};
-const _pkDir20b=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th)),600);return true}return _pkDir20b(th,b)};
+PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th)),600);return true}return next(th,b)});;
 Object.assign(I18N.en,{"mc.calling":"is calling you…","mc.answer":"Answer","mc.decline":"Decline","mc.missed":"Missed call","mc.away":"He called while you were away","mc.rang":"Rang {s}s, then hung up","mc.back":"Call back","mc.called":"You called back"});
 Object.assign(I18N.zh,{"mc.calling":"邀请你语音通话…","mc.answer":"接听","mc.decline":"拒绝","mc.missed":"未接来电","mc.away":"你不在的时候，他打来过","mc.rang":"响了 {s} 秒，对方已取消","mc.back":"回拨","mc.called":"你已回拨"});
 
@@ -8747,7 +8811,7 @@ function dimFloat(key,ch0){const c=$('.dimc[data-dimk="'+key+'"]');if(!c)return;
  ch0.forEach(([x,dd],i)=>{const sp=c.querySelector('[data-dimx="'+x+'"]')||c;sp.insertAdjacentHTML("beforeend",'<span class="dimf '+(dd>0?"up":"down")+'" style="animation-delay:'+(i*.12)+'s">'+(dd>0?"+":"")+dd+'</span>');setTimeout(()=>{const f=sp.querySelector(".dimf");if(f)f.remove()},1800)})}
 /* replace the old single-number bar for stories that have dimensions */
 const _relSync21=relSync;relSync=function(th){if(th&&dimPairs(th)){dimHeader(th);const r=$(".relrow");if(r)r.remove();dimSync(th);return}_relSync21(th)};
-const _pkDir21=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="rd"){th.pk.q.shift();const x=b[2]||{};dimAdd(th,x.p,x.d||{},Lz(x.why));return true}return _pkDir21(th,b)};
+PKREG.add("app21_dims.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="rd"){th.pk.q.shift();const x=b[2]||{};dimAdd(th,x.p,x.d||{},Lz(x.why));return true}return next(th,b)});;
 /* games & unlocks move the main pair */
 const _featDone21=featDone;featDone=function(th,ctx){const f=PKFEAT;const r=_featDone21(th,ctx);if(r&&f&&f.th===th){const m=dimMain(th);if(m){const k=dimKey(m.a,m.b),txt=String(ctx&&ctx.txt||"");
   if(f.k==="heart"){const mm=txt.match(/to (\d+) bpm/),bpm=mm?+mm[1]:0;dimAdd(th,k,bpm>=150?{att:6,ten:8}:{ten:3},t("dm.w.heart",{n:bpm}))}
@@ -9004,8 +9068,7 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-grp]");if(
  appendMsg(f.th,{who:"me",k:"act",txt:"💬 "+L(o.t),at:Date.now()});PKFEAT=null;closeSheet();setTimeout(()=>stopResolve(f.th,L(o.then)||o.then||[]),300)});
 Object.assign(FEATK,{feed:{ic:"📹",run:()=>feedRun(),t:"pk2.feedH"},phone:{ic:"📱",run:()=>phoneRun(),t:"pk2.phH"},match:{ic:"💞",run:()=>matchRun(),t:"pk2.mqH"},group:{ic:"👥",run:()=>groupRun(),t:"pk2.grH"}});
 /* ---------- directives with their own cards ---------- */
-const _pkDir23=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return _pkDir23(th,b)};
+PKREG.add("app23_heir.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return next(th,b)});;
 const _msgHTML23=msgHTML;
 msgHTML=function(m,i,th){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return _msgHTML23(m,i,th);
  if(m.k==="xtitle")return '<div class="xtitle"><b>'+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
@@ -9165,7 +9228,7 @@ bgmTick=function(){const M=BGM_MOODS[BGM.mood];if(!M||!BGM.ctx)return;const c=BG
   if(M.bell&&k===6&&bar%2===0)bgmNote(ch[ch.length-1]+36,t,eighth*10,{wave:"sine",cut:5000,vel:.03});
   if(M.brush){if(k%2===1)bgmNoise(t+(M.sw?eighth*M.sw:0),.08,.035,7000);if(k===2||k===6)bgmNoise(t,.18,.05,3500)}
   BGM.next+=eighth;BGM.step++}};
-const _pkDir24=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="bgm"){th.pk.q.shift();th.pk.bgm=(b[2]||{}).m||null;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true);return true}return _pkDir24(th,b)};
+PKREG.add("app24_gl.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="bgm"){th.pk.q.shift();th.pk.bgm=(b[2]||{}).m||null;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true);return true}return next(th,b)});;
 const _bgmFor24=bgmForThread;bgmForThread=function(th){const r=_bgmFor24(th);if(r&&th&&th.pk&&th.pk.bgm&&BGM_MOODS[th.pk.bgm]&&!(th.fxm&&th.fxm!=="auto"))r.mood=th.pk.bgm;return r};
 /* restarting a chapter clears the cue */
 const _packOpen24=packOpen;packOpen=function(th,n,instant){if(th&&th.pk)th.pk.bgm=null;return _packOpen24.apply(this,arguments)};
@@ -9363,7 +9426,7 @@ pkWait=function(th,prev,spd,ms){const nx=th.pk&&th.pk.q&&th.pk.q[0];
 /* a long block gets time to be read (tap the chat to move on sooner) */
 const _readMs28=readMs;readMs=function(m){if(m&&m.k==="box"&&!m.say){const x=String(m.txt||""),cjk=/[㐀-鿿]/.test(x);return Math.min(14000,Math.max(1800,cjk?900+x.length*80:900+x.length*26))}return _readMs28(m)};
 /* a change of place or picture (scene / bg / title) closes the current block */
-const _pkDir28=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","title"].includes(b[1]))th._brk=1;return _pkDir28(th,b)};
+PKREG.add("app28_burst.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","title"].includes(b[1]))th._brk=1;return next(th,b)});;
 /* a tall block is shown from its first line, not scrolled to its last */
 let _bt=0;function burstTop(th,i){clearTimeout(_bt);_bt=setTimeout(()=>{if(curT!==th.id)return;const box=$("#msgs"),el=$('#msgs [data-mi="'+i+'"]');if(!box||!el)return;
  if(el.offsetHeight>box.clientHeight*.55){const top=el.getBoundingClientRect().top-box.getBoundingClientRect().top+box.scrollTop-10;box.scrollTop=top}},30)}
@@ -9409,8 +9472,8 @@ const _fxSet29=fxSet;fxSet=function(th,k){_fxSet29(th,k);if(k==="flashes"){clear
 function sceneCurtain(place,time,img){const host=(typeof fxLayer==="function"?fxLayer():null)||$("#s-chat")||document.body;const o=document.createElement("div");o.className="scurt"+(img?" pic":"");const src=img&&(window.SCENE_FILES||{})[img];
  o.innerHTML=(src?'<div class="scimg"><img src="'+src+'" alt=""></div><div class="scshade"></div>':'')+'<div class="scin"><small>'+t("sc29.next")+'</small><b>'+esc(place||"")+'</b>'+(time?'<em>'+esc(time)+'</em>':'')+'</div>';host.appendChild(o);
  requestAnimationFrame(()=>o.classList.add("on"));const T=img?2600:1700;setTimeout(()=>o.classList.remove("on"),T);setTimeout(()=>o.remove(),T+700)}
-const _pkDir29=pkDirective;pkDirective=function(th,b){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const n=th.msgs.length;const r=_pkDir29(th,b);
- if(isScene&&r&&curT===th.id&&th.msgs.length>n&&th.msgs.some((m,i)=>i<n&&m.k==="scene")&&!PKSKIP[th.id]){const d=b[2]||{};sceneCurtain(Lz(d.place)||d.place,Lz(d.time)||d.time,d.img);th._sceneHold=1}return r};
+PKREG.add("app29_style.js", function(th,b, next){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const n=th.msgs.length;const r=next(th,b);
+ if(isScene&&r&&curT===th.id&&th.msgs.length>n&&th.msgs.some((m,i)=>i<n&&m.k==="scene")&&!PKSKIP[th.id]){const d=b[2]||{};sceneCurtain(Lz(d.place)||d.place,Lz(d.time)||d.time,d.img);th._sceneHold=1}return r});;
 const _pkWait29=pkWait;pkWait=function(th,prev,spd,ms){if(th._sceneHold){th._sceneHold=0;ms=Math.max(ms,3400)}return _pkWait29(th,prev,spd,ms)};
 Object.assign(I18N.zh,{"sc29.next":"下一幕"});Object.assign(I18N.en,{"sc29.next":"NEXT SCENE"});
 /* the free-chat quick lines don't belong to a written story */
@@ -9696,9 +9759,8 @@ const _pkAppend30=pkAppend;
 pkAppend=function(th,m){const r=_pkAppend30.apply(this,arguments);
  try{if(th&&curT===th.id&&m&&m.pk&&!skipping()){if(m.k==="think"){const n=Date.now();if(n-(EMO.lastInk||0)>6000){EMO.lastInk=n;requestAnimationFrame(()=>emoFx("ink",{weak:true}))}}else if(isNarr(m)&&/吻|kiss/i.test(String(m.txt||"")))emoFx("bloom")}}catch(_){}return r};
 /* events: a jolt (or warmth, when the event is a kiss / embrace / confession). The "unlocked" event belongs to the lock bloom. */
-const _pkDir30=pkDirective;
-pkDirective=function(th,b){const ev=Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"?(b[2]||{}):null;const r=_pkDir30.apply(this,arguments);
- try{if(ev&&th&&curT===th.id&&!skipping()&&ev.icon!=="🔓"){const s=Lz(ev.title)+" "+Lz(ev.txt);if(/吻|kiss|拥抱|抱住|hug|告白|confess/i.test(s)||/💋|❤|💗|💞|💕|🌹|💘/.test(ev.icon||""))emoFx("bloom");else emoFx("shock",{weak:true})}}catch(_){}return r};
+PKREG.add("app30_fx3.js", function(th,b, next){const ev=Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"?(b[2]||{}):null;const r=next.apply(this,arguments);
+ try{if(ev&&th&&curT===th.id&&!skipping()&&ev.icon!=="🔓"){const s=Lz(ev.title)+" "+Lz(ev.txt);if(/吻|kiss|拥抱|抱住|hug|告白|confess/i.test(s)||/💋|❤|💗|💞|💕|🌹|💘/.test(ev.icon||""))emoFx("bloom");else emoFx("shock",{weak:true})}}catch(_){}return r});;
 /* a key scene opening */
 document.addEventListener("click",e=>{if(!e.target.closest||!e.target.closest("[data-lockgo]"))return;
  try{const th=S.threads[curT];if(!th||!th.pk||!th.pk.stop||th.pk.stop[1]!=="lock")return;const k=lockKey(th,th.pk.stop[2]);setTimeout(()=>{if((S.unlocked||{})[k]||S.plus)emoFx("bloom")},120)}catch(_){}},true);
@@ -10006,16 +10068,15 @@ function scScene(th,d){if(!bgmOn()||!SC.G||!BGM.timer)return;const lock=nextCue(
  if(old&&old.alive&&old.mood===nxt){bedDip(.4,1.3,1.6);sting("transition",(d&&(Lz(d.place)||d.place))||"");slog("scene",(d&&(Lz(d.place)||d.place))||"",{from:old.mood,next:nxt,keep:1});return}
  if(old){scKill(old,1.4);SC.cur=null}sting("transition",(d&&(Lz(d.place)||d.place))||"");
  SC.hold={until:Date.now()+1700,lock};slog("scene",(d&&(Lz(d.place)||d.place))||"",{from:old&&old.mood,next:lock||(bgmForThread(th)||{}).mood})}
-const _pkDir31=pkDirective;
-pkDirective=function(th,b){const sys=Array.isArray(b)&&b[0]==="sys"?b[1]:null,d=(sys&&b[2])||{},hadScene=sys==="scene"&&th.msgs.some(m=>m.k==="scene");
- const r=_pkDir31.apply(this,arguments);
+PKREG.add("app31_score.js", function(th,b, next){const sys=Array.isArray(b)&&b[0]==="sys"?b[1]:null,d=(sys&&b[2])||{},hadScene=sys==="scene"&&th.msgs.some(m=>m.k==="scene");
+ const r=next.apply(this,arguments);
  try{if(r&&sys&&curT===th.id&&!PKSKIP[th.id]&&bgmOn()){
   if(sys==="scene"&&hadScene)scScene(th,d);
   else if(sys==="title")sting("reveal","title");
   else if(sys==="money"&&S.plus)sting("reveal","money");
   else if(sys==="event"){const k=EV_STING[String(d.icon||"").replace(/️/g,"")];if(k)sting(k,d.title&&(Lz(d.title)||d.title));
    if(d.icon==="🔇")bedDip(.08,3.5,2.5)}}}catch(e){}
- return r};
+ return r});;
 /* the sealed inheritance number: the reveal plays when it opens */
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xmopen]");if(!x)return;const th=S.threads[curT],i=+x.dataset.xmopen;setTimeout(()=>{const m=th&&th.msgs[i];if(m&&m.open)sting("reveal","money")},60)});
 /* intimate choices: flirt / bold / kiss / soft / tease → heart; a kiss also pulls the score down to almost nothing for a moment */
@@ -10057,10 +10118,9 @@ function mySelf(){return S.selfSpeak!==false}
 const _stopAuto32=stopAuto;
 stopAuto=function(th,b){if(b&&b[1]==="myline"){if(!mySelf()||th.pk.as!==b[0])return [[b[0],"say",b[2].t,1]];return null}return _stopAuto32(th,b)};
 /* turn a written line of the character you play into your turn (packRun reads th.pk.q[0] fresh every loop) */
-const _pkDir32=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[1]==="say"&&!b[3]&&th.pk&&th.pk.as&&b[0]===th.pk.as&&mySelf()&&!PKSKIP[th.id]&&typeof b[2]==="string"){
+PKREG.add("app32_myline.js", function(th,b, next){if(Array.isArray(b)&&b[1]==="say"&&!b[3]&&th.pk&&th.pk.as&&b[0]===th.pk.as&&mySelf()&&!PKSKIP[th.id]&&typeof b[2]==="string"){
   th.pk.q[0]=[b[0],"myline",{t:b[2]}];MYL.sug=null;return true}
- return _pkDir32(th,b)};
+ return next(th,b)});;
 const _stopHTML32=stopHTML;
 stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="myline")return _stopHTML32(th);const d=b[2],c=ch(th.pk.as),nm=c?first(c.n):"";
  const prev=[...th.msgs].reverse().find(m=>m.k==="box"&&m.say||m.k==="say"&&m.who!==th.pk.as);const cue=prev?(prev.say?prev.say.txt:prev.txt):"";
@@ -10257,8 +10317,7 @@ Object.assign(I18N.en,{"call.youT":"You call {n}","call.watchT":"On the call","c
 if(typeof PAY!=="undefined")Object.assign(PAY,{recall:2,missed:PRICES.callMin});
 STOPK.add("missed");STOPK.add("reveal");
 /* 1 · unsent message */
-const _pkDir37=pkDirective;
-pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="recall"){th.pk.q.shift();const d=b[2]||{};appendMsg(th,{who:"sys",k:"xrecall",rw:d.who,txt:Lz(d.txt)||d.txt,at:Date.now()});save();return true}return _pkDir37(th,b)};
+PKREG.add("app37_hooks.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="recall"){th.pk.q.shift();const d=b[2]||{};appendMsg(th,{who:"sys",k:"xrecall",rw:d.who,txt:Lz(d.txt)||d.txt,at:Date.now()});save();return true}return next(th,b)});;
 const _msgHTML37=msgHTML;
 msgHTML=function(m,i,th){if(!m||m.k!=="xrecall")return _msgHTML37(m,i,th);const c=ch(m.rw),nm=c?first(c.n):"";
  if(m.open)return '<div class="xrc open" data-mi="'+i+'">'+avatar(m.rw,30)+'<div class="xrcb"><small>'+esc(t("rc.was",{n:nm}))+'</small><p>'+esc(m.txt)+'</p></div></div>';
@@ -10426,8 +10485,8 @@ function sfxOne(k){const c=sfxCtx();if(!c)return;
  if(k==="ring"){for(let i=0;i<2;i++){blip(c,{f0:880,f1:880,dur:.35,type:"sine",vol:.08,at:i*.5});blip(c,{f0:660,f1:660,dur:.35,type:"sine",vol:.06,at:i*.5+.05})}}
  if(k==="msg"){blip(c,{f0:1320,f1:1320,dur:.12,vol:.07});blip(c,{f0:1760,f1:1760,dur:.14,vol:.06,at:.1})}
  if(k==="unsend"){blip(c,{f0:900,f1:300,dur:.25,type:"triangle",vol:.07})}}
-const _pkDir40=pkDirective;pkDirective=function(th,b){try{if(Array.isArray(b)&&b[0]==="sys"&&curT===th.id&&!PKSKIP[th.id]){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||""));
-  if(b[1]==="event"&&/枪|gunshot|shot|💥/.test(tx+(d.icon||"")))sfxOne("gun");else if(b[1]==="event"&&/🔔|📱|消息|message/.test(tx+(d.icon||"")))sfxOne("msg");if(b[1]==="recall")sfxOne("unsend")}}catch(_){}return _pkDir40(th,b)};
+PKREG.add("app40_sfx.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&curT===th.id&&!PKSKIP[th.id]){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||""));
+  if(b[1]==="event"&&/枪|gunshot|shot|💥/.test(tx+(d.icon||"")))sfxOne("gun");else if(b[1]==="event"&&/🔔|📱|消息|message/.test(tx+(d.icon||"")))sfxOne("msg");if(b[1]==="recall")sfxOne("unsend")}}catch(_){}return next(th,b)});;
 Object.assign(I18N.zh,{"sfx.tip":"🎵 本剧有配乐和音效 · 右上角 🎵 可关闭"});Object.assign(I18N.en,{"sfx.tip":"🎵 This story has music and sound · tap 🎵 at the top to turn it off"});
 /* 2 · intense effects belong to their moment: they fade back to calm on their own */
 const FX_LIFE={danger:7000,flashes:1500,blackout:6000,fireworks:6000,iceshatter:4000};
@@ -10440,7 +10499,7 @@ function popOut(kind,imgId){try{if(PKSKIP[curT])return;const im=$(".cbimg img.on
  L.appendChild(o);setTimeout(()=>o.remove(),kind==="gun"?1800:2800);try{navigator.vibrate&&navigator.vibrate(kind==="gun"?[60,40,120]:[30])}catch(_){}
  try{if(kind==="gun")sfxOne("gun")}catch(_){}}catch(_){}}
 window.popOut=popOut;
-const _pkDir40b=pkDirective;pkDirective=function(th,b){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"&&curT===th.id){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||"")+(d.icon||""));if(/枪|gunshot|shot|💥|撞开/.test(tx))setTimeout(()=>popOut("gun"),50);else if(/吻|kiss|抱|hug|💞|🔥/.test(tx))setTimeout(()=>popOut("kiss"),50)}}catch(_){}return _pkDir40b(th,b)};
+PKREG.add("app40_sfx.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"&&curT===th.id){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||"")+(d.icon||""));if(/枪|gunshot|shot|💥|撞开/.test(tx))setTimeout(()=>popOut("gun"),50);else if(/吻|kiss|抱|hug|💞|🔥/.test(tx))setTimeout(()=>popOut("kiss"),50)}}catch(_){}return next(th,b)});;
 document.addEventListener("click",e=>{const x=e.target.closest("[data-chgo]");if(!x)return;try{const th=S.threads[curT],o=th.pk.stop[2].opts[CH.i];if(o&&["kiss","bold"].includes(o.att))setTimeout(()=>popOut("kiss"),700)}catch(_){}},true);
 document.addEventListener("click",e=>{if(e.target.closest("[data-lockgo],[data-lockbuy]"))setTimeout(()=>popOut("kiss"),900)},true);
 (function(){const st=document.createElement("style");st.textContent=`
@@ -10489,7 +10548,7 @@ function myFromComposer(e){if(!myMode())return false;const ta=$("#cin");const v=
 document.addEventListener("click",e=>{if(e.target.closest("[data-send]"))myFromComposer(e)},true);
 document.addEventListener("keydown",e=>{if(e.target&&e.target.id==="cin"&&e.key==="Enter"&&!e.shiftKey)myFromComposer(e)},true);
 /* "let him speak" applies to this stretch only: it switches back on at the next scene or the next choice */
-const _pkDir41=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&S.selfSpeak===false){S.selfSpeak=true}return _pkDir41(th,b)};
+PKREG.add("app41_merge.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&S.selfSpeak===false){S.selfSpeak=true}return next(th,b)});;
 document.addEventListener("click",e=>{if(e.target.closest("[data-chgo],[data-pkpick2]")&&S.selfSpeak===false)S.selfSpeak=true},true);
 const _save41=save;save=function(){const v=S.selfSpeak;try{S.selfSpeak=true;return _save41.apply(this,arguments)}finally{S.selfSpeak=v}};
 Object.assign(I18N.zh,{"my.ph2":"以{n}的身份说……","my.empty":"先写一句，或者点上面的💡提示"});
@@ -10503,7 +10562,7 @@ Object.assign(I18N.en,{"my.ph2":"Your turn — say it as {n}…","my.empty":"Typ
 .mymode .composer .send{box-shadow:0 0 0 3px rgba(240,183,126,.25)}`;document.head.appendChild(st)})();
 /* the off-the-page effect fires on its own at the story's big pictures */
 const POP_AT={"heir/jet_catch":"kiss","heir/kiss_warehouse":"kiss","heir/bedroom":"kiss","heir/towel":"kiss","heir/lock_jet":"kiss","heir/lock_bedroom":"kiss","heir/press":"kiss","heir/threat":"gun","heir/warehouse":"gun","heir/fiancee":"kiss","afterhours/ch1_p2":"kiss"};
-const _pkDir41b=pkDirective;pkDirective=function(th,b){const r=_pkDir41b(th,b);try{if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="bg"||b[1]==="scene")&&curT===th.id&&!PKSKIP[th.id]){const img=(b[2]||{}).img;const k=POP_AT[img];th._popped=th._popped||{};if(k&&!th._popped[img]){th._popped[img]=1;save();setTimeout(()=>popOut(k,img),b[1]==="scene"?3200:700)}}}catch(_){}return r};
+PKREG.add("app41_merge.js", function(th,b, next){const r=next(th,b);try{if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="bg"||b[1]==="scene")&&curT===th.id&&!PKSKIP[th.id]){const img=(b[2]||{}).img;const k=POP_AT[img];th._popped=th._popped||{};if(k&&!th._popped[img]){th._popped[img]=1;save();setTimeout(()=>popOut(k,img),b[1]==="scene"?3200:700)}}}catch(_){}return r});;
 
 /* ---- v142 · declining a call is a moment, not a silent skip ----
    ✕ on an incoming call → hang-up tone + buzz, a "📵 已拒接" overlay with his face sliding away,
@@ -11062,9 +11121,9 @@ function cpAdd(th,cp){th.cps=th.cps||[];const k=cp.kind+"|"+cp.ch+"|"+cp.idx;th.
 /* chapter starts */
 const _packOpen46=packOpen;packOpen=function(th,n,instant){try{if(th&&th.pk&&!th._cpRestoring)cpAdd(th,{kind:"start",ch:n,idx:0,n:th.msgs.length})}catch(_){}return _packOpen46.apply(this,arguments)};
 /* scenes */
-const _pkDir46=pkDirective;pkDirective=function(th,b){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&th.pk&&th.pk.ch){const key=JSON.stringify(b),last=(th.cps||[]).filter(c=>c.ch===th.pk.ch&&c.kind==="scene").map(c=>c.idx);const from=last.length?Math.max(...last)+1:0;
+PKREG.add("app46_cp.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene"&&th.pk&&th.pk.ch){const key=JSON.stringify(b),last=(th.cps||[]).filter(c=>c.ch===th.pk.ch&&c.kind==="scene").map(c=>c.idx);const from=last.length?Math.max(...last)+1:0;
   const sc=cpScenes(th,th.pk.ch).find(([x,i])=>i>=from&&JSON.stringify(x)===key)||cpScenes(th,th.pk.ch).find(([x])=>JSON.stringify(x)===key);
-  if(sc&&!(th.cps||[]).some(c=>c.kind==="scene"&&c.ch===th.pk.ch&&c.idx===sc[1]))cpAdd(th,{kind:"scene",ch:th.pk.ch,idx:sc[1],n:th.msgs.length})}}catch(_){}return _pkDir46(th,b)};
+  if(sc&&!(th.cps||[]).some(c=>c.kind==="scene"&&c.ch===th.pk.ch&&c.idx===sc[1]))cpAdd(th,{kind:"scene",ch:th.pk.ch,idx:sc[1],n:th.msgs.length})}}catch(_){}return next(th,b)});;
 /* free chats: the first meeting + every 8 turns */
 const _appendMsg46=appendMsg;appendMsg=function(th,m){try{if(th&&!th.pk&&m&&m.who==="me"){const mine=th.msgs.filter(x=>x.who==="me").length;if(mine===0||mine%8===0)cpAdd(th,{kind:"chat",ch:0,idx:mine,n:th.msgs.length})}}catch(_){}return _appendMsg46.apply(this,arguments)};
 function cpLabel(th,cp){if(cp.kind==="chat")return cp.idx===0?LL("初遇","First meeting"):LL("第 "+cp.idx+" 回合","Turn "+cp.idx);const sc=cpScenes(th,cp.ch),j=sc.findIndex(([,i])=>i===cp.idx);return cp.kind==="start"?LL("开头","Opening"):LL("第 "+(j+1)+" 节","Section "+(j+1))}
@@ -12064,8 +12123,7 @@ pkCond=function(th,c){if(!c)return false;const I=pkItems(th),r=pairRow(th,th.pk.
  if(c.any)return c.any.some(x=>pkCond(th,x));if(c.all)return c.all.every(x=>pkCond(th,x));
  return _pkCond56(th,c)};
 /* ---- directives ---- */
-const _pkDir56=pkDirective;
-pkDirective=function(th,b){if(!(Array.isArray(b)&&b[0]==="sys"))return _pkDir56(th,b);const d=b[2]||{},zh=CL()==="zh";
+PKREG.add("app56_story3.js", function(th,b, next){if(!(Array.isArray(b)&&b[0]==="sys"))return next(th,b);const d=b[2]||{},zh=CL()==="zh";
  if(b[1]==="item"){th.pk.q.shift();const I=pkItems(th);
   if(d.give){I[d.give]=(I[d.give]||0)+(d.n||1);if(d.name||d.icon){const w=wd(th.wid);if(w&&w.pack){w.pack.items=w.pack.items||{};w.pack.items[d.give]=w.pack.items[d.give]||{name:d.name,icon:d.icon,desc:d.desc}}}
    appendMsg(th,{who:"sys",k:"card",title:(zh?"🎒 获得道具":"🎒 New item"),txt:itemName(th,d.give)+(d.desc?" · "+Lz(d.desc):""),at:Date.now()})}
@@ -12077,7 +12135,7 @@ pkDirective=function(th,b){if(!(Array.isArray(b)&&b[0]==="sys"))return _pkDir56(
   if(ch(who))appendMsg(th,{who:"sys",k:"card",title:"⚖ "+first(ch(who).n)+(zh?" 自己做了决定":" decides for himself"),txt:(zh?"因为他现在是「":"Because right now he is \"")+(s?Lz(s.name):"")+(zh?"」":"\""),at:Date.now()});
   th.pk.q.unshift(...path);save();return true}
  if(b[1]==="arc"){th.pk.q.shift();arcCheck(th);save();return true}
- return _pkDir56(th,b)};
+ return next(th,b)});;
 /* the "use an item" stop */
 STOPK.add("use");
 const _stopAuto56=stopAuto;
@@ -12350,11 +12408,10 @@ function bgmPick(text){const s=String(text||"").toLowerCase();let best=null,bs=0
 function bgmName(id){const m=BGM100.find(x=>x.id===id);return m?(CL()==="zh"?m.zh:m.en):(typeof BGM_NAME!=="undefined"&&BGM_NAME[id])||id}
 function bgmAhead(th){const q=(th.pk&&th.pk.q)||[];for(let i=0;i<Math.min(q.length,10);i++){const b=q[i];if(!Array.isArray(b)||b[0]!=="sys")continue;if(b[1]==="scene")break;if(b[1]==="bgm")return true}return false}
 /* when a scene opens and the author gave no cue, choose one from the scene's own words */
-const _pkDir58=pkDirective;
-pkDirective=function(th,b){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const r=_pkDir58(th,b);
+PKREG.add("app58_bgm100.js", function(th,b, next){const isScene=Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene";const r=next(th,b);
  if(isScene&&r&&th.pk&&!bgmAhead(th)){try{const d=b[2]||{};const ahead=(th.pk.q||[]).slice(0,14).map(x=>Array.isArray(x)?(typeof x[2]==="string"?x[2]:Lz((x[2]||{}).txt)||""):"").join(" ");
   const m=bgmPick([d.place,d.time,ahead].join(" "));if(m&&th.pk.bgm!==m.id){th.pk.bgm=m.id;th.pk.bgmAuto=1;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true)}}catch(_){}}
- return r};
+ return r});;
 
 /* ================= v2.3 · FX + SFX LIBRARY — 100 screen effects, 100 sound effects, keyword-triggered =================
    FX: one canvas/CSS overlay engine with 20 effect kinds (fall, rise, burst, streak, flash, tint, shake, glitch, pulse, fog, crack, siren…)
@@ -12651,9 +12708,9 @@ function fxAuto(th,txt){if(!th||curT!==th.id||(typeof PKSKIP!=="undefined"&&PKSK
  if(now-FXT.sfx>3000){const s=fxMatch(SFX100,txt);if(s){FXT.sfx=now;sfx100(s.id,.7)}}}
 const _appendMsg59=appendMsg;appendMsg=function(th,m){const r=_appendMsg59(th,m);try{if(m&&m.who!=="me"&&m.who!=="sys"&&(m.txt||m.parts))fxAuto(th,m.txt||(m.parts||[]).map(p=>p.txt).join(" "))}catch(_){}return r};
 const _pkAppend59=pkAppend;pkAppend=function(th,m){const r=_pkAppend59(th,m);try{if(m&&m.who!=="me"&&isNarr(m))fxAuto(th,m.txt)}catch(_){}return r};
-const _pkDir59=pkDirective;pkDirective=function(th,b){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else fx100(d.id)}return true}
+PKREG.add("app59_fx100.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else fx100(d.id)}return true}
  if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="fx"&&FX100.some(x=>x.id===(b[2]||{}).id)){th.pk.q.shift();if(curT===th.id&&!PKSKIP[th.id])fx100(b[2].id);return true}
- return _pkDir59(th,b)};
+ return next(th,b)});;
 
 /* ================= v2.3 · MINI-GAME LIBRARY — 100 games from 15 templates, popped by keywords =================
    Templates: 读心问答 quiz · 翻牌 memory · 密码锁 code · 心跳节拍 rhythm · 屏息 hold · 快拍 whack · 找东西 find · 拆线 wires ·
@@ -15657,8 +15714,7 @@ function off94Show(d, vid) {
   host.appendChild(o); requestAnimationFrame(() => o.classList.add("on")); const bye = () => { o.classList.remove("on"); setTimeout(() => o.remove(), 400); }; o.addEventListener("click", bye);
   if (vid) { const v = o.querySelector("video"); try { v.muted = false; v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); } catch (_) {} v.addEventListener("ended", () => setTimeout(bye, 400)); setTimeout(bye, 20000); } else setTimeout(bye, 4200);
 }
-const _pkDir94 = pkDirective;
-pkDirective = function (th, b) {
+PKREG.add("app94_official2.js", function(th, b, next){
   if (Array.isArray(b) && b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) {
     th.pk.q.shift(); const d0 = b[2] || {}, w = wd(th.wid), A = (w && OFF94.assets[w.community]) || {}, d = Object.assign({}, d0, { src: d0.src || A[d0.slot] });
     /* the opening film already played in the feed / story page — don't show it again once you're inside */
@@ -15668,8 +15724,8 @@ pkDirective = function (th, b) {
       if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: mediaWrap("album:"+aid, d.src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
   }
-  return _pkDir94.apply(this, arguments);
-};
+  return next.apply(this, arguments);
+});;
 /* ---- a written option with nothing scripted after it → he answers it live ---- */
 window.addEventListener("click", e => {
   const x = e.target.closest("[data-stopline]"); if (!x) return; const th = S.threads[curT];
@@ -16466,8 +16522,7 @@ setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
   };
   /* ---------- 3 · 天气跟着场景走 ---------- */
   if (typeof pkDirective === "function" && typeof fxFrom === "function") {
-    const _pd = pkDirective;
-    pkDirective = function (th, b) {
+    PKREG.add("app100_fixes.js", function(th, b, next){
       try {
         if (Array.isArray(b) && b[0] === "sys" && b[1] === "scene" && th && th.pk) {
           const x = b[2] || {}; let txt = (x.place || "") + " " + (x.time || "") + " " + (x.img || "");
@@ -16477,8 +16532,8 @@ setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
           fxSet(th, k || "none");
         }
       } catch (_) {}
-      return _pd.apply(this, arguments);
-    };
+      return next.apply(this, arguments);
+    });;
   }
   if (typeof chatFx === "function") {
     const _cf = chatFx;
@@ -17698,12 +17753,11 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
   document.addEventListener("click", e => { if (e.target.closest("[data-pkspd],[data-spdcyc],[data-spd]")) { S.pkTap101 = false; save(); } }, true);
   /* ---------- 3 · 特效：只跟场景走，淡入淡出 ---------- */
   if (typeof pkDirective === "function") {
-    const _pd = pkDirective;
-    pkDirective = function (th, b) {
+    PKREG.add("app101_you.js", function(th, b, next){
       const evt = Array.isArray(b) && b[0] === "sys" && (b[1] === "event" || b[1] === "bg");
       if (evt) window.__noFx101 = 1;
-      try { return _pd.apply(this, arguments); } finally { window.__noFx101 = 0; }
-    };
+      try { return next.apply(this, arguments); } finally { window.__noFx101 = 0; }
+    });;
   }
   if (typeof fxSet === "function") {
     const _fs = fxSet;
@@ -17731,8 +17785,7 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
   }
   const dec = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
   if (typeof pkDirective === "function") {
-    const _pd2 = pkDirective;
-    pkDirective = function (th, b) {
+    PKREG.add("app101_you.js", function(th, b, next){
       if (Array.isArray(b) && typeof b[2] === "string" && b[2].indexOf(IMARK) === 0) {
         const a = b[2].slice(IMARK.length).split("|").map(dec);
         th.pk.q.shift();
@@ -17742,8 +17795,8 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
         if (curT === th.id) { renderChat(); try { scrollChat(); } catch (_) {} }
         return true;
       }
-      return _pd2.apply(this, arguments);
-    };
+      return next.apply(this, arguments);
+    });;
   }
   if (typeof msgHTML === "function") {
     const _mh = msgHTML;
@@ -18201,6 +18254,10 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
     'app40_sfx.js', 'app41_merge.js', 'app46_cp.js', 'app58_bgm100.js',
     'app100_fixes.js', 'app101_you.js'
   ];
+
+  /* 装配：把所有 PKREG.add 过的层串成一条链（与原来的加载顺序逐字等价）。
+     这一步必须放在**所有注册之后** —— 它此刻才接管 window.pkDirective。 */
+  try { if (window.PKREG && !window.PKREG.installed) window.PKREG.install() } catch (_) {}
 
   window.PKDIRECT = DIRECT;
   window.PKDEAD = DEAD;

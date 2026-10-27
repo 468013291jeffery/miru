@@ -112,8 +112,7 @@ function off94Show(d, vid) {
   host.appendChild(o); requestAnimationFrame(() => o.classList.add("on")); const bye = () => { o.classList.remove("on"); setTimeout(() => o.remove(), 400); }; o.addEventListener("click", bye);
   if (vid) { const v = o.querySelector("video"); try { v.muted = false; v.play().catch(() => { v.muted = true; v.play().catch(() => {}); }); } catch (_) {} v.addEventListener("ended", () => setTimeout(bye, 400)); setTimeout(bye, 20000); } else setTimeout(bye, 4200);
 }
-const _pkDir94 = pkDirective;
-pkDirective = function (th, b) {
+PKREG.add("app94_official2.js", function(th, b, next){
   if (Array.isArray(b) && b[0] === "sys" && (b[1] === "cg94" || b[1] === "vid94")) {
     th.pk.q.shift(); const d0 = b[2] || {}, w = wd(th.wid), A = (w && OFF94.assets[w.community]) || {}, d = Object.assign({}, d0, { src: d0.src || A[d0.slot] });
     /* the opening film already played in the feed / story page — don't show it again once you're inside */
@@ -123,8 +122,8 @@ pkDirective = function (th, b) {
       if (b[1] === "cg94") { const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: mainOf(th), src: mediaWrap("album:"+aid, d.src), at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } }
     save(); return true;
   }
-  return _pkDir94.apply(this, arguments);
-};
+  return next.apply(this, arguments);
+});;
 /* ---- a written option with nothing scripted after it → he answers it live ---- */
 window.addEventListener("click", e => {
   const x = e.target.closest("[data-stopline]"); if (!x) return; const th = S.threads[curT];

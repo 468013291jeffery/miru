@@ -38,6 +38,7 @@ node tools/read-errlog.mjs        # 错误日志（2 分钟窗口）
 | 加载顺序 | 状态机必须先于绑定点 | 位置比较 | `wiring-order-check` |
 | 猴补丁基线 | 新增包装要显式确认 | 148 函数 / 382 处 | `patch-registry --check` |
 | 空 catch | 静默失败存量 | 576 处 | `empty-catch-check` |
+| **剧本指令分发** | 26 层 `pkDirective` 包装 → `PKREG` 注册表 | `__pkreg()` 层内抛错 | `pkdirective-check` |
 | **on\* 事件绑定** | `el.onclick = fn` 会静默覆盖别人的处理器 | 硬类 0 · 软类 93 处 | `on-assign-check` |
 
 **加新代码走入口，不要绕过。** 绕过一次，那道闸对你就失效了。
