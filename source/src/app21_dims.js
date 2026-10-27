@@ -78,7 +78,10 @@ const _fxRun21=fxRun;fxRun=function(kind){drops=[];frost=0;_fxRun21(kind);const 
   requestAnimationFrame(over)};requestAnimationFrame(over)};
 /* manual pick also works outside stories */
 const _chatFx21=chatFx;chatFx=function(th){if(th&&th.fxm&&th.fxm!=="auto"){cancelAnimationFrame(fxRaf);fxRun(th.fxm);return}_chatFx21(th)};
-const _renderChat21=renderChat;renderChat=function(){_renderChat21.apply(this,arguments);const s=$(".status");if(s&&!s.querySelector("[data-fxpick]"))s.insertAdjacentHTML("beforeend",'<button class="fxchip" data-fxpick="1">✨ '+t("fx.chip")+'</button>');const th=S.threads[curT];if(th)dimSync(th)};
+/* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_dims21 = function () { const s=$(".status");if(s&&!s.querySelector("[data-fxpick]"))s.insertAdjacentHTML("beforeend",'<button class="fxchip" data-fxpick="1">✨ '+t("fx.chip")+'</button>');const th=S.threads[curT];if(th)dimSync(th) };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("dims21", __body_dims21);
+else { const _renderChat21 = renderChat; renderChat = function () { const r = _renderChat21.apply(this, arguments); __body_dims21(); return r; }; };
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)return;
  if(e.target.closest("[data-fxpick]")){const cur=th.fxm||"auto";sheet('<h2>✨ '+t("fx.h")+'</h2><p class="xs faint" style="margin-top:4px">'+t("fx.s")+'</p><div class="fxgrid">'+FXLIST.map(([k,i])=>'<button data-fxk="'+k+'" class="'+(k===cur?"on":"")+'"><span>'+i+'</span><b>'+t("fx."+k)+'</b></button>').join("")+'</div>');return}
  if(x=e.target.closest("[data-fxk]")){th.fxm=x.dataset.fxk;save();closeSheet();chatFx(th);bgmFollow(th,true);return}});

@@ -17,8 +17,10 @@ function callsOK97(th) {
   if (w.calls === false) return false; if (AG97.noCall.includes(w.community)) return false;
   const tags = (w.tags || []).join(" "); return !/Romantasy|Fae|Fantasy|Historical|Regency|Medieval|Dragon|Royal Court|古风|奇幻/i.test(tags);
 }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments);
-    try { const th = S.threads[curT]; if (th && !callsOK97(th)) document.querySelectorAll("#s-chat .callbtn").forEach(b => b.remove()); } catch (_) {} return r; }; }
+{ /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移）。逻辑原样，只是不再包住渲染器。 */
+const __body_agents97 = function () { try { const th = S.threads[curT]; if (th && !callsOK97(th)) document.querySelectorAll("#s-chat .callbtn").forEach(b => b.remove()); } catch (_) {} };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("agents97", __body_agents97);
+else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_agents97(); return r; }; }; }
 { const _sc = startCall; startCall = function (cid) { const th = S.threads[curT]; if (th && !callsOK97(th)) { toast(L97("这个世界没有电话。", "There are no phones in this world.")); return; } return _sc.apply(this, arguments); }; }
 /* a scripted call in a no-phone world plays as an ordinary scene */
 { const _sa = stopAuto; stopAuto = function (th, b) {
