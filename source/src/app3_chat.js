@@ -723,7 +723,23 @@ async function playBeats(th,r,ctx,silent){
  if(curT===th.id&&!silent){const cur=$("#s-chat");if(cur&&!cur.hidden){const sc=$("#msgs").scrollTop;renderChat();scrollChat()}}
  if(!INLINE_SPOKE&&S.voice.auto&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
 let VOICE_BUSY=0;   // 正在播/正在生成的语音条数（2026-10-27）
-function speakQueue(list){VOICE_BUSY++;let i=0;const next=()=>{if(i>=list.length){VOICE_BUSY=Math.max(0,VOICE_BUSY-1);return}const m=list[i++];speak(m.txt,m.who,next)};next()}
+/* 2026-10-27 第二步：一条语音的开关。原来只靠 onend 递归推进 —— 任何一层漏调 onend，队列就永远停住，
+   而 VOICE_BUSY 一直 >0、没有任何东西会喊，界面上只表现为「生成中」卡满 8 秒。
+   现在每条带看门狗（VOICE_TIMEOUT_MS 内没 settle ⇒ 强制推下一条，记 why=timeout），
+   并留 32 条环形日志（也挂 window.__voiceLog）：卡过之后能倒查是哪一条、走的哪个通道、为什么结束。 */
+const VOICE_TIMEOUT_MS=8000;
+const VOICE_LOG=[];
+function voiceLog(o){VOICE_LOG.push(o);if(VOICE_LOG.length>32)VOICE_LOG.shift();window.__voiceLog=VOICE_LOG}
+function speakQueue(list){VOICE_BUSY++;let i=0;
+ const next=()=>{
+  if(i>=list.length){VOICE_BUSY=Math.max(0,VOICE_BUSY-1);voiceLog({done:1});return}
+  const m=list[i++],t0=Date.now();let settled=false;
+  const go=(why)=>{if(settled)return;settled=true;clearTimeout(wd);
+   voiceLog({who:m.who,txt:String(m.txt||'').slice(0,16),ms:Date.now()-t0,why:why});next()};
+  const wd=setTimeout(()=>go('timeout'),VOICE_TIMEOUT_MS);
+  try{speak(m.txt,m.who,()=>go('ended'))}catch(_){go('throw')}
+ };
+ next()}
 
 /* ================= COMPOSER EVENTS ================= */
 document.addEventListener("click",e=>{let x;
