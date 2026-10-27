@@ -83,8 +83,8 @@ const STK_RE=new RegExp("^("+STK.map(s=>s[0].replace(/[.*+?^${}()|[\]\\]/g,"\\$&
    也就是说这两个分支（贴纸 / 纯表情放大）**此刻是死的**。这里先原样搬（对拍要逐字节一致），
    死没死由 tools/msgkind-probe.mjs 的命中读数报出来，别在这一步顺手改样式。 */
 MSGKIND.post("app18_promo.js", function (h, m, i, th) { if(!m||!m.txt||typeof m.txt!=="string")return h;const mt=m.txt.match(STK_RE);
- if(mt)return h.replace(/<div class="bub">[\s\S]*?<\/div>/,'<div class="bub stk"><span>'+mt[1]+'</span><small>'+esc(mt[2])+'</small></div>');
- if(/^(\p{Extended_Pictographic}|\u200d|\ufe0f|\s){1,8}$/u.test(m.txt))return h.replace('<div class="bub">','<div class="bub bigemo">');return h});
+ if(mt)return h.replace(/<div class="([^"]*\bbubble\b[^"]*)">[\s\S]*?<\/div>/,'<div class="$1 stk"><span>'+mt[1]+'</span><small>'+esc(mt[2])+'</small></div>');
+ if(/^(\p{Extended_Pictographic}|\u200d|\ufe0f|\s){1,8}$/u.test(m.txt))return h.replace(/<div class="([^"]*\bbubble\b[^"]*)">/,'<div class="$1 bigemo">');return h});
 
 /* ---------- MY MOMENTS: post, and the people you've talked to come comment ---------- */
 function myCircle(){const seen={};Object.values(S.threads||{}).sort((a,b)=>(b.at||0)-(a.at||0)).forEach(th=>{const me=th.pk&&th.pk.as;(th.cast||[]).forEach(id=>{if(id!==me&&ch(id)&&!seen[id])seen[id]=th.at||1})});

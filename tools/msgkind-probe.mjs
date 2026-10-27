@@ -35,7 +35,7 @@ const EXPECT = [
   ['付款行 · 没说出口的话', 'app35_pay.js', 'fires', 'payrow', 'post 类：挂付款行'],
   ['电话卡 · 接听按钮', 'app98_story.js', 'fires', 'data-call98', 'post 类：加接听按钮'],
   ['编辑过 · 小标签', 'app73_features.js', 'fires', 'ed73tag', 'post 类：追加「已编辑」标签'],
-  ['贴纸 / 纯表情放大', 'app18_promo.js', 'silent', '', '同样找 `<div class="bub">` —— 已知死，且 .stk/.bigemo 根本没有 CSS'],
+  ['贴纸 / 纯表情放大', 'app18_promo.js', 'fires', 'bigemo', '2026-10-27：这一层原来找 <div class="bub">（写死外壳）⇒ 一直没生效。改成认 ubble 类之后**复活**，纯表情消息现在真的会加 .bigemo'],
   ['未接来电', 'app20_fx_booth.js', 'fires', '', 'kind 类：认领 missed'],
   ['撤回', 'app37_hooks.js', 'fires', '', 'kind 类：认领 xrecall'],
   ['拒绝', 'app42_decline.js', 'fires', '', 'kind 类：认领 declined'],
