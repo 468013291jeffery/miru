@@ -89,6 +89,10 @@ setTimeout(function () {
       ['电话卡 · 接听按钮', 'app98_story.js', { who: 'c', k: 'say', txt: '（电话响了）', call98: 'c' }, {}],
       ['编辑过 · 小标签', 'app73_features.js', { who: 'c', k: 'say', txt: '改过的一句。', edited: 1 }, {}],
       ['贴纸 / 纯表情放大', 'app18_promo.js', { who: 'c', k: 'say', txt: '🌙' }, {}],
+ ['行内 *动作* · 别人', 'app16_story2.js', { who: 'c2', k: 'say', txt: '*把他拉近* 别走。' }, {}],
+ ['编辑过 · 别人', 'app73_features.js', { who: 'c2', k: 'say', txt: '改过的一句。', edited: 1 }, {}],
+ ['贴纸 · 别人', 'app18_promo.js', { who: 'c2', k: 'say', txt: '🌙' }, {}],
+ ['电话卡 · 别人', 'app98_story.js', { who: 'c2', k: 'say', txt: '（电话响了）', call98: 'c2' }, {}],
       ['未接来电', 'app20_fx_booth.js', { who: 'c', k: 'missed', txt: '未接来电' }, {}],
       ['撤回', 'app37_hooks.js', { who: 'c', k: 'xrecall', rw: 'c', txt: '撤回' }, {}],
       ['拒绝', 'app42_decline.js', { who: 'c', k: 'declined', cid: 'c', txt: '拒绝' }, {}],
@@ -132,7 +136,11 @@ setTimeout(function () {
       finally { if (wpatch) w.wd = wd0 }
       /* 1200 而不是 500：app3_chat 把 `.mquick` 一排按钮放在**行末**，
          截太短会让「不该出现 mquick」这条因为截断而假绿。 */
-      outP.push({ name: name, layer: layer, fired: delta(before, hitMap()), html: html.slice(0, 1200) });
+      outP.push({ name: name, layer: layer, fired: delta(before, hitMap()),
+  /* 2026-10-27：**截断前先剥 base64**。NPC 消息的头像内联成 data:image/jpeg 有几千字符，
+     1200 的窗口被它整个占满 ⇒ 探针看不见气泡和正文 ⇒ 四个后处理层被误判成「失效」。
+     实测：c2 样例的 html 长度 1200、结尾停在 base64 中间、里面既没有 <p class="bac"> 也没有 .bub。 */
+  html: html.replace(/src="data:[^"]*"/g, 'src="data:…"').slice(0, 1200) });
     }
 
     probe.textContent = 'MSGKIND_JSON:' + JSON.stringify({
