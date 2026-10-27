@@ -1,0 +1,163 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>voice probe</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:700px;border:0"></iframe>
+<script>
+/* 语音探针（2026-10-27）
+   用途：让语音出读数。一条语音不出声时，界面上只剩「没声音」——
+   播完 / 报错 / 超时 / 被取消 四种可能同形，产品里没有任何计数器分开它们。
+
+   三条臂：
+     ok      服务端 TTS 正常（喂**真能解码的 WAV**，时长可控）
+     hang    fetch 永不返回（TTS 卡死）
+     corrupt 返回**坏音频**（观察产品把「解码失败」当成什么）
+
+   ⚠️ 两次踩坑（都记在这，因为它们就是这把尺子的校准史）：
+   ① `w.speechSynthesis = stub` 静默无效 —— 它是 Window 上的只读访问器，普通赋值被忽略。
+   ② 造 4096 字节假 mp3 没用 —— 产品（app86_voicefix `const a=TTSEL`）用的是**自己预先
+      建好的 Audio 元素**，根本不碰 `new Audio`。假 mp3 让它真解码失败 ⇒ `onerror → onend`
+      在 **2ms** 内就把这条"播完"了。那次 2ms 不是尺子坏，是**产品把解码失败当成播完**。
+      ⇒ 现在喂真 WAV；并且「ok 组耗时必须跟着 playMs 走」写成了判据。
+
+   输出：一行 `VOICE_JSON:{...}`，由 tools/voice-probe.mjs 解析。 */
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow;
+  if (!w || typeof w.speakQueue !== 'function') { out.textContent = 'ERR no speakQueue'; return }
+
+  var PLAY_MS = (parseInt((location.hash || '').replace('#', ''), 10)) || 600;
+
+  var CUR = null;
+  function touch(ch) { if (CUR && !CUR.channel) CUR.channel = ch }
+
+  /* ---- 真 WAV：8kHz / 8bit / 单声道 / 静音。能被真解码器接受，且时长正好 ---- */
+  function wavBlob(ms) {
+    var rate = 8000, bits = 8, ch = 1;
+    var n = Math.max(1, Math.floor(rate * ms / 1000));
+    var buf = new ArrayBuffer(44 + n), dv = new DataView(buf);
+    function wr(o, s) { for (var i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)) }
+    wr(0, 'RIFF'); dv.setUint32(4, 36 + n, true); wr(8, 'WAVE'); wr(12, 'fmt ');
+    dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, ch, true);
+    dv.setUint32(24, rate, true); dv.setUint32(28, rate * ch * bits / 8, true);
+    dv.setUint16(32, ch * bits / 8, true); dv.setUint16(34, bits, true);
+    wr(36, 'data'); dv.setUint32(40, n, true);
+    for (var i = 0; i < n; i++) dv.setUint8(44 + i, 128);      // 8bit 静音 = 128
+    return new Blob([buf], { type: 'audio/wav' });
+  }
+
+  /* ---- 桩：设备语音（defineProperty —— 普通赋值在这上面静默无效） ---- */
+  w.__ssSpoke = 0;
+  var ssStub = {
+    speak: function (u) {
+      w.__ssSpoke++; touch('device');
+      setTimeout(function () { if (u && u.onend) u.onend() }, PLAY_MS);
+    },
+    cancel: function () {}, pause: function () {}, resume: function () {},
+    getVoices: function () { return [{ name: 'stub', lang: 'zh-CN' }] }
+  };
+  var ssOk = false;
+  try {
+    Object.defineProperty(w, 'speechSynthesis', { value: ssStub, configurable: true, writable: true });
+    ssOk = (w.speechSynthesis === ssStub);
+  } catch (e) { ssOk = false }
+  try {
+    w.SpeechSynthesisUtterance = function (t) {
+      this.text = t; this.onend = null; this.onerror = null; this.lang = ''; this.voice = null; this.rate = 1; this.pitch = 1;
+    };
+  } catch (e) {}
+
+  /* ---- 桩：/api/tts。**不桩 Audio** —— 产品用自己预建的 TTSEL 元素，喂真音频才测得准 ---- */
+  var TTSMODE = 'ok';
+  var realFetch = w.fetch;
+  w.fetch = function (url, opt) {
+    var u = String(url || '');
+    if (u.indexOf('/api/tts') >= 0) {
+      touch('tts-fetch');
+      if (TTSMODE === 'hang') return new Promise(function () {});
+      var blob = (TTSMODE === 'corrupt')
+        ? new Blob([new Uint8Array(4096)], { type: 'audio/mp3' })   // 坏字节：解码必失败
+        : wavBlob(PLAY_MS);
+      return Promise.resolve({ ok: true, status: 200, blob: function () { return Promise.resolve(blob) } });
+    }
+    return realFetch ? realFetch.apply(w, arguments) : Promise.reject(new Error('no fetch'));
+  };
+
+  /* ---- 从外面包一层 speak：记时 + 通道 + 结束方式 + 调用栈 ---- */
+  var LOG = [];
+  var realSpeak = w.speak;
+  w.speak = function (text, id, onend) {
+    var t0 = Date.now();
+    var rec = { who: String(id || ''), txt: String(text || '').slice(0, 12), t0: t0, t1: null, why: null, channel: null, stack: '' };
+    LOG.push(rec);
+    CUR = rec;
+    var settled = false;
+    var mine = function () {
+      if (settled) return; settled = true;
+      rec.t1 = Date.now(); rec.why = 'ended';
+      try {
+        rec.stack = String((new Error()).stack || '').split('\n').slice(1, 4)
+          .map(function (s) { return s.trim().replace(/https?:\/\/[^\/]+\//g, '').slice(0, 70) }).join(' ← ');
+      } catch (e) {}
+      if (onend) onend();
+    };
+    try { return realSpeak.call(w, text, id, mine) }
+    catch (e) { rec.t1 = Date.now(); rec.why = 'throw:' + (e && e.message); throw e }
+    finally { CUR = null }
+  };
+
+  var TEXTS = {
+    ok: ['探针第一句，量它从进到出要多久。', '探针第二句，必须等第一句播完。', '探针第三句，队列到此排空。'],
+    hang: ['挂死组第一句，缓存里没有。', '挂死组第二句，缓存里没有。', '挂死组第三句，缓存里没有。'],
+    corrupt: ['坏音组第一句，解码会失败。', '坏音组第二句，解码会失败。', '坏音组第三句，解码会失败。']
+  };
+
+  function runOne(mode, done) {
+    TTSMODE = mode;
+    LOG = [];
+    var list = TEXTS[mode].map(function (t) { return { txt: t, who: 'c' } });
+    var t0 = Date.now();
+    try { w.speakQueue(list) } catch (e) {
+      out.textContent = 'ERR speakQueue 抛错: ' + (e && e.message);
+      return done({ mode: mode, err: String(e && e.message) })
+    }
+    var deadline = Date.now() + (mode === 'hang' ? 30000 : 6000);
+    var tick = function () {
+      var settledN = LOG.filter(function (r) { return r.why }).length;
+      if (settledN >= list.length || Date.now() > deadline) {
+        return done({
+          mode: mode, ms: Date.now() - t0,
+          drained: settledN >= list.length,
+          spoken: LOG.length, settled: settledN,
+          playMs: PLAY_MS, ssStubOk: ssOk,
+          rows: LOG.map(function (r) {
+            return {
+              who: r.who, txt: r.txt,
+              ms: (r.t1 === null ? null : (r.t1 - r.t0)),
+              why: r.why || 'NEVER',
+              channel: r.channel || 'none',
+              stack: r.stack || ''
+            }
+          }),
+          ssSpoke: w.__ssSpoke || 0
+        });
+      }
+      setTimeout(tick, 60);
+    };
+    tick();
+  }
+
+  var RESULT = {};
+  runOne('ok', function (a) {
+    RESULT.ok = a;
+    runOne('corrupt', function (c) {
+      RESULT.corrupt = c;
+      runOne('hang', function (b) {
+        RESULT.hang = b;
+        out.textContent = 'VOICE_JSON:' + JSON.stringify(RESULT);
+        document.title = 'ready';
+      });
+    });
+  });
+}, 2500);
+</script>

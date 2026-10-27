@@ -25,9 +25,19 @@ speak=function(text,id,onend){try{
  if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return _speak62(text,id,onend);
  stopVoice();const my=(TTS.seq=(TTS.seq||0)+1);let done=false;
  const fallback=()=>{if(done||TTS.seq!==my)return;done=true;_speak62(text,id,onend)};
- const tm=setTimeout(fallback,TTS.mem.has(ttsKey(text,id))?1500:8000);
- ttsFetch(text,id).then(u=>{if(done||TTS.seq!==my)return;done=true;clearTimeout(tm);const a=TTSEL;a.onended=()=>{if(onend)onend()};a.onerror=()=>{if(onend)onend()};
-  a.src=u;AUD_CUR=a;a.play().catch(()=>{const b=new Audio(u);AUD_CUR=b;b.onended=a.onended;b.play().catch(()=>{if(onend)onend()})})}).catch(()=>{clearTimeout(tm);fallback()});
+ /* 2026-10-27 两处实测修正（探针 tools/voice-probe.mjs 抓出来的，不是猜的）：
+    ① **解码失败被当成「播完了」**：原来 `a.onerror=()=>{if(onend)onend()}` 与 onended 同路。
+       坏音频实测 1–3ms 就把这一条"播完"，队列照常推进 —— 用户什么也没听见，而所有计数器正常。
+       ⇒ onerror 现在**降级到设备语音**（免费、总能出声），由它自己的 onend 推进一次。
+    ② **8 秒兜底太长**：实测 TTS 挂死时每条 8.6 秒，3 条 26 秒 —— 观感就是卡死。
+       ⇒ 降到 4 秒（缓存命中 1.4 秒）；并且连续失败时把 TTS.fails 记上，第 4 次直接走设备语音。 */
+ const tm=setTimeout(fallback,TTS.mem.has(ttsKey(text,id))?1400:4000);
+ ttsFetch(text,id).then(u=>{if(done||TTS.seq!==my)return;done=true;clearTimeout(tm);const a=TTSEL;let ended=false;
+  const once=(fn)=>{if(ended)return;ended=true;try{fn()}catch(_){}};
+  a.onended=()=>once(()=>{if(onend)onend()});
+  a.onerror=()=>once(()=>{TTS.fails=(TTS.fails||0)+1;try{a.onended=null;a.onerror=null}catch(_){}_speak62(text,id,onend)});
+  a.src=u;AUD_CUR=a;a.play().catch(()=>{once(()=>{TTS.fails=(TTS.fails||0)+1;const b=new Audio(u);AUD_CUR=b;b.onended=()=>{if(onend)onend()};b.play().catch(()=>{_speak62(text,id,onend)})})})
+ }).catch(()=>{clearTimeout(tm);fallback()});
 }catch(_){return _speak62(text,id,onend)}};
 /* scripted calls: prefetch every line, then let the voice set the pace */
 stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),c=ch(cid),lines=d.lines.map(x=>Array.isArray(x)?x:[cid,x]);let i=0,done=false;const t0=Date.now();
