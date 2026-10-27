@@ -10,7 +10,7 @@
 <script src="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/locale/zh-cn.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
-<script src="/miru_rules.js"></script>
+<script src="./miru_rules.js"></script>
 <style>
 :root{--side:#14121a;--brand:#EE6F97}
 *{box-sizing:border-box}html,body{margin:0;height:100%;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:#f4f5f7;color:#1f2329}
@@ -120,12 +120,14 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
   </el-dialog>
 </div></script>
 <script>
+// GitHub Pages hosts the admin UI only; API routes run on the production Vercel backend.
+const ADMIN_API_BASE = location.hostname === '468013291jeffery.github.io' ? 'https://miru-kk-396c.vercel.app' : '';
 const { createApp, reactive, ref, computed, onMounted, nextTick, watch, h } = Vue;
 const { ElMessage, ElMessageBox } = ElementPlus;
 const S = reactive({ token: localStorage.getItem('miru_admin_tok') || '', me: JSON.parse(localStorage.getItem('miru_admin_me') || '{}'), perms: JSON.parse(localStorage.getItem('miru_admin_perms') || '[]') });
 async function api(r, opt) {
   opt = opt || {}; const qs = new URLSearchParams(Object.assign({ r }, Object.fromEntries(Object.entries(opt.query || {}).filter(([, v]) => v !== '' && v != null)))).toString();
-  const res = await fetch('/api/admin?' + qs, { method: opt.body ? 'POST' : 'GET', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
+  const res = await fetch(ADMIN_API_BASE + '/api/admin?' + qs, { method: opt.body ? 'POST' : 'GET', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
   let j = {}; try { j = await res.json(); } catch (_) {}
   if (res.status === 401 && r !== 'login' && r !== 'password') { logout(); ElMessage.error('登录已过期，请重新登录'); throw new Error('401'); }
   if (!res.ok) { ElMessage.error(j.error || ('请求失败 ' + res.status)); throw new Error(j.error || res.status); }
@@ -235,7 +237,7 @@ const Users = {
       txBusy.value = true;
       try {
         const qs = new URLSearchParams({ r: 'user_transcript', id, limit: String(txN.value) }).toString();
-        const res = await fetch('/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
+        const res = await fetch(ADMIN_API_BASE + '/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
         if (!res.ok) { let j = {}; try { j = await res.json(); } catch (_) {} ElMessage.error(j.error || ('导出失败 ' + res.status)); return; }
         const blob = await res.blob();
         const a = document.createElement('a');
@@ -570,10 +572,10 @@ const Config = {
     const skuRows = computed(() => v.value ? Object.entries(v.value.skus || {}).map(([k, x]) => ({ k, x })) : []);
     const llm = ref(null), probing = ref(false);
     const emb = ref(null);
-    async function probeEmbed() { try { const r = await fetch('/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true, embed: true }) }); emb.value = (await r.json()).embed; } catch (e) { ElMessage.error('测试失败：' + e.message); } }
-    async function probe() { probing.value = true; try { const r = await fetch('/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true }) }); llm.value = await r.json(); } catch (e) { ElMessage.error('测试失败：' + e.message); } finally { probing.value = false; } }
+    async function probeEmbed() { try { const r = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true, embed: true }) }); emb.value = (await r.json()).embed; } catch (e) { ElMessage.error('测试失败：' + e.message); } }
+    async function probe() { probing.value = true; try { const r = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true }) }); llm.value = await r.json(); } catch (e) { ElMessage.error('测试失败：' + e.message); } finally { probing.value = false; } }
     const qw = ref(null);
-    async function probeQwen() { qw.value = { busy: true }; try { const [a, b, c] = await Promise.all([fetch('/api/tts?ping=qwen&l=zh').then(r => r.json()), fetch('/api/tts?ping=qwen&l=en&v=f1').then(r => r.json()), (async () => { const t0 = Date.now(); const r = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ omni: { voice: 'm2', sys: '你在打电话，用一句话回答。', msgs: [{ role: 'user', text: '你好，在吗？' }], max: 60 } }) }); if (!r.ok) { const j = await r.json().catch(() => ({})); return { qwen: { ok: false, error: { message: (j.error && j.error.message || r.status) + ' ' + JSON.stringify(j.error && j.error.trace || '') } } }; } const txt = await r.text(); const n = (txt.match(/"data":"/g) || []).length; return { qwen: { ok: n > 0, ms: Date.now() - t0, provider: r.headers.get('X-MIRU-Provider'), said: (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('') } }; })()]); qw.value = { zh: a, en: b, call: c.qwen || c }; } catch (e) { qw.value = null; ElMessage.error('测试失败：' + e.message); } }
+    async function probeQwen() { qw.value = { busy: true }; try { const [a, b, c] = await Promise.all([fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=zh').then(r => r.json()), fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=en&v=f1').then(r => r.json()), (async () => { const t0 = Date.now(); const r = await fetch(ADMIN_API_BASE + '/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ omni: { voice: 'm2', sys: '你在打电话，用一句话回答。', msgs: [{ role: 'user', text: '你好，在吗？' }], max: 60 } }) }); if (!r.ok) { const j = await r.json().catch(() => ({})); return { qwen: { ok: false, error: { message: (j.error && j.error.message || r.status) + ' ' + JSON.stringify(j.error && j.error.trace || '') } } }; } const txt = await r.text(); const n = (txt.match(/"data":"/g) || []).length; return { qwen: { ok: n > 0, ms: Date.now() - t0, provider: r.headers.get('X-MIRU-Provider'), said: (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('') } }; })()]); qw.value = { zh: a, en: b, call: c.qwen || c }; } catch (e) { qw.value = null; ElMessage.error('测试失败：' + e.message); } }
     onMounted(load);
     return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed, qw, probeQwen };
   },
@@ -684,7 +686,7 @@ const STU = {
 };
 function stuLLM(system, user, max) {
   const body = { model: 'LongCat-2.0', max_tokens: max || 6000, temperature: 0.8, messages: [{ role: 'system', content: system }, { role: 'user', content: user }] };
-  const once = async (mt) => { const res = await fetch('/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({}, body, { max_tokens: mt })) }); const t = await res.text(); let j = {}; try { j = JSON.parse(t); } catch (_) { throw new Error('AI 返回格式错误'); } if (j.error) throw new Error(j.error.message || j.error.code || 'AI 出错'); return String(((j.choices || [])[0] || {}).message && j.choices[0].message.content || '').trim(); };
+  const once = async (mt) => { const res = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({}, body, { max_tokens: mt })) }); const t = await res.text(); let j = {}; try { j = JSON.parse(t); } catch (_) { throw new Error('AI 返回格式错误'); } if (j.error) throw new Error(j.error.message || j.error.code || 'AI 出错'); return String(((j.choices || [])[0] || {}).message && j.choices[0].message.content || '').trim(); };
   return once(max || 6000).catch(e => { if (/max_tokens|length|token/i.test(e.message)) return once(4000); throw e; });
 }
 function stuJSON(t) { t = String(t || '').replace(/^```(json)?/i, '').replace(/```\s*$/, '').trim(); const a = t.indexOf('{'), b = t.lastIndexOf('}'); const a2 = t.indexOf('['), b2 = t.lastIndexOf(']'); try { return JSON.parse(t); } catch (_) {} try { return JSON.parse(t.slice(a, b + 1)); } catch (_) {} try { return JSON.parse(t.slice(a2, b2 + 1)); } catch (_) {} return null; }
