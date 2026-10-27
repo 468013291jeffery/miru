@@ -52,7 +52,11 @@ for (const { f, lines } of src) {
       /* ⚠️ 顺序要紧：先判「包装」，再判「定义」。
          包装行长得像 `const _menuSheet45=menuSheet;menuSheet=function(…)` —— 它同时含
          `NAME=function`，先判定义的话每一处包装都会被记成新定义（第一版就 46 个全是「包 0 层」）。 */
-      const isPatch = new RegExp('=\\s*' + name + '\\s*;').test(ln) && new RegExp(name + '\\s*=\\s*function').test(ln);
+      const isPatch = (new RegExp('=\\s*' + name + '\\s*;').test(ln) && new RegExp(name + '\\s*=\\s*function').test(ln))
+        /* ⚠️ 第二种写法：`NAME = (function (orig) { return function () {…} })(NAME)`
+           —— 第一版只认 `NAME=function{…}`，于是整族「IIFE 形态」的包装全被漏掉
+           （menuSheet 因此被报成 7 处，实际 8 处；ledger 那一层就是这么漏的，搬完 4 个 top 才发现）。 */
+        || new RegExp(name + '\\s*=\\s*\\(\\s*function').test(ln);
       if (isPatch) rec.patches.push(f + ':' + (i + 1));
       else if (new RegExp('function\\s+' + name + '\\s*\\(').test(ln) || new RegExp('(^|[^.\\w])' + name + '\\s*=\\s*function').test(ln)) rec.defs.push(f + ':' + (i + 1));
       /* 直连调用：NAME(（不含定义行与包装行本身） */
