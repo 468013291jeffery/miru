@@ -219,7 +219,20 @@ renderChat = function () {
     if (j >= 0 && box && !busy && !box.querySelector(".rg73")) {
       const lastSay = (() => { for (let k = th.msgs.length - 1; k >= j; k--) { const m = th.msgs[k]; if (ch(m.who) && m.k === "say" && m.who !== (th.pk && th.pk.as) && !(th.msgs[k + 1] && th.msgs[k + 1].mind)) return k; } return -1; })();
       const V = th.vers && th.vers.at === j ? th.vers : null;
-      box.insertAdjacentHTML("beforeend", '<div class="rg73">' +
+      /* 2026-10-27：挂进**气泡内部**，宽度跟气泡走 —— 这样「右对齐」是对话框的右边，
+     不是整屏幕的右边。取最后一个 m-row 的内层 div；没有就退回 #msgs。 */
+ const _host = (function(){
+   try{
+     const rows = box.querySelectorAll(".m-row");
+     const last = rows[rows.length - 1];
+     const inner = last && last.lastElementChild;
+     if (inner && inner !== last) return inner;
+     const bx = box.querySelectorAll(".m-box");
+     if (bx.length) return bx[bx.length - 1].parentNode;
+   }catch(_){}
+   return box;
+ })();
+ _host.insertAdjacentHTML("beforeend", '<div class="rg73">' +
         (V && V.list.length > 1 ? '<span class="vs73"><button data-vs73="-1"' + (V.cur ? '' : ' disabled') + '>‹</button>' + (V.cur + 1) + '/' + V.list.length + '<button data-vs73="1"' + (V.cur < V.list.length - 1 ? '' : ' disabled') + '>›</button></span>' : '') +
         '<button data-rg73="1">↻ ' + esc(t73("regen")) + '</button><button data-edg73="1">✎ ' + esc(t73("edit")) + '</button>' +
         (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">💭 ' + esc(t73("mind")) + '</button>' : '') + '</div>');
@@ -245,7 +258,7 @@ renderChat = function () {
   st.textContent = `
 .af73{display:inline-flex;align-items:center;gap:4px;margin-top:3px;font-size:11px;font-weight:700;color:#F6B4C9;position:relative;padding-bottom:3px}
 .af73 i{position:absolute;left:0;bottom:0;height:2px;border-radius:2px;background:var(--grad);max-width:100%}
-.rg73{display:flex;width:max-content;max-width:calc(100% - 46px);align-items:stretch;align-self:flex-end;margin:-2px 4px 8px 0;border-radius:14px 14px 4px 14px;border:1px solid var(--line2);background:rgba(22,20,28,.72);border-radius:4px 4px 14px 14px;overflow:hidden}
+.rg73{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:0;width:100%;max-width:100%;align-items:stretch;margin:6px 0 0 0;border-radius:10px;border:1px solid var(--line2);background:rgba(22,20,28,.72);border-radius:4px 4px 14px 14px;overflow:hidden}
 .rg73>button,.rg73>.vs73{font-size:11.5px;font-weight:700;color:var(--dim);background:none;border:0;border-radius:0;padding:6px 11px;white-space:nowrap}
 .rg73>*+*{border-left:1px solid var(--line2)!important}
 .rg73>button:active{background:rgba(255,255,255,.06)}
