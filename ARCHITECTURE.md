@@ -235,7 +235,7 @@ on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 |---|---|---|---|---|
 | **回合** `TURN` | `app103_turn.js` | `busy` 这个 boolean（原来四拨人各自解释） | `__turn()`：持有者 · 已持ms · **冲突次数** | `turn-wiring-check` |
 | **章节状态** `PKST` | `app104_pkstate.js` | `th.pk.st` 四值 / 10 个写点在 4 个文件 | `__pkst()`：每条纹路 · **非法迁移** | `pkstate-check` |
-| **存档** `SAVE` | `app105_save.js` | `save()` 397 个调用点无归因 | `__save()`：最慢 · **最烧调用点（文件:行）** | `save-instrument-check` |
+| **存档** `SAVE` | `app105_save.js` | `save()` 的调用点无归因（**377 处**：`save()` 出现次数，去注释与定义；⚠️ 旧记的 397 把 canvas 的 `x.save()` 也算进去了） | `__save()`：最慢 · **最烧调用点（文件:行）** | `save-instrument-check` |
 | **渲染入口** `UI` | `app106_ui.js` | 渲染后的动作：25 层匿名包装 → **1 调度 + 22 具名钩子** | `__ui()`：钩子名 · **失败数** · 最近错误 | `ui-entry-check` |
 | **剧本指令** `PKREG` | `app110_pkreg.js` | 26 层 `pkDirective` 包装 → **一张注册表** | `__pkreg()`：注册层 · 分发次数 · **层内抛错** | `pkdirective-check` |
 | **弹层块** `SHEET` | `app112_sheet.js` | `menuSheet` 的 8 层包装 → **注册表里 7 个具名块 + 1 个改文字的包装**（`memSheet`/`m2Sheet` 判定不该搬：各层锚点不同） | `__sheet()`：每层有哪几块、插前还是插后 · `SHEET.stats()`：插入次数 · 抛错次数 | `sheet-snapshot`（7 张快照逐字节）· `sheet-census`（包装层数两向红） |
