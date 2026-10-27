@@ -49,6 +49,36 @@ const rows = [...table.entries()]
   .map(([fn, arr]) => ({ fn, wrappers: arr.sort((a, b) => a.order - b.order) }))
   .sort((a, b) => b.wrappers.length - a.wrappers.length);
 
+
+// ── 2026-10-27：把「谁包了谁」变成一道闸 ────────────────────────────────
+//   --write  把当前形状写成基线（tools/patch-baseline.json）
+//   --check  只要有**新增**覆盖（某函数被包得更多）就红，并列出新增点
+//   为什么需要：猴补丁是隐式接口，新加一层不会有人知道；有了基线，
+//   加包装就变成一次需要显式确认的动作（改基线 = 承认这一刀）。
+const BASE = 'tools/patch-baseline.json';
+if (process.argv.includes('--write')) {
+  fs.writeFileSync(BASE, JSON.stringify(rows, null, 2) + '\n', 'utf8');
+  console.log('基线已写：' + rows.length + ' 个函数 · ' + rows.reduce((a, r) => a + r.wrappers.length, 0) + ' 处覆盖 → ' + BASE);
+  process.exit(0);
+}
+if (process.argv.includes('--check')) {
+  if (!fs.existsSync(BASE)) { console.log('没有基线（先跑 --write）'); process.exit(1) }
+  const base = JSON.parse(fs.readFileSync(BASE, 'utf8'));
+  const bmap = new Map(base.map(r => [r.fn, r.wrappers.length]));
+  const added = [];
+  for (const r of rows) {
+    const was = bmap.get(r.fn) || 0;
+    if (r.wrappers.length > was) added.push(r.fn + ' ' + was + '→' + r.wrappers.length);
+  }
+  if (added.length) {
+    console.log('✗ 新增猴补丁（隐式接口，请显式确认）: ' + added.slice(0, 8).join(' · '));
+    console.log('确认无误后跑：node tools/patch-registry.mjs --write');
+    process.exit(1);
+  }
+  console.log('没有新增猴补丁（' + rows.length + ' 函数 / ' + rows.reduce((a, r) => a + r.wrappers.length, 0) + ' 处）');
+  process.exit(0);
+}
+
 if (process.argv.includes('--json')) {
   console.log(JSON.stringify(rows, null, 2));
 } else {

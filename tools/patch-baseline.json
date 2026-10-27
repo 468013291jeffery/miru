@@ -1,0 +1,2647 @@
+[
+  {
+    "fn": "pkDirective",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 196
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 266
+      },
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 66
+      },
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 80
+      },
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 12
+      },
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 165
+      },
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 37
+      },
+      {
+        "file": "app23_heir.js",
+        "order": 44,
+        "line": 82
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 141
+      },
+      {
+        "file": "app28_burst.js",
+        "order": 49,
+        "line": 18
+      },
+      {
+        "file": "app29_style.js",
+        "order": 50,
+        "line": 21
+      },
+      {
+        "file": "app30_fx3.js",
+        "order": 51,
+        "line": 278
+      },
+      {
+        "file": "app31_score.js",
+        "order": 52,
+        "line": 301
+      },
+      {
+        "file": "app32_myline.js",
+        "order": 53,
+        "line": 11
+      },
+      {
+        "file": "app37_hooks.js",
+        "order": 58,
+        "line": 8
+      },
+      {
+        "file": "app40_sfx.js",
+        "order": 61,
+        "line": 50
+      },
+      {
+        "file": "app40_sfx.js",
+        "order": 61,
+        "line": 64
+      },
+      {
+        "file": "app41_merge.js",
+        "order": 62,
+        "line": 14
+      },
+      {
+        "file": "app41_merge.js",
+        "order": 62,
+        "line": 28
+      },
+      {
+        "file": "app46_cp.js",
+        "order": 68,
+        "line": 13
+      },
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 49
+      },
+      {
+        "file": "app58_bgm100.js",
+        "order": 81,
+        "line": 153
+      },
+      {
+        "file": "app59_fx100.js",
+        "order": 82,
+        "line": 296
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 115
+      },
+      {
+        "file": "app100_fixes.js",
+        "order": 120,
+        "line": 30
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 67
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 100
+      }
+    ]
+  },
+  {
+    "fn": "renderChat",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 111
+      },
+      {
+        "file": "app11_memory.js",
+        "order": 31,
+        "line": 34
+      },
+      {
+        "file": "app13_rel.js",
+        "order": 33,
+        "line": 39
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 114
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 289
+      },
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 116
+      },
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 64
+      },
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 59
+      },
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 81
+      },
+      {
+        "file": "app29_style.js",
+        "order": 50,
+        "line": 26
+      },
+      {
+        "file": "app31_score.js",
+        "order": 52,
+        "line": 325
+      },
+      {
+        "file": "app33_recs.js",
+        "order": 54,
+        "line": 30
+      },
+      {
+        "file": "app41_merge.js",
+        "order": 62,
+        "line": 7
+      },
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 38
+      },
+      {
+        "file": "app48_clean.js",
+        "order": 70,
+        "line": 24
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 105
+      },
+      {
+        "file": "app65_lib.js",
+        "order": 88,
+        "line": 31
+      },
+      {
+        "file": "app73_features.js",
+        "order": 96,
+        "line": 206
+      },
+      {
+        "file": "app75_mydock.js",
+        "order": 98,
+        "line": 22
+      },
+      {
+        "file": "app86_voicefix.js",
+        "order": 108,
+        "line": 61
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 430
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 83
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 20
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 229
+      },
+      {
+        "file": "app106_ui.js",
+        "order": 129,
+        "line": 5
+      }
+    ]
+  },
+  {
+    "fn": "msgHTML",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 100
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 200
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 286
+      },
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 82
+      },
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 79
+      },
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 84
+      },
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 152
+      },
+      {
+        "file": "app23_heir.js",
+        "order": 44,
+        "line": 84
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 158
+      },
+      {
+        "file": "app26_turns.js",
+        "order": 47,
+        "line": 20
+      },
+      {
+        "file": "app34_hints.js",
+        "order": 55,
+        "line": 26
+      },
+      {
+        "file": "app35_pay.js",
+        "order": 56,
+        "line": 25
+      },
+      {
+        "file": "app37_hooks.js",
+        "order": 58,
+        "line": 10
+      },
+      {
+        "file": "app42_decline.js",
+        "order": 63,
+        "line": 18
+      },
+      {
+        "file": "app73_features.js",
+        "order": 96,
+        "line": 191
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 321
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 137
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 236
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 115
+      }
+    ]
+  },
+  {
+    "fn": "stopHTML",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 188
+      },
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 192
+      },
+      {
+        "file": "app23_heir.js",
+        "order": 44,
+        "line": 18
+      },
+      {
+        "file": "app27_choice.js",
+        "order": 48,
+        "line": 38
+      },
+      {
+        "file": "app29_style.js",
+        "order": 50,
+        "line": 13
+      },
+      {
+        "file": "app32_myline.js",
+        "order": 53,
+        "line": 15
+      },
+      {
+        "file": "app37_hooks.js",
+        "order": 58,
+        "line": 21
+      },
+      {
+        "file": "app38_gift.js",
+        "order": 59,
+        "line": 4
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 93
+      },
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 67
+      },
+      {
+        "file": "app60_games100.js",
+        "order": 83,
+        "line": 229
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 117
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 374
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 465
+      },
+      {
+        "file": "app100_dialogue.js",
+        "order": 121,
+        "line": 113
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 144
+      }
+    ]
+  },
+  {
+    "fn": "pkAppend",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 61
+      },
+      {
+        "file": "app26_turns.js",
+        "order": 47,
+        "line": 7
+      },
+      {
+        "file": "app28_burst.js",
+        "order": 49,
+        "line": 5
+      },
+      {
+        "file": "app28_burst.js",
+        "order": 49,
+        "line": 24
+      },
+      {
+        "file": "app30_fx3.js",
+        "order": 51,
+        "line": 274
+      },
+      {
+        "file": "app31_score.js",
+        "order": 52,
+        "line": 319
+      },
+      {
+        "file": "app59_fx100.js",
+        "order": 82,
+        "line": 295
+      },
+      {
+        "file": "app60_games100.js",
+        "order": 83,
+        "line": 244
+      },
+      {
+        "file": "app62_tts.js",
+        "order": 85,
+        "line": 46
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 99
+      }
+    ]
+  },
+  {
+    "fn": "renderHome",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 162
+      },
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 33
+      },
+      {
+        "file": "app64_entry.js",
+        "order": 87,
+        "line": 64
+      },
+      {
+        "file": "app69_acct.js",
+        "order": 92,
+        "line": 12
+      },
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 272
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 239
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 275
+      },
+      {
+        "file": "app100_fixes.js",
+        "order": 120,
+        "line": 22
+      }
+    ]
+  },
+  {
+    "fn": "menuSheet",
+    "wrappers": [
+      {
+        "file": "app11_memory.js",
+        "order": 31,
+        "line": 35
+      },
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 119
+      },
+      {
+        "file": "app46_cp.js",
+        "order": 68,
+        "line": 44
+      },
+      {
+        "file": "app47_chapters.js",
+        "order": 69,
+        "line": 33
+      },
+      {
+        "file": "app48_clean.js",
+        "order": 70,
+        "line": 35
+      },
+      {
+        "file": "app49_creator.js",
+        "order": 71,
+        "line": 200
+      },
+      {
+        "file": "app95_safety.js",
+        "order": 122,
+        "line": 52
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 235
+      }
+    ]
+  },
+  {
+    "fn": "packRefresh",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 120
+      },
+      {
+        "file": "app33_recs.js",
+        "order": 54,
+        "line": 31
+      },
+      {
+        "file": "app35_pay.js",
+        "order": 56,
+        "line": 14
+      },
+      {
+        "file": "app41_merge.js",
+        "order": 62,
+        "line": 6
+      },
+      {
+        "file": "app52_alt.js",
+        "order": 75,
+        "line": 33
+      },
+      {
+        "file": "app75_mydock.js",
+        "order": 98,
+        "line": 21
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 431
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 262
+      }
+    ]
+  },
+  {
+    "fn": "reply",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 186
+      },
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 23
+      },
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 292
+      },
+      {
+        "file": "app78_memsync.js",
+        "order": 101,
+        "line": 34
+      },
+      {
+        "file": "app86_voicefix.js",
+        "order": 108,
+        "line": 77
+      },
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 19
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 168
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 217
+      }
+    ]
+  },
+  {
+    "fn": "renderMe",
+    "wrappers": [
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 112
+      },
+      {
+        "file": "app54_longcat.js",
+        "order": 77,
+        "line": 65
+      },
+      {
+        "file": "app62_tts.js",
+        "order": 85,
+        "line": 56
+      },
+      {
+        "file": "app64_entry.js",
+        "order": 87,
+        "line": 66
+      },
+      {
+        "file": "app65_lib.js",
+        "order": 88,
+        "line": 28
+      },
+      {
+        "file": "app68_cloud.js",
+        "order": 91,
+        "line": 82
+      },
+      {
+        "file": "app95_safety.js",
+        "order": 122,
+        "line": 103
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 241
+      }
+    ]
+  },
+  {
+    "fn": "doSend",
+    "wrappers": [
+      {
+        "file": "app14_pack.js",
+        "order": 36,
+        "line": 497
+      },
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 22
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 72
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 116
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 73
+      },
+      {
+        "file": "app73_features.js",
+        "order": 96,
+        "line": 66
+      },
+      {
+        "file": "app100_dialogue.js",
+        "order": 121,
+        "line": 119
+      }
+    ]
+  },
+  {
+    "fn": "stopAuto",
+    "wrappers": [
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 107
+      },
+      {
+        "file": "app32_myline.js",
+        "order": 53,
+        "line": 8
+      },
+      {
+        "file": "app36_live.js",
+        "order": 57,
+        "line": 19
+      },
+      {
+        "file": "app37_hooks.js",
+        "order": 58,
+        "line": 16
+      },
+      {
+        "file": "app38_gift.js",
+        "order": 59,
+        "line": 16
+      },
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 65
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 24
+      }
+    ]
+  },
+  {
+    "fn": "appendMsg",
+    "wrappers": [
+      {
+        "file": "app11_memory.js",
+        "order": 31,
+        "line": 36
+      },
+      {
+        "file": "app46_cp.js",
+        "order": 68,
+        "line": 17
+      },
+      {
+        "file": "app59_fx100.js",
+        "order": 82,
+        "line": 294
+      },
+      {
+        "file": "app78_memsync.js",
+        "order": 101,
+        "line": 36
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 44
+      },
+      {
+        "file": "app102_pipeline.js",
+        "order": 128,
+        "line": 99
+      }
+    ]
+  },
+  {
+    "fn": "chatFx",
+    "wrappers": [
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 19
+      },
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 80
+      },
+      {
+        "file": "app22_fx2.js",
+        "order": 43,
+        "line": 107
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 116
+      },
+      {
+        "file": "app100_fixes.js",
+        "order": 120,
+        "line": 45
+      }
+    ]
+  },
+  {
+    "fn": "pkWait",
+    "wrappers": [
+      {
+        "file": "app28_burst.js",
+        "order": 49,
+        "line": 11
+      },
+      {
+        "file": "app28_burst.js",
+        "order": 49,
+        "line": 25
+      },
+      {
+        "file": "app29_style.js",
+        "order": 50,
+        "line": 23
+      },
+      {
+        "file": "app32_myline.js",
+        "order": 53,
+        "line": 53
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 55
+      }
+    ]
+  },
+  {
+    "fn": "fxRun",
+    "wrappers": [
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 66
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 74
+      },
+      {
+        "file": "app30_fx3.js",
+        "order": 51,
+        "line": 166
+      },
+      {
+        "file": "app40_sfx.js",
+        "order": 61,
+        "line": 42
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 79
+      }
+    ]
+  },
+  {
+    "fn": "openThread",
+    "wrappers": [
+      {
+        "file": "app13_rel.js",
+        "order": 33,
+        "line": 22
+      },
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 162
+      },
+      {
+        "file": "app40_sfx.js",
+        "order": 61,
+        "line": 12
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 205
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 238
+      }
+    ]
+  },
+  {
+    "fn": "ask",
+    "wrappers": [
+      {
+        "file": "app29_style.js",
+        "order": 50,
+        "line": 11
+      },
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 135
+      },
+      {
+        "file": "app50_creator2.js",
+        "order": 73,
+        "line": 132
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 46
+      },
+      {
+        "file": "app73_features.js",
+        "order": 96,
+        "line": 94
+      }
+    ]
+  },
+  {
+    "fn": "fxSet",
+    "wrappers": [
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 88
+      },
+      {
+        "file": "app29_style.js",
+        "order": 50,
+        "line": 16
+      },
+      {
+        "file": "app40_sfx.js",
+        "order": 61,
+        "line": 55
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 75
+      }
+    ]
+  },
+  {
+    "fn": "imParse",
+    "wrappers": [
+      {
+        "file": "app90_youturn.js",
+        "order": 112,
+        "line": 6
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 22
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 284
+      },
+      {
+        "file": "app101_you.js",
+        "order": 126,
+        "line": 92
+      }
+    ]
+  },
+  {
+    "fn": "endCall",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 129
+      },
+      {
+        "file": "app81_voicecall.js",
+        "order": 104,
+        "line": 90
+      },
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 49
+      },
+      {
+        "file": "app93_doubao.js",
+        "order": 115,
+        "line": 95
+      }
+    ]
+  },
+  {
+    "fn": "packPanel",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 213
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 275
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 149
+      },
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 86
+      }
+    ]
+  },
+  {
+    "fn": "renderOB",
+    "wrappers": [
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 157
+      },
+      {
+        "file": "app64_entry.js",
+        "order": 87,
+        "line": 106
+      },
+      {
+        "file": "app69_acct.js",
+        "order": 92,
+        "line": 10
+      },
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 96
+      }
+    ]
+  },
+  {
+    "fn": "speak",
+    "wrappers": [
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 71
+      },
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 132
+      },
+      {
+        "file": "app62_tts.js",
+        "order": 85,
+        "line": 29
+      },
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 62
+      }
+    ]
+  },
+  {
+    "fn": "packOpen",
+    "wrappers": [
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 144
+      },
+      {
+        "file": "app46_cp.js",
+        "order": 68,
+        "line": 11
+      },
+      {
+        "file": "app47_chapters.js",
+        "order": 69,
+        "line": 9
+      },
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 290
+      }
+    ]
+  },
+  {
+    "fn": "imBuild",
+    "wrappers": [
+      {
+        "file": "app90_youturn.js",
+        "order": 112,
+        "line": 10
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 63
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 92
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 290
+      }
+    ]
+  },
+  {
+    "fn": "startApp",
+    "wrappers": [
+      {
+        "file": "app12_beats.js",
+        "order": 32,
+        "line": 30
+      },
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 102
+      },
+      {
+        "file": "app92_mustlogin.js",
+        "order": 114,
+        "line": 8
+      }
+    ]
+  },
+  {
+    "fn": "stopResolve",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 120
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 88
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 92
+      }
+    ]
+  },
+  {
+    "fn": "packAfterPick",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 121
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 74
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 233
+      }
+    ]
+  },
+  {
+    "fn": "introHTML",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 140
+      },
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 38
+      },
+      {
+        "file": "app26_turns.js",
+        "order": 47,
+        "line": 34
+      }
+    ]
+  },
+  {
+    "fn": "openStory",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 143
+      },
+      {
+        "file": "app95_safety.js",
+        "order": 122,
+        "line": 45
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 213
+      }
+    ]
+  },
+  {
+    "fn": "renderCreate",
+    "wrappers": [
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 111
+      },
+      {
+        "file": "app49_creator.js",
+        "order": 71,
+        "line": 198
+      },
+      {
+        "file": "app50_creator2.js",
+        "order": 73,
+        "line": 120
+      }
+    ]
+  },
+  {
+    "fn": "save",
+    "wrappers": [
+      {
+        "file": "app41_merge.js",
+        "order": 62,
+        "line": 16
+      },
+      {
+        "file": "app68_cloud.js",
+        "order": 91,
+        "line": 35
+      },
+      {
+        "file": "app84_nosub.js",
+        "order": 107,
+        "line": 9
+      }
+    ]
+  },
+  {
+    "fn": "startSheet",
+    "wrappers": [
+      {
+        "file": "app47_chapters.js",
+        "order": 69,
+        "line": 32
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 181
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 74
+      }
+    ]
+  },
+  {
+    "fn": "packStart",
+    "wrappers": [
+      {
+        "file": "app74_experience.js",
+        "order": 97,
+        "line": 116
+      },
+      {
+        "file": "app76_official.js",
+        "order": 99,
+        "line": 35
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 105
+      }
+    ]
+  },
+  {
+    "fn": "relGraph",
+    "wrappers": [
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 112
+      },
+      {
+        "file": "app100_fixes.js",
+        "order": 120,
+        "line": 68
+      }
+    ]
+  },
+  {
+    "fn": "startCall",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 123
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 22
+      }
+    ]
+  },
+  {
+    "fn": "charRankCard",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 139
+      },
+      {
+        "file": "app13_rel.js",
+        "order": 33,
+        "line": 32
+      }
+    ]
+  },
+  {
+    "fn": "transcript",
+    "wrappers": [
+      {
+        "file": "app11_memory.js",
+        "order": 31,
+        "line": 12
+      },
+      {
+        "file": "app84_nosub.js",
+        "order": 107,
+        "line": 13
+      }
+    ]
+  },
+  {
+    "fn": "booth",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 248
+      },
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 113
+      }
+    ]
+  },
+  {
+    "fn": "boxHTML",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 73
+      },
+      {
+        "file": "app34_hints.js",
+        "order": 55,
+        "line": 25
+      }
+    ]
+  },
+  {
+    "fn": "paySheet",
+    "wrappers": [
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 27
+      },
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 105
+      }
+    ]
+  },
+  {
+    "fn": "renderChats",
+    "wrappers": [
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 178
+      },
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 177
+      }
+    ]
+  },
+  {
+    "fn": "renderTab",
+    "wrappers": [
+      {
+        "file": "app18_promo.js",
+        "order": 39,
+        "line": 193
+      },
+      {
+        "file": "app68_cloud.js",
+        "order": 91,
+        "line": 98
+      }
+    ]
+  },
+  {
+    "fn": "show",
+    "wrappers": [
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 68
+      },
+      {
+        "file": "app44_studio.js",
+        "order": 66,
+        "line": 157
+      }
+    ]
+  },
+  {
+    "fn": "openChar",
+    "wrappers": [
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 112
+      },
+      {
+        "file": "app44_studio.js",
+        "order": 66,
+        "line": 253
+      }
+    ]
+  },
+  {
+    "fn": "bgmForThread",
+    "wrappers": [
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 86
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 142
+      }
+    ]
+  },
+  {
+    "fn": "readMs",
+    "wrappers": [
+      {
+        "file": "app28_burst.js",
+        "order": 49,
+        "line": 16
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 250
+      }
+    ]
+  },
+  {
+    "fn": "dimFloat",
+    "wrappers": [
+      {
+        "file": "app36_live.js",
+        "order": 57,
+        "line": 7
+      },
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 40
+      }
+    ]
+  },
+  {
+    "fn": "usSheet",
+    "wrappers": [
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 36
+      },
+      {
+        "file": "app73_features.js",
+        "order": 96,
+        "line": 81
+      }
+    ]
+  },
+  {
+    "fn": "fallback",
+    "wrappers": [
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 38
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 64
+      }
+    ]
+  },
+  {
+    "fn": "packPrompt",
+    "wrappers": [
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 96
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 15
+      }
+    ]
+  },
+  {
+    "fn": "orOK",
+    "wrappers": [
+      {
+        "file": "app64_entry.js",
+        "order": 87,
+        "line": 30
+      },
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 202
+      }
+    ]
+  },
+  {
+    "fn": "libOpen",
+    "wrappers": [
+      {
+        "file": "app66_libup.js",
+        "order": 89,
+        "line": 77
+      },
+      {
+        "file": "app68_cloud.js",
+        "order": 91,
+        "line": 121
+      }
+    ]
+  },
+  {
+    "fn": "libItems",
+    "wrappers": [
+      {
+        "file": "app66_libup.js",
+        "order": 89,
+        "line": 92
+      },
+      {
+        "file": "app67_i18n.js",
+        "order": 90,
+        "line": 58
+      }
+    ]
+  },
+  {
+    "fn": "miruQA",
+    "wrappers": [
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 138
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 140
+      }
+    ]
+  },
+  {
+    "fn": "authSheet70",
+    "wrappers": [
+      {
+        "file": "app87_regcode.js",
+        "order": 109,
+        "line": 10
+      },
+      {
+        "file": "app87_regcode.js",
+        "order": 109,
+        "line": 28
+      }
+    ]
+  },
+  {
+    "fn": "vcHint",
+    "wrappers": [
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 42
+      },
+      {
+        "file": "app93_doubao.js",
+        "order": 115,
+        "line": 94
+      }
+    ]
+  },
+  {
+    "fn": "au70Buttons",
+    "wrappers": [
+      {
+        "file": "app91_phone.js",
+        "order": 113,
+        "line": 24
+      },
+      {
+        "file": "app91_phone.js",
+        "order": 113,
+        "line": 43
+      }
+    ]
+  },
+  {
+    "fn": "discMain",
+    "wrappers": [
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 253
+      },
+      {
+        "file": "app96_social.js",
+        "order": 123,
+        "line": 302
+      }
+    ]
+  },
+  {
+    "fn": "done96",
+    "wrappers": [
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 170
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 240
+      }
+    ]
+  },
+  {
+    "fn": "feedBtn96",
+    "wrappers": [
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 172
+      },
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 243
+      }
+    ]
+  },
+  {
+    "fn": "talkIntent",
+    "wrappers": [
+      {
+        "file": "app100_dialogue.js",
+        "order": 121,
+        "line": 27
+      }
+    ]
+  },
+  {
+    "fn": "talkSugg",
+    "wrappers": [
+      {
+        "file": "app100_dialogue.js",
+        "order": 121,
+        "line": 31
+      }
+    ]
+  },
+  {
+    "fn": "gameHub",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 134
+      }
+    ]
+  },
+  {
+    "fn": "spEnd",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 137
+      }
+    ]
+  },
+  {
+    "fn": "homeTabBody",
+    "wrappers": [
+      {
+        "file": "app10_story.js",
+        "order": 30,
+        "line": 160
+      }
+    ]
+  },
+  {
+    "fn": "relAdd",
+    "wrappers": [
+      {
+        "file": "app13_rel.js",
+        "order": 33,
+        "line": 21
+      }
+    ]
+  },
+  {
+    "fn": "chatBgSet",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 9
+      }
+    ]
+  },
+  {
+    "fn": "mainOf",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 37,
+        "line": 180
+      }
+    ]
+  },
+  {
+    "fn": "dirRun",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 15
+      }
+    ]
+  },
+  {
+    "fn": "dirPlace",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 29
+      }
+    ]
+  },
+  {
+    "fn": "dirThird",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 30
+      }
+    ]
+  },
+  {
+    "fn": "cardSheet",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 37
+      }
+    ]
+  },
+  {
+    "fn": "giftSheet",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 38
+      }
+    ]
+  },
+  {
+    "fn": "dateSheet",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 39
+      }
+    ]
+  },
+  {
+    "fn": "speakLine",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 38,
+        "line": 78
+      }
+    ]
+  },
+  {
+    "fn": "sceneBg",
+    "wrappers": [
+      {
+        "file": "app19_bgm.js",
+        "order": 40,
+        "line": 69
+      }
+    ]
+  },
+  {
+    "fn": "heartEnd",
+    "wrappers": [
+      {
+        "file": "app20_fx_booth.js",
+        "order": 41,
+        "line": 212
+      }
+    ]
+  },
+  {
+    "fn": "relSync",
+    "wrappers": [
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 36
+      }
+    ]
+  },
+  {
+    "fn": "featDone",
+    "wrappers": [
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 39
+      }
+    ]
+  },
+  {
+    "fn": "rdAdd",
+    "wrappers": [
+      {
+        "file": "app21_dims.js",
+        "order": 42,
+        "line": 97
+      }
+    ]
+  },
+  {
+    "fn": "feedList",
+    "wrappers": [
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 86
+      }
+    ]
+  },
+  {
+    "fn": "worldsForYou",
+    "wrappers": [
+      {
+        "file": "app24_gl.js",
+        "order": 45,
+        "line": 87
+      }
+    ]
+  },
+  {
+    "fn": "dirSheet",
+    "wrappers": [
+      {
+        "file": "app25_dir.js",
+        "order": 46,
+        "line": 26
+      }
+    ]
+  },
+  {
+    "fn": "spShow",
+    "wrappers": [
+      {
+        "file": "app26_turns.js",
+        "order": 47,
+        "line": 32
+      }
+    ]
+  },
+  {
+    "fn": "heartGame",
+    "wrappers": [
+      {
+        "file": "app30_fx3.js",
+        "order": 51,
+        "line": 285
+      }
+    ]
+  },
+  {
+    "fn": "obMatch",
+    "wrappers": [
+      {
+        "file": "app33_recs.js",
+        "order": 54,
+        "line": 17
+      }
+    ]
+  },
+  {
+    "fn": "dimSync",
+    "wrappers": [
+      {
+        "file": "app39_compact.js",
+        "order": 60,
+        "line": 2
+      }
+    ]
+  },
+  {
+    "fn": "dimBarHTML",
+    "wrappers": [
+      {
+        "file": "app39_compact.js",
+        "order": 60,
+        "line": 16
+      }
+    ]
+  },
+  {
+    "fn": "editPersona",
+    "wrappers": [
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 44
+      }
+    ]
+  },
+  {
+    "fn": "newThread",
+    "wrappers": [
+      {
+        "file": "app45_rel.js",
+        "order": 67,
+        "line": 129
+      }
+    ]
+  },
+  {
+    "fn": "chLocked",
+    "wrappers": [
+      {
+        "file": "app47_chapters.js",
+        "order": 69,
+        "line": 8
+      }
+    ]
+  },
+  {
+    "fn": "sceneSrc",
+    "wrappers": [
+      {
+        "file": "app50_creator2.js",
+        "order": 73,
+        "line": 46
+      }
+    ]
+  },
+  {
+    "fn": "scnProbe",
+    "wrappers": [
+      {
+        "file": "app50_creator2.js",
+        "order": 73,
+        "line": 47
+      }
+    ]
+  },
+  {
+    "fn": "crHub",
+    "wrappers": [
+      {
+        "file": "app51_import.js",
+        "order": 74,
+        "line": 136
+      }
+    ]
+  },
+  {
+    "fn": "liveWhy",
+    "wrappers": [
+      {
+        "file": "app54_longcat.js",
+        "order": 77,
+        "line": 52
+      }
+    ]
+  },
+  {
+    "fn": "refreshLive",
+    "wrappers": [
+      {
+        "file": "app54_longcat.js",
+        "order": 77,
+        "line": 77
+      }
+    ]
+  },
+  {
+    "fn": "playBeats",
+    "wrappers": [
+      {
+        "file": "app55_talk.js",
+        "order": 78,
+        "line": 51
+      }
+    ]
+  },
+  {
+    "fn": "pkCond",
+    "wrappers": [
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 39
+      }
+    ]
+  },
+  {
+    "fn": "packPick",
+    "wrappers": [
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 79
+      }
+    ]
+  },
+  {
+    "fn": "dimAdd",
+    "wrappers": [
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 92
+      }
+    ]
+  },
+  {
+    "fn": "talkLearn",
+    "wrappers": [
+      {
+        "file": "app56_story3.js",
+        "order": 79,
+        "line": 94
+      }
+    ]
+  },
+  {
+    "fn": "crSys",
+    "wrappers": [
+      {
+        "file": "app57_rules.js",
+        "order": 80,
+        "line": 9
+      }
+    ]
+  },
+  {
+    "fn": "artSrc",
+    "wrappers": [
+      {
+        "file": "app61_honor.js",
+        "order": 84,
+        "line": 7
+      }
+    ]
+  },
+  {
+    "fn": "stopVoice",
+    "wrappers": [
+      {
+        "file": "app62_tts.js",
+        "order": 85,
+        "line": 37
+      }
+    ]
+  },
+  {
+    "fn": "feedPosts",
+    "wrappers": [
+      {
+        "file": "app63_fixes.js",
+        "order": 86,
+        "line": 7
+      }
+    ]
+  },
+  {
+    "fn": "closeSheet",
+    "wrappers": [
+      {
+        "file": "app64_entry.js",
+        "order": 87,
+        "line": 62
+      }
+    ]
+  },
+  {
+    "fn": "fx100",
+    "wrappers": [
+      {
+        "file": "app66_libup.js",
+        "order": 89,
+        "line": 30
+      }
+    ]
+  },
+  {
+    "fn": "bgmPlay",
+    "wrappers": [
+      {
+        "file": "app66_libup.js",
+        "order": 89,
+        "line": 80
+      }
+    ]
+  },
+  {
+    "fn": "bgmStop",
+    "wrappers": [
+      {
+        "file": "app66_libup.js",
+        "order": 89,
+        "line": 81
+      }
+    ]
+  },
+  {
+    "fn": "hookHTML",
+    "wrappers": [
+      {
+        "file": "app67_i18n.js",
+        "order": 90,
+        "line": 57
+      }
+    ]
+  },
+  {
+    "fn": "toast",
+    "wrappers": [
+      {
+        "file": "app67_i18n.js",
+        "order": 90,
+        "line": 108
+      }
+    ]
+  },
+  {
+    "fn": "hookPlay",
+    "wrappers": [
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 289
+      }
+    ]
+  },
+  {
+    "fn": "unitsSheet",
+    "wrappers": [
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 294
+      }
+    ]
+  },
+  {
+    "fn": "sheet",
+    "wrappers": [
+      {
+        "file": "app70_login.js",
+        "order": 93,
+        "line": 315
+      }
+    ]
+  },
+  {
+    "fn": "cAsk",
+    "wrappers": [
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 127
+      }
+    ]
+  },
+  {
+    "fn": "cBuildWorld",
+    "wrappers": [
+      {
+        "file": "app71_narrative.js",
+        "order": 94,
+        "line": 135
+      }
+    ]
+  },
+  {
+    "fn": "memBlock",
+    "wrappers": [
+      {
+        "file": "app79_ledger.js",
+        "order": 102,
+        "line": 70
+      }
+    ]
+  },
+  {
+    "fn": "m2Sheet",
+    "wrappers": [
+      {
+        "file": "app79_ledger.js",
+        "order": 102,
+        "line": 139
+      }
+    ]
+  },
+  {
+    "fn": "imgSheet",
+    "wrappers": [
+      {
+        "file": "app83_vidu.js",
+        "order": 106,
+        "line": 31
+      }
+    ]
+  },
+  {
+    "fn": "ttsFetch",
+    "wrappers": [
+      {
+        "file": "app86_voicefix.js",
+        "order": 108,
+        "line": 20
+      }
+    ]
+  },
+  {
+    "fn": "ttsUrl",
+    "wrappers": [
+      {
+        "file": "app86_voicefix.js",
+        "order": 108,
+        "line": 80
+      }
+    ]
+  },
+  {
+    "fn": "capi",
+    "wrappers": [
+      {
+        "file": "app87_regcode.js",
+        "order": 109,
+        "line": 34
+      }
+    ]
+  },
+  {
+    "fn": "au70Err",
+    "wrappers": [
+      {
+        "file": "app87_regcode.js",
+        "order": 109,
+        "line": 35
+      }
+    ]
+  },
+  {
+    "fn": "memSheet",
+    "wrappers": [
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 23
+      }
+    ]
+  },
+  {
+    "fn": "vcSys",
+    "wrappers": [
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 35
+      }
+    ]
+  },
+  {
+    "fn": "callSay",
+    "wrappers": [
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 45
+      }
+    ]
+  },
+  {
+    "fn": "stopCallRun",
+    "wrappers": [
+      {
+        "file": "app88_memcall.js",
+        "order": 110,
+        "line": 53
+      }
+    ]
+  },
+  {
+    "fn": "renderDiscRes",
+    "wrappers": [
+      {
+        "file": "app89_offsearch.js",
+        "order": 111,
+        "line": 11
+      }
+    ]
+  },
+  {
+    "fn": "au70Prov",
+    "wrappers": [
+      {
+        "file": "app91_phone.js",
+        "order": 113,
+        "line": 44
+      }
+    ]
+  },
+  {
+    "fn": "packAsName",
+    "wrappers": [
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 309
+      }
+    ]
+  },
+  {
+    "fn": "off94Names",
+    "wrappers": [
+      {
+        "file": "app94_official2.js",
+        "order": 116,
+        "line": 347
+      }
+    ]
+  },
+  {
+    "fn": "renderAuth70",
+    "wrappers": [
+      {
+        "file": "app95_safety.js",
+        "order": 122,
+        "line": 79
+      }
+    ]
+  },
+  {
+    "fn": "packModes",
+    "wrappers": [
+      {
+        "file": "app97_agents.js",
+        "order": 124,
+        "line": 219
+      }
+    ]
+  },
+  {
+    "fn": "total96",
+    "wrappers": [
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 241
+      }
+    ]
+  },
+  {
+    "fn": "agOn97",
+    "wrappers": [
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 245
+      }
+    ]
+  },
+  {
+    "fn": "callsOK97",
+    "wrappers": [
+      {
+        "file": "app98_story.js",
+        "order": 125,
+        "line": 246
+      }
+    ]
+  },
+  {
+    "fn": "header",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "guide",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "fillGuideData",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "view",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "proGraph",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "worksView",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "wizardAIOffer",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "modalHTML",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "setTab",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  },
+  {
+    "fn": "pro",
+    "wrappers": [
+      {
+        "file": "creator_embed.js",
+        "order": 72,
+        "line": 1
+      }
+    ]
+  }
+]
