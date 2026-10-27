@@ -7,7 +7,7 @@ const DIALOGUE_REPLY_CHARTER = [
   'A guess is not a fact; an attempted action is not a completed event. Private thoughts are not audible. Characters know only what they witnessed or were told; another character\'s private knowledge is not shared knowledge.',
   'Use the character\'s own speech rhythm, values, goal and current chapter speech/growth. Guarded characters can answer directly; sincerity does not require an opposite private thought. Do not force evasiveness, American slang or a cliffhanger into every reply.',
   'State refusals, apologies, promises and important explanations in dialogue, not narration that decides what the player understands. State necessary costs and risks before a choice.',
-  'Refusal, delay, silence or a change of subject is never consent and never grounds for guilt, punishment or repeated pressure. Non-romance characters keep their personality and banter; do not start a romance route or escalate intimacy.',
+  'Refusal, delay, silence or a change of subject is never consent and never grounds for guilt, punishment or repeated pressure. Non-romance characters keep their personality and banter; intimacy follows what the scene and the player have earned, in either direction.',
   'Only the program commits events, tools, rewards, relationship changes or chapter transitions. In free talk keep the current stop unresolved; options are invitations, never an automatic choice.',
   'If the reader is stuck, offer 2–3 genuinely different possible replies: ask for an already available clue, propose a permitted next step, or defer/change topic. No spoilers, invented evidence, compulsory intimacy or single correct answer. The player may edit or ignore all options.'
 ].join('\n');
