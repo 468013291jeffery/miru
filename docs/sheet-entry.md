@@ -16,28 +16,36 @@
 closeSheet     app1_core.js:45 · 被包过 1 层（app64_entry.js:62）· 直接调用 109 处
 直连 sheet(    119 处 / 43 个文件（最集中：app3_chat ×23 · app4_more ×9 · app14_pack ×7 · app23_heir ×7）
 绕过入口改结构  32 处（自己摸 `.sheet-card` / `.sheet .plans` / `$("#cards")`）
-具名弹层       45 个，其中 **12 个被包过**
+具名弹层       45 个，其中 9 个被包过
 ```
+
+> ⚠️ **这一节改过一次，因为尺子数错了。** 第一版报 `menuSheet` **14 层**、`startSheet` 6 层，
+> 并写了「整个仓库最密的接缝」。真因：包装行长这样 ——
+> `const _menuSheet45=menuSheet;menuSheet=function(){…}` —— **一行里出现两次 `menuSheet`**，
+> 而我按「那个词出现了几次」计数 ⇒ **每一层都被数成两层**。
+> 去重（按 `文件:行`）之后：`menuSheet` **7 层**、`startSheet` **3 层**、其余各 **1 层**。
+> ⇒ 计数单位是「哪一行的哪一次包装」，不是「那个词出现了几次」。
 
 ## 二、真正的接缝不是 `sheet()`，是那 45 个具名弹层
 
 第一版我以为痛点是「119 处直连 `sheet()`」。量完发现不是 —— 入口只有一个、而且它自己保证不叠。
 **痛点在它上面一层**：每个具名弹层（`menuSheet` / `paySheet` / `startSheet` …）各自是一根接缝，
-被后来的文件一层层包：
+被后来的文件一层层包（已去重，数字是真的）：
 
 | 弹层 | 被包层数 | 直连调用 |
 |---|---|---|
-| **`menuSheet`** | **14** | 3 |
-| `startSheet` | 6 | 11 |
-| `memSheet` / `imgSheet` / `authSheet70` / `dirSheet` / `usSheet` / `dateSheet` / `cardSheet` / `giftSheet` | 2 | 0–5 |
-| `paySheet` 等其余 | 0 | 2–12 |
+| **`menuSheet`** | **7** | 3 |
+| `startSheet` | 3 | 9 |
+| `memSheet` / `authSheet70` / `imgSheet` / `dirSheet` / `usSheet` / `dateSheet` / `cardSheet` | 1 | 0–5 |
+| `paySheet` / `shareSheet` / `m2Sheet` 等其余 | 0 | 3–11 |
 
-**`menuSheet` 被 14 个文件各包一层 —— 这是整个仓库最密的接缝**，
-比 `msgHTML` 那 20 层还集中（那 20 层至少分成三类：认领 / 后处理 / 改入参，能按类各自记账）。
-这里 14 层是同一个形状：`const _menuSheetNN=menuSheet; menuSheet=function(){_menuSheetNN(); …加一块 UI…}`。
+**`menuSheet` 被 7 个文件各包一层**。它不是最大的那个数（`msgHTML` 是 20 层、剧本指令是 26 层），
+但它是**同一个具名函数上的最多层**，而且这 7 层是同一种形状：
+`const _menuSheetNN=menuSheet; menuSheet=function(){_menuSheetNN(); …加一块 UI…}`。
 
 ⇒ 于是「菜单里到底有哪些项」这件事，**没有任何一处能回答**。
-要改菜单，你得读 14 个文件；要删一个项，你得先确认没有第 9 层又把它加回来。
+要改菜单得读 7 个文件；要删一个项得先确认没有第 5 层又把它加回来。
+（7 层还没到该惊慌的量级 —— 它的价值在于**形状**：再加 5 个功能就变成 12 层，而那时再拆要贵得多。）
 
 ## 三、附带读数：32 处绕过入口
 
@@ -62,5 +70,5 @@ __sheet()          // 每个弹层：谁加的、加了几块、有没有互相�
 
 ## 五、顺序
 
-先只读、再分类、最后才动。**14 层先分成「加的是不同块」和「改的是同一块」两堆** ——
+先只读、再分类、最后才动。**7 层先分成「加的是不同块」和「改的是同一块」两堆** ——
 前者可以机械搬进注册表，后者必须人看（谁该赢）。这一步还没做。

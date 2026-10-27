@@ -60,6 +60,14 @@ for (const { f, lines } of src) {
     }
   });
 }
+/* ⚠️ 必须去重：一行里 `const _menuSheet45=menuSheet;menuSheet=function(){…}` 含**两次** `menuSheet`，
+   matchAll 会匹配两次 ⇒ 按出现次数计数会把 7 层数成 14 层（第一版就是这么翻倍的）。
+   计数单位是「哪一行的哪一次包装」，不是「那个词出现了几次」。 */
+for (const [, v] of named) {
+  v.defs = [...new Set(v.defs)];
+  v.patches = [...new Set(v.patches)];
+  v.calls = [...new Set(v.calls)];
+}
 /* 去掉只被当作「被包装对象」出现的伪具名；closeSheet 是**关闭**器，单独报，不混进「具名弹层」 */
 const names = [...named.entries()].filter(([n, v]) => (v.defs.length || v.patches.length) && n !== 'closeSheet')
   .sort((a, b) => (b[1].patches.length + b[1].calls.length) - (a[1].patches.length + a[1].calls.length));
