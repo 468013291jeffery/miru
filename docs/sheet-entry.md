@@ -47,7 +47,36 @@ closeSheet     app1_core.js:45 · 被包过 1 层（app64_entry.js:62）· 直�
 要改菜单得读 7 个文件；要删一个项得先确认没有第 5 层又把它加回来。
 （7 层还没到该惊慌的量级 —— 它的价值在于**形状**：再加 5 个功能就变成 12 层，而那时再拆要贵得多。）
 
-## 三、附带读数：32 处绕过入口
+## 三、7 层逐层分类（已做完，只读）
+
+| 层 | 它动的是什么 | 方式与位置 | 提前 return |
+|---|---|---|---|
+| `app45_rel.js:122` | `.sheet .stack` | `insertAdjacentHTML` **afterbegin**：人设 + 回退按钮 | `if(!th||!st)return;` ← **返回 undefined** |
+| `app46_cp.js:44` | `.sheet [data-rewind]` **里面**的 `<b>` 与 `.grow span` | 改**已有块的文字** | 无 |
+| `app47_chapters.js:33` | `.sheet .stack` | **afterbegin**：章节目录 | 无（条件不满足就跳过） |
+| `app48_clean.js:38` | `.sheet .stack` | **beforeend**：沉浸模式开关 | 无 |
+| `app49_creator.js:200` | `.sheet .stack` | **afterbegin**：回工作台 | 无 |
+| `app95_safety.js:52` | `.sheet .stack` | **beforeend**：举报 AI 回复 / 拉黑 | `if(!th||!st)return r;` ← 返回对了 |
+| `app96_social.js:238` | `.sheet .stack` | **afterbegin**：我的恋爱人格 / 私信 | `if(!th||!st)return r;` ← 返回对了 |
+
+三条结论，都不是"感觉"，是逐行读出来的：
+
+**① 6 层都往同一个容器 `.sheet .stack` 里塞，而且插入位置分两派。**
+`afterbegin` × 4（app45 / app47 / app49 / app96）· `beforeend` × 2（app48 / app95）。
+四个 `afterbegin` 意味着**每来一个新的就排到最前面** ⇒ 菜单的最终顺序是**加载顺序的倒序**，
+而这件事没有任何一处写着。想调顺序，只能靠调 `parts` 里的文件顺序 —— 或者改某一层用 beforeend。
+
+**② 有一层是"改别人刚建的东西"。**
+`app45` 建出 `[data-rewind]` 那个按钮，`app46` 随后改它里面的文字。
+⇒ 两者是**隐式耦合**：`app45` 的守卫（`if(!th||!st)return`）一旦不成立，`app46` 就安静地什么都不做。
+这种"靠前一层留下 DOM 才能工作"的写法，正是 14 层（更正：7 层）叠起来之后最难查的东西。
+
+**③ 一处真的 bug：`return;` 吞掉了返回值。**
+6 层里的 5 层写 `const r = _ms.apply(...)` 并在守卫处 `return r`；
+只有 `app45_rel.js:122` 写的是裸 `return;` ⇒ 它的守卫一旦命中，**整条链的返回值变成 undefined**。
+这不影响菜单显示（没人用返回值），但它让「这个函数返回什么」变成一个取决于运行时条件的谜。
+
+## 四、附带读数：32 处绕过入口
 
 它们不调用 `sheet()`，而是自己去摸弹层内部结构（`.sheet-card` / `.sheet .plans` / `$("#cards")`）。
 这跟 `msgHTML` 那边 `.bub` 的故事同族：**入口就在那儿，但它们选择了绕过它** ——
