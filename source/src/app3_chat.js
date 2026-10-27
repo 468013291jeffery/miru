@@ -317,11 +317,17 @@ function streamPreview(piece){
 }
 
 /* send from composer */
-function doSend(txt,mode,typed){   // typed=手打（2026-10-25）：只有玩家自己敲的才算「珍贵」
+function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对话里（避免重复）
  const th=S.threads[curT];if(!th)return;txt=(txt||"").trim();if(!txt)return;
  /* 2026-10-27 Ann 试玩：上一轮还没说完时点选项，原来**静默丢弃**（选项已清空、话没发出）。
     她看到的就是「我选了，他毫无反应」。改成排队，等这一轮结束自动发出去。 */
- if(busy){SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed});try{toast(S.lang==="zh"?"记下了，这一轮说完就发":"Queued - sends after this reply")}catch(_){}return}
+ if(busy){
+  /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
+     现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
+  try{if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})}catch(_){}
+  SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
+  try{toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")}catch(_){}
+  return}
  if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
  if(th.quest&&th.quest.over){questEnd(th);return}
  mode=mode||cmode;
@@ -522,7 +528,7 @@ async function reply(th,ctx,silent){
  try{if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0}catch(_){}
  if(!silent){busy=false;BUSY_T=0;
   /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed)}catch(_){}},60)}}catch(_){}
+  try{if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}}catch(_){}
  }}
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
