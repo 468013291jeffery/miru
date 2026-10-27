@@ -199,6 +199,56 @@ cardSheet 630  · startSheet 1844 · paySheet-promo 2387   （字符数）
 **这 ~23 处才是「没有做入口」里真正还没动的一块**：入口就在那儿，它们选择了绕过它 ——
 所以任何「在入口上加一条规矩」的做法，对它们都无效。**一个都没改。**
 
+### 五之二、逐条定性：**它们不是「绕过」，是「入口没有那个位置」**
+
+按「改的是哪个弹层的哪个子块、为什么归这一类」逐条读完，结论比预想的干净：
+
+**① 该改成调入口（纯往 `.stack` 里追加、与 `SHEET` 块同形）：0 处**
+
+唯一接近的是 `app97_agents.js:184`（拿到 `.sheet .stack` 后往后插一块），但它也带自己的守卫与
+目标子块。**其余没有一处是「纯往栈里加一块」** —— 也就是说 `SHEET.add` 能覆盖的场景，在这 23 处
+里几乎没有。
+
+**② 只能这样（锚在弹层内部某个子块的前/后，或改已有块）：19 处**
+
+| 位置 | 目标子块 | 动作 |
+|---|---|---|
+| `app10_story.js:137` | `.sheet .gh-gc` | 插 |
+| `app12_beats.js:40` | `.sheet .memlay` | `afterend` |
+| `app17_custom.js:37` | `#cards` | `afterend` |
+| `app17_custom.js:38/39` | `.sheet-card` | `beforeend` |
+| `app18_promo.js:28` | `.sheet .body` / `.sheet>div` / `.sheet` | 插 |
+| `app19_bgm.js:107` | `.sheet .plans` | **整块重画** |
+| `app19_bgm.js:109` | `.sheet [data-buyplus]` + 它的 nextSibling | **改文字** |
+| `app34_hints.js:10` | `.sheet .stack` | `afterend`（在栈**外面**） |
+| `app34_hints.js:14` | `.sheet .cctv` | MutationObserver 里补内容 |
+| `app45_rel.js:36` | `.sheet .sh-body` / `.steps` | `beforebegin` |
+| `app46_cp.js:44` | `.sheet [data-rewind]` | **改文字** |
+| `app47_chapters.js:32` | `.sheet .stack` | `afterend`（在栈**外面**） |
+| `app51_import.js:136` | `.stack [data-crh="quick"]` | `afterend` |
+| `app73_features.js:82` | `.sheet .sheet-card` | `beforeend` |
+| `app77_memory2.js:170` | `.sheet .memlay` | `afterend` |
+| `app78_memsync.js:41` | `.m2s .m2off` | `beforebegin` |
+| `app79_ledger.js:145` | `.m2s` | `beforeend` |
+| `app88_memcall.js:23` | `.sheet .memtiers` | `afterend` |
+| `app97_agents.js:184` | `.sheet .stack` | 插（带自己的守卫） |
+
+**③ 该删：0 处**（没有证据说哪个功能死了，也没找到两处做同一件事）。
+
+**读不出的：2 处** —— `app96_social.js:203`（`const box=$(".sheet"); if(!box) return;` 之后要读全才知道写什么）
+· `app5_money.js:56`（`setTimeout` 里 `if(!$(".sheet")) sheet(...)` 其实是**开**弹层、该算只读判断，
+但同一行又拼了弹层内容）。**不猜，留着。**
+
+### 这条线真正的结论
+
+**「没有做入口」的真实形态不是「大家不用入口」，而是「入口只能整块替换」**：
+`sheet(html)` 收一个完整 HTML 串，**没有任何办法说「在这个子块后面插一块」**。
+于是 19 处各自去摸 DOM —— 而且锚点几乎各不相同（19 处 **8 种**锚点）。
+
+⇒ 缺的不是注册表，是**位置契约**。`SHEET.add` 只覆盖「同一个栈 + top/bottom」那一种。
+要不要加一个「锚在某个子块之后」的原语，是**下一个决定**：加 ⇒ 19 处有归宿；不加 ⇒ 它们继续直接摸 DOM。
+这一刀值不值的判据是「锚点能不能收敛」——今天读下来 8 种，**收敛度不高**。
+
 ## 四、要做成什么（还没做）
 
 形状照 `PKREG` / `MSGKIND`（这两个都是「表 + 读数 + 闸 + 变异」，都已经跑了一整天）：
