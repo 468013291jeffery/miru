@@ -77,8 +77,14 @@ const names = [...named.entries()].filter(([n, v]) => (v.defs.length || v.patche
   .sort((a, b) => (b[1].patches.length + b[1].calls.length) - (a[1].patches.length + a[1].calls.length));
 const closeCalls = hit(/(^|[^.\w])closeSheet\s*\(/).filter(x => !/function\s+closeSheet/.test(x.text));
 
-/* ③ 绕过入口：直接摸弹层内部结构 */
-const bypass = hit(/\.sheet-card|\.sheet \.plans|\.sheet\b[^]*?\$\$?\(|\$\("#cards"\)|\$\("\.sheet/);
+/* ③ 绕过入口：**在选择器里摸弹层内部**。
+   ⚠️ 第一版这条正则写着 `.sheet\b[^]*?\$\$?\(` —— 它实际含义是「同一行里出现 `.sheet`、
+   后面还有个 `$(`」，几乎什么都能命中，于是报出 **32 处**（真值 18）。
+   定义改成可辩护的一句：**任何以 `.sheet` / `.m2s` / `#cards` 开头的选择器字面量**。 */
+const bypass = hit(/['"`](?:\.(?:sheet|m2s)\b[^'"`]*|#cards)['"`]/)
+  /* 必须同时**调了 DOM 接口**：光在选择器里提到不算（注释、文档串里也会出现，app112 的注释就这样被算过一次）*/
+  .filter(x => /(\$\$?\(|querySelector|closest)/.test(x.text))
+  .filter(x => !/^\s*(\*|\/\/|\/\*)/.test(x.text));
 
 /* ④ 直连 sheet( 的调用点 */
 const directSheetCalls = hit(/(^|[^.\w])sheet\s*\(/).filter(x => !/function\s+sheet/.test(x.text) && !/^\s*sheet\s*=\s*function/.test(x.text));
