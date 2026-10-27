@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="f8d0c95701fc 2026-10-27T07:17Z";
+window.MIRU_BUILD="62b7452e04ed 2026-10-27T07:29Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7791,66 +7791,135 @@ Object.assign(I18N.zh,{"pk.spdNorm":"自动播放","pk.spdSlow":"自动 · 慢�
   };
 })();
 
-/* ================= 消息渲染：登记 + 冲突检测（2026-10-27）=================
-   背景：`msgHTML` 被 **19 层**包装（`tools/msghtml-triage.mjs`），其中 10 层是「按 m.k 认领渲染」。
-   四类消息被多层认领（act / box / think / say），另有 **后处理层**（app73 给每条消息挂工具条、
-   app98 改写收尾）—— 所以**不能**把认领层统一挪到最外层，那会让后处理看不到它们。
+/* ================= 消息渲染：三类登记 + 冲突检测 + 存活读数（2026-10-27）=================
+   背景：`msgHTML` 被 **19 层**包装（`tools/msghtml-triage.mjs`）。三形状：
+     · kind  按 `m.k` 认领渲染（10 层）—— 认领了就不往下走
+     · post  先渲染再加工（5 层）—— app73 挂工具条 / app98 加接听按钮 / app18 贴纸改写 /
+             app35 付款行 / app16 的 fmtMix（行内 *动作* 高亮）
+     · wrap  条件改写入参（1 层）—— app34 把「玩家那句」换成舞台指令
+
+   ## 为什么分三类而不是一张类型表
+   因为**形状不同，判据也不同**：kind 层要能答「谁认领了这个类型」；post 层要能答
+   「它有没有真的改过东西」（`.bub` 那次选择器失效就是这么死掉的）；wrap 层要能答
+   「它换了入参之后内层还认得出吗」。一张表答不了三种问题。
 
    ## 这一版做什么
-   **保留原位安装**（顺序一字不改），但把「谁认领了哪些类型」写进一张表：
-       MSGKIND.inline('app42_decline.js', ['declined'], function(m, i, th, next){ …body…; return next(m,i,th) })
-   `inline` 干三件事：
-     ① 立刻按原位置装一个包装（与手写包装逐字等价）
-     ② 把 { 名字, 认领类型 } 记进 MSGKIND.items
-     ③ **重复认领当场记一笔**（同一个 m.k 被两个层认领 —— 从前只有靠加载顺序才知道谁赢）
+   **保留原位安装**（顺序一字不改 —— 后处理层必须看到内层渲染结果，所以不能整体挪到最外层），
+   但把「谁、属于哪一类、认领什么」写进一张表，并且给每层记两个可数的读数：
+       hit         这一层**真的改了东西**的次数
+       nextCalled  这一层把活交给内层的次数（kind 层用）
+   于是「一个层从来没改过任何东西」= 死代码，是可读出来的，不再靠猜。
+
+   ## 用法（在各自的源文件里，原位）
+       MSGKIND.inline('app42_decline.js', ['declined'], function(m, i, th, next){ …; return next(m,i,th) })
+       MSGKIND.post('app98_story.js', function(h, m, i, th){ …; return h })      // 返回字符串 = 改过了
+       MSGKIND.wrap('app34_hints.js', function(m, i, th){ …; return m2 })        // 返回对象 = 换入参
 
    ## 读数
-       __msgkind()           注册层 · 认领类型数 · **冲突类型**
-       __msgkind(true)       冲突明细（哪个类型、哪几层）
+       __msgkind()           注册层 · 各类层数 · 认领类型 · 冲突类型 · 有命中的层
+       __msgkind(true)       逐层：名字 · 类 · 认领 · 命中 · 交内层 · 抛错
 
    ## 为什么不是"一次搬成一张类型表"
-   因为后处理层要看到所有消息的 HTML。真正扁平化需要先有 **post/wrap 两类独立注册**（见
-   `docs/msg-render-registry.md` 第 3 节），那是一步更大的改动。这一版先让"谁认领什么"可见、可查重。
-================================================================================== */
+   见 `docs/msg-render-registry.md`：19 层里有 4 个类型被多层认领（say/act/think/box），
+   搬它们之前必须先有逐字节对拍（`tools/render-snapshot.mjs`）。这一版是那一步的地基。
+   ================================================================================== */
 (function () {
   'use strict';
 
-  const M = { v: 1, items: [], claims: {}, conflicts: [], installed: 0 };
+  const M = { v: 2, items: [], claims: {}, conflicts: [], installed: 0, classes: {} };
 
+  function add(name, cls, kinds) {
+    const it = { name: String(name || '?'), cls: cls, kinds: kinds || [], hit: 0, nextCalled: 0, err: 0 };
+    M.items.push(it);
+    M.classes[cls] = (M.classes[cls] || 0) + 1;
+    M.installed++;
+    return it;
+  }
+
+  /* 抛错不许静默：记次数 + 走 console.error（app108 的 errlog 会接住它）*/
+  function boom(it, e) {
+    it.err++;
+    try { console.error('[msgkind] ' + it.name + '(' + it.cls + ') 抛错：' + ((e && (e.code || e.message)) || e)); } catch (_) { }
+  }
+
+  /* ---------- kind：认领某个 m.k ---------- */
   M.inline = function (name, kinds, fn) {
     if (typeof fn !== 'function') return false;
     const list = Array.isArray(kinds) ? kinds.slice() : [kinds];
-
-    /* ① 原位安装：与手写包装等价 */
+    const it = add(name, 'kind', list);
     const prev = window.msgHTML;
+
     window.msgHTML = function (m, i, th) {
-      return fn.call(this, m, i, th, function (a, b, c) { return prev.apply(this, arguments) });
+      let prevOut = null, calledNext = false;
+      const next = function () { calledNext = true; it.nextCalled++; prevOut = prev.apply(this, arguments); return prevOut };
+      let out;
+      try { out = fn.call(this, m, i, th, next) } catch (e) { boom(it, e); return typeof prevOut === 'string' ? prevOut : '' }
+      /* 「命中」= 这一层**自己答了**（没把活交给内层）或者**改了内层的结果**。
+         两种都算真的干活；只有「交给内层且原样返回」才算没干活。
+         ⚠️ 第一版只比 out!==prevOut，于是四个认领层全部报 0 命中 —— 因为它们从不调 next，
+            prevOut 一直是 null。量不到自己这件事，本身就是没量。
+         ⚠️ 这条读数分辨不了「无条件吃掉所有消息」的坏层，那由 render-snapshot 的 19 种对拍管。 */
+      if (typeof out === 'string' && (!calledNext || out !== prevOut)) it.hit++;
+      return out;
     };
-    M.installed++;
 
-    /* ② 登记 */
-    M.items.push({ name: String(name || '?'), kinds: list });
-
-    /* ③ 查重：同一个 m.k 被两层认领时，谁赢只由加载顺序决定 —— 把它记下来 */
+    /* 认领 + 查重：同一个 m.k 被两层认领时，谁赢只由加载顺序决定 —— 把它记下来 */
     for (const k of list) {
-      (M.claims[k] = M.claims[k] || []).push(String(name || '?'));
+      (M.claims[k] = M.claims[k] || []).push(it.name);
       if (M.claims[k].length === 2) M.conflicts.push(k);
     }
     return true;
   };
 
+  /* ---------- post：拿到已渲染的 HTML 再加工 ---------- */
+  M.post = function (name, fn) {
+    if (typeof fn !== 'function') return false;
+    const it = add(name, 'post');
+    const prev = window.msgHTML;
+
+    window.msgHTML = function (m, i, th) {
+      const h = prev.apply(this, arguments);
+      let out;
+      try { out = fn(h, m, i, th) } catch (e) { boom(it, e); return h }
+      if (typeof out === 'string') { if (out !== h) it.hit++; return out }
+      return h;
+    };
+    return true;
+  };
+
+  /* ---------- wrap：改写入参，再交给内层 ---------- */
+  M.wrap = function (name, fn) {
+    if (typeof fn !== 'function') return false;
+    const it = add(name, 'wrap');
+    const prev = window.msgHTML;
+
+    window.msgHTML = function (m, i, th) {
+      let mm = m;
+      try { const r = fn(m, i, th); if (r && typeof r === 'object') mm = r } catch (e) { boom(it, e) }
+      if (mm !== m) it.hit++;
+      return prev.call(this, mm, i, th);
+    };
+    return true;
+  };
+
+  M.classesOf = function (cls) { return M.items.filter(x => x.cls === cls) };
+
   window.MSGKIND = M;
   window.__msgkind = function (detail) {
+    const alive = M.items.filter(x => x.hit > 0).length;
     const sum = {
       注册层: M.items.length,
       认领类型: Object.keys(M.claims).length,
-      冲突类型: M.conflicts.length
+      冲突类型: M.conflicts.length,
+      类: { kind: M.classes.kind || 0, post: M.classes.post || 0, wrap: M.classes.wrap || 0 },
+      有命中的层: alive,
+      抛错层: M.items.filter(x => x.err > 0).length
     };
     if (!detail) return sum;
     return {
       汇总: sum,
       冲突明细: M.conflicts.map(k => ({ 类型: k, 认领层: M.claims[k] })),
-      层: M.items.map(x => x.name + ' → ' + x.kinds.join(','))
+      层: M.items.map(x => ({ 名字: x.name, 类: x.cls, 认领: x.kinds.join(','), 命中: x.hit, 交内层: x.nextCalled, 抛错: x.err }))
     };
   };
 })();
@@ -8143,9 +8212,13 @@ Object.assign(I18N.en,{"st5.pause":"Pause","st5.resume":"Play"});Object.assign(I
 
 /* ===== action + dialogue in one message: *walks toward you* I've been waiting.  /  （走近他）我一直在等你 ===== */
 function fmtMix(h){return h.replace(/\*([^*<]{1,80})\*/g,'<em class="ma">$1</em>').replace(/（([^）<]{1,80})）/g,'<em class="ma">$1</em>').replace(/\(([^)<]{1,80})\)/g,'<em class="ma">$1</em>')}
-const _msgHTML6=msgHTML;
-msgHTML=function(m,i,th){const h=_msgHTML6(m,i,th);if(!m||!m.txt||m.k==="box"||m.k==="act"||m.k==="think")return h;
- return h.replace(/<div class="bub">([\s\S]*?)<\/div>/,(a,b)=>'<div class="bub">'+fmtMix(b)+'</div>')};
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.post（后处理类）。
+   ⚠️ 顺手修了一处**活着的死代码**：这一层原来找 `<div class="bub">`，而气泡早就是
+   `<div class="m-box lb"><p class="bac">` 了 —— 于是「行内 *动作* 高亮」一直没生效，
+   而逐字节对拍永远是绿的（基线是在这次合并之后拍的，它拍不到自己出生前就坏掉的东西）。
+   命中读数见 tools/msgkind-probe.mjs：现在这一层必须真的动起来，否则那个闸会红。 */
+MSGKIND.post("app16_story2.js", function (h, m, i, th) { if(!m||!m.txt||m.k==="box"||m.k==="act"||m.k==="think")return h;
+ return h.replace(/<p class="(bac[^"]*)">([\s\S]*?)<\/p>/g,(a,cls,b)=>'<p class="'+cls+'">'+fmtMix(b)+'</p>')});
 /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
 const __body_story162 = function () { const ir=$(".composer .inrow");if(!ir||$(".qchips"))return;
  ir.insertAdjacentHTML("beforebegin",'<div class="qchips"><button data-insact="1">✱ '+t("st6.act")+'</button><button data-insthink="1">💭 '+t("st6.think")+'</button><span>'+t("st6.tip")+'</span></div>') };
@@ -8387,10 +8460,13 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-emoins]")){const ta=$("#cin");if(!ta)return;const s=ta.selectionStart??ta.value.length;ta.value=ta.value.slice(0,s)+x.dataset.emoins+ta.value.slice(s);ta.dispatchEvent(new Event("input"));return}
  if(x=e.target.closest("[data-stk]")){const s=STK[+x.dataset.stk],ta=$("#cin");if(!ta)return;ta.value=s[0]+" "+(S.lang==="zh"?s[1]:s[2]);const o=$(".emop");if(o)o.remove();const b=$(".composer [data-send]");if(b)b.click();return}});
 const STK_RE=new RegExp("^("+STK.map(s=>s[0].replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+") (.{1,30})$");
-const _msgHTML18=msgHTML;
-msgHTML=function(m,i,th){const h=_msgHTML18(m,i,th);if(!m||!m.txt||typeof m.txt!=="string")return h;const mt=m.txt.match(STK_RE);
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.post（后处理类）。**逻辑原样**，包括它的选择器 ——
+   它找的是 `<div class="bub">`，而现在的气泡是 `<div class="m-box lb"><p class="bac">`；
+   也就是说这两个分支（贴纸 / 纯表情放大）**此刻是死的**。这里先原样搬（对拍要逐字节一致），
+   死没死由 tools/msgkind-probe.mjs 的命中读数报出来，别在这一步顺手改样式。 */
+MSGKIND.post("app18_promo.js", function (h, m, i, th) { if(!m||!m.txt||typeof m.txt!=="string")return h;const mt=m.txt.match(STK_RE);
  if(mt)return h.replace(/<div class="bub">[\s\S]*?<\/div>/,'<div class="bub stk"><span>'+mt[1]+'</span><small>'+esc(mt[2])+'</small></div>');
- if(/^(\p{Extended_Pictographic}|‍|️|\s){1,8}$/u.test(m.txt))return h.replace('<div class="bub">','<div class="bub bigemo">');return h};
+ if(/^(\p{Extended_Pictographic}|\u200d|\ufe0f|\s){1,8}$/u.test(m.txt))return h.replace('<div class="bub">','<div class="bub bigemo">');return h});
 
 /* ---------- MY MOMENTS: post, and the people you've talked to come comment ---------- */
 function myCircle(){const seen={};Object.values(S.threads||{}).sort((a,b)=>(b.at||0)-(a.at||0)).forEach(th=>{const me=th.pk&&th.pk.as;(th.cast||[]).forEach(id=>{if(id!==me&&ch(id)&&!seen[id])seen[id]=th.at||1})});
@@ -10289,7 +10365,9 @@ Object.assign(I18N.en,{"hn.think":"AI hint","hn.none":"This one tests how well y
 /* in written lines, （…） is a stage direction (an action), not inner voice: show it with the ✱ action marker */
 function stageDir(s){return String(s||"").replace(/（([^）]{1,60})）/g,"*$1*").replace(/\(([^)]{1,60})\)/g,"*$1*")}
 const _boxHTML34=boxHTML;boxHTML=function(m,i,th){if(m&&m.say&&m.pk!==0){m=Object.assign({},m,{say:Object.assign({},m.say,{txt:stageDir(m.say.txt)})})}return _boxHTML34(m,i,th)};
-const _msgHTML34=msgHTML;msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as)m=Object.assign({},m,{txt:stageDir(m.txt)});return _msgHTML34(m,i,th)};
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.wrap（改入参类）—— 逻辑原样，形状统一。
+   这一层只改 m.txt：把（…）写成的舞台指令换成 *…*，真正的加粗由 app16 的 fmtMix（post 类）负责。 */
+MSGKIND.wrap("app34_hints.js",function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as)return Object.assign({},m,{txt:stageDir(m.txt)});return null});
 
 /* ---- v135 things worth paying for ----
    Every paid extra is optional, shows a tempting preview of what you'd get, and the first use of each kind is free:
@@ -10315,12 +10393,14 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-chgo]");if
  const o=th.pk.stop[2].opts[CH.i];const copy=Object.assign({},th);delete copy._snap;th._snap=JSON.stringify(copy);th._snapId=(th._snapId||0)+1;
  PAYPICK={th,o,n:th.msgs.length,sid:th._snapId};
  setTimeout(()=>{const p=PAYPICK;PAYPICK=null;if(!p)return;const m=p.th.msgs.slice(p.n).find(z=>z.who==="me");if(!m)return;m.snapId=p.sid;if(p.o.rthink){m.rthink=p.o.rthink;m.rwho=p.o.rwho||mainOf(p.th)}save();if(curT===p.th.id)renderChat()},0)},true);
-const _msgHTML35=msgHTML;msgHTML=function(m,i,th){const h=_msgHTML35(m,i,th);if(!m||m.who!=="me"||!th||!th.pk||(!m.rthink&&m.snapId!==th._snapId))return h;
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.post（后处理类）—— 拿到已渲染的 HTML 再挂付款行。
+   逻辑原样：不满足条件就原样返回 h（post 类的约定是「返回非字符串 = 不改」）。 */
+MSGKIND.post("app35_pay.js",function(h,m,i,th){if(!m||m.who!=="me"||!th||!th.pk||(!m.rthink&&m.snapId!==th._snapId))return h;
  let x='<div class="payrow">';
  if(m.rthink){const c=ch(m.rwho),nm=c?first(c.n):"";x+=m.rtOpen?'<div class="rtk open">'+avatar(m.rwho,22)+'<p><small>💭 '+esc(t("pay.rtH",{n:nm}))+'</small>'+esc(m.rthink)+'</p></div>'
   :'<button class="rtk" data-payrt="'+i+'">'+avatar(m.rwho,22)+'<p><small>💭 '+esc(t("pay.rtH",{n:nm}))+' · '+payTag("rthink")+'</small><span class="blur">'+esc(m.rthink)+'</span></p></button>'}
  if(m.snapId===th._snapId&&th._snap)x+='<button class="paybtn rw" data-payrw="1">⟲ '+t("pay.rw")+' · '+payTag("rewind")+'</button>';
- return h+x+'</div>'};
+ return h+x+'</div>'});
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)return;
  if(x=e.target.closest("[data-paypv]")){if(!payGo("preview"))return;th._pv=th._pv||{};th._pv[stopKey(th)]=1;save();packRefresh(th);return}
  if(x=e.target.closest("[data-payrt]")){const m=th.msgs[+x.dataset.payrt];if(!m||!payGo("rthink"))return;m.rtOpen=1;save();renderChat();try{window.emoFx&&emoFx("ink")}catch(_){}return}
@@ -14372,10 +14452,10 @@ async function mind73(th, i) {
 }
 
 /* ---------- UI: tools on any message, bar under the latest reply, header chip, address chips ---------- */
-const _msgHTML73 = msgHTML;
-msgHTML = function (m, i, th) {
-  let h = _msgHTML73.apply(this, arguments);
-  try {
+/* 2026-10-27：从「手写包装 + 自带空 catch」搬成 MSGKIND.post（后处理类）。
+   逻辑一行没改；差别是**抛错不再被无声吞掉** —— post 类统一记次数并走 console.error（errlog 收）。 */
+MSGKIND.post("app73_features.js", function (h, m, i, th) {
+  {
     if (typeof openTools !== "undefined" && openTools === i && h.indexOf('<div class="mtools">') >= 0 && m.txt && m.k !== "card") {
       let add = "";
       if (m.ai || m.who === "me") add += '<button data-ed73="' + i + '">✎ ' + esc(t73("edit")) + '</button>';
@@ -14384,9 +14464,9 @@ msgHTML = function (m, i, th) {
     }
     if (m.edited) h += '<div class="ed73tag' + (m.who === "me" ? " me" : "") + '">✎ ' + esc(t73("edited")) + '</div>';
     if (m.mind) h = h.replace(/(class="m-think[^"]*")/, '$1 data-mind="1"');
-  } catch (_) {}
-  return h;
-};
+    return h;
+  }
+});
 /* 2026-10-27：这一层从「包 renderChat」搬成「UI.add 钩子」—— 第一个样板。
    理由：猴补丁是隐式接口，包了几十层之后任何一层抛错都会掐掉后面所有层；
    UI.add 的钩子每个单独 try/catch，一个炸不连累别人。逻辑本身一行没改。 */
@@ -17723,7 +17803,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
 }, true);
 /* a call card gets an answer button */
-{ const _mh = msgHTML; msgHTML = function (m, i, th) { const h = _mh.apply(this, arguments); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); return h; }; }
+MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
 /* free mode needs its world's assets loaded on reopen */
 { const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) renderChat(); }); } } return _ot.apply(this, arguments); }; }
 /* love type + feed work here too */

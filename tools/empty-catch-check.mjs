@@ -29,7 +29,9 @@ const ALLOW = {
   // 日志器自己绝不能再抛（否则记日志这件事本身会把页面带崩）；它的健康由 errlog 文件本身证明
   'app108_errlog.js': '日志器自身的兜底，不允许抛；它的失败由 .browser-errlog.json 是否存在来证明',
   'app110_pkreg.js': '分发器对每一层单独 try/catch：一层炸不许连累整条链（它会把失败计入 __pkreg().层内抛错）',
-  'app109_pkdirect.js': '装配兜底：install() 失败时不许让页面崩，失败另由 __pkreg().已安装=false 暴露'
+  'app109_pkdirect.js': '装配兜底：install() 失败时不许让页面崩，失败另由 __pkreg().已安装=false 暴露',
+  // 2026-10-27：msgkind 三类登记器对每一层单独 try/catch，失败计入 __msgkind(true).层[].抛错 并走 console.error
+  'app111_msgkind.js': '登记器 / 报告器自身的兜底：报错这件事本身不许再抛（否则计数器会把页面带崩）；它的失败由 __msgkind(true) 的抛错列与 errlog 两处暴露'
 };
 
 const per = {};

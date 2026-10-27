@@ -8,13 +8,14 @@ const doc = fs.readFileSync('ARCHITECTURE.md', 'utf8');
 const files = [
   'source/src/app103_turn.js', 'source/src/app104_pkstate.js', 'source/src/app105_save.js',
   'source/src/app106_ui.js', 'source/src/app108_errlog.js', 'source/src/app110_pkreg.js',
-  'source/src/app109_pkdirect.js', 'source/src/app3_chat.js',
+  'source/src/app109_pkdirect.js', 'source/src/app111_msgkind.js', 'source/src/app3_chat.js',
   'tools/turn-wiring-check.mjs', 'tools/pkstate-check.mjs', 'tools/save-instrument-check.mjs',
   'tools/ui-entry-check.mjs', 'tools/pkdirective-check.mjs', 'tools/empty-catch-check.mjs',
   'tools/on-assign-check.mjs', 'tools/errlog-selftest.mjs', 'tools/sanitize-selftest.mjs',
   'tools/wiring-order-check.mjs', 'tools/patch-registry.mjs', 'tools/line2file.mjs',
   'tools/check-all.mjs', 'tools/read-health.mjs', 'tools/read-errlog.mjs',
-  'docs/message-renderers.md'
+  'tools/render-snapshot.mjs', 'tools/msgkind-probe.mjs',
+  'docs/message-renderers.md', 'docs/msg-render-registry.md'
 ];
 let bad = 0;
 for (const f of files) if (!fs.existsSync(f)) { console.log('  ✗ 不存在: ' + f); bad++ }
@@ -23,7 +24,8 @@ for (const f of files) if (!fs.existsSync(f)) { console.log('  ✗ 不存在: ' 
 const checkAll = fs.readFileSync('tools/check-all.mjs', 'utf8');
 const gates = ['turn-wiring-check', 'pkstate-check', 'save-instrument-check', 'ui-entry-check',
   'pkdirective-check', 'empty-catch-check', 'on-assign-check', 'errlog-selftest',
-  'sanitize-selftest', 'wiring-order-check', 'patch-registry'];
+  'sanitize-selftest', 'wiring-order-check', 'patch-registry',
+  'render-snapshot', 'msgkind-probe'];
 for (const g of gates) {
   const mentioned = doc.includes(g);
   const registered = checkAll.includes(g);
@@ -40,6 +42,16 @@ if (m) {
   const claimed = Number((/猴补丁\s+148 个函数 \/ (\d+) 处/.exec(doc) || [])[1] || 0);
   console.log('  猴补丁实测 ' + sites + ' · 文档写 ' + claimed + (sites === claimed ? ' ✓' : ' ✗ 过期'));
   if (sites !== claimed) bad++;
+}
+
+/* ③b 空 catch 存量同样要对得上（文档写数字、代码是事实，两边不一致就红） */
+const ec = execFileSync(process.execPath, ['tools/empty-catch-check.mjs'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+const em = /合计 (\d+) 处 \/ (\d+) 个文件/.exec(ec);
+const dm = /空 catch\s+(\d+) 处 \/ (\d+) 个文件/.exec(doc);
+if (em && dm) {
+  const ok = em[1] === dm[1] && em[2] === dm[2];
+  console.log('  空 catch 实测 ' + em[1] + ' 处 / ' + em[2] + ' 文件 · 文档写 ' + dm[1] + ' 处 / ' + dm[2] + ' 文件' + (ok ? ' ✓' : ' ✗ 过期'));
+  if (!ok) bad++;
 }
 
 /* ④ 闸套数 */

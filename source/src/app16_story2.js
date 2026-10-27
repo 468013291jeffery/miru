@@ -286,9 +286,13 @@ Object.assign(I18N.en,{"st5.pause":"Pause","st5.resume":"Play"});Object.assign(I
 
 /* ===== action + dialogue in one message: *walks toward you* I've been waiting.  /  （走近他）我一直在等你 ===== */
 function fmtMix(h){return h.replace(/\*([^*<]{1,80})\*/g,'<em class="ma">$1</em>').replace(/（([^）<]{1,80})）/g,'<em class="ma">$1</em>').replace(/\(([^)<]{1,80})\)/g,'<em class="ma">$1</em>')}
-const _msgHTML6=msgHTML;
-msgHTML=function(m,i,th){const h=_msgHTML6(m,i,th);if(!m||!m.txt||m.k==="box"||m.k==="act"||m.k==="think")return h;
- return h.replace(/<div class="bub">([\s\S]*?)<\/div>/,(a,b)=>'<div class="bub">'+fmtMix(b)+'</div>')};
+/* 2026-10-27：从「手写包装」搬成 MSGKIND.post（后处理类）。
+   ⚠️ 顺手修了一处**活着的死代码**：这一层原来找 `<div class="bub">`，而气泡早就是
+   `<div class="m-box lb"><p class="bac">` 了 —— 于是「行内 *动作* 高亮」一直没生效，
+   而逐字节对拍永远是绿的（基线是在这次合并之后拍的，它拍不到自己出生前就坏掉的东西）。
+   命中读数见 tools/msgkind-probe.mjs：现在这一层必须真的动起来，否则那个闸会红。 */
+MSGKIND.post("app16_story2.js", function (h, m, i, th) { if(!m||!m.txt||m.k==="box"||m.k==="act"||m.k==="think")return h;
+ return h.replace(/<p class="(bac[^"]*)">([\s\S]*?)<\/p>/g,(a,cls,b)=>'<p class="'+cls+'">'+fmtMix(b)+'</p>')});
 /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
 const __body_story162 = function () { const ir=$(".composer .inrow");if(!ir||$(".qchips"))return;
  ir.insertAdjacentHTML("beforebegin",'<div class="qchips"><button data-insact="1">✱ '+t("st6.act")+'</button><button data-insthink="1">💭 '+t("st6.think")+'</button><span>'+t("st6.tip")+'</span></div>') };

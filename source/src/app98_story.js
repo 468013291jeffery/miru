@@ -236,7 +236,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
 }, true);
 /* a call card gets an answer button */
-{ const _mh = msgHTML; msgHTML = function (m, i, th) { const h = _mh.apply(this, arguments); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); return h; }; }
+MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
 /* free mode needs its world's assets loaded on reopen */
 { const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) renderChat(); }); } } return _ot.apply(this, arguments); }; }
 /* love type + feed work here too */

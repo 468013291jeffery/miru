@@ -33,6 +33,7 @@ const suites = [
   ['timer-audit.mjs', ['tools/timer-audit.mjs', '--check'], true],
   ['ask-retry-selftest.mjs', ['tools/ask-retry-selftest.mjs'], true],
   ['render-snapshot.mjs', ['tools/render-snapshot.mjs','--check'], true],
+  ['msgkind-probe.mjs', ['tools/msgkind-probe.mjs'], true],
   ['doc-ref-check.mjs', ['tools/doc-ref-check.mjs'], true],
   ['pkdirective-check.mjs', ['tools/pkdirective-check.mjs'], true],
   ['on-assign-check.mjs', ['tools/on-assign-check.mjs','--check'], true],
