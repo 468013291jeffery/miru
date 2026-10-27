@@ -224,7 +224,7 @@ async function ask(prompt,opts){
   if(e&&["not_granted","sampling_disabled","not_declared","capability_disabled"].includes(e.code))toast(t("live.denied"));
   else if(e&&e.code!=="cancelled")toast(t("live.err",{c:LIVE_ERR}));
   throw e}}
-const HEAT_RULE={fluff:"Keep it warm and non-sexual: banter, comfort, almost-touching.",slow:"Hold tension on purpose: longing, restraint, near-misses. Nothing physical beyond a touch.",steamy:"Charged and suggestive. Kissing and closeness are fine. Fade to black before anything explicit.",mature:"Adult emotional themes and charged physicality, but never explicit sexual description — cut away at the door."};
+const HEAT_RULE={fluff:"Keep it warm and non-sexual: banter, comfort, almost-touching.",slow:"Hold tension on purpose: longing, restraint, near-misses. Nothing physical beyond a touch.",steamy:"Charged and suggestive. Kissing and closeness are fine, and the scene can go where it goes.",mature:"Adult emotional themes and charged physicality; write the scene as it happens rather than cutting away."};
 
 /* ================= NAV ================= */
 const STACK=[];
