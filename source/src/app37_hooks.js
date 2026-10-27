@@ -6,10 +6,9 @@ if(typeof PAY!=="undefined")Object.assign(PAY,{recall:2,missed:PRICES.callMin});
 STOPK.add("missed");STOPK.add("reveal");
 /* 1 · unsent message */
 PKREG.add("app37_hooks.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="recall"){th.pk.q.shift();const d=b[2]||{};appendMsg(th,{who:"sys",k:"xrecall",rw:d.who,txt:Lz(d.txt)||d.txt,at:Date.now()});save();return true}return next(th,b)});;
-const _msgHTML37=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="xrecall")return _msgHTML37(m,i,th);const c=ch(m.rw),nm=c?first(c.n):"";
+MSGKIND.inline("app37_hooks.js", ["xrecall"], function(m,i,th, next){if(!m||m.k!=="xrecall")return next(m,i,th);const c=ch(m.rw),nm=c?first(c.n):"";
  if(m.open)return '<div class="xrc open" data-mi="'+i+'">'+avatar(m.rw,30)+'<div class="xrcb"><small>'+esc(t("rc.was",{n:nm}))+'</small><p>'+esc(m.txt)+'</p></div></div>';
- return '<div class="xrc" data-mi="'+i+'"><span class="xrcl">'+esc(t("rc.unsent",{n:nm}))+'</span><button data-xrc="'+i+'">👀 '+t("rc.see")+' · '+(typeof payTag==="function"?payTag("recall"):"💎2")+'</button></div>'};
+ return '<div class="xrc" data-mi="'+i+'"><span class="xrcl">'+esc(t("rc.unsent",{n:nm}))+'</span><button data-xrc="'+i+'">👀 '+t("rc.see")+' · '+(typeof payTag==="function"?payTag("recall"):"💎2")+'</button></div>'});;
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xrc]");if(!x)return;const th=S.threads[curT];const m=th&&th.msgs[+x.dataset.xrc];if(!m)return;if(typeof payGo==="function"&&!payGo("recall"))return;m.open=1;save();renderChat();try{window.emoFx&&emoFx("ink")}catch(_){}});
 /* 2 · missed call → call back */
 const _stopAuto37=stopAuto;

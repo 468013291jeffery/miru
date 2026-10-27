@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>msgkind probe</title>
+<pre id="out">…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:600px"></iframe>
+<script>
+setTimeout(function(){
+  var w=document.getElementById('f').contentWindow,o=document.getElementById('out');
+  try{
+    var s=w.__msgkind(true);
+    o.textContent='注册层 '+s.汇总.注册层+' · 认领类型 '+s.汇总.认领类型+' · 冲突 '+s.汇总.冲突类型+'\n层：\n  '+(s.层||[]).join('\n  ')+'\n冲突明细：'+JSON.stringify(s.冲突明细);
+  }catch(e){ o.textContent='err '+e.message }
+},9000);
+</script>

@@ -209,7 +209,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      148 个函数 / 357 处   （当天起点 382 ⇒ −25）
+猴补丁      148 个函数 / 353 处   （当天起点 382 ⇒ −29）
 空 catch    576 处 / 99 个文件    （当天起点 616 ⇒ −40）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
@@ -283,6 +283,22 @@ PKREG.add('app17_custom.js', function(th, b, next){
 > Ann 确认：现在用的就是后者（B 方案）。
 
 闸 `pkdirective-check` 三向对账：**有消费型必登记** · **表的赢家 = 最外层消费型** · **声明的死代码不许复活**。
+
+### 7.4 补 msgHTML 的第一批（只做"可见"，不扁平化）
+
+`msgHTML` 有 **19 层**包装，但形状是三种混的；其中 10 层按 `m.k` 认领渲染，另有**后处理层**（给每条消息挂工具条）。
+⇒ **不能**像剧本指令那样统一挪到最外层：后处理需要看到所有消息的 HTML。
+
+所以先立 `MSGKIND`（`app111_msgkind.js`），它**原位安装**（顺序一字不改），只多记两件事：
+
+      MSGKIND.inline('app42_decline.js', ['declined'], function(m, i, th, next){ … })
+      ① 谁认领了哪个 `m.k`    ② **同一个类型被两层认领就当场记一笔**
+
+已搬 4 层（`vn96` `xrecall` `declined` `missed`），判据是**逐字节**：
+`render-snapshot.mjs` 报「19 种消息与基线一致」。`__msgkind()` 报 4 层 / 4 类型 / **0 冲突**。
+
+剩下 15 层（含 `say`/`act`/`think`/`box` 这些多层认领的）留到下一步：
+先按 `docs/msg-render-registry.md` 把「后处理 / 改入参」两类拆出独立注册，再搬认领层。
 
 ### 7.5 静默失败的三条出口
 

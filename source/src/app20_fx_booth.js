@@ -148,10 +148,9 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ringyes]")){ringEnd(true);return}
  if(e.target.closest("[data-ringno]")){ringEnd(false,true);return}
  if(x=e.target.closest("[data-mcback]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mcback];if(!m)return;if(!S.plus&&!spend(PRICES.callMin,"event"))return;m.back=1;save();startCall(m.who,60);return}});
-const _msgHTML20=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="missed")return _msgHTML20(m,i,th);const c=ch(m.who);if(!c)return"";
+MSGKIND.inline("app20_fx_booth.js", ["missed"], function(m,i,th, next){if(!m||m.k!=="missed")return next(m,i,th);const c=ch(m.who);if(!c)return"";
  return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+t(m.away?"mc.away":"mc.missed")+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
-  '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'};
+  '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'});;
 /* idle trigger inside a chat */
 setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidden||!th||ring||$(".sheet")||$(".callv")){mcIdle=0;return}
  const last=th.msgs[th.msgs.length-1];if(!last||!ch(last.who)||last.k==="missed"){mcIdle=0;return}if(th.pk&&th.pk.q&&th.pk.q.length){mcIdle=0;return}
