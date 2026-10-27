@@ -43,6 +43,12 @@ var PROBES = [
   ['m-box-lb', '.m-box.lb', '<div class="msgs"><div class="m-row"><div class="m-box lb"><p class="bac">x</p></div></div></div>'],
   ['bac', '.m-box.lb p.bac', '<div class="msgs"><div class="m-row"><div class="m-box lb"><p class="bac">x</p></div></div></div>'],
   ['bub', '.bub', '<div class="msgs"><div class="m-row me pkme"><div class="bub">x</div></div></div>'],
+  /* 2026-10-27 补：这三类原先**不在探针里** —— 而我那天正好改了它们的字号/圆角/内边距
+     （统一到 --msg-* 口令）。没有探针 ⇒ 那三处改动当时的读数是「没人看得见」。 */
+  ['m-turn-tb', '.m-turn .tb', '<div class="msgs"><div class="m-turn"><div class="tb">x</div></div></div>'],
+  ['m-narr', '.m-narr', '<div class="msgs"><div class="m-narr">x</div></div>'],
+  ['m-chap', '.m-chap', '<div class="msgs"><div class="m-chap"><h3>x</h3><p>y</p></div></div>'],
+  ['m-chap-h3', '.m-chap h3', '<div class="msgs"><div class="m-chap"><h3>x</h3><p>y</p></div></div>'],
   ['mquick', '.mquick', '<div class="msgs"><div class="m-row"><div class="mquick"></div></div></div>'],
   ['sheet', '.sheet', '<div class="sheet"><div class="sheet-card"></div></div>'],
   ['btn-p', '.btn.btn-p', '<div class="btn btn-p">x</div>'],
