@@ -32,6 +32,7 @@ const suites = [
   ['perf-budget.mjs', ['tools/perf-budget.mjs'], true],
   ['timer-audit.mjs', ['tools/timer-audit.mjs', '--check'], true],
   ['ask-retry-selftest.mjs', ['tools/ask-retry-selftest.mjs'], true],
+  ['pkdirective-check.mjs', ['tools/pkdirective-check.mjs'], true],
   ['on-assign-check.mjs', ['tools/on-assign-check.mjs','--check'], true],
   ['errlog-selftest.mjs', ['tools/errlog-selftest.mjs'], true],
   ['soft-syntax-probe.mjs', ['tools/soft-syntax-probe.mjs'], true],
