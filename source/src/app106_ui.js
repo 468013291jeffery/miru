@@ -37,6 +37,14 @@
     return false;
   };
 
+  /* 只跑钩子（由调度层调用；也供未来 caller 直接调用） */
+  U.afterRender = function (th) {
+    for (const h of U.hooks) {
+      try { h.fn(th); h.n++ }
+      catch (e) { h.errs++; pushErr(h.name, e) }
+    }
+  };
+
   U.render = function (th) {
     const t0 = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     U.runs++;
@@ -73,4 +81,26 @@
       最近错误: U.errors.slice(-10)
     };
   };
+})();
+
+/* ── 调度：renderChat 跑完 → 跑钩子（每个单独 try/catch）─────────────────
+   这是**入口**，不是又一个功能层：全部钩子由这一层统一调度，功能层不再各自去包 renderChat。
+   afterRender 不调用 renderChat ⇒ 无递归。
+   ⚠️ 这一段在模块 IIFE 之外，**拿不到闭包里的 U** —— 必须走 window.UI。
+   今晚的教训：上一个版本写的是 U.afterRender，每次都抛 ReferenceError，
+   又被内层 catch 吞掉 ⇒ 钩子一次都没跑过，而界面上什么也看不出来。 */
+(function () {
+  try {
+    const M = window.UI;
+    if (!M || typeof M.afterRender !== 'function') { window.__uiErr = '__no_ui'; return }
+    if (typeof renderChat !== 'function') { window.__uiErr = '__no_render'; return }
+    const _rc = renderChat;
+    renderChat = function () {
+      const r = _rc.apply(this, arguments);
+      try { M.afterRender((typeof S !== 'undefined' && S && S.threads) ? S.threads[curT] : null) }
+      catch (e) { M.errors.push({ at: Date.now(), hook: '__dispatch', msg: String((e && e.message) || e) }) }
+      return r;
+    };
+    M.__dispatchInstalled = true;
+  } catch (e) { window.__uiErr = String((e && e.message) || e) }
 })();

@@ -203,11 +203,11 @@ msgHTML = function (m, i, th) {
   } catch (_) {}
   return h;
 };
-const _renderChat73 = renderChat;
-renderChat = function () {
-  const r = _renderChat73.apply(this, arguments);
-  try {
-    const th = S.threads[curT]; if (!th) return r;
+/* 2026-10-27：这一层从「包 renderChat」搬成「UI.add 钩子」—— 第一个样板。
+   理由：猴补丁是隐式接口，包了几十层之后任何一层抛错都会掐掉后面所有层；
+   UI.add 的钩子每个单独 try/catch，一个炸不连累别人。逻辑本身一行没改。 */
+const __body73 = function () {
+    const th = S.threads[curT]; if (!th) return;
     /* header chip */
     const cid = mainOf(th), c = ch(cid), hd = document.querySelector(".chead .grow[data-us]");
     if (c && th.love && th.love[cid] != null && hd && !hd.querySelector(".af73")) {
@@ -249,9 +249,18 @@ renderChat = function () {
       return '<button class="' + (th.addr === id ? "on" : "") + '" data-addr73="' + id + '">' + esc(first(ch(id).n)) + '</button>';
     }).join("") + '</div>');
     }
-  } catch (_) {}
-  return r;
 };
+if (window.UI && typeof window.UI.add === "function") {
+  window.UI.add("features73", __body73);
+} else {
+  /* 兜底：UI 入口不在（老包 / 自检沙箱）时保持原来的包装行为 */
+  const _renderChat73 = renderChat;
+  renderChat = function () {
+    const r = _renderChat73.apply(this, arguments);
+    try { __body73() } catch (_) {}
+    return r;
+  };
+}
 
 (function () {
   const st = document.createElement("style");

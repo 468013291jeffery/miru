@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><title>ui probe2</title>
+<pre id="out">running…</pre>
+<script>
+fetch('/.browser-save.json').then(r=>r.text()).then(txt=>{
+  let data=txt; try{const j=JSON.parse(txt); data=j&&j.value?(typeof j.value==='string'?j.value:JSON.stringify(j.value)):txt}catch(_){}
+  try{localStorage.setItem('miru_v2',data)}catch(e){}
+  const f=document.createElement('iframe'); f.src='/index.html'; f.style.cssText='width:420px;height:760px;border:0';
+  document.body.appendChild(f);
+  setTimeout(()=>{
+    const w=f.contentWindow; const out=document.getElementById('out'); const L=[];
+    const src=String(w.renderChat||'');
+    L.push('renderChat 最外层含 afterRender: '+src.includes('afterRender'));
+    L.push('renderChat 最外层含 _renderChat：'+src.includes('_renderChat'));
+    L.push('UI 存在: '+!!w.UI+' · hook数: '+(w.UI?w.UI.hooks.length:'-'));
+    L.push('UI.__dispatchInstalled: '+(w.UI?w.UI.__dispatchInstalled:'-'));
+    L.push('渲染前 hook 执行数: '+(w.UI&&w.UI.hooks[0]?w.UI.hooks[0].n:'-'));
+    try{ w.renderChat() }catch(e){ L.push('render 抛错: '+e.message) }
+    L.push('渲染后 hook 执行数: '+(w.UI&&w.UI.hooks[0]?w.UI.hooks[0].n:'-'));
+    // 直接调 afterRender 验证钩子本身没问题
+    try{ w.UI.afterRender(w.S&&w.S.threads?w.S.threads[w.curT]:null) }catch(e){ L.push('afterRender 抛错: '+e.message) }
+    L.push('直接 afterRender 后: '+(w.UI&&w.UI.hooks[0]?w.UI.hooks[0].n:'-'));
+    out.textContent=L.join('\n');
+  },12000);
+});
+</script>
