@@ -26,6 +26,7 @@ const suites = [
   ['rev-selftest.mjs', ['tools/rev-selftest.mjs'], true],
   ['plan-valid-selftest.mjs', ['tools/plan-valid-selftest.mjs'], true],
   ['replyguard-selftest.mjs', ['tools/replyguard-selftest.mjs'], true],
+  ['dialogue-selftest.mjs', ['tools/dialogue-selftest.mjs'], true],
   ['wiring-check.mjs', ['tools/wiring-check.mjs'], true],
   ['plan-gate-selftest.mjs', ['tools/plan-gate-selftest.mjs'], true],
   ['account-check.mjs', ['tools/account-check.mjs'], true],
