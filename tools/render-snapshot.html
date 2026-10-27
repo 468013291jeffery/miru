@@ -42,6 +42,9 @@ setTimeout(function () {
     ['xpost',  { who: 'sys', k: 'xpost', title: '帖子', txt: '正文' }],
     ['xanchor',{ who: 'sys', k: 'xanchor', title: '锚点', txt: '正文' }],
     ['npc-say',{ who: 'npc', k: 'say',  txt: '别的角色说的一句（角色卡不在 pk.as）+。' }],
+ /* 2026-10-27：这是**真实路径** —— app26 把连续台词包成 k:"box" + say，别人说的台词都从这里出。
+    之前 20 种里没有它，所以把 .m-turn 换成 .bub 这类改动，逐字节对拍一格都没动、闸也看不见。 */
+  ['box-say',{ who: 'n', k: 'box', pk: 1, parts: [{ who: 'c2', k: 'act', txt: '他把杯子挪开。' }], say: { who: 'c2', txt: '我们走。' }, txt: '我们走。' }],
     ['me-say', { who: 'me', k: 'say',   txt: '玩家自己说的一句。' }],
     ['me-act', { who: 'me', k: 'act',   txt: '玩家做了一个动作。' }]
   ];

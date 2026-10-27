@@ -230,7 +230,13 @@ p{margin:0}
 .status span b{color:var(--text)}
 .msgs{flex:1;min-height:0;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none}.msgs::-webkit-scrollbar{display:none}
 .m-narr{align-self:center;max-width:94%;text-align:center;font-family:var(--serif);font-style:italic;font-size:var(--msg-fs);color:var(--dim);line-height:1.65}
-.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%;flex-wrap:wrap}
+.m-row{display:flex;gap:8px;align-items:flex-end;max-width:88%}
+/* 2026-10-27（Ann：「头像和语句分成两段」）：上一版为了 app73 那排按钮把 wrap 开在所有行上，
+   结果气泡一宽、头像就被折到下一行。改成**只有挂了按钮条（.rg73）的行**才折行。
+   `:has()` 在目标浏览器（Chromium/Firefox 121+/Safari 15.4+）都支持；不支持时退化成不折行，
+   那排按钮会挤在气泡右边 —— 比头像掉下去好。 */
+.m-row:has(> .rg73){flex-wrap:wrap}
+.m-row > .av{flex:0 0 auto}  /* 头像永不被压缩、也不参与折行 */
 /* 2026-10-27：`say` 统一成 .bub 之后，app73 的「重新生成 / 编辑 / 他在想什么」这条 bar
    原来靠「取 .m-row 的最后一个子元素」定位，而 .m-row 现在只剩气泡一个子元素 ⇒ 它落进了
    **气泡里面**（Ann 看图指出：应该在框的外面）。现在它作为 .m-row 的第三个子元素插入，
@@ -1427,7 +1433,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="ffd91c7c69b0 2026-10-27T10:16Z";
+window.MIRU_BUILD="03bd08609e97 2026-10-27T11:05Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -8330,8 +8336,8 @@ function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe"
 const _boxHTML8=boxHTML;
 boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx bubble" data-mi="'+i+'">'+m.parts.map(partHTML).join("")+'</div>';
  const c=ch(m.say.who);
- return '<div class="m-turn" data-mi="'+i+'">'+avatar(m.say.who,32)+'<div class="tb"><div class="tn" style="color:'+(c?c.pal[0]:"")+'">'+esc(c?first(c.n):"")+'</div>'+
-  (m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<div class="tsay">'+fmtMix(esc(m.say.txt))+'</div></div></div>'};
+ /* 2026-10-27（Ann：「头像和语句分成两段」「还是以前的样式」）：真实路径上，别人说的台词是被 app26 包成 k:"box" + m.say 再走这里的，**根本到不了 sayHTML**。原来它渲染 .m-turn（头像 + 名字 + 上下文 + 台词，天然分段），现在改成和 sayHTML 的 other 分支**同一套** .m-row + .bub。 */
+ return '<div class="m-row" data-mi="'+i+'">'+avatar(m.say.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(c?first(c.n):"")+'</small>'+(m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<p class="bac">'+fmtMix(esc(m.say.txt))+'</p></div></div>'};
 const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
