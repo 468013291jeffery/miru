@@ -72,9 +72,15 @@ setTimeout(function () {
     function hitMap() { var o = {}; MK.items.forEach(function (x) { o[x.name] = x.hit }); return o }
     function delta(a, b) { var r = []; MK.items.forEach(function (x) { if ((b[x.name] || 0) > (a[x.name] || 0)) r.push(x.name) }); return r }
 
-    /* [探针名, 看哪个层, 消息, 线程补丁] —— 每条探针只为一层准备，好让「谁动了」可归因 */
+    /* [探针名, 看哪个层, 消息, 线程补丁, 世界补丁] —— 每条探针只为一层准备，好让「谁动了」可归因。
+       世界补丁 = 临时改写 wd() 的返回值（app94 的换人称要 w.you94 才动得起来），
+       用完立刻还原，**绝不改全局桩** —— 一改，19 种对拍的基线就作废了。 */
     var PROBES = [
       ['对照：普通一句台词', null, { who: 'c', k: 'say', txt: '普通一句话。' }, {}],
+      /* ⚠️ 说话人必须是**别人**（c2），不能用 c —— c 正好等于 th.pk.as，会走 app3_chat 的
+         「你扮演这个人」分支（L181），那条分支根本不发 `.mquick`，于是「去按钮」永远命中 0。
+         第一版就是这么红的：红在样例选错，不在层死了。 */
+      ['去快捷按钮 · 普通台词', 'app16_story2.js#mquick', { who: 'c2', k: 'say', txt: '普通一句话。' }, {}],
       ['行内 *动作* 高亮', 'app16_story2.js', { who: 'c', k: 'say', txt: '*把他拉近* 别走。' }, {}],
       ['（舞台指令）改入参', 'app34_hints.js', { who: 'c', k: 'say', pk: 1, txt: '（他把杯子挪开）我在。' }, {}],
       ['付款行 · 没说出口的话', 'app35_pay.js', { who: 'me', k: 'say', txt: '我选这个。', rthink: '其实我想说……' }, { _snapId: 1 }],
@@ -84,21 +90,47 @@ setTimeout(function () {
       ['未接来电', 'app20_fx_booth.js', { who: 'c', k: 'missed', txt: '未接来电' }, {}],
       ['撤回', 'app37_hooks.js', { who: 'c', k: 'xrecall', rw: 'c', txt: '撤回' }, {}],
       ['拒绝', 'app42_decline.js', { who: 'c', k: 'declined', cid: 'c', txt: '拒绝' }, {}],
-      ['视觉小说行', 'app96_social.js', { who: 'c', k: 'vn96', txt: '视觉小说行' }, {}]
+      ['视觉小说行', 'app96_social.js', { who: 'c', k: 'vn96', txt: '视觉小说行' }, {}],
+      /* —— 第 3 步：条件型认领层（box / scene / intro / event / act / think / say / mono / x* / item101）—— */
+      ['块里有台词（box）', 'app16_story2.js#kinds', { who: 'c', k: 'box', parts: [{ who: 'c', k: 'say', txt: '块里的台词。' }] }, {}],
+      ['场景卡（scene）', 'app16_story2.js#kinds', { who: 'sys', k: 'scene', place: '后巷', time: '夜里' }, {}],
+      ['开场介绍（intro）', 'app16_story2.js#kinds', { who: 'sys', k: 'intro' }, {}],
+      ['剧情事件卡（event）', 'app16_story2.js#pk', { who: 'sys', k: 'event', icon: '⚡', title: '停电', txt: '整层楼黑下来。' }, {}],
+      ['玩家的动作行', 'app16_story2.js#pk', { who: 'me', k: 'act', txt: '我抬手挡住灯。' }, {}],
+      ['玩家的心声行', 'app16_story2.js#pk', { who: 'me', k: 'think', txt: '我刚才不该那么说。' }, {}],
+      ['别人说话 · 剧本模式成气泡', 'app17_custom.js', { who: 'c2', k: 'say', pk: 1, txt: '他把杯子挪开。' }, {}],
+      ['我自己的剧本台词 · 右手气泡', 'app26_turns.js', { who: 'c', k: 'say', pk: 1, txt: '剧本里我自己的台词。' }, {}],
+      ['内心独白卡（mono）', 'app19_bgm.js', { who: 'sys', k: 'mono', t: [['c', '他心里其实没底。']] }, {}],
+      ['章节标题（xtitle）', 'app23_heir.js', { who: 'sys', k: 'xtitle', t: '第三章' }, {}],
+      ['遗产金额 · 已解锁（交给内层）', 'app23_heir.js', { who: 'sys', k: 'xmoney', from: '$1.1B', to: '$4.2B', label: '今天', open: 1 }, {}],
+      ['遗产金额 · 未解锁封口', 'app24_gl.js', { who: 'sys', k: 'xmoney', from: '$1.1B', to: '$4.2B', label: '今天' }, {}],
+      ['旁白换人称（扮演别人）', 'app94_official2.js', { who: 'n', k: 'say', txt: '你推开门。' }, {}, { you94: 'c2' }],
+      ['捡到东西（item101）', 'app101_you.js', { who: 'sys', k: 'item101', n: '旧钥匙', d: '铜的，很旧', ic: '🗝' }, {}]
     ];
 
     var outP = [];
     for (var p = 0; p < PROBES.length; p++) {
       var name = PROBES[p][0], layer = PROBES[p][1], m = PROBES[p][2], patch = PROBES[p][3] || {};
+      var wpatch = PROBES[p][4] || null;
       var th = {
         id: 'probe', wid: 'w_snap', cast: ['c'], msgs: [m],
         pk: { as: 'c', ch: 1, q: [], stop: null, picks: {} },
         love: { c: 10 }, addr: null, said: []
       };
       Object.keys(patch).forEach(function (k) { th[k] = patch[k] });
+      var wd0 = w.wd;
+      if (wpatch) w.wd = function () {
+        var x = wd0.apply(this, arguments);
+        if (x) Object.keys(wpatch).forEach(function (k) { x[k] = wpatch[k] });
+        return x;
+      };
       var before = hitMap(), html = '';
-      try { html = String(w.msgHTML(m, 0, th) || '') } catch (e) { html = 'ERR ' + (e && e.message) }
-      outP.push({ name: name, layer: layer, fired: delta(before, hitMap()), html: html.slice(0, 500) });
+      try { html = String(w.msgHTML(m, 0, th) || '') }
+      catch (e) { html = 'ERR ' + (e && e.message) }
+      finally { if (wpatch) w.wd = wd0 }
+      /* 1200 而不是 500：app3_chat 把 `.mquick` 一排按钮放在**行末**，
+         截太短会让「不该出现 mquick」这条因为截断而假绿。 */
+      outP.push({ name: name, layer: layer, fired: delta(before, hitMap()), html: html.slice(0, 1200) });
     }
 
     probe.textContent = 'MSGKIND_JSON:' + JSON.stringify({

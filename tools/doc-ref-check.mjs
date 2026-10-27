@@ -38,10 +38,17 @@ const run = (c) => { try { return execFileSync(process.execPath, c, { encoding: 
 const patch = run(['tools/patch-registry.mjs', '--check']);
 const m = /(\d+) 函数 \/ (\d+) 处/.exec(patch);
 if (m) {
-  const sites = Number(m[2]);
-  const claimed = Number((/猴补丁\s+148 个函数 \/ (\d+) 处/.exec(doc) || [])[1] || 0);
-  console.log('  猴补丁实测 ' + sites + ' · 文档写 ' + claimed + (sites === claimed ? ' ✓' : ' ✗ 过期'));
-  if (sites !== claimed) bad++;
+  const fns = Number(m[1]), sites = Number(m[2]);
+  /* ⚠️ 2026-10-27：这里原来把**函数个数**写死在正则里（`猴补丁\s+148 个函数 \/ (\d+) 处`），
+     于是函数数一变（147）就解析不到，报出「文档写 0」—— 一条会误报的判据。
+     现在两个数都解析、都核；解析不到就是 0 ⇒ 照样红，不会静默放过。 */
+  const dm = /猴补丁\s+(\d+) 个函数 \/ (\d+) 处/.exec(doc);
+  const cf = Number((dm || [])[1] || 0), cs = Number((dm || [])[2] || 0);
+  const ok = fns === cf && sites === cs;
+  console.log('  猴补丁实测 ' + fns + ' 函数 / ' + sites + ' 处 · 文档写 ' + cf + ' 函数 / ' + cs + ' 处' + (ok ? ' ✓' : ' ✗ 过期'));
+  if (!ok) bad++;
+} else {
+  console.log('  · 读不到 patch-registry 的读数（跳过猴补丁一项）：' + patch.slice(0, 60));
 }
 
 /* ③b 空 catch 存量同样要对得上（文档写数字、代码是事实，两边不一致就红） */

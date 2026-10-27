@@ -77,9 +77,10 @@ boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx" data-mi="'+i+'
 const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
-/* plain story lines use the same bubble as lines with context */
-const _msgHTML9=msgHTML;
-msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return _msgHTML9(m,i,th)};
+/* plain story lines use the same bubble as lines with context
+   2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app26 共有 say：这一层是**内层**，
+   条件是「剧本模式 + 说话的不是你（也不是 me）」；「就是你」那一支在外层 app26 —— 接力，不是抢。 */
+MSGKIND.inline("app17_custom.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return next(m,i,th)});
 
 /* ================= games really feed the story =================
    1) the result of a game is written into the lines that follow ({bpm}, {mine}, {score} are filled with what you actually got)

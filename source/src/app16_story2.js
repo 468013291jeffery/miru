@@ -98,13 +98,18 @@ function introHTML(th){const w=wd(th.wid);let I=Lz(w.pack.intro)||{};if(th&&th.p
    '<div><span class="lg-ev">⚡ '+t("st3.lgEv")+'</span><em>'+t("st3.lgEvD")+'</em></div></div></div></div>'}
 function introSheet(wid){const th=S.threads[curT];if(!th||!wd(wid).pack.intro)return;sheet(introHTML(th))}
 
-/* message rendering: new kinds + no per-line speaker/share buttons */
-const _msgHTML2=msgHTML;
-msgHTML=function(m,i,th){
+/* message rendering: new kinds + no per-line speaker/share buttons
+   2026-10-27：这里原来一个函数干两件事，现在拆成两层登记（链位置逐字不变：先 post 后 inline）——
+     · 删掉每行右侧的 🔊/🖼/📤 一排（app3_chat 还在发它）= **后处理**：拿到内层 HTML 再改
+     · box / scene / intro = **认领**
+   拆开的好处：「去按钮」这一件是可数的（以前混在认领层里，hit 永远看不见）。 */
+MSGKIND.post("app16_story2.js#mquick",function(h){
+ return h.replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")});
+MSGKIND.inline("app16_story2.js#kinds",["box","scene","intro"],function(m,i,th,next){
  if(m.k==="box")return boxHTML(m,i,th);
  if(m.k==="scene")return '<div class="m-scene" data-mi="'+i+'"><span>📍 '+esc(m.place)+'</span>'+(m.time?'<em>'+esc(m.time)+'</em>':'')+'</div>';
  if(m.k==="intro")return introHTML(th);
- return _msgHTML2(m,i,th).replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")};
+ return next(m,i,th)});
 
 /* 5) the panel lives INSIDE the conversation (choices look like replies), not as a big box over the screen */
 appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
@@ -200,13 +205,14 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
 PKREG.add("app16_story2.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   appendMsg(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||"",at:Date.now()});try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
  return next(th,b)});;
-const _msgHTML3=msgHTML;
-msgHTML=function(m,i,th){
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记。三个认领：event 无条件；
+   act / think 只认「你扮演的那个人」（who==="me" 且本局有 pk）—— 别人做的动作不归这里。 */
+MSGKIND.inline("app16_story2.js#pk",["event","act","think"],function(m,i,th,next){
  if(m.k==="event")return '<div class="m-event" data-mi="'+i+'"><i>'+esc(m.icon)+'</i><b>'+esc(m.title)+'</b>'+(m.txt?'<span>'+esc(m.txt)+'</span>':'')+'</div>';
  const isPkMe=m.who==="me"&&th&&th.pk;
  if(isPkMe&&m.k==="act")return '<div class="m-act me" data-mi="'+i+'"><small class="mt act">✱ '+t("st3.yourAct")+'</small>'+esc(m.txt)+'</div>';
  if(isPkMe&&m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small class="mt think">💭 '+t("st3.yourThink")+'</small>'+esc(m.txt)+'</div>';
- return _msgHTML3(m,i,th)};
+ return next(m,i,th)});
 boxHTML=function(m,i,th){return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p class="bn">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
   return p.k==="think"?'<p class="bth"><span class="mt think">💭 '+esc(nm)+' · '+t("st2.thinks")+'</span>'+esc(p.txt)+'</p>':'<p class="bac"><span class="mt act">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}).join("")+'</div>'};
 

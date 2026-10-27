@@ -1505,7 +1505,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="62b7452e04ed 2026-10-27T07:29Z";
+window.MIRU_BUILD="d80c888c5918 2026-10-27T07:47Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -8024,13 +8024,18 @@ function introHTML(th){const w=wd(th.wid);let I=Lz(w.pack.intro)||{};if(th&&th.p
    '<div><span class="lg-ev">⚡ '+t("st3.lgEv")+'</span><em>'+t("st3.lgEvD")+'</em></div></div></div></div>'}
 function introSheet(wid){const th=S.threads[curT];if(!th||!wd(wid).pack.intro)return;sheet(introHTML(th))}
 
-/* message rendering: new kinds + no per-line speaker/share buttons */
-const _msgHTML2=msgHTML;
-msgHTML=function(m,i,th){
+/* message rendering: new kinds + no per-line speaker/share buttons
+   2026-10-27：这里原来一个函数干两件事，现在拆成两层登记（链位置逐字不变：先 post 后 inline）——
+     · 删掉每行右侧的 🔊/🖼/📤 一排（app3_chat 还在发它）= **后处理**：拿到内层 HTML 再改
+     · box / scene / intro = **认领**
+   拆开的好处：「去按钮」这一件是可数的（以前混在认领层里，hit 永远看不见）。 */
+MSGKIND.post("app16_story2.js#mquick",function(h){
+ return h.replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")});
+MSGKIND.inline("app16_story2.js#kinds",["box","scene","intro"],function(m,i,th,next){
  if(m.k==="box")return boxHTML(m,i,th);
  if(m.k==="scene")return '<div class="m-scene" data-mi="'+i+'"><span>📍 '+esc(m.place)+'</span>'+(m.time?'<em>'+esc(m.time)+'</em>':'')+'</div>';
  if(m.k==="intro")return introHTML(th);
- return _msgHTML2(m,i,th).replace(/<div class="mquick[^"]*">(?:<button[^>]*>[^<]*<\/button>)*<\/div>/g,"")};
+ return next(m,i,th)});
 
 /* 5) the panel lives INSIDE the conversation (choices look like replies), not as a big box over the screen */
 appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
@@ -8126,13 +8131,14 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
 PKREG.add("app16_story2.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   appendMsg(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||"",at:Date.now()});try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
  return next(th,b)});;
-const _msgHTML3=msgHTML;
-msgHTML=function(m,i,th){
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记。三个认领：event 无条件；
+   act / think 只认「你扮演的那个人」（who==="me" 且本局有 pk）—— 别人做的动作不归这里。 */
+MSGKIND.inline("app16_story2.js#pk",["event","act","think"],function(m,i,th,next){
  if(m.k==="event")return '<div class="m-event" data-mi="'+i+'"><i>'+esc(m.icon)+'</i><b>'+esc(m.title)+'</b>'+(m.txt?'<span>'+esc(m.txt)+'</span>':'')+'</div>';
  const isPkMe=m.who==="me"&&th&&th.pk;
  if(isPkMe&&m.k==="act")return '<div class="m-act me" data-mi="'+i+'"><small class="mt act">✱ '+t("st3.yourAct")+'</small>'+esc(m.txt)+'</div>';
  if(isPkMe&&m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small class="mt think">💭 '+t("st3.yourThink")+'</small>'+esc(m.txt)+'</div>';
- return _msgHTML3(m,i,th)};
+ return next(m,i,th)});
 boxHTML=function(m,i,th){return '<div class="m-box" data-mi="'+i+'">'+m.parts.map(p=>{if(p.who==="n")return '<p class="bn">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
   return p.k==="think"?'<p class="bth"><span class="mt think">💭 '+esc(nm)+' · '+t("st2.thinks")+'</span>'+esc(p.txt)+'</p>':'<p class="bac"><span class="mt act">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}).join("")+'</div>'};
 
@@ -8311,9 +8317,10 @@ boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx" data-mi="'+i+'
 const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
-/* plain story lines use the same bubble as lines with context */
-const _msgHTML9=msgHTML;
-msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return _msgHTML9(m,i,th)};
+/* plain story lines use the same bubble as lines with context
+   2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app26 共有 say：这一层是**内层**，
+   条件是「剧本模式 + 说话的不是你（也不是 me）」；「就是你」那一支在外层 app26 —— 接力，不是抢。 */
+MSGKIND.inline("app17_custom.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&!(th&&th.pk&&m.who===th.pk.as))return boxHTML({k:"box",parts:[],say:{who:m.who,txt:m.txt}},i,th);return next(m,i,th)});
 
 /* ================= games really feed the story =================
    1) the result of a game is written into the lines that follow ({bpm}, {mine}, {score} are filled with what you actually got)
@@ -8664,11 +8671,11 @@ Object.assign(I18N.en,{"bgm.on":"Music on","bgm.off":"Music off"});Object.assign
 PKREG.add("app19_bgm.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="mono"){th.pk.q.shift();const L=(b[2]||{}).t||[];
   if(L.length){appendMsg(th,{who:"sys",k:"mono",t:L,at:Date.now()})}return true}return next(th,b)});;
 function monoFree(){const d=today();if((S.monoDay||{}).d!==d)S.monoDay={d,n:0};return S.monoDay.n<2}
-const _msgHTML19=msgHTML;
-msgHTML=function(m,i,th){if(!m||m.k!=="mono")return _msgHTML19(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 mono）。渲染逻辑逐字未改。 */
+MSGKIND.inline("app19_bgm.js",["mono"],function(m,i,th,next){if(!m||m.k!=="mono")return next(m,i,th);
  return '<div class="m-mono'+(m.open?" open":"")+'"><div class="mmh">💜 '+t("mono.h")+'</div>'+
   (m.open?m.t.filter(([w])=>ch(w)).map(([w,x])=>'<p><b>'+esc(first(ch(w).n))+'：</b>'+esc(x)+'</p>').join(""):
-   '<div class="mmlock">'+m.t.filter(([w])=>ch(w)).map(([w])=>avatar(w,26)).join("")+'<span>'+t("mono.peek")+'</span></div><button class="mmbtn" data-mono="'+i+'">'+(S.plus?t("mono.vip"):"💎 1 · "+t("mono.read"))+'</button>')+'</div>'};
+   '<div class="mmlock">'+m.t.filter(([w])=>ch(w)).map(([w])=>avatar(w,26)).join("")+'<span>'+t("mono.peek")+'</span></div><button class="mmbtn" data-mono="'+i+'">'+(S.plus?t("mono.vip"):"💎 1 · "+t("mono.read"))+'</button>')+'</div>'});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-mono]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mono];if(!m||m.open)return;
  if(!S.plus&&!spend(1,"line"))return;m.open=true;save();renderChat()});
 Object.assign(I18N.en,{"mono.h":"Inner monologue","mono.peek":"What they're really thinking right now","mono.free":"Read (free today)","mono.vip":"Read · members free","mono.read":"Read"});
@@ -9213,13 +9220,14 @@ document.addEventListener("click",e=>{const x=e.target.closest("[data-grp]");if(
 Object.assign(FEATK,{feed:{ic:"📹",run:()=>feedRun(),t:"pk2.feedH"},phone:{ic:"📱",run:()=>phoneRun(),t:"pk2.phH"},match:{ic:"💞",run:()=>matchRun(),t:"pk2.mqH"},group:{ic:"👥",run:()=>groupRun(),t:"pk2.grH"}});
 /* ---------- directives with their own cards ---------- */
 PKREG.add("app23_heir.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&["title","money","post","anchor"].includes(b[1])){th.pk.q.shift();appendMsg(th,Object.assign({who:"sys",k:"x"+b[1],at:Date.now()},JSON.parse(JSON.stringify(b[2]||{}))));return true}return next(th,b)});;
-const _msgHTML23=msgHTML;
-msgHTML=function(m,i,th){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return _msgHTML23(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 x* 四种）。⚠️ 与 app24 共有 xmoney：
+   这一层是**内层**，只在「已解锁 / 会员」时被叫到；封口那一支由外层的 app24 直接答。 */
+MSGKIND.inline("app23_heir.js",["xtitle","xmoney","xpost","xanchor"],function(m,i,th,next){if(!m||!/^x(title|money|post|anchor)$/.test(m.k||""))return next(m,i,th);
  if(m.k==="xtitle")return '<div class="xtitle"><b>'+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
  if(m.k==="xanchor")return '<div class="xanchor"><b>⚓ '+esc(L(m.t))+'</b>'+(m.sub?'<span>'+esc(L(m.sub))+'</span>':'')+'</div>';
  if(m.k==="xmoney")return '<div class="xmoney" data-mi="'+i+'"><div class="xm1"><small>'+t("pk2.yday")+'</small><s>'+esc(L(m.from))+'</s></div><div class="xm2"><small>'+t("pk2.today")+' · '+esc(L(m.label)||"")+'</small><b class="num" data-count="'+esc(L(m.to))+'">'+esc(L(m.to))+'</b></div>'+(m.welcome?'<div class="xmw">'+esc(L(m.welcome))+'</div>':'')+'</div>';
  if(m.k==="xpost"){const c=(L(m.cm)||m.cm||[]);return '<div class="xpost"><div class="xph"><b>'+esc(L(m.handle))+'</b><small>🔥 '+t("pk2.trend")+'</small></div><p>'+esc(L(m.txt))+'</p>'+(m.img?'<div class="xpi" style="background-image:url('+(SCENE_FILES[m.img]||"")+')"></div>':'')+
-  '<div class="xpm">♥ '+esc(String(m.likes||"12.4K"))+' · 💬 '+c.length+'</div>'+c.slice(0,4).map(([n,x])=>'<div class="xpc"><b>'+esc(n)+'</b> '+esc(x)+'</div>').join("")+'<button class="xpsave" data-xpsave="'+i+'">'+(m.saved?"✓ "+t("pk2.saved"):"＋ "+t("pk2.saveMom"))+'</button></div>'}};
+  '<div class="xpm">♥ '+esc(String(m.likes||"12.4K"))+' · 💬 '+c.length+'</div>'+c.slice(0,4).map(([n,x])=>'<div class="xpc"><b>'+esc(n)+'</b> '+esc(x)+'</div>').join("")+'<button class="xpsave" data-xpsave="'+i+'">'+(m.saved?"✓ "+t("pk2.saved"):"＋ "+t("pk2.saveMom"))+'</button></div>'}});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xpsave]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xpsave];if(!m||m.saved)return;m.saved=1;
  const p={id:"m"+Date.now(),txt:L(m.txt),img:SCENE_FILES[m.img]||null,at:Date.now(),likes:0,cm:[],day:today()};S.moments=[p].concat(S.moments||[]).slice(0,40);save();if(typeof addComments==="function")addComments(p,[mainOf(th)].filter(Boolean));renderChat();toast(t("mom.posted"))});
 /* money counter animation */
@@ -9389,9 +9397,12 @@ document.addEventListener("click",e=>{let x;
 
 /* ===== inheritance reveal is a paid moment: the number stays sealed until you pay 💎2 (members see it free) ===== */
 const MONEY_PRICE=2;
-const _msgHTML24=msgHTML;msgHTML=function(m,i,th){if(!m||m.k!=="xmoney"||m.open||S.plus)return _msgHTML24(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记。⚠️ xmoney **两个层**认领：
+   这一层在最外层、只答「还没解锁且不是会员」；解锁后它把活交回内层，由 app23 画正常金额。
+   静态扫源码的图漏记过这一条（它的条件是取反写法 m.k!=="xmoney"），运行时认领表补上了。 */
+MSGKIND.inline("app24_gl.js",["xmoney"],function(m,i,th,next){if(!m||m.k!=="xmoney"||m.open||S.plus)return next(m,i,th);
  return '<div class="xmoney sealed" data-mi="'+i+'"><div class="xm1"><small>'+t("pk2.yday")+'</small><s>'+esc(Lz(m.from)||m.from)+'</s></div><div class="xm2"><small>'+t("pk2.today")+' · '+esc(Lz(m.label)||m.label||"")+'</small><b class="num xmblur">$?.?B+</b></div>'+
-  '<button class="xmopen" data-xmopen="'+i+'">🔓 '+t("mo.open",{n:MONEY_PRICE})+'</button><p class="xmhint">'+t("mo.hint")+'</p></div>'};
+  '<button class="xmopen" data-xmopen="'+i+'">🔓 '+t("mo.open",{n:MONEY_PRICE})+'</button><p class="xmhint">'+t("mo.hint")+'</p></div>'});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xmopen]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xmopen];if(!m||m.open)return;
  if(!S.plus&&!spend(MONEY_PRICE,"event"))return;m.open=1;save();renderChat();try{navigator.vibrate&&navigator.vibrate([30,40,60])}catch(_){}
  if(typeof glFx!=="undefined"&&th.pk&&curT===th.id){const prev=th.pk.fx;fxSet(th,"godrays")}});
@@ -9468,11 +9479,14 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];const isBox=L&&L.k
  if(m&&isNarr(m)&&isBox&&L.say){const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
   appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});return}
  return _pkAppend26(th,m)};
-/* scripted lines of the character you play: the same right-hand bubble as the lines you choose */
-const _msgHTML26=msgHTML;
-msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
+/* scripted lines of the character you play: the same right-hand bubble as the lines you choose
+   2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app17 共有 say，条件互斥：
+   这一层（外层）认「剧本模式 + 说话的就是你扮演的人」→ 右手气泡；别人说的交给内层 app17。
+   ⚠️ 这里的 `.bub` 是**产出**（它自己写这个 div），不是选择器 —— 与 app16/app18 那两处失效的
+   「找 `.bub`」不同族，别一起删。 */
+MSGKIND.inline("app26_turns.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
   return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+fmtMix(esc(m.txt))+'</div></div>'}
- return _msgHTML26(m,i,th)};
+ return next(m,i,th)});
 Object.assign(I18N.en,{"pk26.you":"you"});Object.assign(I18N.zh,{"pk26.you":"你"});
 
 /* ---- opening short for THE HEIR: the 72-hours-later warehouse cold open now lives here, not in the chat ---- */
@@ -16066,10 +16080,11 @@ function you94Swap(th, txt) {
     return txt.replace(/\bYou're\b/g, n + " is").replace(/\byou're\b/g, n + " is").replace(/\bYour\b/g, n + "'s").replace(/\byour\b/g, n + "'s").replace(/\bYou\b/g, n).replace(/\byou\b/g, n);
   } catch (_) { return txt; }
 }
-(function () { const _mh = msgHTML; msgHTML = function (m, i, th) {
+(function () { /* 2026-10-27：msgHTML 包装 → MSGKIND 登记（wrap 类：换入参再交给内层）。逻辑逐字未改。 */
+  MSGKIND.wrap("app94_official2.js", function (m, i, th) {
   if (m && th && th.pk && (m.who === "n" || m.k === "act") && typeof m.txt === "string") { const s = you94Swap(th, m.txt); if (s !== m.txt) m = Object.assign({}, m, { txt: s }); }
   if (m && th && th.pk && m.k === "box" && Array.isArray(m.parts)) { const P = m.parts.map(p => p && typeof p.txt === "string" && (!p.who || p.who === "n") ? Object.assign({}, p, { txt: you94Swap(th, p.txt) }) : p); m = Object.assign({}, m, { parts: P }); }
-  return _mh.call(this, m, i, th); }; })();
+  return m; }); })();
 /* installs made before v5.9.4 are rebuilt once so they get the new roles */
 const _installWork96 = installWork;
 installWork = async function (id) {
@@ -17945,14 +17960,14 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
       return next.apply(this, arguments);
     });;
   }
-  if (typeof msgHTML === "function") {
-    const _mh = msgHTML;
-    msgHTML = function (m, i, th) {
-      if (!m || m.k !== "item101") return _mh.apply(this, arguments);
+  if (window.MSGKIND) {
+    /* 2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 item101）。渲染逻辑逐字未改。 */
+    MSGKIND.inline("app101_you.js", ["item101"], function (m, i, th, next) {
+      if (!m || m.k !== "item101") return next(m, i, th);
       return '<div class="it101' + (m.open ? " open" : "") + '" data-mi="' + i + '"><button class="it101c" data-it101="' + i + '">' +
         '<span class="it101f"><i>' + esc(m.ic) + '</i><b>' + esc(zh() ? "你发现了：" : "You found: ") + esc(m.n) + '</b><small>' + esc(zh() ? "点一下，拿起来看看" : "Tap to pick it up") + '</small></span>' +
         '<span class="it101b"><i>' + esc(m.ic) + '</i><b>' + esc(m.n) + '</b><em>' + esc(m.d) + '</em><small>' + esc(zh() ? "✓ 已收进随身物品" : "✓ Added to your things") + '</small></span></button></div>';
-    };
+    });
   }
   document.addEventListener("click", e => {
     const x = e.target.closest("[data-it101]"); if (!x) return;

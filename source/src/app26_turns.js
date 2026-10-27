@@ -16,11 +16,14 @@ pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];const isBox=L&&L.k
  if(m&&isNarr(m)&&isBox&&L.say){const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
   appendMsg(th,{who:"n",k:"box",pk:1,parts:[part],txt:m.txt,last:m.txt,lastWho:m.who,at:Date.now()});return}
  return _pkAppend26(th,m)};
-/* scripted lines of the character you play: the same right-hand bubble as the lines you choose */
-const _msgHTML26=msgHTML;
-msgHTML=function(m,i,th){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
+/* scripted lines of the character you play: the same right-hand bubble as the lines you choose
+   2026-10-27：msgHTML 包装 → MSGKIND 登记（认领 say）。⚠️ 与 app17 共有 say，条件互斥：
+   这一层（外层）认「剧本模式 + 说话的就是你扮演的人」→ 右手气泡；别人说的交给内层 app17。
+   ⚠️ 这里的 `.bub` 是**产出**（它自己写这个 div），不是选择器 —— 与 app16/app18 那两处失效的
+   「找 `.bub`」不同族，别一起删。 */
+MSGKIND.inline("app26_turns.js",["say"],function(m,i,th,next){if(m&&m.pk&&m.k==="say"&&th&&th.pk&&m.who===th.pk.as&&ch(m.who)){const c=ch(m.who);
   return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+fmtMix(esc(m.txt))+'</div></div>'}
- return _msgHTML26(m,i,th)};
+ return next(m,i,th)});
 Object.assign(I18N.en,{"pk26.you":"you"});Object.assign(I18N.zh,{"pk26.you":"你"});
 
 /* ---- opening short for THE HEIR: the 72-hours-later warehouse cold open now lives here, not in the chat ---- */

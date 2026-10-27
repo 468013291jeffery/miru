@@ -155,9 +155,12 @@ document.addEventListener("click",e=>{let x;
 
 /* ===== inheritance reveal is a paid moment: the number stays sealed until you pay 💎2 (members see it free) ===== */
 const MONEY_PRICE=2;
-const _msgHTML24=msgHTML;msgHTML=function(m,i,th){if(!m||m.k!=="xmoney"||m.open||S.plus)return _msgHTML24(m,i,th);
+/* 2026-10-27：msgHTML 包装 → MSGKIND 登记。⚠️ xmoney **两个层**认领：
+   这一层在最外层、只答「还没解锁且不是会员」；解锁后它把活交回内层，由 app23 画正常金额。
+   静态扫源码的图漏记过这一条（它的条件是取反写法 m.k!=="xmoney"），运行时认领表补上了。 */
+MSGKIND.inline("app24_gl.js",["xmoney"],function(m,i,th,next){if(!m||m.k!=="xmoney"||m.open||S.plus)return next(m,i,th);
  return '<div class="xmoney sealed" data-mi="'+i+'"><div class="xm1"><small>'+t("pk2.yday")+'</small><s>'+esc(Lz(m.from)||m.from)+'</s></div><div class="xm2"><small>'+t("pk2.today")+' · '+esc(Lz(m.label)||m.label||"")+'</small><b class="num xmblur">$?.?B+</b></div>'+
-  '<button class="xmopen" data-xmopen="'+i+'">🔓 '+t("mo.open",{n:MONEY_PRICE})+'</button><p class="xmhint">'+t("mo.hint")+'</p></div>'};
+  '<button class="xmopen" data-xmopen="'+i+'">🔓 '+t("mo.open",{n:MONEY_PRICE})+'</button><p class="xmhint">'+t("mo.hint")+'</p></div>'});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xmopen]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.xmopen];if(!m||m.open)return;
  if(!S.plus&&!spend(MONEY_PRICE,"event"))return;m.open=1;save();renderChat();try{navigator.vibrate&&navigator.vibrate([30,40,60])}catch(_){}
  if(typeof glFx!=="undefined"&&th.pk&&curT===th.id){const prev=th.pk.fx;fxSet(th,"godrays")}});
