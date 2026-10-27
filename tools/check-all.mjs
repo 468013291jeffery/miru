@@ -40,6 +40,8 @@ const suites = [
   ['css-dead-rules.mjs', ['tools/css-dead-rules.mjs','--check'], true],
   /* 弹层版的对拍：每个具名弹层开一次，HTML 逐字节比 */
   ['sheet-snapshot.mjs', ['tools/sheet-snapshot.mjs','--check'], true],
+  /* 防回潮：具名弹层被包了几层，与基线比（两个方向都红） */
+  ['sheet-census.mjs', ['tools/sheet-census.mjs','--check'], true],
   ['doc-ref-check.mjs', ['tools/doc-ref-check.mjs'], true],
   ['pkdirective-check.mjs', ['tools/pkdirective-check.mjs'], true],
   ['on-assign-check.mjs', ['tools/on-assign-check.mjs','--check'], true],

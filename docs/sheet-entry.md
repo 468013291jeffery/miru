@@ -135,6 +135,34 @@ cardSheet 630  · startSheet 1844 · paySheet-promo 2387   （字符数）
 **射程（写在明处）**：只覆盖上面 7 个弹层、且只用一个「带 pk 的 solo 线程」造场景。
 需要真实消息对象/真实章节的（`imgSheet` 之类）**不在快照里** —— 别把它读成"弹层都验过了"。
 
+## 四之二、memSheet 与 m2Sheet：量完了，**不该搬**（2026-10-27）
+
+原以为「同一个模式铺到第二个弹层」。逐层读完，**形状不一样**：
+
+| 弹层 | 层 | 锚点 | 位置 |
+|---|---|---|---|
+| memSheet | `app12_beats.js:40` | `.sheet .memlay` | `afterend` |
+| memSheet | `app77_memory2.js:170` | `.sheet .memlay` | `afterend` ← 与上一行**同锚点** |
+| memSheet | `app88_memcall.js:23` | `.sheet .memtiers` | `afterend` |
+| m2Sheet | `app78_memsync.js:41` | `.m2s .m2off` | `beforebegin` |
+| m2Sheet | `app79_ledger.js:145` | `.m2s` | `beforeend` |
+
+`menuSheet` 那 7 层是**往同一个栈里追加**；这 5 层是**各自吊在弹层内部某个已有块的前/后**。
+⇒ 注册表现在的形状（一个容器 + top/bottom）表达不了「`afterend` 某个子元素」，硬塞要么加一个
+`selector + where` 参数，要么把语义拧弯。
+
+**判定：不搬。** 理由不是「麻烦」，是**它买不到东西**：
+
+- `menuSheet` 那 7 层之间有顺序耦合（同一位置 `afterbegin`，后加载的插到更前）⇒「一个地方写明
+  顺序」有实际价值；
+- 这 5 层里只有 **`app12` 与 `app77` 同锚点同位置**（都 `afterend` 到 `.memlay`）⇒ `app77` 的块
+  排在 `app12` 之上（还是加载顺序那条规律），但它只有两层、其余三层互不相干
+  ⇒ **记一句话就够，不值得为它加一个参数。**
+
+**留下的判据**（判「一个弹层要不要上注册表」）：
+> **同一个容器 + ≥2 层 + 位置语义让最终顺序取决于加载顺序** —— 三条全中才值得；
+> 各层吊在不同锚点上的，读一遍锚点表就够了，别硬套 menu 的形状。
+
 ## 五、附带读数：32 处绕过入口
 
 它们不调用 `sheet()`，而是自己去摸弹层内部结构（`.sheet-card` / `.sheet .plans` / `$("#cards")`）。

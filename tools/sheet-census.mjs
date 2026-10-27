@@ -118,4 +118,34 @@ console.log('④ 直连 `sheet(` 调用点：' + directSheetCalls.length + ' 处
 const top = {};
 for (const x of directSheetCalls) top[x.f] = (top[x.f] || 0) + 1;
 console.log('   最集中的：' + Object.entries(top).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([f, n]) => f + ' ×' + n).join(' · '));
+
+/* ===== 防回潮闸（2026-10-27）=====
+   `menuSheet` 的 7 层刚搬进 `SHEET` 注册表、只剩 1 个包装。**这条闸守的就是它别再长回去**。
+   判据**两个方向都红**：新增一层（数变大）或基线里那一层没了（数变小，说明账过期了）。
+   为什么不用「≤ 基线」的宽松式：那样「搬走 1 层 + 新增 1 层」会被读成通过。 */
+const BASE = path.join(ROOT, 'tools', 'sheet-wrappers-baseline.json');
+const cur = {};
+for (const [name, v] of named) if (v.patches.length) cur[name] = v.patches.length;
+
+if (process.argv.includes('--freeze')) {
+  fs.writeFileSync(BASE, JSON.stringify({ v: 1, at: new Date().toISOString(), counts: cur }, null, 1) + '\n', 'utf8');
+  console.log('\n✓ 基线已写：tools/sheet-wrappers-baseline.json —— ' + Object.keys(cur).length + ' 个被包过的弹层');
+  process.exit(0);
+}
+
+if (process.argv.includes('--check')) {
+  if (!fs.existsSync(BASE)) { console.log('\n✗ 没有基线（先跑 --freeze）'); process.exit(2); }
+  const base = JSON.parse(fs.readFileSync(BASE, 'utf8')).counts || {};
+  const bad = [];
+  for (const n of Object.keys(cur)) {
+    const b = base[n] || 0;
+    if (cur[n] > b) bad.push(n + ' 新增了包装：' + b + ' → ' + cur[n] + '（要么搬进 SHEET 注册表，要么 --freeze 说明理由）');
+  }
+  for (const n of Object.keys(base)) {
+    const c = cur[n] || 0;
+    if (c < base[n]) bad.push(n + ' 少了一层：基线 ' + base[n] + ' → 现在 ' + c + '（账过期了，--freeze 一下）');
+  }
+  if (bad.length) { console.log('\n✗ 包装层数不符 ' + bad.length + ' 处：'); for (const x of bad) console.log('   ' + x); process.exit(1); }
+  console.log('\n✓ 包装层数未回潮：' + Object.keys(base).length + ' 个被包过的弹层与基线一致');
+}
 process.exit(0);
