@@ -656,7 +656,17 @@ document.addEventListener("click",e=>{let x;
   v=v.trim(); if(!v)return;
   x.classList.add("sel");
   setSugg([]);
+  /* 2026-10-27 Ann：「点一项，还是什么都不显示」。⇒ 不允许再出现「点了没反应」这种无信息状态：
+     300ms 后如果对话一条都没涨，就当场说出来（并提示导出存档），别让她对着屏幕猜。 */
+  const _n0=(S.threads[curT]&&S.threads[curT].msgs)?S.threads[curT].msgs.length:-1;
   doSend(v,m,false);
+  setTimeout(()=>{try{
+    const th2=S.threads[curT];const n1=(th2&&th2.msgs)?th2.msgs.length:-1;
+    if(n1===_n0){
+      const why=(typeof unitsLeft==="function"&&typeof aiCost==="function"&&unitsLeft()<aiCost())?"（额度不够，可能弹了充值面板）":"";
+      toast(S.lang==="zh"?("这句没进对话"+why+" —— 麻烦导出一次存档，我按记录查"):("That line didn't land"+why+" — export a save so I can trace it"));
+    }
+  }catch(_){}},300);
   return}
  if(e.target.closest("[data-ideas]")){const th=S.threads[curT];if(sugg.length){setSugg(sugg);return}
   const lang=CL();setSugg([0,1,2].map(()=>pickNR(SUGG_FB[lang],"sg")));return}
