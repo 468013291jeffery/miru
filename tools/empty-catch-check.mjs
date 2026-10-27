@@ -24,9 +24,16 @@ const RE = /catch\s*(?:\([^)]*\))?\s*\{((?:\s|\/\/[^\n]*|\/\*[\s\S]*?\*\/)*)\}/g
    它那个空 catch 是设计的一部分（沙箱里没有 soft 时就地吞掉），不该算进债务。 */
 const SHIM = 'function(n,f){try{return f()}catch(e){}}';
 
+/* 显式豁免：**写清理由**才允许有。没有理由的空 catch 一律算债务。 */
+const ALLOW = {
+  // 日志器自己绝不能再抛（否则记日志这件事本身会把页面带崩）；它的健康由 errlog 文件本身证明
+  'app108_errlog.js': '日志器自身的兜底，不允许抛；它的失败由 .browser-errlog.json 是否存在来证明'
+};
+
 const per = {};
 let total = 0;
 for (const f of fs.readdirSync(SRC).filter(x => x.endsWith('.js'))) {
+  if (ALLOW[f]) continue;
   const t = fs.readFileSync(SRC + '/' + f, 'utf8').split(SHIM).join('');
   const n = (t.match(RE) || []).length;
   if (n) { per[f] = n; total += n }
