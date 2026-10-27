@@ -19,7 +19,11 @@ function myDock75() {
     if (rc) rc.style.bottom = on && comp ? (comp.offsetHeight + 10) + "px" : ""; } catch (_) {}
 }
 const _packRefresh75 = packRefresh; packRefresh = function (th) { const r = _packRefresh75.apply(this, arguments); myDock75(); return r; };
-const _renderChat75 = renderChat; renderChat = function () { const r = _renderChat75.apply(this, arguments); myDock75(); return r; };
+/* 2026-10-27：从「包 renderChat」搬成钩子（第三个样板） */
+/* 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） */
+const __body75 = function () { myDock75(); };
+if (window.UI && typeof window.UI.add === "function") window.UI.add("mydock75", __body75);
+else { const _renderChat75 = renderChat; renderChat = function () { const r = _renderChat75.apply(this, arguments); __body75(); return r; }; }
 Object.assign(I18N.zh, { "my.auto": "让 {n} 自动说" });
 Object.assign(I18N.en, { "my.auto": "Auto-speak {n}" });
 (function () {

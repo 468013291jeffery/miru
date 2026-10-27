@@ -427,7 +427,10 @@ function dock97() {
     if (pv || aib) { const row = document.createElement("div"); row.className = "dk97row"; if (pv) row.appendChild(pv); if (aib) row.appendChild(aib); (ai || panel).parentNode === panel && ai ? panel.insertBefore(row, ai) : panel.appendChild(row); }
   } catch (e) { try { console.warn("[dock97]", e); } catch (_) {} }
 }
-{ const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); dock97(); return r; };
+/* 2026-10-27：从「包 renderChat」搬成钩子（第二个样板）。
+   packRefresh 那一层仍保留包装 —— 钩子只在渲染后跑，刷新后也要跑的东西还得另说。 */
+{ if (window.UI && typeof window.UI.add === "function") window.UI.add("dock97", dock97);
+  else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); dock97(); return r; }; }
   const _pr = packRefresh; packRefresh = function () { const r = _pr.apply(this, arguments); dock97(); return r; }; }
 (function () { const st = document.createElement("style"); st.textContent = `
 #pkwrap.dock97{flex:none;align-self:stretch;margin:0;max-height:48vh;overflow-y:auto;background:rgba(12,11,16,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08);border-radius:20px 20px 0 0;padding:12px 12px 6px}
