@@ -209,8 +209,8 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      147 个函数 / 338 处   （当天起点 382 ⇒ −44；最后 9 处是 msgHTML 的 `const _x=msgHTML` 别名，随第 3 步一起退场）
-空 catch    575 处 / 99 个文件    （当天起点 616 ⇒ −41；晚间的 −1 来自 app73 那层把自带空 catch 交给 MSGKIND 统一处理）
+猴补丁      147 个函数 / 331 处   （当天起点 382 ⇒ −51；最后 9 处是 msgHTML 别名、7 处是 menuSheet 的包装）
+空 catch    567 处 / 99 个文件    （当天起点 616 ⇒ −41；晚间的 −1 来自 app73 那层把自带空 catch 交给 MSGKIND 统一处理）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
 消息渲染    20 层 = kind 12 / post 6 / wrap 2（19 处包装，app16 那处拆成两层）· 17 个类型

@@ -235,11 +235,14 @@ document.addEventListener("click", e => { let x;
 /* chapter finished → a nudge to the reading */
 { const _ap = packAfterPick; packAfterPick = function (th) { const r = _ap.apply(this, arguments); try { const n = done96(th); if (n && curT === th.id) setTimeout(() => chg96([["💘", L96("恋爱人格解锁新一项", "A new love-type reading unlocked")]]), 3400); } catch (_) {} return r; }; }
 /* chat menu ⋯: love type · let them reach out */
-{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
-    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r;
-      st.insertAdjacentHTML("afterbegin", (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
-        '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>'); } catch (_) {}
-    return r; }; }
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu", "app96_social.js", "top", function () {
+  try {
+    const th = S.threads[curT]; if (!th) return "";
+    return (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
+      '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>';
+  } catch (_) { return "" }
+});
 /* Me page entry */
 { const _rm = renderMe; renderMe = function (v) { const r = _rm.apply(this, arguments);
     try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".lp96me")) { const at = host.querySelector(".me95"); const h = '<button class="card lp96me" data-lplist96="1"><span style="font-size:26px">💘</span><span class="grow"><b>' + L96("你的恋爱人格", "Your love type") + '</b><span class="xs dim">' + L96("从你在剧里的每个选择，看见你是怎样爱人的", "See how you love, from every choice you've made") + '</span></span>›</button>'; if (at) at.insertAdjacentHTML("beforebegin", h); else host.insertAdjacentHTML("beforeend", h); } } catch (_) {}

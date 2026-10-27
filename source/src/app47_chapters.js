@@ -30,7 +30,8 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-chjump]")){const [wid,n0,as]=x.dataset.chjump.split("|"),n=+n0;const th=S.threads[curT];const picks=th&&th.wid===wid&&th.pk?th.pk.picks:{};closeSheet();packStart(wid,as,n,picks);return}},true);
 /* entry points: the start sheet and the chat menu */
 const _startSheet47=startSheet;startSheet=function(wid,fresh){_startSheet47(wid,fresh);try{const w=wd(wid);if(w&&w.pack){const st=$(".sheet .stack");if(st)st.insertAdjacentHTML("afterend",'<button class="btn btn-g btn-block" style="margin-top:10px" data-chmap="'+wid+'">📖 '+LL("章节目录 · 跳到任意一章","Chapters · jump to any chapter")+'</button>')}}catch(_){}};
-const _menuSheet47=menuSheet;menuSheet=function(){_menuSheet47.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack");if(th&&th.pk&&st)st.insertAdjacentHTML("afterbegin",'<button class="opt" data-chmap="'+th.wid+'"><span class="ic">📖</span><span class="grow"><b>'+LL("章节目录","Chapters")+'</b><span>'+LL("第 "+th.pk.ch+" 章 / 共 "+PCN(wd(th.wid))+" 章 · 跳到任意一章","Chapter "+th.pk.ch+" of "+PCN(wd(th.wid))+" · jump anywhere")+'</span></span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app47_chapters.js","top",function(){try{const th=S.threads[curT];if(!(th&&th.pk))return "";return '<button class="opt" data-chmap="'+th.wid+'"><span class="ic">📖</span><span class="grow"><b>'+LL("章节目录","Chapters")+'</b><span>'+LL("第 "+th.pk.ch+" 章 / 共 "+PCN(wd(th.wid))+" 章 · 跳到任意一章","Chapter "+th.pk.ch+" of "+PCN(wd(th.wid))+" · jump anywhere")+'</span></span></button>'}catch(_){return ""}});
 (function(){const st=document.createElement("style");st.textContent=`
 .chlist{display:flex;flex-direction:column;gap:6px;margin-top:12px;max-height:58vh;overflow:auto}
 .chrow.spch{width:100%;text-align:left;cursor:pointer}.chrow.spch .chl{white-space:nowrap;font-size:12px;font-weight:800;color:#F7D2A8}.chrow.spch .chf{white-space:nowrap}

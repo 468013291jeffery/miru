@@ -78,6 +78,21 @@ closeSheet     app1_core.js:45 · 被包过 1 层（app64_entry.js:62）· 直�
 **有一个实证，不是推的**：上一轮把 `45/47/49/96` 搬进注册表后，**`app79` 的按钮跑到了最前面**
 （快照 diff 直接指出来）。这只有在「`app79` 比它们更晚执行」时成立，与 parts 顺序一致。
 
+### 搬完了（2026-10-27）：7 个 `afterbegin` 全部进注册表
+
+`menuSheet` 现在**只剩 1 个包装**（`app46` 那个「改别人刚建的按钮文字」，它不是加块）。
+7 个 `afterbegin` 各变成一行 `SHEET.add("menu", "<文件>", "top", fn)`，HTML 一字未改。
+
+**判据全过**：`sheet-snapshot --check` → 7 个弹层**逐字节一致**；变异（在 `app11` 那段串里插
+`<!--m11-->`）→ **只有 `menuSheet` 那张红**（2929 → 2939）；`check-all` 41 套全绿；真页面 0 uncaught。
+
+**踩到一个坑，值得单记**：`app112_sheet.js` 第一版排在 `app111_msgkind.js` 之后，而
+`app11_memory.js` 比它更早 —— 于是 app11 注册时 `SHEET` 还不存在，**整包在加载阶段就断了**。
+症状**不是**「SHEET is undefined」，而是下一次碰到某个 `const` 时报
+`Cannot access 'TRIAL_UNITS' before initialization`（bundle 停在 app11，后面所有 `let/const`
+留在 TDZ）。⇒ **加载期炸掉会伪装成一个毫不相干的 TDZ 错误**；新注册表类的文件必须排在
+**第一个使用者之前**（这里挪到 `app1_core.js` 之后），且必须跑一次真页面 uncaught。
+
 ⇒ 搬的时候按这个顺序登记，7 个 `afterbegin` 逐块插，最终 top→bottom 就是
 `app96 → app79 → app77 → app49 → app47 → app45 → app11`，与今天逐字节相同。
 

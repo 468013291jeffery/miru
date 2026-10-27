@@ -26,6 +26,8 @@ const SHIM = 'function(n,f){try{return f()}catch(e){}}';
 
 /* 显式豁免：**写清理由**才允许有。没有理由的空 catch 一律算债务。 */
 const ALLOW = {
+  /* 报告器自己不许抛：它包的就是 console.error。失败会以「抛错」计数出现在 __sheet()/SHEET.stats() 里 */
+  'app112_sheet.js': 'catch 包着 console.error 本身，无法在内部再记日志；失败记在每块的 err 计数上',
   // 日志器自己绝不能再抛（否则记日志这件事本身会把页面带崩）；它的健康由 errlog 文件本身证明
   'app108_errlog.js': '日志器自身的兜底，不允许抛；它的失败由 .browser-errlog.json 是否存在来证明',
   'app110_pkreg.js': '分发器对每一层单独 try/catch：一层炸不许连累整条链（它会把失败计入 __pkreg().层内抛错）',

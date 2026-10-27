@@ -1415,7 +1415,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="172728e90d10 2026-10-27T08:41Z";
+window.MIRU_BUILD="011be4a3e87a 2026-10-27T08:47Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3297,6 +3297,82 @@ function pickSearch(inputId,gridId){return '<div class="field" style="margin-top
 document.addEventListener("input",e=>{const x=e.target.closest(".pickq");if(!x)return;const sel=x.dataset.pickfor,q=x.value.trim().toLowerCase();
  $$(sel+" > *").forEach(b=>{const nm=(b.querySelector("span")||b).textContent.toLowerCase();b.style.display=(!q||nm.includes(q))?"":"none"})});
 
+
+/* ================= 弹层里的「块」登记表（2026-10-27）=================
+   为什么不再用「包一层」：`menuSheet` 被 7 个文件各包一层，而它们做的事只有一件 ——
+   往 `.sheet .stack` 里塞一块 HTML。包一层看不出「一共几块、什么顺序」，注册表能。
+
+   与 `app111_msgkind.js`（渲染链）的**关键差别**：那边必须给 `next()` 语义（认领 / 后处理 /
+   改入参三类各自要答不同问题）；这边**一个都不需要** —— 没有哪一层是"认领整张弹层"，
+   它们全是往同一个容器里追加。所以这里只存两件事：**顺序**与**插在前面还是后面**。
+
+   ## 用法（在各自的源文件里）
+       SHEET.add('menu', 'app48_clean.js', 'bottom', function(){ return '<button …>' });
+       SHEET.add('menu', 'app45_rel.js',  'top',    function(){ … return '…' });
+
+   ## 顺序怎么保住的（这条最容易搬错）
+   今天是「包一层」：每层在 `_inner()` **返回之后**才插，所以最后的 DOM 顺序是
+   **加载顺序**决定的 —— 而 `afterbegin` 那几层，后加载的会插到更前面。
+   ⇒ 注册表按**加载顺序**登记、`render()` 也按登记顺序逐块插，结果与今天逐字节相同。
+   ⚠️ 谁要改成"按视觉顺序登记"，菜单会整个反过来。
+
+   ## 读数
+       __sheet()     每个弹层：有哪几块、各自插在前面还是后面
+       SHEET.stats() 渲染了几次、每个块命中几回（用来发现"登记了但从不插"的死块）
+
+   闸：`tools/sheet-snapshot.mjs --check`（7 个弹层逐字节 + 每条必须有内容）。
+   ================================================================== */
+(function () {
+  'use strict';
+  const M = { v: 1, order: {}, hits: {}, renders: {} };
+
+  M.add = function (sheetName, blockName, at, fn) {
+    if (typeof fn !== 'function') return false;
+    const k = String(sheetName);
+    (M.order[k] = M.order[k] || []).push({
+      name: String(blockName || '?'),
+      at: at === 'top' ? 'top' : 'bottom',
+      fn: fn, hit: 0, err: 0
+    });
+    return true;
+  };
+
+  M.render = function (sheetName, stack) {
+    const list = M.order[sheetName] || [];
+    if (!stack || !list.length) return 0;
+    M.renders[sheetName] = (M.renders[sheetName] || 0) + 1;
+    let n = 0;
+    for (const b of list) {
+      let h = '';
+      /* 块抛错不许打断后面的块，也不许静默：记次数 + 走 console.error（errlog 会接住）*/
+      try { h = b.fn() } catch (e) {
+        b.err++;
+        try { console.error('[sheet] ' + b.name + ' 抛错：' + ((e && (e.code || e.message)) || e)); } catch (_) { }
+        continue;
+      }
+      if (typeof h === 'string' && h) {
+        stack.insertAdjacentHTML(b.at === 'top' ? 'afterbegin' : 'beforeend', h);
+        b.hit++; n++;
+      }
+    }
+    return n;
+  };
+
+  M.stats = function () {
+    const o = {};
+    for (const k of Object.keys(M.order)) {
+      o[k] = M.order[k].map(b => ({ 块: b.name, 位置: b.at, 插入: b.hit, 抛错: b.err }));
+    }
+    return { 渲染: M.renders, 块: o };
+  };
+
+  window.SHEET = M;
+  window.__sheet = function () {
+    const o = {};
+    for (const k of Object.keys(M.order)) o[k] = M.order[k].map(b => b.name + '(' + b.at + ')');
+    return o;
+  };
+})();
 
 /* ================= 可调参数（外置滑钮）=================
    为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、
@@ -5309,7 +5385,7 @@ function menuSheet(){const th=S.threads[curT];
   (th.wid&&wd(th.wid)?'<button class="opt" data-rxfork="1"><span class="ic">⑂</span><span class="grow"><b>'+t("rx.fromHere")+'</b><span>'+t("rx.fromHereS")+'</span></span></button>':"")+'<button class="opt" data-guide="1"><span class="ic">📘</span><span class="grow"><b>'+t("cx.m.guide")+'</b></span></button>'+
   '<button class="opt" data-voiceplay="1"><span class="ic">🔊</span><span class="grow"><b>'+t("cx.m.voice")+'</b></span><span class="check'+(S.voice.auto?" on":"")+'">'+(S.voice.auto?"✓":"")+'</span></button>'+
   '<button class="opt" data-tier="1"><span class="ic">✦</span><span class="grow"><b>'+(S.tier==="deep"?t("cx.deep"):t("cx.std"))+'</b><span>'+t("cx.deepS")+'</span></span><span class="check'+(S.tier==="deep"?" on":"")+'">'+(S.tier==="deep"?"✓":"")+'</span></button>'+
-  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>');try{SHEET.render("menu",$(".sheet .stack"))}catch(_){}}
+  (th.quest?'<button class="opt" data-qsheet="1"><span class="ic">🎯</span><span class="grow"><b>'+t("q.goals")+'</b></span></button>':"")+'</div>');try{SHEET.render("menu",$(".sheet .stack"))}catch(e){console.error("[sheet] menu 渲染失败："+((e&&(e.code||e.message))||e))}}
 function pathTasks(th,cid){const r=th.rounds,tk=th.tasks||{};return [
  {st:0,k:"chat",done:r>=10,l:t("task.chat",{a:Math.min(r,10)})},{st:0,k:"quiz",done:!!tk.quiz,l:t("task.quiz")},
  {st:1,k:"date",done:!!tk.date,l:t("task.date")},{st:1,k:"gift",done:!!tk.gift,l:t("task.gift")},
@@ -6862,7 +6938,8 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-buymax]")){S.plus=true;S.plusMax=true;S.plusSince=Date.now();save();toast(t("mem.maxOn"));memSheet();return}});
 /* chip in the chat status row + menu entry + one-time "he's starting to forget" nudge at 85% */
 renderChat=(function(orig){return function(){orig.apply(this,arguments);const th=S.threads[curT];if(!th)return;const st=$(".status");if(st&&!st.querySelector(".memchip"))st.insertAdjacentHTML("beforeend",memChip(th))}})(renderChat);
-menuSheet=(function(orig){return function(){orig.apply(this,arguments);const s=$(".sheet .stack");if(s)s.insertAdjacentHTML("afterbegin",'<button class="opt" data-memsheet="1"><span class="ic">🧠</span><span class="grow"><b>'+t("mem.h")+'</b><span>'+t("mem.menuS")+'</span></span></button>')}})(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app11_memory.js","top",function(){return '<button class="opt" data-memsheet="1"><span class="ic">🧠</span><span class="grow"><b>'+t("mem.h")+'</b><span>'+t("mem.menuS")+'</span></span></button>'});
 appendMsg=(function(orig){return function(th,m){orig.apply(this,arguments);if(!th||th.memWarn||memTier(th)==="deep")return;const T=MEMT[memTier(th)];if(memUsed(th)>=T.cap*.85){th.memWarn=1;th.msgs.push({who:"sys",k:"card",title:"🧠 "+t("mem.warnH",{n:first((ch(mainOf(th))||{n:""}).n)}),txt:t("mem.warnS"),btn:t("mem.warnB"),act:"mem|",at:Date.now()});save();if(curT===th.id)renderChat()}}})(appendMsg);
 document.addEventListener("click",e=>{const x=e.target.closest("[data-cardbtn]");if(!x)return;const th=S.threads[curT],m=th&&th.msgs[+x.dataset.cardbtn];if(m&&m.act==="mem|"){e.stopImmediatePropagation();memSheet()}},true);
 Object.assign(I18N.en,{"mem.h":"Memory space","mem.menuS":"How much he remembers","mem.used":"used","mem.t.free":"Free","mem.t.plus":"MIRU+","mem.t.deep":"Deep","mem.fixed":"always","mem.on":"on","mem.none":"Nothing yet — make a moment he'll keep.",
@@ -7831,82 +7908,6 @@ Object.assign(I18N.zh,{"pk.spdNorm":"自动播放","pk.spdSlow":"自动 · 慢�
       冲突明细: M.conflicts.map(k => ({ 类型: k, 认领层: M.claims[k] })),
       层: M.items.map(x => ({ 名字: x.name, 类: x.cls, 认领: x.kinds.join(','), 命中: x.hit, 交内层: x.nextCalled, 抛错: x.err }))
     };
-  };
-})();
-
-/* ================= 弹层里的「块」登记表（2026-10-27）=================
-   为什么不再用「包一层」：`menuSheet` 被 7 个文件各包一层，而它们做的事只有一件 ——
-   往 `.sheet .stack` 里塞一块 HTML。包一层看不出「一共几块、什么顺序」，注册表能。
-
-   与 `app111_msgkind.js`（渲染链）的**关键差别**：那边必须给 `next()` 语义（认领 / 后处理 /
-   改入参三类各自要答不同问题）；这边**一个都不需要** —— 没有哪一层是"认领整张弹层"，
-   它们全是往同一个容器里追加。所以这里只存两件事：**顺序**与**插在前面还是后面**。
-
-   ## 用法（在各自的源文件里）
-       SHEET.add('menu', 'app48_clean.js', 'bottom', function(){ return '<button …>' });
-       SHEET.add('menu', 'app45_rel.js',  'top',    function(){ … return '…' });
-
-   ## 顺序怎么保住的（这条最容易搬错）
-   今天是「包一层」：每层在 `_inner()` **返回之后**才插，所以最后的 DOM 顺序是
-   **加载顺序**决定的 —— 而 `afterbegin` 那几层，后加载的会插到更前面。
-   ⇒ 注册表按**加载顺序**登记、`render()` 也按登记顺序逐块插，结果与今天逐字节相同。
-   ⚠️ 谁要改成"按视觉顺序登记"，菜单会整个反过来。
-
-   ## 读数
-       __sheet()     每个弹层：有哪几块、各自插在前面还是后面
-       SHEET.stats() 渲染了几次、每个块命中几回（用来发现"登记了但从不插"的死块）
-
-   闸：`tools/sheet-snapshot.mjs --check`（7 个弹层逐字节 + 每条必须有内容）。
-   ================================================================== */
-(function () {
-  'use strict';
-  const M = { v: 1, order: {}, hits: {}, renders: {} };
-
-  M.add = function (sheetName, blockName, at, fn) {
-    if (typeof fn !== 'function') return false;
-    const k = String(sheetName);
-    (M.order[k] = M.order[k] || []).push({
-      name: String(blockName || '?'),
-      at: at === 'top' ? 'top' : 'bottom',
-      fn: fn, hit: 0, err: 0
-    });
-    return true;
-  };
-
-  M.render = function (sheetName, stack) {
-    const list = M.order[sheetName] || [];
-    if (!stack || !list.length) return 0;
-    M.renders[sheetName] = (M.renders[sheetName] || 0) + 1;
-    let n = 0;
-    for (const b of list) {
-      let h = '';
-      /* 块抛错不许打断后面的块，也不许静默：记次数 + 走 console.error（errlog 会接住）*/
-      try { h = b.fn() } catch (e) {
-        b.err++;
-        try { console.error('[sheet] ' + b.name + ' 抛错：' + ((e && (e.code || e.message)) || e)); } catch (_) { }
-        continue;
-      }
-      if (typeof h === 'string' && h) {
-        stack.insertAdjacentHTML(b.at === 'top' ? 'afterbegin' : 'beforeend', h);
-        b.hit++; n++;
-      }
-    }
-    return n;
-  };
-
-  M.stats = function () {
-    const o = {};
-    for (const k of Object.keys(M.order)) {
-      o[k] = M.order[k].map(b => ({ 块: b.name, 位置: b.at, 插入: b.hit, 抛错: b.err }));
-    }
-    return { 渲染: M.renders, 块: o };
-  };
-
-  window.SHEET = M;
-  window.__sheet = function () {
-    const o = {};
-    for (const k of Object.keys(M.order)) o[k] = M.order[k].map(b => b.name + '(' + b.at + ')');
-    return o;
   };
 })();
 
@@ -11178,13 +11179,13 @@ document.addEventListener("click",async e=>{let x;
   if(k==="discord")open("https://discord.com/channels/@me");shReward()}});
 
 /* ---------- chat menu: new entries on top ---------- */
-const _menuSheet45=menuSheet;menuSheet=function(){const __r45=_menuSheet45.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack");if(!th||!st)return __r45;const p=th.persona||persona(),cid=mainOf(th),mine=S.mine.chars[cid];
- st.insertAdjacentHTML("afterbegin",
-  '<button class="opt" data-pswitch="1"><span class="ic">🎭</span><span class="grow"><b>'+LL("我的人设","My persona")+'</b><span>'+esc(pLabel(p))+'</span></span><span style="color:var(--gold)">⇄</span></button>'+
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app45_rel.js","top",function(){try{const th=S.threads[curT];if(!th)return "";const p=th.persona||persona(),cid=mainOf(th),mine=S.mine.chars[cid];
+ return   '<button class="opt" data-pswitch="1"><span class="ic">🎭</span><span class="grow"><b>'+LL("我的人设","My persona")+'</b><span>'+esc(pLabel(p))+'</span></span><span style="color:var(--gold)">⇄</span></button>'+
   '<button class="opt" data-rewind="1"><span class="ic">⏪</span><span class="grow"><b>'+(th.pk?LL("重新开始（重选身份）","Restart (pick your role)"):LL("回到初遇","Back to the first meeting"))+'</b><span>'+LL("选错了也没关系，从头再来","Took a wrong turn? Start over")+'</span></span></button>'+
   '<button class="opt" data-fixsheet="1"><span class="ic">🛠</span><span class="grow"><b>'+LL("反馈角色表现","Feedback on the character")+'</b><span>'+LL("记忆混乱、逻辑不通、无聊、不像他……","Memory, logic, boring, out of character…")+'</span></span></button>'+
   '<button class="opt" data-shsnip="1"><span class="ic">📤</span><span class="grow"><b>'+LL("分享聊天片段","Share a snippet")+'</b><span>X · Facebook · WhatsApp · Instagram · TikTok · Discord</span></span></button>'+
-  (mine?'<button class="opt" data-sdedit="'+cid+'"><span class="ic">✏️</span><span class="grow"><b>'+LL("打磨这个角色","Polish this character")+'</b></span></button>':''))}catch(_){}return __r45;};
+  (mine?'<button class="opt" data-sdedit="'+cid+'"><span class="ic">✏️</span><span class="grow"><b>'+LL("打磨这个角色","Polish this character")+'</b></span></button>':'')}catch(_){return ""}});
 document.addEventListener("click",e=>{if(e.target.closest("[data-pswitch]")){personaSwitch();return}if(e.target.closest("[data-rewind]")){rewindSheet();return}if(e.target.closest("[data-fixsheet]")){fixSheet();return}if(e.target.closest("[data-shsnip]")){shareSnip();return}});
 
 /* ---------- supporting character joins solo chats; narrator voice ---------- */
@@ -11339,7 +11340,8 @@ document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-chjump]")){const [wid,n0,as]=x.dataset.chjump.split("|"),n=+n0;const th=S.threads[curT];const picks=th&&th.wid===wid&&th.pk?th.pk.picks:{};closeSheet();packStart(wid,as,n,picks);return}},true);
 /* entry points: the start sheet and the chat menu */
 const _startSheet47=startSheet;startSheet=function(wid,fresh){_startSheet47(wid,fresh);try{const w=wd(wid);if(w&&w.pack){const st=$(".sheet .stack");if(st)st.insertAdjacentHTML("afterend",'<button class="btn btn-g btn-block" style="margin-top:10px" data-chmap="'+wid+'">📖 '+LL("章节目录 · 跳到任意一章","Chapters · jump to any chapter")+'</button>')}}catch(_){}};
-const _menuSheet47=menuSheet;menuSheet=function(){_menuSheet47.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack");if(th&&th.pk&&st)st.insertAdjacentHTML("afterbegin",'<button class="opt" data-chmap="'+th.wid+'"><span class="ic">📖</span><span class="grow"><b>'+LL("章节目录","Chapters")+'</b><span>'+LL("第 "+th.pk.ch+" 章 / 共 "+PCN(wd(th.wid))+" 章 · 跳到任意一章","Chapter "+th.pk.ch+" of "+PCN(wd(th.wid))+" · jump anywhere")+'</span></span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app47_chapters.js","top",function(){try{const th=S.threads[curT];if(!(th&&th.pk))return "";return '<button class="opt" data-chmap="'+th.wid+'"><span class="ic">📖</span><span class="grow"><b>'+LL("章节目录","Chapters")+'</b><span>'+LL("第 "+th.pk.ch+" 章 / 共 "+PCN(wd(th.wid))+" 章 · 跳到任意一章","Chapter "+th.pk.ch+" of "+PCN(wd(th.wid))+" · jump anywhere")+'</span></span></button>'}catch(_){return ""}});
 (function(){const st=document.createElement("style");st.textContent=`
 .chlist{display:flex;flex-direction:column;gap:6px;margin-top:12px;max-height:58vh;overflow:auto}
 .chrow.spch{width:100%;text-align:left;cursor:pointer}.chrow.spch .chl{white-space:nowrap;font-size:12px;font-weight:800;color:#F7D2A8}.chrow.spch .chf{white-space:nowrap}
@@ -11631,7 +11633,8 @@ function cPriceSheet(){const R=(a,b,c)=>'<tr><td>'+a+'</td><td>'+b+'</td><td>'+c
 /* creator works open the workbench; creator pack threads get a menu entry */
 const _renderCreate49=renderCreate;renderCreate=function(v){_renderCreate49(v);try{const sc=v.querySelector(".scroll");if(sc&&!sc.querySelector("[data-cnew]"))sc.insertAdjacentHTML("afterbegin",'<button class="card cnewc" data-cnew="1"><div class="row"><span style="font-size:30px">✨</span><div class="grow"><b style="font-size:17px;display:block">'+LL("一句话写一部剧","Write a story from one line")+'</b><p class="xs faint" style="margin-top:4px;line-height:1.5">'+LL("说一句灵感 → 3 个快选 → 第一幕免费试玩。之后在工作台里慢慢写。","One line → three quick picks → play scene 1 free. Keep writing in the Workbench.")+'</p></div><span style="color:var(--gold);font-size:20px">›</span></div></button>');
  v.querySelectorAll("[data-share]").forEach(b=>{const wk=S.works.find(k=>k.id===b.dataset.share);if(wk&&wk.kind==="story"&&!b.parentElement.querySelector("[data-cwork]"))b.insertAdjacentHTML("beforebegin",'<button class="btn btn-p btn-sm" data-cwork="'+wk.id+'" style="margin-right:6px">🛠 '+LL("工作台","Workbench")+'</button>')})}catch(_){}};
-const _menuSheet49=menuSheet;menuSheet=function(){_menuSheet49.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack"),w=th&&wd(th.wid);if(w&&w.pack&&w.pack.mine&&st)st.insertAdjacentHTML("afterbegin",'<button class="opt" data-cwork="'+w.id+'"><span class="ic">🛠</span><span class="grow"><b>'+LL("回到工作台","Back to the Workbench")+'</b><span>'+LL("改剧本、写下一章","Edit the script, write the next chapter")+'</span></span></button>')}catch(_){}};
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app49_creator.js","top",function(){try{const th=S.threads[curT],w=th&&wd(th.wid);if(!(w&&w.pack&&w.pack.mine))return "";return '<button class="opt" data-cwork="'+w.id+'"><span class="ic">🛠</span><span class="grow"><b>'+LL("回到工作台","Back to the Workbench")+'</b><span>'+LL("改剧本、写下一章","Edit the script, write the next chapter")+'</span></span></button>'}catch(_){return ""}});
 (function(){const st=document.createElement("style");st.textContent=`
 .cnewc{text-align:left;border-color:rgba(238,111,151,.5)!important;background:linear-gradient(135deg,rgba(238,111,151,.18),rgba(240,183,126,.1))!important}
 .cwq{font-size:17px;font-weight:800;margin-bottom:6px}.cwta{width:100%;margin-top:10px;background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:12px;color:inherit;font-size:15px;line-height:1.6;outline:none}
@@ -14943,7 +14946,11 @@ document.addEventListener("click", e => {
 document.addEventListener("change", e => { const x = e.target.closest && e.target.closest("[data-m2off]"); if (!x) return; S.m2off = !x.checked; save(); toast(S.m2off ? LL("已关闭自动记忆（已记下的仍保留，可以手动删）", "Auto-memory off (saved ones stay; you can delete them)") : LL("已开启自动记忆", "Auto-memory on")); });
 /* entry points: memory-space sheet gets a "what he remembers" button; menu gets a row */
 memSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const th = S.threads[curT]; if (!th) return; const n = m2(th).filter(x => !x.del).length; const s = document.querySelector(".sheet .memlay"); if (s && !document.querySelector("[data-m2open]")) s.insertAdjacentHTML("afterend", '<button class="btn btn-g btn-block" style="margin-top:10px" data-m2open="1">📖 ' + LL("他记得的事 · " + n + " 条（可查看、删除）", "What he remembers · " + n + " (view & delete)") + '</button>'); } catch (_) {} }; })(memSheet);
-menuSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const s = document.querySelector(".sheet .stack"); if (s && !s.querySelector("[data-m2open]")) s.insertAdjacentHTML("afterbegin", '<button class="opt" data-m2open="1"><span class="ic">📖</span><span class="grow"><b>' + LL("他记得的事", "What he remembers") + '</b><span>' + LL("查看、置顶、别再提、忘掉", "View, pin, mute or forget") + '</span></span></button>'); } catch (_) {} }; })(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。
+   幂等守卫（`!s.querySelector("[data-m2open]")`）不再需要：注册表每次开弹层只渲染一遍。 */
+SHEET.add("menu", "app77_memory2.js", "top", function () {
+  return '<button class="opt" data-m2open="1"><span class="ic">📖</span><span class="grow"><b>' + LL("他记得的事", "What he remembers") + '</b><span>' + LL("查看、置顶、别再提、忘掉", "View, pin, mute or forget") + '</span></span></button>';
+});
 (function () { const st = document.createElement("style"); st.textContent = `
 .m2s{display:flex;flex-direction:column;gap:10px}
 .m2sum{background:rgba(240,183,126,.08);border:1px solid rgba(240,183,126,.3);border-radius:14px;padding:10px 12px}.m2sum b{font-size:12.5px;color:var(--gold)}.m2sum p{margin:4px 0 0;font-size:13px;line-height:1.55;color:var(--text)}
@@ -15136,7 +15143,13 @@ document.addEventListener("click", e => {
   if (x = e.target.closest("[data-ldt]")) { ledSheet(x.dataset.ldt); return; }
   if (x = e.target.closest("[data-ldp]")) { const [id, st] = x.dataset.ldp.split("|"); const p = led(th).p.find(y => y.id === id); if (p) { p.st = st; p.byAI = 0; p.end = st === "open" ? null : Date.now(); save(); toast(st === "kept" ? LL("记下了：约定兑现", "Marked as kept") : st === "broken" ? LL("记下了：约定落空", "Marked as broken") : LL("已改回进行中", "Reopened")); } ledSheet("p"); return; }
 }, true);
-menuSheet = (function (orig) { return function () { orig.apply(this, arguments); try { const s = document.querySelector(".sheet .stack"); if (s && !s.querySelector("[data-ledopen]")) { const th = S.threads[curT]; const L = led(th), n = L ? L.p.filter(p => p.st === "open").length + L.c.filter(c => c.st === "open").length : 0; s.insertAdjacentHTML("afterbegin", '<button class="opt" data-ledopen="1"><span class="ic">📜</span><span class="grow"><b>' + LL("剧情账本", "Story ledger") + (n ? ' · ' + n : '') + '</b><span>' + LL("约定、未解决的冲突、秘密、已做的选择", "Promises, open conflicts, secrets, choices made") + '</span></span></button>'); } } catch (_) {} }; })(menuSheet);
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。
+   它依赖 `th`（数未结项），所以守卫保留为 `!th → 空串`；幂等守卫不再需要。 */
+SHEET.add("menu", "app79_ledger.js", "top", function () {
+  const th = S.threads[curT]; if (!th) return "";
+  const L = led(th), n = L ? L.p.filter(p => p.st === "open").length + L.c.filter(c => c.st === "open").length : 0;
+  return '<button class="opt" data-ledopen="1"><span class="ic">📜</span><span class="grow"><b>' + LL("剧情账本", "Story ledger") + (n ? ' · ' + n : '') + '</b><span>' + LL("约定、未解决的冲突、秘密、已做的选择", "Promises, open conflicts, secrets, choices made") + '</span></span></button>';
+});
 m2Sheet = (function (orig) { return function () { orig.apply(this, arguments); try { const b = document.querySelector(".m2s"); if (b && !b.querySelector("[data-ledopen]")) b.insertAdjacentHTML("beforeend", '<button class="lnk" data-ledopen="1" style="display:block;margin:2px auto 0">📜 ' + LL("剧情账本", "Story ledger") + '</button>'); } catch (_) {} }; })(m2Sheet);
 (function () { const st = document.createElement("style"); st.textContent = `
 .lds{display:flex;flex-direction:column;gap:10px}.ldl{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto}
@@ -17247,11 +17260,14 @@ document.addEventListener("click", e => { let x;
 /* chapter finished → a nudge to the reading */
 { const _ap = packAfterPick; packAfterPick = function (th) { const r = _ap.apply(this, arguments); try { const n = done96(th); if (n && curT === th.id) setTimeout(() => chg96([["💘", L96("恋爱人格解锁新一项", "A new love-type reading unlocked")]]), 3400); } catch (_) {} return r; }; }
 /* chat menu ⋯: love type · let them reach out */
-{ const _ms = menuSheet; menuSheet = function () { const r = _ms.apply(this, arguments);
-    try { const th = S.threads[curT], st = $(".sheet .stack"); if (!th || !st) return r;
-      st.insertAdjacentHTML("afterbegin", (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
-        '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>'); } catch (_) {}
-    return r; }; }
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu", "app96_social.js", "top", function () {
+  try {
+    const th = S.threads[curT]; if (!th) return "";
+    return (th.pk ? '<button class="opt" data-lp96="' + esc(th.id) + '"><span class="ic">💘</span><span class="grow"><b>' + L96("我的恋爱人格", "My love type") + '</b><span>' + L96("根据你在这部剧里的选择分析", "Based on your choices in this story") + '</span></span></button>' : '') +
+      '<button class="opt" data-pcs96="' + esc(mainOf(th)) + '"><span class="ic">💌</span><span class="grow"><b>' + L96("让 TA 主动找你", "Let them reach out") + '</b><span>' + P96.contact + '💎 · ' + L96("永久", "forever") + '</span></span></button>';
+  } catch (_) { return "" }
+});
 /* Me page entry */
 { const _rm = renderMe; renderMe = function (v) { const r = _rm.apply(this, arguments);
     try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".lp96me")) { const at = host.querySelector(".me95"); const h = '<button class="card lp96me" data-lplist96="1"><span style="font-size:26px">💘</span><span class="grow"><b>' + L96("你的恋爱人格", "Your love type") + '</b><span class="xs dim">' + L96("从你在剧里的每个选择，看见你是怎样爱人的", "See how you love, from every choice you've made") + '</span></span>›</button>'; if (at) at.insertAdjacentHTML("beforebegin", h); else host.insertAdjacentHTML("beforeend", h); } } catch (_) {}

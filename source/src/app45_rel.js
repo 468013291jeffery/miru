@@ -119,13 +119,13 @@ document.addEventListener("click",async e=>{let x;
   if(k==="discord")open("https://discord.com/channels/@me");shReward()}});
 
 /* ---------- chat menu: new entries on top ---------- */
-const _menuSheet45=menuSheet;menuSheet=function(){const __r45=_menuSheet45.apply(this,arguments);try{const th=S.threads[curT],st=$(".sheet .stack");if(!th||!st)return __r45;const p=th.persona||persona(),cid=mainOf(th),mine=S.mine.chars[cid];
- st.insertAdjacentHTML("afterbegin",
-  '<button class="opt" data-pswitch="1"><span class="ic">🎭</span><span class="grow"><b>'+LL("我的人设","My persona")+'</b><span>'+esc(pLabel(p))+'</span></span><span style="color:var(--gold)">⇄</span></button>'+
+/* 2026-10-27：从「包一层 menuSheet」搬成登记一块（top）。HTML 一字未改。 */
+SHEET.add("menu","app45_rel.js","top",function(){try{const th=S.threads[curT];if(!th)return "";const p=th.persona||persona(),cid=mainOf(th),mine=S.mine.chars[cid];
+ return   '<button class="opt" data-pswitch="1"><span class="ic">🎭</span><span class="grow"><b>'+LL("我的人设","My persona")+'</b><span>'+esc(pLabel(p))+'</span></span><span style="color:var(--gold)">⇄</span></button>'+
   '<button class="opt" data-rewind="1"><span class="ic">⏪</span><span class="grow"><b>'+(th.pk?LL("重新开始（重选身份）","Restart (pick your role)"):LL("回到初遇","Back to the first meeting"))+'</b><span>'+LL("选错了也没关系，从头再来","Took a wrong turn? Start over")+'</span></span></button>'+
   '<button class="opt" data-fixsheet="1"><span class="ic">🛠</span><span class="grow"><b>'+LL("反馈角色表现","Feedback on the character")+'</b><span>'+LL("记忆混乱、逻辑不通、无聊、不像他……","Memory, logic, boring, out of character…")+'</span></span></button>'+
   '<button class="opt" data-shsnip="1"><span class="ic">📤</span><span class="grow"><b>'+LL("分享聊天片段","Share a snippet")+'</b><span>X · Facebook · WhatsApp · Instagram · TikTok · Discord</span></span></button>'+
-  (mine?'<button class="opt" data-sdedit="'+cid+'"><span class="ic">✏️</span><span class="grow"><b>'+LL("打磨这个角色","Polish this character")+'</b></span></button>':''))}catch(_){}return __r45;};
+  (mine?'<button class="opt" data-sdedit="'+cid+'"><span class="ic">✏️</span><span class="grow"><b>'+LL("打磨这个角色","Polish this character")+'</b></span></button>':'')}catch(_){return ""}});
 document.addEventListener("click",e=>{if(e.target.closest("[data-pswitch]")){personaSwitch();return}if(e.target.closest("[data-rewind]")){rewindSheet();return}if(e.target.closest("[data-fixsheet]")){fixSheet();return}if(e.target.closest("[data-shsnip]")){shareSnip();return}});
 
 /* ---------- supporting character joins solo chats; narrator voice ---------- */
