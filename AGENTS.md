@@ -38,8 +38,31 @@ node tools/read-errlog.mjs        # 错误日志（2 分钟窗口）
 | 加载顺序 | 状态机必须先于绑定点 | 位置比较 | `wiring-order-check` |
 | 猴补丁基线 | 新增包装要显式确认 | 148 函数 / 382 处 | `patch-registry --check` |
 | 空 catch | 静默失败存量 | 576 处 | `empty-catch-check` |
+| **on\* 事件绑定** | `el.onclick = fn` 会静默覆盖别人的处理器 | 硬类 0 · 软类 93 处 | `on-assign-check` |
 
 **加新代码走入口，不要绕过。** 绕过一次，那道闸对你就失效了。
+
+### ①·补 on* 事件绑定：不许在共享元素上覆盖
+
+`el.onclick = fn` 与 `addEventListener` 不是同一件事：**它覆盖前一个处理器（不报错）、没有 remove、只能有一个**。
+与「猴补丁层层覆盖」是同一个病 —— 没有入口，谁后写谁说了算。
+
+分两类管（一刀切会把 `img.onerror` 这类天生形态也判死）：
+
+| 类 | 形状 | 规矩 | 现状 |
+|---|---|---|---|
+| **硬类** | `window.onX =` / `document.onX =` | **必须为 0**（全站只认最后一个，别人的静默消失） | **0 处** ✓ |
+| **软类** | 元素级 `el.onX =` | 只增不减；新增必须 `--write` 确认，或写进 `ALLOW` 并**注明理由** | 93 处 / 25 个文件 |
+
+```
+node tools/on-assign-check.mjs          # 人读：谁最多、用了哪些事件
+node tools/on-assign-check.mjs --check  # 闸（check-all 里已挂）
+```
+
+读法：`img.onerror` / `xhr.onload` / `audio.onended` 这类一次性属性本来就只能是 on*；
+**真正要警惕的是「共享元素」上的 on\***：它会静默盖掉别人的处理器，而你看不到任何报错。
+
+对照读数：`addEventListener` **399 处** vs `on*` **93 处** —— 大头已经走托管路径，剩下的是历史存量。
 
 ### ② 不许静默失败
 
@@ -149,3 +172,4 @@ node tools/read-errlog.mjs        # 错误日志（2 分钟窗口）
 4. 不许在没有判据的情况下宣布「修好了」。
 5. 不许在没有真浏览器验证的情况下提交**影响 bundle 结构**的改动。
 6. 不许把生成物（`index.html` / `content_36.js`）当源码手改。
+7. 不许在全局（`window.` / `document.`）上用 `on*` 覆盖事件处理器。
