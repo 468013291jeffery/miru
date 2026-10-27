@@ -60,7 +60,7 @@ zh:{
 "ob.h1":"故事，想把你写进去。","ob.sub":"冰球宿敌、黑帮继承人、妖精王子。走进去，和他们说话，改写结局。","ob.age":"我已年满 18 岁。所有角色均为虚构成年人。","ob.needAge":"请先确认你已年满 18 岁。","ob.start":"开始","ob.next":"继续","ob.done":"生成我的首页",
 "ob.q1":"你想看什么？","ob.q1s":"随时可以改。","ob.bl":"BL","ob.blS":"男男——宿敌、保镖、慢热","ob.gl":"GG","ob.glS":"女女——暗恋、室友、对手","ob.bg":"BG","ob.bgS":"包办婚姻、破镜重圆","ob.all":"全都要",
 "ob.q2":"选出你无法抗拒的设定","ob.q2s":"至少三个，首页按这个生成。","ob.q3":"想要多辣？","ob.q3s":"所有场景的上限，聊天中也能调低。","ob.q4":"你在故事里是谁？","ob.q4s":"这是你的身份。角色会用这个名字叫你。","ob.name":"你的名字","ob.pron":"代词","ob.look":"一句话描述你（可选）","ob.lookPh":"例如：高个子，嘴毒，总是怕冷",
-"heat.fluff":"糖水","heat.fluffS":"斗嘴、安慰、指尖差一点相碰","heat.slow":"慢热","heat.slowS":"故意拖长张力","heat.steamy":"暧昧","heat.steamyS":"带电、暗示、点到为止","heat.mature":"成人向","heat.matureS":"成人主题，文学化，不露骨",
+"heat.fluff":"糖水","heat.fluffS":"斗嘴、安慰、指尖差一点相碰","heat.slow":"慢热","heat.slowS":"故意拖长张力","heat.steamy":"暧昧","heat.steamyS":"带电、暗示、点到为止","heat.mature":"成人向","heat.matureS":"成人主题，文学化",
 "home.stories":"快拍","home.continue":"继续","home.contWith":"继续和 {n} 聊","home.short":"今日短剧","home.shortS":"60 秒竖屏，看完直接进戏","home.foryou":"为你推荐","home.quests":"任务","home.questsS":"回合有限，藏着隐藏目标。","home.trending":"热门角色","home.seeall":"全部","home.feed":"你在聊的人发了动态",
 "post.likes":"{n} 次赞","post.reply":"回复 {n}…","post.send":"发送","post.sent":"已发送——去和 {n} 的聊天里看看。","post.view":"去聊天",
 "disc.h":"发现","disc.search":"搜索故事、角色、标签","disc.stories":"故事","disc.chars":"角色","disc.genre":"题材","disc.setting":"背景","disc.trope":"套路","disc.char":"人设","disc.results":"{n} 个结果","disc.hot":"最多人玩","disc.new":"最新","disc.clear":"清除","disc.none":"没有匹配的。少选几个标签试试。","disc.top":"本周排行","disc.all":"全部",
