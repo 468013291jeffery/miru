@@ -532,6 +532,27 @@ async function main() {
     if (result.frames) say('帧率: ' + result.frames.fps + ' fps · p50 ' + result.frames.p50 + 'ms · p95 ' + result.frames.p95 + 'ms · 最长 ' + result.frames.max + 'ms · 掉帧 ' + result.frames.dropped + '/' + result.frames.n + ' (' + result.frames.dropPct + '%)');
 
     if (result.runs && result.runs.length) {
+      /* 2026-10-27 Ann：「say 类不发声」。这一跑结束后直接对账：屏幕上出现过的 say 台词，
+         有多少条真的进了 `S._voiceLog`（said / silent / unvoiced 三档），并列出没发声的那几条。 */
+      try {
+        const va = JSON.parse(await evaluate(`JSON.stringify((function(){try{
+          var th=S.threads[curT]; if(!th) return {err:"no-th"};
+          var says=th.msgs.filter(function(m){return m.k==="say"&&m.who&&m.who!=="me"&&m.who!=="n"&&m.who!=="sys"});
+          var log=S._voiceLog||[];
+          var said=log.filter(function(e){return e.ev==="said"}).length;
+          var sil =log.filter(function(e){return e.ev==="silent"}).length;
+          var unv =log.filter(function(e){return e.ev==="unvoiced"});
+          var saidSay=log.filter(function(e){return e.ev==="said"&&e.k==="say"}).length;
+          return {says:says.length, said:said, silent:sil, unvoiced:unv.length,
+                  saidSay:saidSay, unvSample:unv.slice(-4).map(function(e){return (e.who||"?")+"「"+(e.txt||"")+"」"+e.why}),
+                  lastSays:says.slice(-4).map(function(m){return m.who+"「"+String(m.txt||"").slice(0,18)+"」"})};
+        }catch(e){return {err:String(e.message)}}})())`));
+        say('\n=== 语音对账（这条线程）===');
+        say('  say 台词 ' + va.says + ' 条 · 记到 said ' + va.said + ' 条（其中 k=say 的 ' + va.saidSay + '）· silent ' + va.silent + ' · **unvoiced ' + va.unvoiced + '**');
+        if (va.unvSample && va.unvSample.length) say('  没发声的样本: ' + va.unvSample.join(' | '));
+        if (va.lastSays) say('  最后几条台词: ' + va.lastSays.join(' | '));
+        result.voiceAudit = va;
+      } catch (e) { say('  语音对账失败: ' + e.message) }
       say('\n章 | 墙钟 | save 次数/累计 | renderChat 次数/累计 | 长任务 n/ms/max | 掉帧 | msgs 前→后');
       for (const r of result.runs) {
         if (r.phase !== 'main') continue;

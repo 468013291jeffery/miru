@@ -100,10 +100,19 @@
       appendMsg = function (th, m) {
         const r = orig.apply(this, arguments);
         try {
-          if (m && m.k === "say" && !m._voiced && m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys"
-              && (typeof ch === "function" && ch(m.who)) && voiceOn()) {
-            m._voiced = 1;
-            D.say(m).catch(function () {});
+          const isSay = m && m.k === "say" && m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys"
+                        && (typeof ch === "function" && ch(m.who));
+          if (isSay && !m._voiced) {
+            if (voiceOn()) {
+              m._voiced = 1;
+              D.say(m).catch(function () {});
+            } else {
+              /* 2026-10-27 Ann：「say 类不发声的事情」要重新做。
+                 语音关着 / 额度用完 / TTS 被判死时，这条 say **一条痕迹都不留** ⇒ 事后无从统计。
+                 这里记一条 `unvoiced`（带原因与正文前 24 字），导出存档就能逐条数。 */
+              log({ t: Date.now(), ev: "unvoiced", who: String(m.who), k: "say",
+                    len: String(m.txt || "").length, why: "voice-off", txt: String(m.txt || "").slice(0, 24) });
+            }
           }
         } catch (_) {}
         return r;
