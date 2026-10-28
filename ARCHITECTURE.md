@@ -99,6 +99,69 @@ app94_official2.js  资产映射 art/official/<work>.json（槽位 → url，缺
 不再「先按 700ms/句刷完再整批念」，而是**亮一句 → 念完 → 亮下一句**；
 三条保命：每句上限 9–20 秒 · 连续 2 句没出声退回定时节奏 · 不念的句子（旁白/动作）不等。
 
+#### 链 D·1 `speak` 的注册表：`VOICE`（2026-10-27 收口）
+
+**改之前**：`speak` 被 **5 个文件各自包一层**，形状都是 `const _speakNN=speak; speak=function(...){… _speakNN(…) …}`：
+
+| 顺序（外→内） | 文件 | 它在那层做什么 |
+|---|---|---|
+| 1 | `app88_memcall.js` | 通话中拦截；不放行就不往下传 |
+| 2 | `app86_voicefix.js` | 自己发 `/api/tts`、用一个预建的 `TTSEL` 元素播；兜底才往下 |
+| 3 | `app62_tts.js` | 上面那层的**前身**；app86 把它跳过（直接落 app45），它只管 `stopVoice` 与预取 |
+| 4 | `app45_rel.js` | 旁白风格（`w.nv`）：off 则不念、soft/film/noir 换 pitch/rate 用设备语音 |
+| 5 | `app19_bgm.js` | 压低 BGM，念完恢复 |
+
+**为什么改**：两层病，都是「没有唯一咽喉」。
+- 加第 6 层时**忘了把 `onend` 传下去** ⇒ `speakQueue` 静默停住，`VOICE_BUSY` 一直 > 0，**没有任何东西会喊**（这正是 2026-10-27 修掉的 bug）。
+- 出问题只看得见「一条 5 层闭包组成的链」，**说不清卡在哪一层**。
+
+**改之后**（`source/src/app1_core.js`，紧跟 `baseSpeak` 那段）：
+```js
+VOICE.use('bgm-19',  function(next, text, id, onend){ … next(text, id, …) })
+VOICE.use('rel-45',  function(next, text, id, onend){ … })
+VOICE.use('tts-62',  function(next, text, id, onend){ … })
+VOICE.use('voicefix-86', function(next, text, id, onend){ … VOICE.below('tts-62')(…) })
+VOICE.use('memcall-88',  function(next, text, id, onend){ … })
+```
+- `fn(next, …)` 里的 **`next` 就是原来那层的 `_speakNN`**，逐层语义对齐。
+- **执行顺序 = 注册顺序的倒序**（后注册的在外层），与原闭包嵌套一致。
+- `VOICE.below(名字)` = 「该层注册之前的那条链」= 原来那个 `_speakNN`。**app86 靠它保持「跳过 app62」的原语义**（它原来调用的是 app62 文件里捕获的 `_speak62`，那个值其实是 app45）。
+- `speak` 现在只剩一行：`function speak(text,id,onend){ return VOICE.run(text,id,onend) }`；函数体改名 `baseSpeak`。
+
+**加第 6 层就是 `VOICE.use` 一行。** 不要再写 `const _speakNN=speak`。
+
+#### 链 D·2 `speakQueue` 的看门狗与日志（2026-10-27）
+
+`app3_chat.js` 的 `speakQueue(list)` 原来只靠 `onend` 递归推进 ⇒ 任何一层漏调就永久停住。
+
+- **看门狗**：每条 `VOICE_TIMEOUT_MS = 8000` 内没 settle ⇒ 强制推下一条，记 `why:'timeout'`。
+  定在 8s 是**故意高于** TTS 兜底的 4s —— 只在真卡住时开火，TTS 慢一点不会误伤。
+- **环形日志** `VOICE_LOG`（32 条，也挂 `window.__voiceLog`）：`{who, txt 前 16 字, ms, why}`。
+  `why` ∈ `ended` / `timeout` / `throw`。**在这之前，这四种死法在屏幕上完全同形。**
+
+#### 链 D·3 语音的尺子：`tools/voice-probe.mjs`
+
+**它存在的理由**：这条链原来**没有任何东西在量**——一句不出声，屏幕上只剩「生成中」。
+
+```powershell
+node tools/serve.mjs 8131                              # 必须（探针要真页面）
+node tools/voice-probe.mjs --json > 新读数.json         # 三条臂
+```
+
+| 臂 | 喂什么 | 正常读数（2026-10-27 基线，存 `tools/voice-baseline.json`） |
+|---|---|---|
+| `ok` | 真的 8kHz/8bit WAV（约 600ms） | ≈690–970ms，通道 `tts-fetch` |
+| `corrupt` | 解不出的字节 | ≈600ms 且**设备语音 3 次**（降级成功） |
+| `hang` | 永不返回的 fetch | 4,600ms/条，**3/3 排空** |
+
+**它抓到过的两个真 bug**（都已修，留作反面教材）：
+1. `a.onerror = () => onend()` 与 `a.onended` 效果**一模一样** ⇒ 解码失败被当成「播完了」，坏音频 **1–3ms** 推进队列、一声没响，而所有计数器健康。
+2. 兜底 8s ⇒ 挂死的 TTS **8.6s/条**，三条 26s，**读作卡死**。降到 4s（缓存命中 1.4s）后 4.6s/条。
+
+**两条自检**（尺子自己的，别再犯）：
+- `w.speechSynthesis = stub` 在 Window 上是**只读访问器**，直接赋值**静默无效** ⇒ 必须 `Object.defineProperty`，并且**证明桩真的装上了**。
+- `ok` 组的耗时必须**跟着音频长度走**（改 `PLAY_MS` 读数要变），否则量到的是别的东西。
+
 ### 链 E · 状态
 ```
 app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wallet）
@@ -172,6 +235,33 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 
 ---
 
+---
+
+## 5·补 热度为什么不升：**瓶颈是场景，不是 prompt**（2026-10-28 实测）
+
+**问题**：玩家反馈「角色撩不动」。
+
+**先做错的两次**（记下来，免得下一个人重走）：
+1. 默认那 6 句玩家台词是**剧情推进**型（"把椅子挪中间"），一句都不撩 ⇒ `sim-dialogue` **天生看不见 heat**，第一次 A/B 拿到 0/0。
+2. 打分正则写的是**英文**关键词，而对话是**中文** ⇒ 两栏都报 0。
+
+**正确的实验**：同一个 `tools/sim-dialogue.mjs`、同一组撩的台词（`--lines=`）、`deepseek-chat`，**只换 pack + 章节**，判据跑之前写死，每格 n=3。
+
+| 场景 | 章节 | 结果 |
+|---|---|---|
+| **赛前冰场**（浇冰 / 热身哨 / 教练催 / 看台喊名字） | `ice` ch5 | **两版都不升温** —— 角色说「哨响了，左路那个位置不会自己走过去」 |
+| **封闭场景**（公寓 / 清晨 5:50 / 只有两个人） | `crimson` ch6 | **两版都升** —— 角色说「我把手从窗框上拿开，往你那边挪了半步」 |
+
+**而 prompt 那两处改动的贡献，测不出来**：外部靠近均值 改前 **5.0** / 改后 **5.3**，口头承认 **1.0** / **0.7** —— 全在噪声里。
+
+⇒ **结论：挡路的是「场景里有没有别的事正在发生」，不是措辞。**
+角色有正当理由走开时（哨响、会议、有人在旁边），任何 prompt 都留不住他；场景封闭时，两版都升。
+
+⇒ **数据是现成的**：`source/content/out/sNN.json` 的 `chapter.place` / `chapter.time` 里能筛出 **38 条封闭场景**（判例：`crimson` ch6 / `unseelie` ch4 / `light` ch3 / `roomies` ch6）。
+**下一步该做的是让 heat 高的互动优先落在这些场景里**，而不是继续删 prompt 里的话。
+
+---
+
 ## 6. 未验 / 缺口（未量 ≠ 零）
 
 1. `--split` 只验到**启动状态**（`W.length=38`、登录门、首屏 246 字符），**没验完整玩一局**，也没验付费/通话/出图这些在线路径。
@@ -205,7 +295,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**43 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**44 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
