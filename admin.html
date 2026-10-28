@@ -912,14 +912,52 @@ const Studio = {
         ElMessage.success('导入 ' + r.report.chapters + ' 章 · 丢掉后台设计 ' + r.report.tail + ' 字符 · 「你：」' + r.report.you + ' 句 · 选择题 ' + r.report.choices + ' 道（收尾 ' + r.report.dots + ' 个 # ·）');
       } catch (e) { if (e !== 'cancel' && e !== 'close') ElMessage.error((e && e.message) || String(e)); }
     }
+    /* ---------- 批量导入（2026-10-28）----------
+       一次选 N 个 .md，每份 = 一部剧：读标题/取向/尺度 → 建草稿 → 灌章（stage 4）。
+       口味标签不猜（猜错会推给错的人）—— 结果是"草稿，待补标签"，上线前要人工过一遍。 */
+    function readMeta(raw, fname) {
+      const L = String(raw || '').replace(/\r\n?/g, '\n').split('\n');
+      let title = '';
+      for (const l of L) { const m = l.match(/^#\s+(?!CHAPTER|SCENE|CHOICE)(.+)$/); if (m) { title = m[1].trim(); break } }
+      title = title.replace(/[（(][^）)]{0,30}[）)]\s*$/, '').replace(/^M\d{3}\s*[｜|]?\s*/, '').trim() || String(fname || '').replace(/\.(md|txt)$/i, '');
+      const o = raw.match(/orientation\s*[:：｜|]?\s*(bl|bg|gl)/i);
+      const h = raw.match(/heat\s*[:：=｜|]?\s*(fluff|slow|steamy|mature)/i);
+      return { title: title.slice(0, 80), orient: o ? o[1].toLowerCase() : 'bl', heat: h ? h[1].toLowerCase() : 'slow' };
+    }
+    function pickMdMany() {
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = '.md,.txt'; inp.multiple = true;
+      inp.onchange = () => { const fs = [].slice.call(inp.files || []); if (fs.length) batchImport(fs); };
+      inp.click();
+    }
+    async function batchImport(files) {
+      const ok = [], bad = [];
+      for (const f of files) {
+        try {
+          const raw = await f.text();
+          const meta = readMeta(raw, f.name);
+          const r = splitScript(raw);
+          if (r.error) { bad.push(f.name + ' → ' + r.error); continue; }
+          const j = await api('script', { body: { op: 'create', title: meta.title, orient: meta.orient, lang: 'zh', config: { heat: meta.heat } } });
+          await api('script', { body: { op: 'save', id: j.id, patch: { chapters: r.chapters, stage: 4 }, snapshot: '批量导入：' + r.chapters.length + ' 章' } });
+          ok.push(meta.title + '（' + r.chapters.length + ' 章 · ' + (r.report.you) + ' 句你： · ' + r.report.choices + ' 道选择）');
+        } catch (e) { bad.push(f.name + ' → ' + ((e && e.message) || e)); }
+      }
+      await load();
+      ElMessageBox.alert(
+        '<b>成功 ' + ok.length + ' 部</b>' + (ok.length ? '<br>' + ok.map(x => '· ' + x).join('<br>') : '') +
+        (bad.length ? '<br><br><b style="color:#f56c6c">失败 ' + bad.length + ' 部</b><br>' + bad.map(x => '· ' + x).join('<br>') : '') +
+        '<br><br><span style="color:#909399">导入的是草稿：口味标签还没选（推荐和搜索靠它），逐部打开补完再点检查/上线。</span>',
+        '批量导入 .md', { dangerouslyUseHTMLString: true, confirmButtonText: '知道了' });
+    }
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, importMd, splitScript, load, fmt, stLabel, tagType, can, S };
+    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
-    <div class="toolbar"><el-button type="primary" @click="nf.show=true">新建剧本</el-button><span class="muted">五步流程：选题与素材 → 按终版规则生成 → 自动检查 → 编剧审改 → 一键上线。规则版本：{{R.version||'未加载'}}</span></div>
+    <div class="toolbar"><el-button type="primary" @click="nf.show=true">新建剧本</el-button><el-button @click="pickMdMany" style="margin-left:8px">批量导入 .md</el-button><span class="muted">五步流程：选题与素材 → 按终版规则生成 → 自动检查 → 编剧审改 → 一键上线。规则版本：{{R.version||'未加载'}}</span></div>
     <el-table :data="list" stripe @row-click="r=>open(r.id)" style="cursor:pointer">
       <el-table-column prop="title" label="剧本" min-width="200" /><el-table-column label="进度" width="160"><template #default="{row}"><el-progress :percentage="row.stage*20" :format="()=>'第 '+row.stage+' 步'" /></template></el-table-column>
       <el-table-column prop="chapters" label="章数" width="70" /><el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.status==='live'?'success':row.status==='offline'?'info':'warning'">{{stLabel(row.status)}}</el-tag></template></el-table-column>
