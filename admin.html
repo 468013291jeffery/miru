@@ -843,7 +843,7 @@ const Studio = {
     async function runCheck() {
       const pack = stuPack(sel.value.chapters); const c = sel.value.config;
       const q = R.check ? R.check({ pack: Object.assign(pack, { story_mode: c.story_mode }) }, { longform: Number(c.chapters_target) >= 15 }) : { err: ['规则模块没有加载'], warn: [], ok: [], info: [] };
-      if (R.checkCards) { const cq = R.checkCards(sel.value.config.cards98, sel.value.chapters); q.err = q.err.concat(cq.err); q.warn = q.warn.concat(cq.warn); } if (R.checkV21) { const vq = R.checkV21(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(vq.err); q.warn = q.warn.concat(vq.warn); } if (R.checkStandards) { const sq = R.checkStandards(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(sq.err); q.warn = q.warn.concat(sq.warn); } (sel.value.chapters || []).forEach(ch => { const n = (String(ch.md || '').match(/^\s*(你|您|You)\s*[:：]/gm) || []).length; if (n) q.err.push('第 ' + ch.n + ' 章：替玩家写了 ' + n + ' 句台词（「你：…」）。玩家的话要写成「# CHOICE｜（轮到你说）」+ 台词选项，由玩家自己说（App 会把这些句子转成「轮到你说」，但剧本本身要改）'); });
+      if (R.checkCards) { const cq = R.checkCards(sel.value.config.cards98, sel.value.chapters); q.err = q.err.concat(cq.err); q.warn = q.warn.concat(cq.warn); } if (R.checkV21) { const vq = R.checkV21(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(vq.err); q.warn = q.warn.concat(vq.warn); } if (R.checkStandards) { const sq = R.checkStandards(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(sq.err); q.warn = q.warn.concat(sq.warn); } (sel.value.chapters || []).forEach(ch => { const n = (String(ch.md || '').match(/^\s*(你|您|You)\s*[:：]/gm) || []).length; if (n) q.warn.push('第 ' + ch.n + ' 章：有 ' + n + ' 句「你：…」。App 会把它转成「轮到你说」的停顿点（读者可点这句、也可自己说），这是**支持的写法**；但整章一句都没有时，系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）—— 建议每章保留 1–3 句'); });
       const qa = Object.assign({}, sel.value.qa || {}, { err: q.err, warn: q.warn, ok: q.ok, info: q.info, estimate: q.estimate, rules: R.version, at: Date.now() });
       await save({ qa, stage: Math.max(sel.value.stage, 3) }); ElMessage.success('规则检查完成：' + q.err.length + ' 个错误，' + q.warn.length + ' 个提醒');
     }
@@ -864,10 +864,58 @@ const Studio = {
     async function unpublish() { await ElMessageBox.confirm('下线后 App 里将看不到这部剧（已在玩的用户本地副本不受影响）。', '确认下线', { type: 'warning' }); await api('script', { body: { op: 'unpublish', id: sel.value.id } }); ElMessage.success('已下线'); open(sel.value.id); load(); }
     async function del(row) { await ElMessageBox.confirm('删除剧本「' + row.title + '」及全部版本？', '删除', { type: 'error' }); await api('script', { body: { op: 'delete', id: row.id } }); load(); }
     function download() { const s = sel.value; const md = '# ' + s.title + '\n\n' + (s.chapters || []).map(c => c.md).join('\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([md], { type: 'text/markdown' })); a.download = s.title + '.md'; a.click(); }
+    /* ---------- 导入 .md（2026-10-28）----------
+       编剧交上来的是「正文 + 后台设计」一整份；解析器不区分这两层，后台设计会被当成旁白播出去
+       （实测：一份 2.9 万字的稿子多出 363 条旁白）。这里切两刀：
+         ① 起点：第一章前面的 ⟦CHAR⟧ 角色卡要带上（它们必须早于第 1 章）
+         ② 终点：第一章之后第一个「# 二、后台内容」这类编号标题 = 后台设计开始，整段丢弃
+       切完仍然是普通章节 md，之后照旧走「自动检查 → 审改 → 上线」。 */
+    const RE_CHAP = /^#+\s*CHAPTER\s+(\d+)\s*[｜|:：]?\s*(.*)$/i;
+    function splitScript(raw) {
+      const text = String(raw || '').replace(/\r\n?/g, '\n').replace(/^\uFEFF/, '');
+      const L = text.split('\n');
+      const iChap = L.findIndex(l => RE_CHAP.test(l.trim()));
+      if (iChap < 0) return { error: '没找到「# CHAPTER 1｜…」这样的章节标记 —— 先确认这是剧本，不是设计稿' };
+      let iStart = iChap;
+      for (let j = iChap - 1; j >= 0; j--) { const t = L[j].trim(); if (!t) continue; if (/^⟦CHAR\|/.test(t)) { iStart = j; continue; } break; }
+      let iEnd = L.length;
+      for (let j = iChap + 1; j < L.length; j++) { const t = L[j].trim(); if (/^#\s*[一二三四五六七八九十]+\s*、/.test(t) || /^#{1,2}\s*(附录|附：)/.test(t)) { iEnd = j; break; } }
+      const head = L.slice(iStart, iChap).join('\n').trim();
+      const chapters = []; let cur = null;
+      for (const line of L.slice(iChap, iEnd)) {
+        const m = line.trim().match(RE_CHAP);
+        if (m) { if (cur) chapters.push(cur); cur = { n: Number(m[1]) || chapters.length + 1, t: String(m[2] || '').trim(), md: line.replace(/^#+\s*/, '# ') + '\n' }; continue; }
+        if (cur) cur.md += line + '\n';
+      }
+      if (cur) chapters.push(cur);
+      if (!chapters.length) return { error: '切出 0 章' };
+      if (head) chapters[0].md = head + '\n\n' + chapters[0].md;
+      /* 服务端的硬上限（api/admin.js 的 op=save：最多 40 章、单章 20 万字符、整体 3.5 MB）
+         —— 在这里先拦，免得读者走到「保存」才吃一个 413 */
+      const tooMany = chapters.length > 40;
+      const tooLong = chapters.filter(c => c.md.length > 200000);
+      const total = chapters.reduce((n, c) => n + c.md.length, 0);
+      if (tooMany) return { error: '切出 ' + chapters.length + ' 章，超过服务端上限 40 章 —— 请拆分文件' };
+      if (tooLong.length) return { error: '第 ' + tooLong.map(c => c.n).join('、') + ' 章超过单章上限 20 万字符' };
+      if (total > 3500000) return { error: '合计 ' + total + ' 字符，超过 3.5 MB 上限' };
+      const joined = chapters.map(c => c.md).join('\n\n');
+      return { chapters, report: { chapters: chapters.length, tail: L.slice(iEnd).join('\n').length, you: (joined.match(/^\s*(你|您|You)\s*[:：]/gm) || []).length, choices: (joined.match(/^#\s*CHOICE/gm) || []).length, dots: (joined.match(/^#\s*·\s*$/gm) || []).length } };
+    }
+    async function importMd(file) {
+      const f = file && (file.raw || file); if (!f || typeof f.text !== 'function') return;
+      try {
+        const r = splitScript(await f.text());
+        if (r.error) { ElMessage.error(r.error); return; }
+        if ((sel.value.chapters || []).length) await ElMessageBox.confirm('当前已有 ' + sel.value.chapters.length + ' 章，导入会整体替换（旧内容先存一个版本，可恢复）。继续？', '导入 .md', { type: 'warning' });
+        sel.value.chapters = r.chapters; curCh.value = r.chapters[0].n;
+        await save({ chapters: r.chapters, stage: Math.max(sel.value.stage || 1, 4) }, '导入 .md：' + r.report.chapters + ' 章');
+        ElMessage.success('导入 ' + r.report.chapters + ' 章 · 丢掉后台设计 ' + r.report.tail + ' 字符 · 「你：」' + r.report.you + ' 句 · 选择题 ' + r.report.choices + ' 道（收尾 ' + r.report.dots + ' 个 # ·）');
+      } catch (e) { if (e !== 'cancel' && e !== 'close') ElMessage.error((e && e.message) || String(e)); }
+    }
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, load, fmt, stLabel, tagType, can, S };
+    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, importMd, splitScript, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -889,7 +937,7 @@ const Studio = {
 
   <div v-else>
     <div class="panel">
-      <div class="toolbar"><el-button @click="sel=null;load()">← 返回列表</el-button><b style="font-size:16px">{{sel.title}}</b><el-tag size="small" :type="sel.status==='live'?'success':sel.status==='offline'?'info':'warning'">{{stLabel(sel.status)}}</el-tag><span class="muted">更新：{{fmt(sel.updated_at)}} · {{sel.updated_by}}</span><el-button size="small" @click="download" style="margin-left:auto">下载剧本 .md</el-button></div>
+      <div class="toolbar"><el-button @click="sel=null;load()">← 返回列表</el-button><b style="font-size:16px">{{sel.title}}</b><el-tag size="small" :type="sel.status==='live'?'success':sel.status==='offline'?'info':'warning'">{{stLabel(sel.status)}}</el-tag><span class="muted">更新：{{fmt(sel.updated_at)}} · {{sel.updated_by}}</span><el-upload :auto-upload="false" :show-file-list="false" :on-change="importMd" accept=".md,.txt" style="display:inline-block;margin-left:auto"><el-button size="small">导入 .md</el-button></el-upload><el-button size="small" @click="download">下载剧本 .md</el-button></div>
       <el-steps :active="step" finish-status="success" simple style="margin-top:10px"><el-step v-for="(t,i) in steps" :key="i" :title="(i+1)+' '+t" @click="step=i" style="cursor:pointer" /></el-steps>
     </div>
 
