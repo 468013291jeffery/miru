@@ -5,6 +5,23 @@
 > 分支：`ann/decouple` · 26 个提交 · 57 个文件 · +3002 / −95
 > 一条命令验证全部：`node tools/check-all.mjs`（九套 162 个用例）
 
+## 2026-10-29 · 剧本解析层：四层猴子补丁收成一张注册表
+
+> 起因（Ann）：「把剧本这块的接口从工程优化上做好，跟别的地方解耦开来。」
+> 病灶：`imParse` / `imBuild` 被 4 个文件各自 `imParse = function(){…}` 包一层，**层序只由 `build.py` 的 `parts[]` 决定** ——
+> 包错一层不报错，只会「结果怪一点」。最硬的证据：`⟦ITEM⟧` 能用，纯粹因为 `app101` 恰好排在 `app94` 之后。
+> 与 10-27 治掉的 `speak` 五层补丁同形（那次的解法是 `VOICE.use`）。
+
+**改法**：`PARSE.use(名字, {parse?, build?})`，注册顺序 = 层序（先注册在里层），与「后装载的包住先装载的」等价。
+五层：`app90:youturn` · `app94:directives` · `app94:scene-rereg` · `app94:you94` · `app101:item`。
+`imParse` / `imBuild` 保留成兼容门（老调用点一个字不用改）；`__parse()` = 显示接口（层表 + 调用次数）。
+
+**等价性**（不是"看着一样"）：`tools/parse-probe.html` 把 8 份语料（5 部新剧 + `danger`/`moon`/`velvet` 原稿）喂给同一份解析器，
+改前跑旧产物、改后跑新产物 ⇒ **8/8 逐字段相同**（章/items/choices/variants/scenes/lines/omit/pov/cast/sp/chars94/you94/标题）。
+
+**闸**：`tools/parse-registry-check.mjs`（进 `check-all`）—— 层表名字/顺序/职责、没有 `imParse =` / `_imParse9x` 回潮、
+兼容门与 `__parse` 还在、`parts[]` 装载顺序仍是 51→90→94→101；自检 5 臂（正常绿 + 删层/重名/挪序/塞回补丁 四枚变异）。
+
 ## 2026-10-28 · 官方剧本这条路：能整批吃进来，过滤不再误杀，上线前有人看
 
 > 起因：编剧方一次交来 10 份稿子（5 份「扩写版」+ 5 份 V2.1 设计稿），而我们**没有接入口** ——
