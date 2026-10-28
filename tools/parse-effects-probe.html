@@ -1,0 +1,69 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>parse effects probe</title>
+<pre id="out">PENDING</pre>
+<script>
+/* 2026-10-29 · ⟦SET⟧ / ⟦IF⟧…⟦ELSE⟧…⟦/IF⟧ 的行为探针
+   两件事一起验：① 剧本语法 → 结构（sys set / sys if）② 那个结构真的能驱动运行时（pkCond/pkSet）。 */
+const SCRIPT = [
+  '# CHAPTER 1｜留痕 Chapter 1',
+  '# SCENE｜冰场',
+  '旁白：开场。',
+  '⟦SET|mem_video_kept⟧',
+  '⟦IF|mem_video_kept⟧',
+  'Calder：你留着录像，我记住了。',
+  '⟦ELSE⟧',
+  'Calder：你没留。算了。',
+  '⟦/IF⟧',
+  '⟦IF|!mem_video_kept⟧',
+  '旁白：他不再提这件事。',
+  '⟦/IF⟧',
+  '⟦IF|mem_video_kept⟧',
+  '⟦IF|other_flag⟧',
+  '旁白：嵌套里的内容（不该出现）。',
+  '⟦ELSE⟧',
+  '旁白：嵌套的 else。',
+  '⟦/IF⟧',
+  '⟦/IF⟧',
+  '⟦IF|never_closed⟧',
+  '旁白：没闭合的内容。',
+  '# CHOICE｜你怎么做？',
+  '#### A｜先救人',
+  '⟦SET|saved_him⟧',
+  '旁白：你冲了过去。',
+  '#### B｜先留证据',
+  '旁白：你先拍了照。',
+  '# ·',
+].join('\n');
+
+(async () => {
+  const out = {};
+  const fr = document.createElement('iframe'); fr.src = '/index.html'; fr.width = 400; fr.height = 300;
+  document.body.appendChild(fr);
+  await new Promise(r => fr.onload = r);
+  const w = fr.contentWindow;
+  await new Promise(r => setTimeout(r, 1500));
+  try {
+    const d = w.imParse(SCRIPT);
+    const items = (d.chapters[0].items || []);
+    out.warn = d.warn || [];
+    out.shape = items.map(b => {
+      if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: o.t, then: (o.then || []).map(x => x[1] === "set" ? "set:" + (x[2].flags || []).join("+") : (x[1] === "if" ? "if:" + JSON.stringify(x[2].cond) : x[1])) })) };
+      if (Array.isArray(b) && b[0] === "sys" && b[1] === "set") return "set:" + (b[2].flags || []).join("+");
+      if (Array.isArray(b) && b[0] === "sys" && b[1] === "if") return { if: b[2].cond, then: (b[2].then || []).map(x => x[1]), hasElse: !!b[2].else, else: (b[2].else || []).map(x => x[1]) };
+      return (Array.isArray(b) ? b[1] : typeof b);
+    });
+  } catch (e) { out.parseErr = String(e && e.message || e) }
+  /* ② 运行时消费：pkCond / pkSet 用假 th 直接跑 */
+  try {
+    const th = { pk: { flags: {} } };
+    out.cond_before = w.pkCond(th, { flag: 'mem_video_kept' });
+    out.cond_not_before = w.pkCond(th, { not: 'mem_video_kept' });
+    w.pkSet(th, ['mem_video_kept']);
+    out.flags_after_set = Object.keys(th.pk.flags);
+    out.cond_after = w.pkCond(th, { flag: 'mem_video_kept' });
+    out.cond_not_after = w.pkCond(th, { not: 'mem_video_kept' });
+  } catch (e) { out.condErr = String(e && e.message || e) }
+  document.getElementById('out').textContent = 'EFFECTS_PROBE\n' + JSON.stringify(out, null, 1);
+})();
+</script>

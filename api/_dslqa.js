@@ -11,7 +11,9 @@
 // 口径来源：解析器在 source/src/app51_import.js（imParse）+ app90_youturn.js + app94_official2.js。
 // 这份只做行级检查，不重实现解析 —— 想验"真的能播"，仍然要用 App 那份解析器跑一遍。
 
-const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM']);
+// 2026-10-29：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ 进了剧本语法（运行时 app16_story2.js:27-28 早就支持），
+// 这里必须同步认它们，否则审查会把合法的留痕/条件句报成「未知指令」并挡住上线。
+const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF']);
 const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 
 function dslQA(md) {
@@ -35,6 +37,8 @@ function dslQA(md) {
       if (m[1] === 'CALL') st.callsOpen++;
       else if (m[1] === '/CALL') st.callsClose++;
       else if (m[1] === 'CHAR') st.casts++;
+      else if (m[1] === 'IF') st.ifs++;
+      else if (m[1] === '/IF') st.ifEnds++;
       continue;
     }
     st.lines++;
@@ -46,6 +50,7 @@ function dslQA(md) {
   if (!st.chapters) err.push('没有章节：找不到「# CHAPTER 1｜…」这样的标记');
   if (st.unknown.length) err.push('有 ' + st.unknown.length + ' 条不认识的 ⟦…⟧ 指令（会原样显示给玩家）：' + st.unknown.slice(0, 3).join(' / '));
   if (st.callsOpen !== st.callsClose) err.push('⟦CALL⟧ 与 ⟦/CALL⟧ 数量不等（' + st.callsOpen + ' / ' + st.callsClose + '）—— 没闭合的那一通会把后面的内容全吞掉');
+  if (st.ifs !== st.ifEnds) warn.push('⟦IF⟧ 与 ⟦/IF⟧ 数量不等（' + st.ifs + ' / ' + st.ifEnds + '）—— 没闭合的条件块会按内容平铺播出（不丢字，但条件失效）');
   perCh.forEach((c, i) => {
     const n = i + 1;
     if (!c.scenes) warn.push('第 ' + n + ' 章没有 SCENE（没有背景卡）');
