@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="aa7d43c2f0b6 2026-10-28T15:19Z";
+window.MIRU_BUILD="c85eb88ce0b3 2026-10-28T15:48Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -12034,7 +12034,19 @@ const _ask50=ask;ask=function(prompt,opts){try{const th=S.threads[curT],w=th&&wd
    # CHOICE｜问题 + #### A｜“选项” + 后续内容 → a choice (last one in a chapter = chapter ending choice, earlier ones = in-scene choices) ·
    #### 入口A｜… → plays only if the previous chapter ended on A · [EN] blocks are skipped · everything else → narration.
    Rule-based conversion is free. Lines over the content line (explicit sexual wording) are left out and reported. */
-const IM_EXPLICIT=["性器","勃起","硬物","插入","抽动","抽插","内裤","下身","鼓起","erection","crotch","groin","thrust","penetrat","bulge"];
+// 2026-10-28（Ann 拍板）：删掉「鼓起」。它是靠"鼓起=生理反应"的联想收进来的，
+// 实际先咬到的是「心跳鼓起」这种正常描写 —— 一次误删整句，比漏掉一句的代价大得多。
+// 口径对齐服务端 api/_lib.js 的 EXPLICIT（那边本来就没有「鼓起」）。
+const IM_EXPLICIT=["性器","勃起","硬物","插入","抽动","抽插","内裤","下身","erection","crotch","groin","thrust","penetrat","bulge"];
+/* 2026-10-28（Ann：硬物/抽动 也是同一种误伤，对齐）：
+   同一个词表，但**先把正常用法拿掉再匹配**。这一条同时被 app57 的 qaSafety 复用
+   （它原来自己写了一套同样的排除）⇒ 两把尺从此只有一个来源，不会再漂。
+   被排除的都是"非情色的同形写法"：硬物砸/落/撞、指节/嘴角/喉结…抽动、鼓起勇气/腮/掌/嘴。 */
+function imStrip(t){return String(t||"")
+ .replace(/鼓起(勇气|腮|掌|嘴)/g,"")
+ .replace(/(青筋|血管|脸颊|肌肉|腮帮)[^。，,.]{0,8}鼓起/g,"")
+ .replace(/硬物(砸|落|撞)/g,"")
+ .replace(/(手指|指尖|指节|嘴角|眉|眼皮|脸颊|喉结|肌肉)[^。，,.]{0,6}抽动/g,"")}
 const IM_NOTNAME=new Set(["地点","时间","注","备注","提示","场景","说明","状态","标题","第","目标","人物","角色","背景","Note","Time","Place"]);
 function imChunks(s){s=s.trim();if(s.length<=150)return [s];const out=[];let cur="";s.split(/(?<=[。！？!?…」”])/).forEach(p=>{if((cur+p).length>150&&cur){out.push(cur);cur=p}else cur+=p});if(cur)out.push(cur);return out}
 function imQ(s){return String(s||"").trim().replace(/^[“"「『]+|[”"」』]+$/g,"").trim()}
@@ -12044,7 +12056,7 @@ function imParse(text){text=String(text||"").replace(/\r/g,"").replace(/ /g," "
  const sink=()=>opt?opt.then:variant?variant.then:(chap||nc("")).items;
  const closeChoice=()=>{if(choice){(chap||nc("")).items.push({choice});choice=null;opt=null}};
  const closeVar=()=>{if(variant){(chap||nc("")).items.push({variant});variant=null}};
- const push=b=>{const txt=String(b[2]||"");if(IM_EXPLICIT.some(w=>txt.toLowerCase().includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
+ const push=b=>{const txt=String(b[2]||"");const flat=imStrip(txt).toLowerCase();if(IM_EXPLICIT.some(w=>flat.includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
  const titleOf=h=>{const m=h.split(/[｜|]/);return (m.length>1?(m.slice(1).join(" ").match(/[\u4e00-\u9fff]/)||!m[0].match(/[\u4e00-\u9fff]/)?m.slice(1).join(" "):m[0]):h.replace(/^(CHAPTER|Chapter|SCENE|Scene|CHOICE|Choice)\s*[\d.]*\s*[:：]?\s*/,"").replace(/^第\s*[0-9一二三四五六七八九十百]+\s*[章幕场]\s*[:：]?\s*/,"")).trim()};
  for(const line of text.split("\n")){let raw=line.trim();if(!raw||/^[=\-*_~]{3,}$/.test(raw))continue;
   if(/^\[(EN|ENGLISH)\]$/i.test(raw)){mode="en";continue}if(/^\[(ZH|CN|中文)\]$/i.test(raw)){mode="zh";continue}
@@ -12585,7 +12597,7 @@ const _crSys57=crSys;crSys=function(p,path){return _crSys57(p,path)+"\n"+MIRU_GE
 /* ---------- the auto-review ---------- */
 const QA_MINOR=/(未成年|初中生|小学生|中学生|高中生|(?:^|[^\d])1[0-7]\s*岁|十[一二三四五六七]岁|underage|\b1[0-7]\s*(?:yo|years? old))/i;
 function qaText(x){let s="";const walk=v=>{if(v==null)return;if(typeof v==="string"){s+=v+"\n";return}if(Array.isArray(v)){v.forEach(walk);return}if(typeof v==="object")Object.keys(v).forEach(k=>walk(v[k]))};walk(x);return s}
-function qaSafety(text){const out=[];const t2=text.replace(/鼓起(勇气|腮|掌|嘴)/g,"").replace(/(青筋|血管|脸颊|肌肉|腮帮)[^。，,.]{0,8}鼓起/g,"").replace(/硬物(砸|落|撞)/g,"");
+function qaSafety(text){const out=[];const t2=(typeof imStrip==="function"?imStrip(text):text.replace(/鼓起(勇气|腮|掌|嘴)/g,"").replace(/(青筋|血管|脸颊|肌肉|腮帮)[^。，,.]{0,8}鼓起/g,"").replace(/硬物(砸|落|撞)/g,""));
  const ex=(typeof IM_EXPLICIT!=="undefined"?IM_EXPLICIT:[]).filter(w=>t2.toLowerCase().includes(w.toLowerCase()));
  if(ex.length)out.push(LL("出现露骨描写词：","Explicit wording: ")+ex.slice(0,4).join("、"));
  const rx=new RegExp(QA_MINOR.source,"gi");let m;while((m=rx.exec(text))){const win=text.slice(Math.max(0,m.index-30),m.index+m[0].length+30);

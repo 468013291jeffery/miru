@@ -10,7 +10,7 @@ const _crSys57=crSys;crSys=function(p,path){return _crSys57(p,path)+"\n"+MIRU_GE
 /* ---------- the auto-review ---------- */
 const QA_MINOR=/(未成年|初中生|小学生|中学生|高中生|(?:^|[^\d])1[0-7]\s*岁|十[一二三四五六七]岁|underage|\b1[0-7]\s*(?:yo|years? old))/i;
 function qaText(x){let s="";const walk=v=>{if(v==null)return;if(typeof v==="string"){s+=v+"\n";return}if(Array.isArray(v)){v.forEach(walk);return}if(typeof v==="object")Object.keys(v).forEach(k=>walk(v[k]))};walk(x);return s}
-function qaSafety(text){const out=[];const t2=text.replace(/鼓起(勇气|腮|掌|嘴)/g,"").replace(/(青筋|血管|脸颊|肌肉|腮帮)[^。，,.]{0,8}鼓起/g,"").replace(/硬物(砸|落|撞)/g,"");
+function qaSafety(text){const out=[];const t2=(typeof imStrip==="function"?imStrip(text):text.replace(/鼓起(勇气|腮|掌|嘴)/g,"").replace(/(青筋|血管|脸颊|肌肉|腮帮)[^。，,.]{0,8}鼓起/g,"").replace(/硬物(砸|落|撞)/g,""));
  const ex=(typeof IM_EXPLICIT!=="undefined"?IM_EXPLICIT:[]).filter(w=>t2.toLowerCase().includes(w.toLowerCase()));
  if(ex.length)out.push(LL("出现露骨描写词：","Explicit wording: ")+ex.slice(0,4).join("、"));
  const rx=new RegExp(QA_MINOR.source,"gi");let m;while((m=rx.exec(text))){const win=text.slice(Math.max(0,m.index-30),m.index+m[0].length+30);

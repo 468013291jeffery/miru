@@ -283,6 +283,27 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 
 ---
 
+## 5·补三 剧本导入与内容过滤（2026-10-28 · 官方剧这条入口）
+
+**三次切块**（改这条链之前先看这三层，别把"切块"当成一处）：
+
+| 次 | 在哪 | 切成什么 |
+|---|---|---|
+| ① 导入 | `admin.html` 的「导入 .md / 批量导入 .md」 | 一份交付稿 → `chapters=[{n,t,md}]`；**从第一章往上取 `⟦CHAR⟧`，从章后第一个「# 二、后台内容」往下整段丢弃** |
+| ② 上线 | `api/admin.js` 的 `op=publish` | 章按 `n` 拼成一整篇 → `works.pack.script`，并打 `pack.ver` |
+| ③ 播放 | `imParse`(app51) → `app90` → `app94` → `imBuild` | 章/场景/台词/旁白/选择/分支 → `beats=[who,kind,text]` + 章末 `choices` |
+
+实测（5 份编剧交付稿）：整份直接入库会多出 **327–368 条旁白**（后台设计被当旁白念），切掉后是 **1 章 · 24 台词 · 28 旁白 · 2 选择 · 1 自由输入**。
+
+**内容过滤：一个词表，两把尺 → 现在是一把**
+
+- 词表在 `source/src/app51_import.js` 的 `IM_EXPLICIT`（14 词）；`imStrip()` **先去掉正常用法再匹配**：`硬物(砸|落|撞)`、`(手指|指节|嘴角|喉结|肌肉)…抽动`、`鼓起(勇气|腮|掌|嘴)`。
+- `app57_rules.js` 的 `qaSafety()` 现在**直接调 `imStrip`**（原来它自己写了一套同样的排除 ⇒ 两个来源）。改动前实测：3/5 份稿子的「心跳鼓起」被整句删成「（这一段已省略）」。
+- 服务端 `api/_lib.js` 的 `EXPLICIT`（13 词）**没有** 硬物/抽动，所以它更松；**两份词表仍未统一**（要统一得抽一份共享清单给 api 与 bundle 两边读）——这是开着的格。
+
+**官方剧上线原来没有结构校验**（2026-10-28 补）：`op=publish` 只查「有章节 / review.approved / qa.err 空」，而 `qa` 是浏览器算的、`review` 是人点的；`planValid`/`structureQA` 对官方 pack 也用不上（它们要求 `pack.chapters[]`，官方只有 `script` 文本）。
+⇒ 新增 `api/_dslqa.js`（纯函数，行级判：章/场景/选择/`# ·` 收尾/`⟦CALL⟧` 闭包/未知指令/`你：`）+ `op=autoreview`（绿了才写 `review.approved`，审稿人记「D先生」）+ publish 时**再跑一次** `safety()`（防"审完又改文本"）。自检 6 臂（1 正 5 负）在 `_check/dslqa-selftest.js`。
+
 ## 6. 未验 / 缺口（未量 ≠ 零）
 
 1. `--split` 只验到**启动状态**（`W.length=38`、登录门、首屏 246 字符），**没验完整玩一局**，也没验付费/通话/出图这些在线路径。

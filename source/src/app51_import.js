@@ -4,7 +4,19 @@
    # CHOICE｜问题 + #### A｜“选项” + 后续内容 → a choice (last one in a chapter = chapter ending choice, earlier ones = in-scene choices) ·
    #### 入口A｜… → plays only if the previous chapter ended on A · [EN] blocks are skipped · everything else → narration.
    Rule-based conversion is free. Lines over the content line (explicit sexual wording) are left out and reported. */
-const IM_EXPLICIT=["性器","勃起","硬物","插入","抽动","抽插","内裤","下身","鼓起","erection","crotch","groin","thrust","penetrat","bulge"];
+// 2026-10-28（Ann 拍板）：删掉「鼓起」。它是靠"鼓起=生理反应"的联想收进来的，
+// 实际先咬到的是「心跳鼓起」这种正常描写 —— 一次误删整句，比漏掉一句的代价大得多。
+// 口径对齐服务端 api/_lib.js 的 EXPLICIT（那边本来就没有「鼓起」）。
+const IM_EXPLICIT=["性器","勃起","硬物","插入","抽动","抽插","内裤","下身","erection","crotch","groin","thrust","penetrat","bulge"];
+/* 2026-10-28（Ann：硬物/抽动 也是同一种误伤，对齐）：
+   同一个词表，但**先把正常用法拿掉再匹配**。这一条同时被 app57 的 qaSafety 复用
+   （它原来自己写了一套同样的排除）⇒ 两把尺从此只有一个来源，不会再漂。
+   被排除的都是"非情色的同形写法"：硬物砸/落/撞、指节/嘴角/喉结…抽动、鼓起勇气/腮/掌/嘴。 */
+function imStrip(t){return String(t||"")
+ .replace(/鼓起(勇气|腮|掌|嘴)/g,"")
+ .replace(/(青筋|血管|脸颊|肌肉|腮帮)[^。，,.]{0,8}鼓起/g,"")
+ .replace(/硬物(砸|落|撞)/g,"")
+ .replace(/(手指|指尖|指节|嘴角|眉|眼皮|脸颊|喉结|肌肉)[^。，,.]{0,6}抽动/g,"")}
 const IM_NOTNAME=new Set(["地点","时间","注","备注","提示","场景","说明","状态","标题","第","目标","人物","角色","背景","Note","Time","Place"]);
 function imChunks(s){s=s.trim();if(s.length<=150)return [s];const out=[];let cur="";s.split(/(?<=[。！？!?…」”])/).forEach(p=>{if((cur+p).length>150&&cur){out.push(cur);cur=p}else cur+=p});if(cur)out.push(cur);return out}
 function imQ(s){return String(s||"").trim().replace(/^[“"「『]+|[”"」』]+$/g,"").trim()}
@@ -14,7 +26,7 @@ function imParse(text){text=String(text||"").replace(/\r/g,"").replace(/ /g," "
  const sink=()=>opt?opt.then:variant?variant.then:(chap||nc("")).items;
  const closeChoice=()=>{if(choice){(chap||nc("")).items.push({choice});choice=null;opt=null}};
  const closeVar=()=>{if(variant){(chap||nc("")).items.push({variant});variant=null}};
- const push=b=>{const txt=String(b[2]||"");if(IM_EXPLICIT.some(w=>txt.toLowerCase().includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
+ const push=b=>{const txt=String(b[2]||"");const flat=imStrip(txt).toLowerCase();if(IM_EXPLICIT.some(w=>flat.includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
  const titleOf=h=>{const m=h.split(/[｜|]/);return (m.length>1?(m.slice(1).join(" ").match(/[\u4e00-\u9fff]/)||!m[0].match(/[\u4e00-\u9fff]/)?m.slice(1).join(" "):m[0]):h.replace(/^(CHAPTER|Chapter|SCENE|Scene|CHOICE|Choice)\s*[\d.]*\s*[:：]?\s*/,"").replace(/^第\s*[0-9一二三四五六七八九十百]+\s*[章幕场]\s*[:：]?\s*/,"")).trim()};
  for(const line of text.split("\n")){let raw=line.trim();if(!raw||/^[=\-*_~]{3,}$/.test(raw))continue;
   if(/^\[(EN|ENGLISH)\]$/i.test(raw)){mode="en";continue}if(/^\[(ZH|CN|中文)\]$/i.test(raw)){mode="zh";continue}
