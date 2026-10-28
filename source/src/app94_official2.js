@@ -19,11 +19,10 @@ async function off94Assets(id) {
   OFF94.assets[id] = map || {}; return OFF94.assets[id];
 }
 /* ---- parse: lift directives out of the narration ---- */
-const _imParse94 = imParse;
-imParse = function (text) {
+function off94Parse(next, text) {
   const chars = [];
   text = String(text || "").split("\n").filter(l => { const m = mk94(l); if (m && m.k === "CHAR") { chars.push(m.a); return false; } return true; }).join("\n");
-  const doc = _imParse94.call(this, text);
+  const doc = next(text);
   doc.chars94 = chars;
   const walk = (arr, nested) => {
     const out = []; let call = null;
@@ -58,11 +57,10 @@ imParse = function (text) {
   /* cast: everyone the sheet names comes first, in order */
   if (chars.length) { const names = chars.map(a => a[0]); doc.cast = names.filter(n => doc.sp[n]).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)).slice(0, 9); }
   return doc;
-};
+}
 /* ---- build: names → ids, asset slots → urls, cast sheet → characters ---- */
-const _imBuild94 = imBuild;
-imBuild = function (doc, as) {
-  const r = _imBuild94.apply(this, arguments);
+function off94Build(next, doc, as) {
+  const r = next(doc, as);
   try {
     const wid = r && (r.wid || r), w = wd(wid); if (!w) return r;
     const A = (OFF94.cur && OFF94.assets[OFF94.cur.id]) || {}, key = OFF94.cur ? OFF94.cur.id : wid;
@@ -86,10 +84,12 @@ imBuild = function (doc, as) {
     if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   } catch (e) { try { console.warn("[off94]", e); } catch (_) {} }
   return r;
-};
+}
 /* scene art registered again on every load (SCENE_FILES isn't saved) */
 function off94Rereg() { try { Object.values(S.mine.worlds || {}).forEach(w => { if (!w.official76 || !w.pack) return; (w.pack.chapters || []).forEach(c => (c.beats.zh || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].img && /^off94:/.test(b[2].img) && b[2].src94) (window.SCENE_FILES = window.SCENE_FILES || {})[b[2].img] = b[2].src94; })); }); } catch (_) {} }
-const _imBuild94b = imBuild; imBuild = function () { const r = _imBuild94b.apply(this, arguments); try { const w = wd(r && (r.wid || r)); (w.pack.chapters || []).forEach(c => (c.beats.zh || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].img && /^off94:/.test(b[2].img)) b[2].src94 = window.SCENE_FILES[b[2].img]; })); } catch (_) {} return r; };
+function off94SceneRereg(next, doc, as) { const r = next(doc, as); try { const w = wd(r && (r.wid || r)); (w.pack.chapters || []).forEach(c => (c.beats.zh || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].img && /^off94:/.test(b[2].img)) b[2].src94 = window.SCENE_FILES[b[2].img]; })); } catch (_) {} return r; }
+PARSE.use("app94:directives", { parse: off94Parse, build: off94Build });
+PARSE.use("app94:scene-rereg", { build: off94SceneRereg });
 setTimeout(off94Rereg, 0);
 /* install: know which work we're building and fetch its asset list first */
 const _installWork94 = installWork;
@@ -280,15 +280,13 @@ noXlate94();
    their lines become your turns (say the written line or improvise; the cast answers live). */
 const YOU94 = [["埃文", "新队员", "The Rookie", "m"], ["凯兰", "记录员", "The Scribe", "f"], ["陆识野", "顾昭", "Gu Zhao", "f"]];
 function you94Of(doc) { const names = (doc.chars94 || []).map(a => a[0]); return YOU94.find(y => names.includes(y[0])) || ["", "主角", "The Lead", "f"]; }
-const _imParse96 = imParse;
-imParse = function () {
-  const doc = _imParse96.apply(this, arguments);
+function off94You94Parse(next, text) {
+  const doc = next(text);
   if ((doc.chars94 || []).length) { doc.you94 = 1; doc.sp["你"] = Math.max(doc.sp["你"] || 0, 1); doc.cast = (doc.cast || []).filter(n => n !== "你").concat(["你"]); doc.pov = "你"; }
   return doc;
-};
-const _imBuild96 = imBuild;
-imBuild = function (doc, as) {
-  const r = _imBuild96.call(this, doc, doc && doc.you94 ? "你" : as);
+}
+function off94You94Build(next, doc, as) {
+  const r = next(doc, doc && doc.you94 ? "你" : as);
   try {
     if (!doc || !doc.you94) return r;
     const w = wd(r && (r.wid || r)); if (!w) return r;
@@ -303,7 +301,8 @@ imBuild = function (doc, as) {
     w.cast = w.cast.filter(id => id !== yid).concat([yid]);
   } catch (e) { try { console.warn("[off96]", e); } catch (_) {} }
   return r;
-};
+}
+PARSE.use("app94:you94", { parse: off94You94Parse, build: off94You94Build });
 /* names for "扮演 X" on the sheet follow the app language */
 (function () { const _pan = packAsName; packAsName = function (w, as) { try { off94Names(); } catch (_) {}
   const c = w && w.official76 && as && as !== "watch" && as !== "side" && ch(as); if (c) return t("pk.as", { n: c.n }); return _pan.apply(this, arguments); }; })();

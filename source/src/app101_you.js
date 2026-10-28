@@ -87,13 +87,10 @@
 
   /* ---------- 4 · 交互道具 ⟦ITEM|名称|说明|图标⟧ ---------- */
   const IMARK = "⁤ITEM|";
-  if (typeof imParse === "function") {
-    const _ip = imParse;
-    imParse = function (text) {
-      text = String(text || "").split("\n").map(l => { const m = /^\s*⟦ITEM((?:\|[^|⟧]*)*)⟧\s*$/.exec(l); return m ? "旁白：" + IMARK + m[1].slice(1) : l; }).join("\n");
-      return _ip.call(this, text);
-    };
-  }
+  PARSE.use("app101:item", { parse: function (next, text) {
+    text = String(text || "").split("\n").map(l => { const m = /^\s*⟦ITEM((?:\|[^|⟧]*)*)⟧\s*$/.exec(l); return m ? "旁白：" + IMARK + m[1].slice(1) : l; }).join("\n");
+    return next(text);
+  } });
   const dec = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
   if (typeof pkDirective === "function") {
     PKREG.add("app101_you.js", function(th, b, next){

@@ -1,0 +1,47 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>parse probe</title>
+<pre id="out">PENDING</pre>
+<script>
+/* 解析层重构的等价性探针：
+   把语料逐份喂给「当前 index.html」里的 imParse，输出一份可对拍的读数。
+   重构前跑一次、重构后再跑一次，两边必须逐字段相同。
+   参数：?page=/index.html 或 ?page=/reports/parse-baseline.html */
+const P = new URLSearchParams(location.search).get('page') || '/index.html';
+const CORPUS = ['M001_他把最后的冰时让给了我_作品剧本.md','M002_婚礼取消他却要续约_作品剧本.md','M003_我的差评作者住隔壁_作品剧本.md','M004_吸血鬼只记得我的拒绝_作品剧本.md','M005_我的保镖先递辞职信_作品剧本.md','danger.md','moon.md','velvet_lies_zh_src.md'];
+const real = CORPUS;
+function digest(doc) {
+  let items = 0, choices = 0, variants = 0;
+  const walk = arr => { for (const b of arr || []) { if (b && b.choice) { choices++; (b.choice.opts || []).forEach(o => walk(o.then)); continue } if (b && b.variant) { variants++; walk(b.variant.then); continue } items++ } };
+  (doc.chapters || []).forEach(c => walk(c.items));
+  return {
+    chapters: (doc.chapters || []).length,
+    items, choices, variants,
+    scenes: doc.scenes || 0, lines: doc.lines || 0,
+    omit: doc.omit || 0, think: doc.think || 0,
+    pov: doc.pov || null,
+    cast: (doc.cast || []).slice(),
+    sp: Object.keys(doc.sp || {}).sort().map(k => k + ':' + doc.sp[k]),
+    chars94: (doc.chars94 || []).map(a => a[0]),
+    you94: doc.you94 || 0,
+    titles: (doc.chapters || []).map(c => c.t).slice(0, 4),
+  };
+}
+(async () => {
+  const out = { page: P, cases: {}, layers: null };
+  const fr = document.createElement('iframe');
+  fr.src = P; fr.width = 400; fr.height = 300;
+  document.body.appendChild(fr);
+  await new Promise(r => fr.onload = r);
+  const w = fr.contentWindow;
+  await new Promise(r => setTimeout(r, 1500));
+  out.layers = (typeof w.__parse === 'function') ? w.__parse() : 'no-__parse';
+  for (const f of real) {
+    try {
+      const t = await (await fetch('/reports/parse-corpus/' + encodeURIComponent(f))).text();
+      out.cases[f] = digest(w.imParse(t));
+    } catch (e) { out.cases[f] = { err: String(e && e.message || e) } }
+  }
+  document.getElementById('out').textContent = 'PARSE_PROBE\n' + JSON.stringify(out, null, 1);
+})();
+</script>
