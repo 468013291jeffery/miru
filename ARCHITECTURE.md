@@ -439,7 +439,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | 行内 `*动作*` | `source/src/app16_story2.js:294` `fmtMix` | 产 `<em class="ma">`，由 `:300` 的 post 层套用 |
 | **真实第二条入口** | `source/src/app17_custom.js:73/76` `boxHTML` | `app26` 把连续台词包成 `k:"box"` + `m.say` ⇒ **别人的台词实际走这里**，不是 `k:"say"`。`:76` 已改成同一套 `.m-row` + `.bub` |
 | 气泡钩子 | `source/src/shell.html:238` `.m-row:has(> .rg73)` | 折行只给挂了按钮条的行（否则头像被折到下一行） |
-| 名字标签 | `source/src/shell.html:1372` `.pkmen`（self）· `:1375` `.bubn`（other） | 都在气泡**内** |
+| 名字标签 | `:1375` `.bubn`（other） | 都在气泡**内**。**self 那个 2026-10-28 已删**（见下） |
 | 重生成按钮条 | `source/src/app73_features.js:193` post → 挂到 `.m-row` | 必须在气泡**外**（`.m-row > .rg73{flex-basis:100%}`） |
 
 **两条入口的坑（实测，值得单独记）**：只改 `sayHTML` 时，逐字节对拍**一格都不会动** ——
@@ -470,6 +470,21 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 `app18` 的两条分支仍然是死的（`.stk` / `.bigemo` 全仓库没有 CSS，要不要做成样子是 UI 决定），
 `app73` 每行都会挂一个空 `payrow`（已知视觉瑕疵，修它会改快照基线，留到单独一刀）。
 
+#### 2026-10-28：玩家自己那两句冗余的字去掉了（Ann 的决定）
+
+同一件事的两处重复，都删：
+
+| 删了什么 | 位置 | 快照读数 |
+|---|---|---|
+| `self` 气泡顶上的 `<small class="pkmen">名字 · 你</small>` | `app3_chat.js` sayHTML 的 self 分支 | `say` 189 → **138** 字符（−51） |
+| `who==="me"` 分支的 `<b>名字</b>` | `app16_story2.js:73` | `me-say` 226 → **206** 字符（−20） |
+
+连带删掉 CSS `.pkme .pkmen{…}`（`shell.html`）—— 它因此**没有任何元素可命中**，留着就是一条死规则。
+
+`render-snapshot` 当时红了 **恰好这 2 处**，没有第三处 —— 这就是「有意改版」与「改坏了」的分界：**红的数量要等于你想改的数量**。
+基线已按新形态重写（`tools/render-baseline.json`）。
+
+---
 ### 7.6 静默失败的三条出口
 
 以前失败只有一条路：`catch(_){}` → 消失。现在分三层：

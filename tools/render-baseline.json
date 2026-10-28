@@ -1,5 +1,5 @@
 {
-  "say": "&lt;div class=\"m-row me pkme\" data-mi=\"0\"&gt;&lt;div class=\"bub bubble\"&gt;&lt;small class=\"pkmen\"&gt;测试角色 · you&lt;/small&gt;&lt;p class=\"bac\"&gt;样例台词一句话。&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;",
+  "say": "&lt;div class=\"m-row me pkme\" data-mi=\"0\"&gt;&lt;div class=\"bub bubble\"&gt;&lt;p class=\"bac\"&gt;样例台词一句话。&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;",
   "act": "&lt;div class=\"m-act me\" data-mi=\"0\"&gt;&lt;small class=\"asme\"&gt;You: 测试角色&lt;/small&gt;他把杯子挪到一边。&lt;/div&gt;",
   "think": "&lt;div class=\"m-think me\" data-mi=\"0\"&gt;&lt;small&gt;💭 测试角色&lt;/small&gt;他没说出口的那半句。&lt;/div&gt;",
   "narr": "&lt;div class=\"m-narr\" data-mi=\"0\"&gt;街灯把水洼照亮。&lt;/div&gt;",
@@ -18,6 +18,6 @@
   "xanchor": "&lt;div class=\"xanchor\"&gt;&lt;b&gt;⚓ &lt;/b&gt;&lt;/div&gt;",
   "npc-say": "&lt;div class=\"m-row\" data-mi=\"0\" data-wc style=\"--wc:#EE6F97\"&gt;&lt;div class=\"av\" style=\"width:30px;height:30px\"&gt;&lt;img src=\"data:IMG\" data-art=\"npc\" alt=\"\"&gt;&lt;/div&gt;&lt;div class=\"bub bubble\"&gt;&lt;small class=\"bubn\"&gt;测试角色&lt;/small&gt;&lt;p class=\"bac\"&gt;别的角色说的一句&lt;em class=\"mt\"&gt;角色卡不在 pk.as&lt;/em&gt;+。&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;",
   "box-say": "&lt;div class=\"m-row\" data-mi=\"0\"&gt;&lt;div class=\"av\" style=\"width:30px;height:30px\"&gt;&lt;img src=\"data:IMG\" data-art=\"c2\" alt=\"\"&gt;&lt;/div&gt;&lt;div class=\"bub bubble\"&gt;&lt;small class=\"bubn\"&gt;测试角色&lt;/small&gt;&lt;div class=\"tctx\"&gt;&lt;p class=\"tp ac\"&gt;&lt;span class=\"tpa\"&gt;✱ 测试角色&lt;/span&gt;他把杯子挪开。&lt;/p&gt;&lt;/div&gt;&lt;p class=\"bac\"&gt;我们走。&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;",
-  "me-say": "&lt;div class=\"m-row me\" data-mi=\"0\" data-wc style=\"--wc:var(--fg)\"&gt;&lt;div class=\"bub bubble\"&gt;&lt;p class=\"bac me\"&gt;&lt;b&gt;你&lt;/b&gt;玩家自己说的一句。&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=\"payrow\"&gt;&lt;/div&gt;",
+  "me-say": "&lt;div class=\"m-row me\" data-mi=\"0\" data-wc style=\"--wc:var(--fg)\"&gt;&lt;div class=\"bub bubble\"&gt;&lt;p class=\"bac me\"&gt;玩家自己说的一句。&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class=\"payrow\"&gt;&lt;/div&gt;",
   "me-act": "&lt;div class=\"m-act me\" data-mi=\"0\"&gt;&lt;small class=\"mt act\"&gt;✱ You do&lt;/small&gt;玩家做了一个动作。&lt;/div&gt;&lt;div class=\"payrow\"&gt;&lt;/div&gt;"
 }
