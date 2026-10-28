@@ -858,6 +858,24 @@ const Studio = {
     function addCh() { const n = Math.max(0, ...(sel.value.chapters || []).map(c => c.n)) + 1; sel.value.chapters.push({ n, t: '第 ' + n + ' 章', md: '## CHAPTER ' + n + '｜\n# SCENE｜\n', at: Date.now(), by: S.me.name || '' }); curCh.value = n; }
     async function delCh() { await ElMessageBox.confirm('删除第 ' + curCh.value + ' 章？（可从版本记录恢复）', '删除章节', { type: 'warning' }); await save({ chapters: sel.value.chapters.filter(c => c.n !== curCh.value) }, '删除第 ' + curCh.value + ' 章'); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; }
     async function saveReview() { if (review.approved && (sel.value.qa && (sel.value.qa.err || []).length)) await ElMessageBox.confirm('自动检查还有 ' + sel.value.qa.err.length + ' 个错误，确定标记审核通过？', '确认', { type: 'warning' }); await save({ review: { notes: review.notes, approved: review.approved, checks: review.checks }, stage: review.approved ? 5 : Math.max(sel.value.stage, 4) }, review.approved ? '编剧审核通过' : '编剧审稿意见'); ElMessage.success(review.approved ? '已标记审核通过，可以上线' : '审稿意见已保存'); if (review.approved) step.value = 4; }
+    /* 自动审查（D先生）：服务端跑 api/_dslqa.js 的结构检查 + api/_lib.js 的受限词，绿了才盖 review.approved */
+    const autoOut = ref('');
+    async function autoReview() {
+      busy.value = 'auto'; autoOut.value = '跑中…';
+      try {
+        const j = await api('script', { body: { op: 'autoreview', id: sel.value.id } });
+        const L = [];
+        L.push(j.ok ? '✅ 结构 + 受限词都通过（已自动标记「审核通过」）' : '❌ 有 ' + j.err.length + ' 个硬错，不能上线');
+        L.push('章 ' + j.stats.chapters + ' · 场景 ' + j.stats.scenes + ' · 选择 ' + j.stats.choices + ' · 选项 ' + j.stats.options + ' · 收尾 ' + j.stats.dots + ' · 「你：」' + j.stats.you + ' · 角色卡 ' + j.stats.casts);
+        (j.perCh || []).forEach(c => L.push('  第 ' + c.n + ' 章：场景 ' + c.scenes + ' · 选择 ' + c.choices + ' · 收尾 ' + c.dots + ' · 正文 ' + c.lines + ' 行'));
+        (j.err || []).forEach(e => L.push('✗ ' + e));
+        (j.warn || []).forEach(w => L.push('⚠ ' + w));
+        autoOut.value = L.join('\n');
+        await open(sel.value.id);
+        ElMessage[j.ok ? 'success' : 'error'](j.ok ? '审查通过' : '有 ' + j.err.length + ' 个硬错');
+      } catch (e) { autoOut.value = '失败：' + ((e && e.message) || e); ElMessage.error((e && e.message) || String(e)); }
+      finally { busy.value = ''; }
+    }
     async function restore(v) { await ElMessageBox.confirm('用这个版本的架构和章节覆盖当前内容？（当前内容会先自动存一个版本）', '恢复版本', { type: 'warning' }); await save({ outline: sel.value.outline, chapters: sel.value.chapters }, '恢复前自动备份'); const j = await api('script', { body: { op: 'restore', id: sel.value.id, version: v.id } }); sel.value = Object.assign(j.script, { config: Object.assign(cfgDefault(), j.script.config || {}) }); outline.value = sel.value.outline || ''; loadVers(); ElMessage.success('已恢复'); }
     /* ---------- step 5 ---------- */
     async function publish(force) { await ElMessageBox.confirm('上线后 App「发现」页的社区区会置顶显示（作者：MIRU 官方），所有用户都能玩。', '确认上线', { type: 'warning' }); const j = await api('script', { body: { op: 'publish', id: sel.value.id, force: !!force, rulesVersion: R.version } }); ElMessage.success('已上线：' + j.work_id); open(sel.value.id); load(); }
@@ -953,7 +971,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -1036,6 +1054,8 @@ const Studio = {
       <h3>审稿清单</h3>
       <el-checkbox-group v-model="review.checks.list"><div v-for="d in debugTable" :key="d.k"><el-checkbox :value="d.k">没有「{{d.k}}」（{{d.v}}）</el-checkbox></div></el-checkbox-group>
       <el-input v-model="review.notes" type="textarea" :rows="4" placeholder="审稿意见（会记录审稿人和时间）" style="margin-top:10px" />
+      <div class="toolbar" style="margin-top:10px"><el-button type="success" @click="autoReview" :loading="busy==='auto'">🤖 D先生审查（结构 + 受限词）</el-button><span class="muted">跑一遍：章/场景/选择/收尾/指令闭包/未知指令/受限词；绿了才自动标记通过</span></div>
+      <div class="toolbar" v-if="autoOut"><pre class="json" style="max-height:220px">{{autoOut}}</pre></div>
       <div class="toolbar" style="margin-top:10px"><el-switch v-model="review.approved" active-text="审核通过，可以上线" /><el-button type="primary" @click="saveReview">保存审稿</el-button><span class="muted" v-if="sel.review&&sel.review.by">上次审稿：{{sel.review.by}} · {{fmt(sel.review.at)}}</span></div>
       <h3>版本记录</h3>
       <el-table :data="vers" size="small" max-height="260"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="note" label="说明" /><el-table-column prop="by_name" label="操作人" width="110" /><el-table-column width="90"><template #default="{row}"><el-button size="small" text @click="restore(row)">恢复</el-button></template></el-table-column></el-table>

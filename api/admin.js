@@ -391,6 +391,22 @@ module.exports = L.wrap(async (req, res) => {
       await log('script_create', 'script', id, { title }); return L.send(res, 200, { id });
     }
     const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(b.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+    /* ---------- 自动审查（D先生）----------
+       2026-10-28：官方剧的 publish 原来只查「有章节」+「有人点了审改通过」，
+       而「这份文本能不能播」没有任何东西看。这一步就是那个看的人：
+       结构（章/场景/选择/收尾/指令闭包/未知指令）+ 受限词，两条都跑，绿了才敢盖 review.approved。 */
+    if (op === 'autoreview') {
+      const QA = require('./_dslqa');
+      const md = '# ' + s.title + '\n\n' + (s.chapters || []).slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n');
+      const q = QA.dslQA(md);
+      const sf = L.safety([md]);
+      const err = q.err.concat(sf.length ? ['受限词：' + sf.join('; ')] : []);
+      const review = { approved: !err.length, auto: true, by: 'D先生', at: Date.now(), notes: '自动审查：结构' + (q.ok ? '通过' : '不通过') + ' · 受限词 ' + sf.length, checks: { list: [], stats: q.stats, perCh: q.perCh } };
+      const qa = { err, warn: q.warn, ok: q.ok ? ['结构检查通过'] : [], info: ['stats: ' + JSON.stringify(q.stats)], auto: true, by: 'D先生', at: Date.now() };
+      await sql('UPDATE scripts SET qa=$2::jsonb, review=$3::jsonb, stage=GREATEST(stage,4), updated_by=$4, updated_at=now() WHERE id=$1', [s.id, JSON.stringify(qa), JSON.stringify(review), who]);
+      await log('script_autoreview', 'script', s.id, { err: err.length, warn: q.warn.length });
+      return L.send(res, 200, { ok: !err.length, err, warn: q.warn, stats: q.stats, perCh: q.perCh, review });
+    }
     if (op === 'save') {
       const f = b.patch || {}, sets = [], args = [s.id];
       const put = (col, v, json) => { args.push(json ? JSON.stringify(v) : v); sets.push(col + '=$' + args.length + (json ? '::jsonb' : '')); };
@@ -423,6 +439,8 @@ module.exports = L.wrap(async (req, res) => {
       if (s.qa && Array.isArray(s.qa.err) && s.qa.err.length && !b.force) return L.bad(res, '自动检查还有 ' + s.qa.err.length + ' 个错误，请先修改（或由超级管理员强制上线）');
       if (b.force && A.role !== 'owner') return deny(res);
       const md = '# ' + s.title + '\n\n' + ch.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n');
+      /* 上线前再跑一次受限词（防的是"审完之后又改了正文"，review 是旧的、文本是新的） */
+      if (!b.force) { const sf = L.safety([md]); if (sf.length) return L.bad(res, '受限词命中：' + sf.slice(0, 3).join('; ') + '（先改文本，或由超级管理员强制上线）'); }
       const cfg = s.config || {};
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
