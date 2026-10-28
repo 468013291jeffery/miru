@@ -33,7 +33,14 @@
 - 服务端审查同步：`api/_dslqa.js` 的 `KNOWN` 加这四类，并新增「IF 与 /IF 数量不等」warn
 - 证明：`tools/parse-effects-probe.html` 在真产物上跑（嵌套 / ELSE / 取反 / 未闭合 / 选项内 SET），同一探针用假 `th` 跑
   `pkCond` → `pkSet` 前后 **false → true**；8 份既有语料与重构前**逐字段相同**
-- 还没接：`⟦OPT⟧`（选项行挂效果）、`give:`、`love:`
+- 还没接：`give:`、`need:`（写了会被忽略）
+
+**同一刀的后半：`⟦OPT|A|set:f1,f2;love:2⟧`（选项挂效果）**
+
+- 落在 `opt.set` / `opt.love`，**只在这一项被选中时**生效；`set` 场内 + 章末两侧都生效（`app14_pack.js:471` / `:233`），`love` 目前只在场内被读
+- `imBuild` 两处映射都加了透传（场内 `line` 的 `opts`、章末 `choices[]`）—— 不透传就会在 doc→pack 这一步静默丢掉
+- 探针三层一起验：doc → **pack 里的 `lineOpts/endChoices`** → 运行时函数（`S` 是顶层 const，只能在 iframe 内 eval）
+- 服务端 `KNOWN` 再加 `OPT`，否则合法选项效果句会被判「未知指令」
 
 ## 2026-10-28 · 官方剧本这条路：能整批吃进来，过滤不再误杀，上线前有人看
 

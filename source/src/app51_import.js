@@ -82,12 +82,12 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
   const lastIdx=(()=>{for(let j=items.length-1;j>=0;j--){if(items[j].choice)return j;if(Array.isArray(items[j])&&items[j][0]!=="sys")return -1}return -1})();
   const beats=[];let endC=null;items.forEach((x,j)=>{
    if(x.choice){const opts=x.choice.opts.filter(o=>o.t);if(!opts.length)return;if(j===lastIdx){endC=x.choice;return}
-    beats.push([povId==="n"?(ids[doc.cast[0]]||"n"):povId,"line",{hint:x.choice.q||LL("你怎么做？","What do you do?"),opts:opts.slice(0,4).map(o=>({k:"say",t:o.t,then:o.then.map(mapB)}))}]);return}
+    beats.push([povId==="n"?(ids[doc.cast[0]]||"n"):povId,"line",{hint:x.choice.q||LL("你怎么做？","What do you do?"),opts:opts.slice(0,4).map(o=>{const z={k:"say",t:o.t,then:o.then.map(mapB)};if(o.set)z.set=o.set;if(o.love)z.love=o.love;return z})}]);return}
    if(x.variant){if(i===0){if(x.variant.k==="A")x.variant.then.forEach(b=>beats.push(mapB(b)));return}beats.push(mapB(["sys","if",{cond:{pick:[i,x.variant.k]},then:x.variant.then}]));return}
    if(x[0]==="sys"&&x[1]==="scene"){place=x[2].place||place}beats.push(mapB(x))});
   if(!beats.length||beats[0][0]!=="sys"||beats[0][1]!=="scene")beats.unshift(["sys","scene",{place:place||doc.title,time:""}]);
   const opts=endC?endC.opts.filter(o=>o.t).slice(0,4):[];
-  const choices=opts.length?opts.map((o,j)=>({k:"ABCD"[j],t:x0(o.t),then:{zh:o.then.map(mapB),en:o.then.map(mapB)},mem:x0(LL("你选择了：","You chose: ")+o.t)})):[{k:"A",t:x0(LL("继续","Continue")),then:{zh:[],en:[]},mem:x0("")}];
+  const choices=opts.length?opts.map((o,j)=>{const z={k:"ABCD"[j],t:x0(o.t),then:{zh:o.then.map(mapB),en:o.then.map(mapB)},mem:x0(LL("你选择了：","You chose: ")+o.t)};if(o.set)z.set=o.set;return z}):[{k:"A",t:x0(LL("继续","Continue")),then:{zh:[],en:[]},mem:x0("")}];
   return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:x0(endC&&endC.q||""),place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
  const cast=doc.cast.map(n=>ids[n]),L=ids[pov]&&cast.length>1?cast.find(id=>id!==ids[pov]):cast[0];
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});

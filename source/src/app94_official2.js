@@ -36,7 +36,26 @@ function off94Parse(next, text) {
     const push = b => sink().push(b);
     for (let i = 0; i < (arr || []).length; i++) {
       const b = arr[i];
-      if (b && b.choice) { b.choice.opts.forEach(o => { o.then = walk(o.then, 1); }); push(b); continue; }
+      if (b && b.choice) {
+        /* 2026-10-29：⟦OPT|A|set:f1,f2;love:2⟧ 把效果挂到那个选项上。
+           运行时实测的消费点：app14_pack.js:471（场内选择）`pkSet(th,o.set)` + `o.love`；
+           :233（章末选择）`pkSet(th,x.set)`。所以 set 两侧都生效，love 只在场内选择上被读。 */
+        b.choice.opts.forEach(o => {
+          const raw = o.then || [];
+          for (let k = 0; k < raw.length; k++) {
+            const r = raw[k]; const mm = Array.isArray(r) && r[0] === "n" && mk94(r[2]);
+            if (!mm || mm.k !== "OPT") continue;
+            String(mm.a[1] || "").split(/[;；]/).forEach(part => {
+              const kv = part.split(/[:：]/); const key = String(kv[0] || "").trim(); const val = String(kv[1] || "").trim();
+              if (key === "set" && val) o.set = val.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+              else if (key === "love" && val && !isNaN(+val)) o.love = +val;
+            });
+            raw.splice(k--, 1);
+          }
+          o.then = walk(raw, 1);
+        });
+        push(b); continue;
+      }
       if (b && b.variant) { b.variant.then = walk(b.variant.then, 1); push(b); continue; }
       const m = Array.isArray(b) && b[0] === "n" && mk94(b[2]);
       if (call) { if (m && m.k === "/CALL") { push(["@" + call.who, "call", { who94: call.who, lines: call.lines, hint: call.hint }]); call = null; continue; }

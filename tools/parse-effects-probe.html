@@ -3,8 +3,8 @@
 <title>parse effects probe</title>
 <pre id="out">PENDING</pre>
 <script>
-/* 2026-10-29 · ⟦SET⟧ / ⟦IF⟧…⟦ELSE⟧…⟦/IF⟧ 的行为探针
-   两件事一起验：① 剧本语法 → 结构（sys set / sys if）② 那个结构真的能驱动运行时（pkCond/pkSet）。 */
+/* 2026-10-29 · 剧本语法的「效果」探针：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ / ⟦OPT⟧
+   三层一起验：① 剧本 → doc 结构 ② doc → pack（imBuild 有没有把 set/love 带过去）③ 运行时函数认不认（pkCond/pkSet）。 */
 const SCRIPT = [
   '# CHAPTER 1｜留痕 Chapter 1',
   '# SCENE｜冰场',
@@ -29,12 +29,21 @@ const SCRIPT = [
   '旁白：没闭合的内容。',
   '# CHOICE｜你怎么做？',
   '#### A｜先救人',
-  '⟦SET|saved_him⟧',
+  '⟦OPT|A|set:saved_him;love:2⟧',
   '旁白：你冲了过去。',
   '#### B｜先留证据',
   '旁白：你先拍了照。',
   '# ·',
+  '# CHOICE｜这一章怎么收？',
+  '#### A｜留下',
+  '⟦OPT|A|set:stayed⟧',
+  '旁白：你留下了。',
+  '#### B｜离开',
+  '旁白：你走了。',
+  '# ·',
 ].join('\n');
+
+const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
 
 (async () => {
   const out = {};
@@ -43,27 +52,45 @@ const SCRIPT = [
   await new Promise(r => fr.onload = r);
   const w = fr.contentWindow;
   await new Promise(r => setTimeout(r, 1500));
+  let doc = null;
   try {
-    const d = w.imParse(SCRIPT);
-    const items = (d.chapters[0].items || []);
-    out.warn = d.warn || [];
-    out.shape = items.map(b => {
-      if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: o.t, then: (o.then || []).map(x => x[1] === "set" ? "set:" + (x[2].flags || []).join("+") : (x[1] === "if" ? "if:" + JSON.stringify(x[2].cond) : x[1])) })) };
-      if (Array.isArray(b) && b[0] === "sys" && b[1] === "set") return "set:" + (b[2].flags || []).join("+");
-      if (Array.isArray(b) && b[0] === "sys" && b[1] === "if") return { if: b[2].cond, then: (b[2].then || []).map(x => x[1]), hasElse: !!b[2].else, else: (b[2].else || []).map(x => x[1]) };
-      return (Array.isArray(b) ? b[1] : typeof b);
+    doc = w.imParse(SCRIPT);
+    out.warn = doc.warn || [];
+    out.docShape = (doc.chapters[0].items || []).map(b => {
+      if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: flat(o.t), set: o.set || null, love: o.love || null, then: (o.then || []).map(x => x[1] === 'set' ? 'set:' + (x[2].flags || []).join('+') : x[1]) })) };
+      if (Array.isArray(b) && b[0] === 'sys' && b[1] === 'set') return 'set:' + (b[2].flags || []).join('+');
+      if (Array.isArray(b) && b[0] === 'sys' && b[1] === 'if') return { if: b[2].cond, then: (b[2].then || []).map(x => x[1]), hasElse: !!b[2].else };
+      return Array.isArray(b) ? b[1] : typeof b;
     });
   } catch (e) { out.parseErr = String(e && e.message || e) }
-  /* ② 运行时消费：pkCond / pkSet 用假 th 直接跑 */
+
+  /* ② doc → pack：imBuild 有没有把 set/love 带到 line 选项与章末 choices 上。
+     注意：`S` 是 script 顶层的 const（不是 window.S）⇒ 只能在 iframe 自己那一侧 eval 才看得见。 */
   try {
-    const th = { pk: { flags: {} } };
+    w.__probeScript = SCRIPT;
+    out.pack = w.eval(`(function(){
+      var d = imParse(window.__probeScript);
+      var r = imBuild(d, null); var wid = r && (r.wid || r);
+      var ch = S.mine.worlds[wid].pack.chapters[0];
+      var line = null; (ch.beats.zh || []).forEach(function(b){ if (!line && Array.isArray(b) && b[1] === 'line') line = b; });
+      var flat = function(t){ return String(t||'').replace(/\\s+/g,' ').slice(0,60); };
+      return {
+        lineOpts: line ? line[2].opts.map(function(o){ return { t: flat(o.t), set: o.set || null, love: o.love || null }; }) : null,
+        endChoices: (ch.choices || []).map(function(c){ return { k: c.k, set: c.set || null, mem: !!c.mem }; })
+      };
+    })()`);
+  } catch (e) { out.packErr = String(e && e.message || e) }
+
+  /* ③ 运行时函数：旗/条件真的会动 */
+  try {
+    const th = { pk: { flags: {} }, cast: [], love: {}, mem: [] };
     out.cond_before = w.pkCond(th, { flag: 'mem_video_kept' });
-    out.cond_not_before = w.pkCond(th, { not: 'mem_video_kept' });
     w.pkSet(th, ['mem_video_kept']);
     out.flags_after_set = Object.keys(th.pk.flags);
     out.cond_after = w.pkCond(th, { flag: 'mem_video_kept' });
     out.cond_not_after = w.pkCond(th, { not: 'mem_video_kept' });
   } catch (e) { out.condErr = String(e && e.message || e) }
+
   document.getElementById('out').textContent = 'EFFECTS_PROBE\n' + JSON.stringify(out, null, 1);
 })();
 </script>
