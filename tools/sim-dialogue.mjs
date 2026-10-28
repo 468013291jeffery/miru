@@ -118,6 +118,10 @@ const run = async (prompt) => {
 };
 
 const PLAYER = ['（她没有立刻说话，先看了一眼那张写着"支持"的椅子。）', '我把它挪到中间吧。', '谁先去坐，我不管——但别让我点名。', '你刚才说"别让我点名"，是怕谁？', '那条头条的事，你是从哪儿听来的？', '好，那今晚就按你说的走。'];
+/* 2026-10-28：默认这 6 句是「剧情推进」型，一句都不撩 ⇒ 这个 sim 天生看不见 heat。
+   要量升温就得换驱动，所以加了 --lines="用 | 分隔的几句"：只换玩家台词，prompt 仍然逐字取构建产物。 */
+const _linesArg = opt('lines', '');
+if (_linesArg) { const L = _linesArg.split('|').map(s => s.trim()).filter(Boolean); if (L.length) { PLAYER.length = 0; PLAYER.push(...L); } }
 
 const ngrams = (s, n = 8) => { const out = new Set(); const t = s.replace(/\s+/g, ''); for (let i = 0; i + n <= t.length; i++) out.add(t.slice(i, i + n)); return out };
 const jac = (a, b) => { const A = ngrams(a), B = ngrams(b); if (!A.size || !B.size) return 0; let inter = 0; for (const x of A) if (B.has(x)) inter++; return inter / (A.size + B.size - inter) };
