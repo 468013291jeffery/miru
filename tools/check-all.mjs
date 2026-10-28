@@ -26,6 +26,8 @@ const suites = [
   ['rev-selftest.mjs', ['tools/rev-selftest.mjs'], true],
   ['plan-valid-selftest.mjs', ['tools/plan-valid-selftest.mjs'], true],
   ['replyguard-selftest.mjs', ['tools/replyguard-selftest.mjs'], true],
+  /* 剧本解析只剩一张表：层表 / 顺序 / 无猴子补丁 / 兼容门（--selftest 五臂，含四枚变异） */
+  ['parse-registry-check.mjs', ['tools/parse-registry-check.mjs'], true],
   ['dialogue-selftest.mjs', ['tools/dialogue-selftest.mjs'], true],
   ['wiring-check.mjs', ['tools/wiring-check.mjs'], true],
   ['plan-gate-selftest.mjs', ['tools/plan-gate-selftest.mjs'], true],

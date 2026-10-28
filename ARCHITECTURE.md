@@ -304,6 +304,35 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 **官方剧上线原来没有结构校验**（2026-10-28 补）：`op=publish` 只查「有章节 / review.approved / qa.err 空」，而 `qa` 是浏览器算的、`review` 是人点的；`planValid`/`structureQA` 对官方 pack 也用不上（它们要求 `pack.chapters[]`，官方只有 `script` 文本）。
 ⇒ 新增 `api/_dslqa.js`（纯函数，行级判：章/场景/选择/`# ·` 收尾/`⟦CALL⟧` 闭包/未知指令/`你：`）+ `op=autoreview`（绿了才写 `review.approved`，审稿人记「D先生」）+ publish 时**再跑一次** `safety()`（防"审完又改文本"）。自检 6 臂（1 正 5 负）在 `_check/dslqa-selftest.js`。
 
+## 5·补四 剧本解析层：四层猴子补丁 → 一张注册表（2026-10-29）
+
+**原来是什么样**：`imParse` / `imBuild` 被 4 个文件各自用 `imParse = function(){…}` 包一层 ——
+
+```
+app51(核心) ← app90(你：) ← app94(⟦…⟧ 指令) ← app94(you94) ← app101(⟦ITEM⟧)
+```
+
+层的**顺序只由 `build.py` 的 `parts[]` 决定**，包错一层不报错、只会「结果怪一点」。最实在的后果：`⟦ITEM⟧` 能用**纯粹是因为 `app101` 恰好排在 `app94` 之后**。这和 10-27 治掉的 `speak` 五层补丁是同一个病。
+
+**现在**：`PARSE.use(名字, {parse?, build?})`，与 `VOICE.use` 同形。**注册顺序 = 层序（先注册在里层）**，与「后装载的包住先装载的」完全等价。
+
+| # | 层 | parse | build | 管什么 |
+|---:|---|---|---|---|
+| 1 | `app90:youturn` | ✓ | ✓ | 玩家台词 `你：` → 「轮到你说」停顿点；`你` 不进演员表 |
+| 2 | `app94:directives` | ✓ | ✓ | `⟦CHAR/BGM/TIME/BG/CG/VIDEO/PHOTO/MG/FREE/CALL⟧` 提成结构指令 |
+| 3 | `app94:scene-rereg` | | ✓ | 场景图重新登记（`SCENE_FILES` 不进存档） |
+| 4 | `app94:you94` | ✓ | ✓ | 官方剧的主角视角（`you94`） |
+| 5 | `app101:item` | ✓ | | `⟦ITEM⟧` → 道具卡 |
+
+`imParse` / `imBuild` 保留成**兼容门**（老调用点 app76 / app53 / 上传页一个字不用改），都 delegate 给 `PARSE`。
+**显示接口**：浏览器控制台 `__parse()` → `{stats:{layers,parse,build,err}, layers:[…]}`。出问题先看层表和调用次数，别猜谁包了谁。
+
+**等价性怎么证的**（不是"看起来一样"）：`tools/parse-probe.html` 把 8 份语料（5 部新剧 + `danger` / `moon` / `velvet` 原稿）喂给同一份解析器，输出逐字段摘要（章 / items / choices / variants / scenes / lines / omit / pov / cast / sp / chars94 / you94 / 章节标题）。
+改前对 `reports/parse-baseline.html`（旧产物副本）跑一次、改后对新 `index.html` 跑一次 ⇒ **8/8 逐字段相同**（读数存档 `reports/parse-before.json` · `parse-after.json`）。
+
+**闸**：`tools/parse-registry-check.mjs`（已进 `check-all`）—— 守四件事：层表名字/顺序/职责、没有 `imParse =` / `_imParse9x` 回潮、兼容门与 `__parse` 还在、`parts[]` 里这四个文件的装载顺序仍是 51→90→94→101。
+自检 5 臂：正常绿 + 四枚变异（删一层 / 重名 / 顺序挪动 / 塞回猴子补丁）各自红在预期那条。
+
 ## 6. 未验 / 缺口（未量 ≠ 零）
 
 1. `--split` 只验到**启动状态**（`W.length=38`、登录门、首屏 246 字符），**没验完整玩一局**，也没验付费/通话/出图这些在线路径。
@@ -337,11 +366,11 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**44 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**45 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      147 个函数 / 328 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3）
+猴补丁      145 个函数 / 320 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）
 空 catch    569 处 / 99 个文件    （当天起点 616 ⇒ −41）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码

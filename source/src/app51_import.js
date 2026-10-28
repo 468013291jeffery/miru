@@ -20,7 +20,7 @@ function imStrip(t){return String(t||"")
 const IM_NOTNAME=new Set(["地点","时间","注","备注","提示","场景","说明","状态","标题","第","目标","人物","角色","背景","Note","Time","Place"]);
 function imChunks(s){s=s.trim();if(s.length<=150)return [s];const out=[];let cur="";s.split(/(?<=[。！？!?…」”])/).forEach(p=>{if((cur+p).length>150&&cur){out.push(cur);cur=p}else cur+=p});if(cur)out.push(cur);return out}
 function imQ(s){return String(s||"").trim().replace(/^[“"「『]+|[”"」』]+$/g,"").trim()}
-function imParse(text){text=String(text||"").replace(/\r/g,"").replace(/ /g," ");const doc={title:"",chapters:[],sp:{},spq:{},warn:[],omit:0,think:0,scenes:0};
+function imParseCore(text){text=String(text||"").replace(/\r/g,"").replace(/ /g," ");const doc={title:"",chapters:[],sp:{},spq:{},warn:[],omit:0,think:0,scenes:0};
  let chap=null,choice=null,opt=null,variant=null,mode="zh",think=false,seenBody=false;
  const nc=t=>{chap={t:t||"",items:[]};doc.chapters.push(chap);return chap};
  const sink=()=>opt?opt.then:variant?variant.then:(chap||nc("")).items;
@@ -68,7 +68,7 @@ function imParse(text){text=String(text||"").replace(/\r/g,"").replace(/ /g," "
  if(doc.omit)doc.warn.push(LL(doc.omit+" 处露骨内容已省略。",doc.omit+" explicit passages were left out."));
  return doc}
 /* ---------- build a MIRU world from the parsed doc ---------- */
-function imBuild(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s}),lib=window.STUDIO_LIB||{},keys=Object.keys(lib);
+function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s}),lib=window.STUDIO_LIB||{},keys=Object.keys(lib);
  const ids={};doc.cast.forEach((nm,i)=>{const id="u"+(now+i);ids[nm]=id;
   S.mine.chars[id]={n:nm,age:28,g:"m",h:"",w:wid,pal:[["#C98A6B","#1B1520"],["#7A63C9","#141024"],["#5E9E96","#13212A"]][i%3],a:"charm",v:{pitch:1,rate:1},by:"@"+(me()||"you").toLowerCase(),
    role:x0(i===0&&nm===doc.pov?LL("主角","Lead"):""),looks:x0(""),vibe:x0(""),tells:{en:[],zh:[]},twist:x0(""),likes:x0(""),secret:x0(""),pitch:x0(""),solo:x0("…"),
@@ -100,6 +100,48 @@ function imBuild(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s}),l
  S.mine.worlds[wid]={id:wid,or:"bl",pal:cast.length?S.mine.chars[cast[0]].pal:["#C98A6B","#1B1520"],author:"@"+(me()||"you").toLowerCase(),official:false,mine:1,mineAt:now,stats:[0,0,0],heat:"slow",cast,tags:[LL("上传剧本","Uploaded")],
   title:x0(doc.title),hook:x0(firstTxt.slice(0,60)),premise:x0(firstTxt.slice(0,80)),you:x0(ids[pov]?pov:LL("你自己","Yourself")),warn:x0(""),rel:L&&ids[pov]?[[ids[pov],L,x0("")]]:[],status:{time:x0(""),place:x0(place)},pack,cover:null};
  const ps=packSt(wid);ps.own=1;S.works.unshift({id:wid,kind:"story",title:doc.title,at:now,seed:0});save();return {wid,as:ids[pov]||"watch"}}
+/* ================= 剧本解析的唯一咽喉（2026-10-29）=================
+   之前 imParse / imBuild 被 4 个文件各自「重赋值」包一层：
+     app90（你：） → app94（⟦…⟧ 指令） → app94（你视角 you94） → app101（⟦ITEM⟧）
+   层序只由 build.py 的 parts[] 决定 —— 包错一层不会报错，只会「结果怪一点」
+   （⟦ITEM⟧ 能用纯粹是因为 app101 恰好排在 app94 之后）。
+   现在换成和 VOICE.use 同一个形状的注册表，层序 = 注册顺序（先注册的在里层），
+   与「后装载的包住先装载的」完全等价；而 `imParse` / `imBuild` 变成兼容门，
+   老调用点（app76 / app53 / 上传页…）一个字都不用改。
+   显示接口：`__parse()` 给出层表与调用次数 —— 出问题时先看这个，别猜谁包了谁。 */
+const PARSE = (function () {
+  const layers = [];
+  const stat = { parse: 0, build: 0, err: 0 };
+  const run = (kind, core, args) => {
+    let f = core;
+    for (let i = 0; i < layers.length; i++) {
+      const L = layers[i];
+      if (!L[kind]) continue;
+      const prev = f;
+      f = function () { return L[kind].apply(null, [prev].concat([].slice.call(arguments))) };
+    }
+    stat[kind]++;
+    try { return f.apply(null, args) } catch (e) { stat.err++; throw e }
+  };
+  return {
+    /* use(名字, {parse?(next,text), build?(next,doc,as)}) —— 名字进层表，出问题时能一眼看出是谁 */
+    use: function (name, fns) {
+      if (!name || !fns || (!fns.parse && !fns.build)) throw new Error("PARSE.use(name, {parse|build}) 参数不全");
+      for (const L of layers) if (L.name === name) throw new Error("PARSE.use 重名：" + name);
+      layers.push({ name: String(name), parse: fns.parse || null, build: fns.build || null });
+      return layers.length;
+    },
+    parse: function (text) { return run("parse", imParseCore, arguments) },
+    build: function (doc, as) { return run("build", imBuildCore, arguments) },
+    list: function () { return layers.map(L => ({ name: L.name, parse: !!L.parse, build: !!L.build })) },
+    stats: function () { return { layers: layers.length, parse: stat.parse, build: stat.build, err: stat.err } }
+  };
+})();
+/* 兼容门：老调用点继续写 imParse(...) / imBuild(...)（app76、app53、上传页） */
+function imParse(text) { return PARSE.parse.apply(null, arguments) }
+function imBuild(doc, as) { return PARSE.build.apply(null, arguments) }
+/* 显示接口：控制台 __parse() 给出层表与调用次数（没有 window 的环境就不挂，不用 try 兜） */
+if (typeof window !== "undefined") window.__parse = function () { return { stats: PARSE.stats(), layers: PARSE.list() } };
 /* ---------- .docx reader (zip + deflate-raw, no library) ---------- */
 async function imDocx(buf){const u8=new Uint8Array(buf),dv=new DataView(buf);let e=-1;for(let i=u8.length-22;i>=Math.max(0,u8.length-66000);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break}}if(e<0)throw "zip";
  const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);let hit=null;for(let k=0;k<n;k++){const nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true);const name=new TextDecoder().decode(u8.subarray(p+46,p+46+nl));
