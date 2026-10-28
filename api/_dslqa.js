@@ -19,7 +19,7 @@ const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 function dslQA(md) {
   const text = String(md || '').replace(/\r\n?/g, '\n');
   const L = text.split('\n').map(s => s.trim());
-  const st = { chapters: 0, scenes: 0, choices: 0, options: 0, dots: 0, you: 0, casts: 0, lines: 0, callsOpen: 0, callsClose: 0, unknown: [] };
+  const st = { chapters: 0, scenes: 0, choices: 0, options: 0, dots: 0, you: 0, casts: 0, lines: 0, callsOpen: 0, callsClose: 0, ifs: 0, ifEnds: 0, unknown: [] };
   const perCh = [];
   let cur = null;
   const closeCh = () => { if (cur) perCh.push(cur); };
