@@ -44,6 +44,8 @@ const suites = [
   /* 防回潮：具名弹层被包了几层，与基线比（两个方向都红） */
   ['sheet-census.mjs', ['tools/sheet-census.mjs','--check'], true],
   ['doc-ref-check.mjs', ['tools/doc-ref-check.mjs'], true],
+  /* 2026-10-28 Ann：「架构文档写的时候要跟上，要不然做的多了会忘记之前的事情」 */
+  ['doc-freshness.mjs', ['tools/doc-freshness.mjs','--check'], true],
   ['pkdirective-check.mjs', ['tools/pkdirective-check.mjs'], true],
   ['on-assign-check.mjs', ['tools/on-assign-check.mjs','--check'], true],
   ['errlog-selftest.mjs', ['tools/errlog-selftest.mjs'], true],

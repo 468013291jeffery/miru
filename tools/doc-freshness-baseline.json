@@ -1,0 +1,98 @@
+[
+ {
+  "sha": "fffa6eb7",
+  "subject": "heat: strip two of the three stacked ceilings (Ann: the model censors itself already)"
+ },
+ {
+  "sha": "c01f075f",
+  "subject": "heat ceiling: take the self-censoring clause out of the prompt"
+ },
+ {
+  "sha": "ec742409",
+  "subject": "voice queue: a watchdog per line, and a log that can say why"
+ },
+ {
+  "sha": "d5313d9a",
+  "subject": "the avatar was being wrapped onto its own line"
+ },
+ {
+  "sha": "f078404a",
+  "subject": "merge ann/decouple → main：step three: the player character's line finally renders through sayHTML"
+ },
+ {
+  "sha": "e53da099",
+  "subject": "step three: the player character's line finally renders through sayHTML"
+ },
+ {
+  "sha": "45eecdc2",
+  "subject": "merge ann/decouple → main：step two of three: the last post processor that looked for a shell now looks for the bubble"
+ },
+ {
+  "sha": "da520cd0",
+  "subject": "step two of three: the last post processor that looked for a shell now looks for the bubble"
+ },
+ {
+  "sha": "449e9bca",
+  "subject": "merge ann/decouple → main：every bubble now carries one class that survives a shell change"
+ },
+ {
+  "sha": "7b58a92b",
+  "subject": "every bubble now carries one class that survives a shell change"
+ },
+ {
+  "sha": "bd86dc15",
+  "subject": "merge ann/decouple → main：avatars come back, and the regenerate bar moves out of the bubble"
+ },
+ {
+  "sha": "14b8c915",
+  "subject": "avatars come back, and the regenerate bar moves out of the bubble"
+ },
+ {
+  "sha": "37dd4b24",
+  "subject": "merge ann/decouple → main：say finally has one renderer: three speakers, one bubble"
+ },
+ {
+  "sha": "7b367824",
+  "subject": "say finally has one renderer: three speakers, one bubble"
+ },
+ {
+  "sha": "2a990c17",
+  "subject": "merge ann/decouple → main：the player's own line gets the bubble it always should have had, and the \"picked\" echo is gone"
+ },
+ {
+  "sha": "0238ea50",
+  "subject": "the player's own line gets the bubble it always should have had, and the \"picked\" echo is gone"
+ },
+ {
+  "sha": "b904be72",
+  "subject": "merge ann/decouple → main：one set of tokens for what a message looks like, and three probes so the gate can see it"
+ },
+ {
+  "sha": "ee85bbe4",
+  "subject": "one set of tokens for what a message looks like, and three probes so the gate can see it"
+ },
+ {
+  "sha": "f1d860af",
+  "subject": "a registry for dialog blocks, and two layers moved into it"
+ },
+ {
+  "sha": "cae39fdf",
+  "subject": "menuSheet's seven layers, read one by one, and the one place that ate its own return value"
+ },
+ {
+  "sha": "d7fe1fc5",
+  "subject": "delete 35 dead CSS rules whose whole class family never appears in any JS"
+ },
+ {
+  "sha": "30f6e21a",
+  "subject": "three more CSS merges, and a taxonomy that stops calling intentional variants debt"
+ },
+ {
+  "sha": "5b73f01e",
+  "subject": "merge 60 duplicate CSS selectors, and stop a gate from crying wolf on index.html"
+ },
+ {
+  "sha": "aeef41ac",
+  "subject": "first CSS cut: five .dkwrap rules become one, and the new gate says nothing moved"
+ }
+]
