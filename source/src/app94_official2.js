@@ -26,24 +26,43 @@ function off94Parse(next, text) {
   doc.chars94 = chars;
   const walk = (arr, nested) => {
     const out = []; let call = null;
+    /* 2026-10-29（Ann）：「留痕 / 条件」的运行时早就在了 —— app16_story2.js:27 `sys if` / :28 `sys set`，
+       pkCond 支持 pick/flag/not/love/any/all。缺的只是**剧本里能写出来的语法**。这里补三种：
+         ⟦SET|mem_video_kept,other⟧      打旗（落在它所处的位置：章一级 / 选项后果里都行）
+         ⟦IF|flag⟧ … ⟦ELSE⟧ … ⟦/IF⟧      按旗分支（⟦IF|!flag⟧ = 没打这个旗）
+       IF 可以嵌套；没闭合的 IF 会把内容**平铺**回去（宁可播出来，也不要静默吞掉后面的正文）。 */
+    const stack = [];
+    const sink = () => (stack.length ? (stack[stack.length - 1].alt || stack[stack.length - 1].then) : out);
+    const push = b => sink().push(b);
     for (let i = 0; i < (arr || []).length; i++) {
       const b = arr[i];
-      if (b && b.choice) { b.choice.opts.forEach(o => { o.then = walk(o.then, 1); }); out.push(b); continue; }
-      if (b && b.variant) { b.variant.then = walk(b.variant.then, 1); out.push(b); continue; }
+      if (b && b.choice) { b.choice.opts.forEach(o => { o.then = walk(o.then, 1); }); push(b); continue; }
+      if (b && b.variant) { b.variant.then = walk(b.variant.then, 1); push(b); continue; }
       const m = Array.isArray(b) && b[0] === "n" && mk94(b[2]);
-      if (call) { if (m && m.k === "/CALL") { out.push(["@" + call.who, "call", { who94: call.who, lines: call.lines, hint: call.hint }]); call = null; continue; }
+      if (call) { if (m && m.k === "/CALL") { push(["@" + call.who, "call", { who94: call.who, lines: call.lines, hint: call.hint }]); call = null; continue; }
         if (Array.isArray(b) && b[0][0] === "@" && b[0] !== "@pov") call.lines.push([b[0].slice(1), b[2]]); continue; }
-      if (!m) { out.push(b); continue; }
+      if (!m) { push(b); continue; }
       const a = m.a;
+      if (m.k === "SET") { push(["sys", "set", { flags: String(a[0] || "").split(/[,，]/).map(s => s.trim()).filter(Boolean) }]); continue; }
+      if (m.k === "IF") { const f = String(a[0] || "").trim(); stack.push({ cond: f.charAt(0) === "!" ? { not: f.slice(1) } : { flag: f }, then: [], alt: null }); continue; }
+      if (m.k === "ELSE") { const f = stack[stack.length - 1]; if (f && !f.alt) f.alt = []; continue; }
+      if (m.k === "/IF") { const f = stack.pop(); if (!f) continue; const beat = ["sys", "if", { cond: f.cond, then: f.then }]; if (f.alt) beat[2].else = f.alt; push(beat); continue; }
       if (m.k === "CALL") { call = { who: a[0], hint: a[1] || "", lines: [] }; continue; }
-      if (m.k === "BGM") { out.push(["sys", "bgm", { m: a[0] }]); continue; }
+      if (m.k === "BGM") { push(["sys", "bgm", { m: a[0] }]); continue; }
       if (m.k === "TIME" || m.k === "BG") { for (let j = out.length - 1; j >= 0; j--) { const s = out[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
-      if (m.k === "CG" || m.k === "VIDEO") { out.push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
-      if (m.k === "PHOTO") { out.push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
-      if (m.k === "MG") { const gid = /^g_/.test(a[0]) ? a[0] : "g_" + a[0]; out.push(["sys", "mg", { id: gid }]); continue; }
+      if (m.k === "CG" || m.k === "VIDEO") { push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
+      if (m.k === "PHOTO") { push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
+      if (m.k === "MG") { const gid = /^g_/.test(a[0]) ? a[0] : "g_" + a[0]; push(["sys", "mg", { id: gid }]); continue; }
       if (m.k === "FREE" && nested) continue;
-      if (m.k === "FREE") { const ex = a.slice(1).filter(Boolean); out.push({ choice: { q: "\u2063" + (a[0] || ""), opts: (ex.length ? ex : ["……"]).slice(0, 3).map(t => ({ t, then: [] })) }, free94: 1 }); continue; }
+      if (m.k === "FREE") { const ex = a.slice(1).filter(Boolean); push({ choice: { q: "\u2063" + (a[0] || ""), opts: (ex.length ? ex : ["……"]).slice(0, 3).map(t => ({ t, then: [] })) }, free94: 1 }); continue; }
     }
+    /* 没闭合的 IF：内容平铺回上一层（并留一条 warn，别静默） */
+    let unclosed = 0;
+    while (stack.length) {
+      const f = stack.pop(); unclosed++;
+      sink().push.apply(sink(), f.then); if (f.alt) sink().push.apply(sink(), f.alt);
+    }
+    if (unclosed) (doc.warn = doc.warn || []).push("IF 没有闭合（缺 ⟦/IF⟧）：条件块已按内容平铺播出");
     return out;
   };
   (doc.chapters || []).forEach(c => {
