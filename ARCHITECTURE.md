@@ -347,9 +347,14 @@ app51(核心) ← app90(你：) ← app94(⟦…⟧ 指令) ← app94(you94) ←
 **证明**（`tools/parse-effects-probe.html`，跑在真产物上）：一次喂进「SET / IF+ELSE / IF 取反 / 嵌套 IF / 未闭合 IF / 选项后果里的 SET」，读数逐条对得上；并且同一个探针用假 `th` 直接跑运行时 —— `pkCond({flag})` 在 `pkSet` 前后 **false → true**、`{not}` 同步反向，**结构真的能驱动运行时**，不只是形状对。
 语料回归：8 份既有语料与重构前**逐字段相同**（这次改的 `walk` 是所有 ⟦…⟧ 的公共路径）。
 
-**服务端审查同步**：`api/_dslqa.js` 的 `KNOWN` 加了 `SET/IF/ELSE//IF`（否则合法的留痕句会被判「未知指令」挡住上线），并新增一条 warn：`⟦IF⟧` 与 `⟦/IF⟧` 数量不等。
+**服务端审查同步**：`api/_dslqa.js` 的 `KNOWN` 加了 `SET/IF/ELSE//IF/OPT`（否则合法的留痕/效果句会被判「未知指令」挡住上线），并新增一条 warn：`⟦IF⟧` 与 `⟦/IF⟧` 数量不等。
 
-**还没接**：`⟦OPT⟧`（在选项行上挂 `set/love/give`）、`give:` 得道具、`love:` 好感增减 —— 现在写它们会被当成未知指令。
+**选项效果（同一天补上）**：`⟦OPT|A|set:f1,f2;love:2⟧`（紧跟 `#### A｜…`）落到 `opt.set` / `opt.love`，**只在这一项被选中时**生效。
+`imBuild` 的两处映射都加了透传（场内选择 `b[1]==="line"` 的 `opts`、章末 `choices[]`）——不透传的话效果会在 doc→pack 这一步静默丢掉。
+实测消费点：`app14_pack.js:471`（场内）`pkSet(th,o.set)` + `o.love`；`:233`（章末）`pkSet(th,x.set)` ⇒ **`set` 两侧都生效，`love` 只在场内选择上被读**。
+探针 `tools/parse-effects-probe.html` 现在三层一起验：doc 结构 → **pack 里的 `lineOpts/endChoices`**（`S` 是顶层 const，只能在 iframe 内 eval）→ 运行时 `pkCond/pkSet`。
+
+**还没接**：`give:` 得道具、`need:` 需要道具才能选 —— 写了会被忽略（不报错、不生效）。
 
 ## 6. 未验 / 缺口（未量 ≠ 零）
 
