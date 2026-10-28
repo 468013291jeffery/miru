@@ -208,7 +208,7 @@ function sayHTML(m,i,th){
  const sp=speakerOf(m,th),c=(m.who==="me")?null:ch(m.who);
  const body=(typeof lineHTML==="function")?lineHTML({who:m.who,k:"say",txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>');
  if(sp==="me")return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub bubble">'+body+'</div></div>';
- if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub bubble"><small class="pkmen">'+esc(first(c.n))+' · '+t("pk26.you")+'</small>'+body+'</div></div>';
+ if(sp==="self")return '<div class="m-row me pkme" data-mi="'+i+'"><div class="bub bubble">'+body+'</div></div>';
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
  const isMe=m.who==="me",c=isMe?null:ch(m.who);

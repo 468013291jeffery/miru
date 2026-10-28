@@ -70,7 +70,7 @@ function lineHTML(p, th, opts) {
   try {
     const who = p && p.who, k = (p && p.k) || "say", txt = (p && p.txt) != null ? p.txt : "";
     if (who === "n") return '<p class="bdn">' + esc(txt) + '</p>';
-    if (who === "me") return '<p class="' + (k === "think" ? "bth" : "bac") + ' me"><b>' + esc(me()) + '</b>' + esc(txt) + '</p>';
+    if (who === "me") return '<p class="' + (k === "think" ? "bth" : "bac") + ' me">' + esc(txt) + '</p>';
     const c = ch(who), nm = c ? first(c.n) : "";
     /* msgHTML 已经在上方单独渲染了名字（.m-who），这里就不再重复 */
     const nameBit = (opts && opts.noName) ? "" : ('<b style="color:' + (c ? c.pal[0] : "") + '">' + esc(nm) + (k === "think" ? " · " + t("st2.thinks") : "") + '</b>');
