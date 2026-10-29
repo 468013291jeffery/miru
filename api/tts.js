@@ -341,9 +341,13 @@ module.exports = async (req, res) => {
     const en = q.l === 'en' || (!q.l && !/[\u3040-\u30ff\uac00-\ud7af\u4e00-\u9fff]/.test(text));
     let out = null, qerr = null;
     const lang = QLANG[q.l] ? q.l : (/[\u3040-\u30ff]/.test(text) ? 'ja' : /[\uac00-\ud7af]/.test(text) ? 'ko' : /[\u4e00-\u9fff]/.test(text) ? 'zh' : 'en');
-    if (qwenSites().length) { try { out = await viaQwen(text, voice, lang); } catch (e) { qerr = e; out = null; } }
+    /* 后台「语音 API」填了地址 ⇒ 它优先（填了就该生效，否则那一页只是摆设）；
+       它挂了再退回原来的顺序 —— 玩家至少还能听见声音，而不是一片安静。 */
+    let tc = {}; try { tc = ((await L.config()) || {}).tts || {}; } catch (_) {}
+    if (tc.url) { try { out = await viaOpenAI(text, voice, tc); } catch (e) { qerr = e; out = null; } }
+    if (!out && qwenSites().length) { try { out = await viaQwen(text, voice, lang); } catch (e) { qerr = e; out = null; } }
     if (!out && en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
-    if (!out) { let tc = {}; try { tc = ((await L.config()) || {}).tts || {}; } catch (_) {} out = (tc.url || process.env.TTS_URL) ? await viaOpenAI(text, voice, tc) : await viaSpace(text, voice, vec); }
+    if (!out) out = (process.env.TTS_URL && !tc.url) ? await viaOpenAI(text, voice, tc) : await viaSpace(text, voice, vec);
     const riff = out.buf.slice(0, 4).toString() === 'RIFF';
     res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
