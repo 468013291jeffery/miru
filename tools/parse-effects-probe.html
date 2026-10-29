@@ -23,6 +23,8 @@ const SCRIPT = [
   '⟦IF|!mem_video_kept⟧',
   '旁白：他不再提这件事。',
   '⟦/IF⟧',
+  /* ⟦REVEAL|S_A⟧ 提前解锁：它在正文里就该产生一个 `set:secret:S_A` 的节拍 */
+  '⟦REVEAL|S_A⟧',
   '⟦IF|mem_video_kept⟧',
   '⟦IF|other_flag⟧',
   '旁白：嵌套里的内容（不该出现）。',
@@ -127,6 +129,11 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
           sB.knows = saveK;
           sec.knowsArm = { id: someId, name: nm2, hiddenBefore: before, hiddenAfterAddKnows: after };
         } else sec.knowsArm = { skipped: true, castLen: castIds.length };
+        /* ⟦REVEAL⟧ 那一支：第 1 章（S_A 声称 6 章才揭）打上 secret:S_A 的旗 ⇒ 立刻不再"你不知道"；
+           S_B 不受影响（它没有 REVEAL）。 */
+        var thF = mkTh(1, null); thF.pk.flags = { 'secret:S_A': 1 };
+        var pf = packPrompt(thF);
+        sec.revealArm = { A_hiddenBeforeFlag: pa.indexOf('Klaus') >= 0, A_hiddenAfterFlag: pf.indexOf('Klaus') >= 0, B_stillHidden: pf.indexOf('哥哥') >= 0 };
       } catch (e) { sec.err = String(e && e.message || e) }
       return {
         goal: ch.goal || null,

@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="155ceaca210d 2026-10-29T06:12Z";
+window.MIRU_BUILD="a2096e939a72 2026-10-29T06:17Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7784,7 +7784,9 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
     角色名用 lead.n（P 里的 t 是双语对象，secrets 里存的是剧本里的原字名字）。 */
  const _secOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.secretBoundary!==false);
  const _me=lead&&lead.n;
- const _hidden=_secOn?((P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&(s.knows||[]).indexOf(_me)<0).map(s=>s.text)):[];
+ /* ⟦REVEAL|S_A⟧ 会给这个秘密打 `secret:S_A` 的旗 ⇒ 打到之后就不再是"你不知道的事"（提前解锁用）。 */
+ const _revealed=th.pk.flags||{};
+ const _hidden=_secOn?((P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&!_revealed["secret:"+s.id]&&(s.knows||[]).indexOf(_me)<0).map(s=>s.text)):[];
  return [
   "WHERE YOU ARE: "+c.place.en+", "+c.time.en+". This is background for you to stand in — do not recite it back to the reader, just be in it.",
   /* 只有**编剧明写的** ⟦GOAL⟧ 才进（c.goalOwn）；没有 GOAL 的章，它的 goal 是"章末那个问句"，
@@ -16176,6 +16178,10 @@ function off94Parse(next, text) {
       if (!m) { push(b); continue; }
       const a = m.a;
       if (m.k === "SET") { push(["sys", "set", { flags: String(a[0] || "").split(/[,，]/).map(s => s.trim()).filter(Boolean) }]); continue; }
+      /* 2026-10-29 · ⟦REVEAL|S_A⟧ —— 正文里揭露的那一处。它不写 text，只打一个 `secret:S_A` 的旗；
+         packPrompt 里"你不知道"的名单会把这个旗排掉（从**下一个回合**起生效：system 是每轮先算的，
+         揭露那一句本身仍由剧本给出，不需要模型知道）。这样 `reveal_from` 是"最晚"解锁，`⟦REVEAL⟧` 是"提前"解锁。 */
+      if (m.k === "REVEAL") { const sid = String(a[0] || "").trim(); if (sid) push(["sys", "set", { flags: ["secret:" + sid] }]); continue; }
       if (m.k === "IF") { const f = String(a[0] || "").trim(); stack.push({ cond: f.charAt(0) === "!" ? { not: f.slice(1) } : { flag: f }, then: [], alt: null }); continue; }
       if (m.k === "ELSE") { const f = stack[stack.length - 1]; if (f && !f.alt) f.alt = []; continue; }
       if (m.k === "/IF") { const f = stack.pop(); if (!f) continue; const beat = ["sys", "if", { cond: f.cond, then: f.then }]; if (f.alt) beat[2].else = f.alt; push(beat); continue; }
