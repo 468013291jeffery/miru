@@ -542,7 +542,7 @@ function packWorlds(){ return W.filter(w => w.pack) }
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**45 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**46 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
@@ -793,3 +793,151 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
    查法很便宜：把渲染出来的 HTML 打一眼，看那条要删的东西在不在里面。
 
 ---
+
+<!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
+
+共 **138 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
+
+| 模块 | 是什么 | 行数 |
+|---|---|---|
+| `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 242 |
+| `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 290 |
+| `app3_chat.js` | THREADS（原文只有段落横幅） | 1154 |
+| `app4_more.js` | CHATS (WhatsApp-style list) | 598 |
+| `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 172 |
+| `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
+| `app7_rank.js` | WEEKLY CHARACTER BOARD (打榜) — fans push their bias up the chart Everyone … | 48 |
+| `app8_i18n.js` | strings for Game Center · calls · fan board · weekly vote board · home ta… | 38 |
+| `app9_ads.js` | REWARDED ADS — the third path between paying and waiting Economics (US re… | 37 |
+| `app10_story.js` | STORY LINK LAYER — everything feeds the pair's relationship 总纲: the thing… | 196 |
+| `app11_memory.js` | MEMORY SPACE — visible, tiered long memory (竞品: “已用 665 / 8K · 解锁 26K 记忆空… | 51 |
+| `app12_beats.js` | STORY BEATS — the reply-rhythm pay schedule (see doc: BL 剧情进展线 × 付费节奏) Re… | 49 |
+| `app13_rel.js` | RELATIONSHIP ENGINE v1 — multi-dimension state · Watch mode · point-and-c… | 97 |
+| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 554 |
+| `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 202 |
+| `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 314 |
+| `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |
+| `app18_promo.js` | NEW-USER WELCOME · 24h FIRST-PURCHASE 20% OFF · OPENING-LINE VOICE · STIC… | 200 |
+| `app19_bgm.js` | BACKGROUND MUSIC in every chat Each story gets a mood from its genre (lat… | 121 |
+| `app20_fx_booth.js` | PLOT-DRIVEN WEATHER & MOOD EFFECTS The chat background already gets an am… | 218 |
+| `app21_dims.js` | RELATIONSHIP DIMENSIONS, wired to the script A story declares its pairs i… | 103 |
+| `app22_fx2.js` | ATMOSPHERE v2 — cinematic effects One canvas, device-pixel-ratio aware, a… | 109 |
+| `app23_heir.js` | STORY TOOLKIT v5 (built for "The Heir He Came Back For", usable by any st… | 102 |
+| `app24_gl.js` | ATMOSPHERE v3 — GPU shader layer A WebGL canvas over the chat runs real-t… | 168 |
+| `app25_dir.js` | director: no more context-free jumps · The 🌙 card is now a "fast-forward… | 53 |
+| `app26_turns.js` | who-said-what A speaker's bubble only carries that speaker's own actions … | 40 |
+| `app27_choice.js` | your turn, in your words Step 1: pick HOW you answer (an attitude read fr… | 66 |
+| `app28_burst.js` | narration arrives as one block A run of narration / actions / inner voice… | 45 |
+| `app29_style.js` | writing rules for live AI (male/male stories) + "look back" unlocks | 30 |
+| `app30_fx3.js` | FX3 — ice that creeps along the frame + an EMOTION layer ICE ("ice" / "ic… | 286 |
+| `app31_score.js` | FILM SCORE (v4) The chat music now works like a film score: 1) Real recor… | 340 |
+| `app32_myline.js` | you speak your own lines When you play a character, that character's writ… | 53 |
+| `app33_recs.js` | onboarding picks that actually follow your choices Each story's tropes = … | 35 |
+| `app34_hints.js` | games give you something to go on Compatibility quiz: every question has … | 29 |
+| `app35_pay.js` | things worth paying for Every paid extra is optional, shows a tempting pr… | 50 |
+| `app36_live.js` | overlays live in their own layer on #dev so chat re-renders never wipe th… | 39 |
+| `app37_hooks.js` | three story hooks ["sys","recall",{who,txt}] — "X unsent a message" · 👀 … | 77 |
+| `app38_gift.js` | gifts feel like gifts, and the heat setting matters in written stories | 30 |
+| `app39_compact.js` | relationship values live inside the header as one slim strip (tap for det… | 18 |
+| `app40_sfx.js` | sound you can hear, effects that match their moment, pictures that come o… | 96 |
+| `app41_merge.js` | old builds saved a global "auto" switch — clear it | 32 |
+| `app42_decline.js` | declining a call is a moment, not a silent skip ✕ on an incoming call → h… | 39 |
+| `app43_couple.js` | couple room you can actually walk into Tap a person in 情侣房: · 30+ turns →… | 22 |
+| `app44_studio.js` | 角色工作室: building a character is a conversation, not a form Three panes on … | 283 |
+| `app45_rel.js` | relationships that can turn, personas that matter, and a story that leave… | 199 |
+| `app46_cp.js` | 后悔药 = jump back to ANY section you've reached (paid) Stories: a checkpoin… | 51 |
+| `app47_chapters.js` | 章节目录: jump to any chapter Chapters you've already reached: jump back free | 43 |
+| `app48_clean.js` | 沉浸模式: a clean chat screen · Only the latest beats stay on screen; everyth… | 83 |
+| `app49_creator.js` | 一句话写一部剧 (Creator) Quick path: one line → story card → 3 quick picks → fre… | 216 |
+| `app50_creator2.js` | 创作中心: the full Creator v2.1 (AI guide · templates · story workbench · int… | 134 |
+| `app51_import.js` | 上传剧本文件 → 可玩的剧 Upload .md / .txt / .docx (or paste text, or a Creator expo… | 224 |
+| `app52_alt.js` | intercept the old handler (window capture runs before document capture) | 40 |
+| `app53_import2.js` | 上传剧本：也能读 .pdf 和老的 .doc .pdf → bundled pdf.js (no network; text layer, pag… | 53 |
+| `app54_longcat.js` | AI 引擎可切换：Claude（默认）/ LongCat LongCat uses its OpenAI-compatible endpoint:… | 79 |
+| `app55_talk.js` | FREE TALK inside a story Before: at a "your turn" stop, typing anything r… | 122 |
+| `app56_story3.js` | DYNAMIC NARRATIVE — items, long/short branches, convergence, character ar… | 105 |
+| `app57_rules.js` | UGC CONSTRAINTS — the generation rules every AI call follows + the publis… | 76 |
+| `app58_bgm100.js` | BGM LIBRARY — 100 scored cues, picked by keywords Honest note: these are … | 157 |
+| `app59_fx100.js` | FX + SFX LIBRARY — 100 screen effects, 100 sound effects, keyword-trigger… | 299 |
+| `app60_games100.js` | MINI-GAME LIBRARY — 100 games from 15 templates, popped by keywords Templ… | 247 |
+| `app61_honor.js` | 《西岭守则》mechanics sample (stand-in until the team’s The Honor Code script is final) for the whole narrative system generated by gen_honor.py（原文只有段落横幅） | 8 |
+| `app62_tts.js` | CHARACTER VOICES — server TTS (IndexTTS2 / your own TTS server) with devi… | 66 |
+| `app63_fixes.js` | feed fixes 1) Characters post at most ONE moment per day each: the day's … | 22 |
+| `app64_entry.js` | ENTRY = "watch a scene, then step into it" + a layered taste system Produ… | 138 |
+| `app65_lib.js` | 素材库 — browse & try every game / BGM / FX / SFX The libraries fire by them… | 42 |
+| `app66_libup.js` | 素材库 · user uploads Every tab gets "＋ 上传我的": BGM (audio file), 音效 (audio),… | 93 |
+| `app67_i18n.js` | ONE LANGUAGE AT A TIME 1) Taste tags: every name exists in all five app l… | 112 |
+| `app68_cloud.js` | CLOUD — the front end talks to the MIRU backend (/api on Vercel) Everythi… | 134 |
+| `app69_acct.js` | ACCOUNT ENTRY POINTS · Welcome screen: 「已有账号？登录」 under the start button (… | 21 |
+| `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 319 |
+| `app71_narrative.js` | MIRU 互动剧本规则 v1.0 — runtime side The creator side carries the full rule se… | 165 |
+| `app72_zhpure.js` | 中文版只显示中文 Audit (every onboarding step, tabs, store, taste sheet, a story)… | 36 |
+| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 289 |
+| `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 133 |
+| `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
+| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 41 |
+| `app77_memory2.js` | 记忆系统 第一阶段 ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失 | 186 |
+| `app78_memsync.js` | 记忆系统 第二阶段：记忆存进云端数据库 + 按意思召回 登录用户：记忆增删改 3 秒内同步到服务器（/api/state?r=mem）。每次回复前… | 44 |
+| `app79_ledger.js` | 记忆系统 第三阶段：剧情账本（程序裁决，模型只读） 一个故事的「正史」统一放在 th.led，由程序维护： · 约定 P#：来自「约定」类记忆（你… | 151 |
+| `app80_cache.js` | 文字主力切到 DeepSeek：让提示词能吃到「缓存命中」价 DeepSeek 按前缀自动缓存（命中价约为未命中的 1/50）。原来的回复提示词是… | 33 |
+| `app81_voicecall.js` | VOICE CALLS — talk to him out loud (Qwen-Omni via POST /api/tts {omni}) ·… | 93 |
+| `app82_qwenimg.js` | AI PICTURES via Qwen (z-image-turbo for new pictures, wan2.5-i2i for "sam… | 19 |
+| `app83_vidu.js` | MOVING PICTURES — Vidu image-to-video (POST /api/tts {vid}, poll GET /api… | 36 |
+| `app84_nosub.js` | NO MEMBERSHIP — pay-as-you-go diamonds only (owner's decision) · MIRU+ is… | 42 |
+| `app85_guide.js` | FIRST-TIME COACH MARKS One short spotlight tour per surface, shown once (… | 49 |
+| `app86_voicefix.js` | VOICE FIXES + VOICE BILLING 1) Scripted phone calls (pack "call" stops) w… | 95 |
+| `app87_regcode.js` | SIGN-UP EMAIL CODE (Amazon SES) When the server can send mail (/auth?prov… | 37 |
+| `app88_memcall.js` | PAID MEMORY + TURN-TAKING STORY CALLS A) Memory is a 💎 purchase per stor… | 64 |
+| `app89_offsearch.js` | OFFICIAL STORIES IN SEARCH Stories published from the admin "剧本生产" studio… | 20 |
+| `app90_youturn.js` | THE PLAYER SPEAKS FOR THEMSELF Scripts (admin studio or uploads) sometime… | 35 |
+| `app91_phone.js` | SIGN IN WITH A PHONE NUMBER (SMS code · AWS End User Messaging) Shown onl… | 45 |
+| `app92_media.js` | 媒体库（） 问题：图片以前是 base64 字符串存在**存档对象 S 里**（S.art 每角色一张、S.album 最多 12 张） | 176 |
+| `app92_mustlogin.js` | SIGN-IN REQUIRED The live app can no longer be used as a guest: the "先逛逛 … | 14 |
+| `app93_agegate.js` | 年龄门（T08）· 首启一次确认 开关：MIRU_TUNE.tools.ageGate（默认 true） | 44 |
+| `app93_doubao.js` | DOUBAO END-TO-END REALTIME VOICE CALLS When the relay is configured (Verc… | 97 |
+| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 546 |
+| `app94_replyguard.js` | 台词守门（他们 v8.2.3 的「角色台词检查」） 玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事 | 153 |
+| `app95_safety.js` | App Store 1.2 (user-generated content): report · block · terms · contact … | 120 |
+| `app95_status.js` | 状态写入层 v1（唯一写入口） 规格 v7.11 §04.6「状态投影的唯一写入点」： 模型和剧情都只能"提议"，真正的写入只在这里发生 | 130 |
+| `app96_social.js` | 世界围着你转 — lessons from Status & Heyyyy, all paid with 💎 (no membership) ①… | 341 |
+| `app96_tune.js` | 可调参数（外置滑钮） 为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、 关系阶段门槛、每日好感上限、单次好感步长… | 133 |
+| `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 222 |
+| `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
+| `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 269 |
+| `app99_boot.js` | BOOT (keep last) | 20 |
+| `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
+| `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 139 |
+| `app100_fixes.js` | 体验修复（ 用户反馈 8 条中的 1/3/4/7/8） 1 首页：官方新剧列表本地缓存，进入 App 立刻显示，不再先闪 2–3 秒旧剧单；首次没… | 109 |
+| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 188 |
+| `app102_pipeline.js` | 对话流：一道缝（ · 设计见 DIALOGUE-PIPELINE.md） Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧… | 130 |
+| `app103_turn.js` | 回合状态机 v0.1（ · Ann 定的第二件事） Ann：「这是解耦之后应该做的第二件事，统一接口之类的，没有这个谈不上代码质量。」 ## 病 … | 90 |
+| `app104_pkstate.js` | 章节状态机 v0.1（ · 第三件） Ann：「继续做吧，副作用都能修，但增强稳健性、做软件工程上的升级是最重要的事。」 ## 病 `th.pk.… | 71 |
+| `app105_save.js` | 存档变更观测 v0.1（ · 第五件） Ann：「继续做吧，副作用都能修，但增强稳健性、做软件工程上的升级是最重要的事。」 ## 病 `save(… | 99 |
+| `app106_ui.js` | 渲染入口 v0.1（ · 第七件） Ann：「UI 先不动了。UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口。」 对，而且有… | 104 |
+| `app107_health.js` | 运行时健康汇报 v0.1（） 来源：Mythica `CLAUDE.md` 编码习惯第 13 条 —— 「唯一咽喉配三件套：**硬门禁** + *… | 58 |
+| `app108_errlog.js` | 错误日志 v0.1（） Ann：「把 error log 做上，加上 2m 淘汰。」 在此之前我们只有两样东西： · `soft()` —— **… | 117 |
+| `app109_pkdirect.js` | 剧本指令分发：把「谁赢」写出来（） Ann 拍板：「可以把这俩分清楚，现在用的都是 b」 | 85 |
+| `app110_pkreg.js` | 剧本指令：26 层包装 → 一张表（） Ann：「我感觉没有太多问题，你动吧」 | 68 |
+| `app111_msgkind.js` | 消息渲染：三类登记 + 冲突检测 + 存活读数（） 背景：`msgHTML` 被 **19 层**包装（`tools/msghtml-triage… | 133 |
+| `app112_sheet.js` | 弹层里的「块」登记表（） 为什么不再用「包一层」：`menuSheet` 被 7 个文件各包一层，而它们做的事只有一件 —— 往 `.sheet … | 76 |
+| `app113_content.js` | 剧本内容：一道加载缝（第 1 步：立接口 + 哨兵） · 为什么需要它（Ann 问的「解耦充分吗」）： 现状：剧情数据（`wd(wid).pack… | 77 |
+| `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
+| `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
+| `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |
+| `content_worlds.js` | WORLDS or: bl \| gl \| bg kind: story \| ensemble \| quest Openings are writt… | 215 |
+| `creator_embed.js` | creator polish: accessibility, graph editing, playable surfaces | 2 |
+| `i18n.js` | UI STRINGS — en · zh · ja · ko · es | 274 |
+| `miru_rules_full.js` | （文件头没有说明 —— 该补一句） | 3 |
+| `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 286 |
+| `pdfjs_embed.js` | \n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * @licend The above is the entire license notice for the\n * JavaScript code in this page\n（原文只有段落横幅） | 3 |
+| `shorts_v2.js` | DRAMAS v2 — rewritten for tension (hook → escalation → reversal → freeze … | 13 |
+| `shorts_v3.js` | DRAMAS v3 — the 9 Veo-shot pilots: one beat per 8-second clip (the subtit… | 22 |
+| `studio_lib.js` | （文件头没有说明 —— 该补一句） | 2 |
+| `tr_es.js` | （文件头没有说明 —— 该补一句） | 81 |
+| `tr_ja.js` | （文件头没有说明 —— 该补一句） | 81 |
+| `tr_ko.js` | （文件头没有说明 —— 该补一句） | 81 |
+| `tr_merge.js` | CONTENT TRANSLATIONS (ja · ko · es) Each language pack mirrors the Englis… | 23 |
+
+<!-- END module-index -->
