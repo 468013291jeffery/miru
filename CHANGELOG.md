@@ -46,7 +46,10 @@
 
 - 解析层把 GOAL 从 items 摘出来挂到章上；`imBuild` 只在有 GOAL 时用它替掉原来的 goal ⇒ **不写就一字不变**（8 份语料逐字段相同）
 - 它显示在**章节开头卡**与**章节列表副标题**两处
-- ⚠️ **它不进模型**：那句 `Chapter goal: …` 包在 `MIRU_TUNE.chat.characterMeta === true` 里，默认 false（2026-10-28 Ann 的决定：角色只知道此刻与已发生）
+- ⚠️ **它一开始不进模型**：那句 `Chapter goal: …` 包在 `MIRU_TUNE.chat.characterMeta === true` 里，默认 false（2026-10-28 Ann 的决定：角色只知道此刻与已发生）
+- **同日第二版（Ann「接吧」）**：新开一行 `WHAT THIS CHAPTER IS FOR: …` 进 prompt，开关是新加的 `chat.chapterGoal`（默认 true）；
+  章节编号 / 共几章 / 下一步官方选择**仍然关着**（`characterMeta` 保持 false）。措辞带刹车：`never say it out loud, never announce that anything is coming`。
+  探针断言 `promptHasGoal` 从 `no` 变 `yes`。
 - ⚠️ 我先前的判断错了并有读数纠正：原以为"goal 只能从章末问题倒推、是废话"，实测 5 部稿件 `# CHOICE｜…` 每部 **12 条去重 12 种**，都是真句子 ⇒ GOAL 的增量是"能写这一章的戏要立什么"，不是"填一个空"
 
 ## 2026-10-28 · 官方剧本这条路：能整批吃进来，过滤不再误杀，上线前有人看
