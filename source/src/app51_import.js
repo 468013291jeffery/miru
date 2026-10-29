@@ -92,7 +92,7 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
  const cast=doc.cast.map(n=>ids[n]),L=ids[pov]&&cast.length>1?cast.find(id=>id!==ids[pov]):cast[0];
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});
  const firstTxt=(chs[0]&&chs[0].beats.zh.find(b=>b[0]==="n")||[,,""])[2];
- const pack={chapters:chs,endings:{A:end("在一起","Together"),B:end("各自安好","Apart, and okay"),C:end("反目","Enemies")},join:ids[pov]?[{as:ids[pov],t:x0(LL("扮演"+pov,"Play as "+pov))}]:[],pov:null,love:L,
+ const pack={chapters:chs,secrets:(doc.secrets||[]).slice(),endings:{A:end("在一起","Together"),B:end("各自安好","Apart, and okay"),C:end("反目","Enemies")},join:ids[pov]?[{as:ids[pov],t:x0(LL("扮演"+pov,"Play as "+pov))}]:[],pov:null,love:L,
   logline:x0(firstTxt.slice(0,60)),features:{game:x0(""),date:x0(""),gift:x0(""),photo:x0(""),voice:x0(""),room:x0("")},director:{allowed:[],au:[]},bonus:{t:x0(""),d:x0("")},ready:chs.length,mine:1,imported:{at:now,lines:doc.lines,omit:doc.omit},
   card:{title:doc.title,lead:{name:pov||"",role:""},sup:{name:L?S.mine.chars[L].n:"",role:""},place:place,time:"",obj:"",sec:"",con:"",hook:firstTxt.slice(0,60)},
   intro:{zh:{bg:[firstTxt.slice(0,80)].filter(Boolean),you:ids[pov]?"你扮演 "+pov+"。在关键时刻，由你决定他说什么、怎么做。":"你以自己的身份看这个故事。",cast:cast.map(id=>[id,Lz(S.mine.chars[id].role)||""])},

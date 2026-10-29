@@ -91,7 +91,20 @@ function off94Parse(next, text) {
     const raw = c.items || [];
     for (let k = 0; k < raw.length; k++) {
       const it = raw[k]; const mm = Array.isArray(it) && it[0] === "n" && mk94(it[2]);
-      if (!mm || mm.k !== "GOAL") continue;
+      if (!mm) continue;
+      /* 2026-10-29 · ⟦SECRET|S_A|Klaus 的双尸计划|knows:Klaus,Greta|reveal_from:6⟧ —— 认知边界。
+         它不产生节拍，只进 pack.secrets；packPrompt 按「第几章 + 谁在演」算出**这个角色现在不该知道的东西**。
+         （⟦REVEAL|S_A⟧ 是正文里揭露的那一处，留给下一步接，现在只解析不消费。） */
+      if (mm.k === "SECRET") {
+        const a = mm.a.map(s => String(s || "").trim());
+        const id = a[0], text = a[1], kv = {};
+        a.slice(2).forEach(p => { const m2 = /^([a-z_]+)\s*[:：]\s*(.*)$/i.exec(p); if (m2) kv[m2[1].toLowerCase()] = m2[2]; });
+        const knows = String(kv.knows || "").split(/[,，、]/).map(s => s.trim()).filter(Boolean);
+        const from = Math.max(1, parseInt(kv.reveal_from || kv.from || "1", 10) || 1);
+        if (id && text && !(doc.secrets || []).some(x => x.id === id)) (doc.secrets = doc.secrets || []).push({ id, text, knows, from });
+        raw.splice(k--, 1); continue;
+      }
+      if (mm.k !== "GOAL") continue;
       const zh = String(mm.a[0] || "").trim(); const en = String(mm.a[1] || "").trim() || zh;
       if (zh) c.goal94 = { zh, en };
       raw.splice(k--, 1);
