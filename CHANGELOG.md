@@ -5,6 +5,29 @@
 > 分支：`ann/decouple` · 26 个提交 · 57 个文件 · +3002 / −95
 > 一条命令验证全部：`node tools/check-all.mjs`（九套 162 个用例）
 
+## 2026-10-29 · 创作中心的 5 个 AI 步骤搬到服务端：改 prompt 不再重建 9 MB
+
+> 起因（Ann）：「把几个功能的 api 抽出来放到后台，方便修改」「让他们在后台上面可以直接看到和修改 api」。
+> 病灶：`/api/guide-turn` · `/api/plan` · `/api/options` · `/api/rewrite` · `/api/step-suggest` 这五个路径名早就写在那儿
+> （`app50_creator2.js` 的 `crSys(p,path)`），但它们**从来不是 API** —— 每句 prompt 硬编码在 bundle 里，
+> 改一句话要走「重建 9 MB → 45 套闸 → 再部署」全程，而这条链上只有「重建」是必须的。
+
+**改法**：新增 `api/studio.js`（`api/` 下第 13 个函数），五个步骤的 prompt 搬进 `config.studio`
+（`_lib.js` 的 `CONFIG_DEFAULTS`），执行放服务端（`L.llm`，与 `/api/longcat` 同一个 failover 顺序；
+模型顺序 / 最大输出 / 温度都可配 —— `L.llm` 为此多了第 5 个参数 `temperature`，默认仍是 0.3，老调用点不受影响）。
+前端 `MIRU_BRIDGE.ask` 只负责把「这一步此刻的输入」递过去（answers / project / question / current / previous /
+genre / context / text / options + 每个项目自己的 roleRules / storyRules），prompt 与模型由服务端拼。
+**结构性不可用**（旧部署 / 本地 `serve.mjs` 没有 `/api/studio`，返回 404）时退回原前端实现，行为一字不变。
+
+**后台**：`admin.html` 新增「API 台（创作步骤）」（路由 `#api`，权限沿用 `config`）—— 五个步骤一行一个，
+可看 prompt / 开关 / 角色，系统提示 / 模型顺序 / 最大输出 / 温度同页可改；保存走已有的 `r=config`
+（`configReset()` 之后**最多 30 秒**全实例生效 —— 缓存就是 30 秒，是范围不是延迟）。
+
+**判据**：三个改动的 `.js` 过 `node --check` · `admin.html` 抽内联 script 后过 `node --check`（159,949 B）·
+真浏览器 `index.html` 与 `admin.html` 各 `Uncaught 0`（DOM 各 9.99 MB / 172 KB）。
+**闸**：`check-all` 见本节之后的运行结果；已知与本次无关的 `css-dead-rules`（62 条 Google 登录 SDK 注入样式，
+单跑绿）照旧会出现。
+
 ## 2026-10-29 · 剧本解析层：四层猴子补丁收成一张注册表
 
 > 起因（Ann）：「把剧本这块的接口从工程优化上做好，跟别的地方解耦开来。」

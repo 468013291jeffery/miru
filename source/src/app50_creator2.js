@@ -131,3 +131,31 @@ const _renderCreate50=renderCreate;renderCreate=function(v){_renderCreate50(v);t
 /* Creator-made stories: the in-story chat AI gets the author's 场景演出 rules and 秘密权限 rule */
 const _ask50=ask;ask=function(prompt,opts){try{const th=S.threads[curT],w=th&&wd(th.wid),R=w&&w.pack&&w.pack.creator&&w.pack.creator.rules;
  if(R&&typeof prompt==="string"&&prompt.indexOf("You write MIRU")===0){const add=[R.ai&&R.ai.scene,R.system1&&R.system1.knowledgeRule].filter(Boolean).join(" / ");if(add)prompt+="\n\nAUTHOR RULES FOR THIS STORY (obey; never reveal secrets a character doesn't know): "+String(add).slice(0,800)}}catch(_){}return _ask50.apply(this,arguments)};
+
+/* ---- 2026-10-29 · 这 5 步的 prompt 搬到服务端（api/studio.js + config.studio），后台「API 台」可直接改 ----
+   以前每句 prompt 都写死在这个文件里 ⇒ 改一句要重建 9 MB 产物、过 45 套闸、重新部署。
+   现在这里只负责回答「这一步此刻的输入是什么」，prompt 与模型由服务端拼。
+   结构性不可用（旧部署 / 本地 serve 没有 /api/studio）时退回原实现，行为与今天一致。 */
+const _crAsk50 = MIRU_BRIDGE.ask;
+MIRU_BRIDGE.ask = async function (path, pl) {
+  const id = String(path || "").replace(/^\/api\//, "");
+  if (!/^(guide-turn|plan|options|rewrite|step-suggest)$/.test(id) || !liveOn()) return _crAsk50.call(this, path, pl);
+  pl = pl || {};
+  const proj = pl.project ? JSON.stringify({ title: pl.project.title, premise: pl.project.premise, genre: pl.project.genre, world: pl.project.world, hook: pl.project.hook, conflict: pl.project.conflict, secret: pl.project.secret, lead: pl.project.lead, support: pl.project.support }).slice(0, 2400) : "";
+  const ROLE = { "guide-turn": "architect", "plan": "architect", "rewrite": "scene", "step-suggest": "architect" }[id] || "architect";
+  const pj = pl.project || {}, rr = pj.aiRoleRules && pj.aiRoleRules[ROLE], s1 = pj.system1 || {};
+  const keep = ["storyRule", "gateRule", "delayedRule", "knowledgeRule", "sourceRule"].map(k => s1[k]).filter(Boolean).join(" / ");
+  try {
+    const r = await capi("/studio?r=" + encodeURIComponent(id), { json: { payload: {
+      step: (+pl.step || 0) + 1, answers: pl.answers || [], project: proj,
+      question: pl.question || "", current: pl.current || [], previous: pl.previous || "",
+      genre: pl.genre || "", context: pl.context || "", text: pl.text || "",
+      options: pl.options || [], mode: pl.mode || "",
+      roleRules: rr ? String(rr).slice(0, 600) : "", storyRules: keep ? String(keep).slice(0, 900) : "",
+    } } });
+    if (r && r.status === 404) return _crAsk50.call(this, path, pl);
+    if (r && r.ok && r.j && r.j.ok && r.j.json) return r.j.json;
+    return null;
+  } catch (_) { return null; }
+};
+
