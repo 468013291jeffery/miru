@@ -358,6 +358,19 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
   "Time passes in real scenes: you may end a beat, let minutes go by, move to another corner of this place, or let something new happen that nobody announced. You do not know what comes next, and you must not act as if you do."
  ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");
 }
+/* 2026-10-29 · 认知边界的**显示接口**：控制台 `__secrets(th)` 给出这一刻"他该不知道什么"、以及系统认为他在演谁。
+   为什么要有它：`ch()` 是闭包里的函数、不是全局 —— 探针从外面调会拿到 "ch is not a function"，
+   于是 `knows:` 那一支一直没法验（代码在那儿、读数开不了火）。这个钩子把判定结果摊出来，
+   探针只要调它就能验，不用再复刻一遍判定逻辑。 */
+function secretsView(th){try{
+ if(!th||!th.pk) return {err:"no th"};
+ const w=wd(th.wid),P=(w&&w.pack)||{},c=P.chapters&&P.chapters[th.pk.ch-1],lead=ch(th.pk.as),me=lead&&lead.n,fl=th.pk.flags||{};
+ const on=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.secretBoundary!==false);
+ const all=(P.secrets||[]).map(s=>({id:s.id,from:s.from,knows:s.knows,text:s.text}));
+ const hidden=(P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&!fl["secret:"+s.id]&&(s.knows||[]).indexOf(me)<0).map(s=>s.id);
+ return {on:on,chapter:th.pk.ch,me:me||null,as:th.pk.as||null,hasChapter:!!c,all:all,hidden:hidden,flags:Object.keys(fl)};
+}catch(e){return {err:String(e&&e.message||e)}}}
+try{ if(typeof window!=="undefined") window.__secrets=secretsView; }catch(_){}
 /* 与"章节"无关的共用尾部：谁在场 / 玩家扮演谁 / 边界。两种口径都走这里，避免两份漂移。 */
 function packTail(th,as,lead){return [
  as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
