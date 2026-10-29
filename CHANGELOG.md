@@ -65,6 +65,17 @@
   `reveal_from` 是**最晚**解锁。生效时机是下一回合（system 每轮先算，揭露那句由剧本给出）。探针读数：节拍里出现 `set:secret:S_A`；打旗后 `A_hiddenBeforeFlag: true → A_hiddenAfterFlag: false`，且 S_B 不受影响
 - ARCHITECTURE 同时做了**一次梳理**：新增 §5.5「剧本管道总览」（四层唯一咽喉 + 指令矩阵 + 三条不变式 + 认知边界的验证现状），把 5·补三…补七 收成它的展开
 
+**第五刀：`⟦ORIENT|bl|gl|bg⟧`（取向必须有来源）**
+
+> 起因（Ann）：「这个比如说是 bl 还是 bg，应该怎么接，其实应该是第一时间就能回复的」。
+
+- **故障**：`imBuild` 把 `world.or` 硬编码成 `"bl"`，`_dslqa` 里**一条取向判据都没有** ⇒ 五部女性向（玩家女 + 男主）的稿子被发成 BL，
+  取向选「女性向」的读者在发现页**根本看不到**，而这件事是对方来问才发现的（实测：`orient=bg` 4 部 0 命中 / `orient=bl` 5 命中）
+- **改法**：`⟦ORIENT|bg⟧` 显式声明 → 否则 `imOrient()` 按角色卡推（玩家性别 × 对手戏性别：同男=bl / 同女=gl / 不同=bg）
+- **判据**：`_dslqa` 输出 `stats.orient = {declared, inferred, final}`；显式与角色卡**矛盾 ⇒ err**、非法值 ⇒ err、没写 ⇒ warn（附带建议写的那一行）
+- **闭环**：`autoreview` 把推断写回 `scripts.orient`；`publish` 用 `qa.stats.orient.final` ⇒ 上传那一刻就有答案，不再靠人拍
+- 自检 `_check/orient-test.mjs` 四支。⚠️ 第一版四支"全中"是**误判**：`⟦ORIENT⟧` 当时还没进 `KNOWN`，四条红全是被"未知指令"那条擦中的；进 KNOWN 后重跑才真正读对
+
 ## 2026-10-28 · 官方剧本这条路：能整批吃进来，过滤不再误杀，上线前有人看
 
 > 起因：编剧方一次交来 10 份稿子（5 份「扩写版」+ 5 份 V2.1 设计稿），而我们**没有接入口** ——

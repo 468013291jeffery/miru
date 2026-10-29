@@ -310,6 +310,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 | `⟦GOAL⟧` | 解析 → `chapter.goal`(+`goalOwn`) → 章节卡 / 章节列表 / **prompt** | 读者看到目标；角色拿到"这一章要立什么" | ✅（`chat.chapterGoal`） |
 | `⟦SECRET⟧` | 解析 → `pack.secrets` → `packPrompt` 的 `YOU DO NOT KNOW` 行 | 角色**不该**知道的事 | ✅ 章级闸已验；`knows:` 支未验（见下） |
 | `⟦REVEAL⟧` | 解析 → `sys set` 的 `secret:S_x` 旗 → `packPrompt` 提前解锁 | 正文里揭露的那一处 | ✅ |
+| `⟦ORIENT\|bl\|gl\|bg⟧` | 解析 → `doc.orient94` → `imOrient()` → `world.or` / `works.orient` | 发现页的取向筛选 | ✅（2026-10-29 补） |
 | `give:` / `need:` | 不消费 | — | 🟡 写了被忽略 |
 
 **三条不变式**（每条都是踩出来的）：
@@ -317,6 +318,9 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 1. **顺序即语义**：解析层的层序写在 `PARSE` 表里，不由 `parts[]` 猜（5·补四）。加一层就 `PARSE.use` 一行。
 2. **不写就一字不变**：`⟦GOAL⟧` 不写 ⇒ goal 仍从章末问题倒推；`⟦SECRET⟧` 不写 ⇒ 没有 `YOU DO NOT KNOW` 行。判据是 8 份语料逐字段相同。
 3. **消费点必须实测**，不是"代码看起来读了"：`⟦OPT⟧` 的 `set` 是查了 `app14_pack.js:471` 才敢说两侧都生效；`⟦GOAL⟧` 进 prompt 是探针 `promptHasGoal: yes` 才算。
+4. **每个会被玩家看见的字段都要有来源，而且在上传那一刻就回话**（2026-10-29 的教训）：`or`（取向）原来是 `imBuild` 里**硬编码 "bl"**、`_dslqa` 里**一条判据都没有** ⇒ 五部女性向的稿子被发成 BL，取向选"女性向"的读者在发现页**根本看不到**，而这件事要对方来问才发现。
+   现在的形状：`⟦ORIENT⟧` 显式声明 → 否则 `imOrient()` 按角色卡推（玩家性别 × 对手戏性别）→ `_dslqa` 在同一份稿子上给出 `stats.orient = {declared, inferred, final}` 并在矛盾时**报 err**、缺失时**报 warn（附带建议写的那一行）** → `autoreview` 把它写回 `scripts.orient` → `publish` 用 `qa.stats.orient.final`。
+   判据：`_check/orient-test.mjs` 四支（显式对 / 显式与角色卡矛盾 / 非法值 / 不写则推断）各自读对，且**红在正确的消息上**（第一版四支"全中"其实是误判 —— `⟦ORIENT⟧` 当时还没进 KNOWN，四支都是被"未知指令"那条擦中的）。
 
 **认知边界（`⟦SECRET⟧`）的验证现状，写清楚免得下一个人误信**：
 

@@ -97,9 +97,33 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
   card:{title:doc.title,lead:{name:pov||"",role:""},sup:{name:L?S.mine.chars[L].n:"",role:""},place:place,time:"",obj:"",sec:"",con:"",hook:firstTxt.slice(0,60)},
   intro:{zh:{bg:[firstTxt.slice(0,80)].filter(Boolean),you:ids[pov]?"你扮演 "+pov+"。在关键时刻，由你决定他说什么、怎么做。":"你以自己的身份看这个故事。",cast:cast.map(id=>[id,Lz(S.mine.chars[id].role)||""])},
    en:{bg:[firstTxt.slice(0,80)].filter(Boolean),you:ids[pov]?"You play "+pov+". At key moments you decide what he says and does.":"You watch the story as yourself.",cast:cast.map(id=>[id,""])}}};
- S.mine.worlds[wid]={id:wid,or:"bl",pal:cast.length?S.mine.chars[cast[0]].pal:["#C98A6B","#1B1520"],author:"@"+(me()||"you").toLowerCase(),official:false,mine:1,mineAt:now,stats:[0,0,0],heat:"slow",cast,tags:[LL("上传剧本","Uploaded")],
+ /* 取向：剧本显式声明优先，其次按角色卡推断（玩家性别 × 对手戏性别），最后才退回 "bl"。
+    这两者由 imOrient(doc) 一处算，导入页与上传链路都读同一个结果。 */
+ const _or=imOrient(doc)||"bl";
+ S.mine.worlds[wid]={id:wid,or:_or,pal:cast.length?S.mine.chars[cast[0]].pal:["#C98A6B","#1B1520"],author:"@"+(me()||"you").toLowerCase(),official:false,mine:1,mineAt:now,stats:[0,0,0],heat:"slow",cast,tags:[LL("上传剧本","Uploaded")],
   title:x0(doc.title),hook:x0(firstTxt.slice(0,60)),premise:x0(firstTxt.slice(0,80)),you:x0(ids[pov]?pov:LL("你自己","Yourself")),warn:x0(""),rel:L&&ids[pov]?[[ids[pov],L,x0("")]]:[],status:{time:x0(""),place:x0(place)},pack,cover:null};
  const ps=packSt(wid);ps.own=1;S.works.unshift({id:wid,kind:"story",title:doc.title,at:now,seed:0});save();return {wid,as:ids[pov]||"watch"}}
+/* ================= 取向：一处判定，处处读同一个答案（2026-10-29）=================
+   为什么要有这个函数：`or` 原来是**硬编码 "bl"**，而稿子里一个字都没提取向 ⇒
+   五部女性向（玩家女 + 男主）的剧被发成 BL，取向选"女性向"的读者在发现页根本看不到。
+   判据（可复现，不靠人拍）：
+     ① 剧本显式写了 ⟦ORIENT|bl|gl|bg⟧ ⇒ 用它
+     ② 否则按角色卡推：玩家（叫"你"的那个）性别 × 对手戏性别 —— 同男=bl / 同女=gl / 不同=bg
+     ③ 推不出来 ⇒ null（调用方退回到旧行为），**不猜**
+   `api/_dslqa.js` 里有一份等价实现给服务端审查用；两边判据必须一致，改一处要改另一处。 */
+function imOrient(doc) {
+  if (!doc) return null;
+  if (doc.orient94) return doc.orient94;
+  const cs = doc.chars94 || [];
+  const g = cs.map(a => ({ n: String(a[0] || "").trim(), x: String(a[1] || "").trim().toLowerCase().charAt(0) }))
+             .filter(c => c.n && (c.x === "f" || c.x === "m"));
+  const me = g.find(c => /^(你|您|you|me|player|玩家)$/i.test(c.n));
+  const other = me ? g.find(c => c !== me) : null;
+  if (!me || !other) return null;
+  if (me.x === other.x) return me.x === "m" ? "bl" : "gl";
+  return "bg";
+}
+if (typeof window !== "undefined") window.__orient = imOrient;
 /* ================= 剧本解析的唯一咽喉（2026-10-29）=================
    之前 imParse / imBuild 被 4 个文件各自「重赋值」包一层：
      app90（你：） → app94（⟦…⟧ 指令） → app94（你视角 you94） → app101（⟦ITEM⟧）

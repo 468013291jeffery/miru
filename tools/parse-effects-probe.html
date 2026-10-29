@@ -15,6 +15,8 @@ const SCRIPT = [
   '⟦GOAL|这一章要让玩家决定留不留录像|This chapter: decide whether to keep the video⟧',
   '⟦SECRET|S_A|Klaus 的双尸计划|knows:Calder|reveal_from:6⟧',
   '⟦SECRET|S_B|他其实是她哥哥|knows:Greta|reveal_from:2⟧',
+  '⟦ORIENT|bg⟧',
+  '⟦CHAR|你|f|26|f2|冰场技师|女性玩家，可改名⟧',
   '⟦CHAR|Calder|m|29|m2|冰球队长|188cm，深棕短发⟧',
   '⟦CHAR|Greta|f|31|f2|队医|说话很轻⟧',
   '# SCENE｜冰场',
@@ -82,6 +84,12 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
     out.warn = doc.warn || [];
     out.goal94 = doc.chapters[0].goal94 || null;
     out.secrets = (doc.secrets || []).map(s => ({ id: s.id, from: s.from, knows: s.knows }));
+    /* 取向：显式声明 ⟦ORIENT|bg⟧ 与自推断（没有声明时按角色卡推）—— 两条都要读对 */
+    out.orient = { declared: doc.orient94 || null, viaHook: (typeof w.__orient === 'function') ? w.__orient(doc) : 'no-hook' };
+    try {
+      const doc2 = w.imParse(SCRIPT.replace(/^⟦ORIENT\|.*$/m, ''));
+      out.orientNoDecl = { declared: doc2.orient94 || null, inferred: w.__orient(doc2) };
+    } catch (e) { out.orientNoDecl = 'ERR:' + (e && e.message) }
     out.docShape = (doc.chapters[0].items || []).map(b => {
       if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: flat(o.t), set: o.set || null, love: o.love || null })) };
       if (Array.isArray(b) && b[0] === 'sys' && b[1] === 'set') return 'set:' + (b[2].flags || []).join('+');

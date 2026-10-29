@@ -403,7 +403,7 @@ module.exports = L.wrap(async (req, res) => {
       const err = q.err.concat(sf.length ? ['受限词：' + sf.join('; ')] : []);
       const review = { approved: !err.length, auto: true, by: 'D先生', at: Date.now(), notes: '自动审查：结构' + (q.ok ? '通过' : '不通过') + ' · 受限词 ' + sf.length, checks: { list: [], stats: q.stats, perCh: q.perCh } };
       const qa = { err, warn: q.warn, ok: q.ok ? ['结构检查通过'] : [], info: ['stats: ' + JSON.stringify(q.stats)], auto: true, by: 'D先生', at: Date.now() };
-      await sql('UPDATE scripts SET qa=$2::jsonb, review=$3::jsonb, stage=GREATEST(stage,4), updated_by=$4, updated_at=now() WHERE id=$1', [s.id, JSON.stringify(qa), JSON.stringify(review), who]);
+      await sql("UPDATE scripts SET qa=$2::jsonb, review=$3::jsonb, stage=GREATEST(stage,4), orient=COALESCE($5,orient), updated_by=$4, updated_at=now() WHERE id=$1", [s.id, JSON.stringify(qa), JSON.stringify(review), who, (q.stats && q.stats.orient && q.stats.orient.final) || null]);
       await log('script_autoreview', 'script', s.id, { err: err.length, warn: q.warn.length });
       return L.send(res, 200, { ok: !err.length, err, warn: q.warn, stats: q.stats, perCh: q.perCh, review });
     }
@@ -452,7 +452,7 @@ module.exports = L.wrap(async (req, res) => {
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,
-        [id, s.title, String(cfg.hook || '').slice(0, 240), s.lang || 'zh', s.orient || 'bl', JSON.stringify((cfg.tags || []).slice(0, 12)), cfg.cover && /^https?:/.test(cfg.cover) ? cfg.cover : null, JSON.stringify(pack), JSON.stringify(s.qa || null), who]);
+        [id, s.title, String(cfg.hook || '').slice(0, 240), s.lang || 'zh', (function(){ const qo = s.qa && s.qa.stats && s.qa.stats.orient && s.qa.stats.orient.final; return (/^(bl|gl|bg)$/.test(String(qo||'')) ? qo : (s.orient || 'bl')) })(), JSON.stringify((cfg.tags || []).slice(0, 12)), cfg.cover && /^https?:/.test(cfg.cover) ? cfg.cover : null, JSON.stringify(pack), JSON.stringify(s.qa || null), who]);
       await sql("UPDATE scripts SET work_id=$2, status='live', stage=5, published_at=now(), updated_by=$3, updated_at=now() WHERE id=$1", [s.id, id, who]);
       await sql('INSERT INTO script_versions (script_id, stage, note, data, by_name) VALUES ($1,5,$2,$3::jsonb,$4)', [s.id, '上线', JSON.stringify({ outline: s.outline, chapters: s.chapters, config: s.config, qa: s.qa, review: s.review }), who]);
       await log('script_publish', 'script', s.id, { work: id, chapters: ch.length }); return L.send(res, 200, { ok: true, work_id: id });
