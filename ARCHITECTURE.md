@@ -48,6 +48,20 @@ art/<角色>.jpg（有立绘才算）┘
 - 立绘的判据在 `gen_content.py` 的 `has_art()`：**看仓库根 `../art/<id>.jpg` 在不在**，没有就 `_art: null`（不报错）。
 - 构建期只做一件事：把这 37 部塞进全局 `PACK_C` / `PACK_W`，再由一个 IIFE 把它们并进 `C` / `W`。
 
+#### 链 A·1 进新剧时「谁先开口」（2026-10-29，Ann）
+
+**症状**：刚进一部新剧，第一条台词是**玩家自己扮演的那个角色**说的，读起来很怪。
+
+**实测根因**（不是 AI，是剧本数据）：37 部第 1 章都是旁白开场，但**旁白之后第一个开口的，33 部里有 21 部（64%）就是 `cast` 里标 `pov:true` 的那个**（`crimson` `made` `pole` `unseelie` `pact` `night` `split` `roomies`…）。
+
+**修法**（`app14_pack.js` 的 `packOpen`，在 `packBeats(...)` 之后、入队之前）：玩家用某个角色进剧时（`pk.as` 不是 `watch` / `side`），若**第一个开口的是 `pk.as`**，就把**这段领先的连续台词整段**挪到「第一个别人开口」那句之后。旁白留在原位。
+
+**两个实测出来的细节**（都很容易做错）：
+- **不能只挪一句**：`crimson` 是 `n, adrian, adrian` ⇒ 挪走一句仍以自己的台词开头。第一版就这么错的，37 部里还剩 6 部。
+- **段里若混着 stop（`line`/`gift`/`call`…）就不许挪** —— 那会改变玩家发言的时机。第 1 章实测一例都没有，但剧本会改，所以留了 `if(seg.some(b=>isStop(b)))return` 这道闸。
+
+**判据**（数据层，可复跑）：修前首句是 `pk.as` 的 21 部**全部**变成别人先开口；`pk.as` 不作首句的 12 部**一部都没动**；**字句与条数零改动**（按排序后的序列逐字比对）。
+⚠️ **端到端未验**：`tools/beat-order-probe.mjs --mode=open` 目前拿不到聊天屏（无头页面卡在登录门，`#msgs` 为空），所以这条只有数据层读数，没有「真页面渲染顺序」的读数。
 ### 链 B · 官方剧（运行时，改剧本不用重建）
 ```
 admin.html「剧本生产」 → /api/admin → DB.works.pack.script
@@ -814,7 +828,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app11_memory.js` | MEMORY SPACE — visible, tiered long memory (竞品: “已用 665 / 8K · 解锁 26K 记忆空… | 51 |
 | `app12_beats.js` | STORY BEATS — the reply-rhythm pay schedule (see doc: BL 剧情进展线 × 付费节奏) Re… | 49 |
 | `app13_rel.js` | RELATIONSHIP ENGINE v1 — multi-dimension state · Watch mode · point-and-c… | 97 |
-| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 554 |
+| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 581 |
 | `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 202 |
 | `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 314 |
 | `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |

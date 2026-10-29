@@ -99,6 +99,33 @@ function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
  const beats=packBeats(c.beats).slice();
+ /* 2026-10-29（Ann：「不是我扮演的角色先说话，先让另外的角色先说话」）：
+    实测第 1 章有台词的 33 部里，**21 部（64%）第一个开口的就是玩家扮演的那个**（crimson/made/
+    pole/unseelie/pact/night/split/roomies…）—— 旁白之后立刻自己说话，读起来很怪。
+    这里只挪「领先的那一条」：若第一个开口的是 pk.as，就把它挪到下一个「别人开口」之前。
+    只动 pk.as；watch / side 模式不碰；全章只有我一个人说话时不动（挪了也没人接）。
+    剧本是手写内容，这是**排序**不是改写 —— 一个字都不改。 */
+ (typeof soft==='function'?soft:function(n,f){try{return f()}catch(e){}})('packOpen:whoSpeaksFirst',function(){
+  const as=th.pk&&th.pk.as;
+  if(!as||as==="watch"||as==="side")return;
+  const spk=b=>{const w=Array.isArray(b)?b[0]:(b&&b.who);return (w&&w!=="n"&&w!=="sys")?w:null};
+  const i0=beats.findIndex(b=>spk(b));
+  if(i0<0||spk(beats[i0])!==as)return;
+  let j=-1;
+  for(let k=i0+1;k<beats.length;k++){const w=spk(beats[k]);if(w&&w!==as){j=k;break}}
+  if(j<0)return;
+  /* 2026-10-29 实测：只挪一句时，像 crimson（n,adrian,adrian）这种「连着两句都是我」的
+     仍会以我开头（37 部里 6 部）⇒ 必须挪走**整段领先的连续台词**，旁白留在原位。 */
+  /* 防线：段里若混着「等你发言」的停点（line/gift/call…），挪动会改变你说话的时机 ⇒ 一律不动。
+     2026-10-29 实测 37 部的第 1 章：这种段一例都没有，但剧本会改，留这道闸。 */
+  const seg=beats.slice(i0,j);
+  if(seg.some(b=>isStop(b)))return;
+  const keep=seg.filter(b=>spk(b)!==as);
+  const moved=seg.filter(b=>spk(b)===as);
+  const firstOther=beats[j], tail=beats.slice(j+1);
+  const rebuilt=beats.slice(0,i0).concat(keep,[firstOther],moved,tail);
+  beats.length=0; for(const b of rebuilt)beats.push(b);
+ });
  if(instant&&n===1&&w.pack.intro){th.msgs.push({who:"sys",k:"intro",at:Date.now()});th.msgs.push(card);th.pk.q=[["sys","start",{}]].concat(beats);th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),300);return Promise.resolve()}
  if(instant){th.msgs.push(card);let k=0;while(k<beats.length&&k<3&&!isStop(beats[k])){th.msgs.push(beatMsg(beats[k]));k++}
   th.pk.q=beats.slice(k);th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),700);return Promise.resolve()}

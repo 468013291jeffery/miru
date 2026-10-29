@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="51b5499cc548 2026-10-29T14:22Z";
+window.MIRU_BUILD="be0f9996b72a 2026-10-29T15:04Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7538,6 +7538,33 @@ function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
  const beats=packBeats(c.beats).slice();
+ /* 2026-10-29（Ann：「不是我扮演的角色先说话，先让另外的角色先说话」）：
+    实测第 1 章有台词的 33 部里，**21 部（64%）第一个开口的就是玩家扮演的那个**（crimson/made/
+    pole/unseelie/pact/night/split/roomies…）—— 旁白之后立刻自己说话，读起来很怪。
+    这里只挪「领先的那一条」：若第一个开口的是 pk.as，就把它挪到下一个「别人开口」之前。
+    只动 pk.as；watch / side 模式不碰；全章只有我一个人说话时不动（挪了也没人接）。
+    剧本是手写内容，这是**排序**不是改写 —— 一个字都不改。 */
+ (typeof soft==='function'?soft:function(n,f){try{return f()}catch(e){}})('packOpen:whoSpeaksFirst',function(){
+  const as=th.pk&&th.pk.as;
+  if(!as||as==="watch"||as==="side")return;
+  const spk=b=>{const w=Array.isArray(b)?b[0]:(b&&b.who);return (w&&w!=="n"&&w!=="sys")?w:null};
+  const i0=beats.findIndex(b=>spk(b));
+  if(i0<0||spk(beats[i0])!==as)return;
+  let j=-1;
+  for(let k=i0+1;k<beats.length;k++){const w=spk(beats[k]);if(w&&w!==as){j=k;break}}
+  if(j<0)return;
+  /* 2026-10-29 实测：只挪一句时，像 crimson（n,adrian,adrian）这种「连着两句都是我」的
+     仍会以我开头（37 部里 6 部）⇒ 必须挪走**整段领先的连续台词**，旁白留在原位。 */
+  /* 防线：段里若混着「等你发言」的停点（line/gift/call…），挪动会改变你说话的时机 ⇒ 一律不动。
+     2026-10-29 实测 37 部的第 1 章：这种段一例都没有，但剧本会改，留这道闸。 */
+  const seg=beats.slice(i0,j);
+  if(seg.some(b=>isStop(b)))return;
+  const keep=seg.filter(b=>spk(b)!==as);
+  const moved=seg.filter(b=>spk(b)===as);
+  const firstOther=beats[j], tail=beats.slice(j+1);
+  const rebuilt=beats.slice(0,i0).concat(keep,[firstOther],moved,tail);
+  beats.length=0; for(const b of rebuilt)beats.push(b);
+ });
  if(instant&&n===1&&w.pack.intro){th.msgs.push({who:"sys",k:"intro",at:Date.now()});th.msgs.push(card);th.pk.q=[["sys","start",{}]].concat(beats);th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),300);return Promise.resolve()}
  if(instant){th.msgs.push(card);let k=0;while(k<beats.length&&k<3&&!isStop(beats[k])){th.msgs.push(beatMsg(beats[k]));k++}
   th.pk.q=beats.slice(k);th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),700);return Promise.resolve()}
