@@ -325,7 +325,23 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 第 2 章 → S_B 不再出现（已揭露），S_A 仍在  ✓
 开关 chat.secretBoundary=false → 整行不出现  ✓
 ⟦REVEAL|S_A⟧ → 节拍里出现 set:secret:S_A；把那个旗打上后 S_A **立刻**不再"你不知道"，S_B 不受影响  ✓
-knows: 那一支（"他知道所以不瞒他"）→ **没验成**：合成世界的 ch() 解析不到角色 id
+knows: 那一支（"他知道所以不瞒他"）→ ✅ 已验（见下）：`__secrets` 显示接口
+```
+
+**显示接口 `__secrets(th)`**（`app14_pack.js`，2026-10-29 加）：返回 `{on, chapter, me, as, all, hidden, flags}` ——
+"这一刻系统认为你在演谁、以及他该不知道哪些秘密"。
+它为什么必须存在：`ch()` 是**闭包里的函数、不是全局**，探针从外面调会拿到 `ch is not a function`
+⇒ 在它之前，`knows:` 那一支一直"被跳过"，看起来像功能没做，其实是**尺子伸不进去**。
+
+探针读数（`parse-effects-probe.html`，全部开火）：
+
+```
+actor            {id:"u…", me:"Calder"}          ← 显示接口解析出了在演谁
+ch1_noActor      ["S_A","S_B"]                   没指定谁 ⇒ 两个都藏
+ch1_actor        ["S_B"]                         演 Calder，S_A 的 knows 里有他 ⇒ S_A 不藏
+ch2_noActor      ["S_A"]                         S_B 在 2 章揭露 ⇒ 掉出名单
+revealFlag       ["S_B"]                         打 secret:S_A 旗 ⇒ S_A 掉出名单
+knowsArm         []                              把 Calder 加进 S_B 的 knows ⇒ 两个都不藏
 ```
 
 **两种解锁，分清楚**：`reveal_from` 是**最晚**解锁（章号到了自动不藏）· `⟦REVEAL|S_A⟧` 是**提前**解锁（正文写到那儿就放）。

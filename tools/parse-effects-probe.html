@@ -3,8 +3,13 @@
 <title>parse effects probe</title>
 <pre id="out">PENDING</pre>
 <script>
-/* 2026-10-29 · 剧本语法的「效果」探针：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ / ⟦OPT⟧
-   三层一起验：① 剧本 → doc 结构 ② doc → pack（imBuild 有没有把 set/love 带过去）③ 运行时函数认不认（pkCond/pkSet）。 */
+/* 2026-10-29 · 剧本语法的「效果」探针 —— 一次跑完四层：
+   ① 剧本 → doc（GOAL / SET / IF / ELSE / OPT / SECRET / REVEAL 的结构对不对）
+   ② doc → pack（set/love 透传、goal/goalOwn、secrets）
+   ③ pack → prompt（章节目标那行进不进、认知边界那一行进不进）
+   ④ 产品自己的显示接口（__parse / __secrets）说了什么
+   ⚠️ 铁律：A/B 必须在**同一个对象**上翻一个字段。别"再建一部作品来对照" ——
+      imBuild 的 wid = "cw"+Date.now()，同一毫秒建两部会互相覆盖（第一版就这么读出了假失败）。 */
 const SCRIPT = [
   '# CHAPTER 1｜留痕 Chapter 1',
   '⟦GOAL|这一章要让玩家决定留不留录像|This chapter: decide whether to keep the video⟧',
@@ -23,7 +28,6 @@ const SCRIPT = [
   '⟦IF|!mem_video_kept⟧',
   '旁白：他不再提这件事。',
   '⟦/IF⟧',
-  /* ⟦REVEAL|S_A⟧ 提前解锁：它在正文里就该产生一个 `set:secret:S_A` 的节拍 */
   '⟦REVEAL|S_A⟧',
   '⟦IF|mem_video_kept⟧',
   '⟦IF|other_flag⟧',
@@ -48,7 +52,7 @@ const SCRIPT = [
   '#### B｜离开',
   '旁白：你走了。',
   '# ·',
-  /* 第二章：给"认知边界"用 —— S_B 在 2 章揭露，所以第 2 章起它不再是秘密。 */
+  /* 第二章：S_B 在 2 章揭露 ⇒ 第 2 章起它不再是秘密。 */
   '# CHAPTER 2｜揭露 Chapter 2',
   '# SCENE｜议事厅',
   '旁白：第二天。',
@@ -65,98 +69,73 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
 
 (async () => {
   const out = {};
-  const fr = document.createElement('iframe'); fr.src = '/index.html'; fr.width = 400; fr.height = 300;
+  const fr = document.createElement('iframe');
+  fr.src = '/index.html'; fr.width = 400; fr.height = 300;
   document.body.appendChild(fr);
   await new Promise(r => fr.onload = r);
   const w = fr.contentWindow;
-  await new Promise(r => setTimeout(r, 1500));
-  let doc = null;
+  await new Promise(r => setTimeout(r, 1800));
+
+  /* ① 剧本 → doc */
   try {
-    doc = w.imParse(SCRIPT);
+    const doc = w.imParse(SCRIPT);
     out.warn = doc.warn || [];
     out.goal94 = doc.chapters[0].goal94 || null;
+    out.secrets = (doc.secrets || []).map(s => ({ id: s.id, from: s.from, knows: s.knows }));
     out.docShape = (doc.chapters[0].items || []).map(b => {
-      if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: flat(o.t), set: o.set || null, love: o.love || null, then: (o.then || []).map(x => x[1] === 'set' ? 'set:' + (x[2].flags || []).join('+') : x[1]) })) };
+      if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: flat(o.t), set: o.set || null, love: o.love || null })) };
       if (Array.isArray(b) && b[0] === 'sys' && b[1] === 'set') return 'set:' + (b[2].flags || []).join('+');
       if (Array.isArray(b) && b[0] === 'sys' && b[1] === 'if') return { if: b[2].cond, then: (b[2].then || []).map(x => x[1]), hasElse: !!b[2].else };
       return Array.isArray(b) ? b[1] : typeof b;
     });
   } catch (e) { out.parseErr = String(e && e.message || e) }
 
-  /* ② doc → pack：imBuild 有没有把 set/love 带到 line 选项与章末 choices 上。
-     注意：`S` 是 script 顶层的 const（不是 window.S）⇒ 只能在 iframe 自己那一侧 eval 才看得见。 */
+  /* ②③④ 在 iframe 里跑：`S` / `packPrompt` 是那里的作用域，`ch()` 是闭包函数（外面调不到）。 */
   try {
     w.__probeScript = SCRIPT;
     out.pack = w.eval(`(function(){
+      var out = {};
       var d = imParse(window.__probeScript);
       var r = imBuild(d, null); var wid = r && (r.wid || r);
-      var ch = S.mine.worlds[wid].pack.chapters[0];
-      var line = null; (ch.beats.zh || []).forEach(function(b){ if (!line && Array.isArray(b) && b[1] === 'line') line = b; });
-      var flat = function(t){ return String(t||'').replace(/\\s+/g,' ').slice(0,60); };
-      var th = {wid:wid, pk:{ch:1, as:null, picks:{}, st:"play", flags:{}}, cast:[], mem:[]};
-      var pOn = ''; try { pOn = String(packPrompt(th)) } catch(e) { pOn = 'ERR:' + e.message }
-      /* 负对照**不另建一部作品**（第一版就是因为 imBuild 的 wid = "cw"+Date.now() 在同一毫秒里撞了、
-         把正臂那部覆盖掉，才读出假失败）。改成同一个世界、只翻一个字段：goalOwn 关掉后那行必须消失。 */
-      var saved = ch.goalOwn; ch.goalOwn = false;
-      var pOff = ''; try { pOff = String(packPrompt(th)) } catch(e) { pOff = 'ERR:' + e.message }
-      ch.goalOwn = saved;
-      /* ③ 认知边界：同一部作品、三个读数
-         A 第1章 · 演 Calder（S_A 他知道 / S_B 他不知道，且 2 章才揭露）⇒ 只剩 S_B
-         B 第2章 · 演 Calder（S_B 已揭露）⇒ 一个都不该剩
-         C 开关关掉 ⇒ 一个都不该剩 */
-      var castIds = S.mine.worlds[wid].cast || [];
-      var calder = null; castIds.forEach(function(id){ if (ch2n(id) === 'Calder') calder = id });
-      function ch2n(id){ try { return ch(id) && ch(id).n } catch(e) { return null } }      var mkTh = function(k, as){ return {wid:wid, pk:{ch:k, as:as, picks:{}, st:"play", flags:{}}, cast:[], mem:[]} };
-      var sec = { secrets: (S.mine.worlds[wid].pack.secrets || []).map(function(s){ return { id: s.id, from: s.from, knows: s.knows } }), calderId: !!calder, names: castIds.map(function(id){ return ch2n(id) }) };
-      try {
-        var pa = packPrompt(mkTh(1, calder));
-        var pb = packPrompt(mkTh(2, calder));
-        var savedF = MIRU_TUNE.chat.secretBoundary; MIRU_TUNE.chat.secretBoundary = false;
-        var pc = packPrompt(mkTh(1, calder)); MIRU_TUNE.chat.secretBoundary = savedF;
-        sec.ch1_A_hidden = pa.indexOf('Klaus') >= 0; sec.ch1_B_hidden = pa.indexOf('哥哥') >= 0;
-        sec.ch2_B_hidden = pb.indexOf('哥哥') >= 0; sec.ch2_A_hidden = pb.indexOf('Klaus') >= 0;
-        sec.flagOff_B_hidden = pc.indexOf('哥哥') >= 0;
-        /* knows 那一支：拿一个**真**的角色 id 演，再把 S_B 的 knows 改成他的名字 ⇒ 他不该再被蒙在鼓里。
-           （cast 里没有名字时退一步：用 pack.join 的主角 id。） */
-        var someId = null;
-        Object.keys(S.mine.chars || {}).forEach(function(k){ if (!someId) { try { if (ch(k)) someId = k } catch(e) {} } });
-        var nm2 = someId ? ch2n(someId) : null;
+      var chp = S.mine.worlds[wid].pack.chapters[0];
+      out.goalOwn = !!chp.goalOwn;
+      var line = null; (chp.beats.zh || []).forEach(function(b){ if (!line && Array.isArray(b) && b[1] === 'line') line = b; });
+      out.lineOpts = line ? line[2].opts.map(function(o){ return { set: o.set || null, love: o.love || null }; }) : null;
+      out.endChoices = (chp.choices || []).map(function(c){ return { k: c.k, set: c.set || null }; });
+      out.secrets = (S.mine.worlds[wid].pack.secrets || []).map(function(s){ return { id: s.id, from: s.from, knows: s.knows }; });
+
+      var mkTh = function(k, as, flags){ var th = {wid:wid, pk:{ch:k, as:as, picks:{}, st:"play", flags: flags || {}}, cast:[], mem:[]}; return th };
+      var prompt = function(th){ try { return String(packPrompt(th)) } catch(e) { return 'ERR:' + e.message } };
+
+      /* 章节目标：正臂 + 同对象翻字段的负臂 */
+      var pOn = prompt(mkTh(1, null));
+      var savedOwn = chp.goalOwn; chp.goalOwn = false;
+      var pOff = prompt(mkTh(1, null));
+      chp.goalOwn = savedOwn;
+      out.goal = { hasLine: pOn.indexOf('WHAT THIS CHAPTER IS FOR') >= 0,
+                   noLineWhenGoalOwnOff: pOff.indexOf('WHAT THIS CHAPTER IS FOR') < 0 };
+
+      /* 认知边界：**调产品自己的显示接口** __secrets（app14 里那个），不复刻判定逻辑 */
+      out.hook = (typeof window.__secrets === 'function');
+      if (out.hook) {
+        var view = function(k, as, flags){ return window.__secrets(mkTh(k, as, flags)) };
+        var cand = Object.keys(S.mine.chars || {}), rid = null, rme = null;
+        for (var i = 0; i < cand.length; i++) { var v = view(1, cand[i]); if (v && v.me) { rid = cand[i]; rme = v.me; break } }
+        out.sec = { actor: { id: rid, me: rme },
+                    ch1_noActor: view(1, null).hidden,
+                    ch1_actor: rid ? view(1, rid).hidden : 'skipped',
+                    ch2_noActor: view(2, null).hidden,
+                    revealFlag: view(1, null, { 'secret:S_A': 1 }).hidden };
         var sB = (S.mine.worlds[wid].pack.secrets || [])[1];
-        if (sB && someId) {
-          var before = packPrompt(mkTh(1, someId)).indexOf('哥哥') >= 0;
-          var saveK = sB.knows; sB.knows = nm2 ? [nm2] : [];
-          var after = packPrompt(mkTh(1, someId)).indexOf('哥哥') >= 0;
-          sB.knows = saveK;
-          sec.knowsArm = { id: someId, name: nm2, hiddenBefore: before, hiddenAfterAddKnows: after };
-        } else sec.knowsArm = { skipped: true, castLen: castIds.length };
-        /* ⟦REVEAL⟧ 那一支：第 1 章（S_A 声称 6 章才揭）打上 secret:S_A 的旗 ⇒ 立刻不再"你不知道"；
-           S_B 不受影响（它没有 REVEAL）。 */
-        var thF = mkTh(1, null); thF.pk.flags = { 'secret:S_A': 1 };
-        var pf = packPrompt(thF);
-        sec.revealArm = { A_hiddenBeforeFlag: pa.indexOf('Klaus') >= 0, A_hiddenAfterFlag: pf.indexOf('Klaus') >= 0, B_stillHidden: pf.indexOf('哥哥') >= 0 };
-      } catch (e) { sec.err = String(e && e.message || e) }
-      return {
-        goal: ch.goal || null,
-        goalOwn: !!ch.goalOwn,
-        promptHasGoal: pOn.indexOf('decide whether to keep the video') >= 0 ? 'yes' : ('no: ' + pOn.slice(0, 80)),
-        offArm: { hadLine: pOn.indexOf('WHAT THIS CHAPTER IS FOR') >= 0, stillHasLine: pOff.indexOf('WHAT THIS CHAPTER IS FOR') >= 0, goalStillThere: pOff.length > 0 },
-        sec: sec,
-        dbg: { sameObject: true, goalOwn: ch.goalOwn, hasGoalEn: !!(ch.goal && ch.goal.en), chapterGoalFlag: (typeof MIRU_TUNE !== 'undefined' && MIRU_TUNE.chat) ? MIRU_TUNE.chat.chapterGoal : 'no-tune' },
-        lineOpts: line ? line[2].opts.map(function(o){ return { t: flat(o.t), set: o.set || null, love: o.love || null }; }) : null,
-        endChoices: (ch.choices || []).map(function(c){ return { k: c.k, set: c.set || null, mem: !!c.mem }; })
-      };
+        if (sB && rme) { var saveK = sB.knows; sB.knows = [rme]; out.sec.knowsArm = view(1, rid).hidden; sB.knows = saveK }
+        else out.sec.knowsArm = 'skipped';
+        var sv = MIRU_TUNE.chat.secretBoundary; MIRU_TUNE.chat.secretBoundary = false;
+        out.sec.flagOff = view(1, null).hidden; MIRU_TUNE.chat.secretBoundary = sv;
+      }
+      out.parseApi = (typeof window.__parse === 'function') ? window.__parse() : 'no-__parse';
+      return out;
     })()`);
   } catch (e) { out.packErr = String(e && e.message || e) }
-
-  /* ③ 运行时函数：旗/条件真的会动 */
-  try {
-    const th = { pk: { flags: {} }, cast: [], love: {}, mem: [] };
-    out.cond_before = w.pkCond(th, { flag: 'mem_video_kept' });
-    w.pkSet(th, ['mem_video_kept']);
-    out.flags_after_set = Object.keys(th.pk.flags);
-    out.cond_after = w.pkCond(th, { flag: 'mem_video_kept' });
-    out.cond_not_after = w.pkCond(th, { not: 'mem_video_kept' });
-  } catch (e) { out.condErr = String(e && e.message || e) }
 
   document.getElementById('out').textContent = 'EFFECTS_PROBE\n' + JSON.stringify(out, null, 1);
 })();

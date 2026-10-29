@@ -58,7 +58,9 @@
 - `packPrompt` 按「现在第几章 + 演的是谁」算出**这个角色此刻不该知道的事**，输出一行 `YOU DO NOT KNOW (…)`；开关 `chat.secretBoundary`（默认 true）
 - **失败即闭**：`as` 取不到角色（旁观 / 查不到 id）⇒ 所有秘密都当"他不知道"
 - 探针三臂：第 1 章两个秘密都进；**第 2 章 `reveal_from:2` 那个消失**、6 章那个还在；开关关掉整行不出现 —— 全部实测
-- ⚠️ `knows:` 那一支**没验成**（合成世界拿不到角色 id），指导文档里已写「别指望它，只写 `reveal_from`」
+- ✅ `knows:` 那一支**已验**（同日补）：新增显示接口 `__secrets(th)`（app14）把"系统认为你在演谁 + 他该不知道哪些秘密"摊出来 ——
+  之前验不了是因为 `ch()` 是**闭包函数、不是全局**，探针从外面调会 `ch is not a function`（尺子伸不进去，看起来像功能没做）。
+  读数：演 Calder ⇒ S_A（knows 有他）不藏、只剩 S_B；把 Calder 加进 S_B 的 knows ⇒ 两个都不藏
 - ✅ **`⟦REVEAL|S_A⟧` 已接**（同一刀的后半）：它在正文那一处打一个 `secret:S_A` 的旗，`packPrompt` 把这个旗从"你不知道"里排掉 ⇒ **提前解锁**；
   `reveal_from` 是**最晚**解锁。生效时机是下一回合（system 每轮先算，揭露那句由剧本给出）。探针读数：节拍里出现 `set:secret:S_A`；打旗后 `A_hiddenBeforeFlag: true → A_hiddenAfterFlag: false`，且 S_B 不受影响
 - ARCHITECTURE 同时做了**一次梳理**：新增 §5.5「剧本管道总览」（四层唯一咽喉 + 指令矩阵 + 三条不变式 + 认知边界的验证现状），把 5·补三…补七 收成它的展开
