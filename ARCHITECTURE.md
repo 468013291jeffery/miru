@@ -375,7 +375,13 @@ app51(核心) ← app90(你：) ← app94(⟦…⟧ 指令) ← app94(you94) ←
 `false` 一个开关回到 10-28 的干净版；`characterMeta` 保持 false 不动。
 措辞里带两道刹车：`let it shape what happens, never say it out loud, never announce that anything is coming`。
 
-⇒ 结论：`⟦GOAL⟧` 现在**既是读者的目录，也是角色的意图**（只管意图，不管日程）。探针断言：`tools/parse-effects-probe.html` 的 `promptHasGoal` 从 `no` 变 `yes`。
+⇒ 结论：`⟦GOAL⟧` 现在**既是读者的目录，也是角色的意图**（只管意图，不管日程）。
+
+**只有编剧明写的 GOAL 才进**：`imBuild` 在章上打 `goalOwn: !!c.goal94`，prompt 那行的条件是 `_goalOn && c.goalOwn && c.goal.en`。
+没有 GOAL 的章，它的 `goal` 是"章末那个问句"——那是**读者的议程**，给角色看会让他替玩家推进那个决定（正是 10-28 删掉那段的理由）。⇒ 现有 5 部线上稿件没写 GOAL ⇒ **行为一字不变**。
+
+探针（`tools/parse-effects-probe.html`）正负两臂：正臂 `promptHasGoal: yes`；负臂在**同一个世界**上把 `goalOwn` 翻成 false，那一行必须消失（`hadLine: true → stillHasLine: false`）。
+⚠️ 第一版负臂是"另建一部没有 GOAL 的作品"，而 `imBuild` 的 `wid = "cw"+Date.now()` 在同一毫秒里会**覆盖**前一部 ⇒ 正臂读到假失败。教训：A/B 要落在同一个对象上翻一个字段，别靠"再建一个"。
 
 **一个我先前判错的点（留档）**：我原以为"goal 现在是空的/废话，因为只能从章末问题倒推"。实测 5 部稿件：`# CHOICE｜…` 每部 **12 条、去重 12 种**，都是像「独立训练站稳以后，你还允许怎样的联系？」这种真句子 ⇒ **倒推出来的 goal 本来就不差**。`⟦GOAL⟧` 的真正增量是：编剧可以写「这一章的戏要立什么」而不必借提问暗示；不写则一切照旧。
 
