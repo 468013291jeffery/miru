@@ -259,6 +259,10 @@ const CONFIG_DEFAULTS = {
   // 容量/超时类（原来写死在各自文件里，挪进来才能不改代码就调）
   state_max_kb: 900, max_pack_kb: 1500, first_token_ms: 22000,
   skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
+  /* 语音 API：地址 / 密钥 / 模型存在这儿就能在后台改，不用去动 Vercel 的环境变量。
+     协议目前只认 OpenAI 兼容的 POST <url>/v1/audio/speech（CosyVoice / IndexTTS / GPT-SoVITS / 官方 OpenAI 都是这个形状）。
+     url 为空 = 回到原来的行为（TTS_URL 环境变量 → HF Space 兜底）；key 有值才覆盖 TTS_KEY，后台不回显明文。 */
+  tts: { protocol: 'openai', url: '', key: '', model: '', voice: '' },
   /* 创作中心那 5 个 AI 步骤 —— 以前每句 prompt 都写死在 source/src/app50_creator2.js 里，改一句要重建 9 MB 产物。
      现在它们住在这儿（config 表 key=studio），执行在 api/studio.js，后台「API 台」可直接改；config 缓存 30 秒，改完最迟 30 秒生效。
      模板里 {{名字}} 由请求 payload 填（step / answers / project / question / current / previous / genre / context / text / optionsText）。 */

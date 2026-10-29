@@ -10,6 +10,7 @@
 //      Set HF_TOKEN for a personal GPU quota (without it the Space treats every call as anonymous and the free quota runs out fast).
 // Voice references are real, consented Mandarin speakers from AISHELL-3 (Apache-2.0), adults only (age groups 26-40 / 41+).
 // Successful audio is cached on Vercel's CDN for a year, so each line is synthesised once for everyone.
+const L = require('./_lib');
 const SPACE = process.env.TTS_SPACE_URL || 'https://indexteam-indextts-2-demo.hf.space';
 const A3 = 'https://huggingface.co/datasets/AISHELL/AISHELL-3/resolve/main/train/wav/';
 const VOICES = {
@@ -30,10 +31,17 @@ function cors(req, res) {
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-async function viaOpenAI(text, voice) {
-  const r = await fetch(process.env.TTS_URL.replace(/\/$/, '') + '/v1/audio/speech', {
-    method: 'POST', headers: { 'Content-Type': 'application/json', ...(process.env.TTS_KEY ? { Authorization: 'Bearer ' + process.env.TTS_KEY } : {}) },
-    body: JSON.stringify({ model: process.env.TTS_MODEL || 'tts-1', input: text, voice, response_format: 'mp3' }),
+/* 2026-10-30：地址 / 密钥 / 模型可以存在 config 表（后台「语音 API」那一页填），填了就用它，没填回到环境变量。
+   只认 OpenAI 兼容的那一个形状：POST <base>/v1/audio/speech {model, input, voice, response_format}。 */
+async function viaOpenAI(text, voice, c) {
+  const base = String((c && c.url) || process.env.TTS_URL || '').replace(/\/+$/, '');
+  if (!base) throw new Error('no TTS url configured');
+  const key = (c && c.key) || process.env.TTS_KEY || '';
+  const model = (c && c.model) || process.env.TTS_MODEL || 'tts-1';
+  const ep = /\/v1\/audio\/speech$/.test(base) ? base : base + '/v1/audio/speech';
+  const r = await fetch(ep, {
+    method: 'POST', headers: { 'Content-Type': 'application/json', ...(key ? { Authorization: 'Bearer ' + key } : {}) },
+    body: JSON.stringify({ model, input: text, voice: (c && c.voice) || voice, response_format: 'mp3' }),
   });
   if (!r.ok) throw new Error('tts server ' + r.status);
   return { buf: Buffer.from(await r.arrayBuffer()), type: r.headers.get('content-type') || 'audio/mpeg' };
@@ -322,7 +330,8 @@ module.exports = async (req, res) => {
     try { const SAY = { zh: '你终于来了。外面雨这么大，你也不带把伞？', en: 'You finally came. No umbrella?', ja: 'やっと来たね。こんな雨なのに、傘も持ってないの？', ko: '드디어 왔네. 비가 이렇게 오는데 우산도 없어?', es: 'Por fin llegaste. ¿Con esta lluvia y sin paraguas?' }; const L = SAY[q.l] ? q.l : 'zh'; const o = await viaQwen(SAY[L], String(q.v || 'm1'), L); res.status(200).json({ ok: true, bytes: o.buf.length, type: o.type, ms: Date.now() - t0, site: QBASE, voices: QV }); }
     catch (e) { res.status(200).json({ ok: false, error: String(e.message || e).slice(0, 400), sites: qwenSites().map(x => x.base) }); } return; }
   if (q.ping) { res.setHeader('Cache-Control', 'no-store'); let iw = null; if (q.ping === 'inworld' && process.env.INWORLD_API_KEY) { try { iw = { map: await iwVoices(), english_voices: (IW_LIST || []).map(v => v.id + ' [' + v.tags.join(',') + ']') }; } catch (e) { iw = { error: String(e.message || e) }; } }
-    res.status(200).json({ ok: true, provider: process.env.TTS_URL ? 'server' : 'space', qwen: qwenSites().length > 0, english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
+    let tc = {}; try { tc = ((await L.config()) || {}).tts || {}; } catch (_) {}
+    res.status(200).json({ ok: true, provider: (tc.url || process.env.TTS_URL) ? 'server' : 'space', fromConfig: !!tc.url, cfgUrl: tc.url || '', cfgModel: tc.model || '', hasCfgKey: !!tc.key, qwen: qwenSites().length > 0, english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
   const text = String(q.t || '').replace(/[*（）()]/g, '').trim().slice(0, 400);
   if (!text) { res.status(400).json({ error: 'no text' }); return; }
   const voice = String(q.v || 'm1').slice(0, 12);
@@ -334,7 +343,7 @@ module.exports = async (req, res) => {
     const lang = QLANG[q.l] ? q.l : (/[\u3040-\u30ff]/.test(text) ? 'ja' : /[\uac00-\ud7af]/.test(text) ? 'ko' : /[\u4e00-\u9fff]/.test(text) ? 'zh' : 'en');
     if (qwenSites().length) { try { out = await viaQwen(text, voice, lang); } catch (e) { qerr = e; out = null; } }
     if (!out && en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
-    if (!out) out = process.env.TTS_URL ? await viaOpenAI(text, voice) : await viaSpace(text, voice, vec);
+    if (!out) { let tc = {}; try { tc = ((await L.config()) || {}).tts || {}; } catch (_) {} out = (tc.url || process.env.TTS_URL) ? await viaOpenAI(text, voice, tc) : await viaSpace(text, voice, vec); }
     const riff = out.buf.slice(0, 4).toString() === 'RIFF';
     res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));
     res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');

@@ -321,6 +321,51 @@ module.exports = L.wrap(async (req, res) => {
     return L.send(res, 200, { ok: true, changed });
   }
 
+  /* ---------- 语音 API（协议 / 地址 / 密钥 / 测通路） ----------
+     密钥存服务器（config 表 key='tts'），后台只显示「已设置」不回显明文；「测」= 用当前配置真合成一句。 */
+  if (r === 'tts_config') {
+    if (!need('config')) return;
+    if (req.method === 'GET') {
+      const rows = await sql("SELECT value, updated_by, updated_at FROM config WHERE key='tts'");
+      const v = (rows[0] && rows[0].value) || {};
+      return L.send(res, 200, {
+        protocol: v.protocol || 'openai', url: v.url || '', model: v.model || '', voice: v.voice || '',
+        hasKey: !!v.key, updated_by: rows[0] && rows[0].updated_by, updated_at: rows[0] && rows[0].updated_at,
+        env: { url: process.env.TTS_URL || '', model: process.env.TTS_MODEL || '', key: !!process.env.TTS_KEY },
+      });
+    }
+    const cur = (await sql("SELECT value FROM config WHERE key='tts'"))[0];
+    const old = (cur && cur.value) || {};
+    const keyIn = (b.key === undefined || b.key === null || b.key === '') ? (old.key || '') : String(b.key).slice(0, 400);
+    const next = { protocol: String(b.protocol || 'openai').slice(0, 20), url: String(b.url || '').slice(0, 400), model: String(b.model || '').slice(0, 100), voice: String(b.voice || '').slice(0, 40), key: keyIn };
+    await sql("INSERT INTO config (key, value, updated_by, updated_at) VALUES ('tts', $1::jsonb, $2, now()) ON CONFLICT (key) DO UPDATE SET value=$1::jsonb, updated_by=$2, updated_at=now()", [JSON.stringify(next), A.name || A.username]);
+    L.configReset(); await log('tts_config', 'config', 'tts', { url: next.url, model: next.model, key: next.key ? '(set)' : '(empty)' });
+    return L.send(res, 200, { ok: true, url: next.url, model: next.model, hasKey: !!next.key });
+  }
+  if (r === 'tts_probe') {
+    if (!need('config')) return;
+    const v = ((await L.config()).tts) || {};
+    const base = String(v.url || process.env.TTS_URL || '').replace(/\/+$/, '');
+    const key = v.key || process.env.TTS_KEY || '';
+    const model = v.model || process.env.TTS_MODEL || 'tts-1';
+    const voice = String(b.voice || v.voice || 'alloy').slice(0, 40);
+    if (!base) return L.send(res, 200, { ok: false, error: '地址是空的 —— 填一个，或者用环境变量 TTS_URL' });
+    const ep = /\/v1\/audio\/speech$/.test(base) ? base : base + '/v1/audio/speech';
+    const t0 = Date.now();
+    try {
+      const r2 = await fetch(ep, {
+        method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, key ? { Authorization: 'Bearer ' + key } : {}),
+        body: JSON.stringify({ model, input: String(b.text || '你好，这是语音通路测试。'), voice, response_format: 'mp3' }),
+      });
+      const ct = r2.headers.get('content-type') || '';
+      const buf = Buffer.from(await r2.arrayBuffer());
+      if (!r2.ok) return L.send(res, 200, { ok: false, ms: Date.now() - t0, status: r2.status, ep, model, voice, error: buf.toString('utf8').slice(0, 400) });
+      return L.send(res, 200, { ok: true, ms: Date.now() - t0, status: r2.status, ep, model, voice, bytes: buf.length, type: ct, head: buf.slice(0, 4).toString('latin1') });
+    } catch (e) {
+      return L.send(res, 200, { ok: false, ms: Date.now() - t0, ep, model, voice, error: String((e && e.message) || e).slice(0, 400) });
+    }
+  }
+
   /* ---------- in-app notices ---------- */
   if (r === 'notices') {
     if (!need('notices')) return;
