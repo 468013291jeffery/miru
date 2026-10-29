@@ -370,7 +370,8 @@ function secretsView(th){try{
  const hidden=(P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&!fl["secret:"+s.id]&&(s.knows||[]).indexOf(me)<0).map(s=>s.id);
  return {on:on,chapter:th.pk.ch,me:me||null,as:th.pk.as||null,hasChapter:!!c,all:all,hidden:hidden,flags:Object.keys(fl)};
 }catch(e){return {err:String(e&&e.message||e)}}}
-try{ if(typeof window!=="undefined") window.__secrets=secretsView; }catch(_){}
+/* 没有 window 的环境（Node 里跑探针）就不挂 —— 不用空 catch 兜（那会把硬错误变成无操作） */
+if(typeof window!=="undefined") window.__secrets=secretsView;
 /* 与"章节"无关的共用尾部：谁在场 / 玩家扮演谁 / 边界。两种口径都走这里，避免两份漂移。 */
 function packTail(th,as,lead){return [
  as==="watch"?"THE USER IS WATCHING, not in the scene: nobody addresses them or knows they exist. Their input is a director's note — play it out between the characters.":
