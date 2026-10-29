@@ -88,7 +88,7 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
           <template #title><el-icon><Promotion /></el-icon><span>运营工具</span></template>
           <el-menu-item index="notices" v-if="can('notices')">公告管理</el-menu-item>
           <el-menu-item index="events" v-if="can('events')">行为数据</el-menu-item>
-          <el-menu-item index="i18n" v-if="can('i18n')">多语言词条</el-menu-item>
+          <el-menu-item index="api" v-if="can('config')">API 接口目录</el-menu-item><el-menu-item index="i18n" v-if="can('i18n')">多语言词条</el-menu-item>
           <el-menu-item index="config" v-if="can('config')">系统配置</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="sys" v-if="can('admins')||can('audit')">
@@ -624,6 +624,78 @@ const ApiConsole = {
       <div class="muted" style="font-size:12px">可用变量：step · answers · project · question · current · previous · genre · context · text · optionsText（写法 <span class="mono" v-pre>{{变量}}</span>，取不到就是空串）</div>
       <template #footer><el-button @click="dlg=false">取消</el-button><el-button type="primary" @click="apply">应用</el-button></template>
     </el-dialog>
+  </div>`,
+};
+
+/* ================= API · 接口目录 =================
+   数据来自 r=api_index，而那份数据是 tools/api-index.mjs 从 api/*.js 里提出来的 —— 不是手抄的清单，
+   所以不会「加了接口但这一页还停在去年」。这一页只做两件事：看得见、点得通。 */
+const ApiCatalog = {
+  setup() {
+    const rows = ref([]), busy = ref(false), q = ref('');
+    const open = ref({});
+    async function load() {
+      try {
+        const j = await api('api_index');
+        rows.value = (j.endpoints || []).map(x => Object.assign({}, x, { code: null, ms: null, state: 'idle' }));
+      } catch (e) { ElMessage.error('读接口目录失败：' + ((e && e.message) || e)); }
+    }
+    const shown = computed(() => {
+      const k = String(q.value || '').trim().toLowerCase();
+      if (!k) return rows.value;
+      return rows.value.filter(x => (x.path + ' ' + x.desc + ' ' + x.routes.map(r => r.name).join(' ')).toLowerCase().indexOf(k) >= 0);
+    });
+    /* 只用 GET 探一次：这一页回答的是「这个函数在不在、快不快」，不发任何写请求，所以可以放心全测。 */
+    async function hit(x) {
+      x.state = 'running'; x.code = null; x.ms = null;
+      const t0 = Date.now();
+      try {
+        const r = await fetch(x.path, { method: 'GET', headers: { Authorization: 'Bearer ' + S.token }, cache: 'no-store' });
+        x.ms = Date.now() - t0; x.code = r.status; x.state = (r.status < 500) ? 'ok' : 'bad';
+      } catch (e) { x.ms = Date.now() - t0; x.code = 0; x.state = 'bad'; }
+    }
+    /* 串行：并发会把「耗时」这一列变成互相排队的时间，读数就没意义了。 */
+    async function probeAll() { busy.value = true; for (const x of rows.value) await hit(x); busy.value = false; }
+    const toggle = id => { open.value = Object.assign({}, open.value, { [id]: !open.value[id] }); };
+    onMounted(load);
+    return { rows: shown, all: rows, busy, q, probeAll, hit, open, toggle };
+  },
+  template: `<div class="panel">
+    <div class="toolbar">
+      <el-input v-model="q" placeholder="搜端点 / 说明 / 路由（打 ?r=users 这种也行）" style="width:360px" clearable />
+      <el-button type="primary" :loading="busy" @click="probeAll">全部测一遍</el-button>
+      <span class="muted">共 {{ all.length }} 个端点 · {{ all.reduce((a,x)=>a+x.routes.length,0) }} 条路由。判据：有响应就算通（2xx / 4xx 都算 —— 401 说明函数在、只是要登录），只有 5xx / 超时 / 连不上记不通。</span>
+    </div>
+    <el-table :data="rows" stripe size="small" row-key="id">
+      <el-table-column type="expand">
+        <template #default="{row}">
+          <div style="padding:4px 16px 10px 48px">
+            <div v-if="!row.routes.length" class="muted">这个文件没有可枚举的子路由（或者它只有一条主路径）。</div>
+            <div v-for="r in row.routes" :key="r.name" style="margin:2px 0">
+              <span class="mono">{{ row.path }}{{ r.name[0] === '?' ? r.name : '' }}</span>
+              <span v-if="r.name[0] !== '?'" class="mono" style="margin-left:6px">{{ r.name }}</span>
+              <span v-if="r.desc" class="muted" style="margin-left:10px">{{ r.desc }}</span>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="端点" width="180"><template #default="{row}"><span class="mono">{{ row.path }}</span></template></el-table-column>
+      <el-table-column label="方法" width="150"><template #default="{row}"><span class="mono">{{ row.methods }}</span></template></el-table-column>
+      <el-table-column prop="desc" label="说明" min-width="300" show-overflow-tooltip />
+      <el-table-column label="路由" width="80"><template #default="{row}">{{ row.routes.length }}</template></el-table-column>
+      <el-table-column label="状态" width="110"><template #default="{row}">
+        <el-tag v-if="row.state==='idle'" size="small" type="info">未测</el-tag>
+        <el-tag v-else-if="row.state==='running'" size="small">测试中…</el-tag>
+        <el-tag v-else-if="row.state==='ok'" size="small" type="success">通 {{ row.code }}</el-tag>
+        <el-tag v-else size="small" type="danger">不通 {{ row.code || '超时' }}</el-tag>
+      </template></el-table-column>
+      <el-table-column label="耗时" width="90"><template #default="{row}"><span class="mono">{{ row.ms == null ? '—' : row.ms + ' ms' }}</span></template></el-table-column>
+      <el-table-column label="操作" width="140"><template #default="{row}">
+        <el-button size="small" @click="hit(row)">测</el-button>
+        <el-button size="small" text @click="toggle(row.id)">路由</el-button>
+      </template></el-table-column>
+    </el-table>
+    <p class="muted" style="margin-top:10px">目录是生成物：改了 <span class="mono">api/*.js</span> 之后跑 <span class="mono">node tools/api-index.mjs --write</span>，这一页下次打开就是新的。</p>
   </div>`,
 };
 
@@ -1225,7 +1297,7 @@ const app = createApp({
     const route = ref((location.hash || '#dashboard').slice(1)), collapsed = ref(window.innerWidth < 900), busy = ref(false), reloadKey = ref(0);
     const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
     const payTest = ref(false); window.__payTest = payTest;
-    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 台 · 创作步骤', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
+    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 接口目录', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
     function go(k) { route.value = k; location.hash = k; }
     window.addEventListener('hashchange', () => { route.value = (location.hash || '#dashboard').slice(1); });
     async function login() {
@@ -1245,7 +1317,7 @@ const app = createApp({
 });
 app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
 for (const [k, c] of Object.entries(ElementPlusIconsVue)) app.component(k, c);
-Object.entries({ studio: Studio, api: ApiConsole, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
+Object.entries({ studio: Studio, api: ApiCatalog, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
 app.mount('#app');
 </script>
 </body>

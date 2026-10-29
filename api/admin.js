@@ -321,6 +321,13 @@ module.exports = L.wrap(async (req, res) => {
     return L.send(res, 200, { ok: true, changed });
   }
 
+  /* ---------- 接口目录 ----------
+     数据来自 api/_index.js（由 tools/api-index.mjs 从 api/*.js 里提出来）。后台「API」页读它。 */
+  if (r === 'api_index') {
+    if (!need('config')) return;
+    return L.send(res, 200, { endpoints: require('./_index') });
+  }
+
   /* ---------- 语音 API（协议 / 地址 / 密钥 / 测通路） ----------
      密钥存服务器（config 表 key='tts'），后台只显示「已设置」不回显明文；「测」= 用当前配置真合成一句。 */
   if (r === 'tts_config') {
