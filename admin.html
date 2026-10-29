@@ -564,8 +564,31 @@ const ApiConsole = {
       await api('config', { body: { values: { studio } } });
       dirty.value = false; ElMessage.success('已保存 —— 最多 30 秒生效（服务端配置缓存 30 秒）');
     }
+    /* 试跑：改完 prompt 不用进游戏也能看见效果 —— 走 admin token，所以服务器那边也给了这一道门 */
+    const trial = reactive({ open: false, id: '', busy: false, out: '', ms: 0 });
+    const SAMPLE = {
+      'guide-turn': { step: 1, answers: ['我喜欢慢热的悬疑，男主是个医生'], project: '{"title":"测试"}' },
+      'plan': { answers: ['慢热悬疑，男主是医生，秘密是他已经喜欢我很久'], project: '{"title":"测试"}' },
+      'options': { question: '下一步你怎么做？', current: ['A 留下', 'B 离开'], previous: '他在门口等你。' },
+      'rewrite': { genre: '悬疑', context: '深夜的医院走廊', text: '他看了你一眼。' },
+      'step-suggest': { question: '你怎么回答他？', previous: '他说：我送你回去。', options: ['好', '不用'], mode: 'A' },
+    };
+    async function trialRun(id) {
+      trial.id = id; trial.open = true; trial.busy = true; trial.out = '';
+      const t0 = Date.now();
+      try {
+        const r = await fetch('/api/studio?r=' + encodeURIComponent(id), {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + S.token },
+          body: JSON.stringify({ payload: SAMPLE[id] || {} }),
+        });
+        const j = await r.json().catch(() => ({}));
+        trial.ms = Date.now() - t0;
+        trial.out = r.ok ? JSON.stringify(j.json || j.raw || j, null, 1) : ('HTTP ' + r.status + ' — ' + JSON.stringify(j));
+      } catch (e) { trial.ms = Date.now() - t0; trial.out = '请求失败: ' + e; }
+      trial.busy = false;
+    }
     onMounted(load);
-    return { cfg, tasks, dlg, cur, dirty, load, edit, apply, save };
+    return { cfg, tasks, dlg, cur, dirty, load, edit, apply, save, trial, trialRun };
   },
   template: `<div class="panel">
     <div class="toolbar"><el-button type="primary" @click="save">保存</el-button><el-button @click="load">重新读取</el-button>
@@ -584,8 +607,15 @@ const ApiConsole = {
       <el-table-column prop="role" label="角色" width="100" />
       <el-table-column prop="prompt" label="prompt" min-width="360" show-overflow-tooltip />
       <el-table-column label="启用" width="80"><template #default="{row}"><el-switch v-model="row.on" @change="dirty=true" /></template></el-table-column>
-      <el-table-column label="操作" width="90"><template #default="{row}"><el-button size="small" @click="edit(row)">编辑</el-button></template></el-table-column>
+      <el-table-column label="操作" width="150"><template #default="{row}"><el-button size="small" @click="edit(row)">编辑</el-button><el-button size="small" type="primary" text @click="trialRun(row.id)">试跑</el-button></template></el-table-column>
     </el-table>
+    <el-dialog v-model="trial.open" :title="'试跑 · ' + trial.id" width="720px">
+      <div class="muted" style="font-size:12px;margin-bottom:8px">用一组示例输入调一次真模型（会花 token）。改完 prompt 先「保存」，再试跑。</div>
+      <el-alert v-if="trial.busy" type="info" :closable="false" title="正在跑…" />
+      <pre v-else class="mono" style="max-height:420px;overflow:auto;white-space:pre-wrap;font-size:12px">{{ trial.out }}</pre>
+      <div class="muted" style="font-size:12px;margin-top:6px" v-if="trial.ms">耗时 {{ trial.ms }} ms</div>
+      <template #footer><el-button @click="trial.open=false">关闭</el-button><el-button type="primary" @click="trialRun(trial.id)">再跑一次</el-button></template>
+    </el-dialog>
     <el-dialog v-model="dlg" :title="'编辑 · ' + (cur.name || cur.id || '')" width="760px">
       <el-form label-width="70px">
         <el-form-item label="名称"><el-input v-model="cur.name" /></el-form-item>
