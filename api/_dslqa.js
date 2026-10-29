@@ -13,7 +13,7 @@
 
 // 2026-10-29：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ / ⟦OPT⟧ 进了剧本语法（运行时 app16_story2.js:27-28 与 app14_pack.js:471/233 早就支持），
 // 这里必须同步认它们，否则审查会把合法的留痕/条件/选项效果句报成「未知指令」并挡住上线。
-const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT']);
+const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL']);
 const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 
 function dslQA(md) {

@@ -85,6 +85,17 @@ function off94Parse(next, text) {
     return out;
   };
   (doc.chapters || []).forEach(c => {
+    /* 2026-10-29 · ⟦GOAL|这一章要达成什么|English⟧ —— 章节目标。
+       运行时有三处读者（app14_pack.js:100 章节卡 · app15_home.js:134 / app47_chapters.js:16 章节列表 ·
+       app14_pack.js:330 直接进模型的 "Chapter goal: …"），而剧本这边此前只能用「章末问题」倒推 ⇒ 编剧写的目标进不来。 */
+    const raw = c.items || [];
+    for (let k = 0; k < raw.length; k++) {
+      const it = raw[k]; const mm = Array.isArray(it) && it[0] === "n" && mk94(it[2]);
+      if (!mm || mm.k !== "GOAL") continue;
+      const zh = String(mm.a[0] || "").trim(); const en = String(mm.a[1] || "").trim() || zh;
+      if (zh) c.goal94 = { zh, en };
+      raw.splice(k--, 1);
+    }
     c.items = walk(c.items);
     /* a chapter-opening music cue goes after the first scene card */
     const fi = c.items.findIndex(y => Array.isArray(y) && y[0] === "sys" && y[1] === "scene");
