@@ -179,13 +179,13 @@ function chatProviders(order) {
   };
   return String(order || E.LLM_ORDER || 'deepseek,scnet,longcat,glm').split(',').map(k => all[k.trim()]).filter(Boolean);
 }
-async function llm(messages, maxTokens, timeoutMs, order) {
+async function llm(messages, maxTokens, timeoutMs, order, temperature) {
   const list = chatProviders(order); if (!list.length) throw new Error('no LLM key configured');
   let last;
   for (const p of list) {
     const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), timeoutMs || 25000);
     try {
-      const r = await fetch(p.url, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify(Object.assign({ model: p.model, messages, max_tokens: maxTokens || 2000, temperature: 0.3 }, p.nothink ? {} : { thinking: { type: 'disabled' } })) });
+      const r = await fetch(p.url, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + p.key }, body: JSON.stringify(Object.assign({ model: p.model, messages, max_tokens: maxTokens || 2000, temperature: temperature == null ? 0.3 : temperature }, p.nothink ? {} : { thinking: { type: 'disabled' } })) });
       if (!r.ok) throw new Error('llm ' + r.status);
       const j = await r.json(); const c = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
       if (c.trim()) return c;
@@ -259,6 +259,20 @@ const CONFIG_DEFAULTS = {
   // 容量/超时类（原来写死在各自文件里，挪进来才能不改代码就调）
   state_max_kb: 900, max_pack_kb: 1500, first_token_ms: 22000,
   skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
+  /* 创作中心那 5 个 AI 步骤 —— 以前每句 prompt 都写死在 source/src/app50_creator2.js 里，改一句要重建 9 MB 产物。
+     现在它们住在这儿（config 表 key=studio），执行在 api/studio.js，后台「API 台」可直接改；config 缓存 30 秒，改完最迟 30 秒生效。
+     模板里 {{名字}} 由请求 payload 填（step / answers / project / question / current / previous / genre / context / text / optionsText）。 */
+  studio: {
+    sys: "You are MIRU's story editor, helping an author build an interactive romance drama (all characters are fictional adults 21+, no explicit sexual content, no real people, no copyrighted characters). Write in Simplified Chinese.",
+    order: '', max_tokens: 1200, temp: 0.7,
+    tasks: {
+      'guide-turn': { name: '引导 · 回话', on: true, role: 'architect', prompt: 'The author is on step {{step}} of a guided setup. Their answers so far: {{answers}}\nCurrent project: {{project}}\nGive ONE short, specific reaction to their latest answer and one concrete idea that would make the story stronger (max 70 Chinese characters, warm, no praise filler). JSON {"feedback":""}' },
+      'plan': { name: '生成故事大纲', on: true, role: 'architect', prompt: 'Turn the author\'s answers into a sharp story plan. Answers: {{answers}}\nCurrent draft: {{project}}\nKeep the author\'s names and choices; make it specific (place, object, secret, stakes). JSON {"project":{"title":"≤14字","premise":"一句话梗概","hook":"开场：用他的一个具体行为展示吸引力和他对你的态度，并给你一个马上能回应的点（冲突按题材安排，不必一开场就吵）","conflict":"","world":"具体地点和时间","vibe":"","ending":"","lead":{"name":"","role":"","personality":"","goal":"","boundary":""}}}' },
+      'options': { name: '给作者出选项', on: true, role: 'architect', prompt: 'The author is answering: {{question}}\nCurrent options (replace them with a NEW, clearly different set): {{current}}\nTheir story so far: {{previous}}\nGive 6 short options in Simplified Chinese (each under 18 characters), concrete and varied, fitting their story, original (no famous works). JSON {"options":["",...]}' },
+      'rewrite': { name: '改写一句', on: true, role: 'scene', prompt: 'Rewrite this line so it is more vivid and specific, same meaning, same length or shorter. Genre: {{genre}}. Context: {{context}}\nLine: {{text}}\nJSON {"text":""}' },
+      'step-suggest': { name: '建议这一步怎么答', on: true, role: 'architect', prompt: 'Question for the author: {{question}}\nTheir story so far: {{previous}}\n{{optionsText}}' },
+    },
+  },
 };
 let _cfg = null, _cfgAt = 0;
 async function config() {

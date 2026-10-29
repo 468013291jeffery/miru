@@ -88,6 +88,7 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
           <template #title><el-icon><Promotion /></el-icon><span>运营工具</span></template>
           <el-menu-item index="notices" v-if="can('notices')">公告管理</el-menu-item>
           <el-menu-item index="events" v-if="can('events')">行为数据</el-menu-item>
+          <el-menu-item index="api" v-if="can('config')">API 台（创作步骤）</el-menu-item>
           <el-menu-item index="i18n" v-if="can('i18n')">多语言词条</el-menu-item>
           <el-menu-item index="config" v-if="can('config')">系统配置</el-menu-item>
         </el-sub-menu>
@@ -537,6 +538,64 @@ const Notices = {
       <el-form-item label="结束"><el-date-picker v-model="n.ends_at" type="datetime" placeholder="长期" /></el-form-item>
       <el-form-item label="启用"><el-switch v-model="n.active" /></el-form-item></el-form>
       <template #footer><el-button @click="dlg=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template></el-dialog>`,
+};
+
+/* ================= API 台 · 创作中心的 5 个 AI 步骤 =================
+   prompt 住在 config 表（key=studio），执行在 api/studio.js —— 改完不用重建 9 MB 产物。 */
+const ApiConsole = {
+  setup() {
+    const cfg = reactive({ sys: '', order: '', max_tokens: 1200, temp: 0.7 });
+    const tasks = ref([]), dlg = ref(false), cur = reactive({}), dirty = ref(false);
+    const IDS = ['guide-turn', 'plan', 'options', 'rewrite', 'step-suggest'];
+    function hydrate(studio) {
+      cfg.sys = studio.sys || ''; cfg.order = studio.order || ''; cfg.max_tokens = Number(studio.max_tokens) || 1200; cfg.temp = studio.temp == null ? 0.7 : Number(studio.temp);
+      const ts = studio.tasks || {};
+      tasks.value = IDS.map(id => {
+        const t = ts[id] || {};
+        return { id, name: t.name || id, on: t.on !== false, role: t.role || '', prompt: t.prompt || '' };
+      });
+    }
+    async function load() { const j = await api('config'); hydrate(j.values.studio || {}); dirty.value = false; }
+    function edit(row) { Object.keys(cur).forEach(k => delete cur[k]); Object.assign(cur, row); dlg.value = true; }
+    function apply() { dirty.value = true; dlg.value = false; }
+    async function save() {
+      const studio = { sys: cfg.sys, order: cfg.order, max_tokens: Number(cfg.max_tokens) || 1200, temp: cfg.temp == null ? 0.7 : Number(cfg.temp), tasks: {} };
+      tasks.value.forEach(t => { studio.tasks[t.id] = { name: t.name, on: !!t.on, role: t.role, prompt: t.prompt }; });
+      await api('config', { body: { values: { studio } } });
+      dirty.value = false; ElMessage.success('已保存 —— 最多 30 秒生效（服务端配置缓存 30 秒）');
+    }
+    onMounted(load);
+    return { cfg, tasks, dlg, cur, dirty, load, edit, apply, save };
+  },
+  template: `<div class="panel">
+    <div class="toolbar"><el-button type="primary" @click="save">保存</el-button><el-button @click="load">重新读取</el-button>
+      <el-tag v-if="dirty" type="warning" size="small">有未保存的改动</el-tag>
+      <span class="muted">这些步骤跑在服务端 <span class="mono">/api/studio</span>，prompt 存在数据库 —— 改完不用重建 9 MB 产物。</span></div>
+    <el-form label-width="110px">
+      <el-form-item label="系统提示"><el-input v-model="cfg.sys" type="textarea" :rows="3" maxlength="4000" show-word-limit @input="dirty=true" /></el-form-item>
+      <el-form-item label="模型顺序"><el-input v-model="cfg.order" placeholder="留空 = 全局 LLM_ORDER（deepseek,scnet,longcat,glm）" @input="dirty=true" /></el-form-item>
+      <el-form-item label="最大输出"><el-input-number v-model="cfg.max_tokens" :min="200" :max="8000" :step="100" @change="dirty=true" /></el-form-item>
+      <el-form-item label="温度"><el-input-number v-model="cfg.temp" :min="0" :max="1.5" :step="0.1" :precision="1" @change="dirty=true" /><span class="muted" style="margin-left:8px">0 = 稳定，1.0+ = 发散。创作类建议 0.7–0.9</span></el-form-item>
+    </el-form>
+    <el-divider content-position="left">五个步骤</el-divider>
+    <el-table :data="tasks" stripe size="small">
+      <el-table-column prop="name" label="步骤" width="170" />
+      <el-table-column prop="id" label="路由" width="160"><template #default="{row}"><span class="mono">?r={{ row.id }}</span></template></el-table-column>
+      <el-table-column prop="role" label="角色" width="100" />
+      <el-table-column prop="prompt" label="prompt" min-width="360" show-overflow-tooltip />
+      <el-table-column label="启用" width="80"><template #default="{row}"><el-switch v-model="row.on" @change="dirty=true" /></template></el-table-column>
+      <el-table-column label="操作" width="90"><template #default="{row}"><el-button size="small" @click="edit(row)">编辑</el-button></template></el-table-column>
+    </el-table>
+    <el-dialog v-model="dlg" :title="'编辑 · ' + (cur.name || cur.id || '')" width="760px">
+      <el-form label-width="70px">
+        <el-form-item label="名称"><el-input v-model="cur.name" /></el-form-item>
+        <el-form-item label="角色"><el-input v-model="cur.role" placeholder="architect / scene" /></el-form-item>
+        <el-form-item label="prompt"><el-input v-model="cur.prompt" type="textarea" :rows="14" /></el-form-item>
+      </el-form>
+      <div class="muted" style="font-size:12px">可用变量：step · answers · project · question · current · previous · genre · context · text · optionsText（写法 <span class="mono" v-pre>{{变量}}</span>，取不到就是空串）</div>
+      <template #footer><el-button @click="dlg=false">取消</el-button><el-button type="primary" @click="apply">应用</el-button></template>
+    </el-dialog>
+  </div>`,
 };
 
 const I18n = {
@@ -1101,7 +1160,7 @@ const app = createApp({
     const route = ref((location.hash || '#dashboard').slice(1)), collapsed = ref(window.innerWidth < 900), busy = ref(false), reloadKey = ref(0);
     const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
     const payTest = ref(false); window.__payTest = payTest;
-    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
+    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 台 · 创作步骤', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
     function go(k) { route.value = k; location.hash = k; }
     window.addEventListener('hashchange', () => { route.value = (location.hash || '#dashboard').slice(1); });
     async function login() {
@@ -1109,7 +1168,7 @@ const app = createApp({
       try { const j = await api('login', { body: { username: lf.username, password: lf.password } }); S.token = j.token; S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); lf.password = ''; ElMessage.success('欢迎，' + (j.admin.name || j.admin.username)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); }
       catch (_) {} finally { busy.value = false; }
     }
-    const permOf = r => ({ studio: 'scripts', dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
+    const permOf = r => ({ studio: 'scripts', api: 'config', dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
     const firstPage = () => Object.keys(titles).find(k => can(permOf(k))) || 'dashboard';
     async function refreshBadges() { try { if (!can('dashboard')) return; const j = await api('dashboard'); badge.works = j.kpi.works_pending; badge.assets = j.kpi.assets_review; badge.reports = j.kpi.reports_open; payTest.value = j.payTest; } catch (_) {} }
     window.__refreshBadges = refreshBadges;
@@ -1121,7 +1180,7 @@ const app = createApp({
 });
 app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
 for (const [k, c] of Object.entries(ElementPlusIconsVue)) app.component(k, c);
-Object.entries({ studio: Studio, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
+Object.entries({ studio: Studio, api: ApiConsole, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
 app.mount('#app');
 </script>
 </body>

@@ -850,7 +850,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app47_chapters.js` | 章节目录: jump to any chapter Chapters you've already reached: jump back free | 43 |
 | `app48_clean.js` | 沉浸模式: a clean chat screen · Only the latest beats stay on screen; everyth… | 83 |
 | `app49_creator.js` | 一句话写一部剧 (Creator) Quick path: one line → story card → 3 quick picks → fre… | 216 |
-| `app50_creator2.js` | 创作中心: the full Creator v2.1 (AI guide · templates · story workbench · int… | 134 |
+| `app50_creator2.js` | 创作中心: the full Creator v2.1 (AI guide · templates · story workbench · int… | 162 |
 | `app51_import.js` | 上传剧本文件 → 可玩的剧 Upload .md / .txt / .docx (or paste text, or a Creator expo… | 224 |
 | `app52_alt.js` | intercept the old handler (window capture runs before document capture) | 40 |
 | `app53_import2.js` | 上传剧本：也能读 .pdf 和老的 .doc .pdf → bundled pdf.js (no network; text layer, pag… | 53 |
