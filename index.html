@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="3114bf9f8a08 2026-10-28T18:05Z";
+window.MIRU_BUILD="0aa92615c66b 2026-10-29T05:04Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4828,6 +4828,10 @@ function newThread(kind,id,openId,extra){
   th={id:(quest?"q:":"w:")+id+":"+now,kind:quest?"quest":w.kind==="ensemble"?"group":"story",wid:id,cast:w.cast.slice(),title:quest?Lz(w.quest.qtitle):Lz(w.title),msgs:[],love:{},rounds:0,
    status:{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}},tasks:{},mem:[],created:now,at:now};
   w.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5}));
+  /* 2026-10-29 · 进入某个世界之前过一道加载缝（app103_content.js）。
+     第 1 步行为零变化：数据全量 ⇒ 立刻 resolve；没命中只记 `S._dataGap`。
+     第 2 步（真拆包）时，这里改成 `await MIRU.data.need(...)` 即可。 */
+  try { if (window.MIRU && MIRU.data) MIRU.data.need(w.id || id); } catch (e) { if (window.MIRU && MIRU.data) MIRU.data.note("newThread:need", e) }
   if(w.pack&&!quest)packInit(th,w,extra);
   else if(op)(op.beats[CL()]||op.beats.en).forEach(([who,k,x])=>th.msgs.push({who,k:who==="n"?"act":k,txt:x,at:now}));
   if(quest)th.quest={turns:w.quest.turns,goals:w.quest.goals.map(g=>({t:Lz(g),done:false})),hidden:{t:Lz(w.quest.hidden),done:false},over:false};}
@@ -4861,7 +4865,10 @@ setInterval(()=>{try{
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")});
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
-function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
+function openThread(id){const th=S.threads[id];if(!th)return;curT=id;
+ /* 2026-10-29 · 第二个必经点：点进一条已有线程也要过加载缝（判据：数据已到才渲染）。 */
+ try { if (window.MIRU && MIRU.data) MIRU.data.need(th.wid); } catch (e) { if (window.MIRU && MIRU.data) MIRU.data.note("openThread:need", e) }
+ th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
 /* 2026-10-27：渲染前的唯一净化。th.msgs 有 30 处直接 push（卡片/瞬时播种），
    都绕过了 appendMsg 的文本闸；这里在**上屏前**统一补一次 —— 不依赖调用方自觉。 */
 function sanitizeMsgs(th){
@@ -12118,7 +12125,7 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
   if(!beats.length||beats[0][0]!=="sys"||beats[0][1]!=="scene")beats.unshift(["sys","scene",{place:place||doc.title,time:""}]);
   const opts=endC?endC.opts.filter(o=>o.t).slice(0,4):[];
   const choices=opts.length?opts.map((o,j)=>{const z={k:"ABCD"[j],t:x0(o.t),then:{zh:o.then.map(mapB),en:o.then.map(mapB)},mem:x0(LL("你选择了：","You chose: ")+o.t)};if(o.set)z.set=o.set;return z}):[{k:"A",t:x0(LL("继续","Continue")),then:{zh:[],en:[]},mem:x0("")}];
-  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:x0(endC&&endC.q||""),place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
+  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:c.goal94?{zh:c.goal94.zh,en:c.goal94.en||c.goal94.zh}:x0(endC&&endC.q||""),place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
  const cast=doc.cast.map(n=>ids[n]),L=ids[pov]&&cast.length>1?cast.find(id=>id!==ids[pov]):cast[0];
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});
  const firstTxt=(chs[0]&&chs[0].beats.zh.find(b=>b[0]==="n")||[,,""])[2];
@@ -16173,6 +16180,17 @@ function off94Parse(next, text) {
     return out;
   };
   (doc.chapters || []).forEach(c => {
+    /* 2026-10-29 · ⟦GOAL|这一章要达成什么|English⟧ —— 章节目标。
+       运行时有三处读者（app14_pack.js:100 章节卡 · app15_home.js:134 / app47_chapters.js:16 章节列表 ·
+       app14_pack.js:330 直接进模型的 "Chapter goal: …"），而剧本这边此前只能用「章末问题」倒推 ⇒ 编剧写的目标进不来。 */
+    const raw = c.items || [];
+    for (let k = 0; k < raw.length; k++) {
+      const it = raw[k]; const mm = Array.isArray(it) && it[0] === "n" && mk94(it[2]);
+      if (!mm || mm.k !== "GOAL") continue;
+      const zh = String(mm.a[0] || "").trim(); const en = String(mm.a[1] || "").trim() || zh;
+      if (zh) c.goal94 = { zh, en };
+      raw.splice(k--, 1);
+    }
     c.items = walk(c.items);
     /* a chapter-opening music cue goes after the first scene card */
     const fi = c.items.findIndex(y => Array.isArray(y) && y[0] === "sys" && y[1] === "scene");
@@ -18903,6 +18921,83 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
     if (!detail) return s;
     return { 汇总: s, 冲突: T.conflicts.slice(-20), 最近: T.history.slice(-20) };
   };
+})();
+
+/* ================= 剧本内容：一道加载缝（第 1 步：立接口 + 哨兵）=================
+   2026-10-29 · 为什么需要它（Ann 问的「解耦充分吗」）：
+
+   现状：剧情数据（`wd(wid).pack`）被打进单文件，**134 处直接读**，散在 20 多个文件里，
+   而所有代码都**默认它已经在内存里**。所以那不是「加载接口」，只是一张查表。
+
+   要把它拆成按世界懒加载（首屏 9.8 MB → 约 4.9 MB），必须先回答一个问题：
+   **谁会在「数据还没到」的时候去读？** 答不上来就拆，只会得到偶发白屏。
+
+   第 1 步只做两件事，**行为零变化**：
+     ① 立三个唯一入口：`need(wid)` / `prefetch(wid)` / `loaded(wid)`；
+     ② 在「进入某个世界」的必经点上调用 `need()`，没命中就**记一条现场**（带调用栈）。
+   验收判据：**`S._dataGap` 为空** 且 37 部逐一能进、行为与之前一致。为空才允许真拆。
+
+   ⚠️ 本文件里**没有一个空 catch**：仓库的 `empty-catch-check` 会把它判红，理由正当
+      （空 catch 把硬错误变成无操作）。所有兜底都经 `note()` 留痕，进 `S._dataErr`。
+   ======================================================================= */
+(function () {
+  const M = (window.MIRU = window.MIRU || {});
+  if (M.data && M.data.v === 1) return;
+
+  const errs = [];
+
+  /** 兜底留痕：任何被吞掉的异常都进这里（同时进 S._dataErr，导出存档可见）。 */
+  function note(where, e) {
+    const rec = { t: Date.now(), where: String(where || ""), msg: String((e && e.message) || e || "").slice(0, 120) };
+    errs.push(rec);
+    if (errs.length > 30) errs.shift();
+    try {
+      if (typeof S !== "undefined") {
+        S._dataErr = S._dataErr || [];
+        S._dataErr.push(rec);
+        if (S._dataErr.length > 30) S._dataErr.shift();
+      }
+    } catch (inner) {
+      // S 还没起来时只留在内存里；这里也留一行，避免空 catch
+      errs.push({ t: Date.now(), where: "note:S", msg: String((inner && inner.message) || inner).slice(0, 80) });
+    }
+  }
+
+  function worldOf(wid) {
+    try { return (typeof wd === "function") ? wd(wid) : null } catch (e) { note("worldOf", e); return null }
+  }
+
+  /** 这一部的内容现在就在内存里吗？（判据：有 pack 且有 chapters 数组） */
+  function loaded(wid) {
+    const w = worldOf(wid);
+    return !!(w && w.pack && w.pack.chapters && w.pack.chapters.length);
+  }
+
+  /** 进入某个世界之前调它。第 1 步：数据全量 ⇒ 立刻 resolve(true)；
+      没命中只记录，**不阻塞**（阻塞要等第 2 步真去取时再启用）。 */
+  function need(wid) {
+    if (loaded(wid)) return Promise.resolve(true);
+    const rec = { t: Date.now(), wid: String(wid || ""), where: "" };
+    try { rec.where = String((new Error()).stack || "").split("\n").slice(2, 4).join(" | ").slice(0, 160) } catch (e) { note("stack", e) }
+    try {
+      if (typeof S !== "undefined") {
+        S._dataGap = S._dataGap || [];
+        if (S._dataGap.length < 30) S._dataGap.push(rec);
+      }
+    } catch (e) { note("gap-record", e) }
+    return Promise.resolve(false);
+  }
+
+  /** 第 2 步会用：玩这一部时顺手把下一部取下来。现在什么都不做。 */
+  function prefetch(wid) { return Promise.resolve(!!wid) }
+
+  function status() {
+    let gaps = 0;
+    try { if (typeof S !== "undefined" && S._dataGap) gaps = S._dataGap.length } catch (e) { note("status", e) }
+    return { v: 1, gaps: gaps, errs: errs.length, ready: true };
+  }
+
+  M.data = { v: 1, need: need, prefetch: prefetch, loaded: loaded, status: status, note: note };
 })();
 
 </script>

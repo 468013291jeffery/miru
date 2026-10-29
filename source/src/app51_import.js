@@ -88,7 +88,7 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
   if(!beats.length||beats[0][0]!=="sys"||beats[0][1]!=="scene")beats.unshift(["sys","scene",{place:place||doc.title,time:""}]);
   const opts=endC?endC.opts.filter(o=>o.t).slice(0,4):[];
   const choices=opts.length?opts.map((o,j)=>{const z={k:"ABCD"[j],t:x0(o.t),then:{zh:o.then.map(mapB),en:o.then.map(mapB)},mem:x0(LL("你选择了：","You chose: ")+o.t)};if(o.set)z.set=o.set;return z}):[{k:"A",t:x0(LL("继续","Continue")),then:{zh:[],en:[]},mem:x0("")}];
-  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:x0(endC&&endC.q||""),place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
+  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:c.goal94?{zh:c.goal94.zh,en:c.goal94.en||c.goal94.zh}:x0(endC&&endC.q||""),place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
  const cast=doc.cast.map(n=>ids[n]),L=ids[pov]&&cast.length>1?cast.find(id=>id!==ids[pov]):cast[0];
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});
  const firstTxt=(chs[0]&&chs[0].beats.zh.find(b=>b[0]==="n")||[,,""])[2];

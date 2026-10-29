@@ -7,6 +7,7 @@
    三层一起验：① 剧本 → doc 结构 ② doc → pack（imBuild 有没有把 set/love 带过去）③ 运行时函数认不认（pkCond/pkSet）。 */
 const SCRIPT = [
   '# CHAPTER 1｜留痕 Chapter 1',
+  '⟦GOAL|这一章要让玩家决定留不留录像|This chapter: decide whether to keep the video⟧',
   '# SCENE｜冰场',
   '旁白：开场。',
   '⟦SET|mem_video_kept⟧',
@@ -56,6 +57,7 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
   try {
     doc = w.imParse(SCRIPT);
     out.warn = doc.warn || [];
+    out.goal94 = doc.chapters[0].goal94 || null;
     out.docShape = (doc.chapters[0].items || []).map(b => {
       if (b && b.choice) return { choice: b.choice.opts.map(o => ({ t: flat(o.t), set: o.set || null, love: o.love || null, then: (o.then || []).map(x => x[1] === 'set' ? 'set:' + (x[2].flags || []).join('+') : x[1]) })) };
       if (Array.isArray(b) && b[0] === 'sys' && b[1] === 'set') return 'set:' + (b[2].flags || []).join('+');
@@ -75,6 +77,8 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
       var line = null; (ch.beats.zh || []).forEach(function(b){ if (!line && Array.isArray(b) && b[1] === 'line') line = b; });
       var flat = function(t){ return String(t||'').replace(/\\s+/g,' ').slice(0,60); };
       return {
+        goal: ch.goal || null,
+        promptHasGoal: (function(){ try { var th={wid:wid, pk:{ch:1, as:null, picks:{}, st:"play", flags:{}}, cast:[], mem:[]}; var s=packPrompt(th); return String(s).indexOf('decide whether to keep the video')>=0 ? 'yes' : ('no: ' + String(s).slice(0,80)) } catch(e){ return 'ERR:' + e.message } })(),
         lineOpts: line ? line[2].opts.map(function(o){ return { t: flat(o.t), set: o.set || null, love: o.love || null }; }) : null,
         endChoices: (ch.choices || []).map(function(c){ return { k: c.k, set: c.set || null, mem: !!c.mem }; })
       };

@@ -16,6 +16,10 @@ function newThread(kind,id,openId,extra){
   th={id:(quest?"q:":"w:")+id+":"+now,kind:quest?"quest":w.kind==="ensemble"?"group":"story",wid:id,cast:w.cast.slice(),title:quest?Lz(w.quest.qtitle):Lz(w.title),msgs:[],love:{},rounds:0,
    status:{time:Lz(w.status.time),place:Lz(w.status.place),mood:{}},tasks:{},mem:[],created:now,at:now};
   w.cast.forEach(c=>loveWrite(th,c,0,"init",{absolute:5}));
+  /* 2026-10-29 · 进入某个世界之前过一道加载缝（app103_content.js）。
+     第 1 步行为零变化：数据全量 ⇒ 立刻 resolve；没命中只记 `S._dataGap`。
+     第 2 步（真拆包）时，这里改成 `await MIRU.data.need(...)` 即可。 */
+  try { if (window.MIRU && MIRU.data) MIRU.data.need(w.id || id); } catch (e) { if (window.MIRU && MIRU.data) MIRU.data.note("newThread:need", e) }
   if(w.pack&&!quest)packInit(th,w,extra);
   else if(op)(op.beats[CL()]||op.beats.en).forEach(([who,k,x])=>th.msgs.push({who,k:who==="n"?"act":k,txt:x,at:now}));
   if(quest)th.quest={turns:w.quest.turns,goals:w.quest.goals.map(g=>({t:Lz(g),done:false})),hidden:{t:Lz(w.quest.hidden),done:false},over:false};}
@@ -49,7 +53,10 @@ setInterval(()=>{try{
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")});
 }catch(_){}},5000);
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
-function openThread(id){const th=S.threads[id];if(!th)return;curT=id;th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
+function openThread(id){const th=S.threads[id];if(!th)return;curT=id;
+ /* 2026-10-29 · 第二个必经点：点进一条已有线程也要过加载缝（判据：数据已到才渲染）。 */
+ try { if (window.MIRU && MIRU.data) MIRU.data.need(th.wid); } catch (e) { if (window.MIRU && MIRU.data) MIRU.data.note("openThread:need", e) }
+ th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
 /* 2026-10-27：渲染前的唯一净化。th.msgs 有 30 处直接 push（卡片/瞬时播种），
    都绕过了 appendMsg 的文本闸；这里在**上屏前**统一补一次 —— 不依赖调用方自觉。 */
 function sanitizeMsgs(th){
