@@ -88,7 +88,6 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
           <template #title><el-icon><Promotion /></el-icon><span>运营工具</span></template>
           <el-menu-item index="notices" v-if="can('notices')">公告管理</el-menu-item>
           <el-menu-item index="events" v-if="can('events')">行为数据</el-menu-item>
-          <el-menu-item index="api" v-if="can('config')">API 台（创作步骤）</el-menu-item>
           <el-menu-item index="i18n" v-if="can('i18n')">多语言词条</el-menu-item>
           <el-menu-item index="config" v-if="can('config')">系统配置</el-menu-item>
         </el-sub-menu>
@@ -664,9 +663,29 @@ const Config = {
     async function probeEmbed() { try { const r = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true, embed: true }) }); emb.value = (await r.json()).embed; } catch (e) { ElMessage.error('测试失败：' + e.message); } }
     async function probe() { probing.value = true; try { const r = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true }) }); llm.value = await r.json(); } catch (e) { ElMessage.error('测试失败：' + e.message); } finally { probing.value = false; } }
     const qw = ref(null);
+    /* ---- 语音 API：地址 / 密钥 / 协议 / 测通路（存在 config 表，改完不用去动 Vercel 环境变量） ---- */
+    const tts = reactive({ protocol: 'openai', url: '', key: '', model: '', voice: '', text: '', hasKey: false, envUrl: '', busy: false, result: null });
+    async function loadTts() {
+      try {
+        const j = await api('tts_config');
+        tts.protocol = j.protocol || 'openai'; tts.url = j.url || ''; tts.model = j.model || ''; tts.voice = j.voice || '';
+        tts.hasKey = !!j.hasKey; tts.key = ''; tts.envUrl = (j.env && j.env.url) || '';
+      } catch (_) {}
+    }
+    async function saveTts() {
+      const j = await api('tts_config', { body: { protocol: tts.protocol, url: tts.url, model: tts.model, voice: tts.voice, key: tts.key } });
+      tts.hasKey = !!j.hasKey; tts.key = '';
+      ElMessage.success('已保存 —— 下一次发声就用它（配置缓存 30 秒）');
+    }
+    async function probeTts() {
+      tts.busy = true; tts.result = null;
+      try { tts.result = await api('tts_probe', { body: { text: tts.text, voice: tts.voice } }); }
+      catch (e) { tts.result = { ok: false, error: String((e && e.message) || e) }; }
+      finally { tts.busy = false; }
+    }
     async function probeQwen() { qw.value = { busy: true }; try { const [a, b, c] = await Promise.all([fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=zh').then(r => r.json()), fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=en&v=f1').then(r => r.json()), (async () => { const t0 = Date.now(); const r = await fetch(ADMIN_API_BASE + '/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ omni: { voice: 'm2', sys: '你在打电话，用一句话回答。', msgs: [{ role: 'user', text: '你好，在吗？' }], max: 60 } }) }); if (!r.ok) { const j = await r.json().catch(() => ({})); return { qwen: { ok: false, error: { message: (j.error && j.error.message || r.status) + ' ' + JSON.stringify(j.error && j.error.trace || '') } } }; } const txt = await r.text(); const n = (txt.match(/"data":"/g) || []).length; return { qwen: { ok: n > 0, ms: Date.now() - t0, provider: r.headers.get('X-MIRU-Provider'), said: (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('') } }; })()]); qw.value = { zh: a, en: b, call: c.qwen || c }; } catch (e) { qw.value = null; ElMessage.error('测试失败：' + e.message); } }
-    onMounted(load);
-    return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed, qw, probeQwen };
+    onMounted(() => { load(); loadTts(); });
+    return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed, qw, probeQwen, tts, saveTts, probeTts };
   },
   template: `<div v-if="v">
     <div class="panel"><h3>AI 模型（自动切换）</h3>
@@ -679,6 +698,22 @@ const Config = {
       <el-table v-if="emb" :data="emb" size="small" style="margin-top:10px"><el-table-column prop="id" label="向量服务" width="100" /><el-table-column prop="model" label="模型" width="220" /><el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.ok?'success':'info'">{{row.ok?'可用':'不可用'}}</el-tag></template></el-table-column><el-table-column prop="dims" label="维度" width="80" /><el-table-column prop="error" label="说明" min-width="220" show-overflow-tooltip /></el-table>
       <div v-if="qw" style="margin-top:10px"><p v-if="qw.busy" class="muted">测试中…</p><template v-else><p>中文配音：<el-tag size="small" :type="qw.zh.ok?'success':'danger'">{{qw.zh.ok?('可用 · '+qw.zh.ms+'ms'):'不可用'}}</el-tag> <span class="muted">{{qw.zh.error||qw.zh.site}}</span></p><p>英文配音：<el-tag size="small" :type="qw.en.ok?'success':'danger'">{{qw.en.ok?('可用 · '+qw.en.ms+'ms'):'不可用'}}</el-tag> <span class="muted">{{qw.en.error}}</span></p><p>语音通话（Qwen-Omni）：<el-tag size="small" :type="qw.call.ok?'success':'danger'">{{qw.call.ok?('可用 · '+qw.call.ms+'ms'):'不可用'}}</el-tag> <span class="muted">{{qw.call.provider||''}} {{qw.call.said||''}} {{qw.call.error&&qw.call.error.message||qw.call.head||''}}</span></p></template></div>
       <p class="muted" v-if="emb">记忆召回优先使用第一个可用的向量服务（默认 OpenAI → SCNet → 智谱）；都不可用时由免费模型按意思挑选。</p>
+    </div>
+    <div class="panel"><h3>语音 API</h3>
+      <p class="muted">游戏里每一句台词都用这里配的服务合成。协议目前只认 OpenAI 兼容的一种形状：<span class="mono">POST 地址 + /v1/audio/speech</span>（官方 OpenAI、CosyVoice、IndexTTS、GPT-SoVITS 都是这个样子）。
+        填了这里就用这里的；留空则回到服务器环境变量（TTS_URL → HF Space 兜底）。密钥只存服务器，页面不会回显。</p>
+      <el-form label-width="110px" style="max-width:760px">
+        <el-form-item label="协议"><el-select v-model="tts.protocol" style="width:300px"><el-option label="OpenAI 兼容（/v1/audio/speech）" value="openai" /></el-select></el-form-item>
+        <el-form-item label="地址"><el-input v-model="tts.url" placeholder="https://api.openai.com/v1 或 http://你的服务器:8000" /></el-form-item>
+        <el-form-item label="密钥"><el-input v-model="tts.key" type="password" show-password :placeholder="tts.hasKey ? '已保存（留空 = 不修改）' : 'sk-…'" /></el-form-item>
+        <el-form-item label="模型"><el-input v-model="tts.model" placeholder="tts-1 / cosyvoice-v1 …（留空 = 服务端默认）" /></el-form-item>
+        <el-form-item label="默认音色"><el-input v-model="tts.voice" placeholder="alloy / nova …（游戏里的 m1 / f1 先按映射试，失败再用这个）" /></el-form-item>
+        <el-form-item label="测试文本"><el-input v-model="tts.text" placeholder="你好，这是语音通路测试。" /></el-form-item>
+      </el-form>
+      <div class="toolbar"><el-button type="primary" @click="saveTts">保存</el-button><el-button :loading="tts.busy" @click="probeTts">测试通路</el-button>
+        <span class="muted" v-if="tts.envUrl">环境变量里已有的地址：<span class="mono">{{ tts.envUrl }}</span></span></div>
+      <el-alert v-if="tts.result" :type="tts.result.ok?'success':'error'" :closable="false" style="margin-top:10px"
+        :title="tts.result.ok ? ('通 · ' + tts.result.ms + ' ms · ' + tts.result.bytes + ' 字节 · ' + (tts.result.type||'') + ' · ' + (tts.result.model||'')) : ('不通 · ' + (tts.result.error || ('HTTP ' + tts.result.status)))" />
     </div>
     <div class="panel"><h3>新用户与钻石</h3><el-form label-width="160px" style="max-width:640px">
       <el-form-item label="新人礼（钻石）"><el-input-number v-model="v.welcome_gems" :min="0" /></el-form-item>
