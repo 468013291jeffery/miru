@@ -255,6 +255,56 @@ async function main() {
       say('      send: ' + r);
     }
 
+    /* --import <本地 md 路径>：在**真页面**里跑剧本导入器（imParse → imBuildCore），
+       把结构读数打出来。用途（2026-10-29）：验证「md 剧本 → 可玩的剧」这条链通不通，
+       以便回答「为什么线上看不到新剧本」——先证明导入器能不能吃这份文件。
+       判据：chapters 是否等于剧本里声明的章数；beats 是否 > 0；被省略（omit）条数。 */
+    /* --import <md>：单份剧本 → 结构读数（判它能不能导进去）
+       --import-all <目录> --import-out <json>：整批剧本 → 每部的 pack 落盘（供上传用）
+       两者共用同一段页内逻辑；为什么要走真页面：imParse/imBuildCore 依赖 app 的全局上下文
+       （S.mine.worlds / Lz / wd …），脱离浏览器没有等价物。 */
+    if (opt('import') || opt('import-all')) {
+      const base = p => String(p).split(/[\\/]/).pop();
+      const dir = opt('import-all');
+      const files = dir
+        ? fs.readdirSync(dir).filter(f => f.toLowerCase().endsWith('.md')).map(f => ({ name: f, path: String(dir).replace(/[\\/]$/, '') + '\\' + f }))
+        : [{ name: base(opt('import')), path: opt('import') }];
+      const all = [];
+      for (const f of files) {
+        const md = fs.readFileSync(f.path, 'utf8');
+        const r = await evaluate(`(function(){try{
+          if(typeof imParse!=="function") return "no-imParse";
+          var doc = imParse(${JSON.stringify(md)});
+          var brief={title:doc.title||"", chapters:(doc.chapters||[]).length, cast:(doc.cast||[]).length,
+                     lines:doc.lines, scenes:doc.scenes, choices:doc.choices,
+                     warn:(doc.warn||[]).length, omit:doc.omit||0,
+                     chapTags:(doc.chapters||[]).slice(0,4).map(function(c){return (c.t||"")+"("+((c.items||[]).length)+")"})};
+          var built=null, bErr="", keys="";
+          try{ var w = imBuildCore(doc,"watch");
+               keys = w ? Object.keys(w).join(",") : "null";
+               /* imBuildCore 返回 {wid, as}，世界对象写进 S.mine.worlds[wid] ⇒ 从那里读 pack */
+               var WW = (w && S.mine && S.mine.worlds) ? S.mine.worlds[w.wid] : null;
+               var P = (WW && WW.pack) || (w && w.pack) || null;
+               built = P ? {wid:(w&&w.wid), ch:(P.chapters||[]).length,
+                            beats0:((P.chapters&&P.chapters[0]&&P.chapters[0].beats)||[]).length,
+                            cast:(P.cast||[]).length, packKB:Math.round(JSON.stringify(P).length/1024)} : null;
+               if(P) window.__IMP_PACK = P;
+          }catch(e){ bErr="imBuildCore: "+(e&&e.message) }
+          return JSON.stringify({doc:brief, built:built, buildErr:bErr, worldKeys:keys});
+        }catch(e){ return "ERR "+(e&&e.message) }})()`);
+        say('      import ' + f.name + ': ' + String(r).slice(0, 300));
+        if (opt('import-out')) {
+          const pack = await evaluate(`window.__IMP_PACK ? JSON.stringify(window.__IMP_PACK) : ""`);
+          all.push({ file: f.name, brief: JSON.parse(String(r) || '{}'), pack: pack ? JSON.parse(String(pack)) : null });
+          await evaluate(`try{delete window.__IMP_PACK}catch(e){};1`);
+        }
+      }
+      if (opt('import-out')) {
+        fs.writeFileSync(opt('import-out'), JSON.stringify(all, null, 1), 'utf8');
+        say('      已落盘: ' + opt('import-out') + ' · ' + all.length + ' 部 · pack 非空 ' + all.filter(x => x.pack).length);
+      }
+    }
+
     if (flag('novoice')) {
       say('      关朗读（对照组）: ' + await evaluate(`S.autoVoice=false; save(); "autoVoice="+S.autoVoice`));
     }
