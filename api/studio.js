@@ -66,6 +66,7 @@ module.exports = L.wrap(async (req, res) => {
       sys: st.sys || '',
       order: st.order || '',
       max_tokens: Number(st.max_tokens) || 1200,
+      temp: st.temp == null ? 0.7 : Number(st.temp),
       tasks: TASK_IDS.map(view),
     });
   }
