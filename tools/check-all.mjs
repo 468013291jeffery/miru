@@ -48,6 +48,8 @@ const suites = [
   ['doc-ref-check.mjs', ['tools/doc-ref-check.mjs'], true],
   /* 2026-10-28 Ann：「架构文档写的时候要跟上，要不然做的多了会忘记之前的事情」 */
   ['doc-freshness.mjs', ['tools/doc-freshness.mjs','--check'], true],
+  /* 2026-10-29：模块索引是生成的 —— 加一个文件或改一句头注释，这张表就该跟着变 */
+  ['module-index.mjs', ['tools/module-index.mjs','--check'], true],
   ['pkdirective-check.mjs', ['tools/pkdirective-check.mjs'], true],
   ['on-assign-check.mjs', ['tools/on-assign-check.mjs','--check'], true],
   ['errlog-selftest.mjs', ['tools/errlog-selftest.mjs'], true],
