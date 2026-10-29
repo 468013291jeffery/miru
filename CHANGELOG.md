@@ -74,7 +74,8 @@
 - **改法**：`⟦ORIENT|bg⟧` 显式声明 → 否则 `imOrient()` 按角色卡推（玩家性别 × 对手戏性别：同男=bl / 同女=gl / 不同=bg）
 - **判据**：`_dslqa` 输出 `stats.orient = {declared, inferred, final}`；显式与角色卡**矛盾 ⇒ err**、非法值 ⇒ err、没写 ⇒ warn（附带建议写的那一行）
 - **闭环**：`autoreview` 把推断写回 `scripts.orient`；`publish` 用 `qa.stats.orient.final` ⇒ 上传那一刻就有答案，不再靠人拍
-- 自检 `_check/orient-test.mjs` 四支。⚠️ 第一版四支"全中"是**误判**：`⟦ORIENT⟧` 当时还没进 `KNOWN`，四条红全是被"未知指令"那条擦中的；进 KNOWN 后重跑才真正读对
+- 自检 `_check/orient-test.mjs` 四支。
+- **回执**：utoreview 多返回一个 eceipt（固定形状一段话，含「取向 bg（剧本声明 / 按角色卡推断）」那一行），存进 qa.receipt，dmin.html 第 4 步打在细节前面 ⇒ 谁跑审查都能整段复制给编剧，不用自己拼数⚠️ 第一版四支"全中"是**误判**：`⟦ORIENT⟧` 当时还没进 `KNOWN`，四条红全是被"未知指令"那条擦中的；进 KNOWN 后重跑才真正读对
 
 ## 2026-10-28 · 官方剧本这条路：能整批吃进来，过滤不再误杀，上线前有人看
 

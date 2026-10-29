@@ -320,6 +320,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 3. **消费点必须实测**，不是"代码看起来读了"：`⟦OPT⟧` 的 `set` 是查了 `app14_pack.js:471` 才敢说两侧都生效；`⟦GOAL⟧` 进 prompt 是探针 `promptHasGoal: yes` 才算。
 4. **每个会被玩家看见的字段都要有来源，而且在上传那一刻就回话**（2026-10-29 的教训）：`or`（取向）原来是 `imBuild` 里**硬编码 "bl"**、`_dslqa` 里**一条判据都没有** ⇒ 五部女性向的稿子被发成 BL，取向选"女性向"的读者在发现页**根本看不到**，而这件事要对方来问才发现。
    现在的形状：`⟦ORIENT⟧` 显式声明 → 否则 `imOrient()` 按角色卡推（玩家性别 × 对手戏性别）→ `_dslqa` 在同一份稿子上给出 `stats.orient = {declared, inferred, final}` 并在矛盾时**报 err**、缺失时**报 warn（附带建议写的那一行）** → `autoreview` 把它写回 `scripts.orient` → `publish` 用 `qa.stats.orient.final`。
+   **回执**：`autoreview` 现在返回 `receipt`（固定形状一段话：章/场景/选择/选项/收尾/「你：」· **取向（声明 or 推断，带建议写哪一行）** · 未识别指令 · 受限词 · 结论 · 前 3 条提醒），并存进 `qa.receipt`；`admin.html` 第 4 步把它打在细节前面，整段可直接复制给药方。
    判据：`_check/orient-test.mjs` 四支（显式对 / 显式与角色卡矛盾 / 非法值 / 不写则推断）各自读对，且**红在正确的消息上**（第一版四支"全中"其实是误判 —— `⟦ORIENT⟧` 当时还没进 KNOWN，四支都是被"未知指令"那条擦中的）。
 
 **认知边界（`⟦SECRET⟧`）的验证现状，写清楚免得下一个人误信**：
