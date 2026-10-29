@@ -63,6 +63,10 @@ function off94Parse(next, text) {
       if (!m) { push(b); continue; }
       const a = m.a;
       if (m.k === "SET") { push(["sys", "set", { flags: String(a[0] || "").split(/[,，]/).map(s => s.trim()).filter(Boolean) }]); continue; }
+      /* 2026-10-29 · ⟦REVEAL|S_A⟧ —— 正文里揭露的那一处。它不写 text，只打一个 `secret:S_A` 的旗；
+         packPrompt 里"你不知道"的名单会把这个旗排掉（从**下一个回合**起生效：system 是每轮先算的，
+         揭露那一句本身仍由剧本给出，不需要模型知道）。这样 `reveal_from` 是"最晚"解锁，`⟦REVEAL⟧` 是"提前"解锁。 */
+      if (m.k === "REVEAL") { const sid = String(a[0] || "").trim(); if (sid) push(["sys", "set", { flags: ["secret:" + sid] }]); continue; }
       if (m.k === "IF") { const f = String(a[0] || "").trim(); stack.push({ cond: f.charAt(0) === "!" ? { not: f.slice(1) } : { flag: f }, then: [], alt: null }); continue; }
       if (m.k === "ELSE") { const f = stack[stack.length - 1]; if (f && !f.alt) f.alt = []; continue; }
       if (m.k === "/IF") { const f = stack.pop(); if (!f) continue; const beat = ["sys", "if", { cond: f.cond, then: f.then }]; if (f.alt) beat[2].else = f.alt; push(beat); continue; }

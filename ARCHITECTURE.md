@@ -309,7 +309,7 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 | `⟦OPT\|A\|set:…;love:…⟧` | 解析 → `opt.set/love` → `app14_pack.js:471`（场内）/ `:233`（章末） | 选项效果 | ✅ `set` 两处都生效，`love` 只在场内 |
 | `⟦GOAL⟧` | 解析 → `chapter.goal`(+`goalOwn`) → 章节卡 / 章节列表 / **prompt** | 读者看到目标；角色拿到"这一章要立什么" | ✅（`chat.chapterGoal`） |
 | `⟦SECRET⟧` | 解析 → `pack.secrets` → `packPrompt` 的 `YOU DO NOT KNOW` 行 | 角色**不该**知道的事 | ✅ 章级闸已验；`knows:` 支未验（见下） |
-| `⟦REVEAL⟧` | 只解析，不消费 | — | 🟡 下一步 |
+| `⟦REVEAL⟧` | 解析 → `sys set` 的 `secret:S_x` 旗 → `packPrompt` 提前解锁 | 正文里揭露的那一处 | ✅ |
 | `give:` / `need:` | 不消费 | — | 🟡 写了被忽略 |
 
 **三条不变式**（每条都是踩出来的）：
@@ -324,11 +324,15 @@ app78_memsync.js:2 ─→ /api/state ─→ Postgres（memories / threads / wall
 第 1 章 → S_A(6 章揭露) 与 S_B(2 章揭露) 都进"你不知道"
 第 2 章 → S_B 不再出现（已揭露），S_A 仍在  ✓
 开关 chat.secretBoundary=false → 整行不出现  ✓
+⟦REVEAL|S_A⟧ → 节拍里出现 set:secret:S_A；把那个旗打上后 S_A **立刻**不再"你不知道"，S_B 不受影响  ✓
 knows: 那一支（"他知道所以不瞒他"）→ **没验成**：合成世界的 ch() 解析不到角色 id
 ```
 
+**两种解锁，分清楚**：`reveal_from` 是**最晚**解锁（章号到了自动不藏）· `⟦REVEAL|S_A⟧` 是**提前**解锁（正文写到那儿就放）。
+`⟦REVEAL⟧` 生效时机是**下一个回合**——system 是每轮先算的，揭露那一句本身由剧本给出，不需要模型提前知道。
+
 失败的处置是**失败即闭**：`_me` 取不到时（`as` 是旁观 / 角色查不到），**所有秘密都当"他不知道"**——宁可他演得笨一点，也不要他说破。
-`⟦REVEAL|S_A⟧` 还没接：它该在正文那一处把秘密从"不知道"里摘掉，现在写了不报错也不生效。
+`⟦REVEAL|S_A⟧` 已接（2026-10-29）：它把一个 `secret:S_A` 的旗打进玩家身上，下一回合起这个秘密就不再出现在"你不知道"里。
 
 ---
 

@@ -345,7 +345,9 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
     角色名用 lead.n（P 里的 t 是双语对象，secrets 里存的是剧本里的原字名字）。 */
  const _secOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.secretBoundary!==false);
  const _me=lead&&lead.n;
- const _hidden=_secOn?((P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&(s.knows||[]).indexOf(_me)<0).map(s=>s.text)):[];
+ /* ⟦REVEAL|S_A⟧ 会给这个秘密打 `secret:S_A` 的旗 ⇒ 打到之后就不再是"你不知道的事"（提前解锁用）。 */
+ const _revealed=th.pk.flags||{};
+ const _hidden=_secOn?((P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&!_revealed["secret:"+s.id]&&(s.knows||[]).indexOf(_me)<0).map(s=>s.text)):[];
  return [
   "WHERE YOU ARE: "+c.place.en+", "+c.time.en+". This is background for you to stand in — do not recite it back to the reader, just be in it.",
   /* 只有**编剧明写的** ⟦GOAL⟧ 才进（c.goalOwn）；没有 GOAL 的章，它的 goal 是"章末那个问句"，
