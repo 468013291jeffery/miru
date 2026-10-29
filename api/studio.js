@@ -44,7 +44,11 @@ function pickJson(raw) {
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res, 'GET, POST, OPTIONS')) return;
   const u = L.who(req);
-  if (!u || !u.uid) return L.bad(res, '请先登录', 401);
+  /* 后台「试跑」走 admin token 这一道门（不必为了看一眼效果去注册一个账号）；玩家侧仍然只要用户 token。 */
+  let A = null;
+  if (!u || !u.uid) { try { A = await L.whoAdmin(req); } catch (_) {} }
+  if ((!u || !u.uid) && !A) return L.bad(res, '请先登录', 401);
+  const uid = (u && u.uid) || ('admin:' + (A && A.id));
 
   const cfg = await L.config();
   const st = (cfg.studio && typeof cfg.studio === 'object') ? cfg.studio : {};
@@ -71,7 +75,7 @@ module.exports = L.wrap(async (req, res) => {
   if (TASK_IDS.indexOf(id) < 0) return L.bad(res, '未知步骤: ' + (id || '(空)'), 404);
   const t = tasks[id] || {};
   if (t.on === false) return L.bad(res, '这一步已在后台停用', 403);
-  if (!(await L.bump('studio:' + u.uid, 'studio', 90))) return L.bad(res, '太频繁了，缓一下再试', 429);
+  if (!(await L.bump('studio:' + uid, 'studio', 90))) return L.bad(res, '太频繁了，缓一下再试', 429);
 
   const b = L.jsonBody(req);
   const payload = expand(id, (b && b.payload && typeof b.payload === 'object') ? b.payload : {});
