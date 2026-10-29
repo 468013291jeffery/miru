@@ -866,6 +866,7 @@ const Studio = {
         const j = await api('script', { body: { op: 'autoreview', id: sel.value.id } });
         const L = [];
         L.push(j.ok ? '✅ 结构 + 受限词都通过（已自动标记「审核通过」）' : '❌ 有 ' + j.err.length + ' 个硬错，不能上线');
+        if (j.receipt) { L.push(''); L.push('—— 回执（可直接复制给药方/编剧）——'); L.push(j.receipt); L.push(''); }
         L.push('章 ' + j.stats.chapters + ' · 场景 ' + j.stats.scenes + ' · 选择 ' + j.stats.choices + ' · 选项 ' + j.stats.options + ' · 收尾 ' + j.stats.dots + ' · 「你：」' + j.stats.you + ' · 角色卡 ' + j.stats.casts);
         (j.perCh || []).forEach(c => L.push('  第 ' + c.n + ' 章：场景 ' + c.scenes + ' · 选择 ' + c.choices + ' · 收尾 ' + c.dots + ' · 正文 ' + c.lines + ' 行'));
         (j.err || []).forEach(e => L.push('✗ ' + e));
