@@ -342,7 +342,9 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
  const _goalOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.chapterGoal!==false);
  return [
   "WHERE YOU ARE: "+c.place.en+", "+c.time.en+". This is background for you to stand in — do not recite it back to the reader, just be in it.",
-  _goalOn&&c.goal&&c.goal.en?"WHAT THIS CHAPTER IS FOR (the writer's intent: let it shape what happens, never say it out loud, never announce that anything is coming): "+c.goal.en:"",
+  /* 只有**编剧明写的** ⟦GOAL⟧ 才进（c.goalOwn）；没有 GOAL 的章，它的 goal 是"章末那个问句"，
+     那是**读者的议程**，给角色看会让他替玩家推进那个决定 —— 这正是 10-28 她删掉那段的理由。 */
+  _goalOn&&c.goalOwn&&c.goal&&c.goal.en?"WHAT THIS CHAPTER IS FOR (the writer's intent: let it shape what happens, never say it out loud, never announce that anything is coming): "+c.goal.en:"",
   _all?"ALREADY HAPPENED (you were there for these or heard about them; never contradict them, never re-open a settled argument): "+_all:"",
   "Time passes in real scenes: you may end a beat, let minutes go by, move to another corner of this place, or let something new happen that nobody announced. You do not know what comes next, and you must not act as if you do."
  ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");

@@ -76,9 +76,19 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
       var ch = S.mine.worlds[wid].pack.chapters[0];
       var line = null; (ch.beats.zh || []).forEach(function(b){ if (!line && Array.isArray(b) && b[1] === 'line') line = b; });
       var flat = function(t){ return String(t||'').replace(/\\s+/g,' ').slice(0,60); };
+      var th = {wid:wid, pk:{ch:1, as:null, picks:{}, st:"play", flags:{}}, cast:[], mem:[]};
+      var pOn = ''; try { pOn = String(packPrompt(th)) } catch(e) { pOn = 'ERR:' + e.message }
+      /* 负对照**不另建一部作品**（第一版就是因为 imBuild 的 wid = "cw"+Date.now() 在同一毫秒里撞了、
+         把正臂那部覆盖掉，才读出假失败）。改成同一个世界、只翻一个字段：goalOwn 关掉后那行必须消失。 */
+      var saved = ch.goalOwn; ch.goalOwn = false;
+      var pOff = ''; try { pOff = String(packPrompt(th)) } catch(e) { pOff = 'ERR:' + e.message }
+      ch.goalOwn = saved;
       return {
         goal: ch.goal || null,
-        promptHasGoal: (function(){ try { var th={wid:wid, pk:{ch:1, as:null, picks:{}, st:"play", flags:{}}, cast:[], mem:[]}; var s=packPrompt(th); return String(s).indexOf('decide whether to keep the video')>=0 ? 'yes' : ('no: ' + String(s).slice(0,80)) } catch(e){ return 'ERR:' + e.message } })(),
+        goalOwn: !!ch.goalOwn,
+        promptHasGoal: pOn.indexOf('decide whether to keep the video') >= 0 ? 'yes' : ('no: ' + pOn.slice(0, 80)),
+        offArm: { hadLine: pOn.indexOf('WHAT THIS CHAPTER IS FOR') >= 0, stillHasLine: pOff.indexOf('WHAT THIS CHAPTER IS FOR') >= 0, goalStillThere: pOff.length > 0 },
+        dbg: { sameObject: true, goalOwn: ch.goalOwn, hasGoalEn: !!(ch.goal && ch.goal.en), chapterGoalFlag: (typeof MIRU_TUNE !== 'undefined' && MIRU_TUNE.chat) ? MIRU_TUNE.chat.chapterGoal : 'no-tune' },
         lineOpts: line ? line[2].opts.map(function(o){ return { t: flat(o.t), set: o.set || null, love: o.love || null }; }) : null,
         endChoices: (ch.choices || []).map(function(c){ return { k: c.k, set: c.set || null, mem: !!c.mem }; })
       };
