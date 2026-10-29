@@ -13,13 +13,17 @@
 
 // 2026-10-29：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ / ⟦OPT⟧ 进了剧本语法（运行时 app16_story2.js:27-28 与 app14_pack.js:471/233 早就支持），
 // 这里必须同步认它们，否则审查会把合法的留痕/条件/选项效果句报成「未知指令」并挡住上线。
-const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL', 'SECRET', 'REVEAL']);
+const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL', 'SECRET', 'REVEAL', 'ORIENT']);
 const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 
 function dslQA(md) {
   const text = String(md || '').replace(/\r\n?/g, '\n');
   const L = text.split('\n').map(s => s.trim());
   const st = { chapters: 0, scenes: 0, choices: 0, options: 0, dots: 0, you: 0, casts: 0, lines: 0, callsOpen: 0, callsClose: 0, ifs: 0, ifEnds: 0, unknown: [] };
+  /* 取向：⟦ORIENT|bl|gl|bg⟧ 声明，或按角色卡推断（玩家性别 × 对手戏性别）。
+     2026-10-29 的真实故障就是这里没有判据：五部女性向的稿子被发布成 bl，取向选女性向的读者看不到。
+     判据与 app51_import.js 的 imOrient() 一致；改一处要改另一处。 */
+  const orChars = []; let orDecl = '';
   const perCh = [];
   let cur = null;
   const closeCh = () => { if (cur) perCh.push(cur); };
@@ -36,9 +40,10 @@ function dslQA(md) {
       if (!m || !KNOWN.has(m[1])) { st.unknown.push(raw.slice(0, 24)); continue; }
       if (m[1] === 'CALL') st.callsOpen++;
       else if (m[1] === '/CALL') st.callsClose++;
-      else if (m[1] === 'CHAR') st.casts++;
+      else if (m[1] === 'CHAR') { st.casts++; const p = raw.replace(/^⟦CHAR\|/, '').replace(/⟧$/, '').split('|'); if (p.length > 1) orChars.push({ n: String(p[0] || '').trim(), x: String(p[1] || '').trim().toLowerCase().charAt(0) }); }
       else if (m[1] === 'IF') st.ifs++;
       else if (m[1] === '/IF') st.ifEnds++;
+      else if (m[1] === 'ORIENT') { const v = raw.replace(/^⟦ORIENT\|/, '').replace(/⟧$/, '').trim().toLowerCase(); orDecl = v; }
       continue;
     }
     st.lines++;
@@ -61,6 +66,17 @@ function dslQA(md) {
   if (!st.you) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');
   if (st.options < st.choices * 2) warn.push('选项数 ' + st.options + ' 少于选择道数 ' + st.choices + ' 的两倍 —— 可能有选择题只剩 1 个选项');
   if (!st.casts) warn.push('没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜');
+
+  /* 取向：显式声明必须合法；与角色卡推断矛盾要拦；没写就给出推断值（warn，不拦）。
+     「第一时间就能回复」的那句话就是 st.orient.final —— 上传时直接打给编剧看。 */
+  const _me = orChars.find(c => /^(你|您|you|me|player|玩家)$/i.test(c.n) && /[fm]/.test(c.x));
+  const _other = _me ? orChars.find(c => c !== _me && /[fm]/.test(c.x)) : null;
+  const inferred = _me && _other ? (_me.x === _other.x ? (_me.x === 'm' ? 'bl' : 'gl') : 'bg') : '';
+  if (orDecl && !/^(bl|gl|bg)$/.test(orDecl)) err.push('⟦ORIENT|' + orDecl + '⟧ 不是合法取向：只能写 bl / gl / bg');
+  else if (orDecl && inferred && orDecl !== inferred) err.push('取向声明与其角色卡矛盾：写的是 ' + orDecl + '，但角色卡推出来是 ' + inferred + '（玩家「' + _me.n + '」' + _me.x + ' + 「' + _other.n + '」' + _other.x + '）—— 两者必须先对齐');
+  else if (!orDecl && inferred) warn.push('取向没有声明，按角色卡推断为 ' + inferred + '（玩家「' + _me.n + '」' + _me.x + ' + 「' + _other.n + '」' + _other.x + '）；建议在第一章写一行 ⟦ORIENT|' + inferred + '⟧');
+  else if (!orDecl && !inferred) warn.push('取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的');
+  st.orient = { declared: orDecl || '', inferred: inferred || '', final: orDecl || inferred || '' };
 
   return { ok: !err.length, err, warn, stats: st, perCh: perCh.map((c, i) => ({ n: i + 1, choices: c.choices, dots: c.dots, scenes: c.scenes, lines: c.lines })) };
 }

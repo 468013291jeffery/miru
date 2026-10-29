@@ -108,6 +108,15 @@ function off94Parse(next, text) {
         if (id && text && !(doc.secrets || []).some(x => x.id === id)) (doc.secrets = doc.secrets || []).push({ id, text, knows, from });
         raw.splice(k--, 1); continue;
       }
+      /* 2026-10-29 · ⟦ORIENT|bg⟧ —— 取向（bl / gl / bg）。**必须让剧本自己说**：
+         稿子里原本一个字都没提，而导入路径把 world.or 硬编码成 "bl"（app51 那一行）⇒
+         女性向的稿子被发成 BL，取向选女性向的读者在发现页根本看不到（2026-10-29 真实故障）。
+         优先级：显式 ⟦ORIENT⟧ > 角色卡推断（玩家性别 × 对手戏性别）> "bl"。 */
+      if (mm.k === "ORIENT") {
+        const v = String(mm.a[0] || "").trim().toLowerCase();
+        if (/^(bl|gl|bg)$/.test(v)) doc.orient94 = v;
+        raw.splice(k--, 1); continue;
+      }
       if (mm.k !== "GOAL") continue;
       const zh = String(mm.a[0] || "").trim(); const en = String(mm.a[1] || "").trim() || zh;
       if (zh) c.goal94 = { zh, en };
