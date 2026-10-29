@@ -1,0 +1,80 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>beat-order-probe</title></head>
+<body>
+<pre id="out">RUNNING</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:900px;border:1px solid #ccc"></iframe>
+<script>
+/* 2026-10-29 · 验「谁先开口」。
+   两种模式（用 hash 指定）：
+     #mode=open&pack=crimson&as=adrian   进一部新剧，看**第一个开口的**是不是自己
+     #mode=beats&pack=ice&as=mason       直接喂一条「我先说」的 AI 回复，看渲染顺序
+
+   ⚠️ 第一版判据只看「谁在前」，于是「我那条根本没渲染」也被读成 PASS。
+     真身：speakersOf(th) 把 pk.as 排除掉了 ⇒ 我演的角色的 AI 句在 playBeats 里就被过滤，
+     重排代码压根到不了 ⇒ 那是 DROPPED，不是 PASS。所以两条都在才算判得动。 */
+const H = new URLSearchParams(location.hash.slice(1));
+const MODE = H.get('mode') || 'open';
+const PACK = H.get('pack') || 'crimson';
+const AS = H.get('as') || 'adrian';
+
+const out = [];
+const log = (k, v) => { out.push(k + ': ' + v); paint(); };
+function paint() { document.getElementById('out').textContent = 'BEATORDER_JSON:' + JSON.stringify(out); }
+paint();
+
+const f = document.getElementById('f');
+const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+const kindOf = (r) => r.className.match(/pkme/) ? 'self' : (r.querySelector('.bubn') ? 'other' : 'narr');
+
+f.onload = async () => {
+  const w = f.contentWindow;
+  try {
+    let tries = 0;
+    while (typeof w.packStart !== 'function' && tries++ < 100) await sleep(100);
+    if (typeof w.packStart !== 'function') { log('ERR', 'no packStart'); return }
+    log('boot', 'ok');
+
+    const th = w.packStart(PACK, AS);
+    if (!th) { log('ERR', 'packStart returned nothing'); return }
+    log('mode', MODE); log('pack', PACK); log('pk.as', String(th.pk && th.pk.as));
+    /* 无头页面里不一定会切到聊天屏，而 packRun 的 live() 要求 #s-chat 可见 —— 显式切一次 */
+    try { w.show && w.show('s-chat'); } catch (e) {}
+    try { w.openThread(th.id); } catch (e) {}
+    await sleep(1500);
+    if (!(w.document.querySelectorAll('#msgs .m-row') || []).length) {
+      try { w.packOpen(th, 1, true); } catch (e) { log('packOpen', String(e && e.message)) }
+      try { w.show && w.show('s-chat'); } catch (e) {}
+      await sleep(1500);
+    }
+
+    if (MODE === 'beats') {
+      const before = (w.document.querySelectorAll('#msgs .m-row') || []).length;
+      await w.playBeats(th, { beats: [
+        { who: AS, kind: 'say', text: '我演的角色先说的一句' },
+        { who: (th.cast || []).find(c => c !== AS) || AS, kind: 'say', text: '别人的角色说的一句' }
+      ], love: {}, suggest: [], goals: [], status: null }, { kind: 'user', txt: '测试' }, true);
+      await sleep(500);
+      const tail = Array.from(w.document.querySelectorAll('#msgs .m-row')).slice(before).map(kindOf);
+      log('rows', JSON.stringify(tail));
+      const self = tail.indexOf('self'), other = tail.indexOf('other');
+      log('verdict', self < 0 ? 'DROPPED（我演的角色那句没渲染 —— 这条路测不到顺序）'
+        : other < 0 ? 'ONLY_SELF（别人也没有，读数无效）'
+        : (other < self ? 'PASS' : 'FAIL：还是我演的角色先说'));
+      return;
+    }
+
+    /* mode=open：等剧本队列把前几条念完，然后看**第一个开口的**是谁 */
+    await sleep(6000);
+    const rows = Array.from(w.document.querySelectorAll('#msgs .m-row')).map(kindOf);
+    log('rows', JSON.stringify(rows.slice(0, 10)));
+    const self = rows.indexOf('self'), other = rows.indexOf('other');
+    log('firstSelf', self); log('firstOther', other);
+    log('verdict', other < 0 ? 'NO_OTHER（这一场没有别人开口，读数无效）'
+      : self < 0 ? 'PASS（我演的角色没有先开口）'
+      : (other < self ? 'PASS：别人先开口' : 'FAIL：我演的角色先开口'));
+  } catch (e) {
+    log('ERR', String(e && e.message || e));
+  } finally { paint(); }
+};
+</script>
+</body></html>

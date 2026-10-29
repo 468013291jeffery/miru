@@ -47,7 +47,7 @@ const chapter = pack.chapters[CH - 1];
 const st = {
   wid: WID, cast: pack.cast.map(c => c.id).slice(0, 5), love: {}, mem: [], msgs: [], said: [], typed: [],
   status: { time: chapter.time.zh || chapter.time.en, place: chapter.place.zh || chapter.place.en },
-  pk: { ch: CH, as: 'watch', st: 'choose', picks: {} },
+  pk: { ch: CH, as: (opt('as','watch')||'watch'), st: 'choose', picks: {} },
 };
 pack.cast.slice(0, 5).forEach(id => st.love[id] = 12);
 
