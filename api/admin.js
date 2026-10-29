@@ -442,6 +442,9 @@ module.exports = L.wrap(async (req, res) => {
       /* 上线前再跑一次受限词（防的是"审完之后又改了正文"，review 是旧的、文本是新的） */
       if (!b.force) { const sf = L.safety([md]); if (sf.length) return L.bad(res, '受限词命中：' + sf.slice(0, 3).join('; ') + '（先改文本，或由超级管理员强制上线）'); }
       const cfg = s.config || {};
+      /* 2026-10-29 · 门面闸：没有一句话简介，发现页上就是一张空卡。
+         实测代价：5 部上线时 hook 全空，公开列表里只有标题、一行介绍都没有。 */
+      if (!String(cfg.hook || '').trim() && !b.force) return L.bad(res, '还没有一句话简介（hook）—— 发现页上会是一张空卡。先填「一句话卖点」再上线（或由超级管理员强制上线）');
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
