@@ -340,12 +340,19 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
  /* 2026-10-29（Ann「接吧」）：本章目标单独一行进 prompt —— 只给"这场戏要立什么"，不给章节编号、不给下一步要选什么。
     默认开；`MIRU_TUNE.chat.chapterGoal=false` 可关回 10-28 的干净版。 */
  const _goalOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.chapterGoal!==false);
+ /* 2026-10-29 · 认知边界（⟦SECRET⟧）：按「现在第几章 + 你在演谁」算出**这个角色此刻不该知道的事**。
+    判据是数据不是措辞：ch < from（还没到揭露章）且 knows 里没有他。开关 chat.secretBoundary（默认 true）。
+    角色名用 lead.n（P 里的 t 是双语对象，secrets 里存的是剧本里的原字名字）。 */
+ const _secOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.secretBoundary!==false);
+ const _me=lead&&lead.n;
+ const _hidden=_secOn?((P.secrets||[]).filter(s=>((s.from||1)>th.pk.ch)&&(s.knows||[]).indexOf(_me)<0).map(s=>s.text)):[];
  return [
   "WHERE YOU ARE: "+c.place.en+", "+c.time.en+". This is background for you to stand in — do not recite it back to the reader, just be in it.",
   /* 只有**编剧明写的** ⟦GOAL⟧ 才进（c.goalOwn）；没有 GOAL 的章，它的 goal 是"章末那个问句"，
      那是**读者的议程**，给角色看会让他替玩家推进那个决定 —— 这正是 10-28 她删掉那段的理由。 */
   _goalOn&&c.goalOwn&&c.goal&&c.goal.en?"WHAT THIS CHAPTER IS FOR (the writer's intent: let it shape what happens, never say it out loud, never announce that anything is coming): "+c.goal.en:"",
   _all?"ALREADY HAPPENED (you were there for these or heard about them; never contradict them, never re-open a settled argument): "+_all:"",
+  _hidden.length?"YOU DO NOT KNOW (as far as your character is concerned these are not true yet: never state them, never hint at them, never act on them, and do not behave as if you suspect them): "+_hidden.join(" | "):"",
   "Time passes in real scenes: you may end a beat, let minutes go by, move to another corner of this place, or let something new happen that nobody announced. You do not know what comes next, and you must not act as if you do."
  ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");
 }

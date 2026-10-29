@@ -8,6 +8,10 @@
 const SCRIPT = [
   '# CHAPTER 1｜留痕 Chapter 1',
   '⟦GOAL|这一章要让玩家决定留不留录像|This chapter: decide whether to keep the video⟧',
+  '⟦SECRET|S_A|Klaus 的双尸计划|knows:Calder|reveal_from:6⟧',
+  '⟦SECRET|S_B|他其实是她哥哥|knows:Greta|reveal_from:2⟧',
+  '⟦CHAR|Calder|m|29|m2|冰球队长|188cm，深棕短发⟧',
+  '⟦CHAR|Greta|f|31|f2|队医|说话很轻⟧',
   '# SCENE｜冰场',
   '旁白：开场。',
   '⟦SET|mem_video_kept⟧',
@@ -41,6 +45,17 @@ const SCRIPT = [
   '旁白：你留下了。',
   '#### B｜离开',
   '旁白：你走了。',
+  '# ·',
+  /* 第二章：给"认知边界"用 —— S_B 在 2 章揭露，所以第 2 章起它不再是秘密。 */
+  '# CHAPTER 2｜揭露 Chapter 2',
+  '# SCENE｜议事厅',
+  '旁白：第二天。',
+  'Greta：你以为那两具尸体是意外？',
+  '# CHOICE｜这一章怎么收？',
+  '#### A｜追问',
+  '旁白：你追问了。',
+  '#### B｜沉默',
+  '旁白：你什么也没说。',
   '# ·',
 ].join('\n');
 
@@ -83,11 +98,42 @@ const flat = t => String(t || '').replace(/\s+/g, ' ').slice(0, 60);
       var saved = ch.goalOwn; ch.goalOwn = false;
       var pOff = ''; try { pOff = String(packPrompt(th)) } catch(e) { pOff = 'ERR:' + e.message }
       ch.goalOwn = saved;
+      /* ③ 认知边界：同一部作品、三个读数
+         A 第1章 · 演 Calder（S_A 他知道 / S_B 他不知道，且 2 章才揭露）⇒ 只剩 S_B
+         B 第2章 · 演 Calder（S_B 已揭露）⇒ 一个都不该剩
+         C 开关关掉 ⇒ 一个都不该剩 */
+      var castIds = S.mine.worlds[wid].cast || [];
+      var calder = null; castIds.forEach(function(id){ if (ch2n(id) === 'Calder') calder = id });
+      function ch2n(id){ try { return ch(id) && ch(id).n } catch(e) { return null } }      var mkTh = function(k, as){ return {wid:wid, pk:{ch:k, as:as, picks:{}, st:"play", flags:{}}, cast:[], mem:[]} };
+      var sec = { secrets: (S.mine.worlds[wid].pack.secrets || []).map(function(s){ return { id: s.id, from: s.from, knows: s.knows } }), calderId: !!calder, names: castIds.map(function(id){ return ch2n(id) }) };
+      try {
+        var pa = packPrompt(mkTh(1, calder));
+        var pb = packPrompt(mkTh(2, calder));
+        var savedF = MIRU_TUNE.chat.secretBoundary; MIRU_TUNE.chat.secretBoundary = false;
+        var pc = packPrompt(mkTh(1, calder)); MIRU_TUNE.chat.secretBoundary = savedF;
+        sec.ch1_A_hidden = pa.indexOf('Klaus') >= 0; sec.ch1_B_hidden = pa.indexOf('哥哥') >= 0;
+        sec.ch2_B_hidden = pb.indexOf('哥哥') >= 0; sec.ch2_A_hidden = pb.indexOf('Klaus') >= 0;
+        sec.flagOff_B_hidden = pc.indexOf('哥哥') >= 0;
+        /* knows 那一支：拿一个**真**的角色 id 演，再把 S_B 的 knows 改成他的名字 ⇒ 他不该再被蒙在鼓里。
+           （cast 里没有名字时退一步：用 pack.join 的主角 id。） */
+        var someId = null;
+        Object.keys(S.mine.chars || {}).forEach(function(k){ if (!someId) { try { if (ch(k)) someId = k } catch(e) {} } });
+        var nm2 = someId ? ch2n(someId) : null;
+        var sB = (S.mine.worlds[wid].pack.secrets || [])[1];
+        if (sB && someId) {
+          var before = packPrompt(mkTh(1, someId)).indexOf('哥哥') >= 0;
+          var saveK = sB.knows; sB.knows = nm2 ? [nm2] : [];
+          var after = packPrompt(mkTh(1, someId)).indexOf('哥哥') >= 0;
+          sB.knows = saveK;
+          sec.knowsArm = { id: someId, name: nm2, hiddenBefore: before, hiddenAfterAddKnows: after };
+        } else sec.knowsArm = { skipped: true, castLen: castIds.length };
+      } catch (e) { sec.err = String(e && e.message || e) }
       return {
         goal: ch.goal || null,
         goalOwn: !!ch.goalOwn,
         promptHasGoal: pOn.indexOf('decide whether to keep the video') >= 0 ? 'yes' : ('no: ' + pOn.slice(0, 80)),
         offArm: { hadLine: pOn.indexOf('WHAT THIS CHAPTER IS FOR') >= 0, stillHasLine: pOff.indexOf('WHAT THIS CHAPTER IS FOR') >= 0, goalStillThere: pOff.length > 0 },
+        sec: sec,
         dbg: { sameObject: true, goalOwn: ch.goalOwn, hasGoalEn: !!(ch.goal && ch.goal.en), chapterGoalFlag: (typeof MIRU_TUNE !== 'undefined' && MIRU_TUNE.chat) ? MIRU_TUNE.chat.chapterGoal : 'no-tune' },
         lineOpts: line ? line[2].opts.map(function(o){ return { t: flat(o.t), set: o.set || null, love: o.love || null }; }) : null,
         endChoices: (ch.choices || []).map(function(c){ return { k: c.k, set: c.set || null, mem: !!c.mem }; })
