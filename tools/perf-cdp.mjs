@@ -539,6 +539,7 @@ async function main() {
           var th=S.threads[curT]; if(!th) return {err:"no-th"};
           var says=th.msgs.filter(function(m){return m.k==="say"&&m.who&&m.who!=="me"&&m.who!=="n"&&m.who!=="sys"});
           var log=S._voiceLog||[];
+          var dataSt=(window.MIRU&&MIRU.data&&MIRU.data.status)?MIRU.data.status():null;
           var said=log.filter(function(e){return e.ev==="said"}).length;
           /* **所有** speak() 调用都由 app96 那层观测记 start / end —— 这才是「有没有尝试发声」的全口径；
              D.say 的 try 只是其中一条支流（剧本行走的是 speakQueue）。 */
@@ -548,12 +549,13 @@ async function main() {
           var sil =log.filter(function(e){return e.ev==="silent"}).length;
           var unv =log.filter(function(e){return e.ev==="unvoiced"});
           var saidSay=log.filter(function(e){return e.ev==="said"&&e.k==="say"}).length;
-          return {says:says.length, said:said, tries:tries, starts:starts, ends:ends, silent:sil, unvoiced:unv.length,
+          return {says:says.length, said:said, tries:tries, starts:starts, ends:ends, silent:sil, unvoiced:unv.length, data:dataSt,
                   saidSay:saidSay, unvSample:unv.slice(-4).map(function(e){return (e.who||"?")+"「"+(e.txt||"")+"」"+e.why}),
                   lastSays:says.slice(-4).map(function(m){return m.who+"「"+String(m.txt||"").slice(0,18)+"」"})};
         }catch(e){return {err:String(e.message)}}})())`));
         say('\n=== 语音对账（这条线程）===');
         say('  say 台词 ' + va.says + ' 条 · **speak 发起 ' + (va.starts || 0) + ' 次 / 回声 ' + (va.ends || 0) + ' 次** · D.say 发起 ' + (va.tries || 0) + ' · 完成 done ' + va.said + '（k=say ' + va.saidSay + '）· silent ' + va.silent + ' · **unvoiced ' + va.unvoiced + '**');
+        say('  内容加载缝: ' + JSON.stringify(va.data || null) + '  ← gaps 必须为 0（否则说明有路径在数据没到时就读）');
         if (va.unvSample && va.unvSample.length) say('  没发声的样本: ' + va.unvSample.join(' | '));
         if (va.lastSays) say('  最后几条台词: ' + va.lastSays.join(' | '));
         result.voiceAudit = va;
