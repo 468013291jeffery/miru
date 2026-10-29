@@ -366,9 +366,16 @@ app51(核心) ← app90(你：) ← app94(⟦…⟧ 指令) ← app94(you94) ←
 |---|---|---|
 | 章节开头那张卡 | `app14_pack.js:100` `txt:Lz(c.goal)` | 显示 |
 | 章节列表副标题 | `app15_home.js:134` / `app47_chapters.js:16` | 显示 |
-| 模型的 "Chapter goal: …" | `app14_pack.js:330` | **不进** —— 那句包在 `MIRU_TUNE.chat.characterMeta === true` 里，而它默认 **false**（2026-10-28 Ann 的决定：角色只知道此刻与已发生，不该未卜先知本章目标） |
+| 模型的 "WHAT THIS CHAPTER IS FOR: …" | `app14_pack.js:342`（新的一行） | **进**（2026-10-29 Ann「接吧」后接上） |
+| 模型的旧口径 "CHAPTER n/N · Chapter goal: …" | `app14_pack.js:330` | 仍**不进** —— 那段包在 `MIRU_TUNE.chat.characterMeta === true` 里，默认 **false**（2026-10-28 的决定：不给章节编号、不预告下一步要选什么） |
 
-⇒ 结论：`⟦GOAL⟧` 是**给读者看的目录**，不是给角色看的剧本。想让它进模型要她重新拍那个开关，别偷偷开。
+2026-10-29 的第二次决定（Ann：「接吧。我感觉在你的设计里面，这个是比较重要的一部分」）：**只放"这一章要立什么"进去**，
+编号、共几章、下一步官方选择**仍然关着** —— 理由是 10-28 她删掉那段的原话（角色一旦知道该推进到哪，就会提前使劲、说出还没发生的事），
+而"这场戏要立什么"不是"你下一步该被选什么"。开关是**新的** `MIRU_TUNE.chat.chapterGoal`（默认 **true**），
+`false` 一个开关回到 10-28 的干净版；`characterMeta` 保持 false 不动。
+措辞里带两道刹车：`let it shape what happens, never say it out loud, never announce that anything is coming`。
+
+⇒ 结论：`⟦GOAL⟧` 现在**既是读者的目录，也是角色的意图**（只管意图，不管日程）。探针断言：`tools/parse-effects-probe.html` 的 `promptHasGoal` 从 `no` 变 `yes`。
 
 **一个我先前判错的点（留档）**：我原以为"goal 现在是空的/废话，因为只能从章末问题倒推"。实测 5 部稿件：`# CHOICE｜…` 每部 **12 条、去重 12 种**，都是像「独立训练站稳以后，你还允许怎样的联系？」这种真句子 ⇒ **倒推出来的 goal 本来就不差**。`⟦GOAL⟧` 的真正增量是：编剧可以写「这一章的戏要立什么」而不必借提问暗示；不写则一切照旧。
 

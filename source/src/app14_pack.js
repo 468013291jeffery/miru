@@ -337,8 +337,12 @@ function packPrompt(th){if(!th.pk)return "";const w=wd(th.wid),P=w.pack,c=P.chap
   ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");
  }
  const _all=_canon();
+ /* 2026-10-29（Ann「接吧」）：本章目标单独一行进 prompt —— 只给"这场戏要立什么"，不给章节编号、不给下一步要选什么。
+    默认开；`MIRU_TUNE.chat.chapterGoal=false` 可关回 10-28 的干净版。 */
+ const _goalOn=(typeof MIRU_TUNE==="undefined"||!MIRU_TUNE.chat||MIRU_TUNE.chat.chapterGoal!==false);
  return [
   "WHERE YOU ARE: "+c.place.en+", "+c.time.en+". This is background for you to stand in — do not recite it back to the reader, just be in it.",
+  _goalOn&&c.goal&&c.goal.en?"WHAT THIS CHAPTER IS FOR (the writer's intent: let it shape what happens, never say it out loud, never announce that anything is coming): "+c.goal.en:"",
   _all?"ALREADY HAPPENED (you were there for these or heard about them; never contradict them, never re-open a settled argument): "+_all:"",
   "Time passes in real scenes: you may end a beat, let minutes go by, move to another corner of this place, or let something new happen that nobody announced. You do not know what comes next, and you must not act as if you do."
  ].filter(Boolean).concat(packTail(th,as,lead)).join("\n");
