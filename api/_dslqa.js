@@ -24,6 +24,8 @@ function dslQA(md) {
      2026-10-29 的真实故障就是这里没有判据：五部女性向的稿子被发布成 bl，取向选女性向的读者看不到。
      判据与 app51_import.js 的 imOrient() 一致；改一处要改另一处。 */
   const orChars = []; let orDecl = '';
+  /* 资产槽位：剧本里声明了多少个（BG / CG / VIDEO / PHOTO / ITEM）—— 回执里要能一眼看出这部还欠多少图。 */
+  st.assets = { bg: 0, cg: 0, video: 0, photo: 0, item: 0, total: 0 };
   const perCh = [];
   let cur = null;
   const closeCh = () => { if (cur) perCh.push(cur); };
@@ -44,6 +46,7 @@ function dslQA(md) {
       else if (m[1] === 'IF') st.ifs++;
       else if (m[1] === '/IF') st.ifEnds++;
       else if (m[1] === 'ORIENT') { const v = raw.replace(/^⟦ORIENT\|/, '').replace(/⟧$/, '').trim().toLowerCase(); orDecl = v; }
+      else if (m[1] === 'BG' || m[1] === 'CG' || m[1] === 'VIDEO' || m[1] === 'PHOTO' || m[1] === 'ITEM') { const k = m[1].toLowerCase(); st.assets[k] = (st.assets[k] || 0) + 1; st.assets.total++; }
       continue;
     }
     st.lines++;

@@ -415,6 +415,7 @@ module.exports = L.wrap(async (req, res) => {
         '章 ' + q.stats.chapters + ' · 场景 ' + q.stats.scenes + ' · 选择 ' + q.stats.choices + ' · 选项 ' + q.stats.options + ' · 收尾 ' + q.stats.dots + ' · 「你：」' + q.stats.you,
         orLine,
         '未识别指令 ' + (q.stats.unknown || []).length + ' · 受限词 ' + sf.length,
+        '资产 ' + ((q.stats.assets && q.stats.assets.total) || 0) + ' 个声明槽位（背景 ' + ((q.stats.assets && q.stats.assets.bg) || 0) + ' · CG ' + ((q.stats.assets && q.stats.assets.cg) || 0) + ' · 视频 ' + ((q.stats.assets && q.stats.assets.video) || 0) + ' · 照片 ' + ((q.stats.assets && q.stats.assets.photo) || 0) + ' · 道具 ' + ((q.stats.assets && q.stats.assets.item) || 0) + '）· 上线后若没有 art/official/<work_id>.json，这些槽位会静默无图',
         '结论：' + (err.length ? '不通过（' + err.length + ' 个硬错）' : '通过') + '（' + err.length + ' 硬错 / ' + (q.warn || []).length + ' 提醒）',
         warnList.length ? ('提醒：' + warnList.map((w, i) => (i + 1) + ') ' + w).join(' ')) : '',
       ].filter(Boolean).join('\n');

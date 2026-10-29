@@ -879,7 +879,18 @@ const Studio = {
     }
     async function restore(v) { await ElMessageBox.confirm('用这个版本的架构和章节覆盖当前内容？（当前内容会先自动存一个版本）', '恢复版本', { type: 'warning' }); await save({ outline: sel.value.outline, chapters: sel.value.chapters }, '恢复前自动备份'); const j = await api('script', { body: { op: 'restore', id: sel.value.id, version: v.id } }); sel.value = Object.assign(j.script, { config: Object.assign(cfgDefault(), j.script.config || {}) }); outline.value = sel.value.outline || ''; loadVers(); ElMessage.success('已恢复'); }
     /* ---------- step 5 ---------- */
-    async function publish(force) { await ElMessageBox.confirm('上线后 App「发现」页的社区区会置顶显示（作者：MIRU 官方），所有用户都能玩。', '确认上线', { type: 'warning' }); const j = await api('script', { body: { op: 'publish', id: sel.value.id, force: !!force, rulesVersion: R.version } }); ElMessage.success('已上线：' + j.work_id); open(sel.value.id); load(); }
+    /* 上线后再核一次资产映射：剧本声明了 41 个槽位，但映射文件不存在的话，玩家看到的是纯文字。
+       判据只读文件存在 + 非 null 的键数，不猜「应该有人给」。 */
+    async function assetCheck(workId) {
+      try {
+        const r = await fetch('art/official/' + workId + '.json', { cache: 'no-store' });
+        if (!r.ok) return '资产映射：**不存在**（art/official/' + workId + '.json 404）—— 所有背景/CG 槽位会静默无图';
+        const m = await r.json(); const keys = Object.keys(m || {}); const got = keys.filter(k => m[k]);
+        return '资产映射：' + got.length + ' / ' + keys.length + ' 个槽位有图' + (got.length < keys.length ? '（还缺 ' + (keys.length - got.length) + ' 个）' : '（齐了）');
+      } catch (e) { return '资产映射：检查失败（' + ((e && e.message) || e) + '）'; }
+    }
+    async function publish(force) { await ElMessageBox.confirm('上线后 App「发现」页的社区区会置顶显示（作者：MIRU 官方），所有用户都能玩。', '确认上线', { type: 'warning' }); const j = await api('script', { body: { op: 'publish', id: sel.value.id, force: !!force, rulesVersion: R.version } }); ElMessage.success('已上线：' + j.work_id);
+      try { ElMessage.info(await assetCheck(j.work_id), { duration: 8000 }) } catch (_) {} open(sel.value.id); load(); }
     async function unpublish() { await ElMessageBox.confirm('下线后 App 里将看不到这部剧（已在玩的用户本地副本不受影响）。', '确认下线', { type: 'warning' }); await api('script', { body: { op: 'unpublish', id: sel.value.id } }); ElMessage.success('已下线'); open(sel.value.id); load(); }
     async function del(row) { await ElMessageBox.confirm('删除剧本「' + row.title + '」及全部版本？', '删除', { type: 'error' }); await api('script', { body: { op: 'delete', id: row.id } }); load(); }
     function download() { const s = sel.value; const md = '# ' + s.title + '\n\n' + (s.chapters || []).map(c => c.md).join('\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([md], { type: 'text/markdown' })); a.download = s.title + '.md'; a.click(); }
