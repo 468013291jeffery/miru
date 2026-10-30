@@ -22,6 +22,13 @@ const PAGE = 'http://127.0.0.1:' + PORT + '/tools/css-dead-rules.html';
 const EDGE = process.env.MIRU_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 
+/* 2026-10-30：这个闸今天**稳定红**，红的全是第三方样式（`.nsm7Bb-HzV7m-LgbsSe` / `.qJTHM` 那一类
+   —— Google 登录按钮的样式表，GSI 脚本把它注入 <head>）。它们「源码里从没出现过」⇒ 每条都算新增死样式。
+   射程该是「**我们写的** CSS 有没有死规则」，第三方注入的样式表根本不在里面。
+   试过的修法：`--host-resolver-rules=MAP * ~NOTFOUND` 断网 ⇒ Edge 直接不出读数（不可用）。
+   正解（还没做）：**按来源归属** —— 我们自己创建的 <style> 打一个标记（`data-miru`），
+   闸只扫带标记的 + shell 里那份内联样式；没标记的列出来但不判死。没做是因为要动所有创建样式的地方。
+   在那之前：这一条红是**已知的、有解释的**，别拿它当「我们的 CSS 脏了」。 */
 const r = spawnSync(EDGE, ['--headless=new', '--disable-gpu', '--no-sandbox',
   '--virtual-time-budget=25000', '--dump-dom', PAGE], { encoding: 'utf8', maxBuffer: 128 * 1024 * 1024 });
 const dom = r.stdout || '';
@@ -87,6 +94,13 @@ console.log('样式规则普查（真页面 · **这一刻只显示首页**）')
 console.log('  ' + data.sheets + ' 张 sheet · ' + data.rules + ' 条规则 → ' +
   data.live + ' 活 · ' + data.state + ' 状态型 · ' + data.dead + ' 此刻没元素');
 console.log('  其中 52 类分成四档（判据从紧到松）：');
+/* 第三方样式表被整张跳过（Google 登录按钮的 GSI 注入）—— 打出来，免得过滤器自己悄悄失效 */
+{
+  const fr = Array.isArray(data.foreign) ? data.foreign : [];
+  const chars = fr.reduce((n, x) => n + (x.chars || 0), 0);
+  console.log('    ' + (fr.length ? fr.length + ' 张第三方样式表已跳过（' + chars + ' 字符；不是我们写的 CSS）'
+    : '0 张第三方样式表 —— 过滤器此刻没在过滤任何东西'));
+}
 console.log('    ' + truly.length + ' 条 **真死候选**（类名/id 在 JS 里从未出现过，也没有拼接前缀）');
 console.log('    ' + concat.length + ' 条 可能拼接出来（前缀 `xx-` 在 JS 里出现过，完整名搜不到 ⇒ **先留着**）');
 console.log('    ' + notoken.length + ' 条 没法按类名归因（`:focus-visible` / `*` / 纯标签选择器）');

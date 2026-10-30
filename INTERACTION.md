@@ -253,7 +253,7 @@ node tools/voice-probe.mjs --json > 新读数.json      # 对拍 tools/voice-bas
 | 7 | **档位不超过剧本与设置的下限** | `dialogueHeat` = `min(S.heat, pack.heat)`，年龄门再降一档 |
 | 8 | **状态只有一个写点** | `TURN`/`PKST`/`SAVE` + 三条 check |
 | 9 | **她没在看就不往下演** | `packRun` 的 `live()`；`PKPAUSE` |
-| 10 | **闸必须能红** | 每套闸自带 selftest 或变异臂；`tools/check-all.mjs` 46 套 |
+| 10 | **闸必须能红** | 每套闸自带 selftest 或变异臂；`tools/check-all.mjs` 47 套 |
 
 ⚠️ 第 10 条最容易自欺：**「产物里有这串字」不是「它绑上了」**（`wiring-order` 那次就是这样全绿的）。
 

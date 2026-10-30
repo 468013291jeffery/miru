@@ -1,0 +1,93 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>entry modes probe</title>
+<pre id="out">running…</pre>
+<iframe id="f" src="/index.html" style="width:420px;height:760px;border:0"></iframe>
+<script>
+/* 进去能选哪几个视角（2026-10-30 · 只读）
+   面一 数据：每部有 pack 的剧调 packModes(w)，收 `as`
+   面二 界面：真走「故事页 → 开始故事」，数弹层里的 [data-pkgo] 按钮
+   面三 补齐：造两个假世界（join 空 / join 只有主角）—— 三路必须都在，且 hint 非空
+   面四 负对照：一部 join 写全了的真剧 —— hint 必须为空（否则 hint 就是装饰，永远亮着） */
+setTimeout(function () {
+  var out = document.getElementById('out');
+  var w = document.getElementById('f').contentWindow;
+  function done(o) { out.textContent = 'ENTRYMODES_JSON:' + JSON.stringify(o); }
+  try {
+    if (typeof w.packModes !== 'function' || typeof w.packWorlds !== 'function' || typeof w.entryModes !== 'function') {
+      done({ total: 0, onlyWatch: [], multi: [], blank: [], errors: ['no packModes/packWorlds/entryModes in iframe'], arms: {}, diag: {}, control: { pack: '', modes: [], buttons: -1 } });
+      return;
+    }
+    var worlds = w.packWorlds() || [];
+    var onlyWatch = [], multi = [], errors = [], blank = [];
+    worlds.forEach(function (x) {
+      try {
+        var ms = w.packModes(x).map(function (m) { return m.as });
+        if (ms.length <= 1) onlyWatch.push(x.id + '（' + ms.join(',') + '）');
+        else multi.push(x.id + ' → ' + ms.join(' / '));
+        ms.forEach(function (a) {
+          var nm = '';
+          try { nm = String(w.packAsName(x, a) || '') } catch (e) { nm = 'ERR' }
+          if (!nm) blank.push(x.id + '|' + a);
+        });
+      } catch (e) { errors.push(x.id + ': ' + (e && e.message || e)) }
+    });
+
+    /* 面三 / 面四 */
+    var arms = {};
+    try {
+      var w0 = worlds[0] || { cast: [] };
+      var leadId = null, casts = w0.cast || [];
+      for (var ci = 0; ci < casts.length; ci++) { try { if (w.ch(casts[ci])) { leadId = casts[ci]; break } } catch (e) { } }
+      var eB = w.entryModes({ id: 'synthetic-empty', pack: { join: [] }, cast: (w0.cast || []).slice() });
+      arms.B = { modes: eB.modes.map(function (m) { return m.as + ':' + m.src }), hint: eB.hint, leadId: leadId };
+      var eC = w.entryModes({ id: 'synthetic-lead', pack: { join: [{ as: leadId, t: 'x' }] }, cast: (w0.cast || []).slice() });
+      arms.C = { modes: eC.modes.map(function (m) { return m.as + ':' + m.src }), hint: eC.hint };
+      var complete = null;
+      for (var k = 0; k < worlds.length && !complete; k++) {
+        var e = w.entryModes(worlds[k]);
+        var derived = e.modes.filter(function (m) { return m.src === 'derived' }).length;
+        if (!derived) complete = { id: worlds[k].id, hint: e.hint, derived: derived, modes: e.modes.map(function (m) { return m.as }) };
+      }
+      arms.D = complete || { id: '', hint: 'NO_COMPLETE_WORLD', derived: -1, modes: [] };
+      /* 面五：首屏那三条（hookRoles）也得走同一份清单 */
+      try {
+        arms.F = {};
+        var hr = w.hookRoles({ id: 'synthetic-hook', pack: { join: [] }, cast: (w0.cast || []).slice() });
+        arms.F.modes = hr.map(function (r) { return r[0] });
+        arms.F.labels = hr.map(function (r) { return r[1] });
+      } catch (e) { arms.F = { err: String(e && e.message || e) } }
+    } catch (e) { arms.err = String(e && e.message || e) }
+
+    /* 面二：走真路径 */
+    var ctlId = null, modes = [], buttons = -1, diag = {};
+    for (var i = 0; i < worlds.length; i++) {
+      try { if (w.packModes(worlds[i]).length > 1) { ctlId = worlds[i].id; break } } catch (e) { }
+    }
+    if (ctlId) {
+      try { modes = (w.packModes(w.wd(ctlId)) || []).map(function (m) { return m.as }) } catch (e) { }
+      try {
+        w.closeSheet();
+        try { w.openStory && w.openStory(ctlId) } catch (e) { diag.openStory = String(e && e.message || e) }
+        diag.storyScreen = !!w.document.getElementById('s-story');
+        var btn = w.document.querySelector('#s-story [data-pkstart]');
+        diag.foundStartBtn = !!btn;
+        if (btn) btn.click();
+        var el = w.document.querySelector('.sheet');
+        diag.cardLen = el ? el.innerHTML.length : -1;
+        diag.hintShown = !!(el && el.querySelector('[data-emhint]'));
+        buttons = el ? el.querySelectorAll('[data-pkgo]').length : -2;
+        w.closeSheet();
+      } catch (e) { diag.err = String(e && e.message || e); errors.push('startSheet(' + ctlId + '): ' + diag.err) }
+    }
+
+    done({
+      total: worlds.length, onlyWatch: onlyWatch, multi: multi, blank: blank, errors: errors,
+      arms: arms, diag: diag,
+      control: { pack: ctlId || '', modes: modes, buttons: buttons }
+    });
+  } catch (e) {
+    out.textContent = 'ERR ' + (e && e.message || e);
+  }
+}, 5000);
+</script>

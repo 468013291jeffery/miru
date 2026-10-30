@@ -15,7 +15,16 @@
      · raw = 0, relaxed=0 ⇒ 死候选（还要人工确认：有些元素只在某个弹层/某个章节才存在）
 
    ⚠️ 只统计**页面里真的有的 sheet**；`creator_embed.js` 那段是另一个页面的 HTML 字符串，
-   它不在 DOM 里，所以天然不会被算进来。 */
+   它不在 DOM 里，所以天然不会被算进来。
+
+   ⚠️ **第三方注入的样式表不算**（2026-10-30 加）。症状：--check 稳定红 62 条，选择器是
+   `.nsm7Bb-HzV7m-LgbsSe` / `.qJTHM` / `.P1ekSe-ZMv3u` 这种乱码串 —— 那是 Google 登录按钮的 GSI
+   样式表（app70 的 au70MountGoogle 把 accounts.google.com/gsi/client 拉下来之后注进 <head>）。
+   它们「源码里从没出现过」⇒ 每条都算新增死样式，红得没有信息量。
+   这个闸要回答的是**我们写的** CSS 有没有死规则，所以按「表里带第三方标记」整张跳过，并把跳过的
+   张数/字符数打进读数 —— 让「过滤器本身失效」看得见，而不是悄悄绿。
+   若哪天新增死样式的名字又变成这种乱码串：先到这里补一条标记，别去动基线。 */
+var FOREIGN_RE = /nsm7Bb-|L5Fo6c-|P1ekSe-|hSRGPd|qJTHM|accounts\.google\.com|gsi\/client/;
 function relax(sel) {
   return sel
     .replace(/::?[a-zA-Z-]+(\((?:[^()]|\([^()]*\))*\))?/g, '')  // 伪类/伪元素（含括号参数）
@@ -38,11 +47,13 @@ setTimeout(function () {
   var out = document.getElementById('out');
   var w = document.getElementById('f').contentWindow, d = w.document;
   if (!d) { out.textContent = 'ERR no iframe'; return }
-  var all = [];
+  var all = [], foreign = [];
   var sheets = d.querySelectorAll('style');
   for (var s = 0; s < sheets.length; s++) {
     var sheet = sheets[s].sheet;
     if (!sheet) continue;
+    var txt = sheets[s].textContent || '';
+    if (FOREIGN_RE.test(txt)) { foreign.push({ sheet: s, chars: txt.length }); continue }
     var rules = [];
     try { walk(sheet.cssRules, rules, '') } catch (e) { continue }
     for (var j = 0; j < rules.length; j++) {
@@ -66,7 +77,7 @@ setTimeout(function () {
   var state = all.filter(function (x) { return x.nRaw <= 0 && x.nRelaxed > 0 });
   var live = all.filter(function (x) { return x.nRaw > 0 });
   out.textContent = 'CSS_DEAD_JSON:' + JSON.stringify({
-    at: Date.now(), sheets: sheets.length, rules: all.length,
+    at: Date.now(), sheets: sheets.length, foreign: foreign, rules: all.length,
     live: live.length, state: state.length, dead: dead.length,
     deadList: dead.sort(function (a, b) { return (b.len || 0) - (a.len || 0) })
   });

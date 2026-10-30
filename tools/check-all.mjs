@@ -63,6 +63,9 @@ const suites = [
   ['wiring-order-check.mjs', ['tools/wiring-order-check.mjs'], true],
   ['turn-wiring-check.mjs', ['tools/turn-wiring-check.mjs'], true],
   ['bundle-integrity.mjs', ['tools/bundle-integrity.mjs'], true],
+  /* 2026-10-30：进故事「有哪几个视角」—— Ann 报「只有导演视角」那天，**没有任何闸看这个面**。
+     它验的是「三路永远是三路」（补齐 + 提示 + 负对照 + 界面按钮数），不是某部剧的数据。 */
+  ['entry-modes-probe.mjs', ['tools/entry-modes-probe.mjs'], true],
   ['prompt-blocks.mjs', ['tools/prompt-blocks.mjs'], true],
   /* 2026-10-27：语音探针**暂不挂这里** —— 它需要一个跑着 tools/serve.mjs 的本地服务（8131），
      而全量环境不保证有；硬挂会把整套拖红。用法：先起服务，再 node tools/voice-probe.mjs。
