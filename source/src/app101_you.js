@@ -49,8 +49,8 @@
   setTimeout(() => { try { mo.observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (_) {} youPass(); }, 0);
 
 
-  /* ---------- 2026-10-27 · 剧情默认「点一下才继续」（没手动选过自动播放的人都按这个） ---------- */
-  const tapMode = () => S.pkTap101 !== false || S.pkSpd === 0;
+  /* ---------- 2026-10-27 · 普通段落默认自动播放；手动点选逐句/暂停时仍尊重用户设置 ---------- */
+  const tapMode = () => S.pkTap101 === true || S.pkSpd === 0;
   if (typeof pkWait === "function") {
     const _pw = pkWait;
     pkWait = function (th, prev, spd, ms) {

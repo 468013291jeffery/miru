@@ -142,6 +142,7 @@ function readMs(m){if(!m)return 1500;const x=String(m.txt||m.title||"");const cj
  return Math.min(7000,Math.max(1700,(cjk?1000+x.length*105:1000+x.length*34)))}
 function pkSpd(){const v=S.pkSpd;return v===0?0:(v||1)}
 function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
+ if(k==="line"&&pkContinueOnlyOptions(d.opts))return [];
  if(k==="start")return []; // Resume legacy openings automatically.
  if(k==="line"&&as!==speaker){const o=d.opts[0];if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}return [[speaker,o.k||"say",o.t]].concat(o.then||[])}
  if((k==="gift"||k==="call"||k==="voice")&&(!inScene||as===(k==="call"?d.cid:stopWho(th,d))))return d.skip||[];
@@ -211,6 +212,29 @@ function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk
 function aCount(th){const L=PCN(wd(th.wid));return Object.entries(th.pk.picks).filter(([n,k])=>+n<L&&k==="A").length}
 function EN(th){return Math.min(ENDING_NEED,Math.max(0,PCN(wd(th.wid))-1))}
 
+/* A placeholder Continue is navigation, never a player decision or affection gain. */
+function pkContinueOnlyOptions(options){
+ if(!Array.isArray(options)||options.length!==1)return false;
+ const o=options[0];if(!o||o.set||o.love||o.rd||o.need||o.give||o.len)return false;
+ const values=v=>typeof v==="string"?[v]:v&&typeof v==="object"?Object.values(v):[];
+ const labels=values(o.t).filter(x=>typeof x==="string"&&x.trim());
+ if(!labels.length||!labels.every(x=>/^(?:继续|继续剧情|下一章|进入下一章|continue|next chapter)[。.!！\s]*$/i.test(x.trim())))return false;
+ if(values(o.mem).some(x=>typeof x==="string"&&x.trim()))return false;
+ if(Array.isArray(o.then))return o.then.length===0;
+ return !o.then||Object.values(o.then).every(x=>Array.isArray(x)&&x.length===0);
+}
+function pkAdvanceOnly(c){return !!c&&pkContinueOnlyOptions(c.choices)}
+function packAdvanceChapter(th){
+ if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
+ const w=wd(th.wid),n=th.pk.ch,c=w&&w.pack&&w.pack.chapters[n-1];if(!pkAdvanceOnly(c))return;
+ if(n<w.pack.chapters.length&&chLocked(th.wid,n+1)){packPaywall(th.wid,n+1);return}
+ pkDone(th,n);th.pk.afterPendingChoose=0;th.pk.min=false;
+ if(n<w.pack.chapters.length){pkGo(th,"next","chapter-navigation");save();packNext();return}
+ pkGo(th,"end","story-complete");th.pk.end="complete";
+ pkTrack(th,"story_end",{ch:n,ending:null});
+ appendMsg(th,{who:"sys",k:"card",title:CL()==="zh"?"故事已结束":"Story complete",txt:"",at:Date.now()});
+ save();packRefresh(th);
+}
 /* ---------- the panel under the scene ---------- */
 function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!(th.pk.q&&th.pk.q.length);
  if(th.pk.st==="busy"&&!running&&!hasQ&&!th.pk.stop&&!busy)(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','panel-recover');const w=wd(th.wid),P=w.pack,n=th.pk.ch,c=P.chapters[n-1];if(!c)return "";
@@ -220,6 +244,9 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  else if(th.pk.st==="busy"&&running){if(!PKSKIP[th.id]){const v=pkSpd();
   h+='<div class="pkplay"><button class="pkspd" data-pkspd="1">'+(v===0?'👆 '+t("pk.spdTap"):v>1?'🐢 '+t("pk.spdSlow"):'▶ '+t("pk.spdNorm"))+'</button><button class="pkskip" data-pknextl="1">'+t("pk.nextLine")+' ›</button><button class="pkskip" data-pkskip="1">⏩ '+t("pk.skip")+'</button></div><p class="pkhint">'+t("pk.tapHint")+'</p>'}}
  else if(th.pk.st==="busy"&&hasQ){h+='<button class="btn btn-p btn-block" data-pkresume="1">▶ '+t("pk.resume")+'</button>'}
+ else if(th.pk.st==="choose"&&pkAdvanceOnly(c)){
+  h+='<button class="btn btn-p btn-block" data-pkadvance="1">'+(CL()==="zh"?(n<P.chapters.length?'进入下一章':'结束本章'):(n<P.chapters.length?'Next chapter':'Finish chapter'))+'</button>';
+ }
  else if(th.pk.st==="choose"){const need=n===PCN(wd(th.wid))?Math.max(0,EN(th)-aCount(th)):0;
   h+='<p class="pkask">'+esc(Lz(c.ask))+'</p><div class="pkopts">'+c.choices.map(x=>{const lock=x.k==="A"&&need>0;
    return '<button class="pkopt'+(lock?" lk":"")+'" data-pkpick="'+x.k+'"><i>'+x.k+'</i><span>'+esc(Lz(x.t))+(lock?'<small>🔒 '+t("pk.needA",{n:EN(th),h:aCount(th)})+'</small>':'')+'</span></button>'}).join("")+'</div>'+
@@ -227,8 +254,8 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  else if(th.pk.st==="next"){const nx=P.chapters[n],lock=chLocked(th.wid,n+1);
   h+='<button class="btn btn-p btn-block" data-pknext="1">'+(lock?'🔓 '+t("pk.unlockNext",{n:n+1}):'▶ '+t("pk.next",{n:n+1}))+' · '+esc(Lz(nx.t))+'</button>'+
    '<p class="pkhint">'+t("pk.stay")+'</p>'}
- else if(th.pk.st==="end"){const e=P.endings[th.pk.end];
-  h+='<p class="pkask">🏁 '+esc(Lz(e.t))+' · '+t("pk.endN",{a:endingsFound(th.wid),b:3})+'</p><div class="row" style="gap:8px"><button class="btn btn-g btn-sm grow" data-pkreplay="1">⟲ '+t("pk.replay")+'</button><button class="btn btn-g btn-sm grow" data-pkbonus="'+th.wid+'">✦ '+t("pk.bonus")+'</button></div>'}
+ else if(th.pk.st==="end"){const e=P.endings[th.pk.end]||{t:{zh:"故事已结束",en:"Story complete"}};
+  h+='<p class="pkask">🏁 '+esc(Lz(e.t))+(th.pk.end==="complete"?'':' · '+t("pk.endN",{a:endingsFound(th.wid),b:3}))+'</p><div class="row" style="gap:8px"><button class="btn btn-g btn-sm grow" data-pkreplay="1">⟲ '+t("pk.replay")+'</button><button class="btn btn-g btn-sm grow" data-pkbonus="'+th.wid+'">✦ '+t("pk.bonus")+'</button></div>'}
  return h+'</div>'}
 function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=packPanel(th);try{pkLockComposer(th)}catch(_){}}
 
@@ -241,7 +268,7 @@ function pkBusy(th){try{
  /* 2026-10-27 Ann 收窄：只在**必须几选一**的时候关输入框；
     普通剧情播放不该关（她还要边看边说话）。 */
  if(th&&th.pk&&th.pk.stop)return false;
- return !!(th&&th.pk&&th.pk.st==="choose")
+ return !!(th&&th.pk&&th.pk.st==="choose"&&!pkAdvanceOnly((wd(th.wid).pack.chapters||[])[th.pk.ch-1]))
 }catch(_){return false}}
 function pkLockComposer(th){
  if(!th||curT!==th.id)return;
@@ -280,6 +307,7 @@ function pkSetPresent(th,n){try{
 }catch(_){th.present=null}}
 function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
+ if(pkAdvanceOnly(c)){packAdvanceChapter(th);return}
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
  pkTrack(th,"choice_pick",{ch:n,key:k,ms:th.pk._chAt?Date.now()-th.pk._chAt:null});
  th.pk.picks[n]=k;pkSet(th,x.set);(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','pick');th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
@@ -318,18 +346,9 @@ function packNext(){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="next"||
  const w=wd(th.wid);if(w.pack.ready&&n>w.pack.ready){toast(t("st2.soon",{n}));return}
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packNext');packRefresh(th);packOpen(th,n,false)}
 document.addEventListener("click",e=>{let x;
+ if(e.target.closest("[data-pkadvance]")){packAdvanceChapter(S.threads[curT]);return}
  if(x=e.target.closest("[data-pkpick]")){packPick(x.dataset.pkpick);return}
- if(x=e.target.closest("[data-pknext]")){
-  /* 2026-10-27 Ann：上一章刚完结、她还在和角色聊天，点一下就整章翻过去了。
-     改成两步：第一次点只是「确认要开始下一章吗」，再点一次才真的换。5 秒内没点就复位。 */
-  if(!x.dataset.armed){
-   x.dataset.armed="1";
-   x.textContent=(S.lang==="zh"?"再点一次确认进入下一章":(S.lang==="ja"?"もう一度押すと次の章へ":"Tap again to start the next chapter"));
-   setTimeout(()=>{try{if(x.dataset.armed){delete x.dataset.armed;packRefresh(S.threads[curT])}}catch(_){}},5000);
-   return
-  }
-  delete x.dataset.armed; packNext(); return
- }
+ if(e.target.closest("[data-pknext]")){packNext();return}
  if(x=e.target.closest("[data-pkmin]")){const th=S.threads[curT];if(th&&th.pk){th.pk.min=x.dataset.pkmin==="1";save();packRefresh(th)}return}
  if(e.target.closest("[data-pkreplay]")){replaySheet(S.threads[curT]);return}
  if(x=e.target.closest("[data-pkfrom]")){const th=S.threads[curT],n=+x.dataset.pkfrom;if(!th)return;if(chLocked(th.wid,n)){packPaywall(th.wid,n);return}packStart(th.wid,th.pk.as,n,th.pk.picks);return}
@@ -470,7 +489,7 @@ Object.assign(I18N.en,{
  "pk.replayH":"Replaying from Chapter {n}","pk.replayS":"Your earlier choices are kept. Everything after this point plays out again.",
  "pk.chShort":"Ch {n}","pk.yourMove":"your move","pk.ended":"ending","pk.nextUp":"next chapter",
  "pk.needA":"Needs {n} honest steps in chapters 1–7 · you have {h}","pk.orType":"Or type anything below to play the moment your way · ✦ 1 AI turn","pk.orTypeOff":"Or type anything below to play the moment your way.",
- "pk.unlockNext":"Chapter {n}","pk.next":"Chapter {n}","pk.stay":"Not ready? Stay in this moment and keep talking — the next chapter waits for you.",
+ "pk.unlockNext":"Chapter {n}","pk.next":"Next chapter · {n}","pk.stay":"Not ready? Stay in this moment and keep talking — the next chapter waits for you.",
  "pk.endN":"{a}/{b} endings","pk.replay":"Replay a chapter","pk.bonus":"Bonus episode","pk.replayPick":"Replay from…","pk.replayPickS":"A new run starts at that chapter. This one stays saved.","pk.youPicked":"You chose {k}",
  "pk.stepH":"Change how you play","pk.stepS":"The story keeps everything that happened. Only your place in it changes.","pk.steppedH":"You stepped in","pk.steppedS":"From here on: {n}.",
  "pk.packEyebrow":"STORY PACK · CHAPTERS 3–{m}","pk.keepGoing":"Keep going: {t}","pk.b1":"{k} more chapters and all three endings","pk.b2":"+{n} AI turns to make it your own — they never expire",
@@ -494,7 +513,7 @@ Object.assign(I18N.zh,{
  "pk.replayH":"从第 {n} 章重玩","pk.replayS":"之前的选择都保留，这一章之后的剧情重新演。",
  "pk.chShort":"第 {n} 章","pk.yourMove":"轮到你选","pk.ended":"结局","pk.nextUp":"下一章",
  "pk.needA":"需要在 1–7 章做出 {n} 次坦诚的选择 · 目前 {h} 次","pk.orType":"也可以在下面随意输入，按你的方式演这一刻 · ✦ 1 个 AI 回合","pk.orTypeOff":"也可以在下面随意输入，按你的方式演这一刻。",
- "pk.unlockNext":"第 {n} 章","pk.next":"第 {n} 章","pk.stay":"还没准备好？可以留在这一刻继续聊——下一章会等你。",
+ "pk.unlockNext":"第 {n} 章","pk.next":"进入下一章 · 第 {n} 章","pk.stay":"还没准备好？可以留在这一刻继续聊——下一章会等你。",
  "pk.endN":"已收集 {a}/{b} 个结局","pk.replay":"重玩某一章","pk.bonus":"番外","pk.replayPick":"从哪一章重玩？","pk.replayPickS":"会从那一章开新的一局，这一局会保留。","pk.youPicked":"你选了 {k}",
  "pk.stepH":"换一种玩法","pk.stepS":"已经发生的一切都会保留，只是你在故事里的位置变了。","pk.steppedH":"你入场了","pk.steppedS":"从现在起：{n}。",
  "pk.packEyebrow":"故事包 · 第 3–{m} 章","pk.keepGoing":"继续：{t}","pk.b1":"再解锁 {k} 章和全部三个结局","pk.b2":"+{n} 个 AI 回合，按你的方式演——永久有效",

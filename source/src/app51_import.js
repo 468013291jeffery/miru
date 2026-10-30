@@ -64,7 +64,7 @@ function imParseCore(text){text=String(text||"").replace(/\r/g,"").replace(/ /g
  doc.lines=Object.values(doc.sp).reduce((a,b)=>a+b,0);doc.choices=doc.chapters.reduce((a,c)=>a+c.items.filter(x=>x.choice).length,0);
  if(!doc.chapters.length)doc.warn.push(LL("没有读到正文。","No story text found."));
  if(!doc.lines)doc.warn.push(LL("没认出对白。对白请写成「名字：“台词”」。","No dialogue found. Write lines as Name: \"line\"."));
- if(!doc.choices)doc.warn.push(LL("没有选择题，每章结尾会是「继续」。可以用「# CHOICE｜问题」加「#### A｜选项」。","No choices found — each chapter will end with Continue. Use # CHOICE｜question and #### A｜option."));
+ if(!doc.choices)doc.warn.push(LL("没有选择题，章末会显示「进入下一章」。可以用「# CHOICE｜问题」加「#### A｜选项」。","No choices found — chapter endings will show Next chapter. Use # CHOICE｜question and #### A｜option."));
  if(doc.omit)doc.warn.push(LL(doc.omit+" 处露骨内容已省略。",doc.omit+" explicit passages were left out."));
  return doc}
 /* ---------- build a MIRU world from the parsed doc ---------- */
@@ -88,7 +88,7 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
   if(!beats.length||beats[0][0]!=="sys"||beats[0][1]!=="scene")beats.unshift(["sys","scene",{place:place||doc.title,time:""}]);
   const opts=endC?endC.opts.filter(o=>o.t).slice(0,4):[];
   const choices=opts.length?opts.map((o,j)=>{const z={k:"ABCD"[j],t:x0(o.t),then:{zh:o.then.map(mapB),en:o.then.map(mapB)},mem:x0(LL("你选择了：","You chose: ")+o.t)};if(o.set)z.set=o.set;return z}):[{k:"A",t:x0(LL("继续","Continue")),then:{zh:[],en:[]},mem:x0("")}];
-  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:c.goal94?{zh:c.goal94.zh,en:c.goal94.en||c.goal94.zh}:x0(endC&&endC.q||""),goalOwn:!!c.goal94,place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
+  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:c.goal94?{zh:c.goal94.zh,en:c.goal94.en||c.goal94.zh}:x0(endC&&endC.q||""),goalOwn:!!c.goal94,place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,advanceOnly:!opts.length,outline:false}});
  const cast=doc.cast.map(n=>ids[n]),L=ids[pov]&&cast.length>1?cast.find(id=>id!==ids[pov]):cast[0];
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});
  const firstTxt=(chs[0]&&chs[0].beats.zh.find(b=>b[0]==="n")||[,,""])[2];
