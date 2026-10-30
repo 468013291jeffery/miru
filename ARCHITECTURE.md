@@ -859,6 +859,87 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 ---
 
+## 8. 内容交付路线：图和剧本的「谁解析、谁打包」（2026-10-31 路线变更）
+
+> 这一节记**决定与理由**，不是实现细节。以后有人问「图片怎么接的」「为什么我们还要解析剧本」，
+> 从这里开始，再看 §5.5 剧本管道与 `/api/chapter`。
+
+### 8.1 两条路，摆在一起
+
+| | **A · 我们现在这条** | **B · 对方要做的那条（2026-10-30 起）** |
+|---|---|---|
+| 剧本 | 存 DB（`works.pack.script`，MIRU DSL 文本） | **和素材一起打包**，放在服务器上 |
+| 素材 | 静态文件（现为 Vercel Blob）+ `art/official/<workId>.json`（槽位 → URL） | 同一份包里 |
+| 谁解析 | **我们**：前端 `imParse/imBuild`，或服务端 `/api/chapter` | **他们**：包已是可播的形状，前端直接吃 |
+| 前端拿什么 | 文本 + 查找表，自己解析 | 一个「内容包」接口，拿来就能用 |
+| 谁维护 | 我们 | 他们 |
+
+### 8.2 为什么「我们后端解析」本来是合理的（Ann 的判断，我同意）
+
+- **壳薄**：`/api/chapter` 把 28 种引擎指令在服务端就拦掉，`events` 只出 `say/act/think/choice`
+  四种 ⇒ 换壳（iOS / 小程序）时协议不用重新学
+- **内容与呈现解耦**：编剧改剧本不动壳，壳改样式不碰剧本
+- 但代价是 **解析器由我们养**（`imParse` 四层注册表 + `/api/chapter` 与 `_dslqa` 两份词表）——
+  这是一份**长期维护成本**，不是一次性投入
+
+### 8.3 为什么现在把包袱扔出去是合算的
+
+- 解析器是**最贵也最容易腐**的那一块（四层猴子补丁那笔账见 §5·补四，正是"没人接"时我们不得不自己治的病）
+- 对方愿意接，说明他们认这个活；我们省下的是「每加一种指令、每改一次语法都要两处同步」
+- ⇒ **不是我们的做法错了，是有人愿意接更贵的活。** 这句要留着 ——
+  免得下一个人读成「之前白做了」，然后去删还在用的东西
+
+### 8.4 两个风险，盯住（别到时候才发现）
+
+1. **协议控制权跟着走**：他们打包什么，前端就吃什么。以后改事件形状（例如给 `say` 加字段）得他们点头 ——
+   这跟 `web/README.md` / `backend/README.md` 那条「任何一方擅自加字段都要停下来说」是同一条规矩，
+   只是主动权现在在他们手上
+2. **两套并存会漂**：A 这条路（DB 剧本 + `/api/chapter`）**不能马上删**。在 B 完全接管之前，
+   两边内容必须对得上，否则会出现「内置剧能播、官方剧点开是另一版」
+
+### 8.5 现在的实际状态（2026-10-31 00:1x 实测）
+
+- **A 是通的**：`/api/works?feed=new` **17 部** · 62 个槽位的素材全在 Blob 且 **62/62 可达** ·
+  `art/official/<workId>.json` 已全部改成绝对 URL（相对路径 0 条）
+- **但游戏里看不到图**：剧本里**真正的 `⟦BG⟧` 引用是 0 个**（只有 2 个 `⟦BGM⟧`，不是同一指令）。
+  MIRU 是按剧情引用取图的 ⇒ 加一行 `⟦BG|bg_01|地点⟧` 才会显示
+- **B 还没开始**：等对方给出「内容包接口」的形状（字段 / 鉴权 / 版本），我们才知道要不要留 `/api/chapter`
+
+### 8.6 如果 B 真落地，要做的三件事（预置，不提前做）
+
+1. `/api/chapter` 与 `imParse` 降级成「内置剧专用」，并从 `backend/README.md` 的给壳接口表里撤掉
+2. `art/official/*` 槽位表**保留** —— 它是「官方剧」这条线的资产索引，与谁解析无关
+3. `web/README.md` 里「怎么拿内容」改成两句：官方剧走他们的包，内置剧走 `/api/chapter`
+
+### 8.7 解析搬过去之后，调用链怎么排（2026-10-31 追加）
+
+> Ann 的原话：「解析如果在他那边，api 调用又是个问题」。这是 B 路唯一真正的**新接缝**，要在落地前定死。
+> 分法一句话：**静态的可以打包送走，动态的必须留在自己手上。**
+
+| 东西 | 静态 / 动态 | 未来归谁 | 为什么 |
+|---|---|---|---|
+| 剧本正文、素材 URL | **静态** | 他们（内容包） | 写一次读多次，可缓存、可版本化 |
+| **AI 对话**（`/api/longcat`：自由输入、`⟦CALL⟧`、创作中心） | **动态** | **我们** | key 在我们的 env；每轮花钱；要能换 provider 降级 |
+| 存档 / 钱包 / 登录 | **动态** | **我们** | 唯一真相，每人不同 |
+| 语音（`/api/tts`） | 半静态 | 分两半 | **固定台词**可预合成进包；**动态台词**（AI 现编的）必须现调 |
+
+**三条硬规矩（建议直接写进给他们的接口文档）**
+
+1. **前端直连我们的 API，不经过他们的服务器**。他们提供的是「内容包」，不是「代理」——
+   一旦我们的 key 出现在他们机器上，等于把**计费和限流**一起交出去
+2. **内容包里只写"去哪儿调"，不写凭据**。最多一句：
+   `"api": { "chat": "https://www.miru.plus/api/longcat", "tts": "https://www.miru.plus/api/tts" }`
+3. **失败要分得开**：内容包取不到 = 打不开（他们的责任）；AI 不响 = 降级成预写台词（我们的责任）。
+   **两边都别把这两件事混成同一句「加载失败」** —— 混了以后没人能定位是哪一侧挂的
+
+**如果他们的内容包接口想做"前端唯一入口"**（前端只跟他们说话），那只有两条路：
+
+- 他们转发到我们的 API —— **不接受**（key 与计费失控，且多一跳失败面）
+- **前端两个 base**：内容一个、运行时一个 —— **推荐这个**。多一个配置项，但责任边界清楚：
+  他们换内容包不碰我们的运行时，我们换 provider 也不碰他们的内容
+
+---
+
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
 共 **139 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
@@ -941,7 +1022,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 289 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 133 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
-| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 80 |
+| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 41 |
 | `app77_memory2.js` | 记忆系统 第一阶段 ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失 | 186 |
 | `app78_memsync.js` | 记忆系统 第二阶段：记忆存进云端数据库 + 按意思召回 登录用户：记忆增删改 3 秒内同步到服务器（/api/state?r=mem）。每次回复前… | 44 |
 | `app79_ledger.js` | 记忆系统 第三阶段：剧情账本（程序裁决，模型只读） 一个故事的「正史」统一放在 th.led，由程序维护： · 约定 P#：来自「约定」类记忆（你… | 151 |
@@ -996,7 +1077,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `creator_embed.js` | creator polish: accessibility, graph editing, playable surfaces | 2 |
 | `i18n.js` | UI STRINGS — en · zh · ja · ko · es | 274 |
 | `miru_rules_full.js` | （文件头没有说明 —— 该补一句） | 3 |
-| `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 287 |
+| `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 286 |
 | `pdfjs_embed.js` | \n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * @licend The above is the entire license notice for the\n * JavaScript code in this page\n（原文只有段落横幅） | 3 |
 | `shorts_v2.js` | DRAMAS v2 — rewritten for tension (hook → escalation → reversal → freeze … | 13 |
 | `shorts_v3.js` | DRAMAS v3 — the 9 Veo-shot pilots: one beat per 8-second clip (the subtit… | 22 |
@@ -1007,20 +1088,3 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `tr_merge.js` | CONTENT TRANSLATIONS (ja · ko · es) Each language pack mirrors the Englis… | 23 |
 
 <!-- END module-index -->
-
-## 成人露骨作品门槛（2026-10-30）
-
-作品级开关 `pack.meta.adult`（后台剧本配置「成人露骨」，尺度可选 `explicit`；只选 explicit 不开开关，`checkStandards` 报错不能保存）。
-放行条件三者同时满足，判断只在服务器：`api/_lib.js` 的 `adultAccess(req)`
-
-1. `config.adult_enabled === true`（后台「配置」总开关，默认关）
-2. 访问者地区在 `config.adult_regions` 里（`x-vercel-ip-country` / `-region`，写 `FR` 或 `US-CA`；默认空 = 哪里都不开）
-3. 账号 `users.adult_verified_at` 不为空（后台用户详情「标记已年龄验证」，必须写核验方式，进审计日志）
-
-`api/works.js`：feed 对不满足者过滤掉成人作品；`?id=` 返回 451 `{error:'adult_gate', why}`，不下发 pack。
-App：`app76_official.js` 收到 451 给出对应提示；成人作品解析时置 `window.IM_ADULT`，`app51_import.js` 不再省略露骨句子。普通作品行为不变。
-
-测试模式（2026-10-30，只做年龄、不做地区）：
-- `adult_regions` 里填 `*` = 所有地区放行（`adultRegionOk`）；feed 只看总开关 + 地区，不看账号，所以人人能在发现页看到成人作品卡片。
-- `config.adult_self_verify === true` 时，451 带 `self:true`，App 弹出生日期确认（`adultConfirm76`），POST `/auth` `op:"adult_confirm"`，服务器按出生日期精确算满 18 岁才写 `adult_verified_at`，`adult_verified_by = 'self · 日期 · 地区'`。
-- 正式上线前：地区改回法务名单、关掉 `adult_self_verify`，改用第三方年龄验证。

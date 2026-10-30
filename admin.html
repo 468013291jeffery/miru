@@ -252,15 +252,13 @@ const Users = {
     async function gems() { if (!gd.reason.trim()) return ElMessage.warning('请填写原因'); const j = await act('gems', { amount: gd.amount, reason: gd.reason }); gd.show = false; ElMessage.success('完成，当前余额 ' + j.gems); }
     async function ban() { if (!bd.reason.trim()) return ElMessage.warning('请填写封禁原因'); await act('ban', { reason: bd.reason, days: bd.days, hideWorks: bd.hideWorks }); bd.show = false; ElMessage.success('已封禁'); }
     async function unban() { await act('unban'); ElMessage.success('已解封'); }
-    async function adultVerify() { const m = await promptText('标记已年龄验证', '核验方式（必填，如：证件核验 + 核验单号）', { inputValue: '' }); if (!m || !String(m).trim()) return; await act('adult_verify', { method: m }); ElMessage.success('已标记，该账号在白名单地区可看到成人作品'); }
-    async function adultUnverify() { await act('adult_unverify'); ElMessage.success('已撤销'); }
     async function resetpw() { await ElMessageBox.confirm('将生成一个新密码，该用户所有设备会被强制下线。', '重置密码', { type: 'warning' }); const j = await act('resetpw'); ElMessageBox.alert('新密码：<b class="mono">' + j.password + '</b><br>请通过客服渠道告知用户，并提醒其登录后修改。', '已重置', { dangerouslyUseHTMLString: true }); }
     async function logoutAll() { await act('logout'); ElMessage.success('已强制下线'); }
     async function note() { const v = await promptText('备注', '仅后台可见', { inputValue: det.value.user.note || '', inputValidator: null }); await act('note', { note: v }); }
     async function rename() { const v = await promptText('修改昵称', '新昵称', { inputValue: det.value.user.name || '' }); await act('rename', { name: v }); }
     async function email() { const v = await promptText('修改邮箱', '新邮箱（用户将用它登录）', { inputValue: det.value.user.email || '' }); await act('email', { email: v }); }
     onMounted(() => load());
-    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, adultVerify, adultUnverify, resetpw, logoutAll, note, rename, email, play, txN, txBusy, loadPlay, tabChanged, chRows, msfmt, dlTx, L, fmt, tagType, money, size, can };
+    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, resetpw, logoutAll, note, rename, email, play, txN, txBusy, loadPlay, tabChanged, chRows, msfmt, dlTx, L, fmt, tagType, money, size, can };
   },
   template: `<div class="panel">
     <div class="toolbar">
@@ -290,8 +288,6 @@ const Users = {
         <template v-if="can('users.write')">
           <el-button v-if="det.user.status!=='banned'" type="danger" plain @click="bd.show=true">封禁</el-button>
           <el-button v-else type="success" plain @click="unban">解封</el-button>
-          <el-button v-if="!det.user.adult_verified_at" @click="adultVerify">标记已年龄验证</el-button>
-          <el-button v-else type="warning" plain @click="adultUnverify">撤销年龄验证（{{ (det.user.adult_verified_by||'').slice(0,24) }}）</el-button>
           <el-button @click="resetpw" :disabled="!det.user.email">重置密码</el-button>
           <el-button @click="logoutAll">强制下线</el-button>
           <el-dropdown><el-button>更多 <el-icon><ArrowDown/></el-icon></el-button><template #dropdown><el-dropdown-menu><el-dropdown-item @click="rename">修改昵称</el-dropdown-item><el-dropdown-item @click="email">修改邮箱</el-dropdown-item><el-dropdown-item @click="note">编辑备注</el-dropdown-item></el-dropdown-menu></template></el-dropdown>
@@ -797,9 +793,6 @@ const Config = {
       <el-form-item label="每日免费领取上限"><el-input-number v-model="v.earn_cap" :min="0" /><span class="muted">　任务、广告等免费来源每人每天最多</span></el-form-item>
       <el-form-item label="首充双倍"><el-switch v-model="v.first_purchase_double" /></el-form-item>
       <el-form-item label="允许游客试玩"><el-switch v-model="v.guest_allowed" /><span class="muted">　关闭后必须登录才能进入（App Store 审核一般建议保留游客）</span></el-form-item></el-form></div>
-      <el-form-item label="成人露骨作品"><el-switch v-model="v.adult_enabled" /><span class="muted">　总开关。关闭时所有标了「成人露骨」的作品对所有人隐藏</span></el-form-item>
-      <el-form-item label="成人内容开放地区"><el-select v-model="v.adult_regions" multiple filterable allow-create default-first-option placeholder="* = 不限地区（测试）；正式：FR 或 US-CA，由法务确定" style="width:420px" /><span class="muted">　填 * = 所有地区都开放（测试阶段用）；不在名单里的地区看不到；名单为空 = 哪里都不开放</span></el-form-item>
-      <el-form-item label="允许用户自行确认年龄"><el-switch v-model="v.adult_self_verify" /><span class="muted">　测试用：用户打开成人作品时填出生日期、确认年满 18 岁即可观看。正式上线前请关掉，改用第三方年龄验证</span></el-form-item>
     <div class="panel"><h3>上传素材收费（钻石 / 个）</h3><el-form label-width="160px" :inline="true">
       <el-form-item label="音频"><el-input-number v-model="v.upload_price.audio" :min="0" /></el-form-item><el-form-item label="图片"><el-input-number v-model="v.upload_price.image" :min="0" /></el-form-item>
       <el-form-item label="视频"><el-input-number v-model="v.upload_price.video" :min="0" /></el-form-item><el-form-item label="小游戏"><el-input-number v-model="v.upload_price.game" :min="0" /></el-form-item>
@@ -930,7 +923,7 @@ const STU_TAX={
  world:{t:["Setting","世界"],max:2,items:[["contemp","Contemporary","都市",["Coworkers","Small Town","Apartment Life","Hospital","Radio","Broadway","Kitchen","Bakery","Jazz Club","Billionaire"]],["college","College","校园",["Campus","College Football","Military Academy","Roommates"]],
   ["sports","Sports Romance","体育",["Hockey","F1","Esports","Roller Derby","College Football"]],["fantasy","Romantasy & Paranormal","奇幻 · 超自然",["Romantasy","Fae","Vampires","Werewolves","Dragons","Ghosts","Castle Life"]],["mafia","Mafia & Crime","黑帮",["Mafia","Bratva","Secret Heir"]],["scifi","Sci-Fi","科幻",["Sci-Fi","Space Station","Androids"]]]}};
 const STU_LAYERS = [['world', '世界', 2], ['trope', '关系桥段', 4], ['him', '他是什么样的人', 2], ['vibe', '情绪', 2]];
-const STU_HEATS = [['fluff', '清水 · 不越界'], ['slow', '暧昧 · 有张力'], ['steamy', '微辣'], ['explicit', '成人露骨 · 需打开「成人露骨」']];
+const STU_HEATS = [['fluff', '清水 · 不越界'], ['slow', '暧昧 · 有张力'], ['steamy', '微辣']];
 /* 具体元素（职业、种族、运动……）是故事事实，不在口味页，只用于搜索 */
 const STU_FACTS = { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友', 'Campus': '校园', 'Billionaire': '亿万富翁', 'Secret Heir': '隐藏继承人', 'Coworkers': '同事', '单人': '单人' };
 const stuTaxTags = taste => { const out = new Set(); Object.entries(STU_TAX).forEach(([g, G]) => G.items.forEach(([k, , , tags]) => { if (((taste || {})[g] || []).includes(k)) tags.forEach(t => out.add(t)); })); return [...out]; };
@@ -1217,7 +1210,7 @@ const Studio = {
       <el-form label-width="110px">
         <el-form-item label="标题"><el-input v-model="sel.title" /></el-form-item>
         <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
-<el-form-item label="口味标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和用户第一次进 App 选口味（带照片那页）是同一套：选什么，就推给选了这些口味的用户；也用于搜索。</div><div v-for="L in STU_LAYERS" :key="L[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{L[1]}}<br><small>最多 {{L[2]}} 个</small></span><el-checkbox-group v-model="sel.config.taste[L[0]]" :max="L[2]" size="small"><el-checkbox-button v-for="it in STU_TAX[L[0]].items" :key="it[0]" :value="it[0]">{{it[2]}}</el-checkbox-button></el-checkbox-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">尺度</span><el-radio-group v-model="sel.config.heat" size="small"><el-radio-button v-for="h in STU_HEATS" :key="h[0]" :value="h[0]">{{h[1]}}</el-radio-button></el-radio-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">成人露骨</span><el-switch v-model="sel.config.adult" /><span class="muted" style="font-size:12px">打开后允许完整露骨描写；只对「后台已开启 + 地区在白名单 + 账号已做年龄验证」的用户可见，其他人在发现页看不到、也打不开</span></div><div style="display:flex;gap:8px;align-items:flex-start"><span class="muted" style="width:92px;flex:none;padding-top:4px">具体元素<br><small>可选 · 搜索用</small></span><el-checkbox-group v-model="sel.config.facts" size="small"><el-checkbox-button v-for="(zh,k) in STU_FACTS" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div></div></el-form-item>
+<el-form-item label="口味标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和用户第一次进 App 选口味（带照片那页）是同一套：选什么，就推给选了这些口味的用户；也用于搜索。</div><div v-for="L in STU_LAYERS" :key="L[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{L[1]}}<br><small>最多 {{L[2]}} 个</small></span><el-checkbox-group v-model="sel.config.taste[L[0]]" :max="L[2]" size="small"><el-checkbox-button v-for="it in STU_TAX[L[0]].items" :key="it[0]" :value="it[0]">{{it[2]}}</el-checkbox-button></el-checkbox-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">尺度</span><el-radio-group v-model="sel.config.heat" size="small"><el-radio-button v-for="h in STU_HEATS" :key="h[0]" :value="h[0]">{{h[1]}}</el-radio-button></el-radio-group></div><div style="display:flex;gap:8px;align-items:flex-start"><span class="muted" style="width:92px;flex:none;padding-top:4px">具体元素<br><small>可选 · 搜索用</small></span><el-checkbox-group v-model="sel.config.facts" size="small"><el-checkbox-button v-for="(zh,k) in STU_FACTS" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div></div></el-form-item>
         <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
         <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>
         <el-form-item label="玩家身份"><el-input v-model="sel.config.player" placeholder="不填 = 待定（AI 不会替你定）" /></el-form-item>

@@ -1,0 +1,23 @@
+{
+ "bundleVer": 1,
+ "scriptVer": 2,
+ "updated": "2026-10-31",
+ "count": 1,
+ "note": "每个包只含数据（script.md / bible.json / art.json / art/）；解析规则见《剧本标签清单》",
+ "bundles": [
+  {
+   "file": "w_scmvv3sk58b2935cc9b2.zip",
+   "url": "https://www.miru.plus/bundles/w_scmvv3sk58b2935cc9b2.zip",
+   "bytes": 14955,
+   "sha256": "e346f2cdd4782d91aa8fd3973bae2d2259a52c1f44e1103e520ed5e295b1ccdc"
+  }
+ ],
+ "mediaBundles": [
+  {
+   "file": "w_scmvuwd1eg792b553de7.zip",
+   "bytes": 18243687,
+   "sha256": "9771585c1e64e9846aaf44f8e6ae3054fbc5506962b292490a962a8b325d0c5b",
+   "delivery": "素材本体 17.4 MB，未进 git（素材已在 Vercel Blob）；需要时按 art.json 的槽位表从 Blob 逐个拉，或线下转发"
+  }
+ ]
+}

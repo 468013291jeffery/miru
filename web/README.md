@@ -108,6 +108,48 @@ curl "http://154.12.91.48/api/chapter?worldId=ice&chapter=1" | head -c 200
 `?lang=zh|en|ja|ko|es`，默认 `zh`。⚠️ `ja/ko/es` 有 8 章是短版（7–9 行，中文是 71–75 行）——
 那是剧本数据本身的状态，接口**照实下发**并在 `chapter.lang` 里自报，不会偷换成英文。
 
+### 内容资产：图和视频**不在接口里**，在一条约定路径上
+
+剧本正文走接口（`/api/works` / `/api/chapter`），但**图、立绘、道具、短片不在接口里** —— 它们是静态文件，靠一条约定路径对应。
+
+一个剧的"键"是同一个 **`workId`**（比如 `w_scmvuwd1eg792b553de7`），三样东西都用它：
+
+| 拿什么 | 请求 | 返回 |
+|---|---|---|
+| 剧本 | `GET /api/works?id=<workId>` | `pack.script`（MIRU DSL 文本） |
+| 槽位表 | `GET /art/official/<workId>.json` | `{ "bg_01": "art/official/<workId>/v1/bg_01.jpg", … }` |
+| 图 / 视频本体 | `GET` 上面那个相对路径 | `image/jpeg` / `video/mp4` |
+
+**真实样例**（《丝绒谎言》18 章优化版，2026-10-30 实测）：
+
+```bash
+curl -s https://www.miru.plus/art/official/w_scmvuwd1eg792b553de7.json | head -3
+# {
+#  "bg_01": "art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+#  "bg_02": "art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+
+curl -s -o /dev/null -w "%{http_code} %{size_download} %{content_type}\n" \
+  https://www.miru.plus/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg
+# 200 264318 image/jpeg
+```
+
+**槽位名就是剧本里写的那个**（剧本写 `⟦BG|bg_03⟧`，槽位就叫 `bg_03`）。这一部有 62 个：
+
+```
+bg×20 · portrait×9 · prop×20 · hl×10 · cover×1 · poster×1 · vid×1
+（60 个文件，19.1 MB；vid_01.mp4 = 9.96 秒短片，5.5 MB）
+```
+
+**三条要注意的**：
+
+1. **相对路径相对于站点根**，不是相对当前页面 —— 在 `https://www.miru.plus/` 的任何页面上，`art/official/…` 都拼成 `https://www.miru.plus/art/official/…`。
+2. **缺槽位 = 那一格没图**，不是错误。槽位表里没有的键直接跳过：不要报错、不要停顿，剧本不会因为没图播不下去。
+3. **别指望 `/api/works` 把图一起带上** —— `art/official/<id>.json` 是按 id **动态命名**的，Vercel 构建时的文件追踪追不到这类路径（要它带上，就得把整个 `art/` 打进函数包，几十 MB）。所以这一层只能是静态约定。
+
+**为什么不是 `/api/assets`**：那是**用户上传的素材**（社区 UGC），和官方剧的图是两件事；它现在返回 `{"assets":[]}` 是"还没有人上传"，不是坏了。
+
+---
+
 ## 四、一条底线
 
 **改了别人的地盘（`api/` / `source/` / `build.py` / `index.html`）⇒ 先说一声，再动手。**
