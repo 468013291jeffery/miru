@@ -951,20 +951,19 @@ async function sceneStill(th,m,o){const W0=540,H0=960,cv=document.createElement(
  const ls=wrapLines(x,m.txt,W0-70).slice(0,4);let y=H0-60-(ls.length-1)*36;x.fillStyle="#fff";ls.forEach(l=>{x.fillText(l,W0/2,y);y+=36});
  x.shadowBlur=0;x.font="600 15px -apple-system, sans-serif";x.fillStyle="rgba(255,255,255,.7)";x.fillText(ch(m.who).n.toUpperCase()+(th.wid?"  ·  "+Lz(wd(th.wid).title||wd(th.wid).n||""):""),W0/2,H0-60-(ls.length-1)*36-44);
  x.textAlign="left";x.font="bold 13px monospace";x.fillStyle="rgba(255,255,255,.55)";x.fillText("MIRU",18,28);return cv}
-function imgSheet(th,m){IMG.th=th;IMG.m=m;IMG.list=imgSources(th,m);IMG.n=0;IMG.cv=null;
- IMG.o=null;sheet('<h2>'+t("msg.img")+'</h2><p class="xs faint" style="margin-top:4px">'+t("img.sub")+'</p><div id="imgPrev" class="imgprev"><div class="spin"></div></div>'+
- '<div class="row" style="margin-top:12px"><button class="btn btn-g" data-imgnext="1">↻ '+t("img.next")+'</button><button class="btn btn-p grow" data-imgkeep="1">'+t("img.keep")+'</button></div>'+
- (AIG.mcp?'<button class="btn btn-p" style="width:100%;margin-top:8px" data-aigen="1">✨ '+t("ai.gen")+'</button><p id="aiSt" class="xs faint" style="margin-top:6px;text-align:center;min-height:14px"></p>':"")+
- '<div class="row" style="margin-top:8px"><button class="btn btn-g grow" data-imgshare="1">📤 '+t("shr.h")+'</button><button class="btn btn-g grow" data-imgcopy="1">'+t("img.copy")+'</button></div><div id="imgPr"></div>');IMG.tok=(IMG.tok||0)+1;IMG.busy=false;imgDraw();if(AIG.mcp)aiGenerate(1)}
-async function imgDraw(){const L=IMG.list,pv=$("#imgPrev");if(!pv)return;if(IMG.o&&IMG.o.ai&&IMG.busy)return;pv.innerHTML='<div class="spin"></div>';IMG.cv=null;IMG.url=null;
- for(let k=0;k<L.length;k++){const o=L[(IMG.n+k)%L.length];try{const cv=await sceneStill(IMG.th,IMG.m,o);if(IMG.o&&IMG.o.ai)return;let url=null;try{url=cv.toDataURL("image/jpeg",.8)}catch(_){}
-   IMG.o=o;IMG.cv=cv;IMG.url=url;IMG.n=(IMG.n+k)%L.length;
-   if(url)pv.innerHTML='<img src="'+url+'" alt="">';else{pv.innerHTML="";cv.style.width="100%";cv.style.display="block";pv.appendChild(cv)}return}catch(_){}}
- pv.innerHTML='<p class="xs faint" style="padding:30px">'+t("img.fail")+'</p>'}
+function imgSheet(th,m){
+ IMG.tok=(IMG.tok||0)+1;IMG.th=th;IMG.m=m;IMG.list=[];IMG.n=0;IMG.cv=null;IMG.url=null;IMG.o=null;IMG.busy=false;
+ const zh=CL()==="zh";
+ sheet('<h2>'+t("msg.img")+'</h2><p class="xs faint" style="margin-top:4px">'+(zh?"根据当前剧情调用千问图像模型，生成全新的写实场景图片。":"Generate a new photoreal scene from this moment with Qwen.")+'</p><div id="imgPrev" class="imgprev"><div class="spin"></div></div>'+
+ '<div class="row" style="margin-top:12px"><button class="btn btn-g" data-imgnext="1">↻ '+t("img.next")+'</button><button class="btn btn-p grow" data-imgkeep="1" disabled>'+t("img.keep")+'</button></div>'+
+ '<button class="btn btn-p" style="width:100%;margin-top:8px" data-aigen="1">✨ '+t("ai.gen")+'</button><p id="aiSt" role="status" aria-live="polite" class="xs faint" style="margin-top:6px;text-align:center;min-height:14px"></p>'+
+ '<div class="row" style="margin-top:8px"><button class="btn btn-g grow" data-imgshare="1" disabled>📤 '+t("shr.h")+'</button><button class="btn btn-g grow" data-imgcopy="1">'+t("img.copy")+'</button></div><div id="imgPr"></div>');
+ aiGenerate(1);
+}
 document.addEventListener("click",e=>{
- if(e.target.closest("[data-imgnext]")){IMG.tok++;IMG.busy=false;IMG.o=null;IMG.n=(IMG.n+1)%Math.max(1,(IMG.list||[]).length);imgDraw();return}
- if(e.target.closest("[data-imgkeep]")){if(!IMG.cv){toast(t("img.wait"));return}const th=IMG.th,m=IMG.m,aid="a"+Date.now();
-  const it={id:aid,cid:m.who,at:Date.now()};if(IMG.url)it.src=IMG.url;else if(IMG.o.v){it.v=IMG.o.v;it.tm=IMG.o.tm;it.cap=m.txt}else it.src=IMG.o.im;
+ if(e.target.closest("[data-imgnext]")){aiGenerate();return}
+ if(e.target.closest("[data-imgkeep]")){if(IMG.busy||!IMG.o||!IMG.o.ai||!IMG.url){toast(t("img.wait"));return}const th=IMG.th,m=IMG.m,aid="a"+Date.now();
+  const it={id:aid,cid:m.who,src:IMG.url,ai:1,provider:"qwen",prompt:IMG.prompt,at:Date.now()};
   S.album.unshift(it);if(S.album.length>12)S.album.length=12;closeSheet();appendMsg(th,{who:"me",k:"img",aid,at:Date.now()});toast(t("snap.saved"));return}
  if(e.target.closest("[data-imgcopy]")&&IMG.m){const p=imgPrompt(IMG.th,IMG.m),box=$("#imgPr");
   if(box){box.innerHTML='<textarea class="imgpr" readonly>'+esc(p)+'</textarea><p class="xs faint" style="margin-top:6px;line-height:1.5">'+t("img.note")+'</p>';const ta=box.querySelector("textarea");ta.focus();ta.select()}
@@ -986,7 +985,7 @@ function aiPromptBase(th,m){const c=ch(m.who),w=th.wid?wd(th.wid):null,pose=pose
  const place=isAscii(th.status.place)?th.status.place:(w&&w.status&&w.status.place&&w.status.place.en)||"a dimly lit room";
  const time=w&&w.status&&w.status.time&&w.status.time.en||"";
  return {c,looks:looks.replace(/scar[^,.]*[,.]?/gi,""),P,place,time,line:m.txt}}
-function aiTemplate(b){return ("Cinematic vertical film still from a romance drama. "+(fem(b.c)?"A beautiful woman":"A handsome man")+", "+b.c.age+" years old, "+b.looks+" "+b.P+". Setting: "+b.place+(b.time?", "+b.time.split("·")[0].trim():"")+". Moody practical lighting, 35mm lens, f/1.8, shallow depth of field, soft film grain, realistic skin texture. Adult, fully clothed. No text, no letters, no watermark.").replace(/\s+/g," ")}
+function aiTemplate(b){return ("Cinematic vertical film still from a romance drama. "+(fem(b.c)?"A beautiful woman":"A handsome man")+", "+b.c.age+" years old, "+b.looks+" "+b.P+". Setting: "+b.place+(b.time?", "+b.time.split("·")[0].trim():"")+". Moody practical lighting, 35mm lens, f/1.8, shallow depth of field, soft film grain, realistic skin texture. Exact story moment: "+String(b.line||"").slice(0,500)+". Adult, fully clothed. No text, no letters, no watermark.").replace(/\s+/g," ")}
 async function aiPrompt(th,m){const b=aiPromptBase(th,m),base=aiTemplate(b);
  if(!SAMPLE)return base;
  try{const r=await SAMPLE("Write ONE English prompt (max 70 words) for the FLUX text-to-image model: a photoreal cinematic vertical still of this exact moment in a romance drama. Keep the character's look exactly; show the body language and setting; no dialogue, no text in image, adult, fully clothed. Output only the prompt.\n\nCharacter: "+b.c.n+", "+b.c.age+", "+(fem(b.c)?"woman":"man")+". Look: "+b.looks+"\nBody language: "+b.P+"\nSetting: "+b.place+" "+b.time+"\nThe line just spoken (may be Chinese): "+b.line+"\nBase prompt to improve: "+base,{modelTier:"quick"});
@@ -1025,23 +1024,53 @@ async function aiSpeak(id,text,onDone,onErr,onSrc){
   AIVOICE.cache[k]=src;if(onSrc)onSrc(src);stopVoice();const a=new Audio(src);AUD_CUR=a;if(onDone)a.onended=onDone;a.play().catch(()=>{});return true}
  catch(e){if(onErr)onErr(aiErrMsg(e,"voice"));return false}
  finally{AIVOICE.busy=false}}
-async function aiGenerate(auto){if(!AIG.mcp||IMG.busy)return;const d=today();S.imgDay=S.imgDay&&S.imgDay.d===d?S.imgDay:{d,n:0};
- if(S.imgDay.n>=(S.plus?10:1)){if(auto){const st=$("#aiSt");if(st)st.innerHTML=t("pay.imgFree");return}if(!spend(PRICES.img,"img"))return}else{S.imgDay.n++;save()}IMG.busy=true;const th=IMG.th,m=IMG.m,pv=$("#imgPrev"),st=$("#aiSt"),tk=IMG.tok=(IMG.tok||0)+1;
- const btn=$("[data-aigen]");if(btn)btn.disabled=true;if(st)st.textContent=t("ai.writing");if(pv)pv.classList.add("gen");
- try{let res=null,prompt="";const ref=aiRefUrl(m.who);
-  if(ref){try{prompt=await aiKontextPrompt(th,m);if(st&&tk===IMG.tok)st.textContent=t("ai.painting");
-    res=await AIG.mcp.callTool(AIG.srv,AIG.edit,{input_image:ref,prompt,steps:20,guidance_scale:2.5,randomize_seed:true},{cache:false})}
-   catch(e1){const k=e1&&e1.code;if(k==="server_not_connected"||k==="needs_reauth"||k==="blocked_by_policy")throw e1;res=null}}
-  if(!res||!aiImgFrom(res)){prompt=await aiPrompt(th,m);if(st&&tk===IMG.tok)st.textContent=t("ai.painting");
-   res=await AIG.mcp.callTool(AIG.srv,AIG.tool,{prompt,width:576,height:1024,num_inference_steps:24,randomize_seed:true},{cache:false})}
-  if(tk!==IMG.tok||IMG.m!==m)return;const src=aiImgFrom(res);if(!src)throw{code:"tool_error",message:"no image"};
-  const cv=await sceneStill(th,m,{im:src});let url=null;try{url=cv.toDataURL("image/jpeg",.78)}catch(_){}
-  IMG.o={im:src,ai:1};IMG.cv=cv;IMG.url=url;IMG.prompt=prompt;
-  if(pv){pv.innerHTML=url?'<img src="'+url+'" alt="">':"";if(!url){cv.style.width="100%";pv.appendChild(cv)}}
-  if(st)st.innerHTML='<span class="aibadge">✨ AI</span> '+t("ai.done");
-  if(typeof taskClaimDay==="function"&&taskClaimDay("genimg",1))setTimeout(()=>toast(t("task.gotGenimg")),300)}
- catch(e){if(st&&tk===IMG.tok)st.textContent=aiErrMsg(e)}
- finally{IMG.busy=false;if(pv)pv.classList.remove("gen");const b2=$("[data-aigen]");if(b2){b2.disabled=false;b2.textContent="✨ "+t("ai.again")}}}
+async function aiGenerate(auto){
+ if(IMG.busy)return;
+ if(typeof qimgOn==="function")qimgOn();
+ const zh=CL()==="zh",pv=$("#imgPrev"),st=$("#aiSt");
+ if(!AIG.mcp){if(pv)pv.innerHTML='<p class="xs faint" style="padding:30px">'+(zh?"千问生图服务未连接，请稍后重试。":"Qwen image generation is unavailable. Please retry.")+'</p>';return}
+ const d=today();S.imgDay=S.imgDay&&S.imgDay.d===d?S.imgDay:{d,n:0};
+ let paid=false;
+ if(S.imgDay.n>=(S.plus?10:1)){
+  if(auto){if(pv)pv.innerHTML='<p class="xs faint" style="padding:30px">'+t("pay.imgFree")+'</p>';if(st)st.textContent=t("pay.imgFree");return}
+  if(!spend(PRICES.img,"img"))return;paid=true;
+ }else{S.imgDay.n++;save()}
+ IMG.busy=true;IMG.o=null;IMG.cv=null;IMG.url=null;
+ const th=IMG.th,m=IMG.m,tk=IMG.tok=(IMG.tok||0)+1;
+ const controls=()=>["[data-aigen]","[data-imgnext]","[data-imgkeep]","[data-imgshare]"].map(s=>$(s)).filter(Boolean);
+ controls().forEach(b=>b.disabled=true);
+ if(st)st.textContent=zh?"正在调用千问图像模型，可能需要 1–2 分钟…":"Generating with Qwen; this may take 1–2 minutes…";
+ if(pv){pv.classList.add("gen");pv.innerHTML='<div class="spin"></div>'}
+ let success=false;
+ try{
+  const ref=aiRefUrl(m.who);
+  const prompt=(ref?aiKontextTemplate(aiPromptBase(th,m)):aiTemplate(aiPromptBase(th,m)))+
+   " Depict this exact story moment: "+String(m.txt||"").slice(0,600)+". No subtitles, no text, no watermark.";
+  const args=ref?{input_image:ref,prompt,randomize_seed:true}:{prompt,width:576,height:1024,randomize_seed:true};
+  const res=await AIG.mcp.callTool(AIG.srv,ref?AIG.edit:AIG.tool,args,{cache:false});
+  const src=aiImgFrom(res);if(!src)throw new Error("No image returned by model");
+  const im=await loadImg(src);
+  if(!im||!(im.naturalWidth||im.width))throw new Error("Generated image could not be loaded");
+  success=true;
+  if(tk!==IMG.tok||IMG.m!==m)return;
+  IMG.o={im:src,ai:1};IMG.cv=im;IMG.url=src;IMG.prompt=prompt;
+  if(pv)pv.innerHTML='<img src="'+esc(src)+'" alt="'+(zh?"千问生成的当前剧情场景":"Qwen generated scene")+'">';
+  if(st)st.textContent=zh?"✓ 千问 AI 已生成全新场景图片":"✓ New scene generated by Qwen";
+  if(typeof taskClaimDay==="function"&&taskClaimDay("genimg",1))setTimeout(()=>toast(t("task.gotGenimg")),300);
+ }catch(e){
+  if(tk===IMG.tok&&IMG.m===m){
+   if(pv)pv.innerHTML='<p class="xs faint" style="padding:30px">'+(zh?"生成失败，请重试。":"Generation failed. Please retry.")+'</p>';
+   if(st)st.textContent=(zh?"千问生图失败，未生成图片；本次额度已退回。":"Qwen generation failed; allowance refunded.")+" "+String(e&&e.message||"").slice(0,160);
+  }
+ }finally{
+  if(!success){if(paid)S.keys+=PRICES.img;else if(S.imgDay&&S.imgDay.d===d)S.imgDay.n=Math.max(0,S.imgDay.n-1);save()}
+  if(tk===IMG.tok&&IMG.m===m){
+   IMG.busy=false;if(pv)pv.classList.remove("gen");
+   controls().forEach(b=>b.disabled=(!IMG.url&&(b.hasAttribute("data-imgkeep")||b.hasAttribute("data-imgshare"))));
+   const btn=$("[data-aigen]");if(btn)btn.textContent="✨ "+t("ai.again");
+  }
+ }
+}
 document.addEventListener("click",e=>{if(e.target.closest("[data-aigen]")){aiGenerate();return}});
 async function snapMoment(th,m){try{const cv=await frame(m.who,hash(m.txt)%4,480),x=cv.getContext("2d");
  x.fillStyle="rgba(0,0,0,.55)";x.fillRect(0,cv.height-86,cv.width,86);x.fillStyle="#fff";x.font="17px Georgia, serif";x.textAlign="left";
