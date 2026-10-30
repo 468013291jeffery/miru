@@ -81,7 +81,7 @@ curl "http://154.12.91.48/api/chapter?worldId=ice&chapter=1" | head -c 200
 
 看到 JSON 就是通了。看到 **503** = 剧本文件不在函数包里（那句响应会写清它试过哪两个路径）。
 
-### 全部 14 个端点的实测状态（同一天）
+### 全部 13 个端点的实测状态（同一天）
 
 | 类别 | 端点 | 实测 |
 |---|---|---|
@@ -94,13 +94,14 @@ curl "http://154.12.91.48/api/chapter?worldId=ice&chapter=1" | head -c 200
 | 要参数 | `i18n` · `translate` | 400 |
 | | `tts` | 400 |
 | 要 POST | `longcat` | 405 |
-| ⚠️ 有问题 | `transcript` | **404 —— 文件在 `api/` 里但路由不通** |
 
-### 三个已经知道的问题（别当成 bug 来找我，先看这条）
+> **`api/` 下划线开头的文件不是端点**（`_lib` / `_rules` / `_plan` / `_dslqa` / `_ledger` / `_transcript`
+> —— 它们是内部库）。所以**没有** `/api/transcript` 这个路径，访问它是 404，属正常。
+
+### 两个已经知道的问题（别当成 bug 来找我，先看这条）
 
 1. **`assets` 返回空数组** —— 素材还没上传到测试服，所以列表是空的。不是接口坏了。
 2. **`health` 里 `ai: false`** —— AI 密钥没配。`longcat` 要能真的生成，得先在 `/etc/miru/miru.env` 填 `DEEPSEEK_API_KEY` 之类。
-3. **`transcript` 404** —— 这个端点的路由有问题，我在查。
 
 ### 中文以外的语言
 
