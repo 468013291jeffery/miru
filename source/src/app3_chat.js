@@ -180,6 +180,8 @@ function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)retur
   fxRaf=requestAnimationFrame(step)};step()}
 function who(m,th){const c=ch(m.who);return c?first(c.n):""}
 function msgHTML(m,i,th){
+ // Retired reply-counter portrait cards, including ones unlocked in old saves.
+ if(m&&m.k==="pic")return "";
  if(m.k==="chap"){const w=wd(th.wid);return '<div class="m-chap"><span class="eyebrow">'+t("pk.chapter",{n:m.n})+' / '+PCN(w)+'</span><h3>'+esc(m.title||"")+'</h3><p>🎯 '+esc(m.txt||"")+'</p></div>'}
  if(m.k==="dec")return '<div class="m-dec"><span>'+t("pk.decided")+' · '+m.c+'</span><b>'+esc(m.txt)+'</b></div>';
  if(m.k==="end"){const w=wd(th.wid),e=w&&w.pack&&w.pack.endings[m.e];if(!e)return "";const ln=e.line;
@@ -196,7 +198,7 @@ function msgHTML(m,i,th){
   return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
  if(m.k==="react")return '<div class="m-react" style="margin:6px 0 10px;padding-left:10px;border-left:2px solid var(--line);opacity:.72;font-size:13px">'+esc(m.txt)+'</div>';
  if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+(m.btn&&m.hold&&m.act?'<button class="lnk xs faint" style="display:block;margin:8px auto 0" data-cardlater="'+i+'">'+(CL()==="zh"?"先不看，继续剧情 ›":"Not now — continue ›")+'</button>':"")+'</div>';
- if(m.k==="pic")return '<div class="m-pic'+(m.locked?" lk":"")+'"><img src="'+esc(m.src)+'" alt="">'+(m.locked?'<button class="pk" data-unpic="'+i+'"><b>📷 '+t("pay.pic",{n:who(m,th)})+'</b><span>💎 1 · '+t("pay.unlock")+'</span></button>':'')+'</div>';
+
  if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub bubble lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
  if(m.k==="dir")return '<div class="m-dir">🎬 '+esc(m.txt)+'</div>';

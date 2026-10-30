@@ -178,8 +178,9 @@ ask=function(prompt,opts){
  return dialogueProgressAsk.call(this,prompt,opts);
 };
 
-// Hide only legacy counter-generated portrait locks; keep actual shared media.
+// Hide all legacy counter-generated portraits, locked or already unlocked.
+// Actual scene/generated photos use img + album records, not the retired pic kind.
 if(typeof MSGKIND!=="undefined")MSGKIND.post("app12:legacy-photo",function(html,m){
- if(m&&m.k==="pic"&&m.locked&&m.src===artSrc(m.who))return "";
+ if(m&&m.k==="pic")return "";
  return html;
 });

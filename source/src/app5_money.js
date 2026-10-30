@@ -21,13 +21,12 @@ function spend(n,why){if(S.plus&&PLUS_COVERS.includes(why))return true;if(!n)ret
  if(S.keys<n){paySheet(why);return false}S.keys-=n;save();toast(t("pay.spent",{n,left:S.keys}));const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys+(S.plus?" · MIRU+":"");return true}
 /* chat cliffhangers: only inside stories, at most one every 25 replies, never before reply 12 — and the first one each day is free */
 /* retired: no more locked lines or blurred photos inside a story — the reader always gets the whole reply they were promised */
-function payHooks(th,m){return;if(S.plus||!th.wid)return;th.aiN=(th.aiN||0)+1;
- if(th.aiN>=12&&th.aiN-(th.lastLock||0)>=25&&m.k==="say"&&String(m.txt||"").length>24){m.locked=true;th.lastLock=th.aiN}
- if(th.aiN%15===9){const cid=m.who;setTimeout(()=>{th.msgs.push({who:cid,k:"pic",src:artSrc(cid),locked:true,at:Date.now()});save();if(curT===th.id)renderChat()},900)}}
+function payHooks(th,m){return}
 function freeToday(k){const d=today();S.freeUse=S.freeUse||{};if(S.freeUse[k]!==d){S.freeUse[k]=d;save();return true}return false}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-unmsg]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.unmsg];if(!m)return;if(freeToday("line")){toast(t("pay.freeLine"))}else if(!spend(PRICES.line,"line"))return;m.locked=false;save();renderChat();speak(m.txt,m.who);return}
- if(x=e.target.closest("[data-unpic]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.unpic];if(!m)return;if(freeToday("pic")){toast(t("pay.freePic"))}else if(!spend(PRICES.pic,"pic"))return;m.locked=false;save();renderChat();return}
+ // Stale portrait buttons must never consume diamonds or the daily free photo.
+ if(e.target.closest("[data-unpic]")){toast(CL()==="zh"?"这张旧立绘卡已停用，不会扣费":"This old portrait card is retired; no charge");renderChat();return}
  if(e.target.closest("[data-paysheet]")){paySheet();return}
  if(x=e.target.closest("[data-plan]")){S.planSel=x.dataset.plan;$$("[data-plan]").forEach(b=>b.classList.toggle("on",b===x));return}
  if(e.target.closest("[data-buyplus]")){S.plus=true;S.plusPlan=S.planSel||"year";S.plusSince=Date.now();S.keys+=20;save();closeSheet();toast(t("pay.plusOn"));refreshAfterPay();return}
