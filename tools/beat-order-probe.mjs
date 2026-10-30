@@ -37,12 +37,17 @@ let rows;
 try { rows = JSON.parse(m[1]) } catch (e) { console.log('JSON 解析失败: ' + e.message); process.exit(2) }
 const get = (k) => { const x = rows.find(s => s.startsWith(k + ': ')); return x ? x.slice(k.length + 2) : null };
 
-if (JSON_ONLY) { console.log(JSON.stringify(Object.fromEntries(rows.map(s => s.split(/: (.*)/s))))); process.exit(get('verdict') === 'PASS' ? 0 : 1) }
+/* 2026-10-30：判「过没过」看**前缀**，不看全等 —— mode=open 的判决是
+   `PASS（我演的角色没有先开口）` / `PASS：别人先开口`，带括号或冒号后缀；
+   原来全等比较 ⇒ 明明是 PASS 也 exit 1（接进 check-all 就会永远红）。 */
+const isPass = (v) => typeof v === 'string' && v.indexOf('PASS') === 0;
+
+if (JSON_ONLY) { console.log(JSON.stringify(Object.fromEntries(rows.map(s => s.split(/: (.*)/s))))); process.exit(isPass(get('verdict')) ? 0 : 1) }
 
 console.log('=== 谁先说（喂进去的第一句是「我扮演的角色」）===');
 console.log('  我扮演的角色 = ' + get('pk.as'));
 console.log('  渲染顺序     = ' + get('rows'));
 console.log('  第一条 self 的位置 = ' + get('firstSelf') + ' · 第一条 other 的位置 = ' + get('firstOther'));
 const v = get('verdict');
-console.log('\n' + (v === 'PASS' ? '✓ PASS：别人先说' : v === 'FAIL' ? '✗ FAIL：还是我扮演的角色先说' : '✗ 读数不全：' + JSON.stringify(rows)));
-process.exit(v === 'PASS' ? 0 : 1);
+console.log('\n' + (isPass(v) ? '✓ ' + v : (v || '').indexOf('FAIL') === 0 ? '✗ ' + v : '✗ 读数不全：' + JSON.stringify(rows)));
+process.exit(isPass(v) ? 0 : 1);

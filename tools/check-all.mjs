@@ -66,6 +66,12 @@ const suites = [
   /* 2026-10-30：进故事「有哪几个视角」—— Ann 报「只有导演视角」那天，**没有任何闸看这个面**。
      它验的是「三路永远是三路」（补齐 + 提示 + 负对照 + 界面按钮数），不是某部剧的数据。 */
   ['entry-modes-probe.mjs', ['tools/entry-modes-probe.mjs'], true],
+  /* 2026-10-30：**谁先开口**，第一次能在渲染层判红判绿。
+     用 ice#1 / 扮演 mason：37 部里只有 2 部开场先轮到玩家（crimson / heir），ice 不是其中之一。
+     它看的是用户屏幕上真出现的东西（`narr,narr,narr,other` vs `…,self,other`），
+     不是数据层推断 —— 10-29 那次「数据层全绿」其实只做了一半（只避开 think，没避开 say）。
+     探针自己会点「下一句」（默认是「点一下才继续」），否则它永远停在第 3 条。 */
+  ['beat-order-probe.mjs', ['tools/beat-order-probe.mjs', '--mode=open', '--pack=ice', '--as=mason'], true],
   ['prompt-blocks.mjs', ['tools/prompt-blocks.mjs'], true],
   /* 2026-10-27：语音探针**暂不挂这里** —— 它需要一个跑着 tools/serve.mjs 的本地服务（8131），
      而全量环境不保证有；硬挂会把整套拖红。用法：先起服务，再 node tools/voice-probe.mjs。
