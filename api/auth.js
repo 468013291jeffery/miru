@@ -52,6 +52,16 @@ module.exports = L.wrap(async (req, res) => {
   }
   const b = L.jsonBody(req), op = b.op;
 
+  if (op === 'adult_confirm') {
+    const cfg = await L.config(); if (cfg.adult_enabled !== true || cfg.adult_self_verify !== true) return L.bad(res, 'self confirmation is off', 403);
+    const u = await L.needActive(req, res); if (!u) return;
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(b.birthDate || '')); if (!m) return L.bad(res, 'birthDate YYYY-MM-DD required');
+    const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])), t = new Date();
+    let age = t.getUTCFullYear() - d.getUTCFullYear(); if (t.getUTCMonth() < d.getUTCMonth() || (t.getUTCMonth() === d.getUTCMonth() && t.getUTCDate() < d.getUTCDate())) age--;
+    if (!(+m[1] > 1900 && age >= 18 && age < 120)) return L.bad(res, 'must be 18 or older', 403);
+    await sql('UPDATE users SET adult_verified_at=now(), adult_verified_by=$2 WHERE id=$1', [u.uid, 'self · ' + m[0] + ' · ' + (L.region(req).code || '?')]);
+    return L.send(res, 200, { ok: true });
+  }
   if (op === 'guest') {
     const cfg = await L.config(); if (cfg.guest_allowed === false) return L.bad(res, 'please sign in', 403);
     const { user, gems } = await newUser(sql, { name: String(b.name || '').slice(0, 40) || null, lang: String(b.lang || '').slice(0, 5) || null, platform: String(b.platform || '').slice(0, 20) || null });

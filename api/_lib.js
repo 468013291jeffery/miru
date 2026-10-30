@@ -261,6 +261,8 @@ const CONFIG_DEFAULTS = {
   // 成人露骨作品门槛（2026-10-30）：总开关默认关；地区白名单默认空 = 哪里都不开放。
   // 白名单写国家码（"FR"）或 国家-州（"US-CA"），由法务确定后在后台「配置」里填。
   adult_enabled: false, adult_regions: [],
+  // 测试期：名单写 "*" = 不限地区；adult_self_verify=true = 用户自己确认年满 18 岁即可（正式上线前换成第三方核验）
+  adult_self_verify: false,
   // 容量/超时类（原来写死在各自文件里，挪进来才能不改代码就调）
   state_max_kb: 900, max_pack_kb: 1500, first_token_ms: 22000,
   skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
@@ -447,15 +449,20 @@ function region(req) {
   const h = req.headers || {}; const c = String(h['x-vercel-ip-country'] || '').toUpperCase(); const r = String(h['x-vercel-ip-country-region'] || '').toUpperCase();
   return { country: c, code: c && r ? c + '-' + r : c };
 }
+function adultRegionOk(req, cfg) {
+  if (!cfg || cfg.adult_enabled !== true) return false;
+  const reg = region(req), list = (Array.isArray(cfg.adult_regions) ? cfg.adult_regions : []).map(x => String(x).toUpperCase().trim()).filter(Boolean);
+  if (list.includes('*')) return true;
+  return !!reg.country && (list.includes(reg.code) || list.includes(reg.country));
+}
 async function adultAccess(req, cfg) {
   cfg = cfg || await config();
   if (cfg.adult_enabled !== true) return { ok: false, why: 'disabled' };
-  const reg = region(req), list = (Array.isArray(cfg.adult_regions) ? cfg.adult_regions : []).map(x => String(x).toUpperCase().trim()).filter(Boolean);
-  if (!reg.country || !(list.includes(reg.code) || list.includes(reg.country))) return { ok: false, why: 'region', region: reg.code || null };
+  if (!adultRegionOk(req, cfg)) return { ok: false, why: 'region', region: region(req).code || null };
   const u = who(req); if (!u) return { ok: false, why: 'login' };
   const sql = await db(); const r = await sql('SELECT adult_verified_at FROM users WHERE id=$1', [u.uid]);
   if (!r[0] || !r[0].adult_verified_at) return { ok: false, why: 'verify' };
   return { ok: true };
 }
 const isAdultWork = w => !!(w && w.pack && w.pack.meta && w.pack.meta.adult === true);
-module.exports = { region, adultAccess, isAdultWork, needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
+module.exports = { region, adultAccess, adultRegionOk, isAdultWork, needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
