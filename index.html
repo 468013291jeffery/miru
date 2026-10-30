@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="ca2b5a086f3b 2026-10-30T20:26Z";
+window.MIRU_BUILD="9b9cf78018e0 2026-10-30T20:32Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -5003,6 +5003,8 @@ function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)retur
   fxRaf=requestAnimationFrame(step)};step()}
 function who(m,th){const c=ch(m.who);return c?first(c.n):""}
 function msgHTML(m,i,th){
+ // Retired reply-counter portrait cards, including ones unlocked in old saves.
+ if(m&&m.k==="pic")return "";
  if(m.k==="chap"){const w=wd(th.wid);return '<div class="m-chap"><span class="eyebrow">'+t("pk.chapter",{n:m.n})+' / '+PCN(w)+'</span><h3>'+esc(m.title||"")+'</h3><p>🎯 '+esc(m.txt||"")+'</p></div>'}
  if(m.k==="dec")return '<div class="m-dec"><span>'+t("pk.decided")+' · '+m.c+'</span><b>'+esc(m.txt)+'</b></div>';
  if(m.k==="end"){const w=wd(th.wid),e=w&&w.pack&&w.pack.endings[m.e];if(!e)return "";const ln=e.line;
@@ -5019,7 +5021,7 @@ function msgHTML(m,i,th){
   return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
  if(m.k==="react")return '<div class="m-react" style="margin:6px 0 10px;padding-left:10px;border-left:2px solid var(--line);opacity:.72;font-size:13px">'+esc(m.txt)+'</div>';
  if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+(m.btn&&m.hold&&m.act?'<button class="lnk xs faint" style="display:block;margin:8px auto 0" data-cardlater="'+i+'">'+(CL()==="zh"?"先不看，继续剧情 ›":"Not now — continue ›")+'</button>':"")+'</div>';
- if(m.k==="pic")return '<div class="m-pic'+(m.locked?" lk":"")+'"><img src="'+esc(m.src)+'" alt="">'+(m.locked?'<button class="pk" data-unpic="'+i+'"><b>📷 '+t("pay.pic",{n:who(m,th)})+'</b><span>💎 1 · '+t("pay.unlock")+'</span></button>':'')+'</div>';
+
  if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub bubble lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
  if(m.k==="dir")return '<div class="m-dir">🎬 '+esc(m.txt)+'</div>';
@@ -6628,13 +6630,12 @@ function spend(n,why){if(S.plus&&PLUS_COVERS.includes(why))return true;if(!n)ret
  if(S.keys<n){paySheet(why);return false}S.keys-=n;save();toast(t("pay.spent",{n,left:S.keys}));const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys+(S.plus?" · MIRU+":"");return true}
 /* chat cliffhangers: only inside stories, at most one every 25 replies, never before reply 12 — and the first one each day is free */
 /* retired: no more locked lines or blurred photos inside a story — the reader always gets the whole reply they were promised */
-function payHooks(th,m){return;if(S.plus||!th.wid)return;th.aiN=(th.aiN||0)+1;
- if(th.aiN>=12&&th.aiN-(th.lastLock||0)>=25&&m.k==="say"&&String(m.txt||"").length>24){m.locked=true;th.lastLock=th.aiN}
- if(th.aiN%15===9){const cid=m.who;setTimeout(()=>{th.msgs.push({who:cid,k:"pic",src:artSrc(cid),locked:true,at:Date.now()});save();if(curT===th.id)renderChat()},900)}}
+function payHooks(th,m){return}
 function freeToday(k){const d=today();S.freeUse=S.freeUse||{};if(S.freeUse[k]!==d){S.freeUse[k]=d;save();return true}return false}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-unmsg]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.unmsg];if(!m)return;if(freeToday("line")){toast(t("pay.freeLine"))}else if(!spend(PRICES.line,"line"))return;m.locked=false;save();renderChat();speak(m.txt,m.who);return}
- if(x=e.target.closest("[data-unpic]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.unpic];if(!m)return;if(freeToday("pic")){toast(t("pay.freePic"))}else if(!spend(PRICES.pic,"pic"))return;m.locked=false;save();renderChat();return}
+ // Stale portrait buttons must never consume diamonds or the daily free photo.
+ if(e.target.closest("[data-unpic]")){toast(CL()==="zh"?"这张旧立绘卡已停用，不会扣费":"This old portrait card is retired; no charge");renderChat();return}
  if(e.target.closest("[data-paysheet]")){paySheet();return}
  if(x=e.target.closest("[data-plan]")){S.planSel=x.dataset.plan;$$("[data-plan]").forEach(b=>b.classList.toggle("on",b===x));return}
  if(e.target.closest("[data-buyplus]")){S.plus=true;S.plusPlan=S.planSel||"year";S.plusSince=Date.now();S.keys+=20;save();closeSheet();toast(t("pay.plusOn"));refreshAfterPay();return}
@@ -17118,9 +17119,10 @@ ask=function(prompt,opts){
  return dialogueProgressAsk.call(this,prompt,opts);
 };
 
-// Hide only legacy counter-generated portrait locks; keep actual shared media.
+// Hide all legacy counter-generated portraits, locked or already unlocked.
+// Actual scene/generated photos use img + album records, not the retired pic kind.
 if(typeof MSGKIND!=="undefined")MSGKIND.post("app12:legacy-photo",function(html,m){
- if(m&&m.k==="pic"&&m.locked&&m.src===artSrc(m.who))return "";
+ if(m&&m.k==="pic")return "";
  return html;
 });
 
