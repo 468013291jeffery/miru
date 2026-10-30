@@ -57,6 +57,17 @@ setTimeout(function () {
         arms.F.modes = hr.map(function (r) { return r[0] });
         arms.F.labels = hr.map(function (r) { return r[1] });
       } catch (e) { arms.F = { err: String(e && e.message || e) } }
+      /* 面六：在自己创建器里做出来的剧，三路必须都是**剧本自己写的**（不许显示「补」）
+         —— 生产侧写全了，玩家才看不到那条提示 */
+      try {
+        arms.G = {};
+        var card = { title: 'probe', tpl: '', place: 'p', time: 't', con: 'c', obj: 'o', sec: 's', hook: 'h',
+          lead: { name: 'Lea', role: 'lead', lib: '' }, sup: { name: 'Sup', role: 'sup', lib: '' } };
+        var made = w.cBuildWorld(card, { len: '3', tone: 'pull', twist: 'mid', as: 'side', mode: 'mix' });
+        var eG = w.entryModes(w.wd(made.wid));
+        arms.G.modes = eG.modes.map(function (m) { return m.as + ':' + m.src });
+        arms.G.hint = eG.hint;
+      } catch (e) { arms.G = { err: String(e && e.message || e) } }
     } catch (e) { arms.err = String(e && e.message || e) }
 
     /* 面二：走真路径 */

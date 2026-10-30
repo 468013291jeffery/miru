@@ -94,7 +94,7 @@ function cBuildWorld(c,picks){const now=Date.now(),wid="cw"+now,L="u"+now,S2="u"
  const n=+picks.len||3,arc=ARC[n]||ARC[3],chs=arc.map((tt,i)=>({t:{zh:tt[0],en:tt[1]},goal:x0(i===0?c.con:LL("推进：","Next: ")+tt[0]),place:x0(c.place),time:x0(c.time),ask:x0(LL("你怎么做？","What do you do?")),
   beats:i===0?{zh:[],en:[]}:cOutlineBeats(c,L,S2,i,tt),choices:cChoices(c,L,S2,i,i===arc.length-1),outline:i>0}));
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});
- const pack={chapters:chs,endings:{A:end("在一起","Together"),B:end("各自安好","Apart, and okay"),C:end("反目","Enemies")},join:[{as:L,t:x0(LL("扮演"+c.lead.name,"Play as "+c.lead.name))}],pov:null,love:L,
+ const pack={chapters:chs,endings:{A:end("在一起","Together"),B:end("各自安好","Apart, and okay"),C:end("反目","Enemies")},join:[{as:L,t:x0(LL("扮演"+c.lead.name,"Play as "+c.lead.name))},{as:"side",t:x0(LL("以你自己的身份进入","Walk in as yourself"))}],pov:null,love:L,
   logline:x0(c.hook),features:{game:x0(""),date:x0(""),gift:x0(""),photo:x0(""),voice:x0(""),room:x0("")},director:{allowed:[],au:[]},bonus:{t:x0(""),d:x0("")},ready:n,mine:1,card:c,
   intro:{zh:{bg:[c.place+"，"+c.time+"。",c.con+"。","你手里有"+c.obj+"——它不该在你这儿。"],you:"你以自己的身份进入故事。你的选择会改变"+c.lead.name+"对你的信任、吸引和张力，也会改变每一章的走向。",cast:[[L,c.lead.role],[S2,c.sup.role]]},
    en:{bg:[c.place+", "+c.time+".",c.con+".","You're holding "+c.obj.toLowerCase()+" — it shouldn't be yours."],you:"You enter as yourself. Your choices change "+c.lead.name+"'s trust, attraction and tension — and where every chapter goes.",cast:[[L,c.lead.role],[S2,c.sup.role]]}}};

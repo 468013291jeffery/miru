@@ -54,6 +54,7 @@ checks.push(['D 负对照：写全了的剧 hint 必须为空', !!A.D && A.D.hin
 checks.push(['E 界面面：按钮数 == 条数', d.control.buttons === d.control.modes.length && d.control.buttons >= 2, d.control.pack + ' · 按钮=' + d.control.buttons + ' · 条数=' + d.control.modes.length]);
 checks.push(['E 界面面：写全了的剧不显示提示行', !!d.diag && d.diag.hintShown === false, 'hintShown=' + (d.diag && d.diag.hintShown)]);
 checks.push(['F 首屏三条同源（join 空也三条）', !!A.F && !A.F.err && Array.isArray(A.F.modes) && A.F.modes.length === 3 && A.F.modes.indexOf('side') >= 0 && A.F.modes.indexOf('watch') >= 0, A.F ? (JSON.stringify(A.F.modes) + ' · ' + JSON.stringify(A.F.labels)) : '缺读数']);
+checks.push(['G 创建器做的剧：三路都是剧本写的（不显示「补」）', !!A.G && !A.G.err && Array.isArray(A.G.modes) && A.G.modes.indexOf('side:data') >= 0 && A.G.modes.indexOf('watch:always') >= 0 && A.G.hint === '', A.G ? (JSON.stringify(A.G.modes) + ' · hint=' + JSON.stringify(A.G.hint) + (A.G.err ? ' · err=' + A.G.err : '')) : '缺读数']);
 
 console.log('=== 每部剧「进去能选什么」（共 ' + d.total + ' 部）===');
 d.multi.slice(0, 6).forEach(x => console.log('  ' + x));
