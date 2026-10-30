@@ -31,7 +31,7 @@ jobs:
         run: |
           python3 --version
           python3 source/build.py
-          ls -l index.html content_36.js
+          ls -l index.html source/src/content_36.js
 
       - name: commit if changed
         run: |
