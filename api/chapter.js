@@ -17,13 +17,16 @@ const fs = require('fs');
 const path = require('path');
 const L = require('./_lib');
 
-/* 剧本文件的两个位置（内容一样，6,572,785 B）：仓库根是构建产物（本地/dev 在这里），
-   source/src 那份才是 git 里被跟踪的。⚠️ 部署时：仓库根那份**必须被提交进 git** 才会进函数包
-   —— 现在它是未跟踪状态（`git status` 里 `?? content_36.js`）；而 source/ 被 .vercelignore 排掉，
-   所以线上只有「仓库根那份被提交了」这一条路。读不到时下面的 503 会把话说到底。 */
+/* 剧本文件的三个位置（内容一样，6,572,785 B）。**优先读 api/_data/ 那份** —— 那是唯一
+   一定进 Vercel 函数包的副本（api/ 是约定目录，下划线开头的子目录不会被当成路由，
+   先例是 api/_lib.js）。
+   ⚠️ 2026-10-30 实测教训：曾经想用 vercel.json 的 includeFiles 指向 source/src/content_36.js，
+   而 .vercelignore 里写着 `source/` ⇒ **整次部署失败**（Vercel → failure），
+   线上没挂是因为 Vercel 保留了上一个成功版本。别再用 includeFiles 指被 ignore 的路径。 */
 const CONTENT_PATHS = [
-  path.join(__dirname, '..', 'content_36.js'),
-  path.join(__dirname, '..', 'source', 'src', 'content_36.js'),
+  path.join(__dirname, '_data', 'content_36.js'),          // ← 部署包里一定有的那份
+  path.join(__dirname, '..', 'content_36.js'),             // 本地构建产物（未跟踪）
+  path.join(__dirname, '..', 'source', 'src', 'content_36.js'),  // git 跟踪的源（被 .vercelignore 排除）
 ];
 const LANGS = ['zh', 'en', 'ja', 'ko', 'es'];
 const BEAT_KINDS = ['say', 'act', 'think'];
