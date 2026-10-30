@@ -1,1 +1,4 @@
 source/
+# 例外：api/chapter.js 要读剧本来发事件（2026-10-30）。
+# .vercelignore 与 .gitignore 同语法，! 表示重新包含；source/src/content_36.js 6.5 MB，只放这一份，别复制。
+!source/src/content_36.js
