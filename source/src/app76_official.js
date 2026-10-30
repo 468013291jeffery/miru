@@ -4,6 +4,8 @@ const _installWork76 = installWork;
 installWork = async function (id) {
   const zh = CL() === "zh";
   const r = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
+  /* 成人作品被拦：不再只弹一句提示，而是给出能点的下一步 —— 没登录 → 去登录；已登录 → 当场确认年龄，过了直接打开。 */
+  if (r.status === 451) { const why = (r.j && r.j.why) || ""; if (why === "region") { toast(zh ? "这部成人作品在你所在的地区不开放" : "This adult story isn't available in your region"); return null; } if (why === "login" || (typeof au70Loggedin === "function" && !au70Loggedin())) { adultLogin76(); return null; } const ok = await adultConfirm76(); return ok ? installWork(id) : null; }
   if (!r.ok || !r.j.pack) { toast(zh ? "打不开这部作品" : "Couldn't open this story"); return null; }
   const P = r.j.pack;
   if (!P.script) {
@@ -14,7 +16,8 @@ installWork = async function (id) {
   const have = S.off76[id];
   if (have && have.ver === P.ver && have.imv === 2 && wd(have.wid)) { track("community_open", { id }); return have.wid; }
   if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
-  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  /* 成人露骨作品（服务器已按地区 + 年龄验证放行）：解析时不省略露骨句子 */
+  const doc = (() => { window.IM_ADULT = !!(P.meta && P.meta.adult === true); try { return imParse(P.script); } finally { window.IM_ADULT = false; } })(); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
   const m = P.meta || {};
   const b = imBuild(doc, m.as || doc.pov);
   const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
@@ -38,3 +41,39 @@ packStart = function (wid, as, fromCh, picks) {
   if (w && w.official76 && w.pack && !w.pack.exp74 && !fromCh && typeof exp74Build === "function") { exp74Build(wid).then(() => _packStart76(wid, as, fromCh, picks), () => _packStart76(wid, as, fromCh, picks)); return; }
   return _packStart76.apply(this, arguments);
 };
+
+/* 成人作品：测试期由用户自己确认年满 18 岁（后台「允许用户自行确认年龄」打开时才会走到这里）。服务器按出生日期算周岁并记录。 */
+function adultConfirm76() {
+  const zh = CL() === "zh";
+  return new Promise(done => {
+    let settled = false; const fin = v => { if (settled) return; settled = true; done(v); };
+    sheet('<h2>' + (zh ? "🔞 成人内容" : "🔞 Adult content") + '</h2><p class="sm dim" style="margin:8px 0 12px;line-height:1.6">' +
+      (zh ? "这部作品包含露骨的成人内容，仅限年满 18 岁的用户。请填写你的出生日期。" : "This story contains explicit adult content and is for people 18 and older. Enter your date of birth.") +
+      '</p><div class="field"><input type="date" id="adBirth76" max="' + new Date().toISOString().slice(0, 10) + '"></div><p class="xs faint" id="adErr76" style="min-height:16px;margin-top:6px"></p>' +
+      '<div class="row" style="gap:8px;margin-top:10px"><button class="btn btn-g grow" id="adNo76">' + (zh ? "离开" : "Leave") + '</button><button class="btn btn-p grow" id="adYes76">' + (zh ? "我已年满 18 岁，继续" : "I'm 18 or older — continue") + '</button></div>');
+    const no = document.getElementById("adNo76"), yes = document.getElementById("adYes76");
+    if (no) no.addEventListener("click", () => { closeSheet(); fin(false); });
+    if (yes) yes.addEventListener("click", async () => {
+      const v = (document.getElementById("adBirth76") || {}).value || ""; const err = document.getElementById("adErr76");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) { if (err) err.textContent = zh ? "请选择出生日期" : "Pick your date of birth"; return; }
+      yes.disabled = true;
+      try {
+        const r = await capi("/auth", { json: { op: "adult_confirm", birthDate: v } });
+        if (r.ok) { closeSheet(); fin(true); return; }
+        const e0 = (r.j && r.j.error) || ""; if (r.status === 401) { closeSheet(); fin(false); adultLogin76(); return; } if (err) err.textContent = /18/.test(e0) ? (zh ? "未满 18 岁，不能查看这部作品" : "You must be 18 or older to view this story") : /self confirmation/.test(e0) ? (zh ? "年龄确认暂未开放，请稍后再试" : "Age confirmation isn't open yet — try again later") : (zh ? "确认失败，请先登录后再试" : "Couldn't confirm — sign in and try again");
+      } catch (e) { console.warn("[adult76]", e); if (err) err.textContent = zh ? "网络出错，再试一次" : "Network error — try again"; }
+      yes.disabled = false;
+    });
+  });
+}
+
+/* 成人作品要求登录：给一个「去登录」按钮，登录完回来再点「开始看」就会进入年龄确认。 */
+function adultLogin76() {
+  const zh = CL() === "zh";
+  sheet('<h2>' + (zh ? "🔞 成人内容" : "🔞 Adult content") + '</h2><p class="sm dim" style="margin:8px 0 12px;line-height:1.6">' +
+    (zh ? "这部作品仅限年满 18 岁的用户。请先登录，登录后再点「开始看」，填写出生日期完成年龄确认。" : "This story is for people 18 and older. Sign in first, then tap Play again and confirm your date of birth.") +
+    '</p><div class="row" style="gap:8px;margin-top:10px"><button class="btn btn-g grow" id="adLNo76">' + (zh ? "离开" : "Leave") + '</button><button class="btn btn-p grow" id="adLGo76">' + (zh ? "去登录" : "Sign in") + '</button></div>');
+  const no = document.getElementById("adLNo76"), go = document.getElementById("adLGo76");
+  if (no) no.addEventListener("click", () => closeSheet());
+  if (go) go.addEventListener("click", () => { closeSheet(); setTimeout(() => { if (typeof authAll70 === "function") authAll70(); else if (typeof acctSheet === "function") acctSheet(); }, 120); });
+}

@@ -26,7 +26,7 @@ function imParseCore(text){text=String(text||"").replace(/\r/g,"").replace(/ /g
  const sink=()=>opt?opt.then:variant?variant.then:(chap||nc("")).items;
  const closeChoice=()=>{if(choice){(chap||nc("")).items.push({choice});choice=null;opt=null}};
  const closeVar=()=>{if(variant){(chap||nc("")).items.push({variant});variant=null}};
- const push=b=>{const txt=String(b[2]||"");const flat=imStrip(txt).toLowerCase();if(IM_EXPLICIT.some(w=>flat.includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
+ const push=b=>{const txt=String(b[2]||"");const flat=imStrip(txt).toLowerCase();if(!window.IM_ADULT&&IM_EXPLICIT.some(w=>flat.includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
  const titleOf=h=>{const m=h.split(/[｜|]/);return (m.length>1?(m.slice(1).join(" ").match(/[\u4e00-\u9fff]/)||!m[0].match(/[\u4e00-\u9fff]/)?m.slice(1).join(" "):m[0]):h.replace(/^(CHAPTER|Chapter|SCENE|Scene|CHOICE|Choice)\s*[\d.]*\s*[:：]?\s*/,"").replace(/^第\s*[0-9一二三四五六七八九十百]+\s*[章幕场]\s*[:：]?\s*/,"")).trim()};
  for(const line of text.split("\n")){let raw=line.trim();if(!raw||/^[=\-*_~]{3,}$/.test(raw))continue;
   if(/^\[(EN|ENGLISH)\]$/i.test(raw)){mode="en";continue}if(/^\[(ZH|CN|中文)\]$/i.test(raw)){mode="zh";continue}
