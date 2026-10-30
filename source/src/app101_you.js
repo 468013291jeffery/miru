@@ -185,3 +185,38 @@
 .mi101more{margin-top:6px;background:none;border:0;color:var(--gold,#F0B77E);font-size:13px;padding:0}`;
   document.head.appendChild(stl);
 })();
+
+/* 2026-10-31（从 app100 搬来，自测里 document 是桩）：联想回复的「换一批」—— 丢掉这一轮的缓存，按眼前的对话重新想 3 条，避开刚才那几条 */
+document.addEventListener('click', async e => {
+  const btn = e.target.closest('[data-sgmore]'); if (!btn) return;
+  e.preventDefault(); e.stopPropagation();
+  const th = S.threads[curT]; if (!th || btn.disabled) return;
+  const before = (th.sugg || []).slice(), zh = CL() === 'zh';
+  btn.disabled = true; btn.textContent = zh ? '正在想…' : 'Thinking…';
+  try {
+    DIALOGUE_IDEAS.delete(th); DIALOGUE_AVOID.set(th, before);
+    let items; try { items = await dialogueGetIdeas(th); } finally { DIALOGUE_AVOID.delete(th); }
+        if (curT !== th.id) return;
+    if (items.length) setSugg(items); else if (btn.isConnected) toast(zh ? '暂时想不出新的，直接打字也可以' : 'No new ideas right now — just type');
+  } catch (err) { console.warn('[sgmore]', err); }
+  finally { if (btn.isConnected) { btn.disabled = false; btn.textContent = '↻ ' + (zh ? '换一批' : 'More ideas'); } }
+}, true);
+(() => { try { const st = document.createElement('style'); st.textContent = '#sugg .sgmore{flex:none;opacity:.85;border-style:dashed!important;white-space:nowrap}'; document.head.appendChild(st); } catch (e) { console.debug('[sgmore] style', e); } })();
+
+/* 2026-10-31：开场引导。刚进故事、还没开过口时，输入框上方挂一条「轮到你了」提示（只是界面，不进聊天记录、不进记忆），
+   并给出 3 条可以开口的建议。你说出第一句后它就消失。 */
+const __body_open100 = function () { try {
+  const th = S.threads[curT], old = $('#open100'); const kill = () => { if (old) old.remove(); };
+  if (!th || !th.pk) return kill();
+  if ((th.msgs || []).some(m => m && m.who === 'me')) return kill();
+  const st = th.pk.stop, playing = typeof PKPLAY !== 'undefined' && PKPLAY[th.id];
+  const myTurn = (st && st[1] === 'line') || ((!th.pk.q || !th.pk.q.length) && !playing);
+  if (!myTurn || (st && st[1] === 'start') || !(th.msgs || []).some(m => m && ch(m.who))) return kill();
+  const zh = CL() === 'zh', c = ch(mainOf(th)) || {}, nm = first(c.n || '') || (zh ? '他' : 'them');
+  const html = '<b>' + (zh ? '💬 轮到你了' : '💬 Your turn') + '</b> ' + esc(zh ? ('直接打字跟' + nm + '说话——问问题、表态，或用 *星号* 写动作都行。不知道说什么？点下面的建议。') : ('Type to talk to ' + nm + ' — ask, react, or *do something*. Stuck? Tap a suggestion.'));
+  const comp = $('#s-chat .composer'); if (!comp) return;
+  if (!old) comp.insertAdjacentHTML('beforebegin', '<div id="open100" class="open100">' + html + '</div>');
+  if (!th.open100 && !busy) { th.open100 = 1; save(); setTimeout(() => { try { aiIdeasGo97($('#s-chat [data-ai97]')); } catch (e) { console.warn('[open100] ideas', e); } }, 300); }
+} catch (e) { console.warn('[open100]', e); } };
+(() => { try { const st = document.createElement('style'); st.textContent = '.open100{margin:0 10px 6px;padding:8px 12px;border-radius:12px;background:rgba(10,8,14,.7);backdrop-filter:blur(6px);color:#F6F1EC;font-size:13px;line-height:1.5}.open100 b{color:var(--gold,#F0B77E)}'; document.head.appendChild(st); } catch (e) { console.debug('[open100] style', e); } })();
+if (window.UI && typeof window.UI.add === 'function') window.UI.add('open100', __body_open100);

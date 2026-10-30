@@ -16,8 +16,7 @@ installWork = async function (id) {
   const have = S.off76[id];
   if (have && have.ver === P.ver && have.imv === 2 && wd(have.wid)) { track("community_open", { id }); return have.wid; }
   if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
-  /* 成人露骨作品（服务器已按地区 + 年龄验证放行）：解析时不省略露骨句子 */
-  const doc = (() => { window.IM_ADULT = !!(P.meta && P.meta.adult === true); try { return imParse(P.script); } finally { window.IM_ADULT = false; } })(); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
   const m = P.meta || {};
   const b = imBuild(doc, m.as || doc.pov);
   const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
@@ -30,7 +29,7 @@ installWork = async function (id) {
   if (m.hook || r.j.hook) w.hook = x0(m.hook || r.j.hook);
   if (m.premise) w.premise = x0(m.premise);
   if (m.you) w.you = x0(m.you);
-  if ((m.tags || []).length) w.tags = m.tags.slice(0, 16); if (m.heat) w.heat = m.heat; w.or = r.j.orient || w.or;
+  if ((m.tags || []).length) w.tags = m.tags.slice(0, 16); if (m.heat) w.heat = m.heat; w.adult76 = m.adult === true ? 1 : 0; w.or = r.j.orient || w.or;
   S.off76[id] = { wid, ver: P.ver, imv: 2 }; /* imv: importer version — bump to rebuild already-installed official stories */ save(); track("community_open", { id, official: 1 });
   return wid;
 };
@@ -59,7 +58,7 @@ function adultConfirm76() {
       yes.disabled = true;
       try {
         const r = await capi("/auth", { json: { op: "adult_confirm", birthDate: v } });
-        if (r.ok) { closeSheet(); fin(true); return; }
+        if (r.ok) { try { S.ageOk = true; save(); } catch (e) { console.warn('[adult76] save', e); } closeSheet(); fin(true); return; }
         const e0 = (r.j && r.j.error) || ""; if (r.status === 401) { closeSheet(); fin(false); adultLogin76(); return; } if (err) err.textContent = /18/.test(e0) ? (zh ? "未满 18 岁，不能查看这部作品" : "You must be 18 or older to view this story") : /self confirmation/.test(e0) ? (zh ? "年龄确认暂未开放，请稍后再试" : "Age confirmation isn't open yet — try again later") : (zh ? "确认失败，请先登录后再试" : "Couldn't confirm — sign in and try again");
       } catch (e) { console.warn("[adult76]", e); if (err) err.textContent = zh ? "网络出错，再试一次" : "Network error — try again"; }
       yes.disabled = false;

@@ -199,9 +199,12 @@ function liveOn(){return !!(SAMPLE&&S.live)}
 function refreshLive(){const on=liveOn()&&!LIVE_ERR;$$(".livechip").forEach(el=>{el.textContent=on?t("cx.live"):t("cx.script");el.classList.toggle("off",!on)});
  $$(".livebanner").forEach(el=>{el.hidden=on;const s=el.querySelector("span");if(s)s.textContent=t("live.banner",{c:LIVE_ERR||(SAMPLE?"":LIVE_STATE)})})}
 function jsonLoose(t){if(!t)return null;t=String(t).replace(/```(?:json)?/g,"");const i=t.search(/[\[{]/);if(i<0)return null;const open=t[i],close=open==="{"?"}":"]";const j=t.lastIndexOf(close);if(j<=i)return null;try{return JSON.parse(t.slice(i,j+1))}catch(_){try{return JSON.parse(t.slice(i,j+1).replace(/,\s*([}\]])/g,"$1"))}catch(__){return null}}}
+/* 2026-10-31（产品方要求）：所有给玩家看的文字都要口语化 —— 每一次调用模型都带上这条，智能体、导演、建议、通话一视同仁 */
+const ORAL_RULE="SPOKEN STYLE (applies to every line the player will read or hear — dialogue, narration, suggestions, messages): write the way real people actually talk today. Short, natural, conversational sentences; everyday words; contractions and fragments are fine. No literary, formal or written-style phrasing, no four-character idioms piled up, no stiff translation-ese, no flowery description. In Chinese: 用大白话、口语，像真人聊天一样说话，不要书面语、不要文绉绉、不要成语堆砌。";
 async function ask(prompt,opts){
  opts=opts||{};
  if(!liveOn())throw {code:"na"};
+ if(typeof ORAL_RULE==="string"&&typeof prompt==="string"&&prompt.indexOf("SPOKEN STYLE")<0)prompt=prompt+"\n\n"+ORAL_RULE;
  const _tier=opts.modelTier||"default";
  try{let r;try{r=await SAMPLE.json(prompt,Object.assign({modelTier:"default",cache:false},opts))}
   catch(e0){if(!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
@@ -224,7 +227,9 @@ async function ask(prompt,opts){
   if(e&&["not_granted","sampling_disabled","not_declared","capability_disabled"].includes(e.code))toast(t("live.denied"));
   else if(e&&e.code!=="cancelled")toast(t("live.err",{c:LIVE_ERR}));
   throw e}}
-const HEAT_RULE={fluff:"Keep it warm and non-sexual: banter, comfort, almost-touching.",slow:"Hold tension on purpose: longing, restraint, near-misses — but let it build. A touch, a kiss, a line crossed is fine when the moment has earned it.",steamy:"Charged and suggestive. Kissing and closeness are fine, and the scene can go where it goes.",mature:"Adult emotional themes and charged physicality; write the scene as it happens rather than cutting away."};
+const HEAT_RULE={fluff:"Keep it warm and non-sexual: banter, comfort, almost-touching.",slow:"Hold tension on purpose: longing, restraint, near-misses — but let it build. A touch, a kiss, a line crossed is fine when the moment has earned it.",steamy:"Charged and suggestive. Kissing and closeness are fine, and the scene can go where it goes.",mature:"Adult emotional themes and charged physicality; write the scene as it happens rather than cutting away.",
+ /* 2026-10-31：只在「成人露骨」作品 + 已过年龄门槛时才会用到（见 app100 dialogueHeat） */
+ explicit:"Adult-only story; every character is an adult and the player has confirmed they are 18+. When the player flirts or says what they want, the character answers it directly and in their own voice, right away — clear desire, tension and physical closeness, matching the player's intensity. Never play dumb, never change the subject, never lecture. Consent stays explicit and mutual; either side may slow down or say no, and that is respected."};
 
 /* ================= NAV ================= */
 const STACK=[];

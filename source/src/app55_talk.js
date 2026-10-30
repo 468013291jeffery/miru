@@ -112,7 +112,7 @@ function composer55(){const th=S.threads[curT];if(!th||(th.pk&&th.pk.as==="watch
  const d=modes.querySelector('[data-mode="dir"]');if(d){d.classList.add("tool");tray.appendChild(d)}
  const si=modes.querySelector("[data-stepin]");if(si){si.textContent="🚪 "+(CL()==="zh"?"换身份":"Switch role");tray.appendChild(si)}
  if(cmode!=="dir")cmode="say";
- const sg=$("#sugg");if(sg){[...sg.children].slice(3).forEach(x=>x.remove());sg.classList.add("sg55")}
+ const sg=$("#sugg");if(sg){[...sg.children].filter(x=>!x.dataset.sgmore).slice(3).forEach(x=>x.remove());sg.classList.add("sg55")}
  const hint=document.createElement("span");hint.className="c55h";hint.textContent=CL()==="zh"?"直接打字 · *动作* · （心声）":"Just type · *action* · (thought)";modes.insertBefore(hint,modes.firstChild);
  const ta=$("#cin");if(ta)ta.placeholder=CL()==="zh"?"想说什么都行，他会回应你……":"Say anything — he'll answer you…"}
 const _doSend55b=doSend;doSend=function(txt,mode){if(!mode&&cmode==="say"&&txt)mode=autoMode(txt);return _doSend55b(txt,mode)};

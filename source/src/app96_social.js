@@ -123,7 +123,7 @@ async function commentFeed96(pid) {
     (r && r.replies || []).slice(0, 2).forEach(x => p.cm.push({ name: String(x.name || "").slice(0, 24), text: String(x.text || "").slice(0, 160) })); p.likes += 50; save(); if ($("#fd96") && !$("#fd96").hidden) openFeed96(); } catch (_) {}
 }
 document.addEventListener("click", e => { let x;
-  if (e.target.closest("[data-fd96]")) { e.stopPropagation(); openFeed96(); return; }
+  if (e.target.closest("[data-fd96]")) { e.stopPropagation(); if (e.target.closest(".sheet")) closeSheet(); openFeed96(); return; }
   if (e.target.closest("[data-fdx96]")) { const el = $("#fd96"); if (el) el.hidden = true; return; }
   if (e.target.closest("[data-fdr96]")) { refreshFeed96(); return; }
   if (e.target.closest("[data-fdp96]")) { postFeed96(); return; }

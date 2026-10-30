@@ -9,7 +9,9 @@ const TTS={mem:new Map(),inflight:new Map(),fails:0,off:false,ok:null};
 const TTS_VOICES={m:["m1","m2","m3","m4","m5","m6","m7"],f:["f1","f2"]};
 const TTS_VNAME={m1:"低沉克制",m2:"清朗少年感",m3:"温和学长",m4:"冷硬",m5:"慵懒",m6:"明亮",m7:"成熟沉稳",f1:"温柔",f2:"干练"};
 function ttsOn(){return !!TTS_EP&&S.ttsMode!=="device"&&!TTS.off}
-function ttsVoice(id){if(!id||id==="n")return S.ttsNarr||"f1";const c=ch(id);if(!c)return "m1";if(c.voiceId&&/^[mf]\d$/.test(c.voiceId))return c.voiceId;
+/* 2026-10-31：玩家自己的台词也能朗读。演剧中角色时用那个角色的声音；否则按「我的」代词选：he → m4，其余 → f2（和旁白 f1 区分开）；S.myVoice 可覆盖 */
+function ttsMyVoice(){if(S.myVoice&&/^[mf]\d$/.test(S.myVoice))return S.myVoice;try{const th=S.threads[curT],as=th&&th.pk&&th.pk.as;if(as&&as!=="watch"&&ch(as))return ttsVoice(as)}catch(e){console.warn("[tts62] myVoice",e)}const p=(typeof persona==="function"&&persona())||{};return p.pron==="he"?"m4":"f2"}
+function ttsVoice(id){if(id==="me")return ttsMyVoice();if(!id||id==="n")return S.ttsNarr||"f1";const c=ch(id);if(!c)return "m1";if(c.voiceId&&/^[mf]\d$/.test(c.voiceId))return c.voiceId;
  const g=c.g==="f"?"f":"m",L=TTS_VOICES[g];const w0=c.w?wd(c.w):null;const same=w0&&w0.cast?w0.cast.filter(x=>ch(x)&&(ch(x).g==="f"?"f":"m")===g):[];const i=same.indexOf(id);
  return L[(i>=0?i+hash(c.w||""):hash(id))%L.length]}
 /* emotion weights: 喜 怒 哀 惧 厌恶 低落 惊喜 平静 */

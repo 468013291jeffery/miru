@@ -58,6 +58,8 @@ function bt86Btns(i){return '<span class="bt86"><button data-b86="play|'+i+'" ar
 function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
  root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||!ch(m.who)||m.who==="me")return;
   const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
+ /* 2026-10-31：我自己的台词也有 🔊，用「我」的声音读（app62 ttsMyVoice） */
+ root.querySelectorAll('.m-row.me[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.who!=="me"||m.k==="think"||m.k==="dir")return;const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",'<span class="bt86 me86"><button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button></span>')});
  root.querySelectorAll('.m-box[data-mi]').forEach(bx=>{const i=+bx.dataset.mi,m=th.msgs[i];if(!m||!m.parts||!m.parts.length||bx.querySelector(".bt86"))return;bx.insertAdjacentHTML("beforeend",bt86Btns(i))})}catch(_){}}
 /* clicks: capture phase, so the bubble's own tap (open tools) doesn't swallow them */
 /* boxes are often grouped at render time, so read exactly what is on screen */

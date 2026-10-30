@@ -170,7 +170,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
  try{while(th.pk.q&&th.pk.q.length){const b=th.pk.q[0];
   /* 2026-10-27 Ann：玩家一开口，剧本队列先停 —— 他得先接住她的话，
      而不是自己按定时器往下念。回完（PKPAUSE 清掉）再继续。 */
-  while(PKPAUSE[th.id])await new Promise(r=>setTimeout(r,250));
+  while(PKPAUSE[th.id]||(typeof beatHeld==="function"&&beatHeld(th)))await new Promise(r=>setTimeout(r,250));
    if(pkDirective(th,b))continue;
    if(isStop(b)){let extra=stopAuto(th,b);
     if(!extra){delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();

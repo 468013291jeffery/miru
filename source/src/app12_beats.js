@@ -7,10 +7,16 @@ function beatAt(n){return n<=30?BEAT0[n]:BEATN[(n-31)%25]}
 storyHooks=function(){};
 payHooks=function(th,m){if(!th.wid)return;th.aiN=(th.aiN||0)+1;const b=beatAt(th.aiN),cid=m.who,c=ch(cid);if(!b||!c)return;const nm=first(c.n);
  if(b==="pic"&&!S.plus){setTimeout(()=>{th.msgs.push({who:cid,k:"pic",src:artSrc(cid),locked:true,at:Date.now()});save();if(curT===th.id)renderChat()},900)}
- if(b==="del"){setTimeout(()=>{th.msgs.push({who:"sys",k:"card",title:"↩︎ "+t("bt.delH",{n:nm}),txt:t("bt.delS"),btn:t("bt.delB")+(S.plus?"":" · 💎 1"),act:"del|"+cid,at:Date.now()});save();if(curT===th.id)renderChat()},1300)}
+ if(b==="del"){beatCardLater(th,{who:"sys",k:"card",title:"↩︎ "+t("bt.delH",{n:nm}),txt:t("bt.delS"),btn:t("bt.delB")+(S.plus?"":" · 💎 1"),act:"del|"+cid,hold:1})}
  if(b==="cont"&&!S.plus&&m.k==="say"&&String(m.txt||"").length>12){m.locked=true}
  if(b==="call"){setTimeout(()=>callCard(th,cid),1600)}
- if(b==="pov"){setTimeout(()=>{th.msgs.push({who:"sys",k:"card",title:"💭 "+t("bt.povH",{n:nm}),txt:t("bt.povS"),btn:t("bt.povB",{n:nm})+(S.plus?"":" · 💎 "+PRICES.card),act:"pov|"+cid,at:Date.now()});save();if(curT===th.id)renderChat()},1300)}};
+ if(b==="pov"){beatCardLater(th,{who:"sys",k:"card",title:"💭 "+t("bt.povH",{n:nm}),txt:t("bt.povS"),btn:t("bt.povB",{n:nm})+(S.plus?"":" · 💎 "+PRICES.card),act:"pov|"+cid,hold:1})}};
+/* 2026-10-31：互动卡（解锁 POV / 撤回）等这一轮回复全部出完再插到最后，并且「挂住」剧情：
+   在你点它、点「先不看，继续」或自己开口之前，剧本不往下走，卡片也不会被后面的消息顶走。 */
+function beatCardLater(th,card){let n=0;const go=()=>{if(typeof busy!=="undefined"&&busy&&n++<60){setTimeout(go,500);return}
+ card.at=Date.now();th.msgs.push(card);save();if(curT===th.id){renderChat();try{scrollChat()}catch(e){console.warn("[beat12] scroll",e)}}};setTimeout(go,900)}
+function beatHeld(th){if(!th||!th.msgs)return false;let me=-1;th.msgs.forEach((m,i)=>{if(m&&m.who==="me")me=i});return th.msgs.slice(Math.max(me+1,th.msgs.length-6)).some(m=>m&&m.k==="card"&&m.hold&&m.act)}
+document.addEventListener("click",e=>{const x=e.target.closest("[data-cardlater]");if(!x)return;e.stopImmediatePropagation();const th=S.threads[curT],m=th&&th.msgs[+x.dataset.cardlater];if(m){m.hold=0;save();renderChat()}},true);
 async function beatWrite(kind,cid,th){const c=ch(cid),zh=S.lang==="zh",ctx=th.msgs.slice(-8).filter(m=>m.txt).map(m=>(m.who==="me"?"User":ch(m.who)?ch(m.who).n:"")+": "+m.txt).join("\n");
  if(SAMPLE){try{const r=await SAMPLE.json("You are writing for an interactive romance drama. Character: "+c.n+" ("+Lz(c.vibe)+"). Recent scene:\n"+ctx+"\n\n"+(kind==="del"?"Write the ONE text message he typed and then unsent/deleted right after this scene — raw, more honest than he'd ever say out loud, 1–2 sentences.":"Write his inner monologue (POV) during the last moment of this scene — what he was really thinking and hiding, first person, 2–3 short sentences, intense.")+" Reply ONLY JSON {\"text\":\"...\"} in "+(zh?"Simplified Chinese":"English")+".",{modelTier:"quick"});if(r&&r.text)return r.text}catch(_){}}
  const tells=(c.tells&&(c.tells[zh?"zh":"en"]||c.tells.en))||[];

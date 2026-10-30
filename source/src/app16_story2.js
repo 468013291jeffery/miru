@@ -9,6 +9,8 @@ function sceneBg(th,img){const box=$("#cbImg");if(!box)return;const src=sceneSrc
 const _chatBgSet2=chatBgSet;
 chatBgSet=function(who,pose){const th=S.threads[curT];
  if(th&&th.pk&&th.pk.bg){sceneBg(th,th.pk.bg);return}
+ /* 2026-10-31：官方剧（脚本版 official76 / 自由模式 b98 / agent97）背景只跟场景走 —— 不再换成说话人的立绘、两个人来回切。没有场景图时用作品封面。 */
+ if(th&&(th.b98||th.agent97||(th.wid&&(wd(th.wid)||{}).official76))){const box=$("#cbImg");if(box&&box.dataset.scene)return;sceneBg(th,(th.b98&&th.b98.bg)||null);return}
  if(NO_VIDEO_BG&&th&&th.wid&&SCENE[th.wid]){const keep=SCENE[th.wid];SCENE[th.wid]=null;try{_chatBgSet2(who,pose)}finally{SCENE[th.wid]=keep}return}
  _chatBgSet2(who,pose)};
 

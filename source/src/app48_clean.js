@@ -28,8 +28,8 @@ else { const _renderChat48 = renderChat; renderChat = function () { const r = _r
 /* new messages appended without a full re-render */
 let CLEAN_MO=null;setInterval(()=>{const m=$("#msgs");if(!m||m._cleanObs)return;m._cleanObs=1;CLEAN_MO=new MutationObserver(()=>{if(cleanOn())requestAnimationFrame(cleanMark)});CLEAN_MO.observe(m,{childList:true})},600);
 document.addEventListener("click",e=>{let x;
- if(e.target.closest("[data-tools]")){TOOLS_OPEN=!TOOLS_OPEN;cleanMark();return}
- if(e.target.closest("[data-hist]")){HIST_OPEN=!HIST_OPEN;cleanMark();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;return}
+ if(e.target.closest("[data-tools]")){if(e.target.closest(".sheet"))closeSheet();TOOLS_OPEN=!TOOLS_OPEN;cleanMark();return}
+ if(e.target.closest("[data-hist]")){if(e.target.closest(".sheet"))closeSheet();HIST_OPEN=!HIST_OPEN;cleanMark();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;return}
  if(e.target.closest("[data-hdx]")){HD_OPEN=!HD_OPEN;const b=$(".hdx");if(b)b.textContent=HD_OPEN?"⌃":"⌄";cleanMark();return}
  if(e.target.closest("[data-modebtn]")){const c=$("#s-chat .composer");if(c)c.classList.toggle("showmodes");return}
  if((x=e.target.closest("#s-chat .composer .modes button"))){setTimeout(()=>{const c=$("#s-chat .composer");if(c)c.classList.remove("showmodes");const mb=$(".modebtn");if(mb)mb.textContent=x.textContent.trim().slice(0,4)+" ▴"},30)}
@@ -52,6 +52,14 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))re
 #s-chat.clean.histopen #msgs{background:rgba(8,7,11,.82);backdrop-filter:blur(6px)}
 .histbtn{display:none}
 #s-chat.clean .rcol{position:absolute;right:10px;bottom:76px;z-index:40;display:flex;flex-direction:column;gap:8px}
+/* 2026-10-31：热搜 / 播放 / 历史 收进输入框左边的「+」里，不再挡画面；打开历史或播放时才露出来，方便再点一下关掉 */
+#s-chat.clean:not(.histopen):not(.toolsopen) .rcol{display:none}
+/* 2026-10-31：动作 / 旁白直接压在背景图上，浅色衣服、灯光处看不清 —— 给一层半透明深色底 + 字影 */
+#s-chat.clean #msgs{text-shadow:0 1px 3px rgba(0,0,0,.55)}
+#s-chat.clean #msgs .m-act,#s-chat.clean #msgs .m-narr,#s-chat.clean #msgs .m-think:not(.bub),#s-chat.clean #msgs .m-scene,#s-chat.clean #msgs .m-dir,#s-chat.clean #msgs .m-dec,#s-chat.clean #msgs .m-react{background:rgba(10,8,14,.62);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:12px;padding:8px 12px;color:#F6F1EC;text-shadow:0 1px 2px rgba(0,0,0,.6);width:fit-content;max-width:88%}
+#s-chat.clean #msgs .m-act.me,#s-chat.clean #msgs .m-think.me{margin-left:auto}
+#s-chat.clean #msgs .m-act .mt{display:inline-block;margin-bottom:4px}
+.pmq3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.pmq3 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 0;border-radius:14px;background:var(--card2,rgba(255,255,255,.06));border:1px solid var(--line,rgba(255,255,255,.12));color:inherit;position:relative}.pmq3 i{font-style:normal;font-size:22px}.pmq3 small{font-size:12px;font-weight:700}.pmq3 em{position:absolute;top:4px;right:8px;font-style:normal;font-size:10px;font-weight:800;background:var(--rose,#EE6F97);color:#fff;border-radius:99px;padding:0 5px}.pmq3 em:empty{display:none}
 #s-chat.clean .histbtn{display:flex;position:relative;flex-direction:column;align-items:center;gap:1px;width:52px;padding:6px 0;border-radius:16px;background:rgba(12,10,16,.62);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px);color:#fff}
 #s-chat.clean .histbtn i{font-style:normal;font-size:20px}#s-chat.clean .histbtn small{font-size:11px;font-weight:700}
 #s-chat.clean .histbtn em{position:absolute;top:-4px;right:-4px;font-style:normal;font-size:10px;font-weight:800;background:var(--rose,#EE6F97);color:#fff;border-radius:99px;padding:0 5px;min-width:16px;text-align:center}

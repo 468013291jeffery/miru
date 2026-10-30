@@ -20,7 +20,7 @@ function vcSys(c,th){const zh=vcLang()==="zh",L=[];
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L20",function(){if(th&&typeof memBlock==="function")L.push(String(memBlock(th)).slice(0,1800))});
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app81_voicecall:L21",function(){if(th){const last=th.msgs.filter(m=>m.k==="say"&&m.txt).slice(-8).map(m=>(m.who==="me"?(me()||"User"):(ch(m.who)?ch(m.who).n:m.who))+": "+String(m.txt).slice(0,160));if(last.length)L.push("LAST THINGS SAID IN THE STORY:\n"+last.join("\n"))}});
  L.push("HOW TO TALK: stay fully in character. Speak like a real late-night phone call — 1 to 3 short sentences, natural pauses, contractions, a little guarded. No narration, no stage directions, no actions in brackets, no emoji, no lists. React to what they actually said (you hear their voice — tone matters). Ask something back sometimes. Never say you are an AI or a model. Keep it PG-13: tender and charged is fine, nothing explicit; if they push past that, deflect in character.");
- L.push("Speak "+VC_LN[vcLang()]+" only.");return L.join("\n\n")}
+ L.push("Speak "+VC_LN[vcLang()]+" only.");if(typeof ORAL_RULE==="string")L.push(ORAL_RULE);return L.join("\n\n")}
 /* ---------- audio out: schedule PCM16 chunks ---------- */
 function vcCtx(){if(!VC.ctx||VC.ctx.state==="closed"){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;VC.ctx=new A()}if(VC.ctx.state==="suspended")VC.ctx.resume().catch(()=>{});return VC.ctx}
 function vcPlay(b64){const ctx=vcCtx();if(!ctx||!call)return;const bin=atob(b64),n=bin.length>>1;if(!n)return;const f=new Float32Array(n);
@@ -74,10 +74,23 @@ async function vcMic(){if(!call||call.mic||!navigator.mediaDevices||!navigator.m
   vcHint();
  }catch(e){call&&(call.micOn=false);toast(vcT("nomic"))}}
 /* like a real call: no reply options — just a status line (and a mic button if the mic is off) */
-function vcHint(){const rep=$("#cvR");if(!rep||!call)return;rep.innerHTML='<p class="xs faint vc-hint">'+(call.micOn?vcT("talk"):vcT("tap"))+'</p>'+(call.micOn?'':'<button data-vcmic="1">🎙 '+vcT("mic")+'</button>')}
+function vcHint(){const rep=$("#cvR");if(!rep||!call)return;
+ /* 2026-10-31：语音模型连不上（实测：阿里云账号欠费 Arrearage）时，以前只弹一次提示，之后你说什么他都听不到。
+    现在：画面上写明，并给一个输入框直接打字；浏览器自带语音识别的，按住「🎙 说一句」也能说话（转成文字再发）。 */
+ if(call.vdown){const zh=vcLang()==="zh",sr=!!(window.SpeechRecognition||window.webkitSpeechRecognition);
+  rep.innerHTML='<p class="xs faint vc-hint">'+(zh?"语音通话服务暂时不可用，他听不到麦克风。可以打字跟他说：":"Voice service is down — he can't hear your mic. Type to him:")+'</p>'+
+   '<div class="vcdn"><input id="vcIn" maxlength="200" placeholder="'+(zh?"想对他说什么……":"Say something…")+'"><button data-vcsend="1">'+(zh?"发送":"Send")+'</button>'+(sr?'<button data-vcsr="1">🎙 '+(zh?"说一句":"Speak")+'</button>':'')+'</div>';return}
+ rep.innerHTML='<p class="xs faint vc-hint">'+(call.micOn?vcT("talk"):vcT("tap"))+'</p>'+(call.micOn?'':'<button data-vcmic="1">🎙 '+vcT("mic")+'</button>')}
+function vcSendText(txt){txt=String(txt||"").trim();if(!txt||!call||call.busy)return;try{callSay(txt)}catch(e){console.warn("[vc] callSay",e)}}
+document.addEventListener("click",e=>{if(!call)return;
+ if(e.target.closest("[data-vcsend]")){const i=$("#vcIn");if(i){const v=i.value;i.value="";vcSendText(v)}return}
+ if(e.target.closest("[data-vcsr]")){const R=window.SpeechRecognition||window.webkitSpeechRecognition;if(!R)return;const b=e.target.closest("[data-vcsr]");try{const r=new R();r.lang=({zh:"zh-CN",en:"en-US",ja:"ja-JP",ko:"ko-KR",es:"es-ES"})[vcLang()]||"en-US";r.interimResults=false;r.maxAlternatives=1;
+  b.disabled=true;b.textContent="…";r.addEventListener("result",ev=>{const t=ev.results&&ev.results[0]&&ev.results[0][0]&&ev.results[0][0].transcript;if(t)vcSendText(t)});r.addEventListener("error",()=>{toast(vcLang()==="zh"?"没听清，可以再说一次或直接打字":"Didn't catch that — try again or type")});r.addEventListener("end",()=>{if(b.isConnected){b.disabled=false;b.textContent="🎙 "+(vcLang()==="zh"?"说一句":"Speak")}});r.start()}catch(_){b.disabled=false}}});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target&&e.target.id==="vcIn"){e.preventDefault();const v=e.target.value;e.target.value="";vcSendText(v)}});
+(()=>{const st=document.createElement("style");st.textContent=".vcdn{display:flex;gap:6px;margin-top:8px}.vcdn input{flex:1;min-width:0;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;font-size:15px}.vcdn button{flex:none;padding:0 12px;border-radius:12px;border:0;background:var(--rose,#EE6F97);color:#fff;font-weight:700}";document.head.appendChild(st)})();
 document.addEventListener("click",e=>{if(e.target.closest("[data-vcmic]")){vcCtx();vcMic().then(vcHint)}});
 function vcMicOff(){if(!call||!call.mic)return;try{call.mic.pr.disconnect();call.mic.src.disconnect();call.mic.mute.disconnect();call.mic.st.getTracks().forEach(t=>t.stop())}catch(_){}call.mic=null;call.micOn=false}
-function vcFallbackNote(){if(!call||call.noted)return;call.noted=1;toast(vcT("down"))}
+function vcFallbackNote(){if(!call)return;call.vdown=1;vcHint();if(call.noted)return;call.noted=1;toast(vcT("down"))}
 /* ---------- hook into the existing call screen ---------- */
 const _callSay81=callSay;
 callSay=async function(user){if(!call)return;

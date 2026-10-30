@@ -85,7 +85,7 @@ function renderChat(){sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
   (th.quest?'<span style="color:#FFD08A;display:flex;gap:4px;align-items:center" data-qsheet="1">🎯 <span>'+th.quest.goals.filter(g=>g.done).length+'/'+th.quest.goals.length+' · '+t("q.turns",{a:th.rounds,b:th.quest.turns})+'</span></span>':"")+'</div>';
  h+='<button class="livebanner" data-livetest="1" hidden><span></span> · <b>'+t("live.test")+'</b></button>';
  h+='<div class="msgs" id="msgs">'+th.msgs.map((m,i)=>msgHTML(m,i,th)).join("")+'</div>';
- h+='<div class="suggest" id="sugg">'+sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+'</div>';
+ h+='<div class="suggest" id="sugg">'+sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+sgMoreBtn()+'</div>';
  if(th.pk)h+='<div id="pkwrap">'+packPanel(th)+'</div>';
  const watch=th.pk&&th.pk.as==="watch";if(watch)cmode="dir";
  /* primary row: the 3–4 ways to talk, always full-size, never wraps. Everything else (watch, games, ideas, continue, script library)
@@ -195,7 +195,7 @@ function msgHTML(m,i,th){
   if(m.k==="think")return '<div class="m-think me" data-mi="'+i+'"><small>💭 '+esc(first(c0.n))+'</small>'+esc(m.txt)+'</div>';
   return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div>'+lab+'<div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'}
  if(m.k==="react")return '<div class="m-react" style="margin:6px 0 10px;padding-left:10px;border-left:2px solid var(--line);opacity:.72;font-size:13px">'+esc(m.txt)+'</div>';
- if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+'</div>';
+ if(m.k==="card")return '<div class="m-card"><div class="eyebrow">'+esc(m.title||"")+'</div><p class="sm" style="margin-top:6px;line-height:1.5">'+esc(m.txt||"")+'</p>'+(m.btn?'<button class="btn btn-p btn-sm" style="margin-top:10px" data-cardbtn="'+i+'">'+esc(m.btn)+'</button>':"")+(m.btn&&m.hold&&m.act?'<button class="lnk xs faint" style="display:block;margin:8px auto 0" data-cardlater="'+i+'">'+(CL()==="zh"?"先不看，继续剧情 ›":"Not now — continue ›")+'</button>':"")+'</div>';
  if(m.k==="pic")return '<div class="m-pic'+(m.locked?" lk":"")+'"><img src="'+esc(m.src)+'" alt="">'+(m.locked?'<button class="pk" data-unpic="'+i+'"><b>📷 '+t("pay.pic",{n:who(m,th)})+'</b><span>💎 1 · '+t("pay.unlock")+'</span></button>':'')+'</div>';
  if(m.locked&&m.who!=="me")return '<div class="m-row"><div class="av" style="width:30px;height:30px"><img src="'+artSrc(m.who)+'" alt=""></div><div><div class="m-who" style="color:'+(ch(m.who)?ch(m.who).pal[0]:"")+'">'+esc(who(m,th))+'</div><button class="bub bubble lkb" data-unmsg="'+i+'"><span class="blur">'+esc(m.txt)+'</span><em>🔒 '+t("pay.line")+' · 💎 1</em></button></div></div>';
  if(m.k==="img"){const a=S.album.find(y=>y.id===m.aid);return a?'<div class="m-img" data-mi="'+i+'">'+albumHtml(a)+'</div><div class="mquick c"><button data-shimg="'+a.id+'">📤</button></div>'+tools:""}
@@ -376,7 +376,9 @@ function asText70(x){
  return String(x);
 }
 function setSugg(list){sugg=(list||[]).map(objGuard70).map(s=>s.trim()).filter(Boolean).slice(0,3);const th=S.threads[curT];if(th){th.sugg=sugg;save()}
- const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")}
+ const el=$("#sugg");if(el)el.innerHTML=sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+sgMoreBtn()}
+/* 2026-10-31：联想回复后面固定一个「换一批」（app100 负责重新生成） */
+function sgMoreBtn(){return sugg.length?'<button class="sgmore" data-sgmore="1">↻ '+(CL()==="zh"?"换一批":"More ideas")+'</button>':""}
 function typing(on){const el=$("#msgs");if(!el)return;$$(".typing",el).forEach(x=>x.remove());if(on){el.insertAdjacentHTML("beforeend",'<div class="typing"><i></i><i></i><i></i></div>');scrollChat()}}
 /* 流式预览（2026-10-25）：等整段最长要 ~9.5 秒，而首字 ~2.0 秒就到了（LATENCY.md 实测 4.8×）。
    这里把已到达的片段先塞进"正在输入"那一行，让玩家 2 秒内就看见有东西在动。
@@ -557,6 +559,12 @@ async function reply(th,ctx,silent){
   }catch(_){return ""}})(),
   "",
   "NOW: "+inst,
+  /* 2026-10-31：接住玩家的话。剧本外的话题、吐槽、看不懂玩法，都要先正面回应，再自然地把戏往下带。 */
+  (ctx&&ctx.kind==="user"&&ctx.txt)?("THE PLAYER JUST SAID (answer THIS first — it is the most important thing in this reply): \""+String(ctx.txt).slice(0,400)+"\"\n"+
+   "- If it is off the script or about something else entirely, the character engages with it for real (opinion, feeling, a question back) in their own voice. Never ignore it, never answer a different question, never jump straight back to the plot.\n"+
+   "- If it is a question, the first spoken line answers it (or says in character why they won't).\n"+
+   "- If the player sounds confused about the story or what to do (e.g. 'what is this', 'I don't get it', '我玩不明白', '我该干嘛'), add ONE short narration beat (who:\"n\") that warmly explains where they are and gives 2 concrete things they could say or do next. Keep it in the story's tone.\n"+
+   "- Only after the player's words are answered, let the scene move one small step toward its current goal."):"",
   // 情绪合同（T01–T04）：heat 先过一遍白名单，非法值回落到缺省；合法值原样通过（37 部剧本一个字节都不改）
   "HEAT CEILING — "+dialogueHeat(th).toUpperCase()+": "+HEAT_RULE[dialogueHeat(th)],
   typeof DIALOGUE_REPLY_CHARTER !== "undefined" ? DIALOGUE_REPLY_CHARTER : "",
@@ -805,8 +813,14 @@ document.addEventListener("input",e=>{if(e.target.id==="cin"){e.target.style.hei
 const UNLOCK={games:0,gift:0,quiz:0,date:1,snap:1,truth:2,invite:0,bottle:0,lie:0,heart:0};
 function plusSheet(){const th=S.threads[curT],m=mainOf(th),st=stageOf(th,m);
  const it=[["games","🎮","gh.btn"],["gift","🎁","cx.m.gift"],["snap","📷","cx.m.snap"],["date","🌙","cx.m.date"],["quiz","💞","cx.m.quiz"],["truth","🗝","cx.m.truth"],["invite","🚪","cx.m.invite"]];
- sheet('<h2>'+t("cx.more")+'</h2><p class="xs faint" style="margin-top:4px">'+esc(first(ch(m).n))+' · '+t("stage."+st)+'</p><div class="stack" style="margin-top:6px">'+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
+ sheet('<h2>'+t("cx.more")+'</h2>'+plusQuick3()+'<p class="xs faint" style="margin-top:10px">'+esc(first(ch(m).n))+' · '+t("stage."+st)+'</p><div class="stack" style="margin-top:6px">'+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
   return '<button class="opt'+(lock?" locked":"")+'" data-pm="'+k+'"><span class="ic">'+i+'</span><span class="grow"><b>'+t(l)+'</b><span>'+(lock?"🔒 "+t("path.lock",{s:t("stage."+UNLOCK[k])}):"")+'</span></span></button>'}).join("")+'</div>')}
+/* 「+」最上面一排：原来浮在右侧的 热搜 / 播放 / 历史（只列出这部剧当下真有的） */
+function plusQuick3(){const zh=CL()==="zh",q=[],fd=$("#fd96b"),tb=$("#toolBtn"),hb=$("#histBtn"),em=x=>{const e=x&&x.querySelector("em");return e?esc(e.textContent||""):""};
+ if(fd)q.push('<button data-fd96="1"><i>🔥</i><small>'+(zh?"热搜":"Trending")+'</small><em>'+em(fd)+'</em></button>');
+ if(tb&&tb.style.display!=="none")q.push('<button data-tools="1"><i>🎬</i><small>'+(zh?"播放":"Play")+'</small></button>');
+ if(hb)q.push('<button data-hist="1"><i>🕘</i><small>'+(zh?"历史":"History")+'</small><em>'+em(hb)+'</em></button>');
+ return q.length?'<div class="pmq3">'+q.join("")+'</div>':""}
 function csSheet(){sheet('<h2>'+t("cs.h")+'</h2><p class="sm dim" style="margin-top:4px">'+t("cs.sub")+'</p><div class="stack" style="margin-top:6px">'+
  [["natural","▶️"],["ff","⏩"],["skip","⏳"],["event","✨"],["third","👥"]].map(([k,i])=>'<button class="opt" data-csk="'+k+'"><span class="ic">'+i+'</span><span class="grow"><b>'+t("cs."+k)+'</b><span>'+t("cs."+k+"S")+'</span></span></button>').join("")+
  '<div class="row" style="margin:10px 0 2px"><span class="grow" style="height:1px;background:var(--line)"></span><span class="xs faint">'+t("cs.paid")+'</span><span class="grow" style="height:1px;background:var(--line)"></span></div>'+
