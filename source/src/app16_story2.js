@@ -49,17 +49,13 @@ function pkAppend(th,m){const i=th.msgs.length-1,L=th.msgs[i];
     ⇒ 条件不满足时，标记已经打上，`appendMsg` 的兜底挂钩以为「念过了」就跳过 ⇒ **这条 say 永远不发声、也不留痕**。
     实测：一章 4 条台词、0 条发声、`unvoiced` 也是 0 —— 正是这个形状（Ann：「say 类不发声」）。
     ⇒ 现在只有**真的要念**时才打标；没念的留给兜底挂钩（它若也不念，会记一条 `unvoiced`，可数）。 */
- try{
-  if(m&&m.txt&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"&&typeof speakQueue==="function"&&S.voice&&S.voice.auto&&typeof voiceAutoOK==="function"&&voiceAutoOK()){
-   m._voiced=1;
-   speakQueue([{txt:m.txt,who:m.who}]);
-  }
- }catch(_){}
+ // Script playback owns this line; append hooks must not start a second voice.
+ if(m&&m.k==="say"){m._voiced=1;m._voiceOwner="script"}
  /* 2026-10-27 Ann：把 say 解耦出来 —— **一条角色台词永远单独成气泡**，不并进 box。
     两个后果都是她想要的：
     ① 台词不会再被吞进上方那块灰段落（「剧情里那句对话不见了」的成因之一）；
     ② **一次 say 对一条语音**（朗读按消息走），文字和声音从此一一对应，不会再错位。 */
- if(m&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"){appendMsg(th,m);return}
+ if(m&&m.k==="say"&&m.who!=="n"&&m.who!=="sys"){appendMsg(th,m);if(S.autoVoice||(S.voice&&S.voice.auto))speakLine(m,()=>{});return}
  if(!isNarr(m)){appendMsg(th,m);return}
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app16_story2:L60",function(){ if(m&&typeof m.txt==="string"){ const _d=deMeta(m.txt); if(_d!==m.txt){ try{track&&track("beat_demeta",{k:m.k,who:m.who})}catch(_){} m.txt=_d; } } });
  const part={who:m.who,k:m.who==="n"?"act":m.k,txt:m.txt};
@@ -125,6 +121,7 @@ const __body_story16 = function () { const th=S.threads[curT];if(!th)return;
  const box=$("#msgs"),pw=$("#pkwrap");if(box&&pw){box.appendChild(pw);pw.classList.add("inl")}
  const hd=$(".chead [data-cmenu]");if(hd&&!$(".chead .vtog"))hd.insertAdjacentHTML("beforebegin",'<button class="ibtn vtog'+(S.autoVoice?" on":"")+'" data-vtog="1" aria-label="voice">'+(S.autoVoice?"🔊":"🔇")+'</button>');
  const ti=$(".chead [data-us]");if(ti&&th.pk&&wd(th.wid).pack.intro){ti.dataset.us="";ti.setAttribute("data-intro",th.wid)}
+ if(th.pk&&th.pk.stop&&th.pk.stop[1]==="start"&&!th._openingResume){th.pk.opening=true;th._openingResume=1;setTimeout(()=>{delete th._openingResume;if(curT===th.id&&th.pk.stop&&th.pk.stop[1]==="start")stopResolve(th,[])},0)}
  if(th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);scrollChat() };
 if (window.UI && typeof window.UI.add === "function") window.UI.add("story16", __body_story16);
 else { const _renderChat2 = renderChat; renderChat = function () { const r = _renderChat2.apply(this, arguments); __body_story16(); return r; }; };
@@ -136,10 +133,17 @@ packRefresh=function(th){_packRefresh2(th);if(curT===th.id){const pw=$("#pkwrap"
    ⇒ **白名单**：只念 k==="say" 的角色台词。旁白（who==="n"，在 beatMsg 里 k 会被改成 act）、
    动作、环境、卡片、章节标题一律不念。以前这里只排除了 scene/chap/card/intro，
    而旁白在队列里是 act ⇒ 全被念了出来。 */
+const SCRIPT_VOICE=new WeakMap();
+function scriptSpeakOnce(m,txt,who,done){
+ let p=SCRIPT_VOICE.get(m);
+ if(!p){p=new Promise(resolve=>{try{speak(String(txt).replace(/^📞\s*/,""),who,resolve)}catch(_){resolve()}});SCRIPT_VOICE.set(m,p)}
+ p.then(()=>{if(done)done()});
+}
 function speakLine(m,done){if(!m){done();return}
- const who=m.k==="box"?(m.lastWho||"n"):(m.who==="me"?null:m.who),txt=m.k==="box"?(m.last||m.txt):m.txt;
+ const who=m.who==="me"?null:m.who,txt=m.txt;
  if(!txt||m.k!=="say"||!who||who==="n"||who==="sys"||!ch(who)){done();return}
- try{speak(String(txt).replace(/^📞\s*/,""),who,done)}catch(_){done()}}
+ scriptSpeakOnce(m,txt,who,done);
+}
 /* 2026-10-27 · 朗读那条等是「换章之后好卡」的一张脸（进游戏后实测见 PERF.md）
    剧本每放一句都走 pkWait；开朗读时等的是「这句读完了」。原来的兜底是
    `max(ms*3, 14000)` —— 也就是**朗读一旦交不出声音，每一句都白等 14 秒**。
@@ -276,9 +280,9 @@ document.addEventListener("click",async e=>{const x=e.target.closest("[data-shoo
 /* ===== backgrounds with people: art/scenes/<img>.mp4 (looping clip) or .jpg; ["sys","bg",{img}] switches mid-scene and is skipped if the picture isn't there yet ===== */
 const SCN_OK={};
 function scnProbe(img){return Promise.resolve((window.SCENE_FILES||{})[img]||null)}
-sceneBg=function(th,img){const box=$("#cbImg");if(!box)return;const key=img||("cover:"+th.wid);if(box.dataset.scene===key)return;box.dataset.scene=key;box.dataset.clip="";box.dataset.who="";
+sceneBg=function(th,img){const box=$("#cbImg");if(!box)return;const key=img||("cover:"+th.wid),resolved=(window.SCENE_FILES||{})[img]||artSrc(th.wid);if(box.dataset.scene===key&&box.dataset.sceneSrc===resolved&&box.dataset.sceneThread===th.id&&box.lastElementChild)return;box.dataset.scene=key;box.dataset.sceneSrc=resolved;box.dataset.sceneThread=th.id;box.dataset.clip="";box.dataset.who="";
  box.classList.remove("vmode","duo");POSES.forEach(p=>box.classList.remove("p-"+p));
- (img?scnProbe(img):Promise.resolve(null)).then(src=>{if(box.dataset.scene!==key)return;src=src||artSrc(th.wid);let el;
+ (img?scnProbe(img):Promise.resolve(null)).then(src=>{if(box.dataset.scene!==key||box.dataset.sceneThread!==th.id||box.dataset.sceneSrc!==resolved)return;src=src||artSrc(th.wid);let el;
   if(/\.mp4$/.test(src)){el=document.createElement("video");el.muted=true;el.defaultMuted=true;el.setAttribute("muted","");el.loop=true;el.autoplay=true;el.playsInline=true;el.setAttribute("playsinline","");el.setAttribute("webkit-playsinline","");el.preload="auto";el.className="scimg cbv"}else{el=document.createElement("img");el.alt="";el.className="scimg"}
   el.src=src;box.appendChild(el);if(el.play)el.play().catch(()=>{});requestAnimationFrame(()=>{el.classList.add("on");setTimeout(()=>{const keep=box.lastElementChild;[...box.children].forEach(c=>{if(c!==keep)c.remove()})},900)})})};
 const _pkDir5=pkDirective;
@@ -320,3 +324,11 @@ document.addEventListener("click",e=>{
  if(e.target.closest("[data-insthink]")){cmode="think";$$("[data-mode]").forEach(b=>b.classList.toggle("on",b.dataset.mode==="think"));const ta=$("#cin");if(ta){ta.focus();ta.placeholder=t("cx.ph.think")}return}});
 Object.assign(I18N.en,{"st6.act":"(action)","st6.think":"(thought)","st6.tip":"e.g. *pulls him closer* Stay.","st6.actPh":"what you do"});
 Object.assign(I18N.zh,{"st6.act":"（动作）","st6.think":"（心声）","st6.tip":"例：*把他拉近* 别走。","st6.actPh":"你的动作"});
+
+/* Register the base directives too: registry installation otherwise drops these
+   direct handlers, turning scene objects into text without changing the image. */
+const storySceneDirective16=pkDirective;
+PKREG.add("app16_story2.js#scene",function(th,b,next){
+ if(Array.isArray(b)&&b[0]==="sys"&&["scene","bg","if","set"].includes(b[1]))return storySceneDirective16(th,b);
+ return next(th,b);
+});

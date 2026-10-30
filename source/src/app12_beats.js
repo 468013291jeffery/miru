@@ -6,7 +6,9 @@ const BEAT0={9:"pic",14:"del",20:"cont",24:"call",30:"pov"},BEATN={3:"pic",8:"de
 function beatAt(n){return n<=30?BEAT0[n]:BEATN[(n-31)%25]}
 storyHooks=function(){};
 payHooks=function(th,m){if(!th.wid)return;th.aiN=(th.aiN||0)+1;const b=beatAt(th.aiN),cid=m.who,c=ch(cid);if(!b||!c)return;const nm=first(c.n);
- if(b==="pic"&&!S.plus){setTimeout(()=>{th.msgs.push({who:cid,k:"pic",src:artSrc(cid),locked:true,at:Date.now()});save();if(curT===th.id)renderChat()},900)}
+ // A reply counter is not evidence that a character sent a photo.
+ // Images come from an explicit scene event or the player's Generate action.
+
  if(b==="del"){beatCardLater(th,{who:"sys",k:"card",title:"↩︎ "+t("bt.delH",{n:nm}),txt:t("bt.delS"),btn:t("bt.delB")+(S.plus?"":" · 💎 1"),act:"del|"+cid,hold:1})}
  if(b==="cont"&&!S.plus&&m.k==="say"&&String(m.txt||"").length>12){m.locked=true}
  if(b==="call"){setTimeout(()=>callCard(th,cid),1600)}
@@ -52,3 +54,4 @@ Object.assign(I18N.en,{"bt.delH":"{n} unsent a message","bt.delS":"It was only t
 Object.assign(I18N.zh,{"bt.delH":"{n} 撤回了一条消息","bt.delS":"它只停留了一秒。你看见它消失了。","bt.delB":"看看他写了什么","bt.delDone":"{n} 差点发出的那句话",
  "bt.povH":"刚才那一秒，{n} 在想什么？","bt.povS":"他嘴上说的是一回事，表情是另一回事。","bt.povB":"解锁 {n} 的 POV","bt.povDone":"{n} 的 POV",
  "bt.missed":"未接来电 ×2 · {n}","bt.missedS":"你离开了 {h} 小时。","bt.callBack":"📞 回拨","bt.tl":"你们的时间线"});
+

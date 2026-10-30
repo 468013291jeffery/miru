@@ -61,7 +61,7 @@ function pkPart(th,part,txt){const i=th.msgs.length-1,L=th.msgs[i];
 const _pkAppend8=pkAppend;
 pkAppend=function(th,m){const i=th.msgs.length-1,L=th.msgs[i];
  if(m&&m.pk&&m.k==="say"&&ch(m.who)&&m.who!=="me"&&L&&L.k==="box"&&L.pk&&!L.say){L.say={who:m.who,txt:m.txt};L.last=m.txt;L.lastWho=m.who;th.at=Date.now();save();
-  if(curT===th.id){chatBgSet(m.who,poseOf(m));const el=$('#msgs [data-mi="'+i+'"]');if(el){el.outerHTML=msgHTML(L,i,th);scrollChat()}if(S.autoVoice&&m.k==="say"&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}}return}
+  if(curT===th.id){chatBgSet(m.who,poseOf(m));const el=$('#msgs [data-mi="'+i+'"]');if(el){el.outerHTML=msgHTML(L,i,th);scrollChat()}if(S.autoVoice||(S.voice&&S.voice.auto)){m._voiced=1;scriptSpeakOnce(L,m.txt,m.who,()=>{})}}return}
  return _pkAppend8(th,m)};
 PKREG.add("app17_custom.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"){th.pk.q.shift();const d=b[2]||{};
   pkPart(th,{who:"sys",k:"event",icon:d.icon||"⚡",title:d.title||"",txt:d.txt||""},(d.title||"")+" "+(d.txt||""));try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}save();return true}
@@ -74,7 +74,7 @@ boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx bubble" data-mi
  const c=ch(m.say.who);
  /* 2026-10-27（Ann：「头像和语句分成两段」「还是以前的样式」）：真实路径上，别人说的台词是被 app26 包成 k:"box" + m.say 再走这里的，**根本到不了 sayHTML**。原来它渲染 .m-turn（头像 + 名字 + 上下文 + 台词，天然分段），现在改成和 sayHTML 的 other 分支**同一套** .m-row + .bub。 */
  return '<div class="m-row" data-mi="'+i+'">'+avatar(m.say.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(c?first(c.n):"")+'</small>'+(m.parts.length?'<div class="tctx">'+m.parts.map(partHTML).join("")+'</div>':'')+'<p class="bac">'+fmtMix(esc(m.say.txt))+'</p></div></div>'};
-const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){try{speak(m.say.txt,m.say.who,done)}catch(_){done()}return}return _speakLine8(m,done)};
+const _speakLine8=speakLine;speakLine=function(m,done){if(m&&m.k==="box"&&m.say){scriptSpeakOnce(m,m.say.txt,m.say.who,done);return}return _speakLine8(m,done)};
 Object.assign(I18N.zh,{"st3.lgSay":"台词气泡","st3.lgSayD":"一句话一个气泡：最下面大字是他说的话，上面小字是当时的动作、心声、旁白","st3.lgAct":"✱ 动作","st3.lgActD":"橙色斜体：谁做了什么","st3.lgThink":"心声","st3.lgThinkD":"紫色斜体：心里想的，别人听不见","st3.lgN":"旁白","st3.lgND":"灰色小字：在哪、发生了什么","st3.lgEv":"大事件","st3.lgEvD":"红色标签：剧情突然转折"});
 Object.assign(I18N.en,{"st3.lgSay":"Line bubble","st3.lgSayD":"one bubble per line: the big text at the bottom is what they say, the small text above is what's happening","st3.lgAct":"✱ Action","st3.lgActD":"orange italics: what someone does","st3.lgThink":"Inner voice","st3.lgThinkD":"purple italics: what they think","st3.lgN":"Narration","st3.lgND":"small grey text: where, what happens","st3.lgEv":"Event","st3.lgEvD":"red tag: a sudden twist"});
 /* plain story lines use the same bubble as lines with context

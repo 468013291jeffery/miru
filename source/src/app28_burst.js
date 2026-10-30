@@ -29,7 +29,7 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
     const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];th._held=1;if(!th.pk.q||th.pk.q[0]!==b)continue}
    if(pkDirective(th,b))continue;
    if(isStop(b)){let extra=stopAuto(th,b);
-    if(!extra){delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();
+    if(!extra){if(b[1]!=="start")th.pk.opening=false;delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();
      extra=await new Promise(r=>PKWAIT[th.id]=r);if(dead())return;delete PKWAIT[th.id]}
     th.pk.stop=null;th.pk.go=0;th.pk.q.shift();th.pk.q.unshift(...(extra||[]));save();packRefresh(th);continue}
    /* 2026-10-27：打开「历史」时剧情暂停，收起后继续 */

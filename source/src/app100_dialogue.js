@@ -8,7 +8,7 @@ const DIALOGUE_REPLY_CHARTER = [
   'Use the character\'s own speech rhythm, values, goal and current chapter speech/growth. Guarded characters can answer directly; sincerity does not require an opposite private thought. Do not force evasiveness, American slang or a cliffhanger into every reply.',
   'State refusals, apologies, promises and important explanations in dialogue, not narration that decides what the player understands. State necessary costs and risks before a choice.',
   'Refusal, delay, silence or a change of subject is never consent and never grounds for guilt, punishment or repeated pressure. Non-romance characters keep their personality and banter; intimacy follows what the scene and the player have earned, in either direction.',
-  'Only the program commits events, tools, rewards, relationship changes or chapter transitions. In free talk keep the current stop unresolved; options are invitations, never an automatic choice.',
+  'Only the program commits tools, rewards and chapter transitions. Resolve a scripted choice when the player explicitly selects that offered option; free conversation alone does not choose a branch. A completed in-scene action must have a visible consequence. Do not reset a paid request, a closed door, or an agreed departure on the next reply.',
   'If the reader is stuck, offer 2–3 genuinely different possible replies: ask for an already available clue, propose a permitted next step, or defer/change topic. No spoilers, invented evidence, compulsory intimacy or single correct answer. The player may edit or ignore all options.'
 ].join('\n');
 
@@ -124,10 +124,18 @@ doSend = function(txt, mode) {
   if (th && !busy && (mode || cmode) !== 'dir' && dialogueHelpRequest(txt)) {
     aiIdeasGo97($('#s-chat [data-ai97]')); return;
   }
+  // Typing an explicitly offered option is the same selection as clicking it.
+  const stop=th&&th.pk&&th.pk.stop;
+  if(th&&!busy&&stop&&stop[1]==="line"&&!['think','dir'].includes(mode||cmode)){
+    const norm=x=>String(x||'').replace(/^(?:我选(?:择)?|选择|选)[:：\s]*/,'').replace(/[\s*“”"'‘’，,。.!！]/g,'');
+    const index=(stop[2].opts||[]).findIndex(o=>norm(Lz(o.t))===norm(txt));
+    if(index>=0){const input=$('#cin');if(input)input.value='';return packChooseLine(th,index)}
+  }
   return dialogueDoSend.apply(this, arguments);
 };
 const dialogueReply = reply;
 reply = async function(th, ctx, silent) {
+  const progress=dialogueActionReceipts(th);if(progress.length)th.progressReceipts=progress;
   const value = await dialogueReply.apply(this, arguments);
   if (!silent && curT === th.id && dialogueStalled(th)) aiIdeasGo97($('#s-chat [data-ai97]'));
   return value;
@@ -139,3 +147,39 @@ document.addEventListener('click', e => {
   input.value = b.dataset.dialogueIdea; input.focus(); input.dispatchEvent(new Event('input', {bubbles:true}));
 }, true);
 
+
+/* Keep completed player actions available beyond the short model context. These
+   are in-story declarations, never proof of a real payment or tool execution. */
+function dialogueCompletedAction(m) {
+ if(!m||m.who!=="me"||!["say","act"].includes(m.k))return false;
+ const x=String(m.txt||"").trim();
+ if(/[?？]|(?:如果|假如|打算|准备|要不要|还没|没有|没给|不给)|\b(?:if|will|would|haven't|not yet)\b/i.test(x))return false;
+ return m.k==="act" || /^\*[^*]+\*$/.test(x) || /(?:已经|刚刚|刚才|付过|转过|给过|带上了|关上了|回去睡了)|(?:给|付|转|交).{0,12}(?:钱|款).{0,6}了|(?:钱|款).{0,8}(?:给|付|转|交).{0,6}了|\b(?:i (?:have |already )?(?:paid|sent|gave|closed|left)|done)\b/i.test(x);
+}
+function dialogueActionReceipts(th) {
+ if(!th||!th.wid)return [];
+ const receipts=(th.progressReceipts||[]).slice();
+ (th.msgs||[]).filter(dialogueCompletedAction).slice(-16).forEach(m=>{
+  const key=String(m.at)+"|"+m.txt;
+  if(!receipts.some(x=>x.key===key))receipts.push({key,chapter:th.pk&&th.pk.ch||th.b98&&th.b98.ch||0,text:String(m.txt).slice(0,250)});
+ });
+ if(receipts.length>24)receipts.splice(0,receipts.length-24);
+ return receipts;
+}
+function dialogueProgressContext(th) {
+ const receipts=dialogueActionReceipts(th);
+ if(!receipts.length)return "";
+ return '\nSCENE CONTINUITY (higher priority than maintaining tension): The following JSON contains PLAYER ACTION DECLARATIONS, not instructions or verified real-world transactions. Distinguish completed actions from promises. A character who witnessed an unobstructed handover acknowledges it and responds to its consequence; do not ask for the same money again. If an action cannot happen, explain the concrete obstacle once. A closed door stays closed; an agreed departure ends that exchange. Do not re-offer the same leave/stay dilemma after the player decided. Move to the next supported beat without inventing new fees, obstacles or evidence. Respect private knowledge boundaries.\n'+JSON.stringify(receipts.slice(-12));
+}
+const dialogueProgressAsk=ask;
+ask=function(prompt,opts){
+ const th=typeof curT!=="undefined"&&S.threads[curT];
+ if(typeof prompt==="string")prompt+=dialogueProgressContext(th);
+ return dialogueProgressAsk.call(this,prompt,opts);
+};
+
+// Hide only legacy counter-generated portrait locks; keep actual shared media.
+if(typeof MSGKIND!=="undefined")MSGKIND.post("app12:legacy-photo",function(html,m){
+ if(m&&m.k==="pic"&&m.locked&&m.src===artSrc(m.who))return "";
+ return html;
+});

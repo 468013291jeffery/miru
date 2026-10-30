@@ -94,7 +94,7 @@ const pkGo = (typeof window !== "undefined" && window.PKST && typeof window.PKST
   : function (th, to) { if (th && th.pk) th.pk.st = to };
 /* 2026-10-27：th.pk.st 的唯一写入者就在这儿注册给状态机（app104_pkstate.js） */
 (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app14_pack:L96",function(){ if(window.PKST&&window.PKST.bind) window.PKST.bind(function(th,to){ th.pk.st = to }); });
-function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
+function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)return Promise.resolve();pkTrace("packOpen",n);th.pk.ch=n;th.pk.opening=!!(instant&&n===1);th.pk.chRounds=0;   // 本章玩家说了几轮（2026-10-27 节奏门槛）
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
@@ -132,7 +132,7 @@ function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)
   const rebuilt=beats.slice(0,i0).concat(keep,[firstOther],moved,tail);
   beats.length=0; for(const b of rebuilt)beats.push(b);
  });
- if(instant&&n===1&&w.pack.intro){th.msgs.push({who:"sys",k:"intro",at:Date.now()});th.msgs.push(card);th.pk.q=[["sys","start",{}]].concat(beats);th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),300);return Promise.resolve()}
+ if(instant&&n===1&&w.pack.intro){th.msgs.push({who:"sys",k:"intro",at:Date.now()});th.msgs.push(card);th.pk.q=beats;th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),300);return Promise.resolve()}
  if(instant){th.msgs.push(card);let k=0;while(k<beats.length&&k<3&&!isStop(beats[k])){th.msgs.push(beatMsg(beats[k]));k++}
   th.pk.q=beats.slice(k);th.pk.after="choose";save();PKPLAY[th.id]=1;setTimeout(()=>packRun(th),700);return Promise.resolve()}
  appendMsg(th,card);th.pk.q=beats;th.pk.after="choose";save();return packRun(th)}
@@ -142,6 +142,7 @@ function readMs(m){if(!m)return 1500;const x=String(m.txt||m.title||"");const cj
  return Math.min(7000,Math.max(1700,(cjk?1000+x.length*105:1000+x.length*34)))}
 function pkSpd(){const v=S.pkSpd;return v===0?0:(v||1)}
 function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
+ if(k==="start")return []; // Resume legacy openings automatically.
  if(k==="line"&&as!==speaker){const o=d.opts[0];if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}return [[speaker,o.k||"say",o.t]].concat(o.then||[])}
  if((k==="gift"||k==="call"||k==="voice")&&(!inScene||as===(k==="call"?d.cid:stopWho(th,d))))return d.skip||[];
  if(k==="video"&&!stopClip(th,d))return d.then||[];
@@ -173,7 +174,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
   while(PKPAUSE[th.id]||(typeof beatHeld==="function"&&beatHeld(th)))await new Promise(r=>setTimeout(r,250));
    if(pkDirective(th,b))continue;
    if(isStop(b)){let extra=stopAuto(th,b);
-    if(!extra){delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();
+    if(!extra){if(b[1]!=="start")th.pk.opening=false;delete PKSKIP[th.id];th.pk.stop=b;th.pk.go=0;th.pk.min=false;save();packRefresh(th);if(live())scrollChat();
      extra=await new Promise(r=>PKWAIT[th.id]=r);delete PKWAIT[th.id]}
     th.pk.stop=null;th.pk.go=0;th.pk.q.shift();th.pk.q.unshift(...(extra||[]));save();packRefresh(th);continue}
    /* 2026-10-27：打开「历史」时剧情暂停，收起后继续 —— 不再一边看历史一边往下走 */
@@ -543,13 +544,14 @@ function stopVideo(th,d){return new Promise(res=>{const src=stopClip(th,d);const
  ($("#dev")||document.body).appendChild(el);const v=el.querySelector("video");v.muted=false;v.play().catch(()=>{v.muted=true;v.play().catch(()=>{})});
  const close=()=>{el.remove();res()};el.querySelector(".stvx").onclick=close;v.onended=()=>setTimeout(close,600);
  v.onerror=()=>{const f=document.createElement("div");f.className="stvfb";f.style.backgroundImage="url("+artSrc(stopWho(th,d))+")";v.replaceWith(f);setTimeout(close,6000)}})}
+function packChooseLine(th,index){if(!th||!th.pk||!th.pk.stop||th.pk.stop[1]!=="line")return false;const d=th.pk.stop[2];const o=d.opts[index];if(!o)return;appendMsg(th,{who:"me",k:o.k||"say",txt:Lz(o.t),at:Date.now()});th.rounds++;
+  pkSet(th,o.set);if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}if(o.love)th.cast.filter(c=>c!==th.pk.as).forEach(c=>loveWrite(th,c,o.love,"choice:love"));
+  stopResolve(th,o.then||[]);return true}
 document.addEventListener("click",async e=>{let x;const th=S.threads[curT];if(!th||!th.pk||!th.pk.stop)return;const k=th.pk.stop[1],d=th.pk.stop[2];
  if(e.target.closest("[data-stopstart]")){stopResolve(th,[]);return}
  if(e.target.closest("[data-stopskip]")){stopResolve(th,d.skip||[]);return}
  if(e.target.closest("[data-stopdone]")){stopResolve(th,d.then||[]);return}
- if(x=e.target.closest("[data-stopline]")){const o=d.opts[+x.dataset.stopline];appendMsg(th,{who:"me",k:o.k||"say",txt:Lz(o.t),at:Date.now()});th.rounds++;
-  pkSet(th,o.set);if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}if(o.love)th.cast.filter(c=>c!==th.pk.as).forEach(c=>loveWrite(th,c,o.love,"choice:love"));
-  stopResolve(th,o.then||[]);return}
+ if(x=e.target.closest("[data-stopline]")){packChooseLine(th,+x.dataset.stopline);return}
  if(x=e.target.closest("[data-stopgift]")){const g=GIFTS.find(y=>y.id===x.dataset.stopgift);if(!g)return;if(g.cost&&!spend(g.cost,"gift"))return;
   const m=stopWho(th,d);loveWrite(th,m,g.love,"gift");th.tasks.gift=1;th.mem.push(me()+" gave "+ch(m).n+" "+Lz(g.n));
   appendMsg(th,{who:"sys",k:"card",title:g.ic+" "+t("cx.m.gift"),txt:t("gift.given",{n:first(ch(m).n),g:Lz(g.n)}),at:Date.now()});

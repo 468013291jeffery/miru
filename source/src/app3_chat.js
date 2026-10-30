@@ -579,7 +579,7 @@ async function reply(th,ctx,silent){
   "- The USER is always \"you\" (or their name). NEVER call the user he/she/they, and NEVER narrate the user's feelings, decisions or actions. Their beats are written by the app, not by you.",
   "- Each character sounds different, follows their profile, wants something, and may disagree or interrupt.",
   "- Contemporary American voice: contractions, fragments, dry humor. Mild swearing is fine unless heat is FLUFF.",
-  "- End on something the user can answer: a question, a dare, a half-said thing. Never wrap the moment up. Never repeat an earlier line.",
+  "- Resolve completed actions and answered requests. A scene may end naturally. Offer a new, relevant next step only when needed; never keep a resolved demand or repeat the same dilemma just to prolong the chat.",
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
@@ -684,7 +684,9 @@ async function playBeats(th,r,ctx,silent){
   /* 2026-10-27（第二次修）：**别在这里无条件打 `_voiced`**。真正念不念由下面那段判断
      （`canSpeak` / 是不是 say / 是不是角色 / 退避计数），这里先打标会让兜底挂钩跳过它
      ⇒ 条件不满足时这条台词永远不发声、也不留痕。改成：**下面真念了才打标**。 */
-  appendMsg(th,m);if(m.k!=="think")toSpeak.push(m);
+  // Reserve voice ownership BEFORE append hooks can enqueue the same sentence.
+  if(m.k==="say"){m._voiced=1;m._voiceOwner="playBeats"}
+  appendMsg(th,m);if(m.k==="say")toSpeak.push(m);
   /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
@@ -739,7 +741,7 @@ async function playBeats(th,r,ctx,silent){
   }
  }catch(_){}
  if(curT===th.id&&!silent){const cur=$("#s-chat");if(cur&&!cur.hidden){const sc=$("#msgs").scrollTop;renderChat();scrollChat()}}
- if(!INLINE_SPOKE&&S.voice.auto&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
+ if(!INLINE_SPOKE&&canSpeak&&!silent&&voiceAutoOK()){voiceCount(toSpeak.length);speakQueue(toSpeak)}}
 let VOICE_BUSY=0;   // 正在播/正在生成的语音条数（2026-10-27）
 /* 2026-10-27 第二步：一条语音的开关。原来只靠 onend 递归推进 —— 任何一层漏调 onend，队列就永远停住，
    而 VOICE_BUSY 一直 >0、没有任何东西会喊，界面上只表现为「生成中」卡满 8 秒。

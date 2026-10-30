@@ -171,12 +171,55 @@ const _installWork94 = installWork;
 installWork = async function (id) {
   try { const h = S.off76 && S.off76[id]; if (h && !h.v94) { h.ver = -1; } } catch (_) {} OFF94.cur = { id }; try { await off94Assets(id); } catch (_) {} try { return await _installWork94.apply(this, arguments); } finally { OFF94.cur = null; } };
 /* ---- runtime: pictures / films that were added after the story was installed ---- */
+/* Older imported scripts have scene cards but no BG directive. Numbered artwork
+   still belongs to those scenes; persist its URL so a saved queue can restore it. */
+function off94BindScenes(w, A) {
+  const SF = (window.SCENE_FILES = window.SCENE_FILES || {});
+  function bind(arr, chapter, offset) {
+    let scene = offset || 0;
+    (arr || []).forEach(b => {
+      if (!Array.isArray(b) || !b[2] || typeof b[2] !== "object") return;
+      const d = b[2];
+      if (b[0] === "sys" && b[1] === "scene") {
+        scene++;
+        const slot = d.bg94 || "bg_c" + String(chapter).padStart(2,"0") + "s" + String(scene).padStart(2,"0");
+        const src = A[slot] || d.src94;
+        if (src) { d.bg94 = slot; d.img = d.img || "off94:" + w.community + ":" + slot; d.src94 = src; SF[d.img] = src; }
+      }
+      if (b[1] === "if") { bind(d.then,chapter,scene); bind(d.else,chapter,scene); }
+      if (Array.isArray(d.opts)) d.opts.forEach(o => bind(o.then,chapter,scene));
+    });
+  }
+  (w.pack.chapters || []).forEach((c,i) => {
+    ["zh","en"].forEach(l => bind(c.beats && c.beats[l],i+1));
+    (c.choices || []).forEach(o => ["zh","en"].forEach(l => bind(o.then && o.then[l],i+1)));
+  });
+  return bind;
+}
 async function off94Ensure(w) {
-  if (!w || !w.official76 || !w.community) return {}; const A = await off94Assets(w.community); const SF = (window.SCENE_FILES = window.SCENE_FILES || {});
-  (w.pack.chapters || []).forEach(c => ["zh", "en"].forEach(l => ((c.beats && c.beats[l]) || []).forEach(b => { if (Array.isArray(b) && b[1] === "scene" && b[2] && b[2].bg94 && A[b[2].bg94]) { b[2].img = b[2].img || "off94:" + w.community + ":" + b[2].bg94; SF[b[2].img] = A[b[2].bg94]; } })));
+  if (!w || !w.official76 || !w.community || !w.pack) return {};
+  const A = await off94Assets(w.community), bind = off94BindScenes(w,A);
+  Object.values(S.threads || {}).filter(th => th.wid === w.id && th.pk).forEach(th => {
+    const c = w.pack.chapters[th.pk.ch-1], scenes = ((c && packBeats(c.beats)) || []).filter(b => Array.isArray(b) && b[0] === "sys" && b[1] === "scene");
+    const remaining = (th.pk.q || []).filter(b => Array.isArray(b) && b[0] === "sys" && b[1] === "scene").length;
+    bind(th.pk.q,th.pk.ch,Math.max(0,scenes.length-remaining));
+    const reached = (th.msgs || []).some(m => m.k === "scene");
+    const active = scenes[reached ? Math.max(0,scenes.length-remaining-1) : 0];
+    if (active && active[2].img) th.pk.bg = active[2].img;
+    if (th.id === curT && th.pk.bg) sceneBg(th,th.pk.bg);
+  });
   (w.cast || []).forEach(id => { const c = ch(id); const nm = c && (c.n94 ? c.n94.zh : c.n); if (nm && A["char_" + nm]) S.art[id] = A["char_" + nm]; });
   if (A.cover || A.poster) S.art[w.id] = A.cover || A.poster; return A;
 }
+/* Restore artwork when reopening an already-installed story, without restarting it. */
+const OFF94_OPEN = new WeakSet();
+function off94RestoreOpen() {
+  const th = S.threads[curT], w = th && wd(th.wid);
+  if (!th || !w || !w.official76 || !w.pack || OFF94_OPEN.has(th)) return;
+  OFF94_OPEN.add(th);
+  off94Ensure(w).then(() => { save(); }, e => { OFF94_OPEN.delete(th); console.warn("[off94] restore",e); });
+}
+if (window.UI && typeof window.UI.add === "function") window.UI.add("off94-scenes",off94RestoreOpen);
 const _packStart94 = packStart;
 packStart = function (wid) { const w = wd(wid), args = arguments, self = this; if (w && w.official76) { off94Ensure(w).then(() => _packStart94.apply(self, args), () => _packStart94.apply(self, args)); return; } return _packStart94.apply(this, arguments); };
 setTimeout(() => { try { Object.values(S.mine.worlds || {}).forEach(w => { if (w && w.official76) off94Ensure(w); }); } catch (_) {} }, 1500);

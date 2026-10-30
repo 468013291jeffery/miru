@@ -1,14 +1,10 @@
-/* ================= v2.4 · CHARACTER VOICES — server TTS (IndexTTS2 / your own TTS server) with device-voice fallback =================
-   Order for every line: 1) a pre-recorded line in the pack → 2) server TTS (/api/tts on Vercel) → 3) the device voice.
-   · Each character gets a stable voice from a bank of adult Mandarin reference speakers (AISHELL-3, Apache-2.0); creators can pick one.
-   · Emotion comes from the line itself (angry / sad / afraid / surprised / tender / calm) and is sent as IndexTTS2 emotion weights.
-   · Audio is cached on Vercel's CDN (each line synthesised once for everyone) and in memory here; the next lines are prefetched
-     while you read, so read-aloud doesn't wait. If the server is slow (>7s) or down, that line falls back to the device voice. */
+/* Character server TTS, stable voices, caching and prefetch.
+   Playback is owned by voicefix-86; unavailable audio stays silent. */
 const TTS_EP=window.MIRU_TTS!==undefined?window.MIRU_TTS:(/\.vercel\.app$/.test(location.hostname)?"/api/tts":(window.MIRU_PROXY?String(window.MIRU_PROXY).replace(/\/api\/longcat.*$/,"/api/tts"):""));
 const TTS={mem:new Map(),inflight:new Map(),fails:0,off:false,ok:null};
 const TTS_VOICES={m:["m1","m2","m3","m4","m5","m6","m7"],f:["f1","f2"]};
 const TTS_VNAME={m1:"低沉克制",m2:"清朗少年感",m3:"温和学长",m4:"冷硬",m5:"慵懒",m6:"明亮",m7:"成熟沉稳",f1:"温柔",f2:"干练"};
-function ttsOn(){return !!TTS_EP&&S.ttsMode!=="device"&&!TTS.off}
+function ttsOn(){return !!TTS_EP&&!TTS.off}
 /* 2026-10-31：玩家自己的台词也能朗读。演剧中角色时用那个角色的声音；否则按「我的」代词选：he → m4，其余 → f2（和旁白 f1 区分开）；S.myVoice 可覆盖 */
 function ttsMyVoice(){if(S.myVoice&&/^[mf]\d$/.test(S.myVoice))return S.myVoice;try{const th=S.threads[curT],as=th&&th.pk&&th.pk.as;if(as&&as!=="watch"&&ch(as))return ttsVoice(as)}catch(e){console.warn("[tts62] myVoice",e)}const p=(typeof persona==="function"&&persona())||{};return p.pron==="he"?"m4":"f2"}
 function ttsVoice(id){if(id==="me")return ttsMyVoice();if(!id||id==="n")return S.ttsNarr||"f1";const c=ch(id);if(!c)return "m1";if(c.voiceId&&/^[mf]\d$/.test(c.voiceId))return c.voiceId;
@@ -48,13 +44,13 @@ function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return
 const _pkAppend62=pkAppend;pkAppend=function(th,m){const r=_pkAppend62(th,m);try{if(curT===th.id)ttsPrefetch(th)}catch(_){}return r};
 /* settings: the AI-engine card on the Me page gets a voice row */
 function ttsCardHTML(){if(!TTS_EP)return "";const zh=CL()==="zh",mode=S.ttsMode||"server";
- return '<div class="card ttscard"><div class="row"><div class="grow"><b>🎙 '+(zh?"角色配音":"Character voices")+'</b><p class="xs faint">'+(zh?"真人感配音（千问 TTS）· 失败时自动用设备语音":"Natural voices (Qwen TTS) · falls back to the device voice")+'</p></div></div>'+
-  '<div class="ttsseg"><button data-ttsmode="server" class="'+(mode==="server"?"on":"")+'">'+(zh?"真人感":"Natural")+'</button><button data-ttsmode="device" class="'+(mode==="device"?"on":"")+'">'+(zh?"设备语音":"Device")+'</button><button data-ttstest="1">▶ '+(zh?"试听":"Try")+'</button></div><p class="xs faint" id="ttsStat"></p></div>'}
+ return '<div class="card ttscard"><div class="row"><div class="grow"><b>🎙 '+(zh?"角色配音":"Character voices")+'</b><p class="xs faint">'+(zh?"真人感配音（千问 TTS）· 暂不可用时保持静音，可点朗读重试":"Natural voices (Qwen TTS) · stays silent if unavailable; tap to retry")+'</p></div></div>'+
+  '<div class="ttsseg"><button data-ttsmode="server" class="'+(mode==="server"?"on":"")+'">'+(zh?"真人感":"Natural")+'</button><button data-ttstest="1">▶ '+(zh?"试听":"Try")+'</button></div><p class="xs faint" id="ttsStat"></p></div>'}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-ttsmode]")){S.ttsMode=x.dataset.ttsmode;save();document.querySelectorAll("[data-ttsmode]").forEach(b=>b.classList.toggle("on",b===x));return}
  if(e.target.closest("[data-ttstest]")){const st=$("#ttsStat");if(st)st.textContent=CL()==="zh"?"生成中……第一次可能要 10–20 秒":"Generating… the first time can take 10–20s";const t0=Date.now();
   ttsFetch(CL()==="zh"?"你终于来了。外面雨这么大，你也不带把伞？":"You finally came. It's pouring out there — no umbrella?","m1").then(u=>{const a=new Audio(u);a.play().catch(()=>{});if(st)st.textContent=(CL()==="zh"?"✓ 服务器配音可用 · ":"✓ Server voice works · ")+((Date.now()-t0)/1000).toFixed(1)+"s"})
-   .catch(err=>{if(st)st.textContent=(CL()==="zh"?"服务器配音暂时不可用，会用设备语音：":"Server voice unavailable, using the device voice: ")+String(err&&err.message||err)})}});
+   .catch(err=>{if(st)st.textContent=(CL()==="zh"?"服务器配音暂时不可用，请稍后重试：":"Server voice unavailable; please retry: ")+String(err&&err.message||err)})}});
 const _renderMe62=renderMe;renderMe=function(v){const r=_renderMe62.apply(this,arguments);try{if(TTS_EP&&!v.querySelector(".ttscard")){const lc=v.querySelector(".lccard");if(lc)lc.insertAdjacentHTML("afterend",ttsCardHTML());else{const sc=v.querySelector(".scroll");if(sc)sc.insertAdjacentHTML("afterbegin",ttsCardHTML())}}}catch(_){}return r};
 /* creators: pick a voice for each character (stored on the character; used by the server TTS) */
 function ttsVoicePicker(id){const c=ch(id);if(!c)return "";const cur=ttsVoice(id),g=c.g==="f"?"f":"m";

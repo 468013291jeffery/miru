@@ -54,6 +54,9 @@
   if (typeof pkWait === "function") {
     const _pw = pkWait;
     pkWait = function (th, prev, spd, ms) {
+      // Enter the scene and let the cast speak before asking the player to tap/type.
+      // The first real interaction ends this opening; an explicit Pause still wins.
+      if (th.pk && th.pk.opening && !S.pkPaused) return _pw.call(this, th, prev, spd || 1, Math.min(ms, 5000));
       if (!tapMode()) return _pw.apply(this, arguments);
       const av = S.autoVoice; S.autoVoice = false;
       let p; try { p = _pw.call(this, th, prev, 1, 864e5); } finally { S.autoVoice = av; }

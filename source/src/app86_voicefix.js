@@ -1,11 +1,5 @@
-/* ================= v4.1 · VOICE FIXES + VOICE BILLING =================
-   1) Scripted phone calls (pack "call" stops) were silent with server voices: each line moved on after its reading time
-      (~1.5s) and speak() cancelled the previous line before its audio (2–3s to synthesise) arrived. Now every line of the
-      call is fetched up front and the next line waits for the voice to finish.
-   2) One shared <audio> element, unlocked by the first tap, so phones (iOS Safari) let later voice lines play.
-   3) Voice billing by the AI-cost rule: Qwen-TTS ¥0.8 / 10,000 characters → 1💎 (≈$0.20) per 2,500 newly synthesised
-      characters (≈ 80 lines). Lines already cached (official stories, repeats) and the device voice are free.
-      With no diamonds left the voice quietly switches to the device voice — the story never stops. */
+/* Shared server TTS audio, voice billing, and per-message controls.
+   Server failures stay silent; device synthesis is never used as a fallback. */
 const TTS_CHARS_PER_GEM=2500;
 const TTSEL=new Audio();TTSEL.preload="auto";let TTS_UNLOCKED=false;
 document.addEventListener("pointerdown",()=>{if(TTS_UNLOCKED)return;TTS_UNLOCKED=true;try{TTSEL.src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";TTSEL.play().catch(()=>{})}catch(_){}},true);
@@ -15,30 +9,26 @@ function ttsBill(text){const n=String(text||"").replace(/\s/g,"").length;if(!n)r
  if(S.ttsChars<TTS_CHARS_PER_GEM){save();return}
  if(S.keys>=1){S.ttsChars-=TTS_CHARS_PER_GEM;S.keys-=1;save();if(typeof keysChip==="function")try{keysChip()}catch(_){}
   toast(ttsZh()?"🎙 真人配音 −1💎（约 80 句）· 剩 "+S.keys:"🎙 Voice −1💎 (~80 lines) · "+S.keys+" left")}
- else{S.ttsChars=TTS_CHARS_PER_GEM;S.ttsMode="device";save();toast(ttsZh()?"钻石不足，配音已切换为设备语音（免费）":"Out of diamonds — switched to the free device voice")}}
+ else{S.ttsChars=TTS_CHARS_PER_GEM;S.autoVoice=false;if(S.voice)S.voice.auto=false;save();toast(ttsZh()?"配音额度不足，已暂停自动朗读":"Voice allowance used up — auto read-aloud paused")}}
 /* fetch with billing (only when the line wasn't in memory yet) */
 const _ttsFetch86=ttsFetch;
 ttsFetch=function(text,id){const k=ttsKey(text,id),had=TTS.mem.has(k)||TTS.inflight.has(k);const p=_ttsFetch86(text,id);
  if(!had)p.then(()=>{if(!(TTS.billed=TTS.billed||new Set()).has(k)){TTS.billed.add(k);ttsBill(String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,""))}}).catch(()=>{});return p};
 /* speak through the shared element */
-VOICE.use('voicefix-86',function(next,text,id,onend){try{
- if(!ttsOn()||!ttsSpeakable(text)||(typeof recorded==="function"&&recorded(text,id)))return VOICE.below('tts-62')(text,id,onend);
- stopVoice();const my=(TTS.seq=(TTS.seq||0)+1);let done=false;
- const fallback=()=>{if(done||TTS.seq!==my)return;done=true;VOICE.below('tts-62')(text,id,onend)};
- /* 2026-10-27 两处实测修正（探针 tools/voice-probe.mjs 抓出来的，不是猜的）：
-    ① **解码失败被当成「播完了」**：原来 `a.onerror=()=>{if(onend)onend()}` 与 onended 同路。
-       坏音频实测 1–3ms 就把这一条"播完"，队列照常推进 —— 用户什么也没听见，而所有计数器正常。
-       ⇒ onerror 现在**降级到设备语音**（免费、总能出声），由它自己的 onend 推进一次。
-    ② **8 秒兜底太长**：实测 TTS 挂死时每条 8.6 秒，3 条 26 秒 —— 观感就是卡死。
-       ⇒ 降到 4 秒（缓存命中 1.4 秒）；并且连续失败时把 TTS.fails 记上，第 4 次直接走设备语音。 */
- const tm=setTimeout(fallback,TTS.mem.has(ttsKey(text,id))?1400:4000);
- ttsFetch(text,id).then(u=>{if(done||TTS.seq!==my)return;done=true;clearTimeout(tm);const a=TTSEL;let ended=false;
-  const once=(fn)=>{if(ended)return;ended=true;try{fn()}catch(_){}};
-  a.onended=()=>once(()=>{if(onend)onend()});
-  a.onerror=()=>once(()=>{TTS.fails=(TTS.fails||0)+1;try{a.onended=null;a.onerror=null}catch(_){}VOICE.below('tts-62')(text,id,onend)});
-  a.src=u;AUD_CUR=a;a.play().catch(()=>{once(()=>{TTS.fails=(TTS.fails||0)+1;const b=new Audio(u);AUD_CUR=b;b.onended=()=>{if(onend)onend()};b.play().catch(()=>{VOICE.below('tts-62')(text,id,onend)})})})
- }).catch(()=>{clearTimeout(tm);fallback()});
-}catch(_){return VOICE.below('tts-62')(text,id,onend)}});
+// Server TTS is the only story voice. Never switch timbre to device synthesis.
+if(S.ttsMode==="device"){S.ttsMode="server";save()}
+VOICE.use('voicefix-86',function(next,text,id,onend){
+ stopVoice();const my=(TTS.seq=(TTS.seq||0)+1);let finished=false,tm;
+ const finish=()=>{if(finished||TTS.seq!==my)return;finished=true;clearTimeout(tm);if(onend)onend()};
+ const fail=()=>{if(TTS.seq!==my)return;TTS.fails=(TTS.fails||0)+1;finish()};
+ if(!ttsOn()||!ttsSpeakable(text)){finish();return}
+ tm=setTimeout(fail,20000);
+ try{ttsFetch(text,id).then(u=>{
+  if(finished||TTS.seq!==my)return;clearTimeout(tm);
+  const a=TTSEL;a.onended=finish;a.onerror=fail;a.src=u;AUD_CUR=a;
+  a.play().catch(fail);
+ }).catch(fail)}catch(_){fail()}
+});
 /* scripted calls: prefetch every line, then let the voice set the pace */
 stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),c=ch(cid),lines=d.lines.map(x=>Array.isArray(x)?x:[cid,x]);let i=0,done=false;const t0=Date.now();
  const who=w=>ch(w)?w:cid;
