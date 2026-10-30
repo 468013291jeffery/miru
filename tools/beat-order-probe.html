@@ -9,6 +9,25 @@
      #mode=open&pack=crimson&as=adrian   进一部新剧，看**第一个开口的**是不是自己
      #mode=beats&pack=ice&as=mason       直接喂一条「我先说」的 AI 回复，看渲染顺序
 
+   === 2026-10-30 现状（别重复排查）===
+   闸一 登录屏：已解决 —— 点一次「游客」再往下走；读数里带 CLOUD_EP / MUST92 / guestBtn。
+   闸二 读数口径：已解决 —— 原来只查 `#msgs .m-row`，而那是**台词**那一类；旁白/动作是
+        `.m-narr` / `.m-act` ⇒ 旁白起头的剧永远读成「一条都没渲染」。现在数所有子块。
+   闸三 队列不往下演：**还没解决**。现状读数（crimson#1 / as=adrian）：
+        #msgs 冻在 5 个子块（`m-chap cold` + 3 条 `m-narr` + `inl`）、`th.msgs`=4、
+        `th.pk.st`="busy"、`qLen`=68（68 条一条没动）、`#msgs` 的 HTML 长度每次都是 1241。
+        已经排除（都测过，改一个再跑一次，读数一模一样）：
+          · 虚拟时间不够（等 30 s 与等 200 s 同读数；budget 120 s 与 240 s 同读数）
+          · 节奏太慢（readMs=5345ms、spd=1 ⇒ 5.3 s 一句，够演十几句）
+          · 线程地址不对（`th.wid`="crimson"、`wd()` 解析得出来）
+          · 重新 openThread（`qLen` 68→68，不动）
+          · 有个弹层挂着（`.sheet` 数量 = 0）
+          · CSS 动画没收尾（注入 `animation:none` 全关，读数一模一样）
+          · PKPAUSE（没有玩家消息 ⇒ app3 那两个写点都不会执行）
+        ⇒ 下一个动作：在 `packRun` 的 `live()` 里临时打一行（`curT` / `th.id` / `#s-chat` 三个值
+          分别是什么）—— 这条闭包现在从外面看不见，所以只能从里面读一次。
+          最可疑的是 `curT`：`openThread` 若早退，队列就会永远等一个「有人在看」的条件。
+
    ⚠️ 第一版判据只看「谁在前」，于是「我那条根本没渲染」也被读成 PASS。
      真身：speakersOf(th) 把 pk.as 排除掉了 ⇒ 我演的角色的 AI 句在 playBeats 里就被过滤，
      重排代码压根到不了 ⇒ 那是 DROPPED，不是 PASS。所以两条都在才算判得动。 */
@@ -56,6 +75,23 @@ f.onload = async () => {
       await sleep(1200);
     }
     log('screen', String((w.document.querySelector('#s-chat') && !w.document.querySelector('#s-chat').hidden) ? 's-chat' : ((w.document.querySelector('#s-ob') && !w.document.querySelector('#s-ob').hidden) ? 's-ob' : '?')));
+    /* 2026-10-30：队列停在三条的第二种可能 —— 有个弹层还挂着（HIST_OPEN 之类会让 packRun 原地等）。
+       弹层数量是能直接数的，先数一遍；能关就关掉。 */
+    try {
+      const sheets = w.document.querySelectorAll('.sheet');
+      log('sheets', String(sheets.length) + (sheets.length ? ' · ' + Array.from(sheets).map(x => String(x.className)).join('|') : ''));
+      if (sheets.length) { try { w.closeSheet() } catch (e) { } await sleep(500); log('sheetsAfterClose', String(w.document.querySelectorAll('.sheet').length)) }
+    } catch (e) { log('sheetErr', String(e && e.message)) }
+
+    /* 2026-10-30：第三种可能 —— 队列在等一个**动画**（`m-chap cold` / `m-narr cold` 的 cold 开场动画）。
+       无头 + --disable-gpu 里这类动画可能永远不结束，而 packRun 要等它收尾才接下一句。
+       做法：把动画全关掉再开演，看队列会不会自己走完。 */
+    try {
+      const st = w.document.createElement('style');
+      st.textContent = '*,*::before,*::after{animation:none!important;transition:none!important;animation-duration:0s!important;transition-duration:0s!important}';
+      w.document.head.appendChild(st);
+      log('noAnim', 'injected');
+    } catch (e) { log('noAnimErr', String(e && e.message)) }
 
     /* 2026-10-30 · 第二道门：**「她没在看就不往下演」**。
        packRun 的 live() = curT===th.id && #s-chat 可见；而 packOpen 是在 newThread 里就开始跑的，
@@ -67,6 +103,7 @@ f.onload = async () => {
     const th = w.packStart(PACK, AS);
     if (!th) { log('ERR', 'packStart returned nothing'); return }
     log('mode', MODE); log('pack', PACK); log('pk.as', String(th.pk && th.pk.as));
+    try { log('wid', JSON.stringify({ id: th.wid, resolvable: !!w.wd(th.wid), inThreads: !!(w.S && w.S.threads && w.S.threads[th.id]) })) } catch (e) { log('widErr', String(e && e.message)) }
     try { w.openThread(th.id); } catch (e) {}
     await sleep(1500);
     if (!kidsOf(w).length) {
