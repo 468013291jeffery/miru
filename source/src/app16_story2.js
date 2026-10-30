@@ -163,9 +163,16 @@ function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesi
    **没有任何东西会 resolve**，整条剧本停在这一句上（这就是「忽然不动了」）。现在每个分支都保证 resolve。 */
 function pkWait(th,prev,spd,ms){return new Promise(r=>{let ok=false;const go=()=>{if(ok)return;ok=true;r()};PKNEXT[th.id]=go;
  if(S.autoVoice&&AVSKIP<=0){
-  speakLine(prev,()=>{AVSILENT=0;setTimeout(go,300)});
+  /* 2026-10-30 · **退路必须比 speakLine 早注册**。
+     实测（无头 Edge，speakLine 会抛）：原来三条退路里，后两条 setTimeout 写在 speakLine **之后**
+     ⇒ 它一抛，一条都不注册 ⇒ 这个 Promise 永远不 resolve ⇒ 整条剧本队列停在这一句上
+     （读数：`__pkLive` 的 waiting=true、q 一直 68、st 一直 busy）。
+     这和 10-27 修掉的「没有任何东西会 resolve」是同一个病，只是搬到了朗读分支 —— 那次只保证了两条，
+     这次把第三条也保证住：**先挂退路，最后才去念，念不出来也一定会往前走**。 */
   setTimeout(()=>{if(!ok&&avSilent()){AVSILENT++;if(AVSILENT>=2){AVSKIP=8;AVSILENT=0}go()}},3000);   // 3 秒还没响 ⇒ 这一句不等朗读
   setTimeout(go,Math.max(ms*3,14000));                          // 老兜底保留（朗读很慢但确实在读时靠它）
+  try{ speakLine(prev,()=>{AVSILENT=0;setTimeout(go,300)}) }
+  catch(e){ if(typeof console!=="undefined"&&console.warn)console.warn("[pkWait] speakLine 抛了，这一句直接放过：",e); go() }
  }else{
   if(AVSKIP>0)AVSKIP--;
   if(spd)setTimeout(go,ms);else go();

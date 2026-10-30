@@ -142,6 +142,24 @@ function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"
  if(k==="game"&&!GAMEF[d.k])return d.skip||[];
  return null}
 const PKPAUSE={};   // 每个线程：玩家正在说话 ⇒ 剧本队列暂停
+/* 2026-10-30 · 开发读数：`packRun` 里的 live() 是个闭包，从外面**看不见**。
+   代价实测：探针问「队列为什么停在第 3 条」，我在外面猜了六轮（虚拟时间 / 节奏 / 线程地址 /
+   重开线程 / 弹层 / 动画 / PKPAUSE 写点），全部落空 —— 因为判据在闭包里，猜不到。
+   所以把它做成一个**只读**函数：进去看一次，就知道是哪个条件为假。不改任何状态。
+   用法：`__pkLive(th)`（探针里是 `w.__pkLive(th)`）。 */
+function __pkLive(th){const e=$("#s-chat"),id=th&&th.id;
+ return {cur:curT,id:id,same:curT===id,chatThere:!!e,chatHidden:e?e.hidden:null,
+  ok:curT===id&&!!e&&!e.hidden,
+  pause:!!PKPAUSE[id],
+  hist:(typeof HIST_OPEN!=="undefined"?!!HIST_OPEN:null),
+  playing:PKPLAY[id]||0,
+  q:(th&&th.pk&&th.pk.q)?th.pk.q.length:0,
+  st:(th&&th.pk&&th.pk.st)||"",
+  stop:!!(th&&th.pk&&th.pk.stop),
+  /* 停在 pkWait 里？PKNEXT 上挂着 resolver ⇒ 「正在等这一句念完/等够阅读时间」 */
+  waiting:!!PKNEXT[id],
+  autoVoice:(typeof S!=="undefined"?!!S.autoVoice:null),
+  held:!!(th&&th._held)};}
 async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-chat").hidden;if(PKPLAY[th.id]===2)return;PKPLAY[th.id]=2;packRefresh(th);
  try{while(th.pk.q&&th.pk.q.length){const b=th.pk.q[0];
   /* 2026-10-27 Ann：玩家一开口，剧本队列先停 —— 他得先接住她的话，

@@ -70,7 +70,19 @@ art/<角色>.jpg（有立绘才算）┘
 - **段里若混着 stop（`line`/`gift`/`call`…）就不许挪** —— 那会改变玩家发言的时机。第 1 章实测一例都没有，但剧本会改，所以留了 `if(seg.some(b=>isStop(b)))return` 这道闸。
 
 **判据**（数据层，可复跑）：修前首句是 `pk.as` 的 21 部**全部**变成别人先开口；`pk.as` 不作首句的 12 部**一部都没动**；**字句与条数零改动**（按排序后的序列逐字比对）。
-⚠️ **端到端未验**：`tools/beat-order-probe.mjs --mode=open` 目前拿不到聊天屏（无头页面卡在登录门，`#msgs` 为空），所以这条只有数据层读数，没有「真页面渲染顺序」的读数。
+⚠️ **端到端仍未验**：`tools/beat-order-probe.mjs --mode=open` 现在**进得了聊天屏**了（登录门已修，读数口径也修了：原来只查 `#msgs .m-row`，而那是台词那一类，旁白起头的剧永远读成"一条都没渲染"），但 `crimson` 第 1 章在**第 5 条就轮到玩家开口**（`AT_STOP`），所以「谁先开口」这一问在这一章读不出来 —— 缺的是**一部的开场真的先有台词**，不是探针没进门。
+
+#### 链 A·2 进去有哪几个身份（2026-10-30，Ann：「不管对方给的是什么，都强化成三路都有，但是返回一个提示」）
+
+**症状**：Ann 报「进去只有导演视角，别的视角没了」。
+**原来的形状**：`packModes = [🎬 导演] ++ w.pack.join` ⇒ **谁能进去由内容生产的完整度决定**：`heir` 没写"加入场景"；创建器做的剧只写"扮演主角"（`app49`/`app50`/`app51` 都只塞一个元素）。少写一条 `join`，玩家就少一条路，**而且没有任何东西会红**。
+**现在的形状**（`app114_entry.js`）：`entryModes(w)` 一处补齐三条 ——
+- 扮演主角：`pov → love → 第一个 ch() 认识的角色`（认不出的 id 不补，宁可少一行也不出一行没名字的）
+- 加入场景（我自己）：**永远在**，不需要任何人物 id
+- 导演：**永远在**，且**排最后**（"so nobody lands in 导演视角 by accident"）
+每条带 `src`：`data`（剧本写的）/ `derived`（我们补的）/ `always`（结构性）。**补过就返回 `hint`**，开始弹层把它印出来；剧本写全时不显示。`packModes` 变成它的出口 ⇒ 开始弹层 / 故事页"怎么玩" / 换身份 / 章节目录 / 首屏三选一**全走这一份**。
+**闸**：`tools/entry-modes-probe.mjs`（8 条判据，含两条负对照：写全了的剧 hint 必须为空、创建器造的剧不许显示"补"），已进 `check-all`。
+⚠️ **没覆盖**：`bible98`（`app98` 的 `start98`）用 key 体系选身份、没有 `watch` 语义，要凑三路得先给它一条"导演"的意思 —— 这是产品决定，仍等 Ann 拍。
 ### 链 B · 官方剧（运行时，改剧本不用重建）
 ```
 admin.html「剧本生产」 → /api/admin → DB.works.pack.script
@@ -117,6 +129,21 @@ app94_official2.js  资产映射 art/official/<work>.json（槽位 → url，缺
 - 有没有声音：`avSilent()` 三项（`speechSynthesis.speaking/pending` · `TTS.inflight.size` · `AUD_CUR` 是否在放）
 - 还要不要等：`AVSILENT` / `AVSKIP`（连续 2 句没声音 ⇒ 跳 8 句 ⇒ 自动再试）
 - 走的是哪一级：`recorded()` 是否非空（第 1 级）· `ttsOn()`（第 2 级）· 否则第 3 级
+
+#### 链 D·1a `pkWait` 的退路必须**先于**朗读注册（2026-10-30）
+
+`pkWait` 保证「每一句都一定会往前走」—— 但 10-27 那刀只保证了 `else` 分支。朗读分支里
+两条 `setTimeout`（3 秒静音判定 / `max(ms*3,14000)` 兜底）原来写在 `speakLine()` **之后**：
+**它一抛，两条退路一条都不注册 ⇒ 那个 Promise 永远不 resolve ⇒ 整条剧本队列停在那一句上**
+（和 10-27 修掉的是同一个病，只是换到了另一条分支）。
+⇒ 顺序固定为 **先挂退路、最后才去念**，并且 `speakLine` 用 try/catch 包住，抛了就直接放过。
+
+**读数**（`app14_pack.js` 的 `__pkLive(th)`，只读、不改状态）：`cur/id/same` · `chatThere/chatHidden`
+· `ok`（= 闭包里那个 `live()`）· `pause` · `hist` · `playing` · `waiting`（`PKNEXT` 上挂着 resolver
+⇒ 正等在 `pkWait` 里）· `autoVoice` · `q`（还剩几条）· `st` · `stop`。
+**为什么要有它**：`live()` 是闭包，从外面看不见 ⇒ 2026-10-30 探针为了「队列为什么不动」在外面猜了六轮
+（虚拟时间 / 节奏 / 线程地址 / 重开线程 / 弹层 / 动画），全部落空；加了这个读数之后**一次就答**：
+`ok=true`、`waiting=true`、`autoVoice=true` —— 问题在朗读分支，不在「有没有人在看」。
 
 **逐句串行（2026-10-27 新增，`app3_chat.js` 的 `playBeats`）**：模型一轮回了 4–5 句时，
 不再「先按 700ms/句刷完再整批念」，而是**亮一句 → 念完 → 亮下一句**；
@@ -837,9 +864,9 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app11_memory.js` | MEMORY SPACE — visible, tiered long memory (竞品: “已用 665 / 8K · 解锁 26K 记忆空… | 51 |
 | `app12_beats.js` | STORY BEATS — the reply-rhythm pay schedule (see doc: BL 剧情进展线 × 付费节奏) Re… | 49 |
 | `app13_rel.js` | RELATIONSHIP ENGINE v1 — multi-dimension state · Watch mode · point-and-c… | 97 |
-| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 581 |
+| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 599 |
 | `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 202 |
-| `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 314 |
+| `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 321 |
 | `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |
 | `app18_promo.js` | NEW-USER WELCOME · 24h FIRST-PURCHASE 20% OFF · OPENING-LINE VOICE · STIC… | 200 |
 | `app19_bgm.js` | BACKGROUND MUSIC in every chat Each story gets a mood from its genre (lat… | 121 |

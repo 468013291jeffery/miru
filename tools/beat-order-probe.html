@@ -93,6 +93,25 @@ f.onload = async () => {
       log('noAnim', 'injected');
     } catch (e) { log('noAnimErr', String(e && e.message)) }
 
+    /* 2026-10-30 · 第四道门：**节奏**。`pkWait` 在 autoVoice 分支里要等朗读收尾，无头环境里
+       那几条退路（3s / max(ms*3,14s)）实测一次都没走到 ⇒ 队列永远停在第一句上
+       （`__pkLive` 读数：ok=true / pause=false / waiting=true / autoVoice=true，而 q 一直是 68）。
+       这不是产品 bug 的判据（真实浏览器里有声音、有退路），但它挡着这条探针。
+       探针要量的是**顺序**，不是节奏 ⇒ 把等待封顶到 1.5 秒，让队列按顺序走完。
+       ⚠️ 这一步之后，读数只回答「谁先开口」，不回答「多快」。 */
+    try {
+      const orig = w.pkWait;
+      if (typeof orig === 'function') {
+        w.__pkWaitCalls = 0;
+        w.pkWait = function (th2) {
+          w.__pkWaitCalls++;
+          const p = orig.apply(this, arguments);
+          return Promise.race([p, new Promise(r => setTimeout(r, 800))]);
+        };
+        log('pkWaitWrap', 'ok');
+      } else { log('pkWaitWrap', 'no pkWait on window') }
+    } catch (e) { log('pkWaitWrapErr', String(e && e.message)) }
+
     /* 2026-10-30 · 第二道门：**「她没在看就不往下演」**。
        packRun 的 live() = curT===th.id && #s-chat 可见；而 packOpen 是在 newThread 里就开始跑的，
        那一刻屏还是 s-ob ⇒ 第一条就判「没人在看」⇒ 队列停在 busy，之后再切屏也不会自己续
@@ -129,7 +148,7 @@ f.onload = async () => {
     }
 
     /* mode=open：等剧本队列把前几条念完，然后看**第一个开口的**是谁 */
-    await sleep(30000);
+    await sleep(14000);
     /* 拿不到读数时，先把「卡在哪一层」打出来 —— 空读数与「真的没人开口」长得一样 */
     try {
       const sc = w.document.querySelector('#s-chat');
@@ -142,6 +161,8 @@ f.onload = async () => {
       log('kidsCls', JSON.stringify(kidsOf(w).map(x => String(x.className))));
       try { log('readMs', String(typeof w.readMs==='function'?w.readMs((th.msgs||[])[(th.msgs||[]).length-1]):'n/a')); log('spd', String(typeof w.pkSpd==='function'?w.pkSpd():'n/a')) } catch(e){ log('paceErr', String(e&&e.message)) }
       log('globals', JSON.stringify({ PKPLAY: typeof w.PKPLAY, PKPAUSE: typeof w.PKPAUSE, PKSKIP: typeof w.PKSKIP, PKWAIT: typeof w.PKWAIT }));
+      /* 闭包里那三个值 —— app14 加了只读读数 __pkLive(th) 就是为了这一行 */
+      try { log('live', JSON.stringify(typeof w.__pkLive === 'function' ? w.__pkLive(th) : 'no __pkLive')) } catch (e) { log('liveErr', String(e && e.message)) }
       try {
         const q = th.pk && th.pk.q;
         log('qLen', String(q ? q.length : -1));
@@ -166,7 +187,10 @@ f.onload = async () => {
     /* 2026-10-30：第三种读数必须单独说出来 —— 队列还没演到台词（还剩 N 条、状态 busy）
        与「这一场真的没人开口」是两件事，混成一句 NO_OTHER 就等于没有读数。 */
     const qLeft = (th.pk && th.pk.q) ? th.pk.q.length : 0;
-    log('verdict', (other < 0 && self < 0 && qLeft > 0)
+    const atStop = !!(th.pk && th.pk.stop);
+    log('verdict', (other < 0 && self < 0 && atStop)
+      ? 'AT_STOP（已经轮到玩家开口，前面 ' + rows.length + ' 条里没有台词 —— 顺序这一问在这一章读不出来）'
+      : (other < 0 && self < 0 && qLeft > 0)
       ? 'PARKED（队列停在 ' + rows.length + ' 条、还剩 ' + qLeft + ' 条没演 —— 还没到台词，读数无效）'
       : other < 0 ? 'NO_OTHER（这一场没有别人开口，读数无效）'
       : self < 0 ? 'PASS（我演的角色没有先开口）'
