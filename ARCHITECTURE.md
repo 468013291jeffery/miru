@@ -70,7 +70,22 @@ art/<角色>.jpg（有立绘才算）┘
 - **段里若混着 stop（`line`/`gift`/`call`…）就不许挪** —— 那会改变玩家发言的时机。第 1 章实测一例都没有，但剧本会改，所以留了 `if(seg.some(b=>isStop(b)))return` 这道闸。
 
 **判据**（数据层，可复跑）：修前首句是 `pk.as` 的 21 部**全部**变成别人先开口；`pk.as` 不作首句的 12 部**一部都没动**；**字句与条数零改动**（按排序后的序列逐字比对）。
-⚠️ **端到端仍未验**：`tools/beat-order-probe.mjs --mode=open` 现在**进得了聊天屏**了 —— 三道路障都修了：① 登录门（点一次游客）；② 读数口径（原来只查 `#msgs .m-row`，而那是**台词**那一类，旁白起头的剧永远读成"一条都没渲染"）；③ **"队列不动"不是 bug，是 `app101_you.js:52` 的「点一下才继续」**：默认 `S.pkTap101 !== false` ⇒ `pkWait` 拿到的 ms 是 `864e5`（24 小时），只有点 `[data-pknextl]`（`app14_pack.js:594` → `PKNEXT[curT]()`）才往下走；探针现在像真人一样自己点。但 `crimson` 第 1 章在**第 5 条就轮到玩家开口**（实测：点两下、队列 68 → 66，然后停在 `["adrian","line",…]` 这个 stop 上 ⇒ `AT_STOP`）⇒ 「谁先开口」这一问**在这一章读不出来**，缺的是**一部的开场真的先有台词**，不是探针没进门。
+⚠️ **端到端仍未验**：`tools/beat-order-probe.mjs --mode=open` 现在**进得了聊天屏**了 —— 三道路障都修了：① 登录门（点一次游客）；② 读数口径（原来只查 `#msgs .m-row`，而那是**台词**那一类，旁白起头的剧永远读成"一条都没渲染"）；③ **"队列不动"不是 bug，是 `app101_you.js:52` 的「点一下才继续」**：默认 `S.pkTap101 !== false` ⇒ `pkWait` 拿到的 ms 是 `864e5`（24 小时），只有点 `[data-pknextl]`（`app14_pack.js:594` → `PKNEXT[curT]()`）才往下走；探针现在像真人一样自己点。
+
+**2026-10-30 晚 · 这一条终于端到端验过了，而且验出上面那刀只做了一半。**
+
+先用 `--mode=scan`（纯数据，不点不演）找出哪一部的**开场真先有台词**：37 部里 **35 部在轮到玩家之前就有 `say`**，只有 `crimson`（首句台词在第 8 格、第 5 格就轮到玩家）和 `heir`（56 > 31）不是 —— **我先前拿 `crimson` 当默认，正好是唯一读不出来的那部**。
+
+换成 `ice#1` 扮演 `mason`，读到了真结果：
+
+| | 渲染顺序 | 判据 |
+|---|---|---|
+| 修前 | `narr, narr, narr, **self**, other` | ✗ 我演的角色先开口 |
+| 修后 | `narr, narr, narr, **other**` | ✓ 我演的角色没有先开口 |
+
+**根因**：`ice#1` 的原序是 `n·act, mason·say, ethan·think, ethan·say, …`。原来找"第一个别人开口"用的是 `spk(b)` —— **`think`（心里话）也算开口** ⇒ 重排把 mason 的台词挪到 `ethan·think` 之后、**`ethan·say` 之前**，读者看到的仍然是「我先说话」。
+**改法**：先找第一个**别人说的台词**（`b[1]==="say"`）；一个都没有时才退回「第一个别人在场的 beat」。
+**判据**（可复跑）：`node tools/beat-order-probe.mjs --mode=open --pack=ice --as=mason` → `PASS（我演的角色没有先开口）`，`firstSelf = -1`。
 
 #### 链 A·2 进去有哪几个身份（2026-10-30，Ann：「不管对方给的是什么，都强化成三路都有，但是返回一个提示」）
 
@@ -864,7 +879,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app11_memory.js` | MEMORY SPACE — visible, tiered long memory (竞品: “已用 665 / 8K · 解锁 26K 记忆空… | 51 |
 | `app12_beats.js` | STORY BEATS — the reply-rhythm pay schedule (see doc: BL 剧情进展线 × 付费节奏) Re… | 49 |
 | `app13_rel.js` | RELATIONSHIP ENGINE v1 — multi-dimension state · Watch mode · point-and-c… | 97 |
-| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 599 |
+| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 605 |
 | `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 202 |
 | `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 321 |
 | `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |

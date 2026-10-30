@@ -112,7 +112,13 @@ function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)
   const i0=beats.findIndex(b=>spk(b));
   if(i0<0||spk(beats[i0])!==as)return;
   let j=-1;
-  for(let k=i0+1;k<beats.length;k++){const w=spk(beats[k]);if(w&&w!==as){j=k;break}}
+  /* 2026-10-30 · 「别人开口」只算**台词**（say），不算心里话（think）和动作（act）。
+     实测（tools/beat-order-probe 第一次真的读出渲染顺序，ice#1 扮演 mason）：
+     第一句台词是 mason 的，第二格是 `ethan·think` —— 按「有谁在」找 j 会停在 think 上，
+     于是重排把 mason 的台词挪到 think 之后、**ethan 的台词之前**，读者看到的仍然是「我先说话」。
+     ⇒ 先找第一个**别人说的台词**；一个都没有时才退回「第一个别人在场的 beat」（保持原行为）。 */
+  for(let k=i0+1;k<beats.length;k++){const b=beats[k],w=spk(b);if(w&&w!==as&&Array.isArray(b)&&b[1]==="say"){j=k;break}}
+  if(j<0)for(let k=i0+1;k<beats.length;k++){const w=spk(beats[k]);if(w&&w!==as){j=k;break}}
   if(j<0)return;
   /* 2026-10-29 实测：只挪一句时，像 crimson（n,adrian,adrian）这种「连着两句都是我」的
      仍会以我开头（37 部里 6 部）⇒ 必须挪走**整段领先的连续台词**，旁白留在原位。 */

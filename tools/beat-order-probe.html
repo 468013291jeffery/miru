@@ -58,6 +58,46 @@ f.onload = async () => {
     if (typeof w.packStart !== 'function') { log('ERR', 'no packStart'); return }
     log('boot', 'ok');
 
+    /* 2026-10-30 · mode=scan（纯数据，不点不演）：哪一部的**开场**在轮到玩家之前就有台词？
+       为什么要有它：`crimson#1` 第 5 条就把话头交给玩家 ⇒ `--mode=open` 在那部永远只能读到
+       `AT_STOP`。要第一次真正读出「谁先开口」，得先知道该点哪一部。
+       判据：第 1 章里 `第一句 say 的下标` < `第一个 stop 的下标`（没有 stop 记 Infinity）。 */
+    if (MODE === 'scan') {
+      const STOPK = ['line', 'gift', 'photo', 'video', 'game', 'call', 'voice', 'start'];
+      const rows = [];
+      (w.packWorlds() || []).forEach(x => {
+        const c1 = x.pack && x.pack.chapters && x.pack.chapters[0];
+        if (!c1) return;
+        const bs = (c1.beats && (c1.beats.zh || c1.beats.en)) || [];
+        let firstSay = -1, firstStop = -1, n = 0;
+        bs.forEach((b, i) => {
+          if (!Array.isArray(b)) return;
+          n++;
+          if (firstSay < 0 && b[1] === 'say') firstSay = i;
+          if (firstStop < 0 && STOPK.includes(b[1])) firstStop = i;
+        });
+        const fs = firstStop < 0 ? 1e9 : firstStop;
+        rows.push({ id: x.id, beats: n, firstSay: firstSay, firstStop: firstStop, ok: firstSay >= 0 && firstSay < fs });
+      });
+      const good = rows.filter(r => r.ok).map(r => r.id + '#' + r.firstSay + '<' + (r.firstStop < 0 ? '∞' : r.firstStop));
+      log('scanPacks', String(rows.length));
+      log('scanGood', JSON.stringify(good));
+      log('scanNone', JSON.stringify(rows.filter(r => !r.ok).map(r => r.id + '#' + r.firstSay + '>' + (r.firstStop < 0 ? '∞' : r.firstStop))));
+      /* 点名那一部：把前 8 条 beat 的「谁 · 什么」摊出来 —— 「我演的角色先说」是真的剧本如此，
+         还是 A·1 的重排没生效，只有这一步能分辨。 */
+      try {
+        const one = (w.packWorlds() || []).find(x => x.id === PACK);
+        const c1 = one && one.pack && one.pack.chapters && one.pack.chapters[0];
+        const bs = (c1 && c1.beats && (c1.beats.zh || c1.beats.en)) || [];
+        log('headBeats', JSON.stringify(bs.slice(0, 8).map(b => Array.isArray(b) ? (b[0] + '·' + b[1] + '·' + String(typeof b[2] === 'object' ? (b[2].t || b[2].hint || '') : b[2]).slice(0, 28)) : String(b))));
+        log('cast', JSON.stringify(one && one.cast));
+        log('packPov', String(one && one.pack && one.pack.pov));
+      } catch (e) { log('headErr', String(e && e.message)) }
+      log('verdict', good.length ? 'PICK ' + (good[0] || '').split('#')[0] : 'NO_PACK_OPENS_WITH_DIALOGUE');
+      return;
+    }
+
+
     /* 2026-10-30 · 登录门（这一节就是原来 --mode=open 拿不到东西的原因）
        app70 的 startApp：`!au70Loggedin() && !S.authChoice` ⇒ 只画登录屏，不建聊天屏；
        app92 再加上一条：CLOUD_EP 有值（本地只要设了 MIRU_PROXY 就会有）⇒ 游客按钮被 CSS 藏掉、
