@@ -119,7 +119,7 @@ appendMsg=function(th,m){if(ch(m.who)&&m.ai){payHooks(th,m);storyHooks(th,m)}if(
   if(pw&&pw.parentNode===box)pw.insertAdjacentHTML("beforebegin",html);else box.insertAdjacentHTML("beforeend",html);scrollChat()}
  /* 2026-10-27 Ann：「动作还是会读语音」—— 这里以前对**任何** AI 消息发声（只看 who 是角色），
     于是 act/think（动作、环境、内心）也被念。现在只念 say，并打 `_voiced` 免得兜底挂钩再念一遍。 */
- if(S.autoVoice&&m.ai&&m.k==="say"&&ch(m.who)&&curT===th.id&&!m._voiced){m._voiced=1;speak(m.txt,m.who)}};
+ if(S.autoVoice&&m.ai&&m.k==="say"&&ch(m.who)&&curT===th.id&&!m._voiced){m._voiced=1;voiceEnq(m.txt,m.who)}};
 /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
 const __body_story16 = function () { const th=S.threads[curT];if(!th)return;
  const box=$("#msgs"),pw=$("#pkwrap");if(box&&pw){box.appendChild(pw);pw.classList.add("inl")}
@@ -181,7 +181,7 @@ function pkWait(th,prev,spd,ms){return new Promise(r=>{let ok=false;const go=()=
  }})}
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-vtog]")){S.autoVoice=!S.autoVoice;AVSILENT=0;AVSKIP=0;save();const b=$(".vtog");if(b){b.classList.toggle("on",S.autoVoice);b.textContent=S.autoVoice?"🔊":"🔇"}
-  if(!S.autoVoice){stopVoice()}toast(t(S.autoVoice?"st2.vOn":"st2.vOff"));if(PKNEXT[curT]&&!S.autoVoice)PKNEXT[curT]();return}
+  if(!S.autoVoice){voiceClear();stopVoice()}toast(t(S.autoVoice?"st2.vOn":"st2.vOff"));if(PKNEXT[curT]&&!S.autoVoice)PKNEXT[curT]();return}
  if(x=e.target.closest("[data-intro]")){introSheet(x.dataset.intro);return}
  if(e.target.closest("[data-pknext],[data-pknextl],[data-stopline],[data-pkpick]"))stopVoice()},true);
 

@@ -68,7 +68,7 @@ function bt86DomParts(el){const th=S.threads[curT],cast=(th&&th.cast)||[];const 
 function bt86Parts(m){return m.parts?m.parts.filter(p=>p&&p.txt).map(p=>({who:p.who==="n"||!ch(p.who)?"n":p.who,txt:String(p.txt)})):[{who:m.who,txt:String(m.txt||"")}]}
 window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x)return;e.preventDefault();e.stopImmediatePropagation();
  const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
- const box=x.closest(".m-box");if(a==="play"){const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
+ const box=x.closest(".m-box");if(a==="play"){try{voiceClear()}catch(e){console.debug("[b86] vq",e)}const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
  if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
 /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
 const __body_voicefix86 = function () { bt86Decorate($("#msgs")); };
