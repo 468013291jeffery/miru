@@ -1,0 +1,50 @@
+name: build-index
+
+# 谁改了前端源码，就自动构建 index.html 并提交回去。
+# 为什么不用 Vercel 的 buildCommand：build.py 要读 source/（40 项内容 + 151 个源文件），
+# 而 .vercelignore 里有 `source/` ⇒ Vercel 构建上下文拿不到源（2026-10-30 实测 preview failure）。
+# 用 Action 构建不进 Vercel 的构建链，也不需要把 source/ 暴露给公网。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'source/**'
+      - 'art/**'
+      - 'audio/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-index
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: build
+        run: |
+          python3 --version
+          python3 source/build.py
+          ls -l index.html content_36.js
+
+      - name: commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html content_36.js
+          if git diff --staged --quiet; then
+            echo "no change — build produced identical output"
+            exit 0
+          fi
+          git commit -m "build: 重新生成 index.html + content_36.js（由 source/** 触发，自动）"
+          # 并发的另一个 push 可能已经把 main 推进了，rebase 重试三次
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && break
+            echo "push 失败，第 $i 次重试"; sleep 5
+          done

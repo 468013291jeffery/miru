@@ -7,90 +7,125 @@
 
 ---
 
-## ⚠️ 先看这条
+## ⚠️ 先看这条（2026-10-30 实测，原方案已作废）
 
-**半途改会直接让线上挂。** 因为 `miru.plus` 现在发布的就是 git 里的 `index.html`。
-必须**先让 Vercel 会自己构建**，**再**把 `index.html` 从 git 里移除。顺序反了 = 站点 404。
+**原写的「在 Vercel 里配 `buildCommand: python3 source/build.py`」—— 实测行不通。**
 
----
+我在分支 `ann/vercel-build` 上试了（`vercel.json` 加 `buildCommand`），**preview 部署 failure**。原因：
 
-## 甲方案（推荐）：让 Vercel 自己构建
-
-### 第 1 步 · 在 Vercel 项目里加构建配置
-
-Vercel 后台 → 项目 `miru` → **Settings → Build & Development Settings**：
-
-| 项 | 填什么 |
-|---|---|
-| Framework Preset | **Other** |
-| **Build Command** | `python source/build.py` |
-| **Output Directory** | `.`（点号，表示仓库根） |
-| Install Command | 留空（这个项目没有 node 依赖要装） |
-
-> 如果 Vercel 的构建镜像里没有 `python`，把 Build Command 改成 `python3 source/build.py`。
-> 有没有 python 看构建日志第一段（`Build image` 那行会列可用运行时）。
-
-### 第 2 步 · 在**预览部署**上验一次（不要直接上 Production）
-
-推一个无关紧要的提交（比如改个 README），看 Vercel 会不会自动构建出 `index.html`。
-
-**判据（缺一条都不算过）**：
-
-```bash
-# 预览部署的域名
-curl -s -o /dev/null -w "%{http_code} %{size_download}\n" https://<预览域名>/
-# 期望：200，且大小接近 9.8 MB（不是几百字节的目录列表）
-
-curl -s -o /dev/null -w "%{http_code}\n" https://<预览域名>/api/works
-# 期望：200
-
-curl -s -o /dev/null -w "%{http_code}\n" https://<预览域名>/admin.html
-# 期望：200
+```
+source/build.py 要调 source/gen_content.py
+              要读 source/content/out/（40 项）
+              要读 source/src/*.js（151 个文件）
+而 .vercelignore 里写着 `source/`  ⇒ Vercel 的构建上下文里根本没有这个目录
 ```
 
-### 第 3 步 · 验过了，才把 `index.html` 移出 git
+⇒ 想在 Vercel 里构建，必须**同时**改三处：`.vercelignore` 去掉 `source/`（**会让剧本源码公网可下载**）、
+`build.py` 的输出路径、`vercel.json`。**代价大于收益，不建议。**
 
-```bash
-cd /path/to/miru
-git rm --cached index.html          # 只从 git 移除，本地文件保留
-printf '\n# 构建产物，由 Vercel 自动生成（见 backend/CUT-INDEX.md）\nindex.html\n' >> .gitignore
-git add .gitignore
-git commit -m "index.html 退出 git 跟踪：改由 Vercel 构建（build.py），避免每次合并冲突"
+## ✅ 改用 GitHub Action（推荐）
+
+**思路**：不用 Vercel 构建，改用 CI 构建。谁 push `source/**`，Action 自动跑 `build.py` 并把 `index.html` 提交回去。
+
+**好处**：
+- 两边都**不用手动**构建
+- `source/` 不需要暴露给公网（`.vercelignore` 保持原样）
+- Vercel 继续做纯静态发布，**零配置改动**
+- 实测 `build.py` 本地只需 **0.6 秒**，Action 上毫无压力
+
+### 你需要做的：新建一个文件
+
+GitHub 网页 → 仓库根 → **Add file → Create new file** → 文件名填：
+
+```
+.github/workflows/build-index.yml
 ```
 
-> `git rm --cached` 而不是 `git rm` —— **本地那份要留着**，本机构建和 `tools/serve.mjs` 还要用它。
+内容**整段复制**下面这个（也可从 `backend/build-index.yml` 复制）：
 
-### 第 4 步 · 上线后立刻验（3 条）
+```yaml
+name: build-index
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'source/**'
+      - 'art/**'
+      - 'audio/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-index
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: build
+        run: |
+          python3 --version
+          python3 source/build.py
+          ls -l index.html content_36.js
+
+      - name: commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html content_36.js
+          if git diff --staged --quiet; then
+            echo "no change"
+            exit 0
+          fi
+          git commit -m "build: 重新生成 index.html + content_36.js（由 source/** 触发，自动）"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push && break
+            echo "retry $i"; sleep 5
+          done
+```
+
+> ⚠️ 我这边**推不了**这个文件 —— token 缺 `workflow` scope（`refusing to allow a Personal Access Token to create or update workflow`）。
+> 所以必须你上传，或者给一个有 `workflow` 权限的 token。
+
+### 生效后要验的三条
 
 ```bash
+# ① Action 跑成功了没：GitHub → Actions 标签页，看 build-index 最新一次是绿的
+# ② 线上还是好的
 curl -s -o /dev/null -w "%{http_code} %{size_download}\n" https://miru.plus/
-curl -s -o /dev/null -w "%{http_code}\n" https://miru.plus/api/works
-curl -s -o /dev/null -w "%{http_code}\n" https://miru.plus/admin.html
+#   期望 200 + 约 9.8 MB
+# ③ 改一句台词，等一下，看 index.html 有没有被 Action 自动提交
 ```
 
-期望：`200` + 约 9.8 MB、`200`、`200`。**任何一条不对，立刻回滚**（见下）。
+### 然后（可选，收益最大的一步）
 
----
-
-## 回滚（30 秒）
-
-出问题就把 `index.html` 放回 git：
+Action 稳定跑过几次之后，才把 `index.html` 移出 git —— 那时它已经由 Action 自动维护，冲突就消失了：
 
 ```bash
-git add -f index.html
-git commit -m "rollback: index.html 回到 git 跟踪"
+git rm --cached index.html
+printf '\n# 由 GitHub Action 自动构建（见 backend/CUT-INDEX.md）\n' >> .gitignore
 ```
-
-（`.gitignore` 里那行留着不影响 —— `-f` 会强制加。）
 
 ---
 
-## 乙方案（不改配置，靠约定）
+## 原方案（已作废，留档）
+
+### 甲方案：让 Vercel 自己构建 —— ❌ 实测失败
+
+见上面「先看这条」。`vercel.json` 加 `buildCommand` 会让 preview 构建失败，因为 `source/` 被 `.vercelignore` 排除。
+
+### 乙方案（不改配置，靠约定）
 
 `index.html` 继续跟着 git 走，但**约定只有 Ann 构建后提交**：
 姜改完 `source/src/**` 后说一声，由 Ann 跑 `python source/build.py` + 提交。
 
-零配置，代价是靠记性。**先跑一段时间看冲突还会不会发生，再决定要不要走甲。**
+零配置，代价是靠记性。**在 Action 落地之前，先按这个来。**
 
 ---
 
