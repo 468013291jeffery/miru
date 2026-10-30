@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>Legacy photo regression</title><pre id="result">Running…</pre><iframe id="app" src="/index.html" style="width:420px;height:800px"></iframe><script>
+app.onload=async()=>{try{const w=app.contentWindow;await new Promise(r=>setTimeout(r,600));const out=w.eval(`(()=>{
+ const th={id:'legacy-test',wid:'ice',msgs:[],cast:['mason']};
+ for(const locked of [true,false])for(const src of ['art/mason.jpg','old-portrait-url.jpg']){
+  const m={who:'mason',k:'pic',src,locked,at:1};th.msgs.push(m);
+  if(msgHTML(m,0,th)!=='')throw Error('Legacy portrait still visible: '+locked+' '+src);
+ }
+ const item={id:'photo-regression',src:'art/scenes/heir/warehouse.jpg',cid:'mason',at:1};S.album.unshift(item);
+ const html=msgHTML({who:'me',k:'img',aid:item.id},0,th);S.album=S.album.filter(x=>x!==item);
+ if(!html.includes('m-img'))throw Error('Real album image was removed');
+ return {pass:true,lockedPortraitHidden:true,unlockedPortraitHidden:true,oldURLHidden:true,realPhotosPreserved:true};
+})()`);result.textContent=JSON.stringify(out,null,2)}catch(e){result.textContent='FAIL: '+e.stack}};
+</script>

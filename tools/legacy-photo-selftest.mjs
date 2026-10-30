@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const money=fs.readFileSync('source/src/app5_money.js','utf8');
+const start=money.indexOf('document.addEventListener("click",e=>{let x;');
+const end=money.indexOf(' if(e.target.closest("[data-paysheet]"))',start);
+let click,spent=0,free=0,rendered=0;
+const state={keys:12,freeUse:{pic:'yesterday'},threads:{a:{msgs:[{k:'pic',locked:true,src:'portrait.jpg'}]}}};
+const before=JSON.stringify(state);
+const box={S:state,document:{addEventListener:(type,fn)=>click=fn},CL:()=> 'zh',toast(){},renderChat(){rendered++},spend(){spent++;return true},freeToday(){free++;return true}};
+vm.createContext(box);vm.runInContext(money.slice(start,end)+'});',box);
+for(let i=0;i<3;i++)click({target:{closest:selector=>selector==='[data-unpic]'?{dataset:{unpic:'0'}}:null}});
+assert.equal(spent,0);assert.equal(free,0);assert.equal(rendered,3);assert.equal(JSON.stringify(state),before,'stale clicks never charge, consume a free use, or unlock a portrait');
+console.log('Legacy photo billing passed: repeated stale clicks cannot charge or consume the daily photo.');
