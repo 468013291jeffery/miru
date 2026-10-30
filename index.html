@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="d1d4b4e9d2fd 2026-10-30T15:44Z";
+window.MIRU_BUILD="64130d329f45 2026-10-30T15:48Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -15192,6 +15192,7 @@ const _installWork76 = installWork;
 installWork = async function (id) {
   const zh = CL() === "zh";
   const r = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
+  if (r.status === 451 && r.j && r.j.self) { const ok = await adultConfirm76(); return ok ? installWork(id) : null; }
   if (r.status === 451) { const why = (r.j && r.j.why) || ""; toast(zh ? ({ verify: "这部是成人作品，需要先完成年龄验证", login: "这部是成人作品，请先登录并完成年龄验证", region: "这部成人作品在你所在的地区不开放" }[why] || "这部成人作品暂不开放") : ({ verify: "This is an adult story — age verification is required", login: "This is an adult story — sign in and verify your age first", region: "This adult story isn't available in your region" }[why] || "This adult story isn't available")); return null; }
   if (!r.ok || !r.j.pack) { toast(zh ? "打不开这部作品" : "Couldn't open this story"); return null; }
   const P = r.j.pack;
@@ -15228,6 +15229,31 @@ packStart = function (wid, as, fromCh, picks) {
   if (w && w.official76 && w.pack && !w.pack.exp74 && !fromCh && typeof exp74Build === "function") { exp74Build(wid).then(() => _packStart76(wid, as, fromCh, picks), () => _packStart76(wid, as, fromCh, picks)); return; }
   return _packStart76.apply(this, arguments);
 };
+
+/* 成人作品：测试期由用户自己确认年满 18 岁（后台「允许用户自行确认年龄」打开时才会走到这里）。服务器按出生日期算周岁并记录。 */
+function adultConfirm76() {
+  const zh = CL() === "zh";
+  return new Promise(done => {
+    let settled = false; const fin = v => { if (settled) return; settled = true; done(v); };
+    sheet('<h2>' + (zh ? "🔞 成人内容" : "🔞 Adult content") + '</h2><p class="sm dim" style="margin:8px 0 12px;line-height:1.6">' +
+      (zh ? "这部作品包含露骨的成人内容，仅限年满 18 岁的用户。请填写你的出生日期。" : "This story contains explicit adult content and is for people 18 and older. Enter your date of birth.") +
+      '</p><div class="field"><input type="date" id="adBirth76" max="' + new Date().toISOString().slice(0, 10) + '"></div><p class="xs faint" id="adErr76" style="min-height:16px;margin-top:6px"></p>' +
+      '<div class="row" style="gap:8px;margin-top:10px"><button class="btn btn-g grow" id="adNo76">' + (zh ? "离开" : "Leave") + '</button><button class="btn btn-p grow" id="adYes76">' + (zh ? "我已年满 18 岁，继续" : "I'm 18 or older — continue") + '</button></div>');
+    const no = document.getElementById("adNo76"), yes = document.getElementById("adYes76");
+    if (no) no.addEventListener("click", () => { closeSheet(); fin(false); });
+    if (yes) yes.addEventListener("click", async () => {
+      const v = (document.getElementById("adBirth76") || {}).value || ""; const err = document.getElementById("adErr76");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) { if (err) err.textContent = zh ? "请选择出生日期" : "Pick your date of birth"; return; }
+      yes.disabled = true;
+      try {
+        const r = await capi("/auth", { json: { op: "adult_confirm", birthDate: v } });
+        if (r.ok) { closeSheet(); fin(true); return; }
+        if (err) err.textContent = r.status === 403 && /18/.test((r.j && r.j.error) || "") ? (zh ? "未满 18 岁，不能查看这部作品" : "You must be 18 or older to view this story") : (zh ? "确认失败，请先登录后再试" : "Couldn't confirm — sign in and try again");
+      } catch (e) { console.warn("[adult76]", e); if (err) err.textContent = zh ? "网络出错，再试一次" : "Network error — try again"; }
+      yes.disabled = false;
+    });
+  });
+}
 
 /* ================= v3.0 · 记忆系统 第一阶段 =================
    ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失。

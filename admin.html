@@ -798,7 +798,8 @@ const Config = {
       <el-form-item label="首充双倍"><el-switch v-model="v.first_purchase_double" /></el-form-item>
       <el-form-item label="允许游客试玩"><el-switch v-model="v.guest_allowed" /><span class="muted">　关闭后必须登录才能进入（App Store 审核一般建议保留游客）</span></el-form-item></el-form></div>
       <el-form-item label="成人露骨作品"><el-switch v-model="v.adult_enabled" /><span class="muted">　总开关。关闭时所有标了「成人露骨」的作品对所有人隐藏</span></el-form-item>
-      <el-form-item label="成人内容开放地区"><el-select v-model="v.adult_regions" multiple filterable allow-create default-first-option placeholder="国家码 FR 或 国家-州 US-CA，由法务确定" style="width:420px" /><span class="muted">　不在名单里的地区一律看不到；名单为空 = 哪里都不开放</span></el-form-item>
+      <el-form-item label="成人内容开放地区"><el-select v-model="v.adult_regions" multiple filterable allow-create default-first-option placeholder="* = 不限地区（测试）；正式：FR 或 US-CA，由法务确定" style="width:420px" /><span class="muted">　填 * = 所有地区都开放（测试阶段用）；不在名单里的地区看不到；名单为空 = 哪里都不开放</span></el-form-item>
+      <el-form-item label="允许用户自行确认年龄"><el-switch v-model="v.adult_self_verify" /><span class="muted">　测试用：用户打开成人作品时填出生日期、确认年满 18 岁即可观看。正式上线前请关掉，改用第三方年龄验证</span></el-form-item>
     <div class="panel"><h3>上传素材收费（钻石 / 个）</h3><el-form label-width="160px" :inline="true">
       <el-form-item label="音频"><el-input-number v-model="v.upload_price.audio" :min="0" /></el-form-item><el-form-item label="图片"><el-input-number v-model="v.upload_price.image" :min="0" /></el-form-item>
       <el-form-item label="视频"><el-input-number v-model="v.upload_price.video" :min="0" /></el-form-item><el-form-item label="小游戏"><el-input-number v-model="v.upload_price.game" :min="0" /></el-form-item>

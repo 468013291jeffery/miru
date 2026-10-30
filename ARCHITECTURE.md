@@ -941,7 +941,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 289 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 133 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
-| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 43 |
+| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 69 |
 | `app77_memory2.js` | 记忆系统 第一阶段 ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失 | 186 |
 | `app78_memsync.js` | 记忆系统 第二阶段：记忆存进云端数据库 + 按意思召回 登录用户：记忆增删改 3 秒内同步到服务器（/api/state?r=mem）。每次回复前… | 44 |
 | `app79_ledger.js` | 记忆系统 第三阶段：剧情账本（程序裁决，模型只读） 一个故事的「正史」统一放在 th.led，由程序维护： · 约定 P#：来自「约定」类记忆（你… | 151 |
@@ -1019,3 +1019,8 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 `api/works.js`：feed 对不满足者过滤掉成人作品；`?id=` 返回 451 `{error:'adult_gate', why}`，不下发 pack。
 App：`app76_official.js` 收到 451 给出对应提示；成人作品解析时置 `window.IM_ADULT`，`app51_import.js` 不再省略露骨句子。普通作品行为不变。
+
+测试模式（2026-10-30，只做年龄、不做地区）：
+- `adult_regions` 里填 `*` = 所有地区放行（`adultRegionOk`）；feed 只看总开关 + 地区，不看账号，所以人人能在发现页看到成人作品卡片。
+- `config.adult_self_verify === true` 时，451 带 `self:true`，App 弹出生日期确认（`adultConfirm76`），POST `/auth` `op:"adult_confirm"`，服务器按出生日期精确算满 18 岁才写 `adult_verified_at`，`adult_verified_by = 'self · 日期 · 地区'`。
+- 正式上线前：地区改回法务名单、关掉 `adult_self_verify`，改用第三方年龄验证。
