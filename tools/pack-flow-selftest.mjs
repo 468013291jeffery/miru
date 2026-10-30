@@ -13,6 +13,7 @@ const start = html.indexOf('function pkSess(th)');
 const end = html.indexOf('function packNext()');
 if (start < 0 || end < 0 || end < start) { console.error('pack block not found in ' + file); process.exit(2); }
 const block = html.slice(start, end);
+const navigation = html.slice(html.indexOf('function pkContinueOnlyOptions('), html.indexOf('/* ---------- the panel under the scene ---------- */'));
 // the paywall lives further down the same file; cut it separately and glue it after the block
 const payStart = html.indexOf('function packPaywall(wid,n)');
 const payEnd = payStart < 0 ? -1 : html.indexOf('\nfunction ', payStart + 10);
@@ -51,7 +52,7 @@ const stubs = {
   track: (name, props) => events.push({ name, props }),
 };
 
-const api = new Function(...Object.keys(stubs), block + '\n' + payBlock + '\nreturn { pkOpenMark, packPick, packAfterPick, pkDone, packPaywall };')(...Object.values(stubs));
+const api = new Function(...Object.keys(stubs), navigation + '\n' + block + '\n' + payBlock + '\nreturn { pkOpenMark, packPick, packAfterPick, pkDone, packPaywall };')(...Object.values(stubs));
 const { pkOpenMark, packPick, packAfterPick, packPaywall } = api;
 
 let pass = 0; const fails = [];

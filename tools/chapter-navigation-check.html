@@ -1,0 +1,21 @@
+<!doctype html><meta charset="utf-8"><title>Chapter navigation regression</title><pre id="result">Running…</pre><iframe id="app" src="/index.html" style="width:420px;height:850px"></iframe><script>
+app.onload=async()=>{try{const w=app.contentWindow;await new Promise(r=>setTimeout(r,600));const out=await w.eval(`(async()=>{
+S.lang='zh';S.autoVoice=false;S.voice=S.voice||{};S.voice.auto=false;delete S.pkTap101;S.pkSpd=.001;S.pkPaused=false;S.coach={home:1,chat:1};liveOn=()=>false;
+const r=imBuild(imParse('# 章节导航测试\\n# CHAPTER 1｜走廊\\n# SCENE｜走廊\\n旁白：门开了。\\n林：我们进去看看。\\n# CHAPTER 2｜房间\\n# SCENE｜房间\\n旁白：灯亮了。\\n林：信在桌上。'),null),wid=r.wid||r,world=wd(wid);world.pack.exp74=1;
+const th=newThread(null,wid,null,{as:'watch'});openThread(th.id);show('s-chat');await new Promise(r=>setTimeout(r,4500));
+if(th.pk.st!=='choose')throw Error('Ordinary passages did not advance automatically: '+JSON.stringify(__pkLive(th)));
+let html=packPanel(th);if(!html.includes('data-pkadvance')||html.includes('data-pkpick=')||html.includes('pkask'))throw Error('Placeholder still presented as choice');
+if(pkBusy(th))throw Error('Chapter navigation locked conversation');
+const love=JSON.stringify(th.love);packAdvanceChapter(th);await new Promise(r=>setTimeout(r,4500));
+if(th.pk.ch!==2||th.pk.st!=='choose')throw Error('Next chapter requires extra clicks or narration stalls');
+if(JSON.stringify(th.pk.picks)!=='{}'||JSON.stringify(th.love)!==love)throw Error('Navigation invented a branch or affection');
+packAdvanceChapter(th);if(th.pk.st!=='end'||th.pk.end!=='complete')throw Error('Final chapter did not complete cleanly');
+if(JSON.stringify(th.love)!==love||th.msgs.some(m=>m.k==='dec'))throw Error('Completion treated as A choice');
+const c=world.pack.chapters[1];c.ask={zh:'你怎么做？',en:'What do you do?'};c.choices=[{k:'A',t:{zh:'留下',en:'Stay'},set:'stayed',then:{zh:[],en:[]}},{k:'B',t:{zh:'离开',en:'Leave'},set:'left',then:{zh:[],en:[]}}];th.pk.st='choose';html=packPanel(th);
+if(!html.includes('data-pkpick="A"')||!html.includes('data-pkpick="B"'))throw Error('Real branches were removed');
+if(pkContinueOnlyOptions([{t:'继续',then:[['n','act','实际后果']]}]))throw Error('Meaningful Continue was skipped');
+if(pkContinueOnlyOptions([{t:'继续',give:'key',then:[]}]))throw Error('Reward option was skipped');
+if(!Array.isArray(stopAuto(th,['sys','line',{opts:[{t:'继续',then:[]}]}])))throw Error('Inline no-op Continue did not autoplay');
+return {pass:true,ordinaryPassagesAutoPlay:true,oneNextChapterButton:true,noFakeChoice:true,noAffectionOrBranchGain:true,finalChapterCompletes:true,realChoicesPreserved:true};
+})()`);result.textContent=JSON.stringify(out,null,2)}catch(e){result.textContent='FAIL: '+e.stack}};
+</script>
