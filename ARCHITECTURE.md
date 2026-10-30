@@ -868,7 +868,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 |---|---|---|
 | `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 247 |
 | `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 290 |
-| `app3_chat.js` | THREADS（原文只有段落横幅） | 1168 |
+| `app3_chat.js` | THREADS（原文只有段落横幅） | 1184 |
 | `app4_more.js` | CHATS (WhatsApp-style list) | 598 |
 | `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 172 |
 | `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
@@ -1038,3 +1038,5 @@ App：`app76_official.js` 收到 451 给出对应提示；成人作品解析时�
 - 成人露骨作品 + 已过年龄门槛：`dialogueHeat` 返回 `explicit`（`HEAT_RULE.explicit`），角色直接回应玩家的成人向表达。
 - 口语化：`ask()` 每次调用都附 `ORAL_RULE`（通话 `vcSys` 也带）；规则文档 13.4.1。
 - 可读性：清爽模式下动作 / 旁白 / 心声 / 场景文字加半透明深色底和字影。
+- 朗读顺序（10-31 晚）：顶部 🔊（`S.autoVoice`）也走 `playBeats` 的「念完一句再出下一句」；`appendMsg` 的自动朗读改进全局队列 `voiceEnq`（`VOICEQ`），一句读完才读下一句；上限到了但 `voiceAudible()` 仍在出声就继续等（最多 60 秒）。手动点 🔊 / 关朗读会 `voiceClear()`。
+- 联想回复为空时 `#sugg` 也显示「💡 不知道说什么？帮我想几句」（`sgMoreBtn`），点了现生成。
