@@ -1,4 +1,14 @@
-{ "cleanUrls": false,
-  "functions": { "api/tts.js": { "maxDuration": 60 }, "api/translate.js": { "maxDuration": 60 },
-                 "api/chapter.js": { "maxDuration": 10, "includeFiles": "source/src/content_36.js" } },
-  "headers": [{ "source": "/(.*)\\.(jpg|webp|png|mp4|mp3|m4a)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }] }] }
+{
+  "cleanUrls": false,
+  "functions": {
+    "api/tts.js": { "maxDuration": 60 },
+    "api/translate.js": { "maxDuration": 60 },
+    "api/chapter.js": { "maxDuration": 10 }
+  },
+  "headers": [
+    {
+      "source": "/(.*)\\.(jpg|webp|png|mp4|mp3|m4a)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
+    }
+  ]
+}
