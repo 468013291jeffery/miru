@@ -93,24 +93,20 @@ f.onload = async () => {
       log('noAnim', 'injected');
     } catch (e) { log('noAnimErr', String(e && e.message)) }
 
-    /* 2026-10-30 · 第四道门：**节奏**。`pkWait` 在 autoVoice 分支里要等朗读收尾，无头环境里
-       那几条退路（3s / max(ms*3,14s)）实测一次都没走到 ⇒ 队列永远停在第一句上
-       （`__pkLive` 读数：ok=true / pause=false / waiting=true / autoVoice=true，而 q 一直是 68）。
-       这不是产品 bug 的判据（真实浏览器里有声音、有退路），但它挡着这条探针。
-       探针要量的是**顺序**，不是节奏 ⇒ 把等待封顶到 1.5 秒，让队列按顺序走完。
-       ⚠️ 这一步之后，读数只回答「谁先开口」，不回答「多快」。 */
-    try {
-      const orig = w.pkWait;
-      if (typeof orig === 'function') {
-        w.__pkWaitCalls = 0;
-        w.pkWait = function (th2) {
-          w.__pkWaitCalls++;
-          const p = orig.apply(this, arguments);
-          return Promise.race([p, new Promise(r => setTimeout(r, 800))]);
-        };
-        log('pkWaitWrap', 'ok');
-      } else { log('pkWaitWrap', 'no pkWait on window') }
-    } catch (e) { log('pkWaitWrapErr', String(e && e.message)) }
+    /* 2026-10-30 · 第四道门（**这才是真正的那道**）：`app101_you.js:52` 的「点一下才继续」。
+       默认 `S.pkTap101 !== false` ⇒ tapMode 为真 ⇒ pkWait 被调用时 ms 传的是 **864e5（24 小时）**，
+       只有玩家**点一下**才 resolve（`data-pknext` → `PKNEXT[th.id]()`）。
+       这就是「队列停在第 3 条、q 一直 68、`__pkLive` 说 waiting=true」的真正原因 —— **不是 bug，是设计**。
+       而且它临时代 `S.autoVoice=false`、在 finally 里还原，所以我读到的 autoVoice=true 并不是那次等待的
+       条件 —— 那条读数把我往「朗读分支」带偏了一晚。
+       ⇒ 探针像一个真人那样**点**：有 `[data-pknext]` 就点。 */
+    w.__tapCount = 0;
+    w.__tapLoop = setInterval(function () {
+      try {
+        const b = w.document.querySelector('#s-chat [data-pknextl], #s-chat [data-pknext], #msgs [data-pknextl], #msgs [data-pknext]');
+        if (b) { b.click(); w.__tapCount++; }
+      } catch (e) { }
+    }, 500);
 
     /* 2026-10-30 · 第二道门：**「她没在看就不往下演」**。
        packRun 的 live() = curT===th.id && #s-chat 可见；而 packOpen 是在 newThread 里就开始跑的，
@@ -160,6 +156,7 @@ f.onload = async () => {
       log('thPk', JSON.stringify({ st: th.pk && th.pk.st, ch: th.pk && th.pk.ch, stop: th.pk && th.pk.stop ? 1 : 0 }));
       log('kidsCls', JSON.stringify(kidsOf(w).map(x => String(x.className))));
       try { log('readMs', String(typeof w.readMs==='function'?w.readMs((th.msgs||[])[(th.msgs||[]).length-1]):'n/a')); log('spd', String(typeof w.pkSpd==='function'?w.pkSpd():'n/a')) } catch(e){ log('paceErr', String(e&&e.message)) }
+      try { log('tapCount', String(w.__tapCount)) } catch(e) {}
       log('globals', JSON.stringify({ PKPLAY: typeof w.PKPLAY, PKPAUSE: typeof w.PKPAUSE, PKSKIP: typeof w.PKSKIP, PKWAIT: typeof w.PKWAIT }));
       /* 闭包里那三个值 —— app14 加了只读读数 __pkLive(th) 就是为了这一行 */
       try { log('live', JSON.stringify(typeof w.__pkLive === 'function' ? w.__pkLive(th) : 'no __pkLive')) } catch (e) { log('liveErr', String(e && e.message)) }
