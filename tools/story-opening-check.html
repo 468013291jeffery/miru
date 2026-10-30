@@ -1,0 +1,53 @@
+<!doctype html><meta charset="utf-8"><title>Story opening regression</title><pre id="result">Running…</pre><iframe id="app" src="/index.html" style="width:420px;height:850px"></iframe><script>
+app.onload=async()=>{const w=app.contentWindow;try{await new Promise(r=>setTimeout(r,1000));const result=await w.eval(`(async()=>{
+S.lang='zh';S.autoVoice=false;S.voice=S.voice||{};S.voice.auto=false;S.pkSpd=.001;S.pkTap101=true;S.pkPaused=false;S.coach={home:1,chat:1};S.selfSpeak=true;S.clean=false;S.cloudOn=false;liveOn=()=>false;
+const guest=document.querySelector('#mustGuest92');if(guest)guest.click();
+const text='# 测试开场\\n# CHAPTER 1｜417号房间\\n⟦CHAR|你|f|22|f2|调查者|来调查一条匿名消息⟧\\n⟦CHAR|Adrian|m|26|m1|酒店继承人|手里拿着信封⟧\\n# SCENE｜酒店走廊\\n旁白：你来到417号房间门外，手里握着那条匿名消息。\\nAdrian：你来了。先别急，看看这封信。\\nAdrian：有人想让我们见面。你收到消息时，发件人留了名字吗？\\n你：我想先知道是谁。\\n# SCENE｜417套房\\n旁白：门推开了，信封被放在茶几上。\\nAdrian：进来看看，这里还有另一份。\\n你：让我看看。\\n# CHOICE｜下一步\\n#### A｜检查信封\\n旁白：你检查信封。\\n#### B｜询问线索\\n旁白：你问起线索。\\n# ·';
+const doc=imParse(text),r=imBuild(doc,'你'),wid=r.wid||r,w=wd(wid);w.official76=1;w.community='w_scmvv3sk58b2935cc9b2';w.pack.exp74=1;w.title={zh:'丝绒谎言 · 开场验证',en:'Story opening'};
+await off94Ensure(w);const th=newThread(null,wid,null,{as:w.pack.pov});openThread(th.id);show('s-chat');
+await new Promise(r=>setTimeout(r,4800));
+const spoken=th.msgs.filter(m=>m.k==='say'||(m.k==='box'&&m.say));
+const before={npcLines:spoken.length,stop:th.pk.stop&&th.pk.stop[1],background:document.querySelector('#cbImg').lastElementChild?.getAttribute('src'),queue:th.pk.q?.length};
+if(before.npcLines<2||!['myline','line'].includes(before.stop)||!before.background?.includes('corridor'))throw Error('Opening failed: '+JSON.stringify(before));
+S.pkTap101=false;stopResolve(th,[[th.pk.as,'say','先看看信封。',1]]);await new Promise(r=>setTimeout(r,8500));
+const after=document.querySelector('#cbImg').lastElementChild?.getAttribute('src');if(!after?.includes('suite417'))throw Error('Scene did not change: '+after+' '+JSON.stringify({live:__pkLive(th),head:th.pk.q?.slice(0,3),bg:th.pk.bg,scenes:packBeats(w.pack.chapters[0].beats).filter(b=>b[1]==='scene'),msgs:th.msgs.filter(m=>m.k==='scene')}));
+const key=th.pk.bg;delete window.SCENE_FILES[key];document.querySelector('#cbImg').dataset.sceneSrc='old';await off94Ensure(w);await new Promise(r=>setTimeout(r,50));
+if(!document.querySelector('#cbImg').lastElementChild?.getAttribute('src')?.includes('suite417'))throw Error('Restore failed');
+
+parent.document.querySelector('#result').textContent='Testing voice ownership';
+const realSpeak=speak,realOn=voiceAutoOK;let spokenCount=0;const voiceTexts=[];
+speak=(text,id,done)=>{spokenCount++;voiceTexts.push(text);if(done)setTimeout(done,1)};
+voiceAutoOK=()=>true;S.autoVoice=true;S.voice=S.voice||{};S.voice.auto=true;
+const npc=th.cast.find(id=>id!==th.pk.as);
+const beforePics=th.msgs.filter(m=>m.k==='pic').length;th.aiN=8;
+parent.document.querySelector('#result').textContent='Testing AI playback';
+await playBeats(th,{beats:[{who:npc,kind:'say',text:'同一句话只读一次。'}],suggest:[]},{kind:'cont'},false);
+if(spokenCount!==1)throw Error('AI speech duplicated: '+spokenCount);
+parent.document.querySelector('#result').textContent='Testing script playback';
+const m={who:npc,k:'say',txt:'剧本台词只读一次。',pk:1,at:Date.now()};pkAppend(th,m);
+const last=th.msgs[th.msgs.length-1];await new Promise(r=>speakLine(last,r));await new Promise(r=>speakLine(last,r));
+if(spokenCount!==2)throw Error('Script speech duplicated: '+spokenCount);
+parent.document.querySelector('#result').textContent='Testing grouped playback';
+pkAppend(th,{who:'n',k:'act',txt:'门外传来脚步声。',pk:1,at:Date.now()});
+pkAppend(th,{who:npc,k:'say',txt:'我们去看看。',pk:1,at:Date.now()});
+const grouped=th.msgs[th.msgs.length-1];await new Promise(r=>speakLine(grouped,r));await new Promise(r=>speakLine(grouped,r));
+if(spokenCount!==3)throw Error('Grouped script speech duplicated: '+spokenCount);
+
+await new Promise(r=>setTimeout(r,1000));if(th.msgs.filter(m=>m.k==='pic').length!==beforePics)throw Error('Unprompted picture inserted');
+if(msgHTML({who:npc,k:'pic',src:artSrc(npc),locked:true},0,th)!=='')throw Error('Legacy fake picture still visible');
+// Exercise the actual final TTS provider with a rejected request, no network call.
+parent.document.querySelector('#result').textContent='Testing TTS failure';
+const provider=VOICE.layers.find(x=>x.name==='voicefix-86').fn;
+const oldFetch=ttsFetch,oldOn=ttsOn;let fallback=0,ended=0;
+ttsFetch=()=>Promise.reject(Error('test failure'));ttsOn=()=>true;
+provider(()=>fallback++,'服务器失败测试',npc,()=>ended++);await new Promise(r=>setTimeout(r,30));
+if(fallback!==0||ended!==1)throw Error('Device fallback or duplicate completion: '+fallback+'/'+ended);
+ttsFetch=oldFetch;ttsOn=oldOn;speak=realSpeak;voiceAutoOK=realOn;S.autoVoice=false;S.voice.auto=false;
+if(!dialogueCompletedAction({who:'me',k:'say',txt:'钱已经给你了。'}))throw Error('Completed payment declaration lost');
+for(const text of ['我还没给你钱','我准备给你钱','如果我给你钱了呢？'])if(dialogueCompletedAction({who:'me',k:'say',txt:text}))throw Error('Promise treated as payment: '+text);
+if(dialogueCompletedAction({who:'me',k:'think',txt:'钱已经给你了。'}))throw Error('Private thought leaked');
+// An explicitly typed offered action resolves the real stop and its consequences.
+const offered=Lz(th.pk.stop[2].opts[0].t);doSend(offered,'say');await new Promise(r=>setTimeout(r,50));
+if(th.pk.stop&&Lz(th.pk.stop[2].opts?.[0]?.t)===offered)throw Error('Typed option did not advance');
+return {pass:true,opening:before,nextBackground:after,restore:true,voiceOnce:true,noDeviceFallback:true,noRandomPhotos:true,typedChoiceAdvances:true,actionMemory:true};})()`);document.querySelector('#result').textContent=JSON.stringify(result,null,2)}catch(e){document.querySelector('#result').textContent='FAIL: '+e.stack}};
+</script>

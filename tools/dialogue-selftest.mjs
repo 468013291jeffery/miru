@@ -72,3 +72,14 @@ assert.ok(html.includes('src="config.js"') && html.indexOf('src="config.js"') < 
 console.log("proxy configuration loads before the AI client");
 
 assert.ok(build.includes('"app100_fixes.js"') && html.includes("v8.4 · 体验修复"), "keep the concurrently uploaded experience fixes");
+
+for(const txt of ['钱已经给你了。','我付过钱了','我把门关上了','I already paid'])assert.equal(b.dialogueCompletedAction({who:'me',k:'say',txt}),true,txt);
+for(const txt of ['我还没给你钱','我准备给你钱','如果我给你钱了呢？','我没有付钱'])assert.equal(b.dialogueCompletedAction({who:'me',k:'say',txt}),false,txt);
+assert.equal(b.dialogueCompletedAction({who:'me',k:'think',txt:'钱已经给你了'}),false);
+th.msgs.push({who:'me',k:'say',txt:'钱已经给你了。',at:123});
+const beforeContext=JSON.stringify(th);assert.match(b.dialogueProgressContext(th),/do not ask for the same money again/);assert.equal(JSON.stringify(th),beforeContext,'continuity context is read only');
+let selected=-1;b.packChooseLine=(t,index)=>{selected=index;return true};th.pk.stop=['c','line',{opts:[{t:'把门带上。'},{t:'回去睡。'}]}];
+b.doSend('我选择：把门带上。','say');assert.equal(selected,0,'typed explicit choice resolves');
+selected=-1;b.doSend('我还没决定','say');assert.equal(selected,-1,'unrelated speech never selects a branch');
+b.doSend('回去睡。','think');assert.equal(selected,-1,'private thoughts never select a branch');
+console.log('continuity regression passed: completed actions, promises, private thoughts, read-only context and typed explicit choices');
