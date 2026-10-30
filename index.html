@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="916b74a7b3a4 2026-10-30T10:37Z";
+window.MIRU_BUILD="257b16a5be91 2026-10-30T11:01Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7581,6 +7581,24 @@ function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"
  if(k==="game"&&!GAMEF[d.k])return d.skip||[];
  return null}
 const PKPAUSE={};   // 每个线程：玩家正在说话 ⇒ 剧本队列暂停
+/* 2026-10-30 · 开发读数：`packRun` 里的 live() 是个闭包，从外面**看不见**。
+   代价实测：探针问「队列为什么停在第 3 条」，我在外面猜了六轮（虚拟时间 / 节奏 / 线程地址 /
+   重开线程 / 弹层 / 动画 / PKPAUSE 写点），全部落空 —— 因为判据在闭包里，猜不到。
+   所以把它做成一个**只读**函数：进去看一次，就知道是哪个条件为假。不改任何状态。
+   用法：`__pkLive(th)`（探针里是 `w.__pkLive(th)`）。 */
+function __pkLive(th){const e=$("#s-chat"),id=th&&th.id;
+ return {cur:curT,id:id,same:curT===id,chatThere:!!e,chatHidden:e?e.hidden:null,
+  ok:curT===id&&!!e&&!e.hidden,
+  pause:!!PKPAUSE[id],
+  hist:(typeof HIST_OPEN!=="undefined"?!!HIST_OPEN:null),
+  playing:PKPLAY[id]||0,
+  q:(th&&th.pk&&th.pk.q)?th.pk.q.length:0,
+  st:(th&&th.pk&&th.pk.st)||"",
+  stop:!!(th&&th.pk&&th.pk.stop),
+  /* 停在 pkWait 里？PKNEXT 上挂着 resolver ⇒ 「正在等这一句念完/等够阅读时间」 */
+  waiting:!!PKNEXT[id],
+  autoVoice:(typeof S!=="undefined"?!!S.autoVoice:null),
+  held:!!(th&&th._held)};}
 async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-chat").hidden;if(PKPLAY[th.id]===2)return;PKPLAY[th.id]=2;packRefresh(th);
  try{while(th.pk.q&&th.pk.q.length){const b=th.pk.q[0];
   /* 2026-10-27 Ann：玩家一开口，剧本队列先停 —— 他得先接住她的话，
@@ -8384,9 +8402,16 @@ function avSilent(){try{if(typeof speechSynthesis!=="undefined"&&(speechSynthesi
    **没有任何东西会 resolve**，整条剧本停在这一句上（这就是「忽然不动了」）。现在每个分支都保证 resolve。 */
 function pkWait(th,prev,spd,ms){return new Promise(r=>{let ok=false;const go=()=>{if(ok)return;ok=true;r()};PKNEXT[th.id]=go;
  if(S.autoVoice&&AVSKIP<=0){
-  speakLine(prev,()=>{AVSILENT=0;setTimeout(go,300)});
+  /* 2026-10-30 · **退路必须比 speakLine 早注册**。
+     实测（无头 Edge，speakLine 会抛）：原来三条退路里，后两条 setTimeout 写在 speakLine **之后**
+     ⇒ 它一抛，一条都不注册 ⇒ 这个 Promise 永远不 resolve ⇒ 整条剧本队列停在这一句上
+     （读数：`__pkLive` 的 waiting=true、q 一直 68、st 一直 busy）。
+     这和 10-27 修掉的「没有任何东西会 resolve」是同一个病，只是搬到了朗读分支 —— 那次只保证了两条，
+     这次把第三条也保证住：**先挂退路，最后才去念，念不出来也一定会往前走**。 */
   setTimeout(()=>{if(!ok&&avSilent()){AVSILENT++;if(AVSILENT>=2){AVSKIP=8;AVSILENT=0}go()}},3000);   // 3 秒还没响 ⇒ 这一句不等朗读
   setTimeout(go,Math.max(ms*3,14000));                          // 老兜底保留（朗读很慢但确实在读时靠它）
+  try{ speakLine(prev,()=>{AVSILENT=0;setTimeout(go,300)}) }
+  catch(e){ if(typeof console!=="undefined"&&console.warn)console.warn("[pkWait] speakLine 抛了，这一句直接放过：",e); go() }
  }else{
   if(AVSKIP>0)AVSKIP--;
   if(spd)setTimeout(go,ms);else go();
