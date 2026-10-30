@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="9b9cf78018e0 2026-10-30T20:32Z";
+window.MIRU_BUILD="6764d847f544 2026-10-30T20:39Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -7629,6 +7629,7 @@ function readMs(m){if(!m)return 1500;const x=String(m.txt||m.title||"");const cj
  return Math.min(7000,Math.max(1700,(cjk?1000+x.length*105:1000+x.length*34)))}
 function pkSpd(){const v=S.pkSpd;return v===0?0:(v||1)}
 function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
+ if(k==="line"&&pkContinueOnlyOptions(d.opts))return [];
  if(k==="start")return []; // Resume legacy openings automatically.
  if(k==="line"&&as!==speaker){const o=d.opts[0];if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}return [[speaker,o.k||"say",o.t]].concat(o.then||[])}
  if((k==="gift"||k==="call"||k==="voice")&&(!inScene||as===(k==="call"?d.cid:stopWho(th,d))))return d.skip||[];
@@ -7698,6 +7699,29 @@ function packLove(th,k){const d={A:9,B:4,C:-4}[k]||0;th.cast.filter(c=>c!==th.pk
 function aCount(th){const L=PCN(wd(th.wid));return Object.entries(th.pk.picks).filter(([n,k])=>+n<L&&k==="A").length}
 function EN(th){return Math.min(ENDING_NEED,Math.max(0,PCN(wd(th.wid))-1))}
 
+/* A placeholder Continue is navigation, never a player decision or affection gain. */
+function pkContinueOnlyOptions(options){
+ if(!Array.isArray(options)||options.length!==1)return false;
+ const o=options[0];if(!o||o.set||o.love||o.rd||o.need||o.give||o.len)return false;
+ const values=v=>typeof v==="string"?[v]:v&&typeof v==="object"?Object.values(v):[];
+ const labels=values(o.t).filter(x=>typeof x==="string"&&x.trim());
+ if(!labels.length||!labels.every(x=>/^(?:继续|继续剧情|下一章|进入下一章|continue|next chapter)[。.!！\s]*$/i.test(x.trim())))return false;
+ if(values(o.mem).some(x=>typeof x==="string"&&x.trim()))return false;
+ if(Array.isArray(o.then))return o.then.length===0;
+ return !o.then||Object.values(o.then).every(x=>Array.isArray(x)&&x.length===0);
+}
+function pkAdvanceOnly(c){return !!c&&pkContinueOnlyOptions(c.choices)}
+function packAdvanceChapter(th){
+ if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
+ const w=wd(th.wid),n=th.pk.ch,c=w&&w.pack&&w.pack.chapters[n-1];if(!pkAdvanceOnly(c))return;
+ if(n<w.pack.chapters.length&&chLocked(th.wid,n+1)){packPaywall(th.wid,n+1);return}
+ pkDone(th,n);th.pk.afterPendingChoose=0;th.pk.min=false;
+ if(n<w.pack.chapters.length){pkGo(th,"next","chapter-navigation");save();packNext();return}
+ pkGo(th,"end","story-complete");th.pk.end="complete";
+ pkTrack(th,"story_end",{ch:n,ending:null});
+ appendMsg(th,{who:"sys",k:"card",title:CL()==="zh"?"故事已结束":"Story complete",txt:"",at:Date.now()});
+ save();packRefresh(th);
+}
 /* ---------- the panel under the scene ---------- */
 function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!(th.pk.q&&th.pk.q.length);
  if(th.pk.st==="busy"&&!running&&!hasQ&&!th.pk.stop&&!busy)(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','panel-recover');const w=wd(th.wid),P=w.pack,n=th.pk.ch,c=P.chapters[n-1];if(!c)return "";
@@ -7707,6 +7731,9 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  else if(th.pk.st==="busy"&&running){if(!PKSKIP[th.id]){const v=pkSpd();
   h+='<div class="pkplay"><button class="pkspd" data-pkspd="1">'+(v===0?'👆 '+t("pk.spdTap"):v>1?'🐢 '+t("pk.spdSlow"):'▶ '+t("pk.spdNorm"))+'</button><button class="pkskip" data-pknextl="1">'+t("pk.nextLine")+' ›</button><button class="pkskip" data-pkskip="1">⏩ '+t("pk.skip")+'</button></div><p class="pkhint">'+t("pk.tapHint")+'</p>'}}
  else if(th.pk.st==="busy"&&hasQ){h+='<button class="btn btn-p btn-block" data-pkresume="1">▶ '+t("pk.resume")+'</button>'}
+ else if(th.pk.st==="choose"&&pkAdvanceOnly(c)){
+  h+='<button class="btn btn-p btn-block" data-pkadvance="1">'+(CL()==="zh"?(n<P.chapters.length?'进入下一章':'结束本章'):(n<P.chapters.length?'Next chapter':'Finish chapter'))+'</button>';
+ }
  else if(th.pk.st==="choose"){const need=n===PCN(wd(th.wid))?Math.max(0,EN(th)-aCount(th)):0;
   h+='<p class="pkask">'+esc(Lz(c.ask))+'</p><div class="pkopts">'+c.choices.map(x=>{const lock=x.k==="A"&&need>0;
    return '<button class="pkopt'+(lock?" lk":"")+'" data-pkpick="'+x.k+'"><i>'+x.k+'</i><span>'+esc(Lz(x.t))+(lock?'<small>🔒 '+t("pk.needA",{n:EN(th),h:aCount(th)})+'</small>':'')+'</span></button>'}).join("")+'</div>'+
@@ -7714,8 +7741,8 @@ function packPanel(th){if(!th.pk)return "";const running=!!PKPLAY[th.id],hasQ=!!
  else if(th.pk.st==="next"){const nx=P.chapters[n],lock=chLocked(th.wid,n+1);
   h+='<button class="btn btn-p btn-block" data-pknext="1">'+(lock?'🔓 '+t("pk.unlockNext",{n:n+1}):'▶ '+t("pk.next",{n:n+1}))+' · '+esc(Lz(nx.t))+'</button>'+
    '<p class="pkhint">'+t("pk.stay")+'</p>'}
- else if(th.pk.st==="end"){const e=P.endings[th.pk.end];
-  h+='<p class="pkask">🏁 '+esc(Lz(e.t))+' · '+t("pk.endN",{a:endingsFound(th.wid),b:3})+'</p><div class="row" style="gap:8px"><button class="btn btn-g btn-sm grow" data-pkreplay="1">⟲ '+t("pk.replay")+'</button><button class="btn btn-g btn-sm grow" data-pkbonus="'+th.wid+'">✦ '+t("pk.bonus")+'</button></div>'}
+ else if(th.pk.st==="end"){const e=P.endings[th.pk.end]||{t:{zh:"故事已结束",en:"Story complete"}};
+  h+='<p class="pkask">🏁 '+esc(Lz(e.t))+(th.pk.end==="complete"?'':' · '+t("pk.endN",{a:endingsFound(th.wid),b:3}))+'</p><div class="row" style="gap:8px"><button class="btn btn-g btn-sm grow" data-pkreplay="1">⟲ '+t("pk.replay")+'</button><button class="btn btn-g btn-sm grow" data-pkbonus="'+th.wid+'">✦ '+t("pk.bonus")+'</button></div>'}
  return h+'</div>'}
 function packRefresh(th){const el=$("#pkwrap");if(el&&curT===th.id)el.innerHTML=packPanel(th);try{pkLockComposer(th)}catch(_){}}
 
@@ -7728,7 +7755,7 @@ function pkBusy(th){try{
  /* 2026-10-27 Ann 收窄：只在**必须几选一**的时候关输入框；
     普通剧情播放不该关（她还要边看边说话）。 */
  if(th&&th.pk&&th.pk.stop)return false;
- return !!(th&&th.pk&&th.pk.st==="choose")
+ return !!(th&&th.pk&&th.pk.st==="choose"&&!pkAdvanceOnly((wd(th.wid).pack.chapters||[])[th.pk.ch-1]))
 }catch(_){return false}}
 function pkLockComposer(th){
  if(!th||curT!==th.id)return;
@@ -7767,6 +7794,7 @@ function pkSetPresent(th,n){try{
 }catch(_){th.present=null}}
 function packPick(k){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="choose"||busy)return;
  const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1],x=c.choices.find(y=>y.k===k);if(!x)return;
+ if(pkAdvanceOnly(c)){packAdvanceChapter(th);return}
  if(n===PCN(w)&&k==="A"&&aCount(th)<EN(th)){toast(t("pk.needA",{n:EN(th),h:aCount(th)}));return}
  pkTrack(th,"choice_pick",{ch:n,key:k,ms:th.pk._chAt?Date.now()-th.pk._chAt:null});
  th.pk.picks[n]=k;pkSet(th,x.set);(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','pick');th.pk.before={};th.cast.forEach(cid=>th.pk.before[cid]=stageOf(th,cid));setSugg([]);
@@ -7805,18 +7833,9 @@ function packNext(){const th=S.threads[curT];if(!th||!th.pk||th.pk.st!=="next"||
  const w=wd(th.wid);if(w.pack.ready&&n>w.pack.ready){toast(t("st2.soon",{n}));return}
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packNext');packRefresh(th);packOpen(th,n,false)}
 document.addEventListener("click",e=>{let x;
+ if(e.target.closest("[data-pkadvance]")){packAdvanceChapter(S.threads[curT]);return}
  if(x=e.target.closest("[data-pkpick]")){packPick(x.dataset.pkpick);return}
- if(x=e.target.closest("[data-pknext]")){
-  /* 2026-10-27 Ann：上一章刚完结、她还在和角色聊天，点一下就整章翻过去了。
-     改成两步：第一次点只是「确认要开始下一章吗」，再点一次才真的换。5 秒内没点就复位。 */
-  if(!x.dataset.armed){
-   x.dataset.armed="1";
-   x.textContent=(S.lang==="zh"?"再点一次确认进入下一章":(S.lang==="ja"?"もう一度押すと次の章へ":"Tap again to start the next chapter"));
-   setTimeout(()=>{try{if(x.dataset.armed){delete x.dataset.armed;packRefresh(S.threads[curT])}}catch(_){}},5000);
-   return
-  }
-  delete x.dataset.armed; packNext(); return
- }
+ if(e.target.closest("[data-pknext]")){packNext();return}
  if(x=e.target.closest("[data-pkmin]")){const th=S.threads[curT];if(th&&th.pk){th.pk.min=x.dataset.pkmin==="1";save();packRefresh(th)}return}
  if(e.target.closest("[data-pkreplay]")){replaySheet(S.threads[curT]);return}
  if(x=e.target.closest("[data-pkfrom]")){const th=S.threads[curT],n=+x.dataset.pkfrom;if(!th)return;if(chLocked(th.wid,n)){packPaywall(th.wid,n);return}packStart(th.wid,th.pk.as,n,th.pk.picks);return}
@@ -7957,7 +7976,7 @@ Object.assign(I18N.en,{
  "pk.replayH":"Replaying from Chapter {n}","pk.replayS":"Your earlier choices are kept. Everything after this point plays out again.",
  "pk.chShort":"Ch {n}","pk.yourMove":"your move","pk.ended":"ending","pk.nextUp":"next chapter",
  "pk.needA":"Needs {n} honest steps in chapters 1–7 · you have {h}","pk.orType":"Or type anything below to play the moment your way · ✦ 1 AI turn","pk.orTypeOff":"Or type anything below to play the moment your way.",
- "pk.unlockNext":"Chapter {n}","pk.next":"Chapter {n}","pk.stay":"Not ready? Stay in this moment and keep talking — the next chapter waits for you.",
+ "pk.unlockNext":"Chapter {n}","pk.next":"Next chapter · {n}","pk.stay":"Not ready? Stay in this moment and keep talking — the next chapter waits for you.",
  "pk.endN":"{a}/{b} endings","pk.replay":"Replay a chapter","pk.bonus":"Bonus episode","pk.replayPick":"Replay from…","pk.replayPickS":"A new run starts at that chapter. This one stays saved.","pk.youPicked":"You chose {k}",
  "pk.stepH":"Change how you play","pk.stepS":"The story keeps everything that happened. Only your place in it changes.","pk.steppedH":"You stepped in","pk.steppedS":"From here on: {n}.",
  "pk.packEyebrow":"STORY PACK · CHAPTERS 3–{m}","pk.keepGoing":"Keep going: {t}","pk.b1":"{k} more chapters and all three endings","pk.b2":"+{n} AI turns to make it your own — they never expire",
@@ -7981,7 +8000,7 @@ Object.assign(I18N.zh,{
  "pk.replayH":"从第 {n} 章重玩","pk.replayS":"之前的选择都保留，这一章之后的剧情重新演。",
  "pk.chShort":"第 {n} 章","pk.yourMove":"轮到你选","pk.ended":"结局","pk.nextUp":"下一章",
  "pk.needA":"需要在 1–7 章做出 {n} 次坦诚的选择 · 目前 {h} 次","pk.orType":"也可以在下面随意输入，按你的方式演这一刻 · ✦ 1 个 AI 回合","pk.orTypeOff":"也可以在下面随意输入，按你的方式演这一刻。",
- "pk.unlockNext":"第 {n} 章","pk.next":"第 {n} 章","pk.stay":"还没准备好？可以留在这一刻继续聊——下一章会等你。",
+ "pk.unlockNext":"第 {n} 章","pk.next":"进入下一章 · 第 {n} 章","pk.stay":"还没准备好？可以留在这一刻继续聊——下一章会等你。",
  "pk.endN":"已收集 {a}/{b} 个结局","pk.replay":"重玩某一章","pk.bonus":"番外","pk.replayPick":"从哪一章重玩？","pk.replayPickS":"会从那一章开新的一局，这一局会保留。","pk.youPicked":"你选了 {k}",
  "pk.stepH":"换一种玩法","pk.stepS":"已经发生的一切都会保留，只是你在故事里的位置变了。","pk.steppedH":"你入场了","pk.steppedS":"从现在起：{n}。",
  "pk.packEyebrow":"故事包 · 第 3–{m} 章","pk.keepGoing":"继续：{t}","pk.b1":"再解锁 {k} 章和全部三个结局","pk.b2":"+{n} 个 AI 回合，按你的方式演——永久有效",
@@ -12293,7 +12312,7 @@ function imParseCore(text){text=String(text||"").replace(/\r/g,"").replace(/ /g
  doc.lines=Object.values(doc.sp).reduce((a,b)=>a+b,0);doc.choices=doc.chapters.reduce((a,c)=>a+c.items.filter(x=>x.choice).length,0);
  if(!doc.chapters.length)doc.warn.push(LL("没有读到正文。","No story text found."));
  if(!doc.lines)doc.warn.push(LL("没认出对白。对白请写成「名字：“台词”」。","No dialogue found. Write lines as Name: \"line\"."));
- if(!doc.choices)doc.warn.push(LL("没有选择题，每章结尾会是「继续」。可以用「# CHOICE｜问题」加「#### A｜选项」。","No choices found — each chapter will end with Continue. Use # CHOICE｜question and #### A｜option."));
+ if(!doc.choices)doc.warn.push(LL("没有选择题，章末会显示「进入下一章」。可以用「# CHOICE｜问题」加「#### A｜选项」。","No choices found — chapter endings will show Next chapter. Use # CHOICE｜question and #### A｜option."));
  if(doc.omit)doc.warn.push(LL(doc.omit+" 处露骨内容已省略。",doc.omit+" explicit passages were left out."));
  return doc}
 /* ---------- build a MIRU world from the parsed doc ---------- */
@@ -12317,7 +12336,7 @@ function imBuildCore(doc,as){const now=Date.now(),wid="cw"+now,x0=s=>({en:s,zh:s
   if(!beats.length||beats[0][0]!=="sys"||beats[0][1]!=="scene")beats.unshift(["sys","scene",{place:place||doc.title,time:""}]);
   const opts=endC?endC.opts.filter(o=>o.t).slice(0,4):[];
   const choices=opts.length?opts.map((o,j)=>{const z={k:"ABCD"[j],t:x0(o.t),then:{zh:o.then.map(mapB),en:o.then.map(mapB)},mem:x0(LL("你选择了：","You chose: ")+o.t)};if(o.set)z.set=o.set;return z}):[{k:"A",t:x0(LL("继续","Continue")),then:{zh:[],en:[]},mem:x0("")}];
-  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:c.goal94?{zh:c.goal94.zh,en:c.goal94.en||c.goal94.zh}:x0(endC&&endC.q||""),goalOwn:!!c.goal94,place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,outline:false}});
+  return {t:x0(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1))),goal:c.goal94?{zh:c.goal94.zh,en:c.goal94.en||c.goal94.zh}:x0(endC&&endC.q||""),goalOwn:!!c.goal94,place:x0(place),time:x0(""),ask:x0(endC&&endC.q||LL("你怎么做？","What do you do?")),beats:{zh:beats,en:beats},choices,advanceOnly:!opts.length,outline:false}});
  const cast=doc.cast.map(n=>ids[n]),L=ids[pov]&&cast.length>1?cast.find(id=>id!==ids[pov]):cast[0];
  const end=(zh,en)=>({t:{zh,en},txt:x0(""),line:x0("")});
  const firstTxt=(chs[0]&&chs[0].beats.zh.find(b=>b[0]==="n")||[,,""])[2];
@@ -18660,8 +18679,8 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
   setTimeout(() => { try { mo.observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (_) {} youPass(); }, 0);
 
 
-  /* ---------- 2026-10-27 · 剧情默认「点一下才继续」（没手动选过自动播放的人都按这个） ---------- */
-  const tapMode = () => S.pkTap101 !== false || S.pkSpd === 0;
+  /* ---------- 2026-10-27 · 普通段落默认自动播放；手动点选逐句/暂停时仍尊重用户设置 ---------- */
+  const tapMode = () => S.pkTap101 === true || S.pkSpd === 0;
   if (typeof pkWait === "function") {
     const _pw = pkWait;
     pkWait = function (th, prev, spd, ms) {
