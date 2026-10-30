@@ -52,7 +52,7 @@ web/
 | `POST /api/longcat` | 405（要 POST） | 一轮 AI 对话 | ⚠️ 需先配 AI 密钥（`health` 里 `ai:false`） |
 | `POST /api/tts` | 400（要参数） | 文本转语音 | ⚠️ 需先配语音密钥 |
 
-> 其余的不用管 —— 那是后台自己用的（`admin` / `wallet` / `events` / `transcript`），不是给壳的。
+> 其余的不用管 —— 那是后台自己用的（`admin` / `wallet` / `events` / `state`），不是给壳的。
 
 ### `/api/chapter` 的返回形状（真实样例，不是示意）
 
