@@ -158,7 +158,8 @@ MIRU_RULES.checkStandards = function (cfg, cards, chapters, outline) {
   const R = { err: [], warn: [] }; cfg = cfg || {}; const T = cfg.taste || {}; const O = String(outline || ""); const tag = "（编写规范 v7.12 ";
   const lim = [["world", "世界", 2], ["trope", "关系桥段", 4], ["him", "人物类型", 2], ["vibe", "情绪", 2]];
   lim.forEach(([k, n, m]) => { if ((T[k] || []).length > m) R.err.push(n + "标签最多 " + m + " 个，现在 " + T[k].length + " 个" + tag + "§02.1）"); });
-  if (cfg.heat && !["fluff", "slow", "steamy"].includes(cfg.heat)) R.err.push("尺度「" + cfg.heat + "」不是 fluff/slow/steamy，不能保存（非法标签不静默换成默认值）" + tag + "§02.1 / v7.11 §02.2）"); else if (!cfg.heat) R.warn.push("尺度未填，按默认 steamy 执行（记录 default_applied.heat）" + tag + "§02.1）");
+  if (cfg.heat === "explicit" && cfg.adult !== true) R.err.push("尺度是 explicit（成人露骨），但作品没有打开「成人露骨」开关：不打开就会对所有用户可见，不能保存" + tag + "§02.1 / 成人门槛）");
+  if (cfg.heat && !["fluff", "slow", "steamy", "explicit"].includes(cfg.heat)) R.err.push("尺度「" + cfg.heat + "」不是 fluff/slow/steamy，不能保存（非法标签不静默换成默认值）" + tag + "§02.1 / v7.11 §02.2）"); else if (!cfg.heat) R.warn.push("尺度未填，按默认 steamy 执行（记录 default_applied.heat）" + tag + "§02.1）");
   if (!(T.vibe || []).length) R.warn.push("情绪未选，按默认 angst 执行；如果不是虐向请明确选择" + tag + "§02.1）");
   const EMO = ["cozy", "romcom", "angst", "dark", "thrill"]; (T.vibe || []).forEach(v => { if (!EMO.includes(v)) R.err.push("情绪「" + v + "」不是合法值" + tag + "§02.1）"); }); if (new Set(T.vibe || []).size !== (T.vibe || []).length) R.err.push("情绪标签重复" + tag + "§02.1）");
   if (!String(cfg.hook || "").trim()) R.err.push("作品总卡缺 logline（一句话主冲突 + 角色吸引点）" + tag + "§02.3）");

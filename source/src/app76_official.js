@@ -4,6 +4,7 @@ const _installWork76 = installWork;
 installWork = async function (id) {
   const zh = CL() === "zh";
   const r = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
+  if (r.status === 451) { const why = (r.j && r.j.why) || ""; toast(zh ? ({ verify: "这部是成人作品，需要先完成年龄验证", login: "这部是成人作品，请先登录并完成年龄验证", region: "这部成人作品在你所在的地区不开放" }[why] || "这部成人作品暂不开放") : ({ verify: "This is an adult story — age verification is required", login: "This is an adult story — sign in and verify your age first", region: "This adult story isn't available in your region" }[why] || "This adult story isn't available")); return null; }
   if (!r.ok || !r.j.pack) { toast(zh ? "打不开这部作品" : "Couldn't open this story"); return null; }
   const P = r.j.pack;
   if (!P.script) {
@@ -14,7 +15,8 @@ installWork = async function (id) {
   const have = S.off76[id];
   if (have && have.ver === P.ver && have.imv === 2 && wd(have.wid)) { track("community_open", { id }); return have.wid; }
   if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
-  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  /* 成人露骨作品（服务器已按地区 + 年龄验证放行）：解析时不省略露骨句子 */
+  const doc = (() => { window.IM_ADULT = !!(P.meta && P.meta.adult === true); try { return imParse(P.script); } finally { window.IM_ADULT = false; } })(); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
   const m = P.meta || {};
   const b = imBuild(doc, m.as || doc.pov);
   const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
