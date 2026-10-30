@@ -941,7 +941,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 289 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 133 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
-| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 41 |
+| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 43 |
 | `app77_memory2.js` | 记忆系统 第一阶段 ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失 | 186 |
 | `app78_memsync.js` | 记忆系统 第二阶段：记忆存进云端数据库 + 按意思召回 登录用户：记忆增删改 3 秒内同步到服务器（/api/state?r=mem）。每次回复前… | 44 |
 | `app79_ledger.js` | 记忆系统 第三阶段：剧情账本（程序裁决，模型只读） 一个故事的「正史」统一放在 th.led，由程序维护： · 约定 P#：来自「约定」类记忆（你… | 151 |
@@ -996,7 +996,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `creator_embed.js` | creator polish: accessibility, graph editing, playable surfaces | 2 |
 | `i18n.js` | UI STRINGS — en · zh · ja · ko · es | 274 |
 | `miru_rules_full.js` | （文件头没有说明 —— 该补一句） | 3 |
-| `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 286 |
+| `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 287 |
 | `pdfjs_embed.js` | \n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * @licend The above is the entire license notice for the\n * JavaScript code in this page\n（原文只有段落横幅） | 3 |
 | `shorts_v2.js` | DRAMAS v2 — rewritten for tension (hook → escalation → reversal → freeze … | 13 |
 | `shorts_v3.js` | DRAMAS v3 — the 9 Veo-shot pilots: one beat per 8-second clip (the subtit… | 22 |
@@ -1007,3 +1007,15 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `tr_merge.js` | CONTENT TRANSLATIONS (ja · ko · es) Each language pack mirrors the Englis… | 23 |
 
 <!-- END module-index -->
+
+## 成人露骨作品门槛（2026-10-30）
+
+作品级开关 `pack.meta.adult`（后台剧本配置「成人露骨」，尺度可选 `explicit`；只选 explicit 不开开关，`checkStandards` 报错不能保存）。
+放行条件三者同时满足，判断只在服务器：`api/_lib.js` 的 `adultAccess(req)`
+
+1. `config.adult_enabled === true`（后台「配置」总开关，默认关）
+2. 访问者地区在 `config.adult_regions` 里（`x-vercel-ip-country` / `-region`，写 `FR` 或 `US-CA`；默认空 = 哪里都不开）
+3. 账号 `users.adult_verified_at` 不为空（后台用户详情「标记已年龄验证」，必须写核验方式，进审计日志）
+
+`api/works.js`：feed 对不满足者过滤掉成人作品；`?id=` 返回 451 `{error:'adult_gate', why}`，不下发 pack。
+App：`app76_official.js` 收到 451 给出对应提示；成人作品解析时置 `window.IM_ADULT`，`app51_import.js` 不再省略露骨句子。普通作品行为不变。

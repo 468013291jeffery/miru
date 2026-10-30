@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="65d6b0ef0ccc 2026-10-30T15:18Z";
+window.MIRU_BUILD="d1d4b4e9d2fd 2026-10-30T15:13Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4399,7 +4399,8 @@ MIRU_RULES.checkStandards = function (cfg, cards, chapters, outline) {
   const R = { err: [], warn: [] }; cfg = cfg || {}; const T = cfg.taste || {}; const O = String(outline || ""); const tag = "（编写规范 v7.12 ";
   const lim = [["world", "世界", 2], ["trope", "关系桥段", 4], ["him", "人物类型", 2], ["vibe", "情绪", 2]];
   lim.forEach(([k, n, m]) => { if ((T[k] || []).length > m) R.err.push(n + "标签最多 " + m + " 个，现在 " + T[k].length + " 个" + tag + "§02.1）"); });
-  if (cfg.heat && !["fluff", "slow", "steamy"].includes(cfg.heat)) R.err.push("尺度「" + cfg.heat + "」不是 fluff/slow/steamy，不能保存（非法标签不静默换成默认值）" + tag + "§02.1 / v7.11 §02.2）"); else if (!cfg.heat) R.warn.push("尺度未填，按默认 steamy 执行（记录 default_applied.heat）" + tag + "§02.1）");
+  if (cfg.heat === "explicit" && cfg.adult !== true) R.err.push("尺度是 explicit（成人露骨），但作品没有打开「成人露骨」开关：不打开就会对所有用户可见，不能保存" + tag + "§02.1 / 成人门槛）");
+  if (cfg.heat && !["fluff", "slow", "steamy", "explicit"].includes(cfg.heat)) R.err.push("尺度「" + cfg.heat + "」不是 fluff/slow/steamy，不能保存（非法标签不静默换成默认值）" + tag + "§02.1 / v7.11 §02.2）"); else if (!cfg.heat) R.warn.push("尺度未填，按默认 steamy 执行（记录 default_applied.heat）" + tag + "§02.1）");
   if (!(T.vibe || []).length) R.warn.push("情绪未选，按默认 angst 执行；如果不是虐向请明确选择" + tag + "§02.1）");
   const EMO = ["cozy", "romcom", "angst", "dark", "thrill"]; (T.vibe || []).forEach(v => { if (!EMO.includes(v)) R.err.push("情绪「" + v + "」不是合法值" + tag + "§02.1）"); }); if (new Set(T.vibe || []).size !== (T.vibe || []).length) R.err.push("情绪标签重复" + tag + "§02.1）");
   if (!String(cfg.hook || "").trim()) R.err.push("作品总卡缺 logline（一句话主冲突 + 角色吸引点）" + tag + "§02.3）");
@@ -12183,7 +12184,7 @@ function imParseCore(text){text=String(text||"").replace(/\r/g,"").replace(/ /g
  const sink=()=>opt?opt.then:variant?variant.then:(chap||nc("")).items;
  const closeChoice=()=>{if(choice){(chap||nc("")).items.push({choice});choice=null;opt=null}};
  const closeVar=()=>{if(variant){(chap||nc("")).items.push({variant});variant=null}};
- const push=b=>{const txt=String(b[2]||"");const flat=imStrip(txt).toLowerCase();if(IM_EXPLICIT.some(w=>flat.includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
+ const push=b=>{const txt=String(b[2]||"");const flat=imStrip(txt).toLowerCase();if(!window.IM_ADULT&&IM_EXPLICIT.some(w=>flat.includes(w))){doc.omit++;const s=sink(),l=s[s.length-1];if(!(l&&l[3]==="omit"))s.push(["n","act",LL("（这一段已省略）","(This part is left out.)"),"omit"]);return}seenBody=true;sink().push(b)};
  const titleOf=h=>{const m=h.split(/[｜|]/);return (m.length>1?(m.slice(1).join(" ").match(/[\u4e00-\u9fff]/)||!m[0].match(/[\u4e00-\u9fff]/)?m.slice(1).join(" "):m[0]):h.replace(/^(CHAPTER|Chapter|SCENE|Scene|CHOICE|Choice)\s*[\d.]*\s*[:：]?\s*/,"").replace(/^第\s*[0-9一二三四五六七八九十百]+\s*[章幕场]\s*[:：]?\s*/,"")).trim()};
  for(const line of text.split("\n")){let raw=line.trim();if(!raw||/^[=\-*_~]{3,}$/.test(raw))continue;
   if(/^\[(EN|ENGLISH)\]$/i.test(raw)){mode="en";continue}if(/^\[(ZH|CN|中文)\]$/i.test(raw)){mode="zh";continue}
@@ -15191,6 +15192,7 @@ const _installWork76 = installWork;
 installWork = async function (id) {
   const zh = CL() === "zh";
   const r = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
+  if (r.status === 451) { const why = (r.j && r.j.why) || ""; toast(zh ? ({ verify: "这部是成人作品，需要先完成年龄验证", login: "这部是成人作品，请先登录并完成年龄验证", region: "这部成人作品在你所在的地区不开放" }[why] || "这部成人作品暂不开放") : ({ verify: "This is an adult story — age verification is required", login: "This is an adult story — sign in and verify your age first", region: "This adult story isn't available in your region" }[why] || "This adult story isn't available")); return null; }
   if (!r.ok || !r.j.pack) { toast(zh ? "打不开这部作品" : "Couldn't open this story"); return null; }
   const P = r.j.pack;
   if (!P.script) {
@@ -15201,7 +15203,8 @@ installWork = async function (id) {
   const have = S.off76[id];
   if (have && have.ver === P.ver && have.imv === 2 && wd(have.wid)) { track("community_open", { id }); return have.wid; }
   if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
-  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  /* 成人露骨作品（服务器已按地区 + 年龄验证放行）：解析时不省略露骨句子 */
+  const doc = (() => { window.IM_ADULT = !!(P.meta && P.meta.adult === true); try { return imParse(P.script); } finally { window.IM_ADULT = false; } })(); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
   const m = P.meta || {};
   const b = imBuild(doc, m.as || doc.pov);
   const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
