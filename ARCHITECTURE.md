@@ -941,7 +941,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 289 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 133 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
-| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 69 |
+| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 80 |
 | `app77_memory2.js` | 记忆系统 第一阶段 ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失 | 186 |
 | `app78_memsync.js` | 记忆系统 第二阶段：记忆存进云端数据库 + 按意思召回 登录用户：记忆增删改 3 秒内同步到服务器（/api/state?r=mem）。每次回复前… | 44 |
 | `app79_ledger.js` | 记忆系统 第三阶段：剧情账本（程序裁决，模型只读） 一个故事的「正史」统一放在 th.led，由程序维护： · 约定 P#：来自「约定」类记忆（你… | 151 |
