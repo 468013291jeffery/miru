@@ -22,7 +22,7 @@ const JSON_ONLY = process.argv.includes('--json');
 
 const r = spawnSync(EDGE, [
   '--headless=new', '--disable-gpu', '--no-sandbox',
-  '--virtual-time-budget=45000', '--dump-dom', URL
+  '--virtual-time-budget=120000', '--dump-dom', URL
 ], { encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
 
 const dom = (r.stdout || '') + (r.stderr || '');

@@ -24,7 +24,12 @@ paint();
 
 const f = document.getElementById('f');
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-const kindOf = (r) => r.className.match(/pkme/) ? 'self' : (r.querySelector('.bubn') ? 'other' : 'narr');
+/* 2026-10-30 修（原来这一行让整条探针永远读 0 条）：旧版只查 `#msgs .m-row`，
+   而 `.m-row` 只是**台词**那一类；旁白 / 动作 / 卡片是 `.m-narr` / `.m-act` / `.m-card`…
+   ⇒ 开场如果是旁白起头，读数就是「一条都没有」，和「根本没渲染」长得一模一样。
+   现在：所有子块都算，只把「是不是我演的那个角色」分出来。 */
+const kindOf = (r) => /pkme/.test(String(r.className)) ? 'self' : (/m-row/.test(String(r.className)) ? 'other' : 'narr');
+const kidsOf = (w) => Array.from(w.document.querySelectorAll('#msgs > div'));
 
 f.onload = async () => {
   const w = f.contentWindow;
@@ -34,27 +39,50 @@ f.onload = async () => {
     if (typeof w.packStart !== 'function') { log('ERR', 'no packStart'); return }
     log('boot', 'ok');
 
+    /* 2026-10-30 · 登录门（这一节就是原来 --mode=open 拿不到东西的原因）
+       app70 的 startApp：`!au70Loggedin() && !S.authChoice` ⇒ 只画登录屏，不建聊天屏；
+       app92 再加上一条：CLOUD_EP 有值（本地只要设了 MIRU_PROXY 就会有）⇒ 游客按钮被 CSS 藏掉、
+       点击也被拦掉 ⇒ 探针永远进不去。
+       这里先量清楚是哪一种，再走能走的那条：点游客（普通环境）→ 不行就报出来，不再假装。 */
+    let cloudEp = '', must = null, guestBtn = false;
+    try { cloudEp = String(w.CLOUD_EP || '') } catch (e) { }
+    try { must = (typeof w.MUST92 === 'function') ? w.MUST92() : null } catch (e) { }
+    try { guestBtn = !!w.document.querySelector('#au70guest,[data-au70="guest"]') } catch (e) { }
+    log('CLOUD_EP', cloudEp || '(空)');
+    log('MUST92', String(must));
+    log('guestBtn', String(guestBtn));
+    if (guestBtn) {
+      try { w.document.querySelector('#au70guest,[data-au70="guest"]').click(); } catch (e) { log('guestClick', String(e && e.message)) }
+      await sleep(1200);
+    }
+    log('screen', String((w.document.querySelector('#s-chat') && !w.document.querySelector('#s-chat').hidden) ? 's-chat' : ((w.document.querySelector('#s-ob') && !w.document.querySelector('#s-ob').hidden) ? 's-ob' : '?')));
+
+    /* 2026-10-30 · 第二道门：**「她没在看就不往下演」**。
+       packRun 的 live() = curT===th.id && #s-chat 可见；而 packOpen 是在 newThread 里就开始跑的，
+       那一刻屏还是 s-ob ⇒ 第一条就判「没人在看」⇒ 队列停在 busy，之后再切屏也不会自己续
+       （实测：等 6 秒和等 20 秒读数一模一样，都是 5 条旁白 + st:"busy"）。
+       ⇒ 顺序改成先切屏、再开剧，和真实路径一样（人是从屏里点进去的）。 */
+    try { w.show && w.show('s-chat'); } catch (e) {}
+    await sleep(300);
     const th = w.packStart(PACK, AS);
     if (!th) { log('ERR', 'packStart returned nothing'); return }
     log('mode', MODE); log('pack', PACK); log('pk.as', String(th.pk && th.pk.as));
-    /* 无头页面里不一定会切到聊天屏，而 packRun 的 live() 要求 #s-chat 可见 —— 显式切一次 */
-    try { w.show && w.show('s-chat'); } catch (e) {}
     try { w.openThread(th.id); } catch (e) {}
     await sleep(1500);
-    if (!(w.document.querySelectorAll('#msgs .m-row') || []).length) {
+    if (!kidsOf(w).length) {
       try { w.packOpen(th, 1, true); } catch (e) { log('packOpen', String(e && e.message)) }
       try { w.show && w.show('s-chat'); } catch (e) {}
       await sleep(1500);
     }
 
     if (MODE === 'beats') {
-      const before = (w.document.querySelectorAll('#msgs .m-row') || []).length;
+      const before = kidsOf(w).length;
       await w.playBeats(th, { beats: [
         { who: AS, kind: 'say', text: '我演的角色先说的一句' },
         { who: (th.cast || []).find(c => c !== AS) || AS, kind: 'say', text: '别人的角色说的一句' }
       ], love: {}, suggest: [], goals: [], status: null }, { kind: 'user', txt: '测试' }, true);
       await sleep(500);
-      const tail = Array.from(w.document.querySelectorAll('#msgs .m-row')).slice(before).map(kindOf);
+      const tail = kidsOf(w).slice(before).map(kindOf);
       log('rows', JSON.stringify(tail));
       const self = tail.indexOf('self'), other = tail.indexOf('other');
       log('verdict', self < 0 ? 'DROPPED（我演的角色那句没渲染 —— 这条路测不到顺序）'
@@ -64,12 +92,46 @@ f.onload = async () => {
     }
 
     /* mode=open：等剧本队列把前几条念完，然后看**第一个开口的**是谁 */
-    await sleep(6000);
-    const rows = Array.from(w.document.querySelectorAll('#msgs .m-row')).map(kindOf);
+    await sleep(30000);
+    /* 拿不到读数时，先把「卡在哪一层」打出来 —— 空读数与「真的没人开口」长得一样 */
+    try {
+      const sc = w.document.querySelector('#s-chat');
+      const mg = w.document.querySelector('#msgs');
+      log('chatShown', String(!!sc && !sc.hidden));
+      log('msgsKids', String(mg ? mg.children.length : -1));
+      log('msgsLen', String(mg ? mg.innerHTML.length : -1));
+      log('thMsgs', String((th.msgs || []).length));
+      log('thPk', JSON.stringify({ st: th.pk && th.pk.st, ch: th.pk && th.pk.ch, stop: th.pk && th.pk.stop ? 1 : 0 }));
+      log('kidsCls', JSON.stringify(kidsOf(w).map(x => String(x.className))));
+      try { log('readMs', String(typeof w.readMs==='function'?w.readMs((th.msgs||[])[(th.msgs||[]).length-1]):'n/a')); log('spd', String(typeof w.pkSpd==='function'?w.pkSpd():'n/a')) } catch(e){ log('paceErr', String(e&&e.message)) }
+      log('globals', JSON.stringify({ PKPLAY: typeof w.PKPLAY, PKPAUSE: typeof w.PKPAUSE, PKSKIP: typeof w.PKSKIP, PKWAIT: typeof w.PKWAIT }));
+      try {
+        const q = th.pk && th.pk.q;
+        log('qLen', String(q ? q.length : -1));
+        log('qHead', JSON.stringify(q && q[0] ? q[0] : null).slice(0, 300));
+        const last = (th.msgs || [])[th.msgs.length - 1];
+        log('lastMsg', JSON.stringify(last ? { who: last.who, k: last.k, txt: String(last.txt || '').slice(0, 40) } : null));
+      } catch (e) { log('qErr', String(e && e.message)) }
+      /* 诊断：队列停住时，是「curT 不是这条线程」还是「PKPAUSE / 别的闸」？
+         再开一次线程 + 切一次屏 —— 如果队列动了，问题就在 curT。 */
+      try {
+        const q0 = th.pk.q ? th.pk.q.length : -1;
+        try { w.openThread(th.id) } catch (e) { }
+        try { w.show && w.show('s-chat') } catch (e) { }
+        await sleep(4000);
+        log('qAfterReopen', String(q0) + '→' + String(th.pk.q ? th.pk.q.length : -1));
+      } catch (e) { log('reopenErr', String(e && e.message)) }
+    } catch (e) { log('diagErr', String(e && e.message)) }
+    const rows = kidsOf(w).map(kindOf);
     log('rows', JSON.stringify(rows.slice(0, 10)));
     const self = rows.indexOf('self'), other = rows.indexOf('other');
     log('firstSelf', self); log('firstOther', other);
-    log('verdict', other < 0 ? 'NO_OTHER（这一场没有别人开口，读数无效）'
+    /* 2026-10-30：第三种读数必须单独说出来 —— 队列还没演到台词（还剩 N 条、状态 busy）
+       与「这一场真的没人开口」是两件事，混成一句 NO_OTHER 就等于没有读数。 */
+    const qLeft = (th.pk && th.pk.q) ? th.pk.q.length : 0;
+    log('verdict', (other < 0 && self < 0 && qLeft > 0)
+      ? 'PARKED（队列停在 ' + rows.length + ' 条、还剩 ' + qLeft + ' 条没演 —— 还没到台词，读数无效）'
+      : other < 0 ? 'NO_OTHER（这一场没有别人开口，读数无效）'
       : self < 0 ? 'PASS（我演的角色没有先开口）'
       : (other < self ? 'PASS：别人先开口' : 'FAIL：我演的角色先开口'));
   } catch (e) {
