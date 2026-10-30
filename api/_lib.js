@@ -58,6 +58,8 @@ const SCHEMA = [
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS note TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS tv INT DEFAULT 0`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS adult_verified_at TIMESTAMPTZ`,
+  `ALTER TABLE users ADD COLUMN IF NOT EXISTS adult_verified_by TEXT`,
   `ALTER TABLE users ADD COLUMN IF NOT EXISTS platform TEXT`,
   `UPDATE users SET provider='email' WHERE email IS NOT NULL AND google_sub IS NULL AND apple_sub IS NULL AND (provider IS NULL OR provider='guest')`,
   `CREATE UNIQUE INDEX IF NOT EXISTS users_google_idx ON users (google_sub) WHERE google_sub IS NOT NULL`,
@@ -256,6 +258,9 @@ const CONFIG_DEFAULTS = {
   upload_price: { audio: 5, image: 3, video: 10, game: 2 }, reroll_free: 3, reroll_price: 1,
   community_auto_live: true, report_threshold: 5, publish_daily_limit: 30, upload_daily_limit: 40,
   guest_allowed: false, maintenance: '',
+  // 成人露骨作品门槛（2026-10-30）：总开关默认关；地区白名单默认空 = 哪里都不开放。
+  // 白名单写国家码（"FR"）或 国家-州（"US-CA"），由法务确定后在后台「配置」里填。
+  adult_enabled: false, adult_regions: [],
   // 容量/超时类（原来写死在各自文件里，挪进来才能不改代码就调）
   state_max_kb: 900, max_pack_kb: 1500, first_token_ms: 22000,
   skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
@@ -436,4 +441,21 @@ async function verifyApple(idToken) {
   return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
 }
 
-module.exports = { needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
+
+/* ---------- 成人露骨作品门槛：总开关 + 地区白名单 + 账号年龄验证，三者都满足才放行 ---------- */
+function region(req) {
+  const h = req.headers || {}; const c = String(h['x-vercel-ip-country'] || '').toUpperCase(); const r = String(h['x-vercel-ip-country-region'] || '').toUpperCase();
+  return { country: c, code: c && r ? c + '-' + r : c };
+}
+async function adultAccess(req, cfg) {
+  cfg = cfg || await config();
+  if (cfg.adult_enabled !== true) return { ok: false, why: 'disabled' };
+  const reg = region(req), list = (Array.isArray(cfg.adult_regions) ? cfg.adult_regions : []).map(x => String(x).toUpperCase().trim()).filter(Boolean);
+  if (!reg.country || !(list.includes(reg.code) || list.includes(reg.country))) return { ok: false, why: 'region', region: reg.code || null };
+  const u = who(req); if (!u) return { ok: false, why: 'login' };
+  const sql = await db(); const r = await sql('SELECT adult_verified_at FROM users WHERE id=$1', [u.uid]);
+  if (!r[0] || !r[0].adult_verified_at) return { ok: false, why: 'verify' };
+  return { ok: true };
+}
+const isAdultWork = w => !!(w && w.pack && w.pack.meta && w.pack.meta.adult === true);
+module.exports = { region, adultAccess, isAdultWork, needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };

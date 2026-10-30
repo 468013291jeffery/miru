@@ -7,7 +7,7 @@
 // DELETE ?id=          remove my work
 const L = require('./_lib');
 const MAXPACK_FALLBACK = 1500 * 1024;   // 真正的上限读 config.max_pack_kb
-const pub = r => ({ id: r.id, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined });
+const pub = r => ({ id: r.id, adult: r.adult === true, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined });
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db();
@@ -17,6 +17,7 @@ module.exports = L.wrap(async (req, res) => {
       const r = await sql('SELECT * FROM works WHERE id=$1', [String(q.id)]);
       const w = r[0]; const u = L.who(req);
       if (!w || (w.status !== 'live' && !(u && u.uid === w.author) && !L.isAdmin(req))) return L.bad(res, 'not found', 404);
+      if (L.isAdultWork(w) && !L.isAdmin(req)) { const g = await L.adultAccess(req); if (!g.ok) return L.send(res, 451, { error: 'adult_gate', why: g.why }); }
       if (q.play) await sql('UPDATE works SET plays=plays+1 WHERE id=$1', [w.id]);
       return L.send(res, 200, Object.assign(pub(w), { pack: w.pack, qa: w.qa }));
     }
@@ -26,7 +27,8 @@ module.exports = L.wrap(async (req, res) => {
     if (q.orient && q.orient !== 'all') { args.push(String(q.orient)); where += ` AND (orient=$${args.length} OR orient='all')`; }
     if (q.before) { args.push(new Date(Number(q.before)).toISOString()); where += ` AND created_at < $${args.length}`; }
     if (q.feed === 'featured') where += ' AND featured';
-    const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
+    if (!(await L.adultAccess(req)).ok) where += " AND COALESCE(pack->'meta'->>'adult','false') <> 'true'";
+    const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en, pack->'meta'->'adult' AS adult FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
     return L.send(res, 200, { works: r.map(pub) });
   }
   const u = await L.needActive(req, res); if (!u) return;
