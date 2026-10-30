@@ -114,6 +114,36 @@ printf '\n# 由 GitHub Action 自动构建（见 backend/CUT-INDEX.md）\n' >> .
 
 ---
 
+## ✅ 已落地（2026-10-30 15:18）
+
+**GitHub Action 已建成并跑通**（`.github/workflows/build-index.yml`，commit `3a6c1a0` 由它自动产生）。
+
+第一次实测读数（run #2）：
+
+```
+Python 3.12.3
+content_36.js 5042644 bytes · 37 worlds · 69 characters · 69 with portraits · 37 with covers
+7909992 chars -> index.html | single file
+-rw-r--r-- 1 runner runner 9861949  index.html
+
+线上验证：miru.plus / 200 · 9,861,949 B · /api/works 200 · /admin.html 200
+```
+
+⇒ **以后谁改 `source/**`，CI 自动构建 `index.html` 并提交。两边都不用手动。**
+
+第一次尝试失败过一条：`ls -l index.html content_36.js` —— 因为 `build.py` 生成的 `content_36.js` 在 **`source/src/`**，
+不在仓库根（根目录那份是历史 `--split` 留下的）。改成 `source/src/content_36.js` 就过了。
+
+**剩下可做的一步**（现在随时能做，Action 已接管）：把 `index.html` 移出 git
+⇒ 之后连"构建产物也被提交"这件事都不存在了，冲突彻底消失。
+
+```bash
+git rm --cached index.html
+printf '\n# 由 GitHub Action 自动构建（见 backend/CUT-INDEX.md）\nindex.html\n' >> .gitignore
+```
+
+---
+
 ## 原方案（已作废，留档）
 
 ### 甲方案：让 Vercel 自己构建 —— ❌ 实测失败
