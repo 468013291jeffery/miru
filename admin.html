@@ -168,7 +168,9 @@ const Dashboard = {
   setup() {
     const d = ref(null), c1 = ref(), c2 = ref(), c3 = ref(), c4 = ref();
     async function load() {
-      d.value = await api('dashboard'); window.__payTest.value = d.value.payTest; await nextTick();
+      /* 2026-10-31：没有看板权限的角色（writer）在默认 hash 下会先挂上这个页面试着取数，
+         结果每次登录都闪一条「没有权限 / forbidden」。这里先拦住；这一页本来就不在他的菜单里。 */
+      if (!(S.perms.includes('*') || S.perms.includes('dashboard'))) return;      d.value = await api('dashboard'); window.__payTest.value = d.value.payTest; await nextTick();
       const s = d.value.series, days = s.map(x => fmtD(x.day).slice(5));
       chart(c1.value, { tooltip: { trigger: 'axis' }, legend: { data: ['新增用户', '日活 DAU'] }, grid: { left: 40, right: 20, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: { type: 'value', minInterval: 1 }, series: [{ name: '新增用户', type: 'line', smooth: true, data: s.map(x => x.new_users), color: '#EE6F97' }, { name: '日活 DAU', type: 'line', smooth: true, data: s.map(x => x.dau), color: '#7b6ad8' }] });
       chart(c2.value, { tooltip: { trigger: 'axis' }, legend: { data: ['钻石消耗', '收入 (USD)'] }, grid: { left: 50, right: 50, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: [{ type: 'value', name: '💎' }, { type: 'value', name: '$' }], series: [{ name: '钻石消耗', type: 'bar', data: s.map(x => (x.gems_spent || 0)), color: '#F0B77E' }, { name: '收入 (USD)', type: 'line', yAxisIndex: 1, data: s.map(x => (x.revenue || 0) / 100), color: '#67c23a' }] });
@@ -1110,7 +1112,7 @@ const Studio = {
       const iChap = L.findIndex(l => RE_CHAP.test(l.trim()));
       if (iChap < 0) return { error: '没找到「# CHAPTER 1｜…」这样的章节标记 —— 先确认这是剧本，不是设计稿' };
       let iStart = iChap;
-      for (let j = iChap - 1; j >= 0; j--) { const t = L[j].trim(); if (!t) continue; if (/^⟦CHAR\|/.test(t)) { iStart = j; continue; } break; }
+      for (let j = iChap - 1; j >= 0; j--) { const t = L[j].trim(); if (!t) continue; if (/^⟦/.test(t)) { iStart = j; continue; } break; }
       let iEnd = L.length;
       for (let j = iChap + 1; j < L.length; j++) { const t = L[j].trim(); if (/^#\s*[一二三四五六七八九十]+\s*、/.test(t) || /^#{1,2}\s*(附录|附：)/.test(t)) { iEnd = j; break; } }
       const head = L.slice(iStart, iChap).join('\n').trim();
