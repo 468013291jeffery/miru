@@ -202,13 +202,15 @@ function jsonLoose(t){if(!t)return null;t=String(t).replace(/```(?:json)?/g,"");
 /* 2026-10-31（产品方要求）：所有给玩家看的文字都要口语化 —— 每一次调用模型都带上这条，智能体、导演、建议、通话一视同仁 */
 const ORAL_RULE="SPOKEN STYLE (applies to every line the player will read or hear — dialogue, narration, suggestions, messages): write the way real people actually talk today. Short, natural, conversational sentences; everyday words; contractions and fragments are fine. No literary, formal or written-style phrasing, no four-character idioms piled up, no stiff translation-ese, no flowery description. In Chinese: 用大白话、口语，像真人聊天一样说话，不要书面语、不要文绉绉、不要成语堆砌。";
 async function ask(prompt,opts){
- opts=opts||{};
+ opts=Object.assign({},opts||{});
+ const deadline=Date.now()+(opts.timeout||60000);
+ const requestOpts=extra=>{if(opts.signal&&opts.signal.aborted)throw {code:"cancelled"};const left=deadline-Date.now();if(left<=0)throw {code:"timeout"};return Object.assign({modelTier:"default",cache:false},opts,extra,{timeout:left});};
  if(!liveOn())throw {code:"na"};
  if(typeof ORAL_RULE==="string"&&typeof prompt==="string"&&prompt.indexOf("SPOKEN STYLE")<0)prompt=prompt+"\n\n"+ORAL_RULE;
  const _tier=opts.modelTier||"default";
- try{let r;try{r=await SAMPLE.json(prompt,Object.assign({modelTier:"default",cache:false},opts))}
+ try{let r;try{r=await SAMPLE.json(prompt,requestOpts())}
   catch(e0){if(!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
-   if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({modelTier:"default",cache:false},opts));r=jsonLoose(t2&&t2.text)}
+   if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",requestOpts());r=jsonLoose(t2&&t2.text)}
    /* 自适应预算（2026-10-25 · Ann「你看着办」）：
       同一档位仍解析不出来，多半是两种情形之一 ——
         ① 输出被预算掐断（JSON 少半截）② 推理型模型把预算全烧在思考上、正文为空。
@@ -218,7 +220,7 @@ async function ask(prompt,opts){
       为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
    if(r==null&&_tier!=="complex"){
     (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L196",function(){track&&track("llm_escalate",{from:_tier,to:"complex"})});
-    const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
+    const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",requestOpts({modelTier:"complex",cache:false}));
     r=jsonLoose(t3&&t3.text);
    }
    if(r==null)throw e0}

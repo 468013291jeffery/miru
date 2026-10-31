@@ -32,31 +32,23 @@ let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
 /* 2026-10-27：busy 的唯一入口交给 TURN（app103_turn.js）。
    读点不变，只保证「置真置假只有一个门」。 */
 (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L30",function(){ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); });
-/* 2026-10-27 · 「经常卡死」的看门狗。
-   病灶：`busy=true`（reply 开头）与 `busy=false`（playBeats 之后）**不在 try/finally 里** ——
-   两行之间任何一处抛错，`busy` 就永远是 true ⇒「发不出去、界面没反应」，看起来就是卡死。
-   它的形状不是慢，是**锁没放**。这里兜一层：45 秒还没放开就强制放开，并记一条现场。
-   判据（导出存档可见）：`S._stallTrace` 里出现 busy>45s。 */
-setInterval(()=>{try{
- if(!busy||!BUSY_T)return;
- /* ⚠️ 2026-10-27（Ann：「对话没生成完，怎么就开始继续生成对话了」）——
-    第一版只看「锁了多久」，而一轮长回复**本来就可能超过 45 秒**（逐句 2.7 秒 + 等朗读），
-    于是看门狗在一轮跑到一半时把锁解了 ⇒ 她还能再发一条 ⇒ **两个回合叠在一起**。
-    现在改成**看有没有进展**：只要这一轮还在往对话里落新消息（最后一条消息的 at 在 45 秒内），
-    就把计时的起点往前推，不开锁。真正「卡住不动」才开。 */
- const th=S.threads[curT];
- const lastAt=(th&&th.msgs&&th.msgs.length)?(th.msgs[th.msgs.length-1].at||0):0;
- if(Date.now()-Math.max(BUSY_T,lastAt)<45000)return;
- busy=false;BUSY_T=0;try{typing(false)}catch(_){}
- S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s (no new message)"});if(S._stallTrace.length>20)S._stallTrace.shift();
- (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L48",function(){save()});
- (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")});
-}catch(_){}},5000);
+// The request deadline and finally own release; a watchdog must not unlock a live turn.
+function drainSendQueue(){
+ if(busy)return;
+ const i=SENDQ.findIndex(q=>q.threadId===curT);if(i<0)return;
+ const q=SENDQ.splice(i,1)[0];doSend(q.txt,q.mode,q.typed,q.echoed);
+}
+function replyRetryHTML(th){return th&&th.replyFailed?'<button data-reply-retry="1">'+(S.lang==="zh"?'重试回复':'Retry reply')+'</button>':'';}
+document.addEventListener('click',e=>{
+ if(!e.target.closest('[data-reply-retry]'))return;
+ const th=S.threads[curT];if(!th||busy||!th.replyRetry)return;
+ reply(th,th.replyRetry);
+});
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;
  /* 2026-10-29 · 第二个必经点：点进一条已有线程也要过加载缝（判据：数据已到才渲染）。 */
  try { if (window.MIRU && MIRU.data) MIRU.data.need(th.wid); } catch (e) { if (window.MIRU && MIRU.data) MIRU.data.note("openThread:need", e) }
- th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
+ th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();setTimeout(drainSendQueue,0);}
 /* 2026-10-27：渲染前的唯一净化。th.msgs 有 30 处直接 push（卡片/瞬时播种），
    都绕过了 appendMsg 的文本闸；这里在**上屏前**统一补一次 —— 不依赖调用方自觉。 */
 function sanitizeMsgs(th){
@@ -85,7 +77,7 @@ function renderChat(){sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
   (th.quest?'<span style="color:#FFD08A;display:flex;gap:4px;align-items:center" data-qsheet="1">🎯 <span>'+th.quest.goals.filter(g=>g.done).length+'/'+th.quest.goals.length+' · '+t("q.turns",{a:th.rounds,b:th.quest.turns})+'</span></span>':"")+'</div>';
  h+='<button class="livebanner" data-livetest="1" hidden><span></span> · <b>'+t("live.test")+'</b></button>';
  h+='<div class="msgs" id="msgs">'+th.msgs.map((m,i)=>msgHTML(m,i,th)).join("")+'</div>';
- h+='<div class="suggest" id="sugg">'+sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+sgMoreBtn()+'</div>';
+ h+='<div class="suggest" id="sugg">'+sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+sgMoreBtn()+replyRetryHTML(th)+'</div>';
  if(th.pk)h+='<div id="pkwrap">'+packPanel(th)+'</div>';
  const watch=th.pk&&th.pk.as==="watch";if(watch)cmode="dir";
  /* primary row: the 3–4 ways to talk, always full-size, never wraps. Everything else (watch, games, ideas, continue, script library)
@@ -411,7 +403,7 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
   /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
      现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L358",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})});
-  SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
+  SENDQ.push({threadId:th.id,txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L360",function(){toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")});
   return}
  if(!aiGate()){
@@ -440,8 +432,8 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L385",function(){track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})});
   }
  }catch(_){}
- if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
- appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
+ if(mode==="dir"){if(!echoed)appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
+ if(!echoed)appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
  reply(th,{kind:"user",txt,mode});}
 
 /* ================= AI ENGINE ================= */
@@ -505,7 +497,9 @@ const CTX={
  redo:"Rewrite the last reply differently: different angle, different first line."};
 async function reply(th,ctx,silent){
  let LLMERR=null;   // 这一轮 AI 失败的原因（给玩家看，不要吞）
- if(!silent){if(busy)return;if(!aiGate())return;try{(window.TURN&&window.TURN.acquire)?window.TURN.acquire('reply'):(busy=true)}catch(_){busy=true}BUSY_T=Date.now();typing(true)}
+ if(!silent){if(busy)return;if(!aiGate())return;try{(window.TURN&&window.TURN.acquire)?window.TURN.acquire('reply'):(busy=true)}catch(_){busy=true}BUSY_T=Date.now()}
+ try{
+ if(!silent)typing(true);
  const mid=mainOf(th),c=ch(ctx.cid||mid),w=th.wid?wd(th.wid):null,p=th.persona||persona();
  const goals=th.quest?th.quest.goals.map((g,i)=>i+": "+g.t+(g.done?" (done)":"")).concat([th.quest.goals.length+": HIDDEN — "+th.quest.hidden.t+(th.quest.hidden.done?" (done)":"")]).join("\n"):"";
  const inst=(CTX[ctx.kind]||CTX.user).split("{u}").join(p.name||"the user").split("{x}").join(ctx.txt||"").split("{c}").join(c?c.n:"them");
@@ -562,7 +556,7 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   /* 2026-10-31：接住玩家的话。剧本外的话题、吐槽、看不懂玩法，都要先正面回应，再自然地把戏往下带。 */
-  (ctx&&ctx.kind==="user"&&ctx.txt)?("THE PLAYER JUST SAID (answer THIS first — it is the most important thing in this reply): \""+String(ctx.txt).slice(0,400)+"\"\n"+
+  (ctx&&["user","talk"].includes(ctx.kind)&&ctx.txt)?("THE PLAYER JUST SAID (answer THIS first — it is the most important thing in this reply): \""+String(ctx.txt).slice(0,400)+"\"\n"+
    "- If it is off the script or about something else entirely, the character engages with it for real (opinion, feeling, a question back) in their own voice. Never ignore it, never answer a different question, never jump straight back to the plot.\n"+
    "- If it is a question, the first spoken line answers it (or says in character why they won't).\n"+
    "- If the player sounds confused about the story or what to do (e.g. 'what is this', 'I don't get it', '我玩不明白', '我该干嘛'), add ONE short narration beat (who:\"n\") that warmly explains where they are and gives 2 concrete things they could say or do next. Keep it in the story's tone.\n"+
@@ -588,12 +582,14 @@ async function reply(th,ctx,silent){
   "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
+ const turnCtl=new AbortController(),turnTimer=setTimeout(()=>turnCtl.abort(),40000);
+ try{
  if(liveOn()){
   // 流式预览：首字 ~2s 就到，整段要 ~9.5s（LATENCY.md）。开关见 MIRU_TUNE.chat.streamPreview。
   const _prev=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.streamPreview!==false&&typeof streamPreview==="function");
   try{
    STREAM_TXT="";
-   r=await ask(prompt,{modelTier:deep?"complex":"default",onText:_prev?(function(x){streamPreview(x)}):undefined});
+   r=await ask(prompt,{modelTier:deep?"complex":"default",interactive:true,timeout:35000,maxTokens:deep?2400:1400,signal:turnCtl.signal,onText:_prev?(function(x){streamPreview(x)}):undefined});
   }catch(e){r=null;LLMERR=e||{code:"unknown"};try{track&&track("llm_fail",{code:(e&&(e.code||e.message))||"unknown"})}catch(_){}}
   if(r&&Array.isArray(r.beats)&&r.beats.length)useUnits(aiCost());}
  // 台词守门（他们 v8.2.3 的「台词检查」）：说了本章他还不该知道的事 ⇒ 带约束重写一次 ⇒ 仍不行就换保守句。
@@ -607,32 +603,42 @@ async function reply(th,ctx,silent){
      .concat(typeof cardForbidden==="function"?cardForbidden(th,_ids):[]);
    if(_words.length){
     const _g=await guardReply({reply:r,words:_words,
-      ask:async(extra)=>await ask(prompt+"\n\n"+extra,{modelTier:"default"}),
+      ask:async(extra)=>await ask(prompt+"\n\n"+extra,{modelTier:"default",interactive:true,timeout:15000,maxTokens:1400,signal:turnCtl.signal}),
       fallback:()=>fallback(th,ctx)});
     if(_g.retried){try{track&&track("reply_guard",{wid:th.wid,ch:_chNo,leaks:_g.leaked.length,fellBack:!!_g.fellBack})}catch(_){}}
     if(_g.reply&&Array.isArray(_g.reply.beats)&&_g.reply.beats.length)r=_g.reply;
    }
   }catch(_){}
  }
+ }finally{clearTimeout(turnTimer);}
  if(!r||!Array.isArray(r.beats)||!r.beats.length){
-  r=fallback(th,ctx);
-  /* 2026-10-27 Ann 试玩：AI 挂了，界面**一个字都不说**，她读到的是「他不理我」。
-     沉默不等于正常 —— 失败必须带原因露出来，而且要说明下方是兜底文案。 */
-  if(liveOn()&&!silent){
-   try{const why=(LLMERR&&(LLMERR.code||LLMERR.message))||"unknown";
-    appendMsg(th,{who:"sys",k:"warn",txt:"⚠︎ AI 没接通（"+why+"）· 下面这轮是兜底文案，不是他在敷衍你",at:Date.now()})}catch(_){}
+  if(liveOn()){
+   th.replyFailed=true;th.replyRetry=Object.assign({},ctx);
+   if(!silent)appendMsg(th,{who:"sys",k:"warn",txt:S.lang==="zh"?"回复暂时失败，你的话已保留。请点重试。":"Reply failed. Your message is saved. Tap retry.",at:Date.now()});
+   if(!silent&&curT===th.id){const box=$("#sugg");if(box&&!box.querySelector('[data-reply-retry]'))box.insertAdjacentHTML('beforeend',replyRetryHTML(th));}
+   save();return false;
   }
+  r=fallback(th,ctx);
  }
+ th.replyFailed=false;delete th.replyRetry;
+ const retryBtn=$("[data-reply-retry]");if(retryBtn)retryBtn.remove();
  // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
  // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L566",function(){ if(typeof plotGate==="function") plotGate(th); });
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
- (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L569",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0});
- if(!silent){try{(window.TURN&&window.TURN.release)?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}BUSY_T=0;
-  /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L572",function(){if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}});
- }}
+ return true;
+ }finally{
+  if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0;
+  if(!silent){
+   try{typing(false)}catch(_){}
+   try{window.TURN&&window.TURN.release?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}
+   BUSY_T=0;
+   setTimeout(drainSendQueue,60);
+  }
+ }
+}
+
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
  zh:["你到底为什么来？","*我在你旁边坐下，靠得比需要的近。*","再说一遍。慢一点。","（我不该想要这个的。）","就这一次，说实话。","*我伸手去牵你，停在半路。*","你又来了。","如果我留下会怎样？","*我接过你手里的咖啡。*"]};

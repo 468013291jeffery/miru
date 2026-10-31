@@ -70,14 +70,14 @@ function talkLearn(th,txt){if(!th||!th.pk)return;const k=talkIntent(txt),zh=CL()
  save()}
 /* ---- typing at a "your turn" stop = talk, not skip ---- */
 const _doSend55=doSend;
-doSend=function(txt,mode){const th=S.threads[curT];txt=String(txt||"").trim();
+doSend=function(txt,mode,typed,echoed){const th=S.threads[curT];txt=String(txt||"").trim();
  if(th&&txt&&talkStop(th)&&!busy&&(mode||cmode)!=="dir"){
   if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
   const m=mode&&mode!=="say"?mode:autoMode(txt);
-  appendMsg(th,{who:"me",k:m,txt,at:Date.now()});th.rounds=(th.rounds||0)+1;th.pk.talk=(th.pk.talk||0)+1;talkLearn(th,txt);save();packRefresh(th);
+  if(!echoed)appendMsg(th,{who:"me",k:m,txt,typed:!!typed,at:Date.now()});th.rounds=(th.rounds||0)+1;th.pk.talk=(th.pk.talk||0)+1;talkLearn(th,txt);save();packRefresh(th);
   Promise.resolve(reply(th,{kind:"talk",txt,mode:m})).then(()=>{packRefresh(th);if(curT===th.id)scrollChat()});return}
  if(th&&th.pk&&txt&&(mode||cmode)!=="dir")talkLearn(th,txt);
- return _doSend55(txt,mode)};
+ return _doSend55(txt,mode,typed,echoed)};
 /* myline: tapping the hint still says the written line; typing your own words that differ (or a question) opens a talk turn first */
 function talkSim(a,b){a=String(a||"");b=String(b||"");if(!a||!b)return 0;const A=new Set(a.replace(/\s/g,"")),B=new Set(b.replace(/\s/g,""));let n=0;A.forEach(x=>{if(B.has(x))n++});return n/Math.max(A.size,B.size)}
 function mylineTalk(th,txt){const b=talkStop(th);if(!b||b[1]!=="myline")return false;txt=String(txt||"").trim();if(!txt)return true;
@@ -92,12 +92,11 @@ function talkGo(th){const b=talkStop(th);if(!b)return;const d=b[2];
 document.addEventListener("click",e=>{if(!e.target.closest("[data-talkgo]"))return;const th=S.threads[curT];if(th)talkGo(th)});
 const _stopHTML55=stopHTML;
 stopHTML=function(th){const h=_stopHTML55(th);const b=talkStop(th);if(!b||!th.pk.talk)return h;const zh=CL()==="zh";
- return '<div class="talkbar"><span>💬 '+(zh?"你们在自由对话 · 第 "+th.pk.talk+" 句":"Talking freely · turn "+th.pk.talk)+'<small>'+(zh?"想聊就继续打字；想推进剧情点右边，或选下面一项":"Keep typing to talk; tap → or pick an option below to move on")+'</small></span><button data-talkgo="1">▶ '+(zh?"继续剧情":"Continue")+'</button></div>'+h};
+ return h+'<div class="talkbar"><span>'+(zh?"可继续打字聊天，或":"Keep chatting, or")+'</span><button data-talkgo="1">'+(zh?"继续剧情":"continue the story")+' →</button></div>'};
 /* while a talk turn is being answered, keep the panel calm */
 (function(){const st=document.createElement("style");st.textContent=`
-.talkbar{display:flex;gap:10px;align-items:center;margin:0 0 10px;padding:9px 10px 9px 12px;border-radius:14px;background:rgba(127,196,166,.12);border:1px solid rgba(127,196,166,.4);color:#DFF5EA;font-size:13px}
-.talkbar span{flex:1;min-width:0}.talkbar small{display:block;font-size:11px;color:#9FC9B6;margin-top:2px}
-.talkbar button{flex:none;border:0;border-radius:999px;padding:9px 14px;font-weight:800;font-size:13px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}`;document.head.appendChild(st)})();
+.talkbar{display:flex;justify-content:flex-end;gap:4px;align-items:center;margin:8px 0 0;padding:0;border:0;background:none;color:var(--muted,#aaa);font-size:12px;line-height:1.5;white-space:nowrap}
+.talkbar button{flex:none;min-height:32px;border:0;border-radius:0;padding:4px 0 4px 2px;font:inherit;color:inherit;background:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.talkbar button:hover,.talkbar button:focus-visible{color:var(--text,#fff)}`;document.head.appendChild(st)})();
 
 /* ================= composer: free input + 2–3 quick options; director is an advanced tool, not a peer of "say" =================
    Product feedback: 台词/动作/心声/导演 side by side is too flat. Now one box — start with * for an action, wrap in （） for a thought —
@@ -115,7 +114,7 @@ function composer55(){const th=S.threads[curT];if(!th||(th.pk&&th.pk.as==="watch
  const sg=$("#sugg");if(sg){[...sg.children].filter(x=>!x.dataset.sgmore).slice(3).forEach(x=>x.remove());sg.classList.add("sg55")}
  const hint=document.createElement("span");hint.className="c55h";hint.textContent=CL()==="zh"?"直接打字 · *动作* · （心声）":"Just type · *action* · (thought)";modes.insertBefore(hint,modes.firstChild);
  const ta=$("#cin");if(ta)ta.placeholder=CL()==="zh"?"想说什么都行，他会回应你……":"Say anything — he'll answer you…"}
-const _doSend55b=doSend;doSend=function(txt,mode){if(!mode&&cmode==="say"&&txt)mode=autoMode(txt);return _doSend55b(txt,mode)};
+const _doSend55b=doSend;doSend=function(txt,mode,typed,echoed){if(!mode&&cmode==="say"&&txt)mode=autoMode(txt);return _doSend55b(txt,mode,typed,echoed)};
 (function(){const st=document.createElement("style");st.textContent=`
 .composer .c55h{font-size:11.5px;color:#9C93A8;align-self:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .suggest.sg55{display:flex;gap:6px;overflow-x:auto;flex-wrap:nowrap}.suggest.sg55 button{flex:none;max-width:72%}`;document.head.appendChild(st)})();

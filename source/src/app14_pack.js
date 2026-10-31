@@ -597,12 +597,12 @@ function stopCallRun(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),
   tm=setTimeout(go,readMs({txt:x})+400)};
  el.addEventListener("click",e=>{if(e.target.closest("[data-scend]")){fin();return}try{stopVoice()}catch(_){}next()});next()})}
 /* typing your own line at a "your turn" stop */
-const _doSendPk=doSend;doSend=function(txt,mode){const th=S.threads[curT];
+const _doSendPk=doSend;doSend=function(txt,mode,typed,echoed){const th=S.threads[curT];
  if(th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="line"&&!busy&&(mode||cmode)!=="dir"){txt=(txt||"").trim();if(!txt)return;const d=th.pk.stop[2];
-  if(liveOn()){if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}appendMsg(th,{who:"me",k:mode||cmode,txt,at:Date.now()});th.rounds++;
-   Promise.resolve(reply(th,{kind:"user",txt,mode:mode||cmode})).then(()=>stopResolve(th,d.free||[]));return}
+  if(liveOn()){if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt,typed:!!typed,at:Date.now()});th.rounds++;
+   Promise.resolve(reply(th,{kind:"user",txt,mode:mode||cmode})).then(ok=>{if(ok!==false)stopResolve(th,d.free||[])});return}
   appendMsg(th,{who:"me",k:mode||cmode,txt,at:Date.now()});th.rounds++;stopResolve(th,d.free||(d.opts[0]&&d.opts[0].then)||[]);return}
- return _doSendPk(txt,mode)};
+ return _doSendPk(txt,mode,typed,echoed)};
 document.addEventListener("click",e=>{if(!e.target.closest("[data-pkresume]"))return;const th=S.threads[curT];if(th&&th.pk)packRun(th)});
 Object.assign(I18N.en,{"pk.resume":"Continue the scene","st.yourTurn":"Your turn — you're {n}","st.type":"Or type your own line below.","st.typeLive":"Or type anything below — he'll answer you, live.",
  "st.giftH":"A moment for a gift","st.nogift":"Not now","st.later":"Keep going","st.decline":"Decline","st.free":"Free",

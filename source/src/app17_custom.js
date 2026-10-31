@@ -19,7 +19,7 @@ dirRun=function(v,who,extra){const H=DIR_HINTS[v.k]||{},L=S.lang==="zh"?"zh":"en
   ((H[L]||[]).length?'<div class="cuchips">'+H[L].map(x=>'<button data-cufill="'+esc(x)+'">'+esc(x)+'</button>').join("")+'</div>':'')+
   '<div class="row" style="gap:8px;margin-top:14px"><button class="btn btn-g grow" data-drgo="0">'+t("cu.surprise")+'</button><button class="btn btn-p grow" data-drgo="1">🎬 '+t("cu.go")+'</button></div>')};
 /* the detail rides along with whichever path the original director uses (normal chat or watch mode) */
-const _doSend7=doSend;doSend=function(txt,mode){if(DIR_DETAIL&&mode==="dir")txt=txt+(S.lang==="zh"?" 具体：":" Specifically: ")+DIR_DETAIL;return _doSend7(txt,mode)};
+const _doSend7=doSend;doSend=function(txt,mode,typed,echoed){if(DIR_DETAIL&&mode==="dir")txt=txt+(S.lang==="zh"?" 具体：":" Specifically: ")+DIR_DETAIL;return _doSend7(txt,mode,typed,echoed)};
 const _reply7=reply;reply=function(th,ctx,silent){if(DIR_DETAIL&&ctx&&ctx.kind==="watch")ctx=Object.assign({},ctx,{txt:ctx.txt+" Specifically: "+DIR_DETAIL});return _reply7(th,ctx,silent)};
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-cufill]")){const ta=$("#drDetail,#cuTxt");if(ta){ta.value=x.dataset.cufill;ta.focus()}return}
