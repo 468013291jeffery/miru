@@ -1,0 +1,2067 @@
+{
+ "key": "w_scmvv3sk58b2935cc9b2",
+ "title": {
+  "zh": "丝绒谎言 VELVET LIES · 大纲版（自由模式）",
+  "en": "VELVET LIES — Outline Edition"
+ },
+ "hook": {
+  "zh": "凌晨四点十七分，我推开那扇门去查家族的账，门后的男人只穿了一件浴袍——七分钟后，全纽约都以为我是去偷情的。",
+  "en": "4:17 a.m. I opened that door to audit my family's books. Seven minutes later all of New York thought I was having an affair."
+ },
+ "premise": {
+  "zh": "你是 Victoria Vale，维尔集团第三代。一条匿名消息把你带到克罗斯酒店 417 房。",
+  "en": "You are Victoria Vale, third generation of the Vale Group. One anonymous message brought you to Room 417."
+ },
+ "orient": "bg",
+ "tags": [
+  "18+",
+  "三角危险",
+  "丑闻直播",
+  "豪门资本",
+  "情感悬疑"
+ ],
+ "world": "现代纽约上流社会：维尔集团（家族企业与慈善基金）、克罗斯酒店与会所、东区老宅、布鲁克林咖啡馆、匿名爆料账号 VELVET。规则：家族体面高于真相；媒体与资本互为武器；每一句情话都可能被录音。",
+ "style": "单人女性向互动恋爱剧（heat=explicit，成年角色）。开场按锚点演出，之后由玩家驱动：每轮承接玩家实际说的话 → 可观察的反应与细微情绪 → 推进一小步 → 留出决定空间；不强迫玩家每轮做选择。电影感：声音、光线、温度、距离、停顿；旁白只写画面与动作，绝不包含对话。",
+ "player": {
+  "key": "me",
+  "name": {
+   "zh": "你",
+   "en": "You"
+  },
+  "gender": "f",
+  "role": {
+   "zh": "Victoria Vale，22，维尔集团第三代；参与品牌、公关与慈善；不是审计师，不是调查员",
+   "en": "Victoria Vale, 22, third generation of the Vale Group"
+  }
+ },
+ "cast": [
+  {
+   "key": "adrian",
+   "name": {
+    "zh": "阿德里安·克罗斯",
+    "en": "Adrian Cross"
+   },
+   "short": {
+    "zh": "阿德里安",
+    "en": "Adrian"
+   },
+   "gender": "m",
+   "age": 26,
+   "tier": "lead",
+   "romanceable": true,
+   "love0": 25,
+   "trust0": 20,
+   "role": {
+    "zh": "Cross Hospitality 继承人；直接管 3 家酒店、2 家私人会所",
+    "en": "Heir of Cross Hospitality"
+   },
+   "bio": "189cm；深黑微卷短发洗完不吹总在滴水，灰色眼睛，眉骨高、下颌线利，浅胡茬；拳击练出的肩背与窄腰；左手虎口一道旧裂伤。气味：雪松沐浴露、黑咖啡、柑橘皮。体温偏高，掌心热。",
+   "personality": "进攻型直接：先做再解释；用玩笑挡真心；对失去控制极敏感；一旦认真就不留退路。",
+   "voice": "短句、挑衅、带笑；真心话只说半句，剩下用动作补。",
+   "want": "把你留在他的世界里，且不靠家族的钱。",
+   "fear": "被发现他也只是别人棋盘上的一颗子。"
+  },
+  {
+   "key": "theodore",
+   "name": {
+    "zh": "西奥多·阿什福德",
+    "en": "Theodore Ashford"
+   },
+   "short": {
+    "zh": "西奥多",
+    "en": "Theodore"
+   },
+   "gender": "m",
+   "age": 25,
+   "tier": "lead",
+   "romanceable": true,
+   "love0": 45,
+   "trust0": 35,
+   "role": {
+    "zh": "阿什福德家族继承人；与你多年公开交往史，尚未订婚",
+    "en": "Heir of the Ashford family"
+   },
+   "bio": "体面、克制、永远穿戴整齐；笑的时候眼睛先动。声音低而稳，说话像在签文件。",
+   "personality": "把秩序当安全感；习惯替别人做决定并称之为保护；被逼到墙角时才露出真实情绪。",
+   "voice": "完整句、礼貌、留余地；越紧张越客气。",
+   "want": "把一切维持在可控范围内——包括你。",
+   "fear": "你发现他早就知道，却选择不说。"
+  },
+  {
+   "key": "julian",
+   "name": {
+    "zh": "朱利安·里德",
+    "en": "Julian Reed"
+   },
+   "short": {
+    "zh": "朱利安",
+    "en": "Julian"
+   },
+   "gender": "m",
+   "age": 24,
+   "tier": "lead",
+   "romanceable": true,
+   "love0": 15,
+   "trust0": 10,
+   "role": {
+    "zh": "自由记者／信息掮客；掌握资金流向的记录",
+    "en": "Freelance journalist and information broker"
+   },
+   "bio": "瘦、安静、观察多过说话；手指总有墨水印；笑起来像在算数。",
+   "personality": "用问题代替回答；不信任何机构；对真相有近乎自毁的执着。",
+   "voice": "先问再答；句子短，信息密度高；偶尔一句冷幽默。",
+   "want": "让那份记录见光，哪怕代价是自己。",
+   "fear": "他递出去的每一条真相，最后都伤到不该伤的人。"
+  }
+ ],
+ "chapters": [
+  {
+   "n": 1,
+   "title": {
+    "zh": "417 号房间",
+    "en": "417 号房间"
+   },
+   "goal": "门本就没锁；绿灯；你手里攥着匿名消息",
+   "scenes": [
+    {
+     "id": "c01s01",
+     "place": {
+      "zh": "酒店走廊 04:17",
+      "en": "酒店走廊 04:17"
+     },
+     "beat": "门本就没锁；绿灯；你手里攥着匿名消息",
+     "present": [],
+     "script": [],
+     "opts": [
+      {
+       "k": "say",
+       "t": "“你早就知道我要来。”"
+      },
+      {
+       "k": "act",
+       "t": "伸手把他的浴袍领口拉回去，替他系好"
+      },
+      {
+       "k": "say",
+       "t": "“脱了。让我看看你打算用什么换我的七分钟。”"
+      }
+     ]
+    },
+    {
+     "id": "c01s02",
+     "place": {
+      "zh": "套房玄关",
+      "en": "套房玄关"
+     },
+     "beat": "浴袍、滴水、腰带半系；\"想我了，直说就好\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c01s03",
+     "place": {
+      "zh": "茶几信封",
+      "en": "茶几信封"
+     },
+     "beat": "牛皮纸信封推到桌沿，他不放手",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c01s04",
+     "place": {
+      "zh": "走廊脚步",
+      "en": "走廊脚步"
+     },
+     "beat": "猫眼；他把你按进玄关阴影，掌心覆嘴",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c01s05",
+     "place": {
+      "zh": "门缝闪光",
+      "en": "门缝闪光"
+     },
+     "beat": "一道冷白闪光；\"拍到了\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c01s06",
+     "place": {
+      "zh": "04:23 推送",
+      "en": "04:23 推送"
+     },
+     "beat": "VELVET 标题；他的下颌线动了一下",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c01s07",
+     "place": {
+      "zh": "他的坦白（半）",
+      "en": "他的坦白（半）"
+     },
+     "beat": "\"不是我发的。但我知道今晚会有人拍。\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c01s08",
+     "place": {
+      "zh": "离开或留下",
+      "en": "离开或留下"
+     },
+     "beat": "你的第一个真正选择",
+     "present": [],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 2,
+   "title": {
+    "zh": "四点二十三分",
+    "en": "四点二十三分"
+   },
+   "goal": "记者已在门口；他把车停在后巷",
+   "scenes": [
+    {
+     "id": "c02s01",
+     "place": {
+      "zh": "大堂侧门",
+      "en": "大堂侧门"
+     },
+     "beat": "记者已在门口；他把车停在后巷",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c02s02",
+     "place": {
+      "zh": "车内",
+      "en": "车内"
+     },
+     "beat": "他给一件干衬衫，不看你换",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c02s03",
+     "place": {
+      "zh": "母亲来电",
+      "en": "母亲来电"
+     },
+     "beat": "第一句是\"照片能不能撤\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c02s04",
+     "place": {
+      "zh": "西奥多来电",
+      "en": "西奥多来电"
+     },
+     "beat": "背景有记者；他承认录音被剪",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c02s05",
+     "place": {
+      "zh": "玛雅到场",
+      "en": "玛雅到场"
+     },
+     "beat": "做时间线：三份材料 11 分钟内投放",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c02s06",
+     "place": {
+      "zh": "安保室",
+      "en": "安保室"
+     },
+     "beat": "门禁记录缺了一段 7 分钟",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c02s07",
+     "place": {
+      "zh": "匿名短信",
+      "en": "匿名短信"
+     },
+     "beat": "\"每个人都会得到一部分真相\"",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 3,
+   "title": {
+    "zh": "三份交易",
+    "en": "三份交易"
+   },
+   "goal": "母亲把报纸反扣在桌上",
+   "scenes": [
+    {
+     "id": "c03s01",
+     "place": {
+      "zh": "维尔宅早餐厅",
+      "en": "维尔宅早餐厅"
+     },
+     "beat": "母亲把报纸反扣在桌上",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s02",
+     "place": {
+      "zh": "中央公园长椅",
+      "en": "中央公园长椅"
+     },
+     "beat": "西奥多提出联合声明，条件是\"默认婚约\"",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s03",
+     "place": {
+      "zh": "克罗斯酒店办公室",
+      "en": "克罗斯酒店办公室"
+     },
+     "beat": "阿德里安给出安保日志，要求你不再单独行动",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s04",
+     "place": {
+      "zh": "布鲁克林咖啡馆",
+      "en": "布鲁克林咖啡馆"
+     },
+     "beat": "朱利安给资金记录，要你先答三个问题",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s05",
+     "place": {
+      "zh": "玛雅核对名单",
+      "en": "玛雅核对名单"
+     },
+     "beat": "名单上出现马库斯·贝尔",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s06",
+     "place": {
+      "zh": "阿什福德关联企业",
+      "en": "阿什福德关联企业"
+     },
+     "beat": "名字与理查德的旧公司重合",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s07",
+     "place": {
+      "zh": "傍晚街头",
+      "en": "傍晚街头"
+     },
+     "beat": "你被陌生人叫出名字",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c03s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "名单最后一行日期 = 母亲签字日",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 4,
+   "title": {
+    "zh": "第二波",
+    "en": "第二波"
+   },
+   "goal": "大屏播放你的更衣室剪影",
+   "scenes": [
+    {
+     "id": "c04s01",
+     "place": {
+      "zh": "公寓楼下",
+      "en": "公寓楼下"
+     },
+     "beat": "大屏播放你的更衣室剪影",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c04s02",
+     "place": {
+      "zh": "电梯",
+      "en": "电梯"
+     },
+     "beat": "邻居的眼神；你数楼层",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c04s03",
+     "place": {
+      "zh": "衣帽间",
+      "en": "衣帽间"
+     },
+     "beat": "你发现窗帘的褶皱不对",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c04s04",
+     "place": {
+      "zh": "西安娜上门",
+      "en": "西安娜上门"
+     },
+     "beat": "带香槟与\"我陪你\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c04s05",
+     "place": {
+      "zh": "玛雅查源",
+      "en": "玛雅查源"
+     },
+     "beat": "一次性邮箱 → 一个中间跳转",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c04s06",
+     "place": {
+      "zh": "品牌方来电",
+      "en": "品牌方来电"
+     },
+     "beat": "\"暂缓合作\"的礼貌版本",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c04s07",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "剪影角度来自屋内",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 5,
+   "title": {
+    "zh": "白色派对",
+    "en": "白色派对"
+   },
+   "goal": "全白着装；海风把你的裙摆吹起",
+   "scenes": [
+    {
+     "id": "c05s01",
+     "place": {
+      "zh": "游艇码头",
+      "en": "游艇码头"
+     },
+     "beat": "全白着装；海风把你的裙摆吹起",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s02",
+     "place": {
+      "zh": "上层甲板",
+      "en": "上层甲板"
+     },
+     "beat": "西奥多与阿德里安第一次正面",
+     "present": [
+      "adrian",
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s03",
+     "place": {
+      "zh": "服务生被辱",
+      "en": "服务生被辱"
+     },
+     "beat": "客人把酒泼在托盘上；阿德里安请他下船",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s04",
+     "place": {
+      "zh": "机舱层",
+      "en": "机舱层"
+     },
+     "beat": "朱利安接触前承包商",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s05",
+     "place": {
+      "zh": "船尾",
+      "en": "船尾"
+     },
+     "beat": "西安娜劝你停手，眼睛不敢看你",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s06",
+     "place": {
+      "zh": "你的测试",
+      "en": "你的测试"
+     },
+     "beat": "你放出一条假行程",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s07",
+     "place": {
+      "zh": "实时曝光",
+      "en": "实时曝光"
+     },
+     "beat": "假行程被推送，全场哗然",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s08",
+     "place": {
+      "zh": "西安娜失言",
+      "en": "西安娜失言"
+     },
+     "beat": "\"这不应该发出来\"",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c05s09",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "短视频被剪成\"甲板接吻\"",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 6,
+   "title": {
+    "zh": "潮水名单",
+    "en": "潮水名单"
+   },
+   "goal": "阿德里安湿衬衫，站在风口",
+   "scenes": [
+    {
+     "id": "c06s01",
+     "place": {
+      "zh": "回程甲板",
+      "en": "回程甲板"
+     },
+     "beat": "阿德里安湿衬衫，站在风口",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s02",
+     "place": {
+      "zh": "船尾阴影",
+      "en": "船尾阴影"
+     },
+     "beat": "他的坦白停在一半：\"我欠你一个解释\"",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s03",
+     "place": {
+      "zh": "朱利安的截图",
+      "en": "朱利安的截图"
+     },
+     "beat": "Bellwether 付款记录",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s04",
+     "place": {
+      "zh": "玛雅报价单",
+      "en": "玛雅报价单"
+     },
+     "beat": "\"舆情服务\"价格表，备注有姓名缩写",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s05",
+     "place": {
+      "zh": "西奥多的短信",
+      "en": "西奥多的短信"
+     },
+     "beat": "\"我爸想见你。明天。\"",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s06",
+     "place": {
+      "zh": "你的选择点",
+      "en": "你的选择点"
+     },
+     "beat": "靠近谁、问谁、推开谁",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s07",
+     "place": {
+      "zh": "岸上闪光灯",
+      "en": "岸上闪光灯"
+     },
+     "beat": "记者已在码头",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c06s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "母亲坐在客厅等你，灯亮着",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 7,
+   "title": {
+    "zh": "完美家族",
+    "en": "完美家族"
+   },
+   "goal": "大理石、白玫瑰、管家接过外套",
+   "scenes": [
+    {
+     "id": "c07s01",
+     "place": {
+      "zh": "阿什福德宅门厅",
+      "en": "阿什福德宅门厅"
+     },
+     "beat": "大理石、白玫瑰、管家接过外套",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s02",
+     "place": {
+      "zh": "餐前酒",
+      "en": "餐前酒"
+     },
+     "beat": "理查德敬酒，\"两个家族的未来\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s03",
+     "place": {
+      "zh": "餐桌施压",
+      "en": "餐桌施压"
+     },
+     "beat": "婚约被说成已经\"谈得差不多\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s04",
+     "place": {
+      "zh": "西奥多的第一次\"不\"",
+      "en": "西奥多的第一次\"不\""
+     },
+     "beat": "\"这件事需要问她。\"",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s05",
+     "place": {
+      "zh": "洗手间",
+      "en": "洗手间"
+     },
+     "beat": "母亲按住你的手腕：\"再给我三周\"",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s06",
+     "place": {
+      "zh": "书房",
+      "en": "书房"
+     },
+     "beat": "你找到签字的融资合同",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s07",
+     "place": {
+      "zh": "附件编号",
+      "en": "附件编号"
+     },
+     "beat": "正文到 06，附件是 07",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s08",
+     "place": {
+      "zh": "花园",
+      "en": "花园"
+     },
+     "beat": "理查德\"顺便\"说出你母亲董事会的时间",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c07s09",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "你母亲承认\"我付过代价\"",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 8,
+   "title": {
+    "zh": "温室",
+    "en": "温室"
+   },
+   "goal": "玻璃顶、雾气、他手里一封信",
+   "scenes": [
+    {
+     "id": "c08s01",
+     "place": {
+      "zh": "温室夜灯",
+      "en": "温室夜灯"
+     },
+     "beat": "玻璃顶、雾气、他手里一封信",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c08s02",
+     "place": {
+      "zh": "那封信",
+      "en": "那封信"
+     },
+     "beat": "五年前写的\"我不确定\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c08s03",
+     "place": {
+      "zh": "十九岁的机票",
+      "en": "十九岁的机票"
+     },
+     "beat": "未使用的登机牌，日期是九月",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c08s04",
+     "place": {
+      "zh": "他答不出来",
+      "en": "他答不出来"
+     },
+     "beat": "\"你现在想要什么？\"——沉默四十秒",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c08s05",
+     "place": {
+      "zh": "第一次吻（可选）",
+      "en": "第一次吻（可选）"
+     },
+     "beat": "他先问\"我可以吗\"，手在你颈侧停住",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c08s06",
+     "place": {
+      "zh": "信纸背面",
+      "en": "信纸背面"
+     },
+     "beat": "一行铅笔字：一个日期",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c08s07",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "那个日期与 417 相同",
+     "present": [],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 9,
+   "title": {
+    "zh": "午夜假面舞会",
+    "en": "午夜假面舞会"
+   },
+   "goal": "面具、香槟塔、弦乐四重奏",
+   "scenes": [
+    {
+     "id": "c09s01",
+     "place": {
+      "zh": "舞会入场",
+      "en": "舞会入场"
+     },
+     "beat": "面具、香槟塔、弦乐四重奏",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s02",
+     "place": {
+      "zh": "面具背后",
+      "en": "面具背后"
+     },
+     "beat": "你在镜厅看见三张熟悉的下颌线",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s03",
+     "place": {
+      "zh": "露台（Adrian 线）",
+      "en": "露台（Adrian 线）"
+     },
+     "beat": "母亲的旧事；他靠栏杆，没有碰你",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s04",
+     "place": {
+      "zh": "旧歌（Theo 线）",
+      "en": "旧歌（Theo 线）"
+     },
+     "beat": "他请你跳一支你们十九岁听过的曲子",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s05",
+     "place": {
+      "zh": "不合身的西装（Julian 线）",
+      "en": "不合身的西装（Julian 线）"
+     },
+     "beat": "袖口短了一寸，他把手藏起来",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s06",
+     "place": {
+      "zh": "中庭",
+      "en": "中庭"
+     },
+     "beat": "理查德的中间人在打电话",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s07",
+     "place": {
+      "zh": "亲密影像二次传播",
+      "en": "亲密影像二次传播"
+     },
+     "beat": "大屏被人投了 VELVET 的推送",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c09s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "40 分钟后一笔付款到账",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 10,
+   "title": {
+    "zh": "面具之后",
+    "en": "面具之后"
+   },
+   "goal": "三辆车在等，你只能上一辆",
+   "scenes": [
+    {
+     "id": "c10s01",
+     "place": {
+      "zh": "舞会后巷",
+      "en": "舞会后巷"
+     },
+     "beat": "三辆车在等，你只能上一辆",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s02",
+     "place": {
+      "zh": "车内（Adrian）",
+      "en": "车内（Adrian）"
+     },
+     "beat": "坦白到一半，他接到父亲的电话",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s03",
+     "place": {
+      "zh": "门口（Theo）",
+      "en": "门口（Theo）"
+     },
+     "beat": "他父亲的车停在对面",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s04",
+     "place": {
+      "zh": "地铁口（Julian）",
+      "en": "地铁口（Julian）"
+     },
+     "beat": "他把笔记本翻到某一页给你看",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s05",
+     "place": {
+      "zh": "编辑部",
+      "en": "编辑部"
+     },
+     "beat": "你的编辑朋友说：署名不止一个人",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s06",
+     "place": {
+      "zh": "第二署名",
+      "en": "第二署名"
+     },
+     "beat": "一个已离职的 VELVET 编辑",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s07",
+     "place": {
+      "zh": "深夜公寓",
+      "en": "深夜公寓"
+     },
+     "beat": "你把三份材料摊在地上",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c10s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "有人在你门缝下塞了一个信封",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 11,
+   "title": {
+    "zh": "女王坠落",
+    "en": "女王坠落"
+   },
+   "goal": "解约函已经打印好",
+   "scenes": [
+    {
+     "id": "c11s01",
+     "place": {
+      "zh": "品牌会议室",
+      "en": "品牌会议室"
+     },
+     "beat": "解约函已经打印好",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s02",
+     "place": {
+      "zh": "慈善晚宴后台",
+      "en": "慈善晚宴后台"
+     },
+     "beat": "席位表上你的名字被划掉",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s03",
+     "place": {
+      "zh": "集团董事会门外",
+      "en": "集团董事会门外"
+     },
+     "beat": "母亲在里面，你在门外",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s04",
+     "place": {
+      "zh": "母亲的办公室",
+      "en": "母亲的办公室"
+     },
+     "beat": "\"我暂停你的职务\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s05",
+     "place": {
+      "zh": "媒体围堵",
+      "en": "媒体围堵"
+     },
+     "beat": "有人问你\"裙子是谁买的\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s06",
+     "place": {
+      "zh": "阿德里安的提议",
+      "en": "阿德里安的提议"
+     },
+     "beat": "\"我全部接管。\"你拒绝",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s07",
+     "place": {
+      "zh": "朱利安的邀请",
+      "en": "朱利安的邀请"
+     },
+     "beat": "一条很短的短信：\"来布鲁克林\"",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c11s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "附件改动时间：417 之后第二天",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 12,
+   "title": {
+    "zh": "布鲁克林之夜",
+    "en": "布鲁克林之夜"
+   },
+   "goal": "灯坏了，他下楼接你",
+   "scenes": [
+    {
+     "id": "c12s01",
+     "place": {
+      "zh": "公寓楼道",
+      "en": "公寓楼道"
+     },
+     "beat": "灯坏了，他下楼接你",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c12s02",
+     "place": {
+      "zh": "很咸的意面",
+      "en": "很咸的意面"
+     },
+     "beat": "他说\"我妈做饭只有一个咸度\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c12s03",
+     "place": {
+      "zh": "父亲的工牌",
+      "en": "父亲的工牌"
+     },
+     "beat": "十九年的工牌，绳子磨白",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c12s04",
+     "place": {
+      "zh": "那篇报道的代价",
+      "en": "那篇报道的代价"
+     },
+     "beat": "他讲那条\"你毁了我\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c12s05",
+     "place": {
+      "zh": "楼道之吻（可选）",
+      "en": "楼道之吻（可选）"
+     },
+     "beat": "\"我要吻你了。\"然后他真的等",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c12s06",
+     "place": {
+      "zh": "马库斯的来电",
+      "en": "马库斯的来电"
+     },
+     "beat": "他看了眼屏幕，没接",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c12s07",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "\"我有一件事没告诉你。\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 13,
+   "title": {
+    "zh": "三个骗子",
+    "en": "三个骗子"
+   },
+   "goal": "你要求看完整门禁记录",
+   "scenes": [
+    {
+     "id": "c13s01",
+     "place": {
+      "zh": "417 房间（重返）",
+      "en": "417 房间（重返）"
+     },
+     "beat": "你要求看完整门禁记录",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s02",
+     "place": {
+      "zh": "Adrian 承认",
+      "en": "Adrian 承认"
+     },
+     "beat": "\"我把你带进来，是想引出他。\"",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s03",
+     "place": {
+      "zh": "你要记录",
+      "en": "你要记录"
+     },
+     "beat": "他交出三份备份",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s04",
+     "place": {
+      "zh": "阿什福德宅",
+      "en": "阿什福德宅"
+     },
+     "beat": "西奥多承认第一年就知道婚约",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s05",
+     "place": {
+      "zh": "那顿午餐",
+      "en": "那顿午餐"
+     },
+     "beat": "他与另一个家族见过一次面",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s06",
+     "place": {
+      "zh": "布鲁克林",
+      "en": "布鲁克林"
+     },
+     "beat": "朱利安承认给过 VELVET 资料",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s07",
+     "place": {
+      "zh": "稿子",
+      "en": "稿子"
+     },
+     "beat": "他给你看被删掉的那一段",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s08",
+     "place": {
+      "zh": "三条谎",
+      "en": "三条谎"
+     },
+     "beat": "控制、逃避、自认正确",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c13s09",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "注册邮箱指向西安娜旧工作室",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 14,
+   "title": {
+    "zh": "最好的敌人",
+    "en": "最好的敌人"
+   },
+   "goal": "香槟没开，蜡烛没点",
+   "scenes": [
+    {
+     "id": "c14s01",
+     "place": {
+      "zh": "西安娜公寓",
+      "en": "西安娜公寓"
+     },
+     "beat": "香槟没开，蜡烛没点",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s02",
+     "place": {
+      "zh": "艺术项目那年",
+      "en": "艺术项目那年"
+     },
+     "beat": "她的资金怎么被收回",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s03",
+     "place": {
+      "zh": "\"我想看你输一次\"",
+      "en": "\"我想看你输一次\""
+     },
+     "beat": "她说这句话时很平静",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s04",
+     "place": {
+      "zh": "通讯记录",
+      "en": "通讯记录"
+     },
+     "beat": "她打印了与马库斯的全部对话",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s05",
+     "place": {
+      "zh": "停手的时间",
+      "en": "停手的时间"
+     },
+     "beat": "她的\"停手\"在第三波之后",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s06",
+     "place": {
+      "zh": "作证",
+      "en": "作证"
+     },
+     "beat": "她愿意，但要求律师在场",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s07",
+     "place": {
+      "zh": "你们之间",
+      "en": "你们之间"
+     },
+     "beat": "原谅、搁置、或结束",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c14s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "她给出一条付款线索",
+     "present": [],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 15,
+   "title": {
+    "zh": "证据的重量",
+    "en": "证据的重量"
+   },
+   "goal": "每份证据标注\"能证明什么\"",
+   "scenes": [
+    {
+     "id": "c15s01",
+     "place": {
+      "zh": "律师办公室",
+      "en": "律师办公室"
+     },
+     "beat": "每份证据标注\"能证明什么\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c15s02",
+     "place": {
+      "zh": "独立编辑",
+      "en": "独立编辑"
+     },
+     "beat": "玛丽莎要求回避利益冲突",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c15s03",
+     "place": {
+      "zh": "文件鉴定",
+      "en": "文件鉴定"
+     },
+     "beat": "附件的墨迹与打印时间不一致",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c15s04",
+     "place": {
+      "zh": "董事会资料",
+      "en": "董事会资料"
+     },
+     "beat": "股东名单里有一个空壳公司",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c15s05",
+     "place": {
+      "zh": "玛雅的清单",
+      "en": "玛雅的清单"
+     },
+     "beat": "保全、备份、时间戳",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c15s06",
+     "place": {
+      "zh": "股价",
+      "en": "股价"
+     },
+     "beat": "公开的代价：三分之一",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c15s07",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "私下和解：永远不提这七分钟",
+     "present": [
+      "maya"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 16,
+   "title": {
+    "zh": "毁掉这一切",
+    "en": "毁掉这一切"
+   },
+   "goal": "阿德里安交出记录，被除名",
+   "scenes": [
+    {
+     "id": "c16s01",
+     "place": {
+      "zh": "克罗斯董事会",
+      "en": "克罗斯董事会"
+     },
+     "beat": "阿德里安交出记录，被除名",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s02",
+     "place": {
+      "zh": "停车场",
+      "en": "停车场"
+     },
+     "beat": "他对你说\"我没有条件\"",
+     "present": [
+      "adrian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s03",
+     "place": {
+      "zh": "独立律师办公室",
+      "en": "独立律师办公室"
+     },
+     "beat": "西奥多说明家族安排",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s04",
+     "place": {
+      "zh": "阿什福德宅",
+      "en": "阿什福德宅"
+     },
+     "beat": "父子对峙；第一次不欢而散",
+     "present": [
+      "theodore"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s05",
+     "place": {
+      "zh": "编辑部",
+      "en": "编辑部"
+     },
+     "beat": "朱利安交出报道，删掉隐私",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s06",
+     "place": {
+      "zh": "三方会面",
+      "en": "三方会面"
+     },
+     "beat": "三种代价摆在同一张桌上",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s07",
+     "place": {
+      "zh": "链条图",
+      "en": "链条图"
+     },
+     "beat": "中间人—平台—家族—朋友",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c16s08",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "发布会通知发出",
+     "present": [
+      "julian"
+     ],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 17,
+   "title": {
+    "zh": "新闻发布厅",
+    "en": "新闻发布厅"
+   },
+   "goal": "母亲递水，你没接",
+   "scenes": [
+    {
+     "id": "c17s01",
+     "place": {
+      "zh": "后台三分钟",
+      "en": "后台三分钟"
+     },
+     "beat": "母亲递水，你没接",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c17s02",
+     "place": {
+      "zh": "上台",
+      "en": "上台"
+     },
+     "beat": "闪光灯像雨",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c17s03",
+     "place": {
+      "zh": "第一句",
+      "en": "第一句"
+     },
+     "beat": "\"我要求独立审查。\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c17s04",
+     "place": {
+      "zh": "脏问题",
+      "en": "脏问题"
+     },
+     "beat": "\"裙子是谁买的？\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c17s05",
+     "place": {
+      "zh": "母亲在第三排",
+      "en": "母亲在第三排"
+     },
+     "beat": "她的手指在抖",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c17s06",
+     "place": {
+      "zh": "三个位置",
+      "en": "三个位置"
+     },
+     "beat": "三个男人在不同角落",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c17s07",
+     "place": {
+      "zh": "章末",
+      "en": "章末"
+     },
+     "beat": "弹幕里 VELVET 又发了一条",
+     "present": [],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  },
+  {
+   "n": 18,
+   "title": {
+    "zh": "不需要王冠的女王",
+    "en": "不需要王冠的女王"
+   },
+   "goal": "发布会后 48 小时，三个未接来电与一条空消息",
+   "scenes": [
+    {
+     "id": "c18s01",
+     "place": {
+      "zh": "分岔",
+      "en": "分岔"
+     },
+     "beat": "发布会后 48 小时，三个未接来电与一条空消息",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s02",
+     "place": {
+      "zh": "END-A 一",
+      "en": "END-A 一"
+     },
+     "beat": "417 房门，这次没有旁观者",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s03",
+     "place": {
+      "zh": "END-A 二",
+      "en": "END-A 二"
+     },
+     "beat": "他把酒店的钥匙交出来，也把自己的日程表给你",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s04",
+     "place": {
+      "zh": "END-B 一",
+      "en": "END-B 一"
+     },
+     "beat": "一次真正自主的约会，没有家族、没有记者",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s05",
+     "place": {
+      "zh": "END-B 二",
+      "en": "END-B 二"
+     },
+     "beat": "他第一次说\"我要\"，不是\"我们应该\"",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s06",
+     "place": {
+      "zh": "END-C 一",
+      "en": "END-C 一"
+     },
+     "beat": "报道上线，独立署名",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s07",
+     "place": {
+      "zh": "END-C 二",
+      "en": "END-C 二"
+     },
+     "beat": "两个人在布鲁克林桥下走",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s08",
+     "place": {
+      "zh": "END-D",
+      "en": "END-D"
+     },
+     "beat": "工作室挂牌；手机静音",
+     "present": [],
+     "script": [],
+     "opts": []
+    },
+    {
+     "id": "c18s09",
+     "place": {
+      "zh": "尾声",
+      "en": "尾声"
+     },
+     "beat": "VELVET 再发一条；你可以看，也可以放下",
+     "present": [],
+     "script": [],
+     "opts": []
+    }
+   ],
+   "card98": {}
+  }
+ ],
+ "endings": [
+  {
+   "id": "E1",
+   "name": {
+    "zh": "并肩",
+    "en": "Side by Side"
+   },
+   "condition": "你选择公开真相，并让其中一人与你一起承担。",
+   "text": "照片仍然在网上，但标题换了。"
+  },
+  {
+   "id": "E2",
+   "name": {
+    "zh": "体面",
+    "en": "Good Form"
+   },
+   "condition": "你选择让家族处理，代价是你从此欠他们一次。",
+   "text": "记者散去，宴会照办。你学会了在笑的时候数人头。"
+  }
+ ],
+ "intro": {
+  "zh": "你是 Victoria Vale，维尔集团第三代。一条匿名消息把你带到克罗斯酒店 417 房。",
+  "en": "You are Victoria Vale, third generation of the Vale Group. One anonymous message brought you to Room 417."
+ },
+ "playable": [
+  "me"
+ ],
+ "state": {},
+ "relations": [],
+ "games_on": false,
+ "solo98": 1,
+ "v98content": "v8.1"
+}
