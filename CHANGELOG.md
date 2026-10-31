@@ -5,6 +5,41 @@
 > 分支：`ann/decouple` · 26 个提交 · 57 个文件 · +3002 / −95
 > 一条命令验证全部：`node tools/check-all.mjs`（九套 162 个用例）
 
+## 2026-10-31 · 剧本内容有了对外的出口：`scripts/<work_id>/` 目录 + 三份规范
+
+> 起因（Ann）：对方（姜那边）要「把图片和视频收拢，在服务器上建个文件夹放剧本的所有东西；封面地址、剧情图片地址要分好；解析方式给一份」。
+> 病灶：剧本一直只存在**数据库**（`works.pack.script`）和**站点自己的 `art/official/`** 里，外部前端要拿只能
+> ① 打 `/api/works?id=` 读整包 ② 自己猜素材路径。而素材有两种布局（平铺 `o01.jpg` / 版本目录 `v1/bg_01.jpg`），
+> 猜必错；封面与剧情图混在一个扁平映射表里，分不清谁是谁。
+
+**改法**：新增 `scripts/` 目录（进 git，随部署发布），每部作品一个子目录：
+
+```
+scripts/
+  index.json          18 部清单：workId / title / mode / chapters / orient + 4 个站内相对地址
+  syntax.md(.txt)     编剧看：必填四件 / 交互四种 / 引擎标签 / 三条静默坑 / 交稿形态
+  parser.md           前端看：文本 → 事件流的四步、13 种指令的参数与产出、v2 的三处变化
+  README.md(.txt)     接入约定：目录形态 / art.json 分组 / 两种 mode / 版本字段
+  <work_id>/
+    script.md         剧本原文
+    bible.json        故事圣经（只有大纲型作品有；**只给前端取用，不放 art/official** —— 那个位置会切自由模式）
+    meta.json         标题/钩子/取向/标签/章节数/文件 sha256
+    art.json          素材地址，按用途分组：cover / poster / characters / scenes / props / videos
+    scene-map.json    每一场戏用哪张图（manual 看图指定 / keyword 场景名匹配 / rotation 轮转兜底）
+```
+
+三条硬约定：
+
+1. **地址一律站内相对路径**（`/scripts/…`、`/art/official/…`），由前端拼 base ⇒ 域名 / IP / `127.0.0.1` 三处都能用，换地址不用重新生成。
+2. **`v1` 目录不是必须的**：素材在 `art/official/<id>/` 平铺也行、在 `<id>/v1/` 里也行，只要清单与磁盘对得上。
+3. **`bible.json` 的位置决定玩法**：放 `scripts/<id>/` = 只给前端取；放 `art/official/<id>.bible.json` = App 走自由模式（会替换逐字剧）。
+
+**判据**（逐个打 HTTP，不是抽样）：`index.json` 18 部、每部 3–4 个地址全 200 · 六部有素材的作品 `art.json` 共 **256 个槽位、清单↔磁盘断链 0** · 必备文件（`script.md` / `meta.json`）缺 0 · 外部走公网 IP 抽查 10 个地址全 200。
+
+**顺带修的三处**：① 测试服 nginx 不认 `.md`（落到 `default_type application/octet-stream` ⇒ 浏览器只能下载）→ 加一行 `location ~* \.(?:md|markdown)$ { default_type text/plain; charset utf-8; }`，`nginx -t` 通过后 reload；② `make-scriptdir.py` 里「绝对 URL → 相对路径」原本靠生成后另跑一次替换，全量重跑会冲回去 → 写进生成器；③ 同一处 `--work` 单部模式会把 `index.json` 重写成只剩 1 部 → 单部模式禁止重写总清单。
+
+**没动的**：`api/*`、`source/src/*`、`index.html` 一个字节没改 —— 这一条只新增了 `scripts/` 与 `ARCHITECTURE.md` §5.6。
+
 ## 2026-10-29 · 创作中心的 5 个 AI 步骤搬到服务端：改 prompt 不再重建 9 MB
 
 > 起因（Ann）：「把几个功能的 api 抽出来放到后台，方便修改」「让他们在后台上面可以直接看到和修改 api」。
@@ -98,7 +133,8 @@ genre / context / text / options + 每个项目自己的 roleRules / storyRules�
 - **判据**：`_dslqa` 输出 `stats.orient = {declared, inferred, final}`；显式与角色卡**矛盾 ⇒ err**、非法值 ⇒ err、没写 ⇒ warn（附带建议写的那一行）
 - **闭环**：`autoreview` 把推断写回 `scripts.orient`；`publish` 用 `qa.stats.orient.final` ⇒ 上传那一刻就有答案，不再靠人拍
 - 自检 `_check/orient-test.mjs` 四支。
-- **回执**：utoreview 多返回一个 eceipt（固定形状一段话，含「取向 bg（剧本声明 / 按角色卡推断）」那一行），存进 qa.receipt，dmin.html 第 4 步打在细节前面 ⇒ 谁跑审查都能整段复制给编剧，不用自己拼数⚠️ 第一版四支"全中"是**误判**：`⟦ORIENT⟧` 当时还没进 `KNOWN`，四条红全是被"未知指令"那条擦中的；进 KNOWN 后重跑才真正读对
+- **回执**：utoreview 多返回一个 
+eceipt（固定形状一段话，含「取向 bg（剧本声明 / 按角色卡推断）」那一行），存进 qa.receipt，dmin.html 第 4 步打在细节前面 ⇒ 谁跑审查都能整段复制给编剧，不用自己拼数⚠️ 第一版四支"全中"是**误判**：`⟦ORIENT⟧` 当时还没进 `KNOWN`，四条红全是被"未知指令"那条擦中的；进 KNOWN 后重跑才真正读对
 
 ## 2026-10-28 · 官方剧本这条路：能整批吃进来，过滤不再误杀，上线前有人看
 

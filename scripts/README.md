@@ -47,6 +47,30 @@ https://www.miru.plus/scripts/<work_id>/          单部目录
 ⚠️ **命名是协议**：自由模式（`mode=bible`）取图是按前缀拼的 —— 场景图 `bg_<场景id>`、立绘 `char_<角色key>`。
 名字对不上就**静默不显示**（不报错）。这条写在 `syntax.md` 的第十四节。
 
+## 二·补、`scene-map.json`：每一场戏用哪张图（2026-10-31 新增）
+
+`art.json` 里的 `scenes` 是**文件编号**（`bg_01`…），不含"哪一场用哪张"。这一份补上：
+
+```json
+{ "workId": "…", "sceneSource": "bible", "artSource": "…",
+  "cover": "/art/official/<id>/v1/bg_01.jpg",
+  "counts": { "scenes": 142, "images": 20, "assigned": {"manual": 8, "keyword": 22, "rotation": 112} },
+  "imageContent": { "bg_01": "酒店走廊（深色地毯·金壁灯）", "bg_04": "餐厅圆桌", … },
+  "scenes": [ { "sceneId": "c01s01", "chapter": 1, "place": "酒店走廊 04:17",
+                "imageSlot": "bg_01", "assigned": "manual",
+                "image": "/art/official/<id>/v1/bg_01.jpg" } ] }
+```
+
+**前端只需读每条的 `image`**（已经是可用地址）。`assigned` 是可信度标记：
+
+| assigned | 含义 | 可信度 |
+|---|---|---|
+| `manual` | 第 1 章 8 场：**按画面实际内容**人工指定 | 高 |
+| `keyword` | 按场景名关键词匹配（"走廊"→走廊图、"大堂"→大堂图…） | 中 |
+| `rotation` | 兜底轮转（这 20 张图不够分 142 场，必然复用） | 低 —— **要精细就得人工挑** |
+
+`imageContent` 那 20 条是我们**看过图之后写的内容描述**，方便你们判断该换哪张。
+
 ## 三、`meta.json`
 
 ```json

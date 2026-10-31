@@ -1,0 +1,1510 @@
+{
+ "workId": "w_scmvv3sk58b2935cc9b2",
+ "sceneSource": "bible",
+ "artSource": "w_scmvuwd1eg792b553de7",
+ "rule": "图片分配三档，逐场标在 assigned 字段：manual=第1章8场按画面内容人工指定；keyword=按场景名关键词匹配（走廊→走廊图 等）；rotation=兜底轮转。要改哪场就改 imageSlot，前端只需读 image 这个字段。",
+ "counts": {
+  "scenes": 142,
+  "images": 20,
+  "props": 30,
+  "videos": 2,
+  "assigned": {
+   "manual": 8,
+   "keyword": 22,
+   "rotation": 112
+  }
+ },
+ "cover": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+ "poster": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+ "characters": {
+  "adrian": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_adrian.jpg",
+  "eleanor": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_eleanor.jpg",
+  "julian": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_julian.jpg",
+  "marcus": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_marcus.jpg",
+  "maya": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_maya.jpg",
+  "richard": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_richard.jpg",
+  "sienna": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_sienna.jpg",
+  "theodore": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_theodore.jpg",
+  "victoria": "/art/official/w_scmvuwd1eg792b553de7/v1/portrait_victoria.jpg"
+ },
+ "props": {
+  "hl_01": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_01.jpg",
+  "hl_02": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_02.jpg",
+  "hl_03": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_03.jpg",
+  "hl_04": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_04.jpg",
+  "hl_05": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_05.jpg",
+  "hl_06": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_06.jpg",
+  "hl_07": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_07.jpg",
+  "hl_08": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_08.jpg",
+  "hl_09": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_09.jpg",
+  "hl_10": "/art/official/w_scmvuwd1eg792b553de7/v1/hl_10.jpg",
+  "prop_01": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_01.jpg",
+  "prop_02": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_02.jpg",
+  "prop_03": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_03.jpg",
+  "prop_04": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_04.jpg",
+  "prop_05": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_05.jpg",
+  "prop_06": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_06.jpg",
+  "prop_07": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_07.jpg",
+  "prop_08": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_08.jpg",
+  "prop_09": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_09.jpg",
+  "prop_10": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_10.jpg",
+  "prop_11": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_11.jpg",
+  "prop_12": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_12.jpg",
+  "prop_13": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_13.jpg",
+  "prop_14": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_14.jpg",
+  "prop_15": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_15.jpg",
+  "prop_16": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_16.jpg",
+  "prop_17": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_17.jpg",
+  "prop_18": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_18.jpg",
+  "prop_19": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_19.jpg",
+  "prop_20": "/art/official/w_scmvuwd1eg792b553de7/v1/prop_20.jpg"
+ },
+ "videos": {
+  "vid_01": "/art/official/w_scmvuwd1eg792b553de7/v1/vid_01.mp4",
+  "vid_open": "/art/official/w_scmvuwd1eg792b553de7/v1/vid_01.mp4"
+ },
+ "scenes": [
+  {
+   "sceneId": "c01s01",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "酒店走廊 04:17",
+   "beat": "门本就没锁；绿灯；你手里攥着匿名消息",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s02",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "套房玄关",
+   "beat": "浴袍、滴水、腰带半系；\"想我了，直说就好\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s03",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "茶几信封",
+   "beat": "牛皮纸信封推到桌沿，他不放手",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_04.jpg",
+   "imageSlot": "bg_04",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s04",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "走廊脚步",
+   "beat": "猫眼；他把你按进玄关阴影，掌心覆嘴",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s05",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "门缝闪光",
+   "beat": "一道冷白闪光；\"拍到了\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s06",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "04:23 推送",
+   "beat": "VELVET 标题；他的下颌线动了一下",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s07",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "他的坦白（半）",
+   "beat": "\"不是我发的。但我知道今晚会有人拍。\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c01s08",
+   "chapter": 1,
+   "chapterTitle": "417 号房间",
+   "place": "离开或留下",
+   "beat": "你的第一个真正选择",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "manual"
+  },
+  {
+   "sceneId": "c02s01",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "大堂侧门",
+   "beat": "记者已在门口；他把车停在后巷",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_12.jpg",
+   "imageSlot": "bg_12",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c02s02",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "车内",
+   "beat": "他给一件干衬衫，不看你换",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c02s03",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "母亲来电",
+   "beat": "第一句是\"照片能不能撤\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c02s04",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "西奥多来电",
+   "beat": "背景有记者；他承认录音被剪",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_12.jpg",
+   "imageSlot": "bg_12",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c02s05",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "玛雅到场",
+   "beat": "做时间线：三份材料 11 分钟内投放",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c02s06",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "安保室",
+   "beat": "门禁记录缺了一段 7 分钟",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c02s07",
+   "chapter": 2,
+   "chapterTitle": "四点二十三分",
+   "place": "匿名短信",
+   "beat": "\"每个人都会得到一部分真相\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c03s01",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "维尔宅早餐厅",
+   "beat": "母亲把报纸反扣在桌上",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c03s02",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "中央公园长椅",
+   "beat": "西奥多提出联合声明，条件是\"默认婚约\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_03.jpg",
+   "imageSlot": "bg_03",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c03s03",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "克罗斯酒店办公室",
+   "beat": "阿德里安给出安保日志，要求你不再单独行动",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c03s04",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "布鲁克林咖啡馆",
+   "beat": "朱利安给资金记录，要你先答三个问题",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_04.jpg",
+   "imageSlot": "bg_04",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c03s05",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "玛雅核对名单",
+   "beat": "名单上出现马库斯·贝尔",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_20.jpg",
+   "imageSlot": "bg_20",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c03s06",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "阿什福德关联企业",
+   "beat": "名字与理查德的旧公司重合",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c03s07",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "傍晚街头",
+   "beat": "你被陌生人叫出名字",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c03s08",
+   "chapter": 3,
+   "chapterTitle": "三份交易",
+   "place": "章末",
+   "beat": "名单最后一行日期 = 母亲签字日",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_03.jpg",
+   "imageSlot": "bg_03",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c04s01",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "公寓楼下",
+   "beat": "大屏播放你的更衣室剪影",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c04s02",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "电梯",
+   "beat": "邻居的眼神；你数楼层",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c04s03",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "衣帽间",
+   "beat": "你发现窗帘的褶皱不对",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c04s04",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "西安娜上门",
+   "beat": "带香槟与\"我陪你\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c04s05",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "玛雅查源",
+   "beat": "一次性邮箱 → 一个中间跳转",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c04s06",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "品牌方来电",
+   "beat": "\"暂缓合作\"的礼貌版本",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_09.jpg",
+   "imageSlot": "bg_09",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c04s07",
+   "chapter": 4,
+   "chapterTitle": "第二波",
+   "place": "章末",
+   "beat": "剪影角度来自屋内",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s01",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "游艇码头",
+   "beat": "全白着装；海风把你的裙摆吹起",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c05s02",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "上层甲板",
+   "beat": "西奥多与阿德里安第一次正面",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_12.jpg",
+   "imageSlot": "bg_12",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s03",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "服务生被辱",
+   "beat": "客人把酒泼在托盘上；阿德里安请他下船",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s04",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "机舱层",
+   "beat": "朱利安接触前承包商",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s05",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "船尾",
+   "beat": "西安娜劝你停手，眼睛不敢看你",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s06",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "你的测试",
+   "beat": "你放出一条假行程",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s07",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "实时曝光",
+   "beat": "假行程被推送，全场哗然",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_17.jpg",
+   "imageSlot": "bg_17",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s08",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "西安娜失言",
+   "beat": "\"这不应该发出来\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_18.jpg",
+   "imageSlot": "bg_18",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c05s09",
+   "chapter": 5,
+   "chapterTitle": "白色派对",
+   "place": "章末",
+   "beat": "短视频被剪成\"甲板接吻\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s01",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "回程甲板",
+   "beat": "阿德里安湿衬衫，站在风口",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_20.jpg",
+   "imageSlot": "bg_20",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s02",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "船尾阴影",
+   "beat": "他的坦白停在一半：\"我欠你一个解释\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s03",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "朱利安的截图",
+   "beat": "Bellwether 付款记录",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+   "imageSlot": "bg_02",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s04",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "玛雅报价单",
+   "beat": "\"舆情服务\"价格表，备注有姓名缩写",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_03.jpg",
+   "imageSlot": "bg_03",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s05",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "西奥多的短信",
+   "beat": "\"我爸想见你。明天。\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_04.jpg",
+   "imageSlot": "bg_04",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s06",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "你的选择点",
+   "beat": "靠近谁、问谁、推开谁",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s07",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "岸上闪光灯",
+   "beat": "记者已在码头",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c06s08",
+   "chapter": 6,
+   "chapterTitle": "潮水名单",
+   "place": "章末",
+   "beat": "母亲坐在客厅等你，灯亮着",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c07s01",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "阿什福德宅门厅",
+   "beat": "大理石、白玫瑰、管家接过外套",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c07s02",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "餐前酒",
+   "beat": "理查德敬酒，\"两个家族的未来\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_09.jpg",
+   "imageSlot": "bg_09",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c07s03",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "餐桌施压",
+   "beat": "婚约被说成已经\"谈得差不多\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_04.jpg",
+   "imageSlot": "bg_04",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c07s04",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "西奥多的第一次\"不\"",
+   "beat": "\"这件事需要问她。\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c07s05",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "洗手间",
+   "beat": "母亲按住你的手腕：\"再给我三周\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_12.jpg",
+   "imageSlot": "bg_12",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c07s06",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "书房",
+   "beat": "你找到签字的融资合同",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c07s07",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "附件编号",
+   "beat": "正文到 06，附件是 07",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c07s08",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "花园",
+   "beat": "理查德\"顺便\"说出你母亲董事会的时间",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c07s09",
+   "chapter": 7,
+   "chapterTitle": "完美家族",
+   "place": "章末",
+   "beat": "你母亲承认\"我付过代价\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c08s01",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "温室夜灯",
+   "beat": "玻璃顶、雾气、他手里一封信",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c08s02",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "那封信",
+   "beat": "五年前写的\"我不确定\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_18.jpg",
+   "imageSlot": "bg_18",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c08s03",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "十九岁的机票",
+   "beat": "未使用的登机牌，日期是九月",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c08s04",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "他答不出来",
+   "beat": "\"你现在想要什么？\"——沉默四十秒",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_20.jpg",
+   "imageSlot": "bg_20",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c08s05",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "第一次吻（可选）",
+   "beat": "他先问\"我可以吗\"，手在你颈侧停住",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c08s06",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "信纸背面",
+   "beat": "一行铅笔字：一个日期",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+   "imageSlot": "bg_02",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c08s07",
+   "chapter": 8,
+   "chapterTitle": "温室",
+   "place": "章末",
+   "beat": "那个日期与 417 相同",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_03.jpg",
+   "imageSlot": "bg_03",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s01",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "舞会入场",
+   "beat": "面具、香槟塔、弦乐四重奏",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c09s02",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "面具背后",
+   "beat": "你在镜厅看见三张熟悉的下颌线",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s03",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "露台（Adrian 线）",
+   "beat": "母亲的旧事；他靠栏杆，没有碰你",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s04",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "旧歌（Theo 线）",
+   "beat": "他请你跳一支你们十九岁听过的曲子",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s05",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "不合身的西装（Julian 线）",
+   "beat": "袖口短了一寸，他把手藏起来",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s06",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "中庭",
+   "beat": "理查德的中间人在打电话",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_09.jpg",
+   "imageSlot": "bg_09",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s07",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "亲密影像二次传播",
+   "beat": "大屏被人投了 VELVET 的推送",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c09s08",
+   "chapter": 9,
+   "chapterTitle": "午夜假面舞会",
+   "place": "章末",
+   "beat": "40 分钟后一笔付款到账",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c10s01",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "舞会后巷",
+   "beat": "三辆车在等，你只能上一辆",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c10s02",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "车内（Adrian）",
+   "beat": "坦白到一半，他接到父亲的电话",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c10s03",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "门口（Theo）",
+   "beat": "他父亲的车停在对面",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c10s04",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "地铁口（Julian）",
+   "beat": "他把笔记本翻到某一页给你看",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c10s05",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "编辑部",
+   "beat": "你的编辑朋友说：署名不止一个人",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c10s06",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "第二署名",
+   "beat": "一个已离职的 VELVET 编辑",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_17.jpg",
+   "imageSlot": "bg_17",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c10s07",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "深夜公寓",
+   "beat": "你把三份材料摊在地上",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c10s08",
+   "chapter": 10,
+   "chapterTitle": "面具之后",
+   "place": "章末",
+   "beat": "有人在你门缝下塞了一个信封",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c11s01",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "品牌会议室",
+   "beat": "解约函已经打印好",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_17.jpg",
+   "imageSlot": "bg_17",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c11s02",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "慈善晚宴后台",
+   "beat": "席位表上你的名字被划掉",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c11s03",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "集团董事会门外",
+   "beat": "母亲在里面，你在门外",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+   "imageSlot": "bg_02",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c11s04",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "母亲的办公室",
+   "beat": "\"我暂停你的职务\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c11s05",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "媒体围堵",
+   "beat": "有人问你\"裙子是谁买的\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_04.jpg",
+   "imageSlot": "bg_04",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c11s06",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "阿德里安的提议",
+   "beat": "\"我全部接管。\"你拒绝",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c11s07",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "朱利安的邀请",
+   "beat": "一条很短的短信：\"来布鲁克林\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c11s08",
+   "chapter": 11,
+   "chapterTitle": "女王坠落",
+   "place": "章末",
+   "beat": "附件改动时间：417 之后第二天",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c12s01",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "公寓楼道",
+   "beat": "灯坏了，他下楼接你",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c12s02",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "很咸的意面",
+   "beat": "他说\"我妈做饭只有一个咸度\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_09.jpg",
+   "imageSlot": "bg_09",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c12s03",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "父亲的工牌",
+   "beat": "十九年的工牌，绳子磨白",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c12s04",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "那篇报道的代价",
+   "beat": "他讲那条\"你毁了我\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c12s05",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "楼道之吻（可选）",
+   "beat": "\"我要吻你了。\"然后他真的等",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_12.jpg",
+   "imageSlot": "bg_12",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c12s06",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "马库斯的来电",
+   "beat": "他看了眼屏幕，没接",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c12s07",
+   "chapter": 12,
+   "chapterTitle": "布鲁克林之夜",
+   "place": "章末",
+   "beat": "\"我有一件事没告诉你。\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s01",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "417 房间（重返）",
+   "beat": "你要求看完整门禁记录",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s02",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "Adrian 承认",
+   "beat": "\"我把你带进来，是想引出他。\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s03",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "你要记录",
+   "beat": "他交出三份备份",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_17.jpg",
+   "imageSlot": "bg_17",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s04",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "阿什福德宅",
+   "beat": "西奥多承认第一年就知道婚约",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_18.jpg",
+   "imageSlot": "bg_18",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s05",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "那顿午餐",
+   "beat": "他与另一个家族见过一次面",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s06",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "布鲁克林",
+   "beat": "朱利安承认给过 VELVET 资料",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_20.jpg",
+   "imageSlot": "bg_20",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s07",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "稿子",
+   "beat": "他给你看被删掉的那一段",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s08",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "三条谎",
+   "beat": "控制、逃避、自认正确",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+   "imageSlot": "bg_02",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c13s09",
+   "chapter": 13,
+   "chapterTitle": "三个骗子",
+   "place": "章末",
+   "beat": "注册邮箱指向西安娜旧工作室",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_03.jpg",
+   "imageSlot": "bg_03",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s01",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "西安娜公寓",
+   "beat": "香槟没开，蜡烛没点",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c14s02",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "艺术项目那年",
+   "beat": "她的资金怎么被收回",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s03",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "\"我想看你输一次\"",
+   "beat": "她说这句话时很平静",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s04",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "通讯记录",
+   "beat": "她打印了与马库斯的全部对话",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s05",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "停手的时间",
+   "beat": "她的\"停手\"在第三波之后",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s06",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "作证",
+   "beat": "她愿意，但要求律师在场",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_09.jpg",
+   "imageSlot": "bg_09",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s07",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "你们之间",
+   "beat": "原谅、搁置、或结束",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c14s08",
+   "chapter": 14,
+   "chapterTitle": "最好的敌人",
+   "place": "章末",
+   "beat": "她给出一条付款线索",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c15s01",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "律师办公室",
+   "beat": "每份证据标注\"能证明什么\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c15s02",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "独立编辑",
+   "beat": "玛丽莎要求回避利益冲突",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c15s03",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "文件鉴定",
+   "beat": "附件的墨迹与打印时间不一致",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c15s04",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "董事会资料",
+   "beat": "股东名单里有一个空壳公司",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c15s05",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "玛雅的清单",
+   "beat": "保全、备份、时间戳",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c15s06",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "股价",
+   "beat": "公开的代价：三分之一",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_17.jpg",
+   "imageSlot": "bg_17",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c15s07",
+   "chapter": 15,
+   "chapterTitle": "证据的重量",
+   "place": "章末",
+   "beat": "私下和解：永远不提这七分钟",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_18.jpg",
+   "imageSlot": "bg_18",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s01",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "克罗斯董事会",
+   "beat": "阿德里安交出记录，被除名",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s02",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "停车场",
+   "beat": "他对你说\"我没有条件\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_20.jpg",
+   "imageSlot": "bg_20",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s03",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "独立律师办公室",
+   "beat": "西奥多说明家族安排",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "keyword"
+  },
+  {
+   "sceneId": "c16s04",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "阿什福德宅",
+   "beat": "父子对峙；第一次不欢而散",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+   "imageSlot": "bg_02",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s05",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "编辑部",
+   "beat": "朱利安交出报道，删掉隐私",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_03.jpg",
+   "imageSlot": "bg_03",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s06",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "三方会面",
+   "beat": "三种代价摆在同一张桌上",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_04.jpg",
+   "imageSlot": "bg_04",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s07",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "链条图",
+   "beat": "中间人—平台—家族—朋友",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_05.jpg",
+   "imageSlot": "bg_05",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c16s08",
+   "chapter": 16,
+   "chapterTitle": "毁掉这一切",
+   "place": "章末",
+   "beat": "发布会通知发出",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_06.jpg",
+   "imageSlot": "bg_06",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s01",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "后台三分钟",
+   "beat": "母亲递水，你没接",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_07.jpg",
+   "imageSlot": "bg_07",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s02",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "上台",
+   "beat": "闪光灯像雨",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_08.jpg",
+   "imageSlot": "bg_08",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s03",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "第一句",
+   "beat": "\"我要求独立审查。\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_09.jpg",
+   "imageSlot": "bg_09",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s04",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "脏问题",
+   "beat": "\"裙子是谁买的？\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_10.jpg",
+   "imageSlot": "bg_10",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s05",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "母亲在第三排",
+   "beat": "她的手指在抖",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_11.jpg",
+   "imageSlot": "bg_11",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s06",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "三个位置",
+   "beat": "三个男人在不同角落",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_12.jpg",
+   "imageSlot": "bg_12",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c17s07",
+   "chapter": 17,
+   "chapterTitle": "新闻发布厅",
+   "place": "章末",
+   "beat": "弹幕里 VELVET 又发了一条",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_13.jpg",
+   "imageSlot": "bg_13",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s01",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "分岔",
+   "beat": "发布会后 48 小时，三个未接来电与一条空消息",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_14.jpg",
+   "imageSlot": "bg_14",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s02",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-A 一",
+   "beat": "417 房门，这次没有旁观者",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_15.jpg",
+   "imageSlot": "bg_15",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s03",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-A 二",
+   "beat": "他把酒店的钥匙交出来，也把自己的日程表给你",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_16.jpg",
+   "imageSlot": "bg_16",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s04",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-B 一",
+   "beat": "一次真正自主的约会，没有家族、没有记者",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_17.jpg",
+   "imageSlot": "bg_17",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s05",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-B 二",
+   "beat": "他第一次说\"我要\"，不是\"我们应该\"",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_18.jpg",
+   "imageSlot": "bg_18",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s06",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-C 一",
+   "beat": "报道上线，独立署名",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_19.jpg",
+   "imageSlot": "bg_19",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s07",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-C 二",
+   "beat": "两个人在布鲁克林桥下走",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_20.jpg",
+   "imageSlot": "bg_20",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s08",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "END-D",
+   "beat": "工作室挂牌；手机静音",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_01.jpg",
+   "imageSlot": "bg_01",
+   "assigned": "rotation"
+  },
+  {
+   "sceneId": "c18s09",
+   "chapter": 18,
+   "chapterTitle": "不需要王冠的女王",
+   "place": "尾声",
+   "beat": "VELVET 再发一条；你可以看，也可以放下",
+   "image": "/art/official/w_scmvuwd1eg792b553de7/v1/bg_02.jpg",
+   "imageSlot": "bg_02",
+   "assigned": "rotation"
+  }
+ ],
+ "imageContent": {
+  "bg_01": "酒店走廊（深色地毯·金壁灯）",
+  "bg_02": "雨夜街道·车灯反射",
+  "bg_03": "中央公园雪景",
+  "bg_04": "餐厅圆桌（大理石·咖啡·书）",
+  "bg_05": "套房卧室（窗外桥景）",
+  "bg_06": "游艇甲板",
+  "bg_07": "长餐桌·水晶灯",
+  "bg_08": "玻璃温室·夜",
+  "bg_09": "宴会厅·人群",
+  "bg_10": "舞会人群",
+  "bg_11": "酒店门口·街道",
+  "bg_12": "大理石大堂",
+  "bg_13": "旧楼梯间·斑驳",
+  "bg_14": "客房（床·行李箱）",
+  "bg_15": "套房客厅（沙发·夜景）",
+  "bg_16": "书房/办公室（文件·台灯）",
+  "bg_17": "会议厅（国旗·长桌）",
+  "bg_18": "布鲁克林大桥·夜",
+  "bg_19": "私宅门廊·暖光",
+  "bg_20": "夜景（待定）"
+ }
+}
