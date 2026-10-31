@@ -66,6 +66,11 @@ const EXPECT = [
     { mustNot: ['app23_heir.js'] }],
   ['旁白换人称（扮演别人）', 'app94_official2.js', 'fires', '测试角色推开门', 'wrap 类：扮演的不是主角时，把旁白里的「你」换成主角名'],
   ['捡到东西（item101）', 'app101_you.js', 'fires', 'it101', 'kind 类：认领 item101'],
+  /* 2026-10-31 实测：喂 k:'pic' 进去，渲染输出本来就是空（html=''，fired 里没有任何层）。
+     现在的管线根本不认识 pic ⇒ 这一层**无事可做**，它是给老存档兜底的（老数据里可能还留着 pic 记录）。
+     ⇒ 登记为 silent，理由就是这条读数；不是「懒得测」。 */
+  ['退役 pic 旧消息（legacy-photo）', 'app12:legacy-photo', 'silent', '',
+    'post 类兜底层：pic 已被渲染管线弃用（实测输出天然为空），只有在老存档带 pic 记录时才可能动到东西'],
 ];
 
 function read() {

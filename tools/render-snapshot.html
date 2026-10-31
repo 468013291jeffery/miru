@@ -114,7 +114,10 @@ setTimeout(function () {
       ['遗产金额 · 已解锁（交给内层）', 'app23_heir.js', { who: 'sys', k: 'xmoney', from: '$1.1B', to: '$4.2B', label: '今天', open: 1 }, {}],
       ['遗产金额 · 未解锁封口', 'app24_gl.js', { who: 'sys', k: 'xmoney', from: '$1.1B', to: '$4.2B', label: '今天' }, {}],
       ['旁白换人称（扮演别人）', 'app94_official2.js', { who: 'n', k: 'say', txt: '你推开门。' }, {}, { you94: 'c2' }],
-      ['捡到东西（item101）', 'app101_you.js', { who: 'sys', k: 'item101', n: '旧钥匙', d: '铜的，很旧', ic: '🗝' }, {}]
+      ['捡到东西（item101）', 'app101_you.js', { who: 'sys', k: 'item101', n: '旧钥匙', d: '铜的，很旧', ic: '🗝' }, {}],
+      /* 2026-10-31：app100_dialogue.js 注册了一层 post「app12:legacy-photo」——
+         把退役的 pic 整条渲染成空。它此前**没有任何探针点名**（这就是运行时 19 层 / 文档 18 层的那 1 层）。 */
+      ['退役 pic 旧消息（legacy-photo）', 'app12:legacy-photo', { who: 'c', k: 'pic', txt: '旧照片一句' }, {}]
     ];
 
     var outP = [];

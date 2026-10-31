@@ -184,7 +184,16 @@ f.onload = async () => {
     }
 
     /* mode=open：等剧本队列把前几条念完，然后看**第一个开口的**是谁 */
-    await sleep(14000);
+    /* 2026-10-31：原来**固定等 14 秒**再读渲染顺序。可这一章是「3 条旁白 + 每句 1.7–7 秒的播放速度 +
+       点一下继续」—— 14 秒常常还没演到第一句台词，于是同一条命令一次红一次绿
+       （实测 ice/mason：5 次里 1 红 4 绿，红的那次是「多演了一条」）。 */
+    let waited = 0;
+    while (waited < 45000) {
+      const ks = kidsOf(w).map(kindOf);
+      if (ks.indexOf('self') >= 0 || ks.indexOf('other') >= 0) break;
+      await sleep(600); waited += 600;
+    }
+    await sleep(1500);
     /* 拿不到读数时，先把「卡在哪一层」打出来 —— 空读数与「真的没人开口」长得一样 */
     try {
       const sc = w.document.querySelector('#s-chat');
