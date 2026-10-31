@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="6764d847f544 2026-10-31T08:10Z";
+window.MIRU_BUILD="872b8c80448d 2026-10-31T17:43Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3300,13 +3300,15 @@ function jsonLoose(t){if(!t)return null;t=String(t).replace(/```(?:json)?/g,"");
 /* 2026-10-31（产品方要求）：所有给玩家看的文字都要口语化 —— 每一次调用模型都带上这条，智能体、导演、建议、通话一视同仁 */
 const ORAL_RULE="SPOKEN STYLE (applies to every line the player will read or hear — dialogue, narration, suggestions, messages): write the way real people actually talk today. Short, natural, conversational sentences; everyday words; contractions and fragments are fine. No literary, formal or written-style phrasing, no four-character idioms piled up, no stiff translation-ese, no flowery description. In Chinese: 用大白话、口语，像真人聊天一样说话，不要书面语、不要文绉绉、不要成语堆砌。";
 async function ask(prompt,opts){
- opts=opts||{};
+ opts=Object.assign({},opts||{});
+ const deadline=Date.now()+(opts.timeout||60000);
+ const requestOpts=extra=>{if(opts.signal&&opts.signal.aborted)throw {code:"cancelled"};const left=deadline-Date.now();if(left<=0)throw {code:"timeout"};return Object.assign({modelTier:"default",cache:false},opts,extra,{timeout:left});};
  if(!liveOn())throw {code:"na"};
  if(typeof ORAL_RULE==="string"&&typeof prompt==="string"&&prompt.indexOf("SPOKEN STYLE")<0)prompt=prompt+"\n\n"+ORAL_RULE;
  const _tier=opts.modelTier||"default";
- try{let r;try{r=await SAMPLE.json(prompt,Object.assign({modelTier:"default",cache:false},opts))}
+ try{let r;try{r=await SAMPLE.json(prompt,requestOpts())}
   catch(e0){if(!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
-   if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({modelTier:"default",cache:false},opts));r=jsonLoose(t2&&t2.text)}
+   if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",requestOpts());r=jsonLoose(t2&&t2.text)}
    /* 自适应预算（2026-10-25 · Ann「你看着办」）：
       同一档位仍解析不出来，多半是两种情形之一 ——
         ① 输出被预算掐断（JSON 少半截）② 推理型模型把预算全烧在思考上、正文为空。
@@ -3316,7 +3318,7 @@ async function ask(prompt,opts){
       为什么不是"一律给小预算"：给 3000 时推理型模型直接返回空内容。 */
    if(r==null&&_tier!=="complex"){
     (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app1_core:L196",function(){track&&track("llm_escalate",{from:_tier,to:"complex"})});
-    const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",Object.assign({},opts,{modelTier:"complex",cache:false}));
+    const t3=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",requestOpts({modelTier:"complex",cache:false}));
     r=jsonLoose(t3&&t3.text);
    }
    if(r==null)throw e0}
@@ -4855,31 +4857,23 @@ let curT=null,cmode="say",sugg=[],busy=false,BUSY_T=0,openTools=-1;
 /* 2026-10-27：busy 的唯一入口交给 TURN（app103_turn.js）。
    读点不变，只保证「置真置假只有一个门」。 */
 (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L30",function(){ if(window.TURN&&window.TURN.bind) window.TURN.bind(function(v){ busy = !!v }); });
-/* 2026-10-27 · 「经常卡死」的看门狗。
-   病灶：`busy=true`（reply 开头）与 `busy=false`（playBeats 之后）**不在 try/finally 里** ——
-   两行之间任何一处抛错，`busy` 就永远是 true ⇒「发不出去、界面没反应」，看起来就是卡死。
-   它的形状不是慢，是**锁没放**。这里兜一层：45 秒还没放开就强制放开，并记一条现场。
-   判据（导出存档可见）：`S._stallTrace` 里出现 busy>45s。 */
-setInterval(()=>{try{
- if(!busy||!BUSY_T)return;
- /* ⚠️ 2026-10-27（Ann：「对话没生成完，怎么就开始继续生成对话了」）——
-    第一版只看「锁了多久」，而一轮长回复**本来就可能超过 45 秒**（逐句 2.7 秒 + 等朗读），
-    于是看门狗在一轮跑到一半时把锁解了 ⇒ 她还能再发一条 ⇒ **两个回合叠在一起**。
-    现在改成**看有没有进展**：只要这一轮还在往对话里落新消息（最后一条消息的 at 在 45 秒内），
-    就把计时的起点往前推，不开锁。真正「卡住不动」才开。 */
- const th=S.threads[curT];
- const lastAt=(th&&th.msgs&&th.msgs.length)?(th.msgs[th.msgs.length-1].at||0):0;
- if(Date.now()-Math.max(BUSY_T,lastAt)<45000)return;
- busy=false;BUSY_T=0;try{typing(false)}catch(_){}
- S._stallTrace=S._stallTrace||[];S._stallTrace.push({t:Date.now(),where:"busy>45s (no new message)"});if(S._stallTrace.length>20)S._stallTrace.shift();
- (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L48",function(){save()});
- (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L49",function(){toast(S.lang==="zh"?"刚才那一轮真的停住了，已经放开 —— 可以再发一次":"That turn really stalled; it is released — send again")});
-}catch(_){}},5000);
+// The request deadline and finally own release; a watchdog must not unlock a live turn.
+function drainSendQueue(){
+ if(busy)return;
+ const i=SENDQ.findIndex(q=>q.threadId===curT);if(i<0)return;
+ const q=SENDQ.splice(i,1)[0];doSend(q.txt,q.mode,q.typed,q.echoed);
+}
+function replyRetryHTML(th){return th&&th.replyFailed?'<button data-reply-retry="1">'+(S.lang==="zh"?'重试回复':'Retry reply')+'</button>':'';}
+document.addEventListener('click',e=>{
+ if(!e.target.closest('[data-reply-retry]'))return;
+ const th=S.threads[curT];if(!th||busy||!th.replyRetry)return;
+ reply(th,th.replyRetry);
+});
 const SENDQ=[];   // 忙时点下的选项排在这里（2026-10-27）
 function openThread(id){const th=S.threads[id];if(!th)return;curT=id;
  /* 2026-10-29 · 第二个必经点：点进一条已有线程也要过加载缝（判据：数据已到才渲染）。 */
  try { if (window.MIRU && MIRU.data) MIRU.data.need(th.wid); } catch (e) { if (window.MIRU && MIRU.data) MIRU.data.note("openThread:need", e) }
- th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();}
+ th.unread=false;cmode="say";sugg=th.sugg||[];openTools=-1;save();renderChat();show("s-chat");scrollChat();setTimeout(drainSendQueue,0);}
 /* 2026-10-27：渲染前的唯一净化。th.msgs 有 30 处直接 push（卡片/瞬时播种），
    都绕过了 appendMsg 的文本闸；这里在**上屏前**统一补一次 —— 不依赖调用方自觉。 */
 function sanitizeMsgs(th){
@@ -4908,7 +4902,7 @@ function renderChat(){sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
   (th.quest?'<span style="color:#FFD08A;display:flex;gap:4px;align-items:center" data-qsheet="1">🎯 <span>'+th.quest.goals.filter(g=>g.done).length+'/'+th.quest.goals.length+' · '+t("q.turns",{a:th.rounds,b:th.quest.turns})+'</span></span>':"")+'</div>';
  h+='<button class="livebanner" data-livetest="1" hidden><span></span> · <b>'+t("live.test")+'</b></button>';
  h+='<div class="msgs" id="msgs">'+th.msgs.map((m,i)=>msgHTML(m,i,th)).join("")+'</div>';
- h+='<div class="suggest" id="sugg">'+sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+sgMoreBtn()+'</div>';
+ h+='<div class="suggest" id="sugg">'+sugg.map(x=>'<button data-sg="'+esc(x)+'">'+esc(x)+'</button>').join("")+sgMoreBtn()+replyRetryHTML(th)+'</div>';
  if(th.pk)h+='<div id="pkwrap">'+packPanel(th)+'</div>';
  const watch=th.pk&&th.pk.as==="watch";if(watch)cmode="dir";
  /* primary row: the 3–4 ways to talk, always full-size, never wraps. Everything else (watch, games, ideas, continue, script library)
@@ -5234,7 +5228,7 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
   /* 2026-10-27 Ann：「我选了一句，理论上应该出现在我的对话中」。以前忙时只排队、**不落消息** ⇒ 屏幕上看不到自己那句。
      现在：**先落消息（立刻可见），再排队等发送**；真正发时带 echoed 标记，不重复落一条。 */
   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L358",function(){if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt:txt,typed:!!typed,at:Date.now()})});
-  SENDQ.push({txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
+  SENDQ.push({threadId:th.id,txt:txt,mode:mode||cmode,typed:!!typed,echoed:1});
   (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L360",function(){toast(S.lang==="zh"?"这句已经记下了，等这一轮说完他再接":"Noted — he picks it up after this turn")});
   return}
  if(!aiGate()){
@@ -5263,8 +5257,8 @@ function doSend(txt,mode,typed,echoed){   // echoed=排队时已经先落到对�
    (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L385",function(){track&&track("script_dropped",{wid:th.wid,ch:th.pk.ch})});
   }
  }catch(_){}
- if(mode==="dir"){appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
- appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
+ if(mode==="dir"){if(!echoed)appendMsg(th,{who:"me",k:"dir",txt,typed:!!typed,at:Date.now()});reply(th,{kind:"dir",txt});return}
+ if(!echoed)appendMsg(th,{who:"me",k:mode,txt,typed:!!typed,at:Date.now()});th.rounds++;
  reply(th,{kind:"user",txt,mode});}
 
 /* ================= AI ENGINE ================= */
@@ -5328,7 +5322,9 @@ const CTX={
  redo:"Rewrite the last reply differently: different angle, different first line."};
 async function reply(th,ctx,silent){
  let LLMERR=null;   // 这一轮 AI 失败的原因（给玩家看，不要吞）
- if(!silent){if(busy)return;if(!aiGate())return;try{(window.TURN&&window.TURN.acquire)?window.TURN.acquire('reply'):(busy=true)}catch(_){busy=true}BUSY_T=Date.now();typing(true)}
+ if(!silent){if(busy)return;if(!aiGate())return;try{(window.TURN&&window.TURN.acquire)?window.TURN.acquire('reply'):(busy=true)}catch(_){busy=true}BUSY_T=Date.now()}
+ try{
+ if(!silent)typing(true);
  const mid=mainOf(th),c=ch(ctx.cid||mid),w=th.wid?wd(th.wid):null,p=th.persona||persona();
  const goals=th.quest?th.quest.goals.map((g,i)=>i+": "+g.t+(g.done?" (done)":"")).concat([th.quest.goals.length+": HIDDEN — "+th.quest.hidden.t+(th.quest.hidden.done?" (done)":"")]).join("\n"):"";
  const inst=(CTX[ctx.kind]||CTX.user).split("{u}").join(p.name||"the user").split("{x}").join(ctx.txt||"").split("{c}").join(c?c.n:"them");
@@ -5385,7 +5381,7 @@ async function reply(th,ctx,silent){
   "",
   "NOW: "+inst,
   /* 2026-10-31：接住玩家的话。剧本外的话题、吐槽、看不懂玩法，都要先正面回应，再自然地把戏往下带。 */
-  (ctx&&ctx.kind==="user"&&ctx.txt)?("THE PLAYER JUST SAID (answer THIS first — it is the most important thing in this reply): \""+String(ctx.txt).slice(0,400)+"\"\n"+
+  (ctx&&["user","talk"].includes(ctx.kind)&&ctx.txt)?("THE PLAYER JUST SAID (answer THIS first — it is the most important thing in this reply): \""+String(ctx.txt).slice(0,400)+"\"\n"+
    "- If it is off the script or about something else entirely, the character engages with it for real (opinion, feeling, a question back) in their own voice. Never ignore it, never answer a different question, never jump straight back to the plot.\n"+
    "- If it is a question, the first spoken line answers it (or says in character why they won't).\n"+
    "- If the player sounds confused about the story or what to do (e.g. 'what is this', 'I don't get it', '我玩不明白', '我该干嘛'), add ONE short narration beat (who:\"n\") that warmly explains where they are and gives 2 concrete things they could say or do next. Keep it in the story's tone.\n"+
@@ -5411,12 +5407,14 @@ async function reply(th,ctx,silent){
   "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
  ].filter(Boolean).join("\n");
  let r=null;
+ const turnCtl=new AbortController(),turnTimer=setTimeout(()=>turnCtl.abort(),40000);
+ try{
  if(liveOn()){
   // 流式预览：首字 ~2s 就到，整段要 ~9.5s（LATENCY.md）。开关见 MIRU_TUNE.chat.streamPreview。
   const _prev=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&MIRU_TUNE.chat.streamPreview!==false&&typeof streamPreview==="function");
   try{
    STREAM_TXT="";
-   r=await ask(prompt,{modelTier:deep?"complex":"default",onText:_prev?(function(x){streamPreview(x)}):undefined});
+   r=await ask(prompt,{modelTier:deep?"complex":"default",interactive:true,timeout:35000,maxTokens:deep?2400:1400,signal:turnCtl.signal,onText:_prev?(function(x){streamPreview(x)}):undefined});
   }catch(e){r=null;LLMERR=e||{code:"unknown"};try{track&&track("llm_fail",{code:(e&&(e.code||e.message))||"unknown"})}catch(_){}}
   if(r&&Array.isArray(r.beats)&&r.beats.length)useUnits(aiCost());}
  // 台词守门（他们 v8.2.3 的「台词检查」）：说了本章他还不该知道的事 ⇒ 带约束重写一次 ⇒ 仍不行就换保守句。
@@ -5430,32 +5428,42 @@ async function reply(th,ctx,silent){
      .concat(typeof cardForbidden==="function"?cardForbidden(th,_ids):[]);
    if(_words.length){
     const _g=await guardReply({reply:r,words:_words,
-      ask:async(extra)=>await ask(prompt+"\n\n"+extra,{modelTier:"default"}),
+      ask:async(extra)=>await ask(prompt+"\n\n"+extra,{modelTier:"default",interactive:true,timeout:15000,maxTokens:1400,signal:turnCtl.signal}),
       fallback:()=>fallback(th,ctx)});
     if(_g.retried){try{track&&track("reply_guard",{wid:th.wid,ch:_chNo,leaks:_g.leaked.length,fellBack:!!_g.fellBack})}catch(_){}}
     if(_g.reply&&Array.isArray(_g.reply.beats)&&_g.reply.beats.length)r=_g.reply;
    }
   }catch(_){}
  }
+ }finally{clearTimeout(turnTimer);}
  if(!r||!Array.isArray(r.beats)||!r.beats.length){
-  r=fallback(th,ctx);
-  /* 2026-10-27 Ann 试玩：AI 挂了，界面**一个字都不说**，她读到的是「他不理我」。
-     沉默不等于正常 —— 失败必须带原因露出来，而且要说明下方是兜底文案。 */
-  if(liveOn()&&!silent){
-   try{const why=(LLMERR&&(LLMERR.code||LLMERR.message))||"unknown";
-    appendMsg(th,{who:"sys",k:"warn",txt:"⚠︎ AI 没接通（"+why+"）· 下面这轮是兜底文案，不是他在敷衍你",at:Date.now()})}catch(_){}
+  if(liveOn()){
+   th.replyFailed=true;th.replyRetry=Object.assign({},ctx);
+   if(!silent)appendMsg(th,{who:"sys",k:"warn",txt:S.lang==="zh"?"回复暂时失败，你的话已保留。请点重试。":"Reply failed. Your message is saved. Tap retry.",at:Date.now()});
+   if(!silent&&curT===th.id){const box=$("#sugg");if(box&&!box.querySelector('[data-reply-retry]'))box.insertAdjacentHTML('beforeend',replyRetryHTML(th));}
+   save();return false;
   }
+  r=fallback(th,ctx);
  }
+ th.replyFailed=false;delete th.replyRetry;
+ const retryBtn=$("[data-reply-retry]");if(retryBtn)retryBtn.remove();
  // 计划层入口（Ann 2026-10-25：留个入口位置）。**只观测**：判断这一场本来会不会需要续写、
  // 需要就记一条事件；不生成、不改写这一场。返回值目前无人消费，等要真接生成器时改 plotGate 一处。
  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L566",function(){ if(typeof plotGate==="function") plotGate(th); });
  if(!silent)typing(false);
  await playBeats(th,r,ctx,silent);
- (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L569",function(){if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0});
- if(!silent){try{(window.TURN&&window.TURN.release)?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}BUSY_T=0;
-  /* 排队里的话：这一轮结束后自动发出去（同一时刻只跑一轮） */
-  (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("chat:L572",function(){if(SENDQ.length){const q=SENDQ.shift();setTimeout(()=>{try{doSend(q.txt,q.mode,q.typed,q.echoed)}catch(_){}},60)}});
- }}
+ return true;
+ }finally{
+  if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0;
+  if(!silent){
+   try{typing(false)}catch(_){}
+   try{window.TURN&&window.TURN.release?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}
+   BUSY_T=0;
+   setTimeout(drainSendQueue,60);
+  }
+ }
+}
+
 function pickNR(arr,key){const k="_u_"+key;const u=(pickNR[k]=pickNR[k]||[]);if(u.length>=arr.length)u.length=0;const free=arr.map((_,i)=>i).filter(i=>!u.includes(i));const i=free[Math.floor(Math.random()*free.length)];u.push(i);return arr[i]}
 const SUGG_FB={en:["Why are you really here?","*I sit down next to you, closer than I need to.*","Say that again. Slower.","(I shouldn't want this.)","Tell me the truth for once.","*I reach for your hand and stop halfway.*","You're doing the thing again.","What happens if I stay?","*I take the coffee from your hands.*"],
  zh:["你到底为什么来？","*我在你旁边坐下，靠得比需要的近。*","再说一遍。慢一点。","（我不该想要这个的。）","就这一次，说实话。","*我伸手去牵你，停在半路。*","你又来了。","如果我留下会怎样？","*我接过你手里的咖啡。*"]};
@@ -8084,12 +8092,12 @@ function stopCallRun(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),
   tm=setTimeout(go,readMs({txt:x})+400)};
  el.addEventListener("click",e=>{if(e.target.closest("[data-scend]")){fin();return}try{stopVoice()}catch(_){}next()});next()})}
 /* typing your own line at a "your turn" stop */
-const _doSendPk=doSend;doSend=function(txt,mode){const th=S.threads[curT];
+const _doSendPk=doSend;doSend=function(txt,mode,typed,echoed){const th=S.threads[curT];
  if(th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="line"&&!busy&&(mode||cmode)!=="dir"){txt=(txt||"").trim();if(!txt)return;const d=th.pk.stop[2];
-  if(liveOn()){if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}appendMsg(th,{who:"me",k:mode||cmode,txt,at:Date.now()});th.rounds++;
-   Promise.resolve(reply(th,{kind:"user",txt,mode:mode||cmode})).then(()=>stopResolve(th,d.free||[]));return}
+  if(liveOn()){if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}if(!echoed)appendMsg(th,{who:"me",k:mode||cmode,txt,typed:!!typed,at:Date.now()});th.rounds++;
+   Promise.resolve(reply(th,{kind:"user",txt,mode:mode||cmode})).then(ok=>{if(ok!==false)stopResolve(th,d.free||[])});return}
   appendMsg(th,{who:"me",k:mode||cmode,txt,at:Date.now()});th.rounds++;stopResolve(th,d.free||(d.opts[0]&&d.opts[0].then)||[]);return}
- return _doSendPk(txt,mode)};
+ return _doSendPk(txt,mode,typed,echoed)};
 document.addEventListener("click",e=>{if(!e.target.closest("[data-pkresume]"))return;const th=S.threads[curT];if(th&&th.pk)packRun(th)});
 Object.assign(I18N.en,{"pk.resume":"Continue the scene","st.yourTurn":"Your turn — you're {n}","st.type":"Or type your own line below.","st.typeLive":"Or type anything below — he'll answer you, live.",
  "st.giftH":"A moment for a gift","st.nogift":"Not now","st.later":"Keep going","st.decline":"Decline","st.free":"Free",
@@ -8668,7 +8676,7 @@ dirRun=function(v,who,extra){const H=DIR_HINTS[v.k]||{},L=S.lang==="zh"?"zh":"en
   ((H[L]||[]).length?'<div class="cuchips">'+H[L].map(x=>'<button data-cufill="'+esc(x)+'">'+esc(x)+'</button>').join("")+'</div>':'')+
   '<div class="row" style="gap:8px;margin-top:14px"><button class="btn btn-g grow" data-drgo="0">'+t("cu.surprise")+'</button><button class="btn btn-p grow" data-drgo="1">🎬 '+t("cu.go")+'</button></div>')};
 /* the detail rides along with whichever path the original director uses (normal chat or watch mode) */
-const _doSend7=doSend;doSend=function(txt,mode){if(DIR_DETAIL&&mode==="dir")txt=txt+(S.lang==="zh"?" 具体：":" Specifically: ")+DIR_DETAIL;return _doSend7(txt,mode)};
+const _doSend7=doSend;doSend=function(txt,mode,typed,echoed){if(DIR_DETAIL&&mode==="dir")txt=txt+(S.lang==="zh"?" 具体：":" Specifically: ")+DIR_DETAIL;return _doSend7(txt,mode,typed,echoed)};
 const _reply7=reply;reply=function(th,ctx,silent){if(DIR_DETAIL&&ctx&&ctx.kind==="watch")ctx=Object.assign({},ctx,{txt:ctx.txt+" Specifically: "+DIR_DETAIL});return _reply7(th,ctx,silent)};
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-cufill]")){const ta=$("#drDetail,#cuTxt");if(ta){ta.value=x.dataset.cufill;ta.focus()}return}
@@ -12582,9 +12590,9 @@ function lcClean(t){return String(t||"").replace(/<think>[\s\S]*?<\/think>/g,"")
 async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_PROXY)throw {code:"no_key",message:LL("还没填 LongCat API Key","No LongCat API key yet")};const c=lcCfg();
  // 输出预算（2026-10-25 Ann：正常 prompt 就 1 万 token，上限给到 2–3 万）
  // 三轮加起来：普通档 8k 够一句正常回复；复杂档 20k 才养得起推理型模型的思考 + 正文
- const max={quick:2048,default:8192,complex:20000}[opts.modelTier||"default"]||8192;const stream=typeof opts.onText==="function";
- const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,thinking:{type:"disabled"}};
- const t0=Date.now();const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal)opts.signal.addEventListener("abort",()=>ctl.abort());
+ const max=opts.maxTokens||{quick:2048,default:8192,complex:20000}[opts.modelTier||"default"]||8192;const stream=typeof opts.onText==="function";
+ const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,interactive:!!opts.interactive,thinking:{type:"disabled"}};
+ const t0=Date.now();const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal){if(opts.signal.aborted)ctl.abort();else opts.signal.addEventListener("abort",()=>ctl.abort(),{once:true});}
  const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
  let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
@@ -12714,14 +12722,14 @@ function talkLearn(th,txt){if(!th||!th.pk)return;const k=talkIntent(txt),zh=CL()
  save()}
 /* ---- typing at a "your turn" stop = talk, not skip ---- */
 const _doSend55=doSend;
-doSend=function(txt,mode){const th=S.threads[curT];txt=String(txt||"").trim();
+doSend=function(txt,mode,typed,echoed){const th=S.threads[curT];txt=String(txt||"").trim();
  if(th&&txt&&talkStop(th)&&!busy&&(mode||cmode)!=="dir"){
   if(!aiGate()){const ta=$("#cin");if(ta)ta.value=txt;return}
   const m=mode&&mode!=="say"?mode:autoMode(txt);
-  appendMsg(th,{who:"me",k:m,txt,at:Date.now()});th.rounds=(th.rounds||0)+1;th.pk.talk=(th.pk.talk||0)+1;talkLearn(th,txt);save();packRefresh(th);
+  if(!echoed)appendMsg(th,{who:"me",k:m,txt,typed:!!typed,at:Date.now()});th.rounds=(th.rounds||0)+1;th.pk.talk=(th.pk.talk||0)+1;talkLearn(th,txt);save();packRefresh(th);
   Promise.resolve(reply(th,{kind:"talk",txt,mode:m})).then(()=>{packRefresh(th);if(curT===th.id)scrollChat()});return}
  if(th&&th.pk&&txt&&(mode||cmode)!=="dir")talkLearn(th,txt);
- return _doSend55(txt,mode)};
+ return _doSend55(txt,mode,typed,echoed)};
 /* myline: tapping the hint still says the written line; typing your own words that differ (or a question) opens a talk turn first */
 function talkSim(a,b){a=String(a||"");b=String(b||"");if(!a||!b)return 0;const A=new Set(a.replace(/\s/g,"")),B=new Set(b.replace(/\s/g,""));let n=0;A.forEach(x=>{if(B.has(x))n++});return n/Math.max(A.size,B.size)}
 function mylineTalk(th,txt){const b=talkStop(th);if(!b||b[1]!=="myline")return false;txt=String(txt||"").trim();if(!txt)return true;
@@ -12736,12 +12744,11 @@ function talkGo(th){const b=talkStop(th);if(!b)return;const d=b[2];
 document.addEventListener("click",e=>{if(!e.target.closest("[data-talkgo]"))return;const th=S.threads[curT];if(th)talkGo(th)});
 const _stopHTML55=stopHTML;
 stopHTML=function(th){const h=_stopHTML55(th);const b=talkStop(th);if(!b||!th.pk.talk)return h;const zh=CL()==="zh";
- return '<div class="talkbar"><span>💬 '+(zh?"你们在自由对话 · 第 "+th.pk.talk+" 句":"Talking freely · turn "+th.pk.talk)+'<small>'+(zh?"想聊就继续打字；想推进剧情点右边，或选下面一项":"Keep typing to talk; tap → or pick an option below to move on")+'</small></span><button data-talkgo="1">▶ '+(zh?"继续剧情":"Continue")+'</button></div>'+h};
+ return h+'<div class="talkbar"><span>'+(zh?"可继续打字聊天，或":"Keep chatting, or")+'</span><button data-talkgo="1">'+(zh?"继续剧情":"continue the story")+' →</button></div>'};
 /* while a talk turn is being answered, keep the panel calm */
 (function(){const st=document.createElement("style");st.textContent=`
-.talkbar{display:flex;gap:10px;align-items:center;margin:0 0 10px;padding:9px 10px 9px 12px;border-radius:14px;background:rgba(127,196,166,.12);border:1px solid rgba(127,196,166,.4);color:#DFF5EA;font-size:13px}
-.talkbar span{flex:1;min-width:0}.talkbar small{display:block;font-size:11px;color:#9FC9B6;margin-top:2px}
-.talkbar button{flex:none;border:0;border-radius:999px;padding:9px 14px;font-weight:800;font-size:13px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}`;document.head.appendChild(st)})();
+.talkbar{display:flex;justify-content:flex-end;gap:4px;align-items:center;margin:8px 0 0;padding:0;border:0;background:none;color:var(--muted,#aaa);font-size:12px;line-height:1.5;white-space:nowrap}
+.talkbar button{flex:none;min-height:32px;border:0;border-radius:0;padding:4px 0 4px 2px;font:inherit;color:inherit;background:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px}.talkbar button:hover,.talkbar button:focus-visible{color:var(--text,#fff)}`;document.head.appendChild(st)})();
 
 /* ================= composer: free input + 2–3 quick options; director is an advanced tool, not a peer of "say" =================
    Product feedback: 台词/动作/心声/导演 side by side is too flat. Now one box — start with * for an action, wrap in （） for a thought —
@@ -12759,7 +12766,7 @@ function composer55(){const th=S.threads[curT];if(!th||(th.pk&&th.pk.as==="watch
  const sg=$("#sugg");if(sg){[...sg.children].filter(x=>!x.dataset.sgmore).slice(3).forEach(x=>x.remove());sg.classList.add("sg55")}
  const hint=document.createElement("span");hint.className="c55h";hint.textContent=CL()==="zh"?"直接打字 · *动作* · （心声）":"Just type · *action* · (thought)";modes.insertBefore(hint,modes.firstChild);
  const ta=$("#cin");if(ta)ta.placeholder=CL()==="zh"?"想说什么都行，他会回应你……":"Say anything — he'll answer you…"}
-const _doSend55b=doSend;doSend=function(txt,mode){if(!mode&&cmode==="say"&&txt)mode=autoMode(txt);return _doSend55b(txt,mode)};
+const _doSend55b=doSend;doSend=function(txt,mode,typed,echoed){if(!mode&&cmode==="say"&&txt)mode=autoMode(txt);return _doSend55b(txt,mode,typed,echoed)};
 (function(){const st=document.createElement("style");st.textContent=`
 .composer .c55h{font-size:11.5px;color:#9C93A8;align-self:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .suggest.sg55{display:flex;gap:6px;overflow-x:auto;flex-wrap:nowrap}.suggest.sg55 button{flex:none;max-width:72%}`;document.head.appendChild(st)})();
