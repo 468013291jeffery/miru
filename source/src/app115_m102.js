@@ -11,6 +11,7 @@
  S.art[ID]='art/official/m102/cover.jpg';for(const k of Object.keys(D.chars))if(k!=='m102_you')S.art[k]='art/official/m102/char_'+k.slice(5)+'.jpg';
  const assets={};for(const c of D.world.pack.chapters)for(const b of c.beats.zh)if(b[1]==='scene'){const d=b[2];assets[d.img]=d.src94;}
  Object.assign(window.SCENE_FILES||(window.SCENE_FILES={}),assets);
+ if(typeof OFF94!=='undefined')OFF94.assets[D.world.community]={cover:'art/official/m102/cover.jpg',poster:'art/official/m102/cover.jpg'};
  const uuid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
  async function request(th,action){
   if(th._m102Busy)throw Error('上一项正在保存，请稍等');th._m102Busy=true;
@@ -113,6 +114,7 @@
    'The player may refuse all romance and still complete the investigation. Do not turn help into debt or intimacy.'].join('\n');
  };
  const _speakers=speakersOf;speakersOf=function(th){return is(th)?(th.present||th.cast).filter(cid=>cid!=='m102_you'&&!(th.pk&&cid===th.pk.as)):_speakers.apply(this,arguments);};
+ const _main=mainOf;mainOf=function(th){if(!is(th))return _main.apply(this,arguments);const cast=speakersOf(th);return cast.includes(th.focus)?th.focus:(cast[0]||'m102_amy');};
  // Existing reply pipeline receives only present characters; reject an absent speaker on output too.
  const _play=playBeats;playBeats=async function(th,r,ctx,silent){if(is(th)&&r&&Array.isArray(r.beats))r=Object.assign({},r,{beats:r.beats.filter(b=>b.who==='n'||b.who==='sys'||speakersOf(th).includes(b.who))});return _play.call(this,th,r,ctx,silent);};
  const _reply=reply;reply=async function(th,ctx,silent){
@@ -122,6 +124,7 @@
     if(m){const command=m[2];if(/出去|离开|进来/.test(command))await action(th,{op:'access',actor:k,granted:false});else await action(th,{op:'boundary',actor:k,category:/亲/.test(command)?'kiss':'touch',granted:false});}
    }
    th.present=D.world.cast.filter(cid=>cid!=='m102_you'&&!denied(th).includes(cid.slice(5)));
+   if(th.addr&&!th.present.includes(th.addr))th.addr=null;
    if(th.pk.q)th.pk.q=th.pk.q.filter(b=>!denied(th).some(k=>b[0]==='m102_'+k));
    save();return _reply.call(this,th,ctx,silent);
   }catch(e){sayError(e);return null;}
@@ -141,7 +144,8 @@
    th.present=D.world.cast.filter(cid=>cid!=='m102_you'&&!denied(th).includes(cid.slice(5)));
    // A revoked visitor cannot keep speaking from an already-built queue.
    if(el.dataset.m102Access&&el.dataset.grant==='false'&&th.pk.q){const cid='m102_'+el.dataset.m102Access;th.pk.q=th.pk.q.filter(b=>b[0]!==cid);}
-   save();boundarySheet(th);
+   if(th.addr&&!th.present.includes(th.addr))th.addr=null;
+   save();renderChat();boundarySheet(th);
   }catch(e){sayError(e);el.disabled=false;}
  });
  const _renderChat=renderChat;renderChat=function(){const r=_renderChat.apply(this,arguments),el=$('#s-chat');if(el)el.classList.toggle('m102-chat',is(S.threads[curT]));return r;};
