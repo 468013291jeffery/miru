@@ -695,6 +695,12 @@ async function playBeats(th,r,ctx,silent){
   // Reserve voice ownership BEFORE append hooks can enqueue the same sentence.
   if(m.k==="say"){m._voiced=1;m._voiceOwner="playBeats"}
   appendMsg(th,m);if(m.k==="say")toSpeak.push(m);
+  if(!silent&&window.READING&&window.READING.manual(th)){
+   INLINE_SPOKE=true;
+   if(canSpeak&&m.k==="say"&&ch(m.who)){try{voiceCount(1);speak(m.txt,m.who,()=>{});}catch(e){console.debug('[reading] voice unavailable',e);}}
+   await window.READING.wait(th,m,'ai');
+   continue;
+  }
   /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；

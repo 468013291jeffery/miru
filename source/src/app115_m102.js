@@ -13,16 +13,17 @@
  Object.assign(window.SCENE_FILES||(window.SCENE_FILES={}),assets);
  if(typeof OFF94!=='undefined')OFF94.assets[D.world.community]={cover:'art/official/m102/cover.jpg',poster:'art/official/m102/cover.jpg'};
  const uuid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
+ const requestsInFlight=new WeakSet();
  async function request(th,action){
-  if(th._m102Busy)throw Error('上一项正在保存，请稍等');th._m102Busy=true;
+  if(requestsInFlight.has(th))throw Error('上一项正在保存，请稍等');requestsInFlight.add(th);th._m102Busy=true;let timeout;
   try{
    th.m102=th.m102||{session:'m102_'+uuid(),state:E.initial(),ver:0};
-   const m=th.m102,r=await capi('/state?r=m102'+(action?'':'&session='+encodeURIComponent(m.session)),action?{json:{session:m.session,ver:m.ver,action}}:undefined);
+   const m=th.m102,r=await Promise.race([capi('/state?r=m102'+(action?'':'&session='+encodeURIComponent(m.session)),action?{json:{session:m.session,ver:m.ver,action}}:undefined),new Promise((resolve,reject)=>{timeout=setTimeout(()=>reject(Error('进度读取超时，请点重试')),15000);})]);
    if(!r.ok){if(r.j&&r.j.state){m.state=r.j.state;m.ver=r.j.ver;save();}throw Error(r.status===401?'请先登录，再保存这部剧的进度':(r.j&&r.j.error)||'网络连接失败');}
    m.state=r.j.state;m.ver=r.j.ver;th.pk.picks=copy(m.state.choices);
    th.love=th.love||{};for(const k of roles)th.love['m102_'+k]=m.state.relations[k].affection;
    save();return m.state;
-  }finally{th._m102Busy=false;}
+  }finally{clearTimeout(timeout);requestsInFlight.delete(th);th._m102Busy=false;}
  }
  const action=(th,a)=>request(th,Object.assign({id:uuid()},a));
  function state(th){return th.m102&&th.m102.state||E.initial();}
@@ -94,10 +95,11 @@
  };
  const _stopAuto=stopAuto;stopAuto=function(th,b){if(is(th)&&b[2]&&b[2].m102free)return null;return _stopAuto.apply(this,arguments);};
  const _stopHTML=stopHTML;stopHTML=function(th){const d=th.pk&&th.pk.stop&&th.pk.stop[2];if(!is(th)||!d||!d.m102free)return _stopHTML.apply(this,arguments);
-  return '<p class="sm" style="line-height:1.6">'+esc(Lz(d.hint))+'</p><p class="xs dim" style="margin:8px 0">可以在下面输入任何话；想先听下去，也可以直接继续。</p><button class="btn btn-g btn-block" data-m102-continue="1">先继续剧情</button>';
+  return '<div class="eyebrow">轮到你说话了（可以跳过）</div><p class="sm" style="line-height:1.6;margin-top:8px">'+esc(Lz(d.hint))+'</p><p class="xs dim" style="margin:8px 0">想回应，就在下面输入。他们会接着你的话回答；暂时不想说，也可以继续听。</p><button class="btn btn-g btn-block" data-m102-continue="1">我先不说，继续听</button>';
  };
  const _panel=packPanel;packPanel=function(th){if(!is(th))return _panel.apply(this,arguments);
   if(th.pk.m102Resume)return '<div class="pkpanel"><p>进度尚未读取，请登录或恢复连接后重试。</p><button class="btn btn-p" data-m102-retry="1">重试读取进度</button></div>';
+  if(th.pk.ch===0)return '<div class="pkpanel"><p>正在读取故事进度，稍等一下…</p></div>';
   const h=_panel.apply(this,arguments);return h+'<button class="btn btn-g btn-sm" data-m102-boundaries="1" style="margin:8px">人物来访与关系边界</button>';
  };
  const _prompt=packPrompt;packPrompt=function(th){if(!is(th))return _prompt.apply(this,arguments);

@@ -25,6 +25,7 @@ const _pkAppendU=pkAppend;pkAppend=function(th,m){th._unread=1;th._held=0;return
 const _pkWaitU=pkWait;pkWait=function(th,prev,spd,ms){if(th._held){th._held=0;return Promise.resolve()}const p=_pkWaitU(th,prev,spd,ms);return p.then(v=>{th._unread=0;return v})};
 packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-chat").hidden;if(PKPLAY[th.id]===2)return;PKPLAY[th.id]=2;packRefresh(th);const gen=th._gen=(th._gen||0)+1;const dead=()=>th._gen!==gen;
  try{while(th.pk.q&&th.pk.q.length){const b=th.pk.q[0];
+   if(window.READING&&th._unread){await window.READING.wait(th,th.msgs[th.msgs.length-1],'script');if(dead())return;th._unread=0;}
    if(th._unread&&Array.isArray(b)&&b[0]==="sys"&&VIS28.has(b[1])&&!PKSKIP[th.id]){th._unread=0;while(!live())await new Promise(r=>setTimeout(r,500));
     const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];th._held=1;if(!th.pk.q||th.pk.q[0]!==b)continue}
    if(pkDirective(th,b))continue;
@@ -37,7 +38,9 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
    if(!PKSKIP[th.id]){const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);
     await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue;
     if(typeof HIST_OPEN!=="undefined"&&HIST_OPEN)continue}
-   th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
+   th.pk.q.shift();pkAppend(th,beatMsg(b));save()}
+  if(window.READING&&th._unread){await window.READING.wait(th,th.msgs[th.msgs.length-1],'script');th._unread=0;}
+ }
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
  if(a==="choose"){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','burst');save();packRefresh(th);if(curT===th.id)scrollChat()}
