@@ -11,18 +11,22 @@ export const config = { runtime: 'edge' };
 
 const LONGCAT_MODELS = ['LongCat-2.0', 'LongCat-2.5-Preview'];
 const ALLOWED = [/^https:\/\/(?:www\.)?miru\.plus$/, /^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
-const FIRST_TOKEN_MS = Number(process.env.MIRU_FIRST_TOKEN_MS) || 22000; // edge 热路径：读 env 不读 DB（每次请求查一次库不值得）
+const FIRST_TOKEN_MS = Number(process.env.MIRU_FIRST_TOKEN_MS) || 10000; // edge 热路径：读 env 不读 DB（每次请求查一次库不值得）
 
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
 /* SCNet: one key reaches many models. Without SCNET_MODEL we read the account's model list once and pick a good chat model. */
-let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0;
+let SCNET_AUTO = null, SCNET_LIST = null, SCNET_AT = 0, SCNET_PENDING = null;
 const SCNET_PREF = [/^deepseek-v4\.1-flash$/i, /^scnet-max$/i, /^deepseek-v4[\w.-]*flash/i, /^qwen3\.\d+-flash/i, /^glm-5[\w.]*-flash$/i, /^deepseek-v4/i, /^qwen3\.\d+-plus/i, /^glm-5/i, /deepseek/i, /qwen/i, /glm/i];
 async function scnetResolve() {
   if (env('SCNET_MODEL') || !env('SCNET_API_KEY')) return;
-  if (SCNET_AUTO && Date.now() - SCNET_AT < 3600e3) return;
+  if (SCNET_AT && Date.now() - SCNET_AT < (SCNET_AUTO ? 3600e3 : 60000)) return;
+  if (SCNET_PENDING) return SCNET_PENDING;
+  SCNET_PENDING = (async () => {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 1500);
   try {
     const base = env('SCNET_BASE_URL', 'https://api.scnet.cn/api/llm/v1').replace(/\/+$/, '');
-    const r = await fetch(base + '/models', { headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') } });
+    const r = await fetch(base + '/models', { signal: ctl.signal, headers: { 'Authorization': 'Bearer ' + env('SCNET_API_KEY') } });
+    if (!r.ok) throw new Error('model discovery failed');
     const j = await r.json();
     const ids = (j.data || j.models || []).map(m => typeof m === 'string' ? m : (m.id || m.name)).filter(Boolean);
     SCNET_LIST = ids;
@@ -30,7 +34,9 @@ async function scnetResolve() {
     for (const re of SCNET_PREF) { const hit = chat.find(id => re.test(id)); if (hit) { SCNET_AUTO = hit; break; } }
     if (!SCNET_AUTO) SCNET_AUTO = chat[0] || ids[0] || null;
     SCNET_AT = Date.now();
-  } catch (_) {}
+  } catch (_) {} finally { clearTimeout(timer); SCNET_AT = Date.now(); }
+  })();
+  try { await SCNET_PENDING; } finally { SCNET_PENDING = null; }
 }
 function providers() {
   const all = {
@@ -100,8 +106,8 @@ function cors(origin) {
 const J = (o, status, h) => new Response(JSON.stringify(o), { status, headers: { ...h, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 /* open a streaming completion on one provider; resolves once the upstream answered with a 2xx and the first chunk arrived */
-async function open(p, clean) {
-  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), FIRST_TOKEN_MS);
+async function open(p, clean, deadline = Date.now() + 30000) {
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), Math.max(1, Math.min(FIRST_TOKEN_MS, deadline - Date.now())));
   try {
     const body = { ...clean, ...p.extra, model: p.model(clean.model), max_tokens: Math.min(clean.max_tokens, p.maxOut), stream: true };
     const up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal });
@@ -111,7 +117,11 @@ async function open(p, clean) {
     if (first.done) throw new Error(p.name + ' empty response');
     const head = new TextDecoder().decode(first.value);
     if (/"error"\s*:/.test(head) && !/"choices"/.test(head)) throw new Error(p.name + ' ' + head.slice(0, 200));
-    return { rd, first: first.value, ctl };
+    const read = async () => {
+      const idle = setTimeout(() => ctl.abort(), Math.max(1, Math.min(10000, deadline - Date.now())));
+      try { return await rd.read(); } finally { clearTimeout(idle); }
+    };
+    return { rd, first: first.value, ctl, read };
   } catch (e) { clearTimeout(t); try { ctl.abort(); } catch (_) {} throw e.name === 'AbortError' ? new Error(p.name + ' timeout') : e; }
 }
 
@@ -181,14 +191,16 @@ export default async function handler(req) {
   if (!clean.messages.length) return J({ error: { message: 'no messages' } }, 400, c.headers);
   const only = body.provider && list.find(p => p.id === body.provider); // admin may force one provider
   const chain = only ? [only] : list;
+  const deadline = Date.now() + (body.interactive ? 28000 : 90000);
 
   /* streaming callers: hand back the first provider that starts answering (SSE passes straight through) */
   if (body.stream) {
     const errs = [];
     for (const p of chain) {
+      if (Date.now() >= deadline) { errs.push("reply deadline exceeded"); break; }
       try {
-        const o = await open(p, clean);
-        const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.rd.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); } });
+        const o = await open(p, clean, deadline);
+        const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); }, cancel() { o.ctl.abort(); } });
         return new Response(rs, { status: 200, headers: { ...c.headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': p.id } });
       } catch (e) { errs.push(String(e.message || e)); }
     }
@@ -202,14 +214,15 @@ export default async function handler(req) {
     const ka = setInterval(() => { w.write(enc.encode(' ')).catch(() => {}); }, 4000);
     let out = null; const errs = [];
     for (const p of chain) {
+      if (Date.now() >= deadline) { errs.push("reply deadline exceeded"); break; }
       let content = '', finish = null, buf = '';
       const eat = chunk => {
         buf += dec.decode(chunk, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
         for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
       };
       try {
-        const o = await open(p, clean); eat(o.first);
-        for (;;) { const { done, value } = await o.rd.read(); if (done) break; eat(value); }
+        const o = await open(p, clean, deadline); eat(o.first);
+        for (;;) { const { done, value } = await o.read(); if (done) break; eat(value); }
         if (!content.trim()) throw new Error(p.name + ' returned no text');
         out = { provider: p.id, model: p.model(clean.model), choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
         break;
