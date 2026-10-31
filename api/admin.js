@@ -79,12 +79,20 @@ module.exports = L.wrap(async (req, res) => {
       (SELECT count(*) FROM works WHERE status='pending')::int AS works_pending,
       (SELECT count(*) FROM assets WHERE status='review')::int AS assets_review,
       (SELECT count(*) FROM reports WHERE status IS DISTINCT FROM 'resolved' AND status IS DISTINCT FROM 'dismissed')::int AS reports_open`))[0];
+    /* 2026-10-31 · 收口：dashboard 原来一道闸管全部 —— 只要角色带 dashboard，就能读到收入 / 订单 / 钻石存量。
+       给外部编剧开 writer 账号之前先拆开（Ann 10-31：「他们剧本他们自己审」，但没人该看这个月流水）。
+       缺的键直接删，不置 0 —— 0 会被读成「今天没收入」，那比不显示更糟。 */
+    const seeMoney = L.can(A.role, 'orders'), seeGems = L.can(A.role, 'gems');
+    if (!seeMoney) for (const f of ['revenue_today', 'revenue_30d', 'orders_30d', 'payers', 'test_orders']) delete k[f];
+    if (!seeGems) for (const f of ['gems_spent_today', 'gems_outstanding']) delete k[f];
     const series = await sql(`SELECT d::date AS day,
       (SELECT count(*) FROM users WHERE created_at >= d AND created_at < d + interval '1 day')::int AS new_users,
       (SELECT count(*) FROM user_days WHERE day = d::date)::int AS dau,
       (SELECT coalesce(sum(-delta),0) FROM ledger WHERE delta<0 AND at >= d AND at < d + interval '1 day')::int AS gems_spent,
       (SELECT coalesce(sum(price_cents),0) FROM orders WHERE status='paid' AND at >= d AND at < d + interval '1 day')::int AS revenue
       FROM generate_series(CURRENT_DATE - 13, CURRENT_DATE, interval '1 day') d ORDER BY d`);
+    if (!seeMoney) series.forEach(r => delete r.revenue);
+    if (!seeGems) series.forEach(r => delete r.gems_spent);
     const retention = await sql(`SELECT d::date AS day,
       (SELECT count(*) FROM users u WHERE u.created_at >= d AND u.created_at < d + interval '1 day')::int AS cohort,
       (SELECT count(*) FROM users u JOIN user_days x ON x.user_id=u.id AND x.day = d::date + 1 WHERE u.created_at >= d AND u.created_at < d + interval '1 day')::int AS d1,

@@ -299,7 +299,7 @@ const ROLES = {
   owner: ['*'],
   admin: ['dashboard', 'users', 'users.write', 'gems', 'works', 'scripts', 'assets', 'reports', 'orders', 'ledger', 'i18n', 'config', 'notices', 'audit', 'events'],
   reviewer: ['dashboard', 'works', 'assets', 'reports', 'users', 'scripts'],
-  writer: ['dashboard', 'scripts'],
+  writer: ['scripts'],
   support: ['dashboard', 'users', 'users.write', 'gems', 'orders', 'ledger', 'reports'],
   analyst: ['dashboard', 'events', 'orders', 'users'],
 };

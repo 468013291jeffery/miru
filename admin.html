@@ -171,7 +171,7 @@ const Dashboard = {
       d.value = await api('dashboard'); window.__payTest.value = d.value.payTest; await nextTick();
       const s = d.value.series, days = s.map(x => fmtD(x.day).slice(5));
       chart(c1.value, { tooltip: { trigger: 'axis' }, legend: { data: ['新增用户', '日活 DAU'] }, grid: { left: 40, right: 20, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: { type: 'value', minInterval: 1 }, series: [{ name: '新增用户', type: 'line', smooth: true, data: s.map(x => x.new_users), color: '#EE6F97' }, { name: '日活 DAU', type: 'line', smooth: true, data: s.map(x => x.dau), color: '#7b6ad8' }] });
-      chart(c2.value, { tooltip: { trigger: 'axis' }, legend: { data: ['钻石消耗', '收入 (USD)'] }, grid: { left: 50, right: 50, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: [{ type: 'value', name: '💎' }, { type: 'value', name: '$' }], series: [{ name: '钻石消耗', type: 'bar', data: s.map(x => x.gems_spent), color: '#F0B77E' }, { name: '收入 (USD)', type: 'line', yAxisIndex: 1, data: s.map(x => x.revenue / 100), color: '#67c23a' }] });
+      chart(c2.value, { tooltip: { trigger: 'axis' }, legend: { data: ['钻石消耗', '收入 (USD)'] }, grid: { left: 50, right: 50, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: [{ type: 'value', name: '💎' }, { type: 'value', name: '$' }], series: [{ name: '钻石消耗', type: 'bar', data: s.map(x => (x.gems_spent || 0)), color: '#F0B77E' }, { name: '收入 (USD)', type: 'line', yAxisIndex: 1, data: s.map(x => (x.revenue || 0) / 100), color: '#67c23a' }] });
       const f = d.value.funnel.filter(x => x.users > 0 || ['app_open', 'login', 'story_start', 'purchase'].includes(x.name));
       chart(c3.value, { tooltip: { formatter: p => p.name + '：' + p.value + ' 人' }, series: [{ type: 'funnel', sort: 'none', left: 20, right: 20, top: 10, bottom: 10, minSize: '8%', label: { formatter: p => p.name + '  ' + p.value }, data: f.map(x => ({ name: L.event[x.name] || x.name, value: x.users })) }], color: ['#EE6F97', '#F0B77E', '#7b6ad8', '#67c23a', '#409eff', '#e6a23c', '#909399', '#f56c6c', '#36cfc9', '#9254de', '#73d13d'] });
       chart(c4.value, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: ['40%', '68%'], data: d.value.providers.map(x => ({ name: L.provider[x.provider] || x.provider, value: x.n })) }], color: ['#c0c4cc', '#409eff', '#EE6F97', '#1f2329'] });
@@ -186,9 +186,9 @@ const Dashboard = {
       <div class="kpi"><div class="l">今日新增</div><div class="v">{{d.kpi.new_today}}</div><div class="s">昨日 {{d.kpi.new_yesterday}}</div></div>
       <div class="kpi"><div class="l">日活 DAU</div><div class="v">{{d.kpi.dau}}</div><div class="s">昨日 {{d.kpi.dau_yesterday}}</div></div>
       <div class="kpi"><div class="l">周活 / 月活</div><div class="v">{{d.kpi.wau}} / {{d.kpi.mau}}</div></div>
-      <div class="kpi"><div class="l">今日收入</div><div class="v">{{money(d.kpi.revenue_today)}}</div><div class="s">30 天 {{money(d.kpi.revenue_30d)}} · {{d.kpi.orders_30d}} 单</div></div>
-      <div class="kpi"><div class="l">付费用户</div><div class="v">{{d.kpi.payers}}</div><div class="s">付费率 {{pct(d.kpi.payers, d.kpi.users)}}<span v-if="d.kpi.test_orders"> · 含测试单 {{d.kpi.test_orders}}</span></div></div>
-      <div class="kpi"><div class="l">今日钻石消耗</div><div class="v">{{d.kpi.gems_spent_today}}</div><div class="s">用户钻石存量 {{d.kpi.gems_outstanding}}</div></div>
+      <div class="kpi" v-if="can('orders')"><div class="l">今日收入</div><div class="v">{{money(d.kpi.revenue_today)}}</div><div class="s">30 天 {{money(d.kpi.revenue_30d)}} · {{d.kpi.orders_30d}} 单</div></div>
+      <div class="kpi" v-if="can('orders')"><div class="l">付费用户</div><div class="v">{{d.kpi.payers}}</div><div class="s">付费率 {{pct(d.kpi.payers, d.kpi.users)}}<span v-if="d.kpi.test_orders"> · 含测试单 {{d.kpi.test_orders}}</span></div></div>
+      <div class="kpi" v-if="can('gems')"><div class="l">今日钻石消耗</div><div class="v">{{d.kpi.gems_spent_today}}</div><div class="s">用户钻石存量 {{d.kpi.gems_outstanding}}</div></div>
       <div class="kpi"><div class="l">社区作品</div><div class="v">{{d.kpi.works_live}}</div><div class="s">已上线</div></div>
       <div class="kpi" :class="{warn:d.kpi.works_pending}"><div class="l">待审作品</div><div class="v">{{d.kpi.works_pending}}</div></div>
       <div class="kpi" :class="{warn:d.kpi.assets_review}"><div class="l">待审素材</div><div class="v">{{d.kpi.assets_review}}</div></div>
@@ -196,7 +196,7 @@ const Dashboard = {
     </div>
     <div class="grid2">
       <div class="panel"><h3>新增与日活（14 天）</h3><div ref="c1" class="chart"></div></div>
-      <div class="panel"><h3>钻石消耗与收入（14 天）</h3><div ref="c2" class="chart"></div></div>
+      <div class="panel" v-if="can('orders') || can('gems')"><h3>钻石消耗与收入（14 天）</h3><div ref="c2" class="chart"></div></div>
       <div class="panel"><h3>转化漏斗（近 7 天，按人数）</h3><div ref="c3" class="chart"></div></div>
       <div class="panel"><h3>登录方式分布</h3><div ref="c4" class="chart"></div></div>
     </div>
