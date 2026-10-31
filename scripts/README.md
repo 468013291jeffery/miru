@@ -1,7 +1,7 @@
 # 剧本目录（给前端）
 
-> 2026-10-31。**不再打包**。每部作品一个目录，剧本与素材地址都在这儿，素材本体留在 CDN 上。
-> 语法规则在同目录 `syntax.md`（这份是接入约定，那份是"怎么写剧本"）。
+> 2026-10-31。**不再打包**。每部作品一个目录，剧本与素材地址都在这儿；**素材本体也在本站目录里**（不走外部存储，避免慢）。
+> 两份配套文档：`syntax.md` = 编剧怎么写；`parser.md` = 前端怎么解析成事件流。
 
 ---
 
@@ -9,7 +9,8 @@
 
 ```
 https://www.miru.plus/scripts/index.json          全量清单（哪些作品、什么模式、几章）
-https://www.miru.plus/scripts/syntax.md           剧本语法与标签（解析依据）
+https://www.miru.plus/scripts/syntax.md           剧本语法与标签（编剧看）
+https://www.miru.plus/scripts/parser.md           解析规范：文本 → 事件流（前端看）
 https://www.miru.plus/scripts/<work_id>/          单部目录
     script.md       剧本原文（DSL 文本）
     bible.json      故事圣经（只有 mode=bible 的作品有）
