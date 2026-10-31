@@ -574,6 +574,41 @@ function packWorlds(){ return W.filter(w => w.pack) }
 **代价**：`packWorlds()` / `PCN()` / `storyPage()` 等判定要改成两段式（涉及 5–8 个文件），
 而且**没有自动判据能证明首页没被改坏**——只能人眼看。**所以这一刀要她拍板才能动。**
 
+## 5.6 三条线各是什么 · 剧本内容怎么到外部前端手里（2026-10-31）
+
+### 三条线（读者不同，别混）
+
+| | **GitHub**（`468013291jeffery/miru`） | **Vercel**（`www.miru.plus`） | **测试服**（`154.12.91.48`） |
+|---|---|---|---|
+| 是什么 | **源码仓库**（版本库，不是网站） | **正式线上站** | **一台我们自己的机器**（不是"测试环境"） |
+| 里面装 | 代码：`source/` `api/` `tools/` | 由 GitHub main **自动构建**出来的站点 | 同一份代码的**另一副本** + 独立测试库 + 磁盘 |
+| 谁在看 | 我 · 姜那边 | **真实用户** | 我们自己 · 姜那边的前端 |
+| 怎么更新 | `_ghmerge.mjs` 推 main | push main ⇒ 约 2 分钟自动部署 | **手动**：源码归档在 `/opt/miru`（**无 .git**），重建 + 发布 + 重启 |
+| 能放文件吗 | 能（但每次构建都进包） | ❌ serverless 无持久磁盘 | ✅ 30 G 磁盘 |
+
+**判据一句话**：要"给真实用户看"→ 正式站；要"磁盘 / 随便造数据 / 验自建部署"→ 测试服。
+
+### 剧本内容这条出口（不进数据库也不进 Vercel）
+
+```
+_check\make-scriptdir.py                       ← 从线上已发布作品重新生成
+   └→ scripts/<work_id>/{script.md, bible.json, meta.json, art.json, scene-map.json}
+        └→ 部署到测试服 /var/www/miru/scripts/ + 素材 /var/www/miru/art/official/
+             └→ 外部前端按 base 拼地址（域名 / IP / 127.0.0.1 都行）
+```
+
+- **地址形态**：`/scripts/<work_id>/…` 与 `/art/official/<work_id>/…` 都是**站内相对路径**（由前端拼 base）⇒ 换域名或换 IP **不用重新生成**。
+- **`art.json` 按用途分组**：`cover` / `poster` / `characters` / `scenes` / `props` / `videos`；
+  `scene-map.json` 再补「第几场用哪张图」（三档：`manual` 看图指定 / `keyword` 场景名匹配 / `rotation` 轮转兜底）。
+- **不再打包 zip**：素材本体就在这台机器的磁盘上（`/var/www/miru/art/official/`，18 M），包一层只是多一份副本。
+- **语法与解析**：`scripts/syntax.md`（编剧看怎么写）· `scripts/parser.md`（前端看怎么解析成事件流）· `scripts/README.md`（接入约定）。
+- ⚠️ 测试服手动更新代码时**别整目录覆盖 `/var/www/miru`** —— 里面除了构建产物还有 `scripts/` 与 `art/official/` 这两份内容。
+
+### 发布流程（人怎么做，见 `AGENTS.md` §3.5）
+
+代码走「本地门禁 → 推 main → 立刻抽查 → 坏了 2 分钟 revert」；内容走「直接打正式站，靠 `_dslqa` + 受限词闸挡」。
+**明确否掉**了「分支 → 测试服跑一遍 → 再合 main」（理由见那份）。
+
 ## 6. 未验 / 缺口（未量 ≠ 零）
 
 1. `--split` 只验到**启动状态**（`W.length=38`、登录门、首屏 246 字符），**没验完整玩一局**，也没验付费/通话/出图这些在线路径。
