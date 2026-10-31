@@ -153,6 +153,7 @@
  // A shareable entry respects the app's normal sign-in requirement.
  if(new URLSearchParams(location.search).get('story')==='m102'){
   let entered=false;const enter=()=>{if(entered)return;if(typeof MUST92==='function'&&MUST92()&&!loggedIn92())return;entered=true;openStory(ID);};
-  setTimeout(enter,700);if(window.UI&&typeof window.UI.add==='function')window.UI.add('m102-entry',enter);
+  setTimeout(enter,700);
+  const _startApp=startApp;startApp=function(){const result=_startApp.apply(this,arguments);setTimeout(enter,0);return result;};
  }
 })();
