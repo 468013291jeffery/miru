@@ -189,7 +189,7 @@ async function packRun(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
  if(a==="choose"){
   /* 2026-10-27：不再「剧本播完就弹官方选择」。本章玩家至少说过 N 轮，才允许把选择摆出来；
      不够就挂起（afterPendingChoose），等轮数攒够的那一轮结束时再弹。 */
-  const MIN=(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
+  const MIN=typeof wd(th.wid).pack.minRoundsPerChapter==="number"?wd(th.wid).pack.minRoundsPerChapter:(typeof MIRU_TUNE!=="undefined"&&MIRU_TUNE.chat&&typeof MIRU_TUNE.chat.minRoundsPerChapter==="number")?MIRU_TUNE.chat.minRoundsPerChapter:20;
   const had=(th.pk.chRounds||0);
   if(MIN>0&&had<MIN){th.pk.afterPendingChoose=1;save();packRefresh(th)}
   else{(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','queue-drained');th.pk.afterPendingChoose=0;save();packRefresh(th);if(curT===th.id)scrollChat()}
