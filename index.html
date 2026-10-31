@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="0ab41b762e01 2026-10-31T18:09Z";
+window.MIRU_BUILD="1248ac51e504 2026-10-31T18:57Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -5520,6 +5520,12 @@ async function playBeats(th,r,ctx,silent){
   // Reserve voice ownership BEFORE append hooks can enqueue the same sentence.
   if(m.k==="say"){m._voiced=1;m._voiceOwner="playBeats"}
   appendMsg(th,m);if(m.k==="say")toSpeak.push(m);
+  if(!silent&&window.READING&&window.READING.manual(th)){
+   INLINE_SPOKE=true;
+   if(canSpeak&&m.k==="say"&&ch(m.who)){try{voiceCount(1);speak(m.txt,m.who,()=>{});}catch(e){console.debug('[reading] voice unavailable',e);}}
+   await window.READING.wait(th,m,'ai');
+   continue;
+  }
   /* 2026-10-27 Ann：「一次生成了好多，语音都来不及生成 —— 可以生成对话、语音讲完再吐下一条吗？」
     可以。这里把「亮一句」和「念完这句」串起来：只说 say 台词，念完（onend）才继续下一句。
     ⚠️ 三条保命：① 只在真要念时才等；② 每句有上限（按字数算，最多 14 秒），超了照样往下走；
@@ -10011,6 +10017,7 @@ const _pkAppendU=pkAppend;pkAppend=function(th,m){th._unread=1;th._held=0;return
 const _pkWaitU=pkWait;pkWait=function(th,prev,spd,ms){if(th._held){th._held=0;return Promise.resolve()}const p=_pkWaitU(th,prev,spd,ms);return p.then(v=>{th._unread=0;return v})};
 packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-chat").hidden;if(PKPLAY[th.id]===2)return;PKPLAY[th.id]=2;packRefresh(th);const gen=th._gen=(th._gen||0)+1;const dead=()=>th._gen!==gen;
  try{while(th.pk.q&&th.pk.q.length){const b=th.pk.q[0];
+   if(window.READING&&th._unread){await window.READING.wait(th,th.msgs[th.msgs.length-1],'script');if(dead())return;th._unread=0;}
    if(th._unread&&Array.isArray(b)&&b[0]==="sys"&&VIS28.has(b[1])&&!PKSKIP[th.id]){th._unread=0;while(!live())await new Promise(r=>setTimeout(r,500));
     const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];th._held=1;if(!th.pk.q||th.pk.q[0]!==b)continue}
    if(pkDirective(th,b))continue;
@@ -10023,7 +10030,9 @@ packRun=async function(th){const live=()=>curT===th.id&&$("#s-chat")&&!$("#s-cha
    if(!PKSKIP[th.id]){const prev=th.msgs[th.msgs.length-1],spd=pkSpd(),ms=readMs(prev)*(spd||1);
     await pkWait(th,prev,spd,ms);if(dead())return;delete PKNEXT[th.id];if(!th.pk.q||th.pk.q[0]!==b)continue;
     if(typeof HIST_OPEN!=="undefined"&&HIST_OPEN)continue}
-   th.pk.q.shift();pkAppend(th,beatMsg(b));save()}}
+   th.pk.q.shift();pkAppend(th,beatMsg(b));save()}
+  if(window.READING&&th._unread){await window.READING.wait(th,th.msgs[th.msgs.length-1],'script');th._unread=0;}
+ }
  finally{delete PKPLAY[th.id];delete PKSKIP[th.id]}
  const a=th.pk.after;th.pk.after=null;th.pk.q=null;save();
  if(a==="choose"){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'choose','burst');save();packRefresh(th);if(curT===th.id)scrollChat()}
@@ -19697,16 +19706,17 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  Object.assign(window.SCENE_FILES||(window.SCENE_FILES={}),assets);
  if(typeof OFF94!=='undefined')OFF94.assets[D.world.community]={cover:'art/official/m102/cover.jpg',poster:'art/official/m102/cover.jpg'};
  const uuid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
+ const requestsInFlight=new WeakSet();
  async function request(th,action){
-  if(th._m102Busy)throw Error('上一项正在保存，请稍等');th._m102Busy=true;
+  if(requestsInFlight.has(th))throw Error('上一项正在保存，请稍等');requestsInFlight.add(th);th._m102Busy=true;let timeout;
   try{
    th.m102=th.m102||{session:'m102_'+uuid(),state:E.initial(),ver:0};
-   const m=th.m102,r=await capi('/state?r=m102'+(action?'':'&session='+encodeURIComponent(m.session)),action?{json:{session:m.session,ver:m.ver,action}}:undefined);
+   const m=th.m102,r=await Promise.race([capi('/state?r=m102'+(action?'':'&session='+encodeURIComponent(m.session)),action?{json:{session:m.session,ver:m.ver,action}}:undefined),new Promise((resolve,reject)=>{timeout=setTimeout(()=>reject(Error('进度读取超时，请点重试')),15000);})]);
    if(!r.ok){if(r.j&&r.j.state){m.state=r.j.state;m.ver=r.j.ver;save();}throw Error(r.status===401?'请先登录，再保存这部剧的进度':(r.j&&r.j.error)||'网络连接失败');}
    m.state=r.j.state;m.ver=r.j.ver;th.pk.picks=copy(m.state.choices);
    th.love=th.love||{};for(const k of roles)th.love['m102_'+k]=m.state.relations[k].affection;
    save();return m.state;
-  }finally{th._m102Busy=false;}
+  }finally{clearTimeout(timeout);requestsInFlight.delete(th);th._m102Busy=false;}
  }
  const action=(th,a)=>request(th,Object.assign({id:uuid()},a));
  function state(th){return th.m102&&th.m102.state||E.initial();}
@@ -19778,10 +19788,11 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  };
  const _stopAuto=stopAuto;stopAuto=function(th,b){if(is(th)&&b[2]&&b[2].m102free)return null;return _stopAuto.apply(this,arguments);};
  const _stopHTML=stopHTML;stopHTML=function(th){const d=th.pk&&th.pk.stop&&th.pk.stop[2];if(!is(th)||!d||!d.m102free)return _stopHTML.apply(this,arguments);
-  return '<p class="sm" style="line-height:1.6">'+esc(Lz(d.hint))+'</p><p class="xs dim" style="margin:8px 0">可以在下面输入任何话；想先听下去，也可以直接继续。</p><button class="btn btn-g btn-block" data-m102-continue="1">先继续剧情</button>';
+  return '<div class="eyebrow">轮到你说话了（可以跳过）</div><p class="sm" style="line-height:1.6;margin-top:8px">'+esc(Lz(d.hint))+'</p><p class="xs dim" style="margin:8px 0">想回应，就在下面输入。他们会接着你的话回答；暂时不想说，也可以继续听。</p><button class="btn btn-g btn-block" data-m102-continue="1">我先不说，继续听</button>';
  };
  const _panel=packPanel;packPanel=function(th){if(!is(th))return _panel.apply(this,arguments);
   if(th.pk.m102Resume)return '<div class="pkpanel"><p>进度尚未读取，请登录或恢复连接后重试。</p><button class="btn btn-p" data-m102-retry="1">重试读取进度</button></div>';
+  if(th.pk.ch===0)return '<div class="pkpanel"><p>正在读取故事进度，稍等一下…</p></div>';
   const h=_panel.apply(this,arguments);return h+'<button class="btn btn-g btn-sm" data-m102-boundaries="1" style="margin:8px">人物来访与关系边界</button>';
  };
  const _prompt=packPrompt;packPrompt=function(th){if(!is(th))return _prompt.apply(this,arguments);
