@@ -57,6 +57,7 @@ async function memory(req, res, u, sql) {
   return L.bad(res, 'unknown op');
 }
 module.exports = L.wrap(async (req, res) => {
+  if ((req.query || {}).r === 'm102') return require('./_m102')(req, res);
   if (!L.cors(req, res, 'GET, PUT, POST, OPTIONS')) return;
   const u = await L.needActive(req, res); if (!u) return;
   const sql = await L.db();
