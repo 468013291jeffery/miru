@@ -2,9 +2,9 @@
   "title": "午夜邀约",
   "contentId": "midnight-invitation",
   "lang": "zh",
-  "format": "annotated_authoring_markdown",
-  "status": "source-upload",
-  "runtimeReady": false,
+  "format": "bible98",
+  "status": "runtime-ready",
+  "runtimeReady": true,
   "acts": 8,
   "characters": 8,
   "imageCount": 20,
@@ -17,9 +17,21 @@
   "source": "/scripts/midnight-invitation/source.txt",
   "art": "/scripts/midnight-invitation/art.json",
   "notes": [
-    "Source manuscript is preserved byte-for-byte.",
-    "Source includes authoring rules and is not a MIRU CHAPTER DSL script.",
-    "Asset slots are an upload inventory; runtime work ID and scene bindings must be confirmed before publishing.",
-    "Repository upload does not publish a database work or add it to Discover."
-  ]
+    "源稿和二十张原始图片保持原样。",
+    "发布状态以 Miru /api/works 的 live 状态为准。",
+    "RELEASE.md 明确记录现有引擎尚未实现的能力。"
+  ],
+  "workId": "w_scmvxxy1f444b18cd039",
+  "bible": "/scripts/midnight-invitation/bible.json",
+  "script": "/scripts/midnight-invitation/script.md",
+  "runtimeCapabilities": {
+    "actorCard": true,
+    "freeConversation": true,
+    "chapterNavigation": "manual",
+    "sceneEntryArtwork": true,
+    "conditionalArtworkSwitching": false,
+    "transactionalEvents": false,
+    "strictPrivateMemoryIsolation": false,
+    "earlyEndingCard": false
+  }
 }

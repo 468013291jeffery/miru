@@ -1,0 +1,22 @@
+{
+  "format": "MIRU Bible98 + official DSL fallback",
+  "sourcePreserved": true,
+  "chapters": 8,
+  "cast": 8,
+  "choices": 24,
+  "originalImages": 20,
+  "engineFilesChanged": [],
+  "requiresAdminLogin": true,
+  "status": "local-validation-passed",
+  "published": false,
+  "limitations": {
+    "actorCard": true,
+    "freeConversation": true,
+    "chapterNavigation": "manual",
+    "sceneEntryArtwork": true,
+    "conditionalArtworkSwitching": false,
+    "transactionalEvents": false,
+    "strictPrivateMemoryIsolation": false,
+    "earlyEndingCard": false
+  }
+}
