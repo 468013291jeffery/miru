@@ -1,0 +1,25 @@
+{
+  "title": "午夜邀约",
+  "contentId": "midnight-invitation",
+  "lang": "zh",
+  "format": "annotated_authoring_markdown",
+  "status": "source-upload",
+  "runtimeReady": false,
+  "acts": 8,
+  "characters": 8,
+  "imageCount": 20,
+  "artCounts": {
+    "cover": 1,
+    "characters": 8,
+    "scenes": 11
+  },
+  "cover": "https://www.miru.plus/art/official/midnight-invitation/%E5%B0%81%E9%9D%A201_%E5%8D%88%E5%A4%9C%E9%82%80%E7%BA%A6.png",
+  "source": "/scripts/midnight-invitation/source.txt",
+  "art": "/scripts/midnight-invitation/art.json",
+  "notes": [
+    "Source manuscript is preserved byte-for-byte.",
+    "Source includes authoring rules and is not a MIRU CHAPTER DSL script.",
+    "Asset slots are an upload inventory; runtime work ID and scene bindings must be confirmed before publishing.",
+    "Repository upload does not publish a database work or add it to Discover."
+  ]
+}
