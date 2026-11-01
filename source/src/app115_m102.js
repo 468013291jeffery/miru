@@ -12,6 +12,11 @@
  const assets={};for(const c of D.world.pack.chapters)for(const b of c.beats.zh)if(b[1]==='scene'){const d=b[2];assets[d.img]=d.src94;}
  Object.assign(window.SCENE_FILES||(window.SCENE_FILES={}),assets);
  if(typeof OFF94!=='undefined')OFF94.assets[D.world.community]={cover:'art/official/m102/cover.jpg',poster:'art/official/m102/cover.jpg'};
+ // Built-in stories also need a Discover entry; the community feed is a separate catalog.
+ if(typeof discMain==='function'){
+  const discover=discMain;discMain=function(){return '<div class="shelf m102-discover"><div class="shd"><h3>新剧上线</h3></div><div class="rail2"><button class="rcard" data-m102-discover="1"><div class="rart"><img src="art/official/m102/cover.jpg" alt="午夜不打烊封面" loading="lazy"><span class="rbadge">14章完整故事</span></div><b>午夜不打烊</b><span>四份收购书，同一个交割日。谁在替你决定未来？</span></button></div></div>'+discover.apply(this,arguments);};
+  document.addEventListener('click',ev=>{if(!ev.target.closest('[data-m102-discover]'))return;ev.preventDefault();ev.stopImmediatePropagation();openStory(ID);},true);
+ }
  const uuid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
  const requestsInFlight=new WeakSet();
  async function request(th,action){
