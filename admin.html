@@ -939,6 +939,17 @@ const stuTaxTags = taste => { const out = new Set(); Object.entries(STU_TAX).for
 const stuTagsOf = c => [...new Set(stuTaxTags(c.taste).concat(c.facts || []))];
 const STU_TAG_ZH = Object.assign({}, STU_FACTS, ...Object.values(STU_TAX).map(G => Object.fromEntries(G.items.map(i => [i[1], i[2]]))));
 const stuTasteText = c => { const T = c.taste || {}; return STU_LAYERS.map(([g, nm]) => nm + '：' + ((T[g] || []).map(k => { const it = STU_TAX[g].items.find(i => i[0] === k); return it ? it[2] + '（' + it[1] + '）' : k; }).join('、') || '未选')).join('；') + '；尺度：' + ((STU_HEATS.find(h => h[0] === c.heat) || [, '未选'])[1]) + (c.facts && c.facts.length ? '；具体元素：' + c.facts.map(x => STU_FACTS[x] || x).join('、') : ''); };
+function stuCharter(c = {}) {
+  const show = v => typeof v === 'string' ? v : JSON.stringify(v);
+  const lines = [];
+  if (c.emotion_charter) lines.push('已确认情绪约定：' + show(c.emotion_charter));
+  if (c.core_promise) lines.push('核心体验：' + show(c.core_promise));
+  if (c.player_freedom) lines.push('玩家行动自由：' + show(c.player_freedom));
+  lines.push('情绪变化须由实际行动与人物回应产生；不得凭章节自动升级关系。');
+  lines.push('拒绝、暂缓和离开应有真实回应与可继续路径，不以强制亲密推进。');
+  return '【情绪与互动约定】\\n' + lines.join('\\n');
+}
+
 const Studio = {
   setup() {
     const list = ref([]), sel = ref(null), step = ref(0), busy = ref(''), log = ref([]), vers = ref([]), curCh = ref(1), stop = ref(false);
@@ -946,9 +957,9 @@ const Studio = {
     const steps = ['选题与素材', '按规则生成', '自动检查', '编剧审改', '上线'];
     const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], as: '' });
     const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [] });
-    const researchText = ref(''), outline = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
+    const researchText = ref(''), outline = ref(''), cardsText = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
     async function load() { list.value = (await api('scripts')).rows; }
-    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
+    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; cardsText.value = sel.value.config.cards98 ? JSON.stringify(sel.value.config.cards98, null, 1) : ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
     async function loadVers() { if (!sel.value) return; vers.value = (await api('script', { query: { id: sel.value.id, versions: 1 } })).rows; }
     async function create() {
       if (!nf.title.trim()) return ElMessage.warning('请填写标题');
@@ -1188,7 +1199,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+    return { cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -1331,3 +1342,4 @@ app.mount('#app');
 </script>
 </body>
 </html>
+
