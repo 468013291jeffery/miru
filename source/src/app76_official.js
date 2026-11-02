@@ -31,6 +31,15 @@ installWork = async function (id) {
      而且多段的简介直接当开场卡「故事背景」用（玩家反馈：前情提要没加进去）。 */
   if (m.premise) { w.premise = x0(String(m.premise).replace(/\*\*/g, "")); w.premiseAuthor = 1; }
   if (m.you) w.you = x0(m.you);
+  /* 2026-11-03：开场卡不能等 AI 包装（app74 最多等 30 秒，玩家点「先用基础版」就跳过了 ⇒ 没有开场卡）。
+     作者写了多段简介 ⇒ 装作品时就先把开场卡搭好；AI 包装回来再补人物和玩法，不动作者的原文。 */
+  if (w.premiseAuthor && w.pack && !w.pack.intro) {
+    const paras = String(m.premise || "").replace(/\*\*/g, "").split(/\n\s*\n|\n/).map(s => s.trim()).filter(Boolean);
+    if (paras.length >= 2) {
+      const it = { bg: paras.slice(0, 12), you: Lz(w.you) || "", cast: (w.cast || []).filter(id => ch(id)).map(id => [id, Lz(ch(id).role) || ""]), how: zh ? ["你的每个选择都会改变他们对你的信任和好感。", "可以直接打字说自己的话，*星号*里写动作。", "点 💭 能听到他没说出口的那句话。"] : ["Every choice changes their trust and closeness.", "Type your own words; put *actions* in asterisks.", "Tap 💭 to hear what he didn't say."] };
+      w.pack.intro = { zh: it, en: JSON.parse(JSON.stringify(it)) };
+    }
+  }
   if ((m.tags || []).length) w.tags = m.tags.slice(0, 16); if (m.heat) w.heat = m.heat; w.adult76 = m.adult === true ? 1 : 0; w.or = r.j.orient || w.or;
   S.off76[id] = { wid, ver: P.ver, imv: 2 }; /* imv: importer version — bump to rebuild already-installed official stories */ save(); track("community_open", { id, official: 1 });
   return wid;

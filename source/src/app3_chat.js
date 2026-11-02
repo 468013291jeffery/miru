@@ -533,6 +533,7 @@ async function reply(th,ctx,silent){
    return "SCENE DIRECTION (what this moment needs, not what to say. NO PRE-WRITTEN WORDING is given to you — invent it, in your own words, from where the conversation actually is right now. Never announce plot, never repeat a phrase you used earlier):\n"+lines;
   }catch(_){return ""}})()||"",
   packPrompt(th),
+  (typeof loreBlock==="function"?loreBlock(th,ctx):""),
   (th.pk&&th.pk.me)?"THE PLAYER is the story's lead (the one the script calls 你/you), played as THEMSELF, from their role card: "+personaDesc(p)+" The cast knows the player by this name and these facts — use them naturally (call them by name, notice their looks, remember their likes/dislikes) and never contradict them. Never write the player's lines, actions or feelings.":
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+personaDesc(p)+" Never write the user's lines, actions or feelings.",
   memBlock(th),
