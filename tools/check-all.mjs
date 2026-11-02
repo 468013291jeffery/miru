@@ -12,6 +12,7 @@ try { const r = await fetch(api, { signal: AbortSignal.timeout(1500) }); apiUp =
 
 const suites = [
   ['ledger-selftest.mjs', ['tools/ledger-selftest.mjs'], true],
+  ['iap-selftest.mjs', ['tools/iap-selftest.mjs', 'api/_iap.js', 'api/wallet.js'], true],
   ['events-selftest.mjs', ['tools/events-selftest.mjs', 'index.html'], true],
   ['events-contract.mjs', ['tools/events-contract.mjs', 'index.html', '--selftest'], true],
   ['pack-flow-selftest.mjs', ['tools/pack-flow-selftest.mjs', 'index.html'], true],

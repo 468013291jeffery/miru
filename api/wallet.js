@@ -8,6 +8,26 @@ const L = require('./_lib');
 // v4.0: no membership. Packs $0.99 → 5 · $2.99 → 16 · $4.99 → 28 · $9.99 → 60 · $19.99 → 125 · $49.99 → 330 · $99.99 → 700 (bonus included in the id)
 const SKUS = { gems_5: 5, gems_16: 16, gems_28: 28, gems_60: 60, gems_125: 125, gems_330: 330, gems_700: 700 };
 const EARN_DAY_FALLBACK = 80; // 真正生效的是 config.earn_cap
+// 首次充值翻倍时额外送的基础钻（不含 bonus）
+const BASE = { gems_5: 5, gems_16: 15, gems_28: 25, gems_60: 50, gems_125: 100, gems_330: 250, gems_700: 500 };
+
+/* Apple product id → { sku, gems }。三种写法都认：
+   ① cfg.skus[x].apple === productId（后台显式映射）② productId 本身就是 sku 名（gems_5）
+   ③ productId 末段是 sku 名（com.miru.plus.app.gems_5）—— 这样 App Store Connect 里怎么起名都能对上 */
+function gemsForSku(productId, cfg) {
+  const pid = String(productId || '');
+  if (!pid) return null;
+  const sk = (cfg && cfg.skus) || {};
+  for (const name of Object.keys(sk)) {
+    const v = sk[name];
+    if (v && typeof v === 'object' && v.apple === pid) return { sku: name, gems: Number(v.gems) || SKUS[name] || 0 };
+  }
+  const pick = name => ({ sku: name, gems: (sk[name] && Number(sk[name].gems)) || SKUS[name] });
+  if (SKUS[pid]) return pick(pid);
+  const tail = pid.split('.').pop();
+  if (SKUS[tail]) return pick(tail);
+  return null;
+}
 async function apply(sql, uid, delta, reason, key) {
   if (key) { const dup = await sql('SELECT balance FROM ledger WHERE key=$1', [key]); if (dup[0]) return { gems: dup[0].balance, dup: true }; }
   await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [uid]);
@@ -47,6 +67,28 @@ module.exports = L.wrap(async (req, res) => {
     const r = await apply(sql, u.uid, Number(cfg.daily_gems) || 3, 'daily', 'daily:' + u.uid + ':' + day);
     return L.send(res, 200, r);
   }
+  /* StoreKit 2 交易凭证：App 端把 `Transaction.jwsRepresentation` 原样发上来，服务端用 Apple 根证书本地验签
+     （不需要 App Store Connect 的 .p8）。幂等键 = Apple 验过的 transactionId —— 不是客户端传来的字符串，
+     所以同一笔交易无论重试多少次、被谁重放，都只会加一次钻。 */
+  if (b.op === 'iap') {
+    const jws = String(b.jws || b.jwsRepresentation || '');
+    if (!jws) return L.bad(res, 'jws required');
+    let t;
+    try { t = require('./_iap').verifyTransaction(jws); }
+    catch (e) { return L.bad(res, 'invalid transaction: ' + String(e.message || e).slice(0, 80)); }
+    const wantBundle = process.env.IAP_BUNDLE_ID || 'com.miru.plus.app';
+    if (t.bundleId !== wantBundle) return L.bad(res, 'transaction for another app');
+    const mapped = gemsForSku(t.productId, cfg);
+    if (!mapped) return L.bad(res, 'unknown product: ' + String(t.productId).slice(0, 60));
+    const key = 'iap:' + String(t.transactionId).slice(0, 80);
+    const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND reason LIKE '%(iap)' LIMIT 1", [u.uid]);
+    const doubled = (!first[0] && cfg.first_purchase_double !== false) ? (BASE[mapped.sku] || 0) : 0;
+    const total = mapped.gems + doubled;
+    const r = await apply(sql, u.uid, total, mapped.sku + '(iap)', key);
+    if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING',
+      [L.newId('o_'), u.uid, mapped.sku, 'ios', total, ((cfg.skus || {})[mapped.sku] || {}).usd || 0, 'USD', 'paid', false, key]);
+    return L.send(res, 200, Object.assign({ iap: true, transactionId: t.transactionId, productId: t.productId, sku: mapped.sku, gems: total, doubled: doubled > 0, dup: !!(r && r.dup) }, r || {}));
+  }
   if (b.op === 'purchase') {
     const sku = String(b.sku || '');
     const SK = Object.assign({}, ...Object.entries(cfg.skus || {}).map(([k, v]) => ({ [k]: Number(v.gems) || SKUS[k] || 0 })));
@@ -55,7 +97,6 @@ module.exports = L.wrap(async (req, res) => {
     if (!test) return L.send(res, 501, { error: 'store receipt verification is not configured yet (set APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT, or PAY_TEST=1 for test purchases)' });
     const key = 'buy:' + u.uid + ':' + String(b.receipt || L.newId()).slice(0, 80);
     const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND reason LIKE 'gems_%' LIMIT 1", [u.uid]);
-    const BASE = { gems_5: 5, gems_16: 15, gems_28: 25, gems_60: 50, gems_125: 100, gems_330: 250, gems_700: 500 }; // first top-up doubles the base diamonds (not the bonus)
     const gems = (SK[sku] || SKUS[sku]) + (!first[0] && cfg.first_purchase_double !== false ? (BASE[sku] || 0) : 0);
     const r = await apply(sql, u.uid, gems, sku + '(test)', key);
     if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING', [L.newId('o_'), u.uid, sku, String(b.platform || 'web').slice(0, 12), gems, ((cfg.skus || {})[sku] || {}).usd || 0, 'USD', 'paid', true, String(b.receipt || '').slice(0, 200)]);
@@ -63,3 +104,6 @@ module.exports = L.wrap(async (req, res) => {
   }
   L.bad(res, 'unknown op');
 });
+
+// 供自检使用（Vercel 只调用 wrap 出来的 handler，挂个属性无害）
+module.exports.gemsForSku = gemsForSku;

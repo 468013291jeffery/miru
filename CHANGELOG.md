@@ -5,6 +5,35 @@
 > 分支：`ann/decouple` · 26 个提交 · 57 个文件 · +3002 / −95
 > 一条命令验证全部：`node tools/check-all.mjs`（九套 162 个用例）
 
+## 2026-11-02 · IAP 收据验证（后端）：`api/_iap.js` + `wallet.js` 的 `op:'iap'`
+
+> 起因（Ann）：iOS 打包要上 App Store，钻石充值按审核 **3.1.1** 必须走 IAP —— 拍板「先做掉，不行再改」。
+> 病灶：`api/wallet.js` 的 `op:'purchase'` **只实现了 `PAY_TEST=1` 的测试路径**，真实收据验证直接返回 501；
+> 而且幂等键用的是客户端传来的 `receipt` 字符串 —— 那玩意儿能伪造，真上线就是刷钻漏洞。
+
+**改法**：
+
+- 新增 `api/_iap.js`：StoreKit 2 的 JWS **本地验签**，不需要 App Store Connect 的 `.p8`。
+  链路：解析 JWS → 验 `x5c` 证书链（逐级验签 + 每张证书有效期 + 根必须自签且指纹命中）→ ES256 验签
+  （`dsaEncoding: 'ieee-p1363'` —— 注意 ES256 的签名是 r||s 裸格式，不是默认的 DER）→ 校验
+  `transactionId`/`productId`/`bundleId` 非空、`revocationDate` 不存在。
+  Apple Root CA - G3 的 SHA-256 指纹钉在代码里：`63343ABF…3E9179`（官方地址下载，2039 到期）。
+- `api/wallet.js`：新增 `op:'iap'`。**幂等键 = Apple 验过的 `transactionId`**，同一笔交易重放多少次都只加一次钻；
+  `gemsForSku()` 认三种 productId 写法（`gems_5` / `com.miru.plus.app.gems_5` / 后台显式 `apple` 映射）；
+  `BASE`（首充翻倍表）提到模块顶部与 `purchase` 共用。
+- 新增 `tools/iap-selftest.mjs`（14 臂）+ `tools/fixtures/gen-iap-fixture.py`（现造测试证书链 —— 本机没有 openssl，用 python `cryptography`）。
+- `tools/check-all.mjs` 登记该闸；`ARCHITECTURE.md` 的闸套数 48 → **49**。
+
+**读数**：
+
+```
+node tools/iap-selftest.mjs        14 passed / 0 failed
+变异（dsaEncoding: der）            ①②⑥⑦ 四条臂立刻红 —— 恢复后 14/14 ⇒ 判据真在验签，不是恒绿
+测试服 154.12.91.48                两文件 require OK · 内置根指纹与 subject 对上 · healthz OK ·
+                                   POST /api/wallet {op:'iap'} 无 token ⇒ 401（路由活着）
+```
+
+⚠️ **没验到的那一格**：真正的「加钻」需要一条 Apple 真签的 JWS，只有真机 App 能产生 —— **上线前必须用 StoreKit 沙盒实测一次**，别只看自检绿。
 ## 2026-10-31 · 剧本内容有了对外的出口：`scripts/<work_id>/` 目录 + 三份规范
 
 > 起因（Ann）：对方（姜那边）要「把图片和视频收拢，在服务器上建个文件夹放剧本的所有东西；封面地址、剧情图片地址要分好；解析方式给一份」。
