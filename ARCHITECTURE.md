@@ -646,8 +646,8 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      145 个函数 / 321 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）
-空 catch    565 处 / 99 个文件    （当天起点 616 ⇒ −51）
+猴补丁      149 个函数 / 340 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层
+空 catch    562 处 / 99 个文件    （当天起点 616 ⇒ −51）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
 消息渲染    19 层 = kind 10 / post 7 / wrap 2（`say` 收口后从 20 层减 2）· 17 个类型
@@ -896,14 +896,14 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **139 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **143 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
 |---|---|---|
-| `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 247 |
-| `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 290 |
-| `app3_chat.js` | THREADS（原文只有段落横幅） | 1188 |
+| `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 252 |
+| `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 302 |
+| `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1201 |
 | `app4_more.js` | CHATS (WhatsApp-style list) | 598 |
 | `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 171 |
 | `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
@@ -928,7 +928,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app25_dir.js` | director: no more context-free jumps · The 🌙 card is now a "fast-forward… | 53 |
 | `app26_turns.js` | who-said-what A speaker's bubble only carries that speaker's own actions … | 40 |
 | `app27_choice.js` | your turn, in your words Step 1: pick HOW you answer (an attitude read fr… | 66 |
-| `app28_burst.js` | narration arrives as one block A run of narration / actions / inner voice… | 45 |
+| `app28_burst.js` | narration arrives as one block A run of narration / actions / inner voice… | 48 |
 | `app29_style.js` | writing rules for live AI (male/male stories) + "look back" unlocks | 30 |
 | `app30_fx3.js` | FX3 — ice that creeps along the frame + an EMOTION layer ICE ("ice" / "ic… | 286 |
 | `app31_score.js` | FILM SCORE (v4) The chat music now works like a film score: 1) Real recor… | 340 |
@@ -955,7 +955,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app52_alt.js` | intercept the old handler (window capture runs before document capture) | 40 |
 | `app53_import2.js` | 上传剧本：也能读 .pdf 和老的 .doc .pdf → bundled pdf.js (no network; text layer, pag… | 53 |
 | `app54_longcat.js` | AI 引擎可切换：Claude（默认）/ LongCat LongCat uses its OpenAI-compatible endpoint:… | 79 |
-| `app55_talk.js` | FREE TALK inside a story Before: at a "your turn" stop, typing anything r… | 122 |
+| `app55_talk.js` | FREE TALK inside a story Before: at a "your turn" stop, typing anything r… | 121 |
 | `app56_story3.js` | DYNAMIC NARRATIVE — items, long/short branches, convergence, character ar… | 105 |
 | `app57_rules.js` | UGC CONSTRAINTS — the generation rules every AI call follows + the publis… | 76 |
 | `app58_bgm100.js` | BGM LIBRARY — 100 scored cues, picked by keywords Honest note: these are … | 157 |
@@ -996,7 +996,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app92_mustlogin.js` | SIGN-IN REQUIRED The live app can no longer be used as a guest: the "先逛逛 … | 14 |
 | `app93_agegate.js` | 年龄门（T08）· 首启一次确认 开关：MIRU_TUNE.tools.ageGate（默认 true） | 44 |
 | `app93_doubao.js` | DOUBAO END-TO-END REALTIME VOICE CALLS When the relay is configured (Verc… | 97 |
-| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 589 |
+| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 591 |
 | `app94_replyguard.js` | 台词守门（他们 v8.2.3 的「角色台词检查」） 玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事 | 153 |
 | `app95_safety.js` | App Store 1.2 (user-generated content): report · block · terms · contact … | 120 |
 | `app95_status.js` | 状态写入层 v1（唯一写入口） 规格 v7.11 §04.6「状态投影的唯一写入点」： 模型和剧情都只能"提议"，真正的写入只在这里发生 | 130 |
@@ -1023,13 +1023,17 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app111_msgkind.js` | 消息渲染：三类登记 + 冲突检测 + 存活读数（） 背景：`msgHTML` 被 **19 层**包装（`tools/msghtml-triage… | 133 |
 | `app112_sheet.js` | 弹层里的「块」登记表（） 为什么不再用「包一层」：`menuSheet` 被 7 个文件各包一层，而它们做的事只有一件 —— 往 `.sheet … | 76 |
 | `app113_content.js` | 剧本内容：一道加载缝（第 1 步：立接口 + 哨兵） · 为什么需要它（Ann 问的「解耦充分吗」）： 现状：剧情数据（`wd(wid).pack… | 77 |
-| `app114_entry.js` | 进去的身份，永远是三条（） 症状（Ann 报的）：「好像现在进去只有导演视角，别的视角没了」 | 192 |
+| `app114_entry.js` | 进去的身份，永远是三条（） 症状（Ann 报的）：「好像现在进去只有导演视角，别的视角没了」 | 256 |
+| `app115_m102.js` | M102: authored pack, authenticated choices, per-scene free chat and expli… | 164 |
+| `app115_m102data.js` | （文件头没有说明 —— 该补一句） | 2 |
+| `app116_reading.js` | Reading is acknowledged by the player, never by a timer or a voice callba… | 80 |
 | `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
 | `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
 | `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |
 | `content_worlds.js` | WORLDS or: bl \| gl \| bg kind: story \| ensemble \| quest Openings are writt… | 215 |
 | `creator_embed.js` | creator polish: accessibility, graph editing, playable surfaces | 2 |
 | `i18n.js` | UI STRINGS — en · zh · ja · ko · es | 274 |
+| `m102engine.js` | M102 deterministic state | 50 |
 | `miru_rules_full.js` | （文件头没有说明 —— 该补一句） | 3 |
 | `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 287 |
 | `pdfjs_embed.js` | \n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * @licend The above is the entire license notice for the\n * JavaScript code in this page\n（原文只有段落横幅） | 3 |

@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="3640231a7a88 2026-11-02T17:25Z";
+window.MIRU_BUILD="d7999040287c 2026-11-02T17:35Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -3131,6 +3131,9 @@ function ago(ts){const m=Math.max(1,Math.round((Date.now()-ts)/6e4));if(m<60)ret
 function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function persona(){return S.personas.find(p=>p.id===S.pid)||S.personas[0]}
 function me(){return persona().name||"You"}
+/* 角色卡 → 给模型的一句话（2026-11-03）。只写填了的字段。 */
+function personaDesc(p){p=p||persona();const g=p.pron==="he"?"male, he/him":p.pron==="she"?"female, she/her":"non-binary, they/them";
+ return (p.name||"the user")+" ("+g+(p.age?", "+p.age:"")+")"+(p.label?". Role: "+p.label:"")+(p.look?". Looks: "+p.look:"")+(p.like?". Likes: "+p.like:"")+(p.dislike?". Dislikes: "+p.dislike:"")+(p.bio?". About: "+p.bio:"")+"."}
 function ch(id){return C[id]||S.mine.chars[id]||null}
 function wd(id){return W.find(w=>w.id===id)||S.mine.worlds[id]||null}
 function allChars(){return Object.keys(C).filter(id=>!C[id].retired).concat(Object.keys(S.mine.chars))}
@@ -4765,18 +4768,30 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ppick]")){personaSheet();return}
  if(x=e.target.closest("[data-newt]")){const th=newThread(pickQuest?"quest":null,x.dataset.newt,pickOpen);openThread(th.id);return}});
 function personaSheet(){sheet('<h2>'+t("me.personas")+'</h2><div class="stack" style="margin-top:8px">'+S.personas.map(p=>'<button class="opt" data-pid="'+p.id+'"><span class="ic">'+esc((p.name||"?")[0])+'</span><span class="grow"><b>'+esc(p.name||"—")+'</b><span>'+esc(p.pron)+(p.look?" · "+esc(p.look):"")+'</span></span>'+(S.pid===p.id?'<span class="check on">✓</span>':"")+'</button>').join("")+
- '<button class="opt" data-newp="1"><span class="ic">＋</span><span class="grow"><b>'+t("me.addp")+'</b></span></button></div>')}
+ '<button class="opt" data-editp="1"><span class="ic">✎</span><span class="grow"><b>'+((typeof CL==="function"&&CL()==="zh")?"编辑当前角色卡":"Edit current role card")+'</b></span></button>'+'<button class="opt" data-newp="1"><span class="ic">＋</span><span class="grow"><b>'+t("me.addp")+'</b></span></button></div>')}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pid]")){S.pid=x.dataset.pid;save();closeSheet();rerender();return}
  if(e.target.closest("[data-newp]")){editPersona(null);return}
+ if(e.target.closest("[data-editp]")){editPersona(persona());return}
  if(e.target.closest("#pSave")){const id=$("#pSave").dataset.id;let p=S.personas.find(q=>q.id===id);if(!p){p={id:"p"+Date.now()};S.personas.push(p)}
-  p.name=($("#peName").value||"").trim()||"Alex";p.look=($("#peLook").value||"").trim();p.pron=($(".seg#pePron .on")||{dataset:{pr:"they"}}).dataset.pr;S.pid=p.id;save();closeSheet();rerender();return}
+  p.name=($("#peName").value||"").trim()||"Alex";p.look=($("#peLook").value||"").trim();p.pron=($(".seg#pePron .on")||{dataset:{pr:"they"}}).dataset.pr;const gv=id=>{const el=$("#"+id);return el?(el.value||"").trim():""};const ag=parseInt(gv("peAge"),10);p.age=ag>=18?ag:(p.age||"");p.like=gv("peLike");p.dislike=gv("peDislike");p.bio=gv("peBio");p.label=gv("peLabel");{const f=$("#peImg");if(f&&f.dataset.v)p.img=f.dataset.v;}S.pid=p.id;save();closeSheet();rerender();return}
  if(x=e.target.closest("[data-pr]")){$$("#pePron button").forEach(y=>y.classList.toggle("on",y===x));return}});
-function editPersona(p){p=p||{id:"",name:"",pron:"they",look:""};sheet('<h2>'+t("me.addp")+'</h2><div class="stack" style="gap:12px;margin-top:12px">'+
- '<div class="field"><label for="peName">'+t("ob.name")+'</label><input id="peName" maxlength="24" value="'+esc(p.name)+'"></div>'+
- '<div class="field"><label>'+t("ob.pron")+'</label><div class="seg" id="pePron">'+["he","she","they"].map(k=>'<button data-pr="'+k+'" class="'+(p.pron===k?"on":"")+'">'+{he:"he/him",she:"she/her",they:"they/them"}[k]+'</button>').join("")+'</div></div>'+
- '<div class="field"><label for="peLook">'+t("ob.look")+'</label><input id="peLook" maxlength="80" value="'+esc(p.look)+'" placeholder="'+esc(t("ob.lookPh"))+'"></div>'+
- '<button class="btn btn-p" id="pSave" data-id="'+p.id+'">'+t("g.save")+'</button></div>')}
+/* 2026-11-03 角色卡：「扮演我自己」时 AI 认的就是这张卡（名字/性别/年龄/喜欢/不喜欢/外貌/简介/标签/头像）。
+   pron 仍是性别的唯一来源（he/she/they = 男/女/非二元），老数据不用迁移。 */
+function editPersona(p){p=p||{id:"",name:"",pron:"she",look:""};const L2=(z,e)=>(typeof CL==="function"&&CL()==="zh")?z:e;
+ const ta=(id,lab,v,ph,n)=>'<div class="field"><label for="'+id+'">'+lab+'</label><textarea id="'+id+'" maxlength="'+n+'" rows="2" placeholder="'+esc(ph)+'">'+esc(v||"")+'</textarea></div>';
+ sheet('<h2>'+L2("我的角色卡","My role card")+'</h2><p class="xs faint" style="margin-top:4px">'+L2("选「扮演 我自己」时，故事里的人会按这张卡认识你。","When you pick \u201cPlay as me\u201d, the cast knows you by this card.")+'</p><div class="stack" style="gap:12px;margin-top:12px">'+
+ '<div class="row" style="gap:12px;align-items:center"><label class="pe-av" style="width:72px;height:72px;border-radius:14px;border:1px dashed var(--line,#555);display:grid;place-items:center;overflow:hidden;cursor:pointer;flex:none">'+(p.img?'<img id="peImgV" src="'+esc(p.img)+'" style="width:100%;height:100%;object-fit:cover">':'<span id="peImgV" class="xs faint">'+L2("头像","Photo")+'</span>')+'<input type="file" id="peImg" accept="image/*" hidden></label><span class="xs faint">'+L2("可选：一张清楚的正脸照","Optional: a clear front-facing photo")+'</span></div>'+
+ '<div class="field"><label for="peName">'+L2("名字 *","Name *")+'</label><input id="peName" maxlength="24" value="'+esc(p.name)+'" placeholder="'+esc(L2("你在故事里的名字","Your name in the story"))+'"></div>'+
+ '<div class="field"><label>'+L2("性别 *","Gender *")+'</label><div class="seg" id="pePron">'+["he","she","they"].map(k=>'<button data-pr="'+k+'" class="'+(p.pron===k?"on":"")+'">'+{he:L2("男","Male"),she:L2("女","Female"),they:L2("非二元","Non-binary")}[k]+'</button>').join("")+'</div></div>'+
+ '<div class="field"><label for="peAge">'+L2("年龄 *（成年）","Age * (adult)")+'</label><input id="peAge" type="number" min="18" max="99" value="'+esc(p.age||"")+'"></div>'+
+ ta("peLike",L2("喜欢","Likes"),p.like,L2("说说你喜欢什么","Share what you like"),100)+
+ ta("peDislike",L2("不喜欢","Dislikes"),p.dislike,L2("说说你不喜欢什么","Share what you dislike"),100)+
+ ta("peLook",L2("外貌","Appearance"),p.look,L2("发色、发型、眼睛、肤色或其他特征","Hair, eyes, skin tone or other distinctive features"),100)+
+ ta("peBio",L2("简介","Description"),p.bio,L2("再多说说你自己","Tell us more about yourself"),300)+
+ '<div class="field"><label for="peLabel">'+L2("身份标签","Label")+'</label><input id="peLabel" maxlength="50" value="'+esc(p.label||"")+'" placeholder="'+esc(L2("比如：恋人、宿敌、守护者","e.g. Lover, Enemy, Guardian"))+'"></div>'+
+ '<button class="btn btn-p" id="pSave" data-id="'+p.id+'">'+t("g.save")+'</button></div>');
+ try{const f=$("#peImg");if(f)f.addEventListener("change",()=>{const x=f.files&&f.files[0];if(!x)return;const r=new FileReader();r.addEventListener("load",()=>{const im=new Image();im.addEventListener("load",()=>{const c=document.createElement("canvas"),k=256/Math.max(im.width,im.height,1);c.width=Math.round(im.width*Math.min(1,k));c.height=Math.round(im.height*Math.min(1,k));c.getContext("2d").drawImage(im,0,0,c.width,c.height);const d=c.toDataURL("image/jpeg",.82);f.dataset.v=d;const v=$("#peImgV");if(v)v.outerHTML='<img id="peImgV" src="'+d+'" style="width:100%;height:100%;object-fit:cover">'});im.src=r.result});r.readAsDataURL(x)})}catch(e){console.warn("[persona img]",e)}}
 
 /* ---------- CHARACTER PAGE (WHIF-style profile card) ---------- */
 let curChar=null,charTab="profile";
@@ -5358,7 +5373,8 @@ async function reply(th,ctx,silent){
    return "SCENE DIRECTION (what this moment needs, not what to say. NO PRE-WRITTEN WORDING is given to you — invent it, in your own words, from where the conversation actually is right now. Never announce plot, never repeat a phrase you used earlier):\n"+lines;
   }catch(_){return ""}})()||"",
   packPrompt(th),
-  (th.pk&&th.pk.as!=="side")?"":"THE USER: "+(p.name||"the user")+" ("+(p.pron==="he"?"he/him":p.pron==="she"?"she/her":"they/them")+")"+(p.look?". "+p.look:"")+". Never write the user's lines, actions or feelings.",
+  (th.pk&&th.pk.me)?"THE PLAYER is the story's lead (the one the script calls 你/you), played as THEMSELF, from their role card: "+personaDesc(p)+" The cast knows the player by this name and these facts — use them naturally (call them by name, notice their looks, remember their likes/dislikes) and never contradict them. Never write the player's lines, actions or feelings.":
+  (th.pk&&th.pk.as!=="side")?"":"THE USER: "+personaDesc(p)+" Never write the user's lines, actions or feelings.",
   memBlock(th),
   goals?("QUEST GOALS (the user is trying to achieve these; only mark one done if it clearly happened in THIS reply):\n"+goals):"",
   "STORY SO FAR:\n"+transcript(th),
@@ -16801,8 +16817,10 @@ function off94You94Build(next, doc, as) {
     w.you94 = yid; w.pack.pov = yid;
     const zh = s => ({ zh: s, en: s });
     const others = w.cast.filter(id => id !== yid && ch(id) && !["医院"].includes(ch(id).n) && (doc.chars94 || []).some(a => a[0] === (ch(id).n94 ? ch(id).n94.zh : ch(id).n)));
-    w.pack.join = [{ as: yid, t: { zh: "剧本原定的主角视角：每个关键选择都由你来做", en: "The story's own lead: every key choice is yours" } }]
-      .concat(others.map(id => { const n = ch(id).n; return { as: id, t: { zh: "轮到" + n + "时由你来说——照剧本说，或者自由发挥，其他人会接着你演", en: "When it's " + n + "'s turn, you speak — follow the script or improvise; the cast plays off you" } }; }));
+    /* 2026-11-03（产品决定）：入口只留三条 —— 扮演我自己 / 扮演主角 / 导演（见 app114）。
+       不再给「扮演 其他角色」（玩家反馈：我要扮演我，不是其他人）。其他角色一律由 AI 演。 */
+    void others;
+    w.pack.join = [{ as: yid, t: { zh: "按剧本原定的主角来演：每个关键选择都由你来做", en: "Play the story's own lead: every key choice is yours" } }];
     w.cast = w.cast.filter(id => id !== yid).concat([yid]);
   } catch (e) { try { console.warn("[off96]", e); } catch (_) {} }
   return r;
@@ -19559,7 +19577,21 @@ if (window.UI && typeof window.UI.add === 'function') window.UI.add('open100', _
       }
     });
 
-    const filled = out.filter(function (m) { return m.src === 'derived' });
+    /* 2026-11-03（产品决定，覆盖上面「三路 = 导演/扮演X/加入场景」的旧口径）：
+       入口固定三条 ——「扮演 我自己」（用角色卡）/「扮演 主角」/「导演视角」，不再列出每个配角。
+       · 主角 = 剧本 join 里第一个可玩人物，没有就按 leadOf 补；
+       · 我自己 = 第二人称剧本（w.you94）里坐主角的位置、但用你的角色卡（as:'me'，见下面 packStart）；
+                  其他剧本就是原来的 side（以你自己的身份进场）。 */
+    const leadM = out.filter(function (m) { return m.as !== 'watch' && m.as !== 'side' })[0] || null;
+    const sideM = out.filter(function (m) { return m.as === 'side' })[0];
+    const meM = (w && w.you94)
+      ? { as: 'me', t: null, src: 'always' }
+      : { as: 'side', t: sideM && sideM.src === 'data' ? sideM.t : null, src: sideM ? sideM.src : 'derived' };
+    meM.t = meM.t || { zh: '用你的角色卡（名字、外貌、喜好）进去，他们会把你当成你本人来回应', en: "Go in with your role card (name, looks, likes) — they'll answer you as you" };
+    const watchM = out.filter(function (m) { return m.as === 'watch' })[0];
+    out.length = 0;
+    out.push(meM); if (leadM) out.push(leadM); out.push(watchM);
+    const filled = out.filter(function (m) { return m.src === 'derived' && m.as !== 'side' });
     let hint = '';
     if (filled.length) {
       let names = '';
@@ -19582,6 +19614,14 @@ if (window.UI && typeof window.UI.add === 'function') window.UI.add('open100', _
       soft('app114:startSheet.hint', function () {
         const w = wd(wid);
         if (!w || !w.pack || w.bible98) return;          /* b98 有自己的入口，见文件末 */
+        /* 2026-11-03：「扮演 我自己」下面给一个编辑角色卡的入口（同一层包装里做，不新增包装） */
+        soft('app114:me.cardBtn', function () {
+          const st0 = document.querySelector('.sheet .stack');
+          if (!st0 || document.querySelector('[data-editp-start]')) return;
+          const p = persona(), zhs = (typeof CL === 'function' && CL() === 'zh');
+          st0.insertAdjacentHTML('afterend', '<button class="btn btn-g btn-block" data-editp data-editp-start style="margin-top:10px">🪪 ' +
+            esc(zhs ? '我的角色卡：' : 'My role card: ') + esc(p.name || '—') + esc(zhs ? ' · 编辑' : ' · edit') + '</button>');
+        });
         const hint = entryModes(w).hint;
         if (!hint) return;
         const st = document.querySelector('.sheet .stack');
@@ -19602,7 +19642,8 @@ if (window.UI && typeof window.UI.add === 'function') window.UI.add('open100', _
       const out = [];
       entryModes(w).modes.forEach(function (m) {
         if (m.as === 'watch') out.push([m.as, '🎬 ' + (zh() ? '我来导演' : 'Direct it'), zh() ? '旁观，随时插手改戏' : 'Watch, and step in to change the scene anytime']);
-        else if (m.as === 'side') out.push([m.as, '🙋 ' + (zh() ? '我自己走进这场戏' : 'Walk in as yourself'), zh() ? '以你自己的身份，他们会回应你' : "As you — they'll answer you"]);
+        else if (m.as === 'me' || m.as === 'side') out.push([m.as, '🙋 ' + (zh() ? '扮演 我自己' : 'Play as me'), zh() ? '用你的角色卡，他们按你本人来回应' : "With your role card — they answer you as you"]);
+        else if (false) out.push([m.as, '🙋 ' + (zh() ? '我自己走进这场戏' : 'Walk in as yourself'), zh() ? '以你自己的身份，他们会回应你' : "As you — they'll answer you"]);
         else {
           let nm = '';
           try { nm = first(ch(m.as).n) } catch (e) { nm = '' }
@@ -19611,6 +19652,47 @@ if (window.UI && typeof window.UI.add === 'function') window.UI.add('open100', _
       });
       return out;
     };
+  });
+
+  /* ---------- 「扮演 我自己」的接线（as:'me'）----------
+     'me' 只是入口上的一个记号：开局时换成主角 id，并在线程上记 pk.me=1；
+     app3_chat 看到 pk.me 就把角色卡（personaDesc）当作主角本人交给模型。 */
+  soft('app114:me.name', function () {
+    const _pan = packAsName;
+    packAsName = function (w, as) {
+      if (as === 'me' || as === 'side') return (typeof CL === 'function' && CL() === 'zh') ? '扮演 我自己' : 'Play as me';
+      return _pan.apply(this, arguments);
+    };
+  });
+  let mePending = null;
+  soft('app114:me.start', function () {
+    const _ps = packStart;
+    packStart = function (wid, as) {
+      const args = [].slice.call(arguments);
+      if (as === 'me') {
+        const w = wd(wid);
+        const yid = w && (w.you94 || (w.pack && w.pack.pov));
+        mePending = wid; args[1] = yid || 'side';
+      } else if (as) mePending = null;
+      return _ps.apply(this, args);
+    };
+    const _nt = newThread;
+    newThread = function (a, wid) {
+      const th = _nt.apply(this, arguments);
+      soft('app114:me.mark', function () {
+        if (th && th.pk && mePending && wid === mePending) { th.pk.me = 1; mePending = null; save(); }
+      });
+      return th;
+    };
+    /* 换身份：先于 app14 的冒泡监听，把 'me' 换成主角并打标；换到别的身份就去掉标 */
+    document.addEventListener('click', function (e) {
+      const x = e.target && e.target.closest && e.target.closest('[data-stepas]');
+      if (!x) return;
+      const th = S.threads[curT]; if (!th || !th.pk) return;
+      const w = wd(th.wid);
+      if (x.dataset.stepas === 'me') { th.pk.me = 1; x.dataset.stepas = (w && (w.you94 || (w.pack && w.pack.pov))) || 'side'; }
+      else th.pk.me = 0;
+    }, true);
   });
 
   window.entryModes = entryModes;
@@ -19705,11 +19787,8 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  const assets={};for(const c of D.world.pack.chapters)for(const b of c.beats.zh)if(b[1]==='scene'){const d=b[2];assets[d.img]=d.src94;}
  Object.assign(window.SCENE_FILES||(window.SCENE_FILES={}),assets);
  if(typeof OFF94!=='undefined')OFF94.assets[D.world.community]={cover:'art/official/m102/cover.jpg',poster:'art/official/m102/cover.jpg'};
- // Built-in stories also need a Discover entry; the community feed is a separate catalog.
- if(typeof discMain==='function'){
-  const discover=discMain;discMain=function(){return '<div class="shelf m102-discover"><div class="shd"><h3>新剧上线</h3></div><div class="rail2"><button class="rcard" data-m102-discover="1"><div class="rart"><img src="art/official/m102/cover.jpg" alt="午夜不打烊封面" loading="lazy"><span class="rbadge">14章完整故事</span></div><b>午夜不打烊</b><span>四份收购书，同一个交割日。谁在替你决定未来？</span></button></div></div>'+discover.apply(this,arguments);};
-  document.addEventListener('click',ev=>{if(!ev.target.closest('[data-m102-discover]'))return;ev.preventDefault();ev.stopImmediatePropagation();openStory(ID);},true);
- }
+ // 2026-11-03：去掉写死在发现页顶部的「新剧上线 · 午夜不打烊」横条（不跟分类筛选走，女女/男男下也会出现）。
+ // 这部剧仍然在 W 里，走正常的发现页列表和搜索。
  const uuid=()=>Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
  const requestsInFlight=new WeakSet();
  async function request(th,action){
