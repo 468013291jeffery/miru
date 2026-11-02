@@ -13,7 +13,7 @@
 
 // 2026-10-29：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ / ⟦OPT⟧ 进了剧本语法（运行时 app16_story2.js:27-28 与 app14_pack.js:471/233 早就支持），
 // 这里必须同步认它们，否则审查会把合法的留痕/条件/选项效果句报成「未知指令」并挡住上线。
-const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL', 'SECRET', 'REVEAL', 'ORIENT']);
+const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL', 'SECRET', 'REVEAL', 'ORIENT', 'LORE']);
 const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 
 function dslQA(md) {
@@ -27,6 +27,8 @@ function dslQA(md) {
   /* 资产槽位：剧本里声明了多少个（BG / CG / VIDEO / PHOTO / ITEM）—— 回执里要能一眼看出这部还欠多少图。 */
   st.assets = { bg: 0, cg: 0, video: 0, photo: 0, item: 0, total: 0 };
   const perCh = [];
+  /* 设定集（app117_lore.js）：关键词重复、内容超长、格式不对都要在发布前看见 */
+  const lore = []; st.lore = 0;
   let cur = null;
   const closeCh = () => { if (cur) perCh.push(cur); };
   for (const raw of L) {
@@ -45,6 +47,7 @@ function dslQA(md) {
       else if (m[1] === 'CHAR') { st.casts++; const p = raw.replace(/^⟦CHAR\|/, '').replace(/⟧$/, '').split('|'); if (p.length > 1) orChars.push({ n: String(p[0] || '').trim(), x: String(p[1] || '').trim().toLowerCase().charAt(0) }); }
       else if (m[1] === 'IF') st.ifs++;
       else if (m[1] === '/IF') st.ifEnds++;
+      else if (m[1] === 'LORE') { st.lore++; const p = raw.replace(/^⟦LORE\|/, '').replace(/⟧$/, '').split('|'); lore.push({ keys: String(p[0] || '').split(/[,，、]/).map(s => s.trim()).filter(Boolean), txt: String(p[1] || '').trim(), raw: raw.slice(0, 30) }); }
       else if (m[1] === 'ORIENT') { const v = raw.replace(/^⟦ORIENT\|/, '').replace(/⟧$/, '').trim().toLowerCase(); orDecl = v; }
       else if (m[1] === 'BG' || m[1] === 'CG' || m[1] === 'VIDEO' || m[1] === 'PHOTO' || m[1] === 'ITEM') { const k = m[1].toLowerCase(); st.assets[k] = (st.assets[k] || 0) + 1; st.assets.total++; }
       continue;
@@ -68,6 +71,14 @@ function dslQA(md) {
   });
   if (!st.you) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');
   if (st.options < st.choices * 2) warn.push('选项数 ' + st.options + ' 少于选择道数 ' + st.choices + ' 的两倍 —— 可能有选择题只剩 1 个选项');
+  lore.forEach(e => {
+    if (!e.keys.length || !e.txt) err.push('设定集格式不对：' + e.raw + '…（要写成 ⟦LORE|关键词1,关键词2|设定内容⟧）');
+    else if (e.txt.length > 300) warn.push('设定集条目超过 300 字（会被截断）：' + e.raw + '…');
+  });
+  const seenK = {};
+  lore.forEach(e => e.keys.forEach(k => { seenK[k] = (seenK[k] || 0) + 1; }));
+  const dupK = Object.keys(seenK).filter(k => seenK[k] > 1);
+  if (dupK.length) warn.push('设定集里有 ' + dupK.length + ' 个关键词被多条共用（' + dupK.slice(0, 4).join('、') + '）—— 一提到它会同时带出好几条');
   if (!st.casts) warn.push('没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜');
 
   /* 取向：显式声明必须合法；与角色卡推断矛盾要拦；没写就给出推断值（warn，不拦）。
