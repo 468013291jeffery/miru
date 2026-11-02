@@ -414,8 +414,10 @@ function off94You94Build(next, doc, as) {
     w.you94 = yid; w.pack.pov = yid;
     const zh = s => ({ zh: s, en: s });
     const others = w.cast.filter(id => id !== yid && ch(id) && !["医院"].includes(ch(id).n) && (doc.chars94 || []).some(a => a[0] === (ch(id).n94 ? ch(id).n94.zh : ch(id).n)));
-    w.pack.join = [{ as: yid, t: { zh: "剧本原定的主角视角：每个关键选择都由你来做", en: "The story's own lead: every key choice is yours" } }]
-      .concat(others.map(id => { const n = ch(id).n; return { as: id, t: { zh: "轮到" + n + "时由你来说——照剧本说，或者自由发挥，其他人会接着你演", en: "When it's " + n + "'s turn, you speak — follow the script or improvise; the cast plays off you" } }; }));
+    /* 2026-11-03（产品决定）：入口只留三条 —— 扮演我自己 / 扮演主角 / 导演（见 app114）。
+       不再给「扮演 其他角色」（玩家反馈：我要扮演我，不是其他人）。其他角色一律由 AI 演。 */
+    void others;
+    w.pack.join = [{ as: yid, t: { zh: "按剧本原定的主角来演：每个关键选择都由你来做", en: "Play the story's own lead: every key choice is yours" } }];
     w.cast = w.cast.filter(id => id !== yid).concat([yid]);
   } catch (e) { try { console.warn("[off96]", e); } catch (_) {} }
   return r;

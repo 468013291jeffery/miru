@@ -110,7 +110,21 @@
       }
     });
 
-    const filled = out.filter(function (m) { return m.src === 'derived' });
+    /* 2026-11-03（产品决定，覆盖上面「三路 = 导演/扮演X/加入场景」的旧口径）：
+       入口固定三条 ——「扮演 我自己」（用角色卡）/「扮演 主角」/「导演视角」，不再列出每个配角。
+       · 主角 = 剧本 join 里第一个可玩人物，没有就按 leadOf 补；
+       · 我自己 = 第二人称剧本（w.you94）里坐主角的位置、但用你的角色卡（as:'me'，见下面 packStart）；
+                  其他剧本就是原来的 side（以你自己的身份进场）。 */
+    const leadM = out.filter(function (m) { return m.as !== 'watch' && m.as !== 'side' })[0] || null;
+    const sideM = out.filter(function (m) { return m.as === 'side' })[0];
+    const meM = (w && w.you94)
+      ? { as: 'me', t: null, src: 'always' }
+      : { as: 'side', t: sideM && sideM.src === 'data' ? sideM.t : null, src: sideM ? sideM.src : 'derived' };
+    meM.t = meM.t || { zh: '用你的角色卡（名字、外貌、喜好）进去，他们会把你当成你本人来回应', en: "Go in with your role card (name, looks, likes) — they'll answer you as you" };
+    const watchM = out.filter(function (m) { return m.as === 'watch' })[0];
+    out.length = 0;
+    out.push(meM); if (leadM) out.push(leadM); out.push(watchM);
+    const filled = out.filter(function (m) { return m.src === 'derived' && m.as !== 'side' });
     let hint = '';
     if (filled.length) {
       let names = '';
@@ -133,6 +147,14 @@
       soft('app114:startSheet.hint', function () {
         const w = wd(wid);
         if (!w || !w.pack || w.bible98) return;          /* b98 有自己的入口，见文件末 */
+        /* 2026-11-03：「扮演 我自己」下面给一个编辑角色卡的入口（同一层包装里做，不新增包装） */
+        soft('app114:me.cardBtn', function () {
+          const st0 = document.querySelector('.sheet .stack');
+          if (!st0 || document.querySelector('[data-editp-start]')) return;
+          const p = persona(), zhs = (typeof CL === 'function' && CL() === 'zh');
+          st0.insertAdjacentHTML('afterend', '<button class="btn btn-g btn-block" data-editp data-editp-start style="margin-top:10px">🪪 ' +
+            esc(zhs ? '我的角色卡：' : 'My role card: ') + esc(p.name || '—') + esc(zhs ? ' · 编辑' : ' · edit') + '</button>');
+        });
         const hint = entryModes(w).hint;
         if (!hint) return;
         const st = document.querySelector('.sheet .stack');
@@ -153,7 +175,8 @@
       const out = [];
       entryModes(w).modes.forEach(function (m) {
         if (m.as === 'watch') out.push([m.as, '🎬 ' + (zh() ? '我来导演' : 'Direct it'), zh() ? '旁观，随时插手改戏' : 'Watch, and step in to change the scene anytime']);
-        else if (m.as === 'side') out.push([m.as, '🙋 ' + (zh() ? '我自己走进这场戏' : 'Walk in as yourself'), zh() ? '以你自己的身份，他们会回应你' : "As you — they'll answer you"]);
+        else if (m.as === 'me' || m.as === 'side') out.push([m.as, '🙋 ' + (zh() ? '扮演 我自己' : 'Play as me'), zh() ? '用你的角色卡，他们按你本人来回应' : "With your role card — they answer you as you"]);
+        else if (false) out.push([m.as, '🙋 ' + (zh() ? '我自己走进这场戏' : 'Walk in as yourself'), zh() ? '以你自己的身份，他们会回应你' : "As you — they'll answer you"]);
         else {
           let nm = '';
           try { nm = first(ch(m.as).n) } catch (e) { nm = '' }
@@ -162,6 +185,47 @@
       });
       return out;
     };
+  });
+
+  /* ---------- 「扮演 我自己」的接线（as:'me'）----------
+     'me' 只是入口上的一个记号：开局时换成主角 id，并在线程上记 pk.me=1；
+     app3_chat 看到 pk.me 就把角色卡（personaDesc）当作主角本人交给模型。 */
+  soft('app114:me.name', function () {
+    const _pan = packAsName;
+    packAsName = function (w, as) {
+      if (as === 'me' || as === 'side') return (typeof CL === 'function' && CL() === 'zh') ? '扮演 我自己' : 'Play as me';
+      return _pan.apply(this, arguments);
+    };
+  });
+  let mePending = null;
+  soft('app114:me.start', function () {
+    const _ps = packStart;
+    packStart = function (wid, as) {
+      const args = [].slice.call(arguments);
+      if (as === 'me') {
+        const w = wd(wid);
+        const yid = w && (w.you94 || (w.pack && w.pack.pov));
+        mePending = wid; args[1] = yid || 'side';
+      } else if (as) mePending = null;
+      return _ps.apply(this, args);
+    };
+    const _nt = newThread;
+    newThread = function (a, wid) {
+      const th = _nt.apply(this, arguments);
+      soft('app114:me.mark', function () {
+        if (th && th.pk && mePending && wid === mePending) { th.pk.me = 1; mePending = null; save(); }
+      });
+      return th;
+    };
+    /* 换身份：先于 app14 的冒泡监听，把 'me' 换成主角并打标；换到别的身份就去掉标 */
+    document.addEventListener('click', function (e) {
+      const x = e.target && e.target.closest && e.target.closest('[data-stepas]');
+      if (!x) return;
+      const th = S.threads[curT]; if (!th || !th.pk) return;
+      const w = wd(th.wid);
+      if (x.dataset.stepas === 'me') { th.pk.me = 1; x.dataset.stepas = (w && (w.you94 || (w.pack && w.pack.pov))) || 'side'; }
+      else th.pk.me = 0;
+    }, true);
   });
 
   window.entryModes = entryModes;

@@ -33,6 +33,9 @@ function ago(ts){const m=Math.max(1,Math.round((Date.now()-ts)/6e4));if(m<60)ret
 function hash(s){let h=2166136261;for(const c of String(s)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
 function persona(){return S.personas.find(p=>p.id===S.pid)||S.personas[0]}
 function me(){return persona().name||"You"}
+/* 角色卡 → 给模型的一句话（2026-11-03）。只写填了的字段。 */
+function personaDesc(p){p=p||persona();const g=p.pron==="he"?"male, he/him":p.pron==="she"?"female, she/her":"non-binary, they/them";
+ return (p.name||"the user")+" ("+g+(p.age?", "+p.age:"")+")"+(p.label?". Role: "+p.label:"")+(p.look?". Looks: "+p.look:"")+(p.like?". Likes: "+p.like:"")+(p.dislike?". Dislikes: "+p.dislike:"")+(p.bio?". About: "+p.bio:"")+"."}
 function ch(id){return C[id]||S.mine.chars[id]||null}
 function wd(id){return W.find(w=>w.id===id)||S.mine.worlds[id]||null}
 function allChars(){return Object.keys(C).filter(id=>!C[id].retired).concat(Object.keys(S.mine.chars))}

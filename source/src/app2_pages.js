@@ -230,18 +230,30 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ppick]")){personaSheet();return}
  if(x=e.target.closest("[data-newt]")){const th=newThread(pickQuest?"quest":null,x.dataset.newt,pickOpen);openThread(th.id);return}});
 function personaSheet(){sheet('<h2>'+t("me.personas")+'</h2><div class="stack" style="margin-top:8px">'+S.personas.map(p=>'<button class="opt" data-pid="'+p.id+'"><span class="ic">'+esc((p.name||"?")[0])+'</span><span class="grow"><b>'+esc(p.name||"—")+'</b><span>'+esc(p.pron)+(p.look?" · "+esc(p.look):"")+'</span></span>'+(S.pid===p.id?'<span class="check on">✓</span>':"")+'</button>').join("")+
- '<button class="opt" data-newp="1"><span class="ic">＋</span><span class="grow"><b>'+t("me.addp")+'</b></span></button></div>')}
+ '<button class="opt" data-editp="1"><span class="ic">✎</span><span class="grow"><b>'+((typeof CL==="function"&&CL()==="zh")?"编辑当前角色卡":"Edit current role card")+'</b></span></button>'+'<button class="opt" data-newp="1"><span class="ic">＋</span><span class="grow"><b>'+t("me.addp")+'</b></span></button></div>')}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-pid]")){S.pid=x.dataset.pid;save();closeSheet();rerender();return}
  if(e.target.closest("[data-newp]")){editPersona(null);return}
+ if(e.target.closest("[data-editp]")){editPersona(persona());return}
  if(e.target.closest("#pSave")){const id=$("#pSave").dataset.id;let p=S.personas.find(q=>q.id===id);if(!p){p={id:"p"+Date.now()};S.personas.push(p)}
-  p.name=($("#peName").value||"").trim()||"Alex";p.look=($("#peLook").value||"").trim();p.pron=($(".seg#pePron .on")||{dataset:{pr:"they"}}).dataset.pr;S.pid=p.id;save();closeSheet();rerender();return}
+  p.name=($("#peName").value||"").trim()||"Alex";p.look=($("#peLook").value||"").trim();p.pron=($(".seg#pePron .on")||{dataset:{pr:"they"}}).dataset.pr;const gv=id=>{const el=$("#"+id);return el?(el.value||"").trim():""};const ag=parseInt(gv("peAge"),10);p.age=ag>=18?ag:(p.age||"");p.like=gv("peLike");p.dislike=gv("peDislike");p.bio=gv("peBio");p.label=gv("peLabel");{const f=$("#peImg");if(f&&f.dataset.v)p.img=f.dataset.v;}S.pid=p.id;save();closeSheet();rerender();return}
  if(x=e.target.closest("[data-pr]")){$$("#pePron button").forEach(y=>y.classList.toggle("on",y===x));return}});
-function editPersona(p){p=p||{id:"",name:"",pron:"they",look:""};sheet('<h2>'+t("me.addp")+'</h2><div class="stack" style="gap:12px;margin-top:12px">'+
- '<div class="field"><label for="peName">'+t("ob.name")+'</label><input id="peName" maxlength="24" value="'+esc(p.name)+'"></div>'+
- '<div class="field"><label>'+t("ob.pron")+'</label><div class="seg" id="pePron">'+["he","she","they"].map(k=>'<button data-pr="'+k+'" class="'+(p.pron===k?"on":"")+'">'+{he:"he/him",she:"she/her",they:"they/them"}[k]+'</button>').join("")+'</div></div>'+
- '<div class="field"><label for="peLook">'+t("ob.look")+'</label><input id="peLook" maxlength="80" value="'+esc(p.look)+'" placeholder="'+esc(t("ob.lookPh"))+'"></div>'+
- '<button class="btn btn-p" id="pSave" data-id="'+p.id+'">'+t("g.save")+'</button></div>')}
+/* 2026-11-03 角色卡：「扮演我自己」时 AI 认的就是这张卡（名字/性别/年龄/喜欢/不喜欢/外貌/简介/标签/头像）。
+   pron 仍是性别的唯一来源（he/she/they = 男/女/非二元），老数据不用迁移。 */
+function editPersona(p){p=p||{id:"",name:"",pron:"she",look:""};const L2=(z,e)=>(typeof CL==="function"&&CL()==="zh")?z:e;
+ const ta=(id,lab,v,ph,n)=>'<div class="field"><label for="'+id+'">'+lab+'</label><textarea id="'+id+'" maxlength="'+n+'" rows="2" placeholder="'+esc(ph)+'">'+esc(v||"")+'</textarea></div>';
+ sheet('<h2>'+L2("我的角色卡","My role card")+'</h2><p class="xs faint" style="margin-top:4px">'+L2("选「扮演 我自己」时，故事里的人会按这张卡认识你。","When you pick \u201cPlay as me\u201d, the cast knows you by this card.")+'</p><div class="stack" style="gap:12px;margin-top:12px">'+
+ '<div class="row" style="gap:12px;align-items:center"><label class="pe-av" style="width:72px;height:72px;border-radius:14px;border:1px dashed var(--line,#555);display:grid;place-items:center;overflow:hidden;cursor:pointer;flex:none">'+(p.img?'<img id="peImgV" src="'+esc(p.img)+'" style="width:100%;height:100%;object-fit:cover">':'<span id="peImgV" class="xs faint">'+L2("头像","Photo")+'</span>')+'<input type="file" id="peImg" accept="image/*" hidden></label><span class="xs faint">'+L2("可选：一张清楚的正脸照","Optional: a clear front-facing photo")+'</span></div>'+
+ '<div class="field"><label for="peName">'+L2("名字 *","Name *")+'</label><input id="peName" maxlength="24" value="'+esc(p.name)+'" placeholder="'+esc(L2("你在故事里的名字","Your name in the story"))+'"></div>'+
+ '<div class="field"><label>'+L2("性别 *","Gender *")+'</label><div class="seg" id="pePron">'+["he","she","they"].map(k=>'<button data-pr="'+k+'" class="'+(p.pron===k?"on":"")+'">'+{he:L2("男","Male"),she:L2("女","Female"),they:L2("非二元","Non-binary")}[k]+'</button>').join("")+'</div></div>'+
+ '<div class="field"><label for="peAge">'+L2("年龄 *（成年）","Age * (adult)")+'</label><input id="peAge" type="number" min="18" max="99" value="'+esc(p.age||"")+'"></div>'+
+ ta("peLike",L2("喜欢","Likes"),p.like,L2("说说你喜欢什么","Share what you like"),100)+
+ ta("peDislike",L2("不喜欢","Dislikes"),p.dislike,L2("说说你不喜欢什么","Share what you dislike"),100)+
+ ta("peLook",L2("外貌","Appearance"),p.look,L2("发色、发型、眼睛、肤色或其他特征","Hair, eyes, skin tone or other distinctive features"),100)+
+ ta("peBio",L2("简介","Description"),p.bio,L2("再多说说你自己","Tell us more about yourself"),300)+
+ '<div class="field"><label for="peLabel">'+L2("身份标签","Label")+'</label><input id="peLabel" maxlength="50" value="'+esc(p.label||"")+'" placeholder="'+esc(L2("比如：恋人、宿敌、守护者","e.g. Lover, Enemy, Guardian"))+'"></div>'+
+ '<button class="btn btn-p" id="pSave" data-id="'+p.id+'">'+t("g.save")+'</button></div>');
+ try{const f=$("#peImg");if(f)f.addEventListener("change",()=>{const x=f.files&&f.files[0];if(!x)return;const r=new FileReader();r.addEventListener("load",()=>{const im=new Image();im.addEventListener("load",()=>{const c=document.createElement("canvas"),k=256/Math.max(im.width,im.height,1);c.width=Math.round(im.width*Math.min(1,k));c.height=Math.round(im.height*Math.min(1,k));c.getContext("2d").drawImage(im,0,0,c.width,c.height);const d=c.toDataURL("image/jpeg",.82);f.dataset.v=d;const v=$("#peImgV");if(v)v.outerHTML='<img id="peImgV" src="'+d+'" style="width:100%;height:100%;object-fit:cover">'});im.src=r.result});r.readAsDataURL(x)})}catch(e){console.warn("[persona img]",e)}}
 
 /* ---------- CHARACTER PAGE (WHIF-style profile card) ---------- */
 let curChar=null,charTab="profile";
