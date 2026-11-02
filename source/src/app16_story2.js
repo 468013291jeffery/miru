@@ -284,7 +284,11 @@ sceneBg=function(th,img){const box=$("#cbImg");if(!box)return;const key=img||("c
  box.classList.remove("vmode","duo");POSES.forEach(p=>box.classList.remove("p-"+p));
  (img?scnProbe(img):Promise.resolve(null)).then(src=>{if(box.dataset.scene!==key||box.dataset.sceneThread!==th.id||box.dataset.sceneSrc!==resolved)return;src=src||artSrc(th.wid);let el;
   if(/\.mp4$/.test(src)){el=document.createElement("video");el.muted=true;el.defaultMuted=true;el.setAttribute("muted","");el.loop=true;el.autoplay=true;el.playsInline=true;el.setAttribute("playsinline","");el.setAttribute("webkit-playsinline","");el.preload="auto";el.className="scimg cbv"}else{el=document.createElement("img");el.alt="";el.className="scimg"}
-  el.src=src;box.appendChild(el);if(el.play)el.play().catch(()=>{});requestAnimationFrame(()=>{el.classList.add("on");setTimeout(()=>{const keep=box.lastElementChild;[...box.children].forEach(c=>{if(c!==keep)c.remove()})},900)})})};
+  el.src=src;box.appendChild(el);if(el.play)el.play().catch(()=>{});
+  /* 2026-11-03：只靠 requestAnimationFrame 点亮 —— 页面在后台/被遮住时 rAF 不跑，新图就一直是透明的（实测两张图都卡在 opacity 0，看到一片黑）。
+     加一个定时兜底；图片加载完再点一次。点亮只做一次。 */
+  let lit=false;const show=()=>{if(lit)return;lit=true;el.classList.add("on");setTimeout(()=>{const keep=box.lastElementChild;[...box.children].forEach(c=>{if(c!==keep)c.remove()})},900)};
+  requestAnimationFrame(show);setTimeout(show,120);el.addEventListener("load",show,{once:true})})};
 const _pkDir5=pkDirective;
 /* strict order: a background only appears when its line has been reached, and a slow-loading earlier clip never overrides a later one */
 let BGSEQ=0;

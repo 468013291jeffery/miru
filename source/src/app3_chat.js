@@ -534,6 +534,7 @@ async function reply(th,ctx,silent){
   }catch(_){return ""}})()||"",
   packPrompt(th),
   (typeof loreBlock==="function"?loreBlock(th,ctx):""),
+  (typeof turnBlock==="function"?turnBlock(th,ctx):""),
   (th.pk&&th.pk.me)?"THE PLAYER is the story's lead (the one the script calls 你/you), played as THEMSELF, from their role card: "+personaDesc(p)+" The cast knows the player by this name and these facts — use them naturally (call them by name, notice their looks, remember their likes/dislikes) and never contradict them. Never write the player's lines, actions or feelings.":
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+personaDesc(p)+" Never write the user's lines, actions or feelings.",
   memBlock(th),
