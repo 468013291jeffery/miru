@@ -49,7 +49,8 @@ const checks = [];
 checks.push(['A 数据面：没有只给一个视角的剧', d.onlyWatch.length === 0, d.onlyWatch.length ? d.onlyWatch.join(', ') : '全部 ≥2']);
 checks.push(['A 数据面：没有空名字的行', d.blank.length === 0, d.blank.length ? d.blank.join(', ') : '无']);
 checks.push(['B join 全空 → 三条都在 + 有提示', has(A.B, ['watch', 'side']) && A.B.modes.length >= 3 && !!A.B.hint, JSON.stringify(A.B && A.B.modes) + (A.B && A.B.hint ? ' · 提示=' + A.B.hint : ' · 提示为空')]);
-checks.push(['C join 只有主角 → 三条都在 + 有提示', has(A.C, ['watch', 'side']) && A.C.modes.length >= 3 && !!A.C.hint, JSON.stringify(A.C && A.C.modes)]);
+/* 2026-11-03：「扮演 我自己」（side）是固定入口，不算「补」⇒ 只有主角时不再印提示（那句话玩家看不懂） */
+checks.push(['C join 只有主角 → 三条都在（我自己/主角/导演），不印提示', has(A.C, ['watch', 'side']) && A.C.modes.length === 3 && !A.C.hint, JSON.stringify(A.C && A.C.modes)]);
 checks.push(['D 负对照：写全了的剧 hint 必须为空', !!A.D && A.D.hint === '' && A.D.derived === 0, A.D ? (A.D.id + ' · derived=' + A.D.derived + ' · hint=' + JSON.stringify(A.D.hint)) : '缺读数']);
 checks.push(['E 界面面：按钮数 == 条数', d.control.buttons === d.control.modes.length && d.control.buttons >= 2, d.control.pack + ' · 按钮=' + d.control.buttons + ' · 条数=' + d.control.modes.length]);
 checks.push(['E 界面面：写全了的剧不显示提示行', !!d.diag && d.diag.hintShown === false, 'hintShown=' + (d.diag && d.diag.hintShown)]);

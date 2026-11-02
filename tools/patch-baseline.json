@@ -90,7 +90,7 @@
       {
         "file": "app55_talk.js",
         "order": 82,
-        "line": 108
+        "line": 107
       },
       {
         "file": "app65_lib.js",
@@ -115,7 +115,7 @@
       {
         "file": "app94_official2.js",
         "order": 120,
-        "line": 550
+        "line": 552
       },
       {
         "file": "app96_social.js",
@@ -131,6 +131,16 @@
         "file": "app98_story.js",
         "order": 129,
         "line": 232
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 155
+      },
+      {
+        "file": "app116_reading.js",
+        "order": 142,
+        "line": 76
       }
     ]
   },
@@ -200,12 +210,12 @@
       {
         "file": "app94_official2.js",
         "order": 120,
-        "line": 491
+        "line": 493
       },
       {
         "file": "app94_official2.js",
         "order": 120,
-        "line": 585
+        "line": 587
       },
       {
         "file": "app100_dialogue.js",
@@ -216,6 +226,11 @@
         "file": "app96_social.js",
         "order": 127,
         "line": 147
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 99
       }
     ]
   },
@@ -271,6 +286,11 @@
         "file": "app71_narrative.js",
         "order": 98,
         "line": 99
+      },
+      {
+        "file": "app116_reading.js",
+        "order": 142,
+        "line": 68
       }
     ]
   },
@@ -320,6 +340,51 @@
     ]
   },
   {
+    "fn": "stopAuto",
+    "wrappers": [
+      {
+        "file": "app24_gl.js",
+        "order": 49,
+        "line": 107
+      },
+      {
+        "file": "app32_myline.js",
+        "order": 57,
+        "line": 8
+      },
+      {
+        "file": "app36_live.js",
+        "order": 61,
+        "line": 19
+      },
+      {
+        "file": "app37_hooks.js",
+        "order": 62,
+        "line": 14
+      },
+      {
+        "file": "app38_gift.js",
+        "order": 63,
+        "line": 16
+      },
+      {
+        "file": "app56_story3.js",
+        "order": 83,
+        "line": 64
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 128,
+        "line": 26
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 98
+      }
+    ]
+  },
+  {
     "fn": "packRefresh",
     "wrappers": [
       {
@@ -355,7 +420,7 @@
       {
         "file": "app94_official2.js",
         "order": 120,
-        "line": 551
+        "line": 553
       },
       {
         "file": "app98_story.js",
@@ -475,7 +540,7 @@
       {
         "file": "app55_talk.js",
         "order": 82,
-        "line": 118
+        "line": 117
       },
       {
         "file": "app71_narrative.js",
@@ -491,46 +556,6 @@
         "file": "app100_dialogue.js",
         "order": 121,
         "line": 121
-      }
-    ]
-  },
-  {
-    "fn": "stopAuto",
-    "wrappers": [
-      {
-        "file": "app24_gl.js",
-        "order": 49,
-        "line": 107
-      },
-      {
-        "file": "app32_myline.js",
-        "order": 57,
-        "line": 8
-      },
-      {
-        "file": "app36_live.js",
-        "order": 61,
-        "line": 19
-      },
-      {
-        "file": "app37_hooks.js",
-        "order": 62,
-        "line": 14
-      },
-      {
-        "file": "app38_gift.js",
-        "order": 63,
-        "line": 16
-      },
-      {
-        "file": "app56_story3.js",
-        "order": 83,
-        "line": 64
-      },
-      {
-        "file": "app97_agents.js",
-        "order": 128,
-        "line": 26
       }
     ]
   },
@@ -695,6 +720,36 @@
     ]
   },
   {
+    "fn": "packPanel",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 41,
+        "line": 235
+      },
+      {
+        "file": "app16_story2.js",
+        "order": 41,
+        "line": 297
+      },
+      {
+        "file": "app24_gl.js",
+        "order": 49,
+        "line": 149
+      },
+      {
+        "file": "app56_story3.js",
+        "order": 83,
+        "line": 85
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 102
+      }
+    ]
+  },
+  {
     "fn": "openThread",
     "wrappers": [
       {
@@ -775,27 +830,102 @@
     ]
   },
   {
-    "fn": "packPanel",
+    "fn": "packStart",
     "wrappers": [
       {
-        "file": "app16_story2.js",
-        "order": 41,
-        "line": 235
+        "file": "app74_experience.js",
+        "order": 101,
+        "line": 116
       },
       {
-        "file": "app16_story2.js",
-        "order": 41,
-        "line": 297
+        "file": "app76_official.js",
+        "order": 103,
+        "line": 37
       },
       {
-        "file": "app24_gl.js",
-        "order": 49,
-        "line": 149
+        "file": "app94_official2.js",
+        "order": 120,
+        "line": 223
       },
       {
-        "file": "app56_story3.js",
-        "order": 83,
+        "file": "app114_entry.js",
+        "order": 138,
+        "line": 202
+      }
+    ]
+  },
+  {
+    "fn": "packAfterPick",
+    "wrappers": [
+      {
+        "file": "app17_custom.js",
+        "order": 42,
+        "line": 123
+      },
+      {
+        "file": "app96_social.js",
+        "order": 127,
+        "line": 74
+      },
+      {
+        "file": "app96_social.js",
+        "order": 127,
+        "line": 236
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 74
+      }
+    ]
+  },
+  {
+    "fn": "startSheet",
+    "wrappers": [
+      {
+        "file": "app47_chapters.js",
+        "order": 73,
+        "line": 32
+      },
+      {
+        "file": "app97_agents.js",
+        "order": 128,
+        "line": 183
+      },
+      {
+        "file": "app98_story.js",
+        "order": 129,
+        "line": 74
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
         "line": 85
+      }
+    ]
+  },
+  {
+    "fn": "startApp",
+    "wrappers": [
+      {
+        "file": "app12_beats.js",
+        "order": 34,
+        "line": 38
+      },
+      {
+        "file": "app70_login.js",
+        "order": 97,
+        "line": 102
+      },
+      {
+        "file": "app92_mustlogin.js",
+        "order": 118,
+        "line": 8
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 161
       }
     ]
   },
@@ -850,22 +980,22 @@
     ]
   },
   {
-    "fn": "startApp",
+    "fn": "packPrompt",
     "wrappers": [
       {
-        "file": "app12_beats.js",
-        "order": 34,
-        "line": 38
+        "file": "app56_story3.js",
+        "order": 83,
+        "line": 95
       },
       {
-        "file": "app70_login.js",
-        "order": 97,
-        "line": 102
+        "file": "app71_narrative.js",
+        "order": 98,
+        "line": 15
       },
       {
-        "file": "app92_mustlogin.js",
-        "order": 118,
-        "line": 8
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 107
       }
     ]
   },
@@ -886,26 +1016,6 @@
         "file": "app71_narrative.js",
         "order": 98,
         "line": 92
-      }
-    ]
-  },
-  {
-    "fn": "packAfterPick",
-    "wrappers": [
-      {
-        "file": "app17_custom.js",
-        "order": 42,
-        "line": 123
-      },
-      {
-        "file": "app96_social.js",
-        "order": 127,
-        "line": 74
-      },
-      {
-        "file": "app96_social.js",
-        "order": 127,
-        "line": 236
       }
     ]
   },
@@ -990,46 +1100,6 @@
     ]
   },
   {
-    "fn": "startSheet",
-    "wrappers": [
-      {
-        "file": "app47_chapters.js",
-        "order": 73,
-        "line": 32
-      },
-      {
-        "file": "app97_agents.js",
-        "order": 128,
-        "line": 183
-      },
-      {
-        "file": "app98_story.js",
-        "order": 129,
-        "line": 74
-      }
-    ]
-  },
-  {
-    "fn": "packStart",
-    "wrappers": [
-      {
-        "file": "app74_experience.js",
-        "order": 101,
-        "line": 116
-      },
-      {
-        "file": "app76_official.js",
-        "order": 103,
-        "line": 37
-      },
-      {
-        "file": "app94_official2.js",
-        "order": 120,
-        "line": 223
-      }
-    ]
-  },
-  {
     "fn": "relGraph",
     "wrappers": [
       {
@@ -1086,6 +1156,66 @@
         "file": "app16_story2.js",
         "order": 41,
         "line": 288
+      }
+    ]
+  },
+  {
+    "fn": "packAsName",
+    "wrappers": [
+      {
+        "file": "app94_official2.js",
+        "order": 120,
+        "line": 427
+      },
+      {
+        "file": "app114_entry.js",
+        "order": 138,
+        "line": 194
+      }
+    ]
+  },
+  {
+    "fn": "newThread",
+    "wrappers": [
+      {
+        "file": "app45_rel.js",
+        "order": 71,
+        "line": 132
+      },
+      {
+        "file": "app114_entry.js",
+        "order": 138,
+        "line": 212
+      }
+    ]
+  },
+  {
+    "fn": "chLocked",
+    "wrappers": [
+      {
+        "file": "app47_chapters.js",
+        "order": 73,
+        "line": 8
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 33
+      }
+    ]
+  },
+  {
+    "fn": "mainOf",
+    "wrappers": [
+      {
+        "file": "app16_story2.js",
+        "order": 41,
+        "line": 202
+      },
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 121
       }
     ]
   },
@@ -1281,21 +1411,6 @@
         "file": "app71_narrative.js",
         "order": 98,
         "line": 64
-      }
-    ]
-  },
-  {
-    "fn": "packPrompt",
-    "wrappers": [
-      {
-        "file": "app56_story3.js",
-        "order": 83,
-        "line": 95
-      },
-      {
-        "file": "app71_narrative.js",
-        "order": 98,
-        "line": 15
       }
     ]
   },
@@ -1500,6 +1615,46 @@
     ]
   },
   {
+    "fn": "packInit",
+    "wrappers": [
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 35
+      }
+    ]
+  },
+  {
+    "fn": "storyPage",
+    "wrappers": [
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 90
+      }
+    ]
+  },
+  {
+    "fn": "speakersOf",
+    "wrappers": [
+      {
+        "file": "app115_m102.js",
+        "order": 141,
+        "line": 120
+      }
+    ]
+  },
+  {
+    "fn": "streamPreview",
+    "wrappers": [
+      {
+        "file": "app116_reading.js",
+        "order": 142,
+        "line": 69
+      }
+    ]
+  },
+  {
     "fn": "relAdd",
     "wrappers": [
       {
@@ -1516,16 +1671,6 @@
         "file": "app16_story2.js",
         "order": 41,
         "line": 9
-      }
-    ]
-  },
-  {
-    "fn": "mainOf",
-    "wrappers": [
-      {
-        "file": "app16_story2.js",
-        "order": 41,
-        "line": 202
       }
     ]
   },
@@ -1615,7 +1760,7 @@
       {
         "file": "app1_core.js",
         "order": 15,
-        "line": 164
+        "line": 167
       }
     ]
   },
@@ -1750,32 +1895,12 @@
     ]
   },
   {
-    "fn": "newThread",
-    "wrappers": [
-      {
-        "file": "app45_rel.js",
-        "order": 71,
-        "line": 132
-      }
-    ]
-  },
-  {
     "fn": "menuSheet",
     "wrappers": [
       {
         "file": "app46_cp.js",
         "order": 72,
         "line": 44
-      }
-    ]
-  },
-  {
-    "fn": "chLocked",
-    "wrappers": [
-      {
-        "file": "app47_chapters.js",
-        "order": 73,
-        "line": 8
       }
     ]
   },
@@ -2160,22 +2285,12 @@
     ]
   },
   {
-    "fn": "packAsName",
-    "wrappers": [
-      {
-        "file": "app94_official2.js",
-        "order": 120,
-        "line": 425
-      }
-    ]
-  },
-  {
     "fn": "off94Names",
     "wrappers": [
       {
         "file": "app94_official2.js",
         "order": 120,
-        "line": 464
+        "line": 466
       }
     ]
   },
