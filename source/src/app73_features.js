@@ -17,7 +17,7 @@ const T73 = {
   saveRe: { zh: "保存并重新回复", en: "Save & get a new reply", ja: "保存して返事をもらう", ko: "저장하고 다시 답변 받기", es: "Guardar y responder de nuevo" },
   editH: { zh: "编辑这段回复", en: "Edit this reply", ja: "この返事を編集", ko: "이 답변 편집", es: "Editar esta respuesta" },
   editHint: { zh: "改过的内容会成为剧情的一部分，他会记得你改后的版本。", en: "Your edit becomes part of the story — he remembers the edited version.", ja: "編集した内容が物語の一部になります。", ko: "수정한 내용이 이야기의 일부가 돼요.", es: "Tu edición pasa a formar parte de la historia." },
-  maxV: { zh: "最多保留 5 个版本，可以用 ‹ › 切回之前的", en: "Up to 5 versions — use ‹ › to switch back", ja: "最大5バージョンまで。‹ › で切り替え", ko: "최대 5개 버전까지 · ‹ › 로 전환", es: "Hasta 5 versiones; usa ‹ › para volver" },
+  maxV: { zh: "最多保留 5 个版本，可以用 ‹ › 或左右滑切回之前的", en: "Up to 5 versions — use ‹ › to switch back", ja: "最大5バージョンまで。‹ › で切り替え", ko: "최대 5개 버전까지 · ‹ › 로 전환", es: "Hasta 5 versiones; usa ‹ › para volver" },
   free: { zh: "今天还剩 {n} 次免费心声", en: "{n} free inner-voice reads left today", ja: "今日の無料：あと {n} 回", ko: "오늘 무료 {n}회 남음", es: "Te quedan {n} lecturas gratis hoy" },
   paid: { zh: "今天的免费次数用完了，这次 💎1", en: "Free reads used up today — this one is 💎1", ja: "本日の無料分は終了。今回は💎1", ko: "오늘 무료 횟수를 다 썼어요 · 이번엔 💎1", es: "Gratis agotadas hoy: esta cuesta 💎1" },
   nogems: { zh: "钻石不够了", en: "Not enough diamonds", ja: "ダイヤが足りません", ko: "다이아가 부족해요", es: "No tienes diamantes suficientes" },
@@ -31,7 +31,16 @@ const T73 = {
 };
 function t73(k, v) { const x = T73[k] || {}; let s = x[S.lang] || x.en || ""; Object.keys(v || {}).forEach(a => { s = s.split("{" + a + "}").join(v[a]); }); return s; }
 function day73() { return new Date().toISOString().slice(0, 10); }
-function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k >= 0 && th.msgs[k].who !== "me" && !th.msgs[k].ai) k--; if (k < 0 || !th.msgs[k].ai) return -1; let j = k; while (j > 0 && th.msgs[j - 1].ai) j--; return j; }
+/* 2026-11-03（第十四批）：只认末尾的 AI 块（后面只许跟这一轮带出来的系统卡，比如关系推进）。
+   原来会越过剧本写死的台词、选项卡往回找，剧情模式里点 ↻ 会把剧本台词和选项一起截掉。 */
+function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k > 0 && th.msgs[k].who === "sys" && !th.msgs[k].ai) k--; if (!th.msgs[k].ai) return -1; let j = k; while (j > 0 && th.msgs[j - 1].ai) j--; return j; }
+/* 一个版本 = 那几条消息 + 它带来的状态（好感度、今日好感上限账、剧情进度）。切版本时三样一起换。 */
+/* 关系线（lnk）、关系维度（rdv）、降级提示账（_stDown）也算状态：不跟着换的话，
+   切回低好感的版本会被当成「关系倒退」再插一张卡。 */
+const ST73 = ["love", "pk", "lnk", "rdv", "_stDown"];
+function snap73(th) { const o = { g: JSON.parse(JSON.stringify((th.afDay || {}).g || {})) }; ST73.forEach(k => { o[k] = th[k] == null ? null : JSON.parse(JSON.stringify(th[k])); }); return o; }
+function restore73(th, st) { if (!st) return; if (th.afDay) th.afDay.g = JSON.parse(JSON.stringify(st.g || {})); ST73.forEach(k => { if (k in st) { if (st[k] == null) delete th[k]; else th[k] = JSON.parse(JSON.stringify(st[k])); } }); }
+function txt73(list) { return (list || []).map(m => m.txt || "").join(" "); }
 
 /* ---------- 1 · affinity ---------- */
 const AF_CAP = MIRU_TUNE.affinity.cap, AF_MIND = MIRU_TUNE.affinity.mind, AF_GEMS = MIRU_TUNE.affinity.gems;
@@ -86,7 +95,7 @@ let ADDR73 = null, REDO73 = false;
 const _reply73 = reply;
 reply = async function (th, ctx, silent) {
   try {
-    if (ctx && ctx.kind !== "redo" && !REDO73) { th._pre73 = { love: JSON.parse(JSON.stringify(th.love || {})), g: JSON.parse(JSON.stringify((th.afDay || {}).g || {})) }; th._ctx73 = Object.assign({}, ctx); }
+    if (ctx && ctx.kind !== "redo" && !REDO73) { th._pre73 = snap73(th); th._ctx73 = Object.assign({}, ctx); }
     if (ctx && (ctx.kind === "user" || ctx.kind === "talk") && th.addr && ch(th.addr) && (th.cast || []).includes(th.addr)) { ctx = Object.assign({}, ctx, { cid: th.addr }); ADDR73 = th.addr; }
   } catch (_) {}
   try { return await _reply73.call(this, th, ctx, silent); } finally { ADDR73 = null; if (!silent && th && curT === th.id && !REDO73) setTimeout(() => { try { if (!busy) { renderChat(); scrollChat(); } } catch (_) {} }, 0); }
@@ -104,22 +113,56 @@ ask = function (prompt, opts) {
 async function rg73(th) {
   if (busy) return; const j = lastAIStart73(th); if (j < 0) return;
   const cur = th.msgs.slice(j);
-  if (!th.vers || th.vers.at !== j) th.vers = { at: j, list: [cur], cur: 0 }; else th.vers.list[th.vers.cur] = cur;
+  if (!th.vers || th.vers.at !== j) th.vers = { at: j, list: [cur], st: [snap73(th)], cur: 0 };
+  else { th.vers.list[th.vers.cur] = cur; th.vers.st = th.vers.st || []; th.vers.st[th.vers.cur] = snap73(th); }
   if (th.vers.list.length >= 5) { toast(t73("maxV")); return; }
-  if (th._pre73) { th.love = JSON.parse(JSON.stringify(th._pre73.love)); if (th.afDay) th.afDay.g = JSON.parse(JSON.stringify(th._pre73.g)); }
-  th.msgs = th.msgs.slice(0, j); save(); renderChat();
+  const pre = th._pre73;
   const ctx = Object.assign({}, th._ctx73 || { kind: "user" });
-  REDO73 = true;
-  try { await reply(th, ctx); } finally { REDO73 = false; }
-  const neu = th.msgs.slice(j);
-  if (neu.length) { th.vers.list.push(neu); th.vers.cur = th.vers.list.length - 1; }
-  else { th.msgs = th.msgs.slice(0, j).concat(cur); }
+  let neu = [];
+  /* 新版本和已有版本太像（同一句换了两个字）就再取一次，只重取一次，不另收费 */
+  for (let tryN = 0; tryN < 2; tryN++) {
+    restore73(th, pre);
+    th.msgs = th.msgs.slice(0, j); save(); renderChat();
+    REDO73 = true;
+    try { await reply(th, ctx); } finally { REDO73 = false; }
+    neu = th.msgs.slice(j);
+    if (!neu.length) break;
+    const same = typeof altSim === "function" && th.vers.list.some(v => altSim(txt73(v), txt73(neu)) >= 0.6);
+    if (!same) break;
+    if (typeof console !== "undefined") console.warn("[rg73] 新版本与旧版本太像，重取一次");
+  }
+  th._pre73 = pre;
+  if (neu.length) { th.vers.list.push(neu); th.vers.st.push(snap73(th)); th.vers.cur = th.vers.list.length - 1; }
+  else { th.msgs = th.msgs.slice(0, j).concat(cur); restore73(th, th.vers.st[th.vers.cur]); }
   save(); renderChat(); scrollChat();
 }
 function vswitch73(th, dir) {
-  const V = th.vers; if (!V) return; const n = V.cur + dir; if (n < 0 || n >= V.list.length) return;
-  V.list[V.cur] = th.msgs.slice(V.at); V.cur = n; th.msgs = th.msgs.slice(0, V.at).concat(V.list[n]); save(); renderChat(); scrollChat();
+  const V = th.vers; if (!V) return false; const n = V.cur + dir; if (n < 0 || n >= V.list.length) return false;
+  V.st = V.st || [];
+  V.list[V.cur] = th.msgs.slice(V.at); V.st[V.cur] = snap73(th);
+  V.cur = n; th.msgs = th.msgs.slice(0, V.at).concat(V.list[n]); restore73(th, V.st[n]);
+  save(); renderChat(); scrollChat(); return true;
 }
+/* 手机：在最新这段 AI 回复上左右滑。往左滑 = 下一版（已经是最后一版就生成新的，走 ↻ 按钮，计费规则不变）；往右滑 = 上一版。 */
+(function () {
+  let sx = 0, sy = 0, on = false;
+  document.addEventListener("touchstart", e => {
+    on = false; const t = e.touches && e.touches[0]; if (!t) return;
+    const el = e.target && e.target.closest && e.target.closest("#msgs [data-mi]"); if (!el) return;
+    const th = S.threads[curT]; if (!th) return; const j = lastAIStart73(th);
+    if (j < 0 || +el.dataset.mi < j) return;
+    on = true; sx = t.clientX; sy = t.clientY;
+  }, { passive: true });
+  document.addEventListener("touchend", e => {
+    if (!on) return; on = false; const t = e.changedTouches && e.changedTouches[0]; if (!t) return;
+    const dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6 || busy) return;
+    const th = S.threads[curT]; if (!th) return;
+    if (dx > 0) { vswitch73(th, -1); return; }
+    if (vswitch73(th, 1)) return;
+    const b = document.querySelector("[data-rg73]"); if (b) b.click();
+  }, { passive: true });
+})();
 function edit73(th, idxs, isMe) {
   const rows = idxs.map(i => { const m = th.msgs[i]; const who = m.who === "me" ? (me() || "You") : m.who === "n" ? "—" : (ch(m.who) ? first(ch(m.who).n) : ""); return '<label class="ed73r"><span>' + esc(who) + (m.k === "act" ? " · *" : m.k === "think" ? " · 💭" : "") + '</span><textarea data-ed73i="' + i + '" rows="2">' + esc(m.txt || "") + '</textarea></label>'; }).join("");
   sheet('<div class="ed73s"><h2>✎ ' + esc(t73("editH")) + '</h2><p class="xs faint">' + esc(t73("editHint")) + '</p>' + rows +

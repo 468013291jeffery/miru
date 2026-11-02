@@ -118,7 +118,7 @@ function storyPage(id,keep){const w=wd(id);curStory=id;if(!keep)storyTab="intro"
   '<div class="row wrap" style="gap:6px;margin-top:12px">'+(w.tags||[]).map(x=>'<span class="tag" data-dtagq="'+esc(x)+'">#'+esc(tagName(x))+'</span>').join("")+'</div></div>'+
   '<div class="tabs" style="margin-top:14px">'+[["intro","st.intro"],["chapters","sp.chapters"],["cast","st.cast"],["comments","st.comments"]].map(([k,l])=>'<button data-stab="'+k+'" class="'+(storyTab===k?"on":"")+'">'+t(l)+'</button>').join("")+'</div><div class="pad stack" style="gap:12px;padding-block:14px 20px">';
  if(storyTab==="intro"){
-  h+='<p style="font-size:14.5px;line-height:1.7">'+esc(Lz(P.logline))+'</p><p class="sm dim" style="line-height:1.7">'+esc(Lz(w.premise))+'</p>'+
+  h+='<p style="font-size:14.5px;line-height:1.7">'+esc(Lz(P.logline))+'</p><p class="sm dim" style="line-height:1.7;white-space:pre-line">'+esc(Lz(w.premise))+'</p>'+
    '<div class="card warn"><div class="eyebrow">'+t("st.warn")+'</div><p class="sm" style="margin-top:8px;line-height:1.6">'+esc(Lz(w.warn))+'</p></div>'+
    '<div class="eyebrow" style="margin-top:4px">'+t("sp.ways")+'</div><div class="stack" style="gap:6px">'+packModes(w).map(m=>'<div class="task"><span class="ck">'+(m.as==="watch"?"👁":m.as==="side"?"🚪":"▶")+'</span><span class="grow"><b class="sm">'+esc(packAsName(w,m.as))+'</b><span class="xs faint" style="display:block">'+esc(Lz(m.t))+'</span></span></div>').join("")+'</div>'+
    '<div class="eyebrow" style="margin-top:4px">'+t("st.rel")+'</div><div class="reltable">'+(w.rel||[]).map(([a,b,r])=>'<div><b>'+esc(a==="you"?me():first(ch(a).n))+' × '+esc(b==="you"?me():first(ch(b).n))+'</b><span>'+esc(Lz(r))+'</span></div>').join("")+'</div>'+

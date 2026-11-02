@@ -42,7 +42,7 @@ async function exp74Enrich(wid) {
     director: { allowed: [], au: [] }, endings: null, mono: [],
   };
   /* apply: world + intro */
-  if (r.logline) P.logline = xL(r.logline); if (r.premise) w.premise = xL(r.premise); if (r.warn) w.warn = xL(r.warn); if (r.you) w.you = xL(r.you);
+  if (r.logline) P.logline = xL(r.logline); if (r.premise && !w.premiseAuthor) w.premise = xL(r.premise); if (r.warn) w.warn = xL(r.warn); if (r.you) w.you = xL(r.you);
   if (Array.isArray(r.tags) && r.tags.length) w.tags = r.tags.slice(0, 6).map(String);
   if (r.features && typeof r.features === "object") P.features = Object.assign({}, P.features || {}, Object.fromEntries(Object.entries(r.features).filter(([, v]) => v).map(([k, v]) => [k, xL(String(v))])));
   if (r.director) P.director = { allowed: (r.director.allowed || []).slice(0, 4).map(x => xL(String(x))), au: (r.director.au || []).slice(0, 3).map(x => xL(String(x))) };
@@ -56,6 +56,7 @@ async function exp74Enrich(wid) {
   });
   const intro = { bg: (r.intro_bg || []).map(String).filter(Boolean).slice(0, 5), you: Lz(w.you) || "", cast: w.cast.filter(id => ch(id)).map(id => [id, [Lz(ch(id).role), Lz(ch(id).vibe)].filter(Boolean).join(" · ")]), how: (r.intro_how || []).map(String).slice(0, 4) };
   if (!intro.bg.length) intro.bg = [Lz(w.premise)];
+  if (w.premiseAuthor) { const paras = String(Lz(w.premise) || "").split(/\n\s*\n|\n/).map(x => x.trim()).filter(Boolean); if (paras.length >= 2) intro.bg = paras.slice(0, 8); }
   P.intro = { zh: intro, en: JSON.parse(JSON.stringify(intro)) };
   if (r.endings && typeof r.endings === "object") ["A", "B", "C"].forEach(k => { const e = r.endings[k]; if (!e || !P.endings || !P.endings[k]) return; if (e.t) P.endings[k].t = xL(String(e.t)); if (e.txt) P.endings[k].txt = xL(String(e.txt)); if (e.line && L) P.endings[k].line = { who: L, zh: String(e.line), en: String(e.line) }; });
   EXP74.mono = Array.isArray(r.mono) ? r.mono : [];

@@ -27,7 +27,9 @@ installWork = async function (id) {
   w.or = r.j.orient || w.or; if (r.j.cover) w.cover = r.j.cover;
   if (m.title || r.j.title) w.title = x0(m.title || r.j.title);
   if (m.hook || r.j.hook) w.hook = x0(m.hook || r.j.hook);
-  if (m.premise) w.premise = x0(m.premise);
+  /* 2026-11-03：后台写的简介是作者的原话 —— 记一笔，后面的 AI 包装（app74）不许改写它，
+     而且多段的简介直接当开场卡「故事背景」用（玩家反馈：前情提要没加进去）。 */
+  if (m.premise) { w.premise = x0(String(m.premise).replace(/\*\*/g, "")); w.premiseAuthor = 1; }
   if (m.you) w.you = x0(m.you);
   if ((m.tags || []).length) w.tags = m.tags.slice(0, 16); if (m.heat) w.heat = m.heat; w.adult76 = m.adult === true ? 1 : 0; w.or = r.j.orient || w.or;
   S.off76[id] = { wid, ver: P.ver, imv: 2 }; /* imv: importer version — bump to rebuild already-installed official stories */ save(); track("community_open", { id, official: 1 });
