@@ -23,11 +23,12 @@ function fCard(w,i,top){const cl=CLIPS[w.id+":1"],c0=cl&&cl[Object.keys(cl)[0]],
   '<div class="fside">'+(SHORTS[w.id]?'<button data-short="'+w.id+'" aria-label="hook"><i>▶</i><small>'+t("hf.hook")+'</small></button>':'')+
    '<button data-remix="'+w.id+'" aria-label="remix"><i>⑂</i><small>'+t("hf.remix")+'</small></button><button data-fshare="'+w.id+'" aria-label="share"><i>⇪</i><small>'+t("hf.share")+'</small></button></div>'+
   '<div class="finfo fmin"><div class="frow"><button class="ftitle" data-story="'+w.id+'">'+esc(Lz(w.title))+'<small>'+(w.kind==="ensemble"?"":w.or==="bl"?" · BL":w.or==="gl"?" · GL":"")+' ›</small></button><button class="fheart'+(fav?" on":"")+'" data-fav="'+w.id+'" aria-label="save">'+(fav?"♥":"♡")+'</button></div></div></section>'}
+function homeShowcaseHTML(){return '<section class="fcard home-showcase" data-home-showcase="1"><video class="fvid" muted loop playsinline preload="metadata" aria-label="'+(CL()==='zh'?'MIRU 首页视频展示':'MIRU home video showcase')+'" data-src="video/Men_greeting_guest_at_mansion_b703642e_1080p.mp4"></video><div class="fveil"></div><div class="finfo fmin"><div class="frow"><b class="ftitle">MIRU<small> · '+(CL()==='zh'?'视频展示':'Showcase')+'</small></b></div></div></section>';}
 function renderHome(v){
  const ws=feedList(feedTab),top=hotRank();
  v.innerHTML='<div class="feedwrap"><div class="ftabs"><div class="ftabsc" id="ftabsc">'+FEED_TABS.map(([k,l])=>'<button data-ftab="'+k+'" class="'+(feedTab===k?"on":"")+'">'+esc(L(l))+'</button>').join("")+'</div>'+
   '<button class="ftico" data-fsound="1" aria-label="sound">'+(feedSound?"🔊":"🔇")+'</button><button class="ftico" data-tab="discover" aria-label="search">'+ic("disc")+'</button></div>'+
-  '<div class="feed" id="feed">'+(ws.length?ws.map((w,i)=>fCard(w,i,top)).join(""):'<p class="empty" style="padding-top:120px">'+t("disc.none")+'</p>')+'</div></div>';
+  '<div class="feed" id="feed">'+homeShowcaseHTML()+(ws.length?ws.map((w,i)=>fCard(w,i,top)).join(""):'<p class="empty" style="padding-top:120px">'+t("disc.none")+'</p>')+'</div></div>';
  const on=$('[data-ftab].on');if(on)on.scrollIntoView({inline:"center",block:"nearest"});
  feedWire()}
 function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();

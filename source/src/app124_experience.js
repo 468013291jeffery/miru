@@ -58,8 +58,8 @@
   box.prepend(row);
  }
  function header(){const h=document.querySelector('#s-chat .chead');if(!h)return;h.classList.add('slim124');const r=h.querySelector('.row');if(!r)return;
-  // Keep navigation and a compact relationship label. Full cast/title live in details.
-  r.querySelectorAll('.relationship124').forEach(el=>el.remove());[...r.children].forEach(el=>{if(!el.matches('[data-back]'))el.hidden=true;});
+  // Remove only the left cast portraits and title; retain every existing toolbar control.
+  r.querySelectorAll('.relationship124').forEach(el=>el.remove());[...r.children].forEach(el=>{el.hidden=el.matches('.chavs,.av,[data-us]');});
   const th=current(),mid=th&&mainOf(th);if(mid){const b=document.createElement('button');b.className='relationship124';b.dataset.us='1';b.textContent='♥ '+t('stage.'+stageOf(th,mid));r.appendChild(b);}
  }
  function details(){const th=current(),w=th&&wd(th.wid);if(!th)return;

@@ -1477,7 +1477,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* Continuous history and compact composer (player feedback, 2026-11-03). */
 #s-chat .chead.slim124 .row:first-child>[hidden]{display:none!important}
 #s-chat .chead.slim124 .row:first-child{margin:0!important;min-height:40px}
-#s-chat .chead.slim124 .hist121,#s-chat .chead.slim124 .hdx{display:none!important}
+#s-chat .chead.slim124 .hist121{display:inline-flex!important}
 .relationship124{border:0;background:rgba(15,12,20,.38);color:#ead7df;font-size:11px;border-radius:20px;padding:5px 9px;margin-left:auto}
 #s-chat .composer.input124 .modes,#s-chat .composer.input124 .modes2{display:none!important}
 .input-modes124{display:flex;gap:6px;margin:0 0 6px}
@@ -1486,7 +1486,8 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,#000 42px);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 42px)}
 #s-chat.clean #msgs>.cold{display:revert!important}
 #s-chat.clean #msgs .m-box>p.tp{display:block!important}
-#s-chat .rcol,#s-chat .hist121{display:none!important}
+#s-chat .rcol{display:none!important}
+#s-chat.clean .chead.slim124 .vtog{display:inline-flex!important}
 .latest124{align-self:center;z-index:12;flex-shrink:0;margin:3px auto;padding:7px 14px;border:1px solid #ffffff38;border-radius:20px;background:#231d2a;color:#fff;font-size:12px}
 .latest124[hidden]{display:none}
 .chapter124{margin:12px auto;max-width:92%;padding:18px;border:1px solid #f0b77e44;border-radius:18px;background:#17131bef;color:#f5eee7;line-height:1.6}

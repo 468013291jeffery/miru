@@ -357,7 +357,7 @@ const _renderHome94 = renderHome;
 renderHome = function (v) {
   const r = _renderHome94.apply(this, arguments);
   try {
-    const put = L => { const feed = $("#feed"); if (!feed || feed.querySelector(".off94") || !L.length) return; feed.insertAdjacentHTML("afterbegin", L.map(off94FCard).join("")); const em = feed.querySelector(".empty"); if (em) em.remove(); feedWire(); };
+    const put = L => { const feed = $("#feed"); if (!feed || feed.querySelector(".off94") || !L.length) return; const showcase=feed.querySelector("[data-home-showcase]");if(showcase)showcase.insertAdjacentHTML("afterend", L.map(off94FCard).join(""));else feed.insertAdjacentHTML("afterbegin", L.map(off94FCard).join("")); const em = feed.querySelector(".empty"); if (em) em.remove(); feedWire(); };
     if (OFFF94.list) put(OFFF94.list); else off94Feed().then(put);
   } catch (_) {}
   return r;
