@@ -35,7 +35,7 @@
       {
         "file": "app16_story2.js",
         "order": 41,
-        "line": 319
+        "line": 323
       },
       {
         "file": "app17_custom.js",
@@ -100,7 +100,7 @@
       {
         "file": "app73_features.js",
         "order": 100,
-        "line": 260
+        "line": 303
       },
       {
         "file": "app75_mydock.js",
@@ -291,6 +291,51 @@
         "file": "app116_reading.js",
         "order": 142,
         "line": 68
+      }
+    ]
+  },
+  {
+    "fn": "doSend",
+    "wrappers": [
+      {
+        "file": "app14_pack.js",
+        "order": 38,
+        "line": 600
+      },
+      {
+        "file": "app17_custom.js",
+        "order": 42,
+        "line": 22
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 82,
+        "line": 72
+      },
+      {
+        "file": "app55_talk.js",
+        "order": 82,
+        "line": 117
+      },
+      {
+        "file": "app71_narrative.js",
+        "order": 98,
+        "line": 73
+      },
+      {
+        "file": "app73_features.js",
+        "order": 100,
+        "line": 75
+      },
+      {
+        "file": "app100_dialogue.js",
+        "order": 121,
+        "line": 121
+      },
+      {
+        "file": "app119_branch.js",
+        "order": 145,
+        "line": 37
       }
     ]
   },
@@ -520,46 +565,6 @@
     ]
   },
   {
-    "fn": "doSend",
-    "wrappers": [
-      {
-        "file": "app14_pack.js",
-        "order": 38,
-        "line": 600
-      },
-      {
-        "file": "app17_custom.js",
-        "order": 42,
-        "line": 22
-      },
-      {
-        "file": "app55_talk.js",
-        "order": 82,
-        "line": 72
-      },
-      {
-        "file": "app55_talk.js",
-        "order": 82,
-        "line": 117
-      },
-      {
-        "file": "app71_narrative.js",
-        "order": 98,
-        "line": 73
-      },
-      {
-        "file": "app73_features.js",
-        "order": 100,
-        "line": 66
-      },
-      {
-        "file": "app100_dialogue.js",
-        "order": 121,
-        "line": 121
-      }
-    ]
-  },
-  {
     "fn": "ask",
     "wrappers": [
       {
@@ -585,7 +590,7 @@
       {
         "file": "app73_features.js",
         "order": 100,
-        "line": 94
+        "line": 103
       },
       {
         "file": "app100_dialogue.js",
@@ -730,7 +735,7 @@
       {
         "file": "app16_story2.js",
         "order": 41,
-        "line": 297
+        "line": 301
       },
       {
         "file": "app24_gl.js",
@@ -835,12 +840,12 @@
       {
         "file": "app74_experience.js",
         "order": 101,
-        "line": 116
+        "line": 117
       },
       {
         "file": "app76_official.js",
         "order": 103,
-        "line": 37
+        "line": 51
       },
       {
         "file": "app94_official2.js",
@@ -850,7 +855,7 @@
       {
         "file": "app114_entry.js",
         "order": 138,
-        "line": 202
+        "line": 208
       }
     ]
   },
@@ -1155,7 +1160,7 @@
       {
         "file": "app16_story2.js",
         "order": 41,
-        "line": 288
+        "line": 292
       }
     ]
   },
@@ -1170,7 +1175,7 @@
       {
         "file": "app114_entry.js",
         "order": 138,
-        "line": 194
+        "line": 200
       }
     ]
   },
@@ -1185,7 +1190,7 @@
       {
         "file": "app114_entry.js",
         "order": 138,
-        "line": 212
+        "line": 218
       }
     ]
   },
@@ -1395,7 +1400,7 @@
       {
         "file": "app73_features.js",
         "order": 100,
-        "line": 81
+        "line": 90
       }
     ]
   },
