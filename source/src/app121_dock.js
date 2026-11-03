@@ -41,4 +41,20 @@
   if (window.UI && typeof window.UI.add === "function") { window.UI.add("dock121", dock); window.UI.add("hist121", hist); }
   else console.warn("[dock121] UI.add 不在，剧情面板不会贴住输入区");
   window.pkDock = dock;
+  /* 2026-11-03 第三版：横排小气泡里点剧本那句 = 直接说出去（不再进「换个态度 / 加个动作」那一步）。
+     做法和 app27 的「就这么说」一样：造一个隐藏的 [data-stopline] 按钮点一下，走原来的剧本选项流程。 */
+  document.addEventListener("click", function (e) {
+    const x = e.target && e.target.closest && e.target.closest("#pkwrap.dock [data-chatt]"); if (!x) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    const b = document.createElement("button"); b.dataset.stopline = x.dataset.chatt; b.hidden = true; document.body.appendChild(b);
+    try { b.click(); } finally { b.remove(); }
+  }, true);
+  /* 「AI 帮我想」出过一批之后改叫「↻ 换一批」（再点就是重新想三句） */
+  function relabel() {
+    const btn = document.querySelector("#pkwrap.dock [data-ai97]"), box = document.getElementById("ai97o"); if (!btn || btn.disabled) return;
+    const zh = (typeof CL === "function" ? CL() === "zh" : true), has = !!(box && box.querySelector("button"));
+    const want = has ? (zh ? "↻ 换一批" : "↻ New ideas") : (zh ? "✨ AI 帮我想" : "✨ Help me say it");
+    if (btn.textContent !== want) btn.textContent = want;
+  }
+  try { new MutationObserver(relabel).observe(document.body, { childList: true, subtree: true }); } catch (e) { console.warn("[dock121] observer", e); }
 })();
