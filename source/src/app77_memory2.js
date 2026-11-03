@@ -108,11 +108,21 @@ function m2pick(th, n) {
   const rest = vis.filter(x => !must.includes(x)).map((x, i) => ({ x, s: x.imp * 1.2 + (R ? rs(x.id) : rel(x.t) * 3) + (i / L) * 1.5 })).sort((a, b) => b.s - a.s).slice(0, Math.max(0, n - must.length)).map(o => o.x);
   return must.concat(rest);
 }
+/* 2026-11-03（第十七批 · 按人分开记）：一次回复里几个角色一起写 ⇒ 只有部分人知道的事要标出来，
+   否则「只有罗南知道」的事会从朱利安嘴里说出来。 */
+function m2know(th, x) {
+  try {
+    const cast = (th.cast || []).filter(id => ch(id) && !ch(id).you94 && id !== (th.pk && th.pk.as));
+    const w = (x.who || []).filter(id => cast.includes(id));
+    if (!w.length || w.length >= cast.length) return "";
+    return " [only " + w.map(id => first(ch(id).n)).join(" and ") + " know" + (w.length === 1 ? "s" : "") + " this]";
+  } catch (e) { return ""; }
+}
 memBlock = function (th) {
   const tier = memTier(th), T = MEMT[tier]; const pick = m2pick(th, T.mem + 3);
   const out = [];
   if (th.sum && th.sum.t) out.push("THE STORY SO FAR (earlier conversation, summarized — refer back to it naturally):\n" + th.sum.t);
-  for (const k of Object.keys(M2T)) { const g = pick.filter(x => x.type === k); if (g.length) out.push(M2T[k].p + ":\n" + g.map(x => "- " + x.t).join("\n")); }
+  for (const k of Object.keys(M2T)) { const g = pick.filter(x => x.type === k); if (g.length) out.push(M2T[k].p + ":\n" + g.map(x => "- " + x.t + m2know(th, x)).join("\n")); }
   const R = th._m2rec; if (R && R.cross && R.cross.length) out.push("YOU ALSO REMEMBER (from your other stories with the user — relevant right now):\n" + R.cross.map(x => "- " + x).join("\n"));
   const hush = m2(th).filter(x => x.hush && !x.del).slice(-8);
   if (hush.length) out.push("THE USER ASKED YOU NOT TO BRING THESE UP AGAIN (only respond if the user raises it first):\n" + hush.map(x => "- " + x.t).join("\n"));
@@ -142,14 +152,22 @@ function m2Sheet(filter) {
   const th = S.threads[curT]; if (!th) return; const zh = S.lang === "zh", L2 = (a, b) => zh ? a : b;
   const all = m2(th).filter(x => !x.del), c = ch(mainOf(th)), nm = c ? first(c.n) : th.title;
   const f = filter || "all";
-  const shown = (f === "all" ? all : f === "hush" ? all.filter(x => x.hush) : all.filter(x => x.type === f)).slice().reverse();
+  const people = (th.cast || []).filter(id => ch(id) && !ch(id).you94 && id !== (th.pk && th.pk.as));
+  const pf = people.includes(M2.person) ? M2.person : "";
+  const knows = (x, id) => !x.who || !x.who.length || x.who.includes(id);
+  const shown = (f === "all" ? all : f === "hush" ? all.filter(x => x.hush) : all.filter(x => x.type === f)).filter(x => !pf || knows(x, pf)).slice().reverse();
+  const whoL = x => { const w = (x.who || []).filter(id => people.includes(id)); return !w.length || w.length >= people.length ? L2("大家都知道", "everyone knows") : w.map(id => first(ch(id).n)).join("、") + L2(" 知道", " knows"); };
+  const P = (th.pk && th.pk.me && typeof persona === "function") ? (th.persona || persona()) : null;
+  const card = P ? '<div class="m2sum m2card"><b>🪪 ' + L2("来自你的角色卡（一直记得）", "From your role card (always remembered)") + '</b><p>' + esc([P.name, P.age ? P.age + L2("岁", "") : "", P.label, P.look ? L2("外貌：", "Looks: ") + P.look : "", P.like ? L2("喜欢：", "Likes: ") + P.like : "", P.dislike ? L2("不喜欢：", "Dislikes: ") + P.dislike : ""].filter(Boolean).join(" · ")) + '</p><button class="lnk" data-editp="1">' + L2("编辑角色卡", "Edit role card") + '</button></div>' : "";
+  const ptabs = people.length > 1 ? '<div class="m2tabs m2ppl"><span class="xs faint">' + L2("按人看", "By person") + '</span><button class="' + (pf ? "" : "on") + '" data-m2p="">' + L2("所有人", "Everyone") + '</button>' + people.map(id => '<button class="' + (pf === id ? "on" : "") + '" data-m2p="' + id + '">' + esc(first(ch(id).n)) + '</button>').join("") + '</div>' : "";
   const cnt = k => all.filter(x => x.type === k).length;
   const ago = t => { const d = (Date.now() - t) / 864e5; return d < 1 ? L2("今天", "today") : d < 2 ? L2("昨天", "yesterday") : Math.floor(d) + L2(" 天前", "d ago"); };
   const srcL = { you: L2("你说的", "you said it"), ai: L2("他记下的", "he noted it"), story: L2("剧情", "story"), manual: L2("你告诉他的", "you told him"), chat: L2("聊天", "chat") };
-  sheet('<div class="m2s"><div class="row" style="gap:10px">' + avatar(mainOf(th), 40) + '<div class="grow"><div class="eyebrow" style="color:var(--gold)">' + L2("记忆", "MEMORY") + '</div><b style="font-size:17px">' + esc(L2(nm + " 记得的事", "What " + nm + " remembers")) + '</b></div><span class="xs faint">' + all.length + L2(" 条", "") + '</span></div>' +
+  sheet('<div class="m2s"><div class="row" style="gap:10px">' + avatar(pf || mainOf(th), 40) + '<div class="grow"><div class="eyebrow" style="color:var(--gold)">' + L2("记忆", "MEMORY") + '</div><b style="font-size:17px">' + esc(pf ? L2(first(ch(pf).n) + " 记得的事", "What " + first(ch(pf).n) + " remembers") : people.length > 1 ? L2("他们记得的事", "What they remember") : L2(nm + " 记得的事", "What " + nm + " remembers")) + '</b></div><span class="xs faint">' + all.length + L2(" 条", "") + '</span></div>' +
+    card + ptabs +
     (th.sum && th.sum.t ? '<div class="m2sum"><b>📖 ' + L2("到目前为止", "The story so far") + '</b><p>' + esc(th.sum.t) + '</p></div>' : '') +
     '<div class="m2tabs"><button class="' + (f === "all" ? "on" : "") + '" data-m2f="all">' + L2("全部", "All") + '</button>' + Object.keys(M2T).filter(k => cnt(k)).map(k => '<button class="' + (f === k ? "on" : "") + '" data-m2f="' + k + '">' + M2T[k].ic + ' ' + (zh ? M2T[k].zh : M2T[k].en) + ' ' + cnt(k) + '</button>').join("") + (all.some(x => x.hush) ? '<button class="' + (f === "hush" ? "on" : "") + '" data-m2f="hush">🤐 ' + L2("别再提", "Muted") + '</button>' : '') + '</div>' +
-    '<div class="m2list">' + (shown.length ? shown.slice(0, 120).map(x => '<div class="m2i' + (x.hush ? " hush" : "") + '"><div class="m2t"><span>' + M2T[x.type].ic + '</span><p>' + esc(x.t) + '<small>' + (zh ? M2T[x.type].zh : M2T[x.type].en) + ' · ' + (srcL[x.src] || "") + ' · ' + ago(x.at) + (x.pin ? ' · 📌' : '') + (x.imp >= 3 ? ' · ★' : '') + '</small></p></div><div class="m2b"><button data-m2pin="' + x.id + '">' + (x.pin ? L2("取消置顶", "Unpin") : L2("置顶", "Pin")) + '</button><button data-m2hush="' + x.id + '">' + (x.hush ? L2("可以提了", "Unmute") : L2("别再提", "Don't bring up")) + '</button><button data-m2del="' + x.id + '" class="del">' + L2("忘掉", "Forget") + '</button></div></div>').join("") : '<p class="xs faint" style="padding:14px 0;text-align:center">' + L2("还没有。多聊几句，他会记住你说过的事。", "Nothing yet. Talk a little — he'll remember what you tell him.") + '</p>') + '</div>' +
+    '<div class="m2list">' + (shown.length ? shown.slice(0, 120).map(x => '<div class="m2i' + (x.hush ? " hush" : "") + '"><div class="m2t"><span>' + M2T[x.type].ic + '</span><p>' + esc(x.t) + '<small>' + (zh ? M2T[x.type].zh : M2T[x.type].en) + ' · ' + (srcL[x.src] || "") + ' · ' + ago(x.at) + ' · ' + whoL(x) + (x.pin ? ' · 📌' : '') + (x.imp >= 3 ? ' · ★' : '') + '</small></p></div><div class="m2b"><button data-m2edit="' + x.id + '">' + L2("改", "Edit") + '</button><button data-m2pin="' + x.id + '">' + (x.pin ? L2("取消置顶", "Unpin") : L2("置顶", "Pin")) + '</button><button data-m2hush="' + x.id + '">' + (x.hush ? L2("可以提了", "Unmute") : L2("别再提", "Don't bring up")) + '</button><button data-m2del="' + x.id + '" class="del">' + L2("忘掉", "Forget") + '</button></div></div>').join("") : '<p class="xs faint" style="padding:14px 0;text-align:center">' + L2("还没有。多聊几句，他会记住你说过的事。", "Nothing yet. Talk a little — he'll remember what you tell him.") + '</p>') + '</div>' +
     '<div class="m2add"><select id="m2type"><option value="self">🗣 ' + L2("关于我", "About me") + '</option><option value="pref">💛 ' + L2("我喜欢 / 不喜欢", "I like / dislike") + '</option><option value="boundary">🚧 ' + L2("请别…", "Please don't…") + '</option><option value="promise">🤝 ' + L2("我们的约定", "Our plan") + '</option></select><input id="m2txt" maxlength="120" placeholder="' + esc(L2("告诉他一件要记住的事…", "Tell him something to remember…")) + '"><button class="btn btn-p" data-m2addgo="1">' + L2("记住", "Save") + '</button></div>' +
     '<label class="m2off"><input type="checkbox" data-m2off="1"' + (S.m2off ? "" : " checked") + '> ' + L2("让角色自动记住我在聊天里说的事", "Let characters remember what I say in chat") + '</label>' +
     '<button class="lnk" data-memsheet="1" style="display:block;margin:6px auto 0">🧠 ' + L2("记忆空间与档位", "Memory space & tiers") + '</button></div>');
@@ -158,7 +176,20 @@ document.addEventListener("click", e => {
   let x; const th = S.threads[curT]; if (!th) return;
   if (x = e.target.closest("[data-m2open]")) { e.stopImmediatePropagation(); m2Sheet(); return; }
   if (x = e.target.closest("[data-m2f]")) { m2Sheet(x.dataset.m2f); return; }
-  const cur = () => { const on = document.querySelector(".m2tabs .on"); return on ? on.dataset.m2f : "all"; };
+  if (x = e.target.closest("[data-m2p]")) { M2.person = x.dataset.m2p || ""; const on = document.querySelector(".m2tabs:not(.m2ppl) .on"); m2Sheet(on ? on.dataset.m2f : "all"); return; }
+  if (x = e.target.closest("[data-m2edit]")) {
+    const m = (th.mem2 || []).find(y => y.id === x.dataset.m2edit); const box = x.closest(".m2i"); if (!m || !box || box.querySelector("textarea")) return;
+    const p = box.querySelector(".m2t p"); if (p) p.outerHTML = '<div class="m2ed"><textarea rows="2" maxlength="240">' + esc(m.t) + '</textarea><button class="btn btn-p" data-m2editgo="' + m.id + '">' + LL("保存", "Save") + '</button></div>';
+    return;
+  }
+  if (x = e.target.closest("[data-m2editgo]")) {
+    const m = (th.mem2 || []).find(y => y.id === x.dataset.m2editgo); const ta = x.parentNode && x.parentNode.querySelector("textarea");
+    const v = ta ? ta.value.trim() : ""; if (!m || !v) return;
+    m.t = v.slice(0, 240); m.edited = 1; m.src = m.src === "you" ? "you" : "manual"; m.at2 = Date.now(); save();
+    toast(LL("改好了，他会按改过的记", "Updated — he'll remember it this way"));
+    const on = document.querySelector(".m2tabs:not(.m2ppl) .on"); m2Sheet(on ? on.dataset.m2f : "all"); return;
+  }
+  const cur = () => { const on = document.querySelector(".m2tabs:not(.m2ppl) .on"); return on ? on.dataset.m2f : "all"; };
   const find = id => (th.mem2 || []).find(y => y.id === id);
   if (x = e.target.closest("[data-m2pin]")) { const m = find(x.dataset.m2pin); if (m) { m.pin = !m.pin; save(); m2Sheet(cur()); } return; }
   if (x = e.target.closest("[data-m2hush]")) { const m = find(x.dataset.m2hush); if (m) { m.hush = !m.hush; save(); toast(m.hush ? LL("好，他不会再主动提这件事", "Got it — he won't bring this up") : LL("已恢复", "Unmuted")); m2Sheet(cur()); } return; }
@@ -182,4 +213,7 @@ SHEET.add("menu", "app77_memory2.js", "top", function () {
 .m2t{display:flex;gap:8px}.m2t span{flex:none}.m2t p{margin:0;font-size:13.5px;line-height:1.45}.m2t small{display:block;font-size:10.5px;color:var(--faint);margin-top:3px}
 .m2b{display:flex;gap:6px;margin-top:7px;justify-content:flex-end}.m2b button{font-size:11px;font-weight:700;color:var(--dim);border:1px solid var(--line2);background:none;border-radius:999px;padding:3px 9px}.m2b .del{color:#F28B9B;border-color:rgba(242,139,155,.4)}
 .m2add{display:flex;gap:6px}.m2add select{flex:none;max-width:118px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:12px;padding:0 6px}.m2add input{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:9px 10px;color:var(--text);font-size:13px}.m2add .btn{flex:none;padding:0 14px}
+.m2ppl{align-items:center}.m2ppl span{flex:none;margin-right:2px}
+.m2ed{flex:1;display:flex;flex-direction:column;gap:6px}.m2ed textarea{width:100%;background:var(--panel);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:13.5px;padding:8px 10px;resize:vertical}
+.m2card .lnk{margin-top:6px;font-size:12px}
 .m2off{font-size:12px;color:var(--dim);display:flex;gap:6px;align-items:center}`; document.head.appendChild(st); })();

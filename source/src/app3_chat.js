@@ -444,6 +444,7 @@ function castCard(th,cid){const c=ch(cid),st=stageOf(th,cid),A=x=>Lz(x);
   " Secret (never state it outright"+(st>=3?"; may now be revealed if the moment earns it":"; hint only")+"): "+A(c.secret)+
   " · Closeness to "+me()+": "+Math.round(th.love[cid]||0)+"/100 (stage: "+I18N.en["stage."+st]+"). Current mood: "+((th.status.mood||{})[cid]||"unknown")+"."+
   (function(){try{const chNow=(th.pk&&th.pk.ch)||th.ch||1;const memo=(typeof cardMemo==="function")?cardMemo(th,cid,chNow):"";return memo?" He remembers: "+memo+".":""}catch(_){return ""}})()+
+  (c.examples?" How he talks (example from his imported character card — match the voice, never repeat these lines): "+String(c.examples).slice(0,600).replace(/\s+/g," "):"")+
   // 非恋爱对象（2026-10-25 Ann 改）：**只关掉恋爱线，不关掉人的魅力**。
   // 原来这句写的是 "never flirt with them or imply attraction"——那是把角色的性张力当成了一个开关，
   // 而「一个因为标签就突然变得没有魅力的人」正是这个项目一开始要修的病（人不能变成另一个人）。

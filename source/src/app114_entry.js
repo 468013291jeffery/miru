@@ -155,6 +155,12 @@
           st0.insertAdjacentHTML('afterend', '<button class="btn btn-g btn-block" data-editp data-editp-start style="margin-top:10px">🪪 ' +
             esc(zhs ? '我的角色卡：' : 'My role card: ') + esc(p.name || '—') + esc(zhs ? ' · 编辑' : ' · edit') + '</button>');
         });
+        /* 2026-11-03（第十八批）：这部剧的分支表 + 结局收集（app119） */
+        soft('app114:branches', function () {
+          if (typeof branchListHTML !== 'function' || document.querySelector('.sheet .br94')) return;
+          const h = branchListHTML(wid); if (!h) return;
+          const card = document.querySelector('.sheet .sheet-card'); if (card) card.insertAdjacentHTML('beforeend', h);
+        });
         const hint = entryModes(w).hint;
         if (!hint) return;
         const st = document.querySelector('.sheet .stack');

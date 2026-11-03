@@ -64,7 +64,7 @@
   /* 这一轮要带哪几条：返回 [{i, e, hits}]，并推进「粘」的计数（commit=true 时） */
   function pick(th, ctx, commit) {
     const w = th && th.wid ? wd(th.wid) : null;
-    const L = (w && w.pack && w.pack.lore) || [];
+    const L = (w && ((w.pack && w.pack.lore) || w.lore)) || [];   /* w.lore：导入的角色卡（app120）带来的设定集 */
     if (!L.length) return [];
     const recent = (th.msgs || []).slice(-SCAN).map(m => m.txt || (m.parts || []).map(p => p.txt || "").join(" ") || "").join("\n");
     const hay = ((ctx && ctx.txt) || "") + "\n" + recent;
@@ -107,7 +107,7 @@
 
   window.__lore = function () {
     const th = S.threads[curT]; if (!th) return { err: "no thread" };
-    const w = wd(th.wid), L = (w && w.pack && w.pack.lore) || [];
+    const w = wd(th.wid), L = (w && ((w.pack && w.pack.lore) || w.lore)) || [];
     return { entries: L.length, sticky: th.lore94 || {}, thisTurn: pick(th, null, false).map(r => ({ keys: r.e.keys, hits: r.hits, left: r.left })) };
   };
   window.loreParse = parseLore;
