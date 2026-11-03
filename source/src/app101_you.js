@@ -100,7 +100,11 @@
       if (Array.isArray(b) && typeof b[2] === "string" && b[2].indexOf(IMARK) === 0) {
         const a = b[2].slice(IMARK.length).split("|").map(dec);
         th.pk.q.shift();
-        const m = { who: "sys", k: "item101", n: a[0] || "", d: a[1] || "", ic: a[2] || "📦", open: 0, at: Date.now() };
+        /* 2026-11-04：可选第 4、5 段 = 价格 + 原件全文（⟦ITEM|名称|说明|图标|💎5|全文，换行写 %0A⟧）。
+           玩家：「他说『桌上那张纸你自己看』，我却看不到」——卡片翻开先给说明（免费，剧情要的信息都在这里），
+           想看原件逐字内容再花钻石解锁；价格写 0 或不写价格 = 免费直接看。 */
+        const price = Math.max(0, parseInt(String(a[3] || "").replace(/[^0-9]/g, ""), 10) || 0);
+        const m = { who: "sys", k: "item101", n: a[0] || "", d: a[1] || "", ic: a[2] || "📦", p: price, full: a[4] || "", open: 0, at: Date.now() };
         th.msgs.push(m); save();
         if (typeof PKPAUSE !== "undefined") PKPAUSE[th.id] = "item";
         if (curT === th.id) { renderChat(); try { scrollChat(); } catch (_) {} }
@@ -115,9 +119,24 @@
       if (!m || m.k !== "item101") return next(m, i, th);
       return '<div class="it101' + (m.open ? " open" : "") + '" data-mi="' + i + '"><button class="it101c" data-it101="' + i + '">' +
         '<span class="it101f"><i>' + esc(m.ic) + '</i><b>' + esc(zh() ? "你发现了：" : "You found: ") + esc(m.n) + '</b><small>' + esc(zh() ? "点一下，拿起来看看" : "Tap to pick it up") + '</small></span>' +
-        '<span class="it101b"><i>' + esc(m.ic) + '</i><b>' + esc(m.n) + '</b><em>' + esc(m.d) + '</em><small>' + esc(zh() ? "✓ 已收进随身物品" : "✓ Added to your things") + '</small></span></button></div>';
+        '<span class="it101b"><i>' + esc(m.ic) + '</i><b>' + esc(m.n) + '</b><em>' + esc(m.d) + '</em><small>' + esc(zh() ? "✓ 已收进随身物品" : "✓ Added to your things") + '</small></span></button>' + docHTML(m, i) + '</div>';
     });
   }
+  /* 原件：翻开后出现在卡片下面；没付钱时是一个「🔒 💎N 查看原件」按钮 */
+  function docHTML(m, i) {
+    if (!m.full) return "";
+    if (m.p && !m.paid) return '<div class="it101x"><button class="it101buy" data-it101buy="' + i + '">🔒 ' + (zh() ? "查看原件 · 💎" : "See the original · 💎") + m.p + '</button></div>';
+    return '<div class="it101x"><div class="it101doc">' + esc(m.full).replace(/\n/g, "<br>") + '</div></div>';
+  }
+  document.addEventListener("click", e => {
+    const x = e.target.closest("[data-it101buy]"); if (!x) return;
+    e.stopPropagation();
+    const th = S.threads[curT]; if (!th) return; const i = +x.dataset.it101buy, m = th.msgs[i]; if (!m || m.k !== "item101" || m.paid) return;
+    if (typeof spend === "function" && !spend(m.p, "item")) return;
+    m.paid = 1; save();
+    try { if (typeof track === "function") track("item_unlock", { n: m.n, p: m.p, wid: th.wid || "" }); } catch (er) { console.warn("[item] track", er); }
+    const el = x.closest(".it101"); if (el && typeof msgHTML === "function") el.outerHTML = msgHTML(m, i, th);
+  }, true);
   document.addEventListener("click", e => {
     const x = e.target.closest("[data-it101]"); if (!x) return;
     const th = S.threads[curT]; if (!th) return; const m = th.msgs[+x.dataset.it101]; if (!m || m.k !== "item101" || m.open) return;
@@ -174,7 +193,7 @@
 
   const stl = document.createElement("style");
   stl.textContent = `
-.it101{display:flex;justify-content:center;margin:10px 0;perspective:900px}
+.it101{display:flex;flex-direction:column;align-items:center;gap:8px;margin:10px 0;perspective:900px}.it101:not(.open) .it101x{display:none}.it101x{width:min(88%,340px)}.it101buy{width:100%;border:1px dashed #F0B77E99;background:rgba(240,183,126,.08);color:#F0B77E;border-radius:12px;padding:9px 12px;font-weight:700;font-size:13px}.it101doc{background:#F7EFE3;color:#2a1d14;border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.65;text-align:left;font-family:"Songti SC","STSong",serif;box-shadow:0 6px 20px #0006}
 .it101c{position:relative;width:min(78%,300px);height:170px;border:0;background:none;padding:0;cursor:pointer;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.2,.7,.2,1)}
 .it101.open .it101c{transform:rotateY(180deg);cursor:default}
 .it101f,.it101b{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;padding:14px;text-align:center;box-shadow:0 10px 30px #0008}
