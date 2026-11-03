@@ -838,7 +838,7 @@ document.addEventListener("click",e=>{let x;
   if(a==="play")speak(m.txt,m.who);
   if(a==="save"){S.saved.unshift({tid:th.id,txt:m.txt,who:m.who,at:Date.now()});save();toast(t("msg.saved"))}
   if(a==="snap")imgSheet(th,m);
-  if(a==="redo"){let j=th.msgs.length;while(j>0&&th.msgs[j-1].ai)j--;th.msgs=th.msgs.slice(0,j);openTools=-1;save();renderChat();reply(th,{kind:"redo"})}
+  if(a==="redo"){const button=document.querySelector("[data-rg73]");if(button)button.click()}
   return}
  if(x=e.target.closest("[data-cardbtn]")){const th=S.threads[curT],m=th.msgs[+x.dataset.cardbtn];if(m&&m.act&&m.act.startsWith("couple|"))makeCouple(m.act.split("|")[1],th);if(m&&m.act&&m.act.startsWith("call|"))startCall(m.act.split("|")[1]);return}});
 document.addEventListener("keydown",e=>{if(e.target.id==="cin"&&e.key==="Enter"&&!e.shiftKey){e.preventDefault();const v=e.target.value;e.target.value="";doSend(v,null,true)}});

@@ -33,11 +33,11 @@ function t73(k, v) { const x = T73[k] || {}; let s = x[S.lang] || x.en || ""; Ob
 function day73() { return new Date().toISOString().slice(0, 10); }
 /* 2026-11-03（第十四批）：只认末尾的 AI 块（后面只许跟这一轮带出来的系统卡，比如关系推进）。
    原来会越过剧本写死的台词、选项卡往回找，剧情模式里点 ↻ 会把剧本台词和选项一起截掉。 */
-function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k > 0 && th.msgs[k].who === "sys" && !th.msgs[k].ai) k--; if (!th.msgs[k].ai) return -1; let j = k; while (j > 0 && th.msgs[j - 1].ai) j--; return j; }
+function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k > 0 && th.msgs[k].who === "sys" && !th.msgs[k].ai) k--; if (!th.msgs[k].ai) return -1; const turn = th.msgs[k].turn73; let j = k; while (j > 0 && th.msgs[j - 1].ai && th.msgs[j - 1].turn73 === turn) j--; return j; }
 /* 一个版本 = 那几条消息 + 它带来的状态（好感度、今日好感上限账、剧情进度）。切版本时三样一起换。 */
 /* 关系线（lnk）、关系维度（rdv）、降级提示账（_stDown）也算状态：不跟着换的话，
    切回低好感的版本会被当成「关系倒退」再插一张卡。 */
-const ST73 = ["love", "pk", "lnk", "rdv", "_stDown"];
+const ST73 = ["love", "pk", "lnk", "rdv", "_stDown", "status", "mem", "tasks", "quest", "sugg", "turn94", "aiN", "cpAsked"];
 function snap73(th) { const o = { g: JSON.parse(JSON.stringify((th.afDay || {}).g || {})) }; ST73.forEach(k => { o[k] = th[k] == null ? null : JSON.parse(JSON.stringify(th[k])); }); return o; }
 function restore73(th, st) { if (!st) return; if (th.afDay) th.afDay.g = JSON.parse(JSON.stringify(st.g || {})); ST73.forEach(k => { if (k in st) { if (st[k] == null) delete th[k]; else th[k] = JSON.parse(JSON.stringify(st[k])); } }); }
 function txt73(list) { return (list || []).map(m => m.txt || "").join(" "); }
@@ -94,11 +94,23 @@ usSheet = function () { const r = _usSheet73.apply(this, arguments); try { const
 let ADDR73 = null, REDO73 = false;
 const _reply73 = reply;
 reply = async function (th, ctx, silent) {
+  const start = th.msgs.length, previousPre = th._pre73, previousCtx = th._ctx73;
+  const capture = !busy && ctx && ctx.kind !== "redo" && !REDO73;
   try {
-    if (ctx && ctx.kind !== "redo" && !REDO73) { th._pre73 = snap73(th); th._ctx73 = Object.assign({}, ctx); }
+    if (capture) { th._pre73 = snap73(th); th._ctx73 = Object.assign({}, ctx); }
     if (ctx && (ctx.kind === "user" || ctx.kind === "talk") && th.addr && ch(th.addr) && (th.cast || []).includes(th.addr)) { ctx = Object.assign({}, ctx, { cid: th.addr }); ADDR73 = th.addr; }
   } catch (_) {}
-  try { return await _reply73.call(this, th, ctx, silent); } finally { ADDR73 = null; if (!silent && th && curT === th.id && !REDO73) setTimeout(() => { try { if (!busy) { renderChat(); scrollChat(); } } catch (_) {} }, 0); }
+  let ok = false;
+  try {
+    const out = await _reply73.call(this, th, ctx, silent);
+    ok = out !== false && !th.replyFailed && th.msgs.slice(start).some(m => m.ai);
+    if (ok) { const turn = Date.now().toString(36) + ":" + start; th.msgs.slice(start).forEach(m => { if (m.ai) m.turn73 = turn; }); save(); }
+    return out;
+  } finally {
+    if (capture && !ok) { th._pre73 = previousPre; th._ctx73 = previousCtx; }
+    ADDR73 = null;
+    if (!silent && th && curT === th.id && !REDO73) setTimeout(() => { try { if (!busy) { renderChat(); scrollChat(); } } catch (_) {} }, 0);
+  }
 };
 const _ask73 = ask;
 ask = function (prompt, opts) {
@@ -108,59 +120,95 @@ ask = function (prompt, opts) {
       if (REDO73) prompt = prompt.replace("\nNOW:", "\nREGENERATE: the user asked for a different version of this reply. Take a clearly different angle — a different first line and a different move — while staying in character and answering the same input.\nNOW:");
     }
   } catch (_) {}
-  return _ask73.apply(this, arguments);
+  return _ask73.call(this, prompt, opts);
 };
+let RG_PENDING73 = false;
 async function rg73(th) {
-  if (busy) return; const j = lastAIStart73(th); if (j < 0) return;
+  if (busy || RG_PENDING73) return; const j = lastAIStart73(th); if (j < 0) return;
+  if (!th._pre73) { toast(S.lang === "zh" ? "继续对话后即可重新生成新回复。" : "Continue the conversation to regenerate the next reply."); return; }
   const cur = th.msgs.slice(j);
   if (!th.vers || th.vers.at !== j) th.vers = { at: j, list: [cur], st: [snap73(th)], cur: 0 };
   else { th.vers.list[th.vers.cur] = cur; th.vers.st = th.vers.st || []; th.vers.st[th.vers.cur] = snap73(th); }
   if (th.vers.list.length >= 5) { toast(t73("maxV")); return; }
   const pre = th._pre73;
   const ctx = Object.assign({}, th._ctx73 || { kind: "user" });
-  let neu = [];
-  /* 新版本和已有版本太像（同一句换了两个字）就再取一次，只重取一次，不另收费 */
-  for (let tryN = 0; tryN < 2; tryN++) {
+  const originalState = snap73(th), originalRetry = th.replyRetry, originalFailed = th.replyFailed;
+  let accepted = false;
+  th._swipeRecovery73 = { at: j, messages: cur, state: originalState };
+  save(); // A reload during the request must recover the selected candidate.
+  RG_PENDING73 = true;
+  try {
     restore73(th, pre);
     th.msgs = th.msgs.slice(0, j); save(); renderChat();
     REDO73 = true;
-    try { await reply(th, ctx); } finally { REDO73 = false; }
-    neu = th.msgs.slice(j);
-    if (!neu.length) break;
-    const same = typeof altSim === "function" && th.vers.list.some(v => altSim(txt73(v), txt73(neu)) >= 0.6);
-    if (!same) break;
-    if (typeof console !== "undefined") console.warn("[rg73] 新版本与旧版本太像，重取一次");
+    const ok = await reply(th, ctx);
+    const neu = th.msgs.slice(j);
+    // A failure warning is not a new candidate. Keep the selected reply intact.
+    if (ok !== false && !th.replyFailed && neu.some(m => m.ai && m.txt && !m.mind)) {
+      th.vers.list.push(neu); th.vers.st.push(snap73(th)); th.vers.cur = th.vers.list.length - 1;
+      accepted = true;
+    }
+  } catch (error) {
+    console.warn("[swipe] generation failed", error);
+  } finally {
+    REDO73 = false; RG_PENDING73 = false; th._pre73 = pre;
+    if (!accepted) {
+      th.msgs = th.msgs.slice(0, j).concat(cur); restore73(th, originalState);
+      th.replyFailed = originalFailed; th.replyRetry = originalRetry;
+      toast(S.lang === "zh" ? "没能生成新版本，原回复已保留，请再试一次。" : "Couldn't generate a version. Your original reply is safe. Try again.");
+    }
+    delete th._swipeRecovery73;
+    sugg = th.sugg || [];
+    save(); if (curT === th.id) { renderChat(); scrollChat(); }
   }
-  th._pre73 = pre;
-  if (neu.length) { th.vers.list.push(neu); th.vers.st.push(snap73(th)); th.vers.cur = th.vers.list.length - 1; }
-  else { th.msgs = th.msgs.slice(0, j).concat(cur); restore73(th, th.vers.st[th.vers.cur]); }
-  save(); renderChat(); scrollChat();
 }
 function vswitch73(th, dir) {
-  const V = th.vers; if (!V) return false; const n = V.cur + dir; if (n < 0 || n >= V.list.length) return false;
+  if (busy || RG_PENDING73) return false;
+  const V = th.vers; if (!V || V.at !== lastAIStart73(th)) return false; const n = V.cur + dir; if (n < 0 || n >= V.list.length) return false;
   V.st = V.st || [];
   V.list[V.cur] = th.msgs.slice(V.at); V.st[V.cur] = snap73(th);
+  if (typeof stopVoice === "function") stopVoice();
   V.cur = n; th.msgs = th.msgs.slice(0, V.at).concat(V.list[n]); restore73(th, V.st[n]);
-  save(); renderChat(); scrollChat(); return true;
+  sugg = th.sugg || [];
+  save(); if (curT === th.id) { renderChat(); scrollChat(); } return true;
 }
-/* 手机：在最新这段 AI 回复上左右滑。往左滑 = 下一版（已经是最后一版就生成新的，走 ↻ 按钮，计费规则不变）；往右滑 = 上一版。 */
+/* Latest AI turn: left = next/new candidate, right = previous. Vertical scrolling stays native. */
+function swipe73(th, dir) {
+  if (!th || busy || RG_PENDING73) return;
+  if (vswitch73(th, dir) || dir < 0) return;
+  const button = document.querySelector("[data-rg73]");
+  if (button) button.click(); // Use the same quota/gating path as the visible button.
+}
+function recoverSwipes73() {
+  let changed = false;
+  Object.values(S.threads || {}).forEach(th => {
+    const recovery = th._swipeRecovery73;
+    if (!recovery) return;
+    th.msgs = th.msgs.slice(0, recovery.at).concat(recovery.messages);
+    restore73(th, recovery.state); delete th._swipeRecovery73; changed = true;
+  });
+  if (changed) save();
+}
+recoverSwipes73();
 (function () {
-  let sx = 0, sy = 0, on = false;
-  document.addEventListener("touchstart", e => {
-    on = false; const t = e.touches && e.touches[0]; if (!t) return;
-    const el = e.target && e.target.closest && e.target.closest("#msgs [data-mi]"); if (!el) return;
-    const th = S.threads[curT]; if (!th) return; const j = lastAIStart73(th);
-    if (j < 0 || +el.dataset.mi < j) return;
-    on = true; sx = t.clientX; sy = t.clientY;
+  let gesture = null;
+  document.addEventListener("pointerdown", e => {
+    gesture = null;
+    if (!e.isPrimary || e.button !== 0 || busy || RG_PENDING73) return;
+    if (e.target.closest("button,a,input,textarea,[contenteditable]")) return;
+    const el = e.target.closest("#msgs [data-mi]");
+    const th = S.threads[curT], j = lastAIStart73(th);
+    if (!el || j < 0 || +el.dataset.mi < j || !th.msgs[+el.dataset.mi]?.ai) return;
+    gesture = { id: e.pointerId, tid: th.id, at: j, x: e.clientX, y: e.clientY };
   }, { passive: true });
-  document.addEventListener("touchend", e => {
-    if (!on) return; on = false; const t = e.changedTouches && e.changedTouches[0]; if (!t) return;
-    const dx = t.clientX - sx, dy = t.clientY - sy;
-    if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.6 || busy) return;
-    const th = S.threads[curT]; if (!th) return;
-    if (dx > 0) { vswitch73(th, -1); return; }
-    if (vswitch73(th, 1)) return;
-    const b = document.querySelector("[data-rg73]"); if (b) b.click();
+  document.addEventListener("pointercancel", () => { gesture = null; }, { passive: true });
+  document.addEventListener("pointerup", e => {
+    const g = gesture; gesture = null;
+    if (!g || g.id !== e.pointerId || curT !== g.tid) return;
+    const dx = e.clientX - g.x, dy = e.clientY - g.y, th = S.threads[g.tid];
+    if (lastAIStart73(th) !== g.at || Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * .6) return;
+    if (window.getSelection && !window.getSelection().isCollapsed) return;
+    swipe73(th, dx < 0 ? 1 : -1);
   }, { passive: true });
 })();
 function edit73(th, idxs, isMe) {
@@ -171,7 +219,7 @@ function edit73(th, idxs, isMe) {
 document.addEventListener("click", async e => {
   let x; const th = S.threads[curT]; if (!th) return;
   if ((x = e.target.closest("[data-rg73]"))) { e.stopImmediatePropagation(); rg73(th); return; }
-  if ((x = e.target.closest("[data-vs73]"))) { e.stopImmediatePropagation(); vswitch73(th, +x.dataset.vs73); return; }
+  if ((x = e.target.closest("[data-vs73]"))) { e.stopImmediatePropagation(); swipe73(th, +x.dataset.vs73); return; }
   if ((x = e.target.closest("[data-edg73]"))) { e.stopImmediatePropagation(); const j = lastAIStart73(th); if (j < 0) return; const idx = []; for (let k = j; k < th.msgs.length; k++) if (th.msgs[k].txt && th.msgs[k].who !== "sys") idx.push(k); edit73(th, idx, false); return; }
   if ((x = e.target.closest("[data-ed73]"))) { e.stopImmediatePropagation(); const i = +x.dataset.ed73, m = th.msgs[i]; if (!m) return; const isMe = m.who === "me" && th.msgs.slice(i + 1).every(y => y.ai); edit73(th, [i], isMe); return; }
   if ((x = e.target.closest("[data-ed73save]"))) {
@@ -226,7 +274,7 @@ async function mind73(th, i) {
     } catch (_) {}
   }
   if (!txt) { const pool = MIND_FB[S.lang === "zh" ? "zh" : "en"]; txt = pool[(th.msgs.length + i) % pool.length]; }
-  th.msgs.splice(i + 1, 0, { who: m.who, k: "think", txt: String(txt).slice(0, 300), at: Date.now(), ai: 1, mind: 1 });
+  th.msgs.splice(i + 1, 0, { who: m.who, k: "think", txt: String(txt).slice(0, 300), at: Date.now(), ai: 1, mind: 1, turn73: m.turn73 });
   save(); renderChat();
 }
 
@@ -259,7 +307,8 @@ const __body73 = function () {
     }
     /* bar under the latest AI reply */
     const j = lastAIStart73(th), box = $("#msgs");
-    if (j >= 0 && box && !busy && !box.querySelector(".rg73")) {
+    if (j >= 0 && box && !busy && !RG_PENDING73 && !box.querySelector(".rg73")) {
+      box.querySelectorAll("[data-mi]").forEach(el => { if (+el.dataset.mi >= j && th.msgs[+el.dataset.mi]?.ai) el.dataset.swipe73 = "1"; });
       const lastSay = (() => { for (let k = th.msgs.length - 1; k >= j; k--) { const m = th.msgs[k]; if (ch(m.who) && m.k === "say" && m.who !== (th.pk && th.pk.as) && !(th.msgs[k + 1] && th.msgs[k + 1].mind)) return k; } return -1; })();
       const V = th.vers && th.vers.at === j ? th.vers : null;
       /* 2026-10-27（Ann 看图指出「这条 bar 应该在框的外面」）：
@@ -270,7 +319,7 @@ const __body73 = function () {
          .m-row{flex-wrap:wrap} + .m-row>.rg73{flex-basis:100%} 独占一行、落在气泡下方。 */
  const _host = (function(){
    try{
-     const rows = box.querySelectorAll(".m-row");
+     const rows = box.querySelectorAll("[data-swipe73]");
      const last = rows[rows.length - 1];
      if (last) return last;
      const bx = box.querySelectorAll(".m-box,.bub");
@@ -279,9 +328,9 @@ const __body73 = function () {
    return box;
  })();
  _host.insertAdjacentHTML("beforeend", '<div class="rg73">' +
-        (V && V.list.length > 1 ? '<span class="vs73"><button data-vs73="-1"' + (V.cur ? '' : ' disabled') + '>‹</button>' + (V.cur + 1) + '/' + V.list.length + '<button data-vs73="1"' + (V.cur < V.list.length - 1 ? '' : ' disabled') + '>›</button></span>' : '') +
+        '<span class="vs73" aria-label="'+(S.lang === "zh" ? "回复版本" : "Reply versions")+'"><button data-vs73="-1" aria-label="'+(S.lang === "zh" ? "上一个版本" : "Previous version")+'"'+(V && V.cur ? '' : ' disabled')+'>‹</button><span aria-live="polite">'+(V ? V.cur + 1 : 1)+' / '+(V ? V.list.length : 1)+'</span><button data-vs73="1" aria-label="'+(S.lang === "zh" ? "下一个版本或重新生成" : "Next version or regenerate")+'">›</button></span>' +
         '<button data-rg73="1">↻ ' + esc(t73("regen")) + '</button><button data-edg73="1">✎ ' + esc(t73("edit")) + '</button>' +
-        (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">💭 ' + esc(t73("mind")) + '</button>' : '') + '</div>');
+        (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">💭 ' + esc(t73("mind")) + '</button>' : '') + '<span class="swipe73hint">'+(S.lang === "zh" ? "← 左右滑动切换回复 →" : "← Swipe to switch replies →")+'</span></div>');
     }
     /* address chips in multi-character scenes */
     const sp = speakersOf(th).filter(id => ch(id)), comp = document.querySelector(".composer");
@@ -318,7 +367,7 @@ if (window.UI && typeof window.UI.add === "function") {
 .rg73>*+*{border-left:1px solid var(--line2)!important}
 .rg73>button:active{background:rgba(255,255,255,.06)}
 .rg73 button[data-mind73]{color:#D7C6F5}
-.vs73{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--dim);font-weight:700}.vs73 button{padding:0 4px!important;background:none;border:0;color:inherit}.vs73 button[disabled]{opacity:.35}
+.vs73{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--dim);font-weight:700}.vs73 button{padding:0 4px!important;background:none;border:0;color:inherit}.vs73 button[disabled]{opacity:.35}.vs73 button{min-width:32px;min-height:32px}.swipe73hint{flex-basis:100%;text-align:center;padding:4px 8px;font-size:11px;color:var(--faint)}[data-swipe73]{touch-action:pan-y}
 .ed73tag{font-size:10px;color:var(--faint);margin:-4px 0 2px 40px}.ed73tag.me{text-align:right;margin:-4px 6px 2px 0}
 .ed73s{display:flex;flex-direction:column;gap:10px}.ed73s h2{margin:0}.ed73r{display:flex;flex-direction:column;gap:4px}.ed73r span{font-size:11px;color:var(--faint);font-weight:700}
 .ed73r textarea{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5;outline:none;resize:vertical;width:100%}
