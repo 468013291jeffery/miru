@@ -76,6 +76,8 @@
   if(ev.target.closest('[data-reading-next]')){ev.preventDefault();ev.stopImmediatePropagation();R.advance();return;}
   /* 点屏幕 = 下一句。点在气泡上要等 230ms：双击是给这句回 ❤️（app122），不能顺手翻掉两句 */
   {const th=S.threads[curT],chat=$('#s-chat');
+   /* 剧情停在「▶ 继续剧情」（比如刷新页面后）时，点屏幕也算继续 */
+   if(th&&chat&&!chat.hidden&&!R.pending.get(th.id)&&ev.target.closest('#msgs')&&!ev.target.closest('button,a,input,textarea,select,label,.rx122p')){const rs=chat.querySelector('[data-pkresume]');if(rs){ev.stopImmediatePropagation();rs.click();return;}}
    if(th&&chat&&!chat.hidden&&R.pending.get(th.id)&&ev.target.closest('#s-chat')&&!ev.target.closest('button,a,input,textarea,select,label,.composer,.chead,.sheet,.rx122p,#pkwrap,.status')){
     ev.stopImmediatePropagation();
     if(A.busy()){stopVoice();paint();return;}
