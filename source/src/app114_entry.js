@@ -44,12 +44,15 @@
     Object.assign(I18N.en, {
       'pk.way.lead': 'Say his lines, make his choices',
       'pk.way.side': "Walk in as yourself — they'll answer you",
-      'pk.wayHint': "This story didn't list every way in — {n} was filled in from its cast."
+      'pk.wayHint': "This story didn't list every way in — {n} was filled in from its cast.",
+      'pk.modesNote': "You are the \"you\" in this story. Choices and progress save automatically."
     });
     Object.assign(I18N.zh, {
       'pk.way.lead': '你说他的台词，替他做选择',
       'pk.way.side': '以你自己的身份进去，他们会回应你',
-      'pk.wayHint': '这份剧本没写全身份，{n} 是按人物补齐的。'
+      'pk.wayHint': '这份剧本没写全身份，{n} 是按人物补齐的。',
+      /* 2026-11-04：入口只剩「扮演我自己」，「随时可以入场或退回旁观」这句不再成立 */
+      'pk.modesNote': '你就是故事里的「你」。选择和进度自动保存。'
     });
   });
 
@@ -123,7 +126,10 @@
     meM.t = meM.t || { zh: '用你的角色卡（名字、外貌、喜好）进去，他们会把你当成你本人来回应', en: "Go in with your role card (name, looks, likes) — they'll answer you as you" };
     const watchM = out.filter(function (m) { return m.as === 'watch' })[0];
     out.length = 0;
-    out.push(meM); if (leadM) out.push(leadM); out.push(watchM);
+    /* 2026-11-04（产品决定，玩家原话：以后的剧本都是扮演我自己）⇒ 入口只剩「扮演 我自己」一条；
+       「扮演 主角」「导演视角」不再给玩家（代码路径还在，剧本里 / 后台测试仍可用 as:'watch' 等直接进）。 */
+    void leadM; void watchM;
+    out.push(meM);
     const filled = out.filter(function (m) { return m.src === 'derived' && m.as !== 'side' });
     let hint = '';
     if (filled.length) {

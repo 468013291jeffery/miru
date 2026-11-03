@@ -860,7 +860,7 @@ function plusQuick3(tiles){const zh=CL()==="zh",q=[],fd=$("#fd96b"),tb=$("#toolB
  const btn=(attr,i,lab,badge)=>tiles?'<button class="pmt" '+attr+'><i>'+i+'</i><b>'+lab+'</b>'+(badge?'<em>'+badge+'</em>':'')+'</button>':'<button '+attr+'><i>'+i+'</i><small>'+lab+'</small><em>'+(badge||"")+'</em></button>';
  if(fd)q.push(btn('data-fd96="1"',"🔥",zh?"热搜":"Trending",em(fd)));
  if(tb&&tb.style.display!=="none")q.push(btn('data-tools="1"',"🎬",zh?"播放":"Play",""));
- if(hb)q.push(btn('data-hist="1"',"🕘",zh?"历史":"History",em(hb)));
+ if(hb&&!tiles)q.push(btn('data-hist="1"',"🕘",zh?"历史":"History",em(hb)));  /* 2026-11-04：「更多」格子里不再放「历史」（玩家：聊天记录一直在，往上翻就是） */
  if(tiles){const th=S.threads[curT],m=th&&mainOf(th);if(m&&ch(m))q.push(btn('data-pmcall="'+m+'"',"📞",zh?"通话":"Call",""));return q.join("")}
  return q.length?'<div class="pmq3">'+q.join("")+'</div>':""}
 document.addEventListener("click",e=>{const x=e.target.closest&&e.target.closest("[data-pmcall]");if(!x)return;e.stopImmediatePropagation();closeSheet();try{startCall(x.dataset.pmcall)}catch(er){console.warn("[plus] call",er)}},true);

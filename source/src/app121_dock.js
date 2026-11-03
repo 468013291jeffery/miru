@@ -38,7 +38,10 @@
     histSync();
   }
   document.addEventListener("click", function (e) { if (e.target && e.target.closest && e.target.closest("[data-hist]")) setTimeout(histSync, 0); });
-  if (window.UI && typeof window.UI.add === "function") { window.UI.add("dock121", dock); window.UI.add("hist121", hist); }
+  /* 2026-11-04（玩家：「历史」没必要了 —— 聊天记录现在一直在，往上翻就能看）⇒ 不再加顶栏「🕘 历史」，以前加过的也拿掉。 */
+  function noHist() { document.querySelectorAll(".chead .hist121").forEach(b => b.remove()); }
+  void hist;
+  if (window.UI && typeof window.UI.add === "function") { window.UI.add("dock121", dock); window.UI.add("hist121", noHist); }
   else console.warn("[dock121] UI.add 不在，剧情面板不会贴住输入区");
   window.pkDock = dock;
   /* 2026-11-03 第三版：横排小气泡里点剧本那句 = 直接说出去（不再进「换个态度 / 加个动作」那一步）。
@@ -57,4 +60,16 @@
     if (btn.textContent !== want) btn.textContent = want;
   }
   try { new MutationObserver(relabel).observe(document.body, { childList: true, subtree: true }); } catch (e) { console.warn("[dock121] observer", e); }
+  /* 2026-11-04（玩家：新弹出来的那句下面被挡住了，要往上调）
+     原因：新消息先滚到底，随后 app86 才往气泡里补 ☺🔊🖼 那一排 ⇒ 气泡变高、底部被挤到可视区外。
+     做法：#msgs 内容一变（新消息、补按钮、贴表情），只要你本来就在底部附近（没在往上翻历史），就再滚到底一次。 */
+  let atBottom = true;
+  document.addEventListener("scroll", function (e) { const m = e.target; if (m && m.id === "msgs") atBottom = m.scrollHeight - m.scrollTop - m.clientHeight < 140; }, true);
+  try {
+    new MutationObserver(function () {
+      const m = document.getElementById("msgs"); if (!m || !atBottom) return;
+      requestAnimationFrame(function () { m.scrollTop = m.scrollHeight; });
+      setTimeout(function () { if (atBottom) m.scrollTop = m.scrollHeight; }, 60);
+    }).observe(document.body, { childList: true, subtree: true });
+  } catch (e) { console.warn("[dock121] stick-bottom", e); }
 })();

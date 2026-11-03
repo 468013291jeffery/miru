@@ -99,8 +99,12 @@
   window.branchListHTML = function (wid) {
     try {
       const w = wd(wid); if (!w || !w.pack) return "";
-      const ths = Object.values(S.threads).filter(o => o.wid === wid && o.pk).sort((a, b) => (b.at || 0) - (a.at || 0));
-      if (ths.length < 2) return "";
+      /* 2026-11-04（玩家截图：一列「主线 · 第 1 章」看不懂）⇒ 每次重新开局都算了一条「主线」。
+         现在只在真的「⑂ 从这一步重来」过时才出现，只列分出去的那几条和它们的来源那一条。 */
+      const all = Object.values(S.threads).filter(o => o.wid === wid && o.pk);
+      const roots = new Set(all.filter(o => o.branchOf).map(o => o.branchOf));
+      const ths = all.filter(o => o.branchOf || roots.has(o.id)).sort((a, b) => (b.at || 0) - (a.at || 0));
+      if (!roots.size || ths.length < 2) return "";
       const ends = w.pack.endings ? Object.keys(w.pack.endings) : [];
       const got = (typeof endingsFound === "function") ? endingsFound(wid) : 0;
       const endName = th => { const e = w.pack.endings && w.pack.endings[th.pk.end]; return e ? Lz(e.t) : th.pk.end === "complete" ? L2("已完结", "complete") : ""; };

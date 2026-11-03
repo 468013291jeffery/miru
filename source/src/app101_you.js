@@ -147,8 +147,10 @@
     const on = tabs.querySelector("button.on"); const k = on && on.dataset.stab;
     if (k === "intro") {
       if (body.dataset.s101) return; body.dataset.s101 = 1;
-      const kids = [...body.children]; const syn = kids.find(c => c.tagName === "P");
-      kids.forEach(c => { if (c !== syn) c.style.display = "none"; });
+      /* 2026-11-04（玩家：我给的前情提要以后都要显示）⇒ 简介那句 + 前情提要（作者写的 premise）两段都留；其余仍隐藏 */
+      const kids = [...body.children]; const ps = kids.filter(c => c.tagName === "P").slice(0, 2);
+      if (ps[1] && ps[0] && ps[1].textContent.trim() === ps[0].textContent.trim()) ps.pop();
+      kids.forEach(c => { if (!ps.includes(c)) c.style.display = "none"; });
       body.insertAdjacentHTML("beforeend", leadsHTML(w));
     } else if (k === "cast") {
       if (body.dataset.g101) return; body.dataset.g101 = 1;

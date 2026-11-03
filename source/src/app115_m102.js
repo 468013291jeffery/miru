@@ -82,10 +82,11 @@
   }save();packRefresh(th);if(curT===th.id){renderChat();scrollChat();}
  };
  const _endingNeed=EN;EN=function(th){return is(th)?0:_endingNeed.apply(this,arguments);};
+ /* 2026-11-04：入口只留「扮演 我自己」（产品决定：以后的剧本都是扮演我自己），去掉「以自己的身份加入」「导演视角」 */
  const _startSheet=startSheet;startSheet=function(wid,fresh){
   if(wid!==ID)return _startSheet.apply(this,arguments);
   const run=fresh?null:Object.values(S.threads).filter(is).sort((a,b)=>b.at-a.at)[0];
-  sheet('<h2>午夜不打烊</h2><p class="sm dim">14章完整故事 · 选择与进度自动保存</p>'+(run?'<button class="btn btn-p btn-block" data-open="'+esc(run.id)+'" style="margin-top:12px">继续到第'+run.pk.ch+'章</button>':'')+'<div class="stack" style="margin-top:12px"><button class="opt" data-pkgo="m102|m102_you"><b>扮演店主</b><span>你说自己的话，作出自己的选择。</span></button><button class="opt" data-pkgo="m102|side"><b>以自己的身份加入</b><span>走进咖啡店，随时与在场的人交谈。</span></button><button class="opt" data-pkgo="m102|watch"><b>导演视角</b><span>旁观故事，也可以随时提出想法。</span></button></div>');
+  sheet('<h2>午夜不打烊</h2><p class="sm dim">14章完整故事 · 选择与进度自动保存</p>'+(run?'<button class="btn btn-p btn-block" data-open="'+esc(run.id)+'" style="margin-top:12px">继续到第'+run.pk.ch+'章</button>':'')+'<div class="stack" style="margin-top:12px"><button class="opt" data-pkgo="m102|m102_you"><b>扮演 我自己（店主）</b><span>你说自己的话，作出自己的选择。</span></button></div>');
  };
  const _storyPage=storyPage;storyPage=function(id,keep){
   if(id!==ID)return _storyPage.apply(this,arguments);curStory=ID;if(!keep)storyTab='intro';

@@ -13,14 +13,16 @@
   /* 谁说的这句：普通台词看 m.who；剧本里「动作 + 一句话」的块（k:box）看 m.say.who */
   const spk = m => { if (!m || typeof ch !== "function") return null; if (m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys" && ch(m.who)) return m.who; if (m.k === "box" && m.say && ch(m.say.who)) return m.say.who; return null; };
   const lineOf = m => (m && (m.k === "box" && m.say ? m.say.txt : m.txt)) || "";
-  const ok = m => !!(m && spk(m) && lineOf(m) && m.k !== "card" && m.k !== "img");
+  /* 2026-11-04：自己说的话也能贴表情（玩家：我的气泡也要有 ☺）；只是不告诉角色（见 reactBlock） */
+  const mine = m => !!(m && m.who === "me" && m.txt && m.k !== "think" && m.k !== "dir");
+  const ok = m => !!(m && (mine(m) || (spk(m) && lineOf(m))) && m.k !== "card" && m.k !== "img");
 
   /* 渲染：角上的 ☺ + 已回应的表情（一层 post，新消息 appendMsg 时也走 msgHTML，所以都带得上） */
   if (typeof MSGKIND !== "undefined" && MSGKIND.post) {
     MSGKIND.post("app122_react.js", function (h, m, i, th) {
       if (!ok(m)) return h;
       let out = h;
-      if (m.react) out += '<div class="rx122b" data-rx122="' + i + '">' + esc(m.react) + '</div>';
+      if (m.react) out += '<div class="rx122b' + (m.who === "me" ? " me" : "") + '" data-rx122="' + i + '">' + esc(m.react) + '</div>';
       return out;
     });
   }
@@ -35,7 +37,7 @@
       let host = el; while (host.nextElementSibling && host.nextElementSibling.classList.contains("mquick")) host = host.nextElementSibling;
       const old = host.parentNode && host.parentNode.querySelector('.rx122b[data-rx122="' + i + '"]');
       if (old) old.remove();
-      if (m.react) { host.insertAdjacentHTML("afterend", '<div class="rx122b pop" data-rx122="' + i + '">' + esc(m.react) + '</div>'); }
+      if (m.react) { host.insertAdjacentHTML("afterend", '<div class="rx122b pop' + (m.who === "me" ? " me" : "") + '" data-rx122="' + i + '">' + esc(m.react) + '</div>'); }
     }
     closePicker();
   }
@@ -90,7 +92,7 @@
       if (!th || !th.msgs) return "";
       const since = th.rx122seen || 0;
       const rows = [];
-      th.msgs.forEach(m => { if (m && m.react && (m.reactAt || 0) > since && ok(m)) rows.push("- " + m.react + " on " + first(ch(spk(m)).n) + "'s line: \"" + String(lineOf(m)).slice(0, 60) + "\""); });
+      th.msgs.forEach(m => { if (m && m.react && (m.reactAt || 0) > since && ok(m) && !mine(m)) rows.push("- " + m.react + " on " + first(ch(spk(m)).n) + "'s line: \"" + String(lineOf(m)).slice(0, 60) + "\""); });
       th.rx122seen = Date.now();
       if (!rows.length) return "";
       return "PLAYER REACTIONS (the player tapped an emoji on these lines since your last reply — like a chat reaction; let it color the moment naturally if it fits, never count or list them):\n" + rows.slice(-4).join("\n");

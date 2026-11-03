@@ -48,7 +48,8 @@
   m.addEventListener('pointerdown',e=>{m._gesture124={x:e.clientX,y:e.clientY};},{passive:true});
   m.addEventListener('pointermove',e=>{const g=m._gesture124;if(g&&Math.abs(g.y-e.clientY)>12){m._scrolled124=Date.now();X.remember();}},{passive:true});
  }
- X.tools=function(){return [['data-mode="dir"','🎬',text('导演','Director')],['data-stepin="1"','🚪',text('切换身份','Switch role')],['data-detail124="1"','📖',text('剧情详情','Story details')],['data-cmenu="1"','⚙',text('设置与更多','Settings')],['data-ideas="1"','✦',text('回复建议','Reply ideas')],['data-cont="1"','⏩',text('继续','Continue')],['data-cs="1"','🎬',text('剧情工具','Story tools')]].filter(([a])=>!a.includes('data-stepin')||!!current()?.pk).map(([a,i,t])=>'<button class="pmt" '+a+'><i>'+i+'</i><b>'+t+'</b></button>').join('');};
+ /* 2026-11-04（玩家：「设置与更多」可以不要 —— 顶栏的 ⋯ 就是它）⇒ 从「更多」格子里拿掉 */
+ X.tools=function(){return [['data-detail124="1"','📖',text('剧情详情','Story details')],['data-ideas="1"','✦',text('回复建议','Reply ideas')],['data-cont="1"','⏩',text('继续','Continue')],['data-cs="1"','🎬',text('剧情工具','Story tools')]].filter(([a])=>!a.includes('data-stepin')||!!current()?.pk).map(([a,i,t])=>'<button class="pmt" '+a+'><i>'+i+'</i><b>'+t+'</b></button>').join('');};
  function composer(){
   const box=document.querySelector('#s-chat .composer');if(!box)return;
   box.querySelectorAll('.c55h,#modeMoreBtn,.modebtn,#modeToggle').forEach(el=>el.remove());
@@ -57,10 +58,10 @@
   [['say','💬',text('台词','Say')],['act','✱',text('动作','Action')],['think','💭',text('心声','Thought')]].forEach(([k,i,l])=>{const b=document.createElement('button');b.dataset.input124=k;b.textContent=i+' '+l;b.setAttribute('aria-pressed',String(cmode===k));row.appendChild(b);});
   box.prepend(row);
  }
- /* 2026-11-04（玩家：顶栏这样改不好看）⇒ 顶栏恢复原样：左边头像 + 剧名 + 💗 关系，不再藏起来、也不再在最右边另加「♥ 陌生人」。
-    这里只做清理（把以前加过的 .relationship124 / hidden 撤掉），工具按钮一个不动。 */
- function header(){const h=document.querySelector('#s-chat .chead');if(!h)return;h.classList.remove('slim124');const r=h.querySelector('.row');if(!r)return;
-  r.querySelectorAll('.relationship124').forEach(el=>el.remove());[...r.children].forEach(el=>{if(el.matches('.chavs,.av,[data-us]'))el.hidden=false;});
+ /* 2026-11-04 第二次（玩家看图后：头像、剧名 + 💗关系 这两块都不要了）⇒ 顶栏只留返回和右边的工具按钮。
+    不另加「♥ 陌生人」（上一版 GPT 加在最右边的那个也不要）。 */
+ function header(){const h=document.querySelector('#s-chat .chead');if(!h)return;h.classList.add('slim124');const r=h.querySelector('.row');if(!r)return;
+  r.querySelectorAll('.relationship124').forEach(el=>el.remove());[...r.children].forEach(el=>{el.hidden=el.matches('.chavs,.av,[data-us]');});
  }
  function details(){const th=current(),w=th&&wd(th.wid);if(!th)return;
   sheet('<h2>'+esc(th.title)+'</h2><p>'+esc(local(w?.premise||w?.hook))+'</p>'+((th.pk&&w?.pack?.chapters[th.pk.ch-1])?briefHTML(X.brief(th,w.pack.chapters[th.pk.ch-1],th.pk.ch)):'')+'<div class="stack">'+(th.cast||[]).map(id=>{const c=ch(id);return c?'<article><h3>'+esc(c.n)+'</h3><p>'+esc(local(c.role||c.vibe))+'</p></article>':'';}).join('')+'</div>');

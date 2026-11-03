@@ -1510,6 +1510,12 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat .m-row.me .bt86{display:flex;justify-content:flex-end;gap:3px}
 #s-chat .m-row.me .bt86 button{width:22px;height:20px;padding:0;border:0;border-radius:6px;background:rgba(18,16,26,.78)!important;color:#fff!important;font-size:11px;line-height:20px;opacity:.6;filter:none!important;mix-blend-mode:normal!important}
 #s-chat .m-row.me .bt86 button:hover,#s-chat .m-row.me .bt86 button:active{opacity:1}
+.rx122b.me{align-self:flex-end;margin:-12px 10px 4px 0}
+#s-chat #msgs{padding-bottom:22px!important}
+/* 2026-11-04（玩家：作品页顶上的图要显示完整）⇒ 不再裁成 340px 高的横条：图按原比例铺满宽度，标题照旧压在图的下半部分 */
+#s-story .hero{height:auto!important}
+#s-story .hero>.art{position:relative!important;inset:auto!important;height:auto!important}
+#s-story .hero>.art img{height:auto!important;object-fit:contain!important;display:block}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>
