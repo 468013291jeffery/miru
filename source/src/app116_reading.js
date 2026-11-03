@@ -29,18 +29,22 @@
  R.manual=()=>true;
  const readable=m=>m&&((typeof m.txt==='string'&&m.txt.trim())||m.k==='intro'||m.k==='chap');
  const signature=m=>String(m.txt||'')+'|'+String(m.last||'');
+ /* 2026-11-03（玩家：「下一句」没必要做成一条大横幅，点一下屏幕就该继续）
+    ⇒ 不再画大横幅。等你读的时候，点屏幕任意空处 / 点那句话 = 下一句。
+    只有前 5 次在输入区上方飘一行很淡的小字「轻点屏幕继续」，之后什么都不显示。朗读中显示「朗读中…」，点一下就停读。 */
+ const HINT_N=5;
  function paint(){
   const th=S.threads[curT],chat=$('#s-chat');if(!chat)return;
   chat.classList.add('manual-reading');
-  let bar=chat.querySelector('[data-reading-bar]');const entry=th&&R.pending.get(th.id);
-  if(!entry){if(bar)bar.remove();return;}
-  if(!bar){bar=document.createElement('div');bar.dataset.readingBar='1';bar.className='reading-bar';
-   bar.innerHTML='<div><span data-reading-hint>读完再点，内容会一直保留</span><button type="button" data-reading-stop-voice="1">停止朗读</button></div><button type="button" class="btn btn-p" data-reading-next="1">下一句 ›</button>';
-   const composer=chat.querySelector('.composer');if(composer)composer.before(bar);else chat.appendChild(bar);
-  }
-  const voicing=A.busy(),next=bar.querySelector('[data-reading-next]');next.disabled=voicing;next.textContent=voicing?'朗读中…':'下一句 ›';
-  bar.querySelector('[data-reading-hint]').textContent=voicing?'这一句读完后，再点下一句':'读完再点，内容会一直保留';
-  bar.querySelector('[data-reading-stop-voice]').hidden=!voicing;
+  const old=chat.querySelector('[data-reading-bar]');if(old)old.remove();
+  let tip=chat.querySelector('[data-tap-hint]');const entry=th&&R.pending.get(th.id);
+  chat.classList.toggle('await-tap',!!entry);
+  const voicing=A.busy();
+  const show=entry&&(voicing||(S.tapHintN||0)<HINT_N);
+  if(!show){if(tip)tip.remove();return;}
+  if(!tip){tip=document.createElement('div');tip.dataset.tapHint='1';tip.className='tap-hint';const composer=chat.querySelector('.composer');if(composer)composer.before(tip);else chat.appendChild(tip);}
+  tip.textContent=voicing?'朗读中… 点一下停止':'轻点屏幕继续 ›';
+  tip.classList.toggle('voicing',voicing);
  }
  R.wait=function(th,message,kind){
   if(!th||!readable(message))return Promise.resolve();
@@ -55,6 +59,7 @@
    th._unread=0;paint();resolve();
   };
   R.pending.set(th.id,entry);if(kind==='script')PKNEXT[th.id]=entry.finish;
+  if(R._counted!==message){R._counted=message;S.tapHintN=(S.tapHintN||0)+1;}
   paint();return promise;
  };
  R.advance=function(){const th=S.threads[curT],chat=$('#s-chat');if(!th||!chat||chat.hidden||(typeof HIST_OPEN!=='undefined'&&HIST_OPEN))return false;
@@ -69,11 +74,18 @@
  if(typeof streamPreview==='function'){const preview=streamPreview;streamPreview=function(){if(!R.manual())return preview.apply(this,arguments);};}
  window.addEventListener('click',ev=>{
   if(ev.target.closest('[data-reading-next]')){ev.preventDefault();ev.stopImmediatePropagation();R.advance();return;}
+  /* 点屏幕 = 下一句。点在气泡上要等 230ms：双击是给这句回 ❤️（app122），不能顺手翻掉两句 */
+  {const th=S.threads[curT],chat=$('#s-chat');
+   if(th&&chat&&!chat.hidden&&R.pending.get(th.id)&&ev.target.closest('#s-chat')&&!ev.target.closest('button,a,input,textarea,select,label,.composer,.chead,.sheet,.rx122p,#pkwrap,.status')){
+    ev.stopImmediatePropagation();
+    if(A.busy()){stopVoice();paint();return;}
+    if(ev.target.closest('[data-mi]')){if(R._tapT){clearTimeout(R._tapT);R._tapT=null;return;}R._tapT=setTimeout(()=>{R._tapT=null;R.advance();},230);return;}
+    R.advance();return;}}
   if(ev.target.closest('[data-reading-stop-voice]')){ev.preventDefault();ev.stopImmediatePropagation();stopVoice();return;}
   if(ev.target.closest('[data-vtog]')){ev.preventDefault();ev.stopImmediatePropagation();S.autoVoice=!S.autoVoice;S.voice=S.voice||{};S.voice.auto=S.autoVoice;if(!S.autoVoice)stopVoice();save();renderChat();}
  },true);
  if(window.UI&&typeof window.UI.add==='function')window.UI.add('manual-reading',paint);
  const render=renderChat;renderChat=function(){const result=render.apply(this,arguments);paint();return result;};
- const style=document.createElement('style');style.textContent='.reading-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;flex-shrink:0;background:rgba(16,13,22,.88);border-top:1px solid #ffffff16}.reading-bar span{font-size:11px;color:#c9c1d0}.reading-bar>button{min-height:44px;min-width:112px;flex-shrink:0}.reading-bar [data-reading-stop-voice]{display:block;margin-top:3px;background:none;border:0;padding:3px 0;font-size:11px;color:#c9c1d0;text-decoration:underline}.reading-bar [data-reading-stop-voice][hidden]{display:none}.reading-bar>button:disabled{opacity:.6}.manual-reading .pkspeed,.manual-reading .pkspeed+.pkhint,.manual-reading .pkplay,.manual-reading [data-pkspd],.manual-reading [data-pkskip],.manual-reading [data-stpause]{display:none!important}';document.head.appendChild(style);
+ const style=document.createElement('style');style.textContent='.tap-hint{align-self:center;margin:0 auto 6px;padding:4px 12px;border-radius:999px;font-size:12px;color:rgba(255,255,255,.72);background:rgba(10,9,14,.35);pointer-events:none;animation:tapHint 2.4s ease-in-out infinite;flex-shrink:0}.tap-hint.voicing{animation:none;color:#F0B77E}@keyframes tapHint{0%,100%{opacity:.45}50%{opacity:.95}}.await-tap #msgs{cursor:pointer}.reading-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;flex-shrink:0;background:rgba(16,13,22,.88);border-top:1px solid #ffffff16}.reading-bar span{font-size:11px;color:#c9c1d0}.reading-bar>button{min-height:44px;min-width:112px;flex-shrink:0}.reading-bar [data-reading-stop-voice]{display:block;margin-top:3px;background:none;border:0;padding:3px 0;font-size:11px;color:#c9c1d0;text-decoration:underline}.reading-bar [data-reading-stop-voice][hidden]{display:none}.reading-bar>button:disabled{opacity:.6}.manual-reading .pkspeed,.manual-reading .pkspeed+.pkhint,.manual-reading .pkplay,.manual-reading [data-pkspd],.manual-reading [data-pkskip],.manual-reading [data-stpause]{display:none!important}';document.head.appendChild(style);
 })();
 

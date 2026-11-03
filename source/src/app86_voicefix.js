@@ -44,7 +44,7 @@ stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),
   tm=setTimeout(go,ttsOn()?Math.max(readMs({txt:x})+400,11000):readMs({txt:x})+400)};
  el.addEventListener("click",e=>{if(e.target.closest("[data-scend]")){fin();return}try{stopVoice()}catch(_){}next()});next()})};
 /* 4) per-bubble tools: a small 🔊 read-aloud and 🖼 picture button in the bottom-right corner of every character bubble */
-function bt86Btns(i){return '<span class="bt86">'+(typeof reactOK==="function"&&reactOK(i)?'<button data-rx122="'+i+'" aria-label="'+esc(LL("回应","React"))+'">☺</button>':'')+'<button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>'}
+function bt86Btns(i){return '<span class="bt86">'+(typeof altOK==="function"&&altOK(i)?'<button data-alt123="'+i+'|1" aria-label="'+esc(LL("换个说法","Say it differently"))+'">⇄</button>':'')+(typeof reactOK==="function"&&reactOK(i)?'<button data-rx122="'+i+'" aria-label="'+esc(LL("回应","React"))+'">☺</button>':'')+'<button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>'}
 function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
  root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||!ch(m.who)||m.who==="me")return;
   const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
