@@ -11,6 +11,7 @@ let apiUp = false;
 try { const r = await fetch(api, { signal: AbortSignal.timeout(1500) }); apiUp = r.ok; } catch (_) { apiUp = false; }
 
 const suites = [
+  ['experience-selftest.cjs', ['tools/experience-selftest.cjs'], true],
   ['swipe-selftest.mjs', ['tools/swipe-selftest.mjs'], true],
   ['ledger-selftest.mjs', ['tools/ledger-selftest.mjs'], true],
   ['iap-selftest.mjs', ['tools/iap-selftest.mjs', 'api/_iap.js', 'api/wallet.js'], true],

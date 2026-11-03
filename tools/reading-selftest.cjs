@@ -2,7 +2,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 let time=0,bar=null,checks=0,intervalId=0;const intervals=new Map(),calls=[];
 const noop=()=>{},check=(v,m)=>{assert.ok(v,m);checks++;};
 function element(){const nodes={};return {dataset:{},classList:{add:noop,toggle:noop},querySelector:s=>nodes[s]||(nodes[s]={}),remove(){bar=null;}};}
-const chat={hidden:false,classList:{add:noop},querySelector:s=>s==='[data-reading-bar]'?bar:s==='.composer'?{before:e=>bar=e}:null,appendChild:e=>bar=e};
+const chat={hidden:false,classList:{add:noop,toggle:noop},querySelector:s=>s==='[data-reading-bar]'?bar:s==='.composer'?{before:e=>bar=e}:null,appendChild:e=>bar=e};
 const ctx={console,Map,WeakMap,Promise,Set,Date:class extends Date{static now(){return time;}},window:null,
  document:{createElement:element,head:{appendChild:noop}},addEventListener:noop,
  S:{threads:{},voice:{auto:false},couples:{},autoVoice:false},curT:'t',HIST_OPEN:false,PKNEXT:{},PKPLAY:{},PKSKIP:{},PKWAIT:{},VIS28:new Set(['scene']),
@@ -18,7 +18,7 @@ const thread=()=>({id:'t',cast:['a','b'],msgs:[],love:{a:0,b:0},rounds:0,status:
 (async()=>{
  let th=thread();ctx.S.threads.t=th;
  ctx.speak('A long line','a',noop);let resolved=false;const message={txt:'A long line',k:'say'};const wait=R.wait(th,message,'ai').then(()=>resolved=true);
- check(bar.querySelector('[data-reading-next]').disabled,'next is disabled while voice plays');
+ check(!R.advance(),'tap cannot advance while voice plays');
  time=120000;tick();await flush();check(!resolved&&calls.length===1,'even a two minute audible line cannot be timed out');
  check(!R.advance(),'early click cannot cut off current voice');calls[0].onend();await flush();check(!resolved,'early callback cannot bypass the real audio end');
  calls[0].audio.ended=true;calls[0].audio.paused=true;tick();await flush();check(!resolved,'voice finishing never advances text on its own');
