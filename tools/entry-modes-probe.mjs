@@ -46,16 +46,17 @@ const A = d.arms || {};
 const has = (arm, keys) => !!arm && Array.isArray(arm.modes) && keys.every(k => arm.modes.some(x => x.split(':')[0] === k));
 
 const checks = [];
-checks.push(['A 数据面：没有只给一个视角的剧', d.onlyWatch.length === 0, d.onlyWatch.length ? d.onlyWatch.join(', ') : '全部 ≥2']);
+/* 2026-11-04 判据改写（产品决定，玩家原话：以后的剧本都是扮演我自己）：
+   入口只剩一条「扮演 我自己」（as = side，第二人称剧里是 me）。不再给「扮演 主角」「导演视角」。
+   旧判据（三路永远是三路 / 补齐要印提示）随之作废；这里守的是「只有一条、而且是我自己」。 */
+const onlyMe = arm => !!arm && Array.isArray(arm.modes) && arm.modes.length === 1 && /^(side|me)(:|$)/.test(arm.modes[0]);
+const singles = d.onlyWatch || [];
+checks.push(['A 数据面：每部剧都只有一条入口，而且是「我自己」', singles.length === d.total && singles.every(x => /（(side|me)）/.test(x)), singles.length + '/' + d.total + (singles.filter(x => !/（(side|me)）/.test(x)).length ? ' · 不对的：' + singles.filter(x => !/（(side|me)）/.test(x)).join(', ') : '')]);
 checks.push(['A 数据面：没有空名字的行', d.blank.length === 0, d.blank.length ? d.blank.join(', ') : '无']);
-checks.push(['B join 全空 → 三条都在 + 有提示', has(A.B, ['watch', 'side']) && A.B.modes.length >= 3 && !!A.B.hint, JSON.stringify(A.B && A.B.modes) + (A.B && A.B.hint ? ' · 提示=' + A.B.hint : ' · 提示为空')]);
-/* 2026-11-03：「扮演 我自己」（side）是固定入口，不算「补」⇒ 只有主角时不再印提示（那句话玩家看不懂） */
-checks.push(['C join 只有主角 → 三条都在（我自己/主角/导演），不印提示', has(A.C, ['watch', 'side']) && A.C.modes.length === 3 && !A.C.hint, JSON.stringify(A.C && A.C.modes)]);
-checks.push(['D 负对照：写全了的剧 hint 必须为空', !!A.D && A.D.hint === '' && A.D.derived === 0, A.D ? (A.D.id + ' · derived=' + A.D.derived + ' · hint=' + JSON.stringify(A.D.hint)) : '缺读数']);
-checks.push(['E 界面面：按钮数 == 条数', d.control.buttons === d.control.modes.length && d.control.buttons >= 2, d.control.pack + ' · 按钮=' + d.control.buttons + ' · 条数=' + d.control.modes.length]);
-checks.push(['E 界面面：写全了的剧不显示提示行', !!d.diag && d.diag.hintShown === false, 'hintShown=' + (d.diag && d.diag.hintShown)]);
-checks.push(['F 首屏三条同源（join 空也三条）', !!A.F && !A.F.err && Array.isArray(A.F.modes) && A.F.modes.length === 3 && A.F.modes.indexOf('side') >= 0 && A.F.modes.indexOf('watch') >= 0, A.F ? (JSON.stringify(A.F.modes) + ' · ' + JSON.stringify(A.F.labels)) : '缺读数']);
-checks.push(['G 创建器做的剧：三路都是剧本写的（不显示「补」）', !!A.G && !A.G.err && Array.isArray(A.G.modes) && A.G.modes.indexOf('side:data') >= 0 && A.G.modes.indexOf('watch:always') >= 0 && A.G.hint === '', A.G ? (JSON.stringify(A.G.modes) + ' · hint=' + JSON.stringify(A.G.hint) + (A.G.err ? ' · err=' + A.G.err : '')) : '缺读数']);
+checks.push(['B join 全空 → 只有「我自己」，不印提示', onlyMe(A.B) && !A.B.hint, JSON.stringify(A.B && A.B.modes)]);
+checks.push(['C join 只有主角 → 仍只有「我自己」', onlyMe(A.C) && !A.C.hint, JSON.stringify(A.C && A.C.modes)]);
+checks.push(['F 首屏同源：只有「我自己」', !!A.F && !A.F.err && Array.isArray(A.F.modes) && A.F.modes.length === 1 && /^(side|me)$/.test(A.F.modes[0]), A.F ? (JSON.stringify(A.F.modes) + ' · ' + JSON.stringify(A.F.labels)) : '缺读数']);
+checks.push(['G 创建器做的剧：只有「我自己」', !!A.G && !A.G.err && onlyMe(A.G) && A.G.hint === '', A.G ? (JSON.stringify(A.G.modes) + ' · hint=' + JSON.stringify(A.G.hint) + (A.G.err ? ' · err=' + A.G.err : '')) : '缺读数']);
 
 console.log('=== 每部剧「进去能选什么」（共 ' + d.total + ' 部）===');
 d.multi.slice(0, 6).forEach(x => console.log('  ' + x));
@@ -64,5 +65,5 @@ console.log('\n=== 判据 ===');
 let bad = 0;
 checks.forEach(([n, ok, extra]) => { if (!ok) bad++; console.log('  ' + (ok ? '✓' : '✗') + ' ' + n + ' — ' + extra) });
 if (d.errors.length) { console.log('  读数出错：'); d.errors.forEach(x => console.log('    ' + x)) }
-console.log('\n' + (bad === 0 ? '✓ PASS：三路永远是三路，补出来的会说出来' : '✗ FAIL：' + bad + ' 条不成立'));
+console.log('\n' + (bad === 0 ? '✓ PASS：每部剧都只有「扮演 我自己」一条入口' : '✗ FAIL：' + bad + ' 条不成立'));
 process.exit(bad === 0 ? 0 : 1);
