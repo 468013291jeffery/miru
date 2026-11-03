@@ -1428,6 +1428,39 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .orRow3 .orL b{font-size:19px}
 .orRow3 .orL span{font-size:10px;line-height:1.3;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .orRow3 .orC{top:8px;right:8px;width:22px;height:22px;font-size:12px}
+/* 2026-11-03（玩家反馈：「轮到你了」那一块和下面的输入区要融成一块，不要分成两个框）
+   app121 把 #pkwrap 从对话流里挪到输入区正上方（.dock），这里把两块画成一张卡：
+   上半张 = 剧情面板（上圆角，没有下边框），下半张 = 输入区（下圆角，没有上边框），同一块底色、同一圈边框。 */
+.chatscreen #pkwrap.dock:not(:empty){margin:6px 10px 0;padding:10px 10px 2px;border-radius:16px 16px 0 0;background:rgba(10,9,14,.6);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line);border-bottom:0;max-height:48vh;overflow-y:auto;align-self:stretch}
+.chatscreen #pkwrap.dock:empty{display:none}
+.chatscreen #pkwrap.dock:not(:empty)+.composer{margin:0 10px calc(6px + env(safe-area-inset-bottom,0px))!important;padding:6px 10px 10px!important;border-radius:0 0 16px 16px!important;background:rgba(10,9,14,.6)!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)!important;border:1px solid var(--line)!important;border-top:0!important}
+.chatscreen #pkwrap.dock:not(:empty)+.composer .addr73{padding-top:8px;border-top:1px solid rgba(255,255,255,.07)}
+.chatscreen #pkwrap.dock:has(.pkpanel.stop){border-color:rgba(240,183,126,.45)}
+.chatscreen #pkwrap.dock:has(.pkpanel.stop)+.composer{border-color:rgba(240,183,126,.45)!important}
+.chatscreen #pkwrap.dock .pkpanel{margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+.chacttxt{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:rgba(0,0,0,.35);border:1px dashed rgba(240,183,126,.45);border-radius:10px;color:#fff;padding:8px 10px;font-size:13.5px;font-family:inherit;outline:none}.chacttxt:focus{border-style:solid;border-color:var(--gold)}
+.pmgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
+.pmt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:92px;padding:12px 4px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);font-family:inherit}
+.pmt i{font-style:normal;font-size:28px;line-height:1}
+.pmt b{font-size:13.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pmt small{font-size:11px;color:var(--faint);white-space:nowrap}
+.pmt em{position:absolute;top:6px;right:8px;font-style:normal;font-size:10px;font-weight:800;background:var(--rose,#EE6F97);color:#fff;border-radius:99px;padding:0 5px}
+.pmt em:empty{display:none}
+.pmt.locked{opacity:.55}.pmt.locked i{filter:grayscale(.6)}
+.pmt:active{background:rgba(255,255,255,.09)}
+.hist121{display:inline-flex;align-items:center;gap:4px;flex:none;height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--line);background:rgba(10,9,14,.45);color:var(--text);font-size:12.5px;font-weight:800;position:relative;margin-right:6px}
+.hist121 i{font-style:normal;font-size:14px}
+.hist121 em{font-style:normal;font-size:10px;font-weight:800;background:var(--rose,#EE6F97);color:#fff;border-radius:99px;padding:0 5px;line-height:16px}
+.hist121 em:empty{display:none}
+.hist121.on{border-color:rgba(240,183,126,.6);color:var(--gold)}
+.rx122b{display:inline-flex;align-self:flex-start;width:max-content;align-items:center;justify-content:center;min-width:26px;height:24px;padding:0 6px;margin:-12px 0 4px 46px;border-radius:999px;background:rgba(28,26,34,.95);border:1px solid var(--line);font-size:14px;line-height:1;position:relative;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.35);cursor:pointer}
+.rx122b.pop{animation:rx122pop .28s ease-out}
+@keyframes rx122pop{0%{transform:scale(.3)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.rx122p{position:fixed;z-index:9999;display:flex;gap:2px;padding:6px 8px;border-radius:999px;background:rgba(28,26,34,.97);border:1px solid var(--line);box-shadow:0 8px 28px rgba(0,0,0,.5);animation:rx122pop .2s ease-out}
+.rx122p button{font-size:24px;line-height:1;width:40px;height:40px;border-radius:50%;background:none;border:0;cursor:pointer}
+.rx122p button.on{background:rgba(238,111,151,.25)}
+.rx122p button:active{transform:scale(1.2)}
+[data-rx122]:not(.rx122b){font-size:14px}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>

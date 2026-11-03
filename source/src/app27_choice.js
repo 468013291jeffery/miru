@@ -45,20 +45,23 @@ stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="line")return _stopHTML27
  const a=A.find(z=>z.i===CH.i),x=ATT[a.k],acts=x.act?x.act[lang]:[];
  return '<div class="sttag you">🎭 '+t("st.yourTurn",{n:who})+'</div>'+
   '<div class="chstep" style="--ac:'+x.c+'"><div class="chh"><button class="chback" data-chback="1">‹ '+t("ch27.back")+'</button><b>'+x.i+' '+x[lang]+'</b></div>'+
-  (acts.length?'<p class="chl">'+t("ch27.add")+'</p><div class="chacts">'+acts.map((s,j)=>'<button data-chact="'+j+'" class="'+(CH.act===j?"on":"")+'">✱ '+esc(s)+'</button>').join("")+'</div>':'')+
+  /* 2026-11-03（玩家反馈：加个动作，应该让我自己也能写）⇒ 预设动作下面多一个自己写的输入框；写了就用自己写的 */
+  '<p class="chl">'+t("ch27.add")+'</p>'+(acts.length?'<div class="chacts">'+acts.map((s,j)=>'<button data-chact="'+j+'" class="'+(CH.act===j&&!(CH.actTxt||"").trim()?"on":"")+'">✱ '+esc(s)+'</button>').join("")+'</div>':'')+
+  '<input id="chActTxt" class="chacttxt" maxlength="30" value="'+esc(CH.actTxt||"")+'" placeholder="'+esc(lang==="zh"?"✱ 或者自己写一个动作，比如：把外套搭在他肩上":"✱ Or write your own move, e.g. lean on the railing")+'">'+
   '<p class="chl">'+t("ch27.words")+'</p><textarea id="chTxt" rows="2" maxlength="80">'+esc(CH.txt)+'</textarea>'+
   /* 2026-10-27 Ann：这一行和上面的输入框是同一句，看着重复 ⇒ 去掉；
    chPreview 保留（别处还在用），只是这里不再渲染。 */
 
   '<button class="btn btn-p btn-block chgo" data-chgo="1">'+t("ch27.go")+' →</button><p class="pkhint">'+t("ch27.note")+'</p></div>'};
 function chText(th){const d=th.pk.stop[2],a=attList(th,d).find(z=>z.i===CH.i),x=ATT[a.k],lang=S.lang==="zh"?"zh":"en";
- const act=x.act&&CH.act!=null?x.act[lang][CH.act]:"";const w=(CH.txt||"").trim()||Lz(a.o.t);return (act?"*"+act+"* ":"")+w}
+ const own=String(CH.actTxt||"").replace(/^[*✱\s]+|[*\s]+$/g,"").trim();const act=own||(x.act&&CH.act!=null?x.act[lang][CH.act]:"");const w=(CH.txt||"").trim()||Lz(a.o.t);return (act?"*"+act+"* ":"")+w}
 function chPreview(th){try{return '<small>'+t("ch27.prev")+'</small>'+fmtMix(esc(chText(th)))}catch(_){return ""}}
-document.addEventListener("input",e=>{if(e.target&&e.target.id==="chTxt"&&CH){CH.txt=e.target.value;const p=$("#chPrev");const th=S.threads[curT];if(p&&th)p.innerHTML=chPreview(th)}});
+document.addEventListener("input",e=>{if(e.target&&e.target.id==="chActTxt"&&CH){CH.actTxt=e.target.value;if(CH.actTxt.trim())document.querySelectorAll("[data-chact].on").forEach(b=>b.classList.remove("on"));return}
+ if(e.target&&e.target.id==="chTxt"&&CH){CH.txt=e.target.value;const p=$("#chPrev");const th=S.threads[curT];if(p&&th)p.innerHTML=chPreview(th)}});
 document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th||!th.pk||!th.pk.stop||th.pk.stop[1]!=="line")return;const b=th.pk.stop,d=b[2];
  if(x=e.target.closest("[data-chatt]")){const i=+x.dataset.chatt;CH={b,i,act:null,txt:Lz(d.opts[i].t)};packRefresh(th);setTimeout(()=>{const ta=$("#chTxt");if(ta)ta.scrollIntoView({block:"nearest"})},50);return}
  if(e.target.closest("[data-chback]")){CH=null;packRefresh(th);return}
- if(x=e.target.closest("[data-chact]")){const j=+x.dataset.chact;CH.act=CH.act===j?null:j;packRefresh(th);return}
+ if(x=e.target.closest("[data-chact]")){const j=+x.dataset.chact;CH.act=CH.act===j&&!(CH.actTxt||"").trim()?null:j;CH.actTxt="";packRefresh(th);return}
  if(e.target.closest("[data-chgo]")){const o=d.opts[CH.i],keep=o.t,txt=chText(th),i=CH.i;CH=null;o.t=txt;
   const btn=document.createElement("button");btn.dataset.stopline=String(i);btn.hidden=true;document.body.appendChild(btn);try{btn.click()}finally{btn.remove();o.t=keep}return}});
 Object.assign(I18N.zh,{"ch27.how":"你想怎么回他？","ch27.back":"换个态度","ch27.add":"加个动作（可选）","ch27.words":"用你自己的话说（可以改）","ch27.prev":"你会这样说：","ch27.go":"就这么说","ch27.note":"意思别改太远——他会按你选的态度接下去。"});

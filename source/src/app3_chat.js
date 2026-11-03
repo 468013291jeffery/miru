@@ -536,6 +536,7 @@ async function reply(th,ctx,silent){
   packPrompt(th),
   (typeof loreBlock==="function"?loreBlock(th,ctx):""),
   (typeof turnBlock==="function"?turnBlock(th,ctx):""),
+  (typeof reactBlock==="function"?reactBlock(th):""),
   (th.pk&&th.pk.me)?"THE PLAYER is the story's lead (the one the script calls 你/you), played as THEMSELF, from their role card: "+personaDesc(p)+" The cast knows the player by this name and these facts — use them naturally (call them by name, notice their looks, remember their likes/dislikes) and never contradict them. Never write the player's lines, actions or feelings.":
   (th.pk&&th.pk.as!=="side")?"":"THE USER: "+personaDesc(p)+" Never write the user's lines, actions or feelings.",
   memBlock(th),
@@ -847,16 +848,22 @@ document.addEventListener("input",e=>{if(e.target.id==="cin"){e.target.style.hei
 
 /* ================= SHEETS: + menu, continue-story, menu, relationship path ================= */
 const UNLOCK={games:0,gift:0,quiz:0,date:1,snap:1,truth:2,invite:0,bottle:0,lie:0,heart:0};
+/* 2026-11-03（玩家给的样子）：「更多」改成一张 4 列的图标格 —— 热搜 / 播放 / 历史 / 通话 在前，
+   游戏、送礼物、拍立得、约出去、默契问答、真心话、有人进来跟在后面；没解锁的格子变暗，下面写「🔒 要到哪一级」。 */
 function plusSheet(){const th=S.threads[curT],m=mainOf(th),st=stageOf(th,m);
  const it=[["games","🎮","gh.btn"],["gift","🎁","cx.m.gift"],["snap","📷","cx.m.snap"],["date","🌙","cx.m.date"],["quiz","💞","cx.m.quiz"],["truth","🗝","cx.m.truth"],["invite","🚪","cx.m.invite"]];
- sheet('<h2>'+t("cx.more")+'</h2>'+plusQuick3()+'<p class="xs faint" style="margin-top:10px">'+esc(first(ch(m).n))+' · '+t("stage."+st)+'</p><div class="stack" style="margin-top:6px">'+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
-  return '<button class="opt'+(lock?" locked":"")+'" data-pm="'+k+'"><span class="ic">'+i+'</span><span class="grow"><b>'+t(l)+'</b><span>'+(lock?"🔒 "+t("path.lock",{s:t("stage."+UNLOCK[k])}):"")+'</span></span></button>'}).join("")+'</div>')}
+ const tiles=plusQuick3(true)+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
+  return '<button class="pmt'+(lock?" locked":"")+'" data-pm="'+k+'"><i>'+i+'</i><b>'+t(l)+'</b>'+(lock?'<small>🔒 '+esc(t("stage."+UNLOCK[k]))+'</small>':'')+'</button>'}).join("");
+ sheet('<h2>'+t("cx.more")+'</h2><p class="xs faint" style="margin-top:4px">'+esc(first(ch(m).n))+' · '+t("stage."+st)+'</p><div class="pmgrid">'+tiles+'</div>')}
 /* 「+」最上面一排：原来浮在右侧的 热搜 / 播放 / 历史（只列出这部剧当下真有的） */
-function plusQuick3(){const zh=CL()==="zh",q=[],fd=$("#fd96b"),tb=$("#toolBtn"),hb=$("#histBtn"),em=x=>{const e=x&&x.querySelector("em");return e?esc(e.textContent||""):""};
- if(fd)q.push('<button data-fd96="1"><i>🔥</i><small>'+(zh?"热搜":"Trending")+'</small><em>'+em(fd)+'</em></button>');
- if(tb&&tb.style.display!=="none")q.push('<button data-tools="1"><i>🎬</i><small>'+(zh?"播放":"Play")+'</small></button>');
- if(hb)q.push('<button data-hist="1"><i>🕘</i><small>'+(zh?"历史":"History")+'</small><em>'+em(hb)+'</em></button>');
+function plusQuick3(tiles){const zh=CL()==="zh",q=[],fd=$("#fd96b"),tb=$("#toolBtn"),hb=$("#histBtn"),em=x=>{const e=x&&x.querySelector("em");return e?esc(e.textContent||""):""};
+ const btn=(attr,i,lab,badge)=>tiles?'<button class="pmt" '+attr+'><i>'+i+'</i><b>'+lab+'</b>'+(badge?'<em>'+badge+'</em>':'')+'</button>':'<button '+attr+'><i>'+i+'</i><small>'+lab+'</small><em>'+(badge||"")+'</em></button>';
+ if(fd)q.push(btn('data-fd96="1"',"🔥",zh?"热搜":"Trending",em(fd)));
+ if(tb&&tb.style.display!=="none")q.push(btn('data-tools="1"',"🎬",zh?"播放":"Play",""));
+ if(hb)q.push(btn('data-hist="1"',"🕘",zh?"历史":"History",em(hb)));
+ if(tiles){const th=S.threads[curT],m=th&&mainOf(th);if(m&&ch(m))q.push(btn('data-pmcall="'+m+'"',"📞",zh?"通话":"Call",""));return q.join("")}
  return q.length?'<div class="pmq3">'+q.join("")+'</div>':""}
+document.addEventListener("click",e=>{const x=e.target.closest&&e.target.closest("[data-pmcall]");if(!x)return;e.stopImmediatePropagation();closeSheet();try{startCall(x.dataset.pmcall)}catch(er){console.warn("[plus] call",er)}},true);
 function csSheet(){sheet('<h2>'+t("cs.h")+'</h2><p class="sm dim" style="margin-top:4px">'+t("cs.sub")+'</p><div class="stack" style="margin-top:6px">'+
  [["natural","▶️"],["ff","⏩"],["skip","⏳"],["event","✨"],["third","👥"]].map(([k,i])=>'<button class="opt" data-csk="'+k+'"><span class="ic">'+i+'</span><span class="grow"><b>'+t("cs."+k)+'</b><span>'+t("cs."+k+"S")+'</span></span></button>').join("")+
  '<div class="row" style="margin:10px 0 2px"><span class="grow" style="height:1px;background:var(--line)"></span><span class="xs faint">'+t("cs.paid")+'</span><span class="grow" style="height:1px;background:var(--line)"></span></div>'+
