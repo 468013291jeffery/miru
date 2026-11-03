@@ -1027,7 +1027,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app114_entry.js` | 进去的身份，永远是三条（） 症状（Ann 报的）：「好像现在进去只有导演视角，别的视角没了」 | 262 |
 | `app115_m102.js` | M102: authored pack, authenticated choices, per-scene free chat and expli… | 164 |
 | `app115_m102data.js` | （文件头没有说明 —— 该补一句） | 2 |
-| `app116_reading.js` | Reading is acknowledged by the player, never by a timer or a voice callba… | 92 |
+| `app116_reading.js` | Reading is acknowledged by the player, never by a timer or a voice callba… | 94 |
 | `app117_lore.js` | 设定集（v9 · 第十五批 · ） 借鉴 SillyTavern 的 World Info / Lorebook：设定写得再多，也只在「对话碰到它… | 115 |
 | `app118_turnorder.js` | 群聊发言顺序（v9 · 第十六批 · ） 借鉴 SillyTavern 的群聊轮转：几个角色同时在场时，「这一轮谁先开口」由程序定，不再交给模型猜 | 110 |
 | `app119_branch.js` | 对话分支和存档点（v9 · 第十八批 · ） 借鉴 SillyTavern 的 checkpoint / branch：从某一步「重来」，开一条新… | 125 |
