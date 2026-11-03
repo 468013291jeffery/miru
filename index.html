@@ -1428,21 +1428,22 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .orRow3 .orL b{font-size:19px}
 .orRow3 .orL span{font-size:10px;line-height:1.3;margin-top:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .orRow3 .orC{top:8px;right:8px;width:22px;height:22px;font-size:12px}
-/* 2026-11-03 第二版（玩家：不要糊一个大半透明方块，就是简单的聊天框；选项像联想回复那样半透明就行）
-   剧情面板仍贴在输入区上方（app121 的 .dock），但不再有底色和边框：上面一行小字「轮到你了 · 你想怎么回他？」，
-   下面的选项、「AI 帮我想」「看他会怎么反应」都是和联想回复同一种半透明小气泡。输入区保持原样。 */
-.chatscreen #pkwrap.dock:not(:empty){margin:0;padding:2px 12px 4px;border:0;border-radius:0;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;max-height:46vh;overflow-y:auto;align-self:stretch;box-shadow:none}
+/* 2026-11-03 第三版（玩家：还不够简单 —— 框都不要；「轮到你了」那些都不要；只留「AI 帮我想」，横着出三句，后面换一批）
+   轮到你说的时候（面板里有 .chatt），面板 = 一排横向滑动的半透明小气泡：
+   [✨ AI 帮我想 / ↻ 换一批] [剧本给的那句] [AI 想的三句…]。点一句就直接说出去（app121）。
+   标题行、「可继续打字聊天，或继续剧情」、「看他会怎么反应」、态度标签都隐藏；输入框照旧在下面，想自己说就打字。 */
+.chatscreen #pkwrap.dock:not(:empty){margin:0;padding:2px 0 6px;border:0;border-radius:0;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none;align-self:stretch;box-shadow:none}
 .chatscreen #pkwrap.dock:empty{display:none}
-.chatscreen #pkwrap.dock .pkpanel{margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
-.chatscreen #pkwrap.dock .dk97h{margin-bottom:6px;font-size:13px}
-.chatscreen #pkwrap.dock .dk97h b{font-size:13.5px;text-shadow:0 1px 3px rgba(0,0,0,.6)}
-.chatscreen #pkwrap.dock .chatt{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
-.chatscreen #pkwrap.dock .chatt button{max-width:92%;padding:7px 12px!important;border-radius:14px;background:rgba(16,13,22,.42)!important;border:1px solid rgba(240,183,126,.38)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);gap:1px}
-.chatscreen #pkwrap.dock .chatt button b{font-size:11.5px}
-.chatscreen #pkwrap.dock .chatt button span{font-size:13.5px}
-.chatscreen #pkwrap.dock .ai97h,.chatscreen #pkwrap.dock .dk97row{display:inline-flex;margin:6px 6px 0 0}
-.chatscreen #pkwrap.dock .ai97h button,.chatscreen #pkwrap.dock .dk97row .paybtn{width:auto!important;font-size:12px;padding:6px 11px!important;border-radius:12px;background:rgba(16,13,22,.42)!important;border:1px solid rgba(240,183,126,.38)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.chatscreen #pkwrap.dock .pkhint{font-size:11.5px;text-align:left;margin:6px 0 0;color:rgba(255,255,255,.75);text-shadow:0 1px 3px rgba(0,0,0,.6)}
+.chatscreen #pkwrap.dock .pkpanel{margin:0!important;padding:0 12px!important;background:transparent!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt){display:flex!important;flex-wrap:nowrap;align-items:stretch;gap:6px;overflow-x:auto;scrollbar-width:none}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt)::-webkit-scrollbar{display:none}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt)>:not(.chatt):not(.ai97h):not(.ai97o){display:none!important}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .chatt,.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .ai97o{display:contents!important}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .ai97h{order:-1;flex:none;display:flex!important;margin:0!important}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .chatt button b,.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .chatt .pvb{display:none!important}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .chatt button,.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .ai97o button,.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .ai97h button{flex:none;display:block;max-width:72vw;width:auto!important;white-space:normal;text-align:left;font-size:12.5px!important;line-height:1.4;font-weight:600;padding:7px 11px!important;border-radius:12px!important;background:rgba(16,13,22,.35)!important;border:1px solid rgba(240,183,126,.35)!important;color:var(--text)!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .chatt button span{font-size:12.5px!important;color:inherit!important}
+.chatscreen #pkwrap.dock .pkpanel:has(.chatt) .ai97h button{white-space:nowrap;color:#F6D7B0!important;border-color:rgba(240,183,126,.6)!important}
 .chacttxt{display:block;width:100%;box-sizing:border-box;margin-top:8px;background:rgba(0,0,0,.35);border:1px dashed rgba(240,183,126,.45);border-radius:10px;color:#fff;padding:8px 10px;font-size:13.5px;font-family:inherit;outline:none}.chacttxt:focus{border-style:solid;border-color:var(--gold)}
 .pmgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
 .pmt{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:92px;padding:12px 4px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);font-family:inherit}
@@ -1476,7 +1477,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="39332e358ee7 2026-11-03T09:00Z";
+window.MIRU_BUILD="2d8d064be27c 2026-11-03T09:14Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -20838,6 +20839,22 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   if (window.UI && typeof window.UI.add === "function") { window.UI.add("dock121", dock); window.UI.add("hist121", hist); }
   else console.warn("[dock121] UI.add 不在，剧情面板不会贴住输入区");
   window.pkDock = dock;
+  /* 2026-11-03 第三版：横排小气泡里点剧本那句 = 直接说出去（不再进「换个态度 / 加个动作」那一步）。
+     做法和 app27 的「就这么说」一样：造一个隐藏的 [data-stopline] 按钮点一下，走原来的剧本选项流程。 */
+  document.addEventListener("click", function (e) {
+    const x = e.target && e.target.closest && e.target.closest("#pkwrap.dock [data-chatt]"); if (!x) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    const b = document.createElement("button"); b.dataset.stopline = x.dataset.chatt; b.hidden = true; document.body.appendChild(b);
+    try { b.click(); } finally { b.remove(); }
+  }, true);
+  /* 「AI 帮我想」出过一批之后改叫「↻ 换一批」（再点就是重新想三句） */
+  function relabel() {
+    const btn = document.querySelector("#pkwrap.dock [data-ai97]"), box = document.getElementById("ai97o"); if (!btn || btn.disabled) return;
+    const zh = (typeof CL === "function" ? CL() === "zh" : true), has = !!(box && box.querySelector("button"));
+    const want = has ? (zh ? "↻ 换一批" : "↻ New ideas") : (zh ? "✨ AI 帮我想" : "✨ Help me say it");
+    if (btn.textContent !== want) btn.textContent = want;
+  }
+  try { new MutationObserver(relabel).observe(document.body, { childList: true, subtree: true }); } catch (e) { console.warn("[dock121] observer", e); }
 })();
 
 /* ================= 消息表情回应（2026-11-03 · 像 WhatsApp / iMessage 那样）=================
