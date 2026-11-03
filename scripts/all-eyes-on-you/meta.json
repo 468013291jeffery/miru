@@ -1,0 +1,42 @@
+{
+  "contentId": "all-eyes-on-you",
+  "title": "今晚，偏爱失控",
+  "version": "1.3.0",
+  "lang": "zh",
+  "availableLocales": [
+    "zh"
+  ],
+  "englishFields": "Chinese fallback except names and title",
+  "orient": "bg",
+  "playerIsSelf": true,
+  "playerGenderInCurrentEngine": "f",
+  "npcCount": 2,
+  "chapterCount": 10,
+  "authoredOptions": 40,
+  "freeInputWindows": 10,
+  "endingDirections": 5,
+  "storyIntroductions": 1,
+  "chapterIntroductions": 10,
+  "fixedIntroductionDisplay": {
+    "standardDSL": "authored-before-dialogue",
+    "bible98": "not-connected-to-fixed-renderer"
+  },
+  "assetFiles": 17,
+  "status": "authoring-draft",
+  "runtimeReady": false,
+  "modelPerformanceTested": false,
+  "published": false,
+  "githubUploaded": false,
+  "engineFilesChanged": [],
+  "sourceSha256": "bba0134cdc4a5d59a7537cd187689a3fb4ebfd2757444c663ed94a1d6bc4838d",
+  "releaseNeeds": [
+    "published-asset-path-binding",
+    "live-model-playtest",
+    "director-user-focus-conflict-review",
+    "friend-mode-and-scene-entry-behavior-validation",
+    "bible98-fixed-introduction-rendering-and-ui-verification",
+    "conditional-highlight-display-hook-and-ui-verification"
+  ],
+  "assetManifest": "assets-manifest.json",
+  "artBindingScope": "local-content-package-not-published"
+}
