@@ -81,6 +81,7 @@ function yn98(th) { if (th.b98.pname) return th.b98.pname; const c = ch(th.b98.y
 function gx98(th) { const w = wd(th.wid), b = bOf98(w); const g = (cardOf98(w, th.b98.you) || (b && b.player) || {}).gender; return g === "f" ? L98("（女性，用“她”指代）", " (female — she/her)") : L98("（男性，用“他”指代）", " (male — he/him)"); }
 function zhOK98(t) { return !Z98() || /[\u4e00-\u9fff]/.test(String(t || "")); }
 function line98(th, m) {
+  if (m.k === "box" && m.say && ch(m.say.who)) { const nm = first(ch(m.say.who).n), a = (m.parts || []).map(p => p.txt).join(" ").replace(/\s+/g, " ").slice(0, 140); return (a ? nm + L98("（动作）", " (action)") + ": " + a + "\n" : "") + nm + ": " + String(m.say.txt || "").replace(/\s+/g, " ").slice(0, 220); }
   if (m.who === "me" && m.k === "think") return ""; const x = String(m.txt || "").replace(/\s+/g, " ").slice(0, 220); if (!x || m.k === "card" || m.k === "img") return "";
   const who = m.who === "me" ? yn98(th) : m.who === "n" || m.who === "sys" ? "" : (ch(m.who) ? first(ch(m.who).n) : "");
   return who ? who + (m.k === "act" ? L98("（动作）", " (action)") : "") + ": " + x : L98("［场景］", "[scene] ") + x;
@@ -292,8 +293,11 @@ async function beat98(th, mode, act) {
       let r = null; try { r = await actor98(th, sp.id, sp.intent); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", "")); if (r2 && r2.say) r = r2; } } catch (_) {} if (!r) continue;
       r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
       delivered98++;
-      if (r.act) appendMsg(th, { who: sp.id, k: "act", txt: actionView98(th, sp.id, r.act).slice(0, 140), at: Date.now() });
-      if (r.say) appendMsg(th, { who: sp.id, k: "say", txt: String(r.say).slice(0, 220), at: Date.now(), ai: 1 });
+      /* 2026-11-04 玩家：「为什么要分开」—— 和《午夜邀约》一样，同一个人的动作 + 台词放进同一个框（k:box：上面动作、下面台词） */
+      const act98 = r.act ? actionView98(th, sp.id, r.act).slice(0, 140) : "", say98 = r.say ? String(r.say).slice(0, 220) : "";
+      if (act98 && say98) appendMsg(th, { who: "n", k: "box", pk: 1, parts: [{ who: sp.id, k: "act", txt: act98 }], txt: act98, last: say98, lastWho: sp.id, say: { who: sp.id, txt: say98 }, at: Date.now(), ai: 1 });
+      else if (act98) appendMsg(th, { who: sp.id, k: "act", txt: act98, at: Date.now() });
+      else if (say98) appendMsg(th, { who: sp.id, k: "say", txt: say98, at: Date.now(), ai: 1 });
       const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
       if (r.remember) mem98(th, [sp.id], r.remember);
       if (r.say) mem98(th, (policy ? pres : (pres.length ? pres : th.cast)).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
@@ -359,6 +363,22 @@ async function pick98(th, i, echoed) {
   finally { CHOICE98.delete(th); }
   if (policy && ok) { A.picked[s.id] = i; A.flags.push(s.id + ":" + String(o.t).slice(0, 24)); applyChoiceState98(th,o); save(); }
   dock98();
+  if (!policy || ok) auto98(th);
+}
+/* 2026-11-04：没有「继续剧情」按钮了，和《午夜邀约》一样自动往下走——
+   · 选了选项、他们回完话 → 停 2.5 秒让你看完 → 进下一场；
+   · 没有选项的场景，你自由说了 2 句以后 → 自动进下一场。
+   打字「继续剧情 / 下一章」仍然可以手动往下走。 */
+function auto98(th) {
+  const A = th && th.b98; if (!A || A.ended) return; const at = A.ch + ":" + A.sc;
+  let n = 0; const tick = () => { const B = th.b98; if (!B || B.ended || B.ch + ":" + B.sc !== at) return; if (busy) { if (++n < 20) setTimeout(tick, 1500); return; } next98(th); };
+  setTimeout(tick, 2500);
+}
+function talked98(th) {
+  const A = th && th.b98; if (!A || A.ended) return; const { s } = scene98(th); const at = A.ch + ":" + A.sc;
+  if (A.tkAt !== at) { A.tkAt = at; A.tkN = 0; } A.tkN++; save();
+  const open = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked);
+  if (!open && A.tkN >= 2) auto98(th);
 }
 /* sending a message in a b98 thread = free talk inside the current scene */
 { const _rp = reply; reply = function (th, ctx, silent) {
@@ -371,7 +391,7 @@ async function pick98(th, i, echoed) {
         if (/^(?:继续剧情|下一章|进入下一章)$/.test(x)) return next98(th);
         const index=matchingChoice98(th,x);if(index>=0)return pick98(th,index,true);
       }
-      return beat98(th,'talk',{txt:ctx.txt,mode:ctx.kind==='dir'?'act':(ctx.mode||'say'),to:th.addr&&th.cast.includes(th.addr)?th.addr:null});
+      return Promise.resolve(beat98(th,'talk',{txt:ctx.txt,mode:ctx.kind==='dir'?'act':(ctx.mode||'say'),to:th.addr&&th.cast.includes(th.addr)?th.addr:null})).then(r => { try { talked98(th); } catch (e) { console.warn('[b98] talked', e); } return r; });
     }
     return Promise.resolve();
   }
@@ -389,10 +409,10 @@ function dock98() {
     h = '<div class="dk98q">' + esc(cq98(s.choice.q)) + '</div>' +
       (picked ? '<p class="dk98h">' + L98('你已选择：', 'You chose: ') + esc(cq98(s.choice.options[A.picked[s.id]].t)) + '</p>' :
         '<div class="dk98o">' + s.choice.options.map((o,i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join('') + '</div>') +
-      '<div class="dk98r"><span class="dk98t">' + L98('可自由回复；继续剧情会进入下一场', 'Reply freely; Continue enters the next scene') + '</span><button data-b98next="1"' + (busy ? ' disabled' : '') + '>▶ ' + L98('继续剧情', 'Continue') + '</button></div>';
+      ''; /* 2026-11-04 玩家：「继续剧情也可以删掉了」—— 选了就自动往下走（见 pick98 末尾），不再有这个按钮 */
   }
   else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(cq98(o.t)) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
-  else if (A.phase === "talk") h = '<div class="dk98r"><span class="dk98t">💬 ' + L98("自由对话中 · ", "Talking · ") + esc(LZ98(s && s.place)) + '</span><button data-b98next="1">▶ ' + L98("继续剧情", "Continue") + '</button></div>';
+  else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join("") + '</div>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
@@ -435,3 +455,36 @@ MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) h = 
 document.addEventListener("click", e => { if (!e.target.closest("[data-fd97]")) return; S.fold97 = !S.fold97; save(); const th = S.threads[curT]; if (th) packRefresh(th); });
 
 function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自由输入|备注|注：)[^）)]*[）)]/g,'').replace(/\s+$/,'').trim();}
+
+/* 2026-11-04 玩家：底下两排小按钮重复了 —— 和《午夜邀约》一样只留一排。
+   做法：自由模式剧的「▶ 继续剧情」和剧情选项，搬进上面那排回复建议（#sugg）的最前面，原来的 #dk98 那排藏起来。
+   按钮是复制过去的（data-b98pick / data-b98next 的点击是 document 上统一接的，在哪都能点）。
+   没有 #sugg 的时候，#dk98 照常显示，不会丢掉推进剧情的按钮。 */
+(function merge98() {
+  let busy = false;
+  function sync() {
+    if (busy) return; busy = true;
+    try {
+      const scr = document.getElementById("s-chat"), dk = document.getElementById("dk98"), sg = document.getElementById("sugg");
+      const btns = dk ? [...dk.querySelectorAll("button[data-b98pick],button[data-b98next]")] : [];
+      const on = !!(sg && btns.length);
+      if (scr) scr.classList.toggle("m98on", on);
+      if (sg) {
+        const sig = on ? btns.map(b => b.outerHTML).join("") : "";
+        const has = sg.querySelector(".m98");
+        if ((sg.dataset.m98 || "") !== sig || (on && !has)) {
+          sg.querySelectorAll(".m98").forEach(b => b.remove());
+          if (on) {
+            const nx = btns.filter(b => b.dataset.b98next), pk = btns.filter(b => b.dataset.b98pick);
+            [...nx, ...pk].reverse().forEach(b => { const c = b.cloneNode(true); c.classList.add("m98"); if (b.dataset.b98next) c.classList.add("m98n"); sg.prepend(c); });
+          }
+          sg.dataset.m98 = sig;
+        }
+      }
+    } catch (e) { console.warn("[merge98]", e); }
+    busy = false;
+  }
+  const go = () => { sync(); const scr = document.getElementById("s-chat"); if (!scr) return setTimeout(go, 500); let t = 0; new MutationObserver(() => { if (!busy) { clearTimeout(t); t = setTimeout(sync, 0); } }).observe(scr, { childList: true, subtree: true }); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go); else go();
+  try { const st = document.createElement("style"); st.textContent = "#s-chat.m98on #dk98{display:none!important}#sugg .m98{flex:none;max-width:72vw}#sugg .m98n{border-style:dashed!important;font-weight:700;white-space:nowrap}"; document.head.appendChild(st); } catch (e) { console.warn("[merge98] style", e); }
+})();
