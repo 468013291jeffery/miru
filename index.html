@@ -1471,13 +1471,36 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .alt123 button{background:none;border:0;color:var(--text);font-size:15px;line-height:1;padding:2px 6px;cursor:pointer}
 .alt123 button[disabled]{opacity:.3}
 .alt123busy{opacity:.55;transition:opacity .2s}
+
+.scene-shift124{animation:scene124 .65s ease-out}@keyframes scene124{from{filter:brightness(.7)}to{filter:brightness(1)}}
+@media(prefers-reduced-motion:reduce){.scene-shift124{animation:none}}
+/* Continuous history and compact composer (player feedback, 2026-11-03). */
+#s-chat .chead.slim124 .row:first-child>[hidden]{display:none!important}
+#s-chat .chead.slim124 .row:first-child{margin:0!important;min-height:40px}
+#s-chat .chead.slim124 .hist121,#s-chat .chead.slim124 .hdx{display:none!important}
+.relationship124{border:0;background:rgba(15,12,20,.38);color:#ead7df;font-size:11px;border-radius:20px;padding:5px 9px;margin-left:auto}
+#s-chat .composer.input124 .modes,#s-chat .composer.input124 .modes2{display:none!important}
+.input-modes124{display:flex;gap:6px;margin:0 0 6px}
+.input-modes124 button{min-height:36px;flex:1;border:1px solid #ffffff20;border-radius:12px;background:#17131bd9;color:#dbd4e2;font-size:13px}
+.input-modes124 button[aria-pressed=true]{border-color:#f0b77e;color:#ffe0b9;background:#6d4d3580}
+#s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,#000 42px);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 42px)}
+#s-chat.clean #msgs>.cold{display:revert!important}
+#s-chat.clean #msgs .m-box>p.tp{display:block!important}
+#s-chat .rcol,#s-chat .hist121{display:none!important}
+.latest124{align-self:center;z-index:12;flex-shrink:0;margin:3px auto;padding:7px 14px;border:1px solid #ffffff38;border-radius:20px;background:#231d2a;color:#fff;font-size:12px}
+.latest124[hidden]{display:none}
+.chapter124{margin:12px auto;max-width:92%;padding:18px;border:1px solid #f0b77e44;border-radius:18px;background:#17131bef;color:#f5eee7;line-height:1.6}
+.chapter124 small{color:#f0b77e}.chapter124 h3{margin:4px 0 12px}.chapter124 p{font-size:13px;margin:8px 0 0}
+.brief124{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin:8px 0}.brief124 dt{color:#c6b7c9}.brief124 dd{margin:0;overflow-wrap:anywhere}
+.feedback124{animation:feedback124 .65s ease-out}@keyframes feedback124{from{box-shadow:0 0 0 2px #f0b77e88;transform:translateY(4px)}to{box-shadow:0 0 0 8px transparent;transform:none}}
+@media(prefers-reduced-motion:reduce){.feedback124{animation:none}}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="2d8d064be27c 2026-11-03T09:11Z";
+window.MIRU_BUILD="fb6393eb3cef 2026-11-03T12:14Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -4949,7 +4972,7 @@ function sanitizeMsgs(th){
   }catch(_){}
 }
 
-function renderChat(){sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
+function renderChat(){if(window.EXPERIENCE124)EXPERIENCE124.remember();sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
  const th=S.threads[curT];if(!th)return;const mid=mainOf(th),st=stageOf(th,mid);
  const avs=th.cast.length>1?'<div class="row chavs" style="gap:0;flex:none">'+th.cast.slice(0,3).map((c,i)=>'<div style="flex:0 0 auto;margin-left:'+(i?-9:0)+'px;border-radius:50%;box-shadow:0 0 0 2px var(--bg)">'+avatar(c,30)+'</div>').join("")+'</div>':avatar(th.cast[0],32);
  let h='<div class="chead"><div class="row" style="gap:10px;align-items:center;margin-bottom:10px"><button class="ibtn" data-back="1">'+ic("back")+'</button>'+avs+'<div class="grow" data-us="1" style="cursor:pointer"><b>'+esc(th.title)+'</b></div><button class="ibtn" data-cmenu="1">'+ic("dots")+'</button></div>'+
@@ -5164,7 +5187,7 @@ function sayHTML(m,i,th){
  ].join('\n');
  document.head.appendChild(st);
 }catch(_){}})();
-function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
+function scrollChat(){if(window.EXPERIENCE124&&EXPERIENCE124.hold())return;const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){
  /* 2026-10-27：任何文本进 UI 之前都过一道 asText70 —— 模型偶尔把字段返成对象，
     直接落进去就成了「[object Object]」。取不出可读文本的整条丢弃。 */
@@ -5202,7 +5225,7 @@ function appendMsg(th,m){
    }
  }}catch(_){}
 if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
- if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
+ if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat();if(window.EXPERIENCE124)EXPERIENCE124.effect(th,m)}}
 /* 2026-10-27：模型偶尔把 suggest 返成对象（{text:…} / {say:…}），直接 String() 就会显示
    「[object Object]」，而且点击时会把那串字发出去。统一在这里取成人话。 */
 /* 把任何东西变成人话；万一是对象被字符串化了（"[object Object]"），一律当空 */
@@ -5735,7 +5758,7 @@ const UNLOCK={games:0,gift:0,quiz:0,date:1,snap:1,truth:2,invite:0,bottle:0,lie:
    游戏、送礼物、拍立得、约出去、默契问答、真心话、有人进来跟在后面；没解锁的格子变暗，下面写「🔒 要到哪一级」。 */
 function plusSheet(){const th=S.threads[curT],m=mainOf(th),st=stageOf(th,m);
  const it=[["games","🎮","gh.btn"],["gift","🎁","cx.m.gift"],["snap","📷","cx.m.snap"],["date","🌙","cx.m.date"],["quiz","💞","cx.m.quiz"],["truth","🗝","cx.m.truth"],["invite","🚪","cx.m.invite"]];
- const tiles=plusQuick3(true)+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
+ const tiles=(window.EXPERIENCE124?EXPERIENCE124.tools():"")+plusQuick3(true)+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
   return '<button class="pmt'+(lock?" locked":"")+'" data-pm="'+k+'"><i>'+i+'</i><b>'+t(l)+'</b>'+(lock?'<small>🔒 '+esc(t("stage."+UNLOCK[k]))+'</small>':'')+'</button>'}).join("");
  sheet('<h2>'+t("cx.more")+'</h2><p class="xs faint" style="margin-top:4px">'+esc(first(ch(m).n))+' · '+t("stage."+st)+'</p><div class="pmgrid">'+tiles+'</div>')}
 /* 「+」最上面一排：原来浮在右侧的 热搜 / 播放 / 历史（只列出这部剧当下真有的） */
@@ -7668,6 +7691,7 @@ function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
+ if(window.EXPERIENCE124)card.brief124=EXPERIENCE124.brief(th,c,n);
  const beats=packBeats(c.beats).slice();
  /* 2026-10-29（Ann：「不是我扮演的角色先说话，先让另外的角色先说话」）：
     实测第 1 章有台词的 33 部里，**21 部（64%）第一个开口的就是玩家扮演的那个**（crimson/made/
@@ -7711,7 +7735,7 @@ const PKPLAY={},PKSKIP={},PKWAIT={},PKNEXT={};
 function readMs(m){if(!m)return 1500;const x=String(m.txt||m.title||"");const cjk=/[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/.test(x);
  return Math.min(7000,Math.max(1700,(cjk?1000+x.length*105:1000+x.length*34)))}
 function pkSpd(){const v=S.pkSpd;return v===0?0:(v||1)}
-function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
+function stopAuto(th,b){if(window.EXPERIENCE124&&["call","missed"].includes(b[1])&&!EXPERIENCE124.canCall(th,(b[2]||{}).cid||mainOf(th),b[2]||{}))return EXPERIENCE124.callFallback(th,b[2]||{});const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
  if(k==="line"&&pkContinueOnlyOptions(d.opts))return [];
  if(k==="start")return []; // Resume legacy openings automatically.
  if(k==="line"&&as!==speaker){const o=d.opts[0];if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}return [[speaker,o.k||"say",o.t]].concat(o.then||[])}
@@ -9343,11 +9367,11 @@ const MC_LINE={zh:["……算了，没事。","我就是想听听你的声音。
 let ring=null,mcIdle=0;
 function ringTone(){if(!bgmInit())return;const c=BGM.ctx;if(c.state==="suspended")c.resume().catch(()=>{});const t0=c.currentTime;
  for(let k=0;k<5;k++)[0,.18].forEach(d=>[880,1046].forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.connect(g);g.connect(c.destination);const s=t0+k*2+d;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.06,s+.02);g.gain.linearRampToValueAtTime(0,s+.16);o.start(s);o.stop(s+.2)}))}
-function ringIn(th,cid){if(ring||!th||!ch(cid)||$(".callv"))return;const c=ch(cid),line=(S.lang==="zh"?MC_LINE.zh:MC_LINE.en)[hash(cid+Date.now())%7];
+function ringIn(th,cid,context){if(!window.EXPERIENCE124||!EXPERIENCE124.canCall(th,cid,context||{}))return;if(ring||!th||!ch(cid)||$(".callv"))return;const c=ch(cid),line=String(Lz(context.reason||context.hint)||"");
  ring={th,cid,line,t0:Date.now()};document.body.insertAdjacentHTML("beforeend",'<div class="ringv"><div class="ringbg" style="background-image:url('+artSrc(cid)+')"></div><div class="ringin">'+avatar(cid,96)+'<b>'+esc(c.n)+'</b><span>'+t("mc.calling")+'</span>'+
   '<div class="ringbtns"><button data-ringno="1"><i>✕</i>'+t("mc.decline")+'</button><button data-ringyes="1"><i>📞</i>'+t("mc.answer")+'</button></div></div></div>');
  try{navigator.vibrate&&navigator.vibrate([400,300,400,300,400])}catch(_){}ringTone();ring.tm=setTimeout(()=>ringEnd(false),10000)}
-function mcCard(th,cid,secs,line,away){th.msgs.push({who:cid,k:"missed",secs,line,away:!!away,at:Date.now()});th.unread=curT!==th.id;th.at=Date.now();save();if(curT===th.id)renderChat()}
+function mcCard(th,cid,secs,line,away,declined){th.msgs.push({who:cid,k:"missed",secs,line,away:!!away,declined:!!declined,at:Date.now()});th.unread=curT!==th.id;th.at=Date.now();save();if(curT===th.id)renderChat()}
 function ringEnd(answered,declined){if(!ring)return;clearTimeout(ring.tm);const r=ring;ring=null;$(".ringv")&&$(".ringv").remove();try{navigator.vibrate&&navigator.vibrate(0)}catch(_){}
  if(answered){startCall(r.cid,60);return}mcCard(r.th,r.cid,Math.max(3,Math.round((Date.now()-r.t0)/1000)),r.line,false,declined)}
 document.addEventListener("click",e=>{let x;
@@ -9355,18 +9379,10 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ringno]")){ringEnd(false,true);return}
  if(x=e.target.closest("[data-mcback]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mcback];if(!m)return;if(!S.plus&&!spend(PRICES.callMin,"event"))return;m.back=1;save();startCall(m.who,60);return}});
 MSGKIND.inline("app20_fx_booth.js", ["missed"], function(m,i,th, next){if(!m||m.k!=="missed")return next(m,i,th);const c=ch(m.who);if(!c)return"";
- return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+t(m.away?"mc.away":"mc.missed")+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
+ return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+(m.declined?(CL()==="zh"?"已拒接来电":"Declined call"):t(m.away?"mc.away":"mc.missed"))+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
   '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'});;
-/* idle trigger inside a chat */
-setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidden||!th||ring||$(".sheet")||$(".callv")){mcIdle=0;return}
- const last=th.msgs[th.msgs.length-1];if(!last||!ch(last.who)||last.k==="missed"){mcIdle=0;return}if(th.pk&&th.pk.q&&th.pk.q.length){mcIdle=0;return}
- mcIdle+=5;const d=today();if(mcIdle>=45&&(th.mcDay!==d)){th.mcDay=d;save();mcIdle=0;ringIn(th,mainOf(th))}},5000);
-["pointerdown","keydown"].forEach(ev=>document.addEventListener(ev,()=>{mcIdle=0},{passive:true}));
-/* away trigger: reopening a chat after 3h */
-const _openThread20=openThread;openThread=function(id){const th=S.threads[id],d=today();
- if(th&&th.at&&Date.now()-th.at>3*36e5&&th.mcAway!==d&&ch(mainOf(th))){th.mcAway=d;const cid=mainOf(th);th.msgs.push({who:cid,k:"missed",secs:6+hash(id+d)%20,line:(S.lang==="zh"?MC_LINE.zh:MC_LINE.en)[hash(d+id)%7],away:true,at:Date.now()-36e5});save()}
- _openThread20(id)};
-PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th)),600);return true}return next(th,b)});;
+/* Calls require an authored remote contact event; elapsed wall time is not story time. */
+PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th),b[2]||{}),600);return true}return next(th,b)});;
 Object.assign(I18N.en,{"mc.calling":"is calling you…","mc.answer":"Answer","mc.decline":"Decline","mc.missed":"Missed call","mc.away":"He called while you were away","mc.rang":"Rang {s}s, then hung up","mc.back":"Call back","mc.called":"You called back"});
 Object.assign(I18N.zh,{"mc.calling":"邀请你语音通话…","mc.answer":"接听","mc.decline":"拒绝","mc.missed":"未接来电","mc.away":"你不在的时候，他打来过","mc.rang":"响了 {s} 秒，对方已取消","mc.back":"回拨","mc.called":"你已回拨"});
 
@@ -10792,7 +10808,7 @@ stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="myline")return _stopHTML
   '<div class="mysug"><button data-myhint="1"><i>💡</i><span><small>'+t("my.hint")+'</small>'+fmtMix(esc(MYL.sug||d.t))+'</span></button>'+
   '<button class="myai" data-myai="1">'+(MYL.busy?'…':'✨ '+t("my.ai")+'<small>'+(typeof payTag==="function"?payTag("alt"):"💎1")+'</small>')+'</button></div>'+
   '<label class="myauto"><input type="checkbox" data-myauto="1"> '+t("my.auto",{n:esc(nm)})+'</label>'};
-function mySay(th,txt){const b=th.pk.stop;if(!b||b[1]!=="myline")return;txt=String(txt||"").trim();if(!txt)return;MYL.sug=null;th.rounds=(th.rounds||0)+1;stopResolve(th,[[b[0],"say",txt,1]])}
+function mySay(th,txt){const b=th.pk.stop;if(!b||b[1]!=="myline")return;txt=String(txt||"").trim();if(!txt)return;MYL.sug=null;th.rounds=(th.rounds||0)+1;stopResolve(th,[["me",["say","act","think"].includes(cmode)?cmode:"say",txt,1]])}
 document.addEventListener("click",async e=>{let x;const th=S.threads[curT];if(!th||!th.pk||!th.pk.stop||th.pk.stop[1]!=="myline")return;const d=th.pk.stop[2];
  if(e.target.closest("[data-myhint]")){mySay(th,MYL.sug||d.t);return}
  if(e.target.closest("[data-mysend]")){mySay(th,($("#myTxt")||{}).value);return}
@@ -10990,7 +11006,7 @@ MSGKIND.inline("app37_hooks.js", ["xrecall"], function(m,i,th, next){if(!m||m.k!
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xrc]");if(!x)return;const th=S.threads[curT];const m=th&&th.msgs[+x.dataset.xrc];if(!m)return;if(typeof payGo==="function"&&!payGo("recall"))return;m.open=1;save();renderChat();try{window.emoFx&&emoFx("ink")}catch(_){}});
 /* 2 · missed call → call back */
 const _stopAuto37=stopAuto;
-stopAuto=function(th,b){if(b&&b[1]==="missed"){const d=b[2]||{},as=th.pk.as;if(as===d.cid)return [["n","act",t("ms.youHang",{n:first(ch(th.cast.find(c=>c!==d.cid&&ch(c))||mainOf(th)).n)})]].concat(d.skip||[]);if(!as||as==="watch"||as==="side")return d.skip||[];return null}
+stopAuto=function(th,b){if(b&&b[1]==="missed"){if(window.EXPERIENCE124&&!EXPERIENCE124.canCall(th,(b[2]||{}).cid||mainOf(th),b[2]||{}))return EXPERIENCE124.callFallback(th,b[2]||{});const d=b[2]||{},as=th.pk.as;if(as===d.cid)return [["n","act",t("ms.youHang",{n:first(ch(th.cast.find(c=>c!==d.cid&&ch(c))||mainOf(th)).n)})]].concat(d.skip||[]);if(!as||as==="watch"||as==="side")return d.skip||[];return null}
  if(b&&b[1]==="reveal"){if(PKSKIP[th.id])return revealBeats(b[2]);return null}
  return _stopAuto37(th,b)};
 const MS={};
@@ -11880,7 +11896,7 @@ let HIST_OPEN=false,HD_OPEN=false,TOOLS_OPEN=false;
 function cleanMark(){const m=$("#msgs");if(!m)return;const scr=$("#s-chat");if(!scr)return;
  scr.classList.toggle("clean",cleanOn());scr.classList.toggle("histopen",HIST_OPEN);scr.classList.toggle("hdopen",HD_OPEN);scr.classList.toggle("toolsopen",TOOLS_OPEN);const tb=$("#toolBtn");if(tb){tb.classList.toggle("on",TOOLS_OPEN);tb.style.display=$("#pkwrap .pkplay")?"":"none"}
  const kids=[...m.children].filter(c=>c.id!=="pkwrap"&&!c.classList.contains("typing"));
- kids.forEach((c,i)=>c.classList.toggle("cold",cleanOn()&&!HIST_OPEN&&i<kids.length-CLEAN_KEEP));
+ kids.forEach((c,i)=>c.classList.toggle("cold",cleanOn()&&!HIST_OPEN&&false /* history stays in the scroll flow */));
  const n=kids.length-CLEAN_KEEP;const hb=$("#histBtn");if(hb){hb.querySelector("em").textContent=n>0?n:"";hb.classList.toggle("on",HIST_OPEN);hb.querySelector("small").textContent=HIST_OPEN?LL("收起","Hide"):LL("历史","History")}}
 function cleanDecor(){const scr=$("#s-chat");if(!scr||!cleanOn())return;
  /* header toggle */
@@ -11892,14 +11908,14 @@ function cleanDecor(){const scr=$("#s-chat");if(!scr||!cleanOn())return;
  if(ir&&modes&&!ir.querySelector(".modebtn")){const on=modes.querySelector(".on")||modes.querySelector("button");ir.insertAdjacentHTML("afterbegin",'<button class="modebtn" data-modebtn="1">'+esc((on&&on.textContent||LL("台词","Say")).trim().slice(0,4))+' ▴</button>')}
  cleanMark()}
 /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
-const __body_clean48 = function () { try{cleanDecor();if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){} };
+const __body_clean48 = function () { try{cleanDecor();if(window.EXPERIENCE124)return;if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){} };
 if (window.UI && typeof window.UI.add === "function") window.UI.add("clean48", __body_clean48);
 else { const _renderChat48 = renderChat; renderChat = function () { const r = _renderChat48.apply(this, arguments); __body_clean48(); return r; }; };
 /* new messages appended without a full re-render */
 let CLEAN_MO=null;setInterval(()=>{const m=$("#msgs");if(!m||m._cleanObs)return;m._cleanObs=1;CLEAN_MO=new MutationObserver(()=>{if(cleanOn())requestAnimationFrame(cleanMark)});CLEAN_MO.observe(m,{childList:true})},600);
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-tools]")){if(e.target.closest(".sheet"))closeSheet();TOOLS_OPEN=!TOOLS_OPEN;cleanMark();return}
- if(e.target.closest("[data-hist]")){if(e.target.closest(".sheet"))closeSheet();HIST_OPEN=!HIST_OPEN;cleanMark();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;return}
+ if(e.target.closest("[data-hist]")){if(e.target.closest(".sheet"))closeSheet();if(window.EXPERIENCE124){EXPERIENCE124.openHistory();return}HIST_OPEN=!HIST_OPEN;cleanMark();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;return}
  if(e.target.closest("[data-hdx]")){HD_OPEN=!HD_OPEN;const b=$(".hdx");if(b)b.textContent=HD_OPEN?"⌃":"⌄";cleanMark();return}
  if(e.target.closest("[data-modebtn]")){const c=$("#s-chat .composer");if(c)c.classList.toggle("showmodes");return}
  if((x=e.target.closest("#s-chat .composer .modes button"))){setTimeout(()=>{const c=$("#s-chat .composer");if(c)c.classList.remove("showmodes");const mb=$(".modebtn");if(mb)mb.textContent=x.textContent.trim().slice(0,4)+" ▴"},30)}
@@ -11940,7 +11956,7 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))re
 #s-chat.clean .composer.showmodes .modes{display:flex!important;position:absolute;left:10px;right:10px;bottom:58px;flex-wrap:wrap;gap:6px;padding:8px;border-radius:16px;background:rgba(14,12,18,.96);border:1px solid var(--line);z-index:45}
 #s-chat.clean .modebtn{flex:none;height:38px;padding:0 10px;border-radius:12px;background:rgba(240,183,126,.16);border:1px solid rgba(240,183,126,.5);color:#F7D2A8;font-weight:800;font-size:13px;white-space:nowrap}
 #s-chat.clean .composer .inrow{gap:6px}
-#s-chat.clean:not(.histopen) #msgs .m-box>p.tp:not(:nth-last-of-type(-n+4)){display:none}
+#s-chat.clean:not(.histopen) #msgs .m-box>p.tp:not(:nth-last-of-type(-n+4)){display:block}
 #s-chat.clean .chead .vtog,#s-chat.clean .composer .emobtn{display:none!important}
 #s-chat.clean .chead .callbtn span{display:none}#s-chat.clean .chead .callbtn{padding:0 9px}
 #s-chat.clean .chead .row:first-child{gap:6px;flex-wrap:nowrap}
@@ -12847,7 +12863,7 @@ function composer55(){const th=S.threads[curT];if(!th||(th.pk&&th.pk.as==="watch
  ["say","act","think"].forEach(k=>{const b=modes.querySelector('[data-mode="'+k+'"]');if(b)b.remove()});
  const d=modes.querySelector('[data-mode="dir"]');if(d){d.classList.add("tool");tray.appendChild(d)}
  const si=modes.querySelector("[data-stepin]");if(si){si.textContent="🚪 "+(CL()==="zh"?"换身份":"Switch role");tray.appendChild(si)}
- if(cmode!=="dir")cmode="say";
+ /* Keep the explicitly selected dialogue/action/thought mode. */
  const sg=$("#sugg");if(sg){[...sg.children].filter(x=>!x.dataset.sgmore).slice(3).forEach(x=>x.remove());sg.classList.add("sg55")}
  const hint=document.createElement("span");hint.className="c55h";hint.textContent=CL()==="zh"?"直接打字 · *动作* · （心声）":"Just type · *action* · (thought)";modes.insertBefore(hint,modes.firstChild);
  const ta=$("#cin");if(ta)ta.placeholder=CL()==="zh"?"想说什么都行，他会回应你……":"Say anything — he'll answer you…"}
@@ -20208,7 +20224,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   if(R._counted!==message){R._counted=message;S.tapHintN=(S.tapHintN||0)+1;}
   paint();return promise;
  };
- R.advance=function(){const th=S.threads[curT],chat=$('#s-chat');if(!th||!chat||chat.hidden||(typeof HIST_OPEN!=='undefined'&&HIST_OPEN))return false;
+ R.advance=function(){if(window.EXPERIENCE124&&EXPERIENCE124.readingHistory())return false;const th=S.threads[curT],chat=$('#s-chat');if(!th||!chat||chat.hidden||(typeof HIST_OPEN!=='undefined'&&HIST_OPEN))return false;
   const entry=R.pending.get(th.id);if(!entry||A.busy())return false;
   entry.finish();return true;
  };
@@ -20218,7 +20234,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  pkWait=function(th,prev){th._held=0;return R.wait(th,prev,'script');};
  const append=pkAppend;pkAppend=function(th,message){if(isNarr(message))th._brk=1;return append.apply(this,arguments);};
  if(typeof streamPreview==='function'){const preview=streamPreview;streamPreview=function(){if(!R.manual())return preview.apply(this,arguments);};}
- window.addEventListener('click',ev=>{
+ window.addEventListener('click',ev=>{if(window.EXPERIENCE124&&EXPERIENCE124.readingHistory()&&ev.target.closest('#msgs'))return;
   if(ev.target.closest('[data-reading-next]')){ev.preventDefault();ev.stopImmediatePropagation();R.advance();return;}
   /* 点屏幕 = 下一句。点在气泡上要等 230ms：双击是给这句回 ❤️（app122），不能顺手翻掉两句 */
   {const th=S.threads[curT],chat=$('#s-chat');
