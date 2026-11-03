@@ -12,7 +12,7 @@ MSGKIND.inline("app37_hooks.js", ["xrecall"], function(m,i,th, next){if(!m||m.k!
 document.addEventListener("click",e=>{const x=e.target.closest("[data-xrc]");if(!x)return;const th=S.threads[curT];const m=th&&th.msgs[+x.dataset.xrc];if(!m)return;if(typeof payGo==="function"&&!payGo("recall"))return;m.open=1;save();renderChat();try{window.emoFx&&emoFx("ink")}catch(_){}});
 /* 2 · missed call → call back */
 const _stopAuto37=stopAuto;
-stopAuto=function(th,b){if(b&&b[1]==="missed"){const d=b[2]||{},as=th.pk.as;if(as===d.cid)return [["n","act",t("ms.youHang",{n:first(ch(th.cast.find(c=>c!==d.cid&&ch(c))||mainOf(th)).n)})]].concat(d.skip||[]);if(!as||as==="watch"||as==="side")return d.skip||[];return null}
+stopAuto=function(th,b){if(b&&b[1]==="missed"){if(window.EXPERIENCE124&&!EXPERIENCE124.canCall(th,(b[2]||{}).cid||mainOf(th),b[2]||{}))return EXPERIENCE124.callFallback(th,b[2]||{});const d=b[2]||{},as=th.pk.as;if(as===d.cid)return [["n","act",t("ms.youHang",{n:first(ch(th.cast.find(c=>c!==d.cid&&ch(c))||mainOf(th)).n)})]].concat(d.skip||[]);if(!as||as==="watch"||as==="side")return d.skip||[];return null}
  if(b&&b[1]==="reveal"){if(PKSKIP[th.id])return revealBeats(b[2]);return null}
  return _stopAuto37(th,b)};
 const MS={};

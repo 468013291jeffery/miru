@@ -137,11 +137,11 @@ const MC_LINE={zh:["……算了，没事。","我就是想听听你的声音。
 let ring=null,mcIdle=0;
 function ringTone(){if(!bgmInit())return;const c=BGM.ctx;if(c.state==="suspended")c.resume().catch(()=>{});const t0=c.currentTime;
  for(let k=0;k<5;k++)[0,.18].forEach(d=>[880,1046].forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.connect(g);g.connect(c.destination);const s=t0+k*2+d;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.06,s+.02);g.gain.linearRampToValueAtTime(0,s+.16);o.start(s);o.stop(s+.2)}))}
-function ringIn(th,cid){if(ring||!th||!ch(cid)||$(".callv"))return;const c=ch(cid),line=(S.lang==="zh"?MC_LINE.zh:MC_LINE.en)[hash(cid+Date.now())%7];
+function ringIn(th,cid,context){if(!window.EXPERIENCE124||!EXPERIENCE124.canCall(th,cid,context||{}))return;if(ring||!th||!ch(cid)||$(".callv"))return;const c=ch(cid),line=String(Lz(context.reason||context.hint)||"");
  ring={th,cid,line,t0:Date.now()};document.body.insertAdjacentHTML("beforeend",'<div class="ringv"><div class="ringbg" style="background-image:url('+artSrc(cid)+')"></div><div class="ringin">'+avatar(cid,96)+'<b>'+esc(c.n)+'</b><span>'+t("mc.calling")+'</span>'+
   '<div class="ringbtns"><button data-ringno="1"><i>✕</i>'+t("mc.decline")+'</button><button data-ringyes="1"><i>📞</i>'+t("mc.answer")+'</button></div></div></div>');
  try{navigator.vibrate&&navigator.vibrate([400,300,400,300,400])}catch(_){}ringTone();ring.tm=setTimeout(()=>ringEnd(false),10000)}
-function mcCard(th,cid,secs,line,away){th.msgs.push({who:cid,k:"missed",secs,line,away:!!away,at:Date.now()});th.unread=curT!==th.id;th.at=Date.now();save();if(curT===th.id)renderChat()}
+function mcCard(th,cid,secs,line,away,declined){th.msgs.push({who:cid,k:"missed",secs,line,away:!!away,declined:!!declined,at:Date.now()});th.unread=curT!==th.id;th.at=Date.now();save();if(curT===th.id)renderChat()}
 function ringEnd(answered,declined){if(!ring)return;clearTimeout(ring.tm);const r=ring;ring=null;$(".ringv")&&$(".ringv").remove();try{navigator.vibrate&&navigator.vibrate(0)}catch(_){}
  if(answered){startCall(r.cid,60);return}mcCard(r.th,r.cid,Math.max(3,Math.round((Date.now()-r.t0)/1000)),r.line,false,declined)}
 document.addEventListener("click",e=>{let x;
@@ -149,18 +149,10 @@ document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-ringno]")){ringEnd(false,true);return}
  if(x=e.target.closest("[data-mcback]")){const th=S.threads[curT],m=th&&th.msgs[+x.dataset.mcback];if(!m)return;if(!S.plus&&!spend(PRICES.callMin,"event"))return;m.back=1;save();startCall(m.who,60);return}});
 MSGKIND.inline("app20_fx_booth.js", ["missed"], function(m,i,th, next){if(!m||m.k!=="missed")return next(m,i,th);const c=ch(m.who);if(!c)return"";
- return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+t(m.away?"mc.away":"mc.missed")+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
+ return '<div class="msg them"><div class="mcwrap">'+avatar(m.who,30)+'<div class="mcard"><div class="mch"><i>📞</i><div><b>'+(m.declined?(CL()==="zh"?"已拒接来电":"Declined call"):t(m.away?"mc.away":"mc.missed"))+'</b><span>'+t("mc.rang",{s:m.secs})+'</span></div></div>'+
   '<p class="mcl">“'+esc(m.line)+'”</p>'+(m.back?'<div class="xs faint">'+t("mc.called")+'</div>':'<button class="mcbtn" data-mcback="'+i+'">📞 '+t("mc.back")+(S.plus?"":" · 💎"+PRICES.callMin)+'</button>')+'</div></div></div>'});;
-/* idle trigger inside a chat */
-setInterval(()=>{const sc=$("#s-chat");const th=S.threads[curT];if(!sc||sc.hidden||!th||ring||$(".sheet")||$(".callv")){mcIdle=0;return}
- const last=th.msgs[th.msgs.length-1];if(!last||!ch(last.who)||last.k==="missed"){mcIdle=0;return}if(th.pk&&th.pk.q&&th.pk.q.length){mcIdle=0;return}
- mcIdle+=5;const d=today();if(mcIdle>=45&&(th.mcDay!==d)){th.mcDay=d;save();mcIdle=0;ringIn(th,mainOf(th))}},5000);
-["pointerdown","keydown"].forEach(ev=>document.addEventListener(ev,()=>{mcIdle=0},{passive:true}));
-/* away trigger: reopening a chat after 3h */
-const _openThread20=openThread;openThread=function(id){const th=S.threads[id],d=today();
- if(th&&th.at&&Date.now()-th.at>3*36e5&&th.mcAway!==d&&ch(mainOf(th))){th.mcAway=d;const cid=mainOf(th);th.msgs.push({who:cid,k:"missed",secs:6+hash(id+d)%20,line:(S.lang==="zh"?MC_LINE.zh:MC_LINE.en)[hash(d+id)%7],away:true,at:Date.now()-36e5});save()}
- _openThread20(id)};
-PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th)),600);return true}return next(th,b)});;
+/* Calls require an authored remote contact event; elapsed wall time is not story time. */
+PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="ring"){th.pk.q.shift();setTimeout(()=>ringIn(th,(b[2]||{}).who||mainOf(th),b[2]||{}),600);return true}return next(th,b)});;
 Object.assign(I18N.en,{"mc.calling":"is calling you…","mc.answer":"Answer","mc.decline":"Decline","mc.missed":"Missed call","mc.away":"He called while you were away","mc.rang":"Rang {s}s, then hung up","mc.back":"Call back","mc.called":"You called back"});
 Object.assign(I18N.zh,{"mc.calling":"邀请你语音通话…","mc.answer":"接听","mc.decline":"拒绝","mc.missed":"未接来电","mc.away":"你不在的时候，他打来过","mc.rang":"响了 {s} 秒，对方已取消","mc.back":"回拨","mc.called":"你已回拨"});
 

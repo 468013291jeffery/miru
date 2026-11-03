@@ -10,7 +10,7 @@ let HIST_OPEN=false,HD_OPEN=false,TOOLS_OPEN=false;
 function cleanMark(){const m=$("#msgs");if(!m)return;const scr=$("#s-chat");if(!scr)return;
  scr.classList.toggle("clean",cleanOn());scr.classList.toggle("histopen",HIST_OPEN);scr.classList.toggle("hdopen",HD_OPEN);scr.classList.toggle("toolsopen",TOOLS_OPEN);const tb=$("#toolBtn");if(tb){tb.classList.toggle("on",TOOLS_OPEN);tb.style.display=$("#pkwrap .pkplay")?"":"none"}
  const kids=[...m.children].filter(c=>c.id!=="pkwrap"&&!c.classList.contains("typing"));
- kids.forEach((c,i)=>c.classList.toggle("cold",cleanOn()&&!HIST_OPEN&&i<kids.length-CLEAN_KEEP));
+ kids.forEach((c,i)=>c.classList.toggle("cold",cleanOn()&&!HIST_OPEN&&false /* history stays in the scroll flow */));
  const n=kids.length-CLEAN_KEEP;const hb=$("#histBtn");if(hb){hb.querySelector("em").textContent=n>0?n:"";hb.classList.toggle("on",HIST_OPEN);hb.querySelector("small").textContent=HIST_OPEN?LL("收起","Hide"):LL("历史","History")}}
 function cleanDecor(){const scr=$("#s-chat");if(!scr||!cleanOn())return;
  /* header toggle */
@@ -22,14 +22,14 @@ function cleanDecor(){const scr=$("#s-chat");if(!scr||!cleanOn())return;
  if(ir&&modes&&!ir.querySelector(".modebtn")){const on=modes.querySelector(".on")||modes.querySelector("button");ir.insertAdjacentHTML("afterbegin",'<button class="modebtn" data-modebtn="1">'+esc((on&&on.textContent||LL("台词","Say")).trim().slice(0,4))+' ▴</button>')}
  cleanMark()}
 /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
-const __body_clean48 = function () { try{cleanDecor();if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){} };
+const __body_clean48 = function () { try{cleanDecor();if(window.EXPERIENCE124)return;if(cleanOn()&&!HIST_OPEN){const m=$("#msgs");if(m){const intro=m.querySelector(".m-intro:not(.cold)"),th=S.threads[curT],atStart=th&&th.pk&&th.pk.stop&&th.pk.stop[1]==="start";if(intro&&atStart)m.scrollTop=Math.max(0,intro.offsetTop-8);else m.scrollTop=m.scrollHeight}}}catch(_){} };
 if (window.UI && typeof window.UI.add === "function") window.UI.add("clean48", __body_clean48);
 else { const _renderChat48 = renderChat; renderChat = function () { const r = _renderChat48.apply(this, arguments); __body_clean48(); return r; }; };
 /* new messages appended without a full re-render */
 let CLEAN_MO=null;setInterval(()=>{const m=$("#msgs");if(!m||m._cleanObs)return;m._cleanObs=1;CLEAN_MO=new MutationObserver(()=>{if(cleanOn())requestAnimationFrame(cleanMark)});CLEAN_MO.observe(m,{childList:true})},600);
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-tools]")){if(e.target.closest(".sheet"))closeSheet();TOOLS_OPEN=!TOOLS_OPEN;cleanMark();return}
- if(e.target.closest("[data-hist]")){if(e.target.closest(".sheet"))closeSheet();HIST_OPEN=!HIST_OPEN;cleanMark();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;return}
+ if(e.target.closest("[data-hist]")){if(e.target.closest(".sheet"))closeSheet();if(window.EXPERIENCE124){EXPERIENCE124.openHistory();return}HIST_OPEN=!HIST_OPEN;cleanMark();const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight;return}
  if(e.target.closest("[data-hdx]")){HD_OPEN=!HD_OPEN;const b=$(".hdx");if(b)b.textContent=HD_OPEN?"⌃":"⌄";cleanMark();return}
  if(e.target.closest("[data-modebtn]")){const c=$("#s-chat .composer");if(c)c.classList.toggle("showmodes");return}
  if((x=e.target.closest("#s-chat .composer .modes button"))){setTimeout(()=>{const c=$("#s-chat .composer");if(c)c.classList.remove("showmodes");const mb=$(".modebtn");if(mb)mb.textContent=x.textContent.trim().slice(0,4)+" ▴"},30)}
@@ -70,7 +70,7 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))re
 #s-chat.clean .composer.showmodes .modes{display:flex!important;position:absolute;left:10px;right:10px;bottom:58px;flex-wrap:wrap;gap:6px;padding:8px;border-radius:16px;background:rgba(14,12,18,.96);border:1px solid var(--line);z-index:45}
 #s-chat.clean .modebtn{flex:none;height:38px;padding:0 10px;border-radius:12px;background:rgba(240,183,126,.16);border:1px solid rgba(240,183,126,.5);color:#F7D2A8;font-weight:800;font-size:13px;white-space:nowrap}
 #s-chat.clean .composer .inrow{gap:6px}
-#s-chat.clean:not(.histopen) #msgs .m-box>p.tp:not(:nth-last-of-type(-n+4)){display:none}
+#s-chat.clean:not(.histopen) #msgs .m-box>p.tp:not(:nth-last-of-type(-n+4)){display:block}
 #s-chat.clean .chead .vtog,#s-chat.clean .composer .emobtn{display:none!important}
 #s-chat.clean .chead .callbtn span{display:none}#s-chat.clean .chead .callbtn{padding:0 9px}
 #s-chat.clean .chead .row:first-child{gap:6px;flex-wrap:nowrap}

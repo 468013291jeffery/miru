@@ -98,6 +98,7 @@ function packOpen(th,n,instant){const w=wd(th.wid),c=w.pack.chapters[n-1];if(!c)
  (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'busy','packOpen');th.pk.min=false;th.pk.stop=null;
  th.status.time=Lz(c.time);th.status.place=Lz(c.place);
  const card={who:"sys",k:"chap",n,title:Lz(c.t),txt:Lz(c.goal),at:Date.now()};
+ if(window.EXPERIENCE124)card.brief124=EXPERIENCE124.brief(th,c,n);
  const beats=packBeats(c.beats).slice();
  /* 2026-10-29（Ann：「不是我扮演的角色先说话，先让另外的角色先说话」）：
     实测第 1 章有台词的 33 部里，**21 部（64%）第一个开口的就是玩家扮演的那个**（crimson/made/
@@ -141,7 +142,7 @@ const PKPLAY={},PKSKIP={},PKWAIT={},PKNEXT={};
 function readMs(m){if(!m)return 1500;const x=String(m.txt||m.title||"");const cjk=/[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]/.test(x);
  return Math.min(7000,Math.max(1700,(cjk?1000+x.length*105:1000+x.length*34)))}
 function pkSpd(){const v=S.pkSpd;return v===0?0:(v||1)}
-function stopAuto(th,b){const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
+function stopAuto(th,b){if(window.EXPERIENCE124&&["call","missed"].includes(b[1])&&!EXPERIENCE124.canCall(th,(b[2]||{}).cid||mainOf(th),b[2]||{}))return EXPERIENCE124.callFallback(th,b[2]||{});const d=b[2],k=b[1],as=th.pk.as,inScene=as&&as!=="watch"&&as!=="side",speaker=ch(b[0])?b[0]:packPov(th);
  if(k==="line"&&pkContinueOnlyOptions(d.opts))return [];
  if(k==="start")return []; // Resume legacy openings automatically.
  if(k==="line"&&as!==speaker){const o=d.opts[0];if(typeof dimApply==="function"){const P=dimPairs(th);if(o.rd)dimApply(th,o.rd,Lz(o.t));else if(P){const m=P.find(p=>p.main)||P[0];dimApply(th,{[m.a+"|"+m.b]:dimRule(o)},Lz(o.t))}}return [[speaker,o.k||"say",o.t]].concat(o.then||[])}

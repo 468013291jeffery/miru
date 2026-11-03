@@ -62,7 +62,7 @@
   if(R._counted!==message){R._counted=message;S.tapHintN=(S.tapHintN||0)+1;}
   paint();return promise;
  };
- R.advance=function(){const th=S.threads[curT],chat=$('#s-chat');if(!th||!chat||chat.hidden||(typeof HIST_OPEN!=='undefined'&&HIST_OPEN))return false;
+ R.advance=function(){if(window.EXPERIENCE124&&EXPERIENCE124.readingHistory())return false;const th=S.threads[curT],chat=$('#s-chat');if(!th||!chat||chat.hidden||(typeof HIST_OPEN!=='undefined'&&HIST_OPEN))return false;
   const entry=R.pending.get(th.id);if(!entry||A.busy())return false;
   entry.finish();return true;
  };
@@ -72,7 +72,7 @@
  pkWait=function(th,prev){th._held=0;return R.wait(th,prev,'script');};
  const append=pkAppend;pkAppend=function(th,message){if(isNarr(message))th._brk=1;return append.apply(this,arguments);};
  if(typeof streamPreview==='function'){const preview=streamPreview;streamPreview=function(){if(!R.manual())return preview.apply(this,arguments);};}
- window.addEventListener('click',ev=>{
+ window.addEventListener('click',ev=>{if(window.EXPERIENCE124&&EXPERIENCE124.readingHistory()&&ev.target.closest('#msgs'))return;
   if(ev.target.closest('[data-reading-next]')){ev.preventDefault();ev.stopImmediatePropagation();R.advance();return;}
   /* 点屏幕 = 下一句。点在气泡上要等 230ms：双击是给这句回 ❤️（app122），不能顺手翻掉两句 */
   {const th=S.threads[curT],chat=$('#s-chat');

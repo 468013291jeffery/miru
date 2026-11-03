@@ -66,7 +66,7 @@ function sanitizeMsgs(th){
   }catch(_){}
 }
 
-function renderChat(){sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
+function renderChat(){if(window.EXPERIENCE124)EXPERIENCE124.remember();sanitizeMsgs(S&&S.threads?S.threads[curT]:null);
  const th=S.threads[curT];if(!th)return;const mid=mainOf(th),st=stageOf(th,mid);
  const avs=th.cast.length>1?'<div class="row chavs" style="gap:0;flex:none">'+th.cast.slice(0,3).map((c,i)=>'<div style="flex:0 0 auto;margin-left:'+(i?-9:0)+'px;border-radius:50%;box-shadow:0 0 0 2px var(--bg)">'+avatar(c,30)+'</div>').join("")+'</div>':avatar(th.cast[0],32);
  let h='<div class="chead"><div class="row" style="gap:10px;align-items:center;margin-bottom:10px"><button class="ibtn" data-back="1">'+ic("back")+'</button>'+avs+'<div class="grow" data-us="1" style="cursor:pointer"><b>'+esc(th.title)+'</b></div><button class="ibtn" data-cmenu="1">'+ic("dots")+'</button></div>'+
@@ -281,7 +281,7 @@ function sayHTML(m,i,th){
  ].join('\n');
  document.head.appendChild(st);
 }catch(_){}})();
-function scrollChat(){const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
+function scrollChat(){if(window.EXPERIENCE124&&EXPERIENCE124.hold())return;const m=$("#msgs");if(m)m.scrollTop=m.scrollHeight}
 function appendMsg(th,m){
  /* 2026-10-27：任何文本进 UI 之前都过一道 asText70 —— 模型偶尔把字段返成对象，
     直接落进去就成了「[object Object]」。取不出可读文本的整条丢弃。 */
@@ -319,7 +319,7 @@ function appendMsg(th,m){
    }
  }}catch(_){}
 if(m&&m.seen===undefined)m.seen=(th.present||th.cast||[]).slice();th.msgs.push(m);th.at=Date.now();save();if(curT===th.id&&ch(m.who))chatBgSet(m.who,poseOf(m));
- if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat()}}
+ if(curT===th.id&&$("#msgs")&&!$("#s-chat").hidden){$("#msgs").insertAdjacentHTML("beforeend",msgHTML(m,th.msgs.length-1,th));scrollChat();if(window.EXPERIENCE124)EXPERIENCE124.effect(th,m)}}
 /* 2026-10-27：模型偶尔把 suggest 返成对象（{text:…} / {say:…}），直接 String() 就会显示
    「[object Object]」，而且点击时会把那串字发出去。统一在这里取成人话。 */
 /* 把任何东西变成人话；万一是对象被字符串化了（"[object Object]"），一律当空 */
@@ -852,7 +852,7 @@ const UNLOCK={games:0,gift:0,quiz:0,date:1,snap:1,truth:2,invite:0,bottle:0,lie:
    游戏、送礼物、拍立得、约出去、默契问答、真心话、有人进来跟在后面；没解锁的格子变暗，下面写「🔒 要到哪一级」。 */
 function plusSheet(){const th=S.threads[curT],m=mainOf(th),st=stageOf(th,m);
  const it=[["games","🎮","gh.btn"],["gift","🎁","cx.m.gift"],["snap","📷","cx.m.snap"],["date","🌙","cx.m.date"],["quiz","💞","cx.m.quiz"],["truth","🗝","cx.m.truth"],["invite","🚪","cx.m.invite"]];
- const tiles=plusQuick3(true)+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
+ const tiles=(window.EXPERIENCE124?EXPERIENCE124.tools():"")+plusQuick3(true)+it.map(([k,i,l])=>{const lock=st<UNLOCK[k];
   return '<button class="pmt'+(lock?" locked":"")+'" data-pm="'+k+'"><i>'+i+'</i><b>'+t(l)+'</b>'+(lock?'<small>🔒 '+esc(t("stage."+UNLOCK[k]))+'</small>':'')+'</button>'}).join("");
  sheet('<h2>'+t("cx.more")+'</h2><p class="xs faint" style="margin-top:4px">'+esc(first(ch(m).n))+' · '+t("stage."+st)+'</p><div class="pmgrid">'+tiles+'</div>')}
 /* 「+」最上面一排：原来浮在右侧的 热搜 / 播放 / 历史（只列出这部剧当下真有的） */

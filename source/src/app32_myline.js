@@ -20,7 +20,7 @@ stopHTML=function(th){const b=th.pk.stop;if(!b||b[1]!=="myline")return _stopHTML
   '<div class="mysug"><button data-myhint="1"><i>💡</i><span><small>'+t("my.hint")+'</small>'+fmtMix(esc(MYL.sug||d.t))+'</span></button>'+
   '<button class="myai" data-myai="1">'+(MYL.busy?'…':'✨ '+t("my.ai")+'<small>'+(typeof payTag==="function"?payTag("alt"):"💎1")+'</small>')+'</button></div>'+
   '<label class="myauto"><input type="checkbox" data-myauto="1"> '+t("my.auto",{n:esc(nm)})+'</label>'};
-function mySay(th,txt){const b=th.pk.stop;if(!b||b[1]!=="myline")return;txt=String(txt||"").trim();if(!txt)return;MYL.sug=null;th.rounds=(th.rounds||0)+1;stopResolve(th,[[b[0],"say",txt,1]])}
+function mySay(th,txt){const b=th.pk.stop;if(!b||b[1]!=="myline")return;txt=String(txt||"").trim();if(!txt)return;MYL.sug=null;th.rounds=(th.rounds||0)+1;stopResolve(th,[["me",["say","act","think"].includes(cmode)?cmode:"say",txt,1]])}
 document.addEventListener("click",async e=>{let x;const th=S.threads[curT];if(!th||!th.pk||!th.pk.stop||th.pk.stop[1]!=="myline")return;const d=th.pk.stop[2];
  if(e.target.closest("[data-myhint]")){mySay(th,MYL.sug||d.t);return}
  if(e.target.closest("[data-mysend]")){mySay(th,($("#myTxt")||{}).value);return}

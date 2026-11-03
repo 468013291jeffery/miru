@@ -1471,6 +1471,29 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .alt123 button{background:none;border:0;color:var(--text);font-size:15px;line-height:1;padding:2px 6px;cursor:pointer}
 .alt123 button[disabled]{opacity:.3}
 .alt123busy{opacity:.55;transition:opacity .2s}
+
+.scene-shift124{animation:scene124 .65s ease-out}@keyframes scene124{from{filter:brightness(.7)}to{filter:brightness(1)}}
+@media(prefers-reduced-motion:reduce){.scene-shift124{animation:none}}
+/* Continuous history and compact composer (player feedback, 2026-11-03). */
+#s-chat .chead.slim124 .row:first-child>[hidden]{display:none!important}
+#s-chat .chead.slim124 .row:first-child{margin:0!important;min-height:40px}
+#s-chat .chead.slim124 .hist121,#s-chat .chead.slim124 .hdx{display:none!important}
+.relationship124{border:0;background:rgba(15,12,20,.38);color:#ead7df;font-size:11px;border-radius:20px;padding:5px 9px;margin-left:auto}
+#s-chat .composer.input124 .modes,#s-chat .composer.input124 .modes2{display:none!important}
+.input-modes124{display:flex;gap:6px;margin:0 0 6px}
+.input-modes124 button{min-height:36px;flex:1;border:1px solid #ffffff20;border-radius:12px;background:#17131bd9;color:#dbd4e2;font-size:13px}
+.input-modes124 button[aria-pressed=true]{border-color:#f0b77e;color:#ffe0b9;background:#6d4d3580}
+#s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,#000 42px);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 42px)}
+#s-chat.clean #msgs>.cold{display:revert!important}
+#s-chat.clean #msgs .m-box>p.tp{display:block!important}
+#s-chat .rcol,#s-chat .hist121{display:none!important}
+.latest124{align-self:center;z-index:12;flex-shrink:0;margin:3px auto;padding:7px 14px;border:1px solid #ffffff38;border-radius:20px;background:#231d2a;color:#fff;font-size:12px}
+.latest124[hidden]{display:none}
+.chapter124{margin:12px auto;max-width:92%;padding:18px;border:1px solid #f0b77e44;border-radius:18px;background:#17131bef;color:#f5eee7;line-height:1.6}
+.chapter124 small{color:#f0b77e}.chapter124 h3{margin:4px 0 12px}.chapter124 p{font-size:13px;margin:8px 0 0}
+.brief124{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin:8px 0}.brief124 dt{color:#c6b7c9}.brief124 dd{margin:0;overflow-wrap:anywhere}
+.feedback124{animation:feedback124 .65s ease-out}@keyframes feedback124{from{box-shadow:0 0 0 2px #f0b77e88;transform:translateY(4px)}to{box-shadow:0 0 0 8px transparent;transform:none}}
+@media(prefers-reduced-motion:reduce){.feedback124{animation:none}}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>
