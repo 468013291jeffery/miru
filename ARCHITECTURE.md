@@ -647,11 +647,11 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      149 个函数 / 341 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层
-空 catch    562 处 / 99 个文件    （当天起点 616 ⇒ −51）
+猴补丁      149 个函数 / 340 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层
+空 catch    564 处 / 99 个文件    （当天起点 616 ⇒ −51）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
-消息渲染    22 层 = kind 10 / post 10 / wrap 2（`say` 收口后从 20 层减 2；2026-11-03 第十八批加 app119 的「⑂ 从这一步重来」post 层；同日加 app122 的表情回应、app123 的剧本台词换说法 post 层）· 17 个类型
+消息渲染    23 层 = kind 11 / post 10 / wrap 2（`say` 收口后从 20 层减 2；2026-11-03 第十八批加 app119 的「⑂ 从这一步重来」post 层；同日加 app122 的表情回应、app123 的剧本台词换说法 post 层）· 17 个类型
             **1 个类型**被两层认领（xmoney，顺序接力不是抢）· **0 层已知死**（28 条探针，18/18 层被证活着）
             逐字节快照 **21 种**消息（`box+say` 那条真实路径原先不在表里，2026-10-27 补上）
 渲染钩子    22 个（每个 0 失败）
@@ -897,14 +897,14 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **150 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **151 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
 |---|---|---|
 | `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 252 |
 | `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 302 |
-| `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1211 |
+| `app3_chat.js` | THREADS（原文只有段落横幅） | 1211 |
 | `app4_more.js` | CHATS (WhatsApp-style list) | 598 |
 | `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 171 |
 | `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
@@ -915,13 +915,13 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app11_memory.js` | MEMORY SPACE — visible, tiered long memory (竞品: “已用 665 / 8K · 解锁 26K 记忆空… | 51 |
 | `app12_beats.js` | STORY BEATS — the reply-rhythm pay schedule (see doc: BL 剧情进展线 × 付费节奏) Re… | 58 |
 | `app13_rel.js` | RELATIONSHIP ENGINE v1 — multi-dimension state · Watch mode · point-and-c… | 97 |
-| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 626 |
-| `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 202 |
+| `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 627 |
+| `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 203 |
 | `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 339 |
 | `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |
 | `app18_promo.js` | NEW-USER WELCOME · 24h FIRST-PURCHASE 20% OFF · OPENING-LINE VOICE · STIC… | 200 |
 | `app19_bgm.js` | BACKGROUND MUSIC in every chat Each story gets a mood from its genre (lat… | 121 |
-| `app20_fx_booth.js` | PLOT-DRIVEN WEATHER & MOOD EFFECTS The chat background already gets an am… | 218 |
+| `app20_fx_booth.js` | PLOT-DRIVEN WEATHER & MOOD EFFECTS The chat background already gets an am… | 210 |
 | `app21_dims.js` | RELATIONSHIP DIMENSIONS, wired to the script A story declares its pairs i… | 103 |
 | `app22_fx2.js` | ATMOSPHERE v2 — cinematic effects One canvas, device-pixel-ratio aware, a… | 109 |
 | `app23_heir.js` | STORY TOOLKIT v5 (built for "The Heir He Came Back For", usable by any st… | 102 |
@@ -949,7 +949,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app45_rel.js` | relationships that can turn, personas that matter, and a story that leave… | 199 |
 | `app46_cp.js` | 后悔药 = jump back to ANY section you've reached (paid) Stories: a checkpoin… | 51 |
 | `app47_chapters.js` | 章节目录: jump to any chapter Chapters you've already reached: jump back free | 43 |
-| `app48_clean.js` | 沉浸模式: a clean chat screen · Only the latest beats stay on screen; everyth… | 91 |
+| `app48_clean.js` | 沉浸模式: a clean chat screen · Only the latest beats stay on screen; everyth… | 92 |
 | `app49_creator.js` | 一句话写一部剧 (Creator) Quick path: one line → story card → 3 quick picks → fre… | 216 |
 | `app50_creator2.js` | 创作中心: the full Creator v2.1 (AI guide · templates · story workbench · int… | 162 |
 | `app51_import.js` | 上传剧本文件 → 可玩的剧 Upload .md / .txt / .docx (or paste text, or a Creator expo… | 224 |
@@ -1006,7 +1006,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 222 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 269 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 438 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 187 |
@@ -1035,6 +1035,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app121_dock.js` | 剧情面板贴住输入区（） 玩家反馈（截图）：「轮到你了 · 你想怎么回他？」那一块和下面「对谁说 + 输入框」是两个框，要融成一块 | 61 |
 | `app122_react.js` | 消息表情回应（ · 像 WhatsApp / iMessage 那样） 玩家建议：对角色的某一句话点个赞 / 回个表情，美国用户很习惯 | 103 |
 | `app123_alt.js` | 剧本台词「换个说法」（） 玩家：希望剧本台词也能滑出别的说法 —— 剧本原句永远是第 1 版，往左滑让 AI 用同样的意思换一种说法，剧情走向不变 | 110 |
+| `app124_experience.js` | Scene-aware interaction and a continuous, readable conversation | 85 |
 | `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
 | `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
 | `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |
