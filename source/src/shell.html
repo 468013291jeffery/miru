@@ -1516,6 +1516,20 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-story .hero{height:auto!important}
 #s-story .hero>.art{position:relative!important;inset:auto!important;height:auto!important}
 #s-story .hero>.art img{height:auto!important;object-fit:contain!important;display:block}
+/* ===== 2026-11-04 前端以《午夜邀约》为范本（玩家：别的剧前端也要是这个样子）=====
+   自由模式剧（app98 · #dk98）也和午夜一样：没有深色大框、没有标题和说明小字，
+   场景选项 + 「▶ 继续剧情」排成一行横向滑动的半透明小气泡（和联想回复同一种样子）。 */
+#s-chat #dk98{display:flex;flex-wrap:nowrap;align-items:stretch;gap:6px;overflow-x:auto;scrollbar-width:none;max-height:none;margin:0;padding:2px 12px 6px;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important}
+#s-chat #dk98::-webkit-scrollbar{display:none}
+#s-chat #dk98 .dk98q,#s-chat #dk98 .dk98t,#s-chat #dk98 .dk98h{display:none!important}
+#s-chat #dk98 .dk98o,#s-chat #dk98 .dk98r{display:contents!important}
+#s-chat #dk98 .dk98o button,#s-chat #dk98 .dk98r button{flex:none;max-width:72vw;white-space:normal;text-align:left;font-size:13px;font-weight:500;line-height:1.4;padding:7px 10px;border-radius:12px;background:rgba(240,183,126,.07)!important;border:1px solid rgba(240,183,126,.35)!important;color:var(--text)!important;-webkit-backdrop-filter:none;backdrop-filter:none}
+#s-chat #dk98 .dk98r button{order:-1;white-space:nowrap;border-style:dashed!important;font-weight:700}
+/* 回复下面那条「1/1 · 重新生成 · 编辑 · 他在想什么 · ← 左右滑动切换回复 →」也收成和气泡下面一样的小按钮，不要框，不要提示字 */
+#s-chat .rg73{border:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;gap:4px;justify-content:flex-start;margin:4px 0 0 46px;width:auto}
+#s-chat .rg73>*+*{border-left:0!important}
+#s-chat .rg73>button,#s-chat .rg73>.vs73{padding:3px 8px;border-radius:999px;background:rgba(18,16,26,.55);font-size:11px}
+#s-chat .rg73 .swipe73hint{display:none!important}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>

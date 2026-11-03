@@ -53,9 +53,9 @@ async function start98(wid) {
   const opts = (b.playable && b.playable.length ? b.playable : [b.player.key]).map(k => { const c = k === b.player.key ? b.player : b.cast.find(x => x.key === k); return c ? { k, n: LZ98(c.short || c.name), r: LZ98(c.role), main: k === b.player.key } : null; }).filter(Boolean);
   sheet('<div class="eyebrow">' + L98("你想怎么玩？", "How do you want to play?") + '</div><h2 style="margin-top:4px">' + esc(LZ98(b.title)) + '</h2><p class="xs faint" style="margin-top:4px">' + esc(oriL98(b.orient)) + ' · ' + b.chapters.length + L98(" 章", " chapters") + '</p>' +
     (ex ? '<button class="btn btn-p btn-block" style="margin-top:12px" data-b98open="' + esc(ex.id) + '">▶ ' + L98("继续 · 第 " + ex.b98.ch + " 章", "Continue · chapter " + ex.b98.ch) + '</button><div class="eyebrow" style="margin-top:14px">' + L98("重新开始", "Start over") + '</div>' : '') +
-    '<label class="xs faint" style="display:block;margin-top:12px">' + L98("你的名字（扮演主角时使用，可不填）", "Your name (used when you play the lead; optional)") + '</label><input id="b98nm" class="up66i" maxlength="16" style="margin-top:4px" value="' + esc(S.b98name || "") + '" placeholder="' + esc(dn98(b)) + '">' +
-    '<div class="stack" style="gap:8px;margin-top:10px">' + opts.map(o => '<button class="opt" data-b98go="' + esc(wid) + '|' + esc(o.k) + '"><span class="ic">🎭</span><span class="grow"><b>' + L98("扮演 ", "Play ") + esc(o.n) + (o.main ? L98("（主角）", " (lead)") : "") + '</b><span>' + esc(o.r) + '</span></span>›</button>').join("") + '</div>' +
-    '<p class="xs faint" style="margin-top:12px;line-height:1.55">' + L98("每个角色都有自己的想法和记忆，不知道剧情会怎么走。你可以在每个场景里自由聊天，想推进时点「继续剧情」。", "Every character has their own mind and memory and doesn't know where this goes. Talk freely in each scene; tap “Continue” when you want the story to move.") + '</p>');
+    /* 2026-11-04：和《午夜邀约》一样 —— 只给「扮演 我自己」一个入口，名字等来自你的角色卡（不再在这里填名字、不再列其他可扮演的人） */
+    '<div class="stack" style="gap:8px;margin-top:12px">' + opts.filter(o => o.main).slice(0, 1).map(o => '<button class="opt" data-b98go="' + esc(wid) + '|' + esc(o.k) + '"><span class="ic">▶</span><span class="grow"><b>' + L98("扮演 我自己", "Play as me") + '</b><span>' + L98("用你的角色卡（名字、外貌、喜好）进去，他们会把你当成你本人来回应", "Go in with your role card (name, looks, likes) — they'll answer you as you") + '</span></span>›</button>').join("") + '</div>' +
+    '<button class="btn btn-g btn-block" data-editp style="margin-top:10px">🪪 ' + L98("我的角色卡：", "My role card: ") + esc((typeof persona === "function" && persona().name) || "—") + L98(" · 编辑", " · edit") + '</button>');
 }
 function oriL98(o) { return Z98() ? ({ bl: "男男", gl: "女女", bg: "男女" }[o] || "") : ({ bl: "BL · M/M", gl: "GL · F/F", bg: "M/F" }[o] || ""); }
 function new98(wid, asKey) {
@@ -67,7 +67,7 @@ function new98(wid, asKey) {
   th.persona = Object.assign({}, persona()); S.threads[th.id] = th; save(); return th;
 }
 document.addEventListener("click", e => { let x;
-  if ((x = e.target.closest("[data-b98go]"))) { e.stopPropagation(); const [wid, k] = x.dataset.b98go.split("|"); const nmI = $("#b98nm"), nm = nmI ? String(nmI.value || "").replace(/[<>"]/g, "").trim().slice(0, 16) : ""; S.b98name = nm; const th = new98(wid, k); const bb = bOf98(wd(wid)); if (nm && bb && k === bb.player.key) { th.b98.pname = nm; save(); } closeSheet(); openThread(th.id); setTimeout(() => enter98(th), 300); return; }
+  if ((x = e.target.closest("[data-b98go]"))) { e.stopPropagation(); const [wid, k] = x.dataset.b98go.split("|"); const nm = String((typeof persona === "function" && persona().name) || "").replace(/[<>"]/g, "").trim().slice(0, 16); S.b98name = nm; const th = new98(wid, k); const bb = bOf98(wd(wid)); if (nm && bb && k === bb.player.key) { th.b98.pname = nm; save(); } closeSheet(); openThread(th.id); setTimeout(() => enter98(th), 300); return; }
   if ((x = e.target.closest("[data-b98open]"))) { e.stopPropagation(); closeSheet(); openThread(x.dataset.b98open); return; }
   if ((x = e.target.closest("[data-newt],[data-pkstart]"))) { const w = wd(x.dataset.newt || x.dataset.pkstart); if (w && w.bible98) { e.preventDefault(); e.stopPropagation(); start98(w.id); } return; }
 }, true);
