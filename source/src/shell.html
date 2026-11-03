@@ -1483,7 +1483,8 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .input-modes124{display:flex;gap:6px;margin:0 0 6px}
 .input-modes124 button{min-height:36px;flex:1;border:1px solid #ffffff20;border-radius:12px;background:#17131bd9;color:#dbd4e2;font-size:13px}
 .input-modes124 button[aria-pressed=true]{border-color:#f0b77e;color:#ffe0b9;background:#6d4d3580}
-#s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,#000 42px);-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 42px)}
+#s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85) 46%,#000 60%);-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85) 46%,#000 60%)}
+/* 2026-11-04（玩家：越往上颜色越浅，可以往上翻看聊天记录）⇒ 渐隐从原来的 42px 拉长到列表上面 60%：最上面几乎透明、越往下越实，翻上去的那句会移到下面、变清楚。 */
 #s-chat.clean #msgs>.cold{display:revert!important}
 #s-chat.clean #msgs .m-box>p.tp{display:block!important}
 #s-chat .rcol{display:none!important}
@@ -1495,6 +1496,20 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .brief124{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin:8px 0}.brief124 dt{color:#c6b7c9}.brief124 dd{margin:0;overflow-wrap:anywhere}
 .feedback124{animation:feedback124 .65s ease-out}@keyframes feedback124{from{box-shadow:0 0 0 2px #f0b77e88;transform:translateY(4px)}to{box-shadow:0 0 0 8px transparent;transform:none}}
 @media(prefers-reduced-motion:reduce){.feedback124{animation:none}}
+/* 2026-11-04（玩家：这个条改回之前透明的样子，不要大黑条；「联想回复」那种就行）
+   app48 有一条 #s-chat.clean #pkwrap .pkpanel{background:rgba(12,10,16,.55)!important}，两个 id 压过了第二十五批的规则 ⇒ 这里用更高的写法压回去。
+   小气泡和下面的联想回复（#sugg button）一模一样：几乎透明的暖色底 + 细边，「AI 帮我想 / 换一批」用虚线边。 */
+#s-chat.clean #pkwrap.dock .pkpanel,#s-chat #pkwrap.dock .pkpanel,#s-chat #pkwrap.dock.dock97 .pkpanel{background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;box-shadow:none!important;padding:0 12px!important}
+#s-chat #pkwrap.dock,#s-chat #pkwrap.dock.dock97{background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;box-shadow:none!important}
+#s-chat #pkwrap.dock .pkpanel:has(.chatt) .chatt button,#s-chat #pkwrap.dock .pkpanel:has(.chatt) .ai97o button,#s-chat #pkwrap.dock .pkpanel:has(.chatt) .ai97h button{font-size:13px!important;font-weight:500;padding:7px 10px!important;border-radius:12px!important;background:rgba(240,183,126,.07)!important;border:1px solid rgba(240,183,126,.35)!important;color:var(--text)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;box-shadow:none!important}
+#s-chat #pkwrap.dock .pkpanel:has(.chatt) .ai97h button{border-style:dashed!important;color:var(--text)!important;opacity:.9}
+/* 同上：开局第一次轮到你时的「💬 轮到你了 直接打字跟他说话……」深色提示条也不要（玩家要的是只剩一排小气泡）。
+   它顺带会自动出一批「AI 帮我想」的三句，这个行为保留（app101 的 open100 照跑，只是不显示那条字）。 */
+#s-chat .open100{display:none!important}
+/* 2026-11-04（玩家：我的气泡下面那排要和角色的一样）⇒ 粉色气泡上的 🔊 🖼 也用同一种深色小方块，不再被粉底吃掉 */
+#s-chat .m-row.me .bt86{display:flex;justify-content:flex-end;gap:3px}
+#s-chat .m-row.me .bt86 button{width:22px;height:20px;padding:0;border:0;border-radius:6px;background:rgba(18,16,26,.78)!important;color:#fff!important;font-size:11px;line-height:20px;opacity:.6;filter:none!important;mix-blend-mode:normal!important}
+#s-chat .m-row.me .bt86 button:hover,#s-chat .m-row.me .bt86 button:active{opacity:1}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>

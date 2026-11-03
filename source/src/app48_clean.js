@@ -77,8 +77,9 @@ document.addEventListener("click",e=>{if(!e.target.closest("[data-cleantog]"))re
 #s-chat.clean #pkwrap .pkhint{display:none!important}
 #s-chat.clean:not(.toolsopen) #pkwrap .pkpanel:not(.stop):has(.pkplay){display:none!important}
 #s-chat.clean.toolsopen #pkwrap .pkpanel:not(.stop):has(.pkplay){margin-right:0;margin-left:0}
-#s-chat.clean #msgs{padding-right:62px}
-#s-chat.clean.histopen #msgs{padding-right:62px}
+/* 2026-11-04：右侧浮动按钮列（.rcol）早就隐藏了，这 62px 只剩一个作用：把「我」的气泡挤离右边（玩家反馈）。改回和左边对称。 */
+#s-chat.clean #msgs{padding-right:14px}
+#s-chat.clean.histopen #msgs{padding-right:14px}
 #s-chat.clean #pkwrap .pkspeed>:not(.spdcyc){display:none!important}
 #s-chat.clean #pkwrap .pkpanel:has(.pkspeed){display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px}
 #s-chat.clean #pkwrap .pkspeed{margin:0!important}

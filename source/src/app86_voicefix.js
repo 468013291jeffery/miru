@@ -49,7 +49,7 @@ function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
  root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||!ch(m.who)||m.who==="me")return;
   const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
  /* 2026-10-31：我自己的台词也有 🔊，用「我」的声音读（app62 ttsMyVoice） */
- root.querySelectorAll('.m-row.me[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.who!=="me"||m.k==="think"||m.k==="dir")return;const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",'<span class="bt86 me86"><button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button></span>')});
+ root.querySelectorAll('.m-row.me[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.who!=="me"||m.k==="think"||m.k==="dir")return;const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",'<span class="bt86 me86"><button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>')});  /* 2026-11-04：和角色气泡下面那排一样（玩家反馈） */
  root.querySelectorAll('.m-box[data-mi]').forEach(bx=>{const i=+bx.dataset.mi,m=th.msgs[i];if(!m||!m.parts||!m.parts.length||bx.querySelector(".bt86"))return;bx.insertAdjacentHTML("beforeend",bt86Btns(i))})}catch(_){}}
 /* clicks: capture phase, so the bubble's own tap (open tools) doesn't swallow them */
 /* boxes are often grouped at render time, so read exactly what is on screen */
@@ -59,7 +59,7 @@ function bt86Parts(m){return m.parts?m.parts.filter(p=>p&&p.txt).map(p=>({who:p.
 window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x)return;e.preventDefault();e.stopImmediatePropagation();
  const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
  const box=x.closest(".m-box");if(a==="play"){try{voiceClear()}catch(e){console.debug("[b86] vq",e)}const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
- if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else imgSheet(th,m)}},true);
+ if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else if(m.who==="me")imgSheet(th,{who:mainOf(th),k:"say",txt:String(m.txt||"").slice(0,300),pose:m.pose});else imgSheet(th,m)}},true);
 /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
 const __body_voicefix86 = function () { bt86Decorate($("#msgs")); };
 if (window.UI && typeof window.UI.add === "function") window.UI.add("voicefix86", __body_voicefix86);
