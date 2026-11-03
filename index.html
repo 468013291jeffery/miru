@@ -1434,7 +1434,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="f365d99aa32b 2026-11-03T08:19Z";
+window.MIRU_BUILD="bc25b9446389 2026-11-03T08:20Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -20394,6 +20394,339 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     const th = S.threads[curT]; if (!th) return { err: "no thread" };
     return { present: present(th).map(id => first(ch(id).n)), ledger: th.turn94 || null };
   };
+})();
+
+/* ================= 对话分支和存档点（v9 · 第十八批 · 2026-11-03）=================
+   借鉴 SillyTavern 的 checkpoint / branch：从某一步「重来」，开一条新分支，旧的原样保留。
+
+   存档点：玩家每说一句话（doSend）、每做一次剧本选择（[data-pkpick] 章末 / [data-stopline] 场内）之前，
+           自动记一份「那一刻」的状态。线程上只留最近 10 个（th.cps），对话本身不复制，只记位置 mi。
+           状态 = 线程里除对话、存档点、版本以外的全部（好感、剧情进度、关系、旗、状态栏…）；
+           记忆只记条数和那一刻的记忆 id，分叉时按这两样截断，不重复存。
+   重来：  任意一条消息的工具条里「⑂ 从这一步重来」→ 回到它之前最近的那个存档点，复制成一条新线程
+           （对话截到那一步，状态还原），直接打开；原来那条一个字不动。
+   分支表：开始弹层里列出这部剧的所有分支（第几章、走到了哪个结局），点一下继续；顶上是结局收集。
+   读数：控制台 __branch() 看当前线程的存档点。 */
+(function () {
+  "use strict";
+  const KEEP = 10;
+  /* persona 里可能有头像（data URL，几十 KB）⇒ 不进存档点，分叉时直接沿用原线程的 */
+  const SKIP = { msgs: 1, cps: 1, mem: 1, mem2: 1, vers: 1, _pre73: 1, _ctx73: 1, persona: 1 };
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : S.lang === "zh");
+  const L2 = (a, b) => zh() ? a : b;
+
+  function snap(th) {
+    const st = {};
+    Object.keys(th).forEach(k => { if (!SKIP[k]) st[k] = th[k]; });
+    return JSON.parse(JSON.stringify(st));
+  }
+  function checkpoint(th, kind, label) {
+    try {
+      if (!th || !th.msgs) return;
+      const mi = th.msgs.length;
+      th.cps = (th.cps || []).filter(c => c.mi < mi);           // 同一位置只留最新的
+      th.cps.push({ mi: mi, at: Date.now(), kind: kind, label: String(label || "").slice(0, 40), memN: (th.mem || []).length, m2ids: (th.mem2 || []).map(x => x.id), st: snap(th) });
+      if (th.cps.length > KEEP) th.cps = th.cps.slice(-KEEP);
+    } catch (e) { console.warn("[branch] checkpoint", e); }
+  }
+
+  /* 玩家说话之前 */
+  if (typeof doSend === "function") {
+    const _ds = doSend;
+    doSend = function (txt) {
+      const th = S.threads[curT];
+      if (th && String(txt || "").trim()) checkpoint(th, "say", txt);
+      return _ds.apply(this, arguments);
+    };
+  }
+  /* 剧本选择之前（捕获阶段，先于真正的处理） */
+  document.addEventListener("click", function (e) {
+    const x = e.target && e.target.closest && e.target.closest("[data-pkpick],[data-stopline]");
+    if (!x) return;
+    const th = S.threads[curT]; if (!th) return;
+    checkpoint(th, "choice", (x.innerText || "").replace(/\s+/g, " ").trim());
+  }, true);
+
+  function cpFor(th, i) {
+    const L = (th.cps || []).filter(c => c.mi <= i);
+    return L.length ? L[L.length - 1] : null;
+  }
+  function branchNo(th) {
+    const all = Object.values(S.threads).filter(o => o.wid === th.wid && o.wid);
+    return all.length + 1;
+  }
+  function fork(th, cp) {
+    const n = th.wid ? branchNo(th) : 2;
+    const nt = JSON.parse(JSON.stringify(cp.st));
+    const id = (String(th.id).split(":").slice(0, -1).join(":") || "t") + ":" + Date.now();
+    nt.id = id;
+    nt.msgs = JSON.parse(JSON.stringify(th.msgs.slice(0, cp.mi)));
+    if (th.persona) nt.persona = JSON.parse(JSON.stringify(th.persona));
+    nt.mem = (th.mem || []).slice(0, cp.memN);
+    const keepIds = new Set(cp.m2ids || []);
+    nt.mem2 = JSON.parse(JSON.stringify((th.mem2 || []).filter(x => cp.m2ids ? keepIds.has(x.id) : (x.at || 0) <= cp.at)));
+    nt._m2n = Math.min(nt._m2n || 0, nt.mem.length);
+    nt.cps = JSON.parse(JSON.stringify((th.cps || []).filter(c => c.mi <= cp.mi)));
+    nt.branchOf = th.id; nt.branchN = n; nt.at = Date.now(); nt.unread = false;
+    if (nt.title) nt.title = String(nt.title).replace(/ · 分支 \d+$| · Branch \d+$/, "") + L2(" · 分支 ", " · Branch ") + n;
+    S.threads[id] = nt; save();
+    try { if (typeof track === "function") track("branch_fork", { wid: th.wid || "", at: cp.mi, kind: cp.kind }); } catch (e) { console.warn("[branch] track", e); }
+    openThread(id);
+    toast(L2("⑂ 开了一条新分支，原来那条还在", "⑂ New branch — the old one is kept"));
+    return nt;
+  }
+
+  /* 消息工具条：「⑂ 从这一步重来」 */
+  if (typeof MSGKIND !== "undefined" && MSGKIND.post) {
+    MSGKIND.post("app119_branch.js", function (h, m, i, th) {
+      if (typeof openTools === "undefined" || openTools !== i || h.indexOf('<div class="mtools">') < 0 || !th) return h;
+      const cp = cpFor(th, i); if (!cp) return h;
+      return h.replace('<div class="mtools">', '<div class="mtools"><button data-fork94="' + i + '">⑂ ' + esc(L2("从这一步重来", "Redo from here")) + '</button>');
+    });
+  }
+  document.addEventListener("click", function (e) {
+    const x = e.target && e.target.closest && e.target.closest("[data-fork94]");
+    if (!x) return;
+    e.stopImmediatePropagation();
+    const th = S.threads[curT]; if (!th) return;
+    const cp = cpFor(th, +x.dataset.fork94); if (!cp) { toast(L2("这一步之前没有存档点", "No save point before this")); return; }
+    fork(th, cp);
+  }, true);
+
+  /* 开始弹层里的分支表 + 结局收集（app114 的 startSheet 包装里调用） */
+  window.branchListHTML = function (wid) {
+    try {
+      const w = wd(wid); if (!w || !w.pack) return "";
+      const ths = Object.values(S.threads).filter(o => o.wid === wid && o.pk).sort((a, b) => (b.at || 0) - (a.at || 0));
+      if (ths.length < 2) return "";
+      const ends = w.pack.endings ? Object.keys(w.pack.endings) : [];
+      const got = (typeof endingsFound === "function") ? endingsFound(wid) : 0;
+      const endName = th => { const e = w.pack.endings && w.pack.endings[th.pk.end]; return e ? Lz(e.t) : th.pk.end === "complete" ? L2("已完结", "complete") : ""; };
+      return '<div class="br94"><div class="eyebrow">⑂ ' + esc(L2("我的分支", "My branches")) + (got ? ' · ' + esc(L2("已解锁结局 ", "Endings found: ")) + got : '') + '</div>' +
+        ths.slice(0, 8).map(th => '<button class="br94i" data-open="' + esc(th.id) + '"><b>' + esc(th.branchN ? L2("分支 ", "Branch ") + th.branchN : L2("主线", "Main")) + '</b><span>' +
+          esc(L2("第 " + (th.pk.ch || 1) + " 章", "Ch. " + (th.pk.ch || 1))) + (th.pk.end ? ' · 🏁 ' + esc(endName(th)) : '') + '</span></button>').join("") + '</div>';
+    } catch (e) { console.warn("[branch] list", e); return ""; }
+  };
+
+  window.__branch = function () {
+    const th = S.threads[curT]; if (!th) return { err: "no thread" };
+    return { id: th.id, branchOf: th.branchOf || null, cps: (th.cps || []).map(c => ({ mi: c.mi, kind: c.kind, label: c.label })) };
+  };
+  window.branchFork = fork; window.branchCheckpoint = checkpoint;
+
+  (function () {
+    const st = document.createElement("style");
+    st.textContent = ".br94{margin-top:12px;display:flex;flex-direction:column;gap:6px}.br94i{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:13px;text-align:left}.br94i span{color:var(--dim);font-size:12px}";
+    document.head.appendChild(st);
+  })();
+})();
+
+/* ================= 通用角色卡导入 / 导出（v9 · 第十九批 · 2026-11-03）=================
+   读写行业通用的角色卡格式（SillyTavern 等用的 Character Card V2：chara_card_v2），
+   这样外部创作者做好的角色能直接进 MIRU，MIRU 的角色也能带出去。
+
+   导入（「我的」页 → ⇧ 导入角色卡）：.json，或把数据藏在图里的 .png（tEXt 块 chara / ccv3，base64 的 JSON）。
+     name → 名字 · description → 外貌与设定 · personality → 性格 · scenario → 故事背景 · first_mes → 开场白
+     mes_example → 说话示例 · tags → 标签 · character_book.entries → 设定集（接 app117，命中关键词才带）
+     PNG 的图本身 → 头像。{{user}} → 你，{{char}} → 他的名字。
+   安全闸（不过不让进）：写明或暗示未成年（年龄 < 18、学生年级、child / minor / loli 等）一律拒收；
+     年龄写不清的按 25 岁处理，低于 21 的抬到 21（与创建器同一条线）。
+   导出：角色页的 ⇩ 按钮 → 有头像就出 PNG（图里带数据，外部工具直接能读），拿不到图就出 JSON；
+     「我的角色卡」也能导出成同一格式（名字、外貌、喜欢、不喜欢写进对应字段）。
+   往返：MIRU 自己的字段放在 data.extensions.miru，导出再导入不丢。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : S.lang === "zh");
+  const L2 = (a, b) => zh() ? a : b;
+  const x0 = s => ({ en: s, zh: s });
+  const MINOR = /(未成年|小学生|初中生|高中生|中学生|萝莉|正太|幼女|童颜巨|\bloli\b|\bshota\b|\bminor\b|\bunderage\b|\bchild\b|\bkid\b|\bteen(?:ager)?\b|\bhigh[- ]?school(?:er)?\b|\bmiddle[- ]?school\b|\b1[0-7]\s*(?:-|\s)?(?:years?[- ]old|y\/?o)\b|(?:^|\D)1[0-7]\s*岁)/i;
+
+  /* ---------- PNG tEXt 读写 ---------- */
+  const CRC = (function () { const t = new Uint32Array(256); for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function crc32(u8) { let c = 0xFFFFFFFF; for (let i = 0; i < u8.length; i++) c = CRC[(c ^ u8[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  function pngText(buf) {
+    const u8 = new Uint8Array(buf), dv = new DataView(buf), out = {};
+    if (u8[0] !== 0x89 || u8[1] !== 0x50) return out;
+    let p = 8;
+    while (p + 8 <= u8.length) {
+      const len = dv.getUint32(p), type = String.fromCharCode(u8[p + 4], u8[p + 5], u8[p + 6], u8[p + 7]);
+      if (type === "tEXt") {
+        const d = u8.subarray(p + 8, p + 8 + len); const z = d.indexOf(0);
+        if (z > 0) { const k = String.fromCharCode.apply(null, d.subarray(0, z)); out[k] = String.fromCharCode.apply(null, d.subarray(z + 1)); }
+      }
+      if (type === "IEND") break;
+      p += 12 + len;
+    }
+    return out;
+  }
+  function b64utf8(s) { const bin = atob(String(s).trim()); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder().decode(u); }
+  function utf8b64(s) { const u = new TextEncoder().encode(s); let bin = ""; for (let i = 0; i < u.length; i += 0x8000) bin += String.fromCharCode.apply(null, u.subarray(i, i + 0x8000)); return btoa(bin); }
+  function pngWithText(pngBuf, key, text) {
+    const u8 = new Uint8Array(pngBuf); const dv = new DataView(pngBuf);
+    let p = 8, iend = -1;
+    while (p + 8 <= u8.length) { const len = dv.getUint32(p); const type = String.fromCharCode(u8[p + 4], u8[p + 5], u8[p + 6], u8[p + 7]); if (type === "IEND") { iend = p; break; } p += 12 + len; }
+    if (iend < 0) throw new Error("bad png");
+    const kb = new TextEncoder().encode(key), tb = new Uint8Array(text.length); for (let i = 0; i < text.length; i++) tb[i] = text.charCodeAt(i) & 255;
+    const data = new Uint8Array(kb.length + 1 + tb.length); data.set(kb, 0); data[kb.length] = 0; data.set(tb, kb.length + 1);
+    const chunk = new Uint8Array(12 + data.length); const cv = new DataView(chunk.buffer);
+    cv.setUint32(0, data.length); chunk.set([0x74, 0x45, 0x58, 0x74], 4); chunk.set(data, 8);
+    cv.setUint32(8 + data.length, crc32(chunk.subarray(4, 8 + data.length)));
+    const out = new Uint8Array(u8.length + chunk.length); out.set(u8.subarray(0, iend), 0); out.set(chunk, iend); out.set(u8.subarray(iend), iend + chunk.length);
+    return out;
+  }
+
+  /* ---------- 卡 → MIRU ---------- */
+  function cardData(obj) {
+    if (!obj || typeof obj !== "object") return null;
+    if (obj.data && (obj.spec === "chara_card_v2" || obj.spec === "chara_card_v3" || obj.data.name)) return obj.data;
+    if (obj.name || obj.char_name) return { name: obj.name || obj.char_name, description: obj.description || obj.char_persona || "", personality: obj.personality || "", scenario: obj.scenario || obj.world_scenario || "", first_mes: obj.first_mes || obj.char_greeting || "", mes_example: obj.mes_example || obj.example_dialogue || "", tags: obj.tags || [] };
+    return null;
+  }
+  function checkCard(d) {
+    const all = [d.name, d.description, d.personality, d.scenario, d.first_mes, (d.tags || []).join(" ")].join("\n");
+    const ext = (d.extensions && d.extensions.miru) || {};
+    if (ext.age && +ext.age < 18) return L2("这个角色写明未满 18 岁，MIRU 不能导入。", "This character is under 18 — MIRU can't import it.");
+    if (MINOR.test(all)) return L2("角色卡里有未成年相关的描述，MIRU 不能导入。", "The card describes a minor — MIRU can't import it.");
+    if (!String(d.name || "").trim()) return L2("角色卡里没有名字。", "The card has no name.");
+    return "";
+  }
+  function guessAge(d) {
+    const ext = (d.extensions && d.extensions.miru) || {};
+    if (ext.age) return Math.max(21, +ext.age || 25);
+    const m = /(\d{2})\s*(?:岁|years?[- ]old|y\/?o)/i.exec([d.description, d.personality].join(" "));
+    return Math.max(21, m ? +m[1] : 25);
+  }
+  function guessG(d) {
+    const ext = (d.extensions && d.extensions.miru) || {};
+    if (ext.g === "f" || ext.g === "m") return ext.g;
+    const s = [d.description, d.personality].join(" ");
+    const f = (s.match(/\b(she|her|hers|woman|girl)\b|她|女/gi) || []).length, m = (s.match(/\b(he|him|his|man|guy)\b|他|男/gi) || []).length;
+    return f > m ? "f" : "m";
+  }
+  function importCard(obj, avatarUrl) {
+    const d = cardData(obj); if (!d) { toast(L2("看不懂这个文件：不是角色卡", "Couldn't read this file as a character card")); return null; }
+    const bad = checkCard(d); if (bad) { toast("⛔ " + bad); return null; }
+    const name = String(d.name).trim().slice(0, 40);
+    /* 导出的是「我的角色卡」（extensions.miru.persona）⇒ 导回来还是一张玩家角色卡，不是一个新角色 */
+    const pe = d.extensions && d.extensions.miru;
+    if (pe && pe.persona) {
+      const P = { id: "p" + Date.now(), name: name, pron: pe.g === "m" ? "he" : pe.g === "f" ? "she" : "they", age: pe.age || "", look: pe.looks || "", like: pe.likes || "", dislike: pe.dislike || "", bio: pe.bio || "", label: pe.label || "" };
+      if (avatarUrl) P.img = avatarUrl;
+      S.personas.push(P); S.pid = P.id; save();
+      toast(L2("已导入你的角色卡「" + name + "」，并设为当前", "Imported your role card \u201c" + name + "\u201d and set it active"));
+      try { if (typeof rerender === "function") rerender(); } catch (e) { console.warn("[card] rerender", e); }
+      return P.id;
+    }
+    /* {{user}}：中文句子里换成「你」，其他语言换成玩家的名字（没有名字就是 you） */
+    const sub = s => { s = String(s || ""); const u = /[\u4e00-\u9fff]/.test(s) ? "你" : ((typeof me === "function" && me() && me() !== "You") ? me() : "you"); return s.replace(/\{\{\s*user\s*\}\}/gi, u).replace(/\{\{\s*char\s*\}\}/gi, name).replace(/<USER>/g, u).replace(/<BOT>/g, name).trim(); };
+    const ext = (d.extensions && d.extensions.miru) || {};
+    const id = "u" + Date.now(), wid = "uw" + Date.now(), g = guessG(d), age = guessAge(d);
+    const pal = [["#C98A6B", "#1B1520"], ["#7A63C9", "#141024"], ["#5E9E96", "#13212A"]][hash(id) % 3];
+    const first_ = sub(d.first_mes) || (zh() ? "……你来了。" : "…You came.");
+    const by = "@" + String(d.creator || (me() || "you")).toLowerCase().replace(/\s+/g, "").slice(0, 24);
+    S.mine.chars[id] = {
+      n: name, age: age, g: g, h: ext.h || "", w: wid, pal: pal, a: "charm", v: { pitch: 1, rate: 1 }, by: by,
+      role: x0(sub(ext.role || d.creator_notes || "").slice(0, 200) || sub(d.scenario).slice(0, 120)),
+      looks: x0(sub(ext.looks || d.description).slice(0, 600)),
+      vibe: x0(sub(ext.vibe || d.personality || d.description).slice(0, 600)),
+      tells: { en: [], zh: [] }, twist: x0(""), likes: x0(sub(ext.likes || "")), secret: x0(sub(ext.secret || "")),
+      pitch: x0("“" + first_.replace(/\*[^*]*\*/g, "").trim().slice(0, 80) + "”"), solo: x0(first_),
+      examples: sub(d.mes_example).slice(0, 1500), imported: { spec: obj.spec || "v1", at: Date.now(), creator: d.creator || "" }
+    };
+    const lore = ((d.character_book && d.character_book.entries) || []).filter(e => e && e.enabled !== false && (e.content || "").trim())
+      .map(e => ({ keys: (e.keys || e.key || []).map(String).map(s => s.trim()).filter(Boolean), txt: sub(e.content).slice(0, 300), only: [] }))
+      .filter(e => e.keys.length).slice(0, 60);
+    S.mine.worlds[wid] = { id: wid, or: g === "f" ? "gl" : "bl", cover: null, pal: pal, author: by, official: false, stats: [0, 0, 0], heat: S.heat, cast: [id],
+      tags: (d.tags || []).map(String).slice(0, 6), title: x0(name), hook: x0(sub(ext.hook || d.creator_notes || d.scenario).slice(0, 80)), premise: x0(sub(d.scenario).slice(0, 600)),
+      you: x0(""), warn: x0(""), rel: [], status: { time: x0(""), place: x0("") }, openings: [], lore: lore };
+    if (avatarUrl) S.art[id] = avatarUrl;
+    S.works.unshift({ id: id, kind: "char", title: name, at: Date.now(), seed: 0 });
+    save();
+    toast(L2("已导入「" + name + "」" + (lore.length ? "，带 " + lore.length + " 条设定" : ""), "Imported " + name + (lore.length ? " with " + lore.length + " lore entries" : "")));
+    try { if (typeof track === "function") track("card_import", { spec: obj.spec || "v1", lore: lore.length }); } catch (e) { console.warn("[card] track", e); }
+    try { openChar(id); } catch (e) { console.warn("[card] open", e); }
+    return id;
+  }
+  async function shrink(buf, type) {
+    const url = URL.createObjectURL(new Blob([buf], { type: type || "image/png" }));
+    try {
+      const im = await new Promise((res, rej) => { const i = new Image(); i.addEventListener("load", () => res(i)); i.addEventListener("error", rej); i.src = url; });
+      const k = Math.min(1, 640 / Math.max(im.width, im.height)); const c = document.createElement("canvas");
+      c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height);
+      return c.toDataURL("image/jpeg", 0.85);
+    } finally { URL.revokeObjectURL(url); }
+  }
+  async function readFile(f) {
+    const buf = await f.arrayBuffer();
+    if (/\.png$/i.test(f.name) || f.type === "image/png") {
+      const tx = pngText(buf); const raw = tx.ccv3 || tx.chara;
+      if (!raw) { toast(L2("这张图里没有角色卡数据", "No character data in this image")); return; }
+      let obj = null; try { obj = JSON.parse(b64utf8(raw)); } catch (e) { console.warn("[card] png json", e); }
+      let av = null; try { av = await shrink(buf, "image/png"); } catch (e) { console.warn("[card] avatar", e); }
+      importCard(obj, av); return;
+    }
+    let obj = null; try { obj = JSON.parse(new TextDecoder().decode(buf)); } catch (e) { console.warn("[card] json", e); }
+    importCard(obj, null);
+  }
+  function pickFile() {
+    const inp = document.createElement("input"); inp.type = "file"; inp.accept = ".json,.png,application/json,image/png";
+    inp.addEventListener("change", () => { const f = inp.files && inp.files[0]; if (f) readFile(f).catch(e => { console.warn("[card] import", e); toast(L2("导入失败", "Import failed")); }); });
+    inp.click();
+  }
+
+  /* ---------- MIRU → 卡 ---------- */
+  function cardOf(id) {
+    const c = ch(id); if (!c) return null; const w = c.w ? wd(c.w) : null;
+    const lore = (w && ((w.pack && w.pack.lore) || w.lore)) || [];
+    return {
+      spec: "chara_card_v2", spec_version: "2.0",
+      data: {
+        name: c.n, description: [Lz(c.looks), Lz(c.role)].filter(Boolean).join("\n\n"), personality: Lz(c.vibe) || "",
+        scenario: w ? Lz(w.premise) || "" : "", first_mes: Lz(c.solo) || String(Lz(c.pitch) || "").replace(/^“|”$/g, ""),
+        mes_example: c.examples || "", creator_notes: w ? Lz(w.hook) || "" : "", system_prompt: "", post_history_instructions: "",
+        alternate_greetings: [], tags: (w && w.tags) || [], creator: c.by || "MIRU", character_version: "1",
+        character_book: lore.length ? { entries: lore.map((e, i) => ({ keys: e.keys, content: e.txt, enabled: true, insertion_order: i, id: i, extensions: {} })), extensions: {} } : undefined,
+        extensions: { miru: { age: c.age, g: c.g, h: c.h || "", role: Lz(c.role), looks: Lz(c.looks), vibe: Lz(c.vibe), likes: Lz(c.likes), secret: Lz(c.secret), hook: w ? Lz(w.hook) : "" } }
+      }
+    };
+  }
+  function cardOfPersona(p) {
+    p = p || persona();
+    const g = p.pron === "he" ? "m" : p.pron === "she" ? "f" : "x";
+    return { spec: "chara_card_v2", spec_version: "2.0", data: {
+      name: p.name || "", description: [p.look, p.bio].filter(Boolean).join("\n\n"), personality: [p.like ? (zh() ? "喜欢：" : "Likes: ") + p.like : "", p.dislike ? (zh() ? "不喜欢：" : "Dislikes: ") + p.dislike : ""].filter(Boolean).join("\n"),
+      scenario: "", first_mes: "", mes_example: "", creator_notes: p.label || "", tags: ["persona"], creator: "MIRU", character_version: "1",
+      extensions: { miru: { persona: 1, age: p.age || "", g: g, looks: p.look || "", likes: p.like || "", dislike: p.dislike || "", bio: p.bio || "", label: p.label || "" } } } };
+  }
+  function download(blob, name) {
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  async function exportCard(card, imgSrc, base) {
+    const json = JSON.stringify(card, null, 2), fname = String(base || card.data.name || "character").replace(/[\\/:*?"<>|]+/g, "_");
+    if (imgSrc) {
+      try {
+        const r = await fetch(imgSrc, { mode: "cors" }); if (!r.ok) throw new Error("img " + r.status);
+        const bmp = await createImageBitmap(await r.blob());
+        const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height; c.getContext("2d").drawImage(bmp, 0, 0);
+        const png = await new Promise(res => c.toBlob(res, "image/png")); if (!png) throw new Error("toBlob");
+        const out = pngWithText(await png.arrayBuffer(), "chara", utf8b64(json));
+        download(new Blob([out], { type: "image/png" }), fname + ".png");
+        toast(L2("已导出角色卡（图片里带数据）", "Card exported (data inside the image)")); return;
+      } catch (e) { console.warn("[card] png export, falling back to json", e); }
+    }
+    download(new Blob([json], { type: "application/json" }), fname + ".json");
+    toast(L2("已导出角色卡（JSON）", "Card exported (JSON)"));
+  }
+
+  document.addEventListener("click", function (e) {
+    const t = e.target; if (!t || !t.closest) return; let x;
+    if ((x = t.closest("[data-ccimp]"))) { e.stopImmediatePropagation(); pickFile(); return; }
+    if ((x = t.closest("[data-ccexp]"))) { e.stopImmediatePropagation(); const id = x.dataset.ccexp; const card = cardOf(id); if (!card) return; let src = null; try { src = S.art[id] || (typeof artSrc === "function" ? artSrc(id) : null); } catch (er) { src = null; } exportCard(card, src, card.data.name); return; }
+    if ((x = t.closest("[data-ccexpme]"))) { e.stopImmediatePropagation(); const p = persona(); exportCard(cardOfPersona(p), p.img || null, (p.name || "me") + "_" + L2("我的角色卡", "role_card")); return; }
+  }, true);
+
+  window.cardIO = { importCard: importCard, cardOf: cardOf, cardOfPersona: cardOfPersona, pngText: pngText, pngWithText: pngWithText, utf8b64: utf8b64, b64utf8: b64utf8 };
 })();
 
 </script>
