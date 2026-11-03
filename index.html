@@ -1461,13 +1461,17 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .rx122p button.on{background:rgba(238,111,151,.25)}
 .rx122p button:active{transform:scale(1.2)}
 [data-rx122]:not(.rx122b){font-size:14px}
+.alt123{display:flex;align-items:center;gap:6px;align-self:flex-start;width:max-content;margin:-2px 0 6px 46px;padding:2px 6px;border-radius:999px;background:rgba(10,9,14,.55);border:1px solid var(--line);font-size:11.5px;color:var(--dim);font-weight:700}
+.alt123 button{background:none;border:0;color:var(--text);font-size:15px;line-height:1;padding:2px 6px;cursor:pointer}
+.alt123 button[disabled]{opacity:.3}
+.alt123busy{opacity:.55;transition:opacity .2s}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="4ab38ce30c00 2026-11-03T08:36Z";
+window.MIRU_BUILD="0b4f2da05f92 2026-11-03T08:47Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -16239,7 +16243,7 @@ stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),
   tm=setTimeout(go,ttsOn()?Math.max(readMs({txt:x})+400,11000):readMs({txt:x})+400)};
  el.addEventListener("click",e=>{if(e.target.closest("[data-scend]")){fin();return}try{stopVoice()}catch(_){}next()});next()})};
 /* 4) per-bubble tools: a small 🔊 read-aloud and 🖼 picture button in the bottom-right corner of every character bubble */
-function bt86Btns(i){return '<span class="bt86">'+(typeof reactOK==="function"&&reactOK(i)?'<button data-rx122="'+i+'" aria-label="'+esc(LL("回应","React"))+'">☺</button>':'')+'<button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>'}
+function bt86Btns(i){return '<span class="bt86">'+(typeof altOK==="function"&&altOK(i)?'<button data-alt123="'+i+'|1" aria-label="'+esc(LL("换个说法","Say it differently"))+'">⇄</button>':'')+(typeof reactOK==="function"&&reactOK(i)?'<button data-rx122="'+i+'" aria-label="'+esc(LL("回应","React"))+'">☺</button>':'')+'<button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>'}
 function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
  root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||!ch(m.who)||m.who==="me")return;
   const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
@@ -20165,18 +20169,22 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  R.manual=()=>true;
  const readable=m=>m&&((typeof m.txt==='string'&&m.txt.trim())||m.k==='intro'||m.k==='chap');
  const signature=m=>String(m.txt||'')+'|'+String(m.last||'');
+ /* 2026-11-03（玩家：「下一句」没必要做成一条大横幅，点一下屏幕就该继续）
+    ⇒ 不再画大横幅。等你读的时候，点屏幕任意空处 / 点那句话 = 下一句。
+    只有前 5 次在输入区上方飘一行很淡的小字「轻点屏幕继续」，之后什么都不显示。朗读中显示「朗读中…」，点一下就停读。 */
+ const HINT_N=5;
  function paint(){
   const th=S.threads[curT],chat=$('#s-chat');if(!chat)return;
   chat.classList.add('manual-reading');
-  let bar=chat.querySelector('[data-reading-bar]');const entry=th&&R.pending.get(th.id);
-  if(!entry){if(bar)bar.remove();return;}
-  if(!bar){bar=document.createElement('div');bar.dataset.readingBar='1';bar.className='reading-bar';
-   bar.innerHTML='<div><span data-reading-hint>读完再点，内容会一直保留</span><button type="button" data-reading-stop-voice="1">停止朗读</button></div><button type="button" class="btn btn-p" data-reading-next="1">下一句 ›</button>';
-   const composer=chat.querySelector('.composer');if(composer)composer.before(bar);else chat.appendChild(bar);
-  }
-  const voicing=A.busy(),next=bar.querySelector('[data-reading-next]');next.disabled=voicing;next.textContent=voicing?'朗读中…':'下一句 ›';
-  bar.querySelector('[data-reading-hint]').textContent=voicing?'这一句读完后，再点下一句':'读完再点，内容会一直保留';
-  bar.querySelector('[data-reading-stop-voice]').hidden=!voicing;
+  const old=chat.querySelector('[data-reading-bar]');if(old)old.remove();
+  let tip=chat.querySelector('[data-tap-hint]');const entry=th&&R.pending.get(th.id);
+  chat.classList.toggle('await-tap',!!entry);
+  const voicing=A.busy();
+  const show=entry&&(voicing||(S.tapHintN||0)<HINT_N);
+  if(!show){if(tip)tip.remove();return;}
+  if(!tip){tip=document.createElement('div');tip.dataset.tapHint='1';tip.className='tap-hint';const composer=chat.querySelector('.composer');if(composer)composer.before(tip);else chat.appendChild(tip);}
+  tip.textContent=voicing?'朗读中… 点一下停止':'轻点屏幕继续 ›';
+  tip.classList.toggle('voicing',voicing);
  }
  R.wait=function(th,message,kind){
   if(!th||!readable(message))return Promise.resolve();
@@ -20191,6 +20199,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
    th._unread=0;paint();resolve();
   };
   R.pending.set(th.id,entry);if(kind==='script')PKNEXT[th.id]=entry.finish;
+  if(R._counted!==message){R._counted=message;S.tapHintN=(S.tapHintN||0)+1;}
   paint();return promise;
  };
  R.advance=function(){const th=S.threads[curT],chat=$('#s-chat');if(!th||!chat||chat.hidden||(typeof HIST_OPEN!=='undefined'&&HIST_OPEN))return false;
@@ -20205,12 +20214,19 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  if(typeof streamPreview==='function'){const preview=streamPreview;streamPreview=function(){if(!R.manual())return preview.apply(this,arguments);};}
  window.addEventListener('click',ev=>{
   if(ev.target.closest('[data-reading-next]')){ev.preventDefault();ev.stopImmediatePropagation();R.advance();return;}
+  /* 点屏幕 = 下一句。点在气泡上要等 230ms：双击是给这句回 ❤️（app122），不能顺手翻掉两句 */
+  {const th=S.threads[curT],chat=$('#s-chat');
+   if(th&&chat&&!chat.hidden&&R.pending.get(th.id)&&ev.target.closest('#s-chat')&&!ev.target.closest('button,a,input,textarea,select,label,.composer,.chead,.sheet,.rx122p,#pkwrap,.status')){
+    ev.stopImmediatePropagation();
+    if(A.busy()){stopVoice();paint();return;}
+    if(ev.target.closest('[data-mi]')){if(R._tapT){clearTimeout(R._tapT);R._tapT=null;return;}R._tapT=setTimeout(()=>{R._tapT=null;R.advance();},230);return;}
+    R.advance();return;}}
   if(ev.target.closest('[data-reading-stop-voice]')){ev.preventDefault();ev.stopImmediatePropagation();stopVoice();return;}
   if(ev.target.closest('[data-vtog]')){ev.preventDefault();ev.stopImmediatePropagation();S.autoVoice=!S.autoVoice;S.voice=S.voice||{};S.voice.auto=S.autoVoice;if(!S.autoVoice)stopVoice();save();renderChat();}
  },true);
  if(window.UI&&typeof window.UI.add==='function')window.UI.add('manual-reading',paint);
  const render=renderChat;renderChat=function(){const result=render.apply(this,arguments);paint();return result;};
- const style=document.createElement('style');style.textContent='.reading-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;flex-shrink:0;background:rgba(16,13,22,.88);border-top:1px solid #ffffff16}.reading-bar span{font-size:11px;color:#c9c1d0}.reading-bar>button{min-height:44px;min-width:112px;flex-shrink:0}.reading-bar [data-reading-stop-voice]{display:block;margin-top:3px;background:none;border:0;padding:3px 0;font-size:11px;color:#c9c1d0;text-decoration:underline}.reading-bar [data-reading-stop-voice][hidden]{display:none}.reading-bar>button:disabled{opacity:.6}.manual-reading .pkspeed,.manual-reading .pkspeed+.pkhint,.manual-reading .pkplay,.manual-reading [data-pkspd],.manual-reading [data-pkskip],.manual-reading [data-stpause]{display:none!important}';document.head.appendChild(style);
+ const style=document.createElement('style');style.textContent='.tap-hint{align-self:center;margin:0 auto 6px;padding:4px 12px;border-radius:999px;font-size:12px;color:rgba(255,255,255,.72);background:rgba(10,9,14,.35);pointer-events:none;animation:tapHint 2.4s ease-in-out infinite;flex-shrink:0}.tap-hint.voicing{animation:none;color:#F0B77E}@keyframes tapHint{0%,100%{opacity:.45}50%{opacity:.95}}.await-tap #msgs{cursor:pointer}.reading-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;flex-shrink:0;background:rgba(16,13,22,.88);border-top:1px solid #ffffff16}.reading-bar span{font-size:11px;color:#c9c1d0}.reading-bar>button{min-height:44px;min-width:112px;flex-shrink:0}.reading-bar [data-reading-stop-voice]{display:block;margin-top:3px;background:none;border:0;padding:3px 0;font-size:11px;color:#c9c1d0;text-decoration:underline}.reading-bar [data-reading-stop-voice][hidden]{display:none}.reading-bar>button:disabled{opacity:.6}.manual-reading .pkspeed,.manual-reading .pkspeed+.pkhint,.manual-reading .pkplay,.manual-reading [data-pkspd],.manual-reading [data-pkskip],.manual-reading [data-stpause]{display:none!important}';document.head.appendChild(style);
 })();
 
 
