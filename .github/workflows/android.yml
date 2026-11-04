@@ -1,7 +1,7 @@
 # 构建 Google Play 上传用的 .aab（2026-11-05）
 # 触发：手动（Actions → Android App → Run workflow），或 android/ 目录有改动时自动跑。
-# 需要在仓库 Settings → Secrets and variables → Actions 里加 4 个 secret（只加一次）：
-#   ANDROID_KEYSTORE_BASE64 / ANDROID_KEYSTORE_PASSWORD / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD
+# 需要在仓库 Settings → Secrets and variables → Actions 里加 secret（只加一次）：
+#   ANDROID_KEYSTORE_BASE64 / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD（ANDROID_KEYSTORE_PASSWORD 可选，不填就用 KEY_PASSWORD）
 # 跑完在这次运行的页面底部下载 miru-release-aab，里面的 app-release.aab 就是传到 Play Console 的文件。
 name: Android App
 on:
@@ -25,13 +25,13 @@ jobs:
         env: { KS: '${{ secrets.ANDROID_KEYSTORE_BASE64 }}' }
         run: |
           if [ -z "$KS" ]; then echo "::error::还没在 GitHub Secrets 里加 ANDROID_KEYSTORE_BASE64"; exit 1; fi
-          echo "$KS" | base64 -d > "$RUNNER_TEMP/upload.jks"
+          echo "$KS" | tr -d ' \r\n' | base64 -d > "$RUNNER_TEMP/upload.jks"
       - name: Build release bundle
         working-directory: android
         env:
           VERSION_CODE: ${{ github.run_number }}
           KEYSTORE_PATH: ${{ runner.temp }}/upload.jks
-          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || secrets.ANDROID_KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: gradle :app:bundleRelease --stacktrace
