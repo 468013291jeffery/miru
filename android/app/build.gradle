@@ -1,6 +1,7 @@
 /* MIRU 安卓壳（TWA：可信网页壳）—— 打开的就是线上的 https://www.miru.plus，网站更新 = App 自动更新。
    版本号：GitHub Actions 每次构建自动 +1（VERSION_CODE = 构建序号），不用手改。
-   签名：上传密钥从环境变量读（GitHub Secrets → 工作流写进来），仓库里不放任何密钥。 */
+   签名：上传密钥从环境变量读（GitHub Secrets → 工作流写进来），仓库里不放任何密钥。
+   minSdk 24：Google Play「自动保护」要求最低 24。 */
 plugins { id 'com.android.application' }
 def vcode = (System.getenv('VERSION_CODE') ?: '1').toInteger()
 android {
@@ -8,7 +9,7 @@ android {
     compileSdk 36
     defaultConfig {
         applicationId 'com.miru.plus.app'
-        minSdk 23
+        minSdk 24
         targetSdk 36
         versionCode vcode
         versionName "1.0.${vcode}"
