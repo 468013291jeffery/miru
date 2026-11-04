@@ -58,10 +58,10 @@
   [['say','💬',text('台词','Say')],['act','✱',text('动作','Action')],['think','💭',text('心声','Thought')]].forEach(([k,i,l])=>{const b=document.createElement('button');b.dataset.input124=k;b.textContent=i+' '+l;b.setAttribute('aria-pressed',String(cmode===k));row.appendChild(b);});
   box.prepend(row);
  }
- /* 2026-11-04 第二次（玩家看图后：头像、剧名 + 💗关系 这两块都不要了）⇒ 顶栏只留返回和右边的工具按钮。
-    不另加「♥ 陌生人」（上一版 GPT 加在最右边的那个也不要）。 */
- function header(){const h=document.querySelector('#s-chat .chead');if(!h)return;h.classList.add('slim124');const r=h.querySelector('.row');if(!r)return;
-  r.querySelectorAll('.relationship124').forEach(el=>el.remove());[...r.children].forEach(el=>{el.hidden=el.matches('.chavs,.av,[data-us]');});
+ /* 2026-11-05（玩家：顶栏还是之前的版本好看，只是不要「历史」）⇒ 顶栏恢复：左边头像 + 剧名 + 💗 关系，工具按钮照旧；
+    「历史」按钮由 app121_dock 的 noHist() 去掉。不另加「♥ 陌生人」。 */
+ function header(){const h=document.querySelector('#s-chat .chead');if(!h)return;h.classList.remove('slim124');const r=h.querySelector('.row');if(!r)return;
+  r.querySelectorAll('.relationship124').forEach(el=>el.remove());[...r.children].forEach(el=>{if(el.matches('.chavs,.av,[data-us]'))el.hidden=false;});
  }
  function details(){const th=current(),w=th&&wd(th.wid);if(!th)return;
   sheet('<h2>'+esc(th.title)+'</h2><p>'+esc(local(w?.premise||w?.hook))+'</p>'+((th.pk&&w?.pack?.chapters[th.pk.ch-1])?briefHTML(X.brief(th,w.pack.chapters[th.pk.ch-1],th.pk.ch)):'')+'<div class="stack">'+(th.cast||[]).map(id=>{const c=ch(id);return c?'<article><h3>'+esc(c.n)+'</h3><p>'+esc(local(c.role||c.vibe))+'</p></article>':'';}).join('')+'</div>');
