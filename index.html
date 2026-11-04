@@ -2,6 +2,11 @@
 <meta name="google" content="notranslate">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#07060A">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<script>
+window.MIRU_BUILD="7eb80092bea4 2026-11-04T18:06Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -1536,7 +1541,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 <script src="tune.js"></script>
 
 <script>
-window.MIRU_BUILD="7548f18587aa 2026-11-04T18:01Z";
 window.CUT_FILES=["afterhours_ch1_p1", "afterhours_ch1_p2", "afterhours_ch1_p3", "heir_airport", "heir_album17", "heir_bedroom", "heir_car", "heir_cctv", "heir_cvs17", "heir_fiancee", "heir_files", "heir_jet", "heir_jet_catch", "heir_kiss_warehouse", "heir_lock_bedroom", "heir_lock_jet", "heir_penthouse", "heir_press", "heir_threat", "heir_towel", "heir_warehouse", "kiss_warehouse"];
 window.SCENE_FILES={"afterhours/ch1_p1": "art/scenes/afterhours/ch1_p1.jpg", "afterhours/ch1_p2": "art/scenes/afterhours/ch1_p2.jpg", "afterhours/ch1_p3": "art/scenes/afterhours/ch1_p3.jpg", "afterhours/ch1_snap1": "art/scenes/afterhours/ch1_snap1.jpg", "afterhours/ch1_snap2": "art/scenes/afterhours/ch1_snap2.jpg", "afterhours/ch1_snap3": "art/scenes/afterhours/ch1_snap3.jpg", "afterhours/ch1_snap4": "art/scenes/afterhours/ch1_snap4.jpg", "afterhours/group": "art/scenes/afterhours/group.jpg", "afterhours/s1": "art/scenes/afterhours/s1.jpg", "afterhours/s2": "art/scenes/afterhours/s2.jpg", "afterhours/s3": "art/scenes/afterhours/s3.jpg", "afterhours/s4": "art/scenes/afterhours/s4.jpg", "afterhours/s5": "art/scenes/afterhours/s5.jpg", "afterhours/v_aisle": "art/scenes/afterhours/v_aisle.mp4", "afterhours/v_bottle": "art/scenes/afterhours/v_bottle.mp4", "afterhours/v_bottle_nico": "art/scenes/afterhours/v_bottle_nico.mp4", "afterhours/v_collar": "art/scenes/afterhours/v_collar.mp4", "afterhours/v_dark": "art/scenes/afterhours/v_dark.mp4", "afterhours/v_glass": "art/scenes/afterhours/v_glass.mp4", "afterhours/v_nearkiss": "art/scenes/afterhours/v_nearkiss.mp4", "afterhours/v_note": "art/scenes/afterhours/v_note.mp4", "afterhours/v_party": "art/scenes/afterhours/v_party.mp4", "afterhours/v_shock": "art/scenes/afterhours/v_shock.mp4", "afterhours/v_shoulder": "art/scenes/afterhours/v_shoulder.mp4", "afterhours/v_squeeze": "art/scenes/afterhours/v_squeeze.mp4", "afterhours/v_tab": "art/scenes/afterhours/v_tab.mp4", "afterhours/v_thumb": "art/scenes/afterhours/v_thumb.mp4", "afterhours/v_toast": "art/scenes/afterhours/v_toast.mp4", "heir/airport": "art/scenes/heir/airport.jpg", "heir/album17": "art/scenes/heir/album17.jpg", "heir/bedroom": "art/scenes/heir/bedroom.jpg", "heir/car": "art/scenes/heir/car.jpg", "heir/cctv": "art/scenes/heir/cctv.jpg", "heir/cvs17": "art/scenes/heir/cvs17.jpg", "heir/fiancee": "art/scenes/heir/fiancee.jpg", "heir/files": "art/scenes/heir/files.jpg", "heir/jet": "art/scenes/heir/jet.jpg", "heir/jet_catch": "art/scenes/heir/jet_catch.jpg", "heir/kiss_warehouse": "art/scenes/heir/kiss_warehouse.jpg", "heir/lock_bedroom": "art/scenes/heir/lock_bedroom.jpg", "heir/lock_jet": "art/scenes/heir/lock_jet.jpg", "heir/penthouse": "art/scenes/heir/penthouse.jpg", "heir/press": "art/scenes/heir/press.jpg", "heir/sebastian": "art/scenes/heir/sebastian.jpg", "heir/threat": "art/scenes/heir/threat.jpg", "heir/towel": "art/scenes/heir/towel.jpg", "heir/warehouse": "art/scenes/heir/warehouse.jpg"};
 window.BGM_FILES={};
@@ -21488,6 +21492,124 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
 
   if (document.readyState === "complete") load(); else window.addEventListener("load", load);
   window.__leads = () => ({ loaded: loaded, live: [...live], chars: Object.keys(C).filter(id => C[id] && C[id].ld126) });
+})();
+
+/* ================= 安卓 App（Google Play）专用：Play 内购 + 隐藏成人作品（2026-11-05）=================
+   安卓 App 是一个「可信网页壳」（TWA）：打开的就是线上的 miru.plus，所以网站一更新，App 里也就是新版（自动更新）。
+   App 启动地址带 ?src=twa（见 android/ 工程），这里认出来后：
+     1 · 充值：点钻石包 → 走 Google Play 结算（Digital Goods API + Payment Request），付完把 purchaseToken 交给
+         /api/wallet {op:'play'}，服务器向 Google 验单、发钻、消耗；余额以服务器为准。网页版不受影响。
+     2 · 成人作品：Google Play 不允许露骨内容 —— App 里作品列表把 adult 的作品过滤掉（网页版照常）。
+   商品 ID（Play Console 里要建同名的「一次性商品 · 消耗型」）：gems_5 / gems_16 / gems_28 / gems_60 / gems_125 / gems_330 / gems_700 */
+(function () {
+  "use strict";
+  const PLAY_METHOD = "https://play.google.com/billing";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  let twa = false;
+  try {
+    const q = new URLSearchParams(location.search);
+    if (q.get("src") === "twa" || String(document.referrer || "").indexOf("android-app://") === 0) localStorage.setItem("miru_twa", "1");
+    twa = localStorage.getItem("miru_twa") === "1";
+  } catch (e) { console.warn("[play] detect", e); }
+  window.MIRU_TWA = twa;
+  if (!twa) return;
+  document.documentElement.classList.add("twa127");
+
+  /* ---------- 2 · 作品列表里去掉成人作品 ---------- */
+  const _fetch = window.fetch;
+  window.fetch = async function (input, init) {
+    const res = await _fetch.apply(this, arguments);
+    try {
+      const u = String((input && input.url) || input || "");
+      if (u.indexOf("/api/works") < 0 || /[?&]id=/.test(u) || !res.ok) return res;
+      const j = await res.clone().json();
+      const strip = a => Array.isArray(a) ? a.filter(w => !(w && (w.adult === true || (w.meta && w.meta.adult === true)))) : a;
+      let changed = false;
+      if (Array.isArray(j)) { const k = strip(j); changed = k.length !== j.length; if (changed) return new Response(JSON.stringify(k), { status: res.status, headers: res.headers }); }
+      ["rows", "works", "items"].forEach(key => { if (Array.isArray(j[key])) { const k = strip(j[key]); if (k.length !== j[key].length) { j[key] = k; changed = true; } } });
+      return changed ? new Response(JSON.stringify(j), { status: res.status, headers: res.headers }) : res;
+    } catch (e) { return res; }
+  };
+
+  /* ---------- 1 · Play 内购 ---------- */
+  let svc = null, prices = {};
+  async function service() {
+    if (svc) return svc;
+    if (!("getDigitalGoodsService" in window)) throw new Error("no-dgs");
+    svc = await window.getDigitalGoodsService(PLAY_METHOD);
+    if (!svc) throw new Error("no-dgs");
+    return svc;
+  }
+  const SKUS = ["gems_5", "gems_16", "gems_28", "gems_60", "gems_125", "gems_330", "gems_700"];
+  async function loadPrices() {
+    try {
+      const s = await service(); const d = await s.getDetails(SKUS);
+      (d || []).forEach(x => { const p = x.price || {}; try { prices[x.itemId] = new Intl.NumberFormat(undefined, { style: "currency", currency: p.currency }).format(+p.value); } catch (_) { prices[x.itemId] = p.currency + " " + p.value; } });
+      showPrices();
+    } catch (e) { console.warn("[play] prices", e); }
+  }
+  function showPrices() {
+    document.querySelectorAll(".packs84 [data-buy]").forEach(b => { const p = prices["gems_" + b.dataset.buy]; const sp = b.querySelector("span"); if (p && sp) sp.textContent = p; });
+  }
+  new MutationObserver(() => { if (document.querySelector(".packs84 [data-buy]")) showPrices(); }).observe(document.body, { childList: true, subtree: true });
+  setTimeout(loadPrices, 1500);
+
+  let busy = false;
+  async function buy(sku) {
+    if (busy) return; busy = true;
+    try {
+      await service();
+      const req = new PaymentRequest([{ supportedMethods: PLAY_METHOD, data: { sku: sku } }], { total: { label: "Total", amount: { currency: "USD", value: "0" } } });
+      const resp = await req.show();
+      const token = resp && resp.details && resp.details.purchaseToken;
+      if (!token) { await resp.complete("fail"); throw new Error("no-token"); }
+      const r = await capi("/wallet", { json: { op: "play", sku: sku, token: token } });
+      await resp.complete(r.ok ? "success" : "fail");
+      if (!r.ok) {
+        /* 没验上的单留给下次打开时补发（Google 那边不会丢，只要没消耗就还在） */
+        keepPending(sku, token);
+        toast(zh() ? "付款已收到，到账确认中，稍后会自动补上" : "Payment received — confirming, your diamonds will arrive shortly");
+        return;
+      }
+      if (typeof r.j.gems === "number") { S.keys = r.j.gems; S.firstBuy = true; if (typeof save === "function") save(); if (typeof keysChip === "function") keysChip(); }
+      if (typeof closeSheet === "function") closeSheet();
+      toast((zh() ? "充值成功，现在有 💎 " : "Top-up done — you now have 💎 ") + (typeof r.j.gems === "number" ? r.j.gems : S.keys));
+      try { if (typeof track === "function") track("play_purchase", { sku: sku, test: !!r.j.test }); } catch (e2) { console.debug("[play]", e2); }
+      if (typeof refreshAfterPay === "function") refreshAfterPay();
+    } catch (e) {
+      const m = String((e && e.name) || "") + " " + String((e && e.message) || e);
+      if (/AbortError|cancel/i.test(m)) { /* 玩家自己取消 */ }
+      else if (/no-dgs/.test(m)) toast(zh() ? "请从 Google Play 安装的 MIRU App 里充值" : "Please top up in the MIRU app installed from Google Play");
+      else { console.warn("[play] buy", e); toast(zh() ? "这次没有付款成功，没有扣费" : "The purchase didn't go through — you weren't charged"); }
+    } finally { busy = false; }
+  }
+  function keepPending(sku, token) { try { const a = JSON.parse(localStorage.getItem("miru_play_pending") || "[]"); a.push({ sku: sku, token: token, at: Date.now() }); localStorage.setItem("miru_play_pending", JSON.stringify(a.slice(-10))); } catch (e) { console.warn("[play] keep", e); } }
+  /* 打开 App 时：把上次没确认的单再交一次；以及 Google 那边「已付款但没消耗」的单（比如付款时断网） */
+  async function restore() {
+    let list = [];
+    try { list = JSON.parse(localStorage.getItem("miru_play_pending") || "[]"); } catch (e2) { console.debug("[play]", e2); }
+    try { const s = await service(); const ps = await s.listPurchases(); (ps || []).forEach(p => { if (!list.some(x => x.token === p.purchaseToken)) list.push({ sku: p.itemId, token: p.purchaseToken }); }); } catch (e) { console.warn("[play] list", e); }
+    if (!list.length) return;
+    const left = [];
+    for (const x of list) {
+      try { const r = await capi("/wallet", { json: { op: "play", sku: x.sku, token: x.token } }); if (r.ok) { if (typeof r.j.gems === "number") { S.keys = r.j.gems; if (typeof save === "function") save(); } } else if (r.status >= 500) left.push(x); }
+      catch (_) { left.push(x); }
+    }
+    try { localStorage.setItem("miru_play_pending", JSON.stringify(left)); } catch (e2) { console.debug("[play]", e2); }
+    if (typeof keysChip === "function") keysChip();
+  }
+  setTimeout(restore, 4000);
+
+  /* 抢在网页版充值逻辑之前：App 里点钻石包一律走 Google Play */
+  /* 挂在 window 的捕获阶段：比 document 上的网页版充值处理（app84 / app68）更早，拦下来就不会在本机白送钻石 */
+  window.addEventListener("click", function (e) {
+    const x = e.target && e.target.closest && e.target.closest(".packs84 [data-buy],.packs [data-buy]"); if (!x) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    buy("gems_" + x.dataset.buy);
+  }, true);
+
+  try { const st = document.createElement("style"); st.textContent = ".twa127 [data-ccexp]{display:none!important}"; document.head.appendChild(st); } catch (e2) { console.debug("[play]", e2); }
+  window.__play = () => ({ twa: twa, prices: prices, hasDGS: "getDigitalGoodsService" in window });
 })();
 
 /* Scene-aware interaction and a continuous, readable conversation. */

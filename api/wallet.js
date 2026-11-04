@@ -2,6 +2,7 @@
 // GET → {gems, plus, recent[]}
 // POST {op:'spend', amount, reason, key}   idempotent by key; 402 when the balance is too low
 // POST {op:'daily'}                         +3💎 once per day
+// POST {op:'play', sku, token}            Google Play Billing（安卓 App）：服务器向 Google 验单后发钻并消耗
 // POST {op:'purchase', sku, platform, receipt}  store purchases. Real Apple/Google receipt checks need the store keys
 //      (APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT); until then only PAY_TEST=1 grants (test mode, clearly labelled).
 const L = require('./_lib');
@@ -88,6 +89,27 @@ module.exports = L.wrap(async (req, res) => {
     if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING',
       [L.newId('o_'), u.uid, mapped.sku, 'ios', total, ((cfg.skus || {})[mapped.sku] || {}).usd || 0, 'USD', 'paid', false, key]);
     return L.send(res, 200, Object.assign({ iap: true, transactionId: t.transactionId, productId: t.productId, sku: mapped.sku, gems: total, doubled: doubled > 0, dup: !!(r && r.dup) }, r || {}));
+  }
+  /* 2026-11-05 · Google Play 内购（安卓 App 里的 Play Billing）：客户端把 purchaseToken 交上来，服务器向 Google 验单 → 发钻 → 消耗。
+     同一张单只发一次（key = play:<orderId>）；Google 那边已消耗的单重复交上来，按幂等返回余额。 */
+  if (b.op === 'play') {
+    const PLAY = require('./_play');
+    const productId = String(b.sku || b.productId || ''), token = String(b.token || b.purchaseToken || '');
+    const mapped = gemsForSku(productId, cfg);
+    if (!mapped) return L.bad(res, 'unknown product: ' + productId.slice(0, 60));
+    let p;
+    try { p = await PLAY.verifyProduct(productId, token); }
+    catch (e) { const msg = String(e.message || e); return L.send(res, /not set/.test(msg) ? 501 : 400, { error: msg.slice(0, 160) }); }
+    const key = 'play:' + String(p.orderId || token).slice(0, 80);
+    const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND (reason LIKE '%(iap)' OR reason LIKE '%(play)') LIMIT 1", [u.uid]);
+    const doubled = (!first[0] && cfg.first_purchase_double !== false) ? (BASE[mapped.sku] || 0) : 0;
+    const total = mapped.gems + doubled;
+    const r = await apply(sql, u.uid, total, mapped.sku + '(play)', key);
+    if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING',
+      [L.newId('o_'), u.uid, mapped.sku, 'android', total, ((cfg.skus || {})[mapped.sku] || {}).usd || 0, 'USD', 'paid', p.purchaseType === 0, key]);
+    let consumed = p.consumptionState === 1;
+    if (!consumed) { try { await PLAY.consume(productId, token); consumed = true; } catch (e) { console.warn('[play] consume', e.message); } }
+    return L.send(res, 200, Object.assign({ play: true, orderId: p.orderId, sku: mapped.sku, gems: total, doubled: doubled > 0, consumed, dup: !!(r && r.dup), test: p.purchaseType === 0 }, r || {}));
   }
   if (b.op === 'purchase') {
     const sku = String(b.sku || '');

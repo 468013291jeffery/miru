@@ -1,0 +1,19 @@
+{
+  "name": "MIRU",
+  "short_name": "MIRU",
+  "description": "和他们，演一场只属于你的故事。Interactive romance stories with AI characters.",
+  "id": "/",
+  "start_url": "/index.html?src=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#07060A",
+  "theme_color": "#07060A",
+  "lang": "zh-CN",
+  "categories": ["entertainment", "books"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
