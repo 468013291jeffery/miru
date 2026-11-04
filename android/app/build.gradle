@@ -2,6 +2,7 @@
    版本号：GitHub Actions 每次构建自动 +1（VERSION_CODE = 构建序号），不用手改。
    签名：上传密钥从环境变量读（GitHub Secrets → 工作流写进来），仓库里不放任何密钥。 */
 plugins { id 'com.android.application' }
+def vcode = (System.getenv('VERSION_CODE') ?: '1').toInteger()
 android {
     namespace 'com.miru.plus.app'
     compileSdk 36
@@ -9,8 +10,8 @@ android {
         applicationId 'com.miru.plus.app'
         minSdk 23
         targetSdk 36
-        versionCode (System.getenv('VERSION_CODE') ?: '1') as int
-        versionName '1.0.' + (System.getenv('VERSION_CODE') ?: '1')
+        versionCode vcode
+        versionName "1.0.${vcode}"
     }
     signingConfigs {
         release {
