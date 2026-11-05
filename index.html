@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="7eb80092bea4 2026-11-04T18:12Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="044c3407dcf0 2026-11-05T03:40Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -1485,9 +1485,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat .chead.slim124 .hist121{display:inline-flex!important}
 .relationship124{border:0;background:rgba(15,12,20,.38);color:#ead7df;font-size:11px;border-radius:20px;padding:5px 9px;margin-left:auto}
 #s-chat .composer.input124 .modes,#s-chat .composer.input124 .modes2{display:none!important}
-.input-modes124{display:flex;gap:6px;margin:0 0 6px}
-.input-modes124 button{min-height:36px;flex:1;border:1px solid #ffffff20;border-radius:12px;background:#17131bd9;color:#dbd4e2;font-size:13px}
-.input-modes124 button[aria-pressed=true]{border-color:#f0b77e;color:#ffe0b9;background:#6d4d3580}
 #s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85) 46%,#000 60%);-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85) 46%,#000 60%)}
 /* 2026-11-04（玩家：越往上颜色越浅，可以往上翻看聊天记录）⇒ 渐隐从原来的 42px 拉长到列表上面 60%：最上面几乎透明、越往下越实，翻上去的那句会移到下面、变清楚。 */
 #s-chat.clean #msgs>.cold{display:revert!important}
@@ -1496,9 +1493,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat.clean .chead.slim124 .vtog{display:inline-flex!important}
 .latest124{align-self:center;z-index:12;flex-shrink:0;margin:3px auto;padding:7px 14px;border:1px solid #ffffff38;border-radius:20px;background:#231d2a;color:#fff;font-size:12px}
 .latest124[hidden]{display:none}
-.chapter124{margin:12px auto;max-width:92%;padding:18px;border:1px solid #f0b77e44;border-radius:18px;background:#17131bef;color:#f5eee7;line-height:1.6}
-.chapter124 small{color:#f0b77e}.chapter124 h3{margin:4px 0 12px}.chapter124 p{font-size:13px;margin:8px 0 0}
-.brief124{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin:8px 0}.brief124 dt{color:#c6b7c9}.brief124 dd{margin:0;overflow-wrap:anywhere}
 .feedback124{animation:feedback124 .65s ease-out}@keyframes feedback124{from{box-shadow:0 0 0 2px #f0b77e88;transform:translateY(4px)}to{box-shadow:0 0 0 8px transparent;transform:none}}
 @media(prefers-reduced-motion:reduce){.feedback124{animation:none}}
 /* 2026-11-04（玩家：这个条改回之前透明的样子，不要大黑条；「联想回复」那种就行）
@@ -1531,10 +1525,71 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat #dk98 .dk98o button,#s-chat #dk98 .dk98r button{flex:none;max-width:72vw;white-space:normal;text-align:left;font-size:13px;font-weight:500;line-height:1.4;padding:7px 10px;border-radius:12px;background:rgba(240,183,126,.07)!important;border:1px solid rgba(240,183,126,.35)!important;color:var(--text)!important;-webkit-backdrop-filter:none;backdrop-filter:none}
 #s-chat #dk98 .dk98r button{order:-1;white-space:nowrap;border-style:dashed!important;font-weight:700}
 /* 回复下面那条「1/1 · 重新生成 · 编辑 · 他在想什么 · ← 左右滑动切换回复 →」也收成和气泡下面一样的小按钮，不要框，不要提示字 */
-#s-chat .rg73{border:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;gap:4px;justify-content:flex-start;margin:4px 0 0 46px;width:auto}
+/* ===== 2026-11-05 玩家反馈（下面五组是一套，集中在这里，别的地方不要再覆盖）===== */
+/* ① 回复下面的操作：一排细字 + 线条小图标，没有底板，不抢气泡的注意力 */
+#s-chat .rg73{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:12px;width:auto;margin:3px 0 0 40px;border:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;overflow:visible;white-space:nowrap}
 #s-chat .rg73>*+*{border-left:0!important}
-#s-chat .rg73>button,#s-chat .rg73>.vs73{padding:3px 8px;border-radius:999px;background:rgba(18,16,26,.55);font-size:11px}
+#s-chat .rg73>button,#s-chat .rg73>.vs73{display:inline-flex;align-items:center;gap:3px;position:relative;height:18px;padding:0;background:none!important;border:0;border-radius:0;font-size:11px;font-weight:500;line-height:1;letter-spacing:.01em;color:rgba(255,255,255,.62)!important}
+#s-chat .rg73>button::after{content:"";position:absolute;inset:-9px -5px}
+#s-chat .rg73>button:active{color:#FFE0B9!important}
+#s-chat .rg73 svg{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+#s-chat .rg73 .vs73 button{min-width:18px;min-height:18px;padding:0!important;font-size:13px;color:inherit}
 #s-chat .rg73 .swipe73hint{display:none!important}
+/* ② 开场卡和章节卡的固定版式：不透明的一个框，全部左对齐。内容规范见 api/_stylecheck.js */
+#s-chat #msgs.nofade98{-webkit-mask-image:none;mask-image:none}
+#s-chat #msgs .entry98,#s-chat #msgs .chapter124{flex:none;align-self:stretch;width:auto;max-width:none;margin:4px 2px;padding:15px 16px 16px;border-radius:16px;background:#15121A;border:1px solid rgba(240,183,126,.3);color:#F3ECF1;text-align:left;line-height:1.65;-webkit-backdrop-filter:none;backdrop-filter:none}
+#s-chat #msgs .entry98-story:has(+ .entry98-ch){margin-bottom:0;padding-bottom:14px;border-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
+#s-chat #msgs .entry98-story+.entry98-ch{margin-top:-6px;padding-top:0;border-top:0;border-top-left-radius:0;border-top-right-radius:0}
+#s-chat #msgs .entry98-story+.entry98-ch .e98-ch{padding-top:14px;border-top:1px solid rgba(240,183,126,.2)}
+.e98-sh{display:flex;align-items:center;gap:12px;margin:0 0 10px;font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.14em;line-height:1.25;background:linear-gradient(120deg,#FFE9D2,#F0B77E 60%,#F2A3B4);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.e98-sh::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,183,126,.55),transparent)}
+.e98-p{font-size:14px;line-height:1.72;color:#EFE8EE}.e98-p+.e98-p{margin-top:8px}
+.e98-ch span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.16em;color:#F0B77E}
+.e98-ch b{display:block;margin-top:3px;font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:#FFEBD6}
+.e98-m,.brief124{display:grid;grid-template-columns:max-content 1fr;gap:5px 12px;margin:11px 0;padding:0;font-size:13px;line-height:1.55}
+.e98-m dt,.brief124 dt{color:rgba(240,183,126,.82);font-weight:600}
+.e98-m dd,.brief124 dd{margin:0;color:#EFE8EE;overflow-wrap:anywhere}
+.chapter124 small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.16em;color:#F0B77E}
+.chapter124 h3{margin:3px 0 0;font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:#FFEBD6}
+.chapter124 p{font-size:14px;line-height:1.72;color:#EFE8EE;margin:0}
+/* ③「下一章」：只有该往下走时才出现，排在回复建议最前面，不压正文 */
+#s-chat #sugg .m98n{align-self:center;border:0!important;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;color:#1B1017!important;background:linear-gradient(135deg,#F0B77E,#EE8FA8)!important;animation:next98 .32s ease-out}
+@keyframes next98{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+/* ④ 输入类型 + 对谁说：一排。名字在 .addr73s 里左滑，右边界由 app124 对齐到输入框右边（padding-right 是脚本量出来之前的默认值） */
+.ctl124{display:flex;align-items:center;gap:8px;min-width:0;margin:0 0 7px;padding-right:50px}
+.input-modes124{position:relative;flex:none}
+#s-chat .composer .im124{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 9px;border-radius:999px;border:1px solid rgba(240,183,126,.5);background:rgba(14,12,20,.66);color:#FFE0B9;font-size:12px;font-weight:600;white-space:nowrap}
+.im124 i,.immenu124 i{font-style:normal}
+.im124 svg{width:9px;height:6px;margin-left:1px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.im124[aria-expanded=true] svg{transform:rotate(180deg)}
+.immenu124{position:absolute;left:0;bottom:calc(100% + 6px);z-index:40;display:flex;flex-direction:column;gap:2px;min-width:112px;padding:4px;border-radius:14px;background:#1B1722;border:1px solid rgba(240,183,126,.32);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.immenu124[hidden]{display:none}
+#s-chat .composer .immenu124 button{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:13px;color:#E6DEE8;text-align:left;white-space:nowrap}
+#s-chat .composer .immenu124 button[aria-checked=true]{color:#FFE0B9;background:rgba(240,183,126,.14)}
+.immenu124 i{width:16px;text-align:center}
+#s-chat .ctl124 .addr73{flex:1;min-width:0;display:flex;align-items:center;gap:7px;margin:0;overflow:visible}
+#s-chat .ctl124 .addr73>span{flex:none;padding-left:8px;border-left:1px solid rgba(255,255,255,.16);font-size:11.5px;font-weight:600;line-height:14px;color:rgba(255,255,255,.62)}
+.addr73s{flex:1;min-width:0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.addr73s::-webkit-scrollbar{display:none}
+#s-chat .composer .addr73s button{flex:none;height:26px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(14,12,20,.55);color:#D9D1DE;font-size:12px;font-weight:600}
+#s-chat .composer .addr73s button.on{border-color:rgba(240,183,126,.7)!important;background:rgba(240,183,126,.16)!important;color:#FFE0B9}
+/* ⑤ 消息的文字和底板分开定：
+   文字 —— 台词 / 动作 / 心声各一种样式，玩家和角色完全相同（只在这里定）；
+   底板 —— 角色是中性深色；玩家是同一种玫瑰金，台词实底、动作浅底、心声浅底虚线。 */
+#s-chat{--say-c:#F8F3F5;--act-c:#EEC99E;--think-c:#CFC2F2;--npc-plate:rgba(21,18,26,.86);--npc-line:rgba(255,255,255,.11);--me-plate:rgba(150,84,92,.72);--me-plate-soft:rgba(150,84,92,.34);--me-line:rgba(240,183,126,.42)}
+/* 文字 */
+#s-chat #msgs .bub .bac,#s-chat #msgs .m-box p.bac,#s-chat #msgs .m-box .tsay{font-size:14px;font-weight:400;font-style:normal;line-height:1.58;color:var(--say-c)!important}
+#s-chat #msgs .m-act,#s-chat #msgs em.ma,#s-chat #msgs .tp.ac,#s-chat #msgs .tp.ac .tpa{font-size:13.5px;font-weight:400;font-style:italic;line-height:1.58;color:var(--act-c)!important}
+#s-chat #msgs .m-think,#s-chat #msgs em.mt,#s-chat #msgs .m-box p.bth,#s-chat #msgs .tp.th,#s-chat #msgs .tp.th .tpt{font-size:13.5px;font-weight:400;font-style:italic;line-height:1.58;color:var(--think-c)!important}
+#s-chat #msgs em.ma,#s-chat #msgs em.mt{display:inline;margin:0;padding:0!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;opacity:1;text-align:left}
+/* 角色底板 */
+#s-chat #msgs .m-row:not(.me) .bub,#s-chat #msgs .m-row:not(.me) .m-box{background:var(--npc-plate)!important;border:1px solid var(--npc-line)!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-act:not(.me),#s-chat #msgs .m-think:not(.me){align-self:flex-start;max-width:88%;margin:0 0 0 38px;padding:7px 12px;border-radius:14px 14px 14px 6px;background:var(--npc-plate)!important;border:1px solid var(--npc-line)!important;text-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-think:not(.me){border-style:dashed!important}
+/* 玩家底板 */
+#s-chat #msgs .m-row.me .bub,#s-chat #msgs .m-row.me .m-box.lb,#s-chat #msgs .m-row.me[data-wc] .bub{background:var(--me-plate)!important;border:1px solid var(--me-line)!important;border-radius:16px 16px 6px 16px;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-act.me,#s-chat #msgs .m-think.me{align-self:flex-end;max-width:86%;margin:0 0 0 auto;padding:7px 12px;border-radius:14px 14px 6px 14px;text-align:left;background:var(--me-plate-soft)!important;border:1px solid var(--me-line)!important;text-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-think.me{border-style:dashed!important}
+#s-chat #msgs .m-think small{font-style:normal;font-size:10px;letter-spacing:.04em;text-transform:none;color:inherit;opacity:.7}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>
@@ -5159,7 +5214,7 @@ function sayHTML(m,i,th){
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
- if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
+ if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe||String(m.txt).startsWith(who(m,th))?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
  if(isMe)return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub bubble">'+((typeof lineHTML==="function")?lineHTML({who:"me",k:m.k,txt:m.txt},th,{noName:true}):esc(m.txt))+'</div></div>'+tools;
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div><div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div><div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}
@@ -8868,7 +8923,7 @@ PKREG.add("app17_custom.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="s
  return next(th,b)});;
 function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe">'+esc(p.icon)+' '+esc(p.title)+'</span>'+(p.txt?esc(p.txt):'')+'</p>';
  if(p.who==="n")return '<p class="tp n">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
- return p.k==="think"?'<p class="tp th"><span class="tpt">💭 '+esc(nm)+'</span>'+esc(p.txt)+'</p>':'<p class="tp ac"><span class="tpa">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}
+ return p.k==="think"?'<p class="tp th"><span class="tpt">💭 '+esc(nm)+'</span>'+esc(p.txt)+'</p>':'<p class="tp ac">'+(nm&&String(p.txt).startsWith(nm)?'':'<span class="tpa">✱ '+esc(nm)+'</span>')+esc(p.txt)+'</p>'}
 const _boxHTML8=boxHTML;
 boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx bubble" data-mi="'+i+'">'+m.parts.map(partHTML).join("")+'</div>';
  const c=ch(m.say.who);
@@ -15251,6 +15306,11 @@ MSGKIND.post("app73_features.js", function (h, m, i, th) {
    理由：猴补丁是隐式接口，包了几十层之后任何一层抛错都会掐掉后面所有层；
    UI.add 的钩子每个单独 try/catch，一个炸不连累别人。逻辑本身一行没改。 */
 const __body73 = function () {
+    const ICON73 = {
+      regen: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2v3h-3"/></svg>',
+      edit: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 3l2.5 2.5L6 12.5l-3 .5.5-3z"/></svg>',
+      mind: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3c3 0 5.5 1.8 5.5 4.2S11 11.4 8 11.4c-.7 0-1.3-.1-1.9-.3L3.5 12.5l.6-2.3C3 9.4 2.5 8.4 2.5 7.2 2.5 4.8 5 3 8 3z"/></svg>',
+    };
     const th = S.threads[curT]; if (!th) return;
     /* header chip */
     const cid = mainOf(th), c = ch(cid), hd = document.querySelector(".chead .grow[data-us]");
@@ -15281,21 +15341,22 @@ const __body73 = function () {
    return box;
  })();
  _host.insertAdjacentHTML("beforeend", '<div class="rg73">' +
+        /* 2026-11-05 玩家：这排按钮太大、不好看 ⇒ 样式见 shell.html，图标统一成线条小图标 */
         '<span class="vs73" aria-label="'+(S.lang === "zh" ? "回复版本" : "Reply versions")+'"><button data-vs73="-1" aria-label="'+(S.lang === "zh" ? "上一个版本" : "Previous version")+'"'+(V && V.cur ? '' : ' disabled')+'>‹</button><span aria-live="polite">'+(V ? V.cur + 1 : 1)+' / '+(V ? V.list.length : 1)+'</span><button data-vs73="1" aria-label="'+(S.lang === "zh" ? "下一个版本或重新生成" : "Next version or regenerate")+'">›</button></span>' +
-        '<button data-rg73="1">↻ ' + esc(t73("regen")) + '</button><button data-edg73="1">✎ ' + esc(t73("edit")) + '</button>' +
-        (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">💭 ' + esc(t73("mind")) + '</button>' : '') + '<span class="swipe73hint">'+(S.lang === "zh" ? "← 左右滑动切换回复 →" : "← Swipe to switch replies →")+'</span></div>');
+        '<button data-rg73="1">' + ICON73.regen + esc(t73("regen")) + '</button><button data-edg73="1">' + ICON73.edit + esc(t73("edit")) + '</button>' +
+        (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">' + ICON73.mind + esc(t73("mind")) + '</button>' : '') + '<span class="swipe73hint">'+(S.lang === "zh" ? "← 左右滑动切换回复 →" : "← Swipe to switch replies →")+'</span></div>');
     }
     /* address chips in multi-character scenes */
     const sp = speakersOf(th).filter(id => ch(id)), comp = document.querySelector(".composer");
     if (comp && sp.length > 1 && !(th.pk && th.pk.as === "watch") && !comp.querySelector(".addr73")) {
       if (th.addr && !sp.includes(th.addr)) th.addr = null;
-      comp.insertAdjacentHTML("afterbegin", '<div class="addr73"><span>' + esc(t73("addr")) + '</span><button class="' + (th.addr ? "" : "on") + '" data-addr73="">' + esc(t73("all")) + '</button>' + sp.map(id => {
+      comp.insertAdjacentHTML("afterbegin", '<div class="addr73"><span>' + esc(t73("addr")) + '</span><div class="addr73s"><button class="' + (th.addr ? "" : "on") + '" data-addr73="">' + esc(t73("all")) + '</button>' + sp.map(id => {
       /* 玩家扮演的那个人（th.pk.as）不该是「对谁说」的选项 —— 渲染成熄灭、点不动的牌，
          免得她选到自己、或者在选项里找不到「我在跟谁说话」。 */
       const addrMe73 = !!(th.pk && th.pk.as && id === th.pk.as);
       if (addrMe73) return '<button class="me73" disabled data-addr73="" aria-disabled="true">' + esc(first(ch(id).n)) + ' · ' + (S.lang==="zh"?"（你）":S.lang==="ja"?"（あなた）":S.lang==="ko"?"（본인）":" (you)") + '</button>';
       return '<button class="' + (th.addr === id ? "on" : "") + '" data-addr73="' + id + '">' + esc(first(ch(id).n)) + '</button>';
-    }).join("") + '</div>');
+    }).join("") + '</div></div>');
     }
 };
 if (window.UI && typeof window.UI.add === "function") {
@@ -15324,9 +15385,6 @@ if (window.UI && typeof window.UI.add === "function") {
 .ed73tag{font-size:10px;color:var(--faint);margin:-4px 0 2px 40px}.ed73tag.me{text-align:right;margin:-4px 6px 2px 0}
 .ed73s{display:flex;flex-direction:column;gap:10px}.ed73s h2{margin:0}.ed73r{display:flex;flex-direction:column;gap:4px}.ed73r span{font-size:11px;color:var(--faint);font-weight:700}
 .ed73r textarea{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5;outline:none;resize:vertical;width:100%}
-.addr73{display:flex;gap:6px;align-items:center;overflow-x:auto;margin-bottom:6px;scrollbar-width:none}.addr73::-webkit-scrollbar{display:none}
-.addr73 span{font-size:11px;color:var(--faint);font-weight:700;flex:none}
-.addr73 button{flex:none;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}.addr73 button.on{color:var(--text);border-color:rgba(238,111,151,.6);background:rgba(238,111,151,.14)}
 .m-think[data-mind]{border-left-color:#C9B8FF;background:rgba(156,132,224,.12)!important}
 .af73rules{font-size:12px;line-height:1.6;color:var(--dim);margin-top:14px;padding:10px 12px;border-radius:12px;background:var(--panel2)}`;
   document.head.appendChild(st);
@@ -18657,8 +18715,8 @@ function carryAgent97(th, nw) {
    运行：
    · 剧情智能体（导演）：只读世界、当前章节的场景锚点和玩家行为；负责进场、调度谁开口、给建议行动；不知道后面的章节和结局。
    · 角色智能体：每个角色只读自己的角色卡、自己的记忆（亲历 / 被告知）、眼前发生的事；不知道剧情走向，不知道玩家心里想什么。
-   · 每个场景：进场（锚点演出）→ 自由对话（想聊多久聊多久，角色在场景里回应你）→ 你点「继续剧情」→ 场景选择（如有）→ 下一场。
-     剧情只在你点「继续」或做出选择时推进 —— 不会自己跳走。
+   · 每个场景：进场（锚点演出）→ 自由对话（想聊多久聊多久，角色在场景里回应你）→ 聊到位后出现「下一章」按钮 → 你点了才往下走。
+     剧情只在你点按钮（或明确打字说要往下走）时推进 —— 不会自己跳走。
    · 电话只在作品设定里真的有电话的场景出现；小游戏默认关闭（版本 1：无玩法），作品资料里 games_on=true 才开启（版本 2）。
    · 玩家身份卡只有客观身份；玩家的性格、喜好由你的发言和选择累积（动态画像），不预设。 */
 const B98 = { cache: {}, ids: {} };
@@ -18773,6 +18831,35 @@ function introductions98(th) {
   }
   save();
 }
+/* 2026-11-05 玩家：开场和每章导语的版式写死 —— 一个不透明的框，标题 + 时间 / 地点 / 人物 / 眼前的事各占一行，全部左对齐。
+   数据还是 m.title + m.txt 两个字符串（旧存档也能显示），这里只负责把它们排进固定结构；
+   内容能不能放进这个版式，由 api/_stylecheck.js（node tools/script-style-check.mjs）在上传后检查。 */
+const INTRO_ROW98 = /^(时间|地点|人物|眼前的事|Time|Place|Present|Now)\s*[：:]\s*(.*)$/;
+function introHTML98(m, i) {
+  const attr = ' data-mi="' + i + '"';
+  if (m.intro98 === 'story') return '<div class="m-card entry98 entry98-story"' + attr + '><div class="e98-sh">' + esc(m.title || '') + '</div>' +
+    String(m.txt || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => '<p class="e98-p">' + esc(x) + '</p>').join('') + '</div>';
+  const [no, ...rest] = String(m.title || '').split(' · '), rows = [], body = [];
+  String(m.txt || '').split('\n').forEach(line => { const r = line.match(INTRO_ROW98); if (r) { if (r[2].trim()) rows.push(r); } else if (line.trim()) body.push(line.trim()); });
+  return '<div class="m-card entry98 entry98-ch"' + attr + '><div class="e98-ch"><span>' + esc(no) + '</span><b>' + esc(rest.join(' · ')) + '</b></div>' +
+    (rows.length ? '<dl class="e98-m">' + rows.map(r => '<dt>' + esc(r[1]) + '</dt><dd>' + esc(r[2].trim()) + '</dd>').join('') + '</dl>' : '') +
+    body.map(x => '<p class="e98-p">' + esc(x) + '</p>').join('') + '</div>';
+}
+/* 还没开口时停在开场卡的最上面，读完再往下；一旦聊起来就恢复「跟到最新」 */
+window.holdTop98 = function (th) { return !!(th && th.b98 && experience98(th) && !th.msgs.some(m => m.who === 'me' || m.k === 'say' || m.k === 'box')); };
+/* 聊天列表上半截有渐隐遮罩（越往上越淡）。开场卡和章节卡要读，进入遮罩区时把遮罩关掉，翻过去再恢复 */
+function fade98() {
+  const box = document.getElementById('msgs'); if (!box) return;
+  const r = box.getBoundingClientRect(), limit = r.top + r.height * 0.62;
+  const on = [...box.querySelectorAll('.entry98,.chapter124')].some(c => { const b = c.getBoundingClientRect(); return b.bottom > r.top && b.top < limit; });
+  box.classList.toggle('nofade98', on);
+}
+function entry98() {
+  const box = document.getElementById('msgs'); if (!box) return;
+  if (!box._fade98) { box._fade98 = 1; let queued = false; box.addEventListener('scroll', () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; fade98(); }); }, { passive: true }); }
+  fade98();
+}
+if (window.UI && typeof window.UI.add === 'function') window.UI.add('entry98', entry98);
 function actionView98(th, cid, txt) {
   const policy = experience98(th); if (!policy || policy.actionView !== 'thirdPerson') return txt;
   // Only the action field is normalized. Spoken first-person dialogue stays intact.
@@ -18798,7 +18885,7 @@ function experienceContext98(th) {
   const state = Object.assign({}, experienceState98(th), option && option.state);
   return '\n当前互动状态：' + JSON.stringify({romanceMode:state.romanceMode, focus:state.focus}) +
     (state.romanceMode==='friends' ? '\n用户已要求友伴：停止追求、争宠和暧昧，把邀请改成普通陪伴；不能靠换章恢复。' : '\n允许自然试探，不代表已经相爱或同意接触。') +
-    '\n当前地点以本章场景为准；接受陪同先确认安排，只有用户点继续剧情才正式转场。只把实际发生的事记成共同经历。' +
+    '\n当前地点以本章场景为准；接受陪同先确认安排，只有用户点「下一章」按钮才正式转场。只把实际发生的事记成共同经历。' +
     '\n当前章的在场表就是实际站位；不能把在场角色写成没跟过来或仍在上一地点。旁白不另改人物离场。' +
     (th.b98.ch<7 ? '\n雨夜事件尚未发生，不写下雨、雨后或衣服被雨打湿。' : '');
 }
@@ -18888,10 +18975,10 @@ async function director98(th, mode, act) {
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
-    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "两位主角的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
-           : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
+    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "两位主角的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。" + (mode === "exit" || mode === "enter" ? "" : "ready：这一场是否已经演到位、可以让玩家自己决定往下走。只有本章目标的核心已经在实际对话里发生、当前话题告一段落才填 true；玩家刚抛出问题、话题没收束、还聊在兴头上都填 false；不要因为聊得久就填 true。wants_next：玩家这一轮明确表示想离开这里或进入下一段时填 true，否则 false。不管填什么，你都不能替玩家转场，往下走由玩家点按钮决定。")
+           : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty." + (mode === "exit" || mode === "enter" ? "" : " ready: true only when the core of this chapter's goal has actually happened in the conversation and the current topic has wound down; false if the player just asked something, a topic is still open, or they're enjoying it; never true just because it has gone on long. wants_next: true only if the player clearly said this turn they want to leave or move on. Either way you never move the story yourself; the player taps a button.")) +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","ready":false,"wants_next":false,"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -18928,7 +19015,7 @@ async function actor98(th, cid, intent) {
 /* ---------- one beat ---------- */
 async function beat98(th, mode, act) {
   const A = th.b98; if (A.ended) return; if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
-  if (busy) return; busy = true; typing(true); if (experience98(th)) dock98(); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
+  if (busy) return; busy = true; if (act && window.EXPERIENCE124) EXPERIENCE124.positions.delete(th.id); typing(true); if (experience98(th)) dock98(); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
   try {
     const { s } = scene98(th), pres = present98(th, s);
     updateSpeaking98(th,act);
@@ -18958,6 +19045,7 @@ async function beat98(th, mode, act) {
     }
     if (policy && mode === "choice" && !delivered98) { toast(L98("角色回复未完成，选择尚未提交，可以重试", "The character response failed; the choice was not submitted. Try again.")); return false; }
     A.turns++; th.rounds++;
+    if (mode === "talk" || mode === "choice") gate98(th, d);
     if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
     if (d.state) A.flags.push(String(d.state).slice(0, 60));
@@ -18975,7 +19063,8 @@ async function enter98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (!s) return; A.phase = "enter";
   if (experience98(th)) introductions98(th);
   else if (A.sc === 0) appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · ", "Chapter " + A.ch + " · ") + LZ98(c.title), txt: "", at: Date.now() });
-  appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
+  /* 固定导语里已经有「地点」一行，不再重复一张地点卡 */
+  if (!experience98(th)) appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
   const As = OFF94.assets[wd(th.wid).community] || {};
   const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; try { sceneBg(th, key); } catch (_) {} }
   if (s.bgm) { A.bgm = "m_" + String(s.bgm).replace(/^m_/, ""); try { if (typeof bgmPlay === "function" && bgmOn()) bgmPlay(A.bgm, th.wid); } catch (_) {} }
@@ -18990,8 +19079,9 @@ async function enter98(th) {
 async function next98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (busy || A.ended) return;
   if (!(experience98(th) && experience98(th).allowFreeContinue) && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) { A.phase = "choice"; save(); dock98(); return; }
-  const lastScene = A.sc >= c.scenes.length - 1, lastCh = A.ch >= b.chapters.length;
-  const exited98 = await beat98(th, "exit", null); if (experience98(th) && !exited98) { dock98(); return; } if (A.ended) { dock98(); return; }
+  const lastScene = A.sc >= c.scenes.length - 1, lastCh = A.ch >= b.chapters.length, ready98 = A.ready98;
+  A.ready98 = null; dock98(); /* 收掉按钮，防止连点 */
+  const exited98 = await beat98(th, "exit", null); if (experience98(th) && !exited98) { A.ready98 = ready98; dock98(); return; } if (A.ended) { dock98(); return; }
   if (!lastScene) A.sc++;
   else if (!lastCh) { appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · 完", "Chapter " + A.ch + " · end"), txt: "", at: Date.now() });
     const ev = L98("第 " + A.ch + " 章结束，玩家这一章：", "Chapter " + A.ch + " ended. The player: ") + A.sum.slice(-3).join("；"); if (typeof gen96 === "function") gen96(th, ev).then(m => m && chg96(m)).catch(() => {});
@@ -19016,23 +19106,28 @@ async function pick98(th, i, echoed) {
   try { ok = await beat98(th, "choice", { txt: o.t, mode: "act", effect: o.effect }); }
   finally { CHOICE98.delete(th); }
   if (policy && ok) { A.picked[s.id] = i; A.flags.push(s.id + ":" + String(o.t).slice(0, 24)); applyChoiceState98(th,o); save(); }
+  /* 没有固定开场的老作品每场都要选一次，选完这一场就算演到位；《今晚，偏爱失控》这类作者写明「选完当前章继续」的，仍按轮数和智能体判断 */
+  if (!policy) { A.ready98 = A.ch + ":" + A.sc; save(); }
   dock98();
-  if (!policy || ok) auto98(th);
 }
-/* 2026-11-04：没有「继续剧情」按钮了，和《午夜邀约》一样自动往下走——
-   · 选了选项、他们回完话 → 停 2.5 秒让你看完 → 进下一场；
-   · 没有选项的场景，你自由说了 2 句以后 → 自动进下一场。
-   打字「继续剧情 / 下一章」仍然可以手动往下走。 */
-function auto98(th) {
-  const A = th && th.b98; if (!A || A.ended) return; const at = A.ch + ":" + A.sc;
-  let n = 0; const tick = () => { const B = th.b98; if (!B || B.ended || B.ch + ":" + B.sc !== at) return; if (busy) { if (++n < 20) setTimeout(tick, 1500); return; } next98(th); };
-  setTimeout(tick, 2500);
+/* 2026-11-05 玩家：「第一章聊了两句就到第二章了」—— 选完选项 2.5 秒、或聊满 2 句就自动换章，这条路去掉了。
+   现在换章只有两种触发：点「下一章」按钮，或者明确打字说「下一章」。按钮什么时候出现（gate98）：
+   · 剧情智能体判断这一场演到位（ready），且聊够了作者定的最少轮数（experience.pacing.minExchanges）；
+   · 玩家明确说想往下走（wants_next），不看轮数；
+   · 聊满目标轮数（targetExchanges）还没等到 ready，也给按钮，免得卡住 —— 给了也可以不点，接着聊。
+   没写 pacing 的老作品：一章一场的按 6 / 12 轮，一章多场的是场景级推进，按 2 / 6 轮。 */
+function pacing98(th) {
+  const { c } = scene98(th), p = (experience98(th) || {}).pacing || {}, one = !c || c.scenes.length <= 1;
+  return { min: +p.minExchanges || (one ? 6 : 2), target: +p.targetExchanges || (one ? 12 : 6) };
 }
-function talked98(th) {
-  const A = th && th.b98; if (!A || A.ended) return; const { s } = scene98(th); const at = A.ch + ":" + A.sc;
-  if (A.tkAt !== at) { A.tkAt = at; A.tkN = 0; } A.tkN++; save();
-  const open = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked);
-  if (!open && A.tkN >= 2) auto98(th);
+function gate98(th, d) {
+  const A = th.b98, at = A.ch + ":" + A.sc; if (A.tkAt !== at) { A.tkAt = at; A.tkN = 0; } A.tkN++;
+  const yes = v => v === true || v === "true", { min, target } = pacing98(th);
+  if (A.ready98 !== at && (yes(d && d.wants_next) || (yes(d && d.ready) && A.tkN >= min) || A.tkN >= target)) A.ready98 = at;
+}
+function nextLabel98(th) {
+  const { b, c } = scene98(th), A = th.b98;
+  return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : L98("走向结局", "To the ending");
 }
 /* sending a message in a b98 thread = free talk inside the current scene */
 { const _rp = reply; reply = function (th, ctx, silent) {
@@ -19045,14 +19140,14 @@ function talked98(th) {
         if (/^(?:继续剧情|下一章|进入下一章)$/.test(x)) return next98(th);
         const index=matchingChoice98(th,x);if(index>=0)return pick98(th,index,true);
       }
-      return Promise.resolve(beat98(th,'talk',{txt:ctx.txt,mode:ctx.kind==='dir'?'act':(ctx.mode||'say'),to:th.addr&&th.cast.includes(th.addr)?th.addr:null})).then(r => { try { talked98(th); } catch (e) { console.warn('[b98] talked', e); } return r; });
+      return Promise.resolve(beat98(th,'talk',{txt:ctx.txt,mode:ctx.kind==='dir'?'act':(ctx.mode||'say'),to:th.addr&&th.cast.includes(th.addr)?th.addr:null}));
     }
     return Promise.resolve();
   }
   return _rp.apply(this,arguments);
 }; }
 
-/* ---------- compact dock: 继续剧情 / scene choices (never a big window) ---------- */
+/* ---------- compact dock: 下一章 / scene choices (never a big window) ---------- */
 function dock98() {
   const th = S.threads[curT]; const old = $("#dk98"); if (!th || !th.b98) { if (old) old.remove(); return; }
   const comp = $("#s-chat .composer"); if (!comp) return; const A = th.b98, { s } = scene98(th);
@@ -19060,13 +19155,12 @@ function dock98() {
   if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
   else if (experience98(th) && A.phase !== 'enter' && s && s.choice && experience98(th).choiceDock === 'always') {
     const picked = s.id in A.picked;
-    h = '<div class="dk98q">' + esc(cq98(s.choice.q)) + '</div>' +
-      (picked ? '<p class="dk98h">' + L98('你已选择：', 'You chose: ') + esc(cq98(s.choice.options[A.picked[s.id]].t)) + '</p>' :
-        '<div class="dk98o">' + s.choice.options.map((o,i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join('') + '</div>') +
-      ''; /* 2026-11-04 玩家：「继续剧情也可以删掉了」—— 选了就自动往下走（见 pick98 末尾），不再有这个按钮 */
+    h = picked ? '' : '<div class="dk98q">' + esc(cq98(s.choice.q)) + '</div><div class="dk98o">' + s.choice.options.map((o,i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join('') + '</div>';
   }
   else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(cq98(o.t)) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
   else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join("") + '</div>';
+  const mustPick98 = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked) && !(experience98(th) && experience98(th).allowFreeContinue);
+  if (!A.ended && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
@@ -19079,7 +19173,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
 }, true);
 /* a call card gets an answer button */
-MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) h = h.replace('class="m-card"', 'class="m-card entry98"'); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
+MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
 /* free mode needs its world's assets loaded on reopen */
 { const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) { introductions98(th); renderChat(); } }); } } return _ot.apply(this, arguments); }; }
 /* love type + feed work here too */
@@ -19098,7 +19192,7 @@ MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) h = 
 { const _mm = typeof mgMatch === "function" ? mgMatch : null; if (_mm) mgMatch = function (txt) { const th = S.threads[curT], w = th && wd(th.wid); if (w && w.official76) return null; return _mm.apply(this, arguments); }; }
 /* ④ the your-turn dock can fold to one line */
 (function () { const st = document.createElement("style"); st.textContent = `
-.entry98 p{white-space:pre-line}#dk98{max-height:42vh;overflow:auto;flex:none;margin:0;padding:8px 12px 6px;background:rgba(12,11,16,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08)}
+#dk98{max-height:42vh;overflow:auto;flex:none;margin:0;padding:8px 12px 6px;background:rgba(12,11,16,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08)}
 #dk98+.composer{border-top:0}
 .dk98r{display:flex;align-items:center;gap:10px;padding-right:74px}.dk98t{flex:1;font-size:12.5px;color:#BDB4C7;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .dk98r button{flex:none;border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}
@@ -19111,7 +19205,7 @@ document.addEventListener("click", e => { if (!e.target.closest("[data-fd97]")) 
 function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自由输入|备注|注：)[^）)]*[）)]/g,'').replace(/\s+$/,'').trim();}
 
 /* 2026-11-04 玩家：底下两排小按钮重复了 —— 和《午夜邀约》一样只留一排。
-   做法：自由模式剧的「▶ 继续剧情」和剧情选项，搬进上面那排回复建议（#sugg）的最前面，原来的 #dk98 那排藏起来。
+   做法：自由模式剧的「下一章」按钮和剧情选项，搬进上面那排回复建议（#sugg）的最前面，原来的 #dk98 那排藏起来。
    按钮是复制过去的（data-b98pick / data-b98next 的点击是 document 上统一接的，在哪都能点）。
    没有 #sugg 的时候，#dk98 照常显示，不会丢掉推进剧情的按钮。 */
 (function merge98() {
@@ -19140,7 +19234,7 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
   }
   const go = () => { sync(); const scr = document.getElementById("s-chat"); if (!scr) return setTimeout(go, 500); let t = 0; new MutationObserver(() => { if (!busy) { clearTimeout(t); t = setTimeout(sync, 0); } }).observe(scr, { childList: true, subtree: true }); };
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go); else go();
-  try { const st = document.createElement("style"); st.textContent = "#s-chat.m98on #dk98{display:none!important}#sugg .m98{flex:none;max-width:72vw}#sugg .m98n{border-style:dashed!important;font-weight:700;white-space:nowrap}"; document.head.appendChild(st); } catch (e) { console.warn("[merge98] style", e); }
+  try { const st = document.createElement("style"); st.textContent = "#s-chat.m98on #dk98{display:none!important}#sugg .m98{flex:none;max-width:72vw}"; document.head.appendChild(st); } catch (e) { console.warn("[merge98] style", e); }
 })();
 
 /* ================= v8.5 · 2026-10-27 用户反馈第二轮 =================
@@ -21177,7 +21271,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   document.addEventListener("scroll", function (e) { const m = e.target; if (m && m.id === "msgs") atBottom = m.scrollHeight - m.scrollTop - m.clientHeight < 140; }, true);
   try {
     new MutationObserver(function () {
-      const m = document.getElementById("msgs"); if (!m || !atBottom) return;
+      const m = document.getElementById("msgs"); if (!m || !atBottom || (window.holdTop98 && holdTop98(S.threads[curT]))) return;
       requestAnimationFrame(function () { m.scrollTop = m.scrollHeight; });
       setTimeout(function () { if (atBottom) m.scrollTop = m.scrollHeight; }, 60);
     }).observe(document.body, { childList: true, subtree: true });
@@ -21647,7 +21741,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   return '<article class="chapter124" data-mi="'+i+'"><small>'+text('第 '+m.n+' 章','Chapter '+m.n)+'</small><h3>'+esc(m.title||'')+'</h3>'+briefHTML(b)+'</article>';
  });
  X.remember=function(){const m=document.getElementById('msgs');if(!m||m.dataset.thread124!==curT)return;X.positions.set(curT,{top:m.scrollTop,away:m.scrollHeight-m.scrollTop-m.clientHeight>72,count:current()?.msgs.length||0});};
- X.hold=function(){const p=X.positions.get(curT);if(p?.away){const b=document.querySelector('[data-latest124]');if(b){b.hidden=false;b.textContent=text('有新消息 ↓','New messages ↓');}return true;}return false;};
+ X.hold=function(){if(window.holdTop98&&holdTop98(current()))return true;const p=X.positions.get(curT);if(p?.away){const b=document.querySelector('[data-latest124]');if(b){b.hidden=false;b.textContent=text('有新消息 ↓','New messages ↓');}return true;}return false;};
  X.readingHistory=function(){const m=document.getElementById('msgs');return !!X.positions.get(curT)?.away||!!(m&&Date.now()-(m._scrolled124||0)<400);};
  X.openHistory=function(){HIST_OPEN=false;const m=document.getElementById('msgs');if(m){m.scrollTop=Math.max(0,m.scrollTop-m.clientHeight*.8);X.remember();}};
  X.callFallback=function(th,event){const cid=event.cid||mainOf(th);if(Array.isArray(th.present)&&th.present.includes(cid)&&Array.isArray(event.lines))return event.lines.map(line=>Array.isArray(line)?[line[0],'say',line[1]]:[cid,'say',line]).concat(event.then||[]);return event.skip||[];};
@@ -21655,7 +21749,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   const m=document.getElementById('msgs'),th=current();if(!m||!th)return;
   m.dataset.thread124=th.id;m.querySelectorAll('.cold').forEach(el=>el.classList.remove('cold'));
   let b=document.querySelector('[data-latest124]');if(!b){b=document.createElement('button');b.dataset.latest124='1';b.className='latest124';b.hidden=true;m.after(b);}
-  const p=X.positions.get(th.id);if(p?.away)m.scrollTop=p.top;else m.scrollTop=m.scrollHeight;
+  const p=X.positions.get(th.id);if(p?.away)m.scrollTop=p.top;else if(window.holdTop98&&holdTop98(th))m.scrollTop=0;else m.scrollTop=m.scrollHeight;
   b.hidden=!p?.away;b.textContent=p&&th.msgs.length>p.count?text('有新消息 ↓','New messages ↓'):text('回到最新 ↓','Latest ↓');
   const update=()=>{const away=m.scrollHeight-m.scrollTop-m.clientHeight>72;X.positions.set(th.id,{top:m.scrollTop,away,count:th.msgs.length});b.hidden=!away;m.classList.toggle('reading-history124',away);};
   m.addEventListener('scroll',update,{passive:true});
@@ -21668,10 +21762,21 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   const box=document.querySelector('#s-chat .composer');if(!box)return;
   box.querySelectorAll('.c55h,#modeMoreBtn,.modebtn,#modeToggle').forEach(el=>el.remove());
   const watch=current()?.pk?.as==='watch';box.classList.toggle('input124',!watch);if(watch)return;
-  box.querySelectorAll('.input-modes124').forEach(el=>el.remove());const row=document.createElement('div');row.className='input-modes124';row.setAttribute('role','group');row.setAttribute('aria-label',text('输入类型','Input mode'));
-  [['say','💬',text('台词','Say')],['act','✱',text('动作','Action')],['think','💭',text('心声','Thought')]].forEach(([k,i,l])=>{const b=document.createElement('button');b.dataset.input124=k;b.textContent=i+' '+l;b.setAttribute('aria-pressed',String(cmode===k));row.appendChild(b);});
+  /* 2026-11-05 玩家：台词 / 动作 / 心声占地方太大 ⇒ 收成「对谁说」左边的一个小按钮，点开才出选项。
+     名字多了在 .addr73s 里左滑查看，显示和隐藏的分界线对齐下面输入框的右边。 */
+  box.querySelectorAll('.input-modes124,.ctl124').forEach(el=>el.remove());
+  const row=document.createElement('div');row.className='ctl124';
+  const wrap=document.createElement('div');wrap.className='input-modes124';
+  wrap.innerHTML='<button class="im124" data-inputmenu124="1" aria-haspopup="true" aria-expanded="false" aria-label="'+text('输入类型','Input mode')+'">'+modeLabel()+'<svg viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg></button><div class="immenu124" role="menu" hidden>'+MODES().map(([k,i,l])=>'<button role="menuitemradio" data-input124="'+k+'" aria-checked="'+(cmode===k)+'"><i>'+i+'</i>'+l+'</button>').join('')+'</div>';
+  row.appendChild(wrap);
+  const addr=box.querySelector('.addr73');if(addr)row.appendChild(addr);
   box.prepend(row);
+  const input=box.querySelector('#cin');
+  if(input){const gap=row.getBoundingClientRect().right-input.getBoundingClientRect().right;if(gap>0)row.style.paddingRight=gap+'px';if(cmode==='act'||cmode==='think')input.placeholder=text(cmode==='act'?'你要做什么……':'你心里在想……',cmode==='act'?'What do you do?':'Your private thought…');}
  }
+ const MODES=()=>[['say','💬',text('台词','Say')],['act','✱',text('动作','Action')],['think','💭',text('心声','Thought')]];
+ function modeLabel(){const m=MODES().find(([k])=>k===cmode);return m?'<i>'+m[1]+'</i><span>'+m[2]+'</span>':'<i>🎬</i><span>'+text('导演','Direct')+'</span>';}
+ function closeModeMenu(){document.querySelectorAll('.immenu124').forEach(el=>{el.hidden=true;});document.querySelectorAll('[data-inputmenu124]').forEach(b=>b.setAttribute('aria-expanded','false'));}
  /* 2026-11-05（玩家：顶栏还是之前的版本好看，只是不要「历史」）⇒ 顶栏恢复：左边头像 + 剧名 + 💗 关系，工具按钮照旧；
     「历史」按钮由 app121_dock 的 noHist() 去掉。不另加「♥ 陌生人」。 */
  function header(){const h=document.querySelector('#s-chat .chead');if(!h)return;h.classList.remove('slim124');const r=h.querySelector('.row');if(!r)return;
@@ -21682,7 +21787,8 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  }
  document.addEventListener('click',e=>{
   if(e.target.closest('.sheet [data-mode="dir"]')){e.preventDefault();e.stopImmediatePropagation();cmode='dir';closeSheet();const i=document.getElementById('cin');if(i){i.placeholder=text('输入导演指令……','Director instruction…');i.focus();}return;}
-  const mode=e.target.closest('[data-input124]');if(mode){e.preventDefault();e.stopImmediatePropagation();cmode=mode.dataset.input124;document.querySelectorAll('[data-input124]').forEach(b=>b.setAttribute('aria-pressed',String(b===mode)));const i=document.getElementById('cin');if(i){i.placeholder=text(cmode==='act'?'你要做什么……':cmode==='think'?'你心里在想……':'你想说什么……',cmode==='act'?'What do you do?':cmode==='think'?'Your private thought…':'Say something…');i.focus();}return;}
+  const menuBtn=e.target.closest('[data-inputmenu124]');if(menuBtn){e.preventDefault();e.stopImmediatePropagation();const menu=menuBtn.parentNode.querySelector('.immenu124'),open=menu.hidden;closeModeMenu();menu.hidden=!open;menuBtn.setAttribute('aria-expanded',String(open));return;}
+  const mode=e.target.closest('[data-input124]');if(!mode)closeModeMenu();if(mode){e.preventDefault();e.stopImmediatePropagation();cmode=mode.dataset.input124;document.querySelectorAll('[data-input124]').forEach(b=>b.setAttribute('aria-checked',String(b===mode)));document.querySelectorAll('[data-inputmenu124]').forEach(b=>{b.querySelector('i').textContent=mode.querySelector('i').textContent;b.querySelector('span').textContent=mode.textContent.replace(mode.querySelector('i').textContent,'');});closeModeMenu();const i=document.getElementById('cin');if(i){i.placeholder=text(cmode==='act'?'你要做什么……':cmode==='think'?'你心里在想……':'你想说什么……',cmode==='act'?'What do you do?':cmode==='think'?'Your private thought…':'Say something…');i.focus();}return;}
   if(e.target.closest('[data-detail124]')){e.preventDefault();e.stopImmediatePropagation();details();return;}
   if(e.target.closest('[data-latest124]')){e.preventDefault();e.stopImmediatePropagation();X.positions.delete(curT);const m=document.getElementById('msgs');if(m)m.scrollTop=m.scrollHeight;e.target.closest('button').hidden=true;return;}
   const m=e.target.closest('#msgs');if(m&&(X.positions.get(curT)?.away||Date.now()-(m._scrolled124||0)<400)&&!e.target.closest('button,a')){e.stopImmediatePropagation();}

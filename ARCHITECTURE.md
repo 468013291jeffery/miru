@@ -643,7 +643,7 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**50 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**51 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
@@ -974,7 +974,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 319 |
 | `app71_narrative.js` | MIRU 互动剧本规则 v1.0 — runtime side The creator side carries the full rule se… | 165 |
 | `app72_zhpure.js` | 中文版只显示中文 Audit (every onboarding step, tabs, store, taste sheet, a story)… | 36 |
-| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 381 |
+| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 384 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 134 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
 | `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 93 |
@@ -1006,7 +1006,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 222 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 491 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 527 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 187 |
@@ -1035,7 +1035,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app121_dock.js` | 剧情面板贴住输入区（） 玩家反馈（截图）：「轮到你了 · 你想怎么回他？」那一块和下面「对谁说 + 输入框」是两个框，要融成一块 | 76 |
 | `app122_react.js` | 消息表情回应（ · 像 WhatsApp / iMessage 那样） 玩家建议：对角色的某一句话点个赞 / 回个表情，美国用户很习惯 | 105 |
 | `app123_alt.js` | 剧本台词「换个说法」（） 玩家：希望剧本台词也能滑出别的说法 —— 剧本原句永远是第 1 版，往左滑让 AI 用同样的意思换一种说法，剧情走向不变 | 110 |
-| `app124_experience.js` | Scene-aware interaction and a continuous, readable conversation | 86 |
+| `app124_experience.js` | Scene-aware interaction and a continuous, readable conversation | 98 |
 | `app125_fresh.js` | 自动用上新版本（） 玩家：上新了，手机上还是旧样子（iPhone Safari 会把页面一直留在内存里，不刷新就一直是旧版） | 25 |
 | `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 70 |
 | `app127_play.js` | 安卓 App（Google Play）专用：Play 内购 + 隐藏成人作品（） 安卓 App 是一个「可信网页壳」（TWA）：打开的就是线上的 … | 118 |

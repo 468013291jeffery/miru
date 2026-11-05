@@ -466,8 +466,12 @@ module.exports = L.wrap(async (req, res) => {
       const md = '# ' + s.title + '\n\n' + (s.chapters || []).slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n');
       const q = QA.dslQA(md);
       const sf = L.safety([md]);
-      const err = q.err.concat(sf.length ? ['受限词：' + sf.join('; ')] : []);
-      const review = { approved: !err.length, auto: true, by: 'D先生', at: Date.now(), notes: '自动审查：结构' + (q.ok ? '通过' : '不通过') + ' · 受限词 ' + sf.length, checks: { list: [], stats: q.stats, perCh: q.perCh } };
+      /* 2026-11-05：样式检查和结构、受限词一起跑。规则在 api/_stylecheck.js，命令行版见 tools/script-style-check.mjs */
+      const Style = require('./_stylecheck');
+      const st = Style.checkDsl(md);
+      const err = q.err.concat(sf.length ? ['受限词：' + sf.join('; ')] : [], st.err.map(x => '样式：' + x));
+      q.warn = (q.warn || []).concat(st.warn.map(x => '样式：' + x));
+      const review = { approved: !err.length, auto: true, by: 'D先生', at: Date.now(), notes: '自动审查：结构' + (q.ok ? '通过' : '不通过') + ' · 受限词 ' + sf.length + ' · 样式硬错 ' + st.err.length, checks: { list: [], stats: q.stats, perCh: q.perCh } };
       /* 回执（2026-10-29 · Ann）：「bl 还是 bg 应该第一时间就能回复」——所以回执是**固定形状的一段话**，
          谁跑审查都能整段复制给药方/编剧，不用自己拼。取向那一行是重点：声明 / 推断分开写。 */
       const ORLBL = { bg: '女性向 M/F', bl: 'BL', gl: 'GL' };
@@ -480,7 +484,7 @@ module.exports = L.wrap(async (req, res) => {
         '《' + s.title + '》',
         '章 ' + q.stats.chapters + ' · 场景 ' + q.stats.scenes + ' · 选择 ' + q.stats.choices + ' · 选项 ' + q.stats.options + ' · 收尾 ' + q.stats.dots + ' · 「你：」' + q.stats.you,
         orLine,
-        '未识别指令 ' + (q.stats.unknown || []).length + ' · 受限词 ' + sf.length,
+        '未识别指令 ' + (q.stats.unknown || []).length + ' · 受限词 ' + sf.length + ' · 样式硬错 ' + st.err.length,
         '资产 ' + ((q.stats.assets && q.stats.assets.total) || 0) + ' 个声明槽位（背景 ' + ((q.stats.assets && q.stats.assets.bg) || 0) + ' · CG ' + ((q.stats.assets && q.stats.assets.cg) || 0) + ' · 视频 ' + ((q.stats.assets && q.stats.assets.video) || 0) + ' · 照片 ' + ((q.stats.assets && q.stats.assets.photo) || 0) + ' · 道具 ' + ((q.stats.assets && q.stats.assets.item) || 0) + '）· 上线后若没有 art/official/<work_id>.json，这些槽位会静默无图',
         '结论：' + (err.length ? '不通过（' + err.length + ' 个硬错）' : '通过') + '（' + err.length + ' 硬错 / ' + (q.warn || []).length + ' 提醒）',
         warnList.length ? ('提醒：' + warnList.map((w, i) => (i + 1) + ') ' + w).join(' ')) : '',

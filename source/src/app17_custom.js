@@ -68,7 +68,7 @@ PKREG.add("app17_custom.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="s
  return next(th,b)});;
 function partHTML(p){if(p.k==="event")return '<p class="tp ev"><span class="tpe">'+esc(p.icon)+' '+esc(p.title)+'</span>'+(p.txt?esc(p.txt):'')+'</p>';
  if(p.who==="n")return '<p class="tp n">'+esc(p.txt)+'</p>';const c=ch(p.who),nm=c?first(c.n):"";
- return p.k==="think"?'<p class="tp th"><span class="tpt">💭 '+esc(nm)+'</span>'+esc(p.txt)+'</p>':'<p class="tp ac"><span class="tpa">✱ '+esc(nm)+'</span>'+esc(p.txt)+'</p>'}
+ return p.k==="think"?'<p class="tp th"><span class="tpt">💭 '+esc(nm)+'</span>'+esc(p.txt)+'</p>':'<p class="tp ac">'+(nm&&String(p.txt).startsWith(nm)?'':'<span class="tpa">✱ '+esc(nm)+'</span>')+esc(p.txt)+'</p>'}
 const _boxHTML8=boxHTML;
 boxHTML=function(m,i,th){if(!m.say)return '<div class="m-box ctx bubble" data-mi="'+i+'">'+m.parts.map(partHTML).join("")+'</div>';
  const c=ch(m.say.who);

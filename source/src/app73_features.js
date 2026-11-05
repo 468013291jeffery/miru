@@ -298,6 +298,11 @@ MSGKIND.post("app73_features.js", function (h, m, i, th) {
    理由：猴补丁是隐式接口，包了几十层之后任何一层抛错都会掐掉后面所有层；
    UI.add 的钩子每个单独 try/catch，一个炸不连累别人。逻辑本身一行没改。 */
 const __body73 = function () {
+    const ICON73 = {
+      regen: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9M13.5 2v3h-3"/></svg>',
+      edit: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10.5 3l2.5 2.5L6 12.5l-3 .5.5-3z"/></svg>',
+      mind: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3c3 0 5.5 1.8 5.5 4.2S11 11.4 8 11.4c-.7 0-1.3-.1-1.9-.3L3.5 12.5l.6-2.3C3 9.4 2.5 8.4 2.5 7.2 2.5 4.8 5 3 8 3z"/></svg>',
+    };
     const th = S.threads[curT]; if (!th) return;
     /* header chip */
     const cid = mainOf(th), c = ch(cid), hd = document.querySelector(".chead .grow[data-us]");
@@ -328,21 +333,22 @@ const __body73 = function () {
    return box;
  })();
  _host.insertAdjacentHTML("beforeend", '<div class="rg73">' +
+        /* 2026-11-05 玩家：这排按钮太大、不好看 ⇒ 样式见 shell.html，图标统一成线条小图标 */
         '<span class="vs73" aria-label="'+(S.lang === "zh" ? "回复版本" : "Reply versions")+'"><button data-vs73="-1" aria-label="'+(S.lang === "zh" ? "上一个版本" : "Previous version")+'"'+(V && V.cur ? '' : ' disabled')+'>‹</button><span aria-live="polite">'+(V ? V.cur + 1 : 1)+' / '+(V ? V.list.length : 1)+'</span><button data-vs73="1" aria-label="'+(S.lang === "zh" ? "下一个版本或重新生成" : "Next version or regenerate")+'">›</button></span>' +
-        '<button data-rg73="1">↻ ' + esc(t73("regen")) + '</button><button data-edg73="1">✎ ' + esc(t73("edit")) + '</button>' +
-        (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">💭 ' + esc(t73("mind")) + '</button>' : '') + '<span class="swipe73hint">'+(S.lang === "zh" ? "← 左右滑动切换回复 →" : "← Swipe to switch replies →")+'</span></div>');
+        '<button data-rg73="1">' + ICON73.regen + esc(t73("regen")) + '</button><button data-edg73="1">' + ICON73.edit + esc(t73("edit")) + '</button>' +
+        (lastSay >= 0 ? '<button data-mind73="' + lastSay + '">' + ICON73.mind + esc(t73("mind")) + '</button>' : '') + '<span class="swipe73hint">'+(S.lang === "zh" ? "← 左右滑动切换回复 →" : "← Swipe to switch replies →")+'</span></div>');
     }
     /* address chips in multi-character scenes */
     const sp = speakersOf(th).filter(id => ch(id)), comp = document.querySelector(".composer");
     if (comp && sp.length > 1 && !(th.pk && th.pk.as === "watch") && !comp.querySelector(".addr73")) {
       if (th.addr && !sp.includes(th.addr)) th.addr = null;
-      comp.insertAdjacentHTML("afterbegin", '<div class="addr73"><span>' + esc(t73("addr")) + '</span><button class="' + (th.addr ? "" : "on") + '" data-addr73="">' + esc(t73("all")) + '</button>' + sp.map(id => {
+      comp.insertAdjacentHTML("afterbegin", '<div class="addr73"><span>' + esc(t73("addr")) + '</span><div class="addr73s"><button class="' + (th.addr ? "" : "on") + '" data-addr73="">' + esc(t73("all")) + '</button>' + sp.map(id => {
       /* 玩家扮演的那个人（th.pk.as）不该是「对谁说」的选项 —— 渲染成熄灭、点不动的牌，
          免得她选到自己、或者在选项里找不到「我在跟谁说话」。 */
       const addrMe73 = !!(th.pk && th.pk.as && id === th.pk.as);
       if (addrMe73) return '<button class="me73" disabled data-addr73="" aria-disabled="true">' + esc(first(ch(id).n)) + ' · ' + (S.lang==="zh"?"（你）":S.lang==="ja"?"（あなた）":S.lang==="ko"?"（본인）":" (you)") + '</button>';
       return '<button class="' + (th.addr === id ? "on" : "") + '" data-addr73="' + id + '">' + esc(first(ch(id).n)) + '</button>';
-    }).join("") + '</div>');
+    }).join("") + '</div></div>');
     }
 };
 if (window.UI && typeof window.UI.add === "function") {
@@ -371,9 +377,6 @@ if (window.UI && typeof window.UI.add === "function") {
 .ed73tag{font-size:10px;color:var(--faint);margin:-4px 0 2px 40px}.ed73tag.me{text-align:right;margin:-4px 6px 2px 0}
 .ed73s{display:flex;flex-direction:column;gap:10px}.ed73s h2{margin:0}.ed73r{display:flex;flex-direction:column;gap:4px}.ed73r span{font-size:11px;color:var(--faint);font-weight:700}
 .ed73r textarea{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.5;outline:none;resize:vertical;width:100%}
-.addr73{display:flex;gap:6px;align-items:center;overflow-x:auto;margin-bottom:6px;scrollbar-width:none}.addr73::-webkit-scrollbar{display:none}
-.addr73 span{font-size:11px;color:var(--faint);font-weight:700;flex:none}
-.addr73 button{flex:none;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px;border:1px solid var(--line);color:var(--dim)}.addr73 button.on{color:var(--text);border-color:rgba(238,111,151,.6);background:rgba(238,111,151,.14)}
 .m-think[data-mind]{border-left-color:#C9B8FF;background:rgba(156,132,224,.12)!important}
 .af73rules{font-size:12px;line-height:1.6;color:var(--dim);margin-top:14px;padding:10px 12px;border-radius:12px;background:var(--panel2)}`;
   document.head.appendChild(st);

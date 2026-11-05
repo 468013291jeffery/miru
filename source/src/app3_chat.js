@@ -213,7 +213,7 @@ function sayHTML(m,i,th){
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div class="bub bubble"><small class="bubn">'+esc(who(m,th))+'</small>'+body+'</div></div>';
 }
  const isMe=m.who==="me",c=isMe?null:ch(m.who);
- if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
+ if(m.k==="act")return '<div class="m-act'+(isMe?" me":"")+'" data-mi="'+i+'">'+(isMe||String(m.txt).startsWith(who(m,th))?"":'<b style="color:'+(c?c.pal[0]:"")+';font-size:11px">'+esc(who(m,th))+'</b> ')+esc(m.txt)+'</div>'+tools;
  if(m.k==="think")return '<div class="m-think'+(isMe?" me":"")+'" data-mi="'+i+'"><small>'+(isMe?"💭 "+esc(me()):"💭 "+esc(who(m,th)))+'</small>'+esc(m.txt)+'</div>'+tools;
  if(isMe)return '<div class="m-row me" data-mi="'+i+'" data-wc style="--wc:var(--fg)"><div class="bub bubble">'+((typeof lineHTML==="function")?lineHTML({who:"me",k:m.k,txt:m.txt},th,{noName:true}):esc(m.txt))+'</div></div>'+tools;
  return '<div class="m-row" data-mi="'+i+'" data-wc style="--wc:'+((c&&c.pal&&c.pal[0])||"var(--line)")+'">'+avatar(m.who,30)+'<div><div class="m-who" style="color:'+(c?c.pal[0]:"")+'">'+esc(who(m,th))+'</div><div class="m-box lb bubble">'+((typeof lineHTML==="function")?lineHTML({who:m.who,k:m.k,txt:m.txt},th,{noName:true}):('<p class="bac">'+esc(m.txt)+'</p>'))+'</div></div></div>'+tools;}

@@ -22,6 +22,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # 上传剧本（art/official/*.bible.json）后跑样式检查。App 直接读这些文件，所以这一步拦不住上线，
+  # 只负责变红报警；不和 build 绑在一起，免得一处文案问题卡住整站构建。
+  script-style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 剧本样式检查
+        run: node tools/script-style-check.mjs
+
   build:
     runs-on: ubuntu-latest
     steps:

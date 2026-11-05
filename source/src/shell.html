@@ -1484,9 +1484,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat .chead.slim124 .hist121{display:inline-flex!important}
 .relationship124{border:0;background:rgba(15,12,20,.38);color:#ead7df;font-size:11px;border-radius:20px;padding:5px 9px;margin-left:auto}
 #s-chat .composer.input124 .modes,#s-chat .composer.input124 .modes2{display:none!important}
-.input-modes124{display:flex;gap:6px;margin:0 0 6px}
-.input-modes124 button{min-height:36px;flex:1;border:1px solid #ffffff20;border-radius:12px;background:#17131bd9;color:#dbd4e2;font-size:13px}
-.input-modes124 button[aria-pressed=true]{border-color:#f0b77e;color:#ffe0b9;background:#6d4d3580}
 #s-chat #msgs{overflow-y:auto;overscroll-behavior:contain;min-height:0;touch-action:pan-y;mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85) 46%,#000 60%);-webkit-mask-image:linear-gradient(to bottom,transparent 0,rgba(0,0,0,.18) 12%,rgba(0,0,0,.55) 30%,rgba(0,0,0,.85) 46%,#000 60%)}
 /* 2026-11-04（玩家：越往上颜色越浅，可以往上翻看聊天记录）⇒ 渐隐从原来的 42px 拉长到列表上面 60%：最上面几乎透明、越往下越实，翻上去的那句会移到下面、变清楚。 */
 #s-chat.clean #msgs>.cold{display:revert!important}
@@ -1495,9 +1492,6 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat.clean .chead.slim124 .vtog{display:inline-flex!important}
 .latest124{align-self:center;z-index:12;flex-shrink:0;margin:3px auto;padding:7px 14px;border:1px solid #ffffff38;border-radius:20px;background:#231d2a;color:#fff;font-size:12px}
 .latest124[hidden]{display:none}
-.chapter124{margin:12px auto;max-width:92%;padding:18px;border:1px solid #f0b77e44;border-radius:18px;background:#17131bef;color:#f5eee7;line-height:1.6}
-.chapter124 small{color:#f0b77e}.chapter124 h3{margin:4px 0 12px}.chapter124 p{font-size:13px;margin:8px 0 0}
-.brief124{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font-size:13px;margin:8px 0}.brief124 dt{color:#c6b7c9}.brief124 dd{margin:0;overflow-wrap:anywhere}
 .feedback124{animation:feedback124 .65s ease-out}@keyframes feedback124{from{box-shadow:0 0 0 2px #f0b77e88;transform:translateY(4px)}to{box-shadow:0 0 0 8px transparent;transform:none}}
 @media(prefers-reduced-motion:reduce){.feedback124{animation:none}}
 /* 2026-11-04（玩家：这个条改回之前透明的样子，不要大黑条；「联想回复」那种就行）
@@ -1530,10 +1524,71 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #s-chat #dk98 .dk98o button,#s-chat #dk98 .dk98r button{flex:none;max-width:72vw;white-space:normal;text-align:left;font-size:13px;font-weight:500;line-height:1.4;padding:7px 10px;border-radius:12px;background:rgba(240,183,126,.07)!important;border:1px solid rgba(240,183,126,.35)!important;color:var(--text)!important;-webkit-backdrop-filter:none;backdrop-filter:none}
 #s-chat #dk98 .dk98r button{order:-1;white-space:nowrap;border-style:dashed!important;font-weight:700}
 /* 回复下面那条「1/1 · 重新生成 · 编辑 · 他在想什么 · ← 左右滑动切换回复 →」也收成和气泡下面一样的小按钮，不要框，不要提示字 */
-#s-chat .rg73{border:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;gap:4px;justify-content:flex-start;margin:4px 0 0 46px;width:auto}
+/* ===== 2026-11-05 玩家反馈（下面五组是一套，集中在这里，别的地方不要再覆盖）===== */
+/* ① 回复下面的操作：一排细字 + 线条小图标，没有底板，不抢气泡的注意力 */
+#s-chat .rg73{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:12px;width:auto;margin:3px 0 0 40px;border:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;overflow:visible;white-space:nowrap}
 #s-chat .rg73>*+*{border-left:0!important}
-#s-chat .rg73>button,#s-chat .rg73>.vs73{padding:3px 8px;border-radius:999px;background:rgba(18,16,26,.55);font-size:11px}
+#s-chat .rg73>button,#s-chat .rg73>.vs73{display:inline-flex;align-items:center;gap:3px;position:relative;height:18px;padding:0;background:none!important;border:0;border-radius:0;font-size:11px;font-weight:500;line-height:1;letter-spacing:.01em;color:rgba(255,255,255,.62)!important}
+#s-chat .rg73>button::after{content:"";position:absolute;inset:-9px -5px}
+#s-chat .rg73>button:active{color:#FFE0B9!important}
+#s-chat .rg73 svg{width:12px;height:12px;flex:none;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+#s-chat .rg73 .vs73 button{min-width:18px;min-height:18px;padding:0!important;font-size:13px;color:inherit}
 #s-chat .rg73 .swipe73hint{display:none!important}
+/* ② 开场卡和章节卡的固定版式：不透明的一个框，全部左对齐。内容规范见 api/_stylecheck.js */
+#s-chat #msgs.nofade98{-webkit-mask-image:none;mask-image:none}
+#s-chat #msgs .entry98,#s-chat #msgs .chapter124{flex:none;align-self:stretch;width:auto;max-width:none;margin:4px 2px;padding:15px 16px 16px;border-radius:16px;background:#15121A;border:1px solid rgba(240,183,126,.3);color:#F3ECF1;text-align:left;line-height:1.65;-webkit-backdrop-filter:none;backdrop-filter:none}
+#s-chat #msgs .entry98-story:has(+ .entry98-ch){margin-bottom:0;padding-bottom:14px;border-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0}
+#s-chat #msgs .entry98-story+.entry98-ch{margin-top:-6px;padding-top:0;border-top:0;border-top-left-radius:0;border-top-right-radius:0}
+#s-chat #msgs .entry98-story+.entry98-ch .e98-ch{padding-top:14px;border-top:1px solid rgba(240,183,126,.2)}
+.e98-sh{display:flex;align-items:center;gap:12px;margin:0 0 10px;font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.14em;line-height:1.25;background:linear-gradient(120deg,#FFE9D2,#F0B77E 60%,#F2A3B4);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.e98-sh::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,183,126,.55),transparent)}
+.e98-p{font-size:14px;line-height:1.72;color:#EFE8EE}.e98-p+.e98-p{margin-top:8px}
+.e98-ch span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.16em;color:#F0B77E}
+.e98-ch b{display:block;margin-top:3px;font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:#FFEBD6}
+.e98-m,.brief124{display:grid;grid-template-columns:max-content 1fr;gap:5px 12px;margin:11px 0;padding:0;font-size:13px;line-height:1.55}
+.e98-m dt,.brief124 dt{color:rgba(240,183,126,.82);font-weight:600}
+.e98-m dd,.brief124 dd{margin:0;color:#EFE8EE;overflow-wrap:anywhere}
+.chapter124 small{display:block;font-size:11.5px;font-weight:700;letter-spacing:.16em;color:#F0B77E}
+.chapter124 h3{margin:3px 0 0;font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.35;color:#FFEBD6}
+.chapter124 p{font-size:14px;line-height:1.72;color:#EFE8EE;margin:0}
+/* ③「下一章」：只有该往下走时才出现，排在回复建议最前面，不压正文 */
+#s-chat #sugg .m98n{align-self:center;border:0!important;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:700;line-height:1.3;white-space:nowrap;color:#1B1017!important;background:linear-gradient(135deg,#F0B77E,#EE8FA8)!important;animation:next98 .32s ease-out}
+@keyframes next98{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+/* ④ 输入类型 + 对谁说：一排。名字在 .addr73s 里左滑，右边界由 app124 对齐到输入框右边（padding-right 是脚本量出来之前的默认值） */
+.ctl124{display:flex;align-items:center;gap:8px;min-width:0;margin:0 0 7px;padding-right:50px}
+.input-modes124{position:relative;flex:none}
+#s-chat .composer .im124{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 9px;border-radius:999px;border:1px solid rgba(240,183,126,.5);background:rgba(14,12,20,.66);color:#FFE0B9;font-size:12px;font-weight:600;white-space:nowrap}
+.im124 i,.immenu124 i{font-style:normal}
+.im124 svg{width:9px;height:6px;margin-left:1px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.im124[aria-expanded=true] svg{transform:rotate(180deg)}
+.immenu124{position:absolute;left:0;bottom:calc(100% + 6px);z-index:40;display:flex;flex-direction:column;gap:2px;min-width:112px;padding:4px;border-radius:14px;background:#1B1722;border:1px solid rgba(240,183,126,.32);box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.immenu124[hidden]{display:none}
+#s-chat .composer .immenu124 button{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;font-size:13px;color:#E6DEE8;text-align:left;white-space:nowrap}
+#s-chat .composer .immenu124 button[aria-checked=true]{color:#FFE0B9;background:rgba(240,183,126,.14)}
+.immenu124 i{width:16px;text-align:center}
+#s-chat .ctl124 .addr73{flex:1;min-width:0;display:flex;align-items:center;gap:7px;margin:0;overflow:visible}
+#s-chat .ctl124 .addr73>span{flex:none;padding-left:8px;border-left:1px solid rgba(255,255,255,.16);font-size:11.5px;font-weight:600;line-height:14px;color:rgba(255,255,255,.62)}
+.addr73s{flex:1;min-width:0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.addr73s::-webkit-scrollbar{display:none}
+#s-chat .composer .addr73s button{flex:none;height:26px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(14,12,20,.55);color:#D9D1DE;font-size:12px;font-weight:600}
+#s-chat .composer .addr73s button.on{border-color:rgba(240,183,126,.7)!important;background:rgba(240,183,126,.16)!important;color:#FFE0B9}
+/* ⑤ 消息的文字和底板分开定：
+   文字 —— 台词 / 动作 / 心声各一种样式，玩家和角色完全相同（只在这里定）；
+   底板 —— 角色是中性深色；玩家是同一种玫瑰金，台词实底、动作浅底、心声浅底虚线。 */
+#s-chat{--say-c:#F8F3F5;--act-c:#EEC99E;--think-c:#CFC2F2;--npc-plate:rgba(21,18,26,.86);--npc-line:rgba(255,255,255,.11);--me-plate:rgba(150,84,92,.72);--me-plate-soft:rgba(150,84,92,.34);--me-line:rgba(240,183,126,.42)}
+/* 文字 */
+#s-chat #msgs .bub .bac,#s-chat #msgs .m-box p.bac,#s-chat #msgs .m-box .tsay{font-size:14px;font-weight:400;font-style:normal;line-height:1.58;color:var(--say-c)!important}
+#s-chat #msgs .m-act,#s-chat #msgs em.ma,#s-chat #msgs .tp.ac,#s-chat #msgs .tp.ac .tpa{font-size:13.5px;font-weight:400;font-style:italic;line-height:1.58;color:var(--act-c)!important}
+#s-chat #msgs .m-think,#s-chat #msgs em.mt,#s-chat #msgs .m-box p.bth,#s-chat #msgs .tp.th,#s-chat #msgs .tp.th .tpt{font-size:13.5px;font-weight:400;font-style:italic;line-height:1.58;color:var(--think-c)!important}
+#s-chat #msgs em.ma,#s-chat #msgs em.mt{display:inline;margin:0;padding:0!important;background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;opacity:1;text-align:left}
+/* 角色底板 */
+#s-chat #msgs .m-row:not(.me) .bub,#s-chat #msgs .m-row:not(.me) .m-box{background:var(--npc-plate)!important;border:1px solid var(--npc-line)!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-act:not(.me),#s-chat #msgs .m-think:not(.me){align-self:flex-start;max-width:88%;margin:0 0 0 38px;padding:7px 12px;border-radius:14px 14px 14px 6px;background:var(--npc-plate)!important;border:1px solid var(--npc-line)!important;text-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-think:not(.me){border-style:dashed!important}
+/* 玩家底板 */
+#s-chat #msgs .m-row.me .bub,#s-chat #msgs .m-row.me .m-box.lb,#s-chat #msgs .m-row.me[data-wc] .bub{background:var(--me-plate)!important;border:1px solid var(--me-line)!important;border-radius:16px 16px 6px 16px;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-act.me,#s-chat #msgs .m-think.me{align-self:flex-end;max-width:86%;margin:0 0 0 auto;padding:7px 12px;border-radius:14px 14px 6px 14px;text-align:left;background:var(--me-plate-soft)!important;border:1px solid var(--me-line)!important;text-shadow:none!important;-webkit-backdrop-filter:none;backdrop-filter:none!important}
+#s-chat #msgs .m-think.me{border-style:dashed!important}
+#s-chat #msgs .m-think small{font-style:normal;font-size:10px;letter-spacing:.04em;text-transform:none;color:inherit;opacity:.7}
 </style>
 <div class="app"><div class="device" id="dev"></div></div>
 <script src="config.js"></script>

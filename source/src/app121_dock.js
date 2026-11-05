@@ -67,7 +67,7 @@
   document.addEventListener("scroll", function (e) { const m = e.target; if (m && m.id === "msgs") atBottom = m.scrollHeight - m.scrollTop - m.clientHeight < 140; }, true);
   try {
     new MutationObserver(function () {
-      const m = document.getElementById("msgs"); if (!m || !atBottom) return;
+      const m = document.getElementById("msgs"); if (!m || !atBottom || (window.holdTop98 && holdTop98(S.threads[curT]))) return;
       requestAnimationFrame(function () { m.scrollTop = m.scrollHeight; });
       setTimeout(function () { if (atBottom) m.scrollTop = m.scrollHeight; }, 60);
     }).observe(document.body, { childList: true, subtree: true });

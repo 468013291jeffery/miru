@@ -66,6 +66,8 @@ const suites = [
   ['wiring-order-check.mjs', ['tools/wiring-order-check.mjs'], true],
   ['turn-wiring-check.mjs', ['tools/turn-wiring-check.mjs'], true],
   ['bundle-integrity.mjs', ['tools/bundle-integrity.mjs'], true],
+  /* 2026-11-05：开场卡和章节卡的版式写死了，上传的剧本内容必须放得进去（规则 api/_stylecheck.js） */
+  ['script-style-check.mjs', ['tools/script-style-check.mjs', '--selftest'], true],
   /* 2026-10-30：进故事「有哪几个视角」—— Ann 报「只有导演视角」那天，**没有任何闸看这个面**。
      它验的是「三路永远是三路」（补齐 + 提示 + 负对照 + 界面按钮数），不是某部剧的数据。 */
   ['entry-modes-probe.mjs', ['tools/entry-modes-probe.mjs'], true],
