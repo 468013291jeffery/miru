@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="f76f65571b66 2026-11-05T10:45Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="fc22428c6d0b 2026-11-05T10:46Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -21718,6 +21718,56 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
 
   try { const st = document.createElement("style"); st.textContent = ".twa127 [data-ccexp]{display:none!important}"; document.head.appendChild(st); } catch (e2) { console.debug("[play]", e2); }
   window.__play = () => ({ twa: twa, prices: prices, hasDGS: "getDigitalGoodsService" in window });
+})();
+
+/* ================= 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（2026-11-05）=================
+   以前 watchAd 是 15 秒模拟播放，不产生收入。这里接上 AdSense：
+     · PUB 填上 AdSense 发布商 ID（ca-pub-…）后生效；没填时保持原来的模拟播放（开发 / 预览用）。
+     · 激励广告：adBreak({type:'reward'})，只有 adViewed（看完）才发奖励；没有可播的广告就提示“暂时没有广告”，不发奖励。
+     · 次数上限、MIRU+ 免广告等规则沿用 app9_ads.js（adLeft / adState）。
+     · 网站根目录要放 ads.txt（google.com, pub-…, DIRECT, f08c47fec0942fa0）。
+   安卓 App 是 TWA（真 Chrome，不是 WebView），AdSense 在 App 里同样可用。 */
+(function () {
+  "use strict";
+  const PUB = "ca-pub-1779576119248059"; /* ← 例：ca-pub-1234567890123456 */
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  window.__ads128 = () => ({ pub: PUB, ready: !!window.adBreak });
+  if (!PUB || typeof watchAd !== "function") return;
+
+  try {
+    const s = document.createElement("script");
+    s.async = true;
+    s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(PUB);
+    s.crossOrigin = "anonymous";
+    s.setAttribute("data-ad-frequency-hint", "30s");
+    if (/[?&]adtest=on/.test(location.search)) s.setAttribute("data-adbreak-test", "on");
+    document.head.appendChild(s);
+  } catch (e) { console.warn("[ads] load", e); }
+  window.adsbygoogle = window.adsbygoogle || [];
+  window.adBreak = window.adConfig = function (o) { window.adsbygoogle.push(o); };
+  try { window.adConfig({ preloadAdBreaks: "on", sound: "on" }); } catch (e) { console.warn("[ads] config", e); }
+
+  let busy = false;
+  watchAd = function (done) {
+    if (!adLeft()) { toast(t("ad.none")); return; }
+    if (busy) return; busy = true;
+    if (typeof closeSheet === "function") closeSheet();
+    let viewed = false, offered = false;
+    window.adBreak({
+      type: "reward",
+      name: "miru_reward",
+      beforeReward: function (showAdFn) { offered = true; showAdFn(); },
+      adDismissed: function () { toast(t("ad.keep")); },
+      adViewed: function () { viewed = true; },
+      adBreakDone: function (info) {
+        busy = false;
+        if (viewed) { const st = adState(); st.n++; save(); if (done) done(); return; }
+        if (!offered) toast(zh() ? "暂时没有可播放的广告，稍后再试" : "No ad available right now — try again later");
+        try { if (typeof track === "function") track("ad_nofill", { status: info && info.breakStatus }); } catch (e) { console.debug("[ads]", e); }
+      }
+    });
+    setTimeout(function () { busy = false; }, 60000);
+  };
 })();
 
 /* Scene-aware interaction and a continuous, readable conversation. */
