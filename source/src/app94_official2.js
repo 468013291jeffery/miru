@@ -348,6 +348,7 @@ async function off94Feed() {
 function zh94(s) { s = String(s || ""); return /[\u4e00-\u9fff]/.test(s) ? s.replace(/\s+[A-Za-z][A-Za-z0-9'’:&,!?. -]*$/, "").replace(/^[A-Za-z][A-Za-z0-9'’:&,!?. -]*\s+(?=[\u4e00-\u9fff])/, "").trim() : s; }
 function off94Title(w) { const zh = CL() === "zh"; return zh ? zh94(w.title || "") : ((w.en && w.en.title) || w.title || ""); }
 function off94Hook(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.hook) || w.hook || ""; }
+const OFF94_SHOWCASE = "w_scmvp62pluf3cc9d7c96"; /* 首页视频卡对应的剧 */
 function off94FCard(w) {
   const A = w.A, pos = A.cover || A.poster || "";
   const bg = A.vid_open ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(A.vid_open) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
@@ -360,7 +361,12 @@ const _renderHome94 = renderHome;
 renderHome = function (v) {
   const r = _renderHome94.apply(this, arguments);
   try {
-    const put = L => { const feed = $("#feed"); if (!feed || feed.querySelector(".off94") || !L.length) return; const showcase=feed.querySelector("[data-home-showcase]");if(showcase)showcase.insertAdjacentHTML("afterend", L.map(off94FCard).join(""));else feed.insertAdjacentHTML("afterbegin", L.map(off94FCard).join("")); const em = feed.querySelector(".empty"); if (em) em.remove(); feedWire(); };
+    const put = L => { const feed = $("#feed"); if (!feed || feed.querySelector(".off94") || !L.length) return; const showcase=feed.querySelector("[data-home-showcase]");
+      /* 首页第一张视频卡 = 直接进剧（2026-11-06）：用上线剧（优先《丝绒谎言》）的标题/简介/开始看，背景沿用这段视频 */
+      if(showcase){ const sw=L.find(w=>w.id===OFF94_SHOWCASE)||L[0], sv=showcase.querySelector("video"), src=sv&&sv.dataset.src;
+        const card=off94FCard(Object.assign({},sw,{A:Object.assign({},sw.A,{vid_open:src||sw.A.vid_open})})).replace('<video class="fvid"','<video class="fvid" muted').replace('class="fcard off94"','class="fcard off94 home-showcase" data-home-showcase="1"');
+        showcase.insertAdjacentHTML("afterend", card + L.filter(w=>w!==sw).map(off94FCard).join("")); showcase.remove(); }
+      else feed.insertAdjacentHTML("afterbegin", L.map(off94FCard).join("")); const em = feed.querySelector(".empty"); if (em) em.remove(); feedWire(); };
     if (OFFF94.list) put(OFFF94.list); else off94Feed().then(put);
   } catch (_) {}
   return r;
