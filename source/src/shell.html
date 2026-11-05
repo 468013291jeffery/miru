@@ -1528,6 +1528,8 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 /* ① 回复下面的操作：一排细字 + 线条小图标，没有底板，不抢气泡的注意力 */
 #s-chat .rg73{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:12px;width:auto;margin:3px 0 0 40px;border:0!important;background:transparent!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;overflow:visible;white-space:nowrap}
 #s-chat .rg73>*+*{border-left:0!important}
+/* 这一行允许折行是为了让操作条独占一行；气泡先留出头像的位置，长回复才不会把头像挤到上一行 */
+#s-chat #msgs .m-row:has(>.rg73)>.bub{max-width:calc(100% - 38px)}
 #s-chat .rg73>button,#s-chat .rg73>.vs73{display:inline-flex;align-items:center;gap:3px;position:relative;height:18px;padding:0;background:none!important;border:0;border-radius:0;font-size:11px;font-weight:500;line-height:1;letter-spacing:.01em;color:rgba(255,255,255,.62)!important}
 #s-chat .rg73>button::after{content:"";position:absolute;inset:-9px -5px}
 #s-chat .rg73>button:active{color:#FFE0B9!important}
