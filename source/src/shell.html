@@ -1573,6 +1573,20 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .addr73s{flex:1;min-width:0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.addr73s::-webkit-scrollbar{display:none}
 #s-chat .composer .addr73s button{flex:none;height:26px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(14,12,20,.55);color:#D9D1DE;font-size:12px;font-weight:600}
 #s-chat .composer .addr73s button.on{border-color:rgba(240,183,126,.7)!important;background:rgba(240,183,126,.16)!important;color:#FFE0B9}
+/* 顶栏只留一个「声音与特效」按钮，音乐和语音收进面板（原按钮藏起来，点击逻辑照旧用它们） */
+#s-chat.clean .chead .row .bgmtog,#s-chat.clean .chead .row .vtog,#s-chat .chead .row .bgmtog,#s-chat .chead .row .vtog{display:none!important}
+#s-chat .chead .fx128{color:#E6DEE8}#s-chat .chead .fx128[aria-expanded=true]{color:#FFE0B9;border-color:rgba(240,183,126,.6)}
+.fx128 svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+#fxp128{position:absolute;z-index:60;width:172px;padding:5px;border-radius:14px;background:#1B1722;border:1px solid rgba(240,183,126,.32);box-shadow:0 8px 24px rgba(0,0,0,.5);animation:fxp128 .14s ease-out}
+@keyframes fxp128{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+#fxp128 button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:38px;padding:4px 8px 4px 10px;border-radius:10px;font-size:13px;color:#E6DEE8;text-align:left}
+#fxp128 button:disabled{opacity:.45;cursor:default}#fxp128 small{display:block;font-size:10px;line-height:1.2;color:rgba(255,255,255,.55)}
+#fxp128 i{position:relative;flex:none;width:30px;height:18px;border-radius:999px;background:rgba(255,255,255,.16);transition:background .15s}
+#fxp128 i::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
+#fxp128 button[aria-checked=true] i{background:linear-gradient(135deg,#F0B77E,#EE8FA8)}#fxp128 button[aria-checked=true] i::after{transform:translateX(12px)}
+/* 氛围特效铺在消息后面：气泡和卡片挡住雨丝，读字不受影响；瞬间特效（.fx100、#emoTop）只有几秒，仍在最上层 */
+#s-chat .fxtop{z-index:3}#s-chat #msgs,#s-chat .suggest,#s-chat .composer,#s-chat #dk98{position:relative;z-index:7}
+body.fx-off #cbFx,body.fx-off #cbFx2,body.fx-off #emoBack,body.fx-off #emoTop,body.fx-off .fx100{display:none!important}
 /* ⑤ 消息的文字和底板分开定：
    文字 —— 台词 / 动作 / 心声各一种样式，玩家和角色完全相同（只在这里定）；
    底板 —— 角色是中性深色；玩家是同一种玫瑰金，台词实底、动作浅底、心声浅底虚线。 */

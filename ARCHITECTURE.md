@@ -575,9 +575,22 @@ function packWorlds(){ return W.filter(w => w.pack) }
 **代价**：`packWorlds()` / `PCN()` / `storyPage()` 等判定要改成两段式（涉及 5–8 个文件），
 而且**没有自动判据能证明首页没被改坏**——只能人眼看。**所以这一刀要她拍板才能动。**
 
+## 5.5 特效层：谁决定放什么（2026-11-05）
+
+入口只有一个：`app128_fxlib.js` 的 `FXBUS`。优先级：作者（`⟦FX|id⟧`、bible 的 `scene.fx` / `chapter.fx`）> 剧情智能体（导演 JSON 的 `fx`；单模型回复用同一份指令）> 剧本旁白的兜底规则。AI 台词不走关键词。
+
+选导演是因为只有它同时知道场景、玩家这一轮和本轮安排，也不用多调一次模型。角色智能体只知道自己，不参与。导演先于台词返回，所以瞬间特效等第一句台词出现时才放（`FXBUS.agent` 返回的函数）。
+
+- 氛围状态：`fxKeyOf(th)`，剧本模式存 `th.pk.fx`，其他模式存 `th.fxScene`。
+- 白名单：`AMBIENT` + `MOMENT`，提示词从这两张表生成；改表要同步 `api/_stylecheck.js` 的 `FX_IDS`，`tools/fx-selftest.mjs` 会对账。
+- 开关：`S.fxOff` / `S.sfxOff` / `S.vibOff`。震动统一拦在 `navigator.vibrate`；音效不再依赖音乐开关。
+- 渲染引擎没动：`app22_fx2`（画布）、`app24_gl`（着色器）、`app30_fx3`（情绪、冰）、`app59_fx100`（瞬间）。
+
 ## 5.6 三条线各是什么 · 剧本内容怎么到外部前端手里（2026-10-31）
 
 ### 三条线（读者不同，别混）
+
+> 2026-11-05 实测：`www.miru.plus` / `miru.plus` 已不是 Vercel，是一台独立 nginx（`51.81.92.252`），静态文件是单独副本，推 main 不会自动更新。Vercel 站是 `miru-wheat-pi.vercel.app`。下表是 10-31 的写法，留作记录。
 
 | | **GitHub**（`468013291jeffery/miru`） | **Vercel**（`www.miru.plus`） | **测试服**（`154.12.91.48`） |
 |---|---|---|---|
@@ -643,12 +656,12 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**51 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**52 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      150 个函数 / 341 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层；2026-11-05 官方剧男主角色卡在 app126 给 allWorlds 加一层（把只为角色卡服务的壳作品从列表里滤掉）
-空 catch    564 处 / 99 个文件    （当天起点 616 ⇒ −51）
+猴补丁      150 个函数 / 340 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层；2026-11-05 官方剧男主角色卡在 app126 给 allWorlds 加一层（把只为角色卡服务的壳作品从列表里滤掉）
+空 catch    562 处 / 99 个文件    （当天起点 616 ⇒ −51）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
 消息渲染    23 层 = kind 11 / post 10 / wrap 2（`say` 收口后从 20 层减 2；2026-11-03 第十八批加 app119 的「⑂ 从这一步重来」post 层；同日加 app122 的表情回应、app123 的剧本台词换说法 post 层）· 17 个类型
@@ -897,14 +910,14 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **154 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **155 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
 |---|---|---|
 | `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 252 |
 | `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 302 |
-| `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1211 |
+| `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1215 |
 | `app4_more.js` | CHATS (WhatsApp-style list) | 598 |
 | `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 171 |
 | `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
@@ -921,7 +934,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |
 | `app18_promo.js` | NEW-USER WELCOME · 24h FIRST-PURCHASE 20% OFF · OPENING-LINE VOICE · STIC… | 200 |
 | `app19_bgm.js` | BACKGROUND MUSIC in every chat Each story gets a mood from its genre (lat… | 121 |
-| `app20_fx_booth.js` | PLOT-DRIVEN WEATHER & MOOD EFFECTS The chat background already gets an am… | 210 |
+| `app20_fx_booth.js` | PLOT-DRIVEN WEATHER & MOOD EFFECTS The chat background already gets an am… | 211 |
 | `app21_dims.js` | RELATIONSHIP DIMENSIONS, wired to the script A story declares its pairs i… | 103 |
 | `app22_fx2.js` | ATMOSPHERE v2 — cinematic effects One canvas, device-pixel-ratio aware, a… | 109 |
 | `app23_heir.js` | STORY TOOLKIT v5 (built for "The Heir He Came Back For", usable by any st… | 102 |
@@ -960,7 +973,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app56_story3.js` | DYNAMIC NARRATIVE — items, long/short branches, convergence, character ar… | 105 |
 | `app57_rules.js` | UGC CONSTRAINTS — the generation rules every AI call follows + the publis… | 76 |
 | `app58_bgm100.js` | BGM LIBRARY — 100 scored cues, picked by keywords Honest note: these are … | 157 |
-| `app59_fx100.js` | FX + SFX LIBRARY — 100 screen effects, 100 sound effects, keyword-trigger… | 299 |
+| `app59_fx100.js` | FX + SFX LIBRARY — 100 screen effects, 100 sound effects ：不再靠关键词触发。放什么由 a… | 294 |
 | `app60_games100.js` | MINI-GAME LIBRARY — 100 games from 15 templates, popped by keywords Templ… | 247 |
 | `app61_honor.js` | 《西岭守则》mechanics sample (stand-in until the team’s The Honor Code script is final) for the whole narrative system generated by gen_honor.py（原文只有段落横幅） | 8 |
 | `app62_tts.js` | Character server TTS, stable voices, caching and prefetch | 64 |
@@ -997,21 +1010,21 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app92_mustlogin.js` | SIGN-IN REQUIRED The live app can no longer be used as a guest: the "先逛逛 … | 14 |
 | `app93_agegate.js` | 年龄门（T08）· 首启一次确认 开关：MIRU_TUNE.tools.ageGate（默认 true） | 44 |
 | `app93_doubao.js` | DOUBAO END-TO-END REALTIME VOICE CALLS When the relay is configured (Verc… | 97 |
-| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 591 |
+| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 594 |
 | `app94_replyguard.js` | 台词守门（他们 v8.2.3 的「角色台词检查」） 玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事 | 153 |
 | `app95_safety.js` | App Store 1.2 (user-generated content): report · block · terms · contact … | 120 |
 | `app95_status.js` | 状态写入层 v1（唯一写入口） 规格 v7.11 §04.6「状态投影的唯一写入点」： 模型和剧情都只能"提议"，真正的写入只在这里发生 | 130 |
 | `app96_social.js` | 世界围着你转 — lessons from Status & Heyyyy, all paid with 💎 (no membership) ①… | 341 |
 | `app96_tune.js` | 可调参数（外置滑钮） 为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、 关系阶段门槛、每日好感上限、单次好感步长… | 133 |
-| `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 222 |
+| `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 224 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 539 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 542 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 187 |
 | `app100_fixes.js` | 体验修复（ 用户反馈 8 条中的 1/3/4/7/8） 1 首页：官方新剧列表本地缓存，进入 App 立刻显示，不再先闪 2–3 秒旧剧单；首次没… | 109 |
-| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 247 |
+| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 249 |
 | `app102_pipeline.js` | 对话流：一道缝（ · 设计见 DIALOGUE-PIPELINE.md） Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧… | 130 |
 | `app103_turn.js` | 回合状态机 v0.1（ · Ann 定的第二件事） Ann：「这是解耦之后应该做的第二件事，统一接口之类的，没有这个谈不上代码质量。」 ## 病 … | 90 |
 | `app104_pkstate.js` | 章节状态机 v0.1（ · 第三件） Ann：「继续做吧，副作用都能修，但增强稳健性、做软件工程上的升级是最重要的事。」 ## 病 `th.pk.… | 71 |
@@ -1039,6 +1052,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app125_fresh.js` | 自动用上新版本（） 玩家：上新了，手机上还是旧样子（iPhone Safari 会把页面一直留在内存里，不刷新就一直是旧版） | 25 |
 | `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 70 |
 | `app127_play.js` | 安卓 App（Google Play）专用：Play 内购 + 隐藏成人作品（） 安卓 App 是一个「可信网页壳」（TWA）：打开的就是线上的 … | 118 |
+| `app128_fxlib.js` | 特效基础层：特效库 · 统一入口 · 开关（） 玩家：特效要跟着剧情走，不是看到字就放。原来有 4 套特效各自触发，主要靠关键词匹配 ⇒ 「今晚不… | 236 |
 | `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
 | `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
 | `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |

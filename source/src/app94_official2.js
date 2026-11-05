@@ -72,6 +72,9 @@ function off94Parse(next, text) {
       if (m.k === "/IF") { const f = stack.pop(); if (!f) continue; const beat = ["sys", "if", { cond: f.cond, then: f.then }]; if (f.alt) beat[2].else = f.alt; push(beat); continue; }
       if (m.k === "CALL") { call = { who: a[0], hint: a[1] || "", lines: [] }; continue; }
       if (m.k === "BGM") { push(["sys", "bgm", { m: a[0] }]); continue; }
+      /* ⟦FX|id⟧：作者指定特效，持续氛围还是瞬间由特效库决定（app128_fxlib.js）。⟦SFX|id⟧：单独一个音效 */
+      if (m.k === "FX") { const fx = window.FXBUS && FXBUS.resolve(a[0]); push(fx && fx.type === "ambient" ? ["sys", "fx", { k: fx.id }] : ["sys", "fx100", { id: a[0] }]); continue; }
+      if (m.k === "SFX") { push(["sys", "sfx", { id: a[0] }]); continue; }
       if (m.k === "TIME" || m.k === "BG") { for (let j = out.length - 1; j >= 0; j--) { const s = out[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
       if (m.k === "CG" || m.k === "VIDEO") { push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
       if (m.k === "PHOTO") { push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }

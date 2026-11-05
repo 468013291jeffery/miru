@@ -34,6 +34,8 @@
 | `⟦BG\|槽位名\|地点⟧` | 给**上一个场景**挂背景图 | **前面必须有 `# SCENE`**，否则静默失效 |
 | `⟦TIME\|04:17⟧` | 给上一个场景挂时间 | 同上 |
 | `⟦BGM\|标签\|风格⟧` | 音乐 cue | 不改节奏 |
+| `⟦FX\|特效id⟧` | 特效：氛围类持续到下次改变，瞬间类放一次 | 不改节奏。id 见下面「特效表」，写错审查会报错 |
+| `⟦SFX\|音效id⟧` | 单独放一个音效 | 不改节奏 |
 | `⟦CG\|槽位\|说明⟧` / `⟦VIDEO\|槽位\|说明⟧` | 插一张图 / 一段短片 | 插一条就过，**不停** |
 | `⟦PHOTO\|标题\|说明⟧` | 照片卡 | 同上 |
 | `⟦MG\|小游戏 id⟧` | 小游戏 | 同上 |
@@ -289,3 +291,23 @@
 ⇒ **现在一张都显示不出来**（不报错、也不提示）。两条路选一条：
 1. 按新规则**重命名/重新出图**（`bg_<场景id>`、`char_<key>`）
 2. 走**逐字剧**那条路，然后用 `⟦BG|bg_01⟧` 把槽位名写进正文（这样原文件名就能用）
+
+## 特效表（2026-11-05）
+
+谁决定放特效：作者写的 `⟦FX⟧` 最优先；没写的地方，由剧情智能体判断这一刻是否真的发生了事；剧本旁白里明确的物理事件（爆炸、枪响、下起雨）会兜底。所以**不用每场都写**，只写一定要出现的那几下，一章两三次就够。
+
+故事圣经（`bible.json`）也可以写：场景或章节上加 `"fx": {"ambient": "rain", "moment": "lightning"}`，进这一场时生效。
+
+| 类别 | 特效 id |
+|---|---|
+| 持续氛围 | `rain` `storm` `wind` `snowfall` `blizzard` `ice` `candle` `embers` `inferno` `blackout` `drip` `bokeh` `neon` `godrays` `dust` `fireflies` `aurora` `galaxy` `petals` `hearts`，`none` 恢复平静 |
+| 恋爱 | `heartbeat` `bloom` `longing` `blush` `hearts_rise` `heart_burst` `kiss_mark` `ring` |
+| 情绪 | `ink` `shock` `tears` `breath_hold` `dizzy` `flashback` `dreamy` |
+| 镜头 | `cinema` `spotlight` `zoom` `slowmo` `sparkle` `flash_white` `fade_black` `fade_white` |
+| 庆祝 | `confetti` `fireworks` `shooting_star` `lanterns` |
+| 自然 | `lightning` `fog` `rainbow` `leaves` `moonlight` `sunset` `sun_rays` `ripple` `underwater` `frost` |
+| 危险 | `shake` `quake` `explosion` `flash_red` `glass_crack` `blaze` `police` `ambulance` `danger` `watched` `speed` `clock` |
+| 科技 | `phone_buzz` `notify` `glitch` `static` `hologram` `warp` |
+| 奇幻 | `magic_circle` `enchant` `wings` `blood_moon` `wolf_eyes` `fangs` `bats` `crows` `butterflies` |
+
+老特效（如 `balloons` `cats` `dice`）还能播，审查会提醒换成上表里的。

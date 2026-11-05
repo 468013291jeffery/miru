@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="f76f65571b66 2026-11-05T03:53Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="a7c757c33b98 2026-11-05T07:09Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -1574,6 +1574,20 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .addr73s{flex:1;min-width:0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.addr73s::-webkit-scrollbar{display:none}
 #s-chat .composer .addr73s button{flex:none;height:26px;padding:0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(14,12,20,.55);color:#D9D1DE;font-size:12px;font-weight:600}
 #s-chat .composer .addr73s button.on{border-color:rgba(240,183,126,.7)!important;background:rgba(240,183,126,.16)!important;color:#FFE0B9}
+/* 顶栏只留一个「声音与特效」按钮，音乐和语音收进面板（原按钮藏起来，点击逻辑照旧用它们） */
+#s-chat.clean .chead .row .bgmtog,#s-chat.clean .chead .row .vtog,#s-chat .chead .row .bgmtog,#s-chat .chead .row .vtog{display:none!important}
+#s-chat .chead .fx128{color:#E6DEE8}#s-chat .chead .fx128[aria-expanded=true]{color:#FFE0B9;border-color:rgba(240,183,126,.6)}
+.fx128 svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round}
+#fxp128{position:absolute;z-index:60;width:172px;padding:5px;border-radius:14px;background:#1B1722;border:1px solid rgba(240,183,126,.32);box-shadow:0 8px 24px rgba(0,0,0,.5);animation:fxp128 .14s ease-out}
+@keyframes fxp128{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+#fxp128 button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:38px;padding:4px 8px 4px 10px;border-radius:10px;font-size:13px;color:#E6DEE8;text-align:left}
+#fxp128 button:disabled{opacity:.45;cursor:default}#fxp128 small{display:block;font-size:10px;line-height:1.2;color:rgba(255,255,255,.55)}
+#fxp128 i{position:relative;flex:none;width:30px;height:18px;border-radius:999px;background:rgba(255,255,255,.16);transition:background .15s}
+#fxp128 i::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
+#fxp128 button[aria-checked=true] i{background:linear-gradient(135deg,#F0B77E,#EE8FA8)}#fxp128 button[aria-checked=true] i::after{transform:translateX(12px)}
+/* 氛围特效铺在消息后面：气泡和卡片挡住雨丝，读字不受影响；瞬间特效（.fx100、#emoTop）只有几秒，仍在最上层 */
+#s-chat .fxtop{z-index:3}#s-chat #msgs,#s-chat .suggest,#s-chat .composer,#s-chat #dk98{position:relative;z-index:7}
+body.fx-off #cbFx,body.fx-off #cbFx2,body.fx-off #emoBack,body.fx-off #emoTop,body.fx-off .fx100{display:none!important}
 /* ⑤ 消息的文字和底板分开定：
    文字 —— 台词 / 动作 / 心声各一种样式，玩家和角色完全相同（只在这里定）；
    底板 —— 角色是中性深色；玩家是同一种玫瑰金，台词实底、动作浅底、心声浅底虚线。 */
@@ -5157,6 +5171,8 @@ function chatBgSet(who,pose){const box=$("#cbImg");if(!box||!ch(who))return;pose
  box.dataset.last=who}
 const FX={ice:"snow",pack:"snow",unseelie:"frost",bratva:"snow",lowseason:"snow",crimson:"embers",made:"rain",night:"rain",afterhours:"rain",light:"beam",pole:"bokeh",split:"neon",fourth:"dust",pact:"fireflies",roomies:"dust",offbook:"dust"};
 let fxRaf=0;
+/* 这个线程现在的氛围特效：剧本模式存在 th.pk.fx，其他模式（官方自由模式、自由聊天）存在 th.fxScene */
+function fxKeyOf(th){return (th&&th.pk&&th.pk.fx)||(th&&th.fxScene)||null}
 function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)return;const kind=FX[th.wid]||(th.kind==="group"?"dust":"bokeh");
  const r=cv.getBoundingClientRect(),W=cv.width=Math.max(1,r.width),H=cv.height=Math.max(1,r.height),x=cv.getContext("2d");
  const N={snow:90,frost:70,embers:40,rain:110,beam:30,bokeh:26,neon:24,dust:40,fireflies:28}[kind]||30;
@@ -5587,7 +5603,8 @@ async function reply(th,ctx,silent){
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary.",
+  window.FXBUS?FXBUS.promptBlock(th,false)+'\nAdd to the same JSON: "fx":{"ambient":null,"moment":null}':""
  ].filter(Boolean).join("\n");
  let r=null;
  const turnCtl=new AbortController(),turnTimer=setTimeout(()=>turnCtl.abort(),40000);
@@ -5691,6 +5708,7 @@ async function playBeats(th,r,ctx,silent){
  }catch(_){}
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
  const toSpeak=[];let INLINE_SPOKE=false,silentStrikes=0;
+ const fxBeat=(!silent&&window.FXBUS&&r.fx)?FXBUS.agent(th,r.fx):null;
  /* 2026-10-31：顶部 🔊「自动朗读」（S.autoVoice）也走这条「念完一句再出下一句」的路 —— 以前只认 S.voice.auto，
     开 🔊 时每句一出现就各念各的，后一句把前一句掐断。 */
  const canSpeak=(()=>{try{return !!(((S.voice&&S.voice.auto)||S.autoVoice)&&(typeof voiceAutoOK!=="function"||voiceAutoOK()))}catch(_){return false}})();
@@ -5702,7 +5720,7 @@ async function playBeats(th,r,ctx,silent){
      ⇒ 条件不满足时这条台词永远不发声、也不留痕。改成：**下面真念了才打标**。 */
   // Reserve voice ownership BEFORE append hooks can enqueue the same sentence.
   if(m.k==="say"){m._voiced=1;m._voiceOwner="playBeats"}
-  appendMsg(th,m);if(m.k==="say")toSpeak.push(m);
+  appendMsg(th,m);if(m.k==="say")toSpeak.push(m);if(fxBeat)fxBeat();
   if(!silent&&window.READING&&window.READING.manual(th)){
    INLINE_SPOKE=true;
    if(canSpeak&&m.k==="say"&&ch(m.who)){try{voiceCount(1);speak(m.txt,m.who,()=>{});}catch(e){console.debug('[reading] voice unavailable',e);}}
@@ -9331,11 +9349,12 @@ Object.assign(I18N.zh,{"pl.trial":"试用","pl.week":"每周","pl.month":"每月
    "停电" → blackout flicker, a candle-lit scene → candle glow + embers, a basement → dripping water, wind → gusts and leaves,
    snow → snow, a birthday → confetti, a near-kiss → drifting hearts. State is saved on the thread (th.pk.fx). */
 const FX2=["rain","storm","wind","snowfall","blizzard","candle","blackout","drip","hearts","petals","confetti"];
-const FX_RULES=[[/暴雨|雷|storm|thunder|downpour/i,"storm"],[/停电|断电|黑了|blackout|power cut|lights go out/i,"blackout"],[/烛|蜡烛|candle/i,"candle"],
- [/暴风雪|blizzard/i,"blizzard"],[/雪|snow/i,"snowfall"],[/风|台风|gust|wind/i,"wind"],[/地下室|basement|cellar/i,"drip"],[/下雨|雨|rain/i,"rain"],
- [/生日|派对|birthday|confetti/i,"confetti"],[/花瓣|樱花|petal|blossom/i,"petals"],[/nearkiss|forehead|差一点|kiss/i,"hearts"]];
-function fxFrom(s){s=String(s||"");const r=FX_RULES.find(([re])=>re.test(s));return r?r[1]:null}
-function fxSet(th,k){if(!th.pk||!k||th.pk.fx===k)return;th.pk.fx=k;save();if(curT===th.id)chatFx(th)}
+/* 2026-11-05：单字规则会误伤（「雷蒙」打雷、「风格」刮风、「雪莉」下雪），只认明确的天气词；否定和假设由 FXBUS.happened 排除 */
+const FX_RULES=[[/暴雨|雷雨|雷声|打雷|电闪雷鸣|thunderstorm|thunder|downpour/i,"storm"],[/停电|断电|blackout|power cut|lights go out/i,"blackout"],[/烛光|蜡烛|candle/i,"candle"],
+ [/暴风雪|blizzard/i,"blizzard"],[/下雪|大雪|小雪|飘雪|雪花|雪地|snowfall|snowing/i,"snowfall"],[/大风|狂风|寒风|台风|gust|windy/i,"wind"],[/地下室|basement|cellar/i,"drip"],[/下雨|雨声|雨夜|雨丝|细雨|小雨|大雨|raining|in the rain/i,"rain"],
+ [/生日派对|生日会|birthday party|confetti/i,"confetti"],[/花瓣|樱花|petals|blossom/i,"petals"],[/nearkiss|forehead/i,"hearts"]];
+function fxFrom(s){s=String(s||"");const r=FX_RULES.find(([re])=>window.FXBUS?FXBUS.happened(re,s):re.test(s));return r?r[1]:null}
+function fxSet(th,k){if(!th||!k||fxKeyOf(th)===k)return;if(th.pk)th.pk.fx=k;else th.fxScene=k;save();if(curT===th.id)chatFx(th)}
 PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"){const x=b[2]||{};
   if(b[1]==="fx"){th.pk.q.shift();fxSet(th,x.k);return true}
   if(b[1]==="event")fxSet(th,fxFrom((x.title||"")+" "+(x.txt||"")));
@@ -9343,7 +9362,7 @@ PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]===
   if(b[1]==="bg"&&/nearkiss|forehead/.test(x.img||""))fxSet(th,"hearts")}
  return next(th,b)});;
 const _chatFx20=chatFx;
-chatFx=function(th){const k=th&&th.pk&&th.pk.fx;if(!k||!FX2.includes(k)){fxState.k=null;return _chatFx20(th)}cancelAnimationFrame(fxRaf);fxRun(k)};
+chatFx=function(th){const k=fxKeyOf(th),lib=window.FXBUS&&k&&FXBUS.resolve(k);if(!k||!(FX2.includes(k)||(lib&&lib.type==="ambient"))){fxState.k=null;return _chatFx20(th)}cancelAnimationFrame(fxRaf);fxRun(k)};
 const fxState={k:null};
 function fxRun(kind){const cv=$("#cbFx");if(!cv)return;fxState.k=kind;const r=cv.getBoundingClientRect(),W=cv.width=Math.max(1,r.width),H=cv.height=Math.max(1,r.height),x=cv.getContext("2d");
  const low=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;const N0={rain:160,storm:260,wind:70,snowfall:120,blizzard:260,candle:40,blackout:0,drip:22,hearts:22,petals:40,confetti:120}[kind];const N=low?Math.round(N0/3):N0;
@@ -9462,7 +9481,7 @@ Object.assign(I18N.zh,{"w2.h":"欢迎来到 MIRU！新人福利已到","w2.t1":"
 const MC_LINE={zh:["……算了，没事。","我就是想听听你的声音。","你在忙吗？我有件事想当面——","接一下，就一下。","刚才那句话，我想解释一下。","喝了点酒。别多想。","你睡了吗？"],
  en:["...never mind. It's nothing.","I just wanted to hear your voice.","You busy? There's something I want to say to—","Pick up. Just once.","About what I said earlier. Let me explain.","Had a drink. Don't read into it.","Are you asleep?"]};
 let ring=null,mcIdle=0;
-function ringTone(){if(!bgmInit())return;const c=BGM.ctx;if(c.state==="suspended")c.resume().catch(()=>{});const t0=c.currentTime;
+function ringTone(){if(S.sfxOff||!bgmInit())return;const c=BGM.ctx;if(c.state==="suspended")c.resume().catch(()=>{});const t0=c.currentTime;
  for(let k=0;k<5;k++)[0,.18].forEach(d=>[880,1046].forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.connect(g);g.connect(c.destination);const s=t0+k*2+d;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.06,s+.02);g.gain.linearRampToValueAtTime(0,s+.16);o.start(s);o.stop(s+.2)}))}
 function ringIn(th,cid,context){if(!window.EXPERIENCE124||!EXPERIENCE124.canCall(th,cid,context||{}))return;if(ring||!th||!ch(cid)||$(".callv"))return;const c=ch(cid),line=String(Lz(context.reason||context.hint)||"");
  ring={th,cid,line,t0:Date.now()};document.body.insertAdjacentHTML("beforeend",'<div class="ringv"><div class="ringbg" style="background-image:url('+artSrc(cid)+')"></div><div class="ringin">'+avatar(cid,96)+'<b>'+esc(c.n)+'</b><span>'+t("mc.calling")+'</span>'+
@@ -9623,9 +9642,9 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)retu
  if(e.target.closest("[data-fxpick]")){const cur=th.fxm||"auto";sheet('<h2>✨ '+t("fx.h")+'</h2><p class="xs faint" style="margin-top:4px">'+t("fx.s")+'</p><div class="fxgrid">'+FXLIST.map(([k,i])=>'<button data-fxk="'+k+'" class="'+(k===cur?"on":"")+'"><span>'+i+'</span><b>'+t("fx."+k)+'</b></button>').join("")+'</div>');return}
  if(x=e.target.closest("[data-fxk]")){th.fxm=x.dataset.fxk;save();closeSheet();chatFx(th);bgmFollow(th,true);return}});
 /* music follows the effect / scene */
-const _bgmFor21=bgmForThread;bgmForThread=function(th){const r=_bgmFor21(th);if(!r)return r;const k=(th.fxm&&th.fxm!=="auto")?th.fxm:(th.pk&&th.pk.fx);if(k&&FX2MOOD[k])r.mood=FX2MOOD[k];return r};
+const _bgmFor21=bgmForThread;bgmForThread=function(th){const r=_bgmFor21(th);if(!r)return r;const k=(th.fxm&&th.fxm!=="auto")?th.fxm:fxKeyOf(th);if(k&&FX2MOOD[k])r.mood=FX2MOOD[k];return r};
 function bgmFollow(th,say){if(!bgmOn()||!(BGM.timer||BGM.file))return;const w=bgmForThread(th);if(!w)return;const was=BGM.mood;bgmPlay(w.mood,w.wid);if(say&&was!==w.mood)toast("🎵 "+(BGM_NAME[w.mood]||w.mood))}
-const _fxSet21=fxSet;fxSet=function(th,k){const before=th.pk&&th.pk.fx;if(th.pk&&k&&before!==k)th.fxm=null;_fxSet21(th,k);if(curT===th.id&&th.pk&&th.pk.fx!==before)bgmFollow(th,true)};
+const _fxSet21=fxSet;fxSet=function(th,k){const before=fxKeyOf(th);if(k&&before!==k)th.fxm=null;_fxSet21(th,k);if(curT===th.id&&fxKeyOf(th)!==before)bgmFollow(th,true)};
 Object.assign(I18N.en,{"fx.chip":"Mood","fx.h":"Atmosphere","fx.s":"Effects change with the story by themselves. Try any of them here, or go back to following the story.","fx.auto":"Follow the story","fx.rain":"Rain","fx.storm":"Storm","fx.wind":"Wind","fx.snowfall":"Snow","fx.blizzard":"Blizzard","fx.candle":"Candlelight","fx.blackout":"Blackout","fx.drip":"Dripping","fx.hearts":"Hearts","fx.petals":"Petals","fx.confetti":"Confetti"});
 Object.assign(I18N.zh,{"fx.chip":"氛围","fx.h":"氛围特效","fx.s":"特效会跟着剧情自己变。你也可以在这里先试试每一种，或者切回「跟随剧情」。","fx.auto":"跟随剧情","fx.rain":"下雨","fx.storm":"暴雨闪电","fx.wind":"大风","fx.snowfall":"下雪","fx.blizzard":"暴风雪","fx.candle":"烛光","fx.blackout":"停电","fx.drip":"滴水","fx.hearts":"心动","fx.petals":"花瓣","fx.confetti":"彩带"});
 
@@ -9653,7 +9672,7 @@ Object.assign(I18N.en,{"dm.w.chat":"Getting closer in chat"});Object.assign(I18N
 const MAPOLD={snow:"snowfall",frost:"snowfall",embers:"embers",rain:"rain",bokeh:"bokeh",fireflies:"fireflies",dust:"dust"};
 const KINDS=["rain","storm","wind","snowfall","blizzard","candle","blackout","drip","hearts","petals","confetti","embers","bokeh","fireflies","dust"];
 let RAF=0,TH=null;
-function thunder(){try{if(!bgmInit())return;const c=BGM.ctx;if(c.state!=="running")return;const len=c.sampleRate*3,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);let last=0;
+function thunder(){try{if(S.sfxOff||!bgmInit())return;const c=BGM.ctx;if(c.state!=="running")return;const len=c.sampleRate*3,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);let last=0;
   for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.2*Math.pow(1-i/len,1.6)}
   const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type="lowpass";f.frequency.value=180;s.connect(f);f.connect(g);g.connect(c.destination);
   const t0=c.currentTime+.5+Math.random()*1.2;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.55,t0+.25);g.gain.exponentialRampToValueAtTime(.001,t0+2.8);s.start(t0)}catch(_){}}
@@ -9744,7 +9763,7 @@ fxRun=function(kind){kind=MAPOLD[kind]||kind;const c0=$("#cbFx");if(!c0)return;c
     const a=kind==="fireflies"?Math.max(0,Math.sin(f.p*2)):.35;glow(f.x,f.y,kind==="fireflies"?12:5,kind==="fireflies"?"210,255,120":"255,235,200",a*.6)});x.globalCompositeOperation="source-over"}
   RAF=requestAnimationFrame(step);fxRaf=RAF};step()};
 /* ambient story effects run on the new engine too */
-const _chatFx22=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!(th.pk&&th.pk.fx)){const k=FX[th.wid]||(th.kind==="group"?"dust":"bokeh");if(MAPOLD[k]){fxRun(k);return}}_chatFx22(th)};
+const _chatFx22=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!fxKeyOf(th)){const k=FX[th.wid]||(th.kind==="group"?"dust":"bokeh");if(MAPOLD[k]){fxRun(k);return}}_chatFx22(th)};
 })();
 
 /* ================= STORY TOOLKIT v5 (built for "The Heir He Came Back For", usable by any story) =================
@@ -9964,7 +9983,7 @@ const _relGraph24=relGraph;relGraph=function(w,asId){let h=_relGraph24(w,asId);c
 
 /* "none" means no effect at all, and stories without their own atmosphere get none by default (no random bokeh) */
 if(typeof FX2!=="undefined")FX2.push("none");
-const _chatFx24=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!(th.pk&&th.pk.fx)&&!(typeof FX!=="undefined"&&FX[th.wid])){if(window.glFx)glFx.stop();fxRun("none");return}_chatFx24(th)};
+const _chatFx24=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!fxKeyOf(th)&&!(typeof FX!=="undefined"&&FX[th.wid])){if(window.glFx)glFx.stop();fxRun("none");return}_chatFx24(th)};
 
 /* ===== scene music: stories cue the score with ["sys","bgm",{m}] — it wins over everything else until the next cue =====
    New moods: memory (music box), luxury (bright harp + strings), mystery (sparse bells over a low drone),
@@ -10445,7 +10464,7 @@ function cmask(x,W,H,k){x.save();x.globalCompositeOperation="destination-out";x.
 function heartPath(x,cx,cy,s){x.beginPath();for(let i=0;i<=48;i++){const a=i/48*Math.PI*2,hx=16*Math.pow(Math.sin(a),3),hy=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a));i?x.lineTo(cx+hx*s/16,cy+hy*s/16):x.moveTo(cx+hx*s/16,cy+hy*s/16)}x.closePath()}
 function thump(scr,k){if(RM()||!scr.animate)return;try{scr.animate([{transform:"scale(1)"},{transform:"scale("+(1+.006*k)+")",offset:.28},{transform:"scale(1)"}],{duration:320,easing:"cubic-bezier(.2,.8,.3,1)"});
  const bg=scr.querySelector("#chatBg");if(bg)bg.animate([{transform:"scale(1)"},{transform:"scale("+(1+.022*k)+")",offset:.25},{transform:"scale(1)"}],{duration:420,easing:"ease-out"})}catch(_){}}
-function heartSound(){try{if(typeof BGM==="undefined"||!BGM.ctx||BGM.ctx.state!=="running"||!(S.bgm))return;const c=BGM.ctx,t=c.currentTime;[[0,.3],[.23,.18]].forEach(([d,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.setValueAtTime(70,t+d);o.frequency.exponentialRampToValueAtTime(38,t+d+.16);o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(v,t+d+.012);g.gain.exponentialRampToValueAtTime(.001,t+d+.24);o.start(t+d);o.stop(t+d+.3)})}catch(_){}}
+function heartSound(){try{if(S.sfxOff||typeof BGM==="undefined"||!BGM.ctx||BGM.ctx.state!=="running"||!(S.bgm))return;const c=BGM.ctx,t=c.currentTime;[[0,.3],[.23,.18]].forEach(([d,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.setValueAtTime(70,t+d);o.frequency.exponentialRampToValueAtTime(38,t+d+.16);o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(v,t+d+.012);g.gain.exponentialRampToValueAtTime(.001,t+d+.24);o.start(t+d);o.stop(t+d+.3)})}catch(_){}}
 const BEATS=[.06,.9,1.74];
 const benv=u=>u<0?0:(1-Math.exp(-u/.022))*Math.exp(-u/.19);
 const FXE={
@@ -10511,7 +10530,7 @@ const FXE={
    {const {x,W,H}=B;x.globalCompositeOperation="lighter";const ca=Math.cos(ang),sa=Math.sin(ang);
     st.m.forEach(m=>{const px=m.x*W+Math.sin(t*.6+m.p)*10,py=(m.y*H+m.v*t+H)%H;const dx=px-cx,dy=py-cy,dist=Math.abs(dx*ca+dy*sa);const lit=Math.exp(-dist*dist/(2*Math.pow(W*.18,2)));const a=(.15+.85*lit)*e;
      const r=m.s*3,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,"rgba(220,235,255,"+(.85*a)+")");g.addColorStop(1,"rgba(160,190,255,0)");x.fillStyle=g;x.fillRect(px-r,py-r,r*2,r*2)});x.globalCompositeOperation="source-over"}}}};
-window.emoFx=function(kind,opt){opt=opt||{};if(!FXE[kind])return false;const scr=chatEl();if(!scr)return false;if(skipping()&&!opt.force)return false;
+window.emoFx=function(kind,opt){opt=opt||{};if(S.fxOff||!FXE[kind])return false;const scr=chatEl();if(!scr)return false;if(skipping()&&!opt.force)return false;
  const now=PN();if(EMO.k){const el=(now-EMO.t0)/1000/EMO.dur;if(EMO.k===kind&&el<.6)return false;if(opt.weak&&el<.55)return false}
  emoStop();caFilter();const bgw=scr.querySelector("#chatBg")||scr,back=mount("emoBack",bgw),top=mount("emoTop",scr),dpr=Math.min(1.5,window.devicePixelRatio||1);
  back.style.opacity=1;top.style.opacity=1;top.style.mixBlendMode=kind==="longing"||kind==="bloom"?"screen":"normal";
@@ -10532,7 +10551,7 @@ document.addEventListener("click",e=>{if(!e.target.closest||!e.target.closest("[
 /* inner voice → ink; narration of a kiss → bloom */
 const _pkAppend30=pkAppend;
 pkAppend=function(th,m){const r=_pkAppend30.apply(this,arguments);
- try{if(th&&curT===th.id&&m&&m.pk&&!skipping()){if(m.k==="think"){const n=Date.now();if(n-(EMO.lastInk||0)>6000){EMO.lastInk=n;requestAnimationFrame(()=>emoFx("ink",{weak:true}))}}else if(isNarr(m)&&/吻|kiss/i.test(String(m.txt||"")))emoFx("bloom")}}catch(_){}return r};
+ try{if(th&&curT===th.id&&m&&m.pk&&!skipping()){if(m.k==="think"){const n=Date.now();if(n-(EMO.lastInk||0)>6000){EMO.lastInk=n;requestAnimationFrame(()=>emoFx("ink",{weak:true}))}}else if(isNarr(m)&&window.FXBUS&&FXBUS.happened(/吻了|吻住|吻上|接吻|kissed|kissing/i,m.txt))emoFx("bloom")}}catch(_){}return r};
 /* events: a jolt (or warmth, when the event is a kiss / embrace / confession). The "unlocked" event belongs to the lock bloom. */
 PKREG.add("app30_fx3.js", function(th,b, next){const ev=Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"?(b[2]||{}):null;const r=next.apply(this,arguments);
  try{if(ev&&th&&curT===th.id&&!skipping()&&ev.icon!=="🔓"){const s=Lz(ev.title)+" "+Lz(ev.txt);if(/吻|kiss|拥抱|抱住|hug|告白|confess/i.test(s)||/💋|❤|💗|💞|💕|🌹|💘/.test(ev.icon||""))emoFx("bloom");else emoFx("shock",{weak:true})}}catch(_){}return r});;
@@ -11228,7 +11247,7 @@ function audioUnlock(){if(AU_OK)return;AU_OK=true;
 const _openThread40=openThread;openThread=function(){const r=_openThread40.apply(this,arguments);try{if(!S.sndTip&&bgmOn()){S.sndTip=1;save();setTimeout(()=>toast(t("sfx.tip")),1200)}}catch(_){}return r};
 /* 1 · sound effects layered on the visual effects */
 const SFX={cur:null,nodes:[],timers:[]};
-function sfxCtx(){try{if(!bgmOn())return null;if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();const c=BGM.ctx;return c&&c.state==="running"?c:null}catch(_){return null}}
+function sfxCtx(){try{if(S.sfxOff)return null;if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();const c=BGM.ctx;return c&&c.state==="running"?c:null}catch(_){return null}}
 function sfxOut(c){if(!SFX.bus||SFX.bus.context!==c){SFX.bus=c.createGain();SFX.bus.gain.value=.55;SFX.bus.connect(c.destination)}return SFX.bus}
 function noiseBuf(c,sec){const n=c.sampleRate*sec,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;return b}
 function sfxStop(){SFX.timers.forEach(clearInterval);SFX.timers=[];const c=BGM&&BGM.ctx;SFX.nodes.forEach(n=>{try{if(n.gain&&c){n.gain.setTargetAtTime(0,c.currentTime,.4);setTimeout(()=>{try{n.disconnect()}catch(_){}},1500)}else n.stop&&n.stop()}catch(_){}});SFX.nodes=[];SFX.cur=null}
@@ -11265,10 +11284,10 @@ function sfxOne(k){const c=sfxCtx();if(!c)return;
  if(k==="unsend"){blip(c,{f0:900,f1:300,dur:.25,type:"triangle",vol:.07})}}
 PKREG.add("app40_sfx.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&curT===th.id&&!PKSKIP[th.id]){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||""));
   if(b[1]==="event"&&/枪|gunshot|shot|💥/.test(tx+(d.icon||"")))sfxOne("gun");else if(b[1]==="event"&&/🔔|📱|消息|message/.test(tx+(d.icon||"")))sfxOne("msg");if(b[1]==="recall")sfxOne("unsend")}}catch(_){}return next(th,b)});;
-Object.assign(I18N.zh,{"sfx.tip":"🎵 本剧有配乐和音效 · 右上角 🎵 可关闭"});Object.assign(I18N.en,{"sfx.tip":"🎵 This story has music and sound · tap 🎵 at the top to turn it off"});
+Object.assign(I18N.zh,{"sfx.tip":"本剧有配乐和音效 · 右上角可以设置"});Object.assign(I18N.en,{"sfx.tip":"This story has music and sound · adjust them at the top right"});
 /* 2 · intense effects belong to their moment: they fade back to calm on their own */
 const FX_LIFE={danger:7000,flashes:1500,blackout:6000,fireworks:6000,iceshatter:4000};
-const _fxSet40=fxSet;fxSet=function(th,k){_fxSet40(th,k);clearTimeout(fxSet._t40);const life=FX_LIFE[k];if(life)fxSet._t40=setTimeout(()=>{if(th.pk&&th.pk.fx===k)_fxSet40(th,"none")},life)};
+const _fxSet40=fxSet;fxSet=function(th,k){_fxSet40(th,k);clearTimeout(fxSet._t40);const life=FX_LIFE[k];if(life)fxSet._t40=setTimeout(()=>{if(fxKeyOf(th)===k)_fxSet40(th,"none")},life)};
 /* 3 · "off the page": the background picture breaks out of its frame toward you at big moments */
 function cutFor(src){try{const m=String(src).match(/art\/scenes\/([a-z0-9_]+)\/([a-z0-9_]+)\.(jpg|png|webp)/i);if(!m)return null;const k=m[1]+"_"+m[2];return (window.CUT_FILES||[]).includes(k)?"art/cut/"+k+".webp":null}catch(_){return null}}
 function popOut(kind,imgId){try{if(PKSKIP[curT])return;const im=$(".cbimg img.on")||$(".cbimg img");const src=(imgId&&(window.SCENE_FILES||{})[imgId])||(im&&im.src);if(!src)return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
@@ -13308,12 +13327,12 @@ PKREG.add("app58_bgm100.js", function(th,b, next){const isScene=Array.isArray(b)
   const m=bgmPick([d.place,d.time,ahead].join(" "));if(m&&th.pk.bgm!==m.id){th.pk.bgm=m.id;th.pk.bgmAuto=1;save();if(curT===th.id&&typeof bgmFollow==="function")bgmFollow(th,true)}}catch(_){}}
  return r});;
 
-/* ================= v2.3 · FX + SFX LIBRARY — 100 screen effects, 100 sound effects, keyword-triggered =================
+/* ================= v2.3 · FX + SFX LIBRARY — 100 screen effects, 100 sound effects =================
+   2026-11-05：不再靠关键词触发。放什么由 app128_fxlib.js（FXBUS）决定，这里只负责把效果演出来。
    FX: one canvas/CSS overlay engine with 20 effect kinds (fall, rise, burst, streak, flash, tint, shake, glitch, pulse, fog, crack, siren…)
        × parameters = 100 named effects. Each lasts 1.2–4s, never blocks taps, and respects 「减少特效」 (S.fxOff / prefers-reduced-motion).
    SFX: synthesised one-shots built from tone/noise layers (no files) — 100 named sounds. Real recordings can replace any id later via SFX_FILES.
-   Triggers: author directives ["sys","fx",{id}] / ["sys","sfx",{id}], or keywords in any line shown in a story (narration, dialogue, AI replies),
-   with cooldowns (fx 7s, sfx 3s) so a scene never turns into fireworks. */
+   Triggers: author directives ["sys","fx",{id}] / ["sys","fx100",{id}] / ["sys","sfx",{id}]; everything else goes through FXBUS. */
 const FX100_SRC=`rain|下雨|Rain|streak|rain|rain|下雨,雨声,雨水,raining
 downpour|暴雨|Downpour|streak|heavy|downpour|暴雨,倾盆,downpour
 snow|下雪|Snow|fall|❄|wind|下雪,雪花,snowing,snowflakes
@@ -13596,14 +13615,9 @@ function fx100(id,opt){const F=FX100.find(x=>x.id===id);if(!F)return;opt=opt||{}
 .fxzoom{animation:fxzm 1.4s ease-in-out}@keyframes fxzm{40%{transform:scale(1.06)}}
 .fxblur{animation:fxbl 2.2s ease-in-out}@keyframes fxbl{30%,60%{filter:blur(2px) saturate(1.3)}45%{filter:blur(3px)}}`;document.head.appendChild(st)})();
 /* ---------- triggers ---------- */
-const FXT={fx:0,sfx:0};
 function fxMatch(list,txt){const s=String(txt||"").toLowerCase();let best=null,bs=0;list.forEach(x=>{x.kw.forEach(k=>{if(k&&k.length>=2&&s.includes(k.toLowerCase())&&k.length>bs){bs=k.length;best=x}})});return best}
-function fxAuto(th,txt){if(!th||curT!==th.id||(typeof PKSKIP!=="undefined"&&PKSKIP[th.id])||S.autoFx===false)return;const now=Date.now();
- if(now-FXT.fx>7000){const f=fxMatch(FX100,txt);if(f){FXT.fx=now;FXT.sfx=now;fx100(f.id);return}}
- if(now-FXT.sfx>3000){const s=fxMatch(SFX100,txt);if(s){FXT.sfx=now;sfx100(s.id,.7)}}}
-const _appendMsg59=appendMsg;appendMsg=function(th,m){const r=_appendMsg59(th,m);try{if(m&&m.who!=="me"&&m.who!=="sys"&&(m.txt||m.parts))fxAuto(th,m.txt||(m.parts||[]).map(p=>p.txt).join(" "))}catch(_){}return r};
-const _pkAppend59=pkAppend;pkAppend=function(th,m){const r=_pkAppend59(th,m);try{if(m&&m.who!=="me"&&isNarr(m))fxAuto(th,m.txt)}catch(_){}return r};
-PKREG.add("app59_fx100.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else fx100(d.id)}return true}
+const _pkAppend59=pkAppend;pkAppend=function(th,m){const r=_pkAppend59(th,m);try{if(m&&m.who!=="me"&&m.k!=="think"&&isNarr(m)&&!(typeof PKSKIP!=="undefined"&&PKSKIP[th.id])&&window.FXBUS)FXBUS.fromScript(th,m.txt)}catch(e){console.warn("[fx] script",e)}return r};
+PKREG.add("app59_fx100.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else if(window.FXBUS)FXBUS.moment(th,d.id,"author");else fx100(d.id)}return true}
  if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="fx"&&FX100.some(x=>x.id===(b[2]||{}).id)){th.pk.q.shift();if(curT===th.id&&!PKSKIP[th.id])fx100(b[2].id);return true}
  return next(th,b)});;
 
@@ -16793,6 +16807,9 @@ function off94Parse(next, text) {
       if (m.k === "/IF") { const f = stack.pop(); if (!f) continue; const beat = ["sys", "if", { cond: f.cond, then: f.then }]; if (f.alt) beat[2].else = f.alt; push(beat); continue; }
       if (m.k === "CALL") { call = { who: a[0], hint: a[1] || "", lines: [] }; continue; }
       if (m.k === "BGM") { push(["sys", "bgm", { m: a[0] }]); continue; }
+      /* ⟦FX|id⟧：作者指定特效，持续氛围还是瞬间由特效库决定（app128_fxlib.js）。⟦SFX|id⟧：单独一个音效 */
+      if (m.k === "FX") { const fx = window.FXBUS && FXBUS.resolve(a[0]); push(fx && fx.type === "ambient" ? ["sys", "fx", { k: fx.id }] : ["sys", "fx100", { id: a[0] }]); continue; }
+      if (m.k === "SFX") { push(["sys", "sfx", { id: a[0] }]); continue; }
       if (m.k === "TIME" || m.k === "BG") { for (let j = out.length - 1; j >= 0; j--) { const s = out[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
       if (m.k === "CG" || m.k === "VIDEO") { push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
       if (m.k === "PHOTO") { push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
@@ -17954,7 +17971,7 @@ setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
         if (Array.isArray(b) && b[0] === "sys" && b[1] === "scene" && th && th.pk) {
           const x = b[2] || {}; let txt = (x.place || "") + " " + (x.time || "") + " " + (x.img || "");
           const q = th.pk.q || [];
-          for (let i = 1, n = 0; i < q.length && n < 6; i++) { const y = q[i]; if (!Array.isArray(y)) continue; if (y[0] === "sys" && y[1] === "scene") break; if (typeof y[2] === "string") { txt += " " + y[2]; n++; } }
+          for (let i = 1, n = 0; i < q.length && n < 6; i++) { const y = q[i]; if (!Array.isArray(y)) continue; if (y[0] === "sys" && y[1] === "scene") break; if (y[0] === "n" && typeof y[2] === "string") { txt += " " + y[2]; n++; } }
           const k = fxFrom(txt);
           fxSet(th, k || "none");
         }
@@ -17965,7 +17982,7 @@ setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
   if (typeof chatFx === "function") {
     const _cf = chatFx;
     chatFx = function (th) {
-      if (th && th.pk && th.pk.fx === "none" && !(th.fxm && th.fxm !== "auto")) { try { if (window.glFx) glFx.stop(); } catch (_) {} try { cancelAnimationFrame(fxRaf); } catch (_) {} try { fxRun("none"); } catch (_) {} return; }
+      if (th && fxKeyOf(th) === "none" && !(th.fxm && th.fxm !== "auto")) { try { if (window.glFx) glFx.stop(); } catch (_) {} try { cancelAnimationFrame(fxRaf); } catch (_) {} try { fxRun("none"); } catch (_) {} return; }
       return _cf.apply(this, arguments);
     };
   }
@@ -18591,7 +18608,8 @@ async function director97(th, act) {
     "\n\n" + (zh ? "规则：绝不替玩家说话、做动作、做决定；角色可以拒绝、可以互相冲突、可以误会；不要让所有人都围着玩家献殷勤；没有电话就不要安排来电。narration 用第二人称写给玩家，最多 2 句，不含对白。options 给玩家 3 个下一步可以做的事（各不超过 14 字，态度不同）。"
            : "Rules: never write the player's words, actions or decisions; characters may refuse, clash and misread each other; not everyone fawns over the player. narration is second person to the player, max 2 sentences, no dialogue. options: 3 different things the player might do next (under 8 words each).") +
     (last ? (zh ? "\n这是最后一章。chapterDone=true 时给出 ending：A=两人并肩（关系好、彼此信任）/ B=各自安好 / C=反目，取决于玩家一路的言行；并写 endingText（3 句以内）。" : "\nThis is the last chapter. When chapterDone=true also give ending: A = side by side / B = apart and okay / C = enemies, earned by the player's whole run, plus endingText (max 3 sentences).") : "") +
-    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") +
+    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"fx":{"ambient":null,"moment":null},"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
   return ask(p, { maxTokens: 900 });
 }
 async function actor97(th, cid, intent, act) {
@@ -18628,6 +18646,7 @@ async function agentTurn97(th, act) {
       if (a.bgm) { try { if (typeof bgmFollow === "function") bgmFollow({ id: th.id, wid: th.wid, pk: { bgm: a.bgm } }, true); } catch (_) {} }
       if (a.cg) { const As = OFF94.assets[w.community] || {}; const src = As[a.cg]; if (src) { try { off94Show({ src, cap: a.cap }, false); } catch (_) {} const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: th.cast[0], src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } } }
     if (d.narration) appendMsg(th, { who: "n", k: "act", txt: String(d.narration).slice(0, 300), at: Date.now() });
+    if (window.FXBUS) FXBUS.agent(th, d.fx)();
     /* the player's public move is witnessed by whoever is in the room */
     if (act && act.mode !== "think") remember97(th, present.length ? present : th.cast, youName97(th) + (act.mode === "act" ? "：" : L97("说：", " said: ")) + String(act.txt).slice(0, 60));
     /* characters, one by one — each sees what the one before just said */
@@ -18981,7 +19000,8 @@ async function director98(th, mode, act) {
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
     (judging ? gateAsk98(th) : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"",' + (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") +
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},' + (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -19032,7 +19052,7 @@ async function beat98(th, mode, act) {
     let nar = policy ? "" : String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
     if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
     if (act && act.to && (policy ? allowedSpeakers98(th, s) : th.cast).includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
-    let delivered98 = 0;
+    let delivered98 = 0; const fx98 = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
     for (const sp of spk.slice(0, mode === "talk" ? 2 : 3)) {
       let r = null; try { r = await actor98(th, sp.id, sp.intent); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", "")); if (r2 && r2.say) r = r2; } } catch (_) {} if (!r) continue;
       r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
@@ -19042,12 +19062,13 @@ async function beat98(th, mode, act) {
       if (act98 && say98) appendMsg(th, { who: "n", k: "box", pk: 1, parts: [{ who: sp.id, k: "act", txt: act98 }], txt: act98, last: say98, lastWho: sp.id, say: { who: sp.id, txt: say98 }, at: Date.now(), ai: 1 });
       else if (act98) appendMsg(th, { who: sp.id, k: "act", txt: act98, at: Date.now() });
       else if (say98) appendMsg(th, { who: sp.id, k: "say", txt: say98, at: Date.now(), ai: 1 });
+      fx98();
       const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
       if (r.remember) mem98(th, [sp.id], r.remember);
       if (r.say) mem98(th, (policy ? pres : (pres.length ? pres : th.cast)).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
     }
     if (policy && mode === "choice" && !delivered98) { toast(L98("角色回复未完成，选择尚未提交，可以重试", "The character response failed; the choice was not submitted. Try again.")); return false; }
-    A.turns++; th.rounds++;
+    fx98(); A.turns++; th.rounds++;
     if (mode === "talk" || mode === "choice") gate98(th, d);
     if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
@@ -19070,6 +19091,7 @@ async function enter98(th) {
   if (!experience98(th)) appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
   const As = OFF94.assets[wd(th.wid).community] || {};
   const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; try { sceneBg(th, key); } catch (_) {} }
+ if (window.FXBUS) FXBUS.authored(th, s.fx || (A.sc === 0 && c.fx));
   if (s.bgm) { A.bgm = "m_" + String(s.bgm).replace(/^m_/, ""); try { if (typeof bgmPlay === "function" && bgmOn()) bgmPlay(A.bgm, th.wid); } catch (_) {} }
   const cg = As["cg_" + s.id]; if (cg) { try { off94Show({ src: cg, cap: s.cg_cap || "" }, false); } catch (_) {} }
   if (s.social && typeof gen96 === "function") gen96(th, s.social).then(m => m && chg96(m)).catch(() => {});
@@ -19334,6 +19356,8 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
     const _fr = fxRun;
     let cur = null, tm = 0;
     fxRun = function (kind) {
+      /* 特效关了：画面停掉（省电），环境音仍由音效开关决定 */
+      if (S.fxOff && kind !== "none" && kind !== "__none") { cur = "none"; _fr.call(this, "none"); try { sfxSet(kind); } catch (e) { console.warn("[fx] sound", e); } return; }
       const cv = $("#cbFx"); if (!cv || kind === cur) return _fr.apply(this, arguments);
       const args = arguments, self = this; cur = kind;
       cv.style.transition = "opacity .7s ease"; cv.style.opacity = "0"; clearTimeout(tm);
@@ -21816,6 +21840,242 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  };
  PKREG.add('app124_experience.js',function(th,b,next){const result=next(th,b);if(result&&Array.isArray(b)&&b[1]==='scene'&&curT===th.id&&!X.readingHistory()&&!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){const bg=document.getElementById('chatBg');if(bg){bg.classList.remove('scene-shift124');void bg.offsetWidth;bg.classList.add('scene-shift124');setTimeout(()=>bg.classList.remove('scene-shift124'),650);}}return result;});
  UI.add('experience124',()=>{header();composer();history();});
+})();
+
+/* ================= 特效基础层：特效库 · 统一入口 · 开关（2026-11-05）=================
+   玩家：特效要跟着剧情走，不是看到字就放。原来有 4 套特效各自触发，主要靠关键词匹配 ⇒
+   「今晚不会下雨」下雨、「雷蒙」打雷；官方自由模式几乎走不到其他触发。
+
+   ## 谁决定放什么
+     作者   ⟦FX|id⟧ / bible 的 scene.fx、chapter.fx          优先级最高，不限次数
+     智能体 剧情智能体（导演）的 fx 字段；单模型回复也是同一份指令   冷却 + 每章上限
+     关键词 只看剧本旁白，且只认明确发生的物理事件                 兜底，额度最少
+   选导演而不是角色：只有它同时知道场景、玩家这一轮和本轮安排；角色只知道自己，让每个角色选会互相抢。
+   不多调一次模型：fx 跟着导演这一轮的 JSON 一起回来。
+
+   ## 特效库
+   AMBIENT = 持续氛围（环境变了才换）；MOMENT = 一次性瞬间。这两张表是发给智能体的白名单，
+   按「故事里会发生什么」分类，保证每类情境都有可选的；同义和纯装饰的不进表。
+   FX100 里其余效果照常保留：老作品的指令、特效库页面、作者 ⟦FX|id⟧ 都还能用。
+   表一改要同步 api/_stylecheck.js 的 FX_IDS（tools/fx-selftest.mjs 会对账）。
+
+   ## 开关
+   S.fxOff / S.sfxOff / S.vibOff，都在顶栏同一个按钮里；音乐和语音也收进来，不再各占一个按钮。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+
+  /* [id, 什么时候用, when to use] */
+  const AMBIENT = [
+    ["rain", "下雨", "rain"], ["storm", "暴雨雷电", "thunderstorm"], ["wind", "大风", "strong wind"],
+    ["snowfall", "下雪", "snow"], ["blizzard", "暴风雪", "blizzard"], ["ice", "结冰的严寒", "freezing ice"],
+    ["candle", "烛光", "candlelight"], ["embers", "炉火、篝火", "fireplace or campfire"], ["inferno", "火灾现场", "a fire"],
+    ["blackout", "停电", "power cut"], ["drip", "地下室、漏水", "cellar or leaking water"],
+    ["bokeh", "城市夜景灯光", "city lights at night"], ["neon", "霓虹夜店", "neon nightclub"],
+    ["godrays", "暖阳光束", "warm sunbeams"], ["dust", "安静室内的浮尘", "dust in a quiet room"],
+    ["fireflies", "夏夜萤火虫", "fireflies"], ["aurora", "极光", "aurora"], ["galaxy", "星空", "starry sky"],
+    ["petals", "飘落的花瓣", "falling petals"], ["hearts", "持续的甜蜜氛围", "lingering sweetness"],
+  ];
+  const MOMENT = {
+    "恋爱|romance": [
+      ["heartbeat", "心跳失控的距离", "heart racing, very close"], ["bloom", "拥抱或释然的暖意", "an embrace, warm relief"],
+      ["longing", "克制的思念", "restrained longing"], ["blush", "害羞脸红", "blushing"],
+      ["hearts_rise", "明确心动的轻快一刻", "a light moment of falling"], ["heart_burst", "告白说出口", "a confession spoken"],
+      ["kiss_mark", "真的接吻", "an actual kiss"], ["ring", "求婚", "a proposal"],
+    ],
+    "情绪|emotion": [
+      ["ink", "内心翻涌", "inner turmoil"], ["shock", "重大反转或冲突爆发", "a major twist or clash"],
+      ["tears", "有人真的哭了", "someone actually cries"], ["breath_hold", "屏息的紧张", "held breath"],
+      ["dizzy", "醉了、头晕", "drunk or dizzy"], ["flashback", "进入回忆", "entering a memory"], ["dreamy", "梦境、恍惚", "a dream or daze"],
+    ],
+    "镜头|camera": [
+      ["cinema", "电影感的定格", "a cinematic freeze"], ["spotlight", "全场目光聚焦", "everyone looks here"],
+      ["zoom", "死死对视", "a locked stare"], ["slowmo", "时间像停住了", "time seems to stop"],
+      ["sparkle", "惊艳亮相", "a stunning entrance"], ["flash_white", "拍照、闪光灯", "a camera flash"],
+      ["fade_black", "昏迷或黑场", "passing out, fade to black"], ["fade_white", "苏醒、白光", "waking up, white light"],
+    ],
+    "庆祝|celebration": [
+      ["confetti", "庆祝、派对", "a celebration"], ["fireworks", "放烟花", "fireworks"],
+      ["shooting_star", "流星", "a shooting star"], ["lanterns", "放灯", "sky lanterns"],
+    ],
+    "自然|nature": [
+      ["lightning", "一道闪电", "a lightning strike"], ["fog", "起雾", "fog rolls in"], ["rainbow", "雨后彩虹", "a rainbow"],
+      ["leaves", "落叶", "falling leaves"], ["moonlight", "月光洒下", "moonlight"], ["sunset", "夕阳晚霞", "sunset"],
+      ["sun_rays", "阳光照进来", "sunlight breaks through"], ["ripple", "水面涟漪", "ripples on water"],
+      ["underwater", "落水、潜水", "underwater"], ["frost", "瞬间结霜", "a sudden frost"],
+    ],
+    "危险|danger": [
+      ["shake", "撞击、摔倒", "an impact or fall"], ["quake", "地震、剧烈摇晃", "an earthquake"], ["explosion", "爆炸", "an explosion"],
+      ["flash_red", "受伤、中弹", "wounded or shot"], ["glass_crack", "玻璃碎裂", "glass shatters"], ["blaze", "突然起火", "fire breaks out"],
+      ["police", "警车赶到", "police arrive"], ["ambulance", "救护车", "an ambulance"], ["danger", "致命威胁", "a lethal threat"],
+      ["watched", "被暗中盯着", "being watched"], ["speed", "飞奔、追逐", "a sprint or chase"], ["clock", "倒计时", "a countdown"],
+    ],
+    "科技|tech": [
+      ["phone_buzz", "手机震动", "a phone buzzes"], ["notify", "收到关键消息", "a key message arrives"],
+      ["glitch", "系统、信号故障", "a system glitch"], ["static", "监控画面", "CCTV footage"], ["hologram", "全息投影", "a hologram"], ["warp", "超光速跃迁", "a warp jump"],
+    ],
+    "奇幻|fantasy": [
+      ["magic_circle", "施法、法阵", "casting a spell"], ["enchant", "魔法变化", "an enchantment"], ["wings", "显出翅膀", "wings appear"],
+      ["blood_moon", "血月", "a blood moon"], ["wolf_eyes", "兽瞳发光", "glowing eyes"], ["fangs", "露出獠牙", "fangs"],
+      ["bats", "蝙蝠群", "bats"], ["crows", "乌鸦群", "crows"], ["butterflies", "蝴蝶", "butterflies"],
+    ],
+  };
+  const AMB = new Set(AMBIENT.map(x => x[0])), MOM = new Set(Object.values(MOMENT).flat().map(x => x[0]));
+  const EMO = new Set(["heartbeat", "bloom", "longing", "ink", "shock"]);
+  /* 模型或作者写了同义词时归到表里那一个 */
+  const ALIAS = { snow: "snowfall", downpour: "storm", thunder: "lightning", frozen: "ice", kiss: "kiss_mark", hug: "bloom", sakura: "petals", rose_petals: "petals", stars: "galaxy", starry: "galaxy", city_bokeh: "bokeh", sunlight: "sun_rays" };
+  const COOL = { agent: 6000, script: 20000 }, CAP = { agent: 4, script: 2 };
+  const LAST = { at: 0 };
+
+  function resolve(id) {
+    id = String(id || "").trim(); if (!id || id === "null") return null;
+    if (id === "none") return { type: "ambient", id };
+    if (AMB.has(id)) return { type: "ambient", id };
+    if (MOM.has(id)) return { type: "moment", id };
+    if (ALIAS[id]) return resolve(ALIAS[id]);
+    if (typeof FX100 !== "undefined" && FX100.some(x => x.id === id)) return { type: "moment", id, legacy: 1 };
+    return null;
+  }
+  function chapterKey(th) { return th.b98 ? "b" + th.b98.ch : th.pk ? "p" + th.pk.ch : "f" + Math.floor((th.rounds || 0) / 12); }
+  function spend(th, src) {
+    if (src === "author") return true;
+    const now = Date.now(), key = chapterKey(th), b = th.fxB && th.fxB.k === key ? th.fxB : (th.fxB = { k: key, agent: 0, script: 0 });
+    if (now - LAST.at < COOL[src] || b[src] >= CAP[src]) return false;
+    LAST.at = now; b[src]++; return true;
+  }
+  function moment(th, id, src) {
+    src = src || "author";
+    const r = resolve(id); if (!r) return false;
+    if (r.type === "ambient") return ambient(th, r.id, src);
+    if (!th || th.id !== curT || (typeof PKSKIP !== "undefined" && PKSKIP[th.id])) return false;
+    if (window.EXPERIENCE124 && EXPERIENCE124.readingHistory()) return false; /* 在往上翻聊天记录，不打扰 */
+    if (!spend(th, src)) return false;
+    document.querySelectorAll(".fx100").forEach(el => el.remove()); /* 一次只有一个瞬间特效 */
+    if (EMO.has(r.id)) { if (!S.fxOff && window.emoFx) emoFx(r.id); return true; }
+    if (typeof fx100 === "function") fx100(r.id);
+    return true;
+  }
+  function ambient(th, id, src) {
+    const r = resolve(id); if (!th || !r || r.type !== "ambient") return false;
+    if (typeof fxKeyOf === "function" && fxKeyOf(th) === r.id) return false;
+    if (typeof fxSet === "function") fxSet(th, r.id);
+    return true;
+  }
+  /* 智能体返回的 fx：环境马上换；瞬间特效交回一个函数，等第一句台词出现时再放，画面和文字同步 */
+  function agent(th, fx) {
+    fx = fx && typeof fx === "object" ? fx : {};
+    if (fx.ambient) { const a = resolve(fx.ambient); if (a && a.type === "ambient") ambient(th, a.id, "agent"); }
+    let done = !fx.moment;
+    return function () { if (done) return; done = true; moment(th, fx.moment, "agent"); };
+  }
+  function authored(th, fx) {
+    if (!fx || typeof fx !== "object") return;
+    if (fx.ambient) ambient(th, fx.ambient, "author");
+    if (fx.moment) moment(th, fx.moment, "author");
+  }
+
+  /* ---------- 给智能体的指令（表是单一来源，加特效不用改提示词）---------- */
+  function promptBlock(th, wantZh) {
+    const list = rows => rows.map(r => r[0] + " " + r[wantZh ? 1 : 2]).join(wantZh ? "｜" : " | ");
+    const groups = Object.entries(MOMENT).map(([k, rows]) => k.split("|")[wantZh ? 0 : 1] + (wantZh ? "：" : ": ") + list(rows)).join("\n  ");
+    const cur = (th && typeof fxKeyOf === "function" && fxKeyOf(th)) || "none";
+    return wantZh
+      ? "\n\nfx：这一轮要不要特效。默认两项都是 null，大多数回合都不该有特效，特效太多就不特别了。只为这一刻真实发生、玩家能感知到的事选；比喻、否定、假设、回忆、闲聊里提到的词，还有人名地名，都不算（“今晚不会下雨”“雷蒙”“心里像被撞了一下”都填 null）。还没发生、角色可能拒绝的事也不算。" +
+        "\n- ambient：环境真的变了才填，一直持续到下次改变；环境没变就填 null，不要重复当前值。当前环境：" + cur + "。可选：" + list(AMBIENT) + "；none 恢复平静。" +
+        "\n- moment：这一轮最关键的一个瞬间才填，每章最多两三次。可选：\n  " + groups +
+        "\n恋爱和情绪类只在关系真的前进时用，普通暧昧不用。"
+      : "\n\nfx: whether this turn gets an effect. Both default to null; most turns should have none, or effects stop feeling special. Choose only for something really happening now that the player can perceive; metaphors, negations, hypotheticals, memories, words merely mentioned in chat, and names are not events (\"it won't rain tonight\", a man named Storm: null). Nothing that hasn't happened yet or that a character might refuse." +
+        "\n- ambient: only when the environment really changes; it lasts until the next change. If nothing changed use null, don't repeat the current value. Current: " + cur + ". Options: " + list(AMBIENT) + "; none returns to calm." +
+        "\n- moment: only the single most important beat of this turn, at most two or three per chapter. Options:\n  " + groups +
+        "\nRomance and emotion effects only when the relationship really moves forward, not for ordinary flirting.";
+  }
+
+  /* ---------- 剧本旁白的兜底（AI 台词不走这里，由智能体判断）---------- */
+  const SCRIPT_RULES = [
+    [/爆炸声?|炸弹炸|explosion/i, "explosion"], [/枪响|枪声|开了一枪|中弹|gunshot/i, "flash_red"], [/玻璃(?:碎|炸|裂)|碎了一地|shattered/i, "glass_crack"],
+    [/发生地震|地震了|地面(?:剧烈)?(?:震动|摇晃)|earthquake/i, "quake"], [/闪电|惊雷|雷声|打雷|lightning/i, "lightning"], [/着火了|火海|火光冲天|caught fire|burst into flames/i, "blaze"],
+    [/警笛|警车|police car|sirens/i, "police"], [/救护车|ambulance/i, "ambulance"], [/放烟花|烟花(?:炸|升|绽)|fireworks/i, "fireworks"],
+    [/吻了|吻住|吻上|接吻|kissed/i, "bloom"], [/晕倒|昏迷|失去意识|fainted|passed out/i, "fade_black"], [/落泪|流泪|泪水|哭了|in tears/i, "tears"],
+    [/手机(?:突然|又)?(?:震|响)|phone buzzed/i, "phone_buzz"], [/快门|闪光灯|camera flash|shutter clicked/i, "flash_white"], [/求婚|proposed to|down on one knee/i, "ring"], [/表白|告白|confessed (?:his|her|their|my) love/i, "heart_burst"],
+    [/心跳(?:加速|得很快|如鼓|漏了一拍)|心脏狂跳|heart pounding/i, "heartbeat"],
+    [/踹开|摔门|砸碎|狠狠撞|重重摔|slammed/i, "shake"], [/警报(?:响|声)|alarm/i, "danger"], [/停电了|突然断电|灯(?:突然)?全灭|power cut/i, "blackout"],
+    [/下起(?:了)?(?:大|小|暴)?雨|开始下雨|started raining/i, "rain"], [/下起(?:了)?(?:大|小)?雪|开始下雪|started snowing/i, "snowfall"], [/起雾了|大雾弥漫/, "fog"],
+    [/月光(?:洒|落|照|铺)|moonlight fell/i, "moonlight"], [/阳光(?:洒|照|透|落|铺)|sunlight (?:fell|poured)/i, "sun_rays"], [/夕阳(?:西下|落)|晚霞/, "sunset"], [/抱住|抱紧|拥抱了|embraced/i, "bloom"],
+  ];
+  /* 一个分句里出现否定、假设、比喻或回忆，就不算真的发生 */
+  const NOT_REAL = /[不没未别无]|如果|假如|要是|万一|也许|可能|会不会|怕|像|仿佛|好像|似的|一样|以为|记得|当年|那年|n't|\bnot\b|\bno\b|\bnever\b|\bif\b|\blike\b|\bas if\b/i;
+  const NOT_NEG = /忍不住|不由|不禁|不及|不知不觉|不停|没想到|别人|无声/g; /* 这些带否定字，但事情确实发生了 */
+  function happened(re, text) {
+    return String(text || "").split(/[。！？!?；;，,\n…—]+/).some(c => re.test(c) && !NOT_REAL.test(c.replace(NOT_NEG, "")));
+  }
+  function fromScript(th, text) {
+    if (!th || th.id !== curT || S.autoFx === false) return false;
+    const hit = SCRIPT_RULES.find(([re]) => happened(re, text));
+    return hit ? moment(th, hit[1], "script") : false;
+  }
+
+  /* ---------- 开关：一个按钮，点开选 ---------- */
+  const realVibrate = navigator.vibrate ? navigator.vibrate.bind(navigator) : null;
+  if (realVibrate) { try { navigator.vibrate = p => (typeof S !== "undefined" && S.vibOff ? false : realVibrate(p)); } catch (e) { console.warn("[fx] vibrate", e); } }
+  const ICON = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h7M14 6h3M3 14h3M10 14h7"/><circle cx="12" cy="6" r="2"/><circle cx="8" cy="14" r="2"/></svg>';
+  const ROWS = () => [
+    ["bgm", zh() ? "音乐" : "Music", typeof bgmOn === "function" ? bgmOn() : true],
+    ["voice", zh() ? "语音" : "Voice", !!S.autoVoice],
+    ["sfx", zh() ? "音效" : "Sound effects", !S.sfxOff],
+    ["fx", zh() ? "特效" : "Visual effects", !S.fxOff],
+    ["vib", zh() ? "震动" : "Vibration", !S.vibOff, !realVibrate],
+  ];
+  let open = false;
+  function panelHTML() {
+    return ROWS().map(([k, label, on, off]) => '<button role="switch" aria-checked="' + (!off && on) + '" data-fxt128="' + k + '"' + (off ? " disabled" : "") + '><span>' + esc(label) + (off ? '<small>' + (zh() ? "此设备不支持" : "Not supported") + '</small>' : '') + '</span><i></i></button>').join("");
+  }
+  function place() {
+    const btn = document.querySelector(".chead .fx128"), panel = document.getElementById("fxp128"), scr = document.getElementById("s-chat");
+    if (!panel) return;
+    if (!open || !btn || !scr) { panel.remove(); return; }
+    const a = btn.getBoundingClientRect(), s = scr.getBoundingClientRect();
+    panel.style.top = (a.bottom - s.top + 6) + "px"; panel.style.right = (s.right - a.right) + "px";
+    panel.innerHTML = panelHTML();
+  }
+  function toggleOpen(v) {
+    open = v;
+    let panel = document.getElementById("fxp128"); const scr = document.getElementById("s-chat"), btn = document.querySelector(".chead .fx128");
+    if (btn) btn.setAttribute("aria-expanded", String(open));
+    if (open && !panel && scr) { panel = document.createElement("div"); panel.id = "fxp128"; panel.setAttribute("role", "group"); scr.appendChild(panel); }
+    place();
+  }
+  /* 现在的状态同步给正在跑的画面和声音，开关立刻生效 */
+  function apply() {
+    const th = S.threads[curT];
+    document.body.classList.toggle("fx-off", !!S.fxOff);
+    if (S.fxOff) document.querySelectorAll(".fx100").forEach(el => el.remove());
+    if (S.sfxOff && typeof sfxStop === "function") { sfxStop(); if (typeof SFX !== "undefined") SFX.cur = null; }
+    if (th && typeof chatFx === "function") chatFx(th);
+  }
+  function header() {
+    const r = document.querySelector("#s-chat .chead .row"), anchor = r && r.querySelector("[data-cmenu]"); if (!anchor) return;
+    if (!r.querySelector(".fx128")) anchor.insertAdjacentHTML("beforebegin", '<button class="ibtn fx128" data-fxp128="1" aria-haspopup="true" aria-expanded="' + open + '" aria-label="' + (zh() ? "声音与特效" : "Sound and effects") + '">' + ICON + '</button>');
+    document.body.classList.toggle("fx-off", !!S.fxOff);
+    if (open) { const scr = document.getElementById("s-chat"); if (scr && !document.getElementById("fxp128")) toggleOpen(true); else place(); }
+  }
+  document.addEventListener("click", e => {
+    if (e.target.closest("[data-fxp128]")) { e.preventDefault(); e.stopImmediatePropagation(); toggleOpen(!open); return; }
+    const row = e.target.closest("[data-fxt128]");
+    if (row) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      const k = row.dataset.fxt128;
+      if (k === "bgm") { const b = document.querySelector(".chead .bgmtog"); if (b) b.click(); if (typeof SFX !== "undefined") SFX.cur = null; apply(); }
+      else if (k === "voice") { const b = document.querySelector(".chead .vtog"); if (b) b.click(); }
+      else { const key = k === "sfx" ? "sfxOff" : k === "fx" ? "fxOff" : "vibOff"; S[key] = !S[key]; save(); apply(); if (k === "vib" && !S.vibOff && realVibrate) realVibrate(30); if (k === "sfx" && !S.sfxOff && typeof sfx100 === "function") sfx100("pop", .5); }
+      place();
+      return;
+    }
+    if (open && !e.target.closest("#fxp128,[data-bgm],[data-vtog]")) toggleOpen(false);
+  }, true);
+  if (window.UI && typeof window.UI.add === "function") window.UI.add("fx128", header);
+  else console.warn("[fx] UI.add 不在，声音与特效按钮不会显示");
+
+  window.FXBUS = { AMBIENT, MOMENT, resolve, moment, ambient, agent, authored, promptBlock, happened, fromScript };
 })();
 
 </script>

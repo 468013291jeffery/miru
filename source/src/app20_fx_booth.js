@@ -4,11 +4,12 @@
    "停电" → blackout flicker, a candle-lit scene → candle glow + embers, a basement → dripping water, wind → gusts and leaves,
    snow → snow, a birthday → confetti, a near-kiss → drifting hearts. State is saved on the thread (th.pk.fx). */
 const FX2=["rain","storm","wind","snowfall","blizzard","candle","blackout","drip","hearts","petals","confetti"];
-const FX_RULES=[[/暴雨|雷|storm|thunder|downpour/i,"storm"],[/停电|断电|黑了|blackout|power cut|lights go out/i,"blackout"],[/烛|蜡烛|candle/i,"candle"],
- [/暴风雪|blizzard/i,"blizzard"],[/雪|snow/i,"snowfall"],[/风|台风|gust|wind/i,"wind"],[/地下室|basement|cellar/i,"drip"],[/下雨|雨|rain/i,"rain"],
- [/生日|派对|birthday|confetti/i,"confetti"],[/花瓣|樱花|petal|blossom/i,"petals"],[/nearkiss|forehead|差一点|kiss/i,"hearts"]];
-function fxFrom(s){s=String(s||"");const r=FX_RULES.find(([re])=>re.test(s));return r?r[1]:null}
-function fxSet(th,k){if(!th.pk||!k||th.pk.fx===k)return;th.pk.fx=k;save();if(curT===th.id)chatFx(th)}
+/* 2026-11-05：单字规则会误伤（「雷蒙」打雷、「风格」刮风、「雪莉」下雪），只认明确的天气词；否定和假设由 FXBUS.happened 排除 */
+const FX_RULES=[[/暴雨|雷雨|雷声|打雷|电闪雷鸣|thunderstorm|thunder|downpour/i,"storm"],[/停电|断电|blackout|power cut|lights go out/i,"blackout"],[/烛光|蜡烛|candle/i,"candle"],
+ [/暴风雪|blizzard/i,"blizzard"],[/下雪|大雪|小雪|飘雪|雪花|雪地|snowfall|snowing/i,"snowfall"],[/大风|狂风|寒风|台风|gust|windy/i,"wind"],[/地下室|basement|cellar/i,"drip"],[/下雨|雨声|雨夜|雨丝|细雨|小雨|大雨|raining|in the rain/i,"rain"],
+ [/生日派对|生日会|birthday party|confetti/i,"confetti"],[/花瓣|樱花|petals|blossom/i,"petals"],[/nearkiss|forehead/i,"hearts"]];
+function fxFrom(s){s=String(s||"");const r=FX_RULES.find(([re])=>window.FXBUS?FXBUS.happened(re,s):re.test(s));return r?r[1]:null}
+function fxSet(th,k){if(!th||!k||fxKeyOf(th)===k)return;if(th.pk)th.pk.fx=k;else th.fxScene=k;save();if(curT===th.id)chatFx(th)}
 PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"){const x=b[2]||{};
   if(b[1]==="fx"){th.pk.q.shift();fxSet(th,x.k);return true}
   if(b[1]==="event")fxSet(th,fxFrom((x.title||"")+" "+(x.txt||"")));
@@ -16,7 +17,7 @@ PKREG.add("app20_fx_booth.js", function(th,b, next){if(Array.isArray(b)&&b[0]===
   if(b[1]==="bg"&&/nearkiss|forehead/.test(x.img||""))fxSet(th,"hearts")}
  return next(th,b)});;
 const _chatFx20=chatFx;
-chatFx=function(th){const k=th&&th.pk&&th.pk.fx;if(!k||!FX2.includes(k)){fxState.k=null;return _chatFx20(th)}cancelAnimationFrame(fxRaf);fxRun(k)};
+chatFx=function(th){const k=fxKeyOf(th),lib=window.FXBUS&&k&&FXBUS.resolve(k);if(!k||!(FX2.includes(k)||(lib&&lib.type==="ambient"))){fxState.k=null;return _chatFx20(th)}cancelAnimationFrame(fxRaf);fxRun(k)};
 const fxState={k:null};
 function fxRun(kind){const cv=$("#cbFx");if(!cv)return;fxState.k=kind;const r=cv.getBoundingClientRect(),W=cv.width=Math.max(1,r.width),H=cv.height=Math.max(1,r.height),x=cv.getContext("2d");
  const low=matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;const N0={rain:160,storm:260,wind:70,snowfall:120,blizzard:260,candle:40,blackout:0,drip:22,hearts:22,petals:40,confetti:120}[kind];const N=low?Math.round(N0/3):N0;
@@ -135,7 +136,7 @@ Object.assign(I18N.zh,{"w2.h":"欢迎来到 MIRU！新人福利已到","w2.t1":"
 const MC_LINE={zh:["……算了，没事。","我就是想听听你的声音。","你在忙吗？我有件事想当面——","接一下，就一下。","刚才那句话，我想解释一下。","喝了点酒。别多想。","你睡了吗？"],
  en:["...never mind. It's nothing.","I just wanted to hear your voice.","You busy? There's something I want to say to—","Pick up. Just once.","About what I said earlier. Let me explain.","Had a drink. Don't read into it.","Are you asleep?"]};
 let ring=null,mcIdle=0;
-function ringTone(){if(!bgmInit())return;const c=BGM.ctx;if(c.state==="suspended")c.resume().catch(()=>{});const t0=c.currentTime;
+function ringTone(){if(S.sfxOff||!bgmInit())return;const c=BGM.ctx;if(c.state==="suspended")c.resume().catch(()=>{});const t0=c.currentTime;
  for(let k=0;k<5;k++)[0,.18].forEach(d=>[880,1046].forEach(f=>{const o=c.createOscillator(),g=c.createGain();o.frequency.value=f;o.connect(g);g.connect(c.destination);const s=t0+k*2+d;g.gain.setValueAtTime(0,s);g.gain.linearRampToValueAtTime(.06,s+.02);g.gain.linearRampToValueAtTime(0,s+.16);o.start(s);o.stop(s+.2)}))}
 function ringIn(th,cid,context){if(!window.EXPERIENCE124||!EXPERIENCE124.canCall(th,cid,context||{}))return;if(ring||!th||!ch(cid)||$(".callv"))return;const c=ch(cid),line=String(Lz(context.reason||context.hint)||"");
  ring={th,cid,line,t0:Date.now()};document.body.insertAdjacentHTML("beforeend",'<div class="ringv"><div class="ringbg" style="background-image:url('+artSrc(cid)+')"></div><div class="ringin">'+avatar(cid,96)+'<b>'+esc(c.n)+'</b><span>'+t("mc.calling")+'</span>'+

@@ -86,9 +86,9 @@ document.addEventListener("click",e=>{let x;const th=S.threads[curT];if(!th)retu
  if(e.target.closest("[data-fxpick]")){const cur=th.fxm||"auto";sheet('<h2>✨ '+t("fx.h")+'</h2><p class="xs faint" style="margin-top:4px">'+t("fx.s")+'</p><div class="fxgrid">'+FXLIST.map(([k,i])=>'<button data-fxk="'+k+'" class="'+(k===cur?"on":"")+'"><span>'+i+'</span><b>'+t("fx."+k)+'</b></button>').join("")+'</div>');return}
  if(x=e.target.closest("[data-fxk]")){th.fxm=x.dataset.fxk;save();closeSheet();chatFx(th);bgmFollow(th,true);return}});
 /* music follows the effect / scene */
-const _bgmFor21=bgmForThread;bgmForThread=function(th){const r=_bgmFor21(th);if(!r)return r;const k=(th.fxm&&th.fxm!=="auto")?th.fxm:(th.pk&&th.pk.fx);if(k&&FX2MOOD[k])r.mood=FX2MOOD[k];return r};
+const _bgmFor21=bgmForThread;bgmForThread=function(th){const r=_bgmFor21(th);if(!r)return r;const k=(th.fxm&&th.fxm!=="auto")?th.fxm:fxKeyOf(th);if(k&&FX2MOOD[k])r.mood=FX2MOOD[k];return r};
 function bgmFollow(th,say){if(!bgmOn()||!(BGM.timer||BGM.file))return;const w=bgmForThread(th);if(!w)return;const was=BGM.mood;bgmPlay(w.mood,w.wid);if(say&&was!==w.mood)toast("🎵 "+(BGM_NAME[w.mood]||w.mood))}
-const _fxSet21=fxSet;fxSet=function(th,k){const before=th.pk&&th.pk.fx;if(th.pk&&k&&before!==k)th.fxm=null;_fxSet21(th,k);if(curT===th.id&&th.pk&&th.pk.fx!==before)bgmFollow(th,true)};
+const _fxSet21=fxSet;fxSet=function(th,k){const before=fxKeyOf(th);if(k&&before!==k)th.fxm=null;_fxSet21(th,k);if(curT===th.id&&fxKeyOf(th)!==before)bgmFollow(th,true)};
 Object.assign(I18N.en,{"fx.chip":"Mood","fx.h":"Atmosphere","fx.s":"Effects change with the story by themselves. Try any of them here, or go back to following the story.","fx.auto":"Follow the story","fx.rain":"Rain","fx.storm":"Storm","fx.wind":"Wind","fx.snowfall":"Snow","fx.blizzard":"Blizzard","fx.candle":"Candlelight","fx.blackout":"Blackout","fx.drip":"Dripping","fx.hearts":"Hearts","fx.petals":"Petals","fx.confetti":"Confetti"});
 Object.assign(I18N.zh,{"fx.chip":"氛围","fx.h":"氛围特效","fx.s":"特效会跟着剧情自己变。你也可以在这里先试试每一种，或者切回「跟随剧情」。","fx.auto":"跟随剧情","fx.rain":"下雨","fx.storm":"暴雨闪电","fx.wind":"大风","fx.snowfall":"下雪","fx.blizzard":"暴风雪","fx.candle":"烛光","fx.blackout":"停电","fx.drip":"滴水","fx.hearts":"心动","fx.petals":"花瓣","fx.confetti":"彩带"});
 

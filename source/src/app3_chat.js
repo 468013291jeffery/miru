@@ -154,6 +154,8 @@ function chatBgSet(who,pose){const box=$("#cbImg");if(!box||!ch(who))return;pose
  box.dataset.last=who}
 const FX={ice:"snow",pack:"snow",unseelie:"frost",bratva:"snow",lowseason:"snow",crimson:"embers",made:"rain",night:"rain",afterhours:"rain",light:"beam",pole:"bokeh",split:"neon",fourth:"dust",pact:"fireflies",roomies:"dust",offbook:"dust"};
 let fxRaf=0;
+/* 这个线程现在的氛围特效：剧本模式存在 th.pk.fx，其他模式（官方自由模式、自由聊天）存在 th.fxScene */
+function fxKeyOf(th){return (th&&th.pk&&th.pk.fx)||(th&&th.fxScene)||null}
 function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)return;const kind=FX[th.wid]||(th.kind==="group"?"dust":"bokeh");
  const r=cv.getBoundingClientRect(),W=cv.width=Math.max(1,r.width),H=cv.height=Math.max(1,r.height),x=cv.getContext("2d");
  const N={snow:90,frost:70,embers:40,rain:110,beam:30,bokeh:26,neon:24,dust:40,fireflies:28}[kind]||30;
@@ -584,7 +586,8 @@ async function reply(th,ctx,silent){
   "LANGUAGE: write every text field only in "+LANG_NAME[S.lang]+".",
   "",
   'Reply with ONLY this JSON: {"beats":[{"who":"<cast id or n for narration>","kind":"say|act|think","text":"...","pose":"idle|smile|close|angry|sad|away|surprised|think"}],"status":{"time":"...","place":"...","mood":{"<cast id>":"1-3 words"}},"love":{"<cast id>":0-6},"suggest":["...","...","..."],"reaction":"<one short line the player SEES as feedback - what just changed in the room or in him, no numbers>","goals":[<indexes of quest goals completed in this reply>]}',
-  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary."
+  "beats: "+(deep?"5 to 9":"3 to 6")+" items, each under "+(deep?"45":"32")+" words; pose = that speaker's body language in the beat (it animates their portrait). act lines are first-person from that character (\"I …\"). suggest: offer 2–3 items the PLAYER could tap next. They are the user\u2019s own words or actions - never a line, a decision, or anything only a character could do. Do NOT label them: no say:, no act:, no type word at the front, no label in brackets. Punctuation alone carries the type - one plain sentence (the user speaks); one starting with * (the user acts); one in ( ) parentheses (the user stays silent or moves without speaking). Never a name prefix. reaction (REQUIRED on every single reply - never omit this key, never leave it empty) = one short line the player actually sees after this beat, describing what visibly changed (a movement, a silence, something in his face). No numbers, no inner monologue, no summary.",
+  window.FXBUS?FXBUS.promptBlock(th,false)+'\nAdd to the same JSON: "fx":{"ambient":null,"moment":null}':""
  ].filter(Boolean).join("\n");
  let r=null;
  const turnCtl=new AbortController(),turnTimer=setTimeout(()=>turnCtl.abort(),40000);
@@ -688,6 +691,7 @@ async function playBeats(th,r,ctx,silent){
  }catch(_){}
  const before={};th.cast.forEach(c=>before[c]=stageOf(th,c));
  const toSpeak=[];let INLINE_SPOKE=false,silentStrikes=0;
+ const fxBeat=(!silent&&window.FXBUS&&r.fx)?FXBUS.agent(th,r.fx):null;
  /* 2026-10-31：顶部 🔊「自动朗读」（S.autoVoice）也走这条「念完一句再出下一句」的路 —— 以前只认 S.voice.auto，
     开 🔊 时每句一出现就各念各的，后一句把前一句掐断。 */
  const canSpeak=(()=>{try{return !!(((S.voice&&S.voice.auto)||S.autoVoice)&&(typeof voiceAutoOK!=="function"||voiceAutoOK()))}catch(_){return false}})();
@@ -699,7 +703,7 @@ async function playBeats(th,r,ctx,silent){
      ⇒ 条件不满足时这条台词永远不发声、也不留痕。改成：**下面真念了才打标**。 */
   // Reserve voice ownership BEFORE append hooks can enqueue the same sentence.
   if(m.k==="say"){m._voiced=1;m._voiceOwner="playBeats"}
-  appendMsg(th,m);if(m.k==="say")toSpeak.push(m);
+  appendMsg(th,m);if(m.k==="say")toSpeak.push(m);if(fxBeat)fxBeat();
   if(!silent&&window.READING&&window.READING.manual(th)){
    INLINE_SPOKE=true;
    if(canSpeak&&m.k==="say"&&ch(m.who)){try{voiceCount(1);speak(m.txt,m.who,()=>{});}catch(e){console.debug('[reading] voice unavailable',e);}}

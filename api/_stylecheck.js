@@ -13,6 +13,23 @@ const MARKUP = /<[a-z/!][^>]*>|\*\*|^#{1,6}\s|⟦|⟧/im;
 const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u;
 const CHAPTER_PREFIX = /^\s*(?:第\s*[一二三四五六七八九十百零\d]+\s*章|chapter\s*\d+)/i;
 
+/* 特效 id：要和前端 source/src/app128_fxlib.js、app59_fx100.js 一致（tools/fx-selftest.mjs 对账）。
+   FX_IDS 是推荐表；FX_LEGACY 是老特效，还能播，但写新剧本不推荐 */
+const FX_IDS = new Set('none rain storm wind snowfall blizzard ice candle embers inferno blackout drip bokeh neon godrays dust fireflies aurora galaxy petals hearts heartbeat bloom longing blush hearts_rise heart_burst kiss_mark ring ink shock tears breath_hold dizzy flashback dreamy cinema spotlight zoom slowmo sparkle flash_white fade_black fade_white confetti fireworks shooting_star lanterns lightning fog rainbow leaves moonlight sunset sun_rays ripple underwater frost shake quake explosion flash_red glass_crack blaze police ambulance danger watched speed clock phone_buzz notify glitch static hologram warp magic_circle enchant wings blood_moon wolf_eyes fangs bats crows butterflies'.split(' '));
+const FX_LEGACY = new Set('sparks downpour snow sakura rose_petals starry balloons bubbles money_rain diamonds feathers notes sleepy sweat anger question city_bokeh smoke steam cherries cake gift hold_hands sunflowers cats puppies trophy dice cards key lock type'.split(' '));
+function checkFxId(id, where, err, warn) {
+  const x = String(id == null ? '' : id).trim();
+  if (!x) return;
+  if (FX_LEGACY.has(x)) warn.push(where + '：特效「' + x + '」是老特效，建议换成推荐表里的');
+  else if (!FX_IDS.has(x)) err.push(where + '：没有「' + x + '」这个特效，见 scripts/syntax.md');
+}
+function checkFxField(fx, where, err, warn) {
+  if (fx == null) return;
+  if (typeof fx !== 'object') { err.push(where + '：fx 要写成 {"ambient":"rain","moment":"lightning"}'); return; }
+  checkFxId(fx.ambient, where + ' fx.ambient', err, warn);
+  checkFxId(fx.moment, where + ' fx.moment', err, warn);
+}
+
 const zhOf = v => (v && typeof v === 'object') ? String(v.zh || v.en || '') : String(v == null ? '' : v);
 
 function checkBible(b) {
@@ -63,6 +80,7 @@ function checkBible(b) {
     const scenes = (c && Array.isArray(c.scenes)) ? c.scenes : [];
     stats.scenes += scenes.length;
     if (!scenes.length) err.push(tag + '：没有场景');
+    checkFxField(c && c.fx, tag, err, warn);
     const title = single(tag + ' 标题', c && c.title, LIMIT.title, true);
     if (CHAPTER_PREFIX.test(title)) err.push(tag + ' 标题：不要写「第 N 章」，前端会加');
     if (exp && exp.chapterIntroduction) {
@@ -87,6 +105,7 @@ function checkBible(b) {
       }
     }
     scenes.forEach(s => {
+      checkFxField(s && s.fx, tag + ' ' + ((s && s.id) || ''), err, warn);
       const options = (s && s.choice && Array.isArray(s.choice.options)) ? s.choice.options : [];
       options.forEach((o, n) => {
         const t = zhOf(o && o.t).trim();
@@ -109,6 +128,8 @@ function checkDsl(md) {
   const err = [], warn = [];
   let chapters = 0;
   String(md || '').replace(/\r\n?/g, '\n').split('\n').forEach(raw => {
+    const fx = raw.trim().match(/^⟦FX\|([^|⟧]*)⟧$/);
+    if (fx) checkFxId(fx[1], '⟦FX⟧', err, warn);
     const m = raw.trim().match(/^#+\s*CHAPTER\s+(\d+)\s*(?:[｜|]\s*(.*))?$/i);
     if (!m) return;
     chapters++;
@@ -121,4 +142,4 @@ function checkDsl(md) {
   return { ok: !err.length, err, warn, stats: { chapters } };
 }
 
-module.exports = { checkBible, checkDsl, LIMIT };
+module.exports = { checkBible, checkDsl, LIMIT, FX_IDS, FX_LEGACY };

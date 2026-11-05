@@ -186,7 +186,7 @@ function cmask(x,W,H,k){x.save();x.globalCompositeOperation="destination-out";x.
 function heartPath(x,cx,cy,s){x.beginPath();for(let i=0;i<=48;i++){const a=i/48*Math.PI*2,hx=16*Math.pow(Math.sin(a),3),hy=-(13*Math.cos(a)-5*Math.cos(2*a)-2*Math.cos(3*a)-Math.cos(4*a));i?x.lineTo(cx+hx*s/16,cy+hy*s/16):x.moveTo(cx+hx*s/16,cy+hy*s/16)}x.closePath()}
 function thump(scr,k){if(RM()||!scr.animate)return;try{scr.animate([{transform:"scale(1)"},{transform:"scale("+(1+.006*k)+")",offset:.28},{transform:"scale(1)"}],{duration:320,easing:"cubic-bezier(.2,.8,.3,1)"});
  const bg=scr.querySelector("#chatBg");if(bg)bg.animate([{transform:"scale(1)"},{transform:"scale("+(1+.022*k)+")",offset:.25},{transform:"scale(1)"}],{duration:420,easing:"ease-out"})}catch(_){}}
-function heartSound(){try{if(typeof BGM==="undefined"||!BGM.ctx||BGM.ctx.state!=="running"||!(S.bgm))return;const c=BGM.ctx,t=c.currentTime;[[0,.3],[.23,.18]].forEach(([d,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.setValueAtTime(70,t+d);o.frequency.exponentialRampToValueAtTime(38,t+d+.16);o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(v,t+d+.012);g.gain.exponentialRampToValueAtTime(.001,t+d+.24);o.start(t+d);o.stop(t+d+.3)})}catch(_){}}
+function heartSound(){try{if(S.sfxOff||typeof BGM==="undefined"||!BGM.ctx||BGM.ctx.state!=="running"||!(S.bgm))return;const c=BGM.ctx,t=c.currentTime;[[0,.3],[.23,.18]].forEach(([d,v])=>{const o=c.createOscillator(),g=c.createGain();o.type="sine";o.frequency.setValueAtTime(70,t+d);o.frequency.exponentialRampToValueAtTime(38,t+d+.16);o.connect(g);g.connect(c.destination);g.gain.setValueAtTime(0,t+d);g.gain.linearRampToValueAtTime(v,t+d+.012);g.gain.exponentialRampToValueAtTime(.001,t+d+.24);o.start(t+d);o.stop(t+d+.3)})}catch(_){}}
 const BEATS=[.06,.9,1.74];
 const benv=u=>u<0?0:(1-Math.exp(-u/.022))*Math.exp(-u/.19);
 const FXE={
@@ -252,7 +252,7 @@ const FXE={
    {const {x,W,H}=B;x.globalCompositeOperation="lighter";const ca=Math.cos(ang),sa=Math.sin(ang);
     st.m.forEach(m=>{const px=m.x*W+Math.sin(t*.6+m.p)*10,py=(m.y*H+m.v*t+H)%H;const dx=px-cx,dy=py-cy,dist=Math.abs(dx*ca+dy*sa);const lit=Math.exp(-dist*dist/(2*Math.pow(W*.18,2)));const a=(.15+.85*lit)*e;
      const r=m.s*3,g=x.createRadialGradient(px,py,0,px,py,r);g.addColorStop(0,"rgba(220,235,255,"+(.85*a)+")");g.addColorStop(1,"rgba(160,190,255,0)");x.fillStyle=g;x.fillRect(px-r,py-r,r*2,r*2)});x.globalCompositeOperation="source-over"}}}};
-window.emoFx=function(kind,opt){opt=opt||{};if(!FXE[kind])return false;const scr=chatEl();if(!scr)return false;if(skipping()&&!opt.force)return false;
+window.emoFx=function(kind,opt){opt=opt||{};if(S.fxOff||!FXE[kind])return false;const scr=chatEl();if(!scr)return false;if(skipping()&&!opt.force)return false;
  const now=PN();if(EMO.k){const el=(now-EMO.t0)/1000/EMO.dur;if(EMO.k===kind&&el<.6)return false;if(opt.weak&&el<.55)return false}
  emoStop();caFilter();const bgw=scr.querySelector("#chatBg")||scr,back=mount("emoBack",bgw),top=mount("emoTop",scr),dpr=Math.min(1.5,window.devicePixelRatio||1);
  back.style.opacity=1;top.style.opacity=1;top.style.mixBlendMode=kind==="longing"||kind==="bloom"?"screen":"normal";
@@ -273,7 +273,7 @@ document.addEventListener("click",e=>{if(!e.target.closest||!e.target.closest("[
 /* inner voice → ink; narration of a kiss → bloom */
 const _pkAppend30=pkAppend;
 pkAppend=function(th,m){const r=_pkAppend30.apply(this,arguments);
- try{if(th&&curT===th.id&&m&&m.pk&&!skipping()){if(m.k==="think"){const n=Date.now();if(n-(EMO.lastInk||0)>6000){EMO.lastInk=n;requestAnimationFrame(()=>emoFx("ink",{weak:true}))}}else if(isNarr(m)&&/吻|kiss/i.test(String(m.txt||"")))emoFx("bloom")}}catch(_){}return r};
+ try{if(th&&curT===th.id&&m&&m.pk&&!skipping()){if(m.k==="think"){const n=Date.now();if(n-(EMO.lastInk||0)>6000){EMO.lastInk=n;requestAnimationFrame(()=>emoFx("ink",{weak:true}))}}else if(isNarr(m)&&window.FXBUS&&FXBUS.happened(/吻了|吻住|吻上|接吻|kissed|kissing/i,m.txt))emoFx("bloom")}}catch(_){}return r};
 /* events: a jolt (or warmth, when the event is a kiss / embrace / confession). The "unlocked" event belongs to the lock bloom. */
 PKREG.add("app30_fx3.js", function(th,b, next){const ev=Array.isArray(b)&&b[0]==="sys"&&b[1]==="event"?(b[2]||{}):null;const r=next.apply(this,arguments);
  try{if(ev&&th&&curT===th.id&&!skipping()&&ev.icon!=="🔓"){const s=Lz(ev.title)+" "+Lz(ev.txt);if(/吻|kiss|拥抱|抱住|hug|告白|confess/i.test(s)||/💋|❤|💗|💞|💕|🌹|💘/.test(ev.icon||""))emoFx("bloom");else emoFx("shock",{weak:true})}}catch(_){}return r});;

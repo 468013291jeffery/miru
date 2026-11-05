@@ -113,7 +113,7 @@ const _relGraph24=relGraph;relGraph=function(w,asId){let h=_relGraph24(w,asId);c
 
 /* "none" means no effect at all, and stories without their own atmosphere get none by default (no random bokeh) */
 if(typeof FX2!=="undefined")FX2.push("none");
-const _chatFx24=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!(th.pk&&th.pk.fx)&&!(typeof FX!=="undefined"&&FX[th.wid])){if(window.glFx)glFx.stop();fxRun("none");return}_chatFx24(th)};
+const _chatFx24=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!fxKeyOf(th)&&!(typeof FX!=="undefined"&&FX[th.wid])){if(window.glFx)glFx.stop();fxRun("none");return}_chatFx24(th)};
 
 /* ===== scene music: stories cue the score with ["sys","bgm",{m}] — it wins over everything else until the next cue =====
    New moods: memory (music box), luxury (bright harp + strings), mystery (sparse bells over a low drone),

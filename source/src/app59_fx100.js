@@ -1,9 +1,9 @@
-/* ================= v2.3 · FX + SFX LIBRARY — 100 screen effects, 100 sound effects, keyword-triggered =================
+/* ================= v2.3 · FX + SFX LIBRARY — 100 screen effects, 100 sound effects =================
+   2026-11-05：不再靠关键词触发。放什么由 app128_fxlib.js（FXBUS）决定，这里只负责把效果演出来。
    FX: one canvas/CSS overlay engine with 20 effect kinds (fall, rise, burst, streak, flash, tint, shake, glitch, pulse, fog, crack, siren…)
        × parameters = 100 named effects. Each lasts 1.2–4s, never blocks taps, and respects 「减少特效」 (S.fxOff / prefers-reduced-motion).
    SFX: synthesised one-shots built from tone/noise layers (no files) — 100 named sounds. Real recordings can replace any id later via SFX_FILES.
-   Triggers: author directives ["sys","fx",{id}] / ["sys","sfx",{id}], or keywords in any line shown in a story (narration, dialogue, AI replies),
-   with cooldowns (fx 7s, sfx 3s) so a scene never turns into fireworks. */
+   Triggers: author directives ["sys","fx",{id}] / ["sys","fx100",{id}] / ["sys","sfx",{id}]; everything else goes through FXBUS. */
 const FX100_SRC=`rain|下雨|Rain|streak|rain|rain|下雨,雨声,雨水,raining
 downpour|暴雨|Downpour|streak|heavy|downpour|暴雨,倾盆,downpour
 snow|下雪|Snow|fall|❄|wind|下雪,雪花,snowing,snowflakes
@@ -286,13 +286,8 @@ function fx100(id,opt){const F=FX100.find(x=>x.id===id);if(!F)return;opt=opt||{}
 .fxzoom{animation:fxzm 1.4s ease-in-out}@keyframes fxzm{40%{transform:scale(1.06)}}
 .fxblur{animation:fxbl 2.2s ease-in-out}@keyframes fxbl{30%,60%{filter:blur(2px) saturate(1.3)}45%{filter:blur(3px)}}`;document.head.appendChild(st)})();
 /* ---------- triggers ---------- */
-const FXT={fx:0,sfx:0};
 function fxMatch(list,txt){const s=String(txt||"").toLowerCase();let best=null,bs=0;list.forEach(x=>{x.kw.forEach(k=>{if(k&&k.length>=2&&s.includes(k.toLowerCase())&&k.length>bs){bs=k.length;best=x}})});return best}
-function fxAuto(th,txt){if(!th||curT!==th.id||(typeof PKSKIP!=="undefined"&&PKSKIP[th.id])||S.autoFx===false)return;const now=Date.now();
- if(now-FXT.fx>7000){const f=fxMatch(FX100,txt);if(f){FXT.fx=now;FXT.sfx=now;fx100(f.id);return}}
- if(now-FXT.sfx>3000){const s=fxMatch(SFX100,txt);if(s){FXT.sfx=now;sfx100(s.id,.7)}}}
-const _appendMsg59=appendMsg;appendMsg=function(th,m){const r=_appendMsg59(th,m);try{if(m&&m.who!=="me"&&m.who!=="sys"&&(m.txt||m.parts))fxAuto(th,m.txt||(m.parts||[]).map(p=>p.txt).join(" "))}catch(_){}return r};
-const _pkAppend59=pkAppend;pkAppend=function(th,m){const r=_pkAppend59(th,m);try{if(m&&m.who!=="me"&&isNarr(m))fxAuto(th,m.txt)}catch(_){}return r};
-PKREG.add("app59_fx100.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else fx100(d.id)}return true}
+const _pkAppend59=pkAppend;pkAppend=function(th,m){const r=_pkAppend59(th,m);try{if(m&&m.who!=="me"&&m.k!=="think"&&isNarr(m)&&!(typeof PKSKIP!=="undefined"&&PKSKIP[th.id])&&window.FXBUS)FXBUS.fromScript(th,m.txt)}catch(e){console.warn("[fx] script",e)}return r};
+PKREG.add("app59_fx100.js", function(th,b, next){if(Array.isArray(b)&&b[0]==="sys"&&(b[1]==="fx100"||b[1]==="sfx")){th.pk.q.shift();const d=b[2]||{};if(curT===th.id&&!PKSKIP[th.id]){if(b[1]==="sfx")sfx100(d.id);else if(window.FXBUS)FXBUS.moment(th,d.id,"author");else fx100(d.id)}return true}
  if(Array.isArray(b)&&b[0]==="sys"&&b[1]==="fx"&&FX100.some(x=>x.id===(b[2]||{}).id)){th.pk.q.shift();if(curT===th.id&&!PKSKIP[th.id])fx100(b[2].id);return true}
  return next(th,b)});;

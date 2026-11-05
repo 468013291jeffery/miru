@@ -12,7 +12,7 @@ function audioUnlock(){if(AU_OK)return;AU_OK=true;
 const _openThread40=openThread;openThread=function(){const r=_openThread40.apply(this,arguments);try{if(!S.sndTip&&bgmOn()){S.sndTip=1;save();setTimeout(()=>toast(t("sfx.tip")),1200)}}catch(_){}return r};
 /* 1 · sound effects layered on the visual effects */
 const SFX={cur:null,nodes:[],timers:[]};
-function sfxCtx(){try{if(!bgmOn())return null;if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();const c=BGM.ctx;return c&&c.state==="running"?c:null}catch(_){return null}}
+function sfxCtx(){try{if(S.sfxOff)return null;if(typeof scInit==="function")scInit();else if(typeof bgmInit==="function")bgmInit();const c=BGM.ctx;return c&&c.state==="running"?c:null}catch(_){return null}}
 function sfxOut(c){if(!SFX.bus||SFX.bus.context!==c){SFX.bus=c.createGain();SFX.bus.gain.value=.55;SFX.bus.connect(c.destination)}return SFX.bus}
 function noiseBuf(c,sec){const n=c.sampleRate*sec,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;return b}
 function sfxStop(){SFX.timers.forEach(clearInterval);SFX.timers=[];const c=BGM&&BGM.ctx;SFX.nodes.forEach(n=>{try{if(n.gain&&c){n.gain.setTargetAtTime(0,c.currentTime,.4);setTimeout(()=>{try{n.disconnect()}catch(_){}},1500)}else n.stop&&n.stop()}catch(_){}});SFX.nodes=[];SFX.cur=null}
@@ -49,10 +49,10 @@ function sfxOne(k){const c=sfxCtx();if(!c)return;
  if(k==="unsend"){blip(c,{f0:900,f1:300,dur:.25,type:"triangle",vol:.07})}}
 PKREG.add("app40_sfx.js", function(th,b, next){try{if(Array.isArray(b)&&b[0]==="sys"&&curT===th.id&&!PKSKIP[th.id]){const d=b[2]||{};const tx=String((Lz(d.title)||"")+(Lz(d.txt)||""));
   if(b[1]==="event"&&/枪|gunshot|shot|💥/.test(tx+(d.icon||"")))sfxOne("gun");else if(b[1]==="event"&&/🔔|📱|消息|message/.test(tx+(d.icon||"")))sfxOne("msg");if(b[1]==="recall")sfxOne("unsend")}}catch(_){}return next(th,b)});;
-Object.assign(I18N.zh,{"sfx.tip":"🎵 本剧有配乐和音效 · 右上角 🎵 可关闭"});Object.assign(I18N.en,{"sfx.tip":"🎵 This story has music and sound · tap 🎵 at the top to turn it off"});
+Object.assign(I18N.zh,{"sfx.tip":"本剧有配乐和音效 · 右上角可以设置"});Object.assign(I18N.en,{"sfx.tip":"This story has music and sound · adjust them at the top right"});
 /* 2 · intense effects belong to their moment: they fade back to calm on their own */
 const FX_LIFE={danger:7000,flashes:1500,blackout:6000,fireworks:6000,iceshatter:4000};
-const _fxSet40=fxSet;fxSet=function(th,k){_fxSet40(th,k);clearTimeout(fxSet._t40);const life=FX_LIFE[k];if(life)fxSet._t40=setTimeout(()=>{if(th.pk&&th.pk.fx===k)_fxSet40(th,"none")},life)};
+const _fxSet40=fxSet;fxSet=function(th,k){_fxSet40(th,k);clearTimeout(fxSet._t40);const life=FX_LIFE[k];if(life)fxSet._t40=setTimeout(()=>{if(fxKeyOf(th)===k)_fxSet40(th,"none")},life)};
 /* 3 · "off the page": the background picture breaks out of its frame toward you at big moments */
 function cutFor(src){try{const m=String(src).match(/art\/scenes\/([a-z0-9_]+)\/([a-z0-9_]+)\.(jpg|png|webp)/i);if(!m)return null;const k=m[1]+"_"+m[2];return (window.CUT_FILES||[]).includes(k)?"art/cut/"+k+".webp":null}catch(_){return null}}
 function popOut(kind,imgId){try{if(PKSKIP[curT])return;const im=$(".cbimg img.on")||$(".cbimg img");const src=(imgId&&(window.SCENE_FILES||{})[imgId])||(im&&im.src);if(!src)return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;

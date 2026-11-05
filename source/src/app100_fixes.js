@@ -32,7 +32,7 @@
         if (Array.isArray(b) && b[0] === "sys" && b[1] === "scene" && th && th.pk) {
           const x = b[2] || {}; let txt = (x.place || "") + " " + (x.time || "") + " " + (x.img || "");
           const q = th.pk.q || [];
-          for (let i = 1, n = 0; i < q.length && n < 6; i++) { const y = q[i]; if (!Array.isArray(y)) continue; if (y[0] === "sys" && y[1] === "scene") break; if (typeof y[2] === "string") { txt += " " + y[2]; n++; } }
+          for (let i = 1, n = 0; i < q.length && n < 6; i++) { const y = q[i]; if (!Array.isArray(y)) continue; if (y[0] === "sys" && y[1] === "scene") break; if (y[0] === "n" && typeof y[2] === "string") { txt += " " + y[2]; n++; } }
           const k = fxFrom(txt);
           fxSet(th, k || "none");
         }
@@ -43,7 +43,7 @@
   if (typeof chatFx === "function") {
     const _cf = chatFx;
     chatFx = function (th) {
-      if (th && th.pk && th.pk.fx === "none" && !(th.fxm && th.fxm !== "auto")) { try { if (window.glFx) glFx.stop(); } catch (_) {} try { cancelAnimationFrame(fxRaf); } catch (_) {} try { fxRun("none"); } catch (_) {} return; }
+      if (th && fxKeyOf(th) === "none" && !(th.fxm && th.fxm !== "auto")) { try { if (window.glFx) glFx.stop(); } catch (_) {} try { cancelAnimationFrame(fxRaf); } catch (_) {} try { fxRun("none"); } catch (_) {} return; }
       return _cf.apply(this, arguments);
     };
   }

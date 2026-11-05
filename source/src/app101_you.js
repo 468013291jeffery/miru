@@ -81,6 +81,8 @@
     const _fr = fxRun;
     let cur = null, tm = 0;
     fxRun = function (kind) {
+      /* 特效关了：画面停掉（省电），环境音仍由音效开关决定 */
+      if (S.fxOff && kind !== "none" && kind !== "__none") { cur = "none"; _fr.call(this, "none"); try { sfxSet(kind); } catch (e) { console.warn("[fx] sound", e); } return; }
       const cv = $("#cbFx"); if (!cv || kind === cur) return _fr.apply(this, arguments);
       const args = arguments, self = this; cur = kind;
       cv.style.transition = "opacity .7s ease"; cv.style.opacity = "0"; clearTimeout(tm);

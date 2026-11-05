@@ -99,7 +99,8 @@ async function director97(th, act) {
     "\n\n" + (zh ? "规则：绝不替玩家说话、做动作、做决定；角色可以拒绝、可以互相冲突、可以误会；不要让所有人都围着玩家献殷勤；没有电话就不要安排来电。narration 用第二人称写给玩家，最多 2 句，不含对白。options 给玩家 3 个下一步可以做的事（各不超过 14 字，态度不同）。"
            : "Rules: never write the player's words, actions or decisions; characters may refuse, clash and misread each other; not everyone fawns over the player. narration is second person to the player, max 2 sentences, no dialogue. options: 3 different things the player might do next (under 8 words each).") +
     (last ? (zh ? "\n这是最后一章。chapterDone=true 时给出 ending：A=两人并肩（关系好、彼此信任）/ B=各自安好 / C=反目，取决于玩家一路的言行；并写 endingText（3 句以内）。" : "\nThis is the last chapter. When chapterDone=true also give ending: A = side by side / B = apart and okay / C = enemies, earned by the player's whole run, plus endingText (max 3 sentences).") : "") +
-    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") +
+    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"fx":{"ambient":null,"moment":null},"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
   return ask(p, { maxTokens: 900 });
 }
 async function actor97(th, cid, intent, act) {
@@ -136,6 +137,7 @@ async function agentTurn97(th, act) {
       if (a.bgm) { try { if (typeof bgmFollow === "function") bgmFollow({ id: th.id, wid: th.wid, pk: { bgm: a.bgm } }, true); } catch (_) {} }
       if (a.cg) { const As = OFF94.assets[w.community] || {}; const src = As[a.cg]; if (src) { try { off94Show({ src, cap: a.cap }, false); } catch (_) {} const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: th.cast[0], src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } } }
     if (d.narration) appendMsg(th, { who: "n", k: "act", txt: String(d.narration).slice(0, 300), at: Date.now() });
+    if (window.FXBUS) FXBUS.agent(th, d.fx)();
     /* the player's public move is witnessed by whoever is in the room */
     if (act && act.mode !== "think") remember97(th, present.length ? present : th.cast, youName97(th) + (act.mode === "act" ? "：" : L97("说：", " said: ")) + String(act.txt).slice(0, 60));
     /* characters, one by one — each sees what the one before just said */

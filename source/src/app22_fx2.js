@@ -13,7 +13,7 @@
 const MAPOLD={snow:"snowfall",frost:"snowfall",embers:"embers",rain:"rain",bokeh:"bokeh",fireflies:"fireflies",dust:"dust"};
 const KINDS=["rain","storm","wind","snowfall","blizzard","candle","blackout","drip","hearts","petals","confetti","embers","bokeh","fireflies","dust"];
 let RAF=0,TH=null;
-function thunder(){try{if(!bgmInit())return;const c=BGM.ctx;if(c.state!=="running")return;const len=c.sampleRate*3,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);let last=0;
+function thunder(){try{if(S.sfxOff||!bgmInit())return;const c=BGM.ctx;if(c.state!=="running")return;const len=c.sampleRate*3,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0);let last=0;
   for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.2*Math.pow(1-i/len,1.6)}
   const s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();s.buffer=b;f.type="lowpass";f.frequency.value=180;s.connect(f);f.connect(g);g.connect(c.destination);
   const t0=c.currentTime+.5+Math.random()*1.2;g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(.55,t0+.25);g.gain.exponentialRampToValueAtTime(.001,t0+2.8);s.start(t0)}catch(_){}}
@@ -104,5 +104,5 @@ fxRun=function(kind){kind=MAPOLD[kind]||kind;const c0=$("#cbFx");if(!c0)return;c
     const a=kind==="fireflies"?Math.max(0,Math.sin(f.p*2)):.35;glow(f.x,f.y,kind==="fireflies"?12:5,kind==="fireflies"?"210,255,120":"255,235,200",a*.6)});x.globalCompositeOperation="source-over"}
   RAF=requestAnimationFrame(step);fxRaf=RAF};step()};
 /* ambient story effects run on the new engine too */
-const _chatFx22=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!(th.pk&&th.pk.fx)){const k=FX[th.wid]||(th.kind==="group"?"dust":"bokeh");if(MAPOLD[k]){fxRun(k);return}}_chatFx22(th)};
+const _chatFx22=chatFx;chatFx=function(th){if(th&&!(th.fxm&&th.fxm!=="auto")&&!fxKeyOf(th)){const k=FX[th.wid]||(th.kind==="group"?"dust":"bokeh");if(MAPOLD[k]){fxRun(k);return}}_chatFx22(th)};
 })();
