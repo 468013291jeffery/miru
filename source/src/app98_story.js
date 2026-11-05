@@ -236,7 +236,7 @@ async function director98(th, mode, act) {
   const castL = (policy ? allowedSpeakers98(th, s) : th.cast).map(id => { const k = cardOf98(w, id); return "- id=" + id + " · " + first(ch(id).n) + "（" + LZ98(k && k.role) + "，" + (k ? k.tier : "") + "）"; }).join("\n");
   const sceneL = c.scenes.map((x, i) => (i === A.sc ? "▶ " : (i < A.sc ? "✓ " : "· ")) + (i + 1) + ". " + LZ98(x.place) + (i === A.sc ? "：" + x.beat : "")).join("\n");
   const rel = th.cast.slice(0, 8).map(id => first(ch(id).n) + " " + Math.round(th.love[id] || 0)).join("，");
-  const last = A.ch === b.chapters.length && A.sc === c.scenes.length - 1;
+  const last = A.ch === b.chapters.length && A.sc === c.scenes.length - 1, judging = mode === "talk" || mode === "choice";
   let task = mode === "enter" ? (zh ? "现在进入这一场。写进场旁白（第二人称，≤3 句，交代你在哪、眼前发生什么），并安排在场角色把这一场的锚点演出来（1-3 人依次开口）。" : "Enter this scene now. Write an entrance narration (second person, ≤3 sentences: where you are, what's happening) and have present characters play this scene's anchor (1-3 speak in turn).")
     : mode === "choice" ? (zh ? "玩家刚做出这一场的选择，后果见下。让在场角色真实地回应这个选择（1-2 人），旁白最多 1 句。" : "The player just made this scene's choice; its consequence is below. Have present characters respond for real (1-2), narration at most 1 sentence.")
     : mode === "exit" ? (zh ? "玩家要推进剧情：用 1 句旁白收束这一场（可不写），不要有人再长篇说话；speakers 可为空。" : "The player wants to move on: close this scene in one sentence of narration (or none); speakers may be empty.")
@@ -263,10 +263,11 @@ async function director98(th, mode, act) {
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
-    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "两位主角的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。" + (mode === "exit" || mode === "enter" ? "" : "ready：这一场是否已经演到位、可以让玩家自己决定往下走。只有本章目标的核心已经在实际对话里发生、当前话题告一段落才填 true；玩家刚抛出问题、话题没收束、还聊在兴头上都填 false；不要因为聊得久就填 true。wants_next：玩家这一轮明确表示想离开这里或进入下一段时填 true，否则 false。不管填什么，你都不能替玩家转场，往下走由玩家点按钮决定。")
-           : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty." + (mode === "exit" || mode === "enter" ? "" : " ready: true only when the core of this chapter's goal has actually happened in the conversation and the current topic has wound down; false if the player just asked something, a topic is still open, or they're enjoying it; never true just because it has gone on long. wants_next: true only if the player clearly said this turn they want to leave or move on. Either way you never move the story yourself; the player taps a button.")) +
+    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "两位主角的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
+           : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","ready":false,"wants_next":false,"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (judging ? gateAsk98(th) : "") +
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"",' + (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -412,6 +413,17 @@ function gate98(th, d) {
   const A = th.b98, at = A.ch + ":" + A.sc; if (A.tkAt !== at) { A.tkAt = at; A.tkN = 0; } A.tkN++;
   const yes = v => v === true || v === "true", { min, target } = pacing98(th);
   if (A.ready98 !== at && (yes(d && d.wants_next) || (yes(d && d.ready) && A.tkN >= min) || A.tkN >= target)) A.ready98 = at;
+}
+/* 模型默认很保守（剧本里又写着「玩家可无限继续」），混在规则里问它几乎永远答 false。
+   所以单独问，并讲明这只是一个可以不点的按钮、告诉它已经聊了几轮（2026-11-05 用线上模型逐句试出来的写法）。 */
+function gateAsk98(th) {
+  const A = th.b98, at = A.ch + ":" + A.sc, n = (A.tkAt === at ? A.tkN || 0 : 0) + 1, { min } = pacing98(th);
+  return Z98() ? "\n\n最后单独判断两件事，写进 ready 和 wants_next。它们只是给界面的信号：玩家会看到一个可以不点的小按钮，剧情不会因此前进，角色照常回应，所以不用保守。" +
+    "\n- wants_next：只看玩家这一轮说的话。玩家表示想换地方、想走、想往下、想看接下来发生什么（如“换个地方吧”“我们走吧”“接下来呢”“下一段”）就是 true；只是问别人想不想走、或还在聊当前话题就是 false。" +
+    "\n- ready：本章已聊 " + n + " 轮，作者建议至少 " + min + " 轮。对照上面的本章目标：目标的核心已经在对话里发生，并且玩家这一轮没有抛出新问题（表态、收下、总结、一句“挺好的”都算话题告一段落）就是 true；玩家刚问了新问题、话题还开着就是 false。"
+    : "\n\nFinally, judge two things separately for `ready` and `wants_next`. They are only UI signals: the player sees a small optional button, the story does not move and characters respond as usual, so don't be conservative." +
+    "\n- wants_next: look only at the player's latest words. True if they want to go elsewhere, leave, move on, or see what happens next; false if they only ask someone else whether they want to leave, or are still on the current topic." +
+    "\n- ready: this chapter has run " + n + " exchanges; the author suggests at least " + min + ". True if the core of the chapter goal has happened in the conversation and the player didn't open a new question this turn (a statement, acceptance, summing up, or a simple \"that's nice\" all count as winding down); false if they just asked something new.";
 }
 function nextLabel98(th) {
   const { b, c } = scene98(th), A = th.b98;
