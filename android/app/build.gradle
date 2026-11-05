@@ -27,5 +27,5 @@ android {
 }
 dependencies {
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
-    implementation 'com.google.androidbrowserhelper:billing:1.0.0-alpha11'
+    implementation 'com.google.androidbrowserhelper:billing:1.2.0'   // Play 结算库 8.x（Play 要求 ≥ 8.0.0）
 }
