@@ -107,11 +107,13 @@
              实测：一部剧自带的角色（ice 里的 mason / ethan）在 `th.cast` 里，但 `ch(id)` 查不到
              ⇒ 四条台词全被判成「不是角色」⇒ 不念、也不记（`unvoiced` 都是 0，无从统计）。
              判据改成「有 who 且不是玩家/旁白/系统」，剩下的交给 `D.say` 自己失败留痕。 */
-          const isSay = m && m.k === "say" && !!m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys";
+          /* 2026-11-06：动作+台词同框的消息（k:"box"，台词在 m.say）也要念 —— 合框后这类台词一度没有声音 */
+          const boxSay = m && m.k === "box" && m.say && m.say.txt && m.say.who && m.say.who !== "me" && m.say.who !== "n" && m.say.who !== "sys";
+          const isSay = boxSay || (m && m.k === "say" && !!m.who && m.who !== "me" && m.who !== "n" && m.who !== "sys");
           if (isSay && !m._voiced) {
             if (voiceOn()) {
               m._voiced = 1;
-              D.say(m).catch(function () {});
+              D.say(boxSay ? { who: m.say.who, k: "say", txt: m.say.txt, at: m.at, ai: 1 } : m).catch(function () {});
             } else {
               /* 2026-10-27 Ann：「say 类不发声的事情」要重新做。
                  语音关着 / 额度用完 / TTS 被判死时，这条 say **一条痕迹都不留** ⇒ 事后无从统计。
