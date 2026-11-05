@@ -16,7 +16,8 @@
    表一改要同步 api/_stylecheck.js 的 FX_IDS（tools/fx-selftest.mjs 会对账）。
 
    ## 开关
-   S.fxOff / S.sfxOff / S.vibOff，都在顶栏同一个按钮里；音乐和语音也收进来，不再各占一个按钮。 */
+   顶栏一个按钮，点开是音乐、语音、特效三个开关。「特效」是总开关，同时管画面、音效、震动（玩家：这三个合成一个）；
+   代码里仍是 S.fxOff / S.sfxOff / S.vibOff 三个状态，分别拦在各自的出口。 */
 (function () {
   "use strict";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
@@ -177,13 +178,11 @@
   const ROWS = () => [
     ["bgm", zh() ? "音乐" : "Music", typeof bgmOn === "function" ? bgmOn() : true],
     ["voice", zh() ? "语音" : "Voice", !!S.autoVoice],
-    ["sfx", zh() ? "音效" : "Sound effects", !S.sfxOff],
-    ["fx", zh() ? "特效" : "Visual effects", !S.fxOff],
-    ["vib", zh() ? "震动" : "Vibration", !S.vibOff, !realVibrate],
+    ["fx", zh() ? "特效" : "Effects", !S.fxOff, zh() ? "画面、音效、震动" : "Visuals, sound, vibration"],
   ];
   let open = false;
   function panelHTML() {
-    return ROWS().map(([k, label, on, off]) => '<button role="switch" aria-checked="' + (!off && on) + '" data-fxt128="' + k + '"' + (off ? " disabled" : "") + '><span>' + esc(label) + (off ? '<small>' + (zh() ? "此设备不支持" : "Not supported") + '</small>' : '') + '</span><i></i></button>').join("");
+    return ROWS().map(([k, label, on, note]) => '<button role="switch" aria-checked="' + on + '" data-fxt128="' + k + '"><span>' + esc(label) + (note ? '<small>' + esc(note) + '</small>' : '') + '</span><i></i></button>').join("");
   }
   function place() {
     const btn = document.querySelector(".chead .fx128"), panel = document.getElementById("fxp128"), scr = document.getElementById("s-chat");
@@ -222,7 +221,7 @@
       const k = row.dataset.fxt128;
       if (k === "bgm") { const b = document.querySelector(".chead .bgmtog"); if (b) b.click(); if (typeof SFX !== "undefined") SFX.cur = null; apply(); }
       else if (k === "voice") { const b = document.querySelector(".chead .vtog"); if (b) b.click(); }
-      else { const key = k === "sfx" ? "sfxOff" : k === "fx" ? "fxOff" : "vibOff"; S[key] = !S[key]; save(); apply(); if (k === "vib" && !S.vibOff && realVibrate) realVibrate(30); if (k === "sfx" && !S.sfxOff && typeof sfx100 === "function") sfx100("pop", .5); }
+      else { const off = !S.fxOff; S.fxOff = S.sfxOff = S.vibOff = off; save(); apply(); if (!off) { if (realVibrate) realVibrate(30); if (typeof sfx100 === "function") sfx100("pop", .5); } }
       place();
       return;
     }

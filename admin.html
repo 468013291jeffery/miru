@@ -1076,6 +1076,21 @@ const Studio = {
     async function saveReview() { if (review.approved && (sel.value.qa && (sel.value.qa.err || []).length)) await ElMessageBox.confirm('自动检查还有 ' + sel.value.qa.err.length + ' 个错误，确定标记审核通过？', '确认', { type: 'warning' }); await save({ review: { notes: review.notes, approved: review.approved, checks: review.checks }, stage: review.approved ? 5 : Math.max(sel.value.stage, 4) }, review.approved ? '编剧审核通过' : '编剧审稿意见'); ElMessage.success(review.approved ? '已标记审核通过，可以上线' : '审稿意见已保存'); if (review.approved) step.value = 4; }
     /* 自动审查（D先生）：服务端跑 api/_dslqa.js 的结构检查 + api/_lib.js 的受限词，绿了才盖 review.approved */
     const autoOut = ref('');
+    const msText = ref(''), msOut = ref(''), msBible = ref(null);
+    async function msCheck() {
+      busy.value = 'ms'; msOut.value = '识别中…'; msBible.value = null;
+      try {
+        const j = await api('script', { body: { op: 'manuscript', text: msText.value } });
+        const L = [j.ok ? '✅ 识别通过' : '❌ 有 ' + j.err.length + ' 处要改'];
+        if (j.stats) L.push('人物 ' + j.stats.people + ' · 章 ' + j.stats.chapters + ' · 场 ' + j.stats.scenes + ' · 选项 ' + j.stats.options + ' · 结局 ' + j.stats.endings + ' · 图片 ' + j.stats.images + ' · 编剧写的特效 ' + j.stats.authoredFx);
+        (j.err || []).forEach(e => L.push('✗ ' + e)); (j.warn || []).forEach(w => L.push('⚠ ' + w));
+        if (j.images && j.images.length) { L.push('', '—— 要做的图 ——'); j.images.forEach(i => L.push(i.slot + ' · ' + i.kind + ' · ' + (i.name || '') + (i.when ? ' · 条件：' + i.when : '') + ' · ' + (i.desc || ''))); }
+        msOut.value = L.join('\n');
+        if (j.ok) msBible.value = j.bible;
+      } catch (e) { msOut.value = '失败：' + ((e && e.message) || e); }
+      finally { busy.value = ''; }
+    }
+    function msDownload() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(msBible.value, null, 2)], { type: 'application/json' })); a.download = 'story.bible.json'; a.click(); URL.revokeObjectURL(a.href); }
     async function autoReview() {
       busy.value = 'auto'; autoOut.value = '跑中…';
       try {
@@ -1199,7 +1214,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+    return { msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -1284,6 +1299,10 @@ const Studio = {
       <el-input v-model="review.notes" type="textarea" :rows="4" placeholder="审稿意见（会记录审稿人和时间）" style="margin-top:10px" />
       <div class="toolbar" style="margin-top:10px"><el-button type="success" @click="autoReview" :loading="busy==='auto'">🤖 D先生审查（结构 + 受限词 + 样式）</el-button><span class="muted">跑一遍：章/场景/选择/收尾/指令闭包/未知指令/受限词/章节标题样式；绿了才自动标记通过</span></div>
       <div class="toolbar" v-if="autoOut"><pre class="json" style="max-height:220px">{{autoOut}}</pre></div>
+      <h3>识别编剧中文稿</h3>
+      <el-input v-model="msText" type="textarea" :rows="6" placeholder="把按《剧本编写规范》模板写的中文稿整份粘贴到这里" />
+      <div class="toolbar" style="margin-top:10px"><el-button type="primary" @click="msCheck" :loading="busy==='ms'">识别</el-button><el-button v-if="msBible" @click="msDownload">下载故事圣经</el-button><span class="muted">只识别，不会上线；下载的文件放进 art/official/ 后才生效</span></div>
+      <div class="toolbar" v-if="msOut"><pre class="json" style="max-height:320px">{{msOut}}</pre></div>
       <div class="toolbar" style="margin-top:10px"><el-switch v-model="review.approved" active-text="审核通过，可以上线" /><el-button type="primary" @click="saveReview">保存审稿</el-button><span class="muted" v-if="sel.review&&sel.review.by">上次审稿：{{sel.review.by}} · {{fmt(sel.review.at)}}</span></div>
       <h3>版本记录</h3>
       <el-table :data="vers" size="small" max-height="260"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="note" label="说明" /><el-table-column prop="by_name" label="操作人" width="110" /><el-table-column width="90"><template #default="{row}"><el-button size="small" text @click="restore(row)">恢复</el-button></template></el-table-column></el-table>

@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="a7c757c33b98 2026-11-05T07:09Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="038b17095065 2026-11-05T10:07Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -1581,7 +1581,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 #fxp128{position:absolute;z-index:60;width:172px;padding:5px;border-radius:14px;background:#1B1722;border:1px solid rgba(240,183,126,.32);box-shadow:0 8px 24px rgba(0,0,0,.5);animation:fxp128 .14s ease-out}
 @keyframes fxp128{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 #fxp128 button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:38px;padding:4px 8px 4px 10px;border-radius:10px;font-size:13px;color:#E6DEE8;text-align:left}
-#fxp128 button:disabled{opacity:.45;cursor:default}#fxp128 small{display:block;font-size:10px;line-height:1.2;color:rgba(255,255,255,.55)}
+#fxp128 small{display:block;margin-top:1px;font-size:10px;line-height:1.2;color:rgba(255,255,255,.55)}
 #fxp128 i{position:relative;flex:none;width:30px;height:18px;border-radius:999px;background:rgba(255,255,255,.16);transition:background .15s}
 #fxp128 i::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform .15s}
 #fxp128 button[aria-checked=true] i{background:linear-gradient(135deg,#F0B77E,#EE8FA8)}#fxp128 button[aria-checked=true] i::after{transform:translateX(12px)}
@@ -18908,7 +18908,8 @@ function experienceContext98(th) {
     (state.romanceMode==='friends' ? '\n用户已要求友伴：停止追求、争宠和暧昧，把邀请改成普通陪伴；不能靠换章恢复。' : '\n允许自然试探，不代表已经相爱或同意接触。') +
     '\n当前地点以本章场景为准；接受陪同先确认安排，只有用户点「下一章」按钮才正式转场。只把实际发生的事记成共同经历。' +
     '\n当前章的在场表就是实际站位；不能把在场角色写成没跟过来或仍在上一地点。旁白不另改人物离场。' +
-    (th.b98.ch<7 ? '\n雨夜事件尚未发生，不写下雨、雨后或衣服被雨打湿。' : '');
+    /* 只有作品写了 rainFromChapter 才有这条：《今晚，偏爱失控》第 7 章才下雨 */
+    (experience98(th).rainFromChapter && th.b98.ch<experience98(th).rainFromChapter ? '\n雨夜事件尚未发生，不写下雨、雨后或衣服被雨打湿。' : '');
 }
 function updateSpeaking98(th,act) {
   if (!experience98(th) || !act || act.mode==='think') return;
@@ -18935,7 +18936,7 @@ function allowedSpeakers98(th,s) {
 function applyChoiceState98(th, option) {
   const state = experienceState98(th), value = option.state || {};
   if (['open','friends'].includes(value.romanceMode)) state.romanceMode=value.romanceMode;
-  if (['adrian','noah','both'].includes(value.focus)) state.focus=value.focus;
+  if (value.focus && (value.focus==='both' || th.cast.includes(byKey98(th,value.focus)))) state.focus=value.focus;
   const {s} = scene98(th);
   if (!state.choices.some(x=>x.scene===s.id)) state.choices.push({chapter:th.b98.ch,scene:s.id,text:String(option.t).slice(0,120)});
   if (state.choices.length>40) state.choices.shift();
@@ -18975,8 +18976,8 @@ async function director98(th, mode, act) {
     : mode === "exit" ? (zh ? "玩家要推进剧情：用 1 句旁白收束这一场（可不写），不要有人再长篇说话；speakers 可为空。" : "The player wants to move on: close this scene in one sentence of narration (or none); speakers may be empty.")
     : (zh ? "这是自由对话：玩家在这一场里和角色相处。不要推进到下一场，不要强行制造事件；让被对话的人或最自然的人回应（1-2 人），角色可以拒绝、沉默、反问。" : "Free talk: the player is spending time in this scene. Don't move to the next scene or force events; let whoever is addressed or most natural respond (1-2); characters may refuse, go quiet, or ask back.");
   if (policy && mode === "talk") task = zh
-    ? "先接住用户刚说的内容或情绪，再安排一位角色提出一个当前场景内能参与的小行动；另一位只在有具体新意或被点名时回应。用户明确疲惫、想安静或不想应酬时，默认只安排被点名或最合适的一人回应，不追加选择题。短回复不等于冷淡：降低负担，用具体示范或可选邀请承接。一次最多一个问题；不替用户接受邀请，不因聊天轮数自动转场。"
-    : "Respond to the player's words or expressed emotion, then offer one small activity in this scene. The other lead adds something distinct only when relevant. Keep short replies low-effort; one question at most. Never accept an invitation for the player or change scenes on a timer.";
+    ? "先接住用户刚说的内容或情绪，再安排一位角色提出一个当前场景内能参与的小行动；其他在场的人只在有具体新意或被点名时回应。用户明确疲惫、想安静或不想应酬时，默认只安排被点名或最合适的一人回应，不追加选择题。短回复不等于冷淡：降低负担，用具体示范或可选邀请承接。一次最多一个问题；不替用户接受邀请，不因聊天轮数自动转场。"
+    : "Respond to the player's words or expressed emotion, then offer one small activity in this scene. Others present add something distinct only when relevant. Keep short replies low-effort; one question at most. Never accept an invitation for the player or change scenes on a timer.";
   const p = (zh ? "你是互动剧的剧情智能体（导演）。你不替任何人说话；你只安排这一刻：谁开口、他们此刻想干什么。玩家是主角。你只知道下面列出的这一章，不知道后面的章节和结局。"
                 : "You are the story agent (director) of an interactive drama. You never speak for anyone; you arrange this moment: who speaks and what they want right now. The player is the protagonist. You only know this chapter, not later chapters or the ending.") +
     "\n\n" + (zh ? "世界（后台）：\n" : "World (backstage):\n") + String(b.world || "").slice(0, 1600) +
@@ -18996,12 +18997,12 @@ async function director98(th, mode, act) {
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
-    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "两位主角的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
+    "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "主角们的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
     (judging ? gateAsk98(th) : "") +
-    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},' + (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + stagedAsk98(th, s, zh) +
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' + (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -19052,7 +19053,8 @@ async function beat98(th, mode, act) {
     let nar = policy ? "" : String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
     if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
     if (act && act.to && (policy ? allowedSpeakers98(th, s) : th.cast).includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
-    let delivered98 = 0; const fx98 = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
+    let delivered98 = 0; const fx98a = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
+    const fx98 = () => { fx98a(); highlight98(th, d.bg); d.bg = null; };
     for (const sp of spk.slice(0, mode === "talk" ? 2 : 3)) {
       let r = null; try { r = await actor98(th, sp.id, sp.intent); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", "")); if (r2 && r2.say) r = r2; } } catch (_) {} if (!r) continue;
       r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
@@ -19090,7 +19092,8 @@ async function enter98(th) {
   /* 固定导语里已经有「地点」一行，不再重复一张地点卡 */
   if (!experience98(th)) appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
   const As = OFF94.assets[wd(th.wid).community] || {};
-  const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; try { sceneBg(th, key); } catch (_) {} }
+  const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; A.bgHl = null; try { sceneBg(th, key); } catch (_) {} }
+  preload98(th, s, As);
  if (window.FXBUS) FXBUS.authored(th, s.fx || (A.sc === 0 && c.fx));
   if (s.bgm) { A.bgm = "m_" + String(s.bgm).replace(/^m_/, ""); try { if (typeof bgmPlay === "function" && bgmOn()) bgmPlay(A.bgm, th.wid); } catch (_) {} }
   const cg = As["cg_" + s.id]; if (cg) { try { off94Show({ src: cg, cap: s.cg_cap || "" }, false); } catch (_) {} }
@@ -19161,6 +19164,44 @@ function gateAsk98(th) {
     "\n- wants_next: look only at the player's latest words. True if they want to go elsewhere, leave, move on, or see what happens next; false if they only ask someone else whether they want to leave, or are still on the current topic." +
     "\n- ready: this chapter has run " + n + " exchanges; the author suggests at least " + min + ". True if the core of the chapter goal has happened in the conversation and the player didn't open a new question this turn (a statement, acceptance, summing up, or a simple \"that's nice\" all count as winding down); false if they just asked something new.";
 }
+/* ---------- 编剧写的带条件特效和高光图 ----------
+   导演只负责判断「条件是否真的发生」；高光图不按好感数值或轮数换，否则画面和正在聊的内容会对不上。
+   《今晚，偏爱失控》早期的高光图记在 authorArtwork 里，这里一并认。 */
+function highlights98(s) {
+  if (!s) return [];
+  if (Array.isArray(s.highlights)) return s.highlights;
+  const old = s.authorArtwork && s.authorArtwork.conditional;
+  return Array.isArray(old) ? old.map(x => ({ id: x.id, name: x.moment || "", when: x.trigger || "" })) : [];
+}
+function stagedAsk98(th, s, zh) {
+  const A = th.b98, seen = A.hlSeen || {}, As = (OFF94.assets[wd(th.wid).community] || {});
+  const hl = highlights98(s).filter(h => h.when && As[h.id] && !seen[h.id]);
+  const fx = (s && s.fxPlan && s.fxPlan.moments) || [];
+  return (fx.length ? (zh ? "\n本场预留的特效。只有玩家或角色这一轮的言行已经满足括号里的条件才选它，默认不选；只是闲聊、提到、可能发生都不算：" : "\nEffects reserved for this scene. Choose one only if what the player or a character did this turn already meets the condition in brackets; by default choose none. Small talk, mentions and possibilities don't count: ") + fx.map(m => m.id + "（" + m.when + "）").join(zh ? "；" : "; ") : "") +
+    (hl.length ? (zh ? "\n\nbg：要不要切换背景图，默认 null。下面的条件这一刻真的发生了才填对应的 id；只是聊到、可能发生、还没发生都填 null：" : "\n\nbg: whether to switch the background, default null. Fill an id only if its condition has really happened at this moment: ") + hl.map(h => h.id + "（" + h.when + "）").join(zh ? "；" : "; ") : "");
+}
+function highlight98(th, id) {
+  if (!id) return false;
+  const { s } = scene98(th), A = th.b98, As = OFF94.assets[wd(th.wid).community] || {};
+  const h = highlights98(s).find(x => x.id === id); A.hlSeen = A.hlSeen || {};
+  if (!h || !As[id] || A.hlSeen[id]) return false;
+  A.hlSeen[id] = 1;
+  const key = "b98:" + id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = As[id];
+  A.bg = key; A.bgHl = id; save();
+  /* 先把图解码好再换，慢网时不出现空背景；失败就留在原图 */
+  const img = new Image(); img.src = As[id];
+  const go = () => { try { if (curT === th.id && A.bgHl === id) sceneBg(th, key); } catch (e) { console.warn("[b98] highlight", e); } };
+  if (img.decode) img.decode().then(go).catch(e => { console.warn("[b98] highlight decode", e); }); else img.addEventListener("load", go, { once: true });
+  return true;
+}
+/* 提前加载本场的高光图和下一场的主场景图，切换时不用等 */
+function preload98(th, s, As) {
+  try {
+    const { b } = scene98(th), A = th.b98, c = b.chapters[A.ch - 1], next = c.scenes[A.sc + 1] || (b.chapters[A.ch] && b.chapters[A.ch].scenes[0]);
+    const urls = highlights98(s).map(h => As[h.id]).concat(next ? [As["bg_" + next.id]] : []).filter(Boolean).slice(0, 3);
+    urls.forEach(u => { const i = new Image(); i.src = u; });
+  } catch (e) { console.warn("[b98] preload", e); }
+}
 function nextLabel98(th) {
   const { b, c } = scene98(th), A = th.b98;
   return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : L98("走向结局", "To the ending");
@@ -19172,7 +19213,7 @@ function nextLabel98(th) {
       if (experience98(th) && !busy && !th.b98.ended && ctx.kind === 'user' && ctx.mode !== 'think') {
         explicitPreference98(th,ctx.txt);
         const x=String(ctx.txt||'').trim().replace(/[。！!]+$/,'');
-        if (/^(?:我想)?(?:结束今晚|结束故事|离开影院)$/.test(x)) {finishExperience98(th,'leave');return Promise.resolve();}
+        if (/^(?:我想|我要)?(?:结束今晚|结束故事|离开影院|离开这里)$/.test(x)) {finishExperience98(th,'leave');return Promise.resolve();}
         if (/^(?:继续剧情|下一章|进入下一章)$/.test(x)) return next98(th);
         const index=matchingChoice98(th,x);if(index>=0)return pick98(th,index,true);
       }
@@ -19200,7 +19241,7 @@ function dock98() {
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
-const __body_story98 = function () { try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); if (s && As["bg_" + s.id]) { window.SCENE_FILES[th.b98.bg] = As["bg_" + s.id]; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} };
+const __body_story98 = function () { try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); const src = (th.b98.bgHl && As[th.b98.bgHl]) || (s && As["bg_" + s.id]); if (src) { window.SCENE_FILES[th.b98.bg] = src; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} };
 if (window.UI && typeof window.UI.add === "function") window.UI.add("story98", __body_story98);
 else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_story98(); return r; }; }; }
 document.addEventListener("click", e => { let x; const th = S.threads[curT];
@@ -21860,7 +21901,8 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
    表一改要同步 api/_stylecheck.js 的 FX_IDS（tools/fx-selftest.mjs 会对账）。
 
    ## 开关
-   S.fxOff / S.sfxOff / S.vibOff，都在顶栏同一个按钮里；音乐和语音也收进来，不再各占一个按钮。 */
+   顶栏一个按钮，点开是音乐、语音、特效三个开关。「特效」是总开关，同时管画面、音效、震动（玩家：这三个合成一个）；
+   代码里仍是 S.fxOff / S.sfxOff / S.vibOff 三个状态，分别拦在各自的出口。 */
 (function () {
   "use strict";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
@@ -22021,13 +22063,11 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   const ROWS = () => [
     ["bgm", zh() ? "音乐" : "Music", typeof bgmOn === "function" ? bgmOn() : true],
     ["voice", zh() ? "语音" : "Voice", !!S.autoVoice],
-    ["sfx", zh() ? "音效" : "Sound effects", !S.sfxOff],
-    ["fx", zh() ? "特效" : "Visual effects", !S.fxOff],
-    ["vib", zh() ? "震动" : "Vibration", !S.vibOff, !realVibrate],
+    ["fx", zh() ? "特效" : "Effects", !S.fxOff, zh() ? "画面、音效、震动" : "Visuals, sound, vibration"],
   ];
   let open = false;
   function panelHTML() {
-    return ROWS().map(([k, label, on, off]) => '<button role="switch" aria-checked="' + (!off && on) + '" data-fxt128="' + k + '"' + (off ? " disabled" : "") + '><span>' + esc(label) + (off ? '<small>' + (zh() ? "此设备不支持" : "Not supported") + '</small>' : '') + '</span><i></i></button>').join("");
+    return ROWS().map(([k, label, on, note]) => '<button role="switch" aria-checked="' + on + '" data-fxt128="' + k + '"><span>' + esc(label) + (note ? '<small>' + esc(note) + '</small>' : '') + '</span><i></i></button>').join("");
   }
   function place() {
     const btn = document.querySelector(".chead .fx128"), panel = document.getElementById("fxp128"), scr = document.getElementById("s-chat");
@@ -22066,7 +22106,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
       const k = row.dataset.fxt128;
       if (k === "bgm") { const b = document.querySelector(".chead .bgmtog"); if (b) b.click(); if (typeof SFX !== "undefined") SFX.cur = null; apply(); }
       else if (k === "voice") { const b = document.querySelector(".chead .vtog"); if (b) b.click(); }
-      else { const key = k === "sfx" ? "sfxOff" : k === "fx" ? "fxOff" : "vibOff"; S[key] = !S[key]; save(); apply(); if (k === "vib" && !S.vibOff && realVibrate) realVibrate(30); if (k === "sfx" && !S.sfxOff && typeof sfx100 === "function") sfx100("pop", .5); }
+      else { const off = !S.fxOff; S.fxOff = S.sfxOff = S.vibOff = off; save(); apply(); if (!off) { if (realVibrate) realVibrate(30); if (typeof sfx100 === "function") sfx100("pop", .5); } }
       place();
       return;
     }

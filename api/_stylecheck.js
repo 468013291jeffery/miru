@@ -106,6 +106,8 @@ function checkBible(b) {
     }
     scenes.forEach(s => {
       checkFxField(s && s.fx, tag + ' ' + ((s && s.id) || ''), err, warn);
+      ((s && s.fxPlan && s.fxPlan.moments) || []).forEach(m => { checkFxId(m && m.id, tag + ' 关键特效', err, warn); if (!(m && String(m.when || '').trim())) err.push(tag + ' 关键特效：缺触发条件'); });
+      ((s && s.highlights) || []).forEach(h => { if (!(h && h.id)) err.push(tag + ' 高光图：缺 id'); if (!(h && String(h.when || '').trim())) err.push(tag + ' 高光图：缺触发条件'); });
       const options = (s && s.choice && Array.isArray(s.choice.options)) ? s.choice.options : [];
       options.forEach((o, n) => {
         const t = zhOf(o && o.t).trim();

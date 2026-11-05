@@ -450,6 +450,13 @@ module.exports = L.wrap(async (req, res) => {
       return L.send(res, 200, { script: s });
     }
     const op = b.op, who = A.name || A.username;
+    /* 编剧中文稿识别：不写库，只返回识别结果和故事圣经，人看过再放进 art/official/。规则见 api/_scriptparse.js */
+    if (op === 'manuscript') {
+      const r = require('./_scriptparse').parseManuscript(String(b.text || '').slice(0, 400000), { id: String(b.workId || '').slice(0, 60) });
+      const st = r.bible ? require('./_stylecheck').checkBible(r.bible) : { err: [], warn: [] };
+      await log('script_manuscript', 'script', '', { err: r.err.length + st.err.length, chapters: (r.stats || {}).chapters || 0 });
+      return L.send(res, 200, { ok: r.ok && !st.err.length, err: r.err.concat(st.err), warn: r.warn.concat(st.warn), stats: r.stats, images: r.images, bible: r.bible });
+    }
     if (op === 'create') {
       const title = String(b.title || '').trim().slice(0, 80); if (!title) return L.bad(res, '标题必填');
       const id = L.newId('sc_');

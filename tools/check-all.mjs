@@ -70,6 +70,8 @@ const suites = [
   ['script-style-check.mjs', ['tools/script-style-check.mjs', '--selftest'], true],
   /* 2026-11-05：特效库、对账、真假事件判据、智能体接线 */
   ['fx-selftest.mjs', ['tools/fx-selftest.mjs'], true],
+  /* 2026-11-05：编剧中文稿 → 故事圣经，每个栏目都要识别到位（样稿 tools/fixtures/manuscript-sample.txt） */
+  ['manuscript-selftest.mjs', ['tools/manuscript-selftest.mjs'], true],
   /* 2026-10-30：进故事「有哪几个视角」—— Ann 报「只有导演视角」那天，**没有任何闸看这个面**。
      它验的是「三路永远是三路」（补齐 + 提示 + 负对照 + 界面按钮数），不是某部剧的数据。 */
   ['entry-modes-probe.mjs', ['tools/entry-modes-probe.mjs'], true],
