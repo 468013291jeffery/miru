@@ -7,7 +7,7 @@
    安卓 App 是 TWA（真 Chrome，不是 WebView），AdSense 在 App 里同样可用。 */
 (function () {
   "use strict";
-  const PUB = "ca-pub-1779576119248059"; /* ← 例：ca-pub-1234567890123456 */
+  const PUB = ""; /* AdSense 审核通过后填：ca-pub-1779576119248059 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   window.__ads128 = () => ({ pub: PUB, ready: !!window.adBreak });
   if (!PUB || typeof watchAd !== "function") return;
