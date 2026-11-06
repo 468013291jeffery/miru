@@ -1,0 +1,15 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert/strict');
+const data=JSON.parse(fs.readFileSync('art/official/m105-v6/runtime.json'));const names=['Dante','Elena','Vince','Mara','Salvatore','Nora','June','你'];const chars=Object.fromEntries(names.map((n,i)=>['c'+i,{n}]));
+const w={id:'m105-test',community:'w_scmvxnqoko453e6d7bc3',cast:Object.keys(chars),pack:{chapters:[]}},other={id:'other',pack:{chapters:[]}};
+const ctx={console,fetch:async()=>({ok:true,json:async()=>data}),window:{},document:{addEventListener(){}},S:{mine:{worlds:{}},threads:{}},OFF94:{assets:{}},ch:id=>chars[id],wd:id=>id===w.id?w:other,installWork:async()=>w.id,off94Assets:async()=>({}),save(){},pkSet(th,flags){th.pk.flags||={};for(const f of Array.isArray(flags)?flags:[flags])if(f)th.pk.flags[f]=1},EN:()=>9,packLove(){},loveWrite(){},packAfterPick(){},packPanel:()=>'',CL:()=> 'zh'};
+vm.createContext(ctx);vm.runInContext(fs.readFileSync('source/src/app131_m105.js','utf8'),ctx);
+(async()=>{await ctx.window.M105_RUNTIME.load();ctx.window.M105_RUNTIME.configure(w);assert.equal(w.pack.chapters.length,21);assert.equal(w.pack.minRoundsPerChapter,0);ctx.window.M105_RUNTIME.configure(other);assert.equal(other.pack.chapters.length,0);
+const F=th=>th.pk.flags;const execute=(th,beats)=>{for(const b of beats||[]){if(b[1]==='set')ctx.pkSet(th,b[2].flags);if(b[1]==='if')execute(th,F(th)[b[2].cond.flag]?b[2].then:b[2].else)}};
+for(const lang of ['zh','en'])for(const [i,route] of ['committed','slow','independent'].entries()){
+ const th={wid:w.id,pk:{ch:17,flags:{end_slow:1}}};execute(th,w.pack.chapters[16].choices[i].then[lang]);assert.equal(ctx.window.M105_RUNTIME.route(th),route);assert.equal(Object.keys(F(th)).filter(f=>f.startsWith('end_')).length,1);assert.equal(ctx.EN(th),0);
+ for(let n=18;n<21;n++){const branches=w.pack.chapters[n].beats[lang].filter(b=>F(th)[b[2].cond.flag]);assert.equal(branches.length,1);assert.equal(branches[0][2].cond.flag,'end_'+route);const raw=data.routes[route][lang][n-18];assert(raw.title);assert(branches[0][2].then.some(b=>b[1]==='line'));}
+ assert(!ctx.window.M105_RUNTIME.eligible(th,data.events[0],Date.now()));F(th).ch18_complete=1;assert(ctx.window.M105_RUNTIME.eligible(th,data.events[0],Date.now()));th.pk.m105Events={[data.events[0].id]:{at:Date.now()}};assert(!ctx.window.M105_RUNTIME.eligible(th,data.events[0],Date.now()));assert(ctx.window.M105_RUNTIME.eligible(th,data.events[0],Date.now()+8*86400000));
+}
+assert.equal(data.events.length,36);assert.equal(new Set(data.events.map(e=>e.id)).size,36);for(const e of data.events)for(const l of ['zh','en']){assert(e.script[l].scene);assert.equal(e.script[l].choices.length,3)}
+for(const n of ['01_Dante_Cover','02_Dante_Portrait','03_Dinner_CG','04_Night_Conversation','05_Quiet_Intimacy'])assert(fs.statSync('art/official/m105-v6/'+n+'.jpg').size>10000);
+console.log('M105: bilingual 18+3 chapters, all three exclusive routes, 36 opt-in events, cooldowns and isolated scope passed.');})().catch(e=>{console.error(e);process.exitCode=1});

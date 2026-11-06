@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 const root=process.argv[2]||process.cwd(),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const build=read('source/build.py');
 for(const name of ['app100_fixes.js','app101_you.js','app100_dialogue.js','app128_fxlib.js','app129_catalog.js','app130_princes.js'])assert(build.includes('"'+name+'"'),'Missing build module: '+name);
@@ -20,3 +21,6 @@ for(const x of images){const name=x.file||x.name||x.path;const b=fs.readFileSync
 assert(fs.statSync(path.join(root,'video/princes-home-e71e3487.mp4')).size>1000000);
 assert(Object.keys(JSON.parse(read('art/official/w_scmw2calg4a57f5c1974.json'))).length>=46);
 console.log('Release contract: build modules, mainline map, 8 role cards, 85 image hashes and homepage video passed.');
+assert(build.includes('"app131_m105.js"'),'Missing M105 runtime module');
+execFileSync(process.execPath,['tools/build-m105-runtime.cjs','--check'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/m105-selftest.cjs'],{cwd:root,stdio:'inherit'});
