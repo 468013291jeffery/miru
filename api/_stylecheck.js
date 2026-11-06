@@ -99,6 +99,12 @@ function checkBible(b) {
           if (text.length > LIMIT.text) warn.push(tag + ' 导语 text：' + text.length + ' 字，建议不超过 ' + LIMIT.text + ' 字');
           if (text === zhOf(intro.event).trim()) warn.push(tag + ' 导语：text 和 event 完全相同，会重复显示');
         }
+        (Array.isArray(intro.lines) ? intro.lines : []).forEach((l, n) => {
+          if (!castKeys.has(l && l.who)) err.push(tag + ' 开场对白 ' + (n + 1) + '：说话的人不在 cast 里');
+          const say = zhOf(l && l.say).trim();
+          if (!say) err.push(tag + ' 开场对白 ' + (n + 1) + '：没有台词');
+          else if (say.length > 45) warn.push(tag + ' 开场对白 ' + (n + 1) + '：' + say.length + ' 字，建议不超过 45 字');
+        });
         const present = Array.isArray(first.present) ? first.present : [];
         if (!present.length) err.push(tag + ' 人物（scenes[0].present）：缺失');
         present.filter(k => !castKeys.has(k)).forEach(k => err.push(tag + ' 人物（scenes[0].present）：「' + k + '」不在 cast 里'));

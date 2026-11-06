@@ -69,6 +69,14 @@ test('写错时指出是哪一栏', () => {
   bad('直接进入结局：提前离开', '直接进入结局：没有这个', /没有这个/);
   assert.equal(parseManuscript('随便写的一段话').ok, false);
 });
+test('人设五项和开场对白都识别到', () => {
+  const a = b.cast[0];
+  assert.equal(a.archetype, '高冷嘴硬型'); assert(a.expression.startsWith('嘴上说随便')); assert(a.flirt && a.jealousy && a.when_asked);
+  assert.equal(b.cast[1].archetype, undefined);
+  assert.deepEqual(c1.introduction.lines, [{ who: 'c01', say: '雨停之前走不了。画在里面，要看吗？' }, { who: 'c02', say: '他就会说画。你先告诉我，你叫什么？' }]);
+  assert(r.warn.some(w => /陆行舟.*人设类型/.test(w)));
+  assert(parseManuscript(sample.replace('沈砚：雨停之前', '王五：雨停之前')).err.some(e => /开场对白/.test(e)));
+});
 test('不在表里的特效给提醒，不会放错', () => {
   const x = parseManuscript(sample.replace('【环境氛围】下雨', '【环境氛围】彩虹雨')); assert(x.warn.some(w => /彩虹雨/.test(w))); assert.equal(x.bible.chapters[0].scenes[0].fx, undefined);
 });

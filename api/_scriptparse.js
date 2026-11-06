@@ -22,8 +22,8 @@ const FX_NAMES = {
 const AMBIENT_IDS = new Set(['rain', 'storm', 'wind', 'snowfall', 'blizzard', 'ice', 'candle', 'embers', 'inferno', 'blackout', 'drip', 'bokeh', 'neon', 'godrays', 'dust', 'fireflies', 'aurora', 'galaxy', 'petals', 'hearts', 'none']);
 
 const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing' };
-const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines' };
-const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 本章目标: 'goal' };
+const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked' };
+const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal' };
 const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight' };
 const ENDING = { 结局名: 'name', 触发条件: 'condition', 收束文字: 'text' };
 const ART = { 封面: 'cover', 人物图: 'portrait' };
@@ -158,12 +158,14 @@ function parseManuscript(text, opts) {
     if (String(p.knows || '').length > 160) warn.push(tag + '：【开局认知】只读前 160 字，现在 ' + p.knows.length + ' 字');
     if (String(p.personality || '').length > 600) warn.push(tag + '：【性格】只读前 600 字，现在 ' + p.personality.length + ' 字');
     if (String(p.hooks || '').length > 500) warn.push(tag + '：【吸引力】只读前 500 字，现在 ' + p.hooks.length + ' 字');
+    if (tierText === '主角') [['archetype', '人设类型'], ['expression', '嘴上和心里'], ['flirt', '怎么调情'], ['jealousy', '怎么吃醋'], ['when_asked', '玩家提要求时']].forEach(([k, zh]) => { if (!String(p[k] || '').trim()) warn.push(tag + '：主角建议写【' + zh + '】，人物会更鲜明'); });
     [p.name, p.short].filter(Boolean).forEach(n => {
       n = String(n).trim();
       if (seen[n] && seen[n] !== key) err.push(tag + '：名字“' + n + '”和别的人物重复');
       seen[n] = key; keyOf[n] = key;
     });
-    return { key, name: bi(p.name || ''), short: bi(p.short || ''), gender: gender || 'm', age: age || 0, tier: tierText === '主角' ? 'lead' : 'secondary', romanceable: romText !== '不能', role: bi(p.role || ''), bio: p.bio || '', voice: p.voice || '', personality: p.personality || '', want: p.want || '', fear: p.fear || '', secret: NOT_FILLED.test(p.secret || '') ? '' : (p.secret || ''), boundaries: p.boundaries || '', toward_player: p.toward_player || '', hooks: p.hooks || '', knows: p.knows || '', sample_lines: sample };
+    return { key, name: bi(p.name || ''), short: bi(p.short || ''), gender: gender || 'm', age: age || 0, tier: tierText === '主角' ? 'lead' : 'secondary', romanceable: romText !== '不能', role: bi(p.role || ''), bio: p.bio || '', voice: p.voice || '', personality: p.personality || '', want: p.want || '', fear: p.fear || '', secret: NOT_FILLED.test(p.secret || '') ? '' : (p.secret || ''), boundaries: p.boundaries || '', toward_player: p.toward_player || '', hooks: p.hooks || '', knows: p.knows || '', sample_lines: sample,
+      ...Object.fromEntries(['archetype', 'expression', 'flirt', 'jealousy', 'when_asked'].filter(k => String(p[k] || '').trim()).map(k => [k, p[k].trim()])) };
   });
   if (!cast.length) err.push('人物小传：至少要写一个人物');
   if (!chapters.length) err.push('分章大纲：至少要写一章');
@@ -253,7 +255,13 @@ function parseManuscript(text, opts) {
       if (hl.length) sc.highlights = hl;
       return sc;
     });
-    return { n, title: bi(c.title || ''), goal: c.goal || '', introduction: { time: c.time || '', event: c.event || '', text: c.text || '' }, scenes };
+    /* 【开场对白】：章节卡最后两句人物的话，让玩家知道怎么接 */
+    const opening = [];
+    lines(c.lines).forEach(l => { const m = l.match(/^([^：:]{1,12})[：:]\s*(.+)$/); if (!m) { err.push(tag + '【开场对白】：要写成“角色名：台词”，这一行不对：' + l.slice(0, 20)); return; } const k = names(m[1]); if (!k) { err.push(tag + '【开场对白】：“' + m[1] + '”没有对应的人物小传'); return; } const say = m[2].trim().replace(/^[“"「]|[”"」]$/g, ''); if (say.length > 45) warn.push(tag + '【开场对白】：“' + say.slice(0, 12) + '…”超过 45 字'); opening.push({ who: k, say }); });
+    if (!opening.length) warn.push(tag + '：建议写两句【开场对白】，玩家一进章就知道怎么接话');
+    if (opening.length > 2) warn.push(tag + '【开场对白】：只显示前两句');
+    if (scenes[0]) opening.filter(o => !scenes[0].present.includes(o.who)).forEach(o => err.push(tag + '【开场对白】：说话的人不在本章【在场人物】里'));
+    return { n, title: bi(c.title || ''), goal: c.goal || '', introduction: Object.assign({ time: c.time || '', event: c.event || '', text: c.text || '' }, opening.length ? { lines: opening.slice(0, 2) } : {}), scenes };
   });
 
   const bible = {
