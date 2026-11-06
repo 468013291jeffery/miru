@@ -26,7 +26,7 @@ const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄
 const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal' };
 const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo' };
 const ENDING = { 结局名: 'name', 触发条件: 'condition', 收束文字: 'text' };
-const ART = { 封面: 'cover', 人物图: 'portrait' };
+const ART = { 封面: 'cover', 人物图: 'portrait', 开场视频: 'video' };
 const NOT_FILLED = /^(?:不写|无|没有|选填)(?:[，,。].*)?$/;
 
 const bi = s => ({ zh: s, en: s });
@@ -91,6 +91,10 @@ function parseManuscript(text, opts) {
     if (label in WORK) { work[WORK[label]] = value; work['_line_' + WORK[label]] = t.line; return; }
     if (label in ART) {
       if (label === '封面') art.cover = subFields(value, ['画面描述'])['画面描述'] || value;
+      else if (label === '开场视频') { /* 2026-11-07：每部剧开头 10 秒视频的脚本（见规范「开场视频」） */
+        const f = subFields(value, ['一句话钩子', '悬念问题', '镜头脚本']);
+        art.video = { hook: (f.一句话钩子 || '').trim(), question: (f.悬念问题 || '').trim(), script: (f.镜头脚本 || value).trim() };
+      }
       else {
         const f = subFields(value, ['角色名', '画面描述']), m = value.match(/^([^：:\n]+)[：:]\s*([\s\S]*)$/);
         if (f.角色名) art.portraits.push({ who: f.角色名.trim(), desc: (f.画面描述 || '').trim() });
@@ -282,6 +286,8 @@ function parseManuscript(text, opts) {
     capabilities: { freeConversation: true, chapterNavigation: 'manual' },
     source: 'manuscript',
   };
+  if (art.video) bible.openingVideo = art.video;
+  else warn.push('开场视频：没有写【开场视频】，上线前要补一段 10 秒的开场视频脚本');
   if (cast.length === 1) bible.solo98 = 1;
   const stats = { chapters: outChapters.length, scenes: outChapters.reduce((a, c) => a + c.scenes.length, 0), people: cast.length, endings: endingList.length, options: outChapters.reduce((a, c) => a + c.scenes.reduce((b, s) => b + ((s.choice && s.choice.options.length) || 0), 0), 0), images: images.length, authoredFx: outChapters.reduce((a, c) => a + c.scenes.reduce((b, s) => b + (s.fx ? Object.keys(s.fx).length : 0) + (s.fxPlan ? s.fxPlan.moments.length : 0), 0), 0) };
   return { ok: !err.length, err, warn, bible, images, stats };
