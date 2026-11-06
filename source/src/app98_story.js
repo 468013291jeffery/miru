@@ -175,7 +175,12 @@ function introductions98(th) {
 function chapterText98(th, intro, s) {
   const people = here98(th, s).map(id => first(ch(id).n)).join('、');
   const event = dropAway98(th, LZ98(intro.event)), text = dropAway98(th, LZ98(intro.text));
-  return [intro.time && L98('时间：','Time: ') + LZ98(intro.time), L98('地点：','Place: ') + LZ98(s.place), people && L98('人物：','Present: ') + people,
+  /* 编剧设了环境氛围（比如暴雨），时间、导语里却没写：画面一进章就是暴雨，章节卡要跟着写出来 */
+  const c = ((bOf98(wd(th.wid)) || {}).chapters || []).find(x => (x.scenes || []).includes(s)) || {}, amb = ((s.fx || c.fx || {}).ambient) || '';
+  const lb = window.FXBUS && amb && amb !== 'none' && FXBUS.label(amb, L98(true, false));
+  const seenTxt = [intro.time, intro.event, intro.text, s.place].map(LZ98).join(' ');
+  const time = [LZ98(intro.time), lb && !FXBUS.mentioned(amb, seenTxt) ? lb : ''].filter(Boolean).join(' · ');
+  return [time && L98('时间：','Time: ') + time, L98('地点：','Place: ') + LZ98(s.place), people && L98('人物：','Present: ') + people,
     event && L98('眼前的事：','Now: ') + event, text].filter(Boolean).join('\n');
 }
 function openingLines98(th, intro, s) {
@@ -357,7 +362,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail98(th, 14) || (zh ? "（刚开始）" : "(just starting)")) +
     (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
     (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
-    experienceContext98(th) +
+    experienceContext98(th) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
@@ -397,6 +402,7 @@ async function actor98(th, cid, intent, turn) {
     (k.sample_lines && k.sample_lines.length ? "\n" + (zh ? "你说话的样子（参考语气，不要照抄）：" : "How you sound (tone only, don't copy): ") + k.sample_lines.slice(0, 5).map(z => "「" + z + "」").join(" ") : "") +
     "\n" + (zh ? "世界里的规矩：" : "Rules of your world: ") + String(b.world || "").slice(0, 500) +
     (policy ? "\n陪伴与表现规则：" + LZ98(policy.companionRules) + experienceContext98(th) : "") +
+    (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (ownPayload ? "\n只给你的本场任务：" + LZ98(ownPayload) : "") +
     (choicePayload ? "\n用户本次选择，只给你的回应任务：" + LZ98(choicePayload) : "") +
     (policy && s && s.interaction ? "\n眼前可参与的事（没有用户选择就尚未发生）：" + LZ98(s.interaction.invitation) : "") +

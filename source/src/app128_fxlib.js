@@ -147,6 +147,20 @@
         "\nRomance and emotion effects only when the relationship really moves forward, not for ordinary flirting.";
   }
 
+  /* ---------- 环境和文字对得上（2026-11-06 玩家：一进《黑港》就下暴雨，剧情里一个雨字都没有）----------
+     持续氛围是玩家看得见的事实：导演和角色都要知道现在画面上是什么，章节卡也要写出来。
+     MENTION = 文字里出现这些字，就算已经写到了这个环境（api/_stylecheck.js 有同一份，审查时用） */
+  const MENTION = { rain: /雨/, storm: /雨|雷(?:声|电|鸣|暴)|打雷|闪电/, wind: /(?:大|狂|寒|海|夜|冷|晚)风|风(?:声|很大|吹|刮|灌)/, snowfall: /雪/, blizzard: /雪/, ice: /冰|冻|严寒/, candle: /烛/, embers: /炉火|篝火|壁炉/, inferno: /火灾|着火|火光|大火|火势/,
+    blackout: /停电|断电|灯.{0,4}(?:灭|黑)|应急灯|黑暗/, drip: /漏水|滴水|地下室/, neon: /霓虹|夜店/, godrays: /阳光|日光|光束|晨光/, dust: /灰尘|浮尘|尘埃/, fireflies: /萤火/, aurora: /极光/, galaxy: /星空|星星|银河/, petals: /花瓣/ };
+  function label(id, wantZh) { const r = AMBIENT.find(x => x[0] === id); return r ? r[wantZh ? 1 : 2] : ""; }
+  function mentioned(id, text) { const re = MENTION[id]; return !re || re.test(String(text || "")); }
+  function envLine(th, wantZh) {
+    const cur = th && typeof fxKeyOf === "function" && fxKeyOf(th); const lb = cur && cur !== "none" && label(cur, wantZh);
+    if (!lb || (typeof S !== "undefined" && S.fxOff)) return "";
+    return wantZh ? "\n画面上正在显示的环境：" + lb + "（玩家看得见）。旁白和台词要和它一致，可以顺带写到，不能写成没有这回事；剧情里环境真的变了才在 fx.ambient 里换。"
+      : "\nThe screen is currently showing: " + lb + " (the player can see it). Keep narration and dialogue consistent with it; mention it naturally if relevant, never contradict it. Change fx.ambient only if the environment really changes.";
+  }
+
   /* ---------- 剧本旁白的兜底（AI 台词不走这里，由智能体判断）---------- */
   const SCRIPT_RULES = [
     [/爆炸声?|炸弹炸|explosion/i, "explosion"], [/枪响|枪声|开了一枪|中弹|gunshot/i, "flash_red"], [/玻璃(?:碎|炸|裂)|碎了一地|shattered/i, "glass_crack"],
@@ -230,5 +244,5 @@
   if (window.UI && typeof window.UI.add === "function") window.UI.add("fx128", header);
   else console.warn("[fx] UI.add 不在，声音与特效按钮不会显示");
 
-  window.FXBUS = { AMBIENT, MOMENT, resolve, moment, ambient, agent, authored, promptBlock, happened, fromScript };
+  window.FXBUS = { AMBIENT, MOMENT, MENTION, resolve, moment, ambient, agent, authored, promptBlock, happened, fromScript, label, mentioned, envLine };
 })();

@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="961471310f05 2026-11-06T15:44Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="ed71476dbdc4 2026-11-06T16:00Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -19017,7 +19017,12 @@ function introductions98(th) {
 function chapterText98(th, intro, s) {
   const people = here98(th, s).map(id => first(ch(id).n)).join('、');
   const event = dropAway98(th, LZ98(intro.event)), text = dropAway98(th, LZ98(intro.text));
-  return [intro.time && L98('时间：','Time: ') + LZ98(intro.time), L98('地点：','Place: ') + LZ98(s.place), people && L98('人物：','Present: ') + people,
+  /* 编剧设了环境氛围（比如暴雨），时间、导语里却没写：画面一进章就是暴雨，章节卡要跟着写出来 */
+  const c = ((bOf98(wd(th.wid)) || {}).chapters || []).find(x => (x.scenes || []).includes(s)) || {}, amb = ((s.fx || c.fx || {}).ambient) || '';
+  const lb = window.FXBUS && amb && amb !== 'none' && FXBUS.label(amb, L98(true, false));
+  const seenTxt = [intro.time, intro.event, intro.text, s.place].map(LZ98).join(' ');
+  const time = [LZ98(intro.time), lb && !FXBUS.mentioned(amb, seenTxt) ? lb : ''].filter(Boolean).join(' · ');
+  return [time && L98('时间：','Time: ') + time, L98('地点：','Place: ') + LZ98(s.place), people && L98('人物：','Present: ') + people,
     event && L98('眼前的事：','Now: ') + event, text].filter(Boolean).join('\n');
 }
 function openingLines98(th, intro, s) {
@@ -19199,7 +19204,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail98(th, 14) || (zh ? "（刚开始）" : "(just starting)")) +
     (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
     (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
-    experienceContext98(th) +
+    experienceContext98(th) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
@@ -19239,6 +19244,7 @@ async function actor98(th, cid, intent, turn) {
     (k.sample_lines && k.sample_lines.length ? "\n" + (zh ? "你说话的样子（参考语气，不要照抄）：" : "How you sound (tone only, don't copy): ") + k.sample_lines.slice(0, 5).map(z => "「" + z + "」").join(" ") : "") +
     "\n" + (zh ? "世界里的规矩：" : "Rules of your world: ") + String(b.world || "").slice(0, 500) +
     (policy ? "\n陪伴与表现规则：" + LZ98(policy.companionRules) + experienceContext98(th) : "") +
+    (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (ownPayload ? "\n只给你的本场任务：" + LZ98(ownPayload) : "") +
     (choicePayload ? "\n用户本次选择，只给你的回应任务：" + LZ98(choicePayload) : "") +
     (policy && s && s.interaction ? "\n眼前可参与的事（没有用户选择就尚未发生）：" + LZ98(s.interaction.invitation) : "") +
@@ -22562,6 +22568,20 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
         "\nRomance and emotion effects only when the relationship really moves forward, not for ordinary flirting.";
   }
 
+  /* ---------- 环境和文字对得上（2026-11-06 玩家：一进《黑港》就下暴雨，剧情里一个雨字都没有）----------
+     持续氛围是玩家看得见的事实：导演和角色都要知道现在画面上是什么，章节卡也要写出来。
+     MENTION = 文字里出现这些字，就算已经写到了这个环境（api/_stylecheck.js 有同一份，审查时用） */
+  const MENTION = { rain: /雨/, storm: /雨|雷(?:声|电|鸣|暴)|打雷|闪电/, wind: /(?:大|狂|寒|海|夜|冷|晚)风|风(?:声|很大|吹|刮|灌)/, snowfall: /雪/, blizzard: /雪/, ice: /冰|冻|严寒/, candle: /烛/, embers: /炉火|篝火|壁炉/, inferno: /火灾|着火|火光|大火|火势/,
+    blackout: /停电|断电|灯.{0,4}(?:灭|黑)|应急灯|黑暗/, drip: /漏水|滴水|地下室/, neon: /霓虹|夜店/, godrays: /阳光|日光|光束|晨光/, dust: /灰尘|浮尘|尘埃/, fireflies: /萤火/, aurora: /极光/, galaxy: /星空|星星|银河/, petals: /花瓣/ };
+  function label(id, wantZh) { const r = AMBIENT.find(x => x[0] === id); return r ? r[wantZh ? 1 : 2] : ""; }
+  function mentioned(id, text) { const re = MENTION[id]; return !re || re.test(String(text || "")); }
+  function envLine(th, wantZh) {
+    const cur = th && typeof fxKeyOf === "function" && fxKeyOf(th); const lb = cur && cur !== "none" && label(cur, wantZh);
+    if (!lb || (typeof S !== "undefined" && S.fxOff)) return "";
+    return wantZh ? "\n画面上正在显示的环境：" + lb + "（玩家看得见）。旁白和台词要和它一致，可以顺带写到，不能写成没有这回事；剧情里环境真的变了才在 fx.ambient 里换。"
+      : "\nThe screen is currently showing: " + lb + " (the player can see it). Keep narration and dialogue consistent with it; mention it naturally if relevant, never contradict it. Change fx.ambient only if the environment really changes.";
+  }
+
   /* ---------- 剧本旁白的兜底（AI 台词不走这里，由智能体判断）---------- */
   const SCRIPT_RULES = [
     [/爆炸声?|炸弹炸|explosion/i, "explosion"], [/枪响|枪声|开了一枪|中弹|gunshot/i, "flash_red"], [/玻璃(?:碎|炸|裂)|碎了一地|shattered/i, "glass_crack"],
@@ -22645,7 +22665,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   if (window.UI && typeof window.UI.add === "function") window.UI.add("fx128", header);
   else console.warn("[fx] UI.add 不在，声音与特效按钮不会显示");
 
-  window.FXBUS = { AMBIENT, MOMENT, resolve, moment, ambient, agent, authored, promptBlock, happened, fromScript };
+  window.FXBUS = { AMBIENT, MOMENT, MENTION, resolve, moment, ambient, agent, authored, promptBlock, happened, fromScript, label, mentioned, envLine };
 })();
 
 /* Catalog availability, 2026-11-06: retain source and local history. */

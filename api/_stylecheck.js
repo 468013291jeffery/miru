@@ -30,6 +30,16 @@ function checkFxField(fx, where, err, warn) {
   checkFxId(fx.moment, where + ' fx.moment', err, warn);
 }
 
+/* 环境氛围是进章就显示、一直持续的画面。文字里一个字都没写到，玩家会觉得突兀（2026-11-06《黑港》第 1 章：暴雨雷电，剧情里没有雨）。
+   和前端 app128_fxlib.js 的 MENTION 是同一份 */
+const AMB_MENTION = { rain: [/雨/, '下雨'], storm: [/雨|雷(?:声|电|鸣|暴)|打雷|闪电/, '暴雨雷电'], wind: [/(?:大|狂|寒|海|夜|冷|晚)风|风(?:声|很大|吹|刮|灌)/, '大风'], snowfall: [/雪/, '下雪'], blizzard: [/雪/, '暴风雪'], ice: [/冰|冻|严寒/, '结冰的严寒'],
+  candle: [/烛/, '烛光'], embers: [/炉火|篝火|壁炉/, '炉火、篝火'], inferno: [/火灾|着火|火光|大火|火势/, '火灾现场'], blackout: [/停电|断电|灯.{0,4}(?:灭|黑)|应急灯|黑暗/, '停电'], drip: [/漏水|滴水|地下室/, '地下室、漏水'],
+  neon: [/霓虹|夜店/, '霓虹夜店'], godrays: [/阳光|日光|光束|晨光/, '暖阳光束'], dust: [/灰尘|浮尘|尘埃/, '浮尘'], fireflies: [/萤火/, '萤火虫'], aurora: [/极光/, '极光'], galaxy: [/星空|星星|银河/, '星空'], petals: [/花瓣/, '飘落的花瓣'] };
+function checkAmbientText(fx, text, where, warn) {
+  const id = fx && typeof fx === 'object' ? String(fx.ambient || '').trim() : '', m = AMB_MENTION[id];
+  if (m && !m[0].test(text)) warn.push(where + '：环境氛围是「' + m[1] + '」，但时间、导语和本章安排里都没写到，玩家一进章就看到它会觉得突兀。请在时间或导语里写一句，或者把环境氛围改成「无」');
+}
+
 const zhOf = v => (v && typeof v === 'object') ? String(v.zh || v.en || '') : String(v == null ? '' : v);
 
 function checkBible(b) {
@@ -110,8 +120,10 @@ function checkBible(b) {
         present.filter(k => !castKeys.has(k)).forEach(k => err.push(tag + ' 人物（scenes[0].present）：「' + k + '」不在 cast 里'));
       }
     }
-    scenes.forEach(s => {
+    scenes.forEach((s, si) => {
       checkFxField(s && s.fx, tag + ' ' + ((s && s.id) || ''), err, warn);
+      { const intro = (si === 0 && c && c.introduction) || {};
+        checkAmbientText((s && s.fx) || (si === 0 && c && c.fx), [intro.time, intro.event, intro.text, s && s.place, s && s.beat].map(zhOf).join(' '), tag + ' ' + ((s && s.id) || ''), warn); }
       ((s && s.fxPlan && s.fxPlan.moments) || []).forEach(m => { checkFxId(m && m.id, tag + ' 关键特效', err, warn); if (!(m && String(m.when || '').trim())) err.push(tag + ' 关键特效：缺触发条件'); });
       ((s && s.highlights) || []).forEach(h => { if (!(h && h.id)) err.push(tag + ' 高光图：缺 id'); if (!(h && String(h.when || '').trim())) err.push(tag + ' 高光图：缺触发条件'); });
       const options = (s && s.choice && Array.isArray(s.choice.options)) ? s.choice.options : [];
