@@ -16,7 +16,7 @@
 
   async function load() {
     let data = null, ids = null;
-    try { const r = await fetch("art/official/leads.json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) data = await r.json(); } catch (e) { console.warn("[leads] json", e); }
+    try { const r = await fetch("art/official/leads.json?catalog=20261106&v=" + Math.floor(Date.now() / 6e5)); if (r.ok) data = await r.json(); } catch (e) { console.warn("[leads] json", e); }
     if (!data || !Array.isArray(data.works)) return;
     try {
       const r = await fetch("/api/works?feed=new&limit=200", { cache: "no-store" });
@@ -44,6 +44,7 @@
       if (!W.some(w => w.id === wid)) W.push({ id: wid, title: wk.title, or: wk.orient || "bg", tags: wk.tags || [], cast: cast, ld126: wk.wid, hook: { zh: "", en: "" }, stats: [0, 0], status: wk.status || { time: { zh: "", en: "" }, place: { zh: "", en: "" } } });
     });
     loaded = true;
+    if (typeof disc !== "undefined" && disc.mode === "chars" && document.querySelector("#discRes")) renderDiscRes();
     try { if (typeof save === "function") save(); } catch (e) { console.warn("[leads] save", e); }
   }
 

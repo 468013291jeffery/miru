@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+const root=process.argv[2]||process.cwd(),read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const build=read('source/build.py');
+for(const name of ['app100_fixes.js','app101_you.js','app100_dialogue.js','app128_fxlib.js','app129_catalog.js','app130_princes.js'])assert(build.includes('"'+name+'"'),'Missing build module: '+name);
+assert(read('source/src/app15_home.js').includes('video/princes-home-e71e3487.mp4'));
+assert(read('source/src/app94_official2.js').includes('const OFF94_SHOWCASE = "w_scmw2calg4a57f5c1974";'));
+assert(read('source/src/app2_pages.js').includes('return w&&(c.ld126?'));
+assert(read('source/src/app126_leads.js').includes('disc.mode === "chars"'));
+const cards=JSON.parse(read('art/official/leads.json')).works.find(w=>w.wid==='w_scmw2calg4a57f5c1974');
+assert.equal(cards?.leads?.length,8);assert.equal(new Set(cards.leads.map(c=>c.key)).size,8);
+for(const c of cards.leads)assert(fs.statSync(path.join(root,c.art)).size>1000,c.key+' portrait missing');
+const manifest=JSON.parse(read('art/official/eight-princes/upload-manifest.json'));
+const images=Array.isArray(manifest)?manifest:manifest.files||manifest.assets;
+assert(Array.isArray(images),'Image manifest shape changed');
+assert.equal(images.length,85);
+for(const x of images){const name=x.file||x.name||x.path;const b=fs.readFileSync(path.join(root,'art/official/eight-princes',path.basename(name)));assert.equal(crypto.createHash('sha256').update(b).digest('hex'),x.sha256,name+' hash mismatch');}
+assert(fs.statSync(path.join(root,'video/princes-home-e71e3487.mp4')).size>1000000);
+assert(Object.keys(JSON.parse(read('art/official/w_scmw2calg4a57f5c1974.json'))).length>=46);
+console.log('Release contract: build modules, mainline map, 8 role cards, 85 image hashes and homepage video passed.');
