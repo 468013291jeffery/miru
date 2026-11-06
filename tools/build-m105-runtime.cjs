@@ -10,7 +10,7 @@ function closeChoices(t){let open=false;const out=[];for(const line of t.split('
 function norm(t){for(const [z,n] of Object.entries(aliases))t=t.replace(new RegExp('^'+z+'([：:])','gm'),n+'$1');return closeChoices(t.replace(/\r\n?/g,'\n'));}
 function parse(t){return ctx.off94You94Parse(x=>ctx.off94Parse(ctx.imParseCore,x),t);}
 function compile(c){
- const line=(x)=>['@Dante','line',{hint:x.choice.q,opts:x.choice.opts.map(o=>({k:'say',t:o.t,set:o.set,then:walk(o.then)}))}];
+ const line=(x)=>['@pov','line',{hint:x.choice.q,opts:x.choice.opts.map(o=>({k:'say',t:o.t,set:o.set,then:walk(o.then)}))}];
  function walk(items){return (items||[]).map(x=>{if(x.choice)return line(x);if(x.variant)return ['sys','if',{cond:{pick:[0,x.variant.k]},then:walk(x.variant.then)}];if(!Array.isArray(x))throw Error('unknown parsed item');if(x[0]==='sys'&&x[1]==='if')return ['sys','if',{...x[2],then:walk(x[2].then),else:walk(x[2].else)}];return x;});}
  const items=c.items.slice();let at=-1;for(let i=items.length-1;i>=0;i--){if(items[i].choice){at=i;break}if(Array.isArray(items[i])&&items[i][0]!=='sys')break;}
  const end=at>=0?items.splice(at,1)[0].choice:null;

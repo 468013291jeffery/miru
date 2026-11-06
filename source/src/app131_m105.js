@@ -1,13 +1,13 @@
 /* M105 V6: authored choices, one work, three conditional post-season routes. */
 (function () {
-  const ID='w_scmvxnqoko453e6d7bc3', VERSION='m105-v6-20261107.1';
+  const ID='w_scmvxnqoko453e6d7bc3', VERSION='m105-v6-20261107.2';
   const routes=['committed','slow','independent'];let data=null,pending=null;
   const own=w=>w&&w.community===ID;
   const route=th=>routes.find(r=>th&&th.pk&&th.pk.flags&&th.pk.flags['end_'+r]);
   async function load(){if(data)return data;if(!pending)pending=fetch('art/official/m105-v6/runtime.json?v='+VERSION).then(r=>{if(!r.ok)throw Error('M105 content unavailable');return r.json()}).then(j=>data=j).catch(e=>{pending=null;throw e});return pending;}
   function bind(w,arr){const by={};w.cast.forEach(id=>{const c=ch(id);if(c){by[c.n]=id;if(c.n94)Object.values(c.n94).forEach(n=>by[n]=id)}});const A=OFF94.assets[ID]||{};
     return (arr||[]).map(b=>{if(!Array.isArray(b))return b;b=JSON.parse(JSON.stringify(b));
-      if(b[0]==='@pov'||b[0]==='@你')b[0]=w.cast.find(id=>ch(id)&&ch(id).n==='你')||'n';
+      if(b[0]==='@pov'||b[0]==='@你')b[0]=w.you94||w.pack.pov||w.cast.find(id=>ch(id)&&ch(id).n==='你')||'n';
       else if(b[0][0]==='@')b[0]=by[b[0].slice(1)]||'n';
       if(b[1]==='if'){b[2].then=bind(w,b[2].then);b[2].else=bind(w,b[2].else)}
       if(b[1]==='line')b[2].opts.forEach(o=>o.then=bind(w,o.then));
@@ -18,12 +18,14 @@
   function configure(w){if(!own(w)||!w.pack||!data)return;if(!['Dante','Elena','Vince','June'].every(n=>w.cast.some(id=>ch(id)&&ch(id).n===n)))return;const P=w.pack;if(P.m105Version===VERSION)return;
     const bi=(z,e)=>({zh:z||'',en:e||z||''});
     P.chapters=data.main.zh.map((z,i)=>{const e=data.main.en[i];return {t:bi(z.title,e.title),goal:bi(z.goal&&z.goal.zh,e.goal&&e.goal.en),goalOwn:true,place:bi('',''),time:bi('',''),ask:bi(z.ask,e.ask),beats:{zh:bind(w,z.beats),en:bind(w,e.beats)},choices:z.choices.map((o,j)=>({k:o.k,t:bi(o.t,e.choices[j]&&e.choices[j].t),set:o.set,mem:bi('',''),then:{zh:bind(w,o.then),en:bind(w,e.choices[j]&&e.choices[j].then)}})),outline:false};});
-    for(let i=0;i<3;i++){const branches=lang=>routes.map(r=>{const c=data.routes[r][lang][i],beats=bind(w,c.beats);if(c.choices.length)beats.push([w.cast.find(id=>ch(id)&&ch(id).n==='Dante')||w.cast[0],'line',{hint:c.ask,opts:c.choices.map(o=>({k:'say',t:o.t,set:o.set,then:bind(w,o.then)}))}]);return ['sys','if',{cond:{flag:'end_'+r},then:beats}]});
+    P.chapters[16].choices.forEach((o,i)=>o.set=['end_'+routes[i]]);P.chapters[17].choices.forEach(o=>o.set=['ch18_complete','route_confirmed']);
+    for(let i=0;i<3;i++){const branches=lang=>routes.map(r=>{const c=data.routes[r][lang][i],beats=bind(w,c.beats);if(c.choices.length)beats.push([w.you94||w.pack.pov||w.cast.find(id=>ch(id)&&ch(id).n==='你'),'line',{hint:c.ask,opts:c.choices.map(o=>({k:'say',t:o.t,set:o.set,then:bind(w,o.then)}))}]);return ['sys','if',{cond:{flag:'end_'+r},then:beats}]});
       P.chapters.push({t:bi('后续故事 · 第 '+(i+1)+' 集','After the finale · Episode '+(i+1)),goal:bi('延续你确认的关系与边界。','Continue on the relationship terms you chose.'),goalOwn:true,place:bi('',''),time:bi('',''),ask:bi('',''),beats:{zh:branches('zh'),en:branches('en')},choices:[{k:'A',t:bi('继续','Continue'),then:{zh:[],en:[]},mem:bi('','')}],outline:false,advanceOnly:true});
     }
     P.ready=P.chapters.length;P.exp74=1;P.minRoundsPerChapter=0;P.endings={A:{t:bi('认真相爱','Committed, on equal terms')},B:{t:bi('慢慢了解','Taking your time')},C:{t:bi('自己的生活','Your independent life')},complete:{t:bi('这一季结束，生活继续','The season ends. Life continues.'),txt:bi('',''),line:bi('','')}};P.m105Version=VERSION;
   }
   const install=installWork;installWork=async function(id){if(id===ID){await Promise.all([load(),off94Assets(ID)])}const wid=await install.apply(this,arguments);configure(wid&&wd(wid));if(wid)save();return wid;};
+  const init=packInit;packInit=function(th,w,extra){if(own(w)){extra=Object.assign({},extra||{});extra.picks=Object.assign({},extra.picks||{});for(let n=1;n<(extra.fromCh||1);n++){const c=w.pack.chapters[n-1],k=extra.picks[n]||'B';if(c&&!c.choices.some(o=>o.k===k))extra.picks[n]=c.choices[0].k;}}return init.call(this,th,w,extra);};
   load().then(()=>{Object.values(S.mine.worlds||{}).forEach(configure)}).catch(e=>console.warn('[M105]',e.message));
   const set=pkSet;pkSet=function(th,flags){if(own(th&&wd(th.wid))&&(Array.isArray(flags)?flags:[flags]).some(f=>routes.some(r=>f==='end_'+r))){th.pk.flags=th.pk.flags||{};routes.forEach(r=>delete th.pk.flags['end_'+r])}return set.apply(this,arguments)};
   const need=EN;EN=function(th){return own(th&&wd(th.wid))?0:need.apply(this,arguments)};
