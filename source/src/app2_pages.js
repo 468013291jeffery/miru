@@ -173,7 +173,7 @@ function renderDiscRes(){
  const host=$("#discRes");if(!host)return;let items=[];
  if(disc.mode==="stories"){items=allWorlds().filter(orOK).filter(w=>discMatch(w.tags||[],Lz(w.title)+" "+Lz(w.hook)+" "+w.cast.map(id=>ch(id).n).join(" ")+" "+w.author,w.cast));
   if(disc.sort==="hot")items.sort((a,b)=>(b.stats?b.stats[0]:0)-(a.stats?a.stats[0]:0));else items.reverse();}
- else{items=allChars().filter(id=>{const c=ch(id),w=wd(c.w);return w&&orOK(w)&&discMatch(w.tags||[],c.n+" "+Lz(c.role),[id])});}
+ else{items=allChars().filter(id=>{const c=ch(id),w=wd(c.w);return w&&(c.ld126?(!disc.q||(c.n+" "+Lz(c.role)+" "+Lz(w.title)).toLowerCase().includes(disc.q.toLowerCase())):orOK(w)&&discMatch(w.tags||[],c.n+" "+Lz(c.role),[id]))});}
  host.innerHTML='<div class="row" style="padding:14px 16px 10px;justify-content:space-between"><b class="sm">'+t("disc.results",{n:items.length})+'</b>'+
   '<div class="row">'+(Object.values(disc.sel).flat().length?'<button class="chip" data-dclear="1">'+t("disc.clear")+'</button>':"")+
   '<div class="seg"><button data-dsort="hot" class="'+(disc.sort==="hot"?"on":"")+'">'+t("disc.hot")+'</button><button data-dsort="new" class="'+(disc.sort==="new"?"on":"")+'">'+t("disc.new")+'</button></div></div></div>'+

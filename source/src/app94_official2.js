@@ -133,7 +133,7 @@ function off94Parse(next, text) {
     for (let j = c.items.length - 1; j >= 0; j--) { const y = c.items[j]; if (y && y.choice && y.free94) { c.items.push(["n", "act", "……"]); break; } if (y && y.choice) break; if (Array.isArray(y) && y[0] !== "sys") break; }
   });
   /* cast: everyone the sheet names comes first, in order */
-  if (chars.length) { const names = chars.map(a => a[0]); doc.cast = names.filter(n => doc.sp[n]).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)).slice(0, 9); }
+  if (chars.length) { const names = chars.map(a => a[0]); doc.cast = [...new Set(names.filter(n => doc.sp[n]).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)))].slice(0, 12); }
   return doc;
 }
 /* ---- build: names → ids, asset slots → urls, cast sheet → characters ---- */
@@ -348,7 +348,7 @@ async function off94Feed() {
 function zh94(s) { s = String(s || ""); return /[\u4e00-\u9fff]/.test(s) ? s.replace(/\s+[A-Za-z][A-Za-z0-9'’:&,!?. -]*$/, "").replace(/^[A-Za-z][A-Za-z0-9'’:&,!?. -]*\s+(?=[\u4e00-\u9fff])/, "").trim() : s; }
 function off94Title(w) { const zh = CL() === "zh"; return zh ? zh94(w.title || "") : ((w.en && w.en.title) || w.title || ""); }
 function off94Hook(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.hook) || w.hook || ""; }
-const OFF94_SHOWCASE = "w_scmvp62pluf3cc9d7c96"; /* 首页视频卡对应的剧 */
+const OFF94_SHOWCASE = "w_scmw2calg4a57f5c1974"; /* 首页视频卡对应的剧 */
 function off94FCard(w) {
   const A = w.A, pos = A.cover || A.poster || "";
   const bg = A.vid_open ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(A.vid_open) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';

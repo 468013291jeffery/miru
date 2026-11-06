@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="180bb569b3f2 2026-11-06T01:11Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="54479e112b39 2026-11-06T05:07Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -4891,7 +4891,7 @@ function renderDiscRes(){
  const host=$("#discRes");if(!host)return;let items=[];
  if(disc.mode==="stories"){items=allWorlds().filter(orOK).filter(w=>discMatch(w.tags||[],Lz(w.title)+" "+Lz(w.hook)+" "+w.cast.map(id=>ch(id).n).join(" ")+" "+w.author,w.cast));
   if(disc.sort==="hot")items.sort((a,b)=>(b.stats?b.stats[0]:0)-(a.stats?a.stats[0]:0));else items.reverse();}
- else{items=allChars().filter(id=>{const c=ch(id),w=wd(c.w);return w&&orOK(w)&&discMatch(w.tags||[],c.n+" "+Lz(c.role),[id])});}
+ else{items=allChars().filter(id=>{const c=ch(id),w=wd(c.w);return w&&(c.ld126?(!disc.q||(c.n+" "+Lz(c.role)+" "+Lz(w.title)).toLowerCase().includes(disc.q.toLowerCase())):orOK(w)&&discMatch(w.tags||[],c.n+" "+Lz(c.role),[id]))});}
  host.innerHTML='<div class="row" style="padding:14px 16px 10px;justify-content:space-between"><b class="sm">'+t("disc.results",{n:items.length})+'</b>'+
   '<div class="row">'+(Object.values(disc.sel).flat().length?'<button class="chip" data-dclear="1">'+t("disc.clear")+'</button>':"")+
   '<div class="seg"><button data-dsort="hot" class="'+(disc.sort==="hot"?"on":"")+'">'+t("disc.hot")+'</button><button data-dsort="new" class="'+(disc.sort==="new"?"on":"")+'">'+t("disc.new")+'</button></div></div></div>'+
@@ -16871,7 +16871,7 @@ function off94Parse(next, text) {
     for (let j = c.items.length - 1; j >= 0; j--) { const y = c.items[j]; if (y && y.choice && y.free94) { c.items.push(["n", "act", "……"]); break; } if (y && y.choice) break; if (Array.isArray(y) && y[0] !== "sys") break; }
   });
   /* cast: everyone the sheet names comes first, in order */
-  if (chars.length) { const names = chars.map(a => a[0]); doc.cast = names.filter(n => doc.sp[n]).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)).slice(0, 9); }
+  if (chars.length) { const names = chars.map(a => a[0]); doc.cast = [...new Set(names.filter(n => doc.sp[n]).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)))].slice(0, 12); }
   return doc;
 }
 /* ---- build: names → ids, asset slots → urls, cast sheet → characters ---- */
@@ -17086,7 +17086,7 @@ async function off94Feed() {
 function zh94(s) { s = String(s || ""); return /[\u4e00-\u9fff]/.test(s) ? s.replace(/\s+[A-Za-z][A-Za-z0-9'’:&,!?. -]*$/, "").replace(/^[A-Za-z][A-Za-z0-9'’:&,!?. -]*\s+(?=[\u4e00-\u9fff])/, "").trim() : s; }
 function off94Title(w) { const zh = CL() === "zh"; return zh ? zh94(w.title || "") : ((w.en && w.en.title) || w.title || ""); }
 function off94Hook(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.hook) || w.hook || ""; }
-const OFF94_SHOWCASE = "w_scmvp62pluf3cc9d7c96"; /* 首页视频卡对应的剧 */
+const OFF94_SHOWCASE = "w_scmw2calg4a57f5c1974"; /* 首页视频卡对应的剧 */
 function off94FCard(w) {
   const A = w.A, pos = A.cover || A.poster || "";
   const bg = A.vid_open ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(A.vid_open) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
@@ -17548,7 +17548,7 @@ function fCard(w,i,top){const cl=CLIPS[w.id+":1"],c0=cl&&cl[Object.keys(cl)[0]],
   '<div class="fside">'+(SHORTS[w.id]?'<button data-short="'+w.id+'" aria-label="hook"><i>▶</i><small>'+t("hf.hook")+'</small></button>':'')+
    '<button data-remix="'+w.id+'" aria-label="remix"><i>⑂</i><small>'+t("hf.remix")+'</small></button><button data-fshare="'+w.id+'" aria-label="share"><i>⇪</i><small>'+t("hf.share")+'</small></button></div>'+
   '<div class="finfo fmin"><div class="frow"><button class="ftitle" data-story="'+w.id+'">'+esc(Lz(w.title))+'<small>'+(w.kind==="ensemble"?"":w.or==="bl"?" · BL":w.or==="gl"?" · GL":"")+' ›</small></button><button class="fheart'+(fav?" on":"")+'" data-fav="'+w.id+'" aria-label="save">'+(fav?"♥":"♡")+'</button></div></div></section>'}
-function homeShowcaseHTML(){return '<section class="fcard home-showcase" data-home-showcase="1"><video class="fvid" muted loop playsinline preload="metadata" aria-label="'+(CL()==='zh'?'MIRU 首页视频展示':'MIRU home video showcase')+'" data-src="video/Men_greeting_guest_at_mansion_b703642e_1080p.mp4"></video><div class="fveil"></div><div class="finfo fmin"><div class="frow"><b class="ftitle">MIRU</b></div></div></section>';}
+function homeShowcaseHTML(){return '<section class="fcard home-showcase" data-home-showcase="1"><video class="fvid" muted loop playsinline preload="metadata" aria-label="'+(CL()==='zh'?'MIRU 首页视频展示':'MIRU home video showcase')+'" data-src="video/princes-home-e71e3487.mp4"></video><div class="fveil"></div><div class="finfo fmin"><div class="frow"><b class="ftitle">MIRU</b></div></div></section>';}
 function renderHome(v){
  const ws=feedList(feedTab),top=hotRank();
  v.innerHTML='<div class="feedwrap"><div class="ftabs"><div class="ftabsc" id="ftabsc">'+FEED_TABS.map(([k,l])=>'<button data-ftab="'+k+'" class="'+(feedTab===k?"on":"")+'">'+esc(L(l))+'</button>').join("")+'</div>'+
@@ -21685,7 +21685,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
 
   async function load() {
     let data = null, ids = null;
-    try { const r = await fetch("art/official/leads.json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) data = await r.json(); } catch (e) { console.warn("[leads] json", e); }
+    try { const r = await fetch("art/official/leads.json?catalog=20261106&v=" + Math.floor(Date.now() / 6e5)); if (r.ok) data = await r.json(); } catch (e) { console.warn("[leads] json", e); }
     if (!data || !Array.isArray(data.works)) return;
     try {
       const r = await fetch("/api/works?feed=new&limit=200", { cache: "no-store" });
@@ -21713,6 +21713,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
       if (!W.some(w => w.id === wid)) W.push({ id: wid, title: wk.title, or: wk.orient || "bg", tags: wk.tags || [], cast: cast, ld126: wk.wid, hook: { zh: "", en: "" }, stats: [0, 0], status: wk.status || { time: { zh: "", en: "" }, place: { zh: "", en: "" } } });
     });
     loaded = true;
+    if (typeof disc !== "undefined" && disc.mode === "chars" && document.querySelector("#discRes")) renderDiscRes();
     try { if (typeof save === "function") save(); } catch (e) { console.warn("[leads] save", e); }
   }
 
@@ -22236,6 +22237,54 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   else console.warn("[fx] UI.add 不在，声音与特效按钮不会显示");
 
   window.FXBUS = { AMBIENT, MOMENT, resolve, moment, ambient, agent, authored, promptBlock, happened, fromScript };
+})();
+
+/* Catalog availability, 2026-11-06: retain source and local history. */
+(function(){
+  const retired=new Set(['heir','pole','heroics','float','ice','secondset','forecast','openhouse','crush','laundry','lastplate','honor','fourth','crimson','pack','made','gala','night','twominutes','turn','august','recipe','dog','dragon','unseelie','pact','rewind','split','lastjam','bratva','afterhours','masque','light','market','offbook','lowseason','roomies','landing','m102']);
+  const available=w=>!!w&&!retired.has(w.id);
+  const worlds=allWorlds;allWorlds=function(){return worlds.apply(this,arguments).filter(available)};
+  const packs=packWorlds;packWorlds=function(){return packs.apply(this,arguments).filter(available)};
+  const orient=orOK;orOK=function(w){return available(w)&&orient.apply(this,arguments)};
+  const chars=allChars;allChars=function(){return chars.apply(this,arguments).filter(id=>{const c=ch(id);return c&&!retired.has(c.w)})};
+  const unavailable=()=>toast(CL()==='zh'?'这部剧已下线，已有记录仍保留。':'This story is unavailable. Your history is preserved.');
+  const story=openStory;openStory=function(id){if(retired.has(id)){unavailable();return}return story.apply(this,arguments)};
+  const sheet=startSheet;startSheet=function(id){if(retired.has(id)){unavailable();return}return sheet.apply(this,arguments)};
+  const start=packStart;packStart=function(id){if(retired.has(id)){unavailable();return}return start.apply(this,arguments)};
+  document.addEventListener('click',function(e){
+    const t=e.target&&e.target.closest&&e.target.closest('[data-story],[data-pkstart],[data-chto],[data-char]');if(!t)return;
+    const cid=t.dataset.char,c=cid&&ch(cid),id=t.dataset.story||t.dataset.pkstart||(t.dataset.chto||'').split('|')[0]||(c&&c.w);
+    if(retired.has(id)){e.preventDefault();e.stopImmediatePropagation();unavailable()}
+  },true);
+})();
+
+
+/* Catalog pin guard */
+(function(){const blocked=new Set(['heir','pole','heroics','float','ice','secondset','forecast','openhouse','crush','laundry','lastplate','honor','fourth','crimson','pack','made','gala','night','twominutes','turn','august','recipe','dog','dragon','unseelie','pact','rewind','split','lastjam','bratva','afterhours','masque','light','market','offbook','lowseason','roomies','landing','m102']);const f=feedList;feedList=function(){return f.apply(this,arguments).filter(w=>!blocked.has(w.id))};document.querySelectorAll("#feed [data-fw]").forEach(el=>{if(blocked.has(el.dataset.fw))el.remove()})})();
+
+/* Eight Princes authored mainline. Follow-ups are character cards, not standalone routes. */
+(function () {
+  const MAIN = 'w_scmw2calg4a57f5c1974';
+  const isMain = w => w && w.community === MAIN;
+  function configure(w) {
+    if (!isMain(w) || !w.pack) return;
+    w.pack.exp74 = 1;
+    w.pack.minRoundsPerChapter = 0;
+    const last = (w.pack.chapters || []).slice(-1)[0];
+    (last && last.choices || []).forEach(o => {
+      w.pack.endings = w.pack.endings || {};
+      w.pack.endings[o.k] = {t:o.t,txt:{zh:'',en:''},line:{zh:'',en:''}};
+    });
+  }
+  const install = installWork;
+  installWork = async function () { const id = await install.apply(this,arguments); configure(id && wd(id)); return id; };
+  Object.values(S.mine.worlds || {}).forEach(configure);
+  const endingNeed = EN;
+  EN = function(th) { return isMain(th && wd(th.wid)) ? 0 : endingNeed.apply(this,arguments); };
+  const love = packLove;
+  packLove = function(th) { if (!isMain(th && wd(th.wid))) return love.apply(this,arguments); };
+  const write = loveWrite;
+  loveWrite = function(th,cid,delta,reason) { if (isMain(th && wd(th.wid)) && reason === 'ending:A') return; return write.apply(this,arguments); };
 })();
 
 </script>
