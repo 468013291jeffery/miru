@@ -586,6 +586,17 @@ function packWorlds(){ return W.filter(w => w.pack) }
 - 开关：面板上的「特效」一个开关同时设 `S.fxOff` / `S.sfxOff` / `S.vibOff`。震动统一拦在 `navigator.vibrate`；音效不再依赖音乐开关。
 - 渲染引擎没动：`app22_fx2`（画布）、`app24_gl`（着色器）、`app30_fx3`（情绪、冰）、`app59_fx100`（瞬间）。
 
+## 5.5b 故事圣经模式：谁在场、点屏继续、照片、尺度、重新生成（2026-11-06）
+
+全部在 `app98_story.js`，所有故事圣经作品共用，不绑定单部作品。
+
+- **谁在场**：剧本的 `scene.present` 只是计划。实际站位存在 `th.b98.here = {scene, ids}`（`here98`）。导演每轮报 `leave` / `arrive`（来的人要带一句 `how`，界面显示成旁白），离开一场时报 `with_player`。没跟玩家走的人（含中途离开的）记进 `behind98`，进下一场时不在场（`arrive98`），可由导演给理由再叫回来。能开口的人、章节卡「人物」行、开场对白、角色记忆都按 `here98`。剧本导语写到了不在场的人，就先删掉那几句，再按实际在场的人重写这一章的开场（`opening98(th, n, true)`，不进缓存）。
+- **点屏继续**：点聊天区空白（点在气泡上等 260ms，排除双击回 ❤️）或工具栏 ⏩ → `reply(th,{kind:'cont'})` → `beat98(th,'more')`。不换场，连点三次起要求把话头交回玩家（`more98`）。前三次有提示「轻点空白处，让他们接着说」。
+- **照片**：导演 JSON 的 `photo {from, what, cap, asset}`。玩家要看（`PHOTO98`）或连续 `experience.photoEvery`（默认 2）章没发过照片时才问；明说要照片而导演没安排时单独再问一次（`photoOnly98`）。图优先用剧本备的 `scene.photos`（中文稿【照片】栏），否则按立绘生成同一张脸（`AIG.edit`，试两次），拍他本人却生成失败就用立绘；拍物件用文生图。照片先模糊，`spend(PRICES.pic,'pic')` 解锁后清晰并进相册。照片里只能有成年人（`MINOR98` 拦截），尺度按作品上限，最多擦边。
+- **尺度**：`heat98` 用 `dialogueHeat`（作品 heat × 玩家口味 × 年龄确认）算上限，导演和角色都拿到：上限内跟随玩家的直白程度；超过上限不出戏、不冷拒，用人设接住或在最紧处切走。
+- **重新生成**：`talk` / `more` 两种轮次成功后，`turn98` 给回复打 `turn73` 并存 `th._pre73`（`ST73` 新增 `b98`，剧情状态一起回滚）和 `th._ctx73 = {kind:'b98', mode, act}`；`rg73` 重跑时走 `reply` 的 `kind:'b98'` 分支，导演和角色都拿到「换个角度」的指令（`redo98`）。其他轮次（进场、换章、选项）清掉快照。
+- 角色「动作 + 台词」框（`k:box`，`who:'n'`）现在也带 ☺ 🔊 🖼（`app86_voicefix.js` 的 `bt86Decorate`），🔊 只读台词。
+
 ## 5.6 三条线各是什么 · 剧本内容怎么到外部前端手里（2026-10-31）
 
 ### 三条线（读者不同，别混）
@@ -910,7 +921,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **156 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **157 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
@@ -987,7 +998,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 319 |
 | `app71_narrative.js` | MIRU 互动剧本规则 v1.0 — runtime side The creator side carries the full rule se… | 165 |
 | `app72_zhpure.js` | 中文版只显示中文 Audit (every onboarding step, tabs, store, taste sheet, a story)… | 36 |
-| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 384 |
+| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 385 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 134 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
 | `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 93 |
@@ -1000,7 +1011,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app83_vidu.js` | MOVING PICTURES — Vidu image-to-video (POST /api/tts {vid}, poll GET /api… | 36 |
 | `app84_nosub.js` | NO MEMBERSHIP — pay-as-you-go diamonds only (owner's decision) · MIRU+ is… | 42 |
 | `app85_guide.js` | FIRST-TIME COACH MARKS One short spotlight tour per surface, shown once (… | 49 |
-| `app86_voicefix.js` | Shared server TTS audio, voice billing, and per-message controls | 87 |
+| `app86_voicefix.js` | Shared server TTS audio, voice billing, and per-message controls | 88 |
 | `app87_regcode.js` | SIGN-UP EMAIL CODE (Amazon SES) When the server can send mail (/auth?prov… | 37 |
 | `app88_memcall.js` | PAID MEMORY + TURN-TAKING STORY CALLS A) Memory is a 💎 purchase per stor… | 64 |
 | `app89_offsearch.js` | OFFICIAL STORIES IN SEARCH Stories published from the admin "剧本生产" studio… | 20 |
@@ -1019,7 +1030,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 224 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 642 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 951 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 187 |
@@ -1063,6 +1074,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `m102engine.js` | M102 deterministic state | 50 |
 | `miru_rules_full.js` | （文件头没有说明 —— 该补一句） | 3 |
 | `miru_rules.js` | MIRU 互动剧本结构与生成规则｜终版 — single source of truth Used by: the app's creator (… | 287 |
+| `opening_core.js` | 开场编剧（ · 产品级） 每个故事进入后都要有：故事背景、本章的时间 / 地点 / 人物 / 眼前的事 / 导语、两句引导对白 | 54 |
 | `pdfjs_embed.js` | \n * @licstart The following is the entire license notice for the\n * JavaScript code in this page\n *\n * Copyright 2023 Mozilla Foundation\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n *\n * Unless required by applicable law or agreed to in writing, software\n * distributed under the License is distributed on an \"AS IS\" BASIS,\n * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n * See the License for the specific language governing permissions and\n * limitations under the License.\n *\n * @licend The above is the entire license notice for the\n * JavaScript code in this page\n（原文只有段落横幅） | 3 |
 | `shorts_v2.js` | DRAMAS v2 — rewritten for tension (hook → escalation → reversal → freeze … | 13 |
 | `shorts_v3.js` | DRAMAS v3 — the 9 Veo-shot pilots: one beat per 8-second clip (the subtit… | 22 |

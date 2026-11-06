@@ -24,7 +24,7 @@ const AMBIENT_IDS = new Set(['rain', 'storm', 'wind', 'snowfall', 'blizzard', 'i
 const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing' };
 const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked' };
 const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal' };
-const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight' };
+const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo' };
 const ENDING = { 结局名: 'name', 触发条件: 'condition', 收束文字: 'text' };
 const ART = { 封面: 'cover', 人物图: 'portrait' };
 const NOT_FILLED = /^(?:不写|无|没有|选填)(?:[，,。].*)?$/;
@@ -78,7 +78,7 @@ function parseManuscript(text, opts) {
 
   const work = {}, people = [], chapters = [], endings = [], art = { portraits: [] };
   let person = null, chapter = null, scene = null, ending = null;
-  const newScene = () => { scene = { n: chapter.scenes.length + 1, tasks: {}, options: [], highlights: [], moments: [] }; chapter.scenes.push(scene); return scene; };
+  const newScene = () => { scene = { n: chapter.scenes.length + 1, tasks: {}, options: [], highlights: [], photos: [], moments: [] }; chapter.scenes.push(scene); return scene; };
 
   tokens.forEach(t => {
     const where = '第 ' + t.line + ' 行【' + t.label + '】';
@@ -110,6 +110,8 @@ function parseManuscript(text, opts) {
         if (label === '角色任务') { lines(value).forEach(l => { const m = l.match(/^([^：:]+)[：:]\s*(.+)$/); if (m) scene.tasks[m[1].trim()] = m[2].trim(); else err.push(where + '：要写成“角色名：任务”，这一行不对：' + l.slice(0, 20)); }); return; }
         if (opt) { const f = subFields(value, ['选项文字', '选项后果', '角色任务', '特殊标记']); scene.options.push({ line: t.line, label, ...f }); return; }
         if (label === '高光图') { if (!NOT_FILLED.test(value)) { const f = subFields(value, ['图名', '画面描述', '触发条件']); if (f.图名 || f.画面描述) scene.highlights.push({ line: t.line, ...f }); else err.push(where + '：要写“图名：”“画面描述：”“触发条件：”'); } return; }
+        /* 【照片】角色发给玩家、要解锁的照片（2026-11-06）。不写也行：玩家要看时导演会现拍 */
+        if (label === '照片') { if (!NOT_FILLED.test(value)) { const f = subFields(value, ['图名', '画面描述', '谁发', '什么时候发']); if (f.图名 || f.画面描述) scene.photos.push({ line: t.line, ...f }); else err.push(where + '：要写“图名：”“画面描述：”“谁发：”“什么时候发：”'); } return; }
         if (label === '主场景图') { if (!NOT_FILLED.test(value)) { const f = subFields(value, ['图名', '画面描述']); scene.image = { name: f.图名 || '', desc: f.画面描述 || (f.图名 ? '' : value) }; } return; }
         if (label === '关键特效') { if (!NOT_FILLED.test(value)) lines(value).forEach(l => scene.moments.push({ line: t.line, text: l })); return; }
         if (label === '开场建议') { scene.suggestions = lines(value); return; }
@@ -253,6 +255,13 @@ function parseManuscript(text, opts) {
         return { id: slot, name: h.图名 || '', when: h.触发条件 || '' };
       });
       if (hl.length) sc.highlights = hl;
+      const ph = s.photos.map((p, pi) => {
+        const slot = 'ph_' + id + '_' + (pi + 1), who = p.谁发 ? names(p.谁发) || '' : '';
+        if (p.谁发 && !who) err.push(st + '【照片】（第 ' + p.line + ' 行）：“谁发”写的「' + p.谁发 + '」不在人物小传里');
+        images.push({ slot, kind: '照片', chapter: n, name: p.图名 || '', desc: p.画面描述 || '', when: p.什么时候发 || '' });
+        return Object.assign({ id: slot, name: p.图名 || '', when: p.什么时候发 || '' }, who ? { who } : {});
+      });
+      if (ph.length) sc.photos = ph;
       return sc;
     });
     /* 【开场对白】：章节卡最后两句人物的话，让玩家知道怎么接 */

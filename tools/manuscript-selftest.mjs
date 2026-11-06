@@ -80,4 +80,9 @@ test('人设五项和开场对白都识别到', () => {
 test('不在表里的特效给提醒，不会放错', () => {
   const x = parseManuscript(sample.replace('【环境氛围】下雨', '【环境氛围】彩虹雨')); assert(x.warn.some(w => /彩虹雨/.test(w))); assert.equal(x.bible.chapters[0].scenes[0].fx, undefined);
 });
+test('【照片】识别成可解锁照片，并进生成清单', () => {
+  assert.deepEqual(s1.photos, [{ id: 'ph_c01s01_1', name: '修好的那一角', when: '玩家想看那幅画修好的样子', who: 'c01' }]);
+  assert(r.images.some(i => i.slot === 'ph_c01s01_1' && i.kind === '照片'));
+  assert(parseManuscript(sample.replace('谁发：沈砚', '谁发：王五')).err.some(e => /照片.*王五/.test(e)));
+});
 console.log('manuscript selftest: ' + checks + ' 项通过');

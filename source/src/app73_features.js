@@ -36,8 +36,9 @@ function day73() { return new Date().toISOString().slice(0, 10); }
 function lastAIStart73(th) { if (!th || !th.msgs || !th.msgs.length) return -1; let k = th.msgs.length - 1; while (k > 0 && th.msgs[k].who === "sys" && !th.msgs[k].ai) k--; if (!th.msgs[k].ai) return -1; const turn = th.msgs[k].turn73; let j = k; while (j > 0 && th.msgs[j - 1].ai && th.msgs[j - 1].turn73 === turn) j--; return j; }
 /* 一个版本 = 那几条消息 + 它带来的状态（好感度、今日好感上限账、剧情进度）。切版本时三样一起换。 */
 /* 关系线（lnk）、关系维度（rdv）、降级提示账（_stDown）也算状态：不跟着换的话，
-   切回低好感的版本会被当成「关系倒退」再插一张卡。 */
-const ST73 = ["love", "pk", "lnk", "rdv", "_stDown", "status", "mem", "tasks", "quest", "sugg", "turn94", "aiN", "cpAsked"];
+   切回低好感的版本会被当成「关系倒退」再插一张卡。
+   b98 = 故事圣经的剧情状态（谁在场、记忆、换章进度、照片计数）：2026-11-06 故事模式的重新生成也走这里。 */
+const ST73 = ["love", "pk", "lnk", "rdv", "_stDown", "status", "mem", "tasks", "quest", "sugg", "turn94", "aiN", "cpAsked", "b98"];
 function snap73(th) { const o = { g: JSON.parse(JSON.stringify((th.afDay || {}).g || {})) }; ST73.forEach(k => { o[k] = th[k] == null ? null : JSON.parse(JSON.stringify(th[k])); }); return o; }
 function restore73(th, st) { if (!st) return; if (th.afDay) th.afDay.g = JSON.parse(JSON.stringify(st.g || {})); ST73.forEach(k => { if (k in st) { if (st[k] == null) delete th[k]; else th[k] = JSON.parse(JSON.stringify(st[k])); } }); }
 function txt73(list) { return (list || []).map(m => m.txt || "").join(" "); }

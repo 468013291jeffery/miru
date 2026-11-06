@@ -46,7 +46,8 @@ stopCallRun=function(th,d){return new Promise(res=>{const cid=d.cid||mainOf(th),
 /* 4) per-bubble tools: a small 🔊 read-aloud and 🖼 picture button in the bottom-right corner of every character bubble */
 function bt86Btns(i){return '<span class="bt86">'+(typeof altOK==="function"&&altOK(i)?'<button data-alt123="'+i+'|1" aria-label="'+esc(LL("换个说法","Say it differently"))+'">⇄</button>':'')+(typeof reactOK==="function"&&reactOK(i)?'<button data-rx122="'+i+'" aria-label="'+esc(LL("回应","React"))+'">☺</button>':'')+'<button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>'}
 function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
- root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||!ch(m.who)||m.who==="me")return;
+ /* 2026-11-06 玩家：故事模式里角色的「动作 + 台词」框（k:box，who 是旁白 n，说话人在 m.say.who）也要有这一排 */
+ root.querySelectorAll('.m-row:not(.me)[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.locked||m.who==="me"||!(ch(m.who)||(m.k==="box"&&m.say&&ch(m.say.who))))return;
   const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",bt86Btns(i))});
  /* 2026-10-31：我自己的台词也有 🔊，用「我」的声音读（app62 ttsMyVoice） */
  root.querySelectorAll('.m-row.me[data-mi]').forEach(row=>{const i=+row.dataset.mi,m=th.msgs[i];if(!m||!m.txt||m.who!=="me"||m.k==="think"||m.k==="dir")return;const bub=row.querySelector(".bub");if(!bub||bub.querySelector(".bt86"))return;bub.insertAdjacentHTML("beforeend",'<span class="bt86 me86">'+(typeof reactOK==="function"&&reactOK(i)?'<button data-rx122="'+i+'" aria-label="'+esc(LL("回应","React"))+'">☺</button>':'')+'<button data-b86="play|'+i+'" aria-label="'+esc(t("msg.play"))+'">🔊</button><button data-b86="snap|'+i+'" aria-label="'+esc(t("msg.img"))+'">🖼</button></span>')});  /* 2026-11-04：和角色气泡下面那排一样（玩家反馈） */
@@ -55,10 +56,10 @@ function bt86Decorate(root){try{const th=S.threads[curT];if(!th||!root)return;
 /* boxes are often grouped at render time, so read exactly what is on screen */
 function bt86DomParts(el){const th=S.threads[curT],cast=(th&&th.cast)||[];const who=nm=>{nm=String(nm||"").replace(/[✱💭·*]/g,"").trim().split(/\s+/)[0];const id=cast.find(c=>ch(c)&&first(ch(c).n)===nm)||Object.keys(S.mine&&S.mine.chars||{}).find(c=>ch(c)&&first(ch(c).n)===nm);return id||"n"};
  return [...el.querySelectorAll("p")].filter(p=>p.offsetParent!==null).map(p=>{const tag=p.querySelector("b,span.mt,span.tpa,span.tpt,span[class^=tp]");const txt=(p.innerText||"").replace(tag?tag.innerText:"","").trim();return {who:tag?who(tag.innerText.split("·")[0]):"n",txt}}).filter(x=>x.txt)}
-function bt86Parts(m){return m.parts?m.parts.filter(p=>p&&p.txt).map(p=>({who:p.who==="n"||!ch(p.who)?"n":p.who,txt:String(p.txt)})):[{who:m.who,txt:String(m.txt||"")}]}
+function bt86Parts(m){return m.parts?m.parts.filter(p=>p&&p.txt).map(p=>({who:p.who==="n"||!ch(p.who)?"n":p.who,txt:String(p.txt)})).concat(m.say&&m.say.txt&&ch(m.say.who)?[{who:m.say.who,txt:String(m.say.txt)}]:[]):[{who:m.who,txt:String(m.txt||"")}]}
 window.addEventListener("click",e=>{const x=e.target.closest("[data-b86]");if(!x)return;e.preventDefault();e.stopImmediatePropagation();
  const [a,i]=x.dataset.b86.split("|"),th=S.threads[curT],m=th&&th.msgs[+i];if(!m)return;
- const box=x.closest(".m-box");if(a==="play"){try{voiceClear()}catch(e){console.debug("[b86] vq",e)}const P=box?bt86DomParts(box):bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
+ const box=x.closest(".m-box");if(a==="play"){try{voiceClear()}catch(e){console.debug("[b86] vq",e)}const P=box?bt86DomParts(box):m.say&&m.say.txt&&ch(m.say.who)?[{who:m.say.who,txt:String(m.say.txt)}]:bt86Parts(m);let k=0;const my=(TTS.seq86=(TTS.seq86||0)+1);const nx=()=>{if(TTS.seq86!==my||k>=P.length)return;const p=P[k++];speak(p.txt,p.who,nx)};nx();return}
  if(a==="snap"){if(box||m.parts){const P=box?bt86DomParts(box):bt86Parts(m),c=P.find(p=>p.who!=="n");imgSheet(th,{who:c?c.who:mainOf(th),k:"say",txt:P.map(p=>p.txt).join(" ").slice(0,300),pose:m.pose})}else if(m.who==="me")imgSheet(th,{who:mainOf(th),k:"say",txt:String(m.txt||"").slice(0,300),pose:m.pose});else imgSheet(th,m)}},true);
 /* 2026-10-27：从「包 renderChat」搬成钩子（批量迁移之一）。逻辑原样，只是不再包住渲染器。 */
 const __body_voicefix86 = function () { bt86Decorate($("#msgs")); };

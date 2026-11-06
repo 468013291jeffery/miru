@@ -81,6 +81,7 @@ function yn98(th) { if (th.b98.pname) return th.b98.pname; const c = ch(th.b98.y
 function gx98(th) { const w = wd(th.wid), b = bOf98(w); const g = (cardOf98(w, th.b98.you) || (b && b.player) || {}).gender; return g === "f" ? L98("（女性，用“她”指代）", " (female — she/her)") : L98("（男性，用“他”指代）", " (male — he/him)"); }
 function zhOK98(t) { return !Z98() || /[\u4e00-\u9fff]/.test(String(t || "")); }
 function line98(th, m) {
+  if (m.ph98 && ch(m.who)) return first(ch(m.who).n) + L98("发来一张照片：", " sent a photo: ") + m.ph98.what + (m.ph98.open ? L98("（玩家已经打开看了）", " (the player opened it)") : L98("（玩家还没打开）", " (not opened yet)"));
   if (m.k === "box" && m.say && ch(m.say.who)) { const nm = first(ch(m.say.who).n), a = (m.parts || []).map(p => p.txt).join(" ").replace(/\s+/g, " ").slice(0, 140); return (a ? nm + L98("（动作）", " (action)") + ": " + a + "\n" : "") + nm + ": " + String(m.say.txt || "").replace(/\s+/g, " ").slice(0, 220); }
   if (m.k === "card" && Array.isArray(m.lines98)) return m.lines98.filter(l => ch(l.who)).map(l => first(ch(l.who).n) + ": " + l.say).join("\n");
   if (m.who === "me" && m.k === "think") return ""; const x = String(m.txt || "").replace(/\s+/g, " ").slice(0, 220); if (!x || m.k === "card" || m.k === "img") return "";
@@ -89,6 +90,52 @@ function line98(th, m) {
 }
 function tail98(th, n) { return th.msgs.slice(-(n || 16)).map(m => line98(th, m)).filter(Boolean).join("\n"); }
 function present98(th, s) { return ((s && s.present) || []).map(k => byKey98(th, k)).filter(c => th.cast.includes(c)); }
+/* ---------- 谁真的在场（2026-11-06 玩家：只叫了一个人跟我上楼，下一场另一个人还在）----------
+   剧本的「在场人物」是作者的计划；实际站位跟着剧情走：导演每轮报 leave / arrive，离开这一场时报 with_player（谁跟玩家走）。
+   进下一场时，剧本安排了、但上一场没跟来的人先不在场，由导演决定要不要、怎么让他出现（arrive 里写一句交代）。 */
+/* 老剧本可能没写在场名单，那就全员都算在场（和原来一样） */
+function plan98(th, s) { const p = present98(th, s); return p.length || experience98(th) ? p : th.cast.filter(c => c !== th.b98.you); }
+function here98(th, s) {
+  const h = th.b98.here;
+  return s && h && h.scene === s.id ? h.ids.filter(c => th.cast.includes(c)) : plan98(th, s);
+}
+function setHere98(th, s, ids) { th.b98.here = { scene: s.id, ids: [...new Set(ids)].filter(c => th.cast.includes(c) && c !== th.b98.you) }; }
+function arrive98(th, s) {
+  const A = th.b98, behind = A.behind98 || [], plan = plan98(th, s);
+  A.away98 = plan.filter(c => behind.includes(c));
+  setHere98(th, s, plan.filter(c => !behind.includes(c)));
+  A.behind98 = null;
+}
+function names98(ids) { return ids.filter(id => ch(id)).map(id => first(ch(id).n)).join("、"); }
+/* 导演报的人员变动：arrive 先生效（来的人这一轮就能开口），leave 等他说完再走 */
+function move98(th, s, d, mode) {
+  const A = th.b98, ids = here98(th, s).slice(), came = [];
+  const idOf = x => String(x && typeof x === "object" ? x.id : x || "");
+  /* 没跟着玩家走的人（包括这一场中途离开的）都算留下了 */
+  if (mode === "exit") { const go = Array.isArray(d.with_player) ? d.with_player.map(idOf).filter(c => ids.includes(c)) : ids; A.behind98 = th.cast.filter(c => !go.includes(c)); return { came, leave: [] }; }
+  (Array.isArray(d.arrive) ? d.arrive : []).forEach(x => { const c = idOf(x); if (th.cast.includes(c) && c !== A.you && !ids.includes(c)) { ids.push(c); came.push({ id: c, how: String((x && x.how) || "").trim().slice(0, 80) }); } });
+  if (came.length) { setHere98(th, s, ids); A.away98 = (A.away98 || []).filter(c => !ids.includes(c)); }
+  return { came, leave: (Array.isArray(d.leave) ? d.leave : []).map(idOf).filter(c => ids.includes(c)) };
+}
+function left98(th, s, leave) {
+  if (!leave.length) return;
+  const A = th.b98, ids = here98(th, s).filter(c => !leave.includes(c));
+  setHere98(th, s, ids); A.away98 = [...new Set((A.away98 || []).concat(leave))];
+}
+function presence98(th, s, zh) {
+  const A = th.b98, here = names98(here98(th, s)), away = names98((A.away98 || []).filter(c => !here98(th, s).includes(c)));
+  return zh
+    ? "\n\n现在真正在玩家身边的人：" + (here || "没有人，玩家是一个人") + "。只有他们能开口、能被旁白写到。" +
+      (away ? "\n不在这里的人：" + away + "（剧本安排过，但没有跟着玩家来，或者已经离开）。他们不能说话，也不能被写成在场。只有剧情给出合理的理由（比如过了一段时间自己找过来），才能用 arrive 让他出现，并在 how 里用一句话写出他怎么出现的；没有理由就不要出现。" : "") +
+      "\nleave：这一轮有人真的离开了玩家身边（玩家让他先走、他自己走开、玩家只带别人走了）就填他的 id；只是说说、还没走不算。arrive：见上，默认空。"
+    : "\n\nWho is actually with the player now: " + (here || "nobody, the player is alone") + ". Only they may speak or appear in narration." +
+      (away ? "\nNot here: " + away + " (scripted, but didn't come along or already left). They can't speak or be written as present. Only with a believable reason may you bring one in via `arrive`, with one sentence in `how`." : "") +
+      "\nleave: ids of anyone who really left the player this turn. arrive: see above, default empty.";
+}
+function withAsk98(th, s, zh) {
+  return zh ? "\n\nwith_player：玩家要离开这里去下一个地方。根据刚才的对话判断谁跟着玩家一起走：玩家点名只带了谁、谁答应陪着、谁被留下或自己走了。填跟着走的人的 id 数组（一个人都不带就填 []）；对话里没有提到谁跟谁走，就填 null。"
+    : "\n\nwith_player: the player is leaving for the next place. From the conversation, who goes along (whom the player chose to bring, who agreed to come, who was left behind)? An array of ids ([] if the player goes alone); null if nobody's coming or going was discussed.";
+}
 function stage98(v) { return v >= 80 ? L98("深深在意", "deeply attached") : v >= 55 ? L98("心动", "drawn in") : v >= 30 ? L98("开始在意", "starting to care") : v >= 12 ? L98("有点好奇", "curious") : L98("戒备 / 不熟", "guarded / strangers"); }
 function mem98(th, cids, fact) { if (!fact) return; cids.forEach(c => { const cd = th.b98.cards[c] || (th.b98.cards[c] = { mem: [] }); cd.mem.push(String(fact).slice(0, 100)); if (cd.mem.length > 36) cd.mem.splice(1, cd.mem.length - 36); }); }
 const LANG98 = () => Z98() ? "Simplified Chinese" : "English";
@@ -99,8 +146,11 @@ function experience98(th) {
   const b = th && th.b98 && bOf98(wd(th.wid));
   return b && b.experience && b.experience.schema === 1 ? b.experience : null;
 }
+/* 2026-11-06 产品级：所有故事圣经进入时都显示故事背景和章节卡（原来只有写了 experience 的作品才有）。
+   章节卡缺的时间、眼前的事、导语和开场对白，由开场编剧补写（opening_core.js）：
+   剧本里写了就用剧本的；存量作品由 tools/opening-backfill.mjs 写进剧本；都没有才在这里临时生成，并按作品缓存在本机。 */
 function introductions98(th) {
-  const policy = experience98(th); if (!policy) return;
+  const policy = experience98(th);
   const { b, c, s } = scene98(th), A = th.b98; if (!c || !s) return;
   const seen = A.introductions98 || (A.introductions98 = {});
   // Stable IDs also prevent duplicates when a saved thread is reopened.
@@ -109,19 +159,59 @@ function introductions98(th) {
     appendMsg(th, Object.assign({who:'sys', k:'card', title, txt, intro98:key, at:Date.now()}, extra));
     seen[key] = true;
   };
-  if (policy.storyIntroduction) show('story', L98('故事背景', 'Story background'), LZ98(b.intro));
-  const intro = c.introduction;
-  if (policy.chapterIntroduction && intro) {
-    const people = present98(th, s).map(id => first(ch(id).n)).join('、');
-    const txt = [L98('时间：','Time: ') + LZ98(intro.time),
-      L98('地点：','Place: ') + LZ98(s.place), L98('人物：','Present: ') + people,
-      L98('眼前的事：','Now: ') + LZ98(intro.event), LZ98(intro.text)].join('\n');
-    /* 2026-11-06 玩家：章节卡最后加两句人物的话，让人一看就知道怎么接。这两句算他们真的说过，记进对话和记忆 */
-    const lines = (Array.isArray(intro.lines) ? intro.lines : []).map(l => ({ who: byKey98(th, l.who), say: LZ98(l.say) })).filter(l => l.say && th.cast.includes(l.who)).slice(0, 2);
-    if (!seen['chapter:' + A.ch] && lines.length) lines.forEach(l => mem98(th, present98(th, s), first(ch(l.who).n) + L98('说：', ' said: ') + l.say.slice(0, 60)));
-    show('chapter:' + A.ch, L98('第 ' + A.ch + ' 章 · ', 'Chapter ' + A.ch + ' · ') + LZ98(c.title), txt, lines.length ? { lines98: lines } : null);
+  if (policy ? policy.storyIntroduction : LZ98(b.intro)) show('story', L98('故事背景', 'Story background'), LZ98(b.intro));
+  if ((policy ? policy.chapterIntroduction : true) && A.sc === 0) {
+    const key = 'chapter:' + A.ch, fresh = !seen[key];
+    const intro = Object.assign({}, openingCache98(th, A.ch), c.introduction || {});
+    const lines = openingLines98(th, intro, s);
+    if (fresh && lines.length) lines.forEach(l => mem98(th, here98(th, s), first(ch(l.who).n) + L98('说：', ' said: ') + l.say.slice(0, 60)));
+    show(key, L98('第 ' + A.ch + ' 章 · ', 'Chapter ' + A.ch + ' · ') + LZ98(c.title), chapterText98(th, intro, s), lines.length ? { lines98: lines } : null);
+    /* 剧本的导语写了上一场没跟来的人：先把提到他的句子拿掉，再按实际在场的人重写这一章的开场（只改这一局，不进缓存） */
+    if (fresh && awayIn98(th, intro)) opening98(th, A.ch, true);
+    else if (!(intro.event && intro.text && lines.length)) opening98(th, A.ch);
   }
   save();
+}
+function chapterText98(th, intro, s) {
+  const people = here98(th, s).map(id => first(ch(id).n)).join('、');
+  const event = dropAway98(th, LZ98(intro.event)), text = dropAway98(th, LZ98(intro.text));
+  return [intro.time && L98('时间：','Time: ') + LZ98(intro.time), L98('地点：','Place: ') + LZ98(s.place), people && L98('人物：','Present: ') + people,
+    event && L98('眼前的事：','Now: ') + event, text].filter(Boolean).join('\n');
+}
+function openingLines98(th, intro, s) {
+  const here = here98(th, s); /* 没跟来的人不在开场对白里说话 */
+  return (Array.isArray(intro.lines) ? intro.lines : []).map(l => ({ who: byKey98(th, l.who), say: LZ98(l.say) })).filter(l => l.say && here.includes(l.who)).slice(0, 2);
+}
+const OPEN98 = { busy: {} };
+function openingCacheKey98(th, n) { return 'miru_opening98:' + ((wd(th.wid) || {}).community || th.wid) + ':' + n; }
+function openingCache98(th, n) { try { return JSON.parse(localStorage.getItem(openingCacheKey98(th, n)) || 'null') || {}; } catch (e) { return {}; } }
+function awayIn98(th, intro) {
+  const away = (th.b98.away98 || []).filter(id => ch(id)).map(id => first(ch(id).n));
+  return away.length && away.some(nm => (LZ98(intro.text) + LZ98(intro.event)).includes(nm)) ? away : null;
+}
+function dropAway98(th, txt) {
+  const away = (th.b98.away98 || []).filter(id => ch(id)).map(id => first(ch(id).n)); if (!away.length) return txt;
+  return (String(txt || '').match(/[^。！？!?]+[。！？!?]?/g) || []).filter(x => !away.some(nm => x.includes(nm))).join('');
+}
+async function opening98(th, n, fix) {
+  const k = th.id + ':' + n + (fix ? ':fix' : ''); if (OPEN98.busy[k] || typeof OPENING_CORE === 'undefined' || !(typeof liveOn === 'function' && liveOn())) return;
+  OPEN98.busy[k] = 1;
+  try {
+    const w = wd(th.wid), b = bOf98(w), c = b.chapters[n - 1], s = c.scenes[0], given = fix ? { time: (c.introduction || {}).time } : Object.assign({}, c.introduction || {});
+    const away = fix ? awayIn98(th, c.introduction || {}) || [] : [], keyOf = id => (cardOf98(w, id) || {}).key;
+    const o = { title: LZ98(b.title), premise: LZ98(b.premise), world: b.world, playerRole: LZ98((b.player || {}).role),
+      cast: b.cast.map(x => ({ key: x.key, name: LZ98(x.short || x.name), role: LZ98(x.role), voice: x.voice, archetype: x.archetype, expression: x.expression, sample: (x.sample_lines || []).slice(0, 2).join(' / ') })),
+      prev: b.chapters.slice(Math.max(0, n - 4), n - 1).map(x => LZ98(x.title) + '：' + String(x.goal || '').slice(0, 80)).concat(th.b98.sum.slice(-3)).concat(away.length ? [L98(away.join('、') + '没有跟着玩家来，这一章开头不在场，导语和对白里都不能出现', away.join(', ') + ' did not come along and is not here at the start of this chapter')] : []),
+      chapter: { n, title: LZ98(c.title), place: LZ98(s.place), time: LZ98(given.time), goal: c.goal, beat: s.beat, present: fix ? here98(th, s).map(keyOf).filter(Boolean) : s.present || [], given } };
+    const r = OPENING_CORE.validate(await ask(OPENING_CORE.prompt(o), { maxTokens: 900 }), o);
+    const add = { time: given.time || r.time, event: given.event || r.event, text: given.text || r.text, lines: given.lines && given.lines.length ? given.lines : r.lines };
+    if (!fix) try { localStorage.setItem(openingCacheKey98(th, n), JSON.stringify(add)); } catch (e) { console.warn('[opening] cache', e); }
+    const m = th.msgs.find(x => x.intro98 === 'chapter:' + n); if (!m) return;
+    const lines = openingLines98(th, add, s), had = !fix && Array.isArray(m.lines98) && m.lines98.length;
+    m.txt = chapterText98(th, add, s); if (lines.length && !had) { m.lines98 = lines; lines.forEach(l => mem98(th, here98(th, s), first(ch(l.who).n) + L98('说：', ' said: ') + l.say.slice(0, 60))); }
+    save(); if (curT === th.id) renderChat();
+  } catch (e) { console.warn('[opening] write', e); }
+  finally { delete OPEN98.busy[k]; }
 }
 /* 2026-11-05 玩家：开场和每章导语的版式写死 —— 一个不透明的框，标题 + 时间 / 地点 / 人物 / 眼前的事各占一行，全部左对齐。
    数据还是 m.title + m.txt 两个字符串（旧存档也能显示），这里只负责把它们排进固定结构；
@@ -179,7 +269,7 @@ function experienceContext98(th) {
   return '\n当前互动状态：' + JSON.stringify({romanceMode:state.romanceMode, focus:state.focus}) +
     (state.romanceMode==='friends' ? '\n用户已要求友伴：停止追求、争宠和暧昧，把邀请改成普通陪伴；不能靠换章恢复。' : '\n允许自然试探，不代表已经相爱或同意接触。') +
     '\n当前地点以本章场景为准；接受陪同先确认安排，只有用户点「下一章」按钮才正式转场。只把实际发生的事记成共同经历。' +
-    '\n当前章的在场表就是实际站位；不能把在场角色写成没跟过来或仍在上一地点。旁白不另改人物离场。' +
+    '\n现在真正在场的只有：' + (names98(here98(th,s)) || '玩家一个人') + '。在场的人不能写成没跟过来或仍在上一地点；不在场的人不能出现或开口。' +
     /* 只有作品写了 rainFromChapter 才有这条：《今晚，偏爱失控》第 7 章才下雨 */
     (experience98(th).rainFromChapter && th.b98.ch<experience98(th).rainFromChapter ? '\n雨夜事件尚未发生，不写下雨、雨后或衣服被雨打湿。' : '');
 }
@@ -188,7 +278,7 @@ function updateSpeaking98(th,act) {
   const {s}=scene98(th), state=experienceState98(th);
   const quiet=state.quietScene===s.id ? (state.quiet||[]) : [];
   state.quietScene=s.id;
-  for (const id of present98(th,s)) {
+  for (const id of here98(th,s)) {
     const name=first(ch(id).n), position=String(act.txt||'').indexOf(name);
     if(position<0)continue;
     const after=String(act.txt).slice(position+name.length);
@@ -202,7 +292,7 @@ function updateSpeaking98(th,act) {
   state.quiet=quiet;save();
 }
 function allowedSpeakers98(th,s) {
-  const present=present98(th,s),state=experienceState98(th);
+  const present=here98(th,s),state=experienceState98(th);
   return state.quietScene===s.id ? present.filter(id=>!(state.quiet||[]).includes(id)) : present;
 }
 function applyChoiceState98(th, option) {
@@ -239,7 +329,7 @@ function matchingChoice98(th, text) {
 async function director98(th, mode, act) {
   const { b, c, s } = scene98(th), A = th.b98, zh = Z98(), w = wd(th.wid);
   const policy = experience98(th);
-  const castL = (policy ? allowedSpeakers98(th, s) : th.cast).map(id => { const k = cardOf98(w, id); return "- id=" + id + " · " + first(ch(id).n) + "（" + LZ98(k && k.role) + "，" + (k ? k.tier : "") + "）"; }).join("\n");
+  const castL = allowedSpeakers98(th, s).map(id => { const k = cardOf98(w, id); return "- id=" + id + " · " + first(ch(id).n) + "（" + LZ98(k && k.role) + "，" + (k ? k.tier : "") + "）"; }).join("\n");
   const sceneL = c.scenes.map((x, i) => (i === A.sc ? "▶ " : (i < A.sc ? "✓ " : "· ")) + (i + 1) + ". " + LZ98(x.place) + (i === A.sc ? "：" + x.beat : "")).join("\n");
   const rel = th.cast.slice(0, 8).map(id => first(ch(id).n) + " " + Math.round(th.love[id] || 0)).join("，");
   const last = A.ch === b.chapters.length && A.sc === c.scenes.length - 1, judging = mode === "talk" || mode === "choice";
@@ -250,6 +340,7 @@ async function director98(th, mode, act) {
   if (policy && mode === "talk") task = zh
     ? "先接住用户刚说的内容或情绪，再安排一位角色提出一个当前场景内能参与的小行动；其他在场的人只在有具体新意或被点名时回应。用户明确疲惫、想安静或不想应酬时，默认只安排被点名或最合适的一人回应，不追加选择题。短回复不等于冷淡：降低负担，用具体示范或可选邀请承接。一次最多一个问题；不替用户接受邀请，不因聊天轮数自动转场。"
     : "Respond to the player's words or expressed emotion, then offer one small activity in this scene. Others present add something distinct only when relevant. Keep short replies low-effort; one question at most. Never accept an invitation for the player or change scenes on a timer.";
+  if (mode === "more") task = more98(th, zh);
   if (mode === "talk") task += responders98(th, act, zh);
   const p = (zh ? "你是互动剧的剧情智能体（导演）。你不替任何人说话；你只安排这一刻：谁开口、他们此刻想干什么。玩家是主角。你只知道下面列出的这一章，不知道后面的章节和结局。"
                 : "You are the story agent (director) of an interactive drama. You never speak for anyone; you arrange this moment: who speaks and what they want right now. The player is the protagonist. You only know this chapter, not later chapters or the ending.") +
@@ -260,7 +351,7 @@ async function director98(th, mode, act) {
     "\n" + (zh ? "他们对玩家的好感：" : "Their feeling toward the player: ") + rel +
     "\n\n" + (zh ? "第 " + A.ch + " / " + b.chapters.length + " 章「" + LZ98(c.title) + "」目标：" : "Chapter " + A.ch + " / " + b.chapters.length + " “" + LZ98(c.title) + "” goal: ") + (c.goal || "") +
     "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
-    "\n" + (zh ? "当前场景在场：" : "Present now: ") + (present98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
+    "\n" + (zh ? "当前场景在场：" : "Present now: ") + (here98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
     (s.ref_lines && s.ref_lines.length && mode === "enter" ? "\n" + (zh ? "锚点台词（角色可以用，可改写，不必照念）：\n" : "Anchor lines (characters may use or adapt them):\n") + s.ref_lines.map(r => (ch(byKey98(th, r.who)) ? first(ch(byKey98(th, r.who)).n) : r.who) + "：" + r.line).join("\n") : "") +
     (A.sum.length ? "\n" + (zh ? "前情：\n" : "So far:\n") + A.sum.slice(-8).join("\n") : "") +
     "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail98(th, 14) || (zh ? "（刚开始）" : "(just starting)")) +
@@ -273,9 +364,14 @@ async function director98(th, mode, act) {
     "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "主角们的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
+    heat98(th, zh, "director") +
+    (mode === "exit" ? withAsk98(th, s, zh) : presence98(th, s, zh)) +
+    (mode === "talk" || mode === "more" ? photoAsk98(th, act, zh) : "") +
     (judging ? gateAsk98(th) : "") +
-    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + stagedAsk98(th, s, zh) +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' + (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) +
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' +
+    (mode === "exit" ? '"with_player":null,' : '"leave":[],"arrive":[],') + (mode === "talk" || mode === "more" ? '"photo":null,' : '') +
+    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -306,8 +402,9 @@ async function actor98(th, cid, intent, turn) {
     (policy && s && s.interaction ? "\n眼前可参与的事（没有用户选择就尚未发生）：" + LZ98(s.interaction.invitation) : "") +
     "\n\n" + (zh ? "此刻在：" : "You're at: ") + LZ98(s && s.place) + "\n" + (zh ? "眼前：\n" : "Right here:\n") + (tail98(th, 12) || "") +
     "\n\n" + (zh ? "导演的提示（你可以有自己的主意）：" : "Director's note (you may have your own idea): ") + (intent || "") +
-    stance98(th, cid, turn, you, zh) + feeling98(zh) +
-    (policy ? "\n本轮硬约束：你此刻就在" + LZ98(s.place) + "，配置在场的人都在此处。不能把自己或用户写到吧台、门外等新地点，不能说在场人没跟过来。这里只回应或提出邀请，不完成跨场移动。动作只写你自己的眼前动作。" + experienceContext98(th) : "") +
+    stance98(th, cid, turn, you, zh) + feeling98(zh) + heat98(th, zh, "actor") + photoSay98(turn, zh) +
+    (policy ? "\n本轮硬约束：你此刻就在" + LZ98(s.place) + "，身边只有" + (names98(here98(th, s).filter(c => c !== cid)) || "玩家") + "和玩家。不能把自己或用户写到吧台、门外等新地点，不能说在场人没跟过来，也不能和不在场的人说话。这里只回应或提出邀请，不完成跨场移动。动作只写你自己的眼前动作。" + experienceContext98(th) : "") +
+    redo98(zh) +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（" + (policy ? "用第三人称姓名或省略主语，不用‘我抬手／我靠近’；只写有意义、眼前可见的动作，没有就空" : "第一人称「我…」") + "，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
            : "Your turn. Only yourself: an optional action (" + (policy ? "third person or no subject, visible meaningful gesture only, otherwise empty" : "first person") + ", ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
     '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
@@ -318,58 +415,69 @@ async function beat98(th, mode, act) {
   const A = th.b98; if (A.ended) return; if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
   if (busy) return; busy = true; if (act && window.EXPERIENCE124) EXPERIENCE124.positions.delete(th.id); typing(true); if (experience98(th)) dock98(); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
   try {
-    const { s } = scene98(th), pres = present98(th, s);
+    const { s } = scene98(th), pres = here98(th, s), start = th.msgs.length;
+    /* 重新生成要的「这一轮之前」：玩家那句已经在列表里，从这里往后都是这一轮的回复（app73 的 rg73 会回到这里重跑） */
+    const redo = typeof REDO73 !== "undefined" && REDO73, pre = (mode === "talk" || mode === "more") && !redo && typeof snap73 === "function" ? snap73(th) : null;
     updateSpeaking98(th,act);
     let d = null; try { d = await director98(th, mode, act); } catch (_) {}
     if (!d) { toast(L98("剧情智能体走神了，再试一次", "The story agent lost the thread — try again")); return; }
     if (d.narration) { const n0 = String(d.narration).trim(); }
-    if (act && act.mode !== "think") mem98(th, (experience98(th) ? pres : (pres.length ? pres : th.cast)), yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
+    if (act && act.mode !== "think") mem98(th, pres, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
     const policy = experience98(th);
-    let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && (policy ? allowedSpeakers98(th, s) : th.cast).includes(x.id)); if (policy) spk = spk.filter((x,i,all) => all.findIndex(y => y.id === x.id) === i); if (mode === "exit") spk = policy ? [] : spk.slice(0, 1);
+    if (!d.photo && mode === "talk" && act && act.mode !== "think" && PHOTO_ASK98.test(String(act.txt || ""))) d.photo = await photoOnly98(th, act);
+    const mv = move98(th, s, d, mode);
+    mv.came.forEach(x => appendMsg(th, { who: "n", k: "act", txt: x.how || L98(first(ch(x.id).n) + "走了过来。", first(ch(x.id).n) + " joins you."), at: Date.now() }));
+    let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && allowedSpeakers98(th, s).includes(x.id)); if (policy) spk = spk.filter((x,i,all) => all.findIndex(y => y.id === x.id) === i); if (mode === "exit") spk = policy ? [] : spk.slice(0, 1);
     if (policy && act && /累|想安静|不想应酬/.test(String(act.txt||"")) && !/你们都|两个人都/.test(String(act.txt||""))) spk = spk.slice(0,1);
     let nar = policy ? "" : String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
     if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
-    if (act && act.to && (policy ? allowedSpeakers98(th, s) : th.cast).includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
-    if (mode === "talk") spk = pickSpeakers98(th, act, spk);
+    if (act && act.to && allowedSpeakers98(th, s).includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
+    if (mode === "talk" || mode === "more") spk = pickSpeakers98(th, act, spk);
+    const ph = photoPlan98(th, d, mode, spk);
     let delivered98 = 0; const fx98a = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
     const fx98 = () => { fx98a(); highlight98(th, d.bg); d.bg = null; };
-    for (const sp of spk.slice(0, mode === "talk" ? 2 : 3)) {
-      const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to };
-      let r = null; try { r = await actor98(th, sp.id, sp.intent, turn98); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", ""), turn98); if (r2 && r2.say) r = r2; } } catch (_) {} if (!r) continue;
-      r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say) continue;
+    for (const sp of spk.slice(0, mode === "talk" || mode === "more" ? 2 : 3)) {
+      const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to, more: mode === "more", photo: ph && ph.from === sp.id ? ph : null };
+      let r = null; try { r = await actor98(th, sp.id, sp.intent, turn98); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", ""), turn98); if (r2 && r2.say) r = r2; } } catch (_) {}
+      if (!r && turn98.photo) r = { say: ph.cap };
+      if (!r) continue;
+      r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say && turn98.photo) r.say = ph.cap; if (!r.act && !r.say) continue;
       delivered98++;
       /* 2026-11-04 玩家：「为什么要分开」—— 和《午夜邀约》一样，同一个人的动作 + 台词放进同一个框（k:box：上面动作、下面台词） */
       const act98 = r.act ? actionView98(th, sp.id, r.act).slice(0, 140) : "", say98 = r.say ? String(r.say).slice(0, 220) : "";
       if (act98 && say98) appendMsg(th, { who: "n", k: "box", pk: 1, parts: [{ who: sp.id, k: "act", txt: act98 }], txt: act98, last: say98, lastWho: sp.id, say: { who: sp.id, txt: say98 }, at: Date.now(), ai: 1 });
       else if (act98) appendMsg(th, { who: sp.id, k: "act", txt: act98, at: Date.now() });
       else if (say98) appendMsg(th, { who: sp.id, k: "say", txt: say98, at: Date.now(), ai: 1 });
+      if (turn98.photo) photoSend98(th, ph);
       fx98();
       const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
       if (r.remember) mem98(th, [sp.id], r.remember);
-      if (r.say) mem98(th, (policy ? pres : (pres.length ? pres : th.cast)).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
+      if (r.say) mem98(th, here98(th, s).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
     }
     if (policy && mode === "choice" && !delivered98) { toast(L98("角色回复未完成，选择尚未提交，可以重试", "The character response failed; the choice was not submitted. Try again.")); return false; }
-    fx98(); A.turns++; th.rounds++;
+    left98(th, s, mv.leave);
+    fx98(); A.turns++; th.rounds++; A.more98n = mode === "more" ? (A.more98n || 0) + 1 : 0;
     if (mode === "talk" || mode === "choice") gate98(th, d);
     if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
     if (d.state) A.flags.push(String(d.state).slice(0, 60));
     if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
-    useUnits(aiCost() * (mode === "talk" ? 1 : 2));
+    useUnits(aiCost() * (mode === "talk" || mode === "more" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
     if (items.length && typeof chg96 === "function") chg96(items);
     if (d.ending && mode === "exit") { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
       appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L98("结局", "Ending") + " · " + (e ? LZ98(e.name) : A.end), txt: String(d.endingText || (e && e.text) || "").slice(0, 500), at: Date.now() }); }
+    turn98(th, start, pre, mode, act);
     th.at = Date.now(); save(); return true;
   } finally { busy = false; typing(false); try { renderChat(); } catch (_) {} }
 }
 /* ---------- scene flow: enter → talk → (choice) → next ---------- */
 async function enter98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (!s) return; A.phase = "enter";
-  if (experience98(th)) introductions98(th);
-  else if (A.sc === 0) appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · ", "Chapter " + A.ch + " · ") + LZ98(c.title), txt: "", at: Date.now() });
-  /* 固定导语里已经有「地点」一行，不再重复一张地点卡 */
-  if (!experience98(th)) appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
+  arrive98(th, s);
+  introductions98(th);
+  /* 章节卡里已经有「地点」一行；一章里换场时才补一张地点卡 */
+  if (A.sc > 0) appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
   const As = OFF94.assets[wd(th.wid).community] || {};
   const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; A.bgHl = null; try { sceneBg(th, key); } catch (_) {} }
   preload98(th, s, As);
@@ -514,6 +622,7 @@ function pickSpeakers98(th, act, spk) {
 }
 function stance98(th, cid, turn, you, zh) {
   const to = turn.to && ch(turn.to) ? first(ch(turn.to).n) : "";
+  if (turn.more) return zh ? "\n这一轮" + you + "没有开口，只是在等你们说下去。顺着你刚才的话或眼前的事继续：把没说完的心里话说出来、补一个动作、或者把话题往前推一步。不要重复说过的话，不要问“你怎么不说话”。" : "\n" + you + " said nothing; they're waiting for you to go on. Continue from your last words or what's in front of you; don't repeat yourself or ask why they're quiet.";
   if (turn.think) return zh ? "\n这一轮" + you + "没有说话，只是在想事情。你听不到别人心里的话，只能对看得见的表情、沉默或小动作作出反应。" : "\n" + you + " said nothing this turn; you can't hear thoughts, only react to what you can see.";
   if (turn.role === "aside") return zh ? "\n" + you + "这句话" + (to ? "是对" + to + "说的，" : "") + "不是冲你来的，前面已经有人接了。你只是插一句：可以附和加码、唱反调、趁机争取或者吃醋，理由是：" + (turn.why || "你另有立场") + "。短一点，可以冲着" + you + "，也可以回敬对方，不要重复他的意思。" : "\nThat line wasn't aimed at you and someone already answered. Just add your own angle (" + (turn.why || "") + "), briefly; don't repeat them.";
   return zh ? "\n" + you + "这句话" + (to === first(ch(cid).n) ? "是直接对你说的" : "最该由你来接") + "，正面回应。" : "\nThis line is yours to answer; respond directly.";
@@ -528,6 +637,196 @@ function feeling98(zh) {
     ? "\n说话要像一个有欲望、有情绪的活人：先想清楚这一刻你想从" + "对方那里得到什么，再决定嘴上说几分、藏几分。按你的人设来，嘴硬的就嘴硬，热烈的就热烈，让人一听就知道是你。可以调情、挑逗、试探、吃醋、示弱，话里要有潜台词。不要说客服式的“好的”“没问题”“听你的”，不要每句都提问，玩家没接的问题不要连着追问，换个方式靠近；不要解释自己的情绪。前提是尊重玩家当下的意愿。"
     : "\nSpeak like a living person with desire and feelings: know what you want from them right now, then decide how much to say and how much to hide. Stay true to your type so you're recognizable. Flirt, tease, test, get jealous, show weakness; leave subtext. No customer-service lines, not every line a question, don't keep pressing a question they ignored, don't explain your feelings. Always respect what the player wants right now.";
 }
+/* ---------- 点屏继续（2026-11-06 玩家：有时候想让他们多说两句，不想每句都自己接）----------
+   玩家没开口，只点了一下屏幕：剧情往前走一小步，不换场。连着点了几次，就把话头交回给玩家。 */
+function more98(th, zh) {
+  const n = th.b98.more98n || 0;
+  return (zh ? "玩家没有说话，只是轻点屏幕，想让你们接着说下去。顺着刚才的话头往前走一小步：刚才那个人可以把没说完的心里话说出来、补一个动作，另一个人可以接茬、较劲或吃醋，也可以眼前发生一件小事。仍然围绕玩家，不推进到下一场，不替玩家说话、做动作或做决定。默认一个人开口，最多两个人。不要问玩家为什么不说话。"
+             : "The player said nothing; they tapped to let you keep going. Move one small step forward from where the talk left off: finish an unsaid thought, add a gesture, let someone else chime in, compete or get jealous, or let a small thing happen here. Stay centred on the player; don't move scenes; never speak or decide for the player. One speaker by default, two at most. Don't ask why the player is quiet.") +
+    (n >= 2 ? (zh ? "玩家已经连着点了 " + (n + 1) + " 次：这一次要把一个具体的问题或邀请交给玩家，让他接话。" : " They've tapped " + (n + 1) + " times in a row: this time hand them a concrete question or invitation.") : "");
+}
+/* ---------- 尺度跟随（2026-11-06 玩家：往深了聊、说得露骨时，角色不跟同样的深度）----------
+   作品尺度（剧本 heat / 后台作品标签）× 玩家自己选的口味 × 年龄确认，算出这部作品此刻的上限（和单人聊天同一套 dialogueHeat）。
+   上限以内：玩家多直白，角色就多直白，不装傻、不岔开、不说教。超过上限：不出戏、不拒绝玩家这个人，用人设接住（吊着、反将一军、放慢），
+   或者在最紧的那一刻切走（灯灭了、门关上了），之后用暗示接回来。 */
+function heatOf98(th) {
+  try { if (typeof dialogueHeat === "function") return dialogueHeat(th); } catch (e) { console.warn("[b98] heat", e); }
+  return "slow";
+}
+const HEAT98 = {
+  fluff: ["温柔甜：心动、拌嘴、差一点碰到，不写亲热。", "warm and sweet: crushes, banter, almost-touching; no making out"],
+  slow: ["慢热：可以暧昧、拉扯、靠近，感情到了可以牵手、拥抱、一个吻；不写亲热的过程。", "slow burn: tension, closeness; when earned a hand, a hug, a kiss; no intimate scenes"],
+  steamy: ["火热：可以直白地调情、说想要对方、亲吻和身体的贴近都可以写；再往下就在最紧的那一刻切走。", "steamy: direct flirting, saying you want them, kissing and closeness; beyond that, cut away at the tightest moment"],
+  mature: ["成人：成年人的欲望和亲密可以正面写，不用回避；只是不写性器官和性行为的细节过程。", "mature: adult desire and intimacy written head-on; no explicit anatomy or step-by-step sex"],
+  explicit: ["成人露骨（玩家已确认成年）：玩家说什么尺度，角色就用同样的尺度直接回应，有欲望、有身体、有张力；双方随时可以放慢或说不。", "explicit (player confirmed 18+): match the player's intensity directly, with desire, bodies and tension; either side may slow down or say no"]
+};
+function heat98(th, zh, who) {
+  const h = heatOf98(th), rule = HEAT98[h] || HEAT98.slow, top = h === "explicit";
+  if (who === "director") return zh
+    ? "\n\n尺度：本作品此刻的上限是「" + rule[0] + "」玩家往深处聊、说得越来越大胆时，给角色的 intent 要跟上同样的温度，不要安排装傻、岔开话题或说教。" + (top ? "" : "玩家要的超过上限时，安排角色用人设接住（吊着、反将一军、放慢节奏），或者在最紧的那一刻用旁白切走，之后用暗示接回来；不要安排冷冰冰的拒绝。")
+    : "\n\nHeat: this story's ceiling right now is: " + rule[1] + ". When the player goes deeper or bolder, give characters intents at the same temperature; never plan playing dumb, changing the subject or lecturing." + (top ? "" : " If they ask for more than the ceiling, have the character catch it in character (tease, turn it back, slow it down) or cut away at the tightest moment and come back with implication; never a cold refusal.");
+  return zh
+    ? "\n尺度跟着玩家走：玩家这一句有多直白、多大胆，你就用同样的温度回应，可以更撩，但不要比他退得更远；不装傻、不岔开话题、不说教、不像客服一样拒绝。本作品的上限是「" + rule[0] + "」" + (top ? "" : "玩家要的超过这个上限时，不出戏、不拒绝他这个人：用你的人设接住（吊着他、反将一军、把节奏放慢、说“剩下的留到……”），或者停在最紧的那一刻。")
+    : "\nMatch the player's heat: as direct and bold as their line, never colder; no playing dumb, changing the subject, lecturing or customer-service refusals. This story's ceiling: " + rule[1] + "." + (top ? "" : " If they ask past it, stay in character and don't reject them: tease, turn it back, slow down, promise the rest for later, or stop at the tightest moment.");
+}
+/* 重新生成：换一个角度，而不是把原话换个说法 */
+function redo98(zh) {
+  return typeof REDO73 !== "undefined" && REDO73 ? (zh ? "\n\n重新生成：玩家想看这一轮的另一个版本。换一个明显不同的走向：换一个人开口或换一种态度、换一个动作和第一句话，但仍然回应玩家同一句话、仍然符合人设。" : "\n\nREGENERATE: the player wants another version of this turn. Take a clearly different direction (another speaker or attitude, a different first move and line) while answering the same input in character.") : "";
+}
+/* 一轮成功后：给这一轮的回复打上同一个轮次号（app73 靠它找「最新一轮」），并留下重新生成要用的快照 */
+function turn98(th, start, pre, mode, act) {
+  const id = Date.now().toString(36) + ":" + start;
+  if (pre) {
+    th.msgs.slice(start).forEach(m => { if (m.who !== "me" && m.who !== "sys") { m.ai = 1; m.turn73 = id; } });
+    th._pre73 = pre; th._ctx73 = { kind: "b98", mode, act: act ? Object.assign({}, act) : null };
+  } else if (!(typeof REDO73 !== "undefined" && REDO73)) { delete th._pre73; delete th._ctx73; }
+}
+
+/* ---------- 照片（2026-11-06 玩家：说“我想看看…”时，对方应该发来一张要解锁的、符合剧情的照片）----------
+   谁决定：导演。它看得到玩家这句话和眼前的剧情，决定由谁发、拍的是什么（photo 字段）；发照片的人用自己的台词把照片递过来。
+   两种时机：玩家要看（“我想看看…”“给我看看…”“拍给我看”）；或者连着两章（experience.photoEvery 可改）没发过，就在本章最高光的那一刻主动发一张。
+   图从哪来：剧本给了照片图（scene.photos + 资源 id）就用；没有就按角色立绘生成同一张脸的照片；生成不了而照片拍的是他本人，就用他的立绘。
+   照片先模糊着，玩家花 💎 解锁（MIRU+ 免费），解锁后存进相册。照片尺度永远不过线：衣着完整，最多擦边。 */
+const PHOTO98 = /(?:想|要|让我|给我|能不能|可以|让我们)(?:再)?(?:看看|看一下|看下|瞧瞧|瞧一眼|看一眼)|拍(?:给我|一张|张|个)|发(?:我)?(?:张|个|一张|几张)?(?:照片|自拍|相片)|(?:照片|自拍|相片)|show me|send (?:me )?(?:a )?(?:photo|pic|selfie)|picture of/i;
+function exch98(th) { const A = th.b98; return A.tkAt === A.ch + ":" + A.sc ? A.tkN || 0 : 0; }
+/* 玩家明说要照片、导演却没安排时，单独问一次（混在导演的一大堆规则里，模型常常漏掉） */
+const PHOTO_ASK98 = /照片|相片|自拍|拍(?:给我|一张|张|下来)|发(?:我)?(?:一张|张|几张)|给我看看|想看看|show me|photo|pic|selfie/i;
+async function photoOnly98(th, act) {
+  const { s } = scene98(th), zh = Z98(), block = photoAsk98(th, act, zh); if (!block) return null;
+  try {
+    const r = await ask((zh ? "你是互动恋爱剧的导演，只负责一件事：玩家想看东西时，安排谁发一张照片给他。" : "You are the director of an interactive romance; your only job: when the player wants to see something, arrange who sends a photo.") +
+      "\n" + (zh ? "地点：" : "Place: ") + LZ98(s && s.place) + "\n" + (zh ? "在场（id）：" : "Present (ids): ") + here98(th, s).map(id => first(ch(id).n) + "=" + id).join("，") +
+      "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + tail98(th, 8) + "\n\n" + (zh ? "玩家这一轮：" : "Player: ") + act.txt + (act.to && ch(act.to) ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") +
+      block + '\n\nReply with ONLY JSON: {"photo":null} in ' + LANG98() + ".", { maxTokens: 300 });
+    return r && r.photo && typeof r.photo === "object" ? r.photo : null;
+  } catch (e) { console.warn("[b98] photo ask", e); return null; }
+}
+function photoDue98(th) { const A = th.b98, every = +((experience98(th) || {}).photoEvery) || 2; return A.ch - (A.photoCh || 0) >= every && A.photoAutoCh !== A.ch; }
+function photoCap98(th, zh) {
+  const hot = ["steamy", "mature", "explicit"].includes(heatOf98(th));
+  return zh ? (hot ? "可以性感、暧昧（领口敞开、湿发、近距离、镜子里的背影），但不露点、不裸体、没有性行为" : "日常、好看、有氛围，衣着完整") : (hot ? "sensual and suggestive (open collar, wet hair, close-up, mirror shot) but no nudity or sex" : "everyday, attractive, atmospheric, fully clothed");
+}
+function photoAsk98(th, act, zh) {
+  const A = th.b98, asked = !!(act && act.mode !== "think" && PHOTO98.test(String(act.txt || ""))), due = photoDue98(th);
+  const n = (A.photoN98 && A.photoN98.ch === A.ch) ? A.photoN98.n : 0;
+  if ((!asked && !due) || n >= 4) return "";
+  const { s } = scene98(th), list = ((s && s.photos) || []).filter(p => p.id && (OFF94.assets[wd(th.wid).community] || {})[p.id]);
+  return zh
+    ? "\n\n照片 photo，默认 null。" +
+      (asked ? "\n- 玩家这一轮想看东西。照片是玩家真正能看到画面的唯一方式，所以只要他想看的是一样东西、一个人或一段过去（不是“看看你怎么说”这种比喻），就必须填 photo：由被要的人（没点名就由最合适的在场者）发一张。当面也一样：把手机里的照片发给他，或者当场拍下来发给他。照片要和眼下的剧情对得上。" : "") +
+      (due ? "\n- 已经两章没给玩家发过照片了，这一章要在最高光的那一刻主动发一张：情绪到了最高点、暧昧最浓、刚刚发生了只属于你们的事，或者分开前想让对方记住的一刻（比如一张刚拍的合照、一张只给玩家看的自拍）。" + (exch98(th) >= pacing98(th).min ? "本章已经聊了 " + exch98(th) + " 轮，这一轮只要气氛对了就发，不要再等。" : "平平常常的时候填 null。") : "") +
+      (list.length ? "\n- 剧本给这一场备了照片，合适就直接用（写进 asset）：" + list.map(p => p.id + "（" + (p.name || "") + (p.when ? "；" + p.when : "") + "）").join("；") : "") +
+      '\n写成 {"from":"发照片的人的 id","what":"照片画面，30 字内：谁、在做什么、穿着、光线、角度，像手机随手拍的","cap":"他发照片时说的一句话，20 字内，按他的人设","asset":null}。' +
+      "照片里出现的人必须都是成年人：玩家想看他小时候、学生时代的样子，不拍小孩，改发一张成年后的旧照或一件旧物，由他用一句话带过。尺度：" + photoCap98(th, zh) + "。玩家要看的超过这个尺度（比如让他脱衣服）时，照片不越线，由他按人设接住：发一张擦边但不露的，配一句吊胃口的话。"
+    : "\n\nphoto, default null." +
+      (asked ? "\n- The player seems to want to see something. If they really mean a thing or a person (not a figure of speech), the person asked (or the most fitting one present) takes a photo of what they can really shoot here and now, true to the current scene." : "") +
+      (due ? "\n- No photo in two chapters. Send one only at a true high point (peak emotion, strongest tension, a moment just for the two of you). Otherwise null." : "") +
+      (list.length ? "\n- Prepared photos for this scene (put the id in asset if one fits): " + list.map(p => p.id + " (" + (p.name || "") + ")").join("; ") : "") +
+      '\nFormat {"from":"sender id","what":"what the photo shows, under 25 words, like a phone snapshot","cap":"one short line he sends with it, in his voice","asset":null}. Everyone in it must be an adult: if asked for a childhood photo, send an adult-era photo or an old keepsake instead. Limit: ' + photoCap98(th, zh) + ". If asked for more than that (e.g. to undress), the photo stays within it and he plays it in character with a teasing line.";
+}
+function photoSay98(turn, zh) {
+  if (!turn.photo) return "";
+  return zh ? "\n你这一轮给玩家发了一张照片，拍的是：" + turn.photo.what + "。你的台词就是发照片时说的那句话（可以参考：" + (turn.photo.cap || "") + "），不要描述照片里有什么，让他自己打开看。"
+            : "\nThis turn you send the player a photo of: " + turn.photo.what + ". Your line is what you say as you send it (e.g. " + (turn.photo.cap || "") + "); don't describe the photo.";
+}
+/* 导演给的 photo 收紧成能用的样子；发照片的人这一轮一定开口 */
+const MINOR98 = /小时候|童年|男孩|女孩|小孩|孩子|儿童|婴儿|宝宝|少年|少女|小学|初中|高中|中学|未成年|(?:^|[^\d])(?:[1-9]|1[0-7])\s*岁|[一二三四五六七八九十]{1,3}岁|\b(?:child|kid|boy|girl|teen|baby|school ?boy|school ?girl)\b/i;
+function photoPlan98(th, d, mode, spk) {
+  const p = d && d.photo; if (!p || typeof p !== "object" || (mode !== "talk" && mode !== "more")) return null;
+  const { s } = scene98(th), from = String(p.from || ""), what = String(p.what || "").trim().slice(0, 80);
+  /* 照片里只能有成年人：导演写成了小时候的照片就不发（图片生成也不接受） */
+  if (!allowedSpeakers98(th, s).includes(from) || !what || MINOR98.test(what)) return null;
+  if (!spk.some(x => x.id === from)) { if (spk.length >= 2) spk.pop(); spk.push({ id: from, intent: "", role: spk.length ? "aside" : "main", why: L98("给玩家发照片", "sending a photo") }); }
+  const As = OFF94.assets[wd(th.wid).community] || {}, asset = p.asset && As[p.asset] && ((s && s.photos) || []).some(x => x.id === p.asset) ? String(p.asset) : null;
+  return { from, what, cap: String(p.cap || "").trim().slice(0, 40), asset, auto: !PHOTO98.test(String((th.msgs.filter(m => m.who === "me").slice(-1)[0] || {}).txt || "")) };
+}
+function photoSend98(th, ph) {
+  const A = th.b98, id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  A.photoCh = A.ch; if (ph.auto) A.photoAutoCh = A.ch;
+  A.photoN98 = A.photoN98 && A.photoN98.ch === A.ch ? { ch: A.ch, n: A.photoN98.n + 1 } : { ch: A.ch, n: 1 };
+  const m = { who: ph.from, k: "card", txt: ph.cap || L98("一张照片", "A photo"), ph98: { id, what: ph.what, cap: ph.cap, asset: ph.asset, st: "gen" }, at: Date.now() };
+  appendMsg(th, m); m.ai = 1;
+  photoGen98(th, m);
+}
+const PH98 = { busy: {} };
+function photoPaint98(th, m) {
+  if (curT !== th.id) return; const i = th.msgs.indexOf(m), el = document.querySelector('.ph98row[data-ph98row="' + m.ph98.id + '"]');
+  if (el && i >= 0) el.outerHTML = photoHTML98(m, i);
+}
+async function photoGen98(th, m) {
+  const p = m.ph98; if (!p || PH98.busy[p.id]) return;
+  PH98.busy[p.id] = 1; p.st = "gen"; photoPaint98(th, m);
+  try {
+    const As = OFF94.assets[wd(th.wid).community] || {};
+    let url = p.asset && As[p.asset];
+    if (!url) url = await photoImage98(th, m);
+    p.src = /^data:/.test(url) ? mediaWrap("ph98:" + p.id, await shrink98(url)) : url;
+    p.st = p.open ? "open" : "locked";
+  } catch (e) { console.warn("[b98] photo", e); p.st = "fail"; }
+  finally { delete PH98.busy[p.id]; save(); photoPaint98(th, m); }
+}
+async function photoImage98(th, m) {
+  const w = wd(th.wid), c = ch(m.who), k = cardOf98(w, m.who) || {}, { s } = scene98(th), p = m.ph98;
+  let spec = null;
+  try {
+    spec = await ask("Turn this into ONE English prompt (max 60 words) for a photoreal smartphone photo that " + (c ? c.n : "a man") + " (" + (k.age || 30) + ", " + (k.gender === "f" ? "woman" : "man") + "; looks: " + String(k.bio || Lz(c && c.looks) || "").slice(0, 200) + ") just took and sent in a romance chat.\nWhat the photo shows: " + p.what + "\nWhere: " + LZ98(s && s.place) +
+      "\nRules: vertical phone photo, natural light, candid, adults only, " + photoCap98(th, false) + ", no text, no watermark. person = true if he himself is in the photo.\nReply with ONLY JSON: {\"prompt\":\"...\",\"person\":true}", { maxTokens: 300 });
+  } catch (e) { console.warn("[b98] photo prompt", e); }
+  const prompt = String((spec && spec.prompt) || p.what).slice(0, 600), person = !spec || spec.person !== false, ref = typeof aiRefUrl === "function" ? aiRefUrl(m.who) : null;
+  if (MINOR98.test(prompt)) throw new Error("adults only");
+  if (typeof AIG !== "undefined" && AIG.mcp) {
+    try {
+      /* 拍他本人：只用「同一张脸」的改图，试两次；换成凭空生成会是另一张脸，宁可用立绘 */
+      if (person && ref) {
+        for (let t = 0; t < 2; t++) { try { const src = aiImgFrom(await AIG.mcp.callTool(AIG.srv, AIG.edit, { input_image: ref, prompt: "Keep this exact person's face, hair and build unchanged. " + prompt, steps: 20, guidance_scale: 2.5, randomize_seed: true }, { cache: false })); if (src) return src; } catch (e) { console.warn("[b98] photo edit", e); } }
+      } else {
+        const src = aiImgFrom(await AIG.mcp.callTool(AIG.srv, AIG.tool, { prompt, width: 576, height: 1024, num_inference_steps: 24, randomize_seed: true }, { cache: false })); if (src) return src;
+      }
+    } catch (e) { console.warn("[b98] photo gen", e); }
+  }
+  /* 生成不了：拍的是他本人，就发他的立绘；拍的是别的东西，宁可失败也不发一张对不上的图 */
+  const art = person && typeof artSrc === "function" ? artSrc(m.who) : "";
+  if (art && !/^data:image\/svg/.test(art)) return art;
+  throw new Error("no image");
+}
+function shrink98(src) {
+  return new Promise(ok => { const im = new Image(); im.addEventListener("load", () => { try { const r = Math.min(1, 720 / Math.max(im.naturalWidth, im.naturalHeight)), cv = document.createElement("canvas"); cv.width = Math.round(im.naturalWidth * r); cv.height = Math.round(im.naturalHeight * r); cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height); ok(cv.toDataURL("image/jpeg", 0.82)); } catch (e) { ok(src); } }, { once: true }); im.addEventListener("error", () => ok(src), { once: true }); im.src = src; });
+}
+function photoHTML98(m, i) {
+  const p = m.ph98, c = ch(m.who), nm = c ? first(c.n) : "", src = p.src ? albumSrc({ id: "ph98" + p.id, src: p.src }) : "";
+  const over = p.st === "open" ? "" : p.st === "locked"
+    ? '<div class="ph98lk"><i>🔒</i><b>' + esc(L98(nm + " 发来一张照片", nm + " sent you a photo")) + '</b><button data-ph98open="' + p.id + '">' + (S.plus ? L98("打开看看", "Open") : L98("解锁看看", "Unlock") + " · 💎 " + PRICES.pic) + '</button></div>'
+    : p.st === "fail" ? '<div class="ph98lk"><b>' + L98("照片没发出来", "The photo didn't come through") + '</b><button data-ph98retry="' + p.id + '">' + L98("重新发送", "Try again") + '</button></div>'
+    : '<div class="ph98lk"><span class="ph98spin"></span><b>' + esc(L98(nm + " 正在发照片…", nm + " is sending a photo…")) + '</b></div>';
+  return '<div class="m-row ph98row" data-ph98row="' + p.id + '"><div class="av" style="width:30px;height:30px"><img src="' + artSrc(m.who) + '" alt=""></div><div class="ph98col"><div class="m-who" style="color:' + (c ? c.pal[0] : "") + '">' + esc(nm) + '</div>' +
+    '<div class="ph98 ph98-' + p.st + '" data-ph98="' + p.id + '">' + (src ? '<img data-amid="ph98' + p.id + '" src="' + esc(src) + '" alt="">' : '<span class="ph98ph"></span>') + over + '</div></div></div>';
+}
+function photoOpen98(th, id) {
+  const m = th.msgs.find(x => x.ph98 && x.ph98.id === id); if (!m || m.ph98.st !== "locked") return;
+  if (!spend(PRICES.pic, "pic")) return;
+  const p = m.ph98; p.st = "open"; p.open = 1;
+  const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: m.who, src: p.src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24;
+  mem98(th, [m.who], L98(yn98(th) + "打开了你发的照片：" + p.what, yn98(th) + " opened your photo: " + p.what));
+  if (typeof loveAllowed === "function" && loveAllowed(th, m.who)) loveWrite(th, m.who, 2, "story98:photo");
+  save(); photoPaint98(th, m);
+}
+/* ---------- 点屏继续：点聊天区的空白（或者点一句话，等一下确认不是双击回 ❤️）---------- */
+function tapOK98(th) {
+  const A = th && th.b98;
+  return !!(A && !A.ended && !busy && A.phase === "talk" && !(typeof RG_PENDING73 !== "undefined" && RG_PENDING73) && Date.now() - (A.tap98at || 0) > 1500 &&
+    th.msgs.some(m => m.ai && m.who !== "me") && !(window.getSelection && String(window.getSelection())));
+}
+function cont98(th) { if (!tapOK98(th)) return; th.b98.tap98at = Date.now(); S.tap98n = (S.tap98n || 0) + 1; th.rounds++; return beat98(th, "more", null); }
+let TAP98 = null;
+document.addEventListener("click", e => {
+  const th = S.threads[curT]; if (!th || !th.b98) return; let x;
+  if ((x = e.target.closest("[data-ph98open]"))) { e.stopImmediatePropagation(); photoOpen98(th, x.dataset.ph98open); return; }
+  if ((x = e.target.closest("[data-ph98retry]"))) { e.stopImmediatePropagation(); const m = th.msgs.find(y => y.ph98 && y.ph98.id === x.dataset.ph98retry); if (m) photoGen98(th, m); return; }
+  if ((x = e.target.closest(".ph98-open[data-ph98]"))) { const im = x.querySelector("img"); if (im && typeof off94Show === "function") { try { off94Show({ src: im.src, cap: "" }, false); } catch (err) { console.warn("[b98] photo view", err); } } return; }
+  if (!e.target.closest("#msgs") || e.target.closest("button,a,input,textarea,select,label,img,video,.ph98,.rx122p,.bt86,.rg73,.entry98,[data-unmsg]") || !tapOK98(th)) return;
+  if (e.target.closest("[data-mi]")) { if (TAP98) { clearTimeout(TAP98); TAP98 = null; return; } TAP98 = setTimeout(() => { TAP98 = null; cont98(th); }, 260); return; }
+  cont98(th);
+});
 function nextLabel98(th) {
   const { b, c } = scene98(th), A = th.b98;
   return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : L98("走向结局", "To the ending");
@@ -535,6 +834,14 @@ function nextLabel98(th) {
 /* sending a message in a b98 thread = free talk inside the current scene */
 { const _rp = reply; reply = function (th, ctx, silent) {
   if (th && th.b98) {
+    /* 重新生成 / 改了自己那句再发：回到那一轮之前的状态，用同一句话重跑（快照见 turn98） */
+    if (ctx && ctx.kind === 'b98') {
+      if (!REDO73 && ctx.txt != null && th._pre73) restore73(th, th._pre73);
+      const act = ctx.act ? Object.assign({}, ctx.act, ctx.txt != null ? { txt: ctx.txt } : {}) : null;
+      return Promise.resolve(beat98(th, ctx.mode || 'talk', act));
+    }
+    /* 点屏 / ⏩ 继续：玩家不说话，让他们接着说 */
+    if (ctx && ctx.kind === 'cont') return Promise.resolve(beat98(th, 'more', null));
     if (ctx && (ctx.kind === 'user' || ctx.kind === 'dir')) {
       if (experience98(th) && !busy && !th.b98.ended && ctx.kind === 'user' && ctx.mode !== 'think') {
         explicitPreference98(th,ctx.txt);
@@ -564,6 +871,8 @@ function dock98() {
   else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join("") + '</div>';
   const mustPick98 = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked) && !(experience98(th) && experience98(th).allowFreeContinue);
   if (!A.ended && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
+  /* 点屏继续的提示：前三次用过就不再出现 */
+  if (!A.ended && !busy && A.phase === 'talk' && (S.tap98n || 0) < 3 && th.msgs.some(m => m.ai && m.who !== 'me')) h += '<p class="tap98">' + L98('轻点空白处，让他们接着说', 'Tap the empty space to let them keep talking') + '</p>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
@@ -576,7 +885,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
 }, true);
 /* a call card gets an answer button */
-MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
+MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.ph98) return photoHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
 /* free mode needs its world's assets loaded on reopen */
 { const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) { introductions98(th); renderChat(); } }); } } return _ot.apply(this, arguments); }; }
 /* love type + feed work here too */
