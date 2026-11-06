@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="81c4310084db 2026-11-06T16:12Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="2959e53881a5 2026-11-06T16:15Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -22698,7 +22698,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
 
 /* M105 V6: authored choices, one work, three conditional post-season routes. */
 (function () {
-  const ID='w_scmvxnqoko453e6d7bc3', VERSION='m105-v6-20261107';
+  const ID='w_scmvxnqoko453e6d7bc3', VERSION='m105-v6-20261107.1';
   const routes=['committed','slow','independent'];let data=null,pending=null;
   const own=w=>w&&w.community===ID;
   const route=th=>routes.find(r=>th&&th.pk&&th.pk.flags&&th.pk.flags['end_'+r]);
@@ -22719,7 +22719,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     for(let i=0;i<3;i++){const branches=lang=>routes.map(r=>{const c=data.routes[r][lang][i],beats=bind(w,c.beats);if(c.choices.length)beats.push([w.cast.find(id=>ch(id)&&ch(id).n==='Dante')||w.cast[0],'line',{hint:c.ask,opts:c.choices.map(o=>({k:'say',t:o.t,set:o.set,then:bind(w,o.then)}))}]);return ['sys','if',{cond:{flag:'end_'+r},then:beats}]});
       P.chapters.push({t:bi('后续故事 · 第 '+(i+1)+' 集','After the finale · Episode '+(i+1)),goal:bi('延续你确认的关系与边界。','Continue on the relationship terms you chose.'),goalOwn:true,place:bi('',''),time:bi('',''),ask:bi('',''),beats:{zh:branches('zh'),en:branches('en')},choices:[{k:'A',t:bi('继续','Continue'),then:{zh:[],en:[]},mem:bi('','')}],outline:false,advanceOnly:true});
     }
-    P.ready=P.chapters.length;P.exp74=1;P.minRoundsPerChapter=0;P.endings={complete:{t:bi('这一季结束，生活继续','The season ends. Life continues.'),txt:bi('',''),line:bi('','')}};P.m105Version=VERSION;
+    P.ready=P.chapters.length;P.exp74=1;P.minRoundsPerChapter=0;P.endings={A:{t:bi('认真相爱','Committed, on equal terms')},B:{t:bi('慢慢了解','Taking your time')},C:{t:bi('自己的生活','Your independent life')},complete:{t:bi('这一季结束，生活继续','The season ends. Life continues.'),txt:bi('',''),line:bi('','')}};P.m105Version=VERSION;
   }
   const install=installWork;installWork=async function(id){if(id===ID){await Promise.all([load(),off94Assets(ID)])}const wid=await install.apply(this,arguments);configure(wid&&wd(wid));if(wid)save();return wid;};
   load().then(()=>{Object.values(S.mine.worlds||{}).forEach(configure)}).catch(e=>console.warn('[M105]',e.message));
@@ -22727,7 +22727,9 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   const need=EN;EN=function(th){return own(th&&wd(th.wid))?0:need.apply(this,arguments)};
   const love=packLove;packLove=function(th){if(!own(th&&wd(th.wid)))return love.apply(this,arguments)};
   const write=loveWrite;loveWrite=function(th,cid,d,reason){if(own(th&&wd(th.wid))&&reason==='ending:A')return;return write.apply(this,arguments)};
-  const after=packAfterPick;packAfterPick=function(th){const n=th&&th.pk&&th.pk.ch;const result=after.apply(this,arguments);if(own(th&&wd(th.wid))&&n===18){pkSet(th,['ch18_complete','route_confirmed']);save()}return result;};
+  const after=packAfterPick;packAfterPick=function(th){const n=th&&th.pk&&th.pk.ch;const result=after.apply(this,arguments);if(own(th&&wd(th.wid))&&n===18){pkSet(th,['ch18_complete','route_confirmed']);const r=route(th);if(r){const ps=packSt(th.wid);ps.end=ps.end||{};ps.end['ABC'[routes.indexOf(r)]]=1}save()}return result;};
+  const translate=t;t=function(key){if(key==='sp.endRule'&&own(wd(curStory)))return CL()==='zh'?'第 17 章由你选择关系走向：认真相爱、慢慢了解，或保留自己的生活。三条路线都无需累计 A 选项。':'In chapter 17, choose a committed relationship, a slower romance, or your independent life. No route requires an A-choice score.';return translate.apply(this,arguments);};
+  const page=storyPage;storyPage=function(id){const result=page.apply(this,arguments);if(own(wd(id))){const box=$('#s-story');if(box)box.querySelectorAll('.chrow p').forEach(p=>p.remove())}return result;};
   function eligible(th,e,now){const r=route(th),state=(th.pk.m105Events||{})[e.id];return !!(r&&th.pk.flags.ch18_complete&&e.eligible_relationships.includes(r)&&(!state||now-state.at>=e.cooldown_days*86400000));}
   function menu(th){if(!data||!own(wd(th.wid)))return;const now=Date.now(),lang=CL()==='zh'?'zh':'en';const es=data.events.filter(e=>eligible(th,e,now));sheet('<h2>'+esc(lang==='zh'?'选择一个生活片段':'Choose a life moment')+'</h2><p>'+esc(lang==='zh'?'只有你主动打开的事件才会发生。':'An event starts only when you choose it.')+'</p>'+es.map(e=>'<button class="btn btn-g btn-block" data-m105-event="'+esc(e.id)+'">'+esc(e.opening[lang])+'</button>').join('')+(es.length?'':'<p>'+esc(lang==='zh'?'生活片段正在冷却中。':'Life moments are on cooldown.')+'</p>'));}
   const panel=packPanel;packPanel=function(th){const h=panel.apply(this,arguments);return own(th&&wd(th.wid))&&th.pk.st==='end'&&route(th)?h+'<button class="btn btn-g btn-block" data-m105-events="1">'+(CL()==='zh'?'生活继续 · 自选片段':'Life continues · Choose a moment')+'</button>':h;};
