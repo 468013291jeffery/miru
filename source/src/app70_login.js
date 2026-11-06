@@ -104,6 +104,7 @@ startApp = function () { if (!au70Loggedin() && !S.authChoice) { renderAuth70();
 /* ---------- Google: the official button is laid over ours once a client ID exists ---------- */
 async function au70MountGoogle(slotId) {
   const p = await au70Prov(); const slot = document.getElementById(slotId); if (!p.google || !slot) return;
+  if (au70GoogleRedirect(p)) return; /* 整页跳转时不叠谷歌的按钮，点的就是我们自己的按钮 */
   try {
     await au70Script("https://accounts.google.com/gsi/client");
     google.accounts.id.initialize({ client_id: p.google, callback: r => au70OAuth("google", { idToken: r.credential }), ux_mode: "popup" });
@@ -121,6 +122,38 @@ async function au70Apple() {
     au70OAuth("apple", { idToken: r.authorization.id_token, name: nm });
   } catch (e) { if (!(e && /popup_closed|user_cancel/i.test(String(e.error || e)))) toast(au("net")); }
 }
+/* ---------- Google：整页跳转（2026-11-06）----------
+   手机上（尤其 iPhone）谷歌的弹窗方式不可靠：按钮要点好几次，选完账号凭证传不回原页面（服务器日志里那一刻没有任何请求）。
+   整页跳转：点一次 → 当前页去谷歌选账号 → 谷歌把凭证 POST 到 /api/gcb → 回到本页网址 # 后面 → 核对 state 和 nonce → 走原来的 au70OAuth。
+   开关在服务器（GOOGLE_REDIRECT=1），谷歌后台登记好 /api/gcb 才打开；只在接口和页面同源时用（凭证要回到同一个页面）。 */
+function au70GoogleRedirect(p) {
+  try { return !!(p && p.gredirect && p.google && new URL(CLOUD_EP, location.href).origin === location.origin); } catch (_) { return false; }
+}
+function au70Rand() { const a = new Uint8Array(18); crypto.getRandomValues(a); return Array.from(a, b => b.toString(16).padStart(2, "0")).join(""); }
+function au70GoogleGo(p) {
+  const st = au70Rand(), nonce = au70Rand();
+  try { sessionStorage.setItem("au70g", JSON.stringify({ st, nonce, at: Date.now() })); } catch (_) { toast(au("net")); return; }
+  location.href = "https://accounts.google.com/o/oauth2/v2/auth?" + new URLSearchParams({ client_id: p.google, redirect_uri: new URL(CLOUD_EP + "/gcb", location.href).href,
+    response_type: "id_token", response_mode: "form_post", scope: "openid email profile", state: st, nonce, prompt: "select_account" });
+}
+/* 从谷歌回来：先把凭证从网址上拿掉（不留在历史记录里），等页面起来后再登录 */
+const AU70G = (function () {
+  const h = location.hash; if (!/^#(?:gcred|gerr)=/.test(h)) return null;
+  try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { console.warn("[google] clear hash", e); }
+  const q = new URLSearchParams(h.slice(1)); let saved = null;
+  try { saved = JSON.parse(sessionStorage.getItem("au70g") || "null"); sessionStorage.removeItem("au70g"); } catch (e) { console.warn("[google] saved state", e); }
+  return { tok: q.get("gcred"), st: q.get("gst"), err: q.get("gerr"), saved };
+})();
+function au70GoogleBack() {
+  const g = AU70G; if (!g) return;
+  if (g.err) { if (!/access_denied|cancel/i.test(g.err)) toast(au("net")); console.warn("[google] redirect error", g.err); return; }
+  const s = g.saved; let nonce = null;
+  try { nonce = JSON.parse(atob(g.tok.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).nonce; } catch (e) { console.warn("[google] token payload", e); }
+  /* 不是本页发起的、过期（10 分钟）、或者随机码对不上：一律不登录 */
+  if (!s || s.st !== g.st || s.nonce !== nonce || Date.now() - s.at > 600e3) { console.warn("[google] redirect check failed"); toast(au("net")); return; }
+  au70OAuth("google", { idToken: g.tok });
+}
+if (AU70G) setTimeout(au70GoogleBack, 0);
 async function au70OAuth(op, body) {
   try { const r = await capi("/auth", { json: Object.assign({ op }, body) }); if (!r.ok) { au70Err(r); return; } await au70Done(r.j, op); } catch (_) { toast(au("net")); }
 }
@@ -197,7 +230,7 @@ document.addEventListener("click", async e => {
     e.preventDefault(); e.stopImmediatePropagation(); const k = x.dataset.au70;
     if (!CLOUD_EP && k !== "guest") { toast(au("preview")); return; }
     if (k === "apple") au70Apple();
-    else if (k === "google") { const p = await au70Prov(); if (!p.google) toast(au("soonG")); }
+    else if (k === "google") { const p = await au70Prov(); if (!p.google) toast(au("soonG")); else if (au70GoogleRedirect(p)) au70GoogleGo(p); }
     else if (k === "email") authSheet70("login");
     else if (k === "guest") { S.authChoice = "guest"; save(); track("login", { method: "guest" }); au70After(); }
     return;
