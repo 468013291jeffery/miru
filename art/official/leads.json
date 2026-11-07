@@ -464,6 +464,57 @@
           "en": "Kingdom of Aster"
         }
       }
+    },
+    {
+      "wid": "w_scmvxnqoko453e6d7bc3",
+      "title": {
+        "zh": "黑帮教父的唯一软肋",
+        "en": "The Mafia King’s Only Weakness"
+      },
+      "orient": "bg",
+      "tags": [
+        "mafia",
+        "slow burn",
+        "romance"
+      ],
+      "leads": [
+        {
+          "key": "dante",
+          "n": {
+            "zh": "但丁",
+            "en": "Dante Moretti"
+          },
+          "g": "m",
+          "age": 36,
+          "h": "",
+          "voice": "m1",
+          "art": "art/official/m105-v6/02_Dante_Portrait.jpg",
+          "pal": [
+            "#A76A4C",
+            "#17131A"
+          ],
+          "role": {
+            "zh": "莫雷蒂家族掌权人",
+            "en": "Moretti family patriarch"
+          },
+          "looks": {
+            "zh": "黑色微卷短发、深色眼睛、黑西装与银色腕表。",
+            "en": "Dark wavy hair, dark eyes, black tailoring and a silver watch."
+          },
+          "vibe": {
+            "zh": "克制、干练，有干燥的幽默感；正在学着先询问，而不是替你决定。",
+            "en": "Controlled, capable, with dry humor; learning to ask rather than decide for you."
+          },
+          "pitch": {
+            "zh": "他能让交易停下，却愿意等你自己的答案。",
+            "en": "He can stop a deal, but waits for your freely chosen answer."
+          },
+          "solo": {
+            "zh": "我能请你吃顿饭吗？你可以拒绝。",
+            "en": "May I invite you to dinner? You can say no."
+          }
+        }
+      ]
     }
   ]
 }

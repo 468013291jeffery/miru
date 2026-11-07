@@ -1,0 +1,3458 @@
+[
+  {
+    "id": "m105_live_01_lemon_tart",
+    "title": {
+      "en": "Life moment 01",
+      "zh": "生活事件01"
+    },
+    "opening": {
+      "en": "Mara saved the last lemon tart. Dante asks whether you want half.",
+      "zh": "玛拉留下最后一块柠檬挞。但丁问你愿不愿意一人一半。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Mara saved the last lemon tart. Dante asks whether you want half. Mara: \"The lemon tart is the last one. No drama, Dante. A piece of cake is not a proposal.\"",
+        "dialogue": "Mara: \"The lemon tart is the last one. No drama, Dante. A piece of cake is not a proposal.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Split it at the table",
+            "effect": {
+              "set_flag": "m105_live_01_lemon_tart_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Save it for Mara",
+            "effect": {
+              "set_flag": "m105_live_01_lemon_tart_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Choose a different dessert",
+            "effect": {
+              "set_flag": "m105_live_01_lemon_tart_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "玛拉留下最后一块柠檬挞。但丁问你愿不愿意一人一半。 Mara：“这是最后一块柠檬挞，别这么紧张。甜点又不是求婚。”",
+        "dialogue": "Mara：“这是最后一块柠檬挞，别这么紧张。甜点又不是求婚。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "一起在桌边分着吃",
+            "effect": {
+              "set_flag": "m105_live_01_lemon_tart_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "留给 Mara",
+            "effect": {
+              "set_flag": "m105_live_01_lemon_tart_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "换一种甜点",
+            "effect": {
+              "set_flag": "m105_live_01_lemon_tart_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_02_first_rain",
+    "title": {
+      "en": "Life moment 02",
+      "zh": "生活事件02"
+    },
+    "opening": {
+      "en": "Rain traps you both under the community center awning. Dante asks about your favorite rainy-day ritual.",
+      "zh": "暴雨把你们困在社区中心的屋檐下。但丁问你雨天最喜欢做什么。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Rain traps you both under the community center awning. Dante asks about your favorite rainy-day ritual. Dante: \"I used to call rain a problem to solve. Now I want to know whether you like hearing it.\"",
+        "dialogue": "Dante: \"I used to call rain a problem to solve. Now I want to know whether you like hearing it.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Tell him my rainy-day ritual",
+            "effect": {
+              "set_flag": "m105_live_02_first_rain_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Walk in the rain",
+            "effect": {
+              "set_flag": "m105_live_02_first_rain_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Leave and dry off",
+            "effect": {
+              "set_flag": "m105_live_02_first_rain_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "暴雨把你们困在社区中心的屋檐下。但丁问你雨天最喜欢做什么。 Dante：“我过去只想让雨停。现在我想知道你喜不喜欢听雨声。”",
+        "dialogue": "Dante：“我过去只想让雨停。现在我想知道你喜不喜欢听雨声。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "告诉他我的雨天习惯",
+            "effect": {
+              "set_flag": "m105_live_02_first_rain_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "一起冒雨散步",
+            "effect": {
+              "set_flag": "m105_live_02_first_rain_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "回家换干衣服",
+            "effect": {
+              "set_flag": "m105_live_02_first_rain_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_03_scholarship_update",
+    "title": {
+      "en": "Life moment 03",
+      "zh": "生活事件03"
+    },
+    "opening": {
+      "en": "June sends a graduation photo and asks if you want to visit the exhibition.",
+      "zh": "琼发来毕业照，问你要不要去看展览。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "June sends a graduation photo and asks if you want to visit the exhibition. June: \"The photo is from the day we got our own student seat. I would love you to see the exhibit—but it belongs to us either way.\"",
+        "dialogue": "June: \"The photo is from the day we got our own student seat. I would love you to see the exhibit—but it belongs to us either way.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Visit the exhibition",
+            "effect": {
+              "set_flag": "m105_live_03_scholarship_update_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Send congratulations",
+            "effect": {
+              "set_flag": "m105_live_03_scholarship_update_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Ask about the next project",
+            "effect": {
+              "set_flag": "m105_live_03_scholarship_update_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "琼发来毕业照，问你要不要去看展览。 June：“照片是我们赢得学生席位那天拍的。想邀请你看展，但不来也没关系。”",
+        "dialogue": "June：“照片是我们赢得学生席位那天拍的。想邀请你看展，但不来也没关系。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "去看展",
+            "effect": {
+              "set_flag": "m105_live_03_scholarship_update_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "发信息祝贺",
+            "effect": {
+              "set_flag": "m105_live_03_scholarship_update_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "问下一步项目",
+            "effect": {
+              "set_flag": "m105_live_03_scholarship_update_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_04_quiet_morning",
+    "title": {
+      "en": "Life moment 04",
+      "zh": "生活事件04"
+    },
+    "opening": {
+      "en": "Dante sends a photo of thoroughly burned toast and asks for cooking advice.",
+      "zh": "但丁发来一张彻底烤焦的吐司照片，求你指导厨艺。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante sends a photo of thoroughly burned toast and asks for cooking advice. Dante: \"I followed a breakfast recipe that listed 'medium.' Apparently that is a legal term rather than a temperature.\"",
+        "dialogue": "Dante: \"I followed a breakfast recipe that listed 'medium.' Apparently that is a legal term rather than a temperature.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Teach him one cooking step",
+            "effect": {
+              "set_flag": "m105_live_04_quiet_morning_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Invite him to a cooking class",
+            "effect": {
+              "set_flag": "m105_live_04_quiet_morning_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Laugh and send a bakery address",
+            "effect": {
+              "set_flag": "m105_live_04_quiet_morning_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "但丁发来一张彻底烤焦的吐司照片，求你指导厨艺。 Dante：“食谱写了中火。看来‘中’只是个法律概念，不是温度。”",
+        "dialogue": "Dante：“食谱写了中火。看来‘中’只是个法律概念，不是温度。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "教他一个做饭步骤",
+            "effect": {
+              "set_flag": "m105_live_04_quiet_morning_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "约一次烹饪课",
+            "effect": {
+              "set_flag": "m105_live_04_quiet_morning_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "笑着发给他面包店地址",
+            "effect": {
+              "set_flag": "m105_live_04_quiet_morning_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_05_boundary_check",
+    "title": {
+      "en": "Life moment 05",
+      "zh": "生活事件05"
+    },
+    "opening": {
+      "en": "Dante asks if the old privacy agreement still feels right or needs to change.",
+      "zh": "但丁问原来的隐私约定是否还合适，需不需要修改。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante asks if the old privacy agreement still feels right or needs to change. Dante: \"The privacy agreement was written when everything felt like a threat. We can review it or leave it exactly as you prefer.\"",
+        "dialogue": "Dante: \"The privacy agreement was written when everything felt like a threat. We can review it or leave it exactly as you prefer.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Review the clauses together",
+            "effect": {
+              "set_flag": "m105_live_05_boundary_check_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask Elena to review alone",
+            "effect": {
+              "set_flag": "m105_live_05_boundary_check_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Keep the existing boundaries",
+            "effect": {
+              "set_flag": "m105_live_05_boundary_check_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "但丁问原来的隐私约定是否还合适，需不需要修改。 Dante：“隐私协议是在最危险时写的。你想重新审查，或暂时保持原样，都可以。”",
+        "dialogue": "Dante：“隐私协议是在最危险时写的。你想重新审查，或暂时保持原样，都可以。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "一起核对条款",
+            "effect": {
+              "set_flag": "m105_live_05_boundary_check_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "请 Elena 独立审阅",
+            "effect": {
+              "set_flag": "m105_live_05_boundary_check_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "维持现有边界",
+            "effect": {
+              "set_flag": "m105_live_05_boundary_check_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_06_luca_letter",
+    "title": {
+      "en": "Life moment 06",
+      "zh": "生活事件06"
+    },
+    "opening": {
+      "en": "A letter from Luca arrives. Dante asks whether you want to hear about it.",
+      "zh": "卢卡的信到了，但丁先问你愿不愿意听他分享。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A letter from Luca arrives. Dante asks whether you want to hear about it. Dante: \"Luca wrote. I haven’t answered yet. I wanted to ask whether hearing about my family feels okay today.\"",
+        "dialogue": "Dante: \"Luca wrote. I haven’t answered yet. I wanted to ask whether hearing about my family feels okay today.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Listen without asking for details",
+            "effect": {
+              "set_flag": "m105_live_06_luca_letter_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Talk about how he feels",
+            "effect": {
+              "set_flag": "m105_live_06_luca_letter_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Change the subject gently",
+            "effect": {
+              "set_flag": "m105_live_06_luca_letter_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "卢卡的信到了，但丁先问你愿不愿意听他分享。 Dante：“Luca 来信了，我还没回。今天你愿意听这些家事吗？”",
+        "dialogue": "Dante：“Luca 来信了，我还没回。今天你愿意听这些家事吗？”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "听他说但不追问细节",
+            "effect": {
+              "set_flag": "m105_live_06_luca_letter_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "聊聊他的心情",
+            "effect": {
+              "set_flag": "m105_live_06_luca_letter_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "温柔地换话题",
+            "effect": {
+              "set_flag": "m105_live_06_luca_letter_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_07_elena_call",
+    "title": {
+      "en": "Life moment 07",
+      "zh": "生活事件07"
+    },
+    "opening": {
+      "en": "Elena asks for your opinion on a new transparent scholarship policy.",
+      "zh": "埃琳娜打电话征求你对公开透明奖学金政策的意见。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Elena asks for your opinion on a new transparent scholarship policy. Elena: \"The new scholarship board needs rules that don't change when a donor gets angry. Will you read the public draft?\"",
+        "dialogue": "Elena: \"The new scholarship board needs rules that don't change when a donor gets angry. Will you read the public draft?\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Review the appeals process",
+            "effect": {
+              "set_flag": "m105_live_07_elena_call_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask June for student feedback",
+            "effect": {
+              "set_flag": "m105_live_07_elena_call_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Decline the review role",
+            "effect": {
+              "set_flag": "m105_live_07_elena_call_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "埃琳娜打电话征求你对公开透明奖学金政策的意见。 Elena：“奖学金新规不能因为捐款人发火就变动。你能看看公开草案吗？”",
+        "dialogue": "Elena：“奖学金新规不能因为捐款人发火就变动。你能看看公开草案吗？”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "审阅申诉程序",
+            "effect": {
+              "set_flag": "m105_live_07_elena_call_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "问 June 学生意见",
+            "effect": {
+              "set_flag": "m105_live_07_elena_call_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "不参与审核",
+            "effect": {
+              "set_flag": "m105_live_07_elena_call_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_08_market_trip",
+    "title": {
+      "en": "Life moment 08",
+      "zh": "生活事件08"
+    },
+    "opening": {
+      "en": "A market vendor remembers Dante from his failed tomato shopping and teases him.",
+      "zh": "摊贩还记得但丁上次买番茄闹出的笑话，又拿他打趣。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A market vendor remembers Dante from his failed tomato shopping and teases him. Mara: \"He finally knows a tomato from a pepper. Don't ask him the price; he'll cry.\"",
+        "dialogue": "Mara: \"He finally knows a tomato from a pepper. Don't ask him the price; he'll cry.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Let Dante choose tonight’s vegetables",
+            "effect": {
+              "set_flag": "m105_live_08_market_trip_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Challenge Mara to pick dinner",
+            "effect": {
+              "set_flag": "m105_live_08_market_trip_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Buy groceries for myself",
+            "effect": {
+              "set_flag": "m105_live_08_market_trip_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "摊贩还记得但丁上次买番茄闹出的笑话，又拿他打趣。 Mara：“他终于认得番茄和辣椒了。别问价格，他会哭。”",
+        "dialogue": "Mara：“他终于认得番茄和辣椒了。别问价格，他会哭。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "让 Dante 挑今晚的菜",
+            "effect": {
+              "set_flag": "m105_live_08_market_trip_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "请 Mara 决定菜单",
+            "effect": {
+              "set_flag": "m105_live_08_market_trip_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "自己买菜回家",
+            "effect": {
+              "set_flag": "m105_live_08_market_trip_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_09_greenhouse_plant",
+    "title": {
+      "en": "Life moment 09",
+      "zh": "生活事件09"
+    },
+    "opening": {
+      "en": "The greenhouse rosemary is dying. Dante wants to try saving it together.",
+      "zh": "温室里的迷迭香快枯了。但丁想和你一起把它救活。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "The greenhouse rosemary is dying. Dante wants to try saving it together. Dante: \"The rosemary looks like me after a board meeting. Is it thirsty, or just furious?\"",
+        "dialogue": "Dante: \"The rosemary looks like me after a board meeting. Is it thirsty, or just furious?\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Try repotting together",
+            "effect": {
+              "set_flag": "m105_live_09_greenhouse_plant_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Call the garden volunteer",
+            "effect": {
+              "set_flag": "m105_live_09_greenhouse_plant_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Let the plant recover in peace",
+            "effect": {
+              "set_flag": "m105_live_09_greenhouse_plant_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "温室里的迷迭香快枯了。但丁想和你一起把它救活。 Dante：“迷迭香像我开完董事会的样子。是渴了，还是单纯很生气？”",
+        "dialogue": "Dante：“迷迭香像我开完董事会的样子。是渴了，还是单纯很生气？”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "一起换盆",
+            "effect": {
+              "set_flag": "m105_live_09_greenhouse_plant_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "请教花园志愿者",
+            "effect": {
+              "set_flag": "m105_live_09_greenhouse_plant_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "暂时别动它",
+            "effect": {
+              "set_flag": "m105_live_09_greenhouse_plant_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_10_public_event",
+    "title": {
+      "en": "Life moment 10",
+      "zh": "生活事件10"
+    },
+    "opening": {
+      "en": "The neighborhood festival invites you both but asks you to list your own contributions separately.",
+      "zh": "社区节庆邀请了你们，但要求各自独立填写贡献事项。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "The neighborhood festival invites you both but asks you to list your own contributions separately. June: \"The festival form has a separate space for every volunteer. Write what you actually did, not who came with you.\"",
+        "dialogue": "June: \"The festival form has a separate space for every volunteer. Write what you actually did, not who came with you.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "List my own contributions",
+            "effect": {
+              "set_flag": "m105_live_10_public_event_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Help June collect volunteers",
+            "effect": {
+              "set_flag": "m105_live_10_public_event_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Attend as an ordinary visitor",
+            "effect": {
+              "set_flag": "m105_live_10_public_event_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "社区节庆邀请了你们，但要求各自独立填写贡献事项。 June：“节庆登记表每个人单独填写。写你做了什么，不要写跟谁一起来。”",
+        "dialogue": "June：“节庆登记表每个人单独填写。写你做了什么，不要写跟谁一起来。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "填写自己的贡献",
+            "effect": {
+              "set_flag": "m105_live_10_public_event_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "帮 June 招募志愿者",
+            "effect": {
+              "set_flag": "m105_live_10_public_event_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "只当普通游客",
+            "effect": {
+              "set_flag": "m105_live_10_public_event_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_11_missed_dinner",
+    "title": {
+      "en": "Life moment 11",
+      "zh": "生活事件11"
+    },
+    "opening": {
+      "en": "Dante cannot make a planned dinner and tells you promptly, offering a new date without pressure.",
+      "zh": "但丁赶不上原定晚餐，提前解释原因并提出新日期，不施压。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante cannot make a planned dinner and tells you promptly, offering a new date without pressure. Dante: \"I won't make dinner tonight. An audit hearing ran over. I’m sorry; I should have told you earlier.\"",
+        "dialogue": "Dante: \"I won't make dinner tonight. An audit hearing ran over. I’m sorry; I should have told you earlier.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Pick a new day together",
+            "effect": {
+              "set_flag": "m105_live_11_missed_dinner_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Take myself out tonight",
+            "effect": {
+              "set_flag": "m105_live_11_missed_dinner_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Ask for a clearer notice next time",
+            "effect": {
+              "set_flag": "m105_live_11_missed_dinner_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "但丁赶不上原定晚餐，提前解释原因并提出新日期，不施压。 Dante：“今晚我赶不上晚餐了，审计听证会拖延了。对不起，我该更早告诉你。”",
+        "dialogue": "Dante：“今晚我赶不上晚餐了，审计听证会拖延了。对不起，我该更早告诉你。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "共同改约时间",
+            "effect": {
+              "set_flag": "m105_live_11_missed_dinner_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "今晚自己去吃",
+            "effect": {
+              "set_flag": "m105_live_11_missed_dinner_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "要求下次更早通知",
+            "effect": {
+              "set_flag": "m105_live_11_missed_dinner_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_12_photograph_choice",
+    "title": {
+      "en": "Life moment 12",
+      "zh": "生活事件12"
+    },
+    "opening": {
+      "en": "A photographer requests a picture. Dante checks with you before answering.",
+      "zh": "摄影师想给你们拍照。但丁先问你同不同意。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A photographer requests a picture. Dante checks with you before answering. Dante: \"Someone wants a picture. I told them we would ask you, not answer for you.\"",
+        "dialogue": "Dante: \"Someone wants a picture. I told them we would ask you, not answer for you.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Approve one portrait",
+            "effect": {
+              "set_flag": "m105_live_12_photograph_choice_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Suggest a group picture",
+            "effect": {
+              "set_flag": "m105_live_12_photograph_choice_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Decline photos",
+            "effect": {
+              "set_flag": "m105_live_12_photograph_choice_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "摄影师想给你们拍照。但丁先问你同不同意。 Dante：“摄影师想拍照。我告诉他先问你，不能替你答应。”",
+        "dialogue": "Dante：“摄影师想拍照。我告诉他先问你，不能替你答应。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "同意一张合照",
+            "effect": {
+              "set_flag": "m105_live_12_photograph_choice_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "改拍大家的合影",
+            "effect": {
+              "set_flag": "m105_live_12_photograph_choice_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "拒绝拍照",
+            "effect": {
+              "set_flag": "m105_live_12_photograph_choice_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_13_separate_weekend",
+    "title": {
+      "en": "Life moment 13",
+      "zh": "生活事件13"
+    },
+    "opening": {
+      "en": "You plan a weekend alone. Dante wishes you a good trip and does not check in uninvited.",
+      "zh": "你想独自度周末。但丁祝你玩得开心，不会擅自联系或追踪。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "You plan a weekend alone. Dante wishes you a good trip and does not check in uninvited. Dante: \"Have a good weekend. I won’t check your location, and you don't need to check in for my benefit.\"",
+        "dialogue": "Dante: \"Have a good weekend. I won’t check your location, and you don't need to check in for my benefit.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Send a postcard if I want",
+            "effect": {
+              "set_flag": "m105_live_13_separate_weekend_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Keep the trip private",
+            "effect": {
+              "set_flag": "m105_live_13_separate_weekend_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Share my plans with a friend instead",
+            "effect": {
+              "set_flag": "m105_live_13_separate_weekend_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "你想独自度周末。但丁祝你玩得开心，不会擅自联系或追踪。 Dante：“周末玩得开心。我不会查你位置，你也不必为了让我安心而汇报。”",
+        "dialogue": "Dante：“周末玩得开心。我不会查你位置，你也不必为了让我安心而汇报。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "想发再寄明信片",
+            "effect": {
+              "set_flag": "m105_live_13_separate_weekend_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "让旅行完全私人",
+            "effect": {
+              "set_flag": "m105_live_13_separate_weekend_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "和自己朋友分享计划",
+            "effect": {
+              "set_flag": "m105_live_13_separate_weekend_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_14_charity_books",
+    "title": {
+      "en": "Life moment 14",
+      "zh": "生活事件14"
+    },
+    "opening": {
+      "en": "A donation ledger error reopens; Dante shares it with Elena and residents before telling you the outcome.",
+      "zh": "新的捐款账本问题出现。但丁先交给埃琳娜与居民审查，再告诉你结果。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A donation ledger error reopens; Dante shares it with Elena and residents before telling you the outcome. Elena: \"The new ledger discrepancy is real, but the audit team owns the process. No one needs an off-the-books fix.\"",
+        "dialogue": "Elena: \"The new ledger discrepancy is real, but the audit team owns the process. No one needs an off-the-books fix.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Ask for the public findings",
+            "effect": {
+              "set_flag": "m105_live_14_charity_books_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Offer a factual clarification",
+            "effect": {
+              "set_flag": "m105_live_14_charity_books_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Wait until the audit ends",
+            "effect": {
+              "set_flag": "m105_live_14_charity_books_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "新的捐款账本问题出现。但丁先交给埃琳娜与居民审查，再告诉你结果。 Elena：“账本又有差额，但现在由独立审计团队负责，不需要私下摆平。”",
+        "dialogue": "Elena：“账本又有差额，但现在由独立审计团队负责，不需要私下摆平。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "查看公开报告",
+            "effect": {
+              "set_flag": "m105_live_14_charity_books_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "提供客观说明",
+            "effect": {
+              "set_flag": "m105_live_14_charity_books_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "等审计结束",
+            "effect": {
+              "set_flag": "m105_live_14_charity_books_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_15_family_memory",
+    "title": {
+      "en": "Life moment 15",
+      "zh": "生活事件15"
+    },
+    "opening": {
+      "en": "Mara tells a gentle story about Dante and his mother. You can ask questions or change the subject.",
+      "zh": "玛拉讲起但丁和母亲的往事。你可以追问，也可以换话题。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Mara tells a gentle story about Dante and his mother. You can ask questions or change the subject. Mara: \"He once missed his mother's birthday because he was trying to fix a problem with money. She wanted a phone call.\"",
+        "dialogue": "Mara: \"He once missed his mother's birthday because he was trying to fix a problem with money. She wanted a phone call.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Ask what he learned",
+            "effect": {
+              "set_flag": "m105_live_15_family_memory_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Share a memory of my own",
+            "effect": {
+              "set_flag": "m105_live_15_family_memory_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Enjoy dinner without the past",
+            "effect": {
+              "set_flag": "m105_live_15_family_memory_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "玛拉讲起但丁和母亲的往事。你可以追问，也可以换话题。 Mara：“他以前为了赚钱解决问题，错过了母亲生日。她其实只想要一通电话。”",
+        "dialogue": "Mara：“他以前为了赚钱解决问题，错过了母亲生日。她其实只想要一通电话。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "问他后来学到了什么",
+            "effect": {
+              "set_flag": "m105_live_15_family_memory_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "分享自己的回忆",
+            "effect": {
+              "set_flag": "m105_live_15_family_memory_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "今晚不聊过去",
+            "effect": {
+              "set_flag": "m105_live_15_family_memory_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_16_city_train",
+    "title": {
+      "en": "Life moment 16",
+      "zh": "生活事件16"
+    },
+    "opening": {
+      "en": "On the train, Dante realizes nobody recognizes him. He seems oddly relieved.",
+      "zh": "坐地铁时，但丁发现没人认出自己，竟然松了口气。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "On the train, Dante realizes nobody recognizes him. He seems oddly relieved. Dante: \"No one on this train knows my name. I can't decide whether to be relieved or offended.\"",
+        "dialogue": "Dante: \"No one on this train knows my name. I can't decide whether to be relieved or offended.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Enjoy being anonymous",
+            "effect": {
+              "set_flag": "m105_live_16_city_train_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask where he wants to go",
+            "effect": {
+              "set_flag": "m105_live_16_city_train_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Travel separately today",
+            "effect": {
+              "set_flag": "m105_live_16_city_train_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "坐地铁时，但丁发现没人认出自己，竟然松了口气。 Dante：“车厢里没人认识我。真不知道该高兴还是受伤。”",
+        "dialogue": "Dante：“车厢里没人认识我。真不知道该高兴还是受伤。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "享受匿名的感觉",
+            "effect": {
+              "set_flag": "m105_live_16_city_train_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "问他想去哪",
+            "effect": {
+              "set_flag": "m105_live_16_city_train_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "今天各自出行",
+            "effect": {
+              "set_flag": "m105_live_16_city_train_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_17_your_career",
+    "title": {
+      "en": "Life moment 17",
+      "zh": "生活事件17"
+    },
+    "opening": {
+      "en": "Dante asks about your work and listens without offering to buy or fix it.",
+      "zh": "但丁问起你的工作，认真听完，不主动提出花钱收购或替你解决。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante asks about your work and listens without offering to buy or fix it. Dante: \"I can listen, and I can ask questions. I won't buy your problem unless you explicitly ask for business advice.\"",
+        "dialogue": "Dante: \"I can listen, and I can ask questions. I won't buy your problem unless you explicitly ask for business advice.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Tell him about a challenge",
+            "effect": {
+              "set_flag": "m105_live_17_your_career_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask for feedback only",
+            "effect": {
+              "set_flag": "m105_live_17_your_career_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Keep work private tonight",
+            "effect": {
+              "set_flag": "m105_live_17_your_career_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "但丁问起你的工作，认真听完，不主动提出花钱收购或替你解决。 Dante：“我会听、会提问。但除非你主动要求，我不会拿钱买走你的问题。”",
+        "dialogue": "Dante：“我会听、会提问。但除非你主动要求，我不会拿钱买走你的问题。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "讲一个工作难题",
+            "effect": {
+              "set_flag": "m105_live_17_your_career_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "只要建议不要干预",
+            "effect": {
+              "set_flag": "m105_live_17_your_career_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "今晚不聊工作",
+            "effect": {
+              "set_flag": "m105_live_17_your_career_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_18_old_rival",
+    "title": {
+      "en": "Life moment 18",
+      "zh": "生活事件18"
+    },
+    "opening": {
+      "en": "An old rival challenges Dante in public. He chooses a quiet answer and leaves with dignity.",
+      "zh": "一位旧对手公开挑衅但丁。他平静回应，体面离开。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "An old rival challenges Dante in public. He chooses a quiet answer and leaves with dignity. Dante: \"I know that man. I also know the version of myself that would have answered with a threat. I don't miss him.\"",
+        "dialogue": "Dante: \"I know that man. I also know the version of myself that would have answered with a threat. I don't miss him.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Keep walking together",
+            "effect": {
+              "set_flag": "m105_live_18_old_rival_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask what changed",
+            "effect": {
+              "set_flag": "m105_live_18_old_rival_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Leave the event separately",
+            "effect": {
+              "set_flag": "m105_live_18_old_rival_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "一位旧对手公开挑衅但丁。他平静回应，体面离开。 Dante：“我认识那个人，也认识过去会用威胁还击的自己。我不怀念那种自己。”",
+        "dialogue": "Dante：“我认识那个人，也认识过去会用威胁还击的自己。我不怀念那种自己。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "一起继续往前走",
+            "effect": {
+              "set_flag": "m105_live_18_old_rival_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "问他为什么改变",
+            "effect": {
+              "set_flag": "m105_live_18_old_rival_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "各自离开活动",
+            "effect": {
+              "set_flag": "m105_live_18_old_rival_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_19_winter_coat",
+    "title": {
+      "en": "Life moment 19",
+      "zh": "生活事件19"
+    },
+    "opening": {
+      "en": "Dante notices you may be cold and asks before offering his coat.",
+      "zh": "但丁发现你可能有点冷，先询问再递上外套。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante notices you may be cold and asks before offering his coat. Dante: \"You look cold. I have a coat, but I won't assume you need it.\"",
+        "dialogue": "Dante: \"You look cold. I have a coat, but I won't assume you need it.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Borrow his coat",
+            "effect": {
+              "set_flag": "m105_live_19_winter_coat_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Buy a warm drink",
+            "effect": {
+              "set_flag": "m105_live_19_winter_coat_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Say I am comfortable",
+            "effect": {
+              "set_flag": "m105_live_19_winter_coat_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "但丁发现你可能有点冷，先询问再递上外套。 Dante：“你看起来有点冷。我带了外套，但不会擅自替你决定。”",
+        "dialogue": "Dante：“你看起来有点冷。我带了外套，但不会擅自替你决定。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "借他的外套",
+            "effect": {
+              "set_flag": "m105_live_19_winter_coat_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "买杯热饮",
+            "effect": {
+              "set_flag": "m105_live_19_winter_coat_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "告诉他我不冷",
+            "effect": {
+              "set_flag": "m105_live_19_winter_coat_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_20_late_message",
+    "title": {
+      "en": "Life moment 20",
+      "zh": "生活事件20"
+    },
+    "opening": {
+      "en": "Dante drafts a midnight text, then schedules it for morning to respect your sleep.",
+      "zh": "但丁深夜写了消息，最后设置为早上发送，以免打扰你休息。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante drafts a midnight text, then schedules it for morning to respect your sleep. Dante: \"I drafted a message at midnight. Then I remembered you asked for mornings, so here it is: good morning.\"",
+        "dialogue": "Dante: \"I drafted a message at midnight. Then I remembered you asked for mornings, so here it is: good morning.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Answer with my own morning ritual",
+            "effect": {
+              "set_flag": "m105_live_20_late_message_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Set different notification hours",
+            "effect": {
+              "set_flag": "m105_live_20_late_message_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Prefer fewer check-ins",
+            "effect": {
+              "set_flag": "m105_live_20_late_message_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "但丁深夜写了消息，最后设置为早上发送，以免打扰你休息。 Dante：“半夜写好了这条消息。想起你说过早上再发，所以现在才说：早安。”",
+        "dialogue": "Dante：“半夜写好了这条消息。想起你说过早上再发，所以现在才说：早安。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "告诉他我的晨间习惯",
+            "effect": {
+              "set_flag": "m105_live_20_late_message_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "重新约定消息时间",
+            "effect": {
+              "set_flag": "m105_live_20_late_message_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "减少日常问候",
+            "effect": {
+              "set_flag": "m105_live_20_late_message_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_21_birthday_choice",
+    "title": {
+      "en": "Life moment 21",
+      "zh": "生活事件21"
+    },
+    "opening": {
+      "en": "Your birthday is coming. Dante asks whether you want a celebration, a quiet day, or no fuss.",
+      "zh": "你的生日快到了。但丁问你想办派对、安静度过还是完全不庆祝。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Your birthday is coming. Dante asks whether you want a celebration, a quiet day, or no fuss. Dante: \"Your birthday is yours. A party is an option, not a surprise I get to impose.\"",
+        "dialogue": "Dante: \"Your birthday is yours. A party is an option, not a surprise I get to impose.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Plan a quiet dinner",
+            "effect": {
+              "set_flag": "m105_live_21_birthday_choice_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Invite friends to a party",
+            "effect": {
+              "set_flag": "m105_live_21_birthday_choice_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Celebrate privately or not at all",
+            "effect": {
+              "set_flag": "m105_live_21_birthday_choice_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "你的生日快到了。但丁问你想办派对、安静度过还是完全不庆祝。 Dante：“生日属于你。派对只是选项，不是我有权强加的惊喜。”",
+        "dialogue": "Dante：“生日属于你。派对只是选项，不是我有权强加的惊喜。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "安排安静晚餐",
+            "effect": {
+              "set_flag": "m105_live_21_birthday_choice_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "请朋友办派对",
+            "effect": {
+              "set_flag": "m105_live_21_birthday_choice_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "私人庆祝或不庆祝",
+            "effect": {
+              "set_flag": "m105_live_21_birthday_choice_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_22_shared_book",
+    "title": {
+      "en": "Life moment 22",
+      "zh": "生活事件22"
+    },
+    "opening": {
+      "en": "You recommend a book. Dante reads it and disagrees with you respectfully about the ending.",
+      "zh": "你推荐一本书。但丁看完后对结局有不同看法，却认真和你讨论。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "You recommend a book. Dante reads it and disagrees with you respectfully about the ending. Dante: \"I finished the book. I think the ending was too easy for the hero. You may be about to disagree with me.\"",
+        "dialogue": "Dante: \"I finished the book. I think the ending was too easy for the hero. You may be about to disagree with me.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Debate the ending",
+            "effect": {
+              "set_flag": "m105_live_22_shared_book_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask for his favorite passage",
+            "effect": {
+              "set_flag": "m105_live_22_shared_book_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Pick our next books separately",
+            "effect": {
+              "set_flag": "m105_live_22_shared_book_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "你推荐一本书。但丁看完后对结局有不同看法，却认真和你讨论。 Dante：“书读完了。我觉得男主角结局太容易了。你可能马上要反驳我。”",
+        "dialogue": "Dante：“书读完了。我觉得男主角结局太容易了。你可能马上要反驳我。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "讨论结局",
+            "effect": {
+              "set_flag": "m105_live_22_shared_book_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "问他最喜欢哪一段",
+            "effect": {
+              "set_flag": "m105_live_22_shared_book_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "下次各选各的书",
+            "effect": {
+              "set_flag": "m105_live_22_shared_book_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_23_city_park",
+    "title": {
+      "en": "Life moment 23",
+      "zh": "生活事件23"
+    },
+    "opening": {
+      "en": "You run into Dante at a city park. He asks whether you want company or solitude.",
+      "zh": "你在公园偶遇但丁。他问你想有人陪还是想自己待着。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "You run into Dante at a city park. He asks whether you want company or solitude. Dante: \"I didn't expect to see you here. If you need the park to yourself, I can take the other path.\"",
+        "dialogue": "Dante: \"I didn't expect to see you here. If you need the park to yourself, I can take the other path.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Walk a short lap together",
+            "effect": {
+              "set_flag": "m105_live_23_city_park_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Keep my afternoon alone",
+            "effect": {
+              "set_flag": "m105_live_23_city_park_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Exchange a brief greeting",
+            "effect": {
+              "set_flag": "m105_live_23_city_park_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "你在公园偶遇但丁。他问你想有人陪还是想自己待着。 Dante：“没想到在公园遇见你。如果你想独处，我走另一条路。”",
+        "dialogue": "Dante：“没想到在公园遇见你。如果你想独处，我走另一条路。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "一起走一小圈",
+            "effect": {
+              "set_flag": "m105_live_23_city_park_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "继续独处",
+            "effect": {
+              "set_flag": "m105_live_23_city_park_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "简单打个招呼",
+            "effect": {
+              "set_flag": "m105_live_23_city_park_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "m105_live_24_friday_invite",
+    "title": {
+      "en": "Life moment 24",
+      "zh": "生活事件24"
+    },
+    "opening": {
+      "en": "A Friday invitation arrives as a question, never an obligation.",
+      "zh": "星期五的邀约始终是一个问题，而不是义务。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A Friday invitation arrives as a question, never an obligation. Dante: \"Would Friday suit you? If not, nothing needs explaining. Just tell me if you'd prefer another plan.\"",
+        "dialogue": "Dante: \"Would Friday suit you? If not, nothing needs explaining. Just tell me if you'd prefer another plan.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Accept Friday",
+            "effect": {
+              "set_flag": "m105_live_24_friday_invite_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Suggest Saturday instead",
+            "effect": {
+              "set_flag": "m105_live_24_friday_invite_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Decline this week",
+            "effect": {
+              "set_flag": "m105_live_24_friday_invite_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "星期五的邀约始终是一个问题，而不是义务。 Dante：“周五方便吗？不方便不用解释。你想改时间再告诉我。”",
+        "dialogue": "Dante：“周五方便吗？不方便不用解释。你想改时间再告诉我。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "答应周五",
+            "effect": {
+              "set_flag": "m105_live_24_friday_invite_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "改成周六",
+            "effect": {
+              "set_flag": "m105_live_24_friday_invite_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "这周不约",
+            "effect": {
+              "set_flag": "m105_live_24_friday_invite_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_01",
+    "title": {
+      "en": "Mara’s Recipe",
+      "zh": "Mara 的食谱"
+    },
+    "opening": {
+      "en": "Mara loses the final page of Dante’s mother’s lemon cake recipe. You can help, give space, or ask him to recreate it from memory.",
+      "zh": "Mara 弄丢了 Dante 母亲柠檬蛋糕食谱的最后一页。你可以一起找、留出空间，或请他凭记忆重做。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Mara loses the final page of Dante’s mother’s lemon cake recipe. You can help, give space, or ask him to recreate it from memory. Mara: \"We lost the last page of his mother’s recipe. Dante has been glaring at the oven like it was an enemy witness.\"",
+        "dialogue": "Mara: \"We lost the last page of his mother’s recipe. Dante has been glaring at the oven like it was an enemy witness.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Look for the missing page",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_01_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Recreate it from memory",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_01_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Make a new recipe together",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_01_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "Mara 弄丢了 Dante 母亲柠檬蛋糕食谱的最后一页。你可以一起找、留出空间，或请他凭记忆重做。 Mara：“他母亲食谱最后一页不见了。Dante 对着烤箱的表情像在审问证人。”",
+        "dialogue": "Mara：“他母亲食谱最后一页不见了。Dante 对着烤箱的表情像在审问证人。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "寻找遗失的那页",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_01_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "凭记忆重做",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_01_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "一起写新的食谱",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_01_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_02",
+    "title": {
+      "en": "The Community Vote",
+      "zh": "社区投票"
+    },
+    "opening": {
+      "en": "June proposes a greenhouse. Residents vote independently of Dante’s money.",
+      "zh": "June 提议建立温室。住户投票独立于 Dante 的捐款。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "June proposes a greenhouse. Residents vote independently of Dante’s money. June: \"Our greenhouse proposal needs a resident vote. Dante’s money isn't a vote, even if the roof needs fixing.\"",
+        "dialogue": "June: \"Our greenhouse proposal needs a resident vote. Dante’s money isn't a vote, even if the roof needs fixing.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Attend the open vote",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_02_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Read the cost estimate",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_02_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Decline and wish them well",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_02_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "June 提议建立温室。住户投票独立于 Dante 的捐款。 June：“温室方案得由居民投票决定。就算屋顶需要维修，Dante 的钱也不等于一票。”",
+        "dialogue": "June：“温室方案得由居民投票决定。就算屋顶需要维修，Dante 的钱也不等于一票。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "参加公开投票",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_02_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "查看成本估算",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_02_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "不参加但祝顺利",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_02_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_03",
+    "title": {
+      "en": "Bad Day at Work",
+      "zh": "工作不顺"
+    },
+    "opening": {
+      "en": "Dante asks if you want listening, practical help, or time alone.",
+      "zh": "Dante 询问你要倾听、实际帮助还是独处。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Dante asks if you want listening, practical help, or time alone. Dante: \"You sound tired. Do you want me to listen, help with one practical task, or let you be quiet?\"",
+        "dialogue": "Dante: \"You sound tired. Do you want me to listen, help with one practical task, or let you be quiet?\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Talk while he listens",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_03_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask one practical favor",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_03_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Take time alone",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_03_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "Dante 询问你要倾听、实际帮助还是独处。 Dante：“你听起来很累。要我听你说、帮一件实际的事，还是让你安静？”",
+        "dialogue": "Dante：“你听起来很累。要我听你说、帮一件实际的事，还是让你安静？”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "请他听我说",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_03_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "请他帮一个具体忙",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_03_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "先自己待着",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_03_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_04",
+    "title": {
+      "en": "A Postcard From Luca",
+      "zh": "Luca 的明信片"
+    },
+    "opening": {
+      "en": "Luca sends a postcard without an address. His right to privacy remains intact.",
+      "zh": "Luca 寄来无地址明信片，他的隐私权不受影响。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Luca sends a postcard without an address. His right to privacy remains intact. Elena: \"Luca mailed a postcard without an address. That is information, not permission to find him.\"",
+        "dialogue": "Elena: \"Luca mailed a postcard without an address. That is information, not permission to find him.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Respect the privacy",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_04_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Ask about legal channels",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_04_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Leave the family matter alone",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_04_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "Luca 寄来无地址明信片，他的隐私权不受影响。 Elena：“Luca 寄来无回邮地址的明信片。这是消息，不是让人去找他的许可。”",
+        "dialogue": "Elena：“Luca 寄来无回邮地址的明信片。这是消息，不是让人去找他的许可。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "尊重隐私",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_04_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "询问合法沟通渠道",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_04_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "不参与家事",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_04_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_05",
+    "title": {
+      "en": "A Free Friday",
+      "zh": "空出来的周五"
+    },
+    "opening": {
+      "en": "A Friday night invitation can be accepted, changed, or declined.",
+      "zh": "周五晚上的邀约可以接受、修改或拒绝。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A Friday night invitation can be accepted, changed, or declined. Dante: \"An entire Friday opened up. Do you want a plan, a suggestion, or your own free evening?\"",
+        "dialogue": "Dante: \"An entire Friday opened up. Do you want a plan, a suggestion, or your own free evening?\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Make a simple dinner plan",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_05_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Change the day",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_05_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Keep Friday to myself",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_05_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "周五晚上的邀约可以接受、修改或拒绝。 Dante：“整个周五都空出来了。你想安排活动、听个建议，还是自己享受？”",
+        "dialogue": "Dante：“整个周五都空出来了。你想安排活动、听个建议，还是自己享受？”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "安排普通晚餐",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_05_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "改天再约",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_05_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "周五留给自己",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_05_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_06",
+    "title": {
+      "en": "A False Headline",
+      "zh": "不实头条"
+    },
+    "opening": {
+      "en": "A false news story appears; Elena can help ask for a correction.",
+      "zh": "出现不实报道，Elena 可以帮忙要求更正。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A false news story appears; Elena can help ask for a correction. Elena: \"The headline is false. We can request a correction, but you need not give the press more of your life.\"",
+        "dialogue": "Elena: \"The headline is false. We can request a correction, but you need not give the press more of your life.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Authorize a correction",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_06_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Write a short statement myself",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_06_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Say nothing publicly",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_06_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "出现不实报道，Elena 可以帮忙要求更正。 Elena：“报道不实。可以要求更正，但你不需要再把私人生活交出去。”",
+        "dialogue": "Elena：“报道不实。可以要求更正，但你不需要再把私人生活交出去。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "授权更正",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_06_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "自己写简短声明",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_06_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "不公开回应",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_06_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_07",
+    "title": {
+      "en": "Mara’s Birthday",
+      "zh": "Mara 的生日"
+    },
+    "opening": {
+      "en": "Mara asks for no expensive gifts, only an afternoon on her terms.",
+      "zh": "Mara 不要昂贵礼物，只想按自己的喜好过一个下午。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Mara asks for no expensive gifts, only an afternoon on her terms. Mara: \"I don't need expensive flowers. I want the people I love to stop rushing for one afternoon.\"",
+        "dialogue": "Mara: \"I don't need expensive flowers. I want the people I love to stop rushing for one afternoon.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Cook with her",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_07_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Take a slow walk",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_07_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Send a sincere note",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_07_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "Mara 不要昂贵礼物，只想按自己的喜好过一个下午。 Mara：“我不要贵花，只想喜欢的人一下午都别着急。”",
+        "dialogue": "Mara：“我不要贵花，只想喜欢的人一下午都别着急。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "陪她做饭",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_07_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "陪她散步",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_07_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "写张真诚卡片",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_07_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_08",
+    "title": {
+      "en": "Late Volunteer Shift",
+      "zh": "深夜志愿班"
+    },
+    "opening": {
+      "en": "The community kitchen needs hands. Help is optional, not a romantic test.",
+      "zh": "社区厨房需要帮手，是否帮忙不是恋爱考试。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "The community kitchen needs hands. Help is optional, not a romantic test. June: \"The kitchen needs volunteers, but nobody should have to prove affection by showing up for a shift.\"",
+        "dialogue": "June: \"The kitchen needs volunteers, but nobody should have to prove affection by showing up for a shift.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Take one shift",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_08_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Donate supplies anonymously",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_08_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Take the night off",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_08_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "社区厨房需要帮手，是否帮忙不是恋爱考试。 June：“社区厨房需要人手，但没人该靠值班证明爱谁。”",
+        "dialogue": "June：“社区厨房需要人手，但没人该靠值班证明爱谁。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "值一班",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_08_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "匿名捐物资",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_08_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "今晚休息",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_08_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_09",
+    "title": {
+      "en": "A Workspace of Your Own",
+      "zh": "属于你的工作室"
+    },
+    "opening": {
+      "en": "An independent office becomes available and you choose whether to use it.",
+      "zh": "出现一个独立办公室，要不要使用由你决定。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "An independent office becomes available and you choose whether to use it. Elena: \"A studio lease opened up under your own name. You can read it without anybody making an offer for you.\"",
+        "dialogue": "Elena: \"A studio lease opened up under your own name. You can read it without anybody making an offer for you.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Review the lease",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_09_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Compare other spaces",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_09_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Keep working from home",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_09_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "出现一个独立办公室，要不要使用由你决定。 Elena：“一间办公室可以用你的名字签约。你能自己看合同，不需要别人代替报价。”",
+        "dialogue": "Elena：“一间办公室可以用你的名字签约。你能自己看合同，不需要别人代替报价。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "审查租约",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_09_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "比较别的办公地",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_09_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "暂时在家工作",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_09_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_10",
+    "title": {
+      "en": "A Quiet Anniversary",
+      "zh": "安静的纪念日"
+    },
+    "opening": {
+      "en": "Choose your own meaningful ritual. Avoid automatic marriage expectations.",
+      "zh": "由你选择有意义的纪念方式，不默认催婚。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "Choose your own meaningful ritual. Avoid automatic marriage expectations. Dante: \"If anniversaries mean something to you, tell me which ones. I'm not assuming the calendar decides for us.\"",
+        "dialogue": "Dante: \"If anniversaries mean something to you, tell me which ones. I'm not assuming the calendar decides for us.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Mark a quiet anniversary",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_10_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Celebrate a personal achievement",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_10_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Skip commemorations",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_10_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "由你选择有意义的纪念方式，不默认催婚。 Dante：“如果纪念日对你重要，你告诉我是哪一天。我不会让日历替我们决定。”",
+        "dialogue": "Dante：“如果纪念日对你重要，你告诉我是哪一天。我不会让日历替我们决定。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "安静过纪念日",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_10_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "庆祝个人成就",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_10_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "不专门纪念",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_10_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_11",
+    "title": {
+      "en": "Rain at Pier Nine",
+      "zh": "九号码头的雨"
+    },
+    "opening": {
+      "en": "A rainstorm disrupts community plans. You can help or rest.",
+      "zh": "暴雨打乱社区计划，你可以帮忙也可以休息。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A rainstorm disrupts community plans. You can help or rest. June: \"Rain flooded the public walkway. We need volunteers after the city inspects it—not before.\"",
+        "dialogue": "June: \"Rain flooded the public walkway. We need volunteers after the city inspects it—not before.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Join the safe cleanup later",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_11_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Help communicate updates",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_11_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Stay home and recover",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_11_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "暴雨打乱社区计划，你可以帮忙也可以休息。 June：“暴雨淹了步道。市政检查完成后才需要志愿者，现在别冒险。”",
+        "dialogue": "June：“暴雨淹了步道。市政检查完成后才需要志愿者，现在别冒险。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "检查后参与清理",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_11_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "帮忙发布进度",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_11_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "留在家休息",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_11_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  },
+  {
+    "id": "M105_V5_EVENT_12",
+    "title": {
+      "en": "The Family Question",
+      "zh": "关于家庭的问题"
+    },
+    "opening": {
+      "en": "A neighbor asks about weddings. Dante does not answer for you.",
+      "zh": "邻居问起婚礼，Dante 不替你回答。"
+    },
+    "eligible_relationships": [
+      "committed",
+      "slow",
+      "independent"
+    ],
+    "prerequisites": [
+      "ch18_complete",
+      "route_confirmed",
+      "player_opt_in_to_event"
+    ],
+    "cooldown_days": 7,
+    "repeat_policy": "cooldown_and_unique_completion_id",
+    "script": {
+      "en": {
+        "scene": "A neighbor asks about weddings. Dante does not answer for you. Dante: \"Someone asked about a wedding. I told them that your life isn't public property. I won't invent an answer for you.\"",
+        "dialogue": "Dante: \"Someone asked about a wedding. I told them that your life isn't public property. I won't invent an answer for you.\"",
+        "player_prompt": "What will you do in this moment?",
+        "choices": [
+          {
+            "key": "A",
+            "label": "Answer in my own words",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_12_accept",
+              "relationship_delta": 0
+            },
+            "response": "You take part on the terms you chose; the next detail is confirmed before anyone acts."
+          },
+          {
+            "key": "B",
+            "label": "Change the subject",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_12_counter",
+              "relationship_delta": 0
+            },
+            "response": "Your alternative is heard, and the plan changes without a penalty."
+          },
+          {
+            "key": "C",
+            "label": "Ask for no marriage questions",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_12_decline",
+              "relationship_delta": 0
+            },
+            "response": "Your decision is accepted; this event closes without unwanted follow-up."
+          }
+        ]
+      },
+      "zh": {
+        "scene": "邻居问起婚礼，Dante 不替你回答。 Dante：“有人问婚礼。我说你的人生不是公共财产，不会替你编答案。”",
+        "dialogue": "Dante：“有人问婚礼。我说你的人生不是公共财产，不会替你编答案。”",
+        "player_prompt": "这一刻，你准备怎么做？",
+        "choices": [
+          {
+            "key": "A",
+            "label": "按我的意愿回应",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_12_accept",
+              "relationship_delta": 0
+            },
+            "response": "你按自己提出的条件参与，任何下一步都需要再确认。"
+          },
+          {
+            "key": "B",
+            "label": "转移话题",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_12_counter",
+              "relationship_delta": 0
+            },
+            "response": "替代方案被认真采纳，计划随之调整。"
+          },
+          {
+            "key": "C",
+            "label": "要求以后不要问婚事",
+            "effect": {
+              "set_flag": "M105_V5_EVENT_12_decline",
+              "relationship_delta": 0
+            },
+            "response": "选择被接受，事件结束，不再擅自联系。"
+          }
+        ]
+      }
+    },
+    "knowledge_scope": "only_participants_explicitly_informed",
+    "independent_route_contact": "no_dante_proactive_contact_without_explicit_opt_in",
+    "status": "authored_interactive_event_not_runtime_tested"
+  }
+]
