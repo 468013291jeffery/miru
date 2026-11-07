@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="df1c8d29f71a 2026-11-07T19:03Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="6d9b47e5e574 2026-11-07T19:07Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -21165,7 +21165,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   const show=entry&&(voicing||(S.tapHintN||0)<HINT_N);
   if(!show){if(tip)tip.remove();return;}
   if(!tip){tip=document.createElement('div');tip.dataset.tapHint='1';tip.className='tap-hint';const composer=chat.querySelector('.composer');if(composer)composer.before(tip);else chat.appendChild(tip);}
-  tip.textContent=voicing?'朗读中… 点一下停止':'轻点屏幕继续 ›';
+  tip.textContent=CL()==='zh'?(voicing?'朗读中… 点一下停止':'轻点屏幕继续 ›'):(voicing?'Reading aloud… Tap to stop':'Tap to continue ›');
   tip.classList.toggle('voicing',voicing);
  }
  R.wait=function(th,message,kind){
@@ -22358,7 +22358,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   const narration=opening.find(b=>b[0]==='n'&&['act','narr'].includes(b[1])&&typeof b[2]==='string');
   return {time:local(c.time)||local(scene.time)||text('时间待剧情交代','Time not yet established'),place:local(c.place)||local(scene.place)||text('地点待剧情交代','Location not yet established'),cast:ids.filter(id=>id!==th.pk.as).map(id=>ch(id)?.n).filter(Boolean),background:local(c.background||c.context||c.summaryPublic||(narration&&narration[2])).slice(0,240)||text('从本章开场继续了解当前情境。','Follow the opening scene for context.')};
  };
- const briefHTML=(b)=>'<dl class="brief124"><dt>'+text('时间','Time')+'</dt><dd>'+esc(b.time)+'</dd><dt>'+text('地点','Place')+'</dt><dd>'+esc(b.place)+'</dd><dt>'+text('人物','Present')+'</dt><dd>'+esc([text('你','You'),...(b.cast||[])].join('、'))+((b.cast||[]).length?'':text(' · 其余人物随登场介绍',' · Others introduced on arrival'))+'</dd></dl><p>'+esc(b.background)+'</p>';
+ const briefHTML=(b)=>'<dl class="brief124"><dt>'+text('时间','Time')+'</dt><dd>'+esc(b.time)+'</dd><dt>'+text('地点','Place')+'</dt><dd>'+esc(b.place)+'</dd><dt>'+text('人物','Present')+'</dt><dd>'+esc([text('你','You'),...(b.cast||[])].join(text('、',', ')))+((b.cast||[]).length?'':text(' · 其余人物随登场介绍',' · Others introduced on arrival'))+'</dd></dl><p>'+esc(b.background)+'</p>';
  MSGKIND.inline('app124_experience.js',['chap'],function(m,i,th,next){
   if(m.k!=='chap')return next(m,i,th);
   const c=wd(th.wid)?.pack?.chapters[m.n-1],b=m.brief124||(c&&X.brief(th,c,m.n));
@@ -22875,7 +22875,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  function tr(t,l=language()){if(typeof t!=='string'||l!=='zh')return t;const m=t.match(/^([A-Z]+)( texts)?: (.*)$/);if(m)return tr(m[1],l)+(m[2]?'发来消息：':'：')+tr(m[3],l);let v=data.zh&&data.zh[t]||t;for(const [en,z]of Object.entries(names))v=v.replace(new RegExp('\\b'+en+'\\b','gi'),z);return v;}
  function localBeats(a,l){return (a||[]).map(b=>{if(!Array.isArray(b))return b;b=JSON.parse(JSON.stringify(b));if(['say','act','think'].includes(b[1])&&typeof b[2]==='string'){if(!b[3])b[3]={u14en:b[2],u14zh:tr(b[2],'zh')};b[2]=l==='zh'?b[3].u14zh:b[3].u14en;}if(b[1]==='scene'&&b[2])b[2].place=tr(b[2].place,l);if(b[1]==='line')for(const o of b[2].opts||[])o.then=localBeats(o.then,l);return b;});}
  function identity(w){const b={};for(const id of w.cast){const c=ch(id);if(!c)continue;const ns=[c.n,...Object.values(c.n94||{})];for(const [en,z]of Object.entries(names))if(ns.includes(en)||ns.includes(z)){b[en.toUpperCase()]=id;c.n94={zh:z,en};c.n=language()==='zh'?z:en;const profile=data.presentation&&data.presentation.characters&&data.presentation.characters[en];if(profile)Object.assign(c,profile);}}b.HAYDEN=w.you94||w.pack.pov;return b;}
- function presentation(w){const p=data.presentation;if(!p)return;const b=identity(w);w.title=p.title;w.hook=p.hook;w.premise=p.premise;w.premiseAuthor=1;w.you=p.you;w.leads=[b.WILLIAM,b.ALEX].filter(Boolean);w.pack.intro={};for(const l of ['zh','en'])w.pack.intro[l]={bg:p.premise[l].split('\n'),you:p.you[l],cast:w.leads.map(id=>[id,'']),how:[]};}
+ function presentation(w){const p=data.presentation;if(!p)return;const b=identity(w);w.title=p.title;w.hook=p.hook;w.premise=p.premise;w.premiseAuthor=1;w.you=p.you;w.pack.logline=p.hook;w.tags=language()==='zh'?['校园','双男主','慢热','悬疑','自主选择']:['Campus','BL','Slow Burn','Mystery','Choice'];w.leads=[b.WILLIAM,b.ALEX].filter(Boolean);w.pack.intro={};for(const l of ['zh','en'])w.pack.intro[l]={bg:p.premise[l].split('\n'),you:p.you[l],cast:w.leads.map(id=>[id,'']),how:[]};}
  function by(w){const b=identity(w);w.cast.forEach(id=>{const c=ch(id);if(c){b[c.n.toUpperCase()]=id;Object.values(c.n94||{}).forEach(n=>b[n.toUpperCase()]=id)}});b.HAYDEN=w.you94||w.pack.pov;return b;}
  function messageRaw(w,l,lang='en'){const b=by(w),name=l.speaker;if(l.textMessage)return ['n','act',lang==='zh'?tr(name,lang)+ '发来消息：'+tr(l.text,lang):name+' texts: '+l.text];if(name==='WILLIAM (TO HIMSELF)')return [b.WILLIAM,'think',tr(l.text,lang)];if(name==='PLAYER (NARRATION)')return ['n','act',tr(l.text,lang)];if(b[name])return [b[name],'say',tr(l.text,lang)];return ['n','act',tr(name,lang)+ (lang==='zh'?'：':': ')+tr(l.text,lang)];}
  function msg(w,l,lang='en'){const b=messageRaw(w,l,lang);b[3]={u14en:messageRaw(w,l,'en')[2],u14zh:messageRaw(w,l,'zh')[2]};return b;}
