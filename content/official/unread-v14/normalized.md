@@ -2,11 +2,11 @@
 
 # CHAPTER 1 | The Crown Is Not the Prize
 ⟦ORIENT|bl⟧
-⟦CHAR|你|m|0|m4|20-year-old new university student|The player chooses the name, feelings and boundaries.⟧
-⟦CHAR|William|m|1|m1|21-year-old university theater student|Warm, charismatic, ambitious; wears a silver chain. Affection never overrides consent.⟧
-⟦CHAR|Alex|m|1|m2|20-year-old university musician|Guarded and wry, honest about music and boundaries; wears a silver ring.⟧
-⟦CHAR|Nicole|f|0|f1|21-year-old university student and supportive friend|Independent practical support. Knows only what she sees or is told.⟧
-⟦CHAR|Eric|m|0|m3|22-year-old campus media student|His privacy violations have consequences. Do not romanticize them.⟧
+⟦CHAR|你|m|20|m4|20-year-old new university student|The player chooses the name, feelings and boundaries.⟧
+⟦CHAR|William|m|21|m1|21-year-old university theater student|Warm, charismatic, ambitious; wears a silver chain. Affection never overrides consent.⟧
+⟦CHAR|Alex|m|20|m2|20-year-old university musician|Guarded and wry, honest about music and boundaries; wears a silver ring.⟧
+⟦CHAR|Nicole|f|21|f1|21-year-old university student and supportive friend|Independent practical support. Knows only what she sees or is told.⟧
+⟦CHAR|Eric|m|22|m3|22-year-old campus media student|His privacy violations have consequences. Do not romanticize them.⟧
 # SCENE | Formal dance hall
 ⟦BG|BG01⟧
 [ HOST ] And this year’s crown goes to William Hayes!

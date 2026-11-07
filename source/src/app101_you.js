@@ -25,7 +25,7 @@
     names.forEach(n => {
       const e = n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       o = o.replace(new RegExp("你是" + e + "[，,、]", "g"), "你，").replace(new RegExp("你——" + e + "[^，,—]*[，,]", "g"), "你，").replace(new RegExp("你扮演" + e, "g"), "你扮演的是你自己");
-      o = o.replace(new RegExp(e + "(?![A-Za-z])", "g"), "你");
+      o = o.replace(new RegExp(e + "(?![A-Za-z])", "g"), (m,offset) => zh() ? "你" : offset===0 ? "You" : "you");
     });
     return o.replace(/你你/g, "你").replace(/轮到你说话时/g, "轮到你说话时");
   }
@@ -151,6 +151,7 @@
   function leadsOf(w) {
     if (!w || !Array.isArray(w.cast)) return [];
     const run = typeof lastRun === "function" ? lastRun(w.id) : null, pov = povOf(run, w);
+    if(Array.isArray(w.leads)&&w.leads.length)return w.leads.filter(id=>ch(id)&&id!==pov);
     let L = w.cast.filter(id => id !== pov && ch(id) && ch(id).g === "m");
     const top = w.cast.slice(0, 4); const near = L.filter(id => top.includes(id)); if (near.length) L = near;
     return L.slice(0, 4);
