@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="9a40badd9c48 2026-11-07T07:11Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="167ff6ff663d 2026-11-07T11:11Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -22826,5 +22826,84 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
  });
  window.M105_MEDIA={load,apply,decorate,migrate,valid,finish,version:VER};
 })();
+
+/* The Unread Choice V14: authored facts, explicit consent and scene resources. */
+(function(root){
+ let data=null,pending=null;const VER='unread-v14-20261107.1',bi=(zh,en)=>({zh,en});
+ function initial(){return {W_affection:50,A_affection:50,W_trust:50,A_trust:50,focus:'neutral',W_kiss:false,A_kiss:false,W_hug:false,W_handhold:false,A_handhold:false,W_overnight:false,A_overnight:false,William_friend_only:false,Alex_friend_only:false,romance_paused:false,trial_mode:false,consent_W_open:false,consent_A_open:false,public_visibility:'private',secret_melody:false,final_route:null,history:{}};}
+ function choose(s,n,k){const c=data.chapters[n-1],o=c&&c.choices.find(o=>o.k===k);if(!o)return false;if(s.history[n]===o.id)return true;s.history[n]=o.id;s.last_choice=o.id;
+  for(const item of o.updates.split(',')){const m=item.match(/^([^:]+):(.+)$/);if(!m)continue;const key=m[1],v=m[2];if(/^[+-]\d+$/.test(v)){const names=key==='both_trust'?['W_trust','A_trust']:[key];for(const name of names)s[name]=Math.max(0,Math.min(100,(typeof s[name]==='number'?s[name]:0)+Number(v)));}else s[key]=v==='true'?true:v==='false'?false:v;}
+  if(n===1)s.focus=k==='A'?'William':k==='B'?'Alex':'neutral';
+  if(n===14&&k==='A')s.secret_melody=true;
+  if(n===16){s.porch_kiss=k==='A';if(k==='A')s.W_kiss=true;}
+  if(n===17&&k==='C')s.Alex_friend_only=true;
+  if(n===18){s.W_handhold=k==='A';s.public_visibility=k==='A'?'public':'private';}
+  if(n===19&&k==='B')s.Alex_friend_only=true;
+  if(n===20){s.trial_mode=k==='A';s.romance_paused=k==='C';if(k==='C'){s.William_friend_only=true;s.Alex_friend_only=true;}}
+  if(n===21&&k==='C')s.personal_time=true;
+  if(n===30){s.final_route=k==='A'?'William':k==='B'?'Alex':k==='C'?'self':'transition';if(k==='A'||k==='B'){s.romance_paused=false;s[k==='A'?'William_friend_only':'Alex_friend_only']=false;}if(k==='D'){s.consent_W_open=false;s.consent_A_open=false;s.open_confirmed=false;}}
+  return true;
+ }
+ const friend=(s,name)=>s.romance_paused||s[name==='ALEX'?'Alex_friend_only':'William_friend_only'];
+ function lineFor(s,n,l){let text=l.text;if(n===13&&text==='You came. I’m glad.'&&s.history[12]!=='CH_12_A')text='I recorded the rehearsal in case you would like to hear it.';
+  if(n===14&&text.startsWith('I ordered what you liked last time.')&&s.first_date!=='Alex'&&s.history[12]!=='CH_12_B')text='I guessed what you might like. If I guessed wrong, I’ll eat both.';
+  if(n===19&&!s.secret_melody&&text.startsWith('You remembered the song'))text='I wanted you to hear the part of the song I have not shared before.';
+  if(n===29&&!s.secret_melody&&text==='He gives me a tiny audio recorder with our unfinished chorus.')text='He offers a small audio recorder with his unfinished chorus. Nothing has been recorded or shared in my name.';
+  if(n===29&&text==='He holds out the script from our first night backstage.'&&s.history[12]!=='CH_12_A')text='He offers the worn rehearsal script he showed me earlier.';
+  if(n===21&&!s.trial_mode){const changes={
+   'Ten days. Not a test we have to pass. Just time to see how we actually live.':s.romance_paused?'Ten days to focus on classes, friends, and your own plans. No dating trial.':'There is no shared dating trial. We can talk one-to-one when you decide you are ready.',
+   'I’m okay with dating separately, but I need to know if something changes. Not details. Just what that means for us.':'We have not agreed to date. Friendship and privacy still matter.',
+   'Two people asking for real time. A choice that might actually change tomorrow.':'There is space on the calendar for friends, study, and time that belongs only to me.'};text=changes[text]||text;}
+  if(l.speaker==='ALEX'&&friend(s,'ALEX')){const changes={
+   'I do need you to tell me what I should expect from us.':'Music stays. I’m glad we can be honest about our friendship.',
+   'I don’t need to win against him. I need to know whether you see me.':'I would rather protect an honest friendship than pretend it is something else.',
+   'My scholarship offer came today. I should be happy. I’m terrified it means leaving you.':'My scholarship offer came today. I should be happy. I’m terrified of starting over in another city.',
+   'I want you. I also want that stage. For once, I’m trying not to disappear from either.':'I want to keep our friendship and my music real. For once, I’m trying not to disappear.',
+   'I want to try loving someone without disappearing the second it gets difficult.':'I want to stop disappearing from the people who matter when life gets difficult.',
+   'I’m still going to the residency. I need someone who can see me as a musician and a person, not just a promise.':'I’m still going to the residency. I hope we can stay honest friends while I build that life.'};text=changes[text]||text;}
+  if(n===24&&friend(s,'WILLIAM')&&text==='I do want to know whether you’re still comfortable with how we’re dating.')text='I want to make sure our friendship still respects the boundaries you asked for.';
+  return Object.assign({},l,{text});
+ }
+ function canDiscussOpen(s){return s.trial_mode&&s.history[29]==='CH_29_C'&&!s.romance_paused&&!s.William_friend_only&&!s.Alex_friend_only;}
+ function fact(s,key){if(key==='open_W')s.consent_W_open=true;if(key==='open_A')s.consent_A_open=true;if(key==='open_yes'&&s.consent_W_open&&s.consent_A_open&&canDiscussOpen(s)){s.open_confirmed=true;s.final_route='open';}if(key==='open_no'){s.open_declined=true;s.final_route='transition';}if(key==='kiss_W')s.W_kiss=true;if(key==='kiss_A')s.A_kiss=true;if(['SCN_09_SAFE','SCN_15_CORRIDOR'].includes(key)){s.optionalScenes=s.optionalScenes||{};s.optionalScenes[key]=true;}}
+ const api={initial,choose,lineFor,canDiscussOpen,fact,setData:d=>data=d};root.UNREAD14_ENGINE=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;if(typeof document==='undefined')return;
+ const own=w=>!!(data&&data.work_id&&w&&w.community===data.work_id),state=th=>th.pk.unread14||(th.pk.unread14=initial());
+ function load(){if(data)return Promise.resolve(data);if(!pending)pending=fetch('art/official/unread-v14/runtime.json?v='+VER).then(r=>{if(!r.ok)throw Error('Unread Choice content unavailable');return r.json()}).then(d=>data=d).catch(e=>{pending=null;throw e});return pending;}
+ function by(w){const b={};w.cast.forEach(id=>{const c=ch(id);if(c){b[c.n.toUpperCase()]=id;Object.values(c.n94||{}).forEach(n=>b[n.toUpperCase()]=id)}});b.HAYDEN=w.you94||w.pack.pov;return b;}
+ function msg(w,l){const b=by(w),name=l.speaker;if(l.textMessage)return ['n','act',name+' texts: '+l.text];if(name==='PLAYER (NARRATION)')return ['n','act',l.text];if(b[name])return [b[name],'say',l.text];return ['n','act','['+name+'] '+l.text];}
+ function scene(w,s){const img='unread14:'+s.bg,src='art/official/unread-v14/'+s.bg+'.jpg';(root.SCENE_FILES=root.SCENE_FILES||{})[img]=src;const b=by(w),present=s.lines?s.lines.filter(l=>!l.textMessage&&b[l.speaker]).map(l=>b[l.speaker]):[];return ['sys','scene',{img,src94:src,bg94:s.bg,place:s.place,unreadScene:s.id,present:[...new Set(present.concat(w.you94||[]))]}];}
+ function compile(w,c){const out=[['sys','u14intro',{chapter:c.n}]];for(const s of c.scenes){out.push(scene(w,s),['sys','bgm',{m:s.music}],['sys','fx',{k:s.ambient}]);for(const l of s.lines)out.push(['sys','u14line',{chapter:c.n,line:l}]);}if(c.n===9||c.n===15){const s=data.optional.find(x=>x.chapter===c.n);out.push([w.you94,'line',{hint:bi('可选的生活行动，可以跳过。','An optional action. You can skip it.'),opts:[{k:'say',t:bi(c.n===9?'请 Nicole 陪我去校安办公室':'独自到走廊透口气',c.n===9?'Ask Nicole to accompany me to campus safety':'Step into the quiet corridor alone'),then:[scene(w,s),['sys','fx',{k:'none'}],['sys','set',{flags:['u14_fact_'+s.id]}],['n','act',c.n===9?'Nicole accompanies you to request a lawful review. No private information about other students is disclosed.':'You take a quiet moment outside the dance floor. Nobody follows without an invitation.'],scene(w,c.scenes[2])]},{k:'say',t:bi('跳过，继续剧情','Skip and continue'),then:[]}]}]);}return out;}
+ function choiceThen(w,c,o){const out=[[w.you94,'say',o.said],...o.responses.map(l=>msg(w,l))];if(o.bridge)out.push(['n','act',o.bridge]);if(c.n===5&&['A','B'].includes(o.k)){const n=o.k==='A'?'William':'Alex';out.push([w.you94,'line',{hint:bi('是否亲吻由你明确决定。','A kiss is optional and needs your explicit choice.'),opts:[{k:'say',t:bi('确认愿意，只亲吻','Yes, just a kiss'),then:[[by(w)[n.toUpperCase()],'say','I would like that. Just a kiss.'],['sys','set',{flags:['u14_fact_kiss_'+(o.k==='A'?'W':'A')]}],['sys','fx100',{id:'kiss_mark'}]]},{k:'say',t:bi('不亲吻，继续聊天','No kiss. Keep talking.'),then:[]}]}]);}if(c.n===16&&o.k==='A')out.push(['sys','fx100',{id:'kiss_mark'}]);if(c.n===30)out.push(['sys','u14ending',{}]);return out;}
+ function portraits(w){const b=by(w);for(const n of ['WILLIAM','ALEX'])if(b[n])S.art[b[n]]='art/official/unread-v14/'+n.toLowerCase()+'.jpg';w.cast.filter(id=>![b.WILLIAM,b.ALEX].includes(id)).forEach(id=>S.art[id]='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" rx="50" fill="#24212b"/><text x="50" y="65" text-anchor="middle" fill="#d2bfa5" font-size="40">'+((ch(id).n||'?')[0])+'</text></svg>'));S.art[w.id]='art/official/unread-v14/BG01.jpg';}
+ function configure(w){if(!own(w)||!w.pack)return;portraits(w);if(w.pack.unreadVersion===VER)return;const P=w.pack;P.chapters=data.chapters.map(c=>({t:c.title,goalOwn:true,goal:bi('按自己的意愿作出选择。','Choose on your own terms.'),place:bi('',''),time:bi('',''),ask:bi('你想怎么做？','What do you choose?'),beats:{zh:compile(w,c),en:compile(w,c)},choices:c.choices.map(o=>({k:o.k,t:o.label,set:['u14_choice_'+c.n+'_'+o.k],mem:bi(o.id+': '+o.said,o.id+': '+o.said),then:{zh:choiceThen(w,c,o),en:choiceThen(w,c,o)}})),outline:false}));
+  const post={t:bi('后日谈 · 生活继续','After the finale · Life continues'),goalOwn:true,goal:bi('在你选择的关系里继续生活。','Continue on the terms you chose.'),place:bi('',''),time:bi('',''),ask:bi('接下来呢？','What comes next?'),beats:{zh:[['sys','u14post',{}]],en:[['sys','u14post',{}]]},choices:['Keep in touch.','Ask about the next plan.','Make time for my own day.'].map((t,i)=>({k:'ABC'[i],t:bi(['保持联系','询问下个安排','为自己留出时间'][i],t),mem:bi(t,t),then:{zh:[[w.you94,'say',t]],en:[[w.you94,'say',t]]}})),outline:false};P.chapters.push(post);P.ready=31;P.exp74=1;P.minRoundsPerChapter=0;P.unreadVersion=VER;P.endings={A:{t:bi('William · 每天的选择','William · An everyday choice')},B:{t:bi('Alex · 副歌有了明天','Alex · A tomorrow for the song')},C:{t:bi('自己的生活','Your independent life')},D:{t:bi('协商与边界','Conversations and boundaries')}};save();}
+ const install=installWork;installWork=async function(id){await load().catch(e=>console.warn('[Unread]',e.message));const wid=await install.apply(this,arguments);configure(wid&&wd(wid));return wid;};load().then(()=>Object.values(S.mine.worlds||{}).forEach(configure)).catch(e=>console.warn('[Unread]',e.message));
+ const you=you94Of;you94Of=function(doc){return data&&OFF94.cur&&OFF94.cur.id===data.work_id?['William','Hayden','Hayden','m']:you.apply(this,arguments)};
+ const init=packInit;packInit=function(th,w,extra){if(own(w))extra=Object.assign({},extra||{},{as:w.you94||w.pack.pov});return init.call(this,th,w,extra)};
+ const set=pkSet;pkSet=function(th,flags){if(!own(th&&wd(th.wid)))return set.apply(this,arguments);const rest=[];for(const f of Array.isArray(flags)?flags:[flags]){let m=String(f||'').match(/^u14_choice_(\d+)_([ABCD])$/);if(m)choose(state(th),+m[1],m[2]);else if(String(f||'').startsWith('u14_fact_'))fact(state(th),f.slice(9));else rest.push(f);}return set.call(this,th,rest);};
+ const need=EN;EN=function(th){return own(th&&wd(th.wid))?0:need.apply(this,arguments)};const love=packLove;packLove=function(th){if(!own(th&&wd(th.wid)))return love.apply(this,arguments)};const write=loveWrite;loveWrite=function(th,cid,d,why){if(own(th&&wd(th.wid))&&why==='ending:A')return;return write.apply(this,arguments)};
+ const ensure=off94Ensure;off94Ensure=async function(w){if(!own(w))return ensure.apply(this,arguments);configure(w);portraits(w);const th=S.threads[curT];if(th&&th.wid===w.id&&th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);return OFF94.assets[w.community]||{};};
+ if(root.FXBUS){const old=FXBUS.fromScript;FXBUS.fromScript=function(th){return own(th&&wd(th.wid))?false:old.apply(this,arguments)}}if(typeof mgMatch==='function'){const old=mgMatch;mgMatch=function(){const th=S.threads[curT];return own(th&&wd(th.wid))?null:old.apply(this,arguments)}}
+ function endingBeats(w,s){const key=s.final_route==='William'?'W':s.final_route==='Alex'?'A':s.final_route==='self'?'SELF':s.final_route==='open'?'OPEN':null;return key?data.endings[key].lines.map(l=>msg(w,l)):[['n','act','Each of you takes time to think. No relationship begins without everyone’s freely given agreement. Friendship and your own plans remain complete futures.']];}
+ function openMenu(w){const b=by(w),again=['sys','u14ending',{}],set=f=>['sys','set',{flags:['u14_fact_'+f]}];
+  const confirm=[w.you94,'line',{hint:bi('你仍可以选择不开始。','You can still choose not to begin.'),opts:[
+   {k:'say',t:bi('共同探索，任何人随时可以停止','Explore together, with everyone free to stop'),then:[set('open_yes'),again]},
+   {k:'say',t:bi('先保持友谊','Keep friendship for now'),then:[set('open_no'),again]}
+  ]}];
+  return [[w.you94,'line',{hint:bi('没有人需要立即答应。是否改天分别谈？','Nobody needs to answer now. Talk privately another day?'),opts:[
+   {k:'say',t:bi('在各自考虑后分别谈清楚','Talk separately after everyone has time to think'),then:[['n','act','Later, after each of you has had time alone, you talk with William and Alex separately.'],[b.WILLIAM,'say','I want to try, slowly, with actual conversations.'],set('open_W'),[b.ALEX,'say','I can try talking about it. I won’t promise I’m never going to feel jealous.'],set('open_A'),confirm]},
+   {k:'say',t:bi('先不建立关系','Do not begin a relationship now'),then:[set('open_no'),again]}
+  ]}]];
+ }
+ PKREG.add('app133_unread.js',function(th,b,next){if(!own(wd(th.wid))||!Array.isArray(b)||b[0]!=='sys')return next.apply(this,arguments);const w=wd(th.wid),s=state(th),d=b[2]||{};if(b[1]==='scene'&&d.unreadScene){th.present=d.present||[w.you94];return next.apply(this,arguments)}let out=null;
+  if(b[1]==='u14intro'){const c=data.chapters[d.chapter-2],o=c&&c.choices.find(o=>o.id===s.history[d.chapter-1]);out=o&&o.bridge?[['n','act','You remember your previous choice: '+o.bridge]]:[];}
+  if(b[1]==='u14line')out=[msg(w,lineFor(s,d.chapter,d.line))];
+  if(b[1]==='u14ending')out=s.final_route==='transition'&&!s.open_declined&&canDiscussOpen(s)?openMenu(w):endingBeats(w,s);
+  if(b[1]==='u14post'){const route=s.final_route||'self',bg=route==='William'?'BG41':route==='Alex'?'BG44':route==='open'?'BG36':'BG40';const text=route==='William'?'William texts: “I burned the toast. Is this our first official disaster?”':route==='Alex'?'Alex sends a voice note: “First train. First song. Still thinking of you.”':route==='open'?'At breakfast, each person speaks separately about boundaries, privacy, and time. Nobody owes anyone intimacy.':'Nicole has booked breakfast. Your campus projects and your own future are yours to choose.';out=[scene(w,{id:'POST_'+route,bg,place:'The next ordinary day'}),['sys','bgm',{m:'m_good_morning'}],['sys','fx',{k:'none'}],['n','act',text]];}
+  if(out){th.pk.q.shift();th.pk.q.unshift(...out);save();return true}return next.apply(this,arguments);
+ });
+ const after=packAfterPick;packAfterPick=function(th,k){const yes=own(th&&wd(th.wid)),last=yes&&th.pk.ch===31,old=last?Object.assign({},packSt(th.wid).end||{}):null,result=after.apply(this,arguments);if(last){const r=state(th).final_route,key=r==='William'?'A':r==='Alex'?'B':r==='self'?'C':'D';th.pk.end=key;const ps=packSt(th.wid);ps.end=old;ps.end[key]=1;const m=(th.msgs||[]).filter(m=>m.k==='end').pop();if(m)m.e=key;save()}return result;};
+ root.UNREAD14_RUNTIME={load,configure,own,compile,version:VER};
+})(typeof window!=='undefined'?window:globalThis);
 
 </script>
