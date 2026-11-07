@@ -89,6 +89,7 @@
 
  function refreshSaved(th){if(!own(th&&wd(th.wid)))return;const w=wd(th.wid);presentation(w);portraits(w);let chapter=1,index=0;const reverse={};for(const [en,z]of Object.entries(data.zh||{}))reverse[z]=en;th.title=data.presentation.title[language()];if(th.status){const c=w.pack.chapters[(th.pk.ch||1)-1];if(c)th.status.time=c.time[language()];if(th.status.place)th.status.place=tr(reverse[th.status.place]||th.status.place);}
   for(const m of th.msgs||[]){if(m.k==='scene'&&m.place)m.place=tr(reverse[m.place]||m.place);if(m.k==='chap'){chapter=m.n;index=0;const c=w.pack.chapters[chapter-1];if(c){m.title=language()==='zh'?c.t.zh:c.t.en;if(root.EXPERIENCE124)m.brief124=EXPERIENCE124.brief(th,c,chapter);}}
+   if(m.k==='box'){const english=t=>{if(reverse[t])return reverse[t];for(const [en,z]of Object.entries(names)){if(t.startsWith(z+'：'))return en.toUpperCase()+': '+(reverse[t.slice(z.length+1)]||t.slice(z.length+1));}return t;};for(const p of [...(m.parts||[]),...(m.say?[m.say]:[])]){p.u14en=p.u14en||english(p.txt||'');p.u14zh=p.u14zh||tr(p.u14en,'zh');p.txt=language()==='zh'?p.u14zh:p.u14en;}m.txt=[...(m.parts||[]).map(p=>p.txt),...(m.say?[m.say.txt]:[])].join(' ');m.last=m.say?m.say.txt:((m.parts||[]).slice(-1)[0]||{}).txt||m.txt;}
    if(m.k==='u14line'&&m.who==='sys'){const c=data.chapters[chapter-1],l=c&&c.scenes.flatMap(s=>s.lines)[index++];if(l){const b=msg(w,l,language());m.who=b[0];m.k=b[1];m.txt=b[2];m.u14zh=msg(w,l,'zh')[2];m.u14en=l.textMessage?l.speaker+' texts: '+l.text:l.speaker==='PLAYER (NARRATION)'?l.text:by(w)[l.speaker]?l.text:l.speaker+': '+l.text;}}
    if(m.who!=='me'&&typeof m.txt==='string'&&['say','act','think'].includes(m.k)){const en=m.u14en||reverse[m.txt]||m.txt;if(m.u14zh){m.txt=language()==='zh'?m.u14zh:en;}else if(data.zh[en]){m.u14en=en;m.txt=tr(en);}}
   }
@@ -96,6 +97,7 @@
   th.msgs=(th.msgs||[]).filter(m=>!['u14intro','u14ending','u14post'].includes(m.k));
  }
  if(typeof beatMsg==='function'){const beat=beatMsg;beatMsg=function(b){const m=beat.apply(this,arguments);if(m&&Array.isArray(b)&&b[3]&&b[3].u14en){m.u14en=b[3].u14en;m.u14zh=b[3].u14zh;}return m;}}
+ if(typeof pkAppend==='function'){const append=pkAppend;pkAppend=function(th,m){const result=append.apply(this,arguments);if(own(wd(th.wid))&&m&&m.u14en){const box=th.msgs[th.msgs.length-1];if(box&&box.k==='box'){const target=box.say&&box.say.who===m.who&&box.say.txt===m.txt?box.say:(box.parts||[]).slice().reverse().find(p=>p.who===m.who&&p.txt===m.txt);if(target){target.u14en=m.u14en;target.u14zh=m.u14zh;}}}return result;}}
  if(typeof renderChat==='function'){const render=renderChat;renderChat=function(){const th=S.threads[curT];refreshSaved(th);return render.apply(this,arguments)}}
  load().then(()=>{for(const th of Object.values(S.threads||{}))refreshSaved(th);save()}).catch(e=>console.warn('[Unread repair]',e.message));
  root.UNREAD14_RUNTIME={load,configure,own,compile,refreshSaved,localize:tr,version:VER};
