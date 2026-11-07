@@ -12,6 +12,8 @@ The deployer takes a shared lock, verifies the current release fingerprint, reje
 
 If a deployment is rejected, fetch current `main`, merge the missing changes, rebuild and test, then deploy again. Do not bypass the check by rewriting the production fingerprint. `--adopt-current` is for a reviewed first migration from a release without a manifest, not a routine overwrite switch.
 
+For an existing manifest with reviewed direct production edits, capture a separate snapshot with `deploy-state.py snapshot`, commit every changed source/media file to `main`, then use `--expected-current <exact-release> --reconcile-current <reviewed-snapshot.json>`. This full deployment verifies production still matches the snapshot and every changed file is byte-identical in the target commit, except generated `index.html` and `source/all.js`, which are rebuilt. Missing changes abort deployment. The old production manifest is never rewritten to hide drift.
+
 `shared/production.env`, the database and explicit server adapters remain outside Git. When upstream changes a file covered by a server adapter, deployment stops for a manual merge instead of hiding either version. Never display credentials in logs.
 
 Keep media and image mappings in Git. Additional media from the current release is carried forward, but direct edits to an existing release still trigger the drift check. Store mutable application data in the database or blob store.

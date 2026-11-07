@@ -4,7 +4,7 @@ set -euo pipefail
 APP=${MIRU_DEPLOY_APP:-/opt/miru}
 REPO=468013291jeffery/miru
 REF=main
-EXPECTED= TREE= ARCHIVE= REVISION=
+EXPECTED= TREE= ARCHIVE= REVISION= RECONCILE=
 ADOPT=0 CHECK_ONLY=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
@@ -14,6 +14,7 @@ while [ "$#" -gt 0 ]; do
     --archive) ARCHIVE=$2; shift 2;;
     --revision) REVISION=$2; shift 2;;
     --adopt-current) ADOPT=1; shift;;
+    --reconcile-current) RECONCILE=$2; shift 2;;
     --check-only) CHECK_ONLY=1; shift;;
     *) echo "Unknown deployment option: $1" >&2; exit 64;;
   esac
@@ -26,7 +27,10 @@ case "$CUR" in "$APP"/releases/*) ;; *) echo 'Unexpected current release path' >
 [ -z "$EXPECTED" ] || [ "$CUR" = "$EXPECTED" ] || { echo 'Production advanced since this work started; merge again.' >&2; exit 73; }
 HELPER=$(dirname "$(readlink -f "$0")")/deploy-state.py
 if [ -n "$TREE" ]; then python3 "$HELPER" verify "$CUR" "$TREE"; fi
-if [ -f "$CUR/.miru-files.json" ]; then
+if [ -n "$RECONCILE" ]; then
+  [ -n "$EXPECTED" ] && [ "$CHECK_ONLY" != 1 ] && [ -f "$CUR/.miru-files.json" ] || { echo 'Reconciliation requires an exact current release, existing manifest and full deployment.' >&2; exit 64; }
+  python3 "$HELPER" verify "$CUR" "$RECONCILE"
+elif [ -f "$CUR/.miru-files.json" ]; then
   python3 "$HELPER" verify "$CUR" "$CUR/.miru-files.json"
 elif [ "$ADOPT" != 1 ]; then
   echo 'Untracked production baseline. Reconcile changes, then explicitly use --adopt-current.' >&2; exit 73
@@ -47,6 +51,9 @@ else
 fi
 [[ "$SHA" =~ ^[0-9a-f]{40}$ ]] || { echo 'Deployment revision must be a full commit SHA.' >&2; exit 65; }
 test -f "$NEW/tools/release-contract.mjs"
+if [ -n "$RECONCILE" ]; then
+  python3 "$HELPER" reconcile "$NEW" "$CUR" "$RECONCILE"
+fi
 PREVIOUS_REV=$(python3 - "$CUR" <<'PY'
 import pathlib,json,sys,re
 p=pathlib.Path(sys.argv[1]);m=p/'.miru-release.json'

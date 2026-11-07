@@ -24,3 +24,6 @@ console.log('Release contract: build modules, mainline map, 8 role cards, 85 ima
 assert(build.includes('"app131_m105.js"'),'Missing M105 runtime module');
 execFileSync(process.execPath,['tools/build-m105-runtime.cjs','--check'],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,['tools/m105-selftest.cjs'],{cwd:root,stdio:'inherit'});
+assert(build.includes('"app132_m105experience.js"'),'Missing M105 audiovisual module');
+execFileSync(process.execPath,['tools/build-m105-experience.cjs','--check'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/m105-experience-selftest.cjs'],{cwd:root,stdio:'inherit'});

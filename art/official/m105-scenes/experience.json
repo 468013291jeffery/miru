@@ -1,0 +1,1852 @@
+{
+  "version": "m105-solo-scenes-20261107",
+  "policy": "Only Dante appears in character illustrations. No player body, women or secondary character portraits.",
+  "scenes": {
+    "main:1:1": {
+      "key": "main:1:1",
+      "image": "ch01_penthouse",
+      "src": "art/official/m105-scenes/ch01_penthouse.jpg",
+      "music": "m_midnight_jazz",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "顶层公寓",
+        "en": "Moretti Penthouse"
+      }
+    },
+    "main:1:2": {
+      "key": "main:1:2",
+      "image": "ch01_penthouse",
+      "src": "art/official/m105-scenes/ch01_penthouse.jpg",
+      "music": "m_midnight_jazz",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "顶层公寓 · 稍后",
+        "en": "Moretti Penthouse · Later"
+      }
+    },
+    "main:1:3": {
+      "key": "main:1:3",
+      "image": "ch01_penthouse",
+      "src": "art/official/m105-scenes/ch01_penthouse.jpg",
+      "music": "m_midnight_jazz",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:1:4": {
+      "key": "main:1:4",
+      "image": "ch01_penthouse",
+      "src": "art/official/m105-scenes/ch01_penthouse.jpg",
+      "music": "m_midnight_jazz",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "电梯仍然有门",
+        "en": "The elevator still has a door"
+      }
+    },
+    "main:1:5": {
+      "key": "main:1:5",
+      "image": "ch01_penthouse",
+      "src": "art/official/m105-scenes/ch01_penthouse.jpg",
+      "music": "m_midnight_jazz",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The one request he cannot purchase",
+        "en": "The one request he cannot purchase"
+      }
+    },
+    "main:2:1": {
+      "key": "main:2:1",
+      "image": "ch02_restaurant",
+      "src": "art/official/m105-scenes/ch02_restaurant.jpg",
+      "music": "m_slow_burn",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "旧城区餐厅",
+        "en": "A Closed Little Restaurant"
+      }
+    },
+    "main:2:2": {
+      "key": "main:2:2",
+      "image": "ch02_restaurant",
+      "src": "art/official/m105-scenes/ch02_restaurant.jpg",
+      "music": "m_slow_burn",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "旧城区餐厅 · 稍后",
+        "en": "A Closed Little Restaurant · Later"
+      }
+    },
+    "main:2:3": {
+      "key": "main:2:3",
+      "image": "ch02_restaurant",
+      "src": "art/official/m105-scenes/ch02_restaurant.jpg",
+      "music": "m_slow_burn",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:2:4": {
+      "key": "main:2:4",
+      "image": "ch02_restaurant",
+      "src": "art/official/m105-scenes/ch02_restaurant.jpg",
+      "music": "m_slow_burn",
+      "ambient": "candle",
+      "game": "dinner",
+      "cutaway": false,
+      "place": {
+        "zh": "写着两个名字的收据",
+        "en": "The receipt with two names"
+      }
+    },
+    "main:2:5": {
+      "key": "main:2:5",
+      "image": "ch02_restaurant",
+      "src": "art/official/m105-scenes/ch02_restaurant.jpg",
+      "music": "m_slow_burn",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：Not a perfect date",
+        "en": "Not a perfect date"
+      }
+    },
+    "main:3:1": {
+      "key": "main:3:1",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "私人画廊",
+        "en": "Private Gallery"
+      }
+    },
+    "main:3:2": {
+      "key": "main:3:2",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "私人画廊 · 稍后",
+        "en": "Private Gallery · Later"
+      }
+    },
+    "main:3:3": {
+      "key": "main:3:3",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:3:4": {
+      "key": "main:3:4",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": "clues",
+      "cutaway": false,
+      "place": {
+        "zh": "镜头后面的人",
+        "en": "The person behind the camera"
+      }
+    },
+    "main:3:5": {
+      "key": "main:3:5",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：A name is not a headline",
+        "en": "A name is not a headline"
+      }
+    },
+    "main:4:1": {
+      "key": "main:4:1",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "河边社区中心",
+        "en": "Waterfront Community Center"
+      }
+    },
+    "main:4:2": {
+      "key": "main:4:2",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "河边社区中心 · 稍后",
+        "en": "Waterfront Community Center · Later"
+      }
+    },
+    "main:4:3": {
+      "key": "main:4:3",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:4:4": {
+      "key": "main:4:4",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "奖学金墙上的名字",
+        "en": "The names on the scholarship wall"
+      }
+    },
+    "main:4:5": {
+      "key": "main:4:5",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The seat with no nameplate",
+        "en": "The seat with no nameplate"
+      }
+    },
+    "main:5:1": {
+      "key": "main:5:1",
+      "image": "ch05_office",
+      "src": "art/official/m105-scenes/ch05_office.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "旧办公楼",
+        "en": "Old Moretti Office"
+      }
+    },
+    "main:5:2": {
+      "key": "main:5:2",
+      "image": "ch05_office",
+      "src": "art/official/m105-scenes/ch05_office.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "旧办公楼 · 稍后",
+        "en": "Old Moretti Office · Later"
+      }
+    },
+    "main:5:3": {
+      "key": "main:5:3",
+      "image": "ch05_office",
+      "src": "art/official/m105-scenes/ch05_office.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:5:4": {
+      "key": "main:5:4",
+      "image": "ch05_office",
+      "src": "art/official/m105-scenes/ch05_office.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": "boundaries",
+      "cutaway": false,
+      "place": {
+        "zh": "不找借口的道歉",
+        "en": "The apology without an excuse"
+      }
+    },
+    "main:5:5": {
+      "key": "main:5:5",
+      "image": "ch05_office",
+      "src": "art/official/m105-scenes/ch05_office.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：A quiet kind of accountability",
+        "en": "A quiet kind of accountability"
+      }
+    },
+    "main:6:1": {
+      "key": "main:6:1",
+      "image": "ch06_warehouse",
+      "src": "art/official/m105-scenes/ch06_warehouse.jpg",
+      "music": "m_standoff",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "画廊仓库",
+        "en": "Warehouse Gallery"
+      }
+    },
+    "main:6:2": {
+      "key": "main:6:2",
+      "image": "ch06_warehouse",
+      "src": "art/official/m105-scenes/ch06_warehouse.jpg",
+      "music": "m_standoff",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "画廊仓库 · 稍后",
+        "en": "Warehouse Gallery · Later"
+      }
+    },
+    "main:6:3": {
+      "key": "main:6:3",
+      "image": "ch06_warehouse",
+      "src": "art/official/m105-scenes/ch06_warehouse.jpg",
+      "music": "m_standoff",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:6:4": {
+      "key": "main:6:4",
+      "image": "ch06_warehouse",
+      "src": "art/official/m105-scenes/ch06_warehouse.jpg",
+      "music": "m_standoff",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "第一次诚实面对危险",
+        "en": "The first truthful emergency"
+      }
+    },
+    "main:6:5": {
+      "key": "main:6:5",
+      "image": "night_diner",
+      "src": "art/official/m105-scenes/night_diner.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：After the glass",
+        "en": "After the glass"
+      }
+    },
+    "main:7:1": {
+      "key": "main:7:1",
+      "image": "ch07_family_dinner",
+      "src": "art/official/m105-scenes/ch07_family_dinner.jpg",
+      "music": "m_gala_night",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "家族宅邸",
+        "en": "Moretti Family House"
+      }
+    },
+    "main:7:2": {
+      "key": "main:7:2",
+      "image": "ch07_family_dinner",
+      "src": "art/official/m105-scenes/ch07_family_dinner.jpg",
+      "music": "m_gala_night",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "家族宅邸 · 稍后",
+        "en": "Moretti Family House · Later"
+      }
+    },
+    "main:7:3": {
+      "key": "main:7:3",
+      "image": "ch07_family_dinner",
+      "src": "art/official/m105-scenes/ch07_family_dinner.jpg",
+      "music": "m_gala_night",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:7:4": {
+      "key": "main:7:4",
+      "image": "ch07_family_dinner",
+      "src": "art/official/m105-scenes/ch07_family_dinner.jpg",
+      "music": "m_gala_night",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "家宴主位旁的空椅",
+        "en": "The seat beside the patriarch"
+      }
+    },
+    "main:7:5": {
+      "key": "main:7:5",
+      "image": "ch07_family_dinner",
+      "src": "art/official/m105-scenes/ch07_family_dinner.jpg",
+      "music": "m_gala_night",
+      "ambient": "candle",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The empty chair at the table",
+        "en": "The empty chair at the table"
+      }
+    },
+    "main:8:1": {
+      "key": "main:8:1",
+      "image": "ch08_subway",
+      "src": "art/official/m105-scenes/ch08_subway.jpg",
+      "music": "m_rooftop_wind",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "地铁入口",
+        "en": "Subway Entrance"
+      }
+    },
+    "main:8:2": {
+      "key": "main:8:2",
+      "image": "ch08_subway",
+      "src": "art/official/m105-scenes/ch08_subway.jpg",
+      "music": "m_rooftop_wind",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "地铁入口 · 稍后",
+        "en": "Subway Entrance · Later"
+      }
+    },
+    "main:8:3": {
+      "key": "main:8:3",
+      "image": "ch08_subway",
+      "src": "art/official/m105-scenes/ch08_subway.jpg",
+      "music": "m_rooftop_wind",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:8:4": {
+      "key": "main:8:4",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_rooftop_wind",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "选择留下的痕迹",
+        "en": "Consequences you can feel"
+      }
+    },
+    "main:8:5": {
+      "key": "main:8:5",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_rooftop_wind",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "用自己的名字发声",
+        "en": "A statement in your own name"
+      }
+    },
+    "main:8:6": {
+      "key": "main:8:6",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_rooftop_wind",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：Your own door",
+        "en": "Your own door"
+      }
+    },
+    "main:9:1": {
+      "key": "main:9:1",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "旧码头咖啡馆",
+        "en": "Pier Nine Coffee Shop"
+      }
+    },
+    "main:9:2": {
+      "key": "main:9:2",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "旧码头咖啡馆 · 稍后",
+        "en": "Pier Nine Coffee Shop · Later"
+      }
+    },
+    "main:9:3": {
+      "key": "main:9:3",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:9:4": {
+      "key": "main:9:4",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "没有墓碑的弟弟",
+        "en": "The brother nobody buried"
+      }
+    },
+    "main:9:5": {
+      "key": "main:9:5",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：A memory that was not a clue",
+        "en": "A memory that was not a clue"
+      }
+    },
+    "main:10:1": {
+      "key": "main:10:1",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_library_hush",
+      "ambient": "dust",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "私人图书馆",
+        "en": "Moretti Library"
+      }
+    },
+    "main:10:2": {
+      "key": "main:10:2",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_library_hush",
+      "ambient": "dust",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "私人图书馆 · 稍后",
+        "en": "Moretti Library · Later"
+      }
+    },
+    "main:10:3": {
+      "key": "main:10:3",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_library_hush",
+      "ambient": "dust",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:10:4": {
+      "key": "main:10:4",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_library_hush",
+      "ambient": "dust",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "一把不需要收下的钥匙",
+        "en": "A key that opens nothing"
+      }
+    },
+    "main:10:5": {
+      "key": "main:10:5",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_library_hush",
+      "ambient": "dust",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The letter nobody opens for you",
+        "en": "The letter nobody opens for you"
+      }
+    },
+    "main:11:1": {
+      "key": "main:11:1",
+      "image": "ch11_boardroom",
+      "src": "art/official/m105-scenes/ch11_boardroom.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "基金会董事会",
+        "en": "Foundation Boardroom"
+      }
+    },
+    "main:11:2": {
+      "key": "main:11:2",
+      "image": "ch11_boardroom",
+      "src": "art/official/m105-scenes/ch11_boardroom.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "基金会董事会 · 稍后",
+        "en": "Foundation Boardroom · Later"
+      }
+    },
+    "main:11:3": {
+      "key": "main:11:3",
+      "image": "ch11_boardroom",
+      "src": "art/official/m105-scenes/ch11_boardroom.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:11:4": {
+      "key": "main:11:4",
+      "image": "ch11_boardroom",
+      "src": "art/official/m105-scenes/ch11_boardroom.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "买不到的投票",
+        "en": "The vote that cannot be bought"
+      }
+    },
+    "main:11:5": {
+      "key": "main:11:5",
+      "image": "ch11_boardroom",
+      "src": "art/official/m105-scenes/ch11_boardroom.jpg",
+      "music": "m_boardroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The first person to say no",
+        "en": "The first person to say no"
+      }
+    },
+    "main:12:1": {
+      "key": "main:12:1",
+      "image": "ch12_greenhouse",
+      "src": "art/official/m105-scenes/ch12_greenhouse.jpg",
+      "music": "m_heartbeat_close",
+      "ambient": "rain",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "屋顶温室",
+        "en": "Rooftop Greenhouse"
+      }
+    },
+    "main:12:2": {
+      "key": "main:12:2",
+      "image": "ch12_greenhouse",
+      "src": "art/official/m105-scenes/ch12_greenhouse.jpg",
+      "music": "m_heartbeat_close",
+      "ambient": "rain",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "屋顶温室 · 稍后",
+        "en": "Rooftop Greenhouse · Later"
+      }
+    },
+    "main:12:3": {
+      "key": "main:12:3",
+      "image": "ch12_greenhouse",
+      "src": "art/official/m105-scenes/ch12_greenhouse.jpg",
+      "music": "m_heartbeat_close",
+      "ambient": "rain",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:12:4": {
+      "key": "main:12:4",
+      "image": "ch12_greenhouse",
+      "src": "art/official/m105-scenes/ch12_greenhouse.jpg",
+      "music": "m_heartbeat_close",
+      "ambient": "rain",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "选择留下的痕迹",
+        "en": "Consequences you can feel"
+      }
+    },
+    "main:12:5": {
+      "key": "main:12:5",
+      "image": "ch12_greenhouse",
+      "src": "art/official/m105-scenes/ch12_greenhouse.jpg",
+      "music": "m_heartbeat_close",
+      "ambient": "rain",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "没有摄像头的房间",
+        "en": "What a private room is for"
+      }
+    },
+    "main:12:6": {
+      "key": "main:12:6",
+      "image": "ch12_greenhouse",
+      "src": "art/official/m105-scenes/ch12_greenhouse.jpg",
+      "music": "m_heartbeat_close",
+      "ambient": "rain",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The question before the kiss",
+        "en": "The question before the kiss"
+      }
+    },
+    "main:13:1": {
+      "key": "main:13:1",
+      "image": "ch13_marina",
+      "src": "art/official/m105-scenes/ch13_marina.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "新泽西游艇码头",
+        "en": "New Jersey Marina"
+      }
+    },
+    "main:13:2": {
+      "key": "main:13:2",
+      "image": "ch13_marina",
+      "src": "art/official/m105-scenes/ch13_marina.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "新泽西游艇码头 · 稍后",
+        "en": "New Jersey Marina · Later"
+      }
+    },
+    "main:13:3": {
+      "key": "main:13:3",
+      "image": "ch13_marina",
+      "src": "art/official/m105-scenes/ch13_marina.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:13:4": {
+      "key": "main:13:4",
+      "image": "witness_lobby",
+      "src": "art/official/m105-scenes/witness_lobby.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": true,
+      "place": {
+        "zh": "证人自己决定怎么说",
+        "en": "The witness chooses her words"
+      }
+    },
+    "main:13:5": {
+      "key": "main:13:5",
+      "image": "witness_lobby",
+      "src": "art/official/m105-scenes/witness_lobby.jpg",
+      "music": "m_clue",
+      "ambient": "none",
+      "game": null,
+      "cutaway": true,
+      "place": {
+        "zh": "深入场景：A witness with her own voice",
+        "en": "A witness with her own voice"
+      }
+    },
+    "main:14:1": {
+      "key": "main:14:1",
+      "image": "ch14_hearing",
+      "src": "art/official/m105-scenes/ch14_hearing.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "市政听证会",
+        "en": "City Hearing"
+      }
+    },
+    "main:14:2": {
+      "key": "main:14:2",
+      "image": "ch14_hearing",
+      "src": "art/official/m105-scenes/ch14_hearing.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "市政听证会 · 稍后",
+        "en": "City Hearing · Later"
+      }
+    },
+    "main:14:3": {
+      "key": "main:14:3",
+      "image": "ch14_hearing",
+      "src": "art/official/m105-scenes/ch14_hearing.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:14:4": {
+      "key": "main:14:4",
+      "image": "ch14_hearing",
+      "src": "art/official/m105-scenes/ch14_hearing.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "选择留下的痕迹",
+        "en": "Consequences you can feel"
+      }
+    },
+    "main:14:5": {
+      "key": "main:14:5",
+      "image": "ch14_hearing",
+      "src": "art/official/m105-scenes/ch14_hearing.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": "hearing",
+      "cutaway": false,
+      "place": {
+        "zh": "签名下面的供词",
+        "en": "The confession beneath the signature"
+      }
+    },
+    "main:14:6": {
+      "key": "main:14:6",
+      "image": "ch14_hearing",
+      "src": "art/official/m105-scenes/ch14_hearing.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The page no one can sign away",
+        "en": "The page no one can sign away"
+      }
+    },
+    "main:15:1": {
+      "key": "main:15:1",
+      "image": "ch15_headquarters",
+      "src": "art/official/m105-scenes/ch15_headquarters.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "莫雷蒂集团总部",
+        "en": "Moretti Headquarters"
+      }
+    },
+    "main:15:2": {
+      "key": "main:15:2",
+      "image": "ch15_headquarters",
+      "src": "art/official/m105-scenes/ch15_headquarters.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "莫雷蒂集团总部 · 稍后",
+        "en": "Moretti Headquarters · Later"
+      }
+    },
+    "main:15:3": {
+      "key": "main:15:3",
+      "image": "ch15_headquarters",
+      "src": "art/official/m105-scenes/ch15_headquarters.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:15:4": {
+      "key": "main:15:4",
+      "image": "ch15_headquarters",
+      "src": "art/official/m105-scenes/ch15_headquarters.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "放弃王冠的代价",
+        "en": "The price of signing away a crown"
+      }
+    },
+    "main:15:5": {
+      "key": "main:15:5",
+      "image": "ch15_headquarters",
+      "src": "art/official/m105-scenes/ch15_headquarters.jpg",
+      "music": "m_old_letter",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：What resignation does not fix",
+        "en": "What resignation does not fix"
+      }
+    },
+    "main:16:1": {
+      "key": "main:16:1",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "普通街区公寓",
+        "en": "Your Neighborhood"
+      }
+    },
+    "main:16:2": {
+      "key": "main:16:2",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "普通街区公寓 · 稍后",
+        "en": "Your Neighborhood · Later"
+      }
+    },
+    "main:16:3": {
+      "key": "main:16:3",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:16:4": {
+      "key": "main:16:4",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": "groceries",
+      "cutaway": false,
+      "place": {
+        "zh": "买菜，而不是轰动全城",
+        "en": "Groceries, not grand gestures"
+      }
+    },
+    "main:16:5": {
+      "key": "main:16:5",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：The price of tomatoes",
+        "en": "The price of tomatoes"
+      }
+    },
+    "main:17:1": {
+      "key": "main:17:1",
+      "image": "ch17_rooftop",
+      "src": "art/official/m105-scenes/ch17_rooftop.jpg",
+      "music": "m_confession",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "城市天台",
+        "en": "Quiet City Rooftop"
+      }
+    },
+    "main:17:2": {
+      "key": "main:17:2",
+      "image": "ch17_rooftop",
+      "src": "art/official/m105-scenes/ch17_rooftop.jpg",
+      "music": "m_confession",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "城市天台 · 稍后",
+        "en": "Quiet City Rooftop · Later"
+      }
+    },
+    "main:17:3": {
+      "key": "main:17:3",
+      "image": "ch17_rooftop",
+      "src": "art/official/m105-scenes/ch17_rooftop.jpg",
+      "music": "m_confession",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:17:4": {
+      "key": "main:17:4",
+      "image": "ch17_rooftop",
+      "src": "art/official/m105-scenes/ch17_rooftop.jpg",
+      "music": "m_confession",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "选择留下的痕迹",
+        "en": "Consequences you can feel"
+      }
+    },
+    "main:17:5": {
+      "key": "main:17:5",
+      "image": "ch17_rooftop",
+      "src": "art/official/m105-scenes/ch17_rooftop.jpg",
+      "music": "m_confession",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "表白背后的真正问题",
+        "en": "The question behind the question"
+      }
+    },
+    "main:17:6": {
+      "key": "main:17:6",
+      "image": "ch17_rooftop",
+      "src": "art/official/m105-scenes/ch17_rooftop.jpg",
+      "music": "m_confession",
+      "ambient": "bokeh",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：A promise that is not a proposal",
+        "en": "A promise that is not a proposal"
+      }
+    },
+    "main:18:1": {
+      "key": "main:18:1",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "滨河花园",
+        "en": "Waterfront Community Garden"
+      }
+    },
+    "main:18:2": {
+      "key": "main:18:2",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "滨河花园 · 稍后",
+        "en": "Waterfront Community Garden · Later"
+      }
+    },
+    "main:18:3": {
+      "key": "main:18:3",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "只属于这一刻的对话",
+        "en": "Private turning point"
+      }
+    },
+    "main:18:4": {
+      "key": "main:18:4",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "庆典之后 · committed",
+        "en": "After the celebration · committed"
+      }
+    },
+    "main:18:5": {
+      "key": "main:18:5",
+      "image": "ch02_restaurant",
+      "src": "art/official/m105-scenes/ch02_restaurant.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "庆典之后 · slow",
+        "en": "After the celebration · slow"
+      }
+    },
+    "main:18:6": {
+      "key": "main:18:6",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "庆典之后 · independent",
+        "en": "After the celebration · independent"
+      }
+    },
+    "main:18:7": {
+      "key": "main:18:7",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": "garden",
+      "cutaway": false,
+      "place": {
+        "zh": "庆祝之后的清晨",
+        "en": "The morning after the celebration"
+      }
+    },
+    "main:18:8": {
+      "key": "main:18:8",
+      "image": "ch18_riverside",
+      "src": "art/official/m105-scenes/ch18_riverside.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "深入场景：After the cameras leave",
+        "en": "After the cameras leave"
+      }
+    },
+    "committed:1:1": {
+      "key": "committed:1:1",
+      "image": "route_birthday",
+      "src": "art/official/m105-scenes/route_birthday.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "烤焦的生日蛋糕",
+        "en": "A burned birthday cake"
+      }
+    },
+    "committed:1:2": {
+      "key": "committed:1:2",
+      "image": "route_birthday",
+      "src": "art/official/m105-scenes/route_birthday.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "记录本上的一行字",
+        "en": "The line in the logbook"
+      }
+    },
+    "committed:1:3": {
+      "key": "committed:1:3",
+      "image": "route_birthday",
+      "src": "art/official/m105-scenes/route_birthday.jpg",
+      "music": "m_sunday_kitchen",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "没吃完的蛋糕",
+        "en": "The cake, unfinished"
+      }
+    },
+    "committed:2:1": {
+      "key": "committed:2:1",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "没有拆开的房产画册",
+        "en": "A brochure left unopened"
+      }
+    },
+    "committed:2:2": {
+      "key": "committed:2:2",
+      "image": "ch04_community",
+      "src": "art/official/m105-scenes/ch04_community.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "真正重要的一票",
+        "en": "The vote that matters"
+      }
+    },
+    "committed:2:3": {
+      "key": "committed:2:3",
+      "image": "ch16_apartment",
+      "src": "art/official/m105-scenes/ch16_apartment.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "带着自己的钥匙回家",
+        "en": "Returning with your own key"
+      }
+    },
+    "committed:3:1": {
+      "key": "committed:3:1",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "写错名字的邀请函",
+        "en": "The wrong invitation"
+      }
+    },
+    "committed:3:2": {
+      "key": "committed:3:2",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "晚宴与明信片",
+        "en": "The gala and the postcard"
+      }
+    },
+    "committed:3:3": {
+      "key": "committed:3:3",
+      "image": "ch10_library",
+      "src": "art/official/m105-scenes/ch10_library.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "承诺真正的样子",
+        "en": "What commitment looks like"
+      }
+    },
+    "slow:1:1": {
+      "key": "slow:1:1",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "星期二的信息",
+        "en": "The message on Tuesday"
+      }
+    },
+    "slow:1:2": {
+      "key": "slow:1:2",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "不用标签的问题",
+        "en": "A question without a label"
+      }
+    },
+    "slow:1:3": {
+      "key": "slow:1:3",
+      "image": "ch09_dock_cafe",
+      "src": "art/official/m105-scenes/ch09_dock_cafe.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "喝完咖啡以后",
+        "en": "After the cups"
+      }
+    },
+    "slow:2:1": {
+      "key": "slow:2:1",
+      "image": "route_bookstore",
+      "src": "art/official/m105-scenes/route_bookstore.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "书架间的熟悉身影",
+        "en": "A familiar face among the shelves"
+      }
+    },
+    "slow:2:2": {
+      "key": "slow:2:2",
+      "image": "route_bookstore",
+      "src": "art/official/m105-scenes/route_bookstore.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "权力应该怎么使用",
+        "en": "A choice about power"
+      }
+    },
+    "slow:2:3": {
+      "key": "slow:2:3",
+      "image": "route_promenade",
+      "src": "art/official/m105-scenes/route_promenade.jpg",
+      "music": "m_slow_burn",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "留到下次的问题",
+        "en": "A question for another day"
+      }
+    },
+    "slow:3:1": {
+      "key": "slow:3:1",
+      "image": "route_ferry",
+      "src": "art/official/m105-scenes/route_ferry.jpg",
+      "music": "m_seaside",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "晚班渡轮",
+        "en": "The late ferry"
+      }
+    },
+    "slow:3:2": {
+      "key": "slow:3:2",
+      "image": "route_ferry",
+      "src": "art/official/m105-scenes/route_ferry.jpg",
+      "music": "m_seaside",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "没有筹码的未来",
+        "en": "A future without leverage"
+      }
+    },
+    "slow:3:3": {
+      "key": "slow:3:3",
+      "image": "route_promenade",
+      "src": "art/official/m105-scenes/route_promenade.jpg",
+      "music": "m_seaside",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "码头没有截止日期",
+        "en": "No deadline on the pier"
+      }
+    },
+    "independent:1:1": {
+      "key": "independent:1:1",
+      "image": "independent_gallery",
+      "src": "art/official/m105-scenes/independent_gallery.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "用自己的钥匙开门",
+        "en": "An opening with your own key"
+      }
+    },
+    "independent:1:2": {
+      "key": "independent:1:2",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "没人拥有的照片",
+        "en": "The photograph nobody owns"
+      }
+    },
+    "independent:1:3": {
+      "key": "independent:1:3",
+      "image": "ch03_gallery",
+      "src": "art/official/m105-scenes/ch03_gallery.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "以自己的名字离场",
+        "en": "Walking out under your own name"
+      }
+    },
+    "independent:2:1": {
+      "key": "independent:2:1",
+      "image": "witness_lobby",
+      "src": "art/official/m105-scenes/witness_lobby.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": true,
+      "place": {
+        "zh": "Elena 带来的消息",
+        "en": "News from Elena"
+      }
+    },
+    "independent:2:2": {
+      "key": "independent:2:2",
+      "image": "witness_lobby",
+      "src": "art/official/m105-scenes/witness_lobby.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": true,
+      "place": {
+        "zh": "证人不是传话筒",
+        "en": "A witness, not a bridge"
+      }
+    },
+    "independent:2:3": {
+      "key": "independent:2:3",
+      "image": "witness_lobby",
+      "src": "art/official/m105-scenes/witness_lobby.jpg",
+      "music": "m_courtroom",
+      "ambient": "none",
+      "game": null,
+      "cutaway": true,
+      "place": {
+        "zh": "信封保持密封",
+        "en": "The envelope stays sealed"
+      }
+    },
+    "independent:3:1": {
+      "key": "independent:3:1",
+      "image": "independent_studio",
+      "src": "art/official/m105-scenes/independent_studio.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "写着你名字的租约",
+        "en": "A lease in your name"
+      }
+    },
+    "independent:3:2": {
+      "key": "independent:3:2",
+      "image": "independent_studio",
+      "src": "art/official/m105-scenes/independent_studio.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "谁有最后一句话",
+        "en": "Who gets the last word"
+      }
+    },
+    "independent:3:3": {
+      "key": "independent:3:3",
+      "image": "independent_studio",
+      "src": "art/official/m105-scenes/independent_studio.jpg",
+      "music": "m_good_morning",
+      "ambient": "none",
+      "game": null,
+      "cutaway": false,
+      "place": {
+        "zh": "你自己决定的明天",
+        "en": "A future of your choosing"
+      }
+    }
+  },
+  "games": {
+    "dinner": {
+      "title": {
+        "zh": "两个人的餐桌",
+        "en": "A table for two"
+      },
+      "intro": {
+        "zh": "选出你希望这顿晚餐遵守的两条约定。没有标准恋爱答案。",
+        "en": "Choose two agreements for this dinner. There is no romance score."
+      },
+      "kind": "select",
+      "min": 2,
+      "items": [
+        {
+          "zh": "手机放下，认真听彼此",
+          "en": "Put phones away and listen"
+        },
+        {
+          "zh": "先问口味，再替对方点餐",
+          "en": "Ask preferences before ordering"
+        },
+        {
+          "zh": "随时可以结束晚餐",
+          "en": "Either person can end dinner"
+        },
+        {
+          "zh": "账单和安排一起商量",
+          "en": "Discuss the bill and plans together"
+        }
+      ]
+    },
+    "clues": {
+      "title": {
+        "zh": "已知与待核实",
+        "en": "Known and unverified"
+      },
+      "intro": {
+        "zh": "只整理已经公开的线索，猜测不能当证据。",
+        "en": "Sort only what is known. A guess is not evidence."
+      },
+      "kind": "classify",
+      "categories": [
+        {
+          "zh": "已知",
+          "en": "Known"
+        },
+        {
+          "zh": "待核实",
+          "en": "Unverified"
+        }
+      ],
+      "items": [
+        {
+          "t": {
+            "zh": "偷拍照片已经出现",
+            "en": "A covert photograph exists"
+          },
+          "answer": 0
+        },
+        {
+          "t": {
+            "zh": "是谁安排了拍摄",
+            "en": "Who arranged the photograph"
+          },
+          "answer": 1
+        },
+        {
+          "t": {
+            "zh": "照片足以证明所有人的动机",
+            "en": "The photo proves everyone’s motives"
+          },
+          "answer": 1
+        }
+      ]
+    },
+    "boundaries": {
+      "title": {
+        "zh": "把边界写清楚",
+        "en": "Make boundaries clear"
+      },
+      "intro": {
+        "zh": "选出你希望保留的边界。可全选，也可以跳过；不会改变你的关系路线。",
+        "en": "Choose the boundaries you want. Select any, or skip; your relationship route stays yours."
+      },
+      "kind": "select",
+      "min": 1,
+      "items": [
+        {
+          "zh": "不经同意不记录我的行程",
+          "en": "No tracking my movements without consent"
+        },
+        {
+          "zh": "安全建议先问我的意见",
+          "en": "Ask before making safety arrangements"
+        },
+        {
+          "zh": "我可以离开，也可以改主意",
+          "en": "I can leave or change my mind"
+        },
+        {
+          "zh": "错误需要说明和整改",
+          "en": "Mistakes need acknowledgement and repair"
+        }
+      ]
+    },
+    "hearing": {
+      "title": {
+        "zh": "听证前的材料夹",
+        "en": "The hearing folder"
+      },
+      "intro": {
+        "zh": "把材料放到正确位置。这项整理不会代替证人的决定或法律结论。",
+        "en": "Sort the material. This does not decide for a witness or replace legal findings."
+      },
+      "kind": "classify",
+      "categories": [
+        {
+          "zh": "保留原件",
+          "en": "Preserve original"
+        },
+        {
+          "zh": "公开前删隐",
+          "en": "Redact before publication"
+        },
+        {
+          "zh": "继续核实",
+          "en": "Verify further"
+        }
+      ],
+      "items": [
+        {
+          "t": {
+            "zh": "原始转账记录",
+            "en": "Original transfer records"
+          },
+          "answer": 0
+        },
+        {
+          "t": {
+            "zh": "证人的住址",
+            "en": "A witness’s home address"
+          },
+          "answer": 1
+        },
+        {
+          "t": {
+            "zh": "没有出处的传言",
+            "en": "An unsourced rumor"
+          },
+          "answer": 2
+        }
+      ]
+    },
+    "groceries": {
+      "title": {
+        "zh": "今晚的小采购",
+        "en": "Tonight’s small shop"
+      },
+      "intro": {
+        "zh": "小游戏预算为 20，挑选不超预算的三样食材。这里只是生活片段，不花费钻石。",
+        "en": "Game budget: 20. Choose three ingredients within budget. This costs no diamonds."
+      },
+      "kind": "budget",
+      "budget": 20,
+      "min": 3,
+      "items": [
+        {
+          "t": {
+            "zh": "番茄",
+            "en": "Tomatoes"
+          },
+          "cost": 6
+        },
+        {
+          "t": {
+            "zh": "意面",
+            "en": "Pasta"
+          },
+          "cost": 7
+        },
+        {
+          "t": {
+            "zh": "罗勒",
+            "en": "Basil"
+          },
+          "cost": 4
+        },
+        {
+          "t": {
+            "zh": "面包",
+            "en": "Bread"
+          },
+          "cost": 5
+        },
+        {
+          "t": {
+            "zh": "莓果",
+            "en": "Berries"
+          },
+          "cost": 9
+        }
+      ]
+    },
+    "garden": {
+      "title": {
+        "zh": "花园里的三个位置",
+        "en": "Three places in the garden"
+      },
+      "intro": {
+        "zh": "选择今天想先照顾的三个角落。每种安排都能继续故事。",
+        "en": "Choose three corners to care for today. Every arrangement lets the story continue."
+      },
+      "kind": "select",
+      "min": 3,
+      "items": [
+        {
+          "zh": "给花圃浇水",
+          "en": "Water the flower beds"
+        },
+        {
+          "zh": "清理无障碍步道",
+          "en": "Clear the accessible path"
+        },
+        {
+          "zh": "整理公共工具",
+          "en": "Organize shared tools"
+        },
+        {
+          "zh": "给休息区添一把椅子",
+          "en": "Add a chair to the rest area"
+        }
+      ]
+    }
+  }
+}
