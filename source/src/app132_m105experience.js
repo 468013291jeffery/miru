@@ -1,6 +1,6 @@
 /* M105 authored audiovisual scenes and optional, non-scoring activities. */
 (function(){
- const ID='w_scmvxnqoko453e6d7bc3',VER='m105-solo-scenes-20261107';let plan=null,promise=null,active=null;
+ const ID='w_scmvxnqoko453e6d7bc3',VER='m105-solo-scenes-20261107.2';let plan=null,promise=null,active=null;
  const own=w=>w&&w.community===ID,bi=(zh,en)=>({zh,en}),local=x=>typeof x==='string'?x:(x&&(x[CL()]||x.en||x.zh))||'';
  function load(){if(plan)return Promise.resolve(plan);if(!promise)promise=fetch('art/official/m105-scenes/experience.json?v='+VER).then(r=>{if(!r.ok)throw Error('M105 scene plan unavailable');return r.json()}).then(j=>plan=j).catch(e=>{promise=null;throw e});return promise;}
  function rows(chapter,section,episode){return Object.values(plan.scenes).filter(r=>r.key.startsWith(section==='main'?'main:'+chapter+':':section+':'+episode+':'));}
@@ -8,7 +8,7 @@
  function decorate(w,arr,chapter,section,episode,lang,counter){let current=null,waiting=false;const out=[];counter=counter||{n:0};
   const activity=()=>{if(waiting&&current&&current.game){out.push(['sys','m105activity',{id:current.game}]);waiting=false;}};
   for(const raw of arr||[]){if(!Array.isArray(raw)){out.push(raw);continue}const b=JSON.parse(JSON.stringify(raw));
-   if(b[0]==='sys'&&b[1]==='bgm')continue;
+   if(b[0]==='sys'&&['bgm','fx','fx100','m105activity'].includes(b[1]))continue;
    if(b[1]==='cg94'&&['cg_together','cg_kiss','cg_conversation'].includes((b[2]||{}).slot))continue;
    if(b[1]==='scene'){activity();current=rowFor(chapter,section,episode,++counter.n);if(current){const k='m105scene:'+current.key;b[2].m105Scene=current.key;b[2].img=k;b[2].src94=current.src;(window.SCENE_FILES=window.SCENE_FILES||{})[k]=current.src;waiting=!!current.game;out.push(b,['sys','bgm',{m:current.music}],['sys','fx',{k:current.ambient}]);continue;}}
    if(b[1]==='line'){activity();b[2].opts.forEach(o=>o.then=decorate(w,o.then,chapter,section,episode,lang,counter));}
@@ -29,6 +29,9 @@
  }
  const install=installWork;installWork=async function(id){if(id===ID)await load();const wid=await install.apply(this,arguments);apply(wid&&wd(wid));return wid;};
  const assets=off94Assets;off94Assets=async function(id){const r=await assets.apply(this,arguments);if(id===ID)Object.values(S.mine.worlds||{}).forEach(portraits);return r;};
+ // The generic importer restores legacy bg94 slots and cast portraits. M105 has
+ // explicit authored bindings, so reopening must restore those without rebinding.
+ const ensure=off94Ensure;off94Ensure=async function(w){if(!own(w))return ensure.apply(this,arguments);await Promise.all([load(),window.M105_RUNTIME.load(),off94Assets(ID)]);window.M105_RUNTIME.configure(w);apply(w);portraits(w);const th=S.threads[curT];if(th&&th.wid===w.id&&th.pk&&th.pk.bg)sceneBg(th,th.pk.bg);return OFF94.assets[ID]||{};};
  Promise.all([load(),window.M105_RUNTIME.load()]).then(()=>Object.values(S.mine.worlds||{}).forEach(apply)).catch(e=>console.warn('[M105 media]',e.message));
  if(window.FXBUS){const f=FXBUS.fromScript;FXBUS.fromScript=function(th){if(own(th&&wd(th.wid)))return false;return f.apply(this,arguments)}}
  if(typeof mgMatch==='function'){const m=mgMatch;mgMatch=function(){const th=S.threads[curT];return own(th&&wd(th.wid))?null:m.apply(this,arguments)};}
