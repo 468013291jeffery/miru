@@ -43,7 +43,7 @@
   const show=entry&&(voicing||(S.tapHintN||0)<HINT_N);
   if(!show){if(tip)tip.remove();return;}
   if(!tip){tip=document.createElement('div');tip.dataset.tapHint='1';tip.className='tap-hint';const composer=chat.querySelector('.composer');if(composer)composer.before(tip);else chat.appendChild(tip);}
-  tip.textContent=voicing?'朗读中… 点一下停止':'轻点屏幕继续 ›';
+  tip.textContent=CL()==='zh'?(voicing?'朗读中… 点一下停止':'轻点屏幕继续 ›'):(voicing?'Reading aloud… Tap to stop':'Tap to continue ›');
   tip.classList.toggle('voicing',voicing);
  }
  R.wait=function(th,message,kind){

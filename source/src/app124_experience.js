@@ -25,7 +25,7 @@
   const narration=opening.find(b=>b[0]==='n'&&['act','narr'].includes(b[1])&&typeof b[2]==='string');
   return {time:local(c.time)||local(scene.time)||text('时间待剧情交代','Time not yet established'),place:local(c.place)||local(scene.place)||text('地点待剧情交代','Location not yet established'),cast:ids.filter(id=>id!==th.pk.as).map(id=>ch(id)?.n).filter(Boolean),background:local(c.background||c.context||c.summaryPublic||(narration&&narration[2])).slice(0,240)||text('从本章开场继续了解当前情境。','Follow the opening scene for context.')};
  };
- const briefHTML=(b)=>'<dl class="brief124"><dt>'+text('时间','Time')+'</dt><dd>'+esc(b.time)+'</dd><dt>'+text('地点','Place')+'</dt><dd>'+esc(b.place)+'</dd><dt>'+text('人物','Present')+'</dt><dd>'+esc([text('你','You'),...(b.cast||[])].join('、'))+((b.cast||[]).length?'':text(' · 其余人物随登场介绍',' · Others introduced on arrival'))+'</dd></dl><p>'+esc(b.background)+'</p>';
+ const briefHTML=(b)=>'<dl class="brief124"><dt>'+text('时间','Time')+'</dt><dd>'+esc(b.time)+'</dd><dt>'+text('地点','Place')+'</dt><dd>'+esc(b.place)+'</dd><dt>'+text('人物','Present')+'</dt><dd>'+esc([text('你','You'),...(b.cast||[])].join(text('、',', ')))+((b.cast||[]).length?'':text(' · 其余人物随登场介绍',' · Others introduced on arrival'))+'</dd></dl><p>'+esc(b.background)+'</p>';
  MSGKIND.inline('app124_experience.js',['chap'],function(m,i,th,next){
   if(m.k!=='chap')return next(m,i,th);
   const c=wd(th.wid)?.pack?.chapters[m.n-1],b=m.brief124||(c&&X.brief(th,c,m.n));
