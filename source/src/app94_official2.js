@@ -349,9 +349,18 @@ function zh94(s) { s = String(s || ""); return /[\u4e00-\u9fff]/.test(s) ? s.rep
 function off94Title(w) { const zh = CL() === "zh"; return zh ? zh94(w.title || "") : ((w.en && w.en.title) || w.title || ""); }
 function off94Hook(w) { const zh = CL() === "zh"; return (!zh && w.en && w.en.hook) || w.hook || ""; }
 const OFF94_SHOWCASE = "w_scmw2calg4a57f5c1974"; /* 首页视频卡对应的剧 */
+function off94PreviewSrc(w) {
+  const A = w.A || {};
+  if (A.home_video) return A.home_video;
+  if (w.id === OFF94_SHOWCASE && typeof homeShowcaseHTML === "function") {
+    const match = /data-src="([^"]+)"/.exec(homeShowcaseHTML());
+    if (match) return match[1];
+  }
+  return A.vid_open || "";
+}
 function off94FCard(w) {
-  const A = w.A, pos = A.cover || A.poster || "";
-  const bg = A.vid_open ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(A.vid_open) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
+  const A = w.A, homeVideo = off94PreviewSrc(w), pos = A.cover || A.poster || "";
+  const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
   return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
     '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (CL() === "zh" ? (w.orient === "bl" ? "男男" : w.orient === "gl" ? "女女" : "男女") : (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F")) + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
     '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
@@ -372,8 +381,8 @@ renderHome = function (v) {
   return r;
 };
 function off94RCard(w) {
-  const A = w.A, pos = A.cover || A.poster || "";
-  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (A.vid_open ? '<video src="' + esc(A.vid_open) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>' : '<img src="' + esc(pos) + '" alt="">') +
+  const A = w.A, previewVideo = off94PreviewSrc(w), pos = A.cover || A.poster || "";
+  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (previewVideo ? '<video src="' + esc(previewVideo) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>' : '<img src="' + esc(pos) + '" alt="">') +
     '<span class="rbadge">✦ ' + (CL() === "zh" ? "新剧" : "New") + '</span></div><b>' + esc(off94Title(w)) + '</b><span>' + esc(off94Hook(w)).slice(0, 40) + '</span></button>';
 }
 const _discMain94 = discMain;
