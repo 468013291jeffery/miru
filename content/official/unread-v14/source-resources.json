@@ -1,0 +1,659 @@
+{
+  "version": "14.0",
+  "scenes": [
+    {
+      "scene_id": "SCN_01_01",
+      "bg_id": "BG01",
+      "music_id": "M01",
+      "chapter": 1,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_01_02",
+      "bg_id": "BG02",
+      "music_id": "M01",
+      "chapter": 1,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_01_03",
+      "bg_id": "BG01",
+      "music_id": "M01",
+      "chapter": 1,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_02_01",
+      "bg_id": "BG03",
+      "music_id": "M02",
+      "chapter": 2,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_02_02",
+      "bg_id": "BG04",
+      "music_id": "M02",
+      "chapter": 2,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_02_03",
+      "bg_id": "BG03",
+      "music_id": "M02",
+      "chapter": 2,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_03_01",
+      "bg_id": "BG05",
+      "music_id": "M03",
+      "chapter": 3,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_03_02",
+      "bg_id": "BG06",
+      "music_id": "M03",
+      "chapter": 3,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_03_03",
+      "bg_id": "BG05",
+      "music_id": "M03",
+      "chapter": 3,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_04_01",
+      "bg_id": "BG07",
+      "music_id": "M04",
+      "chapter": 4,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_04_02",
+      "bg_id": "BG08",
+      "music_id": "M04",
+      "chapter": 4,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_04_03",
+      "bg_id": "BG07",
+      "music_id": "M04",
+      "chapter": 4,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_05_01",
+      "bg_id": "BG09",
+      "music_id": "M05",
+      "chapter": 5,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_05_02",
+      "bg_id": "BG09",
+      "music_id": "M05",
+      "chapter": 5,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_05_03",
+      "bg_id": "BG10",
+      "music_id": "M05",
+      "chapter": 5,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_06_01",
+      "bg_id": "BG11",
+      "music_id": "M06",
+      "chapter": 6,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_06_02",
+      "bg_id": "BG13",
+      "music_id": "M06",
+      "chapter": 6,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_06_03",
+      "bg_id": "BG12",
+      "music_id": "M06",
+      "chapter": 6,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_07_01",
+      "bg_id": "BG13",
+      "music_id": "M07",
+      "chapter": 7,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_07_02",
+      "bg_id": "BG14",
+      "music_id": "M07",
+      "chapter": 7,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_07_03",
+      "bg_id": "BG15",
+      "music_id": "M07",
+      "chapter": 7,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_08_01",
+      "bg_id": "BG16",
+      "music_id": "M08",
+      "chapter": 8,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_08_02",
+      "bg_id": "BG21",
+      "music_id": "M08",
+      "chapter": 8,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_08_03",
+      "bg_id": "BG15",
+      "music_id": "M08",
+      "chapter": 8,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_09_01",
+      "bg_id": "BG15",
+      "music_id": "M09",
+      "chapter": 9,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_09_02",
+      "bg_id": "BG14",
+      "music_id": "M09",
+      "chapter": 9,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_09_03",
+      "bg_id": "BG18",
+      "music_id": "M09",
+      "chapter": 9,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_10_01",
+      "bg_id": "BG19",
+      "music_id": "M10",
+      "chapter": 10,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_10_02",
+      "bg_id": "BG18",
+      "music_id": "M10",
+      "chapter": 10,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_10_03",
+      "bg_id": "BG21",
+      "music_id": "M10",
+      "chapter": 10,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_11_01",
+      "bg_id": "BG20",
+      "music_id": "M11",
+      "chapter": 11,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_11_02",
+      "bg_id": "BG14",
+      "music_id": "M11",
+      "chapter": 11,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_11_03",
+      "bg_id": "BG21",
+      "music_id": "M11",
+      "chapter": 11,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_12_01",
+      "bg_id": "BG21",
+      "music_id": "M12",
+      "chapter": 12,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_12_02",
+      "bg_id": "BG22",
+      "music_id": "M12",
+      "chapter": 12,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_12_03",
+      "bg_id": "BG03",
+      "music_id": "M12",
+      "chapter": 12,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_13_01",
+      "bg_id": "BG23",
+      "music_id": "M13",
+      "chapter": 13,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_13_02",
+      "bg_id": "BG24",
+      "music_id": "M13",
+      "chapter": 13,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_13_03",
+      "bg_id": "BG38",
+      "music_id": "M13",
+      "chapter": 13,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_14_01",
+      "bg_id": "BG25",
+      "music_id": "M14",
+      "chapter": 14,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_14_02",
+      "bg_id": "BG16",
+      "music_id": "M14",
+      "chapter": 14,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_14_03",
+      "bg_id": "BG39",
+      "music_id": "M14",
+      "chapter": 14,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_15_01",
+      "bg_id": "BG26",
+      "music_id": "M15",
+      "chapter": 15,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_15_02",
+      "bg_id": "BG26",
+      "music_id": "M15",
+      "chapter": 15,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_15_03",
+      "bg_id": "BG46",
+      "music_id": "M15",
+      "chapter": 15,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_16_01",
+      "bg_id": "BG28",
+      "music_id": "M16",
+      "chapter": 16,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_16_02",
+      "bg_id": "BG29",
+      "music_id": "M16",
+      "chapter": 16,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_16_03",
+      "bg_id": "BG30",
+      "music_id": "M16",
+      "chapter": 16,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_17_01",
+      "bg_id": "BG30",
+      "music_id": "M17",
+      "chapter": 17,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_17_02",
+      "bg_id": "BG31",
+      "music_id": "M17",
+      "chapter": 17,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_17_03",
+      "bg_id": "BG33",
+      "music_id": "M17",
+      "chapter": 17,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_18_01",
+      "bg_id": "BG32",
+      "music_id": "M18",
+      "chapter": 18,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_18_02",
+      "bg_id": "BG41",
+      "music_id": "M18",
+      "chapter": 18,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_18_03",
+      "bg_id": "BG46",
+      "music_id": "M18",
+      "chapter": 18,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_19_01",
+      "bg_id": "BG16",
+      "music_id": "M19",
+      "chapter": 19,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_19_02",
+      "bg_id": "BG34",
+      "music_id": "M19",
+      "chapter": 19,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_19_03",
+      "bg_id": "BG33",
+      "music_id": "M19",
+      "chapter": 19,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_20_01",
+      "bg_id": "BG34",
+      "music_id": "M20",
+      "chapter": 20,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_20_02",
+      "bg_id": "BG35",
+      "music_id": "M20",
+      "chapter": 20,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_20_03",
+      "bg_id": "BG34",
+      "music_id": "M20",
+      "chapter": 20,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_21_01",
+      "bg_id": "BG36",
+      "music_id": "M21",
+      "chapter": 21,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_21_02",
+      "bg_id": "BG37",
+      "music_id": "M21",
+      "chapter": 21,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_21_03",
+      "bg_id": "BG36",
+      "music_id": "M21",
+      "chapter": 21,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_22_01",
+      "bg_id": "BG38",
+      "music_id": "M22",
+      "chapter": 22,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_22_02",
+      "bg_id": "BG24",
+      "music_id": "M22",
+      "chapter": 22,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_22_03",
+      "bg_id": "BG43",
+      "music_id": "M22",
+      "chapter": 22,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_23_01",
+      "bg_id": "BG44",
+      "music_id": "M23",
+      "chapter": 23,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_23_02",
+      "bg_id": "BG39",
+      "music_id": "M23",
+      "chapter": 23,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_23_03",
+      "bg_id": "BG40",
+      "music_id": "M23",
+      "chapter": 23,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_24_01",
+      "bg_id": "BG41",
+      "music_id": "M24",
+      "chapter": 24,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_24_02",
+      "bg_id": "BG37",
+      "music_id": "M24",
+      "chapter": 24,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_24_03",
+      "bg_id": "BG22",
+      "music_id": "M24",
+      "chapter": 24,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_25_01",
+      "bg_id": "BG42",
+      "music_id": "M25",
+      "chapter": 25,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_25_02",
+      "bg_id": "BG43",
+      "music_id": "M25",
+      "chapter": 25,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_25_03",
+      "bg_id": "BG42",
+      "music_id": "M25",
+      "chapter": 25,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_26_01",
+      "bg_id": "BG44",
+      "music_id": "M26",
+      "chapter": 26,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_26_02",
+      "bg_id": "BG49",
+      "music_id": "M26",
+      "chapter": 26,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_26_03",
+      "bg_id": "BG39",
+      "music_id": "M26",
+      "chapter": 26,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_27_01",
+      "bg_id": "BG45",
+      "music_id": "M27",
+      "chapter": 27,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_27_02",
+      "bg_id": "BG46",
+      "music_id": "M27",
+      "chapter": 27,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_27_03",
+      "bg_id": "BG45",
+      "music_id": "M27",
+      "chapter": 27,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_28_01",
+      "bg_id": "BG47",
+      "music_id": "M28",
+      "chapter": 28,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_28_02",
+      "bg_id": "BG48",
+      "music_id": "M28",
+      "chapter": 28,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_28_03",
+      "bg_id": "BG48",
+      "music_id": "M28",
+      "chapter": 28,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_29_01",
+      "bg_id": "BG23",
+      "music_id": "M29",
+      "chapter": 29,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_29_02",
+      "bg_id": "BG49",
+      "music_id": "M29",
+      "chapter": 29,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_29_03",
+      "bg_id": "BG03",
+      "music_id": "M29",
+      "chapter": 29,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_30_01",
+      "bg_id": "BG05",
+      "music_id": "M30",
+      "chapter": 30,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_30_02",
+      "bg_id": "BG50",
+      "music_id": "M30",
+      "chapter": 30,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_30_03",
+      "bg_id": "BG50",
+      "music_id": "M30",
+      "chapter": 30,
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_09_SAFE",
+      "bg_id": "BG17",
+      "music_id": "M09",
+      "chapter": 9,
+      "entry_conditions": [
+        "player_requests_security_review"
+      ],
+      "asset_status": "required_not_generated"
+    },
+    {
+      "scene_id": "SCN_15_CORRIDOR",
+      "bg_id": "BG27",
+      "music_id": "M15",
+      "chapter": 15,
+      "entry_conditions": [
+        "player_leaves_dance_floor"
+      ],
+      "asset_status": "required_not_generated"
+    }
+  ],
+  "release_status": "script_candidate_assets_missing",
+  "chapter_count": 30,
+  "scene_count": 92,
+  "background_count": 50
+}

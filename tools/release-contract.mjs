@@ -27,3 +27,6 @@ execFileSync(process.execPath,['tools/m105-selftest.cjs'],{cwd:root,stdio:'inher
 assert(build.includes('"app132_m105experience.js"'),'Missing M105 audiovisual module');
 execFileSync(process.execPath,['tools/build-m105-experience.cjs','--check'],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,['tools/m105-experience-selftest.cjs'],{cwd:root,stdio:'inherit'});
+assert(build.includes('"app133_unread.js"'),'Missing Unread Choice runtime');
+execFileSync(process.execPath,['tools/build-unread-runtime.cjs','--check'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/unread-selftest.cjs'],{cwd:root,stdio:'inherit'});

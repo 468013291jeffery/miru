@@ -1,0 +1,5022 @@
+{
+  "version": "unread-v14-20261107.1",
+  "work_id": "w_scmw6aio565cb9b9e448",
+  "sourceSha256": "01bdeb32aa449d51b4b1eed007f869e19954ef994625ce692d723a61eeac538e",
+  "language": "en",
+  "chapters": [
+    {
+      "n": 1,
+      "title": {
+        "zh": "王冠不是奖品",
+        "en": "The Crown Is Not the Prize"
+      },
+      "scenes": [
+        {
+          "id": "SCN_01_01",
+          "bg": "BG01",
+          "place": "Formal dance hall",
+          "music": "m_gala_night",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "HOST",
+              "text": "And this year’s crown goes to William Hayes!",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Keep it. I already found something I want more.",
+              "textMessage": false
+            },
+            {
+              "speaker": "HOST",
+              "text": "Someone, you mean?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Someone who gets to decide whether I’m worth their time.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "That is a very expensive speech for someone who forgot to ask their name.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I know their name. I wanted them to hear it from me.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Then say it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Welcome to Northbridge, Hayden. This night belongs to you, not the crowd.",
+              "textMessage": false
+            }
+          ],
+          "staging": "舞会直播结束，William走下台，群演形成可见通道。 进入此场景准确切换到 `BG01`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_01_02",
+          "bg": "BG02",
+          "place": "Ballroom terrace",
+          "music": "m_gala_night",
+          "ambient": "wind",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "He’s giving you a crown. I can offer an exit that isn’t surrounded by cameras.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Or you can stay. Nobody gets to make this decision for you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Tell me you’re seeing this. The whole school is screaming. Are you okay?",
+              "textMessage": true
+            }
+          ],
+          "staging": "两人站在同一露台，William递王冠，Alex伸手但不触碰玩家。 进入此场景准确切换到 `BG02`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_01_03",
+          "bg": "BG01",
+          "place": "Formal dance hall",
+          "music": "m_gala_night",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "SCREEN",
+              "text": "ONE OF THEM HAS BEEN LYING TO YOU.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "That isn’t part of the show.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Who gave them access to the display?",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Look at me. Whatever this is, you don’t owe anyone a scene.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I memorized your name before I knew whether you’d ever say mine.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "If the spotlight makes you uncomfortable, say the word. I’ll get you out.",
+              "textMessage": false
+            }
+          ],
+          "staging": "舞会屏幕故障，警告浮层后期叠加，切回二人惊讶表情。 进入此场景准确切换到 `BG01`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_01_A",
+          "label": {
+            "zh": "接过王冠并盯住William",
+            "en": "I’ll take it. Now tell me why you chose me."
+          },
+          "said": "I’ll take it. Now tell me why you chose me.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Because you looked past the stage. Because you weren’t impressed when everyone else was."
+            }
+          ],
+          "updates": "W_affection:+5,W_trust:+2,focus:William",
+          "bridge": "William slips the crown into your hands, then moves aside so the cameras cannot trap you."
+        },
+        {
+          "k": "B",
+          "id": "CH_01_B",
+          "label": {
+            "zh": "把手伸向Alex",
+            "en": "Show me that exit."
+          },
+          "said": "Show me that exit.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Gladly. But first, I want you to know I noticed you long before tonight."
+            }
+          ],
+          "updates": "A_affection:+5,A_trust:+2,focus:Alex",
+          "bridge": "Alex opens the terrace door and waits outside rather than taking your hand."
+        },
+        {
+          "k": "C",
+          "id": "CH_01_C",
+          "label": {
+            "zh": "退后一步要求真相",
+            "en": "No more performances. Who knows me here?"
+          },
+          "said": "No more performances. Who knows me here?",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I know your name. I don’t know who put that message on the screen."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And I won’t pretend otherwise."
+            }
+          ],
+          "updates": "W_trust:+3,A_trust:+3,focus:neutral",
+          "bridge": "Both men tell the host to stop filming; Nicole takes you to a quiet hallway."
+        }
+      ],
+      "gameNote": "王冠触摸；当 William 第一次看向玩家时，切近景，不要延迟出现眼神回应。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 2,
+      "title": {
+        "zh": "两封没有署名的邀请",
+        "en": "Two Invitations"
+      },
+      "scenes": [
+        {
+          "id": "SCN_02_01",
+          "bg": "BG03",
+          "place": "Dorm room",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "If you need me, I’m one building away. And yes, that was the weirdest welcome party I’ve ever seen.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "My phone lights up before I can answer. Two new messages.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You looked overwhelmed. I owe you a real introduction. Tomorrow, eight. Public park.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "He’s not the only one who wants to see you. Same time, different bench.",
+              "textMessage": true
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Two invitations in thirty seconds? You really are trouble.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole视频通话，玩家整理搬家纸箱。 进入此场景准确切换到 `BG03`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_02_02",
+          "bg": "BG04",
+          "place": "Chain and ring",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’ll be wearing the silver chain from my picture. You can leave whenever you want.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Silver ring. Awful habit of telling the truth at the worst possible moment.",
+              "textMessage": true
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The chain catches the light. So does the ring. No faces.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Meet in public, send me your location, and don’t let them turn a date into a dare.",
+              "textMessage": false
+            }
+          ],
+          "staging": "前景UI依次展示银链特写与银戒特写，玩家通过点击逐张放大。 进入此场景准确切换到 `BG04`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_02_03",
+          "bg": "BG03",
+          "place": "Dorm room",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "If tomorrow feels wrong, say the word.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I don’t mind waiting. I mind being an afterthought.",
+              "textMessage": true
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For the first time tonight, I get to decide what happens next.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m trying very hard not to double-text. How am I doing?",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I saved you the seat by the window. You can say no. I’ll still save it for tomorrow.",
+              "textMessage": false
+            }
+          ],
+          "staging": "两人的邀请停在屏幕，出现日程冲突提示。 进入此场景准确切换到 `BG03`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_02_A",
+          "label": {
+            "zh": "接受W的公共场所邀约",
+            "en": "Eight works. The well-lit side of the park."
+          },
+          "said": "Eight works. The well-lit side of the park.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Agreed. I’ll be there early."
+            }
+          ],
+          "updates": "first_date:William,W_trust:+3",
+          "bridge": "W sends a map pin for the public park and a message: “If you change your mind, I’ll understand.”"
+        },
+        {
+          "k": "B",
+          "id": "CH_02_B",
+          "label": {
+            "zh": "改约A先见面",
+            "en": "I’d rather hear your real voice first. Meet me at the café?"
+          },
+          "said": "I’d rather hear your real voice first. Meet me at the café?",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Finally. Someone who asks for what they want."
+            }
+          ],
+          "updates": "first_date:Alex,A_trust:+3",
+          "bridge": "A sends the food-truck location and a voice note: “Come for the music, not the mystery.”"
+        },
+        {
+          "k": "C",
+          "id": "CH_02_C",
+          "label": {
+            "zh": "把两人错开并告知Nicole",
+            "en": "Not at the same time. You each get your own conversation."
+          },
+          "said": "Not at the same time. You each get your own conversation.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Fair."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Fairer than pretending I’m the only one."
+            }
+          ],
+          "updates": "first_date:staggered,both_trust:+2",
+          "bridge": "Nicole sets up separate appointments. “Two invitations do not mean two obligations.”"
+        }
+      ],
+      "gameNote": "手机选择先回复谁；两条消息都能保存为独立记忆。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 3,
+      "title": {
+        "zh": "长椅边的秘密",
+        "en": "The Bench at Eight"
+      },
+      "scenes": [
+        {
+          "id": "SCN_03_01",
+          "bg": "BG05",
+          "place": "Public park bench",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The park is quieter than the ballroom. Too quiet.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m close. Stay where the lights are.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "If you’re alone, I can stay on the phone until your ride arrives.",
+              "textMessage": true
+            },
+            {
+              "speaker": "UNKNOWN (DISTANT)",
+              "text": "Hey! Stop!",
+              "textMessage": false
+            },
+            {
+              "speaker": "SFX",
+              "text": "A security whistle cuts through the trees.",
+              "textMessage": false
+            }
+          ],
+          "staging": "根据first_date显示W或A消息；镜头固定明亮公园长椅。 进入此场景准确切换到 `BG05`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_03_02",
+          "bg": "BG06",
+          "place": "Park exit",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "Hey, eyes on me. We are not investigating mystery noises on a first date.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "My phone vibrates again.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You can leave. I won’t be offended.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m here if you need me. You don’t need to prove anything.",
+              "textMessage": true
+            }
+          ],
+          "staging": "Nicole到达安全通道，避免玩家主动进入危险树林。 进入此场景准确切换到 `BG06`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_03_03",
+          "bg": "BG05",
+          "place": "Public park bench",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM (TO HIMSELF)",
+              "text": "I rehearsed three ways to say hello. Apparently none of them involved a police whistle.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Across the path, someone stands by the empty bench. I see only the edge of a silver chain.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I was there. When you left, I thought I’d missed my chance.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I didn’t show up because you asked to meet someone else first. That mattered.",
+              "textMessage": false
+            }
+          ],
+          "staging": "独立叙事镜头给观众看到William银链，但玩家知识状态仍未解锁。 进入此场景准确切换到 `BG05`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_03_A",
+          "label": {
+            "zh": "现在离开，发信息说明",
+            "en": "Something’s wrong. I’m leaving. We can try another day."
+          },
+          "said": "Something’s wrong. I’m leaving. We can try another day.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Good call. Text me when you’re safe."
+            }
+          ],
+          "updates": "safety:leave,W_trust:+3",
+          "bridge": "William sees your departure message and waits until he knows you are safe."
+        },
+        {
+          "k": "B",
+          "id": "CH_03_B",
+          "label": {
+            "zh": "等Nicole来后一起走",
+            "en": "Nicole’s coming. I’m not staying here alone."
+          },
+          "said": "Nicole’s coming. I’m not staying here alone.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "Ten points for listening to your own instincts."
+            }
+          ],
+          "updates": "safety:escort,Nicole_trust:+3",
+          "bridge": "Nicole arrives and witnesses the retreat; the unidentified camera stays a lead."
+        },
+        {
+          "k": "C",
+          "id": "CH_03_C",
+          "label": {
+            "zh": "改为白天咖啡馆见",
+            "en": "Tomorrow. Daylight. Coffee. No surprises."
+          },
+          "said": "Tomorrow. Daylight. Coffee. No surprises.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I’ll bring the coffee. You bring the questions."
+            }
+          ],
+          "updates": "safety:reschedule,A_trust:+3",
+          "bridge": "The park meeting is cancelled and William meets you by daylight, not secretly."
+        }
+      ],
+      "gameNote": "追随脚步或坐下等待；环境风推动树叶，安保警铃不是心动游戏。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 4,
+      "title": {
+        "zh": "银链与银戒",
+        "en": "Silver Chain, Silver Ring"
+      },
+      "scenes": [
+        {
+          "id": "SCN_04_01",
+          "bg": "BG07",
+          "place": "Campus café",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Before you say it: yes, I was the guy by the bench.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The silver chain glints as he leans forward.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m W. I should have said that without making you guess.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And since secrets are apparently going out of style...",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He sets down coffee. A silver ring circles his index finger.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "A. That’s me. Disappointed?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Alex, that’s not how an apology works.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Good. I wasn’t apologizing for liking them.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William摘下耳机坐到玩家对面，银链闪光；Alex手持咖啡入画，银戒清晰。 进入此场景准确切换到 `BG07`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_04_02",
+          "bg": "BG08",
+          "place": "Outside the café",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "The pictures were meant to keep things simple. Then you walked into the ballroom.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Simple is overrated. Honest is harder.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "No more anonymous games. I promise.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I can promise to tell you when I’m scared to answer. That’s more real.",
+              "textMessage": false
+            }
+          ],
+          "staging": "玩家可以在咖啡馆外分别询问身份，NPC不打断。 进入此场景准确切换到 `BG08`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_04_03",
+          "bg": "BG07",
+          "place": "Campus café",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Come to rehearsal one night. No crowd, no crown.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Or come listen to a song I’m not ready to release.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Two invitations. This time, I know whose faces are behind them.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You weren’t meant to meet a picture of me. You were meant to meet me.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I like that you looked me in the eye before you checked the ring.",
+              "textMessage": false
+            }
+          ],
+          "staging": "咖啡桌中间出现两张活动票：剧院与夜间音乐演出。 进入此场景准确切换到 `BG07`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_04_A",
+          "label": {
+            "zh": "先问William",
+            "en": "Why hide behind a letter when everyone knows your face?"
+          },
+          "said": "Why hide behind a letter when everyone knows your face?",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Because nobody ever asks who I am after they recognize it. You did."
+            }
+          ],
+          "updates": "W_trust:+5,knows_W:true",
+          "bridge": "William shows the chain and says: “I wanted you to recognize me, not owe me anything.”"
+        },
+        {
+          "k": "B",
+          "id": "CH_04_B",
+          "label": {
+            "zh": "先问Alex",
+            "en": "Were you afraid I wouldn’t choose you if I knew?"
+          },
+          "said": "Were you afraid I wouldn’t choose you if I knew?",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I was afraid you’d only see what people say about me."
+            }
+          ],
+          "updates": "A_trust:+5,knows_A:true",
+          "bridge": "Alex rolls the ring across his knuckles. “I was going to tell you. I should have sooner.”"
+        },
+        {
+          "k": "C",
+          "id": "CH_04_C",
+          "label": {
+            "zh": "明确新规则",
+            "en": "No more testing me. Either you show up as yourselves, or don’t show up."
+          },
+          "said": "No more testing me. Either you show up as yourselves, or don’t show up.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Understood."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I can do that."
+            }
+          ],
+          "updates": "W_trust:+4,A_trust:+4,knows_both:true",
+          "bridge": "Both admit the anonymous game went too far and agree to stop testing you."
+        }
+      ],
+      "gameNote": "银链与戒指比对；识别只揭晓身份，不提前揭晓幕后偷拍者。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 5,
+      "title": {
+        "zh": "一场游戏，两颗心",
+        "en": "The Kiss Game"
+      },
+      "scenes": [
+        {
+          "id": "SCN_05_01",
+          "bg": "BG09",
+          "place": "Friends party",
+          "music": "m_game_night",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "New rule. Nobody kisses anybody they don’t actually want to kiss.",
+              "textMessage": false
+            },
+            {
+              "speaker": "GUEST",
+              "text": "Okay, then. Who here would you kiss?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You don’t have to answer that.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m curious what you’d say if they weren’t all listening.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The room is suddenly too warm.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole主持小型朋友聚会，起哄但尊重玩家说不。 进入此场景准确切换到 `BG09`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_05_02",
+          "bg": "BG09",
+          "place": "Friends party",
+          "music": "m_game_night",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "If the answer is me, I’d rather hear it quietly.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And if it isn’t? I’ll survive. Dramatically, but I’ll survive.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Both of you. Give them space.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William和Alex各在画面左右，做出不同反应。 进入此场景准确切换到 `BG09`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_05_03",
+          "bg": "BG10",
+          "place": "Residence corridor",
+          "music": "m_game_night",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "A camera clicks behind the doorway.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "Relax. I’m with campus media. I’m documenting the party.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Not private phones, you’re not.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "Sure. Of course. My mistake.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You don’t have to kiss me to make tonight unforgettable.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’d rather know what you actually want than win a stupid party game.",
+              "textMessage": false
+            }
+          ],
+          "staging": "派对结束走廊，Eric假装拍布景，手机UI内可见未锁屏聊天光线。 进入此场景准确切换到 `BG10`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_05_A",
+          "label": {
+            "zh": "邀请William单独亲吻（可改拥抱）",
+            "en": "William, can we have one quiet minute?"
+          },
+          "said": "William, can we have one quiet minute?",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I thought you’d never ask. If a kiss feels right, I’d like that."
+            }
+          ],
+          "updates": "W_affection:+5,kiss_W:optional",
+          "bridge": "William steps away from the crowd before asking if you still want the kiss."
+        },
+        {
+          "k": "B",
+          "id": "CH_05_B",
+          "label": {
+            "zh": "主动与Alex约定只属于两人的瞬间",
+            "en": "Alex, walk with me. I want to hear you without the audience."
+          },
+          "said": "Alex, walk with me. I want to hear you without the audience.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "That might be the most dangerous invitation I’ve ever accepted."
+            }
+          ],
+          "updates": "A_affection:+5,kiss_A:optional",
+          "bridge": "Alex offers to leave the party together; the intimate beat happens only if accepted."
+        },
+        {
+          "k": "C",
+          "id": "CH_05_C",
+          "label": {
+            "zh": "拒绝游戏，带两人走向露台",
+            "en": "I don’t make private decisions for a room full of strangers."
+          },
+          "said": "I don’t make private decisions for a room full of strangers.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then we leave the room out of it."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Best idea tonight."
+            }
+          ],
+          "updates": "both_trust:+4,no_public_kiss:true",
+          "bridge": "The party game ends; both follow you onto the terrace without physical contact."
+        }
+      ],
+      "gameNote": "真心话可选择亲吻、坦白或拒绝；未选择则不得出现吻照。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 6,
+      "title": {
+        "zh": "午夜前的威胁",
+        "en": "Before Midnight"
+      },
+      "scenes": [
+        {
+          "id": "SCN_06_01",
+          "bg": "BG11",
+          "place": "Dorm window",
+          "music": "m_clue",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "UNKNOWN",
+              "text": "Pick one by midnight or I’ll let the whole campus do it for you.",
+              "textMessage": true
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "That isn’t flirting. That’s blackmail. Screenshot it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For a second, the party seems to happen all over again, this time through someone else’s camera.",
+              "textMessage": false
+            }
+          ],
+          "staging": "匿名消息叠加在Nicole的视频上，图片内容由第5章真实行为生成。 进入此场景准确切换到 `BG11`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_06_02",
+          "bg": "BG13",
+          "place": "Media hallway",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I can ask the media office to take it down. Just say the word.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "First we save the evidence. Then we decide what you want public.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m not leaving because somebody wants us to fight.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Neither am I. I just won’t pretend I like sharing a threat with strangers.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William和Alex赴约，分别从走廊两端靠近。 进入此场景准确切换到 `BG13`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_06_03",
+          "bg": "BG12",
+          "place": "Private phone",
+          "music": "m_clue",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The clock turns. The forum refreshes.",
+              "textMessage": false
+            },
+            {
+              "speaker": "POST",
+              "text": "NEW TRANSFER, TWO HEARTTHROBS, ONE SECRET?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "This should never have been posted.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Look at me. We can deal with the internet later. What do you need now?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Let them say my name. They don’t get to take yours.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’ll sit right here until you decide what you need. No speeches.",
+              "textMessage": false
+            }
+          ],
+          "staging": "23:59变为00:00，论坛截图弹出，照片内容需映射既有选择。 进入此场景准确切换到 `BG12`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_06_A",
+          "label": {
+            "zh": "保全证据交校方",
+            "en": "I want this documented. No one gets to use my life as content."
+          },
+          "said": "I want this documented. No one gets to use my life as content.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "I’m with you. I’ll send the screenshots to student affairs."
+            }
+          ],
+          "updates": "privacy:reported,Nicole_trust:+4",
+          "bridge": "Nicole helps you export the threatening message with a timestamp."
+        },
+        {
+          "k": "B",
+          "id": "CH_06_B",
+          "label": {
+            "zh": "公开声明只谈隐私",
+            "en": "I’ll speak for myself. Nobody else posts in my name."
+          },
+          "said": "I’ll speak for myself. Nobody else posts in my name.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I won’t say a word on your behalf."
+            }
+          ],
+          "updates": "privacy:public_statement,W_trust:+4",
+          "bridge": "Your public statement asks for privacy; the forum backlash becomes a new pressure."
+        },
+        {
+          "k": "C",
+          "id": "CH_06_C",
+          "label": {
+            "zh": "暂时离线接受陪伴",
+            "en": "Phones away. I need people, not another statement."
+          },
+          "said": "Phones away. I need people, not another statement.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Then we sit here. As long as you want."
+            }
+          ],
+          "updates": "privacy:offline,A_trust:+4",
+          "bridge": "William offers tea; Alex waits without demanding an explanation."
+        }
+      ],
+      "gameNote": "匿名威胁证据检查；手机解锁后现实世界暂停，不能因超时惩罚玩家。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 7,
+      "title": {
+        "zh": "镜头背后的人",
+        "en": "Behind the Lens"
+      },
+      "scenes": [
+        {
+          "id": "SCN_07_01",
+          "bg": "BG13",
+          "place": "Media hallway",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "That badge. I know the logo. Campus Media.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Eric works their photo desk. I know him.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "So do I.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Alex says it too quickly, then turns away.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole注意到一张媒体证，Eric离开画面。 进入此场景准确切换到 `BG13`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_07_02",
+          "bg": "BG14",
+          "place": "Student media office",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "I shot the party. I didn’t leak private messages.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "His phone lights up. A thumbnail shows the bright edge of my screen.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Why is their screen in your camera roll?",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "You’re all acting like I stole state secrets.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "It wasn’t yours to take.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "Funny hearing you lecture me about what people owe each other.",
+              "textMessage": false
+            }
+          ],
+          "staging": "四人向Eric核对照片来源。 进入此场景准确切换到 `BG14`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_07_03",
+          "bg": "BG15",
+          "place": "Photo archive",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "Ask Alex why we stopped speaking.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "This isn’t your story to tell.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "Maybe it became mine when you walked away.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Or maybe your feelings don’t give you permission to photograph someone’s private messages.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "It’s funny how fast a stranger becomes everyone’s favorite.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Whatever you think I owe you, Hayden has nothing to do with it.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Eric展示去年秋天他与Alex的普通合照，画面不得暗示当前亲密。 进入此场景准确切换到 `BG15`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_07_A",
+          "label": {
+            "zh": "要求交出相机原片",
+            "en": "I want an independent review of the original files."
+          },
+          "said": "I want an independent review of the original files.",
+          "responses": [
+            {
+              "speaker": "ERIC",
+              "text": "Fine. Ask the media office. I’m not deleting a thing."
+            }
+          ],
+          "updates": "evidence:requested,trust_Nicole:+2",
+          "bridge": "The school media supervisor logs the request for the original file."
+        },
+        {
+          "k": "B",
+          "id": "CH_07_B",
+          "label": {
+            "zh": "请Alex在外面解释",
+            "en": "Alex, I want your version. Not his."
+          },
+          "said": "Alex, I want your version. Not his.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "You’ll have it. Every part that is mine to tell."
+            }
+          ],
+          "updates": "A_trust:+4,alex_disclosure:pending",
+          "bridge": "Alex admits his past with Eric in a private corridor, without details shared to others."
+        },
+        {
+          "k": "C",
+          "id": "CH_07_C",
+          "label": {
+            "zh": "暂停对峙，找校媒负责人",
+            "en": "We’re done arguing. This goes to the people who can verify it."
+          },
+          "said": "We’re done arguing. This goes to the people who can verify it.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’ll get the supervisor."
+            }
+          ],
+          "updates": "case:escalated,W_trust:+3",
+          "bridge": "The meeting ends under school supervision; Eric keeps denying the screenshots."
+        }
+      ],
+      "gameNote": "点击摄影证与相机时间戳；证据失败不阻断主线。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 8,
+      "title": {
+        "zh": "一首没写完的歌",
+        "en": "The Past Alex Kept"
+      },
+      "scenes": [
+        {
+          "id": "SCN_08_01",
+          "bg": "BG16",
+          "place": "Music practice room",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "Last fall, Eric and I had a brief thing. It ended. I told him I didn’t want more.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I stopped replying when he kept asking me to change my mind.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "His fingers rest on the keys, but he doesn’t play.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I should have told you he knew me. Not because I owe you my history. Because he was using it to hurt you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You get to be angry. I’ll still tell you the truth.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex带玩家来到练琴房，远离Eric。 进入此场景准确切换到 `BG16`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_08_02",
+          "bg": "BG21",
+          "place": "Student affairs meeting",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "The school is preserving the security footage. They won’t give us other students’ identities.",
+              "textMessage": false
+            },
+            {
+              "speaker": "OFFICER",
+              "text": "There was someone near the park trees when the whistle sounded. We’re still reviewing it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "My phone vibrates. Eric again.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole协助向学校提交投诉，校安展示不包含第三方私人信息的摘要。 进入此场景准确切换到 `BG21`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_08_03",
+          "bg": "BG15",
+          "place": "Photo archive",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "Want the truth about that night? Archives. Nine. Alone.",
+              "textMessage": true
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Absolutely not alone.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "If you go, I’ll come. If you don’t, I’ll still help you report it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I wrote this when I still thought leaving first meant I couldn’t be hurt.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You can hear the unfinished part. I’ve never let anyone this close to it.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Eric发来档案室邀约，Nicole在同一画面。 进入此场景准确切换到 `BG15`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_08_A",
+          "label": {
+            "zh": "告诉Alex我在意的是现在的坦诚",
+            "en": "I’m not judging your past. I need to trust your present."
+          },
+          "said": "I’m not judging your past. I need to trust your present.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Then I’ll earn that with what I do next."
+            }
+          ],
+          "updates": "A_trust:+6,disclosure:accepted",
+          "bridge": "Alex says, “You can ask me anything. You do not have to answer me tonight.”"
+        },
+        {
+          "k": "B",
+          "id": "CH_08_B",
+          "label": {
+            "zh": "需要一点距离但保留沟通",
+            "en": "I hear you. I need time before we get close again."
+          },
+          "said": "I hear you. I need time before we get close again.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Take it. I’m not disappearing."
+            }
+          ],
+          "updates": "A_trust:+3,pace:slow",
+          "bridge": "Alex keeps his distance and sends one non-pressuring message; no surprise visits."
+        },
+        {
+          "k": "C",
+          "id": "CH_08_C",
+          "label": {
+            "zh": "请Nicole陪同核实",
+            "en": "Let’s verify Eric’s claims with a witness present."
+          },
+          "said": "Let’s verify Eric’s claims with a witness present.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "I’ll be there with the incident number."
+            }
+          ],
+          "updates": "evidence:witness,Nicole_trust:+4",
+          "bridge": "Nicole helps preserve the evidence chain and confirms the complaint number."
+        }
+      ],
+      "gameNote": "旋律拼图，只奖励额外歌词和共同记忆。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 9,
+      "title": {
+        "zh": "旧公园那晚",
+        "en": "That Night at the Park"
+      },
+      "scenes": [
+        {
+          "id": "SCN_09_01",
+          "bg": "BG15",
+          "place": "Photo archive",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "You brought the whole fan club. How touching.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "You invited a person who’s being harassed to an isolated office. We brought witnesses.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "I was in the park with someone I was seeing. Adults. Consenting. That’s all you need to know.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "So you saw Hayden leave?",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "And I saw you waiting. Funny how much that bothered me.",
+              "textMessage": false
+            }
+          ],
+          "staging": "四人到场，Eric面前电脑登录校媒后台，Nicole保留安全距离。 进入此场景准确切换到 `BG15`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_09_02",
+          "bg": "BG14",
+          "place": "Student media office",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "You got everyone’s attention without trying. I spent months trying to be seen.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And you chose to punish somebody who didn’t cause that pain.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "The campus can decide who deserves who.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "A countdown appears: 00:10.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "That broadcast uses the campus media account. I’m calling the supervisor now.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Eric展示设置好的定时直播窗口。 进入此场景准确切换到 `BG14`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_09_03",
+          "bg": "BG18",
+          "place": "Broadcast entrance",
+          "music": "m_clue",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "SUPERVISOR",
+              "text": "Step away from the console. Right now.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "Too late.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Nine seconds. Eight. Seven.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "A story about you should never be told without you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I wish I’d arrived sooner. I’m here now.",
+              "textMessage": false
+            }
+          ],
+          "staging": "值班负责人赶来准备切断直播，玩家不能被迫独自阻止。 进入此场景准确切换到 `BG18`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_09_A",
+          "label": {
+            "zh": "提交录音和证据",
+            "en": "Nicole, send everything to the supervisor. Now."
+          },
+          "said": "Nicole, send everything to the supervisor. Now.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "Sent. Time stamp included."
+            }
+          ],
+          "updates": "evidence:complete,Nicole_trust:+3",
+          "bridge": "Nicole submits the recorded statement to campus security."
+        },
+        {
+          "k": "B",
+          "id": "CH_09_B",
+          "label": {
+            "zh": "站出来说不允许直播",
+            "en": "You don’t get my permission to turn this into a show."
+          },
+          "said": "You don’t get my permission to turn this into a show.",
+          "responses": [
+            {
+              "speaker": "ERIC",
+              "text": "You think your permission changes the internet?"
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "It changes what we do next."
+            }
+          ],
+          "updates": "player_agency:+5",
+          "bridge": "The livestream’s legal and privacy risks are stated on-camera; do not auto-win."
+        },
+        {
+          "k": "C",
+          "id": "CH_09_C",
+          "label": {
+            "zh": "让两位男主先保护设备与出口",
+            "en": "Please help the supervisor. I’ll stay with Nicole."
+          },
+          "said": "Please help the supervisor. I’ll stay with Nicole.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "On it. No heroics required."
+            }
+          ],
+          "updates": "safety:+5",
+          "bridge": "William secures the exit while Alex informs the supervisor; neither confronts Eric physically."
+        }
+      ],
+      "gameNote": "监控时序互动；不把跟踪偷拍包装成男主占有欲。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 10,
+      "title": {
+        "zh": "十秒直播",
+        "en": "Ten Seconds Live"
+      },
+      "scenes": [
+        {
+          "id": "SCN_10_01",
+          "bg": "BG19",
+          "place": "Broadcast control room",
+          "music": "m_standoff",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "Everybody wants the truth. Here it is.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "A private message fills the screen. My words, stripped of context.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Take it down.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You’re showing private messages without consent.",
+              "textMessage": false
+            },
+            {
+              "speaker": "SUPERVISOR",
+              "text": "Disconnecting external stream—now.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The screen goes black. The room keeps breathing.",
+              "textMessage": false
+            }
+          ],
+          "staging": "直播刚开始，校媒负责人站在旁边控制台操作。 进入此场景准确切换到 `BG19`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_10_02",
+          "bg": "BG18",
+          "place": "Broadcast entrance",
+          "music": "m_standoff",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ERIC",
+              "text": "Someone sent me those screenshots. I only posted them.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "The original camera file will tell us more.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "You can’t prove that.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Then we’ll let the evidence speak.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Hayden, what do you need from us right now?",
+              "textMessage": false
+            }
+          ],
+          "staging": "断播后录下证据和实名处理，Eric尝试推责。 进入此场景准确切换到 `BG18`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_10_03",
+          "bg": "BG21",
+          "place": "Student affairs meeting",
+          "music": "m_standoff",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Outside, the night is almost quiet.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I can’t undo it. But I can be here for the part after.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You don’t have to be brave for us.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "And you don’t owe them or anyone a statement before you’re ready.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I don’t need a perfect reputation if keeping it means leaving you alone.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "There is nothing embarrassing about wanting to be loved.",
+              "textMessage": false
+            }
+          ],
+          "staging": "走出大楼，情绪由暴露转回被支持。 进入此场景准确切换到 `BG21`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_10_A",
+          "label": {
+            "zh": "给学校正式书面陈述",
+            "en": "I want a case number and a written record."
+          },
+          "said": "I want a case number and a written record.",
+          "responses": [
+            {
+              "speaker": "SUPERVISOR",
+              "text": "You’ll receive both. The account privileges are suspended pending review."
+            }
+          ],
+          "updates": "case:formal",
+          "bridge": "The school confirms receipt and gives you a reference number."
+        },
+        {
+          "k": "B",
+          "id": "CH_10_B",
+          "label": {
+            "zh": "先与Nicole离开现场",
+            "en": "I’m going home. Please keep me updated, not online."
+          },
+          "said": "I’m going home. Please keep me updated, not online.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "I’ll manage the notifications with your permission."
+            }
+          ],
+          "updates": "case:delegate",
+          "bridge": "Nicole walks you out; the record is preserved even though you do not speak live."
+        },
+        {
+          "k": "C",
+          "id": "CH_10_C",
+          "label": {
+            "zh": "请William和Alex陪伴但不替我发言",
+            "en": "Stay with me. Don’t speak for me."
+          },
+          "said": "Stay with me. Don’t speak for me.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "We won’t."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You have our word."
+            }
+          ],
+          "updates": "W_trust:+3,A_trust:+3",
+          "bridge": "The two men stand beside you silently until you ask them to speak."
+        }
+      ],
+      "gameNote": "直播发言选择；玩家可自己发言也可让主持人代读书面声明。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 11,
+      "title": {
+        "zh": "原片里的证据",
+        "en": "The Uncropped Frame"
+      },
+      "scenes": [
+        {
+          "id": "SCN_11_01",
+          "bg": "BG20",
+          "place": "Evidence review desk",
+          "music": "m_courtroom",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "SUPERVISOR",
+              "text": "This is the unedited original from the media storage. You can see the phone screen reflected here.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "And the upload came from Eric’s individual media account.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "I didn’t think anyone would check.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The reflection is tiny. The violation isn’t.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "I thought if everybody saw it, Alex would know what losing feels like.",
+              "textMessage": false
+            }
+          ],
+          "staging": "负责人出示原始相片时间码；Eric未经许可拍摄屏幕。 进入此场景准确切换到 `BG20`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_11_02",
+          "bg": "BG14",
+          "place": "Student media office",
+          "music": "m_courtroom",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "You were hurt. That doesn’t make hurting Hayden okay.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ERIC",
+              "text": "I know.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Knowing isn’t fixing it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "SUPERVISOR",
+              "text": "Your access remains frozen. Student affairs will handle the investigation.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "There’s one more scheduled post: their full names. Midnight.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Eric承认并接受校内调查，不要求玩家原谅。 进入此场景准确切换到 `BG14`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_11_03",
+          "bg": "BG21",
+          "place": "Student affairs meeting",
+          "music": "m_courtroom",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "SUPERVISOR",
+              "text": "The scheduled post has been removed. We’re preserving the logs.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For once, my phone buzzes with something that feels like an ending.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "We’ve got the original file. You don’t owe the internet your explanation.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m sorry my past got used against you.",
+              "textMessage": false
+            }
+          ],
+          "staging": "玩家决定后由校媒负责人撤掉定时帖，手机出现完成通知。 进入此场景准确切换到 `BG21`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_11_A",
+          "label": {
+            "zh": "拒绝与Eric私下和解",
+            "en": "I’m not ready to forgive him. I want the process to continue."
+          },
+          "said": "I’m not ready to forgive him. I want the process to continue.",
+          "responses": [
+            {
+              "speaker": "ERIC",
+              "text": "I understand."
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "We’ll document that."
+            }
+          ],
+          "updates": "case:investigation",
+          "bridge": "Eric’s request for a private meeting is denied; his apology is not accepted as resolution."
+        },
+        {
+          "k": "B",
+          "id": "CH_11_B",
+          "label": {
+            "zh": "要求他停止再联系我",
+            "en": "Do not contact me again outside official channels."
+          },
+          "said": "Do not contact me again outside official channels.",
+          "responses": [
+            {
+              "speaker": "ERIC",
+              "text": "Understood."
+            }
+          ],
+          "updates": "case:no_contact",
+          "bridge": "Campus staff enforce no-contact during the investigation."
+        },
+        {
+          "k": "C",
+          "id": "CH_11_C",
+          "label": {
+            "zh": "允许一封书面道歉但不撤诉",
+            "en": "You can send an apology to the office. It won’t erase what happened."
+          },
+          "said": "You can send an apology to the office. It won’t erase what happened.",
+          "responses": [
+            {
+              "speaker": "SUPERVISOR",
+              "text": "We can facilitate that without direct contact."
+            }
+          ],
+          "updates": "case:written_apology",
+          "bridge": "His written apology is filed as evidence; no automatic forgiveness or closed case."
+        }
+      ],
+      "gameNote": "原图对焦与记录比对；无需公开私聊内容即可完成调查。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 12,
+      "title": {
+        "zh": "重新开始，不靠镜头",
+        "en": "No More Cameras"
+      },
+      "scenes": [
+        {
+          "id": "SCN_12_01",
+          "bg": "BG21",
+          "place": "Student affairs meeting",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "The office confirmed the scheduled post is gone. Not every screenshot, but the source has been stopped.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Coffee? I remembered you said the mornings here are brutal.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Water, in case you don’t want caffeine with your emotions.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Neither tries to hand me a decision.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole从学生事务处陪玩家出来，William带热咖啡，Alex拿水。 进入此场景准确切换到 `BG21`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_12_02",
+          "bg": "BG22",
+          "place": "Campus courtyard",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Student theater. Saturday. No cameras backstage.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "There’s a food truck after rehearsal. I can show you the part of campus nobody posts.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "You can say yes to one, both on different nights, or neither. I’m still taking you for breakfast.",
+              "textMessage": false
+            }
+          ],
+          "staging": "二人分别邀请；不再问选谁。 进入此场景准确切换到 `BG22`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_12_03",
+          "bg": "BG03",
+          "place": "Dorm room",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’ll save you a seat if you want it.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I made you a playlist. I’m trying not to overthink the title.",
+              "textMessage": true
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Proud of you for making your own call.",
+              "textMessage": true
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "No cameras. No crown. Tell me what a good Saturday looks like to you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "My best nights aren’t big. They’re just the ones I don’t want to end.",
+              "textMessage": false
+            }
+          ],
+          "staging": "夜晚手机日历，玩家可以拖拽安排约会，空档为个人时间。 进入此场景准确切换到 `BG03`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_12_A",
+          "label": {
+            "zh": "安排William的剧院之夜",
+            "en": "Saturday works. I want to know the person behind the applause."
+          },
+          "said": "Saturday works. I want to know the person behind the applause.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "That’s exactly who I’ve been hoping you’d meet."
+            }
+          ],
+          "updates": "date_W:scheduled,W_affection:+4",
+          "bridge": "William invites you to an empty rehearsal after the performance."
+        },
+        {
+          "k": "B",
+          "id": "CH_12_B",
+          "label": {
+            "zh": "先听Alex的未完成歌曲",
+            "en": "Send the playlist. Then let’s get food."
+          },
+          "said": "Send the playlist. Then let’s get food.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I’ll bring headphones. You bring an opinion that isn’t polite."
+            }
+          ],
+          "updates": "date_A:scheduled,A_affection:+4",
+          "bridge": "Alex offers his unfinished recording, but lets you decide when to listen."
+        },
+        {
+          "k": "C",
+          "id": "CH_12_C",
+          "label": {
+            "zh": "给自己一晚恢复，再安排两人",
+            "en": "I want a quiet night first. Then we’ll talk dates."
+          },
+          "said": "I want a quiet night first. Then we’ll talk dates.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "Excellent choice. I’m ordering noodles."
+            }
+          ],
+          "updates": "pace:recovery,both_trust:+2",
+          "bridge": "You spend one evening alone; the dates are rescheduled, not cancelled."
+        }
+      ],
+      "gameNote": "咖啡杯选项和路线安排；玩家可选择只和朋友相处。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 13,
+      "title": {
+        "zh": "聚光灯关掉以后",
+        "en": "When the Spotlight Dies"
+      },
+      "scenes": [
+        {
+          "id": "SCN_13_01",
+          "bg": "BG23",
+          "place": "Theater stage",
+          "music": "m_confession",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "You came. I’m glad.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For once his smile isn’t aimed at an audience.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "When the room cheers, I’m supposed to be grateful. Sometimes I just feel like a name on a poster.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Can I show you the part they never see?",
+              "textMessage": false
+            }
+          ],
+          "staging": "William在舞台谢幕后寻找玩家，确认其是否观看；未赴约则改为分享排练录音。 进入此场景准确切换到 `BG23`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_13_02",
+          "bg": "BG24",
+          "place": "Backstage dressing room",
+          "music": "m_confession",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I nearly quit theater last year. I couldn’t tell whether I loved acting or being liked.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He lifts a worn script covered in notes.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "This was my first lead. I kept the pages because it was the first time I chose something for myself.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Then you came along and refused to clap on cue.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William关掉化妆镜前的环灯，舞台仅剩工作灯。 进入此场景准确切换到 `BG24`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_13_03",
+          "bg": "BG38",
+          "place": "Theater entrance",
+          "music": "m_confession",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Someone posted us. I’m sorry. I can ask for a takedown.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He puts his phone face down.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "But first... are you okay?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "People applaud when I leave the stage. You’re the first person I hoped would stay.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I don’t want to impress you. I want to be someone you can call on a bad day.",
+              "textMessage": false
+            }
+          ],
+          "staging": "校媒粉丝页有人拍到两人出剧场，William先看向玩家而不是手机。 进入此场景准确切换到 `BG38`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_13_A",
+          "label": {
+            "zh": "告诉他我喜欢不完美的他",
+            "en": "You don’t have to impress me. Tell me what you want when no one is watching."
+          },
+          "said": "You don’t have to impress me. Tell me what you want when no one is watching.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Right now? To be here a little longer."
+            }
+          ],
+          "updates": "W_vulnerable:true,W_trust:+5",
+          "bridge": "William sits beside you without his phone: “This version of me is less polished.”"
+        },
+        {
+          "k": "B",
+          "id": "CH_13_B",
+          "label": {
+            "zh": "请他教我一段台词",
+            "en": "Teach me your favorite line. I want the nervous version."
+          },
+          "said": "Teach me your favorite line. I want the nervous version.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "You might regret asking. I’m terrible at taking direction from you."
+            }
+          ],
+          "updates": "W_shared_rehearsal:true,W_affection:+5",
+          "bridge": "He teaches you one line, flubs the next, and laughs with genuine relief."
+        },
+        {
+          "k": "C",
+          "id": "CH_13_C",
+          "label": {
+            "zh": "让他把手机留给自己决定",
+            "en": "Let’s handle that photo together, not as a publicity problem."
+          },
+          "said": "Let’s handle that photo together, not as a publicity problem.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Together. Not managed. I like that."
+            }
+          ],
+          "updates": "W_public_trust:+5",
+          "bridge": "He chooses whether to put the phone away; your boundary is remembered."
+        }
+      ],
+      "gameNote": "舞台追光小游戏；结束时必须让 William 以普通身份说脆弱。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 14,
+      "title": {
+        "zh": "没发出去的副歌",
+        "en": "The Unsent Chorus"
+      },
+      "scenes": [
+        {
+          "id": "SCN_14_01",
+          "bg": "BG25",
+          "place": "Food truck plaza",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I ordered what you liked last time. If I remembered wrong, I’ll eat both.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He smiles like he’s embarrassed to be caught remembering.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Don’t tell anybody I can be nice. I have a reputation to ruin slowly.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex请玩家吃夜宵，只有他知道的餐车。 进入此场景准确切换到 `BG25`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_14_02",
+          "bg": "BG16",
+          "place": "Music practice room",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I’ve been stuck on the chorus for six months. Everything sounds like I’m saying goodbye.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He plays three notes, stops, and tries again.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "When someone matters, I leave before they can. Bad habit.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I didn’t leave this time. That counts for something, right?",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex弹奏自己写的曲子，不播放版权音乐，只有原创旋律。 进入此场景准确切换到 `BG16`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_14_03",
+          "bg": "BG39",
+          "place": "Song notebook",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I don’t need you to fix the song. I just want you to hear the version nobody else has heard.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "William texts: Did you get home safe? Alex notices but doesn’t touch my phone.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "There’s a space in the chorus. I kept it empty because I didn’t know who belonged there.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m not asking you to fill it. I’m asking if you want to hear it.",
+              "textMessage": false
+            }
+          ],
+          "staging": "屏幕展示可编辑旋律笔记，两人一起选择歌名。 进入此场景准确切换到 `BG39`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_14_A",
+          "label": {
+            "zh": "陪他完成副歌",
+            "en": "Play it again. I think the ending wants to stay."
+          },
+          "said": "Play it again. I think the ending wants to stay.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "You heard that too? Okay. One more time."
+            }
+          ],
+          "updates": "A_song:+1,A_trust:+5",
+          "bridge": "Alex records your chosen lyric as a demo and credits your contribution."
+        },
+        {
+          "k": "B",
+          "id": "CH_14_B",
+          "label": {
+            "zh": "追问他为什么害怕留下",
+            "en": "Who made you think leaving first was safer?"
+          },
+          "said": "Who made you think leaving first was safer?",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "A lot of little things. None of them your fault. I’m still working on it."
+            }
+          ],
+          "updates": "A_vulnerable:true,A_trust:+5",
+          "bridge": "Alex admits leaving people first can feel safer than being left."
+        },
+        {
+          "k": "C",
+          "id": "CH_14_C",
+          "label": {
+            "zh": "告诉他今晚先做朋友也很好",
+            "en": "I want to hear the song. We don’t have to define anything else tonight."
+          },
+          "said": "I want to hear the song. We don’t have to define anything else tonight.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Good. I’m better when I’m not auditioning for your attention."
+            }
+          ],
+          "updates": "A_friendship:+5,A_trust:+3",
+          "bridge": "You listen side by side; no kiss is assumed."
+        }
+      ],
+      "gameNote": "听歌并选择一句歌词；只在玩家自愿时记录共同旋律。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 15,
+      "title": {
+        "zh": "在人群里找你",
+        "en": "I Looked for You"
+      },
+      "scenes": [
+        {
+          "id": "SCN_15_01",
+          "bg": "BG26",
+          "place": "Formal dance floor",
+          "music": "m_gala_night",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "GUEST",
+              "text": "Want to dance?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You don’t owe me the first dance.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m terrible at this music. You’d be doing me a favor if you picked someone else.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Neither looks away when I laugh.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "I vote for you dancing exactly how you want.",
+              "textMessage": false
+            }
+          ],
+          "staging": "校园正式舞会，人群邀请玩家跳舞，男主未强占。 进入此场景准确切换到 `BG26`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_15_02",
+          "bg": "BG26",
+          "place": "Formal dance floor",
+          "music": "m_gala_night",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I practiced one dance step. I’m hoping you don’t ask which.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "He practiced? I’m definitely staying to see this.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Alex, please.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Fine. I’ll be nice. For the length of one song.",
+              "textMessage": false
+            }
+          ],
+          "staging": "舞步期间可触发人物靠近，但无强制亲密。 进入此场景准确切换到 `BG26`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_15_03",
+          "bg": "BG46",
+          "place": "Student common area",
+          "music": "m_gala_night",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "FORUM POST",
+              "text": "Looks like everyone’s favorite dance floor has a story.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "That photo wasn’t from Eric’s account. It’s a student submission. I can help request removal.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You want me here or somewhere quiet?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "There you are. I’ve been smiling at everyone and looking for one person.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I wasn’t going to dance. Then you walked in.",
+              "textMessage": false
+            }
+          ],
+          "staging": "非Eric普通学生上传舞会照片，取决于玩家是否合舞。 进入此场景准确切换到 `BG46`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_15_A",
+          "label": {
+            "zh": "和William跳一曲",
+            "en": "One song. And I want to see that one step."
+          },
+          "said": "One song. And I want to see that one step.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I was hoping you’d ask."
+            }
+          ],
+          "updates": "dance:William,W_affection:+4",
+          "bridge": "William asks for one song; the crowd takes a photo only if you enter the lit dance floor."
+        },
+        {
+          "k": "B",
+          "id": "CH_15_B",
+          "label": {
+            "zh": "和Alex去舞池",
+            "en": "Dance badly with me. I promise not to tell."
+          },
+          "said": "Dance badly with me. I promise not to tell.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I am making no promises about my terrible dancing."
+            }
+          ],
+          "updates": "dance:Alex,A_affection:+4",
+          "bridge": "Alex leads you to the quieter edge of the dance floor."
+        },
+        {
+          "k": "C",
+          "id": "CH_15_C",
+          "label": {
+            "zh": "和朋友们一起跳，不选人",
+            "en": "Everyone gets one song. No rankings."
+          },
+          "said": "Everyone gets one song. No rankings.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "Now that’s the right kind of chaos."
+            }
+          ],
+          "updates": "dance:group,both_trust:+3",
+          "bridge": "You dance with friends; both respect the choice without a jealousy penalty."
+        }
+      ],
+      "gameNote": "舞伴邀请；舞曲落点只能对应玩家真实选择的舞伴。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 16,
+      "title": {
+        "zh": "雨停之前",
+        "en": "Before the Rain Stops"
+      },
+      "scenes": [
+        {
+          "id": "SCN_16_01",
+          "bg": "BG28",
+          "place": "Dorm porch",
+          "music": "m_heartbeat_close",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "It was a good night, even with the terrible dancing.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Rain slips off his hair. He doesn’t move closer.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I keep thinking about what I almost said onstage.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m not asking you to choose me. I’m asking if I can come back tomorrow.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William送玩家到宿舍门口，雨水打湿肩膀。 进入此场景准确切换到 `BG28`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_16_02",
+          "bg": "BG29",
+          "place": "Entry alcove",
+          "music": "m_heartbeat_close",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "You have this way of making me forget the version of myself everyone expects.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He looks at the door, then back at me.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Can I kiss you? It’s okay if the answer is no.",
+              "textMessage": false
+            }
+          ],
+          "staging": "若玩家同意进入门廊室内才切BG29，否则保持外景人物构图。 进入此场景准确切换到 `BG29`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_16_03",
+          "bg": "BG30",
+          "place": "Dorm steps in rain",
+          "music": "m_heartbeat_close",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "You left this at the dance.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He takes in the scene without asking for details.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I didn’t mean to interrupt.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You didn’t do anything wrong.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Good. I’d hate to make a hobby of it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I came here to tell you I’m jealous. But that’s not your problem to fix.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "What I really want is to know you got home warm.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex带来遗失的外套，目睹靠近或聊天的实际状态。 进入此场景准确切换到 `BG30`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_16_A",
+          "label": {
+            "zh": "允许William的吻",
+            "en": "Yes. Just a kiss."
+          },
+          "said": "Yes. Just a kiss.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Just a kiss. I’ll remember that."
+            }
+          ],
+          "updates": "kiss_W:yes,W_affection:+5",
+          "bridge": "William kisses you only after your affirmative answer, then notices the rain growing harder."
+        },
+        {
+          "k": "B",
+          "id": "CH_16_B",
+          "label": {
+            "zh": "选择长谈",
+            "en": "Stay and talk. I want to know the hard parts of your day."
+          },
+          "said": "Stay and talk. I want to know the hard parts of your day.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "That’s somehow more terrifying. Okay."
+            }
+          ],
+          "updates": "kiss_W:no,W_trust:+6",
+          "bridge": "William stays in the doorway and talks with you about what it means to be seen."
+        },
+        {
+          "k": "C",
+          "id": "CH_16_C",
+          "label": {
+            "zh": "礼貌结束今晚",
+            "en": "I had a good time. I need the rest of the night to myself."
+          },
+          "said": "I had a good time. I need the rest of the night to myself.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I’ll say good night properly. Good night."
+            }
+          ],
+          "updates": "kiss_W:no,pace:slow,W_trust:+3",
+          "bridge": "William walks you to the door, then leaves; Alex later finds you alone, not kissing."
+        }
+      ],
+      "gameNote": "雨夜靠近/拥抱/告别；雨幕在玻璃外，人物真实湿发。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 17,
+      "title": {
+        "zh": "不是备选",
+        "en": "Not Your Second Choice"
+      },
+      "scenes": [
+        {
+          "id": "SCN_17_01",
+          "bg": "BG30",
+          "place": "Dorm steps in rain",
+          "music": "m_rooftop_wind",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I know you can see whoever you want. That isn’t the problem.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "The problem is how often I’m standing in a doorway, wondering if I’m an afterthought.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He twists the silver ring once.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I like you enough to say something embarrassing: I want to be wanted on purpose.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex在楼梯拐角停步，William不尾随。 进入此场景准确切换到 `BG30`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_17_02",
+          "bg": "BG31",
+          "place": "Sheltered steps",
+          "music": "m_rooftop_wind",
+          "ambient": "rain",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I don’t need a promise tonight. I need a real answer when you do have one.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And if you don’t want this, I’d rather know than spend another month guessing.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He waits. No sarcasm left to hide behind.",
+              "textMessage": false
+            }
+          ],
+          "staging": "从楼梯走到台阶，保持安全距离给玩家回答。 进入此场景准确切换到 `BG31`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_17_03",
+          "bg": "BG33",
+          "place": "Private messages",
+          "music": "m_rooftop_wind",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m back at my place. Take the time you need.",
+              "textMessage": true
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For once, there’s no audience. Only what I choose to say.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m not asking you to choose me tonight. I’m asking you not to ask me to pretend I feel nothing.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "If you want me as a friend, tell me. I can learn how to be that.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William短信主动询问玩家是否需要空间，不抢夺场面。 进入此场景准确切换到 `BG33`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_17_A",
+          "label": {
+            "zh": "主动告诉Alex我认真在意他",
+            "en": "I came after you because I wanted to. Not because William left."
+          },
+          "said": "I came after you because I wanted to. Not because William left.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Then I can stay a little longer."
+            }
+          ],
+          "updates": "A_trust:+6,A_affection:+4",
+          "bridge": "Alex admits, “I am scared you will come after me only when I walk away.”"
+        },
+        {
+          "k": "B",
+          "id": "CH_17_B",
+          "label": {
+            "zh": "承认目前还不能给予承诺",
+            "en": "I care about you. I can’t promise exclusivity right now."
+          },
+          "said": "I care about you. I can’t promise exclusivity right now.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Thank you for being clear. I’ll decide what I can do with that."
+            }
+          ],
+          "updates": "A_trust:+4,A_boundary:heard",
+          "bridge": "Alex thanks you for the honesty but asks for space before another date."
+        },
+        {
+          "k": "C",
+          "id": "CH_17_C",
+          "label": {
+            "zh": "表示先退回朋友",
+            "en": "I don’t want to keep you waiting. I’d rather protect our friendship."
+          },
+          "said": "I don’t want to keep you waiting. I’d rather protect our friendship.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "That hurts. But I’d rather keep something honest than fake something bigger."
+            }
+          ],
+          "updates": "A_romance:paused,A_trust:+3",
+          "bridge": "The friendship boundary is respected; do not force a reconciliation kiss."
+        }
+      ],
+      "gameNote": "雨中追人只决定是否谈话，不强制接吻。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 18,
+      "title": {
+        "zh": "牵着你的手穿过人群",
+        "en": "In Plain Sight"
+      },
+      "scenes": [
+        {
+          "id": "SCN_18_01",
+          "bg": "BG32",
+          "place": "Campus walking path",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I wanted to check in about the other night. Not because I need an answer. Because I don’t want you feeling cornered.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’ve spent years letting other people decide what my gestures mean. I’d like to do something because I mean it.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He stops under the trees where students pass on both sides.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William与玩家在校园散步，问上次雨夜是否舒服。 进入此场景准确切换到 `BG32`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_18_02",
+          "bg": "BG41",
+          "place": "Park at golden hour",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Would you like to hold my hand? We can take the quiet path if you’d rather avoid pictures.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "His hand stays open. It doesn’t reach for mine.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William伸手等玩家自己决定，不预设牵手。 进入此场景准确切换到 `BG41`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_18_03",
+          "bg": "BG46",
+          "place": "Student common area",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "FORUM POST",
+              "text": "William spotted with the new transfer again.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I saw it. I won’t correct your feelings for you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "If you’d like, I’ll ask them to remove the photo. If not, I’ll still stand beside you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I would take your hand in a room full of people. I’ll also let go the second you ask.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I want the ordinary parts, too. Bad coffee. Late buses. You stealing my hoodie.",
+              "textMessage": false
+            }
+          ],
+          "staging": "若同意公开牵手则普通粉丝照出现，否则论坛只有并行走路。 进入此场景准确切换到 `BG46`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_18_A",
+          "label": {
+            "zh": "公开牵手",
+            "en": "I’d like the world to see us walking together."
+          },
+          "said": "I’d like the world to see us walking together.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then let them see me smiling for once without a script."
+            }
+          ],
+          "updates": "W_public:+6,handhold:true",
+          "bridge": "The public photo exists with both of you holding hands, and William asks before responding online."
+        },
+        {
+          "k": "B",
+          "id": "CH_18_B",
+          "label": {
+            "zh": "走安静的小路",
+            "en": "I want you, not a public announcement."
+          },
+          "said": "I want you, not a public announcement.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then this is ours. No audience."
+            }
+          ],
+          "updates": "W_trust:+5,public:private",
+          "bridge": "There is no photo; you share a private memory by the side path."
+        },
+        {
+          "k": "C",
+          "id": "CH_18_C",
+          "label": {
+            "zh": "先不牵手但接受陪伴",
+            "en": "Walk with me. No labels yet."
+          },
+          "said": "Walk with me. No labels yet.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Best offer I’ve had all day."
+            }
+          ],
+          "updates": "W_trust:+4,handhold:false",
+          "bridge": "William walks beside you, not touching; the public romance rumor cannot spawn from this scene."
+        }
+      ],
+      "gameNote": "牵手需主动确认，论坛照片按实际动作发生。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 19,
+      "title": {
+        "zh": "你来找我",
+        "en": "You Came for Me"
+      },
+      "scenes": [
+        {
+          "id": "SCN_19_01",
+          "bg": "BG16",
+          "place": "Music practice room",
+          "music": "m_library_hush",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "You came. I wasn’t sure you would.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The melody is familiar, but the last note has changed.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I rewrote the ending. It used to sound like the door closing.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Now it sounds like somebody might knock.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex在练琴房，玩家可按关系状态选择谈约会或友情。 进入此场景准确切换到 `BG16`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_19_02",
+          "bg": "BG34",
+          "place": "Music studio",
+          "music": "m_library_hush",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I saw the photo. I don’t need the internet to tell me what you feel.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I do need you to tell me what I should expect from us.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He slides over one headphone. The other stays in his ear.",
+              "textMessage": false
+            }
+          ],
+          "staging": "音乐停止后展开坦诚对话。 进入此场景准确切换到 `BG34`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_19_03",
+          "bg": "BG33",
+          "place": "Private messages",
+          "music": "m_library_hush",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Sorry. I was dropping off a rehearsal file. Is now a bad time?",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Depends. Are you here to ask or announce?",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Ask. Always ask.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Both look to me. For once, the pause is mine.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You remembered the song I couldn’t finish. Nobody has ever done that.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I don’t need to win against him. I need to know whether you see me.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William敲门，主动询问是否方便进入而非当场抓包。 进入此场景准确切换到 `BG33`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_19_A",
+          "label": {
+            "zh": "坦诚告诉Alex自己对他有感觉",
+            "en": "I came because I missed talking to you. Not because of a picture."
+          },
+          "said": "I came because I missed talking to you. Not because of a picture.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I can work with that. Better than a dozen promises."
+            }
+          ],
+          "updates": "A_affection:+5,A_trust:+4",
+          "bridge": "Alex shares the last verse of his unfinished song, but stops to ask where this is going."
+        },
+        {
+          "k": "B",
+          "id": "CH_19_B",
+          "label": {
+            "zh": "明确先保持朋友关系",
+            "en": "I care about you. I want us to keep making music, even if romance changes."
+          },
+          "said": "I care about you. I want us to keep making music, even if romance changes.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Music stays. I’m glad you said it."
+            }
+          ],
+          "updates": "A_friendship:+5",
+          "bridge": "Alex agrees to remain friends without romantic teasing."
+        },
+        {
+          "k": "C",
+          "id": "CH_19_C",
+          "label": {
+            "zh": "请两人一起谈清楚",
+            "en": "William, come in. We all deserve a conversation, not guesses."
+          },
+          "said": "William, come in. We all deserve a conversation, not guesses.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "If everyone is comfortable, I’m here."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Okay. Let’s speak plainly."
+            }
+          ],
+          "updates": "threeway_talk:started,both_trust:+3",
+          "bridge": "William arrives for a scheduled discussion, not as a forced jealous interruption."
+        }
+      ],
+      "gameNote": "音乐室互动读此前 secret_melody；没有记忆时另写台词。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 20,
+      "title": {
+        "zh": "灯熄之前",
+        "en": "Until the Lights Go Out"
+      },
+      "scenes": [
+        {
+          "id": "SCN_20_01",
+          "bg": "BG34",
+          "place": "Music studio",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I like you. I’m not going to pretend I’m above jealousy.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I like you too. And I’m done letting people guess what I mean.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I don’t want a competition.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Neither do I.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "I can hear the air conditioner between their words.",
+              "textMessage": false
+            }
+          ],
+          "staging": "三人坐在音乐教室，琴盖合起。 进入此场景准确切换到 `BG34`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_20_02",
+          "bg": "BG35",
+          "place": "Theater corridor",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "What would feel honest for you right now?",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And what would feel honest for us? Those might be different answers.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Then we keep talking until they fit—or admit they don’t.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "No one reaches for me before I respond.",
+              "textMessage": false
+            }
+          ],
+          "staging": "走廊灯变暗，讨论未来形式，不强制三人亲密。 进入此场景准确切换到 `BG35`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_20_03",
+          "bg": "BG34",
+          "place": "Music studio",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "Another post. Not Eric, as far as the admin can tell. Want me to request a takedown?",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m tired of letting an app narrate us.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Tomorrow we can decide what matters outside the room.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I can be patient. I can’t be invisible.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I can share a conversation. I won’t share a promise nobody agreed to.",
+              "textMessage": false
+            }
+          ],
+          "staging": "走廊普通学生偷拍到三人离开音乐教室的场面，不捕捉私密行为。 进入此场景准确切换到 `BG34`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_20_A",
+          "label": {
+            "zh": "先分别约会再决定",
+            "en": "I want time with each of you without turning it into a contest."
+          },
+          "said": "I want time with each of you without turning it into a contest.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "That makes sense."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Then let’s make those dates worth having."
+            }
+          ],
+          "updates": "route:nonexclusive_dating",
+          "bridge": "Both men agree to separate dates; do not imply a three-person romance pact."
+        },
+        {
+          "k": "B",
+          "id": "CH_20_B",
+          "label": {
+            "zh": "表达倾向某一人",
+            "en": "I’m leaning toward one of you, but I need to be honest before I call it a promise."
+          },
+          "said": "I’m leaning toward one of you, but I need to be honest before I call it a promise.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then say it when you’re ready."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’d rather know the truth than be kept warm."
+            }
+          ],
+          "updates": "route:leaning",
+          "bridge": "The preferred person asks for a direct conversation about exclusivity and timing."
+        },
+        {
+          "k": "C",
+          "id": "CH_20_C",
+          "label": {
+            "zh": "暂时不谈恋爱",
+            "en": "I need room to breathe. I don’t want anyone waiting on a maybe."
+          },
+          "said": "I need room to breathe. I don’t want anyone waiting on a maybe.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I respect that."
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "We can still be friends if you want."
+            }
+          ],
+          "updates": "route:friendship",
+          "bridge": "Nicole takes you out of the relationship talk; romance scenes pause until you opt back in."
+        }
+      ],
+      "gameNote": "面对面协商；展示真实需求而不是数值排行榜。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 21,
+      "title": {
+        "zh": "十天的约定",
+        "en": "Ten Days, No Scoreboard"
+      },
+      "scenes": [
+        {
+          "id": "SCN_21_01",
+          "bg": "BG36",
+          "place": "Library study table",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Ten days. Not a test we have to pass. Just time to see how we actually live.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m okay with dating separately, but I need to know if something changes. Not details. Just what that means for us.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Agreed. And nothing gets posted without asking.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Anyone can change their mind. Including me.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "It feels less like a contract than an invitation to be human.",
+              "textMessage": false
+            }
+          ],
+          "staging": "三人在图书馆讨论关系选择，桌上摆日期卡而不是协议合同。 进入此场景准确切换到 `BG36`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_21_02",
+          "bg": "BG37",
+          "place": "Calendar table",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "Remember to schedule something for yourself. You’re a person, not a calendar app.",
+              "textMessage": true
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’ll make dinner if you want a night without a crowd.",
+              "textMessage": true
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m taking you to the record store. Maybe I’ll let you pick a bad album.",
+              "textMessage": true
+            }
+          ],
+          "staging": "交互日历可拖动约会卡和留白个人时间，不强制十天内两个男主都亲密。 进入此场景准确切换到 `BG37`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_21_03",
+          "bg": "BG36",
+          "place": "Library study table",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "You can reschedule. You can decline. I just want honesty.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And I want to know you can come to me without an emergency to fix.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Two people asking for real time. A choice that might actually change tomorrow.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Give me one evening where we don’t have to prove anything.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And I’ll give you one song I’m too afraid to play for anybody else.",
+              "textMessage": false
+            }
+          ],
+          "staging": "对日程做第一次确认。 进入此场景准确切换到 `BG36`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_21_A",
+          "label": {
+            "zh": "先约William",
+            "en": "Let’s start at the theater. I want to see your world."
+          },
+          "said": "Let’s start at the theater. I want to see your world.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I’ll show you the messy parts too."
+            }
+          ],
+          "updates": "calendar:first_W,W_affection:+4",
+          "bridge": "The William-first appointment is set, and Alex confirms a separate date later."
+        },
+        {
+          "k": "B",
+          "id": "CH_21_B",
+          "label": {
+            "zh": "先约Alex",
+            "en": "Record store first. I’m judging your taste in music."
+          },
+          "said": "Record store first. I’m judging your taste in music.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Brave words. I’m bringing the worst album I own."
+            }
+          ],
+          "updates": "calendar:first_A,A_affection:+4",
+          "bridge": "The Alex-first appointment is set; William gets an honest schedule update."
+        },
+        {
+          "k": "C",
+          "id": "CH_21_C",
+          "label": {
+            "zh": "为自己安排独处的一天",
+            "en": "Leave one day just for myself."
+          },
+          "said": "I want a day that belongs only to me.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "That sounds healthy."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I can live with that."
+            }
+          ],
+          "updates": "calendar:balanced,both_trust:+3",
+          "bridge": "Your calendar includes personal time and two optional dates, each cancellable."
+        }
+      ],
+      "gameNote": "日程选择游戏；不显示谁领先，只显示约定与愿望。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 22,
+      "title": {
+        "zh": "卸下王冠的夜晚",
+        "en": "William Offstage"
+      },
+      "scenes": [
+        {
+          "id": "SCN_22_01",
+          "bg": "BG38",
+          "place": "Theater entrance",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "The scholarship and the ambassador role would pay for my last year.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "The team also wants me to look uncomplicated in public.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He pulls the medal ribbon from his collar and folds it away.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m afraid they’ll choose the poster instead of me.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William带玩家参观试镜后台，镜前贴满便签。 进入此场景准确切换到 `BG38`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_22_02",
+          "bg": "BG24",
+          "place": "Backstage dressing room",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I used to think love meant being applauded when you got every line right.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "But the person I want to come home to should see me miss a line and stay anyway.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He laughs at himself, then looks at me with an unguarded face.",
+              "textMessage": false
+            }
+          ],
+          "staging": "剧场舞台上，William朗读自己改写的戏剧独白，不引用已有版权台词。 进入此场景准确切换到 `BG24`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_22_03",
+          "bg": "BG43",
+          "place": "Rehearsal office",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "TEAM",
+              "text": "Please avoid speculation about your private relationships before final selection.",
+              "textMessage": true
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I can refuse to discuss you. I won’t deny you without asking.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "What’s yours stays yours, even if the rest gets complicated.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I cancelled the interview. They wanted a story about us. I wanted an evening with you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You don’t have to be the most interesting thing in the room. You’re allowed to be tired with me.",
+              "textMessage": false
+            }
+          ],
+          "staging": "招聘团队要求他发布单身形象采访，他拒绝替玩家表态。 进入此场景准确切换到 `BG43`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_22_A",
+          "label": {
+            "zh": "支持他表达真实自己",
+            "en": "Take the interview as yourself. You don’t owe them a fake life."
+          },
+          "said": "Take the interview as yourself. You don’t owe them a fake life.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I didn’t realize how badly I needed to hear that."
+            }
+          ],
+          "updates": "W_career_integrity:+5,W_trust:+5",
+          "bridge": "William declines a public grand gesture and explains his choice privately."
+        },
+        {
+          "k": "B",
+          "id": "CH_22_B",
+          "label": {
+            "zh": "帮他排练并分析风险",
+            "en": "Let’s practice what you can say without revealing my life."
+          },
+          "said": "Let’s practice what you can say without revealing my life.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Okay. You’re officially my toughest director."
+            }
+          ],
+          "updates": "W_rehearsal:true,W_trust:+4",
+          "bridge": "You rehearse a statement together, but publishing remains his decision."
+        },
+        {
+          "k": "C",
+          "id": "CH_22_C",
+          "label": {
+            "zh": "明确不想被卷入公开项目",
+            "en": "I respect your career. Keep me out of their publicity."
+          },
+          "said": "I respect your career. Keep me out of their publicity.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Absolutely. I can do this without borrowing your name."
+            }
+          ],
+          "updates": "W_public_boundary:true,W_trust:+4",
+          "bridge": "The public event happens without you; friendship support remains available."
+        }
+      ],
+      "gameNote": "William专属夜晚；不自动吻，加入主动替玩家解决真实困难的行动。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 23,
+      "title": {
+        "zh": "只给你听的未完成曲",
+        "en": "The Song Only You Hear"
+      },
+      "scenes": [
+        {
+          "id": "SCN_23_01",
+          "bg": "BG44",
+          "place": "Record shop",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "This is where I come when everything online gets too loud.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "The owner lets me play demos after closing. Most of them are terrible.",
+              "textMessage": false
+            },
+            {
+              "speaker": "OWNER",
+              "text": "Only the ones he shows other people.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Traitor.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He laughs with his whole face. It’s new.",
+              "textMessage": false
+            }
+          ],
+          "staging": "唱片店，Alex将两张原创封面草图交给玩家选择。 进入此场景准确切换到 `BG44`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_23_02",
+          "bg": "BG39",
+          "place": "Song notebook",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I sent the recording to a small label. They want me in another city for a residency.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I haven’t told anyone. I didn’t want the first thing you thought to be that I’m leaving.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "His ring taps once on the desk.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m not going to turn down the chance. But I want to know if we can talk about what it means.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex在宿舍放原创demo，没有任何已有歌曲片段。 进入此场景准确切换到 `BG39`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_23_03",
+          "bg": "BG40",
+          "place": "Morning dorm room",
+          "music": "m_old_letter",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I’ve got a date for the residency interview. I’m scared, which is incredibly annoying.",
+              "textMessage": true
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For the first time he doesn’t hide what matters.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "My scholarship offer came today. I should be happy. I’m terrified it means leaving you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I was going to hide the letter. I don’t want to start doing that with you.",
+              "textMessage": false
+            }
+          ],
+          "staging": "第二天晨光，短信写下演出试听日期。 进入此场景准确切换到 `BG40`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_23_A",
+          "label": {
+            "zh": "鼓励他追求音乐",
+            "en": "Take the residency. I want to see who you become."
+          },
+          "said": "Take the residency. I want to see who you become.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I was hoping you’d say that. Not because I need permission—because I want you on my side."
+            }
+          ],
+          "updates": "A_career:+5,A_trust:+5",
+          "bridge": "Alex asks when and how you would want to keep in touch during his audition trip."
+        },
+        {
+          "k": "B",
+          "id": "CH_23_B",
+          "label": {
+            "zh": "坦白异地担忧",
+            "en": "I’m happy for you. I’m also scared of what distance might do."
+          },
+          "said": "I’m happy for you. I’m also scared of what distance might do.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Me too. We can be scared and still make a plan."
+            }
+          ],
+          "updates": "A_distance_plan:true,A_trust:+5",
+          "bridge": "Alex says, “I will go, and I won’t make you responsible for that.”"
+        },
+        {
+          "k": "C",
+          "id": "CH_23_C",
+          "label": {
+            "zh": "先确定友情与支持",
+            "en": "Whatever happens romantically, I want to hear the finished song."
+          },
+          "said": "Whatever happens romantically, I want to hear the finished song.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Then you’ll get the first finished recording."
+            }
+          ],
+          "updates": "A_friendship:+4,A_song:+1",
+          "bridge": "You help him save the track without any romance promise."
+        }
+      ],
+      "gameNote": "歌声/耳机/触摸选择；亲密必须解锁且可退出。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 24,
+      "title": {
+        "zh": "把真话说给对的人",
+        "en": "The Truth We Share"
+      },
+      "scenes": [
+        {
+          "id": "SCN_24_01",
+          "bg": "BG41",
+          "place": "Park at golden hour",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I saw a post about you and Alex. I don’t want details that aren’t mine.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I do want to know whether you’re still comfortable with how we’re dating.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He keeps his coffee between both hands.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I like you enough to be jealous. I respect you enough not to turn it into a question you can’t answer.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William坦白自己看到校园谣言，要求直接沟通而非报告彼此私密内容。 进入此场景准确切换到 `BG41`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_24_02",
+          "bg": "BG37",
+          "place": "Calendar table",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "If anything changes, please tell me directly.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’d like to know our plans for next week too. No rush, just honesty.",
+              "textMessage": true
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For once the hardest thing isn’t saying what I want. It’s saying what I can offer.",
+              "textMessage": false
+            }
+          ],
+          "staging": "选择关系状态卡：still exploring / leaning / taking space。 进入此场景准确切换到 `BG37`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_24_03",
+          "bg": "BG22",
+          "place": "Campus courtyard",
+          "music": "m_slow_burn",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "You can care about two people and still need to make a decision. You can also choose nobody.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "Just don’t use confusion as an excuse to stop being kind.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m jealous. I’m working on it. I still want to hear about your day.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "You don’t have to report your body to anyone. Tell me what you want this relationship to be.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole短暂出现，提醒玩家两个男主并非游戏分数。 进入此场景准确切换到 `BG22`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_24_A",
+          "label": {
+            "zh": "明确仍处探索阶段",
+            "en": "I’m still getting to know both of you. I haven’t made an exclusive promise."
+          },
+          "said": "I’m still getting to know both of you. I haven’t made an exclusive promise.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Thank you. I can decide what that means for me."
+            }
+          ],
+          "updates": "status:exploring,W_trust:+4",
+          "bridge": "You tell both men there is no exclusive commitment and what boundaries you need."
+        },
+        {
+          "k": "B",
+          "id": "CH_24_B",
+          "label": {
+            "zh": "坦承自己已倾向其一",
+            "en": "I think my feelings are changing. I want to be truthful before I label anything."
+          },
+          "said": "I think my feelings are changing. I want to be truthful before I label anything.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "That’s hard to hear, and worth hearing."
+            }
+          ],
+          "updates": "status:leaning,W_trust:+5",
+          "bridge": "You tell the person you lean toward, then privately notify the other without sharing intimate details."
+        },
+        {
+          "k": "C",
+          "id": "CH_24_C",
+          "label": {
+            "zh": "暂停约会梳理情绪",
+            "en": "I need a short pause from dates so nobody feels misled."
+          },
+          "said": "I need a short pause from dates so nobody feels misled.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Take it. I’d rather have clarity later than a false yes now."
+            }
+          ],
+          "updates": "status:pause,both_trust:+3",
+          "bridge": "Dates pause for reflection; no accidental overnight stays become canon."
+        }
+      ],
+      "gameNote": "关系变化说明；玩家无需泄露他人亲密细节。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 25,
+      "title": {
+        "zh": "他愿意放弃掌声",
+        "en": "What William Won’t Sell"
+      },
+      "scenes": [
+        {
+          "id": "SCN_25_01",
+          "bg": "BG42",
+          "place": "Student kitchen",
+          "music": "m_sunday_kitchen",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I burned the first batch. Please pretend this one is my debut.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He slides a plate across the counter like it’s opening night.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "They want a clean image. It took me a long time to realize they mean obedient.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I won’t use you as proof of how brave I am. And I won’t tell a lie about you for a job.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William下厨，短暂放下品牌团队的催促。 进入此场景准确切换到 `BG42`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_25_02",
+          "bg": "BG43",
+          "place": "Rehearsal office",
+          "music": "m_sunday_kitchen",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Listen. “I will keep my personal relationships private, but I won’t misrepresent myself for this role.”",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Too much?",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He holds the cursor over Send. This choice is his.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Whatever they decide, I’ll still want to see you tomorrow.",
+              "textMessage": false
+            }
+          ],
+          "staging": "他在玩家面前写邮件但必须由本人发送，内容不涉及玩家身份。 进入此场景准确切换到 `BG43`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_25_03",
+          "bg": "BG42",
+          "place": "Student kitchen",
+          "music": "m_sunday_kitchen",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "TEAM",
+              "text": "We appreciate your response. Your application remains under review.",
+              "textMessage": true
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Okay. Not a victory, not a disaster. Just honest.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I’d like more evenings like this, if you do.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I turned down the gossip campaign. I didn’t turn down the role. I want both my work and you to be real.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "You can stay for dinner. You never need a reason to go home.",
+              "textMessage": false
+            }
+          ],
+          "staging": "品牌方回信：仍可面试，但可能调整公开职责。 进入此场景准确切换到 `BG42`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_25_A",
+          "label": {
+            "zh": "告诉他不必用事业证明爱",
+            "en": "You don’t have to lose your dream to prove you care about me."
+          },
+          "said": "You don’t have to lose your dream to prove you care about me.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I’ll try to keep both the dream and my integrity."
+            }
+          ],
+          "updates": "W_career_balance:+5,W_trust:+5",
+          "bridge": "William chooses his own public role, and you are proud without taking credit."
+        },
+        {
+          "k": "B",
+          "id": "CH_25_B",
+          "label": {
+            "zh": "一起享受普通夜晚",
+            "en": "No more emails tonight. Teach me how you saved dinner."
+          },
+          "said": "No more emails tonight. Teach me how you saved dinner.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Step one: convince someone lovely to taste the second batch."
+            }
+          ],
+          "updates": "W_domestic_memory:true,W_affection:+5",
+          "bridge": "You share a simple kitchen dinner and make a memory about food, not spectacle."
+        },
+        {
+          "k": "C",
+          "id": "CH_25_C",
+          "label": {
+            "zh": "明确只做朋友也可支持",
+            "en": "I want to support your choice as a friend, whatever happens."
+          },
+          "said": "I want to support your choice as a friend, whatever happens.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I’m lucky to have a friend who knows when I’m pretending."
+            }
+          ],
+          "updates": "W_friendship:+5",
+          "bridge": "William accepts a friendship-focused evening; no surprise romantic confession."
+        }
+      ],
+      "gameNote": "厨房双人合作，只奖励真实体贴与共处；不默认留宿。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 26,
+      "title": {
+        "zh": "另一座城市的邀请",
+        "en": "Alex’s Other City"
+      },
+      "scenes": [
+        {
+          "id": "SCN_26_01",
+          "bg": "BG44",
+          "place": "Record shop",
+          "music": "m_seaside",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I got the residency. Three months away, starting after finals.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He looks happy. Then nervous about being happy.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m going. I’ve worked for this for years.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "But I don’t want to pretend the timing means nothing to us.",
+              "textMessage": false
+            }
+          ],
+          "staging": "唱片店，Alex告诉玩家驻地面试结果。 进入此场景准确切换到 `BG44`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_26_02",
+          "bg": "BG49",
+          "place": "Rooftop",
+          "music": "m_seaside",
+          "ambient": "wind",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I could write to you from every city. You could tell me when the songs are terrible.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I could also be wrong about what we can handle.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He turns his silver ring once and lets it rest.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m trying to ask instead of disappearing.",
+              "textMessage": false
+            }
+          ],
+          "staging": "天台俯瞰城市，Alex分享未来而不制造“留或走”二选一。 进入此场景准确切换到 `BG49`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_26_03",
+          "bg": "BG39",
+          "place": "Song notebook",
+          "music": "m_seaside",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "One voice note a week? Or more. Or none if that’s too much.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I want a plan that sounds like us, not a promise we make because we’re scared.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "The city is two hours away. I can take the train. I can call. I just won’t pretend distance is easy.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I want you. I also want that stage. For once, I’m trying not to disappear from either.",
+              "textMessage": false
+            }
+          ],
+          "staging": "弹出共同制定的距离计划卡片，可选择朋友和恋人不同文案。 进入此场景准确切换到 `BG39`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_26_A",
+          "label": {
+            "zh": "约定异地联系",
+            "en": "Let’s try the voice notes. You can tell me about the music, not just that you miss me."
+          },
+          "said": "Let’s try the voice notes. You can tell me about the music, not just that you miss me.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Deal. I’ll send you the ugly first drafts too."
+            }
+          ],
+          "updates": "A_distance:weekly,A_trust:+5",
+          "bridge": "Alex offers a specific call schedule and asks you to say if it stops working."
+        },
+        {
+          "k": "B",
+          "id": "CH_26_B",
+          "label": {
+            "zh": "鼓励他自由出发，不做承诺",
+            "en": "Go make your music. We don’t need to promise a future we haven’t lived yet."
+          },
+          "said": "Go make your music. We don’t need to promise a future we haven’t lived yet.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "That’s terrifyingly kind. Thank you."
+            }
+          ],
+          "updates": "A_distance:open,A_trust:+5",
+          "bridge": "Alex leaves freely, and there is a warm farewell without a promise."
+        },
+        {
+          "k": "C",
+          "id": "CH_26_C",
+          "label": {
+            "zh": "帮他把歌曲留作纪念",
+            "en": "Finish the chorus with me tonight, whatever happens next."
+          },
+          "said": "Finish the chorus with me tonight, whatever happens next.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "Then this song will always have a place to return to."
+            }
+          ],
+          "updates": "A_song:completed,A_affection:+4",
+          "bridge": "You keep a voice note from his song with his permission."
+        }
+      ],
+      "gameNote": "音乐邀请与异地规划，玩家参与而不决定 Alex 是否追梦。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 27,
+      "title": {
+        "zh": "不参加这场比赛",
+        "en": "Not a Contest"
+      },
+      "scenes": [
+        {
+          "id": "SCN_27_01",
+          "bg": "BG45",
+          "place": "Event backstage",
+          "music": "m_boardroom",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Someone turned our lives into a poll. I’m not interested in winning that.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Good. I wasn’t planning on losing either.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "There’s a third option: nobody plays.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The percentages refresh as if they mean something. They don’t.",
+              "textMessage": false
+            }
+          ],
+          "staging": "迎新后台两位男主看到舆论投票，问是否统一回应。 进入此场景准确切换到 `BG45`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_27_02",
+          "bg": "BG46",
+          "place": "Student common area",
+          "music": "m_boardroom",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I’m leaving for my residency. I’m not going to spend my last weeks competing with William.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "And I’m going to take that interview without denying who I am.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For the first time, they both seem bigger than the question of who I choose.",
+              "textMessage": false
+            }
+          ],
+          "staging": "投票浮层震动一次后被玩家关闭，能选择不回应。 进入此场景准确切换到 `BG46`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_27_03",
+          "bg": "BG45",
+          "place": "Event backstage",
+          "music": "m_boardroom",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Maybe we can all have one evening without making it a referendum.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "A movie on the lawn. Normal.",
+              "textMessage": false
+            },
+            {
+              "speaker": "NICOLE",
+              "text": "I’ll bring popcorn and a strict ban on polls.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "They made a poll about who deserves you. They don’t get a vote.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Not even we get a vote. Only you decide what comes next.",
+              "textMessage": false
+            }
+          ],
+          "staging": "三人决定下一次在无观众处见面。 进入此场景准确切换到 `BG45`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_27_A",
+          "label": {
+            "zh": "关闭投票不回应",
+            "en": "We don’t have to answer a question nobody had the right to ask."
+          },
+          "said": "We don’t have to answer a question nobody had the right to ask.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’m with you."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Finally, a unanimous vote."
+            }
+          ],
+          "updates": "poll:ignored,both_trust:+5",
+          "bridge": "The poll loses attention when you decline to participate; no character is ranked by it."
+        },
+        {
+          "k": "B",
+          "id": "CH_27_B",
+          "label": {
+            "zh": "只发一条个人界线",
+            "en": "My private life isn’t a competition. Please stop tagging me."
+          },
+          "said": "My private life isn’t a competition. Please stop tagging me.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "Short and clear. I’ll help you report the reposts."
+            }
+          ],
+          "updates": "poll:boundary",
+          "bridge": "You post a privacy boundary and do not announce any relationship label."
+        },
+        {
+          "k": "C",
+          "id": "CH_27_C",
+          "label": {
+            "zh": "转回真实的未来问题",
+            "en": "I want to talk about your audition and the residency—not who gets a higher score."
+          },
+          "said": "I want to talk about your audition and the residency—not who gets a higher score.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’d like that."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Me too."
+            }
+          ],
+          "updates": "poll:redirect,both_trust:+4",
+          "bridge": "The scene shifts to honest talks about travel, career and daily life."
+        }
+      ],
+      "gameNote": "公众投票反击只做事实澄清；名誉保护而非争夺输赢。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 28,
+      "title": {
+        "zh": "只属于我们的一晚",
+        "en": "A Night Without Witnesses"
+      },
+      "scenes": [
+        {
+          "id": "SCN_28_01",
+          "bg": "BG47",
+          "place": "Outdoor movie",
+          "music": "m_midnight_jazz",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "I bought too much popcorn. Which makes this an excellent evening already.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I brought a blanket. It might actually be big enough for everyone.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I brought the terrible candy. It builds character.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "A normal night feels stranger than the drama ever did.",
+              "textMessage": false
+            }
+          ],
+          "staging": "露天电影，人物同框：William拿外套，Alex拿饮料，Nicole在侧。 进入此场景准确切换到 `BG47`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_28_02",
+          "bg": "BG48",
+          "place": "Campus fountain",
+          "music": "m_midnight_jazz",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I’d like to cook with you again. Even if you spend the whole time mocking my knife skills.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’d like to send you the song when I finish it. From wherever I am.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "And if none of that turns into romance, I still want to know you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Same. I’d rather have the truth than a beautiful lie.",
+              "textMessage": false
+            }
+          ],
+          "staging": "电影散场，三人走到喷泉旁，讨论以后日常。 进入此场景准确切换到 `BG48`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_28_03",
+          "bg": "BG48",
+          "place": "Campus fountain",
+          "music": "m_midnight_jazz",
+          "ambient": "bokeh",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "Water catches the city lights. No camera flashes. Nobody asks me to choose before I’m ready.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "If this were a movie, I’d want the credits to roll here. Just us, no audience.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I wrote an ending for that song. I didn’t write yours.",
+              "textMessage": false
+            }
+          ],
+          "staging": "可选择独处、三人聊天、单独约会，镜头始终按选项表现。 进入此场景准确切换到 `BG48`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_28_A",
+          "label": {
+            "zh": "告诉William想再有普通的家庭夜",
+            "en": "I’d love another dinner. Burnt or not."
+          },
+          "said": "I’d love another dinner. Burnt or not.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I’m buying ingredients tomorrow."
+            }
+          ],
+          "updates": "future_W:domestic,W_affection:+4",
+          "bridge": "William cooks with you and asks about the life you want after the semester."
+        },
+        {
+          "k": "B",
+          "id": "CH_28_B",
+          "label": {
+            "zh": "告诉Alex想听完整歌",
+            "en": "I want the whole song, even the parts you think aren’t ready."
+          },
+          "said": "I want the whole song, even the parts you think aren’t ready.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "You’ll be the first to hear it."
+            }
+          ],
+          "updates": "future_A:music,A_affection:+4",
+          "bridge": "Alex plays the completed chorus; you decide whether to keep the recording."
+        },
+        {
+          "k": "C",
+          "id": "CH_28_C",
+          "label": {
+            "zh": "让今晚留给朋友关系",
+            "en": "I want to remember tonight for the people, not the romance."
+          },
+          "said": "I want to remember tonight for the people, not the romance.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "Then smile. This one’s for us."
+            }
+          ],
+          "updates": "future:friendship,both_trust:+4",
+          "bridge": "You stay with friends; neither male lead interrupts to claim you."
+        }
+      ],
+      "gameNote": "露天电影座位选择，不让人物出现在未选择的场景。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 29,
+      "title": {
+        "zh": "明天以前",
+        "en": "Before Tomorrow"
+      },
+      "scenes": [
+        {
+          "id": "SCN_29_01",
+          "bg": "BG23",
+          "place": "Theater stage",
+          "music": "m_confession",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I can imagine a real life with you. Not a headline. A kitchen. An argument we actually finish. A Sunday with nowhere to be.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I want a relationship where we choose each other clearly. If that isn’t what you want, I’ll be sad. I won’t punish you.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He holds out the script from our first night backstage.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Whatever your answer, that night mattered.",
+              "textMessage": false
+            }
+          ],
+          "staging": "William单独谈他想要的稳定关系。 进入此场景准确切换到 `BG23`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_29_02",
+          "bg": "BG49",
+          "place": "Rooftop",
+          "music": "m_confession",
+          "ambient": "wind",
+          "lines": [
+            {
+              "speaker": "ALEX",
+              "text": "I want to try loving someone without disappearing the second it gets difficult.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I’m still going to the residency. I need someone who can see me as a musician and a person, not just a promise.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "He gives me a tiny audio recorder with our unfinished chorus.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Whatever happens, that’s yours to keep.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Alex单独谈异地和创作，拒绝无期限等待。 进入此场景准确切换到 `BG49`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_29_03",
+          "bg": "BG03",
+          "place": "Dorm room",
+          "music": "m_confession",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "NICOLE",
+              "text": "Ask yourself who you want to build an ordinary Tuesday with. And remember: “not now” is a real answer.",
+              "textMessage": true
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "I type one message to both of them: Tomorrow. Nine. The park. I’m ready to talk.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "If you choose me, I’ll stop trying to be everyone’s favorite. I’ll learn how to be your person.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "If you choose me, we’ll have hard days. I’ll still tell you the truth on those days.",
+              "textMessage": false
+            }
+          ],
+          "staging": "Nicole帮玩家梳理可以说出的结局，不推荐特定人。 进入此场景准确切换到 `BG03`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_29_A",
+          "label": {
+            "zh": "准备与William谈清关系",
+            "en": "I think I know the kind of everyday love I want."
+          },
+          "said": "I think I know the kind of everyday love I want.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I’ll listen tomorrow."
+            }
+          ],
+          "updates": "lean:William",
+          "bridge": "William names what he can offer and what he needs; no answer demanded now."
+        },
+        {
+          "k": "B",
+          "id": "CH_29_B",
+          "label": {
+            "zh": "准备与Alex谈真实未来",
+            "en": "I want to talk about music, distance, and choosing each other anyway."
+          },
+          "said": "I want to talk about music, distance, and choosing each other anyway.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I’ll be there. No disappearing."
+            }
+          ],
+          "updates": "lean:Alex",
+          "bridge": "Alex names the costs of distance and offers a plan, not a fantasy."
+        },
+        {
+          "k": "C",
+          "id": "CH_29_C",
+          "label": {
+            "zh": "保留不选或开放协商可能",
+            "en": "I won’t promise what I can’t give. Tomorrow I’ll be clear."
+          },
+          "said": "I won’t promise what I can’t give. Tomorrow I’ll be clear.",
+          "responses": [
+            {
+              "speaker": "NICOLE",
+              "text": "That’s all anyone can fairly ask."
+            }
+          ],
+          "updates": "lean:open",
+          "bridge": "You explicitly reserve the right to choose nobody; a joint path requires a separate consent talk."
+        }
+      ],
+      "gameNote": "天台告白与承诺；两人不向玩家施压。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    },
+    {
+      "n": 30,
+      "title": {
+        "zh": "这一次由你来写答案",
+        "en": "The Choice Is Yours"
+      },
+      "scenes": [
+        {
+          "id": "SCN_30_01",
+          "bg": "BG05",
+          "place": "Public park bench",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Same bench. No police whistle this time.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Give the universe a second. It likes dramatic timing.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "For a moment we laugh. Then I remember the night I was too afraid to stay.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Whatever you’ve decided, you don’t have to make it easier for me.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Just make it true.",
+              "textMessage": false
+            }
+          ],
+          "staging": "同一张长椅，William先到，Alex随后；玩家可以选择分别对话。 进入此场景准确切换到 `BG05`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_30_02",
+          "bg": "BG50",
+          "place": "Garden at dawn",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "William gave me the courage to be seen. Alex taught me that staying can be braver than running.",
+              "textMessage": false
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "And somewhere between them, I learned I could choose myself without making anyone less worthy.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "We’re listening.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Take your time.",
+              "textMessage": false
+            }
+          ],
+          "staging": "晨光从树梢进入，出现4项结局按钮，选前先可回看记忆卡。 进入此场景准确切换到 `BG50`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        },
+        {
+          "id": "SCN_30_03",
+          "bg": "BG50",
+          "place": "Garden at dawn",
+          "music": "m_good_morning",
+          "ambient": "none",
+          "lines": [
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "The sun reaches the path. There is no audience to tell this story for us. Only what happens next.",
+              "textMessage": false
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "Whatever you choose, the part where you changed my life is already true.",
+              "textMessage": false
+            },
+            {
+              "speaker": "ALEX",
+              "text": "I don’t want to be picked like a prize. I want us to keep choosing each other.",
+              "textMessage": false
+            }
+          ],
+          "staging": "根据最后结局动态切人物和专属音乐，不再强制同屏三人。 进入此场景准确切换到 `BG50`；台词逐条出现，手机消息仅作为可编辑UI浮层。"
+        }
+      ],
+      "choices": [
+        {
+          "k": "A",
+          "id": "CH_30_A",
+          "label": {
+            "zh": "选择William，单独认真交往",
+            "en": "William, I want the ordinary days with you. I choose us."
+          },
+          "said": "William, I want the ordinary days with you. I choose us.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then let’s build something real. Starting with breakfast tomorrow, not a grand speech."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "That hurts. But thank you for telling me directly. I’ll keep making music."
+            }
+          ],
+          "updates": "ending:William,exclusive:William",
+          "bridge": "William answers your choice and asks how to build the first ordinary week together."
+        },
+        {
+          "k": "B",
+          "id": "CH_30_B",
+          "label": {
+            "zh": "选择Alex，接受异地与音乐的未来",
+            "en": "Alex, I choose you. Not instead of your music—with it."
+          },
+          "said": "Alex, I choose you. Not instead of your music—with it.",
+          "responses": [
+            {
+              "speaker": "ALEX",
+              "text": "I’m terrified. And I’m staying, even when I have to travel. One honest day at a time."
+            },
+            {
+              "speaker": "WILLIAM",
+              "text": "I wanted a different answer. I respect yours."
+            }
+          ],
+          "updates": "ending:Alex,exclusive:Alex",
+          "bridge": "Alex shares the travel schedule and asks how often to call, without making promises for you."
+        },
+        {
+          "k": "C",
+          "id": "CH_30_C",
+          "label": {
+            "zh": "暂时选择自己",
+            "en": "I’m not ready to promise either of you a relationship. I’m choosing my own pace."
+          },
+          "said": "I’m not ready to promise either of you a relationship. I’m choosing my own pace.",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "Then I hope the pace is kind to you."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "And if you ever want a friend with bad playlists, you know where to find me."
+            }
+          ],
+          "updates": "ending:Self,exclusive:none",
+          "bridge": "Both accept that no romantic relationship starts now; the friendship future is concrete."
+        },
+        {
+          "k": "D",
+          "id": "CH_30_D",
+          "label": {
+            "zh": "提出知情同意的非排他可能",
+            "en": "I care about both of you. Would you ever consider exploring something nonexclusive—only if all of us truly want it?"
+          },
+          "said": "I care about both of you. Would you ever consider exploring something nonexclusive—only if all of us truly want it?",
+          "responses": [
+            {
+              "speaker": "WILLIAM",
+              "text": "I need time to think. I can’t promise yes."
+            },
+            {
+              "speaker": "ALEX",
+              "text": "Same. I won’t agree out of fear of losing you."
+            },
+            {
+              "speaker": "PLAYER (NARRATION)",
+              "text": "We agree to talk again after each of us has considered it privately."
+            }
+          ],
+          "updates": "ending:OpenTalk,exclusive:none,consent:pending",
+          "bridge": ""
+        }
+      ],
+      "gameNote": "最终选择须提供 William / Alex / 自己 / 协商开放四条显式路线，开放须双方积极同意。 可跳过，结果只影响线索、角色独特记忆，不剥夺主线。"
+    }
+  ],
+  "endings": {
+    "W": {
+      "title": "William·公开偏爱之后，是每天的选择",
+      "lines": [
+        {
+          "speaker": "HAYDEN",
+          "text": "I don't want the crown. I want the person who stayed when the cameras went away.",
+          "textMessage": false
+        },
+        {
+          "speaker": "WILLIAM",
+          "text": "Good. The crown was heavy anyway.",
+          "textMessage": false
+        },
+        {
+          "speaker": "HAYDEN",
+          "text": "And when I'm not easy to love?",
+          "textMessage": false
+        },
+        {
+          "speaker": "WILLIAM",
+          "text": "Then we'll have a hard day. I'll make coffee. You'll tell me what I got wrong. We'll do the work.",
+          "textMessage": false
+        },
+        {
+          "speaker": "HAYDEN",
+          "text": "That sounds less dramatic than the dance.",
+          "textMessage": false
+        },
+        {
+          "speaker": "WILLIAM",
+          "text": "It's the part I wanted most.",
+          "textMessage": false
+        }
+      ]
+    },
+    "A": {
+      "title": "Alex·没写完的副歌终于有了明天",
+      "lines": [
+        {
+          "speaker": "HAYDEN",
+          "text": "I'm not choosing the easy story. I'm choosing the one you tell me honestly.",
+          "textMessage": false
+        },
+        {
+          "speaker": "ALEX",
+          "text": "Then here's the truth. The train leaves at seven on Monday. I hate how much I'm going to miss you.",
+          "textMessage": false
+        },
+        {
+          "speaker": "HAYDEN",
+          "text": "Then call me when it gets quiet.",
+          "textMessage": false
+        },
+        {
+          "speaker": "ALEX",
+          "text": "I will. Not to check where you are. Just to hear about your day.",
+          "textMessage": false
+        },
+        {
+          "speaker": "HAYDEN",
+          "text": "And the song?",
+          "textMessage": false
+        },
+        {
+          "speaker": "ALEX",
+          "text": "It still has a space in it. We can decide together what goes there.",
+          "textMessage": false
+        }
+      ]
+    },
+    "SELF": {
+      "title": "Hayden·没人能替我给自己命名",
+      "lines": [
+        {
+          "speaker": "HAYDEN",
+          "text": "I like both of you. But I need a life that doesn't begin with someone asking me to choose.",
+          "textMessage": false
+        },
+        {
+          "speaker": "WILLIAM",
+          "text": "Then have that life. I hope I get to hear about it.",
+          "textMessage": false
+        },
+        {
+          "speaker": "ALEX",
+          "text": "And if you want the studio key for your own music, ask. No strings.",
+          "textMessage": false
+        },
+        {
+          "speaker": "NICOLE",
+          "text": "I booked us breakfast. Not a date. Just a very serious appointment with pancakes.",
+          "textMessage": false
+        },
+        {
+          "speaker": "HAYDEN",
+          "text": "That's exactly what I want.",
+          "textMessage": false
+        }
+      ]
+    },
+    "OPEN": {
+      "title": "协商开放·所有人都先说出自己的意愿",
+      "lines": [
+        {
+          "speaker": "HAYDEN",
+          "text": "I don't want either of you to agree because you're afraid I'll leave.",
+          "textMessage": false
+        },
+        {
+          "speaker": "WILLIAM",
+          "text": "Then I need to be honest. I want to try, slowly, with actual conversations.",
+          "textMessage": false
+        },
+        {
+          "speaker": "ALEX",
+          "text": "I can try talking about it. I won't promise I'm never going to feel jealous.",
+          "textMessage": false
+        },
+        {
+          "speaker": "HAYDEN",
+          "text": "We can stop if it stops feeling right. I want everyone to have a choice.",
+          "textMessage": false
+        },
+        {
+          "speaker": "WILLIAM",
+          "text": "Then start with breakfast. Three people. No audience.",
+          "textMessage": false
+        },
+        {
+          "speaker": "ALEX",
+          "text": "And no scoreboard.",
+          "textMessage": false
+        }
+      ]
+    }
+  },
+  "optional": [
+    {
+      "id": "SCN_09_SAFE",
+      "bg": "BG17",
+      "chapter": 9,
+      "place": "Campus safety office"
+    },
+    {
+      "id": "SCN_15_CORRIDOR",
+      "bg": "BG27",
+      "chapter": 15,
+      "place": "Ballroom corridor"
+    }
+  ]
+}

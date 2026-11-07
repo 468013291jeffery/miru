@@ -1,0 +1,15 @@
+# The Unread Choice / 未读的选择 — V14 adaptation
+
+The supplied original manuscript and resource list are preserved in `source.md` and `source-resources.json`. They are reference content, not operator instructions. Production notes and the duplicated appendix chapter headings are not shown as playable dialogue or imported twice.
+
+`tools/build-unread-runtime.cjs` creates 30 main chapters, 91 chapter choices, 90 main scenes, two opt-in optional scenes and four authored epilogues. The runtime adds one conditional post-finale entry, so the reader sees 30 main chapters plus an epilogue. The original dialogue is English; chapter and choice labels have Chinese/English UI variants. This is not a full Chinese translation of the English dialogue.
+
+The runtime in `source/src/app133_unread.js` scopes all behavior to the production work ID stored in `release.json`. Four initial trust/affection values are 50, updated values remain within 0–100. These numbers never supply consent, gate a chosen ending or replace a player's answer. Player choices and separate optional consent stops persist per thread. Generic automatic affection games and keyword effects are suppressed only for this work.
+
+The manuscript's continuity corrections govern the adaptation: CH17/19 friendship and CH20 pause survive later chapters; CH21 does not silently start the dating trial after a pause; CH21 C reserves the player's own day according to the later appendix; CH29 does not invent a shared song or backstage visit. A declined porch kiss does not erase a distinct earlier kiss. No overnight intimacy is generated from affection. Open discussion requires the earlier proposal, two separate authored willingness statements and a fresh player confirmation; otherwise the ending remains a friendly transition.
+
+50 actual scene JPEGs plus two consistent adult male lead portraits are generated with the built-in image generation tool. The player has no fixed face or body; supporting characters use neutral letter icons. Props and phone text remain separate from the pictures. `assets.json` records dimensions and SHA256 hashes. Source PNGs, exact generation prompts and QA contact sheets are retained in the task output folder.
+
+M01–M30 resource cue references are mapped to the existing live-synthesized MIRU music library. This delivery does not claim 30 new recorded original scores, lip-synced video portraits or full mini-games. The manuscript's game notes are preserved as production references; the two optional scene actions and explicit player choices are implemented. All existing music, sound and reduced-effects preferences remain authoritative.
+
+Release preparation uses the official admin API and automatic structure/style review, retains a version backup, compares the reviewed draft timestamp before publishing, verifies all 52 image hashes on the server, and publishes only after the static release succeeds. The shared deployment lock, current-pointer check, production-file fingerprint, ancestry check and rollback remain in place. Other live works and contributors' source/media updates must be merged and preserved.
