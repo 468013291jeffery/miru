@@ -29,6 +29,9 @@ const PACKS = { s: { gems: 1, votes: 5 }, m: { gems: 5, votes: 30 } };
 let _ready = null;
 function ready(sql) {
   if (!_ready) _ready = (async () => {
+    const installed = await sql("SELECT to_regclass('public.votes') IS NOT NULL AND to_regclass('public.task_claims') IS NOT NULL AND to_regprocedure('public.miru_board_write(text,jsonb)') IS NOT NULL AS ready");
+    if (installed[0] && installed[0].ready) return;
+    if (process.env.MIRU_SKIP_SCHEMA === '1') { const e = new Error('board schema migration required'); e.code = 503; throw e; }
     for (const q of [
       `CREATE TABLE IF NOT EXISTS votes (id BIGSERIAL PRIMARY KEY, week DATE NOT NULL, day DATE NOT NULL, cid TEXT NOT NULL, user_id TEXT NOT NULL, n INT NOT NULL, src TEXT NOT NULL, key TEXT UNIQUE, at TIMESTAMPTZ DEFAULT now())`,
       `CREATE INDEX IF NOT EXISTS votes_week_cid_idx ON votes (week, cid)`,

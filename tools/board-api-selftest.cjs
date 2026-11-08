@@ -86,5 +86,20 @@ const REPO = process.cwd();
   // week math
   const wk = B._test.weekOf(new Date('2026-11-08T23:00:00Z')); assert.equal(wk, '2026-11-02');
   assert.equal(B._test.weekOf(new Date('2026-11-09T00:00:01Z')), '2026-11-09');
-  console.log('ALL BOARD TESTS PASSED');
+  // Production credentials cannot create schema objects. An owner-installed schema
+  // must be reused without CREATE OR REPLACE on every process start.
+  L.db = async () => async (q, p) => { assert.ok(!/^CREATE /i.test(q), 'runtime attempted DDL'); return sql(q, p); };
+  delete require.cache[require.resolve(path.join(REPO, 'api/_board.js'))];
+  const restricted = require(path.join(REPO, 'api/_board.js'));
+  let restrictedStatus;
+  await restricted.handle({method:'GET',query:{r:'rank'},headers:{}}, {setHeader(){},status(c){restrictedStatus=c;return {json(){}};}}, {});
+  assert.equal(restrictedStatus,200);
+  await sql('DROP FUNCTION miru_board_write(text,jsonb)');
+  delete require.cache[require.resolve(path.join(REPO, 'api/_board.js'))];
+  const missingSchema = require(path.join(REPO, 'api/_board.js')), oldSkip = process.env.MIRU_SKIP_SCHEMA;
+  process.env.MIRU_SKIP_SCHEMA = '1';
+  await assert.rejects(missingSchema.handle({method:'GET',query:{r:'rank'},headers:{}},{},{}), e => e.code === 503);
+  if(oldSkip===undefined)delete process.env.MIRU_SKIP_SCHEMA;else process.env.MIRU_SKIP_SCHEMA=oldSkip;
+  await pg.close();
+  console.log('ALL BOARD TESTS PASSED (including restricted runtime and missing migration)');
 })().catch(e => { console.error(e); process.exit(1); });
