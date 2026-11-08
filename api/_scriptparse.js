@@ -21,10 +21,10 @@ const FX_NAMES = {
 };
 const AMBIENT_IDS = new Set(['rain', 'storm', 'wind', 'snowfall', 'blizzard', 'ice', 'candle', 'embers', 'inferno', 'blackout', 'drip', 'bokeh', 'neon', 'godrays', 'dust', 'fireflies', 'aurora', 'galaxy', 'petals', 'hearts', 'none']);
 
-const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing' };
-const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked' };
+const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing', 核心问题: 'core_question' };
+const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked', 可解锁秘密: 'unlockable_secrets', 怎么看其他人: 'other_views', 会怎么变: 'arc' };
 const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal' };
-const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo' };
+const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo', 这一级的表现: 'growth', 本章音乐: 'music', 小游戏: 'game', 事件: 'events' };
 const ENDING = { 结局名: 'name', 触发条件: 'condition', 收束文字: 'text' };
 const ART = { 封面: 'cover', 人物图: 'portrait', 开场视频: 'video' };
 const NOT_FILLED = /^(?:不写|无|没有|选填)(?:[，,。].*)?$/;
@@ -96,6 +96,12 @@ function parseManuscript(text, opts) {
         art.video = { hook: (f.一句话钩子 || '').trim(), question: (f.悬念问题 || '').trim(), script: (f.镜头脚本 || value).trim() };
       }
       else {
+        const portraitRows = lines(value);
+        if (portraitRows.length > 1 && portraitRows.every(l => /^[^：:]{1,20}[：:]/.test(l))) {
+          portraitRows.forEach(l => { const m = l.match(/^([^：:]+)[：:]\s*([\s\S]*)$/); art.portraits.push({ who: m[1].trim(), desc: m[2].replace(/^画面描述[：:]\s*/, '').trim() }); });
+          person = chapter = scene = ending = null;
+          return;
+        }
         const f = subFields(value, ['角色名', '画面描述']), m = value.match(/^([^：:\n]+)[：:]\s*([\s\S]*)$/);
         if (f.角色名) art.portraits.push({ who: f.角色名.trim(), desc: (f.画面描述 || '').trim() });
         else if (m) art.portraits.push({ who: m[1].trim(), desc: m[2].trim() });
@@ -170,8 +176,14 @@ function parseManuscript(text, opts) {
       if (seen[n] && seen[n] !== key) err.push(tag + '：名字“' + n + '”和别的人物重复');
       seen[n] = key; keyOf[n] = key;
     });
-    return { key, name: bi(p.name || ''), short: bi(p.short || ''), gender: gender || 'm', age: age || 0, tier: tierText === '主角' ? 'lead' : 'secondary', romanceable: romText !== '不能', role: bi(p.role || ''), bio: p.bio || '', voice: p.voice || '', personality: p.personality || '', want: p.want || '', fear: p.fear || '', secret: NOT_FILLED.test(p.secret || '') ? '' : (p.secret || ''), boundaries: p.boundaries || '', toward_player: p.toward_player || '', hooks: p.hooks || '', knows: p.knows || '', sample_lines: sample,
-      ...Object.fromEntries(['archetype', 'expression', 'flirt', 'jealousy', 'when_asked'].filter(k => String(p[k] || '').trim()).map(k => [k, p[k].trim()])) };
+    const unlockable = lines(p.unlockable_secrets).filter(l => !NOT_FILLED.test(l)).map((l, si) => {
+      const f = subFields(l, ['秘密名', '内容', '从第几章起', '好感到', '说出口的样子']);
+      const minChapter = chineseNumber(f.从第几章起), minLove = { '有点好奇': 12, '开始在意': 30, '心动': 55, '深深在意': 80 }[f.好感到];
+      if (!f.秘密名 || !f.内容 || !Number.isFinite(minChapter) || minLove == null) err.push(tag + '：可解锁秘密缺少有效名字、内容、章节或好感阶段');
+      return { id: key + '_secret_' + (si + 1), name: f.秘密名 || '', text: f.内容 || '', from: minChapter || 1, minLove: minLove == null ? 100 : minLove, expression: f.说出口的样子 || '', source: l };
+    });
+    return { key, ...(unlockable.length ? { unlockableSecrets: unlockable } : {}), name: bi(p.name || ''), short: bi(p.short || ''), gender: gender || 'm', age: age || 0, tier: tierText === '主角' ? 'lead' : 'secondary', romanceable: romText !== '不能', role: bi(p.role || ''), bio: p.bio || '', voice: p.voice || '', personality: p.personality || '', want: p.want || '', fear: p.fear || '', secret: NOT_FILLED.test(p.secret || '') ? '' : (p.secret || ''), boundaries: p.boundaries || '', toward_player: p.toward_player || '', hooks: p.hooks || '', knows: p.knows || '', sample_lines: sample,
+      ...Object.fromEntries(['archetype', 'expression', 'flirt', 'jealousy', 'when_asked', 'other_views', 'arc'].filter(k => String(p[k] || '').trim()).map(k => [k, p[k].trim()])) };
   });
   if (!cast.length) err.push('人物小传：至少要写一个人物');
   if (!chapters.length) err.push('分章大纲：至少要写一章');
@@ -239,6 +251,18 @@ function parseManuscript(text, opts) {
       });
       const sc = { id, place: bi(s.place || ''), present, beat: s.beat || '', ref_lines: [], actor_payload: payload, interaction: { invitation: s.invitation || '', suggestions: s.suggestions || [] } };
       if (options.length) sc.choice = { q: '', options };
+      if (s.growth) sc.growth = taskMap(Object.fromEntries(lines(s.growth).map(l => { const m = l.match(/^([^：:]+)[：:]\s*(.*)$/); return m ? [m[1].trim(),m[2]] : ['',l]; })), st + '【这一级的表现】');
+      if (s.events) sc.events = lines(s.events);
+      if (s.music && !NOT_FILLED.test(s.music)) {
+        sc.musicLabel = s.music;
+        sc.bgm = ({ 紧张:'standoff', 吃醋:'jealousy', 悬疑:'clue', 燃:'dragon_flight', 暧昧:'masquerade', 悲伤:'memory_lane', 背叛:'betrayal', 温暖:'reunion' })[s.music] || 'clue';
+      }
+      if (s.game && !NOT_FILLED.test(s.game)) {
+        const f = subFields(s.game, ['用途','玩法','出现时机','赌注','赢了','输了','不玩']);
+        const kind = ({ 真心话骰:'truth', 赌一把:'bet', 记旋律:'melody', 找线索:'clue', 默契考验:'rapport', 还原经过:'timeline' })[f.玩法];
+        if (!kind || !f.出现时机 || !f.赢了 || !f.输了 || !f.不玩) err.push(st + '【小游戏】：缺有效玩法、出现时机或三种结果');
+        sc.game = { id:'game_' + id, kind, name:f.玩法 || '', purpose:f.用途 || '', when:f.出现时机 || '', stake:f.赌注 || '', outcomes:{ WIN:f.赢了 || '', LOSE:f.输了 || '', SKIP:f.不玩 || '' }, source:s.game };
+      }
       const fx = {};
       if (s.ambient && !NOT_FILLED.test(s.ambient)) { const id = fxId(s.ambient, st + '【环境氛围】'); if (id) { if (AMBIENT_IDS.has(id)) fx.ambient = id; else warn.push(st + '【环境氛围】：“' + s.ambient + '”是瞬间特效，请写到【关键特效】'); } }
       const planned = [];
@@ -279,7 +303,7 @@ function parseManuscript(text, opts) {
 
   const bible = {
     key: opts.id || '', title: bi(work.title || ''), hook: bi(work.hook || ''), premise: bi(work.premise || ''), intro: bi(work.intro || ''), orient: orient || 'bg', tags: list(work.tags).slice(0, 8),
-    world: work.world || '', style: work.style || '', state: {}, relations: [], games_on: false, playable: ['me'],
+    world: work.world || '', style: work.style || '', coreQuestion: work.core_question || '', state: {}, relations: [], games_on: outChapters.some(c => c.scenes.some(s => s.game)), playable: ['me'],
     player: { key: 'me', name: { zh: '你', en: 'You' }, short: { zh: '你', en: 'You' }, gender: playerGender || 'f', role: bi(player.身份 || '') },
     cast, chapters: outChapters, endings: endingList,
     experience: { schema: 1, focus: 'player', storyIntroduction: true, chapterIntroduction: true, actionView: 'thirdPerson', choiceDock: 'contextual', allowFreeContinue: true, pacing: { mode: 'player-controlled', minExchanges: pace ? +pace[1] : 12, targetExchanges: pace ? +pace[2] : 18, allowExplicitSkip: true }, companionRules: bi(work.rules || '') },
