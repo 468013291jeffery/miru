@@ -667,11 +667,12 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**53 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**55 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      150 个函数 / 340 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层；2026-11-05 官方剧男主角色卡在 app126 给 allWorlds 加一层（把只为角色卡服务的壳作品从列表里滤掉）
+猴补丁      150 个函数 / 340 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层
+；2026-11-05 官方剧男主角色卡在 app126 给 allWorlds 加一层（把只为角色卡服务的壳作品从列表里滤掉）
 空 catch    562 处 / 99 个文件    （当天起点 616 ⇒ −51）
 on* 绑定    硬类 0 处 · 软类 93 处 · addEventListener 399 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
@@ -921,7 +922,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **157 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **163 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
@@ -929,10 +930,10 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 252 |
 | `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 302 |
 | `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1215 |
-| `app4_more.js` | CHATS (WhatsApp-style list) | 598 |
-| `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 171 |
+| `app4_more.js` | CHATS (WhatsApp-style list) | 629 |
+| `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 190 |
 | `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
-| `app7_rank.js` | WEEKLY CHARACTER BOARD (打榜) — fans push their bias up the chart Everyone … | 48 |
+| `app7_rank.js` | WEEKLY CHARACTER BOARD (打榜) — 起走服务器 以前：热度是本机公式算的（排名衰减 + hash + 本周小时数），对手是… | 98 |
 | `app8_i18n.js` | strings for Game Center · calls · fan board · weekly vote board · home ta… | 38 |
 | `app9_ads.js` | REWARDED ADS — the third path between paying and waiting Economics (US re… | 37 |
 | `app10_story.js` | STORY LINK LAYER — everything feeds the pair's relationship 总纲: the thing… | 196 |
@@ -995,7 +996,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app67_i18n.js` | ONE LANGUAGE AT A TIME 1) Taste tags: every name exists in all five app l… | 112 |
 | `app68_cloud.js` | CLOUD — the front end talks to the MIRU backend (/api on Vercel) Everythi… | 134 |
 | `app69_acct.js` | ACCOUNT ENTRY POINTS · Welcome screen: 「已有账号？登录」 under the start button (… | 21 |
-| `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 319 |
+| `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 352 |
 | `app71_narrative.js` | MIRU 互动剧本规则 v1.0 — runtime side The creator side carries the full rule se… | 165 |
 | `app72_zhpure.js` | 中文版只显示中文 Audit (every onboarding step, tabs, store, taste sheet, a story)… | 36 |
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 385 |
@@ -1021,21 +1022,21 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app92_mustlogin.js` | SIGN-IN REQUIRED The live app can no longer be used as a guest: the "先逛逛 … | 14 |
 | `app93_agegate.js` | 年龄门（T08）· 首启一次确认 开关：MIRU_TUNE.tools.ageGate（默认 true） | 44 |
 | `app93_doubao.js` | DOUBAO END-TO-END REALTIME VOICE CALLS When the relay is configured (Verc… | 97 |
-| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 600 |
+| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 609 |
 | `app94_replyguard.js` | 台词守门（他们 v8.2.3 的「角色台词检查」） 玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事 | 153 |
 | `app95_safety.js` | App Store 1.2 (user-generated content): report · block · terms · contact … | 120 |
 | `app95_status.js` | 状态写入层 v1（唯一写入口） 规格 v7.11 §04.6「状态投影的唯一写入点」： 模型和剧情都只能"提议"，真正的写入只在这里发生 | 130 |
-| `app96_social.js` | 世界围着你转 — lessons from Status & Heyyyy, all paid with 💎 (no membership) ①… | 341 |
+| `app96_social.js` | 世界围着你转 — lessons from Status & Heyyyy, all paid with 💎 (no membership) ①… | 415 |
 | `app96_tune.js` | 可调参数（外置滑钮） 为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、 关系阶段门槛、每日好感上限、单次好感步长… | 133 |
 | `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 224 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 951 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 1085 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 187 |
 | `app100_fixes.js` | 体验修复（ 用户反馈 8 条中的 1/3/4/7/8） 1 首页：官方新剧列表本地缓存，进入 App 立刻显示，不再先闪 2–3 秒旧剧单；首次没… | 109 |
-| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 249 |
+| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 250 |
 | `app102_pipeline.js` | 对话流：一道缝（ · 设计见 DIALOGUE-PIPELINE.md） Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧… | 132 |
 | `app103_turn.js` | 回合状态机 v0.1（ · Ann 定的第二件事） Ann：「这是解耦之后应该做的第二件事，统一接口之类的，没有这个谈不上代码质量。」 ## 病 … | 90 |
 | `app104_pkstate.js` | 章节状态机 v0.1（ · 第三件） Ann：「继续做吧，副作用都能修，但增强稳健性、做软件工程上的升级是最重要的事。」 ## 病 `th.pk.… | 71 |
@@ -1061,10 +1062,16 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app123_alt.js` | 剧本台词「换个说法」（） 玩家：希望剧本台词也能滑出别的说法 —— 剧本原句永远是第 1 版，往左滑让 AI 用同样的意思换一种说法，剧情走向不变 | 110 |
 | `app124_experience.js` | Scene-aware interaction and a continuous, readable conversation | 98 |
 | `app125_fresh.js` | 自动用上新版本（） 玩家：上新了，手机上还是旧样子（iPhone Safari 会把页面一直留在内存里，不刷新就一直是旧版） | 25 |
-| `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 70 |
+| `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 71 |
 | `app127_play.js` | 安卓 App（Google Play）专用：Play 内购 + 隐藏成人作品（） 安卓 App 是一个「可信网页壳」（TWA）：打开的就是线上的 … | 118 |
 | `app128_adsense.js` | 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（） 以前 watchAd 是 15 … | 50 |
-| `app128_fxlib.js` | 特效基础层：特效库 · 统一入口 · 开关（） 玩家：特效要跟着剧情走，不是看到字就放。原来有 4 套特效各自触发，主要靠关键词匹配 ⇒ 「今晚不… | 235 |
+| `app128_fxlib.js` | 特效基础层：特效库 · 统一入口 · 开关（） 玩家：特效要跟着剧情走，不是看到字就放。原来有 4 套特效各自触发，主要靠关键词匹配 ⇒ 「今晚不… | 249 |
+| `app129_catalog.js` | Catalog availability, : retain source and local history | 23 |
+| `app130_princes.js` | Eight Princes authored mainline | 25 |
+| `app131_m105.js` | M105 V6: authored choices, one work, three conditional post-season routes | 48 |
+| `app132_m105experience.js` | M105 authored audiovisual scenes and optional, non-scoring activities | 54 |
+| `app133_unread.js` | The Unread Choice V14: authored facts, explicit consent and scene resourc… | 105 |
+| `app134_arc98.js` | 故事卡升级 · 台阶、戏点和感官层（） 方案：《MIRU 故事卡全面升级方案》https://claude.ai/artifact/2LZ1xeJ… | 292 |
 | `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
 | `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
 | `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |
@@ -1137,3 +1144,8 @@ App：`app76_official.js` 收到 451 给出对应提示；成人作品解析时�
 - 删除 45 秒闲置 / 3 小时离开制造的来电。剧情来电需明确事由、异地依据且来电者不在场；阅读、输入请求、弹层期间不抢占。无法成立的同场电话保留为当面台词与既有后续，其他走作者 skip 分支。拒接记录单独标记。
 - 交互反馈只跟随实际提交的玩家动作、选项和明确场景转场；回看不重播，尊重减少动态效果偏好，不凭台词关键词制造事故或亲密行为。
 - 验证：experience-selftest.cjs、reading-selftest.cjs、pack-flow-selftest.mjs、swipe-selftest.mjs、bundle-integrity、ui-entry-check；本地浏览器检查输入模式、加号菜单、上滑历史及章节卡。
+
+
+## 2026-11-08 产品更新
+
+发现页排行、任务、遇见及我的页整理，与故事台阶、秘密、事件、小游戏和记忆压缩一起整合。`app98_story.js` 直接调用 `app134_arc98.js`，不增加引擎包装层。投票和任务以 Postgres 事务加用户锁保证额度和账本一致。细节与验证入口见 [整合记录](docs/claude-updates-20261108.md)。

@@ -2,10 +2,14 @@
 // GET → {gems, plus, recent[]}
 // POST {op:'spend', amount, reason, key}   idempotent by key; 402 when the balance is too low
 // POST {op:'daily'}                         +3💎 once per day
+// GET  ?r=rank&orient=  ·  ?r=rank&fans=cid      weekly character chart / top fans (api/_board.js, no login needed)
+// POST ?r=rank {op:'vote'|'buy'|'share', …}    free votes, bought votes (spends 💎), share bonus
+// GET  ?r=tasks  ·  POST ?r=tasks {op:'claim', id}  server-verified earn tasks
 // POST {op:'play', sku, token}            Google Play Billing（安卓 App）：服务器向 Google 验单后发钻并消耗
 // POST {op:'purchase', sku, platform, receipt}  store purchases. Real Apple/Google receipt checks need the store keys
 //      (APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT); until then only PAY_TEST=1 grants (test mode, clearly labelled).
 const L = require('./_lib');
+const BOARD = require('./_board');
 // v4.0: no membership. Packs $0.99 → 5 · $2.99 → 16 · $4.99 → 28 · $9.99 → 60 · $19.99 → 125 · $49.99 → 330 · $99.99 → 700 (bonus included in the id)
 const SKUS = { gems_5: 5, gems_16: 16, gems_28: 28, gems_60: 60, gems_125: 125, gems_330: 330, gems_700: 700 };
 const EARN_DAY_FALLBACK = 80; // 真正生效的是 config.earn_cap
@@ -39,6 +43,8 @@ async function apply(sql, uid, delta, reason, key) {
 }
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res, 'GET, POST, OPTIONS')) return;
+  /* 打榜和任务（api/_board.js）：借这个函数的入口，不新增 Vercel 函数。榜单 GET 不需要登录，所以放在 needActive 前面。 */
+  if (req.query && (req.query.r === 'rank' || req.query.r === 'tasks')) return BOARD.handle(req, res, { apply });
   const u = await L.needActive(req, res); if (!u) return;
   const sql = await L.db(); const cfg = await L.config();
   if (req.method === 'GET') {

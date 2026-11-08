@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="efa1d78aeed6 2026-11-07T19:10Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="53de4b9b6a58 2026-11-08T11:21Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -6463,31 +6463,62 @@ document.addEventListener("click",e=>{let x;
   openStory(done);shareSheet(wk);return}});
 
 /* ================= ME ================= */
-function renderMe(v){const p=persona();S.account=S.account||{email:null,pwSet:false};
- let h='<div class="topbar"><h1 style="font-size:24px" class="grow">'+t("me.h")+'</h1>'+langPicker()+'</div><div class="scroll pad stack" style="gap:12px;padding-block:4px 30px">'+
-  '<div class="eyebrow">'+t("me.personas")+'</div><div class="hs">'+S.personas.map(q=>'<button class="card" style="flex:none;min-width:150px;text-align:left'+(q.id===S.pid?";border-color:rgba(238,111,151,.55)":"")+'" data-pid="'+q.id+'"><b>'+esc(q.name||"—")+'</b><p class="xs faint" style="margin-top:3px">'+esc(q.pron)+(q.id===S.pid?" · "+t("me.active"):"")+'</p><p class="xs dim" style="margin-top:6px;max-width:140px;white-space:normal">'+esc(q.look||"")+'</p></button>').join("")+
-  '<button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-newp="1">＋ '+t("me.addp")+'</button><button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-ccimp="1">⇧ '+esc(LL("导入角色卡","Import card"))+'</button></div>'+
-  '<button class="bigopt" data-couple="1"><span style="font-size:22px">💞</span><span class="grow"><b>'+t("me.couple")+'</b><span>'+t("cr.sub")+'</span></span><span style="color:var(--gold)">›</span></button>'+
-  '<div class="card"><div class="row"><div class="eyebrow grow">'+t("me.album")+'</div><span class="xs faint">'+S.album.length+'</span></div>'+(S.album.length?'<div class="album" style="margin-top:10px">'+S.album.map(a=>'<button data-shimg="'+a.id+'" style="display:block;padding:0;border:0;background:none;cursor:pointer">'+albumHtml(a)+'</button>').join("")+'</div>':'<p class="xs faint" style="margin-top:8px">'+t("me.empty")+'</p>')+'</div>'+
-  '<div class="card"><div class="eyebrow">'+t("me.saved")+'</div>'+(S.saved.length?S.saved.slice(0,6).map(s=>'<button class="task" style="margin-top:8px" '+(s.short?'data-short="'+s.short+'"':'data-open="'+s.tid+'"')+'>'+(ch(s.who)?avatar(s.who,24):"")+'<span class="grow" style="font-size:12px">'+esc(s.txt)+'</span></button>').join(""):'<p class="xs faint" style="margin-top:8px">'+t("me.empty")+'</p>')+'</div>'+
-  '<div class="card"><div class="row"><div class="grow"><b>📖 '+t("me.packs")+'</b><p class="xs faint" style="margin-top:3px">'+t("me.packsS",{a:packWorlds().filter(w=>owns(w.id)).length,b:packWorlds().reduce((n,w)=>n+endingsFound(w.id),0)})+'</p></div><button class="btn btn-g btn-sm" data-units="1">✦ '+unitsLeft()+'</button></div>'+
-   (packWorlds().some(w=>owns(w.id)||lastRun(w.id))?'<div class="rail2" style="margin-top:10px">'+packWorlds().filter(w=>owns(w.id)||lastRun(w.id)).map(rCard).join("")+'</div>':'')+'</div>'+
-  '<div class="card"><div class="row"><div class="grow"><b>💎 '+t("me.keys")+' · <span class="num">'+S.keys+'</span></b><p class="xs faint" style="margin-top:3px">'+t("g.demo")+'</p></div><button class="btn btn-g btn-sm" data-keysadd="1">+10</button></div>'+
+/* 2026-11-07 我的页整理：
+   - 顺序（CSS order，见文件末 .me12）：账号 → 钻石/会员 → 我的故事 → 身份/情侣房 → 收藏/相册（有才显示）
+     → 口味/尺度/恋爱人格 → 角色音色/我的声音 → 安全与举报。
+   - 调试用的卡（AI 引擎、实时 AI 测试、素材库、服务器配音试听、本机账号设置、重置演示）只在开发者模式显示：
+     网址加 ?dev=1 打开（记在本机），?dev=0 关闭。
+   - 角色音色：默认只列最近聊过的几个角色，搜索框按名字查全部角色。 */
+function meDev(){try{const m=/[?&]dev=([01])/.exec(location.search);if(m)localStorage.setItem("miru.dev",m[1]);return localStorage.getItem("miru.dev")==="1"}catch(_){return false}}
+const ME_RECENT_N=4;
+function meRecentChars(){const seen=[],all=new Set(allChars());
+ Object.values(S.threads||{}).sort((a,b)=>(b.at||0)-(a.at||0)).forEach(th=>{(th.cast||[]).forEach(id=>{if(all.has(id)&&!seen.includes(id))seen.push(id)})});
+ return seen.slice(0,ME_RECENT_N)}
+function meVoiceRow(id){const c=ch(id),vv=voiceFor(id),rl=recLineOf(id);return '<div class="row" style="gap:6px"><button class="task grow" data-vtest="'+id+'">'+avatar(id,26)+'<span class="grow">'+esc(c.n)+'<span class="xs faint" style="display:block">'+(rl?'🎙 '+t("voice.rec2"):esc(vv?voiceLabel97(vv):"—")+(vv&&(c.g==="f")!==FEM.test(vv.name)?' · ⚠ '+t("voice.wrongG"):''))+'</span></span>▶</button>'+
+ '<button class="btn btn-g btn-xs" data-vai="'+id+'" style="flex:none">✨ '+t("voice.aiBtn")+'</button></div>'}
+/* 名字是渲染后才换成当前语言的（app67 TR.map 译文缓存 / app72 zhFixText），所以搜索时原名、译名都比一遍 */
+function meVoiceNames(id){const c=ch(id)||{},n=String(c.n||""),o=[n];try{if(typeof zhFixText==="function")o.push(zhFixText(n));if(typeof TR!=="undefined"&&TR.map&&TR.map[n])o.push(String(TR.map[n]))}catch(err){console.warn("meVoiceNames",err)}
+ if(c.n94&&typeof c.n94==="object")o.push(...Object.values(c.n94).map(String));return o.map(x=>x.toLowerCase())}
+function meVoiceList(q){q=(q||"").trim().toLowerCase();const zh=CL()==="zh";
+ if(q){const ids=allChars().filter(id=>meVoiceNames(id).some(n=>n.includes(q))).slice(0,30);
+  return ids.length?ids.map(meVoiceRow).join(""):'<p class="xs faint">'+(zh?"没有找到这个角色":"No character found")+'</p>'}
+ const ids=meRecentChars();
+ return '<p class="xs faint">'+(zh?"最近使用":"Recently used")+'</p>'+(ids.length?ids.map(meVoiceRow).join(""):'<p class="xs faint">'+(zh?"还没和角色聊过，搜索名字就能试听":"No chats yet — search a name to preview")+'</p>')}
+document.addEventListener("input",e=>{const x=e.target.closest("#voiceQ");if(!x)return;const l=$("#voiceList");if(l)l.innerHTML=meVoiceList(x.value)});
+function renderMe(v){const p=persona();S.account=S.account||{email:null,pwSet:false};const dev=meDev(),zh=CL()==="zh";
+ const serverVoice=typeof TTS_EP!=="undefined"&&TTS_EP&&(S.ttsMode||"server")==="server";
+ let h='<div class="topbar"><h1 style="font-size:24px" class="grow">'+t("me.h")+'</h1>'+langPicker()+'</div><div class="scroll pad stack me12'+(dev?" me12dev":"")+'" style="gap:12px;padding-block:4px 30px">'+
+  '<div class="card me-wallet"><div class="row"><div class="grow"><b>💎 '+t("me.keys")+' · <span class="num">'+S.keys+'</span></b></div><button class="btn btn-g btn-sm" data-keysadd="1">'+(zh?"充值":"Top up")+'</button></div>'+
   '<div class="row" style="margin-top:12px"><div class="grow"><b>'+t("me.plus")+'</b><p class="xs dim" style="margin-top:3px">'+t("me.plusS")+'</p></div><button class="btn '+(S.plus?"btn-g":"btn-p")+' btn-sm" data-plusset="1">'+(S.plus?"✓":"$9.99")+'</button></div></div>'+
-  '<div class="card"><div class="eyebrow">'+t("me.heat")+'</div><div class="seg" style="margin-top:10px">'+["fluff","slow","steamy","mature"].map(k=>'<button data-heatset="'+k+'" class="'+(S.heat===k?"on":"")+'">'+t("heat."+k)+'</button>').join("")+'</div>'+
-  '<div class="eyebrow" style="margin-top:14px">'+t("me.live")+'</div><p class="sm" id="liveRes" style="margin-top:6px;line-height:1.5">'+(SAMPLE&&!LIVE_ERR?"✓ "+t("live.ok"):liveWhy(LIVE_ERR||(SAMPLE?"":LIVE_STATE)))+'</p><button class="btn btn-g btn-sm" style="margin-top:10px" data-livetest="1">'+t("live.test")+'</button></div>'+
-  '<div class="card"><div class="eyebrow">'+t("me.voice")+'</div><p class="xs dim" style="margin-top:6px">'+t("me.voiceS")+'</p>'+pickSearch("voiceQ","voiceList")+'<div class="stack" style="gap:6px;margin-top:10px" id="voiceList">'+
-   (["m","f"].some(g=>!hasGenderVoice(g))?'<p class="xs" style="margin-top:8px;color:var(--gold);line-height:1.5">'+t(hasGenderVoice("m")?"voice.needF":"voice.needM")+'</p>':'')+
-   allChars().map(id=>{const c=ch(id),vv=voiceFor(id),rl=recLineOf(id);return '<div class="row" style="gap:6px"><button class="task grow" data-vtest="'+id+'">'+avatar(id,26)+'<span class="grow">'+esc(c.n)+'<span class="xs faint" style="display:block">'+(rl?'🎙 '+t("voice.rec2"):esc(vv?voiceLabel97(vv):"—")+(vv&&(c.g==="f")!==FEM.test(vv.name)?' · ⚠ '+t("voice.wrongG"):''))+'</span></span>▶</button>'+
-    '<button class="btn btn-g btn-xs" data-vai="'+id+'" style="flex:none">✨ '+t("voice.aiBtn")+'</button></div>'}).join("")+'</div></div>'+
-  '<div class="card"><div class="eyebrow">'+t("voice.my")+'</div><p class="xs dim" style="margin-top:6px">'+t("voice.myS")+'</p><div class="row" style="margin-top:10px;gap:8px">'+
+  '<div class="card me-packs"><div class="row"><div class="grow"><b>📖 '+t("me.packs")+'</b><p class="xs faint" style="margin-top:3px">'+t("me.packsS",{a:packWorlds().filter(w=>owns(w.id)).length,b:packWorlds().reduce((n,w)=>n+endingsFound(w.id),0)})+'</p></div><button class="btn btn-g btn-sm" data-units="1">✦ '+unitsLeft()+'</button></div>'+
+   (packWorlds().some(w=>owns(w.id)||lastRun(w.id))?'<div class="rail2" style="margin-top:10px">'+packWorlds().filter(w=>owns(w.id)||lastRun(w.id)).map(rCard).join("")+'</div>':'')+'</div>'+
+  '<div class="me-pers"><div class="eyebrow">'+t("me.personas")+'</div><div class="hs" style="margin-top:8px">'+S.personas.map(q=>'<button class="card" style="flex:none;min-width:150px;text-align:left'+(q.id===S.pid?";border-color:rgba(238,111,151,.55)":"")+'" data-pid="'+q.id+'"><b>'+esc(q.name||"—")+'</b><p class="xs faint" style="margin-top:3px">'+esc(q.pron)+(q.id===S.pid?" · "+t("me.active"):"")+'</p><p class="xs dim" style="margin-top:6px;max-width:140px;white-space:normal">'+esc(q.look||"")+'</p></button>').join("")+
+  '<button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-newp="1">＋ '+t("me.addp")+'</button><button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-ccimp="1">⇧ '+esc(LL("导入角色卡","Import card"))+'</button></div></div>'+
+  '<button class="bigopt me-couple" data-couple="1"><span style="font-size:22px">💞</span><span class="grow"><b>'+t("me.couple")+'</b><span>'+t("cr.sub")+'</span></span><span style="color:var(--gold)">›</span></button>'+
+  (S.saved.length?'<div class="card me-saved"><div class="eyebrow">'+t("me.saved")+'</div>'+S.saved.slice(0,6).map(s=>'<button class="task" style="margin-top:8px" '+(s.short?'data-short="'+s.short+'"':'data-open="'+s.tid+'"')+'>'+(ch(s.who)?avatar(s.who,24):"")+'<span class="grow" style="font-size:12px">'+esc(s.txt)+'</span></button>').join("")+'</div>':'')+
+  (S.album.length?'<div class="card me-album"><div class="row"><div class="eyebrow grow">'+t("me.album")+'</div><span class="xs faint">'+S.album.length+'</span></div><div class="album" style="margin-top:10px">'+S.album.map(a=>'<button data-shimg="'+a.id+'" style="display:block;padding:0;border:0;background:none;cursor:pointer">'+albumHtml(a)+'</button>').join("")+'</div></div>':'')+
+  '<div class="card me-heat"><div class="eyebrow">'+t("me.heat")+'</div><div class="seg" style="margin-top:10px">'+["fluff","slow","steamy","mature"].map(k=>'<button data-heatset="'+k+'" class="'+(S.heat===k?"on":"")+'">'+t("heat."+k)+'</button>').join("")+'</div></div>'+
+  '<div class="card me-voice"><div class="eyebrow">'+(zh?"角色音色":t("me.voice"))+'</div><p class="xs dim" style="margin-top:6px">'+t("me.voiceS")+'</p>'+
+   '<div class="field" style="margin-top:10px"><input id="voiceQ" autocomplete="off" placeholder="'+esc(t("g.searchChar"))+'"></div>'+
+   (!serverVoice&&["m","f"].some(g=>!hasGenderVoice(g))?'<p class="xs" style="margin-top:8px;color:var(--gold);line-height:1.5">'+t(hasGenderVoice("m")?"voice.needF":"voice.needM")+'</p>':'')+
+   '<div class="stack" style="gap:6px;margin-top:10px" id="voiceList">'+meVoiceList("")+'</div></div>'+
+  '<div class="card me-myv"><div class="eyebrow">'+t("voice.my")+'</div><p class="xs dim" style="margin-top:6px">'+t("voice.myS")+'</p><div class="row" style="margin-top:10px;gap:8px">'+
    (S.myVoice?'<audio id="myVoiceAud" controls style="height:34px;flex:1" src="'+S.myVoice+'"></audio><button class="btn btn-q btn-sm" data-vdel="1">'+t("voice.del")+'</button>':
     '<button class="btn '+(VREC.recording?"btn-p":"btn-g")+' btn-sm" data-vrec="1" id="vrecBtn">'+(VREC.recording?"● "+t("voice.stop"):"🎙️ "+t("voice.rec"))+'</button><span class="xs faint" id="vrecHint">'+t("voice.recHint")+'</span>')+'</div></div>'+
-  '<div class="card"><div class="eyebrow">'+t("acct.h")+'</div>'+
-   '<button class="task" style="margin-top:8px" data-acctemail="1">📧<span class="grow">'+t("acct.email")+'<span class="xs faint" style="display:block">'+esc(S.account.email||t("acct.none"))+'</span></span>'+t("acct.edit")+'</button>'+
-   '<button class="task" style="margin-top:8px" data-acctpw="1">🔒<span class="grow">'+t("acct.pw")+'<span class="xs faint" style="display:block">'+(S.account.pwSet?t("acct.pwSet"):t("acct.none"))+'</span></span>'+t("acct.edit")+'</button></div>'+
-  '<button class="btn btn-q" data-reset="1">'+t("me.reset")+'</button></div>';
+  (dev?'<div class="eyebrow me-devh">🛠 '+(zh?"开发者":"Developer")+'</div>'+
+   '<div class="card me-live"><div class="eyebrow">'+t("me.live")+'</div><p class="sm" id="liveRes" style="margin-top:6px;line-height:1.5">'+(SAMPLE&&!LIVE_ERR?"✓ "+t("live.ok"):liveWhy(LIVE_ERR||(SAMPLE?"":LIVE_STATE)))+'</p><button class="btn btn-g btn-sm" style="margin-top:10px" data-livetest="1">'+t("live.test")+'</button></div>'+
+   '<div class="card me-lacct"><div class="eyebrow">'+t("acct.h")+'</div>'+
+    '<button class="task" style="margin-top:8px" data-acctemail="1">📧<span class="grow">'+t("acct.email")+'<span class="xs faint" style="display:block">'+esc(S.account.email||t("acct.none"))+'</span></span>'+t("acct.edit")+'</button>'+
+    '<button class="task" style="margin-top:8px" data-acctpw="1">🔒<span class="grow">'+t("acct.pw")+'<span class="xs faint" style="display:block">'+(S.account.pwSet?t("acct.pwSet"):t("acct.none"))+'</span></span>'+t("acct.edit")+'</button></div>'+
+   '<button class="btn btn-q me-reset" data-reset="1">'+t("me.reset")+'</button>':'')+
+  '</div>';
  v.innerHTML=h;}
+(function(){const st=document.createElement("style");st.textContent=
+`.me12>*{order:50}.me12>.promobar{order:0}.me12>.acct68{order:1}.me12>.me-wallet{order:2}.me12>.me-packs{order:3}.me12>.me-pers{order:4}.me12>.me-couple{order:5}
+.me12>.me-saved{order:6}.me12>.me-album{order:7}.me12>.pf64me{order:8}.me12>.me-heat{order:9}.me12>.lp96me{order:10}.me12>.me-voice{order:11}.me12>.me-myv{order:12}.me12>.me95{order:13}
+.me12>.me-devh{order:90;margin-top:18px}.me12>.lccard{order:91}.me12>.ttscard{order:92}.me12>.lib65me{order:93}.me12>.me-live{order:94}.me12>.me-lacct{order:95}.me12>.me-reset{order:96}
+.me12>.acct68,.me12>.pf64me,.me12>.lib65me,.me12>.lp96me,.me12>.me95{margin-top:0;margin-bottom:0}
+.me12:not(.me12dev)>.lccard,.me12:not(.me12dev)>.ttscard,.me12:not(.me12dev)>.lib65me{display:none}`;document.head.appendChild(st)})();
 /* ---------- record my own voice (getUserMedia + MediaRecorder) ---------- */
 const VREC={recording:false,rec:null,chunks:[]};
 async function vrecToggle(){
@@ -6926,37 +6957,56 @@ function dailyPosts(force){const d=today();S.daily=S.daily||{};if(S.daily.d!==d|
    alongside the newer actions (share, reply, vote, publish a character/world) so everything lives in one tab. */
 function taskDayDone(id){return (S.tasksDay||{})[id]===today()}
 function taskOnceDone(id){return !!(S.tasksOnce||{})[id]}
-function taskClaimDay(id,amt){S.tasksDay=S.tasksDay||{};if(taskDayDone(id))return false;S.tasksDay[id]=today();S.keys+=amt;save();const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys+(S.plus?" · MIRU+":"");taskRefreshUI();return true}
-function taskClaimOnce(id,amt){S.tasksOnce=S.tasksOnce||{};if(taskOnceDone(id))return false;S.tasksOnce[id]=1;S.keys+=amt;save();const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys+(S.plus?" · MIRU+":"");taskRefreshUI();return true}
-function taskRefreshUI(){if(typeof homeTab!=="undefined"&&homeTab==="earn"){const b=$("#htabBody");if(b)b.innerHTML=tasksHTML()}}
+/* 2026-11-07：任务奖励改由服务器判定发放（/api/wallet?r=tasks，api/_board.js）。
+   以前散在各处的 taskClaimDay / taskClaimOnce 会直接在本机加钻（关注社媒点一下就给），现在它们只记一笔「做过了」，
+   不再加钻、返回 false（调用处的「+N 💎」提示也就不弹了），免得和服务器任务重复发。 */
+function taskClaimDay(id,amt){S.tasksDay=S.tasksDay||{};if(!taskDayDone(id)){S.tasksDay[id]=today();save()}taskRefreshUI();return false}
+function taskClaimOnce(id,amt){S.tasksOnce=S.tasksOnce||{};if(!taskOnceDone(id)){S.tasksOnce[id]=1;save()}taskRefreshUI();return false}
+function taskRefreshUI(){TK.at=0;if(typeof homeTab!=="undefined"&&homeTab==="earn"){const b=$("#htabBody");if(b)b.innerHTML=tasksHTML()}}
 function taskRow(icon,title,desc,right){return '<div class="trow2"><span class="tic">'+icon+'</span><div class="grow"><b>'+title+'</b><p class="xs faint">'+desc+'</p></div>'+right+'</div>'}
 function taskSection(label){return '<p class="xs faint" style="padding:14px 2px 2px;text-transform:uppercase;letter-spacing:.04em">'+label+'</p>'}
 function personaDone(){const p=persona();return !!(p&&p.name&&p.look)}
 const SOCIAL=[["discord","💬","Discord"],["instagram","📷","Instagram"],["tiktok","🎵","TikTok"],["youtube","▶️","YouTube"]];
+/* 服务器任务：进度、能不能领都由服务器算；这里只负责展示和点「领取」。签到和看广告还是原来的机制。 */
+const TK={data:null,at:0,busy:false,err:false};
+const TZ=(zh,en)=>CL()==="zh"?zh:en;
+async function tasksLoad(force){if(TK.busy||(!force&&TK.data&&Date.now()-TK.at<20e3))return;
+ if(typeof CL0==="undefined"||!CL0.on){TK.err="off";return}
+ TK.busy=true;try{const r=await capi("/wallet?r=tasks");if(r.ok&&Array.isArray(r.j.tasks)){TK.data=r.j;TK.at=Date.now();TK.err=false}else TK.err=true}catch(_){TK.err=true}
+ TK.busy=false;if(typeof homeTab!=="undefined"&&homeTab==="earn"){const b=$("#htabBody");if(b)b.innerHTML=tasksHTML()}}
+function tkRow(x){const zh=CL()==="zh",title=(x.title&&(zh?x.title.zh:x.title.en))||x.id,pct=Math.round(x.progress/x.goal*100);
+ const per=x.period==="day"?TZ("每日","Daily"):x.period==="week"?TZ("本周","This week"):TZ("一次性","One-time");
+ const right=x.claimed?'<span class="tdone">✓</span>':x.claimable?'<button class="btn btn-p btn-xs" data-tkclaim="'+esc(x.id)+'">'+TZ("领取","Claim")+'</button>':(x.go?'<button class="btn btn-g btn-xs" data-tkgo="'+esc(x.go)+'">'+TZ("去完成","Go")+'</button>':'');
+ return '<div class="trow2"><span class="tic">'+(x.icon||"✦")+'</span><div class="grow"><b>'+esc(title)+' <span class="tkrw">+'+x.reward+' 💎</span></b><p class="xs faint">'+per+' · '+Math.min(x.progress,x.goal)+' / '+x.goal+'</p><div class="tkbar"><i style="width:'+pct+'%"></i></div></div>'+right+'</div>'}
 function tasksHTML(){const ci=ciState(),adN=adLeft();
  const done='<span class="tdone">✓</span>';
+ if(!TK.data||Date.now()-TK.at>20e3)tasksLoad();
  let h='<div class="tasklist" style="padding:10px 16px 6px">';
  h+=taskSection(t("task.secDaily"));
  h+=taskRow("📅",t("task.checkin"),t("task.checkinD"),ci.done?done:'<button class="btn btn-p btn-xs" data-ci="1">'+t("task.go")+'</button>');
  h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
- h+=taskRow("📤",t("task.share"),t("task.shareD"),taskDayDone("share")?done:'<button class="btn btn-g btn-xs" data-taskshare="1">'+t("task.go")+'</button>');
- h+=taskRow("👥",t("task.invite"),t("task.inviteD"),taskDayDone("invite")?done:'<button class="btn btn-g btn-xs" data-taskinvite="1">'+t("task.go")+'</button>');
- h+=taskRow("💬",t("task.reply"),t("task.replyD"),taskDayDone("reply")?done:'<span class="xs faint">'+t("task.pending")+'</span>');
- h+=taskRow("🔥",t("task.vote"),t("task.voteD"),taskDayDone("vote")?done:'<button class="btn btn-g btn-xs" data-htab2="rank">'+t("task.go")+'</button>');
- h+=taskRow("🖼️",t("task.genImg"),t("task.genImgD"),taskDayDone("genimg")?done:'<span class="xs faint">'+t("task.genImgGo")+'</span>');
- h+=taskRow("🎬",t("task.genVid"),t("task.genVidD"),'<span class="xs faint">'+t("task.soon")+'</span>');
- h+=taskSection(t("task.secBuild"));
- h+=taskRow("🪪",t("task.persona"),t("task.personaD"),taskOnceDone("persona")?done:(personaDone()?'<button class="btn btn-g btn-xs" data-taskpersona="1">'+t("task.go")+'</button>':'<button class="btn btn-g btn-xs" data-newp="1">'+t("task.go")+'</button>'));
- h+=taskRow("🧬",t("task.pubChar"),t("task.pubCharD"),taskOnceDone("pubChar")?done:'<button class="btn btn-g btn-xs" data-cre="char">'+t("task.go")+'</button>');
- h+=taskRow("🌍",t("task.pubWorld"),t("task.pubWorldD"),taskOnceDone("pubWorld")?done:'<button class="btn btn-g btn-xs" data-cre="group">'+t("task.go")+'</button>');
- h+=taskRow("⑂",t("task.pubRemix"),t("task.pubRemixD"),taskOnceDone("pubRemix")?done:'<button class="btn btn-g btn-xs" data-cre="remix">'+t("task.go")+'</button>');
- h+=taskRow("🎭",t("task.interVid"),t("task.interVidD"),taskOnceDone("interVid")?done:'<button class="btn btn-g btn-xs" data-cre="group">'+t("task.go")+'</button>');
- h+=taskRow("🛠️",t("task.newTool"),t("task.newToolD"),taskOnceDone("tool")?done:'<span class="xs faint">'+t("task.newToolGo")+'</span>');
- h+=taskRow("📲",t("task.appDl"),t("task.appDlD"),taskOnceDone("appdl")?done:'<button class="btn btn-g btn-xs" data-taskappdl="1">'+t("task.go")+'</button>');
- h+=taskSection(t("task.secFollow"));
- h+=SOCIAL.map(([id,ic,nm])=>taskRow(ic,t("task.follow",{n:nm}),t("task.followD"),taskOnceDone("fol_"+id)?done:'<button class="btn btn-g btn-xs" data-tasksocial="'+id+'">'+t("task.go")+'</button>')).join("");
- h+='<p class="xs faint" style="padding:10px 2px 0">'+t("task.ptHint")+'</p></div>';
+ if(TK.data){const L=TK.data.tasks,sec=(k,label)=>{const xs=L.filter(x=>k.includes(x.period));return xs.length?(label?taskSection(label):"")+xs.map(tkRow).join(""):""};
+  h+=sec(["day"],"")+sec(["week"],TZ("本周","This week"))+sec(["once"],TZ("成长","Milestones"));
+  h+='<p class="xs faint" style="padding:10px 2px 0">'+TZ("进度由服务器根据你的真实阅读、聊天和投票记录计算。每日任务 0 点（UTC）重置，本周任务周一重置。","Progress comes from what you actually read, chat and vote. Daily tasks reset at 00:00 UTC, weekly ones on Monday.")+'</p>'}
+ else h+='<p class="xs faint" style="padding:14px 2px">'+(TK.err==="off"?TZ("联网登录后可以做任务赚钻石。","Connect and sign in to earn diamonds from tasks."):TK.err?TZ("任务暂时加载不出来，稍后再试。","Couldn't load tasks — try again soon."):TZ("正在加载任务…","Loading tasks…"))+'</p>';
+ h+='</div>';
  return h}
+async function tkClaim(id,btn){if(btn){btn.disabled=true}
+ const r=await capi("/wallet?r=tasks",{json:{op:"claim",id}});
+ if(r.j&&Array.isArray(r.j.tasks)){TK.data=r.j;TK.at=Date.now()}
+ if(r.ok&&typeof r.j.gems==="number"){S.keys=r.j.gems;if(typeof cloudInfo==="function")cloudInfo().known=r.j.gems;save();if(typeof keysChip==="function")keysChip();toast("+"+(r.j.got||0)+" 💎")}
+ else if(r.status===429)toast(TZ("今天的免费钻石已经领满了","You've collected today's free diamonds"));
+ else if(r.status===409)toast(TZ(r.j.error==="already claimed"?"已经领过了":"还没完成",r.j.error==="already claimed"?"Already claimed":"Not done yet"));
+ else toast(TZ("领取失败，稍后再试","Couldn't claim — try again"));
+ const b=$("#htabBody");if(b&&homeTab==="earn")b.innerHTML=tasksHTML()}
+function tkGo(go){
+ if(go==="rank"){discChip="rank";discSearch=false;renderTab("discover");show("s-main");return}
+ if(go==="chat"){renderTab("chats");show("s-main");return}
+ if(go==="create"){const x=document.createElement("button");x.dataset.cre="group";x.hidden=true;document.body.appendChild(x);x.click();x.remove();return}
+ renderTab("home");show("s-main")}
+document.addEventListener("click",e=>{let x;
+ if(x=e.target.closest("[data-tkclaim]")){tkClaim(x.dataset.tkclaim,x);return}
+ if(x=e.target.closest("[data-tkgo]")){tkGo(x.dataset.tkgo);return}});
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-taskshare]")){const wk={id:"app",kind:"group",title:"MIRU"};shareSheet(wk);
   if(taskClaimDay("share",1))setTimeout(()=>toast(t("task.gotShare")),300);return}
@@ -7146,53 +7196,103 @@ function gcMini(){const p=curPair();return '<div class="gcm"><button class="gcm-
 
 function gcArt(g,p){return artSrc(g.k==="phone"?p[1]:g.k==="rush"?p[2]:g.k==="capsule"?p[0]:g.k==="remember"?(MEM[p[0]]&&p[0]!=="ice"?BLP[0][0]:"crimson"):g.bg)}
 
-/* ================= WEEKLY CHARACTER BOARD (打榜) — fans push their bias up the chart =================
-   Everyone gets free votes every day (Plus gets double). 1 vote = +520 heat. Rivals keep moving on their own,
-   so there is always a "you're only X behind #N" nudge. Sharing a "help him climb" card earns a bonus vote once a day. */
+/* ================= WEEKLY CHARACTER BOARD (打榜) — 2026-11-07 起走服务器 =================
+   以前：热度是本机公式算的（排名衰减 + hash + 本周小时数），对手是编的，票只记在自己手机上。
+   现在：/api/wallet?r=rank（api/_board.js）。榜单 = 官方男主卡（art/official/leads.json，作品下线就出榜），
+     热度 = 本周票数 × 520 + 单聊回合 × 20（每人封顶 50）+ 所在作品读完的章节 × 10，全部是真实数据。
+     每人每天 3 张免费票（服务器记），分享一次 +1；花钻买票：1💎 = 5 票，5💎 = 30 票，每天付费票上限 100。
+     每周一 00:00 UTC 重置；上周前三名挂「上周冠军」。
+   保留的函数名（其他模块在用）：rankHTML · rankRefresh · castVote · voteSheet · charRankCard · rankShare · voteState · wkKey · BLSET · VOTE */
 const VOTE=520,BLSET=new Set(BLP.flatMap(b=>[b[1],b[2]]));
-let rankF="bl";
+const RZ=(zh,en)=>CL()==="zh"?zh:en;
 function wkKey(){const d=new Date();const day=(d.getDay()+6)%7;const m=new Date(d.getFullYear(),d.getMonth(),d.getDate()-day);return m.toISOString().slice(0,10)}
-function wkLeft(){const d=new Date(),day=(d.getDay()+6)%7,end=new Date(d.getFullYear(),d.getMonth(),d.getDate()-day+7);const h=Math.max(0,Math.round((end-d)/36e5));return h>=24?Math.floor(h/24)+t("rk.d")+" "+(h%24)+t("rk.h"):h+t("rk.h")}
-function voteState(){const d=today();S.boost=S.boost||{};if(S.boostWk!==wkKey()){S.boostWk=wkKey();S.boost={}}
- if(!S.vote||S.vote.d!==d)S.vote={d,n:S.plus?6:3,sh:0};return S.vote}
-function rankList(f){voteState();const hrs=(Date.now()-new Date(wkKey()).getTime())/36e5;
- let ids=allChars().filter(id=>{const c=ch(id),w=c&&wd(c.w);return w&&orOK(w)});if(f==="bl")ids=ids.filter(id=>BLSET.has(id));
- const base=ids.map(id=>({id,s:((wd(ch(id).w).stats||[0])[0]||0)+hash(id)%5e4})).sort((a,b)=>b.s-a.s);
- return base.map((r,i)=>({id:r.id,heat:Math.round(186000*Math.pow(.952,i)+hash(r.id)%1500+hrs*(18+hash(r.id)%40))+(S.boost[r.id]||0)*VOTE,mine:(S.boost[r.id]||0)})).sort((a,b)=>b.heat-a.heat).map((r,i)=>Object.assign(r,{rk:i+1}))}
-function rankHTML(){const v=voteState(),L=rankList(rankF),bias=S.bias&&L.find(r=>r.id===S.bias);
- let h='<div class="rkhd"><div class="grow"><div class="eyebrow" style="color:var(--gold)">'+t("rk.week")+'</div><b>'+t("rk.h1")+'</b><p class="xs faint">'+t("rk.reset",{t:wkLeft()})+'</p></div><div class="rkvotes"><b class="num">'+v.n+'</b><span>'+t("rk.left")+'</span></div></div>'+
-  '<div class="rkf">'+[["bl","BL"],["all",t("rk.all")]].map(([k,l])=>'<button data-rkf="'+k+'" class="'+(rankF===k?"on":"")+'">'+l+'</button>').join("")+'<span class="grow"></span><button class="xs" data-rkhow="1">'+t("rk.howQ")+'</button></div>';
- if(bias){const up=L[bias.rk-2],gap=up?up.heat-bias.heat+1:0,need=up?Math.ceil(gap/VOTE):0;
-  h+='<div class="rkbias"><div class="rkbg" style="background-image:url('+artSrc(bias.id)+')"></div><div class="rkbv"></div><div class="row" style="gap:12px;position:relative">'+avatar(bias.id,56)+'<div class="grow" style="min-width:0"><div class="eyebrow">'+t("rk.bias")+'</div><b style="font-size:17px">'+esc(ch(bias.id).n)+'</b><p class="xs">#'+bias.rk+' · 🔥 '+fmtN(bias.heat)+' · '+t("rk.mine",{n:bias.mine})+'</p></div></div>'+
-   '<p class="sm rkgap">'+(up?t("rk.gap",{n:need,who:first(ch(up.id).n),r:up.rk}):t("rk.top1"))+'</p><div class="row" style="gap:8px;position:relative"><button class="btn btn-p grow" data-vote="'+bias.id+'">🔥 '+t("rk.vote")+'</button><button class="btn btn-g grow" data-rkshare="'+bias.id+'">📣 '+t("rk.rally")+'</button></div></div>'}
- else h+='<div class="rkempty">'+t("rk.pick")+'</div>';
+/* 旧接口：小游戏 / 广告还会给它加票。现在票在服务器，这里只留一个不起作用的本机对象，免得旧代码报错。 */
+function voteState(){if(!S.vote||S.vote.d!==today())S.vote={d:today(),n:0,sh:0};return S.vote}
+const RK={orient:null,data:null,at:0,busy:false,err:false,fans:{}};
+function rkOrient(){return RK.orient||(S.or&&S.or!=="all"?S.or:"all")}
+function rkLeft(){const d=RK.data;if(!d||!d.resetsAt)return "";const h=Math.max(0,Math.round((new Date(d.resetsAt)-Date.now())/36e5));return h>=24?Math.floor(h/24)+RZ(" 天 "," d ")+(h%24)+RZ(" 小时"," h"):h+RZ(" 小时"," h")}
+async function rankLoad(force){
+ if(RK.busy||(!force&&RK.data&&RK.data._o===rkOrient()&&Date.now()-RK.at<30e3))return;
+ if(typeof capi!=="function"||typeof CLOUD_EP==="undefined"||!CLOUD_EP){RK.err=true;rankRefresh();return}
+ RK.busy=true;const o=rkOrient();
+ try{const r=await capi("/wallet?r=rank&orient="+encodeURIComponent(o));if(r.ok&&Array.isArray(r.j.rows)){RK.data=Object.assign(r.j,{_o:o});RK.at=Date.now();RK.err=false}else RK.err=true}catch(_){RK.err=true}
+ RK.busy=false;rankRefresh()}
+function rkRows(){return (RK.data&&RK.data.rows||[]).filter(r=>ch(r.cid))}
+function rkMe(){return RK.data&&RK.data.me}
+function rkBias(L){const me=rkMe(),mine=me&&me.votes||{};
+ if(S.bias&&L.some(r=>r.cid===S.bias))return S.bias;
+ const top=Object.keys(mine).filter(c=>L.some(r=>r.cid===c)).sort((a,b)=>mine[b]-mine[a])[0];return top||null}
+function rkGap(L,r){const up=L[r.rank-2];return up?RZ("再投 "+Math.ceil((up.heat-r.heat+1)/VOTE)+" 票超过 "+first(ch(up.cid).n)+"（第 "+up.rank+" 名）","Just "+Math.ceil((up.heat-r.heat+1)/VOTE)+" votes to pass "+first(ch(up.cid).n)+" (#"+up.rank+")"):RZ("本周第一！守住它","#1 this week — hold the crown")}
+function rkChamp(id){return RK.data&&(RK.data.champs||[]).indexOf(id)}
+function rankHTML(){
+ if(!RK.data||RK.data._o!==rkOrient()){if(!RK.err)rankLoad();
+  return RK.err&&!RK.busy?'<div class="rkempty">'+RZ("暂时连不上榜单服务器","Can't reach the chart right now")+'<br><button class="btn btn-g btn-sm" style="margin-top:10px" data-rkretry="1">'+RZ("重试","Retry")+'</button></div>'
+   :'<div class="rkempty">'+RZ("正在加载本周榜单…","Loading this week's chart…")+'</div>'}
+ if(Date.now()-RK.at>30e3&&!RK.err)rankLoad();
+ const L=rkRows(),me=rkMe(),mine=(me&&me.votes)||{},bid=rkBias(L),bias=bid&&L.find(r=>r.cid===bid);
+ const tabs=[["bl","BL"],["bg","BG"],["all",RZ("全部","All")]];
+ let h='<div class="rkhd"><div class="grow"><div class="eyebrow" style="color:var(--gold)">'+RZ("每周人气榜","WEEKLY CHART")+'</div><b>'+RZ("为你的男主打榜","Vote your lead to the top")+'</b><p class="xs faint">'+RZ("距离本周结算 ","Resets in ")+rkLeft()+'</p></div>'+
+  '<div class="rkvotes"><b class="num">'+(me?me.left:"–")+'</b><span>'+RZ("今日免费票","free votes")+'</span></div></div>'+
+  '<div class="rkf">'+tabs.map(([k,l])=>'<button data-rkf="'+k+'" class="'+(rkOrient()===k?"on":"")+'">'+l+'</button>').join("")+'<span class="grow"></span><button class="xs" data-rkhow="1">'+RZ("规则","How it works")+'</button></div>';
+ if(!L.length)return h+'<div class="rkempty">'+RZ("这个分类下还没有上榜的角色","No characters on this chart yet")+'</div>';
+ if(bias)h+='<div class="rkbias"><div class="rkbg" style="background-image:url('+artSrc(bias.cid)+')"></div><div class="rkbv"></div><div class="row" style="gap:12px;position:relative">'+avatar(bias.cid,56)+'<div class="grow" style="min-width:0"><div class="eyebrow">'+RZ("我的本命","MY BIAS")+'</div><b style="font-size:17px">'+esc(ch(bias.cid).n)+'</b><p class="xs">#'+bias.rank+' · 🔥 '+fmtN(bias.heat)+' · '+RZ("我本周投了 ","my votes ")+(mine[bias.cid]||0)+'</p></div></div>'+
+   '<p class="sm rkgap">'+rkGap(L,bias)+'</p><div class="row" style="gap:8px;position:relative"><button class="btn btn-p grow" data-vote="'+bias.cid+'">🔥 '+RZ("投票","Vote")+'</button><button class="btn btn-g grow" data-rkfans="'+bias.cid+'">👑 '+RZ("应援榜","Top fans")+'</button><button class="btn btn-g" data-rkshare="'+bias.cid+'">📣</button></div></div>';
+ else h+='<div class="rkempty">'+RZ("给喜欢的人投一票，TA 就成了你的本命","Vote for someone and they become your bias")+'</div>';
+ if(L.every(r=>!r.heat))h+='<p class="xs faint" style="padding:0 16px 8px">'+RZ("本周还没有人投票——你的第一票就能让 TA 冲上第一。","No votes yet this week — your first one puts them at #1.")+'</p>';
+ const crown=id=>rkChamp(id)>=0?'<small class="rkchamp" title="">🏆 '+RZ("上周冠军","Last week's top 3")+'</small>':'';
  const top=L.slice(0,3),ord=[1,0,2];
- h+='<div class="rkpod">'+ord.map(i=>{const r=top[i];if(!r)return"";const c=ch(r.id);return '<div class="rkp p'+(i+1)+'"><button data-char="'+r.id+'" class="rkpa">'+avatar(r.id,i?58:74)+'<span class="rkcr">'+["👑","2","3"][i]+'</span></button><b>'+esc(first(c.n))+'</b><em class="num">🔥 '+fmtN(r.heat)+'</em><button class="rkvb" data-vote="'+r.id+'">'+t("rk.vote")+'</button></div>'}).join("")+'</div>';
- const rows=L.slice(3,20);if(bias&&bias.rk>20)rows.push(bias);
- h+='<div class="rank">'+rows.map(r=>{const c=ch(r.id),w=wd(c.w),up=L[r.rk-2],pct=up?Math.max(6,Math.round(r.heat/up.heat*100)):100;
-  return '<div class="rrow'+(r.id===S.bias?" me":"")+'"><span class="rn">'+r.rk+'</span><button data-char="'+r.id+'">'+avatar(r.id,44)+'</button><div class="grow" style="min-width:0"><b>'+esc(c.n)+(r.mine?' <small class="rkmy">+'+r.mine+'</small>':'')+'</b><p>'+esc(Lz(w.title))+'</p><div class="rkbar"><i style="width:'+pct+'%"></i></div></div><div class="rkr"><em class="num">🔥 '+fmtN(r.heat)+'</em><button class="rkvb" data-vote="'+r.id+'">'+t("rk.vote")+'</button></div></div>'}).join("")+'</div>';
+ h+='<div class="rkpod">'+ord.map(i=>{const r=top[i];if(!r)return"";const c=ch(r.cid);return '<div class="rkp p'+(i+1)+'"><button data-char="'+r.cid+'" class="rkpa">'+avatar(r.cid,i?58:74)+'<span class="rkcr">'+["👑","2","3"][i]+'</span></button><b>'+esc(first(c.n))+'</b><em class="num">🔥 '+fmtN(r.heat)+'</em>'+crown(r.cid)+'<button class="rkvb" data-vote="'+r.cid+'">'+RZ("投票","Vote")+'</button></div>'}).join("")+'</div>';
+ const rows=L.slice(3);
+ h+='<div class="rank">'+rows.map(r=>{const c=ch(r.cid),w=wd(c.w),up=L[r.rank-2],pct=up&&up.heat?Math.max(6,Math.round(r.heat/up.heat*100)):100;
+  return '<div class="rrow'+(r.cid===bid?" me":"")+'"><span class="rn">'+r.rank+'</span><button data-char="'+r.cid+'">'+avatar(r.cid,44)+'</button><div class="grow" style="min-width:0"><b>'+esc(c.n)+(mine[r.cid]?' <small class="rkmy">+'+mine[r.cid]+'</small>':'')+'</b><p>'+esc(Lz(w&&w.title)||"")+'</p>'+crown(r.cid)+'<div class="rkbar"><i style="width:'+pct+'%"></i></div></div><div class="rkr"><em class="num">🔥 '+fmtN(r.heat)+'</em><button class="rkvb" data-vote="'+r.cid+'">'+RZ("投票","Vote")+'</button></div></div>'}).join("")+'</div>';
  return h}
 function rankRefresh(){const b=$("#htabBody");if(b&&homeTab==="rank")b.innerHTML=rankHTML();const c=$("#chRank");if(c&&curChar)c.outerHTML=charRankCard(curChar)}
-function castVote(id,n){const v=voteState();const before=rankList(rankF).find(r=>r.id===id);
- if(v.n<n){voteSheet(id);return}v.n-=n;S.boost[id]=(S.boost[id]||0)+n;if(!S.bias)S.bias=id;save();
- if(typeof taskClaimDay==="function"&&taskClaimDay("vote",1))toast(t("task.gotVote"));
- const after=rankList(rankF).find(r=>r.id===id);rankRefresh();
+function rkKey(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function rkApply(j){if(!j)return;if(RK.data){if(Array.isArray(j.rows)&&RK.data._o===rkOrient())RK.data.rows=j.rows;if(j.me)RK.data.me=j.me;RK.at=Date.now()}
+ if(typeof j.gems==="number"){S.keys=j.gems;if(typeof cloudInfo==="function")cloudInfo().known=j.gems;save();if(typeof keysChip==="function")keysChip();}}
+async function castVote(id,n){n=n||1;if(typeof CL0==="undefined"||!CL0.on){toast(RZ("连上网络、登录后才能投票","Connect and sign in to vote"));return}
+ const before=rkRows().find(r=>r.cid===id);
+ const r=await capi("/wallet?r=rank",{json:{op:"vote",cid:id,n,key:rkKey(),orient:rkOrient()}});
+ if(r.status===402){voteSheet(id);return}
+ if(!r.ok){toast(RZ("投票没成功，稍后再试","Vote didn't go through — try again"));return}
+ if(!S.bias)S.bias=id;rkApply(r.j);rankRefresh();
  const fl=document.createElement("div");fl.className="rkfloat";fl.textContent="+"+fmtN(n*VOTE)+" 🔥";$("#dev").appendChild(fl);setTimeout(()=>fl.remove(),1100);
- if(before&&after&&after.rk<before.rk)toast("↑ "+t("rk.up",{n:first(ch(id).n),r:after.rk}));else{const L=rankList(rankF),up=L[after?after.rk-2:0];if(up&&after)toast(t("rk.gap",{n:Math.ceil((up.heat-after.heat+1)/VOTE),who:first(ch(up.id).n),r:up.rk}))}}
-function voteSheet(id){const c=ch(id);sheet('<div class="eyebrow" style="color:var(--gold)">'+t("rk.week")+'</div><h2 style="margin-top:4px">'+t("rk.outH",{n:first(c.n)})+'</h2><p class="sm dim" style="margin-top:6px">'+t("rk.outS")+'</p>'+
- adBtn("vote",id,t("ad.vote"))+'<div class="rkbuy"><button data-vbuy="'+id+'|1|5"><b>5 🔥</b><span>💎 1</span></button><button data-vbuy="'+id+'|5|30" class="hot"><i>+20%</i><b>30 🔥</b><span>💎 5</span></button><button data-vbuy="'+id+'|0|1" '+(voteState().sh?"disabled":"")+'><b>1 🔥</b><span>📣 '+t("rk.shareFree")+'</span></button></div>'+(S.plus?'':'<p class="xs faint" style="margin-top:10px">MIRU+ · '+t("rk.plus")+'</p>'))}
-function charRankCard(id){const L=rankList(BLSET.has(id)?"bl":"all"),r=L.find(x=>x.id===id);if(!r)return "";const up=L[r.rk-2];
- return '<div class="card rkcc" id="chRank"><div class="row" style="gap:10px"><div class="grow"><div class="eyebrow" style="color:var(--gold)">'+t("rk.week")+(BLSET.has(id)?" · BL":"")+'</div><b style="font-size:20px" class="num">#'+r.rk+'</b> <span class="xs faint">🔥 '+fmtN(r.heat)+'</span><p class="xs dim">'+(up?t("rk.gap",{n:Math.ceil((up.heat-r.heat+1)/VOTE),who:first(ch(up.id).n),r:up.rk}):t("rk.top1"))+'</p></div><button class="btn btn-p btn-sm" data-vote="'+id+'">🔥 '+t("rk.vote")+'</button></div></div>'}
-function rankShare(id){const c=ch(id),r=rankList(BLSET.has(id)?"bl":"all").find(x=>x.id===id);
- openShare({tag:"VOTE WEEK",who:c.n,big:"#"+(r?r.rk:"?"),quote:t("rk.shareQ",{n:first(c.n)}),bg:artSrc(id),text:t("rk.shareQ",{n:first(c.n)})+" — MIRU",link:shareURL("f",id)})}
+ const after=r.j.row;if(before&&after&&after.rank<before.rank)toast("↑ "+RZ(first(ch(id).n)+" 升到第 "+after.rank+" 名",first(ch(id).n)+" climbed to #"+after.rank));
+ else if(after)toast(rkGap(rkRows(),after));
+ if(typeof taskRefreshUI==="function")taskRefreshUI()}
+function voteSheet(id){const c=ch(id),me=rkMe()||{};
+ sheet('<div class="eyebrow" style="color:var(--gold)">'+RZ("每周人气榜","WEEKLY CHART")+'</div><h2 style="margin-top:4px">'+RZ("今天的免费票用完了","You're out of free votes")+'</h2><p class="sm dim" style="margin-top:6px">'+RZ("买票直接投给 "+first(c.n)+"。明天 0 点（UTC）免费票恢复。","Buy votes and they go straight to "+first(c.n)+". Free votes come back at 00:00 UTC.")+'</p>'+
+  '<div class="rkbuy"><button data-vbuy="'+id+'|s"><b>5 🔥</b><span>💎 1</span></button><button data-vbuy="'+id+'|m" class="hot"><i>+20%</i><b>30 🔥</b><span>💎 5</span></button><button data-vshare="'+id+'" '+(me.shared?"disabled":"")+'><b>1 🔥</b><span>📣 '+RZ("分享免费","Share for free")+'</span></button></div>'+
+  '<p class="xs faint" style="margin-top:10px">'+RZ("每人每天最多买 100 票。","Up to 100 bought votes per day.")+'</p>')}
+async function rkBuy(id,pack){if(typeof CL0==="undefined"||!CL0.on){toast(RZ("连上网络、登录后才能投票","Connect and sign in to vote"));return}
+ const r=await capi("/wallet?r=rank",{json:{op:"buy",cid:id,pack,key:rkKey(),orient:rkOrient()}});
+ if(r.status===402){closeSheet();try{paySheet()}catch(_){toast(RZ("钻石不够","Not enough diamonds"))}return}
+ if(r.status===429){toast(RZ("今天买的票已经到上限了","You've hit today's limit for bought votes"));return}
+ if(!r.ok){toast(RZ("购买没成功，钻石没有扣","Purchase failed — no diamonds were taken"));return}
+ closeSheet();if(!S.bias)S.bias=id;rkApply(r.j);rankRefresh();toast("+"+(pack==="m"?30:5)+" 🔥 → "+first(ch(id).n))}
+async function rkShareVote(){if(typeof CL0==="undefined"||!CL0.on)return false;const me=rkMe();if(me&&me.shared)return false;
+ const r=await capi("/wallet?r=rank",{json:{op:"share"}});if(r.ok){rkApply(r.j);return true}return false}
+function charRankCard(id){if(!/^ld_/.test(id))return "";const L=RK.data?rkRows():[],r=L.find(x=>x.cid===id);
+ if(!RK.data){if(!RK.err)rankLoad();return '<div class="card rkcc" id="chRank"><p class="xs faint">'+RZ("正在加载人气榜…","Loading the chart…")+'</p></div>'}
+ if(!r)return '<div id="chRank"></div>';
+ return '<div class="card rkcc" id="chRank"><div class="row" style="gap:10px"><div class="grow"><div class="eyebrow" style="color:var(--gold)">'+RZ("每周人气榜","WEEKLY CHART")+(rkChamp(id)>=0?" · 🏆 "+RZ("上周冠军","last week's top 3"):"")+'</div><b style="font-size:20px" class="num">#'+r.rank+'</b> <span class="xs faint">🔥 '+fmtN(r.heat)+'</span><p class="xs dim">'+rkGap(L,r)+'</p></div><button class="btn btn-p btn-sm" data-vote="'+id+'">🔥 '+RZ("投票","Vote")+'</button></div></div>'}
+function rankShare(id){const c=ch(id),r=rkRows().find(x=>x.cid===id),q=RZ("帮 "+first(c.n)+" 冲上第一！","Help "+first(c.n)+" reach #1!");
+ openShare({tag:"VOTE WEEK",who:c.n,big:"#"+(r?r.rank:"?"),quote:q,bg:artSrc(id),text:q+" — MIRU",link:shareURL("f",id)})}
+async function rkFans(id){let L=RK.fans[id];
+ if(!L){const r=await capi("/wallet?r=rank&fans="+encodeURIComponent(id));L=r.ok&&r.j.fans||[];RK.fans[id]=L;setTimeout(()=>delete RK.fans[id],60e3)}
+ sheet('<h2>👑 '+RZ(first(ch(id).n)+" 的本周应援榜",first(ch(id).n)+"'s top fans this week")+'</h2><div class="rank" style="margin-top:10px">'+(L.length?L.map(f=>'<div class="rrow"><span class="rn">'+f.rank+'</span><div class="grow"><b>'+esc(f.name)+'</b></div><em class="num">'+f.votes+' '+RZ("票","votes")+'</em></div>').join(""):'<p class="xs faint">'+RZ("还没有人给 TA 投票，第一个就是你。","No votes yet — be the first.")+'</p>')+'</div>')}
+const RK_HOW=()=>RZ("• 每人每天 3 张免费票，0 点（UTC）恢复。\n• 每天分享一次「帮 TA 打榜」，再得 1 张。\n• 热度 = 票数 × 520 + 和 TA 单聊的回合 × 20（每人每周最多算 50 回合）+ TA 所在剧本周被读完的章节 × 10。\n• 票不够可以买：1💎 = 5 票，5💎 = 30 票，每人每天最多买 100 票。\n• 每周一 0 点（UTC）结算清零，前三名挂「上周冠军」。\n• 所有数字都来自真实玩家。",
+ "• 3 free votes a day, back at 00:00 UTC.\n• Share a “help him climb” card once a day for 1 more.\n• Heat = votes × 520 + 1:1 chat turns × 20 (up to 50 per player a week) + chapters read in his story × 10.\n• Out of votes? 1💎 = 5 votes, 5💎 = 30, up to 100 bought votes a day.\n• Resets every Monday 00:00 UTC; the top 3 wear “Last week's top 3”.\n• Every number comes from real players.");
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-vote]")){e.stopPropagation();castVote(x.dataset.vote,1);return}
- if(x=e.target.closest("[data-rkf]")){rankF=x.dataset.rkf;rankRefresh();return}
- if(x=e.target.closest("[data-rkshare]")){const v=voteState();if(!v.sh){v.sh=1;v.n++;save();toast(t("rk.shareGot"));rankRefresh()}rankShare(x.dataset.rkshare);return}
- if(e.target.closest("[data-rkhow]")){sheet('<h2>'+t("rk.howQ")+'</h2><p class="sm dim" style="margin-top:8px;line-height:1.7;white-space:pre-line">'+t("rk.how")+'</p>');return}
- if(x=e.target.closest("[data-vbuy]")){const [id,d,n]=x.dataset.vbuy.split("|");const v=voteState();
-  if(+d===0){if(v.sh)return;v.sh=1;v.n+=1;save();closeSheet();rankShare(id);return}
-  if(!spend(+d,"vote"))return;v.n+=+n;save();closeSheet();castVote(id,+n);return}},true);
+ if(x=e.target.closest("[data-rkf]")){RK.orient=x.dataset.rkf;rankRefresh();return}
+ if(e.target.closest("[data-rkretry]")){RK.err=false;rankLoad(true);rankRefresh();return}
+ if(x=e.target.closest("[data-rkfans]")){rkFans(x.dataset.rkfans);return}
+ if(x=e.target.closest("[data-rkshare]")){const id=x.dataset.rkshare;rkShareVote().then(ok=>{if(ok){toast(RZ("分享成功，多了 1 张免费票","Shared — 1 more free vote"));rankRefresh()}});rankShare(id);return}
+ if(x=e.target.closest("[data-vshare]")){const id=x.dataset.vshare;closeSheet();rkShareVote().then(ok=>{if(ok){toast(RZ("分享成功，多了 1 张免费票","Shared — 1 more free vote"));rankRefresh()}});rankShare(id);return}
+ if(e.target.closest("[data-rkhow]")){sheet('<h2>'+RZ("打榜规则","How the chart works")+'</h2><p class="sm dim" style="margin-top:8px;line-height:1.7;white-space:pre-line">'+RK_HOW()+'</p>');return}
+ if(x=e.target.closest("[data-vbuy]")){const [id,pack]=x.dataset.vbuy.split("|");rkBuy(id,pack);return}},true);
+(function(){const st=document.createElement("style");st.textContent='.rkchamp{display:inline-block;font-size:10.5px;font-weight:800;color:#FFD27F;background:rgba(255,210,127,.12);border-radius:999px;padding:1px 7px;margin:2px 0}.tkbar{height:4px;border-radius:4px;background:rgba(255,255,255,.08);margin-top:6px;overflow:hidden}.tkbar i{display:block;height:100%;background:var(--gold,#E9B45C)}.tkrw{font-size:12px;font-weight:800;color:#FFD27F;white-space:nowrap}';document.head.appendChild(st)})();
 
 /* strings for Game Center · calls · fan board · weekly vote board · home tabs */
 Object.assign(I18N.en,{
@@ -8009,7 +8109,7 @@ function pkLockComposer(th){
    Four events, no gameplay change: chapter_open / choice_pick / chapter_done / story_end.
    Everything hangs off th.pk, so a replay or a second device starts a new session id. */
 function pkSess(th){if(!th.pk._sess){th.pk._sess=Date.now().toString(36)+Math.random().toString(36).slice(2,7)}return th.pk._sess}
-function pkTrack(th,name,extra){try{track(name,Object.assign({wid:th.wid,sess:pkSess(th),t:Date.now()},extra||{}))}catch(_){}}
+function pkTrack(th,name,extra){try{const w0=typeof wd==="function"?wd(th.wid):null,base={wid:th.wid,sess:pkSess(th),t:Date.now()};if(w0&&w0.community)base.cw=w0.community;track(name,Object.assign(base,extra||{}))}catch(_){}} /* cw = 社区作品 id，服务器按作品统计章节（打榜、任务） */
 function pkOpenMark(th,n){try{
   // a genuinely new run = chapter 1 with no session yet, right after an ending, or after having
   // been past chapter 1 (replay). Re-entering the SAME chapter must not count as a second open.
@@ -14841,7 +14941,7 @@ if (typeof hookPlay === "function") { const _hp70 = hookPlay; let once = false; 
 const _packOpen70 = packOpen;
 packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } if (typeof pkSetPresent === "function") pkSetPresent(th, n); if (typeof pkOpenMark === "function") pkOpenMark(th, n); } } catch (_) {} return _packOpen70.apply(this, arguments); };
 const _reply70 = reply;
-reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid }); } catch (_) {} return _reply70.apply(this, arguments); };
+reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid, cid: th && th.kind === "solo" && th.cast && th.cast.length === 1 ? th.cast[0] : undefined }); /* cid：打榜按角色算单聊热度（api/_board.js） */ } catch (_) {} return _reply70.apply(this, arguments); };
 const _units70 = unitsSheet;
 unitsSheet = function () { track("store_open"); return _units70.apply(this, arguments); };
 
@@ -18480,29 +18580,89 @@ SHEET.add("menu", "app96_social.js", "top", function () {
     try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".lp96me")) { const at = host.querySelector(".me95"); const h = '<button class="card lp96me" data-lplist96="1"><span style="font-size:26px">💘</span><span class="grow"><b>' + L96("你的恋爱人格", "Your love type") + '</b><span class="xs dim">' + L96("从你在剧里的每个选择，看见你是怎样爱人的", "See how you love, from every choice you've made") + '</span></span>›</button>'; if (at) at.insertAdjacentHTML("beforebegin", h); else host.insertAdjacentHTML("beforeend", h); } } catch (_) {}
     return r; }; }
 
-/* ================= ⑥ 遇见：滑卡 ================= */
-function sw96() { S.sw96 = S.sw96 || { day: "", used: 0, extra: 0, seen: [], liked: [] }; const d = new Date().toDateString(); if (S.sw96.day !== d) { S.sw96.day = d; S.sw96.used = 0; S.sw96.extra = 0; } return S.sw96; }
-function deck96() {
-  const st = sw96(), pool = allChars().filter(id => { const c = ch(id); if (!c || !artSrc(id)) return false; const w = wd(c.w); if (w && typeof orOK === "function" && !orOK(w)) return false; return !st.seen.includes(id); });
-  if (!pool.length) { st.seen = []; save(); return allChars().filter(id => ch(id)).slice(0, 40); }
-  return pool.sort((a, b) => hash96(a + st.day) - hash96(b + st.day)).slice(0, 40);
+/* ================= ⑥ 遇见：滑卡（按口味匹配，不是把所有人列一遍） =================
+   2026-11-07 改：以前是全部角色按日期随机洗牌、看完一轮清空重来。现在分三步：
+     ① 硬过滤：只要官方角色卡（C 表，不含玩家自建、不含剧里装进来的重复角色）、配对/不想看（orOK）、尺度不超过你选的、已经在聊的不再出现、左滑过的 14 天内不再出现。
+     ② 打分：口味标签命中（S.tropes）+ 你滑出来的偏好（右滑加分、左滑减分，按世界标签和原型记）+ 你玩过 TA 的剧 + 新角色 + 少量热度。
+     ③ 每天一副固定的牌（最多 P96.freeSwipes 张），每 5 张插 1 张口味之外的「换换口味」，免得越推越窄。
+   卡片上写匹配度和推荐理由；合格的人看完了就停下来，提示去调口味（左滑的人 14 天后回来），不再循环所有人。 */
+const HEAT96 = { fluff: 0, slow: 1, steamy: 2, mature: 3 };
+const NOPE_DAYS96 = 14;
+function sw96() {
+  const st = S.sw96 = S.sw96 || {}; const d = new Date().toDateString();
+  st.liked = st.liked || []; st.nope = st.nope || {}; st.aff = st.aff || {};
+  if (Array.isArray(st.seen)) delete st.seen; /* 旧版的「看过」名单没有时间也不分左右滑，直接作废，避免把人永久藏掉 */
+  if (st.day !== d) { st.day = d; st.used = 0; st.extra = 0; st.deck = null; }
+  return st;
 }
-function cardHTML96(id) {
-  const c = ch(id), w = wd(c.w), tags = ((w && w.tags) || []).slice(0, 3);
-  return '<div class="sc96" data-sc96="' + esc(id) + '"><img src="' + esc(artSrc(id)) + '" alt="" draggable="false"><div class="sci96"><b>' + esc(first(c.n)) + (c.age ? '<small>' + c.age + '</small>' : '') + '</b><span>' + esc(Lz(c.role) || "") + '</span><p>' + esc((Lz(c.pitch) || Lz(c.vibe) || "").slice(0, 70)) + '</p><div>' + tags.map(x => '<i>' + esc(typeof TAG_ZH !== "undefined" && Z96() && TAG_ZH[x] ? TAG_ZH[x] : x) + '</i>').join("") + '</div></div><em class="lk96">LIKE</em><em class="np96">NOPE</em></div>';
+let TAGLC96 = null;
+function tagName96(x) { if (typeof TAG_ZH === "undefined" || !Z96()) return x; if (TAG_ZH[x]) return TAG_ZH[x];
+  if (!TAGLC96) { TAGLC96 = {}; Object.keys(TAG_ZH).forEach(k => TAGLC96[k.toLowerCase()] = TAG_ZH[k]); } return TAGLC96[String(x).toLowerCase()] || x; }
+function chatting96(id) { const th = S.threads["c:" + id]; return !!(th && (th.msgs || []).some(m => m.who === "me")); }
+function eligible96(id, st) {
+  const c = ch(id); if (!c || c.retired || !artSrc(id)) return false;
+  /* 只从运行时角色表 C 里挑（官方剧男主卡 leads.json 就注册在这里）。S.mine.chars 里是玩家自己捏的角色，以及打开官方剧后装进来的
+     剧中角色——后者和男主卡是同一个人（会重复出现），还包括玩家自己扮演的那个角色，都不该出现在遇见里。 */
+  if (!C[id]) return false;
+  const w = wd(c.w); if (!w || (typeof orOK === "function" && !orOK(w))) return false;
+  if (w.heat && HEAT96[w.heat] > HEAT96[S.heat || "slow"]) return false;
+  if (st.liked.includes(id) || chatting96(id)) return false;
+  const n = st.nope[id]; if (n && now96() - n < NOPE_DAYS96 * 864e5) return false;
+  return true;
+}
+/* 匹配分 + 理由（理由最多两条，显示在卡片上） */
+function score96(id, st) {
+  const c = ch(id), w = wd(c.w), tags = w.tags || [], mine = (S.tropes || []).map(x => String(x).toLowerCase()), why = [];
+  const hit = tags.filter(x => mine.includes(String(x).toLowerCase()));
+  let s = hit.length * 12;
+  if (hit.length) why.push(L96("你喜欢的：", "You like: ") + hit.slice(0, 2).map(tagName96).join(" · "));
+  let a = (st.aff["a:" + c.a] || 0) * 2; tags.forEach(x => a += st.aff["t:" + String(x).toLowerCase()] || 0); a = Math.max(-18, Math.min(24, a * 2)); s += a;
+  if (a >= 8 && why.length < 2) why.push(L96("和你右滑过的人很像", "Like the ones you swiped right on"));
+  const played = Object.values(S.threads || {}).some(th => th && th.wid === c.w && th.pk);
+  if (played) { s += 8; if (why.length < 2) why.push(L96("你玩过《", "From “") + Lz(w.title) + L96("》", "”")); }
+  if (!S.threads["c:" + id]) s += 4;
+  s += Math.log10(Math.max(10, (w.stats || [0])[0] || 10)) * 2 + (hash96(id + st.day) % 7);
+  return { id, s, why };
+}
+function deck96() {
+  const st = sw96(), size = P96.freeSwipes + (st.extra || 0);
+  const pool = allChars().filter(id => eligible96(id, st)).map(id => score96(id, st)).sort((a, b) => b.s - a.s);
+  if (!pool.length) return [];
+  const top = pool.slice(0, Math.ceil(pool.length * .6)), rest = pool.slice(top.length), out = [];
+  while (out.length < size && (top.length || rest.length)) {
+    const explore = (out.length + 1) % 5 === 0 && rest.length;
+    out.push(explore ? Object.assign(rest.splice(hash96(st.day + out.length) % rest.length, 1)[0], { ex: 1 }) : (top.shift() || rest.shift()));
+  }
+  /* 匹配度用绝对分换算（不按这副牌拉伸），同样理由的两个人不会一个 97% 一个 68% */
+  out.forEach(r => { r.pct = Math.max(60, Math.min(98, Math.round(62 + r.s * 1.1))); if (r.ex) r.why = [L96("换换口味", "Something different")]; });
+  return out;
+}
+/* 今天这副牌：同一天里关掉再打开，顺序不变 */
+function todayDeck96() {
+  const st = sw96();
+  if (!st.deck) st.deck = deck96().map(r => ({ id: r.id, pct: r.pct, why: r.why, ex: r.ex || 0 }));
+  st.deck = st.deck.filter(r => eligible96(r.id, st)); save();
+  return st.deck;
+}
+function cardHTML96(r) {
+  const id = r.id, c = ch(id), w = wd(c.w), tags = ((w && w.tags) || []).slice(0, 3);
+  return '<div class="sc96" data-sc96="' + esc(id) + '"><img src="' + esc(artSrc(id)) + '" alt="" draggable="false"><span class="mp96">' + L96("匹配 ", "Match ") + r.pct + '%</span><div class="sci96"><b>' + esc(first(c.n)) + (c.age ? '<small>' + c.age + '</small>' : '') + '</b><span>' + esc(Lz(c.role) || "") + '</span>' +
+    ((r.why || []).length ? '<p class="why96">' + r.why.map(esc).join("　") + '</p>' : '') + '<p>' + esc((Lz(c.pitch) || Lz(c.vibe) || "").slice(0, 70)) + '</p><div>' + tags.map(x => '<i>' + esc(tagName96(x)) + '</i>').join("") + '</div></div><em class="lk96">LIKE</em><em class="np96">NOPE</em></div>';
 }
 let DECK96 = [];
 function openSwipe96() {
-  DECK96 = deck96(); let el = $("#sw96"); if (!el) { el = document.createElement("div"); el.id = "sw96"; ($("#dev") || document.body).appendChild(el); }
-  el.hidden = false; renderSwipe96();
+  DECK96 = todayDeck96(); let el = $("#sw96"); if (!el) { el = document.createElement("div"); el.id = "sw96"; ($("#dev") || document.body).appendChild(el); }
+  el.hidden = false; renderSwipe96(); if (typeof track === "function") track("meet_open", { n: DECK96.length });
 }
-function swLeft96() { const st = sw96(); return Math.max(0, P96.freeSwipes + st.extra - st.used); }
+function swLeft96() { const st = sw96(); return Math.max(0, P96.freeSwipes + (st.extra || 0) - (st.used || 0)); }
 function renderSwipe96() {
   const el = $("#sw96"); if (!el) return; const left = swLeft96();
-  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>' + L96("今日剩余 ", "Left today ") + left + '</small></div><div class="swd96">' +
-    (left <= 0 ? '<div class="swo96"><p>' + L96("今天的免费滑动用完了", "You're out of swipes for today") + '</p><button class="btn btn-p" data-swmore96="1">' + L96("再滑 30 次 · ", "30 more swipes · ") + P96.swipes + '💎</button></div>'
-      : DECK96.slice(0, 2).reverse().map(cardHTML96).join("")) + '</div>' +
-    '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥</button></div>';
+  const more = allChars().some(id => eligible96(id, sw96()));
+  const done = '<div class="swo96"><p>' + L96("合适的人你都见过了", "You've met everyone who fits you") + '</p><p class="xs faint">' + L96("有新角色上线会先推给你；左滑过的人两周后会再出现。也可以调整口味，换一批人。", "New characters come to you first; people you passed return in two weeks. Or change your taste.") + '</p><button class="btn btn-p" data-pfopen="1">' + L96("调整口味", "Change my taste") + '</button></div>';
+  const body = left <= 0 ? (more ? '<div class="swo96"><p>' + L96("今天的免费滑动用完了", "You're out of swipes for today") + '</p><button class="btn btn-p" data-swmore96="1">' + L96("再滑 30 次 · ", "30 more swipes · ") + P96.swipes + '💎</button></div>' : done)
+    : !DECK96.length ? done : DECK96.slice(0, 2).reverse().map(cardHTML96).join("");
+  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>' + L96("今日剩余 ", "Left today ") + left + '</small></div><div class="swd96">' + body + '</div>' +
+    (DECK96.length && left > 0 ? '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥</button></div>' : '');
   wireSwipe96();
 }
 function wireSwipe96() {
@@ -18511,19 +18671,29 @@ function wireSwipe96() {
   top.onpointermove = e => { if (!on) return; dx = e.clientX - x0; top.style.transform = "translateX(" + dx + "px) rotate(" + dx / 18 + "deg)"; top.classList.toggle("l", dx > 40); top.classList.toggle("r", dx < -40); };
   top.onpointerup = () => { if (!on) return; on = false; top.style.transition = ""; if (dx > 110) swipe96("like"); else if (dx < -110) swipe96("nope"); else { top.style.transform = ""; top.classList.remove("l", "r"); } dx = 0; };
 }
+/* 右滑/左滑都会改你的偏好：按 TA 的世界标签和原型记分，旧分每次轻微衰减 */
+function learn96(st, id, d) {
+  const c = ch(id), w = c && wd(c.w); if (!c) return;
+  Object.keys(st.aff).forEach(k => { st.aff[k] *= .97; if (Math.abs(st.aff[k]) < .05) delete st.aff[k]; });
+  const add = (k, v) => st.aff[k] = Math.max(-6, Math.min(6, (st.aff[k] || 0) + v));
+  if (c.a && c.a !== "charm") add("a:" + c.a, d); /* charm 是官方卡的默认原型，人人都是，学了等于没学 */ ((w && w.tags) || []).forEach(x => add("t:" + String(x).toLowerCase(), d * .5));
+}
 async function swipe96(kind) {
-  const id = DECK96[0]; if (!id) return; if (swLeft96() <= 0) { renderSwipe96(); return; }
+  const r = DECK96[0]; if (!r) return; const id = r.id; if (swLeft96() <= 0) { renderSwipe96(); return; }
   if (kind === "super" && !spend(P96.superlike, "card")) return;
-  const st = sw96(); st.used++; st.seen.push(id); if (st.seen.length > 400) st.seen = st.seen.slice(-200); save();
+  const st = sw96(); st.used = (st.used || 0) + 1;
+  learn96(st, id, kind === "nope" ? -1 : kind === "super" ? 2 : 1);
+  if (kind === "nope") st.nope[id] = now96(); else { delete st.nope[id]; st.liked.push(id); if (st.liked.length > 500) st.liked = st.liked.slice(-300); }
+  if (typeof track === "function") track("meet_swipe", { cid: id, kind, pct: r.pct, explore: r.ex || 0 });
   const top = $("#sw96 .sc96:last-child"); if (top) { top.style.transform = "translateX(" + (kind === "nope" ? -600 : 600) + "px) rotate(" + (kind === "nope" ? -25 : 25) + "deg)"; top.style.opacity = "0"; }
-  DECK96.shift(); if (!DECK96.length) DECK96 = deck96();
+  DECK96.shift(); st.deck = DECK96.slice(); save();
   if (kind === "nope") { setTimeout(renderSwipe96, 260); return; }
-  st.liked.push(id); save(); const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
-  if (kind === "super") { const c = ch(id); const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
+  const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
+  if (kind === "super") { const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
   setTimeout(() => matchSheet96(id, kind === "super"), 280);
 }
 function matchSheet96(id, sup) {
-  const el = $("#sw96 .swd96"); if (!el) return;
+  const el = $("#sw96 .swd96"); if (!el) return; const b = $("#sw96 .swb96"); if (b) b.remove();
   el.innerHTML = '<div class="mt96"><b>' + (sup ? "⭐ " : "") + L96("匹配成功！", "It's a match!") + '</b><div class="mta96">' + meAv(84) + avatar(id, 84) + '</div><p>' + L96(nameOf96(id) + " 也在等你开口。", nameOf96(id) + " is waiting for you to say something.") + '</p><button class="btn btn-p btn-block" data-swchat96="' + esc(id) + '">💬 ' + L96("开始聊天", "Say hi") + '</button><button class="lnk" data-swgo96="1">' + L96("继续滑", "Keep swiping") + '</button></div>';
 }
 document.addEventListener("click", e => { let x;
@@ -18533,12 +18703,15 @@ document.addEventListener("click", e => { let x;
   if (e.target.closest("[data-swy96]")) { swipe96("like"); return; }
   if (e.target.closest("[data-sws96]")) { swipe96("super"); return; }
   if (e.target.closest("[data-swgo96]")) { renderSwipe96(); return; }
-  if (e.target.closest("[data-swmore96]")) { if (!spend(P96.swipes, "card")) return; sw96().extra += 30; save(); renderSwipe96(); return; }
+  if (e.target.closest("[data-swmore96]")) { if (!spend(P96.swipes, "card")) return; const st = sw96(); st.extra = (st.extra || 0) + 30; st.deck = null; save(); DECK96 = todayDeck96(); renderSwipe96(); return; }
   if ((x = e.target.closest("[data-swchat96]"))) { const id = x.dataset.swchat96; const el = $("#sw96"); if (el) el.hidden = true; dmThread96(id); try { openThread("c:" + id); } catch (_) {} return; }
 }, true);
-/* Discover: entry banner */
+/* 调完口味回来：今天的牌按新口味重算 */
+document.addEventListener("click", e => { if (!e.target.closest("[data-pfsave]")) return; setTimeout(() => { const st = sw96(); st.deck = null; save(); const el = $("#sw96"); if (el && !el.hidden) { DECK96 = todayDeck96(); renderSwipe96(); } }, 0); }, true);
+/* Discover: entry banner — 头像用今天牌里排最前的三个人 */
 { const _dm = discMain; discMain = function () { let h = _dm.apply(this, arguments);
-    try { h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + allChars().filter(id => ch(id)).slice(0, 3).map(id => '<img src="' + esc(artSrc(id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + L96("左滑跳过，右滑开始聊天", "Swipe left to pass, right to start chatting") + '</span></span>›</button>' + h; } catch (_) {}
+    try { const dk = todayDeck96(), top3 = dk.slice(0, 3);
+      h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + top3.map(r => '<img src="' + esc(artSrc(r.id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + (top3.length ? L96("今天为你挑了 " + dk.length + " 个人 · 右滑开始聊天", dk.length + " picked for you today · swipe right to chat") : L96("合适的人都见过了 · 新角色上线会推给你", "You've met everyone who fits — new faces coming")) + '</span></span>›</button>' + h; } catch (_) {}
     return h; }; }
 
 (function () { const st = document.createElement("style"); st.textContent = `
@@ -18566,6 +18739,7 @@ document.addEventListener("click", e => { let x;
 .sw96e{display:flex;gap:12px;align-items:center;width:100%;text-align:left;margin:0 0 14px;padding:12px 14px;border-radius:18px;border:1px solid rgba(238,111,151,.35);background:linear-gradient(135deg,rgba(238,111,151,.16),rgba(240,183,126,.10));color:#fff}.sw96e b{display:block;font-size:15px}.sw96e .grow span{font-size:12px;color:#CFC7D8}.sw96ea{display:flex}.sw96ea img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #0C0B10;margin-left:-10px}.sw96ea img:first-child{margin-left:0}
 .swh96{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 8px}.swh96 button{background:none;border:0;color:#fff;font-size:20px}.swh96 b{flex:1;font-size:16px}.swh96 small{color:#9C93A6}
 .swd96{flex:1;position:relative;margin:4px 14px}.sc96{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#1A1622;touch-action:none;transition:transform .3s,opacity .3s;box-shadow:0 14px 40px #0009}.sc96 img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.mp96{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.55);color:#FFD27F;font-size:12px;font-weight:800;backdrop-filter:blur(6px)}.sci96 p.why96{color:#FFD27F;font-size:12.5px;font-weight:700;margin:6px 0 0}.swo96 .lnk{display:block;margin:10px auto 0}
 .sci96{position:absolute;left:0;right:0;bottom:0;padding:60px 18px 18px;background:linear-gradient(transparent,rgba(0,0,0,.85))}.sci96 b{font-size:28px;display:flex;align-items:baseline;gap:8px}.sci96 b small{font-size:20px;font-weight:400}.sci96 span{display:block;color:#F6D3AE;font-size:14px}.sci96 p{margin:6px 0 8px;font-size:14px;color:#E9E4EE;line-height:1.45}.sci96 i{font-style:normal;font-size:11.5px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.14);margin-right:5px}
 .lk96,.np96{position:absolute;top:28px;font-style:normal;font-weight:900;font-size:30px;padding:4px 12px;border:4px solid;border-radius:10px;opacity:0;transition:opacity .15s}.lk96{left:20px;color:#7FE0A8;transform:rotate(-14deg)}.np96{right:20px;color:#FF6F7F;transform:rotate(14deg)}.sc96.l .lk96,.sc96.r .np96{opacity:1}
 .swb96{display:flex;justify-content:center;gap:22px;padding:14px 0 calc(16px + env(safe-area-inset-bottom,0px))}.swb96 button{width:62px;height:62px;border-radius:50%;border:0;font-size:26px;display:grid;place-items:center;background:#1E1A26;color:#fff;box-shadow:0 6px 18px #0008}.swb96 .n{color:#FF6F7F}.swb96 .y{color:#7FE0A8}.swb96 .s{color:#6FB6FF;width:52px;height:52px;align-self:center;font-size:20px;line-height:1}.swb96 .s small{font-size:10px;color:#9C93A6}
@@ -18865,6 +19039,7 @@ const LZ98 = o => (o && typeof o === "object") ? ((Z98() ? o.zh : o.en) || o.zh 
 async function bible98(id) {
   if (id in B98.cache) return B98.cache[id];
   let b = null; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".bible.json?v=" + Math.floor(Date.now() / 3e5)); if (r.ok) b = await r.json(); } catch (_) {}
+  if (b && typeof arcNorm98 === "function") arcNorm98(b); /* 只写了升级台阶的剧本，编译成一级一章（app134） */
   B98.cache[id] = b; return b;
 }
 function cid98(wid, key) { return "b98_" + wid.replace(/[^a-z0-9]/gi, "").slice(-10) + "_" + key; }
@@ -19010,7 +19185,7 @@ function introductions98(th) {
     appendMsg(th, Object.assign({who:'sys', k:'card', title, txt, intro98:key, at:Date.now()}, extra));
     seen[key] = true;
   };
-  if (policy ? policy.storyIntroduction : LZ98(b.intro)) show('story', L98('故事背景', 'Story background'), LZ98(b.intro));
+  if (policy ? policy.storyIntroduction : LZ98(b.intro)) show('story', L98('故事背景', 'Story background'), typeof arcStoryText98 === 'function' ? arcStoryText98(b) : LZ98(b.intro));
   if ((policy ? policy.chapterIntroduction : true) && A.sc === 0) {
     const key = 'chapter:' + A.ch, fresh = !seen[key];
     const intro = Object.assign({}, openingCache98(th, A.ch), c.introduction || {});
@@ -19076,7 +19251,7 @@ const INTRO_ROW98 = /^(时间|地点|人物|眼前的事|Time|Place|Present|Now)
 function introHTML98(m, i) {
   const attr = ' data-mi="' + i + '"';
   if (m.intro98 === 'story') return '<div class="m-card entry98 entry98-story"' + attr + '><div class="e98-sh">' + esc(m.title || '') + '</div>' +
-    String(m.txt || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => '<p class="e98-p">' + esc(x) + '</p>').join('') + '</div>';
+    String(m.txt || '').split(/\n/).map(x => x.trim()).filter(Boolean).map(x => { const r = typeof ARC_ROW98 !== 'undefined' && x.match(ARC_ROW98); return '<p class="e98-p">' + (r ? '<b>' + esc(r[1]) + '：</b>' + esc(r[2]) : esc(x)) + '</p>'; }).join('') + '</div>';
   const [no, ...rest] = String(m.title || '').split(' · '), rows = [], body = [];
   String(m.txt || '').split('\n').forEach(line => { const r = line.match(INTRO_ROW98); if (r) { if (r[2].trim()) rows.push(r); } else if (line.trim()) body.push(line.trim()); });
   return '<div class="m-card entry98 entry98-ch"' + attr + '><div class="e98-ch"><span>' + esc(no) + '</span><b>' + esc(rest.join(' · ')) + '</b></div>' +
@@ -19209,25 +19384,25 @@ async function director98(th, mode, act) {
     "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
     "\n" + (zh ? "当前场景在场：" : "Present now: ") + (here98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
     (s.ref_lines && s.ref_lines.length && mode === "enter" ? "\n" + (zh ? "锚点台词（角色可以用，可改写，不必照念）：\n" : "Anchor lines (characters may use or adapt them):\n") + s.ref_lines.map(r => (ch(byKey98(th, r.who)) ? first(ch(byKey98(th, r.who)).n) : r.who) + "：" + r.line).join("\n") : "") +
-    (A.sum.length ? "\n" + (zh ? "前情：\n" : "So far:\n") + A.sum.slice(-8).join("\n") : "") +
+    (typeof arcRecap98 === "function" ? arcRecap98(th, zh) : (A.sum.length ? "\n" + (zh ? "前情：\n" : "So far:\n") + A.sum.slice(-8).join("\n") : "")) +
     "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail98(th, 14) || (zh ? "（刚开始）" : "(just starting)")) +
     (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
     (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
-    experienceContext98(th) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
+    experienceContext98(th) + authoredDirector98(th,s) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
     "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "主角们的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
-    heat98(th, zh, "director") +
+    heat98(th, zh, "director") + (senseOK98(th, mode) ? senseAsk98(th, zh) : "") +
     (mode === "exit" ? withAsk98(th, s, zh) : presence98(th, s, zh)) +
     (mode === "talk" || mode === "more" ? photoAsk98(th, act, zh) : "") +
     (judging ? gateAsk98(th) : "") +
-    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) +
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + (typeof arcAsk98 === "function" ? arcAsk98(th, mode, act, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) +
     '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' +
     (mode === "exit" ? '"with_player":null,' : '"leave":[],"arrive":[],') + (mode === "talk" || mode === "more" ? '"photo":null,' : '') +
-    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + (senseOK98(th, mode) ? '"sense":"",' : '') + (typeof arcJson98 === "function" ? arcJson98(th, mode) : '') + (s.game && !Array.isArray(s.game) && s.game.outcomes ? '"game":false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -19244,9 +19419,9 @@ async function actor98(th, cid, intent, turn) {
     (policy ? "\n你本人是" + (k.gender === "f" ? "女性" : "男性") + "。act只写你自己的动作，主语用角色姓名或省略，不用我、他、她；玩家的性别不是你的性别。" : "") +
     (k.voice ? "\n" + (zh ? "说话方式：" : "How you talk: ") + k.voice : "") + (k.personality ? "\n" + (zh ? "性格机制：" : "Personality: ") + String(k.personality).slice(0, 600) : "") +
     (k.want ? "\n" + (zh ? "你想要：" : "You want: ") + k.want : "") + (k.fear ? "\n" + (zh ? "你害怕：" : "You fear: ") + k.fear : "") +
-    (k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
+    ((!k.unlockableSecrets || (k.unlockableSecrets||[]).some(x=>th.b98.ch>=x.from&&(th.love[cid]||0)>=x.minLove)) && k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
     (k.toward_player ? "\n" + (zh ? "你对" + you + "的初始态度：" : "Your starting attitude toward " + you + ": ") + k.toward_player : "") + (k.hooks ? "\n" + (zh ? "你的吸引点 / 高光行为：" : "What makes you magnetic: ") + String(k.hooks).slice(0, 500) : "") +
-    persona98(k, you, zh) +
+    persona98(k, you, zh) + authoredActor98(th,cid,k) +
     /* 2026-11-06 玩家：回复像客服。原来好感低于 12 时写的是「保持礼貌关照」，等于让角色客气；现在初见也按人设主动，只有玩家拒绝时才收住 */
     "\n" + (zh ? "你现在对" + you + "的感觉：" : "How you feel about " + you + " now: ") + (policy && (th.love[cid] || 0) < 12 ? L98("刚认识，但你已经被吸引了；按你的人设去靠近，不用客气。玩家拒绝或想做朋友就收住", "you just met, but you're already drawn in; approach in your own way, no politeness act. If the player declines or wants friendship, pull back") : stage98(th.love[cid] || 0)) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
     (cd.mem.length ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + cd.mem.slice(-22).map(m => "- " + m).join("\n") : "") +
@@ -19259,13 +19434,34 @@ async function actor98(th, cid, intent, turn) {
     (policy && s && s.interaction ? "\n眼前可参与的事（没有用户选择就尚未发生）：" + LZ98(s.interaction.invitation) : "") +
     "\n\n" + (zh ? "此刻在：" : "You're at: ") + LZ98(s && s.place) + "\n" + (zh ? "眼前：\n" : "Right here:\n") + (tail98(th, 12) || "") +
     "\n\n" + (zh ? "导演的提示（你可以有自己的主意）：" : "Director's note (you may have your own idea): ") + (intent || "") +
-    stance98(th, cid, turn, you, zh) + feeling98(zh) + heat98(th, zh, "actor") + photoSay98(turn, zh) +
+    stance98(th, cid, turn, you, zh) + feeling98(zh) + heat98(th, zh, "actor") + photoSay98(turn, zh) + (typeof arcActor98 === "function" ? arcActor98(th, cid, turn, zh) : "") +
     (policy ? "\n本轮硬约束：你此刻就在" + LZ98(s.place) + "，身边只有" + (names98(here98(th, s).filter(c => c !== cid)) || "玩家") + "和玩家。不能把自己或用户写到吧台、门外等新地点，不能说在场人没跟过来，也不能和不在场的人说话。这里只回应或提出邀请，不完成跨场移动。动作只写你自己的眼前动作。" + experienceContext98(th) : "") +
     redo98(zh) +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（" + (policy ? "用第三人称姓名或省略主语，不用‘我抬手／我靠近’；只写有意义、眼前可见的动作，没有就空" : "第一人称「我…」") + "，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
            : "Your turn. Only yourself: an optional action (" + (policy ? "third person or no subject, visible meaningful gesture only, otherwise empty" : "first person") + ", ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
     '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 320 });
+}
+/* ---------- 玩家的感官反应（2026-11-07 用户拍板放开）----------
+   旁白原来一律不写玩家；现在允许导演另给一句「不由自主的身体反应」：心跳、呼吸、脸发烫、没有往后退。
+   不能写玩家说的话、能选择的动作、决定和感情结论。剧本 experience.playerSenses=true 才打开（先在黑港试）。
+   频率由代码管：进场那一刻可以写；其余至少隔 3 轮才再问导演要一句。 */
+function senses98(th) { const b = bOf98(wd(th.wid)); return !!(b && ((b.experience || {}).playerSenses || b.playerSenses)); }
+function senseOK98(th, mode) { if (!senses98(th) || S.senses98Off) return false; const A = th.b98; return mode === "enter" || (mode !== "exit" && A.turns - (A.senseAt == null ? -99 : A.senseAt) >= 3); }
+function senseAsk98(th, zh) {
+  return zh ? "\n\nsense（可空）：写一句玩家此刻不由自主的身体反应或感知，第二人称，≤30 字，只在这一刻真的被触动时才写（靠近、对视、被说中、危险逼近、秘密揭开），普通的一轮就留空。" +
+      "\n- 可以写：心跳、呼吸、脸发烫、手指收紧、闻到或注意到什么、某个没发生的动作（“你没有往后退”）。" +
+      "\n- 不能写：玩家说的话、玩家主动做的动作（“你抱住他”）、玩家的决定（“你决定相信他”）、感情结论（“你爱上了他”）。" +
+      "\n- 方向要和玩家自己表现出的样子一致：玩家冷淡、抗拒或不喜欢这个人时，只写紧张、警惕、不自在这类反应，不写心动。"
+    : "\n\nsense (may be empty): one involuntary bodily reaction or perception of the player right now, second person, under 20 words, only when this moment truly lands (closeness, eye contact, being seen through, danger, a secret revealed); leave empty on an ordinary turn." +
+      "\n- Allowed: heartbeat, breath, flushed face, fingers tightening, noticing a scent or a look, a non-action (\"you don't step back\")." +
+      "\n- Never: the player's words, chosen actions (\"you hug him\"), decisions or emotional conclusions." +
+      "\n- Match how the player has shown themselves: if they're cold, resistant or dislike this person, only tension, wariness or unease — never attraction.";
+}
+function senseClean98(v) {
+  const x = String(v || "").trim(); if (!x || /[「」“”"]/.test(x)) return ""; /* 带引号就是台词，不要 */
+  if (/你(?:说|问|回答|喊|决定|选择|答应|拒绝|伸手|抱|吻|亲|走向|站起|转身离开)|你(?:爱上|喜欢上)了|\byou (?:say|said|ask|decide|choose|hug|kiss|reach|walk|fall in love)/i.test(x)) return "";
+  return x.slice(0, 60);
 }
 /* ---------- one beat ---------- */
 async function beat98(th, mode, act) {
@@ -19276,7 +19472,9 @@ async function beat98(th, mode, act) {
     /* 重新生成要的「这一轮之前」：玩家那句已经在列表里，从这里往后都是这一轮的回复（app73 的 rg73 会回到这里重跑） */
     const redo = typeof REDO73 !== "undefined" && REDO73, pre = (mode === "talk" || mode === "more") && !redo && typeof snap73 === "function" ? snap73(th) : null;
     updateSpeaking98(th,act);
-    let d = null; try { d = await director98(th, mode, act); } catch (_) {}
+    const declinedAuthoredGame98 = authoredDecline98(th,act);
+    let d = typeof arcFast98 === "function" ? arcFast98(th, mode, act) : null; /* 点名且聊得顺时不调导演（app134） */
+    if (!d) try { d = await director98(th, mode, act); } catch (e) { console.warn("[story98] director", e); }
     if (!d) { toast(L98("剧情智能体走神了，再试一次", "The story agent lost the thread — try again")); return; }
     if (d.narration) { const n0 = String(d.narration).trim(); }
     if (act && act.mode !== "think") mem98(th, pres, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
@@ -19284,17 +19482,22 @@ async function beat98(th, mode, act) {
     if (!d.photo && mode === "talk" && act && act.mode !== "think" && PHOTO_ASK98.test(String(act.txt || ""))) d.photo = await photoOnly98(th, act);
     const mv = move98(th, s, d, mode);
     mv.came.forEach(x => appendMsg(th, { who: "n", k: "act", txt: x.how || L98(first(ch(x.id).n) + "走了过来。", first(ch(x.id).n) + " joins you."), at: Date.now() }));
+    const arc98 = typeof arcAfter98 === "function" ? arcAfter98(th, d, mode, act) : {}; /* 戏点、秘密、事件、小游戏、音乐（app134） */
     let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && allowedSpeakers98(th, s).includes(x.id)); if (policy) spk = spk.filter((x,i,all) => all.findIndex(y => y.id === x.id) === i); if (mode === "exit") spk = policy ? [] : spk.slice(0, 1);
     if (policy && act && /累|想安静|不想应酬/.test(String(act.txt||"")) && !/你们都|两个人都/.test(String(act.txt||""))) spk = spk.slice(0,1);
     let nar = policy ? "" : String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
     if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
     if (act && act.to && allowedSpeakers98(th, s).includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
     if (mode === "talk" || mode === "more") spk = pickSpeakers98(th, act, spk);
+    if (arc98.reveal && !spk.some(x => x.id === arc98.reveal.cid) && allowedSpeakers98(th, s).includes(arc98.reveal.cid)) spk.unshift({ id: arc98.reveal.cid, intent: "" });
+    if (arc98.game && !spk.some(x => x.id === arc98.game.from)) arc98.game.from = spk[0] ? spk[0].id : "";
     const ph = photoPlan98(th, d, mode, spk);
     let delivered98 = 0; const fx98a = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
     const fx98 = () => { fx98a(); highlight98(th, d.bg); d.bg = null; };
-    for (const sp of spk.slice(0, mode === "talk" || mode === "more" ? 2 : 3)) {
-      const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to, more: mode === "more", photo: ph && ph.from === sp.id ? ph : null };
+    const spk98 = spk.slice(0, mode === "talk" || mode === "more" ? 2 : 3);
+    for (const sp of spk98) {
+      const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to, more: mode === "more", photo: ph && ph.from === sp.id ? ph : null,
+        reveal: arc98.reveal && arc98.reveal.cid === sp.id ? arc98.reveal : null, game: arc98.game && arc98.game.from === sp.id ? arc98.game : null, hook: mode !== "exit" && sp === spk98[spk98.length - 1] };
       let r = null; try { r = await actor98(th, sp.id, sp.intent, turn98); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", ""), turn98); if (r2 && r2.say) r = r2; } } catch (_) {}
       if (!r && turn98.photo) r = { say: ph.cap };
       if (!r) continue;
@@ -19306,18 +19509,22 @@ async function beat98(th, mode, act) {
       else if (act98) appendMsg(th, { who: sp.id, k: "act", txt: act98, at: Date.now() });
       else if (say98) appendMsg(th, { who: sp.id, k: "say", txt: say98, at: Date.now(), ai: 1 });
       if (turn98.photo) photoSend98(th, ph);
+      if (turn98.reveal) { arcRevealed98(th, turn98.reveal); arc98.reveal = null; }
       fx98();
-      const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
+      const f = Math.max(declinedAuthoredGame98 ? 0 : -5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
       if (r.remember) mem98(th, [sp.id], r.remember);
       if (r.say) mem98(th, here98(th, s).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
     }
+    if (arc98.game && delivered98) arcGameCard98(th, arc98.game);
     if (policy && mode === "choice" && !delivered98) { toast(L98("角色回复未完成，选择尚未提交，可以重试", "The character response failed; the choice was not submitted. Try again.")); return false; }
+    if (senseOK98(th, mode)) { const sn = senseClean98(d.sense); if (sn) { appendMsg(th, { who: "n", k: "act", txt: sn, sense98: 1, at: Date.now() }); A.senseAt = A.turns; } }
     left98(th, s, mv.leave);
     fx98(); A.turns++; th.rounds++; A.more98n = mode === "more" ? (A.more98n || 0) + 1 : 0;
     if (mode === "talk" || mode === "choice") gate98(th, d);
     if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
     if (d.state) A.flags.push(String(d.state).slice(0, 60));
+    if (s.game && d.game === true) (A.gameReady98 || (A.gameReady98 = {}))[s.id] = true;
     if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
     useUnits(aiCost() * (mode === "talk" || mode === "more" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
@@ -19325,7 +19532,9 @@ async function beat98(th, mode, act) {
     if (d.ending && mode === "exit") { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
       appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L98("结局", "Ending") + " · " + (e ? LZ98(e.name) : A.end), txt: String(d.endingText || (e && e.text) || "").slice(0, 500), at: Date.now() }); }
     turn98(th, start, pre, mode, act);
-    th.at = Date.now(); save(); return true;
+    th.at = Date.now(); save();
+    if (typeof arcCompress98 === "function") setTimeout(() => arcCompress98(th), 0); /* 每 20 轮压缩一次记忆，后台跑 */
+    return true;
   } finally { busy = false; typing(false); try { renderChat(); } catch (_) {} }
 }
 /* ---------- scene flow: enter → talk → (choice) → next ---------- */
@@ -19339,6 +19548,7 @@ async function enter98(th) {
   const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; A.bgHl = null; try { sceneBg(th, key); } catch (_) {} }
   preload98(th, s, As);
  if (window.FXBUS) FXBUS.authored(th, s.fx || (A.sc === 0 && c.fx));
+  if (typeof arcEnter98 === "function") arcEnter98(th); /* 新一级：升级特效 + 这一级的音乐 */
   if (s.bgm) { A.bgm = "m_" + String(s.bgm).replace(/^m_/, ""); try { if (typeof bgmPlay === "function" && bgmOn()) bgmPlay(A.bgm, th.wid); } catch (_) {} }
   const cg = As["cg_" + s.id]; if (cg) { try { off94Show({ src: cg, cap: s.cg_cap || "" }, false); } catch (_) {} }
   if (s.social && typeof gen96 === "function") gen96(th, s.social).then(m => m && chg96(m)).catch(() => {});
@@ -19742,7 +19952,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
 }, true);
 /* a call card gets an answer button */
-MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.ph98) return photoHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
+MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.game98 && typeof arcGameHTML98 === "function") return arcGameHTML98(h, m); if (m && m.ph98) return photoHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
 /* free mode needs its world's assets loaded on reopen */
 { const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) { introductions98(th); renderChat(); } }); } } return _ot.apply(this, arguments); }; }
 /* love type + feed work here too */
@@ -19805,6 +20015,98 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go); else go();
   try { const st = document.createElement("style"); st.textContent = "#s-chat.m98on #dk98{display:none!important}#sugg .m98{flex:none;max-width:72vw}"; document.head.appendChild(st); } catch (e) { console.warn("[merge98] style", e); }
 })();
+
+
+/* Authored manuscript capabilities; enabled only when the manuscript declares them. */
+function authoredActor98(th,cid,k) {
+  const {s}=scene98(th),love=Number(th.love[cid])||0;
+  const eligible=(k.unlockableSecrets||[]).filter(x=>th.b98.ch>=x.from&&love>=x.minLove);
+  return (s.growth&&s.growth[k.key]?'\n本章你的成长方向（只通过实际行动表现）：'+s.growth[k.key]:'')+
+    (k.other_views?'\n你对其他人的看法（仅供本人，不是对方知道的事实）：'+k.other_views:'')+
+    (k.arc?'\n你本人的长期成长方向，不能直接宣布已经完成：'+k.arc:'')+
+    (k.unlockableSecrets?'\n未到条件的私人秘密不可透露，也不可根据导演提示补全。当前可自然谈及的私人秘密：'+(eligible.map(x=>x.name+'：'+x.text+'；表现：'+x.expression).join('\n')||'无'):'');
+}
+function authoredDirector98(th,s) {
+  const records=th.b98.gameResults||{},g=s.game,done=g&&records[g.id];
+  return (s.events&&s.events.length?'\n本章预留事件（只在括号条件确实满足时推进，不重复触发）：'+s.events.join('\n'):'')+
+    (g?'\n本章小游戏：'+g.name+'；出现条件：'+g.when+'。只有该条件已经实际发生才返回 game:true，其他情况 game:false。只提供可选入口，不能替玩家开玩、判断输赢、宣称已完成或先兑现奖励。'+
+      (done?'\n真实游戏回执：'+JSON.stringify(done)+'。只使用这条回执。':'\n游戏尚未完成，没有共同游戏记忆，也没有奖励。'):'');
+}
+function authoredGameCommit98(th,s,g,result,ids) {
+  if(!['WIN','LOSE','SKIP'].includes(result)||!g||!th.b98||scene98(th).s.id!==s.id)return false;
+  const records=th.b98.gameResults||(th.b98.gameResults={});if(records[g.id])return false;
+  const participants=[...new Set(ids||[])].filter(id=>here98(th,s).includes(id));
+  const receipt={result,chapter:th.b98.ch,scene:s.id,participants,at:Date.now()};
+  records[g.id]=receipt;
+  // The callback is the only source of game facts. Refusal and losses never subtract affection.
+  if(result!=='SKIP'){
+    const fact=g.name+'：'+(result==='WIN'?'成功':'未成功')+'。后续回应提示（尚未实际发生）：'+g.outcomes[result];
+    mem98(th,participants,fact);
+    for(const id of participants)if(result==='WIN'&&loveAllowed(th,id))loveWrite(th,id,2,'story98:game:'+g.id);
+    th.b98.flags.push(g.id+':'+result);
+  }
+  th.b98.sum.push('小游戏 '+g.name+'：'+result+'；后续回应依据：'+g.outcomes[result]);
+  appendMsg(th,{who:'sys',k:'card',title:g.name+' · '+({WIN:'成功',LOSE:'未成功',SKIP:'已跳过'})[result],
+    txt:result==='SKIP'?g.outcomes.SKIP:'结果已记录。接下来：'+g.outcomes[result],at:Date.now()});
+  save();authoredGameDock98(th);return true;
+}
+function authoredGameDock98(th){
+  const old=document.getElementById('authored-game98');if(old)old.remove();
+  const {b,s}=scene98(th),g=s&&s.game;
+  if(!b.games_on||!g||th.b98.ended||busy||!th.b98.gameReady98||!th.b98.gameReady98[s.id]||(th.b98.gameResults||{})[g.id])return;
+  const comp=document.querySelector('#s-chat .composer');if(!comp)return;
+  comp.insertAdjacentHTML('beforebegin','<div id="authored-game98" class="dk98r"><button data-authored-game98="play">🎲 '+esc(g.name)+'</button><button data-authored-game98="skip">先不玩</button></div>');
+}
+function authoredGameOpen98(th){
+  const {s}=scene98(th),g=s&&s.game;if(!g||busy||(th.b98.gameResults||{})[g.id]||!(th.b98.gameReady98||{})[s.id])return;
+  const candidates=here98(th,s).filter(id=>{const k=cardOf98(wd(th.wid),id)||{};return g.kind==='bet'?k.key==='c07':g.kind==='melody'?k.key==='c03':g.kind==='clue'?k.key==='c04':g.kind==='timeline'?['c02','c04','c07'].includes(k.key):g.kind==='rapport'?k.romanceable:k.key!=='c06';});
+  sheet('<h2>'+esc(g.name)+'</h2><p>'+esc(g.when)+'</p><p>'+esc(g.stake)+'。输了或不玩都能继续。</p><p>想和谁一起？</p>'+candidates.map(id=>'<button class="btn btn-block" data-authored-player98="'+esc(id)+'">'+esc(first(ch(id).n))+'</button>').join('')+'<button class="btn btn-g btn-block" data-authored-game98="skip">这次不玩</button>');
+}
+function authoredGameStart98(th,id){
+  const {s}=scene98(th),g=s&&s.game;if(!g||!here98(th,s).includes(id)||(th.b98.gameResults||{})[g.id]||busy)return;
+  closeSheet();
+  const gid='g_authored_'+g.kind;
+  let def=MG100.find(x=>x.id===gid);
+  if(!def){
+    const templates={truth:['dice','3','三局两胜'],bet:['dice','3','三局两胜'],melody:['simon','5','记住刚才的音节顺序'],clue:['find','⭐','✨🌙🪐☄💫🔭'],timeline:['order','核对账本/对照原记录/标记缺页/公开校验','-'],rapport:['authored_rapport','-','-']};
+    const a=templates[g.kind];if(!a)return;
+    def={id:gid,zh:g.name,en:g.name,tpl:a[0],a:a[1],b:a[2],kw:[]};MG100.push(def);
+  }
+  // A personal preference only becomes known after the player actually shares it.
+  if(g.kind==='rapport')MG_T.authored_rapport=function(area,G,sub,done,T){
+    sub.textContent='先说一个你愿意分享的小偏好，再选出对方记对的那一项。';
+    area.innerHTML='<label>我喜欢……<input id="authored-pref98" maxlength="45" autocomplete="off"></label><button class="btn" id="authored-prefgo98">告诉对方</button>';
+    area.querySelector('#authored-prefgo98').onclick=()=>{
+      const value=area.querySelector('input').value.trim();if(!value)return;
+      appendMsg(th,{who:'me',k:'say',txt:'我喜欢'+value,at:Date.now()});
+      mem98(th,[id],yn98(th)+'亲口说喜欢'+value);save();
+      const options=shuf([{t:value,ok:true},{t:'我还没说过这个偏好',ok:false}]);
+      sub.textContent='哪一句准确记住了你刚说的话？';
+      area.innerHTML=options.map((x,i)=>'<button class="btn btn-block" data-p="'+i+'">'+esc(x.t)+'</button>').join('');
+      area.onclick=e=>{const b=e.target.closest('[data-p]');if(b)done(options[Number(b.dataset.p)].ok?'win':'lose');};
+    };
+  };
+  mgOpen(gid,r=>{const result={win:'WIN',lose:'LOSE',skip:'SKIP'}[r];if(authoredGameCommit98(th,s,g,result,[id])){try{renderChat();}catch(_){}if(result!=='SKIP'&&curT===th.id&&!busy)beat98(th,'talk',{mode:'act',txt:'刚才'+g.name+'的真实结果为'+result+'。请回应这个结果，别把尚未兑现的奖励说成已经完成。'});}});
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-authored-game98]'),p=e.target.closest('[data-authored-player98]');if(!b&&!p)return;
+  const th=S.threads[curT];if(!th||!th.b98)return;e.preventDefault();e.stopPropagation();
+  const {s}=scene98(th);if(p)return authoredGameStart98(th,p.dataset.authoredPlayer98);
+  if(b.dataset.authoredGame98==='play')return authoredGameOpen98(th);
+  if(s.game&&!busy){closeSheet();authoredGameCommit98(th,s,s.game,'SKIP',[]);renderChat();}
+});
+{const enter=enter98;enter98=async function(th){
+  const {s}=scene98(th),as=OFF94.assets[wd(th.wid).community]||{};
+  if(s&&s.bgm&&as['bgm_'+s.id]){window.BGM_FILES=window.BGM_FILES||{};window.BGM_FILES['m_'+s.bgm]=as['bgm_'+s.id];}
+  return enter.apply(this,arguments);
+};}
+{const dock=dock98;dock98=function(){const r=dock.apply(this,arguments),th=S.threads[curT];if(th&&th.b98)authoredGameDock98(th);return r;};}
+
+function authoredDecline98(th,act){
+  const {s}=scene98(th);
+  if(!s.game||!act||act.mode==='think'||!/(?:不想|不愿|不|别|不要)(?:再)?(?:玩|赌)|跳过(?:这个)?(?:游戏)?/.test(String(act.txt||'')))return false;
+  authoredGameCommit98(th,s,s.game,'SKIP',[]);return true;
+}
 
 /* ================= v8.5 · 2026-10-27 用户反馈第二轮 =================
    1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」。
@@ -22919,6 +23221,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
 
  function refreshSaved(th){if(!own(th&&wd(th.wid)))return;const w=wd(th.wid);presentation(w);portraits(w);let chapter=1,index=0;const reverse={};for(const [en,z]of Object.entries(data.zh||{}))reverse[z]=en;th.title=data.presentation.title[language()];if(th.status){const c=w.pack.chapters[(th.pk.ch||1)-1];if(c)th.status.time=c.time[language()];if(th.status.place)th.status.place=tr(reverse[th.status.place]||th.status.place);}
   for(const m of th.msgs||[]){if(m.k==='scene'&&m.place)m.place=tr(reverse[m.place]||m.place);if(m.k==='chap'){chapter=m.n;index=0;const c=w.pack.chapters[chapter-1];if(c){m.title=language()==='zh'?c.t.zh:c.t.en;if(root.EXPERIENCE124)m.brief124=EXPERIENCE124.brief(th,c,chapter);}}
+   if(m.k==='box'){const english=t=>{if(reverse[t])return reverse[t];for(const [en,z]of Object.entries(names)){if(t.startsWith(z+'：'))return en.toUpperCase()+': '+(reverse[t.slice(z.length+1)]||t.slice(z.length+1));}return t;};for(const p of [...(m.parts||[]),...(m.say?[m.say]:[])]){p.u14en=p.u14en||english(p.txt||'');p.u14zh=p.u14zh||tr(p.u14en,'zh');p.txt=language()==='zh'?p.u14zh:p.u14en;}m.txt=[...(m.parts||[]).map(p=>p.txt),...(m.say?[m.say.txt]:[])].join(' ');m.last=m.say?m.say.txt:((m.parts||[]).slice(-1)[0]||{}).txt||m.txt;}
    if(m.k==='u14line'&&m.who==='sys'){const c=data.chapters[chapter-1],l=c&&c.scenes.flatMap(s=>s.lines)[index++];if(l){const b=msg(w,l,language());m.who=b[0];m.k=b[1];m.txt=b[2];m.u14zh=msg(w,l,'zh')[2];m.u14en=l.textMessage?l.speaker+' texts: '+l.text:l.speaker==='PLAYER (NARRATION)'?l.text:by(w)[l.speaker]?l.text:l.speaker+': '+l.text;}}
    if(m.who!=='me'&&typeof m.txt==='string'&&['say','act','think'].includes(m.k)){const en=m.u14en||reverse[m.txt]||m.txt;if(m.u14zh){m.txt=language()==='zh'?m.u14zh:en;}else if(data.zh[en]){m.u14en=en;m.txt=tr(en);}}
   }
@@ -22926,9 +23229,302 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   th.msgs=(th.msgs||[]).filter(m=>!['u14intro','u14ending','u14post'].includes(m.k));
  }
  if(typeof beatMsg==='function'){const beat=beatMsg;beatMsg=function(b){const m=beat.apply(this,arguments);if(m&&Array.isArray(b)&&b[3]&&b[3].u14en){m.u14en=b[3].u14en;m.u14zh=b[3].u14zh;}return m;}}
+ if(typeof pkAppend==='function'){const append=pkAppend;pkAppend=function(th,m){const result=append.apply(this,arguments);if(own(wd(th.wid))&&m&&m.u14en){const box=th.msgs[th.msgs.length-1];if(box&&box.k==='box'){const target=box.say&&box.say.who===m.who&&box.say.txt===m.txt?box.say:(box.parts||[]).slice().reverse().find(p=>p.who===m.who&&p.txt===m.txt);if(target){target.u14en=m.u14en;target.u14zh=m.u14zh;}}}return result;}}
  if(typeof renderChat==='function'){const render=renderChat;renderChat=function(){const th=S.threads[curT];refreshSaved(th);return render.apply(this,arguments)}}
  load().then(()=>{for(const th of Object.values(S.threads||{}))refreshSaved(th);save()}).catch(e=>console.warn('[Unread repair]',e.message));
  root.UNREAD14_RUNTIME={load,configure,own,compile,refreshSaved,localize:tr,version:VER};
 })(typeof window!=='undefined'?window:globalThis);
+
+/* ================= 故事卡升级 · 台阶、戏点和感官层（2026-11-07）=================
+   方案：《MIRU 故事卡全面升级方案》https://claude.ai/artifact/2LZ1xeJsbrJqbZPvevM1r9
+   用户：剧本还是按章节写也照收，但整个运行逻辑按新方案走。所以这里不另起一套引擎：
+   · 一章 = 一级台阶。导演看得到整条升级路线（只看标题和目标，不剧透细节），知道下一级往哪升。
+   · 只写了【升级台阶】、没写章节的剧本，进来时编译成一级一章（arcNorm98），后面照常跑。
+   · 导演每轮挑一个戏点；连续 3 轮没推进，下一轮必须推进（事件、泄密、危机、反转、小游戏）。
+   · 秘密、事件、小游戏、换音乐都由导演提议，代码按条件和冷却放行（和特效同一个思路）。
+   · 角色按所在台阶演、知道自己怎么看在场的其他人；最后开口的人留一个钩子。
+   所有函数都由 app98_story.js 的调用点直接调用，不改写别人的函数。 */
+
+const ARC98 = {
+  BEATS: ["试探", "靠近", "打断", "较劲", "危机", "泄密", "反转", "事件", "小游戏", "收束"],
+  PUSH: ["危机", "泄密", "反转", "事件", "小游戏"],
+  /* 戏点没指定瞬间特效时的默认搭配（id 都在 FXBUS.MOMENT 白名单里，限流照旧） */
+  FX: { 靠近: "heartbeat", 较劲: "zoom", 泄密: "spotlight", 危机: "breath_hold", 反转: "shock" },
+  /* 导演只说情绪，代码换成曲库里的曲子（app58 BGM100 的 id） */
+  MOOD: { 暧昧: "heartbeat_close", 慢热: "slow_burn", 吃醋: "jealousy", 危险: "standoff", 紧张: "interrogation", 冷战: "boardroom",
+    秘密: "secret", 悬疑: "clue", 背叛: "betrayal", 告白: "confession", 心碎: "heartbreak", 道歉: "apology", 接吻: "the_kiss",
+    枪火: "gunfire", 黑帮: "the_don", 往事: "memory_lane", 日常: "sunday_kitchen", 温柔: "fever_care", 天亮: "dawn", 终章: "finale", 静默: "hush_still" },
+  /* 没写小游戏的剧本，导演只能从这几个通用的里挑（按剧情用途），不合适就不选 */
+  GAMES: { 推进悬疑: ["find_clue", "code_safe", "order_clue", "quiz_case"], 考验亲密: ["quiz_heart", "quiz_date", "simon_song"],
+    暧昧时刻: ["beat_heart", "hold_hand"], 危机: ["hold_hide", "hold_breath", "wire_alarm"], 较劲: ["dice_truth", "dice_bet", "dice_drink"] },
+  EVENT_GAP: 8, GAME_GAP: 10, BGM_GAP: 90e3, SECRET_CARD: true
+};
+
+/* ---------- 剧本统一：只写了升级台阶的，编译成一级一章 ---------- */
+function arcNorm98(b) {
+  if (!b || b.arc98done) return b;
+  b.arc98done = true;
+  const arc = Array.isArray(b.arc) ? b.arc : [];
+  if ((!b.chapters || !b.chapters.length) && arc.length) {
+    const all = (b.cast || []).map(c => c.key);
+    b.chapters = arc.map((st, i) => ({
+      n: i + 1, title: st.title || { zh: "第 " + (i + 1) + " 级", en: "Stage " + (i + 1) }, goal: [st.change, st.next && "进入下一级：" + st.next].filter(Boolean).join("；"),
+      introduction: st.introduction || (i === 0 && b.opening) || {}, behavior: st.behavior, bgm: st.bgm, game: st.game, events: st.events,
+      scenes: [{ id: "st" + String(i + 1).padStart(2, "0"), place: st.place || b.place || { zh: "", en: "" }, present: st.present || all, beat: st.scene || st.change || "",
+        actor_payload: st.actor_payload || {}, interaction: st.interaction || { invitation: "", suggestions: [] }, fx: st.ambient ? { ambient: st.ambient } : undefined, highlights: st.highlights }]
+    }));
+  }
+  return b;
+}
+function arcOn98(th) { return !!(th && th.b98 && bOf98(wd(th.wid))); }
+function arcStage98(th) { const { b, c } = scene98(th); return { b, c, n: th.b98.ch, total: (b && b.chapters || []).length }; }
+
+/* ---------- 故事背景卡：卖点、你是谁、你的处境、你藏着的事、故事背景、核心问题 ---------- */
+function arcStoryText98(b) {
+  const p = b.player || {}, pitch = LZ98(b.pitch), who = LZ98(p.identity || p.role), press = LZ98(p.pressure), hide = LZ98(p.secret), q = LZ98(b.question);
+  const rows = [pitch, who && L98("你是谁：", "Who you are: ") + who, press && L98("你的处境：", "Your situation: ") + press, hide && L98("你藏着的事：", "What you hide: ") + hide].filter(Boolean);
+  return [rows.join("\n"), LZ98(b.intro), q && L98("核心问题：", "The question: ") + q].filter(Boolean).join("\n\n");
+}
+const ARC_ROW98 = /^(你是谁|你的处境|你藏着的事|核心问题|Who you are|Your situation|What you hide|The question)[：:]\s*(.*)$/;
+
+/* ---------- 导演：升级路线 + 戏点 + 秘密 / 事件 / 小游戏 / 音乐 ---------- */
+function arcRoute98(th, zh) {
+  const { b, n } = arcStage98(th), chs = (b && b.chapters) || []; if (chs.length < 2) return "";
+  const line = (c, i) => (i + 1 === n ? "▶ " : i + 1 < n ? "✓ " : "· ") + (i + 1) + ". " + LZ98(c.title) + (i + 1 === n || i + 1 === n + 1 ? "：" + String(c.goal || "").slice(0, 70) : "");
+  return (zh ? "\n\n升级路线（一章就是一级台阶；只用来判断往哪推，不要提前演后面台阶的事，不要剧透）：\n" : "\n\nEscalation route (one chapter = one stage; use it only to know where to push, never play later stages early or spoil them):\n") +
+    chs.map(line).join("\n") + (zh ? "\n现在在第 " + n + " / " + chs.length + " 级：关系和局势只能停在这一级的程度，最多为下一级埋一点伏笔。" : "\nNow at stage " + n + " / " + chs.length + ": keep the relationship at this stage's level, at most seed the next.");
+}
+function arcStall98(th) { return th.b98.stall98 || 0; }
+function arcSecrets98(th) {
+  const w = wd(th.wid), b = bOf98(w), A = th.b98, out = [], done = A.secrets98 || {};
+  (b.cast || []).forEach(k => (Array.isArray(k.secrets) ? k.secrets : []).forEach((s, i) => {
+    const id = k.key + ":" + (s.id || "s" + (i + 1)), cid = byKey98(th, k.key), u = s.unlock || {};
+    if (done[id] || !ch(cid)) return;
+    out.push({ id, cid, key: k.key, s, ok: (th.love[cid] || 0) >= (+u.love || 0) && A.ch >= (+u.stage || 1) });
+  }));
+  return out;
+}
+function arcEvents98(th) {
+  const { b, c } = scene98(th), A = th.b98, used = A.events98 || {}, n = A.ch;
+  if (A.turns - (A.evAt == null ? -99 : A.evAt) < ARC98.EVENT_GAP) return [];
+  if ((A.evCh || {})[n] >= 2) return [];
+  const pool = [].concat(c.events || [], (b.events || []).filter(e => { const f = +e.from || 1, t = +e.to || 99; return n >= f && n <= t; }));
+  return pool.map((e, i) => Object.assign({ id: e.id || "c" + n + "e" + (i + 1) }, e)).filter(e => !(e.once !== false && used[e.id]));
+}
+function arcGames98(th, mode) {
+  const { b, c, s } = scene98(th), A = th.b98;
+  if (b.games_on && s.game && !Array.isArray(s.game) && s.game.outcomes) return null; /* authored receipt flow */
+  if (!(mode === "talk" || mode === "more") || !window.MG100 && typeof MG100 === "undefined") return null;
+  if (b.games98 === false || (A.gamesCh98 || {})[A.ch]) return null;
+  if (A.turns - (A.gameAt == null ? -99 : A.gameAt) < ARC98.GAME_GAP || exch98(th) < 4) return null;
+  const authored = [].concat(s.game || [], c.game || []).filter(g => g && g.id);
+  if (authored.length) return { authored };
+  return { library: ARC98.GAMES };
+}
+function arcGameOf98(id) { const L = typeof MG100 !== "undefined" ? MG100 : []; const g = String(id || "").replace(/^g_/, ""); return L.find(x => x.id === "g_" + g) || null; }
+function arcAsk98(th, mode, act, zh) {
+  if (!arcOn98(th) || mode === "exit") return "";
+  const stall = arcStall98(th), push = stall >= 3, A = th.b98;
+  let p = arcRoute98(th, zh);
+  p += zh ? "\n\n戏点：这一轮挑一个 beat（" + ARC98.BEATS.join("、") + "），按它安排谁开口、想干什么。被点名的人先正面回答，不能为了戏点不回应玩家。" +
+      "\n- 最后开口的那个人，用一个问题或一个停在半空的动作收尾，给玩家留个钩子。" +
+      "\n- new_info：这一轮有没有出现新的信息、新的动作或关系变化（true / false）。" +
+      (push ? "\n- 已经连续 " + stall + " 轮原地打转：这一轮 beat 必须是 " + ARC98.PUSH.join("、") + " 之一，真的推一步。" : "")
+    : "\n\nBeat: pick one beat this turn (" + ARC98.BEATS.join(", ") + ") and arrange who speaks around it. The addressed person still answers first." +
+      "\n- The last speaker ends on a question or a half-finished gesture: leave the player a hook." +
+      "\n- new_info: did anything new happen this turn — information, an action, a shift in the relationship (true / false)." +
+      (push ? "\n- " + stall + " turns in a row without progress: this beat must be one of " + ARC98.PUSH.join(", ") + "." : "");
+  const sec = arcSecrets98(th);
+  if (sec.length) {
+    const ok = sec.filter(x => x.ok);
+    p += zh ? "\n\n秘密（只给标题，内容在角色自己那里）：" + (ok.length ? "\n现在可以放行：" + ok.map(x => x.id + "「" + LZ98(x.s.title || "") + "」（" + first(ch(x.cid).n) + "）").join("；") + "\n剧情真的走到这一步（被逼问、被感动、局势所迫），才在 reveal 里填 id，并把那个人排进 speakers；否则留空。一轮最多一个。" : "") +
+        (sec.length - ok.length ? "\n还有 " + (sec.length - ok.length) + " 个秘密没到时候，不要让任何人主动说出来；玩家直接问到，按角色自己的规矩回答。" : "")
+      : "\n\nSecrets: " + (ok.length ? "may be revealed now: " + ok.map(x => x.id).join(", ") + ". Put one id in `reveal` only when the story truly gets there, and include that person in speakers." : "") + (sec.length - ok.length ? " " + (sec.length - ok.length) + " more are not due yet." : "");
+  }
+  const ev = arcEvents98(th);
+  if (ev.length && mode !== "enter") p += zh ? "\n\n可以发生的事件（冷场、需要推进或正好合适时才用，填 event = id；发生了就让角色对它作出反应）：\n" + ev.map(e => e.id + "：" + LZ98(e.text) + (e.when ? "（" + e.when + "）" : "")).join("\n")
+    : "\n\nEvents you may trigger (`event` = id, only when it fits):\n" + ev.map(e => e.id + ": " + LZ98(e.text)).join("\n");
+  const gm = arcGames98(th, mode);
+  if (gm) {
+    p += zh ? "\n\n小游戏（beat=小游戏 时填 game）：由一个角色当场提出来（比如“敢不敢跟我赌一把”），玩家可以拒绝。告白、哭、吵到最激烈时不出游戏。" +
+        (gm.authored ? "\n剧本写好的：" + gm.authored.map(g => g.id + "（" + (g.purpose || "") + "，" + (g.when || "") + "）").join("；") + "\ngame 填 {\"id\":\"…\"}，赌注按剧本写的。" :
+          "\n可选（按剧情用途，都不合适就不选）：" + Object.entries(gm.library).map(([k, ids]) => k + "：" + ids.map(i => { const g = arcGameOf98(i); return g ? i + " " + g.zh : ""; }).filter(Boolean).join("、")).join("；") +
+          "\ngame 填 {\"id\":\"…\",\"from\":\"提议的角色 id\",\"stakes\":\"这一局赌什么（≤20字）\",\"win\":\"赢了剧情怎么走\",\"lose\":\"输了怎么走（不能是死路，要另有戏）\",\"skip\":\"玩家不玩怎么走\"}。")
+      : "\n\nMini-game (when beat = 小游戏): one character proposes it in-scene; the player may decline. Never during a confession, tears or the peak of a fight. game = {\"id\",\"from\",\"stakes\",\"win\",\"lose\",\"skip\"}.";
+  }
+  if (typeof bgmOn === "function" && bgmOn()) p += zh ? "\n\n音乐：只有升级、事件、危机、泄密、反转或情绪明显转向时，才在 bgm 里填一个情绪（" + Object.keys(ARC98.MOOD).join("、") + "）；平时留空。" : "\n\nMusic: only on an escalation, event, crisis, reveal, twist or clear mood turn, set `bgm` to one mood (" + Object.keys(ARC98.MOOD).join(", ") + "); otherwise null.";
+  return p;
+}
+function arcJson98(th, mode) {
+  if (!arcOn98(th) || mode === "exit") return "";
+  return '"beat":"","new_info":true,"reveal":null,"event":null,' + (arcGames98(th, mode) ? '"game":null,' : "") + '"bgm":null,';
+}
+
+/* ---------- 导演回来以后：把关 + 落地 ---------- */
+function arcAfter98(th, d, mode, act) {
+  const out = { reveal: null, game: null }; if (!arcOn98(th) || !d || mode === "exit") return out;
+  const A = th.b98, beat = ARC98.BEATS.includes(String(d.beat || "").trim()) ? String(d.beat).trim() : "";
+  /* 冷场计数：没有新东西、玩家只回了几个字、或者只是点屏幕 */
+  const short = act && act.mode !== "think" && String(act.txt || "").replace(/\s/g, "").length < 5;
+  if (ARC98.PUSH.includes(beat) || d.event || d.reveal || d.game) A.stall98 = 0;
+  else if (d.new_info === false || d.new_info === "false" || short || mode === "more") A.stall98 = (A.stall98 || 0) + 1;
+  else A.stall98 = 0;
+  A.beat98 = beat;
+  /* 默认特效：戏点有搭配、导演又没写瞬间特效 */
+  if (beat && ARC98.FX[beat] && !(d.fx && d.fx.moment)) d.fx = Object.assign({}, d.fx || {}, { moment: ARC98.FX[beat] });
+  /* 秘密 */
+  if (d.reveal) { const x = arcSecrets98(th).find(z => z.id === String(d.reveal).trim() && z.ok); if (x) out.reveal = x; }
+  /* 事件 */
+  if (d.event && mode !== "enter") {
+    const e = arcEvents98(th).find(z => z.id === String(d.event).trim());
+    if (e) {
+      (A.events98 = A.events98 || {})[e.id] = 1; A.evAt = A.turns; (A.evCh = A.evCh || {})[A.ch] = ((A.evCh || {})[A.ch] || 0) + 1;
+      appendMsg(th, { who: "n", k: "act", txt: LZ98(e.text).slice(0, 200), ev98: e.id, at: Date.now() });
+      if (e.fx && !(d.fx && d.fx.moment)) d.fx = Object.assign({}, d.fx || {}, { moment: e.fx });
+      if (e.bgm) d.bgm = e.bgm;
+      mem98(th, here98(th, scene98(th).s), L98("发生了：", "Happened: ") + LZ98(e.text).slice(0, 60));
+    }
+  }
+  /* 小游戏：先记下，等角色把邀请说出口再出卡片 */
+  if (d.game && beat === "小游戏") { const gm = arcGames98(th, mode), g = typeof d.game === "string" ? { id: d.game } : d.game, G = g && arcGameOf98(g.id);
+    if (gm && G) { const au = gm.authored && gm.authored.find(x => String(x.id).replace(/^g_/, "") === G.id.slice(2));
+      if (gm.authored ? au : Object.values(gm.library).some(l => l.includes(G.id.slice(2)))) out.game = Object.assign({}, au || {}, g, { id: G.id, name: L98(G.zh, G.en) }); } }
+  /* 音乐 */
+  arcBgm98(th, d.bgm, beat || (d.event ? "事件" : ""));
+  return out;
+}
+function arcBgm98(th, mood, beat) {
+  if (!mood || typeof bgmPlay !== "function" || typeof bgmOn !== "function" || !bgmOn()) return;
+  const A = th.b98, key = ARC98.MOOD[String(mood).trim()] || String(mood).trim().replace(/^m_/, "");
+  if (typeof BGM100 !== "undefined" && !BGM100.some(x => x.id === "m_" + key)) return;
+  const cue = "m_" + key; if (A.bgm === cue || Date.now() - (A.bgmAt98 || 0) < ARC98.BGM_GAP) return;
+  if (!(ARC98.PUSH.includes(beat) || beat === "升级")) return;
+  A.bgm = cue; A.bgmAt98 = Date.now();
+  /* 泄密、危机、反转：音乐先断掉，安静一下再进新曲 */
+  if (["危机", "泄密", "反转"].includes(beat) && typeof bgmStop === "function") { try { bgmStop(true); } catch (e) { console.warn("[arc98]", e); } setTimeout(() => { try { if (bgmOn()) bgmPlay(cue, th.wid); } catch (e) { console.warn("[arc98]", e); } }, 1500); }
+  else { try { bgmPlay(cue, th.wid); } catch (e) { console.warn("[arc98]", e); } }
+}
+
+/* ---------- 角色：按台阶演、看得见其他人、秘密放行、留钩子、接住小游戏结果 ---------- */
+function arcActor98(th, cid, turn, zh) {
+  if (!arcOn98(th)) return "";
+  const w = wd(th.wid), b = bOf98(w), { c, s } = scene98(th), k = cardOf98(w, cid) || {}, A = th.b98, total = (b.chapters || []).length;
+  let p = "";
+  const beh = c.behavior && (c.behavior[k.key] || c.behavior[first(ch(cid).n)]);
+  if (total > 1) p += zh ? "\n\n你现在在第 " + A.ch + " / " + total + " 级「" + LZ98(c.title) + "」。" + (beh ? "这一级你会这样表现：" + LZ98(beh) : "这一级要发生的变化：" + String(c.goal || "").slice(0, 80)) + "\n按这一级的关系程度演，不要提前到后面才会有的亲密、坦白或决裂。"
+    : "\n\nYou're at stage " + A.ch + " / " + total + " “" + LZ98(c.title) + "”. " + (beh ? "At this stage you behave like this: " + LZ98(beh) : "") + " Don't jump ahead to later intimacy, confessions or breaks.";
+  const others = here98(th, s).filter(x => x !== cid).map(x => { const ok = cardOf98(w, x) || {}; const t = (k.others && (k.others[ok.key] || k.others[first(ch(x).n)])) || ((b.relations || []).find(r => (r.a === k.key && r.b === ok.key) || (r.b === k.key && r.a === ok.key)) || {}).text; return t ? first(ch(x).n) + "：" + LZ98(t) : ""; }).filter(Boolean);
+  if (others.length) p += (zh ? "\n你怎么看在场的其他人：" : "\nHow you see the others here: ") + others.join("；");
+  const mine = arcSecrets98(th).filter(x => x.cid === cid);
+  if (turn && turn.reveal) p += zh ? "\n这一轮你决定说出一个藏着的事：" + LZ98(turn.reveal.s.text) + (turn.reveal.s.reveal ? "。说出口的样子：" + LZ98(turn.reveal.s.reveal) : "") + "。用你自己的方式说，可以艰难、可以只说一半，但这件事要说出来。" : "\nThis turn you decide to tell: " + LZ98(turn.reveal.s.text);
+  else if (mine.length) p += zh ? "\n你还有不想说的事：" + mine.map(x => LZ98(x.s.text)).join("；") + "。现在不主动提；被直接问到，按你的底线回答。" : "\nThings you're not ready to tell: " + mine.map(x => LZ98(x.s.text)).join("; ") + ". Don't volunteer them.";
+  if (turn && turn.game) p += zh ? "\n这一轮你当场向玩家提出一个小游戏：" + turn.game.name + (turn.game.stakes ? "，赌注是：" + turn.game.stakes : "") + "。用你的口吻把邀请说出来（比如“敢不敢跟我赌一把”），玩家可以拒绝。" : "\nThis turn you propose a mini-game: " + turn.game.name + ".";
+  if (turn && turn.hook) p += zh ? "\n你是这一轮最后开口的人：结尾留一个钩子——一个问题，或者一个停在半空的动作。" : "\nYou speak last this turn: end on a hook — a question or a half-finished gesture.";
+  return p;
+}
+
+/* ---------- 秘密说出来了 ---------- */
+function arcRevealed98(th, x) {
+  const A = th.b98; (A.secrets98 = A.secrets98 || {})[x.id] = Date.now();
+  const all = (cardOf98(wd(th.wid), x.cid) || {}).secrets || [], n = all.filter((s, i) => A.secrets98[x.key + ":" + (s.id || "s" + (i + 1))]).length;
+  mem98(th, here98(th, scene98(th).s), first(ch(x.cid).n) + L98("说出了：", " revealed: ") + LZ98(x.s.text).slice(0, 60));
+  arcKeep98(th, first(ch(x.cid).n) + L98("说出了秘密：", " revealed: ") + LZ98(x.s.title || x.s.text));
+  appendMsg(th, { who: "sys", k: "card", title: "🔓 " + L98("你知道了" + first(ch(x.cid).n) + "的一个秘密（" + n + "/" + all.length + "）", "You learned one of " + first(ch(x.cid).n) + "'s secrets (" + n + "/" + all.length + ")"), txt: LZ98(x.s.title || ""), sec98: x.id, at: Date.now() });
+}
+
+/* ---------- 小游戏：邀请卡 → 游戏 → 结果回到剧情 ---------- */
+function arcGameCard98(th, g) {
+  const A = th.b98; A.gameAt = A.turns; (A.gamesCh98 = A.gamesCh98 || {})[A.ch] = 1;
+  appendMsg(th, { who: "sys", k: "card", title: "🎮 " + g.name, txt: g.stakes ? L98("赌注：", "Stakes: ") + g.stakes : "", game98: { id: g.id, ch: A.ch, sc: A.sc, from: g.from || "", stakes: g.stakes || "", win: g.win || "", lose: g.lose || "", skip: g.skip || "" }, at: Date.now() });
+}
+function arcGameValid98(th, m) {
+  return !!(th && th.b98 && !th.b98.ended && S.threads[curT] === th && !busy && m && th.msgs.includes(m) &&
+    m.game98 && !m.game98.done && m.game98.ch === th.b98.ch && m.game98.sc === th.b98.sc);
+}
+function arcGameHTML98(h, m) {
+  if (m.game98.done) return h.replace(/<\/div>\s*$/, '<div class="xs dim" style="margin-top:6px">' + esc({ win: L98("赢了", "Won"), lose: L98("输了", "Lost"), skip: L98("没玩", "Skipped") }[m.game98.done] || "") + "</div></div>");
+  return h.replace(/<\/div>\s*$/, '<div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-p btn-sm" data-game98="' + esc(String(m.at)) + '">' + L98("接受", "Play") + '</button><button class="btn btn-sm" data-game98no="' + esc(String(m.at)) + '">' + L98("不了", "Not now") + "</button></div></div>");
+}
+function arcGameDone98(th, m, r) {
+  if (!arcGameValid98(th, m)) return;
+  r = ["win", "lose", "skip"].includes(r) ? r : "skip";
+  m.game98.done = r; save();
+  const g = m.game98, G = arcGameOf98(g.id), name = G ? L98(G.zh, G.en) : "";
+  const txt = r === "win" ? L98("（" + name + "：赢了）", "(" + name + ": won)") : r === "lose" ? L98("（" + name + "：输了）", "(" + name + ": lost)") : L98("（没玩" + name + "）", "(passed on " + name + ")");
+  appendMsg(th, { who: "me", k: "act", txt, at: Date.now() }); arcKeep98(th, txt);
+  const effect = (r === "win" ? g.win : r === "lose" ? g.lose : g.skip) || (r === "skip" ? L98("玩家没接这一局，提议的人有自己的反应", "The player passed; the proposer reacts") : L98("角色对这个结果作出反应", "Characters react to the result"));
+  try { renderChat(); } catch (e) { console.warn("[arc98]", e); }
+  beat98(th, "choice", { txt, mode: "act", effect: L98("小游戏结果：", "Mini-game result: ") + effect, to: g.from && ch(g.from) ? g.from : undefined });
+}
+document.addEventListener("click", e => {
+  const x = e.target.closest("[data-game98],[data-game98no]"); if (!x) return;
+  e.stopPropagation(); const th = S.threads[curT]; if (!th || !th.b98 || busy) return;
+  const at = +(x.dataset.game98 || x.dataset.game98no), m = th.msgs.find(z => z.game98 && z.at === at); if (!arcGameValid98(th, m)) return;
+  if (x.dataset.game98no) { arcGameDone98(th, m, "skip"); return; }
+  if (typeof mgOpen !== "function") { arcGameDone98(th, m, "skip"); return; }
+  mgOpen(m.game98.id, r => arcGameDone98(th, m, r || "skip"));
+}, true);
+
+/* ---------- 进入新一级：升级特效 + 这一级的音乐 ---------- */
+function arcEnter98(th) {
+  const { c, s } = scene98(th), A = th.b98; if (!c || !s || A.sc !== 0) return;
+  A.stall98 = 0; A.fast98n = 0;
+  if (A.ch > 1 && A.keepCh98 !== A.ch) { A.keepCh98 = A.ch; arcKeep98(th, L98("进入第 " + A.ch + " 级「", "Reached stage " + A.ch + " “") + LZ98(c.title) + L98("」", "”")); }
+  if (A.ch > 1 && window.FXBUS && A.arcFx98 !== A.ch) { A.arcFx98 = A.ch; try { setTimeout(() => FXBUS.agent(th, { moment: "cinema" })(), 600); } catch (e) { console.warn("[arc98]", e); } }
+  if (!s.bgm && c.bgm) { A.bgmAt98 = 0; arcBgm98(th, c.bgm, "升级"); }
+}
+
+/* ================= 长聊天记忆压缩（2026-11-07）=================
+   原来导演只看最近 14 条 + 最近 8 句前情，角色记忆只留 36 条，聊上百轮前面的事就忘了。
+   现在每 20 轮用一次便宜的调用，把这段对话压成 3～5 句「到目前为止」，同时给每个在场主角压一句「你记得的要点」。
+   升级、秘密、小游戏结果这类关键事件单独记在 A.keep98，永远不压缩、不丢。压缩在回复发出去之后后台跑，不拖慢这一轮。 */
+ARC98.COMPRESS_EVERY = 20;
+const ARC_COMPRESSING98 = new WeakSet();
+function arcKeep98(th, fact) { const A = th.b98; if (!fact) return; (A.keep98 = A.keep98 || []).push(String(fact).slice(0, 80)); if (A.keep98.length > 40) A.keep98.splice(0, A.keep98.length - 40); }
+function arcRecap98(th, zh) {
+  const A = th.b98, keep = (A.keep98 || []).slice(-12), sum = A.sum.slice(A.recap98 ? -4 : -8);
+  return (A.recap98 ? "\n" + (zh ? "到目前为止（压缩后的前情）：" : "So far (condensed): ") + A.recap98 : "") +
+    (keep.length ? "\n" + (zh ? "一直要记得的事：" : "Always remember: ") + keep.join("；") : "") +
+    (sum.length ? "\n" + (zh ? "最近：\n" : "Recently:\n") + sum.join("\n") : "");
+}
+async function arcCompress98(th) {
+  const A = th && th.b98; if (!A || A.ended || ARC_COMPRESSING98.has(th)) return;
+  if (A.turns - (A.compAt98 || 0) < ARC98.COMPRESS_EVERY || typeof ask !== "function") return;
+  ARC_COMPRESSING98.add(th); const at = A.turns, zh = Z98(), w = wd(th.wid), b = bOf98(w), leads = th.cast.filter(c => { const k = cardOf98(w, c); return k && k.tier === "lead"; });
+  try {
+    const p = (zh ? "把下面这段互动剧的对话压缩成记忆。只写真的发生过的事，不编。" : "Condense this interactive-drama conversation into memory. Only what really happened.") +
+      "\n\n" + (zh ? "之前的记忆：" : "Earlier memory: ") + (A.recap98 || (zh ? "（无）" : "(none)")) +
+      "\n" + (zh ? "这一段：\n" : "This stretch:\n") + (tail98(th, 40) || "") +
+      "\n\n" + (zh ? "recap：3～5 句，合并之前的记忆和这一段：发生了什么、玩家表现出什么态度、关系变成什么样、还有什么悬着。≤220 字。\nchars：每个主角一句他自己记得的要点（≤40 字），key 用下面的 id：" : "recap: 3-5 sentences merging earlier memory and this stretch. chars: one line per lead of what they remember, keyed by id: ") +
+      leads.map(c => c + "=" + first(ch(c).n)).join("，") +
+      '\nReply with ONLY JSON: {"recap":"...","chars":{"id":"..."}} in ' + LANG98() + ".";
+    const r = await ask(p, { maxTokens: 500 });
+    if (r && r.recap && th.b98 === A && !A.ended) {
+      A.recap98 = String(r.recap).slice(0, 400); A.compAt98 = at;
+      Object.entries(r.chars || {}).forEach(([id, txt]) => { const cd = A.cards[id]; if (!cd || !txt) return;
+        const head = cd.mem.length && /初始知道|known from the start/.test(cd.mem[0]) ? [cd.mem[0]] : [];
+        const rest = cd.mem.slice(head.length).filter(m => !/^（之前的事）|^\(earlier\)/.test(m)).slice(-12);
+        cd.mem = head.concat([L98("（之前的事）", "(earlier) ") + String(txt).slice(0, 80)], rest); });
+      save();
+    }
+  } catch (e) { console.warn("[arc98]", e); } finally { ARC_COMPRESSING98.delete(th); }
+}
+
+/* ================= 导演按需调用（2026-11-07）=================
+   每轮都先调导演再调角色，一轮 15～17 秒。玩家用「对谁说」点了名、聊得正顺（没冷场）、没有该检查的事时，
+   直接让被点名的人回应，不调导演；每跳过 2 轮至少调 1 次，保证升级、秘密、事件、小游戏、音乐照常有人管。
+   不跳过的情况：进场 / 选项 / 收束、心声、要照片、想往下走、冷场、该压缩判断的时刻、导演上一轮刚说可以下一章。 */
+ARC98.FAST_MAX = 2;
+const ARC_NEXT98 = /下一章|下一段|接下来|换个地方|我们走|走吧|结束|next|move on|leave/i;
+function arcFast98(th, mode, act) {
+  const A = th.b98; if (!arcOn98(th) || S.fast98Off) return null;
+  if (mode !== "talk" || !act || !act.to || act.mode === "think" || !ch(act.to)) { A.fast98n = 0; return null; }
+  const t = String(act.txt || "");
+  if ((A.fast98n || 0) >= ARC98.FAST_MAX || (A.stall98 || 0) >= 2 || PHOTO_ASK98.test(t) || ARC_NEXT98.test(t) || t.replace(/\s/g, "").length < 5) { A.fast98n = 0; return null; }
+  const { s } = scene98(th); if (!allowedSpeakers98(th, s).includes(act.to)) { A.fast98n = 0; return null; }
+  if (arcEvents98(th).length && (A.stall98 || 0) >= 1) { A.fast98n = 0; return null; }
+  A.fast98n = (A.fast98n || 0) + 1;
+  return { fast98: 1, narration: "", speakers: [{ id: act.to, intent: "" }], fx: {}, new_info: true, summary: L98("对", "to ") + first(ch(act.to).n) + L98("说：", ": ") + t.slice(0, 40) };
+}
 
 </script>

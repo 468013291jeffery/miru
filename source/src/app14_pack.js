@@ -287,7 +287,7 @@ function pkLockComposer(th){
    Four events, no gameplay change: chapter_open / choice_pick / chapter_done / story_end.
    Everything hangs off th.pk, so a replay or a second device starts a new session id. */
 function pkSess(th){if(!th.pk._sess){th.pk._sess=Date.now().toString(36)+Math.random().toString(36).slice(2,7)}return th.pk._sess}
-function pkTrack(th,name,extra){try{track(name,Object.assign({wid:th.wid,sess:pkSess(th),t:Date.now()},extra||{}))}catch(_){}}
+function pkTrack(th,name,extra){try{const w0=typeof wd==="function"?wd(th.wid):null,base={wid:th.wid,sess:pkSess(th),t:Date.now()};if(w0&&w0.community)base.cw=w0.community;track(name,Object.assign(base,extra||{}))}catch(_){}} /* cw = 社区作品 id，服务器按作品统计章节（打榜、任务） */
 function pkOpenMark(th,n){try{
   // a genuinely new run = chapter 1 with no session yet, right after an ending, or after having
   // been past chapter 1 (replay). Re-entering the SAME chapter must not count as a second open.

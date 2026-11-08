@@ -14,6 +14,7 @@ const LZ98 = o => (o && typeof o === "object") ? ((Z98() ? o.zh : o.en) || o.zh 
 async function bible98(id) {
   if (id in B98.cache) return B98.cache[id];
   let b = null; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".bible.json?v=" + Math.floor(Date.now() / 3e5)); if (r.ok) b = await r.json(); } catch (_) {}
+  if (b && typeof arcNorm98 === "function") arcNorm98(b); /* 只写了升级台阶的剧本，编译成一级一章（app134） */
   B98.cache[id] = b; return b;
 }
 function cid98(wid, key) { return "b98_" + wid.replace(/[^a-z0-9]/gi, "").slice(-10) + "_" + key; }
@@ -159,7 +160,7 @@ function introductions98(th) {
     appendMsg(th, Object.assign({who:'sys', k:'card', title, txt, intro98:key, at:Date.now()}, extra));
     seen[key] = true;
   };
-  if (policy ? policy.storyIntroduction : LZ98(b.intro)) show('story', L98('故事背景', 'Story background'), LZ98(b.intro));
+  if (policy ? policy.storyIntroduction : LZ98(b.intro)) show('story', L98('故事背景', 'Story background'), typeof arcStoryText98 === 'function' ? arcStoryText98(b) : LZ98(b.intro));
   if ((policy ? policy.chapterIntroduction : true) && A.sc === 0) {
     const key = 'chapter:' + A.ch, fresh = !seen[key];
     const intro = Object.assign({}, openingCache98(th, A.ch), c.introduction || {});
@@ -225,7 +226,7 @@ const INTRO_ROW98 = /^(时间|地点|人物|眼前的事|Time|Place|Present|Now)
 function introHTML98(m, i) {
   const attr = ' data-mi="' + i + '"';
   if (m.intro98 === 'story') return '<div class="m-card entry98 entry98-story"' + attr + '><div class="e98-sh">' + esc(m.title || '') + '</div>' +
-    String(m.txt || '').split(/\n\s*\n/).map(x => x.trim()).filter(Boolean).map(x => '<p class="e98-p">' + esc(x) + '</p>').join('') + '</div>';
+    String(m.txt || '').split(/\n/).map(x => x.trim()).filter(Boolean).map(x => { const r = typeof ARC_ROW98 !== 'undefined' && x.match(ARC_ROW98); return '<p class="e98-p">' + (r ? '<b>' + esc(r[1]) + '：</b>' + esc(r[2]) : esc(x)) + '</p>'; }).join('') + '</div>';
   const [no, ...rest] = String(m.title || '').split(' · '), rows = [], body = [];
   String(m.txt || '').split('\n').forEach(line => { const r = line.match(INTRO_ROW98); if (r) { if (r[2].trim()) rows.push(r); } else if (line.trim()) body.push(line.trim()); });
   return '<div class="m-card entry98 entry98-ch"' + attr + '><div class="e98-ch"><span>' + esc(no) + '</span><b>' + esc(rest.join(' · ')) + '</b></div>' +
@@ -358,25 +359,25 @@ async function director98(th, mode, act) {
     "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
     "\n" + (zh ? "当前场景在场：" : "Present now: ") + (here98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
     (s.ref_lines && s.ref_lines.length && mode === "enter" ? "\n" + (zh ? "锚点台词（角色可以用，可改写，不必照念）：\n" : "Anchor lines (characters may use or adapt them):\n") + s.ref_lines.map(r => (ch(byKey98(th, r.who)) ? first(ch(byKey98(th, r.who)).n) : r.who) + "：" + r.line).join("\n") : "") +
-    (A.sum.length ? "\n" + (zh ? "前情：\n" : "So far:\n") + A.sum.slice(-8).join("\n") : "") +
+    (typeof arcRecap98 === "function" ? arcRecap98(th, zh) : (A.sum.length ? "\n" + (zh ? "前情：\n" : "So far:\n") + A.sum.slice(-8).join("\n") : "")) +
     "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + (tail98(th, 14) || (zh ? "（刚开始）" : "(just starting)")) +
     (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
     (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
-    experienceContext98(th) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
+    experienceContext98(th) + authoredDirector98(th,s) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
     "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "主角们的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
     (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
-    heat98(th, zh, "director") +
+    heat98(th, zh, "director") + (senseOK98(th, mode) ? senseAsk98(th, zh) : "") +
     (mode === "exit" ? withAsk98(th, s, zh) : presence98(th, s, zh)) +
     (mode === "talk" || mode === "more" ? photoAsk98(th, act, zh) : "") +
     (judging ? gateAsk98(th) : "") +
-    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) +
+    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + (typeof arcAsk98 === "function" ? arcAsk98(th, mode, act, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) +
     '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' +
     (mode === "exit" ? '"with_player":null,' : '"leave":[],"arrive":[],') + (mode === "talk" || mode === "more" ? '"photo":null,' : '') +
-    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + (senseOK98(th, mode) ? '"sense":"",' : '') + (typeof arcJson98 === "function" ? arcJson98(th, mode) : '') + (s.game && !Array.isArray(s.game) && s.game.outcomes ? '"game":false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900 });
 }
 /* ---------- a character agent ---------- */
@@ -393,9 +394,9 @@ async function actor98(th, cid, intent, turn) {
     (policy ? "\n你本人是" + (k.gender === "f" ? "女性" : "男性") + "。act只写你自己的动作，主语用角色姓名或省略，不用我、他、她；玩家的性别不是你的性别。" : "") +
     (k.voice ? "\n" + (zh ? "说话方式：" : "How you talk: ") + k.voice : "") + (k.personality ? "\n" + (zh ? "性格机制：" : "Personality: ") + String(k.personality).slice(0, 600) : "") +
     (k.want ? "\n" + (zh ? "你想要：" : "You want: ") + k.want : "") + (k.fear ? "\n" + (zh ? "你害怕：" : "You fear: ") + k.fear : "") +
-    (k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
+    ((!k.unlockableSecrets || (k.unlockableSecrets||[]).some(x=>th.b98.ch>=x.from&&(th.love[cid]||0)>=x.minLove)) && k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
     (k.toward_player ? "\n" + (zh ? "你对" + you + "的初始态度：" : "Your starting attitude toward " + you + ": ") + k.toward_player : "") + (k.hooks ? "\n" + (zh ? "你的吸引点 / 高光行为：" : "What makes you magnetic: ") + String(k.hooks).slice(0, 500) : "") +
-    persona98(k, you, zh) +
+    persona98(k, you, zh) + authoredActor98(th,cid,k) +
     /* 2026-11-06 玩家：回复像客服。原来好感低于 12 时写的是「保持礼貌关照」，等于让角色客气；现在初见也按人设主动，只有玩家拒绝时才收住 */
     "\n" + (zh ? "你现在对" + you + "的感觉：" : "How you feel about " + you + " now: ") + (policy && (th.love[cid] || 0) < 12 ? L98("刚认识，但你已经被吸引了；按你的人设去靠近，不用客气。玩家拒绝或想做朋友就收住", "you just met, but you're already drawn in; approach in your own way, no politeness act. If the player declines or wants friendship, pull back") : stage98(th.love[cid] || 0)) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
     (cd.mem.length ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + cd.mem.slice(-22).map(m => "- " + m).join("\n") : "") +
@@ -408,13 +409,34 @@ async function actor98(th, cid, intent, turn) {
     (policy && s && s.interaction ? "\n眼前可参与的事（没有用户选择就尚未发生）：" + LZ98(s.interaction.invitation) : "") +
     "\n\n" + (zh ? "此刻在：" : "You're at: ") + LZ98(s && s.place) + "\n" + (zh ? "眼前：\n" : "Right here:\n") + (tail98(th, 12) || "") +
     "\n\n" + (zh ? "导演的提示（你可以有自己的主意）：" : "Director's note (you may have your own idea): ") + (intent || "") +
-    stance98(th, cid, turn, you, zh) + feeling98(zh) + heat98(th, zh, "actor") + photoSay98(turn, zh) +
+    stance98(th, cid, turn, you, zh) + feeling98(zh) + heat98(th, zh, "actor") + photoSay98(turn, zh) + (typeof arcActor98 === "function" ? arcActor98(th, cid, turn, zh) : "") +
     (policy ? "\n本轮硬约束：你此刻就在" + LZ98(s.place) + "，身边只有" + (names98(here98(th, s).filter(c => c !== cid)) || "玩家") + "和玩家。不能把自己或用户写到吧台、门外等新地点，不能说在场人没跟过来，也不能和不在场的人说话。这里只回应或提出邀请，不完成跨场移动。动作只写你自己的眼前动作。" + experienceContext98(th) : "") +
     redo98(zh) +
     "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（" + (policy ? "用第三人称姓名或省略主语，不用‘我抬手／我靠近’；只写有意义、眼前可见的动作，没有就空" : "第一人称「我…」") + "，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
            : "Your turn. Only yourself: an optional action (" + (policy ? "third person or no subject, visible meaningful gesture only, otherwise empty" : "first person") + ", ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
     '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 320 });
+}
+/* ---------- 玩家的感官反应（2026-11-07 用户拍板放开）----------
+   旁白原来一律不写玩家；现在允许导演另给一句「不由自主的身体反应」：心跳、呼吸、脸发烫、没有往后退。
+   不能写玩家说的话、能选择的动作、决定和感情结论。剧本 experience.playerSenses=true 才打开（先在黑港试）。
+   频率由代码管：进场那一刻可以写；其余至少隔 3 轮才再问导演要一句。 */
+function senses98(th) { const b = bOf98(wd(th.wid)); return !!(b && ((b.experience || {}).playerSenses || b.playerSenses)); }
+function senseOK98(th, mode) { if (!senses98(th) || S.senses98Off) return false; const A = th.b98; return mode === "enter" || (mode !== "exit" && A.turns - (A.senseAt == null ? -99 : A.senseAt) >= 3); }
+function senseAsk98(th, zh) {
+  return zh ? "\n\nsense（可空）：写一句玩家此刻不由自主的身体反应或感知，第二人称，≤30 字，只在这一刻真的被触动时才写（靠近、对视、被说中、危险逼近、秘密揭开），普通的一轮就留空。" +
+      "\n- 可以写：心跳、呼吸、脸发烫、手指收紧、闻到或注意到什么、某个没发生的动作（“你没有往后退”）。" +
+      "\n- 不能写：玩家说的话、玩家主动做的动作（“你抱住他”）、玩家的决定（“你决定相信他”）、感情结论（“你爱上了他”）。" +
+      "\n- 方向要和玩家自己表现出的样子一致：玩家冷淡、抗拒或不喜欢这个人时，只写紧张、警惕、不自在这类反应，不写心动。"
+    : "\n\nsense (may be empty): one involuntary bodily reaction or perception of the player right now, second person, under 20 words, only when this moment truly lands (closeness, eye contact, being seen through, danger, a secret revealed); leave empty on an ordinary turn." +
+      "\n- Allowed: heartbeat, breath, flushed face, fingers tightening, noticing a scent or a look, a non-action (\"you don't step back\")." +
+      "\n- Never: the player's words, chosen actions (\"you hug him\"), decisions or emotional conclusions." +
+      "\n- Match how the player has shown themselves: if they're cold, resistant or dislike this person, only tension, wariness or unease — never attraction.";
+}
+function senseClean98(v) {
+  const x = String(v || "").trim(); if (!x || /[「」“”"]/.test(x)) return ""; /* 带引号就是台词，不要 */
+  if (/你(?:说|问|回答|喊|决定|选择|答应|拒绝|伸手|抱|吻|亲|走向|站起|转身离开)|你(?:爱上|喜欢上)了|\byou (?:say|said|ask|decide|choose|hug|kiss|reach|walk|fall in love)/i.test(x)) return "";
+  return x.slice(0, 60);
 }
 /* ---------- one beat ---------- */
 async function beat98(th, mode, act) {
@@ -425,7 +447,9 @@ async function beat98(th, mode, act) {
     /* 重新生成要的「这一轮之前」：玩家那句已经在列表里，从这里往后都是这一轮的回复（app73 的 rg73 会回到这里重跑） */
     const redo = typeof REDO73 !== "undefined" && REDO73, pre = (mode === "talk" || mode === "more") && !redo && typeof snap73 === "function" ? snap73(th) : null;
     updateSpeaking98(th,act);
-    let d = null; try { d = await director98(th, mode, act); } catch (_) {}
+    const declinedAuthoredGame98 = authoredDecline98(th,act);
+    let d = typeof arcFast98 === "function" ? arcFast98(th, mode, act) : null; /* 点名且聊得顺时不调导演（app134） */
+    if (!d) try { d = await director98(th, mode, act); } catch (e) { console.warn("[story98] director", e); }
     if (!d) { toast(L98("剧情智能体走神了，再试一次", "The story agent lost the thread — try again")); return; }
     if (d.narration) { const n0 = String(d.narration).trim(); }
     if (act && act.mode !== "think") mem98(th, pres, yn98(th) + (act.mode === "act" ? "：" : L98("说：", " said: ")) + String(act.txt).slice(0, 70));
@@ -433,17 +457,22 @@ async function beat98(th, mode, act) {
     if (!d.photo && mode === "talk" && act && act.mode !== "think" && PHOTO_ASK98.test(String(act.txt || ""))) d.photo = await photoOnly98(th, act);
     const mv = move98(th, s, d, mode);
     mv.came.forEach(x => appendMsg(th, { who: "n", k: "act", txt: x.how || L98(first(ch(x.id).n) + "走了过来。", first(ch(x.id).n) + " joins you."), at: Date.now() }));
+    const arc98 = typeof arcAfter98 === "function" ? arcAfter98(th, d, mode, act) : {}; /* 戏点、秘密、事件、小游戏、音乐（app134） */
     let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && allowedSpeakers98(th, s).includes(x.id)); if (policy) spk = spk.filter((x,i,all) => all.findIndex(y => y.id === x.id) === i); if (mode === "exit") spk = policy ? [] : spk.slice(0, 1);
     if (policy && act && /累|想安静|不想应酬/.test(String(act.txt||"")) && !/你们都|两个人都/.test(String(act.txt||""))) spk = spk.slice(0,1);
     let nar = policy ? "" : String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
     if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });
     if (act && act.to && allowedSpeakers98(th, s).includes(act.to) && !spk.some(x => x.id === act.to)) spk.unshift({ id: act.to, intent: "" });
     if (mode === "talk" || mode === "more") spk = pickSpeakers98(th, act, spk);
+    if (arc98.reveal && !spk.some(x => x.id === arc98.reveal.cid) && allowedSpeakers98(th, s).includes(arc98.reveal.cid)) spk.unshift({ id: arc98.reveal.cid, intent: "" });
+    if (arc98.game && !spk.some(x => x.id === arc98.game.from)) arc98.game.from = spk[0] ? spk[0].id : "";
     const ph = photoPlan98(th, d, mode, spk);
     let delivered98 = 0; const fx98a = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
     const fx98 = () => { fx98a(); highlight98(th, d.bg); d.bg = null; };
-    for (const sp of spk.slice(0, mode === "talk" || mode === "more" ? 2 : 3)) {
-      const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to, more: mode === "more", photo: ph && ph.from === sp.id ? ph : null };
+    const spk98 = spk.slice(0, mode === "talk" || mode === "more" ? 2 : 3);
+    for (const sp of spk98) {
+      const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to, more: mode === "more", photo: ph && ph.from === sp.id ? ph : null,
+        reveal: arc98.reveal && arc98.reveal.cid === sp.id ? arc98.reveal : null, game: arc98.game && arc98.game.from === sp.id ? arc98.game : null, hook: mode !== "exit" && sp === spk98[spk98.length - 1] };
       let r = null; try { r = await actor98(th, sp.id, sp.intent, turn98); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", ""), turn98); if (r2 && r2.say) r = r2; } } catch (_) {}
       if (!r && turn98.photo) r = { say: ph.cap };
       if (!r) continue;
@@ -455,18 +484,22 @@ async function beat98(th, mode, act) {
       else if (act98) appendMsg(th, { who: sp.id, k: "act", txt: act98, at: Date.now() });
       else if (say98) appendMsg(th, { who: sp.id, k: "say", txt: say98, at: Date.now(), ai: 1 });
       if (turn98.photo) photoSend98(th, ph);
+      if (turn98.reveal) { arcRevealed98(th, turn98.reveal); arc98.reveal = null; }
       fx98();
-      const f = Math.max(-5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
+      const f = Math.max(declinedAuthoredGame98 ? 0 : -5, Math.min(5, +r.feel || 0)); if (loveAllowed(th, sp.id)) loveWrite(th, sp.id, f * 1.6, "story98:model");
       if (r.remember) mem98(th, [sp.id], r.remember);
       if (r.say) mem98(th, here98(th, s).filter(c => c !== sp.id), first(ch(sp.id).n) + L98("说：", " said: ") + String(r.say).slice(0, 60));
     }
+    if (arc98.game && delivered98) arcGameCard98(th, arc98.game);
     if (policy && mode === "choice" && !delivered98) { toast(L98("角色回复未完成，选择尚未提交，可以重试", "The character response failed; the choice was not submitted. Try again.")); return false; }
+    if (senseOK98(th, mode)) { const sn = senseClean98(d.sense); if (sn) { appendMsg(th, { who: "n", k: "act", txt: sn, sense98: 1, at: Date.now() }); A.senseAt = A.turns; } }
     left98(th, s, mv.leave);
     fx98(); A.turns++; th.rounds++; A.more98n = mode === "more" ? (A.more98n || 0) + 1 : 0;
     if (mode === "talk" || mode === "choice") gate98(th, d);
     if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
     if (d.state) A.flags.push(String(d.state).slice(0, 60));
+    if (s.game && d.game === true) (A.gameReady98 || (A.gameReady98 = {}))[s.id] = true;
     if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
     useUnits(aiCost() * (mode === "talk" || mode === "more" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
@@ -474,7 +507,9 @@ async function beat98(th, mode, act) {
     if (d.ending && mode === "exit") { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
       appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L98("结局", "Ending") + " · " + (e ? LZ98(e.name) : A.end), txt: String(d.endingText || (e && e.text) || "").slice(0, 500), at: Date.now() }); }
     turn98(th, start, pre, mode, act);
-    th.at = Date.now(); save(); return true;
+    th.at = Date.now(); save();
+    if (typeof arcCompress98 === "function") setTimeout(() => arcCompress98(th), 0); /* 每 20 轮压缩一次记忆，后台跑 */
+    return true;
   } finally { busy = false; typing(false); try { renderChat(); } catch (_) {} }
 }
 /* ---------- scene flow: enter → talk → (choice) → next ---------- */
@@ -488,6 +523,7 @@ async function enter98(th) {
   const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; A.bgHl = null; try { sceneBg(th, key); } catch (_) {} }
   preload98(th, s, As);
  if (window.FXBUS) FXBUS.authored(th, s.fx || (A.sc === 0 && c.fx));
+  if (typeof arcEnter98 === "function") arcEnter98(th); /* 新一级：升级特效 + 这一级的音乐 */
   if (s.bgm) { A.bgm = "m_" + String(s.bgm).replace(/^m_/, ""); try { if (typeof bgmPlay === "function" && bgmOn()) bgmPlay(A.bgm, th.wid); } catch (_) {} }
   const cg = As["cg_" + s.id]; if (cg) { try { off94Show({ src: cg, cap: s.cg_cap || "" }, false); } catch (_) {} }
   if (s.social && typeof gen96 === "function") gen96(th, s.social).then(m => m && chg96(m)).catch(() => {});
@@ -891,7 +927,7 @@ document.addEventListener("click", e => { let x; const th = S.threads[curT];
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
 }, true);
 /* a call card gets an answer button */
-MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.ph98) return photoHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
+MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && m.intro98) return introHTML98(m, i); if (m && m.game98 && typeof arcGameHTML98 === "function") return arcGameHTML98(h, m); if (m && m.ph98) return photoHTML98(m, i); if (m && m.call98) return h.replace(/<\/div>\s*$/, '<button class="btn btn-p btn-sm" style="margin-top:8px" data-call98="' + esc(m.call98) + '">📞 ' + L98("接听", "Answer") + '</button></div>'); });
 /* free mode needs its world's assets loaded on reopen */
 { const _ot = openThread; openThread = function (id) { const th = S.threads[id]; if (th && th.b98) { const w = wd(th.wid); if (w) { Promise.all([ensure98(w), off94Assets(w.community)]).then(() => { if (curT === id) { introductions98(th); renderChat(); } }); } } return _ot.apply(this, arguments); }; }
 /* love type + feed work here too */
@@ -954,3 +990,95 @@ function cq98(t){return String(t||'').replace(/[（(][^）)]*(?:N\d+|窗口|自�
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", go); else go();
   try { const st = document.createElement("style"); st.textContent = "#s-chat.m98on #dk98{display:none!important}#sugg .m98{flex:none;max-width:72vw}"; document.head.appendChild(st); } catch (e) { console.warn("[merge98] style", e); }
 })();
+
+
+/* Authored manuscript capabilities; enabled only when the manuscript declares them. */
+function authoredActor98(th,cid,k) {
+  const {s}=scene98(th),love=Number(th.love[cid])||0;
+  const eligible=(k.unlockableSecrets||[]).filter(x=>th.b98.ch>=x.from&&love>=x.minLove);
+  return (s.growth&&s.growth[k.key]?'\n本章你的成长方向（只通过实际行动表现）：'+s.growth[k.key]:'')+
+    (k.other_views?'\n你对其他人的看法（仅供本人，不是对方知道的事实）：'+k.other_views:'')+
+    (k.arc?'\n你本人的长期成长方向，不能直接宣布已经完成：'+k.arc:'')+
+    (k.unlockableSecrets?'\n未到条件的私人秘密不可透露，也不可根据导演提示补全。当前可自然谈及的私人秘密：'+(eligible.map(x=>x.name+'：'+x.text+'；表现：'+x.expression).join('\n')||'无'):'');
+}
+function authoredDirector98(th,s) {
+  const records=th.b98.gameResults||{},g=s.game,done=g&&records[g.id];
+  return (s.events&&s.events.length?'\n本章预留事件（只在括号条件确实满足时推进，不重复触发）：'+s.events.join('\n'):'')+
+    (g?'\n本章小游戏：'+g.name+'；出现条件：'+g.when+'。只有该条件已经实际发生才返回 game:true，其他情况 game:false。只提供可选入口，不能替玩家开玩、判断输赢、宣称已完成或先兑现奖励。'+
+      (done?'\n真实游戏回执：'+JSON.stringify(done)+'。只使用这条回执。':'\n游戏尚未完成，没有共同游戏记忆，也没有奖励。'):'');
+}
+function authoredGameCommit98(th,s,g,result,ids) {
+  if(!['WIN','LOSE','SKIP'].includes(result)||!g||!th.b98||scene98(th).s.id!==s.id)return false;
+  const records=th.b98.gameResults||(th.b98.gameResults={});if(records[g.id])return false;
+  const participants=[...new Set(ids||[])].filter(id=>here98(th,s).includes(id));
+  const receipt={result,chapter:th.b98.ch,scene:s.id,participants,at:Date.now()};
+  records[g.id]=receipt;
+  // The callback is the only source of game facts. Refusal and losses never subtract affection.
+  if(result!=='SKIP'){
+    const fact=g.name+'：'+(result==='WIN'?'成功':'未成功')+'。后续回应提示（尚未实际发生）：'+g.outcomes[result];
+    mem98(th,participants,fact);
+    for(const id of participants)if(result==='WIN'&&loveAllowed(th,id))loveWrite(th,id,2,'story98:game:'+g.id);
+    th.b98.flags.push(g.id+':'+result);
+  }
+  th.b98.sum.push('小游戏 '+g.name+'：'+result+'；后续回应依据：'+g.outcomes[result]);
+  appendMsg(th,{who:'sys',k:'card',title:g.name+' · '+({WIN:'成功',LOSE:'未成功',SKIP:'已跳过'})[result],
+    txt:result==='SKIP'?g.outcomes.SKIP:'结果已记录。接下来：'+g.outcomes[result],at:Date.now()});
+  save();authoredGameDock98(th);return true;
+}
+function authoredGameDock98(th){
+  const old=document.getElementById('authored-game98');if(old)old.remove();
+  const {b,s}=scene98(th),g=s&&s.game;
+  if(!b.games_on||!g||th.b98.ended||busy||!th.b98.gameReady98||!th.b98.gameReady98[s.id]||(th.b98.gameResults||{})[g.id])return;
+  const comp=document.querySelector('#s-chat .composer');if(!comp)return;
+  comp.insertAdjacentHTML('beforebegin','<div id="authored-game98" class="dk98r"><button data-authored-game98="play">🎲 '+esc(g.name)+'</button><button data-authored-game98="skip">先不玩</button></div>');
+}
+function authoredGameOpen98(th){
+  const {s}=scene98(th),g=s&&s.game;if(!g||busy||(th.b98.gameResults||{})[g.id]||!(th.b98.gameReady98||{})[s.id])return;
+  const candidates=here98(th,s).filter(id=>{const k=cardOf98(wd(th.wid),id)||{};return g.kind==='bet'?k.key==='c07':g.kind==='melody'?k.key==='c03':g.kind==='clue'?k.key==='c04':g.kind==='timeline'?['c02','c04','c07'].includes(k.key):g.kind==='rapport'?k.romanceable:k.key!=='c06';});
+  sheet('<h2>'+esc(g.name)+'</h2><p>'+esc(g.when)+'</p><p>'+esc(g.stake)+'。输了或不玩都能继续。</p><p>想和谁一起？</p>'+candidates.map(id=>'<button class="btn btn-block" data-authored-player98="'+esc(id)+'">'+esc(first(ch(id).n))+'</button>').join('')+'<button class="btn btn-g btn-block" data-authored-game98="skip">这次不玩</button>');
+}
+function authoredGameStart98(th,id){
+  const {s}=scene98(th),g=s&&s.game;if(!g||!here98(th,s).includes(id)||(th.b98.gameResults||{})[g.id]||busy)return;
+  closeSheet();
+  const gid='g_authored_'+g.kind;
+  let def=MG100.find(x=>x.id===gid);
+  if(!def){
+    const templates={truth:['dice','3','三局两胜'],bet:['dice','3','三局两胜'],melody:['simon','5','记住刚才的音节顺序'],clue:['find','⭐','✨🌙🪐☄💫🔭'],timeline:['order','核对账本/对照原记录/标记缺页/公开校验','-'],rapport:['authored_rapport','-','-']};
+    const a=templates[g.kind];if(!a)return;
+    def={id:gid,zh:g.name,en:g.name,tpl:a[0],a:a[1],b:a[2],kw:[]};MG100.push(def);
+  }
+  // A personal preference only becomes known after the player actually shares it.
+  if(g.kind==='rapport')MG_T.authored_rapport=function(area,G,sub,done,T){
+    sub.textContent='先说一个你愿意分享的小偏好，再选出对方记对的那一项。';
+    area.innerHTML='<label>我喜欢……<input id="authored-pref98" maxlength="45" autocomplete="off"></label><button class="btn" id="authored-prefgo98">告诉对方</button>';
+    area.querySelector('#authored-prefgo98').onclick=()=>{
+      const value=area.querySelector('input').value.trim();if(!value)return;
+      appendMsg(th,{who:'me',k:'say',txt:'我喜欢'+value,at:Date.now()});
+      mem98(th,[id],yn98(th)+'亲口说喜欢'+value);save();
+      const options=shuf([{t:value,ok:true},{t:'我还没说过这个偏好',ok:false}]);
+      sub.textContent='哪一句准确记住了你刚说的话？';
+      area.innerHTML=options.map((x,i)=>'<button class="btn btn-block" data-p="'+i+'">'+esc(x.t)+'</button>').join('');
+      area.onclick=e=>{const b=e.target.closest('[data-p]');if(b)done(options[Number(b.dataset.p)].ok?'win':'lose');};
+    };
+  };
+  mgOpen(gid,r=>{const result={win:'WIN',lose:'LOSE',skip:'SKIP'}[r];if(authoredGameCommit98(th,s,g,result,[id])){try{renderChat();}catch(_){}if(result!=='SKIP'&&curT===th.id&&!busy)beat98(th,'talk',{mode:'act',txt:'刚才'+g.name+'的真实结果为'+result+'。请回应这个结果，别把尚未兑现的奖励说成已经完成。'});}});
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-authored-game98]'),p=e.target.closest('[data-authored-player98]');if(!b&&!p)return;
+  const th=S.threads[curT];if(!th||!th.b98)return;e.preventDefault();e.stopPropagation();
+  const {s}=scene98(th);if(p)return authoredGameStart98(th,p.dataset.authoredPlayer98);
+  if(b.dataset.authoredGame98==='play')return authoredGameOpen98(th);
+  if(s.game&&!busy){closeSheet();authoredGameCommit98(th,s,s.game,'SKIP',[]);renderChat();}
+});
+{const enter=enter98;enter98=async function(th){
+  const {s}=scene98(th),as=OFF94.assets[wd(th.wid).community]||{};
+  if(s&&s.bgm&&as['bgm_'+s.id]){window.BGM_FILES=window.BGM_FILES||{};window.BGM_FILES['m_'+s.bgm]=as['bgm_'+s.id];}
+  return enter.apply(this,arguments);
+};}
+{const dock=dock98;dock98=function(){const r=dock.apply(this,arguments),th=S.threads[curT];if(th&&th.b98)authoredGameDock98(th);return r;};}
+
+function authoredDecline98(th,act){
+  const {s}=scene98(th);
+  if(!s.game||!act||act.mode==='think'||!/(?:不想|不愿|不|别|不要)(?:再)?(?:玩|赌)|跳过(?:这个)?(?:游戏)?/.test(String(act.txt||'')))return false;
+  authoredGameCommit98(th,s,s.game,'SKIP',[]);return true;
+}

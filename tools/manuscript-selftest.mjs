@@ -85,4 +85,20 @@ test('【照片】识别成可解锁照片，并进生成清单', () => {
   assert(r.images.some(i => i.slot === 'ph_c01s01_1' && i.kind === '照片'));
   assert(parseManuscript(sample.replace('谁发：沈砚', '谁发：王五')).err.some(e => /照片.*王五/.test(e)));
 });
+test('故事卡升级：核心问题、处境、秘密、关系、台阶表现、音乐、小游戏、事件都识别到', () => {
+  const t = sample
+    .replace('【玩家身份】性别：女 身份：来取画的成年客人', '【玩家身份】性别：女 身份：来取画的成年客人 处境：画被人调了包，你是最后签字的人 藏着的事：你其实认得那幅画的原作者\n【核心问题】那幅画到底是谁调的包？')
+    .replace('【全名】陆行舟', '【可解锁秘密】\n秘密名：他早就修过这幅画；内容：三年前他偷偷修过这幅画，却从没告诉画廊；从第几章起：2；好感到：开始在意；说出口的样子：先放下工具，再说\n【怎么看其他人】\n陆行舟：认识很多年的对手，嘴上不服，心里信他\n【会怎么变】从冷淡到肯为她破例\n【全名】陆行舟')
+    .replace('【本章目标】两人各自交代清楚是谁；玩家对至少一人表了态。', '【本章目标】两人各自交代清楚是谁；玩家对至少一人表了态。\n【这一级的表现】\n沈砚：克制，只回答被问到的\n【本章音乐】悬疑\n【小游戏】用途：推进悬疑 玩法：找线索 出现时机：玩家想看画框时 赌注：找出画框里的旧标签 赢了：找到标签 输了：标签掉进缝里，两人抢着去捡 不玩：沈砚说明天再查\n【事件】\n门外有人按了两下门铃（触发：冷场时）');
+  const x = parseManuscript(t); assert.deepEqual(x.err, []); const B = x.bible, a = B.cast[0], ch1 = B.chapters[0];
+  assert.equal(B.question.zh, '那幅画到底是谁调的包？'); assert.equal(B.pitch.zh, B.hook.zh);
+  assert.equal(B.player.pressure.zh, '画被人调了包，你是最后签字的人'); assert.equal(B.player.secret.zh, '你其实认得那幅画的原作者');
+  assert.equal(a.secrets.length, 1); assert.deepEqual(a.secrets[0].unlock, { stage: 2, love: 30 }); assert.equal(a.secrets[0].title, '他早就修过这幅画'); assert.equal(a.secrets[0].reveal, '先放下工具，再说');
+  assert.equal(a.others.c02, '认识很多年的对手，嘴上不服，心里信他'); assert.equal(a.arc, '从冷淡到肯为她破例');
+  assert.equal(ch1.behavior.c01, '克制，只回答被问到的'); assert.equal(ch1.bgm, '悬疑');
+  assert.equal(ch1.game[0].id, 'find_clue'); assert.equal(ch1.game[0].lose, '标签掉进缝里，两人抢着去捡');
+  assert.deepEqual(ch1.events, [{ id: 'c1e1', text: '门外有人按了两下门铃', when: '冷场时' }]);
+  const bad = parseManuscript(t.replace(' 不玩：沈砚说明天再查', '')); assert(bad.err.some(e => /小游戏.*不玩/.test(e)));
+  assert(parseManuscript(t.replace('玩法：找线索', '玩法：踢足球')).err.some(e => /不在小游戏库/.test(e)));
+});
 console.log('manuscript selftest: ' + checks + ' 项通过');

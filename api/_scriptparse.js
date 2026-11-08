@@ -21,13 +21,24 @@ const FX_NAMES = {
 };
 const AMBIENT_IDS = new Set(['rain', 'storm', 'wind', 'snowfall', 'blizzard', 'ice', 'candle', 'embers', 'inferno', 'blackout', 'drip', 'bokeh', 'neon', 'godrays', 'dust', 'fireflies', 'aurora', 'galaxy', 'petals', 'hearts', 'none']);
 
-const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing' };
-const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked' };
-const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal' };
-const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo' };
+const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing', 核心问题: 'question' };
+const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked' , 可解锁秘密: 'secrets', 怎么看其他人: 'others', 会怎么变: 'arc' };
+const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal', 这一级的表现: 'behavior', 本章音乐: 'bgm', 小游戏: 'game', 事件: 'events' };
+const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo', 这一级的表现: 'growth', 本章音乐: 'music', 小游戏: 'game', 事件: 'events' };
 const ENDING = { 结局名: 'name', 触发条件: 'condition', 收束文字: 'text' };
 const ART = { 封面: 'cover', 人物图: 'portrait', 开场视频: 'video' };
 const NOT_FILLED = /^(?:不写|无|没有|选填)(?:[，,。].*)?$/;
+/* 2026-11-07 故事卡升级：台阶、秘密、事件、小游戏、音乐（见《MIRU 故事卡全面升级方案》）。章节剧本照收，一章 = 一级台阶 */
+const MOODS = ['暧昧', '慢热', '吃醋', '危险', '紧张', '冷战', '秘密', '悬疑', '背叛', '告白', '心碎', '道歉', '接吻', '枪火', '黑帮', '往事', '日常', '温柔', '天亮', '终章', '静默'];
+const LOVE_STAGE = { 有点好奇: 12, 开始在意: 30, 心动: 55, 深深在意: 80 };
+const GAME_PURPOSE = ['推进悬疑', '考验亲密', '暧昧时刻', '危机', '较劲'];
+let GAME_IDS = null;
+function gameIds() { /* 小游戏库在前端 app60_games100.js 里；按名字或 id 都能认 */
+  if (GAME_IDS) return GAME_IDS; GAME_IDS = {};
+  try { const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'source', 'src', 'app60_games100.js'), 'utf8'); (src.match(/^[a-z_0-9]+\|[^|\n]+\|/gm) || []).forEach(l => { const [id, zh] = l.split('|'); GAME_IDS[id] = id; GAME_IDS[zh] = id; }); } catch (_) {}
+  return GAME_IDS;
+}
+function kv(line) { const o = {}; String(line || '').split(/[；;]\s*/).forEach(part => { const m = part.match(/^\s*([^：:]{1,8})[：:]\s*([\s\S]*)$/); if (m) o[m[1].trim()] = m[2].trim(); }); return o; }
 
 const bi = s => ({ zh: s, en: s });
 const CN = '零一二三四五六七八九十';
@@ -96,6 +107,12 @@ function parseManuscript(text, opts) {
         art.video = { hook: (f.一句话钩子 || '').trim(), question: (f.悬念问题 || '').trim(), script: (f.镜头脚本 || value).trim() };
       }
       else {
+        const portraitRows = lines(value);
+        if (portraitRows.length > 1 && portraitRows.every(l => /^[^：:]{1,20}[：:]/.test(l))) {
+          portraitRows.forEach(l => { const m = l.match(/^([^：:]+)[：:]\s*([\s\S]*)$/); art.portraits.push({ who: m[1].trim(), desc: m[2].replace(/^画面描述[：:]\s*/, '').trim() }); });
+          person = chapter = scene = ending = null;
+          return;
+        }
         const f = subFields(value, ['角色名', '画面描述']), m = value.match(/^([^：:\n]+)[：:]\s*([\s\S]*)$/);
         if (f.角色名) art.portraits.push({ who: f.角色名.trim(), desc: (f.画面描述 || '').trim() });
         else if (m) art.portraits.push({ who: m[1].trim(), desc: m[2].trim() });
@@ -107,7 +124,7 @@ function parseManuscript(text, opts) {
     if (person && label in PERSON) { person[PERSON[label]] = value; return; }
     if (ending && label in ENDING) { ending[ENDING[label]] = value; return; }
     if (chapter) {
-      if (label in CHAPTER) { chapter[CHAPTER[label]] = value; return; }
+      if (label in CHAPTER) { chapter[CHAPTER[label]] = value; if (!(label in SCENE)) return; }
       if (label === '地点' && scene && scene.place) newScene();
       if (label in SCENE || opt) {
         if (!scene) newScene();
@@ -137,7 +154,7 @@ function parseManuscript(text, opts) {
   need(work.rules, '作品设定：缺【相处规则】');
   const orient = { 男女: 'bg', 男男: 'bl', 女女: 'gl' }[String(work.orient || '').trim()];
   if (!orient) err.push('作品设定：【取向】只能填 男女、男男 或 女女');
-  const player = subFields(work.player || '', ['性别', '身份']);
+  const player = subFields(work.player || '', ['性别', '身份', '处境', '藏着的事']);
   const playerGender = { 女: 'f', 女性: 'f', 男: 'm', 男性: 'm' }[String(player.性别 || '').trim()];
   if (!playerGender) err.push('作品设定：【玩家身份】要写“性别：女（或男）”');
   if (!String(player.身份 || '').trim()) err.push('作品设定：【玩家身份】要写“身份：……”');
@@ -170,8 +187,33 @@ function parseManuscript(text, opts) {
       if (seen[n] && seen[n] !== key) err.push(tag + '：名字“' + n + '”和别的人物重复');
       seen[n] = key; keyOf[n] = key;
     });
-    return { key, name: bi(p.name || ''), short: bi(p.short || ''), gender: gender || 'm', age: age || 0, tier: tierText === '主角' ? 'lead' : 'secondary', romanceable: romText !== '不能', role: bi(p.role || ''), bio: p.bio || '', voice: p.voice || '', personality: p.personality || '', want: p.want || '', fear: p.fear || '', secret: NOT_FILLED.test(p.secret || '') ? '' : (p.secret || ''), boundaries: p.boundaries || '', toward_player: p.toward_player || '', hooks: p.hooks || '', knows: p.knows || '', sample_lines: sample,
-      ...Object.fromEntries(['archetype', 'expression', 'flirt', 'jealousy', 'when_asked'].filter(k => String(p[k] || '').trim()).map(k => [k, p[k].trim()])) };
+    p.unlockable_secrets = p.secrets; p.other_views = p.others;
+    const unlockable = lines(p.unlockable_secrets).filter(l => !NOT_FILLED.test(l)).map((l, si) => {
+      const f = subFields(l, ['秘密名', '内容', '从第几章起', '好感到', '说出口的样子']);
+      const minChapter = chineseNumber(f.从第几章起), minLove = { '有点好奇': 12, '开始在意': 30, '心动': 55, '深深在意': 80 }[f.好感到];
+      if (!f.秘密名 || !f.内容 || !Number.isFinite(minChapter) || minLove == null) err.push(tag + '：可解锁秘密缺少有效名字、内容、章节或好感阶段');
+      return { id: key + '_secret_' + (si + 1), name: f.秘密名 || '', text: f.内容 || '', from: minChapter || 1, minLove: minLove == null ? 100 : minLove, expression: f.说出口的样子 || '', source: l };
+    });
+    return { key, ...(unlockable.length ? { unlockableSecrets: unlockable } : {}), name: bi(p.name || ''), short: bi(p.short || ''), gender: gender || 'm', age: age || 0, tier: tierText === '主角' ? 'lead' : 'secondary', romanceable: romText !== '不能', role: bi(p.role || ''), bio: p.bio || '', voice: p.voice || '', personality: p.personality || '', want: p.want || '', fear: p.fear || '', secret: NOT_FILLED.test(p.secret || '') ? '' : (p.secret || ''), boundaries: p.boundaries || '', toward_player: p.toward_player || '', hooks: p.hooks || '', knows: p.knows || '', sample_lines: sample,
+      ...Object.fromEntries(['archetype', 'expression', 'flirt', 'jealousy', 'when_asked', 'other_views', 'arc'].filter(k => String(p[k] || '').trim()).map(k => [k, p[k].trim()])) };
+  });
+  /* 【可解锁秘密】【怎么看其他人】【会怎么变】：要等所有人物的名字都登记好才能对上 */
+  people.forEach((p, i) => {
+    const c = cast[i], tag = '人物“' + (p.name || '第 ' + (i + 1) + ' 个') + '”';
+    if (p.arc && !NOT_FILLED.test(p.arc)) c.arc = p.arc.trim();
+    if (p.others && !NOT_FILLED.test(p.others)) { const o = {}; lines(p.others).forEach(l => { const m = l.match(/^([^：:]{1,12})[：:]\s*(.+)$/); if (!m) { err.push(tag + '【怎么看其他人】：要写成“名字：态度”，这一行不对：' + l.slice(0, 20)); return; } const k = keyOf[m[1].trim()]; if (k) o[k] = m[2].trim(); else err.push(tag + '【怎么看其他人】：“' + m[1] + '”没有对应的人物小传'); }); if (Object.keys(o).length) c.others = o; }
+    if (p.secrets && !NOT_FILLED.test(p.secrets)) {
+      const out = [];
+      lines(p.secrets).forEach((l, si) => {
+        const f = kv(l), text = f.内容 || '', title = f.秘密名 || f.标题 || '';
+        if (!text) { err.push(tag + '【可解锁秘密】第 ' + (si + 1) + ' 条：要写“秘密名：…；内容：…；从第几章起：…；好感到：…；说出口的样子：…”'); return; }
+        const stage = chineseNumber(String(f.从第几章起 || '').replace(/^第|章.*$/g, '')) || +String(f.从第几章起 || '').replace(/\D/g, '') || 1;
+        const lv = f.好感到 ? (LOVE_STAGE[f.好感到] != null ? LOVE_STAGE[f.好感到] : +String(f.好感到).replace(/\D/g, '') || 0) : 0;
+        if (f.好感到 && !(f.好感到 in LOVE_STAGE) && !/\d/.test(f.好感到)) warn.push(tag + '【可解锁秘密】“' + (title || text.slice(0, 8)) + '”：好感到只能写 有点好奇、开始在意、心动、深深在意，或一个数字');
+        out.push(Object.assign({ id: 's' + (out.length + 1), title: title || text.slice(0, 12), text, unlock: { stage, love: lv } }, f.说出口的样子 ? { reveal: f.说出口的样子 } : {}));
+      });
+      if (out.length) c.secrets = out;
+    }
   });
   if (!cast.length) err.push('人物小传：至少要写一个人物');
   if (!chapters.length) err.push('分章大纲：至少要写一章');
@@ -239,6 +281,20 @@ function parseManuscript(text, opts) {
       });
       const sc = { id, place: bi(s.place || ''), present, beat: s.beat || '', ref_lines: [], actor_payload: payload, interaction: { invitation: s.invitation || '', suggestions: s.suggestions || [] } };
       if (options.length) sc.choice = { q: '', options };
+      if (s.growth) sc.growth = taskMap(Object.fromEntries(lines(s.growth).map(l => { const m = l.match(/^([^：:]+)[：:]\s*(.*)$/); return m ? [m[1].trim(),m[2]] : ['',l]; })), st + '【这一级的表现】');
+      if (s.events) sc.events = lines(s.events);
+      if (s.music && !NOT_FILLED.test(s.music)) {
+        sc.musicLabel = s.music;
+        sc.bgm = ({ 紧张:'standoff', 吃醋:'jealousy', 悬疑:'clue', 燃:'dragon_flight', 暧昧:'masquerade', 悲伤:'memory_lane', 背叛:'betrayal', 温暖:'reunion' })[s.music] || 'clue';
+      }
+      if (s.game && !NOT_FILLED.test(s.game)) {
+        const f = subFields(s.game, ['用途','玩法','出现时机','赌注','赢了','输了','不玩']);
+        const kind = ({ 真心话骰:'truth', 赌一把:'bet', 记旋律:'melody', 找线索:'clue', 默契考验:'rapport', 还原经过:'timeline' })[f.玩法];
+        if (kind) {
+          if (!f.出现时机 || !f.赢了 || !f.输了 || !f.不玩) err.push(st + '【小游戏】：缺有效玩法、出现时机或三种结果');
+          sc.game = { id:'game_' + id, kind, name:f.玩法 || '', purpose:f.用途 || '', when:f.出现时机 || '', stake:f.赌注 || '', outcomes:{ WIN:f.赢了 || '', LOSE:f.输了 || '', SKIP:f.不玩 || '' }, source:s.game };
+        }
+      }
       const fx = {};
       if (s.ambient && !NOT_FILLED.test(s.ambient)) { const id = fxId(s.ambient, st + '【环境氛围】'); if (id) { if (AMBIENT_IDS.has(id)) fx.ambient = id; else warn.push(st + '【环境氛围】：“' + s.ambient + '”是瞬间特效，请写到【关键特效】'); } }
       const planned = [];
@@ -274,13 +330,26 @@ function parseManuscript(text, opts) {
     if (!opening.length) warn.push(tag + '：建议写两句【开场对白】，玩家一进章就知道怎么接话');
     if (opening.length > 2) warn.push(tag + '【开场对白】：只显示前两句');
     if (scenes[0]) opening.filter(o => !scenes[0].present.includes(o.who)).forEach(o => err.push(tag + '【开场对白】：说话的人不在本章【在场人物】里'));
-    return { n, title: bi(c.title || ''), goal: c.goal || '', introduction: Object.assign({ time: c.time || '', event: c.event || '', text: c.text || '' }, opening.length ? { lines: opening.slice(0, 2) } : {}), scenes };
+    const extra = {};
+    if (c.behavior && !NOT_FILLED.test(c.behavior)) { const o = {}; lines(c.behavior).forEach(l => { const m = l.match(/^([^：:]{1,12})[：:]\s*(.+)$/); const k = m && names(m[1]); if (k) o[k] = m[2].trim(); else err.push(tag + '【这一级的表现】：要写成“角色名：表现”，这一行不对：' + l.slice(0, 20)); }); if (Object.keys(o).length) extra.behavior = o; }
+    if (c.bgm && !NOT_FILLED.test(c.bgm)) { const m = String(c.bgm).trim(); if (MOODS.includes(m)) extra.bgm = m; else warn.push(tag + '【本章音乐】：“' + m + '”不在情绪表里（' + MOODS.join('、') + '），已跳过'); }
+    if (c.game && !NOT_FILLED.test(c.game)) {
+      const f = subFields(c.game, ['用途', '玩法', '出现时机', '赌注', '赢了', '输了', '不玩']), id = gameIds()[String(f.玩法 || '').trim()];
+      if (!id && !scenes.some(s => s.game && s.game.source === c.game)) err.push(tag + '【小游戏】：玩法“' + (f.玩法 || '') + '”不在小游戏库里，请写库里的名字（如 找线索、赌一把、读心）');
+      else if (id) {
+        if (f.用途 && !GAME_PURPOSE.includes(f.用途.trim())) warn.push(tag + '【小游戏】：用途只能写 ' + GAME_PURPOSE.join('、'));
+        ['赢了', '输了', '不玩'].forEach(k => { if (!String(f[k] || '').trim()) err.push(tag + '【小游戏】：缺“' + k + '：”，三种结果都要写，输了也要有戏，不能是死路'); });
+        extra.game = [{ id, purpose: (f.用途 || '').trim(), when: (f.出现时机 || '').trim(), stakes: (f.赌注 || '').trim(), win: (f.赢了 || '').trim(), lose: (f.输了 || '').trim(), skip: (f.不玩 || '').trim() }];
+      }
+    }
+    if (c.events && !NOT_FILLED.test(c.events)) { const ev = lines(c.events).map((l, ei) => { const m = l.match(/^(.*?)[（(]触发[：:]\s*([^）)]*)[）)]\s*$/); return { id: 'c' + n + 'e' + (ei + 1), text: (m ? m[1] : l).trim(), ...(m ? { when: m[2].trim() } : {}) }; }).filter(e => e.text); if (ev.length) extra.events = ev; }
+    return Object.assign({ n, title: bi(c.title || ''), goal: c.goal || '', introduction: Object.assign({ time: c.time || '', event: c.event || '', text: c.text || '' }, opening.length ? { lines: opening.slice(0, 2) } : {}), scenes }, extra);
   });
 
   const bible = {
-    key: opts.id || '', title: bi(work.title || ''), hook: bi(work.hook || ''), premise: bi(work.premise || ''), intro: bi(work.intro || ''), orient: orient || 'bg', tags: list(work.tags).slice(0, 8),
-    world: work.world || '', style: work.style || '', state: {}, relations: [], games_on: false, playable: ['me'],
-    player: { key: 'me', name: { zh: '你', en: 'You' }, short: { zh: '你', en: 'You' }, gender: playerGender || 'f', role: bi(player.身份 || '') },
+    key: opts.id || '', title: bi(work.title || ''), hook: bi(work.hook || ''), pitch: bi(work.hook || ''), ...(String(work.question || '').trim() ? { question: bi(work.question.trim()) } : {}), premise: bi(work.premise || ''), intro: bi(work.intro || ''), orient: orient || 'bg', tags: list(work.tags).slice(0, 8),
+    world: work.world || '', style: work.style || '', coreQuestion: work.question || '', state: {}, relations: [], games_on: outChapters.some(c => c.scenes.some(s => s.game)), playable: ['me'],
+    player: { key: 'me', name: { zh: '你', en: 'You' }, short: { zh: '你', en: 'You' }, gender: playerGender || 'f', role: bi(player.身份 || ''), ...(String(player.处境 || '').trim() ? { pressure: bi(player.处境.trim()) } : {}), ...(String(player.藏着的事 || '').trim() && !NOT_FILLED.test(player.藏着的事.trim()) ? { secret: bi(player.藏着的事.trim()) } : {}) },
     cast, chapters: outChapters, endings: endingList,
     experience: { schema: 1, focus: 'player', storyIntroduction: true, chapterIntroduction: true, actionView: 'thirdPerson', choiceDock: 'contextual', allowFreeContinue: true, pacing: { mode: 'player-controlled', minExchanges: pace ? +pace[1] : 12, targetExchanges: pace ? +pace[2] : 18, allowExplicitSkip: true }, companionRules: bi(work.rules || '') },
     capabilities: { freeConversation: true, chapterNavigation: 'manual' },

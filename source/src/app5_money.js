@@ -82,37 +82,56 @@ function dailyPosts(force){const d=today();S.daily=S.daily||{};if(S.daily.d!==d|
    alongside the newer actions (share, reply, vote, publish a character/world) so everything lives in one tab. */
 function taskDayDone(id){return (S.tasksDay||{})[id]===today()}
 function taskOnceDone(id){return !!(S.tasksOnce||{})[id]}
-function taskClaimDay(id,amt){S.tasksDay=S.tasksDay||{};if(taskDayDone(id))return false;S.tasksDay[id]=today();S.keys+=amt;save();const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys+(S.plus?" · MIRU+":"");taskRefreshUI();return true}
-function taskClaimOnce(id,amt){S.tasksOnce=S.tasksOnce||{};if(taskOnceDone(id))return false;S.tasksOnce[id]=1;S.keys+=amt;save();const k=$(".topbar .chip.num");if(k)k.textContent="💎 "+S.keys+(S.plus?" · MIRU+":"");taskRefreshUI();return true}
-function taskRefreshUI(){if(typeof homeTab!=="undefined"&&homeTab==="earn"){const b=$("#htabBody");if(b)b.innerHTML=tasksHTML()}}
+/* 2026-11-07：任务奖励改由服务器判定发放（/api/wallet?r=tasks，api/_board.js）。
+   以前散在各处的 taskClaimDay / taskClaimOnce 会直接在本机加钻（关注社媒点一下就给），现在它们只记一笔「做过了」，
+   不再加钻、返回 false（调用处的「+N 💎」提示也就不弹了），免得和服务器任务重复发。 */
+function taskClaimDay(id,amt){S.tasksDay=S.tasksDay||{};if(!taskDayDone(id)){S.tasksDay[id]=today();save()}taskRefreshUI();return false}
+function taskClaimOnce(id,amt){S.tasksOnce=S.tasksOnce||{};if(!taskOnceDone(id)){S.tasksOnce[id]=1;save()}taskRefreshUI();return false}
+function taskRefreshUI(){TK.at=0;if(typeof homeTab!=="undefined"&&homeTab==="earn"){const b=$("#htabBody");if(b)b.innerHTML=tasksHTML()}}
 function taskRow(icon,title,desc,right){return '<div class="trow2"><span class="tic">'+icon+'</span><div class="grow"><b>'+title+'</b><p class="xs faint">'+desc+'</p></div>'+right+'</div>'}
 function taskSection(label){return '<p class="xs faint" style="padding:14px 2px 2px;text-transform:uppercase;letter-spacing:.04em">'+label+'</p>'}
 function personaDone(){const p=persona();return !!(p&&p.name&&p.look)}
 const SOCIAL=[["discord","💬","Discord"],["instagram","📷","Instagram"],["tiktok","🎵","TikTok"],["youtube","▶️","YouTube"]];
+/* 服务器任务：进度、能不能领都由服务器算；这里只负责展示和点「领取」。签到和看广告还是原来的机制。 */
+const TK={data:null,at:0,busy:false,err:false};
+const TZ=(zh,en)=>CL()==="zh"?zh:en;
+async function tasksLoad(force){if(TK.busy||(!force&&TK.data&&Date.now()-TK.at<20e3))return;
+ if(typeof CL0==="undefined"||!CL0.on){TK.err="off";return}
+ TK.busy=true;try{const r=await capi("/wallet?r=tasks");if(r.ok&&Array.isArray(r.j.tasks)){TK.data=r.j;TK.at=Date.now();TK.err=false}else TK.err=true}catch(_){TK.err=true}
+ TK.busy=false;if(typeof homeTab!=="undefined"&&homeTab==="earn"){const b=$("#htabBody");if(b)b.innerHTML=tasksHTML()}}
+function tkRow(x){const zh=CL()==="zh",title=(x.title&&(zh?x.title.zh:x.title.en))||x.id,pct=Math.round(x.progress/x.goal*100);
+ const per=x.period==="day"?TZ("每日","Daily"):x.period==="week"?TZ("本周","This week"):TZ("一次性","One-time");
+ const right=x.claimed?'<span class="tdone">✓</span>':x.claimable?'<button class="btn btn-p btn-xs" data-tkclaim="'+esc(x.id)+'">'+TZ("领取","Claim")+'</button>':(x.go?'<button class="btn btn-g btn-xs" data-tkgo="'+esc(x.go)+'">'+TZ("去完成","Go")+'</button>':'');
+ return '<div class="trow2"><span class="tic">'+(x.icon||"✦")+'</span><div class="grow"><b>'+esc(title)+' <span class="tkrw">+'+x.reward+' 💎</span></b><p class="xs faint">'+per+' · '+Math.min(x.progress,x.goal)+' / '+x.goal+'</p><div class="tkbar"><i style="width:'+pct+'%"></i></div></div>'+right+'</div>'}
 function tasksHTML(){const ci=ciState(),adN=adLeft();
  const done='<span class="tdone">✓</span>';
+ if(!TK.data||Date.now()-TK.at>20e3)tasksLoad();
  let h='<div class="tasklist" style="padding:10px 16px 6px">';
  h+=taskSection(t("task.secDaily"));
  h+=taskRow("📅",t("task.checkin"),t("task.checkinD"),ci.done?done:'<button class="btn btn-p btn-xs" data-ci="1">'+t("task.go")+'</button>');
  h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
- h+=taskRow("📤",t("task.share"),t("task.shareD"),taskDayDone("share")?done:'<button class="btn btn-g btn-xs" data-taskshare="1">'+t("task.go")+'</button>');
- h+=taskRow("👥",t("task.invite"),t("task.inviteD"),taskDayDone("invite")?done:'<button class="btn btn-g btn-xs" data-taskinvite="1">'+t("task.go")+'</button>');
- h+=taskRow("💬",t("task.reply"),t("task.replyD"),taskDayDone("reply")?done:'<span class="xs faint">'+t("task.pending")+'</span>');
- h+=taskRow("🔥",t("task.vote"),t("task.voteD"),taskDayDone("vote")?done:'<button class="btn btn-g btn-xs" data-htab2="rank">'+t("task.go")+'</button>');
- h+=taskRow("🖼️",t("task.genImg"),t("task.genImgD"),taskDayDone("genimg")?done:'<span class="xs faint">'+t("task.genImgGo")+'</span>');
- h+=taskRow("🎬",t("task.genVid"),t("task.genVidD"),'<span class="xs faint">'+t("task.soon")+'</span>');
- h+=taskSection(t("task.secBuild"));
- h+=taskRow("🪪",t("task.persona"),t("task.personaD"),taskOnceDone("persona")?done:(personaDone()?'<button class="btn btn-g btn-xs" data-taskpersona="1">'+t("task.go")+'</button>':'<button class="btn btn-g btn-xs" data-newp="1">'+t("task.go")+'</button>'));
- h+=taskRow("🧬",t("task.pubChar"),t("task.pubCharD"),taskOnceDone("pubChar")?done:'<button class="btn btn-g btn-xs" data-cre="char">'+t("task.go")+'</button>');
- h+=taskRow("🌍",t("task.pubWorld"),t("task.pubWorldD"),taskOnceDone("pubWorld")?done:'<button class="btn btn-g btn-xs" data-cre="group">'+t("task.go")+'</button>');
- h+=taskRow("⑂",t("task.pubRemix"),t("task.pubRemixD"),taskOnceDone("pubRemix")?done:'<button class="btn btn-g btn-xs" data-cre="remix">'+t("task.go")+'</button>');
- h+=taskRow("🎭",t("task.interVid"),t("task.interVidD"),taskOnceDone("interVid")?done:'<button class="btn btn-g btn-xs" data-cre="group">'+t("task.go")+'</button>');
- h+=taskRow("🛠️",t("task.newTool"),t("task.newToolD"),taskOnceDone("tool")?done:'<span class="xs faint">'+t("task.newToolGo")+'</span>');
- h+=taskRow("📲",t("task.appDl"),t("task.appDlD"),taskOnceDone("appdl")?done:'<button class="btn btn-g btn-xs" data-taskappdl="1">'+t("task.go")+'</button>');
- h+=taskSection(t("task.secFollow"));
- h+=SOCIAL.map(([id,ic,nm])=>taskRow(ic,t("task.follow",{n:nm}),t("task.followD"),taskOnceDone("fol_"+id)?done:'<button class="btn btn-g btn-xs" data-tasksocial="'+id+'">'+t("task.go")+'</button>')).join("");
- h+='<p class="xs faint" style="padding:10px 2px 0">'+t("task.ptHint")+'</p></div>';
+ if(TK.data){const L=TK.data.tasks,sec=(k,label)=>{const xs=L.filter(x=>k.includes(x.period));return xs.length?(label?taskSection(label):"")+xs.map(tkRow).join(""):""};
+  h+=sec(["day"],"")+sec(["week"],TZ("本周","This week"))+sec(["once"],TZ("成长","Milestones"));
+  h+='<p class="xs faint" style="padding:10px 2px 0">'+TZ("进度由服务器根据你的真实阅读、聊天和投票记录计算。每日任务 0 点（UTC）重置，本周任务周一重置。","Progress comes from what you actually read, chat and vote. Daily tasks reset at 00:00 UTC, weekly ones on Monday.")+'</p>'}
+ else h+='<p class="xs faint" style="padding:14px 2px">'+(TK.err==="off"?TZ("联网登录后可以做任务赚钻石。","Connect and sign in to earn diamonds from tasks."):TK.err?TZ("任务暂时加载不出来，稍后再试。","Couldn't load tasks — try again soon."):TZ("正在加载任务…","Loading tasks…"))+'</p>';
+ h+='</div>';
  return h}
+async function tkClaim(id,btn){if(btn){btn.disabled=true}
+ const r=await capi("/wallet?r=tasks",{json:{op:"claim",id}});
+ if(r.j&&Array.isArray(r.j.tasks)){TK.data=r.j;TK.at=Date.now()}
+ if(r.ok&&typeof r.j.gems==="number"){S.keys=r.j.gems;if(typeof cloudInfo==="function")cloudInfo().known=r.j.gems;save();if(typeof keysChip==="function")keysChip();toast("+"+(r.j.got||0)+" 💎")}
+ else if(r.status===429)toast(TZ("今天的免费钻石已经领满了","You've collected today's free diamonds"));
+ else if(r.status===409)toast(TZ(r.j.error==="already claimed"?"已经领过了":"还没完成",r.j.error==="already claimed"?"Already claimed":"Not done yet"));
+ else toast(TZ("领取失败，稍后再试","Couldn't claim — try again"));
+ const b=$("#htabBody");if(b&&homeTab==="earn")b.innerHTML=tasksHTML()}
+function tkGo(go){
+ if(go==="rank"){discChip="rank";discSearch=false;renderTab("discover");show("s-main");return}
+ if(go==="chat"){renderTab("chats");show("s-main");return}
+ if(go==="create"){const x=document.createElement("button");x.dataset.cre="group";x.hidden=true;document.body.appendChild(x);x.click();x.remove();return}
+ renderTab("home");show("s-main")}
+document.addEventListener("click",e=>{let x;
+ if(x=e.target.closest("[data-tkclaim]")){tkClaim(x.dataset.tkclaim,x);return}
+ if(x=e.target.closest("[data-tkgo]")){tkGo(x.dataset.tkgo);return}});
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-taskshare]")){const wk={id:"app",kind:"group",title:"MIRU"};shareSheet(wk);
   if(taskClaimDay("share",1))setTimeout(()=>toast(t("task.gotShare")),300);return}
