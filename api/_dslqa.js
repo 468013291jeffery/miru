@@ -36,7 +36,7 @@ function dslQA(md) {
     if (/^#+\s*CHAPTER\s+\d+/i.test(raw)) { closeCh(); cur = { t: raw.replace(/^#+\s*/, '').slice(0, 60), choices: 0, dots: 0, scenes: 0, lines: 0 }; st.chapters++; continue; }
     if (/^#\s*SCENE/i.test(raw)) { st.scenes++; if (cur) cur.scenes++; continue; }
     if (/^#\s*CHOICE/i.test(raw)) { st.choices++; if (cur) cur.choices++; continue; }
-    if (/^#{1,6}\s*[A-D]\s*[｜|]/.test(raw)) { st.options++; continue; }
+    if (/^#{1,6}\s*[A-E]\s*[｜|]/.test(raw)) { st.options++; continue; }
     if (/^#\s*·\s*$/.test(raw)) { st.dots++; if (cur) cur.dots++; continue; }
     if (/^(你|您|You)\s*[:：]/.test(raw)) { st.you++; continue; }
     if (raw.charAt(0) === '⟦') {
