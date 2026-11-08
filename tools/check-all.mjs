@@ -11,6 +11,11 @@ let apiUp = false;
 try { const r = await fetch(api, { signal: AbortSignal.timeout(1500) }); apiUp = r.ok; } catch (_) { apiUp = false; }
 
 const suites = [
+  ['board-write-selftest.cjs', ['tools/board-write-selftest.cjs'], true],
+  ['board-api-selftest.cjs', ['tools/board-api-selftest.cjs'], true],
+  ['arc-runtime-selftest.cjs', ['tools/arc-runtime-selftest.cjs'], true],
+  ['release-contract.mjs', ['tools/release-contract.mjs'], true],
+  ['legacy-photo-selftest.mjs', ['tools/legacy-photo-selftest.mjs'], true],
   ['experience-selftest.cjs', ['tools/experience-selftest.cjs'], true],
   ['swipe-selftest.mjs', ['tools/swipe-selftest.mjs'], true],
   ['ledger-selftest.mjs', ['tools/ledger-selftest.mjs'], true],

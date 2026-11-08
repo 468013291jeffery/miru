@@ -139,6 +139,18 @@ function checkBible(b) {
       });
     });
   });
+  /* 2026-11-07 故事卡升级：小游戏三种结果都要写、输了不能是死路；秘密要有内容；事件和音乐的名字要对 */
+  const MOODS = ['暧昧', '慢热', '吃醋', '危险', '紧张', '冷战', '秘密', '悬疑', '背叛', '告白', '心碎', '道歉', '接吻', '枪火', '黑帮', '往事', '日常', '温柔', '天亮', '终章', '静默'];
+  chapters.forEach((c, i) => {
+    const tag = '第 ' + (c && c.n != null ? c.n : i + 1) + ' 章';
+    const games = [].concat((c && c.game) || []);
+    if (games.length > 1) warn.push(tag + '：小游戏一级台阶最多 1 个，现在 ' + games.length + ' 个');
+    games.forEach(g => { ['win', 'lose', 'skip'].forEach(k => { if (!String((g && g[k]) || '').trim()) err.push(tag + ' 小游戏：缺「' + { win: '赢了', lose: '输了', skip: '不玩' }[k] + '」的后果'); }); if (g && /结束|失败|游戏结束|死/.test(String(g.lose || '')) && String(g.lose).length < 12) warn.push(tag + ' 小游戏：输了的后果像是死路，要另有戏'); });
+    if (c && c.bgm && !MOODS.includes(c.bgm)) warn.push(tag + ' 本章音乐：「' + c.bgm + '」不在情绪表里');
+    [].concat((c && c.events) || []).forEach(e => { if (!zhOf(e && e.text).trim()) err.push(tag + ' 事件：没有内容'); if (e && e.fx) checkFxId(e.fx, tag + ' 事件特效', err, warn); });
+  });
+  (Array.isArray(b.events) ? b.events : []).forEach(e => { if (!zhOf(e && e.text).trim()) err.push('事件池 ' + ((e && e.id) || '') + '：没有内容'); if (e && e.fx) checkFxId(e.fx, '事件池 ' + e.id + ' 特效', err, warn); if (e && e.bgm && !MOODS.includes(e.bgm)) warn.push('事件池 ' + e.id + ' 音乐：「' + e.bgm + '」不在情绪表里'); });
+  (Array.isArray(b.cast) ? b.cast : []).forEach(k => [].concat((k && k.secrets) || []).forEach(s => { if (!String((s && s.text) || '').trim()) err.push('人物 ' + ((k && k.key) || '') + ' 秘密：没有内容'); }));
   if (exp && EMOJI.test(zhOf(b.intro))) warn.push('故事背景（intro）：含表情符号，和固定版式不协调');
   return { ok: !err.length, err, warn, stats };
 }

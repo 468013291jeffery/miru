@@ -248,29 +248,89 @@ SHEET.add("menu", "app96_social.js", "top", function () {
     try { const host = (v && v.querySelector && (v.querySelector(".scroll") || v)) || $("#tabv"); if (host && !host.querySelector(".lp96me")) { const at = host.querySelector(".me95"); const h = '<button class="card lp96me" data-lplist96="1"><span style="font-size:26px">💘</span><span class="grow"><b>' + L96("你的恋爱人格", "Your love type") + '</b><span class="xs dim">' + L96("从你在剧里的每个选择，看见你是怎样爱人的", "See how you love, from every choice you've made") + '</span></span>›</button>'; if (at) at.insertAdjacentHTML("beforebegin", h); else host.insertAdjacentHTML("beforeend", h); } } catch (_) {}
     return r; }; }
 
-/* ================= ⑥ 遇见：滑卡 ================= */
-function sw96() { S.sw96 = S.sw96 || { day: "", used: 0, extra: 0, seen: [], liked: [] }; const d = new Date().toDateString(); if (S.sw96.day !== d) { S.sw96.day = d; S.sw96.used = 0; S.sw96.extra = 0; } return S.sw96; }
-function deck96() {
-  const st = sw96(), pool = allChars().filter(id => { const c = ch(id); if (!c || !artSrc(id)) return false; const w = wd(c.w); if (w && typeof orOK === "function" && !orOK(w)) return false; return !st.seen.includes(id); });
-  if (!pool.length) { st.seen = []; save(); return allChars().filter(id => ch(id)).slice(0, 40); }
-  return pool.sort((a, b) => hash96(a + st.day) - hash96(b + st.day)).slice(0, 40);
+/* ================= ⑥ 遇见：滑卡（按口味匹配，不是把所有人列一遍） =================
+   2026-11-07 改：以前是全部角色按日期随机洗牌、看完一轮清空重来。现在分三步：
+     ① 硬过滤：只要官方角色卡（C 表，不含玩家自建、不含剧里装进来的重复角色）、配对/不想看（orOK）、尺度不超过你选的、已经在聊的不再出现、左滑过的 14 天内不再出现。
+     ② 打分：口味标签命中（S.tropes）+ 你滑出来的偏好（右滑加分、左滑减分，按世界标签和原型记）+ 你玩过 TA 的剧 + 新角色 + 少量热度。
+     ③ 每天一副固定的牌（最多 P96.freeSwipes 张），每 5 张插 1 张口味之外的「换换口味」，免得越推越窄。
+   卡片上写匹配度和推荐理由；合格的人看完了就停下来，提示去调口味（左滑的人 14 天后回来），不再循环所有人。 */
+const HEAT96 = { fluff: 0, slow: 1, steamy: 2, mature: 3 };
+const NOPE_DAYS96 = 14;
+function sw96() {
+  const st = S.sw96 = S.sw96 || {}; const d = new Date().toDateString();
+  st.liked = st.liked || []; st.nope = st.nope || {}; st.aff = st.aff || {};
+  if (Array.isArray(st.seen)) delete st.seen; /* 旧版的「看过」名单没有时间也不分左右滑，直接作废，避免把人永久藏掉 */
+  if (st.day !== d) { st.day = d; st.used = 0; st.extra = 0; st.deck = null; }
+  return st;
 }
-function cardHTML96(id) {
-  const c = ch(id), w = wd(c.w), tags = ((w && w.tags) || []).slice(0, 3);
-  return '<div class="sc96" data-sc96="' + esc(id) + '"><img src="' + esc(artSrc(id)) + '" alt="" draggable="false"><div class="sci96"><b>' + esc(first(c.n)) + (c.age ? '<small>' + c.age + '</small>' : '') + '</b><span>' + esc(Lz(c.role) || "") + '</span><p>' + esc((Lz(c.pitch) || Lz(c.vibe) || "").slice(0, 70)) + '</p><div>' + tags.map(x => '<i>' + esc(typeof TAG_ZH !== "undefined" && Z96() && TAG_ZH[x] ? TAG_ZH[x] : x) + '</i>').join("") + '</div></div><em class="lk96">LIKE</em><em class="np96">NOPE</em></div>';
+let TAGLC96 = null;
+function tagName96(x) { if (typeof TAG_ZH === "undefined" || !Z96()) return x; if (TAG_ZH[x]) return TAG_ZH[x];
+  if (!TAGLC96) { TAGLC96 = {}; Object.keys(TAG_ZH).forEach(k => TAGLC96[k.toLowerCase()] = TAG_ZH[k]); } return TAGLC96[String(x).toLowerCase()] || x; }
+function chatting96(id) { const th = S.threads["c:" + id]; return !!(th && (th.msgs || []).some(m => m.who === "me")); }
+function eligible96(id, st) {
+  const c = ch(id); if (!c || c.retired || !artSrc(id)) return false;
+  /* 只从运行时角色表 C 里挑（官方剧男主卡 leads.json 就注册在这里）。S.mine.chars 里是玩家自己捏的角色，以及打开官方剧后装进来的
+     剧中角色——后者和男主卡是同一个人（会重复出现），还包括玩家自己扮演的那个角色，都不该出现在遇见里。 */
+  if (!C[id]) return false;
+  const w = wd(c.w); if (!w || (typeof orOK === "function" && !orOK(w))) return false;
+  if (w.heat && HEAT96[w.heat] > HEAT96[S.heat || "slow"]) return false;
+  if (st.liked.includes(id) || chatting96(id)) return false;
+  const n = st.nope[id]; if (n && now96() - n < NOPE_DAYS96 * 864e5) return false;
+  return true;
+}
+/* 匹配分 + 理由（理由最多两条，显示在卡片上） */
+function score96(id, st) {
+  const c = ch(id), w = wd(c.w), tags = w.tags || [], mine = (S.tropes || []).map(x => String(x).toLowerCase()), why = [];
+  const hit = tags.filter(x => mine.includes(String(x).toLowerCase()));
+  let s = hit.length * 12;
+  if (hit.length) why.push(L96("你喜欢的：", "You like: ") + hit.slice(0, 2).map(tagName96).join(" · "));
+  let a = (st.aff["a:" + c.a] || 0) * 2; tags.forEach(x => a += st.aff["t:" + String(x).toLowerCase()] || 0); a = Math.max(-18, Math.min(24, a * 2)); s += a;
+  if (a >= 8 && why.length < 2) why.push(L96("和你右滑过的人很像", "Like the ones you swiped right on"));
+  const played = Object.values(S.threads || {}).some(th => th && th.wid === c.w && th.pk);
+  if (played) { s += 8; if (why.length < 2) why.push(L96("你玩过《", "From “") + Lz(w.title) + L96("》", "”")); }
+  if (!S.threads["c:" + id]) s += 4;
+  s += Math.log10(Math.max(10, (w.stats || [0])[0] || 10)) * 2 + (hash96(id + st.day) % 7);
+  return { id, s, why };
+}
+function deck96() {
+  const st = sw96(), size = P96.freeSwipes + (st.extra || 0);
+  const pool = allChars().filter(id => eligible96(id, st)).map(id => score96(id, st)).sort((a, b) => b.s - a.s);
+  if (!pool.length) return [];
+  const top = pool.slice(0, Math.ceil(pool.length * .6)), rest = pool.slice(top.length), out = [];
+  while (out.length < size && (top.length || rest.length)) {
+    const explore = (out.length + 1) % 5 === 0 && rest.length;
+    out.push(explore ? Object.assign(rest.splice(hash96(st.day + out.length) % rest.length, 1)[0], { ex: 1 }) : (top.shift() || rest.shift()));
+  }
+  /* 匹配度用绝对分换算（不按这副牌拉伸），同样理由的两个人不会一个 97% 一个 68% */
+  out.forEach(r => { r.pct = Math.max(60, Math.min(98, Math.round(62 + r.s * 1.1))); if (r.ex) r.why = [L96("换换口味", "Something different")]; });
+  return out;
+}
+/* 今天这副牌：同一天里关掉再打开，顺序不变 */
+function todayDeck96() {
+  const st = sw96();
+  if (!st.deck) st.deck = deck96().map(r => ({ id: r.id, pct: r.pct, why: r.why, ex: r.ex || 0 }));
+  st.deck = st.deck.filter(r => eligible96(r.id, st)); save();
+  return st.deck;
+}
+function cardHTML96(r) {
+  const id = r.id, c = ch(id), w = wd(c.w), tags = ((w && w.tags) || []).slice(0, 3);
+  return '<div class="sc96" data-sc96="' + esc(id) + '"><img src="' + esc(artSrc(id)) + '" alt="" draggable="false"><span class="mp96">' + L96("匹配 ", "Match ") + r.pct + '%</span><div class="sci96"><b>' + esc(first(c.n)) + (c.age ? '<small>' + c.age + '</small>' : '') + '</b><span>' + esc(Lz(c.role) || "") + '</span>' +
+    ((r.why || []).length ? '<p class="why96">' + r.why.map(esc).join("　") + '</p>' : '') + '<p>' + esc((Lz(c.pitch) || Lz(c.vibe) || "").slice(0, 70)) + '</p><div>' + tags.map(x => '<i>' + esc(tagName96(x)) + '</i>').join("") + '</div></div><em class="lk96">LIKE</em><em class="np96">NOPE</em></div>';
 }
 let DECK96 = [];
 function openSwipe96() {
-  DECK96 = deck96(); let el = $("#sw96"); if (!el) { el = document.createElement("div"); el.id = "sw96"; ($("#dev") || document.body).appendChild(el); }
-  el.hidden = false; renderSwipe96();
+  DECK96 = todayDeck96(); let el = $("#sw96"); if (!el) { el = document.createElement("div"); el.id = "sw96"; ($("#dev") || document.body).appendChild(el); }
+  el.hidden = false; renderSwipe96(); if (typeof track === "function") track("meet_open", { n: DECK96.length });
 }
-function swLeft96() { const st = sw96(); return Math.max(0, P96.freeSwipes + st.extra - st.used); }
+function swLeft96() { const st = sw96(); return Math.max(0, P96.freeSwipes + (st.extra || 0) - (st.used || 0)); }
 function renderSwipe96() {
   const el = $("#sw96"); if (!el) return; const left = swLeft96();
-  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>' + L96("今日剩余 ", "Left today ") + left + '</small></div><div class="swd96">' +
-    (left <= 0 ? '<div class="swo96"><p>' + L96("今天的免费滑动用完了", "You're out of swipes for today") + '</p><button class="btn btn-p" data-swmore96="1">' + L96("再滑 30 次 · ", "30 more swipes · ") + P96.swipes + '💎</button></div>'
-      : DECK96.slice(0, 2).reverse().map(cardHTML96).join("")) + '</div>' +
-    '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥</button></div>';
+  const more = allChars().some(id => eligible96(id, sw96()));
+  const done = '<div class="swo96"><p>' + L96("合适的人你都见过了", "You've met everyone who fits you") + '</p><p class="xs faint">' + L96("有新角色上线会先推给你；左滑过的人两周后会再出现。也可以调整口味，换一批人。", "New characters come to you first; people you passed return in two weeks. Or change your taste.") + '</p><button class="btn btn-p" data-pfopen="1">' + L96("调整口味", "Change my taste") + '</button></div>';
+  const body = left <= 0 ? (more ? '<div class="swo96"><p>' + L96("今天的免费滑动用完了", "You're out of swipes for today") + '</p><button class="btn btn-p" data-swmore96="1">' + L96("再滑 30 次 · ", "30 more swipes · ") + P96.swipes + '💎</button></div>' : done)
+    : !DECK96.length ? done : DECK96.slice(0, 2).reverse().map(cardHTML96).join("");
+  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>' + L96("今日剩余 ", "Left today ") + left + '</small></div><div class="swd96">' + body + '</div>' +
+    (DECK96.length && left > 0 ? '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥</button></div>' : '');
   wireSwipe96();
 }
 function wireSwipe96() {
@@ -279,19 +339,29 @@ function wireSwipe96() {
   top.onpointermove = e => { if (!on) return; dx = e.clientX - x0; top.style.transform = "translateX(" + dx + "px) rotate(" + dx / 18 + "deg)"; top.classList.toggle("l", dx > 40); top.classList.toggle("r", dx < -40); };
   top.onpointerup = () => { if (!on) return; on = false; top.style.transition = ""; if (dx > 110) swipe96("like"); else if (dx < -110) swipe96("nope"); else { top.style.transform = ""; top.classList.remove("l", "r"); } dx = 0; };
 }
+/* 右滑/左滑都会改你的偏好：按 TA 的世界标签和原型记分，旧分每次轻微衰减 */
+function learn96(st, id, d) {
+  const c = ch(id), w = c && wd(c.w); if (!c) return;
+  Object.keys(st.aff).forEach(k => { st.aff[k] *= .97; if (Math.abs(st.aff[k]) < .05) delete st.aff[k]; });
+  const add = (k, v) => st.aff[k] = Math.max(-6, Math.min(6, (st.aff[k] || 0) + v));
+  if (c.a && c.a !== "charm") add("a:" + c.a, d); /* charm 是官方卡的默认原型，人人都是，学了等于没学 */ ((w && w.tags) || []).forEach(x => add("t:" + String(x).toLowerCase(), d * .5));
+}
 async function swipe96(kind) {
-  const id = DECK96[0]; if (!id) return; if (swLeft96() <= 0) { renderSwipe96(); return; }
+  const r = DECK96[0]; if (!r) return; const id = r.id; if (swLeft96() <= 0) { renderSwipe96(); return; }
   if (kind === "super" && !spend(P96.superlike, "card")) return;
-  const st = sw96(); st.used++; st.seen.push(id); if (st.seen.length > 400) st.seen = st.seen.slice(-200); save();
+  const st = sw96(); st.used = (st.used || 0) + 1;
+  learn96(st, id, kind === "nope" ? -1 : kind === "super" ? 2 : 1);
+  if (kind === "nope") st.nope[id] = now96(); else { delete st.nope[id]; st.liked.push(id); if (st.liked.length > 500) st.liked = st.liked.slice(-300); }
+  if (typeof track === "function") track("meet_swipe", { cid: id, kind, pct: r.pct, explore: r.ex || 0 });
   const top = $("#sw96 .sc96:last-child"); if (top) { top.style.transform = "translateX(" + (kind === "nope" ? -600 : 600) + "px) rotate(" + (kind === "nope" ? -25 : 25) + "deg)"; top.style.opacity = "0"; }
-  DECK96.shift(); if (!DECK96.length) DECK96 = deck96();
+  DECK96.shift(); st.deck = DECK96.slice(); save();
   if (kind === "nope") { setTimeout(renderSwipe96, 260); return; }
-  st.liked.push(id); save(); const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
-  if (kind === "super") { const c = ch(id); const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
+  const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
+  if (kind === "super") { const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
   setTimeout(() => matchSheet96(id, kind === "super"), 280);
 }
 function matchSheet96(id, sup) {
-  const el = $("#sw96 .swd96"); if (!el) return;
+  const el = $("#sw96 .swd96"); if (!el) return; const b = $("#sw96 .swb96"); if (b) b.remove();
   el.innerHTML = '<div class="mt96"><b>' + (sup ? "⭐ " : "") + L96("匹配成功！", "It's a match!") + '</b><div class="mta96">' + meAv(84) + avatar(id, 84) + '</div><p>' + L96(nameOf96(id) + " 也在等你开口。", nameOf96(id) + " is waiting for you to say something.") + '</p><button class="btn btn-p btn-block" data-swchat96="' + esc(id) + '">💬 ' + L96("开始聊天", "Say hi") + '</button><button class="lnk" data-swgo96="1">' + L96("继续滑", "Keep swiping") + '</button></div>';
 }
 document.addEventListener("click", e => { let x;
@@ -301,12 +371,15 @@ document.addEventListener("click", e => { let x;
   if (e.target.closest("[data-swy96]")) { swipe96("like"); return; }
   if (e.target.closest("[data-sws96]")) { swipe96("super"); return; }
   if (e.target.closest("[data-swgo96]")) { renderSwipe96(); return; }
-  if (e.target.closest("[data-swmore96]")) { if (!spend(P96.swipes, "card")) return; sw96().extra += 30; save(); renderSwipe96(); return; }
+  if (e.target.closest("[data-swmore96]")) { if (!spend(P96.swipes, "card")) return; const st = sw96(); st.extra = (st.extra || 0) + 30; st.deck = null; save(); DECK96 = todayDeck96(); renderSwipe96(); return; }
   if ((x = e.target.closest("[data-swchat96]"))) { const id = x.dataset.swchat96; const el = $("#sw96"); if (el) el.hidden = true; dmThread96(id); try { openThread("c:" + id); } catch (_) {} return; }
 }, true);
-/* Discover: entry banner */
+/* 调完口味回来：今天的牌按新口味重算 */
+document.addEventListener("click", e => { if (!e.target.closest("[data-pfsave]")) return; setTimeout(() => { const st = sw96(); st.deck = null; save(); const el = $("#sw96"); if (el && !el.hidden) { DECK96 = todayDeck96(); renderSwipe96(); } }, 0); }, true);
+/* Discover: entry banner — 头像用今天牌里排最前的三个人 */
 { const _dm = discMain; discMain = function () { let h = _dm.apply(this, arguments);
-    try { h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + allChars().filter(id => ch(id)).slice(0, 3).map(id => '<img src="' + esc(artSrc(id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + L96("左滑跳过，右滑开始聊天", "Swipe left to pass, right to start chatting") + '</span></span>›</button>' + h; } catch (_) {}
+    try { const dk = todayDeck96(), top3 = dk.slice(0, 3);
+      h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + top3.map(r => '<img src="' + esc(artSrc(r.id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + (top3.length ? L96("今天为你挑了 " + dk.length + " 个人 · 右滑开始聊天", dk.length + " picked for you today · swipe right to chat") : L96("合适的人都见过了 · 新角色上线会推给你", "You've met everyone who fits — new faces coming")) + '</span></span>›</button>' + h; } catch (_) {}
     return h; }; }
 
 (function () { const st = document.createElement("style"); st.textContent = `
@@ -334,6 +407,7 @@ document.addEventListener("click", e => { let x;
 .sw96e{display:flex;gap:12px;align-items:center;width:100%;text-align:left;margin:0 0 14px;padding:12px 14px;border-radius:18px;border:1px solid rgba(238,111,151,.35);background:linear-gradient(135deg,rgba(238,111,151,.16),rgba(240,183,126,.10));color:#fff}.sw96e b{display:block;font-size:15px}.sw96e .grow span{font-size:12px;color:#CFC7D8}.sw96ea{display:flex}.sw96ea img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #0C0B10;margin-left:-10px}.sw96ea img:first-child{margin-left:0}
 .swh96{display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 8px}.swh96 button{background:none;border:0;color:#fff;font-size:20px}.swh96 b{flex:1;font-size:16px}.swh96 small{color:#9C93A6}
 .swd96{flex:1;position:relative;margin:4px 14px}.sc96{position:absolute;inset:0;border-radius:22px;overflow:hidden;background:#1A1622;touch-action:none;transition:transform .3s,opacity .3s;box-shadow:0 14px 40px #0009}.sc96 img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+.mp96{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:2;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.55);color:#FFD27F;font-size:12px;font-weight:800;backdrop-filter:blur(6px)}.sci96 p.why96{color:#FFD27F;font-size:12.5px;font-weight:700;margin:6px 0 0}.swo96 .lnk{display:block;margin:10px auto 0}
 .sci96{position:absolute;left:0;right:0;bottom:0;padding:60px 18px 18px;background:linear-gradient(transparent,rgba(0,0,0,.85))}.sci96 b{font-size:28px;display:flex;align-items:baseline;gap:8px}.sci96 b small{font-size:20px;font-weight:400}.sci96 span{display:block;color:#F6D3AE;font-size:14px}.sci96 p{margin:6px 0 8px;font-size:14px;color:#E9E4EE;line-height:1.45}.sci96 i{font-style:normal;font-size:11.5px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.14);margin-right:5px}
 .lk96,.np96{position:absolute;top:28px;font-style:normal;font-weight:900;font-size:30px;padding:4px 12px;border:4px solid;border-radius:10px;opacity:0;transition:opacity .15s}.lk96{left:20px;color:#7FE0A8;transform:rotate(-14deg)}.np96{right:20px;color:#FF6F7F;transform:rotate(14deg)}.sc96.l .lk96,.sc96.r .np96{opacity:1}
 .swb96{display:flex;justify-content:center;gap:22px;padding:14px 0 calc(16px + env(safe-area-inset-bottom,0px))}.swb96 button{width:62px;height:62px;border-radius:50%;border:0;font-size:26px;display:grid;place-items:center;background:#1E1A26;color:#fff;box-shadow:0 6px 18px #0008}.swb96 .n{color:#FF6F7F}.swb96 .y{color:#7FE0A8}.swb96 .s{color:#6FB6FF;width:52px;height:52px;align-self:center;font-size:20px;line-height:1}.swb96 .s small{font-size:10px;color:#9C93A6}

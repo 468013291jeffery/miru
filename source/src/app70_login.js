@@ -323,7 +323,7 @@ if (typeof hookPlay === "function") { const _hp70 = hookPlay; let once = false; 
 const _packOpen70 = packOpen;
 packOpen = function (th, n) { try { if (th && th.pk) { if (n === 1 && !th.pk._st70) { th.pk._st70 = 1; track("story_start", { wid: th.wid }); } if (typeof pkSetPresent === "function") pkSetPresent(th, n); if (typeof pkOpenMark === "function") pkOpenMark(th, n); } } catch (_) {} return _packOpen70.apply(this, arguments); };
 const _reply70 = reply;
-reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid }); } catch (_) {} return _reply70.apply(this, arguments); };
+reply = function (th, ctx) { try { if (ctx && ctx.kind === "talk") track("talk", { wid: th && th.wid, cid: th && th.kind === "solo" && th.cast && th.cast.length === 1 ? th.cast[0] : undefined }); /* cid：打榜按角色算单聊热度（api/_board.js） */ } catch (_) {} return _reply70.apply(this, arguments); };
 const _units70 = unitsSheet;
 unitsSheet = function () { track("store_open"); return _units70.apply(this, arguments); };
 

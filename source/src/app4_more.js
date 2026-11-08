@@ -217,31 +217,62 @@ document.addEventListener("click",e=>{let x;
   openStory(done);shareSheet(wk);return}});
 
 /* ================= ME ================= */
-function renderMe(v){const p=persona();S.account=S.account||{email:null,pwSet:false};
- let h='<div class="topbar"><h1 style="font-size:24px" class="grow">'+t("me.h")+'</h1>'+langPicker()+'</div><div class="scroll pad stack" style="gap:12px;padding-block:4px 30px">'+
-  '<div class="eyebrow">'+t("me.personas")+'</div><div class="hs">'+S.personas.map(q=>'<button class="card" style="flex:none;min-width:150px;text-align:left'+(q.id===S.pid?";border-color:rgba(238,111,151,.55)":"")+'" data-pid="'+q.id+'"><b>'+esc(q.name||"—")+'</b><p class="xs faint" style="margin-top:3px">'+esc(q.pron)+(q.id===S.pid?" · "+t("me.active"):"")+'</p><p class="xs dim" style="margin-top:6px;max-width:140px;white-space:normal">'+esc(q.look||"")+'</p></button>').join("")+
-  '<button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-newp="1">＋ '+t("me.addp")+'</button><button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-ccimp="1">⇧ '+esc(LL("导入角色卡","Import card"))+'</button></div>'+
-  '<button class="bigopt" data-couple="1"><span style="font-size:22px">💞</span><span class="grow"><b>'+t("me.couple")+'</b><span>'+t("cr.sub")+'</span></span><span style="color:var(--gold)">›</span></button>'+
-  '<div class="card"><div class="row"><div class="eyebrow grow">'+t("me.album")+'</div><span class="xs faint">'+S.album.length+'</span></div>'+(S.album.length?'<div class="album" style="margin-top:10px">'+S.album.map(a=>'<button data-shimg="'+a.id+'" style="display:block;padding:0;border:0;background:none;cursor:pointer">'+albumHtml(a)+'</button>').join("")+'</div>':'<p class="xs faint" style="margin-top:8px">'+t("me.empty")+'</p>')+'</div>'+
-  '<div class="card"><div class="eyebrow">'+t("me.saved")+'</div>'+(S.saved.length?S.saved.slice(0,6).map(s=>'<button class="task" style="margin-top:8px" '+(s.short?'data-short="'+s.short+'"':'data-open="'+s.tid+'"')+'>'+(ch(s.who)?avatar(s.who,24):"")+'<span class="grow" style="font-size:12px">'+esc(s.txt)+'</span></button>').join(""):'<p class="xs faint" style="margin-top:8px">'+t("me.empty")+'</p>')+'</div>'+
-  '<div class="card"><div class="row"><div class="grow"><b>📖 '+t("me.packs")+'</b><p class="xs faint" style="margin-top:3px">'+t("me.packsS",{a:packWorlds().filter(w=>owns(w.id)).length,b:packWorlds().reduce((n,w)=>n+endingsFound(w.id),0)})+'</p></div><button class="btn btn-g btn-sm" data-units="1">✦ '+unitsLeft()+'</button></div>'+
-   (packWorlds().some(w=>owns(w.id)||lastRun(w.id))?'<div class="rail2" style="margin-top:10px">'+packWorlds().filter(w=>owns(w.id)||lastRun(w.id)).map(rCard).join("")+'</div>':'')+'</div>'+
-  '<div class="card"><div class="row"><div class="grow"><b>💎 '+t("me.keys")+' · <span class="num">'+S.keys+'</span></b><p class="xs faint" style="margin-top:3px">'+t("g.demo")+'</p></div><button class="btn btn-g btn-sm" data-keysadd="1">+10</button></div>'+
+/* 2026-11-07 我的页整理：
+   - 顺序（CSS order，见文件末 .me12）：账号 → 钻石/会员 → 我的故事 → 身份/情侣房 → 收藏/相册（有才显示）
+     → 口味/尺度/恋爱人格 → 角色音色/我的声音 → 安全与举报。
+   - 调试用的卡（AI 引擎、实时 AI 测试、素材库、服务器配音试听、本机账号设置、重置演示）只在开发者模式显示：
+     网址加 ?dev=1 打开（记在本机），?dev=0 关闭。
+   - 角色音色：默认只列最近聊过的几个角色，搜索框按名字查全部角色。 */
+function meDev(){try{const m=/[?&]dev=([01])/.exec(location.search);if(m)localStorage.setItem("miru.dev",m[1]);return localStorage.getItem("miru.dev")==="1"}catch(_){return false}}
+const ME_RECENT_N=4;
+function meRecentChars(){const seen=[],all=new Set(allChars());
+ Object.values(S.threads||{}).sort((a,b)=>(b.at||0)-(a.at||0)).forEach(th=>{(th.cast||[]).forEach(id=>{if(all.has(id)&&!seen.includes(id))seen.push(id)})});
+ return seen.slice(0,ME_RECENT_N)}
+function meVoiceRow(id){const c=ch(id),vv=voiceFor(id),rl=recLineOf(id);return '<div class="row" style="gap:6px"><button class="task grow" data-vtest="'+id+'">'+avatar(id,26)+'<span class="grow">'+esc(c.n)+'<span class="xs faint" style="display:block">'+(rl?'🎙 '+t("voice.rec2"):esc(vv?voiceLabel97(vv):"—")+(vv&&(c.g==="f")!==FEM.test(vv.name)?' · ⚠ '+t("voice.wrongG"):''))+'</span></span>▶</button>'+
+ '<button class="btn btn-g btn-xs" data-vai="'+id+'" style="flex:none">✨ '+t("voice.aiBtn")+'</button></div>'}
+/* 名字是渲染后才换成当前语言的（app67 TR.map 译文缓存 / app72 zhFixText），所以搜索时原名、译名都比一遍 */
+function meVoiceNames(id){const c=ch(id)||{},n=String(c.n||""),o=[n];try{if(typeof zhFixText==="function")o.push(zhFixText(n));if(typeof TR!=="undefined"&&TR.map&&TR.map[n])o.push(String(TR.map[n]))}catch(err){console.warn("meVoiceNames",err)}
+ if(c.n94&&typeof c.n94==="object")o.push(...Object.values(c.n94).map(String));return o.map(x=>x.toLowerCase())}
+function meVoiceList(q){q=(q||"").trim().toLowerCase();const zh=CL()==="zh";
+ if(q){const ids=allChars().filter(id=>meVoiceNames(id).some(n=>n.includes(q))).slice(0,30);
+  return ids.length?ids.map(meVoiceRow).join(""):'<p class="xs faint">'+(zh?"没有找到这个角色":"No character found")+'</p>'}
+ const ids=meRecentChars();
+ return '<p class="xs faint">'+(zh?"最近使用":"Recently used")+'</p>'+(ids.length?ids.map(meVoiceRow).join(""):'<p class="xs faint">'+(zh?"还没和角色聊过，搜索名字就能试听":"No chats yet — search a name to preview")+'</p>')}
+document.addEventListener("input",e=>{const x=e.target.closest("#voiceQ");if(!x)return;const l=$("#voiceList");if(l)l.innerHTML=meVoiceList(x.value)});
+function renderMe(v){const p=persona();S.account=S.account||{email:null,pwSet:false};const dev=meDev(),zh=CL()==="zh";
+ const serverVoice=typeof TTS_EP!=="undefined"&&TTS_EP&&(S.ttsMode||"server")==="server";
+ let h='<div class="topbar"><h1 style="font-size:24px" class="grow">'+t("me.h")+'</h1>'+langPicker()+'</div><div class="scroll pad stack me12'+(dev?" me12dev":"")+'" style="gap:12px;padding-block:4px 30px">'+
+  '<div class="card me-wallet"><div class="row"><div class="grow"><b>💎 '+t("me.keys")+' · <span class="num">'+S.keys+'</span></b></div><button class="btn btn-g btn-sm" data-keysadd="1">'+(zh?"充值":"Top up")+'</button></div>'+
   '<div class="row" style="margin-top:12px"><div class="grow"><b>'+t("me.plus")+'</b><p class="xs dim" style="margin-top:3px">'+t("me.plusS")+'</p></div><button class="btn '+(S.plus?"btn-g":"btn-p")+' btn-sm" data-plusset="1">'+(S.plus?"✓":"$9.99")+'</button></div></div>'+
-  '<div class="card"><div class="eyebrow">'+t("me.heat")+'</div><div class="seg" style="margin-top:10px">'+["fluff","slow","steamy","mature"].map(k=>'<button data-heatset="'+k+'" class="'+(S.heat===k?"on":"")+'">'+t("heat."+k)+'</button>').join("")+'</div>'+
-  '<div class="eyebrow" style="margin-top:14px">'+t("me.live")+'</div><p class="sm" id="liveRes" style="margin-top:6px;line-height:1.5">'+(SAMPLE&&!LIVE_ERR?"✓ "+t("live.ok"):liveWhy(LIVE_ERR||(SAMPLE?"":LIVE_STATE)))+'</p><button class="btn btn-g btn-sm" style="margin-top:10px" data-livetest="1">'+t("live.test")+'</button></div>'+
-  '<div class="card"><div class="eyebrow">'+t("me.voice")+'</div><p class="xs dim" style="margin-top:6px">'+t("me.voiceS")+'</p>'+pickSearch("voiceQ","voiceList")+'<div class="stack" style="gap:6px;margin-top:10px" id="voiceList">'+
-   (["m","f"].some(g=>!hasGenderVoice(g))?'<p class="xs" style="margin-top:8px;color:var(--gold);line-height:1.5">'+t(hasGenderVoice("m")?"voice.needF":"voice.needM")+'</p>':'')+
-   allChars().map(id=>{const c=ch(id),vv=voiceFor(id),rl=recLineOf(id);return '<div class="row" style="gap:6px"><button class="task grow" data-vtest="'+id+'">'+avatar(id,26)+'<span class="grow">'+esc(c.n)+'<span class="xs faint" style="display:block">'+(rl?'🎙 '+t("voice.rec2"):esc(vv?voiceLabel97(vv):"—")+(vv&&(c.g==="f")!==FEM.test(vv.name)?' · ⚠ '+t("voice.wrongG"):''))+'</span></span>▶</button>'+
-    '<button class="btn btn-g btn-xs" data-vai="'+id+'" style="flex:none">✨ '+t("voice.aiBtn")+'</button></div>'}).join("")+'</div></div>'+
-  '<div class="card"><div class="eyebrow">'+t("voice.my")+'</div><p class="xs dim" style="margin-top:6px">'+t("voice.myS")+'</p><div class="row" style="margin-top:10px;gap:8px">'+
+  '<div class="card me-packs"><div class="row"><div class="grow"><b>📖 '+t("me.packs")+'</b><p class="xs faint" style="margin-top:3px">'+t("me.packsS",{a:packWorlds().filter(w=>owns(w.id)).length,b:packWorlds().reduce((n,w)=>n+endingsFound(w.id),0)})+'</p></div><button class="btn btn-g btn-sm" data-units="1">✦ '+unitsLeft()+'</button></div>'+
+   (packWorlds().some(w=>owns(w.id)||lastRun(w.id))?'<div class="rail2" style="margin-top:10px">'+packWorlds().filter(w=>owns(w.id)||lastRun(w.id)).map(rCard).join("")+'</div>':'')+'</div>'+
+  '<div class="me-pers"><div class="eyebrow">'+t("me.personas")+'</div><div class="hs" style="margin-top:8px">'+S.personas.map(q=>'<button class="card" style="flex:none;min-width:150px;text-align:left'+(q.id===S.pid?";border-color:rgba(238,111,151,.55)":"")+'" data-pid="'+q.id+'"><b>'+esc(q.name||"—")+'</b><p class="xs faint" style="margin-top:3px">'+esc(q.pron)+(q.id===S.pid?" · "+t("me.active"):"")+'</p><p class="xs dim" style="margin-top:6px;max-width:140px;white-space:normal">'+esc(q.look||"")+'</p></button>').join("")+
+  '<button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-newp="1">＋ '+t("me.addp")+'</button><button class="card" style="flex:none;min-width:110px;display:grid;place-items:center;color:var(--dim)" data-ccimp="1">⇧ '+esc(LL("导入角色卡","Import card"))+'</button></div></div>'+
+  '<button class="bigopt me-couple" data-couple="1"><span style="font-size:22px">💞</span><span class="grow"><b>'+t("me.couple")+'</b><span>'+t("cr.sub")+'</span></span><span style="color:var(--gold)">›</span></button>'+
+  (S.saved.length?'<div class="card me-saved"><div class="eyebrow">'+t("me.saved")+'</div>'+S.saved.slice(0,6).map(s=>'<button class="task" style="margin-top:8px" '+(s.short?'data-short="'+s.short+'"':'data-open="'+s.tid+'"')+'>'+(ch(s.who)?avatar(s.who,24):"")+'<span class="grow" style="font-size:12px">'+esc(s.txt)+'</span></button>').join("")+'</div>':'')+
+  (S.album.length?'<div class="card me-album"><div class="row"><div class="eyebrow grow">'+t("me.album")+'</div><span class="xs faint">'+S.album.length+'</span></div><div class="album" style="margin-top:10px">'+S.album.map(a=>'<button data-shimg="'+a.id+'" style="display:block;padding:0;border:0;background:none;cursor:pointer">'+albumHtml(a)+'</button>').join("")+'</div></div>':'')+
+  '<div class="card me-heat"><div class="eyebrow">'+t("me.heat")+'</div><div class="seg" style="margin-top:10px">'+["fluff","slow","steamy","mature"].map(k=>'<button data-heatset="'+k+'" class="'+(S.heat===k?"on":"")+'">'+t("heat."+k)+'</button>').join("")+'</div></div>'+
+  '<div class="card me-voice"><div class="eyebrow">'+(zh?"角色音色":t("me.voice"))+'</div><p class="xs dim" style="margin-top:6px">'+t("me.voiceS")+'</p>'+
+   '<div class="field" style="margin-top:10px"><input id="voiceQ" autocomplete="off" placeholder="'+esc(t("g.searchChar"))+'"></div>'+
+   (!serverVoice&&["m","f"].some(g=>!hasGenderVoice(g))?'<p class="xs" style="margin-top:8px;color:var(--gold);line-height:1.5">'+t(hasGenderVoice("m")?"voice.needF":"voice.needM")+'</p>':'')+
+   '<div class="stack" style="gap:6px;margin-top:10px" id="voiceList">'+meVoiceList("")+'</div></div>'+
+  '<div class="card me-myv"><div class="eyebrow">'+t("voice.my")+'</div><p class="xs dim" style="margin-top:6px">'+t("voice.myS")+'</p><div class="row" style="margin-top:10px;gap:8px">'+
    (S.myVoice?'<audio id="myVoiceAud" controls style="height:34px;flex:1" src="'+S.myVoice+'"></audio><button class="btn btn-q btn-sm" data-vdel="1">'+t("voice.del")+'</button>':
     '<button class="btn '+(VREC.recording?"btn-p":"btn-g")+' btn-sm" data-vrec="1" id="vrecBtn">'+(VREC.recording?"● "+t("voice.stop"):"🎙️ "+t("voice.rec"))+'</button><span class="xs faint" id="vrecHint">'+t("voice.recHint")+'</span>')+'</div></div>'+
-  '<div class="card"><div class="eyebrow">'+t("acct.h")+'</div>'+
-   '<button class="task" style="margin-top:8px" data-acctemail="1">📧<span class="grow">'+t("acct.email")+'<span class="xs faint" style="display:block">'+esc(S.account.email||t("acct.none"))+'</span></span>'+t("acct.edit")+'</button>'+
-   '<button class="task" style="margin-top:8px" data-acctpw="1">🔒<span class="grow">'+t("acct.pw")+'<span class="xs faint" style="display:block">'+(S.account.pwSet?t("acct.pwSet"):t("acct.none"))+'</span></span>'+t("acct.edit")+'</button></div>'+
-  '<button class="btn btn-q" data-reset="1">'+t("me.reset")+'</button></div>';
+  (dev?'<div class="eyebrow me-devh">🛠 '+(zh?"开发者":"Developer")+'</div>'+
+   '<div class="card me-live"><div class="eyebrow">'+t("me.live")+'</div><p class="sm" id="liveRes" style="margin-top:6px;line-height:1.5">'+(SAMPLE&&!LIVE_ERR?"✓ "+t("live.ok"):liveWhy(LIVE_ERR||(SAMPLE?"":LIVE_STATE)))+'</p><button class="btn btn-g btn-sm" style="margin-top:10px" data-livetest="1">'+t("live.test")+'</button></div>'+
+   '<div class="card me-lacct"><div class="eyebrow">'+t("acct.h")+'</div>'+
+    '<button class="task" style="margin-top:8px" data-acctemail="1">📧<span class="grow">'+t("acct.email")+'<span class="xs faint" style="display:block">'+esc(S.account.email||t("acct.none"))+'</span></span>'+t("acct.edit")+'</button>'+
+    '<button class="task" style="margin-top:8px" data-acctpw="1">🔒<span class="grow">'+t("acct.pw")+'<span class="xs faint" style="display:block">'+(S.account.pwSet?t("acct.pwSet"):t("acct.none"))+'</span></span>'+t("acct.edit")+'</button></div>'+
+   '<button class="btn btn-q me-reset" data-reset="1">'+t("me.reset")+'</button>':'')+
+  '</div>';
  v.innerHTML=h;}
+(function(){const st=document.createElement("style");st.textContent=
+`.me12>*{order:50}.me12>.promobar{order:0}.me12>.acct68{order:1}.me12>.me-wallet{order:2}.me12>.me-packs{order:3}.me12>.me-pers{order:4}.me12>.me-couple{order:5}
+.me12>.me-saved{order:6}.me12>.me-album{order:7}.me12>.pf64me{order:8}.me12>.me-heat{order:9}.me12>.lp96me{order:10}.me12>.me-voice{order:11}.me12>.me-myv{order:12}.me12>.me95{order:13}
+.me12>.me-devh{order:90;margin-top:18px}.me12>.lccard{order:91}.me12>.ttscard{order:92}.me12>.lib65me{order:93}.me12>.me-live{order:94}.me12>.me-lacct{order:95}.me12>.me-reset{order:96}
+.me12>.acct68,.me12>.pf64me,.me12>.lib65me,.me12>.lp96me,.me12>.me95{margin-top:0;margin-bottom:0}
+.me12:not(.me12dev)>.lccard,.me12:not(.me12dev)>.ttscard,.me12:not(.me12dev)>.lib65me{display:none}`;document.head.appendChild(st)})();
 /* ---------- record my own voice (getUserMedia + MediaRecorder) ---------- */
 const VREC={recording:false,rec:null,chunks:[]};
 async function vrecToggle(){
