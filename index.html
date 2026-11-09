@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="e8829c4bc7f3 2026-11-09T08:02Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="12e68626b195 2026-11-09T13:41Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -18338,7 +18338,7 @@ document.addEventListener("click", async e => { let x;
    ④ 看得见的结果：每次选择后弹出变化卡片——好感 +8、上热搜第 3、粉丝 +1,204、新角色登场。
    ⑤ 让 TA 主动找你：花 💎 为某个角色打开「主动联系」（永久），之后 TA 会在你不在时发来消息或语音，最多每天 2 条。
    ⑥ 遇见：发现页的滑卡——左滑跳过、右滑开始聊天、⭐ 超级喜欢（TA 先发一条语音）。每天免费滑 30 次。 */
-const P96 = { comment: 1, post: 1, voice: 1, contact: 10, superlike: 2, swipes: 2, freeSwipes: 30 };
+const P96 = { comment: 1, post: 1, voice: 1, contact: 10, superlike: 2, swipes: 2, freeSwipes: 30, likes: 12, moreLikes: 6, moreLikesCost: 3 };
 const Z96 = () => CL() === "zh";
 const L96 = (zh, en) => Z96() ? zh : en;
 const now96 = () => Date.now();
@@ -18592,7 +18592,8 @@ function sw96() {
   const st = S.sw96 = S.sw96 || {}; const d = new Date().toDateString();
   st.liked = st.liked || []; st.nope = st.nope || {}; st.aff = st.aff || {};
   if (Array.isArray(st.seen)) delete st.seen; /* 旧版的「看过」名单没有时间也不分左右滑，直接作废，避免把人永久藏掉 */
-  if (st.day !== d) { st.day = d; st.used = 0; st.extra = 0; st.deck = null; }
+  if (st.day !== d) { st.day = d; st.used = 0; st.extra = 0; st.likes = 0; st.extraLikes = 0; st.opUsed = []; st.deck = null; }
+  st.pend = st.pend || [];
   return st;
 }
 let TAGLC96 = null;
@@ -18606,7 +18607,7 @@ function eligible96(id, st) {
   if (!C[id]) return false;
   const w = wd(c.w); if (!w || (typeof orOK === "function" && !orOK(w))) return false;
   if (w.heat && HEAT96[w.heat] > HEAT96[S.heat || "slow"]) return false;
-  if (st.liked.includes(id) || chatting96(id)) return false;
+  if (st.liked.includes(id) || chatting96(id) || (st.pend || []).some(p => p.id === id)) return false;
   const n = st.nope[id]; if (n && now96() - n < NOPE_DAYS96 * 864e5) return false;
   return true;
 }
@@ -18633,6 +18634,8 @@ function deck96() {
     const explore = (out.length + 1) % 5 === 0 && rest.length;
     out.push(explore ? Object.assign(rest.splice(hash96(st.day + out.length) % rest.length, 1)[0], { ex: 1 }) : (top.shift() || rest.shift()));
   }
+  /* 同一部剧的人不连着出现（能错开就错开） */
+  for (let i = 1; i < out.length; i++) { const w0 = (ch(out[i - 1].id) || {}).w; if ((ch(out[i].id) || {}).w !== w0) continue; const j = out.findIndex((r, k) => k > i && (ch(r.id) || {}).w !== w0); if (j > 0) { const t = out[j]; out.splice(j, 1); out.splice(i, 0, t); } }
   /* 匹配度用绝对分换算（不按这副牌拉伸），同样理由的两个人不会一个 97% 一个 68% */
   out.forEach(r => { r.pct = Math.max(60, Math.min(98, Math.round(62 + r.s * 1.1))); if (r.ex) r.why = [L96("换换口味", "Something different")]; });
   return out;
@@ -18654,16 +18657,65 @@ function openSwipe96() {
   DECK96 = todayDeck96(); let el = $("#sw96"); if (!el) { el = document.createElement("div"); el.id = "sw96"; ($("#dev") || document.body).appendChild(el); }
   el.hidden = false; renderSwipe96(); if (typeof track === "function") track("meet_open", { n: DECK96.length });
 }
-function swLeft96() { const st = sw96(); return Math.max(0, P96.freeSwipes + (st.extra || 0) - (st.used || 0)); }
+/* 2026-11-09 · 遇见 v2：喜欢有上限、匹配要等、开场白看时间
+   · 左滑不限次数；右滑（喜欢）每天免费 P96.likes 次，用完可以花 💎 再买 P96.moreLikes 次；⭐ 超级喜欢另付 💎、不占次数、必定匹配。
+   · 右滑后不会立刻配上：TA 要「考虑」十几秒（超级喜欢几秒），而且不是每个人都会回喜欢你——概率跟匹配度走（约 35%～85%）。
+     没配上的人不会通知你，也不会再出现在今天的牌里。等待中的喜欢存在 S.sw96.pend 里，关掉 App 再打开照样会揭晓。
+   · 配上后 TA 先发第一条消息：按 TA 的人设 + 你此刻的本地时间（凌晨 / 清晨 / 上午 / 中午 / 下午 / 傍晚 / 夜里）现写；
+     AI 不可用时用按时段分好的备用句，按人随机，不会每个人都一样。 */
+function likeLeft96() { const st = sw96(); return Math.max(0, P96.likes + (st.extraLikes || 0) - (st.likes || 0)); }
+function swLeft96() { return likeLeft96(); }
+const BAND96 = [[0, 5, "凌晨", "the middle of the night"], [5, 9, "清晨", "early morning"], [9, 12, "上午", "the morning"], [12, 14, "中午", "lunchtime"], [14, 18, "下午", "the afternoon"], [18, 21, "傍晚", "the evening"], [21, 24, "夜里", "late evening"]];
+function band96(d) { const h = (d || new Date()).getHours(); return BAND96.findIndex(b => h >= b[0] && h < b[1]); }
+const OPF96 = [
+  [["凌晨这个点还在滑……看来今晚睡不着的不止我一个。你在想什么？", "这个时间配上，算不算一种缘分？说说，你为什么还醒着。", "我刚放下手里的事，就看到你也喜欢我。现在轮到你先说——还是我先？", "失眠的人配上失眠的人。要不要比比，谁先困？"],
+   ["Still swiping at this hour… guess I'm not the only one who can't sleep. What's on your mind?", "Matching at this hour has to count as fate, right? Tell me why you're still up.", "I'd just put my work down when you liked me back. Your move — or should I go first?", "An insomniac matched with an insomniac. Want to see who gets sleepy first?"]],
+  [["早。你喜欢我的时候，我刚好在看日出。今天打算怎么过？", "这么早就醒了？我猜你是那种一睁眼先看手机的人。", "早安。今天的第一件好事，是你。", "早。我已经晨跑回来了，你呢，还赖在床上？"],
+   ["Morning. I was watching the sunrise when you liked me. What's your day look like?", "Up this early? I'm guessing you check your phone before you open your eyes.", "Good morning. First good thing today: you.", "Morning. I'm back from a run already — you still in bed?"]],
+  [["我本来在开会，看到你就溜号了。你在忙什么？", "上午好。别告诉我你是上班摸鱼刷到我的。", "刚喝完第二杯咖啡，正好清醒地认识你。", "本来今天上午很无聊，现在不一样了。你那边在忙吗？"],
+   ["I was in a meeting and checked out the second I saw you. What are you up to?", "Hey. Don't tell me you found me while pretending to work.", "Just finished my second coffee — perfect timing to meet you properly.", "This morning was dull until about a minute ago. Busy over there?"]],
+  [["午饭吃了吗？别说又是随便对付的。", "午休被你配上——剩下的半小时，我决定都留给你。", "中午好。我在想要不要请你吃一顿，先问问你爱吃什么？", "太阳正大，我躲在阴凉里刷到了你。你那边热吗？"],
+   ["Did you eat? Don't tell me it was something sad from a desk drawer.", "You caught me on my lunch break. The rest of it's yours.", "Hey. I'm thinking about buying you lunch — so, what do you like?", "Sun's brutal out here — I found you while hiding in the shade. Hot where you are?"]],
+  [["下午最容易犯困，还好你来了。聊点什么提提神？", "这个点刚忙完一阵，抬头就看到你。今天过得怎么样？", "下午好。我有个问题憋了一会儿了：你右滑我，是因为哪一点？", "下午茶时间。如果现在能约你，你想喝点什么？"],
+   ["Afternoons are the worst for staying awake. Lucky you showed up. Keep me alert?", "Just came up for air and there you were. How's your day going?", "Hey. I've been dying to ask — what made you swipe right on me?", "Teatime. If I could take you out right now, what would you order?"]],
+  [["天快黑了。今晚有安排吗？没有的话，我想占用一点。", "刚忙完就看到你，今天总算有件好事。", "傍晚的光最好看。你那边现在是什么颜色的天？", "晚饭还没着落。要不要一起想想，今晚吃什么？"],
+   ["It's getting dark. Plans tonight? If not, I'd like to steal a little of it.", "Just wrapped up and found you — finally something good today.", "Best light of the day right now. What color is the sky where you are?", "No dinner plans yet. Help me decide what we're eating tonight?"]],
+  [["这么晚还在滑……是在等一个能陪你聊到睡着的人吗？", "晚上好。我刚好有空，也刚好想认识你。", "今天最后一件想做的事，是听你说说你的一天。", "本来准备睡了，看到你又精神了。今天过得好吗？"],
+   ["Swiping this late… waiting for someone to talk you to sleep?", "Evening. I happen to be free — and I happen to want to know you.", "Last thing I want to do today is hear about yours.", "I was about to sleep. Now I'm wide awake. How was your day?"]]];
+function opFallback96(id) { const b = Math.max(0, band96()), L = OPF96[b][Z96() ? 0 : 1], st = sw96(); st.opUsed = st.opUsed || [];
+  let k = hash96(id + st.day) % L.length; for (let n = 0; n < L.length && st.opUsed.includes(b + ":" + k); n++) k = (k + 1) % L.length;
+  st.opUsed.push(b + ":" + k); return L[k]; }
+const OP96 = {};
+async function opener96(id) {
+  const c = ch(id); if (!c) return opFallback96(id);
+  const d = new Date(), hm = String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"), b = BAND96[Math.max(0, band96(d))], zh = Z96();
+  const P = zh
+    ? "你是「" + first(c.n) + "」，" + (Lz(c.role) || "") + "。外貌：" + (Lz(c.looks) || "") + "\n性格与说话方式：" + (Lz(c.vibe) || "") + "\n你在交友功能「遇见」里刚和对方互相喜欢、配对成功，现在由你先发第一条消息。\n对方本地时间：" + hm + "（" + b[2] + "）。\n要求：1～2 句，30～60 字，像真人发的聊天消息，完全贴合你的人设和口吻；自然带出这个时间（" + b[2] + "）你正在做什么或想到什么，不要直接报时；结尾留一个对方容易接的问题或钩子；不要用「嘻嘻」「你好呀」之类的模板开头，不说自己全名，不写动作描写。"
+    : "You are " + first(c.n) + ", " + (Lz(c.role) || "") + ". Looks: " + (Lz(c.looks) || "") + "\nPersonality and voice: " + (Lz(c.vibe) || "") + "\nYou just matched with someone in the app's Meet feature (you both liked each other). Send the first message.\nTheir local time: " + hm + " (" + b[3] + ").\nRules: 1–2 sentences, under 40 words, like a real text, fully in character; naturally reflect what you're doing or thinking at this time of day without stating the time; end with an easy question or hook; no generic openers like \"hey there\", no full name, no action descriptions.";
+  try { const r = await ask96(P + '\nReply with ONLY JSON: {"text":"..."} in ' + (zh ? "Simplified Chinese" : "English") + ".", 260); const t = r && String(r.text || "").replace(/\*[^*]*\*/g, "").trim(); if (t && t.length > 4) return t.slice(0, 160); } catch (_) {}
+  return opFallback96(id);
+}
+/* 对方回不回喜欢：按匹配度，约 35%～85% */
+function chance96(pct) { return Math.max(.35, Math.min(.85, .35 + ((pct || 70) - 60) / 38 * .5)); }
 function renderSwipe96() {
-  const el = $("#sw96"); if (!el) return; const left = swLeft96();
-  const more = allChars().some(id => eligible96(id, sw96()));
-  const done = '<div class="swo96"><p>' + L96("合适的人你都见过了", "You've met everyone who fits you") + '</p><p class="xs faint">' + L96("有新角色上线会先推给你；左滑过的人两周后会再出现。也可以调整口味，换一批人。", "New characters come to you first; people you passed return in two weeks. Or change your taste.") + '</p><button class="btn btn-p" data-pfopen="1">' + L96("调整口味", "Change my taste") + '</button></div>';
-  const body = left <= 0 ? (more ? '<div class="swo96"><p>' + L96("今天的免费滑动用完了", "You're out of swipes for today") + '</p><button class="btn btn-p" data-swmore96="1">' + L96("再滑 30 次 · ", "30 more swipes · ") + P96.swipes + '💎</button></div>' : done)
-    : !DECK96.length ? done : DECK96.slice(0, 2).reverse().map(cardHTML96).join("");
-  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>' + L96("今日剩余 ", "Left today ") + left + '</small></div><div class="swd96">' + body + '</div>' +
-    (DECK96.length && left > 0 ? '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥</button></div>' : '');
+  const el = $("#sw96"); if (!el) return; const st = sw96(), left = likeLeft96(), wait = (st.pend || []).length;
+  const keepM = el.querySelector(".mt96");
+  const more = allChars().some(id => eligible96(id, st));
+  const done = '<div class="swo96"><p>' + L96("今天的人你都看过了", "That's everyone for today") + '</p><p class="xs faint">' + L96("明天会有新的一副牌；有新角色上线会先推给你，左滑过的人两周后再出现。也可以调整口味，换一批人。", "A fresh deck comes tomorrow; new characters come to you first, and people you passed return in two weeks. Or change your taste.") + '</p>' +
+    (more ? '<button class="btn btn-p" data-swmore96="1">' + L96("再看 30 人 · ", "30 more people · ") + P96.swipes + '💎</button>' : '') + '<button class="lnk" data-pfopen="1">' + L96("调整口味", "Change my taste") + '</button></div>';
+  const body = !DECK96.length ? done : DECK96.slice(0, 2).reverse().map(cardHTML96).join("");
+  el.innerHTML = '<div class="swh96"><button data-swx96="1">✕</button><b>💘 ' + L96("遇见", "Meet") + '</b><small>♥ ' + L96("今日喜欢 ", "Likes today ") + left + '/' + (P96.likes + (st.extraLikes || 0)) + '</small></div>' +
+    (wait ? '<div class="swq96">💌 ' + L96(wait + " 个人正在看你的资料……", wait + (wait > 1 ? " people are" : " person is") + " checking you out…") + '</div>' : '') +
+    '<div class="swd96">' + body + '</div>' +
+    (DECK96.length ? '<div class="swb96"><button data-swn96="1" class="n">✕</button><button data-sws96="1" class="s">⭐<small>' + P96.superlike + '💎</small></button><button data-swy96="1" class="y">♥<small>' + left + '</small></button></div>' : '');
   wireSwipe96();
+  if (keepM) el.appendChild(keepM);
+}
+function likeWall96() {
+  const d = $("#sw96 .swd96"); if (!d || d.querySelector(".lw96")) return;
+  d.insertAdjacentHTML("beforeend", '<div class="lw96"><b>' + L96("今天的 " + P96.likes + " 次喜欢用完了", "You've used today's " + P96.likes + " likes") + '</b><p>' + L96("明天 0 点刷新。认真挑过的喜欢，才更容易被回应。", "They refresh at midnight. Likes you think about are the ones that get returned.") + '</p>' +
+    '<button class="btn btn-p btn-block" data-swbuy96="1">' + L96("再来 " + P96.moreLikes + " 次喜欢 · ", P96.moreLikes + " more likes · ") + P96.moreLikesCost + '💎</button>' +
+    '<p class="xs faint">' + L96("⭐ 超级喜欢不占次数，TA 一定会回应 · ", "⭐ Super likes don't count and always match · ") + P96.superlike + '💎</p><button class="lnk" data-swlw96="1">' + L96("先继续看看", "Keep browsing") + '</button></div>');
 }
 function wireSwipe96() {
   const top = $("#sw96 .sc96:last-child"); if (!top) return; let x0 = 0, dx = 0, on = false;
@@ -18679,22 +18731,57 @@ function learn96(st, id, d) {
   if (c.a && c.a !== "charm") add("a:" + c.a, d); /* charm 是官方卡的默认原型，人人都是，学了等于没学 */ ((w && w.tags) || []).forEach(x => add("t:" + String(x).toLowerCase(), d * .5));
 }
 async function swipe96(kind) {
-  const r = DECK96[0]; if (!r) return; const id = r.id; if (swLeft96() <= 0) { renderSwipe96(); return; }
-  if (kind === "super" && !spend(P96.superlike, "card")) return;
-  const st = sw96(); st.used = (st.used || 0) + 1;
+  const r = DECK96[0]; if (!r) return; const id = r.id, st = sw96();
+  const top = $("#sw96 .sc96:last-child");
+  if (kind === "like" && likeLeft96() <= 0) { if (top) { top.style.transform = ""; top.classList.remove("l", "r"); } likeWall96(); return; }
+  if (kind === "super" && !spend(P96.superlike, "card")) { if (top) { top.style.transform = ""; top.classList.remove("l", "r"); } return; }
+  st.used = (st.used || 0) + 1;
   learn96(st, id, kind === "nope" ? -1 : kind === "super" ? 2 : 1);
   if (kind === "nope") st.nope[id] = now96(); else { delete st.nope[id]; st.liked.push(id); if (st.liked.length > 500) st.liked = st.liked.slice(-300); }
+  if (kind === "like") st.likes = (st.likes || 0) + 1;
   if (typeof track === "function") track("meet_swipe", { cid: id, kind, pct: r.pct, explore: r.ex || 0 });
-  const top = $("#sw96 .sc96:last-child"); if (top) { top.style.transform = "translateX(" + (kind === "nope" ? -600 : 600) + "px) rotate(" + (kind === "nope" ? -25 : 25) + "deg)"; top.style.opacity = "0"; }
-  DECK96.shift(); st.deck = DECK96.slice(); save();
-  if (kind === "nope") { setTimeout(renderSwipe96, 260); return; }
-  const th = dmThread96(id); th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", {absolute:kind === "super" ? 18 : 8, floor:true});
-  if (kind === "super") { const op = (th.msgs.find(m => m.who === id && m.txt) || {}).txt || L96("你好。", "Hey."); th.msgs.push({ who: id, k: "vn96", txt: L96("听说你给了我超级喜欢……", "Heard you super-liked me…") + " " + String(op).replace(/\*[^*]*\*/g, "").trim().slice(0, 80), at: now96() }); th.unread = true; save(); }
-  setTimeout(() => matchSheet96(id, kind === "super"), 280);
+  if (top) { top.style.transform = "translateX(" + (kind === "nope" ? -600 : 600) + "px) rotate(" + (kind === "nope" ? -25 : 25) + "deg)"; top.style.opacity = "0"; }
+  DECK96.shift(); st.deck = DECK96.slice();
+  if (kind !== "nope") {
+    const sup = kind === "super", ok = sup || Math.random() < chance96(r.pct);
+    const due = now96() + (sup ? 4000 + Math.random() * 3000 : 10000 + Math.random() * 10000);
+    st.pend = (st.pend || []).filter(p => p.id !== id); st.pend.push({ id, due, ok: ok ? 1 : 0, sup: sup ? 1 : 0, pct: r.pct });
+    if (ok) OP96[id] = opener96(id);
+  }
+  save(); setTimeout(renderSwipe96, 260);
 }
-function matchSheet96(id, sup) {
-  const el = $("#sw96 .swd96"); if (!el) return; const b = $("#sw96 .swb96"); if (b) b.remove();
-  el.innerHTML = '<div class="mt96"><b>' + (sup ? "⭐ " : "") + L96("匹配成功！", "It's a match!") + '</b><div class="mta96">' + meAv(84) + avatar(id, 84) + '</div><p>' + L96(nameOf96(id) + " 也在等你开口。", nameOf96(id) + " is waiting for you to say something.") + '</p><button class="btn btn-p btn-block" data-swchat96="' + esc(id) + '">💬 ' + L96("开始聊天", "Say hi") + '</button><button class="lnk" data-swgo96="1">' + L96("继续滑", "Keep swiping") + '</button></div>';
+/* 揭晓：到点的喜欢 → 配上就开聊天、TA 先说第一句；没配上就静悄悄地过去 */
+let PBUSY96 = false;
+async function pendTick96() {
+  if (PBUSY96) return; const st = S.sw96; if (!st || !(st.pend || []).length) return;
+  const due = st.pend.filter(p => p.due <= now96()); if (!due.length) return;
+  PBUSY96 = true;
+  try {
+    st.pend = st.pend.filter(p => p.due > now96()); save();
+    for (const p of due) {
+      if (!ch(p.id)) continue;
+      if (!p.ok) { if (typeof track === "function") track("meet_nomatch", { cid: p.id, pct: p.pct }); continue; }
+      let op = ""; try { op = await (OP96[p.id] || opener96(p.id)); } catch (_) { op = opFallback96(p.id); } delete OP96[p.id];
+      match96(p.id, !!p.sup, op || opFallback96(p.id));
+    }
+  } finally { PBUSY96 = false; }
+  const el = $("#sw96"); if (el && !el.hidden && !el.querySelector(".mt96")) renderSwipe96();
+}
+setInterval(pendTick96, 1000); setTimeout(pendTick96, 3000);
+function match96(id, sup, op) {
+  let th = S.threads["c:" + id];
+  if (!th || !(th.msgs || []).some(m => m.who === "me")) { th = newThread("solo", id); S.threads[th.id] = th; th.msgs = []; }
+  th.love = th.love || {}; loveWrite(th, id, 0, "social96:like", { absolute: sup ? 18 : 8, floor: true });
+  th.msgs.push({ who: id, k: "say", txt: op, at: now96() }); th.unread = true; th.at = now96(); th.m96 = 1; save();
+  if (typeof track === "function") track("meet_match", { cid: id, sup: sup ? 1 : 0, band: band96() });
+  const el = $("#sw96");
+  if (el && !el.hidden) matchSheet96(id, sup, op); else banner96(id, "💘 " + L96("配对成功！", "It's a match! ") + nameOf96(id) + "：" + op);
+}
+function matchSheet96(id, sup, op) {
+  const host = $("#sw96"); if (!host) return; const old = host.querySelector(".mt96"); if (old) old.remove();
+  host.insertAdjacentHTML("beforeend", '<div class="mt96"><b>' + (sup ? "⭐ " : "") + L96("配对成功！", "It's a match!") + '</b><div class="mta96">' + meAv(84) + avatar(id, 84) + '</div><p class="mtn96">' + esc(nameOf96(id)) + '</p>' +
+    (op ? '<div class="mto96">' + avatar(id, 30) + '<span>' + esc(op) + '</span></div>' : '') +
+    '<button class="btn btn-p btn-block" data-swchat96="' + esc(id) + '">💬 ' + L96("回复 TA", "Reply") + '</button><button class="lnk" data-swgo96="1">' + L96("继续滑", "Keep swiping") + '</button></div>');
 }
 document.addEventListener("click", e => { let x;
   if (e.target.closest("[data-swopen96]")) { openSwipe96(); return; }
@@ -18702,16 +18789,18 @@ document.addEventListener("click", e => { let x;
   if (e.target.closest("[data-swn96]")) { swipe96("nope"); return; }
   if (e.target.closest("[data-swy96]")) { swipe96("like"); return; }
   if (e.target.closest("[data-sws96]")) { swipe96("super"); return; }
-  if (e.target.closest("[data-swgo96]")) { renderSwipe96(); return; }
+  if (e.target.closest("[data-swgo96]")) { const m = $("#sw96 .mt96"); if (m) m.remove(); renderSwipe96(); return; }
+  if (e.target.closest("[data-swlw96]")) { const w = $("#sw96 .lw96"); if (w) w.remove(); return; }
+  if (e.target.closest("[data-swbuy96]")) { if (!spend(P96.moreLikesCost, "card")) return; const st = sw96(); st.extraLikes = (st.extraLikes || 0) + P96.moreLikes; save(); if (typeof track === "function") track("meet_buy_likes", { n: P96.moreLikes }); renderSwipe96(); return; }
   if (e.target.closest("[data-swmore96]")) { if (!spend(P96.swipes, "card")) return; const st = sw96(); st.extra = (st.extra || 0) + 30; st.deck = null; save(); DECK96 = todayDeck96(); renderSwipe96(); return; }
-  if ((x = e.target.closest("[data-swchat96]"))) { const id = x.dataset.swchat96; const el = $("#sw96"); if (el) el.hidden = true; dmThread96(id); try { openThread("c:" + id); } catch (_) {} return; }
+  if ((x = e.target.closest("[data-swchat96]"))) { const id = x.dataset.swchat96; const el = $("#sw96"); if (el) { el.hidden = true; const m = el.querySelector(".mt96"); if (m) m.remove(); } try { openThread("c:" + id); } catch (_) {} return; }
 }, true);
 /* 调完口味回来：今天的牌按新口味重算 */
 document.addEventListener("click", e => { if (!e.target.closest("[data-pfsave]")) return; setTimeout(() => { const st = sw96(); st.deck = null; save(); const el = $("#sw96"); if (el && !el.hidden) { DECK96 = todayDeck96(); renderSwipe96(); } }, 0); }, true);
 /* Discover: entry banner — 头像用今天牌里排最前的三个人 */
 { const _dm = discMain; discMain = function () { let h = _dm.apply(this, arguments);
     try { const dk = todayDeck96(), top3 = dk.slice(0, 3);
-      h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + top3.map(r => '<img src="' + esc(artSrc(r.id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + (top3.length ? L96("今天为你挑了 " + dk.length + " 个人 · 右滑开始聊天", dk.length + " picked for you today · swipe right to chat") : L96("合适的人都见过了 · 新角色上线会推给你", "You've met everyone who fits — new faces coming")) + '</span></span>›</button>' + h; } catch (_) {}
+      h = '<button class="sw96e" data-swopen96="1"><span class="sw96ea">' + top3.map(r => '<img src="' + esc(artSrc(r.id)) + '" alt="">').join("") + '</span><span class="grow"><b>💘 ' + L96("遇见", "Meet someone") + '</b><span>' + (top3.length ? L96("今天为你挑了 " + dk.length + " 个人 · 互相喜欢才能开聊", dk.length + " picked for you today · chat when it's mutual") : L96("合适的人都见过了 · 新角色上线会推给你", "You've met everyone who fits — new faces coming")) + '</span></span>›</button>' + h; } catch (_) {}
     return h; }; }
 
 (function () { const st = document.createElement("style"); st.textContent = `
@@ -18743,6 +18832,10 @@ document.addEventListener("click", e => { if (!e.target.closest("[data-pfsave]")
 .sci96{position:absolute;left:0;right:0;bottom:0;padding:60px 18px 18px;background:linear-gradient(transparent,rgba(0,0,0,.85))}.sci96 b{font-size:28px;display:flex;align-items:baseline;gap:8px}.sci96 b small{font-size:20px;font-weight:400}.sci96 span{display:block;color:#F6D3AE;font-size:14px}.sci96 p{margin:6px 0 8px;font-size:14px;color:#E9E4EE;line-height:1.45}.sci96 i{font-style:normal;font-size:11.5px;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.14);margin-right:5px}
 .lk96,.np96{position:absolute;top:28px;font-style:normal;font-weight:900;font-size:30px;padding:4px 12px;border:4px solid;border-radius:10px;opacity:0;transition:opacity .15s}.lk96{left:20px;color:#7FE0A8;transform:rotate(-14deg)}.np96{right:20px;color:#FF6F7F;transform:rotate(14deg)}.sc96.l .lk96,.sc96.r .np96{opacity:1}
 .swb96{display:flex;justify-content:center;gap:22px;padding:14px 0 calc(16px + env(safe-area-inset-bottom,0px))}.swb96 button{width:62px;height:62px;border-radius:50%;border:0;font-size:26px;display:grid;place-items:center;background:#1E1A26;color:#fff;box-shadow:0 6px 18px #0008}.swb96 .n{color:#FF6F7F}.swb96 .y{color:#7FE0A8}.swb96 .s{color:#6FB6FF;width:52px;height:52px;align-self:center;font-size:20px;line-height:1}.swb96 .s small{font-size:10px;color:#9C93A6}
+.swq96{margin:0 14px 6px;padding:7px 12px;border-radius:12px;background:rgba(238,111,151,.12);color:#F6D3AE;font-size:12.5px;text-align:center;animation:swq96 1.6s ease-in-out infinite alternate}@keyframes swq96{from{opacity:.65}to{opacity:1}}
+.swb96 .y{flex-direction:column;line-height:1}.swb96 .y small{font-size:10px;color:#9C93A6;margin-top:2px}
+.lw96{position:absolute;inset:0;z-index:5;border-radius:22px;background:rgba(12,11,16,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}.lw96 b{font-size:20px}.lw96 p{color:#CFC7D8;font-size:13.5px;margin:0}.lw96 .btn{max-width:260px}.lw96 .lnk{background:none;border:0;color:#9C93A6}
+.mt96{z-index:20;background:radial-gradient(ellipse at 50% 35%,rgba(238,111,151,.28),rgba(12,11,16,.97) 70%)}.mtn96{font-size:18px;font-weight:800;color:#fff!important;margin:0}.mto96{display:flex;gap:8px;align-items:flex-start;max-width:300px;text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:10px 12px;font-size:14px;line-height:1.5;color:#EDE8F2}
 .swo96,.mt96{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:20px}.mt96 b{font-size:30px;background:linear-gradient(135deg,#F0B77E,#EE6F97);-webkit-background-clip:text;color:transparent}.mta96{display:flex;gap:-10px}.mta96 .av{margin:0 -8px;border:3px solid #0C0B10}.mt96 p{color:#CFC7D8}.mt96 .btn{max-width:260px}.mt96 .lnk{background:none;border:0;color:#9C93A6}`; document.head.appendChild(st); })();
 
 /* ================= v6.3 · 自由模式（角色智能体）+ 电话开关 =================
