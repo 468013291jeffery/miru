@@ -33,7 +33,7 @@ _mod=open("src/miru_rules.js",encoding="utf8").read()
 # the same text must reach the page (/miru_rules.js) and the functions (/api/_rules.js)
 for p in (os.path.join(ROOT,"miru_rules.js"), os.path.join(ROOT,"api","_rules.js")):
     open(p,"w",encoding="utf8").write(_full+_mod)
-parts.extend(["app129_catalog.js", "app130_princes.js", "app131_m105.js", "app132_m105experience.js", "app133_unread.js", "app134_arc98.js", "app134_m107.js", "app135_context.js", "app135_narration.js", "app136_spp.js"])
+parts.extend(["app129_catalog.js", "app130_princes.js", "app131_m105.js", "app132_m105experience.js", "app133_unread.js", "app134_arc98.js", "app134_m107.js", "app135_context.js", "app135_narration.js", "app136_spp.js", "app137_m108.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)
