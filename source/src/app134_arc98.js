@@ -245,12 +245,14 @@ ARC98.COMPRESS_EVERY = 20;
 const ARC_COMPRESSING98 = new WeakSet();
 function arcKeep98(th, fact) { const A = th.b98; if (!fact) return; (A.keep98 = A.keep98 || []).push(String(fact).slice(0, 80)); if (A.keep98.length > 40) A.keep98.splice(0, A.keep98.length - 40); }
 function arcRecap98(th, zh) {
+  if (typeof contextOn135 === "function" && contextOn135(th)) return contextRecap135(th,zh);
   const A = th.b98, keep = (A.keep98 || []).slice(-12), sum = A.sum.slice(A.recap98 ? -4 : -8);
   return (A.recap98 ? "\n" + (zh ? "到目前为止（压缩后的前情）：" : "So far (condensed): ") + A.recap98 : "") +
     (keep.length ? "\n" + (zh ? "一直要记得的事：" : "Always remember: ") + keep.join("；") : "") +
     (sum.length ? "\n" + (zh ? "最近：\n" : "Recently:\n") + sum.join("\n") : "");
 }
 async function arcCompress98(th) {
+  if (typeof contextOn135 === "function" && contextOn135(th)) return contextCompress135(th);
   const A = th && th.b98; if (!A || A.ended || ARC_COMPRESSING98.has(th)) return;
   if (A.turns - (A.compAt98 || 0) < ARC98.COMPRESS_EVERY || typeof ask !== "function") return;
   ARC_COMPRESSING98.add(th); const at = A.turns, zh = Z98(), w = wd(th.wid), b = bOf98(w), leads = th.cast.filter(c => { const k = cardOf98(w, c); return k && k.tier === "lead"; });

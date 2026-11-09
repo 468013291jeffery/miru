@@ -212,7 +212,7 @@ async function ask(prompt,opts){
  if(typeof ORAL_RULE==="string"&&typeof prompt==="string"&&prompt.indexOf("SPOKEN STYLE")<0)prompt=prompt+"\n\n"+ORAL_RULE;
  const _tier=opts.modelTier||"default";
  try{let r;try{r=await SAMPLE.json(prompt,requestOpts())}
-  catch(e0){if(!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
+  catch(e0){if(opts.optional||!e0||e0.code!=="invalid_json")throw e0;r=jsonLoose(e0.text);
    if(r==null){const t2=await SAMPLE(prompt+"\n\nIMPORTANT: reply with valid JSON only — no prose, no code fences.",requestOpts());r=jsonLoose(t2&&t2.text)}
    /* 自适应预算（2026-10-25 · Ann「你看着办」）：
       同一档位仍解析不出来，多半是两种情形之一 ——
@@ -227,8 +227,8 @@ async function ask(prompt,opts){
     r=jsonLoose(t3&&t3.text);
    }
    if(r==null)throw e0}
-  LIVE_ERR=null;refreshLive();return r}
- catch(e){LIVE_ERR=(e&&e.code)||"error";refreshLive();
+  if(!opts.optional){LIVE_ERR=null;refreshLive();}return r}
+ catch(e){if(opts.optional)throw e;LIVE_ERR=(e&&e.code)||"error";refreshLive();
   if(e&&["not_granted","sampling_disabled","not_declared","capability_disabled"].includes(e.code))toast(t("live.denied"));
   else if(e&&e.code!=="cancelled")toast(t("live.err",{c:LIVE_ERR}));
   throw e}}

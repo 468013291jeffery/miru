@@ -11,6 +11,8 @@ let apiUp = false;
 try { const r = await fetch(api, { signal: AbortSignal.timeout(1500) }); apiUp = r.ok; } catch (_) { apiUp = false; }
 
 const suites = [
+  ['context135-selftest.cjs', ['tools/context135-selftest.cjs'], true],
+  ['narration135-selftest.cjs', ['tools/narration135-selftest.cjs'], true],
   ['board-write-selftest.cjs', ['tools/board-write-selftest.cjs'], true],
   ['board-api-selftest.cjs', ['tools/board-api-selftest.cjs'], true],
   ['arc-runtime-selftest.cjs', ['tools/arc-runtime-selftest.cjs'], true],

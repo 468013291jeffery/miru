@@ -174,7 +174,7 @@ function dialogueProgressContext(th) {
 const dialogueProgressAsk=ask;
 ask=function(prompt,opts){
  const th=typeof curT!=="undefined"&&S.threads[curT];
- if(typeof prompt==="string")prompt+=dialogueProgressContext(th);
+ if(typeof prompt==="string"&&!(opts&&opts.isolatedContext))prompt+=dialogueProgressContext(th);
  return dialogueProgressAsk.call(this,prompt,opts);
 };
 
