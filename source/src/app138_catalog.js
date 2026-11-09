@@ -71,17 +71,19 @@
     if (!runs.length) return null;
     return runs.map(th => th.quest.goals.filter(g => g.done).length + (th.quest.hidden && th.quest.hidden.done ? 1 : 0)).sort((a, b) => b - a)[0];
   }
-  let QH = null;
+  let QH = null, QALL = false;
   function questHTML() {
     if (!QH) { Promise.all([load(), liveList()]).then(([d, L]) => {
-      const A = (d && d.works) || {}, rows = L.filter(w => A[w.id] && A[w.id].quest && (typeof orOK !== "function" || orOK({ or: w.orient || "all" })));
+      const A = (d && d.works) || {}, all = L.filter(w => A[w.id] && A[w.id].quest), fit = all.filter(w => typeof orOK !== "function" || orOK({ or: w.orient || "all" }));
+      /* 选了某个取向（比如「女女」）但这个取向下还没有剧：不给空页，先列全部，并说明一句 */
+      const rows = fit.length ? fit : all; QALL = !fit.length && all.length > 0;
       Promise.all(rows.map(w => (typeof off94Assets === "function" ? off94Assets(w.id) : Promise.resolve({})).then(a => Object.assign({}, w, { A: a || {} })))).then(R => {
         QH = R; if (homeTab === "quest") { const b = $("#htabBody"); if (b) b.innerHTML = questHTML(); else if (typeof renderTab === "function") renderTab("discover"); }
         setTimeout(() => { QH = null; }, 12e4);
       });
     }); return '<p class="empty">' + (zh() ? "正在加载挑战…" : "Loading challenges…") + '</p>'; }
     if (!QH.length) return '<p class="empty">' + (zh() ? "还没有开放的挑战。" : "No challenges yet.") + '</p>';
-    return '<p class="xs faint" style="padding:8px 16px 0">' + (zh() ? "每个挑战有回合上限：在限定回合内，通过对话完成目标。还有一个隐藏目标。" : "Each challenge has a turn limit: reach the goals through conversation before you run out. There's a hidden goal too.") + '</p>' +
+    return (QALL ? '<p class="xs" style="padding:8px 16px 0;color:var(--gold)">' + (zh() ? "当前分类下还没有挑战，先给你看全部。" : "No challenges in this category yet — showing all.") + '</p>' : '') + '<p class="xs faint" style="padding:8px 16px 0">' + (zh() ? "每个挑战有回合上限：在限定回合内，通过对话完成目标。还有一个隐藏目标。" : "Each challenge has a turn limit: reach the goals through conversation before you run out. There's a hidden goal too.") + '</p>' +
       QH.map(w => {
         const q = CAT.data.works[w.id].quest, b = best(w.id), tot = q.goals.length + 1, title = zh() ? w.title : ((w.en && w.en.title) || w.title);
         const cover = w.A.cover || w.A.poster || w.cover || "";
@@ -104,6 +106,16 @@
     } catch (err) { console.warn("[cat138] quest", err); toast(zh() ? "暂时打不开这个挑战" : "Couldn't open this challenge"); }
     finally { delete x.dataset.busy; }
   }, true);
+  /* ---------- 3 · 排行：选的取向下没有上榜角色时，自动切到「全部」，不给空榜 ---------- */
+  if (typeof rankHTML === "function" && typeof RK !== "undefined") {
+    const R0 = rankHTML;
+    rankHTML = function () {
+      try {
+        if (!RK.orient && RK.data && RK.data._o !== "all" && !RK.busy && !(RK.data.rows || []).some(r => ch(r.cid))) { RK.orient = "all"; RK.data = null; }
+      } catch (_) {}
+      return R0.apply(this, arguments);
+    };
+  }
   setTimeout(load, 1200);
   window.__cat138 = { load, tagsFor, infer };
 })();
