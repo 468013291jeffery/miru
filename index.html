@@ -6,7 +6,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="9a352c9ca9c6 2026-11-09T02:47Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="e8829c4bc7f3 2026-11-09T07:50Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -23816,11 +23816,46 @@ function narrationDirector135(th, zh) {
   return zh ? '\n后置旁白已开启：narration 留空，程序会按角色本轮实际说做的事补画面；不提前替角色或玩家完成动作。'
     : '\nPost-performance narration is enabled. Leave narration empty; the app may frame the actual delivered performance afterward. Never pre-complete anyone\'s actions.';
 }
+/* Frame templates use only specific, completed gestures owned by the speaker. */
+function narrationCue135(th, source) {
+  if (!source || source.type !== 'action') return '';
+  const raw=String(source.text||'').replace(/[*＊]/g,' ').trim(),body=raw.replace(/\s/g,'');
+  if (/如果|假如|要是|倘若|一旦|等你|等玩家|待你|只要|只有|获准后|同意后|点头后|许可后|才会|试图|尝试|准备|打算|将要|正要|似乎|仿佛|差点|没|未|不|想|\b(?:if|unless|would|will|try|trying|might|not|never)\b/i.test(body)) return '';
+  for (const id of th.cast || []) {
+    const c=ch(id),name=c&&first(c.n);
+    if (name && name!==source.who && name.length>1 && body.includes(name)) return '';
+  }
+  if (/声音(?:渐渐|慢慢)?(?:压低|低下来|放低)|压低(?:了)?(?:声音|嗓音)|低声|\blower(?:ed|s)?(?:his|her|their)?voice\b/i.test(body)||/\blower(?:ed|s)?\s+(?:his\s+|her\s+|their\s+)?voice\b/i.test(raw)) return 'voice';
+  if (/停住|停下|顿住|动作一顿|手一顿|停了(?:一下|片刻)|顿了顿|\bpause(?:d|s)?\b/i.test(body)||/\bpause(?:d|s)?\b/i.test(raw)) return 'pause';
+  if (/退开|后退|退后|往后退|向后退|\bstep(?:ped|s)?back\b/i.test(body)||/\bstep(?:ped|s)?\s+back\b/i.test(raw)) return 'space';
+  if (/抬眼|抬起目光|看向|望向|抬头看|\blook(?:ed|s)?(?:up|at)\b/i.test(body)||/\blook(?:ed|s)?\s+(?:up|at)\b/i.test(raw)) return 'gaze';
+  if (/朝.{0,6}抬手|举手示意|抬手示意/.test(body)) return 'gesture';
+  return '';
+}
+function narrationFallback135(th,sources) {
+  const action=sources.find(x=>narrationCue135(th,x));if(!action)return null;
+  const cue=narrationCue135(th,action),speech=sources.find(x=>x.who===action.who&&x.type==='speech');
+  const player=sources.find(x=>x.who==='PLAYER'),zh=Z98(),name=action.who;
+  const evidence=cue==='voice'&&speech&&player&&speech.text.includes('证据')&&player.text.includes('证据');
+  const lines={
+    voice:zh?(evidence?name+'的声音低了下来，话题落回了证据上。':name+'的声音低了下来，刚才的回应多了一点分量。'):name+' lowers their voice; the reply lands more clearly.',
+    pause:zh?'这一下停顿，给刚才的话留了点余地。':'The pause leaves a little room for the words.',
+    space:zh?'留出的这点距离，让刚才的话不再那么急。':'The space makes the exchange feel less hurried.',
+    gaze:zh?'这一眼，让刚才的话有了一个看得见的回应。':'That look gives the words a visible response.',
+    gesture:zh?'那个手势，让刚才的话有了一个看得见的回应。':'That gesture gives the words a visible response.'
+  };
+  const refs=[action].concat(evidence?[speech,player]:[]);
+  return {text:lines[cue],sources:[...new Set(refs.map(x=>x.ref||'turn:'+th.b98.turns+':'+x.id))],origin:'cue',cue};
+}
 function narrationSources135(th, start) {
   const out = [];
   const add = (who, type, value, ref) => {
     if (typeof value !== 'string' || !value.trim()) return;
-    if (type === 'action' && /没|未|不|想|试图|尝试|准备|打算|将要|正要|似乎|仿佛|差点|要去|\b(?:would|will|try|trying|might|not|never)\b/i.test(value)) return;
+    if(type==='action'){
+      if(/如果|假如|要是|倘若|一旦|等你|等玩家|待你|只要|只有|获准后|同意后|点头后|许可后|才会|\b(?:if|unless|would)\b/i.test(value))return;
+      value=value.split(/[，,。；;！？!?]/).filter(x=>!(/没|未|不|想|试图|尝试|准备|打算|将要|正要|似乎|仿佛|差点|要去|\b(?:will|try|trying|might|not|never)\b/i.test(x))).join('，');
+      if(!value.trim())return;
+    }
     out.push({ id: out.length, who, type, text: value.trim().slice(0, 220), ref: ref || null });
   };
   const lastPlayer = th.msgs.slice(0, start).reverse().find(m => m.who === 'me' && ['say', 'act', 'think'].includes(m.k));
@@ -23836,18 +23871,22 @@ function narrationSources135(th, start) {
       add(first(ch(m.who).n), m.k === 'act' ? 'action' : 'speech', m.txt, ref);
     }
   }
-  const focus = out.filter(x => x.type === 'action').slice(-1)[0];
+  const actions=out.filter(x=>x.type==='action');
+  const focus=actions.find(x=>lastPlayer&&String(lastPlayer.txt||'').includes(x.who)&&narrationCue135(th,x))||actions.find(x=>narrationCue135(th,x))||actions.slice(-1)[0];
   return out.filter(x => x.type !== 'action' || x.who === (focus && focus.who)).slice(0,9).map((x,id) => Object.assign({},x,{id}));
 }
 function narrationReason135(th, opt) {
   if (!narrationOn135(th) || !opt || !opt.delivered || !['talk', 'more', 'choice'].includes(opt.mode)) return '';
-  if ((opt.act && opt.act.mode === 'think') || (opt.d && opt.d.fast98)) return '';
+  if (opt.act && opt.act.mode === 'think') return '';
   const emitted = th.msgs.slice(opt.start);
   // Existing event, entrance, sense or authored narration owns this moment.
   if (emitted.some(m => m.who === 'n' && m.k !== 'box' && typeof m.txt === 'string' && m.txt.trim())) return '';
   const p = narrationPolicy135(th), state = narrationState135(th), turn = th.b98.turns;
   const cooldown = Math.max(2, Math.min(8, Number(p.cooldown) || 3));
-  if (turn - state.lastAttempt < cooldown || turn - state.lastTurn < cooldown) return '';
+  const sceneKey=th.b98.ch+':'+scene98(th).s.id;
+  const important=opt.mode==='choice'&&state.lastChoiceScene!==sceneKey;
+  if (state.lastTurn===turn&&state.lastScene===sceneKey) return '';
+  if (!important&&turn-state.lastTurn<cooldown) return '';
   const sources = narrationSources135(th, opt.start);
   if (!sources.some(x => x.type === 'action')) return '';
   if (opt.mode === 'choice') return 'choice-response';
@@ -23920,33 +23959,53 @@ function narrationClean135(th, response, sources) {
   if (sources.some(x => normalized(x.text) === normalized(text))) return null;
   return {text, sources:refs.map(n => sources.find(x => x.id === n)).map(x => x.ref || 'turn:' + th.b98.turns + ':' + x.id)};
 }
-async function narrationAfter135(th, opt) {
-  const reason = narrationReason135(th,opt); if (!reason) return false;
-  const A = th.b98, state = narrationState135(th), {s} = scene98(th), scene = s.id, turn = A.turns;
-  const last = th.msgs[th.msgs.length-1], count = th.msgs.length, sources = narrationSources135(th,opt.start);
-  if (!sources.some(x => x.who !== 'PLAYER')) return false;
-  const current = () => th.b98 === A && !A.ended && A.turns === turn && scene98(th).s && scene98(th).s.id === scene && th.msgs.length === count && th.msgs[count-1] === last && S.threads[th.id] === th && curT === th.id;
-  if (!current()) return false;
-  state.lastAttempt = turn; state.attempts++;
-  const started = Date.now(), ctl = new AbortController(), p = narrationPolicy135(th);
-  const timeout = Math.max(1000, Math.min(6000, Number(p.timeoutMs) || 5000));
-  let timer;
-  try {
-    const request = ask(narrationPrompt135(th,sources,reason), {modelTier:'quick',maxTokens:220,timeout,signal:ctl.signal,optional:true,isolatedContext:true});
-    const response = await Promise.race([request, new Promise(resolve => { timer=setTimeout(() => { ctl.abort(); resolve(null); },timeout); })]);
-    if (!current()) return false;
-    state.ms += Date.now()-started;
-    if (!response) { state.failed++; return false; }
-    const clean = narrationClean135(th,response,sources);
-    if (!clean) { if (response.text) state.rejected++; return false; }
-    appendMsg(th,{who:'n',k:'act',txt:clean.text,ai:1,narrative135:{schema:1,kind:'style',sources:clean.sources},at:Date.now()});
-    state.lastTurn=turn; state.shown++;
+async function narrationAfter135(th,opt) {
+  const reason=narrationReason135(th,opt);if(!reason)return false;
+  const A=th.b98,state=narrationState135(th),{s}=scene98(th),scene=s.id,sceneKey=A.ch+':'+scene,turn=A.turns;
+  const last=th.msgs[th.msgs.length-1],count=th.msgs.length,sources=narrationSources135(th,opt.start);
+  if(!sources.some(x=>x.who!=='PLAYER'))return false;
+  const current=()=>th.b98===A&&!A.ended&&A.turns===turn&&scene98(th).s&&scene98(th).s.id===scene&&th.msgs.length===count&&th.msgs[count-1]===last&&S.threads[th.id]===th&&curT===th.id;
+  if(!current())return false;
+  const fallback=narrationFallback135(th,sources),fast=!!(opt.d&&opt.d.fast98),backoff=turn-state.lastAttempt<2;
+  const noSegmenter=typeof Intl==='undefined'||typeof Intl.Segmenter!=='function';
+  const post=frame=>{
+    if(!frame||!current())return false;
+    const message={who:'n',k:'act',txt:frame.text,ai:1,narrative135:{schema:1,kind:'style',sources:frame.sources,origin:frame.origin||'model',cue:frame.cue||null,turnKey:sceneKey+':'+turn},at:Date.now()};
+    appendMsg(th,message);
+    if(!th.msgs.includes(message)){state.notPosted=(state.notPosted||0)+1;return false;}
+    state.lastTurn=turn;state.lastScene=sceneKey;state.shown++;if(opt.mode==='choice')state.lastChoiceScene=sceneKey;
+    if(frame.origin==='cue')state.fallbacks=(state.fallbacks||0)+1;
     return true;
-  } catch (e) {
-    if (current()) { state.failed++; state.ms += Date.now()-started; }
-    console.warn('[narration135] optional frame skipped',String(e && e.code || 'error'));
-    return false;
-  } finally { clearTimeout(timer); }
+  };
+  // Critical choices and fast replies can show a supported frame immediately.
+  // Request backoff affects only optional model calls, never an available frame.
+  if(fast||backoff||noSegmenter||(opt.mode==='choice'&&fallback))return post(fallback);
+  state.lastAttempt=turn;state.attempts++;
+  const started=Date.now(),ctl=new AbortController(),p=narrationPolicy135(th),timeout=Math.max(1000,Math.min(6000,Number(p.timeoutMs)||5000));let timer,response=null;
+  try{
+    const request=ask(narrationPrompt135(th,sources,reason),{modelTier:'quick',maxTokens:220,timeout,signal:ctl.signal,optional:true,isolatedContext:true});
+    response=await Promise.race([request,new Promise(resolve=>{timer=setTimeout(()=>{ctl.abort();resolve(null);},timeout);})]);
+    if(!current())return false;
+    state.ms+=Date.now()-started;
+    if(!response){state.failed++;return post(fallback);}
+    const clean=narrationClean135(th,response,sources);
+    if(clean)return post(clean);
+    if(response.text)state.rejected++;else state.empty=(state.empty||0)+1;
+    return post(fallback);
+  }catch(e){
+    if(!current())return false;
+    state.failed++;state.ms+=Date.now()-started;
+    console.warn('[narration135] optional model skipped',String(e&&e.code||'error'));
+    return post(fallback);
+  }finally{clearTimeout(timer);}
+}
+/* Distinguish independent narration from the actor's own action line. */
+if(typeof MSGKIND!=='undefined'&&typeof MSGKIND.post==='function')MSGKIND.post('app135_narration.js',function(html,m){
+  if(!m||!m.narrative135)return html;
+  return html.replace('class="m-narr"','class="m-narr narrative135"').replace(/(<div class="m-narr narrative135"[^>]*>)/,'$1<small class="narrative135-label">'+(Z98()?'旁白':'Narration')+'</small>');
+});
+if(typeof document!=='undefined'&&document.head){
+  const style=document.createElement('style');style.textContent='.m-narr.narrative135{padding:12px 14px;border-left:2px solid rgba(205,177,129,.65);border-radius:0 10px 10px 0;background:rgba(12,13,21,.82);color:#eeeaf3;font-style:normal;line-height:1.8}.narrative135-label{display:block;margin-bottom:3px;color:#d8bb89;font-size:11px;letter-spacing:.08em;font-style:normal}';document.head.appendChild(style);
 }
 
 </script>

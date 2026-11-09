@@ -11,14 +11,41 @@ const {chromium}=require(process.env.MIRU_PLAYWRIGHT_MODULE||'playwright'),repo=
   const result=await page.evaluate(async()=>{
    S.ob=S.ageOk=true;S.authChoice='guest';S.lang='zh';S.fxOff=S.sfxOff=true;S.bgm=false;S.voice=Object.assign({},S.voice,{auto:false});S.autoVoice=false;S.personas[0]={id:'pilot-reader',name:'测试读者',pron:'she',age:26};S.pid='pilot-reader';S.ciPrompt=today();S.cloud={token:'synthetic',uid:'synthetic',known:100,provider:'email'};S.keys=100;CL0.on=CL0.checked=true;
    liveOn=()=>true;aiGate=()=>true;useUnits=()=>{};gen96=async()=>null;cloudPush=async()=>{};walletDiff=()=>{};capi=async()=>({ok:true,status:200,j:{ok:true,rows:[],db:false}});startApp();closeSheet();
-   const requests=[];ask=async(p,o={})=>{const th=S.threads[curT],{s}=scene98(th);if(p.startsWith('[MIRU_NARRATION135]')){const sources=JSON.parse(p.split('VISIBLE_SOURCES_JSON:\n')[1].split('\nEND_VISIBLE_SOURCES')[0]);requests.push({type:'narration',chars:p.length,actorAlreadyVisible:th.msgs.some(m=>m.say?.txt==='先停刑。你说，我听。'||m.txt==='先停刑。你说，我听。'),optional:o.optional,isolated:o.isolatedContext});return {text:'剑停住了，刚才的话有了片刻空隙。',sources:[sources.find(x=>x.type==='action').id]};}if(p.includes('"speakers"')){requests.push({type:'director',chars:p.length});return {narration:'',speakers:[{id:here98(th,s)[0],intent:'先回应她'}],beat:'危机',new_info:true,fx:{},options:[],summary:'玩家要求停刑。'};}requests.push({type:'actor',chars:p.length});return {act:'凯尔把剑向后收了半寸，握剑的手停住。',say:'先停刑。你说，我听。',feel:0,remember:''};};
-   const wid=await install98('w_scmw7f7e4565778126fa'),b=bOf98(wd(wid)),th=new98(wid,b.player.key);openThread(th.id);await enter98(th);closeSheet();th.b98.turns=6;requests.length=0;appendMsg(th,{who:'me',k:'say',txt:'凯尔，先把剑放下，让我说。'});await beat98(th,'talk',{txt:'凯尔，先把剑放下，让我说。',mode:'say'});renderChat();
-   const frames=th.msgs.filter(m=>m.narrative135),actorIndex=th.msgs.findLastIndex(m=>m.say?.txt==='先停刑。你说，我听。'||m.txt==='先停刑。你说，我听。'),frameIndex=th.msgs.findLastIndex(m=>m.narrative135),saved=JSON.parse(JSON.stringify(th)),st=snap73(th);th.b98.narration135.shown=99;restore73(th,st);const restored=th.b98.narration135.shown;const other=await install98('w_mr_dreamreunion'),old=new98(other,bOf98(wd(other)).player.key);
-   return {title:th.title,requests,frames:frames.map(m=>m.txt),actorIndex,frameIndex,savedHasFrame:saved.msgs.some(m=>m.narrative135),restored,pilot:narrationOn135(th),otherEnabled:narrationOn135(old),contextEnabled:typeof contextOn135==='function'&&contextOn135(th),stats:th.b98.narration135};
+   const requests=[];
+   ask=async(p,o={})=>{
+    const th=S.threads[curT],{s}=scene98(th);
+    if(p.startsWith('[MIRU_NARRATION135]')){
+      const sources=JSON.parse(p.split('VISIBLE_SOURCES_JSON:\n')[1].split('\nEND_VISIBLE_SOURCES')[0]);
+      requests.push({type:'narration',optional:o.optional,isolated:o.isolatedContext});
+      return {text:'凯尔拿出一枚从未出现的戒指，已经把证据全部交给了你。',sources:[sources.find(x=>x.type==='action').id]};
+    }
+    if(p.includes('"speakers"')){requests.push({type:'director'});return {narration:'',speakers:here98(th,s).slice(0,2).map(id=>({id,intent:'先回应她'})),beat:'危机',new_info:true,fx:{},options:[],summary:'玩家要求核对证据。'};}
+    const kyle=p.startsWith('你是「凯尔');requests.push({type:'actor',who:kyle?'凯尔':'卢西安'});
+    return kyle?{act:'＊ 凯尔 拇指离开护手，朝台下抬手，声音压低',say:'处决先撤，审判令暂缓。你要证据，我让人当场封存复核。要查哪一样，你说。',feel:0,remember:''}:{act:'＊ 卢西安没有伸手，想了想。',say:'先核对眼前这张纸，别把猜测当成证据。',feel:0,remember:''};
+   };
+   const wid=await install98('w_scmw7f7e4565778126fa'),b=bOf98(wd(wid)),th=new98(wid,b.player.key);
+   openThread(th.id);await enter98(th);closeSheet();th.b98.turns=6;requests.length=0;
+   th.b98.narration135={lastTurn:5,lastAttempt:5,attempts:0,shown:0,failed:0,rejected:0,ms:0};
+   await pick98(th,0);renderChat();
+   const choiceRequests=requests.splice(0),choiceFrame=th.msgs.filter(m=>m.narrative135).at(-1);
+   const actorIndex=th.msgs.findLastIndex(m=>m.k==='box'||m.k==='say'&&m.ai),frameIndex=th.msgs.findLastIndex(m=>m.narrative135);
+   th.b98.turns+=3;appendMsg(th,{who:'me',k:'say',txt:'凯尔，把证据说清楚。'});
+   await beat98(th,'talk',{txt:'凯尔，把证据说清楚。',mode:'say'});renderChat();
+   const frames=th.msgs.filter(m=>m.narrative135),saved=JSON.parse(JSON.stringify(th)),st=snap73(th);th.b98.narration135.shown=99;restore73(th,st);
+   const restored=th.b98.narration135.shown;
+   const other=await install98('w_mr_dreamreunion'),old=new98(other,bOf98(wd(other)).player.key);
+   return {title:th.title,choiceRequests,requests,choiceFrame,frames:frames.map(m=>({text:m.txt,origin:m.narrative135.origin,cue:m.narrative135.cue})),actorIndex,frameIndex,savedHasFrame:saved.msgs.some(m=>m.narrative135),restored,pilot:narrationOn135(th),otherEnabled:narrationOn135(old),contextEnabled:contextOn135(th),stats:th.b98.narration135};
   });
-  console.log('BROWSER_STATE',JSON.stringify(await page.evaluate(()=>({curT,chatHidden:document.querySelector('#s-chat')?.hidden,body:document.body.innerText.slice(-1800),messages:document.querySelector('#msgs')?.innerText,frameElements:[...document.querySelectorAll('#msgs [data-mi]')].slice(-4).map(x=>({text:x.innerText,html:x.outerHTML.slice(0,400)}))}))));
   if(process.env.MIRU_REPORT_DIR){fs.mkdirSync(process.env.MIRU_REPORT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.MIRU_REPORT_DIR,'narration135-debug.png')});}
-  assert.equal(result.pilot,true);assert.equal(result.otherEnabled,false);assert.equal(result.frames.length,1);assert(result.frameIndex>result.actorIndex);assert.equal(result.savedHasFrame,true);assert.equal(result.restored,1);assert.deepEqual(result.requests.map(x=>x.type),['director','actor','narration']);assert(result.requests.at(-1).actorAlreadyVisible&&result.requests.at(-1).optional&&result.requests.at(-1).isolated);await page.locator('#msgs .m-narr').filter({hasText:result.frames[0]}).waitFor({state:'visible'});assert.deepEqual(errors,[]);
-  if(process.env.MIRU_REPORT_DIR){fs.mkdirSync(process.env.MIRU_REPORT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.MIRU_REPORT_DIR,'narration135.png')});fs.writeFileSync(path.join(process.env.MIRU_REPORT_DIR,'narration135-browser.json'),JSON.stringify({...result,errors},null,2));}console.log(JSON.stringify(result,null,2));console.log('Narration browser: actual beat98, rendering, isolation, save and state restore passed.');
+  assert.equal(result.pilot,true);assert.equal(result.otherEnabled,false);assert.equal(result.frames.length,2);assert(result.frameIndex>result.actorIndex);assert.equal(result.savedHasFrame,true);assert.equal(result.restored,2);
+  assert.deepEqual(result.choiceRequests.map(x=>x.type),['director','actor','actor']);
+  assert.equal(result.choiceFrame.narrative135.origin,'cue');assert.equal(result.choiceFrame.narrative135.cue,'voice');assert(result.choiceFrame.txt.includes('证据'));
+  assert(result.requests.some(x=>x.type==='narration'&&x.optional&&x.isolated));assert(result.frames.every(x=>x.origin==='cue'&&!x.text.includes('戒指')&&!x.text.includes('全部交给')));
+  const frame=page.locator('#msgs .m-narr.narrative135').last();await frame.waitFor({state:'visible'});assert.equal(await frame.locator('.narrative135-label').innerText(),'旁白');
+  const history=await page.evaluate(()=>{const m=document.getElementById('msgs');m.scrollTop=0;m.dispatchEvent(new Event('scroll'));const before=m.scrollTop;renderChat();return {before,after:document.getElementById('msgs').scrollTop,hold:EXPERIENCE124.positions.get(curT)?.away};});
+  assert(history.hold);assert(Math.abs(history.after-history.before)<2);await page.locator('[data-latest124]').click();
+  const distance=await page.evaluate(()=>{const m=document.getElementById('msgs');return m.scrollHeight-m.scrollTop-m.clientHeight;});assert(distance<72);
+  assert.deepEqual(errors,[]);
+  if(process.env.MIRU_REPORT_DIR){fs.mkdirSync(process.env.MIRU_REPORT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.MIRU_REPORT_DIR,'narration135.png')});fs.writeFileSync(path.join(process.env.MIRU_REPORT_DIR,'narration135-browser.json'),JSON.stringify({...result,errors},null,2));}console.log(JSON.stringify(result,null,2));console.log('Narration browser: screenshot choice, two actors, rejected model fallback, narration label, history hold, latest jump and state restore passed.');
  }finally{if(browser)await browser.close();server.closeAllConnections();await new Promise(r=>server.close(r));}
 })().catch(e=>{console.error(e);process.exitCode=1;});
