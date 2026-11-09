@@ -7,7 +7,7 @@
    安卓 App 是 TWA（真 Chrome，不是 WebView），AdSense 在 App 里同样可用。 */
 (function () {
   "use strict";
-  const PUB = ""; /* AdSense 审核通过后填：ca-pub-1779576119248059 */
+  const PUB = "ca-pub-1779576119248059"; /* 2026-11-09 打开：AdSense 还在审核时没有广告可播，自动退回原来的模拟广告；审核通过后真广告自动接上，不用再改代码 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   window.__ads128 = () => ({ pub: PUB, ready: !!window.adBreak });
   if (!PUB || typeof watchAd !== "function") return;
@@ -25,12 +25,15 @@
   window.adBreak = window.adConfig = function (o) { window.adsbygoogle.push(o); };
   try { window.adConfig({ preloadAdBreaks: "on", sound: "on" }); } catch (e) { console.warn("[ads] config", e); }
 
+  const sim = watchAd; /* 原来的模拟播放：没有真广告时兜底 */
   let busy = false;
   watchAd = function (done) {
     if (!adLeft()) { toast(t("ad.none")); return; }
     if (busy) return; busy = true;
     if (typeof closeSheet === "function") closeSheet();
-    let viewed = false, offered = false;
+    let viewed = false, offered = false, settled = false;
+    /* 5 秒内广告脚本没反应（审核中 / 被拦截 / 网络慢）→ 用模拟广告，不让玩家干等 */
+    const fb = setTimeout(function () { if (settled || offered) return; settled = true; busy = false; sim(done); }, 5000);
     window.adBreak({
       type: "reward",
       name: "miru_reward",
@@ -38,9 +41,10 @@
       adDismissed: function () { toast(t("ad.keep")); },
       adViewed: function () { viewed = true; },
       adBreakDone: function (info) {
+        if (settled) return; settled = true; clearTimeout(fb);
         busy = false;
         if (viewed) { const st = adState(); st.n++; save(); if (done) done(); return; }
-        if (!offered) toast(zh() ? "暂时没有可播放的广告，稍后再试" : "No ad available right now — try again later");
+        if (!offered) sim(done); /* 没有真广告可播：退回模拟广告 */
         try { if (typeof track === "function") track("ad_nofill", { status: info && info.breakStatus }); } catch (e) { console.debug("[ads]", e); }
       }
     });
