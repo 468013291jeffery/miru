@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="dda30c099762 2026-11-10T04:18Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="3e8a459fb776 2026-11-10T17:34Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -20143,7 +20143,7 @@ function authoredGameCommit98(th,s,g,result,ids) {
   if(result!=='SKIP'){
     const fact=g.name+'：'+(result==='WIN'?'成功':'未成功')+'。后续回应提示（尚未实际发生）：'+g.outcomes[result];
     mem98(th,participants,fact);
-    for(const id of participants)if(result==='WIN'&&loveAllowed(th,id))loveWrite(th,id,2,'story98:game:'+g.id);
+    for(const id of participants)if(result==='WIN'&&g.kind!=='northlight'&&loveAllowed(th,id))loveWrite(th,id,2,'story98:game:'+g.id);
     th.b98.flags.push(g.id+':'+result);
   }
   th.b98.sum.push('小游戏 '+g.name+'：'+result+'；后续回应依据：'+g.outcomes[result]);
@@ -20208,6 +20208,51 @@ function authoredDecline98(th,act){
   if(!s.game||!act||act.mode==='think'||!/(?:不想|不愿|不|别|不要)(?:再)?(?:玩|赌)|跳过(?:这个)?(?:游戏)?/.test(String(act.txt||'')))return false;
   authoredGameCommit98(th,s,s.game,'SKIP',[]);return true;
 }
+
+
+/* North Light: nine manuscript-specific games, isolated scene-bound receipts. */
+{
+ const previousDock=authoredGameDock98,previousOpen=authoredGameOpen98,previousStart=authoredGameStart98,previousDirector=authoredDirector98;
+ let active=null;
+ const isNorth=g=>g&&g.kind==='northlight';
+ authoredGameDock98=function(th){const {s}=scene98(th);if(s&&isNorth(s.game)){(th.b98.gameReady98||(th.b98.gameReady98={}))[s.id]=true;}return previousDock(th);};
+ authoredGameOpen98=function(th){
+  const {s}=scene98(th),g=s&&s.game;if(!isNorth(g))return previousOpen(th);
+  if(busy||(th.b98.gameResults||{})[g.id])return;
+  const candidates=here98(th,s).filter(id=>g.code!=='G03'||['c01','c02'].includes((cardOf98(wd(th.wid),id)||{}).key));
+  sheet('<h2>'+esc(g.name)+'</h2><p>'+esc(g.stake)+'</p><p>和谁一起操作？</p>'+candidates.map(id=>'<button class="btn btn-block" data-authored-player98="'+esc(id)+'">'+esc(first(ch(id).n))+'</button>').join('')+'<button class="btn btn-g btn-block" data-authored-game98="skip">交给公共核验与工班，继续剧情</button>');
+ };
+ authoredGameStart98=function(th,id){
+  const {s}=scene98(th),g=s&&s.game;if(!isNorth(g))return previousStart(th,id);
+  if(busy||!here98(th,s).includes(id)||(th.b98.gameResults||{})[g.id])return;
+  if(g.code==='G03'&&!['c01','c02'].includes((cardOf98(wd(th.wid),id)||{}).key))return;
+  const nonce=crypto.randomUUID(),url=new URL('/scripts/north-light-v1/games.html',location.href);
+  url.searchParams.set('game',g.code);url.searchParams.set('nonce',nonce);url.searchParams.set('actor',(cardOf98(wd(th.wid),id)||{}).short.zh);
+  sheet('<h2>'+esc(g.name)+'</h2><iframe id="northlight-frame" title="'+esc(g.name)+'" src="'+esc(url.href)+'" style="width:100%;height:70vh;border:0;border-radius:12px" sandbox="allow-scripts allow-same-origin"></iframe><button class="btn btn-g btn-block" data-authored-game98="skip">跳过并继续</button>');
+  const frame=document.getElementById('northlight-frame');active={th,s,g,id,nonce,frame};
+ };
+ window.addEventListener('message',e=>{
+  const a=active,d=e.data;if(!a||e.origin!==location.origin||e.source!==a.frame.contentWindow||!a.frame.isConnected||!d||d.type!=='northlight-receipt'||d.nonce!==a.nonce||d.game!==a.g.code)return;
+  if(curT!==a.th.id||scene98(a.th).s.id!==a.s.id||!here98(a.th,a.s).includes(a.id))return;
+  const r=d.receipt;if(!r||!['WIN','LOSE','SKIP'].includes(r.result)||typeof r.detail!=='string'||typeof r.memory!=='string')return;
+  active=null;
+  // Record only actual inputs and facts; game success never constitutes romance consent.
+  const detail={detail:r.detail.slice(0,2500),memory:r.memory.slice(0,2500),state:d.state};
+  if(!authoredGameCommit98(a.th,a.s,a.g,r.result,[a.id]))return;
+  a.th.b98.gameResults[a.g.id].details=detail;
+  if(r.result!=='SKIP')mem98(a.th,[a.id],a.g.name+'真实操作：'+detail.detail+'；'+detail.memory);
+  a.th.b98.sum.push(a.g.code+'真实回执：'+detail.detail+'；'+detail.memory);
+  if(a.g.code==='G08')a.th.b98.flags.push('BOX:'+(r.result==='WIN'?'保全':r.result==='LOSE'?'丢失':'按工班回执核验'));
+  save();closeSheet();renderChat();
+ });
+ authoredDirector98=function(th,s){const old=previousDirector(th,s);if(!bOf98(wd(th.wid))||bOf98(wd(th.wid)).key!=='w_scmwaymue65be8983c9b')return old;
+  const receipts=th.b98.gameResults||{};
+  return old+'\n北灯游戏只采用以下真实回执（含暗号、物主、证据范围与箱状态），不得补造。输赢不改变恋爱、床食医暖或三条路线可选性：'+JSON.stringify(receipts)+'\n第八章的分支必须依玩家已提交的留守、整体迁移或三站方案；人物位置、交通、许可与关系边界按原稿，不得同时播放互斥版本。';
+ };
+}
+
+/* Register authored North Light cues before the score engine normalizes mood ids. */
+for(let i=1;i<=8;i++){const cue='m_north_light_'+String(i).padStart(2,'0');if(window.__SC)window.__SC.SC_M[cue]=Object.assign({},window.__SC.SC_M.warm);}
 
 /* ================= v8.5 · 2026-10-27 用户反馈第二轮 =================
    1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」。
