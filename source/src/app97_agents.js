@@ -124,8 +124,10 @@ function remember97(th, cids, fact) { if (!fact) return; cids.forEach(c => { con
 async function agentTurn97(th, act) {
   const A = th.agent97, w = wd(th.wid); if (!w || A.ended) return;
   if (!liveOn()) { toast(L97("自由模式需要 AI 在线", "Free mode needs the AI to be online")); return; }
+  const narrationStart135=th.msgs.length;
   busy = true; typing(true); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
   try {
+    if(typeof narrationEnsure135==='function')await narrationEnsure135(th);
     let d = null; try { d = await director97(th, act); } catch (e) { d = null; }
     if (!d) { toast(L97("导演走神了，再说一次试试", "The director lost the thread — try again")); return; }
     const present = (Array.isArray(d.present) ? d.present : []).filter(c => th.cast.includes(c));
@@ -150,6 +152,7 @@ async function agentTurn97(th, act) {
       if (r.remember) remember97(th, [cid], r.remember);
       if (r.say) remember97(th, (present.length ? present : th.cast).filter(c => c !== cid), first(ch(cid).n) + L97("说：", " said: ") + String(r.say).slice(0, 50));
     }
+    if(typeof narrationAfter135==='function')await narrationAfter135(th,{start:narrationStart135,delivered:th.msgs.length>narrationStart135,mode:act?'talk':A.turns?'more':'enter',act});
     A.turns++; th.rounds++; if (d.summary) A.sum.push((Z97() ? "第" + A.ch + "章：" : "Ch" + A.ch + ": ") + String(d.summary).slice(0, 80)); if (A.sum.length > 40) A.sum.splice(0, A.sum.length - 40);
     if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
     useUnits(aiCost() * 2);

@@ -1,5 +1,7 @@
 // 验证 TURN 接线在产物里，并做一次「不卡 busy」的静态核对
 import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
 
 const h = fs.readFileSync('index.html', 'utf8');
 const checks = [
@@ -17,4 +19,5 @@ console.log(`\n${pass} passed, ${fail} failed`);
 // 关键的静态一致性：三件套必须同时存在，否则 release 会把 busy 卡死
 const three = ['TURN.bind', "TURN.acquire('reply')", "TURN.release('reply')"].every(s => h.includes(s));
 console.log(three ? '✓ 三件套齐全（bind/acquire/release）' : '✗ 三件套缺一 —— busy 可能永远卡住');
+const sandbox={window:{}};vm.createContext(sandbox);const code=fs.readFileSync('source/src/app103_turn.js','utf8');vm.runInContext(code,sandbox);const turn=sandbox.window.TURN;let held=false;turn.bind(v=>{held=v;});assert(turn.acquire('reply'));assert.equal(held,true);vm.runInContext(code,sandbox);assert.equal(sandbox.window.TURN,turn);assert.equal(turn.owner,'reply');assert.equal(held,true);assert(turn.release('reply'));assert.equal(held,false);assert.equal(turn.state(),'idle');console.log('✓ 重复加载保留绑定、持有者和忙状态');
 process.exit(fail || !three ? 1 : 0);

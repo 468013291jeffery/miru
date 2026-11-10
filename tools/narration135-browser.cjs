@@ -25,7 +25,7 @@ const {chromium}=require(process.env.MIRU_PLAYWRIGHT_MODULE||'playwright'),repo=
    };
    const wid=await install98('w_scmw7f7e4565778126fa'),b=bOf98(wd(wid)),th=new98(wid,b.player.key);
    openThread(th.id);await enter98(th);closeSheet();th.b98.turns=6;requests.length=0;
-   th.b98.narration135={lastTurn:5,lastAttempt:5,attempts:0,shown:0,failed:0,rejected:0,ms:0};
+   th.msgs=th.msgs.filter(m=>!m.narrative135);th.b98.narration135={version:2,lastTurn:5,lastAttempt:5,attempts:0,shown:0,failed:0,rejected:0,ms:0};
    await pick98(th,0);renderChat();
    const choiceRequests=requests.splice(0),choiceFrame=th.msgs.filter(m=>m.narrative135).at(-1);
    const actorIndex=th.msgs.findLastIndex(m=>m.k==='box'||m.k==='say'&&m.ai),frameIndex=th.msgs.findLastIndex(m=>m.narrative135);
@@ -38,9 +38,9 @@ const {chromium}=require(process.env.MIRU_PLAYWRIGHT_MODULE||'playwright'),repo=
   });
   if(process.env.MIRU_REPORT_DIR){fs.mkdirSync(process.env.MIRU_REPORT_DIR,{recursive:true});await page.screenshot({path:path.join(process.env.MIRU_REPORT_DIR,'narration135-debug.png')});}
   assert.equal(result.pilot,true);assert.equal(result.otherEnabled,false);assert.equal(result.frames.length,2);assert(result.frameIndex>result.actorIndex);assert.equal(result.savedHasFrame,true);assert.equal(result.restored,2);
-  assert.deepEqual(result.choiceRequests.map(x=>x.type),['director','actor','actor']);
-  assert.equal(result.choiceFrame.narrative135.origin,'cue');assert.equal(result.choiceFrame.narrative135.cue,'voice');assert(result.choiceFrame.txt.includes('证据'));
-  assert(result.requests.some(x=>x.type==='narration'&&x.optional&&x.isolated));assert(result.frames.every(x=>x.origin==='cue'&&!x.text.includes('戒指')&&!x.text.includes('全部交给')));
+  assert.deepEqual(result.choiceRequests.map(x=>x.type),['director','actor','actor','narration']);
+  assert.equal(result.choiceFrame.narrative135.origin,'bridge');assert(result.choiceFrame.txt.includes('凯尔'));assert(result.choiceFrame.txt.includes('卢西安'));
+  assert(result.requests.some(x=>x.type==='narration'&&x.optional&&x.isolated));assert(result.frames.every(x=>x.origin==='bridge'&&!x.text.includes('戒指')&&!x.text.includes('全部交给')));
   const frame=page.locator('#msgs .m-narr.narrative135').last();await frame.waitFor({state:'visible'});assert.equal(await frame.locator('.narrative135-label').innerText(),'旁白');
   const history=await page.evaluate(()=>{const m=document.getElementById('msgs');m.scrollTop=0;m.dispatchEvent(new Event('scroll'));const before=m.scrollTop;renderChat();return {before,after:document.getElementById('msgs').scrollTop,hold:EXPERIENCE124.positions.get(curT)?.away};});
   assert(history.hold);assert(Math.abs(history.after-history.before)<2);await page.locator('[data-latest124]').click();

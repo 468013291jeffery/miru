@@ -25,6 +25,8 @@
 ================================================================================== */
 (function () {
   'use strict';
+  // The bundle currently includes this module twice; retain its bound setter.
+  if(window.TURN&&window.TURN.v===1)return;
 
   const T = {
     v: 1,

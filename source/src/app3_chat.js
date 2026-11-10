@@ -500,9 +500,10 @@ const CTX={
  redo:"Rewrite the last reply differently: different angle, different first line."};
 async function reply(th,ctx,silent){
  let LLMERR=null;   // 这一轮 AI 失败的原因（给玩家看，不要吞）
- if(!silent){if(busy)return;if(!aiGate())return;try{(window.TURN&&window.TURN.acquire)?window.TURN.acquire('reply'):(busy=true)}catch(_){busy=true}BUSY_T=Date.now()}
+ if(!silent){if(busy)return;if(!aiGate())return;try{if(!(window.TURN&&window.TURN.acquire&&window.TURN.acquire('reply')))busy=true}catch(_){busy=true}BUSY_T=Date.now()}
  try{
  if(!silent)typing(true);
+ if(typeof narrationEnsure135==='function')await narrationEnsure135(th);
  const mid=mainOf(th),c=ch(ctx.cid||mid),w=th.wid?wd(th.wid):null,p=th.persona||persona();
  const goals=th.quest?th.quest.goals.map((g,i)=>i+": "+g.t+(g.done?" (done)":"")).concat([th.quest.goals.length+": HIDDEN — "+th.quest.hidden.t+(th.quest.hidden.done?" (done)":"")]).join("\n"):"";
  const inst=(CTX[ctx.kind]||CTX.user).split("{u}").join(p.name||"the user").split("{x}").join(ctx.txt||"").split("{c}").join(c?c.n:"them");
@@ -640,7 +641,7 @@ async function reply(th,ctx,silent){
   if(typeof PKPAUSE!=="undefined")PKPAUSE[th.id]=0;
   if(!silent){
    try{typing(false)}catch(_){}
-   try{window.TURN&&window.TURN.release?window.TURN.release('reply'):(busy=false)}catch(_){busy=false}
+   try{if(!(window.TURN&&window.TURN.release&&window.TURN.release('reply')))busy=false}catch(_){busy=false}
    BUSY_T=0;
    setTimeout(drainSendQueue,60);
   }
