@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="0689a4dedf87 2026-11-10T18:39Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="a6857c6f7986 2026-11-10T18:42Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -24455,6 +24455,7 @@ if(typeof document!=='undefined'&&document.head){
     const sc = v.querySelector("#discScroll"); if (!sc) return;
     document.querySelectorAll("#sw96").forEach(x => x.remove());           /* 旧的全屏浮层不要了 */
     const box = document.createElement("div"); box.className = "meet140"; box.innerHTML = matchRow() + '<div id="sw96" class="in140"></div>';
+    try { todayDeck96(); if (ALL) box.insertAdjacentHTML("afterbegin", '<p class="xs" style="padding:4px 16px 0;color:var(--gold)">' + (zh() ? "当前分类下还没有角色，先给你看全部。" : "No one in this category yet — showing everyone.") + '</p>'); } catch (_) {}
     sc.replaceWith(box);
     try { DECK96 = todayDeck96(); renderSwipe96(); if (typeof track === "function") track("meet_open", { n: DECK96.length, tab: 1 }); } catch (e) { console.warn("[meet140]", e); }
   }
@@ -24468,6 +24469,17 @@ if(typeof document!=='undefined'&&document.head){
     const x = e.target.closest("[data-mm140]"); if (!x) return; e.preventDefault(); e.stopPropagation();
     try { openThread("c:" + x.dataset.mm140); } catch (_) {}
   }, true);
+  /* 选了某个取向（比如「女女」）但这个取向下还没有角色时：先给全部角色，不给空牌（不改你的设置） */
+  let ALL = false;
+  if (typeof eligible96 === "function" && typeof todayDeck96 === "function") {
+    const E0 = eligible96, T0 = todayDeck96;
+    eligible96 = function () { if (!ALL) return E0.apply(this, arguments); const o = S.or; S.or = "all"; try { return E0.apply(this, arguments); } finally { S.or = o; } };
+    todayDeck96 = function () {
+      ALL = false;
+      try { if (S.or && S.or !== "all") { const st = sw96(); if (!allChars().some(id => E0(id, st))) { ALL = true; if (Array.isArray(st.deck) && !st.deck.length) st.deck = null; } } } catch (_) {}
+      return T0.apply(this, arguments);
+    };
+  }
   /* 配对成功后点「回复 TA」会把 #sw96 藏起来；回到角色页时重新画 */
   const st = document.createElement("style");
   st.textContent = ".meet140{flex:1;min-height:0;display:flex;flex-direction:column}" +
