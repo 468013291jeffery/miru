@@ -1,0 +1,405 @@
+{
+ "ver": 1,
+ "note": "官方剧的分类标签（发现页筛选用，值来自 content_worlds.js 的 TAGS / GS_TAGS）和挑战任务。每上线一部新剧，在这里加一条。",
+ "works": {
+  "w_scmw9m1jz8453861ec49": {
+   "tags": [
+    "Romantasy",
+    "Gothic Romance",
+    "Vampires",
+    "Royal Court",
+    "Why Choose",
+    "Slow Burn",
+    "Arranged Marriage",
+    "Hidden Identity",
+    "Protective",
+    "Morally Grey",
+    "强势攻",
+    "温柔攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "血月舞会上的第八个名字",
+     "en": "The Eighth Name at the Blood Moon Ball"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让卡西安说出他为什么把你的名字写回名单",
+      "en": "Get Cassian to say why he wrote your name back on the list"
+     },
+     {
+      "zh": "让里文承认那把钥匙是你母亲交给他的",
+      "en": "Get Riven to admit your mother gave him that key"
+     },
+     {
+      "zh": "让七位亲王都同意：你不是任何人的新娘",
+      "en": "Get the princes to agree you are nobody's bride"
+     }
+    ],
+    "hidden": {
+     "zh": "让索伦主动交出他查你的档案原件",
+     "en": "Get Soren to hand over the originals of his files on you"
+    }
+   }
+  },
+  "w_scmw7tfsof0b2f96a20b": {
+   "tags": [
+    "Romantasy",
+    "Paranormal",
+    "Werewolves",
+    "Fated Mates",
+    "Why Choose",
+    "Slow Burn",
+    "Hurt/Comfort",
+    "Protective",
+    "Emotionally Guarded",
+    "强势攻",
+    "温柔攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "月蚀前的最后一夜",
+     "en": "The Last Night Before the Eclipse"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让凯尔说出狼印对你意味着什么",
+      "en": "Get Kael to tell you what the wolf seal means for you"
+     },
+     {
+      "zh": "让罗文讲出他被放逐的真正原因",
+      "en": "Get Rowan to reveal the real reason he was exiled"
+     },
+     {
+      "zh": "让卢西恩承认他看不清你的未来",
+      "en": "Get Lucien to admit he can't see your future"
+     }
+    ],
+    "hidden": {
+     "zh": "让三个人在同一张桌边坐下来，不吵架",
+     "en": "Get all three to sit at one table without a fight"
+    }
+   }
+  },
+  "w_scmw7f7e4565778126fa": {
+   "tags": [
+    "Romantasy",
+    "Drama",
+    "Royal Court",
+    "Dragons",
+    "Secret Heir",
+    "Hidden Identity",
+    "Why Choose",
+    "Enemies to Lovers",
+    "Slow Burn",
+    "Genius",
+    "Protective",
+    "冰山攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "零点之前，摘下王冠",
+     "en": "Lift the Crown Before Midnight"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让凯尔放下审判之剑，听你把话说完",
+      "en": "Get Kyle to lower his sword and hear you out"
+     },
+     {
+      "zh": "让卢西安把王冠的旧契约讲给你听",
+      "en": "Get Lucian to explain the crown's old contract"
+     },
+     {
+      "zh": "让罗恩说出他在找的族人是谁",
+      "en": "Get Ron to tell you who he's searching for"
+     }
+    ],
+    "hidden": {
+     "zh": "让索伦说出他从你的誓言里听到了什么",
+     "en": "Get Soren to say what he heard in your vow"
+    }
+   }
+  },
+  "w_scmw6aio565cb9b9e448": {
+   "tags": [
+    "MM Romance",
+    "Romance",
+    "Campus",
+    "Love Triangle",
+    "Slow Burn",
+    "Mutual Pining",
+    "Cold Prince",
+    "Golden Retriever",
+    "温柔攻",
+    "傲娇攻",
+    "美人受"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "首演前夜，读完那条未读消息",
+     "en": "Read the Unread Message Before Opening Night"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让威廉承认他为什么放下了王冠",
+      "en": "Get William to admit why he set down the crown"
+     },
+     {
+      "zh": "让亚历克斯唱出那首没写完的歌",
+      "en": "Get Alex to play you the unfinished song"
+     },
+     {
+      "zh": "让你自己说出真正想选的是谁",
+      "en": "Say out loud who you really want to choose"
+     }
+    ],
+    "hidden": {
+     "zh": "让威廉和亚历克斯一起笑出来",
+     "en": "Make William and Alex laugh together"
+    }
+   }
+  },
+  "w_scmw4qon3h5311d852bf": {
+   "tags": [
+    "Dark Romance",
+    "Romantic Suspense",
+    "Mafia",
+    "Harbor",
+    "Why Choose",
+    "Love Triangle",
+    "Touch Her and Die",
+    "Forbidden",
+    "Possessive",
+    "Morally Grey",
+    "强势攻",
+    "温柔攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "钟楼会馆的一夜",
+     "en": "One Night at the Clocktower Club"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让达里奥当面说出他撤回追索的理由",
+      "en": "Get Dario to tell you to your face why he dropped the claim"
+     },
+     {
+      "zh": "让雷米说出他给你准备的离开办法",
+      "en": "Get Remy to tell you his way out for you"
+     },
+     {
+      "zh": "让两人都承认：你不欠维斯珀家族任何东西",
+      "en": "Get both to admit you owe the Vesper family nothing"
+     }
+    ],
+    "hidden": {
+     "zh": "让达里奥和雷米为同一件事向你道歉",
+     "en": "Get Dario and Remy to apologize to you for the same thing"
+    }
+   }
+  },
+  "w_scmw2calg4a57f5c1974": {
+   "tags": [
+    "Romantasy",
+    "Royal Court",
+    "Castle Life",
+    "Why Choose",
+    "Arranged Marriage",
+    "Slow Burn",
+    "Found Family",
+    "Cold Prince",
+    "Protective",
+    "温柔攻",
+    "腹黑攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "加冕宴上的第一支舞",
+     "en": "The First Dance at the Coronation Feast"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让卡西安说出王冠到底想告诉你什么",
+      "en": "Get Cassian to tell you what the crown is really saying"
+     },
+     {
+      "zh": "让罗文当众说“她不是奖品”",
+      "en": "Get Rowan to say in front of everyone that you're not a prize"
+     },
+     {
+      "zh": "让西奥支持你在议会上发言",
+      "en": "Get Theo to back you speaking before the council"
+     }
+    ],
+    "hidden": {
+     "zh": "让八位王子都放下求婚，先问你想要什么",
+     "en": "Get all eight princes to drop the proposals and ask what you want"
+    }
+   }
+  },
+  "w_scmw0sxc5p5fa3b3d735": {
+   "tags": [
+    "Romance",
+    "Drama",
+    "Celebrity",
+    "Why Choose",
+    "Love Triangle",
+    "He Falls First",
+    "Mutual Pining",
+    "Possessive",
+    "Golden Retriever",
+    "强势攻",
+    "阳光攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "首映夜的最后一排",
+     "en": "The Back Row on Premiere Night"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让艾德里安承认他投这部电影是为了你",
+      "en": "Get Adrian to admit he funded the film because of you"
+     },
+     {
+      "zh": "让诺亚在红毯之外对你说一句真心话",
+      "en": "Get Noah to say one honest thing to you away from the red carpet"
+     },
+     {
+      "zh": "让两个人都听你的安排，不再争",
+      "en": "Get both to follow your plan for the night instead of competing"
+     }
+    ],
+    "hidden": {
+     "zh": "让诺亚和艾德里安一起替你挡住记者",
+     "en": "Get Noah and Adrian to shield you from the press together"
+    }
+   }
+  },
+  "w_scmvxxy1f444b18cd039": {
+   "tags": [
+    "Romance",
+    "Vacation",
+    "Why Choose",
+    "Secret Admirer",
+    "He Falls First",
+    "Slow Burn",
+    "Cold Prince",
+    "Golden Retriever",
+    "温柔攻",
+    "阳光攻",
+    "禁欲攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "午夜之前的三封邀请",
+     "en": "Three Invitations Before Midnight"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让朱利安说出半年前在洛杉矶见过你",
+      "en": "Get Julian to admit he saw you in LA half a year ago"
+     },
+     {
+      "zh": "让罗南约你去看凌晨的海",
+      "en": "Get Ronan to invite you to watch the sea before dawn"
+     },
+     {
+      "zh": "让伊莱亚斯把写给你的旋律交给你",
+      "en": "Get Elias to give you the melody he wrote for you"
+     }
+    ],
+    "hidden": {
+     "zh": "让三个人都承认今晚是为你准备的",
+     "en": "Get all three to admit tonight was planned for you"
+    }
+   }
+  },
+  "w_scmvxnqoko453e6d7bc3": {
+   "tags": [
+    "Dark Romance",
+    "Romantic Suspense",
+    "Mafia",
+    "Touch Her and Die",
+    "Slow Burn",
+    "Forbidden",
+    "Possessive",
+    "Protective",
+    "Morally Grey",
+    "强势攻",
+    "年上攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "莫雷蒂家的那扇门",
+     "en": "The Door of the Moretti House"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让但丁说出他为什么叫停那笔交易",
+      "en": "Get Dante to tell you why he stopped the deal"
+     },
+     {
+      "zh": "让但丁承认他怕的不是敌人，是失去你",
+      "en": "Get Dante to admit what he fears isn't his enemies but losing you"
+     }
+    ],
+    "hidden": {
+     "zh": "让但丁第一次叫你的名字，而不是“我的人”",
+     "en": "Get Dante to call you by your name instead of “mine”"
+    }
+   }
+  },
+  "w_scmvp62pluf3cc9d7c96": {
+   "tags": [
+    "Romantic Suspense",
+    "Billionaire",
+    "Drama",
+    "Why Choose",
+    "Love Triangle",
+    "Arranged Marriage",
+    "Revenge",
+    "Cold Prince",
+    "Genius",
+    "强势攻",
+    "温柔攻"
+   ],
+   "quest": {
+    "qtitle": {
+     "zh": "曼哈顿慈善晚宴的谎言",
+     "en": "The Lie at the Manhattan Gala"
+    },
+    "turns": 20,
+    "goals": [
+     {
+      "zh": "让阿德里安说出他叫停九位数交易的原因",
+      "en": "Get Adrian to explain why he stopped a nine-figure deal"
+     },
+     {
+      "zh": "让西奥多承认他不想要一段合同式的感情",
+      "en": "Get Theodore to admit he doesn't want a contract for a relationship"
+     },
+     {
+      "zh": "让朱利安把他查到的真相告诉你",
+      "en": "Get Julian to tell you the truth he uncovered"
+     }
+    ],
+    "hidden": {
+     "zh": "让三个人都在你面前说一句真话",
+     "en": "Get each of the three to tell you one true thing"
+    }
+   }
+  }
+ }
+}

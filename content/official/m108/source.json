@@ -1,0 +1,4303 @@
+{
+ "chapters": [
+  {
+   "n": 1,
+   "title": "七封婚书",
+   "goal": "你在纽约一场私人拍卖会上收到七封带有不同封蜡的婚书，邀请你参加从未公开的血月舞会。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 1,
+     "narr": [
+      "纽约的雨打在玻璃穹顶上。你发现拍卖厅所有时钟同时停在11:59。一名侍者端来第八只空杯，杯沿刻着你母亲的姓氏。",
+      "七封婚书不是公开求爱，而是七位亲王分别签发的保护通行令。拍卖会门口已被摄政王的猎犬封锁。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "I didn’t send for a bride. I sent for the woman they’re trying to erase.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then stop calling me a prize.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "Fair. You’re the only person in this room who owes me nothing.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 2,
+     "narr": [
+      "一个身穿皮衣的男人从舞厅暗门冲出来，手里握着被烧焦的第七封信。他不向你伸手，而是把消防通道的钥匙放在地上，让你自己决定是否跟随。",
+      "七扇玻璃门同时映出不同的七位亲王剪影，最后一扇映出的却是你倒在王座前。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "I can get you out. It’s the first offer tonight that doesn’t come with a crown.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "And I can keep them from following.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Why do seven strangers know my name?",
+       ""
+      ]
+     ],
+     "fact": "摄政王的悬赏令出现：你是“第八见证人”，不是所谓命定新娘。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "被夺走名字的第八杯",
+     "bg": 65,
+     "narr": [
+      "玻璃杯底出现母亲姓名缩写。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "The eighth glass is yours. The court erased your name from every guest list. I put it back.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "If you came to rescue me, why did you bring seven marriage contracts?",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "Because someone would kill to stop you reading the eighth.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "接受Cassian的公开保护",
+     "react": "Cassian公开宣告“她受我保护，但不是我的所有物”。",
+     "state": "`trust_cassian` += 2，`public` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "跟Riven走消防通道",
+     "react": "Riven讲出你母亲曾试图毁约，交出旧钥匙。",
+     "state": "`trust_riven` += 2，`clue_ash` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "拒绝两人，拍下婚书",
+     "react": "你获得七封蜡印照片，保留自主立场。",
+     "state": "`agency` += 2，`clue_seals` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "摄政王的悬赏令出现：你是“第八见证人”，不是所谓命定新娘。"
+  },
+  {
+   "n": 2,
+   "title": "月下的第一道禁令",
+   "goal": "你踏入吸血鬼领地，第一次遇见与人类不同的法律：夜里不许独自穿过银桥。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 3,
+     "narr": [
+      "银桥尽头的灯像一排冰冷的星。Adrian率军接应，宣布王庭正在搜捕“第八见证人”。他先让士兵放下武器，再请你决定是否进入车内。如果你拒绝，他便徒步陪你走过桥。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I can order a thousand soldiers. I cannot order you to trust me.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What happens if I don’t?",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "Then I walk beside you until we reach somewhere safe.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 4,
+     "narr": [
+      "你在桥上发现一个受伤的小女孩，Elias拒绝在军队面前用治疗术，因为施法会把伤口转移给自己。你替孩子挡住搜查灯，Elias最终施术，袖口立刻渗出血。",
+      "你可以询问他的伤，也可以先照看孩子。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "She’s breathing. That’s what matters.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Your hand is shaking.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "You noticed. Most people don’t.",
+       ""
+      ]
+     ],
+     "fact": "受伤女孩在昏迷中叫出了你母亲名字，证明她在王庭留下线索。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "桥下的第一个幸存者",
+     "bg": 66,
+     "narr": [
+      "桥下女孩Mae喊出你母亲的名字。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I gave the order to close this bridge. I did not know they were trapping families on the other side.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Not knowing does not bring them back.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "No. That is why I am opening it now.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "与Adrian并肩护送孩子",
+     "react": "",
+     "state": "`trust_adrian` += 2，`agency` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "帮Elias包扎",
+     "react": "",
+     "state": "`trust_elias` += 2，`clue_heal` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "要求先解除桥禁令",
+     "react": "你争取到安全通行证并被军团正式备案。",
+     "state": "`agency` += 2，`public` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "受伤女孩在昏迷中叫出了你母亲名字，证明她在王庭留下线索。"
+  },
+  {
+   "n": 3,
+   "title": "梦里的人认识我",
+   "goal": "王宫安排你在镜塔过夜，你梦见小时候从未见过的门。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 5,
+     "narr": [
+      "镜塔的卧室被月亮照得很亮。Lucien在门外说，只要你说不，他就不会进入你的梦。夜里你主动求助时，他把自己的记忆作为路标，带你穿过镜湖。你看见八岁时的自己把一张信塞进母亲衣袋。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "I can follow you into the dream, but only if you ask.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And if I say stop?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "I leave. Even if the answer is on the other side.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 6,
+     "narr": [
+      "梦中的黑鸦从镜里夺走信封。醒来时，Soren正站在窗外栏杆上，主动交出一张复印件。他承认自己曾经盗取你家族信件，理由是调查一场被皇室掩盖的死亡。Lucien看见信封时脸色骤白。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "I stole your letter. I’m not asking you to be okay with it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then give me the original.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "I will. And the name of the man who ordered me.",
+       ""
+      ]
+     ],
+     "fact": "信中的母亲笔迹写着“血月不是婚礼，而是献祭的门”。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "你梦中的名字",
+     "bg": 67,
+     "narr": [],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "There is a room in your dream that I sealed years ago. I did it without your permission.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You do not get to call that protection.",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "I know. Here is the key. You decide whether I ever enter again.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "允许Lucien带路找记忆",
+     "react": "你获得镜塔可再次进入的口令。",
+     "state": "`trust_lucien` += 2，`clue_dream` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "要求Soren先交出原件",
+     "react": "Soren放弃监控权限，关系以诚实开始。",
+     "state": "`trust_soren` += 2，`clue_letter` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "暂时不信任何人",
+     "react": "",
+     "state": "`agency` += 2，`clue_dream` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "信中的母亲笔迹写着“血月不是婚礼，而是献祭的门”。"
+  },
+  {
+   "n": 4,
+   "title": "全城见证他的偏爱",
+   "goal": "摄政王要求你在宴会上选定一位“临时监护亲王”，Cassian公开拒绝让你成为财产。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 7,
+     "narr": [
+      "宴会墙上挂着七位亲王的油画，只有第八幅被黑布覆盖。司仪念出你的姓氏时全场站起，随后宣布“由亲王决定她的去向”。Cassian把监护契约撕成两半，王冠的红宝石却瞬间变暗。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SEVERIN",
+       "A mortal cannot survive this court without an owner.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "She has a name. Use it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "I’ll speak for myself.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 8,
+     "narr": [
+      "Dante端着两杯酒挡住紧张的贵族人群，把无酒精的一杯递给你。他一直假装轻佻，直到有人羞辱你的出身，他笑容瞬间消失，逐字要求对方道歉。",
+      "你发现宴会一侧有被锁住的地下门，里面传出孩童笑声。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "They’re very loud for people who’ve never had to earn a yes.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You always flirt your way out of danger?",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Only until danger reaches someone I care about.",
+       ""
+      ]
+     ],
+     "fact": "撕毁契约暴露王座的血石正在监视七位亲王。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "王庭上他替你承受所有目光",
+     "bg": 68,
+     "narr": [
+      "王位指环出现裂痕，摄政王微笑，暗示王印早已可以夺命。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "You want a spectacle, Severin? Look at me. Not her.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You would give up the crown for a stranger?",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "For someone who deserves a choice. I should have done it sooner.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "公开站在Cassian身旁",
+     "react": "Cassian得到你主动的支持，王庭舆论分裂。",
+     "state": "`trust_cassian` += 2，`public` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "跟Dante调查地下门",
+     "react": "发现他藏着一群无家可归的遗名儿童。",
+     "state": "`trust_dante` += 2，`clue_children` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "自己上台要求公布法条",
+     "react": "贵族首次听见人类直接宣言。",
+     "state": "`agency` += 3，`public` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "撕毁契约暴露王座的血石正在监视七位亲王。"
+  },
+  {
+   "n": 5,
+   "title": "吻之前，先说真相",
+   "goal": "Dante邀请你看夜城庆典，Riven警告狂欢背后有人收买人类。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 9,
+     "narr": [
+      "屋顶花园悬满萤火灯，Dante把全城最好的夜景留给你，但他问的第一句却是“你今天吃饭了吗”。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "I could give you a thousand roses.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "I’d rather know what you’re hiding.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Then stay for the ugly part. That’s the first honest invitation I’ve made in years.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 10,
+     "narr": [
+      "你发现第七封婚书的火漆曾用于把人从户籍中抹除。追兵破门时，Dante不是带你私奔，而是帮所有劳工撤离。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "They call me a traitor because I kept a list of their victims.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Why trust me with it?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Because you’re the first person who asked about them before asking about yourself.",
+       ""
+      ]
+     ],
+     "fact": "第七封婚书实际上是释放法令的一部分，所谓婚姻宣传是骗局。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "狂欢背后的无名名单",
+     "bg": 69,
+     "narr": [
+      "舞台暗门中有失踪者名册。不是所有华丽宴会都等于欺骗。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "I can make a thousand people dance. I cannot make them remember the children the court erased.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then stop throwing parties and show me the names.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Come with me. Behind the stage. The parties have been hiding an evacuation route.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "与Dante公开救援",
+     "react": "开启屋顶深夜互相坦白，拒绝自动亲吻。",
+     "state": "`trust_dante` += 2，`clue_workers` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "和Riven携账册逃走",
+     "react": "你得到原始名单和火漆线索。",
+     "state": "`trust_riven` += 2，`clue_workers` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "留下公布账册",
+     "react": "帮助劳工但引来更多追杀，得到民众支持。",
+     "state": "`agency` += 2，`public` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "第七封婚书实际上是释放法令的一部分，所谓婚姻宣传是骗局。"
+  },
+  {
+   "n": 6,
+   "title": "无人知道的第八扇门",
+   "goal": "你进入余烬禁地，发现王宫地下的第八扇门只对你的血脉开放。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 11,
+     "narr": [
+      "Riven把一条旧披肩搭在你身前而非强迫你穿上。禁地的热风带着铁锈味。墙壁刻着历代女性的姓名，最后一行是你母亲。",
+      "Riven承认曾协助她逃离，但最后一次逃亡失败，他至今无法原谅自己。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "I didn’t save her. I’m not going to dress that up.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then help me finish what she started.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "That I can do. Even if you never forgive me.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 12,
+     "narr": [
+      "Soren赶来归还偷走的信原件，上面写明王庭历史被改写：从来不存在必须嫁给亲王的古法。信背后藏着八扇门的结构图。Soren主动将密探徽章交给你，可随时切断他的调查权限。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "The crown paid me to watch your family. I’m done taking their money.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What do you want instead?",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "A chance to tell the truth without asking you to reward me for it.",
+       ""
+      ]
+     ],
+     "fact": "门后锁着曾签订血契的女性证词，她们不是消失而是被封在回声石内。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "第八扇门中的回声",
+     "bg": 70,
+     "narr": [
+      "回声石里的被困者发声：只有被保留姓名的灵魂才能被找回。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "I was told the voices behind this door were ghosts. They are prisoners.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Can we get them out alive?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Not tonight. But we can let the city hear them.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "信任Riven开门",
+     "react": "",
+     "state": "`trust_riven` += 2，`clue_gate` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "让Soren独立破解锁",
+     "react": "你要求他以行动而非承诺赎罪。",
+     "state": "`trust_soren` += 2，`clue_gate` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "自己保管钥匙",
+     "react": "你掌控八门钥匙，提升独立结局路径。",
+     "state": "`agency` += 3，`clue_gate` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "门后锁着曾签订血契的女性证词，她们不是消失而是被封在回声石内。"
+  },
+  {
+   "n": 7,
+   "title": "七人中的告密者",
+   "goal": "王庭宣布有人将你行踪卖给摄政王，你被迫审视初步建立的信任。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 13,
+     "narr": [
+      "午夜回廊里有人暗中放出黑鸦，守卫指控Soren告密。Adrian带来军团布防图，发现有一条你才刚走过的通道被提前封死。你要求七人都交出行踪，而不是凭感情认人。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "My soldiers want a suspect. I want evidence.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "Good. Start with mine. I have nothing left worth hiding.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "I’m not choosing a culprit to make this easier.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 14,
+     "narr": [
+      "侦查结果显示，是摄政王在宴会的血石中植入追踪咒。但有人确实把路线标注过。Adrian承认当年焚村令由他执行，他以为撤离令已经发送，却不知道信息被截断。你无法立即原谅他。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I carried out the order. People were hurt. Those facts don’t change.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Why tell me now?",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "Because you deserve the truth before you decide whether I stand beside you.",
+       ""
+      ]
+     ],
+     "fact": "真正的泄密媒介不是七位亲王之一，而是血石复制他们的记忆片段。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "最像叛徒的人递来了证据",
+     "bg": 71,
+     "narr": [
+      "血石会窃听持印者，案件由一人背叛转为制度性监控。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "If you think I sold you out, take my entire ledger.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You could have edited it.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "Then check the pages I was forbidden to open.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "要求Adrian提交军令原件",
+     "react": "解锁焚村真相调查，信任需重新建立。",
+     "state": "`clue_war` += 2，`trust_adrian` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "让Soren破坏血石",
+     "react": "阻断后续部分追踪，Soren付出身份暴露代价。",
+     "state": "`trust_soren` += 2，`clue_stone` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "自己主持证据会议",
+     "react": "",
+     "state": "`agency` += 3，`public` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "真正的泄密媒介不是七位亲王之一，而是血石复制他们的记忆片段。"
+  },
+  {
+   "n": 8,
+   "title": "银色的吻，未完成的誓",
+   "goal": "Elias用治愈术救下被刺杀的孩子，却因此快要失去行动能力，Lucien发现治疗债务被王庭记录。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 15,
+     "narr": [
+      "白蔷薇温室里，Elias手臂的伤从指尖蔓延到肩膀。他不让你担心，但你看出他连茶杯都拿不稳。你可以选择陪伴、叫人帮忙或直接阻止他继续献祭式疗伤。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "I know how to heal everyone except myself.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then this time you don’t do it alone.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "You make that sound possible.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 16,
+     "narr": [
+      "Lucien把一面可回溯的镜子递给你，并说明任何窥探都必须得到当事人同意。镜中显示旧式治愈印记与第八门献祭阵使用同样的血线。Elias第一次承认圣庭在利用他的善意。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "Kindness is not consent to be consumed.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "I thought if I could carry their pain, no one else would have to.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And who carries yours?",
+       ""
+      ]
+     ],
+     "fact": "圣庭以治疗名义收集的伤痛能量被输往血月祭坛。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "治愈者的手在颤抖",
+     "bg": 72,
+     "narr": [
+      "圣庭存有逆转死亡的古法残卷：必须完整名字、回声锚及本人自由意志。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "When I heal someone, I take the wound into myself. I told everyone it was free.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Who is helping you?",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "No one. I was ashamed to ask.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "陪Elias制定停止牺牲计划",
+     "react": "你们共同建立新的治疗边界。",
+     "state": "`trust_elias` += 3，`clue_heal` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "和Lucien追查能量流向",
+     "react": "获取圣庭→祭坛传输图。",
+     "state": "`trust_lucien` += 2，`clue_heal` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "公开揭露圣庭",
+     "react": "获得被治愈民众证词，也遭圣庭指责。",
+     "state": "`agency` += 2，`public` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "圣庭以治疗名义收集的伤痛能量被输往血月祭坛。"
+  },
+  {
+   "n": 9,
+   "title": "王位与她，只能留一个？",
+   "goal": "摄政王当众给Cassian最后通牒：若再包庇你，将撤销摄政继承权。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 17,
+     "narr": [
+      "血王座前，七家族为争夺王印彼此对峙。Cassian没有让你躲在身后，而是请你站到他身边独立发言。你亲自否认。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SEVERIN",
+       "Sign and the killings stop.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "She is not a treaty I can sign.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You fabricated my consent. That ends now.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 18,
+     "narr": [
+      "Adrian交出军团指挥权作为公开听证的担保，拒绝用武力驱散支持你的人类。Cassian则当众解下继承权肩链，要求由独立法庭调查。",
+      "他没有立刻赢得胜利：王庭议员将你们都列为叛逆嫌疑。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "If the throne needs your silence, the throne can have my resignation.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "My troops will protect the witnesses, not the council.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then let the witnesses speak.",
+       ""
+      ]
+     ],
+     "fact": "王庭冻结Cassian的王位继承，新的安全危机发生。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "王冠掉落的一秒",
+     "bg": 73,
+     "narr": [
+      "Cassian拒绝将牺牲兑换亲吻。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "Let them take it. I would rather stand beside you with nothing than above you with a lie.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You might regret that.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "Perhaps. But I will never make it your debt.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "握住Cassian的手站上审判台",
+     "react": "",
+     "state": "`trust_cassian` += 3，`public` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "协助Adrian重组守卫",
+     "react": "军团有条件听命于民众安全规则。",
+     "state": "`trust_adrian` += 2，`clue_war` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "拒绝王廷授予任何监护",
+     "react": "确认你独立行使诉权。",
+     "state": "`agency` += 3，`public` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "王庭冻结Cassian的王位继承，新的安全危机发生。"
+  },
+  {
+   "n": 10,
+   "title": "血月前夜的假新娘",
+   "goal": "一名外貌与你相似的女人走进王宫，自称已与你交换命运，要代替你完成婚礼。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 19,
+     "narr": [
+      "假新娘在楼梯上穿着你的礼服，声音几乎一模一样，却不知道你母亲最爱的一句童谣。Dante先用玩笑替你争取时间，随后将假新娘引向镜廊。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DOUBLE",
+       "The seven princes belong to me. She’s just the copy.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Funny. I know her laugh. You’ve only rehearsed it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "If she’s a prisoner too, don’t hurt her.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 20,
+     "narr": [
+      "Lucien在镜子里看见假新娘其实是被献祭阵复制的“替身容器”，她拥有独立痛苦和记忆。你决定救她还是仅解除控制。如果你施以同情，她会在后续成为反王庭证人。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "She isn’t an illusion. She’s someone they made and then abandoned.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then we don’t throw her away.",
+       ""
+      ],
+      [
+       "say",
+       "DOUBLE",
+       "No one ever asked whether I wanted this face.",
+       ""
+      ]
+     ],
+     "fact": "摄政王已准备第一个替身，说明祭坛不要求爱情，只需要被夺走的选择权。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "假新娘是活着的证人",
+     "bg": 74,
+     "narr": [
+      "Vera说自己是前一届祭坛幸存者，签过誓的人先被篡改记忆再被夺走名字。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "Her name is Vera. She did not steal your face. They trained her to wear it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "How long has she been trapped?",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Long enough to know exactly what happens after a wedding vow.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "救下替身并给她自主身份",
+     "react": "替身“Mae”存活，加入独立证人名单。",
+     "state": "`agency` += 2，`public` += 1，`clue_double` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "让Lucien解除复制术",
+     "react": "",
+     "state": "`trust_lucien` += 2，`clue_double` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "让Dante引开宫廷追兵",
+     "react": "Dante冒险保护替身，暴露避难所。",
+     "state": "`trust_dante` += 2，`clue_double` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "摄政王已准备第一个替身，说明祭坛不要求爱情，只需要被夺走的选择权。"
+  },
+  {
+   "n": 11,
+   "title": "夜宴上的第一场背叛",
+   "goal": "庆典上，王庭播放你母亲的“认罪录像”，七位亲王中有人似乎知晓真相。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 21,
+     "narr": [
+      "夜市被血红广告牌照亮。摄政王公布母亲自愿签下月蚀婚约的录像，现场人群开始敌视你。Soren说录像里钟表指针方向反了，是镜像翻录。你不需要在恐惧中立刻相信任何人。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "The clock is running backward. That isn’t an original.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then prove it in front of them.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "I’ll put my name on the proof. Not yours.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 22,
+     "narr": [
+      "Riven承认自己在母亲失踪前夜曾把她带到边境，却未能护送她出境。你愤怒质问他为什么隐瞒。Riven没有要求拥抱或原谅，而是把唯一可以开第八门的短刀交到你手里。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "I was there. I failed her.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then why should I believe you?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "You don’t have to. Take the key. Do what I couldn’t.",
+       ""
+      ]
+     ],
+     "fact": "所谓认罪录像为镜像伪造，真实原片藏在灰烬短刀的刀柄。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "母亲的认罪影像最后一帧",
+     "bg": 75,
+     "narr": [
+      "录像真伪靠镜面反光和声纹比对，两种证据缺一可用旁证补足。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "They cut the last four seconds.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What happens in those four seconds?",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "Your mother says: I refuse the throne. Then someone edits the world to call it a confession.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "当众指出镜像证据",
+     "react": "公众开始怀疑摄政王，Soren被悬赏。",
+     "state": "`trust_soren` += 2，`public` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "独自检查刀柄",
+     "react": "获得母亲未删节语音，Riven后续可重新赢得信任。",
+     "state": "`agency` += 2，`clue_original` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "先救被骚乱波及的平民",
+     "react": "将个人危机转成保护人民的行动。",
+     "state": "`trust_riven` += 1，`public` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "所谓认罪录像为镜像伪造，真实原片藏在灰烬短刀的刀柄。"
+  },
+  {
+   "n": 12,
+   "title": "他替你挡下第一支箭",
+   "goal": "追兵袭击证据车队，Adrian和Elias为了救你承担不同的代价。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 23,
+     "narr": [
+      "狭窄山道上，银箭穿破车窗。Adrian将你推向安全出口前先问你能否行动，他本人被箭擦伤。Elias试图立即转移毒素，你阻止他再次独自承受全部伤害，要求所有人先撤到有药箱的驿站。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "Eyes on me. Three steps, then the wall. You can do this.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You’re bleeding.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "So are they. We get everyone out first.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 24,
+     "narr": [
+      "山洞临时救护处，Adrian承认执行焚村令的记忆一直折磨他，却不拿痛苦换取你宽恕。Elias向你提出一个不浪漫但真诚的请求：他想学会说“我也需要帮助”。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "I used to think needing someone made me a bad healer.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Needing help makes you alive.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "Then… would you stay until my hands stop shaking?",
+       ""
+      ]
+     ],
+     "fact": "箭头刻有圣庭的徽记，袭击由王庭内部采购而非流浪狼人。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "箭雨之中第一次听见心跳停止",
+     "bg": 76,
+     "narr": [
+      "受伤不是恋爱保证。Elias救人后体内封印开始崩解。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "Get down! That arrow is meant for your heart.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Adrian, you are bleeding.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "I am. And I am going to tell you the truth before anyone calls this heroic.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "帮Adrian清理伤口",
+     "react": "建立共同守护记忆，但伤口后续仍需治疗。",
+     "state": "`trust_adrian` += 3，`clue_arrow` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "陪Elias练习主动求助",
+     "react": "下一次他将选择团队治疗而非自损。",
+     "state": "`trust_elias` += 3，`clue_arrow` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "收集箭矢和采购文件",
+     "react": "增加公开听证实证。",
+     "state": "`agency` += 2，`clue_arrow` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "箭头刻有圣庭的徽记，袭击由王庭内部采购而非流浪狼人。"
+  },
+  {
+   "n": 13,
+   "title": "原来你是第八位继承人",
+   "goal": "母亲的血统记录揭示：你不是被选择的新娘，而是被抹去的第八家族合法继承人。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 25,
+     "narr": [
+      "王庭血脉档案库里，有七本金边家谱和一本封着灰尘的黑皮册。Cassian承认自己的祖父曾投票抹除第八家族，他对这份历史感到羞耻，却承诺把投票原件交给你。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "My family benefited when yours was erased.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "That doesn’t disappear because you’re sorry.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "I know. I’m here to help you take back what’s yours, not ask you to love me for it.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 26,
+     "narr": [
+      "Lucien打开旧预言：第八继承人的力量并非支配七位亲王，而是解除他们与王座之间的强制誓约。王庭恐惧你，是因为你有权决定制度存亡。你发现小时候的名字曾被换成另一个姓氏。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "They didn’t make you powerful by choosing you.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then where does it come from?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "From the name they tried to erase.",
+       ""
+      ]
+     ],
+     "fact": "第八血脉实为制衡王权的“撤销权”，七位亲王无须被动成为恋爱奖品。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "血脉的遗赠不是婚约",
+     "bg": 77,
+     "narr": [],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "Your mother left you the right to revoke every vow. Not the duty to marry a prince.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then why did they send seven letters?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "Because they need you to say yes while believing you have no choice.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "要求Cassian交出族谱原件",
+     "react": "他公开承认家族责任。",
+     "state": "`trust_cassian` += 2，`clue_lineage` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "跟Lucien寻回童年名字",
+     "react": "解锁名字与梦境的真相。",
+     "state": "`trust_lucien` += 2，`clue_lineage` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "宣布暂不承认婚约",
+     "react": "激活独立继承人身份，提升政治风险与自主权。",
+     "state": "`agency` += 3，`public` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "第八血脉实为制衡王权的“撤销权”，七位亲王无须被动成为恋爱奖品。"
+  },
+  {
+   "n": 14,
+   "title": "唯一的叛徒，是他吗",
+   "goal": "Soren身份被曝光，王庭宣称他一直为摄政王服务；Riven因救他受到牵连。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 27,
+     "narr": [
+      "黑鸦情报局总部被包围。Soren主动展示自己过去的每一笔密令，其中包括监视你家族的命令。他解释那是他唯一能够接近真实档案的方式，但没有将此当作免罪符。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "I did work for him. That’s the part I can’t erase.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What are you asking me for?",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "Nothing. The evidence is yours whether you stay or walk away.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 28,
+     "narr": [
+      "Riven闯进包围圈，带走被困的证人。他曾与Soren互相追杀多年，如今两人第一次合作。你发现“告密者”其实是被植入Soren体内的跟踪印记，若强拆会伤及他的记忆。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "He’s not innocent. Neither am I. But the mark is controlling him.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "If taking it off costs my memories, do it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "No one makes that call for you. Tell me what you want.",
+       ""
+      ]
+     ],
+     "fact": "Soren并非主动泄露路线，体内血石印记会读取他看到的地图。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "不求原谅的坦白",
+     "bg": 78,
+     "narr": [],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "I stole your mother’s letter. I told myself I was keeping it safe. I was wrong.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Give it back. No conditions.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "It is already yours. I will not ask you to forgive me.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "陪Soren协商拆印方案",
+     "react": "信任修复，保留部分记忆。",
+     "state": "`trust_soren` += 3，`clue_stone` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "随Riven带走证人",
+     "react": "你获得证人证言，Soren需要更长恢复。",
+     "state": "`trust_riven` += 2，`public` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "不原谅但保全Soren性命",
+     "react": "开启尊重距离支线，不强制恋爱。",
+     "state": "`agency` += 2，`clue_stone` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "Soren并非主动泄露路线，体内血石印记会读取他看到的地图。"
+  },
+  {
+   "n": 15,
+   "title": "午夜的吻，为什么像告别",
+   "goal": "Dante的避难所被抄，Elias发现收留的孩子之一是祭坛仪式的“容器”。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 29,
+     "narr": [
+      "孤儿避难所的墙上全是孩子画的星星，Dante把你引入最安静的房间，向你坦白他收养他们并不是为了赎罪，而是因为曾失去自己的妹妹。他会问你是否愿意靠近。拒绝时他仍认真告诉你故事。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "I’ve kissed people just to avoid telling them what I felt.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And what do you feel now?",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Terrified. Because I actually want you to know me.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 30,
+     "narr": [
+      "Elias发现小女孩的血液里有定时月蚀印记，若仪式启动将被当作祭坛的替代品。三人将孩子安全转移到藏书馆。Dante知道自己的避难所不再安全，于是把所有房契送给孩子们成立信托。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "The ritual isn’t choosing a bride. It’s collecting people who can’t say no.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Then the children leave tonight. Every last one.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "We save them before we settle anything between us.",
+       ""
+      ]
+     ],
+     "fact": "仪式有多个被迫参与的人类，情感选择不是唯一的驱动力。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "告别的吻可以不是吻",
+     "bg": 79,
+     "narr": [
+      "死者名册存在空白页，书页有会吸收血月光的黑墨。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "If this is the last quiet night we get, I want to remember your laugh.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You are talking as if someone is going to die.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Because I found the altar’s death ledger. It has a blank space for one of us.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "允许Dante亲吻你的额头",
+     "react": "",
+     "state": "`trust_dante` += 3，`romance_dante` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "只抱住他或握手",
+     "react": "同样产生深度信任，不强制浪漫亲密。",
+     "state": "`trust_dante` += 2，`agency` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "先与Elias救孩子",
+     "react": "得到仪式时间表，Dante尊重你的优先级。",
+     "state": "`trust_elias` += 2，`clue_child` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "仪式有多个被迫参与的人类，情感选择不是唯一的驱动力。"
+  },
+  {
+   "n": 16,
+   "title": "七位亲王在同一夜争执",
+   "goal": "你召集七位亲王制定行动方案，反派利用他们的嫉妒挑拨。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 31,
+     "narr": [
+      "圆桌上七枚徽章对着你的第八枚。Cassian提出公开起诉，Adrian倾向先撤离目击者，Dante想利用庆典曝光证据。三种方案都合理但互相冲突。你没有义务安抚每个人的情绪。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "I won’t ask you to choose me. I am asking you to choose a plan.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "The witnesses won’t survive another parade of speeches.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "And they won’t survive if no one knows what happened.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 32,
+     "narr": [
+      "争执到最激烈时，Lucien看见一个可能的未来：如果七位亲王为了你打斗，血月祭坛会吸收他们的嫉妒。他立刻停止预言，提醒大家摄政王想要的正是他们互相伤害。你提出一份独立作战章程。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "He doesn’t need your love. He needs your fear of losing it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then nobody fights over me. We fight for the people he’s taken.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Now that sounds like a plan worth following.",
+       ""
+      ]
+     ],
+     "fact": "七位亲王的竞争情绪也会给血月祭坛供能，制度鼓励内斗。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "七位亲王第一次真正害怕",
+     "bg": 80,
+     "narr": [
+      "七人争执停止后祭坛输出短暂下降，证实恐惧和强迫承诺供能。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "Severin does not need us to fight. He only needs you to feel responsible for us.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then stop turning me into a prize.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "You are right. I am done playing his game.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "采用公开听证优先",
+     "react": "Cassian与Dante协力处理媒体。",
+     "state": "`public` += 2，`trust_cassian` += 1，`trust_dante` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "采用撤离与调查优先",
+     "react": "Adrian与Elias保护证人。",
+     "state": "`trust_adrian` += 1，`trust_elias` += 1，`clue_child` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "成立三组并行任务",
+     "react": "",
+     "state": "`agency` += 3，`clue_war` += 1，`clue_original` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "七位亲王的竞争情绪也会给血月祭坛供能，制度鼓励内斗。"
+  },
+  {
+   "n": 17,
+   "title": "为了你，他失去王冠",
+   "goal": "Cassian的王位被正式剥夺，Adrian不得不决定是否执行逮捕命令。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 33,
+     "narr": [
+      "王庭雨夜，Cassian跪在台阶上交还王印。暴雨淋透他的披肩，他的手微微发抖。你可以选择靠近、伸伞或保持政治距离。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "If you never choose me, I’d still do this again.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You lost everything.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "No. I stopped pretending the crown was worth more than people.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 34,
+     "narr": [
+      "Adrian被命令逮捕Cassian，却命令部下放下武器，选择接受军法庭审讯。他亲手把军旗交给副官，宁愿失去军权也不让士兵成为猎杀平民的工具。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I was trained to obey. Tonight I’m choosing who I protect.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "They’ll call you a traitor.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "Let them. I’m done confusing obedience with honor.",
+       ""
+      ]
+     ],
+     "fact": "Cassian失去继承权、Adrian被停职，这一选择产生真实资源损失。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "没有王冠的王子",
+     "bg": 81,
+     "narr": [
+      "他失去王庭资源，后续不能再默认调动军队。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "My title is gone. My guards are gone. You can still walk away from me.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What do you have left?",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "My name. And a choice I finally made for myself.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "撑伞陪Cassian走下台阶",
+     "react": "",
+     "state": "`trust_cassian` += 3，`romance_cassian` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "替Adrian公开作证",
+     "react": "得到军法庭关键证词。",
+     "state": "`trust_adrian` += 3，`clue_war` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "不做情感承诺，先护送民众",
+     "react": "两位尊重你的政治优先级。",
+     "state": "`agency` += 3，`public` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "Cassian失去继承权、Adrian被停职，这一选择产生真实资源损失。"
+  },
+  {
+   "n": 18,
+   "title": "白蔷薇最后的秘密",
+   "goal": "Elias的治疗代价濒临极限，Lucien发现圣庭可以逆转转移术，但必须公开旧档案。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 35,
+     "narr": [
+      "圣庭地下病房，Elias正在写下无法继续救治的患者名单，他第一次承认自己需要休息。你发现修复术可以由多人分摊魔法压力，不必由一人献祭身体。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "I thought love meant giving until there was nothing left.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Love can mean letting someone stay.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "Then will you stay while I learn how?",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 36,
+     "narr": [
+      "Lucien把隐藏在圣庭花窗中的原始阵图投到墙上，图纸显示第八继承人能够解除牺牲转移，但施法时将短暂失去所有与梦有关的记忆。Lucien愿意承担这份代价，却必须由你先同意方案。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "I know what it costs me. I want to choose it myself.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And what will you remember?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "Enough to know I chose freedom with you.",
+       ""
+      ]
+     ],
+     "fact": "治愈可由集体协作完成，牺牲不是唯一答案；Lucien的记忆代价可在后续恢复部分线索。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "白蔷薇禁书里的代价",
+     "bg": 82,
+     "narr": [
+      "复生规则：同一灵魂只能被邀请一次，必须本人选择返回。返回者失去永生庇护，且不必接受恋爱。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "The book does not promise resurrection. It promises one chance to hear a soul answer.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And if the soul says no?",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "Then we leave the dead in peace.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "陪Elias完成协作治疗",
+     "react": "他第一次把治疗任务交给团队。",
+     "state": "`trust_elias` += 3，`clue_heal` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "帮助Lucien封存记忆",
+     "react": "",
+     "state": "`trust_lucien` += 3，`clue_dream` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "公开圣庭牺牲记录",
+     "react": "推动制度改革，也引来圣庭敌对。",
+     "state": "`agency` += 2，`public` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "治愈可由集体协作完成，牺牲不是唯一答案"
+  },
+  {
+   "n": 19,
+   "title": "梦里，你曾经拒绝过他",
+   "goal": "Lucien过去删去过你的一段梦境，因为那段梦里你拒绝成为仪式新娘。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 37,
+     "narr": [
+      "镜塔中，Lucien主动坦白：几年前他曾遵从王庭命令，抹去你与母亲的一次梦中告别。他以为这样能让你安全，却剥夺了你记住母亲的权利。你可以愤怒离开，镜塔会仍然为你敞开。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "I took a memory because I thought I knew what would save you.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You didn’t have the right.",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "I know. I will return it, even if you never speak to me again.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 38,
+     "narr": [
+      "Soren帮助建立梦境防护隔离层，你在幻象里看见母亲抱着年幼的自己说：“你不欠任何王子一个答案。”当记忆回归，你发现母亲是在主动离开血月王庭时被追捕，而非自愿献祭。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "I can lock the doors. You decide which memories to open.",
+       ""
+      ],
+      [
+       "say",
+       "MOTHER",
+       "You were never born to be someone’s reward.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then I’ll finish the choice you tried to give me.",
+       ""
+      ]
+     ],
+     "fact": "梦被篡改、母亲之死有被迫因素，Lucien需承担长期信任后果。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "梦境里被抹掉的拒绝",
+     "bg": 83,
+     "narr": [],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "I stole your memory because I was afraid you would die. I stole something that was yours.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And you never thought to tell me?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "I thought the lie would keep you safe. It only kept me comfortable.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "让Lucien归还记忆并设立禁区",
+     "react": "他不再擅自进入你的梦，关系可以缓慢修复。",
+     "state": "`trust_lucien` += 1，`clue_dream` += 2，`agency` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "只接受Soren帮忙取回",
+     "react": "Lucien尊重保持距离，Soren保护你的隐私。",
+     "state": "`trust_soren` += 2，`clue_dream` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "独立夺回记忆",
+     "react": "提高自主能力并获得母亲最后留言。",
+     "state": "`agency` += 3，`clue_dream` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "梦被篡改、母亲之死有被迫因素，Lucien需承担长期信任后果。"
+  },
+  {
+   "n": 20,
+   "title": "他的真名不是Riven",
+   "goal": "Riven的叛徒身份被揭穿：他本来就是被第八家族收养的遗孤。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 39,
+     "narr": [
+      "余烬矿坑，Riven在石壁上看到自己小时候刻下的真名。后来他反叛，保存下最后一本名册。他没有让你替他承担旧罪。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "They made me burn the records. I kept one book.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Why hide your name?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Because it belongs to people I failed. I’m learning to deserve it again.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 40,
+     "narr": [
+      "Dante在矿坑上方设置撤离舞台，将庆典烟火改成掩护信号。",
+      "两人合作救出档案管理员，你发现Riven真名与第八家族并无血缘，他并非你的亲属，双方关系不存在血亲困境。称呼是一段收养历史。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "I used to love an audience. Tonight I’d rather everyone get out alive.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "That may be the first sensible thing you’ve said.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Keep arguing. It means you’re both still here.",
+       ""
+      ]
+     ],
+     "fact": "Riven的真实出身将成为第八家族收养与被抹除人口案的证据。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "流亡亲王的真名",
+     "bg": 84,
+     "narr": [
+      "Riven用真名打开禁档，出现复生必要的实名条目。他的身份不能仅作浪漫噱头。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "My name before exile was Ashen Mercer. Your mother gave it back to me when the court took it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Why hide it from me?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Because I knew you would find the names of everyone I failed to save.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "陪Riven重刻真名",
+     "react": "建立尊重他真实身份的私密记忆。",
+     "state": "`trust_riven` += 3，`clue_original` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "与Dante组织撤离",
+     "react": "救出档案管理员并赢得庇护所网络支持。",
+     "state": "`trust_dante` += 2，`public` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "先把名册公开备份",
+     "react": "使证据不再依赖某一亲王。",
+     "state": "`agency` += 2，`clue_original` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "Riven的真实出身将成为第八家族收养与被抹除人口案的证据。"
+  },
+  {
+   "n": 21,
+   "title": "你收到母亲最后一封信",
+   "goal": "真相反转：母亲并非被亲王选中，她曾是废除旧契的组织者。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 41,
+     "narr": [
+      "第八门深处，信件由无数落下的灰烬组成。母亲在信里承认她当年并未完成破阵，因为想保住所有被绑在阵上的人。她留下一条只有你能启动的撤销条款。信中没有命令你替她复仇，只希望你自由生活。"
+     ],
+     "lines": [
+      [
+       "say",
+       "MOTHER",
+       "If you are reading this, please choose your own life first.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "I wish you’d told me sooner.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "She wanted you to have a choice she never got.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 42,
+     "narr": [
+      "Cassian带来公开议会的旧票据，证明七家族中并非所有人都支持旧契。其中一位早已反对却被灭口。你发现摄政王Severin借旧法扩权，但七位现任亲王也各自继承了不愿面对的特权。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "The court calls itself eternal because it cannot bear to be questioned.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then we ask in public.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "I’ll bring the records. You bring the truth.",
+       ""
+      ]
+     ],
+     "fact": "最终破局需要法律撤销、公众证词和阵法技术三方面，而非靠亲吻唤醒力量。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "母亲留下的最后一道禁令",
+     "bg": 85,
+     "narr": [
+      "母亲真正死亡，但留下不可篡改的签名锚。不是“母亲突然复活”廉价反转。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "She wrote one rule twice: Never use grief to make someone obey.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Did she know this would happen?",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "She knew Severin would try. She wanted you to know that even love cannot buy your consent.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "珍藏母亲私人留言",
+     "react": "解锁后续思念与成长陪伴事件。",
+     "state": "`agency` += 1，`clue_original` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "公开信中废契条款",
+     "react": "增强改革民意但王庭提前戒备。",
+     "state": "`public` += 3，`clue_law` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "先秘密召集七位亲王",
+     "react": "收集他们对旧制的正式承诺。",
+     "state": "`clue_law` += 1，`trust_cassian` += 1，`trust_riven` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "最终破局需要法律撤销、公众证词和阵法技术三方面，而非靠亲吻唤醒力量。"
+  },
+  {
+   "n": 22,
+   "title": "审判日，他当众背叛你",
+   "goal": "公开听证中Adrian似乎宣读了不利于你的军令，所有人以为他倒戈。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 43,
+     "narr": [
+      "审判大厅钟声响起，Adrian当众宣读军团曾以“保护第八继承人”为名监禁人类的文件。摄政王冷笑，以为他选择效忠王权。",
+      "Adrian最后补了一句“这份命令由我签字执行，我愿承担审判”。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I signed it. I believed the lie. I will answer for what I did.",
+       ""
+      ],
+      [
+       "say",
+       "SEVERIN",
+       "You condemn yourself.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "Yes. That’s what accountability looks like.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 44,
+     "narr": [
+      "Soren播放完整军令录音，证明摄政王篡改命令并截断撤离警报。Adrian仍需承担失职责任，但不再被当成唯一凶手。你可以选择支持公正审判而非替恋人洗白。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "The council removed the evacuation order before it reached the village.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then put every signature on the record.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "Even mine.",
+       ""
+      ]
+     ],
+     "fact": "所谓背叛实为Adrian公开认责，而真正的违法命令链条直指摄政王。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "审判庭上的假背叛",
+     "bg": 86,
+     "narr": [
+      "证词公开后Adrian必须接受审查。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I signed the order. I will not let you blame the people who obeyed me.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Are you telling them I am guilty?",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "No. I am telling them exactly who gave me the command. Severin.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "支持Adrian公开认责",
+     "react": "关系由承担责任深化，绝不抹去受害者。",
+     "state": "`trust_adrian` += 3，`public` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "要求先听受害者证词",
+     "react": "你赢得受害者信任，Adrian尊重选择。",
+     "state": "`agency` += 2，`public` += 3。"
+    },
+    {
+     "k": "C",
+     "label": "由Soren提交录音原件",
+     "react": "证据更稳固，媒体延后公开。",
+     "state": "`trust_soren` += 2，`clue_war` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "所谓背叛实为Adrian公开认责，而真正的违法命令链条直指摄政王。"
+  },
+  {
+   "n": 23,
+   "title": "失去预言之后，他才敢爱",
+   "goal": "Lucien为关闭预言监控支付代价，短暂失去对未来的感知。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 45,
+     "narr": [
+      "星镜塔从高处传来碎裂声。Lucien醒来后第一次不知道明天是否会下雨。他紧张到说错你的咖啡偏好，随后低声承认害怕被你觉得“不再特别”。",
+      "你可以与他一起重新认识日常，而不是用怜悯换亲密。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "I can’t see tomorrow. I can barely choose breakfast.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then we start small. What do you actually want?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "To ask you to stay for coffee. And be okay if the answer is no.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 46,
+     "narr": [
+      "Lucien第一次在无预知条件下写下自己的选择：“我选择学习，而不是控制。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "He’s not broken. He’s recovering from being used.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And he gets to decide what comes next.",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "For once, I don’t know. That might be a beautiful thing.",
+       ""
+      ]
+     ],
+     "fact": "预言能力损失使未来不再可被反派提前操控；浪漫建立在未知而非宿命。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "最后一次没有预言的约会",
+     "bg": 87,
+     "narr": [
+      "出现“自愿确立心意”选择。可以选择任一满足条件的亲王，或不选择任何人。"
+     ],
+     "lines": [
+      [
+       "say",
+       "LUCIEN",
+       "I have no idea what happens tomorrow. It is terrifying.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Would you still want to see me if I never said yes to you?",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "Yes. Because I like who I am when you tell me the truth.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "陪Lucien第一次普通约会",
+     "react": "小事专属记忆与温柔关系进展。",
+     "state": "`trust_lucien` += 3，`romance_lucien` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "协助Elias修复他的睡眠",
+     "react": "以照护建立友情，不强制暧昧。",
+     "state": "`trust_elias` += 2，`trust_lucien` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "调查摄政王读心设备",
+     "react": "获得关闭监控的技术钥匙。",
+     "state": "`agency` += 2，`clue_dream` += 2。"
+    }
+   ],
+   "rel": [
+    [
+     "CASSIAN",
+     "You have seen me without a crown. If you want me, I want you too. If not, I won't turn this into another debt.",
+     ""
+    ],
+    [
+     "ADRIAN",
+     "I can offer an honest life, not an easy one. If you choose it, I will answer every difficult question.",
+     ""
+    ],
+    [
+     "LUCIEN",
+     "I have no prophecy left. I can only promise to ask instead of assume.",
+     ""
+    ],
+    [
+     "DANTE",
+     "No cameras, no audience. Just me, asking if I can take you to breakfast tomorrow.",
+     ""
+    ],
+    [
+     "SOREN",
+     "I have not earned your forgiveness. I will not ask you to mistake guilt for love.",
+     ""
+    ],
+    [
+     "ELIAS",
+     "You don't need to save me. I would like us to learn how to care for each other.",
+     ""
+    ],
+    [
+     "RIVEN",
+     "The exit is still yours. I would love to stay, if staying is also your choice.",
+     ""
+    ]
+   ],
+   "hook": "预言能力损失使未来不再可被反派提前操控"
+  },
+  {
+   "n": 24,
+   "title": "七位亲王不再听命于王座",
+   "goal": "议会通过强制订婚法案，七人被要求依次宣誓效忠摄政王。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 47,
+     "narr": [
+      "大殿里，七位亲王分别交出各自代表权力的徽记。Cassian失去王座，Dante交出夜城控制权，Riven公开第八门证据。",
+      "你不需要感激他们到给予爱情，每个人都独立决定承担制度改革的代价。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "The crown can keep its gold. It does not get her future.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "I’ve been called selfish for centuries. Tonight I’m happy to disappoint them.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "We’re not your seven saviors. We’re seven men who finally learned to listen.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 48,
+     "narr": [
+      "摄政王启动七枚血石，试图让亲王们互相攻击。你发现让他们站成一圈互相报出真名，就能短暂切断强制契约。"
+     ],
+     "lines": [
+      [
+       "say",
+       "YOU",
+       "Tell me your name. Not your title.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "Elias Winter. I’m here because I choose to be.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "Soren Blackwood. No orders left.",
+       ""
+      ]
+     ],
+     "fact": "七位亲王都拥有摆脱王座控制的自主意志，破阵关键不是恋爱选人。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "第七声钟响时，爱人倒下",
+     "bg": 88,
+     "narr": [],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "The blade has your name on it. Move behind me.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "No—look at me. Stay with me.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "I am trying. I just... cannot hear the bells anymore.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [
+      {
+       "title": "真实死亡，不是误会",
+       "items": [
+        [
+         "say",
+         "THE CHOSEN PRINCE",
+         "There's something I didn't say. I was going to ask you what a normal Sunday looks like.",
+         ""
+        ],
+        [
+         "say",
+         "YOU",
+         "You can ask me tomorrow.",
+         ""
+        ],
+        [
+         "say",
+         "THE CHOSEN PRINCE",
+         "I'd like that.",
+         ""
+        ],
+        [
+         "narr",
+         "他突然把你推离袭来的银刃。利刃上的不是毒，而是把名字从世界抹去的古老铭文。"
+        ],
+        [
+         "say",
+         "YOU",
+         "No. Stay. Look at me. Please.",
+         ""
+        ],
+        [
+         "say",
+         "THE CHOSEN PRINCE",
+         "I know your face. I know... I chose this.",
+         ""
+        ],
+        [
+         "narr",
+         "最后一声心跳消失。Elias试图救治，手掌白光熄灭。"
+        ],
+        [
+         "say",
+         "ELIAS",
+         "I can't find his pulse.",
+         ""
+        ]
+       ]
+      }
+     ],
+     "nobond": [
+      "断名银刃没有落在亲王身上，而是射向挡在证人前面的盟友 Seraph。",
+      "她受了重伤，但活了下来。七位亲王都还站在你身边。"
+     ]
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "让七人联手对抗血石",
+     "react": "七人盟约达成，若低信任则需证据补足。",
+     "state": "`agency` += 2，`clue_law` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "优先护送民众撤离",
+     "react": "祭坛祭品数量减少，情绪回报更高。",
+     "state": "`public` += 3，`clue_child` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "记录七人真名证词",
+     "react": "以法律证据支持新秩序。",
+     "state": "`clue_original` += 2，`public` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "七位亲王都拥有摆脱王座控制的自主意志，破阵关键不是恋爱选人。"
+  },
+  {
+   "n": 25,
+   "title": "血月祭坛最残酷的规则",
+   "goal": "反派揭露仪式机制：要通过强迫选择伴侣的心理压迫聚集能量，任何被迫的“我愿意”都能启动献祭。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 49,
+     "narr": [
+      "月蚀阴影爬上祭坛，空中出现无数过去的新娘录音。摄政王向你宣布，只要当众选择一位亲王并签字，所有人就能活。你知道这是陷阱。他根本不在乎你爱谁，只在乎你的“同意”被迫说出。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SEVERIN",
+       "Choose a prince, and I’ll spare them.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "You don’t want love. You want a word you can steal.",
+       ""
+      ],
+      [
+       "say",
+       "SEVERIN",
+       "Everyone chooses under pressure.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 50,
+     "narr": [],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "Their pain is powering this place. We cut the connection first.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "The children are clear. We can get the rest out.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then we save them all, and I decide my life after.",
+       ""
+      ]
+     ],
+     "fact": "祭坛能源来自被迫承诺，选择不谈恋爱也可以完成正史。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "棺椁里没有呼吸",
+     "bg": 89,
+     "narr": [
+      "银刃吸走名字，摄政王留下伪造的“复活影像”诱迫签婚约。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "He is dead. I checked twice. I will not lie to you because you are hurting.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "There must be something.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "There may be a way to ask his soul. Not to command it.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [
+      {
+       "title": "真正的失去",
+       "items": [
+        [
+         "say",
+         "ELIAS",
+         "No pulse. No breath. His name is gone from the blood registry. This is death.",
+         ""
+        ],
+        [
+         "say",
+         "YOU",
+         "Then why can I still hear him say my name?",
+         ""
+        ],
+        [
+         "say",
+         "ELIAS",
+         "Because you remember. The court has never been able to steal that.",
+         ""
+        ],
+        [
+         "narr",
+         "Elias将一枚刻有真名的银牌放到你手里。"
+        ],
+        [
+         "say",
+         "SEVERIN",
+         "Sign the marriage vow. I'll give him back.",
+         "through mirror"
+        ],
+        [
+         "say",
+         "YOU",
+         "You murdered him.",
+         ""
+        ],
+        [
+         "say",
+         "SEVERIN",
+         "I can show you his face before sunrise.",
+         ""
+        ],
+        [
+         "say",
+         "ELIAS",
+         "He promised a face. Not a soul.",
+         ""
+        ]
+       ]
+      }
+     ],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "拒签并公开宣布自主权",
+     "react": "",
+     "state": "`agency` += 3，`public` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "先解救祭品",
+     "react": "开启互助破阵线，减轻受害者损失。",
+     "state": "`clue_heal` += 2，`public` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "拖延时间检查契约",
+     "react": "发现真正破阵需要撤销印与第八名册。",
+     "state": "`clue_law` += 2，`agency` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "祭坛能源来自被迫承诺，选择不谈恋爱也可以完成正史。"
+  },
+  {
+   "n": 26,
+   "title": "月蚀之夜：不必选一个人",
+   "goal": "最终仪式启动，玩家必须决定废除强迫婚约，而不是在七位亲王里被迫点一个。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 51,
+     "narr": [
+      "月亮完全黑去，七条血色锁链从王座延伸到城中每一户人家。你把母亲的旧信放在第八门的凹槽，读出真正的撤销条款。",
+      "Riven护住石门，Cassian组织撤离，Lucien用剩余记忆阻断预言干扰。七人各自承担任务，你是行动的发动者。"
+     ],
+     "lines": [
+      [
+       "say",
+       "YOU",
+       "I revoke every vow taken without a choice.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "The gates are open.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Then run toward a future we haven’t stolen yet.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 52,
+     "narr": [
+      "摄政王的权力来自制度，被制度废除后失去控制，交由独立审判。"
+     ],
+     "lines": [
+      [
+       "say",
+       "YOU",
+       "No one gets to own my yes.",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "I can’t see tomorrow.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Good. We’ll make it ourselves.",
+       ""
+      ]
+     ],
+     "fact": "强制誓约被废除，七位亲王取回自主权；世界仍需重建。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "死人回来了——但那不是他",
+     "bg": 90,
+     "narr": [
+      "旧强制婚约被废除。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "That thing knows his face, not the memory that made him who he was.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then why is it calling me by my name?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Because Severin copied every word you ever said in front of a bloodstone.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [
+      {
+       "title": "第一次“复活”是陷阱",
+       "items": [
+        [
+         "say",
+         "FALSE PRINCE",
+         "It's me. Come here, sweetheart. Promise you'll be mine and I can stay.",
+         ""
+        ],
+        [
+         "say",
+         "YOU",
+         "Tell me something only we know.",
+         ""
+        ],
+        [
+         "say",
+         "FALSE PRINCE",
+         "Everything you said is in the bloodstone. I know it all.",
+         ""
+        ],
+        [
+         "say",
+         "YOU",
+         "Then tell me what you chose when no one was watching.",
+         ""
+        ],
+        [
+         "say",
+         "RIVEN",
+         "That's not him. That's a prison wearing his face.",
+         ""
+        ]
+       ]
+      }
+     ],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "用第八家族的撤销印破阵",
+     "react": "制度废除更快，你可获新议会席位。",
+     "state": "`agency` += 3，`world_free` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "优先救出回声石灵魂",
+     "react": "延长破阵但保护更多幸存者。",
+     "state": "`public` += 3，`world_free` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "让七人分担阵法任务",
+     "react": "七人联盟进一步团结，进入联合重建线。",
+     "state": "`trust_cassian` += 1，`trust_riven` += 1，`trust_lucien` += 1，`world_free` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "强制誓约被废除，七位亲王取回自主权"
+  },
+  {
+   "n": 27,
+   "title": "没有王座的第一天",
+   "goal": "旧制瓦解后，城市却陷入供能危机，胜利不是无代价的童话。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 53,
+     "narr": [
+      "街上的路灯逐盏熄灭，人类和吸血鬼必须暂时共享电力与血库。Elias忙着建立公开救护站，Dante把夜城娱乐场所改成临时避难点。你发现过去被王座掩盖的贫困与疾病开始暴露。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "A broken spell doesn’t fix a broken city.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then we start with the people who were invisible.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "I know every club owner in town. For once, I can call in favors for something good.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 54,
+     "narr": [
+      "居民在墙上写下被遗忘者的名字，Mae如果此前获救也写下自己的新名字。你选择优先修复城市、安抚创伤还是建立公共委员会。男主不再围着你进行无意义争吵，而是在各自岗位承担行动。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "You don’t have to be the symbol of a revolution every second.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What am I allowed to be?",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Tired. Hungry. Maybe just someone who wants breakfast.",
+       ""
+      ]
+     ],
+     "fact": "自由后的治理难题开启长期陪伴世界，而非结局即完结。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "真正的复活，和不能挽回的代价",
+     "bg": 91,
+     "narr": [
+      "若亲王本人愿意回来则回归，永久失去永生。若拒绝则进入哀悼线。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "I can open the door once. He can choose whether to walk through it.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What happens if he comes back?",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "His immortality ends. He will have years, not centuries. And you will still owe him nothing.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [
+      {
+       "title": "真正的归来",
+       "items": [
+        [
+         "say",
+         "ELIAS",
+         "The door opens once. You can invite him, but you cannot pull him back.",
+         ""
+        ],
+        [
+         "say",
+         "YOU",
+         "And the cost?",
+         ""
+        ],
+        [
+         "say",
+         "ELIAS",
+         "He won't be immortal anymore. If he returns, his life will have an end.",
+         ""
+        ],
+        [
+         "narr",
+         "B只留下告别的话。C暂缓，先确保被困者安全。C提供一次后续回访窗口，但不无限延期。"
+        ],
+        [
+         "say",
+         "THE CHOSEN PRINCE",
+         "I remember. I also remember choosing to protect you. But I don't want my next life to be a reward you owe me.",
+         "voice from the threshold"
+        ],
+        [
+         "say",
+         "YOU",
+         "I don't owe you anything. I just wanted you to have a choice.",
+         ""
+        ],
+        [
+         "say",
+         "THE CHOSEN PRINCE",
+         "Then I choose to come home.",
+         ""
+        ],
+        [
+         "narr",
+         "。他恢复生命但不自动恢复恋爱关系，也不保证继续在一起。"
+        ]
+       ]
+      }
+     ],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "与Elias建立公开诊所",
+     "react": "治愈线长期事件解锁。",
+     "state": "`trust_elias` += 2，`world_rebuild` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "和Dante建立避难所基金",
+     "react": "夜城社会线长期事件解锁。",
+     "state": "`trust_dante` += 2，`world_rebuild` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "成立跨族公共委员会",
+     "react": "独立治理线获得更大影响。",
+     "state": "`agency` += 3，`world_rebuild` += 2。"
+    }
+   ],
+   "rel": null,
+   "hook": "自由后的治理难题开启长期陪伴世界，而非结局即完结。"
+  },
+  {
+   "n": 28,
+   "title": "亲王们也要学会普通生活",
+   "goal": "Adrian与Soren分别面对旧职业留下的创伤，玩家不需要治疗所有人。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 55,
+     "narr": [
+      "Adrian在失去军权后第一次走进普通面包店，连排队都不熟练。他承认自己不知道如何不靠命令生活。你可以陪他挑早餐，或者提醒他接受受害者社区的监督。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I’ve led wars. I don’t know how to order coffee.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Start by asking what you like.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "I think I like being here with you. Without a rank.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 56,
+     "narr": [
+      "Soren也把情报局的秘密档案交给民众档案馆管理，失去垄断的信息权。晚上他在旧车站等你，拿出你母亲的信原件，问你是否愿意把它留给未来的历史学家。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "I used to know everything about everyone. I didn’t know how to ask a simple question.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Try.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "Would you like to spend tomorrow with me?",
+       ""
+      ]
+     ],
+     "fact": "两位角色的职业身份改变后，关系从危机保护转向真实日常。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "复活的人第一次怕老去",
+     "bg": 92,
+     "narr": [
+      "复活者需要适应衰老与有限时光。其他亲王同样需要新职业与自由生活。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ADRIAN",
+       "I used to count wars. Now I count mornings.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Does it scare you?",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "It does. But I get to spend them on things I choose.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "与Adrian参加社区听证",
+     "react": "军团改革深入，恋爱可慢热。",
+     "state": "`trust_adrian` += 2，`world_rebuild` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "和Soren建立公开档案馆",
+     "react": "透明治理与秘密保护兼顾。",
+     "state": "`trust_soren` += 2，`world_rebuild` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "两者都不选，去学习新制度",
+     "react": "不损害结局自由，提升自我成长。",
+     "state": "`agency` += 3，`world_rebuild` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "两位角色的职业身份改变后，关系从危机保护转向真实日常。"
+  },
+  {
+   "n": 29,
+   "title": "七封婚书终于被烧掉",
+   "goal": "你召集新议会，为七封婚书举行公开废除仪式，但保留合法自由婚姻的权利。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 57,
+     "narr": [
+      "城中心的炉火被点亮。七封伪装成婚书的保护令在众人面前公开，附着在其上的强制条款被依法注销。Cassian提出新议会只能由公民选举，Riven坚持必须保障流亡者和无名者登记权。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "I no longer want a throne nobody can question.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "And nobody loses their name just because they were born outside the walls.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then write that into the law.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 58,
+     "narr": [
+      "摄政王旧党在广场制造骚乱，想烧毁真实档案。你选择公开直播、分散存档或保护现场证人。此前积累的证据决定不同盟友响应方式，而非逼迫一人出场解决所有问题。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "There’s a copy in every district.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "And a witness in every room.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Good. We’re not giving the truth back to one ruler.",
+       ""
+      ]
+     ],
+     "fact": "婚书的象征被逆转：从强迫选择变成废除强制、保护自主。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "婚书烧掉以后，谁还敢求婚",
+     "bg": 93,
+     "narr": [
+      "焚烧旧婚书与珍藏私人信件并不矛盾，个人关系必须重新邀请。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "Those letters were a threat. If I ever ask you to stay, it will be with the door open.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And if I say no?",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Then I will make sure the road is safe.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "支持Cassian民选改革",
+     "react": "王权转型为民选机构。",
+     "state": "`trust_cassian` += 2，`world_rebuild` += 2。"
+    },
+    {
+     "k": "B",
+     "label": "支持Riven公民登记",
+     "react": "边境人口获得合法身份。",
+     "state": "`trust_riven` += 2，`world_rebuild` += 2。"
+    },
+    {
+     "k": "C",
+     "label": "提出双方案合并",
+     "react": "",
+     "state": "`agency` += 3，`world_rebuild` += 3。"
+    }
+   ],
+   "rel": null,
+   "hook": "婚书的象征被逆转：从强迫选择变成废除强制、保护自主。"
+  },
+  {
+   "n": 30,
+   "title": "七份真心，不是七份欠债",
+   "goal": "高潮之后七位亲王表达各自真实愿望；玩家不欠任何人恋爱承诺。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 59,
+     "narr": [
+      "日落的七色花园中，每位亲王留下属于自己的小礼物：Cassian是一张无头衔的普通约会邀请，Adrian是一张社区球赛门票，Lucien是一张没有预言的旅行地图，Dante是一份他亲手烤坏的甜点，Soren是一把档案馆钥匙，Elias是一瓶他自己种的花，Riven是一条去海边的机车路线。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "No throne. No audience. Just dinner, if you’d like.",
+       ""
+      ],
+      [
+       "say",
+       "ADRIAN",
+       "I’d like to know you on an ordinary day.",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "I can’t promise forever. I can promise to show up tomorrow.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 60,
+     "narr": [
+      "七人各自理解拒绝的可能。Dante不再把所有暧昧当成表演，Soren不再偷读你的信，Elias承诺不会为你耗尽身体，Riven保留你的远行自由。",
+      "你可以接受一个人的认真邀请、继续慢慢了解多人，或者只选自己的旅程。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "You deserve someone who knows when to stop performing.",
+       ""
+      ],
+      [
+       "say",
+       "SOREN",
+       "I will always knock.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "I want to be loved, not needed until I disappear.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "If you leave, I’ll make sure the road is open.",
+       ""
+      ]
+     ],
+     "fact": "最终恋爱不与拯救世界兑换，所有后续关系必须由玩家主动选择。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "不是七份债，而是七个未来",
+     "bg": 94,
+     "narr": [
+      "七人互不干涉，尊重独身或哀悼。已死亡未复活者不在场发言。"
+     ],
+     "lines": [
+      [
+       "say",
+       "DANTE",
+       "I will not ask you to repay me for surviving. I would rather ask if you want breakfast.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What if I choose no one?",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Then we save you a seat anyway.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "明确回应一位亲王",
+     "react": "锁定个人恋爱告白准备场景，具体人选下一章决定。",
+     "state": "`route_mode` = single。"
+    },
+    {
+     "k": "B",
+     "label": "声明慢慢了解而不承诺排他",
+     "react": "开启透明非排他协商前置，不保证所有人都接受。",
+     "state": "`route_mode` = open。"
+    },
+    {
+     "k": "C",
+     "label": "暂不恋爱，先去旅行",
+     "react": "进入自我成长路线，七人保持有边界的友谊。",
+     "state": "`route_mode` = solo，`agency` += 3。"
+    }
+   ],
+   "rel": null,
+   "hook": "最终恋爱不与拯救世界兑换，所有后续关系必须由玩家主动选择。"
+  },
+  {
+   "n": 31,
+   "title": "最后的选择，是你的人生",
+   "goal": "玩家依照先前互动自由决定独立结局、七位之一的专属恋爱结局或经明确同意的多关系后日谈。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 61,
+     "narr": [
+      "月下庭院没有仪式主持，也没有倒计时。你手里拿着七位亲王的邀请，所有人都知道你可以拒绝。",
+      "缺少条件时不是惩罚，而是提出“我们可以慢慢来”。"
+     ],
+     "lines": [
+      [
+       "say",
+       "YOU",
+       "I don’t owe a crown my heart.",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "No. Whoever you choose should be grateful you chose freely.",
+       ""
+      ],
+      [
+       "say",
+       "LUCIEN",
+       "And if you choose no one tonight, tomorrow still belongs to you.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 62,
+     "narr": [
+      "如果你明确选择某人，对方会谈自己想要的关系而非直接进入固定拥吻。如果选择自由路线，众人送你出城而非悲伤控诉。如果选择探索非排他关系，必须逐人确认边界、时间和自主退出权。"
+     ],
+     "lines": [
+      [
+       "say",
+       "RIVEN",
+       "I don’t want to be a secret you keep to spare someone else.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "Then we tell the truth, even when it’s awkward.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "That’s the only kind of future I’ll choose.",
+       ""
+      ]
+     ],
+     "fact": "关系终局由玩家直接选定，世界胜利独立于恋爱结局。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "你选择的不是一个奖品",
+     "bg": 95,
+     "narr": [
+      "七条个别恋爱线、独身线、协商非排他线及哀悼线，分别写后日谈。"
+     ],
+     "lines": [
+      [
+       "say",
+       "CASSIAN",
+       "If you choose me, let it be because tomorrow with me sounds good. Not because of the crown I lost.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "And if I need more time?",
+       ""
+      ],
+      [
+       "say",
+       "CASSIAN",
+       "Then take it. I am not going anywhere I have not chosen to go.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "进入七选一的恋爱结局",
+     "react": "",
+     "state": "`route_mode` = single。"
+    },
+    {
+     "k": "B",
+     "label": "选择自由与事业",
+     "react": "开放世界独立结局。",
+     "state": "`route_mode` = solo。"
+    },
+    {
+     "k": "C",
+     "label": "讨论彼此自愿的非排他关系",
+     "react": "仅在相关角色逐人同意后进入共同关系未来。",
+     "state": "`route_mode` = open。"
+    }
+   ],
+   "rel": null,
+   "hook": "关系终局由玩家直接选定，世界胜利独立于恋爱结局。"
+  },
+  {
+   "n": 32,
+   "title": "明天，比永生更长",
+   "goal": "后日谈不是强制结婚，而是建立可持续经营的关系、工作和新世界生活。",
+   "scenes": [
+    {
+     "kind": "A",
+     "title": "",
+     "bg": 63,
+     "narr": [
+      "你在新王国的第一个清晨醒来，街道亮着重新接通的灯。你曾经挽救的孩子在学校写下你的名字，城中第一份民选公告张贴在广场。",
+      "与谁共度早餐取决于前一章的选择。如果独立，则你在车站收到了七封朋友来信。"
+     ],
+     "lines": [
+      [
+       "say",
+       "YOU",
+       "I thought the ending would feel louder.",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "The quiet is what we fought for.",
+       ""
+      ],
+      [
+       "say",
+       "DANTE",
+       "We could always make pancakes dramatically, if you miss the chaos.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "B",
+     "title": "",
+     "bg": 64,
+     "narr": [
+      "一个新的求助函送来：边境有人开始复刻摄政王的旧血契。你可以选择暂时不去、派团队调查或者亲自前往。恋爱对象会根据自身生活和你一起商量，而不是无条件抛下一切。",
+      "这成为开放世界第31章入口。"
+     ],
+     "lines": [
+      [
+       "say",
+       "SOREN",
+       "The letter isn’t an emergency yet. You have time to decide.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "Then we decide together.",
+       ""
+      ],
+      [
+       "say",
+       "RIVEN",
+       "Or you take the road alone. Either way, you have a way home.",
+       ""
+      ]
+     ],
+     "fact": "结局可继续生活：关系日常、治理、边境危机与过去记忆都可持续拓展。",
+     "conds": [],
+     "nobond": []
+    },
+    {
+     "kind": "D",
+     "title": "新的早晨，会有人敲门",
+     "bg": 96,
+     "narr": [
+      "可接开放世界。失去永生的复活者不能被写成不老不死。"
+     ],
+     "lines": [
+      [
+       "say",
+       "ELIAS",
+       "The city is asking for help again. You do not need to be their queen.",
+       ""
+      ],
+      [
+       "say",
+       "YOU",
+       "What do they need?",
+       ""
+      ],
+      [
+       "say",
+       "ELIAS",
+       "Someone willing to listen before making another vow.",
+       ""
+      ]
+     ],
+     "fact": "",
+     "conds": [],
+     "nobond": []
+    }
+   ],
+   "choice": [
+    {
+     "k": "A",
+     "label": "约定日常相处与新活动",
+     "react": "开启选定恋爱/友谊的每周事件。",
+     "state": "`world_rebuild` += 1。"
+    },
+    {
+     "k": "B",
+     "label": "组织边境调查小队",
+     "react": "开启开放式支线与动态世界。",
+     "state": "`agency` += 1。"
+    },
+    {
+     "k": "C",
+     "label": "给自己一天真正的休息",
+     "react": "开启疗愈与生活型陪伴。",
+     "state": "`agency` += 1。"
+    }
+   ],
+   "rel": null,
+   "hook": "结局可继续生活：关系日常、治理、边境危机与过去记忆都可持续拓展。"
+  }
+ ],
+ "endings": [
+  {
+   "id": "END_01",
+   "name": "Cassian / 无冠之爱",
+   "story": [
+    "旧王宫的王座被改成图书馆。Cassian不再以统治者身份邀请你，而是穿着普通外套，在雨后的长廊等你吃一顿没有随从的晚餐。"
+   ],
+   "lines": [
+    [
+     "CASSIAN",
+     "I spent centuries learning how to rule. I’d like to learn how to love you without ruling anything. Dinner on Friday?"
+    ]
+   ]
+  },
+  {
+   "id": "END_02",
+   "name": "Adrian / 解除命令之后",
+   "story": [
+    "Adrian向被伤害的村落继续履行赔偿和公开道歉。你在社区训练场遇到他，他向你展示自己报名的第一堂烹饪课，开玩笑说没有军令的生活比打仗更难。"
+   ],
+   "lines": [
+    [
+     "ADRIAN",
+     "I can’t rewrite what I did. But I can make tomorrow different. Will you be there to see it?"
+    ]
+   ]
+  },
+  {
+   "id": "END_03",
+   "name": "Lucien / 不知道明天的恋人",
+   "story": [
+    "镜塔不再播放你的未来，只保留一本你们共同书写的日记。Lucien在扉页写下今天的天气、你喜欢的茶、第一次散步的路线，郑重地问是否能亲自了解下一页。"
+   ],
+   "lines": [
+    [
+     "LUCIEN",
+     "I don’t know what comes next. I only know I want to discover it with you, one honest day at a time."
+    ]
+   ]
+  },
+  {
+   "id": "END_04",
+   "name": "Dante / 不必表演的夜晚",
+   "story": [
+    "夜城重新开门，Dante却第一次不参加自己的狂欢派对。他带着烤坏的甜点来找你，认真说今晚没有舞台、没有观众，只有他和一场可能失败的约会。"
+   ],
+   "lines": [
+    [
+     "DANTE",
+     "No grand entrance. No perfect lines. Just me asking if you’d like another bad dessert tomorrow."
+    ]
+   ]
+  },
+  {
+   "id": "END_05",
+   "name": "Soren / 先敲门的人",
+   "story": [
+    "Soren把最后一份秘密档案交给档案馆，站在你家门前先敲三次门。他不再从影子里出现，而是拿着一小束花，问能不能一起散步。他会记住你说不的日子。"
+   ],
+   "lines": [
+    [
+     "SOREN",
+     "I used to know where you were without asking. Now I’d rather ask where you want to go."
+    ]
+   ]
+  },
+  {
+   "id": "END_06",
+   "name": "Elias / 两个人都可以被照顾",
+   "story": [
+    "Elias的诊所终于有人接替夜班。他没有为了见你施展会受伤的魔法，而是提前下班来到街角花店，把一枝白蔷薇放到你掌心，同时承认自己今天也有点累。"
+   ],
+   "lines": [
+    [
+     "ELIAS",
+     "I used to give everything away. With you, I want to build something that lets us both stay."
+    ]
+   ]
+  },
+  {
+   "id": "END_07",
+   "name": "Riven / 余烬之外的路",
+   "story": [
+    "Riven把刻着真名的钥匙留在你面前。机车后座有头盔，但他没有假设你一定要跟他走。他画好地图，把终点选在远离王庭的海边，等你主动决定下一程。"
+   ],
+   "lines": [
+    [
+     "RIVEN",
+     "The road is open. I’d love to take it with you. But it stays open if you go alone."
+    ]
+   ]
+  },
+  {
+   "id": "END_08",
+   "name": "主角独立 / 我不需要王冠",
+   "story": [
+    "你独自走进重建后的纽约车站。七位亲王给你寄来朋友的问候，却无人要求解释为何你没有选择恋爱。第八家族的旧徽章成了公开档案馆的标识，你为自己挑选下一座城市。"
+   ],
+   "lines": [
+    [
+     "YOU",
+     "I wasn’t the woman seven princes had to win. I was the woman who finally got to choose herself."
+    ]
+   ]
+  },
+  {
+   "id": "END_09",
+   "name": "协商式开放关系 / 诚实的选择",
+   "story": [
+    "你与有意继续交往的角色逐一谈清彼此是否愿意非排他相处、能否公开、需要什么私人时间以及随时退出的权利。若有人拒绝，尊重该角色退出该关系安排，不会把七人强制拉进同一个爱情结局。"
+   ],
+   "lines": [
+    [
+     "YOU",
+     "I want honesty, space, and a choice we keep making—not a promise anyone is trapped in."
+    ]
+   ]
+  }
+ ],
+ "last_words": {
+  "Cassian": {
+   "scene": [],
+   "line": "You were the first person who looked at me without seeing a throne."
+  },
+  "Adrian": {
+   "scene": [
+    "他卸下军徽，将盾牌挡在女主身前。"
+   ],
+   "line": "I spent centuries following orders. This one was mine."
+  },
+  "Lucien": {
+   "scene": [
+    "已失去预言的他看见银刃时不再有未来提示。"
+   ],
+   "line": "For once, I didn’t see this coming. I still chose you."
+  },
+  "Dante": {
+   "scene": [
+    "他最后一次摘掉舞会面具，第一次没有笑。"
+   ],
+   "line": "Promise me you’ll dance again. Not for me. For you."
+  },
+  "Soren": {
+   "scene": [],
+   "line": "I gave the truth back. Please keep it."
+  },
+  "Elias": {
+   "scene": [
+    "治愈者不能为自己治疗，白蔷薇在手里枯萎。"
+   ],
+   "line": "You don’t have to save me to prove you cared."
+  },
+  "Riven": {
+   "scene": [
+    "昔日流亡者转身堵上唯一的逃生门。"
+   ],
+   "line": "The door is open. Go live the life they stole from you."
+  }
+ }
+}
