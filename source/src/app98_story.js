@@ -458,7 +458,7 @@ async function beat98(th, mode, act) {
     const mv = move98(th, s, d, mode);
     mv.came.forEach(x => appendMsg(th, { who: "n", k: "act", txt: x.how || L98(first(ch(x.id).n) + "走了过来。", first(ch(x.id).n) + " joins you."), at: Date.now() }));
     const arc98 = typeof arcAfter98 === "function" ? arcAfter98(th, d, mode, act) : {}; /* 戏点、秘密、事件、小游戏、音乐（app134） */
-    let spk = (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && allowedSpeakers98(th, s).includes(x.id)); if (policy) spk = spk.filter((x,i,all) => all.findIndex(y => y.id === x.id) === i); if (mode === "exit") spk = policy ? [] : spk.slice(0, 1);
+    let spk = typeof narrationOn135 === 'function' && narrationOn135(th) ? narrationSpeakers135(th,s,d.speakers,mode,act) : (Array.isArray(d.speakers) ? d.speakers : []).filter(x => x && allowedSpeakers98(th, s).includes(x.id)); if (policy) spk = spk.filter((x,i,all) => all.findIndex(y => y.id === x.id) === i); if (mode === "exit") spk = policy ? [] : spk.slice(0, 1);
     if (policy && act && /累|想安静|不想应酬/.test(String(act.txt||"")) && !/你们都|两个人都/.test(String(act.txt||""))) spk = spk.slice(0,1);
     let nar = policy ? "" : String(d.narration || "").trim(); if (mode !== "enter" && /[「」“”"]/.test(nar)) nar = nar.split(/[「“"]/)[0].trim(); if (mode !== "enter" && nar.length > 140) nar = nar.slice(0, nar.search(/[。！？.!?]/) + 1 || 140);
     if (nar) appendMsg(th, { who: "n", k: "act", txt: nar.slice(0, 320), at: Date.now() });

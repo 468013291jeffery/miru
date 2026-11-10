@@ -18,6 +18,18 @@ function narrationPolicy135(th) {
 }
 function narrationOn135(th) { return !!narrationPolicy135(th); }
 function narrationOwner135(th) { return th.b98||th.agent97||th.pk||th; }
+// Keep a malformed optional director selection from silently dropping a pilot reply.
+function narrationSpeakers135(th,s,speakers,mode,act) {
+  const allowed=allowedSpeakers98(th,s),w=wd(th.wid);
+  const list=(Array.isArray(speakers)?speakers:[]).map(x=>{
+    if(!x||typeof x!=='object')return null;
+    const raw=String(x.id||''),id=allowed.find(id=>id===raw||first(ch(id).n)===raw||String((cardOf98(w,id)||{}).key||'')===raw);
+    return id?Object.assign({},x,{id}):null;
+  }).filter(Boolean);
+  if(list.length||!allowed.length||!['enter','talk','more','choice'].includes(mode)||act&&act.mode==='think')return list;
+  const addressed=act&&allowed.find(id=>id===act.to||String(act.txt||'').includes(first(ch(id).n)));
+  return [{id:addressed||allowed[0],intent:Z98()?'先回应眼前已经说过的话，不预告下一场。':'Respond to the current public exchange without previewing a later scene.'}];
+}
 function narrationTurn135(th) { return th.b98?th.b98.turns:th.agent97?th.agent97.turns:th.rounds||0; }
 function narrationScene135(th) {
   if(th.b98){const x=scene98(th);return {b:x.b,s:x.s,present:here98(th,x.s),key:th.b98.ch+':'+x.s.id};}
@@ -119,7 +131,7 @@ async function narrationAfter135(th,opt) {
   const last=th.msgs.at(-1),count=th.msgs.length,sources=narrationSources135(th,opt.start,opt.mode);
   const fallback=narrationBridge135(th,sources,opt.mode);
   if(!sources.some(x=>x.who!=='PLAYER'))return false;
-  const current=()=>narrationOwner135(th)===A&&!A.ended&&narrationTurn135(th)===turn&&narrationScene135(th).key===scene.key&&th.msgs.length===count&&th.msgs[count-1]===last&&S.threads[th.id]===th&&curT===th.id;
+  const current=()=>narrationOn135(th)&&narrationOwner135(th)===A&&!A.ended&&narrationTurn135(th)===turn&&narrationScene135(th).key===scene.key&&th.msgs.length===count&&th.msgs[count-1]===last&&S.threads[th.id]===th&&curT===th.id;
   if(!current())return false;
   const post=frame=>{
     if(!frame||!current())return false;
@@ -175,5 +187,5 @@ if(typeof MSGKIND!=='undefined'&&typeof MSGKIND.post==='function')MSGKIND.post('
   return html.replace('class="m-narr"','class="m-narr narrative135"').replace(/(<div class="m-narr narrative135"[^>]*>)/,'$1'+label);
 });
 if(typeof document!=='undefined'&&document.head){
-  const style=document.createElement('style');style.textContent='.m-narr.narrative135{padding:12px 14px;border-left:2px solid rgba(205,177,129,.65);border-radius:0 10px 10px 0;background:rgba(12,13,21,.82);color:#eeeaf3;font-style:normal;line-height:1.8}.narrative135-label{display:block;margin-bottom:3px;color:#d8bb89;font-size:11px;letter-spacing:.08em;font-style:normal}';document.head.appendChild(style);
+  const style=document.createElement('style');style.textContent='.chatscreen .msgs .m-narr.narrative135,.chatscreen .msgs .bn.narrative135{align-self:stretch;max-width:100%;text-align:left;padding:12px 14px;border-left:2px solid rgba(205,177,129,.65);border-radius:0 10px 10px 0;background:rgba(12,13,21,.94);color:#eeeaf3;font-style:normal;line-height:1.8}.chatscreen .msgs .narrative135-label{display:block;margin-bottom:5px;color:#f1d29b!important;font-size:12px;font-weight:700;opacity:1;letter-spacing:.08em;font-style:normal}';document.head.appendChild(style);
 }
