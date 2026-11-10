@@ -24,6 +24,12 @@
     try { todayDeck96(); if (ALL) box.insertAdjacentHTML("afterbegin", '<p class="xs" style="padding:4px 16px 0;color:var(--gold)">' + (zh() ? "当前分类下还没有角色，先给你看全部。" : "No one in this category yet — showing everyone.") + '</p>'); } catch (_) {}
     sc.replaceWith(box);
     try { DECK96 = todayDeck96(); renderSwipe96(); if (typeof track === "function") track("meet_open", { n: DECK96.length, tab: 1 }); } catch (e) { console.warn("[meet140]", e); }
+    /* 刚打开 App 就点进来时，男主卡（leads.json）可能还没加载完，牌是空的：每 1.5 秒再看一次，最多 6 次 */
+    if (!DECK96.length) { let n = 0; const t = setInterval(() => {
+      n++; const host = document.querySelector("#sw96.in140");
+      if (!host || disc.mode !== "chars" || n > 6) { clearInterval(t); return; }
+      try { const d = todayDeck96(); if (d.length) { DECK96 = d; renderSwipe96(); clearInterval(t); } } catch (_) { clearInterval(t); }
+    }, 1500); }
   }
   const R0 = renderDiscover;
   renderDiscover = function () { const r = R0.apply(this, arguments); try { mount(); } catch (e) { console.warn("[meet140] mount", e); } return r; };
