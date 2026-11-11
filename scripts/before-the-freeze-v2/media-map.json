@@ -1,0 +1,163 @@
+{
+  "title": "极寒重生：谁能进门",
+  "cover": "art/official/before-the-freeze/portraits/player.webp",
+  "playerPortrait": "art/official/before-the-freeze/portraits/player.webp",
+  "portraits": {
+    "player": "art/official/before-the-freeze/portraits/player.webp",
+    "noah": "art/official/before-the-freeze/portraits/noah.webp",
+    "eli": "art/official/before-the-freeze/portraits/eli.webp",
+    "adam": "art/official/before-the-freeze/portraits/adam.webp",
+    "luke": "art/official/before-the-freeze/portraits/luke.webp",
+    "ruth": "art/official/before-the-freeze/portraits/ruth.webp",
+    "vanessa": "art/official/before-the-freeze/portraits/vanessa.webp",
+    "brent": "art/official/before-the-freeze/portraits/brent.webp"
+  },
+  "chapters": [
+    {
+      "chapter": 1,
+      "title": "这次钥匙不给你",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch01-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch01-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch01-c.webp"
+        }
+      ]
+    },
+    {
+      "chapter": 2,
+      "title": "幸好这批货你查过",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch02-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch02-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch02-c.webp"
+        }
+      ]
+    },
+    {
+      "chapter": 3,
+      "title": "想留下先听你的规矩",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch03-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch03-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch03-c.webp"
+        }
+      ]
+    },
+    {
+      "chapter": 4,
+      "title": "雪来了你准备的都用上了",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch04-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch04-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch04-c.webp"
+        }
+      ]
+    },
+    {
+      "chapter": 5,
+      "title": "灯灭了这里还是暖的",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch05-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch05-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch05-c.webp"
+        }
+      ]
+    },
+    {
+      "chapter": 6,
+      "title": "赶你走的人来敲门了",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch06-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch06-b.webp",
+          "condition": "仅当门外冲突已升级并撞击外层玻璃"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch06-c.webp"
+        }
+      ]
+    },
+    {
+      "chapter": 7,
+      "title": "这张照片是谁发出去的",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch07-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch07-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch07-c.webp",
+          "condition": "仅当玩家主动告知对方自己重生"
+        }
+      ]
+    },
+    {
+      "chapter": 8,
+      "title": "天亮了你还想和谁一起",
+      "highlights": [
+        {
+          "slot": "a",
+          "image": "art/official/before-the-freeze/highlights/ch08-a.webp"
+        },
+        {
+          "slot": "b",
+          "image": "art/official/before-the-freeze/highlights/ch08-b.webp"
+        },
+        {
+          "slot": "c",
+          "image": "art/official/before-the-freeze/highlights/ch08-c.webp"
+        }
+      ]
+    }
+  ]
+}
