@@ -1984,6 +1984,164 @@
           }
         }
       ]
+    },
+    {
+      "wid": "w_scmwccn54rff49c6af5f",
+      "title": {
+        "zh": "全岛都在为你失控",
+        "en": "Everyone Wants You"
+      },
+      "orient": "bg",
+      "tags": [
+        "reality tv",
+        "why choose",
+        "slow burn",
+        "mystery"
+      ],
+      "status": {
+        "time": {
+          "zh": "登岛第一晚",
+          "en": "Your first night on the island"
+        },
+        "place": {
+          "zh": "心动岛",
+          "en": "Heartline Island"
+        }
+      },
+      "leads": [
+        {
+          "key": "adrian",
+          "n": {
+            "zh": "阿德里安",
+            "en": "Adrian"
+          },
+          "g": "m",
+          "age": 29,
+          "h": "",
+          "voice": "m1",
+          "art": "art/official/m110/char_adrian.jpg",
+          "pal": [
+            "#2B2622",
+            "#0E0C0B"
+          ],
+          "role": {
+            "zh": "投资基金合伙人，节目投资方的家族继承人",
+            "en": "Investment fund partner, heir to one of the show's backers"
+          },
+          "looks": {
+            "zh": "黑发、深色亚麻衬衫，站姿克制。",
+            "en": "Black hair, a dark linen shirt, controlled posture."
+          },
+          "vibe": {
+            "zh": "外表冷静，最怕失去控制；先守规则，再学会尊重你的决定。",
+            "en": "Cool on the outside, terrified of losing control; he guards the rules first, then learns to respect your choices."
+          },
+          "pitch": {
+            "zh": "他本来打算离开。然后你走了进来。",
+            "en": "He was about to leave. Then you walked in."
+          },
+          "solo": {
+            "zh": "*他在游艇甲板上只摆了一张小桌。* 我可以包下整艘船。我觉得一张安静的桌子更好。",
+            "en": "*He set one small table on the yacht deck.* I could have booked the whole yacht. I thought a quiet table would be better."
+          },
+          "likes": {
+            "zh": "安静的桌子、直接的问题、没人认识他们的地方",
+            "en": "Quiet tables, honest questions, places nobody knows their names"
+          },
+          "boundary": {
+            "zh": "你说慢一点，他就把手放在桌面上，不再往前。",
+            "en": "If you say slow down, he keeps his hands on the table."
+          }
+        },
+        {
+          "key": "mateo",
+          "n": {
+            "zh": "马特奥",
+            "en": "Mateo"
+          },
+          "g": "m",
+          "age": 27,
+          "h": "",
+          "voice": "m3",
+          "art": "art/official/m110/char_mateo.jpg",
+          "pal": [
+            "#D9CDB8",
+            "#14110E"
+          ],
+          "role": {
+            "zh": "前职业冲浪手，岛上最会撩的人",
+            "en": "Former pro surfer, the island's biggest flirt"
+          },
+          "looks": {
+            "zh": "卷发、白衬衫、晒出来的笑容。",
+            "en": "Curly hair, white shirt, a sun-made grin."
+          },
+          "vibe": {
+            "zh": "幽默又轻浮，其实最想被真正信任；登岛前签过一份他后悔的合同。",
+            "en": "Funny and flirty, but what he wants most is to be trusted; he signed a contract before the show that he regrets."
+          },
+          "pitch": {
+            "zh": "他见谁都撩。可你看向别人的时候，他笑不出来。",
+            "en": "He flirts with everyone. But when you look at someone else, he stops laughing."
+          },
+          "solo": {
+            "zh": "*他在隐秘的海湾里朝你伸出手。* 我准备了一整段开场白。你一笑，全忘了。",
+            "en": "*He reaches out a hand in the hidden cove.* I had a whole speech. You smiled, and now it's gone."
+          },
+          "likes": {
+            "zh": "海浪、清晨的冲浪课、迟到十一分钟",
+            "en": "Waves, early surf lessons, being eleven minutes late"
+          },
+          "boundary": {
+            "zh": "你说不想要这段关系，他就退开，但证据照样交给你。",
+            "en": "If you say you don't want this, he steps back — and still hands you the evidence."
+          }
+        },
+        {
+          "key": "julian",
+          "n": {
+            "zh": "朱利安",
+            "en": "Julian"
+          },
+          "g": "m",
+          "age": 31,
+          "h": "",
+          "voice": "m2",
+          "art": "art/official/m110/char_julian.jpg",
+          "pal": [
+            "#E8DCC6",
+            "#151310"
+          ],
+          "role": {
+            "zh": "建筑设计师，岛上最安静的人",
+            "en": "Architect, the quiet one"
+          },
+          "looks": {
+            "zh": "暖棕色眼睛、奶油色针织衫。",
+            "en": "Warm brown eyes, a cream knit top."
+          },
+          "vibe": {
+            "zh": "细致、温柔，先问再做；他发现了不在清单上的摄像头。",
+            "en": "Careful and gentle, he asks before he acts — and he's found cameras that aren't on any official list."
+          },
+          "pitch": {
+            "zh": "他是唯一一个问你真正想要什么的人。",
+            "en": "He's the only one asking what you actually want."
+          },
+          "solo": {
+            "zh": "*他把一朵没插进花瓶的花递给你。* 我让他们别把花摆好。我想你可能更想自己选。",
+            "en": "*He hands you a flower that never made it into a vase.* I asked them to leave the flowers unarranged. Thought you might want to choose."
+          },
+          "likes": {
+            "zh": "没摆好的花、平面图、能好好说话的安静角落",
+            "en": "Unarranged flowers, floor plans, quiet corners where people actually talk"
+          },
+          "boundary": {
+            "zh": "你说需要空间，他就问一句「要我陪你吗」，然后照你说的做。",
+            "en": "If you need space, he asks once if you want company, then does what you say."
+          }
+        }
+      ]
     }
   ]
 }
