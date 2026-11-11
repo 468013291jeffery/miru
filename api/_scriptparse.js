@@ -359,7 +359,7 @@ function parseManuscript(text, opts) {
     world: work.world || '', style: work.style || '', coreQuestion: work.question || '', state: {}, relations: [], games_on: outChapters.some(c => c.scenes.some(s => s.game)), playable: ['me'],
     player: { key: 'me', name: { zh: '你', en: 'You' }, short: { zh: '你', en: 'You' }, gender: playerGender || 'f', role: bi(player.身份 || ''), ...(String(player.处境 || '').trim() ? { pressure: bi(player.处境.trim()) } : {}), ...(String(player.藏着的事 || '').trim() && !NOT_FILLED.test(player.藏着的事.trim()) ? { secret: bi(player.藏着的事.trim()) } : {}) },
     cast, chapters: outChapters, endings: endingList,
-    experience: { schema: 1, focus: 'player', storyIntroduction: true, chapterIntroduction: true, actionView: 'thirdPerson', choiceDock: 'contextual', allowFreeContinue: true, pacing: { mode: 'player-controlled', minExchanges: pace ? +pace[1] : 12, targetExchanges: pace ? +pace[2] : 18, allowExplicitSkip: true }, companionRules: bi(work.rules || '') },
+    experience: { schema: 1, narration: {schema:2,enabled:true,mode:'story',timeoutMs:14000,maxChars:450}, context: {schema:1,enabled:true}, focus: 'player', storyIntroduction: true, chapterIntroduction: true, actionView: 'thirdPerson', choiceDock: 'contextual', allowFreeContinue: true, pacing: { mode: 'player-controlled', minExchanges: pace ? +pace[1] : 12, targetExchanges: pace ? +pace[2] : 18, allowExplicitSkip: true }, companionRules: bi(work.rules || '') },
     capabilities: { freeConversation: true, chapterNavigation: 'manual' },
     source: 'manuscript', ...(work.dialogueStyle?{dialogueStyle:work.dialogueStyle,dialoguePolicy:{schema:1,maxChars:90}}:{}),
   };

@@ -496,14 +496,14 @@ async function aiIdeas97(th) {
   const p = (zh ? "你在帮一位读者玩互动剧。读者现在扮演「" + who + "」。根据最近的剧情，替读者想 3 句此刻可以说的话：符合人物、口语、每句不超过 30 字，三句态度要不同（比如一句强硬、一句试探、一句柔软）。不要替别人说话，不要旁白。"
                 : "You help a reader play an interactive drama. The reader is playing \"" + who + "\". From the recent scene, write 3 things they could say right now: in character, spoken, under 20 words each, three different attitudes (firm / probing / soft). No narration, nobody else's lines.")
     + (hint ? (zh ? "\n此刻的问题：" : "\nThe moment: ") + hint : "") + "\n\n" + hist
-    + '\n\nReply with ONLY JSON: {"replies":["...","...","..."]} in ' + (zh ? "Simplified Chinese" : "English") + ".";
-  const r = await ask(p, { maxTokens: 300 });
-  return ((r && r.replies) || []).map(s => String(s).trim()).filter(Boolean).slice(0, 3);
+    + suggestionRule146() + '\n\nReply with ONLY JSON: {"replies":[{"mode":"say","text":"..."},{"mode":"act","text":"..."},{"mode":"think","text":"..."}]} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+  const r = await ask(p, { maxTokens: 500 });
+  return ((r && r.replies) || []).map(suggestionValue146).filter(Boolean).slice(0, 3);
 }
 async function aiIdeasGo97(btn) {
   const th = S.threads[curT]; if (!th) return; const zh = CL() === "zh";
   if (btn) { btn.disabled = true; btn.dataset.t0 = btn.textContent; btn.textContent = zh ? "✨ 正在想…" : "✨ Thinking…"; }
-  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => (typeof objGuard70 === "function" ? objGuard70(x) : String(x))).filter(Boolean).map(x => '<button data-sg="' + esc(x) + '">' + esc(x) + '</button>').join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
+  try { const L = await aiIdeas97(th); if (L.length) { setSugg(L); const box = $("#ai97o"); if (box) box.innerHTML = L.map(x => suggestionHTML146(x)).join(""); } else toast(zh ? "没想出来，再点一次试试" : "Nothing came up — try again"); }
   catch (e) { toast(zh ? (e && e.code === "na" ? "AI 现在不可用" : "没想出来，再点一次试试") : (e && e.code === "na" ? "AI isn't available right now" : "Nothing came up — try again")); }
   finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
 }

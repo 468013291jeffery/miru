@@ -71,6 +71,7 @@ function newAgentThread97(wid) {
 function youName97(th) { const w = wd(th.wid), y = yid97(w); return (y && ch(y) && first(ch(y).n)) || L97("你", "you"); }
 function line97(th, m) {
   const who = m.who === "me" ? youName97(th) : m.who === "n" || m.who === "sys" ? "" : (ch(m.who) ? first(ch(m.who).n) : "");
+  if(m.narrative145)return (m.narrative145.facts||[]).filter(f=>(speakersOf(th)||[]).every(id=>(f.seen||[]).includes(id))).map(f=>'[PUBLIC NARRATIVE FACT] '+f.text).join('\n');
   if (m.who === "me" && m.k === "think") return ""; /* your thoughts are yours */
   const x = String(m.txt || "").replace(/\s+/g, " ").slice(0, 200); if (!x || m.k === "card" || m.k === "img") return "";
   return who ? who + (m.k === "act" ? L97("（动作）", " (action)") : "") + ": " + x : L97("［场景］", "[scene] ") + x;
@@ -99,11 +100,12 @@ async function director97(th, act) {
     "\n\n" + (zh ? "规则：绝不替玩家说话、做动作、做决定；角色可以拒绝、可以互相冲突、可以误会；不要让所有人都围着玩家献殷勤；没有电话就不要安排来电。narration 用第二人称写给玩家，最多 2 句，不含对白。options 给玩家 3 个下一步可以做的事（各不超过 14 字，态度不同）。"
            : "Rules: never write the player's words, actions or decisions; characters may refuse, clash and misread each other; not everyone fawns over the player. narration is second person to the player, max 2 sentences, no dialogue. options: 3 different things the player might do next (under 8 words each).") +
     (last ? (zh ? "\n这是最后一章。chapterDone=true 时给出 ending：A=两人并肩（关系好、彼此信任）/ B=各自安好 / C=反目，取决于玩家一路的言行；并写 endingText（3 句以内）。" : "\nThis is the last chapter. When chapterDone=true also give ending: A = side by side / B = apart and okay / C = enemies, earned by the player's whole run, plus endingText (max 3 sentences).") : "") +
-    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") +
-    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":["...","...","..."],"fx":{"ambient":null,"moment":null},"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
+    suggestionRule146() + (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") +
+    '\n\nReply with ONLY JSON: {"present":["id"],"anchor":2,"narration":"...","speakers":[{"id":"...","intent":"..."}],"options":[{"mode":"say","text":"..."},{"mode":"act","text":"..."},{"mode":"think","text":"..."}],"fx":{"ambient":null,"moment":null},"chapterDone":false,"summary":"one line: what the player did this turn","ending":null,"endingText":""} in ' + (zh ? "Simplified Chinese" : "English") + ".";
   return ask(p, { maxTokens: 900 });
 }
 async function actor97(th, cid, intent, act) {
+  if(act&&act.mode==='think')intent=L97('玩家没有说话；只回应已经公开的场景，不猜测或复述玩家心声。','The player is silent; react only to the public scene, never infer or quote their thoughts.');
   const w = wd(th.wid), A = th.agent97, x = ch(cid), k = card97(cid), cd = A.cards[cid] || (A.cards[cid] = { mem: [] }), zh = Z97();
   const ref = voiceRef97(w, A.ch, cid);
   const p = (zh ? "你是「" + x.n + "」，" + (Lz(x.role) || "") + "。你是一个有自己想法的人，不是剧情的工具。你只知道你亲身经历过的事（下面的记忆）；你不知道剧情会怎么发展，也不知道" + youName97(th) + "心里在想什么。"
@@ -138,7 +140,7 @@ async function agentTurn97(th, act) {
       appendMsg(th, { who: "sys", k: "card", title: "📍 " + a.place, txt: "", at: Date.now() });
       if (a.bgm) { try { if (typeof bgmFollow === "function") bgmFollow({ id: th.id, wid: th.wid, pk: { bgm: a.bgm } }, true); } catch (_) {} }
       if (a.cg) { const As = OFF94.assets[w.community] || {}; const src = As[a.cg]; if (src) { try { off94Show({ src, cap: a.cap }, false); } catch (_) {} const aid = "a" + Date.now(); S.album.unshift({ id: aid, cid: th.cast[0], src, at: Date.now() }); if (S.album.length > 24) S.album.length = 24; appendMsg(th, { who: "n", k: "img", aid, at: Date.now() }); } } }
-    if (d.narration) appendMsg(th, { who: "n", k: "act", txt: String(d.narration).slice(0, 300), at: Date.now() });
+    if (d.narration&&!(typeof narrativeOn145==='function'&&narrativeOn145(th))) appendMsg(th, { who: "n", k: "act", txt: String(d.narration).slice(0, 300), at: Date.now() });
     if (window.FXBUS) FXBUS.agent(th, d.fx)();
     /* the player's public move is witnessed by whoever is in the room */
     if (act && act.mode !== "think") remember97(th, present.length ? present : th.cast, youName97(th) + (act.mode === "act" ? "：" : L97("说：", " said: ")) + String(act.txt).slice(0, 60));
@@ -152,9 +154,9 @@ async function agentTurn97(th, act) {
       if (r.remember) remember97(th, [cid], r.remember);
       if (r.say) remember97(th, (present.length ? present : th.cast).filter(c => c !== cid), first(ch(cid).n) + L97("说：", " said: ") + String(r.say).slice(0, 50));
     }
-    if(typeof narrationAfter135==='function')await narrationAfter135(th,{start:narrationStart135,delivered:th.msgs.length>narrationStart135,mode:act?'talk':A.turns?'more':'enter',act});
-    A.turns++; th.rounds++; if (d.summary) A.sum.push((Z97() ? "第" + A.ch + "章：" : "Ch" + A.ch + ": ") + String(d.summary).slice(0, 80)); if (A.sum.length > 40) A.sum.splice(0, A.sum.length - 40);
-    if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
+    if(typeof narrationAfter135==='function')await narrationAfter135(th,{start:narrationStart135,delivered:th.msgs.slice(narrationStart135).some(m=>(th.cast||[]).includes(m.who)&&['say','act'].includes(m.k)),mode:act?'talk':A.turns?'more':'enter',act});
+    A.turns++; th.rounds++; if (d.summary&&!(act&&act.mode==='think')) A.sum.push((Z97() ? "第" + A.ch + "章：" : "Ch" + A.ch + ": ") + String(d.summary).slice(0, 80)); if (A.sum.length > 40) A.sum.splice(0, A.sum.length - 40);
+    if (Array.isArray(d.options)) setSugg(d.options.slice(0, 3));
     useUnits(aiCost() * 2);
     /* changes the player can see */
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L97(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });

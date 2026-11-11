@@ -85,6 +85,7 @@ function line98(th, m) {
   if (m.ph98 && ch(m.who)) return first(ch(m.who).n) + L98("发来一张照片：", " sent a photo: ") + m.ph98.what + (m.ph98.open ? L98("（玩家已经打开看了）", " (the player opened it)") : L98("（玩家还没打开）", " (not opened yet)"));
   if (m.k === "box" && m.say && ch(m.say.who)) { const nm = first(ch(m.say.who).n), a = (m.parts || []).map(p => p.txt).join(" ").replace(/\s+/g, " ").slice(0, 140); return (a ? nm + L98("（动作）", " (action)") + ": " + a + "\n" : "") + nm + ": " + String(m.say.txt || "").replace(/\s+/g, " ").slice(0, 220); }
   if (m.k === "card" && Array.isArray(m.lines98)) return m.lines98.filter(l => ch(l.who)).map(l => first(ch(l.who).n) + ": " + l.say).join("\n");
+  if(m.narrative145)return (m.narrative145.facts||[]).filter(f=>here98(th,scene98(th).s).every(id=>(f.seen||[]).includes(id))).map(f=>'[PUBLIC NARRATIVE FACT] '+f.text).join('\n');
   if (m.who === "me" && m.k === "think") return ""; const x = String(m.txt || "").replace(/\s+/g, " ").slice(0, 220); if (!x || m.k === "card" || m.k === "img") return "";
   const who = m.who === "me" ? yn98(th) : m.who === "n" || m.who === "sys" ? "" : (ch(m.who) ? first(ch(m.who).n) : "");
   return who ? who + (m.k === "act" ? L98("（动作）", " (action)") : "") + ": " + x : L98("［场景］", "[scene] ") + x;
@@ -265,7 +266,7 @@ function actionView98(th, cid, txt) {
 function guidance98(th) {
   const {s} = scene98(th);
   if (experience98(th) && s && s.interaction && Array.isArray(s.interaction.suggestions))
-    setSugg(s.interaction.suggestions.slice(0, 3));
+    setSugg(s.interaction.suggestions.slice(0, 3).map(guidanceInput146));
 }
 
 
@@ -382,14 +383,15 @@ async function director98(th, mode, act) {
     (mode === "exit" ? withAsk98(th, s, zh) : presence98(th, s, zh)) +
     (mode === "talk" || mode === "more" ? photoAsk98(th, act, zh) : "") +
     (judging ? gateAsk98(th) : "") +
-    (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + (typeof arcAsk98 === "function" ? arcAsk98(th, mode, act, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) + (typeof narrationDirector135 === "function" ? narrationDirector135(th,zh) : "") +
-    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' +
+    suggestionRule146() + (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + (typeof arcAsk98 === "function" ? arcAsk98(th, mode, act, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) + (typeof narrationDirector135 === "function" ? narrationDirector135(th,zh) : "") +
+    '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":[{"mode":"say","text":"..."},{"mode":"act","text":"..."},{"mode":"think","text":"..."}],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' +
     (mode === "exit" ? '"with_player":null,' : '"leave":[],"arrive":[],') + (mode === "talk" || mode === "more" ? '"photo":null,' : '') +
     (judging ? '"ready":true or false,"wants_next":true or false,' : '') + (senseOK98(th, mode) ? '"sense":"",' : '') + (typeof arcJson98 === "function" ? arcJson98(th, mode) : '') + (typeof narrativeOn145 === "function" && narrativeOn145(th) ? '"narration_plan":{"kind":"clue","position":"after","material":null},' : '') + (s.game && !Array.isArray(s.game) && s.game.outcomes ? '"game":false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900, isolatedContext: typeof contextOn135 === "function" && contextOn135(th) });
 }
 /* ---------- a character agent ---------- */
 async function actor98(th, cid, intent, turn) {
+  if(turn&&turn.think)intent=L98('玩家没有说话；只回应已经公开的场景，不猜测或复述玩家心声。','The player is silent; react only to the public scene, never infer or quote their thoughts.');
   turn = turn || {};
   const w = wd(th.wid), b = bOf98(w), x = ch(cid), k = cardOf98(w, cid) || {}, cd = th.b98.cards[cid] || (th.b98.cards[cid] = { mem: [] }), zh = Z98(), { s } = scene98(th), you = yn98(th);
   const policy = experience98(th);
@@ -509,11 +511,11 @@ async function beat98(th, mode, act) {
     left98(th, s, mv.leave);
     fx98(); A.turns++; th.rounds++; A.more98n = mode === "more" ? (A.more98n || 0) + 1 : 0;
     if (mode === "talk" || mode === "choice") gate98(th, d);
-    if (d.summary) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
+    if (d.summary&&!(act&&act.mode==='think')) { A.sum.push(L98("第" + A.ch + "章：", "Ch" + A.ch + ": ") + String(d.summary).slice(0, 90)); if (A.sum.length > 48) A.sum.splice(0, A.sum.length - 48); }
     if (d.player_obs) { A.profile.push(String(d.player_obs).slice(0, 60)); if (A.profile.length > 30) A.profile.shift(); }
     if (d.state) A.flags.push(String(d.state).slice(0, 60));
     if (s.game && d.game === true) (A.gameReady98 || (A.gameReady98 = {}))[s.id] = true;
-    if (Array.isArray(d.options)) setSugg(d.options.map(String).slice(0, 3));
+    if (Array.isArray(d.options)) setSugg(d.options.slice(0, 3));
     useUnits(aiCost() * (mode === "talk" || mode === "more" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
     if (items.length && typeof chg96 === "function") chg96(items);
@@ -905,7 +907,7 @@ function nextLabel98(th) {
         if (/^(?:继续剧情|下一章|进入下一章)$/.test(x)) return next98(th);
         const index=matchingChoice98(th,x);if(index>=0)return pick98(th,index,true);
       }
-      return Promise.resolve(beat98(th,'talk',{txt:ctx.txt,mode:ctx.kind==='dir'?'act':(ctx.mode||'say'),to:th.addr&&th.cast.includes(th.addr)?th.addr:null}));
+      return Promise.resolve(beat98(th,'talk',{txt:ctx.txt,mode:ctx.kind==='dir'?'act':(ctx.mode||'say'),to:ctx.mode!=='think'&&th.addr&&th.cast.includes(th.addr)?th.addr:null}));
     }
     return Promise.resolve();
   }
@@ -920,10 +922,10 @@ function dock98() {
   if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
   else if (experience98(th) && A.phase !== 'enter' && s && s.choice && experience98(th).choiceDock === 'always') {
     const picked = s.id in A.picked;
-    h = picked ? '' : '<div class="dk98q">' + esc(cq98(s.choice.q)) + '</div><div class="dk98o">' + s.choice.options.map((o,i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join('') + '</div>';
+    h = picked ? '' : '<div class="dk98q">' + esc(cq98(s.choice.q)) + '</div><div class="dk98o">' + s.choice.options.map((o,i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join('') + '</div>';
   }
-  else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(cq98(o.t)) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
-  else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(cq98(o.t)) + '</button>').join("") + '</div>';
+  else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
+  else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join("") + '</div>';
   const mustPick98 = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked) && !(experience98(th) && experience98(th).allowFreeContinue);
   if (!A.ended && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
   /* 点屏继续的提示：前三次用过就不再出现 */

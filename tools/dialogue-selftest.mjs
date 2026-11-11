@@ -15,7 +15,7 @@ const b={S:{lang:'zh',heat:'steamy',threads:{a:th}},curT:'a',cmode:'say',busy:fa
  doSend:()=>{sent++},reply:async()=>{replyCount++},
  $:sel=>sel==='#cin'?input:sel==='#ai97o'?box:null,
  esc:s=>s.replaceAll('"','&quot;'),Event:class {},document:{addEventListener(k,fn){this.click=fn}}};
-vm.createContext(b);vm.runInContext(src,b);
+vm.createContext(b);const core146=fs.readFileSync('source/src/app3_chat.js','utf8');vm.runInContext(core146.slice(core146.indexOf('function objGuard70'),core146.indexOf('/* send from composer */')),b);vm.runInContext(src,b);
 assert.equal(b.dialogueHeat(th),'fluff');
 assert.equal(b.talkIntent('别碰我，保持距离'),'boundary');
 assert.equal(b.talkIntent('换个话题吧'),'boundary');

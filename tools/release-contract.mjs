@@ -39,3 +39,5 @@ execFileSync(process.execPath,['tools/build-narration145.cjs','--check'],{cwd:ro
 execFileSync(process.execPath,['tools/narrative145-selftest.cjs'],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,['tools/north-light-selftest.cjs'],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,['tools/authored-runtime-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/input146-selftest.cjs'],{cwd:root,stdio:'inherit'});

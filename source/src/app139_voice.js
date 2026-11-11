@@ -16,7 +16,7 @@
   function stop() { try { rec && rec.stop(); } catch (_) {} }
   function start() {
     const t = ta(); if (!t) return;
-    base = t.value ? t.value.replace(/\s+$/, "") + (zh() ? "" : " ") : "";
+    const body=playerInput146(t.value,cmode).text; base = body ? body.replace(/\s+$/, "") + (zh() ? "" : " ") : "";
     rec = new SR();
     rec.lang = LANG[(typeof S !== "undefined" && S.lang) || "en"] || "en-US";
     rec.interimResults = true; rec.continuous = false; /* Android 上 continuous 会重复结果：一次说一句，停顿就结束 */ rec.maxAlternatives = 1;

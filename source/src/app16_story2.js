@@ -325,7 +325,7 @@ function insWrap(o,c,ph){const ta=$("#cin");if(!ta)return;const s=ta.selectionSt
  ta.value=ta.value.slice(0,s)+o+sel+c+(ta.value.slice(e).startsWith(" ")?"":" ")+ta.value.slice(e);ta.focus();ta.setSelectionRange(s+o.length,s+o.length+sel.length);ta.dispatchEvent(new Event("input"))}
 document.addEventListener("click",e=>{
  if(e.target.closest("[data-insact]")){if(cmode!=="say"){cmode="say";$$("[data-mode]").forEach(b=>b.classList.toggle("on",b.dataset.mode==="say"))}insWrap("*","*",t("st6.actPh"));return}
- if(e.target.closest("[data-insthink]")){cmode="think";$$("[data-mode]").forEach(b=>b.classList.toggle("on",b.dataset.mode==="think"));const ta=$("#cin");if(ta){ta.focus();ta.placeholder=t("cx.ph.think")}return}});
+ if(e.target.closest("[data-insthink]")){cmode="think";$$("[data-mode]").forEach(b=>b.classList.toggle("on",b.dataset.mode==="think"));const ta=$("#cin");if(ta){ta.value=playerMark146(playerInput146(ta.value).text,"think");ta.focus();composerMark146();ta.placeholder=t("cx.ph.think")}return}});
 Object.assign(I18N.en,{"st6.act":"(action)","st6.think":"(thought)","st6.tip":"e.g. *pulls him closer* Stay.","st6.actPh":"what you do"});
 Object.assign(I18N.zh,{"st6.act":"（动作）","st6.think":"（心声）","st6.tip":"例：*把他拉近* 别走。","st6.actPh":"你的动作"});
 

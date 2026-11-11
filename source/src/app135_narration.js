@@ -7,8 +7,7 @@ function narrationBible135(th) {
 }
 async function narrationEnsure135(th) {
   const w=th&&wd(th.wid);
-  if(!w||!NARRATION_PILOTS135.has(w.community)||typeof bible98!=='function')return;
-  if(B98.cache[w.community]===null)delete B98.cache[w.community];
+  if(!w||!w.community||typeof bible98!=='function'||B98.cache[w.community]===null)return;
   if(!NARRATION_LOAD135.has(w.community))NARRATION_LOAD135.set(w.community,bible98(w.community).finally(()=>NARRATION_LOAD135.delete(w.community)));
   let timer;try{await Promise.race([NARRATION_LOAD135.get(w.community),new Promise(resolve=>{timer=setTimeout(resolve,1500);})]);}catch(e){console.warn('[narration135] preload unavailable');}finally{clearTimeout(timer);}
 }
