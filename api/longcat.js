@@ -106,8 +106,9 @@ function cors(origin) {
 const J = (o, status, h) => new Response(JSON.stringify(o), { status, headers: { ...h, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
 /* open a streaming completion on one provider; resolves once the upstream answered with a 2xx and the first chunk arrived */
-async function open(p, clean, deadline = Date.now() + 30000) {
-  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), Math.max(1, Math.min(FIRST_TOKEN_MS, deadline - Date.now())));
+async function open(p, clean, deadline = Date.now() + 30000, solo = false) {
+  /* 2026-11-11：只配了一家模型时，没有下一家可以切 ⇒ 不按 10 秒首字超时砍掉，等到本次回复的截止时间（最多 60 秒）。 */
+  const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), Math.max(1, Math.min(solo ? 60000 : FIRST_TOKEN_MS, deadline - Date.now())));
   try {
     const body = { ...clean, ...p.extra, model: p.model(clean.model), max_tokens: Math.min(clean.max_tokens, p.maxOut), stream: true };
     const up = await fetch(p.url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + p.key }, body: JSON.stringify(body), signal: ctl.signal });
@@ -199,7 +200,7 @@ export default async function handler(req) {
     for (const p of chain) {
       if (Date.now() >= deadline) { errs.push("reply deadline exceeded"); break; }
       try {
-        const o = await open(p, clean, deadline);
+        const o = await open(p, clean, deadline, chain.length === 1);
         const rs = new ReadableStream({ async start(ctrl) { ctrl.enqueue(o.first); for (;;) { const { done, value } = await o.read(); if (done) break; ctrl.enqueue(value); } ctrl.close(); }, cancel() { o.ctl.abort(); } });
         return new Response(rs, { status: 200, headers: { ...c.headers, 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', 'X-MIRU-Provider': p.id } });
       } catch (e) { errs.push(String(e.message || e)); }
@@ -221,7 +222,7 @@ export default async function handler(req) {
         for (const ln of lines) { const t = ln.trim(); if (!t.startsWith('data:')) continue; const d = t.slice(5).trim(); if (d === '[DONE]') continue; try { const j = JSON.parse(d), c0 = (j.choices || [])[0] || {}; if (c0.finish_reason) finish = c0.finish_reason; const dl = c0.delta && c0.delta.content; if (dl) content += dl; } catch (_) {} }
       };
       try {
-        const o = await open(p, clean, deadline); eat(o.first);
+        const o = await open(p, clean, deadline, chain.length === 1); eat(o.first);
         for (;;) { const { done, value } = await o.read(); if (done) break; eat(value); }
         if (!content.trim()) throw new Error(p.name + ' returned no text');
         out = { provider: p.id, model: p.model(clean.model), choices: [{ index: 0, finish_reason: finish || 'stop', message: { role: 'assistant', content } }] };
