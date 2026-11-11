@@ -1673,6 +1673,164 @@
           }
         }
       ]
+    },
+    {
+      "wid": "w_scmwbo55bx3b4e35f1b7",
+      "title": {
+        "zh": "我死过一次，他们都记得",
+        "en": "I Died Once. They Remember."
+      },
+      "orient": "bg",
+      "tags": [
+        "romantic suspense",
+        "time loop",
+        "billionaire",
+        "why choose"
+      ],
+      "status": {
+        "time": {
+          "zh": "订婚夜前七天",
+          "en": "Seven days before the engagement"
+        },
+        "place": {
+          "zh": "纽约曼哈顿",
+          "en": "Manhattan, New York"
+        }
+      },
+      "leads": [
+        {
+          "key": "alexander",
+          "n": {
+            "zh": "亚历山大",
+            "en": "Alexander"
+          },
+          "g": "m",
+          "age": 32,
+          "h": "",
+          "voice": "m1",
+          "art": "art/official/m109/char_alexander.jpg",
+          "pal": [
+            "#8C8A86",
+            "#121214"
+          ],
+          "role": {
+            "zh": "你现在的未婚夫，霍索恩家族继承人",
+            "en": "Your fiancé, heir to the Hawthorne fortune"
+          },
+          "looks": {
+            "zh": "深金发、灰绿色眼睛，剪裁利落的炭灰西装。",
+            "en": "Dark blond hair, grey-green eyes, a sharply tailored charcoal suit."
+          },
+          "vibe": {
+            "zh": "体面、克制，习惯把一切安排好；他记得几段失败的人生，也背着一个不肯说出口的错。",
+            "en": "Polished and restrained, used to arranging everything; he remembers several failed lives and carries a mistake he won't name."
+          },
+          "pitch": {
+            "zh": "他求你取消婚约。不是不爱你，是不想再看你死一次。",
+            "en": "He begs you to call off the engagement. Not because he doesn't love you — because he can't watch you die again."
+          },
+          "solo": {
+            "zh": "*他看见你的那一刻，咖啡杯从手里滑落。* 你醒了……这一次，你还活着。",
+            "en": "*The coffee cup slips from his hand the moment he sees you.* You're awake... This time, you're alive."
+          },
+          "likes": {
+            "zh": "普通的早晨、烤焦的吐司、你不用逞强的样子",
+            "en": "Ordinary mornings, burnt toast, you not having to be brave"
+          },
+          "boundary": {
+            "zh": "你说别碰你，他就把外套放在椅背上，而不是你身上。",
+            "en": "If you say don't touch you, he leaves his coat on the chair, not on you."
+          }
+        },
+        {
+          "key": "damien",
+          "n": {
+            "zh": "达米安",
+            "en": "Damien"
+          },
+          "g": "m",
+          "age": 30,
+          "h": "",
+          "voice": "m3",
+          "art": "art/official/m109/char_damien.jpg",
+          "pal": [
+            "#3A3236",
+            "#0C0A0B"
+          ],
+          "role": {
+            "zh": "商界死敌，克罗斯集团掌门人",
+            "en": "Your business rival, head of Cross Holdings"
+          },
+          "looks": {
+            "zh": "黑色乱发、胡茬、黑色长大衣，手掌有一道旧缝合伤。",
+            "en": "Tousled black hair, stubble, a long black coat, an old stitched scar across his palm."
+          },
+          "vibe": {
+            "zh": "危险又破碎；为了查清弟弟的死才入局，在另一段人生里亲手埋葬过你。",
+            "en": "Dangerous and broken; he came into this to find out how his brother died — and in another life, he buried you himself."
+          },
+          "pitch": {
+            "zh": "他说他在你的墓前坐了三个小时。这一次，他不打算再失去你。",
+            "en": "He says he sat beside your grave for three hours. This time, he doesn't plan to lose you."
+          },
+          "solo": {
+            "zh": "*他靠在一幅没画完的画旁边，看见你时手撑住了墙。* 上次你站在这里，问我能不能说一次不像威胁的实话。",
+            "en": "*He leans beside an unfinished painting and braces a hand on the wall when he sees you.* Last time you stood here, you asked if I could ever tell the truth without making it sound like a threat."
+          },
+          "likes": {
+            "zh": "雨夜的画廊、便宜的咖啡、被人问一句「你吃饭了吗」",
+            "en": "Galleries on rainy nights, cheap coffee, someone asking if he's eaten"
+          },
+          "boundary": {
+            "zh": "你不信他，他就把证据给你，然后离开。",
+            "en": "If you don't trust him, he hands you the evidence and walks away."
+          }
+        },
+        {
+          "key": "ethan",
+          "n": {
+            "zh": "伊森",
+            "en": "Ethan"
+          },
+          "g": "m",
+          "age": 29,
+          "h": "",
+          "voice": "m2",
+          "art": "art/official/m109/char_ethan.jpg",
+          "pal": [
+            "#6B5A4A",
+            "#120F0C"
+          ],
+          "role": {
+            "zh": "你沉默的保镖",
+            "en": "Your quiet bodyguard"
+          },
+          "looks": {
+            "zh": "棕色短发、榛色眼睛，朴素的深色夹克。",
+            "en": "Short brown hair, hazel eyes, a plain dark jacket."
+          },
+          "vibe": {
+            "zh": "话不多，最可靠；在另一段人生里，他和你结过婚——但他不会把那段婚姻强加给现在的你。",
+            "en": "Few words, completely reliable; in another life he was married to you — but he won't force that marriage on who you are now."
+          },
+          "pitch": {
+            "zh": "他口袋里有一张你们的婚礼照片。你不记得，他记得。",
+            "en": "He carries a photo of your wedding. You don't remember it. He does."
+          },
+          "solo": {
+            "zh": "*电梯门合上，他把一张旧照片背面朝上递给你。* 你可以不看。我只是不想再瞒着你。",
+            "en": "*As the elevator doors close, he hands you an old photo, face down.* You don't have to look. I just don't want to hide it from you anymore."
+          },
+          "likes": {
+            "zh": "蓝色的旧马克杯、外卖和一部两个人都没看过的电影",
+            "en": "An old blue mug, takeout, and a movie neither of you has seen"
+          },
+          "boundary": {
+            "zh": "你说想一个人待着，他就把晚饭放下，然后走。",
+            "en": "If you want to be alone, he leaves dinner and goes."
+          }
+        }
+      ]
     }
   ]
 }
