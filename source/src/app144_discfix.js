@@ -12,7 +12,12 @@
        朗读有好几条路（剧本播放 pkAppend / pkWait、AI 回复 playBeats、appendMsg 兜底 voiceEnq、气泡 🔊 等），
        各自防重只认自己那份标记，碰上同一句就各念一遍。⇒ 在最底下的 speak() 统一去重：
        同一个人、同一句话 30 秒内只念一次；后来的调用不再发声，只等第一遍念完再回调（剧本节奏不变）。
-       玩家自己点气泡上的 🔊（data-mt / data-b86 = play|…）照常重念。 */
+       玩家自己点气泡上的 🔊（data-mt / data-b86 = play|…）照常重念。
+   5 · 用户反馈：「精选」里所有剧都堆在一排「MIRU 新剧」下面，没有分类。
+       ⇒ 「MIRU 新剧」只放最新 6 部；下面按主题竖着排几排，每排横滑：
+         奇幻言情 · 暗黑与黑帮 · 悬疑反转 · 王室与豪门 · 甜宠心动。
+       （「修罗场 / 多男主」试过，14 部里 13 部都是，等于没分，所以不单列。）
+       分组按作品的标准标签（catalog.json）归类，一部剧可以出现在几排；少于 2 部的那排不显示。 */
 (function () {
   "use strict";
   const st = document.createElement("style");
@@ -75,6 +80,38 @@
       setTimeout(res, 60000);
       recent.set(key, { at: now, p });
       try { return sp.call(this, text, id, fin); } catch (err) { fin(); throw err; }
+    };
+  }
+
+  /* ---------- 5 · 精选页按主题分排 ---------- */
+  const SHELVES = [
+    ["🌙", "奇幻言情", "Romantasy", ["Romantasy", "Vampires", "Werewolves", "Fae", "Dragons", "Paranormal", "Fated Mates", "Gothic Romance"]],
+    ["🖤", "暗黑与黑帮", "Dark & Dangerous", ["Dark Romance", "Mafia", "Bratva", "Touch Her and Die", "Touch Them and Die"]],
+    ["🔍", "悬疑反转", "Twists & Secrets", ["Romantic Suspense", "Revenge", "Hidden Identity", "Secret Heir", "Mystery"]],
+    ["👑", "王室与豪门", "Crowns & Fortunes", ["Royal Court", "Billionaire", "Arranged Marriage", "Castle Life"]],
+    ["☀️", "甜宠心动", "Sweet & Swoony", ["Romance", "Rom-Com", "He Falls First", "Golden Retriever", "Mutual Pining", "Secret Admirer", "Vacation", "Celebrity", "Campus"]]
+  ];
+  if (typeof discMain === "function" && typeof off94RCard === "function") {
+    const main = discMain;
+    discMain = function () {
+      let h = main.apply(this, arguments);
+      try {
+        const L = (typeof OFFF94 !== "undefined" && OFFF94.list) || [];
+        if (!L.length) return h;
+        const z = (typeof CL === "function" ? CL() === "zh" : true);
+        const old = '<div class="shelf off94s"><div class="shd"><h3>✦ ' + (z ? "MIRU 新剧" : "New from MIRU") + '</h3></div><div class="rail2">' + L.map(off94RCard).join("") + '</div></div>';
+        if (h.indexOf(old) < 0) return h;
+        const fresh = new Set(L.slice(0, 6).map(w => w.id));   /* 「新剧」角标只留给最新 6 部 */
+        const card = w => fresh.has(w.id) ? off94RCard(w) : off94RCard(w).replace(/<span class="rbadge">[^<]*<\/span>/, "");
+        const shelf = (title, list, cls) => '<div class="shelf off94s ' + (cls || "") + '"><div class="shd"><h3>' + title + '</h3></div><div class="rail2">' + list.map(card).join("") + '</div></div>';
+        let out = shelf("✦ " + (z ? "MIRU 新剧" : "New from MIRU"), L.slice(0, 6), "s144new");
+        SHELVES.forEach(([ic, zt, et, tags]) => {
+          const list = L.filter(w => (w.tags || []).some(t => tags.includes(t)));
+          if (list.length >= 2) out += shelf(ic + " " + (z ? zt : et), list, "s144");
+        });
+        h = h.replace(old, out);
+      } catch (e) { console.warn("[144] shelves", e); }
+      return h;
     };
   }
 })();

@@ -21,7 +21,7 @@
     const sc = v.querySelector("#discScroll"); if (!sc) return;
     document.querySelectorAll("#sw96").forEach(x => x.remove());           /* 旧的全屏浮层不要了 */
     const box = document.createElement("div"); box.className = "meet140"; box.innerHTML = matchRow() + '<div id="sw96" class="in140"></div>';
-    try { todayDeck96(); if (ALL) box.insertAdjacentHTML("afterbegin", '<p class="xs" style="padding:4px 16px 0;color:var(--gold)">' + (zh() ? "当前分类下还没有角色，先给你看全部。" : "No one in this category yet — showing everyone.") + '</p>'); } catch (_) {}
+    /* 2026-11-12 用户：「不用有分类，展示所有人物出来就行，这句话删掉」⇒ 不再提示「当前分类下还没有角色」 */
     sc.replaceWith(box);
     try { DECK96 = todayDeck96(); renderSwipe96(); if (typeof track === "function") track("meet_open", { n: DECK96.length, tab: 1 }); } catch (e) { console.warn("[meet140]", e); }
     /* 刚打开 App 就点进来时，男主卡（leads.json）可能还没加载完，牌是空的：每 1.5 秒再看一次，最多 6 次 */
@@ -41,14 +41,15 @@
     const x = e.target.closest("[data-mm140]"); if (!x) return; e.preventDefault(); e.stopPropagation();
     try { openThread("c:" + x.dataset.mm140); } catch (_) {}
   }, true);
-  /* 选了某个取向（比如「女女」）但这个取向下还没有角色时：先给全部角色，不给空牌（不改你的设置） */
-  let ALL = false;
+  /* 2026-11-12 用户：「不用有分类，展示所有人物出来就行」⇒ 角色页一律看全部角色，不按取向筛（不改你的设置，故事页照常按取向）。
+     以前按取向算好的今日牌组清一次，按全部重新发。 */
+  let ALL = true;
   if (typeof eligible96 === "function" && typeof todayDeck96 === "function") {
     const E0 = eligible96, T0 = todayDeck96;
     eligible96 = function () { if (!ALL) return E0.apply(this, arguments); const o = S.or; S.or = "all"; try { return E0.apply(this, arguments); } finally { S.or = o; } };
     todayDeck96 = function () {
-      ALL = false;
-      try { if (S.or && S.or !== "all") { const st = sw96(); if (!allChars().some(id => E0(id, st))) { ALL = true; if (Array.isArray(st.deck) && !st.deck.length) st.deck = null; } } } catch (_) {}
+      ALL = true;
+      try { const st = sw96(); if (!st.all140) { st.all140 = 1; st.deck = null; } } catch (_) {}
       return T0.apply(this, arguments);
     };
   }
