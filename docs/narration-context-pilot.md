@@ -32,6 +32,6 @@
 - app98_story、app135_context、app3_chat、app73_features：前中后接线、见闻记忆和版本恢复。
 - tools/narrative145-selftest.cjs：解锁、私密范围、词题匹配、迟到结果、失败降级和旧局。
 - tools/narrative145-browser.cjs：实际构建页面中的插入顺序、角色收到新线索、长段落、揭示和存档。
-- tools/narrative145-live.cjs：隔离测试读者，保留真实导演、角色、旁白和语义检查。MIRU_LIVE_ORIGIN 可指定公开网站；curl 使用 MIRU_TEST_PROXY 接通同一个线上模型接口，避免测试工具 TLS 故障，不预设模型回答。
+- tools/narrative145-live.cjs：隔离测试读者，保留真实导演、角色、旁白和语义检查。MIRU_LIVE_ORIGIN 可指定公开网站；curl 使用 MIRU_TEST_PROXY 接通同一个线上模型接口，避免测试工具 TLS 故障，不预设模型回答。MIRU_MODEL_TRANSPORT=ssh 可从服务器本机调用同一生产后端，报告标明实际通道。
 
 发布继续走安装在服务器上的 miru-deploy 守卫，校验精确当前版本与指纹。通过试点内容验收后，再决定其他作品的配置。

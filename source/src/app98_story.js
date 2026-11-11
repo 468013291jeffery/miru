@@ -424,7 +424,7 @@ async function actor98(th, cid, intent, turn) {
            : "Your turn. Only yourself: an optional action (" + (policy ? "third person or no subject, visible meaningful gesture only, otherwise empty" : "first person") + ", ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
     authoredGrounding142(th) +
     '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
-  const options={maxTokens:320,timeout:typeof narrativeOn145==='function'&&narrativeOn145(th)?20000:undefined,isolatedContext:typeof contextOn135==='function'&&contextOn135(th)};
+  const options={maxTokens:320,isolatedContext:typeof contextOn135==='function'&&contextOn135(th)};
   const reply=await ask(p,options);return authoredReply142(th,p,options,reply,cid);
 }
 /* ---------- 玩家的感官反应（2026-11-07 用户拍板放开）----------
