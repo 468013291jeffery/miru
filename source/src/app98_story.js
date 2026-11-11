@@ -29,7 +29,7 @@ async function install98(id) {
   const pals = [["#C98A6B", "#1B1520"], ["#7A63C9", "#141024"], ["#5E9E96", "#13212A"], ["#B0607A", "#21131B"]];
   all.forEach((c, i) => { const id2 = cid98(wid, c.key), sh0 = c.short || c.name || { zh: c.key, en: c.key }, cut = v => String(v || "").split(/\s*[\/／]\s*/)[0].replace(/[（(].*$/, "").trim(), sh = { zh: cut(sh0.zh) || cut(sh0.en), en: cut(sh0.en) || cut(sh0.zh) };
     const x = S.mine.chars[id2] || {};
-    S.mine.chars[id2] = Object.assign(x, { n: LZ98(sh), n94: { zh: sh.zh || sh.en, en: sh.en || sh.zh }, full: c.name, bkey: c.key, age: +c.age || 0, g: c.gender === "f" ? "f" : "m", w: wid, pal: pals[i % 4], a: "charm", v: x.v || { pitch: 1, rate: 1 },
+    S.mine.chars[id2] = Object.assign(x, { n: LZ98(sh), n94: { zh: sh.zh || sh.en, en: sh.en || sh.zh }, full: c.name, bkey: c.key, romanceable: c.romanceable !== false, entity: c.entity || "human", age: +c.age || 0, g: c.gender === "f" ? "f" : "m", w: wid, pal: pals[i % 4], a: "charm", v: x.v || { pitch: 1, rate: 1 },
       role: { zh: (c.role && (c.role.zh || c.role.en)) || "", en: (c.role && (c.role.en || c.role.zh)) || "" }, looks: { zh: c.bio || c.brief || "", en: c.bio || c.brief || "" }, vibe: { zh: (c.personality || "").slice(0, 80), en: (c.personality || "").slice(0, 80) },
       tells: { en: [], zh: [] }, twist: { en: "", zh: "" }, likes: { en: "", zh: "" }, secret: { en: "", zh: "" }, pitch: { en: "", zh: "" }, solo: { en: "…", zh: "…" }, by: "@miru" });
     const art = A["char_" + c.key] || (sh.zh && A["char_" + sh.zh]) || (c.name && c.name.zh && A["char_" + c.name.zh]); if (art) S.art[id2] = art; });
