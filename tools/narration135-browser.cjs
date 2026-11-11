@@ -23,7 +23,7 @@ const {chromium}=require(process.env.MIRU_PLAYWRIGHT_MODULE||'playwright'),repo=
     const kyle=p.startsWith('你是「凯尔');requests.push({type:'actor',who:kyle?'凯尔':'卢西安'});
     return kyle?{act:'＊ 凯尔 拇指离开护手，朝台下抬手，声音压低',say:'处决先撤，审判令暂缓。你要证据，我让人当场封存复核。要查哪一样，你说。',feel:0,remember:''}:{act:'＊ 卢西安没有伸手，想了想。',say:'先核对眼前这张纸，别把猜测当成证据。',feel:0,remember:''};
    };
-   const wid=await install98('w_scmw7f7e4565778126fa'),b=bOf98(wd(wid)),th=new98(wid,b.player.key);
+   const wid=await install98('w_scmw7f7e4565778126fa'),b=bOf98(wd(wid));b.experience.narration={schema:1,enabled:true,cooldown:3,maxChars:90,timeoutMs:5000};const th=new98(wid,b.player.key);
    openThread(th.id);await enter98(th);closeSheet();th.b98.turns=6;requests.length=0;
    th.msgs=th.msgs.filter(m=>!m.narrative135);th.b98.narration135={version:2,lastTurn:5,lastAttempt:5,attempts:0,shown:0,failed:0,rejected:0,ms:0};
    await pick98(th,0);renderChat();

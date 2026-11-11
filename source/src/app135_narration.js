@@ -14,7 +14,7 @@ async function narrationEnsure135(th) {
 }
 function narrationPolicy135(th) {
   const b=narrationBible135(th),w=th&&wd(th.wid),p=b?b.experience&&b.experience.narration:w&&NARRATION_PILOTS135.has(w.community)?{schema:1,enabled:true,cooldown:3,maxChars:90,timeoutMs:5000}:null;
-  return p&&p.schema===1&&p.enabled===true?p:null;
+  return p&&(p.schema===1||p.schema===2)&&p.enabled===true?p:null;
 }
 function narrationOn135(th) { return !!narrationPolicy135(th); }
 function narrationOwner135(th) { return th.b98||th.agent97||th.pk||th; }

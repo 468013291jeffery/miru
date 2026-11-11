@@ -482,6 +482,7 @@ function castCardFace(th,id){try{
 }catch(_){return castCard(th,id)}}
 function transcript(th){return th.msgs.slice(S.plus?-MIRU_TUNE.chat.transcriptPlus:-MIRU_TUNE.chat.transcript).map(m=>{
  if(m.k==="react")return "[THEN] "+m.txt; if(m.k==="card")return "[EVENT] "+(m.title||"")+": "+(m.txt||"");if(m.k==="chap")return "[CHAPTER "+m.n+": "+(m.title||"")+" — goal: "+(m.txt||"")+"]";if(m.k==="dec")return "[OFFICIAL CHOICE "+m.c+"] "+m.txt;if(m.k==="end")return "[ENDING "+m.e+" reached]";if(m.k==="img")return "[A photo was taken]";
+ if(m.narrative145)return (m.narrative145.facts||[]).filter(f=>(speakersOf(th)||[]).every(id=>(f.seen||[]).includes(id))).map(f=>"[PUBLIC NARRATIVE FACT] "+f.text).join("\n");
  if(m.who==="n")return "(narration) "+m.txt;if(m.k==="dir")return "[DIRECTOR NOTE from "+me()+"] "+m.txt;
  const nm=m.who==="me"?(th.pk&&ch(th.pk.as)?ch(th.pk.as).n+" (the user)":me()):ch(m.who)?ch(m.who).n:m.who;
  return nm+(m.k==="act"?" (does)":m.k==="think"?(m.who==="me"?" (private thought — nobody can hear this, but characters may sense the mood)":" (private thought)"):" (says)")+": "+m.txt}).join("\n")}

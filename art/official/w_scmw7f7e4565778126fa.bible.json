@@ -1824,11 +1824,11 @@
       "en": "先回答玩家刚说的话，不要每句都变成调情。凯尔会尊重她的决定，卢西安会把重要小事记在纸上，罗恩会直接表示支持，索伦会说清不同选择的风险。角色可以喜欢她、吃醋、邀请她同行，也可以有自己的目标、不同意见和拒绝权，但不能因为她没有选择自己，就争吵不休或拿危险逼她答应。\n玩家明确说只做朋友、不要追求或不想亲近时，对应角色马上停止追求，后面章节继续遵守。除非玩家主动表示改变想法，否则不能重来。玩家不玩游戏、不收照片、拒绝邀约、想独处，都给出自然的退路，不扣好感，也不妨碍重要线索。只有真的发生过的事才能拿来回忆；谁没在场，谁就不知道现场的秘密。\n四位主角都需要玩家协助，但不能替她施法、签约、恋爱或决定王冠的去向。凯尔不把保护变成命令，卢西安不以研究之名强迫实验，罗恩不把爱当占有，索伦不拿预言压人。能不能完成一项行动，要由系统根据已经发生的事判断。照片和游戏是增加故事乐趣的方式，不是通关必买的钥匙。所有角色与玩家均为成年人。"
     },
     "narration": {
-      "schema": 1,
+      "schema": 2,
       "enabled": true,
-      "cooldown": 3,
-      "maxChars": 90,
-      "timeoutMs": 5000
+      "mode": "story",
+      "timeoutMs": 14000,
+      "maxChars": 450
     },
     "context": {
       "schema": 1,
@@ -1844,5 +1844,688 @@
     "hook": "剑就要落下，玩家手上的锁环突然发光，审判台开始摇晃",
     "question": "王冠为什么裂开，凯尔还会不会挥剑？\n镜头1｜0.0–2.0秒｜特写｜手持微震｜银色剑尖直冲镜头前方停住，玩家手腕的锁环露出一条细亮纹｜环境声：广场低沉人声与风\n镜头2｜2.0–4.0秒｜近景｜快速切换｜凯尔黑发灰眼、银灰制服，握剑的手松了一寸，看向锁环；卢西安浅金卷发与蓝袍入画，金币突然停转｜环境声延续\n镜头3｜4.0–6.0秒｜中近景｜横移｜罗恩黑发、琥珀眼，颈侧金鳞发亮，双手扯紧黑金铁链；索伦在远处握住星砂杖，侧头听见异常钟声｜环境声延续\n镜头4｜6.0–9.0秒｜近景｜推进｜凯尔朝镜头方向迈近半步，剑被他主动放低；卢西安与凯尔对视，二人目光随即落到玩家手腕；天上的白色王冠突然出现裂纹｜重音：一声断裂的钟响\n镜头5｜9.0–10.0秒｜黑场｜硬切｜剑最终会不会落下尚无答案，画面切黑；最后一秒仅出现片名“零点王冠”｜声音骤停\n对白：无\n片名：零点王冠\n视频生成提示词：Vertical 9:16, 1080x1920, 24 fps, exactly 10 seconds, cinematic live-action dark high fantasy, one continuous fantasy execution platform scene at night, no blood. Shot 1 0-2s: a silver sword tip stops just before first-person camera; only an adult woman's wrist in an engraved cuff appears. Shot 2 2-4s: Kael, adult 29, black hair, grey eyes, silver-grey knight uniform, lowers his sword slightly; Lucian, adult 27, wavy pale golden hair, teal-blue eyes, navy wizard robe, abruptly stops spinning a gold coin. Shot 3 4-6s: Rowan, adult 31, black hair, amber eyes, gold scales on neck, worn leather coat, pulls at black-gold chains; Soren, adult 26, long silver-black hair, unfocused pale grey eyes, dark coat, holds a thin star-sand cane and tilts his head to listen. Shot 4 6-9s: Kael steps closer, lowers sword, exchanges one sharp gaze with Lucian, both look at cuff, a white crown-shaped magical object floating above the castle shows one visible crack. Shot 5 9-10s: hard cut to black before verdict; only the Chinese title appears in the last second. Consistent actor faces, consistent costumes, no other speaking characters, no captions, no logos, no gore, wind and distant crowd as ambient audio, single bell crack as accent, abrupt silence at end.",
     "script": "一句话钩子：剑就要落下，玩家手上的锁环突然发光，审判台开始摇晃。\n悬念问题：王冠为什么裂开，凯尔还会不会挥剑？\n镜头1｜0.0–2.0秒｜特写｜手持微震｜银色剑尖直冲镜头前方停住，玩家手腕的锁环露出一条细亮纹｜环境声：广场低沉人声与风\n镜头2｜2.0–4.0秒｜近景｜快速切换｜凯尔黑发灰眼、银灰制服，握剑的手松了一寸，看向锁环；卢西安浅金卷发与蓝袍入画，金币突然停转｜环境声延续\n镜头3｜4.0–6.0秒｜中近景｜横移｜罗恩黑发、琥珀眼，颈侧金鳞发亮，双手扯紧黑金铁链；索伦在远处握住星砂杖，侧头听见异常钟声｜环境声延续\n镜头4｜6.0–9.0秒｜近景｜推进｜凯尔朝镜头方向迈近半步，剑被他主动放低；卢西安与凯尔对视，二人目光随即落到玩家手腕；天上的白色王冠突然出现裂纹｜重音：一声断裂的钟响\n镜头5｜9.0–10.0秒｜黑场｜硬切｜剑最终会不会落下尚无答案，画面切黑；最后一秒仅出现片名“零点王冠”｜声音骤停\n对白：无\n片名：零点王冠\n视频生成提示词：Vertical 9:16, 1080x1920, 24 fps, exactly 10 seconds, cinematic live-action dark high fantasy, one continuous fantasy execution platform scene at night, no blood. Shot 1 0-2s: a silver sword tip stops just before first-person camera; only an adult woman's wrist in an engraved cuff appears. Shot 2 2-4s: Kael, adult 29, black hair, grey eyes, silver-grey knight uniform, lowers his sword slightly; Lucian, adult 27, wavy pale golden hair, teal-blue eyes, navy wizard robe, abruptly stops spinning a gold coin. Shot 3 4-6s: Rowan, adult 31, black hair, amber eyes, gold scales on neck, worn leather coat, pulls at black-gold chains; Soren, adult 26, long silver-black hair, unfocused pale grey eyes, dark coat, holds a thin star-sand cane and tilts his head to listen. Shot 4 6-9s: Kael steps closer, lowers sword, exchanges one sharp gaze with Lucian, both look at cuff, a white crown-shaped magical object floating above the castle shows one visible crack. Shot 5 9-10s: hard cut to black before verdict; only the Chinese title appears in the last second. Consistent actor faces, consistent costumes, no other speaking characters, no captions, no logos, no gore, wind and distant crowd as ambient audio, single bell crack as accent, abrupt silence at end."
+  },
+  "narrative145": {
+    "schema": 1,
+    "work": "w_scmw7f7e4565778126fa",
+    "version": "2026-11-11.1",
+    "materials": [
+      {
+        "id": "zc1-arrival",
+        "chapter": 1,
+        "scenes": [
+          "c01s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "审判现场的危险与三个可追查的对象",
+          "en": "The lit restraint, cracked crown and failing lamps are observable; their connection remains unverified."
+        },
+        "fact": {
+          "zh": "开场可见：锁环亮起怪字，王冠开裂，广场法阵与灯出现故障；这些现象的关联尚未核实。",
+          "en": "The lit restraint, cracked crown and failing lamps are observable; their connection remains unverified."
+        },
+        "prose": {
+          "zh": "风沿着悬空审判台吹上来，台下的人群还在等一声命令。眼前的剑没有离得很远，头顶的王冠却先裂开了一道细缝。广场上的灯接连闪烁，锁环内侧的怪字也在这时亮了起来。\n\n台上的目光落在锁环上，台下听见的却还是偷窃的罪名。裂缝、刻字与失灵的法阵，都已经摆在眼前；它们为什么会与一名修钟匠的审判扯在一起，仍没有人把来龙去脉说清。",
+          "en": "Wind reaches the suspended platform from the crowded square below. The execution is only part of the immediate danger: a crack has appeared in the crown overhead, the lamps are failing, and strange writing lights up inside the restraint.\n\nThese things occurred together. That does not yet explain their connection. The accusation concerns a stolen fragment; the visible questions concern the restraint, the crack, and the failing magic. A claim still needs something that can be checked."
+        },
+        "topics": [],
+        "source": [
+          "chapters[0].introduction",
+          "chapters[0].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc1-proof",
+        "chapter": 1,
+        "scenes": [
+          "c01s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "区分停刑、指控与已经核实的证据",
+          "en": "A halted execution is not proof for or against the theft accusation. Verifiable records are needed; an unmarked identity is not evidence of guilt."
+        },
+        "fact": {
+          "zh": "停刑并不自动撤销指控；关于王冠碎片失窃的说法，需要可核查的记录，而不能仅凭无纹者身份定罪。",
+          "en": "A halted execution is not proof for or against the theft accusation. Verifiable records are needed; an unmarked identity is not evidence of guilt."
+        },
+        "prose": {
+          "zh": "停刑的命令可以让眼前的剑停下，却不会自己回答那桩指控。所谓失窃发生在什么时候，谁查过现场，留下了什么记录——这些事还需要放在能让旁人查验的地方。\n\n锁环里的光亮，和头顶王冠上的裂缝，都是看得见的异常。但异常不是罪名，也不能只凭一个人没有魔纹，就把两者连成已经成立的证据。现场的危险有了形状，审判的依据也需要同样清楚。",
+          "en": "Stopping an execution and supporting an accusation are different tasks. One concerns what happens on the platform; the other requires an account of the alleged loss, the investigation, and the records another person could check.\n\nThe writing in the restraint is worth investigating. Its glow alone does not make it proof of theft. Connecting a visible phenomenon with an accusation still requires an explanation."
+        },
+        "topics": [
+          "证据",
+          "处决",
+          "撤销",
+          "指控",
+          "失窃",
+          "碎片",
+          "停刑",
+          "evidence",
+          "accusation"
+        ],
+        "source": [
+          "chapters[0].introduction",
+          "chapters[0].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc1-writing",
+        "chapter": 1,
+        "scenes": [
+          "c01s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "锁环文字与王冠裂缝构成待调查的联系",
+          "en": "The writing appeared during the crown failure. Reading it is not proof that the player cast magic or caused the failure."
+        },
+        "fact": {
+          "zh": "锁环文字在王冠开裂、法阵故障时显现；能读出文字不等于已经施法，也没有证明玩家造成故障。",
+          "en": "The writing appeared during the crown failure. Reading it is not proof that the player cast magic or caused the failure."
+        },
+        "prose": {
+          "zh": "锁环里的刻字贴着手腕，王冠的裂缝却悬在整座广场上方。一近一远的两处异常，在同一场故障里出现，让那行字有了值得追查的分量。\n\n能读出它，并不意味着已经启动过法阵。真正有待解释的，是文字属于什么装置、它在故障中扮演了什么角色，以及声称懂得它的人，能把解释说到哪一步。光亮已经出现，原因还没有跟着显出来。",
+          "en": "The writing and the crack remain two concrete things to examine: one in the restraint, the other overhead. Their appearance during the same failure raises a question; it does not establish who caused it.\n\nBeing able to read a line is not the same as activating a spell. The words, the mechanism they belong to, and the basis for anyone claiming to understand them can each be investigated."
+        },
+        "topics": [
+          "锁环",
+          "文字",
+          "字",
+          "法阵",
+          "裂缝",
+          "writing",
+          "restraint"
+        ],
+        "source": [
+          "chapters[0].introduction",
+          "chapters[0].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc2-arrival",
+        "chapter": 2,
+        "scenes": [
+          "c02s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "酒馆提供暂时缓冲与新的调查出口",
+          "en": "The tavern has tea, a rotating bottle, dice and a rear door toward the clock tower. Sharing a room does not establish trust or past cooperation."
+        },
+        "fact": {
+          "zh": "酒馆大厅有温茶、会转的酒瓶、骰子和通往钟楼的后门；各人的合作与过往仍需要分别了解。",
+          "en": "The tavern has tea, a rotating bottle, dice and a rear door toward the clock tower. Sharing a room does not establish trust or past cooperation."
+        },
+        "prose": {
+          "zh": "酒馆门把广场的喧闹隔在外面。温茶放在桌上，旧酒瓶还在自己慢慢转动，两颗骰子让紧绷的交谈多了一个轻一点的开头。后门通着钟楼，调查也有了具体能去的地方。\n\n但同坐一桌，并没有让旧怨消失。骑士的徽章、龙谷的往事，以及每个人想追查的东西，仍然夹在话里。有人愿意同行，有人仍在防备；他们究竟能帮什么，需要从实际说出的安排里一点点分清。",
+          "en": "The tavern softens the noise of the square. Tea, a slowly turning bottle and dice offer a different pace; a rear door gives the investigation a concrete direction toward the clock tower.\n\nOccupying the same room does not make everyone allies. The knightly badge, the history of Dragon Vale and the different reasons for helping still sit between them. Their words and practical offers will have to make those differences clearer."
+        },
+        "topics": [],
+        "source": [
+          "chapters[1].introduction",
+          "chapters[1].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc2-routes",
+        "chapter": 2,
+        "scenes": [
+          "c02s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "合作理由与调查方向可以分开判断",
+          "en": "The clock tower and the restraint are available investigation directions. Games are optional and do not establish whose claims are true."
+        },
+        "fact": {
+          "zh": "玩家可以分别了解各人的合作理由，并选择调查钟楼、锁环或旧事；拒绝游戏和保持距离不关闭调查路线。",
+          "en": "The clock tower and the restraint are available investigation directions. Games are optional and do not establish whose claims are true."
+        },
+        "prose": {
+          "zh": "通向钟楼的后门给出了一个能继续查下去的方向，桌边的交谈则提供了另一种核对：各人究竟知道什么，又为什么想参与。路线和信任，可以分开判断。\n\n瓶子与骰子只负责让一场谈话更容易开始，不负责决定谁说的就是真相。即使不加入游戏，也仍然可以问清锁环的来历、钟楼的情况，以及这些人肯实际提供哪一种帮助。",
+          "en": "The rear door offers a route toward the clock tower. Conversation offers another kind of inquiry: what each person knows and why each wants to help. A route need not depend on complete trust.\n\nThe bottle and dice can open a conversation; they cannot determine whose account is true. The restraint, the tower and the practical help being offered remain open questions even without a game."
+        },
+        "topics": [
+          "调查",
+          "信谁",
+          "帮忙",
+          "合作",
+          "钟楼",
+          "不玩",
+          "investigate",
+          "trust"
+        ],
+        "source": [
+          "chapters[1].introduction",
+          "chapters[1].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc3-arrival",
+        "chapter": 3,
+        "scenes": [
+          "c03s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "地下集市将记忆与旧印放在同一交易现场",
+          "en": "Memory fragments appear in floating glass spheres. Ash holds the first old seal; seeing it does not complete its transfer."
+        },
+        "fact": {
+          "zh": "地下集市有映出记忆片段的玻璃球；第一枚旧印由阿什保管，实际取得仍需完成交接。",
+          "en": "Memory fragments appear in floating glass spheres. Ash holds the first old seal; seeing it does not complete its transfer."
+        },
+        "prose": {
+          "zh": "地下集市的玻璃球漂在头顶，别人记忆里的片段就在里面映着。桌上的旧印却安安稳稳地摆着，旁边是两颗白骰子。这里连记忆都能进入买卖，印章的来路和交接条件，也就格外不能含糊。\n\n看见它，和能够带走它之间，还隔着一场真正的交易。是谁把旧印交到阿什手里，怎样检查它的真假，以及什么才算完成交付，都有了可以继续问下去的落点。",
+          "en": "Glass spheres hang over the underground market, showing fragments of other people’s memories. The seal and two white dice on the table are more tangible: Ash holds the seal, and its transfer still depends on the terms being settled.\n\nIn a place where memories can be exchanged, origin and ownership become questions of their own. Seeing the seal does not prove its authenticity or complete the handover."
+        },
+        "topics": [],
+        "source": [
+          "chapters[2].introduction",
+          "chapters[2].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc3-seal",
+        "chapter": 3,
+        "scenes": [
+          "c03s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "旧印交接有不依赖输赢的路径",
+          "en": "Evidence-based negotiation and a dice-led opening are both available. A dice result alone does not prove ownership or complete delivery of the first seal."
+        },
+        "fact": {
+          "zh": "第一枚旧印可以通过证据交易，或先掷骰决定谈判发言顺序；骰子输赢不是取得旧印的唯一条件。",
+          "en": "Evidence-based negotiation and a dice-led opening are both available. A dice result alone does not prove ownership or complete delivery of the first seal."
+        },
+        "prose": {
+          "zh": "旧印放在桌上，却还不能算已经属于任何新主人。阿什给出的谈判里有两条路：用能让他信服的证据交换，或先用骰子决定谁先开口谈条件。\n\n掷骰改变的是这场交涉的开头，不是印章真伪，也不能替代双方真正完成交接。若想继续追查王冠，值得问清的是阿什保管它的依据，以及怎样把一次口头承诺变成可以核对的交付。",
+          "en": "The seal is visible on the table, but it does not yet belong to a new holder. Evidence can support a trade, or dice can settle who opens the negotiation.\n\nA roll changes the beginning of the conversation. It does not establish authenticity or replace an actual handover. Ash’s basis for keeping the seal, and the steps that would turn an offer into a delivery, remain concrete things to clarify."
+        },
+        "topics": [
+          "旧印",
+          "交易",
+          "拿到",
+          "交接",
+          "骰",
+          "印章",
+          "seal",
+          "trade"
+        ],
+        "source": [
+          "chapters[2].introduction",
+          "chapters[2].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc3-memory",
+        "chapter": 3,
+        "scenes": [
+          "c03s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "记事办法是可观察的线索，不能越过私人秘密的条件",
+          "en": "Lucien sometimes forgets and uses notes. The cause and private contents have not been fully established at this stage."
+        },
+        "fact": {
+          "zh": "卢西安有时会忘事，并用笔记记事；忘事的具体成因与私人内容尚未在这一章得到完整解释。",
+          "en": "Lucien sometimes forgets and uses notes. The cause and private contents have not been fully established at this stage."
+        },
+        "prose": {
+          "zh": "记忆球展示的是已经离开某个人的片段，记事的笔记则试着把容易失去的事情留下。地下集市里的这两样东西，摆出了同一个问题的两面。\n\n忘记一件事，可能影响一个人怎样解释过去，却不能直接证明某一种成因。卢西安愿意说到哪一步、记录里实际写了什么，以及哪些部分还没有解释，需要分开看；眼前的迹象还不够替他把秘密说完。",
+          "en": "The spheres display memories that have left someone, while notes try to preserve what might otherwise be lost. The market makes both sides of that problem visible.\n\nForgetting can affect an account of the past, but it does not by itself prove a cause. What Lucien is willing to explain, what a record actually says, and what remains private must stay distinct."
+        },
+        "topics": [
+          "忘",
+          "记忆",
+          "笔记",
+          "卢西安",
+          "memory",
+          "forget"
+        ],
+        "source": [
+          "chapters[2].introduction",
+          "chapters[2].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc4-arrival",
+        "chapter": 4,
+        "scenes": [
+          "c04s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "守火的现实危险与龙谷旧怨并行",
+          "en": "Six lit braziers stand on the bridge above Dragon Vale. Past grievances and the practical task of tending the fires are distinct concerns."
+        },
+        "fact": {
+          "zh": "石桥上有六座尚亮的火炉，桥下是龙谷；旧徽章与往事的争议不能代替眼前守火的实际任务。",
+          "en": "Six lit braziers stand on the bridge above Dragon Vale. Past grievances and the practical task of tending the fires are distinct concerns."
+        },
+        "prose": {
+          "zh": "石桥上六座火炉还亮着，风却把火苗压得很低。桥下就是龙谷，光从炉口漏出来，将眼前的险情照得很具体：哪一处火最弱，备用火种在哪里，还有多少事情来得及做。\n\n旧徽章和修补过的杯子，让过去也跟着到了这里。关于封锁的争执不会因为火势紧迫就失去分量；但旧事要有人拿出根据说明，眼前的火也要有人实际守住。两件事都需要有人站出来承担。",
+          "en": "Six braziers make a line of light across the bridge, and wind presses their flames lower. Dragon Vale lies below. The immediate danger has concrete dimensions: which fire is weakest, and where a reserve ember might come from.\n\nThe badge and the old blockade give the argument a history. Accounts of what happened and practical work at the fires can each be addressed without dismissing either as a misunderstanding."
+        },
+        "topics": [],
+        "source": [
+          "chapters[3].introduction",
+          "chapters[3].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc4-witness",
+        "chapter": 4,
+        "scenes": [
+          "c04s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "用亲历和记录区分责任与辩解",
+          "en": "Eyewitness accounts, military orders and later claims must be distinguished. Participation in the blockade cannot simply be dismissed as a misunderstanding."
+        },
+        "fact": {
+          "zh": "龙谷往事需要对照亲历与军令记录；凯尔参与封锁的责任不能用一句误会抹去，未公开的救人旧事不自动揭示。",
+          "en": "Eyewitness accounts, military orders and later claims must be distinguished. Participation in the blockade cannot simply be dismissed as a misunderstanding."
+        },
+        "prose": {
+          "zh": "徽章只能说明一个人的身份，不能独自解释一段封锁的经过。关于龙谷，亲眼见到的事、接到的军令和后来听来的说法，需要放在不同的位置核对。\n\n杯子和旧物可以留下往事的痕迹，完整的经过却仍要由有依据的人讲清。追究责任不需要先替任何人找好理由；同样，也不能把尚未说出的私人旧事，直接当成双方已经知道的答案。",
+          "en": "A badge establishes an identity, not the whole account of a blockade. Witnessed events, orders received and later stories have to be compared on their own terms.\n\nOld possessions may carry traces of the past, but a complete account still needs a basis. Responsibility need not wait for an excuse, and an unrevealed private story cannot be treated as an answer everyone already knows."
+        },
+        "topics": [
+          "龙谷",
+          "封锁",
+          "徽章",
+          "证据",
+          "责任",
+          "孩子",
+          "杯",
+          "blockade",
+          "badge"
+        ],
+        "source": [
+          "chapters[3].introduction",
+          "chapters[3].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc5-arrival",
+        "chapter": 5,
+        "scenes": [
+          "c05s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "三个未来都是有条件的推演",
+          "en": "The star chart shows three conditional futures and a clock-tower mark. Images are neither completed events nor commands."
+        },
+        "fact": {
+          "zh": "星盘呈现三种有条件的未来，其中一幅带着钟楼记号；影像不是已经发生的事实，也不是玩家必须服从的命令。",
+          "en": "The star chart shows three conditional futures and a clock-tower mark. Images are neither completed events nor commands."
+        },
+        "prose": {
+          "zh": "星塔的屋顶像被打开了，星光落在圆形地板上。三幅不同的画面在星盘里亮着，其中一处带着钟楼的记号。它很具体，却还不足以替任何人选定未来。\n\n画面之间的差别、记号的来源和旧笔记里留下的记录，都在等一个解释。索伦能听见星盘的变化，但他给出的判断也有条件。这里展示的是几条可能通向的路，哪一条真的成立，还需要把条件一项项问清。",
+          "en": "Starlight reaches the circular floor, and three different images appear on the chart. A clock-tower mark makes one of them especially specific, but no image chooses an ending for anyone.\n\nAn image can point toward conditions worth investigating. Its appearance does not make the event inevitable. The differences, the origin of the mark and the actual contents of the old notes can be examined separately."
+        },
+        "topics": [],
+        "source": [
+          "chapters[4].introduction",
+          "chapters[4].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc5-mark",
+        "chapter": 5,
+        "scenes": [
+          "c05s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "player",
+        "focus": {
+          "zh": "钟楼记号提供个人相关的调查入口",
+          "en": "A clock-tower mark appears in one image. Its origin is investigable; it does not establish the player’s fate or the truth of the experiment."
+        },
+        "fact": {
+          "zh": "星盘其中一幅画面带有钟楼记号；记号的存在可调查，尚不能据此断言玩家的命运或实验真相。",
+          "en": "A clock-tower mark appears in one image. Its origin is investigable; it does not establish the player’s fate or the truth of the experiment."
+        },
+        "prose": {
+          "zh": "三幅画面里，钟楼的记号让其中一处有了可辨认的来源线索。它值得被单独拿出来核对：是记录留下的编号，还是星盘正在引用某段旧资料。\n\n认出一个标记，并没有解释它为什么出现在这里。眼前仍有不同的查法——比对钟楼的记号、询问星盘如何形成影像，或查旧笔记里有没有相同的记录。几条路指向同一个疑点，却还没有合成唯一的答案。",
+          "en": "The mark makes one image traceable in a way the others are not. It might be compared with the tower’s own markings, the chart’s method, or the old notes.\n\nRecognizing a mark does not explain why it appears here. Those lines of inquiry approach the same question from different directions, without yet becoming a single answer."
+        },
+        "topics": [
+          "钟楼",
+          "编号",
+          "记号",
+          "星盘",
+          "图",
+          "mark",
+          "chart"
+        ],
+        "source": [
+          "chapters[4].introduction",
+          "chapters[4].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc5-uncertainty",
+        "chapter": 5,
+        "scenes": [
+          "c05s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "预言与试验记录需要分别核实",
+          "en": "The futures are conditional. Historical experiment notes and predictions require different kinds of verification."
+        },
+        "fact": {
+          "zh": "三种未来都有条件；索伦无法保证唯一正确结局，旧试验的完整细节仍需后续证据。",
+          "en": "The futures are conditional. Historical experiment notes and predictions require different kinds of verification."
+        },
+        "prose": {
+          "zh": "星盘给出的不同画面，本身就在提醒一件事：条件改变，结果也可能改变。一次判断可以被重新检查，而不用先把它解释成谁必须服从的命运。\n\n旧笔记记录过的尝试，与尚未发生的影像，也不属于同一种证据。前者可以追问时间、参与者和记录缺口，后者需要问清成立条件。把两者分开，才能看清一个解释到底说到了哪里，又在哪一步仍是推测。",
+          "en": "Different images point toward different conditions. A judgment can be re-examined without turning it into a destiny someone must obey.\n\nNotes from an old attempt and an image of an uncompleted future are different kinds of evidence. One raises questions about the record; the other raises questions about conditions. Keeping them distinct makes the limits of an explanation visible."
+        },
+        "topics": [
+          "预言",
+          "未来",
+          "试验",
+          "错",
+          "条件",
+          "prophecy",
+          "future"
+        ],
+        "source": [
+          "chapters[4].introduction",
+          "chapters[4].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc6-arrival",
+        "chapter": 6,
+        "scenes": [
+          "c06s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "舞会的礼节包着关于调查权与旧印的谈判",
+          "en": "The public demand concerns returning held seals or pausing investigation. Courtesy and dance invitations do not settle those terms."
+        },
+        "fact": {
+          "zh": "镜厅里的公文要求交还已有旧印或暂停调查；礼节与邀舞不代替玩家对条件作出决定。",
+          "en": "The public demand concerns returning held seals or pausing investigation. Courtesy and dance invitations do not settle those terms."
+        },
+        "prose": {
+          "zh": "镜厅的灯光落在面具与公文上，舞曲和关于旧印的交涉挤在同一个夜晚。礼节让话说得平稳，纸上的条件却仍在决定，谁能继续调查，谁又必须把理由说清。\n\n旧印究竟有没有到手、公文要求交出什么、核心室要怎样进入，都不能由一个邀舞或一句客气话带过去。热闹给谈话留了余地，也让真正要紧的条件更容易藏进漂亮说辞里。它们仍需要被单独摆出来。",
+          "en": "Light falls across masks and an official document. The hall accommodates music and negotiation at once; courtesy can soften the exchange without settling who controls the investigation.\n\nWhether a seal was actually obtained, what the document demands, and what permits access to the next location each require their own basis. A dance invitation cannot complete a signature or a transfer."
+        },
+        "topics": [],
+        "source": [
+          "chapters[5].introduction",
+          "chapters[5].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc6-terms",
+        "chapter": 6,
+        "scenes": [
+          "c06s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "把防线风险、所有权与进入条件拆开谈",
+          "en": "Risk, ownership and access conditions are separate questions. Refusing a dance does not close the main investigation."
+        },
+        "fact": {
+          "zh": "旧印的实际持有情况、停止调查的要求、灰潮风险和进入核心室的条件，应分别核对；拒绝邀舞不阻断主线。",
+          "en": "Risk, ownership and access conditions are separate questions. Refusing a dance does not close the main investigation."
+        },
+        "prose": {
+          "zh": "公文、旧印与城外的灰潮，在谈话里被放到了同一处，却不是一个问题。风险需要说明，所有权需要核对，要求停止调查的人，也需要解释接下来允许怎样查证。\n\n把这些条件拆开，谈判才有能逐项落到实处的内容。是否跳舞、与谁靠近，可以保留为另一种选择；它们不应代替进入核心室的办法，也不能被拿来当作交还旧印的默认同意。",
+          "en": "Risk, ownership and access have entered the same conversation, but they are not the same question. Each needs an explanation that can be checked.\n\nSeparating the terms gives the negotiation practical shape. A decision about a dance or a relationship can remain its own decision; it does not stand in for access to the core or consent to return a seal."
+        },
+        "topics": [
+          "条件",
+          "旧印",
+          "交还",
+          "女王",
+          "公文",
+          "核心",
+          "灰潮",
+          "谈正事",
+          "terms",
+          "seal"
+        ],
+        "source": [
+          "chapters[5].introduction",
+          "chapters[5].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      },
+      {
+        "id": "zc7-arrival",
+        "chapter": 7,
+        "scenes": [
+          "c07s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "原始账本把王冠代价带到可查证的层面",
+          "en": "The original ledger is open in the archive, with records of memories taken. Individual responsibility still requires separate examination."
+        },
+        "fact": {
+          "zh": "地下档案室的原始账本已被展开；记忆被取走的记录可以核对，人物责任仍须分别追问。",
+          "en": "The original ledger is open in the archive, with records of memories taken. Individual responsibility still requires separate examination."
+        },
+        "prose": {
+          "zh": "地底档案室里，滴水声衬得翻页的声音格外清楚。原始账本已经放在桌上，被拿走的记忆一笔笔记在纸页里。之前只在说法之间打转的代价，终于有了能够逐条查阅的形状。\n\n纸页不会替谁求情。是谁留下记录、谁签过名、谁执行过命令，仍得分别追问。王冠怎样保护这座城，和这份保护曾经伤害过谁，现在被放到了同一张桌上，却不必被压成同一个简单答案。",
+          "en": "Water drips through the underground archive, making the turn of a page unusually clear. An original ledger is now on the table. The price paid in memories has become something recorded, rather than merely rumored.\n\nA ledger changes the basis of the discussion without accounting for every person’s responsibility. Its origin, signatures, execution and gaps still matter. Establishing a fact does not require deciding forgiveness at the same moment."
+        },
+        "topics": [],
+        "source": [
+          "chapters[6].introduction",
+          "chapters[6].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc7-cost",
+        "chapter": 7,
+        "scenes": [
+          "c07s01",
+          "c08s01"
+        ],
+        "kind": "reveal",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "揭示王冠以记忆换取保护的世界真相",
+          "en": "The original ledger establishes that some people’s memories power the crown’s protection, and that some in the royal court knew without making it public. This truth is not romance- or game-gated."
+        },
+        "fact": {
+          "zh": "原始账本说明：王冠一直取走一些人的记忆来维持保护；王室有人知情却没有公开。此真相不以恋爱好感或游戏输赢为条件。",
+          "en": "The original ledger establishes that some people’s memories power the crown’s protection, and that some in the royal court knew without making it public. This truth is not romance- or game-gated."
+        },
+        "prose": {
+          "zh": "原始账本里，被拿走的记忆与王冠维持保护的记录，终于能够放在一起读。王城的防线一直有代价，只是过去的说法，把付出代价的人留在了公众看不到的地方。\n\n有人的记忆被取走，也有王室成员知道这套安排，却没有把它公开。城里的保护与那些缺失，原来并不是两件毫不相干的事。账目让这层联系有了可追查的依据，批准、执行与承担损失的人，也需要一个个分清。\n\n这份记录可以先被核对。责任怎样承担、损失怎样补偿，以及是否愿意原谅谁，都还可以继续问下去。",
+          "en": "The original ledger connects memories taken with the maintenance of the crown’s protection. The defense has a cost; earlier public explanations kept that cost out of view.\n\nKeeping the crown can no longer be discussed as if it had no consequences. Some people paid in memories, and some in the court knew without disclosing the arrangement. The record makes that claim traceable. Approval, execution, losses and compensation can now be examined separately.\n\nEstablishing these facts does not require immediate forgiveness."
+        },
+        "topics": [
+          "代价",
+          "记忆",
+          "真相",
+          "谁批准",
+          "谁同意",
+          "王冠",
+          "memory",
+          "cost",
+          "truth"
+        ],
+        "source": [
+          "chapters[6].introduction",
+          "chapters[6].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc7-charge",
+        "chapter": 7,
+        "scenes": [
+          "c07s01",
+          "c08s01"
+        ],
+        "kind": "reveal",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "把错误指控与王冠真实故障分开",
+          "en": "The maintenance and palace records support a crack, but no record of a stolen fragment. Verena authorized the arrest without sufficient evidence and suppressed the news."
+        },
+        "fact": {
+          "zh": "检修册与王宫账本可以对出：王冠开裂是真事，却找不到王冠碎片被盗的记录；维蕾娜在证据不足时同意拘捕修钟匠并压下消息。",
+          "en": "The maintenance and palace records support a crack, but no record of a stolen fragment. Verena authorized the arrest without sufficient evidence and suppressed the news."
+        },
+        "prose": {
+          "zh": "检修册记录的是王冠开裂，王宫账本里，却找不到碎片被盗的一笔。故障确实发生过，最初落到修钟匠身上的罪名，却没有跟着得到证实。\n\n维蕾娜在证据不足时同意了抓捕。她想先压住消息，等找到修复办法再解释；这说明了她当时的选择，也留下了这次选择要由谁负责的问题。王城面对的危险，不能让错误指控造成的伤害凭空消失。\n\n现在，修复王冠与追究抓捕可以分别摆到台面上。前一件事再紧迫，也不会让后一件事失去被问清的分量。",
+          "en": "The maintenance record and palace ledger outline something different from the original accusation. The crown did crack, but the records do not support the claim that a fragment was stolen. A genuine failure did not automatically establish a crime.\n\nVerena agreed to arrest the clock repairer without sufficient evidence and kept the news down while seeking a repair. The city’s danger explains pressure; it does not erase the harm of a wrongful accusation.\n\nMaintaining protection and accounting for the arrest remain distinct responsibilities."
+        },
+        "topics": [
+          "证据",
+          "碎片",
+          "失窃",
+          "指控",
+          "逮捕",
+          "女王",
+          "账本",
+          "记录",
+          "theft",
+          "accusation",
+          "evidence"
+        ],
+        "source": [
+          "chapters[6].introduction",
+          "chapters[6].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc8-arrival",
+        "chapter": 8,
+        "scenes": [
+          "c08s01"
+        ],
+        "kind": "scene",
+        "entry": true,
+        "scope": "present",
+        "focus": {
+          "zh": "控制台上的三条路各有代价",
+          "en": "Three directions remain: preserve and reform, shut down and evacuate, or establish voluntary power and terms. Proposing a plan is not proof of successful execution."
+        },
+        "fact": {
+          "zh": "终章可讨论保留防线并改革、逐步关停并撤离、自愿新契约三条方向；方案尚不等于已经执行成功。",
+          "en": "Three directions remain: preserve and reform, shut down and evacuate, or establish voluntary power and terms. Proposing a plan is not proof of successful execution."
+        },
+        "prose": {
+          "zh": "天快亮了，王冠的裂缝仍在头顶，城外灰潮露出了逼近的轮廓。控制台前摆着三条方向：暂时保住防线并公开改革，逐步关停与撤离，或尝试自愿的新供能和新契约。\n\n每一个办法的背后，都有需要承担风险的人，也有还没完成的步骤。旧印、供能、居民的去向，以及各人的同意，都需要落到实际安排上。紧迫让这些问题更难拖延，却没有让一个尚未执行的办法，自动变成已经到来的好结局。",
+          "en": "Dawn approaches, and the cracked crown and approaching Grey Tide give the discussion practical stakes. Three directions remain: preserve protection while reforming it, shut it down gradually with evacuation, or attempt voluntary power and new terms.\n\nEach must account for risk, unfinished requirements and evidence of actual execution. Urgency requires an emergency arrangement, without making further questions or a deferred final decision impossible."
+        },
+        "topics": [],
+        "source": [
+          "chapters[7].introduction",
+          "chapters[7].scenes[0].beat"
+        ],
+        "seedOnContinue": false
+      },
+      {
+        "id": "zc8-options",
+        "chapter": 8,
+        "scenes": [
+          "c08s01"
+        ],
+        "kind": "clue",
+        "entry": false,
+        "scope": "present",
+        "focus": {
+          "zh": "解释方案代价与执行条件",
+          "en": "Preservation needs disclosure and oversight; shutdown needs evacuation and risk management; voluntary replacement needs actual seals, viable power and individual consent."
+        },
+        "fact": {
+          "zh": "保留旧王冠需公开代价并监督改革；关停需承担短期防线风险并撤离；新契约需旧印手续、分散供能与参加者明确自愿，不能宣称无代价成功。",
+          "en": "Preservation needs disclosure and oversight; shutdown needs evacuation and risk management; voluntary replacement needs actual seals, viable power and individual consent."
+        },
+        "prose": {
+          "zh": "三种办法的差别，落在它们把风险交给谁，以及允许谁作出决定。维持旧王冠，可以争取短期防线，却必须面对公开代价与持续监督；逐步关停，要把撤离和短期安全真正安排进去。\n\n自愿的新契约则需要能执行的供能与交接步骤。旧印没有实际到手，手续就不能算齐；有人提出龙族可以帮忙，也不能替所有龙族作出同意。一个方向值得讨论，不代表它已经成功，更不代表它没有代价。",
+          "en": "The options distribute risk and authority differently. Preserving the old crown buys short-term protection but requires disclosure and oversight. Gradual shutdown must include evacuation and interim safety.\n\nA voluntary replacement needs workable power and transfer arrangements. Missing seals cannot be treated as collected, and an offer of help cannot consent for an entire people. A direction can be worth considering without already being successful or cost-free."
+        },
+        "topics": [
+          "方案",
+          "代价",
+          "风险",
+          "旧印",
+          "自愿",
+          "关停",
+          "改革",
+          "选择",
+          "plan",
+          "risk",
+          "cost"
+        ],
+        "source": [
+          "chapters[7].introduction",
+          "chapters[7].scenes[0].beat"
+        ],
+        "seedOnContinue": true
+      }
+    ]
   }
 }

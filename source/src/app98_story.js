@@ -13,7 +13,7 @@ const L98 = (zh, en) => Z98() ? zh : en;
 const LZ98 = o => (o && typeof o === "object") ? ((Z98() ? o.zh : o.en) || o.zh || o.en || "") : String(o || "");
 async function bible98(id) {
   if (id in B98.cache) return B98.cache[id];
-  let b = null; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".bible.json?v=" + Math.floor(Date.now() / 3e5)); if (r.ok) b = await r.json(); } catch (_) {}
+  let b = null; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".bible.json?v=" + Math.floor(Date.now() / 3e5) + "&build=" + encodeURIComponent(window.MIRU_BUILD || "story-v2")); if (r.ok) b = await r.json(); } catch (_) {}
   if (b && typeof arcNorm98 === "function") arcNorm98(b); /* 只写了升级台阶的剧本，编译成一级一章（app134） */
   B98.cache[id] = b; return b;
 }
@@ -377,7 +377,7 @@ async function director98(th, mode, act) {
     (window.FXBUS ? FXBUS.promptBlock(th, zh) : "") + (typeof arcAsk98 === "function" ? arcAsk98(th, mode, act, zh) : "") + stagedAsk98(th, s, zh) + redo98(zh) + (typeof narrationDirector135 === "function" ? narrationDirector135(th,zh) : "") +
     '\n\nReply with ONLY JSON: {"narration":"...","speakers":[{"id":"...","intent":"...","why":""}],"options":["...","...","..."],"player_obs":"","state":"","fx":{"ambient":null,"moment":null},"bg":null,' +
     (mode === "exit" ? '"with_player":null,' : '"leave":[],"arrive":[],') + (mode === "talk" || mode === "more" ? '"photo":null,' : '') +
-    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + (senseOK98(th, mode) ? '"sense":"",' : '') + (typeof arcJson98 === "function" ? arcJson98(th, mode) : '') + (s.game && !Array.isArray(s.game) && s.game.outcomes ? '"game":false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
+    (judging ? '"ready":true or false,"wants_next":true or false,' : '') + (senseOK98(th, mode) ? '"sense":"",' : '') + (typeof arcJson98 === "function" ? arcJson98(th, mode) : '') + (typeof narrativeOn145 === "function" && narrativeOn145(th) ? '"narration_plan":{"kind":"clue","position":"after","material":null},' : '') + (s.game && !Array.isArray(s.game) && s.game.outcomes ? '"game":false,' : '') + '"summary":"one line: what the player did","ending":null,"endingText":""} in ' + LANG98() + ".";
   return ask(p, { maxTokens: 900, isolatedContext: typeof contextOn135 === "function" && contextOn135(th) });
 }
 /* ---------- a character agent ---------- */
@@ -415,7 +415,7 @@ async function actor98(th, cid, intent, turn) {
     "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（" + (policy ? "用第三人称姓名或省略主语，不用‘我抬手／我靠近’；只写有意义、眼前可见的动作，没有就空" : "第一人称「我…」") + "，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
            : "Your turn. Only yourself: an optional action (" + (policy ? "third person or no subject, visible meaningful gesture only, otherwise empty" : "first person") + ", ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
     '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
-  return ask(p, { maxTokens: 320, isolatedContext: typeof contextOn135 === "function" && contextOn135(th) });
+  return ask(p, { maxTokens: 320, timeout: typeof narrativeOn145 === "function" && narrativeOn145(th) ? 20000 : undefined, isolatedContext: typeof contextOn135 === "function" && contextOn135(th) });
 }
 /* ---------- 玩家的感官反应（2026-11-07 用户拍板放开）----------
    旁白原来一律不写玩家；现在允许导演另给一句「不由自主的身体反应」：心跳、呼吸、脸发烫、没有往后退。
@@ -466,6 +466,7 @@ async function beat98(th, mode, act) {
     if (mode === "talk" || mode === "more") spk = pickSpeakers98(th, act, spk);
     if (arc98.reveal && !spk.some(x => x.id === arc98.reveal.cid) && allowedSpeakers98(th, s).includes(arc98.reveal.cid)) spk.unshift({ id: arc98.reveal.cid, intent: "" });
     if (arc98.game && !spk.some(x => x.id === arc98.game.from)) arc98.game.from = spk[0] ? spk[0].id : "";
+    if(typeof narrationBefore145==='function')await narrationBefore145(th,{mode,act,d,start,delivered:0});
     const ph = photoPlan98(th, d, mode, spk);
     let delivered98 = 0; const fx98a = window.FXBUS ? FXBUS.agent(th, d.fx) : () => {};
     const fx98 = () => { fx98a(); highlight98(th, d.bg); d.bg = null; };
@@ -473,7 +474,7 @@ async function beat98(th, mode, act) {
     for (const sp of spk98) {
       const turn98 = { role: sp.role || "main", why: sp.why || "", think: !!(act && act.mode === "think"), to: act && act.to, more: mode === "more", photo: ph && ph.from === sp.id ? ph : null,
         reveal: arc98.reveal && arc98.reveal.cid === sp.id ? arc98.reveal : null, game: arc98.game && arc98.game.from === sp.id ? arc98.game : null, hook: mode !== "exit" && sp === spk98[spk98.length - 1] };
-      let r = null; try { r = await actor98(th, sp.id, sp.intent, turn98); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", ""), turn98); if (r2 && r2.say) r = r2; } } catch (_) {}
+      let r = null; try { r = await actor98(th, sp.id, sp.intent, turn98); if (r && r.say && !zhOK98(r.say)) { const r2 = await actor98(th, sp.id, (sp.intent || "") + L98("（这次务必用简体中文说）", ""), turn98); if (r2 && r2.say) r = r2; } } catch (e) { console.warn("[story98] actor",sp.id,String(e && (e.code || e.message) || "error")); }
       if (!r && turn98.photo) r = { say: ph.cap };
       if (!r) continue;
       r.act = String(r.act || "").trim(); r.say = String(r.say || "").trim(); if (!r.act && !r.say && turn98.photo) r.say = ph.cap; if (!r.act && !r.say) continue;
@@ -483,6 +484,7 @@ async function beat98(th, mode, act) {
       if (act98 && say98) appendMsg(th, { who: "n", k: "box", pk: 1, parts: [{ who: sp.id, k: "act", txt: act98 }], txt: act98, last: say98, lastWho: sp.id, say: { who: sp.id, txt: say98 }, at: Date.now(), ai: 1 });
       else if (act98) appendMsg(th, { who: sp.id, k: "act", txt: act98, at: Date.now() });
       else if (say98) appendMsg(th, { who: sp.id, k: "say", txt: say98, at: Date.now(), ai: 1 });
+      if(typeof narrationBetween145==='function')await narrationBetween145(th,{mode,act,d,start,delivered:delivered98});
       if (turn98.photo) photoSend98(th, ph);
       if (turn98.reveal) { arcRevealed98(th, turn98.reveal); arc98.reveal = null; }
       fx98();

@@ -9,16 +9,18 @@ function contextPrivate135(m){return !!(m&&(m.sense98||m.k==='think'||m.k==='dir
 function contextStyle135(m){return !!(m&&m.narrative135&&m.narrative135.kind==='style');}
 function contextAppend135(th,m){
  if(!contextOn135(th)||!m||typeof m!=='object'||m.context135&&m.context135.schema===1)return m;
- const st=contextState135(th),A=th.b98,s=typeof scene98==='function'&&scene98(th).s,priv=contextPrivate135(m),style=contextStyle135(m),who=m.say&&m.say.who||m.who,seen=priv||style?[]:contextHere135(th);
+ const st=contextState135(th),A=th.b98,s=typeof scene98==='function'&&scene98(th).s,priv=contextPrivate135(m),style=contextStyle135(m),who=m.say&&m.say.who||m.who,seen=m.narrative145?[...new Set((m.narrative145.facts||[]).flatMap(f=>f.seen||[]))]:priv||style?[]:contextHere135(th);
  if(!priv&&!style&&(th.cast||[]).includes(who)&&!seen.includes(who))seen.push(who);
  m.context135={schema:1,id:String(th.id)+':'+(++st.seq),seen:[...new Set(seen)],chapter:A.ch,scene:s&&s.id||'',turn:A.turns||0,kind:priv?'private':style?'style':m.ev98?'event':m.k==='say'||m.k==='box'||m.lines98?'quote':m.who==='n'?'scene':m.k==='act'?'action':'other'};return m;
 }
 function contextVisible135(th,m,cid){
- if(!m||contextPrivate135(m)||contextStyle135(m))return false;if(!cid)return true;const a=m.context135;
+ if(!m||contextPrivate135(m)||contextStyle135(m))return false;if(!cid)return true;
+ if(m.narrative145)return (m.narrative145.facts||[]).some(f=>(f.seen||[]).includes(cid));const a=m.context135;
  if(a&&a.schema===1)return Array.isArray(a.seen)&&a.seen.includes(cid);
  return m.who===cid||!!(m.say&&m.say.who===cid); // Unknown legacy attendance is never retroactively shared.
 }
-function contextText135(th,m){
+function contextText135(th,m,cid){
+ if(m.narrative145)return (m.narrative145.facts||[]).filter(f=>!cid||(f.seen||[]).includes(cid)).map(f=>'[NARRATIVE '+(f.kind==='reveal'?'REVEALED':'OBSERVED')+' '+f.id+'] '+f.text).join('\n');
  const clean=v=>typeof v==='string'?v.replace(/\s+/g,' ').trim():'',t=clean(m.txt),who=m.say&&m.say.who||m.who,name=contextName135(th,who);
  if(m.ph98)return name+(m.ph98.open?' [PHOTO OPENED] '+clean(m.ph98.what):' [PHOTO SENT, NOT OPENED]');
  if(m.k==='box'&&m.say){const a=(m.parts||[]).filter(p=>p&&(p.k==='act'||p.kind==='act')).map(p=>clean(p.txt)).filter(Boolean).join(' ').slice(0,80);return (a?'[ACTION REPORT; attempt is not success] '+name+': '+a+'\n':'')+(clean(m.say.txt)?'[QUOTED SPEECH; not proof of completion] '+name+': '+clean(m.say.txt).slice(0,120):'');}
@@ -33,8 +35,8 @@ function contextText135(th,m){
 }
 function contextRows135(th,cid){
  const rows=[],messages=th.msgs||[];
- for(let i=0;i<messages.length;i++){const m=messages[i];if(!contextVisible135(th,m,cid))continue;const t=contextText135(th,m);if(!t)continue;const a=m.context135;
- const pin=m.sec98?'secret':m.ev98?'event':/(?:^|[\s，。！？：:]|你|请)别(?:再)?|不要|不想|拒绝|只做朋友|先做朋友|停止|保持距离|不接受|不答应|\b(?:don.t|do not|stop|refuse|friends only|keep your distance)\b/i.test(t)?'boundary':/答应|承诺|保证|我会|我愿意|\b(?:I will|I.ll|promise|agree to)\b/i.test(t)?'promise':'';
+ for(let i=0;i<messages.length;i++){const m=messages[i];if(!contextVisible135(th,m,cid))continue;const t=contextText135(th,m,cid);if(!t)continue;const a=m.context135;
+ const pin=m.sec98?'secret':m.ev98?'event':m.narrative145&&m.narrative145.facts.length?'clue':/(?:^|[\s，。！？：:]|你|请)别(?:再)?|不要|不想|拒绝|只做朋友|先做朋友|停止|保持距离|不接受|不答应|\b(?:don.t|do not|stop|refuse|friends only|keep your distance)\b/i.test(t)?'boundary':/答应|承诺|保证|我会|我愿意|\b(?:I will|I.ll|promise|agree to)\b/i.test(t)?'promise':'';
  rows.push({id:a&&a.id||String(th.id)+':legacy:'+i,index:i,who:m.say&&m.say.who||m.who,seen:a&&Array.isArray(a.seen)?a.seen.slice():null,text:t.length>CONTEXT135.lineChars?t.slice(0,CONTEXT135.lineChars-1)+'…':t,kind:a&&a.kind||'legacy',chapter:a&&a.chapter||0,pin});}
  return rows;
 }
@@ -55,6 +57,7 @@ function contextCanonical135(th,cid){
  if(!cid){for(const [id,key] of Object.entries(A.picked||{}).slice(-16))rows.push('SELECTED '+id+': '+String(key));}
  for(const [id,g] of Object.entries(A.gameResults||{}).slice(-16)){if(!g||cid&&!(g.participants||[]).includes(cid))continue;rows.push('GAME RECEIPT '+id+': '+String(g.result)+' (result only; follow-up not yet proven)');}
  const secretRows=(th.msgs||[]).filter(m=>m.sec98&&contextVisible135(th,m,cid)).slice(-4).map(m=>'SECRET REVEALED '+String(m.sec98)+': '+String(m.txt||m.title||'').slice(0,90));
+ if(typeof narrativeOn145==='function'&&narrativeOn145(th))for(const f of narrativeFacts145(th,cid).slice(-4))rows.push('NARRATIVE '+f.id+': '+f.text);
  const receipts=secretRows.join('\n').slice(-240);
  const cap=cid?450:750,tail=[];let used=boundary.length+receipts.length;for(const row of rows.slice().reverse()){if(used+row.length+1>cap)break;tail.unshift(row);used+=row.length+1;}return [boundary,receipts,...tail].filter(Boolean).join('\n');
 }

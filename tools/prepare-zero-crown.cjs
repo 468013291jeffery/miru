@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..'),meta=JSON.parse(fs.readFileSync(process.
 const {parseManuscript}=require('../api/_scriptparse'),{checkBible,checkDsl}=require('../api/_stylecheck'),{dslQA}=require('../api/_dslqa');
 const r=parseManuscript(src,{id:meta.work_id}),st=checkBible(r.bible);assert.equal(r.err.concat(st.err).length,0,JSON.stringify(r.err.concat(st.err)));
 assert.equal(r.images.length,32);assert.equal(r.bible.chapters.length,8);assert.equal(r.stats.options,32);assert.equal(r.stats.endings,7);
-const b=r.bible,base='https://miru.plus/art/official/zero-crown/v3.0.0/',map={};
+const b=require('./build-narration145.cjs').apply(r.bible),base='https://miru.plus/art/official/zero-crown/v3.0.0/',map={};
 for(const i of r.images)map[i.slot]=base+i.slot+'.webp';
 map.poster=map.cover;map.home_video=base+'opening-en-20261110.mp4';
 const files=fs.readdirSync('art/official/zero-crown/v3.0.0');
