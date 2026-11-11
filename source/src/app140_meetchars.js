@@ -53,11 +53,18 @@
     };
   }
   /* 配对成功后点「回复 TA」会把 #sw96 藏起来；回到角色页时重新画 */
+  /* 角色卡显示完整人物：图片整张放进卡里（不裁头），空出来的地方用同一张图的模糊放大版铺底 */
+  function fullCards() { document.querySelectorAll("#sw96 .sc96").forEach(c => { if (c.querySelector(".bl140")) return; const im = c.querySelector("img"); if (!im) return;
+    const b = document.createElement("i"); b.className = "bl140"; b.style.backgroundImage = "url(" + JSON.stringify(im.getAttribute("src") || "") + ")"; c.insertBefore(b, im); }); }
+  if (typeof renderSwipe96 === "function") { const RS0 = renderSwipe96; renderSwipe96 = function () { const r = RS0.apply(this, arguments); try { fullCards(); } catch (_) {} return r; }; }
   const st = document.createElement("style");
   st.textContent = ".meet140{flex:1;min-height:0;display:flex;flex-direction:column}" +
     "#sw96.in140{position:relative;inset:auto;z-index:auto;background:transparent;flex:1;min-height:420px}" +
     "#sw96.in140 .swh96{padding:6px 16px 4px}#sw96.in140 .swh96 [data-swx96]{display:none}" +
     "#sw96.in140 .swb96{padding:10px 0 12px}" +
+    "#sw96 .sc96 img{position:relative;z-index:1;object-fit:contain;object-position:center top}" +
+    "#sw96 .sc96 .bl140{position:absolute;inset:-20px;background-size:cover;background-position:center;filter:blur(22px) brightness(.55);transform:scale(1.1)}" +
+    "#sw96 .sc96 .sci96,#sw96 .sc96 .mp96,#sw96 .sc96 em{z-index:2}" +
     ".mm140{padding:4px 16px 2px}.mm140 small{color:#9C93A6;font-size:12px}.mm140 .hs{display:flex;gap:12px;overflow-x:auto;padding:6px 0 4px;scrollbar-width:none}" +
     ".mm140 button{position:relative;flex:none;display:grid;justify-items:center;gap:3px;background:none;border:0;color:#fff;font-size:11.5px;width:54px}" +
     ".mm140 button span{max-width:54px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mm140 button i{position:absolute;top:0;right:4px;width:10px;height:10px;border-radius:50%;background:var(--rose,#EE6F97);border:2px solid #0C0B10}";
