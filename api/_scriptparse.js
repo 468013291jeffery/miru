@@ -21,10 +21,10 @@ const FX_NAMES = {
 };
 const AMBIENT_IDS = new Set(['rain', 'storm', 'wind', 'snowfall', 'blizzard', 'ice', 'candle', 'embers', 'inferno', 'blackout', 'drip', 'bokeh', 'neon', 'godrays', 'dust', 'fireflies', 'aurora', 'galaxy', 'petals', 'hearts', 'none']);
 
-const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing', 核心问题: 'question' };
+const WORK = { 作品名: 'title', 取向: 'orient', 题材标签: 'tags', 一句话卖点: 'hook', 作品简介: 'premise', 故事背景: 'intro', 世界规则: 'world', 演出风格: 'style', 相处规则: 'rules', 玩家身份: 'player', 每章节奏: 'pacing', 核心问题: 'question', 对白风格: 'dialogueStyle' };
 const PERSON = { 全名: 'name', 常用称呼: 'short', 性别: 'gender', 年龄: 'age', 人物定位: 'tier', 能否发展感情: 'romanceable', 身份: 'role', 外貌和习惯: 'bio', 说话方式: 'voice', 性格: 'personality', 想要: 'want', 害怕: 'fear', 秘密: 'secret', 底线: 'boundaries', 对玩家的初始态度: 'toward_player', 吸引力: 'hooks', 开局认知: 'knows', 样例台词: 'sample_lines', 人设类型: 'archetype', 嘴上和心里: 'expression', 怎么调情: 'flirt', 怎么吃醋: 'jealousy', 玩家提要求时: 'when_asked' , 可解锁秘密: 'secrets', 怎么看其他人: 'others', 会怎么变: 'arc' };
 const CHAPTER = { 章序: 'no', 章名: 'title', 时间: 'time', 眼前的事: 'event', 章节导语: 'text', 开场对白: 'lines', 本章目标: 'goal', 这一级的表现: 'behavior', 本章音乐: 'bgm', 小游戏: 'game', 事件: 'events' };
-const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo', 这一级的表现: 'growth', 本章音乐: 'music', 小游戏: 'game', 事件: 'events' };
+const SCENE = { 地点: 'place', 在场人物: 'present', 本章安排: 'beat', 参考对白: 'referenceDialogue', 已知事实: 'facts', 角色任务: 'tasks', 眼前邀请: 'invitation', 开场建议: 'suggestions', 环境氛围: 'ambient', 关键特效: 'moment', 主场景图: 'image', 高光图: 'highlight', 照片: 'photo', 这一级的表现: 'growth', 本章音乐: 'music', 小游戏: 'game', 事件: 'events' };
 const ENDING = { 结局名: 'name', 触发条件: 'condition', 收束文字: 'text' };
 const ART = { 封面: 'cover', 人物图: 'portrait', 开场视频: 'video' };
 const NOT_FILLED = /^(?:不写|无|没有|选填)(?:[，,。].*)?$/;
@@ -280,6 +280,14 @@ function parseManuscript(text, opts) {
         return out;
       });
       const sc = { id, place: bi(s.place || ''), present, beat: s.beat || '', ref_lines: [], actor_payload: payload, interaction: { invitation: s.invitation || '', suggestions: s.suggestions || [] } };
+      if(s.facts)sc.facts=lines(s.facts);
+      if(s.referenceDialogue){
+        lines(s.referenceDialogue).forEach(l=>{const m=l.match(/^([^：:]{1,20})[：:]\s*(.+)$/),who=m&&names(m[1]);
+          if(!m||!who){err.push(st+'【参考对白】：要写已登记的角色名和台词：'+l.slice(0,40));return;}
+          if(!present.includes(who)){err.push(st+'【参考对白】：说话的人不在本场');return;}
+          sc.ref_lines.push({who,line:m[2].trim()});
+        });
+      }
       if (options.length) sc.choice = { q: '', options };
       if (s.growth) sc.growth = taskMap(Object.fromEntries(lines(s.growth).map(l => { const m = l.match(/^([^：:]+)[：:]\s*(.*)$/); return m ? [m[1].trim(),m[2]] : ['',l]; })), st + '【这一级的表现】');
       if (s.events) sc.events = lines(s.events);
@@ -353,7 +361,7 @@ function parseManuscript(text, opts) {
     cast, chapters: outChapters, endings: endingList,
     experience: { schema: 1, focus: 'player', storyIntroduction: true, chapterIntroduction: true, actionView: 'thirdPerson', choiceDock: 'contextual', allowFreeContinue: true, pacing: { mode: 'player-controlled', minExchanges: pace ? +pace[1] : 12, targetExchanges: pace ? +pace[2] : 18, allowExplicitSkip: true }, companionRules: bi(work.rules || '') },
     capabilities: { freeConversation: true, chapterNavigation: 'manual' },
-    source: 'manuscript',
+    source: 'manuscript', ...(work.dialogueStyle?{dialogueStyle:work.dialogueStyle,dialoguePolicy:{schema:1,maxChars:90}}:{}),
   };
   if (art.video) bible.openingVideo = art.video;
   else warn.push('开场视频：没有写【开场视频】，上线前要补一段 10 秒的开场视频脚本');

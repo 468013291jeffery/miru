@@ -152,6 +152,17 @@ function checkBible(b) {
   (Array.isArray(b.events) ? b.events : []).forEach(e => { if (!zhOf(e && e.text).trim()) err.push('事件池 ' + ((e && e.id) || '') + '：没有内容'); if (e && e.fx) checkFxId(e.fx, '事件池 ' + e.id + ' 特效', err, warn); if (e && e.bgm && !MOODS.includes(e.bgm)) warn.push('事件池 ' + e.id + ' 音乐：「' + e.bgm + '」不在情绪表里'); });
   (Array.isArray(b.cast) ? b.cast : []).forEach(k => [].concat((k && k.secrets) || []).forEach(s => { if (!String((s && s.text) || '').trim()) err.push('人物 ' + ((k && k.key) || '') + ' 秘密：没有内容'); }));
   if (exp && EMOJI.test(zhOf(b.intro))) warn.push('故事背景（intro）：含表情符号，和固定版式不协调');
+  // Optional source contract: fail a publish/build when exposition or authored dialogue was silently lost.
+  const contract=b.sourceContract;
+  if(contract&&contract.schema===1){
+    const intro=zhOf(b.intro),hash=require('crypto').createHash('sha256').update(intro).digest('hex');
+    if(hash!==contract.introSha256||intro.length!==contract.introChars)err.push('原稿一致性：故事背景与已审核原稿不一致');
+    const allScenes=chapters.flatMap(c=>c.scenes||[]),count=allScenes.reduce((n,s)=>n+(s.authored_dialogue||[]).length,0);
+    if(allScenes.length!==contract.scenes)err.push('原稿一致性：场景数量改变');
+    if(count!==contract.dialogueLines)err.push('原稿一致性：对白缺失或重复');
+    for(const p of b.cast||[])if(p.voice===zhOf(p.role))err.push('人物 '+p.key+'：说话方式误用了身份概括');
+    for(const sc of allScenes)for(const k of sc.present||[])if(!(sc.actor_payload||{})[k])err.push('原稿一致性：'+sc.id+'缺少'+k+'的场景任务');
+  }
   return { ok: !err.length, err, warn, stats };
 }
 

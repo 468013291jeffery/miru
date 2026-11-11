@@ -33,3 +33,6 @@ execFileSync(process.execPath,['tools/unread-selftest.cjs'],{cwd:root,stdio:'inh
 assert(build.includes('"app134_m107.js"'),'Missing Eclipse Oath runtime');
 execFileSync(process.execPath,['tools/build-m107-runtime.cjs','--check'],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,['tools/m107-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/north-light-selftest.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/authored-runtime-selftest.cjs'],{cwd:root,stdio:'inherit'});
