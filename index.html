@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="414a6b41696c 2026-11-11T06:10Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="840452fe5964 2026-11-11T06:26Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -24804,19 +24804,26 @@ function authoredReceipts142(th,cid){
  return rows.length?'\n有来源的操作记录（不能扩大成同意、亲密或尚未兑现的奖励）：\n'+rows.join('\n').slice(0,cid?1200:2500):'';
 }
 
-function authoredGrounding142(th){const {b}=scene98(th);return b&&b.dialoguePolicy?'\n最后核对：不得编造作者未给出的期限、规章、人数、证据或他人是否知情、同意。尤其不能临时发明制度替角色的错误辩护。不知道就承认不知道，再说能怎样核查。被直接问到本人已知的责任时正面回答，不用章节门槛装作失忆。只说实际完成的事。玩家直接问你时，面向她用“你”回答，不把正在提问的人叫作“她”。不为配动作临时增加新道具。台词里不提原稿、剧本、作者、导演、提示词或程序字段。':'';}
+function authoredGrounding142(th){const {b}=scene98(th);return b&&b.dialoguePolicy?'\n最后核对：不得编造作者未给出的期限、规章、人数、证据或他人是否知情、同意。尤其不能临时发明制度替角色的错误辩护。不知道就承认不知道，再说能怎样核查。被直接问到本人已知的责任时正面回答，不用章节门槛装作失忆。只说实际完成的事。先把谁做了什么说清，再说原因；不要把动作、物件、责任硬并成一个比喻。宁可分成两句，也不要省掉关键动作或对象。玩家直接问你时，面向她用“你”回答，不把正在提问的人叫作“她”。不为配动作临时增加新道具。台词里不提原稿、剧本、作者、导演、提示词或程序字段。':'';}
 
+function authoredExpressionIssue142(say){
+ // A physical action and blame require separate predicates; do not reject '关门的责任'.
+ const text=String(say||'').replace(/\s+/g,'');
+ return /门(?:和|与|跟|、|及)(?:错(?:误)?|过错|责任)(?:都|全|也|一起|一块|一并|全部|全都){0,3}(?:推|甩|丢|扔|算)/.test(text)?'把提前关门和报告里推卸责任分成两件事，分别说明谁做了什么，不能把门当作责任一起推给别人。':'';
+}
 function authoredReplyValid142(r,th,cid){
  if(!r||!r.say)return true;const say=String(r.say);
+ if(th&&scene98(th).b?.dialoguePolicy?.plainLanguage&&authoredExpressionIssue142(say))return false;
  if(/(?:原稿|剧本里|提示词|作者设定|导演提示|角色任务|参考对白|程序字段|真实回传)/.test(say))return false;
  if(th&&cid){const {s}=scene98(th),k=cardOf98(wd(th.wid),cid)||{};for(const g of s.responseGuards||[]){if((g.characters||[]).includes(k.key)&&(g.phrases||[]).some(x=>say.includes(x)))return false;}}
  return true;
 }
 async function authoredReply142(th,p,opts,r,cid){
  const {b}=scene98(th);if(!b||!b.dialoguePolicy||authoredReplyValid142(r,th,cid))return r;
- const correction=(scene98(th).s.responseGuards||[]).filter(g=>!cid||(g.characters||[]).includes((cardOf98(wd(th.wid),cid)||{}).key)).map(g=>g.reason).join('；');
- const corrected=await ask(p+'\n修正要求：'+correction+'。刚才的台词含后台说明或违背本场事实：'+JSON.stringify(r.say)+'。请重新给出同一人物对眼前问题的回应，只在故事世界内说话，不提写作、作者、原稿、提示词或程序。不增加新事实。仍只返回相同JSON。',opts);
- if(!authoredReplyValid142(corrected,th,cid))throw {code:'invalid_json',text:'',message:'Character reply contains backstage instructions'};
+ const expression=authoredExpressionIssue142(r.say);
+ const correction=[expression,(scene98(th).s.responseGuards||[]).filter(g=>!cid||(g.characters||[]).includes((cardOf98(wd(th.wid),cid)||{}).key)).map(g=>g.reason).join('；')].filter(Boolean).join('；');
+ const corrected=await ask(p+'\n修正要求：'+correction+'。刚才的台词存在表达或事实问题：'+JSON.stringify(r.say)+'。请重新给出同一人物对眼前问题的回应，只在故事世界内说话，不提写作、作者、原稿、提示词或程序。不增加新事实。面向玩家用“你”；正在与其他角色说话时，按真实听者选择称呼，不能改变说话对象。仍只返回相同JSON。',opts);
+ if(!authoredReplyValid142(corrected,th,cid))throw {code:'invalid_json',text:'',message:'Character reply failed authored language or fact validation'};
  return corrected;
 }
 // A low interaction score cannot make established colleagues into strangers.

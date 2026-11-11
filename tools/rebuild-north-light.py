@@ -38,11 +38,11 @@ if not source.exists():
  source.write_text(text)
  dump(D/'editorial-changes.json',[{'before':a,'after':b} for a,b in replacements.items()])
 text=source.read_text();b=json.loads((R/f'art/official/{WID}.bible.json').read_text())
-intro=original.split('故事背景 玩家进入时首先看到\n\n',1)[1].split('\n玩家身份',1)[0].strip()
+intro=text.split('故事背景 玩家进入时首先看到\n\n',1)[1].split('\n玩家身份',1)[0].strip()
 b['intro']=bi(intro);b['premise']=bi(intro)
 b['dialoguePolicy']={'schema':1,'plainLanguage':True,'maxChars':90}
 b['relationshipLabel']=bi('旧识')
-b['dialogueStyle']='说日常话。先回答玩家刚问的具体事情，再解释原因。工作上需要提设备或规则时，随口解释它是干什么的，不连续堆“核验、凭据、代签、回执”等词。不把主持人说明念给玩家听，不反复用抽象宣言收尾。允许一两句完整的话，把因果说清楚。'
+b['dialogueStyle']='说日常话。先回答玩家刚问的具体事情，再解释原因。工作上需要提设备或规则时，随口解释它是干什么的，不连续堆“核验、凭据、代签、回执”等词。不把主持人说明念给玩家听，不反复用抽象宣言收尾。动作和责任分别说清：门是提前关的，责任是后来在报告里推给别人的；分别用完整的动作说明，不能共用一个含糊的动词。需要两句就分开说，不为缩短字数硬合成一句。说明谁做了什么，代词要让听者知道在指谁。允许一两句完整的话，把因果说清楚。'
 b['world']='北灯是近未来美国西北的一座避难所。灰潮是危险的风沙，不是怪物。原来有240名居民（包含伊莱救下的12名病人），这次玩家带11人返回，总数252。吃饭、床位、医疗和取暖不靠恋爱或游戏输赢交换。聊天和离线不推进第三夜的实施期限。旧授权片是一块曾交伊莱保管的工程凭证，只能打开旧广播和维护频道的代签功能，不是万能钥匙。死亡名册与旧广播分开管理。假广播只能剪接玩家以前录过的工作语音，不能造出新句子。桥芯是各套设备都需要的一枚供能核心，只有一颗，最终只能选一种用途。'
 b['style']='照当前场景的事实和待选分支演，不连续播放互斥分支。角色先接玩家的问题，不把后台条件、题目答案或主持人结论说成台词。不替玩家说话、行动、同意、原谅或恋爱。只把真实操作回传和已在场演出的事当经历。知情人被直接问到自己的责任要正面答，后章改为核实，不重新装不知道。名字、署名与公共帮助不附带恋爱条件。各人的说话方式分别执行。'
 keys={'诺亚':'c01','伊莱':'c02','玛拉':'c03','海伦':'c04','灯塔':'c05'}
@@ -93,6 +93,12 @@ for ci,cm in enumerate(chapters):
   s['beat']=body;s['actor_payload']={keys[n]:v for n,v in tasks[scene_index].items()};scene_index+=1
   s['facts']=facts[scene_index-1]
   if s['id']=='c01s01':s['responseGuards']=[{'characters':['c04'],'phrases':['按北灯的规矩','按北灯规矩','按规矩','按规定','失联满期','失联满三十天','失联满十二天'],'reason':'死亡登记是海伦基于失联作出的错误判断，不能编造失联到期就认定死亡的条款来替自己辩护。直接说明是自己判错，当时没有死亡现场证据。'}]
+  if s['id']=='c04s02':
+   s['facts'].append('十二名病人早已因伊莱的交易被接纳，包含在原240人里，不是现在等玩家决定要不要救。伊莱必须承担未经同意转交授权片的责任。')
+   s['responseGuards']=[{'characters':['c02'],'phrases':['你救不救他们','等你救他们','你决定救不救'],'reason':'十二名病人早已被接纳。解释伊莱过去擅自交易的责任，不把已经完成的救援说成玩家现在需要作的选择。'}]
+  if s['id']=='c06s01':
+   s['facts'].append('附站指三个独立的居住站，不是医疗、取暖、水泵三条功能管线。若最终选择分迁，才把桥芯不可逆加工成三套匹配器，各站实际住84人、容量90。测试不加工桥芯。4格只是测试附站用的电量，不能据此编造实际生活比其他方案多耗几格电。')
+   s['responseGuards']=[{'characters':['c03'],'phrases':['医疗、取暖、水泵','医疗、取暖和水泵','四格比三格多烧','三条功能管线','三个功能回路'],'reason':'附站是三个独立居住站，分迁时每站84人，不是按医疗、取暖、水泵分成三条线。4格仅指本轮测试耗电，不能推导长期生活用电更贵。测试尚不加工或安装桥芯。'}]
   # Only unconditional opening speech is an actor anchor. Conditional lines stay attached to their selected branches.
   opening=re.split(r'【(?!开场导语)',body,maxsplit=1)[0]
   refs=[]
@@ -126,7 +132,7 @@ for ci,cm in enumerate(chapters):
   archive.append({'scene':s['id'],'dialogue':len(all_dialogue),'anchors':len(refs),'choices':len(opts)})
 assert scene_index==16
 b['relations']=[{'a':'c01','b':'c02','text':'旧外勤搭档，因诺亚封门弃人决裂。会互揭错误，也要合作；不能互相替对方洗账。'},{'a':'c03','b':'c04','text':'玛拉争居民自治，海伦维护管理控制。玩家是否恋爱不改变她们的立场。'}]
-b['contentRevision']='north-light-20261111-r2';b['sourceContract']={'schema':1,'sourceFile':'scripts/north-light-v1/story-reviewed.txt','sourceSha256':hashlib.sha256(text.encode()).hexdigest(),'introSha256':hashlib.sha256(intro.encode()).hexdigest(),'introChars':len(intro),'dialogueLines':dialogue_count,'scenes':16}
+b['contentRevision']='north-light-20261111-r3';b['sourceContract']={'schema':1,'sourceFile':'scripts/north-light-v1/story-reviewed.txt','sourceSha256':hashlib.sha256(text.encode()).hexdigest(),'introSha256':hashlib.sha256(intro.encode()).hexdigest(),'introChars':len(intro),'dialogueLines':dialogue_count,'scenes':16}
 b['player']['history']=text.split('玩家身份 你带着怎样的过去进来',1)[1].split('人物看点',1)[0].strip()
 dump(R/f'art/official/{WID}.bible.json',b)
 # Compatibility script retains actual authored dialogue and choices, never a synopsis-only shell.
@@ -145,7 +151,7 @@ for c in b['chapters']:
  for o in options:rows+=['#### '+o['key']+'｜'+o['t'],'旁白：'+re.sub(r'\s+',' ',o['effect']).replace('插入','接入')]
  rows+=['# ·'];chap.append({'n':c['n'],'t':c['title']['zh'],'md':'\n'.join(rows).replace('插入','接入')})
 old['chapters']=chap;old['config']['premise']=intro;dump(D/'admin-import.json',old)
-dump(D/'fidelity.json',{'schema':1,'source':b['sourceContract'],'introMatchesOriginal':b['intro']['zh']==intro,'scenes':archive,'dialogueLines':dialogue_count,'characterVoiceDistinct':all(p['voice']!=p['role']['zh'] for p in b['cast'])})
+dump(D/'fidelity.json',{'schema':1,'source':b['sourceContract'],'introMatchesReviewedSource':b['intro']['zh']==intro,'scenes':archive,'dialogueLines':dialogue_count,'characterVoiceDistinct':all(p['voice']!=p['role']['zh'] for p in b['cast'])})
 leads=json.loads((R/'art/official/leads.json').read_text())
 for w in leads['works']:
  if w['wid']==WID:
