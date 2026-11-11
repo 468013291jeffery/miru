@@ -37,3 +37,5 @@ execFileSync(process.execPath,['tools/m107-selftest.cjs'],{cwd:root,stdio:'inher
 assert(build.includes('\"app145_narration.js\"'),'Missing story narration v2 runtime');
 execFileSync(process.execPath,['tools/build-narration145.cjs','--check'],{cwd:root,stdio:'inherit'});
 execFileSync(process.execPath,['tools/narrative145-selftest.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/north-light-selftest.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/authored-runtime-selftest.cjs'],{cwd:root,stdio:'inherit'});

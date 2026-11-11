@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "source": {
+    "schema": 1,
+    "sourceFile": "scripts/north-light-v1/story-reviewed.txt",
+    "sourceSha256": "cde688e2e6943d43361842888ddf8f1de7ec8404780c697353d7eded5f1bf8bb",
+    "introSha256": "2a70d74cb1ef29e6952bae563e4ae443296fc3a131e662769046ea17a0105d2c",
+    "introChars": 551,
+    "dialogueLines": 150,
+    "scenes": 16
+  },
+  "introMatchesOriginal": true,
+  "scenes": [
+    {
+      "scene": "c01s01",
+      "dialogue": 10,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c01s02",
+      "dialogue": 10,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c02s01",
+      "dialogue": 7,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c02s02",
+      "dialogue": 12,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c03s01",
+      "dialogue": 11,
+      "anchors": 8,
+      "choices": 3
+    },
+    {
+      "scene": "c03s02",
+      "dialogue": 9,
+      "anchors": 6,
+      "choices": 3
+    },
+    {
+      "scene": "c04s01",
+      "dialogue": 10,
+      "anchors": 7,
+      "choices": 0
+    },
+    {
+      "scene": "c04s02",
+      "dialogue": 10,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c05s01",
+      "dialogue": 10,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c05s02",
+      "dialogue": 15,
+      "anchors": 7,
+      "choices": 3
+    },
+    {
+      "scene": "c06s01",
+      "dialogue": 7,
+      "anchors": 7,
+      "choices": 0
+    },
+    {
+      "scene": "c06s02",
+      "dialogue": 8,
+      "anchors": 0,
+      "choices": 3
+    },
+    {
+      "scene": "c07s01",
+      "dialogue": 9,
+      "anchors": 5,
+      "choices": 4
+    },
+    {
+      "scene": "c07s02",
+      "dialogue": 8,
+      "anchors": 5,
+      "choices": 3
+    },
+    {
+      "scene": "c08s01",
+      "dialogue": 9,
+      "anchors": 0,
+      "choices": 0
+    },
+    {
+      "scene": "c08s02",
+      "dialogue": 5,
+      "anchors": 0,
+      "choices": 0
+    }
+  ],
+  "dialogueLines": 150,
+  "characterVoiceDistinct": true
+}

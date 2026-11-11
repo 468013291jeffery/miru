@@ -29,7 +29,7 @@ async function install98(id) {
   const pals = [["#C98A6B", "#1B1520"], ["#7A63C9", "#141024"], ["#5E9E96", "#13212A"], ["#B0607A", "#21131B"]];
   all.forEach((c, i) => { const id2 = cid98(wid, c.key), sh0 = c.short || c.name || { zh: c.key, en: c.key }, cut = v => String(v || "").split(/\s*[\/／]\s*/)[0].replace(/[（(].*$/, "").trim(), sh = { zh: cut(sh0.zh) || cut(sh0.en), en: cut(sh0.en) || cut(sh0.zh) };
     const x = S.mine.chars[id2] || {};
-    S.mine.chars[id2] = Object.assign(x, { n: LZ98(sh), n94: { zh: sh.zh || sh.en, en: sh.en || sh.zh }, full: c.name, bkey: c.key, age: +c.age || 0, g: c.gender === "f" ? "f" : "m", w: wid, pal: pals[i % 4], a: "charm", v: x.v || { pitch: 1, rate: 1 },
+    S.mine.chars[id2] = Object.assign(x, { n: LZ98(sh), n94: { zh: sh.zh || sh.en, en: sh.en || sh.zh }, full: c.name, bkey: c.key, romanceable: c.romanceable !== false, entity: c.entity || "human", age: +c.age || 0, g: c.gender === "f" ? "f" : "m", w: wid, pal: pals[i % 4], a: "charm", v: x.v || { pitch: 1, rate: 1 },
       role: { zh: (c.role && (c.role.zh || c.role.en)) || "", en: (c.role && (c.role.en || c.role.zh)) || "" }, looks: { zh: c.bio || c.brief || "", en: c.bio || c.brief || "" }, vibe: { zh: (c.personality || "").slice(0, 80), en: (c.personality || "").slice(0, 80) },
       tells: { en: [], zh: [] }, twist: { en: "", zh: "" }, likes: { en: "", zh: "" }, secret: { en: "", zh: "" }, pitch: { en: "", zh: "" }, solo: { en: "…", zh: "…" }, by: "@miru" });
     const art = A["char_" + c.key] || (sh.zh && A["char_" + sh.zh]) || (c.name && c.name.zh && A["char_" + c.name.zh]); if (art) S.art[id2] = art; });
@@ -156,7 +156,14 @@ function introductions98(th) {
   const seen = A.introductions98 || (A.introductions98 = {});
   // Stable IDs also prevent duplicates when a saved thread is reopened.
   const show = (key, title, txt, extra) => {
-    if (!txt || seen[key] || th.msgs.some(m => m.intro98 === key)) return;
+    if (!txt) return;
+    const existing=th.msgs.find(m=>m.intro98===key);
+    if(existing){
+      // Exposition is author data, not a played event. Refresh only this card; never restart the save.
+      if(key==='story'&&existing.txt!==txt){existing.txt=txt;existing.title=title;existing.contentRevision=b.contentRevision||null;seen[key]=true;save();}
+      return;
+    }
+    if(seen[key])return;
     appendMsg(th, Object.assign({who:'sys', k:'card', title, txt, intro98:key, at:Date.now()}, extra));
     seen[key] = true;
   };
@@ -303,6 +310,7 @@ function allowedSpeakers98(th,s) {
 }
 function applyChoiceState98(th, option) {
   const state = experienceState98(th), value = option.state || {};
+  if(scene98(th).b.key==='w_scmwaymue65be8983c9b'&&scene98(th).s.id==='c07s01'&&['A','B','C'].includes(value.authoredRoute)){th.b98.authored142=Object.assign({},th.b98.authored142,{route:value.authoredRoute,delegated:value.delegated===true});}
   if (['open','friends'].includes(value.romanceMode)) state.romanceMode=value.romanceMode;
   if (value.focus && (value.focus==='both' || th.cast.includes(byKey98(th,value.focus)))) state.focus=value.focus;
   const {s} = scene98(th);
@@ -363,7 +371,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "刚才：\n" : "Just now:\n") + ((typeof contextOn135 === "function" && contextOn135(th) ? contextTail135(th,14) : tail98(th,14)) || (zh ? "（刚开始）" : "(just starting)")) +
     (act ? "\n\n" + (zh ? "玩家这一轮：" : "The player's move: ") + (act.mode === "think" ? (zh ? "（心里想，角色不知道）" : "(private thought — characters don't know) ") : act.mode === "act" ? (zh ? "（动作）" : "(action) ") : "") + act.txt + (act.to ? (zh ? "（对 " : " (to ") + first(ch(act.to).n) + "）" : "") : "") +
     (act && act.effect ? "\n" + (zh ? "这个选择的后果（作者设定）：" : "Consequence of this choice (by design): ") + act.effect : "") +
-    experienceContext98(th) + authoredDirector98(th,s) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
+    experienceContext98(th) + authoredDirector98(th,s) + authoredReceipts142(th) + (window.FXBUS ? FXBUS.envLine(th, zh) : "") +
     (policy && s.interaction ? "\n当前可玩的桥段（邀请不是已完成）：" + JSON.stringify(s.interaction) : "") +
     (policy && mode === "enter" ? "\n故事背景和本章导语已由界面显示，旁白不要重述背景；直接从眼前的小事件开始。" : "") +
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
@@ -391,14 +399,14 @@ async function actor98(th, cid, intent, turn) {
   const p = (zh ? "你是「" + ((k.name && LZ98(k.name)) || x.n) + "」。你是一个有自己想法的人，不是剧情工具。你只知道自己经历过或被告知的事（见你的记忆）；不知道剧情会怎么走，不知道" + you + "心里在想什么。"
                 : "You are " + ((k.name && LZ98(k.name)) || x.n) + ". You're a person with your own mind, not a plot device. You only know what you lived through or were told (your memories); you don't know where the story goes or what " + you + " is thinking.") +
     "\n" + (zh ? "身份：" : "Who you are: ") + LZ98(k.role) + "，" + (k.age ? k.age + (zh ? "岁" : " y/o") : "") + "\n" + (k.bio || "") +
-    (policy ? "\n你本人是" + (k.gender === "f" ? "女性" : "男性") + "。act只写你自己的动作，主语用角色姓名或省略，不用我、他、她；玩家的性别不是你的性别。" : "") +
+    (policy ? (k.entity==='system'?"\n你是设施AI，不设人类性别。":"\n你本人是"+(k.gender==='f'?"女性":"男性")+"。") + "act只写你自己的动作，主语用角色姓名或省略，不用我、他、她；玩家的性别不是你的性别。" : "") +
     (k.voice ? "\n" + (zh ? "说话方式：" : "How you talk: ") + k.voice : "") + (k.personality ? "\n" + (zh ? "性格机制：" : "Personality: ") + String(k.personality).slice(0, 600) : "") +
     (k.want ? "\n" + (zh ? "你想要：" : "You want: ") + k.want : "") + (k.fear ? "\n" + (zh ? "你害怕：" : "You fear: ") + k.fear : "") +
     ((!k.unlockableSecrets || (k.unlockableSecrets||[]).some(x=>th.b98.ch>=x.from&&(th.love[cid]||0)>=x.minLove)) && k.secret ? "\n" + (zh ? "你的秘密（不会轻易说出口）：" : "Your secret (you don't give it away easily): ") + k.secret : "") + (k.boundaries ? "\n" + (zh ? "底线：" : "Boundaries: ") + k.boundaries : "") +
     (k.toward_player ? "\n" + (zh ? "你对" + you + "的初始态度：" : "Your starting attitude toward " + you + ": ") + k.toward_player : "") + (k.hooks ? "\n" + (zh ? "你的吸引点 / 高光行为：" : "What makes you magnetic: ") + String(k.hooks).slice(0, 500) : "") +
-    persona98(k, you, zh) + authoredActor98(th,cid,k) +
+    persona98(k, you, zh) + authoredActor98(th,cid,k) + authoredDialogue142(th,cid) +
     /* 2026-11-06 玩家：回复像客服。原来好感低于 12 时写的是「保持礼貌关照」，等于让角色客气；现在初见也按人设主动，只有玩家拒绝时才收住 */
-    "\n" + (zh ? "你现在对" + you + "的感觉：" : "How you feel about " + you + " now: ") + (policy && (th.love[cid] || 0) < 12 ? L98("刚认识，但你已经被吸引了；按你的人设去靠近，不用客气。玩家拒绝或想做朋友就收住", "you just met, but you're already drawn in; approach in your own way, no politeness act. If the player declines or wants friendship, pull back") : stage98(th.love[cid] || 0)) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
+    "\n" + (zh ? "你现在对" + you + "的感觉：" : "How you feel about " + you + " now: ") + authoredInitialFeeling142(th,cid,k) + "（" + Math.round(th.love[cid] || 0) + "/100）" +
     (typeof contextOn135 === "function" && contextOn135(th) ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + contextMemory135(th,cid) : (cd.mem.length ? "\n" + (zh ? "你的记忆：\n" : "Your memories:\n") + cd.mem.slice(-22).map(m => "- " + m).join("\n") : "")) +
     (k.sample_lines && k.sample_lines.length ? "\n" + (zh ? "你说话的样子（参考语气，不要照抄）：" : "How you sound (tone only, don't copy): ") + k.sample_lines.slice(0, 5).map(z => "「" + z + "」").join(" ") : "") +
     "\n" + (zh ? "世界里的规矩：" : "Rules of your world: ") + String(b.world || "").slice(0, 500) +
@@ -412,10 +420,12 @@ async function actor98(th, cid, intent, turn) {
     stance98(th, cid, turn, you, zh) + feeling98(zh) + heat98(th, zh, "actor") + photoSay98(turn, zh) + (typeof arcActor98 === "function" ? arcActor98(th, cid, turn, zh) : "") +
     (policy ? "\n本轮硬约束：你此刻就在" + LZ98(s.place) + "，身边只有" + (names98(here98(th, s).filter(c => c !== cid)) || "玩家") + "和玩家。不能把自己或用户写到吧台、门外等新地点，不能说在场人没跟过来，也不能和不在场的人说话。这里只回应或提出邀请，不完成跨场移动。动作只写你自己的眼前动作。" + experienceContext98(th) : "") +
     redo98(zh) +
-    "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（" + (policy ? "用第三人称姓名或省略主语，不用‘我抬手／我靠近’；只写有意义、眼前可见的动作，没有就空" : "第一人称「我…」") + "，≤25 字）和一句台词（≤45 字，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
+    "\n\n" + (zh ? "（" + you + gx98(th) + "）台词必须用简体中文——不管参考台词是什么语言；只有人名、地名、专有名词可以保留英文。不要重复你刚说过的话。" : "(" + you + gx98(th) + ") Speak English. Don't repeat what you just said. ") + (zh ? "轮到你。只写你自己：可选的一个动作（" + (policy ? "用第三人称姓名或省略主语，不用‘我抬手／我靠近’；只写有意义、眼前可见的动作，没有就空" : "第一人称「我…」") + "，≤25 字）和一句或两句台词（≤" + ((b.dialoguePolicy&&b.dialoguePolicy.maxChars)||45) + " 字，把意思说清楚，像真人说话，符合你的口吻）。不写别人，不写旁白，不替" + you + "决定任何事。feel：这一刻你对" + you + "的感觉变化 -5~5。remember：你会记住的一件事（≤25 字，可空）。"
            : "Your turn. Only yourself: an optional action (" + (policy ? "third person or no subject, visible meaningful gesture only, otherwise empty" : "first person") + ", ≤15 words) and one line (≤30 words, natural, in your voice). No one else's lines, no narration, never decide anything for " + you + ". feel: change in how you feel about " + you + ", -5..5. remember: one thing you'll remember (≤15 words, may be empty).") +
+    authoredGrounding142(th) +
     '\nReply with ONLY JSON: {"act":"","say":"...","feel":0,"remember":""} in ' + LANG98() + ".";
-  return ask(p, { maxTokens: 320, timeout: typeof narrativeOn145 === "function" && narrativeOn145(th) ? 20000 : undefined, isolatedContext: typeof contextOn135 === "function" && contextOn135(th) });
+  const options={maxTokens:320,timeout:typeof narrativeOn145==='function'&&narrativeOn145(th)?20000:undefined,isolatedContext:typeof contextOn135==='function'&&contextOn135(th)};
+  const reply=await ask(p,options);return authoredReply142(th,p,options,reply,cid);
 }
 /* ---------- 玩家的感官反应（2026-11-07 用户拍板放开）----------
    旁白原来一律不写玩家；现在允许导演另给一句「不由自主的身体反应」：心跳、呼吸、脸发烫、没有往后退。
@@ -1106,7 +1116,7 @@ function authoredDecline98(th,act){
   const nonce=crypto.randomUUID(),url=new URL('/scripts/north-light-v1/games.html',location.href);
   url.searchParams.set('game',g.code);url.searchParams.set('nonce',nonce);url.searchParams.set('actor',(cardOf98(wd(th.wid),id)||{}).short.zh);
   sheet('<h2>'+esc(g.name)+'</h2><iframe id="northlight-frame" title="'+esc(g.name)+'" src="'+esc(url.href)+'" style="width:100%;height:70vh;border:0;border-radius:12px" sandbox="allow-scripts allow-same-origin"></iframe><button class="btn btn-g btn-block" data-authored-game98="skip">跳过并继续</button>');
-  const frame=document.getElementById('northlight-frame');active={th,s,g,id,nonce,frame};
+  const frame=document.getElementById('northlight-frame');active=frame?{th,s,g,id,nonce,frame}:null;
  };
  window.addEventListener('message',e=>{
   const a=active,d=e.data;if(!a||e.origin!==location.origin||e.source!==a.frame.contentWindow||!a.frame.isConnected||!d||d.type!=='northlight-receipt'||d.nonce!==a.nonce||d.game!==a.g.code)return;

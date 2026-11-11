@@ -102,3 +102,8 @@ test('故事卡升级：核心问题、处境、秘密、关系、台阶表现�
   assert(parseManuscript(t.replace('玩法：找线索', '玩法：踢足球')).err.some(e => /不在小游戏库/.test(e)));
 });
 console.log('manuscript selftest: ' + checks + ' 项通过');
+
+const referenceSample=sample.replace('【演出风格】','【对白风格】用日常口语解释具体的事。\n【演出风格】').replace('【本章安排】','【参考对白】沈砚：先把伞放下，画不会淋着。\n【本章安排】');
+const rr=parseManuscript(referenceSample,{id:'w_ref_test'});assert.deepEqual(rr.err,[]);assert.equal(rr.bible.dialogueStyle,'用日常口语解释具体的事。');assert.equal(rr.bible.chapters[0].scenes[0].ref_lines[0].line,'先把伞放下，画不会淋着。');
+const badRef=parseManuscript(referenceSample.replace('【参考对白】沈砚：','【参考对白】陌生人：'),{id:'w_bad_ref'});assert(badRef.err.some(x=>x.includes('参考对白')));
+console.log('Authored reference dialogue, speaker validation and work dialogue style preserved.');

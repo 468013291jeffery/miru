@@ -72,6 +72,10 @@ function loveAllowed(th, id) {
       const c = ch(id);
       if (c && c.romanceable === false) return false;      // 非恋爱对象：好感根本不参与
     }
+    // Old installed cards may predate romanceable; consult the authoritative story card as well.
+    if(th.b98&&typeof cardOf98==='function'&&typeof wd==='function'){
+      const authored=cardOf98(wd(th.wid),id);if(authored&&authored.romanceable===false)return false;
+    }
     const p = th.present;
     if (!Array.isArray(p) || !p.length) return true;
     return p.indexOf(id) >= 0;
