@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="6a510bc7fb3c 2026-11-11T03:31Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="76e692242de6 2026-11-11T03:45Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -24258,11 +24258,11 @@ if(typeof document!=='undefined'&&document.head){
 
 /* ================= 《第八誓约》M108 运行时（2026-11-10）=================
    终章（第 32 章）的选择只是「后日谈怎么过」，三个选项都应该开放，
-   所以标了 ⟦SET|m108⟧ 的存档不走通用的「最后一章 A 要攒够 A 选项」规则。
+   所以标了 ⟦SET|m108⟧（《第八誓约》）或 ⟦SET|m109⟧（《我死过一次，他们都记得》）的存档不走通用的「最后一章 A 要攒够 A 选项」规则。
    真正的结局在第 32 章开头按第 23 章的心意（heart_*）和第 31 章的路线（route_*）播放。 */
 (function () {
   "use strict";
-  const isM108 = th => !!(th && th.pk && th.pk.flags && th.pk.flags.m108);
+  const isM108 = th => !!(th && th.pk && th.pk.flags && (th.pk.flags.m108 || th.pk.flags.m109));
   if (typeof EN === "function") { const need = EN; EN = function (th) { return isM108(th) ? 0 : need.apply(this, arguments); }; }
 })();
 
