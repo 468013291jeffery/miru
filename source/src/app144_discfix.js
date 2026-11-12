@@ -652,3 +652,70 @@
     finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
   };
 })();
+
+/* ===== 2026-11-13 · 章末选项点不动 + 「帮我想」统一 =====
+   1 · 章末三选一出现时，如果上一句（比如角色刚回的话）还在等你「轻点屏幕」确认，点选项会卡在那句上，看起来像没反应。
+       ⇒ 选项出现 / 点选项时，先把这句确认掉（朗读中就先停掉）；全局 busy 卡住超过 20 秒也自动放开，并给提示而不是静默。
+   2 · 「不知道说什么？帮我想几句」和剧情里的「✨ AI 帮我想」是同一个功能，两种样子 ⇒ 统一成「✨ AI 帮我想」；
+       必须几选一（输入框熄灭）时不显示，剧情面板里已经有「✨ AI 帮我想」时也不重复显示。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  let busySince = 0;
+  setInterval(() => { try { busySince = busy ? (busySince || Date.now()) : 0; } catch (_) {} }, 1000);
+  function ackReading(th) {
+    try {
+      const R = window.READING; if (!R || !th) return;
+      const e = R.pending.get(th.id); if (!e) return;
+      if (R.voice && R.voice.busy()) stopVoice();
+      e.finish();
+    } catch (err) { console.warn("[choice147] ack", err); }
+  }
+  if (typeof packPick === "function") {
+    const pick = packPick;
+    packPick = function (k) {
+      const th = S.threads[curT];
+      try {
+        if (th && th.pk && th.pk.st === "choose") {
+          ackReading(th);
+          if (busy) {
+            if (busySince && Date.now() - busySince > 20000) { busy = false; busySince = 0; try { typing(false); } catch (_) {} }
+            else { toast(zh() ? "上一句还在生成，稍等一下再选" : "Still writing the last line — pick again in a moment"); return; }
+          }
+        }
+      } catch (err) { console.warn("[choice147] pick", err); }
+      return pick.apply(this, arguments);
+    };
+  }
+  /* 选项一出现就把还在等确认的那句确认掉，免得「轻点屏幕继续」和选项同时出现 */
+  if (typeof packRefresh === "function") {
+    const ref = packRefresh;
+    packRefresh = function (th) {
+      const r = ref.apply(this, arguments);
+      try { if (th && th.pk && th.pk.st === "choose" && curT === th.id) setTimeout(() => { ackReading(th); mark(); }, 0); else mark(); } catch (_) {}
+      return r;
+    };
+  }
+  /* 空的联想行：按钮改成和剧情面板一样的「✨ AI 帮我想」（同一个处理函数）；有联想时仍是「↻ 换一批」 */
+  if (typeof sgMoreBtn === "function") {
+    const more = sgMoreBtn;
+    sgMoreBtn = function () {
+      try { if (!sugg.length) return '<button class="sgmore ai147" data-ai97="1">✨ ' + (zh() ? "AI 帮我想" : "AI ideas") + '</button>'; } catch (_) {}
+      return more.apply(this, arguments);
+    };
+  }
+  function mark() {
+    try {
+      const chat = document.getElementById("s-chat"); if (!chat) return;
+      const th = S.threads[curT];
+      const locked = !!(th && typeof pkBusy === "function" && pkBusy(th));
+      const dup = !!chat.querySelector("#pkwrap [data-ai97]");
+      chat.classList.toggle("ch147", locked || dup);
+    } catch (_) {}
+  }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); mark(); return r; }; }
+  setInterval(mark, 1500);
+  const st = document.createElement("style");
+  st.textContent = ".ch147 #sugg [data-sgmore],.ch147 #sugg .ai147{display:none!important}.ch147 .tap-hint{display:none!important}";
+  document.head.appendChild(st);
+})();
