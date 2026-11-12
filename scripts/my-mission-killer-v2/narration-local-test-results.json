@@ -1,0 +1,143 @@
+{
+  "commit": "90e5b5b467f86c876eece7f128a03a3b8bf5fbea",
+  "scope": "local source-function tests with synthetic model responses; no live deployment or audio playback",
+  "passed": 34,
+  "results": [
+    {
+      "name": "full config has 8 chapters 32 choices 24 materials and no system actor",
+      "passed": true
+    },
+    {
+      "name": "material source references exist and every author paragraph fits its kind budget",
+      "passed": true
+    },
+    {
+      "name": "rk01-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk01-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk01-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk02-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk02-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk02-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk03-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk03-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk03-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk04-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk04-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk04-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk05-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk05-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk05-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk06-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk06-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk06-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk07-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk07-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk07-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk08-opening is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk08-archive is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "rk08-check is displayed from authored text and hidden from all actor contexts",
+      "passed": true
+    },
+    {
+      "name": "chapter 1 packet never contains chapter 4 or chapter 7 reveals",
+      "passed": true
+    },
+    {
+      "name": "every future material is locked before its chapter",
+      "passed": true
+    },
+    {
+      "name": "old archive can be queried in chapter 8 without romance or task-completion flags",
+      "passed": true
+    },
+    {
+      "name": "private narrated facts remain private after compression and save round trip",
+      "passed": true
+    },
+    {
+      "name": "rejected model response falls back to the complete author reveal",
+      "passed": true
+    },
+    {
+      "name": "the same material is not displayed twice",
+      "passed": true
+    },
+    {
+      "name": "public introductions and actor cards contain no hidden old-life archive",
+      "passed": true
+    },
+    {
+      "name": "actual ttsUrl truncates a long narration at 200 characters",
+      "passed": true
+    }
+  ]
+}

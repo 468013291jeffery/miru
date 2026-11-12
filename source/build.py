@@ -59,6 +59,13 @@ _cf=sorted(os.path.splitext(os.path.basename(x))[0] for x in _g.glob(ART+"cut/*.
 assets=("window.CUT_FILES="+_j.dumps(_cf)+";\n"+"window.SCENE_FILES="+_j.dumps(_sf)+
         ";\nwindow.BGM_FILES="+_j.dumps(_bf)+";\n")
 shell=open("src/shell.html", encoding="utf8").read()
+# 2026-11-12 · AdSense / 搜索引擎：页面源码里直接带 AdSense 代码、描述、canonical；www / http 自动跳到 https://miru.plus；
+#              不开脚本时给一段说明和剧目、关于、联系等页面的链接（这些页面由 source/gen_seo.py 生成）。
+_WWW = '<script>try{if(/^www\\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>'
+if "adsbygoogle.js?client" not in shell:
+    shell = shell.replace('<meta charset="utf-8">', '<meta charset="utf-8">\n' + _WWW, 1)
+    shell = shell.replace('<title>MIRU</title>', '<title>MIRU · 互动剧与 AI 角色对话 | Interactive Stories</title>\n<meta name="description" content="MIRU 是一款互动剧应用：你来做主角，和角色对话、做出选择，每个选择都会改变结局。奇幻言情、悬疑、末日求生、王室豪门等官方原创剧目。">\n<link rel="canonical" href="https://miru.plus/">\n<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1779576119248059" crossorigin="anonymous"></script>', 1)
+    shell = shell.replace('<div class="app"><div class="device" id="dev"></div></div>', '<div class="app"><div class="device" id="dev"></div></div>\n<noscript><div style="max-width:720px;margin:0 auto;padding:24px 18px;color:#F1ECF3;font:16px/1.7 sans-serif"><h1>MIRU · 互动剧与 AI 角色对话</h1><p>MIRU 是一款互动剧应用：你用自己的名字进入故事，和剧中角色对话，在每一章做出选择，不同的选择会改变人物关系和结局。所有角色都是虚构的成年人。</p><p>MIRU is an interactive story app: play as yourself, talk with the characters and make choices that change the ending.</p><p><a href="/stories/" style="color:#F0B77E">浏览全部剧目 Stories</a> · <a href="/about.html" style="color:#F0B77E">关于 About</a> · <a href="/contact.html" style="color:#F0B77E">联系 Contact</a> · <a href="/privacy.html" style="color:#F0B77E">隐私 Privacy</a> · <a href="/terms.html" style="color:#F0B77E">条款 Terms</a></p></div></noscript>', 1)
 
 # ---- artifact shape -------------------------------------------------------------------------
 # default: one self-contained index.html (what is committed / deployed today).

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /probe
+
+User-agent: Mediapartners-Google
+Allow: /
+
+Sitemap: https://miru.plus/sitemap.xml
