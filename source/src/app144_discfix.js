@@ -444,9 +444,9 @@
     return L.filter(m => { try { return !MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(m); } catch (_) { return false; } }).concat([""]);
   }
   /* WebAudio 兜底：16kHz 单声道 WAV，接口和 MediaRecorder 一样（start / stop / onstop / mimeType） */
-  function wavRecorder(stream) {
-    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) throw { name: "NotSupportedError" };
-    const ctx = new AC(), src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), bufs = [];
+  function wavRecorder(stream, pre) {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC && !pre) throw { name: "NotSupportedError" };
+    const ctx = pre || new AC(), src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), bufs = [];
     const r = { mimeType: "audio/wav", state: "inactive", onstop: null, ondataavailable: null };
     proc.onaudioprocess = e => { if (r.state === "recording") bufs.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
     r.start = () => { r.state = "recording"; try { ctx.resume(); } catch (_) {} src.connect(proc); proc.connect(ctx.destination); };
@@ -508,14 +508,25 @@
   async function recToggle() {
     if (REC.on) { try { REC.rec.stop(); } catch (_) {} return; }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { toast(window.isSecureContext ? micErr({ name: "x" }) : T("需要用 https://miru.plus 打开才能录音", "Open https://miru.plus to record")); return; }
+    /* 2026-11-13：iPhone 上的各家浏览器（WebKit 内核）MediaRecorder 常报 InvalidStateError ⇒ iPhone/iPad 先用 WebAudio 录 WAV；
+       AudioContext 必须在点按的那一刻建好并 resume，否则等完麦克风授权再建会被静音。MediaRecorder 失败一次就换新的麦克风流再试。 */
+    const ACx = window.AudioContext || window.webkitAudioContext; let pre = null;
+    try { if (ACx) { pre = new ACx(); pre.resume && pre.resume().catch(() => {}); } } catch (_) { pre = null; }
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     let stream;
     try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-    catch (e) { console.warn("[146] mic", e); toast(micErr(e)); return; }
-    let rec = null, kind = "";
-    for (const m of mimes()) {
-      try { const r = new MediaRecorder(stream, m ? { mimeType: m } : undefined); r.start(250); rec = r; kind = r.mimeType || m; break; } catch (e) { console.warn("[146] MediaRecorder", m, e); }
+    catch (e) { console.warn("[146] mic", e); try { pre && pre.close(); } catch (_) {} toast(micErr(e)); return; }
+    const fresh = async () => { try { if (stream.getAudioTracks().every(t => t.readyState === "live")) return; stream.getTracks().forEach(t => t.stop()); stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (_) {} };
+    let rec = null, kind = "", lastErr = null;
+    const tryWav = () => { try { const r = wavRecorder(stream, pre); r.start(); rec = r; kind = "audio/wav"; pre = null; } catch (e) { lastErr = e; console.warn("[146] wav", e); } };
+    if (ios && pre) tryWav();
+    if (!rec) for (const m of mimes()) {
+      await fresh();
+      try { const r = new MediaRecorder(stream, m ? { mimeType: m } : undefined); r.start(250); rec = r; kind = r.mimeType || m; break; } catch (e) { lastErr = e; console.warn("[146] MediaRecorder", m, e); }
     }
-    if (!rec) { try { rec = wavRecorder(stream); rec.start(); kind = "audio/wav"; } catch (e) { stream.getTracks().forEach(t => t.stop()); toast(micErr(e)); return; } }
+    if (!rec && !ios) { await fresh(); if (!pre) { try { pre = new ACx(); } catch (_) {} } tryWav(); }
+    if (!rec) { try { stream.getTracks().forEach(t => t.stop()); pre && pre.close(); } catch (_) {} toast(micErr(lastErr)); return; }
+    try { if (pre) pre.close(); } catch (_) {}
     Object.assign(REC, { on: true, rec, chunks: [], t0: Date.now(), stream });
     rec.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
     rec.onstop = () => {
