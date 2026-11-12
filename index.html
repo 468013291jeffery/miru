@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="4f98c024d7bc 2026-11-12T19:53Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="1fa77f95f599 2026-11-12T19:57Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -25671,6 +25671,207 @@ if(typeof document!=='undefined'&&document.head){
   setInterval(mark, 1500);
   const st = document.createElement("style");
   st.textContent = ".ch147 #sugg [data-sgmore],.ch147 #sugg .ai147{display:none!important}.ch147 .tap-hint{display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 故事开场「男主」一排：统一露出人脸 =====
+   立绘有半身、全身、透明底全身好几种，直接 object-fit:cover 会切到胸口或只看到一个小人。
+   ⇒ 用 picojs（MIT，nenadmarkus/picojs）在本地找脸，按脸的位置和大小把头像放大、居中；找不到脸就退回「靠上取景」。
+   模型文件 art/ui/facefinder（≈240KB），只在第一次用到时加载一次。 */
+(function () {
+  "use strict";
+
+const pico = {}
+pico.unpack_cascade = function(bytes)
+{
+	const dview = new DataView(new ArrayBuffer(4));
+	let p = 8;
+	dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+	const tdepth = dview.getInt32(0, true);
+	p = p + 4
+	dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+	const ntrees = dview.getInt32(0, true);
+	p = p + 4
+	const tcodes_ls = [];
+	const tpreds_ls = [];
+	const thresh_ls = [];
+	for(let t=0; t<ntrees; ++t)
+	{
+		Array.prototype.push.apply(tcodes_ls, [0, 0, 0, 0]);
+		Array.prototype.push.apply(tcodes_ls, bytes.slice(p, p+4*Math.pow(2, tdepth)-4));
+		p = p + 4*Math.pow(2, tdepth)-4;
+		for(let i=0; i<Math.pow(2, tdepth); ++i)
+		{
+			dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+			tpreds_ls.push(dview.getFloat32(0, true));
+			p = p + 4;
+		}
+		dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+		thresh_ls.push(dview.getFloat32(0, true));
+		p = p + 4;
+	}
+	const tcodes = new Int8Array(tcodes_ls);
+	const tpreds = new Float32Array(tpreds_ls);
+	const thresh = new Float32Array(thresh_ls);
+	function classify_region(r, c, s, pixels, ldim)
+	{
+		 r = 256*r;
+		 c = 256*c;
+		 let root = 0;
+		 let o = 0.0;
+		 const pow2tdepth = Math.pow(2, tdepth) >> 0; // '>>0' transforms this number to int
+		 for(let i=0; i<ntrees; ++i)
+		 {
+			let idx = 1;
+			for(let j=0; j<tdepth; ++j)
+				idx = 2*idx + (pixels[((r+tcodes[root + 4*idx + 0]*s) >> 8)*ldim+((c+tcodes[root + 4*idx + 1]*s) >> 8)]<=pixels[((r+tcodes[root + 4*idx + 2]*s) >> 8)*ldim+((c+tcodes[root + 4*idx + 3]*s) >> 8)]);
+			 o = o + tpreds[pow2tdepth*i + idx-pow2tdepth];
+			 if(o<=thresh[i])
+				 return -1;
+			 root += 4*pow2tdepth;
+		}
+		return o - thresh[ntrees-1];
+	}
+	return classify_region;
+}
+pico.run_cascade = function(image, classify_region, params)
+{
+	const pixels = image.pixels;
+	const nrows = image.nrows;
+	const ncols = image.ncols;
+	const ldim = image.ldim;
+	const shiftfactor = params.shiftfactor;
+	const minsize = params.minsize;
+	const maxsize = params.maxsize;
+	const scalefactor = params.scalefactor;
+	let scale = minsize;
+	const detections = [];
+	while(scale<=maxsize)
+	{
+		const step = Math.max(shiftfactor*scale, 1) >> 0; // '>>0' transforms this number to int
+		const offset = (scale/2 + 1) >> 0;
+		for(let r=offset; r<=nrows-offset; r+=step)
+			for(let c=offset; c<=ncols-offset; c+=step)
+			{
+				const q = classify_region(r, c, scale, pixels, ldim);
+				if (q > 0.0)
+					detections.push([r, c, scale, q]);
+			}
+		scale = scale*scalefactor;
+	}
+    return detections;
+}
+pico.cluster_detections = function(dets, iouthreshold)
+{
+	dets = dets.sort(function(a, b) {
+		return b[3] - a[3];
+	});
+	function calculate_iou(det1, det2)
+	{
+		const r1=det1[0], c1=det1[1], s1=det1[2];
+		const r2=det2[0], c2=det2[1], s2=det2[2];
+		const overr = Math.max(0, Math.min(r1+s1/2, r2+s2/2) - Math.max(r1-s1/2, r2-s2/2));
+		const overc = Math.max(0, Math.min(c1+s1/2, c2+s2/2) - Math.max(c1-s1/2, c2-s2/2));
+		return overr*overc/(s1*s1+s2*s2-overr*overc);
+	}
+	const assignments = new Array(dets.length).fill(0);
+	const clusters = [];
+	for(let i=0; i<dets.length; ++i)
+	{
+		if(assignments[i]==0)
+		{
+			let r=0.0, c=0.0, s=0.0, q=0.0, n=0;
+			for(let j=i; j<dets.length; ++j)
+				if(calculate_iou(dets[i], dets[j])>iouthreshold)
+				{
+					assignments[j] = 1;
+					r = r + dets[j][0];
+					c = c + dets[j][1];
+					s = s + dets[j][2];
+					q = q + dets[j][3];
+					n = n + 1;
+				}
+			clusters.push([r/n, c/n, s/n, q]);
+		}
+	}
+	return clusters;
+}
+pico.instantiate_detection_memory = function(size)
+{
+	let n = 0;
+	const memory = [];
+	for(let i=0; i<size; ++i)
+		memory.push([]);
+	function update_memory(dets)
+	{
+		memory[n] = dets;
+		n = (n+1)%memory.length;
+		dets = [];
+		for(i=0; i<memory.length; ++i)
+			dets = dets.concat(memory[i]);
+		return dets;
+	}
+	return update_memory;
+}
+
+  let cascade = null, loading = null;
+  const memo = new Map();
+  function loadCascade() {
+    if (cascade) return Promise.resolve(cascade);
+    if (!loading) loading = fetch("/art/ui/facefinder").then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(b => (cascade = pico.unpack_cascade(new Int8Array(b)))).catch(e => { console.warn("[face147] cascade", e); loading = null; return null; });
+    return loading;
+  }
+  function keyOf(src) { return src.length > 300 ? src.length + ":" + src.slice(0, 120) + src.slice(-120) : src; }
+  async function findFace(img) {
+    const k = keyOf(img.currentSrc || img.src); if (memo.has(k)) return memo.get(k);
+    const cl = await loadCascade(); if (!cl) return null;
+    let res = null;
+    try {
+      const W = img.naturalWidth, H = img.naturalHeight;
+      for (const lim of [480, 800]) {
+      const s = Math.min(1, lim / Math.max(W, H)), w = Math.max(1, Math.round(W * s)), h = Math.max(1, Math.round(H * s));
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h; const cx = cv.getContext("2d");
+      cx.fillStyle = "#000"; cx.fillRect(0, 0, w, h); cx.drawImage(img, 0, 0, w, h);
+      const rgba = cx.getImageData(0, 0, w, h).data, g = new Uint8Array(w * h);
+      for (let i = 0; i < w * h; i++) g[i] = (2 * rgba[i * 4] + 7 * rgba[i * 4 + 1] + rgba[i * 4 + 2]) / 10;
+      let d = pico.run_cascade({ pixels: g, nrows: h, ncols: w, ldim: w }, cl, { shiftfactor: 0.1, minsize: Math.max(20, Math.round(Math.min(w, h) * 0.06)), maxsize: Math.round(Math.min(w, h) * 0.9), scalefactor: 1.1 });
+      d = pico.cluster_detections(d, 0.2).filter(x => x[3] > 5).sort((a, b) => b[3] - a[3]);
+      if (d.length) { res = { x: d[0][1] / w, y: d[0][0] / h, s: d[0][2] / w, W, H }; break; }
+      if (s === 1) break;
+      }
+    } catch (e) { console.debug("[face147] detect", e); }
+    memo.set(k, res); return res;
+  }
+  function frame(img, f) {
+    const box = img.parentElement, D = box.clientWidth || 68;
+    if (!f) {
+      const W0 = img.naturalWidth, H0 = img.naturalHeight;
+      /* 没找到脸：竖长的全身立绘按「头在上方 13%」放大；其余靠上取景 */
+      if (W0 && H0 / W0 >= 1.5) f = { x: 0.5, y: 0.13, s: 0.17, W: W0, H: H0 };
+      else { img.style.objectPosition = "50% 12%"; return; }
+    }
+    const W = f.W, H = f.H, faceW = f.s * W;
+    let k = Math.max(0.42 * D / faceW, D / Math.min(W, H));
+    k = Math.min(k, 6 * D / Math.min(W, H));
+    const dw = W * k, dh = H * k;
+    let left = D / 2 - f.x * W * k, top = D * 0.46 - f.y * H * k;
+    left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
+    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
+  }
+  function prep(img) {
+    if (img.dataset.f147) return; img.dataset.f147 = "1";
+    const box = document.createElement("span"); box.className = "f147";
+    img.parentNode.insertBefore(box, img); box.appendChild(img);
+    const go = () => { findFace(img).then(f => frame(img, f)).catch(() => frame(img, null)); };
+    img.style.objectPosition = "50% 12%";
+    if (img.complete && img.naturalWidth) go(); else img.addEventListener("load", go, { once: true });
+  }
+  function scan(root) { try { (root || document).querySelectorAll(".ld101c img:not([data-f147])").forEach(prep); } catch (_) {} }
+  try { new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches && n.matches(".ld101c img") || n.querySelector && n.querySelector(".ld101c img"))) { scan(n.nodeType === 1 && n.parentNode ? n.parentNode : document); return; } }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+  setTimeout(scan, 500);
+  const st = document.createElement("style");
+  st.textContent = ".ld101c .f147{position:relative;display:block;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #F0B77E88;background:rgba(255,255,255,.04);flex:none}.ld101c .f147>img{width:68px;height:68px;box-shadow:none!important;border-radius:0!important}";
   document.head.appendChild(st);
 })();
 
