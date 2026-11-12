@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="1fa77f95f599 2026-11-12T19:57Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="c5447d07e80f 2026-11-12T20:06Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -25650,14 +25650,25 @@ if(typeof document!=='undefined'&&document.head){
       return r;
     };
   }
-  /* 空的联想行：按钮改成和剧情面板一样的「✨ AI 帮我想」（同一个处理函数）；有联想时仍是「↻ 换一批」 */
-  if (typeof sgMoreBtn === "function") {
-    const more = sgMoreBtn;
-    sgMoreBtn = function () {
-      try { if (!sugg.length) return '<button class="sgmore ai147" data-ai97="1">✨ ' + (zh() ? "AI 帮我想" : "AI ideas") + '</button>'; } catch (_) {}
-      return more.apply(this, arguments);
-    };
+  /* 2026-11-13 联想行：所有剧本统一在**最前面**放「✨ AI 帮我想」（和剧情面板同一个处理函数，再点 = 换一批新的）；
+     旧的「不知道说什么？帮我想几句」「↻ 换一批」不再单独出现。 */
+  const aiBtn = () => '<button class="sgmore ai147" data-sgmore="1" data-ai147="1">✨ ' + (zh() ? "AI 帮我想" : "AI ideas") + '</button>';
+  if (typeof sgMoreBtn === "function") sgMoreBtn = function () { return ""; };
+  function ensureAi() {
+    try {
+      const sg = document.getElementById("sugg"); if (!sg) return;
+      sg.querySelectorAll("[data-sgmore]:not(.ai147)").forEach(x => x.remove());
+      let b = sg.querySelector(".ai147");
+      if (!b) { sg.insertAdjacentHTML("afterbegin", aiBtn()); return; }
+      if (sg.firstElementChild !== b) sg.insertBefore(b, sg.firstElementChild);
+    } catch (_) {}
   }
+  if (typeof setSugg === "function") { const ss = setSugg; setSugg = function () { const r = ss.apply(this, arguments); ensureAi(); return r; }; }
+  window.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-ai147]"); if (!b) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    try { aiIdeasGo97(b); } catch (err) { console.warn("[ai147]", err); }
+  }, true);
   function mark() {
     try {
       const chat = document.getElementById("s-chat"); if (!chat) return;
@@ -25665,12 +25676,13 @@ if(typeof document!=='undefined'&&document.head){
       const locked = !!(th && typeof pkBusy === "function" && pkBusy(th));
       const dup = !!chat.querySelector("#pkwrap [data-ai97]");
       chat.classList.toggle("ch147", locked || dup);
+      ensureAi();
     } catch (_) {}
   }
   if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); mark(); return r; }; }
   setInterval(mark, 1500);
   const st = document.createElement("style");
-  st.textContent = ".ch147 #sugg [data-sgmore],.ch147 #sugg .ai147{display:none!important}.ch147 .tap-hint{display:none!important}";
+  st.textContent = ".ch147 #sugg [data-sgmore],.ch147 #sugg .ai147{display:none!important}#sugg .ai147{order:-1;flex:none;border-style:solid!important;border-color:rgba(240,183,126,.55)!important;background:rgba(240,183,126,.12)!important;color:#F6D3AE!important;font-weight:700}.ch147 .tap-hint{display:none!important}";
   document.head.appendChild(st);
 })();
 
