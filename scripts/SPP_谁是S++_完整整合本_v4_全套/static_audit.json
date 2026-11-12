@@ -1,0 +1,119 @@
+{
+  "source": "SPP_谁是S++_完整整合本_v4.md",
+  "format": "legacy DSL (not Chinese manuscript)",
+  "chapters": 18,
+  "chapter_numbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "scenes": 112,
+  "bg_tags": 112,
+  "bg_assets": 112,
+  "choice_blocks": 18,
+  "option_effects": 54,
+  "highlight_tags": 23,
+  "highlight_assets": 23,
+  "missing_background_slots": [],
+  "missing_highlight_slots": [],
+  "assets_by_folder": {
+    "opening_video": 1,
+    "backgrounds": 112,
+    "char_anders": 1,
+    "char_anton": 1,
+    "char_berthe": 1,
+    "char_bram": 1,
+    "char_cas": 1,
+    "char_desmond": 1,
+    "char_emeka": 1,
+    "char_henrik": 1,
+    "char_hugo": 1,
+    "char_ilya": 1,
+    "char_julian": 1,
+    "char_jun": 2,
+    "char_kon": 1,
+    "char_luca": 1,
+    "char_malik": 1,
+    "char_owen": 1,
+    "char_rafe": 2,
+    "char_ravi": 1,
+    "char_seba": 1,
+    "char_theo": 1,
+    "char_vera": 3,
+    "cover": 1,
+    "highlights": 23,
+    "props": 12
+  },
+  "legacy_cues_stripped": {
+    "character_cues": 30,
+    "legacy_single_field_goals": 20,
+    "unmapped_fx": 43,
+    "unmapped_reveals": 3
+  },
+  "issues": [
+    {
+      "severity": "blocking",
+      "topic": "解析器未实测",
+      "detail": "当前只有游戏主仓库读取权限，运行环境尚未本地复现；本包是静态检查及规范化候选，不等于导入成功"
+    },
+    {
+      "severity": "blocking",
+      "topic": "结局解析",
+      "detail": "第18章 CHOICE 之后追加了 3 个条件场景，需验证当前旧 DSL 解析器是否接受章末选择后继续出现 SCENE。若不支持，需要接入端调整路由结构"
+    },
+    {
+      "severity": "blocking",
+      "topic": "玩家自主性",
+      "detail": "原逐字稿含大量（示例·你）对话，同时场景线性推进；需实测玩家自由输入、拒绝、停留以及条件结果是否按游戏方式响应"
+    },
+    {
+      "severity": "blocking",
+      "topic": "资产部署",
+      "detail": "图片和视频仅在交付包内；未写入 miru 主项目服务器的 art/official 路径，没有完成资产上架"
+    },
+    {
+      "severity": "needs-review",
+      "topic": "自定义数值",
+      "detail": "原稿 OPT 中有 authority、bond、ax 等自定义数值；必须核实旧入口是否实际执行，不可照搬为中文稿特殊标记"
+    },
+    {
+      "severity": "needs-review",
+      "topic": "人物角色卡",
+      "detail": "原文 ⟦CHAR|key|描述⟧ 不符合规范要求的 7 字段格式，已隔离到 cue_待映射.json；需将角色卡转成标准全局注册或正式 bible cast"
+    },
+    {
+      "severity": "needs-review",
+      "topic": "场景特效",
+      "detail": "文本描述型 ⟦FX|...⟧ 不是受支持的 FX id，已从兼容稿隔离到 cue_待映射.json"
+    },
+    {
+      "severity": "needs-review",
+      "topic": "旧线索与目标",
+      "detail": "旧单参数 GOAL 和使用秘密正文而非 id 的 REVEAL 尚未映射成引擎数据"
+    },
+    {
+      "severity": "needs-review",
+      "topic": "剧本体裁",
+      "detail": "原稿适用于旧逐字剧 DSL；若目标是角色自由演出的现代 b98，需另行改写为中文栏目稿并用 script-import.mjs 校验"
+    }
+  ],
+  "registered_characters": 22,
+  "unmatched_registered_characters": [
+    "char_ines"
+  ]
+}
