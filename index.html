@@ -7,7 +7,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script>
-window.MIRU_BUILD="853031ed8e67 2026-11-12T04:08Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
+window.MIRU_BUILD="3883ac36daec 2026-11-12T04:34Z";try{if("serviceWorker"in navigator&&location.protocol==="https:")addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(e){console.warn("[sw]",e)})})}catch(e){console.warn("[sw]",e)}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MIRU</title>
@@ -25258,14 +25258,16 @@ if(typeof document!=='undefined'&&document.head){
   const T = (a, b) => zh() ? a : b;
   const ALL_V = (typeof TTS_VOICES !== "undefined") ? TTS_VOICES : { m: ["m1", "m2", "m3", "m4", "m5", "m6", "m7"], f: ["f1", "f2"] };
   const VN_EN = { m1: "Low & restrained", m2: "Clear, boyish", m3: "Warm senior", m4: "Cold & hard", m5: "Lazy drawl", m6: "Bright", m7: "Mature, steady", f1: "Gentle", f2: "Crisp" };
-  const vName = v => zh() ? ((typeof TTS_VNAME !== "undefined" && TTS_VNAME[v]) || v) : (VN_EN[v] || v);
+  const vName = v => /^u[0-9a-f]{20}$/.test(String(v)) ? T("我的录音", "My recorded voice") : zh() ? ((typeof TTS_VNAME !== "undefined" && TTS_VNAME[v]) || v) : (VN_EN[v] || v);
   const ov = () => (S.voiceOv = S.voiceOv || {});
+  let NOCLONE = false;
 
   /* ---------- 换音色：存在 S.voiceOv，剧里朗读也用它 ---------- */
   if (typeof ttsVoice === "function") {
     const tv = ttsVoice;
     ttsVoice = function (id) {
       try {
+        if (id === "me" && S.myClone && S.myClone.on && /^u[0-9a-f]{20}$/.test(S.myClone.id) && !NOCLONE) return S.myClone.id;
         if (id === "me" && S.myVoiceId && /^[mf]\d$/.test(S.myVoiceId)) return S.myVoiceId;
         if ((!id || id === "n") && S.ttsNarr) return S.ttsNarr;
         const o = S.voiceOv && S.voiceOv[id]; if (o && /^[mf]\d$/.test(o)) return o;
@@ -25273,6 +25275,16 @@ if(typeof document!=='undefined'&&document.head){
       return tv.apply(this, arguments);
     };
   }
+  /* 用我的录音念不出来（克隆服务忙 / 超时）⇒ 这一句退回我选的预设声音，不让它没声 */
+  if (typeof ttsFetch === "function") {
+    const tf = ttsFetch;
+    ttsFetch = function (text, id) {
+      const p = tf.apply(this, arguments);
+      if (id !== "me" || !(S.myClone && S.myClone.on)) return p;
+      return p.catch(() => { NOCLONE = true; try { return tf(text, id); } finally { NOCLONE = false; } });
+    };
+  }
+  const cloneOn = () => !!(S.myClone && S.myClone.on && S.myClone.id);
   const curV = id => { try { return ttsVoice(id); } catch (_) { return ""; } };
   const isCustom = id => id === "me" ? !!S.myVoiceId : id === "n" ? !!S.ttsNarr : !!ov()[id];
   function setV(id, v) {
@@ -25348,11 +25360,36 @@ if(typeof document!=='undefined'&&document.head){
     return "";
   }
   function myvHTML() {
-    const clip = S.myVoice && /^data:audio|^blob:/.test(S.myVoice) ? S.myVoice : null;
-    return '<div class="eyebrow">' + T("我的声音", "My voice") + '</div><p class="xs dim" style="margin-top:6px">' + T("录一小段你自己的声音（最长 15 秒），只保存在这台设备上。", "Record a short clip of your own voice (up to 15s) — saved only on this device.") + '</p>' +
+    const clip = S.myVoice && /^data:audio|^blob:/.test(S.myVoice) ? S.myVoice : null, on = cloneOn(), busy = CL_BUSY;
+    return '<div class="eyebrow">' + T("我的声音", "My voice") + '</div><p class="xs dim" style="margin-top:6px;line-height:1.55">' + T("录一段 8–15 秒你自己说话的声音（正常语速、安静的地方），可以用它给你的角色配音。", "Record 8–15 seconds of yourself talking (normal pace, quiet room) — it can voice your character.") + '</p>' +
       '<div class="row" style="margin-top:10px;gap:8px;align-items:center">' +
       (clip ? '<audio controls style="height:36px;flex:1;min-width:0" src="' + clip + '"></audio><button class="btn btn-q btn-sm" data-v146del="1">' + T("删除", "Delete") + '</button><button class="btn btn-g btn-sm" data-v146rec="1">' + T("重录", "Redo") + '</button>'
-        : '<button class="btn ' + (REC.on ? "btn-p" : "btn-g") + ' btn-sm" data-v146rec="1">' + (REC.on ? "■ " + T("停止", "Stop") : "🎙️ " + T("开始录音", "Record")) + '</button><span class="xs faint" id="v146hint">' + (REC.on ? T("正在录音 ", "Recording ") + '<b id="v146sec">0</b>s' : T("点一下开始，再点一下停止", "Tap to start, tap again to stop")) + '</span>') + '</div>';
+        : '<button class="btn ' + (REC.on ? "btn-p" : "btn-g") + ' btn-sm" data-v146rec="1">' + (REC.on ? "■ " + T("停止", "Stop") : "🎙️ " + T("开始录音", "Record")) + '</button><span class="xs faint" id="v146hint">' + (REC.on ? T("正在录音 ", "Recording ") + '<b id="v146sec">0</b>s' : T("点一下开始，再点一下停止", "Tap to start, tap again to stop")) + '</span>') + '</div>' +
+      (clip ? '<div class="v146cl' + (on ? " on" : "") + '"><div class="row" style="gap:10px;align-items:center"><span style="font-size:20px">🎭</span><div class="grow" style="min-width:0"><b>' + T("用我的声音给我的角色配音", "Voice my character with my voice") + '</b><small>' +
+          (busy ? T("正在上传……", "Uploading…") : on ? T("已开启：剧里你说的话会用你的声音读出来", "On: your lines in stories are read in your voice") : T("关闭中：你的台词用上面「我（主角）」选的声音", "Off: your lines use the voice picked for “Me” above")) + '</small></div>' +
+          '<button class="btn ' + (on ? "btn-g" : "btn-p") + ' btn-sm" data-v146clone="1"' + (busy ? " disabled" : "") + '>' + (on ? T("关闭", "Turn off") : T("开启", "Turn on")) + '</button></div>' +
+          (on ? '<button class="v146b" style="margin-top:8px" data-v146play="me">▶ ' + T("听听效果", "Preview") + '</button>' : '') +
+          '<p class="xs faint" style="margin-top:8px;line-height:1.5">' + T("开启后这段录音会上传到 MIRU 服务器，只用来给你自己的台词配音，不会给别人看。关闭或删除录音时会一起从服务器删掉。第一次生成要 10–30 秒，生成不了时自动换回预设声音。", "Turning this on uploads the clip to MIRU's server, used only to voice your own lines and never shown to anyone. Turning it off or deleting the clip removes it from the server. The first line can take 10–30s; if it fails, a preset voice is used.") + '</p></div>' : '');
+  }
+  let CL_BUSY = false;
+  async function cloneToggle() {
+    if (cloneOn()) { const id = S.myClone.id; S.myClone = null; save(); paintMy(); refresh(); try { await fetch(TTS_EP, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, typeof cloudAuth === "function" ? cloudAuth() : {}), body: JSON.stringify({ cloneDel: id }) }); } catch (_) {} return; }
+    const auth = typeof cloudAuth === "function" ? cloudAuth() : {};
+    if (!auth.Authorization) { toast(T("先登录账号，才能用自己的声音配音", "Sign in first to use your own voice")); return; }
+    if (!S.myVoice || !/^data:audio/.test(S.myVoice)) { toast(T("先录一段声音", "Record a clip first")); return; }
+    CL_BUSY = true; paintMy();
+    try {
+      const r = await fetch(TTS_EP, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, auth), body: JSON.stringify({ clone: { audio: S.myVoice } }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.id) throw new Error(j.error || r.status);
+      S.myClone = { id: j.id, on: 1, at: Date.now() }; save();
+      try { if (typeof TTS !== "undefined" && TTS.mem) TTS.mem.clear(); } catch (_) {}
+      toast(T("已开启 · 正在用你的声音试读一句", "On — trying a line in your voice"));
+      CL_BUSY = false; paintMy(); refresh(); play("me", sample("me"));
+    } catch (e) {
+      CL_BUSY = false; paintMy();
+      toast(/short/.test(String(e.message)) ? T("录音太短了，录 8 秒以上再试", "Clip too short — record 8s or more") : /long|413/.test(String(e.message)) ? T("录音太长了，15 秒以内就好", "Clip too long — keep it under 15s") : T("上传没成功，稍后再试", "Upload failed — try again later"));
+    }
   }
   const paintMy = () => { const c = document.querySelector(".me-myv"); if (c) c.innerHTML = myvHTML(); };
   function micErr(e) {
@@ -25369,14 +25406,14 @@ if(typeof document!=='undefined'&&document.head){
     let stream;
     try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
     catch (e) { console.warn("[146] mic", e); toast(micErr(e)); return; }
-    let rec; try { rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); } catch (e) { try { rec = new MediaRecorder(stream); } catch (e2) { stream.getTracks().forEach(t => t.stop()); toast(micErr(e2)); return; } }
+    let rec; try { rec = new MediaRecorder(stream, Object.assign({ audioBitsPerSecond: 32000 }, mime ? { mimeType: mime } : {})); } catch (e) { try { rec = new MediaRecorder(stream); } catch (e2) { stream.getTracks().forEach(t => t.stop()); toast(micErr(e2)); return; } }
     Object.assign(REC, { on: true, rec, chunks: [], t0: Date.now(), stream });
     rec.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
     rec.onstop = () => {
       REC.on = false; clearInterval(REC.tick); try { stream.getTracks().forEach(t => t.stop()); } catch (_) {}
       const blob = new Blob(REC.chunks, { type: rec.mimeType || mime || "audio/webm" });
       if (blob.size < 1200) { toast(T("没录到声音，再试一次", "Nothing was recorded — try again")); paintMy(); return; }
-      const fr = new FileReader(); fr.onload = () => { S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("已保存到这台设备", "Saved to this device")); paintMy(); }; fr.readAsDataURL(blob);
+      const fr = new FileReader(); fr.onload = async () => { const was = cloneOn(); if (was) await cloneToggle(); S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("录好了", "Recorded")); paintMy(); if (was) cloneToggle(); }; fr.readAsDataURL(blob);
     };
     rec.start(250); paintMy();
     REC.tick = setInterval(() => { const s = Math.floor((Date.now() - REC.t0) / 1000), el = document.getElementById("v146sec"); if (el) el.textContent = s; if (s >= 15) try { rec.stop(); } catch (_) {} }, 250);
@@ -25394,14 +25431,15 @@ if(typeof document!=='undefined'&&document.head){
   };
   document.addEventListener("input", e => { if (e.target && e.target.id === "voiceQ146") { const l = document.getElementById("voiceList146"); if (l) l.innerHTML = listHTML(e.target.value); } });
   document.addEventListener("click", e => {
-    const x = e.target.closest && e.target.closest("[data-v146tog],[data-v146play],[data-v146],[data-v146all],[data-v146rec],[data-v146del]"); if (!x) return;
+    const x = e.target.closest && e.target.closest("[data-v146tog],[data-v146play],[data-v146],[data-v146all],[data-v146rec],[data-v146del],[data-v146clone]"); if (!x) return;
     e.preventDefault(); e.stopImmediatePropagation();
     const d = x.dataset;
     if (d.v146tog) { OPEN.has(d.v146tog) ? OPEN.delete(d.v146tog) : OPEN.add(d.v146tog); refresh(); return; }
     if (d.v146play) { play(d.v146play, sample(d.v146play), x); return; }
     if (d.v146all) { SHOW_ALL = true; refresh(); return; }
     if (d.v146rec != null) { recToggle(); return; }
-    if (d.v146del) { S.myVoice = null; save(); paintMy(); return; }
+    if (d.v146del) { if (cloneOn()) cloneToggle(); S.myVoice = null; save(); paintMy(); return; }
+    if (d.v146clone) { cloneToggle(); return; }
     if (d.v146 != null) { const [id, vv] = d.v146.split("|"); setV(id, vv || null); refresh(); play(id, sample(id)); return; }
   }, true);
 
@@ -25429,6 +25467,7 @@ if(typeof document!=='undefined'&&document.head){
       ".v146p{padding:2px 10px 10px}.v146c{display:flex;flex-wrap:wrap;gap:6px}.v146c button{border:1px solid rgba(255,255,255,.16);background:none;color:#ddd;border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer}.v146c button.on{border-color:#F0B77E;background:rgba(240,183,126,.16);color:#F6D3AE;font-weight:600}" +
       ".v146o{font-size:11px;color:#fff8;margin:8px 0 5px}.v146r{margin-top:8px;background:none;border:0;color:#fff9;font-size:12px;text-decoration:underline;padding:0;cursor:pointer}" +
       ".v146ai{display:block;width:calc(100% - 20px);margin:0 10px 10px;border:1px dashed rgba(240,183,126,.5);background:none;color:#F6D3AE;border-radius:12px;padding:8px;font-size:12.5px;cursor:pointer}" +
+      ".v146cl{margin-top:12px;padding:11px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03)}.v146cl.on{border-color:rgba(240,183,126,.5);background:rgba(240,183,126,.07)}.v146cl b{display:block;font-size:13.5px}.v146cl small{display:block;font-size:11.5px;color:#F0B77E;margin-top:2px}" +
       ".v146t{font-size:11.5px;color:#fff8;margin:6px 2px 0}.v146more{border:1px dashed rgba(255,255,255,.2);background:none;color:#ddd;border-radius:12px;padding:9px;font-size:13px;cursor:pointer}";
     document.head.appendChild(st);
   })();
