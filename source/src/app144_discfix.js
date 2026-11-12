@@ -716,6 +716,31 @@
       };
     } catch (_) {}
   });
+  /* 2026-11-13 玩家：「我打字了，怎么一直不回复」——上一轮的台词还在一句一句等「轻点屏幕」，这时发的话只会排队，
+     而提示只出现前 5 次，看起来就是没人理。⇒ 发新消息时，把上一轮没看完的句子直接全部放出来，然后马上发送。 */
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function () {
+      const th = S.threads[curT], self = this, args = arguments;
+      try {
+        const R = window.READING;
+        if (th && busy && R && R.pending.get(th.id) && !document.querySelector("#msgs .typing")) {
+          (async () => {
+            const t0 = Date.now();
+            while (Date.now() - t0 < 8000) {
+              const e = R.pending.get(th.id);
+              if (e) { try { if (R.voice && R.voice.busy()) stopVoice(); e.finish(); } catch (_) {} }
+              if (!busy) break;
+              await new Promise(r => setTimeout(r, 60));
+            }
+            ds.apply(self, args);
+          })();
+          return;
+        }
+      } catch (err) { console.warn("[send147]", err); }
+      return ds.apply(this, arguments);
+    };
+  }
   /* 选项一出现就把还在等确认的那句确认掉，免得「轻点屏幕继续」和选项同时出现 */
   if (typeof packRefresh === "function") {
     const ref = packRefresh;
