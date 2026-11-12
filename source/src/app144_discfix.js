@@ -422,7 +422,7 @@
     const rec = typeof meRecentChars === "function" ? meRecentChars() : [];
     let h = row("me") + row("n") + '<p class="v146t">' + T("最近聊过", "Recently used") + '</p>' + (rec.length ? rec.map(row).join("") : '<p class="xs faint">' + T("还没和角色聊过，搜索名字就能试听", "No chats yet — search a name to preview") + '</p>');
     const rest = allChars().filter(id => !rec.includes(id) && ch(id) && !ch(id).retired && artSrc(id));
-    if (SHOW_ALL) h += '<p class="v146t">' + T("全部角色", "All characters") + '</p>' + rest.map(row).join("");
+    if (SHOW_ALL) h += '<div class="row" style="justify-content:space-between;align-items:center"><p class="v146t">' + T("全部角色", "All characters") + '</p><button class="v146b" data-v146all="0">' + T("收起 ▴", "Collapse ▴") + '</button></div>' + rest.map(row).join("") + '<button class="v146more" data-v146all="0">' + T("收起全部角色 ▴", "Collapse all characters ▴") + '</button>';
     else if (rest.length) h += '<button class="v146more" data-v146all="1">' + T("展开全部 " + rest.length + " 个角色 ▾", "Show all " + rest.length + " characters ▾") + '</button>';
     return h;
   }
@@ -556,7 +556,7 @@
     const d = x.dataset;
     if (d.v146tog) { OPEN.has(d.v146tog) ? OPEN.delete(d.v146tog) : OPEN.add(d.v146tog); refresh(); return; }
     if (d.v146play) { play(d.v146play, sample(d.v146play), x); return; }
-    if (d.v146all) { SHOW_ALL = true; refresh(); return; }
+    if (d.v146all) { SHOW_ALL = d.v146all !== "0"; refresh(); if (!SHOW_ALL) { try { const c = document.querySelector(".me-voice"); if (c) c.scrollIntoView({ block: "start", behavior: "smooth" }); } catch (_) {} } return; }
     if (d.v146rec != null) { recToggle(); return; }
     if (d.v146del) { if (cloneOn()) cloneToggle(); S.myVoice = null; save(); paintMy(); return; }
     if (d.v146clone) { cloneToggle(); return; }
