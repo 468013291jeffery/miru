@@ -1,0 +1,67 @@
+name: Wallet integrity
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'api/**'
+      - 'tools/wallet-selftest.cjs'
+      - 'tools/iap-selftest.mjs'
+      - 'tools/board-*-selftest.cjs'
+      - 'tools/fixtures/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/wallet-tests.yml'
+  push:
+    branches: [main, codex/ios-app-store]
+    paths:
+      - 'api/**'
+      - 'tools/wallet-selftest.cjs'
+      - 'tools/iap-selftest.mjs'
+      - 'tools/board-*-selftest.cjs'
+      - 'tools/fixtures/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/wallet-tests.yml'
+permissions:
+  contents: read
+jobs:
+  wallet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: wallet_test
+          POSTGRES_PASSWORD: wallet_test
+          POSTGRES_DB: wallet_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U wallet_test -d wallet_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: python3 -m pip install cryptography
+      - name: Wallet transactions in PGlite
+        run: node tools/wallet-selftest.cjs
+      - name: Wallet races across PostgreSQL connections
+        run: node tools/wallet-selftest.cjs
+        env:
+          WALLET_TEST_DATABASE_URL: postgresql://wallet_test:wallet_test@127.0.0.1:5432/wallet_test
+      - name: Signed Apple transaction validation
+        run: node tools/iap-selftest.mjs
+      - name: Board transaction regression
+        run: node tools/board-write-selftest.cjs
+      - name: Board API regression
+        run: node tools/board-api-selftest.cjs

@@ -3,7 +3,7 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
 **Goal:** Fix the audited money/security/privacy problems and deliver a buildable overseas iOS client with purchases and rewarded ads.
-**Architecture:** Existing Web UI, new Capacitor iOS native bridge, existing Vercel backend with scoped fixes. Production currency is protected from Sandbox.
+**Architecture:** Existing Web UI, new Capacitor iOS native bridge, existing Vercel backend with scoped fixes. Sandbox transactions are accurately marked; operationally separate review/test accounts share the existing wallet. Retain all existing features and entrances, and defer a separate test-economy architecture.
 **Tech Stack:** JavaScript/Node, PostgreSQL/Neon, Python build tools, Swift/StoreKit 2/AuthenticationServices, Capacitor, Google Mobile Ads and UMP.
 **Spec:** docs/superpowers/specs/2026-11-12-ios-launch-design.md
 
@@ -17,10 +17,10 @@
 ### Task 1: Atomic wallet and verified Apple purchase delivery
 **Files:** api/wallet.js; api/_iap.js; new api/_wallet.js if needed; api/_lib.js schema only if needed; tools/wallet-selftest.cjs; tools/iap-selftest.mjs; package.json dev test dependencies; .github/workflows/wallet-tests.yml.
 **Interfaces:** Preserve apply(sql,uid,delta,reason,key) for api/_board.js. GET /wallet adds iap:{appAccountToken,environment,productIds,test}; POST op:iap returns current gems, transactionId, environment, dup and test.
-- [ ] Write regression tests for parallel identical receipt, ledger-write failure/retry, duplicate after spending, cross-account receipt replay, invalid quantity/type/product, Sandbox on production account and Production on dedicated test account.
+- [ ] Write regression tests for parallel identical receipt, ledger-write failure/retry, duplicate after spending, cross-account receipt replay, invalid quantity/type/product, genuine Sandbox review purchase and accurate test/environment marking.
 - [ ] Run the new test and record failing balances/statuses against the base source.
 - [ ] Implement SQL atomic delivery with a real PostgreSQL-compatible engine test. Lock the user's balance and reserve the unique receipt before crediting; order/bonus cannot be outside the atomic boundary.
-- [ ] Enforce stable account token, exact SKUs and environment policy; only explicit IAP_SANDBOX_USER_IDS may receive Sandbox, and test accounts cannot buy public ranking votes.
+- [ ] Enforce stable account token, exact SKUs and environment policy; genuine Sandbox purchases work for App Review without an internal whitelist; record test/environment and document separate review-account operation.
 - [ ] Run wallet/iap tests and affected board API tests. Add PostgreSQL CI multi-connection race verification. Commit this task only.
 
 ### Task 2: Apple authorization lifecycle, credential hygiene and native server policy

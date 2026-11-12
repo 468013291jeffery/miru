@@ -18,12 +18,16 @@ function blocked(u) { return u.status === 'banned' && (!u.ban_until || new Date(
 
 async function newUser(sql, fields) {
   const cfg = await L.config(), id = L.newId('u_'), gems = Number(cfg.welcome_gems) || 0;
-  await sql('INSERT INTO users (id, email, pass, name, lang, provider, google_sub, apple_sub, avatar, platform) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
-    [id, fields.email || null, fields.pass || null, fields.name || null, fields.lang || null, fields.provider || 'guest', fields.google_sub || null, fields.apple_sub || null, fields.avatar || null, fields.platform || null]);
-  await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, $2) ON CONFLICT DO NOTHING', [id, gems]);
-  if (gems) await sql('INSERT INTO ledger (user_id, delta, reason, key, balance) VALUES ($1,$2,$3,$4,$2) ON CONFLICT DO NOTHING', [id, gems, 'welcome', 'welcome:' + id]);
-  const r = await sql('SELECT * FROM users WHERE id=$1', [id]);
-  return { user: r[0], gems };
+  if (!Number.isSafeInteger(gems) || gems < 0) throw new Error('invalid welcome diamond configuration');
+  const reward = JSON.stringify({ delta: gems, reason: 'welcome', key: 'welcome:' + id });
+  const rows = await sql(`WITH new_user AS (
+    INSERT INTO users (id, email, pass, name, lang, provider, google_sub, apple_sub, avatar, platform)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *
+  ) SELECT to_jsonb(n) AS account, miru_wallet_write(n.id,$11::jsonb) AS wallet FROM new_user n`,
+    [id, fields.email || null, fields.pass || null, fields.name || null, fields.lang || null,
+      fields.provider || 'guest', fields.google_sub || null, fields.apple_sub || null,
+      fields.avatar || null, fields.platform || null, reward]);
+  return { user: rows[0].account, gems: rows[0].wallet.gems };
 }
 async function signedIn(res, sql, u, extra) {
   if (blocked(u)) return L.send(res, 403, { error: 'banned', reason: u.ban_reason || '', until: u.ban_until });

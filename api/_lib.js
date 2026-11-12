@@ -85,6 +85,7 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS reset_codes (email TEXT PRIMARY KEY, code TEXT, exp TIMESTAMPTZ, tries INT DEFAULT 0)`,
   `CREATE TABLE IF NOT EXISTS orders (id TEXT PRIMARY KEY, user_id TEXT, sku TEXT, platform TEXT, gems INT, price_cents INT, currency TEXT, status TEXT, test BOOLEAN DEFAULT false, receipt TEXT, refunded_by TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS orders_user_idx ON orders (user_id, at DESC)`,
+  ...require('./_wallet').SCHEMA,
   `CREATE TABLE IF NOT EXISTS notices (id BIGSERIAL PRIMARY KEY, title TEXT, body TEXT, lang TEXT DEFAULT 'all', kind TEXT DEFAULT 'banner', active BOOLEAN DEFAULT true, starts_at TIMESTAMPTZ, ends_at TIMESTAMPTZ, created_by TEXT, created_at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS memories (user_id TEXT, id TEXT, thread_id TEXT, cast_ids JSONB DEFAULT '[]'::jsonb, type TEXT, text TEXT, who JSONB DEFAULT '[]'::jsonb, imp INT DEFAULT 2, src TEXT, pin BOOLEAN DEFAULT false, hush BOOLEAN DEFAULT false, created_ms BIGINT, emb REAL[], emb_model TEXT, updated_at TIMESTAMPTZ DEFAULT now(), PRIMARY KEY (user_id, id))`,
   `CREATE INDEX IF NOT EXISTS memories_thread_idx ON memories (user_id, thread_id)`,
@@ -265,7 +266,7 @@ const CONFIG_DEFAULTS = {
   adult_self_verify: false,
   // 容量/超时类（原来写死在各自文件里，挪进来才能不改代码就调）
   state_max_kb: 900, max_pack_kb: 1500, first_token_ms: 22000,
-  skus: { gems_5: { gems: 5, usd: 99 }, gems_16: { gems: 16, usd: 299 }, gems_28: { gems: 28, usd: 499 }, gems_60: { gems: 60, usd: 999 }, gems_125: { gems: 125, usd: 1999 }, gems_330: { gems: 330, usd: 4999 }, gems_700: { gems: 700, usd: 9999 } },
+  skus: { gems_5: { gems: 5, usd: 99, apple: 'com.miru.plus.app.gems_5' }, gems_16: { gems: 16, usd: 299, apple: 'com.miru.plus.app.gems_16' }, gems_28: { gems: 28, usd: 499, apple: 'com.miru.plus.app.gems_28' }, gems_60: { gems: 60, usd: 999, apple: 'com.miru.plus.app.gems_60' }, gems_125: { gems: 125, usd: 1999, apple: 'com.miru.plus.app.gems_125' }, gems_330: { gems: 330, usd: 4999, apple: 'com.miru.plus.app.gems_330' }, gems_700: { gems: 700, usd: 9999, apple: 'com.miru.plus.app.gems_700' } },
   /* 语音 API：地址 / 密钥 / 模型存在这儿就能在后台改，不用去动 Vercel 的环境变量。
      协议目前只认 OpenAI 兼容的 POST <url>/v1/audio/speech（CosyVoice / IndexTTS / GPT-SoVITS / 官方 OpenAI 都是这个形状）。
      url 为空 = 回到原来的行为（TTS_URL 环境变量 → HF Space 兜底）；key 有值才覆盖 TTS_KEY，后台不回显明文。 */

@@ -9,12 +9,8 @@ const L = require('./_lib');
 const PRICE = { audio: 5, image: 3, video: 10, game: 2 };
 const LIM = { audio: 4, image: 3, video: 4 };
 async function charge(sql, uid, n, reason, key) {
-  await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [uid]);
-  const dup = await sql('SELECT balance FROM ledger WHERE key=$1', [key]); if (dup[0]) return true;
-  const r = await sql('UPDATE wallet SET gems=gems-$2, updated_at=now() WHERE user_id=$1 AND gems>=$2 RETURNING gems', [uid, n]);
-  if (!r[0]) return false;
-  await sql('INSERT INTO ledger (user_id, delta, reason, key, balance) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING', [uid, -n, reason, key, r[0].gems]);
-  return true;
+  const r = await require('./_wallet').apply(sql, uid, -n, reason, key);
+  return !!r && !r.code;
 }
 const out = r => ({ id: r.id, kind: r.kind, name: r.name, kw: r.kw || [], url: r.url, mime: r.mime, size: r.size, meta: r.meta || {}, status: r.status });
 module.exports = L.wrap(async (req, res) => {
