@@ -13,6 +13,8 @@
   if (!PUB || typeof watchAd !== "function") return;
 
   try {
+    /* 2026-11-12：页面 <head> 里已经静态放了 adsbygoogle.js（审核要求代码在页面源码里），这里就不再插第二份 */
+    if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script");
     s.async = true;
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(PUB);
@@ -20,6 +22,7 @@
     s.setAttribute("data-ad-frequency-hint", "30s");
     if (/[?&]adtest=on/.test(location.search)) s.setAttribute("data-adbreak-test", "on");
     document.head.appendChild(s);
+    }
   } catch (e) { console.warn("[ads] load", e); }
   window.adsbygoogle = window.adsbygoogle || [];
   window.adBreak = window.adConfig = function (o) { window.adsbygoogle.push(o); };
