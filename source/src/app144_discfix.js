@@ -986,3 +986,106 @@ pico.instantiate_detection_memory = function(size)
   st.textContent = ".ld101c .f147{position:relative;display:block;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #F0B77E88;background:rgba(255,255,255,.04);flex:none}.ld101c .f147>img{width:68px;height:68px;box-shadow:none!important;border-radius:0!important}";
   document.head.appendChild(st);
 })();
+
+/* ===== 2026-11-13 · 章末选择融进剧情（所有剧本统一）=====
+   玩家：「这种选择回复很多余，直接融合在剧本里」。选项本身决定分支和结局，不能删 ⇒ 换成剧情里的样子：
+   1 · 章末选择不再是一块单独的「A/B/C 面板」，而是「🎭 轮到你了 + 问题」+ 几句你可以直接说出口的台词（点了 = 你说了这句）。
+   2 · 轮到选择时，下面的 AI 联想先收起来，不和剧本选项抢位置。
+   3 · 关系数值默认收起，只留一个小按钮「💗 关系」，点开再看（数值变化时仍会飘提示）。
+   4 · 输入框不再熄灭：自己打字也算数 —— AI 判断你这句最接近哪个选项，按那条分支走，你的原话保留在对话里。
+   5 · 改在通用框架里，所有剧本一起生效。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  const isChoose = th => { try { if (!th || !th.pk || th.pk.stop || th.pk.st !== "choose") return false; const c = (wd(th.wid).pack.chapters || [])[th.pk.ch - 1]; return !!(c && c.choices && c.choices.length && !pkAdvanceOnly(c)); } catch (_) { return false; } };
+  const chapOf = th => wd(th.wid).pack.chapters[th.pk.ch - 1];
+  const OPEN = { stats: false };
+
+  /* ---------- 1 + 3 · 面板 ---------- */
+  if (typeof packPanel === "function") {
+    const panel = packPanel;
+    packPanel = function (th) {
+      const h = panel.apply(this, arguments);
+      try {
+        if (!isChoose(th) || th.pk.min) return h;
+        const i = h.indexOf('<div class="pkpanel'), extra = i > 0 ? h.slice(0, i) : "";
+        const c = chapOf(th), n = th.pk.ch, w = wd(th.wid), need = n === PCN(w) ? Math.max(0, EN(th) - aCount(th)) : 0;
+        let you = ""; try { const me = typeof playerName === "function" ? playerName(th) : ""; if (me) you = T(" · 你是 ", " · as ") + esc(me); } catch (_) {}
+        const opts = c.choices.map(x => {
+          const lock = x.k === "A" && need > 0;
+          return '<button class="ch148o' + (lock ? " lk" : "") + '" data-pkpick="' + x.k + '"><span>' + esc(Lz(x.t)) + '</span>' + (lock ? '<small>🔒 ' + t("pk.needA", { n: EN(th), h: aCount(th) }) + '</small>' : '') + '</button>';
+        }).join("");
+        const stats = extra ? '<div class="st148' + (OPEN.stats ? " open" : "") + '"><button class="st148b" data-st148="1">💗 ' + T("关系", "Relationships") + (OPEN.stats ? " ▴" : " ▾") + '</button><div class="st148c">' + extra + '</div></div>' : "";
+        return '<div class="pkpanel ch148"><div class="ch148h"><span class="ch148who">🎭 ' + T("轮到你了", "Your turn") + you + '</span><b>' + esc(Lz(c.ask)) + '</b>' + stats + '</div>' +
+          '<div class="ch148l">' + opts + '</div><p class="ch148t">' + T("或者直接打字，说你自己的话", "Or just type your own line") + '</p></div>';
+      } catch (e) { console.warn("[ch148] panel", e); return h; }
+    };
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-st148]"); if (!b) return;
+    e.preventDefault(); e.stopPropagation(); OPEN.stats = !OPEN.stats;
+    const box = b.closest(".st148"); if (box) { box.classList.toggle("open", OPEN.stats); b.textContent = "💗 " + T("关系", "Relationships") + (OPEN.stats ? " ▴" : " ▾"); }
+  }, true);
+
+  /* ---------- 4 · 输入框不熄灭；打字 = 选最接近的那条 ---------- */
+  if (typeof pkBusy === "function") { const pb = pkBusy; pkBusy = function (th) { if (isChoose(th)) return false; return pb.apply(this, arguments); }; }
+  function guess(txt, choices) {
+    const a = new Set(String(txt).replace(/\s/g, "")); let best = choices[0].k, bs = -1;
+    choices.forEach(x => { const s = String(Lz(x.t)); let n = 0; new Set(s.replace(/\s/g, "")).forEach(ch => { if (a.has(ch)) n++; }); const sc = n / Math.max(4, s.length); if (sc > bs) { bs = sc; best = x.k; } });
+    return best;
+  }
+  let mapping = false;
+  async function mapAndPick(th, txt, mode) {
+    if (mapping) return; mapping = true;
+    try {
+      const c = chapOf(th), list = c.choices.map(x => x.k + "｜" + Lz(x.t)).join("\n");
+      try { appendMsg(th, { who: "me", k: mode || "say", txt, typed: true, at: Date.now() }); } catch (_) {}
+      const ta = document.getElementById("cin"); if (ta) ta.value = "";
+      try { typing(true); } catch (_) {}
+      let k = null;
+      try {
+        const r = await ask("玩家在互动剧的一个选择点上，没有点选项，而是自己说了一句话。判断这句话的意图最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+        k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
+      } catch (_) {}
+      try { typing(false); } catch (_) {}
+      if (!k || !c.choices.some(x => x.k === k)) k = guess(txt, c.choices);
+      const n = th.pk.ch, w = wd(th.wid);
+      if (n === PCN(w) && k === "A" && aCount(th) < EN(th)) { const o = c.choices.find(x => x.k !== "A"); if (o) k = o.k; }
+      if (curT === th.id && isChoose(th)) packPick(k);
+    } catch (e) { console.warn("[ch148] map", e); }
+    finally { mapping = false; }
+  }
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function (txt, mode) {
+      const th = S.threads[curT];
+      try {
+        const s = String(txt || "").trim();
+        if (s && isChoose(th) && th.pk.as !== "watch") { mapAndPick(th, s, mode); return; }
+      } catch (e) { console.warn("[ch148] send", e); }
+      return ds.apply(this, arguments);
+    };
+  }
+
+  /* ---------- 2 · 选择时收起 AI 联想 ---------- */
+  function mark() { try { const chat = document.getElementById("s-chat"); if (chat) chat.classList.toggle("chs148", isChoose(S.threads[curT])); } catch (_) {} }
+  if (typeof packRefresh === "function") { const pr = packRefresh; packRefresh = function () { const r = pr.apply(this, arguments); mark(); return r; }; }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); mark(); return r; }; }
+  setInterval(mark, 1200);
+
+  const st = document.createElement("style");
+  st.textContent =
+    ".chs148 #sugg{display:none!important}" +
+    ".pkpanel.ch148{padding:12px 12px 8px}" +
+    ".ch148h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 2px 10px;font-size:14px;line-height:1.4}" +
+    ".ch148who{flex:none;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}" +
+    ".ch148h>b{flex:1 1 auto;min-width:0}" +
+    ".ch148l{display:flex;flex-direction:column;align-items:flex-end;gap:8px}" +
+    ".ch148o{max-width:88%;text-align:left;border:1px solid rgba(238,111,151,.45);background:rgba(120,55,80,.55);color:#fff;border-radius:18px 18px 6px 18px;padding:10px 14px;font-size:14.5px;line-height:1.45;cursor:pointer}" +
+    ".ch148o:active{transform:scale(.98)}.ch148o.lk{opacity:.55}.ch148o small{display:block;font-size:11px;color:#F0B77E;margin-top:3px}" +
+    ".ch148t{margin:8px 2px 0;font-size:11.5px;color:rgba(255,255,255,.55);text-align:right}" +
+    ".st148{flex:none}.st148b{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#F6D3AE;border-radius:999px;padding:3px 10px;font-size:11.5px;cursor:pointer}" +
+    ".st148 .st148c{display:none}.st148.open{flex-basis:100%}.st148.open .st148c{display:block;margin-top:8px}";
+  document.head.appendChild(st);
+})();
