@@ -647,7 +647,8 @@
   aiIdeasGo97 = async function (btn) {
     const th = S.threads[curT]; if (!th) return;
     if (th.pk && th.pk.as === "watch") { toast(T("旁观模式下不用替你想台词", "You're watching — no lines needed")); return; }
-    if (busy) { toast(T("等他们说完这句，再帮你想", "Wait for them to finish, then try again")); return; }
+    /* busy 也会在剧本播放 / 等你轻点屏幕时一直为 true；只有真的在等 AI 回话（正在输入…）时才让你等 */
+    if (busy && document.querySelector("#msgs .typing")) { toast(T("等他们说完这句，再帮你想", "Wait for them to finish, then try again")); return; }
     const key = dialogueSceneKey(th), old = DIALOGUE_IDEAS.get(th);
     if (old && old.key === key && old.items && old.items.length) { try { DIALOGUE_AVOID.set(th, (DIALOGUE_AVOID.get(th) || []).concat(old.items).slice(-9)); } catch (_) {} DIALOGUE_IDEAS.delete(th); }
     if (btn) { btn.disabled = true; btn.dataset.t0 = btn.dataset.t0 || btn.textContent; btn.textContent = T("✨ 正在想…", "✨ Thinking…"); }
