@@ -11,7 +11,7 @@ const off=fs.readFileSync('source/src/app94_official2.js','utf8');vm.runInContex
 vm.runInContext(off.slice(off.indexOf('function off94Build('),off.indexOf('/* scene art registered again')),ctx);
 vm.runInContext(fs.readFileSync('source/src/app147_empress.js','utf8'),ctx);
 const H=hooks.empress147,doc=H.parse(t=>ctx.off94Parse(ctx.imParseCore,t),script);assert.equal(doc.chapters.length,10);assert.equal(doc.cast.length,23);assert.equal(doc.pov,'你');assert.equal(doc.choices,40);assert.equal(doc.omit,0);
-const result=H.build((d,a)=>ctx.off94Build?ctx.off94Build(ctx.imBuildCore,d,a):ctx.imBuildCore(d,a),doc);const P=ctx.S.mine.worlds[result.wid].pack;assert(P.empress147);assert.equal(P.chapters.length,10);assert.equal(P.minRoundsPerChapter,0);
+const result=H.build((d,a)=>ctx.off94Build?ctx.off94Build(ctx.imBuildCore,d,a):ctx.imBuildCore(d,a),doc);const P=ctx.S.mine.worlds[result.wid].pack;assert(P.empress147);assert.equal(P.chapters.length,10);assert.equal(P.minRoundsPerChapter,0);assert.equal(P.chapters[0].place.zh,'黄金软榻');assert.equal(Object.values(ctx.S.mine.chars).find(c=>c.n==='你').full.en,'Aurelia');
 const walk=arr=>(arr||[]).forEach(b=>{assert(Array.isArray(b));if(b[1]==='line')b[2].opts.forEach(o=>walk(o.then));if(b[1]==='if'){walk(b[2].then);walk(b[2].else);}if(b[0][0]==='@')throw Error('Unresolved cast reference: '+b[0]);});P.chapters.forEach(c=>{walk(c.beats.zh);c.choices.forEach(o=>walk(o.then.zh));});
 assert.equal(P.chapters.reduce((n,c)=>n+c.beats.zh.filter(b=>b[1]==='line').length,0),30);assert.equal(P.chapters[7].beats.zh.filter(b=>b[1]==='line')[0][2].opts.length,4);
 assert.equal(Object.values(ctx.S.mine.chars).find(c=>c.n==='SYLAS').age,128);

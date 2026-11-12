@@ -3,7 +3,7 @@
  const X=window.__empress147,E=X.engine,D=X.data,base='art/official/m110-empress/',M=window.EMPRESS_MEDIA147||{};
  const src=(folder,id,ext='webp')=>base+folder+'/'+id.toLowerCase()+'.'+ext;
  function nameOf(id){return ch(id)?.n||id;}
- function art(th){const w=wd(th.wid);if(!w?.pack?.empress147)return;D.characters.forEach((c,i)=>{const id=w.cast.find(id=>nameOf(id)===c.id);if(id){S.art[id]=src('characters','char-'+String(i+1).padStart(2,'0'));ch(id).voiceId=M.voices?.[c.id]||'m1';}});S.art[th.wid]=base+'poster.webp';}
+ function art(th){const w=wd(th.wid);if(!w?.pack?.empress147)return;const player=w.cast.map(ch).find(c=>c?.n==='你');if(player){player.full={zh:'奥瑞利亚',en:'Aurelia'};player.n94=player.full;if(player.studio)player.studio.name=player.full;}D.characters.forEach((c,i)=>{const id=w.cast.find(id=>nameOf(id)===c.id);if(id){S.art[id]=src('characters','char-'+String(i+1).padStart(2,'0'));ch(id).voiceId=M.voices?.[c.id]||'m1';}});S.art[th.wid]=base+'poster.webp';}
  const voices=new Map((M.clips||[]).map(c=>[c.actor+'|'+c.text,base+'voice/'+c.file]));
  const oldRecorded=recorded;recorded=function(text,id){const c=ch(id),th=S.threads[curT],isEmpress=c&&(wd(c.w)||{}).pack?.empress147;if(isEmpress||X.on(th)){const url=voices.get((c?.n||id)+'|'+String(text).replace(/[*()（）]/g,'').trim());if(url)return url;}return oldRecorded.apply(this,arguments);};
  function foley(th,id){if(!id||S.sfxOff||curT!==th.id||document.hidden)return;const a=new Audio(base+'audio/SFX-'+id+'.ogg');a.volume=.28;a.play().catch(()=>{});}
