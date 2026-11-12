@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths: ['source/**', 'art/**', 'audio/**', 'video/**', 'tools/**', 'ops/**', '.github/workflows/build-index.yml']
   workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * *'
 permissions:
   contents: write
 concurrency:
@@ -35,7 +37,8 @@ jobs:
             node tools/catalog-selftest.cjs
             node tools/role-list-selftest.cjs
             python3 tools/deploy-guard-selftest.py
-            git add index.html
+            python3 source/gen_seo.py || true
+            git add index.html stories about.html contact.html robots.txt sitemap.xml 2>/dev/null || git add index.html
             if git diff --cached --quiet; then exit 0; fi
             git commit -m 'build: regenerate index from current main'
             if git push origin HEAD:main; then exit 0; fi
