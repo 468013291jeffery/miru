@@ -1,0 +1,2141 @@
+{
+  "key": "m110-empress",
+  "title": {
+    "zh": "女帝的绝色后宫",
+    "en": "HER MAJESTY’S HAREM"
+  },
+  "sourceSha256": "84b943cc75ba9cd1a503dcf734c0b6e5c2eaff6c0a6f9e2cc32116b4383039d5",
+  "characters": [
+    {
+      "id": "CASSIAN",
+      "name": "Cassian Vale",
+      "age": 29,
+      "role": "首席宫廷宠君",
+      "appearance": "金发绿眸，克制温柔，擅长礼仪、早餐和协调。",
+      "desire": "合法性与排他地位",
+      "secret": "前皇帝摄政诏书。",
+      "voice": "Honey, two drops. I remembered."
+    },
+    {
+      "id": "LUCIEN",
+      "name": "Lucien Fox",
+      "age": 25,
+      "role": "贵族宠君",
+      "appearance": "赤发琥珀眸，外向调情，擅长喂葡萄、撒娇。",
+      "desire": "被公开优先选择",
+      "secret": "曾接受贵族情报报酬。",
+      "voice": "I brought grapes. And a very convincing smile."
+    },
+    {
+      "id": "KAEL",
+      "name": "Kael Draven",
+      "age": 31,
+      "role": "近卫统领",
+      "appearance": "银黑短发，寡言强壮，擅长按摩、保护。",
+      "desire": "自己的温柔被看见",
+      "secret": "曾违抗暗杀女帝的命令。",
+      "voice": "Tell me if my hands are too rough."
+    },
+    {
+      "id": "SYLAS",
+      "name": "Sylas Moonveil",
+      "age": 128,
+      "role": "月精灵宠君",
+      "appearance": "银发紫眸，浪漫诗意，精灵魔法。",
+      "desire": "被记得、被理解",
+      "secret": "身负月之契约符文。",
+      "voice": "I saved the first silver rose for you."
+    },
+    {
+      "id": "DARIAN",
+      "name": "Darian Ashborne",
+      "age": 30,
+      "role": "龙裔公爵",
+      "appearance": "黑发赤瞳，骄傲危险，不爱谄媚。",
+      "desire": "平等被渴望",
+      "secret": "龙族血契与王冠有关。",
+      "voice": "I am not here to beg. I am here because I chose you."
+    },
+    {
+      "id": "ELIAS",
+      "name": "Elias Dawn",
+      "age": 27,
+      "role": "圣殿神子",
+      "appearance": "白金发，克制诚恳，治疗神术。",
+      "desire": "信仰与感情不再对立",
+      "secret": "第七夜死亡预言。",
+      "voice": "I should be praying. Instead, I am worried about you."
+    },
+    {
+      "id": "RAFAEL",
+      "name": "Rafael Solis",
+      "age": 26,
+      "role": "宫廷舞师",
+      "appearance": "棕卷发，热烈活泼，擅长献舞。",
+      "desire": "被当成真实的人而非表演",
+      "secret": "前反抗组织线人。",
+      "voice": "One dance. No crowns. Just you and me."
+    },
+    {
+      "id": "ALISTAIR",
+      "name": "Alistair Voss",
+      "age": 28,
+      "role": "皇家学士",
+      "appearance": "黑发金框眼镜，机智沉稳，擅长对弈。",
+      "desire": "思想共鸣",
+      "secret": "调查前皇帝死亡。",
+      "voice": "The answer is hidden in what nobody bothered to read."
+    },
+    {
+      "id": "NOEL",
+      "name": "Noel Wren",
+      "age": 24,
+      "role": "花园侍君",
+      "appearance": "栗发，敏感温柔，擅长花艺烘焙。",
+      "desire": "安全感与稳定陪伴",
+      "secret": "曾藏起赛拉斯请柬。",
+      "voice": "I grew these roses because you said you liked white."
+    },
+    {
+      "id": "MALIK",
+      "name": "Malik Soren",
+      "age": 33,
+      "role": "沙漠使臣",
+      "appearance": "深肤色，成熟优雅，擅长香油温泉礼仪。",
+      "desire": "关系中的尊重",
+      "secret": "拥有境外王位继承权。",
+      "voice": "You rule all day. May I look after you tonight?"
+    },
+    {
+      "id": "FINN",
+      "name": "Finn Everly",
+      "age": 23,
+      "role": "宫廷乐师",
+      "appearance": "金棕发，活泼幽默，歌曲有魔力。",
+      "desire": "被认真聆听",
+      "secret": "歌曲封存前朝记忆。",
+      "voice": "I wrote you a song. Twelve, actually."
+    },
+    {
+      "id": "VALERIAN",
+      "name": "Valerian Thorne",
+      "age": 35,
+      "role": "密探长",
+      "appearance": "黑发银鬓，成熟冷静，善于调查。",
+      "desire": "被信任而不被畏惧",
+      "secret": "知道女帝血脉真相。",
+      "voice": "I can protect your secrets, but I will not choose for you."
+    },
+    {
+      "id": "THEO",
+      "name": "Theo Maren",
+      "age": 26,
+      "role": "甜点师",
+      "appearance": "浅棕发，细腻热情。",
+      "desire": "手作被认可",
+      "secret": "见过可疑厨房订单。",
+      "voice": "I made these just for you."
+    },
+    {
+      "id": "ROWAN",
+      "name": "Rowan Hale",
+      "age": 30,
+      "role": "宫廷按摩师",
+      "appearance": "棕发，稳重善解人意。",
+      "desire": "陪伴被珍惜",
+      "secret": "发现异常香油。",
+      "voice": "Would you like your shoulders relaxed?"
+    },
+    {
+      "id": "EVREN",
+      "name": "Evren Starling",
+      "age": 27,
+      "role": "星象师",
+      "appearance": "深紫发，神秘。",
+      "desire": "预言被信任",
+      "secret": "看到双重王冠星象。",
+      "voice": "The stars are unusually jealous tonight."
+    },
+    {
+      "id": "NICO",
+      "name": "Nico Bellamy",
+      "age": 25,
+      "role": "宫廷画师",
+      "appearance": "微卷黑发，幽默。",
+      "desire": "被真正看见",
+      "secret": "画出总管的双重影子。",
+      "voice": "Hold still, Your Majesty. Almost perfect."
+    },
+    {
+      "id": "ORION",
+      "name": "Orion Blackwell",
+      "age": 32,
+      "role": "神兽驯养师",
+      "appearance": "黑褐发，野性外表。",
+      "desire": "被认可其温柔",
+      "secret": "神兽能嗅出王冠诅咒。",
+      "voice": "Even the griffin likes you."
+    },
+    {
+      "id": "JASPER",
+      "name": "Jasper Reed",
+      "age": 24,
+      "role": "花艺师",
+      "appearance": "浅栗发，明朗。",
+      "desire": "温柔的关注",
+      "secret": "看见被藏起的信件。",
+      "voice": "These blooms open only for you."
+    },
+    {
+      "id": "CASSIEL",
+      "name": "Cassiel Frost",
+      "age": 29,
+      "role": "冰魔法师",
+      "appearance": "银白发，寡言清冷。",
+      "desire": "愿意展现柔软",
+      "secret": "可冻结诅咒碎片。",
+      "voice": "I made it snow, only where you asked."
+    },
+    {
+      "id": "ADRIEN",
+      "name": "Adrien Lumière",
+      "age": 28,
+      "role": "御用调香师",
+      "appearance": "墨发，气质精致。",
+      "desire": "私人仪式感",
+      "secret": "能识别伊萨克使用的香味。",
+      "voice": "I made this scent for one person alone."
+    }
+  ],
+  "chapters": [
+    {
+      "n": 1,
+      "title": "女帝的第一夜",
+      "en": "THE EMPRESS’S FIRST NIGHT"
+    },
+    {
+      "n": 2,
+      "title": "谁最得宠",
+      "en": "THE FAVORITE’S PRIVILEGE"
+    },
+    {
+      "n": 3,
+      "title": "夜间翻牌",
+      "en": "THE MIDNIGHT SELECTION"
+    },
+    {
+      "n": 4,
+      "title": "玫瑰园陷阱",
+      "en": "THE ROSE GARDEN TRAP"
+    },
+    {
+      "n": 5,
+      "title": "二十美男宴",
+      "en": "THE FEAST OF TWENTY"
+    },
+    {
+      "n": 6,
+      "title": "禁室真相",
+      "en": "THE FORBIDDEN CHAMBERS"
+    },
+    {
+      "n": 7,
+      "title": "背叛之夜",
+      "en": "THE NIGHT OF BETRAYAL"
+    },
+    {
+      "n": 8,
+      "title": "女帝审判",
+      "en": "THE EMPRESS’S JUDGMENT"
+    },
+    {
+      "n": 9,
+      "title": "二十颗心",
+      "en": "TWENTY HEARTS, ONE CROWN"
+    },
+    {
+      "n": 10,
+      "title": "女帝的选择",
+      "en": "HER MAJESTY’S CHOICE"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "M110-C01-S01",
+      "chapter": 1,
+      "title": "黄金软榻",
+      "narration": "你从六小时的加冕仪式回到寝宫。卢西恩捧葡萄，凯尔替你解披风，卡西安温茶，赛拉斯以竖琴迎接你。",
+      "actor": "LUCIEN",
+      "dialogue": "One more, Your Majesty? The sweetest one is yours.",
+      "options": [
+        {
+          "id": "M110-C01-S01-O01",
+          "text": "让卢西恩喂葡萄",
+          "effect": "LUCIEN",
+          "delta": 12,
+          "staging": "甜蜜与公开嫉妒。"
+        },
+        {
+          "id": "M110-C01-S01-O02",
+          "text": "请凯尔按摩",
+          "effect": "KAEL",
+          "delta": 12,
+          "staging": "战士的温柔。"
+        },
+        {
+          "id": "M110-C01-S01-O03",
+          "text": "让卡西安陪坐",
+          "effect": "CASSIAN",
+          "delta": 12,
+          "staging": "稳定的正宫感。"
+        },
+        {
+          "id": "M110-C01-S01-O04",
+          "text": "所有人留下",
+          "effect": "ALL",
+          "delta": 5,
+          "staging": "多人侍奉与竞争。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C01-S02",
+      "chapter": 1,
+      "title": "第一个侍奉选择",
+      "narration": "你选择的男人立刻上前；其余人以自己的方式掩饰嫉妒。",
+      "actor": "CASSIAN",
+      "dialogue": "I only ask that Her Majesty gets a moment to rest.",
+      "options": [
+        {
+          "id": "M110-C01-S02-O01",
+          "text": "温柔称赞",
+          "effect": "TRUST",
+          "delta": 6,
+          "staging": "信任增长。"
+        },
+        {
+          "id": "M110-C01-S02-O02",
+          "text": "故意挑逗竞争",
+          "effect": "JEALOUSY",
+          "delta": 8,
+          "staging": "修罗场升级。"
+        },
+        {
+          "id": "M110-C01-S02-O03",
+          "text": "设立轮值表",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "公平与秩序。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C01-S03",
+      "chapter": 1,
+      "title": "午夜玉牌",
+      "narration": "总管捧来十二枚刻名的玉牌。今夜可以单选、双选，也可以邀请全部人听音乐。",
+      "actor": "ELIAS",
+      "dialogue": "Before midnight, Your Majesty, there is something you must know.",
+      "options": [
+        {
+          "id": "M110-C01-S03-O01",
+          "text": "召卢西恩",
+          "effect": "LUCIEN",
+          "delta": 15,
+          "staging": "葡萄与第一吻可选。"
+        },
+        {
+          "id": "M110-C01-S03-O02",
+          "text": "召凯尔",
+          "effect": "KAEL",
+          "delta": 15,
+          "staging": "温泉与信任。"
+        },
+        {
+          "id": "M110-C01-S03-O03",
+          "text": "召伊莱亚斯",
+          "effect": "ELIAS",
+          "delta": 15,
+          "staging": "死亡预言。"
+        },
+        {
+          "id": "M110-C01-S03-O04",
+          "text": "举办夜宴",
+          "effect": "ALL",
+          "delta": 8,
+          "staging": "后宫热度。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C01-S04",
+      "chapter": 1,
+      "title": "黑玫瑰警告",
+      "narration": "蜡烛熄灭一瞬，一朵黑色玫瑰落在你的枕上：第七次日出之前，会有最亲近者令你丧命。",
+      "actor": "VALERIAN",
+      "dialogue": "Someone entered your chambers. I intend to learn who.",
+      "options": [
+        {
+          "id": "M110-C01-S04-O01",
+          "text": "交瓦莱里安调查",
+          "effect": "VALERIAN",
+          "delta": 8,
+          "staging": "获得密探线索。"
+        },
+        {
+          "id": "M110-C01-S04-O02",
+          "text": "自行收藏",
+          "effect": "SECRET",
+          "delta": 5,
+          "staging": "维持秘密。"
+        },
+        {
+          "id": "M110-C01-S04-O03",
+          "text": "告诉宠君们",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "启动集体守护。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C02-S01",
+      "chapter": 2,
+      "title": "寝宫门口的早晨",
+      "narration": "门外六位男人争着送来早餐。卢西恩捧草莓，提奥端甜点，罗文持精油，芬恩抱琴。",
+      "actor": "FINN",
+      "dialogue": "I wrote a song about your breakfast. I regret nothing.",
+      "options": [
+        {
+          "id": "M110-C02-S01-O01",
+          "text": "喂草莓",
+          "effect": "LUCIEN",
+          "delta": 12,
+          "staging": "撒娇。"
+        },
+        {
+          "id": "M110-C02-S01-O02",
+          "text": "做肩颈按摩",
+          "effect": "ROWAN",
+          "delta": 12,
+          "staging": "照料。"
+        },
+        {
+          "id": "M110-C02-S01-O03",
+          "text": "共进茶点",
+          "effect": "CASSIAN",
+          "delta": 12,
+          "staging": "稳定。"
+        },
+        {
+          "id": "M110-C02-S01-O04",
+          "text": "一同侍奉",
+          "effect": "ALL",
+          "delta": 5,
+          "staging": "热闹。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C02-S02",
+      "chapter": 2,
+      "title": "争夺东宫",
+      "narration": "总管宣告首位贵君将获东宫居所。卡西安愿负责秩序，卢西恩只想得到女帝公开偏爱。",
+      "actor": "LUCIEN",
+      "dialogue": "I promise not to brag. Much.",
+      "options": [
+        {
+          "id": "M110-C02-S02-O01",
+          "text": "册封卡西安",
+          "effect": "CASSIAN",
+          "delta": 18,
+          "staging": "制度稳定。"
+        },
+        {
+          "id": "M110-C02-S02-O02",
+          "text": "册封卢西恩",
+          "effect": "LUCIEN",
+          "delta": 18,
+          "staging": "争宠升温。"
+        },
+        {
+          "id": "M110-C02-S02-O03",
+          "text": "册封凯尔",
+          "effect": "KAEL",
+          "delta": 18,
+          "staging": "兵权影响。"
+        },
+        {
+          "id": "M110-C02-S02-O04",
+          "text": "暂不册封",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "公平。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C02-S03",
+      "chapter": 2,
+      "title": "白昼赐礼",
+      "narration": "皇家匠师进献胸针、披风、琥珀戒指。候选者等候决定。",
+      "actor": "CASSIAN",
+      "dialogue": "A gift from you would mean more than anything in the treasury.",
+      "options": [
+        {
+          "id": "M110-C02-S03-O01",
+          "text": "赏赐给未受宠者",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "平衡嫉妒。"
+        },
+        {
+          "id": "M110-C02-S03-O02",
+          "text": "赏赐给当前宠君",
+          "effect": "FAVORITE",
+          "delta": 10,
+          "staging": "独宠气氛。"
+        },
+        {
+          "id": "M110-C02-S03-O03",
+          "text": "收归国库",
+          "effect": "EMPIRE",
+          "delta": 10,
+          "staging": "政治威望。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C02-S04",
+      "chapter": 2,
+      "title": "走廊中的密谈",
+      "narration": "在无人处，你听到贵族质问卢西恩：你收了钱，怎么反而爱上女帝？卢西恩沉默。",
+      "actor": "LUCIEN",
+      "dialogue": "I came here for the wrong reasons. That changed.",
+      "options": [
+        {
+          "id": "M110-C02-S04-O01",
+          "text": "当面对质",
+          "effect": "LUCIEN",
+          "delta": 8,
+          "staging": "情报真相。"
+        },
+        {
+          "id": "M110-C02-S04-O02",
+          "text": "暗查雇主",
+          "effect": "VALERIAN",
+          "delta": 10,
+          "staging": "证据。"
+        },
+        {
+          "id": "M110-C02-S04-O03",
+          "text": "暂且不问",
+          "effect": "SECRET",
+          "delta": 5,
+          "staging": "疑虑累积。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C03-S01",
+      "chapter": 3,
+      "title": "银盘与名字",
+      "narration": "午夜金色玉牌泛光。达里安的牌先亮了一瞬。所有男人都在等女帝的选择。",
+      "actor": "DARIAN",
+      "dialogue": "I did not make the token glow. Stop staring.",
+      "options": [
+        {
+          "id": "M110-C03-S01-O01",
+          "text": "卢西恩共度夜晚",
+          "effect": "LUCIEN",
+          "delta": 15,
+          "staging": "红葡萄亲密。"
+        },
+        {
+          "id": "M110-C03-S01-O02",
+          "text": "凯尔陪伴温泉",
+          "effect": "KAEL",
+          "delta": 15,
+          "staging": "按摩私谈。"
+        },
+        {
+          "id": "M110-C03-S01-O03",
+          "text": "赛拉斯花园",
+          "effect": "SYLAS",
+          "delta": 15,
+          "staging": "月亮誓言。"
+        },
+        {
+          "id": "M110-C03-S01-O04",
+          "text": "达里安饮酒下棋",
+          "effect": "DARIAN",
+          "delta": 15,
+          "staging": "龙裔试探。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C03-S02",
+      "chapter": 3,
+      "title": "私人时刻",
+      "narration": "寝宫中，当前所选之人明确询问你是否愿意握手、拥抱或独处。细节随人物而变，但玩家始终可以拒绝。",
+      "actor": "LUCIEN",
+      "dialogue": "I want to stay. Only if you want me here.",
+      "options": [
+        {
+          "id": "M110-C03-S02-O01",
+          "text": "接受温柔亲密",
+          "effect": "CHOSEN",
+          "delta": 12,
+          "staging": "专属记忆。"
+        },
+        {
+          "id": "M110-C03-S02-O02",
+          "text": "先聊天",
+          "effect": "TRUST",
+          "delta": 10,
+          "staging": "深度信任。"
+        },
+        {
+          "id": "M110-C03-S02-O03",
+          "text": "今夜独处",
+          "effect": "BOUNDARY",
+          "delta": 5,
+          "staging": "尊重边界。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C03-S03",
+      "chapter": 3,
+      "title": "清晨的醋意",
+      "narration": "受宠男子离开寝宫时，其他人的嫉妒表露无遗。芬恩将这件事写进一首歌。",
+      "actor": "FINN",
+      "dialogue": "This palace needs a better schedule. Or a referee.",
+      "options": [
+        {
+          "id": "M110-C03-S03-O01",
+          "text": "公开安抚大家",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "关系稳定。"
+        },
+        {
+          "id": "M110-C03-S03-O02",
+          "text": "只拥抱受宠者",
+          "effect": "CHOSEN",
+          "delta": 8,
+          "staging": "强烈独宠。"
+        },
+        {
+          "id": "M110-C03-S03-O03",
+          "text": "宣布下一轮公平邀请",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "降低嫉妒。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C03-S04",
+      "chapter": 3,
+      "title": "镜中第一女帝",
+      "narration": "镜面出现古代女帝塞拉菲娜：王冠不是祝福，而是锁链。她只留下一个名字：伊萨克。",
+      "actor": "SERAPHINE",
+      "dialogue": "The crown chose you because you can break it.",
+      "options": [
+        {
+          "id": "M110-C03-S04-O01",
+          "text": "查王冠史",
+          "effect": "ALISTAIR",
+          "delta": 10,
+          "staging": "古史线索。"
+        },
+        {
+          "id": "M110-C03-S04-O02",
+          "text": "找神殿",
+          "effect": "ELIAS",
+          "delta": 10,
+          "staging": "预言线索。"
+        },
+        {
+          "id": "M110-C03-S04-O03",
+          "text": "找龙族",
+          "effect": "DARIAN",
+          "delta": 10,
+          "staging": "血契线索。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C04-S01",
+      "chapter": 4,
+      "title": "空等的花园",
+      "narration": "你与赛拉斯约定月夜散步，他迟迟未出现。诺埃尔捧白玫瑰在喷泉旁等你。",
+      "actor": "NOEL",
+      "dialogue": "I thought you might want these. I hoped you would.",
+      "options": [
+        {
+          "id": "M110-C04-S01-O01",
+          "text": "温柔问清楚",
+          "effect": "NOEL",
+          "delta": 10,
+          "staging": "坦白。"
+        },
+        {
+          "id": "M110-C04-S01-O02",
+          "text": "追查请柬",
+          "effect": "VALERIAN",
+          "delta": 8,
+          "staging": "证据。"
+        },
+        {
+          "id": "M110-C04-S01-O03",
+          "text": "严肃申明规则",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "后宫纪律。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C04-S02",
+      "chapter": 4,
+      "title": "被藏起的请柬",
+      "narration": "你找到了被撕毁的请柬，花香来自诺埃尔的花房。他承认只是希望独占一个下午。",
+      "actor": "NOEL",
+      "dialogue": "I was jealous. I am sorry. That does not excuse it.",
+      "options": [
+        {
+          "id": "M110-C04-S02-O01",
+          "text": "让他向赛拉斯道歉",
+          "effect": "TRUST",
+          "delta": 10,
+          "staging": "修复。"
+        },
+        {
+          "id": "M110-C04-S02-O02",
+          "text": "暂时取消邀约",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "失宠。"
+        },
+        {
+          "id": "M110-C04-S02-O03",
+          "text": "允许他补偿",
+          "effect": "NOEL",
+          "delta": 8,
+          "staging": "花园任务。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C04-S03",
+      "chapter": 4,
+      "title": "被冷落的红发宠君",
+      "narration": "如果卢西恩连续3个主要事件未受宠，他会捧着葡萄自嘲；即使没有冷落也会出现在此处作正常探望。",
+      "actor": "LUCIEN",
+      "dialogue": "I miss you. I was hoping you might miss me too.",
+      "options": [
+        {
+          "id": "M110-C04-S03-O01",
+          "text": "陪他吃水果",
+          "effect": "LUCIEN",
+          "delta": 12,
+          "staging": "复宠。"
+        },
+        {
+          "id": "M110-C04-S03-O02",
+          "text": "解释繁忙",
+          "effect": "TRUST",
+          "delta": 8,
+          "staging": "理解。"
+        },
+        {
+          "id": "M110-C04-S03-O03",
+          "text": "安排未来的相处",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "日程记忆。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C04-S04",
+      "chapter": 4,
+      "title": "月之印记灼烧",
+      "narration": "赛拉斯倒在喷泉旁，无法施法。地上有前皇帝的戒指。",
+      "actor": "SYLAS",
+      "dialogue": "Someone used the crown’s true name against me.",
+      "options": [
+        {
+          "id": "M110-C04-S04-O01",
+          "text": "扶赛拉斯回宫",
+          "effect": "SYLAS",
+          "delta": 15,
+          "staging": "情感。"
+        },
+        {
+          "id": "M110-C04-S04-O02",
+          "text": "封锁花园",
+          "effect": "KAEL",
+          "delta": 8,
+          "staging": "安全。"
+        },
+        {
+          "id": "M110-C04-S04-O03",
+          "text": "调查戒指",
+          "effect": "ALISTAIR",
+          "delta": 10,
+          "staging": "诅咒证据。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C05-S01",
+      "chapter": 5,
+      "title": "二十美男献艺",
+      "narration": "宴会开启，卢西恩喂葡萄，拉斐尔起舞，芬恩奏乐，凯尔守门，卡西安斟茶。",
+      "actor": "RAFAEL",
+      "dialogue": "If we are competing, gentlemen, at least make it beautiful.",
+      "options": [
+        {
+          "id": "M110-C05-S01-O01",
+          "text": "让卢西恩坐左侧",
+          "effect": "LUCIEN",
+          "delta": 10,
+          "staging": "公开宠爱。"
+        },
+        {
+          "id": "M110-C05-S01-O02",
+          "text": "让卡西安坐右侧",
+          "effect": "CASSIAN",
+          "delta": 10,
+          "staging": "正宫争位。"
+        },
+        {
+          "id": "M110-C05-S01-O03",
+          "text": "邀请三人合作演出",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "联动。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C05-S02",
+      "chapter": 5,
+      "title": "舞台上的嫉妒",
+      "narration": "芬恩临时唱出每人的心声，男人们一边害羞一边争着修改歌词。",
+      "actor": "FINN",
+      "dialogue": "She rules the stars and all the sea—and nobody saves a dance for me.",
+      "options": [
+        {
+          "id": "M110-C05-S02-O01",
+          "text": "与拉斐尔跳舞",
+          "effect": "RAFAEL",
+          "delta": 12,
+          "staging": "舞会CG。"
+        },
+        {
+          "id": "M110-C05-S02-O02",
+          "text": "邀请芬恩唱双人曲",
+          "effect": "FINN",
+          "delta": 12,
+          "staging": "音乐记忆。"
+        },
+        {
+          "id": "M110-C05-S02-O03",
+          "text": "听赛拉斯竖琴",
+          "effect": "SYLAS",
+          "delta": 12,
+          "staging": "精灵浪漫。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C05-S03",
+      "chapter": 5,
+      "title": "被调换的葡萄酒",
+      "narration": "酒杯被人替换，伊莱亚斯警告，芬恩突然倒下。凯尔封门；卢西恩失声。",
+      "actor": "ELIAS",
+      "dialogue": "Don’t drink that! This is a memory seal!",
+      "options": [
+        {
+          "id": "M110-C05-S03-O01",
+          "text": "抱住芬恩",
+          "effect": "FINN",
+          "delta": 14,
+          "staging": "情感危机。"
+        },
+        {
+          "id": "M110-C05-S03-O02",
+          "text": "查验酒杯",
+          "effect": "VALERIAN",
+          "delta": 12,
+          "staging": "证据。"
+        },
+        {
+          "id": "M110-C05-S03-O03",
+          "text": "让伊莱亚斯治疗",
+          "effect": "ELIAS",
+          "delta": 12,
+          "staging": "魔法线索。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C05-S04",
+      "chapter": 5,
+      "title": "被封的旋律",
+      "narration": "芬恩醒来，用一首断裂的歌曲重现前帝最后一刻：王冠吞噬了他。",
+      "actor": "FINN",
+      "dialogue": "It wasn’t an assassin. The crown killed him.",
+      "options": [
+        {
+          "id": "M110-C05-S04-O01",
+          "text": "相信芬恩",
+          "effect": "FINN",
+          "delta": 12,
+          "staging": "信任。"
+        },
+        {
+          "id": "M110-C05-S04-O02",
+          "text": "藏起真相",
+          "effect": "SECRET",
+          "delta": 8,
+          "staging": "政治稳定。"
+        },
+        {
+          "id": "M110-C05-S04-O03",
+          "text": "召全员开会",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "信任公开。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C06-S01",
+      "chapter": 6,
+      "title": "地下铭文",
+      "narration": "玩家带四位同伴前往密室，发现四百年前塞拉菲娜女帝的画像及二十男宠符文。",
+      "actor": "ALISTAIR",
+      "dialogue": "History did not forget her. Someone erased her.",
+      "options": [
+        {
+          "id": "M110-C06-S01-O01",
+          "text": "读原稿",
+          "effect": "ALISTAIR",
+          "delta": 12,
+          "staging": "解除诅咒路径C。"
+        },
+        {
+          "id": "M110-C06-S01-O02",
+          "text": "研究精灵符文",
+          "effect": "SYLAS",
+          "delta": 12,
+          "staging": "路径A。"
+        },
+        {
+          "id": "M110-C06-S01-O03",
+          "text": "研究龙焰纹",
+          "effect": "DARIAN",
+          "delta": 12,
+          "staging": "路径B。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C06-S02",
+      "chapter": 6,
+      "title": "四百年前的誓约",
+      "narration": "塞拉菲娜曾以自愿誓言织成王冠；祭司伊萨克把它改成生命陷阱。",
+      "actor": "ELIAS",
+      "dialogue": "The spell was not born evil. It was rewritten.",
+      "options": [
+        {
+          "id": "M110-C06-S02-O01",
+          "text": "召集同伴",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "路径A。"
+        },
+        {
+          "id": "M110-C06-S02-O02",
+          "text": "调查总管",
+          "effect": "VALERIAN",
+          "delta": 12,
+          "staging": "路径D。"
+        },
+        {
+          "id": "M110-C06-S02-O03",
+          "text": "寻求龙火",
+          "effect": "DARIAN",
+          "delta": 12,
+          "staging": "路径B。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C06-S03",
+      "chapter": 6,
+      "title": "后宫的秘密交换",
+      "narration": "十二位核心成员各有线索。女帝决定信任谁，不信任者仍可通过调查工具补齐线索。",
+      "actor": "VALERIAN",
+      "dialogue": "No secret is worth losing your freedom.",
+      "options": [
+        {
+          "id": "M110-C06-S03-O01",
+          "text": "四人联合调查",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "团队。"
+        },
+        {
+          "id": "M110-C06-S03-O02",
+          "text": "单人解密",
+          "effect": "EMPIRE",
+          "delta": 8,
+          "staging": "个人威望。"
+        },
+        {
+          "id": "M110-C06-S03-O03",
+          "text": "向所有人公开",
+          "effect": "TRUST",
+          "delta": 12,
+          "staging": "信任。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C06-S04",
+      "chapter": 6,
+      "title": "女帝的宣言",
+      "narration": "后宫集会，每位男人必须有权决定是否留下。凯尔率先自愿守护你。",
+      "actor": "KAEL",
+      "dialogue": "I stay because I love you. Not because a crown commands me.",
+      "options": [
+        {
+          "id": "M110-C06-S04-O01",
+          "text": "接受众人誓言",
+          "effect": "COURT",
+          "delta": 15,
+          "staging": "联合誓言。"
+        },
+        {
+          "id": "M110-C06-S04-O02",
+          "text": "允许自由退出",
+          "effect": "TRUST",
+          "delta": 15,
+          "staging": "尊重。"
+        },
+        {
+          "id": "M110-C06-S04-O03",
+          "text": "独自抗争",
+          "effect": "EMPIRE",
+          "delta": 12,
+          "staging": "孤勇。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C07-S01",
+      "chapter": 7,
+      "title": "血色闪电",
+      "narration": "第七夜，王冠内部的诅咒撕裂穹顶，众男宠护住女帝。",
+      "actor": "DARIAN",
+      "dialogue": "That thing is alive. Get behind me!",
+      "options": [
+        {
+          "id": "M110-C07-S01-O01",
+          "text": "以龙火阻挡",
+          "effect": "DARIAN",
+          "delta": 12,
+          "staging": "火焰特效。"
+        },
+        {
+          "id": "M110-C07-S01-O02",
+          "text": "召神官结界",
+          "effect": "ELIAS",
+          "delta": 12,
+          "staging": "光明特效。"
+        },
+        {
+          "id": "M110-C07-S01-O03",
+          "text": "命凯尔保护众人",
+          "effect": "KAEL",
+          "delta": 12,
+          "staging": "防线。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C07-S02",
+      "chapter": 7,
+      "title": "凯尔之死",
+      "narration": "魔法长矛直刺女帝。凯尔挡下攻击并在你怀中停止呼吸；灵魂被夺走。",
+      "actor": "KAEL",
+      "dialogue": "Are you hurt? Good. Then I did my job.",
+      "options": [
+        {
+          "id": "M110-C07-S02-O01",
+          "text": "呼唤凯尔",
+          "effect": "KAEL",
+          "delta": 15,
+          "staging": "刻骨记忆。"
+        },
+        {
+          "id": "M110-C07-S02-O02",
+          "text": "请求伊莱亚斯救治",
+          "effect": "ELIAS",
+          "delta": 12,
+          "staging": "发现魂困。"
+        },
+        {
+          "id": "M110-C07-S02-O03",
+          "text": "忍痛指挥众人",
+          "effect": "EMPIRE",
+          "delta": 12,
+          "staging": "领导。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C07-S03",
+      "chapter": 7,
+      "title": "坠落的忠诚",
+      "narration": "卢西恩失声哭泣，卡西安组织疏散，达里安怒意点燃大厅。",
+      "actor": "LUCIEN",
+      "dialogue": "He is not allowed to leave us. Not like this.",
+      "options": [
+        {
+          "id": "M110-C07-S03-O01",
+          "text": "拥抱卢西恩",
+          "effect": "LUCIEN",
+          "delta": 10,
+          "staging": "相互支持。"
+        },
+        {
+          "id": "M110-C07-S03-O02",
+          "text": "命卡西安稳定后宫",
+          "effect": "CASSIAN",
+          "delta": 10,
+          "staging": "秩序。"
+        },
+        {
+          "id": "M110-C07-S03-O03",
+          "text": "命达里安暂止龙火",
+          "effect": "DARIAN",
+          "delta": 10,
+          "staging": "信任。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C07-S04",
+      "chapter": 7,
+      "title": "总管现真形",
+      "narration": "瓦莱里安揭穿总管是伊萨克的寄生载体。伊萨克开出交换：以王冠换凯尔灵魂。",
+      "actor": "ISAAC",
+      "dialogue": "Give me the crown. I will return your knight.",
+      "options": [
+        {
+          "id": "M110-C07-S04-O01",
+          "text": "拒绝交易",
+          "effect": "TRUST",
+          "delta": 10,
+          "staging": "尊严。"
+        },
+        {
+          "id": "M110-C07-S04-O02",
+          "text": "假意接受",
+          "effect": "VALERIAN",
+          "delta": 10,
+          "staging": "反间计。"
+        },
+        {
+          "id": "M110-C07-S04-O03",
+          "text": "询问代价",
+          "effect": "ALISTAIR",
+          "delta": 10,
+          "staging": "信息。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C08-S01",
+      "chapter": 8,
+      "title": "自由之心",
+      "narration": "女帝发现无法强迫自由之心的王冠规律，恋人们自愿为她提供魔力。",
+      "actor": "CASSIAN",
+      "dialogue": "A title cannot tell me who to love. I choose you.",
+      "options": [
+        {
+          "id": "M110-C08-S01-O01",
+          "text": "自由誓约",
+          "effect": "PATH_A",
+          "delta": 10,
+          "staging": "多男主联合。"
+        },
+        {
+          "id": "M110-C08-S01-O02",
+          "text": "龙火焚冠",
+          "effect": "PATH_B",
+          "delta": 10,
+          "staging": "失去部分魔法。"
+        },
+        {
+          "id": "M110-C08-S01-O03",
+          "text": "独自改写",
+          "effect": "PATH_C",
+          "delta": 10,
+          "staging": "女帝威望。"
+        },
+        {
+          "id": "M110-C08-S01-O04",
+          "text": "反间诱敌",
+          "effect": "PATH_D",
+          "delta": 10,
+          "staging": "智取。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C08-S02",
+      "chapter": 8,
+      "title": "四种破解路径",
+      "narration": "根据选择播放四种演出。A共同发光；B龙火熔冠；C灵魂迷宫重写符文；D用伊萨克真名封印。",
+      "actor": "SERAPHINE",
+      "dialogue": "The crown cannot command a heart freely given.",
+      "options": [
+        {
+          "id": "M110-C08-S02-O01",
+          "text": "保护所有灵魂",
+          "effect": "COURT",
+          "delta": 15,
+          "staging": "恢复凯尔。"
+        },
+        {
+          "id": "M110-C08-S02-O02",
+          "text": "封印残留",
+          "effect": "EMPIRE",
+          "delta": 15,
+          "staging": "世界稳定。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C08-S03",
+      "chapter": 8,
+      "title": "凯尔归来",
+      "narration": "金光消散，凯尔从门口走来，伤口已经消失，却仍记得你的呼喊。",
+      "actor": "KAEL",
+      "dialogue": "Did I miss anything? I promised I would stay.",
+      "options": [
+        {
+          "id": "M110-C08-S03-O01",
+          "text": "拥抱凯尔",
+          "effect": "KAEL",
+          "delta": 20,
+          "staging": "复活拥抱CG。"
+        },
+        {
+          "id": "M110-C08-S03-O02",
+          "text": "吻他脸颊",
+          "effect": "KAEL",
+          "delta": 20,
+          "staging": "亲密。"
+        },
+        {
+          "id": "M110-C08-S03-O03",
+          "text": "牵手沉默",
+          "effect": "KAEL",
+          "delta": 15,
+          "staging": "安全感。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C08-S04",
+      "chapter": 8,
+      "title": "谁有权命令爱情",
+      "narration": "伊萨克消亡后，塞拉菲娜投影感谢你没有重蹈覆辙。女帝决定重新定义后宫制度。",
+      "actor": "SERAPHINE",
+      "dialogue": "Keep the throne. Let them keep their hearts.",
+      "options": [
+        {
+          "id": "M110-C08-S04-O01",
+          "text": "开始制度改革",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "新后宫。"
+        },
+        {
+          "id": "M110-C08-S04-O02",
+          "text": "先举行追悼与庆祝",
+          "effect": "TRUST",
+          "delta": 10,
+          "staging": "情感。"
+        },
+        {
+          "id": "M110-C08-S04-O03",
+          "text": "清点剩余诅咒",
+          "effect": "VALERIAN",
+          "delta": 10,
+          "staging": "续集伏笔。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C09-S01",
+      "chapter": 9,
+      "title": "后宫改革议会",
+      "narration": "凯尔复活三日后，宫中恢复争吵与欢笑。卡西安谈制度，卢西恩嫌会议无聊。",
+      "actor": "LUCIEN",
+      "dialogue": "I have feelings. Apparently the schedule does not.",
+      "options": [
+        {
+          "id": "M110-C09-S01-O01",
+          "text": "设帝君",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "唯一官方位分。"
+        },
+        {
+          "id": "M110-C09-S01-O02",
+          "text": "暂不设帝君",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "开放均衡。"
+        },
+        {
+          "id": "M110-C09-S01-O03",
+          "text": "按贡献晋位",
+          "effect": "EMPIRE",
+          "delta": 10,
+          "staging": "绩效。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C09-S02",
+      "chapter": 9,
+      "title": "二十场才艺",
+      "narration": "所有成员依次展示：舞蹈、音乐、鲜花、甜品、按摩、绘画、预言、龙火等。",
+      "actor": "THEO",
+      "dialogue": "I made dessert. I may have written your name in sugar.",
+      "options": [
+        {
+          "id": "M110-C09-S02-O01",
+          "text": "公开表扬新人",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "新人活跃。"
+        },
+        {
+          "id": "M110-C09-S02-O02",
+          "text": "奖赏旧宠",
+          "effect": "FAVORITE",
+          "delta": 12,
+          "staging": "独宠。"
+        },
+        {
+          "id": "M110-C09-S02-O03",
+          "text": "邀请大家互相合作",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "结盟。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C09-S03",
+      "chapter": 9,
+      "title": "第一位帝君",
+      "narration": "女帝选定首席地位或留空。未被选中者表现情感而不强迫玩家改变决定。",
+      "actor": "CASSIAN",
+      "dialogue": "I will honor your choice, even if I wish it were me.",
+      "options": [
+        {
+          "id": "M110-C09-S03-O01",
+          "text": "赐独立宫殿",
+          "effect": "FAVORITE",
+          "delta": 15,
+          "staging": "特别待遇。"
+        },
+        {
+          "id": "M110-C09-S03-O02",
+          "text": "赐自由通行权",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "宫廷福利。"
+        },
+        {
+          "id": "M110-C09-S03-O03",
+          "text": "保留所有位分",
+          "effect": "COURT",
+          "delta": 10,
+          "staging": "公平。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C09-S04",
+      "chapter": 9,
+      "title": "午夜还要选谁",
+      "narration": "卢西恩当众询问明早谁先见女帝，凯尔轻笑，芬恩唱出争宠歌。",
+      "actor": "FINN",
+      "dialogue": "Twelve men, one breakfast table. This is my next hit.",
+      "options": [
+        {
+          "id": "M110-C09-S04-O01",
+          "text": "宣布今夜三人陪伴",
+          "effect": "COURT",
+          "delta": 15,
+          "staging": "多人宴会。"
+        },
+        {
+          "id": "M110-C09-S04-O02",
+          "text": "选一位独处",
+          "effect": "FAVORITE",
+          "delta": 15,
+          "staging": "独宠。"
+        },
+        {
+          "id": "M110-C09-S04-O03",
+          "text": "自己享受安静",
+          "effect": "BOUNDARY",
+          "delta": 10,
+          "staging": "个人自由。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C10-S01",
+      "chapter": 10,
+      "title": "新月庆典",
+      "narration": "一个月后，帝国庆祝恢复秩序，二十位男人为女帝献上专属庆典。",
+      "actor": "MALIK",
+      "dialogue": "No one will ever choose your life for you again.",
+      "options": [
+        {
+          "id": "M110-C10-S01-O01",
+          "text": "盛大宴会",
+          "effect": "COURT",
+          "delta": 12,
+          "staging": "热闹。"
+        },
+        {
+          "id": "M110-C10-S01-O02",
+          "text": "私人晚宴",
+          "effect": "FAVORITE",
+          "delta": 12,
+          "staging": "亲近。"
+        },
+        {
+          "id": "M110-C10-S01-O03",
+          "text": "与民同庆",
+          "effect": "EMPIRE",
+          "delta": 12,
+          "staging": "威望。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C10-S02",
+      "chapter": 10,
+      "title": "最后的册封",
+      "narration": "女帝确定后宫制度：独宠型、多伴侣型、平等型、帝国优先型。",
+      "actor": "VALERIAN",
+      "dialogue": "Whichever you choose, it will be yours.",
+      "options": [
+        {
+          "id": "M110-C10-S02-O01",
+          "text": "黄金后宫",
+          "effect": "ENDING_A",
+          "delta": 10,
+          "staging": "全员后宫。"
+        },
+        {
+          "id": "M110-C10-S02-O02",
+          "text": "公开最爱",
+          "effect": "ENDING_B",
+          "delta": 10,
+          "staging": "特殊偏爱。"
+        },
+        {
+          "id": "M110-C10-S02-O03",
+          "text": "自由之廷",
+          "effect": "ENDING_C",
+          "delta": 10,
+          "staging": "无帝君。"
+        },
+        {
+          "id": "M110-C10-S02-O04",
+          "text": "女帝至上",
+          "effect": "ENDING_D",
+          "delta": 10,
+          "staging": "统治优先。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C10-S03",
+      "chapter": 10,
+      "title": "第二顶王冠",
+      "narration": "隐藏线索达到条件时，古代女帝镜像提醒海底还有第二顶王冠。否则只播宁静庆典。",
+      "actor": "SERAPHINE",
+      "dialogue": "You broke the first crown. Do you know where the second sleeps?",
+      "options": [
+        {
+          "id": "M110-C10-S03-O01",
+          "text": "追查新王冠",
+          "effect": "ENDING_E",
+          "delta": 10,
+          "staging": "第二季。"
+        },
+        {
+          "id": "M110-C10-S03-O02",
+          "text": "暂享后宫生活",
+          "effect": "OPEN_WORLD",
+          "delta": 10,
+          "staging": "开放世界。"
+        }
+      ]
+    },
+    {
+      "id": "M110-C10-S04",
+      "chapter": 10,
+      "title": "黄金清晨",
+      "narration": "清晨卢西恩偷吃草莓，卡西安读日程，凯尔怕大家吵醒女帝。女帝醒来，今日后宫生活再次开始。",
+      "actor": "LUCIEN",
+      "dialogue": "Morning, gorgeous. Who gets to spoil you today?",
+      "options": [
+        {
+          "id": "M110-C10-S04-O01",
+          "text": "喂水果",
+          "effect": "LUCIEN",
+          "delta": 8,
+          "staging": "日常。"
+        },
+        {
+          "id": "M110-C10-S04-O02",
+          "text": "按摩",
+          "effect": "ROWAN",
+          "delta": 8,
+          "staging": "日常。"
+        },
+        {
+          "id": "M110-C10-S04-O03",
+          "text": "开宫廷会议",
+          "effect": "COURT",
+          "delta": 8,
+          "staging": "治理。"
+        },
+        {
+          "id": "M110-C10-S04-O04",
+          "text": "自由聊天",
+          "effect": "OPEN_WORLD",
+          "delta": 8,
+          "staging": "无限互动。"
+        }
+      ]
+    }
+  ],
+  "daily": [
+    {
+      "id": "M110-E001",
+      "title": "葡萄争宠",
+      "actor": "LUCIEN",
+      "time": "日间",
+      "trigger": "favor >= 35",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "一盘红葡萄引发了座位之争。",
+      "dialogue": "Would you let me feed you just one?",
+      "options": [
+        "接受",
+        "轻轻调笑",
+        "邀别人一起"
+      ]
+    },
+    {
+      "id": "M110-E002",
+      "title": "晨间按摩",
+      "actor": "ROWAN",
+      "time": "日间",
+      "trigger": "days_since_attention >= 2",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "你在公文桌前工作得肩颈酸痛。",
+      "dialogue": "You look tense. May I help?",
+      "options": [
+        "接受",
+        "先完成工作",
+        "邀请凯尔旁观"
+      ]
+    },
+    {
+      "id": "M110-E003",
+      "title": "同桌早餐",
+      "actor": "CASSIAN",
+      "time": "日间",
+      "trigger": "jealousy >= 40",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "卡西安悄悄记下你的饮茶习惯。",
+      "dialogue": "Honey, two drops. As always.",
+      "options": [
+        "夸奖",
+        "换新口味",
+        "一起做饭"
+      ]
+    },
+    {
+      "id": "M110-E004",
+      "title": "月下花束",
+      "actor": "SYLAS",
+      "time": "日间",
+      "trigger": "trust >= 50",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "花园中的银玫瑰在你靠近时绽放。",
+      "dialogue": "I saved this bloom for you.",
+      "options": [
+        "收下",
+        "回赠",
+        "问花语"
+      ]
+    },
+    {
+      "id": "M110-E005",
+      "title": "龙火焰火",
+      "actor": "DARIAN",
+      "time": "日间",
+      "trigger": "rank >= 2",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "达里安在夜空燃起无害的金色火花。",
+      "dialogue": "I made this because you asked. Do not tell anyone.",
+      "options": [
+        "拥抱",
+        "调侃",
+        "公开夸奖"
+      ]
+    },
+    {
+      "id": "M110-E006",
+      "title": "神殿祝福",
+      "actor": "ELIAS",
+      "time": "日间",
+      "trigger": "random_weighted",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "伊莱亚斯为你准备私人祈祷。",
+      "dialogue": "You don’t have to be brave every minute.",
+      "options": [
+        "握手",
+        "静坐",
+        "邀请谈心"
+      ]
+    },
+    {
+      "id": "M110-E007",
+      "title": "面具舞会",
+      "actor": "RAFAEL",
+      "time": "日间",
+      "trigger": "favor >= 35",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "拉斐尔向你送来一只银色舞会面具。",
+      "dialogue": "May I have this dance?",
+      "options": [
+        "跳舞",
+        "让他教舞",
+        "公开多人舞"
+      ]
+    },
+    {
+      "id": "M110-E008",
+      "title": "棋局赌约",
+      "actor": "ALISTAIR",
+      "time": "日间",
+      "trigger": "days_since_attention >= 2",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "阿利斯泰尔以一步险棋诱你入局。",
+      "dialogue": "One move, Your Majesty. Impress me.",
+      "options": [
+        "落子",
+        "认输",
+        "要求奖励"
+      ]
+    },
+    {
+      "id": "M110-E009",
+      "title": "玫瑰道歉",
+      "actor": "NOEL",
+      "time": "日间",
+      "trigger": "jealousy >= 40",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "诺埃尔准备了道歉信和白玫瑰。",
+      "dialogue": "I wanted to be better than yesterday.",
+      "options": [
+        "接纳",
+        "讨论边界",
+        "共同种花"
+      ]
+    },
+    {
+      "id": "M110-E010",
+      "title": "温泉香油",
+      "actor": "MALIK",
+      "time": "日间",
+      "trigger": "trust >= 50",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "马利克送来暖香和私人温泉邀请。",
+      "dialogue": "Let me make tonight easier.",
+      "options": [
+        "同去",
+        "只谈心",
+        "谢绝"
+      ]
+    },
+    {
+      "id": "M110-E011",
+      "title": "情歌恶作剧",
+      "actor": "FINN",
+      "time": "日间",
+      "trigger": "rank >= 2",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "芬恩把宫廷争宠改成搞笑歌。",
+      "dialogue": "Everyone is going to hate this chorus.",
+      "options": [
+        "大笑",
+        "合唱",
+        "请他改歌词"
+      ]
+    },
+    {
+      "id": "M110-E012",
+      "title": "影子密谈",
+      "actor": "VALERIAN",
+      "time": "日间",
+      "trigger": "random_weighted",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "瓦莱里安递来一份情报，末尾夹着私人问候。",
+      "dialogue": "I thought of you before I thought of the throne.",
+      "options": [
+        "追问",
+        "感谢",
+        "约晚茶"
+      ]
+    },
+    {
+      "id": "M110-E013",
+      "title": "草莓甜点",
+      "actor": "THEO",
+      "time": "日间",
+      "trigger": "favor >= 35",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "提奥做出一份新甜点。",
+      "dialogue": "A taste test, Your Majesty?",
+      "options": [
+        "尝尝",
+        "分享",
+        "建议改进"
+      ]
+    },
+    {
+      "id": "M110-E014",
+      "title": "七颗星",
+      "actor": "EVREN",
+      "time": "日间",
+      "trigger": "days_since_attention >= 2",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "艾文预测女帝今晚会有人求见。",
+      "dialogue": "The stars refuse to name him.",
+      "options": [
+        "猜测",
+        "让他揭晓",
+        "不在意"
+      ]
+    },
+    {
+      "id": "M110-E015",
+      "title": "肖像彩蛋",
+      "actor": "NICO",
+      "time": "日间",
+      "trigger": "jealousy >= 40",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "尼科把女帝画像角落藏了一朵小玫瑰。",
+      "dialogue": "Look closely. I hid something for you.",
+      "options": [
+        "找彩蛋",
+        "请他重画",
+        "约写生"
+      ]
+    },
+    {
+      "id": "M110-E016",
+      "title": "狮鹫撒娇",
+      "actor": "ORION",
+      "time": "日间",
+      "trigger": "trust >= 50",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "奥利安训练的狮鹫向你递出花朵。",
+      "dialogue": "He likes you more than he likes me.",
+      "options": [
+        "摸狮鹫",
+        "夸奥利安",
+        "同行"
+      ]
+    },
+    {
+      "id": "M110-E017",
+      "title": "花房雨声",
+      "actor": "JASPER",
+      "time": "日间",
+      "trigger": "rank >= 2",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "贾斯珀邀请你去避雨的花房。",
+      "dialogue": "The rain sounds prettier from here.",
+      "options": [
+        "同坐",
+        "一起插花",
+        "让他休息"
+      ]
+    },
+    {
+      "id": "M110-E018",
+      "title": "夏夜落雪",
+      "actor": "CASSIEL",
+      "time": "日间",
+      "trigger": "random_weighted",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "卡西尔在夏天制造一场微雪。",
+      "dialogue": "Only here. Only for you.",
+      "options": [
+        "伸手接雪",
+        "邀请他坐下",
+        "请他教魔法"
+      ]
+    },
+    {
+      "id": "M110-E019",
+      "title": "专属香气",
+      "actor": "ADRIEN",
+      "time": "日间",
+      "trigger": "favor >= 35",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "阿德里安送来只属于你的新香水。",
+      "dialogue": "No one else will wear this blend.",
+      "options": [
+        "试香",
+        "调配",
+        "分享给男宠"
+      ]
+    },
+    {
+      "id": "M110-E020",
+      "title": "葡萄争宠·续篇",
+      "actor": "LUCIEN",
+      "time": "夜间",
+      "trigger": "days_since_attention >= 2",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "一盘红葡萄引发了座位之争。",
+      "dialogue": "Would you let me feed you just one?",
+      "options": [
+        "接受",
+        "轻轻调笑",
+        "邀别人一起"
+      ]
+    },
+    {
+      "id": "M110-E021",
+      "title": "晨间按摩·续篇",
+      "actor": "ROWAN",
+      "time": "夜间",
+      "trigger": "jealousy >= 40",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "你在公文桌前工作得肩颈酸痛。",
+      "dialogue": "You look tense. May I help?",
+      "options": [
+        "接受",
+        "先完成工作",
+        "邀请凯尔旁观"
+      ]
+    },
+    {
+      "id": "M110-E022",
+      "title": "同桌早餐·续篇",
+      "actor": "CASSIAN",
+      "time": "夜间",
+      "trigger": "trust >= 50",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "卡西安悄悄记下你的饮茶习惯。",
+      "dialogue": "Honey, two drops. As always.",
+      "options": [
+        "夸奖",
+        "换新口味",
+        "一起做饭"
+      ]
+    },
+    {
+      "id": "M110-E023",
+      "title": "月下花束·续篇",
+      "actor": "SYLAS",
+      "time": "夜间",
+      "trigger": "rank >= 2",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "花园中的银玫瑰在你靠近时绽放。",
+      "dialogue": "I saved this bloom for you.",
+      "options": [
+        "收下",
+        "回赠",
+        "问花语"
+      ]
+    },
+    {
+      "id": "M110-E024",
+      "title": "龙火焰火·续篇",
+      "actor": "DARIAN",
+      "time": "夜间",
+      "trigger": "random_weighted",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "达里安在夜空燃起无害的金色火花。",
+      "dialogue": "I made this because you asked. Do not tell anyone.",
+      "options": [
+        "拥抱",
+        "调侃",
+        "公开夸奖"
+      ]
+    },
+    {
+      "id": "M110-E025",
+      "title": "神殿祝福·续篇",
+      "actor": "ELIAS",
+      "time": "夜间",
+      "trigger": "favor >= 35",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "伊莱亚斯为你准备私人祈祷。",
+      "dialogue": "You don’t have to be brave every minute.",
+      "options": [
+        "握手",
+        "静坐",
+        "邀请谈心"
+      ]
+    },
+    {
+      "id": "M110-E026",
+      "title": "面具舞会·续篇",
+      "actor": "RAFAEL",
+      "time": "夜间",
+      "trigger": "days_since_attention >= 2",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "拉斐尔向你送来一只银色舞会面具。",
+      "dialogue": "May I have this dance?",
+      "options": [
+        "跳舞",
+        "让他教舞",
+        "公开多人舞"
+      ]
+    },
+    {
+      "id": "M110-E027",
+      "title": "棋局赌约·续篇",
+      "actor": "ALISTAIR",
+      "time": "夜间",
+      "trigger": "jealousy >= 40",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "阿利斯泰尔以一步险棋诱你入局。",
+      "dialogue": "One move, Your Majesty. Impress me.",
+      "options": [
+        "落子",
+        "认输",
+        "要求奖励"
+      ]
+    },
+    {
+      "id": "M110-E028",
+      "title": "玫瑰道歉·续篇",
+      "actor": "NOEL",
+      "time": "夜间",
+      "trigger": "trust >= 50",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "诺埃尔准备了道歉信和白玫瑰。",
+      "dialogue": "I wanted to be better than yesterday.",
+      "options": [
+        "接纳",
+        "讨论边界",
+        "共同种花"
+      ]
+    },
+    {
+      "id": "M110-E029",
+      "title": "温泉香油·续篇",
+      "actor": "MALIK",
+      "time": "夜间",
+      "trigger": "rank >= 2",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "马利克送来暖香和私人温泉邀请。",
+      "dialogue": "Let me make tonight easier.",
+      "options": [
+        "同去",
+        "只谈心",
+        "谢绝"
+      ]
+    },
+    {
+      "id": "M110-E030",
+      "title": "情歌恶作剧·续篇",
+      "actor": "FINN",
+      "time": "夜间",
+      "trigger": "random_weighted",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "芬恩把宫廷争宠改成搞笑歌。",
+      "dialogue": "Everyone is going to hate this chorus.",
+      "options": [
+        "大笑",
+        "合唱",
+        "请他改歌词"
+      ]
+    },
+    {
+      "id": "M110-E031",
+      "title": "影子密谈·续篇",
+      "actor": "VALERIAN",
+      "time": "夜间",
+      "trigger": "favor >= 35",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "瓦莱里安递来一份情报，末尾夹着私人问候。",
+      "dialogue": "I thought of you before I thought of the throne.",
+      "options": [
+        "追问",
+        "感谢",
+        "约晚茶"
+      ]
+    },
+    {
+      "id": "M110-E032",
+      "title": "草莓甜点·续篇",
+      "actor": "THEO",
+      "time": "夜间",
+      "trigger": "days_since_attention >= 2",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "提奥做出一份新甜点。",
+      "dialogue": "A taste test, Your Majesty?",
+      "options": [
+        "尝尝",
+        "分享",
+        "建议改进"
+      ]
+    },
+    {
+      "id": "M110-E033",
+      "title": "七颗星·续篇",
+      "actor": "EVREN",
+      "time": "夜间",
+      "trigger": "jealousy >= 40",
+      "cooldown": 3,
+      "priority": 1,
+      "narration": "艾文预测女帝今晚会有人求见。",
+      "dialogue": "The stars refuse to name him.",
+      "options": [
+        "猜测",
+        "让他揭晓",
+        "不在意"
+      ]
+    },
+    {
+      "id": "M110-E034",
+      "title": "肖像彩蛋·续篇",
+      "actor": "NICO",
+      "time": "夜间",
+      "trigger": "trust >= 50",
+      "cooldown": 4,
+      "priority": 2,
+      "narration": "尼科把女帝画像角落藏了一朵小玫瑰。",
+      "dialogue": "Look closely. I hid something for you.",
+      "options": [
+        "找彩蛋",
+        "请他重画",
+        "约写生"
+      ]
+    },
+    {
+      "id": "M110-E035",
+      "title": "狮鹫撒娇·续篇",
+      "actor": "ORION",
+      "time": "夜间",
+      "trigger": "rank >= 2",
+      "cooldown": 5,
+      "priority": 3,
+      "narration": "奥利安训练的狮鹫向你递出花朵。",
+      "dialogue": "He likes you more than he likes me.",
+      "options": [
+        "摸狮鹫",
+        "夸奥利安",
+        "同行"
+      ]
+    },
+    {
+      "id": "M110-E036",
+      "title": "花房雨声·续篇",
+      "actor": "JASPER",
+      "time": "夜间",
+      "trigger": "random_weighted",
+      "cooldown": 6,
+      "priority": 4,
+      "narration": "贾斯珀邀请你去避雨的花房。",
+      "dialogue": "The rain sounds prettier from here.",
+      "options": [
+        "同坐",
+        "一起插花",
+        "让他休息"
+      ]
+    },
+    {
+      "id": "EMPRESS-KAEL-01",
+      "title": "近卫的休息日",
+      "actor": "KAEL",
+      "time": "日间",
+      "trigger": "random_weighted",
+      "cooldown": 3,
+      "priority": 2,
+      "narration": "凯尔把值勤表交给副手，在长椅另一端给你留出位置。",
+      "dialogue": "I am off duty. Would you like some company?",
+      "options": [
+        "一起坐坐",
+        "听他说说近卫的生活",
+        "今天先各自休息"
+      ],
+      "supplement": true
+    }
+  ]
+}

@@ -41,3 +41,8 @@ execFileSync(process.execPath,['tools/north-light-selftest.cjs'],{cwd:root,stdio
 execFileSync(process.execPath,['tools/authored-runtime-selftest.cjs'],{cwd:root,stdio:'inherit'});
 
 execFileSync(process.execPath,['tools/input146-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+assert(build.includes('"app147_empress.js"'),'Missing independent Empress runtime');
+execFileSync(process.execPath,['tools/empress-selftest.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/empress-games-selftest.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['tools/empress-release-assets-selftest.cjs'],{cwd:root,stdio:'inherit'});

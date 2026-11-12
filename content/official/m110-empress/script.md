@@ -1,0 +1,1059 @@
+# 女帝的绝色后宫
+
+# CHAPTER 1｜女帝的第一夜
+⟦ORIENT|bg⟧
+⟦CHAR|你|f|25|f1|奥瑞利亚女帝|玩家自定义姓名；亲密、册封与恋爱均由本人选择⟧
+⟦CHAR|CASSIAN|m|29|m1|首席宫廷宠君|金发绿眸，克制温柔，擅长礼仪、早餐和协调。⟧
+⟦CHAR|LUCIEN|m|25|m1|贵族宠君|赤发琥珀眸，外向调情，擅长喂葡萄、撒娇。⟧
+⟦CHAR|KAEL|m|31|m1|近卫统领|银黑短发，寡言强壮，擅长按摩、保护。⟧
+⟦CHAR|SYLAS|m|128|m1|月精灵宠君|银发紫眸，浪漫诗意，精灵魔法。⟧
+⟦CHAR|DARIAN|m|30|m1|龙裔公爵|黑发赤瞳，骄傲危险，不爱谄媚。⟧
+⟦CHAR|ELIAS|m|27|m1|圣殿神子|白金发，克制诚恳，治疗神术。⟧
+⟦CHAR|RAFAEL|m|26|m1|宫廷舞师|棕卷发，热烈活泼，擅长献舞。⟧
+⟦CHAR|ALISTAIR|m|28|m1|皇家学士|黑发金框眼镜，机智沉稳，擅长对弈。⟧
+⟦CHAR|NOEL|m|24|m1|花园侍君|栗发，敏感温柔，擅长花艺烘焙。⟧
+⟦CHAR|MALIK|m|33|m1|沙漠使臣|深肤色，成熟优雅，擅长香油温泉礼仪。⟧
+⟦CHAR|FINN|m|23|m1|宫廷乐师|金棕发，活泼幽默，歌曲有魔力。⟧
+⟦CHAR|VALERIAN|m|35|m1|密探长|黑发银鬓，成熟冷静，善于调查。⟧
+⟦CHAR|THEO|m|26|m1|甜点师|浅棕发，细腻热情。⟧
+⟦CHAR|ROWAN|m|30|m1|宫廷按摩师|棕发，稳重善解人意。⟧
+⟦CHAR|EVREN|m|27|m1|星象师|深紫发，神秘。⟧
+⟦CHAR|NICO|m|25|m1|宫廷画师|微卷黑发，幽默。⟧
+⟦CHAR|ORION|m|32|m1|神兽驯养师|黑褐发，野性外表。⟧
+⟦CHAR|JASPER|m|24|m1|花艺师|浅栗发，明朗。⟧
+⟦CHAR|CASSIEL|m|29|m1|冰魔法师|银白发，寡言清冷。⟧
+⟦CHAR|ADRIEN|m|28|m1|御用调香师|墨发，气质精致。⟧
+⟦CHAR|SERAPHINE|f|425|f1|第一女帝的投影|不参与恋爱⟧
+⟦CHAR|ISAAC|m|450|m2|篡改王冠的祭司|反派，不参与恋爱⟧
+
+# SCENE｜黄金软榻
+⟦TIME|第1日⟧
+⟦SET|empress_scene~M110-C01-S01⟧
+旁白：你从六小时的加冕仪式回到寝宫。卢西恩捧葡萄，凯尔替你解披风，卡西安温茶，赛拉斯以竖琴迎接你。
+LUCIEN：“One more, Your Majesty? The sweetest one is yours.”
+# CHOICE｜黄金软榻，你想怎样做？
+#### A｜让卢西恩喂葡萄
+你：“让卢西恩喂葡萄”
+旁白：你把「让卢西恩喂葡萄」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C01-S01-O01⟧
+#### B｜请凯尔按摩
+你：“请凯尔按摩”
+旁白：你把「请凯尔按摩」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C01-S01-O02⟧
+#### C｜让卡西安陪坐
+你：“让卡西安陪坐”
+旁白：你把「让卡西安陪坐」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C01-S01-O03⟧
+#### D｜所有人留下
+你：“所有人留下”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C01-S01-O04⟧
+# ·
+
+# SCENE｜第一个侍奉选择
+⟦TIME|第1日⟧
+⟦SET|empress_scene~M110-C01-S02⟧
+旁白：你选择的男人立刻上前；其余人以自己的方式掩饰嫉妒。
+CASSIAN：“I only ask that Her Majesty gets a moment to rest.”
+# CHOICE｜第一个侍奉选择，你想怎样做？
+#### A｜温柔称赞
+你：“温柔称赞”
+旁白：你把「温柔称赞」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C01-S02-O01⟧
+#### B｜故意挑逗竞争
+你：“故意挑逗竞争”
+旁白：你把「故意挑逗竞争」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C01-S02-O02⟧
+#### C｜设立轮值表
+你：“设立轮值表”
+旁白：你把「设立轮值表」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C01-S02-O03⟧
+# ·
+
+# SCENE｜午夜玉牌
+⟦TIME|第1日⟧
+⟦SET|empress_scene~M110-C01-S03⟧
+旁白：总管捧来十二枚刻名的玉牌。今夜可以单选、双选，也可以邀请全部人听音乐。
+ELIAS：“Before midnight, Your Majesty, there is something you must know.”
+# CHOICE｜午夜玉牌，你想怎样做？
+#### A｜召卢西恩
+你：“召卢西恩”
+旁白：你把「召卢西恩」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C01-S03-O01⟧
+#### B｜召凯尔
+你：“召凯尔”
+旁白：你把「召凯尔」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C01-S03-O02⟧
+#### C｜召伊莱亚斯
+你：“召伊莱亚斯”
+旁白：你把「召伊莱亚斯」的安排说清，Elias Dawn放下手里的事，认真回应。
+ELIAS：“You can tell me what you need. I will listen before I act.”
+⟦SET|empress_pick~M110-C01-S03-O03⟧
+#### D｜举办夜宴
+你：“举办夜宴”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C01-S03-O04⟧
+# ·
+
+# SCENE｜黑玫瑰警告
+⟦TIME|第1日⟧
+⟦SET|empress_scene~M110-C01-S04⟧
+旁白：蜡烛熄灭一瞬，一朵黑色玫瑰落在你的枕上：第七次日出之前，会有最亲近者令你丧命。
+VALERIAN：“Someone entered your chambers. I intend to learn who.”
+# CHOICE｜黑玫瑰警告，你想怎样做？
+#### A｜交瓦莱里安调查
+你：“交瓦莱里安调查”
+旁白：你把「交瓦莱里安调查」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C01-S04-O01⟧
+#### B｜自行收藏
+你：“自行收藏”
+旁白：你把「自行收藏」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C01-S04-O02⟧
+#### C｜告诉宠君们
+你：“告诉宠君们”
+旁白：你把「告诉宠君们」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C01-S04-O03⟧
+# ·
+
+# CHAPTER 2｜谁最得宠
+
+# SCENE｜寝宫门口的早晨
+⟦TIME|第2日⟧
+⟦SET|empress_scene~M110-C02-S01⟧
+旁白：门外六位男人争着送来早餐。卢西恩捧草莓，提奥端甜点，罗文持精油，芬恩抱琴。
+FINN：“I wrote a song about your breakfast. I regret nothing.”
+# CHOICE｜寝宫门口的早晨，你想怎样做？
+#### A｜喂草莓
+你：“喂草莓”
+旁白：你把「喂草莓」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C02-S01-O01⟧
+#### B｜做肩颈按摩
+你：“做肩颈按摩”
+旁白：你把「做肩颈按摩」的安排说清，Rowan Hale放下手里的事，认真回应。
+ROWAN：“We can take our time. Your comfort comes first.”
+⟦SET|empress_pick~M110-C02-S01-O02⟧
+#### C｜共进茶点
+你：“共进茶点”
+旁白：你把「共进茶点」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C02-S01-O03⟧
+#### D｜一同侍奉
+你：“一同侍奉”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C02-S01-O04⟧
+# ·
+
+# SCENE｜争夺东宫
+⟦TIME|第2日⟧
+⟦SET|empress_scene~M110-C02-S02⟧
+旁白：总管宣告首位贵君将获东宫居所。卡西安愿负责秩序，卢西恩只想得到女帝公开偏爱。
+LUCIEN：“I promise not to brag. Much.”
+# CHOICE｜争夺东宫，你想怎样做？
+#### A｜册封卡西安
+你：“册封卡西安”
+旁白：你把「册封卡西安」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C02-S02-O01⟧
+#### B｜册封卢西恩
+你：“册封卢西恩”
+旁白：你把「册封卢西恩」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C02-S02-O02⟧
+#### C｜册封凯尔
+你：“册封凯尔”
+旁白：你把「册封凯尔」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C02-S02-O03⟧
+#### D｜暂不册封
+你：“暂不册封”
+旁白：你把「暂不册封」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C02-S02-O04⟧
+# ·
+
+# SCENE｜白昼赐礼
+⟦TIME|第2日⟧
+⟦SET|empress_scene~M110-C02-S03⟧
+旁白：皇家匠师进献胸针、披风、琥珀戒指。候选者等候决定。
+CASSIAN：“A gift from you would mean more than anything in the treasury.”
+# CHOICE｜白昼赐礼，你想怎样做？
+#### A｜赏赐给未受宠者
+你：“赏赐给未受宠者”
+旁白：你把「赏赐给未受宠者」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C02-S03-O01⟧
+#### B｜赏赐给当前宠君
+你：“赏赐给当前宠君”
+旁白：你把「赏赐给当前宠君」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C02-S03-O02⟧
+#### C｜收归国库
+你：“收归国库”
+旁白：你把「收归国库」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C02-S03-O03⟧
+# ·
+
+# SCENE｜走廊中的密谈
+⟦TIME|第2日⟧
+⟦SET|empress_scene~M110-C02-S04⟧
+旁白：在无人处，你听到贵族质问卢西恩：你收了钱，怎么反而爱上女帝？卢西恩沉默。
+LUCIEN：“I came here for the wrong reasons. That changed.”
+# CHOICE｜走廊中的密谈，你想怎样做？
+#### A｜当面对质
+你：“当面对质”
+旁白：你把「当面对质」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C02-S04-O01⟧
+#### B｜暗查雇主
+你：“暗查雇主”
+旁白：你把「暗查雇主」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C02-S04-O02⟧
+#### C｜暂且不问
+你：“暂且不问”
+旁白：你把「暂且不问」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C02-S04-O03⟧
+# ·
+
+# CHAPTER 3｜夜间翻牌
+
+# SCENE｜银盘与名字
+⟦TIME|第3日⟧
+⟦SET|empress_scene~M110-C03-S01⟧
+旁白：午夜金色玉牌泛光。达里安的牌先亮了一瞬。所有男人都在等女帝的选择。
+DARIAN：“I did not make the token glow. Stop staring.”
+# CHOICE｜银盘与名字，你想怎样做？
+#### A｜卢西恩共度夜晚
+你：“卢西恩共度夜晚”
+旁白：你把「卢西恩共度夜晚」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C03-S01-O01⟧
+#### B｜凯尔陪伴温泉
+你：“凯尔陪伴温泉”
+旁白：你把「凯尔陪伴温泉」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C03-S01-O02⟧
+#### C｜赛拉斯花园
+你：“赛拉斯花园”
+旁白：你把「赛拉斯花园」的安排说清，Sylas Moonveil放下手里的事，认真回应。
+SYLAS：“A small moment can outlast a very long night.”
+⟦SET|empress_pick~M110-C03-S01-O03⟧
+#### D｜达里安饮酒下棋
+你：“达里安饮酒下棋”
+旁白：你把「达里安饮酒下棋」的安排说清，Darian Ashborne放下手里的事，认真回应。
+DARIAN：“Your choice. I intend to make it worth your time.”
+⟦SET|empress_pick~M110-C03-S01-O04⟧
+# ·
+
+# SCENE｜私人时刻
+⟦TIME|第3日⟧
+⟦SET|empress_scene~M110-C03-S02⟧
+旁白：寝宫中，当前所选之人明确询问你是否愿意握手、拥抱或独处。细节随人物而变，但玩家始终可以拒绝。
+LUCIEN：“I want to stay. Only if you want me here.”
+# CHOICE｜私人时刻，你想怎样做？
+#### A｜接受温柔亲密
+你：“接受温柔亲密”
+旁白：你把「接受温柔亲密」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C03-S02-O01⟧
+#### B｜先聊天
+你：“先聊天”
+旁白：你把「先聊天」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C03-S02-O02⟧
+#### C｜今夜独处
+你：“今夜独处”
+旁白：你把「今夜独处」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C03-S02-O03⟧
+# ·
+
+# SCENE｜清晨的醋意
+⟦TIME|第3日⟧
+⟦SET|empress_scene~M110-C03-S03⟧
+旁白：受宠男子离开寝宫时，其他人的嫉妒表露无遗。芬恩将这件事写进一首歌。
+FINN：“This palace needs a better schedule. Or a referee.”
+# CHOICE｜清晨的醋意，你想怎样做？
+#### A｜公开安抚大家
+你：“公开安抚大家”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C03-S03-O01⟧
+#### B｜只拥抱受宠者
+你：“只拥抱受宠者”
+旁白：你把「只拥抱受宠者」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C03-S03-O02⟧
+#### C｜宣布下一轮公平邀请
+你：“宣布下一轮公平邀请”
+旁白：你把「宣布下一轮公平邀请」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C03-S03-O03⟧
+# ·
+
+# SCENE｜镜中第一女帝
+⟦TIME|第3日⟧
+⟦SET|empress_scene~M110-C03-S04⟧
+旁白：镜面出现古代女帝塞拉菲娜：王冠不是祝福，而是锁链。她只留下一个名字：伊萨克。
+SERAPHINE：“The crown chose you because you can break it.”
+# CHOICE｜镜中第一女帝，你想怎样做？
+#### A｜查王冠史
+你：“查王冠史”
+旁白：你把「查王冠史」的安排说清，Alistair Voss放下手里的事，认真回应。
+ALISTAIR：“Let us take it one step at a time and see what we find.”
+⟦SET|empress_pick~M110-C03-S04-O01⟧
+#### B｜找神殿
+你：“找神殿”
+旁白：你把「找神殿」的安排说清，Elias Dawn放下手里的事，认真回应。
+ELIAS：“You can tell me what you need. I will listen before I act.”
+⟦SET|empress_pick~M110-C03-S04-O02⟧
+#### C｜找龙族
+你：“找龙族”
+旁白：你把「找龙族」的安排说清，Darian Ashborne放下手里的事，认真回应。
+DARIAN：“Your choice. I intend to make it worth your time.”
+⟦SET|empress_pick~M110-C03-S04-O03⟧
+# ·
+
+# CHAPTER 4｜玫瑰园陷阱
+
+# SCENE｜空等的花园
+⟦TIME|第4日⟧
+⟦SET|empress_scene~M110-C04-S01⟧
+旁白：你与赛拉斯约定月夜散步，他迟迟未出现。诺埃尔捧白玫瑰在喷泉旁等你。
+NOEL：“I thought you might want these. I hoped you would.”
+# CHOICE｜空等的花园，你想怎样做？
+#### A｜温柔问清楚
+你：“温柔问清楚”
+旁白：你把「温柔问清楚」的安排说清，Noel Wren放下手里的事，认真回应。
+NOEL：“Thank you for telling me. I would rather hear the truth.”
+⟦SET|empress_pick~M110-C04-S01-O01⟧
+#### B｜追查请柬
+你：“追查请柬”
+旁白：你把「追查请柬」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C04-S01-O02⟧
+#### C｜严肃申明规则
+你：“严肃申明规则”
+旁白：你把「严肃申明规则」的安排说清，Noel Wren放下手里的事，认真回应。
+NOEL：“Thank you for telling me. I would rather hear the truth.”
+⟦SET|empress_pick~M110-C04-S01-O03⟧
+# ·
+
+# SCENE｜被藏起的请柬
+⟦TIME|第4日⟧
+⟦SET|empress_scene~M110-C04-S02⟧
+旁白：你找到了被撕毁的请柬，花香来自诺埃尔的花房。他承认只是希望独占一个下午。
+NOEL：“I was jealous. I am sorry. That does not excuse it.”
+# CHOICE｜被藏起的请柬，你想怎样做？
+#### A｜让他向赛拉斯道歉
+你：“让他向赛拉斯道歉”
+旁白：你把「让他向赛拉斯道歉」的安排说清，Noel Wren放下手里的事，认真回应。
+NOEL：“Thank you for telling me. I would rather hear the truth.”
+⟦SET|empress_pick~M110-C04-S02-O01⟧
+#### B｜暂时取消邀约
+你：“暂时取消邀约”
+旁白：你把「暂时取消邀约」的安排说清，Noel Wren放下手里的事，认真回应。
+NOEL：“Thank you for telling me. I would rather hear the truth.”
+⟦SET|empress_pick~M110-C04-S02-O02⟧
+#### C｜允许他补偿
+你：“允许他补偿”
+旁白：你把「允许他补偿」的安排说清，Noel Wren放下手里的事，认真回应。
+NOEL：“Thank you for telling me. I would rather hear the truth.”
+⟦SET|empress_pick~M110-C04-S02-O03⟧
+# ·
+
+# SCENE｜被冷落的红发宠君
+⟦TIME|第4日⟧
+⟦SET|empress_scene~M110-C04-S03⟧
+旁白：如果卢西恩连续3个主要事件未受宠，他会捧着葡萄自嘲；即使没有冷落也会出现在此处作正常探望。
+LUCIEN：“I miss you. I was hoping you might miss me too.”
+# CHOICE｜被冷落的红发宠君，你想怎样做？
+#### A｜陪他吃水果
+你：“陪他吃水果”
+旁白：你把「陪他吃水果」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C04-S03-O01⟧
+#### B｜解释繁忙
+你：“解释繁忙”
+旁白：你把「解释繁忙」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C04-S03-O02⟧
+#### C｜安排未来的相处
+你：“安排未来的相处”
+旁白：你把「安排未来的相处」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C04-S03-O03⟧
+# ·
+
+# SCENE｜月之印记灼烧
+⟦TIME|第4日⟧
+⟦SET|empress_scene~M110-C04-S04⟧
+旁白：赛拉斯倒在喷泉旁，无法施法。地上有前皇帝的戒指。
+SYLAS：“Someone used the crown’s true name against me.”
+# CHOICE｜月之印记灼烧，你想怎样做？
+#### A｜扶赛拉斯回宫
+你：“扶赛拉斯回宫”
+旁白：你把「扶赛拉斯回宫」的安排说清，Sylas Moonveil放下手里的事，认真回应。
+SYLAS：“A small moment can outlast a very long night.”
+⟦SET|empress_pick~M110-C04-S04-O01⟧
+#### B｜封锁花园
+你：“封锁花园”
+旁白：你把「封锁花园」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C04-S04-O02⟧
+#### C｜调查戒指
+你：“调查戒指”
+旁白：你把「调查戒指」的安排说清，Alistair Voss放下手里的事，认真回应。
+ALISTAIR：“Let us take it one step at a time and see what we find.”
+⟦SET|empress_pick~M110-C04-S04-O03⟧
+# ·
+
+# CHAPTER 5｜二十美男宴
+
+# SCENE｜二十美男献艺
+⟦TIME|第5日⟧
+⟦SET|empress_scene~M110-C05-S01⟧
+旁白：宴会开启，卢西恩喂葡萄，拉斐尔起舞，芬恩奏乐，凯尔守门，卡西安斟茶。
+RAFAEL：“If we are competing, gentlemen, at least make it beautiful.”
+# CHOICE｜二十美男献艺，你想怎样做？
+#### A｜让卢西恩坐左侧
+你：“让卢西恩坐左侧”
+旁白：你把「让卢西恩坐左侧」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C05-S01-O01⟧
+#### B｜让卡西安坐右侧
+你：“让卡西安坐右侧”
+旁白：你把「让卡西安坐右侧」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C05-S01-O02⟧
+#### C｜邀请三人合作演出
+你：“邀请三人合作演出”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C05-S01-O03⟧
+# ·
+
+# SCENE｜舞台上的嫉妒
+⟦TIME|第5日⟧
+⟦SET|empress_scene~M110-C05-S02⟧
+旁白：芬恩临时唱出每人的心声，男人们一边害羞一边争着修改歌词。
+FINN：“She rules the stars and all the sea—and nobody saves a dance for me.”
+# CHOICE｜舞台上的嫉妒，你想怎样做？
+#### A｜与拉斐尔跳舞
+你：“与拉斐尔跳舞”
+旁白：你把「与拉斐尔跳舞」的安排说清，Rafael Solis放下手里的事，认真回应。
+RAFAEL：“No audience, unless you want one. This moment is ours.”
+⟦SET|empress_pick~M110-C05-S02-O01⟧
+#### B｜邀请芬恩唱双人曲
+你：“邀请芬恩唱双人曲”
+旁白：你把「邀请芬恩唱双人曲」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C05-S02-O02⟧
+#### C｜听赛拉斯竖琴
+你：“听赛拉斯竖琴”
+旁白：你把「听赛拉斯竖琴」的安排说清，Sylas Moonveil放下手里的事，认真回应。
+SYLAS：“A small moment can outlast a very long night.”
+⟦SET|empress_pick~M110-C05-S02-O03⟧
+# ·
+
+# SCENE｜被调换的葡萄酒
+⟦TIME|第5日⟧
+⟦SET|empress_scene~M110-C05-S03⟧
+旁白：酒杯被人替换，伊莱亚斯警告，芬恩突然倒下。凯尔封门；卢西恩失声。
+ELIAS：“Don’t drink that! This is a memory seal!”
+# CHOICE｜被调换的葡萄酒，你想怎样做？
+#### A｜抱住芬恩
+你：“抱住芬恩”
+旁白：你把「抱住芬恩」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C05-S03-O01⟧
+#### B｜查验酒杯
+你：“查验酒杯”
+旁白：你把「查验酒杯」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C05-S03-O02⟧
+#### C｜让伊莱亚斯治疗
+你：“让伊莱亚斯治疗”
+旁白：你把「让伊莱亚斯治疗」的安排说清，Elias Dawn放下手里的事，认真回应。
+ELIAS：“You can tell me what you need. I will listen before I act.”
+⟦SET|empress_pick~M110-C05-S03-O03⟧
+# ·
+
+# SCENE｜被封的旋律
+⟦TIME|第5日⟧
+⟦SET|empress_scene~M110-C05-S04⟧
+旁白：芬恩醒来，用一首断裂的歌曲重现前帝最后一刻：王冠吞噬了他。
+FINN：“It wasn’t an assassin. The crown killed him.”
+# CHOICE｜被封的旋律，你想怎样做？
+#### A｜相信芬恩
+你：“相信芬恩”
+旁白：你把「相信芬恩」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C05-S04-O01⟧
+#### B｜藏起真相
+你：“藏起真相”
+旁白：你把「藏起真相」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C05-S04-O02⟧
+#### C｜召全员开会
+你：“召全员开会”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C05-S04-O03⟧
+# ·
+
+# CHAPTER 6｜禁室真相
+
+# SCENE｜地下铭文
+⟦TIME|第6日⟧
+⟦SET|empress_scene~M110-C06-S01⟧
+旁白：玩家带四位同伴前往密室，发现四百年前塞拉菲娜女帝的画像及二十男宠符文。
+ALISTAIR：“History did not forget her. Someone erased her.”
+# CHOICE｜地下铭文，你想怎样做？
+#### A｜读原稿
+你：“读原稿”
+旁白：你把「读原稿」的安排说清，Alistair Voss放下手里的事，认真回应。
+ALISTAIR：“Let us take it one step at a time and see what we find.”
+⟦SET|empress_pick~M110-C06-S01-O01⟧
+#### B｜研究精灵符文
+你：“研究精灵符文”
+旁白：你把「研究精灵符文」的安排说清，Sylas Moonveil放下手里的事，认真回应。
+SYLAS：“A small moment can outlast a very long night.”
+⟦SET|empress_pick~M110-C06-S01-O02⟧
+#### C｜研究龙焰纹
+你：“研究龙焰纹”
+旁白：你把「研究龙焰纹」的安排说清，Darian Ashborne放下手里的事，认真回应。
+DARIAN：“Your choice. I intend to make it worth your time.”
+⟦SET|empress_pick~M110-C06-S01-O03⟧
+# ·
+
+# SCENE｜四百年前的誓约
+⟦TIME|第6日⟧
+⟦SET|empress_scene~M110-C06-S02⟧
+旁白：塞拉菲娜曾以自愿誓言织成王冠；祭司伊萨克把它改成生命陷阱。
+ELIAS：“The spell was not born evil. It was rewritten.”
+# CHOICE｜四百年前的誓约，你想怎样做？
+#### A｜召集同伴
+你：“召集同伴”
+旁白：你把「召集同伴」的安排说清，Elias Dawn放下手里的事，认真回应。
+ELIAS：“You can tell me what you need. I will listen before I act.”
+⟦SET|empress_pick~M110-C06-S02-O01⟧
+#### B｜调查总管
+你：“调查总管”
+旁白：你把「调查总管」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C06-S02-O02⟧
+#### C｜寻求龙火
+你：“寻求龙火”
+旁白：你把「寻求龙火」的安排说清，Darian Ashborne放下手里的事，认真回应。
+DARIAN：“Your choice. I intend to make it worth your time.”
+⟦SET|empress_pick~M110-C06-S02-O03⟧
+# ·
+
+# SCENE｜后宫的秘密交换
+⟦TIME|第6日⟧
+⟦SET|empress_scene~M110-C06-S03⟧
+旁白：十二位核心成员各有线索。女帝决定信任谁，不信任者仍可通过调查工具补齐线索。
+VALERIAN：“No secret is worth losing your freedom.”
+# CHOICE｜后宫的秘密交换，你想怎样做？
+#### A｜四人联合调查
+你：“四人联合调查”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C06-S03-O01⟧
+#### B｜单人解密
+你：“单人解密”
+旁白：你把「单人解密」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C06-S03-O02⟧
+#### C｜向所有人公开
+你：“向所有人公开”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C06-S03-O03⟧
+# ·
+
+# SCENE｜女帝的宣言
+⟦TIME|第6日⟧
+⟦SET|empress_scene~M110-C06-S04⟧
+旁白：后宫集会，每位男人必须有权决定是否留下。凯尔率先自愿守护你。
+KAEL：“I stay because I love you. Not because a crown commands me.”
+# CHOICE｜女帝的宣言，你想怎样做？
+#### A｜接受众人誓言
+你：“接受众人誓言”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C06-S04-O01⟧
+#### B｜允许自由退出
+你：“允许自由退出”
+旁白：你把「允许自由退出」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C06-S04-O02⟧
+#### C｜独自抗争
+你：“独自抗争”
+旁白：你把「独自抗争」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C06-S04-O03⟧
+# ·
+
+# CHAPTER 7｜背叛之夜
+
+# SCENE｜血色闪电
+⟦TIME|第7日⟧
+⟦SET|empress_scene~M110-C07-S01⟧
+旁白：第七夜，王冠内部的诅咒撕裂穹顶，众男宠护住女帝。
+DARIAN：“That thing is alive. Get behind me!”
+# CHOICE｜血色闪电，你想怎样做？
+#### A｜以龙火阻挡
+你：“以龙火阻挡”
+旁白：你把「以龙火阻挡」的安排说清，Darian Ashborne放下手里的事，认真回应。
+DARIAN：“Your choice. I intend to make it worth your time.”
+⟦SET|empress_pick~M110-C07-S01-O01⟧
+#### B｜召神官结界
+你：“召神官结界”
+旁白：你把「召神官结界」的安排说清，Elias Dawn放下手里的事，认真回应。
+ELIAS：“You can tell me what you need. I will listen before I act.”
+⟦SET|empress_pick~M110-C07-S01-O02⟧
+#### C｜命凯尔保护众人
+你：“命凯尔保护众人”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C07-S01-O03⟧
+# ·
+
+# SCENE｜凯尔之死
+⟦TIME|第7日⟧
+⟦SET|empress_scene~M110-C07-S02⟧
+旁白：魔法长矛直刺女帝。凯尔挡下攻击并在你怀中停止呼吸；灵魂被夺走。
+KAEL：“Are you hurt? Good. Then I did my job.”
+# CHOICE｜凯尔之死，你想怎样做？
+#### A｜呼唤凯尔
+你：“呼唤凯尔”
+旁白：你把「呼唤凯尔」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C07-S02-O01⟧
+#### B｜请求伊莱亚斯救治
+你：“请求伊莱亚斯救治”
+旁白：你把「请求伊莱亚斯救治」的安排说清，Elias Dawn放下手里的事，认真回应。
+ELIAS：“You can tell me what you need. I will listen before I act.”
+⟦SET|empress_pick~M110-C07-S02-O02⟧
+#### C｜忍痛指挥众人
+你：“忍痛指挥众人”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C07-S02-O03⟧
+# ·
+
+# SCENE｜坠落的忠诚
+⟦TIME|第7日⟧
+⟦SET|empress_scene~M110-C07-S03⟧
+旁白：卢西恩失声哭泣，卡西安组织疏散，达里安怒意点燃大厅。凯尔的灵魂仍困在王冠内。
+LUCIEN：“He is not allowed to leave us. Not like this.”
+# CHOICE｜坠落的忠诚，你想怎样做？
+#### A｜拥抱卢西恩
+你：“拥抱卢西恩”
+旁白：你把「拥抱卢西恩」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C07-S03-O01⟧
+#### B｜命卡西安稳定后宫
+你：“命卡西安稳定后宫”
+旁白：你把「命卡西安稳定后宫」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C07-S03-O02⟧
+#### C｜命达里安暂止龙火
+你：“命达里安暂止龙火”
+旁白：你把「命达里安暂止龙火」的安排说清，Darian Ashborne放下手里的事，认真回应。
+DARIAN：“Your choice. I intend to make it worth your time.”
+⟦SET|empress_pick~M110-C07-S03-O03⟧
+# ·
+
+# SCENE｜总管现真形
+⟦TIME|第7日⟧
+⟦SET|empress_scene~M110-C07-S04⟧
+旁白：瓦莱里安揭穿总管是伊萨克的寄生载体。伊萨克开出交换：以王冠换凯尔灵魂。
+ISAAC：“Give me the crown. I will return your knight.”
+# CHOICE｜总管现真形，你想怎样做？
+#### A｜拒绝交易
+你：“拒绝交易”
+旁白：你把「拒绝交易」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C07-S04-O01⟧
+#### B｜假意接受
+你：“假意接受”
+旁白：你把「假意接受」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C07-S04-O02⟧
+#### C｜询问代价
+你：“询问代价”
+旁白：你把「询问代价」的安排说清，Alistair Voss放下手里的事，认真回应。
+ALISTAIR：“Let us take it one step at a time and see what we find.”
+⟦SET|empress_pick~M110-C07-S04-O03⟧
+# ·
+
+# CHAPTER 8｜女帝审判
+
+# SCENE｜自由之心
+⟦TIME|第8日⟧
+⟦SET|empress_scene~M110-C08-S01⟧
+旁白：女帝发现无法强迫自由之心的王冠规律，恋人们自愿为她提供魔力。
+CASSIAN：“A title cannot tell me who to love. I choose you.”
+# CHOICE｜自由之心，你想怎样做？
+#### A｜自由誓约
+你：“自由誓约”
+⟦IF|!empress_ready_A⟧
+旁白：你前往图书馆，核对三枚自愿契约符文；三位同伴分别确认献魔出于本人意愿。
+⟦SET|empress_supply~A⟧
+⟦/IF⟧
+旁白：你把「自由誓约」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C08-S01-O01⟧
+#### B｜龙火焚冠
+你：“龙火焚冠”
+⟦IF|!empress_ready_B⟧
+旁白：你和达里安进入龙室，核对龙焰符文，并先为宫殿和灵魂设下结界。
+⟦SET|empress_supply~B⟧
+⟦/IF⟧
+旁白：你把「龙火焚冠」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C08-S01-O02⟧
+#### C｜独自改写
+你：“独自改写”
+⟦IF|!empress_ready_C⟧
+旁白：你走进图书馆，对照古代原稿找到王冠真名；学士逐字复核抄本。
+⟦SET|empress_supply~C⟧
+⟦/IF⟧
+旁白：你把「独自改写」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C08-S01-O03⟧
+#### D｜反间诱敌
+你：“反间诱敌”
+⟦IF|!empress_ready_D⟧
+旁白：你前往密探室，与瓦莱里安核对情报和假王冠，确认封印所需的真名。
+⟦SET|empress_supply~D⟧
+⟦/IF⟧
+旁白：你把「反间诱敌」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C08-S01-O04⟧
+# ·
+
+# SCENE｜四种破解路径
+⟦TIME|第8日⟧
+⟦SET|empress_scene~M110-C08-S02⟧
+⟦IF|empress_path_C⟧
+⟦SET|empress_labyrinth⟧
+⟦/IF⟧
+⟦IF|empress_path_A⟧
+旁白：三位同伴分别重申自愿献魔；符文逐一亮起，王冠上的束缚开始断裂。
+⟦/IF⟧
+⟦IF|empress_path_B⟧
+旁白：你维持保护结界，达里安以龙火熔开王冠。帝国将失去部分魔法储量，困住的灵魂有了出口。
+⟦/IF⟧
+⟦IF|empress_path_C⟧
+旁白：迷宫中的三道符文按月、龙、心依次亮起。你以古代原稿和真名改写吞噬生命的咒文。
+⟦/IF⟧
+⟦IF|empress_path_D⟧
+旁白：伊萨克向假王冠伸手，暴露真名。瓦莱里安按核验过的情报发动反封印。
+⟦/IF⟧
+SERAPHINE：“The crown cannot command a heart freely given.”
+# CHOICE｜四种破解路径，你想怎样做？
+#### A｜保护所有灵魂
+你：“保护所有灵魂”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C08-S02-O01⟧
+#### B｜封印残留
+你：“封印残留”
+旁白：你把「封印残留」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C08-S02-O02⟧
+# ·
+
+# SCENE｜凯尔归来
+⟦TIME|第8日⟧
+⟦SET|empress_scene~M110-C08-S03⟧
+旁白：金光消散，凯尔从门口走来，伤口已经消失，却仍记得你的呼喊。
+KAEL：“Did I miss anything? I promised I would stay.”
+# CHOICE｜凯尔归来，你想怎样做？
+#### A｜拥抱凯尔
+你：“拥抱凯尔”
+旁白：你把「拥抱凯尔」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C08-S03-O01⟧
+#### B｜吻他脸颊
+你：“吻他脸颊”
+旁白：你把「吻他脸颊」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C08-S03-O02⟧
+#### C｜牵手沉默
+你：“牵手沉默”
+旁白：你把「牵手沉默」的安排说清，Kael Draven放下手里的事，认真回应。
+KAEL：“All right. I am here. Tell me if you want anything different.”
+⟦SET|empress_pick~M110-C08-S03-O03⟧
+# ·
+
+# SCENE｜谁有权命令爱情
+⟦TIME|第8日⟧
+⟦SET|empress_scene~M110-C08-S04⟧
+旁白：伊萨克消亡后，塞拉菲娜投影感谢你没有重蹈覆辙。女帝决定重新定义后宫制度。
+SERAPHINE：“Keep the throne. Let them keep their hearts.”
+# CHOICE｜谁有权命令爱情，你想怎样做？
+#### A｜开始制度改革
+你：“开始制度改革”
+旁白：你把「开始制度改革」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C08-S04-O01⟧
+#### B｜先举行追悼与庆祝
+你：“先举行追悼与庆祝”
+旁白：你把「先举行追悼与庆祝」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C08-S04-O02⟧
+#### C｜清点剩余诅咒
+你：“清点剩余诅咒”
+旁白：你把「清点剩余诅咒」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C08-S04-O03⟧
+# ·
+
+# CHAPTER 9｜二十颗心
+
+# SCENE｜后宫改革议会
+⟦TIME|复活三日后⟧
+⟦SET|empress_scene~M110-C09-S01⟧
+旁白：凯尔复活三日后，宫中恢复争吵与欢笑。卡西安谈制度，卢西恩嫌会议无聊。
+LUCIEN：“I have feelings. Apparently the schedule does not.”
+# CHOICE｜后宫改革议会，你想怎样做？
+#### A｜设帝君
+你：“设帝君”
+旁白：你把「设帝君」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C09-S01-O01⟧
+#### B｜暂不设帝君
+你：“暂不设帝君”
+旁白：你把「暂不设帝君」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C09-S01-O02⟧
+#### C｜按贡献晋位
+你：“按贡献晋位”
+旁白：你把「按贡献晋位」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C09-S01-O03⟧
+# ·
+
+# SCENE｜二十场才艺
+⟦TIME|复活三日后⟧
+⟦SET|empress_scene~M110-C09-S02⟧
+旁白：所有成员依次展示：舞蹈、音乐、鲜花、甜品、按摩、绘画、预言、龙火等。
+THEO：“I made dessert. I may have written your name in sugar.”
+# CHOICE｜二十场才艺，你想怎样做？
+#### A｜公开表扬新人
+你：“公开表扬新人”
+旁白：你把「公开表扬新人」的安排说清，Theo Maren放下手里的事，认真回应。
+THEO：“I saved a little of the good part for you.”
+⟦SET|empress_pick~M110-C09-S02-O01⟧
+#### B｜奖赏旧宠
+你：“奖赏旧宠”
+旁白：你把「奖赏旧宠」的安排说清，Theo Maren放下手里的事，认真回应。
+THEO：“I saved a little of the good part for you.”
+⟦SET|empress_pick~M110-C09-S02-O02⟧
+#### C｜邀请大家互相合作
+你：“邀请大家互相合作”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C09-S02-O03⟧
+# ·
+
+# SCENE｜第一位帝君
+⟦TIME|复活三日后⟧
+⟦SET|empress_scene~M110-C09-S03⟧
+旁白：女帝选定首席地位或留空。未被选中者表现情感而不强迫玩家改变决定。
+CASSIAN：“I will honor your choice, even if I wish it were me.”
+# CHOICE｜第一位帝君，你想怎样做？
+#### A｜赐独立宫殿
+你：“赐独立宫殿”
+旁白：你把「赐独立宫殿」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C09-S03-O01⟧
+#### B｜赐自由通行权
+你：“赐自由通行权”
+旁白：你把「赐自由通行权」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C09-S03-O02⟧
+#### C｜保留所有位分
+你：“保留所有位分”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C09-S03-O03⟧
+# ·
+
+# SCENE｜午夜还要选谁
+⟦TIME|复活三日后⟧
+⟦SET|empress_scene~M110-C09-S04⟧
+旁白：卢西恩当众询问明早谁先见女帝，凯尔轻笑，芬恩唱出争宠歌。
+FINN：“Twelve men, one breakfast table. This is my next hit.”
+# CHOICE｜午夜还要选谁，你想怎样做？
+#### A｜宣布今夜三人陪伴
+你：“宣布今夜三人陪伴”
+旁白：你把各人的位置与意愿逐一问清，给每个人留下决定是否参加的余地。
+CASSIAN：“I will arrange the seats. Nobody has to stay longer than they want.”
+LUCIEN：“I would like the seat beside you. I can ask nicely.”
+FINN：“I will bring the music. And I promise to let the others speak.”
+⟦SET|empress_pick~M110-C09-S04-O01⟧
+#### B｜选一位独处
+你：“选一位独处”
+旁白：你把「选一位独处」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Now that is a moment worth remembering. I will spare you the rhyme.”
+⟦SET|empress_pick~M110-C09-S04-O02⟧
+#### C｜自己享受安静
+你：“自己享受安静”
+旁白：你把「自己享受安静」的安排说清，Finn Everly放下手里的事，认真回应。
+FINN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C09-S04-O03⟧
+# ·
+
+# CHAPTER 10｜女帝的选择
+
+# SCENE｜新月庆典
+⟦TIME|一个月后⟧
+⟦SET|empress_scene~M110-C10-S01⟧
+旁白：一个月后，帝国庆祝恢复秩序，二十位男人为女帝献上专属庆典。
+MALIK：“No one will ever choose your life for you again.”
+# CHOICE｜新月庆典，你想怎样做？
+#### A｜盛大宴会
+你：“盛大宴会”
+旁白：你把「盛大宴会」的安排说清，Malik Soren放下手里的事，认真回应。
+MALIK：“You set the pace. I am glad to share it.”
+⟦SET|empress_pick~M110-C10-S01-O01⟧
+#### B｜私人晚宴
+你：“私人晚宴”
+旁白：你把「私人晚宴」的安排说清，Malik Soren放下手里的事，认真回应。
+MALIK：“You set the pace. I am glad to share it.”
+⟦SET|empress_pick~M110-C10-S01-O02⟧
+#### C｜与民同庆
+你：“与民同庆”
+旁白：你把「与民同庆」的安排说清，Malik Soren放下手里的事，认真回应。
+MALIK：“You set the pace. I am glad to share it.”
+⟦SET|empress_pick~M110-C10-S01-O03⟧
+# ·
+
+# SCENE｜最后的册封
+⟦TIME|一个月后⟧
+⟦SET|empress_scene~M110-C10-S02⟧
+旁白：女帝确定后宫制度：独宠型、多伴侣型、平等型、帝国优先型。
+VALERIAN：“Whichever you choose, it will be yours.”
+# CHOICE｜最后的册封，你想怎样做？
+#### A｜黄金后宫
+你：“黄金后宫”
+旁白：你把「黄金后宫」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C10-S02-O01⟧
+#### B｜公开最爱
+你：“公开最爱”
+旁白：你把「公开最爱」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C10-S02-O02⟧
+#### C｜自由之廷
+你：“自由之廷”
+旁白：你把「自由之廷」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C10-S02-O03⟧
+#### D｜女帝至上
+你：“女帝至上”
+旁白：你把「女帝至上」的安排说清，Valerian Thorne放下手里的事，认真回应。
+VALERIAN：“I will keep to what you have asked. Nothing more.”
+⟦SET|empress_pick~M110-C10-S02-O04⟧
+# ·
+
+# SCENE｜第二顶王冠
+⟦TIME|一个月后⟧
+⟦SET|empress_scene~M110-C10-S03⟧
+⟦IF|empress_hidden⟧
+旁白：海底王冠的线索与塞拉菲娜的画像相互印证，庆典的镜面映出另一顶王冠。
+SERAPHINE：“You broke the first crown. Do you know where the second sleeps?”
+⟦ELSE⟧
+旁白：庆典的灯光在水面铺开。此刻没有新的线索，你可以安心享受恢复平静的宫廷。
+⟦/IF⟧
+# CHOICE｜第二顶王冠，你想怎样做？
+#### A｜追查新王冠
+你：“追查新王冠”
+旁白：你把「追查新王冠」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C10-S03-O01⟧
+#### B｜暂享后宫生活
+你：“暂享后宫生活”
+旁白：你把「暂享后宫生活」的安排说清，Cassian Vale放下手里的事，认真回应。
+CASSIAN：“Then let me make a little room for you. The schedule can wait.”
+⟦SET|empress_pick~M110-C10-S03-O02⟧
+# ·
+
+# SCENE｜黄金清晨
+⟦TIME|一个月后⟧
+⟦SET|empress_scene~M110-C10-S04⟧
+旁白：清晨卢西恩偷吃草莓，卡西安读日程，凯尔怕大家吵醒女帝。女帝醒来，今日后宫生活再次开始。
+LUCIEN：“Morning, gorgeous. Who gets to spoil you today?”
+# CHOICE｜黄金清晨，你想怎样做？
+#### A｜喂水果
+你：“喂水果”
+旁白：你把「喂水果」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C10-S04-O01⟧
+#### B｜按摩
+你：“按摩”
+旁白：你把「按摩」的安排说清，Rowan Hale放下手里的事，认真回应。
+ROWAN：“We can take our time. Your comfort comes first.”
+⟦SET|empress_pick~M110-C10-S04-O02⟧
+#### C｜开宫廷会议
+你：“开宫廷会议”
+旁白：你把「开宫廷会议」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“There it is. That smile was worth waiting for.”
+⟦SET|empress_pick~M110-C10-S04-O03⟧
+#### D｜自由聊天
+你：“自由聊天”
+旁白：你把「自由聊天」的安排说清，Lucien Fox放下手里的事，认真回应。
+LUCIEN：“Of course. You do not owe me your time or a reason.”
+⟦SET|empress_pick~M110-C10-S04-O04⟧
+# ·

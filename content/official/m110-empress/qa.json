@@ -1,0 +1,148 @@
+{
+  "sourceSha256": "84b943cc75ba9cd1a503dcf734c0b6e5c2eaff6c0a6f9e2cc32116b4383039d5",
+  "structure": {
+    "ok": true,
+    "err": [],
+    "warn": [],
+    "stats": {
+      "chapters": 10,
+      "scenes": 40,
+      "choices": 40,
+      "options": 126,
+      "dots": 40,
+      "you": 126,
+      "casts": 23,
+      "lines": 371,
+      "callsOpen": 0,
+      "callsClose": 0,
+      "ifs": 10,
+      "ifEnds": 10,
+      "unknown": [],
+      "assets": {
+        "bg": 0,
+        "cg": 0,
+        "video": 0,
+        "photo": 0,
+        "item": 0,
+        "total": 0
+      },
+      "lore": 0,
+      "orient": {
+        "declared": "bg",
+        "inferred": "bg",
+        "final": "bg"
+      }
+    },
+    "perCh": [
+      {
+        "n": 1,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 40
+      },
+      {
+        "n": 2,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 38
+      },
+      {
+        "n": 3,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 36
+      },
+      {
+        "n": 4,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 32
+      },
+      {
+        "n": 5,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 36
+      },
+      {
+        "n": 6,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 38
+      },
+      {
+        "n": 7,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 36
+      },
+      {
+        "n": 8,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 9,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 38
+      },
+      {
+        "n": 10,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 35
+      }
+    ]
+  },
+  "style": {
+    "ok": true,
+    "err": [],
+    "warn": [],
+    "stats": {
+      "chapters": 10
+    }
+  },
+  "counts": {
+    "characters": 20,
+    "scenes": 40,
+    "choiceGroups": 40,
+    "options": 126,
+    "authoredDaily": 36,
+    "supplementaryDaily": 1
+  },
+  "assets": {
+    "finalArtworkProvided": 48,
+    "planned": 48,
+    "voiceClips": 122,
+    "music": 8,
+    "sfx": 13,
+    "video": {
+      "file": "video/empress-harem-902ee0dc.mp4",
+      "sha256": "93a8737d382a879ecbb69e5697265ef87308109619daf806d5f615f5ec357075",
+      "seconds": 9.963,
+      "width": 1080,
+      "height": 1920,
+      "hasAudio": true,
+      "userProvided": true
+    }
+  },
+  "corrections": [
+    "M110 is not a unique identifier; independent empress content key",
+    "Kael soul-trapped scenes omit unrelated living dialogue",
+    "Second crown appears only when 4 clues and portrait are present",
+    "Added one separate Kael daily event because original 36 events cover only 19 men",
+    "Chapter 9/10 use narrative elapsed time instead of inconsistent Day 9/10 labels"
+  ]
+}
