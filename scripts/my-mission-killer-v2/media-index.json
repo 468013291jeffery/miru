@@ -1,0 +1,402 @@
+{
+  "title": "系统让我攻略凶手，我让他先认罪",
+  "characters": [
+    {
+      "id": "player",
+      "name": "玛雅 Maya（玩家）",
+      "file": "characters/player.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "id": "cole",
+      "name": "科尔·默瑟 Cole Mercer",
+      "file": "characters/cole.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "id": "ethan",
+      "name": "伊森·布莱克 Ethan Blake",
+      "file": "characters/ethan.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "id": "adrian",
+      "name": "阿德里安·维尔 Adrian Vale",
+      "file": "characters/adrian.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "id": "julia",
+      "name": "朱莉娅·哈特 Julia Hart",
+      "file": "characters/julia.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    }
+  ],
+  "highlights": [
+    {
+      "chapter": 1,
+      "index": 1,
+      "description": "图名：戒指前的停顿。画面描述：阿德里安的手停在戒指盒旁，笑容略僵；科尔在背景等候，窗外车灯清晰。触发条件：玩家明确拒绝独处或暂不戴戒指，二者任一发生",
+      "roles": [
+        "cole",
+        "adrian"
+      ],
+      "file": "highlights/ch01_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 1,
+      "index": 2,
+      "description": "图名：表格转向你。画面描述：科尔俯身将纸转给镜头，阿德里安盯着那只手，桌边空间紧绷。触发条件：使用表实际交到玩家面前",
+      "roles": [
+        "cole",
+        "adrian"
+      ],
+      "file": "highlights/ch01_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 1,
+      "index": 3,
+      "description": "图名：他也看了手机。画面描述：阿德里安握着亮屏手机，目光从屏幕转向玩家，科尔留在远处，餐厅仍明亮。触发条件：已实际看到任务同步，阿德里安确实查看提示并问起建议",
+      "roles": [
+        "cole",
+        "adrian"
+      ],
+      "file": "highlights/ch01_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 2,
+      "index": 1,
+      "description": "图名：别碰那块盘。画面描述：伊森停下拆卸，科尔抬掌示意暂停，两人看向玩家，桌面硬盘和线缆清楚。触发条件：玩家要求暂停，伊森实际收手",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch02_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 2,
+      "index": 2,
+      "description": "图名：这是谁的同意。画面描述：科尔转过申请，伊森不再带笑，后方监视屏照亮侧脸。触发条件：玩家否认授权且看到申请",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch02_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 2,
+      "index": 3,
+      "description": "图名：来源指向你家。画面描述：伊森指着终端来源字段，科尔皱眉审视，机架灯映在两人脸上。触发条件：来源记录展示且已解释不等于操作者身份",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch02_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 3,
+      "index": 1,
+      "description": "图名：饭袋停在门外。画面描述：阿德里安站在门外维持笑容，门廊里的科尔与伊森回头，完整门框形成边界。触发条件：玩家选择不让他进门并开始门口谈话",
+      "roles": [
+        "cole",
+        "ethan",
+        "adrian"
+      ],
+      "file": "highlights/ch03_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 3,
+      "index": 2,
+      "description": "图名：屏幕灭了，提示还在。画面描述：伊森的手刚离开已关闭的终端，科尔盯住黑屏，阿德里安站在门外，只有玩家一只手停在桌边。门廊灯仍亮，人物表情紧绷，系统文字由界面另行显示。触发条件：玩家授权且终端确实关闭；此图不代表他们听见系统。",
+      "roles": [
+        "cole",
+        "ethan",
+        "adrian"
+      ],
+      "file": "highlights/ch03_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 3,
+      "index": 3,
+      "description": "图名：关心变成监视。画面描述：阿德里安在玩家许可的位置承认查看任务，伊森低头，科尔紧盯记录。触发条件：已实际查清同步范围，人物位置按本次进门状态选对应构图",
+      "roles": [
+        "cole",
+        "ethan",
+        "adrian"
+      ],
+      "file": "highlights/ch03_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 4,
+      "index": 1,
+      "description": "图名：签下自己的名字。画面描述：伊森认真署名，科尔等待，桌上安装原件清楚，狭小空间有压迫感。触发条件：伊森确实完成原件交付并署名",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch04_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 4,
+      "index": 2,
+      "description": "图名：名字终于对上。画面描述：科尔与伊森看向核对后的页面，两人表情沉下，玩家一只手在前景。触发条件：本次安装原件实际展示并查清服务账户身份",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch04_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 4,
+      "index": 3,
+      "description": "图名：你让声音停下。画面描述：科尔把谈话空间留给玩家，伊森放下设备，冷光屏幕暗下，工作灯仍亮。触发条件：玩家暂停提示并确认本轮不再播报",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch04_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 5,
+      "index": 1,
+      "description": "图名：假账写着你的名字。画面描述：朱莉娅按住改账页，科尔与伊森表情收紧，文件夹里还压着原始回单。触发条件：玩家实际查看改过的账且朱莉娅说明该笔被写成由玩家领取。9:16，无字、无水印、玩家不露脸。",
+      "roles": [
+        "cole",
+        "ethan",
+        "julia"
+      ],
+      "file": "highlights/ch05_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 5,
+      "index": 2,
+      "description": "图名：两份记录对不上。画面描述：科尔将假账与原始回单并排，朱莉娅脸色苍白，伊森停下翻合同，档案架清楚。触发条件：至少一笔真实银行收款方与账面记载核对完成。9:16，无字、无水印、玩家不露脸。",
+      "roles": [
+        "cole",
+        "ethan",
+        "julia"
+      ],
+      "file": "highlights/ch05_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 5,
+      "index": 3,
+      "description": "图名：她没抽走自己的签名。画面描述：朱莉娅将带自己签名的一整页推过来，另外两人留出空间，下午光落在纸上。触发条件：玩家决定接收，朱莉娅实际交出自己经手的原件。9:16，无字、无水印、玩家不露脸。",
+      "roles": [
+        "julia"
+      ],
+      "file": "highlights/ch05_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 6,
+      "index": 1,
+      "description": "图名：房间为你留着出口。画面描述：科尔站到桌侧让开走道，伊森把副本给玩家核对，夜景与完整门框清楚。触发条件：玩家确认公开方案且安排已完成",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch06_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 6,
+      "index": 2,
+      "description": "图名：他自己走过来。画面描述：阿德里安在公共桌前坐下，科尔在背景，伊森按住原件，双方目光紧绷。触发条件：玩家实际邀请并接受他进入本章",
+      "roles": [
+        "cole",
+        "ethan",
+        "adrian"
+      ],
+      "file": "highlights/ch06_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 6,
+      "index": 3,
+      "description": "图名：这一次记录还在。画面描述：科尔与伊森核对仍保存的画面或取消单，屏幕冷光照亮认真表情，桌有已确认副本。触发条件：玩家核实本次设备准备生效，不论取消或留痕分支",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch06_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 7,
+      "index": 1,
+      "description": "图名：他写好的坦白。画面描述：阿德里安把一份未签文件推到玩家手前，科尔拿着银行回单，伊森盯着文件，公共会谈室的门开着，三人表情各异。触发条件：当面路线中，玩家实际看见推责草稿并指出问题；书面路线不出现阿德里安。",
+      "roles": [
+        "cole",
+        "ethan",
+        "adrian"
+      ],
+      "file": "highlights/ch07_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 7,
+      "index": 2,
+      "description": "图名：名字也留在记录里。画面描述：伊森放下自己的署名说明，科尔核对接收，桌面材料有层次，伊森神情紧绷。触发条件：伊森确实提交完整说明；未交不出图",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch07_high02.png",
+      "dimensions": [
+        941,
+        1671
+      ]
+    },
+    {
+      "chapter": 7,
+      "index": 3,
+      "description": "图名：门外有人等你。画面描述：玩家仅背肩或一只手，科尔与伊森站在公共走廊，神情放松仍认真，明亮门框在后。触发条件：本次接触结束、玩家选择离开会谈室且同意两人同行",
+      "roles": [
+        "cole",
+        "ethan"
+      ],
+      "file": "highlights/ch07_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 8,
+      "index": 1,
+      "description": "图名：工作证先放下。画面描述：科尔把工作证放在桌上，目光认真，伊森与朱莉娅退在背景，日光清楚。触发条件：科尔非朋友模式，玩家允许谈私人关系且他实际提出邀请",
+      "roles": [
+        "cole",
+        "ethan",
+        "julia"
+      ],
+      "file": "highlights/ch08_high01.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 8,
+      "index": 2,
+      "description": "图名：这次没用笑话带过。画面描述：伊森放下笔直视镜头，表情坦诚，科尔与朱莉娅在远处整理文件。触发条件：玩家主动问伊森今后关系且他明确回应；朋友路线改为认真回应友谊",
+      "roles": [
+        "cole",
+        "ethan",
+        "julia"
+      ],
+      "file": "highlights/ch08_high02.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    },
+    {
+      "chapter": 8,
+      "index": 3,
+      "description": "图名：日程由你来写。画面描述：玩家仅一只手放在合上的日程本旁，科尔、伊森、朱莉娅自愿留下或依当场状态离开，不出现未在场者。触发条件：玩家确认系统处理及未来安排后；按实际留场者生成",
+      "roles": [
+        "cole",
+        "ethan",
+        "julia"
+      ],
+      "file": "highlights/ch08_high03.png",
+      "dimensions": [
+        941,
+        1672
+      ]
+    }
+  ],
+  "cover_video": {
+    "status": "not_generated_quota_exhausted",
+    "duration_seconds": 10,
+    "prompt_file": "cover_video_prompt.txt"
+  }
+}
