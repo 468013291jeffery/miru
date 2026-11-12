@@ -308,6 +308,51 @@ function doubaoTicket(req, res) {
     langs: String(process.env.DOUBAO_LANGS || 'zh,en').split(/[ ,]+/).filter(Boolean), speakers: spk });
 }
 
+/* ---------- 2026-11-12 · 玩家自己的声音（「我的」→ 我的声音 → 用在我的角色上） ----------
+   POST /api/tts {clone:{audio:"data:audio/...;base64,..."}}（需要登录）→ 存成文件，返回 {id:"u<20 hex>"}
+   POST /api/tts {cloneDel:"u…"} 删除；GET /api/tts?vref=u… 把这段录音给 IndexTTS-2 当音色参考；
+   GET /api/tts?v=u…&t=… 用这段录音的音色念台词（零样本克隆，IndexTTS-2 · HF Space）。
+   录音只用来给这个玩家自己的台词配音，不公开列出；id 不可猜。 */
+const VDIR = (() => { const path = require('path'), fs = require('fs');
+  const c = [process.env.MIRU_VOICE_DIR, path.resolve(process.cwd(), '..', '..', 'shared', 'voices'), path.join(require('os').tmpdir(), 'miru-voices')].filter(Boolean);
+  for (const d of c) { try { fs.mkdirSync(d, { recursive: true }); fs.accessSync(d, fs.constants.W_OK); return d; } catch (_) {} }
+  return require('os').tmpdir(); })();
+const VEXT = { 'audio/webm': 'webm', 'audio/ogg': 'ogg', 'audio/mp4': 'm4a', 'audio/aac': 'aac', 'audio/mpeg': 'mp3', 'audio/wav': 'wav', 'audio/x-wav': 'wav', 'audio/x-m4a': 'm4a' };
+const VMIME = { webm: 'audio/webm', ogg: 'audio/ogg', m4a: 'audio/mp4', aac: 'audio/aac', mp3: 'audio/mpeg', wav: 'audio/wav' };
+const isUV = v => /^u[0-9a-f]{20}$/.test(String(v || ''));
+function vfile(id) { const fs = require('fs'), path = require('path'); if (!isUV(id)) return null;
+  for (const e of Object.keys(VMIME)) { const f = path.join(VDIR, id + '.' + e); if (fs.existsSync(f)) return { f, type: VMIME[e] }; } return null; }
+function cloneSave(req, o, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  const u = L.who(req); if (!u) { res.status(401).json({ error: 'not signed in' }); return; }
+  const m = /^data:(audio\/[a-z0-9.+-]+)(?:;[^,]*)?;base64,(.+)$/i.exec(String((o && o.audio) || ''));
+  if (!m) { res.status(400).json({ error: 'need an audio clip' }); return; }
+  const mime = m[1].toLowerCase().split(';')[0], ext = VEXT[mime] || 'webm', buf = Buffer.from(m[2], 'base64');
+  if (buf.length < 4000) { res.status(400).json({ error: 'clip too short' }); return; }
+  if (buf.length > 3 * 1024 * 1024) { res.status(413).json({ error: 'clip too long (max ~20s)' }); return; }
+  const crypto = require('crypto'), fs = require('fs'), path = require('path');
+  const id = 'u' + crypto.createHash('sha256').update(String(u.uid) + ':' + crypto.randomBytes(8).toString('hex')).digest('hex').slice(0, 20);
+  try { fs.writeFileSync(path.join(VDIR, id + '.' + ext), buf); } catch (e) { res.status(500).json({ error: 'save failed' }); return; }
+  res.status(200).json({ id });
+}
+function cloneDel(req, id, res) {
+  res.setHeader('Cache-Control', 'no-store');
+  if (!L.who(req)) { res.status(401).json({ error: 'not signed in' }); return; }
+  const v = vfile(id); if (v) try { require('fs').unlinkSync(v.f); } catch (_) {}
+  res.status(200).json({ ok: true });
+}
+async function viaClone(req, text, id, vec) {
+  if (!vfile(id)) throw new Error('voice clip not found');
+  const proto = String(req.headers['x-forwarded-proto'] || 'https').split(',')[0], host = req.headers['x-forwarded-host'] || req.headers.host || 'miru.plus';
+  const ref = proto + '://' + host + '/api/tts?vref=' + id;
+  const useVec = vec.some(x => x > 0), deadline = Date.now() + 70000; let last;
+  for (const label of (useVec ? LABELS.vec : LABELS.same)) {
+    try { return await gradioOnce(label, ref, text, useVec ? vec : [0, 0, 0, 0, 0, 0, 0, 0], deadline); }
+    catch (e) { last = e; if (!/choice|not in|value/i.test(String(e.message))) break; }
+  }
+  throw last;
+}
+
 module.exports = async (req, res) => {
   if (req.method === 'GET' && req.query && req.query.doubao_check) return doubaoCheck(req.query.doubao_check, res);
   const ok = cors(req, res);
@@ -316,12 +361,15 @@ module.exports = async (req, res) => {
   if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
     res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
     if (b.omni) return omni(b.omni, res);
+    if (b.clone) return cloneSave(req, b.clone, res);
+    if (b.cloneDel) return cloneDel(req, b.cloneDel, res);
     if (b.vid) { res.setHeader('Cache-Control', 'no-store'); if (!vidAllowed(req)) { res.status(429).json({ error: 'too many videos, try again later' }); return; }
       try { res.status(200).json(await viduStart(b.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     if (b.img) { res.setHeader('Cache-Control', 'no-store'); if (!imgAllowed(req)) { res.status(429).json({ error: 'too many images, try again later' }); return; }
       try { res.status(200).json(b.img.image && !b.img.model ? await editStart(b.img) : await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
+  if (q.vref) { const v = vfile(q.vref); if (!v) { res.status(404).json({ error: 'not found' }); return; } res.setHeader('Content-Type', v.type); res.setHeader('Cache-Control', 'private, max-age=600'); res.status(200).send(require('fs').readFileSync(v.f)); return; }
   if (q.doubao) { res.setHeader('Cache-Control', 'no-store'); return doubaoTicket(req, res); }
   if (q.imgtask) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await editPoll(q.imgtask)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
   if (q.vid) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await viduPoll(q.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
@@ -334,7 +382,7 @@ module.exports = async (req, res) => {
     res.status(200).json({ ok: true, provider: (tc.url || process.env.TTS_URL) ? 'server' : 'space', fromConfig: !!tc.url, cfgUrl: tc.url || '', cfgModel: tc.model || '', hasCfgKey: !!tc.key, qwen: qwenSites().length > 0, english: process.env.INWORLD_API_KEY ? 'inworld' : null, token: !!process.env.HF_TOKEN, voices: Object.keys(VOICES), inworld: iw || undefined }); return; }
   const text = String(q.t || '').replace(/[*（）()]/g, '').trim().slice(0, 400);
   if (!text) { res.status(400).json({ error: 'no text' }); return; }
-  const voice = String(q.v || 'm1').slice(0, 12);
+  const voice = isUV(q.v) ? String(q.v) : String(q.v || 'm1').slice(0, 12);
   const vec = String(q.e || '').split(',').slice(0, 8).map(x => Math.max(0, Math.min(1, +x || 0)));
   while (vec.length < 8) vec.push(0);
   try {
@@ -343,8 +391,9 @@ module.exports = async (req, res) => {
     const lang = QLANG[q.l] ? q.l : (/[\u3040-\u30ff]/.test(text) ? 'ja' : /[\uac00-\ud7af]/.test(text) ? 'ko' : /[\u4e00-\u9fff]/.test(text) ? 'zh' : 'en');
     /* 后台「语音 API」填了地址 ⇒ 它优先（填了就该生效，否则那一页只是摆设）；
        它挂了再退回原来的顺序 —— 玩家至少还能听见声音，而不是一片安静。 */
+    if (isUV(voice)) out = await viaClone(req, text, voice, vec);
     let tc = {}; try { tc = ((await L.config()) || {}).tts || {}; } catch (_) {}
-    if (tc.url) { try { out = await viaOpenAI(text, voice, tc); } catch (e) { qerr = e; out = null; } }
+    if (!out && tc.url) { try { out = await viaOpenAI(text, voice, tc); } catch (e) { qerr = e; out = null; } }
     if (!out && qwenSites().length) { try { out = await viaQwen(text, voice, lang); } catch (e) { qerr = e; out = null; } }
     if (!out && en && process.env.INWORLD_API_KEY) { try { out = await viaInworld(text, voice, vec); } catch (e) { out = null; } }
     if (!out) out = (process.env.TTS_URL && !tc.url) ? await viaOpenAI(text, voice, tc) : await viaSpace(text, voice, vec);
