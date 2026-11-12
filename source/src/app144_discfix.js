@@ -698,6 +698,23 @@
       return pick.apply(this, arguments);
     };
   }
+  /* 「进入下一章」「下一章」按钮同样：busy 卡住时不再静默没反应 */
+  ["packAdvanceChapter", "packNext"].forEach(name => {
+    try {
+      const f = window[name]; if (typeof f !== "function") return;
+      window[name] = function () {
+        const th = S.threads[curT];
+        try {
+          if (th && th.pk) ackReading(th);
+          if (busy) {
+            if (busySince && Date.now() - busySince > 20000) { busy = false; busySince = 0; try { typing(false); } catch (_) {} }
+            else { toast(zh() ? "上一句还在生成，稍等一下再点" : "Still writing the last line — tap again in a moment"); return; }
+          }
+        } catch (err) { console.warn("[choice147] " + name, err); }
+        return f.apply(this, arguments);
+      };
+    } catch (_) {}
+  });
   /* 选项一出现就把还在等确认的那句确认掉，免得「轻点屏幕继续」和选项同时出现 */
   if (typeof packRefresh === "function") {
     const ref = packRefresh;
