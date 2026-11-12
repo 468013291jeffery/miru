@@ -1,15 +1,21 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MIRU 用户协议与社区规范 · Terms &amp; Community Guidelines</title>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MIRU · 用户协议与社区规范 · Terms & Community Guidelines</title>
 <style>
-:root{color-scheme:dark}body{margin:0;background:#0C0B10;color:#E9E4EE;font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",sans-serif}
-main{max-width:720px;margin:0 auto;padding:28px 18px 60px}h1{font-size:22px;margin:0 0 4px}h2{font-size:17px;margin:28px 0 6px;color:#F6D3AE}
-.muted{color:#9C93A6;font-size:13px}nav{display:flex;gap:10px;margin:14px 0 6px}nav a{color:#F0B77E}section[lang=en]{border-top:1px solid #2A2531;margin-top:40px;padding-top:10px}
-li{margin:4px 0}b{color:#fff}
-</style></head><body><main>
-<nav><a href="#zh">中文</a><a href="#en">English</a></nav>
-
-<section id="zh" lang="zh">
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0C0B10;color:#E9E4EE;font:15px/1.7 -apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans","Apple SD Gothic Neo","Segoe UI",sans-serif}
+header{position:sticky;top:0;z-index:5;background:rgba(12,11,16,.94);backdrop-filter:blur(10px);border-bottom:1px solid #2A2531;padding:calc(env(safe-area-inset-top,0px) + 8px) max(12px,env(safe-area-inset-right,0px)) 8px max(12px,env(safe-area-inset-left,0px))}
+.bar{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:8px}
+#back{display:flex;align-items:center;gap:4px;background:none;border:0;color:#F0B77E;font:inherit;font-size:15px;padding:8px 10px 8px 2px;cursor:pointer;flex:none}#back svg{width:20px;height:20px}
+.bar b{flex:1;min-width:0;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding-right:44px}
+nav{max-width:720px;margin:6px auto 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+nav button{flex:none;background:#1A1720;border:1px solid #2A2531;color:#C9C1D2;border-radius:999px;padding:5px 13px;font:inherit;font-size:13px;cursor:pointer}nav button.on{background:#F0B77E;border-color:#F0B77E;color:#1A1208;font-weight:600}
+main{max-width:720px;margin:0 auto;padding:22px max(18px,env(safe-area-inset-right,0px)) 60px max(18px,env(safe-area-inset-left,0px))}
+h1{font-size:22px;margin:0 0 4px;line-height:1.35}h2{font-size:17px;margin:28px 0 6px;color:#F6D3AE}.muted{color:#9C93A6;font-size:13px}li{margin:4px 0}b{color:#fff}a{color:#F0B77E}
+.foot{margin-top:36px;padding-top:14px;border-top:1px solid #2A2531;font-size:14px}[hidden]{display:none!important}
+</style></head><body>
+<header><div class="bar"><button id="back" type="button" aria-label="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span id="bk">返回</span></button><b id="tt"></b></div>
+<nav><button data-l="zh">中文</button><button data-l="en">English</button><button data-l="ja">日本語</button><button data-l="ko">한국어</button><button data-l="es">Español</button></nav></header>
+<main><section id="s-zh" lang="zh">
 <h1>MIRU 用户协议与社区规范</h1>
 <p class="muted">生效日期：2026 年 10 月 22 日。注册或使用 MIRU 即表示你同意本协议。</p>
 
@@ -51,9 +57,7 @@ li{margin:4px 0}b{color:#fff}
 
 <h2>7. 联系我们</h2>
 <p>在 App 内「我的 → 安全与举报 → 联系我们」提交，我们会在 24 小时内回复。</p>
-</section>
-
-<section id="en" lang="en">
+<p class="foot"><a href="privacy.html#zh">隐私说明</a></p></section><section id="s-en" lang="en" hidden>
 <h1>MIRU Terms of Use &amp; Community Guidelines</h1>
 <p class="muted">Effective October 22, 2026. By creating an account or using MIRU you agree to these terms.</p>
 
@@ -95,5 +99,147 @@ li{margin:4px 0}b{color:#fff}
 
 <h2>7. Contact</h2>
 <p>Use Me → Safety &amp; reporting → Contact us in the app. We reply within 24 hours.</p>
-</section>
-</main></body></html>
+<p class="foot"><a href="privacy.html#en">Privacy notice</a></p></section><section id="s-ja" lang="ja" hidden>
+<h1>MIRU 利用規約・コミュニティガイドライン</h1>
+<p class="muted">発効日：2026 年 10 月 22 日。MIRU に登録または利用することで、本規約に同意したものとみなされます。</p>
+
+<h2>1. サービス内容</h2>
+<p>MIRU はインタラクティブドラマと AI キャラクターとのチャットアプリです。キャラクターの返信は AI によって生成され、不正確な場合があり、MIRU の見解を表すものではありません。登場キャラクターはすべて架空の成人です。</p>
+
+<h2>2. 年齢</h2>
+<p>MIRU を利用するには 17 歳以上である必要があります。</p>
+
+<h2>3. 不適切なコンテンツへのゼロトレランス</h2>
+<p>MIRU は不快なコンテンツや迷惑行為に対して<b>一切容認しません</b>。以下の内容を投稿・アップロードしたり、AI に生成させたりしてはいけません：</p>
+<ul>
+<li>未成年者が関わる性的コンテンツ、またはキャラクターを未成年者として描く性的コンテンツ</li>
+<li>露骨な性的コンテンツ</li>
+<li>ヘイト、差別、嫌がらせ、脅迫、いじめ</li>
+<li>自傷・自殺・現実の暴力をそそのかす内容</li>
+<li>違法行為、薬物取引、詐欺</li>
+<li>著作権・肖像権・プライバシー（他人の実際の個人情報を含む）を侵害する内容</li>
+<li>実在の人物へのなりすまし、スパム、広告</li>
+</ul>
+<p>違反コンテンツは削除され、アカウントは警告・機能制限・<b>永久停止</b>の対象となります。</p>
+
+<h2>4. ユーザー投稿コンテンツ（UGC）</h2>
+<ul>
+<li>コミュニティに公開する脚本、素材ライブラリにアップロードする画像・音楽・動画は、公開前に自動の安全審査を受けます。アップロードした素材は公開前に人による審査も行われます。</li>
+<li>投稿した内容の責任はあなたにあり、必要な権利を持っていることを保証するものとします。</li>
+<li>あなたは MIRU に対し、サービス内でそのコンテンツを表示・配信する非独占的なライセンスを付与します。自分の作品はいつでも削除できます。</li>
+</ul>
+
+<h2>5. 通報とブロック</h2>
+<ul>
+<li>作品ページ、チャットメニュー（⋯）、素材ライブラリから、作品・作者・素材・AI の返信を<b>通報</b>できます。</li>
+<li>任意の作者を<b>ブロック</b>でき、ブロック後はその作者の作品が表示されなくなります。「マイ → 安全と通報」で確認・解除できます。</li>
+<li>通報は <b>24 時間以内</b>に対応し、違反コンテンツを削除して投稿者を停止します。複数の人から通報されたコンテンツは、審査まで自動的に非表示になります。</li>
+</ul>
+
+<h2>6. 仮想通貨</h2>
+<p>ダイヤはサービス内でのみ使える仮想アイテムで、現金との交換や譲渡はできません。</p>
+
+<h2>7. お問い合わせ</h2>
+<p>アプリ内の「マイ → 安全と通報 → お問い合わせ」からご連絡ください。24 時間以内に返信します。</p>
+<p class="foot"><a href="privacy.html#ja">プライバシー</a></p></section><section id="s-ko" lang="ko" hidden>
+<h1>MIRU 이용약관 및 커뮤니티 가이드라인</h1>
+<p class="muted">시행일: 2026년 10월 22일. MIRU에 가입하거나 이용하면 본 약관에 동의한 것으로 간주됩니다.</p>
+
+<h2>1. 서비스 내용</h2>
+<p>MIRU는 인터랙티브 드라마와 AI 캐릭터 채팅 앱입니다. 캐릭터의 답변은 AI가 생성하며 부정확할 수 있고, MIRU의 견해를 대변하지 않습니다. 모든 캐릭터는 가상의 성인입니다.</p>
+
+<h2>2. 연령</h2>
+<p>MIRU를 이용하려면 만 17세 이상이어야 합니다.</p>
+
+<h2>3. 부적절한 콘텐츠 무관용 원칙</h2>
+<p>MIRU는 불쾌한 콘텐츠와 악성 이용자에 대해 <b>무관용</b> 원칙을 적용합니다. 다음 내용을 게시·업로드하거나 AI가 생성하도록 유도해서는 안 됩니다:</p>
+<ul>
+<li>미성년자가 관련된 모든 성적 콘텐츠, 또는 캐릭터를 미성년자로 묘사한 성적 콘텐츠</li>
+<li>노골적인 성적 콘텐츠</li>
+<li>혐오, 차별, 괴롭힘, 협박, 따돌림</li>
+<li>자해, 자살 또는 현실의 폭력을 부추기는 내용</li>
+<li>불법 행위, 마약 거래, 사기</li>
+<li>저작권, 초상권, 개인정보(타인의 실제 개인정보 포함)를 침해하는 내용</li>
+<li>실존 인물 사칭, 스팸, 광고</li>
+</ul>
+<p>위반 콘텐츠는 삭제되며, 계정은 경고, 기능 제한 또는 <b>영구 정지</b> 조치를 받습니다.</p>
+
+<h2>4. 이용자 제작 콘텐츠(UGC)</h2>
+<ul>
+<li>커뮤니티에 게시하는 스토리와 소재 라이브러리에 업로드하는 이미지·음악·영상은 공개 전에 자동 안전 검사를 거치며, 업로드한 소재는 공개 전에 사람이 직접 검토합니다.</li>
+<li>게시한 콘텐츠에 대한 책임은 본인에게 있으며, 해당 권리를 보유하고 있음을 보증합니다.</li>
+<li>귀하는 MIRU에 서비스 내에서 해당 콘텐츠를 표시·배포할 수 있는 비독점적 라이선스를 부여합니다. 자신의 작품은 언제든지 삭제할 수 있습니다.</li>
+</ul>
+
+<h2>5. 신고 및 차단</h2>
+<ul>
+<li>작품 페이지, 채팅 메뉴(⋯), 소재 라이브러리에서 작품, 작가, 소재 또는 AI 답변을 <b>신고</b>할 수 있습니다.</li>
+<li>어떤 작가든 <b>차단</b>할 수 있으며, 차단하면 그 작가의 작품이 더 이상 보이지 않습니다. 「마이 → 안전 및 신고」에서 확인·해제할 수 있습니다.</li>
+<li>신고는 <b>24시간 이내</b>에 처리합니다. 위반 콘텐츠를 삭제하고 게시자를 정지합니다. 여러 사람에게 신고된 콘텐츠는 검토 전까지 자동으로 숨겨집니다.</li>
+</ul>
+
+<h2>6. 가상 화폐</h2>
+<p>다이아몬드는 서비스 내에서만 사용하는 가상 아이템으로, 현금으로 교환하거나 양도할 수 없습니다.</p>
+
+<h2>7. 문의</h2>
+<p>앱의 「마이 → 안전 및 신고 → 문의하기」를 이용해 주세요. 24시간 이내에 답변드립니다.</p>
+<p class="foot"><a href="privacy.html#ko">개인정보 안내</a></p></section><section id="s-es" lang="es" hidden>
+<h1>Términos de uso y normas de la comunidad de MIRU</h1>
+<p class="muted">Vigentes desde el 22 de octubre de 2026. Al crear una cuenta o usar MIRU aceptas estos términos.</p>
+
+<h2>1. El servicio</h2>
+<p>MIRU es una app de dramas interactivos y chat con personajes de IA. Las respuestas de los personajes las genera una IA, pueden ser inexactas y no representan las opiniones de MIRU. Todos los personajes son adultos ficticios.</p>
+
+<h2>2. Edad</h2>
+<p>Debes tener al menos 17 años para usar MIRU.</p>
+
+<h2>3. Tolerancia cero con el contenido inapropiado</h2>
+<p>MIRU tiene <b>tolerancia cero</b> con el contenido ofensivo y los usuarios abusivos. No puedes publicar, subir ni pedir a la IA que genere:</p>
+<ul>
+<li>cualquier contenido sexual que involucre a menores, o contenido sexual que represente a personajes como menores;</li>
+<li>contenido sexual explícito;</li>
+<li>odio, discriminación, acoso, amenazas o bullying;</li>
+<li>incitación a la autolesión, al suicidio o a la violencia real;</li>
+<li>actividades ilegales, venta de drogas o estafas;</li>
+<li>contenido que infrinja derechos de autor, de imagen o la privacidad (incluidos datos personales reales de otras personas);</li>
+<li>suplantación de personas reales, spam o publicidad.</li>
+</ul>
+<p>El contenido que infrinja estas normas se elimina, y las cuentas reciben una advertencia, una restricción o una <b>suspensión permanente</b>.</p>
+
+<h2>4. Contenido generado por usuarios</h2>
+<ul>
+<li>Las historias que publicas en la comunidad y las imágenes, música o vídeos que subes a la biblioteca pasan una revisión automática de seguridad antes de publicarse; además, una persona revisa lo que subes antes de que sea público.</li>
+<li>Eres responsable de lo que publicas y confirmas que tienes los derechos necesarios.</li>
+<li>Concedes a MIRU una licencia no exclusiva para mostrarlo y distribuirlo dentro del servicio. Puedes eliminar tus obras en cualquier momento.</li>
+</ul>
+
+<h2>5. Denuncias y bloqueos</h2>
+<ul>
+<li>Puedes <b>denunciar</b> una historia, a su autor, un recurso de la biblioteca o una respuesta de la IA desde la página de la historia, el menú del chat (⋯) y la biblioteca.</li>
+<li>Puedes <b>bloquear</b> a cualquier autor; dejarás de ver todas sus obras. Gestiona los bloqueos en Yo → Seguridad y denuncias.</li>
+<li>Atendemos las denuncias <b>en menos de 24 horas</b>: eliminamos el contenido infractor y suspendemos a quien lo publicó. El contenido denunciado por varias personas se oculta automáticamente hasta su revisión.</li>
+</ul>
+
+<h2>6. Moneda virtual</h2>
+<p>Los diamantes son artículos virtuales para usar solo dentro del servicio. No tienen valor monetario y no se pueden transferir.</p>
+
+<h2>7. Contacto</h2>
+<p>Usa Yo → Seguridad y denuncias → Contáctanos en la app. Respondemos en menos de 24 horas.</p>
+<p class="foot"><a href="privacy.html#es">Aviso de privacidad</a></p></section></main>
+<script>
+(function(){
+var B={"zh": "返回", "en": "Back", "ja": "戻る", "ko": "뒤로", "es": "Volver"},T={"zh": "用户协议与社区规范", "en": "Terms & Community Guidelines", "ja": "利用規約", "ko": "이용약관", "es": "Términos de uso"},K=["zh","en","ja","ko","es"];
+function pick(){var h=(location.hash||"").slice(1).toLowerCase();if(K.indexOf(h)>=0)return h;
+ try{var s=JSON.parse(localStorage.getItem("miru_v2")||"{}");if(s&&K.indexOf(s.lang)>=0)return s.lang}catch(e){}
+ var n=(navigator.language||"zh").slice(0,2).toLowerCase();return K.indexOf(n)>=0?n:"en"}
+function show(l){K.forEach(function(k){document.getElementById("s-"+k).hidden=k!==l});
+ document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.l===l)});
+ document.documentElement.lang=l==="zh"?"zh-CN":l;document.getElementById("bk").textContent=B[l];document.getElementById("tt").textContent=T[l];window.scrollTo(0,0)}
+document.querySelector("nav").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;history.replaceState(null,"","#"+b.dataset.l);show(b.dataset.l)});
+document.getElementById("back").addEventListener("click",function(){
+ var ref=document.referrer,same=false;try{same=!!ref&&new URL(ref).origin===location.origin}catch(e){}
+ if(same&&history.length>1)history.back();else location.href="/"});
+window.addEventListener("hashchange",function(){show(pick())});show(pick());
+})();
+</script>
+</body></html>
