@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="def7ac82ee2b 2026-11-12T06:13Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="e463d1fe8398 2026-11-12T06:17Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -22818,6 +22818,8 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   if (!PUB || typeof watchAd !== "function") return;
 
   try {
+    /* 2026-11-12：页面 <head> 里已经静态放了 adsbygoogle.js（审核要求代码在页面源码里），这里就不再插第二份 */
+    if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script");
     s.async = true;
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(PUB);
@@ -22825,6 +22827,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     s.setAttribute("data-ad-frequency-hint", "30s");
     if (/[?&]adtest=on/.test(location.search)) s.setAttribute("data-adbreak-test", "on");
     document.head.appendChild(s);
+    }
   } catch (e) { console.warn("[ads] load", e); }
   window.adsbygoogle = window.adsbygoogle || [];
   window.adBreak = window.adConfig = function (o) { window.adsbygoogle.push(o); };
@@ -25358,11 +25361,34 @@ if(typeof document!=='undefined'&&document.head){
 
   /* ---------- 我的声音（录音） ---------- */
   const REC = { on: false, rec: null, chunks: [], t0: 0, tick: null, stream: null };
-  function pickMime() {
-    if (!window.MediaRecorder) return null;
-    const L = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/aac", "audio/ogg;codecs=opus"];
-    for (const m of L) try { if (!MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(m)) return m; } catch (_) {}
-    return "";
+  /* iPhone Safari 只认 audio/mp4；把它排在前面。都不行就用 WebAudio 自己录 WAV（不依赖 MediaRecorder） */
+  const SAFARI = /Safari/.test(navigator.userAgent) && !/Chrome|CriOS|Android/.test(navigator.userAgent);
+  function mimes() {
+    if (!window.MediaRecorder) return [];
+    const L = SAFARI ? ["audio/mp4", "audio/aac", "audio/webm;codecs=opus", "audio/webm"] : ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus"];
+    return L.filter(m => { try { return !MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(m); } catch (_) { return false; } }).concat([""]);
+  }
+  /* WebAudio 兜底：16kHz 单声道 WAV，接口和 MediaRecorder 一样（start / stop / onstop / mimeType） */
+  function wavRecorder(stream) {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) throw { name: "NotSupportedError" };
+    const ctx = new AC(), src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), bufs = [];
+    const r = { mimeType: "audio/wav", state: "inactive", onstop: null, ondataavailable: null };
+    proc.onaudioprocess = e => { if (r.state === "recording") bufs.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
+    r.start = () => { r.state = "recording"; try { ctx.resume(); } catch (_) {} src.connect(proc); proc.connect(ctx.destination); };
+    r.stop = () => {
+      if (r.state !== "recording") return; r.state = "inactive";
+      try { src.disconnect(); proc.disconnect(); } catch (_) {}
+      const rate = ctx.sampleRate, out = 16000, ratio = rate / out, n = bufs.reduce((a, b) => a + b.length, 0), all = new Float32Array(n);
+      let o = 0; bufs.forEach(b => { all.set(b, o); o += b.length; });
+      const len = Math.floor(n / ratio), dv = new DataView(new ArrayBuffer(44 + len * 2)), ws = (off, str) => { for (let i = 0; i < str.length; i++) dv.setUint8(off + i, str.charCodeAt(i)); };
+      ws(0, "RIFF"); dv.setUint32(4, 36 + len * 2, true); ws(8, "WAVE"); ws(12, "fmt "); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+      dv.setUint32(24, out, true); dv.setUint32(28, out * 2, true); dv.setUint16(32, 2, true); dv.setUint16(34, 16, true); ws(36, "data"); dv.setUint32(40, len * 2, true);
+      for (let i = 0; i < len; i++) { const v = Math.max(-1, Math.min(1, all[Math.floor(i * ratio)] || 0)); dv.setInt16(44 + i * 2, v < 0 ? v * 0x8000 : v * 0x7fff, true); }
+      try { ctx.close(); } catch (_) {}
+      if (r.ondataavailable) r.ondataavailable({ data: new Blob([dv], { type: "audio/wav" }) });
+      if (r.onstop) r.onstop();
+    };
+    return r;
   }
   function myvHTML() {
     const clip = S.myVoice && /^data:audio|^blob:/.test(S.myVoice) ? S.myVoice : null, on = cloneOn(), busy = CL_BUSY;
@@ -25402,25 +25428,28 @@ if(typeof document!=='undefined'&&document.head){
     if (n === "NotAllowedError" || n === "SecurityError") return T("麦克风没有被允许：请在浏览器地址栏左侧（或手机 设置 → 隐私 → 麦克风）允许 miru.plus 使用麦克风，然后再试。", "Microphone access was blocked — allow it for miru.plus in your browser or phone settings, then try again.");
     if (n === "NotFoundError" || n === "OverconstrainedError") return T("这台设备上没找到麦克风。", "No microphone found on this device.");
     if (n === "NotReadableError") return T("麦克风正被别的应用占用，关掉它再试。", "Another app is using the microphone — close it and retry.");
-    return T("这个浏览器不支持录音，换 Safari / Chrome 打开 miru.plus 再试。", "This browser can't record — open miru.plus in Safari or Chrome and retry.");
+    return T("录音没能开始（" + (n || "unknown") + "）。请在 设置 → Safari → 麦克风 里选「允许」，再刷新页面重试。", "Recording couldn't start (" + (n || "unknown") + "). Allow the microphone for this site in your browser settings, then reload.");
   }
   async function recToggle() {
     if (REC.on) { try { REC.rec.stop(); } catch (_) {} return; }
-    if (!window.isSecureContext || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { toast(micErr({ name: "x" })); return; }
-    const mime = pickMime(); if (mime === null) { toast(micErr({ name: "x" })); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { toast(window.isSecureContext ? micErr({ name: "x" }) : T("需要用 https://miru.plus 打开才能录音", "Open https://miru.plus to record")); return; }
     let stream;
-    try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
     catch (e) { console.warn("[146] mic", e); toast(micErr(e)); return; }
-    let rec; try { rec = new MediaRecorder(stream, Object.assign({ audioBitsPerSecond: 32000 }, mime ? { mimeType: mime } : {})); } catch (e) { try { rec = new MediaRecorder(stream); } catch (e2) { stream.getTracks().forEach(t => t.stop()); toast(micErr(e2)); return; } }
+    let rec = null, kind = "";
+    for (const m of mimes()) {
+      try { const r = new MediaRecorder(stream, m ? { mimeType: m } : undefined); r.start(250); rec = r; kind = r.mimeType || m; break; } catch (e) { console.warn("[146] MediaRecorder", m, e); }
+    }
+    if (!rec) { try { rec = wavRecorder(stream); rec.start(); kind = "audio/wav"; } catch (e) { stream.getTracks().forEach(t => t.stop()); toast(micErr(e)); return; } }
     Object.assign(REC, { on: true, rec, chunks: [], t0: Date.now(), stream });
     rec.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
     rec.onstop = () => {
       REC.on = false; clearInterval(REC.tick); try { stream.getTracks().forEach(t => t.stop()); } catch (_) {}
-      const blob = new Blob(REC.chunks, { type: rec.mimeType || mime || "audio/webm" });
+      const blob = new Blob(REC.chunks, { type: (kind || "audio/mp4").split(";")[0] });
       if (blob.size < 1200) { toast(T("没录到声音，再试一次", "Nothing was recorded — try again")); paintMy(); return; }
       const fr = new FileReader(); fr.onload = async () => { const was = cloneOn(); if (was) await cloneToggle(); S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("录好了", "Recorded")); paintMy(); if (was) cloneToggle(); }; fr.readAsDataURL(blob);
     };
-    rec.start(250); paintMy();
+    paintMy();
     REC.tick = setInterval(() => { const s = Math.floor((Date.now() - REC.t0) / 1000), el = document.getElementById("v146sec"); if (el) el.textContent = s; if (s >= 15) try { rec.stop(); } catch (_) {} }, 250);
   }
 
@@ -25477,6 +25506,76 @@ if(typeof document!=='undefined'&&document.head){
     document.head.appendChild(st);
   })();
   window.__v146 = { listHTML, curV };
+})();
+
+/* ================= 2026-11-12 · 风声板「回复」改成页内输入框 + www 跳转 =================
+   用户反馈：热搜帖子下的 💬 回复点了没反应。原来用的是浏览器 prompt()，很多 App 内置浏览器直接屏蔽它。
+   ⇒ 点 💬 在帖子下面展开一个输入框，写完点「发送 · 1💎」；角色和路人照常 AI 回复。
+   另外：用户是在 www.miru.plus 打开的（地址栏显示不安全），那个地址没有有效的 HTTPS，
+   浏览器就不给麦克风（录音报「不支持」）。⇒ 打开 www 时自动跳到 https://miru.plus。 */
+(function () {
+  "use strict";
+  try { if (/^www\./i.test(location.hostname) || (location.protocol === "http:" && /miru\.plus$/i.test(location.hostname))) { location.replace("https://miru.plus" + location.pathname + location.search + location.hash); return; } } catch (_) {}
+  if (typeof commentFeed96 !== "function") return;
+  const Z = () => (typeof CL === "function" ? CL() === "zh" : true), T = (a, b) => Z() ? a : b;
+  async function send(pid, txt) {
+    const th = S.threads[curT]; if (!th) return; const F = feed96(th), p = F.posts.find(x => x.id === pid); if (!p) return;
+    txt = String(txt || "").trim(); if (!txt) return; if (!spend(P96.comment, "card")) return;
+    p.cm = p.cm || []; p.cm.push({ name: youName96(th), text: txt.slice(0, 140) }); save(); openFeed96();
+    try {
+      const r = await ask96((Z() ? "剧中社交平台。帖子：" : "In-world social feed. Post: ") + p.name + ": " + p.text + "\n" + (Z() ? "玩家（" + youName96(th) + "）回复：" : "The player (" + youName96(th) + ") replied: ") + txt +
+        "\n" + (Z() ? "角色：" : "Cast: ") + castLine96(th) + "\n" + (Z() ? "写 2 条别人对玩家回复的回复（可以是原帖作者、粉丝或剧中角色），每条不超过 40 字。" : "Write 2 replies to the player's reply (the poster, a fan, or a cast member), each under 25 words.") +
+        '\nReply with ONLY JSON: {"replies":[{"name":"...","text":"..."}]} in ' + (Z() ? "Simplified Chinese" : "English") + ".", 400);
+      (r && r.replies || []).slice(0, 2).forEach(x => p.cm.push({ name: String(x.name || "").slice(0, 24), text: String(x.text || "").slice(0, 160) }));
+      p.likes += 50; save(); if ($("#fd96") && !$("#fd96").hidden) openFeed96();
+    } catch (_) { toast(T("回复已发出，大家还在想怎么接话", "Reply posted — others are still thinking")); }
+  }
+  commentFeed96 = function (pid) {
+    const box = document.querySelector('#fd96 .fp96[data-pid="' + pid + '"]'); if (!box) return;
+    const old = box.querySelector(".rp145"); if (old) { old.remove(); return; }
+    document.querySelectorAll("#fd96 .rp145").forEach(x => x.remove());
+    const th = S.threads[curT], p = th && feed96(th).posts.find(x => x.id === pid);
+    const d = document.createElement("div"); d.className = "rp145";
+    d.innerHTML = '<input maxlength="140" placeholder="' + esc(T("回复 " + (p ? p.name : "") + "……", "Reply to " + (p ? p.name : "") + "…")) + '"><button>' + T("发送", "Send") + ' · ' + P96.comment + '💎</button>';
+    (box.querySelector(".grow") || box).appendChild(d);
+    const inp = d.querySelector("input"), go = () => { const v = inp.value; if (!v.trim()) { inp.focus(); return; } send(pid, v); };
+    d.querySelector("button").addEventListener("click", e => { e.stopPropagation(); go(); });
+    inp.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); go(); } });
+    setTimeout(() => inp.focus(), 30);
+  };
+  const st = document.createElement("style");
+  st.textContent = ".rp145{display:flex;gap:8px;margin-top:8px}.rp145 input{flex:1;min-width:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:9px 12px;color:#fff;font-size:14px;outline:none}.rp145 input:focus{border-color:#F0B77E}.rp145 button{flex:none;border:0;border-radius:12px;padding:0 14px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1a0f08;font-weight:700;font-size:13px}";
+  document.head.appendChild(st);
+})();
+
+
+/* ================= 2026-11-12 · 「AI 帮我想」点了没反应 =================
+   原因：① 同一个场景的建议会被缓存，再点一次拿到的还是那几句，看起来什么都没发生；
+         ② 角色正在回话（busy）时直接 return，没有任何提示；③ 出错时也不提示。
+   ⇒ 每次点都换一批新的（把上一批告诉 AI「别重复」），正在回话时提示稍等，失败给提示；
+     建议同时放进面板里的建议框和输入框上方那一排，保证看得见。 */
+(function () {
+  "use strict";
+  if (typeof aiIdeasGo97 !== "function" || typeof DIALOGUE_IDEAS === "undefined") return;
+  const T = (a, b) => (typeof CL === "function" && CL() !== "zh") ? b : a;
+  aiIdeasGo97 = async function (btn) {
+    const th = S.threads[curT]; if (!th) return;
+    if (th.pk && th.pk.as === "watch") { toast(T("旁观模式下不用替你想台词", "You're watching — no lines needed")); return; }
+    if (busy) { toast(T("等他们说完这句，再帮你想", "Wait for them to finish, then try again")); return; }
+    const key = dialogueSceneKey(th), old = DIALOGUE_IDEAS.get(th);
+    if (old && old.key === key && old.items && old.items.length) { try { DIALOGUE_AVOID.set(th, (DIALOGUE_AVOID.get(th) || []).concat(old.items).slice(-9)); } catch (_) {} DIALOGUE_IDEAS.delete(th); }
+    if (btn) { btn.disabled = true; btn.dataset.t0 = btn.dataset.t0 || btn.textContent; btn.textContent = T("✨ 正在想…", "✨ Thinking…"); }
+    try {
+      const items = await dialogueGetIdeas(th);
+      if (curT !== th.id || dialogueSceneKey(th) !== key) return;
+      if (!items || !items.length) { toast(T("没想出来，再点一次试试", "Nothing came up — try again")); return; }
+      const html = dialogueIdeasHTML(items);
+      const box = document.getElementById("ai97o"), sg = document.getElementById("sugg");
+      if (box) box.innerHTML = html;
+      if (sg && (!box || !box.offsetParent)) { sg.style.display = ""; sg.innerHTML = html; }
+    } catch (e) { console.warn("[ai97] ideas", e); toast(T("AI 现在有点忙，稍后再点一次", "AI is busy — try again shortly")); }
+    finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
+  };
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
