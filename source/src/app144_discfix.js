@@ -1158,7 +1158,16 @@ pico.instantiate_detection_memory = function(size)
       pkSet(th, o.set);
       try { if (typeof dimApply === "function") { const P = typeof dimPairs === "function" ? dimPairs(th) : null; if (o.rd) dimApply(th, o.rd, txt); else if (P) { const m = P.find(p => p.main) || P[0]; dimApply(th, { [m.a + "|" + m.b]: dimRule(o) }, txt); } } } catch (_) {}
       try { if (o.love) th.cast.filter(c => c !== th.pk.as).forEach(c => loveWrite(th, c, o.love, "choice:love")); } catch (_) {}
-      stopResolve(th, o.then || []);
+      /* 2026-11-14 玩家：「答非所问」——剧本里这条分支预先写好的那句回应，和玩家实际说的话对不上。
+         ⇒ 分支照样判定、数值照样加减、后面的剧情照样走；但紧跟着的那几句「角色预写回应」不再照念，
+           改由角色针对你**实际说的话**现场回应，回完再接着播剧情。 */
+      const then0 = (o.then || []).slice(); let k0 = 0;
+      while (k0 < then0.length && Array.isArray(then0[k0]) && ch(then0[k0][0]) && ["say", "act", "think"].includes(then0[k0][1])) k0++;
+      const rest = then0.slice(k0);
+      const live = k0 > 0 && typeof reply === "function";
+      if (live && typeof PKPAUSE !== "undefined") PKPAUSE[th.id] = 1;
+      stopResolve(th, rest);
+      if (live) { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] live reply", e); } finally { try { if (PKPAUSE[th.id] === 1) PKPAUSE[th.id] = 0; } catch (_) {} } }
     } catch (e) { console.warn("[c150] stop", e); }
     finally { busyMap = false; }
   }
@@ -2014,6 +2023,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   if (typeof PKPAUSE === "undefined") return;
   const isScene = b => Array.isArray(b) && (b[1] === "scene" || (b[0] === "sys" && /^(scene|place|time|chapter)$/.test(String(b[1]))));
   const holds = {};
+  /* 剧本播放器每 0.25 秒看一次「暂停」开关；别的代码（你发消息时）会把开关先开后关，以前停不住就是被它关掉了。
+     ⇒ 停住期间，这个开关对这条剧情永远读成「暂停」，谁改都没用；点「下一场 ›」才放开。 */
+  function hold(id) {
+    holds[id] = 1;
+    try {
+      const desc = Object.getOwnPropertyDescriptor(PKPAUSE, id);
+      if (desc && desc.get && desc.get.__h161) return;
+      let v = PKPAUSE[id];
+      const g = function () { return holds[id] ? "scene161" : v; }; g.__h161 = 1;
+      Object.defineProperty(PKPAUSE, id, { configurable: true, enumerable: true, get: g, set(x) { v = x; } });
+    } catch (_) { PKPAUSE[id] = "scene161"; }
+  }
   if (typeof doSend === "function") {
     const ds = doSend;
     doSend = function () {
@@ -2057,7 +2078,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     const pa = pkAppend;
     pkAppend = function (th) {
       const r = pa.apply(this, arguments);
-      try { if (th && th.pk) { th._lines161 = (th._lines161 || 0) + 1; if (!holds[th.id] && aheadScene(th.pk.q)) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; } } } catch (_) {}
+      try { if (th && th.pk) { th._lines161 = (th._lines161 || 0) + 1; if (!holds[th.id] && aheadScene(th.pk.q)) { hold(th.id); } } } catch (_) {}
       return r;
     };
   }
@@ -2073,11 +2094,11 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   setInterval(() => {
     try {
       const th = S.threads[curT];
-      Object.keys(holds).forEach(id => { if (holds[id]) PKPAUSE[id] = PKPAUSE[id] || "scene161"; });
+      Object.keys(holds).forEach(id => { if (holds[id]) hold(id); });
       if (!th || !th.pk) { bar(null, false); return; }
       const q = th.pk.q, next = q && q[0];
       if (holds[th.id]) { bar(th, true); return; }
-      if (next && aheadScene(q) && (th._lines161 || 0) > 0 && !th.pk.stop) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; bar(th, true); return; }
+      if (next && aheadScene(q) && (th._lines161 || 0) > 0 && !th.pk.stop) { hold(th.id); bar(th, true); return; }
       if (next && isScene(next) && !(th._lines161 || 0)) return;
       bar(th, false);
     } catch (_) {}
@@ -2086,7 +2107,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!e.target.closest || !e.target.closest("[data-nx161]")) return;
     e.preventDefault(); e.stopPropagation();
     const th = S.threads[curT]; if (!th) return;
-    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0;
+    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0; try { PKPAUSE[th.id] = 0; } catch (_) {}
     try { const d = th._def161 || []; th._def161 = []; d.forEach(m => { m._rel161 = 1; appendMsg(th, m); }); } catch (_) {} if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
   }, true);
   const st = document.createElement("style");
