@@ -1829,7 +1829,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       if (!th || R.pending.get(th.id)) return;
       const q = Q(th); let m;
       while ((m = q.shift())) {
-        m._q158 = 1; m.at = Date.now(); am.call(window, th, m);
+        m._q158 = 1; m.at = Date.now(); am.call(window, th, m); try { if (window.__q159) __q159(m); } catch (_) {}
         if (readable(m) && curT === th.id) { R.wait(th, m, "script"); return; }
       }
     } catch (e) { console.warn("[q158] release", e); }
@@ -1934,4 +1934,30 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const st = document.createElement("style");
   st.textContent = "html body #s-chat.clean.hdopen>.livebanner,html body #s-chat>.livebanner,html body .livebanner{display:none!important}";
   document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · ①「✨ AI 帮我想」那一行真正固定显示 ② 台词没出来之前不先出声音 =====
+   玩家（截图）：「AI 帮我想应该一直固定在这里；另外现在台词还没有出来，声音已经出来了。」
+   ① 上一版的「固定显示」被另一条更高优先级的「分支点时隐藏联想行」盖过了 ⇒ 再提高优先级。
+   ② 「点一下才出下一条」让排队中的台词先不显示，但朗读是在台词写入时就开始的，于是先听到声音、后看到字。
+      ⇒ 台词还在排队时，它的朗读也一起排队；等你点一下、这句真正出现在屏幕上时才开始读。 */
+(function () {
+  "use strict";
+  const st = document.createElement("style");
+  st.textContent = "html body #s-chat#s-chat #sugg#sugg#sugg{display:flex!important}html body #s-chat#s-chat #sugg#sugg .ai147.ai147{display:inline-flex!important}";
+  document.head.appendChild(st);
+  if (typeof speak !== "function" || !window.READQ158) return;
+  const sp = speak;
+  speak = function (text, who) {
+    try {
+      const th = S.threads[curT], q = th && th._q158;
+      if (q && q.length) {
+        const m = q.find(x => x && !x._sp159 && x.who === who && String(x.txt || "").trim() === String(text || "").trim());
+        if (m) { m._sp159 = [].slice.call(arguments); return; }
+      }
+    } catch (_) {}
+    return sp.apply(this, arguments);
+  };
+  /* 放出排队的那句时，补上它的朗读 */
+  window.__q159 = function (m) { if (m && m._sp159) { const a = m._sp159; delete m._sp159; setTimeout(() => { try { sp.apply(window, a); } catch (_) {} }, 30); } };
 })();
