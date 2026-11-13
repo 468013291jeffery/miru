@@ -13,7 +13,7 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project ios
 cd ..
 python3 tools/ios-no-ads-artifact.py native/Archives/MIRU-NoAds.xcarchive/Products/Applications/App.app
 ```
-这个未签名归档用于构建核验，不能直接上传 App Store。实际签名和导出仍需本人的 Apple 开发者账号、证书与 provisioning profile。本机自动签名 Archive 的实际返回是：团队没有已注册测试设备，无法生成开发描述文件。未导出任何私钥。
+这个未签名归档用于构建核验，不能直接上传 App Store。实际签名和导出仍需本人的 Apple 开发者账号、证书与 provisioning profile。已完成真实 iPhone 的开发签名 Release 构建、安装、启动及 MIRU-Signed.xcarchive 归档；尚未导出 App Store 分发 IPA。未导出任何私钥。
 
 公开配置唯一来源为 ios-release.public.json。Team、Bundle、数字 Apple ID 与两个 Google 客户端均已提供。Release 检查要求首版广告关闭，不再要求任何 AdMob ID。服务端正式验单默认使用公开登记的 appAppleId；若显式配置 IAP_APP_APPLE_ID，必须使用实际数字 ID，空值仍会失败。
 
@@ -23,7 +23,7 @@ python3 tools/ios-no-ads-artifact.py native/Archives/MIRU-NoAds.xcarchive/Produc
 AdMob/UMP 已从 SPM 依赖和本次 App 构建中移除，不初始化广告或同意 SDK，不显示广告奖励任务或广告隐私入口。网页和 Android 原实现保持不变。原生广告源码仅在仓库 `#if MIRU_ADS` 条件内保留；今后恢复需要在新版本中恢复依赖、编译条件、配置及对应审查，不能远程打开首版广告功能。
 
 ## 提审前仍需完成
-- Xcode 账号已配置；连接并信任 iPhone、完成设备注册和开发描述文件后重试签名 Archive，或配置 App Store 分发证书与描述文件。
+- 开发签名及真机安装启动已完成；继续核验本机证书信任链并导出 App Store 分发签名 IPA。
 - 安全部署已审查后端与隐私页，核验 Apple 授权交换/撤销私密配置、生产存储和实际 AI 接收方；清除旧翻译 CDN 缓存。
 - 创建全部 consumable 商品，完成付费协议、税务和银行资料。
 - 在真实 iPhone/TestFlight 验证 Apple/Google 登录、注销重试、Sandbox 内购/中断补发、AI 拒绝及撤回、麦克风拒绝。

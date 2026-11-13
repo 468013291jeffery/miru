@@ -35,13 +35,15 @@
 - 先前主分支 4f58fa9 已合入，保留新双语剧情、配音与页内注销确认；后续 main 37a5be2 仅重生成 index.html。
 - 本次无广告改动独立源码审查未发现明确 P0；此前候选 CI 通过。本次新增 Release Archive 与广告排除 CI，推送后另行核验。上述检查不代表 Apple 审核结果。
 
-## 正式签名的实际阻断
-用户已在 Xcode 配置账号。重新执行带 -allowProvisioningUpdates 的正式 Archive，Apple 返回团队没有可用于生成描述文件的已注册设备，以及未找到 com.miru.plus.app 的 iOS App Development profile。签名 Archive 失败（exit 65）；现有 MIRU-NoAds.xcarchive 为未签名构建核验产物，不能直接上传。
-
-下一步连接并信任真实 iPhone，在 Xcode 选择设备并完成注册及 Developer Mode，再继续签名和真机测试。App Store 分发描述文件不依赖测试设备注册，另可采用分发证书及 App Store profile；当前未验证该路径的证书可用性。不要把开发描述文件缺失描述为 App Store 本身强制要求注册设备。
+## 真机与签名状态
+- 手机照片确认开发者模式已打开，但电脑 CoreDevice 曾持续返回 Disabled。仅重启本机 CoreDeviceService 后，状态刷新为 Enabled；未清除手机数据或配对记录。
+- iPhone 12 / iOS 17.4.1 实际 Release 签名 build 成功，安装成功，并通过 devicectl 启动成功。完整登录、内购、剧情和注销尚未实测，进程启动成功不等于功能全部通过。
+- MIRU-Signed.xcarchive 已生成，实际归档的 Team H79A5X8935、Bundle com.miru.plus.app、内嵌开发描述文件及测试设备一致，广告包检查通过。
+- 当前为开发签名归档，尚未导出 App Store 分发签名 IPA 或上传。macOS codesign --verify --deep --strict 仍报 CSSMERR_TP_NOT_TRUSTED；手机接受了安装与启动，但分发导出时仍需核验证书信任链。
+- 最新代码 e0f79f8 的 iOS candidate 与 Wallet integrity CI 均成功；PR #2 冲突已解除。
 
 ## 提交前必须完成
-1. 完成实际签名；核验 Apple/Google Console capability、商品、付费协议/税务/银行。
+1. 完成 App Store 分发导出及签名信任链核验；核验 Apple/Google Console capability、商品、付费协议/税务/银行。
 2. 安全部署后端和隐私页，核对服务器适配器；清除旧 /api/i18n CDN 缓存，验证私密译文不可公开。历史数据未在生产清理。
 3. 核验生产持久录音卷、Blob 权限、实际启用的 AI 接收方与服务器私密配置。
 4. 真实 iPhone/TestFlight 验证登录、AI 拒绝/撤回、剧情、麦克风拒绝、内购取消/中断补发和账号注销。
