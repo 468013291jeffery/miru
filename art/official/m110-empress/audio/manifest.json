@@ -1,0 +1,324 @@
+{
+  "version": 1,
+  "rights": "Original procedural composition and synthesized foley; no third-party samples.",
+  "music": [
+    {
+      "id": "BGM-01",
+      "file": "BGM-01.ogg",
+      "seconds": 50.526,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.17255,
+      "sha256": "f55bfe9d3d6e80ec38e7a59bb295bb0106f14619f481d433399aaa96cfcd17d0",
+      "title": "Royal Velvet",
+      "bpm": 76,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-02",
+      "file": "BGM-02.ogg",
+      "seconds": 36.923,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.16527,
+      "sha256": "3e50406e49dd27fa05106097bd9de688690a6110a58fed1388263c82e7e0937e",
+      "title": "Jealous Hearts",
+      "bpm": 104,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-03",
+      "file": "BGM-03.ogg",
+      "seconds": 64.0,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.15971,
+      "sha256": "1127f50b86d30bc68192034f5923f24c80935fc5f413e8821c37b900d9d68631",
+      "title": "Midnight Invitation",
+      "bpm": 60,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-04",
+      "file": "BGM-04.ogg",
+      "seconds": 56.471,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.17273,
+      "sha256": "2455bc73a7465cb92cd49610b4b2a51be5a2b33a8ac9b0c3b9c11503241bd6e7",
+      "title": "Rose Garden Mist",
+      "bpm": 68,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-05",
+      "file": "BGM-05.ogg",
+      "seconds": 24.828,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.19524,
+      "sha256": "0e555049f1f8d03d44e6b48089b269a431dd73b4174b8d74cf57d635ddc0a136",
+      "title": "Banquet of Twenty",
+      "bpm": 116,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-06",
+      "file": "BGM-06.ogg",
+      "seconds": 68.571,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.16454,
+      "sha256": "2b3a6f6aa77cc71f461a198f8c63457821e9340aa292373717913f1abd4ba73c",
+      "title": "Crown Below",
+      "bpm": 56,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-07",
+      "file": "BGM-07.ogg",
+      "seconds": 40.0,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.19415,
+      "sha256": "100e8ac39ae00ca88ceb849ada5bf3cce52341a852d4e6f635a390daa82b7dbd",
+      "title": "Seventh Night",
+      "bpm": 96,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    },
+    {
+      "id": "BGM-08",
+      "file": "BGM-08.ogg",
+      "seconds": 46.829,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.15711,
+      "sha256": "dd9dfdace155655cd2ec4a2623b2fef00ac615cc0aa1d67c383c3b3c8c74d0a1",
+      "title": "Golden Morning",
+      "bpm": 82,
+      "bars": 16,
+      "loop": true,
+      "instruments": [
+        "additive harp/celesta",
+        "bowed ensemble",
+        "bass",
+        "room reverb"
+      ]
+    }
+  ],
+  "sfx": [
+    {
+      "id": "SFX-grape_plate",
+      "file": "SFX-grape_plate.ogg",
+      "seconds": 0.65,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.10503,
+      "sha256": "49664fed5c242a834312acb5fce1dcfe673c7aa1e1382dbfb385cea6d0795710",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-tea_cup",
+      "file": "SFX-tea_cup.ogg",
+      "seconds": 1.1,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.05999,
+      "sha256": "bc5e902e585d227fe663f3cfffae13896fffd43b9aa90a4bb72c3b376fd5377f",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-silk",
+      "file": "SFX-silk.ogg",
+      "seconds": 1.2,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.09581,
+      "sha256": "3c9ca7000f267b5411538a5a9238df8c02b81c64782e33ae6f0a6dacb49efe55",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-boots",
+      "file": "SFX-boots.ogg",
+      "seconds": 2.3,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.06293,
+      "sha256": "edca29f2e4cfb9495ab771adfc1ae54e2e0718c59cb2e1952d55caeda3299487",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-banquet_laughter",
+      "file": "SFX-banquet_laughter.ogg",
+      "seconds": 2.8,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.17314,
+      "sha256": "794be175e420b929e419299d3ee4c2ed56527dd63ff5f0efe497f9eacc195a43",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-door",
+      "file": "SFX-door.ogg",
+      "seconds": 1.5,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.1293,
+      "sha256": "b74474392cbe28c3f4ef9b29e032df8fe1989b2e7c5935b3e53e8d82f339d9bb",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-jade_tokens",
+      "file": "SFX-jade_tokens.ogg",
+      "seconds": 1.2,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.05744,
+      "sha256": "da174f8b10027e357d3db858d205dd8be98616de80840b154a24636f4cc924db",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-harp",
+      "file": "SFX-harp.ogg",
+      "seconds": 2.8,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.17468,
+      "sha256": "ddff211ce167f085f86738a6d31af8d48f3172627abd38a9967cd2124bbd1a01",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-dragonfire",
+      "file": "SFX-dragonfire.ogg",
+      "seconds": 3.4,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.06311,
+      "sha256": "86aa2c003d28af9466ce750dfae1ce150547b37c3a12fcc20a7c1178b4ff2faf",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-glass_break",
+      "file": "SFX-glass_break.ogg",
+      "seconds": 1.8,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.08743,
+      "sha256": "642deaf1c5004e6f725fa11722bd209d15ef888e1a0e51d26ce7a31ed3829ba3",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-crown_heartbeat",
+      "file": "SFX-crown_heartbeat.ogg",
+      "seconds": 3.2,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.10308,
+      "sha256": "e2b4b543d9bec972427d2cb6693b886ccc3ea2fdf632e5b1607f5bb2a2437cd9",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-storm",
+      "file": "SFX-storm.ogg",
+      "seconds": 4.0,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.09945,
+      "sha256": "c832354c0554d509f6ff3eceeb33bc5bf7147462b017037feb5794ad1d7b0619",
+      "synthesized": true,
+      "loop": false
+    },
+    {
+      "id": "SFX-teleport",
+      "file": "SFX-teleport.ogg",
+      "seconds": 2.6,
+      "channels": 2,
+      "sampleRate": 44100,
+      "peak": 0.78,
+      "rms": 0.21402,
+      "sha256": "0992c62500471572164153196cdd064a4c32e8987eb10f447088cdfe662f10fa",
+      "synthesized": true,
+      "loop": false
+    }
+  ]
+}

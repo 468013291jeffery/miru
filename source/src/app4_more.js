@@ -14,7 +14,7 @@ function renderChats(v){
   const avs=th.cast.length>1?'<div class="avs two">'+avatar(th.cast[0],38)+avatar(th.cast[1],38)+'</div>':'<div class="avs">'+avatar(th.cast[0],52)+'</div>';
   h+='<button class="trow" data-open="'+th.id+'">'+avs+'<div class="grow"><div class="row"><b class="grow">'+esc(th.title)+'</b><time>'+ago(th.at)+'</time></div>'+
    '<div class="row" style="margin-top:2px"><p class="grow">'+(last.who==="me"?"✓ ":"")+esc(last.txt)+'</p>'+(th.unread?'<span class="dot"></span>':"")+'</div>'+
-   '<div class="row" style="margin-top:5px;gap:6px"><span class="stagechip">'+(th.kind==="quest"?"🎯 "+t("st.quest"):first(ch(mid).n)+" · "+t("stage."+stageOf(th,mid)))+'</span>'+(S.couples[mid]&&th.kind!=="quest"?'<span class="stagechip" style="color:var(--rose)">💍</span>':"")+'<span class="xs faint">'+t("cx.turns",{n:th.rounds})+'</span></div></div></button>'});}
+   '<div class="row" style="margin-top:5px;gap:6px"><span class="stagechip">'+(th.kind==="quest"?"🎯 "+t("st.quest"):first((ch(mid)||{n:""}).n)+" · "+t("stage."+stageOf(th,mid)))+'</span>'+(S.couples[mid]&&th.kind!=="quest"?'<span class="stagechip" style="color:var(--rose)">💍</span>':"")+'<span class="xs faint">'+t("cx.turns",{n:th.rounds})+'</span></div></div></button>'});}
  v.innerHTML=h+'</div>';}
 document.addEventListener("click",e=>{const x=e.target.closest("[data-cseg]");if(x){chatSeg=x.dataset.cseg;renderTab("chats")}if(e.target.closest("[data-moments]")){chatSeg="moments";renderTab("chats")}});
 document.addEventListener("click",e=>{const x=e.target.closest("[data-open]");if(x){closeSheet();openThread(x.dataset.open)}});

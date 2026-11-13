@@ -93,10 +93,10 @@ if [ -d "$CUR/node_modules" ] && cmp -s "$CUR/package.json" "$NEW/package.json";
 else (cd "$NEW" && npm install --omit=dev --no-audit --no-fund); fi
 (cd "$NEW" && python3 source/build.py && node --check source/all.js && node tools/release-contract.mjs && node tools/catalog-selftest.cjs && node tools/role-list-selftest.cjs && python3 tools/deploy-guard-selftest.py)
 P="$NEW/public"; mkdir -p "$P"
-for f in index.html admin.html export.html privacy.html terms.html delete-account.html ads.txt config.js tune.js miru_rules.js miru_dialogue_runtime.js pdfjs_embed.js manifest.webmanifest sw.js; do
+for f in index.html about.html contact.html robots.txt sitemap.xml google4cef64ea7206ce77.html admin.html export.html privacy.html terms.html delete-account.html ads.txt config.js tune.js miru_rules.js miru_dialogue_runtime.js pdfjs_embed.js manifest.webmanifest sw.js; do
   [ ! -f "$NEW/$f" ] || cp -a "$NEW/$f" "$P/"
 done
-for d in art audio video scripts icons; do [ ! -d "$NEW/$d" ] || ln -s "$NEW/$d" "$P/$d"; done
+for d in art audio video scripts icons stories; do [ ! -d "$NEW/$d" ] || ln -s "$NEW/$d" "$P/$d"; done
 [ ! -d "$NEW/.well-known" ] || cp -a "$NEW/.well-known" "$P/"
 python3 - "$NEW" "$SHA" <<'PY'
 import pathlib,json,sys,datetime

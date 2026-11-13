@@ -422,7 +422,7 @@
     const rec = typeof meRecentChars === "function" ? meRecentChars() : [];
     let h = row("me") + row("n") + '<p class="v146t">' + T("最近聊过", "Recently used") + '</p>' + (rec.length ? rec.map(row).join("") : '<p class="xs faint">' + T("还没和角色聊过，搜索名字就能试听", "No chats yet — search a name to preview") + '</p>');
     const rest = allChars().filter(id => !rec.includes(id) && ch(id) && !ch(id).retired && artSrc(id));
-    if (SHOW_ALL) h += '<p class="v146t">' + T("全部角色", "All characters") + '</p>' + rest.map(row).join("");
+    if (SHOW_ALL) h += '<div class="row" style="justify-content:space-between;align-items:center"><p class="v146t">' + T("全部角色", "All characters") + '</p><button class="v146b" data-v146all="0">' + T("收起 ▴", "Collapse ▴") + '</button></div>' + rest.map(row).join("") + '<button class="v146more" data-v146all="0">' + T("收起全部角色 ▴", "Collapse all characters ▴") + '</button>';
     else if (rest.length) h += '<button class="v146more" data-v146all="1">' + T("展开全部 " + rest.length + " 个角色 ▾", "Show all " + rest.length + " characters ▾") + '</button>';
     return h;
   }
@@ -444,9 +444,9 @@
     return L.filter(m => { try { return !MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(m); } catch (_) { return false; } }).concat([""]);
   }
   /* WebAudio 兜底：16kHz 单声道 WAV，接口和 MediaRecorder 一样（start / stop / onstop / mimeType） */
-  function wavRecorder(stream) {
-    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) throw { name: "NotSupportedError" };
-    const ctx = new AC(), src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), bufs = [];
+  function wavRecorder(stream, pre) {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC && !pre) throw { name: "NotSupportedError" };
+    const ctx = pre || new AC(), src = ctx.createMediaStreamSource(stream), proc = ctx.createScriptProcessor(4096, 1, 1), bufs = [];
     const r = { mimeType: "audio/wav", state: "inactive", onstop: null, ondataavailable: null };
     proc.onaudioprocess = e => { if (r.state === "recording") bufs.push(new Float32Array(e.inputBuffer.getChannelData(0))); };
     r.start = () => { r.state = "recording"; try { ctx.resume(); } catch (_) {} src.connect(proc); proc.connect(ctx.destination); };
@@ -508,14 +508,25 @@
   async function recToggle() {
     if (REC.on) { try { REC.rec.stop(); } catch (_) {} return; }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { toast(window.isSecureContext ? micErr({ name: "x" }) : T("需要用 https://miru.plus 打开才能录音", "Open https://miru.plus to record")); return; }
+    /* 2026-11-13：iPhone 上的各家浏览器（WebKit 内核）MediaRecorder 常报 InvalidStateError ⇒ iPhone/iPad 先用 WebAudio 录 WAV；
+       AudioContext 必须在点按的那一刻建好并 resume，否则等完麦克风授权再建会被静音。MediaRecorder 失败一次就换新的麦克风流再试。 */
+    const ACx = window.AudioContext || window.webkitAudioContext; let pre = null;
+    try { if (ACx) { pre = new ACx(); pre.resume && pre.resume().catch(() => {}); } } catch (_) { pre = null; }
+    const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
     let stream;
     try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-    catch (e) { console.warn("[146] mic", e); toast(micErr(e)); return; }
-    let rec = null, kind = "";
-    for (const m of mimes()) {
-      try { const r = new MediaRecorder(stream, m ? { mimeType: m } : undefined); r.start(250); rec = r; kind = r.mimeType || m; break; } catch (e) { console.warn("[146] MediaRecorder", m, e); }
+    catch (e) { console.warn("[146] mic", e); try { pre && pre.close(); } catch (_) {} toast(micErr(e)); return; }
+    const fresh = async () => { try { if (stream.getAudioTracks().every(t => t.readyState === "live")) return; stream.getTracks().forEach(t => t.stop()); stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (_) {} };
+    let rec = null, kind = "", lastErr = null;
+    const tryWav = () => { try { const r = wavRecorder(stream, pre); r.start(); rec = r; kind = "audio/wav"; pre = null; } catch (e) { lastErr = e; console.warn("[146] wav", e); } };
+    if (ios && pre) tryWav();
+    if (!rec) for (const m of mimes()) {
+      await fresh();
+      try { const r = new MediaRecorder(stream, m ? { mimeType: m } : undefined); r.start(250); rec = r; kind = r.mimeType || m; break; } catch (e) { lastErr = e; console.warn("[146] MediaRecorder", m, e); }
     }
-    if (!rec) { try { rec = wavRecorder(stream); rec.start(); kind = "audio/wav"; } catch (e) { stream.getTracks().forEach(t => t.stop()); toast(micErr(e)); return; } }
+    if (!rec && !ios) { await fresh(); if (!pre) { try { pre = new ACx(); } catch (_) {} } tryWav(); }
+    if (!rec) { try { stream.getTracks().forEach(t => t.stop()); pre && pre.close(); } catch (_) {} toast(micErr(lastErr)); return; }
+    try { if (pre) pre.close(); } catch (_) {}
     Object.assign(REC, { on: true, rec, chunks: [], t0: Date.now(), stream });
     rec.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
     rec.onstop = () => {
@@ -545,7 +556,7 @@
     const d = x.dataset;
     if (d.v146tog) { OPEN.has(d.v146tog) ? OPEN.delete(d.v146tog) : OPEN.add(d.v146tog); refresh(); return; }
     if (d.v146play) { play(d.v146play, sample(d.v146play), x); return; }
-    if (d.v146all) { SHOW_ALL = true; refresh(); return; }
+    if (d.v146all) { SHOW_ALL = d.v146all !== "0"; refresh(); if (!SHOW_ALL) { try { const c = document.querySelector(".me-voice"); if (c) c.scrollIntoView({ block: "start", behavior: "smooth" }); } catch (_) {} } return; }
     if (d.v146rec != null) { recToggle(); return; }
     if (d.v146del) { if (cloneOn()) cloneToggle(); S.myVoice = null; save(); paintMy(); return; }
     if (d.v146clone) { cloneToggle(); return; }
@@ -636,7 +647,8 @@
   aiIdeasGo97 = async function (btn) {
     const th = S.threads[curT]; if (!th) return;
     if (th.pk && th.pk.as === "watch") { toast(T("旁观模式下不用替你想台词", "You're watching — no lines needed")); return; }
-    if (busy) { toast(T("等他们说完这句，再帮你想", "Wait for them to finish, then try again")); return; }
+    /* busy 也会在剧本播放 / 等你轻点屏幕时一直为 true；只有真的在等 AI 回话（正在输入…）时才让你等 */
+    if (busy && document.querySelector("#msgs .typing")) { toast(T("等他们说完这句，再帮你想", "Wait for them to finish, then try again")); return; }
     const key = dialogueSceneKey(th), old = DIALOGUE_IDEAS.get(th);
     if (old && old.key === key && old.items && old.items.length) { try { DIALOGUE_AVOID.set(th, (DIALOGUE_AVOID.get(th) || []).concat(old.items).slice(-9)); } catch (_) {} DIALOGUE_IDEAS.delete(th); }
     if (btn) { btn.disabled = true; btn.dataset.t0 = btn.dataset.t0 || btn.textContent; btn.textContent = T("✨ 正在想…", "✨ Thinking…"); }
@@ -651,4 +663,451 @@
     } catch (e) { console.warn("[ai97] ideas", e); toast(T("AI 现在有点忙，稍后再点一次", "AI is busy — try again shortly")); }
     finally { if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = btn.dataset.t0; } }
   };
+})();
+
+/* ===== 2026-11-13 · 章末选项点不动 + 「帮我想」统一 =====
+   1 · 章末三选一出现时，如果上一句（比如角色刚回的话）还在等你「轻点屏幕」确认，点选项会卡在那句上，看起来像没反应。
+       ⇒ 选项出现 / 点选项时，先把这句确认掉（朗读中就先停掉）；全局 busy 卡住超过 20 秒也自动放开，并给提示而不是静默。
+   2 · 「不知道说什么？帮我想几句」和剧情里的「✨ AI 帮我想」是同一个功能，两种样子 ⇒ 统一成「✨ AI 帮我想」；
+       必须几选一（输入框熄灭）时不显示，剧情面板里已经有「✨ AI 帮我想」时也不重复显示。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  let busySince = 0;
+  setInterval(() => { try { busySince = busy ? (busySince || Date.now()) : 0; } catch (_) {} }, 1000);
+  function ackReading(th) {
+    try {
+      const R = window.READING; if (!R || !th) return;
+      const e = R.pending.get(th.id); if (!e) return;
+      if (R.voice && R.voice.busy()) stopVoice();
+      e.finish();
+    } catch (err) { console.warn("[choice147] ack", err); }
+  }
+  if (typeof packPick === "function") {
+    const pick = packPick;
+    packPick = function (k) {
+      const th = S.threads[curT];
+      try {
+        if (th && th.pk && th.pk.st === "choose") {
+          ackReading(th);
+          if (busy) {
+            if (busySince && Date.now() - busySince > 20000) { busy = false; busySince = 0; try { typing(false); } catch (_) {} }
+            else { toast(zh() ? "上一句还在生成，稍等一下再选" : "Still writing the last line — pick again in a moment"); return; }
+          }
+        }
+      } catch (err) { console.warn("[choice147] pick", err); }
+      return pick.apply(this, arguments);
+    };
+  }
+  /* 「进入下一章」「下一章」按钮同样：busy 卡住时不再静默没反应 */
+  ["packAdvanceChapter", "packNext"].forEach(name => {
+    try {
+      const f = window[name]; if (typeof f !== "function") return;
+      window[name] = function () {
+        const th = S.threads[curT];
+        try {
+          if (th && th.pk) ackReading(th);
+          if (busy) {
+            if (busySince && Date.now() - busySince > 20000) { busy = false; busySince = 0; try { typing(false); } catch (_) {} }
+            else { toast(zh() ? "上一句还在生成，稍等一下再点" : "Still writing the last line — tap again in a moment"); return; }
+          }
+        } catch (err) { console.warn("[choice147] " + name, err); }
+        return f.apply(this, arguments);
+      };
+    } catch (_) {}
+  });
+  /* 2026-11-13 玩家：「我打字了，怎么一直不回复」——上一轮的台词还在一句一句等「轻点屏幕」，这时发的话只会排队，
+     而提示只出现前 5 次，看起来就是没人理。⇒ 发新消息时，把上一轮没看完的句子直接全部放出来，然后马上发送。 */
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function () {
+      const th = S.threads[curT], self = this, args = arguments;
+      try {
+        const R = window.READING;
+        if (th && busy && R && R.pending.get(th.id) && !document.querySelector("#msgs .typing")) {
+          (async () => {
+            const t0 = Date.now();
+            while (Date.now() - t0 < 8000) {
+              const e = R.pending.get(th.id);
+              if (e) { try { if (R.voice && R.voice.busy()) stopVoice(); e.finish(); } catch (_) {} }
+              if (!busy) break;
+              await new Promise(r => setTimeout(r, 60));
+            }
+            ds.apply(self, args);
+          })();
+          return;
+        }
+      } catch (err) { console.warn("[send147]", err); }
+      return ds.apply(this, arguments);
+    };
+  }
+  /* 选项一出现就把还在等确认的那句确认掉，免得「轻点屏幕继续」和选项同时出现 */
+  if (typeof packRefresh === "function") {
+    const ref = packRefresh;
+    packRefresh = function (th) {
+      const r = ref.apply(this, arguments);
+      try { if (th && th.pk && th.pk.st === "choose" && curT === th.id) setTimeout(() => { ackReading(th); mark(); }, 0); else mark(); } catch (_) {}
+      return r;
+    };
+  }
+  /* 2026-11-13 联想行：所有剧本统一在**最前面**放「✨ AI 帮我想」（和剧情面板同一个处理函数，再点 = 换一批新的）；
+     旧的「不知道说什么？帮我想几句」「↻ 换一批」不再单独出现。 */
+  const aiBtn = () => '<button class="sgmore ai147" data-sgmore="1" data-ai147="1">✨ ' + (zh() ? "AI 帮我想" : "AI ideas") + '</button>';
+  if (typeof sgMoreBtn === "function") sgMoreBtn = function () { return ""; };
+  function ensureAi() {
+    try {
+      const sg = document.getElementById("sugg"); if (!sg) return;
+      sg.querySelectorAll("[data-sgmore]:not(.ai147)").forEach(x => x.remove());
+      let b = sg.querySelector(".ai147");
+      if (!b) { sg.insertAdjacentHTML("afterbegin", aiBtn()); return; }
+      if (sg.firstElementChild !== b) sg.insertBefore(b, sg.firstElementChild);
+    } catch (_) {}
+  }
+  if (typeof setSugg === "function") { const ss = setSugg; setSugg = function () { const r = ss.apply(this, arguments); ensureAi(); return r; }; }
+  window.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-ai147]"); if (!b) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    try { aiIdeasGo97(b); } catch (err) { console.warn("[ai147]", err); }
+  }, true);
+  function mark() {
+    try {
+      const chat = document.getElementById("s-chat"); if (!chat) return;
+      const th = S.threads[curT];
+      const locked = !!(th && typeof pkBusy === "function" && pkBusy(th));
+      const dup = !!chat.querySelector("#pkwrap [data-ai97]");
+      chat.classList.toggle("ch147", locked || dup);
+      ensureAi();
+    } catch (_) {}
+  }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); mark(); return r; }; }
+  setInterval(mark, 1500);
+  const st = document.createElement("style");
+  st.textContent = ".ch147 #sugg [data-sgmore],.ch147 #sugg .ai147{display:none!important}#sugg .ai147{order:-1;flex:none;border-style:solid!important;border-color:rgba(240,183,126,.55)!important;background:rgba(240,183,126,.12)!important;color:#F6D3AE!important;font-weight:700}.ch147 .tap-hint{display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 故事开场「男主」一排：统一露出人脸 =====
+   立绘有半身、全身、透明底全身好几种，直接 object-fit:cover 会切到胸口或只看到一个小人。
+   ⇒ 用 picojs（MIT，nenadmarkus/picojs）在本地找脸，按脸的位置和大小把头像放大、居中；找不到脸就退回「靠上取景」。
+   模型文件 art/ui/facefinder（≈240KB），只在第一次用到时加载一次。 */
+(function () {
+  "use strict";
+
+const pico = {}
+pico.unpack_cascade = function(bytes)
+{
+	const dview = new DataView(new ArrayBuffer(4));
+	let p = 8;
+	dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+	const tdepth = dview.getInt32(0, true);
+	p = p + 4
+	dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+	const ntrees = dview.getInt32(0, true);
+	p = p + 4
+	const tcodes_ls = [];
+	const tpreds_ls = [];
+	const thresh_ls = [];
+	for(let t=0; t<ntrees; ++t)
+	{
+		Array.prototype.push.apply(tcodes_ls, [0, 0, 0, 0]);
+		Array.prototype.push.apply(tcodes_ls, bytes.slice(p, p+4*Math.pow(2, tdepth)-4));
+		p = p + 4*Math.pow(2, tdepth)-4;
+		for(let i=0; i<Math.pow(2, tdepth); ++i)
+		{
+			dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+			tpreds_ls.push(dview.getFloat32(0, true));
+			p = p + 4;
+		}
+		dview.setUint8(0, bytes[p+0]), dview.setUint8(1, bytes[p+1]), dview.setUint8(2, bytes[p+2]), dview.setUint8(3, bytes[p+3]);
+		thresh_ls.push(dview.getFloat32(0, true));
+		p = p + 4;
+	}
+	const tcodes = new Int8Array(tcodes_ls);
+	const tpreds = new Float32Array(tpreds_ls);
+	const thresh = new Float32Array(thresh_ls);
+	function classify_region(r, c, s, pixels, ldim)
+	{
+		 r = 256*r;
+		 c = 256*c;
+		 let root = 0;
+		 let o = 0.0;
+		 const pow2tdepth = Math.pow(2, tdepth) >> 0; // '>>0' transforms this number to int
+		 for(let i=0; i<ntrees; ++i)
+		 {
+			let idx = 1;
+			for(let j=0; j<tdepth; ++j)
+				idx = 2*idx + (pixels[((r+tcodes[root + 4*idx + 0]*s) >> 8)*ldim+((c+tcodes[root + 4*idx + 1]*s) >> 8)]<=pixels[((r+tcodes[root + 4*idx + 2]*s) >> 8)*ldim+((c+tcodes[root + 4*idx + 3]*s) >> 8)]);
+			 o = o + tpreds[pow2tdepth*i + idx-pow2tdepth];
+			 if(o<=thresh[i])
+				 return -1;
+			 root += 4*pow2tdepth;
+		}
+		return o - thresh[ntrees-1];
+	}
+	return classify_region;
+}
+pico.run_cascade = function(image, classify_region, params)
+{
+	const pixels = image.pixels;
+	const nrows = image.nrows;
+	const ncols = image.ncols;
+	const ldim = image.ldim;
+	const shiftfactor = params.shiftfactor;
+	const minsize = params.minsize;
+	const maxsize = params.maxsize;
+	const scalefactor = params.scalefactor;
+	let scale = minsize;
+	const detections = [];
+	while(scale<=maxsize)
+	{
+		const step = Math.max(shiftfactor*scale, 1) >> 0; // '>>0' transforms this number to int
+		const offset = (scale/2 + 1) >> 0;
+		for(let r=offset; r<=nrows-offset; r+=step)
+			for(let c=offset; c<=ncols-offset; c+=step)
+			{
+				const q = classify_region(r, c, scale, pixels, ldim);
+				if (q > 0.0)
+					detections.push([r, c, scale, q]);
+			}
+		scale = scale*scalefactor;
+	}
+    return detections;
+}
+pico.cluster_detections = function(dets, iouthreshold)
+{
+	dets = dets.sort(function(a, b) {
+		return b[3] - a[3];
+	});
+	function calculate_iou(det1, det2)
+	{
+		const r1=det1[0], c1=det1[1], s1=det1[2];
+		const r2=det2[0], c2=det2[1], s2=det2[2];
+		const overr = Math.max(0, Math.min(r1+s1/2, r2+s2/2) - Math.max(r1-s1/2, r2-s2/2));
+		const overc = Math.max(0, Math.min(c1+s1/2, c2+s2/2) - Math.max(c1-s1/2, c2-s2/2));
+		return overr*overc/(s1*s1+s2*s2-overr*overc);
+	}
+	const assignments = new Array(dets.length).fill(0);
+	const clusters = [];
+	for(let i=0; i<dets.length; ++i)
+	{
+		if(assignments[i]==0)
+		{
+			let r=0.0, c=0.0, s=0.0, q=0.0, n=0;
+			for(let j=i; j<dets.length; ++j)
+				if(calculate_iou(dets[i], dets[j])>iouthreshold)
+				{
+					assignments[j] = 1;
+					r = r + dets[j][0];
+					c = c + dets[j][1];
+					s = s + dets[j][2];
+					q = q + dets[j][3];
+					n = n + 1;
+				}
+			clusters.push([r/n, c/n, s/n, q]);
+		}
+	}
+	return clusters;
+}
+pico.instantiate_detection_memory = function(size)
+{
+	let n = 0;
+	const memory = [];
+	for(let i=0; i<size; ++i)
+		memory.push([]);
+	function update_memory(dets)
+	{
+		memory[n] = dets;
+		n = (n+1)%memory.length;
+		dets = [];
+		for(i=0; i<memory.length; ++i)
+			dets = dets.concat(memory[i]);
+		return dets;
+	}
+	return update_memory;
+}
+
+  let cascade = null, loading = null;
+  const memo = new Map();
+  function loadCascade() {
+    if (cascade) return Promise.resolve(cascade);
+    if (!loading) loading = fetch("/art/ui/facefinder").then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(b => (cascade = pico.unpack_cascade(new Int8Array(b)))).catch(e => { console.warn("[face147] cascade", e); loading = null; return null; });
+    return loading;
+  }
+  function keyOf(src) { return src.length > 300 ? src.length + ":" + src.slice(0, 120) + src.slice(-120) : src; }
+  async function findFace(img) {
+    const k = keyOf(img.currentSrc || img.src); if (memo.has(k)) return memo.get(k);
+    const cl = await loadCascade(); if (!cl) return null;
+    let res = null;
+    try {
+      const W = img.naturalWidth, H = img.naturalHeight;
+      for (const lim of [480, 800]) {
+      const s = Math.min(1, lim / Math.max(W, H)), w = Math.max(1, Math.round(W * s)), h = Math.max(1, Math.round(H * s));
+      const cv = document.createElement("canvas"); cv.width = w; cv.height = h; const cx = cv.getContext("2d");
+      cx.fillStyle = "#000"; cx.fillRect(0, 0, w, h); cx.drawImage(img, 0, 0, w, h);
+      const rgba = cx.getImageData(0, 0, w, h).data, g = new Uint8Array(w * h);
+      for (let i = 0; i < w * h; i++) g[i] = (2 * rgba[i * 4] + 7 * rgba[i * 4 + 1] + rgba[i * 4 + 2]) / 10;
+      let d = pico.run_cascade({ pixels: g, nrows: h, ncols: w, ldim: w }, cl, { shiftfactor: 0.1, minsize: Math.max(20, Math.round(Math.min(w, h) * 0.06)), maxsize: Math.round(Math.min(w, h) * 0.9), scalefactor: 1.1 });
+      d = pico.cluster_detections(d, 0.2).filter(x => x[3] > 5).sort((a, b) => b[3] - a[3]);
+      if (d.length) { res = { x: d[0][1] / w, y: d[0][0] / h, s: d[0][2] / w, W, H }; break; }
+      if (s === 1) break;
+      }
+    } catch (e) { console.debug("[face147] detect", e); }
+    memo.set(k, res); return res;
+  }
+  function frame(img, f) {
+    const box = img.parentElement, D = box.clientWidth || 68;
+    if (!f) {
+      const W0 = img.naturalWidth, H0 = img.naturalHeight;
+      /* 没找到脸：竖长的全身立绘按「头在上方 13%」放大；其余靠上取景 */
+      if (W0 && H0 / W0 >= 1.5) f = { x: 0.5, y: 0.13, s: 0.17, W: W0, H: H0 };
+      else { img.style.objectPosition = "50% 12%"; return; }
+    }
+    const W = f.W, H = f.H, faceW = f.s * W;
+    let k = Math.max(0.42 * D / faceW, D / Math.min(W, H));
+    k = Math.min(k, 6 * D / Math.min(W, H));
+    const dw = W * k, dh = H * k;
+    let left = D / 2 - f.x * W * k, top = D * 0.46 - f.y * H * k;
+    left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
+    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
+  }
+  function prep(img) {
+    if (img.dataset.f147) return; img.dataset.f147 = "1";
+    const box = document.createElement("span"); box.className = "f147";
+    img.parentNode.insertBefore(box, img); box.appendChild(img);
+    const go = () => { findFace(img).then(f => frame(img, f)).catch(() => frame(img, null)); };
+    img.style.objectPosition = "50% 12%";
+    if (img.complete && img.naturalWidth) go(); else img.addEventListener("load", go, { once: true });
+  }
+  function scan(root) { try { (root || document).querySelectorAll(".ld101c img:not([data-f147])").forEach(prep); } catch (_) {} }
+  try { new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches && n.matches(".ld101c img") || n.querySelector && n.querySelector(".ld101c img"))) { scan(n.nodeType === 1 && n.parentNode ? n.parentNode : document); return; } }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+  setTimeout(scan, 500);
+  const st = document.createElement("style");
+  st.textContent = ".ld101c .f147{position:relative;display:block;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #F0B77E88;background:rgba(255,255,255,.04);flex:none}.ld101c .f147>img{width:68px;height:68px;box-shadow:none!important;border-radius:0!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 章末选择融进剧情（所有剧本统一）=====
+   玩家：「这种选择回复很多余，直接融合在剧本里」。选项本身决定分支和结局，不能删 ⇒ 换成剧情里的样子：
+   1 · 章末选择不再是一块单独的「A/B/C 面板」，而是「🎭 轮到你了 + 问题」+ 几句你可以直接说出口的台词（点了 = 你说了这句）。
+   2 · 轮到选择时，下面的 AI 联想先收起来，不和剧本选项抢位置。
+   3 · 关系数值默认收起，只留一个小按钮「💗 关系」，点开再看（数值变化时仍会飘提示）。
+   4 · 输入框不再熄灭：自己打字也算数 —— AI 判断你这句最接近哪个选项，按那条分支走，你的原话保留在对话里。
+   5 · 改在通用框架里，所有剧本一起生效。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  const isChoose = th => { try { if (!th || !th.pk || th.pk.stop || th.pk.st !== "choose") return false; const c = (wd(th.wid).pack.chapters || [])[th.pk.ch - 1]; return !!(c && c.choices && c.choices.length && !pkAdvanceOnly(c)); } catch (_) { return false; } };
+  const chapOf = th => wd(th.wid).pack.chapters[th.pk.ch - 1];
+  const OPEN = { stats: false };
+
+  /* ---------- 1 + 3 · 面板 ---------- */
+  if (typeof packPanel === "function") {
+    const panel = packPanel;
+    packPanel = function (th) {
+      const h = panel.apply(this, arguments);
+      try {
+        if (!isChoose(th) || th.pk.min) return h;
+        const i = h.indexOf('<div class="pkpanel'), extra = i > 0 ? h.slice(0, i) : "";
+        const c = chapOf(th), n = th.pk.ch, w = wd(th.wid), need = n === PCN(w) ? Math.max(0, EN(th) - aCount(th)) : 0;
+        let you = ""; try { const me = typeof playerName === "function" ? playerName(th) : ""; if (me) you = T(" · 你是 ", " · as ") + esc(me); } catch (_) {}
+        const opts = c.choices.map(x => {
+          const lock = x.k === "A" && need > 0;
+          return '<button class="ch148o' + (lock ? " lk" : "") + '" data-pkpick="' + x.k + '"><span>' + esc(Lz(x.t)) + '</span>' + (lock ? '<small>🔒 ' + t("pk.needA", { n: EN(th), h: aCount(th) }) + '</small>' : '') + '</button>';
+        }).join("");
+        const stats = extra ? '<div class="st148' + (OPEN.stats ? " open" : "") + '"><button class="st148b" data-st148="1">💗 ' + T("关系", "Relationships") + (OPEN.stats ? " ▴" : " ▾") + '</button><div class="st148c">' + extra + '</div></div>' : "";
+        return '<div class="pkpanel ch148"><div class="ch148h"><span class="ch148who">🎭 ' + T("轮到你了", "Your turn") + you + '</span><b>' + esc(Lz(c.ask)) + '</b>' + stats + '</div>' +
+          '<div class="ch148l">' + opts + '</div><p class="ch148t">' + T("或者直接打字，说你自己的话", "Or just type your own line") + '</p></div>';
+      } catch (e) { console.warn("[ch148] panel", e); return h; }
+    };
+  }
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-st148]"); if (!b) return;
+    e.preventDefault(); e.stopPropagation(); OPEN.stats = !OPEN.stats;
+    const box = b.closest(".st148"); if (box) { box.classList.toggle("open", OPEN.stats); b.textContent = "💗 " + T("关系", "Relationships") + (OPEN.stats ? " ▴" : " ▾"); }
+  }, true);
+
+  /* ---------- 4 · 输入框不熄灭；打字 = 选最接近的那条 ---------- */
+  if (typeof pkBusy === "function") { const pb = pkBusy; pkBusy = function (th) { if (isChoose(th)) return false; return pb.apply(this, arguments); }; }
+  function guess(txt, choices) {
+    const a = new Set(String(txt).replace(/\s/g, "")); let best = choices[0].k, bs = -1;
+    choices.forEach(x => { const s = String(Lz(x.t)); let n = 0; new Set(s.replace(/\s/g, "")).forEach(ch => { if (a.has(ch)) n++; }); const sc = n / Math.max(4, s.length); if (sc > bs) { bs = sc; best = x.k; } });
+    return best;
+  }
+  let mapping = false;
+  async function mapAndPick(th, txt, mode) {
+    if (mapping) return; mapping = true;
+    try {
+      const c = chapOf(th), list = c.choices.map(x => x.k + "｜" + Lz(x.t)).join("\n");
+      try { appendMsg(th, { who: "me", k: mode || "say", txt, typed: true, at: Date.now() }); } catch (_) {}
+      const ta = document.getElementById("cin"); if (ta) ta.value = "";
+      try { typing(true); } catch (_) {}
+      let k = null;
+      try {
+        const r = await ask("玩家在互动剧的一个选择点上，没有点选项，而是自己说了一句话。判断这句话的意图最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+        k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
+      } catch (_) {}
+      try { typing(false); } catch (_) {}
+      if (!k || !c.choices.some(x => x.k === k)) k = guess(txt, c.choices);
+      const n = th.pk.ch, w = wd(th.wid);
+      if (n === PCN(w) && k === "A" && aCount(th) < EN(th)) { const o = c.choices.find(x => x.k !== "A"); if (o) k = o.k; }
+      if (curT === th.id && isChoose(th)) packPick(k);
+    } catch (e) { console.warn("[ch148] map", e); }
+    finally { mapping = false; }
+  }
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function (txt, mode) {
+      const th = S.threads[curT];
+      try {
+        const s = String(txt || "").trim();
+        if (s && isChoose(th) && th.pk.as !== "watch") { mapAndPick(th, s, mode); return; }
+      } catch (e) { console.warn("[ch148] send", e); }
+      return ds.apply(this, arguments);
+    };
+  }
+
+  /* ---------- 2 · 选择时收起 AI 联想 ---------- */
+  function mark() { try { const chat = document.getElementById("s-chat"); if (chat) chat.classList.toggle("chs148", isChoose(S.threads[curT])); } catch (_) {} }
+  if (typeof packRefresh === "function") { const pr = packRefresh; packRefresh = function () { const r = pr.apply(this, arguments); mark(); return r; }; }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); mark(); return r; }; }
+  setInterval(mark, 1200);
+
+  const st = document.createElement("style");
+  st.textContent =
+    ".chs148 #sugg{display:none!important}" +
+    ".pkpanel.ch148{padding:12px 12px 8px}" +
+    ".ch148h{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 2px 10px;font-size:14px;line-height:1.4}" +
+    ".ch148who{flex:none;font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;background:linear-gradient(135deg,#F0B77E,#EE6F97);color:#1B1017}" +
+    ".ch148h>b{flex:1 1 auto;min-width:0}" +
+    ".ch148l{display:flex;flex-direction:column;align-items:flex-end;gap:8px}" +
+    ".ch148o{max-width:88%;text-align:left;border:1px solid rgba(238,111,151,.45);background:rgba(120,55,80,.55);color:#fff;border-radius:18px 18px 6px 18px;padding:10px 14px;font-size:14.5px;line-height:1.45;cursor:pointer}" +
+    ".ch148o:active{transform:scale(.98)}.ch148o.lk{opacity:.55}.ch148o small{display:block;font-size:11px;color:#F0B77E;margin-top:3px}" +
+    ".ch148t{margin:8px 2px 0;font-size:11.5px;color:rgba(255,255,255,.55);text-align:right}" +
+    ".st148{flex:none}.st148b{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#F6D3AE;border-radius:999px;padding:3px 10px;font-size:11.5px;cursor:pointer}" +
+    ".st148 .st148c{display:none}.st148.open{flex-basis:100%}.st148.open .st148c{display:block;margin-top:8px}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 剧情中途的选择也统一成「轮到你了 + 台词」=====
+   玩家截图：输入框上面一排「↻ 换一批｜问但丁｜设定界限｜自主行动｜台词…」，不知道是什么。
+   那是剧本中途的选择（原来被压成一排只剩短标签的小气泡，问题本身被藏起来），再加上 AI 联想混在同一排。
+   ⇒ 和章末选择一样：显示「🎭 轮到你了 + 问题」，剧本选项按你会说出口的台词竖着排（靠右的气泡），
+      这时不显示 AI 联想（面板里的和下面联想行都收起），底下一行小字「或者直接打字」。 */
+(function () {
+  "use strict";
+  const P = "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)";
+  const st = document.createElement("style");
+  st.textContent =
+    P + "{display:block!important;overflow:visible!important;padding:2px 2px 0!important}" +
+    P + ">.dk97h{display:flex!important;margin:0 2px 10px!important}" +
+    P + ">.pkhd," + P + ">.ai97h," + P + ">.ai97o," + P + ">.dk97row," + P + ">.pkhint{display:none!important}" +
+    P + ">.chatt{display:flex!important;flex-direction:column;align-items:flex-end;gap:8px}" +
+    P + ">.chatt button{max-width:88%;text-align:left;white-space:normal!important;border:1px solid rgba(238,111,151,.45)!important;background:rgba(120,55,80,.55)!important;color:#fff!important;border-radius:18px 18px 6px 18px!important;padding:10px 14px!important;opacity:1!important;flex:none}" +
+    P + ">.chatt button b," + P + ">.chatt .pvb{display:none!important}" +
+    P + ">.chatt button span{font-size:14.5px!important;line-height:1.45!important}" +
+    P + ">.chatt::after{content:\"或者直接打字，说你自己的话\";font-size:11.5px;color:rgba(255,255,255,.55);margin:2px 2px 4px}" +
+    "#s-chat:has(#pkwrap.dock .pkpanel.stop .chatt) #sugg{display:none!important}";
+  document.head.appendChild(st);
 })();
