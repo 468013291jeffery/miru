@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="dbd7224f720f 2026-11-13T15:01Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="b43a43baa51a 2026-11-13T15:08Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -26646,6 +26646,7 @@ pico.instantiate_detection_memory = function(size)
     return parts.filter(Boolean).join(" ");
   }
   function tagsOf(w) {
+    if (window.TAGS157 && TAGS157.MAP && w && TAGS157.MAP[w.id]) return TAGS157.MAP[w.id];
     if (w._tg157) return w._tg157;
     const s = txt(w), out = Object.keys(RX).filter(k => RX[k].test(s));
     return (w._tg157 = out);
@@ -26768,6 +26769,37 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   if (typeof doSend === "function") { const ds = doSend; doSend = function () { try { const th = S.threads[curT]; if (th && Q(th).length) flushAll(th); } catch (_) {} return ds.apply(this, arguments); }; }
   /* 重新打开聊天、或之前排着没放的：没有在等的那句时，放出下一条 */
   if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); try { const th = S.threads[curT]; if (th && th._q158 && th._q158.length && !R.pending.get(th.id)) setTimeout(() => release(th), 0); } catch (_) {} return r; }; }
+})();
+
+/* ===== 2026-11-13 · 首页标签：线上 18 部官方剧逐部定好类型（自动归类只作新剧的兜底） =====
+   自动按关键词归类时，几乎每部剧的服务器标签里都有「Slow Burn」「Why Choose」，结果「慢热」「群像」什么都装。
+   ⇒ 已上线的剧按内容逐部指定 1–3 个类型；以后新上的剧先走关键词兜底，上线时再补进这张表。 */
+(function () {
+  "use strict";
+  if (!window.TAGS157) return;
+  const MAP = {
+    w_scmwf1m5ey5dc969fdb4: ["sweet"],                          /* 我的亿万富翁丈夫只为我下跪 */
+    w_scmwe0kqlf5a8ad0688e: ["fantasy", "ensemble"],            /* 女帝的绝色后宫 */
+    w_scmwd8xkizb4af60b220: ["dark", "rivals"],                 /* 系统让我爱凶手 */
+    w_scmwccn54rff49c6af5f: ["ensemble", "rivals"],             /* 全岛都在为你失控 */
+    w_scmwc6dcvkf78af9d356: ["dark", "ensemble"],               /* 极寒重生：谁能进门 */
+    w_scmwbo55bx3b4e35f1b7: ["dark", "second"],                 /* 我死过一次，他们都记得 */
+    w_scmwaymue65be8983c9b: ["dark", "rivals"],                 /* 北灯未熄 */
+    w_scmw9m1jz8453861ec49: ["fantasy", "ensemble", "dark"],    /* 第八誓约 */
+    w_scmw9biwsq6dcfcceb84: ["ensemble", "dark"],               /* 谁是 S++ */
+    w_scmw7tfsof0b2f96a20b: ["fantasy", "slow"],                /* 月蚀之誓 */
+    w_scmw7f7e4565778126fa: ["fantasy", "rivals"],              /* 零点王冠 */
+    w_scmw6aio565cb9b9e448: ["slow", "sweet"],                  /* 未读的选择 */
+    w_scmw4qon3h5311d852bf: ["dark"],                           /* Black Harbor */
+    w_scmw2calg4a57f5c1974: ["fantasy", "ensemble", "sweet"],   /* 八位王子都想娶我 */
+    w_scmw0sxc5p5fa3b3d735: ["sweet", "ensemble"],              /* 今晚，偏爱失控 */
+    w_scmvxxy1f444b18cd039: ["sweet", "slow"],                  /* 午夜邀约 */
+    w_scmvxnqoko453e6d7bc3: ["dark"],                           /* 黑帮教父的唯一软肋 */
+    w_scmvp62pluf3cc9d7c96: ["dark", "rivals"]                  /* 丝绒谎言 */
+  };
+  const auto = TAGS157.tagsOf;
+  TAGS157.tagsOf = function (w) { return (w && MAP[w.id]) || auto.apply(this, arguments); };
+  TAGS157.MAP = MAP;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
