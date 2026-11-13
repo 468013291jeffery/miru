@@ -3,7 +3,9 @@ import WebKit
 import Capacitor
 import StoreKit
 import AuthenticationServices
+#if MIRU_ADS
 import UserMessagingPlatform
+#endif
 
 final class MIRUBridgeViewController: CAPBridgeViewController {
     override func capacitorDidLoad() {
@@ -37,9 +39,13 @@ public final class MIRUNative: CAPPlugin, CAPBridgedPlugin, ASAuthorizationContr
     var appleCall: CAPPluginCall?
     var appleController: ASAuthorizationController?
     var updatesTask: Task<Void, Never>?
+    #if MIRU_ADS
     var adCoordinator: MIRUAdCoordinator?
+    #endif
     override public func load() {
+        #if MIRU_ADS
         DispatchQueue.main.async { MIRUAdCoordinator.updateConsent() }
+        #endif
         updatesTask = Task { [weak self] in
             for await result in Transaction.updates {
                 guard case .verified = result else { continue }
@@ -50,7 +56,14 @@ public final class MIRUNative: CAPPlugin, CAPBridgedPlugin, ASAuthorizationContr
     deinit { updatesTask?.cancel() }
     @objc func configuration(_ call: CAPPluginCall) {
         let id = Bundle.main.object(forInfoDictionaryKey: "GIDClientID") as? String ?? ""
-        call.resolve(["platform": "ios", "googleConfigured": !id.isEmpty && !id.contains("$("), "privacyOptionsRequired": ConsentInformation.shared.privacyOptionsRequirementStatus == .required])
+        #if MIRU_ADS
+        let adsEnabled = true
+        let privacyRequired = ConsentInformation.shared.privacyOptionsRequirementStatus == .required
+        #else
+        let adsEnabled = false
+        let privacyRequired = false
+        #endif
+        call.resolve(["platform": "ios", "googleConfigured": !id.isEmpty && !id.contains("$("), "adsEnabled": adsEnabled, "privacyOptionsRequired": privacyRequired])
     }
     @objc func products(_ call: CAPPluginCall) {
         guard let ids = call.getArray("ids", String.self), !ids.isEmpty else { call.reject("Missing product IDs"); return }

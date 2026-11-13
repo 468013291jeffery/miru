@@ -3,7 +3,7 @@
  'use strict';
  const N=window.MIRU_NATIVE;if(!N||N.platform!=='ios')return;
  const say=(zh,en)=>CL()==='zh'?zh:en;
- let buying=false,recovering=false,adBusy=false;
+ let buying=false,recovering=false;
  function balance(j){
   if(!j||typeof j.gems!=='number')throw new Error('Missing wallet balance');
   S.keys=j.gems;cloudInfo().known=j.gems;if(j.iap)cloudInfo().iap=j.iap;
@@ -99,17 +99,10 @@
    await resetLocal();
   }catch(e){toast(String(e.message||e))}
  }
- watchAd=async function(done){
-  if(adBusy)return;
-  if(!adLeft()){toast(t('ad.none'));return}
-  adBusy=true;
-  try{
-   closeSheet();const r=await N.showRewardedAd();
-   if(r.rewarded===true){adState().n++;save();if(done)done()}
-   else toast(t('ad.keep'));
-  }catch(e){toast(say('暂时没有广告，请稍后重试。','No ad is available. Please try again later.'))}
-  finally{adBusy=false}
- };
+ // First iOS release has no advertising; Web/Android implementations remain intact.
+ adLeft=function(){return 0};
+ adBtn=function(){return ''};
+ watchAd=async function(){};
  window.addEventListener('click',function(e){
   const x=e.target.closest('[data-ios-product],[data-buy],[data-buyplus],[data-buymax],[data-ios-sync],[data-au70="apple"],[data-au70="google"],[data-au70card="del"]');
   if(!x)return;e.preventDefault();e.stopImmediatePropagation();
@@ -123,9 +116,6 @@
  window.addEventListener('focus',()=>recover().catch(()=>{}));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)recover().catch(()=>{})});
  N.addListener('transactionUpdated',()=>recover().catch(()=>{}));
- const oldMe=renderMe;renderMe=function(v){const r=oldMe.apply(this,arguments);if(!v.querySelector('[data-ios-ad-privacy]')){
-  const b=document.createElement('button');b.type='button';b.className='btn btn-g';b.setAttribute('data-ios-ad-privacy','');b.textContent=say('广告隐私选项','Ad privacy options');b.onclick=()=>N.privacyOptions().catch(e=>toast(e.message));(v.querySelector('.scroll')||v).prepend(b)
- }return r};
  if(localStorage.getItem('miru.deleteLocalPending'))resetLocal().catch(e=>toast(e.message));
  window.__miruIOS={deliver,recover,purchase,login,deleteAccount,resetLocal};
 })();

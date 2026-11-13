@@ -40,8 +40,13 @@ for(const quantity of [0,2,-1,'1',null])await rejects('reject signed quantity '+
 for(const type of ['Non-Consumable','Auto-Renewable Subscription',null])await rejects('reject signed type '+type,()=>IAP.verifyTransaction(jws({...GOOD,type}),OPT));
 await rejects('Xcode bypass environment cannot enter receipt delivery',()=>IAP.verifyTransaction(jws({...GOOD,environment:'Xcode'}),OPT));
 await rejects('missing account token fails',()=>IAP.verifyTransaction(jws({...GOOD,appAccountToken:null}),OPT));
-await check('Production requires actual configured appAppleId',async()=>{
+await check('Production uses the registered public appAppleId by default',async()=>{
  const saved=process.env.IAP_APP_APPLE_ID;delete process.env.IAP_APP_APPLE_ID;
+ try{assert.equal(require('../native/ios-release.public.json').appAppleId,'6834383803');const t=await IAP.verifyTransaction(jws({...GOOD,environment:'Production'}),OPT);assert.equal(t.environment,'Production');}
+ finally{if(saved===undefined)delete process.env.IAP_APP_APPLE_ID;else process.env.IAP_APP_APPLE_ID=saved;}
+});
+await check('Explicit empty Production appAppleId fails closed',async()=>{
+ const saved=process.env.IAP_APP_APPLE_ID;process.env.IAP_APP_APPLE_ID='';
  try{await assert.rejects(async()=>IAP.verifyTransaction(jws({...GOOD,environment:'Production'}),OPT),e=>e.code===503);}
  finally{if(saved===undefined)delete process.env.IAP_APP_APPLE_ID;else process.env.IAP_APP_APPLE_ID=saved;}
 });

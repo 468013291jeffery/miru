@@ -66,10 +66,6 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>GADApplicationIdentifier</key>
-	<string>$(MIRU_ADMOB_APP_ID)</string>
-	<key>MIRURewardedAdUnitID</key>
-	<string>$(MIRU_REWARDED_AD_UNIT_ID)</string>
 	<key>GIDClientID</key>
 	<string>$(MIRU_GOOGLE_IOS_CLIENT_ID)</string>
 	<key>GIDServerClientID</key>

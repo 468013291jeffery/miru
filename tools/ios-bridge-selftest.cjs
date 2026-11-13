@@ -2,7 +2,7 @@ const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('nod
 function setup(){
  const log=[],events={},cloud={uid:'same',token:'original'},S={keys:10,lang:'en'},pending=[{transactionId:'1',jws:'signed'}];
  let mode='success',status='purchased',logged=true,ads=true;
- const native={platform:'ios',addListener(){return Promise.resolve()},finish:async x=>log.push('finish:'+x.transactionId),pendingTransactions:async()=>({transactions:pending}),purchase:async()=>({status,transactionId:'1',jws:'signed'}),showRewardedAd:async()=>({rewarded:ads}),signInWithApple:async()=>({idToken:'id',authorizationCode:'code'}),privacyOptions:async()=>{}};
+ const native={platform:'ios',addListener(){return Promise.resolve()},finish:async x=>log.push('finish:'+x.transactionId),pendingTransactions:async()=>({transactions:pending}),purchase:async()=>({status,transactionId:'1',jws:'signed'}),showRewardedAd:async()=>{log.push('ad-sdk');return {rewarded:ads}},signInWithApple:async()=>({idToken:'id',authorizationCode:'code'}),privacyOptions:async()=>{}};
  const w={S,window:null,CL0:{on:true},clearTimeout(){},MIRU_NATIVE:native,document:{addEventListener(){},getElementById(){return null}},addEventListener:(name,fn)=>events[name]=fn,CL:()=> 'en',cloudInfo:()=>cloud,save0:()=>log.push('save'),keysChip(){},save(){},console:{warn(){}},au70Loggedin:()=>logged,authAll70(){log.push('login')},toast:s=>log.push('toast:'+s),closeSheet(){},refreshAfterPay(){},au70MountGoogle(){},au70Apple(){},au70Done(){},renderMe(){},walletPull:async()=>{},sheet(){},esc:x=>x,confirm:()=>true,au:x=>x,localStorage:{getItem(){return null},setItem(){},removeItem(){},clear(){log.push('clear')}},location:{reload(){log.push('reload')}},setTimeout:fn=>fn(),adLeft:()=>5,adState:()=>({n:0}),t:x=>x,
  capi:async(path,opt)=>{
   if(path==='/wallet'&&opt){log.push('ack');if(mode==='fail')return {ok:false,j:{error:'offline'}};return {ok:true,j:{transactionId:'1',gems:22}}}
@@ -19,7 +19,8 @@ function setup(){
  x=setup();x.setMode('fail');await assert.rejects(x.w.__miruIOS.deliver({transactionId:'1',jws:'signed'}));assert(!x.log.includes('finish:1'));assert.equal(x.S.keys,10);
  for(const status of ['cancelled','pending']){x=setup();x.setStatus(status);await x.w.__miruIOS.purchase('p');assert(!x.log.includes('ack'));assert(!x.log.includes('finish:1'));assert.equal(x.S.keys,10)}
  x=setup();await x.w.__miruIOS.recover();assert(x.log.includes('finish:1'));x=setup();x.setLogged(false);await x.w.__miruIOS.recover();assert(!x.log.includes('ack'));
- x=setup();x.setAds(false);let earned=0;await x.w.watchAd(()=>earned++);assert.equal(earned,0);x.setAds(true);await x.w.watchAd(()=>earned++);assert.equal(earned,1);
+ x=setup();let earned=0;await x.w.watchAd(()=>earned++);assert.equal(earned,0);assert(!x.log.includes('ad-sdk'));assert.equal(x.w.adLeft(),0);assert.equal(x.w.adBtn('gem','','Watch'), '');
+ const money=fs.readFileSync(require.resolve('../source/src/app5_money.js'),'utf8'),tasks=money.slice(money.indexOf('function tasksHTML(){'),money.indexOf('async function tkClaim'));Object.assign(x.w,{ciState:()=>({done:false}),TK:{data:null,at:0},tasksLoad(){},taskSection:k=>k,taskRow:(icon,title)=>title,ADS:{cap:5},TZ:(a,b)=>b});vm.runInNewContext(tasks,x.w);assert(!x.w.tasksHTML().includes('task.ad'));
  x=setup();await x.w.__miruIOS.deleteAccount();assert.equal(x.cloud.token,'original');assert(!x.log.includes('clear'));
  x=setup();x.setMode('mismatch');await x.w.__miruIOS.deleteAccount();assert.equal(x.cloud.token,'original');assert.equal(x.log.filter(z=>z==='delete').length,1);assert(!x.log.includes('clear'));
  x=setup();const data=new Map([['save','deleted account']]);x.w.KEY='save';x.w.localStorage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v),removeItem:k=>data.delete(k),clear:()=>data.clear()};
@@ -37,5 +38,5 @@ function setup(){
  const button={dataset:{del150:'go'},disabled:false},event={target:{closest:()=>button},preventDefault(){},stopImmediatePropagation(){}};
  await listener(event);assert.equal(submitted,1);assert.equal(button.disabled,false);
  button.dataset={au70card:'del'};await listener(event);assert(shown.includes('data-del150="go"'));assert.equal(submitted,1);
- console.log('PASS iOS server-before-finish, retry, cancel/pending, real ad reward, deletion retry and same-account reauthentication');
+ console.log('PASS iOS server-before-finish, retry, cancel/pending, no advertising UI or SDK calls, deletion retry and same-account reauthentication');
 })().catch(e=>{console.error(e);process.exitCode=1});

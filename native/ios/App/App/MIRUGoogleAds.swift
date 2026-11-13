@@ -1,8 +1,10 @@
 import UIKit
 import Capacitor
 import GoogleSignIn
+#if MIRU_ADS
 import GoogleMobileAds
 import UserMessagingPlatform
+#endif
 
 extension MIRUNative {
     @objc func signInWithGoogle(_ call: CAPPluginCall) {
@@ -15,6 +17,7 @@ extension MIRUNative {
             }
         }
     }
+    #if MIRU_ADS
     @objc func showRewardedAd(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             guard self.adCoordinator == nil, let vc = self.bridge?.viewController else { call.reject("An ad is already in progress or no view is available"); return }
@@ -29,7 +32,12 @@ extension MIRUNative {
             catch { call.reject("Privacy options unavailable", nil, error) }
         }
     }
+    #else
+    @objc func showRewardedAd(_ call: CAPPluginCall) { call.resolve(["rewarded": false]) }
+    @objc func privacyOptions(_ call: CAPPluginCall) { call.resolve() }
+    #endif
 }
+#if MIRU_ADS
 final class MIRUAdCoordinator: NSObject, FullScreenContentDelegate {
     private let call: CAPPluginCall
     private weak var vc: UIViewController?
@@ -64,3 +72,4 @@ final class MIRUAdCoordinator: NSObject, FullScreenContentDelegate {
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) { finish(earned) }
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) { fail("Ad presentation failed", error) }
 }
+#endif

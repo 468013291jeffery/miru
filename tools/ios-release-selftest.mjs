@@ -1,3 +1,8 @@
-import assert from 'node:assert/strict';import{validate}from'./ios-release-check.mjs';
-const c={teamId:'H79A5X8935',bundleId:'com.miru.plus.app',appAppleId:'123456789',googleIOSClientId:'123-fixture.apps.googleusercontent.com',googleServerClientId:'123-server.apps.googleusercontent.com',admobAppId:'ca-app-pub-1234567890123456~1234567890',rewardedAdUnitId:'ca-app-pub-1234567890123456/1234567890'};
-assert.deepEqual(validate(c),[]);assert(validate({...c,admobAppId:'ca-app-pub-3940256099942544~1458002511'}).length);assert(validate({...c,rewardedAdUnitId:''}).length);assert(validate({...c,appAppleId:''}).length);assert(validate({...c,googleIOSClientId:'placeholder'}).length);console.log('PASS Release rejects missing identifiers and official test ads');
+import assert from 'node:assert/strict';import{spawnSync}from'node:child_process';import{validate}from'./ios-release-check.mjs';
+const c={teamId:'H79A5X8935',bundleId:'com.miru.plus.app',appAppleId:'6834383803',adsEnabled:false,googleIOSClientId:'123-fixture.apps.googleusercontent.com',googleServerClientId:'123-server.apps.googleusercontent.com'};
+assert.deepEqual(validate(c),[]);assert(validate({...c,adsEnabled:true}).length);assert(validate({...c,adsEnabled:undefined}).length);assert(validate({...c,appAppleId:''}).length);assert(validate({...c,googleIOSClientId:'placeholder'}).length);
+const env={...process.env,CONFIGURATION:'Release',DEVELOPMENT_TEAM:c.teamId,PRODUCT_BUNDLE_IDENTIFIER:c.bundleId,MIRU_APP_APPLE_ID:c.appAppleId,MIRU_ADS_DISABLED:'YES',MIRU_GOOGLE_IOS_CLIENT_ID:c.googleIOSClientId,MIRU_GOOGLE_SERVER_CLIENT_ID:c.googleServerClientId,MIRU_GOOGLE_REVERSED_CLIENT_ID:'com.googleusercontent.apps.123-fixture'};
+assert.equal(spawnSync('sh',['native/validate-release.sh'],{env}).status,0);
+assert.notEqual(spawnSync('sh',['native/validate-release.sh'],{env:{...env,MIRU_ADS_DISABLED:'NO'}}).status,0);
+assert.notEqual(spawnSync('sh',['native/validate-release.sh'],{env:{...env,SWIFT_ACTIVE_COMPILATION_CONDITIONS:'MIRU_ADS'}}).status,0);
+console.log('PASS no-ad Release needs no AdMob identifiers and rejects advertising builds');

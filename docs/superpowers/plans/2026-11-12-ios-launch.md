@@ -2,15 +2,18 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox syntax for tracking.
 
-**Goal:** Fix the audited money/security/privacy problems and deliver a buildable overseas iOS client with purchases and rewarded ads.
+**Goal:** Fix the audited money/security/privacy problems and deliver a buildable overseas iOS client with diamond purchases and no advertising in its first release.
 **Architecture:** Existing Web UI, new Capacitor iOS native bridge, existing Vercel backend with scoped fixes. Sandbox transactions are accurately marked; operationally separate review/test accounts share the existing wallet. Retain all existing features and entrances, and defer a separate test-economy architecture.
 **Tech Stack:** JavaScript/Node, PostgreSQL/Neon, Python build tools, Swift/StoreKit 2/AuthenticationServices, Capacitor, Google Mobile Ads and UMP.
 **Spec:** docs/superpowers/specs/2026-11-12-ios-launch-design.md
 
+## Current first-release override
+Apple ID 6834383803 is supplied. First iOS release ships diamond IAP and no ads. Earlier AdMob/UMP integration tasks describe retained future source; they are no longer release prerequisites. Rebuild without ad SDKs, hide ad offers, remove ad metadata/ID gates, and validate IAP with the supplied public ID. No unrelated refactoring.
+
 ## Global Constraints
 - Minimum iOS 15; confirmed Bundle com.miru.plus.app; backend https://www.miru.plus/api.
 - Keep Web and Android working; preserve miru.plus origins and protected build parts.
-- Both diamond purchases and rewarded ads are required; Google test ads only in development.
+- Diamond purchases are retained; first iOS release does not build or initialize advertising SDKs or show reward offers.
 - No secrets in source; no main merge/deployment/App Store submission in this implementation.
 - Team ID H79A5X8935 is supplied; numeric Apple app ID, Google iOS OAuth ID, production ad IDs and provider-side key rotation remain external until supplied and verified.
 

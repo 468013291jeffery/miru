@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="6342e086a5bf 2026-11-13T10:43Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="933364bbdd04 2026-11-13T11:57Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -7044,7 +7044,7 @@ function tasksHTML(){const ci=ciState(),adN=adLeft();
  let h='<div class="tasklist" style="padding:10px 16px 6px">';
  h+=taskSection(t("task.secDaily"));
  h+=taskRow("📅",t("task.checkin"),t("task.checkinD"),ci.done?done:'<button class="btn btn-p btn-xs" data-ci="1">'+t("task.go")+'</button>');
- h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
+ if(!(window.MIRU_NATIVE&&window.MIRU_NATIVE.platform==="ios"))h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
  if(TK.data){const L=TK.data.tasks,sec=(k,label)=>{const xs=L.filter(x=>k.includes(x.period));return xs.length?(label?taskSection(label):"")+xs.map(tkRow).join(""):""};
   h+=sec(["day"],"")+sec(["week"],TZ("本周","This week"))+sec(["once"],TZ("成长","Milestones"));
   h+='<p class="xs faint" style="padding:10px 2px 0">'+TZ("进度由服务器根据你的真实阅读、聊天和投票记录计算。每日任务 0 点（UTC）重置，本周任务周一重置。","Progress comes from what you actually read, chat and vote. Daily tasks reset at 00:00 UTC, weekly ones on Monday.")+'</p>'}
@@ -26797,7 +26797,7 @@ window.EMPRESS_GAME_CSS147=".eg{color:#f2e8d6;font:14px/1.6 system-ui}.eg nav{di
  'use strict';
  const N=window.MIRU_NATIVE;if(!N||N.platform!=='ios')return;
  const say=(zh,en)=>CL()==='zh'?zh:en;
- let buying=false,recovering=false,adBusy=false;
+ let buying=false,recovering=false;
  function balance(j){
   if(!j||typeof j.gems!=='number')throw new Error('Missing wallet balance');
   S.keys=j.gems;cloudInfo().known=j.gems;if(j.iap)cloudInfo().iap=j.iap;
@@ -26893,17 +26893,10 @@ window.EMPRESS_GAME_CSS147=".eg{color:#f2e8d6;font:14px/1.6 system-ui}.eg nav{di
    await resetLocal();
   }catch(e){toast(String(e.message||e))}
  }
- watchAd=async function(done){
-  if(adBusy)return;
-  if(!adLeft()){toast(t('ad.none'));return}
-  adBusy=true;
-  try{
-   closeSheet();const r=await N.showRewardedAd();
-   if(r.rewarded===true){adState().n++;save();if(done)done()}
-   else toast(t('ad.keep'));
-  }catch(e){toast(say('暂时没有广告，请稍后重试。','No ad is available. Please try again later.'))}
-  finally{adBusy=false}
- };
+ // First iOS release has no advertising; Web/Android implementations remain intact.
+ adLeft=function(){return 0};
+ adBtn=function(){return ''};
+ watchAd=async function(){};
  window.addEventListener('click',function(e){
   const x=e.target.closest('[data-ios-product],[data-buy],[data-buyplus],[data-buymax],[data-ios-sync],[data-au70="apple"],[data-au70="google"],[data-au70card="del"]');
   if(!x)return;e.preventDefault();e.stopImmediatePropagation();
@@ -26917,9 +26910,6 @@ window.EMPRESS_GAME_CSS147=".eg{color:#f2e8d6;font:14px/1.6 system-ui}.eg nav{di
  window.addEventListener('focus',()=>recover().catch(()=>{}));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)recover().catch(()=>{})});
  N.addListener('transactionUpdated',()=>recover().catch(()=>{}));
- const oldMe=renderMe;renderMe=function(v){const r=oldMe.apply(this,arguments);if(!v.querySelector('[data-ios-ad-privacy]')){
-  const b=document.createElement('button');b.type='button';b.className='btn btn-g';b.setAttribute('data-ios-ad-privacy','');b.textContent=say('广告隐私选项','Ad privacy options');b.onclick=()=>N.privacyOptions().catch(e=>toast(e.message));(v.querySelector('.scroll')||v).prepend(b)
- }return r};
  if(localStorage.getItem('miru.deleteLocalPending'))resetLocal().catch(e=>toast(e.message));
  window.__miruIOS={deliver,recover,purchase,login,deleteAccount,resetLocal};
 })();

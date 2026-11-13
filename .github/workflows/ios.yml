@@ -11,6 +11,7 @@ on:
       - 'tools/ios-*.cjs'
       - 'tools/ios-*.mjs'
       - 'tools/prepare-ios.mjs'
+      - 'tools/ios-no-ads-artifact.py'
       - '.github/workflows/ios.yml'
 permissions:
   contents: read
@@ -43,3 +44,10 @@ jobs:
       - name: Compile actual Simulator app
         working-directory: native
         run: xcodebuild -quiet -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build
+      - name: Verify Simulator contains no advertising
+        run: python3 tools/ios-no-ads-artifact.py native/DerivedData/Build/Products/Debug-iphonesimulator/App.app
+      - name: Archive unsigned Release candidate
+        working-directory: native
+        run: xcodebuild -quiet -project ios/App/App.xcodeproj -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath DerivedData -archivePath Archives/MIRU-NoAds.xcarchive CODE_SIGNING_ALLOWED=NO archive
+      - name: Verify Release contains no advertising
+        run: python3 tools/ios-no-ads-artifact.py native/Archives/MIRU-NoAds.xcarchive/Products/Applications/App.app

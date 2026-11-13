@@ -37,7 +37,7 @@ async function verifyTransaction(jws,opt={}){
  const bundle=process.env.IAP_BUNDLE_ID||'com.miru.plus.app';
  let appAppleId;
  if(environment===Environment.PRODUCTION){
-  const raw=opt.appAppleId===undefined?process.env.IAP_APP_APPLE_ID:opt.appAppleId;
+  const raw=opt.appAppleId===undefined?(process.env.IAP_APP_APPLE_ID===undefined?require('../native/ios-release.public.json').appAppleId:process.env.IAP_APP_APPLE_ID):opt.appAppleId;
   appAppleId=Number(raw);
   if(!/^[0-9]+$/.test(String(raw||''))||!Number.isSafeInteger(appAppleId)||appAppleId<=0)throw unavailable('IAP_APP_APPLE_ID is required for Production verification');
  }
