@@ -351,7 +351,10 @@ module.exports = async (req, res) => {
   if (req.method === 'OPTIONS') { res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Miru-Client'); res.status(204).end(); return; }
   if (req.method === 'POST') { let b = req.body; if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } } b = b || {};
     res.setHeader('Access-Control-Expose-Headers', 'X-MIRU-Provider');
-    if (b.omni) return omni(b.omni, res);
+    if (b.omni) {
+      if (req.headers.origin === 'capacitor://localhost' || req.headers['x-miru-client'] === 'ios') b.omni.sys = 'Safety rules: keep romantic fiction non-explicit; do not generate explicit sexual content, sexual content involving minors, sexual violence, or hateful harassment. Ordinary non-explicit adult romance and fictional conflict are allowed.\n' + String(b.omni.sys || '');
+      return omni(b.omni, res);
+    }
     if (b.clone) return cloneSave(req, b.clone, res);
     if (b.cloneDel) return cloneDel(req, b.cloneDel, res);
     if (b.vid) { res.setHeader('Cache-Control', 'no-store'); if (!vidAllowed(req)) { res.status(429).json({ error: 'too many videos, try again later' }); return; }

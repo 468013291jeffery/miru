@@ -7,6 +7,8 @@ on:
       - 'tools/wallet-selftest.cjs'
       - 'tools/apple-auth-selftest.cjs'
       - 'tools/voice-privacy-selftest.cjs'
+      - 'tools/native-policy-selftest.cjs'
+      - 'tools/native-voice-policy-selftest.cjs'
       - 'native/ios-release.public.json'
       - 'tools/iap-selftest.mjs'
       - 'tools/board-*-selftest.cjs'
@@ -21,6 +23,8 @@ on:
       - 'tools/wallet-selftest.cjs'
       - 'tools/apple-auth-selftest.cjs'
       - 'tools/voice-privacy-selftest.cjs'
+      - 'tools/native-policy-selftest.cjs'
+      - 'tools/native-voice-policy-selftest.cjs'
       - 'native/ios-release.public.json'
       - 'tools/iap-selftest.mjs'
       - 'tools/board-*-selftest.cjs'
@@ -99,6 +103,10 @@ jobs:
         run: node tools/apple-auth-selftest.cjs
       - name: Voice ownership and personal-file deletion
         run: node tools/voice-privacy-selftest.cjs
+      - name: Native content, reporting and blocking
+        run: node tools/native-policy-selftest.cjs
+      - name: Native voice policy payloads
+        run: node tools/native-voice-policy-selftest.cjs
       - name: Account deletion across PostgreSQL connections
         run: node tools/apple-auth-selftest.cjs
         env:

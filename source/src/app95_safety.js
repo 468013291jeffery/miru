@@ -27,9 +27,9 @@ function report95(kind, id, snap, title) {
 }
 async function block95(workId, name) {
   if (!confirm(T95("拉黑「" + name + "」？你将不再看到 TA 的任何作品。", "Block “" + name + "”? You won't see any of their works."))) return;
-  let ok = false; try { const r = await capi("/works", { json: { op: "block", id: workId } }); ok = r.ok; if (ok && r.j && r.j.name) name = r.j.name; } catch (_) {}
-  const b = blk95(); if (!b.works.includes(workId)) b.works.push(workId); if (name && !b.names.includes(name)) b.names.push(name); save();
-  toast(ok ? T95("已拉黑，TA 的作品不会再出现", "Blocked — their works won't appear again") : T95("已在本机拉黑；联网后会同步", "Blocked on this device; it syncs when you're online"));
+  let ok = false, authorId = ""; try { const r = await capi("/works", { json: { op: "block", id: workId } }); ok = r.ok; if (ok && r.j) { authorId = r.j.author_id || ""; if (r.j.name) name = r.j.name; } } catch (_) {}
+  const b = blk95(); if (!b.works.includes(workId)) b.works.push(workId); if (name && !b.names.includes(name)) b.names.push(name); if (authorId) { b.authors = b.authors || []; b.authors.push({ id: authorId, work: workId, name }); } save();
+  toast(ok ? T95("已拉黑，TA 的作品不会再出现", "Blocked — their works won't appear again") : T95("已在本机拉黑，请联网后重试以同步", "Blocked on this device; reconnect and retry to sync"));
   try { if (typeof go === "function") go("home"); else if (typeof renderMain === "function") renderMain(); } catch (_) {}
 }
 /* snapshot of what's on screen in a chat (the AI replies being reported) */
@@ -99,7 +99,7 @@ function contactSheet95() {
     closeSheet(); toast(ok ? T95("已发送，我们会尽快回复", "Sent — we'll get back to you soon") : T95("发送失败，请联网后再试", "Couldn't send — check your connection")); };
 }
 document.addEventListener("click", async e => { let x;
-  if ((x = e.target.closest("[data-ub95]"))) { const id = x.dataset.ub95; try { await capi("/works", { json: { op: "unblock", author: id } }); } catch (_) {} const b = blk95(); b.works = []; b.names = []; save(); toast(T95("已解除拉黑", "Unblocked")); blockedSheet95(); return; }
+  if ((x = e.target.closest("[data-ub95]"))) { const id = x.dataset.ub95; let ok = false; try { const r = await capi("/works", { json: { op: "unblock", author: id } }); ok = r.ok; } catch (_) {} if (!ok) { toast(T95("解除失败，请重试", "Could not unblock — try again")); return; } const b = blk95(), rows = (b.authors || []).filter(a => a.id === id); b.authors = (b.authors || []).filter(a => a.id !== id); b.works = b.works.filter(w => !rows.some(a => a.work === w)); b.names = b.names.filter(n => !rows.some(a => a.name === n) || b.authors.some(a => a.name === n)); save(); toast(T95("已解除拉黑", "Unblocked")); blockedSheet95(); return; }
   if (e.target.closest("[data-sf95b]")) { blockedSheet95(); return; }
   if (e.target.closest("[data-sf95c]")) { contactSheet95(); return; }
 });

@@ -73,9 +73,10 @@ const SCHEMA=[
   IF u.status<>'deletion_pending' THEN RAISE EXCEPTION 'account deletion was not started'; END IF;
   IF EXISTS(SELECT 1 FROM apple_grants WHERE user_id=p_uid AND revoked_at IS NULL) THEN RAISE EXCEPTION 'Apple authorization not revoked'; END IF;
   IF EXISTS(SELECT 1 FROM voice_clips WHERE user_id=p_uid AND state='writing') THEN RAISE EXCEPTION 'voice operation unresolved'; END IF;
-  UPDATE reports SET user_id=CASE WHEN user_id=p_uid THEN NULL ELSE user_id END,reason=NULL,note=NULL,target_id=CASE WHEN target_kind='user' AND target_id=p_uid THEN NULL ELSE target_id END
-  WHERE user_id=p_uid OR (target_kind='user' AND target_id=p_uid) OR (target_kind='work' AND target_id IN(SELECT id FROM works WHERE author=p_uid)) OR (target_kind='asset' AND target_id IN(SELECT id FROM assets WHERE owner=p_uid));
-  UPDATE audit_log SET detail='{}'::jsonb,ip=NULL WHERE (target_kind='user' AND target_id=p_uid) OR (target_kind='work' AND target_id IN(SELECT id FROM works WHERE author=p_uid)) OR (target_kind='asset' AND target_id IN(SELECT id FROM assets WHERE owner=p_uid));
+  UPDATE reports SET user_id=CASE WHEN user_id=p_uid THEN NULL ELSE user_id END,reason=NULL,note=NULL,snapshot=NULL,target_id=CASE WHEN target_kind='user' AND target_id=p_uid THEN NULL ELSE target_id END
+  WHERE user_id=p_uid OR (target_kind='user' AND target_id=p_uid) OR (target_kind IN ('work','message') AND target_id IN(SELECT id FROM works WHERE author=p_uid)) OR (target_kind='asset' AND target_id IN(SELECT id FROM assets WHERE owner=p_uid));
+  UPDATE audit_log SET detail='{}'::jsonb,ip=NULL WHERE (target_kind='user' AND target_id=p_uid) OR (target_kind IN ('work','message') AND target_id IN(SELECT id FROM works WHERE author=p_uid)) OR (target_kind='asset' AND target_id IN(SELECT id FROM assets WHERE owner=p_uid));
+  DELETE FROM user_blocks WHERE user_id=p_uid OR author_id=p_uid;
   DELETE FROM work_likes WHERE user_id=p_uid OR work_id IN(SELECT id FROM works WHERE author=p_uid);
   DELETE FROM states WHERE user_id=p_uid;
   DELETE FROM memories WHERE user_id=p_uid;

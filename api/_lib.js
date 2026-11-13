@@ -35,6 +35,7 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS ledger (id BIGSERIAL PRIMARY KEY, user_id TEXT, delta INT, reason TEXT, key TEXT UNIQUE, balance INT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS works (id TEXT PRIMARY KEY, author TEXT, author_name TEXT, title TEXT, hook TEXT, lang TEXT, orient TEXT, tags JSONB, cover TEXT, pack JSONB, status TEXT DEFAULT 'pending', qa JSONB, plays INT DEFAULT 0, likes INT DEFAULT 0, reports INT DEFAULT 0, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS work_likes (user_id TEXT, work_id TEXT, PRIMARY KEY (user_id, work_id))`,
+  `CREATE TABLE IF NOT EXISTS user_blocks (user_id TEXT NOT NULL, author_id TEXT NOT NULL, PRIMARY KEY (user_id, author_id))`,
   `CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, owner TEXT, kind TEXT, name TEXT, kw JSONB, url TEXT, mime TEXT, size INT, meta JSONB, status TEXT DEFAULT 'private', created_at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS translations (h TEXT PRIMARY KEY, lang TEXT, src TEXT, dst TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS events (id BIGSERIAL PRIMARY KEY, user_id TEXT, name TEXT, props JSONB, at TIMESTAMPTZ DEFAULT now())`,
@@ -73,6 +74,7 @@ const SCHEMA = [
   `ALTER TABLE assets ADD COLUMN IF NOT EXISTS reject_reason TEXT`,
   `ALTER TABLE assets ADD COLUMN IF NOT EXISTS reviewed_by TEXT`,
   `ALTER TABLE assets ADD COLUMN IF NOT EXISTS reviewed_at TIMESTAMPTZ`,
+  `ALTER TABLE reports ADD COLUMN IF NOT EXISTS snapshot TEXT`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'open'`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS handled_by TEXT`,
   `ALTER TABLE reports ADD COLUMN IF NOT EXISTS handled_at TIMESTAMPTZ`,
@@ -452,5 +454,5 @@ async function adultAccess(req, cfg) {
   if (!r[0] || !r[0].adult_verified_at) return { ok: false, why: 'verify' };
   return { ok: true };
 }
-const isAdultWork = w => !!(w && w.pack && w.pack.meta && w.pack.meta.adult === true);
+const isAdultWork = w => !!(w && w.pack && w.pack.meta && (w.pack.meta.adult === true || w.pack.meta.adult === 'true'));
 module.exports = { SCHEMA, region, adultAccess, adultRegionOk, isAdultWork, needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
