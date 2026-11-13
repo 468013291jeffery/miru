@@ -52,7 +52,9 @@
 ## 明确延期
 广告接入、历史无归属录音与孤立对象盘点、极端上传/注销并发治理、独立测试经济系统、广泛重构、性能与 UI 优化均延期。模型指令不保证全部输出安全；仍需真实模型与运营处理验证。完整首发检查以用户的最新范围为准，不把上述工程改良列为苹果明文强制项。
 
-## 真机发现的登录阻断（Build 2 修复中）
+## 真机登录修复（Build 2）
 Build 1 真机邮箱登录显示 Network problem，不能提交审核。实测 www.miru.plus/api/auth 的 OPTIONS 返回 301 到 miru.plus；后者 OPTIONS 返回 204，但 Access-Control-Allow-Headers 缺少 X-Miru-Client。App 已修正为直接访问 miru.plus，并对旧绝对 www API 地址统一规范化；网络自测和 AI 许可自测通过。服务端仍需部署允许 iOS Origin/原生标记的 CORS 配置与已审查的首发后端，之后必须真机复测。旧 AppStoreExport/App.ipa 为 Build 1，已被此问题阻断，不应上传。
 
-登录网络修复验证：Build 2 真机签名构建、安装及启动成功。线上并发发布曾从 37a5be2 更新到 1a797bb，脚本按预期中止且未写入；重新核验两个适配文件哈希相同后，仅增加 capacitor://localhost 与 X-Miru-Client。备份位于 /opt/miru/shared/backups/ios-cors-20261113T153359Z；当前及持久 _lib.js 哈希 e4418b04c2682a6114d1515f74f3eec045597850f660d3df691d5f46eb77317c。公网 OPTIONS 204 正确回显原生来源并允许请求头；不含真实凭据的空邮箱 POST 返回应用层 400 invalid email，并带正确 CORS。真实邮箱登录待用户复测。本次未部署整个 iOS 后端分支，不代表其他服务端首发功能已上线。
+登录网络修复验证：Build 2 真机签名构建、安装及启动成功。线上并发发布曾从 37a5be2 更新到 1a797bb，脚本按预期中止且未写入；重新核验两个适配文件哈希相同后，仅增加 capacitor://localhost 与 X-Miru-Client。备份位于 /opt/miru/shared/backups/ios-cors-20261113T153359Z；当前及持久 _lib.js 哈希 e4418b04c2682a6114d1515f74f3eec045597850f660d3df691d5f46eb77317c。公网 OPTIONS 204 正确回显原生来源并允许请求头；不含真实凭据的空邮箱 POST 返回应用层 400 invalid email，并带正确 CORS。用户已在真机重新邮箱登录并确认进入应用。本次未部署整个 iOS 后端分支，不代表其他服务端首发功能已上线。
+
+当前发布候选：native/Archives/AppStoreExport-Build2/App.ipa，版本 1.0 (2)，863,006,759 字节。签名归档与 App Store 分发导出成功；直接读取 IPA 验证 Build 2、规范 API 启动脚本、匹配的 App Store profile、禁止调试/无设备限制及无 GMA/UMP。尚未上传。

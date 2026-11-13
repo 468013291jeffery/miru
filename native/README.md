@@ -30,3 +30,6 @@ AdMob/UMP 已从 SPM 依赖和本次 App 构建中移除，不初始化广告或
 - 准备真实产品截图、审核专用 MIRU 账号和 Connect 年龄/隐私/出口资料。
 
 StoreKit 交易仅在服务端校验到账后完成；本地 Xcode 交易不能替代真实 Sandbox 验单。详见 ../docs/ios-launch-status.md 与 ../docs/ios-app-store-submission.md。编译或未签名归档通过不代表已正式签名、上传或通过审核。
+
+## 当前候选 Build 2
+使用 Archives/AppStoreExport-Build2/App.ipa（1.0 build 2）。已修正 www API 跳转；线上持久适配文件已最小补齐原生 CORS，用户真机邮箱登录进入成功。旧 Archives/AppStoreExport/App.ipa 为有登录阻断的 Build 1，不能提交。Build 2 的分发导出和包内配置检查通过，仍未上传或完成其他首发功能实测。
