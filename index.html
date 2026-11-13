@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="e6812293f1f6 2026-11-13T17:26Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="9d119eed0c44 2026-11-13T17:37Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -26826,6 +26826,32 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent =
     "html body #s-chat #sugg{display:flex!important}" +
     "html body #s-chat.ch147 #sugg .ai147,html body #s-chat #sugg .ai147{display:inline-flex!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 顶栏右上角的「⌄ / ⌃」收起箭头所有剧固定保留 =====
+   玩家（女帝截图）：「这个地方不是有个箭头把东西收起来的吗，怎么也没有了？」
+   原来箭头是插进顶栏「第一个 .row」里的；有的剧（女帝等）顶栏里还会多出别的 .row，箭头就被插到了看不见的地方，
+   或者顶栏重画后没有再补上。
+   ⇒ 箭头固定放在「有返回按钮的那一行」的最右边；顶栏任何时候被重画，都会自动补回来。 */
+(function () {
+  "use strict";
+  function ensure() {
+    try {
+      const scr = document.getElementById("s-chat"); if (!scr || scr.hidden) return;
+      if (typeof cleanOn === "function" && !cleanOn()) return;
+      const back = scr.querySelector(".chead [data-back]"); const row = back && back.parentElement; if (!row) return;
+      scr.querySelectorAll(".chead .hdx").forEach(b => { if (b.parentElement !== row) b.remove(); });
+      let b = row.querySelector(".hdx");
+      const open = typeof HD_OPEN !== "undefined" && HD_OPEN;
+      if (!b) { row.insertAdjacentHTML("beforeend", '<button class="ibtn hdx" data-hdx="1" aria-label="more">' + (open ? "⌃" : "⌄") + "</button>"); }
+      else if (row.lastElementChild !== b) row.appendChild(b);
+    } catch (_) {}
+  }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); ensure(); return r; }; }
+  setInterval(ensure, 800);
+  const st = document.createElement("style");
+  st.textContent = "html body #s-chat .chead .hdx{display:grid!important;place-items:center;flex:none}";
   document.head.appendChild(st);
 })();
 
