@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="e5c22488a469 2026-11-13T07:55Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="48dbc267f73d 2026-11-13T08:09Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -26312,7 +26312,7 @@ pico.instantiate_detection_memory = function(size)
   if (typeof doSend === "function") {
     const ds = doSend;
     doSend = function (txt) {
-      try { const th = S.threads[curT]; if (th && th._ev151 && !th._ev151.done && String(txt || "").trim()) judgeDaily(th, String(txt).trim()); } catch (_) {}
+      try { const th = S.threads[curT]; if (th && th._ev151 && !th._ev151.done && String(txt || "").trim()) (th._ev151.game && window.__court152 ? window.__court152.judge(th, String(txt).trim()) : judgeDaily(th, String(txt).trim())); } catch (_) {}
       return ds.apply(this, arguments);
     };
   }
@@ -26331,7 +26331,7 @@ pico.instantiate_detection_memory = function(size)
       const key = th.id + ":" + th.pk.ch; if (key !== seenKey) { seenKey = key; seenAt = Date.now(); }
       if (busy || (window.READING && READING.pending.get(th.id))) { seenAt = Date.now(); return; }
       const ta = document.getElementById("cin"); if (ta && (ta.value.trim() || document.activeElement === ta)) { seenAt = Date.now(); return; }
-      if (emOn(th) && (!th._ev151 || th._ev151.ch !== th.pk.ch)) { if (popDaily(th)) { seenAt = Date.now(); return; } }
+      if (emOn(th) && (!th._ev151 || th._ev151.ch !== th.pk.ch)) { const g = window.__court152, even = (+th.pk.ch || 0) % 2 === 1; if (even && g ? (g.pop(th) || popDaily(th)) : (popDaily(th) || (g && g.pop(th)))) { seenAt = Date.now(); return; } }
       if (th._ev151 && th._ev151.ch === th.pk.ch && !th._ev151.done) { seenAt = Date.now(); return; } /* 等你回他 */
       if (Date.now() - seenAt > 3500) { seenAt = Date.now() + 60000; b.click(); }
     } catch (_) {}
@@ -26348,6 +26348,116 @@ pico.instantiate_detection_memory = function(size)
     ".fx151.out{opacity:0!important}" +
     "@keyframes fx151{from{opacity:0;transform:translateY(4px)}to{opacity:.85;transform:none}}";
   document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 女帝：翻牌 / 宫宴 / 册封 / 礼物 / 调解 也在剧情里发生；「宫廷 · 帝国 · 线索」放进关系页 =====
+   玩家选定：小游戏「也融进剧情触发」，数值「放进人物关系页」。
+   · 每章结尾轮流出现一件宫廷日常或一项宫廷安排（翻牌、宫宴座位、册封、礼物、调解），以旁白 + 角色台词出现在剧情里；
+     不弹表单、不列选项。你直接打字回答（「今晚让卢西恩陪我」「把葡萄送给卡西安」「都不要，我想一个人」），
+     系统读出你点到的人 / 礼物 / 方式，按原来小游戏的规则结算好感、信任、位分、醋意，并把结果写回剧情。
+   · 点开「他们之间」关系页时，下面多一块「宫廷」：宫廷 / 帝国 / 线索 / 破咒路线，以及每位同伴的好感、信任、位分。 */
+(function () {
+  "use strict";
+  const X = () => window.__empress147, I = () => window.EMPRESS_I18N147;
+  const RANKS = ["候选", "美人", "侍君", "宠君", "贵君", "帝君"];
+  const GIFTS = { fruit: "水果拼盘", flowers: "手扎花束", jewel: "珠宝饰物", perfume: "专属香水", song: "一首歌曲", date: "私人约会邀请" };
+  const METHODS = { listen: "分别倾听双方", rules: "共同制定规则", together: "邀请共同活动" };
+  const ORDER = ["GAME01", "GAME02", "GAME05", "GAME06", "GAME03"];
+  function avail(th) {
+    const s = X().state(th);
+    return X().data.characters.filter(c => { const v = s.characters[c.id]; return v && v.alive_status === "ALIVE" && v.consent_flags.company !== false; });
+  }
+  const nm = id => { try { return I().name(id); } catch (_) { return id; } };
+  function castId(th, actor) { try { return (th.cast || []).find(id => I().actor(ch(id)) === actor) || null; } catch (_) { return null; } }
+  function top(th, list, k) { const s = X().state(th); return list.slice().sort((a, b) => (s.characters[b.id][k] || 0) - (s.characters[a.id][k] || 0)); }
+  function prompt(th, kind) {
+    const L = avail(th); if (!L.length) return null;
+    const fav = top(th, L, "affection"), jea = top(th, L, "jealousy");
+    if (kind === "GAME01") return { narr: "夜色落下，内侍捧来一托盘刻着名字的玉牌，静静等你翻开。", who: fav[0], line: "陛下，今夜……想让谁陪着？也可以谁都不召，留给自己。" };
+    if (kind === "GAME02") return { narr: "宫宴将开，长桌两侧灯火通明，你左右两席还空着。", who: fav[0], line: "席位还空着。陛下想让谁坐在身边？献艺、赏月也可以点人。" };
+    if (kind === "GAME05") return { narr: "礼物工坊送来了新鲜的葡萄、刚扎好的花束、珠宝、香水，还有乐师候着一首新曲。", who: fav[1] || fav[0], line: "听说陛下想亲手备一份礼物——要送给谁，送什么？" };
+    if (kind === "GAME06") { if (jea.length < 2) return null; return { narr: nm(jea[0].id) + "和" + nm(jea[1].id) + "为了今天的座次又起了争执，两个人都看向你。", who: jea[0], pair: [jea[0].id, jea[1].id], line: "陛下，您来评评理。" }; }
+    if (kind === "GAME03") { const c = fav.find(c => X().state(th).characters[c.id].rank < 6); if (!c) return null; return { narr: "礼官呈上册封名册，" + nm(c.id) + "的名字排在最前面。", who: null, line: "陛下，今日要为谁晋位吗？" }; }
+    return null;
+  }
+  function pop(th) {
+    try {
+      if (!X() || !X().on(th)) return false;
+      const s = X().state(th), n = (th._gi152 = ((th._gi152 || 0) + 1));
+      for (let k = 0; k < ORDER.length; k++) {
+        const kind = ORDER[(n + k) % ORDER.length], p = prompt(th, kind); if (!p) continue;
+        th._ev151 = { ch: th.pk.ch, game: kind, pair: p.pair || null, done: false };
+        appendMsg(th, { who: "n", k: "act", txt: I().t(p.narr), at: Date.now() });
+        appendMsg(th, { who: (p.who && castId(th, p.who.id)) || "n", k: p.who ? "say" : "act", txt: I().t(p.line), at: Date.now() });
+        save(); if (curT === th.id) renderChat();
+        return true;
+      }
+    } catch (e) { console.warn("[court152] pop", e); }
+    return false;
+  }
+  function mentioned(th, txt) {
+    const out = []; const t = String(txt).toLowerCase();
+    avail(th).forEach(c => { const names = [nm(c.id), c.name, c.id].filter(Boolean).map(x => String(x).toLowerCase()); const first = String(c.name || "").split(" ")[0].toLowerCase(); if (names.some(x => x && t.includes(x)) || (first.length > 2 && t.includes(first))) out.push(c.id); });
+    return out;
+  }
+  const NO = /不用|不要|都不|谁都不|一个人|独处|算了|改天|不召|不了|不必|休息/;
+  async function parse(th, kind, txt) {
+    const L = avail(th).map(c => c.id + "=" + nm(c.id) + (c.name && c.name !== nm(c.id) ? "/" + c.name : "")).join("；");
+    const spec = {
+      GAME01: "{\"ids\":[最多3个同伴id，玩家明确不召人则为空数组],\"slot\":\"night或day\"}",
+      GAME02: "{\"left\":\"id或空串\",\"right\":\"id或空串\",\"performer\":\"id或空串\",\"moonlight\":\"id或空串\"}",
+      GAME05: "{\"target\":\"同伴id\",\"gift\":\"fruit|flowers|jewel|perfume|song|date\"}",
+      GAME06: "{\"method\":\"listen|rules|together\"}",
+      GAME03: "{\"target\":\"同伴id或空串\",\"award\":\"honor|palace|pass\"}"
+    }[kind];
+    try {
+      const r = await ask("互动剧《女帝的绝色后宫》里的一项宫廷安排，玩家用自己的话回答了。把回答读成参数。\n同伴（id=名字）：" + L + "\n礼物：" + Object.entries(GIFTS).map(([k, v]) => k + "=" + v).join("，") + "\n调解方式：" + Object.entries(METHODS).map(([k, v]) => k + "=" + v).join("，") + "\n玩家说：「" + txt + "」\n玩家拒绝或回避时返回 {\"skip\":true}。只回 JSON：" + spec, { maxTokens: 120, modelTier: "default", timeout: 12000 });
+      if (r && typeof r === "object") return r;
+    } catch (_) {}
+    if (NO.test(txt)) return { skip: true };
+    const ids = mentioned(th, txt);
+    if (kind === "GAME01") return { ids: ids.slice(0, 3), slot: /白天|日间|午|早/.test(txt) ? "day" : "night" };
+    if (kind === "GAME02") return { left: ids[0] || "", right: ids[1] || "", performer: "", moonlight: "" };
+    if (kind === "GAME05") { const g = Object.keys(GIFTS).find(k => [...GIFTS[k]].slice(0, 2).every(ch0 => txt.includes(ch0))) || (/葡萄|水果/.test(txt) ? "fruit" : /花/.test(txt) ? "flowers" : /珠|首饰|戒指/.test(txt) ? "jewel" : /香/.test(txt) ? "perfume" : /歌|曲/.test(txt) ? "song" : /约会|出去/.test(txt) ? "date" : "flowers"); return ids[0] ? { target: ids[0], gift: g } : { skip: true }; }
+    if (kind === "GAME06") return { method: /规则|轮|约定/.test(txt) ? "rules" : /一起|共同|合作/.test(txt) ? "together" : "listen" };
+    if (kind === "GAME03") return ids[0] ? { target: ids[0], award: "honor" } : { skip: true };
+    return { skip: true };
+  }
+  async function judge(th, txt) {
+    const ev = th._ev151; if (!ev || ev.done || !ev.game) return; ev.done = true;
+    try {
+      const kind = ev.game, r = await parse(th, kind, txt), s = X().state(th), ok = id => avail(th).some(c => c.id === id);
+      if (!r || r.skip) return;
+      let args;
+      if (kind === "GAME01") args = { selected_ids: [...new Set((r.ids || []).filter(ok))].slice(0, 3), time_slot: r.slot === "day" ? "day" : "night" };
+      if (kind === "GAME02") args = Object.fromEntries(["left", "right", "performer", "moonlight"].map(k => [k, ok(r[k]) ? r[k] : ""]));
+      if (kind === "GAME05") { if (!ok(r.target)) return; args = { target: r.target, gift: GIFTS[r.gift] ? r.gift : "flowers" }; }
+      if (kind === "GAME06") args = { participants: ev.pair, method: METHODS[r.method] ? r.method : "listen" };
+      if (kind === "GAME03") { if (!ok(r.target)) return; args = { target: r.target, rank_to: s.characters[r.target].rank + 1, award_type: ["honor", "palace", "pass"].includes(r.award) ? r.award : "honor" }; }
+      const res = X().engine.game(s, kind, args);
+      if (!res || !res.ok) return;
+      const rec = res.record, ids = rec.selected_ids || rec.participants || [rec.target_id || args.target].filter(Boolean);
+      appendMsg(th, { who: "n", k: "act", txt: I().t(rec.action), at: Date.now() });
+      ids.slice(0, 2).forEach(actor => { const cid = castId(th, actor), c = I().data().characters.find(c => c.id === actor); if (cid && c) appendMsg(th, { who: cid, k: "say", txt: c.voice, at: Date.now() }); });
+      try { const f = th.pk.flags || (th.pk.flags = {}), E = X().engine; for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; } f.empress_hidden = E.hidden(s) ? 1 : 0; for (const [k, c] of Object.entries(s.characters)) { const cid = castId(th, k); if (cid) th.love[cid] = c.affection; } } catch (_) {}
+      save(); if (curT === th.id) renderChat();
+    } catch (e) { console.warn("[court152] judge", e); }
+  }
+  window.__court152 = { pop, judge };
+
+  /* 关系页：宫廷数值 */
+  function courtBlock(th) {
+    const s = X().state(th), w = s.world || {};
+    const rows = X().data.characters.filter(c => s.characters[c.id]).map(c => { const v = s.characters[c.id]; return '<div class="row" style="justify-content:space-between;gap:8px;padding:4px 0;border-top:1px solid rgba(255,255,255,.06)"><span>' + esc(nm(c.id)) + '</span><span class="xs dim">' + (v.alive_status === "ALIVE" ? "好感 " + v.affection + " · 信任 " + v.trust + " · " + (RANKS[(v.rank || 1) - 1] || "") : "灵魂仍困在王冠内") + "</span></div>"; }).join("");
+    return '<div class="ct152" style="margin-top:14px"><div class="eyebrow" style="color:var(--gold)">宫廷</div><p class="sm">宫廷 ' + (w.court ?? "-") + " · 帝国 " + (w.empire_stability ?? "-") + " · 线索 " + ((s.clues || []).length) + (s.path ? " · 破咒 " + s.path : "") + (s.ending ? " · 结局 " + s.ending : "") + '</p><div class="sm">' + rows + "</div></div>";
+  }
+  if (typeof sheet === "function") {
+    const sh = sheet;
+    sheet = function (html) {
+      try { const th = S.threads[curT]; if (typeof html === "string" && X() && X().on(th) && html.includes(t("rd.h"))) html = html + I().html(courtBlock(th)); } catch (_) {}
+      return sh.apply(this, [html].concat([].slice.call(arguments, 1)));
+    };
+  }
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
