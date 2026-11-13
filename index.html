@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="6f5bafe5c20c 2026-11-13T19:11Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="6d236192db3e 2026-11-13T19:17Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27003,7 +27003,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   if (typeof stopResolve === "function") {
     const sr = stopResolve;
     stopResolve = function (th, extra) {
-      try { if (th && th.pk && ((th._lines161 || 0) > 0 || th._spoke161) && aheadScene(extra || [])) hold(th.id); } catch (_) {}
+      try { if (th && th.pk && ((th._lines161 || 0) > 0 || th._spoke161) && aheadScene((extra || []).concat((th.pk.q || []).slice(1)))) hold(th.id); } catch (_) {}
       return sr.apply(this, arguments);
     };
   }
