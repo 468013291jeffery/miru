@@ -2072,6 +2072,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     const pa0 = pkAppend;
     pkAppend = function (th) { try { if (th) th._inScript161 = 1; return pa0.apply(this, arguments); } finally { try { if (th) th._inScript161 = 0; } catch (_) {} } };
   }
+  /* 最可靠的一道闸：剧本播放器处理每一条之前都会先经过这里。轮到「换场景」这一条、而这一场已经演过内容，
+     就在这里停住（不处理、不出队），直到你点「下一场 ›」。 */
+  if (typeof pkDirective === "function") {
+    const pd = pkDirective;
+    pkDirective = function (th, b) {
+      try {
+        if (th && th.pk && isScene(b) && (th._lines161 || 0) > 0 && th._pass161 !== b) { hold(th.id); return true; }
+        if (th && th._pass161 === b) { th._pass161 = null; th._lines161 = 0; }
+      } catch (_) {}
+      return pd.apply(this, arguments);
+    };
+  }
   /* 分支点放行时：如果紧接着就是换场景，当场停住（以前是放行后剧本立刻把下一场播了） */
   if (typeof stopResolve === "function") {
     const sr = stopResolve;
@@ -2115,7 +2127,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!e.target.closest || !e.target.closest("[data-nx161]")) return;
     e.preventDefault(); e.stopPropagation();
     const th = S.threads[curT]; if (!th) return;
-    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0; try { PKPAUSE[th.id] = 0; } catch (_) {}
+    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0; try { const q0 = th.pk && th.pk.q && th.pk.q.find(isScene); if (q0) th._pass161 = q0; PKPAUSE[th.id] = 0; } catch (_) {}
     try { const d = th._def161 || []; th._def161 = []; d.forEach(m => { m._rel161 = 1; appendMsg(th, m); }); } catch (_) {} if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
   }, true);
   const st = document.createElement("style");
