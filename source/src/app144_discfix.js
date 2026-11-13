@@ -1961,3 +1961,44 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   /* 放出排队的那句时，补上它的朗读 */
   window.__q159 = function (m) { if (m && m._sp159) { const a = m._sp159; delete m._sp159; setTimeout(() => { try { sp.apply(window, a); } catch (_) {} }, 30); } };
 })();
+
+/* ===== 2026-11-14 · 回复自动一句一句播：不用再手动点 =====
+   玩家：「我打字后，对方还是得自动回复，现在是手动点一下，这个不行。自动出文字；如果多人，一句一句朗读——所有剧本都这样。」
+   ⇒ 每一句出现后自动往下走，不用点：
+      · 开了朗读：这一句读完，停顿约 0.5 秒，自动出下一句（下一句再读）——多人对话就是一人一句地轮流说；
+      · 没开朗读：按这句的长度留出阅读时间（约 1.2～5 秒），自动出下一句；
+      · 想快一点仍然可以点一下屏幕直接跳到下一句。中间插进来的旁白、提示也按同样节奏一条一条出。 */
+(function () {
+  "use strict";
+  const R = window.READING; if (!R || typeof R.wait !== "function") return;
+  const A = R.voice;
+  const w = R.wait;
+  R.wait = function (th, message) {
+    const p = w.apply(this, arguments);
+    try {
+      const entry = th && R.pending.get(th.id);
+      if (entry && !entry._auto160) {
+        entry._auto160 = 1;
+        const len = String((message && (message.txt || message.title)) || "").replace(/\s/g, "").length;
+        const readMs = Math.max(1200, Math.min(5000, 700 + len * 70));
+        const t0 = Date.now(); let quietSince = 0, spoke = false;
+        const tick = setInterval(() => {
+          try {
+            if (R.pending.get(th.id) !== entry) { clearInterval(tick); return; }
+            const busy = !!(A && A.busy && A.busy());
+            if (busy) { spoke = true; quietSince = 0; return; }
+            if (!quietSince) quietSince = Date.now();
+            const waitMs = spoke ? 500 : (Date.now() - t0 < 600 ? 1e9 : readMs); /* 给朗读 0.6 秒启动时间 */
+            if (!spoke && Date.now() - t0 >= 600 && Date.now() - t0 >= readMs) { clearInterval(tick); entry.finish(); return; }
+            if (spoke && Date.now() - quietSince >= waitMs) { clearInterval(tick); entry.finish(); }
+          } catch (_) { clearInterval(tick); }
+        }, 200);
+      }
+    } catch (_) {}
+    return p;
+  };
+  /* 自动播放时不再提示「轻点屏幕继续」 */
+  const st = document.createElement("style");
+  st.textContent = "#s-chat [data-tap-hint]:not(.voicing){display:none!important}";
+  document.head.appendChild(st);
+})();
