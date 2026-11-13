@@ -1874,3 +1874,17 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   TAGS157.tagsOf = function (w) { return (w && MAP[w.id]) || auto.apply(this, arguments); };
   TAGS157.MAP = MAP;
 })();
+
+/* ===== 2026-11-14 · 「轮到你了 · 你是你 ＋ 问题」上一版没藏住，补上 =====
+   玩家（截图）：「不是说这个以后都不要了，所有剧本都不要，怎么还有？」
+   原因：剧情中途那块面板被另一条样式（底部停靠时）用更高优先级强制显示，盖过了「隐藏」那条。
+   ⇒ 用更高优先级把整块停靠区藏掉：只要它是「等你回话」的分支点（中途或章末），整块都不显示，直接自然对话。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent =
+    "html body #s-chat #pkwrap#pkwrap:has(.pkpanel.stop .chatt)," +
+    "html body #s-chat #pkwrap#pkwrap:has(.pkpanel.ch148)," +
+    "html body #s-chat #pkwrap#pkwrap .pkpanel.stop.stop:has(.chatt)," +
+    "html body #s-chat #pkwrap#pkwrap .pkpanel.ch148.ch148{display:none!important}";
+  document.head.appendChild(st);
+})();
