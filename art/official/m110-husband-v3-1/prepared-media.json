@@ -1,0 +1,766 @@
+{
+  "content_key": "m110-husband-v3-1",
+  "status": "production-preparation",
+  "images": [
+    {
+      "id": "adrian-reference",
+      "file": "adrian-reference.webp",
+      "width": 1080,
+      "height": 1080,
+      "sha256": "b03f8551869e8fd05a8859daaa542c2f8dff1784deacd435f8a205b70da69e1b",
+      "source_sha256": "012d581429098e0f8bde6ff4f1e5be9ff572d284307dd11f7089ec255e7bcbca",
+      "generated": true,
+      "encoding": "Mechanical square avatar crop from generated reference, top-aligned to preserve face"
+    },
+    {
+      "id": "M110-BG-001",
+      "file": "M110-BG-001.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "06c834f0177f07cd9079574b0dfe85590d07a1c59237e4f7fdf7de3ee4445b2f",
+      "source_sha256": "10fcd61fdb455d46de394283f9ff3a22b6f07d7f1772a0c9cfaecda1183d4e08",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-002",
+      "file": "M110-BG-002.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "c8c63f99487c7a572bd32a4357db35b339dd48ce0c8957a2756b36cd522013b9",
+      "source_sha256": "94284df197f4f602057b16491485b1bd4078ac621f7582f1d35b238e060f8ea4",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-003",
+      "file": "M110-BG-003.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "dad982f318ed483758b6bedb0bdc6131c492b4e16646a2dfdfd69e48e71676f8",
+      "source_sha256": "3c7f7bec008cdc1aeff4bae7a64ea53f380c4d151ca39f8b8002cc51d6018750",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-004",
+      "file": "M110-BG-004.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "1bdc9893a1b40f54a169f82282b5c5277e7a602669444b3737754b7fbb21e0d9",
+      "source_sha256": "4008354ffc814f513def7771e864886de37c3774c2565309744ab60f3665b1bc",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-005",
+      "file": "M110-BG-005.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "be65274889656bf96767be258c82022319d19a8dd663fd3cf186bf2f704dd9a9",
+      "source_sha256": "fe7712ea3d139ef35459f602b5e3c0174bae722f04f57e480f5b71e63fc4c1c4",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-006",
+      "file": "M110-BG-006.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "3ca2e64761e32dce2bc50615f917dc73b0b199fdc422e8eaf20c11540a2e8831",
+      "source_sha256": "cab8664233042d6ff3f77861e33956d63ca7be6cd272e6ddd1e58ee52abbbe31",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-007",
+      "file": "M110-BG-007.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "cf65b0043c4cfc38d2848f854c8e3773ed53db15b7ca90ce6e4b1b8c7f78a98a",
+      "source_sha256": "d42e2c5b7dd8a94cbc6d6ba47a1206e652ce181085f8979e6da1edf81ffc59c1",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-008",
+      "file": "M110-BG-008.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "c79f1e56f98da8081668638a34535b0d8df928e5297c8c7848e0ce22d0455f20",
+      "source_sha256": "91607b27d4d772d4578c645eff2cd5a90d20d7a2104c64af8166ee38a71961b1",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-009",
+      "file": "M110-BG-009.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "3871b548112658883fb7ea0bfddf6ba0b8bb837649ab253146e24d668b3b7dfb",
+      "source_sha256": "f419df83874b8b7f2e2c6a5716615b4c4068cec62ea9ab28af2f7e45bc5d991e",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-010",
+      "file": "M110-BG-010.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "281381fb31566800fdc44cf923b11dbf552e68f271e1bc63de347ddc0c9eee2a",
+      "source_sha256": "88f36a9b591b7eed52990b1c40994ef61ab4dc21207d82f5397a37c71a04f2b0",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-011",
+      "file": "M110-BG-011.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "db9cf84516b907528e6f098f735686e2b8d90738c593bc23b2029f8ea44ce346",
+      "source_sha256": "bf7018cfe699228c6dabb2ae58f15c45e32e0ec471dbd45c9ccccad5646fc46a",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-012",
+      "file": "M110-BG-012.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "a6e83e920fe5a78f9146758ac4ee8b55af74048dac40a311be760360579575d0",
+      "source_sha256": "01942914741f1f6ae77470fc3d9db0f1b6a33b332b39fec8ca784dd165ba0ead",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-013",
+      "file": "M110-BG-013.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "7fb4e75802c623fdc8e5bc43fe115c750ad37b8bf87331a9895a63e679cfe700",
+      "source_sha256": "1a6f9c31425c944bc14bb215ca32e8889c5d58291869a7bc9c8a83f64921101a",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-014",
+      "file": "M110-BG-014.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "0936158e9caa883060c7d1215fab94f1a467eb59ecf0b8d2a93c39c6622392cb",
+      "source_sha256": "95ddfae994d605ba41a6172da00b8303fa78341d7860c2ddade1d759267f38fa",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-015",
+      "file": "M110-BG-015.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "615decd9e96788f138de3d1be4be2ef62762f838bffdd1716112623c0f057814",
+      "source_sha256": "261ed74b611e2532a0b361f7b776e02de47f9147de95b6c70e935f44c620fe5c",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-016",
+      "file": "M110-BG-016.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "f5532a548b9f366049ddb14580329c319fc1f0283cc0fb6e37fbbdbbcac33918",
+      "source_sha256": "cc0c8949c1d5300c935d0826eab2d35b9c5efa31141958c07563a893115d3524",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-017",
+      "file": "M110-BG-017.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "8e23b15270167b44037cd9627133b78ee27aa6926df2c1c1de710f53a2656e25",
+      "source_sha256": "fcd5b64d96c63d4d8f75740d4dce75c0f6e9af1445daa59d82dae47852ff5c07",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-018",
+      "file": "M110-BG-018.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "25444f81ec877e7bdfdfabc3ed1758e37730c003fa2322e54f6750f095d9dcfa",
+      "source_sha256": "e0d06f87ae32623539a4ab9c6d67b4adb70c0011f35e13c6bf4b17a8ce8e88fb",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-019",
+      "file": "M110-BG-019.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "27b3900db127f0653fb732dbd2ee9e8783c44c8bf80eb442059ea16ac0bd9009",
+      "source_sha256": "ec557fe69e3ce57a387694aa07d586095148d4d85c91494e63aff9a5fcbdbd8d",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-020",
+      "file": "M110-BG-020.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "f289b307fb6b3aabebd8478ccbf76626377864c3c19c41c8c662977ee458133f",
+      "source_sha256": "ba4fda3ccf778358a2245ec986be67bb33319cc04328a878315fab5f68f2dfca",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-021",
+      "file": "M110-BG-021.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "cbe81b9236104887ed55aaf6158430740c805e76faf1613906ad4d7f4f83d92d",
+      "source_sha256": "e515aef5977deaa469c87990a899e5c71f5004160e5dc4bfc1ac23b8ca4038ad",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-022",
+      "file": "M110-BG-022.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "b7ef04b15656b86f155d5070d59c105b96a5725fcd44ede447a564b08837a42f",
+      "source_sha256": "cd4b114806d18b064c4c262155b007bf625874f57088c6a885d595c2cba936ea",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-023",
+      "file": "M110-BG-023.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "9ab57ae5db25a4abea55a64064cfd2eddf758a4d671056e7fcef3fe2056fd925",
+      "source_sha256": "eeb0b525d0590bddbd4ebb5382c8ffb36938fbfa18507e36b8504e74d9aa0932",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-024",
+      "file": "M110-BG-024.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "6cdd1dc2baacc035c14a6e257304720ca9c6dfac802be68093e7081faa804c8d",
+      "source_sha256": "043bb92d3d9e1f352c9aca920c4997c2f533e242823acb2319f9a466432f431c",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-025",
+      "file": "M110-BG-025.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "89466996f5556b3dd4dce7a181c0cf9a9f613b793abbcb30adbfaa9ef9096e03",
+      "source_sha256": "4303dbca4160e93135c158f689a7217d82c9b38f1a6e6ebb094b47b01bdaa6be",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-026",
+      "file": "M110-BG-026.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "7566e823bde0e6b9a5fac91edb91fb5b1d2cc2740982ec2192962263bd4a4930",
+      "source_sha256": "1b2d61c402b2fcbb4401b9275430d40240522e551513dbdd98e7d7b4179a9425",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-027",
+      "file": "M110-BG-027.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "90f5226367f2dc1297d4e8234910dfa3da0c378a40fc99502e7ca04a52764611",
+      "source_sha256": "a82e000383be802f19529170ca3e4b45cba2d1f99fa18e6b5f94459bf2ef8444",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-028",
+      "file": "M110-BG-028.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "f0fbb2feb02a9438cc1bb4ed0a753748377e35e6d24174ff764e0f7b91c2c5aa",
+      "source_sha256": "74410e0d868aed46fa01638be27da4f100bbe3c7c876aecaf76999f2daaaafe1",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-029",
+      "file": "M110-BG-029.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "5a4d728bf96c1c44bac11f64f6ea3ef17bf8003b949c4a6d34f20e8ab83309db",
+      "source_sha256": "55a3339ec925acbc35546ee725369061239e1b227126db53061f8647300cc7a8",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-030",
+      "file": "M110-BG-030.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "487432b372baafa76851c6b0944cf1ca3a21b3bfc9b8d6e319b167ad2c6dbc2e",
+      "source_sha256": "a0e1184aa07910afcc0379d6778190aa0b2f930c277f9ae51e50c01f4b99c999",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-031",
+      "file": "M110-BG-031.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "28f20a7bdfe1f3b84d81cf7e68245946632dbe510c4a1a67042ec23689092e7a",
+      "source_sha256": "bdb00f6ef28d7a58db0a1a82ced24df33fe128e22cac1b21f8c7b927474a4163",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-032",
+      "file": "M110-BG-032.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "12edce9151eef82e88561af613bbc2d5232b98ba1f8698031a96deb8cadb6913",
+      "source_sha256": "16d3fc1766064a96031964dbc9cb5476896928f69c9b06ad844a7549ec0cc8e4",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-033",
+      "file": "M110-BG-033.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "df42f27ba3e7d4d67e765c1f685f0bf55a74535857e3f1b520784f1b4c55fc8c",
+      "source_sha256": "11df209a22c3876ae47fef9cb2acd6be25b9e2cac2adc06ec4210dd00f53c361",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-034",
+      "file": "M110-BG-034.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "d798ea8f6ac97e2ddc9867039f1efb3180781358c2f806e3219f3b6994eb1e83",
+      "source_sha256": "acc85dd847786c70ea6327b24b7f1d7f1a7884fc08b0a162d38f8fd2f894bc2b",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-035",
+      "file": "M110-BG-035.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "3875dba57921d6e6b154ce58d3f1fd85031e794914fd1bb68ca8ca635967fe4c",
+      "source_sha256": "dedbd0ec1e491971b4e6a63d60ea58c9ba2fac56c9592c953296907655686eb7",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-036",
+      "file": "M110-BG-036.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "e99b985cb1b0e8929de3a984688c11b747195c3fe60fa5b0d4776b0fd580c390",
+      "source_sha256": "598d5cd046a953611bb4d85ee0b08d735a9017c557e350168d8ea0d4c887094b",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-037",
+      "file": "M110-BG-037.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "f695e6dbdaa726a846d576a1a5b6c0aa78e28a5c75cf235bf353ad8854e7b300",
+      "source_sha256": "c80a410c2b470a63bb6bfb66c6f9aeecdc926fee1e70c656e08241685ffba12d",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-038",
+      "file": "M110-BG-038.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "0fc2a39a926ef2066087d2e4115abbd3f28bebbd478a433118b7e95c36104df7",
+      "source_sha256": "5bd785cae3aef9d00a0b5b5c2915f21e18bcd2852fe41511f8262b8a1e3c2d7b",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-039",
+      "file": "M110-BG-039.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "f39cda4dc8fdd643a48bcde16e893c9ca3597975551afca6282bce62afe6eca7",
+      "source_sha256": "769774e42bfea01b8e3f8429c8644b06e08463354fb34b7375dc797eb1e7332c",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-040",
+      "file": "M110-BG-040.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "fa5a7297b57017b0f316c31508af09e9b93a9261914be1daaf7238033a1eaba7",
+      "source_sha256": "e62d118a45550d950457a0884fe2b8e19a00cc687fdf3f5997ee7e6a2be19400",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-041",
+      "file": "M110-BG-041.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "d4e505cc568f563d9f4053e3f708f6f8f3bde30e00bf0409d1edb47e2f17d0c6",
+      "source_sha256": "6bec717a53457a60b533ec7cabdd2575fb1c1a416aed962f80c58ed0c003f401",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-042",
+      "file": "M110-BG-042.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "3545fbcd261d8343fc69a55dbbcad1ed518b9f871e8089aff3d6eb824255e362",
+      "source_sha256": "694071550f0b31e15ce62d6f04429d113650a9c955c49e17e2bb3da3aaa3356f",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-043",
+      "file": "M110-BG-043.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "53713dc1cb0321c5cc7a0c0b7d2ac6d05266352f49961f0e60efb45928a61f54",
+      "source_sha256": "7016895296bf1bbfe5d21b5ac30fc959651378bc0b2c97afeb11b7b394f8ad25",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-044",
+      "file": "M110-BG-044.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "6d869386cb188f9d314b4057c76cc01e5830ed546275dc8deddc3d50fbc78b03",
+      "source_sha256": "688be7fb114601bc00b4ddb74c97ae5692754dae6e57cf5b146c29ce56cb1312",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-045",
+      "file": "M110-BG-045.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "9481add275b90d3a43ccdd16c65dd363941402d5a891aa82a6d8de2a306cc06e",
+      "source_sha256": "8b73942ddfd163b70e9b7a6936db7c8ad4f327a3164eb269193001dc86b961eb",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding",
+      "review": "Revised setting, time of day and costume; contact sheet reviewed"
+    },
+    {
+      "id": "M110-BG-046",
+      "file": "M110-BG-046.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "6e9c6813be85a8b8c308735a3f1baa0bbf71322149320ddc156c9267a0d1c575",
+      "source_sha256": "d03f31633f0455ae3fdb2b3222c3b672c77774aca4577c8c4eb6882476743b1f",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-047",
+      "file": "M110-BG-047.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "4f30a6a2050541c334dd72d4260ebd088a65866b32e68fa598b38b115218383f",
+      "source_sha256": "2cd5ef9076a6fd15ddde7880610f7ee9fb00288cf5ef6d059523358ee42253f5",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    },
+    {
+      "id": "M110-BG-048",
+      "file": "M110-BG-048.webp",
+      "width": 1080,
+      "height": 1920,
+      "sha256": "d7c74b616338fa3cf197099fd622dcba88cc4a64cb9d6b45164efd3300097781",
+      "source_sha256": "aba6c88344b8aba71d2017bb34d1c65931713263f69ccf5751fb1e7c27580d3d",
+      "generated": true,
+      "encoding": "mechanical resize and web encoding"
+    }
+  ],
+  "music": [
+    {
+      "id": "homecoming",
+      "file": "homecoming.mp3",
+      "seconds": 32,
+      "sha256": "a8bfc41525609b05f1184e2c49324b27b016a1147138e4682456d6d9350b9a3f",
+      "rms": 0.034180672687445034,
+      "peak": 0.15191642782206485,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "warm_evening",
+      "file": "warm_evening.mp3",
+      "seconds": 32,
+      "sha256": "a72520d0f2f4d788234a60f7f2ac1636607d5ef8b6afe7037e48bf1eced5d483",
+      "rms": 0.033375417550458475,
+      "peak": 0.15149046560084417,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "playful_day",
+      "file": "playful_day.mp3",
+      "seconds": 32,
+      "sha256": "afa69de0f4cddc360304c0465ebc9775984f2ac58bfb23e362e2891e246c564a",
+      "rms": 0.03902786824093463,
+      "peak": 0.15909377163131339,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "jealous_light",
+      "file": "jealous_light.mp3",
+      "seconds": 32,
+      "sha256": "18014cf06ce708a32181e6ef1f5f47b6c69948e2654d88d440242b482987a0c9",
+      "rms": 0.03346918615148444,
+      "peak": 0.1525818427845585,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "corporate_cold",
+      "file": "corporate_cold.mp3",
+      "seconds": 32,
+      "sha256": "69e0469955db3492f2fd51c57ce89615381533cf8efcb8296810cc3071d3489b",
+      "rms": 0.034265520850686806,
+      "peak": 0.15240556961541907,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "anniversary",
+      "file": "anniversary.mp3",
+      "seconds": 32,
+      "sha256": "a72520d0f2f4d788234a60f7f2ac1636607d5ef8b6afe7037e48bf1eced5d483",
+      "rms": 0.033375417550458475,
+      "peak": 0.15149046560084417,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "private_leak",
+      "file": "private_leak.mp3",
+      "seconds": 32,
+      "sha256": "d9c5ac14592b0086c2e10b6ba34729eb07b1b4a1bfe7a48bef5c15e3089d7e20",
+      "rms": 0.03419607890682005,
+      "peak": 0.14971101435970655,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "reconciliation",
+      "file": "reconciliation.mp3",
+      "seconds": 32,
+      "sha256": "18014cf06ce708a32181e6ef1f5f47b6c69948e2654d88d440242b482987a0c9",
+      "rms": 0.03346918615148444,
+      "peak": 0.1525818427845585,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": false
+    },
+    {
+      "id": "ending_A",
+      "file": "ending_A.mp3",
+      "seconds": 32,
+      "sha256": "a8bfc41525609b05f1184e2c49324b27b016a1147138e4682456d6d9350b9a3f",
+      "rms": 0.034180672687445034,
+      "peak": 0.15191642782206485,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": true
+    },
+    {
+      "id": "ending_B",
+      "file": "ending_B.mp3",
+      "seconds": 32,
+      "sha256": "a72520d0f2f4d788234a60f7f2ac1636607d5ef8b6afe7037e48bf1eced5d483",
+      "rms": 0.033375417550458475,
+      "peak": 0.15149046560084417,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": true
+    },
+    {
+      "id": "ending_C",
+      "file": "ending_C.mp3",
+      "seconds": 32,
+      "sha256": "88eabd0c059bde9663f36823787fe88e9b246061e62bd189738a4d406caf41e4",
+      "rms": 0.034160568566165214,
+      "peak": 0.15316119862804647,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": true
+    },
+    {
+      "id": "ending_D",
+      "file": "ending_D.mp3",
+      "seconds": 32,
+      "sha256": "18014cf06ce708a32181e6ef1f5f47b6c69948e2654d88d440242b482987a0c9",
+      "rms": 0.03346918615148444,
+      "peak": 0.1525818427845585,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": true
+    },
+    {
+      "id": "ending_E",
+      "file": "ending_E.mp3",
+      "seconds": 32,
+      "sha256": "a8bfc41525609b05f1184e2c49324b27b016a1147138e4682456d6d9350b9a3f",
+      "rms": 0.034180672687445034,
+      "peak": 0.15191642782206485,
+      "rights": "Original procedural composition; no sampled recordings",
+      "endingDirectionPending": true
+    }
+  ],
+  "sfx": [
+    {
+      "id": "door_unlock",
+      "file": "door_unlock.mp3",
+      "seconds": 1.6,
+      "sha256": "db5ca682210e34cc3132e499573be899c14ba183d7551bd4c19f63963fac6163",
+      "rms": 0.009599455345526899,
+      "peak": 0.12103339115033437,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "rain_light",
+      "file": "rain_light.mp3",
+      "seconds": 5,
+      "sha256": "4e48b0743c55b33425df5aa87fe0f53c6cca15064d2d61ed7369d4860cbffcc3",
+      "rms": 0.025106584256985098,
+      "peak": 0.07956169449589709,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "plate_touch",
+      "file": "plate_touch.mp3",
+      "seconds": 1.6,
+      "sha256": "a3348c26eebc17fa70503697e39229e4d3c230247f5454fcc1ff4b4e58da96a4",
+      "rms": 0.01778231187843616,
+      "peak": 0.16061732417164917,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "stove_sizzle",
+      "file": "stove_sizzle.mp3",
+      "seconds": 5,
+      "sha256": "cbb71ff8ce2a2d4668d188c06b77f7e6a24b65b793c8ae215323bf7432cd602d",
+      "rms": 0.028805375256105187,
+      "peak": 0.0649250613863626,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "coffee_machine",
+      "file": "coffee_machine.mp3",
+      "seconds": 5,
+      "sha256": "f546b7619b334975fa3c8f7fd75d661070a82a77f0f788c68fdb336073fbf5d4",
+      "rms": 0.03645127716083408,
+      "peak": 0.11756542003745402,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "phone_vibrate",
+      "file": "phone_vibrate.mp3",
+      "seconds": 1.6,
+      "sha256": "9a094adf58586c39230683cb30143fe075a1e7da635377eee88aa9e75458581d",
+      "rms": 0.055906182895060726,
+      "peak": 0.11,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "shoe_step",
+      "file": "shoe_step.mp3",
+      "seconds": 1.6,
+      "sha256": "4c74a0e03c3e33a51cf78bc0a1e3cf43750913bdd4972d00dfebc86d667545bb",
+      "rms": 0.012917873456982826,
+      "peak": 0.15502464351918918,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "pages_flip",
+      "file": "pages_flip.mp3",
+      "seconds": 1.6,
+      "sha256": "350be1fc0eb6952662b0d9c3f21f466f0f6a4de1e96d411a146ced718bf3dea0",
+      "rms": 0.01662140428674137,
+      "peak": 0.08946960762729185,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "soft_notification",
+      "file": "soft_notification.mp3",
+      "seconds": 1.6,
+      "sha256": "35300841c44e1bf5feacadec2c62fee1e8dfaf1a4cb23d6d876ae5589778a7e7",
+      "rms": 0.02501190941781058,
+      "peak": 0.14050533170877272,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "tension_hit",
+      "file": "tension_hit.mp3",
+      "seconds": 1.6,
+      "sha256": "ef5b863160ed7ceafc34da6edf619a041fcc6a681b67717e575a6c8d311c14d6",
+      "rms": 0.038795350361386205,
+      "peak": 0.21380561776791582,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "sea_wind",
+      "file": "sea_wind.mp3",
+      "seconds": 5,
+      "sha256": "07909074221a2399df67eba382d3ffcdf7b11b8cf98d4b5b2278b42273f73247",
+      "rms": 0.02808030742399821,
+      "peak": 0.1558319795670593,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    },
+    {
+      "id": "elevator",
+      "file": "elevator.mp3",
+      "seconds": 1.6,
+      "sha256": "00b2320abc15e41885188a159b09a20dedc0b994bb06f815f84b8bf0b5eb03e3",
+      "rms": 0.02168617415452399,
+      "peak": 0.11918520798740406,
+      "rights": "Original procedural sound synthesis; no sampled recordings"
+    }
+  ],
+  "video": {
+    "file": "video/husband-home-0471351b.mp4",
+    "sha256": "0471351b96381f05d296633b7da623247e806b44fa5ae86cf133b6b1088a2249",
+    "seconds": 10,
+    "width": 1080,
+    "height": 1920,
+    "hasAudio": true,
+    "userProvided": true,
+    "role": "homepage-opening"
+  }
+}

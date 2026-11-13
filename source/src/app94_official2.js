@@ -279,7 +279,7 @@ function off94MergeEn(wid, P) {
     we.cast.forEach(id => { const z = zid[key(id)]; if (z) js = js.split('"' + id + '"').join('"' + z + '"'); });
     const ce = JSON.parse(js);
     if (ce.length === wz.pack.chapters.length) wz.pack.chapters.forEach((c, i) => {
-      const e = ce[i]; c.beats.en = e.beats.zh; ["t", "goal", "ask", "place"].forEach(k => { if (c[k] && e[k]) c[k].en = e[k].zh || e[k].en; });
+      const e = ce[i]; c.beats.en = e.beats.zh; ["t", "goal", "ask", "place", "time"].forEach(k => { if (c[k] && e[k]) c[k].en = e[k].zh || e[k].en; });
       (c.choices || []).forEach((o, j) => { const oe = (e.choices || [])[j]; if (!oe) return; o.t.en = oe.t.zh || oe.t.en; if (o.then && oe.then) o.then.en = oe.then.zh; if (o.mem && oe.mem) o.mem.en = oe.mem.zh || oe.mem.en; });
     });
     /* names, roles, bios in English */

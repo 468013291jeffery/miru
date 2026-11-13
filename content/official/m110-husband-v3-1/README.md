@@ -1,0 +1,15 @@
+# 我的亿万富翁丈夫只为我下跪
+
+Stable content key: `m110-husband-v3-1`. This is a separate work from both the existing M110 island story and `m110-empress`; neither work is replaced.
+
+Release candidate. The user's DOCX is preserved as `source.docx`. On 2026-11-13 the user explicitly authorized completing missing dialogue, branch responses and endings using the existing setting. The source's 12 chapters, 48 scene IDs, 21 groups and 72 option IDs/numerical effects are preserved in `source-extract.json`, `authoring-input.json` and `story.json`. The final scene is staged inside each ending consequence: the DSL has 47 scene headings plus the final-scene ID/artwork in all five endings.
+
+Media: 48 scene images, one square male portrait, 226 Chinese/English male dialogue recordings, 13 original procedural music tracks, 12 synthesized sound effects, a poster and the user's unchanged 10-second 1080×1920 opening video. All 302 delivery files are hashed; full decoding passed. Original generated PNGs and prompts remain in the preparation directory. Scene WebPs are mechanically normalized to 1080×1920; the avatar is a mechanical square crop of the reference.
+
+`media-bindings.json` records source scene IDs and bindings to the existing MIRU renderer and effect library. `asset-map.template.json` is a prepared asset map and is not bound to a live work ID. `home_video` supplies the homepage preview; `vid_open` uses the same user-provided file. No unrelated story video is reused.
+
+The scripts use the existing MIRU parser, input, dialogue, portraits, queues, saved state, account sync, TTS and effects. Shared opt-in metadata adds explicit intent matching, safe no-match handling, bounded/idempotent numeric effects, mutable preferences and bilingual saved dialogue/queues. Up to three explicitly stated ritual preferences can be recorded together. No separate husband engine, custom UI, visible choice buttons, large next buttons, forced player dialogue or standalone minigames are added. The document's FastAPI routes are references; account saves use the existing MIRU state API.
+
+Five completed endings cover female-led marriage, mutual care, negotiated careers, a new shared rhythm and separation. Career changes require Adrian's agreement; separation does not force reconciliation. Generic A/B/C affection rewards and the legacy A-ending affection gate are disabled only for opted-in authored contracts. Cached dialogue uses the existing adult male TTS slot m1, with live TTS retained for free conversation.
+
+Build with `node tools/build-husband.cjs <repository-path>` and the standard `source/build.py`. Cached voices survive rebuilds. Check with `node tools/husband-selftest.cjs` and `node tools/release-contract.mjs`. The native browser fixture checks parsing, all 72 intents, five endings, safe refusal/offline fallback, preference changes, existing layout, voices and language switching; it disables live account/LLM calls. Publication is complete only after guarded deployment, backend review and public playback verification.

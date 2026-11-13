@@ -1,0 +1,43 @@
+{
+  "content_key": "m110-husband-v3-1",
+  "source_version": "3.1.0",
+  "status": "release-candidate",
+  "title": {
+    "zh": "我的亿万富翁丈夫只为我下跪",
+    "en": "My Billionaire Husband Kneels for Me"
+  },
+  "orientation": "bg",
+  "chapters": 12,
+  "scenes": 48,
+  "choice_groups": 21,
+  "authored_choice_ids": 72,
+  "endings": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "protagonist": "player",
+  "hero": {
+    "id": "ADRIAN",
+    "name": {
+      "zh": "阿德里安·韦尔",
+      "en": "Adrian Vale"
+    },
+    "age": 28,
+    "voice_id": "m1"
+  },
+  "ui_contract": {
+    "engine": "existing MIRU shared frontend and backend",
+    "visible_choice_buttons": false,
+    "large_continue_buttons": false,
+    "interaction": "player text or existing AI suggestions mapped to hidden authored intent",
+    "player_dialogue": "preserve the player's actual input",
+    "language": "separate zh and en presentation",
+    "layout": "standard MIRU dialogue and character cards"
+  },
+  "homepage_video": "video/husband-home-0471351b.mp4",
+  "published": false,
+  "work_id": "w_scmwf1m5ey5dc969fdb4"
+}

@@ -1,0 +1,142 @@
+{
+  "qa": {
+    "ok": true,
+    "err": [],
+    "warn": [
+      "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）"
+    ],
+    "stats": {
+      "chapters": 12,
+      "scenes": 47,
+      "choices": 21,
+      "options": 72,
+      "dots": 21,
+      "you": 0,
+      "casts": 2,
+      "lines": 172,
+      "callsOpen": 0,
+      "callsClose": 0,
+      "ifs": 0,
+      "ifEnds": 0,
+      "unknown": [],
+      "assets": {
+        "bg": 47,
+        "cg": 5,
+        "video": 0,
+        "photo": 0,
+        "item": 0,
+        "total": 52
+      },
+      "lore": 0,
+      "orient": {
+        "declared": "bg",
+        "inferred": "bg",
+        "final": "bg"
+      }
+    },
+    "perCh": [
+      {
+        "n": 1,
+        "choices": 3,
+        "dots": 3,
+        "scenes": 4,
+        "lines": 18
+      },
+      {
+        "n": 2,
+        "choices": 4,
+        "dots": 4,
+        "scenes": 4,
+        "lines": 23
+      },
+      {
+        "n": 3,
+        "choices": 3,
+        "dots": 3,
+        "scenes": 4,
+        "lines": 19
+      },
+      {
+        "n": 4,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 14
+      },
+      {
+        "n": 5,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 4,
+        "lines": 11
+      },
+      {
+        "n": 6,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 4,
+        "lines": 12
+      },
+      {
+        "n": 7,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 4,
+        "lines": 11
+      },
+      {
+        "n": 8,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 4,
+        "lines": 11
+      },
+      {
+        "n": 9,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 4,
+        "lines": 11
+      },
+      {
+        "n": 10,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 4,
+        "lines": 11
+      },
+      {
+        "n": 11,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 14
+      },
+      {
+        "n": 12,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 3,
+        "lines": 16
+      }
+    ]
+  },
+  "style": {
+    "ok": true,
+    "err": [],
+    "warn": [
+      "第 1 章 标题：21 字，建议不超过 16 字",
+      "第 2 章 标题：17 字，建议不超过 16 字",
+      "第 3 章 标题：17 字，建议不超过 16 字",
+      "第 4 章 标题：19 字，建议不超过 16 字",
+      "第 5 章 标题：25 字，建议不超过 16 字",
+      "第 6 章 标题：18 字，建议不超过 16 字",
+      "第 7 章 标题：19 字，建议不超过 16 字",
+      "第 10 章 标题：25 字，建议不超过 16 字",
+      "第 12 章 标题：20 字，建议不超过 16 字"
+    ],
+    "stats": {
+      "chapters": 12
+    }
+  }
+}

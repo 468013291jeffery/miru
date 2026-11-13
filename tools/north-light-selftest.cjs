@@ -13,5 +13,5 @@ const {checkBible}=require('../api/_stylecheck');assert.deepEqual(checkBible(b).
 const damaged=JSON.parse(JSON.stringify(b));damaged.intro.zh='被误压缩';assert(checkBible(damaged).err.some(x=>x.includes('原稿')));
 const dropped=JSON.parse(JSON.stringify(b));dropped.chapters[0].scenes[0].authored_dialogue=[];assert(checkBible(dropped).err.some(x=>x.includes('对白')));
 // Compiling twice must be stable: prevents accidental handwritten output drifting from source.
-const before=fs.readFileSync(file,'utf8');execFileSync(process.env.PYTHON||'python3',['tools/rebuild-north-light.py']);assert.equal(fs.readFileSync(file,'utf8'),before);
+const before=fs.readFileSync(file,'utf8');execFileSync(process.env.PYTHON||'python3',['tools/rebuild-north-light.py']);assert.equal(fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n'),before.replace(/\r\n/g,'\n'));
 console.log('North Light fidelity: complete seven-paragraph reviewed background; 150 dialogue lines, 87 anchors, 16 distinct scene tasks, nine games, route choices and repeatable import passed.');

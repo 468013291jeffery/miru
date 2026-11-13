@@ -1052,7 +1052,8 @@ pico.instantiate_detection_memory = function(size)
       const ta = document.getElementById("cin"); if (ta) ta.value = "";
       try { typing(true); } catch (_) {}
       let k = null;
-      try {
+      if(typeof authoredOption === "function" && c.choices.some(authoredOption)){const i=await authoredMatch(Lz(c.ask),c.choices,txt);if(i<0){typing(false);authoredFallback(th);return;}k=c.choices[i].k;}
+      if(!k) try {
         const r = await ask("玩家在互动剧的一个选择点上，没有点选项，而是自己说了一句话。判断这句话的意图最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
         k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
       } catch (_) {}
@@ -1136,6 +1137,7 @@ pico.instantiate_detection_memory = function(size)
     return best;
   }
   async function classify(question, opts, txt) {
+    if(typeof authoredOption === "function" && opts.some(authoredOption))return authoredMatch(question,opts,txt);
     const list = opts.map((o, i) => (i + 1) + "｜" + Lz(o.t)).join("\n");
     try {
       const r = await ask("玩家在互动剧的一个分支点上，用自己的话回复了一句。判断这句话的意图最接近哪个分支。\n情境：" + (question || "") + "\n分支：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"n\":分支编号}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
@@ -1154,7 +1156,8 @@ pico.instantiate_detection_memory = function(size)
       try { typing(true); } catch (_) {}
       const i = await classify(Lz(d.hint || d.q || ""), opts, txt);
       try { typing(false); } catch (_) {}
-      const o = opts[i]; if (!o || !th.pk.stop) return;
+      if(Array.isArray(i)){const selected=i.map(n=>opts[n]);if(!th.pk.stop)return;selected.forEach(o=>pkSet(th,o.set));stopResolve(th,selected.flatMap(o=>o.then||[]));return;}
+      const o = opts[i]; if (!o || !th.pk.stop) { if(typeof authoredOption === "function" && opts.some(authoredOption))authoredFallback(th); return; }
       pkSet(th, o.set);
       try { if (typeof dimApply === "function") { const P = typeof dimPairs === "function" ? dimPairs(th) : null; if (o.rd) dimApply(th, o.rd, txt); else if (P) { const m = P.find(p => p.main) || P[0]; dimApply(th, { [m.a + "|" + m.b]: dimRule(o) }, txt); } } } catch (_) {}
       try { if (o.love) th.cast.filter(c => c !== th.pk.as).forEach(c => loveWrite(th, c, o.love, "choice:love")); } catch (_) {}
