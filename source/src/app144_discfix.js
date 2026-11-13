@@ -2024,7 +2024,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     const pa = pkAppend;
     pkAppend = function (th) {
       const r = pa.apply(this, arguments);
-      try { if (th && th.pk && th._spoke161 && !holds[th.id] && aheadScene(th.pk.q)) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; } } catch (_) {}
+      try { if (th && th.pk) { th._lines161 = (th._lines161 || 0) + 1; if (!holds[th.id] && aheadScene(th.pk.q)) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; } } } catch (_) {}
       return r;
     };
   }
@@ -2044,8 +2044,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       if (!th || !th.pk) { bar(null, false); return; }
       const q = th.pk.q, next = q && q[0];
       if (holds[th.id]) { bar(th, true); return; }
-      if (next && aheadScene(q) && th._spoke161 && !th.pk.stop) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; bar(th, true); return; }
-      if (next && isScene(next) && !th._spoke161) return;
+      if (next && aheadScene(q) && (th._lines161 || 0) > 0 && !th.pk.stop) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; bar(th, true); return; }
+      if (next && isScene(next) && !(th._lines161 || 0)) return;
       bar(th, false);
     } catch (_) {}
   }, 250);
@@ -2053,10 +2053,14 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!e.target.closest || !e.target.closest("[data-nx161]")) return;
     e.preventDefault(); e.stopPropagation();
     const th = S.threads[curT]; if (!th) return;
-    delete holds[th.id]; th._spoke161 = 0; if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
+    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0; if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
   }, true);
   const st = document.createElement("style");
   st.textContent = ".nx161{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
     ".nx161 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
   document.head.appendChild(st);
 })();
+
+/* 2026-11-14 补：玩家试了说「我还没开始说，就直接切到餐厅了」——上一版只在「你这一场开过口」时才停。
+   ⇒ 改成：每一场只要已经演了内容，换下一场之前一律停下等你（你说不说话都停），点「下一场 ›」才切；
+     章节一开头直接就是场景卡的那种不停。 */
