@@ -1927,3 +1927,11 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent = "html body #s-chat .chead .hdx{display:grid!important;place-items:center;flex:none}";
   document.head.appendChild(st);
 })();
+
+/* ===== 2026-11-14 · 「实时 AI 未连接 · 测试实时 AI」横条：展开顶栏时还会冒出来，补上 =====
+   顶栏展开（⌃）时，旧样式用更高优先级把它强制显示了。⇒ 用更高优先级彻底隐藏。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent = "html body #s-chat.clean.hdopen>.livebanner,html body #s-chat>.livebanner,html body .livebanner{display:none!important}";
+  document.head.appendChild(st);
+})();
