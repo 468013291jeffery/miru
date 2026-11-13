@@ -1,8 +1,8 @@
 /* Native-only bootstrap. Runs before application scripts and cloud initialization. */
 (function () {
  'use strict';
- window.MIRU_PROXY='https://www.miru.plus/api/longcat';
- window.MIRU_TTS='https://www.miru.plus/api/tts';
+ window.MIRU_PROXY='https://miru.plus/api/longcat';
+ window.MIRU_TTS='https://miru.plus/api/tts';
  window.MIRU_ACCOUNT=true;
  if(localStorage.getItem('miru.deleteLocalPending'))window.MIRU_ACCOUNT_DELETED=true;
  const plugin=window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.MIRUNative;
@@ -37,8 +37,8 @@
   }
   const kind=isAI(url,method,body);
   if(kind&&(kind==='custom'?!permitHost(url):!allowed(kind!=='quiet')))throw denial();
-  if(url.protocol==='capacitor:'&&url.hostname==='localhost'&&url.pathname.startsWith('/api/'))url.href='https://www.miru.plus'+url.pathname+url.search;
-  if(url.origin==='https://www.miru.plus'&&url.pathname.startsWith('/api/')){
+  if(url.pathname.startsWith('/api/')&&((url.protocol==='capacitor:'&&url.hostname==='localhost')||url.origin==='https://www.miru.plus'))url.href='https://miru.plus'+url.pathname+url.search;
+  if(url.origin==='https://miru.plus'&&url.pathname.startsWith('/api/')){
    const headers=new Headers(init&&init.headers||(input instanceof Request?input.headers:undefined));
    headers.set('X-Miru-Client','ios');
    return originalFetch(input instanceof Request?new Request(url.href,input):url.href,Object.assign({},init,{headers:headers}));

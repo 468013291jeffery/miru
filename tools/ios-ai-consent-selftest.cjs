@@ -22,7 +22,7 @@ function launch(){
  await w.fetch('/api/tts',post({cloneDel:'uabc'}));await w.fetch('/api/state?r=mem',post({op:'forget_all'}));assert.equal(sent.length,4);
  ({w,sent,prompts,answers}=launch());await block('/api/longcat',post({messages:[]}));assert.equal(prompts.length,0);
  answers.push(true);assert.equal(w.MIRU_AI.change(),true);await w.fetch('/api/longcat',post({messages:[]}));
- assert.equal(sent[0].url,'https://www.miru.plus/api/longcat');assert.equal(sent[0].init.headers.get('X-Miru-Client'),'ios');
+ assert.equal(sent[0].url,'https://miru.plus/api/longcat');assert.equal(sent[0].init.headers.get('X-Miru-Client'),'ios');
  answers.push(false);await block('https://mine.example/v1/chat/completions',post({}));
  answers.push(true);await w.fetch('https://mine.example/v1/chat/completions',post({}));await w.fetch('https://mine.example/v1/chat/completions',post({}));assert.equal(sent.length,3);
  const r=new w.SpeechRecognition();r.start();assert.equal(r.active,true);assert.equal(w.MIRU_AI.change(),false);assert.equal(r.active,false);await block('/api/tts?t=private');assert.equal(sent.length,3);

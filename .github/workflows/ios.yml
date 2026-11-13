@@ -35,6 +35,7 @@ jobs:
         run: |
           node tools/ios-bridge-selftest.cjs
           node tools/ios-ai-consent-selftest.cjs
+          node tools/ios-network-selftest.cjs
           node tools/ios-package-selftest.mjs
           node tools/ios-release-selftest.mjs
           node --check source/all.js
