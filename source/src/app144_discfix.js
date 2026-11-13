@@ -958,6 +958,7 @@ pico.instantiate_detection_memory = function(size)
   function frame(img, f) {
     const box = img.parentElement, D = box.clientWidth || 68;
     if (!f) {
+      reset(img);
       const W0 = img.naturalWidth, H0 = img.naturalHeight;
       /* 没找到脸：竖长的全身立绘按「头在上方 13%」放大；其余靠上取景 */
       if (W0 && H0 / W0 >= 1.5) f = { x: 0.5, y: 0.13, s: 0.17, W: W0, H: H0 };
@@ -971,16 +972,23 @@ pico.instantiate_detection_memory = function(size)
     left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
     Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
+  /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
+  const SEL = ".ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img";
+  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";
-    const box = document.createElement("span"); box.className = "f147";
-    img.parentNode.insertBefore(box, img); box.appendChild(img);
-    const go = () => { findFace(img).then(f => frame(img, f)).catch(() => frame(img, null)); };
+    const par = img.parentElement;
+    if (par && par.classList.contains("av")) { par.style.position = "relative"; par.style.overflow = "hidden"; par.style.borderRadius = par.style.borderRadius || "50%"; }
+    else { const box = document.createElement("span"); box.className = "f147"; img.parentNode.insertBefore(box, img); box.appendChild(img); }
+    const go = () => { if (/^data:image\/jpeg/.test(img.src) && img.dataset.art) { const u = artSrc(img.dataset.art); if (u && !/^data:/.test(u)) { img.src = u; return; } } reset(img); findFace(img).then(f => frame(img, f)).catch(() => frame(img, null)); };
     img.style.objectPosition = "50% 12%";
-    if (img.complete && img.naturalWidth) go(); else img.addEventListener("load", go, { once: true });
+    img.addEventListener("load", go);
+    if (img.complete && img.naturalWidth) go();
   }
-  function scan(root) { try { (root || document).querySelectorAll(".ld101c img:not([data-f147])").forEach(prep); } catch (_) {} }
-  try { new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches && n.matches(".ld101c img") || n.querySelector && n.querySelector(".ld101c img"))) { scan(n.nodeType === 1 && n.parentNode ? n.parentNode : document); return; } }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+  function scan(root) { try { (root || document).querySelectorAll(SEL.split(",").map(x => x.trim() + ":not([data-f147])").join(",")).forEach(prep); } catch (_) {} }
+  try { new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches && n.matches(SEL) || n.querySelector && n.querySelector(SEL))) { scan(n.nodeType === 1 && n.parentNode ? n.parentNode : document); return; } }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+  /* 字母占位图 → 真图：剧目 / 男主卡是后加载的，先渲染出来的头像会停在占位图上 */
+  setInterval(() => { try { document.querySelectorAll('img[data-art]').forEach(im => { if (/^data:image\/jpeg/.test(im.src)) { const u = artSrc(im.dataset.art); if (u && !/^data:/.test(u) && im.src !== u) im.src = u; } }); } catch (_) {} }, 1500);
   setTimeout(scan, 500);
   const st = document.createElement("style");
   st.textContent = ".ld101c .f147{position:relative;display:block;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #F0B77E88;background:rgba(255,255,255,.04);flex:none}.ld101c .f147>img{width:68px;height:68px;box-shadow:none!important;border-radius:0!important}";
