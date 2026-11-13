@@ -39,15 +39,19 @@
   }catch(e){toast(String(e.message||e))}
   finally{buying=false}
  }
+ function storeLoad(promise){
+  let timer;
+  return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(say('连接超时，请检查网络后重试。','Connection timed out. Check your network and try again.'))),20000)})]).finally(()=>clearTimeout(timer));
+ }
  paySheet=function(){
   const id='ios-packs-'+Date.now();
   sheet('<h2>💎 '+say('充值','Top up')+'</h2><div id="'+id+'">'+say('正在连接 App Store…','Connecting to the App Store…')+'</div><button class="lnk" data-ios-sync>'+say('同步购买与余额','Sync purchases and balance')+'</button>');
   (async()=>{
-   const [w,h]=await Promise.all([capi('/wallet'),capi('/health?config=1')]);
+   const [w,h]=await storeLoad(Promise.all([capi('/wallet'),capi('/health?config=1')]));
    if(!w.ok||!h.ok)throw new Error('Store connection unavailable');
    balance(w.j);
-   const iap=w.j.iap;if(!iap||!iap.available)throw new Error('Purchases are currently unavailable');
-   const skus=(h.j.config||{}).skus||{},items=await N.products({ids:iap.productIds}),box=document.getElementById(id);if(!box)return;
+   const iap=w.j.iap;if(!iap||!iap.available)throw new Error(say('内购暂不可用，请稍后重试。','Purchases are currently unavailable. Please try again later.'));
+   const skus=(h.j.config||{}).skus||{},items=await storeLoad(N.products({ids:iap.productIds})),box=document.getElementById(id);if(!box)return;
    const products=items.products||[];
    box.innerHTML='<div class="packs packs84">'+products.map(p=>{
     const v=Object.values(skus).find(s=>s.apple===p.productId);if(!v)return '';

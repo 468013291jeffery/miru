@@ -100,7 +100,7 @@ const SCHEMA = [
 async function db() {
   if (!hasDb()) { const e = new Error('database not configured'); e.code = 503; throw e; }
   const sql = sqlFn();
-  if (!_ready) _ready = (async () => { for (const s of SCHEMA) await sql(s); })().catch(e => { _ready = null; throw e; });
+  if (!_ready) _ready = (async () => { if (process.env.MIRU_SKIP_SCHEMA === '1') { await sql('SELECT 1'); return; } for (const s of SCHEMA) await sql(s); })().catch(e => { _ready = null; throw e; });
   await _ready;
   return sql;
 }
