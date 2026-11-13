@@ -84,8 +84,8 @@
   });
   localStorage.removeItem('miru.deleteLocalPending');location.reload();
  }
- async function deleteAccount(){
-  if(!confirm(au('delAsk')))return;
+ async function deleteAccount(confirmed=false){
+  if(!confirmed&&!confirm(au('delAsk')))return;
   try{
    let r=await capi('/auth',{json:{op:'delete'}});
    if(!r.ok&&r.j.action==='apple_reauthentication_required'){

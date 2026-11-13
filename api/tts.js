@@ -87,7 +87,7 @@ async function viaSpace(text, voice, vec) {
    DASHSCOPE_INTL_API_KEY (international console) or DASHSCOPE_API_KEY (China console); optional DASHSCOPE_BASE_URL (workspace host),
    QWEN_TTS_MODEL (default qwen3-tts-flash), QWEN_VOICE_MAP='{"m1":"Moon",…}'. Every system voice speaks both Mandarin and English. */
 const QWEN_WS = 'https://ws-cnxfgp13wlelgkbu.ap-southeast-1.maas.aliyuncs.com';
-const QV = { m1: 'Moon', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Kai', m6: 'Mochi', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
+const QV = { m1: 'Moon', m2: 'Ethan', m3: 'Andre', m4: 'Alek', m5: 'Kai', m6: 'Aiden', m7: 'Ryan', f1: 'Serena', f2: 'Katerina' };
 let QSITE = null, QBASE = null;
 function qwenSites() {
   const E = process.env, intl = E.DASHSCOPE_INTL_API_KEY, cn = E.DASHSCOPE_API_KEY || E.QWEN_API_KEY, out = [];

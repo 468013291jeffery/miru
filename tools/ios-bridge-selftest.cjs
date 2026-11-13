@@ -30,5 +30,12 @@ function setup(){
  vm.runInNewContext(fs.readFileSync(require.resolve('../source/src/app99_boot.js'),'utf8'),startup);
  const uploads=fs.readFileSync(require.resolve('../source/src/app66_libup.js'),'utf8');vm.runInNewContext(uploads.split('\n').find(l=>l.startsWith('function udb(){')),startup);await assert.rejects(startup.udb(),/being removed/);
  const media=fs.readFileSync(require.resolve('../source/src/app92_media.js'),'utf8');vm.runInNewContext(media.slice(media.indexOf('function mediaOpen()'),media.indexOf('/**',media.indexOf('function mediaOpen()'))),startup);assert.equal(await startup.mediaOpen(),null);
+ const merged=fs.readFileSync(require.resolve('../source/src/app144_discfix.js'),'utf8'),marker=merged.indexOf('/* ===== 2026-11-13 · 注销账号'),last=merged.indexOf('/* ===== 2026-11-13 · 音色',marker);
+ let listener,submitted=0,shown='';
+ const inline={window:{__miruIOS:{async deleteAccount(confirmed){assert.equal(confirmed,true);submitted++}},addEventListener:(name,fn)=>listener=fn},esc:x=>x,au:x=>x,CL:()=> 'en',sheet:x=>shown=x,capi(){throw Error('legacy native delete route used')},closeSheet(){}};
+ vm.runInNewContext(merged.slice(marker,last),inline);
+ const button={dataset:{del150:'go'},disabled:false},event={target:{closest:()=>button},preventDefault(){},stopImmediatePropagation(){}};
+ await listener(event);assert.equal(submitted,1);assert.equal(button.disabled,false);
+ button.dataset={au70card:'del'};await listener(event);assert(shown.includes('data-del150="go"'));assert.equal(submitted,1);
  console.log('PASS iOS server-before-finish, retry, cancel/pending, real ad reward, deletion retry and same-account reauthentication');
 })().catch(e=>{console.error(e);process.exitCode=1});

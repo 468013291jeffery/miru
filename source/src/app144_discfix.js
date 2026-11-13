@@ -958,6 +958,7 @@ pico.instantiate_detection_memory = function(size)
   function frame(img, f) {
     const box = img.parentElement, D = box.clientWidth || 68;
     if (!f) {
+      reset(img);
       const W0 = img.naturalWidth, H0 = img.naturalHeight;
       /* 没找到脸：竖长的全身立绘按「头在上方 13%」放大；其余靠上取景 */
       if (W0 && H0 / W0 >= 1.5) f = { x: 0.5, y: 0.13, s: 0.17, W: W0, H: H0 };
@@ -971,16 +972,23 @@ pico.instantiate_detection_memory = function(size)
     left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
     Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
+  /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
+  const SEL = ".ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img";
+  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";
-    const box = document.createElement("span"); box.className = "f147";
-    img.parentNode.insertBefore(box, img); box.appendChild(img);
-    const go = () => { findFace(img).then(f => frame(img, f)).catch(() => frame(img, null)); };
+    const par = img.parentElement;
+    if (par && par.classList.contains("av")) { par.style.position = "relative"; par.style.overflow = "hidden"; par.style.borderRadius = par.style.borderRadius || "50%"; }
+    else { const box = document.createElement("span"); box.className = "f147"; img.parentNode.insertBefore(box, img); box.appendChild(img); }
+    const go = () => { if (/^data:image\/jpeg/.test(img.src) && img.dataset.art) { const u = artSrc(img.dataset.art); if (u && !/^data:/.test(u)) { img.src = u; return; } } reset(img); findFace(img).then(f => frame(img, f)).catch(() => frame(img, null)); };
     img.style.objectPosition = "50% 12%";
-    if (img.complete && img.naturalWidth) go(); else img.addEventListener("load", go, { once: true });
+    img.addEventListener("load", go);
+    if (img.complete && img.naturalWidth) go();
   }
-  function scan(root) { try { (root || document).querySelectorAll(".ld101c img:not([data-f147])").forEach(prep); } catch (_) {} }
-  try { new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches && n.matches(".ld101c img") || n.querySelector && n.querySelector(".ld101c img"))) { scan(n.nodeType === 1 && n.parentNode ? n.parentNode : document); return; } }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+  function scan(root) { try { (root || document).querySelectorAll(SEL.split(",").map(x => x.trim() + ":not([data-f147])").join(",")).forEach(prep); } catch (_) {} }
+  try { new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) if (n.nodeType === 1 && (n.matches && n.matches(SEL) || n.querySelector && n.querySelector(SEL))) { scan(n.nodeType === 1 && n.parentNode ? n.parentNode : document); return; } }).observe(document.body, { childList: true, subtree: true }); } catch (_) {}
+  /* 字母占位图 → 真图：剧目 / 男主卡是后加载的，先渲染出来的头像会停在占位图上 */
+  setInterval(() => { try { document.querySelectorAll('img[data-art]').forEach(im => { if (/^data:image\/jpeg/.test(im.src)) { const u = artSrc(im.dataset.art); if (u && !/^data:/.test(u) && im.src !== u) im.src = u; } }); } catch (_) {} }, 1500);
   setTimeout(scan, 500);
   const st = document.createElement("style");
   st.textContent = ".ld101c .f147{position:relative;display:block;width:68px;height:68px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 2px #F0B77E88;background:rgba(255,255,255,.04);flex:none}.ld101c .f147>img{width:68px;height:68px;box-shadow:none!important;border-radius:0!important}";
@@ -1110,4 +1118,419 @@ pico.instantiate_detection_memory = function(size)
     P + ">.chatt::after{content:\"或者直接打字，说你自己的话\";font-size:11.5px;color:rgba(255,255,255,.55);margin:2px 2px 4px}" +
     "#s-chat:has(#pkwrap.dock .pkpanel.stop .chatt) #sugg{display:none!important}";
   document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 不再出现任何「选项」：玩家直接回复，系统按回复自动走分支 =====
+   玩家（截图）：「所有的剧以后都不要有这个东西……直接根据回复，去设定它后面那个值就可以了。没有必要要有选择。」
+   · 章末选择、剧情中途的选择：只显示「🎭 轮到你了 + 问题」，不再列出选项。玩家自己打字（或用 ✨ AI 帮我想）回复，
+     AI 判断这句最接近剧本里哪一条分支，就按那条分支加减数值 / 设旗标 / 播后续剧情；对话里只留玩家自己的原话。
+   · 「继续剧情」按钮多余：剧情暂停在「继续剧情」时自动接着播。
+   · 剧本里仍然可以写分支（作者 / GPT 照旧写 OPT），只是不再显示给玩家，变成「按回复判定」的隐藏分支。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  function guess(txt, opts) {
+    const a = new Set(String(txt).replace(/\s/g, "")); let best = 0, bs = -1;
+    opts.forEach((o, i) => { const s = String(Lz(o.t)); let n = 0; new Set(s.replace(/\s/g, "")).forEach(c => { if (a.has(c)) n++; }); const sc = n / Math.max(4, s.length); if (sc > bs) { bs = sc; best = i; } });
+    return best;
+  }
+  async function classify(question, opts, txt) {
+    const list = opts.map((o, i) => (i + 1) + "｜" + Lz(o.t)).join("\n");
+    try {
+      const r = await ask("玩家在互动剧的一个分支点上，用自己的话回复了一句。判断这句话的意图最接近哪个分支。\n情境：" + (question || "") + "\n分支：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"n\":分支编号}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+      const n = r && Number(r.n); if (n >= 1 && n <= opts.length) return n - 1;
+    } catch (_) {}
+    return guess(txt, opts);
+  }
+  /* 剧情中途（stop line）：按回复判定分支，保留玩家原话 */
+  let busyMap = false;
+  async function resolveStop(th, txt, mode) {
+    if (busyMap) return; busyMap = true;
+    try {
+      const d = th.pk.stop[2], opts = (d.opts || []).filter(o => o && o.t);
+      appendMsg(th, { who: "me", k: mode || "say", txt, typed: true, at: Date.now() }); th.rounds++;
+      const ta = document.getElementById("cin"); if (ta) ta.value = "";
+      try { typing(true); } catch (_) {}
+      const i = await classify(Lz(d.hint || d.q || ""), opts, txt);
+      try { typing(false); } catch (_) {}
+      const o = opts[i]; if (!o || !th.pk.stop) return;
+      pkSet(th, o.set);
+      try { if (typeof dimApply === "function") { const P = typeof dimPairs === "function" ? dimPairs(th) : null; if (o.rd) dimApply(th, o.rd, txt); else if (P) { const m = P.find(p => p.main) || P[0]; dimApply(th, { [m.a + "|" + m.b]: dimRule(o) }, txt); } } } catch (_) {}
+      try { if (o.love) th.cast.filter(c => c !== th.pk.as).forEach(c => loveWrite(th, c, o.love, "choice:love")); } catch (_) {}
+      stopResolve(th, o.then || []);
+    } catch (e) { console.warn("[c150] stop", e); }
+    finally { busyMap = false; }
+  }
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function (txt, mode) {
+      const th = S.threads[curT];
+      try {
+        const s = String(txt || "").trim(), st = th && th.pk && th.pk.stop;
+        if (s && st && st[1] === "line" && st[2] && (st[2].opts || []).length && !busy && (mode || cmode) !== "dir" && th.pk.as !== "watch") { resolveStop(th, s, mode); return; }
+      } catch (e) { console.warn("[c150] send", e); }
+      return ds.apply(this, arguments);
+    };
+  }
+  /* 章末：判定后把「你的选择 · …」那条系统提示去掉，只留玩家原话 */
+  if (typeof packPick === "function") {
+    const pp = packPick;
+    packPick = function (k) {
+      const th = S.threads[curT], typed = th && th.msgs && th.msgs.length && th.msgs[th.msgs.length - 1].who === "me";
+      const r = pp.apply(this, arguments);
+      try { if (typed) { for (let i = th.msgs.length - 1; i >= Math.max(0, th.msgs.length - 4); i--) { const m = th.msgs[i]; if (m.who === "sys" && m.k === "dec") { th.msgs.splice(i, 1); break; } } save(); if (curT === th.id) renderChat(); } } catch (_) {}
+      return r;
+    };
+  }
+  /* 「继续剧情」自动接着播（下一章 / 解锁等需要你决定的按钮不动） */
+  setInterval(() => {
+    try {
+      const th = S.threads[curT], chat = document.getElementById("s-chat"); if (!th || !th.pk || !chat || chat.hidden || busy) return;
+      const b = chat.querySelector("#pkwrap [data-pkresume], #pkwrap [data-pkadvance]");
+      if (b && !b.disabled && !(window.READING && READING.pending.get(th.id))) b.click();
+    } catch (_) {}
+  }, 900);
+  const st = document.createElement("style");
+  st.textContent =
+    ".ch148l{display:none!important}" +
+    "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)>.chatt>button{display:none!important}" +
+    "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)>.chatt::after{content:\"直接打字回复，你说的话会决定剧情往哪走\"!important}" +
+    ".ch148t{font-size:0!important}.ch148t::after{content:\"直接打字回复，你说的话会决定剧情往哪走\";font-size:11.5px}" +
+    "#s-chat.chs148 #sugg,#s-chat:has(#pkwrap .pkpanel.stop .chatt) #sugg{display:flex!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 头像：剧里的角色没有单独头像时，用同一部剧的男主卡头像（名字对得上就用） ===== */
+(function () {
+  "use strict";
+  const memo = new Map();
+  function leadArt(id) {
+    if (memo.has(id)) return memo.get(id);
+    let out = null;
+    try {
+      const c = ch(id); if (!c) return null;
+      const nm = first(c.n);
+      const worlds = Object.values((S.mine && S.mine.worlds) || {}).filter(w => w && w.community && Array.isArray(w.cast) && w.cast.includes(id));
+      for (const w of worlds) {
+        const pre = "ld_" + String(w.community).slice(-8) + "_";
+        for (const k of Object.keys(S.art || {})) if (k.indexOf(pre) === 0 && ch(k) && first(ch(k).n) === nm && typeof S.art[k] === "string") { out = S.art[k]; break; }
+        if (out) break;
+      }
+    } catch (_) {}
+    if (out) memo.set(id, out);
+    return out;
+  }
+  if (typeof artSrc === "function") {
+    const as = artSrc;
+    artSrc = function (id) {
+      const r = as.apply(this, arguments);
+      try { if (typeof r === "string" && /^data:image\/jpeg/.test(r) && !(S.art && S.art[id])) { const u = leadArt(id); if (u) return u; } } catch (_) {}
+      return r;
+    };
+  }
+  /* 开场「男主」一排没有 data-art：按当前剧目 + 名字补真图 */
+  setInterval(() => {
+    try {
+      const w = typeof curStory !== "undefined" ? wd(curStory) : null;
+      document.querySelectorAll(".ld101c").forEach(box => {
+        const im = box.querySelector("img"), nm = (box.querySelector("b") || {}).textContent; if (!im || !nm || !/^data:image\/jpeg/.test(im.src)) return;
+        const ids = (w && w.cast) || []; const id = ids.find(x => ch(x) && first(ch(x).n) === nm);
+        const u = id && artSrc(id); if (u && !/^data:/.test(u)) im.src = u;
+      });
+    } catch (_) {}
+  }, 1500);
+})();
+
+/* ===== 2026-11-13 · 注销账号：原来用浏览器 confirm() 确认，部分手机浏览器会直接拦掉，点了没反应 ⇒ 改成页面里的确认框 ===== */
+(function () {
+  "use strict";
+  window.addEventListener("click", async e => {
+    const x = e.target.closest && e.target.closest('[data-au70card="del"],[data-del150]'); if (!x) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (x.dataset.del150 === "go") {
+      x.disabled = true;
+      if (window.__miruIOS) { try { await window.__miruIOS.deleteAccount(true); } finally { x.disabled = false; } return; }
+      try {
+        const r = await capi("/auth", { json: { op: "delete" } });
+        if (r.ok) { closeSheet(); toast(au("delDone")); try { localStorage.clear(); } catch (_) {} setTimeout(() => location.reload(), 900); }
+        else { x.disabled = false; au70Err(r); }
+      } catch (_) { x.disabled = false; toast(CL() === "zh" ? "注销没成功，稍后再试" : "Couldn't delete — try again later"); }
+      return;
+    }
+    if (x.dataset.del150 === "no") { closeSheet(); return; }
+    sheet('<div class="au70s"><h2>⚠️ ' + esc(au("del")) + '</h2><p style="margin:10px 0 16px;line-height:1.6">' + esc(au("delAsk")) + '</p><button class="btn btn-block" style="background:#c0392b;color:#fff" data-del150="go">' + esc(au("del")) + '</button><button class="btn btn-g btn-block" style="margin-top:8px" data-del150="no">' + (CL() === "zh" ? "取消" : "Cancel") + '</button></div>');
+  }, true);
+})();
+
+/* ===== 2026-11-13 · 音色：男角色不会再分到女声 / 童声 =====
+   原因：服务器的 m6 用的是 Qwen「Mochi」（童声，听起来像女生），所有分到 m6 的男角色（比如《女帝》的卢西恩）都受影响。
+   ⇒ 服务器 m6 改成男声「Aiden」；这里给 m6 的音频地址换一个版本号，避免手机里缓存的旧童声；
+      《女帝》里用旧 m6 预先生成的配音不再播放，改成实时生成；剧本里把男角色写成女声（f1/f2）的，自动换成男声，反之亦然。 */
+(function () {
+  "use strict";
+  if (typeof ttsUrl === "function") { const tu = ttsUrl; ttsUrl = function () { const u = tu.apply(this, arguments); return /[?&]v=m6&/.test(u) ? u.replace("&k=q2", "&k=q3m6") : u; }; }
+  if (typeof ttsVoice === "function") {
+    const tv = ttsVoice;
+    ttsVoice = function (id) {
+      const v = tv.apply(this, arguments);
+      try {
+        if (!id || id === "n" || id === "me" || (S.voiceOv && S.voiceOv[id])) return v;
+        const c = ch(id); if (!c || !/^[mf]\d$/.test(v)) return v;
+        const g = c.g === "f" ? "f" : "m";
+        if (v[0] !== g) { const L = TTS_VOICES[g]; return L[hash(String(id)) % L.length]; }
+      } catch (_) {}
+      return v;
+    };
+  }
+  setTimeout(() => {
+    if (typeof recorded !== "function") return;
+    const rc = recorded;
+    recorded = function (text, id) {
+      const u = rc.apply(this, arguments);
+      try { if (u && /m110-empress\/voice/.test(String(u)) && ttsVoice(id) === "m6") return undefined; } catch (_) {}
+      return u;
+    };
+  }, 0);
+})();
+
+/* ===== 2026-11-13 · 剧情页去掉一切「大按钮」，数值变化 / 宫廷日常都在剧情里跳出来 =====
+   玩家（女帝截图）：「这些东西放在这里太难看了，把它安排在剧情里面跳出来就好了呀……大选项以后全都不要了，继续剧情的也不要了。」
+   · 「继续剧情 ›」「宫廷日常 · 二十位同伴」「翻牌 · 宫宴 · 册封 · 礼物 · 调解」、顶部「宫廷 · 帝国 · 线索」数值行：全部不再显示。
+   · 下一章大按钮：不显示。本章播完、你也没在打字时自动进入下一章；需要解锁的章节只留一行小字入口。
+   · 屏幕中间叠起来的「吸引 +1 / 信任 +1」大标签、「关系变化」横幅：改成剧情消息下面一行小字，几秒后淡出。
+   · 女帝：每章结尾从「宫廷日常」里挑一件当下触发的小事，直接以旁白 + 角色台词出现在剧情里；你直接回他，
+     系统按你的回复判定（接受 / 婉拒 …），照原规则加好感、记冷却，然后接着下一章。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const BTN = /<button[^>]*data-(?:reading-next|empress-hub|empress-games)="1"[^>]*>[\s\S]*?<\/button>/g;
+  const STAT = /<div style="padding:8px;font-size:12px">[\s\S]*?<\/div>/;
+  function wrapPanel() {
+    if (typeof packPanel !== "function" || packPanel.__c151) return;
+    const pp = packPanel;
+    packPanel = function (th) {
+      let h = pp.apply(this, arguments);
+      try { if (typeof h === "string") h = h.replace(BTN, "").replace(STAT, ""); } catch (_) {}
+      return h;
+    };
+    packPanel.__c151 = 1;
+  }
+  setTimeout(wrapPanel, 0); setTimeout(wrapPanel, 400);
+
+  /* ---- 数值变化：剧情里一行小字 ---- */
+  let line = null, lineT = 0, acc = {};
+  function inlineFx(ch0) {
+    const box = document.getElementById("msgs"); if (!box) return;
+    if (!line || !line.isConnected || Date.now() - lineT > 1500) { acc = {}; line = document.createElement("div"); line.className = "fx151"; box.appendChild(line); }
+    lineT = Date.now();
+    ch0.forEach(([x, dd]) => { acc[x] = (acc[x] || 0) + dd; });
+    line.innerHTML = Object.keys(acc).filter(x => acc[x]).map(x => {
+      const f = (typeof DIMFX !== "undefined" && DIMFX[x]) || ["•", "#ccc"];
+      return '<span style="--c:' + f[1] + '">' + f[0] + " " + esc(t("rd." + x)) + " " + (acc[x] > 0 ? "+" : "") + acc[x] + "</span>";
+    }).join("");
+    const me = line; clearTimeout(me._t); me.classList.remove("out");
+    me._t = setTimeout(() => { me.classList.add("out"); setTimeout(() => me.remove(), 900); }, 5200);
+    try { box.scrollTop = box.scrollHeight; } catch (_) {}
+  }
+  if (typeof dimFloat === "function") {
+    const df = dimFloat;
+    dimFloat = function (key, ch0) { const r = df.apply(this, arguments); try { if (ch0 && ch0.length) inlineFx(ch0); } catch (_) {} return r; };
+  }
+
+  /* ---- 女帝：章末的宫廷日常直接在剧情里发生 ---- */
+  const EM = () => window.__empress147;
+  function emOn(th) { try { return !!(EM() && EM().on(th)); } catch (_) { return false; } }
+  function emSync(th) {
+    try {
+      const X = EM(), E = X.engine, s = X.state(th), f = th.pk.flags || (th.pk.flags = {}), I = window.EMPRESS_I18N147;
+      for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; }
+      f.empress_hidden = E.hidden(s) ? 1 : 0;
+      const map = Object.fromEntries((th.cast || []).map(id => [I.actor(ch(id)) === "PLAYER" ? "你" : I.actor(ch(id)), id]));
+      for (const [k, c] of Object.entries(s.characters)) if (map[k]) th.love[map[k]] = c.affection;
+    } catch (e) { console.warn("[c151] sync", e); }
+  }
+  function castId(th, actor) { try { const I = window.EMPRESS_I18N147; return (th.cast || []).find(id => I.actor(ch(id)) === actor) || null; } catch (_) { return null; } }
+  function popDaily(th) {
+    try {
+      const X = EM(), s = X.state(th), I = window.EMPRESS_I18N147;
+      const ev = X.data.daily.filter(e => X.engine.eligible(s, e)).sort((a, b) => b.priority - a.priority)[0];
+      th._ev151 = { ch: th.pk.ch, id: ev ? ev.id : null, done: !ev };
+      if (!ev) return false;
+      appendMsg(th, { who: "n", k: "act", txt: I.t(ev.narration), at: Date.now() });
+      appendMsg(th, { who: castId(th, ev.actor) || "n", k: "say", txt: I.t(ev.dialogue), at: Date.now() });
+      save(); if (curT === th.id) renderChat();
+      return true;
+    } catch (e) { console.warn("[c151] daily", e); th._ev151 = { ch: th.pk.ch, done: true }; return false; }
+  }
+  function guessIdx(txt, opts) {
+    if (/不|改天|下次|算了|忙|先完成|独处|休息|走开|别/.test(txt)) return opts.length; /* 婉拒 */
+    const a = new Set(String(txt).replace(/\s/g, "")); let best = 0, bs = -1;
+    opts.forEach((o, i) => { let n = 0; new Set(String(o)).forEach(c => { if (a.has(c)) n++; }); if (n > bs) { bs = n; best = i; } });
+    return best;
+  }
+  async function judgeDaily(th, txt) {
+    const e0 = th._ev151; if (!e0 || e0.done || !e0.id) return; e0.done = true;
+    try {
+      const X = EM(), ev = X.data.daily.find(e => e.id === e0.id); if (!ev) return;
+      const opts = ev.options.concat(["今天先独处 / 婉拒"]);
+      let i = -1;
+      try {
+        const r = await ask("互动剧里发生了一件小事：" + ev.narration + "\n角色说：" + ev.dialogue + "\n玩家回复：「" + txt + "」\n这句回复最接近哪一项？\n" + opts.map((o, k) => (k + 1) + "｜" + o).join("\n") + "\n只回 JSON：{\"n\":编号}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+        const n = r && Number(r.n); if (n >= 1 && n <= opts.length) i = n - 1;
+      } catch (_) {}
+      if (i < 0) i = guessIdx(txt, ev.options);
+      const s = X.state(th);
+      if (X.engine.daily(s, ev.id, i)) { emSync(th); save(); }
+    } catch (err) { console.warn("[c151] judge", err); }
+  }
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function (txt) {
+      try { const th = S.threads[curT]; if (th && th._ev151 && !th._ev151.done && String(txt || "").trim()) (th._ev151.game && window.__court152 ? window.__court152.judge(th, String(txt).trim()) : judgeDaily(th, String(txt).trim())); } catch (_) {}
+      return ds.apply(this, arguments);
+    };
+  }
+
+  /* ---- 下一章：自动进入（需要解锁的只留小字入口） ---- */
+  let seenAt = 0, seenKey = "";
+  setInterval(() => {
+    try {
+      const th = S.threads[curT], chat = document.getElementById("s-chat");
+      if (!th || !th.pk || !chat || chat.hidden) { seenAt = 0; return; }
+      const b = chat.querySelector("#pkwrap [data-pknext]");
+      if (!b) { seenAt = 0; return; }
+      const locked = /🔓/.test(b.textContent);
+      if (locked) { if (!b.classList.contains("nx151l")) { b.classList.add("nx151l"); b.className = b.className.replace(/\bbtn(-p|-block)?\b/g, "").trim() + " nx151l"; } return; }
+      b.classList.add("nx151");
+      const key = th.id + ":" + th.pk.ch; if (key !== seenKey) { seenKey = key; seenAt = Date.now(); }
+      if (busy || (window.READING && READING.pending.get(th.id))) { seenAt = Date.now(); return; }
+      const ta = document.getElementById("cin"); if (ta && (ta.value.trim() || document.activeElement === ta)) { seenAt = Date.now(); return; }
+      if (emOn(th) && (!th._ev151 || th._ev151.ch !== th.pk.ch)) { const g = window.__court152, even = (+th.pk.ch || 0) % 2 === 1; if (even && g ? (g.pop(th) || popDaily(th)) : (popDaily(th) || (g && g.pop(th)))) { seenAt = Date.now(); return; } }
+      if (th._ev151 && th._ev151.ch === th.pk.ch && !th._ev151.done) { seenAt = Date.now(); return; } /* 等你回他 */
+      if (Date.now() - seenAt > 3500) { seenAt = Date.now() + 60000; b.click(); }
+    } catch (_) {}
+  }, 700);
+
+  const st = document.createElement("style");
+  st.textContent =
+    "#pkwrap [data-reading-next],#pkwrap [data-empress-hub],#pkwrap [data-empress-games]{display:none!important}" +
+    "#pkwrap [data-pknext].nx151{display:none!important}" +
+    "#pkwrap [data-pknext].nx151l{display:block;margin:6px auto 2px;padding:4px 10px;background:none;border:0;color:var(--mut,#aaa);font-size:12px;text-decoration:underline;text-underline-offset:3px;width:auto}" +
+    "#fxLayer .dimpop,#fxLayer .stgban{display:none!important}" +
+    ".fx151{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:2px auto 8px;font-size:11.5px;opacity:0;animation:fx151 .5s ease forwards;transition:opacity .8s}" +
+    ".fx151 span{color:var(--c);opacity:.9;letter-spacing:.02em}" +
+    ".fx151.out{opacity:0!important}" +
+    "@keyframes fx151{from{opacity:0;transform:translateY(4px)}to{opacity:.85;transform:none}}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 女帝：翻牌 / 宫宴 / 册封 / 礼物 / 调解 也在剧情里发生；「宫廷 · 帝国 · 线索」放进关系页 =====
+   玩家选定：小游戏「也融进剧情触发」，数值「放进人物关系页」。
+   · 每章结尾轮流出现一件宫廷日常或一项宫廷安排（翻牌、宫宴座位、册封、礼物、调解），以旁白 + 角色台词出现在剧情里；
+     不弹表单、不列选项。你直接打字回答（「今晚让卢西恩陪我」「把葡萄送给卡西安」「都不要，我想一个人」），
+     系统读出你点到的人 / 礼物 / 方式，按原来小游戏的规则结算好感、信任、位分、醋意，并把结果写回剧情。
+   · 点开「他们之间」关系页时，下面多一块「宫廷」：宫廷 / 帝国 / 线索 / 破咒路线，以及每位同伴的好感、信任、位分。 */
+(function () {
+  "use strict";
+  const X = () => window.__empress147, I = () => window.EMPRESS_I18N147;
+  const RANKS = ["候选", "美人", "侍君", "宠君", "贵君", "帝君"];
+  const GIFTS = { fruit: "水果拼盘", flowers: "手扎花束", jewel: "珠宝饰物", perfume: "专属香水", song: "一首歌曲", date: "私人约会邀请" };
+  const METHODS = { listen: "分别倾听双方", rules: "共同制定规则", together: "邀请共同活动" };
+  const ORDER = ["GAME01", "GAME02", "GAME05", "GAME06", "GAME03"];
+  function avail(th) {
+    const s = X().state(th);
+    return X().data.characters.filter(c => { const v = s.characters[c.id]; return v && v.alive_status === "ALIVE" && v.consent_flags.company !== false; });
+  }
+  const nm = id => { try { return I().name(id); } catch (_) { return id; } };
+  function castId(th, actor) { try { return (th.cast || []).find(id => I().actor(ch(id)) === actor) || null; } catch (_) { return null; } }
+  function top(th, list, k) { const s = X().state(th); return list.slice().sort((a, b) => (s.characters[b.id][k] || 0) - (s.characters[a.id][k] || 0)); }
+  function prompt(th, kind) {
+    const L = avail(th); if (!L.length) return null;
+    const fav = top(th, L, "affection"), jea = top(th, L, "jealousy");
+    if (kind === "GAME01") return { narr: "夜色落下，内侍捧来一托盘刻着名字的玉牌，静静等你翻开。", who: fav[0], line: "陛下，今夜……想让谁陪着？也可以谁都不召，留给自己。" };
+    if (kind === "GAME02") return { narr: "宫宴将开，长桌两侧灯火通明，你左右两席还空着。", who: fav[0], line: "席位还空着。陛下想让谁坐在身边？献艺、赏月也可以点人。" };
+    if (kind === "GAME05") return { narr: "礼物工坊送来了新鲜的葡萄、刚扎好的花束、珠宝、香水，还有乐师候着一首新曲。", who: fav[1] || fav[0], line: "听说陛下想亲手备一份礼物——要送给谁，送什么？" };
+    if (kind === "GAME06") { if (jea.length < 2) return null; return { narr: nm(jea[0].id) + "和" + nm(jea[1].id) + "为了今天的座次又起了争执，两个人都看向你。", who: jea[0], pair: [jea[0].id, jea[1].id], line: "陛下，您来评评理。" }; }
+    if (kind === "GAME03") { const c = fav.find(c => X().state(th).characters[c.id].rank < 6); if (!c) return null; return { narr: "礼官呈上册封名册，" + nm(c.id) + "的名字排在最前面。", who: null, line: "陛下，今日要为谁晋位吗？" }; }
+    return null;
+  }
+  function pop(th) {
+    try {
+      if (!X() || !X().on(th)) return false;
+      const s = X().state(th), n = (th._gi152 = ((th._gi152 || 0) + 1));
+      for (let k = 0; k < ORDER.length; k++) {
+        const kind = ORDER[(n + k) % ORDER.length], p = prompt(th, kind); if (!p) continue;
+        th._ev151 = { ch: th.pk.ch, game: kind, pair: p.pair || null, done: false };
+        appendMsg(th, { who: "n", k: "act", txt: I().t(p.narr), at: Date.now() });
+        appendMsg(th, { who: (p.who && castId(th, p.who.id)) || "n", k: p.who ? "say" : "act", txt: I().t(p.line), at: Date.now() });
+        save(); if (curT === th.id) renderChat();
+        return true;
+      }
+    } catch (e) { console.warn("[court152] pop", e); }
+    return false;
+  }
+  function mentioned(th, txt) {
+    const out = []; const t = String(txt).toLowerCase();
+    avail(th).forEach(c => { const names = [nm(c.id), c.name, c.id].filter(Boolean).map(x => String(x).toLowerCase()); const first = String(c.name || "").split(" ")[0].toLowerCase(); if (names.some(x => x && t.includes(x)) || (first.length > 2 && t.includes(first))) out.push(c.id); });
+    return out;
+  }
+  const NO = /不用|不要|都不|谁都不|一个人|独处|算了|改天|不召|不了|不必|休息/;
+  async function parse(th, kind, txt) {
+    const L = avail(th).map(c => c.id + "=" + nm(c.id) + (c.name && c.name !== nm(c.id) ? "/" + c.name : "")).join("；");
+    const spec = {
+      GAME01: "{\"ids\":[最多3个同伴id，玩家明确不召人则为空数组],\"slot\":\"night或day\"}",
+      GAME02: "{\"left\":\"id或空串\",\"right\":\"id或空串\",\"performer\":\"id或空串\",\"moonlight\":\"id或空串\"}",
+      GAME05: "{\"target\":\"同伴id\",\"gift\":\"fruit|flowers|jewel|perfume|song|date\"}",
+      GAME06: "{\"method\":\"listen|rules|together\"}",
+      GAME03: "{\"target\":\"同伴id或空串\",\"award\":\"honor|palace|pass\"}"
+    }[kind];
+    try {
+      const r = await ask("互动剧《女帝的绝色后宫》里的一项宫廷安排，玩家用自己的话回答了。把回答读成参数。\n同伴（id=名字）：" + L + "\n礼物：" + Object.entries(GIFTS).map(([k, v]) => k + "=" + v).join("，") + "\n调解方式：" + Object.entries(METHODS).map(([k, v]) => k + "=" + v).join("，") + "\n玩家说：「" + txt + "」\n玩家拒绝或回避时返回 {\"skip\":true}。只回 JSON：" + spec, { maxTokens: 120, modelTier: "default", timeout: 12000 });
+      if (r && typeof r === "object") return r;
+    } catch (_) {}
+    if (NO.test(txt)) return { skip: true };
+    const ids = mentioned(th, txt);
+    if (kind === "GAME01") return { ids: ids.slice(0, 3), slot: /白天|日间|午|早/.test(txt) ? "day" : "night" };
+    if (kind === "GAME02") return { left: ids[0] || "", right: ids[1] || "", performer: "", moonlight: "" };
+    if (kind === "GAME05") { const g = Object.keys(GIFTS).find(k => [...GIFTS[k]].slice(0, 2).every(ch0 => txt.includes(ch0))) || (/葡萄|水果/.test(txt) ? "fruit" : /花/.test(txt) ? "flowers" : /珠|首饰|戒指/.test(txt) ? "jewel" : /香/.test(txt) ? "perfume" : /歌|曲/.test(txt) ? "song" : /约会|出去/.test(txt) ? "date" : "flowers"); return ids[0] ? { target: ids[0], gift: g } : { skip: true }; }
+    if (kind === "GAME06") return { method: /规则|轮|约定/.test(txt) ? "rules" : /一起|共同|合作/.test(txt) ? "together" : "listen" };
+    if (kind === "GAME03") return ids[0] ? { target: ids[0], award: "honor" } : { skip: true };
+    return { skip: true };
+  }
+  async function judge(th, txt) {
+    const ev = th._ev151; if (!ev || ev.done || !ev.game) return; ev.done = true;
+    try {
+      const kind = ev.game, r = await parse(th, kind, txt), s = X().state(th), ok = id => avail(th).some(c => c.id === id);
+      if (!r || r.skip) return;
+      let args;
+      if (kind === "GAME01") args = { selected_ids: [...new Set((r.ids || []).filter(ok))].slice(0, 3), time_slot: r.slot === "day" ? "day" : "night" };
+      if (kind === "GAME02") args = Object.fromEntries(["left", "right", "performer", "moonlight"].map(k => [k, ok(r[k]) ? r[k] : ""]));
+      if (kind === "GAME05") { if (!ok(r.target)) return; args = { target: r.target, gift: GIFTS[r.gift] ? r.gift : "flowers" }; }
+      if (kind === "GAME06") args = { participants: ev.pair, method: METHODS[r.method] ? r.method : "listen" };
+      if (kind === "GAME03") { if (!ok(r.target)) return; args = { target: r.target, rank_to: s.characters[r.target].rank + 1, award_type: ["honor", "palace", "pass"].includes(r.award) ? r.award : "honor" }; }
+      const res = X().engine.game(s, kind, args);
+      if (!res || !res.ok) return;
+      const rec = res.record, ids = rec.selected_ids || rec.participants || [rec.target_id || args.target].filter(Boolean);
+      appendMsg(th, { who: "n", k: "act", txt: I().t(rec.action), at: Date.now() });
+      ids.slice(0, 2).forEach(actor => { const cid = castId(th, actor), c = I().data().characters.find(c => c.id === actor); if (cid && c) appendMsg(th, { who: cid, k: "say", txt: c.voice, at: Date.now() }); });
+      try { const f = th.pk.flags || (th.pk.flags = {}), E = X().engine; for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; } f.empress_hidden = E.hidden(s) ? 1 : 0; for (const [k, c] of Object.entries(s.characters)) { const cid = castId(th, k); if (cid) th.love[cid] = c.affection; } } catch (_) {}
+      save(); if (curT === th.id) renderChat();
+    } catch (e) { console.warn("[court152] judge", e); }
+  }
+  window.__court152 = { pop, judge };
+
+  /* 关系页：宫廷数值 */
+  function courtBlock(th) {
+    const s = X().state(th), w = s.world || {};
+    const rows = X().data.characters.filter(c => s.characters[c.id]).map(c => { const v = s.characters[c.id]; return '<div class="row" style="justify-content:space-between;gap:8px;padding:4px 0;border-top:1px solid rgba(255,255,255,.06)"><span>' + esc(nm(c.id)) + '</span><span class="xs dim">' + (v.alive_status === "ALIVE" ? "好感 " + v.affection + " · 信任 " + v.trust + " · " + (RANKS[(v.rank || 1) - 1] || "") : "灵魂仍困在王冠内") + "</span></div>"; }).join("");
+    return '<div class="ct152" style="margin-top:14px"><div class="eyebrow" style="color:var(--gold)">宫廷</div><p class="sm">宫廷 ' + (w.court ?? "-") + " · 帝国 " + (w.empire_stability ?? "-") + " · 线索 " + ((s.clues || []).length) + (s.path ? " · 破咒 " + s.path : "") + (s.ending ? " · 结局 " + s.ending : "") + '</p><div class="sm">' + rows + "</div></div>";
+  }
+  if (typeof sheet === "function") {
+    const sh = sheet;
+    sheet = function (html) {
+      try { const th = S.threads[curT]; if (typeof html === "string" && X() && X().on(th) && html.includes(t("rd.h"))) html = html + I().html(courtBlock(th)); } catch (_) {}
+      return sh.apply(this, [html].concat([].slice.call(arguments, 1)));
+    };
+  }
 })();
