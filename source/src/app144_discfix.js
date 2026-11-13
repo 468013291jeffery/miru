@@ -1125,7 +1125,7 @@ pico.instantiate_detection_memory = function(size)
    玩家（截图）：「所有的剧以后都不要有这个东西……直接根据回复，去设定它后面那个值就可以了。没有必要要有选择。」
    · 章末选择、剧情中途的选择：只显示「🎭 轮到你了 + 问题」，不再列出选项。玩家自己打字（或用 ✨ AI 帮我想）回复，
      AI 判断这句最接近剧本里哪一条分支，就按那条分支加减数值 / 设旗标 / 播后续剧情；对话里只留玩家自己的原话。
-   · 「继续剧情」按钮多余：剧情暂停在「继续剧情」时自动接着播。
+   · 「继续剧情」按钮多余：剧情暂停在「继续剧情」时自动接着播。（「进入下一章」不自动点，章末只留小字入口，由玩家决定什么时候走。）
    · 剧本里仍然可以写分支（作者 / GPT 照旧写 OPT），只是不再显示给玩家，变成「按回复判定」的隐藏分支。 */
 (function () {
   "use strict";
@@ -1190,7 +1190,7 @@ pico.instantiate_detection_memory = function(size)
   setInterval(() => {
     try {
       const th = S.threads[curT], chat = document.getElementById("s-chat"); if (!th || !th.pk || !chat || chat.hidden || busy) return;
-      const b = chat.querySelector("#pkwrap [data-pkresume], #pkwrap [data-pkadvance]");
+      const b = chat.querySelector("#pkwrap [data-pkresume]"); /* 2026-11-13：「进入下一章」不再自动点（玩家：这一章还没玩完就跳了） */
       if (b && !b.disabled && !(window.READING && READING.pending.get(th.id))) b.click();
     } catch (_) {}
   }, 900);
@@ -1410,14 +1410,14 @@ pico.instantiate_detection_memory = function(size)
       const ta = document.getElementById("cin"); if (ta && (ta.value.trim() || document.activeElement === ta)) { seenAt = Date.now(); return; }
       if (emOn(th) && (!th._ev151 || th._ev151.ch !== th.pk.ch)) { const g = window.__court152, even = (+th.pk.ch || 0) % 2 === 1; if (even && g ? (g.pop(th) || popDaily(th)) : (popDaily(th) || (g && g.pop(th)))) { seenAt = Date.now(); return; } }
       if (th._ev151 && th._ev151.ch === th.pk.ch && !th._ev151.done) { seenAt = Date.now(); return; } /* 等你回他 */
-      if (Date.now() - seenAt > 3500) { seenAt = Date.now() + 60000; b.click(); }
+      /* 2026-11-13 玩家：「玩着玩着就下一章了，这一章还没玩完」⇒ 不再自动进下一章；章末只留一行小字「下一章 ›」，你想走了自己点。 */
     } catch (_) {}
   }, 700);
 
   const st = document.createElement("style");
   st.textContent =
     "#pkwrap [data-reading-next],#pkwrap [data-empress-hub],#pkwrap [data-empress-games]{display:none!important}" +
-    "#pkwrap [data-pknext].nx151{display:none!important}" +
+    "#pkwrap [data-pkadvance]," + "#pkwrap [data-pknext].nx151{display:block!important;margin:6px auto 2px;padding:4px 10px;background:none!important;border:0!important;box-shadow:none!important;color:var(--mut,#aaa)!important;font-size:12px!important;font-weight:400!important;text-decoration:underline;text-underline-offset:3px;width:auto!important;min-height:0!important}" +
     "#pkwrap [data-pknext].nx151l{display:block;margin:6px auto 2px;padding:4px 10px;background:none;border:0;color:var(--mut,#aaa);font-size:12px;text-decoration:underline;text-underline-offset:3px;width:auto}" +
     "#fxLayer .dimpop,#fxLayer .stgban{display:none!important}" +
     ".fx151{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:2px auto 8px;font-size:11.5px;opacity:0;animation:fx151 .5s ease forwards;transition:opacity .8s}" +
@@ -1659,4 +1659,31 @@ pico.instantiate_detection_memory = function(size)
       return rc.apply(this, arguments);
     };
   }
+})();
+
+/* ===== 2026-11-13 · 群像剧：一句一句看，新的一句一定出现在眼前 =====
+   玩家：「我说完话之后，一个一个人说，我还没看完就咣咣咣出了一大堆，得让我点一下再出下一个。」
+   回复本来就是「点一下出下一句」，但如果聊天记录不在最底部（往上翻过、或上一句很长把视线顶走），新的一句出现在屏幕外，
+   只剩「有新消息 ↓」，点屏幕也不会翻（在看历史时点屏幕不算「下一句」），看起来就像一下子冒出一大堆。
+   ⇒ 每当有新的一句等你点，自动把它滚到眼前；你主动往上翻看历史时不打扰，回到底部后照旧一句一句来。 */
+(function () {
+  "use strict";
+  if (!window.READING || typeof READING.wait !== "function") return;
+  const w = READING.wait;
+  READING.wait = function (th, message) {
+    const r = w.apply(this, arguments);
+    try {
+      if (th && curT === th.id) setTimeout(() => {
+        try {
+          const m = document.getElementById("msgs"); if (!m) return;
+          if (Date.now() - (m._scrolled124 || 0) < 4000) return; /* 你刚刚自己在翻 */
+          m.scrollTop = m.scrollHeight;
+          if (window.EXPERIENCE124 && EXPERIENCE124.positions) EXPERIENCE124.positions.set(th.id, { top: m.scrollTop, away: false, count: th.msgs.length });
+          const b = document.querySelector("[data-latest124]"); if (b) b.hidden = true;
+          m.classList.remove("reading-history124");
+        } catch (_) {}
+      }, 60);
+    } catch (_) {}
+    return r;
+  };
 })();
