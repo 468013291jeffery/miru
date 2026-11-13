@@ -1533,3 +1533,39 @@ pico.instantiate_detection_memory = function(size)
     };
   }
 })();
+
+/* ===== 2026-11-13 · 「🌱 某某 变了 · 封闭 → 试探」不再一人一张卡片刷屏 =====
+   玩家（女帝截图）：「这么多没必要显示出来啊。」—— 女帝有二十位同伴，一次宫廷安排就能让一排人同时换阶段，聊天里一下子冒出一长串卡片。
+   ⇒ 阶段变化不再写成聊天卡片；同一时刻的变化合并成剧情消息下方一行小字（最多列 3 个名字，其余「等 N 人」），几秒后淡出。
+     阶段本身照常记录（影响后续剧情和角色记忆），只是不再刷屏；旧存档里已经堆着的这类卡片也一并清掉。 */
+(function () {
+  "use strict";
+  const RX = /^(🌱|🥀) .+ (变了|退回了一步|changed|pulled back)$/;
+  const isArc = m => m && m.who === "sys" && m.k === "card" && RX.test(String(m.title || ""));
+  let buf = [], tmr = 0;
+  function flush() {
+    tmr = 0; const items = buf; buf = []; if (!items.length) return;
+    const box = document.getElementById("msgs"); if (!box) return;
+    const zh = typeof CL !== "function" || CL() === "zh";
+    const groups = {};
+    items.forEach(m => { const name = String(m.title).replace(/^(🌱|🥀) /, "").replace(/ (变了|退回了一步|changed|pulled back)$/, ""), key = String(m.title).slice(0, 2) + "|" + String(m.txt || ""); (groups[key] = groups[key] || []).push(name); });
+    const el = document.createElement("div"); el.className = "fx151";
+    el.innerHTML = Object.entries(groups).map(([k, names]) => {
+      const [icon, txt] = k.split("|"), shown = names.slice(0, 3).join(zh ? "、" : ", ") + (names.length > 3 ? (zh ? " 等 " + names.length + " 人" : " +" + (names.length - 3)) : "");
+      return '<span style="--c:' + (icon.indexOf("🥀") === 0 ? "#9AA3B5" : "#8BE08F") + '">' + icon + " " + esc(shown) + (txt ? " · " + esc(txt) : "") + "</span>";
+    }).join("");
+    box.appendChild(el);
+    setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 900); }, 5200);
+  }
+  if (typeof appendMsg === "function") {
+    const am = appendMsg;
+    appendMsg = function (th, m) {
+      try { if (isArc(m)) { if (th && curT === th.id) { buf.push(m); clearTimeout(tmr); tmr = setTimeout(flush, 400); } return; } } catch (_) {}
+      return am.apply(this, arguments);
+    };
+  }
+  function clean(th) {
+    try { if (!th || !th.msgs || th._arc153) return; th._arc153 = 1; const n = th.msgs.length; th.msgs = th.msgs.filter(m => !isArc(m)); if (th.msgs.length !== n) save(); } catch (_) {}
+  }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { try { clean(S.threads[curT]); } catch (_) {} return rc.apply(this, arguments); }; }
+})();
