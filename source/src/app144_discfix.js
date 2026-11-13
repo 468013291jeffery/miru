@@ -1053,11 +1053,12 @@ pico.instantiate_detection_memory = function(size)
       try { typing(true); } catch (_) {}
       let k = null;
       try {
-        const r = await ask("玩家在互动剧的一个选择点上，没有点选项，而是自己说了一句话。判断这句话的意图最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+        const r = await ask("玩家在互动剧的一个选择点上，用自己的话说了一句。判断这句话是否明确表达了某个选项的意思。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n规则：只有玩家这句话的意思和某个选项明显一致时才选它；如果说的是别的事、提了别的要求、或者看不出选了哪条，一律回 0。宁可回 0，也不要硬套。\n只回 JSON：{\"k\":\"选项字母或0\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
         k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
       } catch (_) {}
       try { typing(false); } catch (_) {}
-      if (!k || !c.choices.some(x => x.k === k)) k = guess(txt, c.choices);
+      /* 对不上任何选项：当自由聊天，角色正常接你的话，选择点继续等你（不再硬套最像的一条） */
+      if (!k || !c.choices.some(x => x.k === k)) { if (typeof reply === "function") { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[ch148] free", e); } } return; }
       const n = th.pk.ch, w = wd(th.wid);
       if (n === PCN(w) && k === "A" && aCount(th) < EN(th)) { const o = c.choices.find(x => x.k !== "A"); if (o) k = o.k; }
       if (curT === th.id && isChoose(th)) packPick(k);
@@ -1138,10 +1139,12 @@ pico.instantiate_detection_memory = function(size)
   async function classify(question, opts, txt) {
     const list = opts.map((o, i) => (i + 1) + "｜" + Lz(o.t)).join("\n");
     try {
-      const r = await ask("玩家在互动剧的一个分支点上，用自己的话回复了一句。判断这句话的意图最接近哪个分支。\n情境：" + (question || "") + "\n分支：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"n\":分支编号}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+      /* 2026-11-14 玩家：「我说吃河粉，怎么就变成『告诉他今天很棒』了？」——以前不管说什么都硬塞进最像的一条分支。
+         ⇒ 只有意思真的对得上某条分支才算；对不上（聊别的、提要求、随口一句）就当自由聊天：角色正常接你的话，分支点继续等。 */
+      const r = await ask("玩家在互动剧的一个分支点上，用自己的话回复了一句。判断这句话是否明确表达了某个分支的意思。\n情境：" + (question || "") + "\n分支：\n" + list + "\n玩家说：「" + txt + "」\n规则：只有玩家这句话的意思和某个分支明显一致时才选它；如果说的是别的事、提了别的要求、或者看不出选了哪条，一律回 0。宁可回 0，也不要硬套。\n只回 JSON：{\"n\":分支编号或0}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
       const n = r && Number(r.n); if (n >= 1 && n <= opts.length) return n - 1;
     } catch (_) {}
-    return guess(txt, opts);
+    return -1;
   }
   /* 剧情中途（stop line）：按回复判定分支，保留玩家原话 */
   let busyMap = false;
@@ -1154,6 +1157,7 @@ pico.instantiate_detection_memory = function(size)
       try { typing(true); } catch (_) {}
       const i = await classify(Lz(d.hint || d.q || ""), opts, txt);
       try { typing(false); } catch (_) {}
+      if (i < 0) { if (th.pk && th.pk.stop && typeof reply === "function") { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] free", e); } } return; }
       const o = opts[i]; if (!o || !th.pk.stop) return;
       pkSet(th, o.set);
       try { if (typeof dimApply === "function") { const P = typeof dimPairs === "function" ? dimPairs(th) : null; if (o.rd) dimApply(th, o.rd, txt); else if (P) { const m = P.find(p => p.main) || P[0]; dimApply(th, { [m.a + "|" + m.b]: dimRule(o) }, txt); } } } catch (_) {}
@@ -1206,7 +1210,9 @@ pico.instantiate_detection_memory = function(size)
     "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)>.chatt>button{display:none!important}" +
     "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)>.chatt::after{content:\"直接打字回复，你说的话会决定剧情往哪走\"!important}" +
     ".ch148t{font-size:0!important}.ch148t::after{content:\"直接打字回复，你说的话会决定剧情往哪走\";font-size:11.5px}" +
-    "#s-chat.chs148 #sugg,#s-chat:has(#pkwrap .pkpanel.stop .chatt) #sugg{display:flex!important}";
+    "#s-chat.chs148 #sugg,#s-chat:has(#pkwrap .pkpanel.stop .chatt) #sugg{display:flex!important}" +
+    /* 「你的选择 · A …」卡片不再显示：剧情按你的原话走，不需要告诉你被归到了哪一条 */
+    "#s-chat .m-dec{display:none!important}";
   document.head.appendChild(st);
 })();
 
