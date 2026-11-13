@@ -1,5 +1,1109 @@
 {
-  "version": 2,
+  "version": 3,
+  "languages": [
+    "zh",
+    "en"
+  ],
+  "clipsZh": [
+    {
+      "id": "cda17be226ee3785159b",
+      "actor": "LUCIEN",
+      "text": "终于等到你的笑了，等多久都值得。",
+      "voice": "m6",
+      "file": "cda17be226ee3785159b.mp3",
+      "bytes": 46750,
+      "sha256": "e148390246f0598c22eb03f2cb5d607685042c0fe0746e0966e7dda73a7888d7"
+    },
+    {
+      "id": "81c60f09eb1544a853e8",
+      "actor": "LUCIEN",
+      "text": "陛下，再来一颗？最甜的这颗留给你。",
+      "voice": "m6",
+      "file": "81c60f09eb1544a853e8.mp3",
+      "bytes": 45810,
+      "sha256": "79a078b93f525c10525ecab8ac7dbebc0d3797073a5ff7e0f954036cadfe75b3"
+    },
+    {
+      "id": "f5ff806d07d46ee2360c",
+      "actor": "KAEL",
+      "text": "好。我在这里。若你想换一种方式，随时告诉我。",
+      "voice": "m5",
+      "file": "f5ff806d07d46ee2360c.mp3",
+      "bytes": 52706,
+      "sha256": "e37f5ab50d728eaced089e2eff05a605f088f98cae34d23f872de906008b9400"
+    },
+    {
+      "id": "2da7bbf2f815b3e7af67",
+      "actor": "LUCIEN",
+      "text": "我想坐在你身边。这次我会好好请求。",
+      "voice": "m6",
+      "file": "2da7bbf2f815b3e7af67.mp3",
+      "bytes": 60230,
+      "sha256": "4cbb45a76712ef970fce1c3352be2e2d179547563a3cd01e5407d2ff9dd11182"
+    },
+    {
+      "id": "e22659a4bbc5583b2428",
+      "actor": "CASSIAN",
+      "text": "我来安排座位。任何人都不必勉强留下。",
+      "voice": "m1",
+      "file": "e22659a4bbc5583b2428.mp3",
+      "bytes": 35466,
+      "sha256": "5075769b3283a648dda72327d1b58ba95b99a1af7d4c60716cd32c8271ca4fc7"
+    },
+    {
+      "id": "aa3a59d5b3f02f4ce710",
+      "actor": "CASSIAN",
+      "text": "那就让我给你腾个位置。日程可以稍等。",
+      "voice": "m1",
+      "file": "aa3a59d5b3f02f4ce710.mp3",
+      "bytes": 38287,
+      "sha256": "e1fe5c6308f3e6287fce95a2f69291e7c1be251e662f9e30384880cb87d16fde"
+    },
+    {
+      "id": "f391c4ea84a7f985ab45",
+      "actor": "CASSIAN",
+      "text": "我只希望陛下能安稳休息片刻。",
+      "voice": "m1",
+      "file": "f391c4ea84a7f985ab45.mp3",
+      "bytes": 27629,
+      "sha256": "16c401d17cc919cd22039fa131e942654ff5a923471b1ca9185377db9872a377"
+    },
+    {
+      "id": "f6ebba0135a6fec68a5c",
+      "actor": "FINN",
+      "text": "音乐交给我。我保证也给别人开口的机会。",
+      "voice": "m6",
+      "file": "f6ebba0135a6fec68a5c.mp3",
+      "bytes": 57408,
+      "sha256": "1af7c8f333eddf3fcda610ff6e030702c0de8d4ffd8ece6086081e1a503c51d4"
+    },
+    {
+      "id": "658a4f5e2ddf2b0b04be",
+      "actor": "ELIAS",
+      "text": "陛下，午夜之前，有件事你必须知道。",
+      "voice": "m2",
+      "file": "658a4f5e2ddf2b0b04be.mp3",
+      "bytes": 41108,
+      "sha256": "47ad7fbc2f306c70df31047f3db1a757f6955a934bd4b49a7cb60b0c40186761"
+    },
+    {
+      "id": "8a221f3329f790b1caed",
+      "actor": "ELIAS",
+      "text": "告诉我你需要什么。我会先听清，再行动。",
+      "voice": "m2",
+      "file": "8a221f3329f790b1caed.mp3",
+      "bytes": 42989,
+      "sha256": "3be3f89957888f6a22cdec6af519d19f7cb4a4911099d991bb81847c605a2a97"
+    },
+    {
+      "id": "616094617d22ea6f254d",
+      "actor": "VALERIAN",
+      "text": "有人进过你的寝宫。我一定查出是谁。",
+      "voice": "m3",
+      "file": "616094617d22ea6f254d.mp3",
+      "bytes": 34525,
+      "sha256": "ff5c2402e8f56da8cc478877bee59a07327d0ea428b343e40432ee29e03f43d1"
+    },
+    {
+      "id": "2e7c312247de7d654f86",
+      "actor": "VALERIAN",
+      "text": "我会照你的意思做，不会越界。",
+      "voice": "m3",
+      "file": "2e7c312247de7d654f86.mp3",
+      "bytes": 26688,
+      "sha256": "246a78661622f10419702c09e7925f15de6598c348fd83b79df42059f064f6e6"
+    },
+    {
+      "id": "4bd7079c099102569965",
+      "actor": "FINN",
+      "text": "我为你的早餐写了首歌，而且毫不后悔。",
+      "voice": "m6",
+      "file": "4bd7079c099102569965.mp3",
+      "bytes": 42989,
+      "sha256": "76187d9ba5b6381217ee36fe4c0faec125c2bacfb3ba3b15c77663321bb8b3e3"
+    },
+    {
+      "id": "5757f0ba85fcf8ea0402",
+      "actor": "ROWAN",
+      "text": "我们慢慢来。让你舒服最要紧。",
+      "voice": "m5",
+      "file": "5757f0ba85fcf8ea0402.mp3",
+      "bytes": 39227,
+      "sha256": "8b8e1464c3515516b0208c88e3f3d2a2ef952815508494cbecad6d8663daeecc"
+    },
+    {
+      "id": "b6667ae9b508a7cfe359",
+      "actor": "LUCIEN",
+      "text": "我保证不炫耀。至少不会太过分。",
+      "voice": "m6",
+      "file": "b6667ae9b508a7cfe359.mp3",
+      "bytes": 39227,
+      "sha256": "7789213b6e767f5ac5864603cf0a8e98c1f352c59e778251ed73d2760a0fd47a"
+    },
+    {
+      "id": "939ecb39aa737fa3970a",
+      "actor": "LUCIEN",
+      "text": "当然。你不欠我时间，也不必向我解释。",
+      "voice": "m6",
+      "file": "939ecb39aa737fa3970a.mp3",
+      "bytes": 48004,
+      "sha256": "ddf9070965a41f086ec936f1f7407a5b9d4196ff21403e2da0e149124e30ef5b"
+    },
+    {
+      "id": "d5eaa08fdd64e4e7075b",
+      "actor": "CASSIAN",
+      "text": "你亲手赐的礼物，比整座国库都珍贵。",
+      "voice": "m1",
+      "file": "d5eaa08fdd64e4e7075b.mp3",
+      "bytes": 39227,
+      "sha256": "0a46b3dfd24c88ba2137e6bd427db8a136b627e70f368c97572e13625be72220"
+    },
+    {
+      "id": "f096c4cb8c6518aeddfb",
+      "actor": "LUCIEN",
+      "text": "我来这里时另有所图。可后来，一切都变了。",
+      "voice": "m6",
+      "file": "f096c4cb8c6518aeddfb.mp3",
+      "bytes": 74649,
+      "sha256": "3362696420aaae9094906232b5c290c22e9e83ccb14ceb04faaca5848ff29a9c"
+    },
+    {
+      "id": "1444d77dfa0eb9fda1ec",
+      "actor": "DARIAN",
+      "text": "不是我让玉牌发光的。别盯着我看。",
+      "voice": "m3",
+      "file": "1444d77dfa0eb9fda1ec.mp3",
+      "bytes": 29510,
+      "sha256": "a445ce831493a90a078b962a6a19888796a430b1375593d1e4d7db68450e2ccc"
+    },
+    {
+      "id": "3b192075d3a37cca6d08",
+      "actor": "SYLAS",
+      "text": "有些短暂的相伴，会比漫长的夜晚更难忘。",
+      "voice": "m7",
+      "file": "3b192075d3a37cca6d08.mp3",
+      "bytes": 64305,
+      "sha256": "56f2740f18bf84b1f52174ab646131f3c69719c843f0587bac0f074d15395798"
+    },
+    {
+      "id": "a7f5ba0a0586d4aa59c5",
+      "actor": "DARIAN",
+      "text": "由你决定。我会让这段时间值得。",
+      "voice": "m3",
+      "file": "a7f5ba0a0586d4aa59c5.mp3",
+      "bytes": 33585,
+      "sha256": "41f0ac5ead4df60cc8439fea37af2b92bd5c476e8e5202dadbc06537e469dbc1"
+    },
+    {
+      "id": "c33803b1f55f49312c81",
+      "actor": "LUCIEN",
+      "text": "我想留下，但前提是你也愿意。",
+      "voice": "m6",
+      "file": "c33803b1f55f49312c81.mp3",
+      "bytes": 46750,
+      "sha256": "a770f3658db806d5aae903b29b87dfabd360e70c4411ea866aa0b9a85ed393cd"
+    },
+    {
+      "id": "a59f2a589e98cd84b1bd",
+      "actor": "FINN",
+      "text": "这一刻值得记住。放心，我不编押韵的句子了。",
+      "voice": "m6",
+      "file": "a59f2a589e98cd84b1bd.mp3",
+      "bytes": 55528,
+      "sha256": "0f5cd304a3c99137f75bd82d22d5f4fab8c019d34cc036268b4c95fe18fa04b1"
+    },
+    {
+      "id": "9a969ee71ed01d4651b1",
+      "actor": "SERAPHINE",
+      "text": "王冠选中了你，因为你有能力打破它。",
+      "voice": "f1",
+      "file": "9a969ee71ed01d4651b1.mp3",
+      "bytes": 45810,
+      "sha256": "b358fa63a126cdca28dc7f9d7f79e578e55030a45c8bec34e9b28c489d2e6698"
+    },
+    {
+      "id": "4ec28a15350b02acfb00",
+      "actor": "ALISTAIR",
+      "text": "我们一步一步来，看看能发现什么。",
+      "voice": "m1",
+      "file": "4ec28a15350b02acfb00.mp3",
+      "bytes": 38287,
+      "sha256": "b738cc2b3fc49d904ced215f34f0ae5755b983dd12df689f62541c87ec7df1eb"
+    },
+    {
+      "id": "59c12a9f1dea0258ea2f",
+      "actor": "NOEL",
+      "text": "谢谢你愿意告诉我。我宁可听到真话。",
+      "voice": "m6",
+      "file": "59c12a9f1dea0258ea2f.mp3",
+      "bytes": 42989,
+      "sha256": "af5757b04f375828ba8b0f473036f1420c44a03021c35fd68b967cfe5da8e5d1"
+    },
+    {
+      "id": "421f9eb6686f4eef89c0",
+      "actor": "NOEL",
+      "text": "我想着，你也许会喜欢这些。我盼着你喜欢。",
+      "voice": "m6",
+      "file": "421f9eb6686f4eef89c0.mp3",
+      "bytes": 65245,
+      "sha256": "088293ab222e48b250aad1a461d5da02a773eb97c4cc48772c116bb731e626e6"
+    },
+    {
+      "id": "288d0a1beb87a759426b",
+      "actor": "NOEL",
+      "text": "我嫉妒了。对不起。但嫉妒不能成为借口。",
+      "voice": "m6",
+      "file": "288d0a1beb87a759426b.mp3",
+      "bytes": 62110,
+      "sha256": "e6040b986e3fc3f41db1b98f9027f183582d64496e07ba6f89bea05bc9ee0474"
+    },
+    {
+      "id": "7b7b6121f87c89fbd5e9",
+      "actor": "LUCIEN",
+      "text": "我想你了，也盼着你会有一点想我。",
+      "voice": "m6",
+      "file": "7b7b6121f87c89fbd5e9.mp3",
+      "bytes": 49885,
+      "sha256": "857f8cd03029d82908b4279d6d2441e2dff05842cfdeec6d68c7bd3a46ce6bda"
+    },
+    {
+      "id": "273189b957213245f0d4",
+      "actor": "SYLAS",
+      "text": "有人用王冠的真名伤了我。",
+      "voice": "m7",
+      "file": "273189b957213245f0d4.mp3",
+      "bytes": 28569,
+      "sha256": "b376a3e70dfcce055477635eb09beff07befee99a4c3d42a95b48b02a095b7d4"
+    },
+    {
+      "id": "f568332ea8f9aab4672c",
+      "actor": "RAFAEL",
+      "text": "诸位，既然要争，那就争得漂亮一点。",
+      "voice": "m4",
+      "file": "f568332ea8f9aab4672c.mp3",
+      "bytes": 33585,
+      "sha256": "b116dd6e1b4e450de70a533d2387b085a072041112559ffc4510d52c580be42a"
+    },
+    {
+      "id": "b73236003c5442836eee",
+      "actor": "FINN",
+      "text": "她统御群星与海洋，却没人给我留一支舞。",
+      "voice": "m6",
+      "file": "b73236003c5442836eee.mp3",
+      "bytes": 63364,
+      "sha256": "4ebb2f6460e3459c9a2d13046c30f3665b7c4a807c2f473ddacf4aff84d07689"
+    },
+    {
+      "id": "5998a9c667b31665dd2b",
+      "actor": "ELIAS",
+      "text": "别喝！这是记忆封印！",
+      "voice": "m2",
+      "file": "5998a9c667b31665dd2b.mp3",
+      "bytes": 23867,
+      "sha256": "1b13698861c7abf58046f5b266f3e231975e40bf8f3f630b1054f965defa9a67"
+    },
+    {
+      "id": "bf3c82b5a80452a76491",
+      "actor": "RAFAEL",
+      "text": "除非你愿意，否则不必有观众。此刻只属于我们。",
+      "voice": "m4",
+      "file": "bf3c82b5a80452a76491.mp3",
+      "bytes": 59289,
+      "sha256": "d316637e2ea100668222a343fe368e29f185c27177edc20b67aa9933ab7933c1"
+    },
+    {
+      "id": "c8625c708d8935cc6181",
+      "actor": "FINN",
+      "text": "不是刺客。是王冠杀了他。",
+      "voice": "m6",
+      "file": "c8625c708d8935cc6181.mp3",
+      "bytes": 30450,
+      "sha256": "7cfab771c8b64f04d56c37d08beb860c1c617def8745307f20f970eb3f4f2e1a"
+    },
+    {
+      "id": "af2a6b0e23e5b5b90c4d",
+      "actor": "ALISTAIR",
+      "text": "历史没有忘记她，是有人抹去了她。",
+      "voice": "m1",
+      "file": "af2a6b0e23e5b5b90c4d.mp3",
+      "bytes": 40168,
+      "sha256": "08843dff8abfbb7ba4fcaf9dccdbb247ecf22489907e212dfaec3258b6fdfdb7"
+    },
+    {
+      "id": "adf5a36ecfb54d5ee556",
+      "actor": "ELIAS",
+      "text": "这道咒术原本并不邪恶，是后来被人改写了。",
+      "voice": "m2",
+      "file": "adf5a36ecfb54d5ee556.mp3",
+      "bytes": 42989,
+      "sha256": "6e9f609d795b6e85e2aa35c2ecbaf7568db793129ee7296a678cbab6281f353c"
+    },
+    {
+      "id": "abd93281a204fcc14d95",
+      "actor": "VALERIAN",
+      "text": "任何秘密，都不值得你失去自由。",
+      "voice": "m3",
+      "file": "abd93281a204fcc14d95.mp3",
+      "bytes": 27629,
+      "sha256": "26fbf83b38130462bea4d32e7313cefe30b99d0bbc340f12b9123755a0ce8549"
+    },
+    {
+      "id": "3f0b9043b67c30a2d259",
+      "actor": "KAEL",
+      "text": "我留下是因为爱你，不是因为王冠命令我。",
+      "voice": "m5",
+      "file": "3f0b9043b67c30a2d259.mp3",
+      "bytes": 37346,
+      "sha256": "9907a7173e26f35f8745d007d9e6d3240863e4699cc21033ab752ed5e7222796"
+    },
+    {
+      "id": "8c016cb45b83bd60484c",
+      "actor": "KAEL",
+      "text": "当然。你不欠我时间，也不必向我解释。",
+      "voice": "m5",
+      "file": "8c016cb45b83bd60484c.mp3",
+      "bytes": 40168,
+      "sha256": "780cc05cde97ad389547cd61de6876a6f2d899643a8a850fee21737973382e7c"
+    },
+    {
+      "id": "207ff93b449340a8938c",
+      "actor": "DARIAN",
+      "text": "那东西是活的！到我身后！",
+      "voice": "m3",
+      "file": "207ff93b449340a8938c.mp3",
+      "bytes": 32644,
+      "sha256": "c5dc46d9f524b359d655687c9a6498c2d6f9097cd73c0cb8ab51c07d1a21149e"
+    },
+    {
+      "id": "13d79ea86f723d3d4021",
+      "actor": "KAEL",
+      "text": "你受伤了吗？没有就好。那我就尽到了职责。",
+      "voice": "m5",
+      "file": "13d79ea86f723d3d4021.mp3",
+      "bytes": 59289,
+      "sha256": "a35c19e208f5d05c94ed8dd974c70ba3eab594fe77149cd7b7448a1703b4a085"
+    },
+    {
+      "id": "ae9a80989fa123a9fef9",
+      "actor": "LUCIEN",
+      "text": "他不能丢下我们，不能以这种方式。",
+      "voice": "m6",
+      "file": "ae9a80989fa123a9fef9.mp3",
+      "bytes": 51766,
+      "sha256": "b3b89b12d5d6a42f362f8fe5d7110daf4b94f3432e58afe34d50fe5a50eceb68"
+    },
+    {
+      "id": "46f66d56e746d231ede3",
+      "actor": "ISAAC",
+      "text": "把王冠给我，我就归还你的骑士。",
+      "voice": "m3",
+      "file": "46f66d56e746d231ede3.mp3",
+      "bytes": 30450,
+      "sha256": "f930dff86900ea3e78192a85efabbe2ad16955027c82fc357c4d501e1b164b73"
+    },
+    {
+      "id": "e8ef436068ce49c620c8",
+      "actor": "CASSIAN",
+      "text": "头衔不能命令我爱谁。我选择你。",
+      "voice": "m1",
+      "file": "e8ef436068ce49c620c8.mp3",
+      "bytes": 43929,
+      "sha256": "cddf4fcd5bfa20e01f13c6ae12dc556ae6cddc19c998a61bbac0b5ef6bec70d9"
+    },
+    {
+      "id": "0c5f44fc13a20848b5ba",
+      "actor": "CASSIAN",
+      "text": "当然。你不欠我时间，也不必向我解释。",
+      "voice": "m1",
+      "file": "0c5f44fc13a20848b5ba.mp3",
+      "bytes": 48004,
+      "sha256": "87c8debc468e139fc7a7b9412cc1f79d32b676ff3a15e368f433031de59154fa"
+    },
+    {
+      "id": "206a45086c9f5c6dbb0b",
+      "actor": "SERAPHINE",
+      "text": "王冠无法命令一颗自愿交付的心。",
+      "voice": "f1",
+      "file": "206a45086c9f5c6dbb0b.mp3",
+      "bytes": 36406,
+      "sha256": "9700d677f287a12f7315f80f853ce916b97b05caff4594b0c40329a7f406793e"
+    },
+    {
+      "id": "c137c75d70a77921771a",
+      "actor": "KAEL",
+      "text": "我是不是错过了什么？我答应过要留下。",
+      "voice": "m5",
+      "file": "c137c75d70a77921771a.mp3",
+      "bytes": 45810,
+      "sha256": "df774d4a066fd145be8133d96636e0efe149abdd07691674da0892d44f883f72"
+    },
+    {
+      "id": "2fe51a538337a201f0c8",
+      "actor": "SERAPHINE",
+      "text": "守住你的王座，也让他们守住自己的心。",
+      "voice": "f1",
+      "file": "2fe51a538337a201f0c8.mp3",
+      "bytes": 38287,
+      "sha256": "4539b24af368c93b89382c3b338b572b8e8eb5f8d954ca9fbbeecb97d9be144e"
+    },
+    {
+      "id": "279fdc54e486aa7789f7",
+      "actor": "LUCIEN",
+      "text": "我有自己的感受。显然，轮值表没有。",
+      "voice": "m6",
+      "file": "279fdc54e486aa7789f7.mp3",
+      "bytes": 61170,
+      "sha256": "8ff6e55546931d8605ec468c7adf9dd01113a34258f3dd6509817592635d8f03"
+    },
+    {
+      "id": "c43eaeb6b7f6eb7a8cb2",
+      "actor": "THEO",
+      "text": "我做了甜点。也许还用糖写了你的名字。",
+      "voice": "m4",
+      "file": "c43eaeb6b7f6eb7a8cb2.mp3",
+      "bytes": 48004,
+      "sha256": "d65c8eb0d685b9c7823c6ce08146c8d4f17f60fdda349faa67ac3fb9ea0e498c"
+    },
+    {
+      "id": "468d996e8d8b6867d753",
+      "actor": "THEO",
+      "text": "最好吃的那一口，我给你留着。",
+      "voice": "m4",
+      "file": "468d996e8d8b6867d753.mp3",
+      "bytes": 25748,
+      "sha256": "eaf86db120dc3f7db49100811b1eac1487b3a858e2b047d76969d7d11c2d0e2b"
+    },
+    {
+      "id": "a43561ed3fe02876e641",
+      "actor": "CASSIAN",
+      "text": "即使我希望被选中的是自己，也会尊重你的决定。",
+      "voice": "m1",
+      "file": "a43561ed3fe02876e641.mp3",
+      "bytes": 55528,
+      "sha256": "6a54c3558b8f542b3eac7e000f8b824298f2558a3a48380b3fbfc1a2cde3f34f"
+    },
+    {
+      "id": "8778b0cc330139d9562d",
+      "actor": "FINN",
+      "text": "十二个男人，一张早餐桌。我的下一首名曲有了。",
+      "voice": "m6",
+      "file": "8778b0cc330139d9562d.mp3",
+      "bytes": 61170,
+      "sha256": "4a7910b83784a9d35ee158dc991cb962463ba8c346e3d5dfde08c26ac599091b"
+    },
+    {
+      "id": "0ac8a946d59f2fd0e6ae",
+      "actor": "FINN",
+      "text": "当然。你不欠我时间，也不必向我解释。",
+      "voice": "m6",
+      "file": "0ac8a946d59f2fd0e6ae.mp3",
+      "bytes": 46750,
+      "sha256": "6455ad61639e00ba471f5c48153d5516dbfa13dc6474e6a3f34890a982004eeb"
+    },
+    {
+      "id": "0984628dbed9f8c9b8b4",
+      "actor": "MALIK",
+      "text": "从今往后，再也没有人能替你决定人生。",
+      "voice": "m3",
+      "file": "0984628dbed9f8c9b8b4.mp3",
+      "bytes": 42989,
+      "sha256": "7073d72b3844271128b12f5e00ec32ce3b2ab5604ac0d27279ffd04abc21068e"
+    },
+    {
+      "id": "23a5b170464b61cbcdeb",
+      "actor": "VALERIAN",
+      "text": "无论你选择哪一种，那都会是你自己的决定。",
+      "voice": "m3",
+      "file": "23a5b170464b61cbcdeb.mp3",
+      "bytes": 41108,
+      "sha256": "784fb3495bcfe9cca678eb2c973095c9f84fb628f52068992f4bdad98278e190"
+    },
+    {
+      "id": "3715ae861e3b9f84914b",
+      "actor": "MALIK",
+      "text": "节奏由你决定。我很高兴能陪着你。",
+      "voice": "m3",
+      "file": "3715ae861e3b9f84914b.mp3",
+      "bytes": 40168,
+      "sha256": "abbdc853c29a4411604746d2e5237dedb9e4480a82b8631a0003b96f06435fa0"
+    },
+    {
+      "id": "22f863c0bba19fc894e4",
+      "actor": "VALERIAN",
+      "text": "当然。你不欠我时间，也不必向我解释。",
+      "voice": "m3",
+      "file": "22f863c0bba19fc894e4.mp3",
+      "bytes": 44870,
+      "sha256": "0e52d163cdebbef6459475746d8ec83ce39fc592be6d72b750ca1ea2487ba0e2"
+    },
+    {
+      "id": "e072fc7759a55dcbe49e",
+      "actor": "SERAPHINE",
+      "text": "你打破了第一顶王冠。你知道第二顶沉睡在哪里吗？",
+      "voice": "f1",
+      "file": "e072fc7759a55dcbe49e.mp3",
+      "bytes": 53647,
+      "sha256": "d3e809ba9cb80752cfbf27199b0b7452feccdbabd149212ffe46fa97c3c69d6f"
+    },
+    {
+      "id": "da1c5eccb125613d7e63",
+      "actor": "LUCIEN",
+      "text": "早安，我的美人。今天轮到谁宠你？",
+      "voice": "m6",
+      "file": "da1c5eccb125613d7e63.mp3",
+      "bytes": 42989,
+      "sha256": "4f5b1d7d53b0332666d0ffedadef2ee0f490bfb5031d4a6336df78acee9fc410"
+    },
+    {
+      "id": "0b319c1ae7e1eb1d941f",
+      "actor": "CASSIAN",
+      "text": "蜂蜜，两滴。我记着呢。",
+      "voice": "m1",
+      "file": "0b319c1ae7e1eb1d941f.mp3",
+      "bytes": 39227,
+      "sha256": "bdc6a43f41b0469ee872b4787958b4bab50e12d249f2ec3ef29bcae4e2051eab"
+    },
+    {
+      "id": "b0dc03ac9f28e6f0a53f",
+      "actor": "CASSIAN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m1",
+      "file": "b0dc03ac9f28e6f0a53f.mp3",
+      "bytes": 52706,
+      "sha256": "b02678914135224d0f4f833764ccb7fda451d09a86259855f6cc83e29a647898"
+    },
+    {
+      "id": "1ee95cbd92e58827f55f",
+      "actor": "LUCIEN",
+      "text": "我带了葡萄，还有一个足以说服你的笑容。",
+      "voice": "m6",
+      "file": "1ee95cbd92e58827f55f.mp3",
+      "bytes": 51766,
+      "sha256": "cafa8fb9dec14380524186cc1c4634622d94986afe7f47b8ccd2b6bf4b4c8c58"
+    },
+    {
+      "id": "98730656ed84c2343847",
+      "actor": "LUCIEN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m6",
+      "file": "98730656ed84c2343847.mp3",
+      "bytes": 39227,
+      "sha256": "0d922f30d9c92555563fb7029ce8499c8ac8e1b6533f8080d075ea170438156b"
+    },
+    {
+      "id": "7074de23416c994d6d84",
+      "actor": "KAEL",
+      "text": "如果我的手太重，记得告诉我。",
+      "voice": "m5",
+      "file": "7074de23416c994d6d84.mp3",
+      "bytes": 28569,
+      "sha256": "bc6bdfe3ef7173da3568b68428271a9fe4688e5c77d9201f4e9a146ed2882068"
+    },
+    {
+      "id": "f4db746606e24932e0d3",
+      "actor": "KAEL",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m5",
+      "file": "f4db746606e24932e0d3.mp3",
+      "bytes": 42989,
+      "sha256": "3f2d1d4571d1f3a8e822591ad0029b87b8e51a927a96c60d5f2887fe6bccb408"
+    },
+    {
+      "id": "6a2e952d177cf0174fcd",
+      "actor": "SYLAS",
+      "text": "第一朵银玫瑰，我为你留着。",
+      "voice": "m7",
+      "file": "6a2e952d177cf0174fcd.mp3",
+      "bytes": 31390,
+      "sha256": "3811d1ab955408c0c34c06ed0e8cb2ecea1a4f29f845dbdf42cd153a884687d3"
+    },
+    {
+      "id": "c0922953959a266bb944",
+      "actor": "SYLAS",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m7",
+      "file": "c0922953959a266bb944.mp3",
+      "bytes": 42989,
+      "sha256": "9344181be47a0e5e0b985bbc5d857d06d6755c8a03dc769bd05fcfdec588f847"
+    },
+    {
+      "id": "9fe0525566a81ad8af05",
+      "actor": "DARIAN",
+      "text": "我不是来乞求的。我来，是因为我选择了你。",
+      "voice": "m3",
+      "file": "9fe0525566a81ad8af05.mp3",
+      "bytes": 41108,
+      "sha256": "6003b8d69ffeff0c1f064c006526bdbe6ae2af1ffe197d12ecbe0275490de8d9"
+    },
+    {
+      "id": "51ee10f85e130c559ca8",
+      "actor": "DARIAN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m3",
+      "file": "51ee10f85e130c559ca8.mp3",
+      "bytes": 32644,
+      "sha256": "a288fe7b6f8f6596a916a743a399098a90adddc49b406929ffcd15050ae81f20"
+    },
+    {
+      "id": "5c95a44e2a1e06787f9e",
+      "actor": "ELIAS",
+      "text": "我本该祈祷，可此刻我满心都在担心你。",
+      "voice": "m2",
+      "file": "5c95a44e2a1e06787f9e.mp3",
+      "bytes": 42989,
+      "sha256": "ce07fda79bbd33a98758b4978e07aed4e22f90fe53b74dda891565b4710ba5bf"
+    },
+    {
+      "id": "d34beaa2de24401507f8",
+      "actor": "ELIAS",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m2",
+      "file": "d34beaa2de24401507f8.mp3",
+      "bytes": 26688,
+      "sha256": "6e5bf7210932d0926179a26aaf1510bef263e96361d350821f9bfc7a44844342"
+    },
+    {
+      "id": "0152887c19fa7de62923",
+      "actor": "RAFAEL",
+      "text": "跳一支舞吧。不戴王冠，只有你和我。",
+      "voice": "m4",
+      "file": "0152887c19fa7de62923.mp3",
+      "bytes": 39227,
+      "sha256": "5b1190ce5b4844b4d578ba35a001d17fc1153acef98470d50f979cc1f99598a0"
+    },
+    {
+      "id": "cdaff4031a13664384f8",
+      "actor": "FINN",
+      "text": "这座宫廷需要更好的轮值表，或者一位裁判。",
+      "voice": "m6",
+      "file": "cdaff4031a13664384f8.mp3",
+      "bytes": 60230,
+      "sha256": "be1722a3e0dde8e3811d25e9f1828aa4ce68c1d8e555364079ac1a0e7c608757"
+    },
+    {
+      "id": "865484297cf0be9b4e57",
+      "actor": "RAFAEL",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m4",
+      "file": "865484297cf0be9b4e57.mp3",
+      "bytes": 30450,
+      "sha256": "65b25ca520927faf354feb01d6d713968e3d8d5abb243a8e3914539198f3991c"
+    },
+    {
+      "id": "f64d793cbf6742f8a2df",
+      "actor": "ALISTAIR",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m1",
+      "file": "f64d793cbf6742f8a2df.mp3",
+      "bytes": 42048,
+      "sha256": "df75cc4a3d9424ef88a486b84abe0606b67b45d45019e94b2f050e12f72577b6"
+    },
+    {
+      "id": "a6101849c04b237158c8",
+      "actor": "ALISTAIR",
+      "text": "答案就藏在那些没人愿意读的文字里。",
+      "voice": "m1",
+      "file": "a6101849c04b237158c8.mp3",
+      "bytes": 48004,
+      "sha256": "34c09721bf7e680e73c858fe851d94165f6cb55d117bb0abe7b2c61e016b9bad"
+    },
+    {
+      "id": "aca80a611f8924c933e6",
+      "actor": "NOEL",
+      "text": "你说喜欢白色，所以我种下了这些玫瑰。",
+      "voice": "m6",
+      "file": "aca80a611f8924c933e6.mp3",
+      "bytes": 44870,
+      "sha256": "3be0cb771ddb80633a1eceec964d6e49e5d9b4927702c57c63393c8596c87a6d"
+    },
+    {
+      "id": "5c749540f17319b3c454",
+      "actor": "NOEL",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m6",
+      "file": "5c749540f17319b3c454.mp3",
+      "bytes": 42989,
+      "sha256": "1729234efa8810e1e359b41e9c98193e910c3a17ec37bf120f5e60f96ad302a9"
+    },
+    {
+      "id": "67c2b6d1b372126a45ae",
+      "actor": "MALIK",
+      "text": "你操劳了一整天，今夜让我照顾你，好吗？",
+      "voice": "m3",
+      "file": "67c2b6d1b372126a45ae.mp3",
+      "bytes": 41108,
+      "sha256": "4dd1f061e18f66a04afe7cfd12710ccf6805e9c698b59b32da1d8711d16ec68c"
+    },
+    {
+      "id": "43169b6adb4703d1341a",
+      "actor": "MALIK",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m3",
+      "file": "43169b6adb4703d1341a.mp3",
+      "bytes": 32644,
+      "sha256": "794286b727ee481814a2e799b5aac5872ee5433c1333969fabc91dc5ec0ad058"
+    },
+    {
+      "id": "cde927a400515a412c86",
+      "actor": "FINN",
+      "text": "我为你写了首歌。其实，写了十二首。",
+      "voice": "m6",
+      "file": "cde927a400515a412c86.mp3",
+      "bytes": 60230,
+      "sha256": "eabf89700b37c5f56a5a2b68517bcf038aa8655c14f162227f09795c9378e64b"
+    },
+    {
+      "id": "ea41c4612ee2a15c6ca8",
+      "actor": "FINN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m6",
+      "file": "ea41c4612ee2a15c6ca8.mp3",
+      "bytes": 54587,
+      "sha256": "d4bb5e0b4bacf3c3f68684c590941167f1d659732f868659d1ec92d80e5c6210"
+    },
+    {
+      "id": "a826ce1ce18b87e8a481",
+      "actor": "VALERIAN",
+      "text": "我能守住你的秘密，但不会替你选择。",
+      "voice": "m3",
+      "file": "a826ce1ce18b87e8a481.mp3",
+      "bytes": 36406,
+      "sha256": "f2f2d698053131a7bd279df6a3c909053636cf41925bec9af6eef0f238950235"
+    },
+    {
+      "id": "5a329b163ccf91ef1f9a",
+      "actor": "VALERIAN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m3",
+      "file": "5a329b163ccf91ef1f9a.mp3",
+      "bytes": 34525,
+      "sha256": "62bb6d685c7c55cd8c8c40c4890c7f523bc7c51fb54aeba3c4157e3d091912f4"
+    },
+    {
+      "id": "90fac06ebbc4d88627c2",
+      "actor": "THEO",
+      "text": "这些是我专门为你做的。",
+      "voice": "m4",
+      "file": "90fac06ebbc4d88627c2.mp3",
+      "bytes": 23867,
+      "sha256": "bdb68602937709d55524049cbc92a96623f64cce8f353923ae44dfccc4d46d41"
+    },
+    {
+      "id": "517758139fd10670419a",
+      "actor": "THEO",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m4",
+      "file": "517758139fd10670419a.mp3",
+      "bytes": 38287,
+      "sha256": "b23d68c39d2484c9a5f4ee218ebf83041de05074450be1e7864eac43f11ed17e"
+    },
+    {
+      "id": "995cfbb1ad4ef6cf687b",
+      "actor": "ROWAN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m5",
+      "file": "995cfbb1ad4ef6cf687b.mp3",
+      "bytes": 33585,
+      "sha256": "f6cd693e0fa44376958183e6ddae623fd707f20dbd2c1990b2f3ccb76a2dcea1"
+    },
+    {
+      "id": "6ca6516bc8c70c991846",
+      "actor": "EVREN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m7",
+      "file": "6ca6516bc8c70c991846.mp3",
+      "bytes": 39227,
+      "sha256": "e1b4719e1dcd64814ba342c59535346068614c26500d58484968a2105ede9c0c"
+    },
+    {
+      "id": "c4dcfd9abac2a4a82a31",
+      "actor": "EVREN",
+      "text": "今晚的星星，似乎格外爱吃醋。",
+      "voice": "m7",
+      "file": "c4dcfd9abac2a4a82a31.mp3",
+      "bytes": 38287,
+      "sha256": "e1708e59bd808a606ea11cc37817596c56bb0f3b3fc06bd8b596b230cefa32cf"
+    },
+    {
+      "id": "d12cd2fb38f7f5cc6ffc",
+      "actor": "NICO",
+      "text": "陛下，别动。就快画好了。",
+      "voice": "m4",
+      "file": "d12cd2fb38f7f5cc6ffc.mp3",
+      "bytes": 37346,
+      "sha256": "559761843b51550bdffe73c3dc4e0e43d1057935d5c150f127a1641626fe66b2"
+    },
+    {
+      "id": "f516b047b5d7a690646f",
+      "actor": "NICO",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m4",
+      "file": "f516b047b5d7a690646f.mp3",
+      "bytes": 36406,
+      "sha256": "402841abe4cdad8521c8bff37715e107d60c9a4cd30d9f573ec1a46f91158b0f"
+    },
+    {
+      "id": "75fbb4d154183720d405",
+      "actor": "ORION",
+      "text": "连狮鹫都喜欢你。",
+      "voice": "m5",
+      "file": "75fbb4d154183720d405.mp3",
+      "bytes": 17284,
+      "sha256": "71819c97de370e95e5f2c893b51480d457f8be01eb9ba415bf780957981a9c31"
+    },
+    {
+      "id": "dd5e2138ed342fc307db",
+      "actor": "ORION",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m5",
+      "file": "dd5e2138ed342fc307db.mp3",
+      "bytes": 33585,
+      "sha256": "e438d2f95c8c27f36919ddf33580ca93ea37abc4c64b053545bb96a34bdc9e48"
+    },
+    {
+      "id": "c7198f5c7f00f543f01b",
+      "actor": "JASPER",
+      "text": "这些花，只为你绽放。",
+      "voice": "m2",
+      "file": "c7198f5c7f00f543f01b.mp3",
+      "bytes": 26688,
+      "sha256": "f8d81f790e30378828a9494695ab3205e6621e7d70c7deebe286ec1828896b35"
+    },
+    {
+      "id": "26ff24832a6db8bef595",
+      "actor": "JASPER",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m2",
+      "file": "26ff24832a6db8bef595.mp3",
+      "bytes": 32644,
+      "sha256": "f8320f575c93e15404073d3c735bba5cf24a096ea838dd43d5c6966ccb2285f9"
+    },
+    {
+      "id": "7d644da5b88179dc9e35",
+      "actor": "CASSIEL",
+      "text": "我让雪落下了，只落在你指定的地方。",
+      "voice": "m7",
+      "file": "7d644da5b88179dc9e35.mp3",
+      "bytes": 42989,
+      "sha256": "3dfc708b32fb78ce7c928f028fcd5208e571c7d9d93935c3b4dcf8949fcfe015"
+    },
+    {
+      "id": "7f5c5093e3254c452194",
+      "actor": "ROWAN",
+      "text": "要不要让我替你放松一下肩膀？",
+      "voice": "m5",
+      "file": "7f5c5093e3254c452194.mp3",
+      "bytes": 30450,
+      "sha256": "7b965013bbcddeb9fed0c744da951c467326322d3df6d6ab784e8eaa956e5e2b"
+    },
+    {
+      "id": "e4abc01d5febfaeba03f",
+      "actor": "CASSIEL",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m7",
+      "file": "e4abc01d5febfaeba03f.mp3",
+      "bytes": 34525,
+      "sha256": "5a6feea42c2e8baed426ec4d9743de84517b5f69333518583b88e4ec3dcad699"
+    },
+    {
+      "id": "ec56e45325e40575f6a2",
+      "actor": "ADRIEN",
+      "text": "这款香气，我只为一个人调配。",
+      "voice": "m1",
+      "file": "ec56e45325e40575f6a2.mp3",
+      "bytes": 41108,
+      "sha256": "68f49d396873496f8a8a9a69d13c26c8d544aef7d9a80c58139077d768c2cd00"
+    },
+    {
+      "id": "468dd043b380ee94d624",
+      "actor": "ADRIEN",
+      "text": "当然。慢慢来，照顾好自己。",
+      "voice": "m1",
+      "file": "468dd043b380ee94d624.mp3",
+      "bytes": 43929,
+      "sha256": "7a226960dd256cf1d5722dd57e32ab323d8208b38ef68617e0d8cf47623abd59"
+    },
+    {
+      "id": "62feeca2b0ba5d17d9f2",
+      "actor": "LUCIEN",
+      "text": "让我喂你一颗，好吗？",
+      "voice": "m6",
+      "file": "62feeca2b0ba5d17d9f2.mp3",
+      "bytes": 23867,
+      "sha256": "66566f5974dcb5c703a7f2951382c9249afe6d97aa4db28cebe8e023d1473e55"
+    },
+    {
+      "id": "f3bfee5e29f6fa40e103",
+      "actor": "ROWAN",
+      "text": "你看起来很疲惫。让我帮你，好吗？",
+      "voice": "m5",
+      "file": "f3bfee5e29f6fa40e103.mp3",
+      "bytes": 48945,
+      "sha256": "f4f773636a05fff04ab5afcb3df22aa7d16e675743734a23275589f69ceb4fbc"
+    },
+    {
+      "id": "2dfef6241f7425216b3b",
+      "actor": "CASSIAN",
+      "text": "蜂蜜，两滴。和往常一样。",
+      "voice": "m1",
+      "file": "2dfef6241f7425216b3b.mp3",
+      "bytes": 30450,
+      "sha256": "2c658877835c0c0e3c84ae592eb93c7f6848edc3bc8ee57e5f937e0f8d58d8bd"
+    },
+    {
+      "id": "98eb01d55509b8acfe82",
+      "actor": "SYLAS",
+      "text": "这朵花，我为你留着。",
+      "voice": "m7",
+      "file": "98eb01d55509b8acfe82.mp3",
+      "bytes": 21986,
+      "sha256": "7a628592afb4a7259f4a61e32cf4606c94685d951d29dcc59bbb6fb1d82f75f4"
+    },
+    {
+      "id": "eb98ffabb1861dece38a",
+      "actor": "RAFAEL",
+      "text": "我能请你跳这支舞吗？",
+      "voice": "m4",
+      "file": "eb98ffabb1861dece38a.mp3",
+      "bytes": 21046,
+      "sha256": "adb09497758fc83068a7966a7117d5cfbaf6fd27832432e576824162816ec9fa"
+    },
+    {
+      "id": "704f4284c7cb8723d6ff",
+      "actor": "DARIAN",
+      "text": "因为你想看，我才做的。别告诉别人。",
+      "voice": "m3",
+      "file": "704f4284c7cb8723d6ff.mp3",
+      "bytes": 33585,
+      "sha256": "1f7b41a9dc461b6fd5053c1d1623ad880083c574aec88eda00688f31a1596a30"
+    },
+    {
+      "id": "1dbedc2180e61da681f4",
+      "actor": "ELIAS",
+      "text": "你不必每时每刻都那么坚强。",
+      "voice": "m2",
+      "file": "1dbedc2180e61da681f4.mp3",
+      "bytes": 27629,
+      "sha256": "51e5de045dea097482c5db51b8b016ebc45cda04cc7d408fda1640aab3ed01de"
+    },
+    {
+      "id": "05d19cb0c81af5d28e7a",
+      "actor": "MALIK",
+      "text": "今夜，让我为你分担一点。",
+      "voice": "m3",
+      "file": "05d19cb0c81af5d28e7a.mp3",
+      "bytes": 23867,
+      "sha256": "cf9c20f07efcd6af915bffd1c81e68dbaf4bdf3ad0950ff954501fb137a9bd66"
+    },
+    {
+      "id": "8d623bee56bf56e62581",
+      "actor": "ALISTAIR",
+      "text": "陛下，落一子吧，让我见识你的本事。",
+      "voice": "m1",
+      "file": "8d623bee56bf56e62581.mp3",
+      "bytes": 45810,
+      "sha256": "3fb80dde924d447f2296838d8414b5087ffc5ec162bc0192b7ef1d10d461cd3e"
+    },
+    {
+      "id": "63420837dfe595b5d13f",
+      "actor": "NOEL",
+      "text": "我想做得比昨天更好。",
+      "voice": "m6",
+      "file": "63420837dfe595b5d13f.mp3",
+      "bytes": 24808,
+      "sha256": "18ff854584d4c13ff34a0de3fb790c2f50730963d467b92873cccadf38f49517"
+    },
+    {
+      "id": "54a3e67beacad85e5e46",
+      "actor": "FINN",
+      "text": "这段副歌，肯定会把所有人都得罪一遍。",
+      "voice": "m6",
+      "file": "54a3e67beacad85e5e46.mp3",
+      "bytes": 49885,
+      "sha256": "f2b1e9d15d1f8636df18934c86f80ca0554a5184fd088569d2d9379d22adaeca"
+    },
+    {
+      "id": "9ffdf8b9332afcd4a5f9",
+      "actor": "VALERIAN",
+      "text": "想到王座之前，我先想到了你。",
+      "voice": "m3",
+      "file": "9ffdf8b9332afcd4a5f9.mp3",
+      "bytes": 35466,
+      "sha256": "e4d10e3997c480d58bccfbbe386664048d00c1a3352a69c37f9dd0778266dc88"
+    },
+    {
+      "id": "9c89b3a1bc851a49a095",
+      "actor": "THEO",
+      "text": "陛下，要不要帮我尝尝？",
+      "voice": "m4",
+      "file": "9c89b3a1bc851a49a095.mp3",
+      "bytes": 28569,
+      "sha256": "56a95358dc46feb4f2ca65f2aa046c34a85b1084f8d2b0e07857a31bb12c0720"
+    },
+    {
+      "id": "70562ab3aa6a625c50e7",
+      "actor": "EVREN",
+      "text": "星星不肯说出他的名字。",
+      "voice": "m7",
+      "file": "70562ab3aa6a625c50e7.mp3",
+      "bytes": 28569,
+      "sha256": "f5c53010e0b701edb2a109fb998cf2aa66f6ad47d1959bf657886933ac37a9eb"
+    },
+    {
+      "id": "3bc72ab4ad2c7ed495f3",
+      "actor": "NICO",
+      "text": "仔细看看，我为你藏了一个小惊喜。",
+      "voice": "m4",
+      "file": "3bc72ab4ad2c7ed495f3.mp3",
+      "bytes": 33585,
+      "sha256": "94262f8c29c5bad25b17f2b0315437023fd122dc2a7c0d27323f843195989730"
+    },
+    {
+      "id": "3c26618d0288c0215fff",
+      "actor": "ORION",
+      "text": "它喜欢你，胜过喜欢我。",
+      "voice": "m5",
+      "file": "3c26618d0288c0215fff.mp3",
+      "bytes": 23867,
+      "sha256": "7e69751cffab473c6228206307581bd795a122c04c12ef631ffe1353838022c6"
+    },
+    {
+      "id": "4544ff89eb4a9dfea76e",
+      "actor": "JASPER",
+      "text": "坐在这里听雨，声音更好听。",
+      "voice": "m2",
+      "file": "4544ff89eb4a9dfea76e.mp3",
+      "bytes": 28569,
+      "sha256": "df5cc97b9e161e172b8dcace717e17471ad1ee2da717c9486ebeb6f4899e6d21"
+    },
+    {
+      "id": "2e876caa1e4cc7d88bba",
+      "actor": "CASSIEL",
+      "text": "只在这里，也只为你。",
+      "voice": "m7",
+      "file": "2e876caa1e4cc7d88bba.mp3",
+      "bytes": 27629,
+      "sha256": "93765fcf00f3137dc20ef67a80b1a15507e82f6fd3151a51f7daee72475a9d05"
+    },
+    {
+      "id": "0041bee0b86b945b66b4",
+      "actor": "ADRIEN",
+      "text": "别人不会拥有同样的香气。",
+      "voice": "m1",
+      "file": "0041bee0b86b945b66b4.mp3",
+      "bytes": 25748,
+      "sha256": "d5622d5e52f3859528ee3d53d16ab2a8779e12a9122e9cc6e0ac6a9a20f5a59d"
+    },
+    {
+      "id": "9427bd68b874247118c6",
+      "actor": "KAEL",
+      "text": "我今日休息。想让我陪你坐一会儿吗？",
+      "voice": "m5",
+      "file": "9427bd68b874247118c6.mp3",
+      "bytes": 36406,
+      "sha256": "bd2364b5b76c8a4e74d4f2927f514649637f0821c8ed8c895cddcaf4e46cf254"
+    }
+  ],
   "images": [
     {
       "id": "BG-01",
