@@ -1164,7 +1164,7 @@ pico.instantiate_detection_memory = function(size)
       const then0 = (o.then || []).slice(); let k0 = 0;
       while (k0 < then0.length && Array.isArray(then0[k0]) && ch(then0[k0][0]) && ["say", "act", "think"].includes(then0[k0][1])) k0++;
       const rest = then0.slice(k0);
-      const live = k0 > 0 && typeof reply === "function";
+      const live = typeof reply === "function"; /* 这条分支没写角色回应时，也一定现场回应你，不能冷场 */
       /* 先让角色回应完你这句（剧本此时还停在这个分支点上，不会往下跑），再放后面的剧情 */
       if (live) { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] live reply", e); } }
       if (th.pk && th.pk.stop) stopResolve(th, rest);
@@ -2012,130 +2012,106 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   document.head.appendChild(st);
 })();
 
-/* ===== 2026-11-14 · 换场景 / 换章之前，先让你自由聊完 =====
-   玩家（截图：刚回了阿德里安一句，剧情就直接跳到「📍客厅沙发 周五21:00」）：
-   「我都还没有对话完，你就直接进入下一章；其他剧本也是。应该等我自由聊完，再进入下一章。」
-   ⇒ 只要你在这一场里开过口，剧本走到「换场景」（📍新地点 / 新时间）之前就停下来：你想聊多久都行，角色照常接话；
-     聊完了点输入框上方那行小字「下一场 ›」，剧情才往下走。你这一场一句都没说的话，剧情照旧自然往下播。
-     （章末本来就只留一行小字「进入下一章 ›」，不会自动跳。） */
+/* ===== 2026-11-14 · 换场景必须等你点「下一场 ›」（所有剧本） =====
+   玩家：「你每画一个场景，需要我确认点击你才能画下一个场景；现在背景图一直在换，我还没说话就切到餐厅了。」
+   以前的做法是在剧本播放器外面拦（暂停开关、预判下一条），有好几条路能绕过去，所以还是会自己切场景。
+   ⇒ 这次直接改剧本播放器本身：播到「换场景」这一条时，只要这一场已经演过内容，播放器就在这里原地等着，
+     不处理这一条（背景图、📍场景卡都不动），直到你点输入框上方的「下一场 ›」。等的时候你想聊多久都行。
+   另：角色回复是一句一句放出来的，以前「旁白补一段」那一步在台词还没放完时以为角色没回话，又整段重写了一遍（重复一大段）。
+     ⇒ 还在排队等放出的角色台词，也算角色已经回过话。 */
 (function () {
   "use strict";
-  if (typeof PKPAUSE === "undefined") return;
-  const isScene = b => Array.isArray(b) && (b[1] === "scene" || (b[0] === "sys" && /^(scene|place|time|chapter)$/.test(String(b[1]))));
-  const holds = {};
-  /* 剧本播放器每 0.25 秒看一次「暂停」开关；别的代码（你发消息时）会把开关先开后关，以前停不住就是被它关掉了。
-     ⇒ 停住期间，这个开关对这条剧情永远读成「暂停」，谁改都没用；点「下一场 ›」才放开。 */
-  function hold(id) {
-    holds[id] = 1;
-    try {
-      const desc = Object.getOwnPropertyDescriptor(PKPAUSE, id);
-      if (desc && desc.get && desc.get.__h161) return;
-      let v = PKPAUSE[id];
-      const g = function () { return holds[id] ? "scene161" : v; }; g.__h161 = 1;
-      Object.defineProperty(PKPAUSE, id, { configurable: true, enumerable: true, get: g, set(x) { v = x; } });
-    } catch (_) { PKPAUSE[id] = "scene161"; }
+  if (typeof packRun !== "function") return;
+  /* 根子在这里：以前你每自由说一句，AI 回复时会从剧本队列里「拿走」后面两条当提示（包括换场景那条），
+     所以场景会被吃掉、背景乱跳、分支点也会被跳过。⇒ 自由聊天不再动剧本队列；剧本只在你点「下一场 ›」后往下走。 */
+  try { if (typeof MIRU_TUNE !== "undefined") { MIRU_TUNE.chat = MIRU_TUNE.chat || {}; MIRU_TUNE.chat.scriptAsHint = false; } } catch (_) {}
+  const isScene = b => Array.isArray(b) && b[0] === "sys" && /^(scene|place|time)$/.test(String(b[1]));
+  const sig = b => { try { return JSON.stringify(b).slice(0, 240); } catch (_) { return ""; } };
+  const W = {};
+  const SC = window.SC162 = {
+    need(th, b) {
+      if (!th || !th.pk || !isScene(b)) return false;
+      if (th._pass162 && th._pass162 === sig(b)) { th._pass162 = null; th._ln162 = 0; th._held162 = 0; return false; }
+      if (!(th._ln162 > 0)) return false;
+      return true;
+    },
+    wait(th) {
+      th._held162 = 1; try { save(); } catch (_) {}
+      return new Promise(r => { (W[th.id] = W[th.id] || []).push(r); });
+    },
+    release(th) {
+      if (!th) return;
+      const q = th.pk && th.pk.q, b = q && q.find(isScene);
+      if (b) th._pass162 = sig(b);
+      th._held162 = 0; th._ln162 = 0; th._spoke162 = 0;
+      const ws = W[th.id] || []; delete W[th.id]; ws.forEach(r => { try { r(); } catch (_) {} });
+      try { save(); } catch (_) {}
+      setTimeout(() => { try { if (!PKPLAY[th.id] && th.pk && th.pk.q && th.pk.q.length) packRun(th); } catch (_) {} }, 300);
+    }
+  };
+  /* 播放器本身加一道「原地等」：放在处理指令之前 */
+  try {
+    const src = packRun.toString(), A = "if(pkDirective(th,b))continue;";
+    if (src.split(A).length === 2) {
+      const G = "if(window.SC162&&SC162.need(th,b)){await SC162.wait(th);if(dead())return;if(!th.pk.q||th.pk.q[0]!==b)continue;}";
+      const f = (0, eval)("(" + src.replace(A, G + A) + ")");
+      if (typeof f === "function") packRun = f;
+    } else console.warn("[scene162] anchor not found");
+  } catch (e) { console.warn("[scene162] patch", e); }
+  /* 这一场演了几句（剧本台词） */
+  if (typeof pkAppend === "function") {
+    const pa = pkAppend;
+    pkAppend = function (th) { const r = pa.apply(this, arguments); try { if (th && th.pk) th._ln162 = (th._ln162 || 0) + 1; } catch (_) {} return r; };
   }
+  /* 停在换场前自由聊天：你开口不能把后面的剧本丢掉 */
   if (typeof doSend === "function") {
     const ds = doSend;
     doSend = function () {
       const th = S.threads[curT];
-      try { if (th && th.pk && th.pk.q && th.pk.q.length) th._spoke161 = 1; } catch (_) {}
-      /* 停在换场前自由聊天时：你开口不能把剧本后面的内容丢掉或提前播出来 */
-      const held = !!(th && holds[th.id]);
-      let saved = null, tune = null, prevDrop;
+      const held = !!(th && th._held162 && th.pk);
+      let saved = null, tune = null, prev;
       try {
-        if (held && th.pk && Array.isArray(th.pk.q)) {
+        if (held && Array.isArray(th.pk.q)) {
           saved = th.pk.q.slice();
-          if (typeof MIRU_TUNE !== "undefined") { MIRU_TUNE.chat = MIRU_TUNE.chat || {}; tune = MIRU_TUNE.chat; prevDrop = tune.dropScriptOnInput; tune.dropScriptOnInput = false; }
+          if (typeof MIRU_TUNE !== "undefined") { MIRU_TUNE.chat = MIRU_TUNE.chat || {}; tune = MIRU_TUNE.chat; prev = tune.dropScriptOnInput; tune.dropScriptOnInput = false; }
         }
       } catch (_) {}
       try { return ds.apply(this, arguments); }
       finally {
         try {
-          if (tune) { if (prevDrop === undefined) delete tune.dropScriptOnInput; else tune.dropScriptOnInput = prevDrop; }
-          if (saved && th.pk && (!th.pk.q || !th.pk.q.length) && saved.length) { th.pk.q = saved; save(); }
+          if (tune) { if (prev === undefined) delete tune.dropScriptOnInput; else tune.dropScriptOnInput = prev; }
+          if (saved && saved.length && (!th.pk.q || !th.pk.q.length)) { th.pk.q = saved; save(); }
         } catch (_) {}
       }
     };
   }
-  /* 停住期间，剧本那边（换场卡、下一场的旁白）不管从哪条路冒出来，都先收起来，等你点「下一场 ›」再放 */
-  if (typeof appendMsg === "function") {
-    const am0 = appendMsg;
-    appendMsg = function (th, m) {
+  /* 角色台词还在排队等放出时，不算「角色没回话」，旁白不要再整段补写 */
+  if (typeof narrationAfter135 === "function") {
+    const na = narrationAfter135;
+    narrationAfter135 = function (th, opt) {
       try {
-        if (th && m && holds[th.id] && !m._rel161 && (m.k === "scene" || m.k === "chap" || th._inScript161)) { (th._def161 = th._def161 || []).push(m); return; }
+        if (opt && !opt.delivered && th && th._q158 && th._q158.some(m => m && ((m.k === "box" && m.say) || ((th.cast || []).includes(m.who) && (m.k === "say" || m.k === "act"))))) opt.delivered = true;
       } catch (_) {}
-      return am0.apply(this, arguments);
+      return na.apply(this, arguments);
     };
   }
-  if (typeof pkAppend === "function") {
-    const pa0 = pkAppend;
-    pkAppend = function (th) { try { if (th) th._inScript161 = 1; return pa0.apply(this, arguments); } finally { try { if (th) th._inScript161 = 0; } catch (_) {} } };
-  }
-  /* 最可靠的一道闸：剧本播放器处理每一条之前都会先经过这里。轮到「换场景」这一条、而这一场已经演过内容，
-     就在这里停住（不处理、不出队），直到你点「下一场 ›」。 */
-  if (typeof pkDirective === "function") {
-    const pd = pkDirective;
-    pkDirective = function (th, b) {
-      try {
-        if (th && th.pk && isScene(b) && (th._lines161 || 0) > 0 && th._pass161 !== b) { hold(th.id); return true; }
-        if (th && th._pass161 === b) { th._pass161 = null; th._lines161 = 0; }
-      } catch (_) {}
-      return pd.apply(this, arguments);
-    };
-  }
-  /* 分支点放行时：如果紧接着就是换场景，当场停住（以前是放行后剧本立刻把下一场播了） */
-  if (typeof stopResolve === "function") {
-    const sr = stopResolve;
-    stopResolve = function (th, extra) {
-      try { if (th && th.pk && ((th._lines161 || 0) > 0 || th._spoke161) && aheadScene((extra || []).concat((th.pk.q || []).slice(1)))) hold(th.id); } catch (_) {}
-      return sr.apply(this, arguments);
-    };
-  }
-  /* 写入一句剧本台词时就往后看：下一条（跳过不显示的指令）如果是换场景，立刻停住，不给剧本抢先播过去的机会 */
-  function aheadScene(q) { for (const b of (q || []).slice(0, 8)) { if (isScene(b)) return true; if (Array.isArray(b) && b[0] !== "sys") return false; } return false; }
-  if (typeof pkAppend === "function") {
-    const pa = pkAppend;
-    pkAppend = function (th) {
-      const r = pa.apply(this, arguments);
-      try { if (th && th.pk) { th._lines161 = (th._lines161 || 0) + 1; if (!holds[th.id] && aheadScene(th.pk.q)) { hold(th.id); } } } catch (_) {}
-      return r;
-    };
-  }
-  function bar(th, on) {
+  function bar(on) {
     const chat = document.getElementById("s-chat"); if (!chat) return;
-    let el = chat.querySelector(".nx161");
+    let el = chat.querySelector(".nx162");
     if (!on) { if (el) el.remove(); return; }
     if (el) return;
     const zh = typeof CL !== "function" || CL() === "zh";
     const host = chat.querySelector("#sugg") || chat.querySelector(".composer"); if (!host) return;
-    host.insertAdjacentHTML("beforebegin", '<div class="nx161"><span>' + (zh ? "想聊多久都行，聊完了点这里 → " : "Talk as long as you like, then → ") + '</span><button data-nx161="1">' + (zh ? "下一场 ›" : "Next scene ›") + "</button></div>");
+    host.insertAdjacentHTML("beforebegin", '<div class="nx162"><span>' + (zh ? "想聊多久都行，聊完了点这里 → " : "Talk as long as you like, then → ") + '</span><button data-nx162="1">' + (zh ? "下一场 ›" : "Next scene ›") + "</button></div>");
   }
-  setInterval(() => {
-    try {
-      const th = S.threads[curT];
-      Object.keys(holds).forEach(id => { if (holds[id]) hold(id); });
-      if (!th || !th.pk) { bar(null, false); return; }
-      const q = th.pk.q, next = q && q[0];
-      if (holds[th.id]) { bar(th, true); return; }
-      if (next && aheadScene(q) && (th._lines161 || 0) > 0 && !th.pk.stop) { hold(th.id); bar(th, true); return; }
-      if (next && isScene(next) && !(th._lines161 || 0)) return;
-      bar(th, false);
-    } catch (_) {}
-  }, 250);
+  setInterval(() => { try { const th = S.threads[curT]; bar(!!(th && th.pk && th._held162 && th.pk.q && th.pk.q.length)); } catch (_) {} }, 300);
   document.addEventListener("click", e => {
-    if (!e.target.closest || !e.target.closest("[data-nx161]")) return;
+    if (!e.target.closest || !e.target.closest("[data-nx162]")) return;
     e.preventDefault(); e.stopPropagation();
-    const th = S.threads[curT]; if (!th) return;
-    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0; try { const q0 = th.pk && th.pk.q && th.pk.q.find(isScene); if (q0) th._pass161 = q0; PKPAUSE[th.id] = 0; } catch (_) {}
-    try { const d = th._def161 || []; th._def161 = []; d.forEach(m => { m._rel161 = 1; appendMsg(th, m); }); } catch (_) {} if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
+    const th = S.threads[curT]; bar(false); SC.release(th);
   }, true);
   const st = document.createElement("style");
-  st.textContent = ".nx161{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
-    ".nx161 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
+  st.textContent = ".nx162{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
+    ".nx162 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
   document.head.appendChild(st);
 })();
-
-/* 2026-11-14 补：玩家试了说「我还没开始说，就直接切到餐厅了」——上一版只在「你这一场开过口」时才停。
-   ⇒ 改成：每一场只要已经演了内容，换下一场之前一律停下等你（你说不说话都停），点「下一场 ›」才切；
-     章节一开头直接就是场景卡的那种不停。 */
