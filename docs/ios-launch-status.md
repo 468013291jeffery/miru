@@ -23,7 +23,7 @@ Team H79A5X8935；Bundle com.miru.plus.app；Connect 数字 Apple ID 6834383803�
 - 钱包 23/23；此前 Apple 签名交易 33/33、实际 PostgreSQL 授权/注销 20/20。
 - 本轮受限数据库运行、充值加载超时、原生登录不等待余额三项新回归通过，并经只读独立复核。
 - 网络规范域名、AI 许可与原生安全策略回归通过。
-- 已合入主分支 1a797bb 的最新剧情与 authored contract，保留 app100_fixes / app101_you / app100_dialogue；完整 JS 语法、最新剧情与 authored runtime 测试通过。
+- 已合入主分支 1a797bb 的最新剧情与 authored contract，保留 app100_fixes / app101_you / app100_dialogue；随后合入 43f4f04 的首页视频与映射。完整 JS 语法、最新剧情、authored runtime、目录和 release-contract 测试通过。Build 3 本地包的功能代码对应 78beb25；后续视频资源变更会在正式上传前以最终提交重新打包。
 - Build 1/2 此前分发成功及旧 CI 通过，不能替代本轮 Build 3 检查。完整 API 部署流程先隔离准备、再审查、后执行；合成账号验证不使用用户密码、令牌或个人内容。
 
 ## 提交前必须完成
