@@ -2002,3 +2002,61 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent = "#s-chat [data-tap-hint]:not(.voicing){display:none!important}";
   document.head.appendChild(st);
 })();
+
+/* ===== 2026-11-14 · 换场景 / 换章之前，先让你自由聊完 =====
+   玩家（截图：刚回了阿德里安一句，剧情就直接跳到「📍客厅沙发 周五21:00」）：
+   「我都还没有对话完，你就直接进入下一章；其他剧本也是。应该等我自由聊完，再进入下一章。」
+   ⇒ 只要你在这一场里开过口，剧本走到「换场景」（📍新地点 / 新时间）之前就停下来：你想聊多久都行，角色照常接话；
+     聊完了点输入框上方那行小字「下一场 ›」，剧情才往下走。你这一场一句都没说的话，剧情照旧自然往下播。
+     （章末本来就只留一行小字「进入下一章 ›」，不会自动跳。） */
+(function () {
+  "use strict";
+  if (typeof PKPAUSE === "undefined") return;
+  const isScene = b => Array.isArray(b) && (b[1] === "scene" || (b[0] === "sys" && /^(scene|place|time|chapter)$/.test(String(b[1]))));
+  const holds = {};
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function () { try { const th = S.threads[curT]; if (th && th.pk && th.pk.q && th.pk.q.length) th._spoke161 = 1; } catch (_) {} return ds.apply(this, arguments); };
+  }
+  /* 写入一句剧本台词时就往后看：下一条（跳过不显示的指令）如果是换场景，立刻停住，不给剧本抢先播过去的机会 */
+  function aheadScene(q) { for (const b of (q || []).slice(0, 8)) { if (isScene(b)) return true; if (Array.isArray(b) && b[0] !== "sys") return false; } return false; }
+  if (typeof pkAppend === "function") {
+    const pa = pkAppend;
+    pkAppend = function (th) {
+      const r = pa.apply(this, arguments);
+      try { if (th && th.pk && th._spoke161 && !holds[th.id] && aheadScene(th.pk.q)) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; } } catch (_) {}
+      return r;
+    };
+  }
+  function bar(th, on) {
+    const chat = document.getElementById("s-chat"); if (!chat) return;
+    let el = chat.querySelector(".nx161");
+    if (!on) { if (el) el.remove(); return; }
+    if (el) return;
+    const zh = typeof CL !== "function" || CL() === "zh";
+    const host = chat.querySelector("#sugg") || chat.querySelector(".composer"); if (!host) return;
+    host.insertAdjacentHTML("beforebegin", '<div class="nx161"><span>' + (zh ? "想聊多久都行，聊完了点这里 → " : "Talk as long as you like, then → ") + '</span><button data-nx161="1">' + (zh ? "下一场 ›" : "Next scene ›") + "</button></div>");
+  }
+  setInterval(() => {
+    try {
+      const th = S.threads[curT];
+      Object.keys(holds).forEach(id => { if (holds[id]) PKPAUSE[id] = PKPAUSE[id] || "scene161"; });
+      if (!th || !th.pk) { bar(null, false); return; }
+      const q = th.pk.q, next = q && q[0];
+      if (holds[th.id]) { bar(th, true); return; }
+      if (next && aheadScene(q) && th._spoke161 && !th.pk.stop) { holds[th.id] = 1; PKPAUSE[th.id] = "scene161"; bar(th, true); return; }
+      if (next && isScene(next) && !th._spoke161) return;
+      bar(th, false);
+    } catch (_) {}
+  }, 250);
+  document.addEventListener("click", e => {
+    if (!e.target.closest || !e.target.closest("[data-nx161]")) return;
+    e.preventDefault(); e.stopPropagation();
+    const th = S.threads[curT]; if (!th) return;
+    delete holds[th.id]; th._spoke161 = 0; if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
+  }, true);
+  const st = document.createElement("style");
+  st.textContent = ".nx161{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
+    ".nx161 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
+  document.head.appendChild(st);
+})();
