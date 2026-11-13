@@ -39,11 +39,11 @@
 - 手机照片确认开发者模式已打开，但电脑 CoreDevice 曾持续返回 Disabled。仅重启本机 CoreDeviceService 后，状态刷新为 Enabled；未清除手机数据或配对记录。
 - iPhone 12 / iOS 17.4.1 实际 Release 签名 build 成功，安装成功，并通过 devicectl 启动成功。完整登录、内购、剧情和注销尚未实测，进程启动成功不等于功能全部通过。
 - MIRU-Signed.xcarchive 已生成，实际归档的 Team H79A5X8935、Bundle com.miru.plus.app、内嵌开发描述文件及测试设备一致，广告包检查通过。
-- 当前为开发签名归档，尚未导出 App Store 分发签名 IPA 或上传。macOS codesign --verify --deep --strict 仍报 CSSMERR_TP_NOT_TRUSTED；手机接受了安装与启动，但分发导出时仍需核验证书信任链。
+- 开发签名归档已通过 Xcode 自动分发签名导出，EXPORT SUCCEEDED。AppStoreExport/App.ipa 为 1.0 (1)、863,006,742 字节；内嵌 App Store profile 的 Team/Bundle 匹配、get-task-allow=false、无设备限制，包内无 GMA/UMP。尚未上传或完成 App Store 服务端验证。此前开发产物的本机严格 codesign 校验报 CSSMERR_TP_NOT_TRUSTED；不影响已观察到的真机安装启动与 Xcode 分发导出成功，最终仍以服务端上传验证为准。
 - 最新代码 e0f79f8 的 iOS candidate 与 Wallet integrity CI 均成功；PR #2 冲突已解除。
 
 ## 提交前必须完成
-1. 完成 App Store 分发导出及签名信任链核验；核验 Apple/Google Console capability、商品、付费协议/税务/银行。
+1. 完成 App Store 上传验证；核验 Apple/Google Console capability、商品、付费协议/税务/银行。
 2. 安全部署后端和隐私页，核对服务器适配器；清除旧 /api/i18n CDN 缓存，验证私密译文不可公开。历史数据未在生产清理。
 3. 核验生产持久录音卷、Blob 权限、实际启用的 AI 接收方与服务器私密配置。
 4. 真实 iPhone/TestFlight 验证登录、AI 拒绝/撤回、剧情、麦克风拒绝、内购取消/中断补发和账号注销。
