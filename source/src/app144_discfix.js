@@ -1888,3 +1888,16 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     "html body #s-chat #pkwrap#pkwrap .pkpanel.ch148.ch148{display:none!important}";
   document.head.appendChild(st);
 })();
+
+/* ===== 2026-11-14 · 输入框上方的「✨ AI 帮我想」所有剧固定保留 =====
+   玩家（截图）：「这个位置的 AI 帮我想，每个剧本都是固定版式要保留，怎么没有了？」
+   原因：剧情分支点那块面板（现在已整块隐藏）里也带一个「AI 帮我想」，旧逻辑为了不重复，就把输入框上方这一个藏了；
+   另外分支点出现时联想行本身也被设成不显示。面板藏掉以后，两边都没了。
+   ⇒ 输入框上方这一行和「✨ AI 帮我想」永远显示（排第一个），不再因为分支点或别的面板而隐藏。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent =
+    "html body #s-chat #sugg{display:flex!important}" +
+    "html body #s-chat.ch147 #sugg .ai147,html body #s-chat #sugg .ai147{display:inline-flex!important}";
+  document.head.appendChild(st);
+})();
