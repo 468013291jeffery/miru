@@ -1,60 +1,36 @@
 # MIRU iOS 首发状态
-更新时间：2026-11-13。工作分支 codex/ios-app-store。目标是尽快通过海外首次审核；用户最新决定 iOS 首版不接广告，其余已有功能保留。未执行生产部署或 App Store 上传。
+更新时间：2026-11-14。分支 codex/ios-app-store，海外首发，无广告，保留现有剧情、社区及 AI 功能。尚未上传 App Store Connect 或提交审核。
 
-## 已完成的候选代码
-- 钱包原子发放与 Apple 签名交易校验；并发/重复/重试防重复发钻，服务端交付后完成 StoreKit 交易。
-- 原生 Apple/Google 登录、授权撤销、可重试注销、已登记个人文件和本地资料清理。
-- 举报内容留存、作者屏蔽、原生成人标记作品排除和语音/文字模型请求安全指令。
-- iOS 首版移除 AdMob/UMP 构建依赖、初始化、广告奖励入口和广告隐私入口；不调用广告 SDK、不模拟奖励。网页和 Android 广告行为保留。
-- AI 明确许可、拒绝后浏览、撤回许可、自定义接收地址确认及实时语音停止。
-- 自动译文与公开词典分离，避免私聊、记忆和草稿进入匿名词典。历史词条默认不公开。
-- 现有页面和媒体白名单打包，MIRU 图标、权限、Apple capability、正式配置拦截和 CI。
-- 商品、元数据及审核说明草案见 [提交材料](ios-app-store-submission.md)。
+## 当前结果
+- 邮箱与 Google 登录已由用户在真实 iPhone 上确认成功。Google 登录后等待：首页原本额外等待余额请求；Build 3 使用登录接口的权威余额先进入，再后台刷新。跨账号云进度恢复仍先完成，实际改善幅度待真机复测。
+- 剧本 AI 的线上接口原先拒绝 capacitor://localhost 与 X-Miru-Client。已单独部署已审查的 longcat 接口及原生安全指令，公网无个人数据的测试返回 HTTP 200 和真实模型文本。手机剧情实测待确认。
+- Apple 登录旧后端把 apple_challenge 当成邮箱请求，误报邮箱无效。已接入新挑战/授权/撤销与注销模块；目前正确返回 configure_apple，因为用户尚未创建 .p8 / Key ID。令牌加密密钥已在服务器安全生成并持久保存，未输出或进入 Git。
+- 内购服务端已接入签名交易校验和原子钱包。生产隔离测试账号的钱包返回 200、7 个映射及账户绑定信息，注销成功。用户确认 Connect 商品和付费协议/税务/银行尚未完成；真实购买尚未可验证。Build 3 的商品和后端只读加载有 20 秒截止时间，不再无限停留在连接中。此超时不包围付款或交付操作。
+- Build 3（1.0 / 3）实际 Release 真机签名构建、覆盖安装及签名归档成功，保留本机数据。自动启动被手机锁屏拒绝，待解锁手动打开。App Store 分发导出成功；实际 IPA 核验包含登录等待/充值超时修复及正确规范 API、App Store profile 和无 GMA/UMP。路径 native/Archives/AppStoreExport-Build3/App.ipa，908,006,866 字节。旧 Build 1/2 不作为最新候选。
 
-## 公开配置
-| 配置 | 状态 |
-|---|---|
-| Apple Team H79A5X8935 | 已配置 |
-| Bundle com.miru.plus.app | 已配置 |
-| Connect 注册名称 MIRU IOS Production | 已登记 |
-| 数字 Apple ID 6834383803 | 已配置，正式验单默认使用此值 |
-| Google iOS 客户端 | 已配置 |
-| Google 网页/服务端客户端 | 从现有线上公开配置读取并保留 |
-| AdMob ID | 首版不接广告，无需提供 |
+## 已登记的公开配置
+Team H79A5X8935；Bundle com.miru.plus.app；Connect 数字 Apple ID 6834383803；注册名称 MIRU IOS Production。Google iOS 和网页/服务端客户端均已配置，生产网页客户端已按布尔匹配核验。首版无 AdMob/UMP SDK，不再需要广告账号或 ID。
 
-私密 Apple p8、Key ID、令牌加密密钥及生产存储通过服务器安全环境配置，实际配置尚未核验；不要发送私钥或密码到聊天。IAP 商品、付费协议/银行税务也需核验。旧 LongCat 凭据的撤销/轮换未核验，绝不测试或打印旧密钥。
+## 本轮服务端实际变更
+- 保留动态更新中的线上剧情、媒体和网站。准备时两次因发布目录变化中止，均未写入；逐项重新核验哈希后继续。
+- 当前已核验基线 /opt/miru/releases/43f4f04。只接入 _lib、_apple、_wallet、_iap、_voice、auth、wallet 七个必要模块，公开 iOS 配置及依赖清单；同步持久 overrides。AI longcat 先独立部署。
+- 保留运行账号 miru_ovh_20261104 的无 DDL 模式；owner 在一个事务中安装新增表/列/函数、最小权限及缺失商品映射。没有给运行账号开放建表权限，没有真实购买或变更现有用户余额。
+- 独立依赖目录 /opt/miru/shared/ios-native-api-aa8b25a；生产 @apple/app-store-server-library 指向该目录，版本 3.1.0，及其依赖均隔离安装。
+- 备份：shared/backups/ios-cors-20261113T153359Z、ios-ai-20261113T161433Z、ios-native-api-20261113T163841Z、ios-apple-token-key-20261113T164143Z。包含环境备份的目录为服务器私密文件，不应下载或打印。
+- 这不是整分支生产部署：原生社区内容筛选/屏蔽、译文隐私、完整语音处理和网页隐私材料等其他候选变更仍需逐项核对后上线。旧翻译 CDN 缓存清除与旧提供方凭据撤销仍未核验，不把当前核心接口接通当成提审就绪。
 
 ## 验证证据
-- 钱包 23/23；本次 Apple 签名交易 33/33；此前实际 PostgreSQL 登录与注销 20/20。
-- 本次无广告桥接、正式配置拦截、AI 许可自测通过；显式空的正式验单 ID 仍失败，不会默默回退。
-- 此前译文隐私、原生内容、语音安全请求、资源打包、release-contract、目录与角色列表检查通过。
-- Xcode 27.2 / iOS SDK 27.2 实际无广告 Debug 模拟器编译成功。
-- 无广告版实际 iPhone 模拟器 WebKit→Swift 调用返回 platform=ios、adsEnabled=false、googleConfigured=true；前端和 AI 许可模块已加载，页面状态 complete。
-- 实际 iPhoneOS Release 未签名 Archive 成功。Simulator 与 Release 的实际 App 包均通过广告排除检查：无 GMA/UMP 框架或链接、无广告 Info 配置、无静态网页广告脚本。
-- 打包包含 2,398 个公开资源，不包含后端、私钥、浏览器会话或本地报告。
-- 先前主分支 4f58fa9 已合入，保留新双语剧情、配音与页内注销确认；后续 main 37a5be2 仅重生成 index.html。
-- 本次无广告改动独立源码审查未发现明确 P0；此前候选 CI 通过。本次新增 Release Archive 与广告排除 CI，推送后另行核验。上述检查不代表 Apple 审核结果。
-
-## 真机与签名状态
-- 手机照片确认开发者模式已打开，但电脑 CoreDevice 曾持续返回 Disabled。仅重启本机 CoreDeviceService 后，状态刷新为 Enabled；未清除手机数据或配对记录。
-- iPhone 12 / iOS 17.4.1 实际 Release 签名 build 成功，安装成功，并通过 devicectl 启动成功。完整登录、内购、剧情和注销尚未实测，进程启动成功不等于功能全部通过。
-- MIRU-Signed.xcarchive 已生成，实际归档的 Team H79A5X8935、Bundle com.miru.plus.app、内嵌开发描述文件及测试设备一致，广告包检查通过。
-- 开发签名归档已通过 Xcode 自动分发签名导出，EXPORT SUCCEEDED。AppStoreExport/App.ipa 为 1.0 (1)、863,006,742 字节；内嵌 App Store profile 的 Team/Bundle 匹配、get-task-allow=false、无设备限制，包内无 GMA/UMP。尚未上传或完成 App Store 服务端验证。此前开发产物的本机严格 codesign 校验报 CSSMERR_TP_NOT_TRUSTED；不影响已观察到的真机安装启动与 Xcode 分发导出成功，最终仍以服务端上传验证为准。
-- 最新代码 e0f79f8 的 iOS candidate 与 Wallet integrity CI 均成功；PR #2 冲突已解除。
+- 钱包 23/23；此前 Apple 签名交易 33/33、实际 PostgreSQL 授权/注销 20/20。
+- 本轮受限数据库运行、充值加载超时、原生登录不等待余额三项新回归通过，并经只读独立复核。
+- 网络规范域名、AI 许可与原生安全策略回归通过。
+- 已合入主分支 1a797bb 的最新剧情与 authored contract，保留 app100_fixes / app101_you / app100_dialogue；完整 JS 语法、最新剧情与 authored runtime 测试通过。
+- Build 1/2 此前分发成功及旧 CI 通过，不能替代本轮 Build 3 检查。完整 API 部署流程先隔离准备、再审查、后执行；合成账号验证不使用用户密码、令牌或个人内容。
 
 ## 提交前必须完成
-1. 完成 App Store 上传验证；核验 Apple/Google Console capability、商品、付费协议/税务/银行。
-2. 安全部署后端和隐私页，核对服务器适配器；清除旧 /api/i18n CDN 缓存，验证私密译文不可公开。历史数据未在生产清理。
-3. 核验生产持久录音卷、Blob 权限、实际启用的 AI 接收方与服务器私密配置。
-4. 真实 iPhone/TestFlight 验证登录、AI 拒绝/撤回、剧情、麦克风拒绝、内购取消/中断补发和账号注销。
-5. 完成真实产品截图、审核专用 MIRU 账号、年龄/隐私/出口合规和联系人资料，再签名上传并提交。
+1. 用户完成 [Apple 账号配置](ios-account-setup.md)：Sign in with Apple Key、七个消耗型商品、付费协议/税务/银行；私钥只通过本机安全文件接入服务器。
+2. 真实 iPhone/TestFlight 验证 Apple/Google 登录、进度恢复、AI 许可/撤回与剧情回复、麦克风拒绝、真实 Sandbox 内购取消/中断/补发、账号注销。
+3. 核对并部署仍未上线的首发隐私、内容与语音规则，核验生产录音持久存储、Blob 权限与实际 AI 接收方；清除旧译文缓存并核验旧凭据撤销。
+4. 完成真实截图、审核专用 MIRU 账号、年龄/隐私/出口合规和联系人资料；完成 App Store 服务端包验证后再提交。
 
-## 明确延期
-广告接入、历史无归属录音与孤立对象盘点、极端上传/注销并发治理、独立测试经济系统、广泛重构、性能与 UI 优化均延期。模型指令不保证全部输出安全；仍需真实模型与运营处理验证。完整首发检查以用户的最新范围为准，不把上述工程改良列为苹果明文强制项。
-
-## 真机登录修复（Build 2）
-Build 1 真机邮箱登录显示 Network problem，不能提交审核。实测 www.miru.plus/api/auth 的 OPTIONS 返回 301 到 miru.plus；后者 OPTIONS 返回 204，但 Access-Control-Allow-Headers 缺少 X-Miru-Client。App 已修正为直接访问 miru.plus，并对旧绝对 www API 地址统一规范化；网络自测和 AI 许可自测通过。服务端仍需部署允许 iOS Origin/原生标记的 CORS 配置与已审查的首发后端，之后必须真机复测。旧 AppStoreExport/App.ipa 为 Build 1，已被此问题阻断，不应上传。
-
-登录网络修复验证：Build 2 真机签名构建、安装及启动成功。线上并发发布曾从 37a5be2 更新到 1a797bb，脚本按预期中止且未写入；重新核验两个适配文件哈希相同后，仅增加 capacitor://localhost 与 X-Miru-Client。备份位于 /opt/miru/shared/backups/ios-cors-20261113T153359Z；当前及持久 _lib.js 哈希 e4418b04c2682a6114d1515f74f3eec045597850f660d3df691d5f46eb77317c。公网 OPTIONS 204 正确回显原生来源并允许请求头；不含真实凭据的空邮箱 POST 返回应用层 400 invalid email，并带正确 CORS。用户已在真机重新邮箱登录并确认进入应用。本次未部署整个 iOS 后端分支，不代表其他服务端首发功能已上线。
-
-当前发布候选：native/Archives/AppStoreExport-Build2/App.ipa，版本 1.0 (2)，863,006,759 字节。签名归档与 App Store 分发导出成功；直接读取 IPA 验证 Build 2、规范 API 启动脚本、匹配的 App Store profile、禁止调试/无设备限制及无 GMA/UMP。尚未上传。
+## 延期
+广告、历史孤立对象盘点、极端并发治理、独立测试经济系统、广泛重构、UI/性能优化均延期。模型指令不能保证所有输出安全，仍需真实场景及运营处理验证。

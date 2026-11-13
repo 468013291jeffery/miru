@@ -1,35 +1,28 @@
 # MIRU iOS
-海外首发保留现有剧情、社区、AI 文字/语音/图片/视频、邮箱/Apple/Google 登录和钻石内购。根据账号持有人的最新决定，iOS 首版不接广告。Bundle `com.miru.plus.app`，Team `H79A5X8935`，数字 Apple ID `6834383803`，最低 iOS 15。
+海外首发保留剧情、社区、AI、邮箱/Apple/Google 登录和钻石内购；按用户决定，首版无广告。Bundle com.miru.plus.app，Team H79A5X8935，Apple ID 6834383803，最低 iOS 15。
+
+## 当前候选
+1.0（Build 3）：Archives/AppStoreExport-Build3/App.ipa。实际 Release 真机签名构建、覆盖安装、签名 Archive 和 App Store 分发导出成功。包内核验确认规范 API、登录等待和充值加载修复、App Store profile 及无 GMA/UMP。未上传；手机锁屏时自动启动失败，需解锁后手动打开复测。旧 Build 1/2 不作为当前候选。
+
+用户已确认邮箱和 Google 登录成功。剧本 AI 原生 CORS 已上线，公网真实模型测试 200。Apple Sign in Key 和 Connect 商品/协议/税务/银行仍需账号持有人完成；不能把分发导出或服务端商品映射当成真实购买通过。见 ../docs/ios-account-setup.md。
 
 ## 构建
-需要 Node 22+ 与 Xcode 26+。在仓库根目录执行：
+Node 22+，Xcode 26+。从仓库根目录：
 ```sh
 python3 source/build.py
 npm --prefix native ci
 node tools/ios-release-check.mjs --check
 cd native
 node node_modules/@capacitor/cli/bin/capacitor copy ios
-DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath DerivedDataNoAds -archivePath Archives/MIRU-NoAds.xcarchive CODE_SIGNING_ALLOWED=NO archive
-cd ..
-python3 tools/ios-no-ads-artifact.py native/Archives/MIRU-NoAds.xcarchive/Products/Applications/App.app
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -derivedDataPath DerivedDataNoAds -archivePath Archives/MIRU-Build3.xcarchive -allowProvisioningUpdates archive
 ```
-这个未签名归档用于构建核验，不能直接上传 App Store。实际签名和导出仍需本人的 Apple 开发者账号、证书与 provisioning profile。已完成真实 iPhone 的开发签名 Release 构建、安装、启动及 MIRU-Signed.xcarchive 归档；已成功导出 App Store 分发 IPA（Archives/AppStoreExport/App.ipa），尚未上传。未导出任何私钥。
+归档路径已存在时请在 Xcode Organizer 使用现成归档，或为新构建选择新路径。使用 cap copy ios 保留自定义 SPM 依赖；cap sync 可能重生成 Package.swift。
 
-公开配置唯一来源为 ios-release.public.json。Team、Bundle、数字 Apple ID 与两个 Google 客户端均已提供。Release 检查要求首版广告关闭，不再要求任何 AdMob ID。服务端正式验单默认使用公开登记的 appAppleId；若显式配置 IAP_APP_APPLE_ID，必须使用实际数字 ID，空值仍会失败。
+公开配置唯一来源 ios-release.public.json；私钥和环境文件不能打包或提交。服务端 IAP 默认使用登记的数字 Apple ID，显式错误配置仍拒绝。Debug --miru-smoke 只输出有限桥接状态。
 
-使用 `cap copy ios` 保留自定义 SPM 依赖；`cap sync` 可能重生成 CapApp-SPM/Package.swift。公开资源由白名单打包，禁止放入服务端密钥、p8 或浏览器会话。Debug 参数 `--miru-smoke` 可输出有限的真实原生桥接状态。
+## 首版无广告
+SPM 和构建中没有 AdMob/UMP，无广告初始化、奖励任务或广告隐私入口。网页和 Android 原有广告行为保留。仓库广告源码位于 MIRU_ADS 条件内，未来恢复需重新集成依赖、配置并发布新版本，不能远程开启本版广告。
 
-## 首发无广告
-AdMob/UMP 已从 SPM 依赖和本次 App 构建中移除，不初始化广告或同意 SDK，不显示广告奖励任务或广告隐私入口。网页和 Android 原实现保持不变。原生广告源码仅在仓库 `#if MIRU_ADS` 条件内保留；今后恢复需要在新版本中恢复依赖、编译条件、配置及对应审查，不能远程打开首版广告功能。
-
-## 提审前仍需完成
-- 开发签名及真机安装启动已完成；App Store 分发导出也已成功，继续完成服务端上传验证与完整真机功能测试。
-- 安全部署已审查后端与隐私页，核验 Apple 授权交换/撤销私密配置、生产存储和实际 AI 接收方；清除旧翻译 CDN 缓存。
-- 创建全部 consumable 商品，完成付费协议、税务和银行资料。
-- 在真实 iPhone/TestFlight 验证 Apple/Google 登录、注销重试、Sandbox 内购/中断补发、AI 拒绝及撤回、麦克风拒绝。
-- 准备真实产品截图、审核专用 MIRU 账号和 Connect 年龄/隐私/出口资料。
-
-StoreKit 交易仅在服务端校验到账后完成；本地 Xcode 交易不能替代真实 Sandbox 验单。详见 ../docs/ios-launch-status.md 与 ../docs/ios-app-store-submission.md。编译或未签名归档通过不代表已正式签名、上传或通过审核。
-
-## 当前候选 Build 2
-使用 Archives/AppStoreExport-Build2/App.ipa（1.0 build 2）。已修正 www API 跳转；线上持久适配文件已最小补齐原生 CORS，用户真机邮箱登录进入成功。旧 Archives/AppStoreExport/App.ipa 为有登录阻断的 Build 1，不能提交。Build 2 的分发导出和包内配置检查通过，仍未上传或完成其他首发功能实测。
+## 服务端与提审
+必要登录/钱包后端已单独部署并保留生产 DML 运行账号和 owner 迁移流程；生产合成测试账号通过钱包元数据和注销检查。其他内容、隐私和语音候选变更尚需核对部署，真实 Sandbox 内购、Apple 授权撤销、麦克风与 AI 许可/撤回仍需实测。
+完整状态和剩余门槛见 ../docs/ios-launch-status.md，提交材料见 ../docs/ios-app-store-submission.md。不包含服务器环境文件或私钥的本地构建包，也不等于 Apple 已接收或通过审核。

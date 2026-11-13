@@ -177,6 +177,13 @@ function au70Err(r) {
 }
 /* after any successful sign-in */
 async function au70Done(j, method) {
+  function syncWallet() {
+    // Sign-in already returned the server balance; iOS need not wait for another read to enter.
+    if (window.MIRU_NATIVE && window.MIRU_NATIVE.platform === "ios" && Number.isSafeInteger(j.gems) && j.gems >= 0) {
+      S.keys = j.gems; cloudInfo().known = j.gems; save0(); walletPull().catch(() => {}); return Promise.resolve();
+    }
+    return walletPull().catch(() => {});
+  }
   const c = cloudInfo(); const sameUser = c.uid === j.user.id;
   c.token = j.token; c.uid = j.user.id; c.email = j.user.email; c.provider = j.user.provider; c.name = j.user.name;
   CL0.on = true; CL0.checked = true; if (!sameUser) c.ver = 0; save0();
@@ -185,11 +192,11 @@ async function au70Done(j, method) {
   if (j.restored && !sameUser) {
     let had = false; try { had = await cloudPull(); } catch (_) {}
     const cc = cloudInfo(); cc.token = j.token; cc.uid = j.user.id; cc.email = j.user.email; cc.provider = j.user.provider;
-    S.authChoice = method; save0(); await walletPull().catch(() => {});
+    S.authChoice = method; save0(); await syncWallet();
     toast(au("welcomeBack"));
     if (had && S.ob) { au70After(); return; }
   } else {
-    S.authChoice = method; save0(); await walletPull().catch(() => {}); cloudPush(true); toast(au("hi"));
+    S.authChoice = method; save0(); await syncWallet(); cloudPush(true); toast(au("hi"));
   }
   if (!S.ob || ($("#s-ob") && !$("#s-ob").hidden)) au70After(); else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
 }
