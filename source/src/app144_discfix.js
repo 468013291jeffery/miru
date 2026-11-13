@@ -2076,7 +2076,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   if (typeof stopResolve === "function") {
     const sr = stopResolve;
     stopResolve = function (th, extra) {
-      try { if (th && th.pk && ((th._lines161 || 0) > 0 || th._spoke161) && aheadScene(extra || [])) hold(th.id); } catch (_) {}
+      try { if (th && th.pk && ((th._lines161 || 0) > 0 || th._spoke161) && aheadScene((extra || []).concat((th.pk.q || []).slice(1)))) hold(th.id); } catch (_) {}
       return sr.apply(this, arguments);
     };
   }
