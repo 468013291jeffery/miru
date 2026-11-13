@@ -8,11 +8,11 @@
 **Spec:** docs/superpowers/specs/2026-11-12-ios-launch-design.md
 
 ## Global Constraints
-- Minimum iOS 15; bundle candidate com.miru.plus.app; backend https://www.miru.plus/api.
+- Minimum iOS 15; confirmed Bundle com.miru.plus.app; backend https://www.miru.plus/api.
 - Keep Web and Android working; preserve miru.plus origins and protected build parts.
 - Both diamond purchases and rewarded ads are required; Google test ads only in development.
 - No secrets in source; no main merge/deployment/App Store submission in this implementation.
-- Team ID, production ad IDs and provider-side key rotation remain external until supplied and verified.
+- Team ID H79A5X8935 is supplied; numeric Apple app ID, Google iOS OAuth ID, production ad IDs and provider-side key rotation remain external until supplied and verified.
 
 ### Task 1: Atomic wallet and verified Apple purchase delivery
 **Files:** api/wallet.js; api/_iap.js; new api/_wallet.js if needed; api/_lib.js schema only if needed; tools/wallet-selftest.cjs; tools/iap-selftest.mjs; package.json dev test dependencies; .github/workflows/wallet-tests.yml.

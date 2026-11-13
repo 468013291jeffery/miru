@@ -22,7 +22,11 @@ module.exports = L.wrap(async (req, res) => {
   }
   const u = await L.needActive(req, res); if (!u) return;
   const cfg = await L.config(); const PR = Object.assign({}, PRICE, cfg.upload_price || {});
-  if (req.method === 'DELETE') { const r = await sql('DELETE FROM assets WHERE id=$1 AND owner=$2 RETURNING url', [String(q.id || ''), u.uid]); if (r[0] && r[0].url) await L.blobDel(r[0].url); return L.send(res, 200, { ok: true }); }
+  if (req.method === 'DELETE') {
+    const id=String(q.id||''), row=(await sql('SELECT url FROM assets WHERE id=$1 AND owner=$2',[id,u.uid]))[0];
+    try { if(row&&row.url)await L.blobDel(row.url,true); await sql('DELETE FROM assets WHERE id=$1 AND owner=$2',[id,u.uid]); return L.send(res,200,{ok:true}); }
+    catch (_) { return L.send(res,503,{error:'Asset deletion could not finish; retry',action:'retry_asset_deletion',retryable:true}); }
+  }
   if (req.method === 'PUT') {
     if (!L.hasBlob()) return L.bad(res, 'file storage not configured', 503);
     const kind = String(q.kind || ''); if (!['bgm', 'sfx', 'fx'].includes(kind)) return L.bad(res, 'bad kind');

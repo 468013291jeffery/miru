@@ -3,16 +3,16 @@
 // Auth: signed bearer tokens (HMAC-SHA256 with AUTH_SECRET). Guest accounts are created silently; email+password upgrades them.
 const crypto = require('crypto');
 
-const ALLOWED = [/^https:\/\/(?:www\.)?miru\.plus$/, /^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^http:\/\/127\.0\.0\.1(:\d+)?$/, /^null$/];
+const ALLOWED = [/^capacitor:\/\/localhost$/, /^https:\/\/(?:www\.)?miru\.plus$/, /^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^http:\/\/127\.0\.0\.1(:\d+)?$/, /^null$/];
 function cors(req, res, methods) {
   const o = req.headers.origin;
   const ok = !o || ALLOWED.some(r => r.test(o));
   res.setHeader('Access-Control-Allow-Origin', ok && o ? o : '*');
   res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', methods || 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Admin-Key, X-Meta');
-  if (req.method === 'OPTIONS') { res.status(204).end(); return null; }
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Admin-Key, X-Meta, X-Miru-Client');
   if (!ok) { res.status(403).json({ error: 'origin not allowed' }); return null; }
+  if (req.method === 'OPTIONS') { res.status(204).end(); return null; }
   return true;
 }
 const send = (res, code, obj) => { res.setHeader('Cache-Control', 'no-store'); res.status(code).json(obj); };
@@ -92,6 +92,7 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS scripts (id TEXT PRIMARY KEY, title TEXT, orient TEXT DEFAULT 'bl', lang TEXT DEFAULT 'zh', stage INT DEFAULT 1, status TEXT DEFAULT 'draft', config JSONB DEFAULT '{}'::jsonb, research JSONB, brief TEXT, outline TEXT, chapters JSONB DEFAULT '[]'::jsonb, qa JSONB, review JSONB DEFAULT '{}'::jsonb, work_id TEXT, created_by TEXT, updated_by TEXT, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now(), published_at TIMESTAMPTZ)`,
   `CREATE TABLE IF NOT EXISTS script_versions (id BIGSERIAL PRIMARY KEY, script_id TEXT, stage INT, note TEXT, data JSONB, by_name TEXT, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE INDEX IF NOT EXISTS script_versions_idx ON script_versions (script_id, id DESC)`,
+  ...require('./_apple').SCHEMA,
 ];
 async function db() {
   if (!hasDb()) { const e = new Error('database not configured'); e.code = 503; throw e; }
@@ -227,7 +228,7 @@ function cosine(a, b) { let d = 0, x = 0, y = 0; const n = Math.min(a.length, b.
 /* ---------- blob ---------- */
 function hasBlob() { return !!process.env.BLOB_READ_WRITE_TOKEN; }
 async function blobPut(path, buf, contentType) { const { put } = require('@vercel/blob'); const r = await put(path, buf, { access: 'public', contentType, addRandomSuffix: true }); return r.url; }
-async function blobDel(url) { try { const { del } = require('@vercel/blob'); await del(url); } catch (_) {} }
+async function blobDel(url, strict) { try { if (strict && !hasBlob()) { const e = new Error('Blob storage deletion is not configured'); e.code = 503; e.action = 'configure_blob_storage'; e.retryable = true; throw e; } const { del } = require('@vercel/blob'); await del(url); } catch (e) { if (strict) throw e; } }
 
 async function readBody(req) {
   if (req.body && Buffer.isBuffer(req.body)) return req.body;
@@ -246,6 +247,7 @@ async function needActive(req, res) {
   const x = r[0];
   if (!x) { bad(res, 'account not found', 401); return null; }
   if (x.status === 'deleted') { bad(res, 'account deleted', 401); return null; }
+  if (x.status === 'deletion_pending') { send(res, 409, { error: 'account deletion pending', action: 'retry_account_deletion', retryable: true }); return null; }
   if (x.status === 'banned' && (!x.ban_until || new Date(x.ban_until) > new Date())) { send(res, 403, { error: 'banned', reason: x.ban_reason || '', until: x.ban_until }); return null; }
   if ((x.tv || 0) !== (u.tv || 0)) { bad(res, 'session expired — please sign in again', 401); return null; }
   const day = new Date().toISOString().slice(0, 10), k = u.uid + day;
@@ -428,22 +430,7 @@ async function verifyGoogle(idToken) {
   if (Number(p.exp) * 1000 < Date.now()) throw new Error('Google token expired');
   return { sub: p.sub, email: p.email_verified === 'true' || p.email_verified === true ? String(p.email || '').toLowerCase() : null, name: p.name || null, avatar: p.picture || null };
 }
-let _appleKeys = null, _appleAt = 0;
-async function verifyApple(idToken) {
-  const ids = list(process.env.APPLE_CLIENT_ID); if (!ids.length) throw new Error('Apple sign-in is not configured');
-  const [h64, p64, s64] = String(idToken).split('.'); if (!s64) throw new Error('invalid Apple token');
-  const dec = x => Buffer.from(x.replace(/-/g, '+').replace(/_/g, '/'), 'base64');
-  const head = JSON.parse(dec(h64).toString()), p = JSON.parse(dec(p64).toString());
-  if (!_appleKeys || Date.now() - _appleAt > 6 * 3600e3) { const r = await fetch('https://appleid.apple.com/auth/keys'); _appleKeys = (await r.json()).keys; _appleAt = Date.now(); }
-  const jwk = _appleKeys.find(k => k.kid === head.kid); if (!jwk) throw new Error('unknown Apple key');
-  const ok = crypto.verify('RSA-SHA256', Buffer.from(h64 + '.' + p64), crypto.createPublicKey({ key: jwk, format: 'jwk' }), dec(s64));
-  if (!ok) throw new Error('bad Apple signature');
-  if (p.iss !== 'https://appleid.apple.com') throw new Error('bad issuer');
-  if (!ids.includes(p.aud)) throw new Error('Apple token for another app');
-  if (p.exp * 1000 < Date.now()) throw new Error('Apple token expired');
-  return { sub: p.sub, email: p.email && (p.email_verified === true || p.email_verified === 'true') ? String(p.email).toLowerCase() : null, name: null, avatar: null };
-}
-
+async function verifyApple(idToken) { return require('./_apple').authenticate(null, { idToken }, { headers: {} }); }
 
 /* ---------- 成人露骨作品门槛：总开关 + 地区白名单 + 账号年龄验证，三者都满足才放行 ---------- */
 function region(req) {
@@ -466,4 +453,4 @@ async function adultAccess(req, cfg) {
   return { ok: true };
 }
 const isAdultWork = w => !!(w && w.pack && w.pack.meta && w.pack.meta.adult === true);
-module.exports = { region, adultAccess, adultRegionOk, isAdultWork, needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };
+module.exports = { SCHEMA, region, adultAccess, adultRegionOk, isAdultWork, needActive, addUsage, config, configReset, CONFIG_DEFAULTS, ROLES, can, adminToken, whoAdmin, audit, ip, hasMail, hasSES, hasBrevoMail, hasBrevoSMS, sendMail, mailLast, hasSMS, sendSMS, smsLast, firebaseConfig, verifyFirebase, oauthConfig, verifyGoogle, verifyApple, verify, cors, send, bad, db, hasDb, who, needUser, tokenFor, hashPass, checkPass, newId, isAdmin, bump, safety, structureQA, llm, embed, cosine, embedPreferred, embedLast: () => _embLast, hasBlob, blobPut, blobDel, readBody, jsonBody, wrap, crypto, planValid: require('./_plan').planValid };

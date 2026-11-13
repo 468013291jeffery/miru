@@ -1,9 +1,9 @@
 # MIRU overseas iOS launch design
 
-Approved scope: the user instructed us to fix the audit findings, confirmed an Apple developer account, chose overseas launch, and requires both diamond purchases and advertising. Retain the existing Web UI with a Capacitor iOS app, native Apple sign-in, StoreKit 2, and AdMob rewarded ads. Minimum iOS 15; exact bundle candidate com.miru.plus.app. Team ID and registered bundle remain user configuration. AdMob is not registered: only official Google test ads in development, never in Release.
+Approved scope: the user instructed us to fix the audit findings, confirmed an Apple developer account, chose overseas launch, and requires both diamond purchases and advertising. Retain the existing Web UI with a Capacitor iOS app, native Apple sign-in, StoreKit 2, and AdMob rewarded ads. Minimum iOS 15; confirmed Bundle ID com.miru.plus.app and Team ID H79A5X8935. AdMob is not registered: only official Google test ads in development, never in Release.
 
 ## Boundaries
-The latest user instruction narrows implementation to the minimum first App Store submission fixes while retaining all existing features and entrances, including Google/Apple/email login, UGC, AI text/voice/image/video, purchases and advertising. No unrelated whole-repository repairs or feature removal.
+The latest user instruction narrows implementation to the minimum first App Store submission fixes while retaining all existing features and entrances, including Google/Apple/email login, UGC, AI text/voice/image/video, purchases and advertising. No unrelated whole-repository repairs or feature removal. The owner explicitly prioritizes the first release: defer nonblocking refactoring, historical orphan inventory and extreme concurrency infrastructure; keep normal deletion, payment and security boundaries.
 Work only in this isolated branch. Preserve existing Web/Android behavior and all miru.plus CORS origins. Preserve app100_fixes.js, app101_you.js and app100_dialogue.js in source/build.py. Use the real backend at https://www.miru.plus/api. No server keys enter the app. No merge, deployment or App Store submission until changes and external configuration are reviewable.
 
 ## Money
