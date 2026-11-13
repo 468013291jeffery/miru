@@ -319,7 +319,7 @@ function packAfterPick(th,k){const w=wd(th.wid),n=th.pk.ch,c=w.pack.chapters[n-1
  pkDone(th,n);
  if(n===PCN(w)){(typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'end','ending');th.pk.end=k;const ps=packSt(th.wid);ps.end[k]=1;
   pkTrack(th,"story_end",{ch:n,ending:k});
-  if(k==="A")th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>loveWrite(th,cid,0,"ending:A",{floor:80}));
+  if(k==="A"&&!th.pk.authoredContract)th.cast.filter(cid=>cid!==th.pk.as).forEach(cid=>loveWrite(th,cid,0,"ending:A",{floor:80}));
   appendMsg(th,{who:"sys",k:"end",e:k,at:Date.now()});
   if(typeof taskClaimOnce==="function"&&taskClaimOnce("ending_"+th.wid,3))setTimeout(()=>toast(t("pk.endBonus")),900)}
  else (typeof pkGo==="function"?pkGo:(typeof window!=="undefined"&&window.PKST&&window.PKST.go?window.PKST.go:function(t,s){t.pk.st=s}))(th,'next','chapter-done');

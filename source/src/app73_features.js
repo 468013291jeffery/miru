@@ -309,6 +309,7 @@ const __body73 = function () {
     const cid = mainOf(th), c = ch(cid), hd = document.querySelector(".chead .grow[data-us]");
     if (c && th.love && th.love[cid] != null && hd && !hd.querySelector(".af73")) {
       const st = stageOf(th, cid), lv = Math.round(th.love[cid] || 0), nx = STAGE_MIN[st + 1];
+      if(th.pk && ["married","separated"].includes(th.pk.relationship)){const rel=th.pk.relationship==="married"?(CL()==="zh"?"已婚":"Married"):(CL()==="zh"?"已分开":"Separated");hd.insertAdjacentHTML("beforeend",'<span class="af73">💗 '+esc(rel)+'</span>');}else
       hd.insertAdjacentHTML("beforeend", '<span class="af73">💗 ' + esc(t("stage." + st)) + ' · ' + lv + (nx != null ? '/' + nx : '') + '<i style="width:' + (nx != null ? Math.min(100, (lv - STAGE_MIN[st]) / (nx - STAGE_MIN[st]) * 100) : 100) + '%"></i></span>');
     }
     /* bar under the latest AI reply */

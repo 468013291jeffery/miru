@@ -1124,7 +1124,7 @@ pico.instantiate_detection_memory = function(size)
    玩家（截图）：「所有的剧以后都不要有这个东西……直接根据回复，去设定它后面那个值就可以了。没有必要要有选择。」
    · 章末选择、剧情中途的选择：只显示「🎭 轮到你了 + 问题」，不再列出选项。玩家自己打字（或用 ✨ AI 帮我想）回复，
      AI 判断这句最接近剧本里哪一条分支，就按那条分支加减数值 / 设旗标 / 播后续剧情；对话里只留玩家自己的原话。
-   · 「继续剧情」按钮多余：剧情暂停在「继续剧情」时自动接着播。
+   · 「继续剧情」按钮多余：剧情暂停在「继续剧情」时自动接着播。（「进入下一章」不自动点，章末只留小字入口，由玩家决定什么时候走。）
    · 剧本里仍然可以写分支（作者 / GPT 照旧写 OPT），只是不再显示给玩家，变成「按回复判定」的隐藏分支。 */
 (function () {
   "use strict";
@@ -1187,7 +1187,7 @@ pico.instantiate_detection_memory = function(size)
   setInterval(() => {
     try {
       const th = S.threads[curT], chat = document.getElementById("s-chat"); if (!th || !th.pk || !chat || chat.hidden || busy) return;
-      const b = chat.querySelector("#pkwrap [data-pkresume], #pkwrap [data-pkadvance]");
+      const b = chat.querySelector("#pkwrap [data-pkresume]"); /* 2026-11-13：「进入下一章」不再自动点（玩家：这一章还没玩完就跳了） */
       if (b && !b.disabled && !(window.READING && READING.pending.get(th.id))) b.click();
     } catch (_) {}
   }, 900);
@@ -1408,14 +1408,14 @@ pico.instantiate_detection_memory = function(size)
       const ta = document.getElementById("cin"); if (ta && (ta.value.trim() || document.activeElement === ta)) { seenAt = Date.now(); return; }
       if (emOn(th) && (!th._ev151 || th._ev151.ch !== th.pk.ch)) { const g = window.__court152, even = (+th.pk.ch || 0) % 2 === 1; if (even && g ? (g.pop(th) || popDaily(th)) : (popDaily(th) || (g && g.pop(th)))) { seenAt = Date.now(); return; } }
       if (th._ev151 && th._ev151.ch === th.pk.ch && !th._ev151.done) { seenAt = Date.now(); return; } /* 等你回他 */
-      if (Date.now() - seenAt > 3500) { seenAt = Date.now() + 60000; b.click(); }
+      /* 2026-11-13 玩家：「玩着玩着就下一章了，这一章还没玩完」⇒ 不再自动进下一章；章末只留一行小字「下一章 ›」，你想走了自己点。 */
     } catch (_) {}
   }, 700);
 
   const st = document.createElement("style");
   st.textContent =
     "#pkwrap [data-reading-next],#pkwrap [data-empress-hub],#pkwrap [data-empress-games]{display:none!important}" +
-    "#pkwrap [data-pknext].nx151{display:none!important}" +
+    "#pkwrap [data-pkadvance]," + "#pkwrap [data-pknext].nx151{display:block!important;margin:6px auto 2px;padding:4px 10px;background:none!important;border:0!important;box-shadow:none!important;color:var(--mut,#aaa)!important;font-size:12px!important;font-weight:400!important;text-decoration:underline;text-underline-offset:3px;width:auto!important;min-height:0!important}" +
     "#pkwrap [data-pknext].nx151l{display:block;margin:6px auto 2px;padding:4px 10px;background:none;border:0;color:var(--mut,#aaa);font-size:12px;text-decoration:underline;text-underline-offset:3px;width:auto}" +
     "#fxLayer .dimpop,#fxLayer .stgban{display:none!important}" +
     ".fx151{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:2px auto 8px;font-size:11.5px;opacity:0;animation:fx151 .5s ease forwards;transition:opacity .8s}" +
@@ -1533,4 +1533,345 @@ pico.instantiate_detection_memory = function(size)
       return sh.apply(this, [html].concat([].slice.call(arguments, 1)));
     };
   }
+})();
+
+/* ===== 2026-11-13 · 「🌱 某某 变了 · 封闭 → 试探」不再一人一张卡片刷屏 =====
+   玩家（女帝截图）：「这么多没必要显示出来啊。」—— 女帝有二十位同伴，一次宫廷安排就能让一排人同时换阶段，聊天里一下子冒出一长串卡片。
+   ⇒ 阶段变化不再写成聊天卡片；同一时刻的变化合并成剧情消息下方一行小字（最多列 3 个名字，其余「等 N 人」），几秒后淡出。
+     阶段本身照常记录（影响后续剧情和角色记忆），只是不再刷屏；旧存档里已经堆着的这类卡片也一并清掉。 */
+(function () {
+  "use strict";
+  const RX = /^(🌱|🥀) .+ (变了|退回了一步|changed|pulled back)$/;
+  const isArc = m => m && m.who === "sys" && m.k === "card" && RX.test(String(m.title || ""));
+  let buf = [], tmr = 0;
+  function flush() {
+    tmr = 0; const items = buf; buf = []; if (!items.length) return;
+    const box = document.getElementById("msgs"); if (!box) return;
+    const zh = typeof CL !== "function" || CL() === "zh";
+    const groups = {};
+    items.forEach(m => { const name = String(m.title).replace(/^(🌱|🥀) /, "").replace(/ (变了|退回了一步|changed|pulled back)$/, ""), key = String(m.title).slice(0, 2) + "|" + String(m.txt || ""); (groups[key] = groups[key] || []).push(name); });
+    const el = document.createElement("div"); el.className = "fx151";
+    el.innerHTML = Object.entries(groups).map(([k, names]) => {
+      const [icon, txt] = k.split("|"), shown = names.slice(0, 3).join(zh ? "、" : ", ") + (names.length > 3 ? (zh ? " 等 " + names.length + " 人" : " +" + (names.length - 3)) : "");
+      return '<span style="--c:' + (icon.indexOf("🥀") === 0 ? "#9AA3B5" : "#8BE08F") + '">' + icon + " " + esc(shown) + (txt ? " · " + esc(txt) : "") + "</span>";
+    }).join("");
+    box.appendChild(el);
+    setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 900); }, 5200);
+  }
+  if (typeof appendMsg === "function") {
+    const am = appendMsg;
+    appendMsg = function (th, m) {
+      try { if (isArc(m)) { if (th && curT === th.id) { buf.push(m); clearTimeout(tmr); tmr = setTimeout(flush, 400); } return; } } catch (_) {}
+      return am.apply(this, arguments);
+    };
+  }
+  function clean(th) {
+    try { if (!th || !th.msgs || th._arc153) return; th._arc153 = 1; const n = th.msgs.length; th.msgs = th.msgs.filter(m => !isArc(m)); if (th.msgs.length !== n) save(); } catch (_) {}
+  }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { try { clean(S.threads[curT]); } catch (_) {} return rc.apply(this, arguments); }; }
+})();
+
+/* ===== 2026-11-13 · 电话 / 撤回消息：古代剧里没有；人就在你面前也没有 =====
+   玩家（女帝截图「📞 卡西安 来电…」）：「古代没有电话；我人还在场，你就给我打电话。其他剧也有这种情况，统一写进规则。」
+   · 世界是古代、宫廷、王朝、仙侠、武侠、中世纪 / 奇幻王国等没有电话的设定 ⇒ 来电卡、响铃、未接来电、剧本里的电话段一律不出现
+     （剧本电话段改走它自己的「跳过」分支；作品如果确实有电话，可在世界数据里写 phones:true 放开）。
+   · 剧情里打电话的人必须「不在场」：场景名单里有他、或者剧情没交代谁在场时，都当作人就在面前，不来电。
+   · 普通一对一聊天（不在剧情场景里、隔着手机聊天）照旧可以来电。 */
+(function () {
+  "use strict";
+  const OLD = /古代|古风|宫廷|宫斗|王朝|皇帝|皇后|女帝|帝王|朝堂|后宫|侯府|王府|公主|太子|仙侠|修仙|武侠|江湖|中世纪|骑士|王国|魔法学院|dynasty|emperor|empress|imperial court|kingdom|medieval|knight|regency|victorian|harem/i;
+  const cache = new Map();
+  function noPhones(th) {
+    try {
+      const w = th && th.wid && wd(th.wid); if (!w) return false;
+      if (w.phones === true || (w.pack && w.pack.phones === true)) return false;
+      if (w.phones === false || (w.pack && (w.pack.phones === false || w.pack.empress147))) return true;
+      if (cache.has(th.wid)) return cache.get(th.wid);
+      const txt = [w.title, w.hook, w.premise, w.era, w.setting, w.genre].map(x => { try { return typeof x === "string" ? x : x ? [x.zh, x.en].join(" ") : ""; } catch (_) { return ""; } }).join(" ") + " " + [].concat(w.tags || [], w.tabs || []).join(" ");
+      const r = OLD.test(txt); cache.set(th.wid, r); return r;
+    } catch (_) { return false; }
+  }
+  function present(th, cid) {
+    try {
+      if (!th || !th.pk) return false; /* 普通聊天：隔着手机，不算在场 */
+      const c = wd(th.wid)?.pack?.chapters?.[th.pk.ch - 1];
+      const p = th.present || th.status?.present || c?.present;
+      return Array.isArray(p) ? p.includes(cid) : true;
+    } catch (_) { return true; }
+  }
+  window.PHONE153 = { noPhones, present };
+  if (typeof callCard === "function") {
+    const cc = callCard;
+    callCard = function (th, cid) { try { if (noPhones(th) || present(th, cid)) return; } catch (_) {} return cc.apply(this, arguments); };
+  }
+  if (typeof ringIn === "function") {
+    const ri = ringIn;
+    ringIn = function (th, cid) { try { if (noPhones(th) || present(th, cid)) return; } catch (_) {} return ri.apply(this, arguments); };
+  }
+  if (typeof mcCard === "function") {
+    const mc = mcCard;
+    mcCard = function (th) { try { if (noPhones(th)) return; } catch (_) {} return mc.apply(this, arguments); };
+  }
+  setTimeout(function () {
+    try {
+      if (window.EXPERIENCE124 && EXPERIENCE124.canCall && !EXPERIENCE124.canCall.__p153) {
+        const can = EXPERIENCE124.canCall;
+        EXPERIENCE124.canCall = function (th) { try { if (noPhones(th)) return false; } catch (_) {} return can.apply(this, arguments); };
+        EXPERIENCE124.canCall.__p153 = 1;
+      }
+    } catch (_) {}
+    if (typeof stopAuto === "function" && !stopAuto.__p153) {
+      const sa = stopAuto;
+      stopAuto = function (th, b) {
+        try { if (b && ["call", "missed", "ring"].includes(b[1]) && noPhones(th)) return (b[2] && b[2].skip) || []; } catch (_) {}
+        return sa.apply(this, arguments);
+      };
+      stopAuto.__p153 = 1;
+    }
+  }, 0);
+  /* 「撤回了一条消息」同理：那是隔着手机聊天才有的事。剧情场景里人就在你面前（或古代剧），
+     ⇒ 系统随机冒出来的「↩︎ 某某 撤回了一条消息 · 看看他写了什么 💎1」不再出现；
+     ⇒ 剧本写的撤回段落改成当面的样子：「某某张了张口，又把话咽了回去。」 */
+  if (typeof beatCardLater === "function") {
+    const bl = beatCardLater;
+    beatCardLater = function (th, card) { try { if (card && /^(del|call)\|/.test(String(card.act || "")) && (th.pk || noPhones(th))) return; } catch (_) {} return bl.apply(this, arguments); };
+  }
+  if (typeof appendMsg === "function") {
+    const am = appendMsg;
+    appendMsg = function (th, m) {
+      try {
+        if (m && m.k === "xrecall" && th && (noPhones(th) || present(th, m.rw))) {
+          const c = ch(m.rw), zh = typeof CL !== "function" || CL() === "zh", nm = c ? first(c.n) : "";
+          return am.call(this, th, { who: "n", k: "act", txt: zh ? nm + "张了张口，又把话咽了回去。" : nm + " starts to say something, then swallows it.", at: m.at || Date.now() });
+        }
+      } catch (_) {}
+      return am.apply(this, arguments);
+    };
+  }
+  /* 已经出现在存档里的「来电…」「撤回」卡片：剧情场景 / 古代剧里清掉 */
+  if (typeof renderChat === "function") {
+    const rc = renderChat;
+    renderChat = function () {
+      try { const th = S.threads[curT]; if (th && !th._ph153 && noPhones(th)) { th._ph153 = 1; const n = th.msgs.length; th.msgs = th.msgs.filter(m => !(m && ((m.k === "card" && /^call\|/.test(String(m.act || ""))) || m.k === "missed"))); if (n !== th.msgs.length) save(); }
+        if (th && th.pk && !th._dl153) { th._dl153 = 1; const n2 = th.msgs.length; th.msgs = th.msgs.filter(m => !(m && m.k === "card" && /^(del|call)\|/.test(String(m.act || "")))); if (n2 !== th.msgs.length) save(); } } catch (_) {}
+      return rc.apply(this, arguments);
+    };
+  }
+})();
+
+/* ===== 2026-11-13 · 群像剧：一句一句看，新的一句一定出现在眼前 =====
+   玩家：「我说完话之后，一个一个人说，我还没看完就咣咣咣出了一大堆，得让我点一下再出下一个。」
+   回复本来就是「点一下出下一句」，但如果聊天记录不在最底部（往上翻过、或上一句很长把视线顶走），新的一句出现在屏幕外，
+   只剩「有新消息 ↓」，点屏幕也不会翻（在看历史时点屏幕不算「下一句」），看起来就像一下子冒出一大堆。
+   ⇒ 每当有新的一句等你点，自动把它滚到眼前；你主动往上翻看历史时不打扰，回到底部后照旧一句一句来。 */
+(function () {
+  "use strict";
+  if (!window.READING || typeof READING.wait !== "function") return;
+  const w = READING.wait;
+  READING.wait = function (th, message) {
+    const r = w.apply(this, arguments);
+    try {
+      if (th && curT === th.id) setTimeout(() => {
+        try {
+          const m = document.getElementById("msgs"); if (!m) return;
+          if (Date.now() - (m._scrolled124 || 0) < 4000) return; /* 你刚刚自己在翻 */
+          m.scrollTop = m.scrollHeight;
+          if (window.EXPERIENCE124 && EXPERIENCE124.positions) EXPERIENCE124.positions.set(th.id, { top: m.scrollTop, away: false, count: th.msgs.length });
+          const b = document.querySelector("[data-latest124]"); if (b) b.hidden = true;
+          m.classList.remove("reading-history124");
+        } catch (_) {}
+      }, 60);
+    } catch (_) {}
+    return r;
+  };
+})();
+
+/* ===== 2026-11-13 · 去掉「当前是写好的台词——实时 AI 未连接（）· 测试实时 AI」横条 =====
+   玩家（截图）：「实时 AI 都已经连接了，没必要还出现这句话。」—— 这是开发调试用的提示：S.live 标记没打上时就会显示，
+   实际 AI 已经在回复（括号里是空的）。玩家不需要看到连接状态，⇒ 对玩家一律不显示。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent = ".livebanner{display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-13 · 首页标签真正按类型分剧；没有剧的标签不显示 =====
+   玩家（截图）：「标签根本没有用起来：点甜宠出来的不是甜宠，点奇幻出来的不是奇幻，都是全部。」
+   原因：首页现在只放线上的官方新剧，它们是从服务器拉来后整批插进信息流的，没有按标签过滤；老的 36 部示例剧又都下架了，
+   所以每个标签下面看到的都是同一批。
+   ⇒ 每部官方剧按「标题 + 简介 + 服务器标签」自动归类（一部剧可以属于多个标签）；点某个标签只显示属于它的剧；
+     一部都没有的标签先不显示，等有对应的剧再出现。「为你推荐」「热门」照旧显示全部。
+   标签本身调整为：为你推荐 · 热门 · 甜宠 · 宫廷奇幻 · 群像 · 宿敌 · 虐恋暗黑 · 破镜重圆 · 慢热。 */
+(function () {
+  "use strict";
+  const RX = {
+    sweet: /甜宠|甜|宠|治愈|暖|日常|心动|sweet|fluff|cozy|comfort/i,
+    fantasy: /奇幻|魔法|王冠|王子|公主|女帝|帝国|王国|宫廷|后宫|皇|龙|精灵|妖|吸血鬼|狼人|神明|仙|fantasy|magic|prince|princess|crown|kingdom|empress|emperor|throne|dragon|fae|vampire|werewolf/i,
+    ensemble: /群像|后宫|八位|二十位|十二位|几位|众人|多位|兄弟们|harem|ensemble|eight|twenty/i,
+    rivals: /宿敌|死对头|对手|敌人|仇|针锋相对|rival|enem|nemesis/i,
+    dark: /暗黑|黑化|复仇|囚|禁忌|血|杀|阴谋|背叛|黑帮|诅咒|虐|dark|revenge|mafia|curse|obsess|betray/i,
+    second: /破镜重圆|前任|重逢|复合|旧情|再续|second chance|\bex\b|reunion/i,
+    slow: /慢热|暗恋|青梅|竹马|久别|一点点|渐渐|slow burn|pining|childhood/i
+  };
+  const TABS = [["foryou", "For You", "为你推荐"], ["hot", "Hot", "热门"], ["sweet", "Sweet", "甜宠"], ["fantasy", "Court & Fantasy", "宫廷奇幻"], ["ensemble", "Ensemble", "群像"], ["rivals", "Rivals", "宿敌"], ["dark", "Dark", "虐恋暗黑"], ["second", "Second Chance", "破镜重圆"], ["slow", "Slow Burn", "慢热"]];
+  function txt(w) {
+    const parts = [w.title, w.hook, w.en && w.en.title, w.en && w.en.hook, w.genre, w.premise];
+    [].concat(w.tags || [], w.tabs || [], w.tropes || []).forEach(x => parts.push(typeof x === "string" ? x : x && (x.zh || x.en || x.name)));
+    return parts.filter(Boolean).join(" ");
+  }
+  function tagsOf(w) {
+    if (window.TAGS157 && TAGS157.MAP && w && TAGS157.MAP[w.id]) return TAGS157.MAP[w.id];
+    if (w._tg157) return w._tg157;
+    const s = txt(w), out = Object.keys(RX).filter(k => RX[k].test(s));
+    return (w._tg157 = out);
+  }
+  window.TAGS157 = { tagsOf };
+  const on = () => typeof feedTab !== "undefined" && !["foryou", "hot"].includes(feedTab);
+  if (typeof off94FCard === "function") {
+    const fc = off94FCard;
+    off94FCard = function (w) { try { if (on() && !tagsOf(w).includes(feedTab)) return ""; } catch (_) {} return fc.apply(this, arguments); };
+  }
+  try { FEED_TABS.length = 0; TABS.forEach(([k, en, zh]) => FEED_TABS.push([k, T(en, zh)])); } catch (_) {}
+  function tidy() {
+    try {
+      const L = (typeof OFFF94 !== "undefined" && OFFF94.list) || null;
+      if (L && L.length) document.querySelectorAll("#ftabsc [data-ftab]").forEach(b => { const k = b.dataset.ftab; if (["foryou", "hot"].includes(k)) return; b.hidden = !L.some(w => tagsOf(w).includes(k)); });
+      const feed = document.getElementById("feed");
+      if (feed && on() && L) {
+        /* 老的示例剧卡片（data-fw）和首页视频卡：分类标签下不显示 */
+        feed.querySelectorAll(".fcard[data-fw]").forEach(c => c.remove());
+        const sc = feed.querySelector(".home-showcase:not(.off94)"); if (sc) sc.remove();
+        if (!feed.querySelector(".fcard") && !feed.querySelector(".empty157")) feed.insertAdjacentHTML("beforeend", '<p class="empty empty157" style="padding-top:120px;text-align:center">' + (CL() === "zh" ? "这个类型的剧还在路上" : "Stories for this tag are on the way") + "</p>");
+      }
+    } catch (_) {}
+  }
+  if (typeof renderHome === "function") {
+    const rh = renderHome;
+    renderHome = function () { const r = rh.apply(this, arguments); tidy(); setTimeout(tidy, 50); try { if (typeof off94Feed === "function") off94Feed().then(() => setTimeout(tidy, 30)); } catch (_) {} return r; };
+  }
+})();
+
+/* ===== 2026-11-13 · 自动朗读改为付费（按实际成本 × 7） =====
+   老板：「自动朗读肯定要付费，按实际成本的价格乘以七来收费。」
+   成本：语音合成 qwen3-tts-flash（新加坡区）0.1 美元 / 1 万字 = 每字 0.00001 美元；× 7 = 每字 0.00007 美元。
+   1 💎 按最便宜的大包价约 0.143 美元算 ⇒ 1 💎 ≈ 2000 字 ≈ 60 句台词。
+   ⇒ 自动朗读每读满 2000 字扣 1 💎（先扣后读：额度用完时扣 1 💎 换 2000 字）；宝石不够时自动朗读关闭并提示。
+     没有会员了，所有人一样按字数扣；单独点某一句的 🔊 仍免费（只读那一句）；剧里预先录好的配音不扣。 */
+(function () {
+  "use strict";
+  const CHARS = 2000;
+  let autoNext = false;
+  if (typeof voiceAutoOK === "function") voiceAutoOK = function () { try { return (S.vcred157 || 0) > 0 || (S.keys || 0) >= 1; } catch (_) { return false; } };
+  if (typeof voiceCount === "function") { const vc = voiceCount; voiceCount = function () { autoNext = true; return vc.apply(this, arguments); }; }
+  function off() { try { S.autoVoice = false; S.voice = S.voice || {}; S.voice.auto = false; save(); toast(CL() === "zh" ? "宝石不够了，自动朗读已关闭" : "Out of 💎 — auto read-aloud is off"); } catch (_) {} }
+  if (typeof speak === "function") {
+    const sp = speak;
+    speak = function (text, who) {
+      const auto = autoNext; autoNext = false;
+      try {
+        if (auto && !(typeof recorded === "function" && recorded(text, who))) {
+          const n = String(text || "").replace(/[*()（）\s]/g, "").length;
+          if ((S.vcred157 || 0) < n) {
+            if ((S.keys || 0) >= 1) { S.keys -= 1; S.vcred157 = (S.vcred157 || 0) + CHARS; save(); toast(CL() === "zh" ? "自动朗读 · 💎 1（约 60 句）· 剩 " + S.keys : "Read-aloud · 💎 1 (~60 lines) · " + S.keys + " left"); const k = document.querySelector(".topbar .chip.num"); if (k) k.textContent = "💎 " + S.keys + (S.plus ? " · MIRU+" : ""); }
+            else { off(); return; }
+          }
+          S.vcred157 = Math.max(0, (S.vcred157 || 0) - n); save();
+        }
+      } catch (_) {}
+      return sp.apply(this, arguments);
+    };
+  }
+  try {
+    Object.assign(I18N.zh, { "vp.left": "朗读额度（字）· 每 💎1 ≈ 2000 字 ≈ 60 句", "vp.note": "自动朗读按字数扣宝石：💎1 ≈ 60 句。单独点某一句的 🔊 免费。" });
+    Object.assign(I18N.en, { "vp.left": "read-aloud credit (characters) · 💎1 ≈ 2000 chars ≈ 60 lines", "vp.note": "Auto read-aloud uses 💎 by length: 💎1 ≈ 60 lines. Tapping 🔊 on one line is free." });
+    Object.assign(I18N.zh, { "u.what": "一个 AI 回合 = 你说一句话后角色们的一次回应——不管几个角色接话都只算一次。写好的剧情、重玩、你拥有的照片和记忆都不消耗回合。", "u.free": "回合用完也没关系：写好的剧情照常往下播，你的进度、照片和关系都原样保留。" });
+    Object.assign(I18N.en, { "u.what": "An AI turn is one reply to what you say — however many characters answer. Written story scenes, replays, your photos and memories never use turns.", "u.free": "Out of turns? The written story keeps playing, and your progress, photos and relationships stay exactly where they are." });
+  } catch (_) {}
+  /* 语音面板里的大数字：显示剩余朗读字数，而不是「今日免费条数」 */
+  if (typeof voicePlaySheet === "function") {
+    const vs = voicePlaySheet;
+    voicePlaySheet = function () { const r = vs.apply(this, arguments); try { const b = document.querySelector(".vpbig .num"); if (b) b.textContent = String(S.vcred157 || 0); } catch (_) {} return r; };
+  }
+})();
+
+/* ===== 2026-11-13 · 「🎭 轮到你了 · 你是你 ＋ 问题 ＋ 直接打字回复…」这一条也不要了 =====
+   玩家（截图）：「这一种在所有的剧本里面现在全都不要，就正常的自然对话就可以了。」
+   ⇒ 剧情中途的分支点、章末的分支点都不再显示任何提示条；角色把话说到这里，你像平常聊天一样直接回，
+     系统照旧按你的回复判定分支（见上面「不再出现任何选项」）。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent = "#s-chat #pkwrap .pkpanel.stop:has(.chatt),#s-chat #pkwrap .pkpanel.ch148{display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* 语音面板里「MIRU+ 无限畅听」的字样也不再出现（2026-11-13：没有会员了） */
+try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18N.en, { "vp.unl": "", "vp.plus": "" }); } catch (_) {}
+
+/* ===== 2026-11-13 · 所有剧：点一下才出下一条（包括中间插进来的旁白、提示、卡片） =====
+   玩家：「我回了一句之后，其他人一个一个说，我看完点一下再出下一个人；中间要显示什么其他的，也都等我点一下再显示。」
+   角色台词本来就是一句一句等你点；但在等你点的时候，别的地方（旁白补充、关系变化、系统卡片等）插进来的消息会直接冒出来，
+   看起来就是「咣咣咣」一下出一堆。
+   ⇒ 只要还有一句在等你点，后来的任何消息（除了你自己说的话）都先排队，不显示；你点一下，才放出下一条，再等你点。
+     你自己开口发言时，排队的消息一次性放出来，不会丢。 */
+(function () {
+  "use strict";
+  const R = window.READING; if (!R || typeof appendMsg !== "function") return;
+  const Q = th => th._q158 || (th._q158 = []);
+  const readable = m => m && ((typeof m.txt === "string" && m.txt.trim()) || (typeof m.title === "string" && m.title.trim()));
+  const am = appendMsg;
+  appendMsg = function (th, m) {
+    try {
+      if (th && m && !m._q158 && m.who !== "me" && R.pending.get(th.id)) { Q(th).push(m); return; }
+    } catch (_) {}
+    return am.apply(this, arguments);
+  };
+  function release(th) {
+    try {
+      if (!th || R.pending.get(th.id)) return;
+      const q = Q(th); let m;
+      while ((m = q.shift())) {
+        m._q158 = 1; m.at = Date.now(); am.call(window, th, m);
+        if (readable(m) && curT === th.id) { R.wait(th, m, "script"); return; }
+      }
+    } catch (e) { console.warn("[q158] release", e); }
+  }
+  const w = R.wait;
+  R.wait = function (th) { const p = w.apply(this, arguments); try { if (th) p.then(() => setTimeout(() => release(th), 0)); } catch (_) {} return p; };
+  window.READQ158 = { release };
+  /* 你自己开口：排队的全部放出（按顺序），再处理你的话 */
+  function flushAll(th) { try { const q = Q(th); let m; while ((m = q.shift())) { m._q158 = 1; am.call(window, th, m); } } catch (_) {} }
+  if (typeof doSend === "function") { const ds = doSend; doSend = function () { try { const th = S.threads[curT]; if (th && Q(th).length) flushAll(th); } catch (_) {} return ds.apply(this, arguments); }; }
+  /* 重新打开聊天、或之前排着没放的：没有在等的那句时，放出下一条 */
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); try { const th = S.threads[curT]; if (th && th._q158 && th._q158.length && !R.pending.get(th.id)) setTimeout(() => release(th), 0); } catch (_) {} return r; }; }
+})();
+
+/* ===== 2026-11-13 · 首页标签：线上 18 部官方剧逐部定好类型（自动归类只作新剧的兜底） =====
+   自动按关键词归类时，几乎每部剧的服务器标签里都有「Slow Burn」「Why Choose」，结果「慢热」「群像」什么都装。
+   ⇒ 已上线的剧按内容逐部指定 1–3 个类型；以后新上的剧先走关键词兜底，上线时再补进这张表。 */
+(function () {
+  "use strict";
+  if (!window.TAGS157) return;
+  const MAP = {
+    w_scmwf1m5ey5dc969fdb4: ["sweet"],                          /* 我的亿万富翁丈夫只为我下跪 */
+    w_scmwe0kqlf5a8ad0688e: ["fantasy", "ensemble"],            /* 女帝的绝色后宫 */
+    w_scmwd8xkizb4af60b220: ["dark", "rivals"],                 /* 系统让我爱凶手 */
+    w_scmwccn54rff49c6af5f: ["ensemble", "rivals"],             /* 全岛都在为你失控 */
+    w_scmwc6dcvkf78af9d356: ["dark", "ensemble"],               /* 极寒重生：谁能进门 */
+    w_scmwbo55bx3b4e35f1b7: ["dark", "second"],                 /* 我死过一次，他们都记得 */
+    w_scmwaymue65be8983c9b: ["dark", "rivals"],                 /* 北灯未熄 */
+    w_scmw9m1jz8453861ec49: ["fantasy", "ensemble", "dark"],    /* 第八誓约 */
+    w_scmw9biwsq6dcfcceb84: ["ensemble", "dark"],               /* 谁是 S++ */
+    w_scmw7tfsof0b2f96a20b: ["fantasy", "slow"],                /* 月蚀之誓 */
+    w_scmw7f7e4565778126fa: ["fantasy", "rivals"],              /* 零点王冠 */
+    w_scmw6aio565cb9b9e448: ["slow", "sweet"],                  /* 未读的选择 */
+    w_scmw4qon3h5311d852bf: ["dark"],                           /* Black Harbor */
+    w_scmw2calg4a57f5c1974: ["fantasy", "ensemble", "sweet"],   /* 八位王子都想娶我 */
+    w_scmw0sxc5p5fa3b3d735: ["sweet", "ensemble"],              /* 今晚，偏爱失控 */
+    w_scmvxxy1f444b18cd039: ["sweet", "slow"],                  /* 午夜邀约 */
+    w_scmvxnqoko453e6d7bc3: ["dark"],                           /* 黑帮教父的唯一软肋 */
+    w_scmvp62pluf3cc9d7c96: ["dark", "rivals"]                  /* 丝绒谎言 */
+  };
+  const auto = TAGS157.tagsOf;
+  TAGS157.tagsOf = function (w) { return (w && MAP[w.id]) || auto.apply(this, arguments); };
+  TAGS157.MAP = MAP;
 })();
