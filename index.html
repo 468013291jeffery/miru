@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="3f33a063e19b 2026-11-13T18:43Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="01a67fe6fa49 2026-11-13T18:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -26943,7 +26943,40 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const holds = {};
   if (typeof doSend === "function") {
     const ds = doSend;
-    doSend = function () { try { const th = S.threads[curT]; if (th && th.pk && th.pk.q && th.pk.q.length) th._spoke161 = 1; } catch (_) {} return ds.apply(this, arguments); };
+    doSend = function () {
+      const th = S.threads[curT];
+      try { if (th && th.pk && th.pk.q && th.pk.q.length) th._spoke161 = 1; } catch (_) {}
+      /* 停在换场前自由聊天时：你开口不能把剧本后面的内容丢掉或提前播出来 */
+      const held = !!(th && holds[th.id]);
+      let saved = null, tune = null, prevDrop;
+      try {
+        if (held && th.pk && Array.isArray(th.pk.q)) {
+          saved = th.pk.q.slice();
+          if (typeof MIRU_TUNE !== "undefined") { MIRU_TUNE.chat = MIRU_TUNE.chat || {}; tune = MIRU_TUNE.chat; prevDrop = tune.dropScriptOnInput; tune.dropScriptOnInput = false; }
+        }
+      } catch (_) {}
+      try { return ds.apply(this, arguments); }
+      finally {
+        try {
+          if (tune) { if (prevDrop === undefined) delete tune.dropScriptOnInput; else tune.dropScriptOnInput = prevDrop; }
+          if (saved && th.pk && (!th.pk.q || !th.pk.q.length) && saved.length) { th.pk.q = saved; save(); }
+        } catch (_) {}
+      }
+    };
+  }
+  /* 停住期间，剧本那边（换场卡、下一场的旁白）不管从哪条路冒出来，都先收起来，等你点「下一场 ›」再放 */
+  if (typeof appendMsg === "function") {
+    const am0 = appendMsg;
+    appendMsg = function (th, m) {
+      try {
+        if (th && m && holds[th.id] && !m._rel161 && (m.k === "scene" || m.k === "chap" || th._inScript161)) { (th._def161 = th._def161 || []).push(m); return; }
+      } catch (_) {}
+      return am0.apply(this, arguments);
+    };
+  }
+  if (typeof pkAppend === "function") {
+    const pa0 = pkAppend;
+    pkAppend = function (th) { try { if (th) th._inScript161 = 1; return pa0.apply(this, arguments); } finally { try { if (th) th._inScript161 = 0; } catch (_) {} } };
   }
   /* 写入一句剧本台词时就往后看：下一条（跳过不显示的指令）如果是换场景，立刻停住，不给剧本抢先播过去的机会 */
   function aheadScene(q) { for (const b of (q || []).slice(0, 8)) { if (isScene(b)) return true; if (Array.isArray(b) && b[0] !== "sys") return false; } return false; }
@@ -26980,7 +27013,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!e.target.closest || !e.target.closest("[data-nx161]")) return;
     e.preventDefault(); e.stopPropagation();
     const th = S.threads[curT]; if (!th) return;
-    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0; if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
+    delete holds[th.id]; th._spoke161 = 0; th._lines161 = 0;
+    try { const d = th._def161 || []; th._def161 = []; d.forEach(m => { m._rel161 = 1; appendMsg(th, m); }); } catch (_) {} if (PKPAUSE[th.id] === "scene161") delete PKPAUSE[th.id]; bar(th, false); save();
   }, true);
   const st = document.createElement("style");
   st.textContent = ".nx161{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
