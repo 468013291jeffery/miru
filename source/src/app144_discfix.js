@@ -1569,3 +1569,91 @@ pico.instantiate_detection_memory = function(size)
   }
   if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { try { clean(S.threads[curT]); } catch (_) {} return rc.apply(this, arguments); }; }
 })();
+
+/* ===== 2026-11-13 · 电话 / 撤回消息：古代剧里没有；人就在你面前也没有 =====
+   玩家（女帝截图「📞 卡西安 来电…」）：「古代没有电话；我人还在场，你就给我打电话。其他剧也有这种情况，统一写进规则。」
+   · 世界是古代、宫廷、王朝、仙侠、武侠、中世纪 / 奇幻王国等没有电话的设定 ⇒ 来电卡、响铃、未接来电、剧本里的电话段一律不出现
+     （剧本电话段改走它自己的「跳过」分支；作品如果确实有电话，可在世界数据里写 phones:true 放开）。
+   · 剧情里打电话的人必须「不在场」：场景名单里有他、或者剧情没交代谁在场时，都当作人就在面前，不来电。
+   · 普通一对一聊天（不在剧情场景里、隔着手机聊天）照旧可以来电。 */
+(function () {
+  "use strict";
+  const OLD = /古代|古风|宫廷|宫斗|王朝|皇帝|皇后|女帝|帝王|朝堂|后宫|侯府|王府|公主|太子|仙侠|修仙|武侠|江湖|中世纪|骑士|王国|魔法学院|dynasty|emperor|empress|imperial court|kingdom|medieval|knight|regency|victorian|harem/i;
+  const cache = new Map();
+  function noPhones(th) {
+    try {
+      const w = th && th.wid && wd(th.wid); if (!w) return false;
+      if (w.phones === true || (w.pack && w.pack.phones === true)) return false;
+      if (w.phones === false || (w.pack && (w.pack.phones === false || w.pack.empress147))) return true;
+      if (cache.has(th.wid)) return cache.get(th.wid);
+      const txt = [w.title, w.hook, w.premise, w.era, w.setting, w.genre].map(x => { try { return typeof x === "string" ? x : x ? [x.zh, x.en].join(" ") : ""; } catch (_) { return ""; } }).join(" ") + " " + [].concat(w.tags || [], w.tabs || []).join(" ");
+      const r = OLD.test(txt); cache.set(th.wid, r); return r;
+    } catch (_) { return false; }
+  }
+  function present(th, cid) {
+    try {
+      if (!th || !th.pk) return false; /* 普通聊天：隔着手机，不算在场 */
+      const c = wd(th.wid)?.pack?.chapters?.[th.pk.ch - 1];
+      const p = th.present || th.status?.present || c?.present;
+      return Array.isArray(p) ? p.includes(cid) : true;
+    } catch (_) { return true; }
+  }
+  window.PHONE153 = { noPhones, present };
+  if (typeof callCard === "function") {
+    const cc = callCard;
+    callCard = function (th, cid) { try { if (noPhones(th) || present(th, cid)) return; } catch (_) {} return cc.apply(this, arguments); };
+  }
+  if (typeof ringIn === "function") {
+    const ri = ringIn;
+    ringIn = function (th, cid) { try { if (noPhones(th) || present(th, cid)) return; } catch (_) {} return ri.apply(this, arguments); };
+  }
+  if (typeof mcCard === "function") {
+    const mc = mcCard;
+    mcCard = function (th) { try { if (noPhones(th)) return; } catch (_) {} return mc.apply(this, arguments); };
+  }
+  setTimeout(function () {
+    try {
+      if (window.EXPERIENCE124 && EXPERIENCE124.canCall && !EXPERIENCE124.canCall.__p153) {
+        const can = EXPERIENCE124.canCall;
+        EXPERIENCE124.canCall = function (th) { try { if (noPhones(th)) return false; } catch (_) {} return can.apply(this, arguments); };
+        EXPERIENCE124.canCall.__p153 = 1;
+      }
+    } catch (_) {}
+    if (typeof stopAuto === "function" && !stopAuto.__p153) {
+      const sa = stopAuto;
+      stopAuto = function (th, b) {
+        try { if (b && ["call", "missed", "ring"].includes(b[1]) && noPhones(th)) return (b[2] && b[2].skip) || []; } catch (_) {}
+        return sa.apply(this, arguments);
+      };
+      stopAuto.__p153 = 1;
+    }
+  }, 0);
+  /* 「撤回了一条消息」同理：那是隔着手机聊天才有的事。剧情场景里人就在你面前（或古代剧），
+     ⇒ 系统随机冒出来的「↩︎ 某某 撤回了一条消息 · 看看他写了什么 💎1」不再出现；
+     ⇒ 剧本写的撤回段落改成当面的样子：「某某张了张口，又把话咽了回去。」 */
+  if (typeof beatCardLater === "function") {
+    const bl = beatCardLater;
+    beatCardLater = function (th, card) { try { if (card && /^(del|call)\|/.test(String(card.act || "")) && (th.pk || noPhones(th))) return; } catch (_) {} return bl.apply(this, arguments); };
+  }
+  if (typeof appendMsg === "function") {
+    const am = appendMsg;
+    appendMsg = function (th, m) {
+      try {
+        if (m && m.k === "xrecall" && th && (noPhones(th) || present(th, m.rw))) {
+          const c = ch(m.rw), zh = typeof CL !== "function" || CL() === "zh", nm = c ? first(c.n) : "";
+          return am.call(this, th, { who: "n", k: "act", txt: zh ? nm + "张了张口，又把话咽了回去。" : nm + " starts to say something, then swallows it.", at: m.at || Date.now() });
+        }
+      } catch (_) {}
+      return am.apply(this, arguments);
+    };
+  }
+  /* 已经出现在存档里的「来电…」「撤回」卡片：剧情场景 / 古代剧里清掉 */
+  if (typeof renderChat === "function") {
+    const rc = renderChat;
+    renderChat = function () {
+      try { const th = S.threads[curT]; if (th && !th._ph153 && noPhones(th)) { th._ph153 = 1; const n = th.msgs.length; th.msgs = th.msgs.filter(m => !(m && ((m.k === "card" && /^call\|/.test(String(m.act || ""))) || m.k === "missed"))); if (n !== th.msgs.length) save(); }
+        if (th && th.pk && !th._dl153) { th._dl153 = 1; const n2 = th.msgs.length; th.msgs = th.msgs.filter(m => !(m && m.k === "card" && /^(del|call)\|/.test(String(m.act || "")))); if (n2 !== th.msgs.length) save(); } } catch (_) {}
+      return rc.apply(this, arguments);
+    };
+  }
+})();
