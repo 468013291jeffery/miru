@@ -71,7 +71,8 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
  "Walk in as yourself":["自分としてこのシーンに入る","나 자신으로 이 장면에 들어가기","Entra como tú"],"Direct it":["演出する","연출하기","Dirígelo"],"Watch the full short first":["先にショートドラマを最後まで見る","먼저 숏드라마 끝까지 보기","Ver primero el corto completo"],
  "Back to the story":["ストーリーに戻る","이야기로 돌아가기","Volver a la historia"],"You did it!":["成功！","성공!","¡Lo lograste!"],"So close…":["あと少し…","아깝다…","Casi…"],"Got it":["OK","확인","Entendido"]};
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
-function trKey(){return "miru_tr_"+S.lang}
+try{["zh","en","ja","ko","es"].forEach(lang=>localStorage.removeItem("miru_tr_"+lang))}catch(_){}
+function trKey(){return "miru_tr_private_v2_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}
  const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})
  let bad=0;Object.keys(TR.map).forEach(k=>{if(!needsTr(k)||!trFits(TR.map[k])){delete TR.map[k];bad++}});if(bad)trSave()}
@@ -95,7 +96,7 @@ function meTexts(){const th=S.threads&&S.threads[curT];const set=new Set();if(th
 function trScan(root){trLoad();TR.me=meTexts();const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>trSkip(n.parentElement)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
  let n;while((n=w.nextNode()))trNode(n);(root||document.body).querySelectorAll&&(root||document.body).querySelectorAll("[placeholder],[title]").forEach(el=>{if(trSkip(el.parentElement))return;trAttr(el,"placeholder");trAttr(el,"title")});trFlush()}
 function trEP(){const p=typeof TTS_EP!=="undefined"&&TTS_EP?TTS_EP.replace(/\/api\/tts$/,"/api/translate"):"";return p}
-let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
+let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(window.MIRU_AI&&!window.MIRU_AI.allowed(false))return;if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
  const batch=[...TR.q].slice(0,40);batch.forEach(x=>TR.q.delete(x));TR.busy=true;const lang0=S.lang;
  try{const r=await fetch(ep,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},typeof cloudAuth==="function"?cloudAuth():{}),body:JSON.stringify({to:S.lang,texts:batch})});const j=await r.json();
   if(S.lang!==lang0||TR.lang!==lang0){TR.busy=false;return}

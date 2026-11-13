@@ -1,0 +1,3 @@
+import assert from 'node:assert/strict';import{validate}from'./ios-release-check.mjs';
+const c={teamId:'H79A5X8935',bundleId:'com.miru.plus.app',appAppleId:'123456789',googleIOSClientId:'123-fixture.apps.googleusercontent.com',googleServerClientId:'123-server.apps.googleusercontent.com',admobAppId:'ca-app-pub-1234567890123456~1234567890',rewardedAdUnitId:'ca-app-pub-1234567890123456/1234567890'};
+assert.deepEqual(validate(c),[]);assert(validate({...c,admobAppId:'ca-app-pub-3940256099942544~1458002511'}).length);assert(validate({...c,rewardedAdUnitId:''}).length);assert(validate({...c,appAppleId:''}).length);assert(validate({...c,googleIOSClientId:'placeholder'}).length);console.log('PASS Release rejects missing identifiers and official test ads');

@@ -120,7 +120,7 @@ window.addEventListener("click",async e=>{const x=e.target.closest("[data-upshar
  if(!m||!m.cloudId)return toast(zh?"这份素材只在本机，先在联网时重新上传":"This one is only on this device");const r=await capi("/assets",{json:{op:"share",id:m.cloudId}});toast(r.ok&&r.j.ok?(zh?"已提交审核，通过后会出现在所有人的素材库":"Sent for review — approved items join everyone's library"):(zh?"已经提交过了":"Already submitted"))},true);
 const _libOpen68=libOpen;libOpen=function(){_libOpen68();try{const L=myLib()[LIBT]||[];document.querySelectorAll("[data-libtry]").forEach(b=>{const m=L.find(z=>z.id===b.dataset.libtry);if(m&&m.cloudId&&!b.querySelector("[data-upshare]"))b.insertAdjacentHTML("beforeend",'<span class="up66del" data-upshare="'+m.id+'" title="share">🌐</span>')})}catch(_){}};
 /* ---------- shared translations ---------- */
-async function i18nPull(){if(!/^(ja|ko|es|en|zh)$/.test(S.lang))return;try{const r=await capi("/i18n?lang="+S.lang);if(r.ok&&r.j.map&&typeof TR!=="undefined"){trLoad();Object.keys(r.j.map).forEach(k=>{if(TR.map[k]==null)TR.map[k]=r.j.map[k]});trSave();trScan()}}catch(_){}}
+async function i18nPull(){if(!/^(ja|ko|es|en|zh)$/.test(S.lang))return;try{const r=await capi("/i18n?lang="+S.lang+"&v=2");if(r.ok&&r.j.map&&typeof TR!=="undefined"){trLoad();Object.keys(r.j.map).forEach(k=>{if(TR.map[k]==null)TR.map[k]=r.j.map[k]});trSave();trScan()}}catch(_){}}
 /* ---------- analytics ---------- */
 const EVQ=[];function track(name,props){if(!CLOUD_EP)return;EVQ.push({name,props:props||{},at:Date.now()});if(EVQ.length>=20)evFlush()}
 async function evFlush(){if(!CL0.on||!EVQ.length)return;const batch=EVQ.splice(0,50);try{await capi("/events",{json:{events:batch},keepalive:true})}catch(_){}}

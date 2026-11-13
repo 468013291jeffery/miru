@@ -2,7 +2,7 @@
    · Report: a community story, its author, a library item, or an AI reply (chat menu ⋯). Goes to the admin console 「举报处理」 with a
      snapshot of the reported content; stories / library items reported by several people are hidden until reviewed (server side).
    · Block: any community author — their works disappear from the feed, Discover and search (server filters the feed; the device filters too).
-   · Terms: /terms.html (zero tolerance, 17+, 24h handling); agreed to on the sign-in screen.
+   · Terms: /terms.html (zero tolerance, 18+, 24h handling); agreed to on the sign-in screen.
    · Me → 安全与举报: terms, blocked authors (unblock), contact us. */
 const ZH95 = () => CL() === "zh";
 const T95 = (zh, en) => ZH95() ? zh : en;
@@ -81,8 +81,8 @@ document.addEventListener("click", e => {
 function terms95Link(t) { return '<a href="terms.html' + (ZH95() ? "" : "#en") + '" target="_blank" rel="noopener" style="color:#F0B77E">' + t + '</a>'; }
 { const _ra = renderAuth70; renderAuth70 = function () { const r = _ra.apply(this, arguments);
     try { const b = document.querySelector("#s-ob .au70b"); if (b && !document.querySelector(".tm95")) b.insertAdjacentHTML("afterend", '<p class="tm95">' +
-      (ZH95() ? "继续即表示你已年满 17 周岁，并同意" + terms95Link("《用户协议与社区规范》") + "。MIRU 对违规内容和辱骂行为零容忍。"
-              : "By continuing you confirm you're 17+ and agree to the " + terms95Link("Terms & Community Guidelines") + ". MIRU has zero tolerance for objectionable content and abusive users.") + '</p>'); } catch (_) {}
+      (ZH95() ? "继续即表示你已年满 18 周岁，并同意" + terms95Link("《用户协议与社区规范》") + "。MIRU 对违规内容和辱骂行为零容忍。"
+              : "By continuing you confirm you're 18+ and agree to the " + terms95Link("Terms & Community Guidelines") + ". MIRU has zero tolerance for objectionable content and abusive users.") + '</p>'); } catch (_) {}
     return r; }; }
 
 /* ---- Me → 安全与举报 ---- */

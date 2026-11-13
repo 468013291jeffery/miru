@@ -3,6 +3,7 @@
    库打不开（隐私模式 / 旧浏览器）也照常启动 —— mediaBoot 内部对失败是吞掉的，页面按老路径走。
    1.5 秒兜底：迁移不能把白屏拖出来。 */
 (function boot(){
+  if(window.MIRU_ACCOUNT_DELETED)return;
   function go(){ try{ if(S.ob)startApp();else renderOB(); }catch(e){ try{console.error(e)}catch(_){} } }
   try{
     if(typeof mediaBoot==="function"){

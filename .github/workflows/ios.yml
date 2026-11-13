@@ -1,0 +1,45 @@
+name: iOS candidate
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'native/**'
+      - 'source/**'
+      - 'index.html'
+      - 'privacy.html'
+      - 'terms.html'
+      - 'tools/ios-*.cjs'
+      - 'tools/ios-*.mjs'
+      - 'tools/prepare-ios.mjs'
+      - '.github/workflows/ios.yml'
+permissions:
+  contents: read
+jobs:
+  simulator:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: native/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 source/build.py
+      - run: npm --prefix native ci
+      - name: Native UI flows and consent
+        run: |
+          node tools/ios-bridge-selftest.cjs
+          node tools/ios-ai-consent-selftest.cjs
+          node tools/ios-package-selftest.mjs
+          node tools/ios-release-selftest.mjs
+          node --check source/all.js
+      - name: Copy bundled resources
+        working-directory: native
+        run: node node_modules/@capacitor/cli/bin/capacitor copy ios
+      - name: Compile actual Simulator app
+        working-directory: native
+        run: xcodebuild -quiet -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath DerivedData CODE_SIGNING_ALLOWED=NO build

@@ -38,6 +38,7 @@ const SCHEMA = [
   `CREATE TABLE IF NOT EXISTS user_blocks (user_id TEXT NOT NULL, author_id TEXT NOT NULL, PRIMARY KEY (user_id, author_id))`,
   `CREATE TABLE IF NOT EXISTS assets (id TEXT PRIMARY KEY, owner TEXT, kind TEXT, name TEXT, kw JSONB, url TEXT, mime TEXT, size INT, meta JSONB, status TEXT DEFAULT 'private', created_at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS translations (h TEXT PRIMARY KEY, lang TEXT, src TEXT, dst TEXT, at TIMESTAMPTZ DEFAULT now())`,
+  `ALTER TABLE translations ADD COLUMN IF NOT EXISTS published BOOLEAN NOT NULL DEFAULT false`,
   `CREATE TABLE IF NOT EXISTS events (id BIGSERIAL PRIMARY KEY, user_id TEXT, name TEXT, props JSONB, at TIMESTAMPTZ DEFAULT now())`,
   `CREATE TABLE IF NOT EXISTS usage (user_id TEXT, day DATE, kind TEXT, n INT DEFAULT 0, PRIMARY KEY (user_id, day, kind))`,
   `CREATE TABLE IF NOT EXISTS reports (id BIGSERIAL PRIMARY KEY, user_id TEXT, target_kind TEXT, target_id TEXT, reason TEXT, at TIMESTAMPTZ DEFAULT now())`,

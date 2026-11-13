@@ -7,6 +7,7 @@
    安卓 App 是 TWA（真 Chrome，不是 WebView），AdSense 在 App 里同样可用。 */
 (function () {
   "use strict";
+  if (window.MIRU_NATIVE && window.MIRU_NATIVE.platform === "ios") return;
   const PUB = "ca-pub-1779576119248059"; /* 2026-11-09 打开：AdSense 还在审核时没有广告可播，自动退回原来的模拟广告；审核通过后真广告自动接上，不用再改代码 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   window.__ads128 = () => ({ pub: PUB, ready: !!window.adBreak });

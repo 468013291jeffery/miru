@@ -9,6 +9,7 @@ on:
       - 'tools/voice-privacy-selftest.cjs'
       - 'tools/native-policy-selftest.cjs'
       - 'tools/native-voice-policy-selftest.cjs'
+      - 'tools/translation-privacy-selftest.cjs'
       - 'native/ios-release.public.json'
       - 'tools/iap-selftest.mjs'
       - 'tools/board-*-selftest.cjs'
@@ -25,6 +26,7 @@ on:
       - 'tools/voice-privacy-selftest.cjs'
       - 'tools/native-policy-selftest.cjs'
       - 'tools/native-voice-policy-selftest.cjs'
+      - 'tools/translation-privacy-selftest.cjs'
       - 'native/ios-release.public.json'
       - 'tools/iap-selftest.mjs'
       - 'tools/board-*-selftest.cjs'
@@ -107,6 +109,8 @@ jobs:
         run: node tools/native-policy-selftest.cjs
       - name: Native voice policy payloads
         run: node tools/native-voice-policy-selftest.cjs
+      - name: Private translations never enter public dictionary
+        run: node tools/translation-privacy-selftest.cjs
       - name: Account deletion across PostgreSQL connections
         run: node tools/apple-auth-selftest.cjs
         env:

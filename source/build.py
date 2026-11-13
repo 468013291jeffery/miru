@@ -35,6 +35,9 @@ for p in (os.path.join(ROOT,"miru_rules.js"), os.path.join(ROOT,"api","_rules.js
     open(p,"w",encoding="utf8").write(_full+_mod)
 parts.extend(["app129_catalog.js", "app130_princes.js", "app131_m105.js", "app132_m105experience.js", "app133_unread.js", "app134_arc98.js", "app134_m107.js", "app135_context.js", "app135_narration.js", "app136_spp.js", "app137_m108.js", "app138_catalog.js", "app139_voice.js", "app140_meetchars.js", "app141_creator3.js", "app142_m109.js", "app143_m110.js", "app144_discfix.js"])
 parts.extend(["app142_authored.js", "app145_narration.js", "app147_empress.js"])
+# Native overrides and privacy gates must precede synchronous boot.
+parts.remove("app99_boot.js")
+parts.extend(["app148_ios.js", "app149_ai_consent.js", "app99_boot.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)
