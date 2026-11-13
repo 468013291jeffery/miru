@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="ea3281ec19d2 2026-11-13T19:04Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="6f5bafe5c20c 2026-11-13T19:11Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -26092,9 +26092,9 @@ pico.instantiate_detection_memory = function(size)
       while (k0 < then0.length && Array.isArray(then0[k0]) && ch(then0[k0][0]) && ["say", "act", "think"].includes(then0[k0][1])) k0++;
       const rest = then0.slice(k0);
       const live = k0 > 0 && typeof reply === "function";
-      if (live && typeof PKPAUSE !== "undefined") PKPAUSE[th.id] = 1;
-      stopResolve(th, rest);
-      if (live) { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] live reply", e); } finally { try { if (PKPAUSE[th.id] === 1) PKPAUSE[th.id] = 0; } catch (_) {} } }
+      /* 先让角色回应完你这句（剧本此时还停在这个分支点上，不会往下跑），再放后面的剧情 */
+      if (live) { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] live reply", e); } }
+      if (th.pk && th.pk.stop) stopResolve(th, rest);
     } catch (e) { console.warn("[c150] stop", e); }
     finally { busyMap = false; }
   }
@@ -26998,6 +26998,14 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   if (typeof pkAppend === "function") {
     const pa0 = pkAppend;
     pkAppend = function (th) { try { if (th) th._inScript161 = 1; return pa0.apply(this, arguments); } finally { try { if (th) th._inScript161 = 0; } catch (_) {} } };
+  }
+  /* 分支点放行时：如果紧接着就是换场景，当场停住（以前是放行后剧本立刻把下一场播了） */
+  if (typeof stopResolve === "function") {
+    const sr = stopResolve;
+    stopResolve = function (th, extra) {
+      try { if (th && th.pk && ((th._lines161 || 0) > 0 || th._spoke161) && aheadScene(extra || [])) hold(th.id); } catch (_) {}
+      return sr.apply(this, arguments);
+    };
   }
   /* 写入一句剧本台词时就往后看：下一条（跳过不显示的指令）如果是换场景，立刻停住，不给剧本抢先播过去的机会 */
   function aheadScene(q) { for (const b of (q || []).slice(0, 8)) { if (isScene(b)) return true; if (Array.isArray(b) && b[0] !== "sys") return false; } return false; }
