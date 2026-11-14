@@ -316,7 +316,7 @@ module.exports = L.wrap(async (req, res) => {
     if (b.op === 'add') {
       const lang = String(b.lang || ''), src = String(b.src || ''), dst = String(b.dst || ''); if (!lang || !src || !dst) return L.bad(res, '语言、原文、译文都要填');
       const h = L.crypto.createHash('sha1').update(lang + '\n' + src).digest('hex');
-      await sql('INSERT INTO translations (h, lang, src, dst) VALUES ($1,$2,$3,$4) ON CONFLICT (h) DO UPDATE SET dst=$4, at=now()', [h, lang, src, dst]); await log('i18n_add', 'i18n', h, { lang, src, dst }); return L.send(res, 200, { ok: true });
+      await sql('INSERT INTO translations (h, lang, src, dst, published) VALUES ($1,$2,$3,$4,true) ON CONFLICT (h) DO UPDATE SET dst=$4, published=true, at=now()', [h, lang, src, dst]); await log('i18n_add', 'i18n', h, { lang, src, dst }); return L.send(res, 200, { ok: true });
     }
     return L.bad(res, 'unknown op');
   }

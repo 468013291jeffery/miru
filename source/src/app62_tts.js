@@ -17,9 +17,9 @@ function ttsEmo(text,id){const s=String(text||""),v=[0,0,0,0,0,0,0,0];
  R.forEach(([k,re,w])=>{if(re.test(s))v[k]=w});if(/[！!]{1,}/.test(s)&&!v.some(x=>x))v[6]=.25;
  if(!v.some(x=>x))v[7]=.35;return v.map(x=>x.toFixed(2)).join(",")}
 function ttsKey(text,id){return ttsVoice(id)+"|"+String(text).replace(/[*()（）]/g,"").trim()}
-function ttsUrl(text,id){const t0=String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,"").trim().slice(0,200);
+function ttsUrl(text,id){if(window.MIRU_AI&&!window.MIRU_AI.allowed(true))throw Object.assign(new Error('AI sharing is off'),{code:'ai_consent'});const t0=String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,"").trim().slice(0,200);
  return TTS_EP+"?v="+ttsVoice(id)+"&e="+ttsEmo(t0,id)+"&l="+(typeof CL==="function"?CL():(S.lang==="zh"?"zh":"en"))+"&k=q2"+"&t="+encodeURIComponent(t0)}
-function ttsFetch(text,id){const k=ttsKey(text,id);if(TTS.mem.has(k))return Promise.resolve(TTS.mem.get(k));if(TTS.inflight.has(k))return TTS.inflight.get(k);
+function ttsFetch(text,id){if(window.MIRU_AI&&!window.MIRU_AI.allowed(true))return Promise.reject(Object.assign(new Error('AI sharing is off'),{code:'ai_consent'}));const k=ttsKey(text,id);if(TTS.mem.has(k))return Promise.resolve(TTS.mem.get(k));if(TTS.inflight.has(k))return TTS.inflight.get(k);
  const p=fetch(ttsUrl(text,id)).then(r=>{if(!r.ok)throw new Error("tts "+r.status);return r.blob()}).then(b=>{if(!b||b.size<2000)throw new Error("empty");const u=URL.createObjectURL(b);TTS.mem.set(k,u);TTS.fails=0;TTS.ok=true;return u})
   .catch(e=>{TTS.fails++;if(TTS.fails>=4){TTS.off=true;setTimeout(()=>{TTS.off=false;TTS.fails=0},5*60e3)}throw e}).finally(()=>TTS.inflight.delete(k));
  TTS.inflight.set(k,p);return p}
@@ -34,7 +34,7 @@ VOICE.use('tts-62',function(next,text,id,onend){try{
 }catch(_){return next(text,id,onend)}});
 const _stopVoice62=stopVoice;stopVoice=function(){TTS.seq=(TTS.seq||0)+1;return _stopVoice62()};
 /* prefetch the next spoken lines while the current one plays (only when read-aloud is on) */
-function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
+function ttsPrefetch(th){if(window.MIRU_AI&&!window.MIRU_AI.allowed(false))return;if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
  for(const b of th.pk.q.slice(0,12)){if(n>=6)break;if(!Array.isArray(b)||b[0]==="sys")continue;
   /* 2026-10-27：待播里的 payload 有 28% 是对象（`{"t":"一句台词"}`），原来 `typeof b[2]==="string"` 直接把
      这些句子**跳过了** ⇒ 预取形同虚设，播放时只能现场合成（这就是「语音变慢」的一部分）。这里先归一化成文本。 */

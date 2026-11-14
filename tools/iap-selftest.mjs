@@ -1,155 +1,60 @@
-// tools/iap-selftest.mjs — api/_iap.js 的自检（8 臂，含负对照）
-// 跑法：node tools/iap-selftest.mjs
-// 夹具是现造的测试证书链（tools/fixtures/gen-iap-fixture.py，需要 python + cryptography）：
-// 它验的是「这套验签逻辑能不能区分合法与非法」，不是「Apple 真的会发什么」。
-import { spawnSync } from 'node:child_process';
+import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
-import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
-
-const require = createRequire(import.meta.url);
-const HERE = path.dirname(fileURLToPath(import.meta.url));
-const IAP = require(path.join(HERE, '..', 'api', '_iap.js'));
-
-let pass = 0, fail = 0;
-const results = [];
-function check(name, fn) {
-  try { fn(); pass++; results.push(`  ✓ ${name}`); }
-  catch (e) { fail++; results.push(`  ✗ ${name}  — ${String(e.message || e).slice(0, 140)}`); }
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),HERE=path.dirname(fileURLToPath(import.meta.url));
+const IAP=require('../api/_iap');
+const generated=spawnSync(process.env.IAP_TEST_PYTHON||'python3',[path.join(HERE,'fixtures/gen-iap-fixture.py')],{encoding:'utf8'});
+if(generated.status!==0){console.error(generated.stderr||generated.error);process.exit(2);}
+const F=JSON.parse(generated.stdout),root=Buffer.from(F.rootDerB64,'base64');
+const TEST_ROOT_FP=new crypto.X509Certificate(root).fingerprint256;
+const OPT={roots:[TEST_ROOT_FP],rootCertificates:[root],enableOnlineChecks:false};
+const GOOD={transactionId:'2000000123456789',originalTransactionId:'2000000123456789',bundleId:'com.miru.plus.app',productId:'com.miru.plus.app.gems_5',type:'Consumable',quantity:1,purchaseDate:Date.now(),signedDate:Date.now(),environment:'Sandbox',appAccountToken:'11111111-1111-4111-8111-111111111111'};
+const enc=o=>Buffer.from(JSON.stringify(o)).toString('base64url');
+function jws(payload=GOOD,fixture={},extraHeader={}){
+ const leaf=fixture.leafDerB64||F.leafDerB64,key=fixture.leafKeyPem||F.leafKeyPem;
+ const intermediate=fixture.intermediateDerB64||F.intermediateDerB64;
+ const header={alg:'ES256',x5c:[leaf,intermediate,F.rootDerB64],...extraHeader};
+ const input=enc(header)+'.'+enc(payload);
+ const sig=crypto.sign('sha256',Buffer.from(input),{key:crypto.createPrivateKey(key),dsaEncoding:'ieee-p1363'});
+ return input+'.'+sig.toString('base64url');
 }
-function expectThrow(name, fn, wantPattern) {
-  check(name, () => {
-    let threw = null;
-    try { fn(); } catch (e) { threw = e; }
-    if (!threw) throw new Error('expected it to throw, but it passed');
-    if (wantPattern && !wantPattern.test(String(threw.message))) {
-      throw new Error('threw, but message was "' + threw.message + '" (wanted ' + wantPattern + ')');
-    }
-  });
-}
-
-// ---------- 造夹具 ----------
-const gen = spawnSync('python', [path.join(HERE, 'fixtures', 'gen-iap-fixture.py')], { encoding: 'utf8' });
-if (gen.status !== 0) {
-  console.error('fixture generation failed:\n' + (gen.stderr || gen.error));
-  process.exit(2);
-}
-const F = JSON.parse(gen.stdout.trim());
-
-const b64u = buf => Buffer.from(buf).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-const b64uJson = o => b64u(Buffer.from(JSON.stringify(o), 'utf8'));
-
-function makeJws({ payload, leafDerB64 = F.leafDerB64, leafKeyPem = F.leafKeyPem, alg = 'ES256', extraHeader = {} }) {
-  const header = Object.assign({ alg, x5c: [leafDerB64, F.rootDerB64] }, extraHeader);
-  const signingInput = b64uJson(header) + '.' + b64uJson(payload);
-  const key = crypto.createPrivateKey(leafKeyPem);
-  const sig = crypto.sign('sha256', Buffer.from(signingInput, 'utf8'), { key, dsaEncoding: 'ieee-p1363' });
-  return signingInput + '.' + b64u(sig);
-}
-
-const GOOD_PAYLOAD = {
-  transactionId: '2000000123456789',
-  originalTransactionId: '2000000123456789',
-  bundleId: 'com.miru.plus.app',
-  productId: 'gems_5',
-  type: 'Consumable',
-  quantity: 1,
-  purchaseDate: 1762000000000,
-  environment: 'Sandbox',
-};
-const TEST_ROOT_FP = new crypto.X509Certificate(
-  Buffer.from(F.rootDerB64, 'base64') instanceof Buffer
-    ? '-----BEGIN CERTIFICATE-----\n' + F.rootDerB64.match(/.{1,64}/g).join('\n') + '\n-----END CERTIFICATE-----\n'
-    : ''
-).fingerprint256;
-
-// ---------- 正向 ----------
-check('① 合法 JWS ⇒ 通过，字段解析正确', () => {
-  const t = IAP.verifyTransaction(makeJws({ payload: GOOD_PAYLOAD }), { roots: [TEST_ROOT_FP] });
-  if (t.transactionId !== GOOD_PAYLOAD.transactionId) throw new Error('transactionId mismatch: ' + t.transactionId);
-  if (t.productId !== 'gems_5') throw new Error('productId mismatch');
-  if (t.bundleId !== 'com.miru.plus.app') throw new Error('bundleId mismatch');
+let pass=0,fail=0;
+async function check(name,fn){try{await fn();console.log('PASS '+name);pass++;}catch(e){console.error('FAIL '+name+': '+e.message);fail++;}}
+async function rejects(name,fn){await check(name,async()=>assert.rejects(async()=>fn()));}
+await check('valid purpose-bound signed Sandbox transaction',async()=>{const t=await IAP.verifyTransaction(jws(),OPT);assert.equal(t.transactionId,GOOD.transactionId);assert.equal(t.appAccountToken,GOOD.appAccountToken);assert.equal(t.environment,'Sandbox');});
+await rejects('changed payload fails signature',()=>{const parts=jws().split('.');parts[1]=enc({...GOOD,productId:'com.miru.plus.app.gems_700'});return IAP.verifyTransaction(parts.join('.'),OPT);});
+await rejects('untrusted root fails',()=>IAP.verifyTransaction(jws(),{...OPT,roots:['00'.repeat(32)],rootCertificates:[new crypto.X509Certificate(IAP.APPLE_ROOT_G3_PEM).raw]}));
+await rejects('expired signing certificate fails',()=>IAP.verifyTransaction(jws(GOOD,{leafDerB64:F.expiredLeafDerB64,leafKeyPem:F.expiredLeafKeyPem}),OPT));
+await rejects('unexpected algorithm fails',()=>IAP.verifyTransaction(jws(GOOD,{}, {alg:'none'}),OPT));
+await rejects('revoked transaction fails',()=>IAP.verifyTransaction(jws({...GOOD,revocationDate:Date.now()}),OPT));
+await rejects('missing transaction ID fails',()=>{const p={...GOOD};delete p.transactionId;return IAP.verifyTransaction(jws(p),OPT);});
+await rejects('malformed JWS fails',()=>IAP.verifyTransaction('abc.def',OPT));
+await check('built-in root fingerprint is Apple G3',async()=>{assert.equal(new crypto.X509Certificate(IAP.APPLE_ROOT_G3_PEM).fingerprint256.replace(/:/g,''),IAP.TRUSTED_ROOTS[0]);});
+await rejects('test chain cannot use default production trust',()=>IAP.verifyTransaction(jws()));
+for(const [name,fixture] of Object.entries({wrongPurposeLeaf:F.wrongPurposeLeaf,wrongPurposeIntermediate:F.wrongPurposeIntermediate,nonCAIntermediate:F.nonCAIntermediate,wrongIssuer:F.wrongIssuer,wrongCurve:F.wrongCurve}))await rejects('reject '+name+' signed chain',()=>IAP.verifyTransaction(jws(GOOD,fixture),OPT));
+await rejects('wrong bundle cannot pass selected verifier',()=>IAP.verifyTransaction(jws({...GOOD,bundleId:'other.app'}),OPT));
+for(const quantity of [0,2,-1,'1',null])await rejects('reject signed quantity '+JSON.stringify(quantity),()=>IAP.verifyTransaction(jws({...GOOD,quantity}),OPT));
+for(const type of ['Non-Consumable','Auto-Renewable Subscription',null])await rejects('reject signed type '+type,()=>IAP.verifyTransaction(jws({...GOOD,type}),OPT));
+await rejects('Xcode bypass environment cannot enter receipt delivery',()=>IAP.verifyTransaction(jws({...GOOD,environment:'Xcode'}),OPT));
+await rejects('missing account token fails',()=>IAP.verifyTransaction(jws({...GOOD,appAccountToken:null}),OPT));
+await check('Production uses the registered public appAppleId by default',async()=>{
+ const saved=process.env.IAP_APP_APPLE_ID;delete process.env.IAP_APP_APPLE_ID;
+ try{assert.equal(require('../native/ios-release.public.json').appAppleId,'6834383803');const t=await IAP.verifyTransaction(jws({...GOOD,environment:'Production'}),OPT);assert.equal(t.environment,'Production');}
+ finally{if(saved===undefined)delete process.env.IAP_APP_APPLE_ID;else process.env.IAP_APP_APPLE_ID=saved;}
 });
-
-// ---------- 负对照 ----------
-expectThrow('② payload 被篡改 ⇒ 签名不符', () => {
-  const jws = makeJws({ payload: GOOD_PAYLOAD });
-  const parts = jws.split('.');
-  const tampered = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'));
-  tampered.productId = 'gems_700';                       // 想白拿 700 钻
-  const forged = parts[0] + '.' + b64uJson(tampered) + '.' + parts[2];
-  IAP.verifyTransaction(forged, { roots: [TEST_ROOT_FP] });
-}, /signature does not match/);
-
-expectThrow('③ 根不在信任列表 ⇒ 拒（换根攻击）', () => {
-  const jws = makeJws({ payload: GOOD_PAYLOAD });
-  IAP.verifyTransaction(jws, { roots: ['00'.repeat(32)] });
-}, /untrusted root/);
-
-expectThrow('④ 证书已过期 ⇒ 拒', () => {
-  const jws = makeJws({ payload: GOOD_PAYLOAD, leafDerB64: F.expiredLeafDerB64, leafKeyPem: F.expiredLeafKeyPem });
-  IAP.verifyTransaction(jws, { roots: [TEST_ROOT_FP] });
-}, /expired/);
-
-expectThrow('⑤ alg 不是 ES256 ⇒ 拒', () => {
-  const jws = makeJws({ payload: GOOD_PAYLOAD, alg: 'none' });
-  IAP.verifyTransaction(jws, { roots: [TEST_ROOT_FP] });
-}, /alg/);
-
-expectThrow('⑥ 已撤销（revocationDate）⇒ 拒', () => {
-  const jws = makeJws({ payload: Object.assign({}, GOOD_PAYLOAD, { revocationDate: 1762000000000 }) });
-  IAP.verifyTransaction(jws, { roots: [TEST_ROOT_FP] });
-}, /revoked/);
-
-expectThrow('⑦ 缺 transactionId ⇒ 拒', () => {
-  const p = Object.assign({}, GOOD_PAYLOAD);
-  delete p.transactionId;
-  const jws = makeJws({ payload: p });
-  IAP.verifyTransaction(jws, { roots: [TEST_ROOT_FP] });
-}, /transactionId/);
-
-expectThrow('⑧ 只有 1 段/2 段的假 JWS ⇒ 拒', () => {
-  IAP.verifyTransaction('abc.def', { roots: [TEST_ROOT_FP] });
-}, /3 dot-separated parts/);
-
-// ---------- 内置 Apple 根：确认它真的被钉进去了 ----------
-check('⑨ 内置 Apple Root CA G3 指纹 = 63343ABF…3E9179', () => {
-  const fp = IAP.TRUSTED_ROOTS[0].toLowerCase();
-  const want = '63343abfb89a6a03ebb57e9b3f5fa7be7c4f5c756f3017b3a8c488c3653e9179';
-  if (fp !== want) throw new Error('built-in root fp is ' + fp);
-  if (!/BEGIN CERTIFICATE/.test(IAP.APPLE_ROOT_G3_PEM)) throw new Error('built-in PEM missing');
-  const cert = new crypto.X509Certificate(IAP.APPLE_ROOT_G3_PEM);
-  if (!/Apple Root CA - G3/.test(cert.subject)) throw new Error('built-in PEM subject is ' + cert.subject);
+await check('Explicit empty Production appAppleId fails closed',async()=>{
+ const saved=process.env.IAP_APP_APPLE_ID;process.env.IAP_APP_APPLE_ID='';
+ try{await assert.rejects(async()=>IAP.verifyTransaction(jws({...GOOD,environment:'Production'}),OPT),e=>e.code===503);}
+ finally{if(saved===undefined)delete process.env.IAP_APP_APPLE_ID;else process.env.IAP_APP_APPLE_ID=saved;}
 });
-
-// ---------- 真实 Apple 根签不住伪造链（跨信任域） ----------
-expectThrow('⑩ 测试链的根 ≠ Apple 根 ⇒ 用默认信任列表必拒', () => {
-  const jws = makeJws({ payload: GOOD_PAYLOAD });
-  IAP.verifyTransaction(jws);          // 不传 roots ⇒ 用内置 Apple 根
-}, /untrusted root/);
-
-// ---------- 钱包侧：productId → 钻石数 的映射 ----------
-const { gemsForSku } = require(path.join(HERE, '..', 'api', 'wallet.js'));
-const CFG = { skus: { gems_5: { gems: 5, usd: 99 }, gems_700: { gems: 700, usd: 9999 }, special: { gems: 42, usd: 1, apple: 'com.miru.plus.app.special' } } };
-check('⑪ productId = 裸 sku 名 ⇒ 映射对', () => {
-  const m = gemsForSku('gems_5', CFG);
-  if (!m || m.gems !== 5 || m.sku !== 'gems_5') throw new Error(JSON.stringify(m));
-});
-check('⑫ productId 带 bundle 前缀 ⇒ 取末段', () => {
-  const m = gemsForSku('com.miru.plus.app.gems_700', CFG);
-  if (!m || m.gems !== 700 || m.sku !== 'gems_700') throw new Error(JSON.stringify(m));
-});
-check('⑬ 后台显式 apple 映射优先', () => {
-  const m = gemsForSku('com.miru.plus.app.special', CFG);
-  if (!m || m.gems !== 42 || m.sku !== 'special') throw new Error(JSON.stringify(m));
-});
-check('⑭ 不认识的 productId ⇒ null（调用方转 400）', () => {
-  if (gemsForSku('com.miru.plus.app.nope', CFG) !== null) throw new Error('expected null');
-});
-
-console.log('iap-selftest');
-results.forEach(r => console.log(r));
-console.log(`\n${pass} passed / ${fail} failed`);
-process.exit(fail ? 1 : 0);
+await check('Production verifier accepts Production test fixture with fixture-only app ID',async()=>{const t=await IAP.verifyTransaction(jws({...GOOD,environment:'Production'}),{...OPT,appAppleId:123456789});assert.equal(t.environment,'Production');});
+const {gemsForSku}=require('../api/wallet');
+const cfg={skus:{gems_5:{gems:5},special:{gems:42,apple:'com.miru.plus.app.special'}}};
+await check('legacy Play bare SKU mapping retained',async()=>assert.deepEqual(gemsForSku('gems_5',cfg),{sku:'gems_5',gems:5}));
+await check('legacy Play prefixed SKU mapping retained',async()=>assert.equal(gemsForSku('com.miru.plus.app.gems_700',cfg).gems,700));
+await check('explicit custom mapping retained',async()=>assert.deepEqual(gemsForSku('com.miru.plus.app.special',cfg),{sku:'special',gems:42}));
+await check('unknown SKU rejected',async()=>assert.equal(gemsForSku('com.miru.plus.app.nope',cfg),null));
+console.log('IAP: '+pass+' passed / '+fail+' failed');process.exitCode=fail?1:0;

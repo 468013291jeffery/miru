@@ -1,0 +1,13 @@
+{
+  "appId": "com.miru.plus.app",
+  "appName": "MIRU",
+  "webDir": "www",
+  "backgroundColor": "#07060A",
+  "ios": {
+    "contentInset": "automatic"
+  },
+  "server": {
+    "hostname": "localhost",
+    "iosScheme": "capacitor"
+  }
+}

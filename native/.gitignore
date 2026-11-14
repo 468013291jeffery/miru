@@ -1,0 +1,15 @@
+node_modules/
+www/
+ios/App/App/public/
+ios/App/build/
+DerivedData*/
+Archives/
+*.xcuserstate
+*.xcuserdata/
+Config/Local.xcconfig
+ios/release.public.xcconfig
+
+.signed-archive.log
+.signed-device-build.log
+
+.signed-export.log

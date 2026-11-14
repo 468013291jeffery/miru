@@ -12,22 +12,32 @@ module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db();
   const q = req.query || {};
+  const native = req.headers['x-miru-client'] === 'ios' || req.headers.origin === 'capacitor://localhost';
   if (req.method === 'GET') {
+    if (q.blocked) {
+      const u = await L.needActive(req, res); if (!u) return;
+      const r = await sql('SELECT b.author_id, COALESCE(u.name,b.author_id) AS author_name FROM user_blocks b LEFT JOIN users u ON u.id=b.author_id WHERE b.user_id=$1', [u.uid]);
+      return L.send(res, 200, { blocked: r });
+    }
     if (q.id) {
       const r = await sql('SELECT * FROM works WHERE id=$1', [String(q.id)]);
       const w = r[0]; const u = L.who(req);
       if (!w || (w.status !== 'live' && !(u && u.uid === w.author) && !L.isAdmin(req))) return L.bad(res, 'not found', 404);
+      if (native && L.isAdultWork(w)) return L.bad(res, 'not found', 404);
+      if (u && (await sql('SELECT 1 FROM user_blocks WHERE user_id=$1 AND author_id=$2', [u.uid, w.author]))[0]) return L.bad(res, 'not found', 404);
       if (L.isAdultWork(w) && !L.isAdmin(req)) { const g = await L.adultAccess(req); if (!g.ok) return L.send(res, 451, { error: 'adult_gate', why: g.why, self: g.why === 'verify' && (await L.config()).adult_self_verify === true }); }
       if (q.play) await sql('UPDATE works SET plays=plays+1 WHERE id=$1', [w.id]);
       return L.send(res, 200, Object.assign(pub(w), { pack: w.pack, qa: w.qa }));
     }
-    if (q.mine) { const u = await L.needActive(req, res); if (!u) return; const r = await sql('SELECT * FROM works WHERE author=$1 ORDER BY updated_at DESC LIMIT 100', [u.uid]); return L.send(res, 200, { works: r.map(w => Object.assign(pub(w), { qa: w.qa })) }); }
+    if (q.mine) { const u = await L.needActive(req, res); if (!u) return; const r = await sql("SELECT * FROM works WHERE author=$1" + (native ? " AND COALESCE(pack->'meta'->>'adult','false') <> 'true'" : '') + ' ORDER BY updated_at DESC LIMIT 100', [u.uid]); return L.send(res, 200, { works: r.map(w => Object.assign(pub(w), { qa: w.qa })) }); }
     const lim = Math.min(Number(q.limit) || 20, 50), hot = q.feed === 'hot';
     const args = [lim]; let where = "status='live'";
     if (q.orient && q.orient !== 'all') { args.push(String(q.orient)); where += ` AND (orient=$${args.length} OR orient='all')`; }
     if (q.before) { args.push(new Date(Number(q.before)).toISOString()); where += ` AND created_at < $${args.length}`; }
     if (q.feed === 'featured') where += ' AND featured';
-    if (!L.adultRegionOk(req, await L.config())) where += " AND COALESCE(pack->'meta'->>'adult','false') <> 'true'";
+    const viewer = L.who(req);
+    if (viewer) { args.push(viewer.uid); where += ` AND NOT EXISTS (SELECT 1 FROM user_blocks b WHERE b.user_id=$${args.length} AND b.author_id=works.author)`; }
+    if (native || !L.adultRegionOk(req, await L.config())) where += " AND COALESCE(pack->'meta'->>'adult','false') <> 'true'";
     const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en, pack->'meta'->'adult' AS adult FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
     return L.send(res, 200, { works: r.map(pub) });
   }
@@ -70,10 +80,22 @@ module.exports = L.wrap(async (req, res) => {
     const c = await sql('SELECT likes FROM works WHERE id=$1', [id]);
     return L.send(res, 200, { likes: c[0] ? c[0].likes : 0 });
   }
+  if (b.op === 'block') {
+    const r = await sql('SELECT author,author_name FROM works WHERE id=$1', [String(b.id || '')]);
+    if (!r[0] || !r[0].author) return L.bad(res, 'not found', 404);
+    if (r[0].author === u.uid) return L.bad(res, 'cannot block yourself', 400);
+    await sql('INSERT INTO user_blocks (user_id,author_id) VALUES ($1,$2) ON CONFLICT DO NOTHING', [u.uid,r[0].author]);
+    return L.send(res,200,{ok:true,author_id:r[0].author,name:r[0].author_name});
+  }
+  if (b.op === 'unblock') {
+    await sql('DELETE FROM user_blocks WHERE user_id=$1 AND author_id=$2', [u.uid,String(b.author || '')]);
+    return L.send(res,200,{ok:true});
+  }
   if (b.op === 'report') {
     const id = String(b.id || '');
-    await sql('INSERT INTO reports (user_id, target_kind, target_id, reason) VALUES ($1,$2,$3,$4)', [u.uid, 'work', id, String(b.reason || '').slice(0, 300)]);
-    const r = await sql("UPDATE works SET reports=reports+1, status=CASE WHEN reports+1>=$2 AND status='live' THEN 'pending' ELSE status END WHERE id=$1 RETURNING status", [id, Number(cfg.report_threshold) || 5]);
+    const kind = ['work','message','asset','other'].includes(b.kind) ? b.kind : 'work';
+    await sql('INSERT INTO reports (user_id, target_kind, target_id, reason, snapshot) VALUES ($1,$2,$3,$4,$5)', [u.uid, kind, id, String(b.reason || '').slice(0, 300), String(b.snap || '').slice(0, 4000)]);
+    const r = kind === 'work' ? await sql("UPDATE works SET reports=reports+1, status=CASE WHEN reports+1>=$2 AND status='live' THEN 'pending' ELSE status END WHERE id=$1 RETURNING status", [id, Number(cfg.report_threshold) || 5]) : [];
     return L.send(res, 200, { ok: true, status: r[0] && r[0].status });
   }
   L.bad(res, 'unknown op');

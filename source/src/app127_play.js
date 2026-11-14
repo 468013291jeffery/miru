@@ -7,6 +7,7 @@
    商品 ID（Play Console 里要建同名的「一次性商品 · 消耗型」）：gems_5 / gems_16 / gems_28 / gems_60 / gems_125 / gems_330 / gems_700 */
 (function () {
   "use strict";
+  if (window.MIRU_NATIVE && window.MIRU_NATIVE.platform === "ios") return;
   const PLAY_METHOD = "https://play.google.com/billing";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   let twa = false;

@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="0a3ba3375f80 2026-11-13T20:09Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="3f82216c9659 2026-11-14T03:03Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -3314,7 +3314,7 @@ cleanState();
 function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(JSON.parse(JSON.stringify(DEF)),o)}}catch(e){}
  const d=JSON.parse(JSON.stringify(DEF));
  /* the app starts in English for everyone; players switch language themselves */return d}
-function saveRaw(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
+function saveRaw(){if(window.MIRU_ACCOUNT_DELETED)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
  /* storage full: drop oldest album frames first */
  try{if(S.album.length>4){S.album=S.album.slice(0,4);localStorage.setItem(KEY,JSON.stringify(S))}}catch(_){}}}
 /* 2026-10-27：save 的唯一入口（观测见 app105_save.js）。沙箱里没有 SAVE 就直接写。 */
@@ -3489,7 +3489,7 @@ function speak(text,id,onend){return VOICE.run(text,id,onend)}
 
 /* ================= LIVE AI ================= */
 let SAMPLE=null,LIVE_ERR=null,LIVE_STATE="pending";
-(async()=>{try{if(window.claude&&typeof claude.use==="function"){const s=await claude.use("sample");SAMPLE=s||null}}catch(e){SAMPLE=null}
+(async()=>{try{if(window.claude&&typeof claude.use==="function"){const s=await claude.use("sample");SAMPLE=s||null;if(SAMPLE&&window.MIRU_AI){const target=SAMPLE;const check=()=>{if(!window.MIRU_AI.allowed(true))throw Object.assign(new Error("AI sharing is off"),{code:"ai_consent"})};SAMPLE=Object.assign(async function(){check();return target.apply(this,arguments)},target);if(typeof target.json==="function")SAMPLE.json=async function(){check();return target.json.apply(target,arguments)}}}}catch(e){SAMPLE=null}
  LIVE_STATE=SAMPLE?"ready":"na";refreshLive()})();
 async function liveTest(){
  if(!SAMPLE)return {ok:false,code:LIVE_STATE==="pending"?"pending":"na"};
@@ -7044,7 +7044,7 @@ function tasksHTML(){const ci=ciState(),adN=adLeft();
  let h='<div class="tasklist" style="padding:10px 16px 6px">';
  h+=taskSection(t("task.secDaily"));
  h+=taskRow("📅",t("task.checkin"),t("task.checkinD"),ci.done?done:'<button class="btn btn-p btn-xs" data-ci="1">'+t("task.go")+'</button>');
- h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
+ if(!(window.MIRU_NATIVE&&window.MIRU_NATIVE.platform==="ios"))h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
  if(TK.data){const L=TK.data.tasks,sec=(k,label)=>{const xs=L.filter(x=>k.includes(x.period));return xs.length?(label?taskSection(label):"")+xs.map(tkRow).join(""):""};
   h+=sec(["day"],"")+sec(["week"],TZ("本周","This week"))+sec(["once"],TZ("成长","Milestones"));
   h+='<p class="xs faint" style="padding:10px 2px 0">'+TZ("进度由服务器根据你的真实阅读、聊天和投票记录计算。每日任务 0 点（UTC）重置，本周任务周一重置。","Progress comes from what you actually read, chat and vote. Daily tasks reset at 00:00 UTC, weekly ones on Monday.")+'</p>'}
@@ -12986,6 +12986,7 @@ async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_P
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,interactive:!!opts.interactive,thinking:{type:"disabled"}};
  const t0=Date.now();const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal){if(opts.signal.aborted)ctl.abort();else opts.signal.addEventListener("abort",()=>ctl.abort(),{once:true});}
  const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
+ if(key&&window.MIRU_AI&&!window.MIRU_AI.recipient(new URL(url))){clearTimeout(tm);throw Object.assign(new Error('AI sharing is off'),{code:'ai_consent'})}
  let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
  if(!r.ok){clearTimeout(tm);let msg="";try{const j=await r.json();msg=(j.error&&(j.error.message||j.error.code))||j.message||""}catch(_){}
@@ -14069,9 +14070,9 @@ function ttsEmo(text,id){const s=String(text||""),v=[0,0,0,0,0,0,0,0];
  R.forEach(([k,re,w])=>{if(re.test(s))v[k]=w});if(/[！!]{1,}/.test(s)&&!v.some(x=>x))v[6]=.25;
  if(!v.some(x=>x))v[7]=.35;return v.map(x=>x.toFixed(2)).join(",")}
 function ttsKey(text,id){return ttsVoice(id)+"|"+String(text).replace(/[*()（）]/g,"").trim()}
-function ttsUrl(text,id){const t0=String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,"").trim().slice(0,200);
+function ttsUrl(text,id){if(window.MIRU_AI&&!window.MIRU_AI.allowed(true))throw Object.assign(new Error('AI sharing is off'),{code:'ai_consent'});const t0=String(text).replace(/[*()（）]/g,"").replace(/^📞\s*/,"").trim().slice(0,200);
  return TTS_EP+"?v="+ttsVoice(id)+"&e="+ttsEmo(t0,id)+"&l="+(typeof CL==="function"?CL():(S.lang==="zh"?"zh":"en"))+"&k=q2"+"&t="+encodeURIComponent(t0)}
-function ttsFetch(text,id){const k=ttsKey(text,id);if(TTS.mem.has(k))return Promise.resolve(TTS.mem.get(k));if(TTS.inflight.has(k))return TTS.inflight.get(k);
+function ttsFetch(text,id){if(window.MIRU_AI&&!window.MIRU_AI.allowed(true))return Promise.reject(Object.assign(new Error('AI sharing is off'),{code:'ai_consent'}));const k=ttsKey(text,id);if(TTS.mem.has(k))return Promise.resolve(TTS.mem.get(k));if(TTS.inflight.has(k))return TTS.inflight.get(k);
  const p=fetch(ttsUrl(text,id)).then(r=>{if(!r.ok)throw new Error("tts "+r.status);return r.blob()}).then(b=>{if(!b||b.size<2000)throw new Error("empty");const u=URL.createObjectURL(b);TTS.mem.set(k,u);TTS.fails=0;TTS.ok=true;return u})
   .catch(e=>{TTS.fails++;if(TTS.fails>=4){TTS.off=true;setTimeout(()=>{TTS.off=false;TTS.fails=0},5*60e3)}throw e}).finally(()=>TTS.inflight.delete(k));
  TTS.inflight.set(k,p);return p}
@@ -14086,7 +14087,7 @@ VOICE.use('tts-62',function(next,text,id,onend){try{
 }catch(_){return next(text,id,onend)}});
 const _stopVoice62=stopVoice;stopVoice=function(){TTS.seq=(TTS.seq||0)+1;return _stopVoice62()};
 /* prefetch the next spoken lines while the current one plays (only when read-aloud is on) */
-function ttsPrefetch(th){if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
+function ttsPrefetch(th){if(window.MIRU_AI&&!window.MIRU_AI.allowed(false))return;if(!ttsOn()||!S.autoVoice||!th||!th.pk||!th.pk.q)return;let n=0;
  for(const b of th.pk.q.slice(0,12)){if(n>=6)break;if(!Array.isArray(b)||b[0]==="sys")continue;
   /* 2026-10-27：待播里的 payload 有 28% 是对象（`{"t":"一句台词"}`），原来 `typeof b[2]==="string"` 直接把
      这些句子**跳过了** ⇒ 预取形同虚设，播放时只能现场合成（这就是「语音变慢」的一部分）。这里先归一化成文本。 */
@@ -14327,7 +14328,7 @@ const ULIM={audio:8,image:3,video:12};
 const UPRICE={audio:5,image:3,video:10,mg:2};
 function upPrice(){if(UPK==="mg")return UPRICE.mg;const t=UPFILE&&UPFILE.type||"";return /^video\//.test(t)?UPRICE.video:/^image\//.test(t)?UPRICE.image:UPK==="fx"?UPRICE.image:UPRICE.audio}
 const UDB={db:null};
-function udb(){return new Promise((res,rej)=>{if(UDB.db)return res(UDB.db);try{const r=indexedDB.open("miru_lib",1);r.onupgradeneeded=()=>r.result.createObjectStore("f");r.onsuccess=()=>{UDB.db=r.result;res(UDB.db)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+function udb(){return new Promise((res,rej)=>{if(window.MIRU_ACCOUNT_DELETED)return rej(new Error('Account data is being removed'));if(UDB.db)return res(UDB.db);try{const r=indexedDB.open("miru_lib",1);r.onupgradeneeded=()=>r.result.createObjectStore("f");r.onsuccess=()=>{UDB.db=r.result;res(UDB.db)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
 async function uput(id,blob){const db=await udb();return new Promise((res,rej)=>{const tx=db.transaction("f","readwrite");tx.objectStore("f").put(blob,id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
 async function uget(id){const db=await udb();return new Promise(res=>{const tx=db.transaction("f","readonly"),q=tx.objectStore("f").get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}
 async function udel(id){try{const db=await udb();db.transaction("f","readwrite").objectStore("f").delete(id)}catch(_){}}
@@ -14482,7 +14483,8 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
  "Walk in as yourself":["自分としてこのシーンに入る","나 자신으로 이 장면에 들어가기","Entra como tú"],"Direct it":["演出する","연출하기","Dirígelo"],"Watch the full short first":["先にショートドラマを最後まで見る","먼저 숏드라마 끝까지 보기","Ver primero el corto completo"],
  "Back to the story":["ストーリーに戻る","이야기로 돌아가기","Volver a la historia"],"You did it!":["成功！","성공!","¡Lo lograste!"],"So close…":["あと少し…","아깝다…","Casi…"],"Got it":["OK","확인","Entendido"]};
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
-function trKey(){return "miru_tr_"+S.lang}
+try{["zh","en","ja","ko","es"].forEach(lang=>localStorage.removeItem("miru_tr_"+lang))}catch(_){}
+function trKey(){return "miru_tr_private_v2_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}
  const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})
  let bad=0;Object.keys(TR.map).forEach(k=>{if(!needsTr(k)||!trFits(TR.map[k])){delete TR.map[k];bad++}});if(bad)trSave()}
@@ -14506,7 +14508,7 @@ function meTexts(){const th=S.threads&&S.threads[curT];const set=new Set();if(th
 function trScan(root){trLoad();TR.me=meTexts();const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>trSkip(n.parentElement)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
  let n;while((n=w.nextNode()))trNode(n);(root||document.body).querySelectorAll&&(root||document.body).querySelectorAll("[placeholder],[title]").forEach(el=>{if(trSkip(el.parentElement))return;trAttr(el,"placeholder");trAttr(el,"title")});trFlush()}
 function trEP(){const p=typeof TTS_EP!=="undefined"&&TTS_EP?TTS_EP.replace(/\/api\/tts$/,"/api/translate"):"";return p}
-let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
+let trT=null;function trFlush(){clearTimeout(trT);trT=setTimeout(async()=>{if(window.MIRU_AI&&!window.MIRU_AI.allowed(false))return;if(TR.busy||!TR.q.size||TR.fail>3)return;const ep=trEP();if(!ep){TR.q.clear();return}
  const batch=[...TR.q].slice(0,40);batch.forEach(x=>TR.q.delete(x));TR.busy=true;const lang0=S.lang;
  try{const r=await fetch(ep,{method:"POST",headers:Object.assign({"Content-Type":"application/json"},typeof cloudAuth==="function"?cloudAuth():{}),body:JSON.stringify({to:S.lang,texts:batch})});const j=await r.json();
   if(S.lang!==lang0||TR.lang!==lang0){TR.busy=false;return}
@@ -14643,7 +14645,7 @@ window.addEventListener("click",async e=>{const x=e.target.closest("[data-upshar
  if(!m||!m.cloudId)return toast(zh?"这份素材只在本机，先在联网时重新上传":"This one is only on this device");const r=await capi("/assets",{json:{op:"share",id:m.cloudId}});toast(r.ok&&r.j.ok?(zh?"已提交审核，通过后会出现在所有人的素材库":"Sent for review — approved items join everyone's library"):(zh?"已经提交过了":"Already submitted"))},true);
 const _libOpen68=libOpen;libOpen=function(){_libOpen68();try{const L=myLib()[LIBT]||[];document.querySelectorAll("[data-libtry]").forEach(b=>{const m=L.find(z=>z.id===b.dataset.libtry);if(m&&m.cloudId&&!b.querySelector("[data-upshare]"))b.insertAdjacentHTML("beforeend",'<span class="up66del" data-upshare="'+m.id+'" title="share">🌐</span>')})}catch(_){}};
 /* ---------- shared translations ---------- */
-async function i18nPull(){if(!/^(ja|ko|es|en|zh)$/.test(S.lang))return;try{const r=await capi("/i18n?lang="+S.lang);if(r.ok&&r.j.map&&typeof TR!=="undefined"){trLoad();Object.keys(r.j.map).forEach(k=>{if(TR.map[k]==null)TR.map[k]=r.j.map[k]});trSave();trScan()}}catch(_){}}
+async function i18nPull(){if(!/^(ja|ko|es|en|zh)$/.test(S.lang))return;try{const r=await capi("/i18n?lang="+S.lang+"&v=2");if(r.ok&&r.j.map&&typeof TR!=="undefined"){trLoad();Object.keys(r.j.map).forEach(k=>{if(TR.map[k]==null)TR.map[k]=r.j.map[k]});trSave();trScan()}}catch(_){}}
 /* ---------- analytics ---------- */
 const EVQ=[];function track(name,props){if(!CLOUD_EP)return;EVQ.push({name,props:props||{},at:Date.now()});if(EVQ.length>=20)evFlush()}
 async function evFlush(){if(!CL0.on||!EVQ.length)return;const batch=EVQ.splice(0,50);try{await capi("/events",{json:{events:batch},keepalive:true})}catch(_){}}
@@ -14855,6 +14857,13 @@ function au70Err(r) {
 }
 /* after any successful sign-in */
 async function au70Done(j, method) {
+  function syncWallet() {
+    // Sign-in already returned the server balance; iOS need not wait for another read to enter.
+    if (window.MIRU_NATIVE && window.MIRU_NATIVE.platform === "ios" && Number.isSafeInteger(j.gems) && j.gems >= 0) {
+      S.keys = j.gems; cloudInfo().known = j.gems; save0(); walletPull().catch(() => {}); return Promise.resolve();
+    }
+    return walletPull().catch(() => {});
+  }
   const c = cloudInfo(); const sameUser = c.uid === j.user.id;
   c.token = j.token; c.uid = j.user.id; c.email = j.user.email; c.provider = j.user.provider; c.name = j.user.name;
   CL0.on = true; CL0.checked = true; if (!sameUser) c.ver = 0; save0();
@@ -14863,11 +14872,11 @@ async function au70Done(j, method) {
   if (j.restored && !sameUser) {
     let had = false; try { had = await cloudPull(); } catch (_) {}
     const cc = cloudInfo(); cc.token = j.token; cc.uid = j.user.id; cc.email = j.user.email; cc.provider = j.user.provider;
-    S.authChoice = method; save0(); await walletPull().catch(() => {});
+    S.authChoice = method; save0(); await syncWallet();
     toast(au("welcomeBack"));
     if (had && S.ob) { au70After(); return; }
   } else {
-    S.authChoice = method; save0(); await walletPull().catch(() => {}); cloudPush(true); toast(au("hi"));
+    S.authChoice = method; save0(); await syncWallet(); cloudPush(true); toast(au("hi"));
   }
   if (!S.ob || ($("#s-ob") && !$("#s-ob").hidden)) au70After(); else { try { renderTab(S.lastTab || "me"); } catch (_) {} }
 }
@@ -16887,7 +16896,7 @@ function dbSession(c){const cc=ch(call.cid)||{n:"Him"},sys=String(vcSys(cc,call.
 /* ---------- the session ---------- */
 function dbOpen(first){return new Promise(async res=>{const c=await db93Want();if(!c||!call)return res(false);let done=false;const fin=ok=>{if(!done){done=true;res(ok)}};
  const D={sid:(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)),ready:false,said:"",heard:"",turnOpen:false,q:Promise.resolve()};
- let ws;try{ws=new WebSocket(c.url)}catch(_){DB93.fail++;return fin(false)}ws.binaryType="arraybuffer";D.ws=ws;call.db=D;const me0=call;
+ let ws;try{if(window.MIRU_AI&&!window.MIRU_AI.allowed(true))return fin(false);ws=new WebSocket(c.url);if(window.MIRU_AI){const close=()=>ws.close();window.addEventListener('miru-ai-withdrawn',close,{once:true});ws.addEventListener('close',()=>window.removeEventListener('miru-ai-withdrawn',close),{once:true});const send=ws.send.bind(ws);ws.send=function(data){if(window.MIRU_AI.allowed(false))return send(data)}}}catch(_){DB93.fail++;return fin(false)}ws.binaryType="arraybuffer";D.ws=ws;call.db=D;const me0=call;
  const to=setTimeout(()=>{if(!D.ready){DB93.fail++;try{ws.close()}catch(_){}fin(false)}},8000);
  ws.onopen=()=>ws.send(dbJSON(DBE.START_CONN,null,{}));
  ws.onerror=()=>{if(!D.ready){DB93.fail++;clearTimeout(to);fin(false)}};
@@ -17966,7 +17975,7 @@ const MEDIA_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
 function mediaOpen() {
   return new Promise((res) => {
     try {
-      if (typeof indexedDB === "undefined") return res(null);
+      if (window.MIRU_ACCOUNT_DELETED || typeof indexedDB === "undefined") return res(null);
       const rq = indexedDB.open("miru-media", 1);
       rq.onupgradeneeded = () => { try { rq.result.createObjectStore("b") } catch (_) {} };
       rq.onsuccess = () => { MEDIA.db = rq.result; res(MEDIA.db) };
@@ -18276,7 +18285,7 @@ setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
    · Report: a community story, its author, a library item, or an AI reply (chat menu ⋯). Goes to the admin console 「举报处理」 with a
      snapshot of the reported content; stories / library items reported by several people are hidden until reviewed (server side).
    · Block: any community author — their works disappear from the feed, Discover and search (server filters the feed; the device filters too).
-   · Terms: /terms.html (zero tolerance, 17+, 24h handling); agreed to on the sign-in screen.
+   · Terms: /terms.html (zero tolerance, 18+, 24h handling); agreed to on the sign-in screen.
    · Me → 安全与举报: terms, blocked authors (unblock), contact us. */
 const ZH95 = () => CL() === "zh";
 const T95 = (zh, en) => ZH95() ? zh : en;
@@ -18301,9 +18310,9 @@ function report95(kind, id, snap, title) {
 }
 async function block95(workId, name) {
   if (!confirm(T95("拉黑「" + name + "」？你将不再看到 TA 的任何作品。", "Block “" + name + "”? You won't see any of their works."))) return;
-  let ok = false; try { const r = await capi("/works", { json: { op: "block", id: workId } }); ok = r.ok; if (ok && r.j && r.j.name) name = r.j.name; } catch (_) {}
-  const b = blk95(); if (!b.works.includes(workId)) b.works.push(workId); if (name && !b.names.includes(name)) b.names.push(name); save();
-  toast(ok ? T95("已拉黑，TA 的作品不会再出现", "Blocked — their works won't appear again") : T95("已在本机拉黑；联网后会同步", "Blocked on this device; it syncs when you're online"));
+  let ok = false, authorId = ""; try { const r = await capi("/works", { json: { op: "block", id: workId } }); ok = r.ok; if (ok && r.j) { authorId = r.j.author_id || ""; if (r.j.name) name = r.j.name; } } catch (_) {}
+  const b = blk95(); if (!b.works.includes(workId)) b.works.push(workId); if (name && !b.names.includes(name)) b.names.push(name); if (authorId) { b.authors = b.authors || []; b.authors.push({ id: authorId, work: workId, name }); } save();
+  toast(ok ? T95("已拉黑，TA 的作品不会再出现", "Blocked — their works won't appear again") : T95("已在本机拉黑，请联网后重试以同步", "Blocked on this device; reconnect and retry to sync"));
   try { if (typeof go === "function") go("home"); else if (typeof renderMain === "function") renderMain(); } catch (_) {}
 }
 /* snapshot of what's on screen in a chat (the AI replies being reported) */
@@ -18355,8 +18364,8 @@ document.addEventListener("click", e => {
 function terms95Link(t) { return '<a href="terms.html' + (ZH95() ? "" : "#en") + '" target="_blank" rel="noopener" style="color:#F0B77E">' + t + '</a>'; }
 { const _ra = renderAuth70; renderAuth70 = function () { const r = _ra.apply(this, arguments);
     try { const b = document.querySelector("#s-ob .au70b"); if (b && !document.querySelector(".tm95")) b.insertAdjacentHTML("afterend", '<p class="tm95">' +
-      (ZH95() ? "继续即表示你已年满 17 周岁，并同意" + terms95Link("《用户协议与社区规范》") + "。MIRU 对违规内容和辱骂行为零容忍。"
-              : "By continuing you confirm you're 17+ and agree to the " + terms95Link("Terms & Community Guidelines") + ". MIRU has zero tolerance for objectionable content and abusive users.") + '</p>'); } catch (_) {}
+      (ZH95() ? "继续即表示你已年满 18 周岁，并同意" + terms95Link("《用户协议与社区规范》") + "。MIRU 对违规内容和辱骂行为零容忍。"
+              : "By continuing you confirm you're 18+ and agree to the " + terms95Link("Terms & Community Guidelines") + ". MIRU has zero tolerance for objectionable content and abusive users.") + '</p>'); } catch (_) {}
     return r; }; }
 
 /* ---- Me → 安全与举报 ---- */
@@ -18373,7 +18382,7 @@ function contactSheet95() {
     closeSheet(); toast(ok ? T95("已发送，我们会尽快回复", "Sent — we'll get back to you soon") : T95("发送失败，请联网后再试", "Couldn't send — check your connection")); };
 }
 document.addEventListener("click", async e => { let x;
-  if ((x = e.target.closest("[data-ub95]"))) { const id = x.dataset.ub95; try { await capi("/works", { json: { op: "unblock", author: id } }); } catch (_) {} const b = blk95(); b.works = []; b.names = []; save(); toast(T95("已解除拉黑", "Unblocked")); blockedSheet95(); return; }
+  if ((x = e.target.closest("[data-ub95]"))) { const id = x.dataset.ub95; let ok = false; try { const r = await capi("/works", { json: { op: "unblock", author: id } }); ok = r.ok; } catch (_) {} if (!ok) { toast(T95("解除失败，请重试", "Could not unblock — try again")); return; } const b = blk95(), rows = (b.authors || []).filter(a => a.id === id); b.authors = (b.authors || []).filter(a => a.id !== id); b.works = b.works.filter(w => !rows.some(a => a.work === w)); b.names = b.names.filter(n => !rows.some(a => a.name === n) || b.authors.some(a => a.name === n)); save(); toast(T95("已解除拉黑", "Unblocked")); blockedSheet95(); return; }
   if (e.target.closest("[data-sf95b]")) { blockedSheet95(); return; }
   if (e.target.closest("[data-sf95c]")) { contactSheet95(); return; }
 });
@@ -20578,26 +20587,6 @@ const __body_open100 = function () { try {
 (() => { try { const st = document.createElement('style'); st.textContent = '.open100{margin:0 10px 6px;padding:8px 12px;border-radius:12px;background:rgba(10,8,14,.7);backdrop-filter:blur(6px);color:#F6F1EC;font-size:13px;line-height:1.5}.open100 b{color:var(--gold,#F0B77E)}'; document.head.appendChild(st); } catch (e) { console.debug('[open100] style', e); } })();
 if (window.UI && typeof window.UI.add === 'function') window.UI.add('open100', __body_open100);
 
-/* ---- BOOT (keep last) ---- */
-/* 媒体库先跑：开 IndexedDB → 把老存档里的 base64 迁出去（保命：迁不成功就保留原值）→ 再启动。
-   库打不开（隐私模式 / 旧浏览器）也照常启动 —— mediaBoot 内部对失败是吞掉的，页面按老路径走。
-   1.5 秒兜底：迁移不能把白屏拖出来。 */
-(function boot(){
-  function go(){ try{ if(S.ob)startApp();else renderOB(); }catch(e){ try{console.error(e)}catch(_){} } }
-  try{
-    if(typeof mediaBoot==="function"){
-      var t=setTimeout(go,1500);
-      mediaBoot().then(function(m){
-        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L11",function(){ if(t)clearTimeout(t) });
-        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L12",function(){ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) });
-        go();
-      },function(){ try{ if(t)clearTimeout(t) }catch(_){} go(); });
-      return;
-    }
-  }catch(_){}
-  go();
-})();
-
 /* ================= 对话流：一道缝（2026-10-27 · 设计见 DIALOGUE-PIPELINE.md）=================
    Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧。」
    ⇒ 这条链原来被六个文件各自改：显示（appendMsg / app11）· 节奏（pkWait / app28 / playBeats 各一套）·
@@ -22696,6 +22685,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
    商品 ID（Play Console 里要建同名的「一次性商品 · 消耗型」）：gems_5 / gems_16 / gems_28 / gems_60 / gems_125 / gems_330 / gems_700 */
 (function () {
   "use strict";
+  if (window.MIRU_NATIVE && window.MIRU_NATIVE.platform === "ios") return;
   const PLAY_METHOD = "https://play.google.com/billing";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   let twa = false;
@@ -22814,6 +22804,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
    安卓 App 是 TWA（真 Chrome，不是 WebView），AdSense 在 App 里同样可用。 */
 (function () {
   "use strict";
+  if (window.MIRU_NATIVE && window.MIRU_NATIVE.platform === "ios") return;
   const PUB = "ca-pub-1779576119248059"; /* 2026-11-09 打开：AdSense 还在审核时没有广告可播，自动退回原来的模拟广告；审核通过后真广告自动接上，不用再改代码 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   window.__ads128 = () => ({ pub: PUB, ready: !!window.adBreak });
@@ -25406,7 +25397,18 @@ if(typeof document!=='undefined'&&document.head){
   }
   let CL_BUSY = false;
   async function cloneToggle() {
-    if (cloneOn()) { const id = S.myClone.id; S.myClone = null; save(); paintMy(); refresh(); try { await fetch(TTS_EP, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, typeof cloudAuth === "function" ? cloudAuth() : {}), body: JSON.stringify({ cloneDel: id }) }); } catch (_) {} return; }
+    if (cloneOn()) {
+      if (CL_BUSY) return false;
+      CL_BUSY = true; paintMy();
+      try {
+        const r = await fetch(TTS_EP, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, typeof cloudAuth === "function" ? cloudAuth() : {}), body: JSON.stringify({ cloneDel: S.myClone.id }) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || j.ok !== true) throw new Error(j.error || r.status);
+        S.myClone = null; save(); refresh(); return true;
+      } catch (_) {
+        toast(T("服务器录音未删除，已保留记录。请重试或联系支持。", "Server recording was not deleted. Its reference is kept; retry or contact support.")); return false;
+      } finally { CL_BUSY = false; paintMy(); }
+    }
     const auth = typeof cloudAuth === "function" ? cloudAuth() : {};
     if (!auth.Authorization) { toast(T("先登录账号，才能用自己的声音配音", "Sign in first to use your own voice")); return; }
     if (!S.myVoice || !/^data:audio/.test(S.myVoice)) { toast(T("先录一段声音", "Record a clip first")); return; }
@@ -25460,7 +25462,7 @@ if(typeof document!=='undefined'&&document.head){
       REC.on = false; clearInterval(REC.tick); try { stream.getTracks().forEach(t => t.stop()); } catch (_) {}
       const blob = new Blob(REC.chunks, { type: (kind || "audio/mp4").split(";")[0] });
       if (blob.size < 1200) { toast(T("没录到声音，再试一次", "Nothing was recorded — try again")); paintMy(); return; }
-      const fr = new FileReader(); fr.onload = async () => { const was = cloneOn(); if (was) await cloneToggle(); S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("录好了", "Recorded")); paintMy(); if (was) cloneToggle(); }; fr.readAsDataURL(blob);
+      const fr = new FileReader(); fr.onload = async () => { const was = cloneOn(); if (was && !await cloneToggle()) return; S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("录好了", "Recorded")); paintMy(); if (was) cloneToggle(); }; fr.readAsDataURL(blob);
     };
     paintMy();
     REC.tick = setInterval(() => { const s = Math.floor((Date.now() - REC.t0) / 1000), el = document.getElementById("v146sec"); if (el) el.textContent = s; if (s >= 15) try { rec.stop(); } catch (_) {} }, 250);
@@ -25477,7 +25479,7 @@ if(typeof document!=='undefined'&&document.head){
     return r;
   };
   document.addEventListener("input", e => { if (e.target && e.target.id === "voiceQ146") { const l = document.getElementById("voiceList146"); if (l) l.innerHTML = listHTML(e.target.value); } });
-  document.addEventListener("click", e => {
+  document.addEventListener("click", async e => {
     const x = e.target.closest && e.target.closest("[data-v146tog],[data-v146play],[data-v146],[data-v146all],[data-v146rec],[data-v146del],[data-v146clone]"); if (!x) return;
     e.preventDefault(); e.stopImmediatePropagation();
     const d = x.dataset;
@@ -25485,7 +25487,7 @@ if(typeof document!=='undefined'&&document.head){
     if (d.v146play) { play(d.v146play, sample(d.v146play), x); return; }
     if (d.v146all) { SHOW_ALL = d.v146all !== "0"; refresh(); if (!SHOW_ALL) { try { const c = document.querySelector(".me-voice"); if (c) c.scrollIntoView({ block: "start", behavior: "smooth" }); } catch (_) {} } return; }
     if (d.v146rec != null) { recToggle(); return; }
-    if (d.v146del) { if (cloneOn()) cloneToggle(); S.myVoice = null; save(); paintMy(); return; }
+    if (d.v146del) { if (cloneOn() && !await cloneToggle()) return; S.myVoice = null; save(); paintMy(); return; }
     if (d.v146clone) { cloneToggle(); return; }
     if (d.v146 != null) { const [id, vv] = d.v146.split("|"); setV(id, vv || null); refresh(); play(id, sample(id)); return; }
   }, true);
@@ -26192,6 +26194,7 @@ pico.instantiate_detection_memory = function(size)
     e.preventDefault(); e.stopImmediatePropagation();
     if (x.dataset.del150 === "go") {
       x.disabled = true;
+      if (window.__miruIOS) { try { await window.__miruIOS.deleteAccount(true); } finally { x.disabled = false; } return; }
       try {
         const r = await capi("/auth", { json: { op: "delete" } });
         if (r.ok) { closeSheet(); toast(au("delDone")); try { localStorage.clear(); } catch (_) {} setTimeout(() => location.reload(), 900); }
@@ -27444,6 +27447,181 @@ function authoredQueue(th){if(!th?.pk?.authoredContract)return;function walk(arr
  };
  const render=renderChat;renderChat=function(){const th=S.threads[curT],w=th&&wd(th.wid),pairs=w&&w.pack&&w.pack.authoredLanguages;if(pairs){const en=CL()!=='zh',tr=s=>{if(typeof s!=='string')return s;for(const p of [...pairs].sort((a,b)=>b[en?0:1].length-a[en?0:1].length))s=s.split(p[en?0:1]).join(p[en?1:0]);return s;};function fields(o){if(!o||typeof o!=='object')return;['txt','title','place','time','last','premise','summary','name','n','t','present'].forEach(k=>{if(typeof o[k]==='string')o[k]=tr(o[k]);});Object.entries(o).forEach(([k,v])=>{if(v&&typeof v==='object'&&k!=='authoredLanguages'){if(Array.isArray(v))v.forEach(fields);else fields(v);}});}th.msgs.filter(m=>m.who!=='me').forEach(fields);th.title=tr(th.title);if(th.status)fields(th.status);const intro=Lz(w.pack.intro);if(intro && typeof intro==="object"){intro.bg=String(Lz(w.premise)||"").split("\n\n");intro.you=Lz(w.you);}th.msgs.filter(m=>m.k==="chap").forEach(m=>{const c=w.pack.chapters[m.n-1];if(c){m.title=Lz(c.t);m.brief124=EXPERIENCE124.brief(th,c,m.n);}});}authoredQueue(th);const result=render.apply(this,arguments);if(th&&th.pk&&th.pk.relationship){const chip=document.querySelector(".chead .stagechip:not(.livechip)");if(chip)chip.textContent=th.pk.relationship==="married"?(CL()==="zh"?"已婚":"Married"):(CL()==="zh"?"已分开":"Separated");}return result;};
  if(typeof packPrompt==='function'){const prompt=packPrompt;packPrompt=function(th){let s=prompt.apply(this,arguments);if(th&&th.pk&&th.pk.authoredContract)s+='\nAuthored state (read only; never invent stat updates): '+JSON.stringify({stats:th.pk.storyStats,memories:th.pk.storyMemories})+'\nAsk before intimate contact. Respect refusal, independent careers and an ending that separates the couple. Do not speak for the player.';return s;};}
+})();
+
+/* iOS services. Web and Android keep their existing implementations. */
+(function(){
+ 'use strict';
+ const N=window.MIRU_NATIVE;if(!N||N.platform!=='ios')return;
+ const say=(zh,en)=>CL()==='zh'?zh:en;
+ let buying=false,recovering=false;
+ function balance(j){
+  if(!j||typeof j.gems!=='number')throw new Error('Missing wallet balance');
+  S.keys=j.gems;cloudInfo().known=j.gems;if(j.iap)cloudInfo().iap=j.iap;
+  save0();keysChip();
+ }
+ async function deliver(tx){
+  const r=await capi('/wallet',{json:{op:'iap',jws:tx.jws}});
+  if(!r.ok||r.j.transactionId!==tx.transactionId)throw new Error(r.j.error||'Purchase delivery is pending; retry after signing in');
+  balance(r.j);S.firstBuy=true;save0();
+  await N.finish({transactionId:tx.transactionId});
+  return r.j;
+ }
+ async function recover(){
+  if(recovering||buying||!au70Loggedin())return;
+  recovering=true;
+  try{
+   const p=await N.pendingTransactions();
+   for(const tx of p.transactions||[]){try{await deliver(tx)}catch(e){console.warn('[ios] purchase remains unfinished',e.message)}}
+  }finally{recovering=false}
+ }
+ async function purchase(productId){
+  if(buying)return;
+  if(!au70Loggedin()){authAll70();return}
+  buying=true;
+  try{
+   const w=await capi('/wallet');if(!w.ok)throw new Error(w.j.error||'Wallet unavailable');
+   const iap=w.j.iap;if(!iap||!iap.available||!iap.productIds.includes(productId))throw new Error('Product unavailable');
+   const tx=await N.purchase({productId,appAccountToken:iap.appAccountToken});
+   if(tx.status==='cancelled')return;
+   if(tx.status==='pending'){toast(say('购买正在等待批准，批准后会自动补发。','Purchase awaits approval. Diamonds will arrive after approval.'));return}
+   if(tx.status!=='purchased'||!tx.jws||!tx.transactionId)throw new Error('Purchase was not verified');
+   await deliver(tx);closeSheet();toast(say('充值已到账','Diamonds delivered'));refreshAfterPay();
+  }catch(e){toast(String(e.message||e))}
+  finally{buying=false}
+ }
+ function storeLoad(promise){
+  let timer;
+  return Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(say('连接超时，请检查网络后重试。','Connection timed out. Check your network and try again.'))),20000)})]).finally(()=>clearTimeout(timer));
+ }
+ paySheet=function(){
+  const id='ios-packs-'+Date.now();
+  sheet('<h2>💎 '+say('充值','Top up')+'</h2><div id="'+id+'">'+say('正在连接 App Store…','Connecting to the App Store…')+'</div><button class="lnk" data-ios-sync>'+say('同步购买与余额','Sync purchases and balance')+'</button>');
+  (async()=>{
+   const [w,h]=await storeLoad(Promise.all([capi('/wallet'),capi('/health?config=1')]));
+   if(!w.ok||!h.ok)throw new Error('Store connection unavailable');
+   balance(w.j);
+   const iap=w.j.iap;if(!iap||!iap.available)throw new Error(say('内购暂不可用，请稍后重试。','Purchases are currently unavailable. Please try again later.'));
+   const skus=(h.j.config||{}).skus||{},items=await storeLoad(N.products({ids:iap.productIds})),box=document.getElementById(id);if(!box)return;
+   const products=items.products||[];
+   box.innerHTML='<div class="packs packs84">'+products.map(p=>{
+    const v=Object.values(skus).find(s=>s.apple===p.productId);if(!v)return '';
+    return '<button class="pack" data-ios-product="'+esc(p.productId)+'"><b>💎 '+Number(v.gems)+'</b><span>'+esc(p.displayPrice)+'</span></button>';
+   }).join('')+'</div>'+(!products.length?'<p>'+say('商品暂不可用，请稍后重试。','Products are unavailable. Please try again.')+'</p>':'')+
+   '<p class="xs faint">'+say('钻石保存在你的 MIRU 账号中。首充奖励以服务端结算为准。','Diamonds are saved in your MIRU account. Any first-purchase bonus is confirmed by the server.')+'</p>'+
+   (iap.test?'<p class="xs">'+say('测试购买余额','Test purchase balance')+'</p>':'');
+  })().catch(e=>{const box=document.getElementById(id);if(box)box.textContent=e.message});
+ };
+ async function apple(){
+  const c=await capi('/auth',{json:{op:'apple_challenge',client:'ios'}});
+  if(!c.ok)throw new Error(c.j.error||'Apple sign-in unavailable');
+  const p=await N.signInWithApple({nonce:c.j.nonce});
+  return capi('/auth',{json:{op:'apple',challenge:c.j.challenge,idToken:p.idToken,authorizationCode:p.authorizationCode,name:p.name}});
+ }
+ async function login(provider){
+  try{
+   const r=provider==='apple'?await apple():await capi('/auth',{json:{op:'google',...(await N.signInWithGoogle())}});
+   if(!r.ok)throw new Error(r.j.error||'Sign-in failed');
+   await au70Done(r.j,provider);await recover();
+  }catch(e){toast(String(e.message||e))}
+ }
+ au70MountGoogle=async function(){};
+ au70Apple=function(){return login('apple')};
+ async function resetLocal(){
+  window.MIRU_ACCOUNT_DELETED=true;CL0.on=false;clearTimeout(CL0.timer);
+  if(typeof call!=='undefined'&&call&&typeof endCall==='function')endCall();
+  if(typeof stopVoice==='function')stopVoice();
+  localStorage.clear();localStorage.setItem('miru.deleteLocalPending','1');
+  if(typeof UDB!=='undefined'&&UDB.db){UDB.db.close();UDB.db=null}
+  if(typeof MEDIA!=='undefined'){if(MEDIA.db)MEDIA.db.close();MEDIA.db=null;MEDIA.blobs.clear();MEDIA.urls.forEach(u=>URL.revokeObjectURL(u));MEDIA.urls.clear()}
+  if(typeof indexedDB!=='undefined')for(const name of ['miru_lib','miru-media'])await new Promise((resolve,reject)=>{
+   const r=indexedDB.deleteDatabase(name);r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error);r.onblocked=()=>reject(new Error('Close other MIRU windows and retry local data deletion'));
+  });
+  localStorage.removeItem('miru.deleteLocalPending');location.reload();
+ }
+ async function deleteAccount(confirmed=false){
+  if(!confirmed&&!confirm(au('delAsk')))return;
+  try{
+   let r=await capi('/auth',{json:{op:'delete'}});
+   if(!r.ok&&r.j.action==='apple_reauthentication_required'){
+    const uid=cloudInfo().uid,fresh=await apple();
+    if(!fresh.ok)throw new Error(fresh.j.error||'Apple reauthentication failed');
+    if(!fresh.j.user||fresh.j.user.id!==uid)throw new Error(say('请使用当前账号绑定的 Apple 账号重试。','Use the Apple account linked to your current MIRU account.'));
+    cloudInfo().token=fresh.j.token;save0();
+    r=await capi('/auth',{json:{op:'delete'}});
+   }
+   if(!r.ok)throw new Error(r.j.error||say('注销尚未完成，请重试。','Deletion is not complete. Please retry.'));
+   await resetLocal();
+  }catch(e){toast(String(e.message||e))}
+ }
+ // First iOS release has no advertising; Web/Android implementations remain intact.
+ adLeft=function(){return 0};
+ adBtn=function(){return ''};
+ watchAd=async function(){};
+ window.addEventListener('click',function(e){
+  const x=e.target.closest('[data-ios-product],[data-buy],[data-buyplus],[data-buymax],[data-ios-sync],[data-au70="apple"],[data-au70="google"],[data-au70card="del"]');
+  if(!x)return;e.preventDefault();e.stopImmediatePropagation();
+  if(x.hasAttribute('data-ios-product')){purchase(x.dataset.iosProduct);return}
+  if(x.hasAttribute('data-ios-sync')){recover().then(()=>walletPull()).then(()=>toast(say('余额已同步','Balance synced'))).catch(e=>toast(e.message));return}
+  if(x.hasAttribute('data-au70')){login(x.dataset.au70);return}
+  if(x.dataset.au70card==='del'){deleteAccount();return}
+  paySheet();
+ },true);
+ const oldWallet=walletPull;walletPull=async function(){const r=await oldWallet.apply(this,arguments);recover().catch(()=>{});return r};
+ window.addEventListener('focus',()=>recover().catch(()=>{}));
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)recover().catch(()=>{})});
+ N.addListener('transactionUpdated',()=>recover().catch(()=>{}));
+ if(localStorage.getItem('miru.deleteLocalPending'))resetLocal().catch(e=>toast(e.message));
+ window.__miruIOS={deliver,recover,purchase,login,deleteAccount,resetLocal};
+})();
+
+/* Consent before interactive AI and before the first boot. */
+(function(){
+ const ai=window.MIRU_AI;if(!ai)return;
+ const stop=()=>{
+  if(ai.allowed(true)&&!(typeof lcKey==='function'&&lcKey()&&!ai.recipient(new URL(lcCfg().base||LC_BASE))))return false;
+  toast(LL('AI 数据共享已关闭，可在「我」更改。','AI sharing is off. Change it in Me.'));return true
+ };
+ const oldSend=doSend;doSend=function(txt){
+  if(String(txt||'').trim()&&stop()){const t=document.getElementById('cin');if(t&&!t.value){t.value=String(txt);t.dispatchEvent(new Event('input',{bubbles:true}))}return}
+  return oldSend.apply(this,arguments)
+ };
+ const oldReply=reply;reply=async function(){if(stop())return;return oldReply.apply(this,arguments)};
+ const oldCall=startCall;startCall=function(){if(!stop())return oldCall.apply(this,arguments)};
+ const oldGate=callGate;callGate=function(){if(!stop())return oldGate.apply(this,arguments)};
+ const oldPic=aiGenerate;aiGenerate=function(){if(!stop())return oldPic.apply(this,arguments)};
+ const oldVid=vidGo;vidGo=function(){if(!stop())return oldVid.apply(this,arguments)};
+ const label=()=>ai.allowed(false)?LL('撤回 AI 数据共享许可','Withdraw AI data sharing'):LL('允许 AI 数据共享','Allow AI data sharing');
+ const oldMe=renderMe;renderMe=function(v){
+  const r=oldMe.apply(this,arguments);
+  if(!v.querySelector('[data-ai-consent]')){
+   const btn=document.createElement('button');btn.type='button';btn.className='btn btn-g';btn.setAttribute('data-ai-consent','');btn.textContent=label();
+   btn.onclick=()=>{ai.change();btn.textContent=label();if(ai.allowed(false)&&typeof trScan==='function')trScan()};
+   (v.querySelector('.scroll')||v).prepend(btn)
+  }return r
+ };
+ window.addEventListener('miru-ai-withdrawn',()=>{if(typeof call!=='undefined'&&call)endCall();if(typeof stopVoice==='function')stopVoice()});
+})();
+
+/* ---- BOOT (keep last) ---- */
+/* 媒体库先跑：开 IndexedDB → 把老存档里的 base64 迁出去（保命：迁不成功就保留原值）→ 再启动。
+   库打不开（隐私模式 / 旧浏览器）也照常启动 —— mediaBoot 内部对失败是吞掉的，页面按老路径走。
+   1.5 秒兜底：迁移不能把白屏拖出来。 */
+(function boot(){
+  if(window.MIRU_ACCOUNT_DELETED)return;
+  function go(){ try{ if(S.ob)startApp();else renderOB(); }catch(e){ try{console.error(e)}catch(_){} } }
+  try{
+    if(typeof mediaBoot==="function"){
+      var t=setTimeout(go,1500);
+      mediaBoot().then(function(m){
+        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L11",function(){ if(t)clearTimeout(t) });
+        (typeof soft==="function"?soft:function(n,f){try{return f()}catch(e){}})("app99_boot:L12",function(){ if(m&&m.stats&&(m.stats.migrated||m.stats.failed)) track&&track("media_migrate",{ok:m.stats.migrated,fail:m.stats.failed,bytes:m.stats.bytes}) });
+        go();
+      },function(){ try{ if(t)clearTimeout(t) }catch(_){} go(); });
+      return;
+    }
+  }catch(_){}
+  go();
 })();
 
 </script>

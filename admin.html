@@ -465,6 +465,7 @@ const Reports = {
       <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" />
       <el-table-column label="被举报对象" min-width="200"><template #default="{row}"><b>{{row.work_title||row.target_id}}</b><div class="muted">作品状态：{{L.wstatus[row.work_status]||row.work_status||'—'}}</div></template></el-table-column>
       <el-table-column prop="reason" label="举报原因" min-width="200" />
+      <el-table-column prop="snapshot" label="举报内容" min-width="250" />
       <el-table-column label="举报人" width="180"><template #default="{row}"><span class="muted">{{row.reporter_email||row.user_id}}</span></template></el-table-column>
       <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.rstatus[row.status]}}</el-tag></template></el-table-column>
       <el-table-column label="处理" width="160"><template #default="{row}"><span class="muted">{{row.handled_by}} {{row.note}}</span></template></el-table-column>

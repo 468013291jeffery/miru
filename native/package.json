@@ -1,0 +1,21 @@
+{
+  "name": "miru-ios",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "prepare": "node ../tools/ios-release-check.mjs && node ../tools/prepare-ios.mjs",
+    "copy": "npm run prepare && cap copy ios",
+    "check:release": "node ../tools/ios-release-check.mjs --check",
+    "open": "cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.6.0",
+    "@capacitor/ios": "8.6.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.6.0"
+  }
+}
