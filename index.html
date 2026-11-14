@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="7c31e5be9509 2026-11-14T14:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="a2a12fcf93c3 2026-11-14T15:28Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27969,8 +27969,9 @@ window.SVF_RELEASE={"script_id":"sc_mwge64og525f6dcd56","work_id":"w_scmwge64og5
  const R=window.SVF_RELEASE,E=createSvfEngine(),bi=x=>({zh:x,en:x});
  const own=th=>!!(th&&th.pk&&wd(th.wid)?.community===R.work_id);
  const state=th=>{th.pk.authoredContract=1;return th.pk.svf||(th.pk.svf=E.initial());};
+ function configure(w){w.leads=w.cast.filter(id=>R.cast.some(c=>c.lead&&c.name===ch(id).n));w.bgm='warm';w.pack.minRoundsPerChapter=0;w.pack.authoredContract=1;for(const c of w.pack.chapters){for(const lang of ['zh','en']){const b=c.beats[lang].find(b=>b[1]==='scene');if(b){c.place[lang]=b[2].place||'';c.time[lang]=b[2].time||'';}}}if(w.premise){for(const lang of ['zh','en'])if(w.pack.intro?.[lang]){w.pack.intro[lang].bg=String(w.premise?.[lang]||'').split(/\n\s*\n/).filter(Boolean);w.pack.intro[lang].you=w.you?.[lang]||'';}}}
  PARSE.use('svf-v4',{build(next,doc,as){const r=next(doc,as),w=wd(r?.wid||r);if(OFF94.cur?.id!==R.work_id||!w)return r;
-  w.leads=w.cast.filter(id=>R.cast.some(c=>c.lead&&c.name===ch(id).n));w.bgm='warm';w.pack.minRoundsPerChapter=0;w.pack.authoredContract=1;
+  configure(w);
   // The source's final choice precedes three conditional epilogues. Lift it into the
   // authored chapter ending so the legacy default “continue → A” cannot replace it.
   const c=w.pack.chapters[17];const lifted=c.choices;
@@ -27992,8 +27993,8 @@ window.SVF_RELEASE={"script_id":"sc_mwge64og525f6dcd56","work_id":"w_scmwge64og5
  const love=packLove;packLove=function(th){return own(th)?undefined:love.apply(this,arguments);};
  const pick=packPick;packPick=function(k){const th=S.threads[curT];if(own(th)&&th.pk.ch===18){const o=wd(th.wid).pack.chapters[17].choices.find(o=>o.k===k);if(!o||!E.eligible(state(th),k,o.set)){toast('该结局尚未满足原稿条件：'+({A:'任一男主好感 ≥ 8，绯闻风险 < 60',B:'家族距离 ≤ 3，威信 ≥ 70',C:'舞台轴 ≥ 8，家族距离 ≥ 7'}[k]));return;}}return pick.apply(this,arguments);};
  const prompt=packPrompt;packPrompt=function(th){const p=prompt.apply(this,arguments);return own(th)?p+'\nSEVENFOLD 内部演出规则：世界设定、图片描述、数值和样例玩家台词不是旁白。玩家只由本人发言；说停立即停止，不用感情惩罚拒绝。角色只说亲历和明确得知的事，不提前知道后续章或结局。当前已确认选择产生的数值：'+JSON.stringify(state(th).values):p;};
- const install=installWork;installWork=async function(id){const r=await install.apply(this,arguments),w=wd(r);if(id===R.work_id&&w)w.leads=w.cast.filter(cid=>R.cast.some(c=>c.lead&&c.name===ch(cid).n));return r;};
- const open=openThread;openThread=function(id){const th=S.threads[id];if(own(th)&&!th.msgs.some(m=>m.svfTrailer)){const A=OFF94.assets[R.work_id]||{};if(A.opening_video)th.msgs.unshift({who:'sys',k:'storyTrailer',src:A.opening_video,poster:A.cover,title:'开场预告片',intro98:'opening-media',svfTrailer:true,at:Date.now()});}return open.apply(this,arguments);};
+ const install=installWork;installWork=async function(id){const r=await install.apply(this,arguments),w=wd(r);if(id===R.work_id&&w)configure(w);return r;};
+ const open=openThread;openThread=function(id){const th=S.threads[id];if(own(th)){configure(wd(th.wid));if(typeof EXPERIENCE124!=='undefined')for(const m of th.msgs||[])if(m.k==='chap'){const c=wd(th.wid).pack.chapters[m.n-1];if(c)m.brief124=EXPERIENCE124.brief(th,c,m.n);}}if(own(th)&&!th.msgs.some(m=>m.svfTrailer)){const A=OFF94.assets[R.work_id]||{};if(A.opening_video)th.msgs.unshift({who:'sys',k:'storyTrailer',src:A.opening_video,poster:A.cover,title:'开场预告片',intro98:'opening-media',svfTrailer:true,at:Date.now()});}return open.apply(this,arguments);};
  window.SVF_ENGINE={...E,own,state};
 })();
 
