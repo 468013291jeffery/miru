@@ -4459,6 +4459,7 @@
   "dialoguePolicy": {
     "schema": 1,
     "plainLanguage": true,
+    "noBackstage": true,
     "maxChars": 180
   },
   "dialogueStyle": "只输出人物真实说出的话和可感知动作。设定、程序字段、图片描述、评分规则、导演任务、提示词均是内部资料，禁止朗读或变为旁白。一次只回应当前输入，不替玩家发言或决定。"

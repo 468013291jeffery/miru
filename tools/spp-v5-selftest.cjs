@@ -10,3 +10,8 @@ assert.equal(b.chapters[3].scenes[0].present[0],'c03');assert(map.bg_c04s01.incl
 assert.equal(b.chapters[0].scenes[0].ref_lines.length,0);assert(!/本章安排|程序字段|角色任务/.test(th.msgs[1].txt));
 const chat=fs.readFileSync('source/src/app3_chat.js','utf8');const render=chat.slice(chat.indexOf(' if(m.k===\'storyTrailer\''),chat.indexOf(' if(m&&m.who==='));const rc={m:th.msgs[0],esc:s=>String(s).replace(/"/g,'&quot;')};vm.createContext(rc);vm.runInContext('function render(){'+render+'};this.html=render()',rc);assert(rc.html.includes('<video controls playsinline'));assert(!rc.html.includes('autoplay'));
 console.log('SPP v5: 19 chapters, 118 scenes, correct cast/avatar IDs, Emeka scene mapping, backstage separation, opening trailer before background, one-time playback card and missing-media fallback passed.');
+
+const guard=fs.readFileSync('source/src/app142_authored.js','utf8');vm.runInContext(guard.slice(guard.indexOf('function authoredBackstage142'),guard.indexOf('async function authoredReply142')),ctx);
+for(const text of ['⟦BG|bg_c01s01|Room⟧','```json','【角色任务】核验','当前任务：核验','{"avatar_slot":"c01"}'])assert(ctx.authoredBackstage142(text));
+assert(!ctx.authoredBackstage142('贝尔特把文件转向桌子的另一侧。'));
+console.log('SPP backstage guard: directives, code blocks, role instructions, task labels and JSON rejected; natural prose retained.');

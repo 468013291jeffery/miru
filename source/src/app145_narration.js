@@ -74,6 +74,7 @@ function narrativePrompt145(packet){return '[MIRU_NARRATIVE145]\n'+(Z98()?'你�
 function narrativeClean145(th,r,plan){
  if(!r||!Array.isArray(r.paragraphs)||!Array.isArray(r.materialIds))return null;
  const ps=r.paragraphs.map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!ps.length||ps.length>3)return null;
+ if(narrationBible135(th)?.dialoguePolicy?.noBackstage&&authoredBackstage142(ps.join('\n')))return null;
  const text=ps.join('\n\n'),min=Z98()?plan.budget.min:Math.round(plan.budget.min*1.5),max=Z98()?plan.budget.max:plan.budget.max*3;
  if(text.length<min||text.length>max||/[<>]|(?:提示词|后台字段|作者设定|剧情智能体|程序回执)/.test(text)||/给出了回应|的回应里.{0,3}提到/.test(text))return null;
  if(/你(?:终于|已经|不由得|忍不住|忽然|突然|也)?(?:决定|选择了|答应|原谅|相信了|明白了|意识到|爱上|喜欢上|接受了|同意|默认|默许|伸手|抱住|吻上|亲上|牵起|走向|站起|转身|坐下|点头|摇头)|你(?:的)?(?:心跳|呼吸|脸红)|\byou(?:r)?\s+(?:decide|choose|agree|consent|forgive|feel|love|hug|kiss|reach|walk|nod|heart)/i.test(text))return null;

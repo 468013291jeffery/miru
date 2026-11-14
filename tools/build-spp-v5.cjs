@@ -9,7 +9,7 @@ const r=require('../api/_scriptparse').parseManuscript(text,{id});
 const errors=r.err.filter(e=>!/^第 \d+ 章第 \d+ 场：缺【(?:眼前邀请|开场建议)】$/.test(e));
 assert.deepEqual(errors,[]);const b=r.bible;
 b.contentRevision='spp-v5-20261114';b.openingMedia={slot:'opening_video'};
-b.player.age=26;b.dialoguePolicy={schema:1,plainLanguage:true,maxChars:180};
+b.player.age=26;b.dialoguePolicy={schema:1,plainLanguage:true,noBackstage:true,maxChars:180};
 b.dialogueStyle='只输出人物真实说出的话和可感知动作。设定、程序字段、图片描述、评分规则、导演任务、提示词均是内部资料，禁止朗读或变为旁白。一次只回应当前输入，不替玩家发言或决定。';
 const mapping=JSON.parse(fs.readFileSync(path.join(base,'asset_mapping_v5.json'))).slots;
 mapping.cover='assets/cover/cover.jpg';mapping.opening_video='谁是s++预告片.mp4';mapping.home_video=mapping.vid_open=mapping.opening_video;

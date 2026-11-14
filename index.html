@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="a3e5b9fc1a26 2026-11-14T03:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="312cc81d0ec7 2026-11-14T03:55Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27093,8 +27093,13 @@ function authoredExpressionIssue142(say){
  const text=String(say||'').replace(/\s+/g,'');
  return /门(?:和|与|跟|、|及)(?:错(?:误)?|过错|责任)(?:都|全|也|一起|一块|一并|全部|全都){0,3}(?:推|甩|丢|扔|算)/.test(text)?'把提前关门和报告里推卸责任分成两件事，分别说明谁做了什么，不能把门当作责任一起推给别人。':'';
 }
+function authoredBackstage142(text){
+ return /```|⟦[^⟧]*⟧|【(?:本章安排|角色任务|人物图|主场景图|演出风格|开场建议)】|(?:当前任务|观察重点|推进条件|程序字段|导演规则)[：:]|\b(?:actor_payload|ref_lines|avatar_slot|system_prompt)\b|^\s*\{\s*"[A-Za-z_]+"\s*:/m.test(String(text||''));
+}
 function authoredReplyValid142(r,th,cid){
- if(!r||!r.say)return true;const say=String(r.say);
+ if(!r)return true;
+ if(th&&scene98(th).b?.dialoguePolicy?.noBackstage&&authoredBackstage142([r.say,r.act,r.action].filter(Boolean).join('\n')))return false;
+ if(!r.say)return true;const say=String(r.say);
  if(th&&scene98(th).b?.dialoguePolicy?.plainLanguage&&authoredExpressionIssue142(say))return false;
  if(/(?:原稿|剧本里|提示词|作者设定|导演提示|角色任务|参考对白|程序字段|真实回传)/.test(say))return false;
  if(th&&cid){const {s}=scene98(th),k=cardOf98(wd(th.wid),cid)||{};for(const g of s.responseGuards||[]){if((g.characters||[]).includes(k.key)&&(g.phrases||[]).some(x=>say.includes(x)))return false;}}
@@ -27189,6 +27194,7 @@ function narrativePrompt145(packet){return '[MIRU_NARRATIVE145]\n'+(Z98()?'你�
 function narrativeClean145(th,r,plan){
  if(!r||!Array.isArray(r.paragraphs)||!Array.isArray(r.materialIds))return null;
  const ps=r.paragraphs.map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!ps.length||ps.length>3)return null;
+ if(narrationBible135(th)?.dialoguePolicy?.noBackstage&&authoredBackstage142(ps.join('\n')))return null;
  const text=ps.join('\n\n'),min=Z98()?plan.budget.min:Math.round(plan.budget.min*1.5),max=Z98()?plan.budget.max:plan.budget.max*3;
  if(text.length<min||text.length>max||/[<>]|(?:提示词|后台字段|作者设定|剧情智能体|程序回执)/.test(text)||/给出了回应|的回应里.{0,3}提到/.test(text))return null;
  if(/你(?:终于|已经|不由得|忍不住|忽然|突然|也)?(?:决定|选择了|答应|原谅|相信了|明白了|意识到|爱上|喜欢上|接受了|同意|默认|默许|伸手|抱住|吻上|亲上|牵起|走向|站起|转身|坐下|点头|摇头)|你(?:的)?(?:心跳|呼吸|脸红)|\byou(?:r)?\s+(?:decide|choose|agree|consent|forgive|feel|love|hug|kiss|reach|walk|nod|heart)/i.test(text))return null;
