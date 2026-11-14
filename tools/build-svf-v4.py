@@ -65,6 +65,9 @@ for row in manifest:
 for c in casts:
  first=next(row for row in manifest if row['slot'].startswith('char_'+c['key']+'/'));mapping['char_'+c['name']]=mapping[first['slot']];c['art']=mapping[first['slot']]
 cover=next(row for row in manifest if row['category']=='cover');mapping['cover']=mapping['poster']='/art/official/svf-v4/'+cover['path'];mapping['home_video']=mapping['vid_open']=mapping['opening_video']='/video/svf-opening-v4.mp4'
+if presentation.get('cover'):
+ mapping['cover']=mapping['poster']=presentation['cover']
+ assert hashlib.sha256((R/presentation['cover'].lstrip('/')).read_bytes()).hexdigest()==presentation['cover_sha256']
 for n in range(1,24):mapping['hl_%02d'%n]=next(mapping[row['slot']] for row in manifest if row['path'].endswith('hl_%02d.jpg'%n))
 (R/'art/official'/f'{rel["work_id"]}.json').write_text(json.dumps(mapping,ensure_ascii=False,indent=2)+'\n');(out/'cast.json').write_text(json.dumps(casts,ensure_ascii=False,indent=2)+'\n')
 meta={'title':'我在男团当团宠','hook':'十八天，一栋别墅，七个男团成员都想留住你。那条“不许碰经纪人”的团规，正是队长亲手写下的。','premise':'\n\n'.join(presentation['background']),'you':presentation['identity'],'as':'你','orient':'bg','adult':True,'cover':'https://miru.plus'+mapping['cover'],'tags':['现代','娱乐圈','群像','慢热','自主选择']}
