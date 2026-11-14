@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="b8f1d0c9dd30 2026-11-13T17:00Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="c6e72cfde97c 2026-11-14T02:05Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -25971,11 +25971,12 @@ pico.instantiate_detection_memory = function(size)
       try { typing(true); } catch (_) {}
       let k = null;
       try {
-        const r = await ask("玩家在互动剧的一个选择点上，没有点选项，而是自己说了一句话。判断这句话的意图最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+        const r = await ask("玩家在互动剧的一个选择点上，用自己的话说了一句。判断这句话是否明确表达了某个选项的意思。\n问题：" + Lz(c.ask) + "\n选项：\n" + list + "\n玩家说：「" + txt + "」\n规则：只有玩家这句话的意思和某个选项明显一致时才选它；如果说的是别的事、提了别的要求、或者看不出选了哪条，一律回 0。宁可回 0，也不要硬套。\n只回 JSON：{\"k\":\"选项字母或0\"}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
         k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
       } catch (_) {}
       try { typing(false); } catch (_) {}
-      if (!k || !c.choices.some(x => x.k === k)) k = guess(txt, c.choices);
+      /* 对不上任何选项：当自由聊天，角色正常接你的话，选择点继续等你（不再硬套最像的一条） */
+      if (!k || !c.choices.some(x => x.k === k)) { if (typeof reply === "function") { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[ch148] free", e); } } return; }
       const n = th.pk.ch, w = wd(th.wid);
       if (n === PCN(w) && k === "A" && aCount(th) < EN(th)) { const o = c.choices.find(x => x.k !== "A"); if (o) k = o.k; }
       if (curT === th.id && isChoose(th)) packPick(k);
@@ -26056,10 +26057,12 @@ pico.instantiate_detection_memory = function(size)
   async function classify(question, opts, txt) {
     const list = opts.map((o, i) => (i + 1) + "｜" + Lz(o.t)).join("\n");
     try {
-      const r = await ask("玩家在互动剧的一个分支点上，用自己的话回复了一句。判断这句话的意图最接近哪个分支。\n情境：" + (question || "") + "\n分支：\n" + list + "\n玩家说：「" + txt + "」\n只回 JSON：{\"n\":分支编号}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
+      /* 2026-11-14 玩家：「我说吃河粉，怎么就变成『告诉他今天很棒』了？」——以前不管说什么都硬塞进最像的一条分支。
+         ⇒ 只有意思真的对得上某条分支才算；对不上（聊别的、提要求、随口一句）就当自由聊天：角色正常接你的话，分支点继续等。 */
+      const r = await ask("玩家在互动剧的一个分支点上，用自己的话回复了一句。判断这句话是否明确表达了某个分支的意思。\n情境：" + (question || "") + "\n分支：\n" + list + "\n玩家说：「" + txt + "」\n规则：只有玩家这句话的意思和某个分支明显一致时才选它；如果说的是别的事、提了别的要求、或者看不出选了哪条，一律回 0。宁可回 0，也不要硬套。\n只回 JSON：{\"n\":分支编号或0}", { maxTokens: 40, modelTier: "default", timeout: 12000 });
       const n = r && Number(r.n); if (n >= 1 && n <= opts.length) return n - 1;
     } catch (_) {}
-    return guess(txt, opts);
+    return -1;
   }
   /* 剧情中途（stop line）：按回复判定分支，保留玩家原话 */
   let busyMap = false;
@@ -26072,11 +26075,21 @@ pico.instantiate_detection_memory = function(size)
       try { typing(true); } catch (_) {}
       const i = await classify(Lz(d.hint || d.q || ""), opts, txt);
       try { typing(false); } catch (_) {}
+      if (i < 0) { if (th.pk && th.pk.stop && typeof reply === "function") { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] free", e); } } return; }
       const o = opts[i]; if (!o || !th.pk.stop) return;
       pkSet(th, o.set);
       try { if (typeof dimApply === "function") { const P = typeof dimPairs === "function" ? dimPairs(th) : null; if (o.rd) dimApply(th, o.rd, txt); else if (P) { const m = P.find(p => p.main) || P[0]; dimApply(th, { [m.a + "|" + m.b]: dimRule(o) }, txt); } } } catch (_) {}
       try { if (o.love) th.cast.filter(c => c !== th.pk.as).forEach(c => loveWrite(th, c, o.love, "choice:love")); } catch (_) {}
-      stopResolve(th, o.then || []);
+      /* 2026-11-14 玩家：「答非所问」——剧本里这条分支预先写好的那句回应，和玩家实际说的话对不上。
+         ⇒ 分支照样判定、数值照样加减、后面的剧情照样走；但紧跟着的那几句「角色预写回应」不再照念，
+           改由角色针对你**实际说的话**现场回应，回完再接着播剧情。 */
+      const then0 = (o.then || []).slice(); let k0 = 0;
+      while (k0 < then0.length && Array.isArray(then0[k0]) && ch(then0[k0][0]) && ["say", "act", "think"].includes(then0[k0][1])) k0++;
+      const rest = then0.slice(k0);
+      const live = typeof reply === "function"; /* 这条分支没写角色回应时，也一定现场回应你，不能冷场 */
+      /* 先让角色回应完你这句（剧本此时还停在这个分支点上，不会往下跑），再放后面的剧情 */
+      if (live) { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] live reply", e); } }
+      if (th.pk && th.pk.stop) stopResolve(th, rest);
     } catch (e) { console.warn("[c150] stop", e); }
     finally { busyMap = false; }
   }
@@ -26115,7 +26128,9 @@ pico.instantiate_detection_memory = function(size)
     "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)>.chatt>button{display:none!important}" +
     "#s-chat #pkwrap.dock .pkpanel.stop:has(.chatt)>.chatt::after{content:\"直接打字回复，你说的话会决定剧情往哪走\"!important}" +
     ".ch148t{font-size:0!important}.ch148t::after{content:\"直接打字回复，你说的话会决定剧情往哪走\";font-size:11.5px}" +
-    "#s-chat.chs148 #sugg,#s-chat:has(#pkwrap .pkpanel.stop .chatt) #sugg{display:flex!important}";
+    "#s-chat.chs148 #sugg,#s-chat:has(#pkwrap .pkpanel.stop .chatt) #sugg{display:flex!important}" +
+    /* 「你的选择 · A …」卡片不再显示：剧情按你的原话走，不需要告诉你被归到了哪一条 */
+    "#s-chat .m-dec{display:none!important}";
   document.head.appendChild(st);
 })();
 
@@ -26748,7 +26763,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       if (!th || R.pending.get(th.id)) return;
       const q = Q(th); let m;
       while ((m = q.shift())) {
-        m._q158 = 1; m.at = Date.now(); am.call(window, th, m);
+        m._q158 = 1; m.at = Date.now(); am.call(window, th, m); try { if (window.__q159) __q159(m); } catch (_) {}
         if (readable(m) && curT === th.id) { R.wait(th, m, "script"); return; }
       }
     } catch (e) { console.warn("[q158] release", e); }
@@ -26792,6 +26807,238 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const auto = TAGS157.tagsOf;
   TAGS157.tagsOf = function (w) { return (w && MAP[w.id]) || auto.apply(this, arguments); };
   TAGS157.MAP = MAP;
+})();
+
+/* ===== 2026-11-14 · 「轮到你了 · 你是你 ＋ 问题」上一版没藏住，补上 =====
+   玩家（截图）：「不是说这个以后都不要了，所有剧本都不要，怎么还有？」
+   原因：剧情中途那块面板被另一条样式（底部停靠时）用更高优先级强制显示，盖过了「隐藏」那条。
+   ⇒ 用更高优先级把整块停靠区藏掉：只要它是「等你回话」的分支点（中途或章末），整块都不显示，直接自然对话。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent =
+    "html body #s-chat #pkwrap#pkwrap:has(.pkpanel.stop .chatt)," +
+    "html body #s-chat #pkwrap#pkwrap:has(.pkpanel.ch148)," +
+    "html body #s-chat #pkwrap#pkwrap .pkpanel.stop.stop:has(.chatt)," +
+    "html body #s-chat #pkwrap#pkwrap .pkpanel.ch148.ch148{display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 输入框上方的「✨ AI 帮我想」所有剧固定保留 =====
+   玩家（截图）：「这个位置的 AI 帮我想，每个剧本都是固定版式要保留，怎么没有了？」
+   原因：剧情分支点那块面板（现在已整块隐藏）里也带一个「AI 帮我想」，旧逻辑为了不重复，就把输入框上方这一个藏了；
+   另外分支点出现时联想行本身也被设成不显示。面板藏掉以后，两边都没了。
+   ⇒ 输入框上方这一行和「✨ AI 帮我想」永远显示（排第一个），不再因为分支点或别的面板而隐藏。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent =
+    "html body #s-chat #sugg{display:flex!important}" +
+    "html body #s-chat.ch147 #sugg .ai147,html body #s-chat #sugg .ai147{display:inline-flex!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 顶栏右上角的「⌄ / ⌃」收起箭头所有剧固定保留 =====
+   玩家（女帝截图）：「这个地方不是有个箭头把东西收起来的吗，怎么也没有了？」
+   原来箭头是插进顶栏「第一个 .row」里的；有的剧（女帝等）顶栏里还会多出别的 .row，箭头就被插到了看不见的地方，
+   或者顶栏重画后没有再补上。
+   ⇒ 箭头固定放在「有返回按钮的那一行」的最右边；顶栏任何时候被重画，都会自动补回来。 */
+(function () {
+  "use strict";
+  function ensure() {
+    try {
+      const scr = document.getElementById("s-chat"); if (!scr || scr.hidden) return;
+      if (typeof cleanOn === "function" && !cleanOn()) return;
+      const back = scr.querySelector(".chead [data-back]"); const row = back && back.parentElement; if (!row) return;
+      scr.querySelectorAll(".chead .hdx").forEach(b => { if (b.parentElement !== row) b.remove(); });
+      let b = row.querySelector(".hdx");
+      const open = typeof HD_OPEN !== "undefined" && HD_OPEN;
+      if (!b) { row.insertAdjacentHTML("beforeend", '<button class="ibtn hdx" data-hdx="1" aria-label="more">' + (open ? "⌃" : "⌄") + "</button>"); }
+      else if (row.lastElementChild !== b) row.appendChild(b);
+    } catch (_) {}
+  }
+  if (typeof renderChat === "function") { const rc = renderChat; renderChat = function () { const r = rc.apply(this, arguments); ensure(); return r; }; }
+  setInterval(ensure, 800);
+  const st = document.createElement("style");
+  st.textContent = "html body #s-chat .chead .hdx{display:grid!important;place-items:center;flex:none}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 「实时 AI 未连接 · 测试实时 AI」横条：展开顶栏时还会冒出来，补上 =====
+   顶栏展开（⌃）时，旧样式用更高优先级把它强制显示了。⇒ 用更高优先级彻底隐藏。 */
+(function () {
+  const st = document.createElement("style");
+  st.textContent = "html body #s-chat.clean.hdopen>.livebanner,html body #s-chat>.livebanner,html body .livebanner{display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · ①「✨ AI 帮我想」那一行真正固定显示 ② 台词没出来之前不先出声音 =====
+   玩家（截图）：「AI 帮我想应该一直固定在这里；另外现在台词还没有出来，声音已经出来了。」
+   ① 上一版的「固定显示」被另一条更高优先级的「分支点时隐藏联想行」盖过了 ⇒ 再提高优先级。
+   ② 「点一下才出下一条」让排队中的台词先不显示，但朗读是在台词写入时就开始的，于是先听到声音、后看到字。
+      ⇒ 台词还在排队时，它的朗读也一起排队；等你点一下、这句真正出现在屏幕上时才开始读。 */
+(function () {
+  "use strict";
+  const st = document.createElement("style");
+  st.textContent = "html body #s-chat#s-chat #sugg#sugg#sugg{display:flex!important}html body #s-chat#s-chat #sugg#sugg .ai147.ai147{display:inline-flex!important}";
+  document.head.appendChild(st);
+  if (typeof speak !== "function" || !window.READQ158) return;
+  const sp = speak;
+  speak = function (text, who) {
+    try {
+      const th = S.threads[curT], q = th && th._q158;
+      if (q && q.length) {
+        const m = q.find(x => x && !x._sp159 && x.who === who && String(x.txt || "").trim() === String(text || "").trim());
+        if (m) { m._sp159 = [].slice.call(arguments); return; }
+      }
+    } catch (_) {}
+    return sp.apply(this, arguments);
+  };
+  /* 放出排队的那句时，补上它的朗读 */
+  window.__q159 = function (m) { if (m && m._sp159) { const a = m._sp159; delete m._sp159; setTimeout(() => { try { sp.apply(window, a); } catch (_) {} }, 30); } };
+})();
+
+/* ===== 2026-11-14 · 回复自动一句一句播：不用再手动点 =====
+   玩家：「我打字后，对方还是得自动回复，现在是手动点一下，这个不行。自动出文字；如果多人，一句一句朗读——所有剧本都这样。」
+   ⇒ 每一句出现后自动往下走，不用点：
+      · 开了朗读：这一句读完，停顿约 0.5 秒，自动出下一句（下一句再读）——多人对话就是一人一句地轮流说；
+      · 没开朗读：按这句的长度留出阅读时间（约 1.2～5 秒），自动出下一句；
+      · 想快一点仍然可以点一下屏幕直接跳到下一句。中间插进来的旁白、提示也按同样节奏一条一条出。 */
+(function () {
+  "use strict";
+  const R = window.READING; if (!R || typeof R.wait !== "function") return;
+  const A = R.voice;
+  const w = R.wait;
+  R.wait = function (th, message) {
+    const p = w.apply(this, arguments);
+    try {
+      const entry = th && R.pending.get(th.id);
+      if (entry && !entry._auto160) {
+        entry._auto160 = 1;
+        const len = String((message && (message.txt || message.title)) || "").replace(/\s/g, "").length;
+        const readMs = Math.max(1200, Math.min(5000, 700 + len * 70));
+        const t0 = Date.now(); let quietSince = 0, spoke = false;
+        const tick = setInterval(() => {
+          try {
+            if (R.pending.get(th.id) !== entry) { clearInterval(tick); return; }
+            const busy = !!(A && A.busy && A.busy());
+            if (busy) { spoke = true; quietSince = 0; return; }
+            if (!quietSince) quietSince = Date.now();
+            const waitMs = spoke ? 500 : (Date.now() - t0 < 600 ? 1e9 : readMs); /* 给朗读 0.6 秒启动时间 */
+            if (!spoke && Date.now() - t0 >= 600 && Date.now() - t0 >= readMs) { clearInterval(tick); entry.finish(); return; }
+            if (spoke && Date.now() - quietSince >= waitMs) { clearInterval(tick); entry.finish(); }
+          } catch (_) { clearInterval(tick); }
+        }, 200);
+      }
+    } catch (_) {}
+    return p;
+  };
+  /* 自动播放时不再提示「轻点屏幕继续」 */
+  const st = document.createElement("style");
+  st.textContent = "#s-chat [data-tap-hint]:not(.voicing){display:none!important}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 换场景必须等你点「下一场 ›」（所有剧本） =====
+   玩家：「你每画一个场景，需要我确认点击你才能画下一个场景；现在背景图一直在换，我还没说话就切到餐厅了。」
+   以前的做法是在剧本播放器外面拦（暂停开关、预判下一条），有好几条路能绕过去，所以还是会自己切场景。
+   ⇒ 这次直接改剧本播放器本身：播到「换场景」这一条时，只要这一场已经演过内容，播放器就在这里原地等着，
+     不处理这一条（背景图、📍场景卡都不动），直到你点输入框上方的「下一场 ›」。等的时候你想聊多久都行。
+   另：角色回复是一句一句放出来的，以前「旁白补一段」那一步在台词还没放完时以为角色没回话，又整段重写了一遍（重复一大段）。
+     ⇒ 还在排队等放出的角色台词，也算角色已经回过话。 */
+(function () {
+  "use strict";
+  if (typeof packRun !== "function") return;
+  /* 根子在这里：以前你每自由说一句，AI 回复时会从剧本队列里「拿走」后面两条当提示（包括换场景那条），
+     所以场景会被吃掉、背景乱跳、分支点也会被跳过。⇒ 自由聊天不再动剧本队列；剧本只在你点「下一场 ›」后往下走。 */
+  try { if (typeof MIRU_TUNE !== "undefined") { MIRU_TUNE.chat = MIRU_TUNE.chat || {}; MIRU_TUNE.chat.scriptAsHint = false; } } catch (_) {}
+  const isScene = b => Array.isArray(b) && b[0] === "sys" && /^(scene|place|time)$/.test(String(b[1]));
+  const sig = b => { try { return JSON.stringify(b).slice(0, 240); } catch (_) { return ""; } };
+  const W = {};
+  const SC = window.SC162 = {
+    need(th, b) {
+      if (!th || !th.pk || !isScene(b)) return false;
+      if (th._pass162 && th._pass162 === sig(b)) { th._pass162 = null; th._ln162 = 0; th._held162 = 0; return false; }
+      if (!(th._ln162 > 0)) return false;
+      return true;
+    },
+    wait(th) {
+      th._held162 = 1; try { save(); } catch (_) {}
+      return new Promise(r => { (W[th.id] = W[th.id] || []).push(r); });
+    },
+    release(th) {
+      if (!th) return;
+      const q = th.pk && th.pk.q, b = q && q.find(isScene);
+      if (b) th._pass162 = sig(b);
+      th._held162 = 0; th._ln162 = 0; th._spoke162 = 0;
+      const ws = W[th.id] || []; delete W[th.id]; ws.forEach(r => { try { r(); } catch (_) {} });
+      try { save(); } catch (_) {}
+      setTimeout(() => { try { if (!PKPLAY[th.id] && th.pk && th.pk.q && th.pk.q.length) packRun(th); } catch (_) {} }, 300);
+    }
+  };
+  /* 播放器本身加一道「原地等」：放在处理指令之前 */
+  try {
+    const src = packRun.toString(), A = "if(pkDirective(th,b))continue;";
+    if (src.split(A).length === 2) {
+      const G = "if(window.SC162&&SC162.need(th,b)){await SC162.wait(th);if(dead())return;if(!th.pk.q||th.pk.q[0]!==b)continue;}";
+      const f = (0, eval)("(" + src.replace(A, G + A) + ")");
+      if (typeof f === "function") packRun = f;
+    } else console.warn("[scene162] anchor not found");
+  } catch (e) { console.warn("[scene162] patch", e); }
+  /* 这一场演了几句（剧本台词） */
+  if (typeof pkAppend === "function") {
+    const pa = pkAppend;
+    pkAppend = function (th) { const r = pa.apply(this, arguments); try { if (th && th.pk) th._ln162 = (th._ln162 || 0) + 1; } catch (_) {} return r; };
+  }
+  /* 停在换场前自由聊天：你开口不能把后面的剧本丢掉 */
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function () {
+      const th = S.threads[curT];
+      const held = !!(th && th._held162 && th.pk);
+      let saved = null, tune = null, prev;
+      try {
+        if (held && Array.isArray(th.pk.q)) {
+          saved = th.pk.q.slice();
+          if (typeof MIRU_TUNE !== "undefined") { MIRU_TUNE.chat = MIRU_TUNE.chat || {}; tune = MIRU_TUNE.chat; prev = tune.dropScriptOnInput; tune.dropScriptOnInput = false; }
+        }
+      } catch (_) {}
+      try { return ds.apply(this, arguments); }
+      finally {
+        try {
+          if (tune) { if (prev === undefined) delete tune.dropScriptOnInput; else tune.dropScriptOnInput = prev; }
+          if (saved && saved.length && (!th.pk.q || !th.pk.q.length)) { th.pk.q = saved; save(); }
+        } catch (_) {}
+      }
+    };
+  }
+  /* 角色台词还在排队等放出时，不算「角色没回话」，旁白不要再整段补写 */
+  if (typeof narrationAfter135 === "function") {
+    const na = narrationAfter135;
+    narrationAfter135 = function (th, opt) {
+      try {
+        if (opt && !opt.delivered && th && th._q158 && th._q158.some(m => m && ((m.k === "box" && m.say) || ((th.cast || []).includes(m.who) && (m.k === "say" || m.k === "act"))))) opt.delivered = true;
+      } catch (_) {}
+      return na.apply(this, arguments);
+    };
+  }
+  function bar(on) {
+    const chat = document.getElementById("s-chat"); if (!chat) return;
+    let el = chat.querySelector(".nx162");
+    if (!on) { if (el) el.remove(); return; }
+    if (el) return;
+    const zh = typeof CL !== "function" || CL() === "zh";
+    const host = chat.querySelector("#sugg") || chat.querySelector(".composer"); if (!host) return;
+    host.insertAdjacentHTML("beforebegin", '<div class="nx162"><span>' + (zh ? "想聊多久都行，聊完了点这里 → " : "Talk as long as you like, then → ") + '</span><button data-nx162="1">' + (zh ? "下一场 ›" : "Next scene ›") + "</button></div>");
+  }
+  setInterval(() => { try { const th = S.threads[curT]; bar(!!(th && th.pk && th._held162 && th.pk.q && th.pk.q.length)); } catch (_) {} }, 300);
+  document.addEventListener("click", e => {
+    if (!e.target.closest || !e.target.closest("[data-nx162]")) return;
+    e.preventDefault(); e.stopPropagation();
+    const th = S.threads[curT]; bar(false); SC.release(th);
+  }, true);
+  const st = document.createElement("style");
+  st.textContent = ".nx162{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
+    ".nx162 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
+  document.head.appendChild(st);
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
