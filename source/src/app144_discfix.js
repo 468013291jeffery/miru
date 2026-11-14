@@ -2599,7 +2599,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 #### B｜……
 # ·
 每章 2–3 场。章末顺序：关键事件 → # CHOICE｜本章结尾的关键问题 → #### A/B/C 意图 + 后果 + ⟦OPT⟧ → # · → 章尾钩子 1 句。
-第 2 章起，第一场前两句承接上一章（过了多久、人在哪），可用 ⟦IF|旗子⟧……⟦ELSE⟧……⟦/IF⟧ 按上一章选择写不同的一句。
+第 2 章起，第一场前两句承接上一章（过了多久、人在哪），不要用任何条件语法（不写 IF / ELSE）。
+⟦GOAL⟧ 下面必须紧跟 1–2 行 ⟦DONE⟧，每一章都要有，缺了剧本无法使用。
 硬要求：玩家看不到选项，不写「轮到你了」「请选择」；不替玩家决定感受；古代、奇幻等没有手机的世界不写电话短信；对方在场时不打电话；所有角色都是虚构成年人；不写露骨内容；只输出剧本正文，不要解释、不要代码块。`;
 
   let busy = false;
@@ -2613,17 +2614,33 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 
   function tidy(txt) {
     const L = String(txt).split("\n"), out = [], seenDone = new Set();
+    let skip = false;
     for (let l of L) {
+      if (/^\s*⟦IF\|[^⟧]*⟧\s*$/.test(l)) { skip = true; continue; }
+      if (/^\s*⟦ELSE⟧\s*$/.test(l)) { skip = false; continue; }
+      if (/^\s*⟦\/IF⟧\s*$/.test(l)) { skip = false; continue; }
+      if (skip) continue;
+      if (/⟦\s*\/?\s*(IF|ELSE)/.test(l)) {
+        const e = l.lastIndexOf("⟦ELSE⟧");
+        l = (e >= 0 ? l.slice(e + 6) : (/⟦IF\|/.test(l) ? "" : l)).replace(/⟦\s*\/?\s*(IF|ELSE)[^⟧]*⟧/g, "").trim();
+        if (!l) continue;
+      }
       if (/^\s*⟦\s*DONE/.test(l)) { l = l.replace(/[|｜]\s*推进句\s*[:：]\s*/, "|"); const v = (l.split(/[|｜]/)[2] || "").trim(); if (seenDone.has(v)) continue; seenDone.add(v); }
       if (/^\s*⟦OPT\|/.test(l)) l = l.replace(/;?\s*flag:[^;⟧]*/g, "").replace(/\|;/, "|");
       const bg = /^\s*⟦BG\|[^|⟧]+\|?([^⟧]*)⟧/.exec(l);
       if (bg) { let k = out.length - 1; while (k >= 0 && !out[k].trim()) k--; if (k < 0 || !/^\s*#\s*(SCENE|场景)/i.test(out[k])) out.push("# SCENE｜" + ((bg[1] || "").split(/[·•]/)[0].trim() || "场景")); }
       out.push(l);
     }
+    if (!seenDone.size) {
+      const qs = out.filter(x => /^\s*#\s*CHOICE\s*[｜|]/i.test(x)); const q = qs.length ? qs[qs.length - 1].replace(/^\s*#\s*CHOICE\s*[｜|]\s*/i, "").trim() : "";
+      const gi = out.findIndex(x => /^\s*⟦GOAL\|/.test(x)); const at = gi >= 0 ? gi + 1 : Math.max(1, out.findIndex(x => /^\s*#\s*SCENE/i.test(x)));
+      out.splice(at, 0, "⟦DONE|say|" + (q ? "对「" + q.replace(/[|⟧]/g, " ").slice(0, 40) + "」说出自己的决定" : "说出你对眼前这件事的决定") + "|做出决定|旁白：话一出口，局面就不一样了。⟧");
+    }
     return out.join("\n");
   }
   async function generate() {
-    const sh = shellOf(rx.wid), wid0 = sh.ld126, a = rxAuto();
+    const sh = shellOf(rx.wid), wid0 = sh.ld126, a = Object.assign({}, rxAuto());
+    if (zh()) a.title = String(a.title || "").replace(/\s*·\s*What if…?/i, " · 如果……").replace(/\s*·\s*Sequel/i, " · 后传").replace(/\s*·\s*AU/i, " · 平行世界");
     const cast = rx.cast.filter(id => ch(id));
     let meta = {}, script = "", assets = {};
     try { const r = await fetch("/api/works?id=" + encodeURIComponent(wid0)); if (r.ok) { const j = await r.json(); meta = (j.pack && j.pack.meta) || {}; script = (j.pack && j.pack.script) || ""; } } catch (_) {}
@@ -2661,7 +2678,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     const r = imBuild(doc, null); const nid = r && (r.wid || r); const w = nid && wd(nid);
     if (!w) throw new Error("build");
     const x0 = v => ({ en: v, zh: v });
-    Object.assign(w, { title: x0(a.title), hook: x0(a.hook), premise: x0(String(meta.premise || "").slice(0, 300) + " —— 二创 · " + how + (rx.twist ? "：" + rx.twist : "")), remixOf: wid0, remixType: rx.type, heat: rx.heat, official: false });
+    Object.assign(w, { title: x0(a.title), hook: x0(a.hook), premise: x0(String(meta.premise || "").replace(/[^。！？.!?]*\d+\s*章[^。！？]*[。！？]?/g, "").slice(0, 260) + " —— 二创 · " + how + (rx.twist ? "：" + rx.twist : "")), remixOf: wid0, remixType: rx.type, heat: rx.heat, official: false });
     /* 角色立绘和资料：沿用官方人物卡 */
     (w.cast || []).forEach(id => {
       const c = (S.mine.chars || {})[id]; if (!c) return;
