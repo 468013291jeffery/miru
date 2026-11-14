@@ -2143,7 +2143,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const T = (a, b) => (zh() ? a : b);
   const L1 = 4, L2 = 8, L3 = 14;
   const RX = /^\s*⟦\s*DONE\s*[|｜](.*?)⟧\s*$/;
-  const CHAP = /^\s*#\s*(CHAPTER\b|第\s*[0-9一二三四五六七八九十百零〇两]+\s*章)/i;
+  const CHAP = /^\s*#{1,3}\s*(CHAPTER\b|第\s*[0-9一二三四五六七八九十百零〇两]+\s*章)/i;
 
   function parseDone(body) {
     const a = String(body || "").split(/[|｜]/).map(s => s.trim());
