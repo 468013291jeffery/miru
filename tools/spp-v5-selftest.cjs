@@ -15,3 +15,8 @@ const guard=fs.readFileSync('source/src/app142_authored.js','utf8');vm.runInCont
 for(const text of ['⟦BG|bg_c01s01|Room⟧','```json','【角色任务】核验','当前任务：核验','{"avatar_slot":"c01"}'])assert(ctx.authoredBackstage142(text));
 assert(!ctx.authoredBackstage142('贝尔特把文件转向桌子的另一侧。'));
 console.log('SPP backstage guard: directives, code blocks, role instructions, task labels and JSON rejected; natural prose retained.');
+
+let post;const postctx={MSGKIND:{post:(name,fn)=>post=fn},introHTML98:()=>'<chapter />'};vm.createContext(postctx);vm.runInContext(source.split('\n').find(l=>l.startsWith('MSGKIND.post("app98_story.js"')),postctx);
+assert.equal(post('<video controls></video>',th.msgs[0],0,th),undefined);
+assert.equal(post('<old />',{intro98:'chapter:1'},0,th),'<chapter />');
+console.log('Opening trailer survives the final introduction post-renderer; chapter cards still use chapter rendering.');
