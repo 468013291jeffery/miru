@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="3f82216c9659 2026-11-14T03:03Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="87e2e01b5ba2 2026-11-14T06:41Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -7193,7 +7193,7 @@ function gCapsule(){const p=curPair(),free=(S.capDay!==today());
  gScreen(t("gc.capsule"),'<div class="cap-m"><div class="cap-dome" id="capDome">'+Array.from({length:14},(_,i)=>'<i style="--h:'+(i*37%360)+';left:'+(8+i*6%80)+'%;top:'+(20+i*13%60)+'%"></i>').join("")+'</div><div class="cap-base"><button class="cap-knob" data-capspin="1" id="capKnob">'+(free?t("gc.capFree"):"💎 1")+'</button><div class="cap-slot" id="capOut"></div></div></div><p class="xs faint" style="text-align:center">'+t("gc.capHow")+'</p><div id="gRes"></div>')}
 document.addEventListener("click",e=>{if(!e.target.closest("[data-capspin]"))return;const p=curPair();if(S.capDay===today()){if(!spend(1,"img"))return}else{S.capDay=today();save()}
  const d=$("#capDome"),k=$("#capKnob");d.classList.add("spin");k.disabled=true;k.style.transform="rotate(360deg)";
- setTimeout(()=>{d.classList.remove("spin");const who=Math.random()<.5?p[1]:p[2],c=ch(who),L=S.lang==="zh"?"zh":"en",kind=hash(who+Date.now())%3;
+ setTimeout(()=>{d.classList.remove("spin");const who=Math.random()<.5?p[1]:p[2],c=ch(who),L=S.lang==="zh"?"zh":"en",kind=Math.floor(Math.random()*3);
   const tells=(c.tells&&(c.tells[L]||c.tells.en))||[];const prize=kind===0?{i:"🔊",t:t("gc.capVoice"),x:Lz(c.pitch).replace(/[“”"]/g,"")}:kind===1?{i:"🤫",t:t("gc.capSecret"),x:tells[0]||Lz(c.twist)}:{i:"📸",t:t("gc.capPhoto"),img:artSrc(who)};
   $("#capOut").innerHTML='<div class="cap-ball" style="--h:'+(hash(who)%360)+'"></div>';
   setTimeout(()=>{gResult(p,3,(S.lang==="zh"?"扭蛋开出了 ":"Capsule: ")+c.n+" · "+prize.t,'<div class="cap-prize">'+(prize.img?'<img src="'+prize.img+'" alt="">':'')+'<b>'+prize.i+' '+esc(first(c.n))+' · '+prize.t+'</b>'+(prize.x?'<p>“'+esc(prize.x)+'”</p>':'')+'</div>');if(kind===0)speak(prize.x,who)},700)},1600)});
@@ -7363,7 +7363,7 @@ Object.assign(I18N.en,{
 "gc.result":"RESULT","gc.movesStory":"this carries into their story","gc.more":"More games","gc.toStory":"Back to their story","gc.start":"Start",
 "gc.phDate":"Saturday, 2:17 AM","gc.phHint":"Passcode hint: {c}","gc.phMsgs":"Messages","gc.phLast":"About today… I'm sorry.","gc.phCoach":"Practice 6am. Don't be late.",
 "gc.phDrafts":"Drafts","gc.phTo":"To {n} (unsent)","gc.phDeleted":"Recently deleted","gc.phPhoto":"1 photo · restore","gc.phTyping":"is typing…","gc.phRestored":"Restored",
-"gc.rushHow":"Letters fall for 20 seconds. Tap the ones signed by {a} — the rest are decoys meant for {b}.","gc.capFree":"FREE","gc.capHow":"First spin every day is free · then 1 💎",
+"gc.rushHow":"Letters fall for 20 seconds. Tap the ones signed by {a} — the rest are decoys meant for {b}.","gc.capFree":"FREE","gc.capHow":"First spin every day is free · then 1 💎. Odds per spin: voice line, secret or photo 1/3 each; either character 1/2. Repeats are possible. Rewards have no cash value.",
 "gc.capVoice":"voice line","gc.capSecret":"secret","gc.capPhoto":"photo","gc.remHow":"Each row is the same moment from {a} and {b}. Tap the rows where their stories don't match.",
 "rel.s0":"Strangers","rel.s1":"Rivals","rel.s2":"Something's there","rel.s3":"Almost","rel.s4":"Together","rel.s5":"Endgame",
 "call.in":"{n} is calling…","call.inS":"It's late. He wouldn't call if it didn't matter.","call.pick":"📞 Pick up","call.mute":"Mute","call.end":"End","call.ended":"Call with {n} ended",
@@ -7381,7 +7381,7 @@ Object.assign(I18N.zh,{
 "gc.result":"结果","gc.movesStory":"会带进他们的剧情里","gc.more":"再玩一个","gc.toStory":"回到他们的故事","gc.start":"开始",
 "gc.phDate":"星期六 凌晨 2:17","gc.phHint":"密码提示：{c}","gc.phMsgs":"信息","gc.phLast":"今天的事……对不起。","gc.phCoach":"明早 6 点训练，别迟到。",
 "gc.phDrafts":"草稿箱","gc.phTo":"发给 {n}（未发送）","gc.phDeleted":"最近删除","gc.phPhoto":"1 张照片 · 恢复","gc.phTyping":"正在输入…","gc.phRestored":"已恢复",
-"gc.rushHow":"信会掉落 20 秒。只点 {a} 署名的那些——其他都是写给 {b} 的干扰信。","gc.capFree":"免费","gc.capHow":"每天第一次免费 · 之后 1 💎",
+"gc.rushHow":"信会掉落 20 秒。只点 {a} 署名的那些——其他都是写给 {b} 的干扰信。","gc.capFree":"免费","gc.capHow":"每天第一次免费 · 之后 1 💎。每次概率：语音、秘密、照片各 1/3；两位角色各 1/2。可能重复获得，奖励不可兑换现金。",
 "gc.capVoice":"语音","gc.capSecret":"秘密","gc.capPhoto":"照片","gc.remHow":"每一行是 {a} 和 {b} 对同一时刻的说法，点出对不上的那几行。",
 "rel.s0":"陌生人","rel.s1":"死对头","rel.s2":"有点什么","rel.s3":"差一点","rel.s4":"在一起","rel.s5":"锁死",
 "call.in":"{n} 来电…","call.inS":"这么晚了。不是要紧的事，他不会打来。","call.pick":"📞 接听","call.mute":"静音","call.end":"挂断","call.ended":"与 {n} 的通话已结束",

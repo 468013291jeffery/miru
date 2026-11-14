@@ -1,5 +1,5 @@
 # MIRU 首次提交材料（草案）
-尚未上传、尚未提交审核。以下资料应在真实候选包与线上环境验证后填写，不能用开发截图或测试通过代替实际结果。
+最终候选 1.0（Build 5）已通过 Xcode 上传，尚未提交审核。以下资料应在真实候选包与线上环境验证后填写，不能用开发截图或测试通过代替实际结果。
 
 ## 已确认身份
 - Bundle：com.miru.plus.app；Team：H79A5X8935。
@@ -15,7 +15,7 @@ Keywords: romance,choices,fiction,characters,roleplay,drama,chat,creative,commun
 Support URL: https://miru.plus/contact.html
 Privacy URL: https://miru.plus/privacy.html
 
-以上字段已在 Connect 保存。专用审核账号已填写私密登录字段；密码仅存本机受限文件，不进入本文。英文描述和审核备注也已保存，最终文字以 Connect 草稿为准。年龄分级、版权、隐私标签、截图、构建选择与实际 Sandbox 内购仍未完成。
+以上字段已在 Connect 保存。专用审核账号已填写私密登录字段；密码仅存本机受限文件，不进入本文。英文描述和审核备注也已保存，最终文字以 Connect 草稿为准。年龄 18+ 与 17 类隐私数据声明已保存并发布；版权、规定设备截图、构建选择与实际 Sandbox 内购仍需完成。Build 5 增加购买前扭蛋概率说明，原功能、免费次数与价格保留。
 
 Description:
 Enter interactive stories, meet original characters, and choose how your journey unfolds.
