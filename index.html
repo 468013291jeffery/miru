@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="4a679a6bd794 2026-11-14T05:11Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="a762178ed4d9 2026-11-14T10:25Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -5219,7 +5219,7 @@ function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)retur
   fxRaf=requestAnimationFrame(step)};step()}
 function who(m,th){const c=ch(m.who);return c?first(c.n):""}
 function msgHTML(m,i,th){
- if(m.k==='storyTrailer' && /^\/(?!\/)/.test(m.src||''))return '<div class="m-card story-trailer"><h4>'+esc(m.title||'')+'</h4><video controls playsinline preload="metadata" style="display:block;width:100%;max-height:70vh" src="'+esc(m.src)+'" poster="'+esc(m.poster||'')+'"></video></div>';
+ if(m.k==='storyTrailer' && /^\/(?!\/)/.test(m.src||''))return '<div class="m-card story-trailer"><h4>'+esc(m.title||'')+'</h4><video controls playsinline preload="metadata" style="display:block;width:100%;max-height:70vh" src="'+esc(m.src)+'" poster="'+esc(m.poster||'')+'"></video><button class="btn btn-p btn-block" data-story-trailer="'+esc(m.src)+'">▶ '+(CL()==='zh'?'播放预告片':'Play trailer')+'</button></div>';
  if(m&&m.who==="me"&&["say","act","think"].includes(m.k))m=Object.assign({},m,{txt:playerMark146(m.txt,m.k)});
  // Retired reply-counter portrait cards, including ones unlocked in old saves.
  if(m&&m.k==="pic")return "";
@@ -20333,6 +20333,17 @@ function authoredDecline98(th,act){
 
 /* Register authored North Light cues before the score engine normalizes mood ids. */
 for(let i=1;i<=8;i++){const cue='m_north_light_'+String(i).padStart(2,'0');if(window.__SC)window.__SC.SC_M[cue]=Object.assign({},window.__SC.SC_M.warm);}
+
+// Playback lives outside the transcript so dialogue refreshes cannot reset the video.
+document.addEventListener('click', function(e) {
+  const button=e.target.closest('[data-story-trailer]'); if(!button)return;
+  e.preventDefault();e.stopImmediatePropagation();const src=button.dataset.storyTrailer;if(!/^\/(?!\/)/.test(src))return;
+  const overlay=document.createElement('div');overlay.className='story-trailer-player';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label',L98('开场预告片','Opening trailer'));
+  overlay.style.cssText='position:fixed;inset:0;z-index:99999;background:#000e;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML='<video controls playsinline autoplay style="max-width:100%;max-height:90vh" src="'+esc(src)+'"></video><button aria-label="'+L98('关闭预告片','Close trailer')+'" style="position:absolute;top:16px;right:16px;padding:12px;background:#222;color:#fff;border:1px solid #777;border-radius:50%">✕</button>';
+  const video=overlay.querySelector('video'),close=()=>{video.pause();overlay.remove();};overlay.querySelector('button').addEventListener('click',close);overlay.addEventListener('click',ev=>{if(ev.target===overlay)close();});
+  document.body.appendChild(overlay);video.play().catch(()=>{});
+},true);
 
 /* ================= v8.5 · 2026-10-27 用户反馈第二轮 =================
    1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」。
