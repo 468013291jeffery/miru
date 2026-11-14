@@ -1147,3 +1147,14 @@ function authoredDecline98(th,act){
 
 /* Register authored North Light cues before the score engine normalizes mood ids. */
 for(let i=1;i<=8;i++){const cue='m_north_light_'+String(i).padStart(2,'0');if(window.__SC)window.__SC.SC_M[cue]=Object.assign({},window.__SC.SC_M.warm);}
+
+// Playback lives outside the transcript so dialogue refreshes cannot reset the video.
+document.addEventListener('click', function(e) {
+  const button=e.target.closest('[data-story-trailer]'); if(!button)return;
+  e.preventDefault();e.stopImmediatePropagation();const src=button.dataset.storyTrailer;if(!/^\/(?!\/)/.test(src))return;
+  const overlay=document.createElement('div');overlay.className='story-trailer-player';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label',L98('开场预告片','Opening trailer'));
+  overlay.style.cssText='position:fixed;inset:0;z-index:99999;background:#000e;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML='<video controls playsinline autoplay style="max-width:100%;max-height:90vh" src="'+esc(src)+'"></video><button aria-label="'+L98('关闭预告片','Close trailer')+'" style="position:absolute;top:16px;right:16px;padding:12px;background:#222;color:#fff;border:1px solid #777;border-radius:50%">✕</button>';
+  const video=overlay.querySelector('video'),close=()=>{video.pause();overlay.remove();};overlay.querySelector('button').addEventListener('click',close);overlay.addEventListener('click',ev=>{if(ev.target===overlay)close();});
+  document.body.appendChild(overlay);video.play().catch(()=>{});
+},true);

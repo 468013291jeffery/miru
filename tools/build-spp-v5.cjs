@@ -12,7 +12,7 @@ b.contentRevision='spp-v5-20261114';b.openingMedia={slot:'opening_video'};
 b.player.age=26;b.dialoguePolicy={schema:1,plainLanguage:true,noBackstage:true,maxChars:180};
 b.dialogueStyle='只输出人物真实说出的话和可感知动作。设定、程序字段、图片描述、评分规则、导演任务、提示词均是内部资料，禁止朗读或变为旁白。一次只回应当前输入，不替玩家发言或决定。';
 const mapping=JSON.parse(fs.readFileSync(path.join(base,'asset_mapping_v5.json'))).slots;
-mapping.cover='assets/cover/cover.jpg';mapping.opening_video='谁是s++预告片.mp4';mapping.home_video=mapping.vid_open=mapping.opening_video;
+mapping.cover='assets/cover/cover-969a4c400ecd.png';mapping.opening_video='谁是s++预告片.mp4';mapping.home_video=mapping.vid_open=mapping.opening_video;
 const registry=JSON.parse(fs.readFileSync(path.join(base,'character_registry_v5.json')));
 for(const c of registry){assert.equal(b.cast.find(x=>x.key===c.key).short.zh,c.name);mapping['char_'+c.key]=c.avatar_path;mapping['char_'+c.name]=c.avatar_path;}
 // Package maps the added prologue and the new Emeka chapter explicitly.

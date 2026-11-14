@@ -936,6 +936,10 @@ pico.instantiate_detection_memory = function(size)
   }
   function keyOf(src) { return src.length > 300 ? src.length + ":" + src.slice(0, 120) + src.slice(-120) : src; }
   async function findFace(img) {
+    // SPP supporting cast uses transparent full-body art with different head heights.
+    // Frame the existing faces in avatar UI; keep the full illustration unchanged.
+    const url = img.currentSrc || img.src || "", W0 = img.naturalWidth, H0 = img.naturalHeight;
+    if (W0 && H0 && /char_(?:desmond|berthe)__default\.png(?:[?#]|$)/.test(url)) return {x:0.51,y:url.includes('char_berthe__')?0.238:0.147,s:0.19,fill:0.72,W:W0,H:H0};
     const k = keyOf(img.currentSrc || img.src); if (memo.has(k)) return memo.get(k);
     const cl = await loadCascade(); if (!cl) return null;
     let res = null;
@@ -965,16 +969,16 @@ pico.instantiate_detection_memory = function(size)
       else { img.style.objectPosition = "50% 12%"; return; }
     }
     const W = f.W, H = f.H, faceW = f.s * W;
-    let k = Math.max(0.42 * D / faceW, D / Math.min(W, H));
+    let k = Math.max((f.fill || 0.42) * D / faceW, D / Math.min(W, H));
     k = Math.min(k, 6 * D / Math.min(W, H));
     const dw = W * k, dh = H * k;
     let left = D / 2 - f.x * W * k, top = D * 0.46 - f.y * H * k;
     left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
-    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
+    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", maxHeight: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
   /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
-  const SEL = ".ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img";
-  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
+  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"]';
+  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "maxHeight", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";
     const par = img.parentElement;

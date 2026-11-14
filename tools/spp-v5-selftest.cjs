@@ -8,7 +8,7 @@ ctx.OFF94.assets.spp={};const noMedia={wid:'spp',b98:{ch:1,sc:0},msgs:[]};ctx.in
 for(const c of b.cast)assert(map['char_'+c.key]);
 assert.equal(b.chapters[3].scenes[0].present[0],'c03');assert(map.bg_c04s01.includes('bg_emeka_morning'));
 assert.equal(b.chapters[0].scenes[0].ref_lines.length,0);assert(!/本章安排|程序字段|角色任务/.test(th.msgs[1].txt));
-const chat=fs.readFileSync('source/src/app3_chat.js','utf8');const render=chat.slice(chat.indexOf(' if(m.k===\'storyTrailer\''),chat.indexOf(' if(m&&m.who==='));const rc={m:th.msgs[0],esc:s=>String(s).replace(/"/g,'&quot;')};vm.createContext(rc);vm.runInContext('function render(){'+render+'};this.html=render()',rc);assert(rc.html.includes('<video controls playsinline'));assert(!rc.html.includes('autoplay'));
+const chat=fs.readFileSync('source/src/app3_chat.js','utf8');const render=chat.slice(chat.indexOf(' if(m.k===\'storyTrailer\''),chat.indexOf(' if(m&&m.who==='));const rc={m:th.msgs[0],CL:()=> 'zh',esc:s=>String(s).replace(/"/g,'&quot;')};vm.createContext(rc);vm.runInContext('function render(){'+render+'};this.html=render()',rc);assert(rc.html.includes('<video controls playsinline'));assert(!rc.html.includes('autoplay'));assert(rc.html.includes('data-story-trailer')); 
 console.log('SPP v5: 19 chapters, 118 scenes, correct cast/avatar IDs, Emeka scene mapping, backstage separation, opening trailer before background, one-time playback card and missing-media fallback passed.');
 
 const guard=fs.readFileSync('source/src/app142_authored.js','utf8');vm.runInContext(guard.slice(guard.indexOf('function authoredBackstage142'),guard.indexOf('async function authoredReply142')),ctx);

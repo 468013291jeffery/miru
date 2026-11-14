@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="45bb3e81369f 2026-11-14T10:43Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="2dd95cf5ea3d 2026-11-14T11:57Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -5219,7 +5219,7 @@ function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)retur
   fxRaf=requestAnimationFrame(step)};step()}
 function who(m,th){const c=ch(m.who);return c?first(c.n):""}
 function msgHTML(m,i,th){
- if(m.k==='storyTrailer' && /^\/(?!\/)/.test(m.src||''))return '<div class="m-card story-trailer"><h4>'+esc(m.title||'')+'</h4><video controls playsinline preload="metadata" style="display:block;width:100%;max-height:70vh" src="'+esc(m.src)+'" poster="'+esc(m.poster||'')+'"></video></div>';
+ if(m.k==='storyTrailer' && /^\/(?!\/)/.test(m.src||''))return '<div class="m-card story-trailer"><h4>'+esc(m.title||'')+'</h4><video controls playsinline preload="metadata" style="display:block;width:100%;max-height:70vh" src="'+esc(m.src)+'" poster="'+esc(m.poster||'')+'"></video><button class="btn btn-p btn-block" data-story-trailer="'+esc(m.src)+'">▶ '+(CL()==='zh'?'播放预告片':'Play trailer')+'</button></div>';
  if(m&&m.who==="me"&&["say","act","think"].includes(m.k))m=Object.assign({},m,{txt:playerMark146(m.txt,m.k)});
  // Retired reply-counter portrait cards, including ones unlocked in old saves.
  if(m&&m.k==="pic")return "";
@@ -20336,6 +20336,17 @@ function authoredDecline98(th,act){
 /* Register authored North Light cues before the score engine normalizes mood ids. */
 for(let i=1;i<=8;i++){const cue='m_north_light_'+String(i).padStart(2,'0');if(window.__SC)window.__SC.SC_M[cue]=Object.assign({},window.__SC.SC_M.warm);}
 
+// Playback lives outside the transcript so dialogue refreshes cannot reset the video.
+document.addEventListener('click', function(e) {
+  const button=e.target.closest('[data-story-trailer]'); if(!button)return;
+  e.preventDefault();e.stopImmediatePropagation();const src=button.dataset.storyTrailer;if(!/^\/(?!\/)/.test(src))return;
+  const overlay=document.createElement('div');overlay.className='story-trailer-player';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label',L98('开场预告片','Opening trailer'));
+  overlay.style.cssText='position:fixed;inset:0;z-index:99999;background:#000e;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML='<video controls playsinline autoplay style="max-width:100%;max-height:90vh" src="'+esc(src)+'"></video><button aria-label="'+L98('关闭预告片','Close trailer')+'" style="position:absolute;top:16px;right:16px;padding:12px;background:#222;color:#fff;border:1px solid #777;border-radius:50%">✕</button>';
+  const video=overlay.querySelector('video'),close=()=>{video.pause();overlay.remove();};overlay.querySelector('button').addEventListener('click',close);overlay.addEventListener('click',ev=>{if(ev.target===overlay)close();});
+  document.body.appendChild(overlay);video.play().catch(()=>{});
+},true);
+
 /* ================= v8.5 · 2026-10-27 用户反馈第二轮 =================
    1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」。
    3 特效：只在「进入新场景」时按场景描写切换，剧情事件（标题/提示卡）不再临时触发天气；切换时淡出淡入，不再突然出现。
@@ -25874,6 +25885,10 @@ pico.instantiate_detection_memory = function(size)
   }
   function keyOf(src) { return src.length > 300 ? src.length + ":" + src.slice(0, 120) + src.slice(-120) : src; }
   async function findFace(img) {
+    // SPP supporting cast uses transparent full-body art with different head heights.
+    // Frame the existing faces in avatar UI; keep the full illustration unchanged.
+    const url = img.currentSrc || img.src || "", W0 = img.naturalWidth, H0 = img.naturalHeight;
+    if (W0 && H0 && /char_(?:desmond|berthe)__default\.png(?:[?#]|$)/.test(url)) return {x:0.51,y:url.includes('char_berthe__')?0.238:0.147,s:0.19,fill:0.72,W:W0,H:H0};
     const k = keyOf(img.currentSrc || img.src); if (memo.has(k)) return memo.get(k);
     const cl = await loadCascade(); if (!cl) return null;
     let res = null;
@@ -25903,16 +25918,16 @@ pico.instantiate_detection_memory = function(size)
       else { img.style.objectPosition = "50% 12%"; return; }
     }
     const W = f.W, H = f.H, faceW = f.s * W;
-    let k = Math.max(0.42 * D / faceW, D / Math.min(W, H));
+    let k = Math.max((f.fill || 0.42) * D / faceW, D / Math.min(W, H));
     k = Math.min(k, 6 * D / Math.min(W, H));
     const dw = W * k, dh = H * k;
     let left = D / 2 - f.x * W * k, top = D * 0.46 - f.y * H * k;
     left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
-    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
+    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", maxHeight: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
   /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
-  const SEL = ".ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img";
-  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
+  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"]';
+  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "maxHeight", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";
     const par = img.parentElement;
