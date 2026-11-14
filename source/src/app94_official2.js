@@ -133,7 +133,7 @@ function off94Parse(next, text) {
     for (let j = c.items.length - 1; j >= 0; j--) { const y = c.items[j]; if (y && y.choice && y.free94) { c.items.push(["n", "act", "……"]); break; } if (y && y.choice) break; if (Array.isArray(y) && y[0] !== "sys") break; }
   });
   /* cast: everyone the sheet names comes first, in order */
-  if (chars.length) { const names = chars.map(a => a[0]), spp = text.includes('⟦SET|spp_v4⟧'); doc.cast = [...new Set((spp ? names : names.filter(n => doc.sp[n])).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)))].slice(0, spp ? 24 : 12); }
+  if (chars.length) { const names = chars.map(a => a[0]), spp = text.includes('⟦SET|spp_v4⟧') || text.includes('⟦SET|cast_all⟧'); doc.cast = [...new Set((spp ? names : names.filter(n => doc.sp[n])).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)))].slice(0, spp ? 24 : 12); }
   return doc;
 }
 /* ---- build: names → ids, asset slots → urls, cast sheet → characters ---- */

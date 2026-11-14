@@ -977,7 +977,7 @@ pico.instantiate_detection_memory = function(size)
     Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", maxHeight: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
   /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
-  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"]';
+  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"], .av img[src*="/svf-v4/characters/"]';
   function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "maxHeight", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";

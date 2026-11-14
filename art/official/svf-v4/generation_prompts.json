@@ -1,0 +1,930 @@
+{
+  "assets_v2": {
+    "char_dorian_default": {
+      "id": "char_dorian/default",
+      "ref": "exec-7597cdbb-43af-4d21-82dd-3fe54aa9fdc1.png",
+      "extra": "",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. ",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-624da435-bb70-4309-9d33-d5ea014cb803.png"
+    },
+    "char_cora_gala": {
+      "id": "char_cora/gala",
+      "ref": "exec-1f3c3f5f-4230-4aa2-80f3-350c7a0c0fec.png",
+      "extra": "Keep exactly this couture design and identity, but change sapphire dress and shoes to BLACK as the script requires. Keep crystals and diamonds.",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. Keep exactly this couture design and identity, but change sapphire dress and shoes to BLACK as the script requires. Keep crystals and diamonds.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-7c49812e-410b-4701-8305-7cf60a536b7f.png",
+      "correction": "Edit first image ONLY add Cora's father's silver wristwatch, matching watch on second reference, to her anatomical LEFT wrist (hand resting on hip). Preserve EXACT black dress design, face, pose, all jewelry, shoes. Keep genuine transparent alpha background."
+    },
+    "hl_23": {
+      "id": "hl_23",
+      "scene": "Exactly seven distinct adult male band members standing on front steps of Spanish revival house in morning, Cora foreground with suitcase, black touring passenger van waiting on gravel, bittersweet exchanged looks. Premium travel wardrobe matching references, elegant architectural perspective.",
+      "prompt": "Photorealistic cinematic visual novel ensemble illustration portrait9:16. Two reference boards: first left-to-right Cora24, Rhys27, Dorian29, Kai26; second Noah25, Matteo24, Sasha24, Jonah23. Preserve exact distinct faces and ethnicities and carefully designed wardrobe. Exactly ONE woman and SEVEN men, no duplicates. Rhys left wrist red cord; Noah RIGHT knee support; Dorian fine glasses; Kai silver chain; Jonah earbud. All fully dressed adults, natural hands, rich fabric. Set in Los Angeles Los Feliz Casa Alta 1928 Spanish revival villa except television scene. Exactly seven distinct adult male band members standing on front steps of Spanish revival house in morning, Cora foreground with suitcase, black touring passenger van waiting on gravel, bittersweet exchanged looks. Premium travel wardrobe matching references, elegant architectural perspective.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-d86e8b90-0598-4a01-93e5-75d0c0deb6d6.png"
+    },
+    "hl_12": {
+      "id": "hl_12",
+      "ref": "exec-898ffa70-998e-489b-8164-958cfec59b4b.png",
+      "scene": "Rhys alone in artificial rain on flooded urban street film set, head down in exhausted concentration, crew silhouettes and rain rigs behind, navy cotton shirt and dark trousers, fully dressed, cinematic blue rain and amber lamps, no romance action.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Rhys alone in artificial rain on flooded urban street film set, head down in exhausted concentration, crew silhouettes and rain rigs behind, navy cotton shirt and dark trousers, fully dressed, cinematic blue rain and amber lamps, no romance action.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-4de0afbb-3476-4551-b4ac-84dc6d2e3edb.png"
+    },
+    "hl_20": {
+      "id": "hl_20",
+      "ref": "exec-898ffa70-998e-489b-8164-958cfec59b4b.png",
+      "scene": "Quiet fully clothed bedtime conversation, Cora24 and Rhys27 seated in TWO separate chairs beside bedroom window, both in opaque long sleeve pajamas, pool blue through sheer curtain and one warm lamp, thoughtful exchanged gaze, hands holding separate cups of tea. No bed occupied, peaceful affectionate late night mood. Portrait waist up.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Quiet fully clothed bedtime conversation, Cora24 and Rhys27 seated in TWO separate chairs beside bedroom window, both in opaque long sleeve pajamas, pool blue through sheer curtain and one warm lamp, thoughtful exchanged gaze, hands holding separate cups of tea. No bed occupied, peaceful affectionate late night mood. Portrait waist up.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-bf454597-4b94-48c7-91dc-50901457451d.png"
+    },
+    "char_cora_default": {
+      "id": "char_cora/default",
+      "ref": "exec-7a9d005f-784a-4f49-9c38-407210c59c23.png",
+      "extra": "",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. ",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-56d395b3-b212-4d3a-b536-68242d75ad88.png"
+    },
+    "char_sasha_default": {
+      "id": "char_sasha/default",
+      "ref": "exec-463eb58c-9304-4674-ab43-dfe05a9c776c.png",
+      "extra": "",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. ",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-91b6c960-f146-439d-b4d8-ef350dbfac79.png"
+    },
+    "hl_04": {
+      "id": "hl_04",
+      "m": "rhys",
+      "scene": "Cora and Rhys seated together on basement recording studio floor listening to music on headphones, warm fascinated exchanged gaze, hands resting on their own knees. Cora gray sculpted blazer ivory silk blouse graphite skirt; Rhys black silk shirt. One amber lamp and dark vocal booth. Close eye level composition.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Cora and Rhys seated together on basement recording studio floor listening to music on headphones, warm fascinated exchanged gaze, hands resting on their own knees. Cora gray sculpted blazer ivory silk blouse graphite skirt; Rhys black silk shirt. One amber lamp and dark vocal booth. Close eye level composition.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-a872b675-babd-436e-8ece-913d4548c016.png"
+    },
+    "char_matteo_default": {
+      "id": "char_matteo/default",
+      "ref": "exec-61164fc6-ac7b-44f7-aef7-4a9543d1a4be.png",
+      "extra": "",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. ",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-9682615c-034a-44e5-a9d7-c8f23f227049.png"
+    },
+    "hl_19": {
+      "id": "hl_19",
+      "prompt": "Cinematic concert backstage photograph, vertical portrait9:16. Cora Vane24 adult music manager with dark hair in neat bun, in fully covering elegant gray tailored TROUSER SUIT over ivory high neck silk blouse, diamond geometric earrings, silver wristwatch. She stands alone in dark stage wings holding professional headset, camera from her side showing calm determined face. Huge packed Los Angeles arena beyond as abstract crowd lights, warm beam from stage and cool blue ambient, realistic professional event scene. No text.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-f97d7a5f-de55-437c-944e-8a2f2f8242d8.png"
+    },
+    "hl_11": {
+      "id": "hl_11",
+      "m": "sasha",
+      "scene": "Cora and Sasha stand side by side on midnight hotel balcony, hands on railing, turning to exchange warm affectionate glance. Black satin sculptural cocktail dress crystal waist and his black jacket over her shoulders. His fitted black formal shirt and trousers. Waist up composition, cool city bokeh and warm gala doorway.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Cora and Sasha stand side by side on midnight hotel balcony, hands on railing, turning to exchange warm affectionate glance. Black satin sculptural cocktail dress crystal waist and his black jacket over her shoulders. His fitted black formal shirt and trousers. Waist up composition, cool city bokeh and warm gala doorway.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-10b736d8-d01e-48fb-b8db-259a8ab8b25b.png",
+      "correction": "Continuity edit of FIRST image. Preserve exact two faces, positions, expressions, suit, black jacket over her shoulders, hands and balcony. Replace woman's dress with EXACT black sculptural folded asymmetric off shoulder neckline and panel bodice and crystal hip drape shown on SECOND reference, as visible beneath jacket. Add silver wristwatch on her anatomical LEFT wrist. Replace skyline with Los Angeles distant downtown and low hillside lights, no New York towers. Maintain cinematic lighting."
+    },
+    "char_kai_default": {
+      "id": "char_kai/default",
+      "ref": "exec-9f0788ea-a5e0-4fc2-bfd9-50be36da1c3f.png",
+      "extra": "",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. ",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-72d570c0-322b-4fc9-ae62-bb1afceb9946.png"
+    },
+    "hl_15": {
+      "id": "hl_15",
+      "ref": "exec-881b6ddf-cda2-45b3-8a02-664f4c93baee.png",
+      "scene": "Cora crouched beside Noah sitting on road case backstage, holding his hand in reassurance, his anatomical RIGHT knee brace visible, concrete arena corridor, quiet caring faces. Fully dressed, he ivory rib tank black trousers and jacket, she elegant gray work suit with skirt, amber and blue practical lights.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Cora crouched beside Noah sitting on road case backstage, holding his hand in reassurance, his anatomical RIGHT knee brace visible, concrete arena corridor, quiet caring faces. Fully dressed, he ivory rib tank black trousers and jacket, she elegant gray work suit with skirt, amber and blue practical lights.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-f31c2575-da2f-4ee7-9261-342e684de64b.png",
+      "correction": "Correct ONLY the knee support continuity. Move entire black brace from the man's left knee on RIGHT side of image to his anatomical RIGHT knee on LEFT side of image. His left knee must have plain black trousers. Keep exact faces, clothes, woman's hand holding his hand, backstage cases, composition and lighting."
+    },
+    "hl_07": {
+      "id": "hl_07",
+      "m": "kai",
+      "scene": "Cora and Kai sitting on rooftop low wall at night, turning toward each other with affectionate warm gaze, hands on wall, city lights behind. Her sculpted gray jacket over ivory blouse and graphite skirt, his black leather jacket scoop black tank silver chain. Romantic movie still.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Cora and Kai sitting on rooftop low wall at night, turning toward each other with affectionate warm gaze, hands on wall, city lights behind. Her sculpted gray jacket over ivory blouse and graphite skirt, his black leather jacket scoop black tank silver chain. Romantic movie still.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-8c597562-3929-4667-8e53-c292e42e4037.png",
+      "correction": "Change ONLY background city to Los Angeles skyline viewed from Los Feliz hillside at night, broad low city lights with a small cluster of downtown skyscrapers in distance and a few palms, NOT New York, no Empire State or Chrysler building, no river. Preserve exact two people, faces, poses, clothing, rooftop wall, framing and lighting."
+    },
+    "hl_13": {
+      "id": "hl_13",
+      "ref": "exec-7597cdbb-43af-4d21-82dd-3fe54aa9fdc1.png",
+      "scene": "Cora and Dorian standing beside mixing desk in dark basement studio, one printed page fallen on floor, single amber desk lamp behind. They face one another calmly at arm length, thoughtful serious exchanged gaze. She in sculpted gray blazer silk blouse graphite skirt, he in midnight navy silk rolled sleeve shirt charcoal waistcoat fine glasses, pencil marks on fingers.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Cora and Dorian standing beside mixing desk in dark basement studio, one printed page fallen on floor, single amber desk lamp behind. They face one another calmly at arm length, thoughtful serious exchanged gaze. She in sculpted gray blazer silk blouse graphite skirt, he in midnight navy silk rolled sleeve shirt charcoal waistcoat fine glasses, pencil marks on fingers.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-ecd6ed57-d81f-4b96-b911-8f0c3ae0befb.png"
+    },
+    "char_matteo_natural": {
+      "id": "char_matteo/natural",
+      "ref": "exec-61164fc6-ac7b-44f7-aef7-4a9543d1a4be.png",
+      "extra": "Remove stage makeup, natural face, quiet shy gaze. Change to luxurious loose cream cable knit cardigan over opaque white cotton shirt, charcoal fitted trousers and leather loafers. Preserve exact face and hairstyle.",
+      "prompt": "Production visual novel full body SINGLE adult character sprite, preserve exact identity from reference, full head to shoes within margins. Genuinely TRANSPARENT alpha background, no scenery, no floor, no backdrop, crisp clean hair edges, photorealistic natural skin premium textile. Remove stage makeup, natural face, quiet shy gaze. Change to luxurious loose cream cable knit cardigan over opaque white cotton shirt, charcoal fitted trousers and leather loafers. Preserve exact face and hairstyle.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-8f726574-6119-4eda-b242-b3cd4b5f43a6.png"
+    },
+    "hl_09": {
+      "id": "hl_09",
+      "scene": "Exactly seven distinct adult men and Cora crowded around Spanish villa kitchen table with a badly cooked pot and flour on counter, warm late afternoon daylight, lively natural smiles and playful household interaction, premium casual outfits adapted from references, contemporary film ensemble.",
+      "prompt": "Photorealistic cinematic visual novel ensemble illustration portrait9:16. Two reference boards: first left-to-right Cora24, Rhys27, Dorian29, Kai26; second Noah25, Matteo24, Sasha24, Jonah23. Preserve exact distinct faces and ethnicities and carefully designed wardrobe. Exactly ONE woman and SEVEN men, no duplicates. Rhys left wrist red cord; Noah RIGHT knee support; Dorian fine glasses; Kai silver chain; Jonah earbud. All fully dressed adults, natural hands, rich fabric. Set in Los Angeles Los Feliz Casa Alta 1928 Spanish revival villa except television scene. Exactly seven distinct adult men and Cora crowded around Spanish villa kitchen table with a badly cooked pot and flour on counter, warm late afternoon daylight, lively natural smiles and playful household interaction, premium casual outfits adapted from references, contemporary film ensemble.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-10c34c9f-9601-40ed-ba07-c1e7d18c4b34.png"
+    },
+    "hl_18": {
+      "id": "hl_18",
+      "scene": "Cora standing across long table from her father Alastair Vane age61 silver hair impeccable dark suit, closed folder between them, Beverly Hills through window, charged business confrontation conveyed by posture. She in sculpted gray tailoring silk blouse graphite skirt and father's watch, confident straight stance. Father seen three quarter back. Daylight.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Cora standing across long table from her father Alastair Vane age61 silver hair impeccable dark suit, closed folder between them, Beverly Hills through window, charged business confrontation conveyed by posture. She in sculpted gray tailoring silk blouse graphite skirt and father's watch, confident straight stance. Father seen three quarter back. Daylight.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-f08bbfce-0320-4664-b4a5-cd9089e5c0dd.png"
+    },
+    "hl_03": {
+      "id": "hl_03",
+      "m": "rhys",
+      "scene": "Cora and Rhys sitting side by side at illuminated swimming pool edge at night, bare feet in water, warm exchanged glance, hillside city bokeh. Cora wears refined ivory satin blouse and tasteful tailored shorts; Rhys black silk shirt and trousers rolled at ankles. Hands resting on pool coping, red cord on his LEFT wrist.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Cora and Rhys sitting side by side at illuminated swimming pool edge at night, bare feet in water, warm exchanged glance, hillside city bokeh. Cora wears refined ivory satin blouse and tasteful tailored shorts; Rhys black silk shirt and trousers rolled at ankles. Hands resting on pool coping, red cord on his LEFT wrist.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-fc2afbd5-e12b-418a-b10a-e8c5b72dd7c9.png"
+    },
+    "char_rhys_casual": {
+      "id": "char_rhys/casual",
+      "ref": "exec-898ffa70-998e-489b-8164-958cfec59b4b.png",
+      "extra": "Change costume to luxury fitted charcoal zip hoodie with sculptural shoulder seams, black rib tank, tailored dark joggers and boots, red cord anatomical LEFT wrist.",
+      "prompt": "Production visual novel full body SINGLE adult character sprite, preserve exact identity from reference, full head to shoes within margins. Genuinely TRANSPARENT alpha background, no scenery, no floor, no backdrop, crisp clean hair edges, photorealistic natural skin premium textile. Change costume to luxury fitted charcoal zip hoodie with sculptural shoulder seams, black rib tank, tailored dark joggers and boots, red cord anatomical LEFT wrist.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-e4bcd653-372b-4110-9869-6b0828e7d8d2.png"
+    },
+    "hl_08": {
+      "id": "hl_08",
+      "scene": "Exactly seven distinct adult male pop band members seated along large ivory curved TV interview couch under bright warm studio lamps, each looking a different direction; Cora standing at side wings watching. Clearly TV interview set, camera equipment at edge, stylish coordinated stage wardrobe.",
+      "prompt": "Photorealistic cinematic visual novel ensemble illustration portrait9:16. Two reference boards: first left-to-right Cora24, Rhys27, Dorian29, Kai26; second Noah25, Matteo24, Sasha24, Jonah23. Preserve exact distinct faces and ethnicities and carefully designed wardrobe. Exactly ONE woman and SEVEN men, no duplicates. Rhys left wrist red cord; Noah RIGHT knee support; Dorian fine glasses; Kai silver chain; Jonah earbud. All fully dressed adults, natural hands, rich fabric. Set in Los Angeles Los Feliz Casa Alta 1928 Spanish revival villa except television scene. Exactly seven distinct adult male pop band members seated along large ivory curved TV interview couch under bright warm studio lamps, each looking a different direction; Cora standing at side wings watching. Clearly TV interview set, camera equipment at edge, stylish coordinated stage wardrobe.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-230e6ce2-03f8-4bd3-a2e9-945bbd782328.png"
+    },
+    "cover": {
+      "id": "cover",
+      "scene": "Spanish revival villa luxurious living room in late afternoon, Cora standing central foreground holding folder, exactly seven distinct male pop band members arranged naturally around room looking toward her, romantic ensemble drama cover. Strong composition, confident beautiful woman central, full ensemble readable, upper15% dark calm negative space for title added later. No written title.",
+      "prompt": "Photorealistic cinematic visual novel ensemble illustration portrait9:16. Two reference boards: first left-to-right Cora24, Rhys27, Dorian29, Kai26; second Noah25, Matteo24, Sasha24, Jonah23. Preserve exact distinct faces and ethnicities and carefully designed wardrobe. Exactly ONE woman and SEVEN men, no duplicates. Rhys left wrist red cord; Noah RIGHT knee support; Dorian fine glasses; Kai silver chain; Jonah earbud. All fully dressed adults, natural hands, rich fabric. Set in Los Angeles Los Feliz Casa Alta 1928 Spanish revival villa except television scene. Spanish revival villa luxurious living room in late afternoon, Cora standing central foreground holding folder, exactly seven distinct male pop band members arranged naturally around room looking toward her, romantic ensemble drama cover. Strong composition, confident beautiful woman central, full ensemble readable, upper15% dark calm negative space for title added later. No written title.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-f0c6c653-0b5e-4a40-a01f-94a0433ea593.png"
+    },
+    "hl_17": {
+      "id": "hl_17",
+      "scene": "Exactly seven distinct adult men and Cora around Spanish villa kitchen island at seven in morning, one steaming pot of porridge, quiet caring teamwork. Cora in ivory silk opaque full length pajamas and watch, men in premium casual opaque knit tops and trousers, gentle morning sun.",
+      "prompt": "Photorealistic cinematic visual novel ensemble illustration portrait9:16. Two reference boards: first left-to-right Cora24, Rhys27, Dorian29, Kai26; second Noah25, Matteo24, Sasha24, Jonah23. Preserve exact distinct faces and ethnicities and carefully designed wardrobe. Exactly ONE woman and SEVEN men, no duplicates. Rhys left wrist red cord; Noah RIGHT knee support; Dorian fine glasses; Kai silver chain; Jonah earbud. All fully dressed adults, natural hands, rich fabric. Set in Los Angeles Los Feliz Casa Alta 1928 Spanish revival villa except television scene. Exactly seven distinct adult men and Cora around Spanish villa kitchen island at seven in morning, one steaming pot of porridge, quiet caring teamwork. Cora in ivory silk opaque full length pajamas and watch, men in premium casual opaque knit tops and trousers, gentle morning sun.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-4eee8070-d168-4f50-ba5d-b2db19926525.png"
+    },
+    "char_jonah_default": {
+      "id": "char_jonah/default",
+      "ref": "exec-eae0c968-0802-4c00-9c8a-4d3b9b3565d2.png",
+      "extra": "",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. ",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-9390cb3e-6239-446d-b4a6-8c7bb6e6d678.png"
+    },
+    "hl_14": {
+      "id": "hl_14",
+      "scene": "Cora alone at kitchen table at night, laptop and exactly three mobile phones, typing public statement, focused determined face, dark Spanish villa behind. Sculpted gray tailored blazer ivory silk blouse graphite skirt, father's wristwatch, warm task light and cool empty house.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Cora alone at kitchen table at night, laptop and exactly three mobile phones, typing public statement, focused determined face, dark Spanish villa behind. Sculpted gray tailored blazer ivory silk blouse graphite skirt, father's wristwatch, warm task light and cool empty house.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-120fef36-8acd-408e-b3ac-637e7d6d0237.png"
+    },
+    "char_rhys_rain": {
+      "id": "char_rhys/rain",
+      "ref": "exec-898ffa70-998e-489b-8164-958cfec59b4b.png",
+      "extra": "Change costume to opaque navy cotton shirt lightly rain damp with realistic water beads and dark trousers and boots, red cord LEFT wrist. Fully covered torso, no transparent fabric.",
+      "prompt": "Production visual novel full body SINGLE adult character sprite, preserve exact identity from reference, full head to shoes within margins. Genuinely TRANSPARENT alpha background, no scenery, no floor, no backdrop, crisp clean hair edges, photorealistic natural skin premium textile. Change costume to opaque navy cotton shirt lightly rain damp with realistic water beads and dark trousers and boots, red cord LEFT wrist. Fully covered torso, no transparent fabric.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-5e00b13c-52ac-456f-ab72-0d6bfc52e8cf.png"
+    },
+    "char_cora_home": {
+      "id": "char_cora/home",
+      "ref": "exec-7a9d005f-784a-4f49-9c38-407210c59c23.png",
+      "extra": "Keep exact face, change outfit to ivory silk long sleeve pajama blouse and matching full length pants, soft slippers, hair loose, father's wristwatch. Quiet tired expression.",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. Keep exact face, change outfit to ivory silk long sleeve pajama blouse and matching full length pants, soft slippers, hair loose, father's wristwatch. Quiet tired expression.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-64ece534-bff7-4f6f-b1d6-cf8755896ec2.png"
+    },
+    "hl_01": {
+      "id": "hl_01",
+      "scene": "Cora in doorway holding folder, exactly seven distinct adult male band members in elegant casually messy Spanish revival villa living room turning to look at her, late afternoon sun through arched window, first meeting, wide environmental portrait.",
+      "prompt": "Photorealistic cinematic visual novel ensemble illustration portrait9:16. Two reference boards: first left-to-right Cora24, Rhys27, Dorian29, Kai26; second Noah25, Matteo24, Sasha24, Jonah23. Preserve exact distinct faces and ethnicities and carefully designed wardrobe. Exactly ONE woman and SEVEN men, no duplicates. Rhys left wrist red cord; Noah RIGHT knee support; Dorian fine glasses; Kai silver chain; Jonah earbud. All fully dressed adults, natural hands, rich fabric. Set in Los Angeles Los Feliz Casa Alta 1928 Spanish revival villa except television scene. Cora in doorway holding folder, exactly seven distinct adult male band members in elegant casually messy Spanish revival villa living room turning to look at her, late afternoon sun through arched window, first meeting, wide environmental portrait.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-b09fc104-a411-41d1-a162-ca5a8c5e4cfb.png"
+    },
+    "char_rhys_default": {
+      "id": "char_rhys/default",
+      "ref": "exec-898ffa70-998e-489b-8164-958cfec59b4b.png",
+      "extra": "Red cord only on anatomical LEFT wrist.",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. Red cord only on anatomical LEFT wrist.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-65ef69a7-f9d8-4b0f-a31d-580b19f3ce3a.png"
+    },
+    "char_noah_default": {
+      "id": "char_noah/default",
+      "ref": "exec-881b6ddf-cda2-45b3-8a02-664f4c93baee.png",
+      "extra": "IMPORTANT move knee brace to his anatomical RIGHT knee (viewer left), remove brace from left.",
+      "prompt": "Create production full body visual novel character sprite from reference. Preserve exact face, age, ethnicity, hair and garment design unless change stated. SINGLE person head to shoes with 8% margin, neutral poised stance, no scene. Truly TRANSPARENT background alpha, NO dark backdrop, no floor, no glow, no shadow outside figure. Photorealistic high detail, fine natural skin, clean hair edges. IMPORTANT move knee brace to his anatomical RIGHT knee (viewer left), remove brace from left.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-4aee01ee-e2f8-4a34-8a18-5693c712bd35.png"
+    },
+    "hl_06": {
+      "id": "hl_06",
+      "m": "matteo",
+      "solo": true,
+      "scene": "Matteo alone on white photography cyclorama with studio lights lowered, shoulders finally relaxed, gentle vulnerable expression looking off frame. Preserve champagne silk shirt and embroidered black velvet jacket from reference, luxurious textures, clean fashion editorial.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Matteo alone on white photography cyclorama with studio lights lowered, shoulders finally relaxed, gentle vulnerable expression looking off frame. Preserve champagne silk shirt and embroidered black velvet jacket from reference, luxurious textures, clean fashion editorial.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-70553e25-2eda-41fd-baad-282685e80d60.png"
+    },
+    "hl_10": {
+      "id": "hl_10",
+      "m": "sasha",
+      "scene": "Cora and Sasha together on glamorous red carpet with photographer flashes and photographers behind barriers. She wears BLACK version of sculptural sapphire couture cocktail dress shown in third reference, diamond earrings, black heels. He wears elegant black dinner suit and black shirt. His hand lightly at back of her jacket, poised protective stance, mutual glance.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Cora and Sasha together on glamorous red carpet with photographer flashes and photographers behind barriers. She wears BLACK version of sculptural sapphire couture cocktail dress shown in third reference, diamond earrings, black heels. He wears elegant black dinner suit and black shirt. His hand lightly at back of her jacket, poised protective stance, mutual glance.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-1733c957-e54a-42fc-b553-53309ca8e297.png"
+    },
+    "hl_05": {
+      "id": "hl_05",
+      "m": "noah",
+      "scene": "Noah seated on bench in mirrored dance studio, adjusting brace on anatomical RIGHT knee, Cora crouched in front of bench offering water bottle, attentive exchanged gaze. Sporty premium knit and dance trousers for him, gray tailored jacket ivory blouse skirt for her, daylight.",
+      "prompt": "Create cinematic photorealistic visual novel CG, portrait9:16. References are identity and wardrobe anchors, preserve faces and ethnicities. All characters adults24-29 and fully dressed. Luxurious realistic materials, cinematic shallow depth, expressive gaze, no text, no collage. Noah seated on bench in mirrored dance studio, adjusting brace on anatomical RIGHT knee, Cora crouched in front of bench offering water bottle, attentive exchanged gaze. Sporty premium knit and dance trousers for him, gray tailored jacket ivory blouse skirt for her, daylight.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-86006409-bdbb-47e8-bee9-23dd60e18721.png"
+    },
+    "char_sasha_suit": {
+      "id": "char_sasha/suit",
+      "ref": "exec-463eb58c-9304-4674-ab43-dfe05a9c776c.png",
+      "extra": "Change wardrobe to perfectly fitted black dinner suit with satin lapels, black open collar opaque shirt, polished black shoes, no tie. Preserve hand scar and exact face.",
+      "prompt": "Production visual novel full body SINGLE adult character sprite, preserve exact identity from reference, full head to shoes within margins. Genuinely TRANSPARENT alpha background, no scenery, no floor, no backdrop, crisp clean hair edges, photorealistic natural skin premium textile. Change wardrobe to perfectly fitted black dinner suit with satin lapels, black open collar opaque shirt, polished black shoes, no tie. Preserve hand scar and exact face.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-2ddb92cc-2ab7-4251-b80e-95a7f8eb4ef3.png"
+    },
+    "hl_16": {
+      "id": "hl_16",
+      "ref": "exec-898ffa70-998e-489b-8164-958cfec59b4b.png",
+      "scene": "Quiet caring bedside scene: Cora asleep with fever, fully clothed in opaque ivory silk pajamas under neatly arranged blanket to chest, Rhys sitting on chair BESIDE bed holding her hand gently, fully dressed black shirt and trousers red cord on left wrist. No romance, caring worried expression, low bedside lamp, curtain slightly open pool blue beyond.",
+      "prompt": "Photorealistic cinematic visual novel illustration, portrait9:16, preserve identity from references, realistic skin textile and architecture, all adults, layered warm/cool film lighting, no text or collage. Quiet caring bedside scene: Cora asleep with fever, fully clothed in opaque ivory silk pajamas under neatly arranged blanket to chest, Rhys sitting on chair BESIDE bed holding her hand gently, fully dressed black shirt and trousers red cord on left wrist. No romance, caring worried expression, low bedside lamp, curtain slightly open pool blue beyond.",
+      "source": "/workspace/scratch/7a41034a438c/generated_images/exec-e89cf869-f56f-4e7a-84d1-a68ea4b2b24b.png"
+    }
+  },
+  "backgrounds_v1": [
+    {
+      "source_group": "front_afternoon",
+      "slots": [
+        "bg_c01s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only to preserve architecture/material palette, REMOVE ALL humans and reframe as wider empty environment. 1928 Spanish hillside villa Casa Alta, white cracked stucco red tile roof, arched timber door, terracotta steps, bougainvillea, gravel driveway EXACTLY five ordinary band cars parked haphazardly, Los Feliz16:40 late sun."
+    },
+    {
+      "source_group": "front_night",
+      "slots": [
+        "bg_c04s06"
+      ],
+      "base_group": "front_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this night villa driveway: replace the FRONTMOST SUV on the RIGHT with a clearly recognizable MODERN BLACK long-wheelbase TOURING PASSENGER VAN with large side windows, parked with lights off. Other cars can remain. Preserve exact house, doorway, steps, plants, camera viewpoint and dark night lighting. No people, no camper van, no vintage van. The returning band van must visibly be in driveway."
+    },
+    {
+      "source_group": "front_morning",
+      "slots": [
+        "bg_c18s02",
+        "bg_c18s03",
+        "bg_c18s04"
+      ],
+      "base_group": "front_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME Casa Alta front steps and driveway morning09:30, ONE waiting black car with rear passenger door open and ONE closed suitcase at foot of steps, include gravel foreground."
+    },
+    {
+      "source_group": "living_afternoon",
+      "slots": [
+        "bg_c01s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only to preserve architecture/material palette, REMOVE ALL humans and reframe as wider empty environment. Casa Alta living room, exposed dark timber beams cream plaster walls arched windows, worn patterned couch with small tear, guitars keyboard, open tiled floor, warm17:10 light."
+    },
+    {
+      "source_group": "living_morning",
+      "slots": [
+        "bg_c05s06",
+        "bg_c10s06",
+        "bg_c17s02",
+        "bg_c17s03"
+      ],
+      "base_group": "living_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME Casa Alta living room at07:00 morning, pale window sun, worn torn couch guitars keyboard, cereal bowls on coffee table, quiet lived-in atmosphere."
+    },
+    {
+      "source_group": "living_stream",
+      "slots": [
+        "bg_c11s01",
+        "bg_c11s02"
+      ],
+      "base_group": "living_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME living room set up for19:00 livestream, ring light camera on tripod aimed at couch, phone on table, evening outside."
+    },
+    {
+      "source_group": "living_afterstream",
+      "slots": [
+        "bg_c11s03"
+      ],
+      "base_group": "living_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME living room immediately after stream ends19:40, camera lies face down on couch, ring light off, abandoned cables, tense stillness."
+    },
+    {
+      "source_group": "living_party",
+      "slots": [
+        "bg_c16s01"
+      ],
+      "base_group": "living_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME living room23:30, furniture pushed to walls to clear floor, speaker on floor, empty bottle and glasses on side table, warm practical lamps."
+    },
+    {
+      "source_group": "living_stay",
+      "slots": [
+        "bg_c18s05"
+      ],
+      "base_group": "living_afternoon",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME living room20:40, furniture back in normal positions, signed contract on coffee table, welcoming warm lamps, dark windows."
+    },
+    {
+      "source_group": "hall_evening",
+      "slots": [
+        "bg_c01s03"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Casa Alta long terracotta-tile upstairs hallway, EXACTLY SEVEN closed wooden bedroom doors with small handwritten name cards Rhys Dorian Kai Noah Matteo Sasha Jonah; one DO NOT KNOCK paper,18:20 twilight."
+    },
+    {
+      "source_group": "hall_night",
+      "slots": [
+        "bg_c06s06",
+        "bg_c07s06",
+        "bg_c17s05"
+      ],
+      "base_group": "hall_evening",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. SAME seven-door Spanish villa corridor at01:20, warm sconces sparse, blue darkness at far window, doors closed, open center foreground."
+    },
+    {
+      "source_group": "hall_ajar",
+      "slots": [
+        "bg_c16s03"
+      ],
+      "base_group": "hall_evening",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. SAME seven-door corridor01:50, exactly THREE doors open a crack with strips of warm light, other four closed, quiet night."
+    },
+    {
+      "source_group": "break_rule",
+      "slots": [
+        "bg_c01s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Production correction: REMOVE ONLY the spurious handwritten time '19:40' beneath the seven names on the door, restoring plain cream door paint. Keep all seven names and exact rule writing unchanged, preserve room couch fridge lighting composition. No new text or symbols. Preserve appropriate vehicle/room identity from reference."
+    },
+    {
+      "source_group": "pool_lit",
+      "slots": [
+        "bg_c01s05",
+        "bg_c07s05",
+        "bg_c16s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only to preserve architecture/material palette, REMOVE ALL humans and reframe as wider empty environment. Villa rectangular pool at night with soft blue underwater lights, stone coping wide enough for sitting, Spanish house lit behind, Los Angeles hillside city lights, glass of water on edge."
+    },
+    {
+      "source_group": "pool_day",
+      "slots": [
+        "bg_c07s02"
+      ],
+      "base_group": "pool_lit",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EDIT the supplied empty scene: preserve EXACT room/house/pool architecture, doors, window positions, wall materials, main furniture style and viewpoint; change ONLY time/light and specified temporary props or furniture rearrangement. SAME rectangular villa pool11:20 bright daylight, clear blue water diving board lounger and closed folder, Spanish stucco home and palms, no people."
+    },
+    {
+      "source_group": "pool_black",
+      "slots": [
+        "bg_c11s05",
+        "bg_c11s06"
+      ],
+      "base_group": "pool_lit",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. SAME pool01:00 with ALL underwater lights OFF, dark almost black water, faint moon reflections distant hillside lights, subdued house windows."
+    },
+    {
+      "source_group": "bedroom_arrival",
+      "slots": [
+        "bg_c01s06"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only to preserve architecture/material palette, REMOVE ALL humans and reframe as wider empty environment. Cora small villa bedroom01:20: bed white linen, window facing pool, small timber desk with thick32page schedule and desk lamp, ONE unopened suitcase by wall, modest lived-in room."
+    },
+    {
+      "source_group": "bedroom_dress",
+      "slots": [
+        "bg_c08s01"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME Cora bedroom19:40, garment bag open on bed with ONE long black evening dress, pair of black heels beside bed, small mirror, warm lamp."
+    },
+    {
+      "source_group": "bedroom_sickday",
+      "slots": [
+        "bg_c13s01",
+        "bg_c13s02",
+        "bg_c13s03"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME Cora bedroom daylight behind half-closed curtains, rumpled linen bed EMPTY, glass of water phone, chair pulled close bedside, bedroom door open toward hallway, quiet recovery setting."
+    },
+    {
+      "source_group": "bedroom_sicknight",
+      "slots": [
+        "bg_c13s04",
+        "bg_c13s05"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME bedroom23:40 bedside amber lamp low, rumpled empty bed, chair beside bed, closed laptop on floor, curtain cracked with cool night beyond."
+    },
+    {
+      "source_group": "bedroom_notes",
+      "slots": [
+        "bg_c16s04"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME bedroom02:20, one warm lamp, EXACTLY FOUR small paper notes on floor just inside closed door, linen bed and window facing pool."
+    },
+    {
+      "source_group": "bedroom_dark",
+      "slots": [
+        "bg_c16s05"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME empty bedroom03:10 bedside lamp OFF, door closed, drawn curtain with ONLY thin sliver of blue pool light, slightly rumpled sheets, no people."
+    },
+    {
+      "source_group": "bedroom_dawn",
+      "slots": [
+        "bg_c16s06",
+        "bg_c18s01"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME bedroom07:00 warm morning sun curtains open pool visible, rumpled bed with ONE note on pillow, water glass white pill on bedside stand, ONE closed suitcase near door."
+    },
+    {
+      "source_group": "bedroom_farewell",
+      "slots": [
+        "bg_c17s06"
+      ],
+      "base_group": "bedroom_arrival",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit this SAME EMPTY bedroom. Preserve exact bed position, bedside table, desk, window/door geometry, pool view, fabrics and camera viewpoint. Change ONLY time/lighting, curtain state and temporary props specified. IMPORTANT absolutely NO person on bed, no sleeping body shapes under covers. Do not print time stamps anywhere. SAME bedroom00:40, ONE open half-packed suitcase on floor, unoccupied bed one bedside lamp, doorway visible, poignant restrained night."
+    },
+    {
+      "source_group": "studio_morning",
+      "slots": [
+        "bg_c02s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only to preserve architecture/material palette, REMOVE ALL humans and reframe as wider empty environment. Villa basement recording studio07:00: black acoustic foam, one glass vocal booth, large mixing desk with tiny LED lights, two chairs waveform monitor, cold coffee, neutral studio practical light."
+    },
+    {
+      "source_group": "studio_booth",
+      "slots": [
+        "bg_c02s02"
+      ],
+      "base_group": "studio_morning",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. NEW CAMERA POSITION: camera must now be INSIDE the SMALL VOCAL RECORDING BOOTH, NOT in the control room. Main foreground is a large condenser microphone and round pop filter with hanging headphones, small music stand, black acoustic foam walls around camera. Look THROUGH the booth glass window to the SAME mixing desk and empty chairs in the control room BEYOND GLASS. Do NOT put mixing console or office chairs in foreground. Preserve same studio equipment/materials from reference but reverse viewing direction. Day recording session, neutral warm practical illumination, no people."
+    },
+    {
+      "source_group": "studio_control",
+      "slots": [
+        "bg_c02s03"
+      ],
+      "base_group": "studio_morning",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. Same recording studio control-room angle12:20, mixing desk and two empty chairs in foreground, waveform screen, glass vocal booth beyond, equipment LEDs."
+    },
+    {
+      "source_group": "studio_night",
+      "slots": [
+        "bg_c02s05",
+        "bg_c10s01"
+      ],
+      "base_group": "studio_morning",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. SAME basement studio23:00 only desk lamp and equipment LEDs on, vocal booth DARK, two chairs and clear floor area against wall."
+    },
+    {
+      "source_group": "studio_dawn",
+      "slots": [
+        "bg_c05s05"
+      ],
+      "base_group": "studio_morning",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. SAME studio05:40 dawn after work, laptop open mixing waveform, couch empty with folded blanket, subdued practical light, booth dark."
+    },
+    {
+      "source_group": "studio_floor",
+      "slots": [
+        "bg_c10s02",
+        "bg_c10s03",
+        "bg_c10s04"
+      ],
+      "base_group": "studio_morning",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied EMPTY environment as strict architecture/layout reference. Preserve materials, doors, furniture identity and spatial continuity. Change camera ONLY if specified, and change light/temporary props as described. Same studio01:10-03:00 lower camera facing mixing console, ONE printout on floor and phone on console, single lamp behind, empty floor against desk."
+    },
+    {
+      "source_group": "basement_stair",
+      "slots": [
+        "bg_c02s04",
+        "bg_c10s05"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Narrow concrete stairwell connecting basement studio and villa kitchen, one bare warm bulb, worn steps simple metal rail, no windows, quiet dim light."
+    },
+    {
+      "source_group": "kitchen_tea",
+      "slots": [
+        "bg_c02s06"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Reference is architecture/style only; remove ALL people, preserve room materials and arrangement, use a wider environment-only view. Casa Alta Spanish kitchen01:40, timber island blue-white tile backsplash cream plaster, ONE pendant on over island, kettle and TWO mugs, dark windows."
+    },
+    {
+      "source_group": "kitchen_write",
+      "slots": [
+        "bg_c05s01"
+      ],
+      "base_group": "kitchen_tea",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME kitchen02:10, laptop notebook pencil on island, one overhead lamp, rest of home dark, no cups or extra props."
+    },
+    {
+      "source_group": "kitchen_morning",
+      "slots": [
+        "bg_c07s01",
+        "bg_c13s06"
+      ],
+      "base_group": "kitchen_tea",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME kitchen07:30 morning sunlight, open schedule on counter ONE pot of porridge on island, small bowls, warm ordinary domestic calm."
+    },
+    {
+      "source_group": "kitchen_chaos",
+      "slots": [
+        "bg_c07s03"
+      ],
+      "base_group": "kitchen_tea",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME kitchen15:40, flour scattered over island, one pot of badly cooked pasta, spoons and imperfect cleanup, sunlit windows, no smoke cloud."
+    },
+    {
+      "source_group": "kitchen_crisis",
+      "slots": [
+        "bg_c11s04"
+      ],
+      "base_group": "kitchen_tea",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME kitchen21:40, laptop and EXACTLY THREE phones on kitchen table, printed press statement, warm pendant contrasting cold screens, rest dark."
+    },
+    {
+      "source_group": "kitchen_handover",
+      "slots": [
+        "bg_c17s01"
+      ],
+      "base_group": "kitchen_tea",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME kitchen09:20 clear morning sun, ONE laptop and ONE printed letter with pen on table, quiet tidy space, no porridge pot."
+    },
+    {
+      "source_group": "dance_dawn",
+      "slots": [
+        "bg_c03s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Reference is architecture/style only; remove ALL people, preserve room materials and arrangement, use a wider environment-only view. Garage converted to dance studio06:40, one mirrored wall ballet barre sprung timber floor high garage windows, early cool light, empty center."
+    },
+    {
+      "source_group": "dance_day",
+      "slots": [
+        "bg_c03s02"
+      ],
+      "base_group": "dance_dawn",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME mirrored garage studio09:20, clear warm daylight, mirror and sprung floor, barre and simple bench against wall, empty dance area."
+    },
+    {
+      "source_group": "dance_bench",
+      "slots": [
+        "bg_c03s03"
+      ],
+      "base_group": "dance_dawn",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME garage studio12:40, closer framing on EMPTY wooden bench beside mirror, black knee brace and small gym bag, noon light."
+    },
+    {
+      "source_group": "dance_night",
+      "slots": [
+        "bg_c03s04",
+        "bg_c03s05"
+      ],
+      "base_group": "dance_dawn",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME garage dance studio at night, main lights off ONLY narrow strip beside mirror, dark sprung floor and empty bench, no silhouettes."
+    },
+    {
+      "source_group": "dance_afternoon",
+      "slots": [
+        "bg_c17s04"
+      ],
+      "base_group": "dance_dawn",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME dance studio15:40 afternoon window light, folded towel and blue gel ice pack beside EMPTY floor position near mirror, quiet stillness."
+    },
+    {
+      "source_group": "garage_stair",
+      "slots": [
+        "bg_c03s06"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Narrow WOODEN stairway from converted garage to Spanish villa kitchen01:50, plate covered with aluminum foil on a step, one lamp, not concrete."
+    },
+    {
+      "source_group": "photo_bright",
+      "slots": [
+        "bg_c04s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Professional photo studio08:00 white seamless cyclorama floor curving into wall, softboxes on stands camera stand and clothes rack to side, no people, bright work lights."
+    },
+    {
+      "source_group": "photo_low",
+      "slots": [
+        "bg_c04s03"
+      ],
+      "base_group": "photo_bright",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Edit supplied environment while preserving EXACT architecture, floor, windows, fixed furniture, material palette and spatial layout. Only lighting, camera if specified, and temporary props change. SAME white cyclorama15:30, lights lowered for intimate natural portrait setup, empty white floor, stands at edges, softer light."
+    },
+    {
+      "source_group": "dressing",
+      "slots": [
+        "bg_c04s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Small photo-studio dressing room14:40, vanity mirror ringed with bare bulbs, empty chair, garment bag wardrobe rack, makeup brushes neatly set, no faces in mirror."
+    },
+    {
+      "source_group": "van_dusk",
+      "slots": [
+        "bg_c04s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Interior back seat of touring passenger van19:20 dusk, dark cloth seats armrests, makeup wipes on seat, Los Angeles streets beyond windows, no passengers or driver."
+    },
+    {
+      "source_group": "van_night",
+      "slots": [
+        "bg_c06s05",
+        "bg_c09s06",
+        "bg_c12s06"
+      ],
+      "base_group": "van_dusk",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. SAME touring van interior at night, rows of EMPTY cloth seats, distant streetlights through glass, faint reading lamp, subtle condensation, no driver or reflections. Preserve appropriate vehicle/room identity from reference."
+    },
+    {
+      "source_group": "van_roof",
+      "slots": [
+        "bg_c04s05"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Create matching EXTERIOR of the same modern professional passenger touring van, a MODERN BLACK long-wheelbase passenger van, NOT a vintage VW NOT camper, NO kitchenette NO campsite NO tent NO camping chairs. Van parked at Los Angeles hillside overlook at23:40. Frame from slightly above so wide flat metal roof and ONE folded blanket on roof are prominent, city lights beyond; van empty windows dark. Photorealistic night, no people. Preserve appropriate vehicle/room identity from reference."
+    },
+    {
+      "source_group": "terrace",
+      "slots": [
+        "bg_c05s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Casa Alta terrace above pool02:40, small table OPEN laptop notebook, EXACTLY TWO chairs, blue pool glow on stucco, palms dark sky city lights."
+    },
+    {
+      "source_group": "rooftop",
+      "slots": [
+        "bg_c05s03",
+        "bg_c05s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Flat roof above Spanish villa03:30, dark tar paper and utilitarian water tank, WIDE low parapet, Los Angeles grid lights below, safe open rooftop foreground."
+    },
+    {
+      "source_group": "tv_backstage",
+      "slots": [
+        "bg_c06s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Show BACKSTAGE area looking toward the EXACT supplied talk-show set, preserve its curved long ivory sofa, red host chair, arched scenic windows and round brass table. In backstage foreground arrange EXACTLY SEVEN separate clearly countable black folding chairs in one row, seven seats seven backrests, coiled cables equipment cases and monitor displaying this same empty stage. No people."
+    },
+    {
+      "source_group": "tv_stage",
+      "slots": [
+        "bg_c06s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Entertainment TV studio14:20, LONG sofa for seven on bright set, empty host chair side table, colored studio lighting, audience seating in soft distant blur with no identifiable people."
+    },
+    {
+      "source_group": "tv_break",
+      "slots": [
+        "bg_c06s03"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. TV studio backstage break room16:40, empty worn couch, vending area, door with printed schedule, fluorescent practical light, coiled cables by door."
+    },
+    {
+      "source_group": "tv_wings",
+      "slots": [
+        "bg_c06s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. View from DARK SIDE WINGS toward the EXACT supplied talk-show stage: same curved long ivory sofa with burgundy cushions, red host chair, round brass coffee table and ARCHED scenic windows. Black curtain, taped cables and equipment foreground; no people, no audience faces."
+    },
+    {
+      "source_group": "jonah_room",
+      "slots": [
+        "bg_c07s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Jonah adult musician bedroom19:20: modest bed unbranded concert posters gaming chair laptop on low desk, ONE white earbud on floor cushion, relaxed personal room, no people or faces in posters."
+    },
+    {
+      "source_group": "car_back",
+      "slots": [
+        "bg_c08s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Inside luxurious but discreet BLACK chauffeured car backseat20:20, black leather upholstery, partition up, city night lights beyond windows, empty seats, no chauffeur."
+    },
+    {
+      "source_group": "redcarpet",
+      "slots": [
+        "bg_c08s03"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Hotel arrival RED CARPET21:00, velvet ropes and bank of camera equipment tripods behind barrier, flashes and hotel entrance light, clear walkway, no foreground people or readable logos."
+    },
+    {
+      "source_group": "ballroom",
+      "slots": [
+        "bg_c08s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Grand contemporary hotel ballroom22:10, crystal chandeliers high ceilings formal dressed tables glassware, clear central aisle, festive gold light, event atmosphere without any people."
+    },
+    {
+      "source_group": "balcony",
+      "slots": [
+        "bg_c08s05",
+        "bg_c08s06"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Hotel balcony23:50 black wrought rail, warm wall lantern and distant Los Angeles city bokeh, empty foreground for two sprites, no jacket or people."
+    },
+    {
+      "source_group": "hotel_corridor",
+      "slots": [
+        "bg_c08s07"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Quiet luxury hotel corridor01:50, warm sconces soft carpet repeated dark doors, one prominent closed door, tired dim atmosphere, no people."
+    },
+    {
+      "source_group": "film_before",
+      "slots": [
+        "bg_c09s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Outdoor music video film set21:00: flooded fake city street, visible rain machine rig switched ready, cinema lights camera under covers, blue/amber night lighting, NO crew."
+    },
+    {
+      "source_group": "film_rain",
+      "slots": [
+        "bg_c09s02"
+      ],
+      "base_group": "film_before",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied film-set image as strict set architecture/material continuity. Preserve buildings, street, arch bridge, lighting rig identity. Change viewpoint only if specified and change rain/light/props as required. Absolutely NO crew or actors. SAME street film set22:40 under ACTIVE artificial rain, flooded pavement dramatic backlight pale steam, empty street, cinema rain rig visible at edge, NO crew."
+    },
+    {
+      "source_group": "film_wrap",
+      "slots": [
+        "bg_c09s05"
+      ],
+      "base_group": "film_before",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied film-set image as strict set architecture/material continuity. Preserve buildings, street, arch bridge, lighting rig identity. Change viewpoint only if specified and change rain/light/props as required. Absolutely NO crew or actors. SAME film street set02:40 after wrap, rain machine OFF no falling rain, wet ground reflecting a few remaining lamps, parked equipment, no people."
+    },
+    {
+      "source_group": "awning",
+      "slots": [
+        "bg_c09s03"
+      ],
+      "base_group": "film_before",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied film-set image as strict set architecture/material continuity. Preserve buildings, street, arch bridge, lighting rig identity. Change viewpoint only if specified and change rain/light/props as required. Absolutely NO crew or actors. Under canvas awning beside SAME rainy film set23:50, rain visible outside, folded towel and ONE stainless thermos on road case, dry sheltered foreground, no people."
+    },
+    {
+      "source_group": "trailer",
+      "slots": [
+        "bg_c09s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Narrow production trailer01:20, modest electric heater, wet shirt draped over empty chair, wood vinyl floor small bench window with rain, no people."
+    },
+    {
+      "source_group": "arena_build",
+      "slots": [
+        "bg_c12s01"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. EMPTY concert arena09:00, half-built stage truss scaffolding, a hundred visible vacant seats within huge venue, work lights, tape marks on stage, no crew."
+    },
+    {
+      "source_group": "arena_rehearsal",
+      "slots": [
+        "bg_c12s02"
+      ],
+      "base_group": "arena_build",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Strictly preserve venue architecture, truss/stage arrangement, walls, seats/corridor and equipment identity from supplied image. Change time/light and temporary props as specified, camera can change only as described. SAME arena11:40, completed stage lit HALF brightness for run-through, tape blocking marks, empty venue seats, no performers or crew."
+    },
+    {
+      "source_group": "arena_night",
+      "slots": [
+        "bg_c12s04"
+      ],
+      "base_group": "arena_build",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Strictly preserve venue architecture, truss/stage arrangement, walls, seats/corridor and equipment identity from supplied image. Change time/light and temporary props as specified, camera can change only as described. SAME arena22:40 completely empty and dark except single blue stage wash, view from center stage into empty seats, no people."
+    },
+    {
+      "source_group": "arena_backday",
+      "slots": [
+        "bg_c12s03"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Arena backstage13:20 concrete corridor equipment road cases stacked, one case suitable sitting, black knee brace blue gel pack on case, practical fluorescent light, no people."
+    },
+    {
+      "source_group": "arena_preshow",
+      "slots": [
+        "bg_c15s01"
+      ],
+      "base_group": "arena_backday",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Strictly preserve venue architecture, truss/stage arrangement, walls, seats/corridor and equipment identity from supplied image. Change time/light and temporary props as specified, camera can change only as described. SAME arena backstage18:00, road cases stage garments on rack and setlist taped wall, work lights and warm stage spill, no people."
+    },
+    {
+      "source_group": "arena_after",
+      "slots": [
+        "bg_c15s05"
+      ],
+      "base_group": "arena_backday",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Strictly preserve venue architecture, truss/stage arrangement, walls, seats/corridor and equipment identity from supplied image. Change time/light and temporary props as specified, camera can change only as described. SAME arena corridor00:20 after concert, road cases partly packed confetti flecks on concrete headset resting on case, empty exhausted atmosphere, no crew."
+    },
+    {
+      "source_group": "loadingdock",
+      "slots": [
+        "bg_c12s05",
+        "bg_c15s06"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Arena loading dock01:00, EXACTLY TWO large trucks backed near concrete ramp and loading doors, cold overhead security lights, empty windy industrial foreground."
+    },
+    {
+      "source_group": "office_day",
+      "slots": [
+        "bg_c14s01",
+        "bg_c14s02"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Change ONLY LIGHT AND SKY to bright clear LATE MORNING10:20 in Beverly Hills: sun HIGH well above frame, pale blue sky, balanced white daylight, no orange clouds, no glowing sun at horizon, no sunset. Preserve SAME exact office architecture, long table, folder, chairs and hill view. Emphasize WHITE walls where visible. No people."
+    },
+    {
+      "source_group": "office_folder",
+      "slots": [
+        "bg_c14s03"
+      ],
+      "base_group": "office_day",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use supplied office as exact architectural reference. Preserve bright LATE MORNING pale blue sky and high sun, white walls, long table/chairs and hill view. Change ONLY the closed folder on table to an OPEN folder with neatly printed contract pages visible, as11:20 meeting. No sunset no people no captions."
+    },
+    {
+      "source_group": "elevator",
+      "slots": [
+        "bg_c14s04"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Corporate elevator12:10, mirror walls brushed steel handrail discreet lit floor digits, empty cabin, no human reflections, controlled neutral corporate lighting."
+    },
+    {
+      "source_group": "car_frontday",
+      "slots": [
+        "bg_c14s05"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Interior FRONT seats of SAME black car parked Los Angeles hillside13:40, steering wheel gear shift black leather, city visible windshield, engine off, clear midday sun, no people."
+    },
+    {
+      "source_group": "car_frontsunset",
+      "slots": [
+        "bg_c14s06"
+      ],
+      "base_group": "car_frontday",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Preserve EXACT architecture/interior/venue camera arrangement from supplied image. Change only light/weather and temporary visual elements as follows. SAME parked car interior front seats17:50, warm LOW SUN through windshield over gearshift, Los Angeles beyond, no people."
+    },
+    {
+      "source_group": "arena_wings",
+      "slots": [
+        "bg_c15s02",
+        "bg_c18s07"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only for architecture, remove all people and widen environment composition. Dark side wings of enormous concert arena21:00, curtain taped cables production cases foreground, radiant stage spill and ten-thousand tiny audience lights far beyond. Audience only abstract distant points, no identifiable humans."
+    },
+    {
+      "source_group": "arena_show",
+      "slots": [
+        "bg_c15s03"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Use reference only for architecture, remove all people and widen environment composition. Concert arena stage21:20, view from side stage toward vast glowing audience-light field, microphone stand at stage edge, amber/white concert beams, NO performers, distant audience only abstract bokeh points."
+    },
+    {
+      "source_group": "arena_encore",
+      "slots": [
+        "bg_c15s04"
+      ],
+      "base_group": "arena_show",
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. Preserve EXACT architecture/interior/venue camera arrangement from supplied image. Change only light/weather and temporary visual elements as follows. SAME concert stage22:50 encore, metallic CONFETTI falling under bright show lights, empty foreground, vast distant audience-light field, NO performers, no identifiable audience faces."
+    },
+    {
+      "source_group": "london_office",
+      "slots": [
+        "bg_c18s06"
+      ],
+      "base_group": null,
+      "prompt": "ONE standalone production visual-novel ENVIRONMENT BACKGROUND, full bleed vertical9:16 requested941x1672. Photorealistic prestige romantic TV drama, 35mm interior architectural photography, detailed real materials and believable wear, cinematic amber versus cool blue light, coherent perspective, sharp usable environment. ABSOLUTELY NO PEOPLE, no human silhouettes, no people in mirrors/screens/photos; NO characters baked in. Medium wide establishing composition with natural open central area for character sprites and visually quiet bottom300px for dialogue. Not panorama, not collage, not UI, no frame, no watermark, no title or labels. Keep story equipment and furniture physically plausible. LONDON office23:10, one desk elegant chair, window over River THAMES and London lights, ONE framed group photograph face details indistinct on desk, midnight blue and desk-lamp amber. NOT Los Angeles NOT Beverly Hills."
+    }
+  ]
+}
