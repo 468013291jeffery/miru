@@ -2287,6 +2287,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       const g = st(th), op = open(th);
       if (!op.length && th.pk.st !== "choose") return;
       if (g.r >= L3) {
+        // Strict authored goals require real source flags; time spent chatting is not completion.
+        if (chap(th)?.strictDone) { g.r = L1; g.lv = 1; save(); return; }
         if (op.length) { op.forEach(x => { g.ok[x.i] = 1; }); g.auto = 1; progressed(th, []); }
         if (th.pk.st === "choose") { g.r = 0; await closestPick(th, s); }
         return;

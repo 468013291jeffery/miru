@@ -3,6 +3,7 @@ import re,json,csv,hashlib
 R=Path(__file__).resolve().parents[1];out=R/'content/official/svf-v4';rel=json.loads((out/'release.json').read_text());source=(R/'scripts/svf-v4/source.md').read_text();body='# CHAPTER 1｜Moving In'+source.split('# CHAPTER 1｜Moving In',1)[1];body=body.replace('\\_','_').replace('⟧⟧','⟧').replace('**','')
 names={'cora':'你','rhys':'里斯','dorian':'多里安','kai':'凯','noah':'诺亚','matteo':'马泰奥','sasha':'萨沙','jonah':'乔纳','alastair':'阿利斯泰尔','hale':'黑尔','wren':'温'}
 ages={'cora':24,'rhys':27,'dorian':29,'kai':26,'noah':25,'matteo':24,'sasha':24,'jonah':23,'alastair':61,'hale':29,'wren':31}
+presentation=json.loads((out/'presentation.json').read_text())
 profiles={}
 for k in list(names)[1:8]:
  m=re.search(r'#### '+k+r' · (.*?)(?=\n#### |\n### 三、)',source,re.S);assert m,k
@@ -23,6 +24,7 @@ for raw in body.splitlines():
   ch=int(m[1]);scene=0;lines.append(l)
   if ch==1:lines+=['⟦ORIENT|bg⟧','⟦SET|cast_all⟧','⟦SET|svf_v4⟧']+decl
   continue
+ if l.startswith('# CHOICE'):lines.append('⟦SET|svfscene_c%02d⟧'%ch)
  if l.startswith('# SCENE'):
   if lines and any(x.startswith('⟦IF|route_') for x in lines[-30:]):pass
   scene+=1
@@ -34,12 +36,12 @@ for raw in body.splitlines():
   if k in ['CHAR','ITEM','FX']:continue
   if k=='GOAL':
    if ch in goals:continue
-   goals.add(ch);l='⟦GOAL|'+a[0]+'⟧'
+   goals.add(ch);g=presentation['chapters'][ch-1];lines+=['⟦DONE|flag|svfscene_c%02d|%s⟧'%(ch,g['criteria'][0]),'⟦DONE|flag|svfchoice_c%02d|%s⟧'%(ch,g['criteria'][1])];l='⟦GOAL|'+g['goal']+'⟧'
   elif k=='BG':l='⟦BG|'+a[0]+'⟧'
   elif k=='CG':l='⟦CG|'+a[0]+'⟧'
   elif k=='BGM':l='⟦BGM|'+('tense' if ch in [8,11,14,17] else 'sport' if ch in [3,12,15] else 'warm')+'⟧'
   elif k=='OPT':
-   flags=[]
+   flags=['svfchoice_c%02d'%ch]
    for part in a[1].split(';'):
     key,val=part.split(':',1)
     if key=='set':flags+=val.split(',')
@@ -54,7 +56,7 @@ for raw in body.splitlines():
 if any(x.startswith('⟦IF|route_') for x in lines):lines.append('⟦/IF⟧')
 # URI-encode directive arguments before the generic dialogue parser sees colons.
 from urllib.parse import unquote
-lines=[re.sub(r'^⟦([A-Z/]+)(.*?)⟧$',lambda m:'⟦'+m[1]+''.join('|'+quote(unquote(a),safe='') for a in m[2].split('|')[1:])+'⟧',l) for l in lines]
+lines=[l if l.startswith('⟦DONE|') else re.sub(r'^⟦([A-Z/]+)(.*?)⟧$',lambda m:'⟦'+m[1]+''.join('|'+quote(unquote(a),safe='') for a in m[2].split('|')[1:])+'⟧',l) for l in lines]
 text='# 我在男团当团宠\n\n'+'\n'.join(lines)+'\n';assert sample==205
 (out/'script.md').write_text(text);(out/'cast.json').write_text(json.dumps(casts,ensure_ascii=False,indent=2)+'\n');(out/'production-notes.json').write_text(json.dumps(notes,ensure_ascii=False,indent=2)+'\n')
 assets=R/'art/official/svf-v4';mapping={};manifest=list(csv.DictReader((assets/'manifest.csv').open(encoding='utf-8-sig',newline='')))
@@ -65,7 +67,7 @@ for c in casts:
 cover=next(row for row in manifest if row['category']=='cover');mapping['cover']=mapping['poster']='/art/official/svf-v4/'+cover['path'];mapping['home_video']=mapping['vid_open']=mapping['opening_video']='/video/svf-opening-v4.mp4'
 for n in range(1,24):mapping['hl_%02d'%n]=next(mapping[row['slot']] for row in manifest if row['path'].endswith('hl_%02d.jpg'%n))
 (R/'art/official'/f'{rel["work_id"]}.json').write_text(json.dumps(mapping,ensure_ascii=False,indent=2)+'\n');(out/'cast.json').write_text(json.dumps(casts,ensure_ascii=False,indent=2)+'\n')
-meta={'title':'我在男团当团宠','hook':'十八天，一栋别墅，七个男团成员都想留住你。那条“不许碰经纪人”的团规，正是队长亲手写下的。','premise':source.split('**一句话卖点**：',1)[1].split('\n\n',1)[0],'you':'Cora Vane，24岁，Vane Group 主席之女，SEVENFOLD 的新经纪人。','as':'你','orient':'bg','adult':True,'cover':'https://miru.plus'+mapping['cover'],'tags':['现代','娱乐圈','群像','慢热','自主选择']}
+meta={'title':'我在男团当团宠','hook':'十八天，一栋别墅，七个男团成员都想留住你。那条“不许碰经纪人”的团规，正是队长亲手写下的。','premise':'\n\n'.join(presentation['background']),'you':presentation['identity'],'as':'你','orient':'bg','adult':True,'cover':'https://miru.plus'+mapping['cover'],'tags':['现代','娱乐圈','群像','慢热','自主选择']}
 chs=re.split(r'(?=^# CHAPTER \d+)',text,flags=re.M);chapters=[]
 for x in chs:
  m=re.match(r'# CHAPTER (\d+)[｜|](.*)',x)

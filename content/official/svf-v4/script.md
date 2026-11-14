@@ -21,7 +21,9 @@
 ⟦BG|bg_c01s01⟧
 ⟦TIME|16%3A40⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E5%9C%A8%E5%8D%81%E5%85%AB%E5%A4%A9%E9%87%8C%E7%AE%A1%E4%BD%8F%E4%B8%83%E4%B8%AA%E4%BA%BA%EF%BC%8C%E5%90%8C%E6%97%B6%E4%B8%8D%E8%AE%A9%E4%BB%96%E4%BB%AC%E5%8F%91%E7%8E%B0%E5%A5%B9%E5%8F%AA%E6%9C%89%E5%8D%81%E5%85%AB%E5%A4%A9⟧
+⟦DONE|flag|svfscene_c01|完成入住与首次见面⟧
+⟦DONE|flag|svfchoice_c01|明确工作和相处的边界⟧
+⟦GOAL|%E8%AE%A4%E8%AF%86%E4%B8%83%E4%BD%8D%E6%88%90%E5%91%98%E3%80%81%E4%BA%A4%E4%BB%A3%E7%BB%8F%E7%BA%AA%E4%BA%BA%E7%9A%84%E8%81%8C%E8%B4%A3%EF%BC%8C%E5%B9%B6%E5%86%B3%E5%AE%9A%E5%8D%81%E5%85%AB%E5%A4%A9%E9%87%8C%E7%9B%B8%E5%A4%84%E4%B8%8E%E5%B7%A5%E4%BD%9C%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%BE%B9%E7%95%8C%E3%80%82⟧
 
 旁白：房子比照片上旧。白色灰泥墙面有几道裂缝，红瓦上长着草。
 
@@ -205,25 +207,26 @@
 
 旁白：你回头看那杯水的杯口——上面有一点水汽，是刚倒的。
 
+⟦SET|svfscene_c01⟧
 # CHOICE｜第一夜，你怎么定这十八天的调子？
 
 #### A｜按通告表走，一分不差。明天六点五十到录音室
 
 旁白：你在便条背面写：六点五十。
 旁白：写完你把它贴在门上。你决定从第一天起就让他们知道，谁在定时间。
-⟦OPT|A|set%3Astrict_schedule%2Csvfdelta~c01~authority~4%2Csvfdelta~c01~trust~1%2Csvfdelta~c01~love_rhys~2⟧
+⟦OPT|A|set%3Asvfchoice_c01%2Cstrict_schedule%2Csvfdelta~c01~authority~4%2Csvfdelta~c01~trust~1%2Csvfdelta~c01~love_rhys~2⟧
 
 #### B｜明天先不开工，用一天看清这七个人
 
 旁白：你把三十二页合上，改成一张白纸。
 旁白：你在纸上写下七个名字，每个名字后面留了很大一片空白。
-⟦OPT|B|set%3Aobserve_first%2Csvfdelta~c01~authority~2%2Csvfdelta~c01~trust~3%2Csvfdelta~c01~love_rhys~2%2Csvfdelta~c01~love_jonah~1⟧
+⟦OPT|B|set%3Asvfchoice_c01%2Cobserve_first%2Csvfdelta~c01~authority~2%2Csvfdelta~c01~trust~3%2Csvfdelta~c01~love_rhys~2%2Csvfdelta~c01~love_jonah~1⟧
 
 #### C｜把这张便条留着，不回应。看他明天几点到
 
 旁白：你把便条夹进文件夹第二页。
 旁白：你决定什么都不说。你想知道，一个不回应的人，他会怎么等。
-⟦OPT|C|set%3Asaid_nothing_back%2Csvfdelta~c01~authority~3%2Csvfdelta~c01~love_rhys~3%2Csvfdelta~c01~ax_rule~0⟧
+⟦OPT|C|set%3Asvfchoice_c01%2Csaid_nothing_back%2Csvfdelta~c01~authority~3%2Csvfdelta~c01~love_rhys~3%2Csvfdelta~c01~ax_rule~0⟧
 
 # ·
 
@@ -234,7 +237,9 @@
 ⟦BG|bg_c02s01⟧
 ⟦TIME|07%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E8%AE%A9%E4%B8%BB%E6%89%93%E6%AD%8C%E5%BD%95%E5%AE%8C%EF%BC%8C%E5%90%8C%E6%97%B6%E5%BC%84%E6%B8%85%E4%BB%96%E5%88%B0%E5%BA%95%E6%83%B3%E5%94%B1%E6%88%90%E4%BB%80%E4%B9%88%E6%A0%B7⟧
+⟦DONE|flag|svfscene_c02|处理主打歌录制⟧
+⟦DONE|flag|svfchoice_c02|回应录音后的越界⟧
+⟦GOAL|%E5%8D%8F%E8%B0%83%E5%BD%95%E5%88%B6%E4%B8%8E%E6%88%90%E5%91%98%E7%8A%B6%E6%80%81%EF%BC%8C%E5%90%AC%E6%B8%85%E9%87%8C%E6%96%AF%E5%AF%B9%E6%AD%8C%E6%9B%B2%E7%9A%84%E6%83%B3%E6%B3%95%EF%BC%8C%E5%B9%B6%E5%9B%9E%E5%BA%94%E5%BD%95%E9%9F%B3%E5%90%8E%E5%87%BA%E7%8E%B0%E7%9A%84%E5%85%B3%E7%B3%BB%E8%BE%B9%E7%95%8C%E3%80%82⟧
 
 旁白：你六点五十到。他已经在了。
 
@@ -427,25 +432,26 @@
 
 多里安：“你今天记了四页笔记。一页是关于人的，三页是关于流程的。”
 
+⟦SET|svfscene_c02⟧
 # CHOICE｜第二十八遍之后，你怎么处理这条已经越界的线？
 
 #### A｜明天开工前，把团规重新念一遍
 
 旁白：第二天早上，你把七个人叫到客厅，念了门背后那行字。
 旁白：念完你说：这条规矩还在。谁想改，先跟我说。
-⟦OPT|A|set%3Aread_the_rule_aloud%2Csvfdelta~c02~authority~5%2Csvfdelta~c02~love_rhys~2%2Csvfdelta~c02~ax_rule~-1⟧
+⟦OPT|A|set%3Asvfchoice_c02%2Cread_the_rule_aloud%2Csvfdelta~c02~authority~5%2Csvfdelta~c02~love_rhys~2%2Csvfdelta~c02~ax_rule~-1⟧
 
 #### B｜什么都不说，但今晚不去录音室
 
 旁白：你给自己定了一条：晚上十点以后不单独进地下那间房。
 旁白：这条规矩只有你知道。你知道它撑不了多久。
-⟦OPT|B|set%3Aself_imposed_curfew%2Csvfdelta~c02~love_rhys~3%2Csvfdelta~c02~trust~2%2Csvfdelta~c02~ax_rule~0⟧
+⟦OPT|B|set%3Asvfchoice_c02%2Cself_imposed_curfew%2Csvfdelta~c02~love_rhys~3%2Csvfdelta~c02~trust~2%2Csvfdelta~c02~ax_rule~0⟧
 
 #### C｜问他：那条规矩，是你写的，你能不能改
 
 旁白：你在车上问他这句话。
 旁白：他看着前面，很久才说：能改的人不是我。
-⟦OPT|C|set%3Aasked_him_to_change_rule%2Csvfdelta~c02~love_rhys~5%2Csvfdelta~c02~trust~3%2Csvfdelta~c02~ax_rule~1⟧
+⟦OPT|C|set%3Asvfchoice_c02%2Casked_him_to_change_rule%2Csvfdelta~c02~love_rhys~5%2Csvfdelta~c02~trust~3%2Csvfdelta~c02~ax_rule~1⟧
 
 # ·
 
@@ -456,7 +462,9 @@
 ⟦BG|bg_c03s01⟧
 ⟦TIME|06%3A40⟧
 ⟦BGM|sport⟧
-⟦GOAL|%E5%BC%84%E6%87%82%E8%BF%99%E4%B8%83%E4%B8%AA%E4%BA%BA%E9%87%8C%E6%9C%80%E4%B8%8D%E8%AF%B4%E8%AF%9D%E7%9A%84%E9%82%A3%E4%B8%AA%EF%BC%8C%E5%9C%A8%E6%83%B3%E4%BB%80%E4%B9%88⟧
+⟦DONE|flag|svfscene_c03|了解排练与诺亚的状态⟧
+⟦DONE|flag|svfchoice_c03|决定如何回应他的照顾⟧
+⟦GOAL|%E4%BA%86%E8%A7%A3%E8%AF%BA%E4%BA%9A%E7%9A%84%E6%8E%92%E7%BB%83%E7%8A%B6%E6%80%81%E5%92%8C%E8%A1%A8%E8%BE%BE%E6%96%B9%E5%BC%8F%EF%BC%8C%E5%86%B3%E5%AE%9A%E6%98%AF%E5%90%A6%E4%B8%BB%E5%8A%A8%E8%AF%A2%E9%97%AE%E4%BB%96%E7%9A%84%E7%85%A7%E9%A1%BE%E4%B8%8E%E5%85%B3%E5%BF%83%E3%80%82⟧
 
 旁白：他一个人在没有音乐的房间里跳。嘴里在数，很轻。
 
@@ -620,25 +628,26 @@
 
 旁白：没有署名。
 
+⟦SET|svfscene_c03⟧
 # CHOICE｜第三夜，你要不要问那盘菜是谁做的？
 
 #### A｜问。你端着盘子上楼，一间一间敲门
 
 旁白：敲到第四间，Dorian 开门。他看了一眼盘子，说：凉了，我再做一份。
 旁白：他说完就下楼了。没有解释。
-⟦OPT|A|set%3Aasked_about_the_plate%2Csvfdelta~c03~love_dorian~4%2Csvfdelta~c03~trust~3⟧
+⟦OPT|A|set%3Asvfchoice_c03%2Casked_about_the_plate%2Csvfdelta~c03~love_dorian~4%2Csvfdelta~c03~trust~3⟧
 
 #### B｜不问。吃掉，把盘子洗干净放回去
 
 旁白：你吃完了。洗了盘子，放回原位。
 旁白：第二天早上，盘子里多了一块巧克力。
-⟦OPT|B|set%3Aate_in_silence%2Csvfdelta~c03~love_dorian~3%2Csvfdelta~c03~trust~2%2Csvfdelta~c03~love_noah~2⟧
+⟦OPT|B|set%3Asvfchoice_c03%2Cate_in_silence%2Csvfdelta~c03~love_dorian~3%2Csvfdelta~c03~trust~2%2Csvfdelta~c03~love_noah~2⟧
 
 #### C｜不问，但明天开始，你也给他们留一份
 
 旁白：第二天你让厨房多备七份宵夜，贴上每个人的名字。
 旁白：七个人下楼的时候都看见了。有人笑了，有人没说话。
-⟦OPT|C|set%3Afed_them_back%2Csvfdelta~c03~authority~4%2Csvfdelta~c03~trust~4%2Csvfdelta~c03~love_dorian~2%2Csvfdelta~c03~love_jonah~2⟧
+⟦OPT|C|set%3Asvfchoice_c03%2Cfed_them_back%2Csvfdelta~c03~authority~4%2Csvfdelta~c03~trust~4%2Csvfdelta~c03~love_dorian~2%2Csvfdelta~c03~love_jonah~2⟧
 
 # ·
 
@@ -649,7 +658,9 @@
 ⟦BG|bg_c04s01⟧
 ⟦TIME|08%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E8%AE%A9%E4%BB%96%E6%8B%8D%E5%87%BA%E4%B8%8D%E6%98%AF%E2%80%9C%E5%A5%BD%E7%9C%8B%E2%80%9D%E7%9A%84%E9%82%A3%E4%B8%80%E5%BC%A0⟧
+⟦DONE|flag|svfscene_c04|完成封面拍摄⟧
+⟦DONE|flag|svfchoice_c04|处理拍摄后的私人消息⟧
+⟦GOAL|%E5%B8%AE%E5%8A%A9%E9%A9%AC%E6%B3%B0%E5%A5%A5%E5%AE%8C%E6%88%90%E8%83%BD%E8%A1%A8%E8%BE%BE%E8%87%AA%E6%88%91%E7%9A%84%E6%8B%8D%E6%91%84%EF%BC%8C%E5%B9%B6%E9%80%89%E6%8B%A9%E5%A6%82%E4%BD%95%E5%9B%9E%E5%BA%94%E6%8B%8D%E6%91%84%E5%90%8E%E6%94%B6%E5%88%B0%E7%9A%84%E7%A7%81%E4%BA%BA%E6%B6%88%E6%81%AF%E3%80%82⟧
 
 旁白：早上八点开始拍。到下午两点，他拍了六个小时。
 
@@ -823,6 +834,7 @@
 
 乔纳：“我知道。你在看他。”
 
+⟦SET|svfscene_c04⟧
 # CHOICE｜第四天早上，你怎么处理这三条没回的消息？
 
 #### A｜起床第一件事，找他，一条一条回
@@ -830,19 +842,19 @@
 旁白：你在他房门口等他出来，把三条消息一条一条答了。
 旁白：他站在那儿，听完，然后说：其实不重要。
 旁白：但他耳朵红了。
-⟦OPT|A|set%3Aanswered_jonah%2Csvfdelta~c04~love_jonah~4%2Csvfdelta~c04~trust~3%2Csvfdelta~c04~love_matteo~2⟧
+⟦OPT|A|set%3Asvfchoice_c04%2Canswered_jonah%2Csvfdelta~c04~love_jonah~4%2Csvfdelta~c04~trust~3%2Csvfdelta~c04~love_matteo~2⟧
 
 #### B｜把“消息当天回”写进工作群公告
 
 旁白：你在群里发了一条：工作时间我的手机在响，我就会看。非工作时间，我会在睡前统一回。
 旁白：七个人都看到了。有人回了一个“收到”，有人什么都没回。
-⟦OPT|B|set%3Aset_reply_policy%2Csvfdelta~c04~authority~5%2Csvfdelta~c04~trust~2%2Csvfdelta~c04~love_jonah~2⟧
+⟦OPT|B|set%3Asvfchoice_c04%2Cset_reply_policy%2Csvfdelta~c04~authority~5%2Csvfdelta~c04~trust~2%2Csvfdelta~c04~love_jonah~2⟧
 
 #### C｜今天不解释。晚上主动去他房间
 
 旁白：晚上你敲了他的门。他开门，手里还拿着那只耳机。
 旁白：你说：三条消息，我现在回。
-⟦OPT|C|set%3Awent_to_jonah_room%2Csvfdelta~c04~love_jonah~5%2Csvfdelta~c04~trust~3%2Csvfdelta~c04~ax_rule~1⟧
+⟦OPT|C|set%3Asvfchoice_c04%2Cwent_to_jonah_room%2Csvfdelta~c04~love_jonah~5%2Csvfdelta~c04~trust~3%2Csvfdelta~c04~ax_rule~1⟧
 
 # ·
 
@@ -853,7 +865,9 @@
 ⟦BG|bg_c05s01⟧
 ⟦TIME|02%3A10⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E5%BC%84%E6%B8%85%E4%BB%96%E4%B8%BA%E4%BB%80%E4%B9%88%E5%AF%B9%E6%89%80%E6%9C%89%E4%BA%BA%E9%83%BD%E5%87%B6%EF%BC%8C%E5%8F%AA%E5%AF%B9%E5%A5%B9%E5%87%B6%E5%BE%97%E4%B8%8D%E4%B8%80%E6%A0%B7⟧
+⟦DONE|flag|svfscene_c05|完成深夜创作交流⟧
+⟦DONE|flag|svfchoice_c05|明确作品署名的处理⟧
+⟦GOAL|%E5%90%AC%E6%B8%85%E5%87%AF%E5%AF%B9%E5%88%9B%E4%BD%9C%E7%9A%84%E5%9D%9A%E6%8C%81%EF%BC%8C%E5%9C%A8%E5%90%88%E4%BD%9C%E5%AE%8C%E6%88%90%E5%90%8E%E6%98%8E%E7%A1%AE%E7%BD%B2%E5%90%8D%E4%B8%8E%E8%B4%A1%E7%8C%AE%E7%9A%84%E5%A4%84%E7%90%86%E6%96%B9%E5%BC%8F%E3%80%82⟧
 
 旁白：凌晨两点，厨房只有他一个人。电脑开着，屏幕上是音轨。
 
@@ -1037,25 +1051,26 @@
 
 多里安：“谁写的，不重要。重要的是这句词，会让人问一个问题。”
 
+⟦SET|svfscene_c05⟧
 # CHOICE｜署名这件事，你怎么处理？
 
 #### A｜承认。并且要求加进制作名单
 
 旁白：你说：是我改的。加我的名字，作为共同作词。
 旁白：Kai 笑了。Rhys 没有说话。
-⟦OPT|A|set%3Aclaimed_the_credit%2Csvfdelta~c05~authority~5%2Csvfdelta~c05~love_kai~4%2Csvfdelta~c05~love_rhys~1%2Csvfdelta~c05~buzz~2⟧
+⟦OPT|A|set%3Asvfchoice_c05%2Cclaimed_the_credit%2Csvfdelta~c05~authority~5%2Csvfdelta~c05~love_kai~4%2Csvfdelta~c05~love_rhys~1%2Csvfdelta~c05~buzz~2⟧
 
 #### B｜不承认。让 Kai 拿着
 
 旁白：你说：是他写的。我只是说了一句废话。
 旁白：Kai 看着你，眼神变了。
-⟦OPT|B|set%3Agave_credit_to_kai%2Csvfdelta~c05~love_kai~5%2Csvfdelta~c05~trust~4%2Csvfdelta~c05~authority~2⟧
+⟦OPT|B|set%3Asvfchoice_c05%2Cgave_credit_to_kai%2Csvfdelta~c05~love_kai~5%2Csvfdelta~c05~trust~4%2Csvfdelta~c05~authority~2⟧
 
 #### C｜当场把那一句删掉，换成他自己的一句
 
 旁白：你说：删了吧。这句不该是我写的。
 旁白：Kai 没删。他把电脑合上，端走了。
-⟦OPT|C|set%3Atried_to_delete_the_line%2Csvfdelta~c05~love_kai~3%2Csvfdelta~c05~trust~2%2Csvfdelta~c05~insight~2⟧
+⟦OPT|C|set%3Asvfchoice_c05%2Ctried_to_delete_the_line%2Csvfdelta~c05~love_kai~3%2Csvfdelta~c05~trust~2%2Csvfdelta~c05~insight~2⟧
 
 # ·
 
@@ -1066,7 +1081,9 @@
 ⟦BG|bg_c06s01⟧
 ⟦TIME|13%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%85%AC%E5%BC%80%E9%9C%B2%E9%9D%A2%EF%BC%8C%E4%B8%8D%E5%87%BA%E4%BA%8B%EF%BC%8C%E4%B8%94%E8%AE%A9%E4%BB%96%E4%BB%AC%E7%9F%A5%E9%81%93%E5%A5%B9%E7%AB%99%E5%9C%A8%E8%B0%81%E9%82%A3%E8%BE%B9⟧
+⟦DONE|flag|svfscene_c06|完成公开录制⟧
+⟦DONE|flag|svfchoice_c06|决定团体对外口径⟧
+⟦GOAL|%E5%AE%8C%E6%88%90%E7%BB%BC%E8%89%BA%E5%BD%95%E5%88%B6%EF%BC%8C%E5%9B%9E%E5%BA%94%E6%88%90%E5%91%98%E5%9C%A8%E9%95%9C%E5%A4%B4%E5%89%8D%E7%9A%84%E8%A1%A8%E6%80%81%EF%BC%8C%E5%B9%B6%E5%86%B3%E5%AE%9A%E6%98%AF%E5%90%A6%E7%BB%9F%E4%B8%80%E5%AF%B9%E5%A4%96%E8%AF%B4%E6%B3%95%E3%80%82⟧
 
 旁白：后台很挤。七个人坐在一排折叠椅上，化妆师来回跑。
 
@@ -1253,26 +1270,27 @@
 
 旁白：他走了。
 
+⟦SET|svfscene_c06⟧
 # CHOICE｜第六天，七个人在镜头前各自表了态。你要不要统一口径？
 
 #### A｜开会。定一条对外口径：我们只是工作关系
 
 旁白：第二天早上，你把七个人叫到客厅，定了一条口径。
 旁白：七个人都点头。点得最快的是 Sasha。点得最慢的是 Jonah。
-⟦OPT|A|set%3Aset_public_line%2Csvfdelta~c06~authority~6%2Csvfdelta~c06~scandal~-10%2Csvfdelta~c06~love_jonah~1⟧
+⟦OPT|A|set%3Asvfchoice_c06%2Cset_public_line%2Csvfdelta~c06~authority~6%2Csvfdelta~c06~scandal~-10%2Csvfdelta~c06~love_jonah~1⟧
 
 #### B｜不开会。让他们各自说，你只负责善后
 
 旁白：你说：你们想怎么说就怎么说。出事我担。
 旁白：Rhys 看了你很久，然后说：这句话你别在外面说。
-⟦OPT|B|set%3Ano_public_line%2Csvfdelta~c06~trust~4%2Csvfdelta~c06~scandal~10%2Csvfdelta~c06~love_rhys~3%2Csvfdelta~c06~love_kai~2⟧
+⟦OPT|B|set%3Asvfchoice_c06%2Cno_public_line%2Csvfdelta~c06~trust~4%2Csvfdelta~c06~scandal~10%2Csvfdelta~c06~love_rhys~3%2Csvfdelta~c06~love_kai~2⟧
 
 #### C｜只跟一个人说真话：告诉他你只有十八天
 
 旁白：晚上你叫住 Rhys，说了这件事。
 旁白：他站在那儿，很久没有说话。
 里斯：“……十八天之后呢。”
-⟦OPT|C|set%3Atold_rhys_about_18_days%2Csvfdelta~c06~love_rhys~6%2Csvfdelta~c06~trust~5%2Csvfdelta~c06~insight~3⟧
+⟦OPT|C|set%3Asvfchoice_c06%2Ctold_rhys_about_18_days%2Csvfdelta~c06~love_rhys~6%2Csvfdelta~c06~trust~5%2Csvfdelta~c06~insight~3⟧
 
 # ·
 
@@ -1283,7 +1301,9 @@
 ⟦BG|bg_c07s01⟧
 ⟦TIME|08%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E7%BB%99%E4%BB%96%E4%BB%AC%E4%B8%80%E5%A4%A9%E4%BB%80%E4%B9%88%E9%83%BD%E4%B8%8D%E7%94%A8%E5%81%9A%EF%BC%8C%E7%84%B6%E5%90%8E%E7%9C%8B%E4%BB%96%E4%BB%AC%E4%BC%9A%E5%81%9A%E4%BB%80%E4%B9%88⟧
+⟦DONE|flag|svfscene_c07|完成休整日的相处⟧
+⟦DONE|flag|svfchoice_c07|确定红毯同行安排⟧
+⟦GOAL|%E5%AE%89%E6%8E%92%E4%B8%80%E5%A4%A9%E5%8F%AF%E4%BB%A5%E7%9C%9F%E6%AD%A3%E4%BC%91%E6%81%AF%E7%9A%84%E7%94%9F%E6%B4%BB%EF%BC%8C%E5%B9%B6%E4%B8%BA%E6%AC%A1%E6%97%A5%E7%BA%A2%E6%AF%AF%E7%A1%AE%E5%AE%9A%E5%90%8C%E8%A1%8C%E5%AE%89%E6%8E%92%E3%80%82⟧
 
 旁白：通告表上，第七天是空的。
 
@@ -1479,25 +1499,26 @@
 
 多里安：“今天是这个月，他们笑得最多的一天。”
 
+⟦SET|svfscene_c07⟧
 # CHOICE｜第七天过去了。明天红毯，你要不要带谁一起去？
 
 #### A｜按规矩来：全员一起走，她走最后
 
 旁白：你在群里定了顺序：七个人先走，她最后。
 旁白：Sasha 回了一条：不行。她回：这是通知，不是商量。
-⟦OPT|A|set%3Awalked_last%2Csvfdelta~c07~authority~5%2Csvfdelta~c07~scandal~-5%2Csvfdelta~c07~love_sasha~2⟧
+⟦OPT|A|set%3Asvfchoice_c07%2Cwalked_last%2Csvfdelta~c07~authority~5%2Csvfdelta~c07~scandal~-5%2Csvfdelta~c07~love_sasha~2⟧
 
 #### B｜让 Sasha 陪她走，理由是“安保”
 
 旁白：你在日程表上写：安保随行。
 旁白：Sasha 看到那行字，看了很久。
-⟦OPT|B|set%3Asasha_as_security%2Csvfdelta~c07~love_sasha~5%2Csvfdelta~c07~trust~3%2Csvfdelta~c07~scandal~5⟧
+⟦OPT|B|set%3Asvfchoice_c07%2Csasha_as_security%2Csvfdelta~c07~love_sasha~5%2Csvfdelta~c07~trust~3%2Csvfdelta~c07~scandal~5⟧
 
 #### C｜让 Rhys 陪她走，理由是“队长代表”
 
 旁白：你在日程表上写：队长代表。
 旁白：Kai 在群里发了一个问号。没有人回他。
-⟦OPT|C|set%3Arhys_as_captain%2Csvfdelta~c07~love_rhys~4%2Csvfdelta~c07~love_kai~1%2Csvfdelta~c07~scandal~5⟧
+⟦OPT|C|set%3Asvfchoice_c07%2Crhys_as_captain%2Csvfdelta~c07~love_rhys~4%2Csvfdelta~c07~love_kai~1%2Csvfdelta~c07~scandal~5⟧
 
 # ·
 
@@ -1508,7 +1529,9 @@
 ⟦BG|bg_c08s01⟧
 ⟦TIME|19%3A40⟧
 ⟦BGM|tense⟧
-⟦GOAL|%E6%92%91%E8%BF%87%E4%B8%80%E5%9C%BA%E5%85%A8%E6%98%AF%E5%A5%B9%E7%88%B6%E4%BA%B2%E7%9A%84%E7%86%9F%E4%BA%BA%E7%9A%84%E6%99%9A%E5%AE%B4⟧
+⟦DONE|flag|svfscene_c08|处理红毯与晚宴压力⟧
+⟦DONE|flag|svfchoice_c08|回应晚宴后的沟通⟧
+⟦GOAL|%E5%BA%94%E5%AF%B9%E7%BA%A2%E6%AF%AF%E4%B8%8E%E6%99%9A%E5%AE%B4%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%80%E5%8E%8B%E5%8A%9B%EF%BC%8C%E5%90%AC%E5%8F%96%E6%88%90%E5%91%98%E7%9A%84%E5%9B%9E%E5%BA%94%EF%BC%8C%E5%B9%B6%E8%A1%A8%E6%98%8E%E8%87%AA%E5%B7%B1%E7%9A%84%E5%BA%94%E5%AF%B9%E6%80%81%E5%BA%A6%E3%80%82⟧
 
 旁白：礼服是黑色的，很长，露一点后背。
 
@@ -1735,25 +1758,26 @@
 
 里斯：“Cora。明天早上七点，地下录音室。我有话跟你说。”
 
+⟦SET|svfscene_c08⟧
 # CHOICE｜红毯之后，Rhys 说明早有话跟你说。你猜他要说什么？
 
 #### A｜他要说：这条规矩我来破，但只破一次
 
 旁白：第二天早上，他站在录音室中间，说了这句话。
 旁白：然后他补了一句：不是因为我勇敢。是因为我怕再等三年。
-⟦OPT|A|set%3Arhys_breaks_the_rule%2Csvfdelta~c08~love_rhys~7%2Csvfdelta~c08~ax_rule~1%2Csvfdelta~c08~trust~4⟧
+⟦OPT|A|set%3Asvfchoice_c08%2Crhys_breaks_the_rule%2Csvfdelta~c08~love_rhys~7%2Csvfdelta~c08~ax_rule~1%2Csvfdelta~c08~trust~4⟧
 
 #### B｜他要说：你该回伦敦了
 
 旁白：他说，你在这儿，这个团会散。
 旁白：他说完自己先低下了头。
-⟦OPT|B|set%3Arhys_tells_her_to_leave%2Csvfdelta~c08~love_rhys~4%2Csvfdelta~c08~authority~3%2Csvfdelta~c08~ax_family~2⟧
+⟦OPT|B|set%3Asvfchoice_c08%2Crhys_tells_her_to_leave%2Csvfdelta~c08~love_rhys~4%2Csvfdelta~c08~authority~3%2Csvfdelta~c08~ax_family~2⟧
 
 #### C｜他要说：我三年前就认识你，我一直没说
 
 旁白：他说了。说完之后，录音室很安静。
 旁白：他说：我知道这不算什么。但我不能再装作不认识你。
-⟦OPT|C|set%3Arhys_confesses_three_years%2Csvfdelta~c08~love_rhys~8%2Csvfdelta~c08~trust~5%2Csvfdelta~c08~insight~2⟧
+⟦OPT|C|set%3Asvfchoice_c08%2Crhys_confesses_three_years%2Csvfdelta~c08~love_rhys~8%2Csvfdelta~c08~trust~5%2Csvfdelta~c08~insight~2⟧
 
 # ·
 
@@ -1764,7 +1788,9 @@
 ⟦BG|bg_c09s01⟧
 ⟦TIME|21%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E6%8B%8D%E5%AE%8C%E8%BF%99%E5%9C%BA%E6%88%8F%EF%BC%8C%E5%88%AB%E8%AE%A9%E4%BB%96%E6%8A%8A%E8%87%AA%E5%B7%B1%E5%BC%84%E5%9E%AE⟧
+⟦DONE|flag|svfscene_c09|处理雨戏与身体风险⟧
+⟦DONE|flag|svfchoice_c09|回应父亲的会面安排⟧
+⟦GOAL|%E5%8D%8F%E8%B0%83%E9%9B%A8%E6%88%8F%E6%8B%8D%E6%91%84%E4%B8%8E%E9%87%8C%E6%96%AF%E7%9A%84%E8%BA%AB%E4%BD%93%E7%8A%B6%E6%80%81%EF%BC%8C%E5%B9%B6%E5%86%B3%E5%AE%9A%E5%A6%82%E4%BD%95%E5%9B%9E%E5%BA%94%E7%88%B6%E4%BA%B2%E7%9A%84%E5%A9%9A%E7%BA%A6%E7%BA%A6%E8%B0%88%E3%80%82⟧
 
 旁白：MV 的最后一场，是雨戏。
 
@@ -1937,26 +1963,27 @@
 
 旁白：「Vane 先生希望您明天下午四点，到比佛利山庄的办公室。关于婚约。」
 
+⟦SET|svfscene_c09⟧
 # CHOICE｜父亲约你明天四点谈婚约。你去不去？
 
 #### A｜去。但要带着七个人的合约一起去
 
 旁白：你回了两个字：我会到。
 旁白：然后你上楼，把那份还没签的续约合同放进了包里。
-⟦OPT|A|set%3Atook_contract_to_meeting%2Csvfdelta~c09~authority~6%2Csvfdelta~c09~ax_family~1%2Csvfdelta~c09~insight~3⟧
+⟦OPT|A|set%3Asvfchoice_c09%2Ctook_contract_to_meeting%2Csvfdelta~c09~authority~6%2Csvfdelta~c09~ax_family~1%2Csvfdelta~c09~insight~3⟧
 
 #### B｜不去。回一条：十八天还没到
 
 旁白：你回了七个字：十八天还没到。
 旁白：对面没有再回。
-⟦OPT|B|set%3Arefused_the_meeting%2Csvfdelta~c09~authority~5%2Csvfdelta~c09~ax_family~3%2Csvfdelta~c09~scandal~5⟧
+⟦OPT|B|set%3Asvfchoice_c09%2Crefused_the_meeting%2Csvfdelta~c09~authority~5%2Csvfdelta~c09~ax_family~3%2Csvfdelta~c09~scandal~5⟧
 
 #### C｜去，但先告诉七个人
 
 旁白：第二天早上，你在餐桌上说了这件事。
 旁白：七个人都放下了筷子。
 乔纳：“我们陪你去。”
-⟦OPT|C|set%3Atold_all_seven%2Csvfdelta~c09~trust~6%2Csvfdelta~c09~love_jonah~3%2Csvfdelta~c09~love_rhys~3%2Csvfdelta~c09~ax_rule~1⟧
+⟦OPT|C|set%3Asvfchoice_c09%2Ctold_all_seven%2Csvfdelta~c09~trust~6%2Csvfdelta~c09~love_jonah~3%2Csvfdelta~c09~love_rhys~3%2Csvfdelta~c09~ax_rule~1⟧
 
 # ·
 
@@ -1967,7 +1994,9 @@
 ⟦BG|bg_c10s01⟧
 ⟦TIME|23%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E7%9C%8B%E6%87%82%E8%BF%99%E4%B8%AA%E4%BA%BA%E4%B8%BA%E4%BB%80%E4%B9%88%E6%80%BB%E6%9B%BF%E5%88%AB%E4%BA%BA%E5%81%9A%E5%86%B3%E5%AE%9A⟧
+⟦DONE|flag|svfscene_c10|完成混音与协作沟通⟧
+⟦DONE|flag|svfchoice_c10|明确下一步人员安排⟧
+⟦GOAL|%E5%AE%8C%E6%88%90%E6%B7%B7%E9%9F%B3%E6%9C%9F%E9%97%B4%E7%9A%84%E5%8D%8F%E4%BD%9C%EF%BC%8C%E7%90%86%E8%A7%A3%E5%B9%B6%E5%9B%9E%E5%BA%94%E5%A4%9A%E9%87%8C%E5%AE%89%E7%9A%84%E5%86%B3%E5%AE%9A%E6%96%B9%E5%BC%8F%EF%BC%8C%E4%BD%9C%E5%87%BA%E4%B8%8B%E4%B8%80%E9%A1%B9%E5%90%8C%E8%A1%8C%E5%AE%89%E6%8E%92%E3%80%82⟧
 
 旁白：混音要通宵。他说他一个人就行。你说你留下。
 
@@ -2151,6 +2180,7 @@
 
 里斯：“今天下午四点，我陪你去。”
 
+⟦SET|svfscene_c10⟧
 # CHOICE｜四个人都想去。你带谁？
 
 #### A｜一个人都不带。这是我家的事
@@ -2158,19 +2188,19 @@
 旁白：你说，这是我家的事。
 旁白：Rhys 看了你三秒，然后让开了路。
 里斯：“我在楼下等。”
-⟦OPT|A|set%3Awent_alone%2Csvfdelta~c10~authority~6%2Csvfdelta~c10~ax_family~2%2Csvfdelta~c10~trust~-2⟧
+⟦OPT|A|set%3Asvfchoice_c10%2Cwent_alone%2Csvfdelta~c10~authority~6%2Csvfdelta~c10~ax_family~2%2Csvfdelta~c10~trust~-2⟧
 
 #### B｜带 Dorian。他说过会送
 
 旁白：你说，Dorian 送。
 旁白：Dorian 去拿车钥匙。Kai 站在原地没动。
-⟦OPT|B|set%3Atook_dorian%2Csvfdelta~c10~love_dorian~6%2Csvfdelta~c10~authority~4%2Csvfdelta~c10~love_kai~1⟧
+⟦OPT|B|set%3Asvfchoice_c10%2Ctook_dorian%2Csvfdelta~c10~love_dorian~6%2Csvfdelta~c10~authority~4%2Csvfdelta~c10~love_kai~1⟧
 
 #### C｜带 Rhys。队长代表团体
 
 旁白：你说，Rhys 去。
 旁白：他点头。Sasha 把车钥匙扔给他。
-⟦OPT|C|set%3Atook_rhys%2Csvfdelta~c10~love_rhys~5%2Csvfdelta~c10~authority~4%2Csvfdelta~c10~scandal~3⟧
+⟦OPT|C|set%3Asvfchoice_c10%2Ctook_rhys%2Csvfdelta~c10~love_rhys~5%2Csvfdelta~c10~authority~4%2Csvfdelta~c10~scandal~3⟧
 
 # ·
 
@@ -2181,7 +2211,9 @@
 ⟦BG|bg_c11s01⟧
 ⟦TIME|19%3A00⟧
 ⟦BGM|tense⟧
-⟦GOAL|%E4%B8%80%E5%9C%BA%E4%B8%A4%E5%B0%8F%E6%97%B6%E7%9A%84%E7%9B%B4%E6%92%AD%EF%BC%8C%E5%88%AB%E5%87%BA%E4%BA%8B⟧
+⟦DONE|flag|svfscene_c11|面对直播及舆论影响⟧
+⟦DONE|flag|svfchoice_c11|提交公关处理决定⟧
+⟦GOAL|%E4%BA%86%E8%A7%A3%E7%9B%B4%E6%92%AD%E4%B8%8E%E6%8A%A5%E9%81%93%E9%80%A0%E6%88%90%E7%9A%84%E5%BD%B1%E5%93%8D%EF%BC%8C%E5%9C%A8%E5%85%AC%E5%BC%80%E5%9B%9E%E5%BA%94%E3%80%81%E5%85%8B%E5%88%B6%E5%A4%84%E7%90%86%E4%B8%8E%E6%B1%82%E5%8A%A9%E5%AE%B6%E6%97%8F%E4%B9%8B%E9%97%B4%E4%BD%9C%E5%87%BA%E6%98%8E%E7%A1%AE%E9%80%89%E6%8B%A9%E3%80%82⟧
 
 旁白：团体每两周一次直播。今天本来只是聊天、答问题、唱两句。
 
@@ -2349,26 +2381,27 @@
 
 里斯：“因为现在不是规矩的问题。是我想站在你这边。”
 
+⟦SET|svfscene_c11⟧
 # CHOICE｜危机第三天，你打算怎么处理？
 
 #### A｜把真相全说出来：公开你和七个人的关系，也公开婚约
 
 旁白：你写了第二份声明。这一次，你自己签了名。
 旁白：发出去之前，你把稿子给七个人看了。
-⟦OPT|A|set%3Awent_public%2Csvfdelta~c11~authority~8%2Csvfdelta~c11~scandal~20%2Csvfdelta~c11~ax_family~5%2Csvfdelta~c11~ax_stage~3⟧
+⟦OPT|A|set%3Asvfchoice_c11%2Cwent_public%2Csvfdelta~c11~authority~8%2Csvfdelta~c11~scandal~20%2Csvfdelta~c11~ax_family~5%2Csvfdelta~c11~ax_stage~3⟧
 
 #### B｜只发事实：红毯当晚是安保随行，附时间线
 
 旁白：你发了一份时间线，精确到分钟。没有一句解释。
 旁白：舆论冷了一半。
-⟦OPT|B|set%3Areleased_timeline%2Csvfdelta~c11~authority~6%2Csvfdelta~c11~scandal~-15%2Csvfdelta~c11~insight~2⟧
+⟦OPT|B|set%3Asvfchoice_c11%2Creleased_timeline%2Csvfdelta~c11~authority~6%2Csvfdelta~c11~scandal~-15%2Csvfdelta~c11~insight~2⟧
 
 #### C｜什么都不发。让父亲出手，你欠他一次
 
 旁白：你打了那个电话。
 旁白：第二天，所有报道消失了。干净得像没发生过。
 旁白：七个人看你的眼神变了。
-⟦OPT|C|set%3Alet_father_fix_it%2Csvfdelta~c11~authority~-3%2Csvfdelta~c11~scandal~-25%2Csvfdelta~c11~ax_family~-3%2Csvfdelta~c11~trust~-4⟧
+⟦OPT|C|set%3Asvfchoice_c11%2Clet_father_fix_it%2Csvfdelta~c11~authority~-3%2Csvfdelta~c11~scandal~-25%2Csvfdelta~c11~ax_family~-3%2Csvfdelta~c11~trust~-4⟧
 
 # ·
 
@@ -2379,7 +2412,9 @@
 ⟦BG|bg_c12s01⟧
 ⟦TIME|09%3A00⟧
 ⟦BGM|sport⟧
-⟦GOAL|%E6%92%91%E8%BF%87%E7%AC%AC%E4%B8%80%E6%AC%A1%E5%85%A8%E5%9C%BA%E5%BD%A9%E6%8E%92%EF%BC%8C%E5%88%AB%E8%AE%A9%E4%BB%BB%E4%BD%95%E4%B8%80%E4%B8%AA%E4%BA%BA%E5%8F%97%E4%BC%A4⟧
+⟦DONE|flag|svfscene_c12|完成彩排问题的处理⟧
+⟦DONE|flag|svfchoice_c12|明确对父亲的答复⟧
+⟦GOAL|%E5%A4%84%E7%90%86%E5%85%A8%E5%9C%BA%E5%BD%A9%E6%8E%92%E4%B8%AD%E7%9A%84%E8%BA%AB%E4%BD%93%E4%B8%8E%E9%85%8D%E5%90%88%E9%97%AE%E9%A2%98%EF%BC%8C%E5%B9%B6%E5%86%B3%E5%AE%9A%E4%BD%95%E6%97%B6%E3%80%81%E4%BB%A5%E4%BB%80%E4%B9%88%E7%AB%8B%E5%9C%BA%E5%9B%9E%E5%A4%8D%E7%88%B6%E4%BA%B2%E3%80%82⟧
 
 旁白：巡演首场在三天后。今天是第一次全场彩排。
 
@@ -2558,25 +2593,26 @@
 
 旁白：「我知道。」
 
+⟦SET|svfscene_c12⟧
 # CHOICE｜明天早上，你要给父亲什么答案？
 
 #### A｜“这十八天还没结束。等结束我再回答你。”
 
 旁白：你按了发送。然后把手机扔在座位上。
 旁白：这是你第一次，没有在规定时间内回答他。
-⟦OPT|A|set%3Adelayed_the_answer%2Csvfdelta~c12~authority~7%2Csvfdelta~c12~ax_family~4⟧
+⟦OPT|A|set%3Asvfchoice_c12%2Cdelayed_the_answer%2Csvfdelta~c12~authority~7%2Csvfdelta~c12~ax_family~4⟧
 
 #### B｜“我会回伦敦。但我要带走一份合约。”
 
 旁白：你发了这条。发完你靠在椅背上，闭着眼。
 旁白：你知道这句话意味着什么——你在跟他谈条件，不是求他。
-⟦OPT|B|set%3Anegotiated_with_father%2Csvfdelta~c12~authority~8%2Csvfdelta~c12~ax_family~2%2Csvfdelta~c12~insight~3⟧
+⟦OPT|B|set%3Asvfchoice_c12%2Cnegotiated_with_father%2Csvfdelta~c12~authority~8%2Csvfdelta~c12~ax_family~2%2Csvfdelta~c12~insight~3⟧
 
 #### C｜不发。等明天当面说
 
 旁白：你把手机放进包里。
 旁白：你想看着他的眼睛说那句话。
-⟦OPT|C|set%3Asaid_it_in_person%2Csvfdelta~c12~authority~5%2Csvfdelta~c12~ax_family~5%2Csvfdelta~c12~trust~2⟧
+⟦OPT|C|set%3Asvfchoice_c12%2Csaid_it_in_person%2Csvfdelta~c12~authority~5%2Csvfdelta~c12~ax_family~5%2Csvfdelta~c12~trust~2⟧
 
 # ·
 
@@ -2587,7 +2623,9 @@
 ⟦BG|bg_c13s01⟧
 ⟦TIME|09%3A40⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E6%92%91%E8%B5%B7%E6%9D%A5%EF%BC%8C%E5%9B%A0%E4%B8%BA%E4%BB%8A%E5%A4%A9%E6%9C%89%E5%BD%A9%E6%8E%92%EF%BC%9B%E7%84%B6%E5%90%8E%E6%89%BF%E8%AE%A4%E6%92%91%E4%B8%8D%E8%B5%B7%E6%9D%A5⟧
+⟦DONE|flag|svfscene_c13|面对病情与照护⟧
+⟦DONE|flag|svfchoice_c13|确定当天工作或休养安排⟧
+⟦GOAL|%E9%9D%A2%E5%AF%B9%E7%97%85%E6%83%85%E5%92%8C%E7%85%A7%E6%8A%A4%E5%AE%89%E6%8E%92%EF%BC%8C%E5%9C%A8%E8%BF%94%E5%B7%A5%E3%80%81%E4%BC%91%E5%85%BB%E4%B8%8E%E5%8F%AC%E5%BC%80%E5%90%88%E7%BA%A6%E4%BC%9A%E8%AE%AE%E4%B9%8B%E9%97%B4%E4%BD%9C%E5%87%BA%E8%87%AA%E5%B7%B1%E7%9A%84%E5%86%B3%E5%AE%9A%E3%80%82⟧
 
 旁白：你醒的时候，房间在转。
 
@@ -2772,26 +2810,27 @@
 
 旁白：他转过身，看了你一眼。就一眼。
 
+⟦SET|svfscene_c13⟧
 # CHOICE｜退烧了。今天你选什么？
 
 #### A｜去彩排。你已经耽误了一天
 
 旁白：你换了衣服就上车。
 旁白：七个人跟出来，谁都没有反对。但车上没有人说话。
-⟦OPT|A|set%3Awent_to_rehearsal%2Csvfdelta~c13~authority~6%2Csvfdelta~c13~health~-10%2Csvfdelta~c13~love_rhys~2⟧
+⟦OPT|A|set%3Asvfchoice_c13%2Cwent_to_rehearsal%2Csvfdelta~c13~authority~6%2Csvfdelta~c13~health~-10%2Csvfdelta~c13~love_rhys~2⟧
 
 #### B｜留在家里。让他们去，你在客厅看直播
 
 旁白：你说今天你留下。
 旁白：Jonah 立刻说：我也留。
 旁白：Sasha 说：你留下，我也留下。
-⟦OPT|B|set%3Astayed_home%2Csvfdelta~c13~health~20%2Csvfdelta~c13~trust~4%2Csvfdelta~c13~love_jonah~4%2Csvfdelta~c13~love_sasha~3⟧
+⟦OPT|B|set%3Asvfchoice_c13%2Cstayed_home%2Csvfdelta~c13~health~20%2Csvfdelta~c13~trust~4%2Csvfdelta~c13~love_jonah~4%2Csvfdelta~c13~love_sasha~3⟧
 
 #### C｜把今天变成一次全员会议：谈续约
 
 旁白：你说：今天不谈彩排。谈合约。
 旁白：七个人愣住。Dorian 第一个坐下。
-⟦OPT|C|set%3Aheld_contract_meeting%2Csvfdelta~c13~authority~8%2Csvfdelta~c13~insight~4%2Csvfdelta~c13~trust~3⟧
+⟦OPT|C|set%3Asvfchoice_c13%2Cheld_contract_meeting%2Csvfdelta~c13~authority~8%2Csvfdelta~c13~insight~4%2Csvfdelta~c13~trust~3⟧
 
 # ·
 
@@ -2802,7 +2841,9 @@
 ⟦BG|bg_c14s01⟧
 ⟦TIME|10%3A00⟧
 ⟦BGM|tense⟧
-⟦GOAL|%E5%9C%A8%E4%BB%96%E7%BB%99%E5%87%BA%E7%9A%84%E6%9D%A1%E4%BB%B6%E9%87%8C%EF%BC%8C%E6%8B%BF%E5%88%B0%E5%A5%B9%E7%9C%9F%E6%AD%A3%E6%83%B3%E8%A6%81%E7%9A%84%E9%82%A3%E4%B8%80%E6%A0%B7⟧
+⟦DONE|flag|svfscene_c14|完成与父亲的条件沟通⟧
+⟦DONE|flag|svfchoice_c14|明确剩余日子的相处安排⟧
+⟦GOAL|%E5%9C%A8%E4%B8%8E%E7%88%B6%E4%BA%B2%E7%9A%84%E6%B2%9F%E9%80%9A%E4%B8%AD%E6%98%8E%E7%A1%AE%E8%87%AA%E5%B7%B1%E7%9A%84%E8%AF%89%E6%B1%82%E4%B8%8E%E7%AB%8B%E5%9C%BA%EF%BC%8C%E5%B9%B6%E5%86%B3%E5%AE%9A%E5%A6%82%E4%BD%95%E4%B8%8E%E6%88%90%E5%91%98%E8%AE%A8%E8%AE%BA%E5%89%A9%E4%B8%8B%E7%9A%84%E6%97%A5%E5%AD%90%E3%80%82⟧
 
 旁白：他背对着门站着。这个姿势他用了三十年。
 
@@ -2982,6 +3023,7 @@
 
 旁白：这一辆车停在山顶，全世界的城市在下面，没有一个人看得见。
 
+⟦SET|svfscene_c14⟧
 # CHOICE｜只剩四天。今晚你想做什么？
 
 #### A｜回别墅，跟七个人一起吃饭
@@ -2989,19 +3031,19 @@
 旁白：你说，回去吃饭。
 旁白：他愣了一下，然后笑了。
 里斯：“好。我做饭。”
-⟦OPT|A|set%3Adinner_with_all%2Csvfdelta~c14~trust~5%2Csvfdelta~c14~love_rhys~3%2Csvfdelta~c14~love_dorian~2⟧
+⟦OPT|A|set%3Asvfchoice_c14%2Cdinner_with_all%2Csvfdelta~c14~trust~5%2Csvfdelta~c14~love_rhys~3%2Csvfdelta~c14~love_dorian~2⟧
 
 #### B｜不回去。今晚只有你们两个
 
 旁白：你说，今晚不回。
 旁白：他把车发动了。
-⟦OPT|B|set%3Aone_night_only%2Csvfdelta~c14~love_rhys~6%2Csvfdelta~c14~ax_rule~1%2Csvfdelta~c14~consent~10⟧
+⟦OPT|B|set%3Asvfchoice_c14%2Cone_night_only%2Csvfdelta~c14~love_rhys~6%2Csvfdelta~c14~ax_rule~1%2Csvfdelta~c14~consent~10⟧
 
 #### C｜回别墅，但把话说清楚：四天后你要做什么
 
 旁白：你说，回去。但我们得谈谈四天后。
 旁白：他沉默了很久，说：好。
-⟦OPT|C|set%3Atalked_about_day_18%2Csvfdelta~c14~authority~5%2Csvfdelta~c14~trust~4%2Csvfdelta~c14~love_rhys~4%2Csvfdelta~c14~insight~2⟧
+⟦OPT|C|set%3Asvfchoice_c14%2Ctalked_about_day_18%2Csvfdelta~c14~authority~5%2Csvfdelta~c14~trust~4%2Csvfdelta~c14~love_rhys~4%2Csvfdelta~c14~insight~2⟧
 
 # ·
 
@@ -3012,7 +3054,9 @@
 ⟦BG|bg_c15s01⟧
 ⟦TIME|18%3A00⟧
 ⟦BGM|sport⟧
-⟦GOAL|%E7%AC%AC%E4%B8%80%E5%9C%BA%E6%BC%94%E5%94%B1%E4%BC%9A%EF%BC%8C%E4%B8%80%E4%B8%AA%E4%BA%BA%E9%83%BD%E4%B8%8D%E8%83%BD%E5%A1%8C⟧
+⟦DONE|flag|svfscene_c15|完成首场演唱会⟧
+⟦DONE|flag|svfchoice_c15|自主确定演出后的安排⟧
+⟦GOAL|%E5%AE%8C%E6%88%90%E9%A6%96%E5%9C%BA%E6%BC%94%E5%94%B1%E4%BC%9A%E7%9A%84%E5%B7%A5%E4%BD%9C%EF%BC%8C%E7%A1%AE%E8%AE%A4%E5%90%8E%E7%BB%AD%E5%AE%89%E6%8E%92%EF%BC%8C%E5%B9%B6%E9%80%89%E6%8B%A9%E5%BA%86%E5%8A%9F%E3%80%81%E7%A7%81%E4%BA%BA%E4%BA%A4%E6%B5%81%E6%88%96%E7%8B%AC%E5%A4%84%E3%80%82⟧
 
 旁白：开场前两小时，后台像被台风吹过。
 
@@ -3177,25 +3221,26 @@
 
 阿利斯泰尔：“Cora。这一年，是给你的。”
 
+⟦SET|svfscene_c15⟧
 # CHOICE｜一年之后你要自己决定。今晚你怎么过？
 
 #### A｜回去，跟他们一起庆功
 
 旁白：你回到后台，说，今晚去哪里。
 旁白：Jonah 跳起来，说，泳池。
-⟦OPT|A|set%3Acelebrated_with_all%2Csvfdelta~c15~trust~5%2Csvfdelta~c15~love_jonah~3%2Csvfdelta~c15~love_kai~2%2Csvfdelta~c15~scandal~5⟧
+⟦OPT|A|set%3Asvfchoice_c15%2Ccelebrated_with_all%2Csvfdelta~c15~trust~5%2Csvfdelta~c15~love_jonah~3%2Csvfdelta~c15~love_kai~2%2Csvfdelta~c15~scandal~5⟧
 
 #### B｜把 Rhys 一个人叫出来
 
 旁白：你给他发了一条消息：卸货口。
 旁白：他三分钟就到了。
-⟦OPT|B|set%3Acalled_rhys_out%2Csvfdelta~c15~love_rhys~7%2Csvfdelta~c15~ax_rule~1%2Csvfdelta~c15~consent~10⟧
+⟦OPT|B|set%3Asvfchoice_c15%2Ccalled_rhys_out%2Csvfdelta~c15~love_rhys~7%2Csvfdelta~c15~ax_rule~1%2Csvfdelta~c15~consent~10⟧
 
 #### C｜一个人待着。今晚谁都不见
 
 旁白：你让司机送你回别墅，一路上没有说话。
 旁白：进门的时候，客厅灯还亮着。有人没睡。
-⟦OPT|C|set%3Awent_home_alone%2Csvfdelta~c15~authority~4%2Csvfdelta~c15~ax_stage~3%2Csvfdelta~c15~trust~-1⟧
+⟦OPT|C|set%3Asvfchoice_c15%2Cwent_home_alone%2Csvfdelta~c15~authority~4%2Csvfdelta~c15~ax_stage~3%2Csvfdelta~c15~trust~-1⟧
 
 # ·
 
@@ -3206,7 +3251,9 @@
 ⟦BG|bg_c16s01⟧
 ⟦TIME|23%3A30⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E5%BA%86%E7%A5%9D%EF%BC%8C%E7%84%B6%E5%90%8E%E5%9C%A8%E6%89%80%E6%9C%89%E4%BA%BA%E6%95%A3%E5%8E%BB%E4%B9%8B%E5%90%8E%E5%81%9A%E4%B8%80%E4%B8%AA%E5%86%B3%E5%AE%9A⟧
+⟦DONE|flag|svfscene_c16|面对这一夜后的现实事项⟧
+⟦DONE|flag|svfchoice_c16|确定并落实下一步行动⟧
+⟦GOAL|%E9%9D%A2%E5%AF%B9%E5%85%B3%E7%B3%BB%E4%B8%8E%E5%B7%A5%E4%BD%9C%E7%9A%84%E7%8E%B0%E5%AE%9E%E5%90%8E%E7%BB%AD%EF%BC%8C%E9%80%89%E6%8B%A9%E5%8E%BB%E5%BD%95%E9%9F%B3%E5%AE%A4%E3%80%81%E9%99%AA%E8%AF%BA%E4%BA%9A%E5%B0%B1%E5%8C%BB%E6%88%96%E6%95%B4%E7%90%86%E6%96%87%E4%BB%B6%EF%BC%8C%E8%90%BD%E5%AE%9E%E4%B8%8B%E4%B8%80%E6%AD%A5%E8%A1%8C%E5%8A%A8%E3%80%82⟧
 
 旁白：庆功在别墅里。没有外人，没有媒体，没有经纪人该做的事。
 
@@ -3351,25 +3398,26 @@
 旁白：床头柜上放着水，还有一片退烧药。
 ⟦CG|hl_21⟧
 
+⟦SET|svfscene_c16⟧
 # CHOICE｜这一夜过去了。你接下来怎么做？
 
 #### A｜七点去录音室
 
 旁白：你换了衣服就下去了。他坐在里面，看见你，站了起来。
 旁白：他什么都没说，只是把耳机递过来。
-⟦OPT|A|set%3Awent_to_studio_at_seven%2Csvfdelta~c16~love_rhys~8%2Csvfdelta~c16~trust~4%2Csvfdelta~c16~consent~10⟧
+⟦OPT|A|set%3Asvfchoice_c16%2Cwent_to_studio_at_seven%2Csvfdelta~c16~love_rhys~8%2Csvfdelta~c16~trust~4%2Csvfdelta~c16~consent~10⟧
 
 #### B｜先去车库，看 Noah 的膝盖
 
 旁白：你开车带他去医院。路上他一句话没说，下车的时候说了一句“谢谢”。
 旁白：那句“谢谢”说得很难听，像在忍。
-⟦OPT|B|set%3Atook_noah_to_hospital%2Csvfdelta~c16~love_noah~7%2Csvfdelta~c16~trust~4⟧
+⟦OPT|B|set%3Asvfchoice_c16%2Ctook_noah_to_hospital%2Csvfdelta~c16~love_noah~7%2Csvfdelta~c16~trust~4⟧
 
 #### C｜坐在房间里，把四张纸重新看一遍
 
 旁白：你把四张纸按顺序排好，看了很久。
 旁白：然后你拿出笔记本电脑，开始写一份东西。
-⟦OPT|C|set%3Astarted_writing_something%2Csvfdelta~c16~authority~6%2Csvfdelta~c16~insight~5%2Csvfdelta~c16~ax_family~2⟧
+⟦OPT|C|set%3Asvfchoice_c16%2Cstarted_writing_something%2Csvfdelta~c16~authority~6%2Csvfdelta~c16~insight~5%2Csvfdelta~c16~ax_family~2⟧
 
 # ·
 
@@ -3380,7 +3428,9 @@
 ⟦BG|bg_c17s01⟧
 ⟦TIME|09%3A20⟧
 ⟦BGM|tense⟧
-⟦GOAL|%E6%8A%8A%E8%AF%A5%E8%AF%B4%E7%9A%84%E8%AF%9D%E8%AF%B4%E5%AE%8C%EF%BC%8C%E7%84%B6%E5%90%8E%E7%A6%BB%E5%BC%80⟧
+⟦DONE|flag|svfscene_c17|完成辞呈与告别沟通⟧
+⟦DONE|flag|svfchoice_c17|明确红绳与关系的回应⟧
+⟦GOAL|%E8%A1%A8%E8%BE%BE%E5%85%B3%E4%BA%8E%E5%B7%A5%E4%BD%9C%E5%8E%BB%E7%95%99%E7%9A%84%E5%86%B3%E5%AE%9A%EF%BC%8C%E5%AE%8C%E6%88%90%E5%BF%85%E8%A6%81%E7%9A%84%E5%91%8A%E5%88%AB%EF%BC%8C%E5%B9%B6%E5%9B%9E%E5%BA%94%E9%87%8C%E6%96%AF%E4%BA%A4%E6%9D%A5%E7%9A%84%E7%BA%A2%E7%BB%B3%E3%80%82⟧
 
 旁白：你在厨房写辞呈。
 
@@ -3554,6 +3604,7 @@
 里斯：“因为它没保住我哥。但它可能能保住你。”
 ⟦CG|hl_22⟧
 
+⟦SET|svfscene_c17⟧
 # CHOICE｜第十七夜，你把这条红绳怎么办？
 
 #### A｜收下，系在自己手腕上
@@ -3562,19 +3613,19 @@
 旁白：他看着你的手腕，看了很久。
 里斯：“太松了。”
 旁白：他伸手，重新系了一遍。
-⟦OPT|A|set%3Atook_the_red_string%2Csvfdelta~c17~love_rhys~8%2Csvfdelta~c17~trust~5%2Csvfdelta~c17~ax_rule~1⟧
+⟦OPT|A|set%3Asvfchoice_c17%2Ctook_the_red_string%2Csvfdelta~c17~love_rhys~8%2Csvfdelta~c17~trust~5%2Csvfdelta~c17~ax_rule~1⟧
 
 #### B｜还给他。这是他的，不是你的
 
 旁白：你把绳子推回去。
 旁白：他没有拿。他说：那就放在这儿。
-⟦OPT|B|set%3Agave_it_back%2Csvfdelta~c17~love_rhys~5%2Csvfdelta~c17~authority~4%2Csvfdelta~c17~insight~2⟧
+⟦OPT|B|set%3Asvfchoice_c17%2Cgave_it_back%2Csvfdelta~c17~love_rhys~5%2Csvfdelta~c17~authority~4%2Csvfdelta~c17~insight~2⟧
 
 #### C｜把绳子系在他手腕上，再打一个结
 
 旁白：你拉过他的手，把绳子系回去，系得很紧。
 旁白：他低头看着，没有说话。
-⟦OPT|C|set%3Atied_it_back_on_him%2Csvfdelta~c17~love_rhys~9%2Csvfdelta~c17~trust~6%2Csvfdelta~c17~ax_family~3⟧
+⟦OPT|C|set%3Asvfchoice_c17%2Ctied_it_back_on_him%2Csvfdelta~c17~love_rhys~9%2Csvfdelta~c17~trust~6%2Csvfdelta~c17~ax_family~3⟧
 
 # ·
 
@@ -3585,7 +3636,9 @@
 ⟦BG|bg_c18s01⟧
 ⟦TIME|08%3A00⟧
 ⟦BGM|warm⟧
-⟦GOAL|%E5%9C%A8%E7%AC%AC%E5%8D%81%E5%85%AB%E5%A4%A9%E7%BB%93%E6%9D%9F%E4%B9%8B%E5%89%8D%EF%BC%8C%E5%81%9A%E4%B8%80%E4%B8%AA%E4%B8%8D%E6%98%AF%E2%80%9C%E5%AE%89%E5%85%A8%E2%80%9D%E7%9A%84%E9%80%89%E6%8B%A9⟧
+⟦DONE|flag|svfscene_c18|面对最后一天的去留⟧
+⟦DONE|flag|svfchoice_c18|亲自选择并完成对应结局⟧
+⟦GOAL|%E5%9B%9E%E9%A1%BE%E5%B7%B2%E7%BB%8F%E5%BD%A2%E6%88%90%E7%9A%84%E9%80%89%E6%8B%A9%E4%B8%8E%E5%85%B3%E7%B3%BB%EF%BC%8C%E5%9C%A8%E6%BB%A1%E8%B6%B3%E5%AE%9E%E9%99%85%E6%9D%A1%E4%BB%B6%E7%9A%84%E6%96%B9%E5%90%91%E4%B8%AD%E4%BA%B2%E8%87%AA%E5%86%B3%E5%AE%9A%E6%9C%AA%E6%9D%A5%EF%BC%8C%E7%A1%AE%E8%AE%A4%E8%AF%A5%E6%96%B9%E5%90%91%E7%9A%84%E5%90%8E%E7%BB%AD%E3%80%82⟧
 
 旁白：第十八天。天很好。
 
@@ -3687,25 +3740,26 @@
 
 旁白：车还在等。
 
+⟦SET|svfscene_c18⟧
 # CHOICE｜第十八天，你上不上那辆车？
 
 #### A｜留下。签那份合约
 
 旁白：你把箱子放回地上。
 旁白：七个人里有人吸了一口气。
-⟦OPT|A|set%3Astayed%2Csvfdelta~c18~love_rhys~6%2Csvfdelta~c18~authority~5%2Csvfdelta~c18~ax_family~2%2Croute_stay⟧
+⟦OPT|A|set%3Asvfchoice_c18%2Cstayed%2Csvfdelta~c18~love_rhys~6%2Csvfdelta~c18~authority~5%2Csvfdelta~c18~ax_family~2%2Croute_stay⟧
 
 #### B｜上车。回伦敦，把子公司做起来
 
 旁白：你上了车。
 旁白：车开动的时候，你没有回头。
-⟦OPT|B|set%3Aleft%2Csvfdelta~c18~authority~8%2Csvfdelta~c18~ax_family~-2%2Csvfdelta~c18~insight~3%2Croute_company⟧
+⟦OPT|B|set%3Asvfchoice_c18%2Cleft%2Csvfdelta~c18~authority~8%2Csvfdelta~c18~ax_family~-2%2Csvfdelta~c18~insight~3%2Croute_company⟧
 
 #### C｜把箱子放回地上，然后走到台阶上，站在七个人中间
 
 旁白：你没有上车，也没有留下来当经纪人。
 旁白：你走到台阶上，站在他们中间，转过身，面对着那辆车。
-⟦OPT|C|set%3Astood_on_the_steps%2Csvfdelta~c18~ax_stage~6%2Csvfdelta~c18~authority~4%2Csvfdelta~c18~ax_family~4%2Croute_stage⟧
+⟦OPT|C|set%3Asvfchoice_c18%2Cstood_on_the_steps%2Csvfdelta~c18~ax_stage~6%2Csvfdelta~c18~authority~4%2Csvfdelta~c18~ax_family~4%2Croute_stage⟧
 
 # ·
 
