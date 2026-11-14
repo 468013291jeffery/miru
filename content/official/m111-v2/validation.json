@@ -1,0 +1,8 @@
+{
+  "date": "2026-11-14",
+  "story": "12 chapters, 48 scenes, 24 hidden branch groups, 74 options, 24 DONE conditions, six optional existing-library games, five endings",
+  "browser": "Native parser/build and actual browser exercised: unmatched input stays pending with live free reply; matched input commits the intended flag; goals lock until complete; all five endings reachable; scene transition requires player release; old Chinese messages and pending queue localize to English.",
+  "media": "269 hashes verified: 54 images, 6 original procedural scores, 7 original sound effects, 202 bilingual recorded lines; all 48 scenes visually inspected, one gallery image replaced to avoid a fixed player portrait.",
+  "legacy": "Full release-contract passed, including M105, Unread, M107, North Light, Empress and existing authored runtime. Pack-flow 19 checks passed; all 18 SPP male leads remain visible.",
+  "limits": "Preview model/account APIs were intentionally mocked. Production TTS was called directly; live AI quality is not established by mocked intent fixtures. Public production verification follows deployment."
+}

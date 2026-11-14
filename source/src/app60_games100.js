@@ -241,6 +241,6 @@ document.addEventListener("click",e=>{const th=S.threads[curT];if(!th||!th.pk||!
  if(e.target.closest("[data-mgno]"))stopResolve(th,mgResult(th,d,"skip"))});
 function mgMatch(txt){const s=String(txt||"").toLowerCase();let best=null,bs=0;MG100.forEach(g=>g.kw.forEach(k=>{if(k&&k.length>=2&&s.includes(k.toLowerCase())&&k.length>bs){bs=k.length;best=g}}));return best}
 /* keyword pop: at most one auto game per chapter, never in the first lines, never while skipping */
-const _pkAppend60=pkAppend;pkAppend=function(th,m){const r=_pkAppend60(th,m);try{if(S.autoGames!==false&&th.pk&&curT===th.id&&!PKSKIP[th.id]&&m&&m.who!=="me"&&th.pk.q){const key="c"+th.pk.ch;th.pk.mgAuto=th.pk.mgAuto||{};
+const _pkAppend60=pkAppend;pkAppend=function(th,m){const r=_pkAppend60(th,m);try{if(S.autoGames!==false&&th.pk&&!wd(th.wid)?.pack?.nativeV2&&curT===th.id&&!PKSKIP[th.id]&&m&&m.who!=="me"&&th.pk.q){const key="c"+th.pk.ch;th.pk.mgAuto=th.pk.mgAuto||{};
   if(!th.pk.mgAuto[key]&&(th.pk.lineN=(th.pk.lineN||0)+1)>3){const G=mgMatch(m.txt);if(G&&!th.pk.q.some(b=>Array.isArray(b)&&b[1]==="mg")){th.pk.mgAuto[key]=G.id;th.pk.q.unshift(["sys","mg",{id:G.id,auto:1}]);save()}}}}catch(_){}return r};
 const _packOpen60=typeof packOpen==="function"?packOpen:null;
