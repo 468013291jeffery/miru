@@ -1155,7 +1155,8 @@ pico.instantiate_detection_memory = function(size)
       appendMsg(th, { who: "me", k: mode || "say", txt, typed: true, at: Date.now() }); th.rounds++;
       const ta = document.getElementById("cin"); if (ta) ta.value = "";
       try { typing(true); } catch (_) {}
-      const i = await classify(Lz(d.hint || d.q || ""), opts, txt);
+      /* 只有一条（「轮到你说」那种）就不用判定：你说什么都接着往下走 */
+      const i = opts.length <= 1 ? 0 : await classify(Lz(d.hint || d.q || ""), opts, txt);
       try { typing(false); } catch (_) {}
       if (i < 0) { if (th.pk && th.pk.stop && typeof reply === "function") { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] free", e); } } return; }
       const o = opts[i]; if (!o || !th.pk.stop) return;
@@ -2120,4 +2121,252 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent = ".nx162{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
     ".nx162 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
   document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 每章要完成固定目标，才能进下一章（所有剧本） =====
+   玩家：「除了点下一章之外，每个章节要完成固定的目标，完成了再进下一个章节；或者完成某些具体动作，达成某些目标。」
+   ⇒ 剧本每章写 1–3 个完成条件 ⟦DONE|类型|内容|短名|推进句⟧（写在 ⟦GOAL⟧ 下面）：
+       say  = 玩家说出 / 做出某类事（AI 看对话判断）    flag = 某个旗子已打上（关键剧情播过、小游戏赢了、拿到道具）
+     · 条件没全部完成，「进入下一章 ›」不出现；输入框上方一行小字显示「本章目标 1/2 · ✓… · …」。
+     · 防卡死，三级引导（从上次有目标完成、或本章开始，数玩家自己发的话）：
+         4 轮 → 角色的回应自然地往没完成的目标上带；8 轮 → 播这个目标的推进句；14 轮 → 剩下的目标按已完成处理。
+     · 章末分支一直对不上（玩家一直聊别的）：同样到 14 轮时按最接近的一条走。
+     · 没写 ⟦DONE⟧ 的旧剧：照旧，章末分支判定完就能进下一章。
+   作者也可以在作品资料（bible.json）里写 chapters[].done = [{type,val,name,push}]。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  const L1 = 4, L2 = 8, L3 = 14;
+  const RX = /^\s*⟦\s*DONE\s*[|｜](.*?)⟧\s*$/;
+  const CHAP = /^\s*#\s*(CHAPTER\b|第\s*[0-9一二三四五六七八九十百零〇两]+\s*章)/i;
+
+  function parseDone(body) {
+    const a = String(body || "").split(/[|｜]/).map(s => s.trim());
+    const type = (a[0] || "").toLowerCase();
+    if (!/^(say|flag)$/.test(type) || !a[1]) return null;
+    return { type, val: a[1], name: a[2] || a[1].slice(0, 8), push: a[3] || "" };
+  }
+
+  /* ---- 导入：剧本里的 ⟦DONE⟧ 收进每一章，正文里不留 ---- */
+  if (typeof PARSE !== "undefined" && PARSE.use) {
+    try {
+      PARSE.use("app163:done", {
+        parse(next, text) {
+          const per = []; let ci = -1;
+          const kept = String(text || "").split("\n").filter(l => {
+            if (CHAP.test(l)) { ci++; return true; }
+            const m = RX.exec(l); if (!m) return true;
+            const d = parseDone(m[1]); if (d) (per[Math.max(0, ci)] = per[Math.max(0, ci)] || []).push(d);
+            return false;
+          }).join("\n");
+          const args = [].slice.call(arguments, 1); args[0] = kept;
+          const doc = next.apply(null, args);
+          try { if (doc && per.length) doc.done163 = per; } catch (_) {}
+          return doc;
+        },
+        build(next, doc, as) {
+          const r = next(doc, as);
+          try {
+            if (doc && doc.done163) {
+              const wid = r && (r.wid || r), w = typeof wd === "function" ? wd(wid) : null;
+              const cs = w && w.pack && w.pack.chapters;
+              if (cs) cs.forEach((c, i) => { const d = doc.done163[i]; if (d && d.length) c.done163 = d.slice(0, 3); });
+            }
+          } catch (e) { console.warn("[goal163] build", e); }
+          return r;
+        }
+      });
+    } catch (e) { console.warn("[goal163] use", e); }
+  }
+
+  /* ---- 运行时 ---- */
+  function chap(th) { try { const w = wd(th.wid); return w && w.pack && w.pack.chapters && w.pack.chapters[(+th.pk.ch || 1) - 1]; } catch (_) { return null; } }
+  function goals(th) {
+    const c = th && th.pk && chap(th); if (!c) return [];
+    const raw = c.done163 || c.done || [];
+    return (Array.isArray(raw) ? raw : []).map(d => (typeof d === "string" ? parseDone(d) : d && d.type ? { type: String(d.type).toLowerCase(), val: d.val || d.value || "", name: d.name || "", push: d.push || "" } : null)).filter(d => d && d.val).slice(0, 3);
+  }
+  function st(th) {
+    const n = +th.pk.ch || 1;
+    let g = th.pk.g163;
+    if (!g || g.ch !== n) g = th.pk.g163 = { ch: n, ok: [], r: 0, lv: 0, pushed: [] };
+    return g;
+  }
+  function syncFlags(th, gs, g) {
+    let hit = false; const f = th.pk.flags || {};
+    gs.forEach((d, i) => { if (!g.ok[i] && d.type === "flag" && f[d.val]) { g.ok[i] = 1; hit = true; } });
+    return hit;
+  }
+  function locked(th) {
+    if (!th || !th.pk) return false;
+    const gs = goals(th); if (!gs.length) return false;
+    const g = st(th); syncFlags(th, gs, g);
+    return gs.some((_, i) => !g.ok[i]);
+  }
+  function open(th) { const gs = goals(th), g = st(th); return gs.map((d, i) => ({ d, i })).filter(x => !g.ok[x.i]); }
+  function progressed(th, names) {
+    const g = st(th); g.r = 0; g.lv = 0;
+    try { save(); } catch (_) {}
+    try { if (names.length) toast(T("✓ 本章目标达成：", "✓ Chapter goal: ") + names.join("、")); } catch (_) {}
+  }
+  window.GOAL163 = { goals, locked, state: st, open };
+
+  /* 判定 say 类：看最近几句对话 */
+  let judging = false;
+  async function judge(th) {
+    if (judging) return; const todo = open(th).filter(x => x.d.type === "say"); if (!todo.length) return;
+    judging = true;
+    try {
+      const recent = (th.msgs || []).slice(-10).filter(m => m && m.txt && m.who !== "sys").map(m => (m.who === "me" ? T("玩家", "Player") : ((typeof ch === "function" && ch(m.who) && ch(m.who).n) || T("旁白", "Narration"))) + "：" + String(m.txt).slice(0, 160)).join("\n");
+      const list = todo.map((x, k) => (k + 1) + "｜" + x.d.val).join("\n");
+      const r = await ask("互动剧里，这一章有几个需要玩家自己完成的目标。根据最近的对话，判断玩家已经完成了哪些。\n目标：\n" + list + "\n最近的对话：\n" + recent + "\n规则：只看玩家本人说的话和做的事；意思做到了就算完成，不要求原话；没做到的不算。\n只回 JSON：{\"done\":[已完成的编号]}", { maxTokens: 60, modelTier: "default", timeout: 12000 });
+      const arr = r && Array.isArray(r.done) ? r.done.map(Number) : [];
+      const g = st(th), names = [];
+      arr.forEach(n => { const x = todo[n - 1]; if (x && !g.ok[x.i]) { g.ok[x.i] = 1; names.push(x.d.name); } });
+      if (names.length) progressed(th, names);
+    } catch (e) { console.warn("[goal163] judge", e); }
+    finally { judging = false; }
+  }
+
+  function pushLine(th, d) {
+    const s = String(d.push || "").trim(); if (!s) return false;
+    let m = /^(旁白|narration|narrator)\s*[:：]\s*(.+)$/i.exec(s);
+    if (m) { appendMsg(th, { who: "n", k: "act", txt: m[2], at: Date.now() }); return true; }
+    m = /^([^:：]{1,12})\s*[:：]\s*[“"「]?(.+?)[”"」]?$/.exec(s);
+    if (m) {
+      const id = (th.cast || []).find(c => { try { const o = ch(c); return o && (o.n === m[1] || Lz(o.n) === m[1]); } catch (_) { return false; } });
+      if (id) { appendMsg(th, { who: id, k: "say", txt: m[2], at: Date.now() }); return true; }
+    }
+    appendMsg(th, { who: "n", k: "act", txt: s, at: Date.now() }); return true;
+  }
+
+  async function closestPick(th, txt) {
+    try {
+      const c = chap(th); const cs = (c && c.choices) || []; if (!cs.length || typeof packPick !== "function") return;
+      let k = null;
+      try {
+        const r = await ask("玩家在互动剧的章末选择点聊了很久，一直没有明确选哪条。按他到目前为止的态度，判断最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + cs.map(x => x.k + "｜" + Lz(x.t)).join("\n") + "\n玩家最近说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 30, modelTier: "default", timeout: 12000 });
+        k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
+      } catch (_) {}
+      if (!k || !cs.some(x => x.k === k)) k = cs[cs.length - 1].k;
+      if (curT === th.id && th.pk.st === "choose") packPick(k);
+    } catch (e) { console.warn("[goal163] pick", e); }
+  }
+
+  /* 玩家每发一句：计轮数 → 判定 → 引导 */
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function (txt) {
+      const th = S.threads[curT]; const s = String(txt || "").trim();
+      let watch = false;
+      try {
+        if (th && th.pk && s && th.pk.as !== "watch") {
+          const lk = locked(th), choosing = th.pk.st === "choose";
+          if (lk || choosing) { const g = st(th); g.r = (g.r || 0) + 1; watch = true; }
+        }
+      } catch (_) {}
+      const res = ds.apply(this, arguments);
+      if (watch) setTimeout(() => after(th, s), 2500);
+      return res;
+    };
+  }
+  async function after(th, s) {
+    try {
+      if (!th || !th.pk) return;
+      await judge(th);
+      const g = st(th), op = open(th);
+      if (!op.length && th.pk.st !== "choose") return;
+      if (g.r >= L3) {
+        if (op.length) { op.forEach(x => { g.ok[x.i] = 1; }); g.auto = 1; progressed(th, []); }
+        if (th.pk.st === "choose") { g.r = 0; await closestPick(th, s); }
+        return;
+      }
+      if (g.r >= L2 && g.lv < 2) {
+        g.lv = 2;
+        const x = op.find(y => y.d.push && !(g.pushed || []).includes(y.i));
+        if (x) {
+          /* 等角色这一轮说完再推 */
+          const t0 = Date.now();
+          while (Date.now() - t0 < 30000 && ((typeof busy !== "undefined" && busy) || (window.READING && READING.pending.get(th.id)))) await new Promise(r => setTimeout(r, 600));
+          if (pushLine(th, x.d)) { (g.pushed = g.pushed || []).push(x.i); save(); if (curT === th.id) { try { renderChat(); } catch (_) {} } }
+        }
+        return;
+      }
+      if (g.r >= L1 && g.lv < 1) { g.lv = 1; save(); }
+    } catch (e) { console.warn("[goal163] after", e); }
+  }
+
+  /* 引导：进模型的提示里加一句「往没完成的目标上带」 */
+  if (typeof packPrompt === "function") {
+    const pp = packPrompt;
+    packPrompt = function (th) {
+      let s = pp.apply(this, arguments);
+      try {
+        if (th && th.pk) {
+          const g = st(th), op = open(th);
+          if (op.length && g.lv >= 1) {
+            s += "\nOPEN CHAPTER GOALS (the player has not done these yet): " + op.map(x => x.d.val).join(" / ") +
+              (g.lv >= 2 ? "\nThe chapter has stalled. In this reply, actively create a natural opening that invites the player toward one of these goals (a question, an action, something noticed). Never mention goals, chapters or the game." :
+                "\nGently let the conversation drift toward one of these through what the characters say or do. Never mention goals, chapters or the game, and never decide for the player.");
+          } else if (th.pk.st === "choose" && g.r >= L1) {
+            s += "\nThe chapter's closing question is still open. Bring the conversation back to it naturally, in character.";
+          }
+        }
+      } catch (_) {}
+      return s;
+    };
+  }
+
+  /* 下一章：条件没完成就不给进 */
+  ["packNext", "packAdvanceChapter"].forEach(name => {
+    try {
+      const f = window[name]; if (typeof f !== "function") return;
+      const w = function () {
+        try {
+          const th = S.threads[curT];
+          if (th && locked(th)) { const op = open(th); toast(T("先完成本章目标：", "Finish this chapter first: ") + op.map(x => x.d.name).join("、")); return; }
+        } catch (_) {}
+        return f.apply(this, arguments);
+      };
+      window[name] = w;
+      try { (0, eval)(name + " = window." + name); } catch (_) {}
+    } catch (_) {}
+  });
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("#pkwrap [data-pknext],#pkwrap [data-pkadvance]"); if (!b) return;
+    const th = S.threads[curT]; if (!th || !locked(th)) return;
+    e.preventDefault(); e.stopPropagation();
+    toast(T("先完成本章目标：", "Finish this chapter first: ") + open(th).map(x => x.d.name).join("、"));
+  }, true);
+
+  /* 输入框上方：本章目标进度 */
+  function bar(th) {
+    const chat = document.getElementById("s-chat"); if (!chat) return;
+    let el = chat.querySelector(".g163");
+    const gs = th && th.pk ? goals(th) : [];
+    chat.classList.toggle("g163lock", !!(gs.length && locked(th)));
+    if (!gs.length) { if (el) el.remove(); return; }
+    const g = st(th), done = gs.filter((_, i) => g.ok[i]).length;
+    const html = '<b>' + T("本章目标 ", "Goals ") + done + "/" + gs.length + "</b>" + gs.map((d, i) => '<span class="' + (g.ok[i] ? "ok" : "") + '">' + (g.ok[i] ? "✓" : "") + esc(d.name) + "</span>").join("");
+    if (!el) {
+      const host = chat.querySelector(".nx162") || chat.querySelector("#sugg") || chat.querySelector(".composer"); if (!host) return;
+      host.insertAdjacentHTML("beforebegin", '<div class="g163"></div>'); el = chat.querySelector(".g163");
+    }
+    if (el && el.innerHTML !== html) el.innerHTML = html;
+  }
+  setInterval(() => {
+    try {
+      const th = S.threads[curT];
+      if (th && th.pk) { const gs = goals(th); if (gs.length) { const g = st(th), before = g.ok.filter(Boolean).length; if (syncFlags(th, gs, g)) progressed(th, gs.filter((_, i) => g.ok[i]).map(d => d.name).slice(before)); } }
+      bar(th);
+    } catch (_) {}
+  }, 500);
+  const css = document.createElement("style");
+  css.textContent =
+    "#s-chat.g163lock #pkwrap [data-pknext],#s-chat.g163lock #pkwrap [data-pkadvance]{display:none!important}" +
+    ".g163{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:4px 10px;margin:0 14px 6px;font-size:11.5px;color:var(--mut,#aaa)}" +
+    ".g163 b{font-weight:600;color:#F6D3AE}" +
+    ".g163 span{opacity:.85}.g163 span.ok{opacity:.55;text-decoration:line-through}";
+  document.head.appendChild(css);
 })();
