@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="c714e285d50a 2026-11-14T17:59Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="dbe14e28d8a5 2026-11-14T18:34Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27329,6 +27329,139 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     ".g163 b{font-weight:600;color:#F6D3AE}" +
     ".g163 span{opacity:.85}.g163 span.ok{opacity:.55;text-decoration:line-through}";
   document.head.appendChild(css);
+})();
+
+/* ===== 2026-11-15 · 人物卡跟着剧本走：新上线的官方剧，角色自动出现在「发现 → 角色」 =====
+   以前「发现 → 角色」只读一张手工维护的总表（art/official/leads.json），新剧上线忘了加，角色就不出现。
+   ⇒ 后台上线时把人物卡一起写进作品（pack.meta.leads，第⑤步「人物卡」自动生成、编剧确认）。
+     App 启动时：在线的官方剧如果总表里没有，就读作品自带的人物卡，同样注册成可以一对一聊天的角色。
+     总表里已有的剧照旧（总表优先）。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const KEY = "miru_leads165";
+  const bi = v => (v && typeof v === "object" ? { zh: String(v.zh || v.en || ""), en: String(v.en || v.zh || "") } : { zh: String(v || ""), en: String(v || "") });
+  function cache() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } }
+  function keep(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (_) {} }
+  function register(wid, title, leads, art, orient) {
+    if (typeof C === "undefined" || typeof W === "undefined") return 0;
+    const shell = "ldw_" + wid, cast = [];
+    leads.forEach(L => {
+      if (!L || !L.key || !L.n) return;
+      const key = String(L.key).toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24); if (!key) return;
+      const id = "ld_" + wid.slice(-8) + "_" + key; if (C[id] && !C[id].ld165) { cast.push(id); return; }
+      const n = bi(L.n);
+      C[id] = {
+        n: zh() ? n.zh : n.en, n94: n, age: +L.age || 25, h: L.h || "", w: shell, g: L.g === "f" ? "f" : "m", pal: L.pal || ["#2B2238", "#0E0B14"],
+        a: "charm", v: { pitch: 1, rate: 1 }, voiceId: L.voice || "", by: "@miru",
+        role: bi(L.role), looks: bi(L.looks), vibe: bi(L.vibe), pitch: bi(L.pitch), solo: bi(L.solo),
+        likes: bi(L.likes), boundary: bi(L.boundary),
+        tells: { zh: [], en: [] }, twist: { zh: "", en: "" }, secret: { zh: "", en: "" }, want: { zh: "", en: "" }, fear: { zh: "", en: "" },
+        ld126: wid, ld165: 1
+      };
+      Object.defineProperty(C[id], "n", { get: function () { return zh() ? n.zh : n.en; }, enumerable: true, configurable: true });
+      const pic = L.art || (art && (art["char_" + key] || art["char_" + L.key]));
+      if (pic && S.art && S.art[id] !== pic) S.art[id] = pic;
+      cast.push(id);
+    });
+    if (cast.length && !W.some(w => w.id === shell)) W.push({ id: shell, title: bi(title), or: orient || "bg", tags: [], cast, ld126: wid, hook: { zh: "", en: "" }, stats: [0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } } });
+    return cast.length;
+  }
+  async function run() {
+    try {
+      let known = new Set();
+      try { const r = await fetch("art/official/leads.json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) { const d = await r.json(); (d.works || []).forEach(w => known.add(w.wid)); } } catch (_) {}
+      const r = await fetch("/api/works?feed=new&limit=200", { cache: "no-store" }); if (!r.ok) return;
+      const j = await r.json(); const rows = (j.works || j.rows || []).filter(w => w && /官方|MIRU/i.test(String(w.author || "")) && !known.has(w.id));
+      const c = cache(); let added = 0;
+      for (const row of rows) {
+        let ent = c[row.id];
+        if (!ent || Date.now() - (ent.at || 0) > 6 * 3600e3) {
+          ent = { at: Date.now(), leads: [], art: null, title: row.title, orient: row.orient };
+          try { const p = await fetch("/api/works?id=" + encodeURIComponent(row.id)); if (p.ok) { const pj = await p.json(); const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
+          if (ent.leads.length) { try { const a = await fetch("art/official/" + row.id + ".json"); if (a.ok) ent.art = await a.json(); } catch (_) {} }
+          c[row.id] = ent;
+        }
+        if (ent.leads && ent.leads.length) added += register(row.id, ent.title || row.title, ent.leads, ent.art, ent.orient);
+      }
+      keep(c);
+      if (added) { try { if (typeof disc !== "undefined" && disc.mode === "chars" && document.querySelector("#discRes")) renderDiscRes(); } catch (_) {} try { save(); } catch (_) {} }
+      window.__leads165 = { added, checked: rows.length };
+    } catch (e) { console.warn("[leads165]", e); }
+  }
+  if (document.readyState === "complete") setTimeout(run, 2500); else window.addEventListener("load", () => setTimeout(run, 2500));
+})();
+
+/* ===== 2026-11-15 · 二创页按最新规则：玩家自己不算「角色」、提示语用这部剧自己的人 =====
+   玩家截图：二创《午夜不打烊》时，角色里出现「店主（你）」（头像是一个「店」字），封面预览也拿它当一张图；
+   「改变了什么？」的提示还是别的剧里的「如果那晚 Mason 没有睡地上……」。
+   ⇒ · 玩家扮演的那个人（剧里的「你」）不进二创的角色列表，也不出现在「加人」里、不进封面预览；
+     · 简介用「你和 ×× 」来写（例：如果你和卢卡的那件事换一种结局？）；
+     · 输入框提示改用这部剧自己的角色名。 */
+(function () {
+  "use strict";
+  if (typeof createRemix !== "function" || typeof renderRemix !== "function") return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  function isYou(id) {
+    try {
+      const o = ch(id); if (!o) return false;
+      const nm = String(typeof o.n === "object" ? (o.n.zh || o.n.en) : o.n || "");
+      if (/^(你|you|me|我)$/i.test(nm) || /[（(]\s*(你|you)\s*[)）]/i.test(nm)) return true;
+      const w = (typeof wd === "function" && o.w) ? wd(o.w) : null;
+      if (w && (w.you94 === id || (w.pack && w.pack.pov === id))) return true;
+    } catch (_) {}
+    try { return (typeof W !== "undefined" ? W : []).concat(Object.values((S.mine && S.mine.worlds) || {})).some(w => w && (w.you94 === id || (w.pack && w.pack.pov === id))); } catch (_) { return false; }
+  }
+  const cr = createRemix;
+  createRemix = function () {
+    const r = cr.apply(this, arguments);
+    try {
+      if (rx && Array.isArray(rx.cast)) {
+        const you = rx.cast.find(isYou); if (you) rx._you = you;
+        const c = rx.cast.filter(id => !isYou(id)); if (c.length && c.length !== rx.cast.length) { rx.cast = c; renderRemix(); }
+      }
+    } catch (_) {}
+    return r;
+  };
+  /* 发布时把「你」放回最后一位：剧本靠它认出玩家扮演谁（只是不在二创页上当角色显示） */
+  document.addEventListener("click", e => {
+    try { if (e.target.closest && e.target.closest("[data-gorx]") && rx && rx._you && !rx.cast.includes(rx._you)) rx.cast.push(rx._you); } catch (_) {}
+  }, true);
+  if (typeof allChars === "function") {
+    const rr = renderRemix;
+    renderRemix = function () {
+      const ac = allChars;
+      try { if (rx && Array.isArray(rx.cast)) { const you = rx.cast.find(isYou); if (you && !rx._you) rx._you = you; rx.cast = rx.cast.filter(id => !isYou(id)); } } catch (_) {}
+      allChars = function () { return ac.apply(this, arguments).filter(id => !isYou(id)); };
+      try { return rr.apply(this, arguments); }
+      finally {
+        allChars = ac;
+        try {
+          const names = (rx.cast || []).map(id => first(ch(id).n)).filter(Boolean), a = names[0] || (zh() ? "他" : "him"), b = names[1] || a;
+          const P = zh() ? { whatif: "如果那晚" + a + "没有走……", au: a + "和" + b + "在同一个街角开对门的咖啡车……", swap: "说不出口的人换成了" + a + "……", sequel: "半年后，" + a + "又出现在门口……", crossover: "那家店的新客人是" + b + "……" }
+            : { whatif: "What if " + a + " hadn't walked away that night…", au: a + " and " + b + " run rival coffee carts on the same corner…", swap: a + " is the one who can't say it…", sequel: "Six months later, " + a + " shows up at the door again…", crossover: b + " is the new regular…" };
+          const ta = document.getElementById("rxTw"); if (ta && P[rx.type]) ta.placeholder = P[rx.type];
+        } catch (_) {}
+      }
+    };
+  }
+  if (typeof rxAuto === "function") {
+    const ra = rxAuto;
+    rxAuto = function () {
+      const o = ra.apply(this, arguments);
+      try {
+        if (!rx.twist) {
+          const names = (rx.cast || []).filter(id => !isYou(id)).map(id => first(ch(id).n));
+          const me = zh() ? "你" : "you", a = names[0] || "", b = names[1] || a;
+          const p = zh() ? ((typeof RX_AU_ZH !== "undefined" && RX_AU_ZH[rx.au]) || rx.au) : rx.au;
+          const H = zh() ? { whatif: "如果你和" + a + "的那件事换一种结局？", au: "你和" + a + "，但这次是在" + p + "。", swap: "你和" + a + "互换了位置——一切都变了。", sequel: "结局之后，你和" + a + "还得接着活下去。", crossover: a + "本来永远不该遇见" + b + "。" }
+            : { whatif: "What if it had gone differently for you and " + a + "?", au: "You and " + a + ", but it's " + p + ".", swap: "You and " + a + " switch places — and it changes everything.", sequel: "After the ending, you and " + a + " still have to live with it.", crossover: a + " was never supposed to meet " + b + "." };
+          if (a && H[rx.type]) o.hook = H[rx.type];
+        }
+      } catch (_) {}
+      return o;
+    };
+  }
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
