@@ -539,10 +539,13 @@ module.exports = L.wrap(async (req, res) => {
       /* 2026-10-29 · 门面闸：没有一句话简介，发现页上就是一张空卡。
          实测代价：5 部上线时 hook 全空，公开列表里只有标题、一行介绍都没有。 */
       if (!String(cfg.hook || '').trim() && !b.force) return L.bad(res, '还没有一句话简介（hook）—— 发现页上会是一张空卡。先填「一句话卖点」再上线（或由超级管理员强制上线）');
+      /* 2026-11-15 · 人物卡（发现 → 角色）跟作品一起上线；第一次上线必须有（后台第⑤步会自动生成，编剧确认） */
+      const leads = Array.isArray(cfg.leads) ? cfg.leads.filter(x => x && x.key && x.n).slice(0, 24) : [];
+      if (!s.work_id && !leads.length && !b.force) return L.bad(res, '还没有人物卡——每个能和玩家互动的主要角色都要有一张（会出现在 App「发现 → 角色」）。在第⑤步点「自动生成人物卡」，检查保存后再上线');
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
-      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true }, official: true, rules: b.rulesVersion || null };
+      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads }, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,
