@@ -1,6 +1,6 @@
-// /api/translate — machine translation of UI and story text, cached for everyone
+// /api/translate — private translation response; only explicitly published labels are shared
 // POST {to:'ja'|'ko'|'es'|'en'|'zh', texts:[…≤60]} → {map:{src:dst}}
-// Cached in Postgres by sha1(lang+text), so each line is translated once for all users; misses go to LongCat in one batch.
+// Model results return only to the requesting client; its device caches the response.
 const L = require('./_lib');
 const NAMES = { ja: 'Japanese', ko: 'Korean', es: 'Spanish (Latin American, US audience)', en: 'English (American)', zh: 'Simplified Chinese' };
 module.exports = L.wrap(async (req, res) => {
@@ -12,7 +12,7 @@ module.exports = L.wrap(async (req, res) => {
   const sql = await L.db();
   const h = t => L.crypto.createHash('sha1').update(to + '\n' + t).digest('hex');
   const hs = texts.map(h);
-  const rows = await sql('SELECT h, dst FROM translations WHERE h = ANY($1)', [hs]);
+  const rows = await sql('SELECT h, dst FROM translations WHERE published AND h = ANY($1)', [hs]);
   const got = {}; rows.forEach(r => { got[r.h] = r.dst; });
   const map = {}, miss = [];
   texts.forEach((t, i) => { if (got[hs[i]] != null) map[t] = got[hs[i]]; else miss.push(t); });
@@ -31,7 +31,7 @@ module.exports = L.wrap(async (req, res) => {
       if (Array.isArray(arr) && arr.length === list.length) {
         for (let i = 0; i < list.length; i++) {
           const dst = String(arr[i] || '').slice(0, 1200); if (!dst) continue; map[list[i]] = dst;
-          await sql('INSERT INTO translations (h, lang, src, dst) VALUES ($1,$2,$3,$4) ON CONFLICT (h) DO NOTHING', [h(list[i]), to, list[i], dst]);
+          // Private chat, memories and drafts must never enter the public dictionary.
         }
         return;
       }
