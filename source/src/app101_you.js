@@ -152,6 +152,9 @@
     if (!w || !Array.isArray(w.cast)) return [];
     const run = typeof lastRun === "function" ? lastRun(w.id) : null, pov = povOf(run, w);
     if(Array.isArray(w.leads)&&w.leads.length)return w.leads.filter(id=>ch(id)&&id!==pov);
+    // Resolve authoritative cast for worlds cached before the explicit leads list existed.
+    const bible = typeof bOf98 === "function" && bOf98(w);
+    if (bible) return bible.cast.filter(c => c.tier === "lead" && c.romanceable !== false && c.gender === "m").map(c => cid98(w.id, c.key)).filter(id => ch(id) && id !== pov);
     let L = w.cast.filter(id => id !== pov && ch(id) && ch(id).g === "m");
     const top = w.cast.slice(0, 4); const near = L.filter(id => top.includes(id)); if (near.length) L = near;
     return L.slice(0, 4);

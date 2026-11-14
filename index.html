@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="312cc81d0ec7 2026-11-14T04:00Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="301a69fdd02f 2026-11-14T04:54Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -19224,7 +19224,7 @@ async function install98(id) {
   S.mine.worlds[wid] = Object.assign(w, { id: wid, kind: "story", bible98: 1, official76: 1, community: id, mine: 0, author: Z98() ? "MIRU 官方" : "MIRU Originals",
     title: { zh: b.title.zh, en: b.title.en }, hook: { zh: b.hook.zh, en: b.hook.en }, premise: { zh: b.premise.zh, en: b.premise.en },
     you: { zh: LZ98(b.player.name) + " · " + (b.player.role ? (b.player.role.zh || "") : "") , en: (b.player.name.en || "") + " · " + (b.player.role ? (b.player.role.en || "") : "") },
-    warn: { zh: "", en: "" }, rel: [], openings: null, tags: (b.tags || []).slice(0, 8), or: b.orient || "bl", cast, stats: [0, 0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } }, cover: A.cover ? wid : null, calls: !!b.chapters.some(c => c.scenes.some(s => s.call)) });
+    warn: { zh: "", en: "" }, rel: [], openings: null, tags: (b.tags || []).slice(0, 8), or: b.orient || "bl", cast, leads: b.cast.filter(c => c.tier === "lead" && c.romanceable !== false && c.gender === "m").map(c => cid98(wid, c.key)), stats: [0, 0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } }, cover: A.cover ? wid : null, calls: !!b.chapters.some(c => c.scenes.some(s => s.call)) });
   if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save(); return wid;
 }
@@ -20488,6 +20488,9 @@ for(let i=1;i<=8;i++){const cue='m_north_light_'+String(i).padStart(2,'0');if(wi
     if (!w || !Array.isArray(w.cast)) return [];
     const run = typeof lastRun === "function" ? lastRun(w.id) : null, pov = povOf(run, w);
     if(Array.isArray(w.leads)&&w.leads.length)return w.leads.filter(id=>ch(id)&&id!==pov);
+    // Resolve authoritative cast for worlds cached before the explicit leads list existed.
+    const bible = typeof bOf98 === "function" && bOf98(w);
+    if (bible) return bible.cast.filter(c => c.tier === "lead" && c.romanceable !== false && c.gender === "m").map(c => cid98(w.id, c.key)).filter(id => ch(id) && id !== pov);
     let L = w.cast.filter(id => id !== pov && ch(id) && ch(id).g === "m");
     const top = w.cast.slice(0, 4); const near = L.filter(id => top.includes(id)); if (near.length) L = near;
     return L.slice(0, 4);

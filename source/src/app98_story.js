@@ -38,7 +38,7 @@ async function install98(id) {
   S.mine.worlds[wid] = Object.assign(w, { id: wid, kind: "story", bible98: 1, official76: 1, community: id, mine: 0, author: Z98() ? "MIRU 官方" : "MIRU Originals",
     title: { zh: b.title.zh, en: b.title.en }, hook: { zh: b.hook.zh, en: b.hook.en }, premise: { zh: b.premise.zh, en: b.premise.en },
     you: { zh: LZ98(b.player.name) + " · " + (b.player.role ? (b.player.role.zh || "") : "") , en: (b.player.name.en || "") + " · " + (b.player.role ? (b.player.role.en || "") : "") },
-    warn: { zh: "", en: "" }, rel: [], openings: null, tags: (b.tags || []).slice(0, 8), or: b.orient || "bl", cast, stats: [0, 0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } }, cover: A.cover ? wid : null, calls: !!b.chapters.some(c => c.scenes.some(s => s.call)) });
+    warn: { zh: "", en: "" }, rel: [], openings: null, tags: (b.tags || []).slice(0, 8), or: b.orient || "bl", cast, leads: b.cast.filter(c => c.tier === "lead" && c.romanceable !== false && c.gender === "m").map(c => cid98(wid, c.key)), stats: [0, 0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } }, cover: A.cover ? wid : null, calls: !!b.chapters.some(c => c.scenes.some(s => s.call)) });
   if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save(); return wid;
 }
