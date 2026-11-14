@@ -2613,7 +2613,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   function nameOf(id) { const c = ch(id) || {}; const n94 = c.n94 || {}; return String(n94.zh || first(c.n) || ""); }
 
   function tidy(txt) {
-    const L = String(txt).split("\n"), out = [], seenDone = new Set();
+    const L0 = String(txt).split("\n"), L = [], out = [], seenDone = new Set();
+    for (let i = 0; i < L0.length; i++) { let l = L0[i]; if (/^\s*⟦/.test(l)) { let k = 0; while (!/⟧/.test(l) && i + 1 < L0.length && k++ < 4) l += L0[++i].trim(); } L.push(l); }
     let skip = false;
     for (let l of L) {
       if (/^\s*⟦IF\|[^⟧]*⟧\s*$/.test(l)) { skip = true; continue; }
