@@ -14,9 +14,11 @@ const OFF94 = { cur: null, assets: {} };
 const dec94 = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
 function mk94(txt) { const m = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/.exec(String(txt || "").trim()); if (!m) return null; return { k: m[1], a: m[2] ? m[2].slice(1).split("|").map(dec94) : [] }; }
 async function off94Assets(id) {
-  if (OFF94.assets[id]) return OFF94.assets[id];
-  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) map = await r.json(); } catch (_) {}
-  OFF94.assets[id] = map || {}; return OFF94.assets[id];
+  const at=Date.now(); OFF94.assetAt=OFF94.assetAt||{};
+  if (OFF94.assets[id] && at-(OFF94.assetAt[id]||0)<120000) return OFF94.assets[id];
+  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Date.now(), {cache:"no-store"}); if (r.ok) map = await r.json(); } catch (_) {}
+  if (!Object.keys(map||{}).length && OFF94.assets[id]) return OFF94.assets[id];
+  OFF94.assets[id] = map || {}; OFF94.assetAt[id]=at; return OFF94.assets[id];
 }
 /* ---- parse: lift directives out of the narration ---- */
 function off94Parse(next, text) {
