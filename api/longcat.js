@@ -10,7 +10,7 @@
 export const config = { runtime: 'edge' };
 
 const LONGCAT_MODELS = ['LongCat-2.0', 'LongCat-2.5-Preview'];
-const ALLOWED = [/^https:\/\/(?:www\.)?miru\.plus$/, /^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
+const ALLOWED = [/^capacitor:\/\/localhost$/, /^https:\/\/(?:www\.)?miru\.plus$/, /^https:\/\/468013291jeffery\.github\.io$/, /^https:\/\/[a-z0-9-]+\.vercel\.app$/, /^http:\/\/localhost(:\d+)?$/, /^null$/];
 const FIRST_TOKEN_MS = Number(process.env.MIRU_FIRST_TOKEN_MS) || 10000; // edge 热路径：读 env 不读 DB（每次请求查一次库不值得）
 
 const env = (k, d) => (typeof process !== 'undefined' && process.env && process.env[k]) || d;
@@ -101,7 +101,7 @@ async function omni(o, headers) {
 
 function cors(origin) {
   const ok = !origin || ALLOWED.some(r => r.test(origin));
-  return { ok, headers: { 'Access-Control-Allow-Origin': ok && origin ? origin : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Expose-Headers': 'X-MIRU-Provider', 'Vary': 'Origin' } };
+  return { ok, headers: { 'Access-Control-Allow-Origin': ok && origin ? origin : 'null', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Miru-Client', 'Access-Control-Expose-Headers': 'X-MIRU-Provider', 'Vary': 'Origin' } };
 }
 const J = (o, status, h) => new Response(JSON.stringify(o), { status, headers: { ...h, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
@@ -135,7 +135,9 @@ export default async function handler(req) {
   await scnetResolve();
   let body;
   try { body = await req.json(); } catch { return J({ error: { message: 'bad json' } }, 400, c.headers); }
-  if (body.omni) return omni(body.omni, c.headers);
+  const native = req.headers.get('x-miru-client') === 'ios' || origin === 'capacitor://localhost';
+  const policy = 'Safety rules: keep romantic fiction non-explicit; do not generate explicit sexual content, sexual content involving minors, sexual violence, or hateful harassment. Ordinary non-explicit adult romance and fictional conflict are allowed.';
+  if (body.omni) { if (native) body.omni.sys = policy + '\n' + String(body.omni.sys || ''); return omni(body.omni, c.headers); }
   if (body.probe && body.qwen) { // is the voice-call model reachable? (tiny text turn, reports whether audio came back)
     const t0 = Date.now(), trace = []; const r = await omni({ voice: 'm2', sys: 'Reply in one short sentence.', msgs: [{ role: 'user', text: 'Say hi.' }], max: 40, trace }, c.headers);
     if (r.status !== 200) return J({ qwen: { ok: false, status: r.status, error: (await r.json().catch(() => ({}))).error, trace }, sites: qwenSites().map(x => x.base) }, 200, c.headers);
@@ -190,6 +192,7 @@ export default async function handler(req) {
     temperature: typeof body.temperature === 'number' ? body.temperature : 0.85,
   };
   if (!clean.messages.length) return J({ error: { message: 'no messages' } }, 400, c.headers);
+  if (native) clean.messages.push({ role: 'system', content: policy });
   const only = body.provider && list.find(p => p.id === body.provider); // admin may force one provider
   const chain = only ? [only] : list;
   const deadline = Date.now() + (body.interactive ? 28000 : 90000);

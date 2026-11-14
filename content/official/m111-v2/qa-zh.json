@@ -1,0 +1,130 @@
+{
+  "qa": {
+    "ok": true,
+    "err": [],
+    "warn": [],
+    "stats": {
+      "chapters": 12,
+      "scenes": 48,
+      "choices": 24,
+      "options": 74,
+      "dots": 24,
+      "you": 0,
+      "casts": 6,
+      "lines": 488,
+      "callsOpen": 0,
+      "callsClose": 0,
+      "ifs": 80,
+      "ifEnds": 80,
+      "unknown": [],
+      "assets": {
+        "bg": 48,
+        "cg": 0,
+        "video": 0,
+        "photo": 0,
+        "item": 0,
+        "total": 48
+      },
+      "lore": 0,
+      "orient": {
+        "declared": "bg",
+        "inferred": "bg",
+        "final": "bg"
+      }
+    },
+    "perCh": [
+      {
+        "n": 1,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 35
+      },
+      {
+        "n": 2,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 3,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 38
+      },
+      {
+        "n": 4,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 5,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 6,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 38
+      },
+      {
+        "n": 7,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 8,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 9,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 38
+      },
+      {
+        "n": 10,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 11,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 41
+      },
+      {
+        "n": 12,
+        "choices": 2,
+        "dots": 2,
+        "scenes": 4,
+        "lines": 52
+      }
+    ]
+  },
+  "style": {
+    "ok": true,
+    "err": [],
+    "warn": [],
+    "stats": {
+      "chapters": 12
+    }
+  }
+}

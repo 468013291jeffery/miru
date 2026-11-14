@@ -1,137 +1,68 @@
-// /api/wallet — the server-side diamond ledger (the device balance follows this one)
-// GET → {gems, plus, recent[]}
-// POST {op:'spend', amount, reason, key}   idempotent by key; 402 when the balance is too low
-// POST {op:'daily'}                         +3💎 once per day
-// GET  ?r=rank&orient=  ·  ?r=rank&fans=cid      weekly character chart / top fans (api/_board.js, no login needed)
-// POST ?r=rank {op:'vote'|'buy'|'share', …}    free votes, bought votes (spends 💎), share bonus
-// GET  ?r=tasks  ·  POST ?r=tasks {op:'claim', id}  server-verified earn tasks
-// POST {op:'play', sku, token}            Google Play Billing（安卓 App）：服务器向 Google 验单后发钻并消耗
-// POST {op:'purchase', sku, platform, receipt}  store purchases. Real Apple/Google receipt checks need the store keys
-//      (APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT); until then only PAY_TEST=1 grants (test mode, clearly labelled).
-const L = require('./_lib');
-const BOARD = require('./_board');
-// v4.0: no membership. Packs $0.99 → 5 · $2.99 → 16 · $4.99 → 28 · $9.99 → 60 · $19.99 → 125 · $49.99 → 330 · $99.99 → 700 (bonus included in the id)
-const SKUS = { gems_5: 5, gems_16: 16, gems_28: 28, gems_60: 60, gems_125: 125, gems_330: 330, gems_700: 700 };
-const EARN_DAY_FALLBACK = 80; // 真正生效的是 config.earn_cap
-// 首次充值翻倍时额外送的基础钻（不含 bonus）
-const BASE = { gems_5: 5, gems_16: 15, gems_28: 25, gems_60: 50, gems_125: 100, gems_330: 250, gems_700: 500 };
-
-/* Apple product id → { sku, gems }。三种写法都认：
-   ① cfg.skus[x].apple === productId（后台显式映射）② productId 本身就是 sku 名（gems_5）
-   ③ productId 末段是 sku 名（com.miru.plus.app.gems_5）—— 这样 App Store Connect 里怎么起名都能对上 */
-function gemsForSku(productId, cfg) {
-  const pid = String(productId || '');
-  if (!pid) return null;
-  const sk = (cfg && cfg.skus) || {};
-  for (const name of Object.keys(sk)) {
-    const v = sk[name];
-    if (v && typeof v === 'object' && v.apple === pid) return { sku: name, gems: Number(v.gems) || SKUS[name] || 0 };
-  }
-  const pick = name => ({ sku: name, gems: (sk[name] && Number(sk[name].gems)) || SKUS[name] });
-  if (SKUS[pid]) return pick(pid);
-  const tail = pid.split('.').pop();
-  if (SKUS[tail]) return pick(tail);
-  return null;
+const L=require('./_lib');
+const BOARD=require('./_board');
+const W=require('./_wallet');
+const SKUS={gems_5:5,gems_16:16,gems_28:28,gems_60:60,gems_125:125,gems_330:330,gems_700:700};
+function gemsForSku(productId,cfg){
+ const pid=String(productId||'');if(!pid)return null;const sk=(cfg&&cfg.skus)||{};
+ for(const name of Object.keys(sk)){const v=sk[name];if(v&&typeof v==='object'&&v.apple===pid)return {sku:name,gems:Number(v.gems)||SKUS[name]||0};}
+ const pick=name=>({sku:name,gems:(sk[name]&&Number(sk[name].gems))||SKUS[name]});
+ if(SKUS[pid])return pick(pid);const tail=pid.split('.').pop();return SKUS[tail]?pick(tail):null;
 }
-async function apply(sql, uid, delta, reason, key) {
-  if (key) { const dup = await sql('SELECT balance FROM ledger WHERE key=$1', [key]); if (dup[0]) return { gems: dup[0].balance, dup: true }; }
-  await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [uid]);
-  const r = await sql('UPDATE wallet SET gems=gems+$2, updated_at=now() WHERE user_id=$1 AND gems+$2>=0 RETURNING gems', [uid, delta]);
-  if (!r[0]) return null;
-  await sql('INSERT INTO ledger (user_id, delta, reason, key, balance) VALUES ($1,$2,$3,$4,$5) ON CONFLICT (key) DO NOTHING', [uid, delta, String(reason || '').slice(0, 40), key || null, r[0].gems]);
-  return { gems: r[0].gems };
-}
-module.exports = L.wrap(async (req, res) => {
-  if (!L.cors(req, res, 'GET, POST, OPTIONS')) return;
-  /* 打榜和任务（api/_board.js）：借这个函数的入口，不新增 Vercel 函数。榜单 GET 不需要登录，所以放在 needActive 前面。 */
-  if (req.query && (req.query.r === 'rank' || req.query.r === 'tasks')) return BOARD.handle(req, res, { apply });
-  const u = await L.needActive(req, res); if (!u) return;
-  const sql = await L.db(); const cfg = await L.config();
-  if (req.method === 'GET') {
-    await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [u.uid]);
-    const w = await sql('SELECT gems, plus_until FROM wallet WHERE user_id=$1', [u.uid]);
-    const recent = await sql('SELECT delta, reason, balance, at FROM ledger WHERE user_id=$1 ORDER BY id DESC LIMIT 20', [u.uid]);
-    return L.send(res, 200, { gems: w[0].gems, plus: false, recent });
-  }
-  const b = L.jsonBody(req);
-  if (b.op === 'spend') {
-    const n = Math.floor(Number(b.amount));
-    if (!(n > 0 && n <= 500)) return L.bad(res, 'bad amount');
-    const r = await apply(sql, u.uid, -n, b.reason || 'spend', b.key ? 'spend:' + u.uid + ':' + String(b.key).slice(0, 80) : null);
-    if (!r) { const w = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.uid]); return L.send(res, 402, { error: 'not enough diamonds', gems: w[0] ? w[0].gems : 0 }); }
-    return L.send(res, 200, r);
-  }
-  if (b.op === 'earn') {
-    const n = Math.floor(Number(b.amount));
-    if (!(n > 0 && n <= 50)) return L.bad(res, 'bad amount');
-    const used = await sql(`INSERT INTO usage (user_id, day, kind, n) VALUES ($1, CURRENT_DATE, 'earn', $2) ON CONFLICT (user_id, day, kind) DO UPDATE SET n = usage.n + $2 RETURNING n`, [u.uid, n]);
-    if (used[0].n > (Number(cfg.earn_cap) || EARN_DAY_FALLBACK)) { await sql(`UPDATE usage SET n = n - $2 WHERE user_id=$1 AND day=CURRENT_DATE AND kind='earn'`, [u.uid, n]); const w = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.uid]); return L.send(res, 429, { error: 'daily free-diamond limit reached', gems: w[0] ? w[0].gems : 0 }); }
-    const r = await apply(sql, u.uid, n, 'earn:' + String(b.reason || '').slice(0, 30), b.key ? 'earn:' + u.uid + ':' + String(b.key).slice(0, 80) : null);
-    return L.send(res, 200, r);
-  }
-  if (b.op === 'daily') {
-    const day = new Date().toISOString().slice(0, 10);
-    const r = await apply(sql, u.uid, Number(cfg.daily_gems) || 3, 'daily', 'daily:' + u.uid + ':' + day);
-    return L.send(res, 200, r);
-  }
-  /* StoreKit 2 交易凭证：App 端把 `Transaction.jwsRepresentation` 原样发上来，服务端用 Apple 根证书本地验签
-     （不需要 App Store Connect 的 .p8）。幂等键 = Apple 验过的 transactionId —— 不是客户端传来的字符串，
-     所以同一笔交易无论重试多少次、被谁重放，都只会加一次钻。 */
-  if (b.op === 'iap') {
-    const jws = String(b.jws || b.jwsRepresentation || '');
-    if (!jws) return L.bad(res, 'jws required');
-    let t;
-    try { t = require('./_iap').verifyTransaction(jws); }
-    catch (e) { return L.bad(res, 'invalid transaction: ' + String(e.message || e).slice(0, 80)); }
-    const wantBundle = process.env.IAP_BUNDLE_ID || 'com.miru.plus.app';
-    if (t.bundleId !== wantBundle) return L.bad(res, 'transaction for another app');
-    const mapped = gemsForSku(t.productId, cfg);
-    if (!mapped) return L.bad(res, 'unknown product: ' + String(t.productId).slice(0, 60));
-    const key = 'iap:' + String(t.transactionId).slice(0, 80);
-    const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND reason LIKE '%(iap)' LIMIT 1", [u.uid]);
-    const doubled = (!first[0] && cfg.first_purchase_double !== false) ? (BASE[mapped.sku] || 0) : 0;
-    const total = mapped.gems + doubled;
-    const r = await apply(sql, u.uid, total, mapped.sku + '(iap)', key);
-    if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING',
-      [L.newId('o_'), u.uid, mapped.sku, 'ios', total, ((cfg.skus || {})[mapped.sku] || {}).usd || 0, 'USD', 'paid', false, key]);
-    return L.send(res, 200, Object.assign({ iap: true, transactionId: t.transactionId, productId: t.productId, sku: mapped.sku, gems: total, doubled: doubled > 0, dup: !!(r && r.dup) }, r || {}));
-  }
-  /* 2026-11-05 · Google Play 内购（安卓 App 里的 Play Billing）：客户端把 purchaseToken 交上来，服务器向 Google 验单 → 发钻 → 消耗。
-     同一张单只发一次（key = play:<orderId>）；Google 那边已消耗的单重复交上来，按幂等返回余额。 */
-  if (b.op === 'play') {
-    const PLAY = require('./_play');
-    const productId = String(b.sku || b.productId || ''), token = String(b.token || b.purchaseToken || '');
-    const mapped = gemsForSku(productId, cfg);
-    if (!mapped) return L.bad(res, 'unknown product: ' + productId.slice(0, 60));
-    let p;
-    try { p = await PLAY.verifyProduct(productId, token); }
-    catch (e) { const msg = String(e.message || e); return L.send(res, /not set/.test(msg) ? 501 : 400, { error: msg.slice(0, 160) }); }
-    const key = 'play:' + String(p.orderId || token).slice(0, 80);
-    const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND (reason LIKE '%(iap)' OR reason LIKE '%(play)') LIMIT 1", [u.uid]);
-    const doubled = (!first[0] && cfg.first_purchase_double !== false) ? (BASE[mapped.sku] || 0) : 0;
-    const total = mapped.gems + doubled;
-    const r = await apply(sql, u.uid, total, mapped.sku + '(play)', key);
-    if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING',
-      [L.newId('o_'), u.uid, mapped.sku, 'android', total, ((cfg.skus || {})[mapped.sku] || {}).usd || 0, 'USD', 'paid', p.purchaseType === 0, key]);
-    let consumed = p.consumptionState === 1;
-    if (!consumed) { try { await PLAY.consume(productId, token); consumed = true; } catch (e) { console.warn('[play] consume', e.message); } }
-    return L.send(res, 200, Object.assign({ play: true, orderId: p.orderId, sku: mapped.sku, gems: total, doubled: doubled > 0, consumed, dup: !!(r && r.dup), test: p.purchaseType === 0 }, r || {}));
-  }
-  if (b.op === 'purchase') {
-    const sku = String(b.sku || '');
-    const SK = Object.assign({}, ...Object.entries(cfg.skus || {}).map(([k, v]) => ({ [k]: Number(v.gems) || SKUS[k] || 0 })));
-    if (!(sku in SKUS) && !(sku in SK)) return L.bad(res, 'unknown sku');
-    const test = process.env.PAY_TEST === '1';
-    if (!test) return L.send(res, 501, { error: 'store receipt verification is not configured yet (set APPLE_SHARED_SECRET / GOOGLE_SERVICE_ACCOUNT, or PAY_TEST=1 for test purchases)' });
-    const key = 'buy:' + u.uid + ':' + String(b.receipt || L.newId()).slice(0, 80);
-    const first = await sql("SELECT 1 FROM ledger WHERE user_id=$1 AND reason LIKE 'gems_%' LIMIT 1", [u.uid]);
-    const gems = (SK[sku] || SKUS[sku]) + (!first[0] && cfg.first_purchase_double !== false ? (BASE[sku] || 0) : 0);
-    const r = await apply(sql, u.uid, gems, sku + '(test)', key);
-    if (r && !r.dup) await sql('INSERT INTO orders (id, user_id, sku, platform, gems, price_cents, currency, status, test, receipt) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) ON CONFLICT DO NOTHING', [L.newId('o_'), u.uid, sku, String(b.platform || 'web').slice(0, 12), gems, ((cfg.skus || {})[sku] || {}).usd || 0, 'USD', 'paid', true, String(b.receipt || '').slice(0, 200)]);
-    return L.send(res, 200, Object.assign({ test: true }, r));
-  }
-  L.bad(res, 'unknown op');
+async function apply(sql,uid,delta,reason,key){return W.apply(sql,uid,delta,reason,key);}
+module.exports=L.wrap(async(req,res)=>{
+ if(!L.cors(req,res,'GET, POST, OPTIONS'))return;
+ if(req.query&&(req.query.r==='rank'||req.query.r==='tasks'))return BOARD.handle(req,res,{apply});
+ const u=await L.needActive(req,res);if(!u)return;
+ const sql=await L.db(),cfg=await L.config();
+ if(req.method==='GET'){
+  await sql('INSERT INTO wallet(user_id,gems) VALUES($1,0) ON CONFLICT DO NOTHING',[u.uid]);
+  const w=await sql('SELECT gems FROM wallet WHERE user_id=$1',[u.uid]);
+  const recent=await sql('SELECT delta,reason,balance,at FROM ledger WHERE user_id=$1 ORDER BY id DESC LIMIT 20',[u.uid]);
+  return L.send(res,200,{gems:w[0].gems,plus:false,recent,iap:await W.info(sql,u.uid,cfg)});
+ }
+ const b=L.jsonBody(req),respond=r=>L.send(res,r&&r.code?r.code:200,r);
+ if(b.op==='spend'){
+  const n=Math.floor(Number(b.amount));if(!(n>0&&n<=500))return L.bad(res,'bad amount');
+  const r=await apply(sql,u.uid,-n,b.reason||'spend',b.key?'spend:'+u.uid+':'+String(b.key).slice(0,80):null);
+  if(!r){const w=await sql('SELECT gems FROM wallet WHERE user_id=$1',[u.uid]);return L.send(res,402,{error:'not enough diamonds',gems:w[0]?w[0].gems:0});}return respond(r);
+ }
+ if(b.op==='earn'){
+  const n=Math.floor(Number(b.amount));if(!(n>0&&n<=50))return L.bad(res,'bad amount');
+  return respond(await W.write(sql,u.uid,{delta:n,reason:'earn:'+String(b.reason||'').slice(0,30),key:b.key?'earn:'+u.uid+':'+String(b.key).slice(0,80):null,earnCap:Number(cfg.earn_cap)||80}));
+ }
+ if(b.op==='daily'){const day=new Date().toISOString().slice(0,10);return respond(await apply(sql,u.uid,Number(cfg.daily_gems)||3,'daily','daily:'+u.uid+':'+day));}
+ if(b.op==='iap'){
+  const jws=String(b.jws||b.jwsRepresentation||'');if(!jws)return L.bad(res,'jws required');
+  let t,mapped;
+  try{t=await require('./_iap').verifyTransaction(jws);}
+  catch(e){if(e.code===503)throw e;return L.bad(res,'invalid transaction: '+String(e.message||e).slice(0,120));}
+  const token=await W.accountToken(sql,u.uid);
+  try{W.validateIdentity(t,token);}catch(e){return L.bad(res,'invalid transaction: '+String(e.message||e).slice(0,120));}
+  const reply=r=>L.send(res,r&&r.code?r.code:200,Object.assign({iap:true,transactionId:t.transactionId,productId:t.productId,environment:t.environment,test:t.environment==='Sandbox'},r||{}));
+  const committed=await W.replay(sql,u.uid,t.transactionId);if(committed)return reply(committed);
+  try{mapped=W.appleProducts(cfg).get(t.productId);if(!mapped)throw new Error('unknown Apple product');}
+  catch(e){return L.bad(res,String(e.message||e));}
+  return reply(Object.assign({sku:mapped.sku},await W.purchase(sql,u.uid,mapped,cfg,{key:'iap:'+t.transactionId,reason:'iap',platform:'ios',environment:t.environment,test:t.environment==='Sandbox'})));
+ }
+ if(b.op==='play'){
+  const PLAY=require('./_play'),productId=String(b.sku||b.productId||''),token=String(b.token||b.purchaseToken||''),mapped=gemsForSku(productId,cfg);
+  if(!mapped)return L.bad(res,'unknown product: '+productId.slice(0,60));let p;
+  try{p=await PLAY.verifyProduct(productId,token);}catch(e){const msg=String(e.message||e);return L.send(res,/not set/.test(msg)?501:400,{error:msg.slice(0,160)});}
+  const r=await W.purchase(sql,u.uid,mapped,cfg,{key:'play:'+String(p.orderId||token).slice(0,80),reason:'play',platform:'android',test:p.purchaseType===0,environment:p.purchaseType===0?'Sandbox':'Production'});
+  if(r&&r.code)return L.send(res,r.code,r);let consumed=p.consumptionState===1;
+  if(!consumed){try{await PLAY.consume(productId,token);consumed=true;}catch(e){console.warn('[play] consume',e.message);}}
+  return L.send(res,200,Object.assign({play:true,orderId:p.orderId,sku:mapped.sku,consumed,test:p.purchaseType===0},r||{}));
+ }
+ if(b.op==='purchase'){
+  const sku=String(b.sku||''),SK=Object.assign({},...Object.entries(cfg.skus||{}).map(([k,v])=>({[k]:Number(v.gems)||SKUS[k]||0})));
+  if(!(sku in SKUS)&&!(sku in SK))return L.bad(res,'unknown sku');
+  const nativeIOS=req.headers.origin==='capacitor://localhost'||String(req.headers['x-miru-client']||'').toLowerCase()==='ios';
+  if(nativeIOS)return L.send(res,400,{error:'iOS purchases require a verified App Store transaction'});
+  // Existing explicit Web/Android test mode; PAY_TEST must be disabled for a production release.
+  if(process.env.PAY_TEST!=='1')return L.send(res,501,{error:'test purchases are not enabled'});
+  const r=await W.purchase(sql,u.uid,{sku,gems:SK[sku]||SKUS[sku]},cfg,{key:'buy:'+u.uid+':'+String(b.receipt||L.newId()).slice(0,80),reason:'test',platform:String(b.platform||'web').slice(0,12),environment:'Sandbox',test:true});
+  return L.send(res,r&&r.code?r.code:200,Object.assign({test:true},r||{}));
+ }
+ return L.bad(res,'unknown op');
 });
-
-// 供自检使用（Vercel 只调用 wrap 出来的 handler，挂个属性无害）
-module.exports.gemsForSku = gemsForSku;
+module.exports.gemsForSku=gemsForSku;

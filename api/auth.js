@@ -11,6 +11,7 @@
 // POST {op:'profile', name}    → rename
 // POST {op:'delete'}           → delete the account (App Store requirement): personal data removed, works taken down
 const L = require('./_lib');
+const Apple = require('./_apple');
 
 const maskPhone = p => p ? String(p).slice(0, 3) + '•••' + String(p).slice(-4) : null;
 const pubUser = u => ({ id: u.id, email: u.email || null, phone: maskPhone(u.phone), name: u.name || null, avatar: u.avatar || null, provider: u.provider || (u.email ? 'email' : u.phone ? 'phone' : 'guest'), created_at: u.created_at });
@@ -18,16 +19,21 @@ function blocked(u) { return u.status === 'banned' && (!u.ban_until || new Date(
 
 async function newUser(sql, fields) {
   const cfg = await L.config(), id = L.newId('u_'), gems = Number(cfg.welcome_gems) || 0;
-  await sql('INSERT INTO users (id, email, pass, name, lang, provider, google_sub, apple_sub, avatar, platform) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)',
-    [id, fields.email || null, fields.pass || null, fields.name || null, fields.lang || null, fields.provider || 'guest', fields.google_sub || null, fields.apple_sub || null, fields.avatar || null, fields.platform || null]);
-  await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, $2) ON CONFLICT DO NOTHING', [id, gems]);
-  if (gems) await sql('INSERT INTO ledger (user_id, delta, reason, key, balance) VALUES ($1,$2,$3,$4,$2) ON CONFLICT DO NOTHING', [id, gems, 'welcome', 'welcome:' + id]);
-  const r = await sql('SELECT * FROM users WHERE id=$1', [id]);
-  return { user: r[0], gems };
+  if (!Number.isSafeInteger(gems) || gems < 0) throw new Error('invalid welcome diamond configuration');
+  const reward = JSON.stringify({ delta: gems, reason: 'welcome', key: 'welcome:' + id });
+  const rows = await sql(`WITH new_user AS (
+    INSERT INTO users (id, email, pass, name, lang, provider, google_sub, apple_sub, avatar, platform)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *
+  ) SELECT to_jsonb(n) AS account, miru_wallet_write(n.id,$11::jsonb) AS wallet FROM new_user n`,
+    [id, fields.email || null, fields.pass || null, fields.name || null, fields.lang || null,
+      fields.provider || 'guest', fields.google_sub || null, fields.apple_sub || null,
+      fields.avatar || null, fields.platform || null, reward]);
+  return { user: rows[0].account, gems: rows[0].wallet.gems };
 }
 async function signedIn(res, sql, u, extra) {
   if (blocked(u)) return L.send(res, 403, { error: 'banned', reason: u.ban_reason || '', until: u.ban_until });
   if (u.status === 'deleted') return L.bad(res, 'account deleted', 401);
+  if (u.status === 'deletion_pending') return L.send(res, 409, { error: 'account deletion pending', action: 'retry_account_deletion', retryable: true });
   await sql('UPDATE users SET last_seen=now() WHERE id=$1', [u.id]);
   const w = await sql('SELECT gems FROM wallet WHERE user_id=$1', [u.id]);
   return L.send(res, 200, Object.assign({ token: L.tokenFor(u.id, u.role, u.tv), user: pubUser(u), gems: w[0] ? w[0].gems : 0 }, extra || {}));
@@ -51,6 +57,18 @@ module.exports = L.wrap(async (req, res) => {
     return L.send(res, 200, { user: pubUser(r[0]) });
   }
   const b = L.jsonBody(req), op = b.op;
+  if (op === 'apple_challenge') {
+    try { if (!(await L.bump('apple:' + L.ip(req), 'apple_challenge', 60))) return L.bad(res, 'too many Apple sign-in requests', 429); return L.send(res, 200, await Apple.challenge(sql, b, req)); }
+    catch (e) { return L.send(res, e.code || 500, { error: e.message, action: e.action, retryable: !!e.retryable }); }
+  }
+  if (op === 'delete') {
+    const cur = L.needUser(req, res); if (!cur) return;
+    if (cur.adm) return L.bad(res, 'admin token', 401);
+    const u = (await sql('SELECT * FROM users WHERE id=$1', [cur.uid]))[0];
+    if (!u) return L.bad(res, 'account not found', 401);
+    try { return L.send(res, 200, await Apple.deleteAccount(sql, { ...u, tv: cur.tv || 0 }, L)); }
+    catch (e) { return L.send(res, e.code || 503, { error: e.message, action: e.action || 'retry_account_deletion', retryable: e.retryable !== false }); }
+  }
 
   if (op === 'adult_confirm') {
     const cfg = await L.config(); if (cfg.adult_enabled !== true || cfg.adult_self_verify !== true) return L.bad(res, 'self confirmation is off', 403);
@@ -69,22 +87,29 @@ module.exports = L.wrap(async (req, res) => {
   }
 
   if (op === 'google' || op === 'apple') {
-    let p; try { p = op === 'google' ? await L.verifyGoogle(String(b.idToken || '')) : await L.verifyApple(String(b.idToken || '')); } catch (e) { return L.bad(res, String(e.message || e), 401); }
+    let p; try { p = op === 'google' ? await L.verifyGoogle(String(b.idToken || '')) : await Apple.authenticate(sql, b, req); } catch (e) { return L.send(res, e.code || 401, { error: String(e.message || e), action: e.action, retryable: !!e.retryable }); }
+    const finish = async (user, extra) => {
+      if (op === 'apple' && user.status !== 'deleted' && user.status !== 'deletion_pending' && !blocked(user)) {
+        try { await Apple.saveGrant(sql, user.id, p); }
+        catch (e) { if (!e.action) throw e; return L.send(res, e.code || 503, { error: e.message, action: e.action, retryable: !!e.retryable }); }
+      }
+      return signedIn(res, sql, user, extra);
+    };
     const col = op === 'google' ? 'google_sub' : 'apple_sub';
     let r = await sql(`SELECT * FROM users WHERE ${col}=$1`, [p.sub]);
-    if (r[0]) return signedIn(res, sql, r[0], { restored: true });
+    if (r[0]) return finish(r[0], { restored: true });
     if (p.email) {
       r = await sql('SELECT * FROM users WHERE email=$1', [p.email]);
-      if (r[0]) { await sql(`UPDATE users SET ${col}=$2, avatar=COALESCE(avatar,$3) WHERE id=$1`, [r[0].id, p.sub, p.avatar]); r[0][col] = p.sub; return signedIn(res, sql, r[0], { restored: true }); }
+      if (r[0]) { await sql(`UPDATE users SET ${col}=$2, avatar=COALESCE(avatar,$3) WHERE id=$1`, [r[0].id, p.sub, p.avatar]); r[0][col] = p.sub; return finish(r[0], { restored: true }); }
     }
     const name = (b.name && String(b.name).slice(0, 40)) || p.name || null;
     const g = await currentGuest(sql, req);
     if (g) {
       const up = await sql(`UPDATE users SET ${col}=$2, email=COALESCE(email,$3), name=COALESCE(name,$4), avatar=COALESCE(avatar,$5), provider=$6 WHERE id=$1 RETURNING *`, [g.id, p.sub, p.email, name, p.avatar, op]);
-      return signedIn(res, sql, up[0], { linked: true });
+      return finish(up[0], { linked: true });
     }
     const { user } = await newUser(sql, { provider: op, [col]: p.sub, email: p.email, name, avatar: p.avatar });
-    return signedIn(res, sql, user, { created: true });
+    return finish(user, { created: true });
   }
 
   /* phone sign-in through Firebase: POST {op:'firebase', idToken, name?} */
@@ -162,7 +187,7 @@ module.exports = L.wrap(async (req, res) => {
     return signedIn(res, sql, u[0]);
   }
 
-  if (op === 'password' || op === 'logout_all' || op === 'profile' || op === 'delete') {
+  if (op === 'password' || op === 'logout_all' || op === 'profile') {
     const cur = await L.needActive(req, res); if (!cur) return;
     const r = await sql('SELECT * FROM users WHERE id=$1', [cur.uid]); const u = r[0];
     if (op === 'password') {
@@ -173,14 +198,6 @@ module.exports = L.wrap(async (req, res) => {
     }
     if (op === 'logout_all') { const up = await sql('UPDATE users SET tv=COALESCE(tv,0)+1 WHERE id=$1 RETURNING *', [u.id]); return signedIn(res, sql, up[0]); }
     if (op === 'profile') { const up = await sql('UPDATE users SET name=$2 WHERE id=$1 RETURNING *', [u.id, String(b.name || '').slice(0, 40) || null]); return L.send(res, 200, { user: pubUser(up[0]) }); }
-    if (op === 'delete') {
-      await sql("UPDATE users SET status='deleted', email=NULL, phone=NULL, pass=NULL, name=NULL, avatar=NULL, google_sub=NULL, apple_sub=NULL, note=COALESCE(note,'')||' [deleted by user '||now()::date||']', tv=COALESCE(tv,0)+1 WHERE id=$1", [u.id]);
-      await sql('DELETE FROM states WHERE user_id=$1', [u.id]); await sql('DELETE FROM memories WHERE user_id=$1', [u.id]);
-      await sql("UPDATE works SET status='removed', updated_at=now() WHERE author=$1", [u.id]);
-      const a = await sql("UPDATE assets SET status='removed' WHERE owner=$1 RETURNING url", [u.id]);
-      for (const x of a) if (x.url) await L.blobDel(x.url);
-      return L.send(res, 200, { ok: true });
-    }
   }
 
   const email = String(b.email || '').trim().toLowerCase(), pw = String(b.password || '');

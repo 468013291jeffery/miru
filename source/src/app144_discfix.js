@@ -2184,7 +2184,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   function chap(th) { try { const w = wd(th.wid); return w && w.pack && w.pack.chapters && w.pack.chapters[(+th.pk.ch || 1) - 1]; } catch (_) { return null; } }
   function goals(th) {
     const c = th && th.pk && chap(th); if (!c) return [];
-    const raw = c.done163 || c.done || [];
+    const raw = (c.done163Locales && c.done163Locales[CL() === "zh" ? "zh" : "en"]) || c.done163 || c.done || [];
     return (Array.isArray(raw) ? raw : []).map(d => (typeof d === "string" ? parseDone(d) : d && d.type ? { type: String(d.type).toLowerCase(), val: d.val || d.value || "", name: d.name || "", push: d.push || "" } : null)).filter(d => d && d.val).slice(0, 3);
   }
   function st(th) {
@@ -2245,6 +2245,11 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     try {
       const c = chap(th); const cs = (c && c.choices) || []; if (!cs.length || typeof packPick !== "function") return;
       let k = null;
+      /* A stalled conversation cannot grant romantic consent in native v2. */
+      if (wd(th.wid)?.pack?.nativeV2 && +th.pk.ch === PCN(wd(th.wid))) {
+        const neutral = cs.find(x => (x.set || []).includes("ending_open"));
+        if (neutral) { if (curT === th.id && th.pk.st === "choose") packPick(neutral.k); return; }
+      }
       try {
         const r = await ask("玩家在互动剧的章末选择点聊了很久，一直没有明确选哪条。按他到目前为止的态度，判断最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + cs.map(x => x.k + "｜" + Lz(x.t)).join("\n") + "\n玩家最近说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 30, modelTier: "default", timeout: 12000 });
         k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;

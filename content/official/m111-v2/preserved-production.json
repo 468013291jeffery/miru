@@ -1,0 +1,82 @@
+{
+  "baseline": "/opt/miru/releases/ceb212a",
+  "policy": "Production-only iOS, account, wallet, voice and legal changes merged without replacing them with older Git source. Generated index/rules matched the Git baseline. No environment or private credential files read or committed.",
+  "files": [
+    {
+      "file": "api/_iap.js",
+      "sha256": "dae5e18f1d314c79298ebdc2e184be1c4be347b2b94b238a09f2e7e914c1e6bd"
+    },
+    {
+      "file": "api/_lib.js",
+      "sha256": "8847ab799153f928b9ad7ead67aa86e94630179d2e5a5bc161b65af706fde981"
+    },
+    {
+      "file": "api/auth.js",
+      "sha256": "723b1c58bb98e7d6877c6dc0a70b7ae605496612f8b8cddc3d87a883c1627356"
+    },
+    {
+      "file": "api/i18n.js",
+      "sha256": "35ff72ea10d4977ea2faa95187562be90d3451447d6114dd4ea0afc46cec5537"
+    },
+    {
+      "file": "api/longcat.js",
+      "sha256": "4729639742dad90990efcf1237f1b820e4d9ed2601226ddcb2c8834590dedcfd"
+    },
+    {
+      "file": "api/translate.js",
+      "sha256": "41342625aef1b48d186576102779411e8a4f0f52e22c421f7ac7ac5df9a70c3e"
+    },
+    {
+      "file": "api/tts.js",
+      "sha256": "1a0e8d400cc0001f1c701d83fc84ec47b906d03f9b36e29547ae9e83f4c4b67f"
+    },
+    {
+      "file": "api/wallet.js",
+      "sha256": "13e629ae1dd55296ee2ef37c9a5bf10f5a4f4f38edce0fca07ddbaec195b6e35"
+    },
+    {
+      "file": "api/works.js",
+      "sha256": "6275d2203581a8a518c0927fe6b4a194638111dbf9360615e803dce38b8e8142"
+    },
+    {
+      "file": "package-lock.json",
+      "sha256": "6c2441391c1649ac749d2dcc11f57e084cdede72bbfe2ca20a41de19e4b2b9c9"
+    },
+    {
+      "file": "package.json",
+      "sha256": "fef858f0ce0c1c11666863d9971d3d2c6073f30f16a3db8fe425ce7875b93637"
+    },
+    {
+      "file": "privacy.html",
+      "sha256": "984b4029039cd84c427d58cc70301eca3022716adca3c6b225e4fac0aac60a3c"
+    },
+    {
+      "file": "terms.html",
+      "sha256": "5d9877b008f5861c7da80550aad4ad44c58ba8cc3000f5a1f41653fd36178136"
+    },
+    {
+      "file": "api/_apple.js",
+      "sha256": "33aef9ac399deeb9c37e8ee32862102da3fdc1740e0784a61f7d32f5e36190a4"
+    },
+    {
+      "file": "api/_voice.js",
+      "sha256": "94c9745ecfc0c9ff56d4b3a537c87d5c82b13146b2d1ba33c6e3c97dd30d7345"
+    },
+    {
+      "file": "api/_wallet.js",
+      "sha256": "dadbc817f8828c42d99992a00ee221545a8393a1acefe1f5d28c20fc7b18b193"
+    },
+    {
+      "file": "deploy/migrate.cjs",
+      "sha256": "f99740f546f1c3e768022d9e43eb91dfd4798c87902af8d8c1edebc8d76f93fb"
+    },
+    {
+      "file": "deploy/server.cjs",
+      "sha256": "fd18b1c1f81d9c91ab6d0b0c2794af6da38f923a47c5d4cda1c4bf9335b2aa5e"
+    },
+    {
+      "file": "native/ios-release.public.json",
+      "sha256": "0f0e090464405651d887fbc0ef12470fb14b5bd63b7e072afcb313c9d7ed9ebc"
+    }
+  ]
+}
