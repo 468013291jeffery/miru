@@ -479,7 +479,18 @@
   }
   let CL_BUSY = false;
   async function cloneToggle() {
-    if (cloneOn()) { const id = S.myClone.id; S.myClone = null; save(); paintMy(); refresh(); try { await fetch(TTS_EP, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, typeof cloudAuth === "function" ? cloudAuth() : {}), body: JSON.stringify({ cloneDel: id }) }); } catch (_) {} return; }
+    if (cloneOn()) {
+      if (CL_BUSY) return false;
+      CL_BUSY = true; paintMy();
+      try {
+        const r = await fetch(TTS_EP, { method: "POST", headers: Object.assign({ "Content-Type": "application/json" }, typeof cloudAuth === "function" ? cloudAuth() : {}), body: JSON.stringify({ cloneDel: S.myClone.id }) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok || j.ok !== true) throw new Error(j.error || r.status);
+        S.myClone = null; save(); refresh(); return true;
+      } catch (_) {
+        toast(T("服务器录音未删除，已保留记录。请重试或联系支持。", "Server recording was not deleted. Its reference is kept; retry or contact support.")); return false;
+      } finally { CL_BUSY = false; paintMy(); }
+    }
     const auth = typeof cloudAuth === "function" ? cloudAuth() : {};
     if (!auth.Authorization) { toast(T("先登录账号，才能用自己的声音配音", "Sign in first to use your own voice")); return; }
     if (!S.myVoice || !/^data:audio/.test(S.myVoice)) { toast(T("先录一段声音", "Record a clip first")); return; }
@@ -533,7 +544,7 @@
       REC.on = false; clearInterval(REC.tick); try { stream.getTracks().forEach(t => t.stop()); } catch (_) {}
       const blob = new Blob(REC.chunks, { type: (kind || "audio/mp4").split(";")[0] });
       if (blob.size < 1200) { toast(T("没录到声音，再试一次", "Nothing was recorded — try again")); paintMy(); return; }
-      const fr = new FileReader(); fr.onload = async () => { const was = cloneOn(); if (was) await cloneToggle(); S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("录好了", "Recorded")); paintMy(); if (was) cloneToggle(); }; fr.readAsDataURL(blob);
+      const fr = new FileReader(); fr.onload = async () => { const was = cloneOn(); if (was && !await cloneToggle()) return; S.myVoice = fr.result; try { save(); } catch (_) {} toast(T("录好了", "Recorded")); paintMy(); if (was) cloneToggle(); }; fr.readAsDataURL(blob);
     };
     paintMy();
     REC.tick = setInterval(() => { const s = Math.floor((Date.now() - REC.t0) / 1000), el = document.getElementById("v146sec"); if (el) el.textContent = s; if (s >= 15) try { rec.stop(); } catch (_) {} }, 250);
@@ -550,7 +561,7 @@
     return r;
   };
   document.addEventListener("input", e => { if (e.target && e.target.id === "voiceQ146") { const l = document.getElementById("voiceList146"); if (l) l.innerHTML = listHTML(e.target.value); } });
-  document.addEventListener("click", e => {
+  document.addEventListener("click", async e => {
     const x = e.target.closest && e.target.closest("[data-v146tog],[data-v146play],[data-v146],[data-v146all],[data-v146rec],[data-v146del],[data-v146clone]"); if (!x) return;
     e.preventDefault(); e.stopImmediatePropagation();
     const d = x.dataset;
@@ -558,7 +569,7 @@
     if (d.v146play) { play(d.v146play, sample(d.v146play), x); return; }
     if (d.v146all) { SHOW_ALL = d.v146all !== "0"; refresh(); if (!SHOW_ALL) { try { const c = document.querySelector(".me-voice"); if (c) c.scrollIntoView({ block: "start", behavior: "smooth" }); } catch (_) {} } return; }
     if (d.v146rec != null) { recToggle(); return; }
-    if (d.v146del) { if (cloneOn()) cloneToggle(); S.myVoice = null; save(); paintMy(); return; }
+    if (d.v146del) { if (cloneOn() && !await cloneToggle()) return; S.myVoice = null; save(); paintMy(); return; }
     if (d.v146clone) { cloneToggle(); return; }
     if (d.v146 != null) { const [id, vv] = d.v146.split("|"); setV(id, vv || null); refresh(); play(id, sample(id)); return; }
   }, true);

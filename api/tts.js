@@ -363,7 +363,7 @@ module.exports = async (req, res) => {
       try { res.status(200).json(b.img.image && !b.img.model ? await editStart(b.img) : await genImage(b.img)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
     res.status(400).json({ error: 'bad request' }); return; }
   const q = req.query || {};
-  if (q.vref) { const v = vfile(q.vref); if (!v) { res.status(404).json({ error: 'not found' }); return; } res.setHeader('Content-Type', v.type); res.setHeader('Cache-Control', 'private, max-age=600'); res.status(200).send(require('fs').readFileSync(v.f)); return; }
+  if (q.vref) { const v = vfile(q.vref); if (!v) { res.status(404).json({ error: 'not found' }); return; } res.setHeader('Content-Type', v.type); res.setHeader('Cache-Control', 'private, no-store'); res.status(200).send(require('fs').readFileSync(v.f)); return; }
   if (q.doubao) { res.setHeader('Cache-Control', 'no-store'); return doubaoTicket(req, res); }
   if (q.imgtask) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await editPoll(q.imgtask)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
   if (q.vid) { res.setHeader('Cache-Control', 'no-store'); try { res.status(200).json(await viduPoll(q.vid)); } catch (e) { res.status(502).json({ error: String(e.message || e).slice(0, 300) }); } return; }
@@ -393,7 +393,7 @@ module.exports = async (req, res) => {
     if (!out) out = (process.env.TTS_URL && !tc.url) ? await viaOpenAI(text, voice, tc) : await viaSpace(text, voice, vec);
     const riff = out.buf.slice(0, 4).toString() === 'RIFF';
     res.setHeader('Content-Type', /^audio\//.test(out.type) ? out.type : (riff ? 'audio/wav' : 'audio/mpeg'));
-    res.setHeader('Cache-Control', 'public, max-age=86400, s-maxage=31536000, immutable');
+    res.setHeader('Cache-Control', isUV(voice) ? 'private, no-store' : 'public, max-age=86400, s-maxage=31536000, immutable');
     res.status(200).send(out.buf);
   } catch (e) {
     res.setHeader('Cache-Control', 'no-store');

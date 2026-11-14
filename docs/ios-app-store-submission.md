@@ -3,17 +3,19 @@
 
 ## 已确认身份
 - Bundle：com.miru.plus.app；Team：H79A5X8935。
-- App Store Connect 注册名称：MIRU IOS Production。商店显示名称建议 MIRU（以后台可用性为准）。
+- App Store Connect 注册名称：MIRU IOS Production。商店实际显示名称 MIRU Interactive Stories。
 - 数字 Apple ID：6834383803。
 - iOS 首版不接广告；广告源码保留在仓库，但不编译或初始化广告 SDK。
 - 首发海外；具体国家列表由账号持有人在可售范围中确认，暂不包含中国大陆。
 
 ## 英文元数据草案
-Name: MIRU
+Name: MIRU Interactive Stories
 Subtitle: Your choices shape the story
-Keywords: interactive,stories,romance,characters,choices,fiction,roleplay
-Support URL: https://www.miru.plus/contact.html
-Privacy URL: https://www.miru.plus/privacy.html
+Keywords: romance,choices,fiction,characters,roleplay,drama,chat,creative,community
+Support URL: https://miru.plus/contact.html
+Privacy URL: https://miru.plus/privacy.html
+
+以上字段已在 Connect 保存。专用审核账号已填写私密登录字段；密码仅存本机受限文件，不进入本文。英文描述和审核备注也已保存，最终文字以 Connect 草稿为准。年龄分级、版权、隐私标签、截图、构建选择与实际 Sandbox 内购仍未完成。
 
 Description:
 Enter interactive stories, meet original characters, and choose how your journey unfolds.
