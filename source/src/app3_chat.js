@@ -175,6 +175,7 @@ function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)retur
   fxRaf=requestAnimationFrame(step)};step()}
 function who(m,th){const c=ch(m.who);return c?first(c.n):""}
 function msgHTML(m,i,th){
+ if(m.k==='storyTrailer' && /^\/(?!\/)/.test(m.src||''))return '<div class="m-card story-trailer"><h4>'+esc(m.title||'')+'</h4><video controls playsinline preload="metadata" style="display:block;width:100%;max-height:70vh" src="'+esc(m.src)+'" poster="'+esc(m.poster||'')+'"></video></div>';
  if(m&&m.who==="me"&&["say","act","think"].includes(m.k))m=Object.assign({},m,{txt:playerMark146(m.txt,m.k)});
  // Retired reply-counter portrait cards, including ones unlocked in old saves.
  if(m&&m.k==="pic")return "";

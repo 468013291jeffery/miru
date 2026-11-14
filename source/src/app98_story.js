@@ -155,6 +155,11 @@ function introductions98(th) {
   const policy = experience98(th);
   const { b, c, s } = scene98(th), A = th.b98; if (!c || !s) return;
   const seen = A.introductions98 || (A.introductions98 = {});
+  // Authored opening media is a playable card before exposition, never narration.
+  if (A.ch === 1 && b.openingMedia && !th.msgs.some(m => m.intro98 === 'opening-media')) {
+    const src = OFF94.assets[(wd(th.wid) || {}).community]?.[b.openingMedia.slot];
+    if (src && /^\/(?!\/)/.test(src)) appendMsg(th, {who:'sys', k:'storyTrailer', src, poster:OFF94.assets[(wd(th.wid) || {}).community]?.cover || '', title:L98('开场预告片', 'Opening trailer'), intro98:'opening-media', at:Date.now()});
+  }
   // Stable IDs also prevent duplicates when a saved thread is reopened.
   const show = (key, title, txt, extra) => {
     if (!txt) return;

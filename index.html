@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="0a3ba3375f80 2026-11-13T20:09Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="a3e5b9fc1a26 2026-11-14T03:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -5219,6 +5219,7 @@ function chatFx(th){cancelAnimationFrame(fxRaf);const cv=$("#cbFx");if(!cv)retur
   fxRaf=requestAnimationFrame(step)};step()}
 function who(m,th){const c=ch(m.who);return c?first(c.n):""}
 function msgHTML(m,i,th){
+ if(m.k==='storyTrailer' && /^\/(?!\/)/.test(m.src||''))return '<div class="m-card story-trailer"><h4>'+esc(m.title||'')+'</h4><video controls playsinline preload="metadata" style="display:block;width:100%;max-height:70vh" src="'+esc(m.src)+'" poster="'+esc(m.poster||'')+'"></video></div>';
  if(m&&m.who==="me"&&["say","act","think"].includes(m.k))m=Object.assign({},m,{txt:playerMark146(m.txt,m.k)});
  // Retired reply-counter portrait cards, including ones unlocked in old saves.
  if(m&&m.k==="pic")return "";
@@ -19340,6 +19341,11 @@ function introductions98(th) {
   const policy = experience98(th);
   const { b, c, s } = scene98(th), A = th.b98; if (!c || !s) return;
   const seen = A.introductions98 || (A.introductions98 = {});
+  // Authored opening media is a playable card before exposition, never narration.
+  if (A.ch === 1 && b.openingMedia && !th.msgs.some(m => m.intro98 === 'opening-media')) {
+    const src = OFF94.assets[(wd(th.wid) || {}).community]?.[b.openingMedia.slot];
+    if (src && /^\/(?!\/)/.test(src)) appendMsg(th, {who:'sys', k:'storyTrailer', src, poster:OFF94.assets[(wd(th.wid) || {}).community]?.cover || '', title:L98('开场预告片', 'Opening trailer'), intro98:'opening-media', at:Date.now()});
+  }
   // Stable IDs also prevent duplicates when a saved thread is reopened.
   const show = (key, title, txt, extra) => {
     if (!txt) return;
