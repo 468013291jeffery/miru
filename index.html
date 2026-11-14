@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="b636a3449e42 2026-11-14T19:53Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="cc052372fe1e 2026-11-14T20:00Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27562,7 +27562,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   function nameOf(id) { const c = ch(id) || {}; const n94 = c.n94 || {}; return String(n94.zh || first(c.n) || ""); }
 
   function tidy(txt) {
-    const L = String(txt).split("\n"), out = [], seenDone = new Set();
+    const L0 = String(txt).split("\n"), L = [], out = [], seenDone = new Set();
+    for (let i = 0; i < L0.length; i++) { let l = L0[i]; if (/^\s*⟦/.test(l)) { let k = 0; while (!/⟧/.test(l) && i + 1 < L0.length && k++ < 4) l += L0[++i].trim(); } L.push(l); }
     let skip = false;
     for (let l of L) {
       if (/^\s*⟦IF\|[^⟧]*⟧\s*$/.test(l)) { skip = true; continue; }
