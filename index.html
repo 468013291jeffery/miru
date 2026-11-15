@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="f1a859a4b0a0 2026-11-15T16:45Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="4fcc69ac4c51 2026-11-15T17:13Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27720,7 +27720,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 
 /* ===== 2026-11-16 · ① 遇见：今天的牌是空的（每天都显示「今天的人你都看过了」） ② 推广分佣 + 单剧收入统计 =====
    ① 玩家：「每天不是给 12 个吗？昨天没有，今天还是没有。」
-      原因：打开 App 时官方男主卡（leads.json）还没装进角色表，第一次生成的当天牌是空的；空牌被当成「今天已经发过牌」存了一整天。
+      原因：① 发牌函数 deck96 里还按玩家取向筛人（遇见本该不筛），取向不匹配时一张牌都没有；② 空牌被当成「今天已经发过牌」存了一整天（打开 App 时角色表还没装好也会这样）。
       ⇒ 当天还没滑过、牌却是空的，就重新发牌；角色表装好后如果遇见页开着，自动刷新。
    ② 玩家：「每个创作者都可以推广剧本，推广的剧有人充值就能分佣，在 App 里能看到自己的推广收益；要有链接、二维码，能分享到各平台；
       还要能看到单部剧的收入。」
@@ -27747,7 +27747,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
           const untouched = !(st.likes > 0) && !(st.used > 0) && !Object.values(st.nope || {}).some(t => new Date(t).toDateString() === st.day);
           if (Array.isArray(st.deck) && st.deck.length === 0 && untouched && !st.deckOk167) st.deck = null;
         } catch (_) {}
-        const d = TD.apply(this, arguments);
+        /* 遇见本来就不按取向筛人（app140 只放开了 eligible96，deck96 里还有一道取向过滤，取向是「GL」等时一张牌都发不出来） */
+        const o = S.or; let d;
+        try { S.or = "all"; d = TD.apply(this, arguments); } finally { S.or = o; }
         try { if (d && d.length) sw96().deckOk167 = 1; } catch (_) {}
         return d;
       };
