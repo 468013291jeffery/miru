@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="d414516c3892 2026-11-15T16:42Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="5bf454327a92 2026-11-15T16:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27715,6 +27715,273 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent = ".rx166p{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(7,6,10,.72)}.rx166p[hidden]{display:none}" +
     ".rx166p>div{display:flex;flex-direction:column;gap:8px;align-items:center;padding:22px 26px;border-radius:16px;background:#17131d;border:1px solid rgba(255,255,255,.08);color:#fff;max-width:80vw;text-align:center}" +
     ".rx166p span{font-size:13px;color:rgba(255,255,255,.65)}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-16 · ① 遇见：今天的牌是空的（每天都显示「今天的人你都看过了」） ② 推广分佣 + 单剧收入统计 =====
+   ① 玩家：「每天不是给 12 个吗？昨天没有，今天还是没有。」
+      原因：打开 App 时官方男主卡（leads.json）还没装进角色表，第一次生成的当天牌是空的；空牌被当成「今天已经发过牌」存了一整天。
+      ⇒ 当天还没滑过、牌却是空的，就重新发牌；角色表装好后如果遇见页开着，自动刷新。
+   ② 玩家：「每个创作者都可以推广剧本，推广的剧有人充值就能分佣，在 App 里能看到自己的推广收益；要有链接、二维码，能分享到各平台；
+      还要能看到单部剧的收入。」
+      规则（产品定）：被推广用户自绑定起 30 天内每笔正式充值的 10%，按 $1 = 5 钻发给推广人；平台出，原作者不额外分。后台可调。
+      · 剧详情页加「📣 推广赚钻」：专属链接（miru.plus/?story=剧&p=推广码）、二维码（可存图）、系统分享 + X / Facebook / WhatsApp / Telegram / LINE；
+        Instagram、TikTok 没有网页分享入口，用系统分享或存二维码海报去发。
+      · 「我的」页加「我的推广」：点击、带来的新用户、付费人数、带来的充值、已得钻石，按剧分开看。
+      · 通过链接进来的新用户登录后自动绑定推广人（服务器判定：只认新号、没充过值、不能绑自己）。
+      · 单剧收入：在剧里花的钻、在剧里打开充值页后完成的充值，都记到这部剧上，后台「推广与单剧收入」查看。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T2 = (a, b) => (zh() ? a : b);
+  const on = () => typeof CL0 !== "undefined" && CL0.on && typeof capi === "function" && typeof cloudInfo === "function" && !!cloudInfo().token;
+  const normWid = id => { let s = String(id || ""); s = s.replace(/^off94:/, "").replace(/^ldw_/, ""); return /^[A-Za-z0-9_:.-]{1,80}$/.test(s) ? s : ""; };
+
+  /* ---------- ① 遇见：空牌重发 ---------- */
+  try {
+    if (typeof todayDeck96 === "function" && typeof sw96 === "function") {
+      const TD = todayDeck96;
+      todayDeck96 = function () {
+        try {
+          const st = sw96();
+          const untouched = !(st.likes > 0) && !(st.used > 0) && !Object.values(st.nope || {}).some(t => new Date(t).toDateString() === st.day);
+          if (Array.isArray(st.deck) && st.deck.length === 0 && untouched && !st.deckOk167) st.deck = null;
+        } catch (_) {}
+        const d = TD.apply(this, arguments);
+        try { if (d && d.length) sw96().deckOk167 = 1; } catch (_) {}
+        return d;
+      };
+      let tries = 0;
+      const iv = setInterval(() => {
+        tries++; if (tries > 40) return clearInterval(iv);
+        try {
+          const el = document.getElementById("sw96");
+          if (!el || el.hidden || (typeof DECK96 !== "undefined" && DECK96.length)) return;
+          if (!Object.keys(C || {}).length) return;
+          DECK96 = todayDeck96(); if (DECK96.length) { renderSwipe96(); clearInterval(iv); }
+        } catch (_) {}
+      }, 1500);
+    }
+  } catch (e) { console.warn("[meet167]", e); }
+
+  /* ---------- ② 推广链接：记点击，登录后绑定 ---------- */
+  const PK = "miru_promo167";
+  try {
+    const q = new URLSearchParams(location.search), code = q.get("p");
+    if (code && /^[a-z0-9]{3,20}$/i.test(code)) {
+      const wid = normWid(q.get("story") || "");
+      const old = JSON.parse(localStorage.getItem(PK) || "null");
+      if (!old || old.code !== code) {
+        localStorage.setItem(PK, JSON.stringify({ code, wid, at: Date.now() }));
+        setTimeout(() => { try { fetch((typeof CLOUD_EP !== "undefined" ? CLOUD_EP : "/api") + "/promo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "click", code, wid }) }).catch(() => {}); } catch (_) {} }, 1200);
+      }
+    }
+  } catch (_) {}
+  let binding = false;
+  async function tryBind() {
+    if (binding || !on()) return; let p = null;
+    try { p = JSON.parse(localStorage.getItem(PK) || "null"); } catch (_) {}
+    if (!p || p.done || Date.now() - (p.at || 0) > 30 * 864e5) return;
+    binding = true;
+    try {
+      const r = await capi("/promo", { json: { op: "bind", code: p.code, wid: p.wid } });
+      if (r && r.ok && r.j) { p.done = 1; p.res = r.j.ok ? "ok" : r.j.why; localStorage.setItem(PK, JSON.stringify(p)); }
+    } catch (_) {} finally { binding = false; }
+  }
+  setTimeout(tryBind, 3000); setInterval(tryBind, 20000);
+
+  /* ---------- 单剧收入：花钻和打开充值页记到当前这部剧 ---------- */
+  function curWid() {
+    try {
+      const chat = document.getElementById("s-chat");
+      if (chat && !chat.hidden && typeof curT !== "undefined" && curT && S.threads[curT] && S.threads[curT].wid) return normWid(S.threads[curT].wid);
+    } catch (_) {}
+    try { if (typeof curStory !== "undefined" && curStory) return normWid(curStory); } catch (_) {}
+    try { if (typeof curT !== "undefined" && curT && S.threads[curT] && S.threads[curT].wid) return normWid(S.threads[curT].wid); } catch (_) {}
+    return "";
+  }
+  let UQ = [], ut = null;
+  function flushUse() {
+    ut = null; if (!UQ.length || !on()) return; const items = UQ.splice(0, 40);
+    capi("/promo", { json: { op: "use", items } }).catch(() => {});
+  }
+  if (typeof spend === "function") {
+    const SP = spend;
+    spend = function (n, why) {
+      const before = typeof S !== "undefined" ? S.keys : 0;
+      const ok = SP.apply(this, arguments);
+      try {
+        const used = before - S.keys;
+        if (ok && used > 0) { const wid = curWid(); if (wid) { UQ.push({ wid, n: Math.min(50, used), why: String(why || "").slice(0, 20) }); if (!ut) ut = setTimeout(flushUse, 4000); } }
+      } catch (_) {}
+      return ok;
+    };
+  }
+  if (typeof paySheet === "function") {
+    const PS = paySheet;
+    paySheet = function (why) {
+      const r = PS.apply(this, arguments);
+      try { const wid = curWid(); if (wid && on()) capi("/promo", { json: { op: "paywall", wid, why: String(why || "").slice(0, 20) } }).catch(() => {}); } catch (_) {}
+      return r;
+    };
+  }
+  window.addEventListener("pagehide", flushUse);
+
+  /* ---------- 推广码 + 数据 ---------- */
+  let ME = null, meAt = 0;
+  async function loadMe(force) {
+    if (!on()) return null;
+    if (ME && !force && Date.now() - meAt < 30000) return ME;
+    try { const r = await capi("/promo?r=me"); if (r && r.ok && r.j && r.j.code) { ME = r.j; meAt = Date.now(); } } catch (_) {}
+    return ME;
+  }
+  const usd = c => "$" + ((Number(c) || 0) / 100).toFixed(2);
+  const linkOf = (wid, code) => "https://miru.plus/?story=" + encodeURIComponent(wid) + "&p=" + encodeURIComponent(code);
+  function needLogin() {
+    toast(T2("先登录账号，才能生成你的专属推广链接", "Sign in first to get your own promo link"));
+    try { if (typeof authSheet === "function") authSheet(); } catch (_) {}
+  }
+
+  /* 二维码：cdnjs 上的 qrcode-generator（只在打开分享时加载） */
+  let qrLib = null;
+  function loadQR() {
+    if (window.qrcode) return Promise.resolve(window.qrcode);
+    if (qrLib) return qrLib;
+    qrLib = new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"; s.onload = () => ok(window.qrcode); s.onerror = () => { qrLib = null; no(new Error("qr")); }; document.head.appendChild(s); });
+    return qrLib;
+  }
+  async function drawPoster(cv, url, title, sub) {
+    const qr = await loadQR(); const q = qr(0, "M"); q.addData(url); q.make();
+    const n = q.getModuleCount(), W0 = 720, H0 = 960, x = cv.getContext("2d");
+    cv.width = W0; cv.height = H0;
+    const g = x.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, "#1B1520"); g.addColorStop(1, "#07060A"); x.fillStyle = g; x.fillRect(0, 0, W0, H0);
+    x.fillStyle = "#E8B4C8"; x.font = "bold 30px system-ui,sans-serif"; x.textAlign = "center"; x.fillText("MIRU", W0 / 2, 80);
+    x.fillStyle = "#fff"; x.font = "bold 40px system-ui,sans-serif";
+    const lines = []; let line = ""; for (const chr of String(title)) { if (x.measureText(line + chr).width > W0 - 100) { lines.push(line); line = ""; } line += chr; } if (line) lines.push(line);
+    lines.slice(0, 2).forEach((l, i) => x.fillText(l, W0 / 2, 160 + i * 52));
+    x.fillStyle = "rgba(255,255,255,.65)"; x.font = "24px system-ui,sans-serif"; x.fillText(sub, W0 / 2, 280);
+    const box = 440, ox = (W0 - box) / 2, oy = 330, cell = box / (n + 8);
+    x.fillStyle = "#fff"; x.fillRect(ox, oy, box, box);
+    x.fillStyle = "#111"; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) x.fillRect(ox + (c + 4) * cell, oy + (r + 4) * cell, Math.ceil(cell), Math.ceil(cell));
+    x.fillStyle = "rgba(255,255,255,.8)"; x.font = "24px system-ui,sans-serif"; x.fillText(T2("扫码进入故事", "Scan to start the story"), W0 / 2, oy + box + 60);
+    x.fillStyle = "rgba(255,255,255,.45)"; x.font = "20px system-ui,sans-serif"; x.fillText("miru.plus", W0 / 2, oy + box + 100);
+  }
+  function titleOf(wid) { try { const w = wd(wid) || wd("ldw_" + wid) || wd("off94:" + wid); if (w) return Lz(w.title); } catch (_) {} return "MIRU"; }
+
+  async function promoSheet(rawWid) {
+    const wid = normWid(rawWid); if (!wid) return;
+    if (!on()) return needLogin();
+    sheet('<h2>📣 ' + esc(T2("推广这部剧", "Promote this story")) + '</h2><p class="sm dim" style="margin-top:6px">' + esc(T2("正在生成你的专属链接……", "Getting your link…")) + '</p>');
+    const me = await loadMe(true);
+    if (!me) { closeSheet(); toast(T2("暂时拿不到推广链接，稍后再试", "Couldn't get your link — try again later")); return; }
+    const url = linkOf(wid, me.code), title = titleOf(wid), w0 = (me.byWork || []).find(x => x.wid === wid) || {};
+    const pct = Math.round((me.rate || 0.1) * 100);
+    const txt = T2("我在 MIRU 玩《" + title + "》，你也来试试：", "I'm playing \"" + title + "\" on MIRU — try it: ");
+    const enc = encodeURIComponent, full = txt + " " + url;
+    const nets = [
+      ["X", "https://twitter.com/intent/tweet?text=" + enc(txt) + "&url=" + enc(url)],
+      ["Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + enc(url)],
+      ["WhatsApp", "https://wa.me/?text=" + enc(full)],
+      ["Telegram", "https://t.me/share/url?url=" + enc(url) + "&text=" + enc(txt)],
+      ["LINE", "https://social-plugins.line.me/lineit/share?url=" + enc(url)],
+      ["Reddit", "https://www.reddit.com/submit?url=" + enc(url) + "&title=" + enc(title)],
+    ];
+    sheet('<h2>📣 ' + esc(T2("推广《", "Promote “") + title + T2("》", "”")) + '</h2>' +
+      '<p class="sm dim" style="margin-top:6px;line-height:1.6">' + esc(T2("通过你的链接进来的新用户，" + me.days + " 天内每次充值，你都能拿到充值金额的 " + pct + "%（按 $1 = " + me.gemsPerUsd + " 钻自动发到你的钱包）。", "New players who join through your link: for " + me.days + " days you get " + pct + "% of every top-up they make, paid in gems ($1 = " + me.gemsPerUsd + " gems).")) + '</p>' +
+      '<div class="pr167s"><span><b>' + (w0.clicks || 0) + '</b>' + esc(T2("点击", "Clicks")) + '</span><span><b>' + (w0.users || 0) + '</b>' + esc(T2("新用户", "New players")) + '</span><span><b>' + usd(w0.cents) + '</b>' + esc(T2("带来充值", "Sales")) + '</span></div>' +
+      '<div class="pr167l"><code>' + esc(url) + '</code><button class="btn btn-g btn-sm" data-pr167copy="1">' + esc(T2("复制", "Copy")) + '</button></div>' +
+      '<div class="pr167q"><canvas id="pr167cv"></canvas></div>' +
+      '<div class="pr167b"><button class="btn btn-p btn-sm" data-pr167share="1">' + esc(T2("分享…", "Share…")) + '</button><button class="btn btn-g btn-sm" data-pr167save="1">' + esc(T2("保存二维码海报", "Save QR poster")) + '</button></div>' +
+      '<div class="pr167n">' + nets.map(([n, h]) => '<a href="' + esc(h) + '" target="_blank" rel="noopener">' + esc(n) + '</a>').join("") + '</div>' +
+      '<p class="xs faint" style="margin-top:10px;line-height:1.55">' + esc(T2("Instagram、TikTok 没有网页分享入口：点「分享…」选它们，或者保存二维码海报后发帖、发快拍。", "Instagram and TikTok don't accept web share links: tap Share… and pick them, or save the QR poster and post it.")) + '</p>' +
+      '<button class="btn btn-g btn-block" style="margin-top:10px" data-pr167me="1">' + esc(T2("查看我的全部推广收益", "See all my promo earnings")) + '</button>');
+    const sh = document.querySelector(".sheet") || document;
+    sh.__pr167 = { url, txt, title };
+    try { await drawPoster(document.getElementById("pr167cv"), url, title, T2("和 TA 的故事，从这里开始", "Your story starts here")); } catch (_) { const q = document.querySelector(".pr167q"); if (q) q.innerHTML = '<p class="xs faint">' + esc(T2("二维码加载失败，可以先用链接分享", "QR code didn't load — share the link instead")) + '</p>'; }
+  }
+
+  async function myPromoSheet() {
+    if (!on()) return needLogin();
+    sheet('<h2>' + esc(T2("我的推广", "My promotions")) + '</h2><p class="sm dim" style="margin-top:6px">' + esc(T2("加载中……", "Loading…")) + '</p>');
+    const me = await loadMe(true);
+    if (!me) { closeSheet(); toast(T2("暂时拿不到数据，稍后再试", "Couldn't load — try again later")); return; }
+    const rows = (me.byWork || []).filter(x => x.wid);
+    sheet('<h2>' + esc(T2("我的推广", "My promotions")) + '</h2>' +
+      '<p class="xs faint" style="margin-top:4px">' + esc(T2("推广码 ", "Code ") + me.code + T2(" · 被推广用户 " + me.days + " 天内充值的 " + Math.round(me.rate * 100) + "%，自动折成钻石", " · " + Math.round(me.rate * 100) + "% of top-ups for " + me.days + " days, paid in gems")) + '</p>' +
+      '<div class="pr167s"><span><b>' + me.clicks + '</b>' + esc(T2("链接点击", "Clicks")) + '</span><span><b>' + me.users + '</b>' + esc(T2("带来新用户", "New players")) + '</span><span><b>' + me.payers + '</b>' + esc(T2("付费人数", "Payers")) + '</span></div>' +
+      '<div class="pr167s"><span><b>' + usd(me.salesCents) + '</b>' + esc(T2("带来充值", "Sales")) + '</span><span><b>' + usd(me.commCents) + '</b>' + esc(T2("我的佣金", "My commission")) + '</span><span><b>💎 ' + me.gems + '</b>' + esc(T2("已到账", "Paid out")) + '</span></div>' +
+      '<div class="eyebrow" style="margin-top:14px">' + esc(T2("按剧", "By story")) + '</div>' +
+      (rows.length ? '<div class="pr167t">' + rows.map(x => '<div><b>' + esc(x.title || titleOf(x.wid)) + '</b><small>' + esc(T2("点击 ", "Clicks ") + x.clicks + T2(" · 新用户 ", " · New ") + x.users + T2(" · 充值 ", " · Sales ") + usd(x.cents) + T2(" · 佣金 ", " · Earned ") + usd(x.comm)) + '</small><button class="btn btn-g btn-sm" data-promo167="' + esc(x.wid) + '">' + esc(T2("分享", "Share")) + '</button></div>').join("") + '</div>'
+        : '<p class="sm dim" style="margin-top:8px;line-height:1.6">' + esc(T2("还没有推广数据。打开任意一部剧，点「📣 推广赚钻」拿到你的专属链接和二维码。", "No promo data yet. Open any story and tap “📣 Promote & earn” to get your link and QR code.")) + '</p>') +
+      '<p class="xs faint" style="margin-top:12px;line-height:1.55">' + esc(T2("规则：只算通过你的链接新注册、之前没充过值的用户；不能推广给自己。佣金按累计金额折成钻石，不足 1 钻的零头留到下次。", "Only players who sign up through your link and haven't bought before count; you can't refer yourself. Commission is paid in whole gems; fractions carry over.")) + '</p>');
+  }
+  window.PROMO167 = { open: promoSheet, mine: myPromoSheet, loadMe };
+
+  document.addEventListener("click", async e => {
+    let x;
+    if ((x = e.target.closest && e.target.closest("[data-promo167]"))) { e.preventDefault(); e.stopPropagation(); promoSheet(x.dataset.promo167); return; }
+    if ((x = e.target.closest && e.target.closest("[data-pr167me]"))) { e.preventDefault(); myPromoSheet(); return; }
+    const box = document.querySelector(".sheet"), info = box && box.__pr167;
+    if (!info) return;
+    if (e.target.closest("[data-pr167copy]")) {
+      try { await navigator.clipboard.writeText(info.url); toast(T2("链接已复制", "Link copied")); } catch (_) { const c = document.querySelector(".pr167l code"); if (c) { const r = document.createRange(); r.selectNodeContents(c); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } toast(T2("长按选中复制", "Long-press to copy")); }
+      return;
+    }
+    if (e.target.closest("[data-pr167share]")) {
+      try {
+        const cv = document.getElementById("pr167cv"); let files = null;
+        if (cv && cv.width > 10 && navigator.canShare) { const blob = await new Promise(r => cv.toBlob(r, "image/png")); const f = new File([blob], "miru-qr.png", { type: "image/png" }); if (navigator.canShare({ files: [f] })) files = [f]; }
+        if (navigator.share) { await navigator.share(Object.assign({ title: info.title, text: info.txt, url: info.url }, files ? { files } : {})); return; }
+      } catch (err) { if (err && err.name === "AbortError") return; }
+      try { await navigator.clipboard.writeText(info.txt + " " + info.url); toast(T2("已复制分享文案，去 App 里粘贴即可", "Copied — paste it in any app")); } catch (_) {}
+      return;
+    }
+    if (e.target.closest("[data-pr167save]")) {
+      const cv = document.getElementById("pr167cv"); if (!cv || cv.width < 10) return;
+      const url = cv.toDataURL("image/png");
+      try {
+        const blob = await (await fetch(url)).blob(), f = new File([blob], "miru-qr.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
+      } catch (err) { if (err && err.name === "AbortError") return; }
+      const a = document.createElement("a"); a.href = url; a.download = "miru-qr.png"; document.body.appendChild(a); a.click(); a.remove();
+      toast(T2("如果没有自动保存，长按二维码图片保存", "If it didn't save, long-press the image"));
+    }
+  }, true);
+
+  /* 剧详情页：在收藏按钮旁边放「📣 推广赚钻」 */
+  if (typeof storyPage === "function") {
+    const SPG = storyPage;
+    storyPage = function (id) {
+      const r = SPG.apply(this, arguments);
+      try {
+        const fav = document.querySelector('[data-fav="' + CSS.escape(id) + '"]');
+        if (fav && !fav.parentElement.querySelector("[data-promo167]")) fav.insertAdjacentHTML("afterend", '<button class="chip" data-promo167="' + esc(id) + '" style="margin-left:6px">📣 ' + esc(T2("推广赚钻", "Promote & earn")) + '</button>');
+      } catch (_) {}
+      return r;
+    };
+  }
+  /* 「我的」页：钱包下面放「我的推广」 */
+  if (typeof renderMe === "function") {
+    const RM = renderMe;
+    renderMe = function (v) {
+      const r = RM.apply(this, arguments);
+      try {
+        const root = (v && v.querySelector) ? v : document;
+        const wal = root.querySelector(".me-wallet");
+        if (wal && !root.querySelector(".pr167card")) wal.insertAdjacentHTML("afterend", '<button class="card pr167card" data-pr167me="1"><div class="row"><div class="grow" style="text-align:left"><b>📣 ' + esc(T2("我的推广", "My promotions")) + '</b><p class="xs dim" style="margin-top:3px">' + esc(T2("分享剧的链接或二维码，好友充值你拿分佣", "Share stories — earn when friends top up")) + '</p></div><span style="color:var(--gold);font-size:20px">›</span></div></button>');
+      } catch (_) {}
+      return r;
+    };
+  }
+
+  const st = document.createElement("style");
+  st.textContent = ".pr167s{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pr167s span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:12px;background:rgba(255,255,255,.05);font-size:12px;color:var(--dim)}.pr167s b{font-size:17px;color:var(--fg,#fff)}" +
+    ".pr167l{display:flex;gap:8px;align-items:center;margin-top:12px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.06)}.pr167l code{flex:1;min-width:0;font-size:12px;word-break:break-all;user-select:all}" +
+    ".pr167q{display:flex;justify-content:center;margin-top:12px}.pr167q canvas{width:min(60vw,240px);height:auto;border-radius:12px}" +
+    ".pr167b{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}" +
+    ".pr167n{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}.pr167n a{padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--fg,#fff);font-size:13px;text-decoration:none}" +
+    ".pr167t{display:flex;flex-direction:column;gap:8px;margin-top:8px}.pr167t>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05)}.pr167t small{grid-column:1;color:var(--dim);font-size:12px}.pr167t button{grid-row:1/3;grid-column:2}" +
+    ".pr167card{width:100%;text-align:left;border:0;cursor:pointer}";
   document.head.appendChild(st);
 })();
 
