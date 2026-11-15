@@ -49,3 +49,6 @@ execFileSync(process.execPath,['tools/empress-release-assets-selftest.cjs'],{cwd
 
 assert(build.includes('"app148_svf.js"'),'Missing SEVENFOLD runtime');
 execFileSync(process.execPath,['tools/svf-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+assert(build.includes('app151_onlyme.js'),'Missing ONLY ME runtime');
+execFileSync(process.execPath,['tools/only-me-selftest.cjs'],{cwd:root,stdio:'inherit'});
