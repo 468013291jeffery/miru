@@ -21,3 +21,5 @@ assert.equal(assets.length,262);
 for(const a of assets){assert(fs.existsSync(a.path),'Missing '+a.path);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(a.path)).digest('hex'),a.sha256,a.path);}
 assert(JSON.parse(fs.readFileSync(dir+'validation.json')).publish_ready);
 console.log('ONLY ME: all 261 images and the opening video match reviewed source bytes.');
+
+for(const spec of JSON.parse(fs.readFileSync(dir+'cast.json'))){const c=w.cast.map(id=>ctx.ch(id)).find(c=>c.n===spec.name);assert.equal(c.age,spec.age);assert.equal(c.g,spec.gender);}
