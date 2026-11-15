@@ -40,7 +40,16 @@ async function install98(id) {
     you: { zh: LZ98(b.player.name) + " · " + (b.player.role ? (b.player.role.zh || "") : "") , en: (b.player.name.en || "") + " · " + (b.player.role ? (b.player.role.en || "") : "") },
     warn: { zh: "", en: "" }, rel: [], openings: null, tags: (b.tags || []).slice(0, 8), or: b.orient || "bl", cast, leads: b.cast.filter(c => c.tier === "lead" && c.romanceable !== false && c.gender === "m").map(c => cid98(wid, c.key)), stats: [0, 0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } }, cover: A.cover ? wid : null, calls: !!b.chapters.some(c => c.scenes.some(s => s.call)) });
   if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
-  S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save(); return wid;
+  S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save();
+  // Story-bible installs bypass the legacy installer that records plays.
+  try {
+    const play = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
+    if (play && play.ok) {
+      OFF89.at = 0; OFFF94.at = 0;
+    }
+    if (typeof OFF94 !== "undefined" && OFF94.play) delete OFF94.play[id];
+  } catch (_) {} // A statistics outage must not prevent playing an installed story.
+  return wid;
 }
 { const _iw = installWork; installWork = async function (id) { try { const b = await bible98(id); if (b) return await install98(id); } catch (e) { try { console.warn("[b98]", e); } catch (_) {} } return _iw.apply(this, arguments); }; }
 /* worlds loaded from a previous session need their bible back in memory */
