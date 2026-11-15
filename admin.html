@@ -869,25 +869,27 @@ const Events = {
    AI 调用走 /api/longcat（密钥只在服务器）；规则来自 /miru_rules.js（终版规则 + 生成 Skill 调试规则 v1.0，与 App 同一份）。 */
 const STU = {
   modes: ['强剧情', '混合', '日常陪伴'], forms: ['有限主线', '有限主线加持续陪伴', '持续陪伴'], inter: ['按钮', '自由输入', '混合'], twist: ['低', '中', '高'],
-  fmt: `【输出格式 · MIRU 标准剧本（App 会按这个格式自动转成可玩的剧）】
+  fmt: `【输出格式 · MIRU 标准剧本 v2（按《MIRU 互动剧本写作规范 v2》，App 会按这个格式自动转成可玩的剧）】
 ## CHAPTER {n}｜章节标题
-# SCENE｜地点 · 时间
-旁白直接写成段落（不加任何前缀），只写看得见的动作、环境和细节。
-名字：“台词”            ← 每句对白单独一行，名字用角色英文名
+⟦GOAL|这一章要立什么（一句话）|English⟧
+⟦DONE|say|玩家要说出或做出的一个意图（不是具体台词）|4–8 字短名|推进句：旁白：…… 或 名字：“……”⟧
+⟦DONE|flag|旗子名|4–8 字短名|推进句⟧      ← 每章 1–3 个完成条件，至少一个 say；flag 要在正文对应处写 ⟦SET|旗子名⟧，每条路线都能打到
+# SCENE｜地点
+⟦BG|bg_c{章号两位}s{场号两位}|地点 · 画面说明（写清在场角色和他的动作：背景图必须带人物）⟧
+⟦TIME|时间⟧
+旁白直接写成段落（不加任何前缀），只写看得见的动作、环境和细节。每场 4–8 句：第一句是落地句（到了哪、过了多久、气氛），最后一句是离场句（接下来去哪 / 做什么）。
+名字：“台词”            ← 每句对白单独一行、一个人一行，名字用角色英文名，一句不超过 40 字
 【心理】
-“玩家角色此刻没说出口的话”   ← 内心独白，只写玩家扮演的角色
-# CHOICE｜场景中的小选择（可选，写在章节中间）
-#### A｜“玩家可以说的一句话”
-（选了 A 之后 1–3 行的即时反馈：对白或动作）
-#### B｜“……”
-（……）
-# CHOICE｜本章结尾的关键问题（每章最后必须有一个）
-#### A｜选项文字
-（选 A 之后的后果：1–3 行）
+“玩家角色此刻没说出口的话”   ← 内心独白，只写玩家扮演的角色，不替玩家决定感受
+# CHOICE｜章内分支点：写成让玩家有话可说的情境（可选）
+#### A｜玩家意图（例：直接问他钱的去向）——不是现成台词，各条意图要一读就区分得开
+（选 A 之后的后果 1–3 行：旁白、动作、事件。不要写角色对玩家这句话的固定回答，App 会按玩家原话现场回应）
+⟦OPT|A|set:英文旗子;love:2⟧
 #### B｜……
-#### C｜……
-#### 入口A｜（写在下一章开头：只有上一章结尾选了 A 才会出现的段落）
-硬要求：只输出剧本正文，不要解释、不要 markdown 代码块；露骨性描写不写（会被 App 省略）；所有角色都是成年人。`,
+# ·
+章末顺序固定：关键事件（无论玩家聊什么都会发生）→ # CHOICE｜本章结尾的关键问题 → #### A/B/C 意图 + 后果 + ⟦OPT⟧ → # · → 章尾钩子 1 句
+下一章第一场的前两句是承接句：交代过了多久、人在哪，并用 ⟦IF|旗子⟧……⟦ELSE⟧……⟦/IF⟧ 按上一章的选择写不同的一句。
+硬要求：玩家看不到选项，分支只按玩家原话判定，不写「轮到你了」「请选择」；地点或时间变了就开新的 # SCENE；古代、奇幻等没有手机的世界不写电话、短信、撤回，对方在场时也不打电话、不发消息；特效 ⟦FX|id⟧ 一章 2–3 个、只用特效表里的 id；小游戏 ⟦MG|id⟧ 一章最多 1 个，赢和输都写后果；只输出剧本正文，不要解释、不要 markdown 代码块；露骨性描写不写；所有角色都是成年人。`,
 };
 function stuLLM(system, user, max) {
   const body = { model: 'LongCat-2.0', max_tokens: max || 6000, temperature: 0.8, messages: [{ role: 'system', content: system }, { role: 'user', content: user }] };
@@ -957,9 +959,10 @@ const Studio = {
     const steps = ['选题与素材', '按规则生成', '自动检查', '编剧审改', '上线'];
     const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], as: '' });
     const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [] });
+    const leadsText = ref('');
     const researchText = ref(''), outline = ref(''), cardsText = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
     async function load() { list.value = (await api('scripts')).rows; }
-    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; cardsText.value = sel.value.config.cards98 ? JSON.stringify(sel.value.config.cards98, null, 1) : ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
+    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; cardsText.value = sel.value.config.cards98 ? JSON.stringify(sel.value.config.cards98, null, 1) : ''; leadsText.value = Array.isArray(sel.value.config.leads) && sel.value.config.leads.length ? JSON.stringify(sel.value.config.leads, null, 1) : ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
     async function loadVers() { if (!sel.value) return; vers.value = (await api('script', { query: { id: sel.value.id, versions: 1 } })).rows; }
     async function create() {
       if (!nf.title.trim()) return ElMessage.warning('请填写标题');
@@ -1035,6 +1038,26 @@ const Studio = {
         say('角色卡完成：' + out.map(c => c.name).join('、'));
       } catch (e) { ElMessage.error(e.message); say('角色卡失败：' + e.message); } finally { busy.value = ''; }
     }
+    /* 2026-11-15 · 人物卡（发现 → 角色）：每个能和玩家互动的主要角色一张，跟作品一起上线（pack.meta.leads）。规范见《MIRU 互动剧本写作规范 v2》第二节 ② */
+    async function genLeads(silent) {
+      if (busy.value) return null; busy.value = 'leads';
+      try {
+        const s = sel.value, c = s.config || {};
+        const md = (s.chapters || []).slice().sort((x, y) => x.n - y.n).map(x => x.md || '').join('\n\n');
+        const cards = (c.cards98 && c.cards98.characters) || [];
+        const sys = '你是 MIRU 互动剧的编辑，按《MIRU 互动剧本写作规范 v2》第二节「② 详细人物卡」为每个主要角色写人物卡。人物卡会出现在 App「发现 → 角色」里，玩家可以和这个角色一对一聊天。所有角色都是虚构成年人；不剧透真凶、反转和结局；不写露骨内容；外貌写可复现的固定特征。';
+        const user = '【作品】' + s.title + '\n【一句话卖点】' + (c.hook || '') + '\n【简介】' + (c.premise || '') + '\n【玩家扮演】' + (c.you || '') + (cards.length ? '\n【已有角色卡（摘要）】\n' + JSON.stringify(cards.map(x => ({ key: x.key, name: x.name, identity: x.identity, appearance: x.appearance, core_personality: x.core_personality }))).slice(0, 12000) : '') + '\n【剧本正文（节选）】\n' + md.slice(0, 24000) + '\n\n列出剧里有台词、能和玩家互动的主要角色（玩家本人「你」不算；只出场一两句的路人不算；最多 8 个），每人一张人物卡。只输出 JSON 数组：[{"key":"英文小写id，和剧本 ⟦CHAR⟧ / 立绘文件名一致","n":{"zh":"中文名","en":"英文名"},"g":"m 或 f","age":数字,"h":"身高，如 186cm","role":{"zh":"一句话身份","en":"..."},"looks":{"zh":"外貌固定特征：发型、眼睛、疤痕、常穿什么","en":"..."},"vibe":{"zh":"性格：外在怎样、内里怎样、怕什么","en":"..."},"pitch":{"zh":"角色页上吸引玩家点进来的一句话","en":"..."},"solo":{"zh":"一对一聊天时他说的第一句，带一个用 *星号* 包起来的动作","en":"..."},"likes":{"zh":"三两件具体的喜好","en":"..."},"boundary":{"zh":"他不会做的事","en":"..."}}]';
+        const t = await stuLLM(sys, user, 6000);
+        const arr = stuJSON(t);
+        if (!Array.isArray(arr) || !arr.length) throw new Error('没有生成出人物卡（可重试）');
+        const leads = arr.filter(x => x && x.key && x.n).slice(0, 8);
+        leadsText.value = JSON.stringify(leads, null, 1);
+        await save({ config: Object.assign({}, sel.value.config, { leads }) }, 'AI 生成人物卡（' + leads.length + ' 人）');
+        if (!silent) ElMessage.success('人物卡已生成：' + leads.map(x => (x.n && (x.n.zh || x.n.en)) || x.key).join('、') + '，请检查后保存');
+        return leads;
+      } catch (e) { ElMessage.error(e.message); return null; } finally { busy.value = ''; }
+    }
+    async function saveLeads() { let v = []; try { v = JSON.parse(leadsText.value || '[]'); } catch (e) { return ElMessage.error('人物卡 JSON 格式有误：' + e.message); } if (!Array.isArray(v)) return ElMessage.error('人物卡要是一个数组 [ ... ]'); await save({ config: Object.assign({}, sel.value.config, { leads: v }) }, '修改人物卡'); ElMessage.success('人物卡已保存'); }
     async function saveCards() { let c = null; try { c = JSON.parse(cardsText.value || '{}'); } catch (e) { return ElMessage.error('角色卡 JSON 格式有误：' + e.message); } await save({ config: Object.assign({}, sel.value.config, { cards98: c }) }, '修改角色卡'); ElMessage.success('角色卡已保存'); }
     const cardsFor = n => { const L = (sel.value.config.cards98 && sel.value.config.cards98.characters) || []; if (!L.length) return ''; const J = x => Array.isArray(x) ? x.map(v => typeof v === 'object' ? Object.values(v).filter(Boolean).join('：') : v).join('；') : (x && typeof x === 'object' ? Object.values(x).filter(Boolean).join('；') : String(x || ''));
       return '\n\n【角色卡（V1.3）· 第 ' + n + ' 章时的人物状态——台词与行为必须符合；不得让角色说出他不知道的事；内在动机只用于一致性，不直接写成台词】\n' + L.map(c => { const ch = (c.chapters || {})[n] || {};
@@ -1120,7 +1143,7 @@ const Studio = {
         return '资产映射：' + got.length + ' / ' + keys.length + ' 个槽位有图' + (got.length < keys.length ? '（还缺 ' + (keys.length - got.length) + ' 个）' : '（齐了）');
       } catch (e) { return '资产映射：检查失败（' + ((e && e.message) || e) + '）'; }
     }
-    async function publish(force) { await ElMessageBox.confirm('上线后 App「发现」页的社区区会置顶显示（作者：MIRU 官方），所有用户都能玩。', '确认上线', { type: 'warning' }); const j = await api('script', { body: { op: 'publish', id: sel.value.id, force: !!force, rulesVersion: R.version } }); ElMessage.success('已上线：' + j.work_id);
+    async function publish(force) { if (!force && !(Array.isArray(sel.value.config.leads) && sel.value.config.leads.length)) { const g = await genLeads(true); if (g) await ElMessageBox.alert('已从剧本自动生成 ' + g.length + ' 张人物卡（' + g.map(x => (x.n && (x.n.zh || x.n.en)) || x.key).join('、') + '）。请在下方「人物卡」里检查、修改并保存，然后再点上线。', '先确认人物卡', { type: 'info' }); return; } await ElMessageBox.confirm('上线后 App「发现」页的社区区会置顶显示（作者：MIRU 官方），所有用户都能玩。', '确认上线', { type: 'warning' }); const j = await api('script', { body: { op: 'publish', id: sel.value.id, force: !!force, rulesVersion: R.version } }); ElMessage.success('已上线：' + j.work_id);
       try { ElMessage.info(await assetCheck(j.work_id), { duration: 8000 }) } catch (_) {} open(sel.value.id); load(); }
     async function unpublish() { await ElMessageBox.confirm('下线后 App 里将看不到这部剧（已在玩的用户本地副本不受影响）。', '确认下线', { type: 'warning' }); await api('script', { body: { op: 'unpublish', id: sel.value.id } }); ElMessage.success('已下线'); open(sel.value.id); load(); }
     async function del(row) { await ElMessageBox.confirm('删除剧本「' + row.title + '」及全部版本？', '删除', { type: 'error' }); await api('script', { body: { op: 'delete', id: row.id } }); load(); }
@@ -1214,7 +1237,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(load);
-    return { msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+    return { leadsText, genLeads, saveLeads, msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -1319,6 +1342,10 @@ const Studio = {
         <el-descriptions-item label="规则版本">{{R.version}}</el-descriptions-item>
       </el-descriptions>
       <p class="muted">上线后：App「发现」页社区区置顶显示（作者 MIRU 官方）。玩家第一次打开时，App 会按同一套规则自动生成故事页、人物资料，并配好音乐、特效和小游戏。再次上线会覆盖为新版本。</p>
+      <h3 style="margin-top:14px">人物卡（会出现在 App「发现 → 角色」，玩家可以一对一聊天）</h3>
+      <p class="muted">每个能和玩家互动的主要角色一张（玩家本人不算）。还没有人物卡时，点上线会先自动生成，你检查保存后再上线。</p>
+      <div class="toolbar"><el-button type="primary" :loading="busy==='leads'" :disabled="!!busy&&busy!=='leads'" @click="genLeads(false)">{{leadsText?'重新生成人物卡':'自动生成人物卡'}}</el-button><el-button @click="saveLeads" :disabled="!!busy">保存人物卡修改</el-button></div>
+      <el-input v-model="leadsText" type="textarea" :rows="10" placeholder="人物卡 JSON（可直接编辑）" style="margin-bottom:12px" />
       <div class="toolbar"><el-button type="primary" @click="publish(false)" :disabled="!(sel.review&&sel.review.approved)">{{sel.status==='live'?'更新线上版本':'一键上线'}}</el-button><el-button v-if="S.me.role==='owner'" type="warning" plain @click="publish(true)" :disabled="!(sel.review&&sel.review.approved)">强制上线（忽略自动检查错误）</el-button><el-button v-if="sel.status==='live'" type="danger" plain @click="unpublish">下线</el-button></div>
     </div>
     <div class="panel stunav" style="display:flex;justify-content:space-between;align-items:center;gap:10px">

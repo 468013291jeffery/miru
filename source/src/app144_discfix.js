@@ -2143,7 +2143,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const T = (a, b) => (zh() ? a : b);
   const L1 = 4, L2 = 8, L3 = 14;
   const RX = /^\s*⟦\s*DONE\s*[|｜](.*?)⟧\s*$/;
-  const CHAP = /^\s*#\s*(CHAPTER\b|第\s*[0-9一二三四五六七八九十百零〇两]+\s*章)/i;
+  const CHAP = /^\s*#{1,3}\s*(CHAPTER\b|第\s*[0-9一二三四五六七八九十百零〇两]+\s*章)/i;
 
   function parseDone(body) {
     const a = String(body || "").split(/[|｜]/).map(s => s.trim());
@@ -2380,4 +2380,382 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     ".g163 b{font-weight:600;color:#F6D3AE}" +
     ".g163 span{opacity:.85}.g163 span.ok{opacity:.55;text-decoration:line-through}";
   document.head.appendChild(css);
+})();
+
+/* ===== 2026-11-15 · 人物卡跟着剧本走：新上线的官方剧，角色自动出现在「发现 → 角色」 =====
+   以前「发现 → 角色」只读一张手工维护的总表（art/official/leads.json），新剧上线忘了加，角色就不出现。
+   ⇒ 后台上线时把人物卡一起写进作品（pack.meta.leads，第⑤步「人物卡」自动生成、编剧确认）。
+     App 启动时：在线的官方剧如果总表里没有，就读作品自带的人物卡，同样注册成可以一对一聊天的角色。
+     总表里已有的剧照旧（总表优先）。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const KEY = "miru_leads165";
+  const bi = v => (v && typeof v === "object" ? { zh: String(v.zh || v.en || ""), en: String(v.en || v.zh || "") } : { zh: String(v || ""), en: String(v || "") });
+  function cache() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } }
+  function keep(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (_) {} }
+  function register(wid, title, leads, art, orient) {
+    if (typeof C === "undefined" || typeof W === "undefined") return 0;
+    const shell = "ldw_" + wid, cast = [];
+    leads.forEach(L => {
+      if (!L || !L.key || !L.n) return;
+      const key = String(L.key).toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24); if (!key) return;
+      const id = "ld_" + wid.slice(-8) + "_" + key; if (C[id] && !C[id].ld165) { cast.push(id); return; }
+      const n = bi(L.n);
+      C[id] = {
+        n: zh() ? n.zh : n.en, n94: n, age: +L.age || 25, h: L.h || "", w: shell, g: L.g === "f" ? "f" : "m", pal: L.pal || ["#2B2238", "#0E0B14"],
+        a: "charm", v: { pitch: 1, rate: 1 }, voiceId: L.voice || "", by: "@miru",
+        role: bi(L.role), looks: bi(L.looks), vibe: bi(L.vibe), pitch: bi(L.pitch), solo: bi(L.solo),
+        likes: bi(L.likes), boundary: bi(L.boundary),
+        tells: { zh: [], en: [] }, twist: { zh: "", en: "" }, secret: { zh: "", en: "" }, want: { zh: "", en: "" }, fear: { zh: "", en: "" },
+        ld126: wid, ld165: 1
+      };
+      Object.defineProperty(C[id], "n", { get: function () { return zh() ? n.zh : n.en; }, enumerable: true, configurable: true });
+      const pic = L.art || (art && (art["char_" + key] || art["char_" + L.key]));
+      if (pic && S.art && S.art[id] !== pic) S.art[id] = pic;
+      cast.push(id);
+    });
+    if (cast.length && !W.some(w => w.id === shell)) W.push({ id: shell, title: bi(title), or: orient || "bg", tags: [], cast, ld126: wid, hook: { zh: "", en: "" }, stats: [0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } } });
+    return cast.length;
+  }
+  async function run() {
+    try {
+      let known = new Set();
+      try { const r = await fetch("art/official/leads.json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) { const d = await r.json(); (d.works || []).forEach(w => known.add(w.wid)); } } catch (_) {}
+      const r = await fetch("/api/works?feed=new&limit=200", { cache: "no-store" }); if (!r.ok) return;
+      const j = await r.json(); const rows = (j.works || j.rows || []).filter(w => w && /官方|MIRU/i.test(String(w.author || "")) && !known.has(w.id));
+      const c = cache(); let added = 0;
+      for (const row of rows) {
+        let ent = c[row.id];
+        if (!ent || Date.now() - (ent.at || 0) > 6 * 3600e3) {
+          ent = { at: Date.now(), leads: [], art: null, title: row.title, orient: row.orient };
+          try { const p = await fetch("/api/works?id=" + encodeURIComponent(row.id)); if (p.ok) { const pj = await p.json(); const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
+          if (ent.leads.length) { try { const a = await fetch("art/official/" + row.id + ".json"); if (a.ok) ent.art = await a.json(); } catch (_) {} }
+          c[row.id] = ent;
+        }
+        if (ent.leads && ent.leads.length) added += register(row.id, ent.title || row.title, ent.leads, ent.art, ent.orient);
+      }
+      keep(c);
+      if (added) { try { if (typeof disc !== "undefined" && disc.mode === "chars" && document.querySelector("#discRes")) renderDiscRes(); } catch (_) {} try { save(); } catch (_) {} }
+      window.__leads165 = { added, checked: rows.length };
+    } catch (e) { console.warn("[leads165]", e); }
+  }
+  if (document.readyState === "complete") setTimeout(run, 2500); else window.addEventListener("load", () => setTimeout(run, 2500));
+})();
+
+/* ===== 2026-11-15 · 二创页按最新规则：玩家自己不算「角色」、提示语用这部剧自己的人 =====
+   玩家截图：二创《午夜不打烊》时，角色里出现「店主（你）」（头像是一个「店」字），封面预览也拿它当一张图；
+   「改变了什么？」的提示还是别的剧里的「如果那晚 Mason 没有睡地上……」。
+   ⇒ · 玩家扮演的那个人（剧里的「你」）不进二创的角色列表，也不出现在「加人」里、不进封面预览；
+     · 简介用「你和 ×× 」来写（例：如果你和卢卡的那件事换一种结局？）；
+     · 输入框提示改用这部剧自己的角色名。 */
+(function () {
+  "use strict";
+  if (typeof createRemix !== "function" || typeof renderRemix !== "function") return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  function isYou(id) {
+    try {
+      const o = ch(id); if (!o) return false;
+      const nm = String(typeof o.n === "object" ? (o.n.zh || o.n.en) : o.n || "");
+      if (/^(你|you|me|我)$/i.test(nm) || /[（(]\s*(你|you)\s*[)）]/i.test(nm)) return true;
+      const w = (typeof wd === "function" && o.w) ? wd(o.w) : null;
+      if (w && (w.you94 === id || (w.pack && w.pack.pov === id))) return true;
+    } catch (_) {}
+    try { return (typeof W !== "undefined" ? W : []).concat(Object.values((S.mine && S.mine.worlds) || {})).some(w => w && (w.you94 === id || (w.pack && w.pack.pov === id))); } catch (_) { return false; }
+  }
+  const cr = createRemix;
+  createRemix = function () {
+    const r = cr.apply(this, arguments);
+    try {
+      if (rx && Array.isArray(rx.cast)) {
+        const you = rx.cast.find(isYou); if (you) rx._you = you;
+        const c = rx.cast.filter(id => !isYou(id)); if (c.length && c.length !== rx.cast.length) { rx.cast = c; renderRemix(); }
+      }
+    } catch (_) {}
+    return r;
+  };
+  /* 发布时把「你」放回最后一位：剧本靠它认出玩家扮演谁（只是不在二创页上当角色显示） */
+  document.addEventListener("click", e => {
+    try { if (e.target.closest && e.target.closest("[data-gorx]") && rx && rx._you && !rx.cast.includes(rx._you)) rx.cast.push(rx._you); } catch (_) {}
+  }, true);
+  if (typeof allChars === "function") {
+    const rr = renderRemix;
+    renderRemix = function () {
+      const ac = allChars;
+      try { if (rx && Array.isArray(rx.cast)) { const you = rx.cast.find(isYou); if (you && !rx._you) rx._you = you; rx.cast = rx.cast.filter(id => !isYou(id)); } } catch (_) {}
+      allChars = function () { return ac.apply(this, arguments).filter(id => !isYou(id)); };
+      try { return rr.apply(this, arguments); }
+      finally {
+        allChars = ac;
+        try {
+          const names = (rx.cast || []).map(id => first(ch(id).n)).filter(Boolean), a = names[0] || (zh() ? "他" : "him"), b = names[1] || a;
+          const P = zh() ? { whatif: "如果那晚" + a + "没有走……", au: a + "和" + b + "在同一个街角开对门的咖啡车……", swap: "说不出口的人换成了" + a + "……", sequel: "半年后，" + a + "又出现在门口……", crossover: "那家店的新客人是" + b + "……" }
+            : { whatif: "What if " + a + " hadn't walked away that night…", au: a + " and " + b + " run rival coffee carts on the same corner…", swap: a + " is the one who can't say it…", sequel: "Six months later, " + a + " shows up at the door again…", crossover: b + " is the new regular…" };
+          const ta = document.getElementById("rxTw"); if (ta && P[rx.type]) ta.placeholder = P[rx.type];
+        } catch (_) {}
+      }
+    };
+  }
+  if (typeof rxAuto === "function") {
+    const ra = rxAuto;
+    rxAuto = function () {
+      const o = ra.apply(this, arguments);
+      try {
+        if (!rx.twist) {
+          const names = (rx.cast || []).filter(id => !isYou(id)).map(id => first(ch(id).n));
+          const me = zh() ? "你" : "you", a = names[0] || "", b = names[1] || a;
+          const p = zh() ? ((typeof RX_AU_ZH !== "undefined" && RX_AU_ZH[rx.au]) || rx.au) : rx.au;
+          const H = zh() ? { whatif: "如果你和" + a + "的那件事换一种结局？", au: "你和" + a + "，但这次是在" + p + "。", swap: "你和" + a + "互换了位置——一切都变了。", sequel: "结局之后，你和" + a + "还得接着活下去。", crossover: a + "本来永远不该遇见" + b + "。" }
+            : { whatif: "What if it had gone differently for you and " + a + "?", au: "You and " + a + ", but it's " + p + ".", swap: "You and " + a + " switch places — and it changes everything.", sequel: "After the ending, you and " + a + " still have to live with it.", crossover: a + " was never supposed to meet " + b + "." };
+          if (a && H[rx.type]) o.hook = H[rx.type];
+        }
+      } catch (_) {}
+      return o;
+    };
+  }
+})();
+
+
+/* ===== 2026-11-15 · 二创重做：只能选官方剧和剧里的角色；AI 按《MIRU 互动剧本写作规范 v2》写一部 3 章的新剧；按次收费 =====
+   玩家：「二创页没办法选要二创哪一部剧，总是显示午夜不打烊；角色必须是我们剧本里的，不要随便的角色；
+          二创和一创都要消耗 token 和成本，要收费。」
+   ⇒ · 第 1 步「选一个故事」只列在线的官方剧（有人物卡的），默认选你当前在看的那一部；
+     · 角色只能从这部剧的人物卡里选（「跨作品联动」可以从其他官方剧的人物卡里拉人）；玩家自己不算角色；
+     · 点「发布二创」→ 确认价格 → AI 按规范 v2 写 3 章（每章有目标、完成条件、场景、背景图、章内分支、章末分支），
+       用原剧的背景图和角色立绘，生成一部可以正常玩的剧（换场等「下一场」、完成目标才进下一章，规则和官方剧一样）；
+       生成失败自动退还钻石。
+     · 一创（创建角色、组局）发布时也按次收钻。价格见 PRICES.remix / create / group，可调。 */
+(function () {
+  "use strict";
+  if (typeof createRemix !== "function" || typeof renderRemix !== "function" || typeof W === "undefined") return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T2 = (a, b) => (zh() ? a : b);
+  try { if (typeof PRICES !== "undefined") Object.assign(PRICES, { remix: PRICES.remix || 5, create: PRICES.create || 2, group: PRICES.group || 2 }); } catch (_) {}
+  try {
+    Object.assign(I18N.zh, { "pay.why.remix": "二创要由 AI 为你写一部新剧", "pay.why.create": "创作要消耗 AI 算力" });
+    Object.assign(I18N.en, { "pay.why.remix": "A remix is a brand-new story written for you by AI", "pay.why.create": "Creating uses AI compute" });
+  } catch (_) {}
+
+  /* 官方剧列表：优先按你的取向筛；筛完一部都没有就全列出来 */
+  const shells = () => { const all = W.filter(w => w && w.ld126 && Array.isArray(w.cast) && w.cast.length); let pref = []; try { pref = all.filter(w => !w.or || w.or === "all" || !S.or || w.or === S.or); } catch (_) {} return pref.length ? pref : all; };
+  const shellOf = id => { if (!id) return null; const s = String(id).replace(/^off94:/, ""); return W.find(w => w && w.ld126 && (w.id === s || w.ld126 === s || w.id === "ldw_" + s)) || null; };
+  const allowed = () => {
+    if (!rx) return new Set();
+    if (rx.type === "crossover") return new Set(shells().flatMap(w => w.cast));
+    const sh = shellOf(rx.wid); return new Set(sh ? sh.cast : []);
+  };
+
+  /* 默认选当前在看的那部官方剧；不是官方剧就选第一部 */
+  const cr = createRemix;
+  createRemix = function (wid, fromTh) {
+    const r = cr.apply(this, arguments);
+    try {
+      if (rx && !rx.from) {
+        const cur = wid || (typeof curStory !== "undefined" ? curStory : "");
+        const sh = shellOf(cur) || shellOf(rx.wid) || shells()[0];
+        if (sh) { rx.wid = sh.id; rx.cast = sh.cast.slice(0, 3); renderRemix(); }
+      }
+    } catch (e) { console.warn("[rx166] create", e); }
+    return r;
+  };
+
+  /* 第 1 步只放官方剧；「加人」只给允许的角色 */
+  const rr = renderRemix;
+  renderRemix = function () {
+    try { if (rx && !rx.from && !shellOf(rx.wid)) { const sh = shells()[0]; if (sh) { rx.wid = sh.id; rx.cast = sh.cast.slice(0, 3); } } } catch (_) {}
+    try { if (rx && Array.isArray(rx.cast)) { const ok = allowed(); if (ok.size) { const c = rx.cast.filter(id => ok.has(id)); if (c.length) rx.cast = c; } } } catch (_) {}
+    const out = rr.apply(this, arguments);
+    try {
+      const scr = document.getElementById("s-cremix");
+      const rail = scr && scr.querySelector(".rail");
+      if (rail && !rx.from) rail.innerHTML = shells().map(w => rxWorldCard(w)).join("");
+      const go = scr && scr.querySelector("[data-gorx]"); if (go && !/💎/.test(go.textContent)) go.textContent = t("rx.go") + " · 💎" + PRICES.remix;
+    } catch (e) { console.warn("[rx166] render", e); }
+    return out;
+  };
+  if (typeof rxPickSheet === "function") {
+    const ps = rxPickSheet;
+    rxPickSheet = function () {
+      const ac = allChars, ok = allowed();
+      allChars = function () { return ac.apply(this, arguments).filter(id => ok.has(id)); };
+      try { return ps.apply(this, arguments); } finally { allChars = ac; }
+    };
+  }
+
+  /* ---------- 生成二创剧本 ---------- */
+  const FMT = `【输出格式 · MIRU 标准剧本 v2】
+## CHAPTER {n}｜章节标题
+⟦GOAL|这一章要立什么（一句话）|English⟧
+⟦DONE|say|玩家要说出或做出的一个意图（不是具体台词）|4–8 字短名|推进句：旁白：…… 或 名字：“……”⟧   ← 每章 1–2 个，至少一个 say
+# SCENE｜地点
+⟦BG|背景槽位名|地点 · 画面说明⟧      ← 槽位名只能从【可用背景】里选，选地点最接近的
+⟦TIME|时间⟧
+旁白直接写成段落（不加前缀），只写看得见的动作、环境和细节。每场 4–8 句：第一句交代到了哪、气氛，最后一句交代接下来去哪 / 做什么。
+名字：“台词”      ← 一行一个人，一句不超过 40 字；名字必须和【角色】里的中文名一字不差
+# CHOICE｜章内分支点：写成让玩家有话可说的情境
+#### A｜玩家意图（不是现成台词，各条意图要区分得开）
+（选 A 之后的后果 1–3 行：旁白、动作、事件；不要写角色对玩家这句话的固定回答）
+⟦OPT|A|set:英文旗子;love:2⟧
+#### B｜……
+# ·
+每章 2–3 场。章末顺序：关键事件 → # CHOICE｜本章结尾的关键问题 → #### A/B/C 意图 + 后果 + ⟦OPT⟧ → # · → 章尾钩子 1 句。
+第 2 章起，第一场前两句承接上一章（过了多久、人在哪），不要用任何条件语法（不写 IF / ELSE）。
+⟦GOAL⟧ 下面必须紧跟 1–2 行 ⟦DONE⟧，每一章都要有，缺了剧本无法使用。
+硬要求：玩家看不到选项，不写「轮到你了」「请选择」；不替玩家决定感受；古代、奇幻等没有手机的世界不写电话短信；对方在场时不打电话；所有角色都是虚构成年人；不写露骨内容；只输出剧本正文，不要解释、不要代码块。`;
+
+  let busy = false;
+  function prog(msg) {
+    let el = document.getElementById("rx166p");
+    if (!el) { el = document.createElement("div"); el.id = "rx166p"; el.className = "rx166p"; document.body.appendChild(el); }
+    el.innerHTML = '<div><b>' + esc(T2("正在写你的二创", "Writing your remix")) + '</b><span>' + esc(msg) + '</span></div>'; el.hidden = false;
+  }
+  function progOff() { const el = document.getElementById("rx166p"); if (el) el.hidden = true; }
+  function nameOf(id) { const c = ch(id) || {}; const n94 = c.n94 || {}; return String(n94.zh || first(c.n) || ""); }
+
+  function tidy(txt) {
+    const L0 = String(txt).split("\n"), L = [], out = [], seenDone = new Set();
+    for (let i = 0; i < L0.length; i++) { let l = L0[i]; if (/^\s*⟦/.test(l)) { let k = 0; while (!/⟧/.test(l) && i + 1 < L0.length && k++ < 4) l += L0[++i].trim(); } L.push(l); }
+    let skip = false;
+    for (let l of L) {
+      if (/^\s*⟦IF\|[^⟧]*⟧\s*$/.test(l)) { skip = true; continue; }
+      if (/^\s*⟦ELSE⟧\s*$/.test(l)) { skip = false; continue; }
+      if (/^\s*⟦\/IF⟧\s*$/.test(l)) { skip = false; continue; }
+      if (skip) continue;
+      if (/⟦\s*\/?\s*(IF|ELSE)/.test(l)) {
+        const e = l.lastIndexOf("⟦ELSE⟧");
+        l = (e >= 0 ? l.slice(e + 6) : (/⟦IF\|/.test(l) ? "" : l)).replace(/⟦\s*\/?\s*(IF|ELSE)[^⟧]*⟧/g, "").trim();
+        if (!l) continue;
+      }
+      if (/^\s*⟦\s*DONE/.test(l)) { l = l.replace(/[|｜]\s*推进句\s*[:：]\s*/, "|"); const v = (l.split(/[|｜]/)[2] || "").trim(); if (seenDone.has(v)) continue; seenDone.add(v); }
+      if (/^\s*⟦OPT\|/.test(l)) l = l.replace(/;?\s*flag:[^;⟧]*/g, "").replace(/\|;/, "|");
+      const bg = /^\s*⟦BG\|[^|⟧]+\|?([^⟧]*)⟧/.exec(l);
+      if (bg) { let k = out.length - 1; while (k >= 0 && !out[k].trim()) k--; if (k < 0 || !/^\s*#\s*(SCENE|场景)/i.test(out[k])) out.push("# SCENE｜" + ((bg[1] || "").split(/[·•]/)[0].trim() || "场景")); }
+      out.push(l);
+    }
+    if (!seenDone.size) {
+      const qs = out.filter(x => /^\s*#\s*CHOICE\s*[｜|]/i.test(x)); const q = qs.length ? qs[qs.length - 1].replace(/^\s*#\s*CHOICE\s*[｜|]\s*/i, "").trim() : "";
+      const gi = out.findIndex(x => /^\s*⟦GOAL\|/.test(x)); const at = gi >= 0 ? gi + 1 : Math.max(1, out.findIndex(x => /^\s*#\s*SCENE/i.test(x)));
+      out.splice(at, 0, "⟦DONE|say|" + (q ? "对「" + q.replace(/[|⟧]/g, " ").slice(0, 40) + "」说出自己的决定" : "说出你对眼前这件事的决定") + "|做出决定|旁白：话一出口，局面就不一样了。⟧");
+    }
+    return out.join("\n");
+  }
+  async function generate() {
+    const sh = shellOf(rx.wid), wid0 = sh.ld126, a = Object.assign({}, rxAuto());
+    if (zh()) a.title = String(a.title || "").replace(/\s*·\s*What if…?/i, " · 如果……").replace(/\s*·\s*Sequel/i, " · 后传").replace(/\s*·\s*AU/i, " · 平行世界");
+    const cast = rx.cast.filter(id => ch(id));
+    let meta = {}, script = "", assets = {};
+    try { const r = await fetch("/api/works?id=" + encodeURIComponent(wid0)); if (r.ok) { const j = await r.json(); meta = (j.pack && j.pack.meta) || {}; script = (j.pack && j.pack.script) || ""; } } catch (_) {}
+    try { const r = await fetch("art/official/" + wid0 + ".json"); if (r.ok) assets = await r.json(); } catch (_) {}
+    /* 原剧里每个背景槽位对应的地点 */
+    const bgs = [], seen = new Set(); let lastPlace = "";
+    String(script).split("\n").forEach(l => {
+      const s1 = /^\s*#\s*(?:SCENE|场景|第.+场)\s*[｜|]\s*(.+)$/i.exec(l); if (s1) lastPlace = s1[1].trim();
+      const b = /⟦BG\|([^|⟧]+)\|?([^⟧]*)⟧/.exec(l); if (b && !seen.has(b[1].trim())) { seen.add(b[1].trim()); bgs.push(b[1].trim() + "：" + (b[2] || lastPlace).trim().slice(0, 40)); }
+    });
+    Object.keys(assets).filter(k => /^bg_/.test(k) && !seen.has(k)).slice(0, 30).forEach(k => bgs.push(k + "：（原剧场景图）"));
+    const people = cast.map(id => { const c = ch(id) || {}; return "- " + nameOf(id) + "（" + Lz(c.role || "") + "）外貌：" + Lz(c.looks || "") + "；性格：" + Lz(c.vibe || ""); }).join("\n");
+    const how = { whatif: "如果……：改变原剧里发生过的一件事，之后的一切跟着变", au: "平行世界：同样的人，换到「" + ((typeof RX_AU_ZH !== "undefined" && RX_AU_ZH[rx.au]) || rx.au) + "」", swap: "身份互换：角色之间的权力和位置反过来", sequel: "结局之后：从原剧停下的地方接着写", crossover: "跨作品联动：来自不同故事的人走进同一个故事" }[rx.type] || "";
+    const ctx = "【原剧】" + Lz(sh.title) + "\n【原剧简介】" + String(meta.premise || "").slice(0, 600) + "\n【玩家扮演】" + String(meta.you || "你").slice(0, 200) +
+      "\n【二创类型】" + how + "\n【改了什么】" + (rx.twist || a.hook) + (rx.opening ? "\n【开场第一句（要用上）】" + rx.opening : "") +
+      "\n【尺度】" + (rx.heat || "slow") + "（不写露骨内容）\n【角色】（只用这些人，玩家是「你」）\n" + people + "\n【可用背景】\n" + (bgs.slice(0, 40).join("\n") || "（没有，可以省略 ⟦BG⟧ 行）");
+    const chapters = [];
+    for (let n = 1; n <= 3; n++) {
+      prog(T2("第 " + n + " / 3 章 · 约需 20–40 秒", "Chapter " + n + " of 3 · about 20–40 seconds"));
+      const prev = chapters.length ? "\n\n【前面已经写好的章节（接着写，不要重复）】\n" + chapters.join("\n\n").slice(-7000) : "";
+      const prompt = "你是 MIRU 互动剧的编剧。根据下面的设定写这部二创的第 " + n + " 章（共 3 章；第 3 章要给出一个阶段性的结局和余韵）。\n\n" + FMT.replace("{n}", n) + "\n\n" + ctx + prev + "\n\n现在只输出第 " + n + " 章的剧本正文。";
+      let txt = "";
+      for (let k = 0; k < 2 && !/CHAPTER/i.test(txt); k++) {
+        const r = await SAMPLE(prompt, { modelTier: "complex", maxTokens: 6000, timeout: 160000, cache: false });
+        txt = String((r && r.text) || "").replace(/^```[a-z]*\s*/i, "").replace(/```\s*$/, "").trim();
+      }
+      if (!/CHAPTER/i.test(txt)) throw new Error("chapter " + n);
+      chapters.push(tidy(txt).replace(/^#{1,2}\s*CHAPTER\s*\d*/i, "## CHAPTER " + n));
+    }
+    const chars = cast.map(id => { const c = ch(id) || {}; return "⟦CHAR|" + nameOf(id) + "|" + (c.g === "f" ? "f" : "m") + "|" + (c.age || 26) + "|" + id + "|" + Lz(c.role || "").replace(/[|⟧]/g, " ") + "|" + Lz(c.looks || "").replace(/[|⟧]/g, " ") + "⟧"; }).join("\n");
+    const md = "# " + a.title + "\n" + chars + "\n⟦CHAR|你|f|25|you|玩家|" + String(meta.you || "").replace(/[|⟧]/g, " ").slice(0, 80) + "⟧\n\n" + chapters.join("\n\n");
+    prog(T2("正在把剧本做成可以玩的剧……", "Building your playable story…"));
+    const doc = imParse(md);
+    if (!doc || !doc.chapters || !doc.chapters.length) throw new Error("parse");
+    const r = imBuild(doc, null); const nid = r && (r.wid || r); const w = nid && wd(nid);
+    if (!w) throw new Error("build");
+    const x0 = v => ({ en: v, zh: v });
+    Object.assign(w, { title: x0(a.title), hook: x0(a.hook), premise: x0(String(meta.premise || "").replace(/[^。！？.!?]*\d+\s*章[^。！？]*[。！？]?/g, "").slice(0, 260) + " —— 二创 · " + how + (rx.twist ? "：" + rx.twist : "")), remixOf: wid0, remixType: rx.type, heat: rx.heat, official: false });
+    /* 角色立绘和资料：沿用官方人物卡 */
+    (w.cast || []).forEach(id => {
+      const c = (S.mine.chars || {})[id]; if (!c) return;
+      const lead = cast.find(L => nameOf(L) === String(c.n || "")); if (!lead) return;
+      const L = ch(lead) || {};
+      Object.assign(c, { g: L.g || c.g, age: L.age || c.age, h: L.h || "", role: L.role || c.role, looks: L.looks || c.looks, vibe: L.vibe || c.vibe, pitch: L.pitch || c.pitch, solo: L.solo || c.solo, likes: L.likes || c.likes, boundary: L.boundary || c.boundary, ldFrom: lead });
+      const pic = (S.art && S.art[lead]) || (typeof artSrc === "function" ? artSrc(lead) : ""); if (pic) S.art[id] = pic;
+    });
+    /* 背景图：原剧的同名槽位 */
+    try {
+      const walk = bs => (bs || []).forEach(b => { if (!Array.isArray(b)) { if (b && b.choice) (b.choice.opts || []).forEach(o => walk(o.then)); return; } if (b[0] === "sys" && b[1] === "scene" && b[2]) { const slot = b[2].bg94 || b[2].bg || b[2].img; if (slot && assets[slot]) { const key = "rx166:" + nid + ":" + slot; S.art[key] = assets[slot]; b[2].img = key; } } if (b[0] === "sys" && b[1] === "if" && b[2]) { walk(b[2].then); walk(b[2].else || b[2].alt); } (b[2] && b[2].opts || []).forEach(o => walk(o.then)); });
+      (w.pack && w.pack.chapters || []).forEach(c => { walk(c.beats && c.beats.zh); if (c.beats && c.beats.en !== c.beats.zh) walk(c.beats.en); (c.choices || []).forEach(o => { walk(o.then && o.then.zh); }); });
+      const cov = assets.cover || assets.poster; if (cov) { S.art[nid] = cov; w.cover = true; }
+    } catch (e) { console.warn("[rx166] bg", e); }
+    try { const wk = (S.works || []).find(x => x && x.id === nid); if (wk) Object.assign(wk, { kind: "remix", title: a.title }); else (S.works = S.works || []).unshift({ id: nid, kind: "remix", title: a.title, at: Date.now(), seed: 0 }); } catch (_) {}
+    save();
+    return nid;
+  }
+
+  window.RX166 = { generate: () => generate(), shells, allowed };
+  document.addEventListener("click", async e => {
+    const go = e.target.closest && e.target.closest("[data-gorx]");
+    const ok = e.target.closest && e.target.closest("[data-rx166go]");
+    if (!go && !ok) return;
+    if (!rx || rx.from) return; /* 「从这一刻二创」照旧 */
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (busy) return;
+    if (go) {
+      if (!shellOf(rx.wid)) { toast(T2("先选一部官方剧", "Pick a story first")); return; }
+      if (!String(rx.twist || "").trim() && !String(rx.opening || "").trim() && rx.type !== "au" && rx.type !== "crossover") { toast(t("rx.need")); const x = document.getElementById("rxTw"); if (x) x.focus(); return; }
+      sheet('<h2>' + esc(T2("生成二创剧本", "Write my remix")) + '</h2><p class="sm dim" style="margin-top:8px;line-height:1.6">' +
+        esc(T2("AI 会按 MIRU 剧本规范，用《" + Lz(shellOf(rx.wid).title) + "》的角色和场景为你写一部 3 章的新剧，大约 1–2 分钟。生成失败会自动退还钻石。", "AI will write a new 3-chapter story with the characters and places of the original, following the MIRU script rules. About 1–2 minutes. If it fails, your gems are refunded.")) +
+        '</p><button class="btn btn-p btn-block" style="margin-top:14px" data-rx166go="1">💎 ' + PRICES.remix + ' · ' + esc(T2("开始生成", "Start")) + '</button>');
+      return;
+    }
+    try { closeSheet(); } catch (_) {}
+    const price = PRICES.remix;
+    if (!spend(price, "remix")) return;
+    busy = true;
+    try {
+      const nid = await generate();
+      progOff(); rx = null;
+      try { if (typeof taskClaimOnce === "function" && taskClaimOnce("pubRemix", 3)) setTimeout(() => toast(t("task.gotRemix")), 2600); } catch (_) {}
+      openStory(nid);
+    } catch (err) {
+      console.warn("[rx166] generate", err);
+      progOff();
+      S.keys = (S.keys || 0) + price; save();
+      toast(T2("这次没写成，钻石已退还（💎" + price + "），可以再试一次", "Couldn't finish this time — " + price + " gems refunded. Try again."));
+    } finally { busy = false; }
+  }, true);
+
+  /* ---------- 一创：创建角色、组局，发布时收钻 ---------- */
+  document.addEventListener("click", e => {
+    const pc = e.target.closest && e.target.closest("[data-pubchar]");
+    const gg = e.target.closest && e.target.closest("[data-gogroup]");
+    if (!pc && !gg) return;
+    if (pc) {
+      const v = id => ((document.getElementById(id) || {}).value || "").trim();
+      if (!v("fName") || !v("fOpen") || (v("fAge") && +v("fAge") < 21)) return; /* 让原来的提示出来，不收钱 */
+      if (!spend(PRICES.create, "create")) { e.preventDefault(); e.stopImmediatePropagation(); }
+      return;
+    }
+    if (typeof gpick !== "undefined" && gpick.length < 2) return;
+    if (!spend(PRICES.group, "create")) { e.preventDefault(); e.stopImmediatePropagation(); }
+  }, true);
+  setInterval(() => {
+    try {
+      const pc = document.querySelector("[data-pubchar]"); if (pc && !/💎/.test(pc.textContent)) pc.textContent = t("f.publish") + " · 💎" + PRICES.create;
+      const gg = document.querySelector("[data-gogroup]"); if (gg && !/💎/.test(gg.textContent)) gg.textContent = gg.textContent + " · 💎" + PRICES.group;
+    } catch (_) {}
+  }, 700);
+
+  const st = document.createElement("style");
+  st.textContent = ".rx166p{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(7,6,10,.72)}.rx166p[hidden]{display:none}" +
+    ".rx166p>div{display:flex;flex-direction:column;gap:8px;align-items:center;padding:22px 26px;border-radius:16px;background:#17131d;border:1px solid rgba(255,255,255,.08);color:#fff;max-width:80vw;text-align:center}" +
+    ".rx166p span{font-size:13px;color:rgba(255,255,255,.65)}";
+  document.head.appendChild(st);
 })();
