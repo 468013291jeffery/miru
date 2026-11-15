@@ -83,6 +83,7 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
           <template #title><el-icon><Wallet /></el-icon><span>订单与钻石</span></template>
           <el-menu-item index="orders" v-if="can('orders')">充值订单</el-menu-item>
           <el-menu-item index="ledger" v-if="can('ledger')">钻石流水</el-menu-item>
+          <el-menu-item index="promo" v-if="can('orders')">推广与单剧收入</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="ops" v-if="can('notices')||can('i18n')||can('config')||can('events')">
           <template #title><el-icon><Promotion /></el-icon><span>运营工具</span></template>
@@ -1357,13 +1358,90 @@ const Studio = {
 };
 
 /* ================= app shell ================= */
+/* 2026-11-16：推广分佣 + 单剧收入（/api/admin?r=promo → api/promo.js） */
+const Promo = {
+  setup() {
+    const st = reactive({ loading: false, d: null, days: 30, tab: 'works', q: '' });
+    const fm = reactive({ rate: 10, days: 30, gemsPerUsd: 5, newDays: 7, on: true });
+    async function load() {
+      st.loading = true;
+      try { const d = await api('promo', { query: { days: st.days } }); st.d = d; Object.assign(fm, { rate: Math.round(d.cfg.rate * 1000) / 10, days: d.cfg.days, gemsPerUsd: d.cfg.gemsPerUsd, newDays: d.cfg.newDays, on: d.cfg.on }); }
+      catch (_) {} finally { st.loading = false; }
+    }
+    async function save() {
+      await api('promo', { body: { values: { rate: Number(fm.rate) / 100, days: fm.days, gemsPerUsd: fm.gemsPerUsd, newDays: fm.newDays, on: fm.on } } });
+      ElMessage.success('已保存，新规则对之后的充值生效'); load();
+    }
+    const works = computed(() => { const d = st.d; if (!d) return []; const q = st.q.trim().toLowerCase();
+      return d.works.map(w => Object.assign({}, w, { total: Number(w.pay_cents) + Number(w.gem_cents) })).filter(w => !q || String(w.title || '').toLowerCase().includes(q) || String(w.wid).toLowerCase().includes(q)); });
+    const name = w => w.title || (w.wid.startsWith('ldw_') ? '（官方剧）' + w.wid.slice(4) : w.wid);
+    onMounted(load);
+    return { st, fm, load, save, works, name, money, fmt, can };
+  },
+  template: `<div v-loading="st.loading">
+    <div class="toolbar">
+      <el-radio-group v-model="st.days" @change="load"><el-radio-button :value="7">近 7 天</el-radio-button><el-radio-button :value="30">近 30 天</el-radio-button><el-radio-button :value="90">近 90 天</el-radio-button><el-radio-button :value="3650">全部</el-radio-button></el-radio-group>
+      <el-button @click="load">刷新</el-button>
+    </div>
+    <div class="kpis" v-if="st.d">
+      <div class="kpi"><div class="l">期间正式充值</div><div class="v">{{money(st.d.totals.revenue)}}</div><div class="s">一颗钻平均 {{money(st.d.centsPerGem)}}</div></div>
+      <div class="kpi"><div class="l">推广链接点击</div><div class="v">{{st.d.totals.clicks}}</div><div class="s">带来新用户 {{st.d.totals.users}}</div></div>
+      <div class="kpi"><div class="l">推广带来的充值</div><div class="v">{{money(st.d.totals.sales)}}</div><div class="s">应付佣金 {{money(st.d.totals.comm)}}</div></div>
+      <div class="kpi"><div class="l">已发佣金（累计）</div><div class="v">💎 {{st.d.totals.gems_all}}</div><div class="s">按 $1 = {{st.d.cfg.gemsPerUsd}} 钻发放</div></div>
+    </div>
+    <el-tabs v-model="st.tab">
+      <el-tab-pane label="单剧收入" name="works">
+        <div class="panel">
+          <el-alert type="info" :closable="false" style="margin-bottom:12px" title="怎么算的" description="直接充值：玩家在这部剧里打开充值页后 60 分钟内完成的正式充值。钻石消耗：玩家在这部剧里花掉的钻石，折合收入 = 钻石数 × 一颗钻的平均价格（含赠送和免费钻，是估算）。推广带来：通过这部剧的推广链接进来的用户的充值。数据从本功能上线后开始累计。" />
+          <div class="toolbar"><el-input v-model="st.q" placeholder="搜剧名或 ID" clearable style="width:240px" /><span class="muted">共 {{works.length}} 部</span></div>
+          <el-table :data="works" stripe :default-sort="{prop:'total',order:'descending'}">
+            <el-table-column label="剧" min-width="220"><template #default="{row}"><b>{{name(row)}}</b><div class="muted mono">{{row.wid}}<span v-if="row.author_name"> · {{row.author_name}}</span></div></template></el-table-column>
+            <el-table-column prop="total" label="合计（估算）" width="130" sortable :formatter="r=>money(r.total)" />
+            <el-table-column prop="pay_cents" label="直接充值" width="110" sortable :formatter="r=>money(r.pay_cents)" />
+            <el-table-column prop="orders" label="充值单数" width="95" sortable />
+            <el-table-column prop="gems" label="钻石消耗" width="100" sortable />
+            <el-table-column prop="gem_cents" label="折合收入" width="100" sortable :formatter="r=>money(r.gem_cents)" />
+            <el-table-column prop="spenders" label="花钻人数" width="95" sortable />
+            <el-table-column prop="promo_cents" label="推广带来" width="100" sortable :formatter="r=>money(r.promo_cents)" />
+            <el-table-column prop="clicks" label="推广点击" width="95" sortable />
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="推广人" name="promoters">
+        <div class="panel">
+          <el-table :data="st.d ? st.d.promoters : []" stripe>
+            <el-table-column label="推广人" min-width="200"><template #default="{row}">{{row.name || row.email || '游客'}}<div class="muted mono">{{row.user_id}} · 码 {{row.code}}</div></template></el-table-column>
+            <el-table-column prop="clicks" label="点击" width="80" sortable /><el-table-column prop="users" label="新用户" width="85" sortable /><el-table-column prop="payers" label="付费人数" width="95" sortable />
+            <el-table-column prop="sales" label="带来充值" width="110" sortable :formatter="r=>money(r.sales)" />
+            <el-table-column prop="comm" label="佣金" width="100" sortable :formatter="r=>money(r.comm)" />
+            <el-table-column prop="gems" label="已发钻石（累计）" width="140" sortable />
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="分佣规则" name="cfg">
+        <div class="panel" style="max-width:560px">
+          <el-form label-width="150px">
+            <el-form-item label="推广分佣"><el-switch v-model="fm.on" active-text="开启" inactive-text="关闭" /></el-form-item>
+            <el-form-item label="分佣比例"><el-input-number v-model="fm.rate" :min="0" :max="50" :step="1" /> <span class="muted" style="margin-left:8px">% · 被推广用户每笔正式充值</span></el-form-item>
+            <el-form-item label="归属天数"><el-input-number v-model="fm.days" :min="1" :max="3650" /> <span class="muted" style="margin-left:8px">天 · 从绑定那天算</span></el-form-item>
+            <el-form-item label="钻石换算"><el-input-number v-model="fm.gemsPerUsd" :min="1" :max="100" /> <span class="muted" style="margin-left:8px">钻 = 1 美元佣金</span></el-form-item>
+            <el-form-item label="只认新用户"><el-input-number v-model="fm.newDays" :min="0" :max="365" /> <span class="muted" style="margin-left:8px">天内注册、且没充过值的才能绑定（0 = 不限）</span></el-form-item>
+            <el-form-item><el-button type="primary" @click="save" :disabled="!can('config')">保存</el-button><span class="muted" style="margin-left:10px" v-if="!can('config')">需要「系统配置」权限</span></el-form-item>
+          </el-form>
+          <el-alert type="warning" :closable="false" title="佣金由平台出，原作者不额外分成。只算正式订单（测试单不算）；佣金按累计金额折成钻石自动发到推广人的钱包，不足 1 钻的零头留到下次。已发的佣金在订单退款后不会自动扣回。" />
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+  </div>`,
+};
+
 const app = createApp({
   template: '#root-tpl',
   setup() {
     const route = ref((location.hash || '#dashboard').slice(1)), collapsed = ref(window.innerWidth < 900), busy = ref(false), reloadKey = ref(0);
     const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
     const payTest = ref(false); window.__payTest = payTest;
-    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 接口目录', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
+    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 接口目录', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', promo: '推广与单剧收入', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
     function go(k) { route.value = k; location.hash = k; }
     window.addEventListener('hashchange', () => { route.value = (location.hash || '#dashboard').slice(1); });
     async function login() {
@@ -1371,7 +1449,7 @@ const app = createApp({
       try { const j = await api('login', { body: { username: lf.username, password: lf.password } }); S.token = j.token; S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); lf.password = ''; ElMessage.success('欢迎，' + (j.admin.name || j.admin.username)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); }
       catch (_) {} finally { busy.value = false; }
     }
-    const permOf = r => ({ studio: 'scripts', api: 'config', dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
+    const permOf = r => ({ studio: 'scripts', api: 'config', dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', promo: 'orders', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
     const firstPage = () => Object.keys(titles).find(k => can(permOf(k))) || 'dashboard';
     async function refreshBadges() { try { if (!can('dashboard')) return; const j = await api('dashboard'); badge.works = j.kpi.works_pending; badge.assets = j.kpi.assets_review; badge.reports = j.kpi.reports_open; payTest.value = j.payTest; } catch (_) {} }
     window.__refreshBadges = refreshBadges;
@@ -1383,7 +1461,7 @@ const app = createApp({
 });
 app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
 for (const [k, c] of Object.entries(ElementPlusIconsVue)) app.component(k, c);
-Object.entries({ studio: Studio, api: ApiCatalog, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
+Object.entries({ studio: Studio, api: ApiCatalog, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, promo: Promo, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
 app.mount('#app');
 </script>
 </body>
