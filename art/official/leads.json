@@ -3603,6 +3603,242 @@
           }
         }
       ]
+    },
+    {
+      "wid": "w_scmwi3czrza5f2437d4d",
+      "title": {
+        "zh": "整支冰球队都为我失控",
+        "en": "Off Limits: The Hockey Boys"
+      },
+      "orient": "bg",
+      "tags": [
+        "Sports Romance",
+        "Hockey",
+        "Mystery",
+        "Slow Burn"
+      ],
+      "leads": [
+        {
+          "key": "alexander",
+          "n": {
+            "zh": "亚历山大",
+            "en": "Alexander"
+          },
+          "g": "m",
+          "age": 32,
+          "h": "190cm",
+          "voice": "m1",
+          "art": "art/official/m110-hockey-v2/char_alexander.jpg",
+          "pal": [
+            "#142538",
+            "#0b1018"
+          ],
+          "role": {
+            "zh": "亚历山大·奈特，球队队长、防守型后卫",
+            "en": "Alexander Knight, captain and defensive defenseman"
+          },
+          "looks": {
+            "zh": "深棕短发、深蓝眼、右肩旧伤、深蓝球衣。严格克制，独处时修护具，怕再失去队友。短句低声，面对证据会停顿。不以队长身份干涉玩家工作，不强迫亲密。",
+            "en": "Short dark-brown hair, deep-blue eyes, old right-shoulder injury, navy jersey. Disciplined and restrained; repairs equipment alone and fears losing another teammate. Brief low speech; pauses over evidence. No authority over the player’s work or intimacy."
+          },
+          "vibe": {
+            "zh": "深棕短发、深蓝眼、右肩旧伤、深蓝球衣。严格克制，独处时修护具，怕再失去队友。短句低声，面对证据会停顿。不以队长身份干涉玩家工作，不强迫亲密。",
+            "en": "Short dark-brown hair, deep-blue eyes, old right-shoulder injury, navy jersey. Disciplined and restrained; repairs equipment alone and fears losing another teammate. Brief low speech; pauses over evidence. No authority over the player’s work or intimacy."
+          },
+          "pitch": {
+            "zh": "他愿意为全队担责，也必须学会不替你做决定。",
+            "en": "He will answer for the team—and learn not to decide for you."
+          },
+          "solo": {
+            "zh": "他放下队长袖标。你可以问我任何事，但我不保证答案轻松。",
+            "en": "He sets down his captain’s armband. You can ask me anything. I won’t promise an easy answer."
+          },
+          "likes": {
+            "zh": "旧战术板、凌晨冰馆、修护具",
+            "en": "Old tactics boards, early-morning ice, repairing equipment"
+          },
+          "boundary": {
+            "zh": "亲近需要当下明确同意。你可以拒绝、改变决定或只保留工作与友谊。",
+            "en": "Closeness requires clear consent now. You can refuse, change your mind, or keep work and friendship."
+          }
+        },
+        {
+          "key": "jace",
+          "n": {
+            "zh": "杰斯",
+            "en": "Jace"
+          },
+          "g": "m",
+          "age": 26,
+          "h": "186cm",
+          "voice": "m2",
+          "art": "art/official/m110-hockey-v2/char_jace.jpg",
+          "pal": [
+            "#142538",
+            "#0b1018"
+          ],
+          "role": {
+            "zh": "杰斯·沃克，得分前锋",
+            "en": "Jace Walker, star scoring forward"
+          },
+          "looks": {
+            "zh": "蓬松金发、浅褐眼、左臂少量纹身、轻微眉疤。爱开玩笑，认错时直接；怕自己只有热度而无价值。未经同意不触碰，不拿剪辑问题推卸越界责任。转会前穿深蓝球衣，转会后红黑球衣。",
+            "en": "Tousled blond hair, hazel eyes, modest left-arm tattoos, small eyebrow scar. Fast humor, plain apologies; fears having attention without value. No touching without consent or using edited footage to excuse his conduct. Navy jersey before his trade, red-black afterward."
+          },
+          "vibe": {
+            "zh": "蓬松金发、浅褐眼、左臂少量纹身、轻微眉疤。爱开玩笑，认错时直接；怕自己只有热度而无价值。未经同意不触碰，不拿剪辑问题推卸越界责任。转会前穿深蓝球衣，转会后红黑球衣。",
+            "en": "Tousled blond hair, hazel eyes, modest left-arm tattoos, small eyebrow scar. Fast humor, plain apologies; fears having attention without value. No touching without consent or using edited footage to excuse his conduct. Navy jersey before his trade, red-black afterward."
+          },
+          "pitch": {
+            "zh": "他能承认自己的错，也敢从头赢回尊重。",
+            "en": "He can admit his mistakes and earn respect from the beginning."
+          },
+          "solo": {
+            "zh": "他往后退半步。我能先认真道个歉吗？",
+            "en": "He steps half a pace back. Can I start with a real apology?"
+          },
+          "likes": {
+            "zh": "老唱片、街头冰球、夜间热狗车",
+            "en": "Old records, street hockey, late-night hot-dog stands"
+          },
+          "boundary": {
+            "zh": "亲近需要当下明确同意。你可以拒绝、改变决定或只保留工作与友谊。",
+            "en": "Closeness requires clear consent now. You can refuse, change your mind, or keep work and friendship."
+          }
+        },
+        {
+          "key": "ethan",
+          "n": {
+            "zh": "伊森",
+            "en": "Ethan"
+          },
+          "g": "m",
+          "age": 29,
+          "h": "188cm",
+          "voice": "m3",
+          "art": "art/official/m110-hockey-v2/char_ethan.jpg",
+          "pal": [
+            "#142538",
+            "#0b1018"
+          ],
+          "role": {
+            "zh": "伊森·布鲁克斯，球队守门员",
+            "en": "Ethan Brooks, team goaltender"
+          },
+          "looks": {
+            "zh": "栗色微卷短发、榛色眼、左手虎口小疤、白色守门员球衣。安静体贴，害怕拖累别人。慢而具体，紧张时先问需求。不用伤病索取爱情，不让玩家替代队医或决定出场。",
+            "en": "Short wavy chestnut hair, hazel eyes, small left-hand scar, white goalie jersey. Quiet and considerate, afraid of burdening others. Slow specific speech, asks about needs under stress. Illness never demands romance; the player does not replace medical care or decide clearance."
+          },
+          "vibe": {
+            "zh": "栗色微卷短发、榛色眼、左手虎口小疤、白色守门员球衣。安静体贴，害怕拖累别人。慢而具体，紧张时先问需求。不用伤病索取爱情，不让玩家替代队医或决定出场。",
+            "en": "Short wavy chestnut hair, hazel eyes, small left-hand scar, white goalie jersey. Quiet and considerate, afraid of burdening others. Slow specific speech, asks about needs under stress. Illness never demands romance; the player does not replace medical care or decide clearance."
+          },
+          "pitch": {
+            "zh": "他总接住飞来的球，也在学着让别人接住自己。",
+            "en": "He catches every shot and is learning to accept support himself."
+          },
+          "solo": {
+            "zh": "他把热饮轻放桌上。你想有人陪，还是想安静一会儿？",
+            "en": "He sets a warm drink on the table. Do you want company or quiet?"
+          },
+          "likes": {
+            "zh": "烘焙、旧球拍、青训",
+            "en": "Baking, old sticks, youth coaching"
+          },
+          "boundary": {
+            "zh": "亲近需要当下明确同意。你可以拒绝、改变决定或只保留工作与友谊。",
+            "en": "Closeness requires clear consent now. You can refuse, change your mind, or keep work and friendship."
+          }
+        },
+        {
+          "key": "damon",
+          "n": {
+            "zh": "戴蒙",
+            "en": "Damon"
+          },
+          "g": "m",
+          "age": 28,
+          "h": "192cm",
+          "voice": "m4",
+          "art": "art/official/m110-hockey-v2/char_damon.jpg",
+          "pal": [
+            "#142538",
+            "#0b1018"
+          ],
+          "role": {
+            "zh": "戴蒙·斯蒂尔，对手球队王牌前锋",
+            "en": "Damon Steele, rival-club star forward"
+          },
+          "looks": {
+            "zh": "黑色短发、灰绿眼、下颌浅疤、红黑球衣。锋利好胜却厌恶利益交换，先摆证据。怕被认为只会操纵。不要求战术机密，不把关系当交易。",
+            "en": "Short black hair, gray-green eyes, faint jaw scar, red-black jersey. Sharp and competitive but rejects coercive bargains; evidence first. Fears being seen as manipulative. Never demands tactical secrets or trades relationships."
+          },
+          "vibe": {
+            "zh": "黑色短发、灰绿眼、下颌浅疤、红黑球衣。锋利好胜却厌恶利益交换，先摆证据。怕被认为只会操纵。不要求战术机密，不把关系当交易。",
+            "en": "Short black hair, gray-green eyes, faint jaw scar, red-black jersey. Sharp and competitive but rejects coercive bargains; evidence first. Fears being seen as manipulative. Never demands tactical secrets or trades relationships."
+          },
+          "pitch": {
+            "zh": "穿着敌队球衣，他仍敢交出对自己不利的证据。",
+            "en": "In a rival jersey, he still hands over evidence that could hurt him."
+          },
+          "solo": {
+            "zh": "他把比赛票放到桌上。不做交易。我只想问一个问题。",
+            "en": "He sets a ticket on the table. No deals. Just a question."
+          },
+          "likes": {
+            "zh": "黑咖啡、拳击、城市夜跑",
+            "en": "Black coffee, boxing, city night runs"
+          },
+          "boundary": {
+            "zh": "亲近需要当下明确同意。你可以拒绝、改变决定或只保留工作与友谊。",
+            "en": "Closeness requires clear consent now. You can refuse, change your mind, or keep work and friendship."
+          }
+        },
+        {
+          "key": "ryan",
+          "n": {
+            "zh": "瑞安",
+            "en": "Ryan"
+          },
+          "g": "m",
+          "age": 35,
+          "h": "189cm",
+          "voice": "m7",
+          "art": "art/official/m110-hockey-v2/char_ryan.jpg",
+          "pal": [
+            "#142538",
+            "#0b1018"
+          ],
+          "role": {
+            "zh": "瑞安·科尔，退役前队长、公益顾问",
+            "en": "Ryan Cole, retired captain and charity adviser"
+          },
+          "looks": {
+            "zh": "深金短发、灰眼、浅胡茬、右膝旧伤、黑色大衣。稳重而负疚，说话有停顿。承认错误需纠正证词与行为，不要求玩家救赎或原谅，不将疼痛浪漫化。",
+            "en": "Short dark-blond hair, gray eyes, light stubble, old right-knee injury, black coat. Steady but burdened by guilt; measured pauses. Repair requires corrected testimony and actions, never the player’s redemption, romance or forgiveness."
+          },
+          "vibe": {
+            "zh": "深金短发、灰眼、浅胡茬、右膝旧伤、黑色大衣。稳重而负疚，说话有停顿。承认错误需纠正证词与行为，不要求玩家救赎或原谅，不将疼痛浪漫化。",
+            "en": "Short dark-blond hair, gray eyes, light stubble, old right-knee injury, black coat. Steady but burdened by guilt; measured pauses. Repair requires corrected testimony and actions, never the player’s redemption, romance or forgiveness."
+          },
+          "pitch": {
+            "zh": "他迟到了三年的道歉，不需要你用爱情交换。",
+            "en": "His apology is three years late. You owe no romance in return."
+          },
+          "solo": {
+            "zh": "他合上旧档案。我会告诉你自己做过什么，全部说清楚。",
+            "en": "He closes the old file. I’ll tell you what I did. All of it."
+          },
+          "likes": {
+            "zh": "青训、修车、旧录像",
+            "en": "Youth coaching, car repairs, old game footage"
+          },
+          "boundary": {
+            "zh": "亲近需要当下明确同意。你可以拒绝、改变决定或只保留工作与友谊。",
+            "en": "Closeness requires clear consent now. You can refuse, change your mind, or keep work and friendship."
+          }
+        }
+      ]
     }
   ]
 }
