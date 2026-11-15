@@ -272,6 +272,16 @@ module.exports = L.wrap(async (req, res) => {
     await log('report_' + op, 'report', id, { note: b.note }); return L.send(res, 200, { ok: true });
   }
 
+  /* ---------- 2026-11-16 推广分佣 + 单剧收入（数据在 api/promo.js） ---------- */
+  if (r === 'promo') {
+    if (!need('orders')) return;
+    const P = require('./promo');
+    if (req.method === 'GET') return L.send(res, 200, await P.adminOverview(sql, q));
+    if (!need('config')) return;
+    try { const c = await P.saveCfg(sql, b.values || {}, A.name || A.username); await log('config_update', 'config', 'promo', b.values || {}); return L.send(res, 200, { cfg: c }); }
+    catch (e) { return L.bad(res, String(e.message || e)); }
+  }
+
   /* ---------- orders & diamond ledger ---------- */
   if (r === 'orders') {
     if (!need('orders')) return; const p = PAGE(q); const args = []; let w = '1=1';
