@@ -2777,7 +2777,16 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const T2 = (a, b) => (zh() ? a : b);
   const on = () => typeof CL0 !== "undefined" && CL0.on && typeof capi === "function" && typeof cloudInfo === "function" && !!cloudInfo().token;
-  const normWid = id => { let s = String(id || ""); s = s.replace(/^off94:/, "").replace(/^ldw_/, ""); return /^[A-Za-z0-9_:.-]{1,80}$/.test(s) ? s : ""; };
+  /* 官方剧打开后是本地搭的世界（bw_xxx），统计和推广链接要用服务器上的作品 ID（w_xxx） */
+  const WMAP = {};
+  const normWid = id => {
+    let s = String(id || ""); s = s.replace(/^off94:/, "").replace(/^ldw_/, "");
+    if (s && !/^w_/.test(s)) {
+      if (!(s in WMAP)) { let m = null; try { const w = typeof wd === "function" && wd(s); if (w) m = (JSON.stringify(w).match(/"(w_[a-z0-9]{12,})"/) || [])[1] || null; } catch (_) {} WMAP[s] = m; }
+      if (WMAP[s]) s = WMAP[s];
+    }
+    return /^[A-Za-z0-9_:.-]{1,80}$/.test(s) ? s : "";
+  };
 
   /* ---------- ① 遇见：空牌重发 ---------- */
   try {
@@ -2918,7 +2927,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     sheet('<h2>📣 ' + esc(T2("推广这部剧", "Promote this story")) + '</h2><p class="sm dim" style="margin-top:6px">' + esc(T2("正在生成你的专属链接……", "Getting your link…")) + '</p>');
     const me = await loadMe(true);
     if (!me) { closeSheet(); toast(T2("暂时拿不到推广链接，稍后再试", "Couldn't get your link — try again later")); return; }
-    const url = linkOf(wid, me.code), title = titleOf(wid), w0 = (me.byWork || []).find(x => x.wid === wid) || {};
+    const url = linkOf(wid, me.code), title = titleOf(rawWid) !== "MIRU" ? titleOf(rawWid) : titleOf(wid), w0 = (me.byWork || []).find(x => x.wid === wid) || {};
     const pct = Math.round((me.rate || 0.1) * 100);
     const txt = T2("我在 MIRU 玩《" + title + "》，你也来试试：", "I'm playing \"" + title + "\" on MIRU — try it: ");
     const enc = encodeURIComponent, full = txt + " " + url;
@@ -3004,6 +3013,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       return r;
     };
   }
+  /* 官方剧的详情页不走 storyPage（没有收藏按钮），在「关注」按钮旁边补一个 */
+  function addStoryBtn() {
+    try {
+      const scr = document.getElementById("s-story"); if (!scr || scr.hidden || scr.querySelector("[data-promo167]")) return;
+      const id = typeof curStory !== "undefined" ? curStory : ""; if (!id || !normWid(id)) return;
+      const at = scr.querySelector("[data-fav]") || scr.querySelector("[data-follow]"); if (!at) return;
+      at.insertAdjacentHTML("afterend", '<button class="chip" data-promo167="' + esc(id) + '" style="margin-left:6px">📣 ' + esc(T2("推广赚钻", "Promote & earn")) + '</button>');
+    } catch (_) {}
+  }
+  try { const scr0 = document.getElementById("s-story"); if (scr0) new MutationObserver(() => addStoryBtn()).observe(scr0, { childList: true, subtree: false, attributes: true, attributeFilter: ["hidden"] }); } catch (_) {}
+  setInterval(addStoryBtn, 1500);
+
   /* 「我的」页：钱包下面放「我的推广」 */
   if (typeof renderMe === "function") {
     const RM = renderMe;
