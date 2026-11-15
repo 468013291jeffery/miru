@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="04d8c203c05b 2026-11-15T12:47Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="634bdc1c052c 2026-11-15T13:39Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -17023,7 +17023,7 @@ function off94Parse(next, text) {
       /* ⟦FX|id⟧：作者指定特效，持续氛围还是瞬间由特效库决定（app128_fxlib.js）。⟦SFX|id⟧：单独一个音效 */
       if (m.k === "FX") { const fx = window.FXBUS && FXBUS.resolve(a[0]); push(fx && fx.type === "ambient" ? ["sys", "fx", { k: fx.id }] : ["sys", "fx100", { id: a[0] }]); continue; }
       if (m.k === "SFX") { push(["sys", "sfx", { id: a[0] }]); continue; }
-      if (m.k === "TIME" || m.k === "BG") { for (let j = out.length - 1; j >= 0; j--) { const s = out[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
+      if (m.k === "TIME" || m.k === "BG") { const here=sink(), target=here.some(b=>Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene")?here:out; for (let j = target.length - 1; j >= 0; j--) { const s = target[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
       if (m.k === "CG" || m.k === "VIDEO") { push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
       if (m.k === "PHOTO") { push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
       if (m.k === "MG") { const gid = /^g_/.test(a[0]) ? a[0] : "g_" + a[0]; push(["sys", "mg", { id: gid }]); continue; }
@@ -25935,7 +25935,7 @@ pico.instantiate_detection_memory = function(size)
     Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", maxHeight: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
   /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
-  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"], .av img[src*="/svf-v4/characters/"]';
+  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"], .av img[src*="/svf-v4/characters/"],.av img[src*="/only-me-v2/characters/"]';
   function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "maxHeight", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";
@@ -28388,27 +28388,21 @@ window.SVF_RELEASE={"script_id":"sc_mwge64og525f6dcd56","work_id":"w_scmwge64og5
  window.SVF_ENGINE={...E,own,state};
 })();
 
-/* Authored goals, exposition and narration remain readable over any scene. */
+/* Subtle contrast for chapter objectives and character dialogue only.
+   Narration and exposition retain their original theme styles. */
 (function(){
  const style=document.createElement('style');style.id='story-text-readability152';
- const targets=[
-  '#msgs .m-narr','#msgs .m-narr *',
-  '#msgs .m-act:not(.me)','#msgs .m-act:not(.me) *',
-  '#msgs .m-scene','#msgs .m-scene *',
-  '#msgs .m-intro .mi-sec','#msgs .m-intro .mi-sec *',
-  '#msgs .chapter124','#msgs .chapter124 *',
-  '#msgs .entry98','#msgs .entry98 :is(p,h2,h3,h4,dt,dd,b,small,span,strong,em)',
-  '#msgs .svf-chapter-goals','#msgs .svf-chapter-goals *',
+ const goals=['#msgs .svf-chapter-goals','#msgs .svf-chapter-goals *',
   '#msgs .onlyme-chapter-goals','#msgs .onlyme-chapter-goals *',
-  '#s-chat .g163','#s-chat .g163 b','#s-chat .g163 span'
- ];
- style.textContent=targets.join(',')+`{
-  color:#000!important;-webkit-text-fill-color:#000!important;
-  -webkit-text-stroke:.35px #fff;paint-order:stroke fill;
-  text-shadow:-1px -1px 0 #fff,0 -1px 0 #fff,1px -1px 0 #fff,
-    -1px 0 0 #fff,1px 0 0 #fff,-1px 1px 0 #fff,0 1px 0 #fff,1px 1px 0 #fff,
-    0 0 3px #fff,0 0 5px rgba(255,255,255,.95)!important;
-  opacity:1!important;
+  '#s-chat .g163','#s-chat .g163 b','#s-chat .g163 span'];
+ const dialogue=['#msgs .m-row:not(.me) .bac',
+  '#msgs .m-row:not(.me) .bac :is(span,strong,em)',
+  '#msgs .m-row:not(.me) .bub > p'];
+ style.textContent=goals.concat(dialogue).join(',')+`{
+  -webkit-text-stroke:.18px rgba(255,255,255,.38);
+  paint-order:stroke fill;
+  text-shadow:0 0 1px rgba(255,255,255,.28),
+    0 0 2px rgba(255,255,255,.12)!important;
  }`;
  document.head.appendChild(style);
 })();
