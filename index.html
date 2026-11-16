@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="5e869958efb7 2026-11-16T19:19Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="a2d0ee6fa345 2026-11-16T19:28Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -28360,6 +28360,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   ];
   games.forEach((g, n) => { g.img = "https://miru.plus/art/official/m111-idol/m111-idol/mg_c" + String(n + 1).padStart(2, "0") + "_base.jpg"; });
   for (const g of games) { const i = MG100.findIndex(x => x.id === g.id); const v = Object.assign({ a: "", b: "", kw: [] }, g); if (i >= 0) MG100[i] = v; else MG100.push(v); }
+  /* 剧本里 ⟦MG|x⟧ 运行时查的是 g_x，这里两个名字都注册 */
+  const reg = list => { for (const g of list) { for (const id of [g.id, "g_" + g.id.replace(/^g_/, "")]) { const v = Object.assign({ a: "", b: "", kw: [] }, g, { id }); const i = MG100.findIndex(x => x.id === id); if (i >= 0) MG100[i] = v; else MG100.push(v); } } };
+  reg(games);
+  window.MG168 = { reg };
   window.M111G = games;
 })();
 
