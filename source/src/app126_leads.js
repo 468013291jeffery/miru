@@ -32,6 +32,7 @@
         C[id] = {
           n: zh() ? L.n.zh : L.n.en, n94: L.n, age: L.age, h: L.h || "", w: wid, g: L.g || "m", pal: L.pal || ["#2B2238", "#0E0B14"],
           a: "charm", v: { pitch: 1, rate: 1 }, voiceId: L.voice || "", by: "@miru",
+          romanceable: L.romanceable !== false, entity: L.entity || "human",
           role: L.role, looks: L.looks, vibe: L.vibe, pitch: L.pitch, solo: L.solo,
           likes: L.likes || { zh: "", en: "" }, boundary: L.boundary || { zh: "", en: "" },
           tells: { zh: [], en: [] }, twist: { zh: "", en: "" }, secret: { zh: "", en: "" }, want: { zh: "", en: "" }, fear: { zh: "", en: "" },
