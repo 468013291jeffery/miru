@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="31c7ba80c79a 2026-11-16T13:06Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="4969f8b8f31b 2026-11-16T14:11Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -20125,7 +20125,7 @@ function nextLabel98(th) {
 
 /* ---------- compact dock: 下一章 / scene choices (never a big window) ---------- */
 function dock98() {
-  const th = S.threads[curT]; const old = $("#dk98"); if (!th || !th.b98) { if (old) old.remove(); return; }
+  const th = S.threads[curT]; const old = $("#dk98"); goalDock98(th); if (!th || !th.b98) { if (old) old.remove(); return; }
   const comp = $("#s-chat .composer"); if (!comp) return; const A = th.b98, { s } = scene98(th);
   let h = '';
   if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
@@ -20140,7 +20140,6 @@ function dock98() {
   if (!A.ended && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
   /* 点屏继续的提示：前三次用过就不再出现 */
   if (!A.ended && !busy && A.phase === 'talk' && (S.tap98n || 0) < 3 && th.msgs.some(m => m.ai && m.who !== 'me')) h += '<p class="tap98">' + L98('轻点空白处，让他们接着说', 'Tap the empty space to let them keep talking') + '</p>';
-  h = goalBar98(th) + h;
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
@@ -20172,6 +20171,9 @@ MSGKIND.post("app98_story.js", function (h, m, i, th) { if (m && (m.intro98 === 
 { const _mm = typeof mgMatch === "function" ? mgMatch : null; if (_mm) mgMatch = function (txt) { const th = S.threads[curT], w = th && wd(th.wid); if (w && w.official76) return null; return _mm.apply(this, arguments); }; }
 /* ④ the your-turn dock can fold to one line */
 (function () { const st = document.createElement("style"); st.textContent = `
+.g98{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:4px 10px;margin:0 14px 6px;font-size:11.5px;color:var(--mut,#aaa)}
+.g98 b{font-weight:600;color:#F6D3AE}
+.g98 span{opacity:.85}.g98 span.ok{opacity:.55;text-decoration:line-through}
 #dk98{max-height:42vh;overflow:auto;flex:none;margin:0;padding:8px 12px 6px;background:rgba(12,11,16,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.08)}
 #dk98+.composer{border-top:0}
 .dk98r{display:flex;align-items:center;gap:10px;padding-right:74px}.dk98t{flex:1;font-size:12.5px;color:#BDB4C7;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -20472,8 +20474,17 @@ function goalGuide98(th) {
 }
 function goalBar98(th) {
   if(!objectives98(th))return '';const defs=goalDefinitions98(th),g=goalSync98(th),done=defs.filter((d,i)=>g.ok[i]).length;
-  return '<div class="g98" role="status" aria-live="polite" style="padding:8px 12px;font-size:12px;line-height:1.6;color:#dec6a5"><b>'+esc(L98('本章目标 ','Goals ')+done+'/'+defs.length)+'</b> '+defs.map((d,i)=>'<span style="margin-left:8px;'+(g.ok[i]?'color:#a8cba5':'')+'">'+(g.ok[i]?'✓ ':'')+esc(d.name)+'</span>').join('')+(g.error?' <span>'+esc(L98('核验未完成，可继续对话重试','Check pending; keep talking to retry'))+'</span>':'')+(done<defs.length?' <button class="btn btn-g btn-sm" data-goal-check98="1"'+((typeof busy!=='undefined'&&busy)||GOAL98_JUDGING.has(th)?' disabled':'')+'>'+esc(L98('核验目标','Check goals'))+'</button>':'')+(scripted98(scene98(th).b)?' <button class="btn btn-g btn-sm" data-authored-profile98="'+esc(th.wid)+'">'+esc(L98('主角设定','Protagonist'))+'</button>':'')+'</div>';
+  return '<div class="g98" role="status" aria-live="polite"><b>'+esc(L98('本章目标 ','Goals ')+done+'/'+defs.length)+'</b>'+defs.map((d,i)=>'<span class="'+(g.ok[i]?'ok':'')+'">'+(g.ok[i]?'✓':'')+esc(d.name)+'</span>').join('')+'</div>';
 }
+function goalDock98(th) {
+  const chat=document.getElementById('s-chat');if(!chat)return;
+  const html=goalBar98(th),old=chat.querySelector('.g98');
+  if(!html){if(old)old.remove();return;}
+  if(old){if(old.outerHTML!==html)old.outerHTML=html;return;}
+  const host=chat.querySelector('.nx162')||chat.querySelector('#sugg')||chat.querySelector('.composer');
+  if(host)host.insertAdjacentHTML('beforebegin',html);
+}
+
 function hiddenChoice98(th) { return !!(experience98(th)?.hiddenChoices && scene98(th).s?.choice); }
 async function hiddenChoiceReply98(th,ctx) {
   const {s}=scene98(th),a=th.b98,act={txt:ctx.txt,mode:ctx.mode||'say',to:th.addr&&th.cast.includes(th.addr)?th.addr:null};
