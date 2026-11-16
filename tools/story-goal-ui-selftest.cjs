@@ -1,0 +1,13 @@
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),vm=require('vm'),root=process.argv[2],src=fs.readFileSync(path.join(root,'source/src/app98_story.js'),'utf8');
+const b={player:{mode:'scripted'},experience:{schema:1,objectives:{schema:1}},chapters:[]},c={done:[{type:'say',name:'表达态度',criterion:'公开表达',fromScene:0},{type:'flag',name:'核实证据',criterion:'已核实',fromScene:0}],scenes:[{id:'first'}]},s=c.scenes[0],th={wid:'world',msgs:[],b98:{ch:1,sc:0,phase:'talk',picked:{}}};
+const changes=[],host={insertAdjacentHTML:(where,html)=>changes.push({where,html})};let existing=null,removed=false;
+const chat={querySelector:q=>q==='.g98'?existing:q==='#sugg'?host:null};
+const ctx={console,Date,WeakSet,Set,Map,JSON,S:{threads:{thread:th}},curT:'thread',document:{getElementById:id=>id==='s-chat'?chat:null},wd:()=>({community:'world'}),bOf98:()=>b,scene98:()=>({b,c,s}),Z98:()=>true,L98:z=>z,LZ98:o=>o?.zh||o,save:()=>{},esc:String,busy:false,experience98:()=>b.experience,toast:()=>{},$:q=>q==='#dk98'?null:host,nextLabel98:()=> '下一章'};
+vm.createContext(ctx);vm.runInContext(src.slice(src.indexOf('/* Authored protagonist and chapter objectives. */'),src.indexOf('/* End authored protagonist and chapter objectives. */')),ctx);
+assert.equal(typeof ctx.goalDock98,'function','Goals need a separate row above AI suggestions');
+const html=ctx.goalBar98(th);assert(html.includes('本章目标 0/2'));assert(!html.includes('<button'),'Goals must not include large action buttons');assert(!html.includes('data-authored-profile98'));assert(!html.includes('data-goal-check98'));
+ctx.goalDock98(th);assert.equal(changes.length,1);assert.equal(changes[0].where,'beforebegin');assert.equal(changes[0].html,html);
+existing={outerHTML:html,remove:()=>removed=true};changes.length=0;ctx.goalDock98(th);assert.equal(changes.length,0,'Unchanged goals should not replace the DOM');ctx.goalDock98(null);assert(removed,'Switching away must remove stale goals');
+existing=null;changes.length=0;vm.runInContext(src.slice(src.indexOf('function dock98()'),src.indexOf('\n{ /* 2026-10-27')),ctx);ctx.dock98();assert.equal(changes.length,1);assert(changes[0].html.includes('class="g98"'));assert(!changes.some(x=>x.html.includes('id="dk98"')&&x.html.includes('class="g98"')),'Goals cannot sit below AI suggestions inside the merged dock');
+assert(src.includes('.g98 span.ok{opacity:.55;text-decoration:line-through}'),'Completion should match the reference muted strike-through');
+console.log('PASS: compact goals above AI suggestions, no check/profile buttons, stable rendering, stale-row cleanup and native completion styling');
