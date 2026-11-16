@@ -3049,3 +3049,196 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     ".pr167card{width:100%;text-align:left;border:0;cursor:pointer}";
   document.head.appendChild(st);
 })();
+
+/* ===== mod168: M111《全韩娱顶流都偏爱我》专属小游戏（12 个，4 套新模板：放置 / 排序 / 选择 / 配对 / 节拍） ===== */
+(function () {
+  if (typeof MG100 === "undefined" || typeof MG_T === "undefined") return;
+  const t2 = (zh, a, b) => (zh ? a : b);
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+
+  const css = el("style");
+  css.textContent = ".m168{display:flex;flex-direction:column;gap:10px;width:100%;padding:6px 4px;color:#f2ecff}" +
+    ".m168 .pr{font-size:13px;line-height:1.55;color:#cdbdf5;margin:0}" +
+    ".m168 .tb{height:5px;border-radius:3px;background:#2a2240;overflow:hidden}.m168 .tb i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff5fa2,#8f6bff);transition:width linear}" +
+    ".m168 .row{display:flex;gap:8px;align-items:center;padding:11px 12px;border:1px solid #4b3d73;border-radius:12px;background:#1a1530}" +
+    ".m168 .row span{flex:1;font-size:14px}.m168 .row b{color:#ff8fc0;font-size:12px;min-width:20px}" +
+    ".m168 button.k{min-width:44px;min-height:44px;border-radius:10px;background:#2c2348;color:#fff;border:1px solid #6d58a8;padding:8px 10px;font-size:14px}" +
+    ".m168 button.k:disabled{opacity:.35}.m168 button.k.on{background:#7a3b78;border-color:#ff8fc0}" +
+    ".m168 button.go{min-height:48px;border-radius:12px;background:linear-gradient(90deg,#ff5fa2,#8f6bff);color:#fff;border:0;font-weight:700;font-size:15px}" +
+    ".m168 select{max-width:52%;background:#221b3a;color:#fff;padding:10px;border-radius:9px;border:1px solid #6d58a8}" +
+    ".m168 .hint{color:#ffb3d1;font-size:13px;min-height:1em;margin:0}" +
+    ".m168 svg{width:100%;height:auto;max-height:210px;display:block}" +
+    ".m168 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px}" +
+    ".m168 .slot{min-height:56px;border:1.5px dashed #6d58a8;border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;padding:6px;background:#15112a;color:#e8dcff}" +
+    ".m168 .slot.f{border-style:solid;border-color:#ff8fc0;background:#2a1d40}" +
+    ".m168 .beat{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}.m168 .beat i{font-style:normal;text-align:center;padding:12px 0;border-radius:8px;background:#211a38;font-weight:700;color:#9c8cc9}" +
+    ".m168 .beat i.ev{color:#ffb3d1}.m168 .beat i.now{background:#8f6bff;color:#fff}.m168 .beat i.hit{background:#2f7a5a;color:#fff}.m168 .beat i.miss{background:#7a2f45;color:#fff}" +
+    ".m168 .tap{min-height:84px;font-size:20px}";
+  document.head.appendChild(css);
+
+  /* 通用外壳：说明、倒计时、两次机会 */
+  function shell(A, G, sub, done, T, zh, instr) {
+    A.className = "mgarea m168"; A.innerHTML = "";
+    sub.textContent = instr;
+    const pr = el("p", "pr", zh ? G.pz : G.pe); A.append(pr);
+    const tb = el("div", "tb"); const bar = el("i"); tb.append(bar); A.append(tb);
+    const secs = G.seconds || 35; let over = false, tries = 0;
+    requestAnimationFrame(() => { bar.style.transitionDuration = secs + "s"; bar.style.width = "0%"; });
+    T.push(setTimeout(() => { if (!over) { over = true; done("lose"); } }, secs * 1000));
+    const body = el("div", "m168b"); body.style.cssText = "display:flex;flex-direction:column;gap:8px"; A.append(body);
+    const hint = el("p", "hint");
+    const submit = ok => { if (over) return; if (ok) { over = true; done("win"); } else if (tries++ < 1) { hint.textContent = t2(zh, "还差一点，再核对一次。", "Not quite. Check once more."); } else { over = true; done("lose"); } };
+    return { body, hint, submit, isOver: () => over };
+  }
+  const L = (x, zh) => (Array.isArray(x) ? x[zh ? 0 : 1] : x);
+
+  /* 排序：items 已是正确顺序 */
+  MG_T.m111_order = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "用 ↑ ↓ 调整顺序，再点核对。", "Use ↑ ↓ to reorder, then check."));
+    let ord = sh(G.items.map((_, i) => i)); if (ord.every((n, i) => n === i)) ord.reverse();
+    const draw = () => {
+      c.body.innerHTML = "";
+      ord.forEach((id, p) => {
+        const r = el("div", "row"); r.append(el("b", "", String(p + 1)), el("span", "", L(G.items[id], zh)));
+        [[-1, "↑"], [1, "↓"]].forEach(([d, s]) => { const b = el("button", "k", s); b.disabled = p + d < 0 || p + d >= ord.length; b.setAttribute("aria-label", t2(zh, "移动", "Move") + s); b.onclick = () => { [ord[p], ord[p + d]] = [ord[p + d], ord[p]]; draw(); }; r.append(b); });
+        c.body.append(r);
+      });
+      const go = el("button", "go", t2(zh, "核对顺序", "Check order")); go.onclick = () => c.submit(ord.every((n, i) => n === i));
+      c.body.append(go, c.hint);
+    };
+    draw();
+  };
+
+  /* 放置：先点碎片，再点位置 */
+  MG_T.m111_place = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "先点一块碎片，再点它在照片上的位置。", "Tap a fragment, then tap where it belongs."));
+    const put = G.slots.map(() => -1); let sel = -1;
+    const draw = () => {
+      c.body.innerHTML = "";
+      c.body.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 300 120" aria-hidden="true"><rect x="8" y="8" width="284" height="104" rx="6" fill="#241c3d" stroke="#6d58a8"/><g fill="#3a2f5e">' + [0, 1, 2, 3, 4, 5, 6].map(i => '<circle cx="' + (40 + i * 37) + '" cy="52" r="13"/><rect x="' + (29 + i * 37) + '" y="66" width="22" height="34" rx="6"/>').join("") + '</g><path d="M258 8 L292 8 L292 46 Z" fill="#120e22"/><text x="150" y="26" fill="#9c8cc9" font-size="11" text-anchor="middle">ECLIPSE · 7</text></svg>');
+      const sl = el("div", "grid");
+      G.slots.forEach((s, i) => { const b = el("button", "slot" + (put[i] >= 0 ? " f" : ""), put[i] >= 0 ? "✓ " + L(G.items[put[i]], zh) : L(s, zh)); b.onclick = () => { if (sel < 0) { if (put[i] >= 0) { put[i] = -1; draw(); } return; } const old = put.indexOf(sel); if (old >= 0) put[old] = -1; put[i] = sel; sel = -1; draw(); }; sl.append(b); });
+      c.body.append(el("p", "pr", t2(zh, "照片位置", "Photo positions")), sl, el("p", "pr", t2(zh, "碎片", "Fragments")));
+      const pc = el("div", "grid");
+      G.order = G.order || sh(G.items.map((_, i) => i));
+      G.order.forEach(i => { if (put.includes(i)) return; const b = el("button", "k" + (sel === i ? " on" : ""), "🧩 " + L(G.items[i], zh)); b.onclick = () => { sel = sel === i ? -1 : i; draw(); }; pc.append(b); });
+      c.body.append(pc);
+      const go = el("button", "go", t2(zh, "拼好了", "Done")); go.onclick = () => c.submit(put.every((v, i) => v === i));
+      c.body.append(go, c.hint);
+    };
+    G.order = null; draw();
+  };
+
+  /* 单选：可附示意图 svg(zh) 与选项 */
+  MG_T.m111_pick = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.ask, zh));
+    let sel = -1;
+    const opts = sh(G.items.map((_, i) => i));
+    const draw = () => {
+      c.body.innerHTML = "";
+      if (G.svg) c.body.insertAdjacentHTML("beforeend", G.svg(zh, sel));
+      const g = el("div", G.items.length > 4 ? "grid" : ""); if (G.items.length <= 4) g.style.cssText = "display:flex;flex-direction:column;gap:8px";
+      opts.forEach(i => { const b = el("button", "k" + (sel === i ? " on" : ""), L(G.items[i], zh)); b.style.textAlign = "left"; b.onclick = () => { sel = i; draw(); }; g.append(b); });
+      const go = el("button", "go", t2(zh, "确认", "Confirm")); go.disabled = sel < 0; go.onclick = () => c.submit(sel === G.ans);
+      c.body.append(g, go, c.hint);
+    };
+    draw();
+  };
+
+  /* 配对：items [左, 右]，右侧打乱成下拉 */
+  MG_T.m111_match = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "给每一项选出正确的对应。", "Match each item to the right one."));
+    const right = sh(G.items.map((_, i) => i)); const ss = [];
+    G.items.forEach(it => {
+      const r = el("label", "row"); const s = el("span", "", L(it[0], zh)); const q = el("select");
+      q.setAttribute("aria-label", s.textContent);
+      const e = el("option", "", t2(zh, "选择…", "Choose…")); e.value = ""; q.append(e);
+      right.forEach(j => { const o = el("option", "", L(G.items[j][1], zh)); o.value = j; q.append(o); });
+      r.append(s, q); c.body.append(r); ss.push(q);
+    });
+    const go = el("button", "go", t2(zh, "核对", "Check")); go.onclick = () => c.submit(ss.every((q, i) => q.value === String(i)));
+    c.body.append(go, c.hint);
+  };
+
+  /* 节拍：在 2/4/6/8 拍时点击，允许 1 次失误 */
+  MG_T.m111_beat = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "点「开始」，在亮起的 2、4、6、8 拍按下「踩点」。", "Press Start, then tap on counts 2, 4, 6 and 8."));
+    const row = el("div", "beat"); const cells = [];
+    for (let i = 1; i <= 8; i++) { const x = el("i", i % 2 ? "" : "ev", String(i)); cells.push(x); row.append(x); }
+    const tap = el("button", "go tap", t2(zh, "开始", "Start"));
+    c.body.append(row, tap, c.hint);
+    let ac = null; const tick = hi => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = hi ? 880 : 520; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .06); } catch (_) {} };
+    let run = false, beat = 0, t0 = 0, hit = new Set(), bad = 0; const SP = 650;
+    const finish = () => {
+      run = false; for (const b of [2, 4, 6, 8]) if (!hit.has(b)) { bad++; cells[b - 1].className = "miss"; }
+      if (bad <= 1) c.submit(true); else { c.submit(false); if (!c.isOver()) { tap.textContent = t2(zh, "再来一次", "Try again"); } }
+    };
+    tap.onclick = () => {
+      if (c.isOver()) return;
+      if (!run) {
+        run = true; beat = 0; hit = new Set(); bad = 0; cells.forEach((x, i) => x.className = i % 2 ? "ev" : ""); tap.textContent = t2(zh, "踩点！", "Tap!"); c.hint.textContent = "";
+        t0 = performance.now() + SP;
+        for (let i = 1; i <= 8; i++) T.push(setTimeout(() => { if (!run) return; beat = i; cells.forEach((x, k) => x.classList.toggle("now", k === i - 1 && !x.classList.contains("hit"))); tick(i % 2 === 0); }, SP * i));
+        T.push(setTimeout(() => { if (run) finish(); }, SP * 9));
+        return;
+      }
+      const now = performance.now(), pos = (now - t0) / SP + 1, near = Math.round(pos);
+      if (near % 2 === 0 && near >= 2 && near <= 8 && Math.abs(pos - near) < .42 && !hit.has(near)) { hit.add(near); cells[near - 1].className = "hit"; }
+      else bad++;
+    };
+  };
+
+  /* ---------- 示意图 ---------- */
+  const svgSeal = (zh) => '<svg viewBox="0 0 300 130" aria-hidden="true"><rect x="70" y="8" width="160" height="114" rx="6" fill="#2a2240" stroke="#6d58a8"/><line x1="150" y1="8" x2="150" y2="122" stroke="#6d58a8"/><rect x="128" y="40" width="44" height="22" fill="#d9d2ff" opacity=".35"/><rect x="132" y="56" width="40" height="24" fill="#ff8fc0" opacity=".55"/><text x="152" y="72" font-size="9" fill="#fff" text-anchor="middle">' + t2(zh, "新", "NEW") + '</text><path d="M126 62 q6 4 12 0" stroke="#c9a46a" stroke-width="3" fill="none"/><text x="20" y="120" font-size="10" fill="#9c8cc9">' + t2(zh, "档案柜 B-3", "Cabinet B-3") + '</text></svg>';
+  const svgWave = (zh, sel) => { const segs = [[10, 100], [105, 195], [200, 290]]; let p = ""; for (let x = 10; x < 290; x += 3) { let h = 6 + 14 * Math.abs(Math.sin(x * .13)) * (x < 100 ? 1 : x > 200 ? .35 : .4); if (x > 125 && x < 175 && ((x - 125) % 18) < 5) h = 44; p += "M" + x + " " + (65 - h) + "V" + (65 + h); } return '<svg viewBox="0 0 300 130" aria-hidden="true"><rect width="300" height="130" rx="8" fill="#15112a"/><path d="' + p + '" stroke="#8f6bff" stroke-width="2"/>' + segs.map((s, i) => '<text x="' + ((s[0] + s[1]) / 2) + '" y="122" fill="#cdbdf5" font-size="11" text-anchor="middle">' + ["A", "B", "C"][i] + '</text>').join("") + '<text x="10" y="16" fill="#9c8cc9" font-size="10">REC_0312.wav</text></svg>'; };
+  const svgLights = (zh) => '<svg viewBox="0 0 300 120" aria-hidden="true"><rect width="300" height="120" rx="8" fill="#15112a"/>' + [1, 2, 3, 4, 5, 6, 7].map(i => { const x = 18 + (i - 1) * 40; return '<rect x="' + x + '" y="14" width="30" height="70" rx="4" fill="#241c3d" stroke="#6d58a8"/><rect x="' + (x + 4) + '" y="' + (i === 7 ? 22 : 50) + '" width="22" height="8" fill="' + (i === 7 ? "#ff5f7a" : "#8f6bff") + '"/><text x="' + (x + 15) + '" y="100" fill="#cdbdf5" font-size="10" text-anchor="middle">' + i + '</text><text x="' + (x + 15) + '" y="113" fill="' + (i === 7 ? "#ff8fc0" : "#7d70a8") + '" font-size="7" text-anchor="middle">' + (i === 7 ? "op_2023×" : "op_" + ["kim", "lee", "park", "choi", "han", "yoon"][i - 1]) + '</text>'; }).join("") + '</svg>';
+  const svgEdit = (zh) => '<svg viewBox="0 0 300 120" aria-hidden="true"><rect width="300" height="120" rx="8" fill="#15112a"/><text x="10" y="22" fill="#cdbdf5" font-size="10">' + t2(zh, "原始监控", "Original CCTV") + '</text><rect x="10" y="28" width="280" height="16" fill="#8f6bff"/><rect x="150" y="28" width="40" height="16" fill="#ff8fc0"/><text x="10" y="70" fill="#cdbdf5" font-size="10">' + t2(zh, "流出版本", "Leaked clip") + '</text><rect x="10" y="76" width="140" height="16" fill="#8f6bff"/><rect x="150" y="76" width="140" height="16" fill="#8f6bff"/><line x1="150" y1="72" x2="150" y2="96" stroke="#fff" stroke-dasharray="2 2"/><text x="10" y="112" fill="#7d70a8" font-size="9">08:31:00</text><text x="290" y="112" fill="#7d70a8" font-size="9" text-anchor="end">08:31:40</text></svg>';
+  const svgRail = (zh) => '<svg viewBox="0 0 300 140" aria-hidden="true"><rect width="300" height="140" rx="8" fill="#15112a"/><rect x="40" y="26" width="220" height="10" rx="5" fill="#b8b0d8"/><rect x="60" y="36" width="8" height="74" fill="#8a82ad"/><rect x="232" y="36" width="8" height="74" fill="#8a82ad"/><rect x="40" y="110" width="50" height="14" fill="#6c6491"/><rect x="210" y="110" width="50" height="14" fill="#6c6491"/><circle cx="52" cy="117" r="4" fill="#ddd"/><circle cx="78" cy="117" r="4" fill="#ddd"/><circle cx="222" cy="117" r="4" fill="#ddd"/><circle cx="248" cy="117" r="4" fill="none" stroke="#ff8fc0" stroke-dasharray="2 2"/><text x="150" y="18" fill="#cdbdf5" font-size="10" text-anchor="middle">' + t2(zh, "旧护栏 · 2023", "Old barrier · 2023") + '</text><text x="150" y="134" fill="#7d70a8" font-size="9" text-anchor="middle">' + t2(zh, "左底座 ←  → 右底座", "Left base ← → Right base") + '</text></svg>';
+
+  const games = [
+    { id: "m111_photo_puzzle", zh: "旧合照碎片复原", en: "Restore the Old Group Photo", tpl: "m111_place", seconds: 40,
+      pz: "旧合照的角落被撕去了。把三块碎片拼回原位，找出第七人的舞台证件号。", pe: "A corner of the old group photo was torn away. Put the three fragments back to reveal the seventh performer’s badge number.",
+      slots: [["右上角", "Top-right corner"], ["中间背景", "Center background"], ["下方胸前", "Lower chest area"]],
+      items: [["日期角标", "Date stamp"], ["舞台入口", "Stage entrance"], ["第七人证件号", "Seventh badge number"]] },
+    { id: "m111_archive_seal", zh: "旧档案封条核验", en: "Check the Archive Seal", tpl: "m111_pick", seconds: 35, svg: svgSeal,
+      pz: "档案柜上有两层封条。比对痕迹，判断柜子最近一次被打开的证据。", pe: "The cabinet carries two layers of seals. Compare the traces to find proof of when it was last opened.",
+      ask: ["哪一处痕迹证明封条最近被换过？", "Which trace proves the seal was replaced recently?"],
+      items: [["透明封条完整", "The clear seal is intact"], ["旧胶残留", "Old adhesive residue"], ["新封条压在旧胶上", "A new seal sits over the old adhesive"]], ans: 2 },
+    { id: "m111_choreo_timeline", zh: "七人舞步时间线", en: "The Seven-Member Timeline", tpl: "m111_order", seconds: 35,
+      pz: "三年前那次彩排的录像只剩三个时码。按发生顺序排好。", pe: "Only three timecodes survive from that rehearsal three years ago. Put them in the order they happened.",
+      items: [["七人站位就绪", "Seven members in position"], ["护栏发生位移", "The barrier shifts"], ["音乐停止", "The music stops"]] },
+    { id: "m111_audio_wave", zh: "录音警报声波定位", en: "Find the Alarm in the Audio", tpl: "m111_pick", seconds: 35, svg: svgWave,
+      pz: "珉载的录音里藏着一段被剪掉的警报。找出三连短警报峰所在的片段。", pe: "Min-jae’s recording hides an alarm someone cut out. Find the segment with three short alarm peaks.",
+      ask: ["警报在哪一段？", "Which segment holds the alarm?"],
+      items: [["A 段 · 歌声波形", "A · Vocal waveform"], ["B 段 · 三连短峰", "B · Three short peaks"], ["C 段 · 尾奏余响", "C · Outro reverb"]], ans: 1 },
+    { id: "m111_spotlight_cue", zh: "七束追光异常检测", en: "Find the Rogue Spotlight", tpl: "m111_pick", seconds: 35, svg: svgLights,
+      pz: "灯控台上有七路追光。其中一路由已经失效的账号发出。", pe: "The lighting desk runs seven spotlight tracks. One was triggered by an expired account.",
+      ask: ["哪一路是未经批准的？", "Which track was never approved?"],
+      items: [["轨道 1", "Track 1"], ["轨道 2", "Track 2"], ["轨道 3", "Track 3"], ["轨道 4", "Track 4"], ["轨道 5", "Track 5"], ["轨道 6", "Track 6"], ["轨道 7", "Track 7"]], ans: 6 },
+    { id: "m111_leak_edit", zh: "偷拍剪辑差异比对", en: "Spot the Edited Footage", tpl: "m111_pick", seconds: 35, svg: svgEdit,
+      pz: "把流出视频和原始监控放在一起，找出被删掉的八秒。", pe: "Line up the leaked clip with the original security footage and find the missing eight seconds.",
+      ask: ["流出版本删掉了哪一段？", "What did the leaked version cut?"],
+      items: [["08:31:00 两人交谈", "08:31:00 Two people talking"], ["08:31:12–08:31:20 主管走进镜头", "08:31:12–08:31:20 The supervisor walks into frame"], ["08:31:30 镜头转向走廊", "08:31:30 Camera pans to the hallway"]], ans: 1 },
+    { id: "m111_barrier_inspection", zh: "旧护栏安全检查", en: "Inspect the Old Barrier", tpl: "m111_pick", seconds: 35, svg: svgRail,
+      pz: "这是当年事故中的旧护栏。找出缺失固定件的位置。检查结果仍需独立检验员确认。", pe: "This is the barrier from the old accident. Find where a fastener is missing. An independent inspector must still confirm it.",
+      ask: ["哪里少了原装螺栓？", "Where is the original bolt missing?"],
+      items: [["扶手上缘", "Top of the handrail"], ["底座左侧", "Left side of the base"], ["底座右侧", "Right side of the base"]], ans: 2 },
+    { id: "m111_encore_setlist", zh: "安可舞台编排", en: "Build a Safe Encore Setlist", tpl: "m111_order", seconds: 35,
+      pz: "为东京站安排三段安可：要安全，也要留住成员的创作。不使用移动升降台。", pe: "Arrange three encore segments for Tokyo: safe, and still true to the members’ ideas. No moving platforms.",
+      items: [["粉丝互动", "Fan singalong"], ["全员合唱", "Full-group number"], ["静态灯光谢幕", "Static-light finale"]] },
+    { id: "m111_lift_log", zh: "舞台升降机日志", en: "Read the Lift Log", tpl: "m111_order", seconds: 35,
+      pz: "把升降机系统的三条事件按时间排好，锁定异常的远程指令。", pe: "Put the three lift-system events in time order to pin down the rogue remote command.",
+      items: [["失效凭据登录", "Login with an expired credential"], ["远程重设参数", "Remote parameter reset"], ["高度故障报警", "Height fault alarm"]] },
+    { id: "m111_final_eight", zh: "安全八拍编舞", en: "Complete the Eight-Count Routine", tpl: "m111_beat", seconds: 45,
+      pz: "和泰贤一起试跳去掉危险高抬动作的八拍。在 2、4、6、8 拍踩点，允许失误一次。", pe: "Rehearse Tae-hyun’s eight counts with the risky lift removed. Hit counts 2, 4, 6 and 8. One miss is allowed." },
+    { id: "m111_evidence_chain", zh: "证据链交叉核验", en: "Cross-Check the Evidence", tpl: "m111_match", seconds: 40,
+      pz: "把三份证据对应到它能证明的内容。主观责任仍需独立调查确认。", pe: "Match each piece of evidence to what it proves. Intent still needs an independent investigation.",
+      items: [[["原始警报录音", "Original alarm recording"], ["事故时间线", "The accident timeline"]], [["后台账号日志", "Backstage account log"], ["远程操作", "The remote operation"]], [["合同条款", "Contract clause"], ["潜在利益动机", "A possible financial motive"]]] },
+    { id: "m111_final_cue", zh: "最终场演出提示核对", en: "Final Show Cue Check", tpl: "m111_match", seconds: 40,
+      pz: "开演前核对三张提示卡，确保纪念灯光不会干扰主舞台安全。", pe: "Check the three cue cards before the show so the tribute light never interferes with stage safety.",
+      items: [[["音乐开始", "Music start"], ["音频台", "Audio desk"]], [["安全确认", "Safety sign-off"], ["舞监台", "Stage manager desk"]], [["纪念灯光", "Tribute light"], ["独立静态灯位", "Separate static light position"]]] }
+  ];
+  for (const g of games) { const i = MG100.findIndex(x => x.id === g.id); const v = Object.assign({ a: "", b: "", kw: [] }, g); if (i >= 0) MG100[i] = v; else MG100.push(v); }
+  window.M111G = games;
+})();
