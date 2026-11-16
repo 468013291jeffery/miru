@@ -33,7 +33,7 @@ function dslQA(md) {
   const closeCh = () => { if (cur) perCh.push(cur); };
   for (const raw of L) {
     if (!raw) continue;
-    if (/^#+\s*CHAPTER\s+\d+/i.test(raw)) { closeCh(); cur = { t: raw.replace(/^#+\s*/, '').slice(0, 60), choices: 0, dots: 0, scenes: 0, lines: 0 }; st.chapters++; continue; }
+    if (/^#+\s*CHAPTER\s+\d+/i.test(raw)) { closeCh(); cur = { t: raw.replace(/^#+\s*/, '').slice(0, 60), choices: 0, dots: 0, scenes: 0, lines: 0, mg: 0 }; st.chapters++; continue; }
     if (/^#\s*SCENE/i.test(raw)) { st.scenes++; if (cur) cur.scenes++; continue; }
     if (/^#\s*CHOICE/i.test(raw)) { st.choices++; if (cur) cur.choices++; continue; }
     if (/^#{1,6}\s*[A-E]\s*[｜|]/.test(raw)) { st.options++; continue; }
@@ -49,6 +49,7 @@ function dslQA(md) {
       else if (m[1] === '/IF') st.ifEnds++;
       else if (m[1] === 'LORE') { st.lore++; const p = raw.replace(/^⟦LORE\|/, '').replace(/⟧$/, '').split('|'); lore.push({ keys: String(p[0] || '').split(/[,，、]/).map(s => s.trim()).filter(Boolean), txt: String(p[1] || '').trim(), raw: raw.slice(0, 30) }); }
       else if (m[1] === 'ORIENT') { const v = raw.replace(/^⟦ORIENT\|/, '').replace(/⟧$/, '').trim().toLowerCase(); orDecl = v; }
+      else if (m[1] === 'MG') { st.mg = (st.mg || 0) + 1; if (cur) cur.mg++; }
       else if (m[1] === 'BG' || m[1] === 'CG' || m[1] === 'VIDEO' || m[1] === 'PHOTO' || m[1] === 'ITEM') { const k = m[1].toLowerCase(); st.assets[k] = (st.assets[k] || 0) + 1; st.assets.total++; }
       continue;
     }
@@ -68,6 +69,8 @@ function dslQA(md) {
     if (!c.choices) err.push('第 ' + n + ' 章章末没有 CHOICE —— 这一章结尾只会显示「继续」');
     if (c.dots < c.choices) err.push('第 ' + n + ' 章：CHOICE ' + c.choices + ' 道，却只有 ' + c.dots + ' 个「# ·」收尾（少收尾会让后面的场景算进最后一个选项）');
     if (c.lines < 3) warn.push('第 ' + n + ' 章正文只有 ' + c.lines + ' 行');
+    /* 2026-11-17 规范：每章 2 个互动小游戏（⟦MG|id⟧，放在不同场景）。先提醒，不拦上线（老剧本是每章 0–1 个） */
+    if (c.mg !== 2) warn.push('第 ' + n + ' 章小游戏 ' + c.mg + ' 个：规范要求每章 2 个互动小游戏（⟦MG|小游戏id⟧，放在不同场景）');
   });
   if (!st.you && !orChars.some(c => /^(你|您|you)$/i.test(c.n))) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');
   if (st.options < st.choices * 2) warn.push('选项数 ' + st.options + ' 少于选择道数 ' + st.choices + ' 的两倍 —— 可能有选择题只剩 1 个选项');
@@ -92,7 +95,7 @@ function dslQA(md) {
   else if (!orDecl && !inferred) warn.push('取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的');
   st.orient = { declared: orDecl || '', inferred: inferred || '', final: orDecl || inferred || '' };
 
-  return { ok: !err.length, err, warn, stats: st, perCh: perCh.map((c, i) => ({ n: i + 1, choices: c.choices, dots: c.dots, scenes: c.scenes, lines: c.lines })) };
+  return { ok: !err.length, err, warn, stats: st, perCh: perCh.map((c, i) => ({ n: i + 1, choices: c.choices, dots: c.dots, scenes: c.scenes, lines: c.lines, mg: c.mg })) };
 }
 
 module.exports = { dslQA, KNOWN_DIRECTIVES: KNOWN };
