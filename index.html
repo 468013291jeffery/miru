@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="3d9fe82e59d5 2026-11-16T18:43Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="5e869958efb7 2026-11-16T19:10Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -28361,6 +28361,58 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   games.forEach((g, n) => { g.img = "https://miru.plus/art/official/m111-idol/m111-idol/mg_c" + String(n + 1).padStart(2, "0") + "_base.jpg"; });
   for (const g of games) { const i = MG100.findIndex(x => x.id === g.id); const v = Object.assign({ a: "", b: "", kw: [] }, g); if (i >= 0) MG100[i] = v; else MG100.push(v); }
   window.M111G = games;
+})();
+
+/* ===== mod169: 点「本章目标」弹出任务说明——这一章要做什么、每个目标怎么完成（所有剧本） ===== */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  const E = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const css = document.createElement("style");
+  css.textContent = ".g163{cursor:pointer}.g163::after{content:'ⓘ';margin-left:2px;color:#F6D3AE;opacity:.8}" +
+    ".gm169{position:fixed;inset:0;z-index:95;background:rgba(8,6,12,.72);display:flex;align-items:flex-end;justify-content:center}" +
+    ".gm169 .bx{width:100%;max-width:440px;max-height:78vh;overflow:auto;background:#17131F;color:#f4ecf7;border:1px solid rgba(240,183,126,.3);border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}" +
+    ".gm169 h4{margin:0 0 6px;font-size:16px;color:#F6D3AE}.gm169 .gl{font-size:13.5px;line-height:1.6;margin:0 0 14px;color:#e6dcef}" +
+    ".gm169 .it{display:flex;gap:10px;padding:11px 12px;border:1px solid #3e3352;border-radius:12px;margin:0 0 8px;background:#1f1a2b}" +
+    ".gm169 .it.ok{opacity:.6}.gm169 .ck{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #8b78b8;display:flex;align-items:center;justify-content:center;font-size:12px}" +
+    ".gm169 .it.ok .ck{background:#2f7a5a;border-color:#2f7a5a}.gm169 .it b{display:block;font-size:14px;margin-bottom:3px}.gm169 .it small{font-size:12.5px;line-height:1.5;color:#c9bedb}" +
+    ".gm169 .tip{font-size:12px;color:#a99cbf;line-height:1.55;margin:10px 0 12px}.gm169 button.cl{width:100%;min-height:46px;border-radius:12px;border:0;background:#3a2f52;color:#fff;font-size:15px}";
+  document.head.appendChild(css);
+
+  function howTo(d) {
+    if (d.type === "say") return T("在对话里说出或做出：", "Say or do this in the conversation: ") + d.val;
+    const f = String(d.val || "");
+    if (/^mg_/.test(f)) {
+      const id = f.replace(/^mg_/, "").replace(/_win$/, "");
+      const g = typeof MG100 !== "undefined" && MG100.find(x => x.id === id);
+      return T("完成本章小游戏", "Win this chapter's mini-game") + (g ? T("《" + g.zh + "》", " “" + g.en + "”") : "") + T("。跳过或失败也能继续，但这一项要赢了才算完成。", ". You can skip it, but this goal counts only when you win.");
+    }
+    if (/evidence|clue|seen|found/i.test(f)) return T("跟着剧情走，留意场景里出现的关键线索；线索出现后会自动打勾。", "Follow the scene and watch for the key clue. It ticks off automatically once the clue appears.");
+    if (/choice|pick|final/i.test(f)) return T("在本章结尾的选择里做出你的决定。", "Make your decision at the chapter's closing choice.");
+    return T("继续推进当前剧情，相关事件发生后会自动完成。", "Keep the story moving; this completes when the event happens.");
+  }
+
+  function show() {
+    try {
+      const th = S.threads[curT]; if (!th || !th.pk || !window.GOAL163) return;
+      const gs = GOAL163.goals(th); if (!gs.length) return;
+      const g = GOAL163.state(th);
+      let goal = "";
+      try { const c = wd(th.wid).pack.chapters[(+th.pk.ch || 1) - 1]; const x = c && c.goal; goal = x ? (typeof x === "string" ? x : (zh() ? x.zh : x.en) || x.zh || x.en || "") : ""; } catch (_) {}
+      const done = gs.filter((_, i) => g.ok[i]).length;
+      const ov = document.createElement("div"); ov.className = "gm169";
+      ov.innerHTML = '<div class="bx" role="dialog" aria-label="' + E(T("本章目标", "Chapter goals")) + '"><h4>🎯 ' + E(T("第 " + (th.pk.ch || 1) + " 章目标", "Chapter " + (th.pk.ch || 1) + " goals")) + ' · ' + done + '/' + gs.length + '</h4>' +
+        (goal ? '<p class="gl">' + E(goal) + '</p>' : '') +
+        gs.map((d, i) => '<div class="it' + (g.ok[i] ? " ok" : "") + '"><span class="ck">' + (g.ok[i] ? "✓" : "") + '</span><div><b>' + E(d.name || d.val) + '</b><small>' + E(howTo(d)) + '</small></div></div>').join("") +
+        '<p class="tip">' + E(T("目标全部完成后，「进入下一章」才会出现。卡住了也没关系：多聊几轮，角色会把话题往目标上带，聊得够久也会自动放行。", "“Next chapter” appears once every goal is done. Stuck? Keep talking — the characters will steer toward the goal, and after enough turns it unlocks on its own.")) + '</p>' +
+        '<button class="cl">' + E(T("知道了", "Got it")) + '</button></div>';
+      ov.addEventListener("click", e => { if (e.target === ov || e.target.closest(".cl")) ov.remove(); });
+      document.body.appendChild(ov);
+    } catch (e) { console.warn("[169]", e); }
+  }
+  document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#s-chat .g163")) { e.preventDefault(); show(); } }, true);
+  window.GOAL169 = { show };
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
