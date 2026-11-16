@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="a2d0ee6fa345 2026-11-16T19:28Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="a2347e0f0c43 2026-11-16T19:35Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -28417,6 +28417,46 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   }
   document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#s-chat .g163")) { e.preventDefault(); show(); } }, true);
   window.GOAL169 = { show };
+})();
+
+/* ===== mod170: M112《六位魔王都不准我死》24 个小游戏（每章 2 个），复用 mod168 的模板 ===== */
+(function () {
+  if (typeof MG_T === "undefined" || !window.MG168) return;
+  /* 没有对错的选择题：选哪个都算完成（纪念物、未来规划） */
+  MG_T.m112_free = function (A, G, sub, done, T, zh) {
+    A.className = "mgarea m168"; A.innerHTML = ""; sub.textContent = zh ? G.ask[0] : G.ask[1];
+    const p = document.createElement("p"); p.className = "pr"; p.textContent = zh ? G.pz : G.pe; A.append(p);
+    G.items.forEach(it => { const b = document.createElement("button"); b.className = "k"; b.style.textAlign = "left"; b.textContent = it[zh ? 0 : 1]; b.onclick = () => done("win"); A.append(b); });
+  };
+  const O = (id, zh, en, tpl, pz, pe, extra) => Object.assign({ id, zh, en, tpl, seconds: 40, pz, pe }, extra || {});
+  const games = [
+    O("m112_01_a", "审判钟声同步", "Trial Bell Rhythm", "m111_beat", "钟声回荡三次，在 2、4、6、8 拍轻触，为卢西恩受诅咒的羽翼争取片刻稳定。", "The bell echoes. Tap on counts 2, 4, 6 and 8 to steady Lucien's cursed wing."),
+    O("m112_01", "断裂的处刑锁链", "The Broken Execution Chain", "m111_order", "处刑结界由四道符文锁住。按正确顺序拆解，结界才会失效。", "Four runes hold the execution barrier. Undo them in the right order to break it.", { items: [["外圈封印", "Outer seal"], ["钟声符", "Bell rune"], ["锁链符", "Chain rune"], ["核心王印", "Royal core seal"]] }),
+    O("m112_02_a", "王储的誓约试探", "The Prince's Vow", "m111_pick", "卡西安递来三张誓言卡。哪一句既公开保护你，又不替你做决定？", "Cassian offers three vow cards. Which one protects you openly without deciding for you?", { ask: ["选出真正的誓言", "Choose the honest vow"], items: [["“从今天起，你哪里都不准去。”", "“From today, you go nowhere.”"], ["“我当众护着你，去留由你自己定。”", "“I'll protect you in public. Whether you stay is your call.”"], ["“只要你听我的，我就保你不死。”", "“Obey me and I'll keep you alive.”"]], ans: 1 }),
+    O("m112_02", "王室印章碎片", "Royal Seal Fragments", "m111_pick", "四枚契约印鉴里，有一枚是伪造的第 99 世契约。", "One of these four contract seals is the forged 99th-life contract.", { ask: ["哪一枚是伪造的？", "Which seal is forged?"], items: [["第 97 世：王冠纹七道齿", "97th life: crown with seven teeth"], ["第 98 世：王冠纹七道齿", "98th life: crown with seven teeth"], ["第 99 世：王冠纹只有六道齿", "99th life: crown with only six teeth"], ["第 100 世：王冠纹七道齿", "100th life: crown with seven teeth"]], ans: 2 }),
+    O("m112_03_a", "白羽天平", "Feather Balance", "m111_pick", "判决天平左盘已有 5 份重量。三枚羽片分别重 1、2、3。怎样放才能让天平平衡？", "The left pan already holds 5. The feathers weigh 1, 2 and 3. How do you balance the scale?", { ask: ["选出让天平平衡的放法", "Pick the balancing move"], items: [["右盘放 2 和 3", "Put 2 and 3 on the right"], ["右盘放 1 和 3", "Put 1 and 3 on the right"], ["右盘放全部三枚", "Put all three on the right"]], ans: 0 }),
+    O("m112_03", "被涂改的判决书", "The Altered Verdict", "m111_pick", "卷宗里有一处批注的墨色和日期都不对。", "One annotation in the file has the wrong ink and date.", { ask: ["哪一处是伪造的批注？", "Which annotation is forged?"], items: [["“依天界律第七条审理”", "“Tried under Heaven's Law, Article 7”"], ["“判决生效于她出生前三年”", "“Verdict effective three years before her birth”"], ["“审判官卢西恩签署”", "“Signed by Inquisitor Lucien”"]], ans: 1 }),
+    O("m112_04_a", "龙焰共鸣", "Dragonfire Pulse", "m111_beat", "跟着凯尔的呼吸，在 2、4、6、8 拍点燃护身火焰，别碰中心的危险火核。", "Follow Kael's breathing. Light the warding flame on 2, 4, 6 and 8, and stay clear of the core.", { seconds: 45 }),
+    O("m112_04", "破损的骑士徽章", "The Damaged Knight's Badge", "m111_order", "沿着徽章背面的划痕，复原护卫队当年的出征路线。", "Follow the scratches on the badge to rebuild the guard's old route.", { items: [["王城北门", "North Gate"], ["灰岩谷", "Greyrock Valley"], ["龙骨桥", "Dragonbone Bridge"], ["边境要塞", "Border Fortress"]] }),
+    O("m112_05_a", "星轨连线", "Starlight Constellation", "m111_order", "按时间顺序连接四颗星，找出记录九十九次轮回的星座。", "Connect four stars in time order to find the constellation that recorded ninety-nine loops.", { items: [["初生之星", "Star of Birth"], ["誓约之星", "Star of the Vow"], ["处刑之星", "Star of Execution"], ["重置之星", "Star of Reset"]] }),
+    O("m112_05", "第 99 世沙漏", "Hourglass of the 99th Life", "m111_match", "沙漏耗尽前，把三个时间锚点和它们保存的真相对上。", "Before the sand runs out, match each time anchor to the truth it preserves.", { items: [[["过去锚点", "Past anchor"], ["第一份判决的来历", "Where the first verdict came from"]], [["现在锚点", "Present anchor"], ["今晚的处刑命令", "Tonight's execution order"]], [["未来锚点", "Future anchor"], ["一个还没被写下的明天", "A tomorrow not yet written"]]] }),
+    O("m112_06_a", "影子找花", "Shadow Petals", "m111_pick", "赛拉斯藏起的花束里，有一朵被人换过。", "One flower in Silas's hidden bouquet has been swapped.", { ask: ["哪一朵被换过？", "Which flower was swapped?"], items: [["白蔷薇·花瓣完整", "White rose, petals intact"], ["夜百合·花瓣完整", "Night lily, petals intact"], ["紫鸢尾·花瓣缺口朝左", "Purple iris, notch facing left"], ["紫鸢尾·花瓣缺口朝右", "Purple iris, notch facing right"], ["黑郁金香·花瓣完整", "Black tulip, petals intact"], ["银铃兰·花瓣完整", "Silver lily-of-the-valley, intact"]], ans: 3 }),
+    O("m112_06", "密令编码纸", "The Coded Order", "m111_pick", "密令写着：“月隐三刻，钟鸣之前。”推断下一次袭击的时间。", "The order reads: “Moon hidden, third quarter, before the bell.” When is the next attack?", { ask: ["下一次袭击在什么时候？", "When is the next attack?"], items: [["黎明第一声钟响", "At the first dawn bell"], ["子夜第三刻、钟响之前", "Midnight's third quarter, before the bell"], ["正午换岗时", "At the noon guard change"]], ans: 1 }),
+    O("m112_07_a", "治愈印记", "Healing Sigils", "m111_match", "帮以斯拉把三道治愈印记和病人需要的效果配对，完成一场无害的仪式。", "Help Ezra match three healing sigils to what the patient needs.", { items: [[["新月印", "Crescent sigil"], ["止痛", "Ease pain"]], [["藤蔓印", "Vine sigil"], ["愈合伤口", "Close wounds"]], [["水滴印", "Droplet sigil"], ["退烧", "Break a fever"]]] }),
+    O("m112_07", "六瓶记忆药剂", "Six Memory Potions", "m111_match", "按颜色和瓶底日期，查出药剂来自哪一次复活。", "Use color and the date on each bottom to trace which revival each potion came from.", { items: [[["琥珀色药剂", "Amber potion"], ["第 12 次复活", "12th revival"]], [["深蓝色药剂", "Deep-blue potion"], ["第 57 次复活", "57th revival"]], [["银白色药剂", "Silver potion"], ["第 99 次复活", "99th revival"]]] }),
+    O("m112_08_a", "破碎的誓言", "Broken Promises", "m111_place", "把三块镜片放回镜框，拼出三段承诺，看看哪一段与事实不符。", "Fit three mirror shards back into the frame to rebuild three promises.", { slots: [["镜框上方", "Top of the frame"], ["镜框中间", "Middle of the frame"], ["镜框下方", "Bottom of the frame"]], items: [["“我会回来”", "“I'll come back”"], ["“我没有下令”", "“I gave no order”"], ["“我从未忘记你”", "“I never forgot you”"]] }),
+    O("m112_08", "不完整的证言", "Incomplete Testimonies", "m111_match", "把四段证词放回它们发生的时间点。", "Place four testimonies at the moments they happened.", { items: [[["卡西安：我放下了王冠", "Cassian: I set down the crown"], ["审判钟第十三响", "The thirteenth bell"]], [["卢西恩：我签了字", "Lucien: I signed it"], ["处刑前一夜", "The night before the execution"]], [["凯尔：撤军令到了", "Kael: The retreat order came"], ["边境之战当天", "The day of the border battle"]], [["以斯拉：药剂换了人", "Ezra: The potion changed hands"], ["第 99 次复活", "The 99th revival"]]] }),
+    O("m112_09_a", "空白书页", "The Blank Page", "m111_order", "沿着发光的墨迹，按顺序描出被改写的那一行命运。", "Trace the glowing ink in order to reveal the rewritten line of fate.", { items: [["她", "She"], ["将在今晚", "will tonight"], ["自己选择", "choose for herself"], ["明天", "tomorrow"]] }),
+    O("m112_09", "命运编年册", "Chronicle of Fate", "m111_pick", "编年册里，有一句台词在每一世都一字不差地重复——那是剧本留下的破绽。", "One line repeats word for word in every life. That's the script's flaw.", { ask: ["哪一句是剧本的破绽？", "Which line is the flaw?"], items: [["“今天的风有点冷。”（只出现一次）", "“The wind is cold today.” (once)"], ["“反派千金必须在钟响时死去。”（出现 99 次）", "“The villainess must die when the bell tolls.” (99 times)"], ["“我想去看海。”（出现两次）", "“I want to see the sea.” (twice)"]], ans: 1 }),
+    O("m112_10_a", "背靠背", "Back-to-Back Ward", "m111_beat", "和凯尔背靠背撑住护盾。在 2、4、6、8 拍加固，掩护城下的人撤离。", "Hold the shield back to back with Kael. Reinforce on 2, 4, 6 and 8 while people evacuate.", { seconds: 45 }),
+    O("m112_10", "守卫轮岗图", "Guard Rotation Chart", "m111_order", "照着轮岗图，排出一条避开所有守卫的路线。", "Use the rotation chart to plot a route past every guard.", { items: [["趁东墙换岗穿过庭院", "Cross the yard during the east-wall change"], ["躲进地下水道", "Slip into the sewers"], ["从钟楼背面爬上去", "Climb the back of the bell tower"], ["在月落时翻出城墙", "Go over the wall at moonset"]] }),
+    O("m112_11_a", "夺回真名", "True Name Echo", "m111_pick", "六个回声里，只有一个是你自己说过的承诺，其余都是别人替你写的命令。", "Of the echoes, only one is a promise you made yourself. The rest were written for you.", { ask: ["哪一句是你自己的承诺？", "Which promise is yours?"], items: [["“我会安静地接受审判。”", "“I will accept judgment quietly.”"], ["“我会按预言毁灭世界。”", "“I will destroy the world as foretold.”"], ["“我要用自己的名字活下去。”", "“I will live under my own name.”"]], ans: 2 }),
+    O("m112_11", "真实姓名符文", "True-Name Runes", "m111_place", "把三块符文放回对应位置，拼出属于你的名字，解除控制。", "Set three runes back in place to spell your own name and break the control.", { slots: [["第一位：起始", "First: beginning"], ["第二位：誓约", "Second: vow"], ["第三位：归属", "Third: belonging"]], items: [["晨光符", "Dawn rune"], ["誓言符", "Oath rune"], ["归心符", "Homeward rune"]] }),
+    O("m112_12_a", "黎明纪念物", "Dawn Keepsake", "m112_free", "做一枚只属于你的纪念徽章。没有标准答案，选你想记住的。", "Make a keepsake badge of your own. There's no right answer—choose what you want to remember.", { ask: ["你想把什么刻在徽章上？", "What goes on your badge?"], items: [["断开的锁链", "A broken chain"], ["第一缕日出", "The first sunrise"], ["六个人的剪影", "Six silhouettes"], ["只写你自己的名字", "Only your own name"]] }),
+    O("m112_12", "新世界地图", "Map of the New World", "m112_free", "王城要重建了。先做哪一件，由你决定。", "The city will be rebuilt. You decide what comes first.", { ask: ["你最先建设什么？", "What do you build first?"], items: [["人人都能查阅的公开法庭", "A public court anyone can access"], ["给孤儿和伤者的疗愈院", "A healing house for orphans and the injured"], ["六国共议的圆桌", "A round table for all six realms"], ["一条通往远方的自由之路", "A free road leading far away"]] })
+  ];
+  MG168.reg(games);
+  window.M112G = games;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
