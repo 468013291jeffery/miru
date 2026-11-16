@@ -3081,6 +3081,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   function shell(A, G, sub, done, T, zh, instr) {
     A.className = "mgarea m168"; A.innerHTML = "";
     sub.textContent = instr;
+    if (G.img) { const im = el("img"); im.src = G.img; im.alt = ""; im.style.cssText = "width:100%;max-height:170px;object-fit:cover;border-radius:12px;display:block"; A.append(im); }
     const pr = el("p", "pr", zh ? G.pz : G.pe); A.append(pr);
     const tb = el("div", "tb"); const bar = el("i"); tb.append(bar); A.append(tb);
     const secs = G.seconds || 35; let over = false, tries = 0;
@@ -3239,6 +3240,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       pz: "开演前核对三张提示卡，确保纪念灯光不会干扰主舞台安全。", pe: "Check the three cue cards before the show so the tribute light never interferes with stage safety.",
       items: [[["音乐开始", "Music start"], ["音频台", "Audio desk"]], [["安全确认", "Safety sign-off"], ["舞监台", "Stage manager desk"]], [["纪念灯光", "Tribute light"], ["独立静态灯位", "Separate static light position"]]] }
   ];
+  games.forEach((g, n) => { g.img = "https://miru.plus/art/official/m111-idol/m111-idol/mg_c" + String(n + 1).padStart(2, "0") + "_base.jpg"; });
   for (const g of games) { const i = MG100.findIndex(x => x.id === g.id); const v = Object.assign({ a: "", b: "", kw: [] }, g); if (i >= 0) MG100[i] = v; else MG100.push(v); }
   window.M111G = games;
 })();
