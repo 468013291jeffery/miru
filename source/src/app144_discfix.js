@@ -93,6 +93,8 @@
     ["🖤", "暗黑与黑帮", "Dark & Dangerous", ["Dark Romance", "Mafia", "Bratva", "Touch Her and Die", "Touch Them and Die"]],
     ["🔍", "悬疑反转", "Twists & Secrets", ["Romantic Suspense", "Revenge", "Hidden Identity", "Secret Heir", "Mystery"]],
     ["👑", "王室与豪门", "Crowns & Fortunes", ["Royal Court", "Billionaire", "Arranged Marriage", "Castle Life"]],
+    ["🎤", "偶像与娱乐圈", "Idols & Showbiz", ["K-pop", "Idols", "Idol", "Showbiz", "K-pop偶像", "韩国娱乐圈", "娱乐圈", "偶像", "男团", "女团", "顶流"]],
+    ["✨", "二次元", "Anime & 2D", ["Anime", "2D", "Manga", "Isekai", "二次元", "动漫", "番剧", "漫画", "异世界"]],
     ["☀️", "甜宠心动", "Sweet & Swoony", ["Romance", "Rom-Com", "He Falls First", "Golden Retriever", "Mutual Pining", "Secret Admirer", "Vacation", "Celebrity", "Campus"]]
   ];
   if (typeof discMain === "function" && typeof off94RCard === "function") {
