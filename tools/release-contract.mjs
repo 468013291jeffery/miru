@@ -52,3 +52,5 @@ execFileSync(process.execPath,['tools/svf-selftest.cjs'],{cwd:root,stdio:'inheri
 
 assert(build.includes('app151_onlyme.js'),'Missing ONLY ME runtime');
 execFileSync(process.execPath,['tools/only-me-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/hockey-selftest.cjs'],{cwd:root,stdio:'inherit'});

@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="5bf454327a92 2026-11-15T16:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="32b13aaa6dae 2026-11-16T00:39Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -27720,7 +27720,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 
 /* ===== 2026-11-16 · ① 遇见：今天的牌是空的（每天都显示「今天的人你都看过了」） ② 推广分佣 + 单剧收入统计 =====
    ① 玩家：「每天不是给 12 个吗？昨天没有，今天还是没有。」
-      原因：打开 App 时官方男主卡（leads.json）还没装进角色表，第一次生成的当天牌是空的；空牌被当成「今天已经发过牌」存了一整天。
+      原因：① 发牌函数 deck96 里还按玩家取向筛人（遇见本该不筛），取向不匹配时一张牌都没有；② 空牌被当成「今天已经发过牌」存了一整天（打开 App 时角色表还没装好也会这样）。
       ⇒ 当天还没滑过、牌却是空的，就重新发牌；角色表装好后如果遇见页开着，自动刷新。
    ② 玩家：「每个创作者都可以推广剧本，推广的剧有人充值就能分佣，在 App 里能看到自己的推广收益；要有链接、二维码，能分享到各平台；
       还要能看到单部剧的收入。」
@@ -27735,7 +27735,16 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const T2 = (a, b) => (zh() ? a : b);
   const on = () => typeof CL0 !== "undefined" && CL0.on && typeof capi === "function" && typeof cloudInfo === "function" && !!cloudInfo().token;
-  const normWid = id => { let s = String(id || ""); s = s.replace(/^off94:/, "").replace(/^ldw_/, ""); return /^[A-Za-z0-9_:.-]{1,80}$/.test(s) ? s : ""; };
+  /* 官方剧打开后是本地搭的世界（bw_xxx），统计和推广链接要用服务器上的作品 ID（w_xxx） */
+  const WMAP = {};
+  const normWid = id => {
+    let s = String(id || ""); s = s.replace(/^off94:/, "").replace(/^ldw_/, "");
+    if (s && !/^w_/.test(s)) {
+      if (!(s in WMAP)) { let m = null; try { const w = typeof wd === "function" && wd(s); if (w) m = (JSON.stringify(w).match(/"(w_[a-z0-9]{12,})"/) || [])[1] || null; } catch (_) {} WMAP[s] = m; }
+      if (WMAP[s]) s = WMAP[s];
+    }
+    return /^[A-Za-z0-9_:.-]{1,80}$/.test(s) ? s : "";
+  };
 
   /* ---------- ① 遇见：空牌重发 ---------- */
   try {
@@ -27747,7 +27756,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
           const untouched = !(st.likes > 0) && !(st.used > 0) && !Object.values(st.nope || {}).some(t => new Date(t).toDateString() === st.day);
           if (Array.isArray(st.deck) && st.deck.length === 0 && untouched && !st.deckOk167) st.deck = null;
         } catch (_) {}
-        const d = TD.apply(this, arguments);
+        /* 遇见本来就不按取向筛人（app140 只放开了 eligible96，deck96 里还有一道取向过滤，取向是「GL」等时一张牌都发不出来） */
+        const o = S.or; let d;
+        try { S.or = "all"; d = TD.apply(this, arguments); } finally { S.or = o; }
         try { if (d && d.length) sw96().deckOk167 = 1; } catch (_) {}
         return d;
       };
@@ -27874,7 +27885,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     sheet('<h2>📣 ' + esc(T2("推广这部剧", "Promote this story")) + '</h2><p class="sm dim" style="margin-top:6px">' + esc(T2("正在生成你的专属链接……", "Getting your link…")) + '</p>');
     const me = await loadMe(true);
     if (!me) { closeSheet(); toast(T2("暂时拿不到推广链接，稍后再试", "Couldn't get your link — try again later")); return; }
-    const url = linkOf(wid, me.code), title = titleOf(wid), w0 = (me.byWork || []).find(x => x.wid === wid) || {};
+    const url = linkOf(wid, me.code), title = titleOf(rawWid) !== "MIRU" ? titleOf(rawWid) : titleOf(wid), w0 = (me.byWork || []).find(x => x.wid === wid) || {};
     const pct = Math.round((me.rate || 0.1) * 100);
     const txt = T2("我在 MIRU 玩《" + title + "》，你也来试试：", "I'm playing \"" + title + "\" on MIRU — try it: ");
     const enc = encodeURIComponent, full = txt + " " + url;
@@ -27960,6 +27971,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       return r;
     };
   }
+  /* 官方剧的详情页不走 storyPage（没有收藏按钮），在「关注」按钮旁边补一个 */
+  function addStoryBtn() {
+    try {
+      const scr = document.getElementById("s-story"); if (!scr || scr.hidden || scr.querySelector("[data-promo167]")) return;
+      const id = typeof curStory !== "undefined" ? curStory : ""; if (!id || !normWid(id)) return;
+      const at = scr.querySelector("[data-fav]") || scr.querySelector("[data-follow]"); if (!at) return;
+      at.insertAdjacentHTML("afterend", '<button class="chip" data-promo167="' + esc(id) + '" style="margin-left:6px">📣 ' + esc(T2("推广赚钻", "Promote & earn")) + '</button>');
+    } catch (_) {}
+  }
+  try { const scr0 = document.getElementById("s-story"); if (scr0) new MutationObserver(() => addStoryBtn()).observe(scr0, { childList: true, subtree: false, attributes: true, attributeFilter: ["hidden"] }); } catch (_) {}
+  setInterval(addStoryBtn, 1500);
+
   /* 「我的」页：钱包下面放「我的推广」 */
   if (typeof renderMe === "function") {
     const RM = renderMe;
@@ -28653,6 +28676,44 @@ window.SVF_RELEASE={"script_id":"sc_mwge64og525f6dcd56","work_id":"w_scmwge64og5
  const open=openThread;openThread=function(id){const th=S.threads[id];if(own(th)){configure(wd(th.wid));for(const m of th.msgs||[])if(m.svfTrailer)m.poster=R.presentation.cover;const n=String(th.pk.ch).padStart(2,'0'),sf='svfscene_c'+n,cf='svfchoice_c'+n;th.pk.flags=th.pk.flags||{};if(th.pk.st==='choose')th.pk.flags[sf]=1;if(['next','end'].includes(th.pk.st)&&th.pk.picks?.[th.pk.ch]){th.pk.flags[sf]=1;th.pk.flags[cf]=1;}if(th.pk.after==='choose'&&th.pk.q?.length&&!th.pk.q.some(b=>b[1]==='set'&&b[2]?.flags?.includes(sf)))th.pk.q.push(['sys','set',{flags:[sf]}]);if(typeof EXPERIENCE124!=='undefined')for(const m of th.msgs||[])if(m.k==='chap'){const c=wd(th.wid).pack.chapters[m.n-1];if(c)m.brief124=EXPERIENCE124.brief(th,c,m.n);}}if(own(th)&&!th.msgs.some(m=>m.svfTrailer)){const A=OFF94.assets[R.work_id]||{};if(A.opening_video)th.msgs.unshift({who:'sys',k:'storyTrailer',src:A.opening_video,poster:A.cover,title:'开场预告片',intro98:'opening-media',svfTrailer:true,at:Date.now()});}return open.apply(this,arguments);};
  if(typeof MSGKIND!=='undefined')MSGKIND.inline('svf:chapter-goals',['chap'],function(m,i,th,next){const html=next(m,i,th);if(!own(th))return html;const p=R.presentation.chapters[m.n-1];if(!p)return html;return html+'<aside class="svf-chapter-goals" style="background:#15111d;color:#f7edf2;line-height:1.7;margin:8px 12px;padding:14px;border:1px solid #80694d;border-radius:12px"><b>本章目标</b><p>'+esc(p.goal)+'</p><b>完成标准</b><ol>'+p.criteria.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ol><small>完成相关事件并作出本章决定后，才可进入下一章；聊天轮数不代替完成。</small></aside>';});
  window.SVF_ENGINE={...E,own,state};
+})();
+
+/* M110 hockey work data and bindings. Shared Claude matching, live replies,
+   queues, manual scene/chapter navigation, DONE and saves remain authoritative. */
+(function(){
+ const cast={alexander:['亚历山大','Alexander'],jace:['杰斯','Jace'],ethan:['伊森','Ethan'],damon:['戴蒙','Damon'],ryan:['瑞安','Ryan']};
+ const aliases={alexander:/亚历山大|奈特|\bAlexander\b|\bAlex\b/i,jace:/杰斯|\bJace\b/i,ethan:/伊森|\bEthan\b/i,damon:/戴蒙|\bDamon\b/i,ryan:/瑞安|\bRyan\b/i};
+ function target(text){const s=String(text||'').trim(),names=Object.keys(aliases).filter(k=>aliases[k].test(s));if(names.length!==1)return null;if(/不想|不愿|不要|不确定|没想好|还没决定|不是|\b(?:not|never|unsure|undecided)\b|don['’]?t|wouldn['’]?t|can['’]?t/i.test(s))return null;const positive=/(?:(?:我.{0,8})?(?:愿意|愿|想|希望|决定|选择).{0,35}(?:约会|恋爱|交往|在一起|发展.{0,8}关系))|(?:\bI(?:['’]d| would)?\s+(?:want|like|choose|am ready|freely choose).{0,55}(?:date|dating|relationship|romance|be with))|(?:\bI\s+want\s+to\s+be\s+with)/i.test(s);return positive?names[0]:null;}
+ const assets=th=>{const w=th&&wd(th.wid);return w&&OFF94.assets[w.community]||{}},on=th=>!!(th&&assets(th).hockey_v2);
+ const aftercare={
+ alexander:{place:['空场战术室','Empty tactics room'],text:['亚历山大放下队长袖标，把工作回避安排留在桌上。下一次会面不需要以沉默换取。','Alexander sets down his captain’s armband and leaves the recusal plan on the table. Another meeting will not require silence in exchange.']},
+ jace:{place:['客队训练馆外','Outside the visiting practice rink'],text:['杰斯把手机屏幕朝下放好，镜头不再占据你们之间的位置。一次普通邀约可以被拒绝。','Jace places his phone face down. No camera stands between you. An ordinary invitation can be refused.']},
+ ethan:{place:['青训活动后的烘焙店','Bakery after the youth session'],text:['伊森把康复日程收好，热可可放在两把独立的椅子之间。休息和陪伴都不用换取爱情。','Ethan puts away his rehabilitation schedule and sets cocoa between two separate chairs. Rest and company do not have to be earned through romance.']},
+ damon:{place:['球馆外的咖啡馆','Café outside the arena'],text:['戴蒙把球队资料留在办公室，只带来一份普通咖啡馆菜单。这里没有证据或战术可以交换。','Damon leaves team documents at the office and brings only an ordinary café menu. No evidence or tactics are being traded here.']},
+ ryan:{place:['安全公益基金会门外','Outside the safety charity'],text:['瑞安锁好调查档案后才走到门外。他仍须为过去负责，未来的会面不以你的原谅作条件。','Ryan locks away the investigation file before stepping outside. He remains accountable for the past; future meetings do not require your forgiveness.']}
+ };
+ const prompt=packPrompt;packPrompt=function(th){const p=prompt.apply(this,arguments);if(!on(th))return p;const key=th.pk.hockeyTarget||th.pk.hockeyCandidate?.key;return p+'\nHOCKEY WORK: Harbor Wolves and Red Harbor Falcons are fictional. Victor Lane is the technician; Victor Hale is the sponsor executive. Do not conflate them. No one may know verified evidence before it has appeared. Clinical decisions belong to the physician and patient, never the player’s romance or scores.\n'+(key?'The player explicitly and voluntarily named '+cast[key][1]+'. This records a past wish to explore dating only, never consent to touching, exclusivity, sex or a future step. Any new refusal or withdrawal takes priority immediately. Keep other characters out of private scenes.':'No named romantic relationship has been agreed. Do not choose a man from affection scores or a cooperation choice.')+(th.pk.hockeyClarify?'\nThe current romantic answer is ambiguous. Ask which one adult character the player freely wants to date, or whether they prefer friendship, independence or more time. Do not advance the choice.':'');};
+ const pick=packPick;packPick=function(k){const th=S.threads[curT];if(!on(th)||th.pk.ch!==12||th.pk.st!=='choose')return pick.apply(this,arguments);if(k==='A'){const last=[...(th.msgs||[])].reverse().find(m=>m.who==='me'),key=target(last?.txt);if(!key){delete th.pk.hockeyCandidate;th.pk.hockeyClarify=true;save();return typeof reply==='function'?reply(th,{kind:'user',txt:last?.txt||'',mode:last?.k||'say'}):undefined;}th.pk.hockeyCandidate={key,at:last.at,explicit:true};const w=wd(th.wid),actor=(w.cast||[]).find(id=>ch(id)?.n94?.zh===cast[key][0]);if(actor&&(th.present||[]).includes(actor))th.addr=actor;th.pk.hockeyClarify=false;}else{delete th.pk.hockeyCandidate;th.pk.hockeyClarify=false;}return pick.apply(this,arguments);};
+ const after=packAfterPick;packAfterPick=function(th,k){if(!on(th)||th.pk.ch!==12)return after.apply(this,arguments);let selected=th.pk.hockeyCandidate;if(k==='A'&&(!selected?.explicit||!cast[selected.key])){k='D';delete th.pk.flags.c12_final_a;pkSet(th,'c12_final_d');th.pk.picks[12]='D';}if(k==='A')th.pk.hockeyTarget=selected.key;else delete th.pk.hockeyTarget;const ps=packSt(th.wid),hadB=!!ps.end.B,r=after.call(this,th,k);if(k==='B'&&th.pk.flags.c11_final_a){th.pk.end='E';ps.end.E=1;if(!hadB)delete ps.end.B;const msg=[...(th.msgs||[])].reverse().find(m=>m.k==='end');if(msg)msg.e='E';}if(k==='A'){const key=selected.key,a=aftercare[key],w=wd(th.wid),actor=(w.cast||[]).find(id=>(ch(id)?.n94?.zh===cast[key][0]||ch(id)?.n===cast[key][0]||String(ch(id)?.n94?.en||'').split(' ')[0]===cast[key][1]));th.pk.hockeyAftercare=key;th.present=actor?[actor]:[];th.addr=actor||null;th.pk.nativeScene={place:a.place[CL()==='zh'?0:1],time:CL()==='zh'?'新赛季 · 自愿会面':'New season · voluntary meeting',present:th.present.slice()};appendMsg(th,{who:'sys',k:'card',title:cast[key][CL()==='zh'?0:1],txt:a.text[CL()==='zh'?0:1],hockey151:key,at:Date.now()});}save();packRefresh(th);return r;};
+ const render=renderChat;renderChat=function(){const th=S.threads[curT];if(on(th)){for(const m of th.msgs||[])if(m.hockey151&&aftercare[m.hockey151]){m.title=cast[m.hockey151][CL()==='zh'?0:1];m.txt=aftercare[m.hockey151].text[CL()==='zh'?0:1];}if(th.pk.hockeyAftercare&&aftercare[th.pk.hockeyAftercare]&&th.pk.nativeScene)th.pk.nativeScene.place=aftercare[th.pk.hockeyAftercare].place[CL()==='zh'?0:1];}return render.apply(this,arguments);};
+ const games=[
+ {id:'g_m110_clip_trace',zh:'偷拍视频时间线',en:'Hidden-camera timeline',tpl:'hockey_order',seconds:20,items:[['08:37 安装摄像机','08:37 Camera installed'],['08:40 媒体总监抵达','08:40 Media director arrives'],['08:42 杰斯靠近镜头','08:42 Jace approaches the camera']]},
+ {id:'g_m110_metadata',zh:'被篡改的导出记录',en:'Altered export records',tpl:'hockey_spot',seconds:45},
+ {id:'g_m110_gate_match',zh:'门禁编号拼合',en:'Match the access records',tpl:'hockey_match',seconds:40,items:[['A12 设备门','A12 Equipment gate','17:06'],['B03 媒体口','B03 Media entrance','17:12'],['C08 维修道','C08 Service access','17:17'],['D02 看台','D02 Stands','17:22']]},
+ {id:'g_m110_bolt_compare',zh:'护板安全检查',en:'Board safety inspection',tpl:'hockey_find',seconds:45},
+ {id:'g_m110_audio_verify',zh:'录音证词核验',en:'Verify the audio sequence',tpl:'hockey_order',seconds:30,audio:true,items:[['17:31:08 警报响起','17:31:08 Alarm sounds'],['17:31:15 关闭命令','17:31:15 Shutdown order'],['17:31:42 设施撞击','17:31:42 Impact']]},
+ {id:'g_m110_statement_check',zh:'赛后事实核查',en:'Postgame fact check',tpl:'hockey_facts',seconds:60}
+ ];
+ for(const g of games)if(!MG100.some(x=>x.id===g.id))MG100.push({...g,a:'',b:'',kw:[]});
+ const style=document.createElement('style');style.textContent='.h151rows{display:grid;gap:10px;width:100%;padding:8px}.h151row{display:flex;gap:8px;align-items:center;padding:12px;border:1px solid #655947;border-radius:12px;background:#1b1722;color:#eee}.h151row span{flex:1}.h151row button,.h151btn{min-width:44px;min-height:44px;border-radius:10px;background:#382f40;color:#fff;border:1px solid #91775d;padding:9px}.h151row select{max-width:48%;background:#201b29;color:#fff;padding:10px;border-radius:9px}.h151hint{color:#d9ad86;line-height:1.5}.h151two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.h151panel{background:#191923;border:1px solid #73654f;border-radius:14px;padding:12px}.h151panel button{display:block;width:100%;margin:9px 0;min-height:48px;background:#272332;color:#fff;border:1px solid #72654f;border-radius:8px}.h151panel button.on{border-color:#f7c7a1;background:#5d4638}.h151rows svg{width:100%;max-height:180px}';document.head.appendChild(style);
+ const shuffle=a=>a.slice().sort(()=>Math.random()-.5),text=(x,zh)=>x[zh?0:1];
+ function setup(A,G,sub,done,timers,zh,instruction){A.className='mgarea h151rows';sub.textContent=instruction;let tries=0,over=false;timers.push(setTimeout(()=>{over=true;done('lose')},G.seconds*1000));const hint=document.createElement('p');hint.className='h151hint';function submit(test){if(over)return;if(test()){over=true;done('win')}else if(tries++<1){hint.textContent=zh?'还没完全对上，可以再核对一次。':'Not quite aligned. You can check once more.';}else{over=true;done('lose')}}return{hint,submit};}
+ MG_T.hockey_order=function(A,G,sub,done,T,zh){const c=setup(A,G,sub,done,T,zh,zh?'按真实时间排序。可拖动，也可用上下按钮；可以跳过。':'Arrange the true timeline. Drag or use the arrow buttons; skipping is allowed.'),order=shuffle(G.items.map((_,i)=>i));let drag=null;const draw=()=>{A.innerHTML='';order.forEach((id,pos)=>{const row=document.createElement('div');row.className='h151row';row.draggable=true;row.ondragstart=()=>drag=pos;row.ondragover=e=>e.preventDefault();row.ondrop=e=>{e.preventDefault();if(drag===null)return;const item=order.splice(drag,1)[0];order.splice(pos,0,item);draw()};const label=document.createElement('span');label.textContent=text(G.items[id],zh);row.append(label);if(G.audio&&[assets(S.threads[curT]).sfx_hockey_alarm,Lz(assets(S.threads[curT]).audio_hockey_order||''),assets(S.threads[curT]).sfx_hockey_impact][id]){const play=document.createElement('button');play.textContent='▶';play.setAttribute('aria-label',zh?'播放片段':'Play clip');play.onclick=()=>{const th=S.threads[curT],a=assets(th),url=[a.sfx_hockey_alarm,Lz(a.audio_hockey_order||''),a.sfx_hockey_impact][id];if(url)new Audio(url).play().catch(()=>{});};row.append(play);}for(const [delta,symbol]of [[-1,'↑'],[1,'↓']]){const b=document.createElement('button');b.textContent=symbol;b.setAttribute('aria-label',(zh?'移动':'Move ')+symbol);b.disabled=pos+delta<0||pos+delta>=order.length;b.onclick=()=>{[order[pos],order[pos+delta]]=[order[pos+delta],order[pos]];draw()};row.append(b)}A.append(row)});const b=document.createElement('button');b.className='h151btn';b.textContent=zh?'核对顺序':'Check sequence';b.onclick=()=>c.submit(()=>order.every((n,i)=>n===i));A.append(b,c.hint)};draw();};
+ MG_T.hockey_match=function(A,G,sub,done,T,zh){const c=setup(A,G,sub,done,T,zh,zh?'把每个门位与原始刷卡时间配对。':'Match each gate to its original access time.');A.innerHTML='';const selects=[];for(const item of G.items){const row=document.createElement('label');row.className='h151row';const s=document.createElement('span');s.textContent=item[zh?0:1];const select=document.createElement('select');select.setAttribute('aria-label',s.textContent);const empty=document.createElement('option');empty.value='';empty.textContent=zh?'选择时间':'Choose time';select.append(empty);for(const time of shuffle(G.items.map(x=>x[2]))){const o=document.createElement('option');o.value=time;o.textContent=time;select.append(o)}row.append(s,select);A.append(row);selects.push(select)}const b=document.createElement('button');b.className='h151btn';b.textContent=zh?'核对记录':'Check records';b.onclick=()=>c.submit(()=>selects.every((s,i)=>s.value===G.items[i][2]));A.append(b,c.hint);};
+ MG_T.hockey_spot=function(A,G,sub,done,T,zh){const c=setup(A,G,sub,done,T,zh,zh?'比较原片与发布版，标出三处被更改的记录。':'Compare the raw and released records. Mark three altered fields.');const data=[['机位','Camera','C-02','C-07',true],['入镜顺序','Entry order',zh?'总监→杰斯':'Director → Jace',zh?'杰斯→总监':'Jace → Director',true],['上传时间','Upload time','08:19','08:39',true],['文件时长','Duration','00:18','00:18',false],['录制日期','Recording date',zh?'同一比赛日':'Same game day',zh?'同一比赛日':'Same game day',false]],picked=new Set();A.innerHTML='';const pair=document.createElement('div');pair.className='h151two';for(let side=0;side<2;side++){const panel=document.createElement('div');panel.className='h151panel';const title=document.createElement('b');title.textContent=side?(zh?'发布版记录':'Released record'):(zh?'原片记录':'Raw record');panel.append(title);data.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d[zh?0:1]+': '+d[side?3:2];b.onclick=()=>{if(picked.has(i))picked.delete(i);else picked.add(i);for(const btn of pair.querySelectorAll('[data-field="'+i+'"]'))btn.classList.toggle('on',picked.has(i));};b.dataset.field=i;panel.append(b)});pair.append(panel)}const check=document.createElement('button');check.className='h151btn';check.textContent=zh?'核对差异':'Check differences';check.onclick=()=>c.submit(()=>picked.size===3&&[...picked].every(i=>data[i][4]));A.append(pair,check,c.hint);};
+ MG_T.hockey_find=function(A,G,sub,done,T,zh){const c=setup(A,G,sub,done,T,zh,zh?'标出三处需要工程师复核的风险。这不等于专业安全放行。':'Mark three risks for an engineer to review. This does not grant safety clearance.'),items=[['松动螺帽','Loose nut',true],['旧批次固定件','Old-batch fastener',true],['异常磨损切口','Abnormal wear cut',true],['完整垫圈','Intact washer',false],['正常保护套','Intact guard',false]],picked=new Set();A.innerHTML='<svg viewBox="0 0 360 140" role="img" aria-label="'+(zh?'护板部件示意':'Board component diagram')+'"><rect x="15" y="30" width="330" height="85" rx="10" fill="#516373"/><path d="M50 55h50v20H50zM150 40v65M225 55l25 30M280 55h40v35h-40z" fill="none" stroke="#e1c29b" stroke-width="10"/><circle cx="70" cy="90" r="15" fill="#d9dfe4"/><circle cx="310" cy="70" r="12" fill="#adbcc7"/></svg>';for(const [i,item]of items.entries()){const b=document.createElement('button');b.className='h151btn';b.textContent=text(item,zh);b.onclick=()=>{picked.has(i)?picked.delete(i):picked.add(i);b.classList.toggle('on',picked.has(i))};A.append(b)}const check=document.createElement('button');check.className='h151btn';check.textContent=zh?'提交风险标注':'Submit risk marks';check.onclick=()=>c.submit(()=>picked.size===3&&[...picked].every(i=>items[i][2]));A.append(check,c.hint);};
+ MG_T.hockey_facts=function(A,G,sub,done,T,zh){const c=setup(A,G,sub,done,T,zh,zh?'把已经核验的事实与仍待裁定的责任分开。':'Separate verified facts from responsibility still awaiting adjudication.'),items=[['事故已经发生','An accident occurred',true],['比赛已中止检查','Play stopped for inspection',true],['旧警报被授权关闭','The old alarm was disabled by authorization',true],['具体刑事责任已获法院裁定','A court has determined criminal responsibility',false]],selects=[];A.innerHTML='';for(const item of items){const row=document.createElement('label');row.className='h151row';const span=document.createElement('span');span.textContent=text(item,zh);const select=document.createElement('select');select.setAttribute('aria-label',span.textContent);for(const [v,t]of [['',zh?'待选择':'Choose'],['true',zh?'已核实':'Verified'],['false',zh?'待证实':'Unconfirmed']]){const o=document.createElement('option');o.value=v;o.textContent=t;select.append(o)}row.append(span,select);A.append(row);selects.push(select)}const check=document.createElement('button');check.className='h151btn';check.textContent=zh?'核对公告':'Check the statement';check.onclick=()=>c.submit(()=>selects.every((s,i)=>s.value===String(items[i][2])));A.append(check,c.hint);};
+ window.HOCKEY151={target,aftercare,games,on};
 })();
 
 function createOnlyMeEngine(){

@@ -1,0 +1,123 @@
+{
+  "states": {
+    "trust_alexander": 0,
+    "trust_jace": 0,
+    "trust_ethan": 0,
+    "trust_damon": 0,
+    "trust_ryan": 0,
+    "career_independence": 50,
+    "evidence_integrity": 50,
+    "safety_priority": 50,
+    "romance_target": null,
+    "romance_consent": false
+  },
+  "mapping_note": "Implementation-level data contract proposal only; no unverified parser tags added.",
+  "event_schema": {
+    "chapter": "integer 1-12",
+    "scene": "integer 1-4",
+    "intent_id": "string",
+    "flag": "string",
+    "character": "string or null",
+    "trust_delta": "integer -5..5",
+    "career_delta": "integer -5..5",
+    "safety_delta": "integer -5..5"
+  },
+  "rules": [
+    "Only visible player actions affect trust; never infer romance from high trust.",
+    "Jace cannot bypass the explicit consent and apology requirements.",
+    "Medical treatment cannot depend on relationship scores.",
+    "Romance opens in chapter 12 only on clear, affirmative, named intent; ambiguity triggers a clarifying in-character response, not a random match.",
+    "No player inactivity penalty.",
+    "Any path can reach verified core facts and a complete ending."
+  ],
+  "beats": [
+    {
+      "chapter": 1,
+      "story_and_character_beat": "Jace realizes his media stunt invaded your space; apologizes without expecting forgiveness. Alexander tries to shield the team but learns not to control your work."
+    },
+    {
+      "chapter": 2,
+      "story_and_character_beat": "Alexander presents his signed NDA and makes room for an honest interview. He admits responsibility, not an excuse."
+    },
+    {
+      "chapter": 3,
+      "story_and_character_beat": "Jace accepts team discipline and refuses a defensive PR script; trust grows only if his actions change."
+    },
+    {
+      "chapter": 4,
+      "story_and_character_beat": "Ethan asks for care without using his vulnerability to seek romance. A medical hold is treated as the responsible choice."
+    },
+    {
+      "chapter": 5,
+      "story_and_character_beat": "Damon provides evidence with a verifiable chain of custody, refuses to request confidential tactics, and protects a witness."
+    },
+    {
+      "chapter": 6,
+      "story_and_character_beat": "Ryan recognizes the past statement was inaccurate and volunteers to correct the record. His guilt does not become the player’s obligation."
+    },
+    {
+      "chapter": 7,
+      "story_and_character_beat": "Alexander calls off play even at competitive cost; Ethan sees that safety matters more than appearing invulnerable."
+    },
+    {
+      "chapter": 8,
+      "story_and_character_beat": "Jace offers a personally damaging clip rather than let false accusations stand. Damon refuses to exploit it on the ice."
+    },
+    {
+      "chapter": 9,
+      "story_and_character_beat": "The trade changes both Jace and Damon’s daily routines. Rivalry becomes uneasy teamwork; neither has automatic access to your time."
+    },
+    {
+      "chapter": 10,
+      "story_and_character_beat": "The five men have different reasons to request a private conversation; the player can refuse without relationship penalties."
+    },
+    {
+      "chapter": 11,
+      "story_and_character_beat": "The team honors the safety protocol even with a title on the line. No player is made to choose between treatment and the player’s love."
+    },
+    {
+      "chapter": 12,
+      "story_and_character_beat": "Each man explicitly asks rather than assumes; player may choose romance, friendship, professional distance, or an undecided path."
+    }
+  ],
+  "romance_routes": {
+    "alexander": {
+      "arc": "control → accountability → respects player autonomy",
+      "payoff": "After retiring the captain badge for the evening, he asks permission for coffee, away from team decisions."
+    },
+    "jace": {
+      "arc": "attention-seeking → apology → sustained responsibility",
+      "payoff": "He asks to earn trust slowly in his new city, without media spectacle."
+    },
+    "ethan": {
+      "arc": "hides symptoms → accepts medical care → can ask for help",
+      "payoff": "After a youth practice he invites the player to a bakery, with his rehab plan openly discussed."
+    },
+    "damon": {
+      "arc": "uses provocation → offers evidence with no strings → equal rival",
+      "payoff": "After the final he proposes a date with no trade, secret, or favor attached."
+    },
+    "ryan": {
+      "arc": "silence and guilt → sworn evidence → restitution",
+      "payoff": "After a charity fundraiser he asks for a normal first date rather than absolution."
+    }
+  },
+  "critical_paths": [
+    {
+      "choice": "c01_final_a vs c01_final_b",
+      "payoff": "Chapter 2 opens with compliance receipt vs Ryan first-look and supplementary chain-of-custody request; later witness access differs."
+    },
+    {
+      "choice": "c05_final_a vs c05_final_b",
+      "payoff": "Chapter 6 opens with combined witness testimony vs restored raw door logs; investigative permissions differ."
+    },
+    {
+      "choice": "c10_final_a vs c10_final_b",
+      "payoff": "Chapter 11 opens with league safety officer presence vs certified forensic audio and increased security."
+    },
+    {
+      "choice": "c11_final_a vs c11_final_b",
+      "payoff": "Chapter 12 begins with policy-reform invitation vs independent investigation offer."
+    }
+  ]
+}

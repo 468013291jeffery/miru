@@ -1,0 +1,16 @@
+{
+  "static_qa": "PASS",
+  "chapters": 12,
+  "scenes": 48,
+  "hidden_choice_nodes": 24,
+  "hidden_intents": 50,
+  "mini_games": 6,
+  "locale_structural_parity": true,
+  "english_narration": true,
+  "scene_bg_immediately_after_header": true,
+  "script_syntax_note": "English narrator retains 旁白： prefix to preserve expected parser schema",
+  "mini_game_demo_javascript_syntax": "PASS",
+  "requires_game_id_registration": true,
+  "requires_production_app_integration": true,
+  "rendered_assets_created": false
+}
