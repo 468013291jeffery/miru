@@ -3244,6 +3244,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   ];
   games.forEach((g, n) => { g.img = "https://miru.plus/art/official/m111-idol/m111-idol/mg_c" + String(n + 1).padStart(2, "0") + "_base.jpg"; });
   for (const g of games) { const i = MG100.findIndex(x => x.id === g.id); const v = Object.assign({ a: "", b: "", kw: [] }, g); if (i >= 0) MG100[i] = v; else MG100.push(v); }
+  /* 剧本里 ⟦MG|x⟧ 运行时查的是 g_x，这里两个名字都注册 */
+  const reg = list => { for (const g of list) { for (const id of [g.id, "g_" + g.id.replace(/^g_/, "")]) { const v = Object.assign({ a: "", b: "", kw: [] }, g, { id }); const i = MG100.findIndex(x => x.id === id); if (i >= 0) MG100[i] = v; else MG100.push(v); } } };
+  reg(games);
+  window.MG168 = { reg };
   window.M111G = games;
 })();
 
