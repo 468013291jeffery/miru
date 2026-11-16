@@ -3342,3 +3342,47 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   MG168.reg(games);
   window.M112G = games;
 })();
+
+/* ===== mod171: 所有剧本统一有「本章目标」——剧本没写 ⟦DONE⟧ 的章节，按本章目标和章末问题自动补上 ===== */
+(function () {
+  "use strict";
+  const L = (x, k) => (x && typeof x === "object" ? String(x[k] || x.zh || x.en || "") : String(x || "")).trim();
+  const clause = (s, n) => { const a = String(s || "").split(/[，。；：！？,.;:!?—（(]/)[0].trim(); return (a.length > n ? a.slice(0, n) + "…" : a); };
+  const qpart = (s, n) => { const a = String(s || "").replace(/[？?！!。.\s]+$/, "").split(/[，。；：,;:]/).map(x => x.trim()).filter(Boolean).pop() || ""; return (a.length > n ? a.slice(0, n) + "…" : a); };
+  const generic = s => !s || /^(你怎么做|你接下来怎么做|接下来怎么办|What do you do|What will you do next)/i.test(s);
+  function make(c, lang) {
+    const zh = lang === "zh", out = [];
+    const g = L(c.goal, lang), a = L(c.ask, lang), t = L(c.t, lang);
+    const goal = g || t;
+    if (goal) out.push({ type: "say", val: (zh ? "围绕本章目标说出或做出你的打算：" : "Say or do what you intend toward this chapter's goal: ") + goal, name: clause(goal, zh ? 12 : 40), push: zh ? "旁白：眼前的人停下来，等你决定下一步。" : "旁白：They pause, waiting for your next move." });
+    if (a && !generic(a) && out.length < 2) out.push({ type: "say", val: (zh ? "对这个问题做出自己的回应或选择：" : "Answer or decide on this: ") + a, name: zh ? "回应：" + qpart(a, 12) : "Answer: " + qpart(a, 40), push: zh ? "旁白：问题还摆在那里，所有人都在等你的回答。" : "旁白：The question is still open, and everyone is waiting for your answer." });
+    return out;
+  }
+  function fill(w) {
+    const cs = w && w.pack && w.pack.chapters; if (!cs || w.pack.auto171) return;
+    let n = 0;
+    cs.forEach(c => {
+      if (!c || c.done163 || c.done || c.done163Locales) return;
+      const zh = make(c, "zh"), en = make(c, "en");
+      if (!zh.length) return;
+      c.done163Locales = { zh, en: en.length ? en : zh }; c.done163 = zh; c.auto171 = 1; n++;
+    });
+    w.pack.auto171 = 1;
+    if (n) { try { console.info("[171] auto goals", n); } catch (_) {} }
+  }
+  setInterval(() => {
+    try {
+      const th = S.threads[curT]; if (!(th && th.pk && th.wid && typeof wd === "function")) return;
+      const w = wd(th.wid); if (!w || !w.pack || w.pack.auto171) return;
+      fill(w);
+      /* 已经玩到一半的章节：补上的目标直接算完成，不把老玩家卡在当前章 */
+      Object.values(S.threads || {}).forEach(t => {
+        if (!t || t.wid !== th.wid || !t.pk) return;
+        const n = +t.pk.ch || 1, c = w.pack.chapters[n - 1];
+        if (c && c.auto171 && (!t.pk.g163 || t.pk.g163.ch !== n) && (t.msgs || []).length > 3) t.pk.g163 = { ch: n, ok: c.done163.map(() => 1), r: 0, lv: 0, pushed: [] };
+      });
+      try { save(); } catch (_) {}
+    } catch (_) {}
+  }, 800);
+  window.GOAL171 = { fill, make };
+})();
