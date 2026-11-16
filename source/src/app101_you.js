@@ -8,6 +8,7 @@
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   /* ---------- 1 · 玩家 = 你 ---------- */
   function povOf(th, w) {
+    if (w && w.literalPlayerNames101) return null; // Authored second-person stories already identify the reader.
     let as = th && th.pk && th.pk.as;
     if (!as || as === "watch" || as === "side") as = w && w.pack && w.pack.pov;
     return as && ch(as) ? as : null;

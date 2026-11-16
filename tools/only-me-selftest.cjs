@@ -18,7 +18,7 @@ const companion=P.chapters[16].beats.zh.find(b=>b[1]==='if'&&b[2].cond.flag==='o
 
 const crypto=require('node:crypto');
 const assets=JSON.parse(fs.readFileSync('content/official/only-me-v2/media-hashes.json'));
-assert.equal(assets.length,262);
+assert.equal(assets.length,263);
 for(const a of assets){assert(fs.existsSync(a.path),'Missing '+a.path);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(a.path)).digest('hex'),a.sha256,a.path);}
 assert(JSON.parse(fs.readFileSync(dir+'validation.json')).publish_ready);
 console.log('ONLY ME: all 261 images and the opening video match reviewed source bytes.');
@@ -26,3 +26,5 @@ console.log('ONLY ME: all 261 images and the opening video match reviewed source
 for(const spec of JSON.parse(fs.readFileSync(dir+'cast.json'))){const c=w.cast.map(id=>ctx.ch(id)).find(c=>spec.key==='me'?c.you94:c.n===spec.name);assert.equal(c.age,spec.age);assert.equal(c.g,spec.gender);}
 
 const player=ctx.ch(w.you94);assert.equal(player.n94.en,'Wren');assert.equal(player.g,'f');assert.equal(player.age,27);assert(w.premise.zh.includes('The Slow Hour'));
+
+assert(w.literalPlayerNames101);const povCode=fs.readFileSync('source/src/app101_you.js','utf8');vm.runInContext(povCode.slice(povCode.indexOf('function povOf('),povCode.indexOf('function namesOf(')),ctx);assert.equal(ctx.povOf({pk:{as:w.you94}},w),null);

@@ -71,6 +71,7 @@ for c in cast:M['char_'+c['name']]=M['char_'+c['key']]=c['art']
 for n in range(1,83):
  if (A/'highlights'/('hl_%02d.png'%n)).is_file():M['hl_%02d'%n]='/art/official/only-me-v2/highlights/hl_%02d.png'%n
 if (A/'cover/cover.png').is_file():M['cover']=M['poster']='/art/official/only-me-v2/cover/cover.png'
+if rel.get('cover') and (R/rel['cover'].lstrip('/')).is_file():M['cover']=M['poster']=rel['cover']
 M['opening_video']=M['home_video']=M['vid_open']='/video/only-me-opening-v2.mp4'
 (R/'art/official'/f'{rel["work_id"]}.json').write_text(json.dumps(M,ensure_ascii=False,indent=2)+'\n')
 contexts=[]
