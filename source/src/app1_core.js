@@ -16,7 +16,7 @@ cleanState();
 function load(){try{const r=localStorage.getItem(KEY);if(r){const o=JSON.parse(r);return Object.assign(JSON.parse(JSON.stringify(DEF)),o)}}catch(e){}
  const d=JSON.parse(JSON.stringify(DEF));
  /* the app starts in English for everyone; players switch language themselves */return d}
-function saveRaw(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
+function saveRaw(){if(window.MIRU_ACCOUNT_DELETED)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){
  /* storage full: drop oldest album frames first */
  try{if(S.album.length>4){S.album=S.album.slice(0,4);localStorage.setItem(KEY,JSON.stringify(S))}}catch(_){}}}
 /* 2026-10-27：save 的唯一入口（观测见 app105_save.js）。沙箱里没有 SAVE 就直接写。 */
@@ -191,7 +191,7 @@ function speak(text,id,onend){return VOICE.run(text,id,onend)}
 
 /* ================= LIVE AI ================= */
 let SAMPLE=null,LIVE_ERR=null,LIVE_STATE="pending";
-(async()=>{try{if(window.claude&&typeof claude.use==="function"){const s=await claude.use("sample");SAMPLE=s||null}}catch(e){SAMPLE=null}
+(async()=>{try{if(window.claude&&typeof claude.use==="function"){const s=await claude.use("sample");SAMPLE=s||null;if(SAMPLE&&window.MIRU_AI){const target=SAMPLE;const check=()=>{if(!window.MIRU_AI.allowed(true))throw Object.assign(new Error("AI sharing is off"),{code:"ai_consent"})};SAMPLE=Object.assign(async function(){check();return target.apply(this,arguments)},target);if(typeof target.json==="function")SAMPLE.json=async function(){check();return target.json.apply(target,arguments)}}}}catch(e){SAMPLE=null}
  LIVE_STATE=SAMPLE?"ready":"na";refreshLive()})();
 async function liveTest(){
  if(!SAMPLE)return {ok:false,code:LIVE_STATE==="pending"?"pending":"na"};

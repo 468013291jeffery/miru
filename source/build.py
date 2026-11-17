@@ -37,6 +37,9 @@ parts.extend(["app129_catalog.js", "app130_princes.js", "app131_m105.js", "app13
 parts.extend(["app142_authored.js", "app145_narration.js", "app147_empress.js", "app148_authored_contract.js", "app149_native_v2.js", "app150_catalogrefresh.js", "app148_svf.js", "app151_hockey_v2.js"])
 parts.extend(["app151_onlyme.js"])
 parts.extend(["app152_readability.js"])
+# Native overrides and privacy gates must precede synchronous boot.
+parts.remove("app99_boot.js")
+parts.extend(["app148_ios.js", "app149_ai_consent.js", "app99_boot.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)

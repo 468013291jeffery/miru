@@ -39,7 +39,7 @@ function dbSession(c){const cc=ch(call.cid)||{n:"Him"},sys=String(vcSys(cc,call.
 /* ---------- the session ---------- */
 function dbOpen(first){return new Promise(async res=>{const c=await db93Want();if(!c||!call)return res(false);let done=false;const fin=ok=>{if(!done){done=true;res(ok)}};
  const D={sid:(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random().toString(16).slice(2)),ready:false,said:"",heard:"",turnOpen:false,q:Promise.resolve()};
- let ws;try{ws=new WebSocket(c.url)}catch(_){DB93.fail++;return fin(false)}ws.binaryType="arraybuffer";D.ws=ws;call.db=D;const me0=call;
+ let ws;try{if(window.MIRU_AI&&!window.MIRU_AI.allowed(true))return fin(false);ws=new WebSocket(c.url);if(window.MIRU_AI){const close=()=>ws.close();window.addEventListener('miru-ai-withdrawn',close,{once:true});ws.addEventListener('close',()=>window.removeEventListener('miru-ai-withdrawn',close),{once:true});const send=ws.send.bind(ws);ws.send=function(data){if(window.MIRU_AI.allowed(false))return send(data)}}}catch(_){DB93.fail++;return fin(false)}ws.binaryType="arraybuffer";D.ws=ws;call.db=D;const me0=call;
  const to=setTimeout(()=>{if(!D.ready){DB93.fail++;try{ws.close()}catch(_){}fin(false)}},8000);
  ws.onopen=()=>ws.send(dbJSON(DBE.START_CONN,null,{}));
  ws.onerror=()=>{if(!D.ready){DB93.fail++;clearTimeout(to);fin(false)}};

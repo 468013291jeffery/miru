@@ -109,7 +109,7 @@ function tasksHTML(){const ci=ciState(),adN=adLeft();
  let h='<div class="tasklist" style="padding:10px 16px 6px">';
  h+=taskSection(t("task.secDaily"));
  h+=taskRow("📅",t("task.checkin"),t("task.checkinD"),ci.done?done:'<button class="btn btn-p btn-xs" data-ci="1">'+t("task.go")+'</button>');
- h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
+ if(!(window.MIRU_NATIVE&&window.MIRU_NATIVE.platform==="ios"))h+=taskRow("📺",t("task.ad"),t("ad.left",{n:adN,c:ADS.cap}),S.plus?'<span class="tdone">MIRU+</span>':adN?'<button class="btn btn-p btn-xs" data-ad="gem|">'+t("task.go")+'</button>':done);
  if(TK.data){const L=TK.data.tasks,sec=(k,label)=>{const xs=L.filter(x=>k.includes(x.period));return xs.length?(label?taskSection(label):"")+xs.map(tkRow).join(""):""};
   h+=sec(["day"],"")+sec(["week"],TZ("本周","This week"))+sec(["once"],TZ("成长","Milestones"));
   h+='<p class="xs faint" style="padding:10px 2px 0">'+TZ("进度由服务器根据你的真实阅读、聊天和投票记录计算。每日任务 0 点（UTC）重置，本周任务周一重置。","Progress comes from what you actually read, chat and vote. Daily tasks reset at 00:00 UTC, weekly ones on Monday.")+'</p>'}

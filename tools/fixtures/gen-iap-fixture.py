@@ -1,69 +1,63 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""生成 IAP 自检用的测试证书链（自签 CA + 叶子证书），输出 JSON 到 stdout。
-仅用于 tools/iap-selftest.mjs —— 这些证书与本机/生产毫无关系，是现造的。
-"""
-import json
+"""Generated test certificates only; no production trust overrides."""
 import base64
 import datetime
-
+import json
 from cryptography import x509
-from cryptography.x509.oid import NameOID
+from cryptography.x509.oid import NameOID, ObjectIdentifier
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
-
-def der_b64(cert):
-    return base64.b64encode(cert.public_bytes(serialization.Encoding.DER)).decode()
-
-
-def key_pem(key):
-    return key.private_bytes(
-        serialization.Encoding.PEM,
-        serialization.PrivateFormat.PKCS8,
-        serialization.NoEncryption(),
-    ).decode()
-
-
-def make(name, issuer_cert=None, issuer_key=None, not_before=None, days=365):
-    key = ec.generate_private_key(ec.SECP256R1())
-    subject = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, name)])
-    now = datetime.datetime.now(datetime.timezone.utc)
-    nb = not_before or now
-    builder = (
-        x509.CertificateBuilder()
-        .subject_name(subject)
-        .issuer_name(issuer_cert.subject if issuer_cert else subject)
-        .public_key(key.public_key())
-        .serial_number(x509.random_serial_number())
-        .not_valid_before(nb)
-        .not_valid_after(nb + datetime.timedelta(days=days))
-        .add_extension(
-            x509.BasicConstraints(ca=(issuer_cert is None), path_length=None),
-            critical=True,
-        )
-    )
-    cert = builder.sign(issuer_key or key, hashes.SHA256())
-    return key, cert
-
-
+LEAF_OID = '1.2.840.113635.100.6.11.1'
+CA_OID = '1.2.840.113635.100.6.2.1'
 now = datetime.datetime.now(datetime.timezone.utc)
 
-root_key, root = make("Test Root CA - IAP selftest")
-leaf_key, leaf = make("Test Leaf - IAP selftest", issuer_cert=root, issuer_key=root_key)
-# 过期叶子：签发日往前推 400 天，有效期 30 天 ⇒ 现在已过期
-exp_key, exp_leaf = make(
-    "Expired Leaf - IAP selftest",
-    issuer_cert=root,
-    issuer_key=root_key,
-    not_before=now - datetime.timedelta(days=400),
-    days=30,
-)
+def make(name, issuer=None, issuer_key=None, ca=False, oid=None, expired=False, curve=None, wrong_issuer=False):
+    key = ec.generate_private_key(curve or ec.SECP256R1())
+    subject = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, name)])
+    issuer_name = issuer.subject if issuer else subject
+    if wrong_issuer:
+        issuer_name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, 'Wrong issuer name')])
+    start = now - datetime.timedelta(days=400) if expired else now - datetime.timedelta(minutes=2)
+    builder = (x509.CertificateBuilder().subject_name(subject).issuer_name(issuer_name)
+        .public_key(key.public_key()).serial_number(x509.random_serial_number())
+        .not_valid_before(start).not_valid_after(start + datetime.timedelta(days=30 if expired else 365))
+        .add_extension(x509.BasicConstraints(ca=ca, path_length=None), critical=True)
+        .add_extension(x509.KeyUsage(digital_signature=not ca, content_commitment=False,
+            key_encipherment=False, data_encipherment=False, key_agreement=False,
+            key_cert_sign=ca, crl_sign=ca, encipher_only=None, decipher_only=None), critical=True))
+    if oid:
+        builder = builder.add_extension(x509.UnrecognizedExtension(ObjectIdentifier(oid), b'\x05\x00'), critical=False)
+    return key, builder.sign(issuer_key or key, hashes.SHA256())
+
+def der(cert):
+    return base64.b64encode(cert.public_bytes(serialization.Encoding.DER)).decode()
+
+def pem(key):
+    return key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()).decode()
+
+root_key, root = make('Fixture Root', ca=True)
+int_key, intermediate = make('Fixture App Store CA', root, root_key, ca=True, oid=CA_OID)
+leaf_key, leaf = make('Fixture App Store signer', intermediate, int_key, oid=LEAF_OID)
+expired_key, expired = make('Expired signer', intermediate, int_key, oid=LEAF_OID, expired=True)
+wrong_leaf_key, wrong_leaf = make('Wrong purpose signer', intermediate, int_key)
+wrong_int_key, wrong_int = make('Wrong purpose CA', root, root_key, ca=True)
+wrong_int_leaf_key, wrong_int_leaf = make('Signer under wrong purpose CA', wrong_int, wrong_int_key, oid=LEAF_OID)
+nonca_key, nonca = make('Not a CA', root, root_key, oid=CA_OID)
+nonca_leaf_key, nonca_leaf = make('Signer under non-CA', nonca, nonca_key, oid=LEAF_OID)
+wrong_issuer_key, wrong_issuer = make('Wrong issuer signer', intermediate, int_key, oid=LEAF_OID, wrong_issuer=True)
+p384_key, p384 = make('Wrong curve signer', intermediate, int_key, oid=LEAF_OID, curve=ec.SECP384R1())
+
+def case(key, cert, parent=intermediate):
+    return {'leafDerB64': der(cert), 'leafKeyPem': pem(key), 'intermediateDerB64': der(parent)}
 
 print(json.dumps({
-    "rootDerB64": der_b64(root),
-    "leafDerB64": der_b64(leaf),
-    "leafKeyPem": key_pem(leaf_key),
-    "expiredLeafDerB64": der_b64(exp_leaf),
-    "expiredLeafKeyPem": key_pem(exp_key),
+    'rootDerB64': der(root), 'intermediateDerB64': der(intermediate),
+    'leafDerB64': der(leaf), 'leafKeyPem': pem(leaf_key),
+    'expiredLeafDerB64': der(expired), 'expiredLeafKeyPem': pem(expired_key),
+    'wrongPurposeLeaf': case(wrong_leaf_key, wrong_leaf),
+    'wrongPurposeIntermediate': case(wrong_int_leaf_key, wrong_int_leaf, wrong_int),
+    'nonCAIntermediate': case(nonca_leaf_key, nonca_leaf, nonca),
+    'wrongIssuer': case(wrong_issuer_key, wrong_issuer),
+    'wrongCurve': case(p384_key, p384),
 }))

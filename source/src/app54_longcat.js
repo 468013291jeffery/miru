@@ -21,6 +21,7 @@ async function lcCall(input,opts){opts=opts||{};const key=lcKey();if(!key&&!LC_P
  const body={model:c.model||LC_MODELS[0],messages:lcMsgs(input),max_tokens:max,temperature:0.85,stream,interactive:!!opts.interactive,thinking:{type:"disabled"}};
  const t0=Date.now();const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),opts.timeout||60000);if(opts.signal){if(opts.signal.aborted)ctl.abort();else opts.signal.addEventListener("abort",()=>ctl.abort(),{once:true});}
  const url=key?(c.base||LC_BASE).replace(/\/+$/,"")+"/v1/chat/completions":LC_PROXY,hd={"Content-Type":"application/json"};if(key)hd.Authorization="Bearer "+key;
+ if(key&&window.MIRU_AI&&!window.MIRU_AI.recipient(new URL(url))){clearTimeout(tm);throw Object.assign(new Error('AI sharing is off'),{code:'ai_consent'})}
  let r;try{r=await fetch(url,{method:"POST",headers:hd,body:JSON.stringify(body),signal:ctl.signal})}
  catch(e){clearTimeout(tm);throw {code:opts.signal&&opts.signal.aborted?"cancelled":ctl.signal.aborted?"timeout":"network",message:String(e&&e.message||e)}}
  if(!r.ok){clearTimeout(tm);let msg="";try{const j=await r.json();msg=(j.error&&(j.error.message||j.error.code))||j.message||""}catch(_){}

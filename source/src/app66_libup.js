@@ -9,7 +9,7 @@ const ULIM={audio:8,image:3,video:12};
 const UPRICE={audio:5,image:3,video:10,mg:2};
 function upPrice(){if(UPK==="mg")return UPRICE.mg;const t=UPFILE&&UPFILE.type||"";return /^video\//.test(t)?UPRICE.video:/^image\//.test(t)?UPRICE.image:UPK==="fx"?UPRICE.image:UPRICE.audio}
 const UDB={db:null};
-function udb(){return new Promise((res,rej)=>{if(UDB.db)return res(UDB.db);try{const r=indexedDB.open("miru_lib",1);r.onupgradeneeded=()=>r.result.createObjectStore("f");r.onsuccess=()=>{UDB.db=r.result;res(UDB.db)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
+function udb(){return new Promise((res,rej)=>{if(window.MIRU_ACCOUNT_DELETED)return rej(new Error('Account data is being removed'));if(UDB.db)return res(UDB.db);try{const r=indexedDB.open("miru_lib",1);r.onupgradeneeded=()=>r.result.createObjectStore("f");r.onsuccess=()=>{UDB.db=r.result;res(UDB.db)};r.onerror=()=>rej(r.error)}catch(e){rej(e)}})}
 async function uput(id,blob){const db=await udb();return new Promise((res,rej)=>{const tx=db.transaction("f","readwrite");tx.objectStore("f").put(blob,id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error)})}
 async function uget(id){const db=await udb();return new Promise(res=>{const tx=db.transaction("f","readonly"),q=tx.objectStore("f").get(id);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}
 async function udel(id){try{const db=await udb();db.transaction("f","readwrite").objectStore("f").delete(id)}catch(_){}}

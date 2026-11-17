@@ -54,7 +54,9 @@ module.exports = L.wrap(async (req, res) => {
     return L.send(res, 200, { days, events: r });
   }
 
-  const u = L.who(req), b = L.jsonBody(req);
+  let u = L.who(req);
+  if ((req.headers.authorization || '').trim()) { u = await L.needActive(req, res); if (!u) return; }
+  const b = L.jsonBody(req);
   const evs = (Array.isArray(b.events) ? b.events : []).slice(0, 50);
   /* 幂等（2026-10-25）：事件可以带一个 `idem` 键（例如 `choice:gala:3:A`）。
      同一个键重复上报只落一条 —— 客户端重试、多设备同时上报都不会把流水写花。

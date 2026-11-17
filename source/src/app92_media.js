@@ -21,7 +21,7 @@ const MEDIA_BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
 function mediaOpen() {
   return new Promise((res) => {
     try {
-      if (typeof indexedDB === "undefined") return res(null);
+      if (window.MIRU_ACCOUNT_DELETED || typeof indexedDB === "undefined") return res(null);
       const rq = indexedDB.open("miru-media", 1);
       rq.onupgradeneeded = () => { try { rq.result.createObjectStore("b") } catch (_) {} };
       rq.onsuccess = () => { MEDIA.db = rq.result; res(MEDIA.db) };
