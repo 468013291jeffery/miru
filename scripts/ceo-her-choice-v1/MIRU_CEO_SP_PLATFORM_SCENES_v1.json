@@ -1,0 +1,1999 @@
+{
+  "spec_version": "2026-11-17-bg48",
+  "language": "zh-CN",
+  "english_localization": "partial_goals_only",
+  "play_mode": "self_only",
+  "choice_ui": "free_text_intent_classification",
+  "chapters": [
+    {
+      "chapter_id": "CH_01",
+      "title_cn": "她说创意是偷的",
+      "goal_cn": "在公开指控里保住自己的发言权，并要求封存原始证据",
+      "goal_en_provisional": "Keep your voice and secure the original evidence",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确要求封存原始文件或公开核验时间戳",
+          "label_cn": "要求封存原件",
+          "nudge_cn": "原始版本就在现场，先让他们别碰。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch01_record_sealed",
+          "label_cn": "证据已封存",
+          "nudge_cn": "只要文件被封存，谁都不能再偷偷改动。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_01_01",
+          "title": "获奖瞬间被截断",
+          "bg": "BG48_001",
+          "content": "旁白：香槟还没打开，投影上的获奖提案就被换成了举报邮件。Veronica 站在屏幕前，得意地看着你。\nVeronica：*用指尖敲了敲投影。* “这是我的创意草稿。Ava，你是不是该解释一下？”\nBlake：*把椅子往后推，装作惋惜。* “我早告诉过你，有困难可以来找我。”\nEthan：*推门进来，先看了你一眼。* “原稿还没查，谁说她偷了？”\n旁白：他说话的语气让你觉得有点熟。网上那个和你聊 SP 的匿名男人，也总先听你把话说完。会是巧合吗？\n【玩家输入】Ethan 看着你：“你想先告诉我什么？”\n⟦OPT|CHO_01_OPEN|player_intent=要求保留原稿/时间戳/记录|choice_level=L2|effects=plot.preserve_request:true;relation.ethan_respect:+2|immediate_feedback=Ethan叫停删除动作|next=SCN_01_02⟧\n⟦OPT|CHO_01_CHALLENGE|player_intent=要求Veronica当面解释来源|choice_level=L2|effects=plot.public_challenge:true;relation.veronica_tension:+2|immediate_feedback=Veronica明显僵了一下|next=SCN_01_02⟧\n⟦OPT|CHO_01_FALLBACK|player_intent=否认/沉默/答非所问|choice_level=L0|effects=memory.asked_for_space:true|immediate_feedback=Ethan允许Ava整理思路且不替她发言|next=SCN_01_02⟧"
+        },
+        {
+          "scene_id": "SCN_01_02",
+          "title": "文件的指纹",
+          "bg": "BG48_001",
+          "content": "旁白：Ethan 把投影换成只读模式。屏幕右下角有个几乎看不见的紫色像素点，那是你常用的打样标记。\nAva（玩家行动提示）：你可以指出标记的位置、查看版本号，或者请他把整块屏幕拍下来。\n⟦MG|MG_01_A⟧\nEthan：*举起手机，镜头只对准文件。* “我只拍文件，不拍你。可以吗？”"
+        },
+        {
+          "scene_id": "SCN_01_03",
+          "title": "CEO 的第一条规则",
+          "bg": "BG48_002",
+          "content": "旁白：Veronica 伸手想合上电脑。Ethan 用一张空白文件袋挡住她的手，没有碰她。\nEthan：“谁拿出证据，谁就要说清楚它从哪儿来。谁被指控，谁就有权看原稿。”\nVeronica：“你要为了一个普通员工怀疑我？”\nEthan：“我谁都不偏袒。你，我，都一样。”\n【玩家输入】玩家可请求由独立记录保存，或表达愿意暂时离场。两者都不取消后续核验。"
+        },
+        {
+          "scene_id": "SCN_01_04",
+          "title": "被藏起来的第三页",
+          "bg": "BG48_003",
+          "content": "旁白：三页电子版本打印后只有两页。第三页不是消失，而是被人调整了打印范围。\n⟦MG|MG_01_B⟧\nBlake：“Ava，跟我走。我有办法把这事压下去。”\nEthan：*往旁边让了一步。* “留下来查，还是先出去透口气，你自己决定。”"
+        },
+        {
+          "scene_id": "SCN_01_05",
+          "title": "封条上的名字",
+          "bg": "BG48_003",
+          "content": "旁白：你看着原稿装进文件袋，封条上写着你的名字和时间。Veronica 笑不出来了。\n⟦SET|ch01_record_sealed⟧ ⟦SET|SEED_01_placed⟧\nEthan：*把工牌还给你。* “今天至少有件事做对了：没人能替你认错。”\n旁白：你突然想起，网上那个男人也说过一句话：“我只接受你自己愿意的答案。”你忍不住多看了 Ethan 一眼。\n旁白：灯快关时，屏幕又跳出一条记录：这个提案文件夹竟然比你入职还早。"
+        }
+      ],
+      "minigames": [
+        "MG_01_A",
+        "MG_01_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_01_OPEN",
+          "raw_contract": "player_intent=要求保留原稿/时间戳/记录|choice_level=L2|effects=plot.preserve_request:true;relation.ethan_respect:+2|immediate_feedback=Ethan叫停删除动作|next=SCN_01_02"
+        },
+        {
+          "id": "CHO_01_CHALLENGE",
+          "raw_contract": "player_intent=要求Veronica当面解释来源|choice_level=L2|effects=plot.public_challenge:true;relation.veronica_tension:+2|immediate_feedback=Veronica明显僵了一下|next=SCN_01_02"
+        },
+        {
+          "id": "CHO_01_FALLBACK",
+          "raw_contract": "player_intent=否认/沉默/答非所问|choice_level=L0|effects=memory.asked_for_space:true|immediate_feedback=Ethan允许Ava整理思路且不替她发言|next=SCN_01_02"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_02",
+      "title_cn": "总裁说她不能走",
+      "goal_cn": "阻止立即停职，拿到可独立核验的操作记录",
+      "goal_en_provisional": "Prevent an immediate suspension and obtain verifiable logs",
+      "done": [
+        {
+          "type": "say",
+          "condition": "提出由独立审计保留账号日志而非口头求情",
+          "label_cn": "申请独立审计",
+          "nudge_cn": "先把账号日志调出来，不能只有口供。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch02_log_hold",
+          "label_cn": "日志已保全",
+          "nudge_cn": "日志必须先保全，才谈得上谁登录过。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_02_01",
+          "title": "红色停职通知",
+          "bg": "BG48_004",
+          "content": "Veronica：*把停职通知推到你面前。* “签字走人，大家都好看。”\nEthan：*将笔盖合上。* “这是处罚通知，不是调查结果。撤回。”\nVeronica：“你现在连流程都要教我？”\nEthan：“我不替她下结论。但你们必须听她把话说完。”"
+        },
+        {
+          "scene_id": "SCN_02_02",
+          "title": "最后一次登录",
+          "bg": "BG48_004",
+          "content": "旁白：日志显示昨晚 11点47 分，有人用你的账号导出了提案。可那时候，你正从医院给家里打电话，根本没碰电脑。\n⟦MG|MG_02_A⟧\nEthan：“有人用了你的账号，不等于那个人就是你。”"
+        },
+        {
+          "scene_id": "SCN_02_03",
+          "title": "他主动退一步",
+          "bg": "BG48_005",
+          "content": "旁白：Ethan 看完日志，主动退出决定你去留的审核名单。\nEthan：“我已经卷进这件事，不能再由我决定你走不走。你不用谢我。”\n【玩家输入】“你希望我现在做哪一步？”\n⟦OPT|CHO_02_AUDIT|player_intent=要求独立保留所有设备日志|choice_level=L2|effects=plot.audit_track:true;relation.ethan_respect:+1|immediate_feedback=日志进入保全队列|next=SCN_02_04⟧\n⟦OPT|CHO_02_WITNESS|player_intent=先要求听证与答辩记录|choice_level=L2|effects=plot.hearing_track:true|immediate_feedback=听证时间被记在日程|next=SCN_02_04⟧\n⟦OPT|CHO_02_FALLBACK|player_intent=其他/暂时拒绝|choice_level=L0|effects=memory.needs_time:true|immediate_feedback=调查顺延一小时并保全证据|next=SCN_02_04⟧"
+        },
+        {
+          "scene_id": "SCN_02_04",
+          "title": "锁屏前的一秒",
+          "bg": "BG48_006",
+          "content": "旁白：在系统自动锁定之前，你看见导出设备的最后四位与公司公用演示机不同。\n⟦MG|MG_02_B⟧\nBlake：*靠在门口，想碰你的肩又收了手。* “陪我吃顿饭，我就帮你拿回账号。”\nAva（玩家行动提示）：你可以明确拒绝交易，或要求他只提供与工作有关的公开证据。"
+        },
+        {
+          "scene_id": "SCN_02_05",
+          "title": "谁也别碰记录",
+          "bg": "BG48_006",
+          "content": "旁白：全部相关登录记录封存成功。Blake 眼里的笑意慢慢褪去。\n⟦SET|ch02_log_hold⟧ ⟦SET|SEED_02_placed⟧\nEthan：“明天来查证据。别来求我救你，你不需要。”\n旁白：你收到一份没有署名的日志副本。设备代号的前两个字母，竟与主管电脑的旧编号吻合。"
+        }
+      ],
+      "minigames": [
+        "MG_02_A",
+        "MG_02_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_02_AUDIT",
+          "raw_contract": "player_intent=要求独立保留所有设备日志|choice_level=L2|effects=plot.audit_track:true;relation.ethan_respect:+1|immediate_feedback=日志进入保全队列|next=SCN_02_04"
+        },
+        {
+          "id": "CHO_02_WITNESS",
+          "raw_contract": "player_intent=先要求听证与答辩记录|choice_level=L2|effects=plot.hearing_track:true|immediate_feedback=听证时间被记在日程|next=SCN_02_04"
+        },
+        {
+          "id": "CHO_02_FALLBACK",
+          "raw_contract": "player_intent=其他/暂时拒绝|choice_level=L0|effects=memory.needs_time:true|immediate_feedback=调查顺延一小时并保全证据|next=SCN_02_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_03",
+      "title_cn": "他递来的保密协议",
+      "goal_cn": "识破让你自认有错的协议，并保留自由公开事实的权利",
+      "goal_en_provisional": "Reject the trap clause and keep the right to tell the truth",
+      "done": [
+        {
+          "type": "say",
+          "condition": "指出协议里把沉默等同承认的条款并拒绝签署",
+          "label_cn": "拒签陷阱条款",
+          "nudge_cn": "看清第三条，签下去就等于认罪。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch03_clause_exposed",
+          "label_cn": "陷阱条款曝光",
+          "nudge_cn": "协议的真正目的，现在可以摆到桌面上。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_03_01",
+          "title": "一百万美元的沉默",
+          "bg": "BG48_007",
+          "content": "Blake：*转着手里的金笔。* “签了这份协议，你能拿到一百万。只要你认个错。”\nVeronica：“机会只有一次。”\nEthan：*看向协议。* “先让她读完。别催。”"
+        },
+        {
+          "scene_id": "SCN_03_02",
+          "title": "第三条的小字",
+          "bg": "BG48_007",
+          "content": "旁白：第一页写着“双方和解”。可第三条小字却写着，你承认所有错误。\n⟦MG|MG_03_A⟧\nEthan：“你若不签，调查照样继续。”"
+        },
+        {
+          "scene_id": "SCN_03_03",
+          "title": "不卖清白",
+          "bg": "BG48_008",
+          "content": "【玩家输入】Blake 弯下腰：“就为了不肯认错，你真想把工作也丢了？”\n⟦OPT|CHO_03_REJECT|player_intent=拒绝签字并要求保留调查|choice_level=L2|effects=resource.severance_offer:0;relation.blake_tension:+2|immediate_feedback=Blake撕掉封皮却无法拿走副本|next=SCN_03_04⟧\n⟦OPT|CHO_03_EDIT|player_intent=提出删掉认错条款再谈和解|choice_level=L2|effects=plot.counteroffer:true|immediate_feedback=Ethan支持交由独立律师审查|next=SCN_03_04⟧\n⟦OPT|CHO_03_FALLBACK|player_intent=不确定/其他回应|choice_level=L0|effects=memory.decision_deferred:true|immediate_feedback=协议暂缓，调查不受影响|next=SCN_03_04⟧"
+        },
+        {
+          "scene_id": "SCN_03_04",
+          "title": "谁改过签名页",
+          "bg": "BG48_009",
+          "content": "旁白：纸质协议夹着两版签名页，一版是今天凌晨刚改过的。\n⟦MG|MG_03_B⟧\nVeronica：*手指发白。* “我只是想让公司别丢脸。”"
+        },
+        {
+          "scene_id": "SCN_03_05",
+          "title": "没有人能买走你的回答",
+          "bg": "BG48_009",
+          "content": "旁白：第三条被当场记录为争议条款，你没有交出否认指控的权利。\n⟦SET|ch03_clause_exposed⟧ ⟦SET|SEED_03_placed⟧\nEthan：*把没签字的文件还给你。* “你守住了自己的东西。做得好。”\n旁白：你在版本记录中看见了一个熟悉的代号——V.S."
+        }
+      ],
+      "minigames": [
+        "MG_03_A",
+        "MG_03_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_03_REJECT",
+          "raw_contract": "player_intent=拒绝签字并要求保留调查|choice_level=L2|effects=resource.severance_offer:0;relation.blake_tension:+2|immediate_feedback=Blake撕掉封皮却无法拿走副本|next=SCN_03_04"
+        },
+        {
+          "id": "CHO_03_EDIT",
+          "raw_contract": "player_intent=提出删掉认错条款再谈和解|choice_level=L2|effects=plot.counteroffer:true|immediate_feedback=Ethan支持交由独立律师审查|next=SCN_03_04"
+        },
+        {
+          "id": "CHO_03_FALLBACK",
+          "raw_contract": "player_intent=不确定/其他回应|choice_level=L0|effects=memory.decision_deferred:true|immediate_feedback=协议暂缓，调查不受影响|next=SCN_03_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_04",
+      "title_cn": "下班后，规则换我定",
+      "goal_cn": "分清工作调查与私人吸引，并说出自己的不可碰触的界限",
+      "goal_en_provisional": "Separate work from attraction and state your private boundaries",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确要求私人互动与职场评价分离且保留随时拒绝权",
+          "label_cn": "说清彼此边界",
+          "nudge_cn": "先把工作和私事分开，任何亲密都得自愿。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch04_boundary_recorded",
+          "label_cn": "边界已经确认",
+          "nudge_cn": "两个人知道规则，才能谈得上靠近。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_04_01",
+          "title": "雨夜门口",
+          "bg": "BG48_010",
+          "content": "旁白：晚上十点，办公室里只剩你和 Ethan 等调查回执。外面下着雨，桌上是两杯热茶。\nEthan：*把一杯茶推到你手边，留了半张桌子的距离。* “今晚发生了太多事。要我离开吗？”"
+        },
+        {
+          "scene_id": "SCN_04_02",
+          "title": "说了就有效",
+          "bg": "BG48_010",
+          "content": "旁白：你们把话说清楚：工作上的错不能拿到私下“处罚”；谁说停，就立刻停。\n⟦MG|MG_04_A⟧\nEthan：“你说停，我就停。这句话必须比任何游戏规则都大。”"
+        },
+        {
+          "scene_id": "SCN_04_03",
+          "title": "那把紫雨伞",
+          "bg": "BG48_011",
+          "content": "Ethan：*看见你本子上的紫色雨伞贴纸，愣了一下。* “这把伞……你也喜欢？”\n旁白：你想起网上那个和你聊过 SP 的男人。他曾说：“我撑伞是邀请，不是命令。”\n【玩家输入】“如果以后我们在工作以外见面，你希望怎么定义那次邀请？”\n⟦OPT|CHO_04_SLOW|player_intent=只接受慢慢了解/不谈实践|choice_level=L1|effects=boundary.no_play_until_invited:true;relation.ethan_trust:+2|immediate_feedback=Ethan将话题停在约会和了解|next=SCN_04_04⟧\n⟦OPT|CHO_04_CURIOUS|player_intent=愿意了解成人自愿角色互动但保留暂停|choice_level=L1|effects=boundary.private_talk_allowed:true;relation.ethan_trust:+1|immediate_feedback=Ethan主动提出事前清单而非当场要求|next=SCN_04_04⟧\n⟦OPT|CHO_04_FALLBACK|player_intent=拒绝/其他/不想回答|choice_level=L1|effects=boundary.private_talk_allowed:false|immediate_feedback=Ethan接受并回到公事|next=SCN_04_04⟧"
+        },
+        {
+          "scene_id": "SCN_04_04",
+          "title": "暂停比继续重要",
+          "bg": "BG48_012",
+          "content": "旁白：桌上的纸列了“可以聊”“先不要”“绝对不做”，没有任何已打勾的预设。\n⟦MG|MG_04_B⟧\nEthan：“这些规则不是拿来逼你的。不想聊，我们就不聊。”"
+        },
+        {
+          "scene_id": "SCN_04_05",
+          "title": "一张没有署名的邀请",
+          "bg": "BG48_012",
+          "content": "旁白：你在自己的本子上写下“私事下班再谈，任何时候都能说停”。Ethan 没有拍照。\n⟦SET|ch04_boundary_recorded⟧ ⟦SET|SEED_04_placed⟧\nEthan：*微微笑了。* “你说得算。”\n旁白：他的手机在桌上亮起一个图标——和你熟悉的匿名社区很像。但屏幕很快熄了。\n\n## 第二幕上｜流言、代价与身份谜题（CH_05—CH_09）"
+        }
+      ],
+      "minigames": [
+        "MG_04_A",
+        "MG_04_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_04_SLOW",
+          "raw_contract": "player_intent=只接受慢慢了解/不谈实践|choice_level=L1|effects=boundary.no_play_until_invited:true;relation.ethan_trust:+2|immediate_feedback=Ethan将话题停在约会和了解|next=SCN_04_04"
+        },
+        {
+          "id": "CHO_04_CURIOUS",
+          "raw_contract": "player_intent=愿意了解成人自愿角色互动但保留暂停|choice_level=L1|effects=boundary.private_talk_allowed:true;relation.ethan_trust:+1|immediate_feedback=Ethan主动提出事前清单而非当场要求|next=SCN_04_04"
+        },
+        {
+          "id": "CHO_04_FALLBACK",
+          "raw_contract": "player_intent=拒绝/其他/不想回答|choice_level=L1|effects=boundary.private_talk_allowed:false|immediate_feedback=Ethan接受并回到公事|next=SCN_04_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_05",
+      "title_cn": "追求者把你卖了",
+      "goal_cn": "在客户晚宴上识破 Blake 的交易话术，并维护自己的专业署名",
+      "goal_en_provisional": "Defend your credit at the client dinner",
+      "done": [
+        {
+          "type": "say",
+          "condition": "当面要求活动介绍恢复自己的提案署名",
+          "label_cn": "拿回作品署名",
+          "nudge_cn": "这份方案是我写的，名字应该写对。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch05_credit_claimed",
+          "label_cn": "署名已经提出",
+          "nudge_cn": "公开提出署名，下一步才能追究谁改的。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_05_01",
+          "title": "空着的名牌",
+          "bg": "BG48_013",
+          "content": "旁白：酒店晚宴上，你的名牌写着“助理”，Veronica 的名牌却写着“首席创意”。\nBlake：*端着酒杯走过来。* “今晚别惹事。你只管笑就行。”\nEthan：*看着你的名牌，皱了皱眉。* “你想怎么处理？我听你的。”"
+        },
+        {
+          "scene_id": "SCN_05_02",
+          "title": "席卡不是小事",
+          "bg": "BG48_013",
+          "content": "旁白：名牌打印清单与现场摆放顺序并不一致。\n⟦MG|MG_05_A⟧\nVeronica：“是工作人员的疏忽。”\nEthan：“那我们就把疏忽的来龙去脉记下来。”"
+        },
+        {
+          "scene_id": "SCN_05_03",
+          "title": "全场都在等她闭嘴",
+          "bg": "BG48_014",
+          "content": "Blake：“在这儿反驳我，你就别想接下个单子。”\n【玩家输入】“你还要在话筒前说什么？”\n⟦OPT|CHO_05_MIC|player_intent=公开要求署名及验稿记录|choice_level=L3|effects=plot.public_credit_claim:true;relation.ethan_respect:+2|immediate_feedback=主持麦克风交还玩家|next=SCN_05_04⟧\n⟦OPT|CHO_05_PROOF|player_intent=提交署名证明而不当众争吵|choice_level=L3|effects=plot.private_credit_claim:true;resource.audit_receipt:+1|immediate_feedback=晚宴登记簿加注争议|next=SCN_05_04⟧\n⟦OPT|CHO_05_FALLBACK|player_intent=暂时离场/其他|choice_level=L0|effects=memory.public_pressure:true|immediate_feedback=保留会后书面申诉|next=SCN_05_04⟧"
+        },
+        {
+          "scene_id": "SCN_05_04",
+          "title": "镜子里的改稿人",
+          "bg": "BG48_015",
+          "content": "旁白：你发现封面文件的修改时间，比晚宴名单的定稿时间还晚。\n⟦MG|MG_05_B⟧\nEthan：*侧身替你挡住闪光灯，没有碰你。* “慢慢来。你刚才说得很好。”"
+        },
+        {
+          "scene_id": "SCN_05_05",
+          "title": "她终于听见自己的名字",
+          "bg": "BG48_015",
+          "content": "旁白：无论你选择当场说还是书面提交，主持资料均补充“原作者争议待核实”。\n⟦SET|ch05_credit_claimed⟧ ⟦SET|SEED_05_placed⟧\nBlake：*低声咬牙。* “Ava，你总会需要我的。”\nEthan：“真正的合作从来不是用这个口气开始。”"
+        }
+      ],
+      "minigames": [
+        "MG_05_A",
+        "MG_05_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_05_MIC",
+          "raw_contract": "player_intent=公开要求署名及验稿记录|choice_level=L3|effects=plot.public_credit_claim:true;relation.ethan_respect:+2|immediate_feedback=主持麦克风交还玩家|next=SCN_05_04"
+        },
+        {
+          "id": "CHO_05_PROOF",
+          "raw_contract": "player_intent=提交署名证明而不当众争吵|choice_level=L3|effects=plot.private_credit_claim:true;resource.audit_receipt:+1|immediate_feedback=晚宴登记簿加注争议|next=SCN_05_04"
+        },
+        {
+          "id": "CHO_05_FALLBACK",
+          "raw_contract": "player_intent=暂时离场/其他|choice_level=L0|effects=memory.public_pressure:true|immediate_feedback=保留会后书面申诉|next=SCN_05_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_06",
+      "title_cn": "全公司都看见了假聊天",
+      "goal_cn": "证明公司群流传的暧昧截图经过拼接，不让流言定义你",
+      "goal_en_provisional": "Expose the altered chat screenshot",
+      "done": [
+        {
+          "type": "say",
+          "condition": "向同场人员指出截图可核验的拼接位置并提出保全源文件",
+          "label_cn": "要求核验截图",
+          "nudge_cn": "聊天图被拼过，让我们看原始文件。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch06_fake_chat_logged",
+          "label_cn": "假聊天已留证",
+          "nudge_cn": "流言证据一旦封存，就能追溯传播路径。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_06_01",
+          "title": "手机一齐亮起",
+          "bg": "BG48_016",
+          "content": "旁白：早会刚开始，每个人手机上都弹出一张聊天截图。图里写着，你为了升职去讨好 CEO。\nVeronica：“这就是所谓的独立调查？真让人失望。”\nEthan：*把手机扣在桌上。* “一张截图说明不了什么。先查是谁发的。”"
+        },
+        {
+          "scene_id": "SCN_06_02",
+          "title": "不像你的标点",
+          "bg": "BG48_016",
+          "content": "旁白：截图里的字一会儿大一会儿小，聊天框边上还有一道奇怪的白线。\n⟦MG|MG_06_A⟧\nEthan：“我不会翻你的手机。你愿意给什么证据，由你决定。”"
+        },
+        {
+          "scene_id": "SCN_06_03",
+          "title": "不解释私生活",
+          "bg": "BG48_017",
+          "content": "【玩家输入】“他们想让你交出私人账户，你怎么回应？”\n⟦OPT|CHO_06_PRIVACY|player_intent=只提交技术证据并拒绝展示私人聊天|choice_level=L2|effects=boundary.private_data_protected:true;relation.ethan_respect:+2|immediate_feedback=调查仅收截图原文件|next=SCN_06_04⟧\n⟦OPT|CHO_06_VOLUNTARY|player_intent=自愿仅展示指定一条消息而非整部手机|choice_level=L2|effects=plot.limited_disclosure:true|immediate_feedback=仅目标消息记录入档|next=SCN_06_04⟧\n⟦OPT|CHO_06_FALLBACK|player_intent=其他/不想谈私生活|choice_level=L0|effects=boundary.private_data_protected:true|immediate_feedback=Ethan承认隐私权且调查继续|next=SCN_06_04⟧"
+        },
+        {
+          "scene_id": "SCN_06_04",
+          "title": "谁第一个转发",
+          "bg": "BG48_018",
+          "content": "旁白：你查到这张图最早不是从群里发的，而是先经过了会议室的投屏电脑。\n⟦MG|MG_06_B⟧\nBlake：“大家都是为你好，解释一下不就完了？”\nAva（玩家行动提示）：你可以直说：“不是我欠你们解释，是造谣的人欠我解释。”"
+        },
+        {
+          "scene_id": "SCN_06_05",
+          "title": "被看见的是造假痕迹",
+          "bg": "BG48_018",
+          "content": "⟦SET|ch06_fake_chat_logged⟧ ⟦SET|SEED_06_placed⟧\n旁白：技术疑点写进记录，群里有人撤回二次转发。你没有交出私人账户密码。\nEthan：“你不用跟他们解释自己的人品。我们只查谁改了图。”"
+        }
+      ],
+      "minigames": [
+        "MG_06_A",
+        "MG_06_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_06_PRIVACY",
+          "raw_contract": "player_intent=只提交技术证据并拒绝展示私人聊天|choice_level=L2|effects=boundary.private_data_protected:true;relation.ethan_respect:+2|immediate_feedback=调查仅收截图原文件|next=SCN_06_04"
+        },
+        {
+          "id": "CHO_06_VOLUNTARY",
+          "raw_contract": "player_intent=自愿仅展示指定一条消息而非整部手机|choice_level=L2|effects=plot.limited_disclosure:true|immediate_feedback=仅目标消息记录入档|next=SCN_06_04"
+        },
+        {
+          "id": "CHO_06_FALLBACK",
+          "raw_contract": "player_intent=其他/不想谈私生活|choice_level=L0|effects=boundary.private_data_protected:true|immediate_feedback=Ethan承认隐私权且调查继续|next=SCN_06_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_07",
+      "title_cn": "CEO 的保护也有代价",
+      "goal_cn": "选定追查路线：公开程序或私下取证，并确认不靠Ethan特权过关",
+      "goal_en_provisional": "Choose an evidence path without special favors",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确告诉Ethan选择程序举报或私下搜集可核验记录",
+          "label_cn": "选定追查路线",
+          "nudge_cn": "我想走哪条路，要由我来定。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch07_route_committed",
+          "label_cn": "路线已经确定",
+          "nudge_cn": "先定方法，之后每一步才有依据。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_07_01",
+          "title": "他把万能门卡收回去",
+          "bg": "BG48_019",
+          "content": "Ethan：*把高级门卡收进抽屉。* “我能直接拿到文件，但绕开流程，证据就未必有用。”\nAva（玩家行动提示）：你可以选择合法审计路线，或者用公开资料和现有权限自己还原事情。"
+        },
+        {
+          "scene_id": "SCN_07_02",
+          "title": "哪条线更稳",
+          "bg": "BG48_019",
+          "content": "⟦MG|MG_07_A⟧\nVeronica：“你们是在故意拖延。”\nEthan：“调查慢一点可以，证据错了不行。”"
+        },
+        {
+          "scene_id": "SCN_07_03",
+          "title": "这是你的案子",
+          "bg": "BG48_020",
+          "content": "【玩家输入】Ethan：“我尊重你的决定。你想先用哪种方式查？”\n⟦OPT|CHO_07_AUDIT|player_intent=优先正式程序/向独立审计申请|choice_level=L4|effects=route.audit:true;route.field:false;resource.audit_access:+1|risk_notice=会更公开、需要可核验文书|immediate_feedback=程序申请已收件|exclusive_experience=CH08-A审计室核对；CH12-A权限复盘|delayed_payoff=CH16公开听证可直接调用凭据|route_switch=CH14允许转线|next=SCN_07_04⟧\n⟦OPT|CHO_07_FIELD|player_intent=优先自己核对公开资料和工作底稿|choice_level=L4|effects=route.field:true;route.audit:false;resource.field_contacts:+1|risk_notice=更快但材料需要追加验证|immediate_feedback=个人资料清单建立|exclusive_experience=CH08-B档案库查找；CH12-B纸质回执复盘|delayed_payoff=CH16可提出更具体的伪造机制|route_switch=CH14允许转线|next=SCN_07_04⟧\n⟦OPT|CHO_07_FALLBACK|player_intent=没决定/两条都不喜欢|choice_level=L1|effects=route.audit:true;route.field:false;memory.route_provisional:true|immediate_feedback=先走保守保全程序，CH14仍可调整|next=SCN_07_04⟧"
+        },
+        {
+          "scene_id": "SCN_07_04",
+          "title": "第一张路径图",
+          "bg": "BG48_020",
+          "content": "⟦MG|MG_07_B⟧\n旁白：你把四个问题写在白板上：文件谁做的，谁碰过，谁传出去，谁得了好处。"
+        },
+        {
+          "scene_id": "SCN_07_05",
+          "title": "不是他的战利品",
+          "bg": "BG48_020",
+          "content": "⟦SET|ch07_route_committed⟧\nEthan：*把白板笔递还给你。* “不管怎么查，最后都由你决定要说什么。”\n旁白：审计名单出现意外一栏——CEO 的姓名也在被调查人范围里。"
+        }
+      ],
+      "minigames": [
+        "MG_07_A",
+        "MG_07_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_07_AUDIT",
+          "raw_contract": "player_intent=优先正式程序/向独立审计申请|choice_level=L4|effects=route.audit:true;route.field:false;resource.audit_access:+1|risk_notice=会更公开、需要可核验文书|immediate_feedback=程序申请已收件|exclusive_experience=CH08-A审计室核对；CH12-A权限复盘|delayed_payoff=CH16公开听证可直接调用凭据|route_switch=CH14允许转线|next=SCN_07_04"
+        },
+        {
+          "id": "CHO_07_FIELD",
+          "raw_contract": "player_intent=优先自己核对公开资料和工作底稿|choice_level=L4|effects=route.field:true;route.audit:false;resource.field_contacts:+1|risk_notice=更快但材料需要追加验证|immediate_feedback=个人资料清单建立|exclusive_experience=CH08-B档案库查找；CH12-B纸质回执复盘|delayed_payoff=CH16可提出更具体的伪造机制|route_switch=CH14允许转线|next=SCN_07_04"
+        },
+        {
+          "id": "CHO_07_FALLBACK",
+          "raw_contract": "player_intent=没决定/两条都不喜欢|choice_level=L1|effects=route.audit:true;route.field:false;memory.route_provisional:true|immediate_feedback=先走保守保全程序，CH14仍可调整|next=SCN_07_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_08",
+      "title_cn": "谁替你签了字",
+      "goal_cn": "找出伪造审批的关键差异，确认谁能使用那枚电子签名",
+      "goal_en_provisional": "Find the forged approval and its access path",
+      "done": [
+        {
+          "type": "say",
+          "condition": "提出核对电子签名的创建、访问与实际授权范围",
+          "label_cn": "追问签名来源",
+          "nudge_cn": "我没签过，这个签名是谁拿到的？"
+        },
+        {
+          "type": "flag",
+          "condition": "ch08_signature_disputed",
+          "label_cn": "伪签名已质疑",
+          "nudge_cn": "先把伪签名标出来，才不会被当作事实。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_08_01",
+          "title": "两份一模一样的授权",
+          "bg": "BG48_021",
+          "content": "旁白：一份文件写着，你同意让 Veronica 代你提交方案。可签字那天，你根本没来公司。\nEthan：“我看到了自己的审批标记。但我记得没批这份。”"
+        },
+        {
+          "scene_id": "SCN_08_02",
+          "title": "签名像，时间不像",
+          "bg": "BG48_021",
+          "content": "⟦MG|MG_08_A⟧\n旁白：那枚签名像是从旧文件里贴上去的，边上还留着淡淡的方框。"
+        },
+        {
+          "scene_id": "SCN_08_03",
+          "title": "两条路，两种发现",
+          "bg": "BG48_022",
+          "content": "如果 `route.audit`：旁白：正式调查给了你一张带编号的回执。你忙了一整晚，但这份材料能在听证会上用。\n如果 `route.field`：旁白：你从旧打印稿里找到一份权限说明。它能帮你查方向，但还得让技术人员核实。\n【玩家输入】Ethan：“这处漏洞也有我的责任。你希望我怎么处理？”\n⟦OPT|CHO_08_ADMIT|player_intent=要求Ethan正式承认权限漏洞|choice_level=L2|effects=plot.ethan_error_disclosed:true;relation.ethan_trust:+2|immediate_feedback=Ethan录入本人整改说明|next=SCN_08_04⟧\n⟦OPT|CHO_08_SEPARATE|player_intent=只谈证据、暂不评价他的责任|choice_level=L1|effects=plot.ethan_error_disclosed:false|immediate_feedback=漏洞暂列独立待查项|next=SCN_08_04⟧\n⟦OPT|CHO_08_FALLBACK|player_intent=其他/需要时间|choice_level=L0|effects=memory.response_deferred:true|immediate_feedback=两条路径保留并继续查证|next=SCN_08_04⟧"
+        },
+        {
+          "scene_id": "SCN_08_04",
+          "title": "谁拿到旧权限",
+          "bg": "BG48_023",
+          "content": "⟦MG|MG_08_B⟧\nVeronica：“一枚签名能说明什么？”\nAva（玩家行动提示）：你可以请记录将其列为争议，不替她下刑事结论。"
+        },
+        {
+          "scene_id": "SCN_08_05",
+          "title": "他终于说了抱歉",
+          "bg": "BG48_023",
+          "content": "⟦SET|ch08_signature_disputed⟧ ⟦SET|SEED_08_placed⟧\nEthan：“旧权限没管好，是我的错。对不起。我会把漏洞补上，你不用因此原谅我。”\n旁白：你从来没想过，这个人人害怕的男人会先说“我错了”。"
+        }
+      ],
+      "minigames": [
+        "MG_08_A",
+        "MG_08_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_08_ADMIT",
+          "raw_contract": "player_intent=要求Ethan正式承认权限漏洞|choice_level=L2|effects=plot.ethan_error_disclosed:true;relation.ethan_trust:+2|immediate_feedback=Ethan录入本人整改说明|next=SCN_08_04"
+        },
+        {
+          "id": "CHO_08_SEPARATE",
+          "raw_contract": "player_intent=只谈证据、暂不评价他的责任|choice_level=L1|effects=plot.ethan_error_disclosed:false|immediate_feedback=漏洞暂列独立待查项|next=SCN_08_04"
+        },
+        {
+          "id": "CHO_08_FALLBACK",
+          "raw_contract": "player_intent=其他/需要时间|choice_level=L0|effects=memory.response_deferred:true|immediate_feedback=两条路径保留并继续查证|next=SCN_08_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_09",
+      "title_cn": "匿名男人是他",
+      "goal_cn": "核对匿名社群里的共同经历，决定是否允许两人继续私下了解",
+      "goal_en_provisional": "Verify the anonymous connection and choose whether to continue",
+      "done": [
+        {
+          "type": "say",
+          "condition": "直接询问Ethan是否是过去那位匿名联系人，并表明是否继续联系",
+          "label_cn": "问出匿名身份",
+          "nudge_cn": "那个认真谈边界的人，是你吗？"
+        },
+        {
+          "type": "flag",
+          "condition": "ch09_identity_answered",
+          "label_cn": "身份疑问解开",
+          "nudge_cn": "问出口，才能让对方给你一个能核实的回答。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_09_01",
+          "title": "他记得那句雨伞",
+          "bg": "BG48_024",
+          "content": "Ethan：*慢慢把一枚紫伞形书签放在桌上。* “我不该让你这么久才知道。那个人是我。”\n旁白：你心跳一下快了。那个在网上和你聊 SP、每次都先问你愿不愿意的人，原来是这个冷面 CEO。"
+        },
+        {
+          "scene_id": "SCN_09_02",
+          "title": "真正的暗号",
+          "bg": "BG48_024",
+          "content": "⟦MG|MG_09_A⟧\nEthan：“我只知道你在网上告诉我的事。我从没查过你的真实身份。”"
+        },
+        {
+          "scene_id": "SCN_09_03",
+          "title": "匿名不等于同意",
+          "bg": "BG48_025",
+          "content": "【玩家输入】“你希望我们的现实关系怎么继续？”\n⟦OPT|CHO_09_KNOW|player_intent=愿意私下慢慢了解但不马上进行SP互动|choice_level=L3|effects=relation.romance_open:true;boundary.play_consent:false;relation.ethan_trust:+2|immediate_feedback=Ethan提出无压力的下班咖啡邀请|next=SCN_09_04⟧\n⟦OPT|CHO_09_PAUSE|player_intent=要求暂停私下联系直至调查结束|choice_level=L3|effects=relation.romance_open:false;boundary.contact_paused:true|immediate_feedback=Ethan答应只用工作程序联系|next=SCN_09_04⟧\n⟦OPT|CHO_09_FALLBACK|player_intent=生气/其他/不确定|choice_level=L1|effects=relation.romance_open:false;memory.identity_shock:true|immediate_feedback=Ethan道歉且不追问|next=SCN_09_04⟧"
+        },
+        {
+          "scene_id": "SCN_09_04",
+          "title": "有些秘密不能交换",
+          "bg": "BG48_026",
+          "content": "⟦MG|MG_09_B⟧\n旁白：你翻出以前的聊天记录。他很早就说过：“工作上的上下级关系，不能拿来玩私下的控制游戏。”原来他一直这样想。"
+        },
+        {
+          "scene_id": "SCN_09_05",
+          "title": "真正需要道歉的人",
+          "bg": "BG48_026",
+          "content": "⟦SET|ch09_identity_answered⟧ ⟦SET|SEED_04_consumed⟧\nEthan：“我喜欢和你说话，也想更了解你。但你可以拒绝，调查照样继续。”\n旁白：你没回答。他也没有逼问。会议室外，Veronica 正拿着一张你从未见过的打印纸。\n\n## 第二幕下｜羞辱被反转，规则接受考验（CH_10—CH_14）"
+        }
+      ],
+      "minigames": [
+        "MG_09_A",
+        "MG_09_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_09_KNOW",
+          "raw_contract": "player_intent=愿意私下慢慢了解但不马上进行SP互动|choice_level=L3|effects=relation.romance_open:true;boundary.play_consent:false;relation.ethan_trust:+2|immediate_feedback=Ethan提出无压力的下班咖啡邀请|next=SCN_09_04"
+        },
+        {
+          "id": "CHO_09_PAUSE",
+          "raw_contract": "player_intent=要求暂停私下联系直至调查结束|choice_level=L3|effects=relation.romance_open:false;boundary.contact_paused:true|immediate_feedback=Ethan答应只用工作程序联系|next=SCN_09_04"
+        },
+        {
+          "id": "CHO_09_FALLBACK",
+          "raw_contract": "player_intent=生气/其他/不确定|choice_level=L1|effects=relation.romance_open:false;memory.identity_shock:true|immediate_feedback=Ethan道歉且不追问|next=SCN_09_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_10",
+      "title_cn": "她说我自愿被管教",
+      "goal_cn": "拆穿利用私人偏好污名化你的谣言，并拿回公开解释的边界",
+      "goal_en_provisional": "Refuse the weaponization of your private life",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确拒绝让任何人用私人偏好评价你的工作能力",
+          "label_cn": "阻止私事羞辱",
+          "nudge_cn": "我的私人边界和工作表现没有关系。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch10_stigma_rebutted",
+          "label_cn": "污名已被反驳",
+          "nudge_cn": "问题不是你喜欢什么，而是谁把隐私当武器。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_10_01",
+          "title": "会议上的那三个字母",
+          "bg": "BG48_027",
+          "content": "Veronica：*将纸投到墙上。* “SP。Ava，你还有什么想说？”\n旁白：屏幕上只有几句从匿名社群截来的话。没有名字，更没有任何跟工作有关的证据。\nEthan：*声音冷了下来。* “够了。别拿别人的私事当武器。”"
+        },
+        {
+          "scene_id": "SCN_10_02",
+          "title": "被剪掉的前提",
+          "bg": "BG48_027",
+          "content": "旁白：原本写着“成年人自愿，想停就停”的那一行，被人故意裁掉了。\n⟦MG|MG_10_A⟧\nEthan：“你不用向全公司解释私生活。该解释的是偷发截图的人。”"
+        },
+        {
+          "scene_id": "SCN_10_03",
+          "title": "羞耻应属于谁",
+          "bg": "BG48_028",
+          "content": "【玩家输入】“你要给 Veronica 什么回应？”\n⟦OPT|CHO_10_PRIVACY|player_intent=要求停止传播/公开指出隐私与工作无关|choice_level=L2|effects=plot.privacy_objection:true;relation.ethan_respect:+2|immediate_feedback=资料从公共投影撤下|next=SCN_10_04⟧\n⟦OPT|CHO_10_TRACE|player_intent=先保留泄露证据并要求追查来源|choice_level=L2|effects=plot.leak_trace:true;resource.leak_snapshot:+1|immediate_feedback=屏幕留存仅供封存|next=SCN_10_04⟧\n⟦OPT|CHO_10_FALLBACK|player_intent=沉默/其他/情绪激动|choice_level=L0|effects=memory.shamed_publicly:true|immediate_feedback=Ethan终止会议并保护发言空间|next=SCN_10_04⟧"
+        },
+        {
+          "scene_id": "SCN_10_04",
+          "title": "匿名文件的水印",
+          "bg": "BG48_029",
+          "content": "⟦MG|MG_10_B⟧\n旁白：截图角落留着一串淡淡的编号。它竟然是公司打印机的任务号。\nBlake：“也许只是有人关心你。”\nEthan：“真关心一个人，不会逼她把秘密拿给所有人看。”"
+        },
+        {
+          "scene_id": "SCN_10_05",
+          "title": "重新抬起头",
+          "bg": "BG48_029",
+          "content": "⟦SET|ch10_stigma_rebutted⟧ ⟦SET|SEED_10_placed⟧\n旁白：投影关了，证据留了下来。Ethan 没再问你的秘密，只站在一旁，等你先离开。\nEthan：“你不需要我的许可，才有资格选择自己要怎样生活。”"
+        }
+      ],
+      "minigames": [
+        "MG_10_A",
+        "MG_10_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_10_PRIVACY",
+          "raw_contract": "player_intent=要求停止传播/公开指出隐私与工作无关|choice_level=L2|effects=plot.privacy_objection:true;relation.ethan_respect:+2|immediate_feedback=资料从公共投影撤下|next=SCN_10_04"
+        },
+        {
+          "id": "CHO_10_TRACE",
+          "raw_contract": "player_intent=先保留泄露证据并要求追查来源|choice_level=L2|effects=plot.leak_trace:true;resource.leak_snapshot:+1|immediate_feedback=屏幕留存仅供封存|next=SCN_10_04"
+        },
+        {
+          "id": "CHO_10_FALLBACK",
+          "raw_contract": "player_intent=沉默/其他/情绪激动|choice_level=L0|effects=memory.shamed_publicly:true|immediate_feedback=Ethan终止会议并保护发言空间|next=SCN_10_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_11",
+      "title_cn": "他的规则，先问我愿不愿",
+      "goal_cn": "在下班后的私人谈话里明确可谈与不可谈，并决定是否接受更亲密的了解",
+      "goal_en_provisional": "State explicit limits before any private intimacy",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确说出愿意了解或暂时拒绝私下角色互动及停止信号",
+          "label_cn": "说出停止信号",
+          "nudge_cn": "我可以说不，也可以随时改变主意。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch11_consent_answered",
+          "label_cn": "自愿意向已说明",
+          "nudge_cn": "两个人都清楚边界，下一步才有意义。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_11_01",
+          "title": "一份没有签名栏的清单",
+          "bg": "BG48_030",
+          "content": "旁白：下班后，休息区只亮着一盏灯。Ethan 拿来一张纸，第一栏写着：“哪些事绝对不能做。”\nEthan：“今晚只聊规则。你不想聊，我们就到这儿。”\n如果 `boundary.contact_paused`：改为玩家独立整理个人边界，Ethan 不在场，所有私人对白自动略过。",
+          "bg_variants": [
+            {
+              "condition": "boundary.contact_paused == true",
+              "bg": "BG48_032",
+              "cast": [
+                "Ava"
+              ],
+              "skip_private_dialogue": true
+            }
+          ]
+        },
+        {
+          "scene_id": "SCN_11_02",
+          "title": "红灯比绿灯重要",
+          "bg": "BG48_030",
+          "content": "⟦MG|MG_11_A⟧\n旁白：你把“拿工作来威胁”“当众羞辱”“没问过就碰你”全写在禁止栏里。",
+          "bg_variants": [
+            {
+              "condition": "boundary.contact_paused == true",
+              "bg": "BG48_032",
+              "cast": [
+                "Ava"
+              ],
+              "skip_private_dialogue": true
+            }
+          ]
+        },
+        {
+          "scene_id": "SCN_11_03",
+          "title": "一句完整的拒绝",
+          "bg": "BG48_031",
+          "content": "Ethan：“你敢拒绝，很好。但你要不要跟我约会，还是由你决定。”\n【玩家输入】“若他提出下周只喝咖啡，你会怎么定义？”\n⟦OPT|CHO_11_DATE|player_intent=只接受普通约会/了解|choice_level=L2|effects=relation.romance_open:true;boundary.play_consent:false;relation.ethan_trust:+1|immediate_feedback=Ethan约定公开地点、无条件取消|next=SCN_11_04⟧\n⟦OPT|CHO_11_TALK|player_intent=愿意仅讨论成人SP偏好和安全词/暂不实践|choice_level=L2|effects=boundary.private_talk_allowed:true;boundary.play_consent:false|immediate_feedback=Ethan补充退出与照护约定|next=SCN_11_04⟧\n⟦OPT|CHO_11_NO|player_intent=拒绝约会或不想谈/其他|choice_level=L2|effects=relation.romance_open:false;boundary.private_talk_allowed:false|immediate_feedback=Ethan接受、工作支持不变|next=SCN_11_04⟧",
+          "bg_variants": [
+            {
+              "condition": "boundary.contact_paused == true",
+              "bg": "BG48_032",
+              "cast": [
+                "Ava"
+              ],
+              "skip_private_dialogue": true
+            }
+          ]
+        },
+        {
+          "scene_id": "SCN_11_04",
+          "title": "如果你后悔",
+          "bg": "BG48_031",
+          "content": "⟦MG|MG_11_B⟧\nEthan：“你随时能反悔，也不用解释。我会立刻停下，先问你还好吗。”\n旁白：你们没有真的开始什么，只是先把“可以”和“不可以”说清楚。",
+          "bg_variants": [
+            {
+              "condition": "boundary.contact_paused == true",
+              "bg": "BG48_032",
+              "cast": [
+                "Ava"
+              ],
+              "skip_private_dialogue": true
+            }
+          ]
+        },
+        {
+          "scene_id": "SCN_11_05",
+          "title": "温柔不是奖赏",
+          "bg": "BG48_031",
+          "content": "⟦SET|ch11_consent_answered⟧\nEthan：*将那张清单合起来，放在你能拿到的位置。* “不管你选择什么，明天我都会遵守职业回避。”\n旁白：一则消息提示出现：匿名泄漏所用的打印任务，在同一天还打印了你那份“认错协议”。",
+          "bg_variants": [
+            {
+              "condition": "boundary.contact_paused == true",
+              "bg": "BG48_032",
+              "cast": [
+                "Ava"
+              ],
+              "skip_private_dialogue": true
+            }
+          ]
+        }
+      ],
+      "minigames": [
+        "MG_11_A",
+        "MG_11_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_11_DATE",
+          "raw_contract": "player_intent=只接受普通约会/了解|choice_level=L2|effects=relation.romance_open:true;boundary.play_consent:false;relation.ethan_trust:+1|immediate_feedback=Ethan约定公开地点、无条件取消|next=SCN_11_04"
+        },
+        {
+          "id": "CHO_11_TALK",
+          "raw_contract": "player_intent=愿意仅讨论成人SP偏好和安全词/暂不实践|choice_level=L2|effects=boundary.private_talk_allowed:true;boundary.play_consent:false|immediate_feedback=Ethan补充退出与照护约定|next=SCN_11_04"
+        },
+        {
+          "id": "CHO_11_NO",
+          "raw_contract": "player_intent=拒绝约会或不想谈/其他|choice_level=L2|effects=relation.romance_open:false;boundary.private_talk_allowed:false|immediate_feedback=Ethan接受、工作支持不变|next=SCN_11_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_12",
+      "title_cn": "他为你交出总裁权限",
+      "goal_cn": "确认Ethan的正式回避已生效，同时查清两份泄露文件的权限链",
+      "goal_en_provisional": "Verify the recusal and trace the access chain",
+      "done": [
+        {
+          "type": "say",
+          "condition": "要求公开正式的权限回避记录并保全系统操作链",
+          "label_cn": "索取回避记录",
+          "nudge_cn": "别只说你会避嫌，我要看正式记录。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch12_recusal_verified",
+          "label_cn": "回避程序生效",
+          "nudge_cn": "这张回执说明决定你命运的人不再是他。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_12_01",
+          "title": "他签了自己的名字",
+          "bg": "BG48_033",
+          "content": "旁白：Ethan 在正式回避表上签了字。你没要他辞职，只要求这件事有记录、能查清。\nVeronica：“这么做，董事会会觉得你心虚。”\nEthan：“那就让他们看完整记录。”"
+        },
+        {
+          "scene_id": "SCN_12_02",
+          "title": "谁还有权限",
+          "bg": "BG48_033",
+          "content": "⟦MG|MG_12_A⟧\n旁白：回避声明记录了生效分钟；有一个系统令牌却比声明晚撤销了七分钟。"
+        },
+        {
+          "scene_id": "SCN_12_03",
+          "title": "路径的区别被看见",
+          "bg": "BG48_034",
+          "content": "如果 `route.audit`：旁白：你凭正式回执能直接申请系统令牌审阅，流程慢却证据等级高。\n如果 `route.field`：旁白：你通过旧纸本找到打印编号，再申请对照；需要多一次独立核验。\n【玩家输入】“你希望 Ethan 公开承认那七分钟漏洞吗？”\n⟦OPT|CHO_12_PUBLIC|player_intent=要求如实公开漏洞与时间|choice_level=L2|effects=plot.recusal_gap_disclosed:true;relation.ethan_trust:+2|immediate_feedback=Ethan将漏洞写入报告|next=SCN_12_04⟧\n⟦OPT|CHO_12_VERIFY|player_intent=先核对再披露|choice_level=L2|effects=plot.recusal_gap_pending:true|immediate_feedback=证据待核但不删除|next=SCN_12_04⟧\n⟦OPT|CHO_12_FALLBACK|player_intent=其他/不确定|choice_level=L0|effects=memory.recusal_question_deferred:true|immediate_feedback=回避仍生效，调查继续|next=SCN_12_04⟧"
+        },
+        {
+          "scene_id": "SCN_12_04",
+          "title": "七分钟里的复制",
+          "bg": "BG48_034",
+          "content": "⟦MG|MG_12_B⟧\n旁白：那七分钟，有一个匿名导出任务使用了旧令牌，却没有经过 Ethan 的个人设备。"
+        },
+        {
+          "scene_id": "SCN_12_05",
+          "title": "他能做的最难的一件事",
+          "bg": "BG48_034",
+          "content": "⟦SET|ch12_recusal_verified⟧ ⟦SET|SEED_12_placed⟧\nEthan：“该我承担的责任，我不会躲。以后不能再让别人遇到和你一样的事。”\n旁白：Blake 却在走廊等你，手里拿着一张印有私人账号的纸。"
+        }
+      ],
+      "minigames": [
+        "MG_12_A",
+        "MG_12_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_12_PUBLIC",
+          "raw_contract": "player_intent=要求如实公开漏洞与时间|choice_level=L2|effects=plot.recusal_gap_disclosed:true;relation.ethan_trust:+2|immediate_feedback=Ethan将漏洞写入报告|next=SCN_12_04"
+        },
+        {
+          "id": "CHO_12_VERIFY",
+          "raw_contract": "player_intent=先核对再披露|choice_level=L2|effects=plot.recusal_gap_pending:true|immediate_feedback=证据待核但不删除|next=SCN_12_04"
+        },
+        {
+          "id": "CHO_12_FALLBACK",
+          "raw_contract": "player_intent=其他/不确定|choice_level=L0|effects=memory.recusal_question_deferred:true|immediate_feedback=回避仍生效，调查继续|next=SCN_12_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_13",
+      "title_cn": "他威胁曝光我的秘密",
+      "goal_cn": "拒绝Blake以隐私换沉默的勒索，并保存他的威胁证据",
+      "goal_en_provisional": "Refuse Blake's blackmail and preserve his threat",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确拒绝以约会或撤诉换取隐私安全，并要求记录威胁",
+          "label_cn": "拒绝隐私交易",
+          "nudge_cn": "不，我不会用约会换你闭嘴。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch13_threat_saved",
+          "label_cn": "威胁证据已存",
+          "nudge_cn": "把他威胁你的话留下来，别让他倒打一耙。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_13_01",
+          "title": "红色倒计时",
+          "bg": "BG48_035",
+          "content": "Blake：*晃着平板，屏幕上有一封待发送邮件。* “今晚八点前答应我，你的秘密就不会传出去。”\nAva（玩家行动提示）：先保全内容，不跟他讨价还价。"
+        },
+        {
+          "scene_id": "SCN_13_02",
+          "title": "假的定时发送",
+          "bg": "BG48_035",
+          "content": "⟦MG|MG_13_A⟧\n旁白：Blake 给你看的只是邮件草稿，根本没设置定时发送。但他刚才说的威胁是真的。"
+        },
+        {
+          "scene_id": "SCN_13_03",
+          "title": "不是爱情，是控制",
+          "bg": "BG48_036",
+          "content": "【玩家输入】Blake：“你至少该给我一个机会吧？”\n⟦OPT|CHO_13_RECORD|player_intent=明确拒绝并提出记录威胁|choice_level=L3|effects=plot.blackmail_record:true;relation.blake_tension:+3|immediate_feedback=Blake的言辞被写进当场纪要|next=SCN_13_04⟧\n⟦OPT|CHO_13_EXIT|player_intent=拒绝继续谈话并离开/要求安全空间|choice_level=L3|effects=plot.blackmail_record:true;boundary.blake_no_contact:true|immediate_feedback=保全现场资料并退出对峙|next=SCN_13_04⟧\n⟦OPT|CHO_13_FALLBACK|player_intent=害怕/其他/不确定|choice_level=L0|effects=memory.blackmail_fear:true;plot.blackmail_record:true|immediate_feedback=保留威胁信息，安全结束当前接触|next=SCN_13_04⟧"
+        },
+        {
+          "scene_id": "SCN_13_04",
+          "title": "把威胁变证据",
+          "bg": "BG48_037",
+          "content": "⟦MG|MG_13_B⟧\nEthan：*站在门外，没有直接走进来。* “要我进去陪你吗？你说了算。”"
+        },
+        {
+          "scene_id": "SCN_13_05",
+          "title": "爱不是欠条",
+          "bg": "BG48_037",
+          "content": "⟦SET|ch13_threat_saved⟧ ⟦SET|SEED_13_placed⟧\n旁白：你保存了 Blake 威胁你的原话。他再说“我只是开玩笑”，也没人会信了。\nEthan：“他说喜欢你，可他根本不想听你说‘不’。”"
+        }
+      ],
+      "minigames": [
+        "MG_13_A",
+        "MG_13_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_13_RECORD",
+          "raw_contract": "player_intent=明确拒绝并提出记录威胁|choice_level=L3|effects=plot.blackmail_record:true;relation.blake_tension:+3|immediate_feedback=Blake的言辞被写进当场纪要|next=SCN_13_04"
+        },
+        {
+          "id": "CHO_13_EXIT",
+          "raw_contract": "player_intent=拒绝继续谈话并离开/要求安全空间|choice_level=L3|effects=plot.blackmail_record:true;boundary.blake_no_contact:true|immediate_feedback=保全现场资料并退出对峙|next=SCN_13_04"
+        },
+        {
+          "id": "CHO_13_FALLBACK",
+          "raw_contract": "player_intent=害怕/其他/不确定|choice_level=L0|effects=memory.blackmail_fear:true;plot.blackmail_record:true|immediate_feedback=保留威胁信息，安全结束当前接触|next=SCN_13_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_14",
+      "title_cn": "这次他不能替我出头",
+      "goal_cn": "自己陈述关键证据，并决定最后走公开程序还是私下核验",
+      "goal_en_provisional": "Take the lead and settle your final evidence strategy",
+      "done": [
+        {
+          "type": "say",
+          "condition": "亲口提出一项关键证据与决定最终程序路线",
+          "label_cn": "自己决定出场",
+          "nudge_cn": "我来讲清楚，证据也由我提交。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch14_final_route_set",
+          "label_cn": "最后路线已锁定",
+          "nudge_cn": "今天定下公开或审慎路线，之后后果由你承担。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_14_01",
+          "title": "他走到旁听席",
+          "bg": "BG48_038",
+          "content": "Ethan：*划掉了自己的发言顺序。* “今天让 Ava 来说。我只负责提供证据。”\nVeronica：“她凭什么来质问我？”\nAva（玩家行动提示）：你有证据，有知情权，更有提出问题的资格。"
+        },
+        {
+          "scene_id": "SCN_14_02",
+          "title": "一张没说谎的日历",
+          "bg": "BG48_038",
+          "content": "⟦MG|MG_14_A⟧\n旁白：你把所有改稿时间排好，终于看出了问题出在哪一步。"
+        },
+        {
+          "scene_id": "SCN_14_03",
+          "title": "公开，还是先拿稳证据",
+          "bg": "BG48_039",
+          "content": "【玩家输入】Ethan：“我们可以申请公开听证，也可以先做封闭核验。你希望怎么做？”\n⟦OPT|CHO_14_PUBLIC|player_intent=选择公开听证、透明披露|choice_level=L4|effects=route.final_public:true;route.final_private:false|risk_notice=隐私暴露可能上升，所有未确认信息须明确标记|immediate_feedback=公开申请提交|route_switch=无，CH14末锁定|next=SCN_14_04⟧\n⟦OPT|CHO_14_PRIVATE|player_intent=选择封闭核验、先保护隐私|choice_level=L4|effects=route.final_public:false;route.final_private:true|risk_notice=信息扩散较少，但结果说服力依赖独立签字|immediate_feedback=封闭核验申请提交|route_switch=无，CH14末锁定|next=SCN_14_04⟧\n⟦OPT|CHO_14_FALLBACK|player_intent=未决定/其他/想兼顾|choice_level=L4|effects=route.final_public:false;route.final_private:true;memory.last_route_default:true|immediate_feedback=先保存证据、默认审慎核验；再次明确询问后才锁定|next=SCN_14_04⟧"
+        },
+        {
+          "scene_id": "SCN_14_04",
+          "title": "她敢看自己的证据",
+          "bg": "BG48_039",
+          "content": "⟦MG|MG_14_B⟧\nVeronica：*第一次低下目光。* “你以为这样就能赢？”\nEthan：“声音大没用。她手里有证据。”"
+        },
+        {
+          "scene_id": "SCN_14_05",
+          "title": "他把镜头交给你",
+          "bg": "BG48_039",
+          "content": "⟦SET|ch14_final_route_set⟧\n旁白：屏幕上只显示你的名字。Ethan 坐在下面，没有抢你的位置。\nEthan：“接下来怎么走，你自己决定。”\n\n## 第三幕｜揭穿、选择与新的规则（CH_15—CH_18）"
+        }
+      ],
+      "minigames": [
+        "MG_14_A",
+        "MG_14_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_14_PUBLIC",
+          "raw_contract": "player_intent=选择公开听证、透明披露|choice_level=L4|effects=route.final_public:true;route.final_private:false|risk_notice=隐私暴露可能上升，所有未确认信息须明确标记|immediate_feedback=公开申请提交|route_switch=无，CH14末锁定|next=SCN_14_04"
+        },
+        {
+          "id": "CHO_14_PRIVATE",
+          "raw_contract": "player_intent=选择封闭核验、先保护隐私|choice_level=L4|effects=route.final_public:false;route.final_private:true|risk_notice=信息扩散较少，但结果说服力依赖独立签字|immediate_feedback=封闭核验申请提交|route_switch=无，CH14末锁定|next=SCN_14_04"
+        },
+        {
+          "id": "CHO_14_FALLBACK",
+          "raw_contract": "player_intent=未决定/其他/想兼顾|choice_level=L4|effects=route.final_public:false;route.final_private:true;memory.last_route_default:true|immediate_feedback=先保存证据、默认审慎核验；再次明确询问后才锁定|next=SCN_14_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_15",
+      "title_cn": "两份真相，谁都别想藏",
+      "goal_cn": "补齐原稿、签名与泄露事件的因果链，区分事实和推断",
+      "goal_en_provisional": "Close the evidence chain without overstating claims",
+      "done": [
+        {
+          "type": "say",
+          "condition": "把原稿时间戳与伪造授权按顺序联系起来并说明尚未确认处",
+          "label_cn": "讲清证据顺序",
+          "nudge_cn": "这是原稿，这是伪签名，其他部分还要查。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch15_chain_complete",
+          "label_cn": "证据链已成形",
+          "nudge_cn": "终于可以从头到尾解释这场局。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_15_01",
+          "title": "第一份草稿在你这里",
+          "bg": "BG48_040",
+          "content": "旁白：桌上摆着你的原稿、改稿记录和导出日志。第一次，所有证据都对上了。\nEthan：“有证据的就说有证据。还在猜的，就别说死。”"
+        },
+        {
+          "scene_id": "SCN_15_02",
+          "title": "谁改了哪一秒",
+          "bg": "BG48_040",
+          "content": "⟦MG|MG_15_A⟧\n旁白：导出文件和复制签名，用的是同一个旧账号权限。但这还不能证明是谁操作的。"
+        },
+        {
+          "scene_id": "SCN_15_03",
+          "title": "主管的理由",
+          "bg": "BG48_041",
+          "content": "Veronica：*笑不出来了。* “我带了十年团队。要是连这个客户都丢了，还有谁记得我？”\nAva（玩家行动提示）：理解动机，不等于认同栽赃。\n【玩家输入】“你希望她先回答哪件事？”\n⟦OPT|CHO_15_FACTS|player_intent=要求解释改稿记录和权限来源|choice_level=L2|effects=plot.confronted_veronica:true|immediate_feedback=Veronica承认提交过修改版本，但否认所有泄漏|next=SCN_15_04⟧\n⟦OPT|CHO_15_HARM|player_intent=要求她承认职业伤害并公开更正|choice_level=L2|effects=plot.demand_correction:true|immediate_feedback=Veronica同意讨论更正而非私下道歉|next=SCN_15_04⟧\n⟦OPT|CHO_15_FALLBACK|player_intent=其他/不想逼问|choice_level=L0|effects=memory.no_direct_confrontation:true|immediate_feedback=由证据表陈述事实，继续下一环|next=SCN_15_04⟧"
+        },
+        {
+          "scene_id": "SCN_15_04",
+          "title": "两个人，两种证据",
+          "bg": "BG48_041",
+          "content": "⟦MG|MG_15_B⟧\n旁白：你能证明 Veronica 改过稿，也能证明 Blake 威胁过你。但他们是不是每一步都串通好了，还不能乱说。"
+        },
+        {
+          "scene_id": "SCN_15_05",
+          "title": "你终于不用再猜",
+          "bg": "BG48_041",
+          "content": "⟦SET|ch15_chain_complete⟧ ⟦SET|SEED_01_consumed⟧ ⟦SET|SEED_02_consumed⟧ ⟦SET|SEED_03_consumed⟧ ⟦SET|SEED_05_consumed⟧ ⟦SET|SEED_06_consumed⟧ ⟦SET|SEED_08_consumed⟧ ⟦SET|SEED_10_consumed⟧ ⟦SET|SEED_12_consumed⟧ ⟦SET|SEED_13_consumed⟧\nEthan：“你保护了自己，也保护了真正的调查。”\n旁白：最后的核查安排下来了。你可以当面公开说，也可以先做不公开的核对。"
+        }
+      ],
+      "minigames": [
+        "MG_15_A",
+        "MG_15_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_15_FACTS",
+          "raw_contract": "player_intent=要求解释改稿记录和权限来源|choice_level=L2|effects=plot.confronted_veronica:true|immediate_feedback=Veronica承认提交过修改版本，但否认所有泄漏|next=SCN_15_04"
+        },
+        {
+          "id": "CHO_15_HARM",
+          "raw_contract": "player_intent=要求她承认职业伤害并公开更正|choice_level=L2|effects=plot.demand_correction:true|immediate_feedback=Veronica同意讨论更正而非私下道歉|next=SCN_15_04"
+        },
+        {
+          "id": "CHO_15_FALLBACK",
+          "raw_contract": "player_intent=其他/不想逼问|choice_level=L0|effects=memory.no_direct_confrontation:true|immediate_feedback=由证据表陈述事实，继续下一环|next=SCN_15_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_16",
+      "title_cn": "今天轮到他们低头",
+      "goal_cn": "对两种高潮路线分别准备能够经受质询的结论",
+      "goal_en_provisional": "Prepare a defensible resolution on your chosen route",
+      "done": [
+        {
+          "type": "say",
+          "condition": "明确提出撤销指控、恢复署名和保护隐私三项诉求",
+          "label_cn": "提出三项诉求",
+          "nudge_cn": "撤销污名，还我署名，别再泄露私事。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch16_resolution_drafted",
+          "label_cn": "纠正方案成稿",
+          "nudge_cn": "别急着接受道歉，先看结果能不能落地。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_16_01",
+          "title": "两扇不同的门",
+          "bg": "BG48_042",
+          "content": "若 `route.final_public`：旁白：你决定公开说明。玻璃会议室里，四个人面对面坐着。跟私人社群有关的姓名都被遮住了。\n若 `route.final_private`：旁白：你决定先私下核对。房间里只有你们四个，所有结论都会留下可核对的签字记录。\nBlake：“就算你赢了，外面的人也会猜。”\nAva（玩家行动提示）：你可以承认无法控制所有人的猜测，但可以要求正式纠正。"
+        },
+        {
+          "scene_id": "SCN_16_02",
+          "title": "改哪一句声明",
+          "bg": "BG48_042",
+          "content": "⟦MG|MG_16_A⟧\nEthan：“别写什么‘双方误会’。谁做错了什么，就写清楚。”"
+        },
+        {
+          "scene_id": "SCN_16_03",
+          "title": "她要求的是恢复，不是施舍",
+          "bg": "BG48_043",
+          "content": "【玩家输入】Veronica：“你还想要什么？我的道歉吗？”\n⟦OPT|CHO_16_FIX|player_intent=要求撤销错误指控/署名更正/保密补救|choice_level=L5|effects=plot.restorative_package:true;relation.ethan_respect:+2|immediate_feedback=三项纠正进入正式草案|next=SCN_16_04⟧\n⟦OPT|CHO_16_ACCOUNT|player_intent=要求公开说明行为责任并保留依法维权|choice_level=L5|effects=plot.accountability_package:true|immediate_feedback=责任披露被纳入独立说明|next=SCN_16_04⟧\n⟦OPT|CHO_16_FALLBACK|player_intent=其他/不确定|choice_level=L1|effects=plot.restorative_package:true;memory.needs_revision:true|immediate_feedback=仅先记录最低三项权利，允许会后补充|next=SCN_16_04⟧"
+        },
+        {
+          "scene_id": "SCN_16_04",
+          "title": "反击不是复仇",
+          "bg": "BG48_043",
+          "content": "⟦MG|MG_16_B⟧\n旁白：这份声明只需要说清三件事：查到了什么、改正了什么、还有什么没查清。你的私事不用写进去。"
+        },
+        {
+          "scene_id": "SCN_16_05",
+          "title": "他们无法再让你消失",
+          "bg": "BG48_043",
+          "content": "⟦SET|ch16_resolution_drafted⟧\nEthan：*看着你的草稿，终于笑了。* “这是你自己争回来的。”\n旁白：Veronica 不敢看你。Blake 把手机扣在桌上，再也笑不出来。"
+        }
+      ],
+      "minigames": [
+        "MG_16_A",
+        "MG_16_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_16_FIX",
+          "raw_contract": "player_intent=要求撤销错误指控/署名更正/保密补救|choice_level=L5|effects=plot.restorative_package:true;relation.ethan_respect:+2|immediate_feedback=三项纠正进入正式草案|next=SCN_16_04"
+        },
+        {
+          "id": "CHO_16_ACCOUNT",
+          "raw_contract": "player_intent=要求公开说明行为责任并保留依法维权|choice_level=L5|effects=plot.accountability_package:true|immediate_feedback=责任披露被纳入独立说明|next=SCN_16_04"
+        },
+        {
+          "id": "CHO_16_FALLBACK",
+          "raw_contract": "player_intent=其他/不确定|choice_level=L1|effects=plot.restorative_package:true;memory.needs_revision:true|immediate_feedback=仅先记录最低三项权利，允许会后补充|next=SCN_16_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_17",
+      "title_cn": "把真相放到他们面前",
+      "goal_cn": "完成终审陈述并让职业纠正正式生效",
+      "goal_en_provisional": "Complete the hearing and make the correction effective",
+      "done": [
+        {
+          "type": "say",
+          "condition": "用自己的话要求独立宣布提案权属与指控纠正结果",
+          "label_cn": "宣布事实结论",
+          "nudge_cn": "请把核验后的结果写进正式记录。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch17_case_closed",
+          "label_cn": "职场指控结案",
+          "nudge_cn": "清白不能只停在一句口头恭喜。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_17_01",
+          "title": "没人再替你拿话筒",
+          "bg": "BG48_044",
+          "content": "旁白：你走到屏幕前，手里有原稿、有签名记录，也有自己的话。\nEthan：*坐在非表决席，向你点头。* “我会听着。”"
+        },
+        {
+          "scene_id": "SCN_17_02",
+          "title": "证据要按次序说",
+          "bg": "BG48_044",
+          "content": "⟦MG|MG_17_A⟧\n旁白：你先拿出原稿，再讲假签名，最后说到泄密和威胁。每一件事都有证据。"
+        },
+        {
+          "scene_id": "SCN_17_03",
+          "title": "没有英雄替你领奖",
+          "bg": "BG48_045",
+          "content": "Veronica：*盯着桌上的文件。* “是我把你的名字换掉的。那份修改稿，也是我交的。”\nBlake：“我不该拿她的秘密威胁她。”\n【玩家输入】“这份书面结果还少了什么？”\n⟦OPT|CHO_17_CORRECT|player_intent=要求删去对Ava不实指控并恢复署名|choice_level=L5|effects=plot.professional_reinstatement:true|immediate_feedback=更正函正式生效|next=SCN_17_04⟧\n⟦OPT|CHO_17_SAFETY|player_intent=要求封存泄露资料并限制二次传播|choice_level=L5|effects=plot.privacy_remedy:true|immediate_feedback=附加保密补救条款|next=SCN_17_04⟧\n⟦OPT|CHO_17_FALLBACK|player_intent=其他/难以当场回应|choice_level=L0|effects=plot.professional_reinstatement:true;plot.privacy_remedy:true|immediate_feedback=按已确认基础方案同时更正与保护隐私|next=SCN_17_04⟧"
+        },
+        {
+          "scene_id": "SCN_17_04",
+          "title": "最后一次真假核验",
+          "bg": "BG48_046",
+          "content": "⟦MG|MG_17_B⟧\n旁白：你一条条核对文件。作者已经改回你的名字，错误指控撤销了，私人生活也不会被拿来考核。"
+        },
+        {
+          "scene_id": "SCN_17_05",
+          "title": "她的名字回来了",
+          "bg": "BG48_046",
+          "content": "⟦SET|ch17_case_closed⟧\n旁白：系统里终于删掉了你“涉嫌违规”的标签。你的署名回来了，处分也撤销了。至于他们各自要承担什么责任，公司还会继续调查。\nEthan：“不用谢我。今天是你自己赢回来的。”"
+        }
+      ],
+      "minigames": [
+        "MG_17_A",
+        "MG_17_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_17_CORRECT",
+          "raw_contract": "player_intent=要求删去对Ava不实指控并恢复署名|choice_level=L5|effects=plot.professional_reinstatement:true|immediate_feedback=更正函正式生效|next=SCN_17_04"
+        },
+        {
+          "id": "CHO_17_SAFETY",
+          "raw_contract": "player_intent=要求封存泄露资料并限制二次传播|choice_level=L5|effects=plot.privacy_remedy:true|immediate_feedback=附加保密补救条款|next=SCN_17_04"
+        },
+        {
+          "id": "CHO_17_FALLBACK",
+          "raw_contract": "player_intent=其他/难以当场回应|choice_level=L0|effects=plot.professional_reinstatement:true;plot.privacy_remedy:true|immediate_feedback=按已确认基础方案同时更正与保护隐私|next=SCN_17_04"
+        }
+      ]
+    },
+    {
+      "chapter_id": "CH_18",
+      "title_cn": "以后，规则由我来定",
+      "goal_cn": "确认未来事业和关系由自己选择，并与Ethan或独立人生达成清楚承诺",
+      "goal_en_provisional": "Choose your next chapter on your own terms",
+      "done": [
+        {
+          "type": "say",
+          "condition": "清楚表明想与Ethan如何相处，或选择专注自己的事业",
+          "label_cn": "说出下一步",
+          "nudge_cn": "从今往后，我会自己决定和谁同行。"
+        },
+        {
+          "type": "flag",
+          "condition": "ch18_future_chosen",
+          "label_cn": "未来选择落定",
+          "nudge_cn": "只要这是你的决定，就是属于你的结局。"
+        }
+      ],
+      "scenes": [
+        {
+          "scene_id": "SCN_18_01",
+          "title": "清晨重新打开电脑",
+          "bg": "BG48_047",
+          "content": "旁白：新的一天，你的账户恢复了。项目档案里，作者一栏是你的名字。\nEthan：“不管你留在这里还是去别处，推荐信都只写你的成绩。”"
+        },
+        {
+          "scene_id": "SCN_18_02",
+          "title": "给未来的自己排顺序",
+          "bg": "BG48_047",
+          "content": "⟦MG|MG_18_A⟧\n旁白：你给自己列了三件事：收好更正函，备份作品，再慢慢想清楚要不要谈恋爱。没人能替你排顺序。"
+        },
+        {
+          "scene_id": "SCN_18_03",
+          "title": "他不再替你写答案",
+          "bg": "BG48_048",
+          "content": "Ethan：*在离你一步远的地方停下。* “我还想见你。但不管你的答案是什么，我都接受。”\n【玩家输入】“现在，你想怎样定义未来？”\n⟦OPT|CHO_18_ROMANCE|player_intent=愿意以工作外、平等的成年人身份慢慢相处|choice_level=L5|visible_if=无强制条件|effects=ending:END_TENDER;relation.romance_open:true;commitment.slow_date:true|immediate_feedback=Ethan只约一杯咖啡并确认取消自由|next=SCN_18_04⟧\n⟦OPT|CHO_18_FRIEND|player_intent=愿意保持尊重和友情、不启动恋情|choice_level=L5|effects=ending:END_ALLIES;relation.romance_open:false|immediate_feedback=Ethan祝福且不继续追求|next=SCN_18_04⟧\n⟦OPT|CHO_18_SOLO|player_intent=选择离开公司/独立事业/暂不联系|choice_level=L5|effects=ending:END_SOVEREIGN;relation.romance_open:false|immediate_feedback=署名与推荐信不受影响|next=SCN_18_04⟧\n⟦OPT|CHO_18_FALLBACK|player_intent=其他/不确定|choice_level=L5|effects=ending:END_OPEN;relation.romance_open:false|immediate_feedback=未来保持开放，Ethan不追问|next=SCN_18_04⟧"
+        },
+        {
+          "scene_id": "SCN_18_04",
+          "title": "最后一道规则",
+          "bg": "BG48_048",
+          "content": "⟦MG|MG_18_B⟧\n如果 `ending:END_TENDER`：旁白：你们约好下班后喝杯咖啡。至于网上聊过的 SP，还得两个人重新谈清楚，谁也不能默认对方答应。\n如果 `ending:END_ALLIES`：旁白：你们很欣赏彼此，但不打算谈恋爱。这样也很好。\n如果 `ending:END_SOVEREIGN`：旁白：你带着自己的作品离开公司。下一站去哪儿，由你自己说了算。\n如果 `ending:END_OPEN`：旁白：你还没想好要不要跟他在一起。没关系，今天不用回答。"
+        },
+        {
+          "scene_id": "SCN_18_05",
+          "title": "她亲手关上文件",
+          "bg": "BG48_048",
+          "content": "⟦SET|ch18_future_chosen⟧\nEthan（仅非独立结局在场）：*将桌上的空白笔记本推给你，笑意温柔。* “新的一页，你来写。”\n旁白：你翻开新本子，在第一页写下自己的名字。窗外的纽约依旧很吵，可你心里终于安静了。\n\n## 章内自由输入的统一兜底语料（非强制台词）\n\n1. 玩家提出与当前危机相关的新办法：由当前知情角色先回应可行性，并给出一个具体核验入口；不得凭空发放隐藏证据。\n2. 玩家拒绝继续或要求停下：立即停止私人互动；主线可沿独立调查继续，不能扣“爱意”。\n3. 玩家表达身体不适或害怕：先确认安全，暂停压力场景，再提供书面核验或稍后处理；不可强行让男主拥抱。\n4. 玩家问“SP是什么”：角色可简洁解释成年人的自愿权力角色互动；“打屁股”是该社群常见词义，但不描述露骨过程，也不把它变成工作惩罚。\n5. 玩家想追查超出该章权限的信息：角色承认“我还不知道”，记录问题到 `unresolved_conflict` 并给可达的下一场；不得用全知视角泄密。\n6. 玩家使用 AI 帮我想：按当前场景生成不超过3句第一人称候选；不能弹出可见选项大按钮；用户点词句后发出的是玩家自己的话。"
+        }
+      ],
+      "minigames": [
+        "MG_18_A",
+        "MG_18_B"
+      ],
+      "hidden_choices": [
+        {
+          "id": "CHO_18_ROMANCE",
+          "raw_contract": "player_intent=愿意以工作外、平等的成年人身份慢慢相处|choice_level=L5|visible_if=无强制条件|effects=ending:END_TENDER;relation.romance_open:true;commitment.slow_date:true|immediate_feedback=Ethan只约一杯咖啡并确认取消自由|next=SCN_18_04"
+        },
+        {
+          "id": "CHO_18_FRIEND",
+          "raw_contract": "player_intent=愿意保持尊重和友情、不启动恋情|choice_level=L5|effects=ending:END_ALLIES;relation.romance_open:false|immediate_feedback=Ethan祝福且不继续追求|next=SCN_18_04"
+        },
+        {
+          "id": "CHO_18_SOLO",
+          "raw_contract": "player_intent=选择离开公司/独立事业/暂不联系|choice_level=L5|effects=ending:END_SOVEREIGN;relation.romance_open:false|immediate_feedback=署名与推荐信不受影响|next=SCN_18_04"
+        },
+        {
+          "id": "CHO_18_FALLBACK",
+          "raw_contract": "player_intent=其他/不确定|choice_level=L5|effects=ending:END_OPEN;relation.romance_open:false|immediate_feedback=未来保持开放，Ethan不追问|next=SCN_18_04"
+        }
+      ]
+    }
+  ],
+  "background_asset_count": 48,
+  "background_manifest": "background_manifest_48.json",
+  "background_assets": [
+    {
+      "id": "BG48_001",
+      "chapter": "CH_01",
+      "title": "指控与原稿",
+      "cast": "AEVB",
+      "description": "Night glass conference room, Ava stands hurt but defiant holding notebook; Veronica beside projector accusing her, Blake seated patronizing half-smile, Ethan at glass door scrutinizing accusation. Unopened champagne and proposal pages. No verdict yet.",
+      "scenes": [
+        "SCN_01_01",
+        "SCN_01_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_001.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_002",
+      "chapter": "CH_01",
+      "title": "谁也不能关掉证据",
+      "cast": "AEV",
+      "description": "Same night meeting room, Veronica reaches toward laptop lid, Ethan calmly lays an empty paper folder between her hand and laptop without touching her. Ava faces Veronica with steady challenging gaze. Screen abstract thumbnails.",
+      "scenes": [
+        "SCN_01_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_002.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_003",
+      "chapter": "CH_01",
+      "title": "把原稿留在桌上",
+      "cast": "AEBV",
+      "description": "Night meeting room, three loose printed proposal pages and an OPEN empty evidence envelope on table. Ava studies papers, Ethan holds out her employee badge, Veronica tense and Blake by open door. Envelope remains open, no completed verdict shown.",
+      "scenes": [
+        "SCN_01_04",
+        "SCN_01_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_003.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_004",
+      "chapter": "CH_02",
+      "title": "被拦下的停职",
+      "cast": "AEV",
+      "description": "Morning meeting room, Veronica slides a red-edged unsigned personnel document forward, Ethan calmly closes a pen cap, Ava stands upright, watching suspiciously. Laptop beside them shows abstract audit log grid.",
+      "scenes": [
+        "SCN_02_01",
+        "SCN_02_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_004.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_005",
+      "chapter": "CH_02",
+      "title": "总裁主动退开",
+      "cast": "AE",
+      "description": "Daylit office, Ethan slides his chair back from a personnel review document while Ava sits in the central decision seat holding audit papers, thoughtful determination. Wide respectful distance; restrained serious expressions.",
+      "scenes": [
+        "SCN_02_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_005.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_006",
+      "chapter": "CH_02",
+      "title": "账号换约会的交易",
+      "cast": "AEB",
+      "description": "Office doorway, Blake leans on doorframe with ingratiating smile and open palm, Ava keeps distance with firm wary eyes and closed laptop in hand, Ethan further back by workstation. Screens dim, no physical contact.",
+      "scenes": [
+        "SCN_02_04",
+        "SCN_02_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_006.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_007",
+      "chapter": "CH_03",
+      "title": "一百万的陷阱",
+      "cast": "AEBV",
+      "description": "Meeting room, Blake offers thick unsigned settlement folder with gold pen and smug smile, Veronica watches with tight confident lips, Ava reads fine print skeptically, Ethan waits quietly to side. No readable monetary text.",
+      "scenes": [
+        "SCN_03_01",
+        "SCN_03_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_007.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_008",
+      "chapter": "CH_03",
+      "title": "她不肯低头",
+      "cast": "AB",
+      "description": "At office conference table, Blake leans forward pressing for answer, Ava holds her own copy close, chin raised, steady refusal, open space between them. Gold pen lies unused.",
+      "scenes": [
+        "SCN_03_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_008.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_009",
+      "chapter": "CH_03",
+      "title": "签名页的破绽",
+      "cast": "AEV",
+      "description": "Office desk, two almost identical unsigned agreement copies side by side. Ava traces a difference with finger, Veronica grips watch strap nervously, Ethan studies discrepancy. Neither sheet torn, no final signature.",
+      "scenes": [
+        "SCN_03_04",
+        "SCN_03_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_009.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_010",
+      "chapter": "CH_04",
+      "title": "雨夜的两杯茶",
+      "cast": "AE",
+      "description": "10pm rainy Manhattan office, two steaming tea cups across desk, Ethan gently slides one cup toward Ava leaving half desk distance, she studies him cautiously, soft intimate but professional lighting.",
+      "scenes": [
+        "SCN_04_01",
+        "SCN_04_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_010.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_011",
+      "chapter": "CH_04",
+      "title": "那把紫雨伞",
+      "cast": "AE",
+      "description": "Rainy night desk, open notebook with small purple umbrella sticker, Ethan notices it with startled brow, Ava examines his face with sudden suspicious recognition. Two tea cups and face-down phone. No touch.",
+      "scenes": [
+        "SCN_04_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_011.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_012",
+      "chapter": "CH_04",
+      "title": "由她写下边界",
+      "cast": "AE",
+      "description": "Rainy night office, Ava writes in her own notebook beside blank boundary worksheet; Ethan sits a respectful distance hands away from paper, small accepting smile. Phone with tiny abstract notification glow beside him, no readable messages.",
+      "scenes": [
+        "SCN_04_04",
+        "SCN_04_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_012.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_013",
+      "chapter": "CH_05",
+      "title": "被改掉的名牌",
+      "cast": "AEVB",
+      "description": "Luxury hotel client dinner corner, only four known adults visible. Ava in cream blouse charcoal blazer holds generic blank place card, hurt but composed. Veronica proudly beside her own card, Blake holding wine with patronizing smile, Ethan frowns at misattributed credit. Warm chandeliers.",
+      "scenes": [
+        "SCN_05_01",
+        "SCN_05_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_013.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_014",
+      "chapter": "CH_05",
+      "title": "她拿回发言权",
+      "cast": "AEBV",
+      "description": "Hotel dinner presentation alcove, Ava stands with microphone held at chest height and evidence folder ready, determined eyes; Blake tense jaw, Veronica brittle smile, Ethan to side listening. No crowd or additional faces. Do not imply chosen public route is mandatory; microphone rests on stand within reach rather than in her hand.",
+      "scenes": [
+        "SCN_05_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_014.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_015",
+      "chapter": "CH_05",
+      "title": "迟来的署名更正",
+      "cast": "AEB",
+      "description": "Hotel banquet corner with reflective wall, Ava reviews cover sheet calmly, Ethan stands between her and distant flash glare without touching, Blake turns his wineglass with frustrated smile. Original author dispute still pending, no celebration.",
+      "scenes": [
+        "SCN_05_04",
+        "SCN_05_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_015.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_016",
+      "chapter": "CH_06",
+      "title": "被恶意截图围住",
+      "cast": "AEVB",
+      "description": "Morning office meeting, four smartphones glowing on table, Ava distressed but upright, Veronica judgmental glance, Blake feigned concern, Ethan firmly places his phone face down. Projection abstract chat bubbles no words.",
+      "scenes": [
+        "SCN_06_01",
+        "SCN_06_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_016.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_017",
+      "chapter": "CH_06",
+      "title": "私生活不是证据",
+      "cast": "AE",
+      "description": "Meeting table, Ava keeps personal phone screen toward herself with assertive chin, Ethan hands visibly away from phone, openly listening. A separate printed abstract screenshot lies on table for verification, not all chats exposed.",
+      "scenes": [
+        "SCN_06_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_017.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_018",
+      "chapter": "CH_06",
+      "title": "看见拼接的白线",
+      "cast": "AEB",
+      "description": "Office projection workstation, Ava examines printed screenshot with noticeable white seam between abstract chat panels, expression focused confidence; Blake anxious sideways glance, Ethan attentive beside her. Computer shows anonymous abstract routing dots, no names.",
+      "scenes": [
+        "SCN_06_04",
+        "SCN_06_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_018.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_019",
+      "chapter": "CH_07",
+      "title": "收起万能门卡",
+      "cast": "AEV",
+      "description": "Executive office daylight, Ethan puts premium access card into partly open drawer, Ava watches thoughtfully holding notes; Veronica across desk impatient. Card is not handed to Ava, procedural fairness.",
+      "scenes": [
+        "SCN_07_01",
+        "SCN_07_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_019.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_020",
+      "chapter": "CH_07",
+      "title": "她画自己的路径",
+      "cast": "AE",
+      "description": "Office whiteboard, Ava with marker drawing four simple blank boxes and connecting arrows, concentrated empowered expression, Ethan stands aside returning another marker to tray. Abstract routing map, no readable text or selected route implied.",
+      "scenes": [
+        "SCN_07_03",
+        "SCN_07_04",
+        "SCN_07_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_020.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_021",
+      "chapter": "CH_08",
+      "title": "复制出来的授权",
+      "cast": "AE",
+      "description": "Neutral records review room with desk lamp and shelving, Ava and Ethan compare two nearly identical approval papers, each marked with abstract signature strokes and faint rectangular paste edge. Ava skeptical, Ethan concerned, no extra people.",
+      "scenes": [
+        "SCN_08_01",
+        "SCN_08_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_021.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_022",
+      "chapter": "CH_08",
+      "title": "漏洞也有他的责任",
+      "cast": "AE",
+      "description": "Neutral document review room, receipt and old printed permissions page both closed on table, Ava questions Ethan directly, he listens with lowered defensive posture and accountable serious expression. No route-specific winner, neither receipt nor archive is exclusive focus.",
+      "scenes": [
+        "SCN_08_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_022.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_023",
+      "chapter": "CH_08",
+      "title": "一句真正的道歉",
+      "cast": "AEV",
+      "description": "Office records desk, disputed signature photocopy with faint paste rectangle between them, Ava upright holding her copy, Ethan sincerely apologetic with relaxed open hands, Veronica defensive at far edge. No forgiving embrace or verdict.",
+      "scenes": [
+        "SCN_08_04",
+        "SCN_08_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_023.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_024",
+      "chapter": "CH_09",
+      "title": "紫伞书签的主人",
+      "cast": "AE",
+      "description": "Quiet rainy meeting room, Ethan places small purple umbrella-shaped bookmark on desk, Ava startled with breath caught, both face visible and restrained attraction. Two seated adults, no touch, no phone spying.",
+      "scenes": [
+        "SCN_09_01",
+        "SCN_09_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_024.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_025",
+      "chapter": "CH_09",
+      "title": "现实关系重新选择",
+      "cast": "AE",
+      "description": "Same quiet meeting room, Ava thoughtfully meets Ethan eyes with hand resting near umbrella bookmark, Ethan sits back with patient respectful uncertainty. No touching, no romance acceptance or rejection predetermined.",
+      "scenes": [
+        "SCN_09_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_025.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_026",
+      "chapter": "CH_09",
+      "title": "门外的陌生打印纸",
+      "cast": "AEV",
+      "description": "Glass meeting room, Ava reviews her own phone without exposing readable private chat, Ethan waits quietly a full step away; through frosted doorway Veronica holds a folded printed sheet, suspicious poised expression. No exposed explicit material.",
+      "scenes": [
+        "SCN_09_04",
+        "SCN_09_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_026.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_027",
+      "chapter": "CH_10",
+      "title": "隐私被当成武器",
+      "cast": "AEVB",
+      "description": "Conference room, Veronica holds cropped printed abstract chat and points toward projection of meaningless gray chat rectangles, Ava tense but chin level, Ethan sternly objects, Blake watches uneasily. No readable private text, no intimate images.",
+      "scenes": [
+        "SCN_10_01",
+        "SCN_10_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_027.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_028",
+      "chapter": "CH_10",
+      "title": "她拒绝被定义",
+      "cast": "AV",
+      "description": "Meeting room, Ava faces Veronica with firm direct gaze and raised open hand requesting stop, projection is dim neutral gray without private content, paper copy remains face down for evidence. Veronica surprised and unsettled.",
+      "scenes": [
+        "SCN_10_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_028.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_029",
+      "chapter": "CH_10",
+      "title": "水印指向打印机",
+      "cast": "AEB",
+      "description": "Office printer alcove, Ava studies tiny abstract watermark squares on sealed photocopy, Blake forced smile and tense hands near own phone, Ethan listens seriously. No leaked private content readable, no final culprit inference.",
+      "scenes": [
+        "SCN_10_04",
+        "SCN_10_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_029.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_030",
+      "chapter": "CH_11",
+      "title": "没有签名栏的清单",
+      "cast": "AE",
+      "description": "After-hours office lounge one warm lamp, Ava and Ethan seated across low table with blank three-column boundary worksheet and tea, Ethan hands open calm, Ava alert and thoughtful. Two adults fully clothed, no touch or intimate action.",
+      "scenes": [
+        "SCN_11_01",
+        "SCN_11_02"
+      ],
+      "condition": "!boundary.contact_paused",
+      "file": "backgrounds/BG48_030.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_031",
+      "chapter": "CH_11",
+      "title": "拒绝也被认真听见",
+      "cast": "AE",
+      "description": "Same after-hours lounge, Ava speaks with calm assertive gaze holding her own worksheet, Ethan leans slightly back listening respectfully, checklist placed within her reach. No romantic acceptance predetermined, no smile of conquest.",
+      "scenes": [
+        "SCN_11_03",
+        "SCN_11_04",
+        "SCN_11_05"
+      ],
+      "condition": "!boundary.contact_paused",
+      "file": "backgrounds/BG48_031.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_032",
+      "chapter": "CH_11",
+      "title": "独自写下自己的边界",
+      "cast": "A",
+      "description": "After-hours lounge one warm lamp, Ava ALONE writing personal boundaries in notebook, calm autonomous thoughtful expression, empty adjacent seat, own phone glowing with tiny abstract notification. No Ethan reflection or portrait, no other people.",
+      "scenes": [
+        "SCN_11_01",
+        "SCN_11_02",
+        "SCN_11_03",
+        "SCN_11_04",
+        "SCN_11_05"
+      ],
+      "condition": "boundary.contact_paused",
+      "file": "backgrounds/BG48_032.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_033",
+      "chapter": "CH_12",
+      "title": "他签下回避记录",
+      "cast": "AEV",
+      "description": "Daylit CEO office, Ethan signs his own recusal form at desk, Ava observes critically with audit checklist, Veronica watches with tense disapproval. Not resignation, no emotional sacrifice romance.",
+      "scenes": [
+        "SCN_12_01",
+        "SCN_12_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_033.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_034",
+      "chapter": "CH_12",
+      "title": "七分钟的权限漏洞",
+      "cast": "AE",
+      "description": "Office audit workstation, Ava and Ethan study abstract timeline with two separated endpoints on monitor, printed receipt and old permissions note on desk. Ava concentrated, Ethan sober accountable, no indication his device exported data, no culprit named.",
+      "scenes": [
+        "SCN_12_03",
+        "SCN_12_04",
+        "SCN_12_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_034.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_035",
+      "chapter": "CH_13",
+      "title": "拿秘密换一次约会",
+      "cast": "AB",
+      "description": "Office corridor alcove at dusk, Blake holds tablet showing abstract unsent email draft and ominous red clock symbol, manipulative tight smile, Ava stands outside arm reach with guarded determined eyes. No restraint, clear exit visible.",
+      "scenes": [
+        "SCN_13_01",
+        "SCN_13_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_035.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_036",
+      "chapter": "CH_13",
+      "title": "她把威胁留下来",
+      "cast": "ABE",
+      "description": "Same corridor meeting alcove, Ava holds her own notebook documenting threat, firmly looks at Blake, he has lost confident smile; Ethan visible OUTSIDE open doorway waiting for invitation, no entering or rescue grab. Tablet stays in Blake hand.",
+      "scenes": [
+        "SCN_13_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_036.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_037",
+      "chapter": "CH_13",
+      "title": "爱不是欠条",
+      "cast": "AE",
+      "description": "Office corridor beside open review room, Ava securely stores her own phone and threat notes in portfolio, relief mixed with firm resolve. Ethan stands a respectful step away, serious empathetic gaze, clear exit visible. Blake absent, no romance embrace, no readable threat.",
+      "scenes": [
+        "SCN_13_04",
+        "SCN_13_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_037.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_038",
+      "chapter": "CH_14",
+      "title": "总裁坐到旁听席",
+      "cast": "AEV",
+      "description": "Formal glass review room daylight, Ava central at screen with evidence folder, Ethan seated well aside as observer, Veronica seated opposite with skeptical raised chin. Ava prepares chronology sheet, no extra people.",
+      "scenes": [
+        "SCN_14_01",
+        "SCN_14_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_038.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_039",
+      "chapter": "CH_14",
+      "title": "最后路线由她决定",
+      "cast": "AEV",
+      "description": "Review room, Ava stands over two closed procedural folders neutral undecided covers, Ethan listens from side seat, Veronica avoids direct gaze. Screen abstract chronology of four blank nodes. No public audience or route outcome implied.",
+      "scenes": [
+        "SCN_14_03",
+        "SCN_14_04",
+        "SCN_14_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_039.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_040",
+      "chapter": "CH_15",
+      "title": "所有证据终于对上",
+      "cast": "AE",
+      "description": "Office review table under neutral daylight, Ava sorts original proposal, revision logs and authorization copies into separate neat groups, focused confident expression, Ethan serious listening, not leading. No readable signatures, no premature judgment.",
+      "scenes": [
+        "SCN_15_01",
+        "SCN_15_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_040.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_041",
+      "chapter": "CH_15",
+      "title": "主管说出她的理由",
+      "cast": "AVEB",
+      "description": "Review table, Veronica speaks with brittle shaken pride gripping watch strap, Ava listens steadily without forgiving smile, Ethan and Blake seated farther apart observing. Separate proposal and threat evidence stacks, no implied full conspiracy confession.",
+      "scenes": [
+        "SCN_15_03",
+        "SCN_15_04",
+        "SCN_15_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_041.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_042",
+      "chapter": "CH_16",
+      "title": "她提出三项纠正",
+      "cast": "AEVB",
+      "description": "Glass review room only four known adults, Ava stands with correction draft and original proposal, Veronica across table defensive, Blake tense jaw, Ethan seated aside attentive. Neutral private-safe staging works for both public review and closed verification; no crowd, no press.",
+      "scenes": [
+        "SCN_16_01",
+        "SCN_16_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_042.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_043",
+      "chapter": "CH_16",
+      "title": "更正不是施舍",
+      "cast": "AEVB",
+      "description": "Same review room, Ava carefully edits draft with pen, determined calm expression; Veronica looks down uneasily, Blake phone face down lost smile, Ethan offers small proud supportive smile from side. No signed final decision yet.",
+      "scenes": [
+        "SCN_16_03",
+        "SCN_16_04",
+        "SCN_16_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_043.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_044",
+      "chapter": "CH_17",
+      "title": "这次由她陈述",
+      "cast": "AEVB",
+      "description": "Final review room, Ava stands at screen holding original proposal and orderly evidence tabs, confident composed gaze, Ethan seated nonvoting side with supportive nod, Veronica and Blake seated opposite tense. Only four adults visible, no readable screen.",
+      "scenes": [
+        "SCN_17_01",
+        "SCN_17_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_044.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_045",
+      "chapter": "CH_17",
+      "title": "他们终于无法否认",
+      "cast": "AEVB",
+      "description": "Final review table, Ava holds up creative proposal folder upright with calm victorious dignity, Veronica lowered eyes ashamed, Blake smile gone staring at phone face down, Ethan seated side proud warm gaze. She leads, no physical contact.",
+      "scenes": [
+        "SCN_17_03"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_045.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_046",
+      "chapter": "CH_17",
+      "title": "名字回到作品上",
+      "cast": "AE",
+      "description": "Office workstation morning, Ava seated at restored laptop holding correction letter beside backed-up portfolio, expression relieved dignified, Ethan one respectful step away with soft proud smile. Laptop generic editable author field, no readable generated text, no forced romance.",
+      "scenes": [
+        "SCN_17_04",
+        "SCN_17_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_046.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_047",
+      "chapter": "CH_18",
+      "title": "重新打开属于她的作品",
+      "cast": "A",
+      "description": "Bright Manhattan office morning, Ava alone at restored computer, neatly backed-up portfolio and correction letter on desk, focused peaceful expression, new notebook ready. No other people. Professional freedom, no chosen romantic ending.",
+      "scenes": [
+        "SCN_18_01",
+        "SCN_18_02"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_047.png",
+      "generation_status": "complete"
+    },
+    {
+      "id": "BG48_048",
+      "chapter": "CH_18",
+      "title": "新的一页由她来写",
+      "cast": "A",
+      "description": "Sunlit office window Manhattan skyline, Ava ALONE opening clean notebook with small purple umbrella sticker, writing her own small signature-like stroke, tranquil confident hopeful face. Packed portfolio beside her suggests open future, no partner, no forced stay or departure.",
+      "scenes": [
+        "SCN_18_03",
+        "SCN_18_04",
+        "SCN_18_05"
+      ],
+      "condition": "always",
+      "file": "backgrounds/BG48_048.png",
+      "generation_status": "complete"
+    }
+  ],
+  "background_status": "48_of_48_complete"
+}

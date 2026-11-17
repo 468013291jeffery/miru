@@ -1,0 +1,100 @@
+[
+  {
+    "id": "seal_original",
+    "result": {
+      "n": 1
+    },
+    "passed": true
+  },
+  {
+    "id": "pause_contact",
+    "result": {
+      "n": 2
+    },
+    "passed": true
+  },
+  {
+    "id": "independent_future",
+    "result": {
+      "n": 3
+    },
+    "passed": true
+  },
+  {
+    "id": "friends_only",
+    "result": {
+      "n": 2
+    },
+    "passed": true
+  },
+  {
+    "id": "question_not_consent",
+    "result": {
+      "n": 0
+    },
+    "passed": true
+  },
+  {
+    "id": "ordinary_date_only",
+    "result": {
+      "n": 1
+    },
+    "passed": true
+  },
+  {
+    "id": "sealed_evidence",
+    "result": {
+      "done": [
+        {
+          "id": 0,
+          "evidence": [
+            {
+              "message": 1,
+              "quote": "请封存原稿和全部时间戳。"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "evidence": [
+            {
+              "message": 0,
+              "quote": "原始提案装进只读文件袋，封条注明艾娃与时间，封存成功。"
+            }
+          ]
+        }
+      ]
+    },
+    "passed": true
+  },
+  {
+    "id": "solo_boundary_achievable",
+    "result": {
+      "done": [
+        {
+          "id": 0,
+          "evidence": [
+            {
+              "message": 1,
+              "quote": "我写下：不谈私人玩法，工作与私事分开；说停就停。"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "evidence": [
+            {
+              "message": 0,
+              "quote": "你独处整理的边界笔记已留存，其中标明停止信号为停。"
+            },
+            {
+              "message": 1,
+              "quote": "我写下：不谈私人玩法，工作与私事分开；说停就停。"
+            }
+          ]
+        }
+      ]
+    },
+    "passed": true
+  }
+]

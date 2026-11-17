@@ -85,7 +85,15 @@ document.addEventListener("click", e => { let x;
 { const _ss = startSheet; startSheet = function (wid) { const w = wd(wid); if (w && w.bible98) return start98(wid); return _ss.apply(this, arguments); }; }
 
 /* ---------- helpers ---------- */
-function scene98(th) { const b = bOf98(wd(th.wid)), c = b && b.chapters[th.b98.ch - 1]; return { b, c, s: c && c.scenes[th.b98.sc] }; }
+function scene98(th) {
+  const b=bOf98(wd(th.wid)), original=b&&b.chapters[th.b98.ch-1];
+  if(!original)return {b,c:original,s:undefined};
+  const scenes=original.scenes.map(s=>{
+    const v=(s.variants||[]).find(v=>v.when&&Array.isArray(v.when.indices)&&Number.isInteger((th.b98.picked||{})[v.when.scene])&&v.when.indices.includes(th.b98.picked[v.when.scene]));
+    return v?Object.assign({},s,v.patch,{id:s.id}):s;
+  });
+  const c=Object.assign({},original,{scenes,introduction:scenes[0]?.chapterIntroduction||original.introduction});return {b,c,s:scenes[th.b98.sc]};
+}
 function byKey98(th, key) { return cid98(th.wid, key); }
 function dn98(b) { const n = b && b.player && LZ98(b.player.short || b.player.name); return !n || /你|You/.test(n) ? L98("不填就叫“你”", "leave empty to be “you”") : L98("默认：", "Default: ") + n; }
 function yn98(th) { const authored=bOf98(wd(th.wid)); if(scripted98(authored))return LZ98(authored.player.short||authored.player.name)||L98("你","you"); if (th.b98.pname) return th.b98.pname; const c = ch(th.b98.you); const n = c && first(c.n); if (th.b98.as === "heir" || !n || /你|You/.test(n)) { try { const p = persona(); if (p && p.name) return p.name; } catch (_) {} return L98("你", "you"); } return n; }
@@ -552,7 +560,7 @@ async function enter98(th) {
   /* 章节卡里已经有「地点」一行；一章里换场时才补一张地点卡 */
   if (A.sc > 0) appendMsg(th, { who: "sys", k: "card", title: "📍 " + LZ98(s.place), txt: "", at: Date.now() });
   const As = OFF94.assets[wd(th.wid).community] || {};
-  const bg = As["bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; A.bgHl = null; try { sceneBg(th, key); } catch (_) {} }
+  const bg = As[s.backgroundKey || "bg_" + s.id]; if (bg) { const key = "b98:" + s.id; (window.SCENE_FILES = window.SCENE_FILES || {})[key] = bg; th.status.place = LZ98(s.place); A.bg = key; A.bgHl = null; try { sceneBg(th, key); } catch (_) {} }
   preload98(th, s, As);
  if (window.FXBUS) FXBUS.authored(th, s.fx || (A.sc === 0 && c.fx));
   if (typeof arcEnter98 === "function") arcEnter98(th); /* 新一级：升级特效 + 这一级的音乐 */
@@ -569,7 +577,7 @@ async function next98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (busy || A.ended) return;
   if (!(experience98(th) && experience98(th).allowFreeContinue) && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) { A.phase = "choice"; save(); dock98(); return; }
   if(!goalMayAdvance98(th))return;
-  if(A.pendingEnding98){const id=A.pendingEnding98;delete A.pendingEnding98;finishExperience98(th,id);return;}
+  if(A.pendingEnding98&&A.sc>=c.scenes.length-1){const id=A.pendingEnding98;delete A.pendingEnding98;finishExperience98(th,id);return;}
   const lastScene = A.sc >= c.scenes.length - 1, lastCh = A.ch >= b.chapters.length, ready98 = A.ready98;
   A.ready98 = null; dock98(); /* 收掉按钮，防止连点 */
   const exited98 = await beat98(th, "exit", null); if (experience98(th) && !exited98) { A.ready98 = ready98; dock98(); return; } if (A.ended) { dock98(); return; }
@@ -662,7 +670,7 @@ function highlight98(th, id) {
 function preload98(th, s, As) {
   try {
     const { b } = scene98(th), A = th.b98, c = b.chapters[A.ch - 1], next = c.scenes[A.sc + 1] || (b.chapters[A.ch] && b.chapters[A.ch].scenes[0]);
-    const urls = highlights98(s).map(h => As[h.id]).concat(next ? [As["bg_" + next.id]] : []).filter(Boolean).slice(0, 3);
+    const urls = highlights98(s).map(h => As[h.id]).concat(next ? [As[next.backgroundKey || "bg_" + next.id]] : []).filter(Boolean).slice(0, 3);
     urls.forEach(u => { const i = new Image(); i.src = u; });
   } catch (e) { console.warn("[b98] preload", e); }
 }
@@ -955,7 +963,7 @@ function dock98() {
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
-const __body_story98 = function () { try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); const src = (th.b98.bgHl && As[th.b98.bgHl]) || (s && As["bg_" + s.id]); if (src) { window.SCENE_FILES[th.b98.bg] = src; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} };
+const __body_story98 = function () { try { dock98(); const th = S.threads[curT]; if (th && th.b98 && th.b98.bg && window.SCENE_FILES && !window.SCENE_FILES[th.b98.bg]) { /* bg key lost on reload */ const As = OFF94.assets[(wd(th.wid) || {}).community] || {}; const { s } = scene98(th); const src = (th.b98.bgHl && As[th.b98.bgHl]) || (s && As[s.backgroundKey || "bg_" + s.id]); if (src) { window.SCENE_FILES[th.b98.bg] = src; sceneBg(th, th.b98.bg); } } else if (th && th.b98 && th.b98.bg) sceneBg(th, th.b98.bg); } catch (_) {} };
 if (window.UI && typeof window.UI.add === "function") window.UI.add("story98", __body_story98);
 else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_story98(); return r; }; }; }
 document.addEventListener("click", e => { let x; const th = S.threads[curT];
