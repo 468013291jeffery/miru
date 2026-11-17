@@ -116,6 +116,11 @@
   if(x.dataset.au70card==='del'){deleteAccount();return}
   paySheet();
  },true);
+ // Referral commission (main mod167) stays Web-only: it loads a remote QR script and pays gems from other users' purchases.
+ try{const promoCss=document.createElement('style');promoCss.textContent='[data-promo167],[data-pr167me],.pr167card{display:none!important}';document.head.appendChild(promoCss)}catch(_){}
+ window.addEventListener('click',function(e){
+  if(e.target.closest&&e.target.closest('[data-promo167],[data-pr167me],[data-pr167copy],[data-pr167share],[data-pr167save]')){e.preventDefault();e.stopImmediatePropagation()}
+ },true);
  const oldWallet=walletPull;walletPull=async function(){const r=await oldWallet.apply(this,arguments);recover().catch(()=>{});return r};
  window.addEventListener('focus',()=>recover().catch(()=>{}));
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)recover().catch(()=>{})});

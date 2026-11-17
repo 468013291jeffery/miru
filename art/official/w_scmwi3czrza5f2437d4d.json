@@ -1,0 +1,378 @@
+{
+  "native_v2": true,
+  "hockey_v2": true,
+  "cover": "art/official/m110-hockey-v2/cover.jpg",
+  "home_video": "https://miru.plus/video/Hockey_players_surround_woman_at%E2%80%A6_ac569e7a_1080p.mp4",
+  "poster": "art/official/m110-hockey-v2/cover.jpg",
+  "leads": [
+    "亚历山大",
+    "杰斯",
+    "伊森",
+    "戴蒙",
+    "瑞安"
+  ],
+  "endings": {
+    "A": {
+      "id": "romance",
+      "t": {
+        "zh": "自愿相识",
+        "en": "A Voluntary Beginning"
+      },
+      "txt": {
+        "zh": "关系只从你明确说出的愿望开始；每次亲密仍可拒绝。",
+        "en": "The relationship begins with your stated wish; every intimate step remains optional."
+      },
+      "line": {
+        "zh": "日常仍可以继续，节奏和边界由你决定。",
+        "en": "Daily life can continue at your pace and within your boundaries."
+      }
+    },
+    "B": {
+      "id": "friendship",
+      "t": {
+        "zh": "开放式友情",
+        "en": "Friendship Without a Deadline"
+      },
+      "txt": {
+        "zh": "保持朋友身份，新赛季的联络不附带恋爱承诺。",
+        "en": "Stay friends; new-season contact carries no romantic promise."
+      },
+      "line": {
+        "zh": "日常仍可以继续，节奏和边界由你决定。",
+        "en": "Daily life can continue at your pace and within your boundaries."
+      }
+    },
+    "C": {
+      "id": "independent",
+      "t": {
+        "zh": "独立体育调查",
+        "en": "Independent Sports Reporting"
+      },
+      "txt": {
+        "zh": "职务交接结束，新的工作计划与私人生活分别展开。",
+        "en": "The handover is complete; a new work plan and private life can unfold separately."
+      },
+      "line": {
+        "zh": "日常仍可以继续，节奏和边界由你决定。",
+        "en": "Daily life can continue at your pace and within your boundaries."
+      }
+    },
+    "D": {
+      "id": "open",
+      "t": {
+        "zh": "重新开始",
+        "en": "An Open New Season"
+      },
+      "txt": {
+        "zh": "没有最终答案也可以继续日常，无需为离线作出解释。",
+        "en": "Daily life can continue without a final answer or any obligation to explain time offline."
+      },
+      "line": {
+        "zh": "日常仍可以继续，节奏和边界由你决定。",
+        "en": "Daily life can continue at your pace and within your boundaries."
+      }
+    },
+    "E": {
+      "id": "reform",
+      "t": {
+        "zh": "改革同行",
+        "en": "Working for Safer Ice"
+      },
+      "txt": {
+        "zh": "参与独立安全改革，也保留完整的私人边界。",
+        "en": "Help independent safety reform while retaining your personal boundaries."
+      },
+      "line": {
+        "zh": "日常仍可以继续，节奏和边界由你决定。",
+        "en": "Daily life can continue at your pace and within your boundaries."
+      }
+    }
+  },
+  "scene_present": {
+    "bg_c01s01": [
+      "亚历山大",
+      "杰斯"
+    ],
+    "bg_c01s02": [
+      "亚历山大",
+      "伊森"
+    ],
+    "bg_c01s03": [
+      "杰斯"
+    ],
+    "bg_c01s04": [
+      "瑞安"
+    ],
+    "bg_c02s01": [
+      "亚历山大"
+    ],
+    "bg_c02s02": [
+      "亚历山大"
+    ],
+    "bg_c02s03": [
+      "亚历山大",
+      "伊森"
+    ],
+    "bg_c02s04": [
+      "亚历山大"
+    ],
+    "bg_c03s01": [
+      "杰斯"
+    ],
+    "bg_c03s02": [
+      "杰斯"
+    ],
+    "bg_c03s03": [
+      "杰斯"
+    ],
+    "bg_c03s04": [
+      "杰斯"
+    ],
+    "bg_c04s01": [
+      "伊森"
+    ],
+    "bg_c04s02": [
+      "伊森",
+      "奥利维娅"
+    ],
+    "bg_c04s03": [
+      "伊森"
+    ],
+    "bg_c04s04": [
+      "亚历山大",
+      "伊森"
+    ],
+    "bg_c05s01": [
+      "戴蒙"
+    ],
+    "bg_c05s02": [
+      "戴蒙",
+      "玛雅"
+    ],
+    "bg_c05s03": [
+      "戴蒙"
+    ],
+    "bg_c05s04": [
+      "戴蒙",
+      "莱恩"
+    ],
+    "bg_c06s01": [
+      "瑞安"
+    ],
+    "bg_c06s02": [
+      "瑞安",
+      "玛雅"
+    ],
+    "bg_c06s03": [
+      "瑞安"
+    ],
+    "bg_c06s04": [
+      "瑞安",
+      "玛雅"
+    ],
+    "bg_c07s01": [
+      "亚历山大",
+      "伊森"
+    ],
+    "bg_c07s02": [
+      "亚历山大",
+      "奥利维娅"
+    ],
+    "bg_c07s03": [
+      "玛雅",
+      "莱恩"
+    ],
+    "bg_c07s04": [
+      "亚历山大",
+      "奥利维娅"
+    ],
+    "bg_c08s01": [
+      "瑞安",
+      "玛雅"
+    ],
+    "bg_c08s02": [
+      "亚历山大",
+      "杰斯"
+    ],
+    "bg_c08s03": [
+      "戴蒙",
+      "玛雅"
+    ],
+    "bg_c08s04": [
+      "亚历山大",
+      "玛雅"
+    ],
+    "bg_c09s01": [
+      "杰斯"
+    ],
+    "bg_c09s02": [
+      "亚历山大",
+      "杰斯"
+    ],
+    "bg_c09s03": [
+      "杰斯",
+      "戴蒙"
+    ],
+    "bg_c09s04": [
+      "杰斯",
+      "戴蒙"
+    ],
+    "bg_c10s01": [
+      "亚历山大",
+      "伊森"
+    ],
+    "bg_c10s02": [
+      "杰斯",
+      "伊森"
+    ],
+    "bg_c10s03": [
+      "瑞安",
+      "玛雅"
+    ],
+    "bg_c10s04": [
+      "亚历山大",
+      "戴蒙"
+    ],
+    "bg_c11s01": [
+      "亚历山大",
+      "伊森"
+    ],
+    "bg_c11s02": [
+      "亚历山大",
+      "戴蒙"
+    ],
+    "bg_c11s03": [
+      "亚历山大",
+      "瑞安",
+      "玛雅"
+    ],
+    "bg_c11s04": [
+      "亚历山大",
+      "杰斯",
+      "伊森",
+      "戴蒙",
+      "瑞安"
+    ],
+    "bg_c12s01": [
+      "瑞安",
+      "玛雅"
+    ],
+    "bg_c12s02": [
+      "亚历山大",
+      "杰斯",
+      "伊森"
+    ],
+    "bg_c12s03": [
+      "戴蒙",
+      "瑞安"
+    ],
+    "bg_c12s04": [
+      "亚历山大",
+      "杰斯",
+      "伊森",
+      "戴蒙",
+      "瑞安"
+    ]
+  },
+  "voices": {
+    "zh": {},
+    "en": {}
+  },
+  "bg_c01s01": "art/official/m110-hockey-v2/bg_c01s01.jpg",
+  "bg_c01s02": "art/official/m110-hockey-v2/bg_c01s02.jpg",
+  "bg_c01s03": "art/official/m110-hockey-v2/bg_c01s03.jpg",
+  "bg_c01s04": "art/official/m110-hockey-v2/bg_c01s04.jpg",
+  "bg_c02s01": "art/official/m110-hockey-v2/bg_c02s01.jpg",
+  "bg_c02s02": "art/official/m110-hockey-v2/bg_c02s02.jpg",
+  "bg_c02s03": "art/official/m110-hockey-v2/bg_c02s03.jpg",
+  "bg_c02s04": "art/official/m110-hockey-v2/bg_c02s04.jpg",
+  "bg_c03s01": "art/official/m110-hockey-v2/bg_c03s01.jpg",
+  "bg_c03s02": "art/official/m110-hockey-v2/bg_c03s02.jpg",
+  "bg_c03s03": "art/official/m110-hockey-v2/bg_c03s03.jpg",
+  "bg_c03s04": "art/official/m110-hockey-v2/bg_c03s04.jpg",
+  "bg_c04s01": "art/official/m110-hockey-v2/bg_c04s01.jpg",
+  "bg_c04s02": "art/official/m110-hockey-v2/bg_c04s02.jpg",
+  "bg_c04s03": "art/official/m110-hockey-v2/bg_c04s03.jpg",
+  "bg_c04s04": "art/official/m110-hockey-v2/bg_c04s04.jpg",
+  "bg_c05s01": "art/official/m110-hockey-v2/bg_c05s01.jpg",
+  "bg_c05s02": "art/official/m110-hockey-v2/bg_c05s02.jpg",
+  "bg_c05s03": "art/official/m110-hockey-v2/bg_c05s03.jpg",
+  "bg_c05s04": "art/official/m110-hockey-v2/bg_c05s04.jpg",
+  "bg_c06s01": "art/official/m110-hockey-v2/bg_c06s01.jpg",
+  "bg_c06s02": "art/official/m110-hockey-v2/bg_c06s02.jpg",
+  "bg_c06s03": "art/official/m110-hockey-v2/bg_c06s03.jpg",
+  "bg_c06s04": "art/official/m110-hockey-v2/bg_c06s04.jpg",
+  "bg_c07s01": "art/official/m110-hockey-v2/bg_c07s01.jpg",
+  "bg_c07s02": "art/official/m110-hockey-v2/bg_c07s02.jpg",
+  "bg_c07s03": "art/official/m110-hockey-v2/bg_c07s03.jpg",
+  "bg_c07s04": "art/official/m110-hockey-v2/bg_c07s04.jpg",
+  "bg_c08s01": "art/official/m110-hockey-v2/bg_c08s01.jpg",
+  "bg_c08s02": "art/official/m110-hockey-v2/bg_c08s02.jpg",
+  "bg_c08s03": "art/official/m110-hockey-v2/bg_c08s03.jpg",
+  "bg_c08s04": "art/official/m110-hockey-v2/bg_c08s04.jpg",
+  "bg_c09s01": "art/official/m110-hockey-v2/bg_c09s01.jpg",
+  "bg_c09s02": "art/official/m110-hockey-v2/bg_c09s02.jpg",
+  "bg_c09s03": "art/official/m110-hockey-v2/bg_c09s03.jpg",
+  "bg_c09s04": "art/official/m110-hockey-v2/bg_c09s04.jpg",
+  "bg_c10s01": "art/official/m110-hockey-v2/bg_c10s01.jpg",
+  "bg_c10s02": "art/official/m110-hockey-v2/bg_c10s02.jpg",
+  "bg_c10s03": "art/official/m110-hockey-v2/bg_c10s03.jpg",
+  "bg_c10s04": "art/official/m110-hockey-v2/bg_c10s04.jpg",
+  "bg_c11s01": "art/official/m110-hockey-v2/bg_c11s01.jpg",
+  "bg_c11s02": "art/official/m110-hockey-v2/bg_c11s02.jpg",
+  "bg_c11s03": "art/official/m110-hockey-v2/bg_c11s03.jpg",
+  "bg_c11s04": "art/official/m110-hockey-v2/bg_c11s04.jpg",
+  "bg_c12s01": "art/official/m110-hockey-v2/bg_c12s01.jpg",
+  "bg_c12s02": "art/official/m110-hockey-v2/bg_c12s02.jpg",
+  "bg_c12s03": "art/official/m110-hockey-v2/bg_c12s03.jpg",
+  "bg_c12s04": "art/official/m110-hockey-v2/bg_c12s04.jpg",
+  "portrait_alexander": "art/official/m110-hockey-v2/portrait_alexander.jpg",
+  "char_alexander": "art/official/m110-hockey-v2/char_alexander.jpg",
+  "portrait_jace": "art/official/m110-hockey-v2/portrait_jace.jpg",
+  "char_jace": "art/official/m110-hockey-v2/char_jace.jpg",
+  "portrait_ethan": "art/official/m110-hockey-v2/portrait_ethan.jpg",
+  "char_ethan": "art/official/m110-hockey-v2/char_ethan.jpg",
+  "portrait_damon": "art/official/m110-hockey-v2/portrait_damon.jpg",
+  "char_damon": "art/official/m110-hockey-v2/char_damon.jpg",
+  "portrait_ryan": "art/official/m110-hockey-v2/portrait_ryan.jpg",
+  "char_ryan": "art/official/m110-hockey-v2/char_ryan.jpg",
+  "portrait_maya": "art/official/m110-hockey-v2/portrait_maya.jpg",
+  "char_maya": "art/official/m110-hockey-v2/char_maya.jpg",
+  "portrait_olivia": "art/official/m110-hockey-v2/portrait_olivia.jpg",
+  "char_olivia": "art/official/m110-hockey-v2/char_olivia.jpg",
+  "portrait_victor": "art/official/m110-hockey-v2/portrait_victor.jpg",
+  "char_victor": "art/official/m110-hockey-v2/char_victor.jpg",
+  "portrait_hale": "art/official/m110-hockey-v2/portrait_hale.jpg",
+  "char_hale": "art/official/m110-hockey-v2/char_hale.jpg",
+  "char_亚历山大": "art/official/m110-hockey-v2/char_alexander.jpg",
+  "char_Alexander": "art/official/m110-hockey-v2/char_alexander.jpg",
+  "char_杰斯": "art/official/m110-hockey-v2/char_jace.jpg",
+  "char_Jace": "art/official/m110-hockey-v2/char_jace.jpg",
+  "char_伊森": "art/official/m110-hockey-v2/char_ethan.jpg",
+  "char_Ethan": "art/official/m110-hockey-v2/char_ethan.jpg",
+  "char_戴蒙": "art/official/m110-hockey-v2/char_damon.jpg",
+  "char_Damon": "art/official/m110-hockey-v2/char_damon.jpg",
+  "char_瑞安": "art/official/m110-hockey-v2/char_ryan.jpg",
+  "char_Ryan": "art/official/m110-hockey-v2/char_ryan.jpg",
+  "char_玛雅": "art/official/m110-hockey-v2/char_maya.jpg",
+  "char_Maya": "art/official/m110-hockey-v2/char_maya.jpg",
+  "char_奥利维娅": "art/official/m110-hockey-v2/char_olivia.jpg",
+  "char_Olivia": "art/official/m110-hockey-v2/char_olivia.jpg",
+  "char_莱恩": "art/official/m110-hockey-v2/char_victor.jpg",
+  "char_Victor Lane": "art/official/m110-hockey-v2/char_victor.jpg",
+  "char_黑尔": "art/official/m110-hockey-v2/char_hale.jpg",
+  "char_Victor Hale": "art/official/m110-hockey-v2/char_hale.jpg",
+  "bgm_hockey_investigation": "art/official/m110-hockey-v2/music_investigation.mp3",
+  "bgm_hockey_action": "art/official/m110-hockey-v2/music_action.mp3",
+  "bgm_hockey_distance": "art/official/m110-hockey-v2/music_distance.mp3",
+  "bgm_hockey_care": "art/official/m110-hockey-v2/music_care.mp3",
+  "bgm_hockey_resolve": "art/official/m110-hockey-v2/music_resolve.mp3",
+  "bgm_hockey_future": "art/official/m110-hockey-v2/music_future.mp3",
+  "sfx_hockey_paper": "art/official/m110-hockey-v2/sfx_paper.mp3",
+  "sfx_hockey_door": "art/official/m110-hockey-v2/sfx_door.mp3",
+  "sfx_hockey_alarm": "art/official/m110-hockey-v2/sfx_alarm.mp3",
+  "sfx_hockey_impact": "art/official/m110-hockey-v2/sfx_impact.mp3",
+  "sfx_hockey_skate": "art/official/m110-hockey-v2/sfx_skate.mp3",
+  "sfx_hockey_puck": "art/official/m110-hockey-v2/sfx_puck.mp3",
+  "sfx_hockey_release": "art/official/m110-hockey-v2/sfx_release.mp3"
+}

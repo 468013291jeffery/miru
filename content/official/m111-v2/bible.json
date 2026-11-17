@@ -1,0 +1,3823 @@
+{
+  "content_key": "m111-v2",
+  "title": {
+    "zh": "那个记得我每一世的吸血鬼",
+    "en": "The Vampire Who Remembers Me"
+  },
+  "hook": {
+    "zh": "同样的七天，他记得九十九次失去。这次，你不必用生命换来明天。",
+    "en": "He remembers losing you ninety-nine times in the same seven days. This time, tomorrow need not cost your life."
+  },
+  "premise": {
+    "zh": "纽约永夜结界中的同一周已经重置九十九次。第一百次，你带回了死亡的片段，手腕上也多了一枚银色断针。\n\n记得一切的吸血鬼、不断做梦的急救医生、记忆受血誓压制的猎人，握着互相矛盾的证词。原始契约却从未要求你的死亡。\n\n核验被篡改的条款、救回正在被城市遗忘的人，并决定谁能与你走向没有倒计时的未来。爱情、友谊与独立，都由你现在的意愿开始。",
+    "en": "The same week inside New York’s Eternal Night boundary has reset ninety-nine times. On the hundredth, you retain fragments of a death and discover a silver broken-hand mark on your wrist.\n\nA vampire who remembers everything, an emergency doctor with recurring dreams, and a hunter bound by a blood oath hold conflicting accounts. Yet the original pact never required your death.\n\nVerify the altered terms, rescue people the city is forgetting, and decide who may share a future without a countdown. Love, friendship, and independence begin with what you want now."
+  },
+  "intro": {
+    "zh": "纽约永夜结界中的同一周已经重置九十九次。第一百次，你带回了死亡的片段，手腕上也多了一枚银色断针。\n\n记得一切的吸血鬼、不断做梦的急救医生、记忆受血誓压制的猎人，握着互相矛盾的证词。原始契约却从未要求你的死亡。\n\n核验被篡改的条款、救回正在被城市遗忘的人，并决定谁能与你走向没有倒计时的未来。爱情、友谊与独立，都由你现在的意愿开始。",
+    "en": "The same week inside New York’s Eternal Night boundary has reset ninety-nine times. On the hundredth, you retain fragments of a death and discover a silver broken-hand mark on your wrist.\n\nA vampire who remembers everything, an emergency doctor with recurring dreams, and a hunter bound by a blood oath hold conflicting accounts. Yet the original pact never required your death.\n\nVerify the altered terms, rescue people the city is forgetting, and decide who may share a future without a countdown. Love, friendship, and independence begin with what you want now."
+  },
+  "orient": "bg",
+  "tags": [
+    "都市哥特",
+    "时间循环",
+    "吸血鬼",
+    "悬疑",
+    "三位男主",
+    "五种未来"
+  ],
+  "world": "同一段11月7日至13日重置99次；第100次玩家首次保留碎片。结界外时间不普遍倒流。1894年仅为装置原约日期，不是玩家的古代轮回。原约不含献祭；末页、独立见证、居民记忆锚及三路同步校验撤销。除角色亲历/已核实证物外不得提前知道秘密。",
+  "style": "沿用MIRU原生隐藏分支、现场回应、自由聊天、手动换场与DONE目标。绝不显示分支意图按钮，不替玩家说话、感受或同意；未匹配保持分支待定，绝不伪造道具与证词。不把合作当恋爱。",
+  "cast": {
+    "you": {
+      "name": [
+        "你",
+        "You"
+      ],
+      "g": "f",
+      "age": 25,
+      "voice": "f2",
+      "role": [
+        "玩家本人，成年自由调查者",
+        "The adult player, an independent investigator"
+      ],
+      "bio": [
+        "只由玩家决定自己的话、态度与亲密边界。不得画出固定面孔。",
+        "Only the player decides their words, attitude, and intimate boundaries. Never depict a fixed face."
+      ]
+    },
+    "lucien": {
+      "name": [
+        "卢西恩",
+        "Lucien"
+      ],
+      "g": "m",
+      "age": 32,
+      "voice": "m1",
+      "role": [
+        "卢西恩·沃斯，吸血鬼亲王",
+        "Lucien Voss, vampire prince"
+      ],
+      "bio": [
+        "黑色微卷发，银灰眼，黑色定制长外套。低沉克制；害怕丧失时语句变短。完整记得99次七日循环，不能用过去的关系要求现在的同意。",
+        "Wavy black hair, silver-gray eyes, tailored long black coat. Low restrained speech, shorter under fear of loss. Remembers 99 seven-day cycles; past relationships never establish present consent."
+      ]
+    },
+    "rowan": {
+      "name": [
+        "罗文",
+        "Rowan"
+      ],
+      "g": "m",
+      "age": 30,
+      "voice": "m3",
+      "role": [
+        "罗文·阿什福德，急救医生",
+        "Rowan Ashford, emergency physician"
+      ],
+      "bio": [
+        "赤褐短发，绿眼，海军蓝医护衣。诚恳直接，以具体照护与核验回应。自第97次循环开始只有梦境片段，不知道所有真相。",
+        "Short auburn hair, green eyes, navy scrubs. Direct, compassionate, practical care and verification. Has only dream fragments since cycle 97, not complete knowledge."
+      ]
+    },
+    "cassian": {
+      "name": [
+        "卡西安",
+        "Cassian"
+      ],
+      "g": "m",
+      "age": 29,
+      "voice": "m4",
+      "role": [
+        "卡西安·索恩，猎人",
+        "Cassian Thorne, hunter"
+      ],
+      "bio": [
+        "深金短发，眉上细疤，皮革长外套。言语简短带讽刺，认错时不绕弯；记忆受血誓压制。不能靠受伤索取原谅。",
+        "Short dark blond hair, healed eyebrow scar, leather coat. Brief and sardonic, plain when admitting fault; memories suppressed by a blood oath. Injury never entitles him to forgiveness."
+      ]
+    },
+    "mara": {
+      "name": [
+        "玛拉",
+        "Mara"
+      ],
+      "g": "f",
+      "age": 36,
+      "voice": "f3",
+      "role": [
+        "玛拉·埃勒里，独立档案保管人；非恋爱角色",
+        "Mara Ellery, independent archive custodian; non-romantic"
+      ],
+      "bio": [
+        "自然短卷发、酒红外套、铜框眼镜。精确沉稳，区分原件、推测与证词。通过结界外保管程序保存离线材料，不全知。",
+        "Short natural curls, burgundy coat, copper glasses. Calm and precise about originals, inference, and testimony. Preserves offline records outside the boundary; not omniscient."
+      ]
+    },
+    "evelyn": {
+      "name": [
+        "伊芙琳",
+        "Evelyn"
+      ],
+      "g": "f",
+      "age": 41,
+      "voice": "f4",
+      "role": [
+        "伊芙琳·鲁克，永夜议会主席；非恋爱角色",
+        "Evelyn Rook, council chair; non-romantic"
+      ],
+      "bio": [
+        "象牙白发、黑丝绒套装。冷静强势，以秩序替控制辩护。知道献祭条款被篡改，但其他人必须经证据核验才能得知。",
+        "Ivory-white hair, black velvet suit. Controlled and commanding; justifies control as order. Knows the sacrifice clause was altered, but others require evidence before knowing this."
+      ]
+    }
+  },
+  "chapters": [
+    {
+      "n": 1,
+      "title": [
+        "又一次死亡之夜",
+        "THE NIGHT I DIED AGAIN"
+      ],
+      "goal": [
+        "核实银色印记和死亡片段，选择调查线索",
+        "Verify the mark and the remembered death; choose a lead"
+      ],
+      "say": [
+        "追问重置、核验银色印记或提出调查办法",
+        "Ask about the reset, verify the silver mark, or propose an investigation"
+      ],
+      "scenes": [
+        {
+          "id": "c01s01",
+          "place": [
+            "曼哈顿天台·残留记忆",
+            "Manhattan rooftop · remembered fragment"
+          ],
+          "time": "第99次循环 · 11月13日 23:59",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Night rooftop in torrential rain, Lucien reaching toward the unseen viewer from beside a damaged railing, no fall or body shown",
+          "beats": [
+            [
+              "n",
+              "暴雨中的天台，像一段正在重播的旧影像。",
+              "A rain-soaked rooftop flickers like a recording played again."
+            ],
+            [
+              "n",
+              "栏杆外没有地面，银色钟针的倒影横过玻璃。",
+              "Beyond the railing is darkness. A silver clock hand reflects in the glass."
+            ],
+            [
+              "lucien",
+              "看着我。跟着我的声音。",
+              "Look at me. Stay with my voice."
+            ],
+            [
+              "n",
+              "他伸出的手停在雨中；钟声盖过了后半句话。",
+              "His outstretched hand hangs in the rain; the bell swallows the rest."
+            ],
+            [
+              "n",
+              "画面停在午夜。床头闹钟的声音从黑暗里传来。",
+              "The image freezes at midnight. A bedside alarm sounds in the dark."
+            ]
+          ],
+          "exit": [
+            "闹钟仍响着，窗外却没有雨声。",
+            "The alarm continues, but there is no rain outside."
+          ]
+        },
+        {
+          "id": "c01s02",
+          "place": [
+            "公寓卧室",
+            "Apartment bedroom"
+          ],
+          "time": "第100次循环 · 11月7日 09:20",
+          "cast": [],
+          "visual": "Sunlit modern New York apartment bedroom, rumpled empty bed and silver broken clock hand motif reflected on bedside glass, explicitly alone, no human figure",
+          "beats": [
+            [
+              "n",
+              "窗外是晴天。床头手机显示11月7日。",
+              "Sunlight fills the window. The bedside phone reads November 7."
+            ],
+            [
+              "n",
+              "手腕上留着一道断针形的银色印记。",
+              "A silver mark shaped like a broken clock hand remains on your wrist."
+            ],
+            [
+              "n",
+              "昨夜天台的门禁照片，时间却标着11月13日。",
+              "The rooftop access photo is dated November 13."
+            ],
+            [
+              "n",
+              "床头卡片写着：不要只相信那个记得你的人。",
+              "A bedside card reads: Do not trust only the man who remembers you."
+            ],
+            [
+              "n",
+              "卡背留有博物馆预展地址和一家急诊诊所的电话。",
+              "The back lists a museum preview and an emergency clinic number."
+            ]
+          ],
+          "exit": [
+            "下午的预展对公众开放，名单可以独立核验。",
+            "The afternoon preview is public; its guest list can be checked independently."
+          ],
+          "choice": {
+            "q": [
+              "两份日期相冲突的记录摆在眼前。你打算怎样核实？",
+              "Two records disagree about the date. How will you verify them?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "先听Lucien解释，并索取可核验证据",
+                  "Hear Lucien out and request verifiable evidence"
+                ],
+                "consequence": [
+                  [
+                    "Lucien的访客登记被复制保存，时间没有被涂改。",
+                    "A copy of Lucien’s visitor log is preserved, with its time intact."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "先做独立检查，再判断印记",
+                  "Get an independent examination of the mark"
+                ],
+                "consequence": [
+                  [
+                    "诊所确认可保留检查结果，未经同意不会向访客透露。",
+                    "The clinic offers to preserve results without sharing them with visitors."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "不跟随任何人，先查公共档案",
+                  "Stay independent and check public records"
+                ],
+                "consequence": [
+                  [
+                    "公共目录显示，预展的出借人连续登记了九十九份密封材料。",
+                    "The public catalog lists ninety-nine sealed loans from the same lender."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c01s03",
+          "place": [
+            "博物馆预展厅",
+            "Museum preview hall"
+          ],
+          "time": "第1日 · 11月7日 16:30",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Late afternoon museum preview hall, Lucien holding an untouched wine glass, surprised and holding respectful distance",
+          "beats": [
+            [
+              "n",
+              "预展厅里，黑衣男人握着一杯未动的酒。",
+              "In the preview hall, a man in black holds an untouched glass of wine."
+            ],
+            [
+              "n",
+              "Lucien看见你，指节猛地收紧。",
+              "Lucien sees you; his fingers tighten around the stem."
+            ],
+            [
+              "lucien",
+              "你还活着。",
+              "You’re alive."
+            ],
+            [
+              "lucien",
+              "周五午夜前，别独自去那座天台。",
+              "Before midnight on Friday, do not go to that rooftop alone."
+            ],
+            [
+              "lucien",
+              "我能提供记录。你不必只听我的话。",
+              "I can give you records. You need not take my word for it."
+            ]
+          ],
+          "exit": [
+            "他把展厅侧门钥匙放在柜台上，退开一步。",
+            "He leaves the side-gallery key on the counter and steps back."
+          ]
+        },
+        {
+          "id": "c01s04",
+          "place": [
+            "博物馆侧展廊",
+            "Museum side gallery"
+          ],
+          "time": "第1日 · 11月7日 18:10",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Dusk museum side gallery, ninety-nine small portrait photo frames of one unseen subject turned away from camera, one empty frame, Lucien opening archival case, no player face",
+          "beats": [
+            [
+              "n",
+              "侧廊里有九十九个相框，日期全是同一个星期。",
+              "Ninety-nine frames line the side gallery, all dated within the same week."
+            ],
+            [
+              "n",
+              "每个相框旁都有不同的循环编号，第一百格仍空着。",
+              "Each has a different cycle number. The hundredth is empty."
+            ],
+            [
+              "lucien",
+              "同样的七天，我记得九十九遍。",
+              "The same seven days. I remember ninety-nine of them."
+            ],
+            [
+              "lucien",
+              "这一次，你第一次带回了死亡的片段。",
+              "This is the first time you have brought back a fragment of dying."
+            ],
+            [
+              "n",
+              "相框背后的封印，与床头卡片上的压痕相同。",
+              "The seals behind the frames match the impression on the bedside card."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "这些记录该从哪里开始核实？",
+              "Where should the records be checked first?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "询问某次循环里未被死亡占据的片刻",
+                  "Ask about a moment in a cycle that was not defined by death"
+                ],
+                "consequence": [
+                  [
+                    "Lucien取出第十二次循环的相册：同一周的河畔野餐。",
+                    "Lucien retrieves the twelfth cycle’s album: a riverside picnic in the same week."
+                  ],
+                  [
+                    "相册出借单指向旧教堂地下的保管室。",
+                    "The loan slip points to a vault beneath the old church."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "索取九十九次死亡记录",
+                  "Request all ninety-nine death records"
+                ],
+                "consequence": [
+                  [
+                    "九十九份记录被交到公开阅览台，末页都有同一个保管编号。",
+                    "Ninety-nine records are placed on the public desk, all bearing the same vault code."
+                  ],
+                  [
+                    "编号所属的旧教堂今晚仍有人值守。",
+                    "The old church assigned that code is still staffed tonight."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "拍下空相框封印，核验来源",
+                  "Photograph the empty frame’s seal and trace its source"
+                ],
+                "consequence": [
+                  [
+                    "空相框背面的封印被拍照留存，博物馆确认它来自旧教堂。",
+                    "The empty frame’s seal is photographed; the museum traces it to the old church."
+                  ],
+                  [
+                    "那枚封印，比最后一次死亡记录更新。",
+                    "The seal is newer than the final death record."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": [
+        "九十九座纪念碑",
+        "THE MAN WITH NINETY-NINE GRAVES"
+      ],
+      "goal": [
+        "核验纪念碑、录音和医生的梦境",
+        "Verify the memorials, recording, and the doctor’s dreams"
+      ],
+      "say": [
+        "询问记录来源、核对录音或安排独立检查",
+        "Ask about provenance, check the recording, or arrange an independent examination"
+      ],
+      "scenes": [
+        {
+          "id": "c02s01",
+          "place": [
+            "旧教堂地下纪念室",
+            "Old church memorial vault"
+          ],
+          "time": "第1日 · 11月7日 20:00",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Old church underground memorial vault at night, Lucien beside ninety-nine small numbered stone markers and white roses, candlelit, no readable inscriptions",
+          "beats": [
+            [
+              "n",
+              "两个小时后，教堂管理员打开地下纪念室。",
+              "Two hours later, the church custodian opens the memorial vault."
+            ],
+            [
+              "n",
+              "九十九块石碑只刻循环编号，终止日期全是11月13日。",
+              "Ninety-nine markers carry cycle numbers and the same end date: November 13."
+            ],
+            [
+              "n",
+              "白玫瑰旁，记录袋与博物馆保管编号一一对应。",
+              "Beside white roses, the record bags match the museum’s vault codes."
+            ],
+            [
+              "lucien",
+              "不是九十九个世纪，是九十九次没能结束的一周。",
+              "Not ninety-nine centuries. Ninety-nine weeks that could not end."
+            ],
+            [
+              "lucien",
+              "我记得，不等于我有权替你决定。",
+              "Remembering does not give me the right to decide for you."
+            ]
+          ],
+          "exit": [
+            "管理员把一份未被拆过的录音交给阅览室。",
+            "The custodian delivers an unopened recording to the reading room."
+          ]
+        },
+        {
+          "id": "c02s02",
+          "place": [
+            "教堂录音阅览室",
+            "Church recording room"
+          ],
+          "time": "第1日 · 11月7日 20:30",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Church archive listening room, Lucien beside a small audio player and sealed evidence pouch on a table, warm desk lamp at night",
+          "beats": [
+            [
+              "n",
+              "封袋标着第九十八次循环，录制时间早于午夜。",
+              "The pouch is marked cycle ninety-eight, recorded before midnight."
+            ],
+            [
+              "n",
+              "扬声器里传出一个与旧影像吻合的声音。",
+              "A voice matching the old footage comes through the speaker."
+            ],
+            [
+              "n",
+              "录音说：记得一个人，也可能误解这个人。",
+              "The recording says: You can remember someone and still misunderstand them."
+            ],
+            [
+              "lucien",
+              "这份录音，我以前没有听过。",
+              "I have never heard this recording before."
+            ],
+            [
+              "n",
+              "封袋签收处有一名医院值班医生的姓名。",
+              "An on-duty hospital physician signed the pouch’s receipt."
+            ]
+          ],
+          "exit": [
+            "医院仍开着夜间门诊，签收人正在值班。",
+            "The hospital’s night clinic is open; the signatory is on duty."
+          ],
+          "choice": {
+            "q": [
+              "封袋和Lucien的记忆并不完全相同。你需要谁来核验？",
+              "The sealed recording and Lucien’s memory differ. Who should verify them?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "先逐项听Lucien的记述",
+                  "Compare Lucien’s account item by item"
+                ],
+                "consequence": [
+                  [
+                    "他的记述被分栏抄录，无法解释的部分留空。",
+                    "His account is transcribed in separate columns; unexplained gaps stay blank."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "独自核对全部纪念记录",
+                  "Examine every memorial record independently"
+                ],
+                "consequence": [
+                  [
+                    "管理员提供独立座位和副本，Lucien留在门外。",
+                    "The custodian provides copies and a private desk; Lucien waits outside."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "请签收医生Rowan核验封袋",
+                  "Ask Rowan, the physician who signed for it, to verify the seal"
+                ],
+                "consequence": [
+                  [
+                    "封袋交接表附入检查材料，Rowan可以核验原始签名。",
+                    "The custody form is added to the examination file so Rowan can check the signature."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c02s03",
+          "place": [
+            "医院夜间诊室",
+            "Hospital night clinic"
+          ],
+          "time": "第1日 · 11月7日 21:20",
+          "cast": [
+            "rowan"
+          ],
+          "visual": "Modern hospital consultation room at night, Rowan in navy scrubs beside a diagnostic lamp and sealed envelope, focused green eyes",
+          "beats": [
+            [
+              "n",
+              "Rowan把检查灯转向银色印记，没有直接碰触。",
+              "Rowan angles the examination lamp toward the silver mark without touching it."
+            ],
+            [
+              "rowan",
+              "可以检查吗？你随时可以叫停。",
+              "May I examine it? You can stop me at any point."
+            ],
+            [
+              "n",
+              "他在纸上画出天台栏杆，还画出一枚裂纹戒指。",
+              "He sketches the rooftop railing and a cracked ring on paper."
+            ],
+            [
+              "rowan",
+              "从九十七这个数字出现后，我就一直梦见这里。",
+              "Since the number ninety-seven began appearing, I keep dreaming of this place."
+            ],
+            [
+              "n",
+              "画里的戒指，与预展照片中Lucien的戒指吻合。",
+              "The ring in the drawing matches Lucien’s in the preview photograph."
+            ]
+          ],
+          "exit": [
+            "Rowan保留原图，走到隔壁会诊室核对访客记录。",
+            "Rowan preserves the original sketch and moves to the adjacent consultation room."
+          ]
+        },
+        {
+          "id": "c02s04",
+          "place": [
+            "医院会诊室",
+            "Hospital consultation room"
+          ],
+          "time": "第1日 · 11月7日 22:00",
+          "cast": [
+            "lucien",
+            "rowan"
+          ],
+          "visual": "Quiet modern hospital consultation room at night, Rowan and Lucien on opposite sides of a desk, neither blocking the open doorway",
+          "beats": [
+            [
+              "n",
+              "Lucien应值班台的核验邀请来到会诊室。",
+              "Lucien arrives at the consultation room at the duty desk’s request."
+            ],
+            [
+              "lucien",
+              "他的梦可能受时钟影响，不能直接当证词。",
+              "His dreams may be affected by the clock. They are not testimony by themselves."
+            ],
+            [
+              "rowan",
+              "所以我保留检查和签收记录，不替梦下结论。",
+              "That is why I keep examination and custody records, not conclusions about dreams."
+            ],
+            [
+              "n",
+              "门始终开着。两人把材料放在同一张桌上。",
+              "The door stays open. Both men put their records on the same desk."
+            ],
+            [
+              "rowan",
+              "接下来谁留下，由你决定。",
+              "You decide who stays for the next step."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "接下来的核验怎样安排，才符合你的边界？",
+              "What arrangement respects your boundaries for the next examination?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "让Rowan检查印记，其他人回避",
+                  "Let Rowan examine the mark in private"
+                ],
+                "consequence": [
+                  [
+                    "Rowan准备非侵入检查，Lucien把通行钥匙留在值班台。",
+                    "Rowan prepares a non-invasive examination; Lucien leaves a transit key at the duty desk."
+                  ],
+                  [
+                    "钥匙对应的废弃站台，曾出现在异常信号记录里。",
+                    "The key belongs to a closed platform listed in the anomalous signal log."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "请Lucien保护往返路线，但不接触检查资料",
+                  "Ask Lucien to secure the route without accessing medical records"
+                ],
+                "consequence": [
+                  [
+                    "Lucien只拿走路线图，检查文件仍由医院保管。",
+                    "Lucien takes only the route map; the hospital retains the medical file."
+                  ],
+                  [
+                    "路线图末端的废弃站台，今晚再次出现列车信号。",
+                    "At the map’s end, a closed platform registers another train signal tonight."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "请两人离开，先独立阅读副本",
+                  "Ask both men to leave while you review the copies"
+                ],
+                "consequence": [
+                  [
+                    "两人退到门外，桌上留下医院副本与公共交通档案。",
+                    "Both men step outside, leaving hospital copies and public transit records."
+                  ],
+                  [
+                    "交通档案中，一座封闭站台仍在午夜发出信号。",
+                    "The transit records show a sealed platform still signaling at midnight."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": [
+        "另一次循环的誓言",
+        "A VOW FROM ANOTHER CYCLE"
+      ],
+      "goal": [
+        "核实旧影像与契约，界定当下的同意",
+        "Check old footage and the pact; define consent in the present"
+      ],
+      "say": [
+        "核验旧影像、询问契约或说明现在的亲密边界",
+        "Verify the footage, ask about the pact, or state present boundaries"
+      ],
+      "scenes": [
+        {
+          "id": "c03s01",
+          "place": [
+            "封闭地铁站台",
+            "Closed subway platform"
+          ],
+          "time": "第2日 · 11月8日 00:10",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Abandoned New York subway platform after midnight, Lucien holding a flashlight beside an empty stationary old subway carriage, no readable signs",
+          "beats": [
+            [
+              "n",
+              "午夜后，公共档案中的钥匙打开了封闭站台。",
+              "After midnight, the cataloged key opens the closed platform."
+            ],
+            [
+              "n",
+              "Lucien停在安全线内，列车玻璃映着不属于此刻的灯。",
+              "Lucien stays behind the safety line; other lights flicker in the train glass."
+            ],
+            [
+              "n",
+              "墙上的划痕与第十二次循环的照片位置相同。",
+              "Scratches on the wall match their position in the twelfth-cycle photograph."
+            ],
+            [
+              "lucien",
+              "它会放出片段。片段不等于完整事实。",
+              "It releases fragments. Fragments are not the whole truth."
+            ],
+            [
+              "n",
+              "一节停驶车厢的门滑开，里面没有乘客。",
+              "A stationary carriage door slides open. There are no passengers inside."
+            ]
+          ],
+          "exit": [
+            "玻璃内侧的反光停在同一周的一个夜晚。",
+            "The reflection inside the glass settles on a night in the same week."
+          ]
+        },
+        {
+          "id": "c03s02",
+          "place": [
+            "停驶列车车厢",
+            "Stationary subway carriage"
+          ],
+          "time": "第2日 · 11月8日 00:20",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Inside empty stationary vintage subway carriage at night, Lucien stands a respectful step away, fractured reflections of rain and lights only, no visible female player or kiss",
+          "beats": [
+            [
+              "n",
+              "玻璃映出第十二次循环的站台，日期仍是11月8日。",
+              "The glass shows the platform in cycle twelve, still dated November 8."
+            ],
+            [
+              "n",
+              "影像中有人把一枚戒指放回长椅，没有留下誓言。",
+              "In the footage, a ring is left on a bench. No vow is made."
+            ],
+            [
+              "lucien",
+              "那次我们曾亲近。你后来要求我不要替你决定。",
+              "We were close then. Later, you asked me not to decide for you."
+            ],
+            [
+              "lucien",
+              "那段关系不是你现在必须继续的关系。",
+              "That relationship is not one you are required to continue now."
+            ],
+            [
+              "n",
+              "他把戒指盒合上，放在远离你的座椅上。",
+              "He closes the ring box and places it on a seat away from you."
+            ]
+          ],
+          "exit": [
+            "列车记录器的保管标签指向晨间开放的市档案馆。",
+            "The recorder’s custody tag points to the city archive, which opens in the morning."
+          ],
+          "choice": {
+            "q": [
+              "这段旧关系应该怎样进入今天的调查？",
+              "How should this past relationship enter the present investigation?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "将影像作为待核验证据，不视作承诺",
+                  "Treat the footage as evidence to verify, not a promise"
+                ],
+                "consequence": [
+                  [
+                    "影像被保存为待核材料，与当前关系分开登记。",
+                    "The footage is preserved as unverified material, separate from the present relationship."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "明确保持情感距离",
+                  "State that you want emotional distance"
+                ],
+                "consequence": [
+                  [
+                    "戒指盒留在车厢座椅，Lucien不再向前靠近。",
+                    "The ring box stays on the seat; Lucien does not move closer."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "追问过去拒绝之后发生了什么",
+                  "Ask what happened after the earlier refusal"
+                ],
+                "consequence": [
+                  [
+                    "他交出后续录音索引，原始文件须由Mara开封。",
+                    "He provides the later recording’s index; Mara must unseal the original."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c03s03",
+          "place": [
+            "市档案馆阅览室",
+            "City archive reading room"
+          ],
+          "time": "第2日 · 11月8日 09:00",
+          "cast": [
+            "mara"
+          ],
+          "visual": "Morning city archive reading room, Mara with copper glasses and burgundy coat opens an antique bound pact under daylight, missing last leaf visible",
+          "beats": [
+            [
+              "n",
+              "天亮后，Mara在阅览台展开一份1894年的旧契约。",
+              "After dawn, Mara unfolds an 1894 pact on the archive reading desk."
+            ],
+            [
+              "mara",
+              "这是时钟装置的历史原约，不是你的前世证明。",
+              "This is the clock’s historical charter, not proof of a previous incarnation."
+            ],
+            [
+              "n",
+              "当代启用附页写着：记忆启用与撤销，须由本人同意。",
+              "Its modern activation addendum requires personal consent for memory access and revocation."
+            ],
+            [
+              "mara",
+              "爱情不能代签，记忆也不能代签。",
+              "Love cannot sign for you. Neither can memory."
+            ],
+            [
+              "n",
+              "装订线下，最后一页被整齐割走。",
+              "Beneath the binding, the final page has been neatly cut away."
+            ]
+          ],
+          "exit": [
+            "Mara允许带走认证副本；夜间交接点设在河岸阅览亭。",
+            "Mara permits a certified copy to leave; the evening handover is at the riverside pavilion."
+          ]
+        },
+        {
+          "id": "c03s04",
+          "place": [
+            "河岸阅览亭",
+            "Riverside reading pavilion"
+          ],
+          "time": "第2日 · 11月8日 18:30",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Rain-cleared New York riverside pavilion at dusk, Lucien standing beside a bench and protected archive copy, muted city skyline, respectful open posture",
+          "beats": [
+            [
+              "n",
+              "傍晚雨停，认证副本在河岸阅览亭完成交接。",
+              "At dusk, after the rain, the certified copy is handed over at the riverside pavilion."
+            ],
+            [
+              "n",
+              "Lucien带来一张没有修改痕迹的保管清单。",
+              "Lucien brings a custody list with no visible alterations."
+            ],
+            [
+              "lucien",
+              "我愿意讲快乐的片段，也愿意接受你只谈证据。",
+              "I can tell you the happier fragments, or we can discuss only evidence."
+            ],
+            [
+              "n",
+              "清单上出现猎人团的借阅印，日期就在失页之后。",
+              "The list bears a hunters’ loan stamp dated just after the page disappeared."
+            ],
+            [
+              "lucien",
+              "这枚印章需要核验。不能因为我不喜欢他们，就认定他们有罪。",
+              "That stamp needs checking. My dislike is not proof of guilt."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "契约失页的线索该怎样保全？",
+              "How should the missing-page evidence be protected?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "封存契约副本，循借阅记录调查",
+                  "Seal the copy and follow the loan record"
+                ],
+                "consequence": [
+                  [
+                    "副本装入防拆袋，猎人团借阅编号保留在外页。",
+                    "The copy is sealed in a tamper-evident pouch with the hunters’ loan code outside."
+                  ],
+                  [
+                    "编号的签收人，正在博物馆地下等候。",
+                    "The signatory is waiting beneath the museum."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "要求Lucien解释他的保管责任",
+                  "Question Lucien’s responsibility for the records"
+                ],
+                "consequence": [
+                  [
+                    "Lucien的签名与猎人团借阅记录并列保存，责任暂不合并。",
+                    "Lucien’s signature is preserved separately from the hunters’ loan record."
+                  ],
+                  [
+                    "两条保管链都指向博物馆地下停车场。",
+                    "Both custody trails lead to the museum’s underground garage."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "请Mara认证印章与保管链",
+                  "Ask Mara to certify the stamp and chain of custody"
+                ],
+                "consequence": [
+                  [
+                    "Mara在认证件上标明缺页范围，原始借阅印未被覆盖。",
+                    "Mara certifies the missing section without obscuring the original loan stamp."
+                  ],
+                  [
+                    "认证件附有签收人Cassian的联络方式。",
+                    "The certification includes contact details for the signatory, Cassian."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": [
+        "曾执行猎杀令的人",
+        "THE HUNTER WHO KILLED ME"
+      ],
+      "goal": [
+        "查清猎杀令的改写，决定救援与证据安排",
+        "Trace the altered hunting order and decide how to protect people and evidence"
+      ],
+      "say": [
+        "追问Cassian的责任、查验命令或提出救援安排",
+        "Question Cassian’s responsibility, examine the order, or propose a rescue arrangement"
+      ],
+      "scenes": [
+        {
+          "id": "c04s01",
+          "place": [
+            "博物馆地下停车场",
+            "Museum underground garage"
+          ],
+          "time": "第2日 · 11月8日 20:00",
+          "cast": [
+            "cassian"
+          ],
+          "visual": "Museum underground parking garage at night, Cassian stands with open hands, a sheathed silver blade safely on the concrete away from viewer",
+          "beats": [
+            [
+              "n",
+              "夜间交接后，Cassian在停车场的摄像头下等候。",
+              "After the evening handover, Cassian waits beneath a garage security camera."
+            ],
+            [
+              "n",
+              "他把银刃连鞘放下，双手离开武器。",
+              "He lays down the sheathed silver blade and takes his hands away."
+            ],
+            [
+              "cassian",
+              "第七十六次，我执行过针对你的命令。",
+              "In cycle seventy-six, I carried out an order against you."
+            ],
+            [
+              "cassian",
+              "记忆不完整不是免责。原始命令在团部。",
+              "Missing memories do not excuse me. The original order is at headquarters."
+            ],
+            [
+              "n",
+              "封套上有两层印章，下面一层被刮薄。",
+              "The envelope bears two seals; the lower one has been scraped thin."
+            ]
+          ],
+          "exit": [
+            "Cassian交出档案通行证，路线通向团部证物室。",
+            "Cassian hands over an archive pass for the headquarters evidence room."
+          ]
+        },
+        {
+          "id": "c04s02",
+          "place": [
+            "猎人团证物室",
+            "Hunters’ evidence room"
+          ],
+          "time": "第2日 · 11月8日 20:40",
+          "cast": [
+            "cassian"
+          ],
+          "visual": "Hunters headquarters evidence room at night, Cassian opening a secured ledger on a steel desk, worn leather coat, sealed weapon case aside",
+          "beats": [
+            [
+              "n",
+              "证物室的借阅钟与博物馆交接时间吻合。",
+              "The evidence-room checkout clock matches the museum handover time."
+            ],
+            [
+              "n",
+              "命令底稿指向时钟附着物，改写稿却指向宿主。",
+              "The draft targets a clock attachment; the revision targets its host."
+            ],
+            [
+              "cassian",
+              "我没有核对两版，就执行了。",
+              "I acted without comparing the two versions."
+            ],
+            [
+              "n",
+              "改写页的血誓封印，遮住了发令人的签名。",
+              "A blood-oath seal on the revision covers the issuer’s signature."
+            ],
+            [
+              "cassian",
+              "你可以不原谅。两版记录都给你。",
+              "You need not forgive me. Both versions are yours to examine."
+            ]
+          ],
+          "exit": [
+            "隔壁核验室有独立摄像设备，可以保全两版差异。",
+            "The adjacent verification room has an independent camera for preserving both versions."
+          ],
+          "choice": {
+            "q": [
+              "怎样核验猎人的警告，才不把风险留给你？",
+              "How should the hunter’s warning be checked without leaving you exposed?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "听完Cassian的证词并核对底稿",
+                  "Hear Cassian’s testimony and compare the draft"
+                ],
+                "consequence": [
+                  [
+                    "Cassian的证词连同底稿录入独立设备，疑点单独标注。",
+                    "Cassian’s testimony and the draft are recorded independently, with uncertainties marked."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "要求他交出武器后再调查",
+                  "Require him to surrender his weapon before proceeding"
+                ],
+                "consequence": [
+                  [
+                    "银刃被封入证物柜，他只保留开档案柜的钥匙。",
+                    "The silver blade is sealed in the evidence locker; he keeps only the archive key."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "请Lucien作为见证人核验",
+                  "Ask Lucien to witness the verification"
+                ],
+                "consequence": [
+                  [
+                    "Lucien收到证物核验邀请，原始封印在他到达前不拆。",
+                    "Lucien is invited to witness; the original seal stays intact until he arrives."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c04s03",
+          "place": [
+            "猎人团核验室",
+            "Hunters’ verification room"
+          ],
+          "time": "第2日 · 11月8日 21:10",
+          "cast": [
+            "lucien",
+            "cassian"
+          ],
+          "visual": "Hunter archive verification room at night, Lucien and Cassian standing apart beside two documents under a lamp, restrained tension, no drawn weapons",
+          "beats": [
+            [
+              "n",
+              "核验室门敞开着，Lucien将博物馆副本放到桌上。",
+              "The verification-room door stays open as Lucien places the museum copy on the desk."
+            ],
+            [
+              "lucien",
+              "封印出自议会。签名还不能确认。",
+              "The seal comes from the council. The signature is not yet confirmed."
+            ],
+            [
+              "cassian",
+              "那就继续查，不替空白填名字。",
+              "Then we keep checking. We do not invent a name for a blank."
+            ],
+            [
+              "n",
+              "两版命令的纸纤维相同，墨迹却相差一次封存。",
+              "Both orders use the same paper fibers, but the ink was applied across two sealing events."
+            ],
+            [
+              "n",
+              "走廊尽头忽然传来金属抓挠声。",
+              "Metal scraping sounds from the far end of the corridor."
+            ]
+          ],
+          "exit": [
+            "证物室警报亮起，疏散门在走廊另一端。",
+            "The evidence-room alarm lights up; the evacuation door is at the corridor’s end."
+          ]
+        },
+        {
+          "id": "c04s04",
+          "place": [
+            "团部疏散走廊",
+            "Headquarters evacuation corridor"
+          ],
+          "time": "第2日 · 11月8日 21:20",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Stone and steel evacuation corridor at night, wounded but non-graphic Cassian bracing a safety door, Lucien guarding the passage, Rowan arriving with medical bag, distant shadow hound behind barrier",
+          "beats": [
+            [
+              "n",
+              "异界猎犬撞上防火门，Cassian的前臂被门边划伤。",
+              "A spectral hound strikes the fire door; its edge cuts Cassian’s forearm."
+            ],
+            [
+              "n",
+              "Lucien撑住门闩，急救值班的Rowan已赶到入口。",
+              "Lucien braces the bolt. Rowan, called from emergency duty, reaches the entrance."
+            ],
+            [
+              "rowan",
+              "出口还能走。证物袋在桌上，担架在我这里。",
+              "The exit is usable. The evidence pouch is on the desk; I have the stretcher."
+            ],
+            [
+              "cassian",
+              "别因为我受伤，就把判断交给我。",
+              "Do not let my injury make the decision for you."
+            ],
+            [
+              "n",
+              "门闩正在弯曲，安全出口保持亮灯。",
+              "The bolt begins to bend; the emergency exit remains lit."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "门闩撑不了多久，救援与证物怎样分配？",
+              "The bolt will not hold much longer. How should rescue and evidence be handled?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "协助转移Cassian，让Lucien带证物",
+                  "Help transfer Cassian while Lucien carries the evidence"
+                ],
+                "consequence": [
+                  [
+                    "Rowan固定伤臂，Cassian被转上担架；Lucien带走密封账簿。",
+                    "Rowan stabilizes the arm; Cassian reaches the stretcher while Lucien carries the sealed ledger."
+                  ],
+                  [
+                    "撤离单上，一条医院街道的地址开始褪色。",
+                    "On the evacuation sheet, a hospital street address begins to fade."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "优先带走账簿，交由Rowan处理伤员",
+                  "Secure the ledger while Rowan treats the injured"
+                ],
+                "consequence": [
+                  [
+                    "账簿封袋进入安全出口，Rowan与Lucien随后转移Cassian。",
+                    "The sealed ledger reaches the exit; Rowan and Lucien transfer Cassian behind it."
+                  ],
+                  [
+                    "账簿上的街道名逐渐变淡，医院地图也出现相同缺口。",
+                    "A street name fades in the ledger, matching a gap in the hospital map."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "让Rowan指挥救援，自己核对撤离清单",
+                  "Let Rowan direct the rescue while you check the evacuation list"
+                ],
+                "consequence": [
+                  [
+                    "Rowan接管担架，Lucien把证物固定在撤离车上。",
+                    "Rowan takes charge of the stretcher; Lucien secures the evidence to the evacuation cart."
+                  ],
+                  [
+                    "清点人数时，医院所在的街道从电子地图上消失。",
+                    "During the headcount, the hospital’s street disappears from the digital map."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": [
+        "正在遗忘的城市",
+        "THE CITY THAT FORGETS"
+      ],
+      "goal": [
+        "证明居民记录遭到抹除，安排可执行的救援",
+        "Prove residents are being erased and arrange a practical rescue"
+      ],
+      "say": [
+        "核对失踪记录、提出记忆锚或安排救援资源",
+        "Check missing records, propose a memory anchor, or allocate rescue resources"
+      ],
+      "scenes": [
+        {
+          "id": "c05s01",
+          "place": [
+            "医院街口",
+            "Hospital street entrance"
+          ],
+          "time": "第3日 · 11月9日 08:00",
+          "cast": [
+            "rowan"
+          ],
+          "visual": "Cold bright morning New York hospital street, Rowan with medical bag beside a pale discontinuity in the pavement and an ambulance, no disaster gore",
+          "beats": [
+            [
+              "n",
+              "一夜过去，医院外的路牌仍在，地图上的街道却是空白。",
+              "By morning the hospital street sign remains, but the map is blank."
+            ],
+            [
+              "n",
+              "Rowan手里的纸质交班单保留着四十七个名字。",
+              "Rowan’s paper handover sheet retains forty-seven names."
+            ],
+            [
+              "rowan",
+              "电子病历里，一个都没有了。",
+              "None of them remain in the electronic records."
+            ],
+            [
+              "n",
+              "大门里的值班灯还亮着，楼道传来呼救声。",
+              "The duty light is still on inside. Calls for help come from the corridor."
+            ],
+            [
+              "rowan",
+              "人还在。我们先让记录也留下。",
+              "The people are still here. We need their records to stay, too."
+            ]
+          ],
+          "exit": [
+            "Mara将离线记录送到医院旁的临时档案台。",
+            "Mara brings offline records to the temporary archive desk beside the hospital."
+          ]
+        },
+        {
+          "id": "c05s02",
+          "place": [
+            "临时离线档案室",
+            "Temporary offline archive"
+          ],
+          "time": "第3日 · 11月9日 08:30",
+          "cast": [
+            "mara"
+          ],
+          "visual": "Daylit temporary archive room near hospital, Mara compares paper patient lists and faded street maps at folding table, burgundy coat and copper glasses",
+          "beats": [
+            [
+              "n",
+              "Mara摊开九十九次循环留下的余烬档案。",
+              "Mara lays out the Ember Archive preserved across ninety-nine cycles."
+            ],
+            [
+              "mara",
+              "它放在结界外，再由保管人带回。不是所有地方都倒流。",
+              "It is stored outside the boundary and carried back by custodians. Time does not reverse everywhere."
+            ],
+            [
+              "n",
+              "每次重置都有几行名字变浅，纸页边缘却没有破损。",
+              "A few names fade after each reset, though the paper edges remain intact."
+            ],
+            [
+              "mara",
+              "缺口能用独立记录核验，不能只靠谁记性好。",
+              "We can verify gaps with independent records, not someone’s confidence in their memory."
+            ],
+            [
+              "n",
+              "医院广播响起：一层供电正在中断。",
+              "The hospital announcement reports a power failure on the ground floor."
+            ]
+          ],
+          "exit": [
+            "核验材料可分别送往病区、街口测量点或离线备份台。",
+            "Verification materials can go to the ward, street survey point, or offline backup desk."
+          ],
+          "choice": {
+            "q": [
+              "要证明这次抹除，先取得哪一组材料？",
+              "Which evidence should establish this erasure first?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "核对病区患者名单",
+                  "Check the ward’s patient roster"
+                ],
+                "consequence": [
+                  [
+                    "Rowan按床号核对纸质腕带，患者人数与交班单一致。",
+                    "Rowan checks paper wristbands by bed number; the count matches the handover sheet."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "测量消失街道的实际边界",
+                  "Survey the physical boundary of the missing street"
+                ],
+                "consequence": [
+                  [
+                    "街口测量保留了医院的实际坐标，地图空白无法覆盖它。",
+                    "The street survey preserves the hospital’s physical coordinates despite the blank map."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "比对Mara保存的离线副本",
+                  "Compare Mara’s offline copies"
+                ],
+                "consequence": [
+                  [
+                    "Mara逐页对照离线副本，找出首次消失的七个姓名。",
+                    "Mara compares offline copies page by page and identifies the first seven names to disappear."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c05s03",
+          "place": [
+            "医院一层疏散厅",
+            "Hospital ground-floor evacuation hall"
+          ],
+          "time": "第3日 · 11月9日 09:10",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Hospital ground floor evacuation hall in morning daylight and emergency lights, Rowan by evacuation checklist, Lucien holds open safety door, Cassian with bandaged forearm guides stretcher route",
+          "beats": [
+            [
+              "n",
+              "三人带着核验材料赶到一层，墙面正显出旧砖纹。",
+              "The three men reach the ground floor with the verification material as old brickwork shows through the walls."
+            ],
+            [
+              "rowan",
+              "门还能撑六分钟。楼梯通向外面的临时诊区。",
+              "The door can hold for six minutes. The stairs lead to the outdoor triage area."
+            ],
+            [
+              "n",
+              "Cassian用未受伤的手固定坡道，Lucien打开侧门。",
+              "Cassian braces the ramp with his uninjured hand; Lucien opens the side door."
+            ],
+            [
+              "n",
+              "纸质名单贴上病历柜，银色印记在柜门附近亮起。",
+              "A paper roster is placed on the record cabinet. The silver mark lights up nearby."
+            ],
+            [
+              "rowan",
+              "不是你的命在供电。是这些名字在回应。",
+              "Your life is not powering this. The names are responding."
+            ]
+          ],
+          "exit": [
+            "疏散继续，病历柜旁留出安全的核验位置。",
+            "Evacuation continues, leaving a safe verification station beside the cabinet."
+          ]
+        },
+        {
+          "id": "c05s04",
+          "place": [
+            "医院临时诊区",
+            "Hospital temporary triage area"
+          ],
+          "time": "第3日 · 11月9日 09:40",
+          "cast": [
+            "lucien",
+            "rowan",
+            "mara"
+          ],
+          "visual": "Morning outdoor covered triage courtyard, Rowan and Lucien beside restored paper roster and safe generator, Mara checks archive box, hopeful restrained mood",
+          "beats": [
+            [
+              "n",
+              "患者全部转入临时诊区，部分电子记录重新出现。",
+              "The patients reach temporary triage; some electronic records return."
+            ],
+            [
+              "mara",
+              "独立记录与本人姓名重合，形成了记忆锚。",
+              "Independent records matched with personal names form a memory anchor."
+            ],
+            [
+              "rowan",
+              "安娜·莫拉莱斯。她一直记得自己喜欢天文学。",
+              "Ana Morales. She still remembers that she loves astronomy."
+            ],
+            [
+              "lucien",
+              "这次恢复没有发生死亡。把过程留下。",
+              "No one died for this restoration. Preserve the procedure."
+            ],
+            [
+              "n",
+              "诊区需要姓名核验、电力和转运三组人手。",
+              "Triage needs three teams: identity verification, power, and transport."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "临时诊区稳定后，先加强哪一项保障？",
+              "With triage stable, which safeguard should be strengthened first?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "先恢复患者姓名和亲属联系",
+                  "Restore patient identities and family contacts first"
+                ],
+                "consequence": [
+                  [
+                    "姓名核验台先开，电力与转运交给值班组持续处理。",
+                    "The identity desk opens first; duty teams continue power and transport work."
+                  ],
+                  [
+                    "失踪记录里的共同签名，需要三名知情者分别解释。",
+                    "A signature shared by the missing records needs three separate accounts."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "先稳定备用电源",
+                  "Stabilize the backup power first"
+                ],
+                "consequence": [
+                  [
+                    "备用电源先接入，纸质身份核验与转运同步继续。",
+                    "Backup power is connected first while paper identification and transport continue."
+                  ],
+                  [
+                    "供电日志里，同一个签名跨过三次封锁命令。",
+                    "The power log shows the same signature across three lockdown orders."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "先转移儿童与需持续照护者",
+                  "Transfer children and patients needing continuous care first"
+                ],
+                "consequence": [
+                  [
+                    "高依赖患者先行转移，值班组维持其余病区和身份核验。",
+                    "High-dependency patients are transferred first; duty teams maintain the wards and identification."
+                  ],
+                  [
+                    "转运车带回三份相互冲突的死亡目击记录。",
+                    "The transport vehicle returns with three conflicting death-witness records."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": [
+        "三人，三份真相",
+        "THREE MEN, THREE TRUTHS"
+      ],
+      "goal": [
+        "核对三份证词，并约定新的责任边界",
+        "Compare three accounts and agree on new responsibilities"
+      ],
+      "say": [
+        "质询证词矛盾、提出合作边界或分配核验任务",
+        "Question conflicting testimony, set boundaries, or assign verification tasks"
+      ],
+      "scenes": [
+        {
+          "id": "c06s01",
+          "place": [
+            "公寓公共会客室",
+            "Apartment common sitting room"
+          ],
+          "time": "第3日 · 11月9日 14:00",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Daylit modern apartment common sitting room, Lucien Rowan and bandaged Cassian seated apart around table with three evidence folders, serious candid discussion",
+          "beats": [
+            [
+              "n",
+              "下午，三份材料在公寓公共会客室分别摊开。",
+              "That afternoon, three files are laid out separately in the apartment’s common room."
+            ],
+            [
+              "lucien",
+              "我记得午夜时钟响起，她在我怀里停止呼吸。",
+              "I remember the midnight bell and her breath stopping in my arms."
+            ],
+            [
+              "rowan",
+              "我梦见心跳恢复。梦里没有日期。",
+              "I dreamed of a heartbeat returning. The dream had no date."
+            ],
+            [
+              "cassian",
+              "我的片段里有假面。我无法证明是谁戴着它。",
+              "My fragment contains a mask. I cannot prove who wore it."
+            ],
+            [
+              "n",
+              "三份材料并列放置，矛盾没有被抹平。",
+              "The three files stay side by side; their contradictions remain visible."
+            ]
+          ],
+          "exit": [
+            "Lucien留在会客室，另外两人去整理各自原始材料。",
+            "Lucien stays in the sitting room while the others retrieve their original records."
+          ]
+        },
+        {
+          "id": "c06s02",
+          "place": [
+            "公寓小书房",
+            "Apartment study"
+          ],
+          "time": "第3日 · 11月9日 14:30",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Afternoon apartment study, Lucien seated away from open doorway places old door key and cycle log on desk, remorse without melodrama",
+          "beats": [
+            [
+              "n",
+              "小书房门开着。Lucien将一把旧钥匙放在桌上。",
+              "The study door is open. Lucien places an old key on the desk."
+            ],
+            [
+              "lucien",
+              "第五十四次，我把你锁在屋里，以为能避开天台。",
+              "In cycle fifty-four, I locked you inside, thinking it would keep you from the rooftop."
+            ],
+            [
+              "lucien",
+              "两个街区被吞掉，死亡仍发生了。",
+              "Two blocks were erased. The death still happened."
+            ],
+            [
+              "lucien",
+              "那是控制，不是保护。我不能用害怕为它开脱。",
+              "That was control, not protection. Fear does not excuse it."
+            ],
+            [
+              "n",
+              "钥匙旁放着完整记录，门口没有人挡着。",
+              "The full record lies beside the key. No one blocks the doorway."
+            ]
+          ],
+          "exit": [
+            "各自的证词可以分开封存，也可以放到公共核验台。",
+            "The accounts can be sealed separately or compared at the public verification desk."
+          ],
+          "choice": {
+            "q": [
+              "三份矛盾的证词怎样核对，才不会彼此污染？",
+              "How should the conflicting accounts be checked without contaminating one another?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "分开记录，再逐项比对",
+                  "Record them separately before comparing"
+                ],
+                "consequence": [
+                  [
+                    "三份证词分别密封，先后顺序与不确定项都被保留。",
+                    "The accounts are sealed separately, retaining their sequence and uncertainties."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "共同对质，只谈有依据的部分",
+                  "Compare them together and challenge unsupported claims"
+                ],
+                "consequence": [
+                  [
+                    "公共核验表列出一致项和冲突项，没有少数服从多数。",
+                    "The public comparison lists agreements and conflicts without using majority vote as proof."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "交给Mara建立独立保管链",
+                  "Ask Mara to establish independent custody"
+                ],
+                "consequence": [
+                  [
+                    "Mara接收原件，各人只保留副本，修改必须留下版本。",
+                    "Mara takes custody of originals; revisions to their copies require a version trail."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c06s03",
+          "place": [
+            "医院医生休息室",
+            "Hospital staff rest room"
+          ],
+          "time": "第3日 · 11月9日 17:00",
+          "cast": [
+            "rowan"
+          ],
+          "visual": "Late afternoon hospital staff rest room, Rowan beside old triage board and tea cup, tired honest expression, daylight through blinds",
+          "beats": [
+            [
+              "n",
+              "傍晚换班后，Rowan带来第九十七次封锁的纸质命令。",
+              "After the evening handover, Rowan brings the paper lockdown order from cycle ninety-seven."
+            ],
+            [
+              "rowan",
+              "我把异常患者留在医院，以为封门就能保护别人。",
+              "I kept anomalous patients inside, believing a locked door would protect everyone else."
+            ],
+            [
+              "rowan",
+              "裂缝扩大了。我不能把恐惧写成医疗判断。",
+              "The breach spread. I cannot call fear a medical judgment."
+            ],
+            [
+              "n",
+              "新预案把患者同意与独立复核写在转移流程前面。",
+              "The revised plan puts patient consent and independent review before transfers."
+            ],
+            [
+              "rowan",
+              "这次先听当事人的话，再决定怎么救。",
+              "This time, we listen to the people affected before deciding how to help."
+            ]
+          ],
+          "exit": [
+            "Cassian在医院楼下的公开会商室等候，原始命令已带齐。",
+            "Cassian waits in the public meeting room downstairs with the original orders."
+          ]
+        },
+        {
+          "id": "c06s04",
+          "place": [
+            "医院公开会商室",
+            "Hospital public meeting room"
+          ],
+          "time": "第3日 · 11月9日 18:00",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Early evening hospital meeting room, Cassian places sealed hunting order on table with Lucien and Rowan watching, bandaged arm, calm accountable teamwork",
+          "beats": [
+            [
+              "n",
+              "公开会商室里，Cassian把血誓命令压在透明板下。",
+              "In the public meeting room, Cassian secures the blood-oath order beneath a clear sheet."
+            ],
+            [
+              "cassian",
+              "我执行了命令，没有核对受伤的是谁。",
+              "I carried out an order without checking who would be harmed."
+            ],
+            [
+              "cassian",
+              "不再执行来路不明的命令。证据不齐，就停。",
+              "No more orders of uncertain origin. If evidence is missing, we stop."
+            ],
+            [
+              "n",
+              "Lucien交出保管清单，Rowan交出封锁原件。",
+              "Lucien provides the custody list; Rowan provides the original lockdown order."
+            ],
+            [
+              "n",
+              "三条材料线都指向议会明晚的预备仪式。",
+              "All three trails lead to the council’s preparatory ceremony tomorrow night."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "接下来的议会调查，谁负责哪一条核验线？",
+              "Who should lead which line of the council investigation?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "让Lucien核对议会通行与保管记录",
+                  "Assign Lucien to verify council access and custody"
+                ],
+                "consequence": [
+                  [
+                    "Lucien只领取通行记录，不代签玩家的仪式许可。",
+                    "Lucien takes the access records without signing any ceremony consent for you."
+                  ],
+                  [
+                    "他在来宾名单里发现了“第一百位新娘”的预填称谓。",
+                    "He finds the pre-filled designation “hundredth bride” in the guest register."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "与Rowan核对仪式的医疗风险",
+                  "Work with Rowan to check the ceremony’s medical risks"
+                ],
+                "consequence": [
+                  [
+                    "Rowan把风险核对交给独立值班组，保留退出仪式的权利。",
+                    "Rowan submits the risk review to an independent duty team and preserves the right to leave."
+                  ],
+                  [
+                    "仪式表没有医疗退出栏，只有预填的王冠佩戴时间。",
+                    "The ceremony form has no medical withdrawal field, only a pre-filled crowning time."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "让Cassian侦查守卫与撤离路线",
+                  "Assign Cassian to scout the guards and exit routes"
+                ],
+                "consequence": [
+                  [
+                    "Cassian交出守卫轮换表和两条无武器撤离路线。",
+                    "Cassian provides the guard schedule and two unarmed evacuation routes."
+                  ],
+                  [
+                    "两条路线的终点，都被改成了议会仪式厅。",
+                    "Both routes have been redirected toward the council ceremony hall."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "title": [
+        "第一百位新娘",
+        "THE HUNDREDTH BRIDE"
+      ],
+      "goal": [
+        "识破预备仪式的强制条款，保全原始录像",
+        "Expose coercion in the preparatory ceremony and preserve the original recording"
+      ],
+      "say": [
+        "质询预填同意、要求记录或提出非强制的调查方式",
+        "Challenge pre-filled consent, request records, or propose a non-coercive investigation"
+      ],
+      "scenes": [
+        {
+          "id": "c07s01",
+          "place": [
+            "议会迎宾前厅",
+            "Council reception foyer"
+          ],
+          "time": "第4日 · 11月10日 18:00",
+          "cast": [
+            "evelyn"
+          ],
+          "visual": "Night council reception foyer in gothic New York museum annex, Evelyn holding black invitation and crown display case behind her, no lettering",
+          "beats": [
+            [
+              "n",
+              "第二天傍晚，预备仪式的核验在迎宾前厅开始。",
+              "The following evening, the preparatory ceremony’s review begins in the reception foyer."
+            ],
+            [
+              "n",
+              "Evelyn把预填称谓的黑色邀请函推到桌沿。",
+              "Evelyn slides a black invitation with a pre-filled designation to the table’s edge."
+            ],
+            [
+              "evelyn",
+              "第七日，你会以第一百位新娘的身份戴冠。",
+              "On the seventh day, you will wear the crown as the hundredth bride."
+            ],
+            [
+              "n",
+              "签名栏仍然空着，王冠锁在玻璃柜里。",
+              "The signature field is blank. The crown remains locked in glass."
+            ],
+            [
+              "evelyn",
+              "你可以先看记录，再告诉我你的要求。",
+              "You may inspect the records before stating your terms."
+            ]
+          ],
+          "exit": [
+            "核验邀请允许进入舞厅外侧，不包括任何仪式许可。",
+            "The review invitation permits access to the ballroom edge, not consent to a ceremony."
+          ]
+        },
+        {
+          "id": "c07s02",
+          "place": [
+            "议会舞厅外廊",
+            "Council ballroom anteroom"
+          ],
+          "time": "第4日 · 11月10日 18:30",
+          "cast": [
+            "lucien",
+            "evelyn"
+          ],
+          "visual": "Gothic gala ballroom anteroom at night, Lucien in black formal coat facing Evelyn in black velvet suit beside unaccepted invitation, warm chandeliers",
+          "beats": [
+            [
+              "n",
+              "外廊能看见舞厅，却与戴冠席隔着一道门。",
+              "The anteroom overlooks the ballroom, separated from the crowning seat by a door."
+            ],
+            [
+              "n",
+              "来宾称呼循环编号，没人解释失踪者的名单。",
+              "Guests recite cycle numbers; no one explains the missing residents."
+            ],
+            [
+              "lucien",
+              "你的入场记录，不是同意戴冠的记录。",
+              "Your entry record is not consent to wear the crown."
+            ],
+            [
+              "evelyn",
+              "原始记录在红色档案室，访问方式须登记。",
+              "The original records are in the red archive. Access must be registered."
+            ],
+            [
+              "n",
+              "公开核验、保密核验和书面调取，各有独立编号。",
+              "Public review, confidential review, and written retrieval each have a separate reference code."
+            ]
+          ],
+          "exit": [
+            "红色档案室的保管程序等待确定。",
+            "The red archive’s custody procedure awaits confirmation."
+          ],
+          "choice": {
+            "q": [
+              "要怎样取得档案，才不会被算成接受仪式？",
+              "How should the archive be accessed without implying acceptance of the ceremony?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "公开登记调查身份入内",
+                  "Enter openly as an investigator"
+                ],
+                "consequence": [
+                  [
+                    "调查身份写入来宾登记，戴冠授权栏仍空白。",
+                    "Investigator status is entered in the guest register; crowning consent stays blank."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "以保密核验身份避开舞会宾客",
+                  "Use confidential reviewer access away from gala guests"
+                ],
+                "consequence": [
+                  [
+                    "Mara的保密核验许可替代舞会通行证，姓名不进入宾客名单。",
+                    "Mara’s confidential review permit replaces the gala pass without adding a guest entry."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "拒绝参加舞会，要求书面调取记录",
+                  "Decline the gala and demand written retrieval of records"
+                ],
+                "consequence": [
+                  [
+                    "拒绝函附入档案，录像由保管员送至独立核验台。",
+                    "The refusal is filed; a custodian brings the recording to the independent review desk."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c07s03",
+          "place": [
+            "红色档案室核验台",
+            "Red archive verification desk"
+          ],
+          "time": "第4日 · 11月10日 19:00",
+          "cast": [
+            "lucien",
+            "evelyn"
+          ],
+          "visual": "Red-walled archive verification desk at night, Lucien and Evelyn beside old film reel and two visibly different document stacks, no actual footage of player",
+          "beats": [
+            [
+              "n",
+              "原始录像在核验台开封，红色墙面映着放映机的光。",
+              "The original recording is unsealed at the desk; projector light washes over the red walls."
+            ],
+            [
+              "n",
+              "第一个循环开始于本月的城市疫病应急仪式。",
+              "The first cycle began with this month’s emergency ceremony during the city epidemic."
+            ],
+            [
+              "n",
+              "录像中，启用附页只批准一次有限回溯。",
+              "In the recording, the activation addendum authorizes only one limited reversal."
+            ],
+            [
+              "lucien",
+              "我后来才加入。我没有见过这份原始附页。",
+              "I joined later. I had never seen this original addendum."
+            ],
+            [
+              "n",
+              "续播记录里，疫病已解除，时钟却未按约停机。",
+              "In the continuation, the epidemic is resolved, but the clock is not shut down as agreed."
+            ]
+          ],
+          "exit": [
+            "录像校验码与隔壁议事间的停机令相连。",
+            "The recording’s checksum links to the shutdown order in the adjacent hearing room."
+          ]
+        },
+        {
+          "id": "c07s04",
+          "place": [
+            "议会小议事间",
+            "Council hearing room"
+          ],
+          "time": "第4日 · 11月10日 19:30",
+          "cast": [
+            "evelyn"
+          ],
+          "visual": "Small council hearing room at night, Evelyn beside unexecuted shutdown order and empty ceremonial chair, rigid controlled posture, candlelight",
+          "beats": [
+            [
+              "n",
+              "停机令被压在权力续期表下，执行栏没有签字。",
+              "The shutdown order lies beneath a power-renewal form. Its execution field is unsigned."
+            ],
+            [
+              "evelyn",
+              "停机后，我不能保证所有人继续服从。",
+              "After shutdown, I cannot guarantee everyone will keep obeying."
+            ],
+            [
+              "n",
+              "她没有否认修改过校验条款。",
+              "She does not deny changing the validation clauses."
+            ],
+            [
+              "evelyn",
+              "你们要带走副本，就留下完整的交接记录。",
+              "If you take copies, leave a complete handover record."
+            ],
+            [
+              "n",
+              "三条副本保全路线，都可在公开接待厅交接。",
+              "Three copy-preservation routes meet at the public reception hall."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "怎样将录像与停机令带出议会保管？",
+              "How should the recording and shutdown order leave council custody?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "请Lucien以公开舞伴身份掩护副本交接",
+                  "Ask Lucien to cover the copy handover as a publicly registered dance partner"
+                ],
+                "consequence": [
+                  [
+                    "公开交接登记在舞会接待台；任何触碰仍需另行同意。",
+                    "The handover is publicly registered at the gala desk; physical contact still requires separate consent."
+                  ],
+                  [
+                    "副本中第37次循环的封袋，只有Lucien能核验来源。",
+                    "A cycle-thirty-seven pouch in the copy requires Lucien to verify its provenance."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "请Cassian核对押送与撤离路线",
+                  "Ask Cassian to verify escort and exit routes"
+                ],
+                "consequence": [
+                  [
+                    "Cassian核对押送名单，副本经无武器通道离开。",
+                    "Cassian checks the escort list and takes the copies through the unarmed corridor."
+                  ],
+                  [
+                    "押送表里，第37次循环的复活记录被单独划走。",
+                    "The escort sheet separates a resurrection record from cycle thirty-seven."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "随Mara的档案保管程序转存",
+                  "Use Mara’s independent archive custody procedure"
+                ],
+                "consequence": [
+                  [
+                    "Mara的收据由双方签收，副本离开议会的独占保管。",
+                    "Mara’s receipt is countersigned, ending the council’s exclusive custody of the copies."
+                  ],
+                  [
+                    "新收据挂接了一份第37次循环的复活记录。",
+                    "The new receipt links to a resurrection record from cycle thirty-seven."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "title": [
+        "Lucien死去的那一夜",
+        "THE NIGHT LUCIEN DIED"
+      ],
+      "goal": [
+        "核实第37次循环的复活，并确定风险边界",
+        "Verify the resurrection in cycle thirty-seven and set risk boundaries"
+      ],
+      "say": [
+        "追问复活记录、说明相处边界或提出非致命调查办法",
+        "Ask about the resurrection record, state boundaries, or propose nonlethal research"
+      ],
+      "scenes": [
+        {
+          "id": "c08s01",
+          "place": [
+            "博物馆镜片保管室",
+            "Museum mirror-fragment vault"
+          ],
+          "time": "第5日 · 11月11日 09:00",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Morning museum secure mirror vault, Lucien beside fractured mirror in padded evidence tray, cool silver light and daylight, haunted but controlled",
+          "beats": [
+            [
+              "n",
+              "次日早晨，第37次循环的封袋在博物馆保管室开封。",
+              "The next morning, the cycle-thirty-seven pouch is opened in the museum vault."
+            ],
+            [
+              "n",
+              "碎镜只映出Lucien挡在时钟碎片前的身影。",
+              "The mirror shows only Lucien standing in the path of the clock fragments."
+            ],
+            [
+              "n",
+              "记录标明：23:58停止生命反应，重置后再次出现。",
+              "The record states: life signs ceased at 23:58; present again after reset."
+            ],
+            [
+              "lucien",
+              "那次我死了。重置把我带回来，没有带走记忆。",
+              "I died that time. The reset brought me back without taking the memory."
+            ],
+            [
+              "n",
+              "封袋底部有一枚被时钟纹路贯穿的戒指。",
+              "At the bottom of the pouch lies a ring threaded with the clock’s pattern."
+            ]
+          ],
+          "exit": [
+            "戒指与复活记录转到隔壁的隔离检查间。",
+            "The ring and resurrection record are transferred to the adjacent examination room."
+          ]
+        },
+        {
+          "id": "c08s02",
+          "place": [
+            "博物馆隔离检查间",
+            "Museum isolation examination room"
+          ],
+          "time": "第5日 · 11月11日 09:30",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Daylit museum conservation examination room, Lucien beside a glass tray holding cracked ring, hands relaxed away from viewer, vulnerable honest gaze",
+          "beats": [
+            [
+              "n",
+              "玻璃罩下，戒指与时钟信号同时脉动。",
+              "Under glass, the ring pulses in time with the clock signal."
+            ],
+            [
+              "lucien",
+              "我不是靠强大活到现在，是被它不断重新启动。",
+              "Strength did not keep me alive. It kept restarting me."
+            ],
+            [
+              "lucien",
+              "不死，和真正活着，不是一回事。",
+              "Immortality is not the same as living."
+            ],
+            [
+              "n",
+              "他把座椅移开，留出不必靠近他的通道。",
+              "He shifts the chair aside, leaving a route that does not require approaching him."
+            ],
+            [
+              "lucien",
+              "你可以关心，也可以只谈怎么解除绑定。",
+              "You may care, or we can discuss only how to end the binding."
+            ]
+          ],
+          "exit": [
+            "检查资料可以留在玻璃隔板两侧，不必接触本人。",
+            "The examination files can remain on either side of the glass; no contact is necessary."
+          ],
+          "choice": {
+            "q": [
+              "听完他的经历，你希望怎样继续这次谈话？",
+              "After hearing his account, how would you like this conversation to continue?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "表达关心，但不把安慰当成恋爱承诺",
+                  "Offer care without making a romantic commitment"
+                ],
+                "consequence": [
+                  [
+                    "Lucien留下复活记录，没有要求以触碰或承诺回应。",
+                    "Lucien leaves the resurrection record without asking for touch or commitment."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "要求他交出控制权，接受共同核验",
+                  "Ask him to release control and accept shared verification"
+                ],
+                "consequence": [
+                  [
+                    "保管权限交给共同签收台，Lucien不再单独持有钥匙。",
+                    "Custody passes to a shared sign-in desk; Lucien no longer holds the only key."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "要求空间，稍后再谈",
+                  "Ask for space and resume later"
+                ],
+                "consequence": [
+                  [
+                    "Lucien退到隔板外，资料留在桌上供独立阅读。",
+                    "Lucien moves behind the partition, leaving the records for private review."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c08s03",
+          "place": [
+            "博物馆修复工作间",
+            "Museum conservation workshop"
+          ],
+          "time": "第5日 · 11月11日 11:00",
+          "cast": [
+            "lucien"
+          ],
+          "visual": "Late morning museum conservation workshop, Lucien places mirror fragments in protective tray and leaves tools untouched awaiting collaboration, natural window light",
+          "beats": [
+            [
+              "n",
+              "工作间里，核心碎片仍封在保护盘中。",
+              "In the workshop, the core fragment remains sealed in a protective tray."
+            ],
+            [
+              "lucien",
+              "以前我会自己拿走它。这次不。",
+              "Before, I would have taken it away myself. Not this time."
+            ],
+            [
+              "n",
+              "他把风险表摊开，工具留在原位。",
+              "He unfolds the risk sheet and leaves the tools where they are."
+            ],
+            [
+              "lucien",
+              "我需要帮助，但你没有替我承担的义务。",
+              "I need help. You are not obliged to bear the risk for me."
+            ],
+            [
+              "n",
+              "检测结果显示，断开绑定未必导致死亡，仍需独立复核。",
+              "The test suggests unbinding need not cause death, but independent review is still required."
+            ]
+          ],
+          "exit": [
+            "Mara将复核人安排在楼下的风险会商室。",
+            "Mara arranges independent reviewers in the risk conference room downstairs."
+          ]
+        },
+        {
+          "id": "c08s04",
+          "place": [
+            "博物馆风险会商室",
+            "Museum risk conference room"
+          ],
+          "time": "第5日 · 11月11日 14:00",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian",
+            "mara"
+          ],
+          "visual": "Afternoon museum conference room, Mara explains diagram without visible text to Lucien Rowan Cassian around table, fractured ring in protective case",
+          "beats": [
+            [
+              "n",
+              "Mara把绑定、梦境和血誓分成三条待解除的限制。",
+              "Mara separates the binding, dreams, and blood oath into three restrictions to resolve."
+            ],
+            [
+              "mara",
+              "终止后可能失去力量或部分记忆。不能替本人签同意。",
+              "Ending them may cost power or some memories. Consent cannot be signed by someone else."
+            ],
+            [
+              "rowan",
+              "风险要复核，医疗支持也要到场。",
+              "The risks need review, and medical support must be present."
+            ],
+            [
+              "cassian",
+              "我签自己的，不替别人签。",
+              "I sign for myself, not for anyone else."
+            ],
+            [
+              "n",
+              "原始契约的末页索引，在风险表背面再次出现。",
+              "The original pact’s missing-page index appears again on the back of the risk sheet."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "解除时钟前，哪项工作应当先完成？",
+              "What must be done before attempting to unbind the clock?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "先验证非致命的解除方法",
+                  "Verify a nonlethal unbinding method first"
+                ],
+                "consequence": [
+                  [
+                    "非致命方案进入独立复核，未经证实不执行。",
+                    "The nonlethal method enters independent review and will not be used unverified."
+                  ],
+                  [
+                    "复核表指出：末页保存着原始撤销条件。",
+                    "The review identifies the missing page as the source of the original revocation conditions."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "逐一取得盟友对自身风险的同意",
+                  "Obtain each ally’s consent to their own risk"
+                ],
+                "consequence": [
+                  [
+                    "各人同意分开签收，任何人都可在实施前撤回。",
+                    "Each person’s consent is recorded separately and may be withdrawn before implementation."
+                  ],
+                  [
+                    "签收表仍缺撤销条件的原文，末页必须找回。",
+                    "The signed forms still lack the original revocation conditions. The page must be found."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "暂不决定，先补齐末页证据",
+                  "Delay the decision until the missing-page evidence is complete"
+                ],
+                "consequence": [
+                  [
+                    "执行时间暂缓，已取得的风险资料保持公开。",
+                    "Implementation is deferred while the collected risk evidence remains open."
+                  ],
+                  [
+                    "末页索引指向第一轮仪式录像的未删节备份。",
+                    "The index points to an uncut backup of the first-cycle ceremony."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "title": [
+        "第一个循环留下的责任",
+        "THE BETRAYAL OF THE FIRST SELF"
+      ],
+      "goal": [
+        "找回撤销末页，揭穿献祭检验",
+        "Recover the revocation page and expose the sacrificial validation"
+      ],
+      "say": [
+        "核对原始撤销条件、拒绝献祭或质询受益者",
+        "Check the original revocation terms, reject sacrifice, or question who benefits"
+      ],
+      "scenes": [
+        {
+          "id": "c09s01",
+          "place": [
+            "档案馆独立阅片间",
+            "Archive private screening room"
+          ],
+          "time": "第6日 · 11月12日 09:00",
+          "cast": [],
+          "visual": "Morning private archive screening room explicitly alone, film reel and projector, empty chair, abstract light on screen without recognizable person or text",
+          "beats": [
+            [
+              "n",
+              "一夜复核后，未删节备份送到独立阅片间。",
+              "After overnight verification, the uncut backup reaches the private screening room."
+            ],
+            [
+              "n",
+              "第一轮录像里，当时的签署者批准一次应急回溯。",
+              "In the first-cycle recording, the signatory authorizes a single emergency reversal."
+            ],
+            [
+              "n",
+              "附注曾允许暂缓记忆，后来补上随时撤回的权利。",
+              "An addendum permits temporary memory suspension, then adds a right to withdraw it."
+            ],
+            [
+              "n",
+              "录像不能替现在的你表态，也不能替篡改者免责。",
+              "The recording cannot speak for you now or excuse whoever altered it."
+            ],
+            [
+              "n",
+              "末页的保管编号反复出现，指向旧钟的维修盒。",
+              "The final page’s custody number recurs, pointing to the old clock’s service box."
+            ]
+          ],
+          "exit": [
+            "Mara已申请开箱核验，地点在钟楼保管间。",
+            "Mara has requested a witnessed opening in the clock-tower vault."
+          ]
+        },
+        {
+          "id": "c09s02",
+          "place": [
+            "钟楼保管间",
+            "Clock-tower vault"
+          ],
+          "time": "第6日 · 11月12日 10:00",
+          "cast": [
+            "mara"
+          ],
+          "visual": "Morning clock tower vault, Mara opens old clock maintenance box revealing an archival parchment page in protective sleeve, copper glasses, no readable text",
+          "beats": [
+            [
+              "n",
+              "维修盒封印与索引吻合，Mara在摄像头前取出末页。",
+              "The service-box seal matches the index. Mara removes the page before the camera."
+            ],
+            [
+              "mara",
+              "撤销权属于当前启用者，不由旧承诺代签。",
+              "Revocation belongs to the current operator. An old promise cannot sign for them."
+            ],
+            [
+              "n",
+              "条件列明：原始末页、独立见证、居民记忆锚、三路同时校验。",
+              "The terms specify the original page, independent witnesses, residents’ memory anchors, and three simultaneous validations."
+            ],
+            [
+              "mara",
+              "这里没有任何献祭条款。",
+              "There is no sacrificial clause here."
+            ],
+            [
+              "n",
+              "页边的缝线与1894年原约完全吻合。",
+              "The stitching at the edge matches the 1894 charter exactly."
+            ]
+          ],
+          "exit": [
+            "认证副本送往议会质询室，原件保持独立保管。",
+            "A certified copy goes to the council hearing room; the original remains in independent custody."
+          ],
+          "choice": {
+            "q": [
+              "旧签署者的决定，与现在的责任应该怎样区分？",
+              "How should the earlier signatory’s decision be separated from responsibility now?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "拒绝继承未由自己同意的罪责",
+                  "Reject guilt imposed without present consent"
+                ],
+                "consequence": [
+                  [
+                    "核验表把当前撤销权与旧签署责任分开，个人自由不再作抵押。",
+                    "The review separates present revocation rights from earlier liability; personal freedom is not collateral."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "承认救城初衷，但要求纠正后续伤害",
+                  "Acknowledge the rescue intention while demanding repair of later harm"
+                ],
+                "consequence": [
+                  [
+                    "救援成果与重复伤害分别登记，没有用初衷冲销后果。",
+                    "Rescue achievements and repeated harm are recorded separately; intention does not cancel consequences."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "要求完整公布每一次改写记录",
+                  "Demand the full history of every alteration"
+                ],
+                "consequence": [
+                  [
+                    "改写版本全部保全，议会不能只公布有利的一页。",
+                    "Every revision is preserved; the council cannot publish only a favorable page."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c09s03",
+          "place": [
+            "议会质询室",
+            "Council inquiry room"
+          ],
+          "time": "第6日 · 11月12日 14:00",
+          "cast": [
+            "evelyn"
+          ],
+          "visual": "Daylit council inquiry room, Evelyn seated across evidence desk with certified pact copies, guarded expression and open door, no crown on player",
+          "beats": [
+            [
+              "n",
+              "质询室里，Evelyn把一只夜冠匣放在认证副本旁。",
+              "In the inquiry room, Evelyn places a crown case beside the certified copy."
+            ],
+            [
+              "evelyn",
+              "保留循环，你可以继续拥有那些记忆。",
+              "Keep the loop, and you can keep those memories."
+            ],
+            [
+              "n",
+              "副本上的撤销权没有因她的提议消失。",
+              "The revocation right on the copy does not vanish with her offer."
+            ],
+            [
+              "evelyn",
+              "我宁可让城市重复，也不愿失去控制。",
+              "I would rather repeat the city than lose control of it."
+            ],
+            [
+              "n",
+              "她的陈述被独立录音，未被登记为任何人的同意。",
+              "Her statement is independently recorded, not registered as anyone’s consent."
+            ]
+          ],
+          "exit": [
+            "证人资格的复核在档案馆公共核验厅继续。",
+            "Witness eligibility will be reviewed in the archive’s public verification hall."
+          ]
+        },
+        {
+          "id": "c09s04",
+          "place": [
+            "档案馆公共核验厅",
+            "Archive public verification hall"
+          ],
+          "time": "第6日 · 11月12日 16:00",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian",
+            "mara"
+          ],
+          "visual": "Afternoon public archive verification hall, Mara with witness register and Lucien Rowan Cassian examining separate eligibility documents, calm procedural focus",
+          "beats": [
+            [
+              "n",
+              "三人的限制都在核验表里，不能自称完全独立。",
+              "All three men’s restrictions appear on the review sheet; none can simply claim independence."
+            ],
+            [
+              "mara",
+              "先解除绑定、梦境校验和血誓，再分别确认自愿。",
+              "First release the binding, dream validation, and blood oath; then confirm voluntary participation separately."
+            ],
+            [
+              "n",
+              "Mara的结界外保管收据，提供一条独立见证的备用线。",
+              "Mara’s outside-boundary custody receipts provide an independent witness backup."
+            ],
+            [
+              "rowan",
+              "救援不能等。见证程序也不能省。",
+              "Rescue cannot wait. Neither can the witness procedure be skipped."
+            ],
+            [
+              "n",
+              "距离第七日只剩一夜，所有原件仍由独立保管人持有。",
+              "Only one night remains before day seven. Independent custodians retain every original."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "Evelyn试图维持循环，你要留下怎样的公开记录？",
+              "Evelyn is trying to preserve the loop. What public record should be made?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "明确拒绝以永恒交换持续重置",
+                  "Reject eternity in exchange for continuing the resets"
+                ],
+                "consequence": [
+                  [
+                    "拒绝书写明不接受继续重置，撤销权与救援权保持完整。",
+                    "The refusal rejects continued resets while preserving revocation and rescue rights."
+                  ],
+                  [
+                    "议会仍握着最后三枚校验印章，交接必须有人见证。",
+                    "The council still holds the three validation seals. Their handover needs witnesses."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "暂不表态，以书面条件追问更多证据",
+                  "Withhold commitment and request written terms as evidence"
+                ],
+                "consequence": [
+                  [
+                    "书面条件被标明仅供取证，不构成同意；Evelyn的签名成为版本证据。",
+                    "The written terms are marked as evidence only, not consent; Evelyn’s signature becomes version evidence."
+                  ],
+                  [
+                    "条件附表暴露了最后三枚校验印章的保管位置。",
+                    "An annex reveals where the three validation seals are kept."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "追查循环的权力受益者与责任",
+                  "Trace who benefits from the loop and who is responsible"
+                ],
+                "consequence": [
+                  [
+                    "续权记录被并入公开案卷，篡改责任不再藏在匿名议会之后。",
+                    "Power-renewal records enter the public case file, exposing responsibility behind the anonymous council."
+                  ],
+                  [
+                    "印章的出借审批，将在第七日傍晚失效。",
+                    "Authorization to borrow the seals expires at dusk on day seven."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "title": [
+        "最后七小时",
+        "THE LAST SEVEN HOURS"
+      ],
+      "goal": [
+        "完成双线救援，准备居民见证与三路校验",
+        "Complete the two rescues and prepare residents’ testimony and three-way validation"
+      ],
+      "say": [
+        "分配救援职责、核对记忆锚或说明此刻的关系边界",
+        "Assign rescue duties, check memory anchors, or state present relationship boundaries"
+      ],
+      "scenes": [
+        {
+          "id": "c10s01",
+          "place": [
+            "档案馆应急指挥台",
+            "Archive emergency coordination desk"
+          ],
+          "time": "第7日 · 11月13日 17:00",
+          "cast": [
+            "mara"
+          ],
+          "visual": "Dusk emergency coordination desk in public archive, Mara beside paper city map and three seal cases, emergency lanterns, tense purposeful mood",
+          "beats": [
+            [
+              "n",
+              "第七日傍晚，离午夜还剩七小时。",
+              "On the seventh evening, seven hours remain until midnight."
+            ],
+            [
+              "n",
+              "Mara把原件交独立保管人，三枚印章完成出借登记。",
+              "Mara entrusts originals to independent custodians and registers the loan of the three seals."
+            ],
+            [
+              "mara",
+              "印章只证明材料来源，不代表谁有权支配你。",
+              "The seals establish provenance. They grant no authority over you."
+            ],
+            [
+              "n",
+              "医院与南隧道同时报告撤离通道受阻。",
+              "The hospital and south tunnel both report blocked evacuation routes."
+            ],
+            [
+              "mara",
+              "两边都有队伍，备用电源只能先送一处。",
+              "Both have teams. The backup generator can reach only one first."
+            ]
+          ],
+          "exit": [
+            "Rowan和Cassian在医院调度室等候资源分配。",
+            "Rowan and Cassian await resource allocation in the hospital dispatch room."
+          ]
+        },
+        {
+          "id": "c10s02",
+          "place": [
+            "医院调度室",
+            "Hospital dispatch room"
+          ],
+          "time": "第7日 · 11月13日 17:30",
+          "cast": [
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Hospital emergency dispatch room at dusk, Rowan at paper triage roster and Cassian at tunnel map, portable generator near doorway, bandaged forearm",
+          "beats": [
+            [
+              "n",
+              "调度室里，患者名单与隧道撤离图并排贴好。",
+              "In dispatch, the patient roster and tunnel evacuation map are posted side by side."
+            ],
+            [
+              "rowan",
+              "医院需要连续供电。人工通气可以短时接上。",
+              "The hospital needs continuous power. Manual ventilation can bridge a short gap."
+            ],
+            [
+              "cassian",
+              "南隧道要排水。北侧干通道也能绕行，但更慢。",
+              "The south tunnel needs pumping. The dry north passage works, but takes longer."
+            ],
+            [
+              "n",
+              "两名独立队长在场，没人需要被放弃。",
+              "Two independent team leaders are present. No one needs to be abandoned."
+            ],
+            [
+              "rowan",
+              "先后顺序由资源决定，不由你喜欢谁决定。",
+              "Resource allocation is not a test of whom you love."
+            ]
+          ],
+          "exit": [
+            "调度单留有主方案与备用步骤，两支队伍都等待明确职责。",
+            "The dispatch sheet has primary and backup steps. Both teams await clear duties."
+          ],
+          "choice": {
+            "q": [
+              "一台发电机、两条救援线，你怎样安排？",
+              "One generator, two rescue lines. How will you allocate them?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "发电机先送医院，隧道队走干通道",
+                  "Send the generator to the hospital and use the dry tunnel route"
+                ],
+                "consequence": [
+                  [
+                    "医院恢复连续供电；Cassian带队沿干通道分批撤离。",
+                    "Continuous hospital power returns; Cassian leads staggered evacuation through the dry passage."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "发电机先排水，医院短时人工支持",
+                  "Pump the tunnel first while the hospital uses manual support"
+                ],
+                "consequence": [
+                  [
+                    "隧道积水排出；Rowan带值班组完成人工通气交接。",
+                    "The tunnel is pumped clear; Rowan’s duty team completes the manual ventilation handover."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "分时轮转电源，分别指定交接责任人",
+                  "Rotate power on a schedule with named handover leads"
+                ],
+                "consequence": [
+                  [
+                    "两名队长按时交接电源，病区与排水口分别保留人工备用组。",
+                    "The leads hand over power on schedule, retaining manual backup teams at both sites."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c10s03",
+          "place": [
+            "医院屋顶休息区",
+            "Hospital rooftop rest area"
+          ],
+          "time": "第7日 · 11月13日 20:00",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Quiet hospital rooftop rest area at blue evening, Lucien Rowan and Cassian sit apart with paper cups after successful evacuation, no dramatic danger, New York skyline",
+          "beats": [
+            [
+              "n",
+              "晚八点，两支队伍报告人员安全，交接单分别签收。",
+              "At eight, both teams report people safe; separate handover sheets are signed."
+            ],
+            [
+              "lucien",
+              "我爱的是现在的你，不只是我记得的那些片段。",
+              "I love you now, not only the fragments I remember."
+            ],
+            [
+              "rowan",
+              "我想有未来。但你不欠我那个未来。",
+              "I want a future. You do not owe me that future."
+            ],
+            [
+              "cassian",
+              "即使你独自走，我也会继续反对那座时钟。",
+              "Even if you walk alone, I will still stand against that clock."
+            ],
+            [
+              "n",
+              "三人没有索取回答，把休息区的出口留空。",
+              "None demands an answer. They leave the rest-area exit clear."
+            ]
+          ],
+          "exit": [
+            "Mara带来新消息，最后一枚印章在公开登记台受损。",
+            "Mara brings news: the last seal has been damaged at the public registry."
+          ]
+        },
+        {
+          "id": "c10s04",
+          "place": [
+            "市民公开登记台",
+            "Residents’ public registry"
+          ],
+          "time": "第7日 · 11月13日 21:30",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian",
+            "mara"
+          ],
+          "visual": "Night public archive registry with Lucien Rowan Cassian and Mara, cracked seal inside clear case and blank paper witness sheets, warm practical lamps, no readable writing",
+          "beats": [
+            [
+              "n",
+              "登记台上的印章裂成两半，监控保留着Evelyn动手的画面。",
+              "The seal lies in two pieces; the security recording preserves Evelyn breaking it."
+            ],
+            [
+              "mara",
+              "第三日验证过：姓名与独立记录可以形成替代锚。",
+              "We verified it on day three: names matched with independent records can form an alternative anchor."
+            ],
+            [
+              "n",
+              "居民的纸质证词逐份核对，未经本人确认的记录另放。",
+              "Residents’ paper statements are checked individually; unconfirmed records are kept separate."
+            ],
+            [
+              "n",
+              "受损印章的职能由共同见证接替，没有人被要求献出生命。",
+              "Collective testimony replaces the damaged seal’s function. No life is demanded."
+            ],
+            [
+              "mara",
+              "进塔前还可以谈边界。救援不会因为你的答案撤回。",
+              "You may still state your boundaries before the tower. Rescue will not be withdrawn for your answer."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "听到他们的心意后，你希望怎样共同进入最后的行动？",
+              "After hearing their feelings, how would you like to approach the final operation together?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "说明对某人的心意，仍分别核验行动同意",
+                  "Express feelings for someone while keeping operational consent separate"
+                ],
+                "consequence": [
+                  [
+                    "关系意愿不写入行动许可，各人的风险同意仍单独核验。",
+                    "Relationship wishes are not entered as operational consent; each risk consent remains separate."
+                  ],
+                  [
+                    "永夜之塔已开放最后一次材料交接。",
+                    "The Tower of Eternal Night opens its final evidence handover."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "暂不谈恋爱，明确以盟友身份合作",
+                  "Set romance aside and cooperate as allies"
+                ],
+                "consequence": [
+                  [
+                    "三人将关系讨论留到安全以后，既定救援职责保持不变。",
+                    "The men leave relationship discussions until safety is secured; rescue duties remain unchanged."
+                  ],
+                  [
+                    "独立保管人带着末页原件来到塔门。",
+                    "The independent custodian arrives at the tower door with the original final page."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "要求保留私人空间，行动只按已确认职责进行",
+                  "Request private space and proceed only by agreed responsibilities"
+                ],
+                "consequence": [
+                  [
+                    "行动组减少私人追问，撤离通道与独立见证照常保留。",
+                    "The team stops personal questioning and retains the exit route and independent witnesses."
+                  ],
+                  [
+                    "塔内最后一盏信号灯亮起，校验时限正在接近。",
+                    "The tower’s final signal lights up as the validation deadline approaches."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "title": [
+        "让时钟停止",
+        "BREAK THE CLOCK"
+      ],
+      "goal": [
+        "在不献祭任何人的前提下完成三路撤销校验",
+        "Complete three-way revocation without sacrificing anyone"
+      ],
+      "say": [
+        "确认撤销条件、说明见证安排或提出非致命的校验方案",
+        "Confirm revocation terms, specify witnesses, or propose a nonlethal validation plan"
+      ],
+      "scenes": [
+        {
+          "id": "c11s01",
+          "place": [
+            "永夜之塔入口厅",
+            "Tower entrance hall"
+          ],
+          "time": "第7日 · 11月13日 23:00",
+          "cast": [
+            "evelyn"
+          ],
+          "visual": "Gothic clock tower entrance hall at late night, Evelyn beside luminous suspended clock mechanism behind glass, rain on high windows, no person in danger",
+          "beats": [
+            [
+              "n",
+              "午夜前一小时，独立保管人在塔门完成原件交接。",
+              "One hour before midnight, the independent custodian completes the original-document handover at the tower door."
+            ],
+            [
+              "n",
+              "Evelyn站在入口厅，时钟投影闪过九十九个终止编号。",
+              "Evelyn stands in the entrance hall as ninety-nine termination numbers flicker in projection."
+            ],
+            [
+              "evelyn",
+              "撤销之后，城市不会再听我指挥。",
+              "After revocation, the city will no longer answer to me."
+            ],
+            [
+              "n",
+              "原始末页与改写稿放在玻璃台两端。",
+              "The original final page and altered version lie at opposite ends of a glass table."
+            ],
+            [
+              "evelyn",
+              "你们仍可以停下来。",
+              "You can still stop."
+            ]
+          ],
+          "exit": [
+            "末页认证完成，见证人前往核心外环校验台。",
+            "The page is authenticated. The witnesses move to the outer-ring validation desk."
+          ]
+        },
+        {
+          "id": "c11s02",
+          "place": [
+            "核心外环校验台",
+            "Core outer-ring validation desk"
+          ],
+          "time": "第7日 · 11月13日 23:15",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian",
+            "mara"
+          ],
+          "visual": "Clock tower outer ring platform late at night, Mara authenticating original pact while Lucien Rowan Cassian stand at separate safe validation stations, luminous mechanism beyond railing",
+          "beats": [
+            [
+              "n",
+              "Mara宣读认证范围，不替玩家宣读撤销意愿。",
+              "Mara states the scope of authentication without declaring revocation on your behalf."
+            ],
+            [
+              "n",
+              "三人的限制按已复核程序进入解除准备，尚未启动核心。",
+              "The three restrictions enter verified release preparation; the core is not yet activated."
+            ],
+            [
+              "lucien",
+              "我的绑定，我自己同意解除。",
+              "I consent to release my binding."
+            ],
+            [
+              "rowan",
+              "我的风险由我确认，不转给别人。",
+              "I confirm my own risk. It will not be transferred to someone else."
+            ],
+            [
+              "cassian",
+              "血誓不能代替今天的同意。",
+              "The blood oath cannot replace consent today."
+            ]
+          ],
+          "exit": [
+            "认证、保护与公开质询都可以先行，但没有一项能省略原始条款。",
+            "Authentication, protection, or public challenge may lead, but none can omit the original terms."
+          ],
+          "choice": {
+            "q": [
+              "核心启动前，先以什么程序保障撤销？",
+              "Before the core starts, which procedure should secure revocation first?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "明确要求按原文撤销，并逐条核验",
+                  "Request revocation under the original terms and verify each clause"
+                ],
+                "consequence": [
+                  [
+                    "原始撤销条件逐条登记，篡改稿被隔离为证物。",
+                    "Original revocation conditions are logged clause by clause; the altered version is isolated as evidence."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "先落实证人保护与退出通道",
+                  "Secure witness protection and exits first"
+                ],
+                "consequence": [
+                  [
+                    "证人保护与医疗值守先就位，退出不会作违约处理。",
+                    "Witness protection and medical support take position; withdrawal will not be treated as breach."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "公开质询Evelyn对条款的改写",
+                  "Publicly challenge Evelyn’s alterations"
+                ],
+                "consequence": [
+                  [
+                    "改写记录连同Evelyn的陈述进入公开案卷，不能再秘密替换。",
+                    "Revision records and Evelyn’s statement enter the public case file, preventing secret replacement."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c11s03",
+          "place": [
+            "核心安全隔离间",
+            "Core safety enclosure"
+          ],
+          "time": "第7日 · 11月13日 23:35",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Clock tower safety enclosure late night, Lucien Rowan Cassian at three separate guarded validation consoles with simple glowing symbols, emergency exit open, no readable text",
+          "beats": [
+            [
+              "n",
+              "隔离屏亮起红色献祭检验，与原始末页不符。",
+              "A red sacrificial test lights up on the isolation panel, contradicting the original page."
+            ],
+            [
+              "n",
+              "认证副本逐项对照后，伪造的双重校验被移出执行链。",
+              "Comparison with the certified copy removes the forged double check from execution."
+            ],
+            [
+              "lucien",
+              "解除的是对时间的控制，不是谁的生命。",
+              "We release control of time, not anyone’s life."
+            ],
+            [
+              "rowan",
+              "三路都准备好，医疗备用也在。",
+              "All three channels are ready, with medical backup."
+            ],
+            [
+              "cassian",
+              "等你的方案确认，再同时执行。",
+              "We execute together after your plan is confirmed."
+            ]
+          ],
+          "exit": [
+            "午夜同步窗口只在核心操作台开放，出口始终保持可用。",
+            "The midnight synchronization window opens only at the core desk. The exit remains usable."
+          ]
+        },
+        {
+          "id": "c11s04",
+          "place": [
+            "核心同步操作台",
+            "Core synchronization desk"
+          ],
+          "time": "第7日 · 11月13日 23:58",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian",
+            "mara",
+            "evelyn"
+          ],
+          "visual": "Huge gothic clock tower core desk at two minutes before midnight, Lucien Rowan Cassian at separate stations, Mara with original document and Evelyn beyond safety rail, tense silver light, no injuries",
+          "beats": [
+            [
+              "n",
+              "23:58，原始末页、居民锚与独立资格复核全部到位。",
+              "At 23:58, the original page, residents’ anchors, and independent eligibility checks are in place."
+            ],
+            [
+              "mara",
+              "三路同步是底线。可以改变校验先后，不能转移生命代价。",
+              "Three-way synchronization is essential. We can reorder checks, not transfer a cost in lives."
+            ],
+            [
+              "n",
+              "Lucien的绑定、Rowan的梦境校验与Cassian的血誓等待解除。",
+              "Lucien’s binding, Rowan’s dream validation, and Cassian’s blood oath await release."
+            ],
+            [
+              "evelyn",
+              "没有守护者，明天会怎样？",
+              "Without a keeper, what will tomorrow be?"
+            ],
+            [
+              "n",
+              "钟针仍在移动，决定尚未被系统代签。",
+              "The hands are still moving. The system has not signed the decision for you."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "证据齐备后，你要求按怎样的安全程序同步撤销？",
+              "With the evidence complete, which safety procedure should guide synchronized revocation?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "均分操作责任，独立确认后同时解除",
+                  "Distribute responsibilities and release together after independent confirmations"
+                ],
+                "consequence": [
+                  [
+                    "三人分别确认自身风险，Mara核对原文，居民见证持续。",
+                    "Each man confirms his own risk; Mara checks the original terms while residents’ testimony continues."
+                  ],
+                  [
+                    "零点，三路同时解除。下一分钟的钟声没有带来重置。",
+                    "At midnight, all three channels release together. The next minute brings no reset."
+                  ],
+                  [
+                    "凌晨00:01，出口外第一次出现11月14日的报时。",
+                    "At 00:01, the time signal outside announces November 14 for the first time."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "先公开锁定伪造规则，再同步解除",
+                  "Publicly lock out the forged rule before simultaneous release"
+                ],
+                "consequence": [
+                  [
+                    "伪造检验的版本锁定到公开案卷，原始三路与居民锚再次核对。",
+                    "The forged test version is locked into the public case file; the original channels and residents’ anchors are checked again."
+                  ],
+                  [
+                    "零点，三路同时解除。玻璃后的红色检验熄灭。",
+                    "At midnight, all three channels release together. The red test behind the glass goes dark."
+                  ],
+                  [
+                    "凌晨00:01，独立记录保留着连续的一分钟。",
+                    "At 00:01, the independent record preserves one uninterrupted minute."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "先确认居民共同见证，再启动三路解除",
+                  "Confirm residents’ collective testimony before three-way release"
+                ],
+                "consequence": [
+                  [
+                    "居民逐份确认自身证词，Mara核对原文，三人独立确认风险。",
+                    "Residents confirm their own statements; Mara verifies the terms and each man confirms his risk."
+                  ],
+                  [
+                    "零点，三路同时解除。城市的名字没有再次褪去。",
+                    "At midnight, all three channels release together. The city’s names do not fade again."
+                  ],
+                  [
+                    "凌晨00:01，广播读出了此前从未到来的日期。",
+                    "At 00:01, the broadcast announces the date that had never arrived."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "title": [
+        "第一个真正的明天",
+        "THE FIRST TOMORROW"
+      ],
+      "goal": [
+        "确认重置结束，自主决定未来的关系与生活",
+        "Confirm the reset has ended and choose relationships and life freely"
+      ],
+      "say": [
+        "说明想与谁同行、选择独立或明确暂缓恋爱决定",
+        "State whom to be with, choose independence, or explicitly defer romance"
+      ],
+      "scenes": [
+        {
+          "id": "c12s01",
+          "place": [
+            "医院清晨观察台",
+            "Hospital morning observation terrace"
+          ],
+          "time": "11月14日 07:00 · 循环结束",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Warm sunrise hospital terrace in New York, Lucien feeling sunlight on open palm, Rowan checks paper pulse record, Cassian looks toward city, relieved but quiet",
+          "beats": [
+            [
+              "n",
+              "11月14日清晨七点，医院记录仍与凌晨连续。",
+              "At seven on November 14, the hospital record remains continuous with the night before."
+            ],
+            [
+              "n",
+              "手腕的银色印记变淡，居民名单仍在原处。",
+              "The silver wrist mark fades. The residents’ roster remains in place."
+            ],
+            [
+              "lucien",
+              "我能感觉到太阳的暖意。",
+              "I can feel the warmth of the sun."
+            ],
+            [
+              "rowan",
+              "生命体征稳定。之后还会复查，不只看这一刻。",
+              "Your vital signs are stable. We will check again, not rely on one moment."
+            ],
+            [
+              "cassian",
+              "我检查了两遍。时钟没有重启。",
+              "I checked twice. The clock did not restart."
+            ]
+          ],
+          "exit": [
+            "上午的修复登记在博物馆公共休息厅开放。",
+            "Morning restoration registration opens in the museum’s public lounge."
+          ]
+        },
+        {
+          "id": "c12s02",
+          "place": [
+            "博物馆公共休息厅",
+            "Museum public lounge"
+          ],
+          "time": "11月14日 09:20",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Sunny museum public lounge in morning, Lucien Rowan Cassian stand beside table with three unsealed envelopes and coffee, relaxed respectful space",
+          "beats": [
+            [
+              "n",
+              "三封没有封口的信放在公共休息厅，没有回信期限。",
+              "Three unsealed letters lie in the public lounge. None has a reply deadline."
+            ],
+            [
+              "lucien",
+              "如果你愿意，我们可以从第一次约会重新开始。",
+              "If you wish, we can begin again with a first date."
+            ],
+            [
+              "rowan",
+              "海边的邀请没有附带关系条件。",
+              "The invitation to the coast comes with no relationship conditions."
+            ],
+            [
+              "cassian",
+              "重建猎人团需要见证人，不需要谁成为谁的所有物。",
+              "Rebuilding the hunters needs witnesses, not anyone belonging to anyone."
+            ],
+            [
+              "n",
+              "修复登记台也接受独立参与，不要求加入任何关系。",
+              "The restoration desk accepts independent participation without requiring any relationship."
+            ]
+          ],
+          "exit": [
+            "上午仍有空闲，可以同行、独处，也可以只谈城市修复。",
+            "There is time this morning to be together, be alone, or discuss only restoration."
+          ],
+          "choice": {
+            "q": [
+              "没有倒计时的第一个上午，你想怎样度过？",
+              "How would you like to spend the first morning without a countdown?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "邀请Lucien一起走走，不预先确定关系",
+                  "Invite Lucien for a walk without defining a relationship in advance"
+                ],
+                "consequence": [
+                  [
+                    "散步的邀请被接受，旧誓言不随同行重新生效。",
+                    "The walk is accepted. Being together does not reactivate an old vow."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "与所有伙伴共同庆祝",
+                  "Celebrate with all your allies"
+                ],
+                "consequence": [
+                  [
+                    "公共休息厅多摆几只杯子，庆祝不设恋人席。",
+                    "More cups are set out in the public lounge. No seats are reserved for couples."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "独自去河边，保留自己的时间",
+                  "Visit the river alone and keep time for yourself"
+                ],
+                "consequence": [
+                  [
+                    "河岸路线与返程时间供自由安排，没有人要求陪同或汇报。",
+                    "The riverside route and return time remain yours to arrange. No one demands company or reports."
+                  ]
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "c12s03",
+          "place": [
+            "博物馆修复展厅",
+            "Museum restoration gallery"
+          ],
+          "time": "11月14日 16:30",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian"
+          ],
+          "visual": "Afternoon museum restoration gallery under glass roof, Lucien Rowan Cassian around public city repair display with blank pins, warm peaceful light",
+          "beats": [
+            [
+              "n",
+              "下午的修复展厅开放，城市案卷开始向居民归还。",
+              "The restoration gallery opens that afternoon as city records begin returning to residents."
+            ],
+            [
+              "n",
+              "三份行动记录保留各人的责任，没有写成恋爱功劳。",
+              "The three operational records preserve responsibilities without recasting them as romantic merit."
+            ],
+            [
+              "lucien",
+              "你不必记得那些片段，才有资格拒绝我。",
+              "You do not need to remember those fragments to have the right to refuse me."
+            ],
+            [
+              "rowan",
+              "不决定恋爱，也是一份完整的未来。",
+              "A future without a romantic decision is still complete."
+            ],
+            [
+              "cassian",
+              "自由不是我们救城之后，才赏给你的东西。",
+              "Freedom is not something we award you for helping save the city."
+            ]
+          ],
+          "exit": [
+            "傍晚，Mara在玻璃穹顶登记厅开放新的无期限联系册。",
+            "At dusk, Mara opens a new contact register without deadlines beneath the glass dome."
+          ]
+        },
+        {
+          "id": "c12s04",
+          "place": [
+            "博物馆玻璃穹顶登记厅",
+            "Museum glass-dome registry"
+          ],
+          "time": "11月14日 18:30",
+          "cast": [
+            "lucien",
+            "rowan",
+            "cassian",
+            "mara"
+          ],
+          "visual": "Museum glass dome registry at sunset, Lucien Rowan Cassian stand apart in warm amber light while Mara opens fresh blank registry, unsealed envelopes on table, hopeful freedom",
+          "beats": [
+            [
+              "n",
+              "日落穿过玻璃穹顶，落在仍未封口的信上。",
+              "Sunset passes through the glass dome and falls across the still-unsealed letters."
+            ],
+            [
+              "n",
+              "Mara打开新的联系册，不替任何人填写关系。",
+              "Mara opens a new contact register without filling in anyone’s relationship."
+            ],
+            [
+              "mara",
+              "只记录你现在愿意留下的约定。以后仍可以改变。",
+              "We record only the agreements you want now. They may still change later."
+            ],
+            [
+              "n",
+              "三人留在能够听见、又不会挡住出口的位置。",
+              "The three men remain within earshot without blocking the exit."
+            ],
+            [
+              "n",
+              "城里的钟继续向前，这次没有最后一分钟。",
+              "The city’s clocks move forward. This time there is no final minute."
+            ]
+          ],
+          "choice": {
+            "q": [
+              "这个没有倒计时的未来，你希望怎样开始？",
+              "How do you want to begin this future without a countdown?"
+            ],
+            "options": [
+              {
+                "id": "A",
+                "intent": [
+                  "明确选择与Lucien重新建立恋爱关系",
+                  "Explicitly choose a new romantic relationship with Lucien"
+                ],
+                "consequence": [
+                  [
+                    "旧肖像留在档案馆。Lucien将第一次约会的时间留白，等双方共同确定。",
+                    "The old portraits remain in the archive. Lucien leaves the first date’s time open for both of you to agree."
+                  ],
+                  [
+                    "你们保留各自生活，约定每次亲近都听现在的意愿。",
+                    "You retain separate lives and agree to hear present wishes before every new intimacy."
+                  ],
+                  [
+                    "下一次相见可以只是喝咖啡，不必拯救整座城市。",
+                    "The next meeting can simply be coffee. It need not save an entire city."
+                  ]
+                ]
+              },
+              {
+                "id": "B",
+                "intent": [
+                  "明确选择与Rowan建立恋爱与共同生活",
+                  "Explicitly choose romance and a shared life with Rowan"
+                ],
+                "consequence": [
+                  [
+                    "医院恢复夜间急诊。Rowan把一次海边出游留在双方可调整的日程里。",
+                    "The hospital’s night clinic reopens. Rowan leaves a coastal trip on a schedule both of you can change."
+                  ],
+                  [
+                    "恋爱不替代工作边界，也不要求你负责他的每一次值班。",
+                    "Romance does not replace work boundaries or make you responsible for every shift."
+                  ],
+                  [
+                    "下一轮复诊与一次日出之约，都是生活的一部分。",
+                    "The next follow-up and a sunrise together can both belong to ordinary life."
+                  ]
+                ]
+              },
+              {
+                "id": "C",
+                "intent": [
+                  "明确选择与Cassian恋爱并重建信任",
+                  "Explicitly choose romance with Cassian and rebuild trust"
+                ],
+                "consequence": [
+                  [
+                    "猎人团撤销旧血誓，Cassian把责任审查交给独立成员。",
+                    "The hunters revoke the old blood oath. Cassian submits accountability review to independent members."
+                  ],
+                  [
+                    "你们的关系不替他免除责任；信任可以慢慢重新建立。",
+                    "Your relationship does not exempt him from responsibility. Trust can be rebuilt slowly."
+                  ],
+                  [
+                    "第一次没有任务的散步，路线由两人共同商量。",
+                    "The first walk without a mission has a route the two of you can choose together."
+                  ]
+                ]
+              },
+              {
+                "id": "D",
+                "intent": [
+                  "选择独立生活，不建立恋爱关系",
+                  "Choose an independent life without a romantic relationship"
+                ],
+                "consequence": [
+                  [
+                    "联系册保留朋友与公共求助渠道，不登记恋人。",
+                    "The register retains friends and public support contacts without naming a romantic partner."
+                  ],
+                  [
+                    "没有期限的车票可以买，也可以留待以后。城市不再收取自由的代价。",
+                    "An open-ended ticket can be bought now or later. The city no longer charges for freedom."
+                  ],
+                  [
+                    "朋友的下一封来信，会先问你愿不愿意收到。",
+                    "The next letter from a friend will first ask whether you wish to receive it."
+                  ]
+                ]
+              },
+              {
+                "id": "E",
+                "intent": [
+                  "暂不确定恋人，继续以伙伴身份同行",
+                  "Defer romance and continue together as companions"
+                ],
+                "consequence": [
+                  [
+                    "城市修复计划以伙伴身份存档，关系没有被偷偷补全。",
+                    "The restoration plan records companionship without silently inventing a relationship."
+                  ],
+                  [
+                    "未来可以出现约会，也可以一直只有友谊；没人为等待记账。",
+                    "There may be dates later, or lasting friendship. No one keeps a debt for waiting."
+                  ],
+                  [
+                    "下一次见面先谈一顿饭，新的日子不需要命运批准。",
+                    "The next meeting can start with a meal. New days need no permission from fate."
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "endings": {
+    "A": {
+      "id": "lucien",
+      "t": {
+        "zh": "重新相识",
+        "en": "Begin Again"
+      },
+      "txt": {
+        "zh": "旧肖像留在档案馆。Lucien将第一次约会的时间留白，等双方共同确定。\n你们保留各自生活，约定每次亲近都听现在的意愿。\n下一次相见可以只是喝咖啡，不必拯救整座城市。",
+        "en": "The old portraits remain in the archive. Lucien leaves the first date’s time open for both of you to agree.\nYou retain separate lives and agree to hear present wishes before every new intimacy.\nThe next meeting can simply be coffee. It need not save an entire city."
+      },
+      "line": {
+        "zh": "明天仍可以继续相见，也可以自由改变。",
+        "en": "Tomorrow still allows another meeting, and the freedom to change."
+      }
+    },
+    "B": {
+      "id": "rowan",
+      "t": {
+        "zh": "共同生活",
+        "en": "A Shared Life"
+      },
+      "txt": {
+        "zh": "医院恢复夜间急诊。Rowan把一次海边出游留在双方可调整的日程里。\n恋爱不替代工作边界，也不要求你负责他的每一次值班。\n下一轮复诊与一次日出之约，都是生活的一部分。",
+        "en": "The hospital’s night clinic reopens. Rowan leaves a coastal trip on a schedule both of you can change.\nRomance does not replace work boundaries or make you responsible for every shift.\nThe next follow-up and a sunrise together can both belong to ordinary life."
+      },
+      "line": {
+        "zh": "明天仍可以继续相见，也可以自由改变。",
+        "en": "Tomorrow still allows another meeting, and the freedom to change."
+      }
+    },
+    "C": {
+      "id": "cassian",
+      "t": {
+        "zh": "重建信任",
+        "en": "Trust Rebuilt"
+      },
+      "txt": {
+        "zh": "猎人团撤销旧血誓，Cassian把责任审查交给独立成员。\n你们的关系不替他免除责任；信任可以慢慢重新建立。\n第一次没有任务的散步，路线由两人共同商量。",
+        "en": "The hunters revoke the old blood oath. Cassian submits accountability review to independent members.\nYour relationship does not exempt him from responsibility. Trust can be rebuilt slowly.\nThe first walk without a mission has a route the two of you can choose together."
+      },
+      "line": {
+        "zh": "明天仍可以继续相见，也可以自由改变。",
+        "en": "Tomorrow still allows another meeting, and the freedom to change."
+      }
+    },
+    "D": {
+      "id": "independent",
+      "t": {
+        "zh": "独立的明天",
+        "en": "An Independent Tomorrow"
+      },
+      "txt": {
+        "zh": "联系册保留朋友与公共求助渠道，不登记恋人。\n没有期限的车票可以买，也可以留待以后。城市不再收取自由的代价。\n朋友的下一封来信，会先问你愿不愿意收到。",
+        "en": "The register retains friends and public support contacts without naming a romantic partner.\nAn open-ended ticket can be bought now or later. The city no longer charges for freedom.\nThe next letter from a friend will first ask whether you wish to receive it."
+      },
+      "line": {
+        "zh": "明天仍可以继续相见，也可以自由改变。",
+        "en": "Tomorrow still allows another meeting, and the freedom to change."
+      }
+    },
+    "E": {
+      "id": "open",
+      "t": {
+        "zh": "开放的未来",
+        "en": "An Open Future"
+      },
+      "txt": {
+        "zh": "城市修复计划以伙伴身份存档，关系没有被偷偷补全。\n未来可以出现约会，也可以一直只有友谊；没人为等待记账。\n下一次见面先谈一顿饭，新的日子不需要命运批准。",
+        "en": "The restoration plan records companionship without silently inventing a relationship.\nThere may be dates later, or lasting friendship. No one keeps a debt for waiting.\nThe next meeting can start with a meal. New days need no permission from fate."
+      },
+      "line": {
+        "zh": "明天仍可以继续相见，也可以自由改变。",
+        "en": "Tomorrow still allows another meeting, and the freedom to change."
+      }
+    }
+  },
+  "experience": {
+    "contract": "native-v2",
+    "minRoundsPerChapter": 0,
+    "free_truth": true,
+    "aftercare": "城市修复、日常邀约、尊重离线、可撤回同意；不用新危机催促登录。"
+  },
+  "authorship": {
+    "source": "M111_按MIRU写作规范v2_12章修订包.zip",
+    "authorized_repairs": "User approved repairing the established seven-day setting before publication on 2026-11-14.",
+    "preserved": "12 chapters, 48 scene IDs, 24 hidden branch groups, 74 options, 3 male leads, core conspiracy and 5 ending directions.",
+    "changes": "Removed reincarnation timeline conflicts and template transitions; repaired causal choice order and branch readbacks; separated Chinese/English; added existing-library games and scene art."
+  }
+}

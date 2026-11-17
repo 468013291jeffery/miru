@@ -13,7 +13,7 @@
 
 // 2026-10-29：⟦SET⟧ / ⟦IF⟧⟦ELSE⟧⟦/IF⟧ / ⟦OPT⟧ 进了剧本语法（运行时 app16_story2.js:27-28 与 app14_pack.js:471/233 早就支持），
 // 这里必须同步认它们，否则审查会把合法的留痕/条件/选项效果句报成「未知指令」并挡住上线。
-const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL', 'SECRET', 'REVEAL', 'ORIENT', 'LORE', 'FX', 'SFX']);
+const KNOWN = new Set(['CHAR', 'BGM', 'TIME', 'BG', 'CG', 'VIDEO', 'PHOTO', 'MG', 'FREE', 'CALL', '/CALL', 'ITEM', 'SET', 'IF', 'ELSE', '/IF', 'OPT', 'GOAL', 'DONE', 'SECRET', 'REVEAL', 'ORIENT', 'LORE', 'FX', 'SFX']);
 const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 
 function dslQA(md) {
@@ -69,7 +69,7 @@ function dslQA(md) {
     if (c.dots < c.choices) err.push('第 ' + n + ' 章：CHOICE ' + c.choices + ' 道，却只有 ' + c.dots + ' 个「# ·」收尾（少收尾会让后面的场景算进最后一个选项）');
     if (c.lines < 3) warn.push('第 ' + n + ' 章正文只有 ' + c.lines + ' 行');
   });
-  if (!st.you) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');
+  if (!st.you && !orChars.some(c => /^(你|您|you)$/i.test(c.n))) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');
   if (st.options < st.choices * 2) warn.push('选项数 ' + st.options + ' 少于选择道数 ' + st.choices + ' 的两倍 —— 可能有选择题只剩 1 个选项');
   lore.forEach(e => {
     if (!e.keys.length || !e.txt) err.push('设定集格式不对：' + e.raw + '…（要写成 ⟦LORE|关键词1,关键词2|设定内容⟧）');

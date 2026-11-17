@@ -1,0 +1,32 @@
+(function(){
+ const R=window.ONLYME_RELEASE,E=createOnlyMeEngine(),bi=x=>({zh:x,en:x});
+ const own=th=>!!(th&&th.pk&&wd(th.wid)?.community===R.work_id);
+ const state=th=>{th.pk.authoredContract=1;return th.pk.onlyMe||(th.pk.onlyMe=E.initial());};
+ function configure(w){w.literalPlayerNames101=true;for(const spec of R.cast){const id=w.cast.find(id=>ch(id)?.n===spec.name||(spec.key==='me'&&(ch(id)?.you94||id===w.you94||['主角','雷恩'].includes(ch(id)?.n))));if(id){const c=ch(id);if(spec.key==='me'){c.n='雷恩';c.n94={zh:'雷恩',en:'Wren'};c.you94=1;w.you94=id;w.pack.pov=id;}c.age=spec.age;c.g=spec.gender;if(c.studio){c.studio.age=String(spec.age);c.studio.g=spec.gender;}c.vibe=bi(spec.personality);c.looks=bi(spec.bio);c.role=bi(spec.role);}}if(R.presentation.cover){w.cover=R.presentation.cover;S.art[w.id]=R.presentation.cover;}w.premise=bi(R.presentation.background.join('\n\n'));w.premiseAuthor=1;w.you=bi(R.presentation.identity);w.leads=w.cast.filter(id=>R.cast.some(c=>c.lead&&c.name===ch(id).n));w.bgm='warm';w.pack.minRoundsPerChapter=0;w.pack.authoredContract=1;for(const [i,c]of w.pack.chapters.entries()){const p=R.presentation.chapters[i];c.goal=bi(p.goal);c.goalOwn=true;c.background=bi(p.background);c.strictDone=true;c.done163=p.criteria.map((name,j)=>({type:'flag',val:(j?'omchoice_':'omscene_')+'c'+String(i+1).padStart(2,'0'),name}));for(const lang of ['zh','en']){const a=c.beats[lang],sf='omscene_c'+String(i+1).padStart(2,'0'),cf='omchoice_c'+String(i+1).padStart(2,'0');if(!a.some(b=>b[1]==='set'&&b[2]?.flags?.includes(sf))){const at=a.findIndex(b=>b[1]==='line');a.splice(at<0?a.length:at,0,['sys','set',{flags:[sf]}]);}for(const b of a)if(b[1]==='line')for(const o of b[2].opts||[])o.set=[...new Set([...(o.set||[]),cf])];for(const o of c.choices)o.set=[...new Set([...(o.set||[]),cf])];const b=c.beats[lang].find(b=>b[1]==='scene');if(b){c.place[lang]=b[2].place||'';c.time[lang]=b[2].time||'';}}}if(w.premise){for(const lang of ['zh','en'])if(w.pack.intro?.[lang]){w.pack.intro[lang].bg=String(w.premise?.[lang]||'').split(/\n\s*\n/).filter(Boolean);w.pack.intro[lang].you=w.you?.[lang]||'';}}}
+ PARSE.use('only-me-v2',{build(next,doc,as){const r=next(doc,as),w=wd(r?.wid||r);if(OFF94.cur?.id!==R.work_id||!w)return r;
+  configure(w);
+  // The source's final choice precedes four conditional epilogues. Lift it into the
+  // authored chapter ending so the legacy default “continue → A” cannot replace it.
+  const c=w.pack.chapters[17];const lifted=c.choices;
+  for(const lang of ['zh','en']){
+   const a=c.beats[lang],at=a.findIndex(b=>b[1]==='line'&&b[2]?.opts?.length===3);
+   const opts=at>=0?a[at][2].opts:lifted;
+   const split=at>=0?at+1:a.findIndex(b=>b[1]==='scene'&&/^END A/.test(b[2]?.place||''));
+   if(opts.length!==4||split<0)throw Error('ONLY ME ending choice missing');
+   const tail=a.slice(split),starts=tail.map((b,i)=>b[1]==='scene'?i:-1).filter(i=>i>=0);
+   if(starts.length!==4)throw Error('ONLY ME ending scenes missing');
+   if(lang==='zh')c.choices=opts.map((o,i)=>({k:'ABCD'[i],t:typeof o.t==='string'?bi(o.t):o.t,then:{},set:o.set||[],mem:typeof o.t==='string'?bi(o.t):o.t}));
+   opts.forEach((o,i)=>{const route=tail.slice(starts[i],starts[i+1]??tail.length);c.choices[i].then[lang]=(Array.isArray(o.then)?o.then:o.then[lang]).concat(route);});
+   c.advanceOnly=false;c.beats[lang]=a.slice(0,at>=0?at:split);
+  }
+  w.pack.endings=Object.fromEntries(['伊莱亚斯 · 门没锁','裘德 · 你迟到了','赛拉斯 · 进来','自己的生活 · 只准看我'].map((t,i)=>['ABCD'[i],{t:bi(t),txt:bi(''),line:null}]));
+  return r;}});
+ const set=pkSet;pkSet=function(th,value){const a=Array.isArray(value)?value:[value];if(own(th))E.apply(state(th),a);return set.call(this,th,a.filter(f=>!String(f).startsWith('omdelta~')));};
+ const need=EN;EN=function(th){return own(th)?0:need.apply(this,arguments);};
+ const love=packLove;packLove=function(th){return own(th)?undefined:love.apply(this,arguments);};
+ const prompt=packPrompt;packPrompt=function(th){const p=prompt.apply(this,arguments);return own(th)?p+'\nONLY ME 内部演出规则：世界设定、图片描述、数值和样例玩家台词不是旁白。玩家只由本人发言；说停立即停止，不用感情惩罚拒绝。角色只说亲历和明确得知的事，不提前知道后续章或结局。当前已确认选择的数值变化累计（原稿未定义初始值，不得冒充绝对分数）：'+JSON.stringify(state(th).values)+'\n当前场景的公开背景：'+R.presentation.chapters[th.pk.ch-1].background+'\n当前章的推进目标（仅用来安排自然事件，不在台词中宣读）：'+R.presentation.chapters[th.pk.ch-1].goal+'；完成标准：'+R.presentation.chapters[th.pk.ch-1].criteria.join('；')+'。只有实际经历对应事件并由玩家本人作出决定才算完成，不能编造行动、不能替玩家选择，不因聊天次数达标而自动结算。':p;};
+ const install=installWork;installWork=async function(id){const r=await install.apply(this,arguments),w=wd(r);if(id===R.work_id&&w)configure(w);return r;};
+ const open=openThread;openThread=function(id){const th=S.threads[id];if(own(th)){configure(wd(th.wid));for(const m of th.msgs||[])if(m.onlyMeTrailer)m.poster=R.presentation.cover;const n=String(th.pk.ch).padStart(2,'0'),sf='omscene_c'+n,cf='omchoice_c'+n;th.pk.flags=th.pk.flags||{};if(th.pk.st==='choose')th.pk.flags[sf]=1;if(['next','end'].includes(th.pk.st)&&th.pk.picks?.[th.pk.ch]){th.pk.flags[sf]=1;th.pk.flags[cf]=1;}if(th.pk.after==='choose'&&th.pk.q?.length&&!th.pk.q.some(b=>b[1]==='set'&&b[2]?.flags?.includes(sf)))th.pk.q.push(['sys','set',{flags:[sf]}]);if(typeof EXPERIENCE124!=='undefined')for(const m of th.msgs||[])if(m.k==='chap'){const c=wd(th.wid).pack.chapters[m.n-1];if(c)m.brief124=EXPERIENCE124.brief(th,c,m.n);}}if(own(th)&&!th.msgs.some(m=>m.onlyMeTrailer)){const A=OFF94.assets[R.work_id]||{};if(A.opening_video)th.msgs.unshift({who:'sys',k:'storyTrailer',src:A.opening_video,poster:A.cover,title:'开场预告片',intro98:'opening-media',onlyMeTrailer:true,at:Date.now()});}return open.apply(this,arguments);};
+ if(typeof MSGKIND!=='undefined')MSGKIND.inline('onlyme:chapter-goals',['chap'],function(m,i,th,next){const html=next(m,i,th);if(!own(th))return html;const p=R.presentation.chapters[m.n-1];if(!p)return html;return html+'<aside class="onlyme-chapter-goals" style="background:#15111d;color:#f7edf2;line-height:1.7;margin:8px 12px;padding:14px;border:1px solid #80694d;border-radius:12px"><b>本章目标</b><p>'+esc(p.goal)+'</p><b>完成标准</b><ol>'+p.criteria.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ol><small>完成相关事件并作出本章决定后，才可进入下一章；聊天轮数不代替完成。</small></aside>';});
+ window.ONLYME_ENGINE={...E,own,state};
+})();

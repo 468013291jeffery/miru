@@ -14,9 +14,11 @@ const OFF94 = { cur: null, assets: {} };
 const dec94 = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
 function mk94(txt) { const m = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/.exec(String(txt || "").trim()); if (!m) return null; return { k: m[1], a: m[2] ? m[2].slice(1).split("|").map(dec94) : [] }; }
 async function off94Assets(id) {
-  if (OFF94.assets[id]) return OFF94.assets[id];
-  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) map = await r.json(); } catch (_) {}
-  OFF94.assets[id] = map || {}; return OFF94.assets[id];
+  const at=Date.now(); OFF94.assetAt=OFF94.assetAt||{};
+  if (OFF94.assets[id] && at-(OFF94.assetAt[id]||0)<120000) return OFF94.assets[id];
+  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Date.now(), {cache:"no-store"}); if (r.ok) map = await r.json(); } catch (_) {}
+  if (!Object.keys(map||{}).length && OFF94.assets[id]) return OFF94.assets[id];
+  OFF94.assets[id] = map || {}; OFF94.assetAt[id]=at; return OFF94.assets[id];
 }
 /* ---- parse: lift directives out of the narration ---- */
 function off94Parse(next, text) {
@@ -75,7 +77,7 @@ function off94Parse(next, text) {
       /* ⟦FX|id⟧：作者指定特效，持续氛围还是瞬间由特效库决定（app128_fxlib.js）。⟦SFX|id⟧：单独一个音效 */
       if (m.k === "FX") { const fx = window.FXBUS && FXBUS.resolve(a[0]); push(fx && fx.type === "ambient" ? ["sys", "fx", { k: fx.id }] : ["sys", "fx100", { id: a[0] }]); continue; }
       if (m.k === "SFX") { push(["sys", "sfx", { id: a[0] }]); continue; }
-      if (m.k === "TIME" || m.k === "BG") { for (let j = out.length - 1; j >= 0; j--) { const s = out[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
+      if (m.k === "TIME" || m.k === "BG") { const here=sink(), target=here.some(b=>Array.isArray(b)&&b[0]==="sys"&&b[1]==="scene")?here:out; for (let j = target.length - 1; j >= 0; j--) { const s = target[j]; if (Array.isArray(s) && s[0] === "sys" && s[1] === "scene") { if (m.k === "TIME") s[2].time = a[0]; else s[2].bg94 = a[0]; break; } } continue; }
       if (m.k === "CG" || m.k === "VIDEO") { push(["sys", m.k === "CG" ? "cg94" : "vid94", { slot: a[0], cap: a[1] || "" }]); continue; }
       if (m.k === "PHOTO") { push(["sys", "photo94", { t: a[0], cap: a[1] || a[0] }]); continue; }
       if (m.k === "MG") { const gid = /^g_/.test(a[0]) ? a[0] : "g_" + a[0]; push(["sys", "mg", { id: gid }]); continue; }
@@ -133,7 +135,7 @@ function off94Parse(next, text) {
     for (let j = c.items.length - 1; j >= 0; j--) { const y = c.items[j]; if (y && y.choice && y.free94) { c.items.push(["n", "act", "……"]); break; } if (y && y.choice) break; if (Array.isArray(y) && y[0] !== "sys") break; }
   });
   /* cast: everyone the sheet names comes first, in order */
-  if (chars.length) { const names = chars.map(a => a[0]), spp = text.includes('⟦SET|spp_v4⟧'); doc.cast = [...new Set((spp ? names : names.filter(n => doc.sp[n])).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)))].slice(0, spp ? 24 : 12); }
+  if (chars.length) { const names = chars.map(a => a[0]), spp = text.includes('⟦SET|spp_v4⟧') || text.includes('⟦SET|cast_all⟧'); doc.cast = [...new Set((spp ? names : names.filter(n => doc.sp[n])).concat((doc.cast || []).filter(n => !names.includes(n) && doc.sp[n] >= 8)))].slice(0, spp ? 24 : 12); }
   return doc;
 }
 /* ---- build: names → ids, asset slots → urls, cast sheet → characters ---- */

@@ -1,0 +1,15 @@
+{
+  "work_id": "w_scmwg7y9rwaee3c4191c",
+  "homepage_video": "video/vampire-home-8d626ca7.mp4",
+  "sha256": "8d626ca7f4697ce6b551d75113f870431f51bb5f8f0b3caac278d1bba910b8cd",
+  "seconds": 10,
+  "width": 1080,
+  "height": 1920,
+  "codecs": ["h264", "aac"],
+  "user_provided": true,
+  "transcoded": false,
+  "audio_preserved": true,
+  "story_changed": false,
+  "entry": "https://miru.plus/?story=w_scmwg7y9rwaee3c4191c",
+  "regression": "An already-open homepage receives the newly published story without duplicate cards; keeps the current card through shared UI redraws; the direct link focuses the M111 card even with an existing BL preference. The exact 1080x1920, ten-second file decoded and played in a browser. Old story availability filters remain in effect."
+}

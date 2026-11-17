@@ -1,0 +1,30 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const dir='content/official/only-me-v2/',script=fs.readFileSync(dir+'script.md','utf8'),R=JSON.parse(fs.readFileSync(dir+'release.json')),E=require('../'+dir+'engine.cjs').createOnlyMeEngine();
+const hooks={},ctx={console,window:{},S:{mine:{worlds:{},chars:{}},art:{},threads:{},works:[]},LL:(a,b)=>a,Lz:o=>typeof o==='string'?o:o?.zh||'',me:()=>'',wd:id=>ctx.S.mine.worlds[id],ch:id=>ctx.S.mine.chars[id],PARSE:{use:(n,v)=>hooks[n]=v},packSt:()=>({}),save(){},pkSet(){},EN:()=>5,packLove(){},packPick(){},packPrompt:()=>'',installWork:async()=>'',openThread(){}};vm.createContext(ctx);
+const p=fs.readFileSync('source/src/app51_import.js','utf8');vm.runInContext(p.slice(0,p.indexOf('const PARSE =')),ctx);const o=fs.readFileSync('source/src/app94_official2.js','utf8');vm.runInContext(o.slice(0,o.indexOf('/* ---- build:')),ctx);vm.runInContext(o.slice(o.indexOf('function off94Build('),o.indexOf('/* scene art registered again')),ctx);vm.runInContext(fs.readFileSync('source/src/app151_onlyme.js','utf8'),ctx);
+vm.runInContext('OFF94.cur={id:'+JSON.stringify(R.work_id)+'};OFF94.assets[OFF94.cur.id]='+fs.readFileSync('art/official/'+R.work_id+'.json','utf8'),ctx);
+const done=fs.readFileSync('source/src/app144_discfix.js','utf8');const ds=done.indexOf('(function () {',done.indexOf('每章要完成固定目标'));vm.runInContext(done.slice(ds,done.indexOf('/* ---- 运行时 ---- */',ds))+'})();',ctx);const doc=hooks['app163:done'].parse(t=>ctx.off94Parse(ctx.imParseCore,t),script);assert.equal(doc.chapters.length,18);assert.equal(doc.scenes,132);assert.equal(doc.choices,18);assert.equal(doc.chapters.reduce((n,c)=>n+c.items.reduce((n,b)=>n+(b.choice?.opts.length||0),0),0),58);assert.equal(doc.cast.length,4);assert(!doc.warn.some(w=>w.includes('IF')));assert.deepEqual(require('../api/_lib').safety([script]),[]);
+vm.runInContext(o.slice(o.indexOf('const YOU94 ='),o.indexOf('PARSE.use("app94:you94"')),ctx);
+const result=hooks['only-me-v2'].build((d,a)=>ctx.off94You94Build((d,a)=>ctx.off94Build(ctx.imBuildCore,d,a),ctx.off94You94Parse(()=>d,''),a),doc,'你'),w=ctx.wd(result.wid),P=w.pack;w.community=R.work_id;assert.equal(w.leads.length,3);assert.equal(P.chapters[0].place.zh,P.chapters[0].beats.zh.find(b=>b[1]==='scene')[2].place);assert.equal(P.chapters[0].time.zh,'23:47');assert.equal(P.chapters.length,18);assert.equal(P.chapters[17].advanceOnly,false);assert.equal(P.chapters[17].choices.length,4);
+function walk(a,out=[]){for(const b of a||[]){assert(Array.isArray(b));assert(!b[0].startsWith('@'));if(typeof b[2]==='string'){assert(!b[2].includes('⟦'),b[2]);assert(!b[2].includes('示例·你'));out.push(b[2]);}if(b[1]==='line')for(const opt of b[2].opts)walk(opt.then,out);if(b[1]==='if')walk(b[2].then,out);}return out;}
+for(const c of P.chapters){assert(c.strictDone);assert.equal(c.done163.length,2);assert(c.goal.zh.length>12);assert(c.beats.zh.some(b=>b[1]==='set'&&b[2].flags.includes(c.done163[0].val)));assert(c.choices.every(o=>o.set.includes(c.done163[1].val)));walk(c.beats.zh);c.choices.forEach(o=>walk(o.then.zh));}
+for(const [i,c]of P.chapters[17].choices.entries()){assert.equal(c.then.zh.filter(b=>b[1]==='scene').length,1);const branch=c.then.zh.find(b=>b[1]==='if');assert.equal(branch[2].cond.flag,['route_thorne','route_ferreira','route_reidy','route_herself'][i]);}
+assert.equal(doc.done163.length,18);assert.equal(doc.done163[0][0].type,'flag');
+const s=E.initial();E.apply(s,['omdelta~c01~trust~2','omdelta~c01~love_thorne~3']);const saved=JSON.stringify(s);E.apply(s,['omdelta~c01~trust~2']);assert.equal(JSON.stringify(s),saved);assert.equal(s.values.trust,2);assert.equal(s.values.love_thorne,3);
+const all=P.chapters.flatMap(c=>c.beats.zh);assert(all.some(b=>b[1]==='if'&&b[2].cond.flag==='om_companion17'));assert.equal(doc.secrets.length,5);assert(P.chapters.every(c=>c.goalOwn&&c.done163.length===2));
+console.log('ONLY ME: 18 chapters, 132 scenes, 58 options, 3 leads, 4 exclusive endings, 5 scoped secrets, independent refusal branch, typed production metadata and idempotent authored numeric changes passed.');
+
+const companion=P.chapters[16].beats.zh.find(b=>b[1]==='if'&&b[2].cond.flag==='om_companion17');assert.deepEqual(Array.from(companion[2].then.filter(b=>b[1]==='scene'),b=>b[2].bg94),['bg_c17s03','bg_c17s04','bg_c17s05','bg_c17s06']);
+
+const crypto=require('node:crypto');
+const assets=JSON.parse(fs.readFileSync('content/official/only-me-v2/media-hashes.json'));
+assert.equal(assets.length,263);
+for(const a of assets){assert(fs.existsSync(a.path),'Missing '+a.path);assert.equal(crypto.createHash('sha256').update(fs.readFileSync(a.path)).digest('hex'),a.sha256,a.path);}
+assert(JSON.parse(fs.readFileSync(dir+'validation.json')).publish_ready);
+console.log('ONLY ME: all 261 images and the opening video match reviewed source bytes.');
+
+for(const spec of JSON.parse(fs.readFileSync(dir+'cast.json'))){const c=w.cast.map(id=>ctx.ch(id)).find(c=>spec.key==='me'?c.you94:c.n===spec.name);assert.equal(c.age,spec.age);assert.equal(c.g,spec.gender);}
+
+const player=ctx.ch(w.you94);assert.equal(player.n94.en,'Wren');assert.equal(player.g,'f');assert.equal(player.age,27);assert(w.premise.zh.includes('The Slow Hour'));
+
+assert(w.literalPlayerNames101);const povCode=fs.readFileSync('source/src/app101_you.js','utf8');vm.runInContext(povCode.slice(povCode.indexOf('function povOf('),povCode.indexOf('function namesOf(')),ctx);assert.equal(ctx.povOf({pk:{as:w.you94}},w),null);

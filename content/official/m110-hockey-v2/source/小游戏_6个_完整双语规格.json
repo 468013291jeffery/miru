@@ -1,0 +1,234 @@
+{
+  "project": "MIRU-M110",
+  "note": "Proposed game IDs; bind against existing library before deployment",
+  "games": [
+    {
+      "id": "g_m110_clip_trace",
+      "name": "偷拍视频时间线",
+      "kind": "sequence",
+      "chapter": 1,
+      "scene": 3,
+      "goal": "根据三个镜头时间戳排出真实拍摄次序",
+      "intro": "旁白：三段片段被打乱，你需要还原谁先架好摄像机。",
+      "win": "你恢复了摄像机提前就位的次序，拿到可供复核的时间轴。",
+      "lose": "时间排序未能确认，Maya建议保留原件等待人工比对。",
+      "flag": "clip_order_verified",
+      "rounds": "20秒；3张时间卡拖拽排序；可重试1次；无惩罚",
+      "data": "08:37 安装摄像机、08:40 你抵达、08:42 Jace靠近镜头；正确序列1-2-3",
+      "win_flag": "mg_g_m110_clip_trace_win",
+      "lose_blocks_story": false,
+      "player_copy": {
+        "zh": "还原被偷拍的视频发生顺序",
+        "en": "Rebuild the hidden-camera timeline"
+      },
+      "gameplay": {
+        "interactions": "drag_to_order",
+        "retry_limit": 1,
+        "failure_blocks_story": false,
+        "supports_keyboard": true,
+        "supports_tap_alternative": true,
+        "non_audio_mode": true,
+        "success_flag": "mg_g_m110_clip_trace_win"
+      },
+      "production_status": "Designed; NOT registered or tested in the MIRU mini-game catalog",
+      "analytics_events": [
+        "game_open",
+        "game_success",
+        "game_fail",
+        "game_retry",
+        "game_skip_accessibility"
+      ],
+      "visual_asset": "game_m110_c01_panel.png"
+    },
+    {
+      "id": "g_m110_metadata",
+      "name": "被篡改的导出记录",
+      "kind": "spot",
+      "chapter": 3,
+      "scene": 3,
+      "goal": "找出原视频与公开视频的三个不同点",
+      "intro": "旁白：你将两个画面并排，检查未经授权的剪辑痕迹。",
+      "win": "三处剪辑标记得到确认，原片校验信息被保存。",
+      "lose": "画面差异尚不充分，证据仍可由第三方鉴定。",
+      "flag": "metadata_diff_verified",
+      "rounds": "45秒；两个相邻画面点击3处差异；误触不扣剧情数值",
+      "data": "机位标记、人物入镜顺序、上传时间浮层；差异均指向发布版有修改",
+      "win_flag": "mg_g_m110_metadata_win",
+      "lose_blocks_story": false,
+      "player_copy": {
+        "zh": "找出原视频与公开视频的差异",
+        "en": "Spot three differences between the raw and released clips"
+      },
+      "gameplay": {
+        "interactions": "tap_hotspots",
+        "retry_limit": 1,
+        "failure_blocks_story": false,
+        "supports_keyboard": true,
+        "supports_tap_alternative": true,
+        "non_audio_mode": true,
+        "success_flag": "mg_g_m110_metadata_win"
+      },
+      "production_status": "Designed; NOT registered or tested in the MIRU mini-game catalog",
+      "analytics_events": [
+        "game_open",
+        "game_success",
+        "game_fail",
+        "game_retry",
+        "game_skip_accessibility"
+      ],
+      "visual_asset": "game_m110_c03_panel.png"
+    },
+    {
+      "id": "g_m110_gate_match",
+      "name": "门禁编号拼合",
+      "kind": "match",
+      "chapter": 5,
+      "scene": 3,
+      "goal": "将门禁刷卡记录与出入门位置正确配对",
+      "intro": "旁白：四条门禁记录与旧票根编号相互矛盾。",
+      "win": "两条关键记录完成配对，异常开门时间被圈出。",
+      "lose": "你只排除了无关记录，Maya仍能申请完整后台日志。",
+      "flag": "gate_pair_verified",
+      "rounds": "40秒；4张记录卡配4个门位；允许重置一次",
+      "data": "A12设备门=17:06；B03媒体口=17:12；C08维修道=17:17；D02看台=17:22",
+      "win_flag": "mg_g_m110_gate_match_win",
+      "lose_blocks_story": false,
+      "player_copy": {
+        "zh": "匹配旧事故门禁刷卡记录",
+        "en": "Match each access entry to the correct door"
+      },
+      "gameplay": {
+        "interactions": "drag_to_match",
+        "retry_limit": 1,
+        "failure_blocks_story": false,
+        "supports_keyboard": true,
+        "supports_tap_alternative": true,
+        "non_audio_mode": true,
+        "success_flag": "mg_g_m110_gate_match_win"
+      },
+      "production_status": "Designed; NOT registered or tested in the MIRU mini-game catalog",
+      "analytics_events": [
+        "game_open",
+        "game_success",
+        "game_fail",
+        "game_retry",
+        "game_skip_accessibility"
+      ],
+      "visual_asset": "game_m110_c05_panel.png"
+    },
+    {
+      "id": "g_m110_bolt_compare",
+      "name": "护板安全检查",
+      "kind": "find",
+      "chapter": 7,
+      "scene": 3,
+      "goal": "在部件照片里找出松动、混用与磨损三个异常",
+      "intro": "旁白：Maya拍下固定件特写，让你标记安全疑点。",
+      "win": "三处风险均被标注，独立检测获得优先处理清单。",
+      "lose": "风险判断待专业工程师复核，现场仍保持封控。",
+      "flag": "bolt_risks_marked",
+      "rounds": "45秒；静态放大图点3处；失败不解除封锁",
+      "data": "松动螺帽、旧批次序号、异常磨损切口",
+      "win_flag": "mg_g_m110_bolt_compare_win",
+      "lose_blocks_story": false,
+      "player_copy": {
+        "zh": "找出护板固定件的安全疑点",
+        "en": "Mark three safety concerns in the rink boards"
+      },
+      "gameplay": {
+        "interactions": "tap_hotspots",
+        "retry_limit": 1,
+        "failure_blocks_story": false,
+        "supports_keyboard": true,
+        "supports_tap_alternative": true,
+        "non_audio_mode": true,
+        "success_flag": "mg_g_m110_bolt_compare_win"
+      },
+      "production_status": "Designed; NOT registered or tested in the MIRU mini-game catalog",
+      "analytics_events": [
+        "game_open",
+        "game_success",
+        "game_fail",
+        "game_retry",
+        "game_skip_accessibility"
+      ],
+      "visual_asset": "game_m110_c07_panel.png"
+    },
+    {
+      "id": "g_m110_audio_verify",
+      "name": "录音证词核验",
+      "kind": "sequence",
+      "chapter": 10,
+      "scene": 3,
+      "goal": "将三段原始录音与书面时间点排列一致",
+      "intro": "旁白：Maya按下播放键，请你核对原始警报和命令的顺序。",
+      "win": "你确认警报先响、命令后出，独立鉴定有了明确检查点。",
+      "lose": "音轨中的噪声影响辨认，Maya将交给专业声学机构。",
+      "flag": "audio_sequence_verified",
+      "rounds": "30秒；播放三段原创语音/波形并排序，配文字转写；可无声游玩",
+      "data": "警报17:31:08、关闭命令17:31:15、设施撞击17:31:42",
+      "win_flag": "mg_g_m110_audio_verify_win",
+      "lose_blocks_story": false,
+      "player_copy": {
+        "zh": "排列警报、命令、撞击的先后顺序",
+        "en": "Put the alarm, order, and impact in sequence"
+      },
+      "gameplay": {
+        "interactions": "drag_to_order",
+        "retry_limit": 1,
+        "failure_blocks_story": false,
+        "supports_keyboard": true,
+        "supports_tap_alternative": true,
+        "non_audio_mode": true,
+        "success_flag": "mg_g_m110_audio_verify_win"
+      },
+      "production_status": "Designed; NOT registered or tested in the MIRU mini-game catalog",
+      "analytics_events": [
+        "game_open",
+        "game_success",
+        "game_fail",
+        "game_retry",
+        "game_skip_accessibility"
+      ],
+      "visual_asset": "game_m110_c10_panel.png"
+    },
+    {
+      "id": "g_m110_statement_check",
+      "name": "赛后事实核查",
+      "kind": "match",
+      "chapter": 11,
+      "scene": 3,
+      "goal": "把四条公开说法匹配至可核实证据或标记待证实",
+      "intro": "旁白：发布前，你将媒体询问逐条对照调查文件。",
+      "win": "四条信息完成核查，球队发布了没有夸大结论的公告。",
+      "lose": "不确定的信息被移出公告，Maya保留核验后的最小声明。",
+      "flag": "statement_checked",
+      "rounds": "60秒；4条说法拖入已证实/待核实；误判默认待核实",
+      "data": "已证实：事故发生、停赛检查、旧报警遭覆盖；待核实：具体刑事责任",
+      "win_flag": "mg_g_m110_statement_check_win",
+      "lose_blocks_story": false,
+      "player_copy": {
+        "zh": "核对能公开的事实与尚未证实的推测",
+        "en": "Separate verified facts from unconfirmed claims"
+      },
+      "gameplay": {
+        "interactions": "drag_to_match",
+        "retry_limit": 1,
+        "failure_blocks_story": false,
+        "supports_keyboard": true,
+        "supports_tap_alternative": true,
+        "non_audio_mode": true,
+        "success_flag": "mg_g_m110_statement_check_win"
+      },
+      "production_status": "Designed; NOT registered or tested in the MIRU mini-game catalog",
+      "analytics_events": [
+        "game_open",
+        "game_success",
+        "game_fail",
+        "game_retry",
+        "game_skip_accessibility"
+      ],
+      "visual_asset": "game_m110_c11_panel.png"
+    }
+  ]
+}

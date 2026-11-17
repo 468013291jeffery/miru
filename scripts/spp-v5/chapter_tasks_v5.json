@@ -1,0 +1,947 @@
+{
+  "status": "authoring_contract_not_server_enforced",
+  "chapters": [
+    {
+      "chapter": 1,
+      "day": 0,
+      "lead": null,
+      "goals": [
+        "核对期限、评分与退出方式",
+        "确认三条相处边界或提出修改",
+        "选择第一天的参与方向并决定是否继续"
+      ],
+      "task_ids": [
+        "chapter_01_task_1",
+        "chapter_01_task_2",
+        "chapter_01_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_01_task_1",
+          "goal": "核对期限、评分与退出方式",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_01_task_2",
+          "goal": "确认三条相处边界或提出修改",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_01_task_3",
+          "goal": "选择第一天的参与方向并决定是否继续",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 2,
+      "day": 1,
+      "lead": "c01",
+      "goals": [
+        "说明经验和边界，选择骑乘、牵马或步行",
+        "比较两条路线并说明理由，现场确认一次实际反馈",
+        "核对休息与返程安排，写一条有依据的评级"
+      ],
+      "task_ids": [
+        "chapter_02_task_1",
+        "chapter_02_task_2",
+        "chapter_02_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_02_task_1",
+          "goal": "说明经验和边界，选择骑乘、牵马或步行",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_02_task_2",
+          "goal": "比较两条路线并说明理由，现场确认一次实际反馈",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_02_task_3",
+          "goal": "核对休息与返程安排，写一条有依据的评级",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 3,
+      "day": 2,
+      "lead": "c02",
+      "goals": [
+        "约定纠正方式和是否允许身体指导",
+        "自选练习或观察，发现一处前后变化",
+        "评价一次调整，给出具体而非外貌理由"
+      ],
+      "task_ids": [
+        "chapter_03_task_1",
+        "chapter_03_task_2",
+        "chapter_03_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_03_task_1",
+          "goal": "约定纠正方式和是否允许身体指导",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_03_task_2",
+          "goal": "自选练习或观察，发现一处前后变化",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_03_task_3",
+          "goal": "评价一次调整，给出具体而非外貌理由",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 4,
+      "day": 3,
+      "lead": "c03",
+      "goals": [
+        "说清饮食偏好、过敏信息和不想尝试的东西",
+        "比较两份菜单，完成一道冷盘或口述备餐方案",
+        "邀请他为自己留一份餐，核对实际回应后记录评级"
+      ],
+      "task_ids": [
+        "chapter_04_task_1",
+        "chapter_04_task_2",
+        "chapter_04_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_04_task_1",
+          "goal": "说清饮食偏好、过敏信息和不想尝试的东西",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_04_task_2",
+          "goal": "比较两份菜单，完成一道冷盘或口述备餐方案",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_04_task_3",
+          "goal": "邀请他为自己留一份餐，核对实际回应后记录评级",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 5,
+      "day": 4,
+      "lead": "c04",
+      "goals": [
+        "说清不接受的保护方式，确认可用出口",
+        "区分一项已核实事实与一项猜测，选择等待或求助",
+        "核对他是否尊重决定，为安全与自主分别评价"
+      ],
+      "task_ids": [
+        "chapter_05_task_1",
+        "chapter_05_task_2",
+        "chapter_05_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_05_task_1",
+          "goal": "说清不接受的保护方式，确认可用出口",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_05_task_2",
+          "goal": "区分一项已核实事实与一项猜测，选择等待或求助",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_05_task_3",
+          "goal": "核对他是否尊重决定，为安全与自主分别评价",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 6,
+      "day": 5,
+      "lead": "c05",
+      "goals": [
+        "约定闻香方式，蒙眼可拒绝",
+        "比较两瓶气味并描述差异，可使用文字替代",
+        "决定留下、修改或不收专属香，并解释理由"
+      ],
+      "task_ids": [
+        "chapter_06_task_1",
+        "chapter_06_task_2",
+        "chapter_06_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_06_task_1",
+          "goal": "约定闻香方式，蒙眼可拒绝",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_06_task_2",
+          "goal": "比较两瓶气味并描述差异，可使用文字替代",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_06_task_3",
+          "goal": "决定留下、修改或不收专属香，并解释理由",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 7,
+      "day": 6,
+      "lead": "c06",
+      "goals": [
+        "选择说话、安静观察或共同动手",
+        "辨别一个温度或器物差异，说出观察依据",
+        "决定什么值得等待，记下他的实际回应"
+      ],
+      "task_ids": [
+        "chapter_07_task_1",
+        "chapter_07_task_2",
+        "chapter_07_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_07_task_1",
+          "goal": "选择说话、安静观察或共同动手",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_07_task_2",
+          "goal": "辨别一个温度或器物差异，说出观察依据",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_07_task_3",
+          "goal": "决定什么值得等待，记下他的实际回应",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 8,
+      "day": 7,
+      "lead": "c07",
+      "goals": [
+        "确认是否愿意公开露面和舞蹈",
+        "选择练步、观察或与他讨论节奏，得到具体反馈",
+        "提出一个公开与私下不同的要求，复核其回应"
+      ],
+      "task_ids": [
+        "chapter_08_task_1",
+        "chapter_08_task_2",
+        "chapter_08_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_08_task_1",
+          "goal": "确认是否愿意公开露面和舞蹈",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_08_task_2",
+          "goal": "选择练步、观察或与他讨论节奏，得到具体反馈",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_08_task_3",
+          "goal": "提出一个公开与私下不同的要求，复核其回应",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 9,
+      "day": 8,
+      "lead": "c08",
+      "goals": [
+        "决定记录哪些信息、哪些不得保存",
+        "比较一项观察与其解释，指出不能直接推断的部分",
+        "选择保留或删除记录，评价他如何执行"
+      ],
+      "task_ids": [
+        "chapter_09_task_1",
+        "chapter_09_task_2",
+        "chapter_09_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_09_task_1",
+          "goal": "决定记录哪些信息、哪些不得保存",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_09_task_2",
+          "goal": "比较一项观察与其解释，指出不能直接推断的部分",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_09_task_3",
+          "goal": "选择保留或删除记录，评价他如何执行",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 10,
+      "day": 9,
+      "lead": "c09",
+      "goals": [
+        "选择路线和停靠点，确认可随时结束行程",
+        "发现异常后停止夜驾，以代步车或原地交谈继续",
+        "保留异常记录并选择交给谁，说明证据与情感的区别"
+      ],
+      "task_ids": [
+        "chapter_10_task_1",
+        "chapter_10_task_2",
+        "chapter_10_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_10_task_1",
+          "goal": "选择路线和停靠点，确认可随时结束行程",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_10_task_2",
+          "goal": "发现异常后停止夜驾，以代步车或原地交谈继续",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_10_task_3",
+          "goal": "保留异常记录并选择交给谁，说明证据与情感的区别",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 11,
+      "day": 10,
+      "lead": "c10",
+      "goals": [
+        "列出两项真正需要的东西",
+        "选择不超过三件陈设，说明保留或舍弃原因",
+        "核对他是否听懂需求，记录一项可见改变"
+      ],
+      "task_ids": [
+        "chapter_11_task_1",
+        "chapter_11_task_2",
+        "chapter_11_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_11_task_1",
+          "goal": "列出两项真正需要的东西",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_11_task_2",
+          "goal": "选择不超过三件陈设，说明保留或舍弃原因",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_11_task_3",
+          "goal": "核对他是否听懂需求，记录一项可见改变",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 12,
+      "day": 11,
+      "lead": "c11",
+      "goals": [
+        "约定听音、看弦或听解释的参与方式",
+        "比较前后两次变化，提出一次自己的判断",
+        "让他选择是否为自己弹一段，不把请求当成已完成"
+      ],
+      "task_ids": [
+        "chapter_12_task_1",
+        "chapter_12_task_2",
+        "chapter_12_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_12_task_1",
+          "goal": "约定听音、看弦或听解释的参与方式",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_12_task_2",
+          "goal": "比较前后两次变化，提出一次自己的判断",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_12_task_3",
+          "goal": "让他选择是否为自己弹一段，不把请求当成已完成",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 13,
+      "day": 12,
+      "lead": "c12",
+      "goals": [
+        "选择希望被看见的程度，拒绝拍摄仍可参加",
+        "比较两种灯位并描述感受或可见差异",
+        "邀请他走入光里，尊重拒绝并记录真实回应"
+      ],
+      "task_ids": [
+        "chapter_13_task_1",
+        "chapter_13_task_2",
+        "chapter_13_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_13_task_1",
+          "goal": "选择希望被看见的程度，拒绝拍摄仍可参加",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_13_task_2",
+          "goal": "比较两种灯位并描述感受或可见差异",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_13_task_3",
+          "goal": "邀请他走入光里，尊重拒绝并记录真实回应",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 14,
+      "day": 13,
+      "lead": "c13",
+      "goals": [
+        "决定朗读、默读或只谈写信这件事",
+        "从自愿公开的一句话里提出一个真实问题",
+        "决定信由谁保管、是否寄出，确认本人意愿"
+      ],
+      "task_ids": [
+        "chapter_14_task_1",
+        "chapter_14_task_2",
+        "chapter_14_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_14_task_1",
+          "goal": "决定朗读、默读或只谈写信这件事",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_14_task_2",
+          "goal": "从自愿公开的一句话里提出一个真实问题",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_14_task_3",
+          "goal": "决定信由谁保管、是否寄出，确认本人意愿",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 15,
+      "day": 14,
+      "lead": "c14",
+      "goals": [
+        "确认清点方法、可触碰范围和记录方式",
+        "对照三条编号与实物，发现缺项时只记录事实",
+        "决定证据交接对象和下一步，不先认定责任人"
+      ],
+      "task_ids": [
+        "chapter_15_task_1",
+        "chapter_15_task_2",
+        "chapter_15_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_15_task_1",
+          "goal": "确认清点方法、可触碰范围和记录方式",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_15_task_2",
+          "goal": "对照三条编号与实物，发现缺项时只记录事实",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_15_task_3",
+          "goal": "决定证据交接对象和下一步，不先认定责任人",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 16,
+      "day": 15,
+      "lead": "c15",
+      "goals": [
+        "明确不参加高空项目也能完成本章",
+        "选择地面练习、观察专业演示或只讨论安全计划",
+        "提出一次停止或调整请求，核对是否被立即尊重"
+      ],
+      "task_ids": [
+        "chapter_16_task_1",
+        "chapter_16_task_2",
+        "chapter_16_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_16_task_1",
+          "goal": "明确不参加高空项目也能完成本章",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_16_task_2",
+          "goal": "选择地面练习、观察专业演示或只讨论安全计划",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_16_task_3",
+          "goal": "提出一次停止或调整请求，核对是否被立即尊重",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 17,
+      "day": 16,
+      "lead": "c16",
+      "goals": [
+        "自选观察、记录或在指导下照护",
+        "比较两株植物的状态，说明一个可见依据",
+        "决定是否取走花枝，尊重不剪的方案并核对反馈"
+      ],
+      "task_ids": [
+        "chapter_17_task_1",
+        "chapter_17_task_2",
+        "chapter_17_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_17_task_1",
+          "goal": "自选观察、记录或在指导下照护",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_17_task_2",
+          "goal": "比较两株植物的状态，说明一个可见依据",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_17_task_3",
+          "goal": "决定是否取走花枝，尊重不剪的方案并核对反馈",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 18,
+      "day": 17,
+      "lead": "c17",
+      "goals": [
+        "确认身体情况和冰上、场边两种等价路线",
+        "完成观察或低难度练习，提出一次调整",
+        "核对他能否放下教练身份正常交谈，给出评级理由"
+      ],
+      "task_ids": [
+        "chapter_18_task_1",
+        "chapter_18_task_2",
+        "chapter_18_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_18_task_1",
+          "goal": "确认身体情况和冰上、场边两种等价路线",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_18_task_2",
+          "goal": "完成观察或低难度练习，提出一次调整",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_18_task_3",
+          "goal": "核对他能否放下教练身份正常交谈，给出评级理由",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    },
+    {
+      "chapter": 19,
+      "day": 18,
+      "lead": "c18",
+      "goals": [
+        "选定两个尚未解释的矛盾，说明来源",
+        "核对对方回答与已见记录，允许回答未知或保密",
+        "确认最终选择的具体对象、代价与公开范围"
+      ],
+      "task_ids": [
+        "chapter_19_task_1",
+        "chapter_19_task_2",
+        "chapter_19_task_3"
+      ],
+      "accepted_statuses": [
+        "completed",
+        "waived_by_player"
+      ],
+      "requires_player_closure": true,
+      "receipts": [
+        {
+          "id": "chapter_19_task_1",
+          "goal": "选定两个尚未解释的矛盾，说明来源",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_19_task_2",
+          "goal": "核对对方回答与已见记录，允许回答未知或保密",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        },
+        {
+          "id": "chapter_19_task_3",
+          "goal": "确认最终选择的具体对象、代价与公开范围",
+          "status": "pending",
+          "method": null,
+          "player_intent": null,
+          "observed_feedback": null,
+          "evidence_source": null
+        }
+      ]
+    }
+  ],
+  "gate": "完成或玩家明确跳过三项任务后，还需玩家确认结束本章。targetExchanges只提供按钮机会，不代表任务完成。",
+  "valid_receipt": "completed必须有玩家的选择或尝试，以及在场角色/物件的实际反馈；拒绝活动可以改观察/访谈等价路线；闲聊轮数不能替代回执。",
+  "carryover": [
+    "各角色关系意愿",
+    "朋友/触碰/公开边界",
+    "偏好与拒绝事项",
+    "逐项评分与理由",
+    "证据来源与见证人",
+    "未完成与明确跳过项",
+    "下次约定"
+  ]
+}

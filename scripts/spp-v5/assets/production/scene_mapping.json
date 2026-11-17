@@ -1,0 +1,946 @@
+[
+  {
+    "chapter": 1,
+    "scene": 1,
+    "slot": "bg_c01s01",
+    "source_slot": "bg_c01s01",
+    "description": "A law office on the 43rd floor before sunrise, floor-to-ceiling glass, one long table, three folders, the city still dark outside",
+    "present": "贝尔特"
+  },
+  {
+    "chapter": 1,
+    "scene": 2,
+    "slot": "bg_c01s02",
+    "source_slot": "bg_c01s02",
+    "description": "A narrow service corridor under a brownstone, bare brick, one unmarked steel door with a brass number 9 at eye height, a woman waiting with a lantern",
+    "present": "贝尔特"
+  },
+  {
+    "chapter": 1,
+    "scene": 3,
+    "slot": "bg_c01s03",
+    "source_slot": "bg_c01s03",
+    "description": "A windowless room with a long black table, eighteen matte black cards laid face down in a row, one chair at the head, warm light from a single pendant",
+    "present": "贝尔特、戴斯蒙德"
+  },
+  {
+    "chapter": 1,
+    "scene": 4,
+    "slot": "bg_c01s04",
+    "source_slot": "bg_c01s04",
+    "description": "A long corridor with eighteen identical doors, brass letters A to R at eye height, no photographs, one lantern moving along the wall",
+    "present": "贝尔特、戴斯蒙德"
+  },
+  {
+    "chapter": 1,
+    "scene": 5,
+    "slot": "bg_c01s05",
+    "source_slot": "bg_c01s05",
+    "description": "A service stairwell, painted concrete, one bare bulb, a man waiting two steps above a woman",
+    "present": "贝尔特"
+  },
+  {
+    "chapter": 1,
+    "scene": 6,
+    "slot": "bg_c01s06",
+    "source_slot": "bg_c01s06",
+    "description": "A small private room with one chair, one desk lamp, a single black card face up, a coat over the chair back",
+    "present": "贝尔特"
+  },
+  {
+    "chapter": 2,
+    "scene": 1,
+    "slot": "bg_c02s01",
+    "source_slot": "bg_c02s01",
+    "description": "A gravel drive at dawn, white fences, mist on the pasture, a man already on horseback waiting at the gate",
+    "present": "拉斐尔"
+  },
+  {
+    "chapter": 2,
+    "scene": 2,
+    "slot": "bg_c02s02",
+    "source_slot": "bg_c02s02",
+    "description": "An old olive grove, dry earth, hard shadows, two horses walking side by side at a slow walk",
+    "present": "拉斐尔"
+  },
+  {
+    "chapter": 2,
+    "scene": 3,
+    "slot": "bg_c02s03",
+    "source_slot": "bg_c02s03",
+    "description": "A stone stable, dust in a shaft of light, hay bales, a saddle on a wooden stand, horse breathing in the next stall",
+    "present": "拉斐尔"
+  },
+  {
+    "chapter": 2,
+    "scene": 4,
+    "slot": "bg_c02s04",
+    "source_slot": "bg_c02s04",
+    "description": "Inside a stall, straw on the floor, a saddle blanket spread out, the door half open letting in a bar of white light",
+    "present": "拉斐尔"
+  },
+  {
+    "chapter": 2,
+    "scene": 5,
+    "slot": "bg_c02s05",
+    "source_slot": "bg_c02s05",
+    "description": "A stable at dusk, one lantern, the horses quiet, a wooden door pulled almost shut",
+    "present": "拉斐尔"
+  },
+  {
+    "chapter": 2,
+    "scene": 6,
+    "slot": "bg_c02s06",
+    "source_slot": "bg_c02s06",
+    "description": "Inside a car parked on gravel, dashboard light, a folded jacket on the passenger seat, condensation on the glass",
+    "present": "拉斐尔"
+  },
+  {
+    "chapter": 3,
+    "scene": 1,
+    "slot": "bg_c03s01",
+    "source_slot": "bg_c03s01",
+    "description": "An empty ballet studio at seven in the morning, one wall of mirrors, a barre, sunlight on pale wood, no music",
+    "present": "伊利亚"
+  },
+  {
+    "chapter": 3,
+    "scene": 2,
+    "slot": "bg_c03s02",
+    "source_slot": "bg_c03s02",
+    "description": "A ballet studio, morning light from high windows, a woman at the barre, a man behind her adjusting her shoulder with two fingers",
+    "present": "伊利亚"
+  },
+  {
+    "chapter": 3,
+    "scene": 3,
+    "slot": "bg_c03s03",
+    "source_slot": "bg_c03s03",
+    "description": "An empty studio at noon, windows open, dust, a record player on the floor, one vinyl sleeve leaning against the wall",
+    "present": "伊利亚"
+  },
+  {
+    "chapter": 3,
+    "scene": 4,
+    "slot": "bg_c03s04",
+    "source_slot": "bg_c03s04",
+    "description": "A studio at dusk, mirrors going dark, one lamp, a man standing behind a woman facing the mirror, both barefoot",
+    "present": "伊利亚"
+  },
+  {
+    "chapter": 3,
+    "scene": 5,
+    "slot": "bg_c03s05",
+    "source_slot": "bg_c03s05",
+    "description": "A dark studio, only the emergency light above the door, bodies as silhouettes, a mirror catching one thin line of light",
+    "present": "伊利亚"
+  },
+  {
+    "chapter": 3,
+    "scene": 6,
+    "slot": "bg_c03s06",
+    "source_slot": "bg_c03s06",
+    "description": "A quiet street outside a studio building, a black car waiting, wet asphalt, a man in a coat holding a paper cup",
+    "present": "伊利亚"
+  },
+  {
+    "chapter": 4,
+    "scene": 1,
+    "slot": "bg_c04s01",
+    "source_slot": "bg_emeka_morning",
+    "description": "伦敦十二座开放厨房，食材台、主厨桌与灯下餐具，简单写实陈设，无人物，无文字。",
+    "present": "埃梅卡"
+  },
+  {
+    "chapter": 4,
+    "scene": 2,
+    "slot": "bg_c04s02",
+    "source_slot": "bg_emeka_morning",
+    "description": "伦敦十二座开放厨房，食材台、主厨桌与灯下餐具，简单写实陈设，无人物，无文字。",
+    "present": "埃梅卡"
+  },
+  {
+    "chapter": 4,
+    "scene": 3,
+    "slot": "bg_c04s03",
+    "source_slot": "bg_emeka_day",
+    "description": "伦敦十二座开放厨房，食材台、主厨桌与灯下餐具，简单写实陈设，无人物，无文字。",
+    "present": "埃梅卡"
+  },
+  {
+    "chapter": 4,
+    "scene": 4,
+    "slot": "bg_c04s04",
+    "source_slot": "bg_emeka_day",
+    "description": "伦敦十二座开放厨房，食材台、主厨桌与灯下餐具，简单写实陈设，无人物，无文字。",
+    "present": "埃梅卡"
+  },
+  {
+    "chapter": 4,
+    "scene": 5,
+    "slot": "bg_c04s05",
+    "source_slot": "bg_emeka_night",
+    "description": "伦敦十二座开放厨房，食材台、主厨桌与灯下餐具，简单写实陈设，无人物，无文字。",
+    "present": "埃梅卡"
+  },
+  {
+    "chapter": 4,
+    "scene": 6,
+    "slot": "bg_c04s06",
+    "source_slot": "bg_emeka_night",
+    "description": "伦敦十二座开放厨房，食材台、主厨桌与灯下餐具，简单写实陈设，无人物，无文字。",
+    "present": "埃梅卡"
+  },
+  {
+    "chapter": 5,
+    "scene": 1,
+    "slot": "bg_c05s01",
+    "source_slot": "bg_c04s01",
+    "description": "A hotel suite at seven in the morning, curtains shut, all lamps on, a very large man standing in the middle of the room doing nothing",
+    "present": "卡西米尔"
+  },
+  {
+    "chapter": 5,
+    "scene": 2,
+    "slot": "bg_c05s02",
+    "source_slot": "bg_c04s02",
+    "description": "A hotel suite, a small table, two cups of coffee untouched, a phone face down being pushed across the table",
+    "present": "卡西米尔"
+  },
+  {
+    "chapter": 5,
+    "scene": 3,
+    "slot": "bg_c05s03",
+    "source_slot": "bg_c04s03",
+    "description": "A hotel suite in complete darkness, no light at all, the hum of a dead building, a hand finding a hand",
+    "present": "卡西米尔"
+  },
+  {
+    "chapter": 5,
+    "scene": 4,
+    "slot": "bg_c05s04",
+    "source_slot": "bg_c04s04",
+    "description": "A pitch-black hotel room, two people sitting against the same wall, shoulders touching, a flashlight on the floor pointing at the ceiling",
+    "present": "卡西米尔"
+  },
+  {
+    "chapter": 5,
+    "scene": 5,
+    "slot": "bg_c05s05",
+    "source_slot": "bg_c04s05",
+    "description": "A dark hotel room, a flashlight dimming, a shirt folded on a chair, two shadows on the ceiling",
+    "present": "卡西米尔"
+  },
+  {
+    "chapter": 5,
+    "scene": 6,
+    "slot": "bg_c05s06",
+    "source_slot": "bg_c04s06",
+    "description": "A hotel lobby at two in the morning, one clerk asleep, a man in a coat standing by the door with his hands behind his back",
+    "present": "卡西米尔"
+  },
+  {
+    "chapter": 6,
+    "scene": 1,
+    "slot": "bg_c06s01",
+    "source_slot": "bg_c05s01",
+    "description": "A perfume atelier at dawn, glass cabinets, hundreds of small bottles, a marble counter, one chair in the middle of the room",
+    "present": "泰奥"
+  },
+  {
+    "chapter": 6,
+    "scene": 2,
+    "slot": "bg_c06s02",
+    "source_slot": "bg_c05s02",
+    "description": "A marble counter with thirty-six numbered bottles in a row, a woman smelling each one, a man behind her taking notes in pencil",
+    "present": "泰奥"
+  },
+  {
+    "chapter": 6,
+    "scene": 3,
+    "slot": "bg_c06s03",
+    "source_slot": "bg_c05s03",
+    "description": "A dark atelier, a woman seated with a black silk blindfold, a man moving around her without sound, bottles being opened and closed",
+    "present": "泰奥"
+  },
+  {
+    "chapter": 6,
+    "scene": 4,
+    "slot": "bg_c06s04",
+    "source_slot": "bg_c05s04",
+    "description": "A dark atelier, the blindfold still on, a man kneeling in front of a seated woman, one bottle open on the floor",
+    "present": "泰奥"
+  },
+  {
+    "chapter": 6,
+    "scene": 5,
+    "slot": "bg_c06s05",
+    "source_slot": "bg_c05s05",
+    "description": "A dark atelier lit by one lamp, a black silk blindfold in a man's hand, a woman blinking in the light",
+    "present": "泰奥"
+  },
+  {
+    "chapter": 6,
+    "scene": 6,
+    "slot": "bg_c06s06",
+    "source_slot": "bg_c05s06",
+    "description": "A narrow street at half past one, a lit shop window, two people walking slowly, one of them holding a small bottle",
+    "present": "泰奥"
+  },
+  {
+    "chapter": 7,
+    "scene": 1,
+    "slot": "bg_c07s01",
+    "source_slot": "bg_c06s01",
+    "description": "A traditional wooden tea room assembled inside a Manhattan warehouse, rain falling in a glass courtyard beyond, tatami, one low table",
+    "present": "各务纯"
+  },
+  {
+    "chapter": 7,
+    "scene": 2,
+    "slot": "bg_c07s02",
+    "source_slot": "bg_c06s02",
+    "description": "Inside a tea room, a low table, a kettle over a brazier, a woman kneeling, a man's hands moving through a slow ritual",
+    "present": "各务纯"
+  },
+  {
+    "chapter": 7,
+    "scene": 3,
+    "slot": "bg_c07s03",
+    "source_slot": "bg_c06s03",
+    "description": "A tea room opening onto a glass courtyard, rain falling hard, a woman sitting at the edge of the tatami, a man behind her",
+    "present": "各务纯"
+  },
+  {
+    "chapter": 7,
+    "scene": 4,
+    "slot": "bg_c07s04",
+    "source_slot": "bg_c06s04",
+    "description": "A tea room at dusk, one lamp, rain slowing, two tea bowls, a man lifting a bowl to her lips with both hands",
+    "present": "各务纯"
+  },
+  {
+    "chapter": 7,
+    "scene": 5,
+    "slot": "bg_c07s05",
+    "source_slot": "bg_c06s05",
+    "description": "A corridor between a tea room and a warehouse door, wooden floor, dim light, rain audible through the wall",
+    "present": "各务纯"
+  },
+  {
+    "chapter": 7,
+    "scene": 6,
+    "slot": "bg_c07s06",
+    "source_slot": "bg_c06s06",
+    "description": "A warehouse door open to a wet street, a man in a dark coat standing under the overhang, rain beyond",
+    "present": "各务纯"
+  },
+  {
+    "chapter": 8,
+    "scene": 1,
+    "slot": "bg_c08s01",
+    "source_slot": "bg_c07s01",
+    "description": "An old dance hall before opening, wooden floor being swept, chairs stacked, a stage with a single bandoneon case on it",
+    "present": "塞巴斯蒂安"
+  },
+  {
+    "chapter": 8,
+    "scene": 2,
+    "slot": "bg_c08s02",
+    "source_slot": "bg_c07s02",
+    "description": "An empty dance hall in the morning, sunlight through tall windows, two people standing in the middle of a bare wooden floor",
+    "present": "塞巴斯蒂安"
+  },
+  {
+    "chapter": 8,
+    "scene": 3,
+    "slot": "bg_c08s03",
+    "source_slot": "bg_c07s03",
+    "description": "A crowded milonga at night, forty people around a small floor, warm lamps, a band playing bandoneon and strings",
+    "present": "塞巴斯蒂安"
+  },
+  {
+    "chapter": 8,
+    "scene": 4,
+    "slot": "bg_c08s04",
+    "source_slot": "bg_c07s04",
+    "description": "A narrow alley behind a dance hall at midnight, brick wall, one bulb, music muffled through a door",
+    "present": "塞巴斯蒂安"
+  },
+  {
+    "chapter": 8,
+    "scene": 5,
+    "slot": "bg_c08s05",
+    "source_slot": "bg_c07s05",
+    "description": "A narrow alley at night, one bulb, two people against a brick wall, her hand on his chest, his hand at her waist",
+    "present": "塞巴斯蒂安"
+  },
+  {
+    "chapter": 8,
+    "scene": 6,
+    "slot": "bg_c08s06",
+    "source_slot": "bg_c07s06",
+    "description": "An empty dance hall after closing, chairs stacked, one lamp left on, two pairs of shoes on the floor",
+    "present": "塞巴斯蒂安"
+  },
+  {
+    "chapter": 9,
+    "scene": 1,
+    "slot": "bg_c09s01",
+    "source_slot": "bg_c08s01",
+    "description": "A minimalist apartment with research equipment, electrodes on a table, two monitors, a single bed made with hospital corners",
+    "present": "朱利安"
+  },
+  {
+    "chapter": 9,
+    "scene": 2,
+    "slot": "bg_c09s02",
+    "source_slot": "bg_c08s02",
+    "description": "A chair in the middle of a bare room, electrodes on a woman's wrist and collarbone, a man adjusting a monitor",
+    "present": "朱利安"
+  },
+  {
+    "chapter": 9,
+    "scene": 3,
+    "slot": "bg_c09s03",
+    "source_slot": "bg_c08s03",
+    "description": "A bare room, monitor light on two faces, a woman seated, a man standing with arms crossed",
+    "present": "朱利安"
+  },
+  {
+    "chapter": 9,
+    "scene": 4,
+    "slot": "bg_c09s04",
+    "source_slot": "bg_c08s04",
+    "description": "A bare apartment at dusk, electrodes removed and laid on a table, two people sitting on the floor against a wall",
+    "present": "朱利安"
+  },
+  {
+    "chapter": 9,
+    "scene": 5,
+    "slot": "bg_c09s05",
+    "source_slot": "bg_c08s05",
+    "description": "A dark apartment, one lamp, a woman standing over a seated man, electrodes in her hand, his wrist turned up",
+    "present": "朱利安"
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "slot": "bg_c09s06",
+    "source_slot": "bg_c08s06",
+    "description": "A bare apartment at two in the morning, monitors dark, two cups on the floor, a man sitting on the edge of a hospital-cornered bed",
+    "present": "朱利安"
+  },
+  {
+    "chapter": 10,
+    "scene": 1,
+    "slot": "bg_c10s01",
+    "source_slot": "bg_c09s01",
+    "description": "A garage full of vintage sports cars, concrete floor, tool benches, one car with its hood open",
+    "present": "卢卡"
+  },
+  {
+    "chapter": 10,
+    "scene": 2,
+    "slot": "bg_c10s02",
+    "source_slot": "bg_c09s02",
+    "description": "A vintage coupe on a coastal road, top down, wind, cliffs on one side and sea on the other, late afternoon light",
+    "present": "卢卡"
+  },
+  {
+    "chapter": 10,
+    "scene": 3,
+    "slot": "bg_c10s03",
+    "source_slot": "bg_c09s03",
+    "description": "A gravel turnout on a cliff at sunset, the sea below, the car parked at an angle, two people leaning on the hood",
+    "present": "卢卡"
+  },
+  {
+    "chapter": 10,
+    "scene": 4,
+    "slot": "bg_c10s04",
+    "source_slot": "bg_c09s04",
+    "description": "Inside a parked car at night, windows fogged, dashboard glow, a man in the driver's seat and a woman beside him",
+    "present": "卢卡"
+  },
+  {
+    "chapter": 10,
+    "scene": 5,
+    "slot": "bg_c10s05",
+    "source_slot": "bg_c09s05",
+    "description": "A gravel turnout before dawn, a car with its hood up, a flashlight, a man crouched by a wheel well",
+    "present": "卢卡"
+  },
+  {
+    "chapter": 10,
+    "scene": 6,
+    "slot": "bg_c10s06",
+    "source_slot": "bg_c09s06",
+    "description": "A garage at sunrise, the car back in its bay, a man wiping his hands on a rag, a woman standing in the doorway",
+    "present": "卢卡"
+  },
+  {
+    "chapter": 11,
+    "scene": 1,
+    "slot": "bg_c11s01",
+    "source_slot": "bg_c10s01",
+    "description": "An empty apartment floor, bare boards, one mattress by a tall window, white walls, nothing else at all",
+    "present": "安德斯"
+  },
+  {
+    "chapter": 11,
+    "scene": 2,
+    "slot": "bg_c11s02",
+    "source_slot": "bg_c10s02",
+    "description": "An empty room, a woman sitting on bare floor by the window, a man sitting across from her, both silent",
+    "present": "安德斯"
+  },
+  {
+    "chapter": 11,
+    "scene": 3,
+    "slot": "bg_c11s03",
+    "source_slot": "bg_c10s03",
+    "description": "An empty room at dusk, one mattress, a window turning orange, two people sitting on the floor facing each other",
+    "present": "安德斯"
+  },
+  {
+    "chapter": 11,
+    "scene": 4,
+    "slot": "bg_c11s04",
+    "source_slot": "bg_c10s04",
+    "description": "An empty room at night, the window open, city light, one mattress on the floor, a man standing over a woman",
+    "present": "安德斯"
+  },
+  {
+    "chapter": 11,
+    "scene": 5,
+    "slot": "bg_c11s05",
+    "source_slot": "bg_c10s05",
+    "description": "An empty room at night, one mattress, an open window, two people, city light on bare walls",
+    "present": "安德斯"
+  },
+  {
+    "chapter": 11,
+    "scene": 6,
+    "slot": "bg_c11s06",
+    "source_slot": "bg_c10s06",
+    "description": "An empty room before dawn, gray light, one mattress, a man sitting with his back against the wall, a woman beside him",
+    "present": "安德斯"
+  },
+  {
+    "chapter": 12,
+    "scene": 1,
+    "slot": "bg_c12s01",
+    "source_slot": "bg_c11s01",
+    "description": "A small concert room with one grand piano, wooden floor, chairs stacked, morning light through tall shutters",
+    "present": "安东"
+  },
+  {
+    "chapter": 12,
+    "scene": 2,
+    "slot": "bg_c12s02",
+    "source_slot": "bg_c11s02",
+    "description": "A grand piano with its lid open, a man leaning inside with a tuning hammer, a woman sitting on the bench watching",
+    "present": "安东"
+  },
+  {
+    "chapter": 12,
+    "scene": 3,
+    "slot": "bg_c12s03",
+    "source_slot": "bg_c11s03",
+    "description": "A grand piano, a woman on the bench, a man standing behind her, his hands over hers on the keys",
+    "present": "安东"
+  },
+  {
+    "chapter": 12,
+    "scene": 4,
+    "slot": "bg_c12s04",
+    "source_slot": "bg_c11s04",
+    "description": "A piano room at night, lid open, one lamp, a woman lying back against the piano's side, a man beside her",
+    "present": "安东"
+  },
+  {
+    "chapter": 12,
+    "scene": 5,
+    "slot": "bg_c12s05",
+    "source_slot": "bg_c11s05",
+    "description": "A piano room at midnight, one lamp turned low, the piano closed, two people on the wooden floor",
+    "present": "安东"
+  },
+  {
+    "chapter": 12,
+    "scene": 6,
+    "slot": "bg_c12s06",
+    "source_slot": "bg_c11s06",
+    "description": "A piano room at two in the morning, one lamp, a man sitting at the bench with the lid closed, a woman standing behind him",
+    "present": "安东"
+  },
+  {
+    "chapter": 13,
+    "scene": 1,
+    "slot": "bg_c13s01",
+    "source_slot": "bg_c12s01",
+    "description": "A dark empty theatre, eight hundred seats, one work light on the stage, dust in the air",
+    "present": "拉维"
+  },
+  {
+    "chapter": 13,
+    "scene": 2,
+    "slot": "bg_c13s02",
+    "source_slot": "bg_c12s02",
+    "description": "An empty stage, a taped mark on the floor, a woman standing on it, a man at the lighting desk in the house",
+    "present": "拉维"
+  },
+  {
+    "chapter": 13,
+    "scene": 3,
+    "slot": "bg_c13s03",
+    "source_slot": "bg_c12s03",
+    "description": "An empty stage, a single spotlight on bare boards, a woman walking slowly toward its edge",
+    "present": "拉维"
+  },
+  {
+    "chapter": 13,
+    "scene": 4,
+    "slot": "bg_c13s04",
+    "source_slot": "bg_c12s04",
+    "description": "A stage at night, one spotlight, two people standing inside it, the theatre completely dark beyond",
+    "present": "拉维"
+  },
+  {
+    "chapter": 13,
+    "scene": 5,
+    "slot": "bg_c13s05",
+    "source_slot": "bg_c12s05",
+    "description": "Backstage behind a heavy curtain, one work light, cables on the floor, two people in the narrow space between curtain and wall",
+    "present": "拉维"
+  },
+  {
+    "chapter": 13,
+    "scene": 6,
+    "slot": "bg_c13s06",
+    "source_slot": "bg_c12s06",
+    "description": "An empty theatre with the house lights on, all eight hundred seats visible, two people sitting in the middle row",
+    "present": "拉维"
+  },
+  {
+    "chapter": 14,
+    "scene": 1,
+    "slot": "bg_c14s01",
+    "source_slot": "bg_c13s01",
+    "description": "A private library with tall shelves, rain on a glass roof, one reading table with a green lamp, a hundred years of dust",
+    "present": "欧文"
+  },
+  {
+    "chapter": 14,
+    "scene": 2,
+    "slot": "bg_c14s02",
+    "source_slot": "bg_c13s02",
+    "description": "A library reading table under a green lamp, rain above, a man reading from a single sheet, a woman listening",
+    "present": "欧文"
+  },
+  {
+    "chapter": 14,
+    "scene": 3,
+    "slot": "bg_c14s03",
+    "source_slot": "bg_c13s03",
+    "description": "A library aisle between two tall shelves, narrow, a man leaning against a shelf, a woman facing him",
+    "present": "欧文"
+  },
+  {
+    "chapter": 14,
+    "scene": 4,
+    "slot": "bg_c14s04",
+    "source_slot": "bg_c13s04",
+    "description": "A narrow library aisle, rain above, one green lamp far away, two people very close, books on both sides",
+    "present": "欧文"
+  },
+  {
+    "chapter": 14,
+    "scene": 5,
+    "slot": "bg_c14s05",
+    "source_slot": "bg_c13s05",
+    "description": "A library reading room at midnight, one green lamp, rain easing, a man and a woman on the floor between shelves",
+    "present": "欧文"
+  },
+  {
+    "chapter": 14,
+    "scene": 6,
+    "slot": "bg_c14s06",
+    "source_slot": "bg_c13s06",
+    "description": "A library at two in the morning, rain stopped, a man handing an envelope to a woman at the door",
+    "present": "欧文"
+  },
+  {
+    "chapter": 15,
+    "scene": 1,
+    "slot": "bg_c15s01",
+    "source_slot": "bg_c14s01",
+    "description": "A private vault under a building, steel walls, cold light, long drawers, a man in shirtsleeves with white gloves",
+    "present": "雨果"
+  },
+  {
+    "chapter": 15,
+    "scene": 2,
+    "slot": "bg_c15s02",
+    "source_slot": "bg_c14s02",
+    "description": "A steel vault, drawers open in a row, a man counting quietly, a woman writing numbers on a list",
+    "present": "雨果"
+  },
+  {
+    "chapter": 15,
+    "scene": 3,
+    "slot": "bg_c15s03",
+    "source_slot": "bg_c14s03",
+    "description": "A steel vault at noon, two people sitting on the floor against a drawer cabinet, a sandwich untouched, cold light",
+    "present": "雨果"
+  },
+  {
+    "chapter": 15,
+    "scene": 4,
+    "slot": "bg_c15s04",
+    "source_slot": "bg_c14s04",
+    "description": "A steel vault, one drawer open, an empty velvet slot, a man's white glove hovering over it",
+    "present": "雨果"
+  },
+  {
+    "chapter": 15,
+    "scene": 5,
+    "slot": "bg_c15s05",
+    "source_slot": "bg_c14s05",
+    "description": "A steel vault at night, cold light dimmed, a coat on the floor, two people against the cabinet, breath visible",
+    "present": "雨果"
+  },
+  {
+    "chapter": 15,
+    "scene": 6,
+    "slot": "bg_c15s06",
+    "source_slot": "bg_c14s06",
+    "description": "A vault door at half past one, a man holding it open, a woman stepping out, a lift at the end of the corridor",
+    "present": "雨果"
+  },
+  {
+    "chapter": 16,
+    "scene": 1,
+    "slot": "bg_c16s01",
+    "source_slot": "bg_c15s01",
+    "description": "A rooftop at dawn, two steel poles, a cable being strung between them, the city below in mist",
+    "present": "马利克"
+  },
+  {
+    "chapter": 16,
+    "scene": 2,
+    "slot": "bg_c16s02",
+    "source_slot": "bg_c15s02",
+    "description": "A rooftop, a safety harness being fitted, a man kneeling to check a buckle at a woman's thigh",
+    "present": "马利克"
+  },
+  {
+    "chapter": 16,
+    "scene": 3,
+    "slot": "bg_c16s03",
+    "source_slot": "bg_c15s03",
+    "description": "A steel cable between two rooftop poles, a woman in a harness taking her first steps, a man walking backward in front of her",
+    "present": "马利克"
+  },
+  {
+    "chapter": 16,
+    "scene": 4,
+    "slot": "bg_c16s04",
+    "source_slot": "bg_c15s04",
+    "description": "A rooftop at dusk, the cable empty, two people sitting on the parapet with their legs inside, sky turning",
+    "present": "马利克"
+  },
+  {
+    "chapter": 16,
+    "scene": 5,
+    "slot": "bg_c16s05",
+    "source_slot": "bg_c15s05",
+    "description": "A rooftop at night, city lights below, two people on the parapet, one jacket over both shoulders",
+    "present": "马利克"
+  },
+  {
+    "chapter": 16,
+    "scene": 6,
+    "slot": "bg_c16s06",
+    "source_slot": "bg_c15s06",
+    "description": "A rooftop at night, a steel cable still strung between poles, a man running a cloth along it, a woman watching",
+    "present": "马利克"
+  },
+  {
+    "chapter": 17,
+    "scene": 1,
+    "slot": "bg_c17s01",
+    "source_slot": "bg_c16s01",
+    "description": "A vast glass greenhouse before dawn, rows of plants, condensation on every pane, one lamp hanging low, wet gravel underfoot",
+    "present": "布拉姆"
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "slot": "bg_c17s02",
+    "source_slot": "bg_c16s02",
+    "description": "Inside a greenhouse, a man showing a woman how to pollinate a flower with a small brush, both hands careful",
+    "present": "布拉姆"
+  },
+  {
+    "chapter": 17,
+    "scene": 3,
+    "slot": "bg_c17s03",
+    "source_slot": "bg_c16s03",
+    "description": "Inside a greenhouse at noon, dense heat, mist on glass, a woman with her coat off and sleeves rolled",
+    "present": "布拉姆"
+  },
+  {
+    "chapter": 17,
+    "scene": 4,
+    "slot": "bg_c17s04",
+    "source_slot": "bg_c16s04",
+    "description": "A greenhouse at dusk, one lamp, a single white flower open, a man holding it up to a woman's face",
+    "present": "布拉姆"
+  },
+  {
+    "chapter": 17,
+    "scene": 5,
+    "slot": "bg_c17s05",
+    "source_slot": "bg_c16s05",
+    "description": "A greenhouse at night, glass walls streaming with condensation, one lamp, plants in rows, two people among them",
+    "present": "布拉姆"
+  },
+  {
+    "chapter": 17,
+    "scene": 6,
+    "slot": "bg_c17s06",
+    "source_slot": "bg_c16s06",
+    "description": "A greenhouse before dawn, one lamp, a man holding scissors over a white flower, a woman watching",
+    "present": "布拉姆"
+  },
+  {
+    "chapter": 18,
+    "scene": 1,
+    "slot": "bg_c18s01",
+    "source_slot": "bg_c17s01",
+    "description": "An empty ice rink before dawn, one lamp row on, ice fog above the surface, breath visible, boards and glass",
+    "present": "亨里克"
+  },
+  {
+    "chapter": 18,
+    "scene": 2,
+    "slot": "bg_c18s02",
+    "source_slot": "bg_c17s02",
+    "description": "An empty ice rink, a man holding a woman's hands, teaching her to stand, ice fog around their ankles",
+    "present": "亨里克"
+  },
+  {
+    "chapter": 18,
+    "scene": 3,
+    "slot": "bg_c18s03",
+    "source_slot": "bg_c17s03",
+    "description": "An ice rink at noon, a man lifting a woman off the ice, both in coats, ice fog",
+    "present": "亨里克"
+  },
+  {
+    "chapter": 18,
+    "scene": 4,
+    "slot": "bg_c18s04",
+    "source_slot": "bg_c17s04",
+    "description": "Rink-side bench, coats, a thermos, a man holding a woman's hands in his and blowing on them",
+    "present": "亨里克"
+  },
+  {
+    "chapter": 18,
+    "scene": 5,
+    "slot": "bg_c18s05",
+    "source_slot": "bg_c17s05",
+    "description": "An ice rink at night, lights dimmed to two rows, two people standing in the middle of the ice, no boards in view",
+    "present": "亨里克"
+  },
+  {
+    "chapter": 18,
+    "scene": 6,
+    "slot": "bg_c18s06",
+    "source_slot": "bg_c17s06",
+    "description": "A locker corridor beside an ice rink, concrete, one bench, coats hung, cold air from the rink door",
+    "present": "亨里克"
+  },
+  {
+    "chapter": 19,
+    "scene": 1,
+    "slot": "bg_c19s01",
+    "source_slot": "bg_c18s01",
+    "description": "A bare room with two wooden chairs facing each other, one window with the blind down, no table, no lamp, gray light",
+    "present": "康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 2,
+    "slot": "bg_c19s02",
+    "source_slot": "bg_c18s02",
+    "description": "A bare room, two chairs, a man leaning forward slightly, a woman not leaning back",
+    "present": "康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 3,
+    "slot": "bg_c19s03",
+    "source_slot": "bg_c18s03",
+    "description": "A bare room, a folder on the floor between two chairs, a man's hand pushing it across the stone",
+    "present": "康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 4,
+    "slot": "bg_c19s04",
+    "source_slot": "bg_c18s04",
+    "description": "A bare room, afternoon light through the blind, two chairs, a woman standing now, a man still seated",
+    "present": "康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 5,
+    "slot": "bg_c19s05",
+    "source_slot": "bg_c18s05",
+    "description": "A bare room, two people standing, chairs behind them, the blind drawn, gray light",
+    "present": "康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 6,
+    "slot": "bg_c19s06",
+    "source_slot": "bg_c18s06",
+    "description": "A bare room at night, the blind up, city light, two chairs, two people sitting close, not facing each other",
+    "present": "康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 7,
+    "slot": "bg_c19s07",
+    "source_slot": "bg_c18s07",
+    "description": "The long black table again, morning, eighteen cards stacked in one pile, a man standing at the far end, a woman at the head",
+    "present": "贝尔特、戴斯蒙德"
+  },
+  {
+    "chapter": 19,
+    "scene": 8,
+    "slot": "bg_c19s08",
+    "source_slot": "bg_c18s08",
+    "description": "A long black table in a windowless room, one man stepping forward from a line of eighteen, a card being handed over",
+    "present": "贝尔特、戴斯蒙德、康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 9,
+    "slot": "bg_c19s09",
+    "source_slot": "bg_c18s09",
+    "description": "A long table with eighteen men and one woman standing, a card on the table reading one word, a man in a suit walking out",
+    "present": "贝尔特、戴斯蒙德、康斯坦丁"
+  },
+  {
+    "chapter": 19,
+    "scene": 10,
+    "slot": "bg_c19s10",
+    "source_slot": "bg_c18s10",
+    "description": "A vault door open, a cardboard box on a steel table, a reel of tape, one man standing beside a woman",
+    "present": "贝尔特、戴斯蒙德、康斯坦丁"
+  }
+]

@@ -1,0 +1,6263 @@
+[
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在三条留言里，先回一条｜Answer one of the three"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "VIDEO",
+    "args": [
+      "trailer_12s",
+      "A woman speaking into a microphone at midnight, cut to three men standing under the same streetlight in the rain"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客《The Slow Hour》主理人",
+      "Wren Calloway，雷恩·卡洛威，27，深夜播客主理人，怕黑，左耳轻微耳鸣，说话前会先停半秒"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，短发，深灰毛衣，左手腕一道旧烫伤，身上是冷杉与铅笔屑的味道"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队 The Undertow 主唱／修车行技工",
+      "Jude Ferreira，黑发过长，耳骨一枚银钉，右手虎口有扳手磨出的茧，身上是机油与柑橘"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "St. Brendan's 急诊科主治／Garden Level 住户",
+      "Silas Reidy，浅色眼睛，白大褂，说话很慢，身上是消毒水与一点点雪松"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c01s01",
+      "Small recording booth at midnight, foam panels, one warm lamp, condenser mic, rain on the window"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "23:47"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c01_slow_hour",
+      "soft room tone, rain on glass, low synth pad, no drums"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 1,
+    "kind": "FX",
+    "args": [
+      "screen_glow"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c01s02",
+      "Rain-soaked Providence side street at midnight, brick row houses, one figure under a streetlight without umbrella"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "00:12"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c01_rain",
+      "rain on pavement, distant car, no music"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c01s03",
+      "Old brick row house lobby, terrazzo floor worn mirror-like, brass mailboxes, dusty afternoon light"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "14:20"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c02_house",
+      "old house hum, faint traffic, clock ticking"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_01",
+      "Three items in a brass mailbox: a key on a note, a paper bag of sweet bread, a brown envelope"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c01s04",
+      "Narrow wooden stairwell, dark banister, dust in a shaft of window light, third step worn lower"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "14:31"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c02_house",
+      "old house hum, footsteps on wood"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 4,
+    "kind": "CHAR",
+    "args": [
+      "char_elias",
+      "neutral"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c01s05",
+      "Flat roof deck of an old brick row house at dusk, tar paper, folding chair, city lights and harbor beyond"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "19:40"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c01_roof",
+      "wind, distant traffic, acoustic guitar tuning"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_02",
+      "A young man kneeling on a flat roof at dusk, tar paper and a scraper, city lights behind him"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c01s06",
+      "Stone front steps of a brick row house at night, a man sitting alone, streetlight, wet pavement"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "22:05"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c02_house",
+      "night insects, distant siren fading"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 6,
+    "kind": "CHAR",
+    "args": [
+      "char_silas",
+      "tired"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_03",
+      "A man on stone steps at night, lab coat on his knees, an unlit cigarette behind his ear"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c01s07",
+      "Empty second-floor rear room, cardboard boxes, old wood floor, one window facing a bare tree"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "23:30"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c01_slow_hour",
+      "low drone, wind at the window"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "FX",
+    "args": [
+      "paper_rustle"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:replied_thorne;love_thorne:3;trust:2;intimacy:2"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:replied_ferreira;love_ferreira:3;desire:2;intimacy:1"
+    ]
+  },
+  {
+    "chapter": 1,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:replied_reidy;love_reidy:3;trust:3;intimacy:1"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "搞清楚这三个人为什么都住在这栋楼里｜Figure out why all three of them live here"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客《The Slow Hour》主理人",
+      "Wren Calloway，27，刚搬回母亲留下的楼"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，Thorne & Sons 第三代，说话极省"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，阁楼住户，白天修车，晚上唱歌"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，夜班医生，记录一切"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c02s01",
+      "Sunlit empty bedroom, unpacked boxes, bare mattress on the floor, dust in the light"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "07:10"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c02_morning",
+      "birds, distant bus, kettle starting to whistle"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c02s02",
+      "Entire third floor converted into an architect's studio, drafting table, basswood models, one wall of windows, no sofa"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "10:00"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c02_studio",
+      "pencil on paper, radiator ticking, faint jazz on a radio"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_04",
+      "Architect's studio, seven white cardboard models lined along a window, a steel ruler on a drawing"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c02s03",
+      "Semi-basement apartment, windows at sidewalk level, medical books, a neat desk, everything labeled"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "11:20"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c02_clinic",
+      "refrigerator hum, footsteps on the sidewalk above"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 3,
+    "kind": "CHAR",
+    "args": [
+      "char_silas",
+      "calm"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_05",
+      "A precise semi-basement desk, labeled boxes, a notebook open to dated lines"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c02s04",
+      "Roof deck at dusk, two folding chairs, a bucket of rainwater, harbor lights coming on"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "18:30"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c02_roof",
+      "acoustic guitar, fingers on strings, wind"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c02s05",
+      "Narrow stairwell at night, fuse box open, one bulb flickering, shadows on brick"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "21:15"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c02_house",
+      "electrical buzz, bulb flicker, silence between"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 5,
+    "kind": "FX",
+    "args": [
+      "flashlight"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_06",
+      "Two people in a narrow dark stairwell, a small flashlight between them, one bulb coming back on"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c02s06",
+      "Twenty-four-hour corner store at night, fluorescent light, beer fridge, a dog tied outside"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "23:40"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c02_store",
+      "fridge hum, door chime, radio in the back"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c02s07",
+      "Night in an empty room, a peeled patch of wallpaper, exposed lath and old wiring behind it"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "01:20"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c02_night",
+      "clock ticking, house settling, one car passing"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:asked_thorne;love_thorne:3;trust:2;intimacy:2"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:asked_reidy;love_reidy:3;trust:3"
+    ]
+  },
+  {
+    "chapter": 2,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:asked_ferreira;love_ferreira:3;desire:2;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "完成第一次朗读，并决定坐多远｜Do the first reading, and decide how close to sit"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，声音是她的职业，也是她的盾牌"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，阅读障碍，从不承认"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，住在他们头顶"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，值夜班，睡得很少"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c03s01",
+      "Open closet in a half-unpacked room, two dresses and a sweater, mirror with a crack"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "21:40"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c03_before",
+      "quiet room, hanger sliding on a rod"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 1,
+    "kind": "FX",
+    "args": [
+      "mirror"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c03s02",
+      "Architect's floor at night, one floor lamp, drafting table cleared, a single armchair pulled into the light"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "22:00"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c03_reading",
+      "clock ticking, page turning, radiator"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 2,
+    "kind": "CHAR",
+    "args": [
+      "char_elias",
+      "neutral"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_07",
+      "A man at a drafting table at night, listening with his eyes closed, one lamp, one book"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c03s03",
+      "Same room, closer shot, the lamp warm, the reader's hands on the book"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "22:07"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c03_reading",
+      "low room tone, page turning"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_08",
+      "A hand resting on the very edge of a book page, not turning it"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c03s04",
+      "Two chairs in a pool of lamplight, the gap between them visible on the wood floor"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "22:40"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c03_reading",
+      "clock, quiet breath"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 4,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c03s05",
+      "Third-floor landing, door half open, warm light spilling onto the stairs"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "23:05"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c03_landing",
+      "stairs creaking, low voices"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_09",
+      "Two men on a landing, one inside the door, one on the stairs, a bag of beer between them"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c03s06",
+      "Roof deck at night, city glow, two beer cans, one guitar leaning on a chair"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "23:30"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c03_roof",
+      "wind, can opening, distant train"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_10",
+      "A young man leaning back against a rooftop railing at night, city glow behind him"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c03s07",
+      "Open door of 2R at midnight, hallway light behind, a shadow on the threshold"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "00:10"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c03_night",
+      "house settling, one car passing below"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "CHAR",
+    "args": [
+      "char_silas",
+      "calm"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:kept_distance;trust:3;self:2;intimacy:-2"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:did_not_move;love_thorne:4;desire:4;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 3,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:turned_off_light;love_thorne:3;intimacy:5;consent:10"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "撑过第一顿三个人的晚饭｜Survive the first dinner with all three of them"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，不会做饭，会问问题"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，带了一瓶酒，没喝"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，做饭的人，家里开修车行"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，带了药箱，没打开"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c04s01",
+      "Shared kitchen on the second-floor front, old gas stove, mismatched chairs, one long table"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "18:40"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c04_kitchen",
+      "gas burner, pot lid, radio in the corner"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_11",
+      "A narrow shared kitchen, a young man at the stove in a crooked apron, three people arriving"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c04s02",
+      "An old 1988 pickup truck parked on a narrow street, rust on the wheel arch, guitar case in the bed"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "17:50"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c04_truck",
+      "engine idling rough, radio static"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c04s03",
+      "Family-run auto body shop, corrugated metal, tool wall, a lift, smell of oil and paint"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "18:05"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c04_shop",
+      "compressor, impact wrench, radio playing Portuguese fado"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_12",
+      "An old auto body shop, a wall of tools, a photograph of two boys taped above the bench"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c04s04",
+      "Long table set for four, mismatched plates, one empty chair at the head"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "19:10"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c04_dinner",
+      "cutlery, chair legs, low talk"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_13",
+      "Four plates on a long table, three men avoiding each other's eyes, one empty chair"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c04s05",
+      "Same table, dishes half empty, one bowl untouched in front of the empty chair"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "20:00"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c04_dinner",
+      "quiet, a chair shifting"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 5,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_14",
+      "Three hands meeting over a single bowl on a table, none of them pulling away"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c04s06",
+      "Front steps of the row house in the rain, two figures under a narrow overhang"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "21:20"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c04_rain",
+      "steady rain, gutter dripping"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_15",
+      "Two people under a narrow overhang in the rain, one cigarette going out on the railing"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c04s07",
+      "Bedroom at night, a desk drawer open, papers spread out, one lamp low"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "23:50"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c04_night",
+      "rain softer, clock ticking"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:cleared_bowl;self:3;trust:1"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:kept_bowl;trust:3;love_reidy:2"
+    ]
+  },
+  {
+    "chapter": 4,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:asked_seat;love_thorne:3;trust:2;suspicion:1"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "让赛拉斯说出第一句真话｜Get Silas to say one true thing"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，擅长提问，不擅长被问"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，习惯记录别人，不习惯被记录"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，今晚不在场，但每个人都在提他"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，在楼上，弹同一段和弦"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c05s01",
+      "Semi-basement living room, two chairs facing each other, a clock, windows at sidewalk level"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "20:00"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c05_session",
+      "clock, refrigerator, footsteps overhead"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 1,
+    "kind": "CHAR",
+    "args": [
+      "char_silas",
+      "professional"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_16",
+      "Two chairs facing each other in a semi-basement room, a mechanical timer on a small table"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c05s02",
+      "Same room, closer, the emotional temperature dropping, hands still"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "20:19"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c05_session",
+      "timer ticking louder than before"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_17",
+      "A man sitting very still, hands gripping his own knees, a clock behind him"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c05s03",
+      "Same room, the light changed, one lamp, shadows longer"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "20:31"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c05_session",
+      "timer, quieter"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c05s04",
+      "An open desk drawer, a thick notebook, dated entries in small neat handwriting"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "20:41"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c05_session",
+      "paper, timer"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_18",
+      "A thick notebook open on a desk, dates in a column, a hand resting on the page"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c05s05",
+      "Same room, both standing now, the chair pushed back, the timer still running"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "20:46"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c05_session",
+      "timer, no other sound"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_19",
+      "A man standing with his hand on a stopped timer, not looking at her"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c05s06",
+      "The door of the garden-level apartment, hallway light, a coat on a hook"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "20:52"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c05_end",
+      "quiet, a door handle"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c05s07",
+      "Second-floor landing at night, three men standing at different distances from one door"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "21:05"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c06_landing",
+      "low tension drone, stairs creaking"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_20",
+      "Three men on a stairwell at different levels, all facing the same door"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:will_come;love_reidy:4;trust:4"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:asked_notebook;love_reidy:3;trust:3;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 5,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:touched_forehead;love_reidy:4;intimacy:4;consent:10"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在停电的一夜里，只开一次门｜Open the door only once tonight"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，怕黑，这件事没人知道"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，知道这栋楼每一条线的走向"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，怕黑，也不承认"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，随身带手电，像随身带钥匙"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c06s01",
+      "Late afternoon room, gray sky, a laptop open with a weather alert on screen"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "17:30"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c06_warning",
+      "wind rising, window rattling"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c06s02",
+      "Pitch-dark room, lightning outside, one window glowing blue, furniture in silhouette"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "21:12"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c06_dark",
+      "rain, thunder, then silence, then rain again"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 2,
+    "kind": "FX",
+    "args": [
+      "blackout"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c06s03",
+      "Dark stairwell lit by phone screens, three pools of light at different landings"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "21:20"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c06_knock",
+      "rain, three distinct knocks, silence between"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c06s04",
+      "A door open three inches, a chain lock taut, light from a phone in the gap"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "21:32"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c06_door",
+      "rain, breathing, chain rattling"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_21",
+      "Three faces lit from below by phone screens, seen through a three-inch gap in a chained door"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c06s05",
+      "Dark landing, two men sitting on the stairs on opposite sides, one standing by the door"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "22:40"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c06_wait",
+      "rain, someone shifting on a step"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c06s06",
+      "Gray morning light in a hallway, three men asleep or half-asleep on the stairs"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "05:50"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c06_dawn",
+      "birds, rain stopped, first bus"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_22",
+      "Three men in a tiny room at dawn, one holding a guitar, one at the window, one in the doorway"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c06s07",
+      "A door with three notes taped to it, different handwriting, morning light"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "09:10"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c06_note",
+      "quiet house, distant traffic"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:opened_to_thorne;love_thorne:4;trust:3;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:opened_to_ferreira;love_ferreira:4;desire:3;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:opened_to_reidy;love_reidy:4;trust:4;intimacy:2"
+    ]
+  },
+  {
+    "chapter": 6,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "D",
+      "set:opened_to_none;self:5;independence:3"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "找出母亲把楼分给三个人的真正原因｜Find out why her mother gave the building to three men"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，开始像做口述史一样调查这三个人"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，图纸上有七版屋顶，每一版都少了点什么"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，琴盒里有一张没寄出去的明信片"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，文件柜里有一份没交出去的证词"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c07s01",
+      "Archive box on the floor, gray folders, cassette tapes in rows, cotton gloves beside it"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "10:00"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c07_archive",
+      "paper, tape rewinding, clock"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c07s02",
+      "The trust document spread on a table, a legal page, a highlighter uncapped"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "11:20"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c07_document",
+      "paper, pen cap clicking"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 2,
+    "kind": "FX",
+    "args": [
+      "paper_rustle"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c07s03",
+      "A document held up to a window, faint pencil writing showing through the back"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "12:40"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c07_reveal",
+      "low drone, wind outside"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c07s04",
+      "Drafting table covered with drawings, seven roof models, one drawer open with old plans"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "15:10"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c07_studio",
+      "pencil, paper sliding, radiator"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 4,
+    "kind": "CHAR",
+    "args": [
+      "char_elias",
+      "tense"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_23",
+      "A rolled-up drawing being pushed into a cabinet, a hand still on it"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c07s05",
+      "Roof deck in the afternoon, a guitar case open, a postcard stuck in the lining"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "16:30"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c07_roof",
+      "wind, distant harbor bell, strings being tuned"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_24",
+      "An open guitar case with a postcard tucked into the lining, afternoon light on the roof"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c07s06",
+      "A metal file cabinet, alphabetized folders, one folder labeled with a date only"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "17:40"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c07_file",
+      "drawer sliding, papers, clock"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_25",
+      "A file folder labeled only with a date, three stapled pages inside"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c07s07",
+      "Night, three documents laid side by side on the floor, one lamp overhead"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "22:30"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c07_three",
+      "low drone, clock"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_26",
+      "Three men standing in a doorway looking down at three documents on the floor"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:asked_thorne_first;love_thorne:3;trust:3;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:asked_ferreira_first;love_ferreira:3;trust:2;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 7,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:asked_reidy_first;love_reidy:3;trust:4;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在雨落下来之前，决定要不要靠近｜Decide whether to close the distance before the rain"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，第一次被人唱歌给她听"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，在屋顶搭了一个不像舞台的舞台"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，在三楼窗后看着"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，在楼下听见了"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c08s01",
+      "Rooftop at dusk, string lights hung between pipes, two chairs, a small amp, a bucket of rainwater"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "19:20"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c08_setup",
+      "extension cord, chair dragging, guitar plugged in, hum"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_27",
+      "A rooftop at dusk with string lights, a small amp, two chairs, one person kneeling by a cord"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c08s02",
+      "Same roof, dark now, city lights, one man with a guitar, one woman in a folding chair"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "20:10"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c08_song",
+      "acoustic guitar, room hum, city below"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 2,
+    "kind": "FX",
+    "args": [
+      "music_swell"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_28",
+      "A young man with a guitar under string lights, looking up mid-song, the city behind him"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c08s03",
+      "Rooftop, first raindrops on tar paper, string lights flickering, one person grabbing a guitar"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "20:40"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c08_rain_start",
+      "first drops, then steady rain, amp crackling"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "rain_heavy"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c08s04",
+      "A narrow metal awning over the roof stair door, two people pressed under it, rain outside"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "20:52"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c08_awning",
+      "rain on metal, close breathing"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_29",
+      "Two people under a narrow metal awning in heavy rain, one hand raised but not touching"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c08s05",
+      "Extreme close-up under the awning, rain behind, two faces almost touching"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "20:55"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c08_kiss",
+      "rain, breath, heartbeat under it"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 5,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_30",
+      "A kiss under a metal awning, rain pouring beyond it, one hand at the back of a neck"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c08s06",
+      "Third-floor window seen from the roof, one silhouette standing behind the glass, unlit room"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "21:10"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c08_window",
+      "rain, distant thunder, no music"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_31",
+      "A silhouette behind a rain-streaked third-floor window, curtains being drawn"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c08s07",
+      "Semi-basement at 3 a.m., one lamp, a man sitting on the edge of a bed, shoes still on"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "03:00"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c08_night",
+      "refrigerator, rain dripping, clock"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_32",
+      "A man sitting on the edge of a bed at 3 a.m., shoes on, a notebook open beside him"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:went_up;love_thorne:4;trust:2;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:stayed_on_roof;love_ferreira:3;desire:2;self:1"
+    ]
+  },
+  {
+    "chapter": 8,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:locked_door;self:4;independence:2;intimacy:-2"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "让伊莱亚斯亲手量一次你的房间｜Let Elias measure your room with his own hands"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，屋里有一块地板塌了"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，用手思考，用距离说话"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，在楼下，听见了头顶的脚步声"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，值完夜班回来"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c09s01",
+      "A room with a section of floorboards pulled up, exposed joists, a toolbox open"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "14:00"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c09_work",
+      "sawing, hammer, radio off"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 1,
+    "kind": "CHAR",
+    "args": [
+      "char_elias",
+      "focused"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c09s02",
+      "Two people holding a new board in place, hands close on the wood, sawdust in the air"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "15:10"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c09_work",
+      "wood creaking, breathing, hammer set down"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_33",
+      "Two pairs of hands on a new floorboard, a hammer resting beside them, sawdust in the light"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c09s03",
+      "Same room, late afternoon light, a measuring tape stretched along the wall"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "16:20"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c09_tension",
+      "tape retracting, quiet room"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_34",
+      "A measuring tape held against a woman's side in late afternoon light, a hand very still"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c09s04",
+      "Two people sitting on the floor against a wall, tools pushed aside, one window"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "17:00"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c09_memory",
+      "low strings, clock"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_35",
+      "Two people sitting on the floor against a wall, a tool box between them, late light"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c09s05",
+      "The room door opening, a figure in the doorway, two people on the floor turning"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "17:20"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c09_interrupt",
+      "door, footsteps, sudden quiet"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_36",
+      "A paper bag of beer left on a cabinet, two people still on the floor behind it"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c09s06",
+      "Architect's studio at night, a new model on the table, a roof with an extra room"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "22:40"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c09_studio",
+      "knife on cardboard, glue, quiet"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_37",
+      "A white cardboard model of a small room with a skylight, a knife and ruler beside it"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:measure_again;love_thorne:4;desire:5;intimacy:5"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:thanked_and_let_go;trust:2;self:3;intimacy:-2"
+    ]
+  },
+  {
+    "chapter": 9,
+    "scene": 6,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:held_wrist;love_thorne:4;intimacy:4;consent:10"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在临界的那一刻，决定要不要越过那条线｜Decide at the edge whether to cross it"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，凌晨两点睡不着"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，第一次不带记录本上楼"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，在楼上，醒着"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，在阁楼，没睡"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c10s01",
+      "Dark bedroom at 2 a.m., a bare mattress, a phone face down, a glass of water"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "02:00"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c10_night",
+      "refrigerator below, a car passing, ticking"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_38",
+      "A dark room at 2 a.m., a hand resting flat on the floorboards"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c10s02",
+      "The edge of a mattress, a man kneeling beside it, a medical bag open on the floor"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "02:06"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c10_close",
+      "quiet breathing, bag zipper"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_39",
+      "A man kneeling beside a mattress in the dark, two fingers on a wrist"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c10s03",
+      "Close two-shot in dim light, one hand still on a wrist, faces a foot apart"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "02:15"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c10_breath",
+      "breathing, slow and deliberate"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c10s04",
+      "Two faces very close in the dark, one hand lifted toward a cheek"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "02:24"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c10_close",
+      "breathing, no music"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_40",
+      "A hand suspended three centimeters from a cheek in the dark"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c10s05",
+      "Darkness, a shift of weight, a mattress dipping, two silhouettes"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "02:31"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c10_edge",
+      "breath, fabric, a clock somewhere"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 5,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_41",
+      "Two silhouettes on a mattress, one pulling away, foreheads still touching"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c10s06",
+      "Gray dawn light, a man asleep in a chair beside the bed, a note on the nightstand"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "05:40"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c10_dawn",
+      "first birds, radiator, quiet"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_42",
+      "A handwritten prescription slip on a nightstand at dawn, a man asleep in a chair by the door"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c10s07",
+      "Landing in early morning, three men at three distances, one door open behind them"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "06:20"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c10_landing",
+      "morning traffic, stairs, tension"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "FX",
+    "args": [
+      "crush"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:asked_stay;love_reidy:5;trust:3;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:let_him_go;self:4;trust:2;intimacy:-3"
+    ]
+  },
+  {
+    "chapter": 10,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:followed_down;love_reidy:4;desire:4;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "听完三个版本，判断谁在说谎｜Hear all three versions and decide who is lying"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，第一次同时问三个人同一个问题"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，说了他藏了十年的一句话"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，今晚不唱歌"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，把证词交出来了"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c11s01",
+      "A manila envelope on a table, opened, a city fire report inside, photographs paper-clipped"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "09:00"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c11_open",
+      "paper, coffee cup set down, quiet"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_43",
+      "A city fire report spread on a table, photographs paper-clipped to the pages"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c11s02",
+      "Third floor studio, drawings pushed aside, a man standing with his back to the window"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "11:00"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c11_confession",
+      "low drone, no music, silence between lines"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_44",
+      "A man standing at a drafting table with a fire report in front of him, not touching it"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c11s03",
+      "Roof deck in harsh midday light, no string lights, a man sitting on the parapet"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "13:20"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c11_roof",
+      "wind, traffic far below, no guitar"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_45",
+      "A young man sitting on a rooftop parapet with his legs over the edge, city below"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c11s04",
+      "Semi-basement, a man standing very straight, a folder in his hand, no lab coat"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "14:40"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c11_clinic",
+      "refrigerator, footsteps above, quiet"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_46",
+      "A man standing beside a table with a stapled document, hands flat on the wood"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c11s05",
+      "Front of the row house in the rain, three men standing apart, no umbrellas"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "16:10"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c11_rain",
+      "rain, no music, distant siren"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 5,
+    "kind": "FX",
+    "args": [
+      "thunder"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c11s06",
+      "Small backyard, wet brick, a bare tree, one person standing in the rain"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "17:00"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c11_yard",
+      "rain on leaves, gutter"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_47",
+      "A woman standing alone in a small backyard in the rain, looking up at a second-floor window"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c11s07",
+      "A drawer pulled all the way out, its bottom panel lifted, a cavity underneath"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "19:30"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c11_drawer",
+      "wood scraping, breath, rain outside"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:rode_with_thorne;love_thorne:4;trust:3;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:rode_with_ferreira;love_ferreira:4;desire:3;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 11,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:walked_with_reidy;love_reidy:4;trust:4;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在地下室里，逼出最后一句谎话｜Force out the last lie in the basement"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，手里拿着母亲的档案编号"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，第一次下到地下室"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，在这里长大"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，带着手电，但今晚不需要"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c12s01",
+      "Basement of an old row house, stone walls, one bare bulb, a steel filing cabinet"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "20:00"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c12_basement",
+      "dripping water, bulb hum, footsteps on stone"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_48",
+      "A steel filing cabinet in a stone basement, one drawer open, a loose brick behind it"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c12s02",
+      "A construction log book open on a crate, pages brittle, one entry circled in pencil"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "20:20"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c12_log",
+      "pages turning, water dripping"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_49",
+      "A brittle construction log open on a wooden crate, one line circled in pencil"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c12s03",
+      "A reel-to-reel recorder on a workbench, a cassette adapter, one lamp"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "20:45"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c12_tape",
+      "tape hiss, mechanical click, room tone"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "tape_hiss"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_50",
+      "An old reel-to-reel recorder on a workbench, a cassette turning, one lamp above"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c12s04",
+      "Four people in a stone basement, one bulb, shadows on rough walls"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "21:00"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c12_four",
+      "water, breathing, tension drone"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_51",
+      "Four people standing in a stone basement under a single bulb, a recorder between them"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c12s05",
+      "Close on a young man in a basement, jaw tight, hands in fists"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "21:10"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c12_lie",
+      "low drone, breathing"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_52",
+      "A young man with his eyes closed in a basement, fists at his sides"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c12s06",
+      "Close on a man in a basement, very still, a scar visible at his collar"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "21:25"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c12_lie2",
+      "water, quiet"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 6,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c12s07",
+      "Four people, one bulb swinging slightly, long shadows"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "21:40"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c12_final",
+      "drone rising, water dripping"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_53",
+      "A single bulb swinging in a stone basement, four long shadows on the wall"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:gave_tape_thorne;love_thorne:4;trust:4;suspicion:1"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:gave_tape_reidy;love_reidy:3;trust:5;suspicion:1"
+    ]
+  },
+  {
+    "chapter": 12,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:kept_tape;self:5;independence:3;suspicion:2"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在三个人之间，吃完饭，并决定拆哪一份礼物｜Get through dinner, and choose which gift to open"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，今天生日，也是感恩节"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，礼物是一个模型"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，礼物是一盘录音"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，礼物是一份文件"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c13s01",
+      "Night, three envelopes on a table, three different handwritings, one lamp"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "22:40"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c13_night",
+      "clock, wind rising, paper"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c13s02",
+      "An unfinished house on a hillside, exposed studs, plywood floors, harbor visible through empty window frames"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "15:00"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c13_house",
+      "wind through studs, footsteps on plywood, harbor bell"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_54",
+      "A small white cardboard model of a room held in two hands, an unfinished house behind"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c13s03",
+      "Recording studio at night, drum kit, amps, one microphone, red light on"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "19:00"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c13_studio",
+      "amp hum, drum tuning, one voice test"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_55",
+      "A singer at a microphone in a small studio, red recording light on, band behind him"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c13s04",
+      "Semi-basement at seven, a table set for two, a folder beside a plate"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "19:00"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c13_clinic",
+      "refrigerator, footsteps above, quiet"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_56",
+      "A resignation letter on a dinner table set for two, a pen laid across it"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c13s05",
+      "Three objects on a bed: a small model, a cassette, a folder"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "21:30"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c13_gifts",
+      "quiet, wind, clock"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_57",
+      "A small cake box on a table, three gifts on a bed behind it, a man in the doorway"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c13s06",
+      "One candle on a supermarket cake, three men standing at different distances, lights off"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "23:40"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c13_cake",
+      "quiet, a match striking, three people breathing"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 6,
+    "kind": "FX",
+    "args": [
+      "candle_blow"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c13s07",
+      "Midnight, phone screen lighting a face, three message threads, one window"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "00:05"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c13_midnight",
+      "wind, phone buzz, quiet"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:opened_model;love_thorne:5;trust:3;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:played_tape;love_ferreira:5;desire:4;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 13,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:read_letter;love_reidy:5;trust:4;intimacy:2"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在封楼的一夜里，只留一个人｜Keep only one person with you tonight"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，怕黑，也怕水"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，知道这栋楼哪里最先塌"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，会游泳，怕水"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，半地下最先被淹"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c14s01",
+      "Street under a nor'easter at night, driving rain, water rising over the curb, one red tag on a door"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "21:00"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c14_storm",
+      "howling wind, rain, water rushing, distant siren"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_58",
+      "A red condemnation tag on a door, water rising over the curb outside, four people in a dark foyer"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c14s02",
+      "Stairwell with water climbing the steps, a flashlight beam, reflections on the wall"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "22:20"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c14_water",
+      "water lapping, dripping, wind outside"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 2,
+    "kind": "FX",
+    "args": [
+      "blackout"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_59",
+      "Water climbing a staircase in the dark, three flashlight beams crossing on a wall"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c14s03",
+      "Landing kitchen in the dark, water at the threshold, one phone showing no signal"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "23:10"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c14_dark",
+      "rain, water, wind, no music"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_60",
+      "Four people sitting on a dark staircase, one flashlight hanging above them"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c14s04",
+      "Her room lit by two candles, water outside the window, rain on glass"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "00:20"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c14_candle",
+      "rain, candle flicker, quiet voices"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_61",
+      "Two candles in a dark room, a man sitting two steps away, rain on the window"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c14s05",
+      "Candlelit room, three men in different corners, one woman in the middle"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "02:00"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c14_night",
+      "rain softer, four people breathing, clock stopped"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_62",
+      "Three men in three corners of a candlelit room, one woman in the center"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c14s06",
+      "Room at 4 a.m., candles low, two of the men asleep, one still awake"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "04:00"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c14_late",
+      "rain, one candle guttering"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_63",
+      "A man kneeling in front of a woman at 4 a.m., one candle almost out"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c14s07",
+      "A dark room, candle out, two silhouettes, rain outside, a door ajar"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "04:20"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c14_edge",
+      "rain, breath, heartbeat"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_64",
+      "Two silhouettes against a wall in the dark, foreheads touching, rain beyond"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:stayed_with_thorne;love_thorne:5;trust:3;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:stayed_with_ferreira;love_ferreira:5;desire:3;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:stayed_with_reidy;love_reidy:5;trust:5;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 14,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "D",
+      "set:stayed_alone;self:6;independence:4"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "听完母亲留下的最后一句话｜Listen to the last thing her mother left"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，终于按下播放键"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，站在门边，没有进来"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，坐在地板上"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，靠墙站着"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c15s01",
+      "A lifted floorboard, a rusted tin box, twenty-one cassettes wrapped in plastic"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "10:00"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c15_box",
+      "wood, plastic, tape cases clicking"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c15s02",
+      "A cassette player on a table, one hand on the play button, morning light"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "10:20"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c15_play",
+      "tape hiss, room tone, a chair creaking"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 2,
+    "kind": "FX",
+    "args": [
+      "tape_hiss"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c15s03",
+      "Three men entering a room one by one, a cassette player on the table between them"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "10:35"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c15_tape",
+      "tape hiss, footsteps, a door"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c15s04",
+      "Close on a cassette player, the tape reels turning, one hand flat on the table"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "10:50"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c15_tape",
+      "tape hiss, a breath, then quiet"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 4,
+    "kind": "FX",
+    "args": [
+      "tape_stop"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c15s05",
+      "Four people in a room, morning light, no one moving"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "11:10"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c15_silence",
+      "room tone, a clock, breathing"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c15s06",
+      "Three separate close shots: a man at a window, a man on the floor, a man against a wall"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "11:40"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c15_silence",
+      "room tone only"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c15s07",
+      "The doorway of 2R, three men leaving one by one, a woman standing at the table"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "12:30"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c15_door",
+      "footsteps, stairs, a door closing"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:said_forgive;trust:5;love_thorne:3;love_ferreira:3;love_reidy:3"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:asked_time;trust:3;self:3;independence:2"
+    ]
+  },
+  {
+    "chapter": 15,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:refused_forgive;self:5;independence:4;trust:-2"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在三个人收拾行李的时候，决定去哪一层｜Decide which floor to walk up to while they pack"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，手里有一份没签的文件"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，在收拾十年的图纸"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，在收琴，收得很慢"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，在打包一间几乎没有东西的屋子"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c16s01",
+      "Third floor at night, drawings rolled and stacked, a legal document on the drafting table"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "20:00"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c16_pack",
+      "paper tubes, tape, a chair dragging"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_65",
+      "Rolled drawings stacked in boxes, a quitclaim deed on a drafting table, a pen beside it"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c16s02",
+      "Roof deck at night, bags packed, a guitar case, a bus ticket on a folding chair"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "21:00"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c16_roof",
+      "wind, a distant train, strings being loosened"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 2,
+    "kind": "CG",
+    "args": [
+      "hl_66",
+      "A packed guitar case and a one-way bus ticket on a rooftop chair at night"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c16s03",
+      "Semi-basement, almost empty, boxes taped shut, a transfer order on a bare table"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "21:40"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c16_clinic",
+      "tape gun, empty room echo, refrigerator unplugged"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c16s04",
+      "A narrow storage room on the third floor, old furniture, dust, one bare bulb"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "22:20"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c16_storage",
+      "dust, wood, a bulb buzzing"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_67",
+      "An old leather suitcase on the floor of a dusty storage room, one hand on the latch"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c16s05",
+      "Three men and one woman around an open suitcase, dust in the bulb light"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "22:35"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c16_suitcase",
+      "fabric, paper, a small metal object"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_68",
+      "A handwritten list from 1974, five names, the fourth circled lightly"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c16s06",
+      "The suitcase being repacked, each object placed carefully, three pairs of hands"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "23:00"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c16_repack",
+      "fabric, paper, quiet breathing"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_69",
+      "Four hands closing the lid of an old leather suitcase"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c16s07",
+      "Dawn, three men standing on the sidewalk with bags, a condemned building behind them"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "06:40"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c16_dawn",
+      "birds, a van idling, straps tightening"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_70",
+      "Three men with luggage on a sidewalk at dawn, a condemned red tag on the door behind"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:went_to_station;love_reidy:5;trust:3;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:caught_the_truck;love_ferreira:5;desire:4;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 16,
+    "scene": 7,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:waited_until_ten;love_thorne:5;trust:4;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在三个人都离开之前，只开一扇门｜Open only one door before they all leave"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，站在三扇门中间"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师／3F 住户",
+      "Elias Thorne，36，在十点等她，没有收拾行李"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱／修车行技工",
+      "Jude Ferreira，25，把车钥匙放在桌上"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治／Garden Level 住户",
+      "Silas Reidy，34，把行李箱放在门后，没有锁"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c17s01",
+      "Her room at night, lights off, streetlight through the window, three doors in her mind"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "21:40"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c17_night",
+      "clock, a car passing, one stair creaking above"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c17s02",
+      "The landing, three doors visible, one up, one down, one behind her, a single bulb"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "22:00"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c17_landing",
+      "bulb hum, three kinds of silence behind three doors"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:opened_thorne;love_thorne:5;trust:4;intimacy:5"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:opened_ferreira;love_ferreira:5;desire:4;intimacy:5"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:opened_reidy;love_reidy:5;trust:5;intimacy:5"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 2,
+    "kind": "OPT",
+    "args": [
+      "D",
+      "set:opened_none;self:6;independence:3"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c17s03",
+      "A dark room, one lamp low, a coat being taken off, two silhouettes near a window"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "23:30"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c17_close",
+      "quiet, fabric, breath, no music"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 3,
+    "kind": "FX",
+    "args": [
+      "heartbeat"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 3,
+    "kind": "CG",
+    "args": [
+      "hl_71",
+      "Two silhouettes near a fogged window in a dim room, one hand at the back of a neck"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c17s04",
+      "Early morning, fogged window, clothes on the floor, an arm across a waist"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "05:50"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c17_dawn",
+      "birds, distant traffic, quiet breathing"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_72",
+      "A fogged window with one clear streak, morning street beyond, an arm across a waist"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c17s05",
+      "The landing kitchen at dawn, one glass of water on the table, two people dressed"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "06:20"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c17_kitchen",
+      "tap water, glass set down, quiet"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_73",
+      "A glass of water on a kitchen table at dawn, two hands on opposite sides"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c17s06",
+      "The landing at 6:40, two men with luggage standing at the bottom of the stairs"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "06:40"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c17_stairs",
+      "wheels on wood, a door, low voices"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_74",
+      "Two men with luggage at the bottom of a stairwell, one woman on the stairs"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c17s07",
+      "The front steps of the row house, morning, three men leaving at different times"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "07:00"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c17_goodbye",
+      "a car door, wheels on wet pavement, birds"
+    ]
+  },
+  {
+    "chapter": 17,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_75",
+      "A row house door with a red tag, a key left on a mailbox, a street empty at ten"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 0,
+    "kind": "GOAL",
+    "args": [
+      "在你选的那条路上，说出最后一句｜Say the last line on the road you chose"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "你",
+      "f",
+      "27",
+      "char_me",
+      "玩家角色／播客主理人",
+      "Wren Calloway，27，最后一次站在这栋楼里"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "伊莱亚斯",
+      "m",
+      "36",
+      "char_elias",
+      "建筑师",
+      "Elias Thorne，36，在工地等她"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "裘德",
+      "m",
+      "25",
+      "char_jude",
+      "乐队主唱",
+      "Jude Ferreira，25，在公路边等她"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 0,
+    "kind": "CHAR",
+    "args": [
+      "赛拉斯",
+      "m",
+      "34",
+      "char_silas",
+      "急诊科主治",
+      "Silas Reidy，34，在医院等她"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 0,
+    "kind": "ORIENT",
+    "args": [
+      "bg"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 1,
+    "kind": "BG",
+    "args": [
+      "bg_c18s01",
+      "Rooftop at dawn, one chair, one microphone on a stand, the harbor turning gray-gold"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 1,
+    "kind": "TIME",
+    "args": [
+      "06:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 1,
+    "kind": "BGM",
+    "args": [
+      "c18_roof",
+      "wind, harbor bell, one mic humming"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 1,
+    "kind": "FX",
+    "args": [
+      "rec_light"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 1,
+    "kind": "CG",
+    "args": [
+      "hl_76",
+      "A rooftop at dawn, one microphone on a stand, three vehicles waiting below"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 2,
+    "kind": "BG",
+    "args": [
+      "bg_c18s02",
+      "Third-floor window from outside, morning light on glass, one man standing inside"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 2,
+    "kind": "TIME",
+    "args": [
+      "06:40"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 2,
+    "kind": "BGM",
+    "args": [
+      "c18_window",
+      "birds, a truck idling below"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 3,
+    "kind": "BG",
+    "args": [
+      "bg_c18s03",
+      "Close on a man at an open third-floor window, morning light on his face"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 3,
+    "kind": "TIME",
+    "args": [
+      "06:42"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 3,
+    "kind": "BGM",
+    "args": [
+      "c18_window",
+      "wind, one voice across the street"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 4,
+    "kind": "BG",
+    "args": [
+      "bg_c18s04",
+      "A highway heading south, marshland on both sides, a pickup truck, late afternoon light"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 4,
+    "kind": "TIME",
+    "args": [
+      "16:20"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 4,
+    "kind": "BGM",
+    "args": [
+      "c18_road",
+      "engine, wind through a window, radio low"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 4,
+    "kind": "CG",
+    "args": [
+      "hl_77",
+      "A pickup truck on a coastal highway, marshland, one hand held open between two seats"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 5,
+    "kind": "BG",
+    "args": [
+      "bg_c18s05",
+      "A gravel pull-off beside the road, the sea in the distance, two people outside the truck"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 5,
+    "kind": "TIME",
+    "args": [
+      "17:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 5,
+    "kind": "BGM",
+    "args": [
+      "c18_pull",
+      "engine off, wind, distant surf"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 5,
+    "kind": "CG",
+    "args": [
+      "hl_78",
+      "Two people outside a pickup truck on a gravel pull-off, the sea in the distance"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 6,
+    "kind": "BG",
+    "args": [
+      "bg_c18s06",
+      "Hospital corridor, fluorescent light, a man in scrubs sitting outside an OR, exhausted"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 6,
+    "kind": "TIME",
+    "args": [
+      "14:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 6,
+    "kind": "BGM",
+    "args": [
+      "c18_hospital",
+      "monitor beeps, gurney wheels, distant PA"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 6,
+    "kind": "CG",
+    "args": [
+      "hl_79",
+      "Two people on a hospital corridor bench, one pair of hands held open"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 7,
+    "kind": "BG",
+    "args": [
+      "bg_c18s07",
+      "A hospital locker room, a transfer order being torn in half, scrubs hanging"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 7,
+    "kind": "TIME",
+    "args": [
+      "15:10"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 7,
+    "kind": "BGM",
+    "args": [
+      "c18_tear",
+      "paper tearing, locker door, quiet"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 7,
+    "kind": "CG",
+    "args": [
+      "hl_80",
+      "Torn pieces of a transfer order in a trash bin, a locker door open with a photograph inside"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 8,
+    "kind": "BG",
+    "args": [
+      "bg_c18s08",
+      "An empty room in late afternoon, bare floor, one chair, sunlight moving across the boards"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 8,
+    "kind": "TIME",
+    "args": [
+      "16:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 8,
+    "kind": "BGM",
+    "args": [
+      "c18_empty",
+      "room tone, birds, a distant saw"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 8,
+    "kind": "CG",
+    "args": [
+      "hl_81",
+      "An empty room in late afternoon, one chair, one document, sunlight on new floorboards"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 9,
+    "kind": "BG",
+    "args": [
+      "bg_c18s09",
+      "A renovated ground floor one year later, recording booth, warm lamps, three chairs, a kitchen"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 9,
+    "kind": "TIME",
+    "args": [
+      "19:30"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 9,
+    "kind": "BGM",
+    "args": [
+      "c18_epilogue",
+      "room tone, a kettle, low music, people talking downstairs"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 9,
+    "kind": "CG",
+    "args": [
+      "hl_82",
+      "A renovated ground-floor recording studio one year later, green sound panels, warm lamps, four plates upstairs"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "BG",
+    "args": [
+      "bg_c18s10",
+      "The same studio at night, one person at the microphone, three people behind the glass"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "TIME",
+    "args": [
+      "22:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "BGM",
+    "args": [
+      "c18_last",
+      "low room tone, one voice, heartbeat under it"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "OPT",
+    "args": [
+      "A",
+      "set:last_door_unlocked;love_thorne:6;trust:5;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "OPT",
+    "args": [
+      "B",
+      "set:last_youre_late;love_ferreira:6;desire:5;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "OPT",
+    "args": [
+      "C",
+      "set:last_come_in;love_reidy:6;trust:6;intimacy:4"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 10,
+    "kind": "OPT",
+    "args": [
+      "D",
+      "set:last_only_me;self:8;independence:4;intimacy:3"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 11,
+    "kind": "BG",
+    "args": [
+      "bg_c18s11",
+      "A demolished interior wall in morning light, tools on the floor, two people in work clothes, dust in the air"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 11,
+    "kind": "TIME",
+    "args": [
+      "09:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 11,
+    "kind": "BGM",
+    "args": [
+      "c18_end_a",
+      "hammer, wood splitting, morning birds"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 11,
+    "kind": "IF",
+    "args": [
+      "route_thorne"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 12,
+    "kind": "BG",
+    "args": [
+      "bg_c18s12",
+      "Point Judith lighthouse at dusk, a pickup truck parked on gravel, the sea beyond, wind"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 12,
+    "kind": "TIME",
+    "args": [
+      "18:40"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 12,
+    "kind": "BGM",
+    "args": [
+      "c18_end_b",
+      "surf, wind, acoustic guitar"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 12,
+    "kind": "IF",
+    "args": [
+      "route_ferreira"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 13,
+    "kind": "BG",
+    "args": [
+      "bg_c18s13",
+      "A kitchen window on March 11th, gray light, one man sitting with a cup, no coat on"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 13,
+    "kind": "TIME",
+    "args": [
+      "10:00"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 13,
+    "kind": "BGM",
+    "args": [
+      "c18_end_c",
+      "quiet room, clock, distant siren"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 13,
+    "kind": "IF",
+    "args": [
+      "route_reidy"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 14,
+    "kind": "BG",
+    "args": [
+      "bg_c18s14",
+      "A renovated ground floor on a Wednesday night, four plates on a table, three chairs filled"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 14,
+    "kind": "TIME",
+    "args": [
+      "19:30"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 14,
+    "kind": "BGM",
+    "args": [
+      "c18_end_d",
+      "room tone, plates, low talk, laughter"
+    ]
+  },
+  {
+    "chapter": 18,
+    "scene": 14,
+    "kind": "IF",
+    "args": [
+      "route_herself"
+    ]
+  }
+]

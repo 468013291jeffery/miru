@@ -1,0 +1,82 @@
+[
+  {
+    "id": "invoice_request",
+    "result": {
+      "n": 1
+    },
+    "passed": true
+  },
+  {
+    "id": "slow_relationship",
+    "result": {
+      "n": 2
+    },
+    "passed": true
+  },
+  {
+    "id": "independent_refusal",
+    "result": {
+      "n": 3
+    },
+    "passed": true
+  },
+  {
+    "id": "clarification_no_consent",
+    "result": {
+      "n": 0
+    },
+    "passed": true
+  },
+  {
+    "id": "hospital_earlier_evidence",
+    "result": {
+      "done": [
+        {
+          "id": 0,
+          "evidence": [
+            {
+              "message": 1,
+              "quote": "我愿意继续了解，也想知道你后来为什么关注我。"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "evidence": [
+            {
+              "message": 0,
+              "quote": "我妹妹两年前做手术。她一个人在医院等，我没来得及赶到。她后来给我看了这张卡，说有个叫艾娃的女孩跟她讲了一整晚笑话。"
+            }
+          ]
+        }
+      ]
+    },
+    "passed": true
+  },
+  {
+    "id": "audit_cleared_earlier_evidence",
+    "result": {
+      "done": [
+        {
+          "id": 0,
+          "evidence": [
+            {
+              "message": 1,
+              "quote": "请公司书面更正，我也要保留追责权。"
+            }
+          ]
+        },
+        {
+          "id": 1,
+          "evidence": [
+            {
+              "message": 0,
+              "quote": "审计方的书面结论投上大屏：未发现艾娃参与虚假转账。"
+            }
+          ]
+        }
+      ]
+    },
+    "passed": true
+  }
+]

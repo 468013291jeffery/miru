@@ -36,8 +36,13 @@ function authoredExpressionIssue142(say){
  const text=String(say||'').replace(/\s+/g,'');
  return /门(?:和|与|跟|、|及)(?:错(?:误)?|过错|责任)(?:都|全|也|一起|一块|一并|全部|全都){0,3}(?:推|甩|丢|扔|算)/.test(text)?'把提前关门和报告里推卸责任分成两件事，分别说明谁做了什么，不能把门当作责任一起推给别人。':'';
 }
+function authoredBackstage142(text){
+ return /```|⟦[^⟧]*⟧|【(?:本章安排|角色任务|人物图|主场景图|演出风格|开场建议)】|(?:当前任务|观察重点|推进条件|程序字段|导演规则)[：:]|\b(?:actor_payload|ref_lines|avatar_slot|system_prompt)\b|^\s*\{\s*"[A-Za-z_]+"\s*:/m.test(String(text||''));
+}
 function authoredReplyValid142(r,th,cid){
- if(!r||!r.say)return true;const say=String(r.say);
+ if(!r)return true;
+ if(th&&scene98(th).b?.dialoguePolicy?.noBackstage&&authoredBackstage142([r.say,r.act,r.action].filter(Boolean).join('\n')))return false;
+ if(!r.say)return true;const say=String(r.say);
  if(th&&scene98(th).b?.dialoguePolicy?.plainLanguage&&authoredExpressionIssue142(say))return false;
  if(/(?:原稿|剧本里|提示词|作者设定|导演提示|角色任务|参考对白|程序字段|真实回传)/.test(say))return false;
  if(th&&cid){const {s}=scene98(th),k=cardOf98(wd(th.wid),cid)||{};for(const g of s.responseGuards||[]){if((g.characters||[]).includes(k.key)&&(g.phrases||[]).some(x=>say.includes(x)))return false;}}

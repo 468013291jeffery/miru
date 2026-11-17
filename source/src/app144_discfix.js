@@ -93,6 +93,8 @@
     ["🖤", "暗黑与黑帮", "Dark & Dangerous", ["Dark Romance", "Mafia", "Bratva", "Touch Her and Die", "Touch Them and Die"]],
     ["🔍", "悬疑反转", "Twists & Secrets", ["Romantic Suspense", "Revenge", "Hidden Identity", "Secret Heir", "Mystery"]],
     ["👑", "王室与豪门", "Crowns & Fortunes", ["Royal Court", "Billionaire", "Arranged Marriage", "Castle Life"]],
+    ["🎤", "偶像与娱乐圈", "Idols & Showbiz", ["K-pop", "Idols", "Idol", "Showbiz", "K-pop偶像", "韩国娱乐圈", "娱乐圈", "偶像", "男团", "女团", "顶流"]],
+    ["✨", "二次元", "Anime & 2D", ["Anime", "2D", "Manga", "Isekai", "二次元", "动漫", "番剧", "漫画", "异世界"]],
     ["☀️", "甜宠心动", "Sweet & Swoony", ["Romance", "Rom-Com", "He Falls First", "Golden Retriever", "Mutual Pining", "Secret Admirer", "Vacation", "Celebrity", "Campus"]]
   ];
   if (typeof discMain === "function" && typeof off94RCard === "function") {
@@ -947,6 +949,10 @@ pico.instantiate_detection_memory = function(size)
   }
   function keyOf(src) { return src.length > 300 ? src.length + ":" + src.slice(0, 120) + src.slice(-120) : src; }
   async function findFace(img) {
+    // SPP supporting cast uses transparent full-body art with different head heights.
+    // Frame the existing faces in avatar UI; keep the full illustration unchanged.
+    const url = img.currentSrc || img.src || "", W0 = img.naturalWidth, H0 = img.naturalHeight;
+    if (W0 && H0 && /char_(?:desmond|berthe)__default\.png(?:[?#]|$)/.test(url)) return {x:0.51,y:url.includes('char_berthe__')?0.238:0.147,s:0.19,fill:0.72,W:W0,H:H0};
     const k = keyOf(img.currentSrc || img.src); if (memo.has(k)) return memo.get(k);
     const cl = await loadCascade(); if (!cl) return null;
     let res = null;
@@ -976,16 +982,16 @@ pico.instantiate_detection_memory = function(size)
       else { img.style.objectPosition = "50% 12%"; return; }
     }
     const W = f.W, H = f.H, faceW = f.s * W;
-    let k = Math.max(0.42 * D / faceW, D / Math.min(W, H));
+    let k = Math.max((f.fill || 0.42) * D / faceW, D / Math.min(W, H));
     k = Math.min(k, 6 * D / Math.min(W, H));
     const dw = W * k, dh = H * k;
     let left = D / 2 - f.x * W * k, top = D * 0.46 - f.y * H * k;
     left = Math.min(0, Math.max(D - dw, left)); top = Math.min(0, Math.max(D - dh, top));
-    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
+    Object.assign(img.style, { position: "absolute", width: dw + "px", height: dh + "px", left: left + "px", top: top + "px", maxWidth: "none", maxHeight: "none", objectFit: "fill", borderRadius: "0", boxShadow: "none" });
   }
   /* 2026-11-13：排行榜（领奖台 / 列表 / 我的本命）的头像也统一按人脸居中；头像图后加载时（先显示字母占位图）自动换成真图再取景 */
-  const SEL = ".ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img";
-  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
+  const SEL = '.ld101c img, .rkpod .av img, .rrow .av img, .rkbias .av img, .av img[data-art="b98_6dcfcceb84_c19"], .av img[data-art="b98_6dcfcceb84_c20"], .av img[src*="/svf-v4/characters/"],.av img[src*="/only-me-v2/characters/"]';
+  function reset(img) { ["position", "width", "height", "left", "top", "maxWidth", "maxHeight", "objectFit", "borderRadius", "boxShadow"].forEach(k => { img.style[k] = ""; }); }
   function prep(img) {
     if (img.dataset.f147) return; img.dataset.f147 = "1";
     const par = img.parentElement;
@@ -1166,7 +1172,8 @@ pico.instantiate_detection_memory = function(size)
       appendMsg(th, { who: "me", k: mode || "say", txt, typed: true, at: Date.now() }); th.rounds++;
       const ta = document.getElementById("cin"); if (ta) ta.value = "";
       try { typing(true); } catch (_) {}
-      const i = await classify(Lz(d.hint || d.q || ""), opts, txt);
+      /* 只有一条（「轮到你说」那种）就不用判定：你说什么都接着往下走 */
+      const i = opts.length <= 1 ? 0 : await classify(Lz(d.hint || d.q || ""), opts, txt);
       try { typing(false); } catch (_) {}
       if (i < 0) { if (th.pk && th.pk.stop && typeof reply === "function") { try { await reply(th, { kind: "user", txt, mode: mode || "say" }); } catch (e) { console.warn("[c150] free", e); } } return; }
       const o = opts[i]; if (!o || !th.pk.stop) return;
@@ -2132,4 +2139,1262 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent = ".nx162{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 14px 6px;font-size:12px;color:var(--mut,#aaa)}" +
     ".nx162 button{background:none;border:0;color:#F6D3AE;font-size:12.5px;text-decoration:underline;text-underline-offset:3px;padding:2px 4px;cursor:pointer}";
   document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-14 · 每章要完成固定目标，才能进下一章（所有剧本） =====
+   玩家：「除了点下一章之外，每个章节要完成固定的目标，完成了再进下一个章节；或者完成某些具体动作，达成某些目标。」
+   ⇒ 剧本每章写 1–3 个完成条件 ⟦DONE|类型|内容|短名|推进句⟧（写在 ⟦GOAL⟧ 下面）：
+       say  = 玩家说出 / 做出某类事（AI 看对话判断）    flag = 某个旗子已打上（关键剧情播过、小游戏赢了、拿到道具）
+     · 条件没全部完成，「进入下一章 ›」不出现；输入框上方一行小字显示「本章目标 1/2 · ✓… · …」。
+     · 防卡死，三级引导（从上次有目标完成、或本章开始，数玩家自己发的话）：
+         4 轮 → 角色的回应自然地往没完成的目标上带；8 轮 → 播这个目标的推进句；14 轮 → 剩下的目标按已完成处理。
+     · 章末分支一直对不上（玩家一直聊别的）：同样到 14 轮时按最接近的一条走。
+     · 没写 ⟦DONE⟧ 的旧剧：照旧，章末分支判定完就能进下一章。
+   作者也可以在作品资料（bible.json）里写 chapters[].done = [{type,val,name,push}]。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  const L1 = 4, L2 = 8, L3 = 14;
+  const RX = /^\s*⟦\s*DONE\s*[|｜](.*?)⟧\s*$/;
+  const CHAP = /^\s*#{1,3}\s*(CHAPTER\b|第\s*[0-9一二三四五六七八九十百零〇两]+\s*章)/i;
+
+  function parseDone(body) {
+    const a = String(body || "").split(/[|｜]/).map(s => s.trim());
+    const type = (a[0] || "").toLowerCase();
+    if (!/^(say|flag)$/.test(type) || !a[1]) return null;
+    return { type, val: a[1], name: a[2] || a[1].slice(0, 8), push: a[3] || "" };
+  }
+
+  /* ---- 导入：剧本里的 ⟦DONE⟧ 收进每一章，正文里不留 ---- */
+  if (typeof PARSE !== "undefined" && PARSE.use) {
+    try {
+      PARSE.use("app163:done", {
+        parse(next, text) {
+          const per = []; let ci = -1;
+          const kept = String(text || "").split("\n").filter(l => {
+            if (CHAP.test(l)) { ci++; return true; }
+            const m = RX.exec(l); if (!m) return true;
+            const d = parseDone(m[1]); if (d) (per[Math.max(0, ci)] = per[Math.max(0, ci)] || []).push(d);
+            return false;
+          }).join("\n");
+          const args = [].slice.call(arguments, 1); args[0] = kept;
+          const doc = next.apply(null, args);
+          try { if (doc && per.length) doc.done163 = per; } catch (_) {}
+          return doc;
+        },
+        build(next, doc, as) {
+          const r = next(doc, as);
+          try {
+            if (doc && doc.done163) {
+              const wid = r && (r.wid || r), w = typeof wd === "function" ? wd(wid) : null;
+              const cs = w && w.pack && w.pack.chapters;
+              if (cs) cs.forEach((c, i) => { const d = doc.done163[i]; if (d && d.length) c.done163 = d.slice(0, 3); });
+            }
+          } catch (e) { console.warn("[goal163] build", e); }
+          return r;
+        }
+      });
+    } catch (e) { console.warn("[goal163] use", e); }
+  }
+
+  /* ---- 运行时 ---- */
+  function chap(th) { try { const w = wd(th.wid); return w && w.pack && w.pack.chapters && w.pack.chapters[(+th.pk.ch || 1) - 1]; } catch (_) { return null; } }
+  function goals(th) {
+    const c = th && th.pk && chap(th); if (!c) return [];
+    const raw = (c.done163Locales && c.done163Locales[CL() === "zh" ? "zh" : "en"]) || c.done163 || c.done || [];
+    return (Array.isArray(raw) ? raw : []).map(d => (typeof d === "string" ? parseDone(d) : d && d.type ? { type: String(d.type).toLowerCase(), val: d.val || d.value || "", name: d.name || "", push: d.push || "" } : null)).filter(d => d && d.val).slice(0, 3);
+  }
+  function st(th) {
+    const n = +th.pk.ch || 1;
+    let g = th.pk.g163;
+    if (!g || g.ch !== n) g = th.pk.g163 = { ch: n, ok: [], r: 0, lv: 0, pushed: [] };
+    return g;
+  }
+  function syncFlags(th, gs, g) {
+    let hit = false; const f = th.pk.flags || {};
+    gs.forEach((d, i) => { if (!g.ok[i] && d.type === "flag" && f[d.val]) { g.ok[i] = 1; hit = true; } });
+    return hit;
+  }
+  function locked(th) {
+    if (!th || !th.pk) return false;
+    const gs = goals(th); if (!gs.length) return false;
+    const g = st(th); syncFlags(th, gs, g);
+    return gs.some((_, i) => !g.ok[i]);
+  }
+  function open(th) { const gs = goals(th), g = st(th); return gs.map((d, i) => ({ d, i })).filter(x => !g.ok[x.i]); }
+  function progressed(th, names) {
+    const g = st(th); g.r = 0; g.lv = 0;
+    try { save(); } catch (_) {}
+    try { if (names.length) toast(T("✓ 本章目标达成：", "✓ Chapter goal: ") + names.join("、")); } catch (_) {}
+  }
+  window.GOAL163 = { goals, locked, state: st, open };
+
+  /* 判定 say 类：看最近几句对话 */
+  let judging = false;
+  async function judge(th) {
+    if (judging) return; const todo = open(th).filter(x => x.d.type === "say"); if (!todo.length) return;
+    judging = true;
+    try {
+      const recent = (th.msgs || []).slice(-10).filter(m => m && m.txt && m.who !== "sys").map(m => (m.who === "me" ? T("玩家", "Player") : ((typeof ch === "function" && ch(m.who) && ch(m.who).n) || T("旁白", "Narration"))) + "：" + String(m.txt).slice(0, 160)).join("\n");
+      const list = todo.map((x, k) => (k + 1) + "｜" + x.d.val).join("\n");
+      const r = await ask("互动剧里，这一章有几个需要玩家自己完成的目标。根据最近的对话，判断玩家已经完成了哪些。\n目标：\n" + list + "\n最近的对话：\n" + recent + "\n规则：只看玩家本人说的话和做的事；意思做到了就算完成，不要求原话；没做到的不算。\n只回 JSON：{\"done\":[已完成的编号]}", { maxTokens: 60, modelTier: "default", timeout: 12000 });
+      const arr = r && Array.isArray(r.done) ? r.done.map(Number) : [];
+      const g = st(th), names = [];
+      arr.forEach(n => { const x = todo[n - 1]; if (x && !g.ok[x.i]) { g.ok[x.i] = 1; names.push(x.d.name); } });
+      if (names.length) progressed(th, names);
+    } catch (e) { console.warn("[goal163] judge", e); }
+    finally { judging = false; }
+  }
+
+  function pushLine(th, d) {
+    const s = String(d.push || "").trim(); if (!s) return false;
+    let m = /^(旁白|narration|narrator)\s*[:：]\s*(.+)$/i.exec(s);
+    if (m) { appendMsg(th, { who: "n", k: "act", txt: m[2], at: Date.now() }); return true; }
+    m = /^([^:：]{1,12})\s*[:：]\s*[“"「]?(.+?)[”"」]?$/.exec(s);
+    if (m) {
+      const id = (th.cast || []).find(c => { try { const o = ch(c); return o && (o.n === m[1] || Lz(o.n) === m[1]); } catch (_) { return false; } });
+      if (id) { appendMsg(th, { who: id, k: "say", txt: m[2], at: Date.now() }); return true; }
+    }
+    appendMsg(th, { who: "n", k: "act", txt: s, at: Date.now() }); return true;
+  }
+
+  async function closestPick(th, txt) {
+    try {
+      const c = chap(th); const cs = (c && c.choices) || []; if (!cs.length || typeof packPick !== "function") return;
+      let k = null;
+      /* A stalled conversation cannot grant romantic consent in native v2. */
+      if (wd(th.wid)?.pack?.nativeV2 && +th.pk.ch === PCN(wd(th.wid))) {
+        const neutral = cs.find(x => (x.set || []).includes("ending_open"));
+        if (neutral) { if (curT === th.id && th.pk.st === "choose") packPick(neutral.k); return; }
+      }
+      try {
+        const r = await ask("玩家在互动剧的章末选择点聊了很久，一直没有明确选哪条。按他到目前为止的态度，判断最接近哪个选项。\n问题：" + Lz(c.ask) + "\n选项：\n" + cs.map(x => x.k + "｜" + Lz(x.t)).join("\n") + "\n玩家最近说：「" + txt + "」\n只回 JSON：{\"k\":\"选项字母\"}", { maxTokens: 30, modelTier: "default", timeout: 12000 });
+        k = r && typeof r.k === "string" ? r.k.trim().toUpperCase().slice(0, 1) : null;
+      } catch (_) {}
+      if (!k || !cs.some(x => x.k === k)) k = cs[cs.length - 1].k;
+      if (curT === th.id && th.pk.st === "choose") packPick(k);
+    } catch (e) { console.warn("[goal163] pick", e); }
+  }
+
+  /* 玩家每发一句：计轮数 → 判定 → 引导 */
+  if (typeof doSend === "function") {
+    const ds = doSend;
+    doSend = function (txt) {
+      const th = S.threads[curT]; const s = String(txt || "").trim();
+      let watch = false;
+      try {
+        if (th && th.pk && s && th.pk.as !== "watch") {
+          const lk = locked(th), choosing = th.pk.st === "choose";
+          if (lk || choosing) { const g = st(th); g.r = (g.r || 0) + 1; watch = true; }
+        }
+      } catch (_) {}
+      const res = ds.apply(this, arguments);
+      if (watch) setTimeout(() => after(th, s), 2500);
+      return res;
+    };
+  }
+  async function after(th, s) {
+    try {
+      if (!th || !th.pk) return;
+      await judge(th);
+      const g = st(th), op = open(th);
+      if (!op.length && th.pk.st !== "choose") return;
+      if (g.r >= L3) {
+        // Strict authored goals require real source flags; time spent chatting is not completion.
+        if (chap(th)?.strictDone) { g.r = L1; g.lv = 1; save(); return; }
+        if (op.length) { op.forEach(x => { g.ok[x.i] = 1; }); g.auto = 1; progressed(th, []); }
+        if (th.pk.st === "choose") { g.r = 0; await closestPick(th, s); }
+        return;
+      }
+      if (g.r >= L2 && g.lv < 2) {
+        g.lv = 2;
+        const x = op.find(y => y.d.push && !(g.pushed || []).includes(y.i));
+        if (x) {
+          /* 等角色这一轮说完再推 */
+          const t0 = Date.now();
+          while (Date.now() - t0 < 30000 && ((typeof busy !== "undefined" && busy) || (window.READING && READING.pending.get(th.id)))) await new Promise(r => setTimeout(r, 600));
+          if (pushLine(th, x.d)) { (g.pushed = g.pushed || []).push(x.i); save(); if (curT === th.id) { try { renderChat(); } catch (_) {} } }
+        }
+        return;
+      }
+      if (g.r >= L1 && g.lv < 1) { g.lv = 1; save(); }
+    } catch (e) { console.warn("[goal163] after", e); }
+  }
+
+  /* 引导：进模型的提示里加一句「往没完成的目标上带」 */
+  if (typeof packPrompt === "function") {
+    const pp = packPrompt;
+    packPrompt = function (th) {
+      let s = pp.apply(this, arguments);
+      try {
+        if (th && th.pk) {
+          const g = st(th), op = open(th);
+          if (op.length && g.lv >= 1) {
+            s += "\nOPEN CHAPTER GOALS (the player has not done these yet): " + op.map(x => x.d.val).join(" / ") +
+              (g.lv >= 2 ? "\nThe chapter has stalled. In this reply, actively create a natural opening that invites the player toward one of these goals (a question, an action, something noticed). Never mention goals, chapters or the game." :
+                "\nGently let the conversation drift toward one of these through what the characters say or do. Never mention goals, chapters or the game, and never decide for the player.");
+          } else if (th.pk.st === "choose" && g.r >= L1) {
+            s += "\nThe chapter's closing question is still open. Bring the conversation back to it naturally, in character.";
+          }
+        }
+      } catch (_) {}
+      return s;
+    };
+  }
+
+  /* 下一章：条件没完成就不给进 */
+  ["packNext", "packAdvanceChapter"].forEach(name => {
+    try {
+      const f = window[name]; if (typeof f !== "function") return;
+      const w = function () {
+        try {
+          const th = S.threads[curT];
+          if (th && locked(th)) { const op = open(th); toast(T("先完成本章目标：", "Finish this chapter first: ") + op.map(x => x.d.name).join("、")); return; }
+        } catch (_) {}
+        return f.apply(this, arguments);
+      };
+      window[name] = w;
+      try { (0, eval)(name + " = window." + name); } catch (_) {}
+    } catch (_) {}
+  });
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("#pkwrap [data-pknext],#pkwrap [data-pkadvance]"); if (!b) return;
+    const th = S.threads[curT]; if (!th || !locked(th)) return;
+    e.preventDefault(); e.stopPropagation();
+    toast(T("先完成本章目标：", "Finish this chapter first: ") + open(th).map(x => x.d.name).join("、"));
+  }, true);
+
+  /* 输入框上方：本章目标进度 */
+  function bar(th) {
+    const chat = document.getElementById("s-chat"); if (!chat) return;
+    let el = chat.querySelector(".g163");
+    const gs = th && th.pk ? goals(th) : [];
+    chat.classList.toggle("g163lock", !!(gs.length && locked(th)));
+    if (!gs.length) { if (el) el.remove(); return; }
+    const g = st(th), done = gs.filter((_, i) => g.ok[i]).length;
+    const html = '<b>' + T("本章目标 ", "Goals ") + done + "/" + gs.length + "</b>" + gs.map((d, i) => '<span class="' + (g.ok[i] ? "ok" : "") + '">' + (g.ok[i] ? "✓" : "") + esc(d.name) + "</span>").join("");
+    if (!el) {
+      const host = chat.querySelector(".nx162") || chat.querySelector("#sugg") || chat.querySelector(".composer"); if (!host) return;
+      host.insertAdjacentHTML("beforebegin", '<div class="g163"></div>'); el = chat.querySelector(".g163");
+    }
+    if (el && el.innerHTML !== html) el.innerHTML = html;
+  }
+  setInterval(() => {
+    try {
+      const th = S.threads[curT];
+      if (th && th.pk) { const gs = goals(th); if (gs.length) { const g = st(th), before = g.ok.filter(Boolean).length; if (syncFlags(th, gs, g)) progressed(th, gs.filter((_, i) => g.ok[i]).map(d => d.name).slice(before)); } }
+      bar(th);
+    } catch (_) {}
+  }, 500);
+  const css = document.createElement("style");
+  css.textContent =
+    "#s-chat.g163lock #pkwrap [data-pknext],#s-chat.g163lock #pkwrap [data-pkadvance]{display:none!important}" +
+    ".g163{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:4px 10px;margin:0 14px 6px;font-size:11.5px;color:var(--mut,#aaa)}" +
+    ".g163 b{font-weight:600;color:#F6D3AE}" +
+    ".g163 span{opacity:.85}.g163 span.ok{opacity:.55;text-decoration:line-through}";
+  document.head.appendChild(css);
+})();
+
+/* ===== 2026-11-15 · 人物卡跟着剧本走：新上线的官方剧，角色自动出现在「发现 → 角色」 =====
+   以前「发现 → 角色」只读一张手工维护的总表（art/official/leads.json），新剧上线忘了加，角色就不出现。
+   ⇒ 后台上线时把人物卡一起写进作品（pack.meta.leads，第⑤步「人物卡」自动生成、编剧确认）。
+     App 启动时：在线的官方剧如果总表里没有，就读作品自带的人物卡，同样注册成可以一对一聊天的角色。
+     总表里已有的剧照旧（总表优先）。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const KEY = "miru_leads165";
+  const bi = v => (v && typeof v === "object" ? { zh: String(v.zh || v.en || ""), en: String(v.en || v.zh || "") } : { zh: String(v || ""), en: String(v || "") });
+  function cache() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } }
+  function keep(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (_) {} }
+  function register(wid, title, leads, art, orient) {
+    if (typeof C === "undefined" || typeof W === "undefined") return 0;
+    const shell = "ldw_" + wid, cast = [];
+    leads.forEach(L => {
+      if (!L || !L.key || !L.n) return;
+      const key = String(L.key).toLowerCase().replace(/[^a-z0-9_]/g, "").slice(0, 24); if (!key) return;
+      const id = "ld_" + wid.slice(-8) + "_" + key; if (C[id] && !C[id].ld165) { cast.push(id); return; }
+      const n = bi(L.n);
+      C[id] = {
+        n: zh() ? n.zh : n.en, n94: n, age: +L.age || 25, h: L.h || "", w: shell, g: L.g === "f" ? "f" : "m", pal: L.pal || ["#2B2238", "#0E0B14"],
+        a: "charm", v: { pitch: 1, rate: 1 }, voiceId: L.voice || "", by: "@miru",
+        role: bi(L.role), looks: bi(L.looks), vibe: bi(L.vibe), pitch: bi(L.pitch), solo: bi(L.solo),
+        likes: bi(L.likes), boundary: bi(L.boundary),
+        tells: { zh: [], en: [] }, twist: { zh: "", en: "" }, secret: { zh: "", en: "" }, want: { zh: "", en: "" }, fear: { zh: "", en: "" },
+        ld126: wid, ld165: 1
+      };
+      Object.defineProperty(C[id], "n", { get: function () { return zh() ? n.zh : n.en; }, enumerable: true, configurable: true });
+      const pic = L.art || (art && (art["char_" + key] || art["char_" + L.key]));
+      if (pic && S.art && S.art[id] !== pic) S.art[id] = pic;
+      cast.push(id);
+    });
+    if (cast.length && !W.some(w => w.id === shell)) W.push({ id: shell, title: bi(title), or: orient || "bg", tags: [], cast, ld126: wid, hook: { zh: "", en: "" }, stats: [0, 0], status: { time: { zh: "", en: "" }, place: { zh: "", en: "" } } });
+    return cast.length;
+  }
+  async function run() {
+    try {
+      let known = new Set();
+      try { const r = await fetch("art/official/leads.json?v=" + Math.floor(Date.now() / 6e5)); if (r.ok) { const d = await r.json(); (d.works || []).forEach(w => known.add(w.wid)); } } catch (_) {}
+      const r = await fetch("/api/works?feed=new&limit=200", { cache: "no-store" }); if (!r.ok) return;
+      const j = await r.json(); const rows = (j.works || j.rows || []).filter(w => w && /官方|MIRU/i.test(String(w.author || "")) && !known.has(w.id));
+      const c = cache(); let added = 0;
+      for (const row of rows) {
+        let ent = c[row.id];
+        if (!ent || Date.now() - (ent.at || 0) > 6 * 3600e3) {
+          ent = { at: Date.now(), leads: [], art: null, title: row.title, orient: row.orient };
+          try { const p = await fetch("/api/works?id=" + encodeURIComponent(row.id)); if (p.ok) { const pj = await p.json(); const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
+          if (ent.leads.length) { try { const a = await fetch("art/official/" + row.id + ".json"); if (a.ok) ent.art = await a.json(); } catch (_) {} }
+          c[row.id] = ent;
+        }
+        if (ent.leads && ent.leads.length) added += register(row.id, ent.title || row.title, ent.leads, ent.art, ent.orient);
+      }
+      keep(c);
+      if (added) { try { if (typeof disc !== "undefined" && disc.mode === "chars" && document.querySelector("#discRes")) renderDiscRes(); } catch (_) {} try { save(); } catch (_) {} }
+      window.__leads165 = { added, checked: rows.length };
+    } catch (e) { console.warn("[leads165]", e); }
+  }
+  if (document.readyState === "complete") setTimeout(run, 2500); else window.addEventListener("load", () => setTimeout(run, 2500));
+})();
+
+/* ===== 2026-11-15 · 二创页按最新规则：玩家自己不算「角色」、提示语用这部剧自己的人 =====
+   玩家截图：二创《午夜不打烊》时，角色里出现「店主（你）」（头像是一个「店」字），封面预览也拿它当一张图；
+   「改变了什么？」的提示还是别的剧里的「如果那晚 Mason 没有睡地上……」。
+   ⇒ · 玩家扮演的那个人（剧里的「你」）不进二创的角色列表，也不出现在「加人」里、不进封面预览；
+     · 简介用「你和 ×× 」来写（例：如果你和卢卡的那件事换一种结局？）；
+     · 输入框提示改用这部剧自己的角色名。 */
+(function () {
+  "use strict";
+  if (typeof createRemix !== "function" || typeof renderRemix !== "function") return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  function isYou(id) {
+    try {
+      const o = ch(id); if (!o) return false;
+      const nm = String(typeof o.n === "object" ? (o.n.zh || o.n.en) : o.n || "");
+      if (/^(你|you|me|我)$/i.test(nm) || /[（(]\s*(你|you)\s*[)）]/i.test(nm)) return true;
+      const w = (typeof wd === "function" && o.w) ? wd(o.w) : null;
+      if (w && (w.you94 === id || (w.pack && w.pack.pov === id))) return true;
+    } catch (_) {}
+    try { return (typeof W !== "undefined" ? W : []).concat(Object.values((S.mine && S.mine.worlds) || {})).some(w => w && (w.you94 === id || (w.pack && w.pack.pov === id))); } catch (_) { return false; }
+  }
+  const cr = createRemix;
+  createRemix = function () {
+    const r = cr.apply(this, arguments);
+    try {
+      if (rx && Array.isArray(rx.cast)) {
+        const you = rx.cast.find(isYou); if (you) rx._you = you;
+        const c = rx.cast.filter(id => !isYou(id)); if (c.length && c.length !== rx.cast.length) { rx.cast = c; renderRemix(); }
+      }
+    } catch (_) {}
+    return r;
+  };
+  /* 发布时把「你」放回最后一位：剧本靠它认出玩家扮演谁（只是不在二创页上当角色显示） */
+  document.addEventListener("click", e => {
+    try { if (e.target.closest && e.target.closest("[data-gorx]") && rx && rx._you && !rx.cast.includes(rx._you)) rx.cast.push(rx._you); } catch (_) {}
+  }, true);
+  if (typeof allChars === "function") {
+    const rr = renderRemix;
+    renderRemix = function () {
+      const ac = allChars;
+      try { if (rx && Array.isArray(rx.cast)) { const you = rx.cast.find(isYou); if (you && !rx._you) rx._you = you; rx.cast = rx.cast.filter(id => !isYou(id)); } } catch (_) {}
+      allChars = function () { return ac.apply(this, arguments).filter(id => !isYou(id)); };
+      try { return rr.apply(this, arguments); }
+      finally {
+        allChars = ac;
+        try {
+          const names = (rx.cast || []).map(id => first(ch(id).n)).filter(Boolean), a = names[0] || (zh() ? "他" : "him"), b = names[1] || a;
+          const P = zh() ? { whatif: "如果那晚" + a + "没有走……", au: a + "和" + b + "在同一个街角开对门的咖啡车……", swap: "说不出口的人换成了" + a + "……", sequel: "半年后，" + a + "又出现在门口……", crossover: "那家店的新客人是" + b + "……" }
+            : { whatif: "What if " + a + " hadn't walked away that night…", au: a + " and " + b + " run rival coffee carts on the same corner…", swap: a + " is the one who can't say it…", sequel: "Six months later, " + a + " shows up at the door again…", crossover: b + " is the new regular…" };
+          const ta = document.getElementById("rxTw"); if (ta && P[rx.type]) ta.placeholder = P[rx.type];
+        } catch (_) {}
+      }
+    };
+  }
+  if (typeof rxAuto === "function") {
+    const ra = rxAuto;
+    rxAuto = function () {
+      const o = ra.apply(this, arguments);
+      try {
+        if (!rx.twist) {
+          const names = (rx.cast || []).filter(id => !isYou(id)).map(id => first(ch(id).n));
+          const me = zh() ? "你" : "you", a = names[0] || "", b = names[1] || a;
+          const p = zh() ? ((typeof RX_AU_ZH !== "undefined" && RX_AU_ZH[rx.au]) || rx.au) : rx.au;
+          const H = zh() ? { whatif: "如果你和" + a + "的那件事换一种结局？", au: "你和" + a + "，但这次是在" + p + "。", swap: "你和" + a + "互换了位置——一切都变了。", sequel: "结局之后，你和" + a + "还得接着活下去。", crossover: a + "本来永远不该遇见" + b + "。" }
+            : { whatif: "What if it had gone differently for you and " + a + "?", au: "You and " + a + ", but it's " + p + ".", swap: "You and " + a + " switch places — and it changes everything.", sequel: "After the ending, you and " + a + " still have to live with it.", crossover: a + " was never supposed to meet " + b + "." };
+          if (a && H[rx.type]) o.hook = H[rx.type];
+        }
+      } catch (_) {}
+      return o;
+    };
+  }
+})();
+
+
+/* ===== 2026-11-15 · 二创重做：只能选官方剧和剧里的角色；AI 按《MIRU 互动剧本写作规范 v2》写一部 3 章的新剧；按次收费 =====
+   玩家：「二创页没办法选要二创哪一部剧，总是显示午夜不打烊；角色必须是我们剧本里的，不要随便的角色；
+          二创和一创都要消耗 token 和成本，要收费。」
+   ⇒ · 第 1 步「选一个故事」只列在线的官方剧（有人物卡的），默认选你当前在看的那一部；
+     · 角色只能从这部剧的人物卡里选（「跨作品联动」可以从其他官方剧的人物卡里拉人）；玩家自己不算角色；
+     · 点「发布二创」→ 确认价格 → AI 按规范 v2 写 3 章（每章有目标、完成条件、场景、背景图、章内分支、章末分支），
+       用原剧的背景图和角色立绘，生成一部可以正常玩的剧（换场等「下一场」、完成目标才进下一章，规则和官方剧一样）；
+       生成失败自动退还钻石。
+     · 一创（创建角色、组局）发布时也按次收钻。价格见 PRICES.remix / create / group，可调。 */
+(function () {
+  "use strict";
+  if (typeof createRemix !== "function" || typeof renderRemix !== "function" || typeof W === "undefined") return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T2 = (a, b) => (zh() ? a : b);
+  try { if (typeof PRICES !== "undefined") Object.assign(PRICES, { remix: PRICES.remix || 5, create: PRICES.create || 2, group: PRICES.group || 2 }); } catch (_) {}
+  try {
+    Object.assign(I18N.zh, { "pay.why.remix": "二创要由 AI 为你写一部新剧", "pay.why.create": "创作要消耗 AI 算力" });
+    Object.assign(I18N.en, { "pay.why.remix": "A remix is a brand-new story written for you by AI", "pay.why.create": "Creating uses AI compute" });
+  } catch (_) {}
+
+  /* 官方剧列表：优先按你的取向筛；筛完一部都没有就全列出来 */
+  const shells = () => { const all = W.filter(w => w && w.ld126 && Array.isArray(w.cast) && w.cast.length); let pref = []; try { pref = all.filter(w => !w.or || w.or === "all" || !S.or || w.or === S.or); } catch (_) {} return pref.length ? pref : all; };
+  const shellOf = id => { if (!id) return null; const s = String(id).replace(/^off94:/, ""); return W.find(w => w && w.ld126 && (w.id === s || w.ld126 === s || w.id === "ldw_" + s)) || null; };
+  const allowed = () => {
+    if (!rx) return new Set();
+    if (rx.type === "crossover") return new Set(shells().flatMap(w => w.cast));
+    const sh = shellOf(rx.wid); return new Set(sh ? sh.cast : []);
+  };
+
+  /* 默认选当前在看的那部官方剧；不是官方剧就选第一部 */
+  const cr = createRemix;
+  createRemix = function (wid, fromTh) {
+    const r = cr.apply(this, arguments);
+    try {
+      if (rx && !rx.from) {
+        const cur = wid || (typeof curStory !== "undefined" ? curStory : "");
+        const sh = shellOf(cur) || shellOf(rx.wid) || shells()[0];
+        if (sh) { rx.wid = sh.id; rx.cast = sh.cast.slice(0, 3); renderRemix(); }
+      }
+    } catch (e) { console.warn("[rx166] create", e); }
+    return r;
+  };
+
+  /* 第 1 步只放官方剧；「加人」只给允许的角色 */
+  const rr = renderRemix;
+  renderRemix = function () {
+    try { if (rx && !rx.from && !shellOf(rx.wid)) { const sh = shells()[0]; if (sh) { rx.wid = sh.id; rx.cast = sh.cast.slice(0, 3); } } } catch (_) {}
+    try { if (rx && Array.isArray(rx.cast)) { const ok = allowed(); if (ok.size) { const c = rx.cast.filter(id => ok.has(id)); if (c.length) rx.cast = c; } } } catch (_) {}
+    const out = rr.apply(this, arguments);
+    try {
+      const scr = document.getElementById("s-cremix");
+      const rail = scr && scr.querySelector(".rail");
+      if (rail && !rx.from) rail.innerHTML = shells().map(w => rxWorldCard(w)).join("");
+      const go = scr && scr.querySelector("[data-gorx]"); if (go && !/💎/.test(go.textContent)) go.textContent = t("rx.go") + " · 💎" + PRICES.remix;
+    } catch (e) { console.warn("[rx166] render", e); }
+    return out;
+  };
+  if (typeof rxPickSheet === "function") {
+    const ps = rxPickSheet;
+    rxPickSheet = function () {
+      const ac = allChars, ok = allowed();
+      allChars = function () { return ac.apply(this, arguments).filter(id => ok.has(id)); };
+      try { return ps.apply(this, arguments); } finally { allChars = ac; }
+    };
+  }
+
+  /* ---------- 生成二创剧本 ---------- */
+  const FMT = `【输出格式 · MIRU 标准剧本 v2】
+## CHAPTER {n}｜章节标题
+⟦GOAL|这一章要立什么（一句话）|English⟧
+⟦DONE|say|玩家要说出或做出的一个意图（不是具体台词）|4–8 字短名|推进句：旁白：…… 或 名字：“……”⟧   ← 每章 1–2 个，至少一个 say
+# SCENE｜地点
+⟦BG|背景槽位名|地点 · 画面说明⟧      ← 槽位名只能从【可用背景】里选，选地点最接近的
+⟦TIME|时间⟧
+旁白直接写成段落（不加前缀），只写看得见的动作、环境和细节。每场 4–8 句：第一句交代到了哪、气氛，最后一句交代接下来去哪 / 做什么。
+名字：“台词”      ← 一行一个人，一句不超过 40 字；名字必须和【角色】里的中文名一字不差
+# CHOICE｜章内分支点：写成让玩家有话可说的情境
+#### A｜玩家意图（不是现成台词，各条意图要区分得开）
+（选 A 之后的后果 1–3 行：旁白、动作、事件；不要写角色对玩家这句话的固定回答）
+⟦OPT|A|set:英文旗子;love:2⟧
+#### B｜……
+# ·
+每章 2–3 场。章末顺序：关键事件 → # CHOICE｜本章结尾的关键问题 → #### A/B/C 意图 + 后果 + ⟦OPT⟧ → # · → 章尾钩子 1 句。
+第 2 章起，第一场前两句承接上一章（过了多久、人在哪），不要用任何条件语法（不写 IF / ELSE）。
+⟦GOAL⟧ 下面必须紧跟 1–2 行 ⟦DONE⟧，每一章都要有，缺了剧本无法使用。
+硬要求：玩家看不到选项，不写「轮到你了」「请选择」；不替玩家决定感受；古代、奇幻等没有手机的世界不写电话短信；对方在场时不打电话；所有角色都是虚构成年人；不写露骨内容；只输出剧本正文，不要解释、不要代码块。`;
+
+  let busy = false;
+  function prog(msg) {
+    let el = document.getElementById("rx166p");
+    if (!el) { el = document.createElement("div"); el.id = "rx166p"; el.className = "rx166p"; document.body.appendChild(el); }
+    el.innerHTML = '<div><b>' + esc(T2("正在写你的二创", "Writing your remix")) + '</b><span>' + esc(msg) + '</span></div>'; el.hidden = false;
+  }
+  function progOff() { const el = document.getElementById("rx166p"); if (el) el.hidden = true; }
+  function nameOf(id) { const c = ch(id) || {}; const n94 = c.n94 || {}; return String(n94.zh || first(c.n) || ""); }
+
+  function tidy(txt) {
+    const L0 = String(txt).split("\n"), L = [], out = [], seenDone = new Set();
+    for (let i = 0; i < L0.length; i++) { let l = L0[i]; if (/^\s*⟦/.test(l)) { let k = 0; while (!/⟧/.test(l) && i + 1 < L0.length && k++ < 4) l += L0[++i].trim(); } L.push(l); }
+    let skip = false;
+    for (let l of L) {
+      if (/^\s*⟦IF\|[^⟧]*⟧\s*$/.test(l)) { skip = true; continue; }
+      if (/^\s*⟦ELSE⟧\s*$/.test(l)) { skip = false; continue; }
+      if (/^\s*⟦\/IF⟧\s*$/.test(l)) { skip = false; continue; }
+      if (skip) continue;
+      if (/⟦\s*\/?\s*(IF|ELSE)/.test(l)) {
+        const e = l.lastIndexOf("⟦ELSE⟧");
+        l = (e >= 0 ? l.slice(e + 6) : (/⟦IF\|/.test(l) ? "" : l)).replace(/⟦\s*\/?\s*(IF|ELSE)[^⟧]*⟧/g, "").trim();
+        if (!l) continue;
+      }
+      if (/^\s*⟦\s*DONE/.test(l)) { l = l.replace(/[|｜]\s*推进句\s*[:：]\s*/, "|"); const v = (l.split(/[|｜]/)[2] || "").trim(); if (seenDone.has(v)) continue; seenDone.add(v); }
+      if (/^\s*⟦OPT\|/.test(l)) l = l.replace(/;?\s*flag:[^;⟧]*/g, "").replace(/\|;/, "|");
+      const bg = /^\s*⟦BG\|[^|⟧]+\|?([^⟧]*)⟧/.exec(l);
+      if (bg) { let k = out.length - 1; while (k >= 0 && !out[k].trim()) k--; if (k < 0 || !/^\s*#\s*(SCENE|场景)/i.test(out[k])) out.push("# SCENE｜" + ((bg[1] || "").split(/[·•]/)[0].trim() || "场景")); }
+      out.push(l);
+    }
+    if (!seenDone.size) {
+      const qs = out.filter(x => /^\s*#\s*CHOICE\s*[｜|]/i.test(x)); const q = qs.length ? qs[qs.length - 1].replace(/^\s*#\s*CHOICE\s*[｜|]\s*/i, "").trim() : "";
+      const gi = out.findIndex(x => /^\s*⟦GOAL\|/.test(x)); const at = gi >= 0 ? gi + 1 : Math.max(1, out.findIndex(x => /^\s*#\s*SCENE/i.test(x)));
+      out.splice(at, 0, "⟦DONE|say|" + (q ? "对「" + q.replace(/[|⟧]/g, " ").slice(0, 40) + "」说出自己的决定" : "说出你对眼前这件事的决定") + "|做出决定|旁白：话一出口，局面就不一样了。⟧");
+    }
+    return out.join("\n");
+  }
+  async function generate() {
+    const sh = shellOf(rx.wid), wid0 = sh.ld126, a = Object.assign({}, rxAuto());
+    if (zh()) a.title = String(a.title || "").replace(/\s*·\s*What if…?/i, " · 如果……").replace(/\s*·\s*Sequel/i, " · 后传").replace(/\s*·\s*AU/i, " · 平行世界");
+    const cast = rx.cast.filter(id => ch(id));
+    let meta = {}, script = "", assets = {};
+    try { const r = await fetch("/api/works?id=" + encodeURIComponent(wid0)); if (r.ok) { const j = await r.json(); meta = (j.pack && j.pack.meta) || {}; script = (j.pack && j.pack.script) || ""; } } catch (_) {}
+    try { const r = await fetch("art/official/" + wid0 + ".json"); if (r.ok) assets = await r.json(); } catch (_) {}
+    /* 原剧里每个背景槽位对应的地点 */
+    const bgs = [], seen = new Set(); let lastPlace = "";
+    String(script).split("\n").forEach(l => {
+      const s1 = /^\s*#\s*(?:SCENE|场景|第.+场)\s*[｜|]\s*(.+)$/i.exec(l); if (s1) lastPlace = s1[1].trim();
+      const b = /⟦BG\|([^|⟧]+)\|?([^⟧]*)⟧/.exec(l); if (b && !seen.has(b[1].trim())) { seen.add(b[1].trim()); bgs.push(b[1].trim() + "：" + (b[2] || lastPlace).trim().slice(0, 40)); }
+    });
+    Object.keys(assets).filter(k => /^bg_/.test(k) && !seen.has(k)).slice(0, 30).forEach(k => bgs.push(k + "：（原剧场景图）"));
+    const people = cast.map(id => { const c = ch(id) || {}; return "- " + nameOf(id) + "（" + Lz(c.role || "") + "）外貌：" + Lz(c.looks || "") + "；性格：" + Lz(c.vibe || ""); }).join("\n");
+    const how = { whatif: "如果……：改变原剧里发生过的一件事，之后的一切跟着变", au: "平行世界：同样的人，换到「" + ((typeof RX_AU_ZH !== "undefined" && RX_AU_ZH[rx.au]) || rx.au) + "」", swap: "身份互换：角色之间的权力和位置反过来", sequel: "结局之后：从原剧停下的地方接着写", crossover: "跨作品联动：来自不同故事的人走进同一个故事" }[rx.type] || "";
+    const ctx = "【原剧】" + Lz(sh.title) + "\n【原剧简介】" + String(meta.premise || "").slice(0, 600) + "\n【玩家扮演】" + String(meta.you || "你").slice(0, 200) +
+      "\n【二创类型】" + how + "\n【改了什么】" + (rx.twist || a.hook) + (rx.opening ? "\n【开场第一句（要用上）】" + rx.opening : "") +
+      "\n【尺度】" + (rx.heat || "slow") + "（不写露骨内容）\n【角色】（只用这些人，玩家是「你」）\n" + people + "\n【可用背景】\n" + (bgs.slice(0, 40).join("\n") || "（没有，可以省略 ⟦BG⟧ 行）");
+    const chapters = [];
+    for (let n = 1; n <= 3; n++) {
+      prog(T2("第 " + n + " / 3 章 · 约需 20–40 秒", "Chapter " + n + " of 3 · about 20–40 seconds"));
+      const prev = chapters.length ? "\n\n【前面已经写好的章节（接着写，不要重复）】\n" + chapters.join("\n\n").slice(-7000) : "";
+      const prompt = "你是 MIRU 互动剧的编剧。根据下面的设定写这部二创的第 " + n + " 章（共 3 章；第 3 章要给出一个阶段性的结局和余韵）。\n\n" + FMT.replace("{n}", n) + "\n\n" + ctx + prev + "\n\n现在只输出第 " + n + " 章的剧本正文。";
+      let txt = "";
+      for (let k = 0; k < 2 && !/CHAPTER/i.test(txt); k++) {
+        const r = await SAMPLE(prompt, { modelTier: "complex", maxTokens: 6000, timeout: 160000, cache: false });
+        txt = String((r && r.text) || "").replace(/^```[a-z]*\s*/i, "").replace(/```\s*$/, "").trim();
+      }
+      if (!/CHAPTER/i.test(txt)) throw new Error("chapter " + n);
+      chapters.push(tidy(txt).replace(/^#{1,2}\s*CHAPTER\s*\d*/i, "## CHAPTER " + n));
+    }
+    const chars = cast.map(id => { const c = ch(id) || {}; return "⟦CHAR|" + nameOf(id) + "|" + (c.g === "f" ? "f" : "m") + "|" + (c.age || 26) + "|" + id + "|" + Lz(c.role || "").replace(/[|⟧]/g, " ") + "|" + Lz(c.looks || "").replace(/[|⟧]/g, " ") + "⟧"; }).join("\n");
+    const md = "# " + a.title + "\n" + chars + "\n⟦CHAR|你|f|25|you|玩家|" + String(meta.you || "").replace(/[|⟧]/g, " ").slice(0, 80) + "⟧\n\n" + chapters.join("\n\n");
+    prog(T2("正在把剧本做成可以玩的剧……", "Building your playable story…"));
+    const doc = imParse(md);
+    if (!doc || !doc.chapters || !doc.chapters.length) throw new Error("parse");
+    const r = imBuild(doc, null); const nid = r && (r.wid || r); const w = nid && wd(nid);
+    if (!w) throw new Error("build");
+    const x0 = v => ({ en: v, zh: v });
+    Object.assign(w, { title: x0(a.title), hook: x0(a.hook), premise: x0(String(meta.premise || "").replace(/[^。！？.!?]*\d+\s*章[^。！？]*[。！？]?/g, "").slice(0, 260) + " —— 二创 · " + how + (rx.twist ? "：" + rx.twist : "")), remixOf: wid0, remixType: rx.type, heat: rx.heat, official: false });
+    /* 角色立绘和资料：沿用官方人物卡 */
+    (w.cast || []).forEach(id => {
+      const c = (S.mine.chars || {})[id]; if (!c) return;
+      const lead = cast.find(L => nameOf(L) === String(c.n || "")); if (!lead) return;
+      const L = ch(lead) || {};
+      Object.assign(c, { g: L.g || c.g, age: L.age || c.age, h: L.h || "", role: L.role || c.role, looks: L.looks || c.looks, vibe: L.vibe || c.vibe, pitch: L.pitch || c.pitch, solo: L.solo || c.solo, likes: L.likes || c.likes, boundary: L.boundary || c.boundary, ldFrom: lead });
+      const pic = (S.art && S.art[lead]) || (typeof artSrc === "function" ? artSrc(lead) : ""); if (pic) S.art[id] = pic;
+    });
+    /* 背景图：原剧的同名槽位 */
+    try {
+      const walk = bs => (bs || []).forEach(b => { if (!Array.isArray(b)) { if (b && b.choice) (b.choice.opts || []).forEach(o => walk(o.then)); return; } if (b[0] === "sys" && b[1] === "scene" && b[2]) { const slot = b[2].bg94 || b[2].bg || b[2].img; if (slot && assets[slot]) { const key = "rx166:" + nid + ":" + slot; S.art[key] = assets[slot]; b[2].img = key; } } if (b[0] === "sys" && b[1] === "if" && b[2]) { walk(b[2].then); walk(b[2].else || b[2].alt); } (b[2] && b[2].opts || []).forEach(o => walk(o.then)); });
+      (w.pack && w.pack.chapters || []).forEach(c => { walk(c.beats && c.beats.zh); if (c.beats && c.beats.en !== c.beats.zh) walk(c.beats.en); (c.choices || []).forEach(o => { walk(o.then && o.then.zh); }); });
+      const cov = assets.cover || assets.poster; if (cov) { S.art[nid] = cov; w.cover = true; }
+    } catch (e) { console.warn("[rx166] bg", e); }
+    try { const wk = (S.works || []).find(x => x && x.id === nid); if (wk) Object.assign(wk, { kind: "remix", title: a.title }); else (S.works = S.works || []).unshift({ id: nid, kind: "remix", title: a.title, at: Date.now(), seed: 0 }); } catch (_) {}
+    save();
+    return nid;
+  }
+
+  window.RX166 = { generate: () => generate(), shells, allowed };
+  document.addEventListener("click", async e => {
+    const go = e.target.closest && e.target.closest("[data-gorx]");
+    const ok = e.target.closest && e.target.closest("[data-rx166go]");
+    if (!go && !ok) return;
+    if (!rx || rx.from) return; /* 「从这一刻二创」照旧 */
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (busy) return;
+    if (go) {
+      if (!shellOf(rx.wid)) { toast(T2("先选一部官方剧", "Pick a story first")); return; }
+      if (!String(rx.twist || "").trim() && !String(rx.opening || "").trim() && rx.type !== "au" && rx.type !== "crossover") { toast(t("rx.need")); const x = document.getElementById("rxTw"); if (x) x.focus(); return; }
+      sheet('<h2>' + esc(T2("生成二创剧本", "Write my remix")) + '</h2><p class="sm dim" style="margin-top:8px;line-height:1.6">' +
+        esc(T2("AI 会按 MIRU 剧本规范，用《" + Lz(shellOf(rx.wid).title) + "》的角色和场景为你写一部 3 章的新剧，大约 1–2 分钟。生成失败会自动退还钻石。", "AI will write a new 3-chapter story with the characters and places of the original, following the MIRU script rules. About 1–2 minutes. If it fails, your gems are refunded.")) +
+        '</p><button class="btn btn-p btn-block" style="margin-top:14px" data-rx166go="1">💎 ' + PRICES.remix + ' · ' + esc(T2("开始生成", "Start")) + '</button>');
+      return;
+    }
+    try { closeSheet(); } catch (_) {}
+    const price = PRICES.remix;
+    if (!spend(price, "remix")) return;
+    busy = true;
+    try {
+      const nid = await generate();
+      progOff(); rx = null;
+      try { if (typeof taskClaimOnce === "function" && taskClaimOnce("pubRemix", 3)) setTimeout(() => toast(t("task.gotRemix")), 2600); } catch (_) {}
+      openStory(nid);
+    } catch (err) {
+      console.warn("[rx166] generate", err);
+      progOff();
+      S.keys = (S.keys || 0) + price; save();
+      toast(T2("这次没写成，钻石已退还（💎" + price + "），可以再试一次", "Couldn't finish this time — " + price + " gems refunded. Try again."));
+    } finally { busy = false; }
+  }, true);
+
+  /* ---------- 一创：创建角色、组局，发布时收钻 ---------- */
+  document.addEventListener("click", e => {
+    const pc = e.target.closest && e.target.closest("[data-pubchar]");
+    const gg = e.target.closest && e.target.closest("[data-gogroup]");
+    if (!pc && !gg) return;
+    if (pc) {
+      const v = id => ((document.getElementById(id) || {}).value || "").trim();
+      if (!v("fName") || !v("fOpen") || (v("fAge") && +v("fAge") < 21)) return; /* 让原来的提示出来，不收钱 */
+      if (!spend(PRICES.create, "create")) { e.preventDefault(); e.stopImmediatePropagation(); }
+      return;
+    }
+    if (typeof gpick !== "undefined" && gpick.length < 2) return;
+    if (!spend(PRICES.group, "create")) { e.preventDefault(); e.stopImmediatePropagation(); }
+  }, true);
+  setInterval(() => {
+    try {
+      const pc = document.querySelector("[data-pubchar]"); if (pc && !/💎/.test(pc.textContent)) pc.textContent = t("f.publish") + " · 💎" + PRICES.create;
+      const gg = document.querySelector("[data-gogroup]"); if (gg && !/💎/.test(gg.textContent)) gg.textContent = gg.textContent + " · 💎" + PRICES.group;
+    } catch (_) {}
+  }, 700);
+
+  const st = document.createElement("style");
+  st.textContent = ".rx166p{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;background:rgba(7,6,10,.72)}.rx166p[hidden]{display:none}" +
+    ".rx166p>div{display:flex;flex-direction:column;gap:8px;align-items:center;padding:22px 26px;border-radius:16px;background:#17131d;border:1px solid rgba(255,255,255,.08);color:#fff;max-width:80vw;text-align:center}" +
+    ".rx166p span{font-size:13px;color:rgba(255,255,255,.65)}";
+  document.head.appendChild(st);
+})();
+
+/* ===== 2026-11-16 · ① 遇见：今天的牌是空的（每天都显示「今天的人你都看过了」） ② 推广分佣 + 单剧收入统计 =====
+   ① 玩家：「每天不是给 12 个吗？昨天没有，今天还是没有。」
+      原因：① 发牌函数 deck96 里还按玩家取向筛人（遇见本该不筛），取向不匹配时一张牌都没有；② 空牌被当成「今天已经发过牌」存了一整天（打开 App 时角色表还没装好也会这样）。
+      ⇒ 当天还没滑过、牌却是空的，就重新发牌；角色表装好后如果遇见页开着，自动刷新。
+   ② 玩家：「每个创作者都可以推广剧本，推广的剧有人充值就能分佣，在 App 里能看到自己的推广收益；要有链接、二维码，能分享到各平台；
+      还要能看到单部剧的收入。」
+      规则（产品定）：被推广用户自绑定起 30 天内每笔正式充值的 10%，按 $1 = 5 钻发给推广人；平台出，原作者不额外分。后台可调。
+      · 剧详情页加「📣 推广赚钻」：专属链接（miru.plus/?story=剧&p=推广码）、二维码（可存图）、系统分享 + X / Facebook / WhatsApp / Telegram / LINE；
+        Instagram、TikTok 没有网页分享入口，用系统分享或存二维码海报去发。
+      · 「我的」页加「我的推广」：点击、带来的新用户、付费人数、带来的充值、已得钻石，按剧分开看。
+      · 通过链接进来的新用户登录后自动绑定推广人（服务器判定：只认新号、没充过值、不能绑自己）。
+      · 单剧收入：在剧里花的钻、在剧里打开充值页后完成的充值，都记到这部剧上，后台「推广与单剧收入」查看。 */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T2 = (a, b) => (zh() ? a : b);
+  const on = () => typeof CL0 !== "undefined" && CL0.on && typeof capi === "function" && typeof cloudInfo === "function" && !!cloudInfo().token;
+  /* 官方剧打开后是本地搭的世界（bw_xxx），统计和推广链接要用服务器上的作品 ID（w_xxx） */
+  const WMAP = {};
+  const normWid = id => {
+    let s = String(id || ""); s = s.replace(/^off94:/, "").replace(/^ldw_/, "");
+    if (s && !/^w_/.test(s)) {
+      if (!(s in WMAP)) { let m = null; try { const w = typeof wd === "function" && wd(s); if (w) m = (JSON.stringify(w).match(/"(w_[a-z0-9]{12,})"/) || [])[1] || null; } catch (_) {} WMAP[s] = m; }
+      if (WMAP[s]) s = WMAP[s];
+    }
+    return /^[A-Za-z0-9_:.-]{1,80}$/.test(s) ? s : "";
+  };
+
+  /* ---------- ① 遇见：空牌重发 ---------- */
+  try {
+    if (typeof todayDeck96 === "function" && typeof sw96 === "function") {
+      const TD = todayDeck96;
+      todayDeck96 = function () {
+        try {
+          const st = sw96();
+          const untouched = !(st.likes > 0) && !(st.used > 0) && !Object.values(st.nope || {}).some(t => new Date(t).toDateString() === st.day);
+          if (Array.isArray(st.deck) && st.deck.length === 0 && untouched && !st.deckOk167) st.deck = null;
+        } catch (_) {}
+        /* 遇见本来就不按取向筛人（app140 只放开了 eligible96，deck96 里还有一道取向过滤，取向是「GL」等时一张牌都发不出来） */
+        const o = S.or; let d;
+        try { S.or = "all"; d = TD.apply(this, arguments); } finally { S.or = o; }
+        try { if (d && d.length) sw96().deckOk167 = 1; } catch (_) {}
+        return d;
+      };
+      let tries = 0;
+      const iv = setInterval(() => {
+        tries++; if (tries > 40) return clearInterval(iv);
+        try {
+          const el = document.getElementById("sw96");
+          if (!el || el.hidden || (typeof DECK96 !== "undefined" && DECK96.length)) return;
+          if (!Object.keys(C || {}).length) return;
+          DECK96 = todayDeck96(); if (DECK96.length) { renderSwipe96(); clearInterval(iv); }
+        } catch (_) {}
+      }, 1500);
+    }
+  } catch (e) { console.warn("[meet167]", e); }
+
+  /* ---------- ② 推广链接：记点击，登录后绑定 ---------- */
+  const PK = "miru_promo167";
+  try {
+    const q = new URLSearchParams(location.search), code = q.get("p");
+    if (code && /^[a-z0-9]{3,20}$/i.test(code)) {
+      const wid = normWid(q.get("story") || "");
+      const old = JSON.parse(localStorage.getItem(PK) || "null");
+      if (!old || old.code !== code) {
+        localStorage.setItem(PK, JSON.stringify({ code, wid, at: Date.now() }));
+        setTimeout(() => { try { fetch((typeof CLOUD_EP !== "undefined" ? CLOUD_EP : "/api") + "/promo", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ op: "click", code, wid }) }).catch(() => {}); } catch (_) {} }, 1200);
+      }
+    }
+  } catch (_) {}
+  let binding = false;
+  async function tryBind() {
+    if (binding || !on()) return; let p = null;
+    try { p = JSON.parse(localStorage.getItem(PK) || "null"); } catch (_) {}
+    if (!p || p.done || Date.now() - (p.at || 0) > 30 * 864e5) return;
+    binding = true;
+    try {
+      const r = await capi("/promo", { json: { op: "bind", code: p.code, wid: p.wid } });
+      if (r && r.ok && r.j) { p.done = 1; p.res = r.j.ok ? "ok" : r.j.why; localStorage.setItem(PK, JSON.stringify(p)); }
+    } catch (_) {} finally { binding = false; }
+  }
+  setTimeout(tryBind, 3000); setInterval(tryBind, 20000);
+
+  /* ---------- 单剧收入：花钻和打开充值页记到当前这部剧 ---------- */
+  function curWid() {
+    try {
+      const chat = document.getElementById("s-chat");
+      if (chat && !chat.hidden && typeof curT !== "undefined" && curT && S.threads[curT] && S.threads[curT].wid) return normWid(S.threads[curT].wid);
+    } catch (_) {}
+    try { if (typeof curStory !== "undefined" && curStory) return normWid(curStory); } catch (_) {}
+    try { if (typeof curT !== "undefined" && curT && S.threads[curT] && S.threads[curT].wid) return normWid(S.threads[curT].wid); } catch (_) {}
+    return "";
+  }
+  let UQ = [], ut = null;
+  function flushUse() {
+    ut = null; if (!UQ.length || !on()) return; const items = UQ.splice(0, 40);
+    capi("/promo", { json: { op: "use", items } }).catch(() => {});
+  }
+  if (typeof spend === "function") {
+    const SP = spend;
+    spend = function (n, why) {
+      const before = typeof S !== "undefined" ? S.keys : 0;
+      const ok = SP.apply(this, arguments);
+      try {
+        const used = before - S.keys;
+        if (ok && used > 0) { const wid = curWid(); if (wid) { UQ.push({ wid, n: Math.min(50, used), why: String(why || "").slice(0, 20) }); if (!ut) ut = setTimeout(flushUse, 4000); } }
+      } catch (_) {}
+      return ok;
+    };
+  }
+  if (typeof paySheet === "function") {
+    const PS = paySheet;
+    paySheet = function (why) {
+      const r = PS.apply(this, arguments);
+      try { const wid = curWid(); if (wid && on()) capi("/promo", { json: { op: "paywall", wid, why: String(why || "").slice(0, 20) } }).catch(() => {}); } catch (_) {}
+      return r;
+    };
+  }
+  window.addEventListener("pagehide", flushUse);
+
+  /* ---------- 推广码 + 数据 ---------- */
+  let ME = null, meAt = 0;
+  async function loadMe(force) {
+    if (!on()) return null;
+    if (ME && !force && Date.now() - meAt < 30000) return ME;
+    try { const r = await capi("/promo?r=me"); if (r && r.ok && r.j && r.j.code) { ME = r.j; meAt = Date.now(); } } catch (_) {}
+    return ME;
+  }
+  const usd = c => "$" + ((Number(c) || 0) / 100).toFixed(2);
+  const linkOf = (wid, code) => "https://miru.plus/?story=" + encodeURIComponent(wid) + "&p=" + encodeURIComponent(code);
+  function needLogin() {
+    toast(T2("先登录账号，才能生成你的专属推广链接", "Sign in first to get your own promo link"));
+    try { if (typeof authSheet === "function") authSheet(); } catch (_) {}
+  }
+
+  /* 二维码：cdnjs 上的 qrcode-generator（只在打开分享时加载） */
+  let qrLib = null;
+  function loadQR() {
+    if (window.qrcode) return Promise.resolve(window.qrcode);
+    if (qrLib) return qrLib;
+    qrLib = new Promise((ok, no) => { const s = document.createElement("script"); s.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"; s.onload = () => ok(window.qrcode); s.onerror = () => { qrLib = null; no(new Error("qr")); }; document.head.appendChild(s); });
+    return qrLib;
+  }
+  async function drawPoster(cv, url, title, sub) {
+    const qr = await loadQR(); const q = qr(0, "M"); q.addData(url); q.make();
+    const n = q.getModuleCount(), W0 = 720, H0 = 960, x = cv.getContext("2d");
+    cv.width = W0; cv.height = H0;
+    const g = x.createLinearGradient(0, 0, 0, H0); g.addColorStop(0, "#1B1520"); g.addColorStop(1, "#07060A"); x.fillStyle = g; x.fillRect(0, 0, W0, H0);
+    x.fillStyle = "#E8B4C8"; x.font = "bold 30px system-ui,sans-serif"; x.textAlign = "center"; x.fillText("MIRU", W0 / 2, 80);
+    x.fillStyle = "#fff"; x.font = "bold 40px system-ui,sans-serif";
+    const lines = []; let line = ""; for (const chr of String(title)) { if (x.measureText(line + chr).width > W0 - 100) { lines.push(line); line = ""; } line += chr; } if (line) lines.push(line);
+    lines.slice(0, 2).forEach((l, i) => x.fillText(l, W0 / 2, 160 + i * 52));
+    x.fillStyle = "rgba(255,255,255,.65)"; x.font = "24px system-ui,sans-serif"; x.fillText(sub, W0 / 2, 280);
+    const box = 440, ox = (W0 - box) / 2, oy = 330, cell = box / (n + 8);
+    x.fillStyle = "#fff"; x.fillRect(ox, oy, box, box);
+    x.fillStyle = "#111"; for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) x.fillRect(ox + (c + 4) * cell, oy + (r + 4) * cell, Math.ceil(cell), Math.ceil(cell));
+    x.fillStyle = "rgba(255,255,255,.8)"; x.font = "24px system-ui,sans-serif"; x.fillText(T2("扫码进入故事", "Scan to start the story"), W0 / 2, oy + box + 60);
+    x.fillStyle = "rgba(255,255,255,.45)"; x.font = "20px system-ui,sans-serif"; x.fillText("miru.plus", W0 / 2, oy + box + 100);
+  }
+  function titleOf(wid) { try { const w = wd(wid) || wd("ldw_" + wid) || wd("off94:" + wid); if (w) return Lz(w.title); } catch (_) {} return "MIRU"; }
+
+  async function promoSheet(rawWid) {
+    const wid = normWid(rawWid); if (!wid) return;
+    if (!on()) return needLogin();
+    sheet('<h2>📣 ' + esc(T2("推广这部剧", "Promote this story")) + '</h2><p class="sm dim" style="margin-top:6px">' + esc(T2("正在生成你的专属链接……", "Getting your link…")) + '</p>');
+    const me = await loadMe(true);
+    if (!me) { closeSheet(); toast(T2("暂时拿不到推广链接，稍后再试", "Couldn't get your link — try again later")); return; }
+    const url = linkOf(wid, me.code), title = titleOf(rawWid) !== "MIRU" ? titleOf(rawWid) : titleOf(wid), w0 = (me.byWork || []).find(x => x.wid === wid) || {};
+    const pct = Math.round((me.rate || 0.1) * 100);
+    const txt = T2("我在 MIRU 玩《" + title + "》，你也来试试：", "I'm playing \"" + title + "\" on MIRU — try it: ");
+    const enc = encodeURIComponent, full = txt + " " + url;
+    const nets = [
+      ["X", "https://twitter.com/intent/tweet?text=" + enc(txt) + "&url=" + enc(url)],
+      ["Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + enc(url)],
+      ["WhatsApp", "https://wa.me/?text=" + enc(full)],
+      ["Telegram", "https://t.me/share/url?url=" + enc(url) + "&text=" + enc(txt)],
+      ["LINE", "https://social-plugins.line.me/lineit/share?url=" + enc(url)],
+      ["Reddit", "https://www.reddit.com/submit?url=" + enc(url) + "&title=" + enc(title)],
+    ];
+    sheet('<h2>📣 ' + esc(T2("推广《", "Promote “") + title + T2("》", "”")) + '</h2>' +
+      '<p class="sm dim" style="margin-top:6px;line-height:1.6">' + esc(T2("通过你的链接进来的新用户，" + me.days + " 天内每次充值，你都能拿到充值金额的 " + pct + "%（按 $1 = " + me.gemsPerUsd + " 钻自动发到你的钱包）。", "New players who join through your link: for " + me.days + " days you get " + pct + "% of every top-up they make, paid in gems ($1 = " + me.gemsPerUsd + " gems).")) + '</p>' +
+      '<div class="pr167s"><span><b>' + (w0.clicks || 0) + '</b>' + esc(T2("点击", "Clicks")) + '</span><span><b>' + (w0.users || 0) + '</b>' + esc(T2("新用户", "New players")) + '</span><span><b>' + usd(w0.cents) + '</b>' + esc(T2("带来充值", "Sales")) + '</span></div>' +
+      '<div class="pr167l"><code>' + esc(url) + '</code><button class="btn btn-g btn-sm" data-pr167copy="1">' + esc(T2("复制", "Copy")) + '</button></div>' +
+      '<div class="pr167q"><canvas id="pr167cv"></canvas></div>' +
+      '<div class="pr167b"><button class="btn btn-p btn-sm" data-pr167share="1">' + esc(T2("分享…", "Share…")) + '</button><button class="btn btn-g btn-sm" data-pr167save="1">' + esc(T2("保存二维码海报", "Save QR poster")) + '</button></div>' +
+      '<div class="pr167n">' + nets.map(([n, h]) => '<a href="' + esc(h) + '" target="_blank" rel="noopener">' + esc(n) + '</a>').join("") + '</div>' +
+      '<p class="xs faint" style="margin-top:10px;line-height:1.55">' + esc(T2("Instagram、TikTok 没有网页分享入口：点「分享…」选它们，或者保存二维码海报后发帖、发快拍。", "Instagram and TikTok don't accept web share links: tap Share… and pick them, or save the QR poster and post it.")) + '</p>' +
+      '<button class="btn btn-g btn-block" style="margin-top:10px" data-pr167me="1">' + esc(T2("查看我的全部推广收益", "See all my promo earnings")) + '</button>');
+    const sh = document.querySelector(".sheet") || document;
+    sh.__pr167 = { url, txt, title };
+    try { await drawPoster(document.getElementById("pr167cv"), url, title, T2("和 TA 的故事，从这里开始", "Your story starts here")); } catch (_) { const q = document.querySelector(".pr167q"); if (q) q.innerHTML = '<p class="xs faint">' + esc(T2("二维码加载失败，可以先用链接分享", "QR code didn't load — share the link instead")) + '</p>'; }
+  }
+
+  async function myPromoSheet() {
+    if (!on()) return needLogin();
+    sheet('<h2>' + esc(T2("我的推广", "My promotions")) + '</h2><p class="sm dim" style="margin-top:6px">' + esc(T2("加载中……", "Loading…")) + '</p>');
+    const me = await loadMe(true);
+    if (!me) { closeSheet(); toast(T2("暂时拿不到数据，稍后再试", "Couldn't load — try again later")); return; }
+    const rows = (me.byWork || []).filter(x => x.wid);
+    sheet('<h2>' + esc(T2("我的推广", "My promotions")) + '</h2>' +
+      '<p class="xs faint" style="margin-top:4px">' + esc(T2("推广码 ", "Code ") + me.code + T2(" · 被推广用户 " + me.days + " 天内充值的 " + Math.round(me.rate * 100) + "%，自动折成钻石", " · " + Math.round(me.rate * 100) + "% of top-ups for " + me.days + " days, paid in gems")) + '</p>' +
+      '<div class="pr167s"><span><b>' + me.clicks + '</b>' + esc(T2("链接点击", "Clicks")) + '</span><span><b>' + me.users + '</b>' + esc(T2("带来新用户", "New players")) + '</span><span><b>' + me.payers + '</b>' + esc(T2("付费人数", "Payers")) + '</span></div>' +
+      '<div class="pr167s"><span><b>' + usd(me.salesCents) + '</b>' + esc(T2("带来充值", "Sales")) + '</span><span><b>' + usd(me.commCents) + '</b>' + esc(T2("我的佣金", "My commission")) + '</span><span><b>💎 ' + me.gems + '</b>' + esc(T2("已到账", "Paid out")) + '</span></div>' +
+      '<div class="eyebrow" style="margin-top:14px">' + esc(T2("按剧", "By story")) + '</div>' +
+      (rows.length ? '<div class="pr167t">' + rows.map(x => '<div><b>' + esc(x.title || titleOf(x.wid)) + '</b><small>' + esc(T2("点击 ", "Clicks ") + x.clicks + T2(" · 新用户 ", " · New ") + x.users + T2(" · 充值 ", " · Sales ") + usd(x.cents) + T2(" · 佣金 ", " · Earned ") + usd(x.comm)) + '</small><button class="btn btn-g btn-sm" data-promo167="' + esc(x.wid) + '">' + esc(T2("分享", "Share")) + '</button></div>').join("") + '</div>'
+        : '<p class="sm dim" style="margin-top:8px;line-height:1.6">' + esc(T2("还没有推广数据。打开任意一部剧，点「📣 推广赚钻」拿到你的专属链接和二维码。", "No promo data yet. Open any story and tap “📣 Promote & earn” to get your link and QR code.")) + '</p>') +
+      '<p class="xs faint" style="margin-top:12px;line-height:1.55">' + esc(T2("规则：只算通过你的链接新注册、之前没充过值的用户；不能推广给自己。佣金按累计金额折成钻石，不足 1 钻的零头留到下次。", "Only players who sign up through your link and haven't bought before count; you can't refer yourself. Commission is paid in whole gems; fractions carry over.")) + '</p>');
+  }
+  window.PROMO167 = { open: promoSheet, mine: myPromoSheet, loadMe };
+
+  document.addEventListener("click", async e => {
+    let x;
+    if ((x = e.target.closest && e.target.closest("[data-promo167]"))) { e.preventDefault(); e.stopPropagation(); promoSheet(x.dataset.promo167); return; }
+    if ((x = e.target.closest && e.target.closest("[data-pr167me]"))) { e.preventDefault(); myPromoSheet(); return; }
+    const box = document.querySelector(".sheet"), info = box && box.__pr167;
+    if (!info) return;
+    if (e.target.closest("[data-pr167copy]")) {
+      try { await navigator.clipboard.writeText(info.url); toast(T2("链接已复制", "Link copied")); } catch (_) { const c = document.querySelector(".pr167l code"); if (c) { const r = document.createRange(); r.selectNodeContents(c); const s = getSelection(); s.removeAllRanges(); s.addRange(r); } toast(T2("长按选中复制", "Long-press to copy")); }
+      return;
+    }
+    if (e.target.closest("[data-pr167share]")) {
+      try {
+        const cv = document.getElementById("pr167cv"); let files = null;
+        if (cv && cv.width > 10 && navigator.canShare) { const blob = await new Promise(r => cv.toBlob(r, "image/png")); const f = new File([blob], "miru-qr.png", { type: "image/png" }); if (navigator.canShare({ files: [f] })) files = [f]; }
+        if (navigator.share) { await navigator.share(Object.assign({ title: info.title, text: info.txt, url: info.url }, files ? { files } : {})); return; }
+      } catch (err) { if (err && err.name === "AbortError") return; }
+      try { await navigator.clipboard.writeText(info.txt + " " + info.url); toast(T2("已复制分享文案，去 App 里粘贴即可", "Copied — paste it in any app")); } catch (_) {}
+      return;
+    }
+    if (e.target.closest("[data-pr167save]")) {
+      const cv = document.getElementById("pr167cv"); if (!cv || cv.width < 10) return;
+      const url = cv.toDataURL("image/png");
+      try {
+        const blob = await (await fetch(url)).blob(), f = new File([blob], "miru-qr.png", { type: "image/png" });
+        if (navigator.canShare && navigator.canShare({ files: [f] })) { await navigator.share({ files: [f] }); return; }
+      } catch (err) { if (err && err.name === "AbortError") return; }
+      const a = document.createElement("a"); a.href = url; a.download = "miru-qr.png"; document.body.appendChild(a); a.click(); a.remove();
+      toast(T2("如果没有自动保存，长按二维码图片保存", "If it didn't save, long-press the image"));
+    }
+  }, true);
+
+  /* 剧详情页：在收藏按钮旁边放「📣 推广赚钻」 */
+  if (typeof storyPage === "function") {
+    const SPG = storyPage;
+    storyPage = function (id) {
+      const r = SPG.apply(this, arguments);
+      try {
+        const fav = document.querySelector('[data-fav="' + CSS.escape(id) + '"]');
+        if (fav && !fav.parentElement.querySelector("[data-promo167]")) fav.insertAdjacentHTML("afterend", '<button class="chip" data-promo167="' + esc(id) + '" style="margin-left:6px">📣 ' + esc(T2("推广赚钻", "Promote & earn")) + '</button>');
+      } catch (_) {}
+      return r;
+    };
+  }
+  /* 官方剧的详情页不走 storyPage（没有收藏按钮），在「关注」按钮旁边补一个 */
+  function addStoryBtn() {
+    try {
+      const scr = document.getElementById("s-story"); if (!scr || scr.hidden || scr.querySelector("[data-promo167]")) return;
+      const id = typeof curStory !== "undefined" ? curStory : ""; if (!id || !normWid(id)) return;
+      const at = scr.querySelector("[data-fav]") || scr.querySelector("[data-follow]"); if (!at) return;
+      at.insertAdjacentHTML("afterend", '<button class="chip" data-promo167="' + esc(id) + '" style="margin-left:6px">📣 ' + esc(T2("推广赚钻", "Promote & earn")) + '</button>');
+    } catch (_) {}
+  }
+  try { const scr0 = document.getElementById("s-story"); if (scr0) new MutationObserver(() => addStoryBtn()).observe(scr0, { childList: true, subtree: false, attributes: true, attributeFilter: ["hidden"] }); } catch (_) {}
+  setInterval(addStoryBtn, 1500);
+
+  /* 「我的」页：钱包下面放「我的推广」 */
+  if (typeof renderMe === "function") {
+    const RM = renderMe;
+    renderMe = function (v) {
+      const r = RM.apply(this, arguments);
+      try {
+        const root = (v && v.querySelector) ? v : document;
+        const wal = root.querySelector(".me-wallet");
+        if (wal && !root.querySelector(".pr167card")) wal.insertAdjacentHTML("afterend", '<button class="card pr167card" data-pr167me="1"><div class="row"><div class="grow" style="text-align:left"><b>📣 ' + esc(T2("我的推广", "My promotions")) + '</b><p class="xs dim" style="margin-top:3px">' + esc(T2("分享剧的链接或二维码，好友充值你拿分佣", "Share stories — earn when friends top up")) + '</p></div><span style="color:var(--gold);font-size:20px">›</span></div></button>');
+      } catch (_) {}
+      return r;
+    };
+  }
+
+  const st = document.createElement("style");
+  st.textContent = ".pr167s{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.pr167s span{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:12px;background:rgba(255,255,255,.05);font-size:12px;color:var(--dim)}.pr167s b{font-size:17px;color:var(--fg,#fff)}" +
+    ".pr167l{display:flex;gap:8px;align-items:center;margin-top:12px;padding:8px 10px;border-radius:12px;background:rgba(255,255,255,.06)}.pr167l code{flex:1;min-width:0;font-size:12px;word-break:break-all;user-select:all}" +
+    ".pr167q{display:flex;justify-content:center;margin-top:12px}.pr167q canvas{width:min(60vw,240px);height:auto;border-radius:12px}" +
+    ".pr167b{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap}" +
+    ".pr167n{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}.pr167n a{padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.07);color:var(--fg,#fff);font-size:13px;text-decoration:none}" +
+    ".pr167t{display:flex;flex-direction:column;gap:8px;margin-top:8px}.pr167t>div{display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.05)}.pr167t small{grid-column:1;color:var(--dim);font-size:12px}.pr167t button{grid-row:1/3;grid-column:2}" +
+    ".pr167card{width:100%;text-align:left;border:0;cursor:pointer}";
+  document.head.appendChild(st);
+})();
+
+/* ===== mod168: M111《全韩娱顶流都偏爱我》专属小游戏（12 个，4 套新模板：放置 / 排序 / 选择 / 配对 / 节拍） ===== */
+(function () {
+  if (typeof MG100 === "undefined" || typeof MG_T === "undefined") return;
+  const t2 = (zh, a, b) => (zh ? a : b);
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+
+  const css = el("style");
+  css.textContent = ".m168{display:flex;flex-direction:column;gap:10px;width:100%;padding:6px 4px;color:#f2ecff}" +
+    ".m168 .pr{font-size:13px;line-height:1.55;color:#cdbdf5;margin:0}" +
+    ".m168 .tb{height:5px;border-radius:3px;background:#2a2240;overflow:hidden}.m168 .tb i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff5fa2,#8f6bff);transition:width linear}" +
+    ".m168 .row{display:flex;gap:8px;align-items:center;padding:11px 12px;border:1px solid #4b3d73;border-radius:12px;background:#1a1530}" +
+    ".m168 .row span{flex:1;font-size:14px}.m168 .row b{color:#ff8fc0;font-size:12px;min-width:20px}" +
+    ".m168 button.k{min-width:44px;min-height:44px;border-radius:10px;background:#2c2348;color:#fff;border:1px solid #6d58a8;padding:8px 10px;font-size:14px}" +
+    ".m168 button.k:disabled{opacity:.35}.m168 button.k.on{background:#7a3b78;border-color:#ff8fc0}" +
+    ".m168 button.go{min-height:48px;border-radius:12px;background:linear-gradient(90deg,#ff5fa2,#8f6bff);color:#fff;border:0;font-weight:700;font-size:15px}" +
+    ".m168 select{max-width:52%;background:#221b3a;color:#fff;padding:10px;border-radius:9px;border:1px solid #6d58a8}" +
+    ".m168 .hint{color:#ffb3d1;font-size:13px;min-height:1em;margin:0}" +
+    ".m168 svg{width:100%;height:auto;max-height:210px;display:block}" +
+    ".m168 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px}" +
+    ".m168 .slot{min-height:56px;border:1.5px dashed #6d58a8;border-radius:10px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:13px;padding:6px;background:#15112a;color:#e8dcff}" +
+    ".m168 .slot.f{border-style:solid;border-color:#ff8fc0;background:#2a1d40}" +
+    ".m168 .beat{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}.m168 .beat i{font-style:normal;text-align:center;padding:12px 0;border-radius:8px;background:#211a38;font-weight:700;color:#9c8cc9}" +
+    ".m168 .beat i.ev{color:#ffb3d1}.m168 .beat i.now{background:#8f6bff;color:#fff}.m168 .beat i.hit{background:#2f7a5a;color:#fff}.m168 .beat i.miss{background:#7a2f45;color:#fff}" +
+    ".m168 .tap{min-height:84px;font-size:20px}";
+  document.head.appendChild(css);
+
+  /* 通用外壳：说明、倒计时、两次机会 */
+  function shell(A, G, sub, done, T, zh, instr) {
+    A.className = "mgarea m168"; A.innerHTML = "";
+    sub.textContent = instr;
+    if (G.img) { const im = el("img"); im.src = G.img; im.alt = ""; im.style.cssText = "width:100%;max-height:170px;object-fit:cover;border-radius:12px;display:block"; A.append(im); }
+    const pr = el("p", "pr", zh ? G.pz : G.pe); A.append(pr);
+    const tb = el("div", "tb"); const bar = el("i"); tb.append(bar); A.append(tb);
+    const secs = G.seconds || 35; let over = false, tries = 0;
+    requestAnimationFrame(() => { bar.style.transitionDuration = secs + "s"; bar.style.width = "0%"; });
+    T.push(setTimeout(() => { if (!over) { over = true; done("lose"); } }, secs * 1000));
+    const body = el("div", "m168b"); body.style.cssText = "display:flex;flex-direction:column;gap:8px"; A.append(body);
+    const hint = el("p", "hint");
+    const submit = ok => { if (over) return; if (ok) { over = true; done("win"); } else if (tries++ < 1) { hint.textContent = t2(zh, "还差一点，再核对一次。", "Not quite. Check once more."); } else { over = true; done("lose"); } };
+    return { body, hint, submit, isOver: () => over };
+  }
+  const L = (x, zh) => (Array.isArray(x) ? x[zh ? 0 : 1] : x);
+
+  /* 排序：items 已是正确顺序 */
+  MG_T.m111_order = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "用 ↑ ↓ 调整顺序，再点核对。", "Use ↑ ↓ to reorder, then check."));
+    let ord = sh(G.items.map((_, i) => i)); if (ord.every((n, i) => n === i)) ord.reverse();
+    const draw = () => {
+      c.body.innerHTML = "";
+      ord.forEach((id, p) => {
+        const r = el("div", "row"); r.append(el("b", "", String(p + 1)), el("span", "", L(G.items[id], zh)));
+        [[-1, "↑"], [1, "↓"]].forEach(([d, s]) => { const b = el("button", "k", s); b.disabled = p + d < 0 || p + d >= ord.length; b.setAttribute("aria-label", t2(zh, "移动", "Move") + s); b.onclick = () => { [ord[p], ord[p + d]] = [ord[p + d], ord[p]]; draw(); }; r.append(b); });
+        c.body.append(r);
+      });
+      const go = el("button", "go", t2(zh, "核对顺序", "Check order")); go.onclick = () => c.submit(ord.every((n, i) => n === i));
+      c.body.append(go, c.hint);
+    };
+    draw();
+  };
+
+  /* 放置：先点碎片，再点位置 */
+  MG_T.m111_place = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "先点一块碎片，再点它在照片上的位置。", "Tap a fragment, then tap where it belongs."));
+    const put = G.slots.map(() => -1); let sel = -1;
+    const draw = () => {
+      c.body.innerHTML = "";
+      c.body.insertAdjacentHTML("beforeend", '<svg viewBox="0 0 300 120" aria-hidden="true"><rect x="8" y="8" width="284" height="104" rx="6" fill="#241c3d" stroke="#6d58a8"/><g fill="#3a2f5e">' + [0, 1, 2, 3, 4, 5, 6].map(i => '<circle cx="' + (40 + i * 37) + '" cy="52" r="13"/><rect x="' + (29 + i * 37) + '" y="66" width="22" height="34" rx="6"/>').join("") + '</g><path d="M258 8 L292 8 L292 46 Z" fill="#120e22"/><text x="150" y="26" fill="#9c8cc9" font-size="11" text-anchor="middle">ECLIPSE · 7</text></svg>');
+      const sl = el("div", "grid");
+      G.slots.forEach((s, i) => { const b = el("button", "slot" + (put[i] >= 0 ? " f" : ""), put[i] >= 0 ? "✓ " + L(G.items[put[i]], zh) : L(s, zh)); b.onclick = () => { if (sel < 0) { if (put[i] >= 0) { put[i] = -1; draw(); } return; } const old = put.indexOf(sel); if (old >= 0) put[old] = -1; put[i] = sel; sel = -1; draw(); }; sl.append(b); });
+      c.body.append(el("p", "pr", t2(zh, "照片位置", "Photo positions")), sl, el("p", "pr", t2(zh, "碎片", "Fragments")));
+      const pc = el("div", "grid");
+      G.order = G.order || sh(G.items.map((_, i) => i));
+      G.order.forEach(i => { if (put.includes(i)) return; const b = el("button", "k" + (sel === i ? " on" : ""), "🧩 " + L(G.items[i], zh)); b.onclick = () => { sel = sel === i ? -1 : i; draw(); }; pc.append(b); });
+      c.body.append(pc);
+      const go = el("button", "go", t2(zh, "拼好了", "Done")); go.onclick = () => c.submit(put.every((v, i) => v === i));
+      c.body.append(go, c.hint);
+    };
+    G.order = null; draw();
+  };
+
+  /* 单选：可附示意图 svg(zh) 与选项 */
+  MG_T.m111_pick = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.ask, zh));
+    let sel = -1;
+    const opts = sh(G.items.map((_, i) => i));
+    const draw = () => {
+      c.body.innerHTML = "";
+      if (G.svg) c.body.insertAdjacentHTML("beforeend", G.svg(zh, sel));
+      const g = el("div", G.items.length > 4 ? "grid" : ""); if (G.items.length <= 4) g.style.cssText = "display:flex;flex-direction:column;gap:8px";
+      opts.forEach(i => { const b = el("button", "k" + (sel === i ? " on" : ""), L(G.items[i], zh)); b.style.textAlign = "left"; b.onclick = () => { sel = i; draw(); }; g.append(b); });
+      const go = el("button", "go", t2(zh, "确认", "Confirm")); go.disabled = sel < 0; go.onclick = () => c.submit(sel === G.ans);
+      c.body.append(g, go, c.hint);
+    };
+    draw();
+  };
+
+  /* 配对：items [左, 右]，右侧打乱成下拉 */
+  MG_T.m111_match = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "给每一项选出正确的对应。", "Match each item to the right one."));
+    const right = sh(G.items.map((_, i) => i)); const ss = [];
+    G.items.forEach(it => {
+      const r = el("label", "row"); const s = el("span", "", L(it[0], zh)); const q = el("select");
+      q.setAttribute("aria-label", s.textContent);
+      const e = el("option", "", t2(zh, "选择…", "Choose…")); e.value = ""; q.append(e);
+      right.forEach(j => { const o = el("option", "", L(G.items[j][1], zh)); o.value = j; q.append(o); });
+      r.append(s, q); c.body.append(r); ss.push(q);
+    });
+    const go = el("button", "go", t2(zh, "核对", "Check")); go.onclick = () => c.submit(ss.every((q, i) => q.value === String(i)));
+    c.body.append(go, c.hint);
+  };
+
+  /* 节拍：在 2/4/6/8 拍时点击，允许 1 次失误 */
+  MG_T.m111_beat = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "点「开始」，在亮起的 2、4、6、8 拍按下「踩点」。", "Press Start, then tap on counts 2, 4, 6 and 8."));
+    const row = el("div", "beat"); const cells = [];
+    for (let i = 1; i <= 8; i++) { const x = el("i", i % 2 ? "" : "ev", String(i)); cells.push(x); row.append(x); }
+    const tap = el("button", "go tap", t2(zh, "开始", "Start"));
+    c.body.append(row, tap, c.hint);
+    let ac = null; const tick = hi => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); const o = ac.createOscillator(), g = ac.createGain(); o.frequency.value = hi ? 880 : 520; g.gain.value = .08; o.connect(g); g.connect(ac.destination); o.start(); o.stop(ac.currentTime + .06); } catch (_) {} };
+    let run = false, beat = 0, t0 = 0, hit = new Set(), bad = 0; const SP = 650;
+    const finish = () => {
+      run = false; for (const b of [2, 4, 6, 8]) if (!hit.has(b)) { bad++; cells[b - 1].className = "miss"; }
+      if (bad <= 1) c.submit(true); else { c.submit(false); if (!c.isOver()) { tap.textContent = t2(zh, "再来一次", "Try again"); } }
+    };
+    tap.onclick = () => {
+      if (c.isOver()) return;
+      if (!run) {
+        run = true; beat = 0; hit = new Set(); bad = 0; cells.forEach((x, i) => x.className = i % 2 ? "ev" : ""); tap.textContent = t2(zh, "踩点！", "Tap!"); c.hint.textContent = "";
+        t0 = performance.now() + SP;
+        for (let i = 1; i <= 8; i++) T.push(setTimeout(() => { if (!run) return; beat = i; cells.forEach((x, k) => x.classList.toggle("now", k === i - 1 && !x.classList.contains("hit"))); tick(i % 2 === 0); }, SP * i));
+        T.push(setTimeout(() => { if (run) finish(); }, SP * 9));
+        return;
+      }
+      const now = performance.now(), pos = (now - t0) / SP + 1, near = Math.round(pos);
+      if (near % 2 === 0 && near >= 2 && near <= 8 && Math.abs(pos - near) < .42 && !hit.has(near)) { hit.add(near); cells[near - 1].className = "hit"; }
+      else bad++;
+    };
+  };
+
+  /* ---------- 示意图 ---------- */
+  const svgSeal = (zh) => '<svg viewBox="0 0 300 130" aria-hidden="true"><rect x="70" y="8" width="160" height="114" rx="6" fill="#2a2240" stroke="#6d58a8"/><line x1="150" y1="8" x2="150" y2="122" stroke="#6d58a8"/><rect x="128" y="40" width="44" height="22" fill="#d9d2ff" opacity=".35"/><rect x="132" y="56" width="40" height="24" fill="#ff8fc0" opacity=".55"/><text x="152" y="72" font-size="9" fill="#fff" text-anchor="middle">' + t2(zh, "新", "NEW") + '</text><path d="M126 62 q6 4 12 0" stroke="#c9a46a" stroke-width="3" fill="none"/><text x="20" y="120" font-size="10" fill="#9c8cc9">' + t2(zh, "档案柜 B-3", "Cabinet B-3") + '</text></svg>';
+  const svgWave = (zh, sel) => { const segs = [[10, 100], [105, 195], [200, 290]]; let p = ""; for (let x = 10; x < 290; x += 3) { let h = 6 + 14 * Math.abs(Math.sin(x * .13)) * (x < 100 ? 1 : x > 200 ? .35 : .4); if (x > 125 && x < 175 && ((x - 125) % 18) < 5) h = 44; p += "M" + x + " " + (65 - h) + "V" + (65 + h); } return '<svg viewBox="0 0 300 130" aria-hidden="true"><rect width="300" height="130" rx="8" fill="#15112a"/><path d="' + p + '" stroke="#8f6bff" stroke-width="2"/>' + segs.map((s, i) => '<text x="' + ((s[0] + s[1]) / 2) + '" y="122" fill="#cdbdf5" font-size="11" text-anchor="middle">' + ["A", "B", "C"][i] + '</text>').join("") + '<text x="10" y="16" fill="#9c8cc9" font-size="10">REC_0312.wav</text></svg>'; };
+  const svgLights = (zh) => '<svg viewBox="0 0 300 120" aria-hidden="true"><rect width="300" height="120" rx="8" fill="#15112a"/>' + [1, 2, 3, 4, 5, 6, 7].map(i => { const x = 18 + (i - 1) * 40; return '<rect x="' + x + '" y="14" width="30" height="70" rx="4" fill="#241c3d" stroke="#6d58a8"/><rect x="' + (x + 4) + '" y="' + (i === 7 ? 22 : 50) + '" width="22" height="8" fill="' + (i === 7 ? "#ff5f7a" : "#8f6bff") + '"/><text x="' + (x + 15) + '" y="100" fill="#cdbdf5" font-size="10" text-anchor="middle">' + i + '</text><text x="' + (x + 15) + '" y="113" fill="' + (i === 7 ? "#ff8fc0" : "#7d70a8") + '" font-size="7" text-anchor="middle">' + (i === 7 ? "op_2023×" : "op_" + ["kim", "lee", "park", "choi", "han", "yoon"][i - 1]) + '</text>'; }).join("") + '</svg>';
+  const svgEdit = (zh) => '<svg viewBox="0 0 300 120" aria-hidden="true"><rect width="300" height="120" rx="8" fill="#15112a"/><text x="10" y="22" fill="#cdbdf5" font-size="10">' + t2(zh, "原始监控", "Original CCTV") + '</text><rect x="10" y="28" width="280" height="16" fill="#8f6bff"/><rect x="150" y="28" width="40" height="16" fill="#ff8fc0"/><text x="10" y="70" fill="#cdbdf5" font-size="10">' + t2(zh, "流出版本", "Leaked clip") + '</text><rect x="10" y="76" width="140" height="16" fill="#8f6bff"/><rect x="150" y="76" width="140" height="16" fill="#8f6bff"/><line x1="150" y1="72" x2="150" y2="96" stroke="#fff" stroke-dasharray="2 2"/><text x="10" y="112" fill="#7d70a8" font-size="9">08:31:00</text><text x="290" y="112" fill="#7d70a8" font-size="9" text-anchor="end">08:31:40</text></svg>';
+  const svgRail = (zh) => '<svg viewBox="0 0 300 140" aria-hidden="true"><rect width="300" height="140" rx="8" fill="#15112a"/><rect x="40" y="26" width="220" height="10" rx="5" fill="#b8b0d8"/><rect x="60" y="36" width="8" height="74" fill="#8a82ad"/><rect x="232" y="36" width="8" height="74" fill="#8a82ad"/><rect x="40" y="110" width="50" height="14" fill="#6c6491"/><rect x="210" y="110" width="50" height="14" fill="#6c6491"/><circle cx="52" cy="117" r="4" fill="#ddd"/><circle cx="78" cy="117" r="4" fill="#ddd"/><circle cx="222" cy="117" r="4" fill="#ddd"/><circle cx="248" cy="117" r="4" fill="none" stroke="#ff8fc0" stroke-dasharray="2 2"/><text x="150" y="18" fill="#cdbdf5" font-size="10" text-anchor="middle">' + t2(zh, "旧护栏 · 2023", "Old barrier · 2023") + '</text><text x="150" y="134" fill="#7d70a8" font-size="9" text-anchor="middle">' + t2(zh, "左底座 ←  → 右底座", "Left base ← → Right base") + '</text></svg>';
+
+  const games = [
+    { id: "m111_photo_puzzle", zh: "旧合照碎片复原", en: "Restore the Old Group Photo", tpl: "m111_place", seconds: 40,
+      pz: "旧合照的角落被撕去了。把三块碎片拼回原位，找出第七人的舞台证件号。", pe: "A corner of the old group photo was torn away. Put the three fragments back to reveal the seventh performer’s badge number.",
+      slots: [["右上角", "Top-right corner"], ["中间背景", "Center background"], ["下方胸前", "Lower chest area"]],
+      items: [["日期角标", "Date stamp"], ["舞台入口", "Stage entrance"], ["第七人证件号", "Seventh badge number"]] },
+    { id: "m111_archive_seal", zh: "旧档案封条核验", en: "Check the Archive Seal", tpl: "m111_pick", seconds: 35, svg: svgSeal,
+      pz: "档案柜上有两层封条。比对痕迹，判断柜子最近一次被打开的证据。", pe: "The cabinet carries two layers of seals. Compare the traces to find proof of when it was last opened.",
+      ask: ["哪一处痕迹证明封条最近被换过？", "Which trace proves the seal was replaced recently?"],
+      items: [["透明封条完整", "The clear seal is intact"], ["旧胶残留", "Old adhesive residue"], ["新封条压在旧胶上", "A new seal sits over the old adhesive"]], ans: 2 },
+    { id: "m111_choreo_timeline", zh: "七人舞步时间线", en: "The Seven-Member Timeline", tpl: "m111_order", seconds: 35,
+      pz: "三年前那次彩排的录像只剩三个时码。按发生顺序排好。", pe: "Only three timecodes survive from that rehearsal three years ago. Put them in the order they happened.",
+      items: [["七人站位就绪", "Seven members in position"], ["护栏发生位移", "The barrier shifts"], ["音乐停止", "The music stops"]] },
+    { id: "m111_audio_wave", zh: "录音警报声波定位", en: "Find the Alarm in the Audio", tpl: "m111_pick", seconds: 35, svg: svgWave,
+      pz: "珉载的录音里藏着一段被剪掉的警报。找出三连短警报峰所在的片段。", pe: "Min-jae’s recording hides an alarm someone cut out. Find the segment with three short alarm peaks.",
+      ask: ["警报在哪一段？", "Which segment holds the alarm?"],
+      items: [["A 段 · 歌声波形", "A · Vocal waveform"], ["B 段 · 三连短峰", "B · Three short peaks"], ["C 段 · 尾奏余响", "C · Outro reverb"]], ans: 1 },
+    { id: "m111_spotlight_cue", zh: "七束追光异常检测", en: "Find the Rogue Spotlight", tpl: "m111_pick", seconds: 35, svg: svgLights,
+      pz: "灯控台上有七路追光。其中一路由已经失效的账号发出。", pe: "The lighting desk runs seven spotlight tracks. One was triggered by an expired account.",
+      ask: ["哪一路是未经批准的？", "Which track was never approved?"],
+      items: [["轨道 1", "Track 1"], ["轨道 2", "Track 2"], ["轨道 3", "Track 3"], ["轨道 4", "Track 4"], ["轨道 5", "Track 5"], ["轨道 6", "Track 6"], ["轨道 7", "Track 7"]], ans: 6 },
+    { id: "m111_leak_edit", zh: "偷拍剪辑差异比对", en: "Spot the Edited Footage", tpl: "m111_pick", seconds: 35, svg: svgEdit,
+      pz: "把流出视频和原始监控放在一起，找出被删掉的八秒。", pe: "Line up the leaked clip with the original security footage and find the missing eight seconds.",
+      ask: ["流出版本删掉了哪一段？", "What did the leaked version cut?"],
+      items: [["08:31:00 两人交谈", "08:31:00 Two people talking"], ["08:31:12–08:31:20 主管走进镜头", "08:31:12–08:31:20 The supervisor walks into frame"], ["08:31:30 镜头转向走廊", "08:31:30 Camera pans to the hallway"]], ans: 1 },
+    { id: "m111_barrier_inspection", zh: "旧护栏安全检查", en: "Inspect the Old Barrier", tpl: "m111_pick", seconds: 35, svg: svgRail,
+      pz: "这是当年事故中的旧护栏。找出缺失固定件的位置。检查结果仍需独立检验员确认。", pe: "This is the barrier from the old accident. Find where a fastener is missing. An independent inspector must still confirm it.",
+      ask: ["哪里少了原装螺栓？", "Where is the original bolt missing?"],
+      items: [["扶手上缘", "Top of the handrail"], ["底座左侧", "Left side of the base"], ["底座右侧", "Right side of the base"]], ans: 2 },
+    { id: "m111_encore_setlist", zh: "安可舞台编排", en: "Build a Safe Encore Setlist", tpl: "m111_order", seconds: 35,
+      pz: "为东京站安排三段安可：要安全，也要留住成员的创作。不使用移动升降台。", pe: "Arrange three encore segments for Tokyo: safe, and still true to the members’ ideas. No moving platforms.",
+      items: [["粉丝互动", "Fan singalong"], ["全员合唱", "Full-group number"], ["静态灯光谢幕", "Static-light finale"]] },
+    { id: "m111_lift_log", zh: "舞台升降机日志", en: "Read the Lift Log", tpl: "m111_order", seconds: 35,
+      pz: "把升降机系统的三条事件按时间排好，锁定异常的远程指令。", pe: "Put the three lift-system events in time order to pin down the rogue remote command.",
+      items: [["失效凭据登录", "Login with an expired credential"], ["远程重设参数", "Remote parameter reset"], ["高度故障报警", "Height fault alarm"]] },
+    { id: "m111_final_eight", zh: "安全八拍编舞", en: "Complete the Eight-Count Routine", tpl: "m111_beat", seconds: 45,
+      pz: "和泰贤一起试跳去掉危险高抬动作的八拍。在 2、4、6、8 拍踩点，允许失误一次。", pe: "Rehearse Tae-hyun’s eight counts with the risky lift removed. Hit counts 2, 4, 6 and 8. One miss is allowed." },
+    { id: "m111_evidence_chain", zh: "证据链交叉核验", en: "Cross-Check the Evidence", tpl: "m111_match", seconds: 40,
+      pz: "把三份证据对应到它能证明的内容。主观责任仍需独立调查确认。", pe: "Match each piece of evidence to what it proves. Intent still needs an independent investigation.",
+      items: [[["原始警报录音", "Original alarm recording"], ["事故时间线", "The accident timeline"]], [["后台账号日志", "Backstage account log"], ["远程操作", "The remote operation"]], [["合同条款", "Contract clause"], ["潜在利益动机", "A possible financial motive"]]] },
+    { id: "m111_final_cue", zh: "最终场演出提示核对", en: "Final Show Cue Check", tpl: "m111_match", seconds: 40,
+      pz: "开演前核对三张提示卡，确保纪念灯光不会干扰主舞台安全。", pe: "Check the three cue cards before the show so the tribute light never interferes with stage safety.",
+      items: [[["音乐开始", "Music start"], ["音频台", "Audio desk"]], [["安全确认", "Safety sign-off"], ["舞监台", "Stage manager desk"]], [["纪念灯光", "Tribute light"], ["独立静态灯位", "Separate static light position"]]] }
+  ];
+  games.forEach((g, n) => { g.img = "https://miru.plus/art/official/m111-idol/m111-idol/mg_c" + String(n + 1).padStart(2, "0") + "_base.jpg"; });
+  for (const g of games) { const i = MG100.findIndex(x => x.id === g.id); const v = Object.assign({ a: "", b: "", kw: [] }, g); if (i >= 0) MG100[i] = v; else MG100.push(v); }
+  /* 剧本里 ⟦MG|x⟧ 运行时查的是 g_x，这里两个名字都注册 */
+  const reg = list => { for (const g of list) { for (const id of [g.id, "g_" + g.id.replace(/^g_/, "")]) { const v = Object.assign({ a: "", b: "", kw: [] }, g, { id }); const i = MG100.findIndex(x => x.id === id); if (i >= 0) MG100[i] = v; else MG100.push(v); } } };
+  reg(games);
+  window.MG168 = { reg };
+  window.M111G = games;
+})();
+
+/* ===== mod169: 点「本章目标」弹出任务说明——这一章要做什么、每个目标怎么完成（所有剧本） ===== */
+(function () {
+  "use strict";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const T = (a, b) => (zh() ? a : b);
+  const E = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const css = document.createElement("style");
+  css.textContent = ".g163{cursor:pointer}.g163::after{content:'ⓘ';margin-left:2px;color:#F6D3AE;opacity:.8}" +
+    ".gm169{position:fixed;inset:0;z-index:95;background:rgba(8,6,12,.72);display:flex;align-items:flex-end;justify-content:center}" +
+    ".gm169 .bx{width:100%;max-width:440px;max-height:78vh;overflow:auto;background:#17131F;color:#f4ecf7;border:1px solid rgba(240,183,126,.3);border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}" +
+    ".gm169 h4{margin:0 0 6px;font-size:16px;color:#F6D3AE}.gm169 .gl{font-size:13.5px;line-height:1.6;margin:0 0 14px;color:#e6dcef}" +
+    ".gm169 .it{display:flex;gap:10px;padding:11px 12px;border:1px solid #3e3352;border-radius:12px;margin:0 0 8px;background:#1f1a2b}" +
+    ".gm169 .it.ok{opacity:.6}.gm169 .ck{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid #8b78b8;display:flex;align-items:center;justify-content:center;font-size:12px}" +
+    ".gm169 .it.ok .ck{background:#2f7a5a;border-color:#2f7a5a}.gm169 .it b{display:block;font-size:14px;margin-bottom:3px}.gm169 .it small{font-size:12.5px;line-height:1.5;color:#c9bedb}" +
+    ".gm169 .tip{font-size:12px;color:#a99cbf;line-height:1.55;margin:10px 0 12px}.gm169 button.cl{width:100%;min-height:46px;border-radius:12px;border:0;background:#3a2f52;color:#fff;font-size:15px}";
+  document.head.appendChild(css);
+
+  function howTo(d) {
+    if (d.type === "say") return T("在对话里说出或做出：", "Say or do this in the conversation: ") + d.val;
+    const f = String(d.val || "");
+    if (/^mg_/.test(f)) {
+      const id = f.replace(/^mg_/, "").replace(/_win$/, "");
+      const g = typeof MG100 !== "undefined" && MG100.find(x => x.id === id);
+      return T("完成本章小游戏", "Win this chapter's mini-game") + (g ? T("《" + g.zh + "》", " “" + g.en + "”") : "") + T("。跳过或失败也能继续，但这一项要赢了才算完成。", ". You can skip it, but this goal counts only when you win.");
+    }
+    if (/evidence|clue|seen|found/i.test(f)) return T("跟着剧情走，留意场景里出现的关键线索；线索出现后会自动打勾。", "Follow the scene and watch for the key clue. It ticks off automatically once the clue appears.");
+    if (/choice|pick|final/i.test(f)) return T("在本章结尾的选择里做出你的决定。", "Make your decision at the chapter's closing choice.");
+    return T("继续推进当前剧情，相关事件发生后会自动完成。", "Keep the story moving; this completes when the event happens.");
+  }
+
+  function show() {
+    try {
+      const th = S.threads[curT]; if (!th || !th.pk || !window.GOAL163) return;
+      const gs = GOAL163.goals(th); if (!gs.length) return;
+      const g = GOAL163.state(th);
+      let goal = "";
+      try { const c = wd(th.wid).pack.chapters[(+th.pk.ch || 1) - 1]; const x = c && c.goal; goal = x ? (typeof x === "string" ? x : (zh() ? x.zh : x.en) || x.zh || x.en || "") : ""; } catch (_) {}
+      const done = gs.filter((_, i) => g.ok[i]).length;
+      const ov = document.createElement("div"); ov.className = "gm169";
+      ov.innerHTML = '<div class="bx" role="dialog" aria-label="' + E(T("本章目标", "Chapter goals")) + '"><h4>🎯 ' + E(T("第 " + (th.pk.ch || 1) + " 章目标", "Chapter " + (th.pk.ch || 1) + " goals")) + ' · ' + done + '/' + gs.length + '</h4>' +
+        (goal ? '<p class="gl">' + E(goal) + '</p>' : '') +
+        gs.map((d, i) => '<div class="it' + (g.ok[i] ? " ok" : "") + '"><span class="ck">' + (g.ok[i] ? "✓" : "") + '</span><div><b>' + E(d.name || d.val) + '</b><small>' + E(howTo(d)) + '</small></div></div>').join("") +
+        '<p class="tip">' + E(T("目标全部完成后，「进入下一章」才会出现。卡住了也没关系：多聊几轮，角色会把话题往目标上带，聊得够久也会自动放行。", "“Next chapter” appears once every goal is done. Stuck? Keep talking — the characters will steer toward the goal, and after enough turns it unlocks on its own.")) + '</p>' +
+        '<button class="cl">' + E(T("知道了", "Got it")) + '</button></div>';
+      ov.addEventListener("click", e => { if (e.target === ov || e.target.closest(".cl")) ov.remove(); });
+      document.body.appendChild(ov);
+    } catch (e) { console.warn("[169]", e); }
+  }
+  document.addEventListener("click", e => { if (e.target.closest && e.target.closest("#s-chat .g163")) { e.preventDefault(); show(); } }, true);
+  window.GOAL169 = { show };
+})();
+
+/* ===== mod170: M112《六位魔王都不准我死》24 个小游戏（每章 2 个），复用 mod168 的模板 ===== */
+(function () {
+  if (typeof MG_T === "undefined" || !window.MG168) return;
+  /* 没有对错的选择题：选哪个都算完成（纪念物、未来规划） */
+  MG_T.m112_free = function (A, G, sub, done, T, zh) {
+    A.className = "mgarea m168"; A.innerHTML = ""; sub.textContent = zh ? G.ask[0] : G.ask[1];
+    const p = document.createElement("p"); p.className = "pr"; p.textContent = zh ? G.pz : G.pe; A.append(p);
+    G.items.forEach(it => { const b = document.createElement("button"); b.className = "k"; b.style.textAlign = "left"; b.textContent = it[zh ? 0 : 1]; b.onclick = () => done("win"); A.append(b); });
+  };
+  const O = (id, zh, en, tpl, pz, pe, extra) => Object.assign({ id, zh, en, tpl, seconds: 40, pz, pe }, extra || {});
+  const games = [
+    O("m112_01_a", "审判钟声同步", "Trial Bell Rhythm", "m111_beat", "钟声回荡三次，在 2、4、6、8 拍轻触，为卢西恩受诅咒的羽翼争取片刻稳定。", "The bell echoes. Tap on counts 2, 4, 6 and 8 to steady Lucien's cursed wing."),
+    O("m112_01", "断裂的处刑锁链", "The Broken Execution Chain", "m111_order", "处刑结界由四道符文锁住。按正确顺序拆解，结界才会失效。", "Four runes hold the execution barrier. Undo them in the right order to break it.", { items: [["外圈封印", "Outer seal"], ["钟声符", "Bell rune"], ["锁链符", "Chain rune"], ["核心王印", "Royal core seal"]] }),
+    O("m112_02_a", "王储的誓约试探", "The Prince's Vow", "m111_pick", "卡西安递来三张誓言卡。哪一句既公开保护你，又不替你做决定？", "Cassian offers three vow cards. Which one protects you openly without deciding for you?", { ask: ["选出真正的誓言", "Choose the honest vow"], items: [["“从今天起，你哪里都不准去。”", "“From today, you go nowhere.”"], ["“我当众护着你，去留由你自己定。”", "“I'll protect you in public. Whether you stay is your call.”"], ["“只要你听我的，我就保你不死。”", "“Obey me and I'll keep you alive.”"]], ans: 1 }),
+    O("m112_02", "王室印章碎片", "Royal Seal Fragments", "m111_pick", "四枚契约印鉴里，有一枚是伪造的第 99 世契约。", "One of these four contract seals is the forged 99th-life contract.", { ask: ["哪一枚是伪造的？", "Which seal is forged?"], items: [["第 97 世：王冠纹七道齿", "97th life: crown with seven teeth"], ["第 98 世：王冠纹七道齿", "98th life: crown with seven teeth"], ["第 99 世：王冠纹只有六道齿", "99th life: crown with only six teeth"], ["第 100 世：王冠纹七道齿", "100th life: crown with seven teeth"]], ans: 2 }),
+    O("m112_03_a", "白羽天平", "Feather Balance", "m111_pick", "判决天平左盘已有 5 份重量。三枚羽片分别重 1、2、3。怎样放才能让天平平衡？", "The left pan already holds 5. The feathers weigh 1, 2 and 3. How do you balance the scale?", { ask: ["选出让天平平衡的放法", "Pick the balancing move"], items: [["右盘放 2 和 3", "Put 2 and 3 on the right"], ["右盘放 1 和 3", "Put 1 and 3 on the right"], ["右盘放全部三枚", "Put all three on the right"]], ans: 0 }),
+    O("m112_03", "被涂改的判决书", "The Altered Verdict", "m111_pick", "卷宗里有一处批注的墨色和日期都不对。", "One annotation in the file has the wrong ink and date.", { ask: ["哪一处是伪造的批注？", "Which annotation is forged?"], items: [["“依天界律第七条审理”", "“Tried under Heaven's Law, Article 7”"], ["“判决生效于她出生前三年”", "“Verdict effective three years before her birth”"], ["“审判官卢西恩签署”", "“Signed by Inquisitor Lucien”"]], ans: 1 }),
+    O("m112_04_a", "龙焰共鸣", "Dragonfire Pulse", "m111_beat", "跟着凯尔的呼吸，在 2、4、6、8 拍点燃护身火焰，别碰中心的危险火核。", "Follow Kael's breathing. Light the warding flame on 2, 4, 6 and 8, and stay clear of the core.", { seconds: 45 }),
+    O("m112_04", "破损的骑士徽章", "The Damaged Knight's Badge", "m111_order", "沿着徽章背面的划痕，复原护卫队当年的出征路线。", "Follow the scratches on the badge to rebuild the guard's old route.", { items: [["王城北门", "North Gate"], ["灰岩谷", "Greyrock Valley"], ["龙骨桥", "Dragonbone Bridge"], ["边境要塞", "Border Fortress"]] }),
+    O("m112_05_a", "星轨连线", "Starlight Constellation", "m111_order", "按时间顺序连接四颗星，找出记录九十九次轮回的星座。", "Connect four stars in time order to find the constellation that recorded ninety-nine loops.", { items: [["初生之星", "Star of Birth"], ["誓约之星", "Star of the Vow"], ["处刑之星", "Star of Execution"], ["重置之星", "Star of Reset"]] }),
+    O("m112_05", "第 99 世沙漏", "Hourglass of the 99th Life", "m111_match", "沙漏耗尽前，把三个时间锚点和它们保存的真相对上。", "Before the sand runs out, match each time anchor to the truth it preserves.", { items: [[["过去锚点", "Past anchor"], ["第一份判决的来历", "Where the first verdict came from"]], [["现在锚点", "Present anchor"], ["今晚的处刑命令", "Tonight's execution order"]], [["未来锚点", "Future anchor"], ["一个还没被写下的明天", "A tomorrow not yet written"]]] }),
+    O("m112_06_a", "影子找花", "Shadow Petals", "m111_pick", "赛拉斯藏起的花束里，有一朵被人换过。", "One flower in Silas's hidden bouquet has been swapped.", { ask: ["哪一朵被换过？", "Which flower was swapped?"], items: [["白蔷薇·花瓣完整", "White rose, petals intact"], ["夜百合·花瓣完整", "Night lily, petals intact"], ["紫鸢尾·花瓣缺口朝左", "Purple iris, notch facing left"], ["紫鸢尾·花瓣缺口朝右", "Purple iris, notch facing right"], ["黑郁金香·花瓣完整", "Black tulip, petals intact"], ["银铃兰·花瓣完整", "Silver lily-of-the-valley, intact"]], ans: 3 }),
+    O("m112_06", "密令编码纸", "The Coded Order", "m111_pick", "密令写着：“月隐三刻，钟鸣之前。”推断下一次袭击的时间。", "The order reads: “Moon hidden, third quarter, before the bell.” When is the next attack?", { ask: ["下一次袭击在什么时候？", "When is the next attack?"], items: [["黎明第一声钟响", "At the first dawn bell"], ["子夜第三刻、钟响之前", "Midnight's third quarter, before the bell"], ["正午换岗时", "At the noon guard change"]], ans: 1 }),
+    O("m112_07_a", "治愈印记", "Healing Sigils", "m111_match", "帮以斯拉把三道治愈印记和病人需要的效果配对，完成一场无害的仪式。", "Help Ezra match three healing sigils to what the patient needs.", { items: [[["新月印", "Crescent sigil"], ["止痛", "Ease pain"]], [["藤蔓印", "Vine sigil"], ["愈合伤口", "Close wounds"]], [["水滴印", "Droplet sigil"], ["退烧", "Break a fever"]]] }),
+    O("m112_07", "六瓶记忆药剂", "Six Memory Potions", "m111_match", "按颜色和瓶底日期，查出药剂来自哪一次复活。", "Use color and the date on each bottom to trace which revival each potion came from.", { items: [[["琥珀色药剂", "Amber potion"], ["第 12 次复活", "12th revival"]], [["深蓝色药剂", "Deep-blue potion"], ["第 57 次复活", "57th revival"]], [["银白色药剂", "Silver potion"], ["第 99 次复活", "99th revival"]]] }),
+    O("m112_08_a", "破碎的誓言", "Broken Promises", "m111_place", "把三块镜片放回镜框，拼出三段承诺，看看哪一段与事实不符。", "Fit three mirror shards back into the frame to rebuild three promises.", { slots: [["镜框上方", "Top of the frame"], ["镜框中间", "Middle of the frame"], ["镜框下方", "Bottom of the frame"]], items: [["“我会回来”", "“I'll come back”"], ["“我没有下令”", "“I gave no order”"], ["“我从未忘记你”", "“I never forgot you”"]] }),
+    O("m112_08", "不完整的证言", "Incomplete Testimonies", "m111_match", "把四段证词放回它们发生的时间点。", "Place four testimonies at the moments they happened.", { items: [[["卡西安：我放下了王冠", "Cassian: I set down the crown"], ["审判钟第十三响", "The thirteenth bell"]], [["卢西恩：我签了字", "Lucien: I signed it"], ["处刑前一夜", "The night before the execution"]], [["凯尔：撤军令到了", "Kael: The retreat order came"], ["边境之战当天", "The day of the border battle"]], [["以斯拉：药剂换了人", "Ezra: The potion changed hands"], ["第 99 次复活", "The 99th revival"]]] }),
+    O("m112_09_a", "空白书页", "The Blank Page", "m111_order", "沿着发光的墨迹，按顺序描出被改写的那一行命运。", "Trace the glowing ink in order to reveal the rewritten line of fate.", { items: [["她", "She"], ["将在今晚", "will tonight"], ["自己选择", "choose for herself"], ["明天", "tomorrow"]] }),
+    O("m112_09", "命运编年册", "Chronicle of Fate", "m111_pick", "编年册里，有一句台词在每一世都一字不差地重复——那是剧本留下的破绽。", "One line repeats word for word in every life. That's the script's flaw.", { ask: ["哪一句是剧本的破绽？", "Which line is the flaw?"], items: [["“今天的风有点冷。”（只出现一次）", "“The wind is cold today.” (once)"], ["“反派千金必须在钟响时死去。”（出现 99 次）", "“The villainess must die when the bell tolls.” (99 times)"], ["“我想去看海。”（出现两次）", "“I want to see the sea.” (twice)"]], ans: 1 }),
+    O("m112_10_a", "背靠背", "Back-to-Back Ward", "m111_beat", "和凯尔背靠背撑住护盾。在 2、4、6、8 拍加固，掩护城下的人撤离。", "Hold the shield back to back with Kael. Reinforce on 2, 4, 6 and 8 while people evacuate.", { seconds: 45 }),
+    O("m112_10", "守卫轮岗图", "Guard Rotation Chart", "m111_order", "照着轮岗图，排出一条避开所有守卫的路线。", "Use the rotation chart to plot a route past every guard.", { items: [["趁东墙换岗穿过庭院", "Cross the yard during the east-wall change"], ["躲进地下水道", "Slip into the sewers"], ["从钟楼背面爬上去", "Climb the back of the bell tower"], ["在月落时翻出城墙", "Go over the wall at moonset"]] }),
+    O("m112_11_a", "夺回真名", "True Name Echo", "m111_pick", "六个回声里，只有一个是你自己说过的承诺，其余都是别人替你写的命令。", "Of the echoes, only one is a promise you made yourself. The rest were written for you.", { ask: ["哪一句是你自己的承诺？", "Which promise is yours?"], items: [["“我会安静地接受审判。”", "“I will accept judgment quietly.”"], ["“我会按预言毁灭世界。”", "“I will destroy the world as foretold.”"], ["“我要用自己的名字活下去。”", "“I will live under my own name.”"]], ans: 2 }),
+    O("m112_11", "真实姓名符文", "True-Name Runes", "m111_place", "把三块符文放回对应位置，拼出属于你的名字，解除控制。", "Set three runes back in place to spell your own name and break the control.", { slots: [["第一位：起始", "First: beginning"], ["第二位：誓约", "Second: vow"], ["第三位：归属", "Third: belonging"]], items: [["晨光符", "Dawn rune"], ["誓言符", "Oath rune"], ["归心符", "Homeward rune"]] }),
+    O("m112_12_a", "黎明纪念物", "Dawn Keepsake", "m112_free", "做一枚只属于你的纪念徽章。没有标准答案，选你想记住的。", "Make a keepsake badge of your own. There's no right answer—choose what you want to remember.", { ask: ["你想把什么刻在徽章上？", "What goes on your badge?"], items: [["断开的锁链", "A broken chain"], ["第一缕日出", "The first sunrise"], ["六个人的剪影", "Six silhouettes"], ["只写你自己的名字", "Only your own name"]] }),
+    O("m112_12", "新世界地图", "Map of the New World", "m112_free", "王城要重建了。先做哪一件，由你决定。", "The city will be rebuilt. You decide what comes first.", { ask: ["你最先建设什么？", "What do you build first?"], items: [["人人都能查阅的公开法庭", "A public court anyone can access"], ["给孤儿和伤者的疗愈院", "A healing house for orphans and the injured"], ["六国共议的圆桌", "A round table for all six realms"], ["一条通往远方的自由之路", "A free road leading far away"]] })
+  ];
+  MG168.reg(games);
+  window.M112G = games;
+})();
+
+/* ===== mod171: 所有剧本统一有「本章目标」——剧本没写 ⟦DONE⟧ 的章节，按本章目标和章末问题自动补上 ===== */
+(function () {
+  "use strict";
+  const L = (x, k) => (x && typeof x === "object" ? String(x[k] || x.zh || x.en || "") : String(x || "")).trim();
+  const clause = (s, n) => { const a = String(s || "").split(/[，。；：！？,.;:!?—（(]/)[0].trim(); return (a.length > n ? a.slice(0, n) + "…" : a); };
+  const qpart = (s, n) => { const a = String(s || "").replace(/[？?！!。.\s]+$/, "").split(/[，。；：,;:]/).map(x => x.trim()).filter(Boolean).pop() || ""; return (a.length > n ? a.slice(0, n) + "…" : a); };
+  const generic = s => !s || /^(你怎么做|你接下来怎么做|接下来怎么办|What do you do|What will you do next)/i.test(s);
+  function make(c, lang) {
+    const zh = lang === "zh", out = [];
+    const g = L(c.goal, lang), a = L(c.ask, lang), t = L(c.t, lang);
+    const goal = g || t;
+    if (goal) out.push({ type: "say", val: (zh ? "围绕本章目标说出或做出你的打算：" : "Say or do what you intend toward this chapter's goal: ") + goal, name: clause(goal, zh ? 12 : 40), push: zh ? "旁白：眼前的人停下来，等你决定下一步。" : "旁白：They pause, waiting for your next move." });
+    if (a && !generic(a) && out.length < 2) out.push({ type: "say", val: (zh ? "对这个问题做出自己的回应或选择：" : "Answer or decide on this: ") + a, name: zh ? "回应：" + qpart(a, 12) : "Answer: " + qpart(a, 40), push: zh ? "旁白：问题还摆在那里，所有人都在等你的回答。" : "旁白：The question is still open, and everyone is waiting for your answer." });
+    return out;
+  }
+  function fill(w) {
+    const cs = w && w.pack && w.pack.chapters; if (!cs || w.pack.auto171) return;
+    let n = 0;
+    cs.forEach(c => {
+      if (!c || c.done163 || c.done || c.done163Locales) return;
+      const zh = make(c, "zh"), en = make(c, "en");
+      if (!zh.length) return;
+      c.done163Locales = { zh, en: en.length ? en : zh }; c.done163 = zh; c.auto171 = 1; n++;
+    });
+    w.pack.auto171 = 1;
+    if (n) { try { console.info("[171] auto goals", n); } catch (_) {} }
+  }
+  setInterval(() => {
+    try {
+      const th = S.threads[curT]; if (!(th && th.pk && th.wid && typeof wd === "function")) return;
+      const w = wd(th.wid); if (!w || !w.pack || w.pack.auto171) return;
+      fill(w);
+      /* 已经玩到一半的章节：补上的目标直接算完成，不把老玩家卡在当前章 */
+      Object.values(S.threads || {}).forEach(t => {
+        if (!t || t.wid !== th.wid || !t.pk) return;
+        const n = +t.pk.ch || 1, c = w.pack.chapters[n - 1];
+        if (c && c.auto171 && (!t.pk.g163 || t.pk.g163.ch !== n) && (t.msgs || []).length > 3) t.pk.g163 = { ch: n, ok: c.done163.map(() => 1), r: 0, lv: 0, pushed: [] };
+      });
+      try { save(); } catch (_) {}
+    } catch (_) {}
+  }, 800);
+  window.GOAL171 = { fill, make };
 })();
