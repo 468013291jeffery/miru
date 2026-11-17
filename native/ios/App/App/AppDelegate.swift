@@ -7,7 +7,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // Story media downloaded by earlier builds is keyed by a different asset version; drop it.
+        MIRURemoteAssets.purgeOldVersions()
         return true
     }
 

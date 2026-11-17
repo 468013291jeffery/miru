@@ -116,10 +116,11 @@
   if(x.dataset.au70card==='del'){deleteAccount();return}
   paySheet();
  },true);
- // Referral commission (main mod167) stays Web-only: it loads a remote QR script and pays gems from other users' purchases.
- try{const promoCss=document.createElement('style');promoCss.textContent='[data-promo167],[data-pr167me],.pr167card{display:none!important}';document.head.appendChild(promoCss)}catch(_){}
+ // Invite rewards (welcome card) and referral commission (main mod167) stay Web-only: the invite reward is not in the App Review notes;
+ // referral commission loads a remote QR script and pays gems from other users' purchases.
+ try{const promoCss=document.createElement('style');promoCss.textContent='[data-promo167],[data-pr167me],.pr167card,.wel2 [data-invite]{display:none!important}';document.head.appendChild(promoCss)}catch(_){}
  window.addEventListener('click',function(e){
-  if(e.target.closest&&e.target.closest('[data-promo167],[data-pr167me],[data-pr167copy],[data-pr167share],[data-pr167save]')){e.preventDefault();e.stopImmediatePropagation()}
+  if(e.target.closest&&e.target.closest('[data-promo167],[data-pr167me],[data-pr167copy],[data-pr167share],[data-pr167save],[data-invite]')){e.preventDefault();e.stopImmediatePropagation()}
  },true);
  const oldWallet=walletPull;walletPull=async function(){const r=await oldWallet.apply(this,arguments);recover().catch(()=>{});return r};
  window.addEventListener('focus',()=>recover().catch(()=>{}));

@@ -49,6 +49,10 @@ To inspect purchases, open the diamond top-up sheet. “Sync purchases and balan
 To review AI privacy, open an AI conversation or creation feature. The app requests permission before sharing user inputs with AI providers. Decline to keep browsing; permission can be changed in Me. Me also contains content reporting, author blocking and account deletion.
 
 Explicit adult-marked community works are excluded in the native iOS client.
+
+Story media (chapter illustrations, character voice lines and video) is downloaded on demand over HTTPS from miru.plus and cached on the device, so an internet connection is needed the first time a chapter is opened. The app shell, story data and covers are bundled. Only image, audio and video files are downloaded; the app never downloads or executes code.
+
+Build 7 起：上面这段需要追加到 Connect 的审核备注（Build 7 把剧情媒体改为在线按需下载，包体约 180 MB）。iOS 不显示邀请好友奖励和推广分佣入口（Web 专属）。
 审核专用 MIRU 账号及密码直接填写 Connect 的私密审核字段，不提交到仓库。账号应可访问完整功能，不依赖审核员接收邮件验证码。提供可联系的审核联系人。真实外部服务及商品必须在审核期间可用。
 
 ## 年龄、隐私与截图

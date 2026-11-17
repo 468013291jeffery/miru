@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="8e3235ea178c 2026-11-17T04:03Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="e349bf42b102 2026-11-17T08:01Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29393,10 +29393,11 @@ window.ONLYME_RELEASE={"script_id":"sc_mwh6yka90638d645da","work_id":"w_scmwh6yk
   if(x.dataset.au70card==='del'){deleteAccount();return}
   paySheet();
  },true);
- // Referral commission (main mod167) stays Web-only: it loads a remote QR script and pays gems from other users' purchases.
- try{const promoCss=document.createElement('style');promoCss.textContent='[data-promo167],[data-pr167me],.pr167card{display:none!important}';document.head.appendChild(promoCss)}catch(_){}
+ // Invite rewards (welcome card) and referral commission (main mod167) stay Web-only: the invite reward is not in the App Review notes;
+ // referral commission loads a remote QR script and pays gems from other users' purchases.
+ try{const promoCss=document.createElement('style');promoCss.textContent='[data-promo167],[data-pr167me],.pr167card,.wel2 [data-invite]{display:none!important}';document.head.appendChild(promoCss)}catch(_){}
  window.addEventListener('click',function(e){
-  if(e.target.closest&&e.target.closest('[data-promo167],[data-pr167me],[data-pr167copy],[data-pr167share],[data-pr167save]')){e.preventDefault();e.stopImmediatePropagation()}
+  if(e.target.closest&&e.target.closest('[data-promo167],[data-pr167me],[data-pr167copy],[data-pr167share],[data-pr167save],[data-invite]')){e.preventDefault();e.stopImmediatePropagation()}
  },true);
  const oldWallet=walletPull;walletPull=async function(){const r=await oldWallet.apply(this,arguments);recover().catch(()=>{});return r};
  window.addEventListener('focus',()=>recover().catch(()=>{}));

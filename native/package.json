@@ -7,7 +7,8 @@
   },
   "scripts": {
     "prepare": "node ../tools/ios-release-check.mjs && node ../tools/prepare-ios.mjs",
-    "copy": "npm run prepare && cap copy ios",
+    "copy": "npm run prepare && node ../tools/ios-remote-check.mjs && cap copy ios",
+    "check:remote": "node ../tools/ios-remote-check.mjs --sha 8",
     "check:release": "node ../tools/ios-release-check.mjs --check",
     "open": "cap open ios"
   },

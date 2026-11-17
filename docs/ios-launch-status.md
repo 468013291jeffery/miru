@@ -13,6 +13,14 @@
 - Build 5 模拟器实际专用账号登录、故事目录加载和英文多角色 AI 回复已观察；iPhone 18 Pro 原始截图已保存。其 1206×2622 是中屏规格，不能代替大屏必需截图；正以原生大屏与 iPad 采集，不拉伸伪造。
 - App 和七个消耗型钻石商品均保存 17 个销售地区：美国、加拿大、南美洲 12 国、日本、韩国、台湾。无广告、无订阅。
 
+## Build 7（2026-11-17）：两层打包
+- Build 6（合并 main c0b2708 后）2.0 GB，主要是新剧的场景图、立绘、配音和视频。Build 7 改为两层：包内只留外壳、JS/JSON 数据、通用 UI 图音、首页引用和封面；其余 3330 个剧情媒体（约 1.99 GB）放服务器。
+- 打包：tools/prepare-ios.mjs 生成 native/www/ios-remote.json（路径 → 大小 + SHA-256），包内 400 KB 以上 JPG 用 sips 重压；scripts/ 下只打包外壳引用的页面（北灯小游戏 games.html，修复 Build 6 小游戏空白）。
+- 原生：MIRUBridge.swift 的 MIRUAssetHandler 接管 Capacitor 资源请求，包里没有且在清单里的媒体从 https://miru.plus/ios-assets/b7/ 下载，校验大小与 SHA-256 后缓存在 Caches/miru-remote/b7；视频 Range 请求直接转发，边下边播。只放行清单内的媒体文件，不下载任何代码。旧版本缓存在启动时清理。
+- 服务器：/var/www/miru-ios-assets/b7 为不可变快照（从生产 release 硬链接，3330 个 SHA-256 全部一致），nginx `location ^~ /ios-assets/` 只放媒体，一年 immutable 缓存；配置备份 /etc/nginx/miru-production.conf.before-ios-assets。main 以后改名或删素材不影响已上架版本；下一版用新目录（b8…）。
+- 检查：tools/ios-remote-check.mjs（`npm run copy` 自动执行）逐个核对服务器文件存在、大小一致、类型为媒体，抽样核对 SHA-256；不通过不 cap copy。
+- iOS 隐藏新人福利卡里的「邀请好友 +💎30」（app148_ios.js），与推广分佣一样仅 Web。
+
 ## 生产部署与验证
 当前生产基线 /opt/miru/releases/05db359；核心 _lib、_apple、_wallet、_iap、_voice、auth、longcat 已逐项匹配候选。保留 miru_ovh_20261104 DML 运行角色，未授予 DDL。
 本轮六文件 api/works.js、api/tts.js、api/i18n.js、api/translate.js、privacy.html、terms.html 已同步 current 和 shared/overrides；备份 shared/backups/ios-closeout-20261114T032755Z。
