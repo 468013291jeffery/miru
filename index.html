@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="4fee38843a1e 2026-11-17T16:26Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="e90204905345 2026-11-17T16:39Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -28509,6 +28509,41 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     } catch (_) {}
   }, 800);
   window.GOAL171 = { fill, make };
+})();
+
+/* ===== mod172: M113《今晚，请听我的》24 个小游戏（每章 2 个），复用 mod168 / mod170 的模板 ===== */
+(function () {
+  if (typeof MG_T === "undefined" || !window.MG168 || !MG_T.m112_free) return;
+  const O = (id, zh, en, tpl, pz, pe, extra) => Object.assign({ id, zh, en, tpl, seconds: 40, pz, pe }, extra || {});
+  const F = (id, zh, en, pz, pe, ask, items) => O(id, zh, en, "m112_free", pz, pe, { ask, items });
+  const games = [
+    F("m113_c01_g1", "一步之遥", "One Step Away", "Adrian 站在离你三步远的地方，等你决定距离。你随时可以喊停。", "Adrian stands three steps away, waiting for you to set the distance. You can stop at any time.", ["你希望他怎么做？", "What would you like him to do?"], [["原地别动", "Stay where you are"], ["靠近一步", "Take one step closer"], ["后退一步", "Take one step back"]]),
+    F("m113_c01_g2", "红丝带交换", "The Red Ribbon Exchange", "道具台上放着一条松式红丝带。谁来戴、戴多久，都由你决定，随时可以取下。", "A loose red ribbon lies on the prop table. Who wears it, and for how long, is up to you. It comes off whenever you say.", ["这条丝带交给谁？", "Who gets the ribbon?"], [["我自己戴", "I'll wear it"], ["交给 Adrian", "Give it to Adrian"], ["今晚不用它", "Not tonight"]]),
+    F("m113_c02_g1", "贵族的请求", "The Noble Request", "白色练习室里，Sebastian 把“提出邀请”的位置让给你。", "In the white practice room, Sebastian lets you be the one who asks.", ["你想怎么回应他？", "How do you answer him?"], [["请他起身，平视说话", "Ask him to stand and talk eye to eye"], ["接受他的单膝致意", "Accept his bow on one knee"], ["先给他一个拥抱", "Hug him first"], ["礼貌地拒绝", "Politely decline"]]),
+    O("m113_c02_g2", "火漆与指尖", "Wax Seal & Fingertips", "m111_pick", "两枚火漆封印看起来一模一样。怎么核对，才能找出真正的差别？", "The two wax seals look identical. How do you find the real difference?", { ask: ["你怎么核对？", "How do you check?"], items: [["只凭颜色判断", "Judge by colour alone"], ["对齐 A 与 B，再翻到背面看编号", "Line up A and B, then check the numbers on the back"], ["闻一闻蜡的味道", "Smell the wax"]], ans: 1 }),
+    O("m113_c03_g1", "交换主导权", "Trading the Lead", "m111_order", "镜面舞台上，一人示意、一人跟随，然后交换。把这一轮排成正确顺序。", "On the mirrored stage, one leads and one follows, then you swap. Put one round in the right order.", { items: [["先征询对方", "Ask first"], ["给出示意", "Give the cue"], ["对方回应", "They respond"], ["交换主导", "Swap the lead"]] }),
+    O("m113_c03_g2", "心跳四拍", "Four Heartbeats", "m111_beat", "Dante 在桌面上敲出节拍，看你能不能跟上。", "Dante taps a rhythm on the table and dares you to keep up."),
+    O("m113_c04_g1", "蒙眼听声", "Follow My Voice", "m111_pick", "你闭上眼睛。Julian 说：“跟着我的声音走。”三种声音同时响起。", "You close your eyes. Julian says, \"Follow my voice.\" Three sounds come at once.", { ask: ["哪一个才是 Julian？", "Which one is Julian?"], items: [["左侧的铃声", "A bell on the left"], ["身后的脚步声", "Footsteps behind you"], ["正前方平稳的口令声", "A calm voice straight ahead"]], ans: 2 }),
+    O("m113_c04_g2", "一声之后", "After the Chime", "m111_order", "录音里有三个声音。按发生的先后排好，时间线就清楚了。", "The recording holds three sounds. Put them in order and the timeline becomes clear.", { items: [["铃声", "The bell"], ["金属扣声", "A metal clasp clicking"], ["钟响", "The clock striking"]] }),
+    F("m113_c05_g1", "假面距离", "Masked Distance", "假面舞会的音乐响起。跳不跳、靠多近，都由你决定。", "The masquerade music starts. Whether you dance, and how close, is your call.", ["你怎么做？", "What do you do?"], [["牵手共舞，近一步", "Take his hand and step closer"], ["共舞，但保持一臂距离", "Dance, but keep an arm's length"], ["在旁边看就好", "Just watch from the side"]]),
+    O("m113_c05_g2", "面具后的名字", "The Name Behind the Mask", "m111_pick", "人群里有人戴着和邀请函同样的印记。Kai 低声问：“你要靠什么认人？”", "Someone in the crowd wears the same mark as your invitation. Kai whispers, \"How will you tell who it is?\"", { ask: ["最可靠的辨认方法是？", "What's the most reliable way?"], items: [["只听声音", "Their voice alone"], ["旧封印加上约定手势，一起核对", "The old seal plus the agreed hand signal, together"], ["看衣袖纽扣", "Their cuff buttons"]], ans: 1 }),
+    F("m113_c06_g1", "五人的邀请", "Five Invitations", "五个人同时向你提出邀请。接受一个、重新安排，或者都拒绝，都可以。", "All five ask you out at once. Accept one, rearrange things, or turn them all down—any choice is fine.", ["你的决定是？", "Your decision?"], [["公开选一个人", "Choose one openly"], ["分开单独聊", "Talk to each separately"], ["今晚先都暂停", "Pause everything for tonight"]]),
+    O("m113_c06_g2", "谁说了真话", "Who Told the Truth?", "m111_pick", "两份口供互相矛盾。怎么判断才不会冤枉人？", "Two statements contradict each other. How do you decide without wronging anyone?", { ask: ["你怎么核对？", "How do you check?"], items: [["相信先开口的那个", "Believe whoever spoke first"], ["调取门禁时间，和两份口供交叉核对", "Pull the door-access times and cross-check both statements"], ["相信你更喜欢的那个", "Believe the one you like more"]], ans: 1 }),
+    O("m113_c07_g1", "道歉的距离", "The Distance of an Apology", "m111_order", "Adrian 想道歉。一个真正的道歉应该按什么顺序？", "Adrian wants to apologise. What order does a real apology follow?", { items: [["承认事实", "Admit what happened"], ["停止越界", "Stop crossing the line"], ["说明怎么补救", "Explain how to make it right"]] }),
+    O("m113_c07_g2", "并肩查看", "Side by Side", "m111_match", "授权日志摊在桌上。把每一项和它能证明的内容对应起来。", "The authorisation log lies open. Match each entry to what it proves.", { items: [[["访问权限", "Access rights"], ["谁有资格打开档案", "Who was allowed to open the file"]], [["修改时间", "Edit time"], ["改动发生在授权之前还是之后", "Whether the change came before or after approval"]], [["本人签名", "Personal signature"], ["授权是不是本人亲自签的", "Whether the approval was signed in person"]]] }),
+    O("m113_c08_g1", "角色反转", "Role Reversal", "m111_order", "这一轮由你提出指引。协商的步骤应该是？", "This round, you give the direction. What are the steps of a fair negotiation?", { items: [["你先提议", "You propose"], ["对方回复", "They reply"], ["双方确认", "You both confirm"], ["执行，然后交换", "Do it, then swap"]] }),
+    O("m113_c08_g2", "双人密码", "Two-Person Cipher", "m111_order", "一人读数字，一人转密码盘。按原来的顺序转出组合。", "One reads the numbers, one turns the dial. Enter the combination in order.", { items: [["07", "07"], ["11", "11"], ["19", "19"]] }),
+    O("m113_c09_g1", "靠近真相", "Closer to the Truth", "m111_match", "两个人说了同一件事的不同版本。给每句话分好类。", "Two men tell different versions of the same night. Sort each statement.", { items: [[["门禁记录显示 23:40 有人进入档案室", "The access log shows someone entered the archive at 23:40"], ["事实", "Fact"]], [["Sebastian 说他听见了 Evelyn 的声音", "Sebastian says he heard Evelyn's voice"], ["证词", "Testimony"]], [["Dante 觉得寄信人就是 Adrian", "Dante thinks Adrian sent the letter"], ["猜测", "Guess"]]] }),
+    O("m113_c09_g2", "午夜拼图", "Midnight Puzzle", "m111_order", "你和 Kai 把三段线索摊开。按发生的顺序排好。", "You and Kai lay out three clues. Put them in the order they happened.", { items: [["访问记录", "The access record"], ["旧信函", "The old letter"], ["新邀请函", "The new invitation"]] }),
+    F("m113_c10_g1", "五封告白", "Five Confessions", "五个人轮流说出想和你发展的关系。你不必马上回答。", "Each of the five tells you what he hopes you could be. You don't have to answer now.", ["你怎么回应？", "How do you respond?"], [["和他们分别独处谈", "Talk to each of them alone"], ["听完再回答", "Hear them all, then answer"], ["今天先不谈", "Not today"]]),
+    O("m113_c10_g2", "未寄出的纸条", "Unsent Notes", "m111_order", "要辨认哪张纸条从没寄出，应该按什么顺序核对？", "To find the note that was never sent, what do you check, in order?", { items: [["署名", "The signature"], ["封口", "The seal"], ["日期", "The date"]] }),
+    O("m113_c11_g1", "公开还是保留", "Public or Private", "m111_pick", "听证会前，你得决定公开哪些资料。", "Before the hearing, you decide what goes public.", { ask: ["公开什么最稳妥？", "What's safest to release?"], items: [["全部资料，包括会员私人记录", "Everything, including members' private records"], ["只公开授权过、脱敏后的日志", "Only the approved, anonymised log"], ["先把未核实的指控放出去", "Release the unverified accusations first"]], ans: 1 }),
+    F("m113_c11_g2", "最后的舞步", "The Final Dance", "听证会前的几分钟，只属于你们。", "A few minutes before the hearing, just for the two of you.", ["你想怎么度过？", "How do you spend them?"], [["牵手共舞", "Dance together"], ["并肩听一首歌", "Listen to one song side by side"], ["只说一声再见", "Just say goodbye"]]),
+    F("m113_c12_g1", "谁在你身边", "Who Stays With You", "黎明前，你一一问清每个人的意愿。不选任何人，也是完整的结局。", "Before dawn, you ask each of them what he wants. Choosing no one is a complete ending too.", ["你打算怎么做？", "What will you do?"], [["逐个认真谈", "Talk it through with each of them"], ["不建立恋爱关系", "No romance for now"], ["之后再决定", "Decide later"]]),
+    F("m113_c12_g2", "黎明约定", "A Promise at Dawn", "天亮了。在门厅里，和他们约好下一次。", "Dawn breaks. In the lobby, you make a plan for next time.", ["你的约定是？", "Your promise?"], [["一起吃早餐", "Breakfast together"], ["改天再见", "See you another day"], ["独自出发", "Leave on your own"]])
+  ];
+  MG168.reg(games);
+  window.M113G = games;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
