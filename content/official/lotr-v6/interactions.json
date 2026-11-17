@@ -1,0 +1,1058 @@
+[
+  {
+    "chapter": 1,
+    "name": "星冠入谷",
+    "goal": "说明星汐领参与议事的依据，并决定先核查哪段山路",
+    "completion": {
+      "type": "say",
+      "intent": "说明星汐领参与议事的依据，并决定先核查哪段山路",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c01_g1",
+        "name_zh": "旧剑与月石辨认",
+        "name_en": "Chapter 1 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "旧剑是家族信物；月石不赋予命令他人的权力",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 1,
+        "scene_index": 2,
+        "location": "瑞文戴尔 · 枫树回廊",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c01_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c01_g2",
+        "name_zh": "星冠入谷安排",
+        "name_en": "Chapter 1 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后提出核查路线",
+          "再听取异议",
+          "先说明领地资源"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 1,
+        "scene_index": 3,
+        "location": "瑞文戴尔 · 议事厅",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c01_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "name": "王子与雨",
+    "goal": "核对古籍与月石的对应现象，决定向谁说明发现",
+    "completion": {
+      "type": "say",
+      "intent": "核对古籍与月石的对应现象，决定向谁说明发现",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c02_g1",
+        "name_zh": "古籍与月石辨认",
+        "name_en": "Chapter 2 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "观察到光形不等于已经知道古约真相",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 2,
+        "scene_index": 2,
+        "location": "瑞文戴尔 · 藏书塔",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c02_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c02_g2",
+        "name_zh": "王子与雨安排",
+        "name_en": "Chapter 2 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后决定分享范围",
+          "再询问出处",
+          "先记录所见"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 2,
+        "scene_index": 3,
+        "location": "瑞文戴尔 · 练武庭",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c02_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "name": "未寄出的信",
+    "goal": "分清旧信的记载与猜测，说明你愿意听取哪些私人往事",
+    "completion": {
+      "type": "say",
+      "intent": "分清旧信的记载与猜测，说明你愿意听取哪些私人往事",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c03_g1",
+        "name_zh": "旧信与证词辨认",
+        "name_en": "Chapter 3 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "旧信记载一次失约；责任归属仍需核实",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 3,
+        "scene_index": 2,
+        "location": "瑞文戴尔 · 针线室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c03_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c03_g2",
+        "name_zh": "未寄出的信安排",
+        "name_en": "Chapter 3 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后提出核实问题",
+          "再标记未知",
+          "先读原句"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 3,
+        "scene_index": 3,
+        "location": "瑞文戴尔 · 无人的阶梯",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c03_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "name": "离谷之日",
+    "goal": "确认同行方式、携带物资与可接受的风险",
+    "completion": {
+      "type": "say",
+      "intent": "确认同行方式、携带物资与可接受的风险",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c04_g1",
+        "name_zh": "山路图与急救包辨认",
+        "name_en": "Chapter 4 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "危险路段需要准备；护符不能替代物资",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 4,
+        "scene_index": 2,
+        "location": "瑞文戴尔 · 临别长廊",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c04_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c04_g2",
+        "name_zh": "离谷之日安排",
+        "name_en": "Chapter 4 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后约定联络方式",
+          "再检查物资",
+          "先确认路线"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 4,
+        "scene_index": 3,
+        "location": "瑞文戴尔 · 兵器廊",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c04_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 5,
+    "name": "远灯",
+    "goal": "商定一种可拒绝、可调整的日常联络安排",
+    "completion": {
+      "type": "say",
+      "intent": "商定一种可拒绝、可调整的日常联络安排",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c05_g1",
+        "name_zh": "短笺与战报辨认",
+        "name_en": "Chapter 5 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "私人问候不等于新的战报，也不构成排他承诺",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 5,
+        "scene_index": 2,
+        "location": "临时驻地 · 战报桌",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c05_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c05_g2",
+        "name_zh": "远灯安排",
+        "name_en": "Chapter 5 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后保留暂停方式",
+          "再约定频率",
+          "先询问偏好"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 5,
+        "scene_index": 3,
+        "location": "山路 · 雾中并行",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c05_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 6,
+    "name": "没有署名的人",
+    "goal": "核查旧信封蜡的异常，并决定如何保存证物",
+    "completion": {
+      "type": "say",
+      "intent": "核查旧信封蜡的异常，并决定如何保存证物",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c06_g1",
+        "name_zh": "封蜡与证词辨认",
+        "name_en": "Chapter 6 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "细裂是可见异常；尚不能仅凭细裂指认真凶",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 6,
+        "scene_index": 2,
+        "location": "驿站 · 临时书桌",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c06_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c06_g2",
+        "name_zh": "没有署名的人安排",
+        "name_en": "Chapter 6 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后另找佐证",
+          "再保留原件",
+          "先记录异常"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 6,
+        "scene_index": 3,
+        "location": "驿站 · 壁炉旁",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c06_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 7,
+    "name": "雪径上的承诺",
+    "goal": "根据救援位置和物资限制，决定雪径救援方案",
+    "completion": {
+      "type": "say",
+      "intent": "根据救援位置和物资限制，决定雪径救援方案",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c07_g1",
+        "name_zh": "绳索与救援位置辨认",
+        "name_en": "Chapter 7 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "救援要核对位置与人手，不能以亲近程度决定战术",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 7,
+        "scene_index": 2,
+        "location": "雪径 · 临时救援营",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c07_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c07_g2",
+        "name_zh": "雪径上的承诺安排",
+        "name_en": "Chapter 7 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后检查绳索",
+          "再分配人手",
+          "先确认位置"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 7,
+        "scene_index": 3,
+        "location": "旧矿道 · 木桥",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c07_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 8,
+    "name": "白城来信",
+    "goal": "核对需要补全的名单，并说明星汐领可提供的协助",
+    "completion": {
+      "type": "say",
+      "intent": "核对需要补全的名单，并说明星汐领可提供的协助",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c08_g1",
+        "name_zh": "名单与来信辨认",
+        "name_en": "Chapter 8 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "名单空缺需要核验，不能凭熟悉姓名直接补写",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 8,
+        "scene_index": 2,
+        "location": "白城 · 图书室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c08_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c08_g2",
+        "name_zh": "白城来信安排",
+        "name_en": "Chapter 8 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后记录待查名单",
+          "再询问缺项",
+          "先核对来源"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 8,
+        "scene_index": 3,
+        "location": "白城 · 露台茶桌",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c08_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 9,
+    "name": "破碎号角",
+    "goal": "核实伏击风险与援军进度，决定救护和通报次序",
+    "completion": {
+      "type": "say",
+      "intent": "核实伏击风险与援军进度，决定救护和通报次序",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c09_g1",
+        "name_zh": "伤情与援军消息辨认",
+        "name_en": "Chapter 9 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "希望援军抵达不等于援军已经抵达",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 9,
+        "scene_index": 2,
+        "location": "林缘 · 小溪旁",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c09_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c09_g2",
+        "name_zh": "破碎号角安排",
+        "name_en": "Chapter 9 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后核实援军进度",
+          "再派人通报",
+          "先确认伤情"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 9,
+        "scene_index": 3,
+        "location": "山脊 · 伏击警戒线",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c09_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 10,
+    "name": "星汐盟约",
+    "goal": "核算避难路的承载条件，说明你对古约的履行安排",
+    "completion": {
+      "type": "say",
+      "intent": "核算避难路的承载条件，说明你对古约的履行安排",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c10_g1",
+        "name_zh": "旧约与避难资源辨认",
+        "name_en": "Chapter 10 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "仁慈的意愿不能替代粮食、道路和守备安排",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 10,
+        "scene_index": 2,
+        "location": "祖厅 · 档案阶梯",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c10_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c10_g2",
+        "name_zh": "星汐盟约安排",
+        "name_en": "Chapter 10 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后说明安排",
+          "再听取受影响者",
+          "先核查资源"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 10,
+        "scene_index": 3,
+        "location": "星汐领 · 露台温室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c10_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 11,
+    "name": "黎明之前",
+    "goal": "确认战前协作责任，并表达愿意留下或保留的私人承诺",
+    "completion": {
+      "type": "say",
+      "intent": "确认战前协作责任，并表达愿意留下或保留的私人承诺",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c11_g1",
+        "name_zh": "战前信件与职责辨认",
+        "name_en": "Chapter 11 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "私人牵挂不代替职责，也不要求玩家确认恋爱",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 11,
+        "scene_index": 2,
+        "location": "东侧塔楼 · 灯边",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c11_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c11_g2",
+        "name_zh": "黎明之前安排",
+        "name_en": "Chapter 11 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后留出拒绝空间",
+          "再说明能做到的事",
+          "先确认职责"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 11,
+        "scene_index": 3,
+        "location": "西境 · 临时指挥所",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c11_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 12,
+    "name": "仍有灯火",
+    "goal": "分别回应领地事务与私人关系，留下尚未完成的事项",
+    "completion": {
+      "type": "say",
+      "intent": "分别回应领地事务与私人关系，留下尚未完成的事项",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c12_g1",
+        "name_zh": "诉求与私人来信辨认",
+        "name_en": "Chapter 12 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "政治结果与关系结果需要分别确认",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 12,
+        "scene_index": 2,
+        "location": "星汐领 · 长廊日光",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c12_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c12_g2",
+        "name_zh": "仍有灯火安排",
+        "name_en": "Chapter 12 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后表达关系意愿",
+          "再核对执行结果",
+          "先听取诉求"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 12,
+        "scene_index": 3,
+        "location": "海边 · 月光台阶",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c12_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 13,
+    "name": "旧路开放日",
+    "goal": "就旧路开放的分配争议提出试行方案与复议方式",
+    "completion": {
+      "type": "say",
+      "intent": "就旧路开放的分配争议提出试行方案与复议方式",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c13_g1",
+        "name_zh": "商队与守备意见辨认",
+        "name_en": "Chapter 13 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "草案尚有分歧，不能直接视为已经通过的新规",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 13,
+        "scene_index": 2,
+        "location": "星汐领·侧厅·山门议事亭",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c13_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c13_g2",
+        "name_zh": "旧路开放日安排",
+        "name_en": "Chapter 13 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后约定复议",
+          "再写试行条件",
+          "先分别听取意见"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 13,
+        "scene_index": 3,
+        "location": "星汐领·晚间·山门议事亭",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c13_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 14,
+    "name": "没有任务的午后",
+    "goal": "决定如何度过午后，并说清陪伴或独处的边界",
+    "completion": {
+      "type": "say",
+      "intent": "决定如何度过午后，并说清陪伴或独处的边界",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c14_g1",
+        "name_zh": "邀请与个人安排辨认",
+        "name_en": "Chapter 14 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "拒绝邀请不等于结束友谊",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 14,
+        "scene_index": 2,
+        "location": "星汐领·侧厅·海风书廊",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c14_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c14_g2",
+        "name_zh": "没有任务的午后安排",
+        "name_en": "Chapter 14 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后确认可随时结束",
+          "再提出活动",
+          "先问是否方便"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 14,
+        "scene_index": 3,
+        "location": "星汐领·晚间·海风书廊",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c14_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 15,
+    "name": "四封没有催促的信",
+    "goal": "区分四封信里的近况与请求，决定回信对象和内容",
+    "completion": {
+      "type": "say",
+      "intent": "区分四封信里的近况与请求，决定回信对象和内容",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c15_g1",
+        "name_zh": "私人信与回信辨认",
+        "name_en": "Chapter 15 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "某人的近况不代表其他人已经知情",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 15,
+        "scene_index": 2,
+        "location": "星汐领·侧厅·冬夜信房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c15_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c15_g2",
+        "name_zh": "四封没有催促的信安排",
+        "name_en": "Chapter 15 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后分别回信",
+          "再核对承诺",
+          "先逐封阅读"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 15,
+        "scene_index": 3,
+        "location": "星汐领·晚间·冬夜信房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c15_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 16,
+    "name": "愿意继续的明天",
+    "goal": "说明明天的生活安排，并与相关的人确认可兑现的约定",
+    "completion": {
+      "type": "say",
+      "intent": "说明明天的生活安排，并与相关的人确认可兑现的约定",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "lotr_c16_g1",
+        "name_zh": "旅程与既有责任辨认",
+        "name_en": "Chapter 16 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "新的邀约不自动取消既有责任",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 16,
+        "scene_index": 2,
+        "location": "星汐领·侧厅·晨光露台",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c16_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "lotr_c16_g2",
+        "name_zh": "愿意继续的明天安排",
+        "name_en": "Chapter 16 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后确认下一次联系",
+          "再表达意愿",
+          "先核对责任"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 16,
+        "scene_index": 3,
+        "location": "星汐领·晚间·晨光露台",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_lotr_c16_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1058 @@
+[
+  {
+    "chapter": 1,
+    "name": "未签的婚书",
+    "goal": "核对婚书中的港口条款，表达是否继续谈判",
+    "completion": {
+      "type": "say",
+      "intent": "核对婚书中的港口条款，表达是否继续谈判",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c01_g1",
+        "name_zh": "婚书与贸易协议辨认",
+        "name_en": "Chapter 1 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "婚姻不自动转移港口主权；缺页协议仍不完整",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 1,
+        "scene_index": 2,
+        "location": "红堡 · 长宴厅",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c01_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c01_g2",
+        "name_zh": "未签的婚书安排",
+        "name_en": "Chapter 1 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后表达谈判立场",
+          "再标出疑点",
+          "先保留原件"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 1,
+        "scene_index": 3,
+        "location": "长宴厅 · 御林铁卫席旁",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c01_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 2,
+    "name": "狮子的影子",
+    "goal": "核查金库账目中的疑点，并决定下一步询问对象",
+    "completion": {
+      "type": "say",
+      "intent": "核查金库账目中的疑点，并决定下一步询问对象",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c02_g1",
+        "name_zh": "账册与家乡游记辨认",
+        "name_en": "Chapter 2 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "文字记载可能有误，需要与可查来源核对",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 2,
+        "scene_index": 2,
+        "location": "红堡 · 走廊拱窗",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c02_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c02_g2",
+        "name_zh": "狮子的影子安排",
+        "name_en": "Chapter 2 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后提出核查问题",
+          "再记录差异",
+          "先核对原文"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 2,
+        "scene_index": 3,
+        "location": "君临 · 金库事务所",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c02_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 3,
+    "name": "多恩的橙花",
+    "goal": "核对商会印章线索，并说清与奥柏伦交往的边界",
+    "completion": {
+      "type": "say",
+      "intent": "核对商会印章线索，并说清与奥柏伦交往的边界",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c03_g1",
+        "name_zh": "商会印章与关系约定辨认",
+        "name_en": "Chapter 3 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "印章是线索；艾拉莉亚是否同意不能由别人代答",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 3,
+        "scene_index": 2,
+        "location": "使节花园 · 荫凉处",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c03_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c03_g2",
+        "name_zh": "多恩的橙花安排",
+        "name_en": "Chapter 3 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后表达边界",
+          "再询问既有约定",
+          "先辨明线索范围"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 3,
+        "scene_index": 3,
+        "location": "使节花园 · 暗墙",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c03_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 4,
+    "name": "北境来信",
+    "goal": "核对长城求援需求，并确认你能提供的援助",
+    "completion": {
+      "type": "say",
+      "intent": "核对长城求援需求，并确认你能提供的援助",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c04_g1",
+        "name_zh": "求援信与货单辨认",
+        "name_en": "Chapter 4 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "船队到达北方要经过数周，不能即时往返",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 4,
+        "scene_index": 2,
+        "location": "海路驿站 · 渡船",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c04_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c04_g2",
+        "name_zh": "北境来信安排",
+        "name_en": "Chapter 4 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后记录抵达与交接",
+          "再准备船货",
+          "先核对需求"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 4,
+        "scene_index": 3,
+        "location": "长城 · 黑城堡庭院",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c04_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 5,
+    "name": "火与雪之间",
+    "goal": "商定北境期间的联络方式与夜巡前的安排",
+    "completion": {
+      "type": "say",
+      "intent": "商定北境期间的联络方式与夜巡前的安排",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c05_g1",
+        "name_zh": "远信与夜巡职责辨认",
+        "name_en": "Chapter 5 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "远信有传递延迟，琼恩不能随意放弃夜巡",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 5,
+        "scene_index": 2,
+        "location": "黑城堡 · 信鸦室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c05_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c05_g2",
+        "name_zh": "火与雪之间安排",
+        "name_en": "Chapter 5 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后保留休息时间",
+          "再约定报平安方式",
+          "先确认职责"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 5,
+        "scene_index": 3,
+        "location": "黑城堡 · 书房灯下",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c05_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 6,
+    "name": "烧掉的账页",
+    "goal": "分清烧损账页中的可读事实与缺口，提出补证办法",
+    "completion": {
+      "type": "say",
+      "intent": "分清烧损账页中的可读事实与缺口，提出补证办法",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c06_g1",
+        "name_zh": "账页与补救清单辨认",
+        "name_en": "Chapter 6 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "烧毁部分不能靠猜测补成确定账目",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 6,
+        "scene_index": 2,
+        "location": "黑城堡 · 炉火桌边",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c06_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c06_g2",
+        "name_zh": "烧掉的账页安排",
+        "name_en": "Chapter 6 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后寻找独立凭证",
+          "再标记缺口",
+          "先保存残页"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 6,
+        "scene_index": 3,
+        "location": "君临 · 提利昂书室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c06_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 7,
+    "name": "狮心的第二面",
+    "goal": "听取詹姆对责任与旧关系的说明，表达你的信任边界",
+    "completion": {
+      "type": "say",
+      "intent": "听取詹姆对责任与旧关系的说明，表达你的信任边界",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c07_g1",
+        "name_zh": "道歉与实际责任辨认",
+        "name_en": "Chapter 7 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "一次道歉或亲吻不能代替责任处理",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 7,
+        "scene_index": 2,
+        "location": "红堡 · 侧厅镜前",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c07_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c07_g2",
+        "name_zh": "狮心的第二面安排",
+        "name_en": "Chapter 7 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后表达边界",
+          "再确认可做的补救",
+          "先询问事实"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 7,
+        "scene_index": 3,
+        "location": "红堡 · 私人回廊",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c07_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 8,
+    "name": "海邦旧债",
+    "goal": "核对海邦旧债与税率，说明你支持的公开处理方式",
+    "completion": {
+      "type": "say",
+      "intent": "核对海邦旧债与税率，说明你支持的公开处理方式",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c08_g1",
+        "name_zh": "旧债与公开税率辨认",
+        "name_en": "Chapter 8 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "公开税率不代表旧债已经完成清算",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 8,
+        "scene_index": 2,
+        "location": "群岛 · 祖母书房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c08_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c08_g2",
+        "name_zh": "海邦旧债安排",
+        "name_en": "Chapter 8 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后说明处理方式",
+          "再听取受影响者",
+          "先核对账目"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 8,
+        "scene_index": 3,
+        "location": "群岛 · 橙树庭院",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c08_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 9,
+    "name": "长夜之前",
+    "goal": "根据边境报告核算供给，决定援助与撤离的安排",
+    "completion": {
+      "type": "say",
+      "intent": "根据边境报告核算供给，决定援助与撤离的安排",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c09_g1",
+        "name_zh": "边境报告与库存辨认",
+        "name_en": "Chapter 9 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "最坏报告是风险依据，不等于灾难已经发生",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 9,
+        "scene_index": 2,
+        "location": "黑城堡 · 仓库",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c09_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c09_g2",
+        "name_zh": "长夜之前安排",
+        "name_en": "Chapter 9 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后安排运输与退路",
+          "再核对需求",
+          "先清点库存"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 9,
+        "scene_index": 3,
+        "location": "黑城堡 · 楼梯平台",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c09_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 10,
+    "name": "无需谁的姓氏",
+    "goal": "就主权与担保条件公开表态，确认哪些承诺可以签署",
+    "completion": {
+      "type": "say",
+      "intent": "就主权与担保条件公开表态，确认哪些承诺可以签署",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c10_g1",
+        "name_zh": "担保条款与印章辨认",
+        "name_en": "Chapter 10 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "见证人的支持不能代替你同意担保条款",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 10,
+        "scene_index": 2,
+        "location": "议事厅 · 担保桌",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c10_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c10_g2",
+        "name_zh": "无需谁的姓氏安排",
+        "name_en": "Chapter 10 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后确认签署意愿",
+          "再核对权限",
+          "先读清条款"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 10,
+        "scene_index": 3,
+        "location": "君临 · 议事后花房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c10_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 11,
+    "name": "火与雪的抉择",
+    "goal": "确认海路协作方案，并分别回应三地来信与关系约定",
+    "completion": {
+      "type": "say",
+      "intent": "确认海路协作方案，并分别回应三地来信与关系约定",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c11_g1",
+        "name_zh": "海图与三地来信辨认",
+        "name_en": "Chapter 11 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "不同地点的人不能即时共享未送达的信息",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 11,
+        "scene_index": 2,
+        "location": "红堡 · 剑庭长椅",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c11_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c11_g2",
+        "name_zh": "火与雪的抉择安排",
+        "name_en": "Chapter 11 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后等待各自回复",
+          "再分别传信",
+          "先核对航程"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 11,
+        "scene_index": 3,
+        "location": "多恩 · 橙花书信",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c11_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 12,
+    "name": "王冠不必成双",
+    "goal": "分别结算港口规章与私人关系，确定下一步生活安排",
+    "completion": {
+      "type": "say",
+      "intent": "分别结算港口规章与私人关系，确定下一步生活安排",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c12_g1",
+        "name_zh": "港口规章与私人邀请辨认",
+        "name_en": "Chapter 12 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "规章执行与伴侣关系是两件独立的事",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 12,
+        "scene_index": 2,
+        "location": "群岛 · 晴日书房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c12_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c12_g2",
+        "name_zh": "王冠不必成双安排",
+        "name_en": "Chapter 12 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后表达私人意愿",
+          "再核对既有责任",
+          "先确认执行情况"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 12,
+        "scene_index": 3,
+        "location": "群岛 · 海边练剑台",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c12_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 13,
+    "name": "新港口条例",
+    "goal": "就新港口条例提出试行条件、公开方式和复议安排",
+    "completion": {
+      "type": "say",
+      "intent": "就新港口条例提出试行条件、公开方式和复议安排",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c13_g1",
+        "name_zh": "商队与守备意见辨认",
+        "name_en": "Chapter 13 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "草案未获确认前不能当作生效条例",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 13,
+        "scene_index": 2,
+        "location": "苍曜群岛·侧厅·公开议政厅",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c13_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c13_g2",
+        "name_zh": "新港口条例安排",
+        "name_en": "Chapter 13 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后约定复议",
+          "再写试行条件",
+          "先听取意见"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 13,
+        "scene_index": 3,
+        "location": "苍曜群岛·晚间·公开议政厅",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c13_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 14,
+    "name": "多恩来的请柬",
+    "goal": "回应多恩请柬，确认行程、同行意愿与拒绝空间",
+    "completion": {
+      "type": "say",
+      "intent": "回应多恩请柬，确认行程、同行意愿与拒绝空间",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c14_g1",
+        "name_zh": "请柬与现有行程辨认",
+        "name_en": "Chapter 14 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "请柬是邀请，不是已同意出行的承诺",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 14,
+        "scene_index": 2,
+        "location": "苍曜群岛·侧厅·橙花温室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c14_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c14_g2",
+        "name_zh": "多恩来的请柬安排",
+        "name_en": "Chapter 14 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后分别确认安排",
+          "再询问参与意愿",
+          "先核对行程"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 14,
+        "scene_index": 3,
+        "location": "苍曜群岛·晚间·橙花温室",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c14_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 15,
+    "name": "雪与海的回信",
+    "goal": "区分北境与海邦来信中的近况和请求，决定回信内容",
+    "completion": {
+      "type": "say",
+      "intent": "区分北境与海邦来信中的近况和请求，决定回信内容",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c15_g1",
+        "name_zh": "雪与海的来信辨认",
+        "name_en": "Chapter 15 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "收到一封信不表示远方已收到你的回答",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 15,
+        "scene_index": 2,
+        "location": "苍曜群岛·侧厅·私人信房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c15_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c15_g2",
+        "name_zh": "雪与海的回信安排",
+        "name_en": "Chapter 15 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后安排送信",
+          "再分别写回信",
+          "先核对寄信时间"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 15,
+        "scene_index": 3,
+        "location": "苍曜群岛·晚间·私人信房",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c15_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  },
+  {
+    "chapter": 16,
+    "name": "王冠旁的空位",
+    "goal": "决定王冠旁是否留给伴侣，并确认各自的责任与后续约定",
+    "completion": {
+      "type": "say",
+      "intent": "决定王冠旁是否留给伴侣，并确认各自的责任与后续约定",
+      "rule": "明确回应相关具体安排或提出可行替代；含糊回答先澄清，不以小游戏输赢卡住主线。"
+    },
+    "games": [
+      {
+        "id": "got_c16_g1",
+        "name_zh": "生活邀请与各自职责辨认",
+        "name_en": "Chapter 16 Evidence Check",
+        "type": "事实比对",
+        "instruction": "只按眼前材料，找出可以确认的一句。",
+        "options": [
+          "保留空位或选择朋友都是有效结局",
+          "只要对方承诺，就可以跳过核实",
+          "还没发生的事也能记成已经完成"
+        ],
+        "correct_answer": 0,
+        "success": "记住这一条事实与它的限制；不凭答题生成新证物。",
+        "failure": "在场人物指出材料中可以确认的部分，不扣主线资格。",
+        "chapter": 16,
+        "scene_index": 2,
+        "location": "苍曜群岛·侧厅·晴日港楼",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c16_g1_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      },
+      {
+        "id": "got_c16_g2",
+        "name_zh": "王冠旁的空位安排",
+        "name_en": "Chapter 16 Action Order",
+        "type": "顺序整理",
+        "instruction": "把眼前这件事的处理步骤排顺；这只是拟案，不代表已经执行。",
+        "options": [
+          "最后确认可行约定",
+          "再核对双方责任",
+          "先表达真实意愿"
+        ],
+        "correct_answer": [
+          2,
+          1,
+          0
+        ],
+        "success": "保存为可修改的处理拟案；实际行动仍需玩家确认。",
+        "failure": "展示建议次序，允许玩家另提合法办法，不自动执行。",
+        "chapter": 16,
+        "scene_index": 3,
+        "location": "苍曜群岛·晚间·晴日港楼",
+        "suggested_seconds": 35,
+        "skip": "跳过练习，人物提供相同的必要信息；剧情继续，不减少调查权。",
+        "win_flag": "mg_got_c16_g2_win",
+        "fail_forward": true,
+        "repeat_reward": "每个存档只记一次胜利；重试不重复发奖。",
+        "implementation_status": "需映射并核对平台模板；未核对前不宣称已经可玩",
+        "knowledge": "仅限本场在场人物与玩家；不自动传播私人回答。"
+      }
+    ]
+  }
+]
