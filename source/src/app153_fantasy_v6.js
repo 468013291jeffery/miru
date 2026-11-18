@@ -16,4 +16,8 @@ const oldMatch=mgMatch;mgMatch=function(txt){const th=S.threads[curT];return rel
 const oldResult=mgResult;mgResult=function(th,d,result){const g=MG100.find(x=>x.id===d.id)?.spec;if(!g||!release(th))return oldResult.apply(this,arguments);if(result==='win')pkSet(th,g.win_flag);return [['n','act',result==='win'?g.success:result==='lose'?g.failure:g.skip]];};
 // No raw source metadata is rendered; preserve full character art while framing faces in small portraits.
 const style=document.createElement('style');style.textContent='img[src*="/lotr-v6/char_"],img[src*="/got-v6/char_"]{object-fit:cover;object-position:50% 15%}';document.head.append(style);
+// Repair legacy percent-encoded prose in existing local story caches as well as new installs.
+function readable(value){return String(value).replace(/(?:%[0-9a-f]{2}){3,}/gi,part=>{try{const out=decodeURIComponent(part);return /[\u3400-\u9fff]/.test(out)?out:part;}catch(_){return part;}});}
+function repairText(node,seen=new Set()){if(!node||typeof node!=='object'||seen.has(node))return;seen.add(node);for(const key of Object.keys(node)){const v=node[key];if(typeof v==='string'&&!/^(src|url|art|cover|poster|id|wid|community|slot)$/i.test(key))node[key]=readable(v);else if(v&&typeof v==='object')repairText(v,seen);}}
+const openPrevious=openThread;openThread=function(id){const th=S.threads[id],r=release(th);if(r){const w=wd(th.wid);repairText(w.pack);for(const m of th.msgs||[])if(m.who!=='me'&&m.who!=='you')repairText(m);configure(w,r);save();}return openPrevious.apply(this,arguments);};
 })();
