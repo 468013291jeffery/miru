@@ -1,37 +1,5 @@
 [
   {
-    "path": "art/official/lotr-v6/char_aragorn.png",
-    "sha256": "89e4064ebd29366d38fdc30c9198d6679ad8c7fe18d9d5d250b811be8db69669"
-  },
-  {
-    "path": "art/official/lotr-v6/char_boromir.png",
-    "sha256": "0427844367bfa5037dfa63d671792567ce6c59fed8e5610c3671ad43c4af052c"
-  },
-  {
-    "path": "art/official/lotr-v6/char_legolas.png",
-    "sha256": "78b59d3a41d82a2d46c9253b4ed4c6d49f149e4c722a12185a61cf66472bf60d"
-  },
-  {
-    "path": "art/official/lotr-v6/char_ith.png",
-    "sha256": "6576c7ca32582b0bdba2897021fc1a8b97a5f9c8f930e3050311299f3d86795f"
-  },
-  {
-    "path": "art/official/lotr-v6/char_faramir.png",
-    "sha256": "9b49382297826335e0a77cc108ad9be0301443c54ea9ae37ac774abaca62dc02"
-  },
-  {
-    "path": "art/official/lotr-v6/cg_boromir_camp.png",
-    "sha256": "240af686faf085a06206e298e988235bb1b12d708caf022317cdd36e7e5df7f7"
-  },
-  {
-    "path": "art/official/lotr-v6/cg_aragorn_balcony.png",
-    "sha256": "66097fa15b613fe1cf78751ab70edd02d5968023c737b2ec49e585aaa1bc17ee"
-  },
-  {
-    "path": "art/official/lotr-v6/cg_legolas_moon.png",
-    "sha256": "6be42e3dc5b275492063e0c3f4b5e33d678dfbd9eb16522287d26c5a71d102af"
-  },
-  {
     "path": "art/official/lotr-v6/lotr_c07s02.png",
     "sha256": "77624ac09e523bb03b86f27c008fe40e754bff52e0185300692ed07381ab8fab"
   },
@@ -58,6 +26,10 @@
   {
     "path": "art/official/lotr-v6/lotr_c09s04.png",
     "sha256": "7663d6cdfc12a41508f0ad0fb21b2100d6f1895b22ac522d079659b6e75a54f2"
+  },
+  {
+    "path": "art/official/lotr-v6/char_aragorn.png",
+    "sha256": "89e4064ebd29366d38fdc30c9198d6679ad8c7fe18d9d5d250b811be8db69669"
   },
   {
     "path": "art/official/lotr-v6/lotr_new_c16s01.png",
@@ -104,6 +76,10 @@
     "sha256": "07dc8a9a101e01708ab57f009a0f60846252cb2cf693d60ed5b3c1e9fd363c25"
   },
   {
+    "path": "art/official/lotr-v6/cover-en-v7.png",
+    "sha256": "175f127ae39f0f0a87b314595b4b7fea2942fabbc41f0375c72864a5820061b6"
+  },
+  {
     "path": "art/official/lotr-v6/lotr_c09s03.png",
     "sha256": "ccb3707fe40b18e9f0fe033a1fd952ecdf9c0391c3f62204838dae412fccf9e3"
   },
@@ -133,7 +109,7 @@
   },
   {
     "path": "art/official/lotr-v6/lotr_c01s01.png",
-    "sha256": "578126eec5560f3f98d06133e32f4324857dec729cf325d5bee9e47c5df6335d"
+    "sha256": "2cede4835d4661fa368c40d6fe6b84c6070cb688b69b66a2f20b79d17391c988"
   },
   {
     "path": "art/official/lotr-v6/lotr_c01s03.png",
@@ -141,7 +117,7 @@
   },
   {
     "path": "art/official/lotr-v6/lotr_c01s02.png",
-    "sha256": "aa0e18bd0e1dd74885d88cee47999c695b73e5b275a33e411cc27aa5201c1d44"
+    "sha256": "e938e9dce86f7300a82c63bc343c1a3798c4598e7c00d537cbecb9cb835717fa"
   },
   {
     "path": "art/official/lotr-v6/lotr_c11s03.png",
@@ -156,12 +132,20 @@
     "sha256": "9a325b70e0202d7b1dca3c1fc61391ba7e71eacceada044eff5df1e14466dd90"
   },
   {
+    "path": "art/official/lotr-v6/cg_boromir_camp.png",
+    "sha256": "240af686faf085a06206e298e988235bb1b12d708caf022317cdd36e7e5df7f7"
+  },
+  {
     "path": "art/official/lotr-v6/lotr_c11s02.png",
     "sha256": "bbbc4585daa178d434619fac1dcda07d6e69eb19c93390fed507cb9e47518cee"
   },
   {
     "path": "art/official/lotr-v6/lotr_c01s05.png",
-    "sha256": "26826ad52c5192387e5849d9642ca651dfd6d5c7d03b69cd7cfe47dbbdee34e2"
+    "sha256": "9e1ea816571222d060e88c7dded0e3507f399daf2985f655de9588dab179d802"
+  },
+  {
+    "path": "art/official/lotr-v6/cg_aragorn_balcony.png",
+    "sha256": "66097fa15b613fe1cf78751ab70edd02d5968023c737b2ec49e585aaa1bc17ee"
   },
   {
     "path": "art/official/lotr-v6/lotr_c03s01.png",
@@ -173,11 +157,15 @@
   },
   {
     "path": "art/official/lotr-v6/lotr_c01s04.png",
-    "sha256": "7ec07e671a6ee261ae394c22ab646cbc1195ff6044c4b8accbe35e72749d12af"
+    "sha256": "12a369833a9b4b84db2268801d8c6eb0f7981e37451b02933e493f7667fa6e29"
   },
   {
     "path": "art/official/lotr-v6/lotr_c08s05.png",
     "sha256": "13d1a11b75440aa1ec69884cac1a3ebd1f9e2fcd1ebc40ceba621715ce0e8273"
+  },
+  {
+    "path": "art/official/lotr-v6/char_boromir.png",
+    "sha256": "0427844367bfa5037dfa63d671792567ce6c59fed8e5610c3671ad43c4af052c"
   },
   {
     "path": "art/official/lotr-v6/lotr_c04s05.png",
@@ -193,11 +181,15 @@
   },
   {
     "path": "art/official/lotr-v6/lotr_c08s04.png",
-    "sha256": "264ddc9f76d2cfbf8c23e03985cf23b6b5b79296eb6d3e9078bb1c55741c2e0b"
+    "sha256": "8c7772114f042e0dea425619460982ff54e0d90e68f958dfabdea8c945a4fac8"
   },
   {
     "path": "art/official/lotr-v6/lotr_c06s03.png",
     "sha256": "18e227302aa2e8f9bcb29d0cec1392c520c203fb1b3e8cac5110220ec54e647c"
+  },
+  {
+    "path": "art/official/lotr-v6/char_legolas.png",
+    "sha256": "78b59d3a41d82a2d46c9253b4ed4c6d49f149e4c722a12185a61cf66472bf60d"
   },
   {
     "path": "art/official/lotr-v6/lotr_c06s02.png",
@@ -262,6 +254,18 @@
   {
     "path": "art/official/lotr-v6/lotr_c02s04.png",
     "sha256": "a1fedaf3fb0000644edc916f5adc6ebe365d7a936a1b2a19292e791ae08b3532"
+  },
+  {
+    "path": "art/official/lotr-v6/char_ith.png",
+    "sha256": "6576c7ca32582b0bdba2897021fc1a8b97a5f9c8f930e3050311299f3d86795f"
+  },
+  {
+    "path": "art/official/lotr-v6/cg_legolas_moon.png",
+    "sha256": "6be42e3dc5b275492063e0c3f4b5e33d678dfbd9eb16522287d26c5a71d102af"
+  },
+  {
+    "path": "art/official/lotr-v6/char_faramir.png",
+    "sha256": "9b49382297826335e0a77cc108ad9be0301443c54ea9ae37ac774abaca62dc02"
   },
   {
     "path": "art/official/lotr-v6/lotr_c10s04.png",
