@@ -8,4 +8,5 @@ const previous=mgResult;mgResult=function(th,d,r){const g=MG100.find(g=>g.id===d
 const match=mgMatch;mgMatch=function(){return own(S.threads[curT])?null:match.apply(this,arguments);};
 const pp=packPrompt;packPrompt=function(th){const base=pp.apply(this,arguments);if(!own(th))return base;const flags=th.pk.flags||{},has=f=>Array.isArray(flags)?flags.includes(f):!!flags[f];const comments=R.contexts[th.pk.ch-1]?.comments||[];const notes=[];for(const c of comments){for(const l of c.split('\n')){const m=l.trim().match(/^(dream_reunion_[a-z0-9_]+)\s*→\s*(.*)$/);if(m&&has(m[1]))notes.push(m[2]);}}return base+'\n本章已提交状态对应的承接依据（仅作为行为约束，不念成旁白，不把计划当已执行）：'+notes.join('\n')+'\n缺少授权旗标时不披露私人材料；询问不是同意。只按真实已提交状态推进，不提前知道后章秘密。小游戏失败与跳过仍继续；记录事实、猜测和许可边界。';};
 const open=openThread;openThread=function(id){const th=S.threads[id];if(own(th))config(wd(th.wid));return open.apply(this,arguments);};
+const feed=off94Feed;off94Feed=async function(){const list=await feed.apply(this,arguments);const at=list.findIndex(w=>w.id===R.work_id);if(at>0)list.unshift(list.splice(at,1)[0]);return list;};
 })();
