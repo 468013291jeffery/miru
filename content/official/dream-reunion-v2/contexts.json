@@ -1,0 +1,161 @@
+[
+  {
+    "chapter": 1,
+    "comments": [
+      " MG_RESULT mg_dream_reunion_c01_a\n赢 → mg_dream_reunion_c01_a_win → 旁白：亚历克斯按你核对的小票换回杯子，留下正确小票供你带走。\n输 → mg_dream_reunion_c01_a_lose → 旁白：他请店员复核杯贴，当面纠正拿错的订单。\n跳过 → mg_dream_reunion_c01_a_skip → 旁白：他把未开封的杯子交还柜台，各自重新取单。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c01_b\n赢 → mg_dream_reunion_c01_b_win → 旁白：亚历克斯记下玩家愿意分享的口味，聊天时可用来提出邀约。\n输 → mg_dream_reunion_c01_b_lose → 旁白：摊主翻开卡背，亚历克斯把自己猜错的香味拿来开玩笑。\n跳过 → mg_dream_reunion_c01_b_skip → 旁白：他把闻香卡留在摊位，照常询问玩家是否想再聊。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 2,
+    "comments": [
+      " MG_RESULT mg_dream_reunion_c02_a\n赢 → mg_dream_reunion_c02_a_win → 旁白：亚历克斯保留三栏索引，第8章可直接对比实物、声音与气象。\n输 → mg_dream_reunion_c02_a_lose → 旁白：艾薇另立待查栏，暂不拿混放的卡作比对依据。\n跳过 → mg_dream_reunion_c02_a_skip → 旁白：亚历克斯收回卡片，梦境内容维持私人笔记。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c02_b\n赢 → mg_dream_reunion_c02_b_win → 旁白：补注单列，第8章艾薇可指出它与第一手速记的边界。\n输 → mg_dream_reunion_c02_b_lose → 旁白：亚历克斯圈出日期不明处，请艾薇之后复核。\n跳过 → mg_dream_reunion_c02_b_skip → 旁白：三张纸原样夹回，后文只引用有明确来源的材料。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 3,
+    "comments": [
+      " MG_RESULT mg_dream_reunion_c03_a\n赢 → mg_dream_reunion_c03_a_win → 旁白：诺亚承认自己听岔，让亚历克斯有机会说出他的训练感受。\n输 → mg_dream_reunion_c03_a_lose → 旁白：诺亚重敲一遍，两人暂时把节拍争论放下。\n跳过 → mg_dream_reunion_c03_a_skip → 旁白：教练接管节拍回顾，诺亚转去归还计时夹。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c03_b\n赢 → mg_dream_reunion_c03_b_win → 旁白：亚历克斯交回多算的一枚，免去一次重复登记。\n输 → mg_dream_reunion_c03_b_lose → 旁白：诺亚和亚历克斯一起复点，谈话等登记后继续。\n跳过 → mg_dream_reunion_c03_b_skip → 旁白：教练保留清单，队员先散场。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 4,
+    "comments": [
+      " MG_RESULT mg_dream_reunion_c04_a\n赢 → mg_dream_reunion_c04_a_win → 旁白：诺拉可拿编号向编辑核对信纸。\n输 → mg_dream_reunion_c04_a_lose → 旁白：编辑标记来源待查，诺拉只带走无个人信息的摘要。\n跳过 → mg_dream_reunion_c04_a_skip → 旁白：信留在编辑室，诺拉只听已确认事实。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c04_b\n赢 → mg_dream_reunion_c04_b_win → 旁白：亚历克斯确认谈话笔记的边界，诺拉后续只收到获准核实的问题。\n输 → mg_dream_reunion_c04_b_lose → 旁白：亚历克斯收回未确认的笔记，口头澄清一句。\n跳过 → mg_dream_reunion_c04_b_skip → 旁白：保留谈话，不生成采访记录。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 5,
+    "comments": [
+      " MG_RESULT mg_dream_reunion_c05_a\n赢 → mg_dream_reunion_c05_a_win → 旁白：校报可独立核对原话，第6章不以剪辑片段替代。\n输 → mg_dream_reunion_c05_a_lose → 旁白：编辑将摘句标为待核，调查先看其他记录。\n跳过 → mg_dream_reunion_c05_a_skip → 旁白：搁置录音，亚历克斯仍可自己向诺拉道歉。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c05_b\n赢 → mg_dream_reunion_c05_b_win → 旁白：将三件事分别写入回执，诺拉可在第7章只核验材料。\n输 → mg_dream_reunion_c05_b_lose → 旁白：亚历克斯只签认自己的道歉，其他说法留待核实。\n跳过 → mg_dream_reunion_c05_b_skip → 旁白：谈话不存档，道歉由亚历克斯自行提出。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 6,
+    "comments": [
+      " 早章小游戏回收：仅处理已结算且命中的结果；无旗标不补写成功。授权限制优先。\nmg_dream_reunion_c05_a_win → 校报可独立核对原话，第6章不以剪辑片段替代。\n",
+      " MG_RESULT mg_dream_reunion_c06_a\n赢 → mg_dream_reunion_c06_a_win → 旁白：艾薇分开保全，第7章调档时可并列复核。\n输 → mg_dream_reunion_c06_a_lose → 旁白：艾薇封存录像并标记口述待核。\n跳过 → mg_dream_reunion_c06_a_skip → 旁白：艾薇只登记现有材料，不要求玩家现场核对。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c06_b\n赢 → mg_dream_reunion_c06_b_win → 旁白：杰森的说明带明确来源交至校务档案室。\n输 → mg_dream_reunion_c06_b_lose → 旁白：先封存副本，杰森的答复不入档。\n跳过 → mg_dream_reunion_c06_b_skip → 旁白：艾薇只在取得授权后独立整理。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 7,
+    "comments": [
+      " 早章小游戏回收：仅处理已结算且命中的结果；无旗标不补写成功。授权限制优先。\nmg_dream_reunion_c05_b_win → 将三件事分别写入回执，诺拉可在第7章只核验材料。\nmg_dream_reunion_c06_a_win → 艾薇分开保全，第7章调档时可并列复核。\n",
+      " MG_RESULT mg_dream_reunion_c07_a\n赢 → mg_dream_reunion_c07_a_win → 旁白：艾薇取得修订登记编号，第8章可向馆员独立查证。\n输 → mg_dream_reunion_c07_a_lose → 旁白：先保留父亲陈述，登记编号待馆员复核。\n跳过 → mg_dream_reunion_c07_a_skip → 旁白：不使用未经核对的解释，只保全既有记录。\n三种结果均返回本场，继续下一场或本章隐藏意图。 ",
+      " MG_RESULT mg_dream_reunion_c07_b\n赢 → mg_dream_reunion_c07_b_win → 旁白：第8章可先调原照索引，梦笔记仍作为独立材料。\n输 → mg_dream_reunion_c07_b_lose → 旁白：艾薇在第8章先分开放置照片和个人报告。\n跳过 → mg_dream_reunion_c07_b_skip → 旁白：第8章只跟进获准查阅的照片出处。\n三种结果均返回本场，继续下一场或本章隐藏意图。 "
+    ]
+  },
+  {
+    "chapter": 8,
+    "comments": [
+      " 早章小游戏回收：仅处理已结算且命中的结果；无旗标不补写成功。授权限制优先。\nmg_dream_reunion_c02_a_win → 亚历克斯保留三栏索引，第8章可直接对比实物、声音与气象。\nmg_dream_reunion_c02_b_win → 补注单列，第8章艾薇可指出它与第一手速记的边界。\nmg_dream_reunion_c07_a_win → 艾薇取得修订登记编号，第8章可向馆员独立查证。\nmg_dream_reunion_c07_b_win → 第8章可先调原照索引，梦笔记仍作为独立材料。\nmg_dream_reunion_c07_b_lose → 艾薇在第8章先分开放置照片和个人报告。\nmg_dream_reunion_c07_b_skip → 第8章只跟进获准查阅的照片出处。\n",
+      " 同时读取较早的边界和线索状态；以下命中项可并行，但以更新、更严格的授权为准。\ndream_reunion_c04_a → 诺拉已获准核信源，由她出示自己的核实记录；授权限于信件。\ndream_reunion_c05_b → 调查采用玩家独立核实过的录音来源，艾薇不替玩家署名。\ndream_reunion_c06_a → 杰森相关录像已有留存，进场时将录像与照片分开登记。\n",
+      " 按第7章最后提交的有效决定选播一条；旧档缺值时沿用尚未同意进一步披露的默认线。\ndream_reunion_c07_a → 艾薇带来已公开的删稿记录，诺拉提醒从此必须区分公开文件和私人印样。\ndream_reunion_c07_b → 诺拉带来显影室提供的原始索引，率先介绍底片来历。\ndream_reunion_c07_c → 亚历克斯没有联系父亲，艾薇用馆员的登记补齐照片时间。\ndream_reunion_c07_custom → 艾薇按上一章记录的自拟方案核对其范围；无授权的材料留在袋内。\n",
+      " MG_RESULT mg_dream_reunion_c08_a：赢／旁白：艾薇当场交给你底片登记号，可直接向馆员索引。 输／旁白：诺拉复核画幅并带走底片，次日由她提出查档。 跳过／旁白：艾薇保留未核验印样，次日由馆员见证核对。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c08_b：赢／旁白：三种材料分开登记，庄园会上可直接质疑混引。 输／旁白：艾薇把混引标注为待查，庄园会上先说明材料来源。 跳过／旁白：艾薇只提交实物栏，庄园会保留口述空白。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「以梦中钟声作为检索词」或同义行动。effects: 艾薇登记钟声供检索，注明来源及未验证。 ",
+      " player_intent: 明确表达「只查底片及照片来源」或同义行动。effects: 诺拉持原登记号查显影室。 ",
+      " player_intent: 明确表达「暂停并保护私人记忆」或同义行动。effects: 亚历克斯把笔记交艾薇封存，玩家可退出调查。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 9,
+    "comments": [
+      " 先按上章意图执行对应进场与授权限制；若玩家未到场，以下对话作为角色行动切镜，玩家只收到允许范围内的纪要，不代写玩家在场或回应。\ndream_reunion_c08_a → 家族会面先核对钟楼拨款，使父亲必须回应支出。\ndream_reunion_c08_b → 家族会面以裁切记录开场，围绕梦境的私人追问被挡回。\ndream_reunion_c08_c → 家族会面由艾薇代为报告，玩家收到可选择阅读的摘要。\ndream_reunion_c08_custom → 家族会面由艾薇代为报告，玩家收到可选择阅读的摘要。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c08_a_win / mg_dream_reunion_c08_a_lose / mg_dream_reunion_c08_a_skip\nmg_dream_reunion_c08_b_win / mg_dream_reunion_c08_b_lose / mg_dream_reunion_c08_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c09_a：赢／旁白：勾出设备款转列单，旧钟楼归档号可直接查询。 输／旁白：会计补查款号，会谈中不能立即质问父亲。 跳过／旁白：接收目录复印件，归档号待馆员确认。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c09_b：赢／旁白：责任链附到交涉纪要，校方收到具名质询。 输／旁白：只确认经手单位，等待档案员签字复核。 跳过／旁白：米白信封内保留原页，会议纪要只写未核实。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「谈判接受有限查阅」或同义行动。effects: 由艾薇签限阅回执，拒绝交出梦境原稿。 ",
+      " player_intent: 明确表达「拒签并向独立馆员查证」或同义行动。effects: 诺拉递交目录申请，失去庄园快捷渠道。 ",
+      " player_intent: 明确表达「停止交涉，交由研究组」或同义行动。effects: 艾薇登记联络限制并独立接收校方答复。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 10,
+    "comments": [
+      " 先按上章意图执行对应进场与授权限制；若玩家未到场，以下对话作为角色行动切镜，玩家只收到允许范围内的纪要，不代写玩家在场或回应。\ndream_reunion_c09_a → 校园活动时可走校方目录路线，但查阅窗口短。\ndream_reunion_c09_b → 校园活动时由志愿者转交调阅结果。\ndream_reunion_c09_c → 下一章无私人要求，由校方刊出公开索引。\ndream_reunion_c09_custom → 下一章无私人要求，由校方刊出公开索引。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c09_a_win / mg_dream_reunion_c09_a_lose / mg_dream_reunion_c09_a_skip\nmg_dream_reunion_c09_b_win / mg_dream_reunion_c09_b_lose / mg_dream_reunion_c09_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c10_a：赢／旁白：你的核对促成负责人收回电子稿。 输／旁白：负责人只及时遮住实物展板，电子稿继续待撤。 跳过／旁白：诺亚接手回查，撤稿回执延后。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c10_b：赢／旁白：编号当晚写进预约单，封存室多一个查阅席位。 输／旁白：由馆员一起补齐登记，只保留一个查阅席位。 跳过／旁白：艾薇代办，仅向玩家转达阅览结果。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「愿意尝试私下相处」或同义行动。effects: 亚历克斯约定调查结束后再问一次，未经邀请不接触。 ",
+      " player_intent: 明确表达「只保留调查合作」或同义行动。effects: 联系方式改为艾薇的工作群。 ",
+      " player_intent: 明确表达「暂停私人及调查联系」或同义行动。effects: 亚历克斯把档案交接给艾薇，自行承担撤稿后果。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 11,
+    "comments": [
+      " 先按上章意图执行对应进场与授权限制；若玩家未到场，以下对话作为角色行动切镜，玩家只收到允许范围内的纪要，不代写玩家在场或回应。\ndream_reunion_c10_a → 封存室撤出后会等玩家主动同行。\ndream_reunion_c10_b → 封存室结束后只有工作回执。\ndream_reunion_c10_c → 封存室事件由艾薇通过公开纪要告知。\ndream_reunion_c10_custom → 封存室事件由艾薇通过公开纪要告知。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c10_a_win / mg_dream_reunion_c10_a_lose / mg_dream_reunion_c10_a_skip\nmg_dream_reunion_c10_b_win / mg_dream_reunion_c10_b_lose / mg_dream_reunion_c10_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c11_a：赢／旁白：认出试音批次号，可为材料写入档案索引。 输／旁白：馆员封存碎片并出具临时收据。 跳过／旁白：馆员保留拼合责任，只发内容摘要。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c11_b：赢／旁白：形成带双签名的副本，可供伦理审查直接调阅。 输／旁白：馆员把副本标成待复核，先保全原件。 跳过／旁白：仅封存原件，伦理组申请后才能阅览。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「授权脱敏副本给独立伦理组」或同义行动。effects: 刊发延期，独立伦理组收到最小材料。 ",
+      " player_intent: 明确表达「只让馆员封存原件」或同义行动。effects: 馆员封存，任何阅览须重新征询。 ",
+      " player_intent: 明确表达「暂缓使用与自己有关的材料」或同义行动。effects: 艾薇登记撤回范围，公共工程资料由馆员单列。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 12,
+    "comments": [
+      " 按第11章最后提交的有效决定选播一条；旧档缺值时沿用尚未同意进一步披露的默认线。\ndream_reunion_c11_a → 第12章先听授权听证。\ndream_reunion_c11_b → 第12章先处理调阅申请。\ndream_reunion_c11_c → 第12章先核对撤回清单。\ndream_reunion_c11_custom → 第12章先核对撤回清单。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c11_a_win / mg_dream_reunion_c11_a_lose / mg_dream_reunion_c11_a_skip\nmg_dream_reunion_c11_b_win / mg_dream_reunion_c11_b_lose / mg_dream_reunion_c11_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c12_a：赢／旁白：日期进入公开纪要，私人资料封存。 输／旁白：纪要延后，伦理组重做授权表。 跳过／旁白：馆员只交公开目录。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c12_b：赢／旁白：当场核发授权清单，说明会可展示公共副本。 输／旁白：伦理组逐件复查，说明会先读清单标题。 跳过／旁白：馆员封存三件材料，说明会只用独立公共记录。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「授权使用去身份的研究摘录」或同义行动。effects: 艾薇只提交有授权的摘录，保留撤回权。 ",
+      " player_intent: 明确表达「只准使用公共工程材料」或同义行动。effects: 将研究记录与公共工程账分开封存。 ",
+      " player_intent: 明确表达「撤回本人材料并退出听证」或同义行动。effects: 登记撤回并提供仅含公开信息的回执。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 13,
+    "comments": [
+      " 先按上章意图执行对应进场与授权限制；若玩家未到场，以下对话作为角色行动切镜，玩家只收到允许范围内的纪要，不代写玩家在场或回应。\ndream_reunion_c12_a → 说明会可展示方法，撤回者内容仍封存。\ndream_reunion_c12_b → 说明会只讨论基金会删稿和湖区工程。\ndream_reunion_c12_c → 说明会切镜由艾薇发言，玩家只在主动请求时收到纪要。\ndream_reunion_c12_custom → 说明会切镜由艾薇发言，玩家只在主动请求时收到纪要。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c12_a_win / mg_dream_reunion_c12_a_lose / mg_dream_reunion_c12_a_skip\nmg_dream_reunion_c12_b_win / mg_dream_reunion_c12_b_lose / mg_dream_reunion_c12_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c13_a：赢／旁白：主持人允许投屏公开出处。 输／旁白：发言限于口述，材料事后复核。 跳过／旁白：艾薇代交书面陈述，无需玩家上台。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c13_b：赢／旁白：主持人发出独立核验申请。 输／旁白：主持人记录争议，由馆员补验编号。 跳过／旁白：只归档无争议的工程日期。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「作具名公开陈述」或同义行动。effects: 公开玩家许可的范围，记录可归名证词。 ",
+      " player_intent: 明确表达「仅交去身份材料」或同义行动。effects: 馆员保管来源，公开版只有授权摘要。 ",
+      " player_intent: 明确表达「不提交玩家材料」或同义行动。effects: 玩家署名和材料均不进入纪要。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 14,
+    "comments": [
+      " 先按上章意图执行对应进场与授权限制；若玩家未到场，以下对话作为角色行动切镜，玩家只收到允许范围内的纪要，不代写玩家在场或回应。\ndream_reunion_c13_a → 钟楼查验由听证方派人见证。\ndream_reunion_c13_b → 钟楼只查可独立追溯的公共项目记录。\ndream_reunion_c13_c → 后续查验由亚历克斯与馆员独立完成，玩家可收公共回执。\ndream_reunion_c13_custom → 后续查验由亚历克斯与馆员独立完成，玩家可收公共回执。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c13_a_win / mg_dream_reunion_c13_a_lose / mg_dream_reunion_c13_a_skip\nmg_dream_reunion_c13_b_win / mg_dream_reunion_c13_b_lose / mg_dream_reunion_c13_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c14_a：赢／旁白：二卷分列，私人访谈不会在比对时被误播。 输／旁白：馆员将访谈盒另封，延后核对。 跳过／旁白：只播放公开测试带。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c14_b：赢／旁白：馆员把试音和旧登记一并签认。 输／旁白：只提供书面比对，不开放平台。 跳过／旁白：馆员独自核验，回执可在柜台领取。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「共同见证最后一次查验」或同义行动。effects: 在馆员认可的权限内写共同回执。 ",
+      " player_intent: 明确表达「交馆员独立验证」或同义行动。effects: 只领公共副本，由馆员签认。 ",
+      " player_intent: 明确表达「到此为止并保留调查资料」或同义行动。effects: 停止私人核验，公共物证继续保存。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 "
+    ]
+  },
+  {
+    "chapter": 15,
+    "comments": [
+      " 先按上章意图执行对应进场与授权限制；若玩家未到场，以下对话作为角色行动切镜，玩家只收到允许范围内的纪要，不代写玩家在场或回应。\ndream_reunion_c14_a → 湖畔保留共同签名，关系仍须询问。\ndream_reunion_c14_b → 湖畔以独立查验回执开场。\ndream_reunion_c14_c → 湖畔可只收公开摘要，不主动邀约。\ndream_reunion_c14_custom → 湖畔可只收公开摘要，不主动邀约。 自拟方案只使用已明确获准的材料。\n",
+      " 随上章游戏状态选播其在作品资料中约定的本章后果，合并互不冲突的后果；两项结果同时涉及同一份文件时，以更严格的访问权限为准。\nmg_dream_reunion_c14_a_win / mg_dream_reunion_c14_a_lose / mg_dream_reunion_c14_a_skip\nmg_dream_reunion_c14_b_win / mg_dream_reunion_c14_b_lose / mg_dream_reunion_c14_b_skip\n",
+      " MG_RESULT mg_dream_reunion_c15_a：赢／旁白：带走一张只写公开事件的时间卡。 输／旁白：亚历克斯收走带错日期的一栏，稍后交公开日回执。 跳过／旁白：卡片留在座位上，由馆员给索引。 三种结果均进入本场收尾并前往下一场。 ",
+      " MG_RESULT mg_dream_reunion_c15_b：赢／旁白：获得一张可自行填写的日程卡。 输／旁白：只留公开阅览时间，私人计划空白。 跳过／旁白：日程卡不填写，由玩家决定是否重启计划。 三种结果均进入本场收尾并前往下一场。 ",
+      " player_intent: 明确表达「愿意在现实中慢慢约会」或同义行动。effects: 亚历克斯询问一个可拒绝的具体约会时间。 ",
+      " player_intent: 明确表达「只做朋友或同学」或同义行动。effects: 亚历克斯保留普通校园问候，把未发的邀约删掉。 ",
+      " player_intent: 明确表达「各自生活或不再联系」或同义行动。effects: 艾薇接过公开更新的联络，亚历克斯停止主动联系。 ",
+      " player_intent: 答非所问、拒绝表态、意图仍不清楚，或提出其余方案。先复述实际意图并澄清一次；可行且合规的自拟行动经确认后记录原话，遵守同样的隐私、授权与退出边界；无确认时采用暂缓。 ",
+      " 按已确认关系意图播放对应的章末分支。四轴分别结算，涉及授权以更严格的记录为准。 ",
+      " event：c13_a/b 且独立证据签认成立，说明会启动基金会审查；其余为公共记录保存及待审。c14_a/b 决定签认主体，c14_c 不得补写玩家查验。\nrelationship：c15_a 需玩家明确接受和亚历克斯同意，安排第一次约会；c15_b 维持朋友或普通同学；c15_c/custom 结束主动联系。\narc：亚历克斯已退出基金会代表席并为自己的见证具名，承担公开后果；玩家无需以亲密作为回报。\npersistent：c12_c 撤回权保持有效；任何取用 c11 私人档案仍按保管授权审查。依据 c15_a 游戏结果给时间卡、听证回执或公共索引；依据 c15_b 游戏结果给可填写卡、公开阅览时间或无邀约。 ",
+      " 下列为互斥关系后日谈。仅播放符合本章最后有效意图、且未违反既有联络边界的一段。 "
+    ]
+  }
+]

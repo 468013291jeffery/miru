@@ -38,6 +38,7 @@ parts.extend(["app142_authored.js", "app145_narration.js", "app147_empress.js", 
 parts.extend(["app151_onlyme.js"])
 parts.extend(["app152_readability.js"])
 parts.extend(["app153_fantasy_v6.js"])
+parts.extend(["app154_dream_v2.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)
