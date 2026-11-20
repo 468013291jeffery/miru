@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="229a8dc836a7 2026-11-20T11:41Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="55e2cf478710 2026-11-20T16:44Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -7190,11 +7190,12 @@ function rushRun(){const p=curPair(),A=ch(p[1]),box=$("#rush");let score=0,left=
   el.addEventListener("animationend",()=>el.remove());box.appendChild(el)},520)}
 document.addEventListener("click",e=>{if(e.target.closest("[data-rushgo]"))rushRun()});
 /* ---------- 3. HEARTBEAT CAPSULE (daily gacha) ---------- */
+function capOdds(p){const zh=S.lang==="zh",a=esc(first(ch(p[1]).n)),b=esc(first(ch(p[2]).n));return '<div class="xs faint cap-odds" style="text-align:center;margin-top:6px;line-height:1.6">'+(zh?'概率公示：'+a+' 50% · '+b+' 50%<br>语音 / 秘密 / 照片 各 33.3%（每种组合 16.7%）<br>每天第一次免费，之后每次 1 💎；开出的内容只能在 MIRU 内查看，不能兑换现金。':'Odds: '+a+' 50% · '+b+' 50%<br>Voice / Secret / Photo 33.3% each (16.7% per combination)<br>First spin each day is free, then 1 💎 per spin. Prizes stay in MIRU and can’t be exchanged for cash.')+'</div>'}
 function gCapsule(){const p=curPair(),free=(S.capDay!==today());
- gScreen(t("gc.capsule"),'<div class="cap-m"><div class="cap-dome" id="capDome">'+Array.from({length:14},(_,i)=>'<i style="--h:'+(i*37%360)+';left:'+(8+i*6%80)+'%;top:'+(20+i*13%60)+'%"></i>').join("")+'</div><div class="cap-base"><button class="cap-knob" data-capspin="1" id="capKnob">'+(free?t("gc.capFree"):"💎 1")+'</button><div class="cap-slot" id="capOut"></div></div></div><p class="xs faint" style="text-align:center">'+t("gc.capHow")+'</p><div id="gRes"></div>')}
+ gScreen(t("gc.capsule"),'<div class="cap-m"><div class="cap-dome" id="capDome">'+Array.from({length:14},(_,i)=>'<i style="--h:'+(i*37%360)+';left:'+(8+i*6%80)+'%;top:'+(20+i*13%60)+'%"></i>').join("")+'</div><div class="cap-base"><button class="cap-knob" data-capspin="1" id="capKnob">'+(free?t("gc.capFree"):"💎 1")+'</button><div class="cap-slot" id="capOut"></div></div></div><p class="xs faint" style="text-align:center">'+t("gc.capHow")+'</p>'+capOdds(p)+'<div id="gRes"></div>')}
 document.addEventListener("click",e=>{if(!e.target.closest("[data-capspin]"))return;const p=curPair();if(S.capDay===today()){if(!spend(1,"img"))return}else{S.capDay=today();save()}
  const d=$("#capDome"),k=$("#capKnob");d.classList.add("spin");k.disabled=true;k.style.transform="rotate(360deg)";
- setTimeout(()=>{d.classList.remove("spin");const who=Math.random()<.5?p[1]:p[2],c=ch(who),L=S.lang==="zh"?"zh":"en",kind=hash(who+Date.now())%3;
+ setTimeout(()=>{d.classList.remove("spin");const who=Math.random()<.5?p[1]:p[2],c=ch(who),L=S.lang==="zh"?"zh":"en",kind=Math.floor(Math.random()*3);
   const tells=(c.tells&&(c.tells[L]||c.tells.en))||[];const prize=kind===0?{i:"🔊",t:t("gc.capVoice"),x:Lz(c.pitch).replace(/[“”"]/g,"")}:kind===1?{i:"🤫",t:t("gc.capSecret"),x:tells[0]||Lz(c.twist)}:{i:"📸",t:t("gc.capPhoto"),img:artSrc(who)};
   $("#capOut").innerHTML='<div class="cap-ball" style="--h:'+(hash(who)%360)+'"></div>';
   setTimeout(()=>{gResult(p,3,(S.lang==="zh"?"扭蛋开出了 ":"Capsule: ")+c.n+" · "+prize.t,'<div class="cap-prize">'+(prize.img?'<img src="'+prize.img+'" alt="">':'')+'<b>'+prize.i+' '+esc(first(c.n))+' · '+prize.t+'</b>'+(prize.x?'<p>“'+esc(prize.x)+'”</p>':'')+'</div>');if(kind===0)speak(prize.x,who)},700)},1600)});
@@ -13860,17 +13861,17 @@ simon_spell|记咒语|Memorize the Spell|simon|5|符文的顺序|咒语,符文,r
 simon_lock|记手势|Memorize the Pattern|simon|4|他刚才画的手势|手势密码,pattern
 simon_song|记旋律|Memorize the Tune|simon|5|他哼的那段旋律|哼了一段,旋律,melody
 simon_dance|记动作|Memorize the Moves|simon|4|跟着他做|跟着我做,学动作,follow my lead
-scratch_ticket|刮彩票|Scratch Ticket|scratch|🎟|恭喜，中了一个愿望|彩票,刮刮乐,lottery
+scratch_ticket|心愿卡|Wish Card|scratch|🎟|卡片下面写着一个心愿|彩票,刮刮乐,lottery
 scratch_photo|刮开照片|Reveal the Photo|scratch|🖼|照片背面写着：别走|照片背面,反过来,back of the photo
 scratch_note|显影|Reveal the Note|scratch|📝|纸条上写着：今晚十点，老地方|纸条,便签,a note
 scratch_window|擦窗户|Wipe the Window|scratch|🪟|雾气后面，他正看着你|起雾的窗,车窗,fogged window
 scratch_mirror|擦镜子|Wipe the Mirror|scratch|🪞|镜子上写着：我知道你是谁|浴室镜子,镜子,mirror
 scratch_gold|刮金粉|Gold Leaf|scratch|✨|金粉下面是一个名字|金粉,邀请函,invitation
-dice_bet|赌一把|Roll for It|dice|3|三局两胜|赌一把,掷骰子,roll the dice
-dice_drink|喝酒骰|Drinking Dice|dice|3|输的喝|喝酒游戏,摇骰子,drinking game
-dice_fate|命运骰|Fate Dice|dice|1|一次定生死|命运,赌命,fate
+dice_bet|比一把|Roll Off|dice|3|三局两胜|赌一把,掷骰子,roll the dice
+dice_drink|惩罚骰|Forfeit Dice|dice|3|输的接受一个小惩罚|喝酒游戏,摇骰子,drinking game
+dice_fate|一掷定局|One Roll|dice|1|一局定胜负|命运,赌命,fate
 dice_truth|真心话骰|Truth Dice|dice|3|输的说真心话|真心话,truth or dare
-dice_casino|赌场|Casino Night|dice|3|庄家对你|赌场,赌桌,casino
+dice_casino|骰子对决|Dice Duel|dice|3|他对你|赌场,赌桌,casino
 order_confess|拼回告白|Rebuild the Confession|order|我/从来/没有/后悔/遇见你|-|他说的那句话,那句告白,what he said
 order_vow|拼回誓言|Rebuild the Vow|order|无论/发生/什么/我/都在|-|誓言,发誓,vow
 order_spell|拼回咒文|Rebuild the Incantation|order|以/月光/之名/解开/契约|-|咒文,契约,incantation
@@ -23772,10 +23773,10 @@ function arcAsk98(th, mode, act, zh) {
     : "\n\nEvents you may trigger (`event` = id, only when it fits):\n" + ev.map(e => e.id + ": " + LZ98(e.text)).join("\n");
   const gm = arcGames98(th, mode);
   if (gm) {
-    p += zh ? "\n\n小游戏（beat=小游戏 时填 game）：由一个角色当场提出来（比如“敢不敢跟我赌一把”），玩家可以拒绝。告白、哭、吵到最激烈时不出游戏。" +
-        (gm.authored ? "\n剧本写好的：" + gm.authored.map(g => g.id + "（" + (g.purpose || "") + "，" + (g.when || "") + "）").join("；") + "\ngame 填 {\"id\":\"…\"}，赌注按剧本写的。" :
+    p += zh ? "\n\n小游戏（beat=小游戏 时填 game）：由一个角色当场提出来（比如“敢不敢跟我比一把”），玩家可以拒绝。告白、哭、吵到最激烈时不出游戏。" +
+        (gm.authored ? "\n剧本写好的：" + gm.authored.map(g => g.id + "（" + (g.purpose || "") + "，" + (g.when || "") + "）").join("；") + "\ngame 填 {\"id\":\"…\"}，输赢的代价按剧本写的。" :
           "\n可选（按剧情用途，都不合适就不选）：" + Object.entries(gm.library).map(([k, ids]) => k + "：" + ids.map(i => { const g = arcGameOf98(i); return g ? i + " " + g.zh : ""; }).filter(Boolean).join("、")).join("；") +
-          "\ngame 填 {\"id\":\"…\",\"from\":\"提议的角色 id\",\"stakes\":\"这一局赌什么（≤20字）\",\"win\":\"赢了剧情怎么走\",\"lose\":\"输了怎么走（不能是死路，要另有戏）\",\"skip\":\"玩家不玩怎么走\"}。")
+          "\ngame 填 {\"id\":\"…\",\"from\":\"提议的角色 id\",\"stakes\":\"这一局输了要做什么（≤20字）\",\"win\":\"赢了剧情怎么走\",\"lose\":\"输了怎么走（不能是死路，要另有戏）\",\"skip\":\"玩家不玩怎么走\"}。")
       : "\n\nMini-game (when beat = 小游戏): one character proposes it in-scene; the player may decline. Never during a confession, tears or the peak of a fight. game = {\"id\",\"from\",\"stakes\",\"win\",\"lose\",\"skip\"}.";
   }
   if (typeof bgmOn === "function" && bgmOn()) p += zh ? "\n\n音乐：只有升级、事件、危机、泄密、反转或情绪明显转向时，才在 bgm 里填一个情绪（" + Object.keys(ARC98.MOOD).join("、") + "）；平时留空。" : "\n\nMusic: only on an escalation, event, crisis, reveal, twist or clear mood turn, set `bgm` to one mood (" + Object.keys(ARC98.MOOD).join(", ") + "); otherwise null.";
@@ -23844,7 +23845,7 @@ function arcActor98(th, cid, turn, zh) {
   const mine = arcSecrets98(th).filter(x => x.cid === cid);
   if (turn && turn.reveal) p += zh ? "\n这一轮你决定说出一个藏着的事：" + LZ98(turn.reveal.s.text) + (turn.reveal.s.reveal ? "。说出口的样子：" + LZ98(turn.reveal.s.reveal) : "") + "。用你自己的方式说，可以艰难、可以只说一半，但这件事要说出来。" : "\nThis turn you decide to tell: " + LZ98(turn.reveal.s.text);
   else if (mine.length) p += zh ? "\n你还有不想说的事：" + mine.map(x => LZ98(x.s.text)).join("；") + "。现在不主动提；被直接问到，按你的底线回答。" : "\nThings you're not ready to tell: " + mine.map(x => LZ98(x.s.text)).join("; ") + ". Don't volunteer them.";
-  if (turn && turn.game) p += zh ? "\n这一轮你当场向玩家提出一个小游戏：" + turn.game.name + (turn.game.stakes ? "，赌注是：" + turn.game.stakes : "") + "。用你的口吻把邀请说出来（比如“敢不敢跟我赌一把”），玩家可以拒绝。" : "\nThis turn you propose a mini-game: " + turn.game.name + ".";
+  if (turn && turn.game) p += zh ? "\n这一轮你当场向玩家提出一个小游戏：" + turn.game.name + (turn.game.stakes ? "，输的一方要：" + turn.game.stakes : "") + "。用你的口吻把邀请说出来（比如“敢不敢跟我比一把”），玩家可以拒绝。" : "\nThis turn you propose a mini-game: " + turn.game.name + ".";
   if (turn && turn.hook) p += zh ? "\n你是这一轮最后开口的人：结尾留一个钩子——一个问题，或者一个停在半空的动作。" : "\nYou speak last this turn: end on a hook — a question or a half-finished gesture.";
   return p;
 }
@@ -23861,7 +23862,7 @@ function arcRevealed98(th, x) {
 /* ---------- 小游戏：邀请卡 → 游戏 → 结果回到剧情 ---------- */
 function arcGameCard98(th, g) {
   const A = th.b98; A.gameAt = A.turns; (A.gamesCh98 = A.gamesCh98 || {})[A.ch] = 1;
-  appendMsg(th, { who: "sys", k: "card", title: "🎮 " + g.name, txt: g.stakes ? L98("赌注：", "Stakes: ") + g.stakes : "", game98: { id: g.id, ch: A.ch, sc: A.sc, from: g.from || "", stakes: g.stakes || "", win: g.win || "", lose: g.lose || "", skip: g.skip || "" }, at: Date.now() });
+  appendMsg(th, { who: "sys", k: "card", title: "🎮 " + g.name, txt: g.stakes ? L98("输赢代价：", "Forfeit: ") + g.stakes : "", game98: { id: g.id, ch: A.ch, sc: A.sc, from: g.from || "", stakes: g.stakes || "", win: g.win || "", lose: g.lose || "", skip: g.skip || "" }, at: Date.now() });
 }
 function arcGameValid98(th, m) {
   return !!(th && th.b98 && !th.b98.ended && S.threads[curT] === th && !busy && m && th.msgs.includes(m) &&
