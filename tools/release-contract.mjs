@@ -58,3 +58,5 @@ execFileSync(process.execPath,['tools/hockey-selftest.cjs'],{cwd:root,stdio:'inh
 execFileSync(process.execPath,['tools/fantasy-v6-selftest.cjs'],{cwd:root,stdio:'inherit'});
 
 execFileSync(process.execPath,['tools/dream-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/moonlit-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
