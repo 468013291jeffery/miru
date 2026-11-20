@@ -109,10 +109,10 @@ function arcAsk98(th, mode, act, zh) {
     : "\n\nEvents you may trigger (`event` = id, only when it fits):\n" + ev.map(e => e.id + ": " + LZ98(e.text)).join("\n");
   const gm = arcGames98(th, mode);
   if (gm) {
-    p += zh ? "\n\n小游戏（beat=小游戏 时填 game）：由一个角色当场提出来（比如“敢不敢跟我赌一把”），玩家可以拒绝。告白、哭、吵到最激烈时不出游戏。" +
-        (gm.authored ? "\n剧本写好的：" + gm.authored.map(g => g.id + "（" + (g.purpose || "") + "，" + (g.when || "") + "）").join("；") + "\ngame 填 {\"id\":\"…\"}，赌注按剧本写的。" :
+    p += zh ? "\n\n小游戏（beat=小游戏 时填 game）：由一个角色当场提出来（比如“敢不敢跟我比一把”），玩家可以拒绝。告白、哭、吵到最激烈时不出游戏。" +
+        (gm.authored ? "\n剧本写好的：" + gm.authored.map(g => g.id + "（" + (g.purpose || "") + "，" + (g.when || "") + "）").join("；") + "\ngame 填 {\"id\":\"…\"}，输赢的代价按剧本写的。" :
           "\n可选（按剧情用途，都不合适就不选）：" + Object.entries(gm.library).map(([k, ids]) => k + "：" + ids.map(i => { const g = arcGameOf98(i); return g ? i + " " + g.zh : ""; }).filter(Boolean).join("、")).join("；") +
-          "\ngame 填 {\"id\":\"…\",\"from\":\"提议的角色 id\",\"stakes\":\"这一局赌什么（≤20字）\",\"win\":\"赢了剧情怎么走\",\"lose\":\"输了怎么走（不能是死路，要另有戏）\",\"skip\":\"玩家不玩怎么走\"}。")
+          "\ngame 填 {\"id\":\"…\",\"from\":\"提议的角色 id\",\"stakes\":\"这一局输了要做什么（≤20字）\",\"win\":\"赢了剧情怎么走\",\"lose\":\"输了怎么走（不能是死路，要另有戏）\",\"skip\":\"玩家不玩怎么走\"}。")
       : "\n\nMini-game (when beat = 小游戏): one character proposes it in-scene; the player may decline. Never during a confession, tears or the peak of a fight. game = {\"id\",\"from\",\"stakes\",\"win\",\"lose\",\"skip\"}.";
   }
   if (typeof bgmOn === "function" && bgmOn()) p += zh ? "\n\n音乐：只有升级、事件、危机、泄密、反转或情绪明显转向时，才在 bgm 里填一个情绪（" + Object.keys(ARC98.MOOD).join("、") + "）；平时留空。" : "\n\nMusic: only on an escalation, event, crisis, reveal, twist or clear mood turn, set `bgm` to one mood (" + Object.keys(ARC98.MOOD).join(", ") + "); otherwise null.";
@@ -181,7 +181,7 @@ function arcActor98(th, cid, turn, zh) {
   const mine = arcSecrets98(th).filter(x => x.cid === cid);
   if (turn && turn.reveal) p += zh ? "\n这一轮你决定说出一个藏着的事：" + LZ98(turn.reveal.s.text) + (turn.reveal.s.reveal ? "。说出口的样子：" + LZ98(turn.reveal.s.reveal) : "") + "。用你自己的方式说，可以艰难、可以只说一半，但这件事要说出来。" : "\nThis turn you decide to tell: " + LZ98(turn.reveal.s.text);
   else if (mine.length) p += zh ? "\n你还有不想说的事：" + mine.map(x => LZ98(x.s.text)).join("；") + "。现在不主动提；被直接问到，按你的底线回答。" : "\nThings you're not ready to tell: " + mine.map(x => LZ98(x.s.text)).join("; ") + ". Don't volunteer them.";
-  if (turn && turn.game) p += zh ? "\n这一轮你当场向玩家提出一个小游戏：" + turn.game.name + (turn.game.stakes ? "，赌注是：" + turn.game.stakes : "") + "。用你的口吻把邀请说出来（比如“敢不敢跟我赌一把”），玩家可以拒绝。" : "\nThis turn you propose a mini-game: " + turn.game.name + ".";
+  if (turn && turn.game) p += zh ? "\n这一轮你当场向玩家提出一个小游戏：" + turn.game.name + (turn.game.stakes ? "，输的一方要：" + turn.game.stakes : "") + "。用你的口吻把邀请说出来（比如“敢不敢跟我比一把”），玩家可以拒绝。" : "\nThis turn you propose a mini-game: " + turn.game.name + ".";
   if (turn && turn.hook) p += zh ? "\n你是这一轮最后开口的人：结尾留一个钩子——一个问题，或者一个停在半空的动作。" : "\nYou speak last this turn: end on a hook — a question or a half-finished gesture.";
   return p;
 }
@@ -198,7 +198,7 @@ function arcRevealed98(th, x) {
 /* ---------- 小游戏：邀请卡 → 游戏 → 结果回到剧情 ---------- */
 function arcGameCard98(th, g) {
   const A = th.b98; A.gameAt = A.turns; (A.gamesCh98 = A.gamesCh98 || {})[A.ch] = 1;
-  appendMsg(th, { who: "sys", k: "card", title: "🎮 " + g.name, txt: g.stakes ? L98("赌注：", "Stakes: ") + g.stakes : "", game98: { id: g.id, ch: A.ch, sc: A.sc, from: g.from || "", stakes: g.stakes || "", win: g.win || "", lose: g.lose || "", skip: g.skip || "" }, at: Date.now() });
+  appendMsg(th, { who: "sys", k: "card", title: "🎮 " + g.name, txt: g.stakes ? L98("输赢代价：", "Forfeit: ") + g.stakes : "", game98: { id: g.id, ch: A.ch, sc: A.sc, from: g.from || "", stakes: g.stakes || "", win: g.win || "", lose: g.lose || "", skip: g.skip || "" }, at: Date.now() });
 }
 function arcGameValid98(th, m) {
   return !!(th && th.b98 && !th.b98.ended && S.threads[curT] === th && !busy && m && th.msgs.includes(m) &&
