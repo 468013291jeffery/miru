@@ -60,3 +60,5 @@ execFileSync(process.execPath,['tools/fantasy-v6-selftest.cjs'],{cwd:root,stdio:
 execFileSync(process.execPath,['tools/dream-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
 
 execFileSync(process.execPath,['tools/moonlit-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/dangerous-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});

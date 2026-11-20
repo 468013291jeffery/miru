@@ -1,0 +1,799 @@
+# 危险距离
+
+# CHAPTER 01｜雨夜伤员
+⟦ORIENT|bg⟧
+⟦CHAR|%E4%BD%A0|f|18|f2|%E7%8E%A9%E5%AE%B6|%E6%89%AE%E6%BC%94%E8%87%AA%E5%B7%B1%EF%BC%9B%E6%88%90%E5%B9%B4%EF%BC%8C%E8%BA%AB%E4%BB%BD%E3%80%81%E6%80%A7%E6%A0%BC%E4%B8%8E%E9%80%89%E6%8B%A9%E7%94%B1%E7%8E%A9%E5%AE%B6%E8%87%AA%E5%B7%B1%E5%86%B3%E5%AE%9A%E3%80%82⟧
+⟦CHAR|%E5%8D%A2%E8%A5%BF%E6%81%A9|m|30|m3|%E7%94%B7%E4%B8%BB%E8%A7%92|188cm%EF%BC%8C%E4%BF%AE%E9%95%BF%E7%BB%93%E5%AE%9E%EF%BC%9B%E9%BB%91%E8%89%B2%E7%9F%AD%E5%8F%91%E3%80%81%E6%B7%B1%E7%81%B0%E7%BB%BF%E8%89%B2%E7%9C%BC%E7%9D%9B%E3%80%81%E6%B8%85%E6%99%B0%E7%9C%89%E9%AA%A8%E4%B8%8E%E4%B8%8B%E9%A2%8C%E7%BA%BF%EF%BC%9B%E6%89%8B%E8%83%8C%E5%92%8C%E5%89%8D%E8%87%82%E6%9C%89%E6%97%A7%E4%BC%A4%E6%B5%85%E7%97%95%EF%BC%9B%E6%B7%B1%E8%89%B2%E5%A4%96%E5%A5%97%E3%80%81%E7%AE%80%E6%B4%81%E8%A1%AC%E8%A1%AB%E3%80%82%E5%88%9D%E9%81%87%E6%97%B6%E8%85%B9%E4%BE%A7%E5%8F%97%E4%BC%A4%EF%BC%88%E4%BC%A4%E5%8A%BF%E5%9C%A8%E5%AD%98%E6%A1%A3%E4%B8%AD%E5%BB%B6%E7%BB%AD%EF%BC%8C%E9%9C%80%E8%A6%81%E5%A4%84%E7%90%86%E5%92%8C%E6%97%B6%E9%97%B4%E6%81%A2%E5%A4%8D%EF%BC%89%E3%80%82%E6%9B%BE%E5%9B%A0%E8%BF%87%E5%BA%A6%E4%BF%A1%E4%BB%BB%E4%B8%8A%E7%BA%A7%E5%A4%B1%E5%8E%BB%E4%B8%80%E4%BD%8D%E9%87%8D%E8%A6%81%E6%90%AD%E6%A1%A3%EF%BC%8C%E6%AD%A4%E5%90%8E%E5%AF%B9%E5%86%85%E9%83%A8%E4%BF%A1%E6%81%AF%E5%AE%A1%E6%85%8E%EF%BC%9B%E4%BB%8E%E6%9C%AA%E5%BB%BA%E7%AB%8B%E7%A8%B3%E5%AE%9A%E7%9A%84%E4%BA%B2%E5%AF%86%E5%85%B3%E7%B3%BB%E3%80%82⟧
+⟦CHAR|%E7%B1%B3%E6%8B%89|f|29|f2|%E8%B0%83%E6%9F%A5%E8%AE%B0%E8%80%85%EF%BC%8C%E7%8B%AC%E7%AB%8B%E6%A0%B8%E5%AF%B9%E8%B5%84%E6%96%99%E5%B9%B6%E4%BF%9D%E6%8A%A4%E6%B6%88%E6%81%AF%E6%BA%90|%E8%B0%83%E6%9F%A5%E8%AE%B0%E8%80%85%EF%BC%8C%E7%8B%AC%E7%AB%8B%E6%A0%B8%E5%AF%B9%E8%B5%84%E6%96%99%E5%B9%B6%E4%BF%9D%E6%8A%A4%E6%B6%88%E6%81%AF%E6%BA%90⟧
+⟦CHAR|%E4%BC%8A%E6%A3%AE|m|34|m3|%E6%9C%BA%E6%9E%84%E8%81%94%E7%BB%9C%E5%AE%98%EF%BC%8C%E5%8F%97%E5%88%A9%E7%9B%8A%E5%86%B2%E7%AA%81%E5%92%8C%E5%AE%B6%E4%BA%BA%E5%8E%8B%E5%8A%9B%E5%BD%B1%E5%93%8D|%E6%9C%BA%E6%9E%84%E8%81%94%E7%BB%9C%E5%AE%98%EF%BC%8C%E5%8F%97%E5%88%A9%E7%9B%8A%E5%86%B2%E7%AA%81%E5%92%8C%E5%AE%B6%E4%BA%BA%E5%8E%8B%E5%8A%9B%E5%BD%B1%E5%93%8D⟧
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E6%2598%25AF%25E5%2590%25A6%25E7%25BB%25A7%25E7%25BB%25AD%25E6%258F%2590%25E4%25BE%259B%25E6%259C%2589%25E9%2599%2590%25E5%25B8%25AE%25E5%258A%25A9⟧
+⟦DONE|say|决定是否继续提供有限帮助|雨夜伤员决定|可以先提出问题，再表达你的安排。⟧
+
+# SCENE｜维修隔间
+⟦BG|bg_c01s01|%E7%BB%B4%E4%BF%AE%E9%9A%94%E9%97%B4%EF%BC%88%E5%9C%A8%E5%9C%BA%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%8C%E7%AC%AC%E4%B8%80%E4%BA%BA%E7%A7%B0%E6%88%96%E8%BF%87%E8%82%A9%E8%A7%86%E8%A7%92%EF%BC%8C%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E6%95%85%E4%BA%8B%E5%BD%93%E6%97%A5%C2%B7%E5%82%8D%E6%99%9A⟧
+旁白：建立救助关系与风险知情。你来到这里时，卢西恩已经在场。他没有替你决定要不要留下，只把眼前的情况说清楚。
+卢西恩：“我不想替你做决定。你可以先听完，再告诉我你愿意做到哪一步。”
+旁白：他把关键物件放在你看得见的位置，没有伸手替你拿。
+⟦SET|dangerous_distance_c01_scene1_seen⟧
+
+# CHOICE｜卢西恩把决定留给你
+#### A｜主动了解并继续参与
+⟦OPT|A|set%3Adangerous_distance_c01_cooperate%2Cddrespect~dangerous_distance_c01_cooperate~1⟧
+旁白：你获得完整的现场信息，并保留下一步行动的主动权。
+#### B｜先设边界，只接受有限信息
+⟦OPT|B|set%3Adangerous_distance_c01_boundary%2Cddrespect~dangerous_distance_c01_boundary~2⟧
+旁白：合作范围被缩小，但双方对彼此的底线更清楚。
+#### C｜暂时退出，之后再决定
+⟦OPT|C|set%3Adangerous_distance_c01_pause⟧
+旁白：眼前行动暂停，故事保留一条不惩罚退出的回返路径。
+#### D｜兜底：提出其他问题或替代方案
+⟦OPT|D|set%3Adangerous_distance_c01_alternative⟧
+旁白：你提出的替代做法被记录；当前可行部分会进入下一场评估。
+# ·
+
+# SCENE｜伤势处理
+⟦BG|bg_c01s02|%E4%BC%A4%E5%8A%BF%E5%A4%84%E7%90%86%EF%BC%88%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E6%AD%A3%E5%9C%A8%E8%BF%9B%E8%A1%8C%E8%B0%83%E6%9F%A5%EF%BC%8F%E6%B4%BB%E5%8A%A8%EF%BC%8C%E7%94%BB%E9%9D%A2%E5%90%AB%E4%BA%BA%E7%89%A9%EF%BC%89⟧
+⟦TIME|%E7%A8%8D%E5%90%8E⟧
+旁白：你们把注意力转向眼前的细节。卢西恩没有急着给答案，而是等你先看。
+旁白：维修隔间的救助盒旁有三张物资标签。
+⟦MG|mg_dangerous_distance_c01_a⟧
+
+旁白：桌上的材料仍在原处，卢西恩等你继续询问。
+卢西恩：“你发现的东西，比我预想的更重要。”
+
+# SCENE｜追踪者暂退
+⟦BG|bg_c01s03|%E8%BF%BD%E8%B8%AA%E8%80%85%E6%9A%82%E9%80%80%EF%BC%88%E5%9C%A8%E5%9C%BA%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%8C%E5%8A%A8%E4%BD%9C%E4%BD%93%E7%8E%B0%E6%9C%AC%E5%9C%BA%E5%85%B3%E7%B3%BB%E7%8A%B6%E6%80%81%EF%BC%89⟧
+⟦TIME|%E5%BD%93%E6%99%9A⟧
+旁白：事情暂时告一段落。卢西恩把第二项任务交给你，语气比刚才放松了一些。
+旁白：窗外声音被记成三组节拍。
+⟦MG|mg_dangerous_distance_c01_b⟧
+
+旁白：卢西恩收好自己的那份材料，没有催你表态。
+卢西恩：“今天先到这里。你想继续聊，还是先休息？”
+
+# CHOICE｜离开前，你想怎样处理刚才的事
+#### A｜说明自己的决定与理由
+⟦OPT|A|set%3Adangerous_distance_c01_decision_shared⟧
+旁白：你的理由被记入共同经历，后续人物会据此调整行动。
+#### B｜暂不表态，要求更多事实
+⟦OPT|B|set%3Adangerous_distance_c01_decision_deferred⟧
+旁白：决定暂缓，下一章先提供新的事实或行动机会。
+#### C｜明确拒绝当前合作
+⟦OPT|C|set%3Adangerous_distance_c01_decision_refused⟧
+旁白：合作结束，但不会被自动判定为关系失败。
+#### D｜兜底：提出其他回应
+⟦OPT|D|set%3Adangerous_distance_c01_decision_other⟧
+旁白：卢西恩听完你的想法，先确认你希望他协助的范围。
+# ·
+
+
+
+# CHAPTER 02｜名字不是真的
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E5%2585%25B1%25E4%25BA%25AB%25E5%25A4%259A%25E5%25B0%2591%25E4%25B8%25AA%25E4%25BA%25BA%25E4%25BF%25A1%25E6%2581%25AF⟧
+⟦DONE|say|决定共享多少个人信息|名字不是真的决定|可以先提出问题，再表达你的安排。⟧
+
+# SCENE｜临时安全屋
+⟦BG|bg_c02s01|%E4%B8%B4%E6%97%B6%E5%AE%89%E5%85%A8%E5%B1%8B%EF%BC%88%E5%9C%A8%E5%9C%BA%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%8C%E7%AC%AC%E4%B8%80%E4%BA%BA%E7%A7%B0%E6%88%96%E8%BF%87%E8%82%A9%E8%A7%86%E8%A7%92%EF%BC%8C%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E6%95%85%E4%BA%8B%E5%BD%93%E6%97%A5%C2%B7%E5%82%8D%E6%99%9A⟧
+旁白：核验卢西恩给出的身份信息。你来到这里时，卢西恩已经在场。他没有替你决定要不要留下，只把眼前的情况说清楚。
+卢西恩：“我不想替你做决定。你可以先听完，再告诉我你愿意做到哪一步。”
+旁白：他把关键物件放在你看得见的位置，没有伸手替你拿。
+⟦SET|dangerous_distance_c02_scene1_seen⟧
+
+# CHOICE｜卢西恩把决定留给你
+#### A｜主动了解并继续参与
+⟦OPT|A|set%3Adangerous_distance_c02_cooperate%2Cddrespect~dangerous_distance_c02_cooperate~1⟧
+旁白：你获得完整的现场信息，并保留下一步行动的主动权。
+#### B｜先设边界，只接受有限信息
+⟦OPT|B|set%3Adangerous_distance_c02_boundary%2Cddrespect~dangerous_distance_c02_boundary~2⟧
+旁白：合作范围被缩小，但双方对彼此的底线更清楚。
+#### C｜暂时退出，之后再决定
+⟦OPT|C|set%3Adangerous_distance_c02_pause⟧
+旁白：眼前行动暂停，故事保留一条不惩罚退出的回返路径。
+#### D｜兜底：提出其他问题或替代方案
+⟦OPT|D|set%3Adangerous_distance_c02_alternative⟧
+旁白：你提出的替代做法被记录；当前可行部分会进入下一场评估。
+# ·
+
+# SCENE｜证件矛盾
+⟦BG|bg_c02s02|%E8%AF%81%E4%BB%B6%E7%9F%9B%E7%9B%BE%EF%BC%88%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E6%AD%A3%E5%9C%A8%E8%BF%9B%E8%A1%8C%E8%B0%83%E6%9F%A5%EF%BC%8F%E6%B4%BB%E5%8A%A8%EF%BC%8C%E7%94%BB%E9%9D%A2%E5%90%AB%E4%BA%BA%E7%89%A9%EF%BC%89⟧
+⟦TIME|%E7%A8%8D%E5%90%8E⟧
+旁白：你们把注意力转向眼前的细节。卢西恩没有急着给答案，而是等你先看。
+旁白：桌上两份材料的日期和页号一致，称呼不同。
+⟦MG|mg_dangerous_distance_c02_a⟧
+
+旁白：桌上的材料仍在原处，卢西恩等你继续询问。
+卢西恩：“你发现的东西，比我预想的更重要。”
+
+# SCENE｜双方设边界
+⟦BG|bg_c02s03|%E5%8F%8C%E6%96%B9%E8%AE%BE%E8%BE%B9%E7%95%8C%EF%BC%88%E5%9C%A8%E5%9C%BA%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%8C%E5%8A%A8%E4%BD%9C%E4%BD%93%E7%8E%B0%E6%9C%AC%E5%9C%BA%E5%85%B3%E7%B3%BB%E7%8A%B6%E6%80%81%EF%BC%89⟧
+⟦TIME|%E5%BD%93%E6%99%9A⟧
+旁白：事情暂时告一段落。卢西恩把第二项任务交给你，语气比刚才放松了一些。
+旁白：把三张物品卡依次交还玩家、卢西恩和安全屋管理人。
+⟦MG|mg_dangerous_distance_c02_b⟧
+
+旁白：卢西恩收好自己的那份材料，没有催你表态。
+卢西恩：“今天先到这里。你想继续聊，还是先休息？”
+
+# CHOICE｜离开前，你想怎样处理刚才的事
+#### A｜说明自己的决定与理由
+⟦OPT|A|set%3Adangerous_distance_c02_decision_shared⟧
+旁白：你的理由被记入共同经历，后续人物会据此调整行动。
+#### B｜暂不表态，要求更多事实
+⟦OPT|B|set%3Adangerous_distance_c02_decision_deferred⟧
+旁白：决定暂缓，下一章先提供新的事实或行动机会。
+#### C｜明确拒绝当前合作
+⟦OPT|C|set%3Adangerous_distance_c02_decision_refused⟧
+旁白：合作结束，但不会被自动判定为关系失败。
+#### D｜兜底：提出其他回应
+⟦OPT|D|set%3Adangerous_distance_c02_decision_other⟧
+旁白：卢西恩听完你的想法，先确认你希望他协助的范围。
+# ·
+
+
+
+# CHAPTER 03｜第三个人的消息
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E6%2598%25AF%25E5%2590%25A6%25E5%2590%25AC%25E5%258F%2596%25E8%25AE%25B0%25E8%2580%2585%25E6%259D%25A1%25E4%25BB%25B6⟧
+⟦DONE|say|决定是否听取记者条件|第三个人的消决定|可以先提出问题，再表达你的安排。⟧
+
+# SCENE｜旧报社
+⟦BG|bg_c03s01|%E6%97%A7%E6%8A%A5%E7%A4%BE%EF%BC%88%E5%9C%A8%E5%9C%BA%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%8C%E7%AC%AC%E4%B8%80%E4%BA%BA%E7%A7%B0%E6%88%96%E8%BF%87%E8%82%A9%E8%A7%86%E8%A7%92%EF%BC%8C%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E6%95%85%E4%BA%8B%E5%BD%93%E6%97%A5%C2%B7%E5%82%8D%E6%99%9A⟧
+旁白：引入米拉与外部证据。你来到这里时，卢西恩已经在场。他没有替你决定要不要留下，只把眼前的情况说清楚。
+卢西恩：“我不想替你做决定。你可以先听完，再告诉我你愿意做到哪一步。”
+旁白：他把关键物件放在你看得见的位置，没有伸手替你拿。
+⟦SET|dangerous_distance_c03_scene1_seen⟧
+
+# CHOICE｜卢西恩把决定留给你
+#### A｜主动了解并继续参与
+⟦OPT|A|set%3Adangerous_distance_c03_cooperate%2Cddrespect~dangerous_distance_c03_cooperate~1⟧
+旁白：你获得完整的现场信息，并保留下一步行动的主动权。
+#### B｜先设边界，只接受有限信息
+⟦OPT|B|set%3Adangerous_distance_c03_boundary%2Cddrespect~dangerous_distance_c03_boundary~2⟧
+旁白：合作范围被缩小，但双方对彼此的底线更清楚。
+#### C｜暂时退出，之后再决定
+⟦OPT|C|set%3Adangerous_distance_c03_pause⟧
+旁白：眼前行动暂停，故事保留一条不惩罚退出的回返路径。
+#### D｜兜底：提出其他问题或替代方案
+⟦OPT|D|set%3Adangerous_distance_c03_alternative⟧
+旁白：你提出的替代做法被记录；当前可行部分会进入下一场评估。
+# ·
+
+# SCENE｜资料交接
+⟦BG|bg_c03s02|%E8%B5%84%E6%96%99%E4%BA%A4%E6%8E%A5%EF%BC%88%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E6%AD%A3%E5%9C%A8%E8%BF%9B%E8%A1%8C%E8%B0%83%E6%9F%A5%EF%BC%8F%E6%B4%BB%E5%8A%A8%EF%BC%8C%E7%94%BB%E9%9D%A2%E5%90%AB%E4%BA%BA%E7%89%A9%EF%BC%89⟧
+⟦TIME|%E7%A8%8D%E5%90%8E⟧
+旁白：你们把注意力转向眼前的细节。卢西恩没有急着给答案，而是等你先看。
+旁白：米拉在旧报社摊开三张流程卡。
+⟦MG|mg_dangerous_distance_c03_a⟧
+
+旁白：桌上的材料仍在原处，卢西恩等你继续询问。
+卢西恩：“你发现的东西，比我预想的更重要。”
+
+# SCENE｜卢西恩反对
+⟦BG|bg_c03s03|%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%8F%8D%E5%AF%B9%EF%BC%88%E5%9C%A8%E5%9C%BA%E4%B8%BB%E8%A6%81%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%8C%E5%8A%A8%E4%BD%9C%E4%BD%93%E7%8E%B0%E6%9C%AC%E5%9C%BA%E5%85%B3%E7%B3%BB%E7%8A%B6%E6%80%81%EF%BC%89⟧
+⟦TIME|%E5%BD%93%E6%99%9A⟧
+旁白：事情暂时告一段落。卢西恩把第二项任务交给你，语气比刚才放松了一些。
+旁白：判断哪一项能证明资料确实交到了编辑手里。
+⟦MG|mg_dangerous_distance_c03_b⟧
+
+旁白：卢西恩收好自己的那份材料，没有催你表态。
+卢西恩：“今天先到这里。你想继续聊，还是先休息？”
+
+# CHOICE｜离开前，你想怎样处理刚才的事
+#### A｜说明自己的决定与理由
+⟦OPT|A|set%3Adangerous_distance_c03_decision_shared⟧
+旁白：你的理由被记入共同经历，后续人物会据此调整行动。
+#### B｜暂不表态，要求更多事实
+⟦OPT|B|set%3Adangerous_distance_c03_decision_deferred⟧
+旁白：决定暂缓，下一章先提供新的事实或行动机会。
+#### C｜明确拒绝当前合作
+⟦OPT|C|set%3Adangerous_distance_c03_decision_refused⟧
+旁白：合作结束，但不会被自动判定为关系失败。
+#### D｜兜底：提出其他回应
+⟦OPT|D|set%3Adangerous_distance_c03_decision_other⟧
+旁白：卢西恩听完你的想法，先确认你希望他协助的范围。
+# ·
+
+
+
+
+# CHAPTER 04｜04｜安全屋规则
+⟦GOAL|%25E5%25BB%25BA%25E7%25AB%258B%25E4%25B8%25B4%25E6%2597%25B6%25E5%2585%25B1%25E5%25A4%2584%25E8%25A7%2584%25E5%2588%2599%25EF%25BC%258C%25E5%2586%25B3%25E5%25AE%259A%25E5%2593%25AA%25E4%25BA%259B%25E9%25A3%258E%25E9%2599%25A9%25E5%25BF%2585%25E9%25A1%25BB%25E5%2585%25B1%25E4%25BA%25AB%25E3%2580%2582⟧
+⟦DONE|say|建立临时共处规则，决定哪些风险必须共享。|04｜安全屋决定|可以先提出问题，再表达你的安排。⟧
+# SCENE｜安全屋厨房
+⟦BG|bg_c04s01|%E5%AE%89%E5%85%A8%E5%B1%8B%E5%8E%A8%E6%88%BF%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E5%87%8C%E6%99%A8⟧
+旁白：卢西恩把药品、现金和备用钥匙分成三堆，却没解释为何把钥匙放在你更容易拿到的位置。你指出他的安排像部署人质，他冷冷看你。
+卢西恩：“如果你是人质，我会选间更舒服的房间。规则你来定。”
+⟦SET|dangerous_distance_c04_event_revealed⟧
+# SCENE｜狭窄走廊
+⟦BG|bg_c04s02|%E7%8B%AD%E7%AA%84%E8%B5%B0%E5%BB%8A%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E6%B8%85%E6%99%A8⟧
+旁白：他独自检查门锁，伤口却重新渗血。他把疼痛藏在每次停顿里，不喜欢被照顾，更不喜欢被看穿。
+卢西恩：“别用那种眼神看我。我还没脆弱到需要掌声。”
+旁白：走廊白板列出公共桌、卢西恩自用、应由值班员保管三处，按标签归放。
+⟦MG|mg_dangerous_distance_c04_a⟧
+
+# SCENE｜客厅地图桌
+⟦BG|bg_c04s03|%E5%AE%A2%E5%8E%85%E5%9C%B0%E5%9B%BE%E6%A1%8C%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E4%B8%8A%E5%8D%88⟧
+旁白：你们约定共享影响彼此安全的事实、任何人都可暂停合作、离开路线双方知情。卢西恩在最后一条停了很久，最终签下名字。
+卢西恩：“我不习惯把退路交给别人。但我可以练习。”
+旁白：地图桌仅用来讨论协作边界。
+⟦MG|mg_dangerous_distance_c04_b⟧
+
+# CHOICE｜本章决定
+#### A｜要求共享全部即时风险
+⟦OPT|A|set%3Adangerous_distance_c04_a⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### B｜只共享影响你安全的部分
+⟦OPT|B|set%3Adangerous_distance_c04_b⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### C｜明确保留随时退出的权利
+⟦OPT|C|set%3Adangerous_distance_c04_c⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### D｜提出其他方案
+⟦OPT|D|set%3Adangerous_distance_c04_custom⟧
+旁白：记录你的原话；若方案可行，按世界规则进入对应路径，否则说明限制并提供替代行动。
+# ·
+
+
+
+# CHAPTER 05｜05｜失联的联络官
+⟦GOAL|%25E7%25A1%25AE%25E8%25AE%25A4%25E4%25BC%258A%25E6%25A3%25AE%25E5%25A4%25B1%25E8%2581%2594%25E8%2583%258C%25E5%2590%258E%25E6%2598%25AF%25E4%25BF%259D%25E6%258A%25A4%25E3%2580%2581%25E8%2583%258C%25E5%258F%259B%25E8%25BF%2598%25E6%2598%25AF%25E8%2587%25AA%25E4%25BF%259D%25E3%2580%2582⟧
+⟦DONE|say|确认伊森失联背后是保护、背叛还是自保。|05｜失联的决定|可以先提出问题，再表达你的安排。⟧
+# SCENE｜临时联络点
+⟦BG|bg_c05s01|%E4%B8%B4%E6%97%B6%E8%81%94%E7%BB%9C%E7%82%B9%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E6%AC%A1%E6%97%A5%E5%8D%88%E5%90%8E⟧
+旁白：卢西恩收到伊森要求单独见面的短讯，读了两遍才删除，声称这是钓鱼信息。你看见他指节绷紧。
+卢西恩：“我不喜欢他，更不喜欢他知道我还活着。”
+⟦SET|dangerous_distance_c05_event_revealed⟧
+# SCENE｜旧电车站咖啡亭
+⟦BG|bg_c05s02|%E6%97%A7%E7%94%B5%E8%BD%A6%E7%AB%99%E5%92%96%E5%95%A1%E4%BA%AD%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E5%82%8D%E6%99%9A⟧
+旁白：伊森带来行动时间表，指控卢西恩偏离撤离命令，导致线人失踪。卢西恩否认责任，却承认收到过撤离指令。
+伊森：“问问谁替他的决定承担代价。”
+旁白：同张原记录写「收件 15:10，复核 15:40」。
+⟦MG|mg_dangerous_distance_c05_a⟧
+
+# SCENE｜站台末端
+⟦BG|bg_c05s03|%E7%AB%99%E5%8F%B0%E6%9C%AB%E7%AB%AF%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E5%A4%9C⟧
+旁白：伊森承认自己延迟转发撤离命令。他并非无辜，只想让卢西恩承担全部责任。卢西恩没有动手，把记录放到你面前。
+卢西恩：“我可以恨他，但不能再替他决定你该知道多少。”
+旁白：把纸质联络回执分别归给收件人、内容陈述者、独立核对人。
+⟦MG|mg_dangerous_distance_c05_b⟧
+
+# CHOICE｜本章决定
+#### A｜要求伊森提供原始时间记录
+⟦OPT|A|set%3Adangerous_distance_c05_a⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### B｜先让卢西恩解释撤离命令
+⟦OPT|B|set%3Adangerous_distance_c05_b⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### C｜暂时不站队，保留双方证词
+⟦OPT|C|set%3Adangerous_distance_c05_c⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### D｜提出其他方案
+⟦OPT|D|set%3Adangerous_distance_c05_custom⟧
+旁白：记录你的原话；若方案可行，按世界规则进入对应路径，否则说明限制并提供替代行动。
+# ·
+
+
+
+# CHAPTER 06｜06｜他没说的那一枪
+⟦GOAL|%25E6%259F%25A5%25E6%2598%258E%25E5%258D%25A2%25E8%25A5%25BF%25E6%2581%25A9%25E9%259A%2590%25E7%259E%2592%25E7%259A%2584%25E8%25A1%258C%25E5%258A%25A8%25EF%25BC%258C%25E5%25B9%25B6%25E5%2586%25B3%25E5%25AE%259A%25E4%25BF%25A1%25E4%25BB%25BB%25E6%2598%25AF%25E5%2590%25A6%25E7%25BB%25A7%25E7%25BB%25AD%25E3%2580%2582⟧
+⟦DONE|say|查明卢西恩隐瞒的行动，并决定信任是否继续。|06｜他没说决定|可以先提出问题，再表达你的安排。⟧
+# SCENE｜旧仓库外侧
+⟦BG|bg_c06s01|%E6%97%A7%E4%BB%93%E5%BA%93%E5%A4%96%E4%BE%A7%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E6%AC%A1%E6%97%A5%E9%BB%84%E6%98%8F⟧
+
+旁白：米拉交来现场照片：墙面弹痕与卢西恩报告位置不符。卢西恩看完没有解释，只问照片来自谁。
+米拉：“你可以继续相信他，但要知道他不只对你隐瞒。”
+⟦SET|dangerous_distance_c06_event_revealed⟧
+# SCENE｜仓库办公室
+⟦BG|bg_c06s02|%E4%BB%93%E5%BA%93%E5%8A%9E%E5%85%AC%E5%AE%A4%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E7%A8%8D%E5%90%8E⟧
+旁白：记录显示卢西恩曾击碎警报灯制造撤离窗口，枪击没有伤人，却暴露线人位置。他承认行动，不知道线人仍在建筑内。
+卢西恩：“我以为里面清空了。我错了。你可以生气，不必替我找理由。”
+旁白：只拼合虚构报告页脚。
+⟦MG|mg_dangerous_distance_c06_a⟧
+
+# SCENE｜装卸区
+⟦BG|bg_c06s03|%E8%A3%85%E5%8D%B8%E5%8C%BA%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E5%A4%9C⟧
+旁白：卢西恩交出未提交报告：他选择救一个已暴露目标，代价是另一名线人失去保护。伊森延迟命令是另一层责任。
+卢西恩：“我不是你必须救的人。你现在知道了，可以重新决定要不要和我站在一起。”
+旁白：根据卢西恩刚才的话，选出能归给他本人承认的句子。
+⟦MG|mg_dangerous_distance_c06_b⟧
+
+# CHOICE｜本章决定
+#### A｜要求公开完整行动报告
+⟦OPT|A|set%3Adangerous_distance_c06_a⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### B｜先确认线人是否安全
+⟦OPT|B|set%3Adangerous_distance_c06_b⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### C｜暂停私人关系，只保留必要合作
+⟦OPT|C|set%3Adangerous_distance_c06_c⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### D｜提出其他方案
+⟦OPT|D|set%3Adangerous_distance_c06_custom⟧
+旁白：记录你的原话；若方案可行，按世界规则进入对应路径，否则说明限制并提供替代行动。
+# ·
+
+
+
+# CHAPTER 07｜07｜交换条件
+⟦GOAL|%25E9%259D%25A2%25E5%25AF%25B9%25E7%25B1%25B3%25E6%258B%2589%25E6%258F%2590%25E5%2587%25BA%25E7%259A%2584%25E8%25AF%2581%25E6%258D%25AE%25E4%25BA%25A4%25E6%258D%25A2%25EF%25BC%258C%25E5%2586%25B3%25E5%25AE%259A%25E6%2598%25AF%25E5%2590%25A6%25E7%2594%25A8%25E4%25B8%25AA%25E4%25BA%25BA%25E4%25BF%25A1%25E6%2581%25AF%25E6%258D%25A2%25E5%258F%2596%25E7%25BA%25BF%25E4%25BA%25BA%25E4%25B8%258B%25E8%2590%25BD%25E3%2580%2582⟧
+⟦DONE|say|面对米拉提出的证据交换，决定是否用个人信息换取线人下落。|07｜交换条决定|可以先提出问题，再表达你的安排。⟧
+# SCENE｜记者工作室
+⟦BG|bg_c07s01|%E8%AE%B0%E8%80%85%E5%B7%A5%E4%BD%9C%E5%AE%A4%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E4%B8%8A%E5%8D%88⟧
+旁白：米拉提出交换：她交出线人下落，你们必须交出行动报告副本。卢西恩立刻拒绝，理由却不是保密，而是报告里有一名无关证人的住址。
+卢西恩：“你可以认为我在保护机构。其实我是在保护那个根本不知道自己卷进来的人。”
+⟦SET|dangerous_distance_c07_event_revealed⟧
+# SCENE｜暗室资料墙
+⟦BG|bg_c07s02|%E6%9A%97%E5%AE%A4%E8%B5%84%E6%96%99%E5%A2%99%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E4%B8%8B%E5%8D%88⟧
+旁白：你发现米拉已经把部分资料发给第三方编辑。她承认这是保险措施，防止任何一方扣下证据。她并不完全信任你们。
+米拉：“信任不是交出所有东西。是知道对方手里有什么，还愿意继续谈。”
+旁白：米拉用三张纸列出编辑交接的前提。
+⟦MG|mg_dangerous_distance_c07_a⟧
+
+# SCENE｜工作室后门
+⟦BG|bg_c07s03|%E5%B7%A5%E4%BD%9C%E5%AE%A4%E5%90%8E%E9%97%A8%EF%BC%88%E4%B8%BB%E8%A6%81%E5%9C%A8%E5%9C%BA%E4%BA%BA%E7%89%A9%E5%85%A5%E7%94%BB%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E4%B8%8D%E7%94%BB%E7%8E%A9%E5%AE%B6%E6%AD%A3%E8%84%B8%EF%BC%89⟧
+⟦TIME|%E5%82%8D%E6%99%9A⟧
+旁白：卢西恩提出遮蔽无关证人信息后交换报告。他第一次主动把方案交由你评估，而不是直接决定。
+卢西恩：“我可以接受你不同意我。只希望你告诉我，反对的理由是什么。”
+旁白：依次归入公开候选、限制阅览、待核推断三类。
+⟦MG|mg_dangerous_distance_c07_b⟧
+
+# CHOICE｜本章决定
+#### A｜同意脱敏后交换
+⟦OPT|A|set%3Adangerous_distance_c07_a⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### B｜拒绝交出报告，改用线索核验
+⟦OPT|B|set%3Adangerous_distance_c07_b⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### C｜要求米拉先证明线人安全
+⟦OPT|C|set%3Adangerous_distance_c07_c⟧
+旁白：你的决定会影响后续人物行动、可获得的信息或关系走向。
+#### D｜提出其他方案
+⟦OPT|D|set%3Adangerous_distance_c07_custom⟧
+旁白：记录你的原话；若方案可行，按世界规则进入对应路径，否则说明限制并提供替代行动。
+# ·
+
+
+
+
+# CHAPTER 08｜没有安全的选择
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E8%25AF%2581%25E6%258D%25AE%25E5%2585%2588%25E5%2585%25AC%25E5%25BC%2580%25E8%25BF%2598%25E6%2598%25AF%25E4%25BA%25A4%25E7%258B%25AC%25E7%25AB%258B%25E6%2596%25B9%25E4%25BF%259D%25E7%25AE%25A1⟧
+⟦DONE|say|决定证据先公开还是交独立方保管|没有安全的选决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜交通枢纽候车厅
+⟦BG|bg_c08s01|%E7%B1%B3%E6%8B%89%E3%80%81%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9C%A8%E7%A9%BA%E6%A4%85%E9%97%B4%E6%91%8A%E5%BC%80%E6%94%BE%E8%A1%8C%E8%B5%84%E6%96%99%EF%BC%8C%E7%AA%97%E5%A4%96%E5%8F%91%E8%BD%A6%E7%89%8C%E8%99%9A%E7%84%A6%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E6%AC%A1%E6%97%A5%E4%B8%8A%E5%8D%88⟧
+
+
+
+旁白：发车牌灭了一列字。米拉在空座上铺开两只文件袋，把装着名字的那只按住。
+米拉：“编辑收到的是摘录。现在催我发全文的是法务。我们还有时间问一句，究竟哪张纸能走。”
+卢西恩：“我先把同意公开的信息写出来。你看一眼我漏了什么。”
+⟦MG|mg_dangerous_distance_c08_a⟧
+
+
+# SCENE｜交通枢纽咨询桌
+⟦BG|bg_c08s02|%E7%B1%B3%E6%8B%89%E3%80%81%E5%80%BC%E7%8F%AD%E5%92%A8%E8%AF%A2%E5%91%98%E3%80%81%E5%8D%A2%E8%A5%BF%E6%81%A9%EF%BC%8C%E6%9F%9C%E5%8F%B0%E6%91%86%E4%B8%89%E4%BB%BD%E7%A9%BA%E7%99%BD%E6%94%B6%E6%8D%AE%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E8%BF%91%E5%8D%88⟧
+旁白：值班人员替米拉叫来了独立见证人，把交接收据留在桌上。卢西恩的袖子滴着雨，他换左手去拿笔。
+米拉：“我能请到两个人。一个审稿，一个守原件。第三件事得等。你来核对我有没有把人用错地方。”
+⟦MG|mg_dangerous_distance_c08_b⟧
+
+
+# SCENE｜候车厅玻璃门外
+⟦BG|bg_c08s03|%E7%B1%B3%E6%8B%89%E4%B8%BE%E6%89%8B%E6%9C%BA%E7%AD%89%E5%9B%9E%E5%A4%8D%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9C%A8%E9%97%A8%E8%BE%B9%E6%89%B6%E4%BD%8F%E5%B7%A6%E8%87%82%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E9%9B%A8%E5%81%9C%E5%89%8D⟧
+⟦CG|cg_c08s03_01|%E7%B1%B3%E6%8B%89%E4%B8%BE%E6%89%8B%E6%9C%BA%E7%AD%89%E5%9B%9E%E5%A4%8D%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9C%A8%E9%97%A8%E8%BE%B9%E6%89%B6%E4%BD%8F%E5%B7%A6%E8%87%82%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+卢西恩：“你要是先回去，我把结果写给你。也可以只告诉米拉，你更愿意谁保管。”
+旁白：玻璃上映出他的手指。他刚才写自己的名字时，最后一笔滑出了纸。
+
+# CHOICE｜隐藏意图
+#### A｜授权刊发已核验的摘要
+⟦OPT|A|set%3Adangerous_distance_c08_a⟧
+
+旁白：米拉独立决定版面并刊发最小摘要，原件封存。
+#### B｜暂缓刊发并交见证人
+⟦OPT|B|set%3Adangerous_distance_c08_b⟧
+
+旁白：由见证人封存，米拉失去当天版面。
+#### C｜退出交接或暂不授权
+⟦OPT|C|set%3Adangerous_distance_c08_c⟧
+
+旁白：只封存米拉自己合法持有的材料，不使用玩家材料。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c08_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：伊森发来一句话：那份报告的签收时间是真的。签收人写的是我。
+
+
+
+# CHAPTER 09｜伤口与真话
+⟦GOAL|%25E8%25AF%25B4%25E6%2598%258E%25E5%258D%25A2%25E8%25A5%25BF%25E6%2581%25A9%25E5%2586%258D%25E9%259A%2590%25E7%259E%2592%25E9%25A3%258E%25E9%2599%25A9%25E6%2597%25B6%25E5%2590%2588%25E4%25BD%259C%25E5%25A6%2582%25E4%25BD%2595%25E5%25A4%2584%25E7%2590%2586⟧
+⟦DONE|say|说明卢西恩再隐瞒风险时合作如何处理|伤口与真话决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜社区诊所诊室
+⟦BG|bg_c09s01|%E5%8C%BB%E7%94%9F%E3%80%81%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%92%8C%E5%BA%8A%E8%BE%B9%E7%A9%BA%E6%A4%85%EF%BC%8C%E5%86%B7%E8%89%B2%E7%A3%A8%E7%A0%82%E7%AA%97%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E4%B8%8B%E5%8D%88⟧
+
+
+
+旁白：医生请卢西恩抬起手。他举到一半，另一只手已经伸过去托住了。他松手，试了一次，仍旧抬不动。
+卢西恩：“昨天我说没事的时候，我就知道今天会来。”
+医生：“两张表。我的表记录身体状况，你们的表记录谁能收到消息。先把事情排好。”
+⟦MG|mg_dangerous_distance_c09_a⟧
+
+
+# SCENE｜诊所窗前走廊
+⟦BG|bg_c09s02|%E5%8D%A2%E8%A5%BF%E6%81%A9%E4%B8%8E%E7%B1%B3%E6%8B%89%E9%9A%94%E9%95%BF%E6%A4%85%EF%BC%8C%E5%A4%95%E5%85%89%E7%85%A7%E4%BD%8F%E6%8A%98%E8%B5%B7%E7%9A%84%E6%8A%A5%E5%91%8A%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E9%BB%84%E6%98%8F⟧
+米拉：“你以为我抓着你受伤不放？有人用‘他不适合陈述’退回了我的稿。”
+卢西恩：“我跟他们说过伤势。对你说得轻，是因为我怕你知道我那时候不能陪你出去。事情会怎么发展，我控制不了，我当时还想控制你怎么看我。”
+⟦MG|mg_dangerous_distance_c09_b⟧
+
+
+# SCENE｜诊所侧院
+⟦BG|bg_c09s03|%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9D%90%E5%9C%A8%E4%BE%A7%E9%99%A2%E9%95%BF%E5%87%B3%EF%BC%8C%E6%89%8B%E6%97%81%E6%94%BE%E7%9D%80%E7%BD%B2%E5%90%8D%E4%BF%A1%E5%B0%81%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%82%8D%E6%99%9A⟧
+⟦CG|cg_c09s03_01|%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9D%90%E5%9C%A8%E4%BE%A7%E9%99%A2%E9%95%BF%E5%87%B3%EF%BC%8C%E6%89%8B%E6%97%81%E6%94%BE%E7%9D%80%E7%BD%B2%E5%90%8D%E4%BF%A1%E5%B0%81%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+旁白：他在信封上写了机构外联处。第二行原本写着你的名字，他划掉，换成自己的联络方式。
+卢西恩：“我准备把那次没有上报的事记进我的陈述。你还愿意和我一起办事的话，什么必须第一时间告诉你？”
+
+# CHOICE｜隐藏意图
+#### A｜继续合作且要求即时说明风险
+⟦OPT|A|set%3Adangerous_distance_c09_a⟧
+
+旁白：卢西恩签知情边界，先交书面陈述再询问玩家。
+#### B｜仅保留必要合作
+⟦OPT|B|set%3Adangerous_distance_c09_b⟧
+
+旁白：米拉任工作联系人，卢西恩退出私人沟通。
+#### C｜终止合作等待独立结论
+⟦OPT|C|set%3Adangerous_distance_c09_c⟧
+
+旁白：把陈述副本交见证人，玩家可离场。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c09_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：米拉拆开回信，抽出附件。伊森主动要求公开听取陈述，但给自己的席位写的是证人。
+
+
+
+# CHAPTER 10｜内鬼的名字
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E6%2580%258E%25E6%25A0%25B7%25E5%25AF%25B9%25E5%25BE%2585%25E4%25BC%258A%25E6%25A3%25AE%25E7%259A%2584%25E9%2599%2588%25E8%25BF%25B0⟧
+⟦DONE|say|决定怎样对待伊森的陈述|内鬼的名字决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜机构外联处会客室
+⟦BG|bg_c10s01|%E4%BC%8A%E6%A3%AE%E3%80%81%E7%B1%B3%E6%8B%89%E5%92%8C%E7%A9%BA%E7%9D%80%E7%9A%84%E7%AC%AC%E5%9B%9B%E6%8A%8A%E6%A4%85%E5%AD%90%EF%BC%8C%E6%96%87%E4%BB%B6%E6%A1%8C%E4%B8%AD%E6%99%AF%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E6%AC%A1%E6%97%A5%E4%B8%8A%E5%8D%88⟧
+
+
+
+旁白：伊森取下自己的工作牌，让它反扣在桌上。他递来一份更正函，封口已经拆开。
+伊森：“我签收过报告。我把外派备注告诉过部门主管，也确实没把自己家人涉及承包商的关系报上去。谁传出了备注，我不能从一个签名猜出来。”
+米拉：“好。我们逐句看你承认了什么。”
+⟦MG|mg_dangerous_distance_c10_a⟧
+
+
+# SCENE｜外联处记录桌
+⟦BG|bg_c10s02|%E7%B1%B3%E6%8B%89%E3%80%81%E8%AE%B0%E5%BD%95%E5%91%98%E3%80%81%E4%BC%8A%E6%A3%AE%E5%92%8C%E5%B9%B6%E6%8E%92%E4%B8%A4%E4%BB%BD%E7%AD%BE%E6%94%B6%E8%A1%A8%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E4%B8%8A%E5%8D%88%E7%A8%8D%E6%99%9A⟧
+旁白：记录员翻开纸质回执。伊森的名字出现在受理栏，主管处盖的是复核章。另一张联上的日期相同，职责栏却空着。
+米拉：“我们能指出哪一栏缺了。谁利用那一栏，得另找证据。”
+⟦MG|mg_dangerous_distance_c10_b⟧
+
+
+# SCENE｜外联处楼梯平台
+⟦BG|bg_c10s03|%E4%BC%8A%E6%A3%AE%E7%AB%8B%E5%9C%A8%E7%AA%97%E5%8F%A3%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E6%8A%8A%E6%96%87%E4%BB%B6%E5%A4%B9%E6%90%81%E5%9C%A8%E7%AA%97%E5%8F%B0%E4%B8%AD%E5%A4%AE%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E4%B8%AD%E5%8D%88⟧
+⟦CG|cg_c10s03_01|%E4%BC%8A%E6%A3%AE%E7%AB%8B%E5%9C%A8%E7%AA%97%E5%8F%A3%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E6%8A%8A%E6%96%87%E4%BB%B6%E5%A4%B9%E6%90%81%E5%9C%A8%E7%AA%97%E5%8F%B0%E4%B8%AD%E5%A4%AE%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+伊森：“我可以把更正函交出去。能不能也让审查的人知道，当时我说过我不适合办这件事？”
+卢西恩：“写进去。也写进去你后来接了。”
+旁白：伊森看了卢西恩很久，坐回台阶，在两句话后面各添了一个日期。
+
+# CHOICE｜隐藏意图
+#### A｜把证词作为待核实线索
+⟦OPT|A|set%3Adangerous_distance_c10_a⟧
+
+旁白：在审查材料标明利益冲突并列可核验事实。
+#### B｜拒绝依赖伊森证词
+⟦OPT|B|set%3Adangerous_distance_c10_b⟧
+
+旁白：只移交原始签收联和审查申请。
+#### C｜要求伊森承担具名更正
+⟦OPT|C|set%3Adangerous_distance_c10_c⟧
+
+旁白：伊森自行签署并接受可能的职务处分。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c10_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：审查处回执来了。被保护的人同意见一次，但拒绝到机构的任何房间里。
+
+
+
+# CHAPTER 11｜撤离窗口
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E8%25B0%2581%25E5%2585%2588%25E5%259C%25A8%25E6%258E%2588%25E6%259D%2583%25E5%25AE%2589%25E6%258E%2592%25E4%25B8%258B%25E7%25A6%25BB%25E5%25BC%2580%25E5%258F%258A%25E8%25B0%2581%25E8%25B4%259F%25E8%25B4%25A3%25E8%25AF%2581%25E6%258D%25AE⟧
+⟦DONE|say|决定谁先在授权安排下离开及谁负责证据|撤离窗口决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜港区公共服务大厅
+⟦BG|bg_c11s01|%E7%B1%B3%E6%8B%89%E4%B8%8E%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9C%A8%E6%98%8E%E4%BA%AE%E6%9C%8D%E5%8A%A1%E5%8F%B0%E5%89%8D%E7%9C%8B%E8%A7%81%E8%AF%81%E8%A2%8B%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%82%8D%E6%99%9A⟧
+
+
+旁白：旅客的箱轮从石地上滚过。米拉把机密名字那一页留在自己的封袋里，旁边摆着见证回执和没有个人资料的公开摘要。
+米拉：“能送交审查的是这一包。哪些纸只适合拿着办手续？”
+⟦MG|mg_dangerous_distance_c11_a⟧
+
+
+# SCENE｜港区等候区
+⟦BG|bg_c11s02|%E5%8D%A2%E8%A5%BF%E6%81%A9%E3%80%81%E7%B1%B3%E6%8B%89%E4%B8%8E%E5%80%BC%E7%8F%AD%E5%8D%8F%E8%B0%83%E5%91%98%E7%AB%99%E5%9C%A8%E5%8F%91%E8%BD%A6%E6%9D%BF%E5%89%8D%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%82%8D%E6%99%9A%E7%A8%8D%E6%99%9A⟧
+协调员：“见证签到之后才能领保管回执。想坐接驳，回执要在候车前交回窗口。”
+卢西恩：“我留给审查员问完。你们收到回执就可以走。”
+⟦MG|mg_dangerous_distance_c11_b⟧
+
+
+# SCENE｜港区候车线
+⟦BG|bg_c11s03|%E5%8D%A2%E8%A5%BF%E6%81%A9%E4%B8%8E%E7%B1%B3%E6%8B%89%E9%9A%94%E7%AA%97%E7%9B%B8%E6%9C%9B%EF%BC%8C%E5%B0%81%E5%AD%98%E5%9B%9E%E6%89%A7%E5%9C%A8%E8%BF%91%E6%99%AF%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%85%A5%E5%A4%9C⟧
+⟦CG|cg_c11s03_01|%E5%8D%A2%E8%A5%BF%E6%81%A9%E4%B8%8E%E7%B1%B3%E6%8B%89%E9%9A%94%E7%AA%97%E7%9B%B8%E6%9C%9B%EF%BC%8C%E5%B0%81%E5%AD%98%E5%9B%9E%E6%89%A7%E5%9C%A8%E8%BF%91%E6%99%AF%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+旁白：卢西恩把自己的候车凭条退给值班员。他随身那张新陈述上，第一页已经签妥，第二页仍空白。
+卢西恩：“我是这份记录的当事人。我会留下，把那一页补完。你想先离开，我会让米拉把受理时间发给你。”
+
+# CHOICE｜隐藏意图
+#### A｜玩家先离开，米拉递交材料
+⟦OPT|A|set%3Adangerous_distance_c11_a⟧
+
+旁白：米拉拿回执先行，卢西恩留下作证，玩家可接受公开转述。
+#### B｜与米拉等待签收后同行离开
+⟦OPT|B|set%3Adangerous_distance_c11_b⟧
+
+旁白：错过首班，保全回执由玩家和米拉共同确认。
+#### C｜结束参与并交独立见证人
+⟦OPT|C|set%3Adangerous_distance_c11_c⟧
+
+旁白：玩家独立离开，证据由独立见证人负责，私人资料仍封存。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c11_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：米拉收到被保护人的第二条消息：见面的地方，是他以前住过的旧公寓。
+
+
+
+
+# CHAPTER 12｜被保护的人
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E6%2598%25AF%25E5%2590%25A6%25E7%25BB%25A7%25E7%25BB%25AD%25E5%258F%2582%25E4%25B8%258E%25E8%25AF%2581%25E4%25BA%25BA%25E7%259A%2584%25E7%258B%25AC%25E7%25AB%258B%25E4%25BA%25A4%25E6%258E%25A5⟧
+⟦DONE|say|决定是否继续参与证人的独立交接|被保护的人决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜旧公寓餐厅
+⟦BG|bg_c12s01|%E7%B1%B3%E6%8B%89%E3%80%81%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%92%8C%E8%AF%81%E4%BA%BA%EF%BC%8C%E7%AA%97%E5%8F%B0%E4%B8%8A%E6%98%AF%E6%97%A7%E4%BD%8F%E6%88%B7%E5%90%8D%E7%89%8C%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E7%BF%8C%E6%97%A5%E4%B8%8A%E5%8D%88⟧
+
+
+旁白：开门的人把写着自己名字的旧名牌翻了面。他是承包商的前审核员，也是伊森曾经没有申报的姻亲。那张签收副联经过他的手，他不愿再让伊森代表自己。
+证人：“我愿意告诉审查员我做过什么。请先把我同谁有关系、我经手了什么分开。”
+⟦MG|mg_dangerous_distance_c12_a⟧
+
+
+# SCENE｜公寓内走廊
+⟦BG|bg_c12s02|%E5%8D%A2%E8%A5%BF%E6%81%A9%E9%80%80%E5%9C%A8%E8%B5%B0%E5%BB%8A%E5%B0%BD%E7%AB%AF%EF%BC%8C%E7%B1%B3%E6%8B%89%E4%B8%8E%E8%AF%81%E4%BA%BA%E5%90%84%E6%8C%81%E4%B8%80%E4%BB%BD%E7%BA%B8%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%8D%88%E5%89%8D⟧
+卢西恩：“他是我那项任务要保护的人。他亲眼看见过哪份纸，我从来没有问过。”
+证人：“问我。我会告诉你我在哪页签过字，剩下的请别替我接上。”
+⟦MG|mg_dangerous_distance_c12_b⟧
+
+
+# SCENE｜旧公寓楼下檐廊
+⟦BG|bg_c12s03|%E8%AF%81%E4%BA%BA%E6%8B%89%E7%B4%A7%E5%A4%96%E5%A5%97%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E6%8A%8A%E6%A4%85%E5%AD%90%E7%A7%BB%E5%87%BA%E9%97%A8%E5%8F%A3%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E6%AD%A3%E5%8D%88⟧
+⟦CG|cg_c12s03_01|%E8%AF%81%E4%BA%BA%E6%8B%89%E7%B4%A7%E5%A4%96%E5%A5%97%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E6%8A%8A%E6%A4%85%E5%AD%90%E7%A7%BB%E5%87%BA%E9%97%A8%E5%8F%A3%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+证人：“你们可以走。你们留下也行。送到审查员手里的话，由我自己说。”
+
+# CHOICE｜隐藏意图
+#### A｜在场见证并遵守证人隐私
+⟦OPT|A|set%3Adangerous_distance_c12_a⟧
+
+旁白：米拉登记玩家作为见证人，并请证人单独确认。
+#### B｜只经米拉提供有限支持
+⟦OPT|B|set%3Adangerous_distance_c12_b⟧
+
+旁白：米拉成为唯一联系接口。
+#### C｜退出证人交接
+⟦OPT|C|set%3Adangerous_distance_c12_c⟧
+
+旁白：玩家不再列入联络和见证名单。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c12_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：卢西恩从包里取出一份见证表。他发现自己的初次陈述，把公寓登记前的一段时间留成了空白。
+
+
+
+# CHAPTER 13｜最后一次隐瞒
+⟦GOAL|%25E5%2586%25B3%25E5%25AE%259A%25E5%258D%25A2%25E8%25A5%25BF%25E6%2581%25A9%25E6%2598%25AF%25E5%2590%25A6%25E8%25BF%2598%25E6%259C%2589%25E4%25BF%25AE%25E5%25A4%258D%25E4%25BF%25A1%25E4%25BB%25BB%25E7%259A%2584%25E6%259C%25BA%25E4%25BC%259A⟧
+⟦DONE|say|决定卢西恩是否还有修复信任的机会|最后一次隐瞒决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜旧安全屋桌边
+⟦BG|bg_c13s01|%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9D%90%E5%9C%A8%E6%97%A7%E6%A1%8C%E6%97%81%EF%BC%8C%E7%B1%B3%E6%8B%89%E7%BF%BB%E5%BC%80%E5%88%9D%E6%AC%A1%E9%99%88%E8%BF%B0%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E6%AC%A1%E6%97%A5%E6%99%A8⟧
+
+
+
+旁白：安全屋里只剩一把椅子没有积灰。卢西恩把那把椅子推给米拉，自己靠墙站着。
+卢西恩：“我最早知道他愿意重新作证，是在我交报告之前。我没有写进去。我以为这样还能由我决定谁能找他。”
+⟦MG|mg_dangerous_distance_c13_a⟧
+
+
+# SCENE｜安全屋窗台
+⟦BG|bg_c13s02|%E7%B1%B3%E6%8B%89%E6%94%B6%E8%B5%B7%E7%BA%B8%E4%BB%BD%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E6%8B%BF%E7%9D%80%E5%B0%9A%E6%9C%AA%E7%AD%BE%E5%90%8D%E7%9A%84%E6%9B%B4%E6%AD%A3%E4%B9%A6%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E6%99%A8%E5%90%8E⟧
+米拉：“你说以后通知。你说的以后，是事情发生之前还是你处理完之后？”
+卢西恩用指尖把签字纸推回台面。
+⟦MG|mg_dangerous_distance_c13_b⟧
+
+
+# SCENE｜安全屋门廊
+⟦BG|bg_c13s03|%E5%8D%A2%E8%A5%BF%E6%81%A9%E7%8B%AC%E7%AB%8B%E5%9C%A8%E9%97%A8%E5%BB%8A%EF%BC%8C%E9%97%A8%E7%89%8C%E5%8D%8A%E5%BC%80%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E4%B8%B4%E8%BF%91%E4%B8%AD%E5%8D%88⟧
+⟦CG|cg_c13s03_01|%E5%8D%A2%E8%A5%BF%E6%81%A9%E7%8B%AC%E7%AB%8B%E5%9C%A8%E9%97%A8%E5%BB%8A%EF%BC%8C%E9%97%A8%E7%89%8C%E5%8D%8A%E5%BC%80%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+卢西恩：“我会交出去。你不用原谅我才能让我把事做对。我们之间，你还需要什么才能接着谈？”
+
+# CHOICE｜隐藏意图
+#### A｜按可验证承诺重新合作
+⟦OPT|A|set%3Adangerous_distance_c13_a⟧
+
+旁白：卢西恩先交补正，等审查处回执再来询问。
+#### B｜只保留交接合作
+⟦OPT|B|set%3Adangerous_distance_c13_b⟧
+
+旁白：把联系限制在米拉的公共工作渠道。
+#### C｜终止私人联系和协作
+⟦OPT|C|set%3Adangerous_distance_c13_c⟧
+
+旁白：归还玩家资料并记录联络边界。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c13_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：外部审查员给出最终受理时段。回执迟到，听证将分两次办理。
+
+
+
+# CHAPTER 14｜行动前夜
+⟦GOAL|%25E8%25AE%25BE%25E5%25AE%259A%25E5%2590%25AC%25E8%25AF%2581%25E5%258D%258F%25E4%25BD%259C%25E5%2588%2586%25E5%25B7%25A5%25E5%2592%258C%25E9%2580%2580%25E5%2587%25BA%25E8%25BE%25B9%25E7%2595%258C⟧
+⟦DONE|say|设定听证协作分工和退出边界|行动前夜决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜独立审查处接待室
+⟦BG|bg_c14s01|%E5%80%BC%E7%8F%AD%E5%91%98%E3%80%81%E7%B1%B3%E6%8B%89%E4%B8%8E%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%AF%B9%E7%9D%80%E4%B8%89%E6%9E%9A%E5%A7%93%E5%90%8D%E7%89%8C%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%90%AC%E8%AF%81%E5%89%8D%E5%A4%9C⟧
+
+
+旁白：接待室只有两扇相对开的门。值班员倒了三杯水，请每人自己拿自己的姓名牌。
+米拉：“谁能讲证据，谁能讲见过的事，先别把两种话塞在同一个人嘴里。”
+⟦MG|mg_dangerous_distance_c14_a⟧
+
+
+# SCENE｜听证处准备间
+⟦BG|bg_c14s02|%E7%B1%B3%E6%8B%89%E5%92%8C%E5%AE%A1%E6%9F%A5%E5%91%98%E5%AF%B9%E7%85%A7%E6%A1%8C%E4%B8%8A%E9%A2%84%E7%BA%A6%E7%B0%BF%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E7%A8%8D%E6%99%9A⟧
+审查员：“原件必须在证词之前登记。留下的时间，你们可以用来申请公开纪要。”
+⟦MG|mg_dangerous_distance_c14_b⟧
+
+
+# SCENE｜审查处外墙长椅
+⟦BG|bg_c14s03|%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9C%A8%E9%97%A8%E7%81%AF%E4%B8%8B%E6%8F%A1%E7%9D%80%E8%87%AA%E5%B7%B1%E7%9A%84%E7%AD%BE%E5%AD%97%E5%A4%B9%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%A4%9C⟧
+⟦CG|cg_c14s03_01|%E5%8D%A2%E8%A5%BF%E6%81%A9%E5%9C%A8%E9%97%A8%E7%81%AF%E4%B8%8B%E6%8F%A1%E7%9D%80%E8%87%AA%E5%B7%B1%E7%9A%84%E7%AD%BE%E5%AD%97%E5%A4%B9%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+卢西恩：“我得进去。这是我该承认的事。你想说什么，我会听。你决定走的话，我也会进去。”
+
+# CHOICE｜隐藏意图
+#### A｜作为获准见证人参加
+⟦OPT|A|set%3Adangerous_distance_c14_a⟧
+
+旁白：审查员确认玩家经授权可陈述的范围。
+#### B｜只旁听获准公开部分
+⟦OPT|B|set%3Adangerous_distance_c14_b⟧
+
+旁白：米拉先说明公开席位的边界。
+#### C｜离开听证，由独立方处理
+⟦OPT|C|set%3Adangerous_distance_c14_c⟧
+
+旁白：终止私人联络流程并交案件归档。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c14_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+# ·
+
+旁白：第一张座位卡上印着伊森的名字。他临进门又添了一行：申请纠正本人先前陈述。
+
+
+
+# CHAPTER 15｜危险距离
+⟦GOAL|%25E8%25A1%25A8%25E8%25BE%25BE%25E5%25B8%258C%25E6%259C%259B%25E4%25B8%258E%25E5%258D%25A2%25E8%25A5%25BF%25E6%2581%25A9%25E5%25A6%2582%25E4%25BD%2595%25E7%25BB%25A7%25E7%25BB%25AD⟧
+⟦DONE|say|表达希望与卢西恩如何继续|危险距离决定|可以先提出问题，再表达你的安排。⟧
+
+
+# SCENE｜独立听证室
+⟦BG|bg_c15s01|%E4%BC%8A%E6%A3%AE%E3%80%81%E5%8D%A2%E8%A5%BF%E6%81%A9%E3%80%81%E7%B1%B3%E6%8B%89%E4%B8%8E%E7%8B%AC%E7%AB%8B%E5%AE%A1%E6%9F%A5%E5%91%98%E5%88%86%E5%B8%AD%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E6%AC%A1%E6%97%A5⟧
+
+
+审查员：“伊森，你承认利益冲突和延误。卢西恩，你承认补正前漏报。今天我们先把有原件能支持的事情登记。”
+伊森：“我的家人可以自己说话。我的签字留在这里。”
+⟦MG|mg_dangerous_distance_c15_a⟧
+
+
+# SCENE｜公寓街口的餐台
+⟦BG|bg_c15s02|%E7%B1%B3%E6%8B%89%E7%8B%AC%E5%9D%90%E9%A4%90%E5%8F%B0%EF%BC%8C%E5%8D%A2%E8%A5%BF%E6%81%A9%E6%94%BE%E4%B8%8B%E8%87%AA%E5%B7%B1%E7%9A%84%E5%A4%8D%E8%AF%8A%E9%A2%84%E7%BA%A6%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E5%8D%88%E5%90%8E⟧
+旁白：米拉的稿子少了一段名字，多了一段更正。卢西恩数好自己的预约日期，第一张纸留给自己。
+⟦MG|mg_dangerous_distance_c15_b⟧
+
+
+# SCENE｜维斯珀城街角
+⟦BG|bg_c15s03|%E5%8D%A2%E8%A5%BF%E6%81%A9%E7%AB%99%E5%9C%A8%E6%9C%89%E4%B8%A4%E6%9D%A1%E5%87%BA%E8%B7%AF%E7%9A%84%E8%A1%97%E8%A7%92%EF%BC%8C%E4%BD%8E%E6%9C%BA%E4%BD%8D%EF%BC%9B%E8%A7%92%E8%89%B2%E5%A4%96%E5%BD%A2%E6%B2%BF%E7%94%A8%E6%AF%8D%E6%A1%A3%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+⟦TIME|%E9%9B%A8%E5%90%8E%E9%BB%84%E6%98%8F⟧
+⟦CG|cg_c15s03_01|%E5%8D%A2%E8%A5%BF%E6%81%A9%E7%AB%99%E5%9C%A8%E6%9C%89%E4%B8%A4%E6%9D%A1%E5%87%BA%E8%B7%AF%E7%9A%84%E8%A1%97%E8%A7%92%EF%BC%8C%E4%BD%8E%E6%9C%BA%E4%BD%8D%EF%BC%9B%E9%AB%98%E5%85%89%E5%88%87%E6%8D%A2%EF%BC%9B%E7%8E%A9%E5%AE%B6%E4%B8%8D%E9%9C%B2%E6%AD%A3%E8%84%B8⟧
+卢西恩：“以前我会说，我知道你该跟谁走。今天我只问你，想让我往哪个方向？”
+
+# CHOICE｜隐藏意图
+#### A｜愿意在边界下尝试约会
+⟦OPT|A|set%3Adangerous_distance_c15_a⟧
+
+旁白：卢西恩先问周末是否方便，并征询今后联系时间。
+旁白：复诊结束后，卢西恩提前十分钟到了街角，把还没打开的两把伞摆在旁边。“我会等到三点。你想换地方，也可以告诉我。”
+#### B｜维持朋友或有限联系
+⟦OPT|B|set%3Adangerous_distance_c15_b⟧
+
+旁白：按已约好的工作或朋友渠道交接更新。
+旁白：米拉只把公共回执放进工作频道。卢西恩在上面补了自己更正书的归档日期，没有把日期下面的空白留给私人讯息。
+#### C｜结束联系并各自生活
+⟦OPT|C|set%3Adangerous_distance_c15_c⟧
+
+旁白：卢西恩归还私人物品，停止主动联系。
+旁白：听证之后再来的消息只有公开公告。米拉把私人联络资料从订阅单移走。卢西恩自己在第三次复诊时签了到。
+#### D｜澄清、拒答或其他方案
+⟦OPT|D|set%3Adangerous_distance_c15_custom⟧
+
+旁白：当事人先将手边材料收好，等你说明愿意授权的范围。你可以把自己的决定留到以后。
+旁白：听证之后再来的消息只有公开公告。米拉把私人联络资料从订阅单移走。卢西恩自己在第三次复诊时签了到。
+# ·
+
+旁白：雨停的时候，卢西恩没有催你收伞。
+
