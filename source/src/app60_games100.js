@@ -62,17 +62,17 @@ simon_spell|记咒语|Memorize the Spell|simon|5|符文的顺序|咒语,符文,r
 simon_lock|记手势|Memorize the Pattern|simon|4|他刚才画的手势|手势密码,pattern
 simon_song|记旋律|Memorize the Tune|simon|5|他哼的那段旋律|哼了一段,旋律,melody
 simon_dance|记动作|Memorize the Moves|simon|4|跟着他做|跟着我做,学动作,follow my lead
-scratch_ticket|刮彩票|Scratch Ticket|scratch|🎟|恭喜，中了一个愿望|彩票,刮刮乐,lottery
+scratch_ticket|心愿卡|Wish Card|scratch|🎟|卡片下面写着一个心愿|彩票,刮刮乐,lottery
 scratch_photo|刮开照片|Reveal the Photo|scratch|🖼|照片背面写着：别走|照片背面,反过来,back of the photo
 scratch_note|显影|Reveal the Note|scratch|📝|纸条上写着：今晚十点，老地方|纸条,便签,a note
 scratch_window|擦窗户|Wipe the Window|scratch|🪟|雾气后面，他正看着你|起雾的窗,车窗,fogged window
 scratch_mirror|擦镜子|Wipe the Mirror|scratch|🪞|镜子上写着：我知道你是谁|浴室镜子,镜子,mirror
 scratch_gold|刮金粉|Gold Leaf|scratch|✨|金粉下面是一个名字|金粉,邀请函,invitation
-dice_bet|赌一把|Roll for It|dice|3|三局两胜|赌一把,掷骰子,roll the dice
-dice_drink|喝酒骰|Drinking Dice|dice|3|输的喝|喝酒游戏,摇骰子,drinking game
-dice_fate|命运骰|Fate Dice|dice|1|一次定生死|命运,赌命,fate
+dice_bet|比一把|Roll Off|dice|3|三局两胜|赌一把,掷骰子,roll the dice
+dice_drink|惩罚骰|Forfeit Dice|dice|3|输的接受一个小惩罚|喝酒游戏,摇骰子,drinking game
+dice_fate|一掷定局|One Roll|dice|1|一局定胜负|命运,赌命,fate
 dice_truth|真心话骰|Truth Dice|dice|3|输的说真心话|真心话,truth or dare
-dice_casino|赌场|Casino Night|dice|3|庄家对你|赌场,赌桌,casino
+dice_casino|骰子对决|Dice Duel|dice|3|他对你|赌场,赌桌,casino
 order_confess|拼回告白|Rebuild the Confession|order|我/从来/没有/后悔/遇见你|-|他说的那句话,那句告白,what he said
 order_vow|拼回誓言|Rebuild the Vow|order|无论/发生/什么/我/都在|-|誓言,发誓,vow
 order_spell|拼回咒文|Rebuild the Incantation|order|以/月光/之名/解开/契约|-|咒文,契约,incantation
