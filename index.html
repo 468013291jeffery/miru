@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="bb485891a3bc 2026-11-21T03:43Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="742e4827c281 2026-11-21T04:08Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -14714,6 +14714,7 @@ const AUT = {
   net: { zh: "网络不稳定，请稍后再试", en: "Network problem — try again", ja: "通信エラーです。もう一度お試しください", ko: "네트워크 오류예요. 다시 시도해 주세요", es: "Error de red, inténtalo de nuevo" },
   welcomeBack: { zh: "欢迎回来，进度已恢复", en: "Welcome back — progress restored", ja: "おかえりなさい。進行状況を復元しました", ko: "다시 오신 걸 환영해요. 진행 상황을 복원했어요", es: "¡Bienvenido de nuevo! Progreso restaurado" },
   hi: { zh: "登录成功", en: "You're signed in", ja: "ログインしました", ko: "로그인했어요", es: "Sesión iniciada" },
+  syncing: { zh: "登录成功，正在同步你的进度…", en: "Signed in — syncing your progress…", ja: "ログインしました。進行状況を同期中…", ko: "로그인했어요. 진행 상황을 동기화하는 중…", es: "Sesión iniciada. Sincronizando tu progreso…" },
   banned: { zh: "账号已被封禁", en: "This account is suspended", ja: "このアカウントは停止されています", ko: "이 계정은 정지되었어요", es: "Esta cuenta está suspendida" },
   until: { zh: "解封时间", en: "Until", ja: "解除日時", ko: "해제 시각", es: "Hasta" },
   forever: { zh: "永久", en: "Permanent", ja: "無期限", ko: "영구", es: "Permanente" },
@@ -14863,6 +14864,8 @@ async function au70Done(j, method) {
   track("login", { method, restored: !!j.restored });
   closeSheet();
   if (j.restored && !sameUser) {
+    /* 2026-11-21：登录框关掉之后还要从服务器取存档和钻石（网慢时要好几秒），以前这段时间页面上什么提示都没有，像卡死了。先说一声。 */
+    try { toast(au("syncing")); } catch (_) {}
     let had = false; try { had = await cloudPull(); } catch (_) {}
     const cc = cloudInfo(); cc.token = j.token; cc.uid = j.user.id; cc.email = j.user.email; cc.provider = j.user.provider;
     S.authChoice = method; save0(); await walletPull().catch(() => {});
@@ -16961,11 +16964,18 @@ const OFF94 = { cur: null, assets: {} };
 const dec94 = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
 function mk94(txt) { const m = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/.exec(String(txt || "").trim()); if (!m) return null; return { k: m[1], a: m[2] ? m[2].slice(1).split("|").map(dec94) : [] }; }
 async function off94Assets(id) {
-  const at=Date.now(); OFF94.assetAt=OFF94.assetAt||{};
+  const at=Date.now(); OFF94.assetAt=OFF94.assetAt||{}; OFF94.assetBusy=OFF94.assetBusy||{};
   if (OFF94.assets[id] && at-(OFF94.assetAt[id]||0)<120000) return OFF94.assets[id];
-  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Date.now(), {cache:"no-store"}); if (r.ok) map = await r.json(); } catch (_) {}
-  if (!Object.keys(map||{}).length && OFF94.assets[id]) return OFF94.assets[id];
-  OFF94.assets[id] = map || {}; OFF94.assetAt[id]=at; return OFF94.assets[id];
+  /* 2026-11-21 性能：同一部剧的素材表同时只取一次（以前首页、发现页、挑战页各取各的，同一个文件同时下两三遍）。
+     取法本身不变：仍然带时间戳 + no-store，新发布的预告片照样立刻生效（tools/homepage-assets-selftest.cjs 守着这一条）。 */
+  if (OFF94.assetBusy[id]) return OFF94.assetBusy[id];
+  const job = (async () => {
+    let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Date.now(), {cache:"no-store"}); if (r.ok) map = await r.json(); } catch (_) {}
+    if (!Object.keys(map||{}).length && OFF94.assets[id]) return OFF94.assets[id];
+    OFF94.assets[id] = map || {}; OFF94.assetAt[id]=at; return OFF94.assets[id];
+  })();
+  OFF94.assetBusy[id] = job;
+  try { return await job; } finally { if (OFF94.assetBusy[id] === job) delete OFF94.assetBusy[id]; }
 }
 /* ---- parse: lift directives out of the narration ---- */
 function off94Parse(next, text) {
@@ -17275,10 +17285,10 @@ function off94Cards(root) {
   (root || document).querySelectorAll("[data-cwork] .off89ph").forEach(ph => {
     const id = ph.closest("[data-cwork]").dataset.cwork; if (ph.dataset.h94) return; ph.dataset.h94 = 1;
     off94Assets(id).then(A => { if (!ph.isConnected) return; const art = ph.parentNode;
-      if (A.cover) { ph.outerHTML = '<img src="' + esc(A.cover) + '" alt="">'; return; }
-      if (A.vid_open) { ph.outerHTML = '<video class="v94" src="' + esc(A.vid_open) + '"' + (A.poster ? ' poster="' + esc(A.poster) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>';
-        const v = art.querySelector("video.v94"); if (v) { v.muted = true; v.play().catch(() => {}); } return; }
-      if (A.poster) ph.outerHTML = '<img src="' + esc(A.poster) + '" alt="">'; });
+      /* 2026-11-21 性能：同上，搜索结果里的封面 / 预告片也滚到眼前才加载（data-lz，见 app157_perf.js） */
+      if (A.cover) { ph.outerHTML = '<img data-lz="1" data-src="' + esc(A.cover) + '" alt="">'; return; }
+      if (A.vid_open) { ph.outerHTML = '<video class="v94" data-lz="1" data-src="' + esc(A.vid_open) + '"' + (A.poster ? ' data-poster="' + esc(A.poster) + '"' : '') + ' muted loop playsinline preload="none"></video>'; return; }
+      if (A.poster) ph.outerHTML = '<img data-lz="1" data-src="' + esc(A.poster) + '" alt="">'; });
   });
 }
 new MutationObserver(() => { try { if (document.querySelector("[data-cwork] .off89ph:not([data-h94])")) off94Cards(); } catch (_) {} }).observe(document.body, { childList: true, subtree: true });
@@ -17289,8 +17299,13 @@ async function off94Feed() {
   if (OFFF94.list && Date.now() - OFFF94.at < 120000) return OFFF94.list;
   let L = []; try { L = await off89Load(); } catch (_) {}
   if (!L || !L.length) { try { const r = await capi("/works?feed=featured&limit=50"); L = ((r && r.j && r.j.works) || []).filter(w => w.featured); } catch (_) {} }
+  /* 2026-11-21 性能：素材表 6 路并发取，顺序不变。
+     以前是一部一部排队等（40 多部 × 每次一个跨洋往返 ≈ 10 多秒），首页的官方新剧要等全部取完才出来。 */
+  const rows = L || [], maps = new Array(rows.length); let next = 0;
+  const worker = async () => { while (next < rows.length) { const i = next++; try { maps[i] = await off94Assets(rows[i].id); } catch (_) { maps[i] = null; } } };
+  await Promise.all(Array.from({ length: Math.min(6, rows.length) }, worker));
   const out = [];
-  for (const w of (L || [])) { try { const A = await off94Assets(w.id); if (A.vid_open || A.cover || A.poster) out.push(Object.assign({}, w, { A })); } catch (_) {} }
+  rows.forEach((w, i) => { const A = maps[i]; if (A && (A.vid_open || A.cover || A.poster)) out.push(Object.assign({}, w, { A })); });
   OFFF94.list = out; OFFF94.at = Date.now(); return out;
 }
 /* a Chinese title must not carry its English name ("冰场之外 Off the Ice" → "冰场之外") */
@@ -17309,7 +17324,9 @@ function off94PreviewSrc(w) {
 }
 function off94FCard(w) {
   const A = w.A, homeVideo = off94PreviewSrc(w), pos = A.cover || A.poster || "";
-  const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
+  /* 2026-11-21 性能：封面不再一进首页就全下（38 张、每张 2–3 MB ≈ 38 MB，把连接全占满，别的请求都排在后面）。
+     先写在 data-poster / data-src 上，feedWire 只给当前这张和上下各一张卡加载（见 app15_home.js）。 */
+  const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' data-poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg"' + (pos ? ' data-src="' + esc(pos) + '"' : '') + ' alt="">';
   return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
     '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (CL() === "zh" ? (w.orient === "bl" ? "男男" : w.orient === "gl" ? "女女" : "男女") : (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F")) + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
     '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
@@ -17331,7 +17348,9 @@ renderHome = function (v) {
 };
 function off94RCard(w) {
   const A = w.A, previewVideo = off94PreviewSrc(w), pos = A.cover || A.poster || "";
-  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (previewVideo ? '<video src="' + esc(previewVideo) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>' : '<img src="' + esc(pos) + '" alt="">') +
+  /* 2026-11-21 性能：发现页每排的卡片以前全是 autoplay 视频（一部剧出现在几排就是几个），一打开几十上百个视频同时下载。
+     现在标 data-lz：滚到眼前才加载封面，预告片同一时间最多放 2 个（见 app157_perf.js）。 */
+  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (previewVideo ? '<video data-lz="1" data-src="' + esc(previewVideo) + '"' + (pos ? ' data-poster="' + esc(pos) + '"' : '') + ' muted loop playsinline preload="none"></video>' : '<img data-lz="1"' + (pos ? ' data-src="' + esc(pos) + '"' : '') + ' alt="">') +
     '<span class="rbadge">✦ ' + (CL() === "zh" ? "新剧" : "New") + '</span></div><b>' + esc(off94Title(w)) + '</b><span>' + esc(off94Hook(w)).slice(0, 40) + '</span></button>';
 }
 const _discMain94 = discMain;
@@ -17750,7 +17769,7 @@ if(typeof MSGKIND!=="undefined")MSGKIND.post("app12:legacy-photo",function(html,
    The catalog is the 36 official story packs (+ community worlds in Discover). */
 const FEED_TABS=[["foryou",T("For You","为你推荐")],["hot",T("Hot","热门")],["sweet",T("Sweet","甜宠")],["rivals",T("Rivals","宿敌")],["dark",T("Dark","暗黑")],
  ["fantasy",T("Fantasy","奇幻")],["slow",T("Slow Burn","慢热")],["second",T("Second Chance","破镜重圆")],["ensemble",T("Ensemble","群像")]];
-let feedTab="foryou",feedObs=null,feedSound=true;
+let feedTab="foryou",feedObs=null,feedNear=null,feedSound=true;
 function packWorlds(){return W.filter(w=>w.pack)}
 function hotRank(){return packWorlds().slice().sort((a,b)=>b.stats[0]-a.stats[0]).map(w=>w.id)}
 function heatFit(w){const o=["fluff","slow","steamy","mature"];return 3-Math.abs(o.indexOf(w.heat)-o.indexOf(S.heat))}
@@ -17780,7 +17799,16 @@ function renderHome(v){
 function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();
  feedObs=new IntersectionObserver(es=>es.forEach(en=>{const v=en.target.querySelector("video");if(!v)return;
   if(en.isIntersecting&&en.intersectionRatio>.6){if(!v.src)v.src=v.dataset.src;v.muted=!feedSound;const p=v.play();p&&p.catch&&p.catch(()=>{v.muted=true;v.play().catch(()=>{})})}else v.pause()}),{root:feed,threshold:[0,.6,1]});
- feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c))}
+ feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c));
+ /* 2026-11-21 性能：封面按需加载 —— 只给当前这张卡和上下各一张卡加载封面（data-poster / data-src → poster / src）。
+    以前所有卡的封面一进首页就全下，官方剧封面每张 2–3 MB，几十张把连接占满。老浏览器没有 IntersectionObserver 时照旧全部加载。 */
+ const hyd=c=>{c.querySelectorAll("video[data-poster]").forEach(v=>{if(!v.getAttribute("poster"))v.setAttribute("poster",v.dataset.poster)});
+  c.querySelectorAll("img[data-src]").forEach(i=>{if(!i.getAttribute("src")&&i.dataset.src)i.setAttribute("src",i.dataset.src)})};
+ if(feedNear){feedNear.disconnect();feedNear=null}
+ if(typeof IntersectionObserver==="function"){
+  feedNear=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){hyd(en.target);feedNear&&feedNear.unobserve(en.target)}}),{root:feed,rootMargin:"100% 0px 100% 0px",threshold:0});
+  feed.querySelectorAll(".fcard").forEach(c=>feedNear.observe(c))}
+ else feed.querySelectorAll(".fcard").forEach(hyd)}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-fsound]")){feedSound=!feedSound;x.textContent=feedSound?"🔊":"🔇";$$(".fvid").forEach(v=>v.muted=!feedSound);return}
  if(feedSound&&e.target.closest(".fcard")){$$(".fvid").forEach(v=>{if(v.muted&&!v.paused)v.muted=false})}
@@ -18182,7 +18210,8 @@ setTimeout(function () { try { ageGateAsk() } catch (_) {} }, 1200);
     off94Feed = async function () {
       const before = JSON.stringify((OFFF94.list || []).map(w => w.id));
       const L = await _f.apply(this, arguments);
-      try { localStorage.setItem(OKEY, JSON.stringify({ at: Date.now(), L })); } catch (_) {}
+      /* 2026-11-21 性能：列表（约 300 KB）没变就不重写 localStorage —— 首页每分钟刷新一次，以前每次都同步写一遍。 */
+      try { const body = JSON.stringify(L || []); if (body !== OFFF94.saved100) { localStorage.setItem(OKEY, '{"at":' + Date.now() + ',"L":' + body + '}'); OFFF94.saved100 = body; } } catch (_) {}
       try { if (JSON.stringify((L || []).map(w => w.id)) !== before && S.lastTab === "home" && $("#feed")) { const f = $("#feed"); f.querySelectorAll(".off94").forEach(x => x.remove()); renderHome($("#tabv")); } } catch (_) {}
       return L;
     };
@@ -22881,7 +22910,10 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   }, true);
   try { const st = document.createElement("style"); st.textContent = '[data-remix^="ldw_"]{display:none!important}'; document.head.appendChild(st); } catch (e) { console.warn("[leads] style", e); }
 
-  if (document.readyState === "complete") load(); else window.addEventListener("load", load);
+  /* 2026-11-21 性能：不再等整页 load 事件。谷歌广告 / 谷歌登录按钮的内嵌页在连不上谷歌的网络里要挂 40 秒才超时，
+     load 被它们拖住，角色卡（发现 → 角色、排行、遇见）就一直不出来。改成页面脚本跑完（DOMContentLoaded）就开始，只跑一次。 */
+  let started = false; const start = function () { if (started) return; started = true; load(); };
+  if (document.readyState !== "loading") start(); else { document.addEventListener("DOMContentLoaded", start); window.addEventListener("load", start); }
   window.__leads = () => ({ loaded: loaded, live: [...live], chars: Object.keys(C).filter(id => C[id] && C[id].ld126) });
 })();
 
@@ -27567,7 +27599,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       window.__leads165 = { added, checked: rows.length };
     } catch (e) { console.warn("[leads165]", e); }
   }
-  if (document.readyState === "complete") setTimeout(run, 2500); else window.addEventListener("load", () => setTimeout(run, 2500));
+  /* 2026-11-21 性能：同 app126 —— 不等整页 load（会被连不上的谷歌内嵌页拖 40 秒），脚本跑完 2.5 秒后就开始，只跑一次。 */
+  let started = false; const start = () => { if (started) return; started = true; setTimeout(run, 2500); };
+  if (document.readyState !== "loading") start(); else { document.addEventListener("DOMContentLoaded", start); window.addEventListener("load", start); }
 })();
 
 /* ===== 2026-11-15 · 二创页按最新规则：玩家自己不算「角色」、提示语用这部剧自己的人 =====
@@ -29332,7 +29366,8 @@ function authoredQueue(th){if(!th?.pk?.authoredContract)return;function walk(arr
         if(w.id===pin)html=html.replace('class="fcard off94"','class="fcard off94 home-showcase" data-home-showcase="1"');
         let node=existing.get(w.id);const video=node?.querySelector('video'),preview=off94PreviewSrc(w),poster=w.A?.cover||w.A?.poster||'';
         const same=node && (node.querySelector('.ftitle')?.textContent||'').replace(/\s*›\s*$/,'')===off94Title(w) && node.querySelector('.fhook94')?.textContent===off94Hook(w) &&
-          (preview ? video?.dataset.src===preview && video.getAttribute('poster')===poster : !video && node.querySelector('.fimg')?.getAttribute('src')===poster);
+          /* 2026-11-21：封面改成按需加载后，地址先写在 data-poster / data-src 上（见 app94 的 off94FCard），这里两处都认 */
+          (preview ? video?.dataset.src===preview && (video.dataset.poster||video.getAttribute('poster')||'')===poster : !video && (node.querySelector('.fimg')?.dataset.src||node.querySelector('.fimg')?.getAttribute('src')||'')===poster);
         if(!same){const t=document.createElement('template');t.innerHTML=html;const replacement=t.content.firstElementChild;if(node){if(cursor===node)cursor=replacement;node.replaceWith(replacement);}node=replacement;}
         if(node!==cursor)feed.insertBefore(node,cursor);
         cursor=node.nextSibling;
@@ -29569,6 +29604,79 @@ const match=mgMatch;mgMatch=function(){return own(S.threads[curT])?null:match.ap
 const pp=packPrompt;packPrompt=function(th){const base=pp.apply(this,arguments);if(!own(th))return base;const flags=th.pk.flags||{},has=f=>Array.isArray(flags)?flags.includes(f):!!flags[f];const comments=R.contexts[th.pk.ch-1]?.comments||[];const notes=[];for(const c of comments){for(const l of c.split('\n')){const m=l.trim().match(/^(dangerous_distance_[a-z0-9_]+)\s*→\s*(.*)$/);if(m&&has(m[1]))notes.push(m[2]);}}for(const g of R.games){const ch=Number(g.id.match(/_c(\d+)_/)[1]);if(ch!==th.pk.ch-1)continue;for(const r of ['win','lose','skip'])if(has(g.id+'_'+r))notes.push('上章已确认的互动后果：'+g.outcomes[r]);}return base+'\n本章已提交状态对应的承接依据（仅作为行为约束，不念成旁白，不把计划当已执行）：'+notes.join('\n')+'\n当前协作尊重记录：'+(th.pk.dangerScores?.respect||0)+'，只影响对已表达边界的理解，不代表玩家同意或亲密授权。'+'\n缺少授权旗标时不披露私人材料；询问不是同意。只按真实已提交状态推进，不提前知道后章秘密。小游戏失败与跳过仍继续；记录事实、猜测和许可边界。';};
 const open=openThread;openThread=function(id){const th=S.threads[id];if(own(th))config(wd(th.wid));return open.apply(this,arguments);};
 const feed=off94Feed;off94Feed=async function(){const list=await feed.apply(this,arguments);const at=list.findIndex(w=>w.id===R.work_id);if(at>0)list.unshift(list.splice(at,1)[0]);return list;};
+})();
+
+/* ================= 2026-11-21 · 性能：首页列表请求合并 + 媒体滚到眼前才加载 =================
+   起因：线上「登录后、运行时都很卡」。实测（服务器在美国，国内一次往返约 250 ms，服务器只有 HTTP/1.1、同域最多 6 条连接）：
+   1 首页官方新剧列表 off94Feed() 会被好几处同时调（进页面、2.5 秒后、每次画首页、每 60 秒刷新、切回页面），
+     每调一次就把 40 多部剧的素材表重新取一遍，几条链同时跑。⇒ 这里加一层「正在取就等同一次结果」。
+     （素材表本身改成并发 + 同一个文件同时只取一次，在 app94_official2.js 的 off94Assets / off94Feed 里。）
+   2 发现页 / 搜索结果的卡片：封面图和预告片滚到眼前才加载（卡片上标 data-lz，地址写在 data-src / data-poster）。
+     预告片同一时间最多放 2 个 —— 以前每张卡都是 autoplay 视频，一打开几十个视频同时下载，把 6 条连接全占住，
+     点开一部剧、登录、对话的请求都只能排在后面等。
+     （首页竖滑卡片的封面在 app15_home.js 的 feedWire 里按需加载。）
+   3 首页列表缓存（miru_off94_v1，约 300 KB）内容没变就不重写 localStorage。
+   这个文件必须排在所有包装 off94Feed 的模块（app100_fixes / app150_catalogrefresh）之后。 */
+(function () {
+  "use strict";
+  /* ---------- 1 · off94Feed：同一时间只跑一趟 ---------- */
+  try {
+    if (typeof off94Feed === "function") {
+      const feed = off94Feed; let busy = null;
+      off94Feed = function () {
+        if (busy) return busy;
+        const p = Promise.resolve().then(() => feed.apply(this, arguments));
+        busy = p; const done = () => { if (busy === p) busy = null; }; p.then(done, done);
+        return p;
+      };
+    }
+  } catch (e) { console.warn("[perf157] feed", e); }
+
+  /* ---------- 2 · data-lz：滚到眼前才加载 ---------- */
+  const MAX_PLAYING = 2;
+  const fill = el => {
+    try {
+      if (el.tagName === "VIDEO") { if (el.dataset.poster && !el.getAttribute("poster")) el.setAttribute("poster", el.dataset.poster); }
+      else if (el.dataset.src && !el.getAttribute("src")) el.setAttribute("src", el.dataset.src);
+    } catch (e) { console.warn("[perf157] fill", e); }
+  };
+  const play = v => {
+    try {
+      if (!v.getAttribute("src") && v.dataset.src) v.setAttribute("src", v.dataset.src);
+      v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {});
+    } catch (e) { console.warn("[perf157] play", e); }
+  };
+  const stop = v => { try { if (!v.paused) v.pause(); } catch (_) {} };
+  try {
+    if (typeof IntersectionObserver === "function" && typeof MutationObserver === "function") {
+      const showing = new Set();   /* 眼前（露出一半以上）的预告片，按进入先后 */
+      const pump = () => { let n = 0; showing.forEach(v => { if (!v.isConnected) { showing.delete(v); return; } if (n < MAX_PLAYING) { n++; if (v.paused) play(v); } else stop(v); }); };
+      const io = new IntersectionObserver(es => {
+        es.forEach(en => {
+          const el = en.target;
+          if (el.tagName === "VIDEO") {
+            if (en.isIntersecting) fill(el);
+            if (en.isIntersecting && en.intersectionRatio >= .5) showing.add(el); else { showing.delete(el); stop(el); }
+          } else if (en.isIntersecting) { fill(el); io.unobserve(el); }
+        });
+        pump();
+      }, { rootMargin: "120px", threshold: [0, .5] });
+      let queued = false;
+      const scan = () => { queued = false; document.querySelectorAll("[data-lz]:not([data-lzo])").forEach(el => { el.dataset.lzo = "1"; io.observe(el); }); };
+      const ask = () => { if (queued) return; queued = true; setTimeout(scan, 60); };
+      new MutationObserver(ask).observe(document.body, { childList: true, subtree: true });
+      ask();
+    } else {
+      /* 老浏览器：没有 IntersectionObserver 就照以前的做法，卡片一出现就全部直接加载（不用定时器） */
+      const all = () => document.querySelectorAll("[data-lz]:not([data-lzo])").forEach(el => { el.dataset.lzo = "1"; fill(el); if (el.tagName === "VIDEO") play(el); });
+      const later = () => setTimeout(all, 80);
+      if (typeof MutationObserver === "function") new MutationObserver(later).observe(document.body, { childList: true, subtree: true });
+      else document.addEventListener("click", later, true);
+      all();
+    }
+  } catch (e) { console.warn("[perf157] lazy", e); }
+
+  window.PERF157 = { max: MAX_PLAYING };
 })();
 
 </script>
