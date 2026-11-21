@@ -2442,7 +2442,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       window.__leads165 = { added, checked: rows.length };
     } catch (e) { console.warn("[leads165]", e); }
   }
-  if (document.readyState === "complete") setTimeout(run, 2500); else window.addEventListener("load", () => setTimeout(run, 2500));
+  /* 2026-11-21 性能：同 app126 —— 不等整页 load（会被连不上的谷歌内嵌页拖 40 秒），脚本跑完 2.5 秒后就开始，只跑一次。 */
+  let started = false; const start = () => { if (started) return; started = true; setTimeout(run, 2500); };
+  if (document.readyState !== "loading") start(); else { document.addEventListener("DOMContentLoaded", start); window.addEventListener("load", start); }
 })();
 
 /* ===== 2026-11-15 · 二创页按最新规则：玩家自己不算「角色」、提示语用这部剧自己的人 =====

@@ -49,7 +49,8 @@
         if(w.id===pin)html=html.replace('class="fcard off94"','class="fcard off94 home-showcase" data-home-showcase="1"');
         let node=existing.get(w.id);const video=node?.querySelector('video'),preview=off94PreviewSrc(w),poster=w.A?.cover||w.A?.poster||'';
         const same=node && (node.querySelector('.ftitle')?.textContent||'').replace(/\s*›\s*$/,'')===off94Title(w) && node.querySelector('.fhook94')?.textContent===off94Hook(w) &&
-          (preview ? video?.dataset.src===preview && video.getAttribute('poster')===poster : !video && node.querySelector('.fimg')?.getAttribute('src')===poster);
+          /* 2026-11-21：封面改成按需加载后，地址先写在 data-poster / data-src 上（见 app94 的 off94FCard），这里两处都认 */
+          (preview ? video?.dataset.src===preview && (video.dataset.poster||video.getAttribute('poster')||'')===poster : !video && (node.querySelector('.fimg')?.dataset.src||node.querySelector('.fimg')?.getAttribute('src')||'')===poster);
         if(!same){const t=document.createElement('template');t.innerHTML=html;const replacement=t.content.firstElementChild;if(node){if(cursor===node)cursor=replacement;node.replaceWith(replacement);}node=replacement;}
         if(node!==cursor)feed.insertBefore(node,cursor);
         cursor=node.nextSibling;

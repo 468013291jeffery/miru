@@ -4,7 +4,7 @@
    The catalog is the 36 official story packs (+ community worlds in Discover). */
 const FEED_TABS=[["foryou",T("For You","为你推荐")],["hot",T("Hot","热门")],["sweet",T("Sweet","甜宠")],["rivals",T("Rivals","宿敌")],["dark",T("Dark","暗黑")],
  ["fantasy",T("Fantasy","奇幻")],["slow",T("Slow Burn","慢热")],["second",T("Second Chance","破镜重圆")],["ensemble",T("Ensemble","群像")]];
-let feedTab="foryou",feedObs=null,feedSound=true;
+let feedTab="foryou",feedObs=null,feedNear=null,feedSound=true;
 function packWorlds(){return W.filter(w=>w.pack)}
 function hotRank(){return packWorlds().slice().sort((a,b)=>b.stats[0]-a.stats[0]).map(w=>w.id)}
 function heatFit(w){const o=["fluff","slow","steamy","mature"];return 3-Math.abs(o.indexOf(w.heat)-o.indexOf(S.heat))}
@@ -34,7 +34,16 @@ function renderHome(v){
 function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();
  feedObs=new IntersectionObserver(es=>es.forEach(en=>{const v=en.target.querySelector("video");if(!v)return;
   if(en.isIntersecting&&en.intersectionRatio>.6){if(!v.src)v.src=v.dataset.src;v.muted=!feedSound;const p=v.play();p&&p.catch&&p.catch(()=>{v.muted=true;v.play().catch(()=>{})})}else v.pause()}),{root:feed,threshold:[0,.6,1]});
- feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c))}
+ feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c));
+ /* 2026-11-21 性能：封面按需加载 —— 只给当前这张卡和上下各一张卡加载封面（data-poster / data-src → poster / src）。
+    以前所有卡的封面一进首页就全下，官方剧封面每张 2–3 MB，几十张把连接占满。老浏览器没有 IntersectionObserver 时照旧全部加载。 */
+ const hyd=c=>{c.querySelectorAll("video[data-poster]").forEach(v=>{if(!v.getAttribute("poster"))v.setAttribute("poster",v.dataset.poster)});
+  c.querySelectorAll("img[data-src]").forEach(i=>{if(!i.getAttribute("src")&&i.dataset.src)i.setAttribute("src",i.dataset.src)})};
+ if(feedNear){feedNear.disconnect();feedNear=null}
+ if(typeof IntersectionObserver==="function"){
+  feedNear=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){hyd(en.target);feedNear&&feedNear.unobserve(en.target)}}),{root:feed,rootMargin:"100% 0px 100% 0px",threshold:0});
+  feed.querySelectorAll(".fcard").forEach(c=>feedNear.observe(c))}
+ else feed.querySelectorAll(".fcard").forEach(hyd)}
 document.addEventListener("click",e=>{let x;
  if(x=e.target.closest("[data-fsound]")){feedSound=!feedSound;x.textContent=feedSound?"🔊":"🔇";$$(".fvid").forEach(v=>v.muted=!feedSound);return}
  if(feedSound&&e.target.closest(".fcard")){$$(".fvid").forEach(v=>{if(v.muted&&!v.paused)v.muted=false})}

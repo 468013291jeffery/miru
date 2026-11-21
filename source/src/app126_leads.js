@@ -66,6 +66,9 @@
   }, true);
   try { const st = document.createElement("style"); st.textContent = '[data-remix^="ldw_"]{display:none!important}'; document.head.appendChild(st); } catch (e) { console.warn("[leads] style", e); }
 
-  if (document.readyState === "complete") load(); else window.addEventListener("load", load);
+  /* 2026-11-21 性能：不再等整页 load 事件。谷歌广告 / 谷歌登录按钮的内嵌页在连不上谷歌的网络里要挂 40 秒才超时，
+     load 被它们拖住，角色卡（发现 → 角色、排行、遇见）就一直不出来。改成页面脚本跑完（DOMContentLoaded）就开始，只跑一次。 */
+  let started = false; const start = function () { if (started) return; started = true; load(); };
+  if (document.readyState !== "loading") start(); else { document.addEventListener("DOMContentLoaded", start); window.addEventListener("load", start); }
   window.__leads = () => ({ loaded: loaded, live: [...live], chars: Object.keys(C).filter(id => C[id] && C[id].ld126) });
 })();
