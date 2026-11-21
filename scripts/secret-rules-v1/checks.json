@@ -1,0 +1,177 @@
+{
+  "style": {
+    "ok": true,
+    "err": [],
+    "warn": [
+      "故事背景（intro）：6 段，建议不超过 4 段",
+      "experience.pacing：未配置，将按默认轮数显示「下一章」按钮"
+    ],
+    "stats": {
+      "chapters": 18,
+      "scenes": 90,
+      "schema": 1
+    }
+  },
+  "dsl": {
+    "ok": true,
+    "err": [],
+    "warn": [],
+    "stats": {
+      "chapters": 18,
+      "scenes": 90,
+      "choices": 18,
+      "options": 72,
+      "dots": 18,
+      "you": 0,
+      "casts": 2,
+      "lines": 393,
+      "callsOpen": 0,
+      "callsClose": 0,
+      "ifs": 0,
+      "ifEnds": 0,
+      "unknown": [],
+      "assets": {
+        "bg": 90,
+        "cg": 0,
+        "video": 0,
+        "photo": 0,
+        "item": 0,
+        "total": 90
+      },
+      "lore": 0,
+      "orient": {
+        "declared": "bg",
+        "inferred": "bg",
+        "final": "bg"
+      }
+    },
+    "perCh": [
+      {
+        "n": 1,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 26
+      },
+      {
+        "n": 2,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 24
+      },
+      {
+        "n": 3,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 25
+      },
+      {
+        "n": 4,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 24
+      },
+      {
+        "n": 5,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 23
+      },
+      {
+        "n": 6,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 21
+      },
+      {
+        "n": 7,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 22
+      },
+      {
+        "n": 8,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 21
+      },
+      {
+        "n": 9,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 22
+      },
+      {
+        "n": 10,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 23
+      },
+      {
+        "n": 11,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 22
+      },
+      {
+        "n": 12,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 20
+      },
+      {
+        "n": 13,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 20
+      },
+      {
+        "n": 14,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 21
+      },
+      {
+        "n": 15,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 19
+      },
+      {
+        "n": 16,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 18
+      },
+      {
+        "n": 17,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 22
+      },
+      {
+        "n": 18,
+        "choices": 1,
+        "dots": 1,
+        "scenes": 5,
+        "lines": 20
+      }
+    ]
+  }
+}
