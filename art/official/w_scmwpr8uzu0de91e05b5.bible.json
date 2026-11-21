@@ -228,7 +228,48 @@
           },
           "highlights": [],
           "bgm": "clue",
-          "variants": []
+          "variants": [],
+          "game": {
+            "id": "MG_CH01_A",
+            "kind": "pick3",
+            "code": "MG_CH01_A",
+            "name": "通知拼图",
+            "name_en": "Notice Sort",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "找出首要申请事项",
+            "outcomes": {
+              "WIN": "找到首要申请事项：安全方案先行，资金和预约都排在它后面。",
+              "LOSE": "Rowan补出正确分类：没有安全方案，资金和预约都无从谈起。",
+              "SKIP": "跳过分类，直接查看通知附带的清单，信息照样拿到。"
+            },
+            "winFlag": "mg_MG_CH01_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "市政通知要求 28 天内交齐三份材料。通电、让人进场之前，必须先过哪一关？",
+              "pe": "The town notice wants three documents within 28 days. Before any power or people go inside, which one has to come first?",
+              "ask": [
+                "哪一项是首要申请事项？",
+                "Which item comes first?"
+              ],
+              "items": [
+                [
+                  "安全方案",
+                  "Safety plan"
+                ],
+                [
+                  "资金方案",
+                  "Funding plan"
+                ],
+                [
+                  "观众预约证明",
+                  "Proof of audience bookings"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH01_01.png"
+            }
+          }
         },
         {
           "id": "c01s03",
@@ -409,7 +450,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：决定要不要让Rowan帮你申请保住影院。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：看见当年签字；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH01_B",
+            "kind": "pick3",
+            "code": "MG_CH01_B",
+            "name": "投影仪急检",
+            "name_en": "Projector Check",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "找出通电前的安全隐患",
+            "outcomes": {
+              "WIN": "找到潜在安全问题：电源线绝缘层老化，今天先不通电。",
+              "LOSE": "Rowan提醒先检查供电线路，其他的都可以晚一点。",
+              "SKIP": "改用不通电的纸面检测流程，同样记下了设备状况。"
+            },
+            "winFlag": "mg_MG_CH01_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "放映室那台老投影仪六年没开过。谁都不该冒险直接通电。",
+              "pe": "The old projector hasn't been switched on in six years. Nobody should risk powering it up blind.",
+              "ask": [
+                "通电之前，最先检查哪一项？",
+                "What do you check before powering it on?"
+              ],
+              "items": [
+                [
+                  "外壳有没有破损",
+                  "Whether the casing is damaged"
+                ],
+                [
+                  "电路和电源线",
+                  "The wiring and power cord"
+                ],
+                [
+                  "灯泡还亮不亮",
+                  "Whether the bulb still works"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH01_02.png"
+            }
+          }
         },
         {
           "id": "c01s05",
@@ -653,7 +735,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：核对旧报告并决定哪些区域可以安全进入。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：画出安全区域；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH02_A",
+            "kind": "pick3",
+            "code": "MG_CH02_A",
+            "name": "裂纹比对",
+            "name_en": "Crack Compare",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "完善危险点记录",
+            "outcomes": {
+              "WIN": "完善危险点记录：梁角斜裂就是报告里那一处，已在平面图上标出。",
+              "LOSE": "Rowan陪你重新对照照片，确认危险点在梁角。",
+              "SKIP": "先把没核对的区域全部封住，等之后再比对。"
+            },
+            "winFlag": "mg_MG_CH02_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "旧安全报告里附着一张照片：一道裂缝从承重梁的拐角斜着向下延伸。现场有三处裂纹。",
+              "pe": "The old safety report has a photo: a crack running diagonally down from the corner of a load-bearing beam. There are three cracks on site.",
+              "ask": [
+                "哪一处和报告照片相符？",
+                "Which one matches the report photo?"
+              ],
+              "items": [
+                [
+                  "左墙上的细纹",
+                  "A hairline crack on the left wall"
+                ],
+                [
+                  "承重梁角的斜裂",
+                  "A diagonal crack at the beam corner"
+                ],
+                [
+                  "地砖上的碎缝",
+                  "A broken floor tile"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH02_01.png"
+            }
+          }
         },
         {
           "id": "c02s03",
@@ -865,7 +988,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：核对旧报告并决定哪些区域可以安全进入。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：画出安全区域；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH02_B",
+            "kind": "pick3",
+            "code": "MG_CH02_B",
+            "name": "安全路线",
+            "name_en": "Safe Route",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "得到一条可走路线",
+            "outcomes": {
+              "WIN": "得到可走路线：从门厅出发，一路标出安全区。",
+              "LOSE": "路线退回安全入口，从门厅重新规划。",
+              "SKIP": "直接使用报告附带的完整安全图。"
+            },
+            "winFlag": "mg_MG_CH02_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "勘查只能从已经确认安全的地方出发，一步错了也只会绕回大厅，资料不会丢。",
+              "pe": "A survey has to start from somewhere already confirmed safe. A wrong step just loops you back to the lobby; nothing is lost.",
+              "ask": [
+                "勘查的第一步从哪里开始？",
+                "Where does the survey start?"
+              ],
+              "items": [
+                [
+                  "门厅",
+                  "The lobby"
+                ],
+                [
+                  "封闭的楼梯",
+                  "The sealed stairwell"
+                ],
+                [
+                  "还没进去过的房间",
+                  "A room no one has entered yet"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH02_02.png"
+            }
+          }
         },
         {
           "id": "c02s05",
@@ -1166,7 +1330,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：把合作条款和他的私人规则分开谈清楚。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：明确公私边界；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH03_A",
+            "kind": "pick3",
+            "code": "MG_CH03_A",
+            "name": "条款归位",
+            "name_en": "Contract Split",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "建立对外发送的审批约束",
+            "outcomes": {
+              "WIN": "建立审批约束：未经你同意，任何材料不得对外发送。",
+              "LOSE": "Rowan指出这样公私混在一起不妥，帮你把两张纸分开。",
+              "SKIP": "先暂停，把合同从头读一遍再说。"
+            },
+            "winFlag": "mg_MG_CH03_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "工作合同和他手写的私人规则卡夹在了一起。工作归工作，私事归私事。",
+              "pe": "The work contract and his handwritten rule card got clipped together. Work stays work; private stays private.",
+              "ask": [
+                "哪一条必须写进工作合同？",
+                "Which line belongs in the work contract?"
+              ],
+              "items": [
+                [
+                  "私下的昵称",
+                  "A private nickname"
+                ],
+                [
+                  "对外发送材料须经你授权",
+                  "Nothing goes out without your approval"
+                ],
+                [
+                  "牵手",
+                  "Holding hands"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH03_01.png"
+            }
+          }
         },
         {
           "id": "c03s03",
@@ -1396,7 +1601,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：把合作条款和他的私人规则分开谈清楚。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：明确公私边界；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH03_B",
+            "kind": "pick3",
+            "code": "MG_CH03_B",
+            "name": "档案分类",
+            "name_en": "Archive Split",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "把私人资料和项目档案分开",
+            "outcomes": {
+              "WIN": "保护私密资料：情书单独存放，不进任何项目档案。",
+              "LOSE": "Rowan提醒这是你的隐私，不该和项目资料放在一起。",
+              "SKIP": "不保存这封私人信件，项目档案里也不留副本。"
+            },
+            "winFlag": "mg_MG_CH03_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "整理项目档案时，你六年前写的那封情书夹在了资料堆里。",
+              "pe": "While sorting the project archive, you find the love letter you wrote six years ago tucked in with the files.",
+              "ask": [
+                "它应该放进哪个文件夹？",
+                "Which folder does it go in?"
+              ],
+              "items": [
+                [
+                  "项目证据",
+                  "Project evidence"
+                ],
+                [
+                  "私人信件（不进项目档案）",
+                  "Private letters (kept out of the project file)"
+                ],
+                [
+                  "售票单据",
+                  "Ticket receipts"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH03_02.png"
+            }
+          }
         },
         {
           "id": "c03s05",
@@ -1769,7 +2015,48 @@
                 }
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH04_A",
+            "kind": "pick3",
+            "code": "MG_CH04_A",
+            "name": "边界识别",
+            "name_en": "Boundary Words",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "分清明确同意和不确定",
+            "outcomes": {
+              "WIN": "说清谈话许可：只有明确说出口的同意才算数，而且只到“谈”为止。",
+              "LOSE": "Rowan把所有不确定都当作没有同意，话题先不推进。",
+              "SKIP": "保持关闭状态，私人话题不开启。"
+            },
+            "winFlag": "mg_MG_CH04_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "这是一张帮你看清词义的卡，答错不扣任何分。记住：同意谈，不等于同意做。",
+              "pe": "This card only helps you read the words clearly; there's no penalty for a wrong answer. Remember: agreeing to talk isn't agreeing to do.",
+              "ask": [
+                "哪一句是明确同意“谈一谈”？",
+                "Which one is a clear yes to talking?"
+              ],
+              "items": [
+                [
+                  "“也许吧。”",
+                  "“Maybe.”"
+                ],
+                [
+                  "“我同意谈谈。”",
+                  "“I agree to talk about it.”"
+                ],
+                [
+                  "一言不发",
+                  "Saying nothing"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH04_01.png"
+            }
+          }
         },
         {
           "id": "c04s03",
@@ -2133,7 +2420,48 @@
                 }
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH04_B",
+            "kind": "pick3",
+            "code": "MG_CH04_B",
+            "name": "停止信号",
+            "name_en": "Stop Signal",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "记录一个清楚的停用信号",
+            "outcomes": {
+              "WIN": "记录停用信号：“等一下”一出口，任何事都立刻停。",
+              "LOSE": "Rowan主动停下，再跟你一起把信号说清楚。",
+              "SKIP": "默认任何犹豫都等于停止。"
+            },
+            "winFlag": "mg_MG_CH04_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "停用信号要短、要固定，一听就懂。不确定的时候也要先停下来澄清，但约定的信号得是一句清楚的话。",
+              "pe": "A stop signal should be short, fixed and instantly clear. Uncertainty also means pausing to check, but the agreed signal must be one clear phrase.",
+              "ask": [
+                "哪一句适合约定为“立刻停下”的信号？",
+                "Which phrase works as the agreed “stop now” signal?"
+              ],
+              "items": [
+                [
+                  "“等一下。”",
+                  "“Wait.”"
+                ],
+                [
+                  "“继续。”",
+                  "“Keep going.”"
+                ],
+                [
+                  "“我没想好……”",
+                  "“I'm not sure…”"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH04_02.png"
+            }
+          }
         },
         {
           "id": "c04s05",
@@ -2521,7 +2849,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：用旧照片验证当年的安全问题究竟有多严重。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：证实事故原因；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH05_A",
+            "kind": "pick3",
+            "code": "MG_CH05_A",
+            "name": "时间线照片",
+            "name_en": "Photo Timeline",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "核实当年的安全危险",
+            "outcomes": {
+              "WIN": "核实安全危险：短路烧痕在停业之前就已经存在。",
+              "LOSE": "再看一遍照片日期，烧痕那张在停业前。",
+              "SKIP": "改由正式记录来确认，结论一样。"
+            },
+            "winFlag": "mg_MG_CH05_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "影院是六年前停业的。三张旧照片的相机日期：海报照摄于停业后，配电箱照摄于停业前一个月，票据照摄于上周。",
+              "pe": "The cinema closed six years ago. Camera dates: the poster shot is from after closing, the fuse box shot from a month before, the ticket shot from last week.",
+              "ask": [
+                "哪一张能证明电气隐患早于停业？",
+                "Which photo proves the electrical hazard came before the closure?"
+              ],
+              "items": [
+                [
+                  "停业后拍的海报",
+                  "The poster, shot after closing"
+                ],
+                [
+                  "停业前一个月拍到的配电箱烧痕",
+                  "Scorch marks on the fuse box, a month before closing"
+                ],
+                [
+                  "上周的新票据",
+                  "Last week's new receipt"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH05_01.png"
+            }
+          }
         },
         {
           "id": "c05s03",
@@ -2746,7 +3115,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：用旧照片验证当年的安全问题究竟有多严重。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：证实事故原因；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH05_B",
+            "kind": "pick3",
+            "code": "MG_CH05_B",
+            "name": "证据优先",
+            "name_en": "Evidence Rank",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "得到可以核对的证据",
+            "outcomes": {
+              "WIN": "得到可核对证据：带日期的照片附进申请材料。",
+              "LOSE": "Rowan提示看时间戳：能被核对的才算证据。",
+              "SKIP": "保留现有的正式报告作为证据。"
+            },
+            "winFlag": "mg_MG_CH05_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "申请材料只能附一份证据。它得让一个从没来过这里的审核员也看得懂、查得到。",
+              "pe": "You can attach one piece of evidence. A reviewer who has never been here must be able to understand and verify it.",
+              "ask": [
+                "优先保留哪一份？",
+                "Which one do you keep?"
+              ],
+              "items": [
+                [
+                  "镇上流传的说法",
+                  "What people in town say"
+                ],
+                [
+                  "带拍摄日期的照片",
+                  "A photo with a timestamp"
+                ],
+                [
+                  "对当年心情的推测",
+                  "A guess about how everyone felt back then"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH05_02.png"
+            }
+          }
         },
         {
           "id": "c05s05",
@@ -3043,7 +3453,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：安全完成屋顶勘查并让Rowan尊重你的决定权。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：取得屋顶证据；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH06_A",
+            "kind": "pick3",
+            "code": "MG_CH06_A",
+            "name": "屋顶裂缝",
+            "name_en": "Roof Mark",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "取得屋顶证据",
+            "outcomes": {
+              "WIN": "取得屋顶证据：梁端裂纹已拍清楚，标进勘查图。",
+              "LOSE": "Rowan重新调整镜头角度，帮你看清梁端那道裂纹。",
+              "SKIP": "先标记为“未知”，等天气好再补拍。"
+            },
+            "winFlag": "mg_MG_CH06_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "你没爬上去，用探杆摄像头拍回了屋顶的画面。三处痕迹里只有一处危及结构。",
+              "pe": "You stay off the roof and send up a pole camera instead. Of three marks, only one threatens the structure.",
+              "ask": [
+                "哪一处是危险裂纹？",
+                "Which one is the dangerous crack?"
+              ],
+              "items": [
+                [
+                  "排水管接口的锈迹",
+                  "Rust at the drainpipe joint"
+                ],
+                [
+                  "梁端的裂纹",
+                  "A crack at the end of a beam"
+                ],
+                [
+                  "灯罩边缘的划痕",
+                  "A scratch on a lamp shade"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH06_01.png"
+            }
+          }
         },
         {
           "id": "c06s03",
@@ -3268,7 +3719,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：安全完成屋顶勘查并让Rowan尊重你的决定权。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：取得屋顶证据；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH06_B",
+            "kind": "pick3",
+            "code": "MG_CH06_B",
+            "name": "修复排序",
+            "name_en": "Repair Order",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "建立合理的施工顺序",
+            "outcomes": {
+              "WIN": "建立合理顺序：先防漏，再布线，最后才是装饰。",
+              "LOSE": "修正施工顺序：先挡住水，布线才不会白做。",
+              "SKIP": "采用风险最低的保守方案。"
+            },
+            "winFlag": "mg_MG_CH06_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "雨季快到了，雨水会顺着屋顶裂缝流进墙里的线路。眼下的预算只够先做一项。",
+              "pe": "The rainy season is close, and water will run through the roof cracks into the wiring. The budget covers one job first.",
+              "ask": [
+                "最先处理哪一步？",
+                "What gets fixed first?"
+              ],
+              "items": [
+                [
+                  "内部装饰",
+                  "Interior decoration"
+                ],
+                [
+                  "屋顶防漏",
+                  "Roof waterproofing"
+                ],
+                [
+                  "重新布线",
+                  "Rewiring"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH06_02.png"
+            }
+          }
         },
         {
           "id": "c06s05",
@@ -3557,7 +4049,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：在停电前护住胶片档案并决定今晚相处距离。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：救回旧胶片箱；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH07_A",
+            "kind": "pick3",
+            "code": "MG_CH07_A",
+            "name": "胶片抢救",
+            "name_en": "Reel Rescue",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "救出最急的那一箱",
+            "outcomes": {
+              "WIN": "救出最急的箱子：湿掉的旧胶片已经搬到高处。",
+              "LOSE": "两人重新调整优先级，先把湿箱子抬起来。",
+              "SKIP": "先给所有箱子盖上防水布。"
+            },
+            "winFlag": "mg_MG_CH07_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "暴风雨灌进了档案室。你们只来得及先搬一箱。",
+              "pe": "The storm is pouring into the archive room. You only have time to move one box first.",
+              "ask": [
+                "先搬哪一箱？",
+                "Which box goes first?"
+              ],
+              "items": [
+                [
+                  "干燥的备用拷贝",
+                  "The dry backup copies"
+                ],
+                [
+                  "外壳已经淋湿的旧胶片",
+                  "The old reels whose case is already wet"
+                ],
+                [
+                  "宣传海报",
+                  "The promo posters"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH07_01.png"
+            }
+          }
         },
         {
           "id": "c07s03",
@@ -3787,7 +4320,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：在停电前护住胶片档案并决定今晚相处距离。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：救回旧胶片箱；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH07_B",
+            "kind": "pick3",
+            "code": "MG_CH07_B",
+            "name": "备用电力",
+            "name_en": "Backup Power",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "保住胶片的湿度",
+            "outcomes": {
+              "WIN": "保住胶片湿度：除湿机整夜运转。",
+              "LOSE": "Rowan提醒电量有限，只能留给除湿机。",
+              "SKIP": "把其他电器全部关掉，省下的电留给档案室。"
+            },
+            "winFlag": "mg_MG_CH07_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "停电了，备用电池只够带一台设备。胶片怕潮。",
+              "pe": "The power's out and the backup battery can run one device. Film hates damp.",
+              "ask": [
+                "先给哪台设备接电？",
+                "What gets the power first?"
+              ],
+              "items": [
+                [
+                  "门口的招牌",
+                  "The sign out front"
+                ],
+                [
+                  "除湿机",
+                  "The dehumidifier"
+                ],
+                [
+                  "装饰灯串",
+                  "The string lights"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH07_02.png"
+            }
+          }
         },
         {
           "id": "c07s05",
@@ -4079,7 +4653,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：办成一次合规的小范围试映并留下真实需求记录。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：保存试映记录；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH08_A",
+            "kind": "pick3",
+            "code": "MG_CH08_A",
+            "name": "试映检查",
+            "name_en": "Screening Prep",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "完成试映前的安全检查",
+            "outcomes": {
+              "WIN": "完成安全检查：消防通道已清空。",
+              "LOSE": "Rowan帮你一起清出通道，再继续检查。",
+              "SKIP": "暂停试映，等安全检查补完再开门。"
+            },
+            "winFlag": "mg_MG_CH08_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "试映开门前最后巡场，发现三个问题。",
+              "pe": "Final walk-through before doors open. You spot three problems.",
+              "ask": [
+                "开门前必须先修哪一项？",
+                "Which one must be fixed before doors open?"
+              ],
+              "items": [
+                [
+                  "座椅颜色不一样",
+                  "Mismatched seat colours"
+                ],
+                [
+                  "消防通道被杂物堵住",
+                  "The fire exit is blocked"
+                ],
+                [
+                  "海报贴歪了",
+                  "A crooked poster"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH08_01.png"
+            }
+          }
         },
         {
           "id": "c08s03",
@@ -4304,7 +4919,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：办成一次合规的小范围试映并留下真实需求记录。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：保存试映记录；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH08_B",
+            "kind": "pick3",
+            "code": "MG_CH08_B",
+            "name": "故障替代",
+            "name_en": "Fallback Play",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "保住一段演示",
+            "outcomes": {
+              "WIN": "保住一段演示：备用电源接上，放完了最后一段。",
+              "LOSE": "改为现场讲解材料，观众依然安全离场。",
+              "SKIP": "取消现场放映，改成线上方案。"
+            },
+            "winFlag": "mg_MG_CH08_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "放到一半，整栋楼突然断电。观众还坐在里面。",
+              "pe": "Halfway through the film, the whole building loses power. The audience is still seated.",
+              "ask": [
+                "哪种方案还能安全地把演示做完？",
+                "Which plan safely finishes the screening?"
+              ],
+              "items": [
+                [
+                  "黑着屏硬撑下去",
+                  "Sit it out in the dark"
+                ],
+                [
+                  "切换到备用电源",
+                  "Switch to backup power"
+                ],
+                [
+                  "关掉疏散通道的灯省电",
+                  "Turn off the exit lights to save power"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH08_02.png"
+            }
+          }
         },
         {
           "id": "c08s05",
@@ -4600,7 +5256,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：面对那封没寄出的回信并明确你现在想听什么。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：看见未寄回信；没有真实行动证据时继续提供可用资料，不自动完成。\n玩家可选择阅读、暂不阅读或退回未寄回复；不强迫她读私人信件，不虚构读过。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH09_A",
+            "kind": "pick3",
+            "code": "MG_CH09_A",
+            "name": "信件日期",
+            "name_en": "Letter Date",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "核对两件事的时间",
+            "outcomes": {
+              "WIN": "核对两件事时间：回信和停业发生在同一周，但不是同一个理由。",
+              "LOSE": "Rowan把信封上的标记拿给你看，时间就在停业那一周。",
+              "SKIP": "不看日期也可以继续，信的内容不变。"
+            },
+            "winFlag": "mg_MG_CH09_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "停业报告的签字日期，和Rowan那封没寄出的回信上的落款，只隔了两天。",
+              "pe": "The closure report was signed just two days apart from the date on Rowan's unsent reply.",
+              "ask": [
+                "回信写在什么时候？",
+                "When was the reply written?"
+              ],
+              "items": [
+                [
+                  "停业之前",
+                  "Before the closure"
+                ],
+                [
+                  "停业当周",
+                  "The same week as the closure"
+                ],
+                [
+                  "六年之后",
+                  "Six years later"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH09_01.png"
+            }
+          }
         },
         {
           "id": "c09s03",
@@ -4825,7 +5522,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：面对那封没寄出的回信并明确你现在想听什么。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：看见未寄回信；没有真实行动证据时继续提供可用资料，不自动完成。\n玩家可选择阅读、暂不阅读或退回未寄回复；不强迫她读私人信件，不虚构读过。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH09_B",
+            "kind": "pick3",
+            "code": "MG_CH09_B",
+            "name": "事实与感受",
+            "name_en": "Facts & Feelings",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "区分事实和推断",
+            "outcomes": {
+              "WIN": "区分事实与推断：能确定的只有“信没寄出”，其余由你自己决定。",
+              "LOSE": "Rowan帮你把纸分成两栏，事实只写一行。",
+              "SKIP": "保留自己的意见，暂时不分栏。"
+            },
+            "winFlag": "mg_MG_CH09_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "把心里的话分成两栏：资料能证明的，和你的感受。感受不是错，但它不是事实。",
+              "pe": "Sort your thoughts into two columns: what the records prove, and what you feel. Feelings aren't wrong; they just aren't facts.",
+              "ask": [
+                "哪一句可以被资料证实？",
+                "Which one can the records confirm?"
+              ],
+              "items": [
+                [
+                  "“他一定不爱我。”",
+                  "“He must not love me.”"
+                ],
+                [
+                  "“那封回信没有寄出。”",
+                  "“The reply was never sent.”"
+                ],
+                [
+                  "“我必须原谅他。”",
+                  "“I have to forgive him.”"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH09_02.png"
+            }
+          }
         },
         {
           "id": "c09s05",
@@ -5122,7 +5860,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：查明Rowan送出的改造草案并决定怎样追责。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：找到越权邮件；没有真实行动证据时继续提供可用资料，不自动完成。\n罗温的工作材料交接、撤回越权草案与释放公共数据，可以由已发生的正式文件体现，不要求私下见面，也不等于玩家原谅。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH10_A",
+            "kind": "pick3",
+            "code": "MG_CH10_A",
+            "name": "版本追踪",
+            "name_en": "Version Trace",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "找到越权发出的草案",
+            "outcomes": {
+              "WIN": "找到越权草案：B 稿三天前未经你同意发给了投资方。",
+              "LOSE": "重新打开发送记录，B 稿的收件人一栏写得很清楚。",
+              "SKIP": "继续保留质疑，等他自己说明。"
+            },
+            "winFlag": "mg_MG_CH10_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "发件记录里有三份文件：A 旧图（去年）、B 改造草案（三天前，收件人是投资方）、一张私人便笺（从未发送）。",
+              "pe": "The outbox shows three files: A, an old drawing (last year); B, a renovation draft (three days ago, sent to the investor); and a private note (never sent).",
+              "ask": [
+                "哪一份是发给投资方的新版本？",
+                "Which is the new version sent to the investor?"
+              ],
+              "items": [
+                [
+                  "A 旧图",
+                  "A, the old drawing"
+                ],
+                [
+                  "B 改造草案",
+                  "B, the renovation draft"
+                ],
+                [
+                  "私人便笺",
+                  "The private note"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH10_01.png"
+            }
+          }
         },
         {
           "id": "c10s03",
@@ -5356,7 +6135,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：查明Rowan送出的改造草案并决定怎样追责。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：找到越权邮件；没有真实行动证据时继续提供可用资料，不自动完成。\n罗温的工作材料交接、撤回越权草案与释放公共数据，可以由已发生的正式文件体现，不要求私下见面，也不等于玩家原谅。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH10_B",
+            "kind": "pick3",
+            "code": "MG_CH10_B",
+            "name": "外墙差异",
+            "name_en": "Facade Diff",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "看清不可逆的代价",
+            "outcomes": {
+              "WIN": "看清不可逆代价：老招牌一拆，就再也装不回原样。",
+              "LOSE": "Rowan指出图纸上的变化：招牌被整片移除了。",
+              "SKIP": "要求对方出一份完整的差异清单。"
+            },
+            "winFlag": "mg_MG_CH10_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "把影院外墙的老照片和新方案效果图并排放着。有一样旧东西在新图里不见了。",
+              "pe": "Put the old facade photo next to the new design render. One old element has disappeared.",
+              "ask": [
+                "新方案移走了哪个旧元素？",
+                "What did the new design remove?"
+              ],
+              "items": [
+                [
+                  "老招牌",
+                  "The old marquee sign"
+                ],
+                [
+                  "地砖上的污渍",
+                  "A stain on the floor tiles"
+                ],
+                [
+                  "椅垫",
+                  "A seat cushion"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH10_02.png"
+            }
+          }
         },
         {
           "id": "c10s05",
@@ -5649,7 +6469,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：处理未经授权的草案并确定新的项目决策规则。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：撤回未经授权稿；没有真实行动证据时继续提供可用资料，不自动完成。\n罗温的工作材料交接、撤回越权草案与释放公共数据，可以由已发生的正式文件体现，不要求私下见面，也不等于玩家原谅。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH11_A",
+            "kind": "pick3",
+            "code": "MG_CH11_A",
+            "name": "撤回核验",
+            "name_en": "Retraction Check",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "撤回完整记录",
+            "outcomes": {
+              "WIN": "撤回完整记录：已发送的附件正式发函撤回。",
+              "LOSE": "Rowan补齐撤回清单，已发送的附件也在里面。",
+              "SKIP": "先停止一切后续发送。"
+            },
+            "winFlag": "mg_MG_CH11_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "要把越权的草案完整撤回。三样东西里，哪一样已经离开了你们的邮箱？",
+              "pe": "The unauthorised draft has to be fully retracted. Which of these three has already left your outbox?",
+              "ask": [
+                "哪一项还需要正式撤回？",
+                "Which one still needs a formal retraction?"
+              ],
+              "items": [
+                [
+                  "没发出的草稿",
+                  "The unsent draft"
+                ],
+                [
+                  "已经发送的附件",
+                  "The attachment that was already sent"
+                ],
+                [
+                  "个人笔记",
+                  "Personal notes"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH11_01.png"
+            }
+          }
         },
         {
           "id": "c11s03",
@@ -5929,7 +6790,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：处理未经授权的草案并确定新的项目决策规则。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：撤回未经授权稿；没有真实行动证据时继续提供可用资料，不自动完成。\n罗温的工作材料交接、撤回越权草案与释放公共数据，可以由已发生的正式文件体现，不要求私下见面，也不等于玩家原谅。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH11_B",
+            "kind": "pick3",
+            "code": "MG_CH11_B",
+            "name": "审批流程",
+            "name_en": "Approval Flow",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "形成新的审批规则",
+            "outcomes": {
+              "WIN": "形成新的审批规则：起草 → 本人确认 → 发送。",
+              "LOSE": "流程改好后保存，中间一步是你本人确认。",
+              "SKIP": "按最保守的流程执行：所有材料一律等你确认。"
+            },
+            "winFlag": "mg_MG_CH11_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "新的发布流程写着：起草 → ？ → 发送。不管顾问换成谁，这条流程都适用。",
+              "pe": "The new release flow reads: draft → ? → send. It applies no matter who the adviser is.",
+              "ask": [
+                "中间缺的那一步是什么？",
+                "What's the missing step?"
+              ],
+              "items": [
+                [
+                  "再起草一次",
+                  "Draft it again"
+                ],
+                [
+                  "你本人确认",
+                  "Your own sign-off"
+                ],
+                [
+                  "直接发送",
+                  "Send it straight away"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH11_02.png"
+            }
+          }
         },
         {
           "id": "c11s05",
@@ -6396,7 +7298,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：分别说清工作规则与私人关系边界。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：双方确认边界；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH12_A",
+            "kind": "pick3",
+            "code": "MG_CH12_A",
+            "name": "公私分栏",
+            "name_en": "Work / Private",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "把关系和项目分开",
+            "outcomes": {
+              "WIN": "分开关系与项目：验收签字是工作决定，跟私人关系无关。",
+              "LOSE": "Rowan解释这是你的工作权利，不该夹在私事里谈。",
+              "SKIP": "直接关闭私人话题，只谈工作。"
+            },
+            "winFlag": "mg_MG_CH12_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "一张纸分成三栏：私人约定、工作决定、无需讨论。“工程验收签字”这一项还没归位。",
+              "pe": "A sheet with three columns: private agreements, work decisions, no discussion needed. “Sign-off on the construction” hasn't been placed yet.",
+              "ask": [
+                "“工程验收签字”放在哪一栏？",
+                "Where does “construction sign-off” go?"
+              ],
+              "items": [
+                [
+                  "私人约定",
+                  "Private agreements"
+                ],
+                [
+                  "工作决定",
+                  "Work decisions"
+                ],
+                [
+                  "无需讨论",
+                  "No discussion needed"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH12_01.png"
+            }
+          }
         },
         {
           "id": "c12s03",
@@ -6727,7 +7670,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：分别说清工作规则与私人关系边界。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：双方确认边界；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH12_B",
+            "kind": "pick3",
+            "code": "MG_CH12_B",
+            "name": "许可用词",
+            "name_en": "Consent Match",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "只开放谈话许可",
+            "outcomes": {
+              "WIN": "只开放谈话许可：可以谈，但谈不等于做。",
+              "LOSE": "没有明确同意，一律不推进。",
+              "SKIP": "继续普通相处，什么都不改变。"
+            },
+            "winFlag": "mg_MG_CH12_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "任何一栏都可以留空，以后再谈。推进只能靠说出口的许可，而且只推进到许可的那一步。",
+              "pe": "Any column can stay blank for later. Things only move forward on a spoken yes, and only as far as that yes covers.",
+              "ask": [
+                "哪一种表达能让事情推进到“谈话”这一步？",
+                "Which response moves things forward to a conversation?"
+              ],
+              "items": [
+                [
+                  "沉默",
+                  "Silence"
+                ],
+                [
+                  "明确说“可以谈”",
+                  "Clearly saying “we can talk”"
+                ],
+                [
+                  "“不确定。”",
+                  "“I'm not sure.”"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH12_02.png"
+            }
+          }
         },
         {
           "id": "c12s05",
@@ -7186,7 +8170,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：收下无附加条件的工程资料并重做资金计划。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：获得开放资料；没有真实行动证据时继续提供可用资料，不自动完成。\n罗温的工作材料交接、撤回越权草案与释放公共数据，可以由已发生的正式文件体现，不要求私下见面，也不等于玩家原谅。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH13_A",
+            "kind": "pick3",
+            "code": "MG_CH13_A",
+            "name": "工程缺页",
+            "name_en": "Blueprint Check",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "补完图纸清单",
+            "outcomes": {
+              "WIN": "补完图纸清单：缺失的排水图找回来了。",
+              "LOSE": "Rowan拿出他保存的第二份备份。",
+              "SKIP": "先标注缺件，之后再补查。"
+            },
+            "winFlag": "mg_MG_CH13_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "工程资料袋里应该有结构图、电气图、排水管道图三份，现在只有两份。夹层里摸出了几样东西。",
+              "pe": "The engineering folder should hold the structural plan, the electrical plan and the drainage plan. Only two are there. A few things turn up in the inner pocket.",
+              "ask": [
+                "哪一样能补上缺口？",
+                "Which one fills the gap?"
+              ],
+              "items": [
+                [
+                  "旧排水管道图",
+                  "The old drainage plan"
+                ],
+                [
+                  "一张电影票根",
+                  "A cinema ticket stub"
+                ],
+                [
+                  "一块桌布",
+                  "A tablecloth"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH13_01.png"
+            }
+          }
         },
         {
           "id": "c13s03",
@@ -7572,7 +8597,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：收下无附加条件的工程资料并重做资金计划。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：获得开放资料；没有真实行动证据时继续提供可用资料，不自动完成。\n罗温的工作材料交接、撤回越权草案与释放公共数据，可以由已发生的正式文件体现，不要求私下见面，也不等于玩家原谅。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH13_B",
+            "kind": "pick3",
+            "code": "MG_CH13_B",
+            "name": "资金组合",
+            "name_en": "Funding Mix",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "形成一份能解释的预算",
+            "outcomes": {
+              "WIN": "形成可解释预算：每一笔成本都对得上来源。",
+              "LOSE": "再把成本一项项拆开，来源写在旁边。",
+              "SKIP": "保留最稳健的那份方案。"
+            },
+            "winFlag": "mg_MG_CH13_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "三份资金计划摆在桌上。每条路都有代价，没有万能的解决办法。",
+              "pe": "Three funding plans on the table. Every route has a cost; none of them fixes everything.",
+              "ask": [
+                "哪一份把风险说得最清楚？",
+                "Which plan explains its risks most clearly?"
+              ],
+              "items": [
+                [
+                  "全靠运气撑过去",
+                  "Hope it works out"
+                ],
+                [
+                  "成本和资金来源分开列出",
+                  "Costs and funding sources listed separately"
+                ],
+                [
+                  "只写了愿望",
+                  "A list of wishes"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH13_02.png"
+            }
+          }
         },
         {
           "id": "c13s05",
@@ -8214,7 +9280,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：在期限前明确影院未来是原貌保留、改造还是出售。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：锁定建筑路线；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH14_A",
+            "kind": "pick3",
+            "code": "MG_CH14_A",
+            "name": "现金流错点",
+            "name_en": "Cashflow Spot",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "修正乐观预测",
+            "outcomes": {
+              "WIN": "修正乐观预测：删掉“每场满座”，改用真实预约。",
+              "LOSE": "Rowan指出这条假设没有任何依据。",
+              "SKIP": "整份收入重新核算一遍。"
+            },
+            "winFlag": "mg_MG_CH14_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "现金流表里有一项收入明显过于乐观。",
+              "pe": "One income line in the cashflow sheet is clearly too optimistic.",
+              "ask": [
+                "哪一项收入预测站不住？",
+                "Which income forecast doesn't hold up?"
+              ],
+              "items": [
+                [
+                  "已经售出的票",
+                  "Tickets already sold"
+                ],
+                [
+                  "没有证据的“每场满座”",
+                  "“Full house every night”, with no evidence"
+                ],
+                [
+                  "按保守预约估算",
+                  "An estimate from cautious booking numbers"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH14_01.png"
+            }
+          }
         },
         {
           "id": "c14s03",
@@ -8667,7 +9774,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：在期限前明确影院未来是原貌保留、改造还是出售。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：锁定建筑路线；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH14_B",
+            "kind": "pick3",
+            "code": "MG_CH14_B",
+            "name": "决定权归属",
+            "name_en": "Who Decides",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "确认签署责任",
+            "outcomes": {
+              "WIN": "确认签署责任：方案由你本人批准。",
+              "LOSE": "Rowan提醒你：产权在你手里，许可也只能由你给。",
+              "SKIP": "暂时不签，先把方案留着。"
+            },
+            "winFlag": "mg_MG_CH14_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "影院的产权在你名下。原貌保留、改造还是出售，最后要有人签字批准。",
+              "pe": "The cinema is in your name. Keep it as is, renovate or sell: someone has to sign off.",
+              "ask": [
+                "最后的产权方案由谁批准？",
+                "Who approves the final plan?"
+              ],
+              "items": [
+                [
+                  "Rowan",
+                  "Rowan"
+                ],
+                [
+                  "投资方",
+                  "The investor"
+                ],
+                [
+                  "你本人",
+                  "You"
+                ]
+              ],
+              "ans": 2,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH14_02.png"
+            }
+          }
         },
         {
           "id": "c14s05",
@@ -9300,7 +10448,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：完成最后一次试映并留下合规的观众需求数据。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：需求结果已留存；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH15_A",
+            "kind": "pick3",
+            "code": "MG_CH15_A",
+            "name": "故障源头",
+            "name_en": "Fault Source",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "定位真正的故障",
+            "outcomes": {
+              "WIN": "定位故障：线路接头松了，拧紧后画面恢复。",
+              "LOSE": "改做静态演示，试映照常安全进行。",
+              "SKIP": "安全暂停，等技术员到场。"
+            },
+            "winFlag": "mg_MG_CH15_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "最后一场试映前响了三个警报：音量偏低、投影画面闪烁、一排座位编号贴错。两个是假警报，一个是真问题。",
+              "pe": "Three alerts before the final screening: low volume, a flickering picture, a mislabelled row of seats. Two are false alarms; one is real.",
+              "ask": [
+                "真正让投影出问题的是哪一项？",
+                "What's actually breaking the projection?"
+              ],
+              "items": [
+                [
+                  "音量设置",
+                  "The volume setting"
+                ],
+                [
+                  "松动的线路接头",
+                  "A loose cable connector"
+                ],
+                [
+                  "座位编号",
+                  "The seat numbers"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH15_01.png"
+            }
+          }
         },
         {
           "id": "c15s03",
@@ -9741,7 +10930,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：完成最后一次试映并留下合规的观众需求数据。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：需求结果已留存；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH15_B",
+            "kind": "pick3",
+            "code": "MG_CH15_B",
+            "name": "重复票单",
+            "name_en": "Ticket Clean",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "清理出真实数据",
+            "outcomes": {
+              "WIN": "清理真实数据：重复预约已去重，报告里的数字都经得起查。",
+              "LOSE": "Rowan提示按邮箱去重。",
+              "SKIP": "只提交最保守的那组数据。"
+            },
+            "winFlag": "mg_MG_CH15_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "预约报告要交给审核方。有一笔数字不能算进支持量。",
+              "pe": "The booking report goes to the reviewers. One number can't count toward real support.",
+              "ask": [
+                "哪一笔不能重复计数？",
+                "Which entry can't be counted?"
+              ],
+              "items": [
+                [
+                  "同一邮箱重复提交的预约",
+                  "Repeat bookings from the same email"
+                ],
+                [
+                  "首次预约",
+                  "First-time bookings"
+                ],
+                [
+                  "已核验身份的登记",
+                  "Verified registrations"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH15_02.png"
+            }
+          }
         },
         {
           "id": "c15s05",
@@ -10365,7 +11595,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：完成所选方案的最后证明并确认能承担它的代价。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：路线处理已记录；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH16_A",
+            "kind": "pick3",
+            "code": "MG_CH16_A",
+            "name": "路线补件",
+            "name_en": "Plan Gap",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "补足路线凭证",
+            "outcomes": {
+              "WIN": "补足路线凭证：安全预算已附上。",
+              "LOSE": "按你选的路线重新核查，缺的是安全预算。",
+              "SKIP": "先申请缓冲期，再补交材料。"
+            },
+            "winFlag": "mg_MG_CH16_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "你选的路线还差一项关键凭证，少了它审核过不了。",
+              "pe": "Your chosen route is missing one key document. Without it, the review won't pass.",
+              "ask": [
+                "最关键的缺项是什么？",
+                "What's the critical missing piece?"
+              ],
+              "items": [
+                [
+                  "安全预算",
+                  "The safety budget"
+                ],
+                [
+                  "宣传海报",
+                  "A promo poster"
+                ],
+                [
+                  "一只茶杯",
+                  "A teacup"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH16_01.png"
+            }
+          }
         },
         {
           "id": "c16s03",
@@ -10806,7 +12077,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：完成所选方案的最后证明并确认能承担它的代价。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：路线处理已记录；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH16_B",
+            "kind": "pick3",
+            "code": "MG_CH16_B",
+            "name": "代价辨认",
+            "name_en": "Cost Check",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "看清不可逆风险",
+            "outcomes": {
+              "WIN": "看清不可逆风险：拆旧入口这一项单独写进签署说明。",
+              "LOSE": "Rowan把拆除的真实后果重新讲了一遍。",
+              "SKIP": "推迟签字，先去求证。"
+            },
+            "winFlag": "mg_MG_CH16_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "签署前，要把关键代价写清楚。有一项决定一旦执行就很难撤回。",
+              "pe": "Before signing, the key costs have to be spelled out. One decision is very hard to undo once it's done.",
+              "ask": [
+                "哪一项是不可逆的决定？",
+                "Which decision can't easily be undone?"
+              ],
+              "items": [
+                [
+                  "改个片名标题",
+                  "Changing a title"
+                ],
+                [
+                  "拆掉旧入口",
+                  "Demolishing the old entrance"
+                ],
+                [
+                  "换一个灯泡",
+                  "Changing a light bulb"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH16_02.png"
+            }
+          }
         },
         {
           "id": "c16s05",
@@ -11436,7 +12748,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：要求Rowan完整承认过去，再决定要不要让他陪你提交。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：真相与责任说清；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH17_A",
+            "kind": "pick3",
+            "code": "MG_CH17_A",
+            "name": "两次沉默",
+            "name_en": "Silence Timeline",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "厘清责任链",
+            "outcomes": {
+              "WIN": "厘清责任链：两件事结果不同，但都是先做后说。",
+              "LOSE": "对照项目记录，第二次是那份发给投资方的草案。",
+              "SKIP": "先把项目记录读完，再决定。"
+            },
+            "winFlag": "mg_MG_CH17_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "Rowan有两次没有先告诉你。第一次：读了你的情书，却一直没有回音。",
+              "pe": "Twice, Rowan didn't tell you first. The first time: he read your letter and never answered.",
+              "ask": [
+                "第二次是哪件事？",
+                "What was the second time?"
+              ],
+              "items": [
+                [
+                  "读你的回信",
+                  "Reading your reply"
+                ],
+                [
+                  "背着你把改造草案发给投资方",
+                  "Sending the renovation draft to the investor behind your back"
+                ],
+                [
+                  "修屋顶",
+                  "Fixing the roof"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH17_01.png"
+            }
+          }
         },
         {
           "id": "c17s03",
@@ -11901,7 +13254,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：要求Rowan完整承认过去，再决定要不要让他陪你提交。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：真相与责任说清；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH17_B",
+            "kind": "pick3",
+            "code": "MG_CH17_B",
+            "name": "成长证据",
+            "name_en": "Change Proof",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "辨认实际承担",
+            "outcomes": {
+              "WIN": "辨认实际承担：撤回草案是他真正付出代价的行动。",
+              "LOSE": "Rowan不要求被夸奖，只请你看他做了什么。",
+              "SKIP": "保留自己的判断，暂不评价。"
+            },
+            "winFlag": "mg_MG_CH17_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "哪一项是真正的改变，由你来判断。好听的话和行动，分量不一样。",
+              "pe": "You decide what counts as real change. Nice words and actions don't weigh the same.",
+              "ask": [
+                "哪一项是他用行动证明的改变？",
+                "Which one is change he proved with action?"
+              ],
+              "items": [
+                [
+                  "说他喜欢你",
+                  "Saying he likes you"
+                ],
+                [
+                  "主动撤回草案并说明",
+                  "Withdrawing the draft himself and explaining why"
+                ],
+                [
+                  "给你送咖啡",
+                  "Bringing you coffee"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH17_02.png"
+            }
+          }
         },
         {
           "id": "c17s05",
@@ -12585,7 +13979,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：亲自提交影院的未来，并决定你与Rowan的关系。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对资料中的可验证事项。\n本章需核对成果：完成双线结算；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH18_A",
+            "kind": "pick3",
+            "code": "MG_CH18_A",
+            "name": "最终材料",
+            "name_en": "Final Packet",
+            "when": "进入「资料核对」这一场后，可以选择玩或跳过",
+            "stake": "确认提交材料齐全",
+            "outcomes": {
+              "WIN": "确认提交齐全：三份证明都在袋里。",
+              "LOSE": "系统提示补齐缺项，三份证明缺一不可。",
+              "SKIP": "选择缓冲处置，晚一点再交。"
+            },
+            "winFlag": "mg_MG_CH18_A_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "最后一次提交前核对材料袋。最后的确认权只属于你。",
+              "pe": "A last check of the submission packet. The final say belongs only to you.",
+              "ask": [
+                "哪一项材料必不可少？",
+                "Which item can't be left out?"
+              ],
+              "items": [
+                [
+                  "安全、资金与需求三份证明",
+                  "The safety, funding and demand reports"
+                ],
+                [
+                  "两个人的合照",
+                  "A photo of the two of you"
+                ],
+                [
+                  "咖啡店集点卡",
+                  "A coffee loyalty card"
+                ]
+              ],
+              "ans": 0,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH18_01.png"
+            }
+          }
         },
         {
           "id": "c18s03",
@@ -13123,7 +14558,48 @@
                 "beat": "玩家选择独立处理或解聘罗温，目前罗温不在场，不主动私人联系。当前要核对：亲自提交影院的未来，并决定你与Rowan的关系。你只能使用已经交接的公开资料与本人记录；不要虚构新证人、审批通过或工程已完工。不替玩家执行提示中的行动、签字或作决定。拒绝私事时可在个人记录里说明边界，主线不要求重新见面。\n本场待参与任务：核对实际行动的结果。\n本章需核对成果：完成双线结算；没有真实行动证据时继续提供可用资料，不自动完成。"
               }
             }
-          ]
+          ],
+          "game": {
+            "id": "MG_CH18_B",
+            "kind": "pick3",
+            "code": "MG_CH18_B",
+            "name": "最终签署",
+            "name_en": "Final Signature",
+            "when": "进入「后果核验」这一场后，可以选择玩或跳过",
+            "stake": "自主完成签署",
+            "outcomes": {
+              "WIN": "自主完成签署：签名栏写下的是你自己的名字。",
+              "LOSE": "Rowan提醒你产权归属：这一栏只有你能签。",
+              "SKIP": "回到材料页，想好了再签。"
+            },
+            "winFlag": "mg_MG_CH18_B_win",
+            "play": {
+              "tpl": "m111_pick",
+              "seconds": 35,
+              "pz": "影院的最终决定摆在桌上，签名栏还空着。",
+              "pe": "The final decision on the cinema is on the table. The signature line is still blank.",
+              "ask": [
+                "谁有资格在这里签字？",
+                "Who has the right to sign here?"
+              ],
+              "items": [
+                [
+                  "Rowan",
+                  "Rowan"
+                ],
+                [
+                  "你本人",
+                  "You"
+                ],
+                [
+                  "系统自动代签",
+                  "An automatic e-signature"
+                ]
+              ],
+              "ans": 1,
+              "img": "https://miru.plus/art/official/secret-rules-v1/assets/BG_CH18_02.png"
+            }
+          }
         },
         {
           "id": "c18s05",
@@ -13357,7 +14833,7 @@
     "freeConversation": true,
     "chapterNavigation": "manual"
   },
-  "games_on": false,
+  "games_on": true,
   "experience": {
     "schema": 1,
     "storyIntroduction": true,
@@ -13792,5 +15268,14 @@
     "images": 62,
     "games": "36 proposals only",
     "video": "15-second animatic preview, not lip-synced final film"
+  },
+  "minigames": {
+    "count": 36,
+    "kind": "pick3",
+    "template": "m111_pick",
+    "seconds": 35,
+    "source": "scripts/secret-rules-v1/minigames.json",
+    "placement": "每章第2场A、第4场B",
+    "rules": "每章第2场挂A、第4场挂B；进入该场即可选择玩或跳过。限时35秒、两次作答机会。赢了只写 mg_<编号>_win 旗标；输了、跳过都继续原场景，不改好感、不改选择、不改亲密边界。"
   }
 }

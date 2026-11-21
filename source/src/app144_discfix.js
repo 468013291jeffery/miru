@@ -3546,3 +3546,69 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   MG168.reg(games);
   window.M117G = games;
 })();
+
+/* ===== mod176: 作者剧本里的三选一小游戏（scene.game.kind="pick3"，题面写在作品资料 bible 的 game.play 里）。
+   首个使用者：《我暗恋的人有秘密规则》36 个（每章第 2、4 场）。进场就能玩或跳过；限时、两次机会，复用 mod168 的 m111_pick。
+   结果只写回执和 mg_<编号>_win 旗标：输赢、跳过都不加减好感，也不替玩家做任何选择。 ===== */
+(function () {
+  if (typeof authoredGameStart98 !== "function" || typeof mgOpen !== "function" || typeof MG_T === "undefined" || !MG_T.m111_pick) return;
+  const isP = g => !!(g && g.kind === "pick3" && g.play && Array.isArray(g.play.items) && g.play.items[g.play.ans]);
+  const zh = () => (typeof CL === "function" ? CL() !== "en" : true);
+  const label = it => (Array.isArray(it) ? it[zh() ? 0 : 1] || it[0] : String(it));
+  const prevDock = authoredGameDock98, prevOpen = authoredGameOpen98, prevStart = authoredGameStart98, prevCommit = authoredGameCommit98;
+  const defOf = g => {
+    const p = g.play, id = "g_pick3_" + g.id;
+    const v = { id, zh: g.name, en: g.name_en || g.name, tpl: p.tpl || "m111_pick", seconds: p.seconds || 35, pz: p.pz, pe: p.pe || p.pz,
+      ask: p.ask, items: p.items, ans: p.ans, img: p.img || "", a: "", b: "", kw: [] };
+    const i = MG100.findIndex(x => x.id === id); if (i >= 0) MG100[i] = v; else MG100.push(v);
+    return id;
+  };
+  const answer = g => g.play.items[g.play.ans][0];
+  const nextText = (g, result, who) => {
+    const t = g.outcomes[result] || "";
+    if (who.length || !/Rowan|罗温/.test(t)) return t;
+    return result === "WIN" ? "判断正确：「" + answer(g) + "」。" : result === "LOSE" ? "你对照公开资料重新核对：正确的是「" + answer(g) + "」。" : "跳过了，剧情照常继续。";
+  };
+  authoredGameDock98 = function (th) {
+    try { const { s } = scene98(th); if (s && isP(s.game)) (th.b98.gameReady98 || (th.b98.gameReady98 = {}))[s.id] = true; } catch (_) {}
+    return prevDock(th);
+  };
+  authoredGameOpen98 = function (th) {
+    const { s } = scene98(th), g = s && s.game; if (!isP(g)) return prevOpen(th);
+    if (busy || (th.b98.gameResults || {})[g.id]) return;
+    const ids = here98(th, s);
+    const buddies = ids.map(id => '<button class="btn btn-block" data-authored-player98="' + esc(id) + '">和 ' + esc(first(ch(id).n)) + ' 一起</button>').join("");
+    sheet('<h2>' + esc(g.name) + '</h2><p>' + esc(g.stake) + '。三选一，限时 ' + (g.play.seconds || 35) + ' 秒，有两次机会。</p><p>输了或不玩，剧情都照常继续，不影响好感，也不替你做任何选择。</p>' +
+      buddies + '<button class="btn btn-block" data-authored-player98="__solo">' + (ids.length ? "我自己来" : "开始") + '</button><button class="btn btn-g btn-block" data-authored-game98="skip">这次不玩</button>');
+  };
+  authoredGameStart98 = function (th, id) {
+    const { s } = scene98(th), g = s && s.game; if (!isP(g)) return prevStart(th, id);
+    if (busy || (th.b98.gameResults || {})[g.id]) return;
+    const who = id && id !== "__solo" && here98(th, s).includes(id) ? [id] : [];
+    closeSheet();
+    mgOpen(defOf(g), r => {
+      const result = { win: "WIN", lose: "LOSE", skip: "SKIP" }[r] || "SKIP";
+      if (!authoredGameCommit98(th, s, g, result, who)) return;
+      try { renderChat(); } catch (_) {}
+      if (result !== "SKIP" && who.length && curT === th.id && !busy)
+        beat98(th, "talk", { mode: "act", txt: "刚才一起玩了「" + g.name + "」，结果：" + (result === "WIN" ? "答对了" : "没答对") + "（正确答案：" + answer(g) + "）。请按这个真实结果自然回应，不要替玩家做决定，也不要把它说成别的成就。" });
+    });
+  };
+  authoredGameCommit98 = function (th, s, g, result, ids) {
+    if (!isP(g)) return prevCommit(th, s, g, result, ids);
+    if (!["WIN", "LOSE", "SKIP"].includes(result) || !th.b98 || !s || scene98(th).s.id !== s.id) return false;
+    const rec = th.b98.gameResults || (th.b98.gameResults = {}); if (rec[g.id]) return false;
+    const here = here98(th, s), who = [...new Set(ids || [])].filter(x => here.includes(x));
+    rec[g.id] = { result, chapter: th.b98.ch, scene: s.id, participants: who, at: Date.now() };
+    const next = nextText(g, result, who);
+    if (result !== "SKIP") {
+      mem98(th, who, g.name + "：" + (result === "WIN" ? "答对" : "没答对") + "（正确答案：" + answer(g) + "）");
+      const fl = th.b98.flags || (th.b98.flags = []);
+      fl.push(g.id + ":" + result); if (result === "WIN") fl.push(g.winFlag || "mg_" + g.id + "_win");
+    }
+    (th.b98.sum || (th.b98.sum = [])).push("小游戏 " + g.name + "：" + result + "；" + next);
+    appendMsg(th, { who: "sys", k: "card", title: g.name + " · " + ({ WIN: "成功", LOSE: "未成功", SKIP: "已跳过" })[result], txt: next, at: Date.now() });
+    save(); authoredGameDock98(th); return true;
+  };
+  window.PICK3_176 = { isP, defOf };
+})();
