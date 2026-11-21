@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="742e4827c281 2026-11-21T07:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="464e1025e036 2026-11-21T09:57Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -905,6 +905,7 @@ body.heavyfx .chatscreen .bub{background:rgba(22,20,28,.82);backdrop-filter:blur
 .feed{position:absolute;inset:0;overflow-y:auto;scroll-snap-type:y mandatory;scrollbar-width:none;overscroll-behavior:contain}.feed::-webkit-scrollbar{display:none}
 .fcard{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
 .fvid,.fimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:kb 22s ease-in-out infinite alternate}
+[data-feed-play][hidden]{display:none!important}
 .fimg.duo{width:62%;object-position:center 20%}.fimg2{position:absolute;right:0;top:0;width:52%;height:72%;object-fit:cover;object-position:center 20%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 30%);mask-image:linear-gradient(90deg,transparent,#000 30%);animation:kb 26s ease-in-out infinite alternate-reverse}
 @keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.1) translateY(-1.5%)}}
 .fveil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0,transparent 16%,transparent 42%,rgba(5,4,8,.55) 62%,rgba(5,4,8,.92) 100%)}
@@ -17327,7 +17328,7 @@ function off94FCard(w) {
   /* 2026-11-21 性能：封面不再一进首页就全下（38 张、每张 2–3 MB ≈ 38 MB，把连接全占满，别的请求都排在后面）。
      先写在 data-poster / data-src 上，feedWire 只给当前这张和上下各一张卡加载（见 app15_home.js）。 */
   const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' data-poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg"' + (pos ? ' data-src="' + esc(pos) + '"' : '') + ' alt="">';
-  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
+  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + (homeVideo ? feedRetryHTML() : '') + '<div class="fveil"></div>' +
     '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (CL() === "zh" ? (w.orient === "bl" ? "男男" : w.orient === "gl" ? "女女" : "男女") : (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F")) + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
     '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
     '<button class="btn btn-p btn-sm fplay94" data-off94="' + esc(w.id) + '">▶ ' + (CL() === "zh" ? "开始看" : "Play") + '</button></div></section>';
@@ -17363,8 +17364,10 @@ discMain = function () {
   return h;
 };
 document.addEventListener("click", async e => {
-  const x = e.target.closest("[data-off94]"); if (!x) return; e.preventDefault(); e.stopPropagation();
+  const x = e.target.closest("[data-off94]"); if (!x || e.target.closest("[data-feed-play]")) return; e.preventDefault(); e.stopPropagation();
   if (x.dataset.busy) return; x.dataset.busy = 1;
+  if (window.PERF157) PERF157.stopAll();
+  toast(CL() === "zh" ? "正在打开剧本…" : "Opening story…");
   try { const wid = await installWork(x.dataset.off94); if (wid) { try { if (typeof openStory === "function") openStory(wid); else startSheet(wid); } catch (_) { try { startSheet(wid); } catch (__) {} } } } finally { delete x.dataset.busy; }
 }, true);
 (function () { const st = document.createElement("style"); st.textContent = `.fcard.off94 .fimg{object-fit:cover}.fp.new94{background:var(--gold,#F0B77E);color:#241a10}.fhook94{margin:6px 0 10px;font-size:13.5px;line-height:1.5;color:#fffd;max-width:88%;text-shadow:0 1px 6px #000a}.fplay94{pointer-events:auto}
@@ -17769,7 +17772,7 @@ if(typeof MSGKIND!=="undefined")MSGKIND.post("app12:legacy-photo",function(html,
    The catalog is the 36 official story packs (+ community worlds in Discover). */
 const FEED_TABS=[["foryou",T("For You","为你推荐")],["hot",T("Hot","热门")],["sweet",T("Sweet","甜宠")],["rivals",T("Rivals","宿敌")],["dark",T("Dark","暗黑")],
  ["fantasy",T("Fantasy","奇幻")],["slow",T("Slow Burn","慢热")],["second",T("Second Chance","破镜重圆")],["ensemble",T("Ensemble","群像")]];
-let feedTab="foryou",feedObs=null,feedNear=null,feedSound=true;
+let feedTab="foryou",feedObs=null,feedNear=null,feedSound=true,feedCurrent=null,feedPlaySeq=0,feedWireSeq=0;
 function packWorlds(){return W.filter(w=>w.pack)}
 function hotRank(){return packWorlds().slice().sort((a,b)=>b.stats[0]-a.stats[0]).map(w=>w.id)}
 function heatFit(w){const o=["fluff","slow","steamy","mature"];return 3-Math.abs(o.indexOf(w.heat)-o.indexOf(S.heat))}
@@ -17781,10 +17784,11 @@ function feedList(k){const all=packWorlds();let ws=all.filter(orOK);
  return L.sort((a,b)=>recScore(b)-recScore(a))}
 function lastRun(wid){return Object.values(S.threads).filter(th=>th.wid===wid&&th.pk).sort((a,b)=>b.at-a.at)[0]}
 function orPill(w){return w.kind==="ensemble"?'<span class="fp or ens">'+t("st.ensemble")+'</span>':'<span class="fp or '+w.or+'">'+(w.or==="bl"?"BL":w.or==="gl"?"GL":"M/F")+'</span>'}
+function feedRetryHTML(){return '<button class="btn btn-g" data-feed-play="1" hidden style="position:absolute;z-index:4;top:42%;left:50%;transform:translateX(-50%)">▶ '+(CL()==='zh'?'点击播放':'Tap to play')+'</button>'}
 function fCard(w,i,top){const cl=CLIPS[w.id+":1"],c0=cl&&cl[Object.keys(cl)[0]],run=lastRun(w.id),fav=(S.favs||{})[w.id],rk=top.indexOf(w.id);
  const bg=c0?'<video class="fvid" loop playsinline preload="none" poster="'+artSrc(w.cover?w.id:w.cast[0])+'" data-src="'+vidSrc(c0.src)+'"></video>':
   '<img class="fimg'+(w.cover?"":" duo")+'" src="'+artSrc(w.cover?w.id:w.cast[0])+'" alt="">'+(!w.cover&&w.cast[1]?'<img class="fimg2" src="'+artSrc(w.cast[1])+'" alt="">':"");
- return '<section class="fcard" data-fw="'+w.id+'">'+bg+'<div class="fveil"></div>'+
+ return '<section class="fcard" data-fw="'+w.id+'">'+bg+(c0?feedRetryHTML():"")+'<div class="fveil"></div>'+
   '<div class="fside">'+(SHORTS[w.id]?'<button data-short="'+w.id+'" aria-label="hook"><i>▶</i><small>'+t("hf.hook")+'</small></button>':'')+
    '<button data-remix="'+w.id+'" aria-label="remix"><i>⑂</i><small>'+t("hf.remix")+'</small></button><button data-fshare="'+w.id+'" aria-label="share"><i>⇪</i><small>'+t("hf.share")+'</small></button></div>'+
   '<div class="finfo fmin"><div class="frow"><button class="ftitle" data-story="'+w.id+'">'+esc(Lz(w.title))+'<small>'+(w.kind==="ensemble"?"":w.or==="bl"?" · BL":w.or==="gl"?" · GL":"")+' ›</small></button><button class="fheart'+(fav?" on":"")+'" data-fav="'+w.id+'" aria-label="save">'+(fav?"♥":"♡")+'</button></div></div></section>'}
@@ -17796,9 +17800,22 @@ function renderHome(v){
   '<div class="feed" id="feed">'+homeShowcaseHTML()+(ws.length?ws.map((w,i)=>fCard(w,i,top)).join(""):'<p class="empty" style="padding-top:120px">'+t("disc.none")+'</p>')+'</div></div>';
  const on=$('[data-ftab].on');if(on)on.scrollIntoView({inline:"center",block:"nearest"});
  feedWire()}
-function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();
- feedObs=new IntersectionObserver(es=>es.forEach(en=>{const v=en.target.querySelector("video");if(!v)return;
-  if(en.isIntersecting&&en.intersectionRatio>.6){if(!v.src)v.src=v.dataset.src;v.muted=!feedSound;const p=v.play();p&&p.catch&&p.catch(()=>{v.muted=true;v.play().catch(()=>{})})}else v.pause()}),{root:feed,threshold:[0,.6,1]});
+function feedStopVideo(v){if(!v)return;if(feedCurrent===v){feedCurrent=null;feedPlaySeq++}
+ try{v.pause();if(v.getAttribute("src")){v.removeAttribute("src");v.load()}}catch(_){}
+ const retry=v.closest(".fcard")?.querySelector("[data-feed-play]");if(retry)retry.hidden=true;}
+function feedPlayVideo(v){if(!v||feedCurrent===v||document.hidden||v.closest(".screen[hidden]"))return;
+ if(feedCurrent)feedStopVideo(feedCurrent);feedCurrent=v;const seq=++feedPlaySeq;
+ const current=()=>feedCurrent===v&&feedPlaySeq===seq&&v.isConnected&&!document.hidden&&!v.closest(".screen[hidden]");
+ const retry=v.closest(".fcard")?.querySelector("[data-feed-play]");v.onplaying=()=>{if(retry)retry.hidden=true};
+ const failed=()=>{if(current()&&retry)retry.hidden=false};
+ try{if(!v.getAttribute("src"))v.setAttribute("src",v.dataset.src);v.muted=!feedSound;
+  const p=v.play();if(p&&p.catch)p.catch(e=>{if(!current()||e?.name==="AbortError")return;
+   if(e?.name!=="NotAllowedError"){failed();return}v.muted=true;try{v.play().catch(failed)}catch(_){failed()}});
+ }catch(_){failed()}}
+function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();const wire=++feedWireSeq;
+ if(feedCurrent&&!feed.contains(feedCurrent))feedStopVideo(feedCurrent);
+ feedObs=new IntersectionObserver(es=>{if(wire!==feedWireSeq)return;es.forEach(en=>{const v=en.target.querySelector("video");if(!v)return;
+  if(en.isIntersecting&&en.intersectionRatio>=.6)feedPlayVideo(v);else feedStopVideo(v)})},{root:feed,threshold:[0,.6,1]});
  feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c));
  /* 2026-11-21 性能：封面按需加载 —— 只给当前这张卡和上下各一张卡加载封面（data-poster / data-src → poster / src）。
     以前所有卡的封面一进首页就全下，官方剧封面每张 2–3 MB，几十张把连接占满。老浏览器没有 IntersectionObserver 时照旧全部加载。 */
@@ -17810,7 +17827,8 @@ function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.dis
   feed.querySelectorAll(".fcard").forEach(c=>feedNear.observe(c))}
  else feed.querySelectorAll(".fcard").forEach(hyd)}
 document.addEventListener("click",e=>{let x;
- if(x=e.target.closest("[data-fsound]")){feedSound=!feedSound;x.textContent=feedSound?"🔊":"🔇";$$(".fvid").forEach(v=>v.muted=!feedSound);return}
+ if(x=e.target.closest("[data-feed-play]")){e.preventDefault();e.stopImmediatePropagation();const v=x.closest(".fcard")?.querySelector("video");if(v){feedStopVideo(v);feedPlayVideo(v);x.hidden=true}return}
+ if(x=e.target.closest("[data-fsound]")){feedSound=!feedSound;x.textContent=feedSound?"🔊":"🔇";if(feedCurrent){feedCurrent.muted=!feedSound;if(feedCurrent.paused){const v=feedCurrent;feedCurrent=null;feedPlayVideo(v)}}return}
  if(feedSound&&e.target.closest(".fcard")){$$(".fvid").forEach(v=>{if(v.muted&&!v.paused)v.muted=false})}
  if(x=e.target.closest("[data-ftab]")){feedTab=x.dataset.ftab;renderHome($("#tabv"));return}
  if(x=e.target.closest("[data-fav]")){const id=x.dataset.fav;S.favs=S.favs||{};S.favs[id]=!S.favs[id];if(!S.favs[id])delete S.favs[id];save();x.classList.toggle("on",!!S.favs[id]);x.textContent=S.favs[id]?"♥":"♡";toast(S.favs[id]?t("hf.saved"):t("hf.unsaved"));return}
@@ -19260,13 +19278,14 @@ async function install98(id) {
   if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save();
   // Story-bible installs bypass the legacy installer that records plays.
-  try {
+  // Reporting must not hold the installed story behind another network round trip.
+  (async () => { try {
     const play = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
     if (play && play.ok) {
       OFF89.at = 0; OFFF94.at = 0;
     }
     if (typeof OFF94 !== "undefined" && OFF94.play) delete OFF94.play[id];
-  } catch (_) {} // A statistics outage must not prevent playing an installed story.
+  } catch (_) {} })(); // A statistics outage must not prevent playing an installed story.
   return wid;
 }
 { const _iw = installWork; installWork = async function (id) { try { const b = await bible98(id); if (b) return await install98(id); } catch (e) { try { console.warn("[b98]", e); } catch (_) {} } return _iw.apply(this, arguments); }; }
@@ -19606,6 +19625,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "玩家：" : "Player: ") + yn98(th) + gx98(th) + "（" + LZ98((A.as === b.player.key ? b.player : cardOf98(w, A.you) || {}).role) + "）" + (A.profile.length ? (zh ? "；玩家自己表现出的样子：" : "; how the player has shown themselves: ") + A.profile.slice(-6).join("；") : "") +
     "\n" + (zh ? "角色（只有这些 id 能开口）：\n" : "Cast (only these ids may speak):\n") + castL +
     "\n" + (zh ? "他们对玩家的好感：" : "Their feeling toward the player: ") + rel +
+    (serial98(b) ? "\n" + (zh ? "本作正在连载，当前只开放" + b.chapters.length + "章。只演当前场景，不生成后续未发布章节，不揭露大纲，不宣布全剧结局。最后一场只收束眼前事件并保留悬念，ending 必须为 null。" : "This story is ongoing. Only " + b.chapters.length + " chapters are published. Stay in the current scene, do not invent unpublished chapters or a final ending. Close the current event on a cliffhanger; ending must be null.") : "") +
     "\n\n" + (zh ? "第 " + A.ch + " / " + b.chapters.length + " 章「" + LZ98(c.title) + "」目标：" : "Chapter " + A.ch + " / " + b.chapters.length + " “" + LZ98(c.title) + "” goal: ") + (c.goal || "") +
     "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
     "\n" + (zh ? "当前场景在场：" : "Present now: ") + (here98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
@@ -19620,7 +19640,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
     "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "主角们的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
-    (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
+    (last && mode === "exit" && !serial98(b) ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
     heat98(th, zh, "director") + (senseOK98(th, mode) ? senseAsk98(th, zh) : "") +
     (mode === "exit" ? withAsk98(th, s, zh) : presence98(th, s, zh)) +
     (mode === "talk" || mode === "more" ? photoAsk98(th, act, zh) : "") +
@@ -19694,7 +19714,9 @@ function senseClean98(v) {
 }
 /* ---------- one beat ---------- */
 async function beat98(th, mode, act) {
-  const A = th.b98; if (A.ended) return; if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
+  const A = th.b98; if (A.ended) return;
+  if (serialWaiting98(th)) { serialSheet98(th); return false; }
+  if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
   if (busy) return; busy = true; if (act && window.EXPERIENCE124) EXPERIENCE124.positions.delete(th.id); typing(true); if (experience98(th)) dock98(); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
   try {
     const { s } = scene98(th), pres = here98(th, s), start = th.msgs.length;
@@ -19762,7 +19784,7 @@ async function beat98(th, mode, act) {
     useUnits(aiCost() * (mode === "talk" || mode === "more" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
     if (items.length && typeof chg96 === "function") chg96(items);
-    if (d.ending && mode === "exit") { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
+    if (d.ending && mode === "exit" && !serial98(bOf98(wd(th.wid)))) { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
       appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L98("结局", "Ending") + " · " + (e ? LZ98(e.name) : A.end), txt: String(d.endingText || (e && e.text) || "").slice(0, 500), at: Date.now() }); }
     turn98(th, start, pre, mode, act);
     th.at = Date.now(); save();
@@ -19791,8 +19813,11 @@ async function enter98(th) {
   if (s.call && callsOK97(th)) { const cid = byKey98(th, s.call.who); if (ch(cid)) appendMsg(th, { who: "sys", k: "card", title: "📞 " + L98(first(ch(cid).n) + " 来电", first(ch(cid).n) + " is calling"), txt: "", call98: cid, at: Date.now() }); }
   dock98();
 }
+
 async function next98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (busy || A.ended) return;
+  if (serialWaiting98(th)) { serialSheet98(th); return; }
+  if (A.serialPaused98) delete A.serialPaused98;
   if (!(experience98(th) && experience98(th).allowFreeContinue) && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) { A.phase = "choice"; save(); dock98(); return; }
   if(!goalMayAdvance98(th))return;
   if(A.pendingEnding98&&A.sc>=c.scenes.length-1){const id=A.pendingEnding98;delete A.pendingEnding98;finishExperience98(th,id);return;}
@@ -19803,7 +19828,7 @@ async function next98(th) {
   else if (!lastCh) { appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · 完", "Chapter " + A.ch + " · end"), txt: "", at: Date.now() });
     const ev = L98("第 " + A.ch + " 章结束，玩家这一章：", "Chapter " + A.ch + " ended. The player: ") + A.sum.slice(-3).join("；"); if (typeof gen96 === "function") gen96(th, ev).then(m => m && chg96(m)).catch(() => {});
     A.ch++; A.sc = 0; }
-  else { A.ended = true; save(); dock98(); return; }
+  else { if (serial98(b)) { A.serialPaused98 = true; A.phase = "talk"; save(); dock98(); serialSheet98(th); return; } A.ended = true; save(); dock98(); return; }
   save(); await enter98(th);
 }
 async function pick98(th, i, echoed) {
@@ -20132,7 +20157,7 @@ document.addEventListener("click", e => {
 });
 function nextLabel98(th) {
   const { b, c } = scene98(th), A = th.b98;
-  return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : L98("走向结局", "To the ending");
+  return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : serial98(b) ? L98("本次更新已读完", "Finish available chapters") : L98("走向结局", "To the ending");
 }
 /* sending a message in a b98 thread = free talk inside the current scene */
 { const _rp = reply; reply = function (th, ctx, silent) {
@@ -20166,7 +20191,8 @@ function dock98() {
   const th = S.threads[curT]; const old = $("#dk98"); goalDock98(th); if (!th || !th.b98) { if (old) old.remove(); return; }
   const comp = $("#s-chat .composer"); if (!comp) return; const A = th.b98, { s } = scene98(th);
   let h = '';
-  if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
+  if (serialWaiting98(th)) h = '<div class="dk98r"><button data-serial-open98="1">' + esc(L98("后续剧情持续更新 · 查看", "More chapters coming · View")) + '</button></div>';
+  else if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
   else if (hiddenChoice98(th) && !(s.id in A.picked) && A.phase !== 'enter') h = '<p class="dk98h">'+esc(L98('直接说出你想怎么做；也可以继续询问或暂缓决定。','Say what you want to do, ask a question, or take your time.'))+'</p>';
   else if (experience98(th) && A.phase !== 'enter' && s && s.choice && experience98(th).choiceDock === 'always') {
     const picked = s.id in A.picked;
@@ -20175,9 +20201,9 @@ function dock98() {
   else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
   else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join("") + '</div>';
   const mustPick98 = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked) && !(experience98(th) && experience98(th).allowFreeContinue);
-  if (!A.ended && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
+  if (!A.ended && !serialWaiting98(th) && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
   /* 点屏继续的提示：前三次用过就不再出现 */
-  if (!A.ended && !busy && A.phase === 'talk' && (S.tap98n || 0) < 3 && th.msgs.some(m => m.ai && m.who !== 'me')) h += '<p class="tap98">' + L98('轻点空白处，让他们接着说', 'Tap the empty space to let them keep talking') + '</p>';
+  if (!A.ended && !serialWaiting98(th) && !busy && A.phase === 'talk' && (S.tap98n || 0) < 3 && th.msgs.some(m => m.ai && m.who !== 'me')) h += '<p class="tap98">' + L98('轻点空白处，让他们接着说', 'Tap the empty space to let them keep talking') + '</p>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
@@ -20185,6 +20211,10 @@ const __body_story98 = function () { try { dock98(); const th = S.threads[curT];
 if (window.UI && typeof window.UI.add === "function") window.UI.add("story98", __body_story98);
 else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_story98(); return r; }; }; }
 document.addEventListener("click", e => { let x; const th = S.threads[curT];
+  if (e.target.closest("[data-serial-open98]")) { if (th && serialWaiting98(th)) serialSheet98(th); return; }
+  const detail98 = e.target.closest("[data-serial-detail98]");
+  if (detail98) { closeSheet(); openStory(detail98.dataset.serialDetail98); return; }
+  if (e.target.closest("[data-serial-discover98]")) { closeSheet(); show("s-main"); renderTab("discover"); return; }
   if (e.target.closest("[data-b98next]")) { if (th && th.b98) next98(th); return; }
   if ((x = e.target.closest("[data-b98pick]"))) { if (th && th.b98) pick98(th, +x.dataset.b98pick); return; }
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
@@ -20538,6 +20568,20 @@ async function hiddenChoiceReply98(th,ctx) {
   return index>=0?pick98(th,index,true):beat98(th,'talk',act);
 }
 
+/* Ongoing story boundary. */
+function serial98(b) { return !!(b && b.publication && b.publication.status === 'ongoing'); }
+function serialWaiting98(th) {
+  if (!th || !th.b98 || !th.b98.serialPaused98) return false;
+  const { b } = scene98(th);
+  return serial98(b) && th.b98.ch >= b.chapters.length;
+}
+function serialSheet98(th) {
+  const { b } = scene98(th), w = wd(th.wid), assets = OFF94.assets[w.community] || {}, cover = assets.cover || assets.poster;
+  sheet('<div style="text-align:center;padding:8px 4px 20px">' +
+    (cover ? '<img src="' + esc(cover) + '" alt="" style="width:104px;height:148px;object-fit:cover;border-radius:14px;margin:0 auto 20px;display:block;box-shadow:0 12px 36px #0005">' : '') +
+    '<p class="xs faint" style="letter-spacing:.18em">' + esc(LZ98(b.title)) + '</p><h2 style="margin:14px 0">' + L98('故事未完，敬请期待', 'The story continues') + '</h2><p style="color:var(--gold);margin:0 0 16px">' + esc(L98('已更新至第 ' + b.chapters.length + ' 章', 'Updated through chapter ' + b.chapters.length)) + '</p><p class="sm" style="line-height:1.9">' + L98('后续剧情持续更新。<br>下一次选择，等你回来。', 'More chapters are on the way.<br>Your next choice awaits.') + '</p><p class="xs faint" style="margin:18px 0 24px">' + L98('本次进度已保存', 'Your progress has been saved') + '</p><button class="btn btn-p btn-block" data-serial-detail98="' + esc(th.wid) + '">' + L98('返回剧本详情', 'Story details') + '</button><button class="btn btn-g btn-block" data-serial-discover98="1">' + L98('发现更多剧本', 'Discover more stories') + '</button></div>');
+}
+/* End ongoing story boundary. */
 /* End authored protagonist and chapter objectives. */
 document.addEventListener('click',e=>{
   if(e.target.closest('[data-goal-check98]')){e.preventDefault();e.stopPropagation();const th=S.threads[curT];if(!th||!objectives98(th)||busy||GOAL98_JUDGING.has(th))return;goalJudge98(th,'check',null).then(()=>{const {c}=scene98(th),a=th.b98;if(a.sc===c.scenes.length-1)a.ready98=goalLocked98(th)?null:a.ch+':'+a.sc;save();if(S.threads[curT]===th)dock98();});dock98();return;}
@@ -29646,11 +29690,15 @@ const feed=off94Feed;off94Feed=async function(){const list=await feed.apply(this
       v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {});
     } catch (e) { console.warn("[perf157] play", e); }
   };
-  const stop = v => { try { if (!v.paused) v.pause(); } catch (_) {} };
+  const stop = v => { try { v.pause(); if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); } } catch (_) {} };
+  const stopAll = () => {
+    if (typeof feedStopVideo === "function" && feedCurrent) feedStopVideo(feedCurrent);
+    document.querySelectorAll("video[data-lz]").forEach(stop);
+  };
   try {
     if (typeof IntersectionObserver === "function" && typeof MutationObserver === "function") {
       const showing = new Set();   /* 眼前（露出一半以上）的预告片，按进入先后 */
-      const pump = () => { let n = 0; showing.forEach(v => { if (!v.isConnected) { showing.delete(v); return; } if (n < MAX_PLAYING) { n++; if (v.paused) play(v); } else stop(v); }); };
+      const pump = () => { let n = 0; showing.forEach(v => { if (!v.isConnected || document.hidden || v.closest(".screen[hidden]")) { stop(v); showing.delete(v); return; } if (n < MAX_PLAYING) { n++; if (v.paused) play(v); } else stop(v); }); };
       const io = new IntersectionObserver(es => {
         es.forEach(en => {
           const el = en.target;
@@ -29662,9 +29710,13 @@ const feed=off94Feed;off94Feed=async function(){const list=await feed.apply(this
         pump();
       }, { rootMargin: "120px", threshold: [0, .5] });
       let queued = false;
-      const scan = () => { queued = false; document.querySelectorAll("[data-lz]:not([data-lzo])").forEach(el => { el.dataset.lzo = "1"; io.observe(el); }); };
+      const scan = () => { queued = false; pump(); document.querySelectorAll("[data-lz]:not([data-lzo])").forEach(el => { el.dataset.lzo = "1"; io.observe(el); }); };
       const ask = () => { if (queued) return; queued = true; setTimeout(scan, 60); };
       new MutationObserver(ask).observe(document.body, { childList: true, subtree: true });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) { showing.forEach(stop); showing.clear(); }
+        else document.querySelectorAll("[data-lz]").forEach(el => { io.unobserve(el); io.observe(el); });
+      });
       ask();
     } else {
       /* 老浏览器：没有 IntersectionObserver 就照以前的做法，卡片一出现就全部直接加载（不用定时器） */
@@ -29676,7 +29728,13 @@ const feed=off94Feed;off94Feed=async function(){const list=await feed.apply(this
     }
   } catch (e) { console.warn("[perf157] lazy", e); }
 
-  window.PERF157 = { max: MAX_PLAYING };
+  const showScreen = show;
+  show = function (id) { if (id !== "s-main") stopAll(); return showScreen.apply(this, arguments); };
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAll();
+    else if (typeof feedWire === "function" && !document.getElementById("s-main")?.hidden) feedWire();
+  });
+  window.PERF157 = { max: MAX_PLAYING, stopAll };
 })();
 
 </script>
