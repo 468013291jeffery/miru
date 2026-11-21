@@ -33,6 +33,14 @@ window.MIRU_TUNE_OVERRIDE = {
 | `ai.costNormal` / `costDeep` | 1 / 3 | 每轮消耗的单位 | 与「一轮几次调用」相乘才是真成本 |
 | `chat.transcript` / `transcriptPlus` | 20 / 60 | `STORY SO FAR` 带多少条消息 | 调大 ⇒ 上下文更长更连贯，也更贵；**调小到 1–2 条会明显失忆**。**实测口径**（`node tools/transcript-size.mjs gala`）：一条消息 ≈ 0.22 轮，所以 **20 条 ≈ 4.4 轮对话 ≈ 760 字符 ≈ 507 tokens**；一章按 18 轮算，20 条只覆盖**本章最近 25%**。40 条约 1,000 tokens（+500/轮 ≈ +5% 上下文） |
 | `chat.partMergeMax` | 5 | 同一段文字合并成几块为止 | 调大 ⇒ 更少气泡、更连贯；调小 ⇒ 更像即时聊天但更碎 |
+| `reading.cjkMsPerChar` | 130 | **阅读节奏**：每个汉字给多少毫秒（130 ≈ 7.7 字/秒） | 旧版是 70（14 字/秒，玩家反馈「来不及读」）。调到 100 以下会重新出现「被顶走」 |
+| `reading.latinMsPerChar` | 40 | 每个拉丁字符给多少毫秒（40 ≈ 25 字符/秒） | 与上一条同义，按语言分开 |
+| `reading.minMs` / `maxMs` | 1800 / 12000 | 单条停留的下限 / 上限 | 上限只在**单条**很长时生效；正常靠 `pageCjk` 分页，不会顶到 |
+| `reading.voiceTailMs` | 700 | 朗读读完之后再留多久才出下一条 | 朗读本身会替代阅读时间（不是叠加）。调 0 ⇒ 读完立刻顶下一条 |
+| `reading.speakerGapMs` / `sceneGapMs` | 400 / 600 | 换人说话 / 换场景时多留的一拍 | 这是「多人对话不糊成一团」的关键；调 0 会变成一条接一条 |
+| `reading.boxCjk` / `boxLatin` | 100 / 300 | 旁白并块的字数上限 | 超了就另起一块，各自计时。调大 ⇒ 更少气泡但更容易变成一墙字；调小 ⇒ 旁白更碎 |
+| `reading.pageCjk` / `pageLatin` | 120 / 320 | 单条最长字数，超过按句分页 | 台词/旁白会被拆成多条，各自计时、各自朗读；分页只落在句末 |
+| `reading.slowFactor` / `fastFactor` | 1.35 / 0.75 | 顶栏 ⏱「慢速 / 快速」的时长倍数 | 「点一下才走」不受影响（永远等你） |
 | `tools.giftPerScene` / `datePerScene` / `truthPerScene` | 0 | 每个工具**本场**可用几次（0=不限，旧行为） | 调成 1 ⇒ 一章只能送一次礼物；玩家会感觉到「被限制」，但能挡住刷好感 |
 | `tools.ageGate` | **true** | 年龄门：开着时**未确认成年**把 heat 上限压到 slow（fluff 不动） | 2026-10-25 起默认**开**（Ann 拍：等于免责声明）。未确认 ⇒ heat 上限压到 slow，首启问一次并存下答案 |
 | `tools.cooldownMs` | 0 | 同一工具两次之间的冷却（毫秒） | 与上面三个配合；单开它等于「限速不限次」 |

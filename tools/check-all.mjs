@@ -22,6 +22,8 @@ const suites = [
   ['legacy-photo-selftest.mjs', ['tools/legacy-photo-selftest.mjs'], true],
   ['experience-selftest.cjs', ['tools/experience-selftest.cjs'], true],
   ['swipe-selftest.mjs', ['tools/swipe-selftest.mjs'], true],
+  /* 阅读节奏：按阅读时长放行 / 点按优先 / 朗读尾音 / 翻记录不抢 / 长文分页 / 并块封顶 */
+  ['reading-pace-selftest.cjs', ['tools/reading-pace-selftest.cjs'], true],
   ['ledger-selftest.mjs', ['tools/ledger-selftest.mjs'], true],
   ['iap-selftest.mjs', ['tools/iap-selftest.mjs', 'api/_iap.js', 'api/wallet.js'], true],
   ['events-selftest.mjs', ['tools/events-selftest.mjs', 'index.html'], true],

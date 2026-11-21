@@ -922,17 +922,17 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **175 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **190 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
 |---|---|---|
 | `app1_core.js` | repair data saved by older versions so one bad record can never blank a p… | 252 |
 | `app2_pages.js` | ONBOARDING（原文只有段落横幅） | 302 |
-| `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1262 |
+| `app3_chat.js` | The request deadline and finally own release; a watchdog must not unlock … | 1263 |
 | `app4_more.js` | CHATS (WhatsApp-style list) | 629 |
 | `app5_money.js` | MONEY, MEMORY, DAILY POSTS What people pay for is the story, not "AI": th… | 190 |
-| `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 133 |
+| `app6_games.js` | GAME CENTER (BL first) — story games, each one moves the relationship BET… | 134 |
 | `app7_rank.js` | WEEKLY CHARACTER BOARD (打榜) — 起走服务器 以前：热度是本机公式算的（排名衰减 + hash + 本周小时数），对手是… | 98 |
 | `app8_i18n.js` | strings for Game Center · calls · fan board · weekly vote board · home ta… | 38 |
 | `app9_ads.js` | REWARDED ADS — the third path between paying and waiting Economics (US re… | 37 |
@@ -999,7 +999,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 352 |
 | `app71_narrative.js` | MIRU 互动剧本规则 v1.0 — runtime side The creator side carries the full rule se… | 165 |
 | `app72_zhpure.js` | 中文版只显示中文 Audit (every onboarding step, tabs, store, taste sheet, a story)… | 36 |
-| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 385 |
+| `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 386 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 134 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
 | `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 93 |
@@ -1022,21 +1022,21 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app92_mustlogin.js` | SIGN-IN REQUIRED The live app can no longer be used as a guest: the "先逛逛 … | 14 |
 | `app93_agegate.js` | 年龄门（T08）· 首启一次确认 开关：MIRU_TUNE.tools.ageGate（默认 true） | 44 |
 | `app93_doubao.js` | DOUBAO END-TO-END REALTIME VOICE CALLS When the relay is configured (Verc… | 97 |
-| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 609 |
+| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 611 |
 | `app94_replyguard.js` | 台词守门（他们 v8.2.3 的「角色台词检查」） 玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事 | 153 |
 | `app95_safety.js` | App Store 1.2 (user-generated content): report · block · terms · contact … | 120 |
 | `app95_status.js` | 状态写入层 v1（唯一写入口） 规格 v7.11 §04.6「状态投影的唯一写入点」： 模型和剧情都只能"提议"，真正的写入只在这里发生 | 134 |
 | `app96_social.js` | 世界围着你转 — lessons from Status & Heyyyy, all paid with 💎 (no membership) ①… | 508 |
-| `app96_tune.js` | 可调参数（外置滑钮） 为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、 关系阶段门槛、每日好感上限、单次好感步长… | 133 |
+| `app96_tune.js` | 可调参数（外置滑钮） 为什么要它：这些数字原来散在 6 个文件里当字面量（价格、单位、章节数、窗口长度、 关系阶段门槛、每日好感上限、单次好感步长… | 152 |
 | `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 229 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 1145 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 1334 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 188 |
 | `app100_fixes.js` | 体验修复（ 用户反馈 8 条中的 1/3/4/7/8） 1 首页：官方新剧列表本地缓存，进入 App 立刻显示，不再先闪 2–3 秒旧剧单；首次没… | 109 |
-| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 250 |
+| `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 254 |
 | `app102_pipeline.js` | 对话流：一道缝（ · 设计见 DIALOGUE-PIPELINE.md） Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧… | 132 |
 | `app103_turn.js` | 回合状态机 v0.1（ · Ann 定的第二件事） Ann：「这是解耦之后应该做的第二件事，统一接口之类的，没有这个谈不上代码质量。」 ## 病 … | 92 |
 | `app104_pkstate.js` | 章节状态机 v0.1（ · 第三件） Ann：「继续做吧，副作用都能修，但增强稳健性、做软件工程上的升级是最重要的事。」 ## 病 `th.pk.… | 71 |
@@ -1062,9 +1062,9 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app123_alt.js` | 剧本台词「换个说法」（） 玩家：希望剧本台词也能滑出别的说法 —— 剧本原句永远是第 1 版，往左滑让 AI 用同样的意思换一种说法，剧情走向不变 | 110 |
 | `app124_experience.js` | Scene-aware interaction and a continuous, readable conversation | 98 |
 | `app125_fresh.js` | 自动用上新版本（） 玩家：上新了，手机上还是旧样子（iPhone Safari 会把页面一直留在内存里，不刷新就一直是旧版） | 25 |
-| `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 71 |
+| `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 72 |
 | `app127_play.js` | 安卓 App（Google Play）专用：Play 内购 + 隐藏成人作品（） 安卓 App 是一个「可信网页壳」（TWA）：打开的就是线上的 … | 118 |
-| `app128_adsense.js` | 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（） 以前 watchAd 是 15 … | 54 |
+| `app128_adsense.js` | 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（） 以前 watchAd 是 15 … | 57 |
 | `app128_fxlib.js` | 特效基础层：特效库 · 统一入口 · 开关（） 玩家：特效要跟着剧情走，不是看到字就放。原来有 4 套特效各自触发，主要靠关键词匹配 ⇒ 「今晚不… | 249 |
 | `app129_catalog.js` | Catalog availability, : retain source and local history | 23 |
 | `app130_princes.js` | Eight Princes authored mainline | 25 |
@@ -1079,11 +1079,26 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app137_m108.js` | 《第八誓约》M108 运行时（） 终章（第 32 章）的选择只是「后日谈怎么过」，三个选项都应该开放， 所以标了 ⟦SET\|m108⟧（《第八誓约》）或 ⟦SET\|m109⟧（《我死过一次，他们都记得》）的存档不走通用的「最后一章 A 要攒够 A 选项」规则（原文只有段落横幅） | 10 |
 | `app138_catalog.js` | 官方剧：分类标签 + 挑战任务（） 数据：art/official/catalog.json → works[作品 id] = { tags:[…… | 122 |
 | `app139_voice.js` | 聊天框语音输入（） 输入框旁边加一个 🎙：点一下开始听，说的话实时写进输入框（灰字是还没确定的部分），再点一下或停顿一会儿就结束 | 58 |
-| `app140_meetchars.js` | 旧的全屏浮层不要了 | 73 |
+| `app140_meetchars.js` | 旧的全屏浮层不要了 | 74 |
 | `app141_creator3.js` | 用户创作 v3：让普通用户也能做出「有推进、有反转、有选择」的剧（） 修四件事（都在「一句话写一部剧」和创作中心发布后的工作台里生效）： 1 · … | 137 |
-| `app142_authored.js` | Authored content contract: refresh exposition without replaying events; k… | 58 |
+| `app142_authored.js` | Authored content contract: refresh exposition without replaying events; k… | 63 |
 | `app142_m109.js` | 数值 | 111 |
-| `app145_narration.js` | 剧情旁白 v2：按桥段释放作者线索，叙述与角色表演衔接，事实和氛围分别记忆 | 141 |
+| `app143_m110.js` | 数值 + 2 · 结局判定 | 92 |
+| `app144_discfix.js` | 发现页整理（） 用户反馈：「点击角色后页面真的混乱」 | 3581 |
+| `app145_narration.js` | 剧情旁白 v2：按桥段释放作者线索，叙述与角色表演衔接，事实和氛围分别记忆 | 148 |
+| `app147_empress.js` | Isolated from the unrelated island drama also named M110 | 142 |
+| `app148_authored_contract.js` | Shared authored-option contract | 50 |
+| `app148_svf.js` | The source's final choice precedes three conditional epilogues | 44 |
+| `app149_native_v2.js` | Native v2 metadata/media compatibility | 140 |
+| `app150_catalogrefresh.js` | Keep an already-open homepage current when official stories or their trai… | 83 |
+| `app151_hockey_v2.js` | M110 hockey work data and bindings | 38 |
+| `app151_onlyme.js` | The source's final choice precedes four conditional epilogues | 42 |
+| `app152_readability.js` | Subtle contrast for chapter objectives and character dialogue only | 19 |
+| `app153_fantasy_v6.js` | No raw source metadata is rendered; preserve full character art while fra… | 24 |
+| `app154_dream_v2.js` | （文件头没有说明 —— 该补一句） | 13 |
+| `app155_moonlit_v2.js` | （文件头没有说明 —— 该补一句） | 13 |
+| `app156_dangerous_v2.js` | （文件头没有说明 —— 该补一句） | 14 |
+| `app157_reply_pace.js` | app157 · 阅读节奏（） 玩家：「剧本的文字回复太快，而且太乱，来不及阅读。」 先把「快多少」量出来（本仓库 536 条台词 / 209 段… | 313 |
 | `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
 | `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
 | `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |

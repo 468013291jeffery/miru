@@ -41,6 +41,8 @@ parts.extend(["app153_fantasy_v6.js"])
 parts.extend(["app154_dream_v2.js"])
 parts.extend(["app155_moonlit_v2.js"])
 parts.extend(["app156_dangerous_v2.js"])
+# 阅读节奏：必须排在 app116（点一下才走）与 app144（旧的自动计时器已撤）之后，才能接管 R.wait
+parts.extend(["app157_reply_pace.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)
