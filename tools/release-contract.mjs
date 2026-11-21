@@ -62,3 +62,5 @@ execFileSync(process.execPath,['tools/dream-v2-selftest.cjs'],{cwd:root,stdio:'i
 execFileSync(process.execPath,['tools/moonlit-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
 
 execFileSync(process.execPath,['tools/dangerous-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/three-story-copy-selftest.cjs'],{cwd:root,stdio:'inherit'});

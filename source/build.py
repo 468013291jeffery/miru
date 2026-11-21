@@ -41,6 +41,7 @@ parts.extend(["app153_fantasy_v6.js"])
 parts.extend(["app154_dream_v2.js"])
 parts.extend(["app155_moonlit_v2.js"])
 parts.extend(["app156_dangerous_v2.js"])
+parts.extend(["app158_story_copy.js"])
 # 2026-11-21 性能：首页列表请求合并 + 媒体按需加载。必须排在所有包装 off94Feed 的模块之后（见文件头说明）。
 parts.extend(["app157_perf.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
