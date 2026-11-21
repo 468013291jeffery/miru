@@ -42,13 +42,14 @@ async function install98(id) {
   if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save();
   // Story-bible installs bypass the legacy installer that records plays.
-  try {
+  // Reporting must not hold the installed story behind another network round trip.
+  (async () => { try {
     const play = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
     if (play && play.ok) {
       OFF89.at = 0; OFFF94.at = 0;
     }
     if (typeof OFF94 !== "undefined" && OFF94.play) delete OFF94.play[id];
-  } catch (_) {} // A statistics outage must not prevent playing an installed story.
+  } catch (_) {} })(); // A statistics outage must not prevent playing an installed story.
   return wid;
 }
 { const _iw = installWork; installWork = async function (id) { try { const b = await bible98(id); if (b) return await install98(id); } catch (e) { try { console.warn("[b98]", e); } catch (_) {} } return _iw.apply(this, arguments); }; }

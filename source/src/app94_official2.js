@@ -377,7 +377,7 @@ function off94FCard(w) {
   /* 2026-11-21 性能：封面不再一进首页就全下（38 张、每张 2–3 MB ≈ 38 MB，把连接全占满，别的请求都排在后面）。
      先写在 data-poster / data-src 上，feedWire 只给当前这张和上下各一张卡加载（见 app15_home.js）。 */
   const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' data-poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg"' + (pos ? ' data-src="' + esc(pos) + '"' : '') + ' alt="">';
-  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
+  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + (homeVideo ? feedRetryHTML() : '') + '<div class="fveil"></div>' +
     '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (CL() === "zh" ? (w.orient === "bl" ? "男男" : w.orient === "gl" ? "女女" : "男女") : (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F")) + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
     '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
     '<button class="btn btn-p btn-sm fplay94" data-off94="' + esc(w.id) + '">▶ ' + (CL() === "zh" ? "开始看" : "Play") + '</button></div></section>';
@@ -413,8 +413,10 @@ discMain = function () {
   return h;
 };
 document.addEventListener("click", async e => {
-  const x = e.target.closest("[data-off94]"); if (!x) return; e.preventDefault(); e.stopPropagation();
+  const x = e.target.closest("[data-off94]"); if (!x || e.target.closest("[data-feed-play]")) return; e.preventDefault(); e.stopPropagation();
   if (x.dataset.busy) return; x.dataset.busy = 1;
+  if (window.PERF157) PERF157.stopAll();
+  toast(CL() === "zh" ? "正在打开剧本…" : "Opening story…");
   try { const wid = await installWork(x.dataset.off94); if (wid) { try { if (typeof openStory === "function") openStory(wid); else startSheet(wid); } catch (_) { try { startSheet(wid); } catch (__) {} } } } finally { delete x.dataset.busy; }
 }, true);
 (function () { const st = document.createElement("style"); st.textContent = `.fcard.off94 .fimg{object-fit:cover}.fp.new94{background:var(--gold,#F0B77E);color:#241a10}.fhook94{margin:6px 0 10px;font-size:13.5px;line-height:1.5;color:#fffd;max-width:88%;text-shadow:0 1px 6px #000a}.fplay94{pointer-events:auto}

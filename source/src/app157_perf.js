@@ -38,11 +38,15 @@
       v.muted = true; const p = v.play(); if (p && p.catch) p.catch(() => {});
     } catch (e) { console.warn("[perf157] play", e); }
   };
-  const stop = v => { try { if (!v.paused) v.pause(); } catch (_) {} };
+  const stop = v => { try { v.pause(); if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); } } catch (_) {} };
+  const stopAll = () => {
+    if (typeof feedStopVideo === "function" && feedCurrent) feedStopVideo(feedCurrent);
+    document.querySelectorAll("video[data-lz]").forEach(stop);
+  };
   try {
     if (typeof IntersectionObserver === "function" && typeof MutationObserver === "function") {
       const showing = new Set();   /* 眼前（露出一半以上）的预告片，按进入先后 */
-      const pump = () => { let n = 0; showing.forEach(v => { if (!v.isConnected) { showing.delete(v); return; } if (n < MAX_PLAYING) { n++; if (v.paused) play(v); } else stop(v); }); };
+      const pump = () => { let n = 0; showing.forEach(v => { if (!v.isConnected || document.hidden || v.closest(".screen[hidden]")) { stop(v); showing.delete(v); return; } if (n < MAX_PLAYING) { n++; if (v.paused) play(v); } else stop(v); }); };
       const io = new IntersectionObserver(es => {
         es.forEach(en => {
           const el = en.target;
@@ -54,9 +58,13 @@
         pump();
       }, { rootMargin: "120px", threshold: [0, .5] });
       let queued = false;
-      const scan = () => { queued = false; document.querySelectorAll("[data-lz]:not([data-lzo])").forEach(el => { el.dataset.lzo = "1"; io.observe(el); }); };
+      const scan = () => { queued = false; pump(); document.querySelectorAll("[data-lz]:not([data-lzo])").forEach(el => { el.dataset.lzo = "1"; io.observe(el); }); };
       const ask = () => { if (queued) return; queued = true; setTimeout(scan, 60); };
       new MutationObserver(ask).observe(document.body, { childList: true, subtree: true });
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) { showing.forEach(stop); showing.clear(); }
+        else document.querySelectorAll("[data-lz]").forEach(el => { io.unobserve(el); io.observe(el); });
+      });
       ask();
     } else {
       /* 老浏览器：没有 IntersectionObserver 就照以前的做法，卡片一出现就全部直接加载（不用定时器） */
@@ -68,5 +76,11 @@
     }
   } catch (e) { console.warn("[perf157] lazy", e); }
 
-  window.PERF157 = { max: MAX_PLAYING };
+  const showScreen = show;
+  show = function (id) { if (id !== "s-main") stopAll(); return showScreen.apply(this, arguments); };
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stopAll();
+    else if (typeof feedWire === "function" && !document.getElementById("s-main")?.hidden) feedWire();
+  });
+  window.PERF157 = { max: MAX_PLAYING, stopAll };
 })();

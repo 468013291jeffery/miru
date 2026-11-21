@@ -5,7 +5,17 @@ async function run(response){
  const calls=[],b={player:{key:'me',name:{zh:'你',en:'You'},role:{}},cast:[],title:{},hook:{},premise:{},chapters:[]};
  const x={S:{mine:{chars:{},worlds:{}},art:{}},bible98:async()=>b,off94Assets:async()=>({}),cid98:(w,k)=>k,LZ98:()=>'',Z98:()=>true,save:()=>{},OFF89:{at:123},OFFF94:{at:456},OFF94:{play:{}},capi:async p=>{calls.push(p);if(response instanceof Error)throw response;return response;}};
  vm.createContext(x);vm.runInContext(body,x);const wid=await x.install98('w_test');assert(wid);assert.deepEqual(calls,['/works?id=w_test&play=1']);
+ await new Promise(r=>setImmediate(r));
  if(response.ok){assert.equal(x.OFF89.at,0);assert.equal(x.OFFF94.at,0);}else{assert.equal(x.OFF89.at,123);}
  assert(x.S.mine.worlds[wid]);
 }
-(async()=>{await run({ok:true});await run({ok:false});await run(new Error('offline'));console.log('Story-bible play reporting, cache refresh, API failure and offline play passed');})().catch(e=>{console.error(e);process.exitCode=1;});
+async function slowReport(){
+ let finish;const report=new Promise(r=>{finish=r});
+ const b={player:{key:'me',name:{zh:'你',en:'You'},role:{}},cast:[],title:{},hook:{},premise:{},chapters:[]};
+ const x={S:{mine:{chars:{},worlds:{}},art:{}},bible98:async()=>b,off94Assets:async()=>({}),cid98:(w,k)=>k,LZ98:()=>'',Z98:()=>true,save:()=>{},OFF89:{at:123},OFFF94:{at:456},OFF94:{play:{}},capi:()=>report};
+ vm.createContext(x);vm.runInContext(body,x);
+ const result=await Promise.race([x.install98('w_slow'),new Promise(r=>setTimeout(()=>r(null),50))]);
+ assert(result,'Story entry must not wait for a stalled statistics request');
+ finish({ok:true});await new Promise(r=>setImmediate(r));assert.equal(x.OFF89.at,0);assert.equal(x.OFFF94.at,0);
+}
+(async()=>{await run({ok:true});await run({ok:false});await run(new Error('offline'));await slowReport();console.log('Story-bible play reporting, cache refresh, API failure, offline play and nonblocking entry passed');})().catch(e=>{console.error(e);process.exitCode=1;});
