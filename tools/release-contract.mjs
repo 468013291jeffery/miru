@@ -64,3 +64,5 @@ execFileSync(process.execPath,['tools/moonlit-v2-selftest.cjs'],{cwd:root,stdio:
 execFileSync(process.execPath,['tools/dangerous-v2-selftest.cjs'],{cwd:root,stdio:'inherit'});
 
 execFileSync(process.execPath,['tools/three-story-copy-selftest.cjs'],{cwd:root,stdio:'inherit'});
+
+for (const name of ['song-selftest.cjs','song-parse-selftest.cjs','song-flow-selftest.cjs']) execFileSync(process.execPath,['tools/'+name],{cwd:root,stdio:'inherit'});
