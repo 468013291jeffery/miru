@@ -3,7 +3,7 @@ const hooks={},ctx={console,window:{},MG100:[],MG_T:{},off94Feed:async()=>[],mgM
 vm.createContext(ctx);let p=fs.readFileSync('source/src/app51_import.js','utf8');vm.runInContext(p.slice(0,p.indexOf('const PARSE =')),ctx);let o=fs.readFileSync('source/src/app94_official2.js','utf8');vm.runInContext(o.slice(0,o.indexOf('/* ---- build:')),ctx);vm.runInContext(o.slice(o.indexOf('function off94Build('),o.indexOf('/* scene art registered again')),ctx);
 
 vm.runInContext(o.slice(o.indexOf('const YOU94 ='),o.indexOf('PARSE.use("app94:you94"')),ctx);
-Object.assign(ctx,{off94Assets:async()=>({}),packModes(){},packOpen(){},packPick(){},packAdvanceChapter(){},stopResolve(){},reply:async()=>{},doSend(){},PKREG:{add(){}},document:{createElement:()=>({}),head:{appendChild(){}}}});
+Object.assign(ctx,{off94Assets:async()=>({}),packModes(){},packOpen(){},packPick(){},packAdvanceChapter(){},stopResolve(){},reply:async()=>{},doSend(){},pkDirective(){return false;},PKREG:{add(){}},document:{createElement:()=>({}),head:{appendChild(){}}}});
 for(const f of ['app159_song_data.js','wtsr_state.js','app159_song.js'])vm.runInContext(fs.readFileSync('source/src/'+f,'utf8'),ctx);
 let done=fs.readFileSync('source/src/app144_discfix.js','utf8'),ds=done.indexOf('(function () {',done.indexOf('每章要完成固定目标'));vm.runInContext(done.slice(ds,done.indexOf('/* ---- 运行时 ---- */',ds))+'})();',ctx);
 const dir='content/official/when-song-returns-v1/',r=JSON.parse(fs.readFileSync(dir+'release.json')),script=fs.readFileSync(dir+'script.md','utf8'),map=r.assets;

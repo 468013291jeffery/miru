@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="342ec4113ff9 2026-11-23T06:26Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="ae56b8174ef1 2026-11-23T06:43Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29916,16 +29916,18 @@ let resolving=false;
 const resolve=stopResolve;stopResolve=function(th,extra){if(own(th)&&th.pk.stop?.[2]?.wtsr&&!resolving)return;return resolve.apply(this,arguments);};
 function go(th,beats){resolving=true;try{return stopResolve(th,beats||[]);}finally{resolving=false;}}
 function finish(th){const s=state(th),id=s.ending;th.pk.q=th.pk.stop?[th.pk.stop]:[];th.pk.after=null;const lines=R.ending_text[id].slice();if(id==='END_SOLO')lines.unshift(s.demo==='done'?'旁白：朱尔斯发来刚才完成的小样，文件使用你确认的艺名。':s.demo==='planned'?'旁白：桌上留着你确认的录音预约。':'旁白：专辑的第一页仍有空白，下一首歌可以以后再写。');const beats=[...lines.map(x=>text(th,x)),['sys','wtsrEnd',{id}]];if(th.pk.stop)go(th,beats);else{th.pk.q=beats;packRun(th);}}
-PKREG.add('song:queues',function(th,b,next){
+const songDirective=function(th,b,next){
  if(!own(th)||b?.[0]!=='sys')return next(th,b);
  if(b[1]==='wtsrScene'){th.pk.q.shift();const id=b[2].id;const opening=id==='SCN_0101'&&!state(th).seenOpening;state(th).seenOpening=true;th.pk.q.unshift(...render(th,id,opening));save();return true;}
  if(b[1]==='wtsrCG'){th.pk.q.shift();const slot=b[2].slot,s=state(th);s.images=s.images||{};const permitted=slot!=='hl_c03s03_1'||s.consent.hand;const hugOK=slot!=='hl_c06s04_1'||s.consent.hug===s.scene;if(permitted&&hugOK&&!s.images[slot]&&R.assets[slot]){s.images[slot]=true;th.pk.q.unshift(['sys','cg94',{slot,src:R.assets[slot]}]);}save();return true;}
  if(b[1]==='wtsrEnd'){th.pk.q.shift();th.pk.st='end';th.pk.end=b[2].id;packSt(th.wid).end=packSt(th.wid).end||{};packSt(th.wid).end[b[2].id]=1;th.pk.after=null;appendMsg(th,{who:'sys',k:'card',title:R.ending_titles[b[2].id],txt:'',at:Date.now()});save();return true;}
  return next(th,b);
-});
-// The shared dispatcher is installed before late story adapters load. Rebuild its
-// chain so this story's queue directives are actually executable in the browser.
-if(PKREG.installed)PKREG.install();
+};
+PKREG.add('song:queues',songDirective);
+// Preserve earlier direct adapters (including Empress); a global reinstall
+// would discard them. Activate this story without replacing any other adapter.
+const beforeSongDirective=pkDirective;
+pkDirective=function(th,b){return own(th)?songDirective(th,b,(t,beat)=>beforeSongDirective(t,beat)):beforeSongDirective.apply(this,arguments);};
 function options(th){const s=state(th);let list=[...(E.choices[s.scene]||[]),...E.global];return list.filter(o=>{
  if(o.id==='eri_disclosure')return th.present?.includes(cid(th,'艾琳'));
  const k=/^(kiss|touch_no)_(viv|eri)$/.exec(o.id);if(k)return th.present?.includes(cid(th,person(k[2])));

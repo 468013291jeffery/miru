@@ -15,7 +15,8 @@ const c={console,window:{},S:{mine:{worlds,chars},art:{},threads},OFF94:{cur:nul
  authoredMatch:async()=>c.window.WTSR_RUNTIME.options(threads.flow).findIndex(o=>o.id===actionId)};
 // Persist one ending registry, just as packSt does in the real app.
 const endings={end:{}};c.packSt=()=>endings;
-c.window=c;vm.createContext(c);vm.runInContext(fs.readFileSync('source/src/app110_pkreg.js','utf8'),c);c.PKREG.install();assert(c.PKREG.installed);for(const f of ['app159_song_data.js','wtsr_state.js','app159_song.js'])vm.runInContext(fs.readFileSync('source/src/'+f,'utf8'),c);
+c.window=c;vm.createContext(c);vm.runInContext(fs.readFileSync('source/src/app110_pkreg.js','utf8'),c);c.PKREG.install();assert(c.PKREG.installed);let oldAdapterCalls=0;const oldAdapter=c.pkDirective;c.pkDirective=function(th,b){if(th.wid==='existing-empress'&&b[1]==='legacy-rune'){oldAdapterCalls++;return true;}return oldAdapter(th,b);};for(const f of ['app159_song_data.js','wtsr_state.js','app159_song.js'])vm.runInContext(fs.readFileSync('source/src/'+f,'utf8'),c);
+assert(c.pkDirective({wid:'existing-empress'},['sys','legacy-rune',{}]));assert.equal(oldAdapterCalls,1,'pre-existing direct adapter survives Song activation');
 R.cast.forEach(x=>chars[x.name]={n:x.name,n94:{zh:x.name}});
 worlds.song={community:R.work_id,cast:R.cast.map(x=>x.name),pack:{chapters:R.chapters.map(x=>({n:x.n,beats:{zh:[]}}))}};
 function drain(th){let count=0;while(th.pk.q.length){assert(++count<300,'finite queue');const b=th.pk.q[0];if(b[0]==='sys'&&b[1]==='line'){th.pk.stop=b;return;}if(c.pkDirective(th,b))continue;th.pk.q.shift();if(b[0]==='sys'&&b[1]==='mg')th.pk.q.unshift(...c.mgResult(th,b[2],'skip'));else if(b[0]!=='sys')th.msgs.push({who:b[0],k:b[1],txt:b[2]});}th.pk.stop=null;}
