@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="19299399dfcd 2026-11-23T20:49Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="f8e70dc1ab16 2026-11-23T20:52Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29346,6 +29346,247 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     };
   }
   window.PK180 = { store, packOf, remember };
+})();
+
+/* ===== mod181: 新增 4 种剧情小游戏模板（2026-11-24）=====
+   剧本原稿里常写、以前只能退化成三选一的玩法，现在有自己的模板（后台小游戏编辑框里直接用 tpl 名）：
+     m111_classify 分类  bins:[[中,英],…]  items:[[[中,英], 正确的组序号], …]          每项点一下选组，全部对才算赢
+     m111_pair     比对  items:[[中,英],…]  pair:[i, j]                                  选出真正一致的两项
+     m111_spot     找不同 items:[[中,英]或 "🔑",…]  ans: 序号  (cols: 每行几格，默认 3)   直接点那一格
+     m111_align    对齐  target: 0–100  tol: 允许误差（默认 6） marks:[[左端中,英],[右端中,英]]  拖动滑块对准再核对
+   都沿用 mod168 的外观（.m168）、倒计时和两次机会；输了或跳过剧情照常继续。 */
+(function () {
+  "use strict";
+  if (typeof MG_T === "undefined") return;
+  const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const t2 = (zh, a, b) => (zh ? a : b);
+  const L = (x, zh) => (Array.isArray(x) ? x[zh ? 0 : 1] : x);
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function shell(A, G, sub, done, T, zh, instr) {
+    A.className = "mgarea m168"; A.innerHTML = "";
+    sub.textContent = instr;
+    if (G.img) { const im = el("img"); im.src = G.img; im.alt = ""; im.style.cssText = "width:100%;max-height:170px;object-fit:cover;border-radius:12px;display:block"; A.append(im); }
+    A.append(el("p", "pr", zh ? G.pz : G.pe));
+    const tb = el("div", "tb"), bar = el("i"); tb.append(bar); A.append(tb);
+    const secs = G.seconds || 35; let over = false, tries = 0;
+    requestAnimationFrame(() => { bar.style.transitionDuration = secs + "s"; bar.style.width = "0%"; });
+    T.push(setTimeout(() => { if (!over) { over = true; done("lose"); } }, secs * 1000));
+    const body = el("div", "m168b"); body.style.cssText = "display:flex;flex-direction:column;gap:8px"; A.append(body);
+    const hint = el("p", "hint");
+    const submit = ok => { if (over) return; if (ok) { over = true; done("win"); } else if (tries++ < 1) hint.textContent = t2(zh, "还差一点，再核对一次。", "Not quite. Check once more."); else { over = true; done("lose"); } };
+    return { body, hint, submit };
+  }
+
+  /* 分类：每项在几个组之间切换 */
+  MG_T.m111_classify = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "给每一项选对它属于哪一组，再点核对。", "Put each item in the right group, then check."));
+    const bins = G.bins || [], items = (G.items || []).map((x, i) => ({ i, label: x[0], ans: x[1] })), pick = {};
+    const order = sh(items);
+    const draw = () => {
+      c.body.innerHTML = "";
+      order.forEach(it => {
+        const r = el("div", "row"); r.style.flexWrap = "wrap"; r.append(el("span", "", L(it.label, zh)));
+        const g = el("div"); g.style.cssText = "display:flex;gap:6px;flex-wrap:wrap";
+        bins.forEach((b, k) => { const x = el("button", "k" + (pick[it.i] === k ? " on" : ""), L(b, zh)); x.onclick = () => { pick[it.i] = k; draw(); }; g.append(x); });
+        r.append(g); c.body.append(r);
+      });
+      const go = el("button", "go", t2(zh, "核对分类", "Check")); go.disabled = items.some(it => pick[it.i] == null);
+      go.onclick = () => c.submit(items.every(it => pick[it.i] === it.ans));
+      c.body.append(go, c.hint);
+    };
+    draw();
+  };
+
+  /* 比对：选出一致的两项 */
+  MG_T.m111_pair = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "选出真正一致的两项。", "Pick the two that truly match."));
+    const want = (G.pair || [0, 1]).slice().sort().join(","), sel = new Set(), order = sh((G.items || []).map((_, i) => i));
+    const draw = () => {
+      c.body.innerHTML = "";
+      const g = el("div", "grid");
+      order.forEach(i => { const b = el("button", "k" + (sel.has(i) ? " on" : ""), L(G.items[i], zh)); b.style.textAlign = "left"; b.onclick = () => { if (sel.has(i)) sel.delete(i); else { if (sel.size >= 2) sel.delete(sel.values().next().value); sel.add(i); } draw(); }; g.append(b); });
+      const go = el("button", "go", t2(zh, "确认这两项", "Confirm these two")); go.disabled = sel.size !== 2;
+      go.onclick = () => c.submit([...sel].sort().join(",") === want);
+      c.body.append(g, go, c.hint);
+    };
+    draw();
+  };
+
+  /* 找不同：直接点那一格 */
+  MG_T.m111_spot = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.ask, zh) || t2(zh, "找出不一样的那一个。", "Find the one that's different."));
+    const g = el("div"); g.style.cssText = "display:grid;gap:8px;grid-template-columns:repeat(" + (G.cols || 3) + ",1fr)";
+    (G.items || []).forEach((x, i) => {
+      const b = el("button", "k", L(x, zh)); b.style.cssText = "min-height:64px;font-size:" + (String(L(x, zh)).length <= 2 ? "26px" : "14px");
+      b.onclick = () => { if (i === G.ans) { b.classList.add("on"); c.submit(true); } else { b.disabled = true; c.submit(false); } };
+      g.append(b);
+    });
+    c.body.append(g, c.hint);
+  };
+
+  /* 对齐：拖动滑块，让活动线对准目标线 */
+  MG_T.m111_align = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "拖动滑块，让粉色线对准虚线，再点核对。", "Drag the slider until the pink line meets the dashed one, then check."));
+    const target = Math.max(5, Math.min(95, Number(G.target) || 62)), tol = Number(G.tol) || 6;
+    let v = target > 50 ? 12 : 88;
+    const box = el("div"); box.style.cssText = "position:relative;height:96px;border-radius:12px;background:#15112a;border:1px solid #4b3d73;overflow:hidden";
+    const tline = el("i"); tline.style.cssText = "position:absolute;top:8px;bottom:8px;width:0;border-left:2px dashed #9c8cc9;left:" + target + "%";
+    const mline = el("i"); mline.style.cssText = "position:absolute;top:8px;bottom:8px;width:3px;margin-left:-1px;border-radius:2px;background:#ff5fa2";
+    box.append(tline, mline);
+    const m = G.marks || [];
+    const lab = el("div"); lab.style.cssText = "display:flex;justify-content:space-between;font-size:12px;color:#9c8cc9"; lab.append(el("span", "", L(m[0], zh) || ""), el("span", "", L(m[1], zh) || ""));
+    const rg = el("input"); rg.type = "range"; rg.min = 0; rg.max = 100; rg.step = 1; rg.value = v; rg.style.width = "100%"; rg.setAttribute("aria-label", t2(zh, "位置", "Position"));
+    const paint = () => { mline.style.left = v + "%"; };
+    rg.oninput = () => { v = Number(rg.value); paint(); };
+    paint();
+    const go = el("button", "go", t2(zh, "核对", "Check")); go.onclick = () => c.submit(Math.abs(v - target) <= tol);
+    c.body.append(box, lab, rg, go, c.hint);
+  };
+  window.MG181 = ["m111_classify", "m111_pair", "m111_spot", "m111_align"];
+})();
+
+/* ===== mod182: 再加 4 种动手玩法 + 《她毁了我的首秀》24 个小游戏全部换成真正的玩法（2026-11-24）=====
+   新模板（后台小游戏编辑框里直接用 tpl 名）：
+     m111_mark  圈出所有符合的  items:[[中,英],…]  ans:[序号,…]  ask:[中,英]        可多选，选全、选对才赢
+     m111_seq   按顺序点位置    points:[[[中,英], x%, y%],…]（按正确顺序写）  img 可选    点错一次重来
+     m111_find  黑暗里找东西    target:"🪡"  decoy:["🔩","📎",…]  label:[中,英]           手指移动是手电光圈，点中目标才算
+     m111_hold  按住稳住        need: 秒数（默认 4）  label:[中,英]                         按住让指针停在绿区，累计够秒数
+   原则：剧本写的是什么动作，小游戏就做什么动作；不再把排序、比对、找东西都压成三选一。 */
+(function () {
+  "use strict";
+  if (typeof MG_T === "undefined") return;
+  const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const t2 = (zh, a, b) => (zh ? a : b);
+  const L = (x, zh) => (Array.isArray(x) ? x[zh ? 0 : 1] : x);
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function shell(A, G, sub, done, T, zh, instr, noImg) {
+    A.className = "mgarea m168"; A.innerHTML = "";
+    sub.textContent = instr;
+    if (G.img && !noImg) { const im = el("img"); im.src = G.img; im.alt = ""; im.style.cssText = "width:100%;max-height:170px;object-fit:cover;border-radius:12px;display:block"; A.append(im); }
+    A.append(el("p", "pr", zh ? G.pz : G.pe));
+    const tb = el("div", "tb"), bar = el("i"); tb.append(bar); A.append(tb);
+    const secs = G.seconds || 40; let over = false, tries = 0;
+    requestAnimationFrame(() => { bar.style.transitionDuration = secs + "s"; bar.style.width = "0%"; });
+    T.push(setTimeout(() => { if (!over) { over = true; done("lose"); } }, secs * 1000));
+    const body = el("div", "m168b"); body.style.cssText = "display:flex;flex-direction:column;gap:8px"; A.append(body);
+    const hint = el("p", "hint");
+    const submit = ok => { if (over) return true; if (ok) { over = true; done("win"); return true; } if (tries++ < 1) { hint.textContent = t2(zh, "还差一点，再来一次。", "Not quite. One more try."); return false; } over = true; done("lose"); return true; };
+    return { body, hint, submit, isOver: () => over };
+  }
+
+  /* 圈出所有符合的（可多选） */
+  MG_T.m111_mark = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.ask, zh) || t2(zh, "把符合的全部点亮，再点核对。", "Light up every one that fits, then check."));
+    const want = (G.ans || []).slice().sort().join(","), on = new Set(), order = sh((G.items || []).map((_, i) => i));
+    const draw = () => {
+      c.body.innerHTML = "";
+      order.forEach(i => { const b = el("button", "k" + (on.has(i) ? " on" : ""), (on.has(i) ? "✓ " : "") + L(G.items[i], zh)); b.style.textAlign = "left"; b.onclick = () => { on.has(i) ? on.delete(i) : on.add(i); draw(); }; c.body.append(b); });
+      const go = el("button", "go", t2(zh, "核对（已选 " + on.size + "）", "Check (" + on.size + " picked)")); go.disabled = !on.size;
+      go.onclick = () => { if (!c.submit([...on].sort().join(",") === want)) { on.clear(); draw(); } };
+      c.body.append(go, c.hint);
+    };
+    draw();
+  };
+
+  /* 按顺序点位置 */
+  MG_T.m111_seq = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "按正确的顺序依次点这些位置。", "Tap the spots in the right order."), true);
+    const pts = G.points || []; let k = 0;
+    const box = el("div"); box.style.cssText = "position:relative;width:100%;aspect-ratio:4/3;max-width:100%;border-radius:12px;overflow:hidden;background:#15112a;border:1px solid #4b3d73;" + (G.img ? "background:#15112a url(" + JSON.stringify(G.img) + ") center/cover" : "");
+    const marks = pts.map((p, i) => {
+      const b = el("button", "k", L(p[0], zh)); b.style.cssText = "position:absolute;transform:translate(-50%,-50%);left:" + p[1] + "%;top:" + p[2] + "%;font-size:12px;padding:6px 9px;border-radius:999px;white-space:nowrap";
+      b.onclick = () => {
+        if (c.isOver()) return;
+        if (i === k) { b.classList.add("on"); b.textContent = (k + 1) + " · " + L(p[0], zh); k++; if (k === pts.length) c.submit(true); }
+        else if (!c.submit(false)) { k = 0; marks.forEach((m, j) => { m.classList.remove("on"); m.textContent = L(pts[j][0], zh); }); }
+      };
+      box.append(b); return b;
+    });
+    c.body.append(box, c.hint);
+  };
+
+  /* 黑暗里找东西：手电光圈 */
+  MG_T.m111_find = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.label, zh) || t2(zh, "移动手电，找到它，点一下。", "Move the flashlight, find it, tap it."), true);
+    const cols = 6, rows = 5, n = cols * rows, at = Math.floor(Math.random() * n), dec = G.decoy && G.decoy.length ? G.decoy : ["🔩", "📎", "🧷", "🪙", "🔘"];
+    const box = el("div"); box.style.cssText = "position:relative;width:100%;aspect-ratio:6/5;max-width:100%;border-radius:12px;overflow:hidden;background:#2a2238;touch-action:none;user-select:none";
+    const grid = el("div"); grid.style.cssText = "position:absolute;inset:0;display:grid;grid-template-columns:repeat(" + cols + ",1fr);grid-template-rows:repeat(" + rows + ",1fr)";
+    for (let i = 0; i < n; i++) {
+      const s = el("span", "", i === at ? (G.target || "🪡") : (Math.random() < 0.55 ? dec[Math.floor(Math.random() * dec.length)] : ""));
+      s.style.cssText = "display:flex;align-items:center;justify-content:center;font-size:22px;transform:rotate(" + Math.floor(Math.random() * 80 - 40) + "deg)";
+      grid.append(s);
+    }
+    const dark = el("div"); dark.style.cssText = "position:absolute;inset:0;pointer-events:none";
+    let lx = 50, ly = 50;
+    const paint = () => { dark.style.background = "radial-gradient(circle at " + lx + "% " + ly + "%, rgba(0,0,0,0) 0, rgba(0,0,0,0) 42px, rgba(8,6,14,.96) 78px)"; };
+    const pos = e => { const r = box.getBoundingClientRect(); lx = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)); ly = Math.max(0, Math.min(100, (e.clientY - r.top) / r.height * 100)); paint(); };
+    box.addEventListener("pointermove", pos); box.addEventListener("pointerdown", pos);
+    box.addEventListener("click", e => {
+      pos(e); if (c.isOver()) return;
+      const r = box.getBoundingClientRect(), ci = Math.min(cols - 1, Math.floor((e.clientX - r.left) / r.width * cols)), ri = Math.min(rows - 1, Math.floor((e.clientY - r.top) / r.height * rows));
+      if (ri * cols + ci === at) { dark.style.background = "transparent"; grid.children[at].style.filter = "drop-shadow(0 0 8px #ffd27a)"; c.submit(true); }
+      else c.submit(false);
+    });
+    paint(); box.append(grid, dark);
+    c.body.append(box, c.hint);
+  };
+
+  /* 按住稳住 */
+  MG_T.m111_hold = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.label, zh) || t2(zh, "按住按钮让指针停在绿区，累计够时间。", "Hold to keep the needle in the green until the bar fills."));
+    const need = Number(G.need) || 4; let v = 20, down = false, got = 0, last = 0, raf = 0;
+    const track = el("div"); track.style.cssText = "position:relative;height:30px;border-radius:999px;background:#15112a;border:1px solid #4b3d73;overflow:hidden";
+    const zone = el("i"); zone.style.cssText = "position:absolute;top:0;bottom:0;left:42%;width:22%;background:rgba(127,196,166,.35)";
+    const nd = el("i"); nd.style.cssText = "position:absolute;top:3px;bottom:3px;width:4px;margin-left:-2px;border-radius:2px;background:#ff5fa2";
+    track.append(zone, nd);
+    const prog = el("div", "tb"), pb = el("i"); pb.style.cssText = "width:0%;transition:none;background:#7FC4A6"; prog.append(pb);
+    const btn = el("button", "go", t2(zh, "按住", "Hold")); btn.style.touchAction = "none";
+    const set = d => e => { down = d; if (e && e.cancelable) e.preventDefault(); };
+    btn.addEventListener("pointerdown", set(true)); ["pointerup", "pointerleave", "pointercancel"].forEach(x => btn.addEventListener(x, set(false)));
+    const step = ts => {
+      if (c.isOver()) return; const dt = last ? Math.min(0.05, (ts - last) / 1000) : 0; last = ts;
+      v += (down ? 34 : -30) * dt + (Math.random() - 0.5) * 10 * dt * 6; v = Math.max(0, Math.min(100, v));
+      nd.style.left = v + "%"; if (v >= 42 && v <= 64) got += dt; pb.style.width = Math.min(100, got / need * 100) + "%";
+      if (got >= need) { c.submit(true); return; }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    c.body.append(track, prog, btn, c.hint);
+  };
+  window.MG182 = ["m111_mark", "m111_seq", "m111_find", "m111_hold"];
+
+  /* ---------- 《她毁了我的首秀》M120：24 个游戏按剧本动作重做 ---------- */
+  const IMG = id => { const g = (typeof MG100 !== "undefined" ? MG100 : []).find(x => x.id === id); return g && g.img; };
+  const E = (zh, en) => [zh, en];
+  const M120 = [
+    { id: "m120_g01", zh: "救回第一针", en: "Save the First Stitch", tpl: "m111_align", seconds: 40, pz: "袖边裂开了。拖动布片，让两边的线纹对齐，再用定位针固定。", pe: "The sleeve hem split. Drag the panel until the grain lines meet, then pin it.", target: 58, tol: 5, marks: [E("左片线纹", "Left grain"), E("右片线纹", "Right grain")] },
+    { id: "m120_g02", zh: "9F痕迹", en: "The 9F Mark", tpl: "m111_pair", seconds: 40, pz: "比对现场照片上的楼层编号，选出真正一致的两张。", pe: "Compare the floor numbers in the photos. Pick the two that truly match.", items: [E("9F原现场照", "9F scene photo"), E("6F模糊照", "Blurry 6F photo"), E("9F近景", "9F close-up"), E("8F侧拍", "8F side shot")], pair: [0, 2] },
+    { id: "m120_g03", zh: "领口三点", en: "Three Collar Points", tpl: "m111_seq", seconds: 35, pz: "领口有三个定位点。按顺序点：先左肩，经过锁骨，再到右肩。", pe: "The collar has three fitting points. Tap left shoulder, collarbone, then right shoulder.", points: [[E("左肩", "Left shoulder"), 18, 34], [E("锁骨", "Collarbone"), 50, 52], [E("右肩", "Right shoulder"), 82, 34]] },
+    { id: "m120_g04", zh: "收据上的日期", en: "The Receipt Date", tpl: "m111_order", seconds: 40, pz: "整理品牌第一笔成交的票据，按发生顺序排好。", pe: "Sort the paperwork from the brand's first sale in the order it happened.", items: [E("展会纪念卡", "Expo card"), E("成交收据", "Sales receipt"), E("付款回执", "Payment slip")] },
+    { id: "m120_g05", zh: "不该签的条款", en: "Find the Clause", tpl: "m111_mark", seconds: 40, pz: "逐条看合同。把允许未经授权拍你私人感情的条款圈出来。", pe: "Read the contract line by line. Mark the clause that allows filming your private life without consent.", ask: E("圈出有问题的条款", "Mark the clause that's a problem"), items: [E("第2条 赛事公平条款", "§2 Fair competition"), E("第4条 摄影公开条款（限秀场）", "§4 Photo publicity (runway only)"), E("第7条 私人生活授权条款", "§7 Private-life release"), E("第9条 费用结算条款", "§9 Payment terms")], ans: [2] },
+    { id: "m120_g06", zh: "被遮住的照片", en: "The Hidden Print", tpl: "m111_mark", seconds: 40, pz: "展墙上要挂照片。把可以公开展出的全部点亮。", pe: "The wall needs prints. Light up every photo that can be shown publicly.", ask: E("可以展出的是哪些？", "Which can be shown?"), items: [E("授权工作照 · 打版台", "Authorized work photo · pattern table"), E("授权工作照 · 试衣间", "Authorized work photo · fitting room"), E("未授权的私人照", "Unauthorized private photo"), E("已提出撤展的作品", "Piece you asked to withdraw")], ans: [0, 1] },
+    { id: "m120_g07", zh: "完整采访", en: "The Full Statement", tpl: "m111_order", seconds: 40, pz: "把采访录音片段按真实顺序排好。", pe: "Put the interview clips back in their real order.", items: [E("记者提问", "Reporter's question"), E("Sloane回应", "Sloane answers"), E("会后承认", "Later admission")] },
+    { id: "m120_g08", zh: "上传源头", en: "Track the Upload", tpl: "m111_mark", seconds: 45, pz: "比对两张图的上传记录。只圈出现在就能写下的结论。", pe: "Compare the two upload records. Mark only the conclusions you can write down now.", ask: E("哪些结论站得住？", "Which conclusions hold?"), items: [E("两张图的哈希不同", "The two hashes differ"), E("泄露来源尚未证实", "The leak source isn't proven yet"), E("泄露来自官方团队", "The leak came from the official team"), E("Evelyn一定是泄露者", "Evelyn must be the leaker")], ans: [0, 1] },
+    { id: "m120_g09", zh: "删掉那一格", en: "Cancel the Shot", tpl: "m111_mark", seconds: 40, pz: "拍摄日程表上有五个机位。把必须移出的那一格圈出来。", pe: "The shoot schedule has five setups. Mark the one that has to go.", ask: E("哪个机位要删？", "Which shot goes?"), items: [E("公开走秀镜头", "Public runway shot"), E("服装细节镜头", "Garment detail shot"), E("后台准备镜头（已授权）", "Backstage prep (authorized)"), E("未经同意的旧情侣镜头", "Ex-couple shot nobody agreed to"), E("谢幕镜头", "Curtain-call shot")], ans: [3] },
+    { id: "m120_g10", zh: "夜风里的别针", en: "The Safety Pin", tpl: "m111_find", seconds: 35, pz: "天台很暗，风把一枚松脱的别针吹到了栏杆边。用手电找到它，别让它勾住裙摆。", pe: "The rooftop is dark and the wind blew a loose pin toward the railing. Find it with the flashlight before it snags the hem.", label: E("移动手电，找到松脱的别针", "Move the light and find the loose pin"), target: "🧷", decoy: ["🔘", "🪙", "📎", "🍂", "🔩"] },
+    { id: "m120_g11", zh: "暗房的遮幅", en: "Protect the Worker", tpl: "m111_mark", seconds: 40, pz: "照片里有一位没授权的工人。只遮住会让人认出他的那一处，照片其余部分照常展出。", pe: "An unconsented worker is in the shot. Cover only what identifies him; the rest of the photo stays.", ask: E("遮光板盖在哪？", "Where does the mask go?"), items: [E("照片主体（模特）", "Main subject (model)"), E("工人的姓名牌", "Worker's name tag"), E("背景里的衣架", "Clothing rack in the back"), E("整张照片", "The whole photo")], ans: [1] },
+    { id: "m120_g12", zh: "报告的两个日期", en: "Two Report Dates", tpl: "m111_mark", seconds: 45, pz: "核对安全报告上的两个日期。圈出所有站得住的说法。", pe: "Check the two dates on the safety report. Mark every statement that holds up.", ask: E("哪些说法站得住？", "Which statements hold?"), items: [E("检测日期早于封存日期", "Testing came before sealing"), E("这个批次可以追溯", "The lot is traceable"), E("报告是伪造的", "The report is fake"), E("摘要已经足以定最终责任", "The summary settles final blame")], ans: [0, 1] },
+    { id: "m120_g13", zh: "证言顺序", en: "Witness Timeline", tpl: "m111_order", seconds: 40, pz: "把三份记录按真实时间排好。", pe: "Put the three records in real time order.", items: [E("值班记录", "Shift log"), E("9F异常报告", "9F incident report"), E("停秀通知", "Shutdown notice")] },
+    { id: "m120_g14", zh: "寄不出的信", en: "Unsent Letter", tpl: "m111_order", seconds: 40, pz: "Sloane沉默了多久？把这三件事按时间排好。", pe: "How long was Sloane silent? Put these in time order.", items: [E("首秀取消", "Show cancelled"), E("媒体归责于你", "Media blames you"), E("那封没寄出的信", "The unsent letter")] },
+    { id: "m120_g15", zh: "小灯下的针", en: "Needle in the Dark", tpl: "m111_find", seconds: 35, pz: "停电了，银针掉在桌脚附近。用手电一格一格照，找到后放回针盒。", pe: "Power's out and the silver needle fell near the table leg. Sweep with the flashlight and put it back in the box.", label: E("移动手电，找到银针", "Move the light and find the needle"), target: "🪡", decoy: ["🧵", "🔘", "📎", "✂️", "🧶"] },
+    { id: "m120_g16", zh: "照片使用许可", en: "Photo Consent Check", tpl: "m111_classify", seconds: 45, pz: "把每类照片放进正确的处理方式。", pe: "Sort each kind of photo into the right handling.", bins: [E("展出", "Show"), E("私存", "Keep private"), E("移除", "Remove")], items: [[E("授权工作照", "Authorized work photos"), 0], [E("私人底片", "Private negatives"), 1], [E("已撤展的作品", "Withdrawn pieces"), 2]] },
+    { id: "m120_g17", zh: "底片元数据", en: "Negative Metadata", tpl: "m111_pair", seconds: 40, pz: "比对三处时间码，选出真正一致的两项。", pe: "Compare the three timecodes and pick the two that truly match.", items: [E("原始底片时间码", "Original negative timecode"), E("授权登记时间码", "Consent registry timecode"), E("媒体截图时间码", "Media screenshot timecode")], pair: [0, 1] },
+    { id: "m120_g18", zh: "原话在哪里", en: "Restore the Quote", tpl: "m111_mark", seconds: 40, pz: "把短剪版和原始问答逐段对齐。圈出短剪版里被删掉的部分。", pe: "Line up the short cut with the full Q&A. Mark what the short cut deleted.", ask: E("被删掉的是哪段？", "What was cut?"), items: [E("片头字幕", "Opening titles"), E("记者的提问", "Reporter's question"), E("Sloane的完整答复", "Sloane's full answer"), E("片尾署名", "End credits")], ans: [2] },
+    { id: "m120_g19", zh: "两份互不交换的合同", en: "Separate Agreements", tpl: "m111_classify", seconds: 40, pz: "摄影许可、工作指导、私人邀约——各自放进该去的地方。", pe: "Photo consent, mentoring, a private invitation—put each where it belongs.", bins: [E("专业合同", "Work contract"), E("另外处理", "Kept separate")], items: [[E("摄影许可", "Photo consent"), 0], [E("工作指导", "Mentoring"), 0], [E("私人邀约", "Private invitation"), 1]] },
+    { id: "m120_g20", zh: "安全走台线", en: "Safe Runway Path", tpl: "m111_align", seconds: 40, pz: "移动灯架旁边有一条安全线。拖动裙摆的落点，停在安全线上，不越过去。", pe: "There's a safety line beside the moving rig. Drag the hem's mark onto the line without crossing it.", target: 36, tol: 5, marks: [E("裙摆", "Hem"), E("灯架", "Light rig")] },
+    { id: "m120_g21", zh: "最后一针", en: "The Final Stitch", tpl: "m111_hold", seconds: 40, pz: "压轴裙摆只剩最后一针。按住压脚，把针脚稳在绿区里走完。", pe: "One stitch left on the finale gown. Hold the presser foot and keep the stitch in the green.", label: E("按住，让针脚稳稳走完", "Hold steady to finish the stitch"), need: 4 },
+    { id: "m120_g22", zh: "只签事实", en: "Sign the Facts", tpl: "m111_mark", seconds: 40, pz: "责任声明只能写事实。圈出还不能当事实写进去的内容。", pe: "The statement can only hold facts. Mark what can't be written as fact yet.", ask: E("哪些还不是事实？", "What isn't fact yet?"), items: [E("安全叫停的记录", "The safety shutdown record"), E("错误归责的报道", "Reports that wrongly blamed you"), E("谁指使泄露的猜测", "Guesses about who ordered the leak")], ans: [2] },
+    { id: "m120_g23", zh: "属于你的版权", en: "Your Rights", tpl: "m111_classify", seconds: 45, pz: "新订单、展示许可、摄影授权都签了。哪些权利归你的工作室，哪些只是给别人用？", pe: "The order, display license and photo license are signed. What stays with your studio, and what's only licensed out?", bins: [E("归工作室所有", "Owned by your studio"), E("只限定使用范围", "Limited use only")], items: [[E("核心设计版权", "Core design copyright"), 0], [E("新订单的生产使用", "Production use for the order"), 1], [E("展示许可", "Display license"), 1], [E("摄影授权", "Photo license"), 1]] },
+    { id: "m120_g24", zh: "下一个星期六", en: "Next Saturday", tpl: "m111_order", seconds: 40, pz: "安排下周的日程，按先后排好。", pe: "Plan next week. Put it in order.", items: [E("客户交付", "Client delivery"), E("团队休息", "Crew rest"), E("个人时间", "Personal time")] },
+  ];
+  if (window.MG168 && window.MG168.reg) {
+    window.MG168.reg(M120.map(g => Object.assign({ img: IMG(g.id) }, g, { a: "", b: "" })));
+  }
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */

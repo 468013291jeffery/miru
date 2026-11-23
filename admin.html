@@ -110,14 +110,15 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
         </el-dropdown>
       </el-header>
       <el-main class="main">
-        <component :is="'p-'+route" :key="route+'-'+reloadKey" />
+        <component v-if="!mustPw" :is="'p-'+route" :key="route+'-'+reloadKey" /><el-empty v-else description="请先修改初始密码" />
       </el-main>
     </el-container>
   </el-container>
 
-  <el-dialog v-model="pwDlg" title="修改密码" width="380px">
+  <el-dialog v-model="pwDlg" :title="mustPw ? '第一次登录：请先设置你自己的密码' : '修改密码'" width="400px" :close-on-click-modal="!mustPw" :close-on-press-escape="!mustPw" :show-close="!mustPw">
+    <p v-if="mustPw" class="muted" style="margin:0 0 12px">你现在用的是管理员发给你的初始密码。设置一个只有你知道的新密码（至少 8 位）后才能开始使用后台。</p>
     <el-form label-width="80px"><el-form-item label="原密码"><el-input v-model="pw.old" type="password" show-password /></el-form-item><el-form-item label="新密码"><el-input v-model="pw.password" type="password" show-password placeholder="至少 8 位" /></el-form-item></el-form>
-    <template #footer><el-button @click="pwDlg=false">取消</el-button><el-button type="primary" @click="changePw">保存</el-button></template>
+    <template #footer><el-button v-if="!mustPw" @click="pwDlg=false">取消</el-button><el-button v-else @click="cmd('out')">退出登录</el-button><el-button type="primary" @click="changePw">保存</el-button></template>
   </el-dialog>
 </div></script>
 <script>
@@ -825,14 +826,21 @@ const Admins = {
     const rows = ref([]), dlg = reactive({ show: false, username: '', name: '', role: 'reviewer', password: '' });
     async function load() { rows.value = (await api('admins')).rows; }
     async function create() { await api('admins', { body: Object.assign({ op: 'create' }, dlg) }); dlg.show = false; ElMessage.success('已创建，请把用户名和初始密码交给同事，并提醒其登录后修改密码'); load(); }
+    const picked = ref([]);
+    async function bulkPw() {
+      if (!picked.value.length) return ElMessage.warning('先在表格左边勾选账号');
+      const r = await ElMessageBox.prompt('给勾选的 ' + picked.value.length + ' 个账号设同一个初始密码（至少 6 位）。他们第一次登录后必须先改成自己的密码，才能使用后台。', '批量设置初始密码', { inputType: 'password', inputPattern: /^.{6,}$/, inputErrorMessage: '至少 6 位', confirmButtonText: '设置' });
+      const j = await api('admins', { body: { op: 'bulkpw', ids: picked.value.map(x => x.id), password: r.value } });
+      ElMessage.success('已设置 ' + j.n + ' 个账号'); load();
+    }
     async function op(a, o, extra) { if (o === 'delete') await ElMessageBox.confirm('删除管理员 ' + a.username + '？', '确认', { type: 'error' }); const j = await api('admins', { body: Object.assign({ op: o, id: a.id }, extra || {}) }); if (j.password) ElMessageBox.alert('新密码：<b class="mono">' + j.password + '</b>', '已重置', { dangerouslyUseHTMLString: true }); else ElMessage.success('已完成'); load(); }
     onMounted(load);
-    return { rows, dlg, create, op, L, fmt, me: S.me };
+    return { rows, dlg, create, op, L, fmt, me: S.me, picked, bulkPw };
   },
-  template: `<div class="panel"><div class="toolbar"><el-button type="primary" @click="dlg.show=true">新建管理员</el-button></div>
-    <el-table :data="rows" stripe><el-table-column prop="username" label="用户名" width="140" /><el-table-column prop="name" label="姓名" width="140" />
+  template: `<div class="panel"><div class="toolbar"><el-button type="primary" @click="dlg.show=true">新建管理员</el-button><el-button @click="bulkPw" :disabled="!picked.length">批量设置初始密码{{picked.length?'（'+picked.length+'）':''}}</el-button><span class="muted">勾选账号后可一次设同一个初始密码；对方第一次登录必须先改密码</span></div>
+    <el-table :data="rows" stripe @selection-change="v=>picked=v"><el-table-column type="selection" width="40" :selectable="r=>r.id!==me.id&&r.role!=='owner'" /><el-table-column prop="username" label="用户名" width="140" /><el-table-column prop="name" label="姓名" width="140" />
       <el-table-column label="角色" width="170"><template #default="{row}"><el-select :model-value="row.role" size="small" :disabled="row.id===me.id" @change="v=>op(row,'update',{role:v,name:row.name})"><el-option v-for="(v,k) in L.role" :key="k" :label="v" :value="k" /></el-select></template></el-table-column>
-      <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.status==='active'?'success':'info'">{{row.status==='active'?'启用':'停用'}}</el-tag></template></el-table-column>
+      <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.status==='active'?'success':'info'">{{row.status==='active'?'启用':'停用'}}</el-tag> <el-tag v-if="row.must_change" size="small" type="warning">待改密</el-tag></template></el-table-column>
       <el-table-column label="最近登录" width="170" :formatter="r=>fmt(r.last_login)" /><el-table-column label="创建" width="200" :formatter="r=>fmt(r.created_at)+' · '+(r.created_by||'')" />
       <el-table-column label="操作" min-width="230"><template #default="{row}"><template v-if="row.id!==me.id"><el-button size="small" @click="op(row,'resetpw')">重置密码</el-button><el-button size="small" v-if="row.status==='active'" @click="op(row,'disable')">停用</el-button><el-button size="small" v-else type="success" plain @click="op(row,'enable')">启用</el-button><el-button size="small" type="danger" text @click="op(row,'delete')">删除</el-button></template><span v-else class="muted">（当前账号）</span></template></el-table-column></el-table></div>
     <div class="panel"><h3>角色说明</h3><el-table :data="Object.keys(L.role).map(k=>({k,n:L.role[k],d:L.roleDesc[k]}))" size="small"><el-table-column prop="n" label="角色" width="140" /><el-table-column prop="d" label="可以做什么" /></el-table></div>
@@ -1513,24 +1521,25 @@ const app = createApp({
   template: '#root-tpl',
   setup() {
     const route = ref((location.hash || '#dashboard').slice(1)), collapsed = ref(window.innerWidth < 900), busy = ref(false), reloadKey = ref(0);
-    const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
+    const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), mustPw = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
     const payTest = ref(false); window.__payTest = payTest;
     const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 接口目录', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', promo: '推广与单剧收入', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
     function go(k) { route.value = k; location.hash = k; }
     window.addEventListener('hashchange', () => { route.value = (location.hash || '#dashboard').slice(1); });
     async function login() {
       busy.value = true;
-      try { const j = await api('login', { body: { username: lf.username, password: lf.password } }); S.token = j.token; S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); lf.password = ''; ElMessage.success('欢迎，' + (j.admin.name || j.admin.username)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); }
+      try { const j = await api('login', { body: { username: lf.username, password: lf.password } }); S.token = j.token; S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); lf.password = ''; ElMessage.success('欢迎，' + (j.admin.name || j.admin.username)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); if (j.must_change) needPw(j); else refreshBadges(); }
       catch (_) {} finally { busy.value = false; }
     }
     const permOf = r => ({ studio: 'scripts', api: 'config', dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', promo: 'orders', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
     const firstPage = () => Object.keys(titles).find(k => can(permOf(k))) || 'dashboard';
     async function refreshBadges() { try { if (!can('dashboard')) return; const j = await api('dashboard'); badge.works = j.kpi.works_pending; badge.assets = j.kpi.assets_review; badge.reports = j.kpi.reports_open; payTest.value = j.payTest; } catch (_) {} }
     window.__refreshBadges = refreshBadges;
-    async function changePw() { const j = await api('password', { body: pw }); S.token = j.token; localStorage.setItem('miru_admin_tok', j.token); pwDlg.value = false; pw.old = pw.password = ''; ElMessage.success('密码已修改'); }
+    async function changePw() { const j = await api('password', { body: pw }); S.token = j.token; localStorage.setItem('miru_admin_tok', j.token); pwDlg.value = false; pw.old = pw.password = ''; ElMessage.success('密码已修改'); if (mustPw.value) { mustPw.value = false; reloadKey.value++; refreshBadges(); } }
+    function needPw(j) { if (j && j.must_change) { mustPw.value = true; pwDlg.value = true; ElMessage.warning('请先修改初始密码'); } }
     function cmd(c) { if (c === 'pw') pwDlg.value = true; if (c === 'out') { logout(); ElMessage.success('已退出'); } }
-    onMounted(async () => { if (S.token) { try { const j = await api('me'); S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); } catch (_) {} } });
-    return { token: computed(() => S.token), me: computed(() => S.me), route, collapsed, busy, lf, login, go, titles, can, roleName: L.role, pwDlg, pw, changePw, cmd, badge, payTest, reloadKey };
+    onMounted(async () => { if (S.token) { try { const j = await api('me'); needPw(j); S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); } catch (_) {} } });
+    return { token: computed(() => S.token), me: computed(() => S.me), route, collapsed, busy, lf, login, go, titles, can, roleName: L.role, pwDlg, mustPw, pw, changePw, cmd, badge, payTest, reloadKey };
   },
 });
 app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
