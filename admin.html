@@ -1008,13 +1008,15 @@ const Studio = {
       for (const m of md.matchAll(/⟦(?:BG|CG|VIDEO)\|([^|⟧]+)/g)) need.add(m[1].trim());
       return [...need].filter(k => !have[k]);
     });
-    const GAME_SAMPLE = [{ id: 'm121_g01', zh: '游戏名', en: 'Game Name', tpl: 'm111_pick', seconds: 35, pz: '中文题面：一句话说清要做什么', pe: 'English prompt', ask: ['哪一个是对的？', 'Which one is right?'], items: [['选项一', 'Option one'], ['选项二', 'Option two'], ['选项三', 'Option three']], ans: 1 }];
+    const GAME_SAMPLE = [{ id: 'm121_g01', zh: '游戏名', en: 'Game Name', tpl: 'm111_mark', seconds: 40, pz: '中文题面：一句话说清要做什么动作', pe: 'English prompt', ask: ['把符合的全部圈出来', 'Mark every one that fits'], items: [['符合的一项', 'A fitting item'], ['不符合的一项', 'A non-fitting item'], ['符合的另一项', 'Another fitting item'], ['不符合的另一项', 'Another non-fitting item']], ans: [0, 2] }, { id: 'm121_g02', zh: '排序示例', en: 'Order Example', tpl: 'm111_order', seconds: 40, pz: '按发生顺序排好', pe: 'Put them in order', items: [['第一步', 'Step one'], ['第二步', 'Step two'], ['第三步', 'Step three']] }];
     function gameSample() { gamesText.value = JSON.stringify(GAME_SAMPLE, null, 1); }
     async function saveGames() {
       let v = []; try { v = JSON.parse(gamesText.value || '[]'); } catch (e) { return ElMessage.error('小游戏 JSON 格式有误：' + e.message); }
       if (!Array.isArray(v)) return ElMessage.error('最外层要是 [ ... ] 数组');
       const bad = v.filter(g => !g || !g.id || !/^m11[12]_/.test(String(g.tpl || '')));
-      if (bad.length) return ElMessage.error('每个游戏都要有 id，tpl 只能是 m111_pick / m111_order / m111_match / m111_place / m111_beat / m112_free');
+      if (bad.length) return ElMessage.error('每个游戏都要有 id，tpl 要用下面说明里列出的模板名');
+      const pick = v.filter(g => g.tpl === 'm111_pick');
+      if (pick.length) return ElMessage.error('不再使用三选一（m111_pick）：' + pick.map(g => g.id).join('、') + '。请按剧本里的动作换成排序、分类、圈选、比对、找位置等玩法');
       const md = (sel.value.chapters || []).map(c => c.md || '').join('\n'), used = [...md.matchAll(/⟦MG\|([^|⟧]+)/g)].map(m => m[1].trim()), ids = new Set(v.map(g => g.id));
       const lack = [...new Set(used)].filter(x => !ids.has(x));
       await save({ config: Object.assign({}, sel.value.config, { games: v }) }, '保存小游戏（' + v.length + ' 个）');
@@ -1412,7 +1414,7 @@ const Studio = {
       <p class="muted" v-if="missingSlots.length">剧本里还没有素材的槽位（{{missingSlots.length}}）：{{missingSlots.slice(0,30).join('、')}}{{missingSlots.length>30?' …':''}}</p>
       <el-table v-if="Object.keys(sel.config.assets||{}).length" :data="Object.entries(sel.config.assets||{}).map(([k,v])=>({k,v}))" size="small" max-height="220" style="margin-bottom:12px"><el-table-column prop="k" label="槽位" width="280" /><el-table-column label="文件"><template #default="{row}"><a :href="row.v" target="_blank">{{String(row.v).split('/').pop()}}</a></template></el-table-column><el-table-column width="70"><template #default="{row}"><el-button size="small" text type="danger" @click="delAsset(row.k)">删除</el-button></template></el-table-column></el-table>
       <h3 style="margin-top:14px">小游戏</h3>
-      <p class="muted">剧本里写 ⟦MG|游戏id⟧，这里写同一个 id 的题目。模板：m111_pick 选择题（items + ans 正确序号，从 0 开始）、m111_order 排序（items 按正确顺序写）、m111_match 配对、m111_place 摆放、m111_beat 节拍、m112_free 自由输入。上线后直接可玩，不用部署。</p>
+      <p class="muted">剧本里写 ⟦MG|游戏id⟧，这里写同一个 id 的题目。剧本写的是什么动作，小游戏就用对应玩法，不用三选一。模板：m111_order 排序（items 按正确顺序写）、m111_classify 分类（bins + items:[[项, 组序号]]）、m111_mark 圈出所有符合的（items + ans:[序号…]）、m111_match 配对、m111_pair 选出一致的两项（items + pair:[i,j]）、m111_spot 点位置（items + ans + cols）、m111_seq 按顺序点位置（points:[[名称,x%,y%]…]）、m111_align 拖动对准（target + tol + marks）、m111_find 手电找东西（target + decoy）、m111_hold 按住稳住（need 秒）、m111_morse 敲击码（code:"...-"）、m111_place 摆放、m111_beat 节拍、m112_free 无标准答案的自由选择。上线后直接可玩，不用部署。</p>
       <div class="toolbar"><el-button @click="gameSample">插入示例</el-button><el-button type="primary" @click="saveGames" :disabled="!!busy">保存小游戏</el-button><span class="muted">已保存 {{(sel.config.games||[]).length}} 个</span></div>
       <el-input v-model="gamesText" type="textarea" :rows="8" placeholder="小游戏 JSON 数组" style="margin-bottom:12px" />
       <h3 style="margin-top:14px">发现页标签</h3>
