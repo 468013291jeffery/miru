@@ -16,10 +16,47 @@ installWork = async function (id) {
   const have = S.off76[id];
   if (have && have.ver === P.ver && have.imv === 2 && wd(have.wid)) { track("community_open", { id }); return have.wid; }
   if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
-  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  /* 文件包 / 社区作品：素材表随 pack 一起走（pack.assets）。
+     官方剧的槽位表在 art/official/<id>.json；创作者没有那份文件，所以这里直接把它挂进 OFF94.assets，
+     再让 app94 的指令层在 imParse / imBuild 时按槽位（⟦BG⟧ ⟦CG⟧ ⟦VIDEO⟧ ⟦CHAR⟧）取到 URL。 */
+  const A = (P.assets && typeof P.assets === "object") ? P.assets : null;
+  if (A && typeof OFF94 !== "undefined") {
+    OFF94.assets[id] = Object.assign({}, OFF94.assets[id] || {}, A);
+    OFF94.assetAt = OFF94.assetAt || {}; OFF94.assetAt[id] = Date.now();
+    /* 音乐：bgm_<提示> 走 BGM_FILES；⟦BGM|提示⟧ 在播放时按 cue 取文件 */
+    Object.keys(A).forEach(k => { const mm = /^(?:bgm_|bgm:)(.+)$/i.exec(k); if (mm && /^https?:/i.test(A[k])) (window.BGM_FILES = window.BGM_FILES || {})[mm[1]] = A[k]; });
+  }
+  /* 互动游戏：包里的模板定义（id/tpl/a/b）进 MG100，⟦MG|g_x⟧ 才能找到它 */
+  if (P.games && Array.isArray(P.games) && typeof MG100 !== "undefined") {
+    P.games.forEach(g => { if (!g || !g.id) return; const gid = /^g_/.test(String(g.id)) ? String(g.id) : "g_" + g.id; if (!MG100.some(x => x.id === gid)) MG100.push({ id: gid, zh: "🌐 " + (g.name || gid), en: "🌐 " + (g.name || gid), tpl: g.tpl || "find", a: g.a || "", b: g.b || "-", kw: g.kw || [] }); });
+  }
+  const _cur76 = (typeof OFF94 !== "undefined") ? OFF94.cur : null;
+  if (A && typeof OFF94 !== "undefined") OFF94.cur = { id };
+  let doc = null, b = null;
+  try {
+    doc = imParse(P.script);
+    if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+    const m0 = P.meta || {};
+    b = imBuild(doc, m0.as || doc.pov);
+  } finally { if (A && typeof OFF94 !== "undefined") OFF94.cur = _cur76; }
   const m = P.meta || {};
-  const b = imBuild(doc, m.as || doc.pov);
   const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
+  /* 人物卡（作品资料的 ②）：外貌 / 性格 / 卖点 / 单聊开场白 / 立绘。剧本里的 ⟦CHAR⟧ 已经有名字与年龄，
+     这里补的是「角色页」和「一对一聊天」需要的那部分。 */
+  if (Array.isArray(P.characters)) {
+    P.characters.forEach(c => {
+      if (!c || typeof c !== "object") return;
+      const nm = String(c.name || c.key || "").trim(); if (!nm) return;
+      const cid = (w.cast || []).find(id => { const x = ch(id); return x && (x.n === nm || (x.studio && x.studio.name === nm) || (x.n94 && Object.values(x.n94).includes(nm))); });
+      if (!cid) return;
+      const x = S.mine.chars[cid];
+      if (c.looks) x.looks = { zh: String(c.looks), en: String(c.looks) };
+      if (c.personality) x.vibe = { zh: String(c.personality), en: String(c.personality) };
+      if (c.identity) x.role = { zh: String(c.identity), en: String(c.identity) };
+      if (c.portrait && /^https?:/i.test(c.portrait)) S.art[cid] = c.portrait;
+      if (c.openingLine) x.solo = { zh: String(c.openingLine), en: String(c.openingLine) };
+    });
+  }
   S.works = (S.works || []).filter(x => x.id !== wid);
   try { const ps = packSt(wid); ps.own = 0; } catch (_) {}
   const x0 = s => ({ en: s, zh: s });

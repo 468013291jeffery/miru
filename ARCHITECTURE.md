@@ -667,7 +667,7 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 这一节回答的是**另一个问题**：不是「能力放在哪」，而是「**同一个东西有几条路能改它**」。
 > 起点是 Ann 的一句话：**「UI 出问题，纯粹也是因为我们没有做整合、没有做工程优化、没有做入口导致的。」**
 >
-> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**55 套**），且每道都做过变异测试。
+> 每一条都配**读数命令**与**闸**；闸都在 `tools/check-all.mjs`（**56 套**），且每道都做过变异测试。
 > 截至本日收盘的全部读数：
 
 ```
@@ -977,7 +977,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app48_clean.js` | 沉浸模式: a clean chat screen · Only the latest beats stay on screen; everyth… | 92 |
 | `app49_creator.js` | 一句话写一部剧 (Creator) Quick path: one line → story card → 3 quick picks → fre… | 216 |
 | `app50_creator2.js` | 创作中心: the full Creator v2.1 (AI guide · templates · story workbench · int… | 162 |
-| `app51_import.js` | 上传剧本文件 → 可玩的剧 Upload .md / .txt / .docx (or paste text, or a Creator expo… | 224 |
+| `app51_import.js` | 上传剧本文件 → 可玩的剧 Upload .md / .txt / .docx (or paste text, or a Creator expo… | 376 |
 | `app52_alt.js` | intercept the old handler (window capture runs before document capture) | 40 |
 | `app53_import2.js` | 上传剧本：也能读 .pdf 和老的 .doc .pdf → bundled pdf.js (no network; text layer, pag… | 53 |
 | `app54_longcat.js` | AI 引擎可切换：Claude（默认）/ LongCat LongCat uses its OpenAI-compatible endpoint:… | 79 |
@@ -1002,7 +1002,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 386 |
 | `app74_experience.js` | 试玩 = 正式版体验 Every story a user creates (AI 一步步引导, 一句话写剧, 故事编辑) is packaged… | 134 |
 | `app75_mydock.js` | 只留「渲染之后要做的事」——不能带上 _renderChat75.apply（那是包装层的事） | 50 |
-| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 93 |
+| `app76_official.js` | 后台「剧本生产」上线的 MIRU 官方剧：作品包里是 MIRU 标准剧本（pack.script），在 App 里用导入器转成可玩的剧 同一版本只… | 130 |
 | `app77_memory2.js` | 记忆系统 第一阶段 ② 滚动摘要：旧对话滑出窗口前先压缩进「到目前为止」，不再整段丢失 | 220 |
 | `app78_memsync.js` | 记忆系统 第二阶段：记忆存进云端数据库 + 按意思召回 登录用户：记忆增删改 3 秒内同步到服务器（/api/state?r=mem）。每次回复前… | 44 |
 | `app79_ledger.js` | 记忆系统 第三阶段：剧情账本（程序裁决，模型只读） 一个故事的「正史」统一放在 th.led，由程序维护： · 约定 P#：来自「约定」类记忆（你… | 151 |

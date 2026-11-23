@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="9aee5b9b7a33 2026-11-21T16:17Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="b00e49d6443e 2026-11-23T11:59Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -12844,11 +12844,95 @@ async function imDocx(buf){const u8=new Uint8Array(buf),dv=new DataView(buf);let
  const d=new DOMParser().parseFromString(xml,"application/xml"),W="http://schemas.openxmlformats.org/wordprocessingml/2006/main";
  return [...d.getElementsByTagNameNS(W,"p")].map(pp=>{const st=pp.getElementsByTagNameNS(W,"pStyle")[0],sv=st?st.getAttributeNS(W,"val")||st.getAttribute("w:val")||"":"";const tx=[...pp.getElementsByTagNameNS(W,"t")].map(t2=>t2.textContent).join("");
   const hm=sv.match(/(?:Heading|heading|标题)\s*(\d)/);return (hm&&tx.trim()?"#".repeat(+hm[1])+" ":"")+tx}).join("\n")}
+/* ================= 剧本文件包（miru.package/1）=================
+   创作者提交一个 zip：manifest.json + 剧本 + assets/。素材按剧本里的槽位挂：
+     ⟦BG|槽位⟧ ⟦CG|槽位⟧ ⟦VIDEO|槽位⟧ ⟦BGM|提示⟧ ⟦MG|游戏⟧ ⟦CHAR|名字⟧
+   这里只做三件事：读包、预览「缺什么」、发布时把文件按槽位传上去。
+   槽位规则是 api/_package.js 的镜像（服务端是权威）；改一处要改另一处。 */
+const IM_RE_DIR=/^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
+const IM_SLOT={BG:'bg',CG:'cg',VIDEO:'video',PHOTO:'photo',BGM:'bgm',MG:'mg',CHAR:'char'};
+function imDec(s){try{return decodeURIComponent(s)}catch(_){return s}}
+function imSlots(text){
+ const o={bg:[],cg:[],video:[],photo:[],bgm:[],mg:[],char:[],orient:''};
+ const seen={bg:new Set(),cg:new Set(),video:new Set(),photo:new Set(),bgm:new Set(),mg:new Set(),char:new Set()};
+ const add=(k,v)=>{v=String(v||'').trim();if(!v||seen[k].has(v))return;seen[k].add(v);o[k].push(v)};
+ for(const raw of String(text||'').replace(/\r\n?/g,'\n').split('\n')){
+  const line=raw.trim();if(!line||line.charAt(0)!=='⟦')continue;
+  const m=line.match(IM_RE_DIR);if(!m)continue;
+  const a=m[2]?m[2].slice(1).split('|').map(imDec):[];
+  if(m[1]==='ORIENT'){o.orient=String(a[0]||'').trim().toLowerCase();continue}
+  const k=IM_SLOT[m[1]];if(!k)continue;
+  if(m[1]==='MG')add('mg',/^g_/.test(a[0]||'')?a[0]:'g_'+(a[0]||''));
+  else add(k,a[0]);
+ }
+ return o;
+}
+function imPkgQA(script,assets,characters){
+ const slots=imSlots(script),A=Object.assign({},(assets&&typeof assets==='object')?assets:{}),missing=[],unused=[];
+ /* 人物卡的立绘：包里给了就算有（发布时会按 char_<key> 上传），不要求此刻已经是 https */
+ (Array.isArray(characters)?characters:[]).forEach(c=>{if(!c)return;const p=c.portrait||A["char_"+(c.key||"")]||A["char_"+(c.name||"")];if(!p)return;if(c.key&&!A["char_"+c.key])A["char_"+c.key]=p;if(c.name&&!A["char_"+c.name])A["char_"+c.name]=p});
+ const has=(k)=>!!A[k];
+ for(const kind of ['bg','cg','video','bgm','mg']){
+  for(const s of slots[kind]){
+   const keys=[s];if(kind==='bgm')keys.push('bgm_'+s);if(kind==='char')keys.push('char_'+s);
+   if(!keys.some(has))missing.push(s);
+  }
+ }
+ const ref=new Set();
+ for(const kind of ['bg','cg','video','bgm','mg','char','photo']){
+  for(const s of slots[kind]){ref.add(s);if(kind==='bgm')ref.add('bgm_'+s);if(kind==='char')ref.add('char_'+s)}
+ }
+ (Array.isArray(characters)?characters:[]).forEach(c=>{if(!c)return;if(c.key)ref.add('char_'+c.key);if(c.name)ref.add('char_'+c.name)});
+ for(const k of Object.keys(A))if(!ref.has(k)&&!/^(cover|poster|opening_video|vid_open|home_video|endings|voices|leads|bible|trailer)$/i.test(k))unused.push(k);
+ const coverage={};
+ for(const kind of ['bg','cg','video','bgm','mg','char']){
+  const keys=s=>kind==='bgm'?['bgm_'+s,s]:kind==='char'?['char_'+s,s]:[s];
+  coverage[kind]={have:slots[kind].filter(s=>keys(s).some(has)).length,total:slots[kind].length};
+ }
+ return {slots,coverage,missing,unused};
+}
+function imMime(path){
+ const e=String(path||'').split('.').pop().toLowerCase();
+ const M={png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',webp:'image/webp',gif:'image/gif',avif:'image/avif',mp4:'video/mp4',webm:'video/webm',mov:'video/quicktime',mp3:'audio/mpeg',m4a:'audio/mp4',ogg:'audio/ogg',wav:'audio/wav',json:'application/json'};
+ return M[e]||'application/octet-stream';
+}
+/* zip: 中央目录 → 条目；method 0 直存 / 8 deflate-raw（与 .docx 读取同一套，不引库） */
+async function imZip(buf){
+ const u8=new Uint8Array(buf),dv=new DataView(buf);let e=-1;
+ for(let i=u8.length-22;i>=Math.max(0,u8.length-66000);i--){if(dv.getUint32(i,true)===0x06054b50){e=i;break}}
+ if(e<0)throw'zip';
+ const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const out=new Map();
+ for(let k=0;k<n;k++){
+  const method=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xl=dv.getUint16(p+30,true),cl=dv.getUint16(p+32,true),off=dv.getUint32(p+42,true);
+  const name=new TextDecoder().decode(u8.subarray(p+46,p+46+nl)).replace(/\\/g,'/');
+  p+=46+nl+xl+cl;
+  if(name.endsWith('/')||!cs)continue;
+  const lo=off,start=lo+30+dv.getUint16(lo+26,true)+dv.getUint16(lo+28,true),data=u8.subarray(start,start+cs);
+  let bytes=null;
+  if(method===0)bytes=data;
+  else if(method===8){try{bytes=new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer())}catch(_){bytes=null}}
+  if(bytes)out.set(name,bytes);
+ }
+ return out;
+}
+async function imReadPackage(buf){
+ const files=await imZip(buf);let mf=null,mname='';
+ for(const n of ['manifest.json','miru.package.json']){if(files.has(n)){try{mf=JSON.parse(new TextDecoder().decode(files.get(n)));mname=n}catch(_){}break}}
+ if(!mf)for(const [n,b] of files){if(!/\.json$/i.test(n))continue;try{const j=JSON.parse(new TextDecoder().decode(b));if(j&&/^miru\.package\//.test(String(j.format||''))){mf=j;mname=n;break}}catch(_){}}
+ const m=(mf&&typeof mf==='object')?mf:{},w=(m.work&&typeof m.work==='object')?m.work:m;
+ const norm={format:String(m.format||'miru.package/1'),script:String(m.script||'script.md'),cover:m.cover?String(m.cover):'',opening_video:m.opening_video?String(m.opening_video):'',
+  work:{title:String(w.title||'').slice(0,80),hook:String(w.hook||'').slice(0,240),premise:String(w.premise||''),you:String(w.you||''),lang:String(w.lang||'zh'),orient:['bl','gl','bg','all'].includes(String(w.orient||'').toLowerCase())?String(w.orient).toLowerCase():'all',tags:Array.isArray(w.tags)?w.tags.filter(x=>typeof x==='string'&&x.trim()).slice(0,12):[],adult:w.adult===true,as:String(w.as||'')},
+  assets:(m.assets&&typeof m.assets==='object'&&!Array.isArray(m.assets))?m.assets:{},games:Array.isArray(m.games)?m.games.slice(0,100):[],
+  characters:Array.isArray(m.characters||m.cast)?(m.characters||m.cast).filter(x=>x&&typeof x==='object').slice(0,40).map(c=>({key:String(c.key||c.id||'').toLowerCase(),name:String(c.name||c['名字']||''),gender:String(c.gender||c.g||c['性别']||'').toLowerCase().charAt(0),age:parseInt(String(c.age||c['年龄']||'').replace(/[^\d]/g,''),10)||0,identity:String(c.identity||c.role||c['身份']||''),looks:String(c.looks||c['外貌']||''),personality:String(c.personality||c['性格与反差']||''),sellingPoint:String(c.sellingPoint||c['一句话卖点']||''),openingLine:String(c.openingLine||c['单聊开场白']||''),speech:String(c.speech||c['说话方式']||''),likes:String(c.likes||c['喜好']||''),boundary:String(c.boundary||c['边界']||''),portrait:String(c.portrait||c['立绘']||'')})):[]};
+ const sn=(norm.script&&files.has(norm.script))?norm.script:(files.has('script.md')?'script.md':[...files.keys()].find(n=>/\.(md|txt)$/i.test(n)));
+ if(!sn)throw'noscript';
+ return {manifest:norm,manifestName:mname,script:new TextDecoder().decode(files.get(sn)),scriptName:sn,files};
+}
 /* ---------- UI ---------- */
 let IM=null;
-function imOpen(){IM={doc:null,as:null,name:""};imRender()}
+function imOpen(){IM={doc:null,as:null,name:"",text:"",pkg:null,pkgId:"",busy:false};imRender()}
 function imRender(){const d=IM.doc;let b='<div class="scroll pad stack" style="gap:12px;padding-bottom:30px">';
- if(!d){b+='<label class="imdrop"><input type="file" id="imFile" accept=".md,.markdown,.txt,.docx,.doc,.pdf,.json" hidden><span style="font-size:34px">📄</span><b>'+LL("选择剧本文件","Choose a script file")+'</b><small>'+LL("支持 .md · .txt · .docx · .doc · .pdf · 创作中心导出的 .json，最大 10MB","Supports .md · .txt · .docx · .doc · .pdf · Creator .json, up to 10MB")+'</small></label>'+
+ if(!d){b+='<label class="imdrop"><input type="file" id="imFile" accept=".md,.markdown,.txt,.docx,.doc,.pdf,.json,.zip" hidden><span style="font-size:34px">📦</span><b>'+LL("选择剧本或文件包","Choose a script or a package")+'</b><small>'+LL("剧本 .md · .txt · .docx · .pdf，或创作文件包 .zip（manifest.json + 剧本 + assets/），最大 64MB","Script .md · .txt · .docx · .pdf, or a package .zip (manifest.json + script + assets/), up to 64MB")+'</small></label>'+
   '<div class="card"><b style="font-size:14px">'+LL("或者直接粘贴","Or paste it")+'</b><textarea id="imTxt" rows="6" class="imta" placeholder="'+esc(LL("# CHAPTER 1｜标题\n# SCENE｜地点\n正文……\nRoman：“台词”\n# CHOICE｜问题\n#### A｜“选项”","# CHAPTER 1｜Title\n# SCENE｜Place\nNarration…\nRoman: \"line\"\n# CHOICE｜Question\n#### A｜\"Option\""))+'"></textarea><button class="btn btn-p btn-block" style="margin-top:8px" data-imparse="1">'+LL("解析","Convert")+'</button></div>'+
   '<button class="btn btn-g btn-block" data-imrules="1">📘 '+LL("MIRU 标准剧本格式 · 下载模板","MIRU script format · download template")+'</button>'+
   '<p class="xs faint" style="line-height:1.6">'+LL("按 MIRU 标准规则自动转换：章节、场景、对白、心声、选择和分支都会变成可玩的剧。转换免费。所有角色须为成年人；露骨内容会被省略。","Converted by MIRU's standard rules: chapters, scenes, dialogue, inner voice, choices and branches become a playable story. Free. All characters must be adults; explicit passages are left out.")+'</p>'}
@@ -12858,24 +12942,92 @@ function imRender(){const d=IM.doc;let b='<div class="scroll pad stack" style="g
    '<div class="card"><b style="font-size:14px">'+LL("人物","Cast")+'</b><p class="xs faint" style="margin-top:3px">'+d.cast.map(n=>esc(n)+" ×"+d.sp[n]).join(" · ")+'</p><b style="font-size:14px;display:block;margin-top:10px">'+LL("你扮演谁？","Who do you play?")+'</b><div class="row" style="flex-wrap:wrap;gap:6px;margin-top:6px">'+d.cast.map(n=>chip(n,n)).join("")+chip("watch",LL("👁 旁观","👁 Watch"))+'</div></div>'+
    '<div class="card"><b style="font-size:14px">'+LL("章节","Chapters")+'</b>'+d.chapters.map((c,i)=>{const nb=c.items.length,nc2=c.items.filter(x=>x.choice).length;return '<div class="imch"><i>'+(i+1)+'</i><span class="grow">'+esc(c.t||LL("第 "+(i+1)+" 章","Chapter "+(i+1)))+'</span><small>'+nb+LL(" 段"," parts")+(nc2?' · '+nc2+LL(" 个选择"," choices"):'')+'</small></div>'}).join("")+'</div>'+
    (d.warn.length?'<div class="card imwarn">'+d.warn.map(w=>'<p>⚠️ '+esc(w)+'</p>').join("")+'</div>':'')+
-   '<button class="btn btn-p btn-block" data-imgo="play">▶ '+LL("生成并试玩 · 免费","Build & play · free")+'</button><button class="btn btn-g btn-block" data-imgo="work">🛠 '+LL("生成后去工作台改","Build & open the Workbench")+'</button><button class="btn btn-g btn-block" data-imreset="1">↺ '+LL("换一个文件","Use another file")+'</button>'}
+   (IM.pkg?imPackageCard():'')+
+   '<button class="btn btn-p btn-block" data-impub="1">🚀 '+LL("发布到 MIRU","Publish to MIRU")+'</button>'+
+   '<button class="btn btn-g btn-block" data-imgo="play">▶ '+LL("生成并试玩 · 免费","Build & play · free")+'</button><button class="btn btn-g btn-block" data-imgo="work">🛠 '+LL("生成后去工作台改","Build & open the Workbench")+'</button><button class="btn btn-g btn-block" data-imreset="1">↺ '+LL("换一个文件","Use another file")+'</button>'}
  screen("s-cimp",'<div class="topbar"><button class="ibtn" data-back="1">'+ic("back")+'</button><h2 class="grow" style="font-size:17px">📄 '+LL("上传剧本","Upload a script")+'</h2></div>'+b+'</div>');show("s-cimp")}
-function imLoad(text,name){const d=imParse(text);if(!d.chapters.length){toast(LL("没读到正文，检查一下格式？","No story text found — check the format?"));return}IM.doc=d;IM.as=d.pov||"watch";IM.name=name||"";imRender()}
+function imLoad(text,name){const d=imParse(text);if(!d.chapters.length){toast(LL("没读到正文，检查一下格式？","No story text found — check the format?"));return}IM.doc=d;IM.as=d.pov||"watch";IM.name=name||"";IM.text=text;IM.pkg=null;imRender()}
+function imLoadPackage(pkg,name){const d=imParse(pkg.script);if(!d.chapters.length){toast(LL("没读到正文，检查一下剧本文件和 manifest 的 script 字段？","No story text — check the script file and manifest.script"));return}
+ IM.doc=d;IM.as=d.pov||"watch";IM.name=name||pkg.scriptName;IM.text=pkg.script;IM.pkg=pkg;IM.pkgId=IM.pkgId||("w_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6));imRender()}
+function imPackageCard(){
+ const q=imPkgQA(IM.text||"",(IM.pkg&&IM.pkg.manifest.assets)||{},(IM.pkg&&IM.pkg.manifest.characters)||[]);
+ const label={bg:LL("背景","BG"),cg:LL("CG","CG"),video:LL("视频","video"),bgm:LL("音乐","music"),mg:LL("互动","game")};
+ return '<div class="card"><div class="eyebrow" style="color:var(--gold)">📦 '+LL("文件包","Package")+' · '+esc((IM.pkg&&IM.pkg.manifestName)||(IM.pkg&&IM.pkg.scriptName)||"")+'</div>'+
+  '<div class="imstats">'+["bg","cg","video","bgm","mg"].map(k=>'<span><b>'+q.coverage[k].have+"/"+q.coverage[k].total+'</b>'+label[k]+'</span>').join("")+'</div>'+
+  (q.missing.length?'<p class="xs" style="color:#F7D2A8;margin-top:8px">⚠️ '+LL("还缺 ","Missing ")+q.missing.length+LL(" 个位置："," slots: ")+esc(q.missing.slice(0,8).join(", "))+'</p>':'<p class="xs" style="color:#8bd5c4;margin-top:8px">✓ '+LL("所有剧本位置都有素材","Every slot has an asset")+'</p>')+
+  (q.unused.length?'<p class="xs faint" style="margin-top:4px">'+LL("未引用：","Unused: ")+esc(q.unused.slice(0,6).join(", "))+'</p>':'')+
+  '<p class="xs faint" style="margin-top:6px">'+LL("发布时按《MIRU 互动剧本写作规范 v2》检查：章节、场景、BG、CHOICE 收尾、人物卡。","Publishing runs the MIRU v2 checks: chapters, scenes, BG, CHOICE terminators, character cards.")+'</p></div>';
+}
+async function imPublish(){
+ if(!IM||!IM.doc)return;
+ const zh=CL()==="zh";
+ const logged=(typeof cloudInfo==="function")&&cloudInfo().token;
+ if(!logged){toast(zh?"发布前请先登录":"Sign in to publish");try{if(typeof authAll70==="function")setTimeout(authAll70,300)}catch(_){}return}
+ const d=IM.doc,ti=$("#imTitle");if(ti&&ti.value.trim())d.title=ti.value.trim();
+ const pkg=IM.pkg,m=pkg&&pkg.manifest,script=IM.text||"";
+ if(!script.trim())return toast(zh?"没有可发布的剧本正文":"No script to publish");
+ const id=IM.pkgId||(IM.pkgId="w_"+Date.now().toString(36)+Math.random().toString(36).slice(2,6));
+ const meta={title:d.title||"",hook:(m&&m.work.hook)||"",premise:(m&&m.work.premise)||"",you:(m&&m.work.you)||"",lang:(m&&m.work.lang)||CL(),orient:(m&&m.work.orient&&m.work.orient!=="all")?m.work.orient:(imOrient(d)||"all"),tags:(m&&m.work.tags)||[],adult:!!(m&&m.work.adult),as:IM.as||""};
+ const btn=document.querySelector("[data-impub]"),label=btn?btn.textContent:"";
+ const setT=t=>{if(btn)btn.textContent=t};
+ const assets={};let done=0,total=0;
+ try{
+  const map=(m&&m.assets)||{},cover=(m&&m.cover)||"",open=(m&&m.opening_video)||"",cards=(m&&Array.isArray(m.characters))?m.characters:[];
+  total=Object.keys(map).length+(cover?1:0)+(open?1:0)+cards.filter(c=>c&&c.portrait&&!/^https:\/\//i.test(c.portrait)).length;
+  const up=async(slot,path)=>{
+   const clean=String(path||"").replace(/^\.\//,"");
+   if(/^https:\/\//i.test(clean)){assets[slot]=clean;return}
+   const bytes=pkg&&pkg.files&&pkg.files.get(clean);
+   if(!bytes)return;
+   const r=await capi("/pkg?work="+encodeURIComponent(id)+"&slot="+encodeURIComponent(slot)+"&mime="+encodeURIComponent(imMime(clean))+"&name="+encodeURIComponent(clean.split("/").pop()),{method:"PUT",headers:{"Content-Type":"application/octet-stream"},body:bytes});
+   if(!r.ok)throw new Error((r.j&&r.j.error)||("upload failed: "+slot));
+   assets[slot]=r.j.asset.url;done++;setT("⬆ "+done+"/"+total);
+  };
+  for(const slot of Object.keys(map))await up(slot,map[slot]);
+  if(open)await up("opening_video",open);
+  for(const c of cards){const slot="char_"+String(c&&(c.key||c.name)||"").trim();if(!slot||slot==="char_")continue;await up(slot,c&&c.portrait);if(c&&c.name&&assets[slot])assets["char_"+c.name]=assets[slot]}
+  let coverUrl="";
+  if(cover){await up("cover",cover);coverUrl=assets.cover||"";delete assets.cover}
+  setT(zh?"发布中…":"Publishing…");
+  const r=await capi("/works",{json:{op:"publish",work:{id,title:meta.title,hook:meta.hook,lang:meta.lang,orient:meta.orient,tags:meta.tags,cover:coverUrl||null,pack:{script,meta,assets,games:(m&&m.games)||[],characters:(m&&m.characters)||[],opening_video:(m&&m.opening_video)||"",ver:Date.now()}}}});
+  if(!r.ok){toast((r.j&&r.j.error)||(zh?"发布失败":"Publish failed"));setT(label);return}
+  const q=(r.j&&r.j.qa)||{},miss=(q.assets&&q.assets.missing)||[];
+  const okMsg=r.j.status==="live"
+   ?(zh?"🌐 已发布到社区":"🌐 Live in the community")+(miss.length?(zh?"，还有 "+miss.length+" 个素材位待补":" — "+miss.length+" slots open"):"")
+   :(zh?"🌐 已提交，审核通过后上线":"🌐 Submitted for review");
+  toast(okMsg);
+  setT(label);imRender();
+ }catch(e){toast(String((e&&e.message)||e).slice(0,140));setT(label)}
+}
 document.addEventListener("change",async e=>{if(e.target.id!=="imFile"||!e.target.files||!e.target.files[0])return;const f=e.target.files[0];
- if(f.size>10e6){toast(LL("文件太大（最大 10MB）","File too large (max 10MB)"));return}
- try{if(/\.docx$/i.test(f.name)){imLoad(await imDocx(await f.arrayBuffer()),f.name);return}
+ const zip=/\.zip$/i.test(f.name),cap=zip?64e6:10e6;
+ if(f.size>cap){toast(zip?LL("文件包太大（最大 64MB）","Package too large (max 64MB)"):LL("文件太大（最大 10MB）","File too large (max 10MB)"));return}
+ try{if(zip){const pk=await imReadPackage(await f.arrayBuffer());imLoadPackage(pk,f.name);return}
+  if(/\.docx$/i.test(f.name)){imLoad(await imDocx(await f.arrayBuffer()),f.name);return}
   const txt=await f.text();if(/\.json$/i.test(f.name)){const o=JSON.parse(txt);if(o&&o.story&&o.project){const wid=crPublish(o.story,o.project,o.sourcebook||[]);toast(LL("已导入创作中心作品","Creator project imported"));packStart(wid,crAs(o.project,wd(wid)));return}toast(LL("这个 JSON 不是创作中心导出的作品","This JSON isn't a Creator export"));return}
-  imLoad(txt,f.name)}catch(_){toast(LL("读不出这个文件，可能已损坏或加了密码","Couldn't read this file — it may be damaged or password-protected"))}});
+  imLoad(txt,f.name)}catch(_){toast(zip?LL("读不出这个文件包：需要 manifest.json（或 bible.json）+ 剧本 + assets/","Couldn't read this package — it needs manifest.json (or bible.json) + script + assets/"):LL("读不出这个文件，可能已损坏或加了密码","Couldn't read this file — it may be damaged or password-protected"))}});
 const IM_TPL="# 我的剧名｜MY STORY\n\n# CHAPTER 1｜第一章标题\n\n# SCENE 01｜纽约 · 深夜公寓\n\n门开了。他站在雨里，没有进来。\n\nRoman：“你还没睡。”\nAdrian：“你也没走。”\n\n【心理】\n> “他为什么偏偏今晚回来？”\n\n# CHOICE 01｜让他进来吗？\n\n#### A｜“进来吧。”\nAdrian侧身让开。\nRoman：“谢谢。”\n\n#### B｜“有话就在门口说。”\nRoman没有动。\nRoman：“好。”\n\n# CHAPTER 2｜第二章标题\n\n#### 入口A｜上一章让他进门了\n他坐在你的沙发上，外套还在滴水。\n\n#### 入口B｜上一章让他留在门口\n第二天早上，门口放着一把伞。\n\n# SCENE 02｜咖啡店\n……\n";
+const IM_PKG_TPL=JSON.stringify({
+ format:"miru.package/1",
+ work:{title:"我的剧名",hook:"一句话钩子",premise:"3–9 段前情提要：异状或情感困局 → 你为何卷入 → 每位主要人物的魅力与反差 → 人物间的牵制 → 一个非你不可的难题。",you:"扮演……",lang:"zh",orient:"bg",tags:["恋爱","悬疑"],adult:false,as:"主角"},
+ script:"script.md",
+ cover:"assets/cover.jpg",
+ opening_video:"assets/opening.mp4",
+ characters:[{key:"adrian",name:"阿德里安",gender:"m",age:26,height:"189cm",identity:"克罗斯酒店集团继承人",looks:"深黑微卷短发、灰色眼睛、浅胡茬",personality:"外表慵懒毒舌，内里极度警觉、怕被抛弃",sellingPoint:"为了你，他叫停了一笔九位数的交易",openingLine:"他靠在落地窗边。你想从哪儿开始问我？",speech:"句子短，爱反问",likes:"凌晨的曼哈顿、拳击",boundary:"你说停，他就停",portrait:"assets/char_adrian.jpg"}],
+ assets:{bg_c01s01:"assets/bg/c01s01.jpg",CG_C01:"assets/cg/c01.jpg",BGM_TENSE:"assets/bgm/tense.mp3",char_adrian:"assets/char_adrian.jpg",g_find_ring:"assets/games/find_ring.json"},
+ games:[{id:"g_find_ring",tpl:"find",a:"戒指",b:"沙发"}]
+},null,2);
 document.addEventListener("click",e=>{let x;
  if(e.target.closest("[data-imparse]")){const v=($("#imTxt")||{}).value||"";if(v.trim().length<20){toast(LL("先粘贴剧本内容","Paste the script first"));return}imLoad(v,"");return}
  if(x=e.target.closest("[data-imas]")){IM.as=x.dataset.imas;imRender();return}
- if(e.target.closest("[data-imreset]")){IM={doc:null,as:null,name:""};imRender();return}
+ if(e.target.closest("[data-impub]")){imPublish();return}
+ if(e.target.closest("[data-imreset]")){IM={doc:null,as:null,name:"",text:"",pkg:null,pkgId:""};imRender();return}
  if(e.target.closest("[data-imrules]")){sheet('<h2>📘 '+LL("MIRU 标准剧本格式","MIRU script format")+'</h2><div class="imrules">'+[
    ["# CHAPTER 1｜标题","第几章；也可以写「第一章 标题」"],["# SCENE 01｜地点","新场景，地点会显示在顶部"],["正文段落","旁白 / 动作描写，一段一个气泡"],["Roman：“台词”","对白；名字出现 2 次以上会自动成为角色"],
-   ["【心理】 + 下一行 “……”","心声（你扮演的角色）"],["# CHOICE｜问题","选择题；一章里最后一个是章末选择，前面的是剧情中的选择"],["#### A｜“选项”","选项，下面的内容是选了之后发生的事"],["#### 入口A｜说明","只有上一章结尾选了 A 才会播放"],["[EN] … [ZH]","[EN] 段落会被跳过"]].map(r=>'<div><code>'+esc(r[0])+'</code><span>'+esc(r[1])+'</span></div>').join("")+'</div>'+
-   '<button class="btn btn-p btn-block" style="margin-top:12px" data-imtpl="1">⬇ '+LL("下载格式模板 .md","Download template .md")+'</button><button class="btn btn-g btn-block" style="margin-top:8px" data-imtry="1">'+LL("用模板试一下","Try the template")+'</button>');return}
+   ["【心理】 + 下一行 “……”","心声（你扮演的角色）"],["# CHOICE｜问题","选择题；一章里最后一个是章末选择，前面的是剧情中的选择"],["#### A｜“选项”","选项，下面的内容是选了之后发生的事"],["#### 入口A｜说明","只有上一章结尾选了 A 才会播放"],["⟦BG｜槽位｜说明⟧","场景图；紧跟 # SCENE，槽位名和素材表里的一致（如 bg_c01s01）"],["⟦CG｜⟧ ⟦VIDEO｜⟧ ⟦BGM｜⟧ ⟦MG｜⟧","照片 / 视频 / 音乐 / 互动游戏挂在哪一句后面"],["manifest.json","文件包清单：work / characters / assets；剧本.md 只放剧本，人物卡和素材表放这里"],["[EN] … [ZH]","[EN] 段落会被跳过"]].map(r=>'<div><code>'+esc(r[0])+'</code><span>'+esc(r[1])+'</span></div>').join("")+'</div>'+
+   '<button class="btn btn-p btn-block" style="margin-top:12px" data-imtpl="1">⬇ '+LL("下载剧本格式模板 .md","Download script template .md")+'</button><button class="btn btn-p btn-block" style="margin-top:8px" data-impkgtpl="1">⬇ '+LL("下载文件包模板 manifest.json","Download package manifest.json")+'</button><button class="btn btn-g btn-block" style="margin-top:8px" data-imtry="1">'+LL("用模板试一下","Try the template")+'</button>');return}
  if(e.target.closest("[data-imtpl]")){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([IM_TPL],{type:"text/markdown"}));a.download="MIRU_剧本模板.md";document.body.appendChild(a);a.click();a.remove();return}
+ if(e.target.closest("[data-impkgtpl]")){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([IM_PKG_TPL],{type:"application/json"}));a.download="manifest.json";document.body.appendChild(a);a.click();a.remove();return}
  if(e.target.closest("[data-imtry]")){closeSheet();imLoad(IM_TPL,"MIRU_剧本模板.md");return}
  if(x=e.target.closest("[data-imgo]")){const d=IM.doc;if(!d)return;const ti=$("#imTitle");if(ti&&ti.value.trim())d.title=ti.value.trim();const r=imBuild(d,IM.as);IM=null;toast(LL("已生成《","Built “")+d.title+LL("》","”"));
   if(x.dataset.imgo==="work"){cWork(r.wid,"chs");return}packStart(r.wid,r.as);return}});
@@ -15838,10 +15990,47 @@ installWork = async function (id) {
   const have = S.off76[id];
   if (have && have.ver === P.ver && have.imv === 2 && wd(have.wid)) { track("community_open", { id }); return have.wid; }
   if (have && wd(have.wid)) { try { delete S.mine.worlds[have.wid]; } catch (_) {} }
-  const doc = imParse(P.script); if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+  /* 文件包 / 社区作品：素材表随 pack 一起走（pack.assets）。
+     官方剧的槽位表在 art/official/<id>.json；创作者没有那份文件，所以这里直接把它挂进 OFF94.assets，
+     再让 app94 的指令层在 imParse / imBuild 时按槽位（⟦BG⟧ ⟦CG⟧ ⟦VIDEO⟧ ⟦CHAR⟧）取到 URL。 */
+  const A = (P.assets && typeof P.assets === "object") ? P.assets : null;
+  if (A && typeof OFF94 !== "undefined") {
+    OFF94.assets[id] = Object.assign({}, OFF94.assets[id] || {}, A);
+    OFF94.assetAt = OFF94.assetAt || {}; OFF94.assetAt[id] = Date.now();
+    /* 音乐：bgm_<提示> 走 BGM_FILES；⟦BGM|提示⟧ 在播放时按 cue 取文件 */
+    Object.keys(A).forEach(k => { const mm = /^(?:bgm_|bgm:)(.+)$/i.exec(k); if (mm && /^https?:/i.test(A[k])) (window.BGM_FILES = window.BGM_FILES || {})[mm[1]] = A[k]; });
+  }
+  /* 互动游戏：包里的模板定义（id/tpl/a/b）进 MG100，⟦MG|g_x⟧ 才能找到它 */
+  if (P.games && Array.isArray(P.games) && typeof MG100 !== "undefined") {
+    P.games.forEach(g => { if (!g || !g.id) return; const gid = /^g_/.test(String(g.id)) ? String(g.id) : "g_" + g.id; if (!MG100.some(x => x.id === gid)) MG100.push({ id: gid, zh: "🌐 " + (g.name || gid), en: "🌐 " + (g.name || gid), tpl: g.tpl || "find", a: g.a || "", b: g.b || "-", kw: g.kw || [] }); });
+  }
+  const _cur76 = (typeof OFF94 !== "undefined") ? OFF94.cur : null;
+  if (A && typeof OFF94 !== "undefined") OFF94.cur = { id };
+  let doc = null, b = null;
+  try {
+    doc = imParse(P.script);
+    if (!doc.chapters.length) { toast(zh ? "这部剧暂时打不开" : "This story can't be opened right now"); return null; }
+    const m0 = P.meta || {};
+    b = imBuild(doc, m0.as || doc.pov);
+  } finally { if (A && typeof OFF94 !== "undefined") OFF94.cur = _cur76; }
   const m = P.meta || {};
-  const b = imBuild(doc, m.as || doc.pov);
   const wid = b && (b.wid || b), w = wd(wid); if (!w) return null;
+  /* 人物卡（作品资料的 ②）：外貌 / 性格 / 卖点 / 单聊开场白 / 立绘。剧本里的 ⟦CHAR⟧ 已经有名字与年龄，
+     这里补的是「角色页」和「一对一聊天」需要的那部分。 */
+  if (Array.isArray(P.characters)) {
+    P.characters.forEach(c => {
+      if (!c || typeof c !== "object") return;
+      const nm = String(c.name || c.key || "").trim(); if (!nm) return;
+      const cid = (w.cast || []).find(id => { const x = ch(id); return x && (x.n === nm || (x.studio && x.studio.name === nm) || (x.n94 && Object.values(x.n94).includes(nm))); });
+      if (!cid) return;
+      const x = S.mine.chars[cid];
+      if (c.looks) x.looks = { zh: String(c.looks), en: String(c.looks) };
+      if (c.personality) x.vibe = { zh: String(c.personality), en: String(c.personality) };
+      if (c.identity) x.role = { zh: String(c.identity), en: String(c.identity) };
+      if (c.portrait && /^https?:/i.test(c.portrait)) S.art[cid] = c.portrait;
+      if (c.openingLine) x.solo = { zh: String(c.openingLine), en: String(c.openingLine) };
+    });
+  }
   S.works = (S.works || []).filter(x => x.id !== wid);
   try { const ps = packSt(wid); ps.own = 0; } catch (_) {}
   const x0 = s => ({ en: s, zh: s });

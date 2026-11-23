@@ -48,18 +48,43 @@ module.exports = L.wrap(async (req, res) => {
   if (b.op === 'publish') {
     if (!(await L.bump(u.uid, 'publish', Number(cfg.publish_daily_limit) || 30))) return L.bad(res, 'daily publish limit reached', 429);
     const w = b.work || {};
+    const PKG = require('./_package');
+    /* 两条发布路径：
+       ① 文件包（pack.script）：剧本正文是唯一事实源，发布前查「能不能播」+「素材有没有挂到剧本的位置上」；
+       ② 老路径（pack.world / pack.chapters）：创作中心已经构建好的 pack，保持原样。
+       运行时对两者都能装（app76_official.js 会解析 pack.script），差别只在入库前的审查。 */
+    const script = (w.pack && typeof w.pack.script === 'string' && w.pack.script.trim()) ? w.pack.script : '';
+    let scriptQA = null, pkgQA = null;
+    if (script) {
+      scriptQA = require('./_dslqa').dslQA(script);
+      if (!scriptQA.ok) return L.bad(res, 'script invalid (' + scriptQA.err.length + '): ' + scriptQA.err.slice(0, 3).join('; '), 400);
+      pkgQA = PKG.packageQA({ script, assets: w.pack.assets, characters: w.pack.characters, cover: w.cover, opening_video: w.pack.opening_video });
+      if (!pkgQA.ok) return L.bad(res, 'package invalid (' + pkgQA.errors.length + '): ' + pkgQA.errors.slice(0, 3).join('; '), 400);
+      w.pack.assets = pkgQA.assets;
+      /* 缺封面就补：用剧本里第一张真的上传了的背景。不编造、不下载，只做引用兜底。 */
+      if (!w.cover) {
+        const firstBg = (pkgQA.slots.bg || []).map(k => w.pack.assets[k]).find(Boolean);
+        if (firstBg) w.cover = firstBg;
+      }
+    } else {
+      const v = L.planValid ? L.planValid(w.pack) : { ok: true, errors: [] };
+      if (!v.ok) {
+        const head = v.errors.slice(0, 3).map(e => e.path + ': ' + e.why).join('; ');
+        return L.bad(res, 'pack invalid (' + v.errors.length + '): ' + head, 400);
+      }
+    }
     const raw = JSON.stringify(w.pack || null);
     const MAXPACK = (Number(cfg.max_pack_kb) || 1500) * 1024;
     if (raw.length > MAXPACK) return L.bad(res, 'story too large (' + Math.round(raw.length / 1024) + 'KB, limit ' + Math.round(MAXPACK / 1024) + 'KB)', 413);
-    // 结构校验（T19/T20 的前置）：播不出来的剧本不该进库。点名是哪一条错，别只说 invalid。
-    const v = L.planValid ? L.planValid(w.pack) : { ok: true, errors: [] };
-    if (!v.ok) {
-      const head = v.errors.slice(0, 3).map(e => e.path + ': ' + e.why).join('; ');
-      return L.bad(res, 'pack invalid (' + v.errors.length + '): ' + head, 400);
-    }
     const safety = L.safety([w.title, w.hook, w.pack]);
     if (safety.length) return L.send(res, 422, { error: 'blocked by safety review', reasons: safety });
-    const s = L.structureQA(w.pack);
+    /* 回执里写清：剧本结构、素材覆盖率、还缺哪些槽位、哪些文件没被引用。
+       缺素材不挡发布（作者可以后补，运行时也会跳过），但必须让作者和审核看见。 */
+    const s = script ? {
+      err: scriptQA.err, warn: scriptQA.warn,
+      script: { ok: scriptQA.ok, chapters: scriptQA.stats.chapters, scenes: scriptQA.stats.scenes, choices: scriptQA.stats.choices, orient: scriptQA.stats.orient },
+      assets: pkgQA ? { coverage: pkgQA.coverage, missing: pkgQA.missing, unused: pkgQA.unused, warnings: pkgQA.warnings } : null,
+    } : L.structureQA(w.pack);
     const prev = await sql('SELECT status FROM works WHERE id=$1', [w.id || '']);
     const status = s.err.length || cfg.community_auto_live === false || (prev[0] && ['rejected', 'takedown'].includes(prev[0].status)) ? 'pending' : 'live';
     const me = await sql('SELECT name, email FROM users WHERE id=$1', [u.uid]);
