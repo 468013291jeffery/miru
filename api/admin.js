@@ -466,7 +466,18 @@ module.exports = L.wrap(async (req, res) => {
     const cls = /^image\//.test(mime) ? 'image' : /^video\//.test(mime) ? 'video' : /^audio\//.test(mime) ? 'audio' : null;
     if (!cls) return L.bad(res, '只能上传图片、视频或音频');
     const slot = String(q.slot || '').toLowerCase().replace(/[^a-z0-9_]/g, '_').slice(0, 80); if (!slot) return L.bad(res, '缺少槽位名');
-    const buf = await L.readBody(req); if (!buf.length) return L.bad(res, '空文件');
+    let buf = await L.readBody(req);
+    /* 大文件分块：服务器前面的 nginx 单次请求上限约 5MB，后台把大于 4MB 的文件切块传（&up=<批次>&part=<序号>&parts=<总数>），收齐再合并 */
+    const parts = Math.max(1, Math.min(40, Number(q.parts) || 1)), part = Math.max(0, Number(q.part) || 0);
+    if (parts > 1) {
+      const up = String(q.up || '').replace(/[^a-z0-9]/gi, '').slice(0, 40); if (!up) return L.bad(res, '缺少分块批次');
+      const fs = require('fs'), path = require('path'), dir = path.join(require('os').tmpdir(), 'miru_up_' + up);
+      fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(path.join(dir, String(part)), buf);
+      if (fs.readdirSync(dir).length < parts) return L.send(res, 200, { ok: true, part, parts, pending: true });
+      buf = Buffer.concat([...Array(parts).keys()].map(i => fs.readFileSync(path.join(dir, String(i)))));
+      try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
+    }
+    if (!buf.length) return L.bad(res, '空文件');
     const LIM = { image: 12, video: 60, audio: 15 }; if (buf.length > LIM[cls] * 1048576) return L.bad(res, '文件太大（最大 ' + LIM[cls] + 'MB）', 413);
     const ext = ((String(q.name || '').match(/\.([a-z0-9]{2,5})$/i) || [])[1] || mime.split('/')[1] || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5);
     const url = await L.blobPut('works/' + s.id + '/' + slot + '.' + ext, buf, mime);
