@@ -341,7 +341,7 @@ const payload = {
 fs.writeFileSync(path.join(dir, 'script.md'), script);
 fs.writeFileSync(path.join(dir, 'release.json'), JSON.stringify(release));
 fs.writeFileSync(path.join(dir, 'assets.json'), JSON.stringify({
-  note: 'One video only: video/official/m121-off-camera/V01_opening.mp4 is the chapter-1 opening (slot m121_v01) and the card preview (vid_open). There are no per-lead trailers. Image paths are art/official/m121-off-camera/images/<ID>.webp. CG_M121_024 is still a placeholder. Music files are not in the repo yet.',
+  note: 'One video only: video/official/m121-off-camera/V01_opening.mp4 is the chapter-1 opening (slot m121_v01) and the card preview (vid_open). There are no per-lead trailers. All 117 images are at art/official/m121-off-camera/images/<ID>.webp. Music files are not in the repo yet.',
   opening: { slot: 'm121_v01', path: OPENING, caption: 'WHO DO YOU GO TO TONIGHT?', captionFromSec: 8.7, present: fs.existsSync(path.join(root, OPENING)) },
   images: Object.fromEntries(assets.map(a => [a.asset_id, { type: a.type, scene_id: a.scene_id, path: map[a.asset_id], present: fs.existsSync(path.join(root, map[a.asset_id])) }])),
   audio: Object.fromEntries(audio.bgm.map(b => [b.id, { path: map[b.id], present: fs.existsSync(path.join(root, map[b.id])) }]))

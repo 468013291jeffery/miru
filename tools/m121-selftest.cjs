@@ -88,22 +88,18 @@ E.note(rich, 'm121_epi_stop');
 assert.equal(rich.cg.EPI_SEB, undefined);
 assert.equal(rich.consent.revoked, true);
 
-const ph = E.placeholder('CG_M121_024');
-assert(ph.startsWith('data:image/svg+xml'));
-assert(decodeURIComponent(ph).includes('CG_M121_024'));
-assert.equal(E.assetUrl('CHAR_SEB'), 'art/official/m121-off-camera/images/CHAR_SEB.webp');
+assert.equal(E.assetUrl('CG_M121_024'), 'art/official/m121-off-camera/images/CG_M121_024.webp');
 const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'assets.json'), 'utf8'));
 const imgDir = path.join(root, 'art/official/m121-off-camera/images');
 const onDisk = new Set(fs.readdirSync(imgDir).filter(n => n.endsWith('.webp')).map(n => n.slice(0, -5)));
 const referenced = [...script.matchAll(/⟦(?:BG|CG)\|([^|⟧]+)/g)].map(m => m[1]);
-const unresolved = [...new Set(referenced)].filter(id => !onDisk.has(id)).sort();
-assert.deepEqual(unresolved, ['CG_M121_024']);
+assert.deepEqual([...new Set(referenced)].filter(id => !onDisk.has(id)), []);
+assert.equal(Object.keys(manifest.images).length, 117);
+assert.equal(onDisk.size, 117);
 assert.deepEqual([...onDisk].filter(id => !manifest.images[id]), []);
 for (const [id, row] of Object.entries(manifest.images)) {
   const file = path.join(root, row.path);
-  const exists = fs.existsSync(file);
-  if (id === 'CG_M121_024') { assert.equal(exists, false); assert.equal(row.present, false); continue; }
-  assert.equal(exists, true, id);
+  assert.equal(fs.existsSync(file), true, id);
   assert.equal(row.present, true, id);
   assert.equal(onDisk.has(id), true, id);
   const b = fs.readFileSync(file);
