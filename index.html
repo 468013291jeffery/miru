@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="6c74c135d50c 2026-11-23T18:49Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="e3c7fe621f94 2026-11-23T18:51Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29068,6 +29068,199 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   ];
   MG168.reg(games);
   window.M120G = games;
+})();
+
+/* ===== mod179: 发现页重做（2026-11-24）=====
+   用户反馈：「分类」那一大块（题材 / 背景 / 套路 / 人设 / 攻 / 受 六排横滑标签）太乱；「社区新作」先不要。
+   新结构：恋爱类型（全部 / 男女 / 男男 / 女女）→「挑一个幻想」大入口 →「你喜欢的类型」性格 →「筛选」底部面板。
+   数据：art/official/discover.json（dict = 标签字典，works[作品id] = 恋爱对象数 / 人物身份 / 性格 / 套路 / 氛围 / 亲密强度）。
+   规则：同一组里选多个 = 任意一个符合；不同组之间 = 都要符合；亲密强度单选。攻 / 受两排去掉。
+   结果只列线上官方作品（/api/works），点卡片走原来的 data-cwork（装好就打开）。零结果时给出最接近的作品，不显示空白页。 */
+(function () {
+  "use strict";
+  if (typeof renderDiscover !== "function" || typeof tagBar !== "function") return;
+  const GROUPS = ["cast", "identity", "persona", "trope", "mood"];
+  const D = { data: null, list: null, busy: null, sheet: null, covers: {} };
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : S.lang === "zh");
+  const T2 = (a, b) => (zh() ? a : b);
+  const sel = () => {
+    if (!disc.s179) disc.s179 = { cast: [], identity: [], persona: [], trope: [], mood: [], intensity: "" };
+    return disc.s179;
+  };
+  const nSel = s => GROUPS.reduce((n, g) => n + s[g].length, 0) + (s.intensity ? 1 : 0);
+  const lab = (g, k) => { const d = D.data && D.data.dict[g] && D.data.dict[g][k]; return d ? (zh() ? d.zh : d.en) : k; };
+  const copy = s => JSON.parse(JSON.stringify(s));
+
+  function load() {
+    if (D.data && D.list) return Promise.resolve();
+    if (D.busy) return D.busy;
+    const v = Math.floor(Date.now() / 6e5);
+    D.busy = Promise.all([
+      fetch("art/official/discover.json?v=" + v).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch("/api/works?feed=new&limit=200").then(r => r.ok ? r.json() : null).catch(() => null)
+    ]).then(([d, j]) => {
+      if (d && d.works) D.data = d;
+      const L = (j && (j.works || j.rows)) || [];
+      D.list = L.filter(w => (w.status === "live" || !w.status) && D.data && D.data.works[w.id])
+        .map(w => Object.assign({}, w, { d: D.data.works[w.id], or: w.orient || D.data.works[w.id].rel }));
+    }).finally(() => { D.busy = null; });
+    return D.busy;
+  }
+  const orFit = w => (typeof S === "undefined" || S.or === "all" || !S.or || w.or === S.or);
+  function fits(w, s) {
+    if (!orFit(w)) return false;
+    for (const g of GROUPS) {
+      if (!s[g].length) continue;
+      const have = g === "cast" ? [w.d.cast] : (w.d[g] || []);
+      if (!s[g].some(k => have.includes(k))) return false;
+    }
+    return !s.intensity || w.d.intensity === s.intensity;
+  }
+  function score(w, s) { /* 零结果时：满足的组越多越靠前（恋爱类型必须对） */
+    if (!orFit(w)) return -1;
+    let n = 0;
+    for (const g of GROUPS) { if (!s[g].length) continue; const have = g === "cast" ? [w.d.cast] : (w.d[g] || []); if (s[g].some(k => have.includes(k))) n++; }
+    if (s.intensity && w.d.intensity === s.intensity) n++;
+    return n;
+  }
+  const results = s => (D.list || []).filter(w => fits(w, s)).sort((a, b) => (b.plays || 0) - (a.plays || 0));
+
+  /* ---------- 卡片：最多 3 个标签 ---------- */
+  function coverOf(w) {
+    if (w.cover) return w.cover;
+    if (D.covers[w.id] !== undefined) return D.covers[w.id];
+    D.covers[w.id] = "";
+    fetch("art/official/" + w.id + ".json").then(r => r.ok ? r.json() : null).then(a => {
+      const c = a && (a.cover || a.poster); if (!c) return; D.covers[w.id] = c;
+      document.querySelectorAll('.d179card[data-cwork="' + w.id + '"] .art').forEach(el => { el.innerHTML = '<img src="' + esc(c) + '" alt="">'; });
+    }).catch(() => {});
+    return "";
+  }
+  function card(w) {
+    const d = w.d, tags = [d.identity[0] && lab("identity", d.identity[0]), d.trope[0] && lab("trope", d.trope[0]), d.mood[0] && lab("mood", d.mood[0])].filter(Boolean).slice(0, 3);
+    const title = zh() ? w.title : ((w.en && w.en.title) || w.title), hook = zh() ? w.hook : ((w.en && w.en.hook) || w.hook), c = coverOf(w);
+    return '<button class="gcard d179card" data-cwork="' + esc(w.id) + '"><div class="art" style="aspect-ratio:3/4">' + (c ? '<img src="' + esc(c) + '" alt="">' : '<div class="off89ph">📖</div>') +
+      '<span class="d179int i-' + d.intensity + '">' + esc(lab("intensity", d.intensity)) + '</span></div><div class="b"><b>' + esc(title || "") + '</b><p class="s">' + esc(hook || "") + '</p>' +
+      '<div class="d179tg">' + tags.map(x => '<span>' + esc(x) + '</span>').join("") + '</div></div></button>';
+  }
+
+  /* ---------- 发现页上半部分（替换旧的「分类」块） ---------- */
+  const ORS = [["all", "disc.all"], ["bg", "ob.bg"], ["bl", "ob.bl"], ["gl", "ob.gl"]];
+  tagBar = function () {
+    const s = sel(), n = nSel(s), d = D.data;
+    if (!d || !D.list) { load().then(() => { if (S.lastTab === "discover" && document.querySelector(".d179")) renderTab("discover"); }); }
+    let h = '<div class="d179"><div class="seg dor d179or" id="orSeg">' + ORS.map(([k, l]) => '<button data-orf="' + k + '" class="' + (S.or === k ? "on" : "") + '">' + t(l) + '</button>').join("") + '</div>';
+    if (d) {
+      h += '<div class="d179h"><b>' + T2("挑一个幻想", "Pick your fantasy") + '</b></div><div class="d179fan">' +
+        d.home.map(k => { const x = d.dict.identity[k]; return '<button data-d179q="identity|' + k + '" class="' + (s.identity.includes(k) ? "on" : "") + '"><i>' + x.icon + '</i><span>' + esc(lab("identity", k)) + '</span></button>'; }).join("") + '</div>';
+      h += '<div class="d179h"><b>' + T2("你喜欢的类型", "What's your type?") + '</b></div><div class="d179chips">' +
+        Object.keys(d.dict.persona).map(k => '<button data-d179q="persona|' + k + '" class="chip' + (s.persona.includes(k) ? " on" : "") + '">' + esc(lab("persona", k)) + '</button>').join("") + '</div>';
+      h += '<div class="d179bar"><button class="d179fbtn" data-d179open="1">⚙︎ ' + T2("筛选", "Filters") + (n ? ' <i>' + n + '</i>' : '') + '</button>' +
+        (n ? '<div class="d179sel">' + chipsOf(s) + '<button class="chip" data-d179clr="1">' + T2("清空", "Clear") + '</button></div>' : '') + '</div>';
+    }
+    h += '<div id="d179res">' + (n ? resHTML(s) : '') + '</div></div><div id="discRes"></div>';
+    return h;
+  };
+  function chipsOf(s) {
+    const out = [];
+    GROUPS.forEach(g => s[g].forEach(k => out.push('<button class="chip on" data-d179q="' + g + '|' + k + '">' + esc(lab(g, k)) + ' ✕</button>')));
+    if (s.intensity) out.push('<button class="chip on" data-d179int="">' + esc(lab("intensity", s.intensity)) + ' ✕</button>');
+    return out.join("");
+  }
+  function resHTML(s) {
+    if (!D.list) return '<p class="empty">' + T2("加载中…", "Loading…") + '</p>';
+    const L = results(s);
+    if (L.length) return '<div class="d179cnt">' + T2("找到 " + L.length + " 部", L.length + (L.length === 1 ? " story" : " stories")) + '</div><div class="grid2" style="padding-bottom:20px">' + L.map(card).join("") + '</div>';
+    const near = (D.list || []).map(w => [score(w, s), w]).filter(x => x[0] > 0).sort((a, b) => b[0] - a[0] || (b[1].plays || 0) - (a[1].plays || 0)).slice(0, 6).map(x => x[1]);
+    return '<div class="d179zero"><b>' + T2("还没有完全符合的作品", "Nothing matches all of that yet") + '</b><p>' + T2("试试去掉一两个条件。下面是最接近的：", "Try removing a filter or two. Closest matches:") + '</p><button class="chip" data-d179clr="1">' + T2("清空筛选", "Clear filters") + '</button></div>' +
+      (near.length ? '<div class="grid2" style="padding-bottom:20px">' + near.map(card).join("") + '</div>' : '');
+  }
+  /* 有筛选条件时，把下面的精选 / 排行内容收起来 */
+  if (typeof discActive === "function") { const A0 = discActive; discActive = function () { return A0.apply(this, arguments) || nSel(sel()) > 0; }; }
+  const R0 = renderDiscover;
+  renderDiscover = function (v) {
+    const r = R0.apply(this, arguments);
+    try { const b = document.getElementById("htabBody"); if (b && !discSearch && disc.mode === "stories") b.style.display = nSel(sel()) ? "none" : ""; } catch (_) {}
+    return r;
+  };
+  function rerender() {
+    const sc = document.getElementById("discScroll"), y = sc ? sc.scrollTop : 0;
+    renderTab("discover");
+    const s2 = document.getElementById("discScroll"); if (s2) s2.scrollTop = y;
+  }
+
+  /* ---------- 底部筛选面板：先选，再点「显示 N 部」才生效 ---------- */
+  function sheetHTML() {
+    const d = D.data, s = D.sheet, n = results(s).length;
+    const grp = (g, title) => '<div class="d179g"><b>' + title + '</b><div class="d179gw">' + Object.keys(d.dict[g]).map(k =>
+      '<button class="chip' + (s[g].includes(k) ? " on" : "") + '" data-d179s="' + g + '|' + k + '">' + (g === "identity" ? d.dict.identity[k].icon + " " : "") + esc(lab(g, k)) + '</button>').join("") + '</div></div>';
+    return '<div class="d179sh"><div class="d179shh"><button class="ibtn" data-d179close="1" aria-label="close">✕</button><b>' + T2("筛选", "Filters") + '</b><button class="chip" data-d179sclr="1">' + T2("清空", "Clear") + '</button></div>' +
+      '<div class="d179shb">' +
+      grp("cast", T2("恋爱对象", "Love interests")) + grp("identity", T2("人物身份", "Who they are")) + grp("persona", T2("性格", "Personality")) +
+      grp("trope", T2("恋爱套路", "Romance tropes")) + grp("mood", T2("故事氛围", "Mood")) +
+      '<div class="d179g"><b>' + T2("亲密强度", "Romance intensity") + '</b><div class="d179int3">' + [["", T2("不限", "Any"), ""]].concat(Object.keys(d.dict.intensity).map(k => [k, lab("intensity", k), zh() ? d.dict.intensity[k].desc : ""])).map(([k, l, ds]) =>
+        '<button class="' + (s.intensity === k ? "on" : "") + '" data-d179si="' + k + '"><b>' + esc(l) + '</b>' + (ds ? '<small>' + esc(ds) + '</small>' : '') + '</button>').join("") + '</div>' +
+      '<p class="d179note">' + T2("亲密强度是 MIRU 自己的体验分类，不是年龄分级。", "Intensity describes the romance, not an age rating.") + '</p></div>' +
+      '</div><div class="d179shf"><button class="btn btn-p btn-block" data-d179apply="1">' + (n ? T2("显示 " + n + " 部", "Show " + n + (n === 1 ? " story" : " stories")) : T2("没有符合的作品 · 仍然应用", "No matches · apply anyway")) + '</button></div></div>';
+  }
+  function openSheet() {
+    D.sheet = copy(sel());
+    let w = document.getElementById("d179wrap");
+    if (!w) { w = document.createElement("div"); w.id = "d179wrap"; document.body.appendChild(w); }
+    w.innerHTML = '<div class="d179mask" data-d179close="1"></div>' + sheetHTML(); w.hidden = false;
+  }
+  function paintSheet() {
+    const w = document.getElementById("d179wrap"); if (!w || w.hidden) return;
+    const b = w.querySelector(".d179shb"), y = b ? b.scrollTop : 0;
+    w.innerHTML = '<div class="d179mask" data-d179close="1"></div>' + sheetHTML();
+    const b2 = w.querySelector(".d179shb"); if (b2) b2.scrollTop = y;
+  }
+  const closeSheet = () => { const w = document.getElementById("d179wrap"); if (w) { w.hidden = true; w.innerHTML = ""; } D.sheet = null; };
+  const toggle = (s, g, k) => { s[g] = s[g].includes(k) ? s[g].filter(x => x !== k) : s[g].concat(k); };
+  const track2 = (ev, o) => { try { if (typeof track === "function") track(ev, o); } catch (_) {} };
+
+  document.addEventListener("click", e => {
+    let x;
+    if ((x = e.target.closest("[data-d179q]"))) { const [g, k] = x.dataset.d179q.split("|"); toggle(sel(), g, k); track2("disc_tag", { g, k }); rerender(); return; }
+    if ((x = e.target.closest("[data-d179int]"))) { sel().intensity = ""; rerender(); return; }
+    if (e.target.closest("[data-d179clr]")) { disc.s179 = null; rerender(); return; }
+    if (e.target.closest("[data-d179open]")) { load().then(() => { if (D.data) openSheet(); }); return; }
+    if (e.target.closest("[data-d179close]")) { closeSheet(); return; }
+    if ((x = e.target.closest("[data-d179s]"))) { const [g, k] = x.dataset.d179s.split("|"); toggle(D.sheet, g, k); paintSheet(); return; }
+    if ((x = e.target.closest("[data-d179si]"))) { D.sheet.intensity = x.dataset.d179si; paintSheet(); return; }
+    if (e.target.closest("[data-d179sclr]")) { D.sheet = { cast: [], identity: [], persona: [], trope: [], mood: [], intensity: "" }; paintSheet(); return; }
+    if (e.target.closest("[data-d179apply]")) { disc.s179 = D.sheet; track2("disc_apply", { n: nSel(D.sheet), hits: results(D.sheet).length }); closeSheet(); rerender(); return; }
+  });
+  setTimeout(() => { try { load(); } catch (_) {} }, 2500);
+
+  const st = document.createElement("style");
+  st.textContent = [
+    /* 社区新作那一排、发现页底部的社区书架先不显示 */
+    ".comm68{display:none!important}.shelf:has([data-dchip=community]),.shelf:has([data-cre=remix]){display:none!important}",
+    ".d179{padding:4px 16px 0}.d179or{margin:2px 0 14px}",
+    ".d179h{margin:14px 0 8px}.d179h b{font-size:15px;letter-spacing:.02em}",
+    ".d179fan{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}",
+    ".d179fan button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:inherit;min-width:0}",
+    ".d179fan button i{font-style:normal;font-size:26px;line-height:1}.d179fan button span{font-size:12px;line-height:1.25;text-align:center;opacity:.9}",
+    ".d179fan button.on{border-color:var(--pink,#ff5c9d);background:rgba(255,92,157,.14)}",
+    ".d179chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.d179chips::-webkit-scrollbar{display:none}.d179chips .chip{flex:none}",
+    ".d179bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 4px}",
+    ".d179fbtn{padding:9px 16px;border-radius:999px;border:1px solid var(--pink,#ff5c9d);background:transparent;color:inherit;font-weight:700}.d179fbtn i{font-style:normal;background:var(--pink,#ff5c9d);color:#fff;border-radius:999px;padding:0 7px;margin-left:4px;font-size:12px}",
+    ".d179sel{display:flex;flex-wrap:wrap;gap:6px}",
+    ".d179cnt{font-size:13px;opacity:.75;margin:14px 0 10px}#d179res .grid2{padding-left:0;padding-right:0}",
+    ".d179zero{margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.04);display:flex;flex-direction:column;gap:8px;align-items:flex-start}.d179zero p{margin:0;font-size:13px;opacity:.75}",
+    ".d179card .art{position:relative}.d179int{position:absolute;left:8px;top:8px;font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(0,0,0,.55);color:#fff}.d179int.i-spicy{background:rgba(214,40,90,.85)}.d179int.i-steamy{background:rgba(160,60,200,.8)}",
+    ".d179tg{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}.d179tg span{font-size:11px;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.07);opacity:.85}",
+    "#d179wrap{position:fixed;inset:0;z-index:300}#d179wrap[hidden]{display:none}.d179mask{position:absolute;inset:0;background:rgba(0,0,0,.55)}",
+    ".d179sh{position:absolute;left:0;right:0;bottom:0;max-height:88vh;display:flex;flex-direction:column;background:var(--bg2,#16121c);border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom,0px)}",
+    ".d179shh{display:flex;align-items:center;gap:10px;padding:14px 16px 10px;border-bottom:1px solid rgba(255,255,255,.06)}.d179shh b{flex:1;font-size:17px}",
+    ".d179shb{overflow-y:auto;padding:4px 16px 12px;flex:1;min-height:0}.d179g{margin-top:14px}.d179g>b{display:block;font-size:14px;margin-bottom:8px}.d179gw{display:flex;flex-wrap:wrap;gap:8px}",
+    ".d179int3{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.d179int3 button{display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;padding:10px;border-radius:14px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:inherit;min-width:0}.d179int3 button small{font-size:10.5px;opacity:.7;line-height:1.3}.d179int3 button.on{border-color:var(--pink,#ff5c9d);background:rgba(255,92,157,.14)}",
+    "@media (max-width:420px){.d179int3{grid-template-columns:repeat(2,1fr)}}",
+    ".d179note{font-size:11.5px;opacity:.6;margin:8px 0 0}.d179shf{padding:10px 16px 14px;border-top:1px solid rgba(255,255,255,.06)}"
+  ].join("");
+  document.head.appendChild(st);
+  window.D179 = D;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
