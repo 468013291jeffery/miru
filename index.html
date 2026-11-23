@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="c409c0b65176 2026-11-23T19:30Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="9d1f62fc700b 2026-11-23T20:29Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29346,6 +29346,103 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     };
   }
   window.PK180 = { store, packOf, remember };
+})();
+
+/* ===== mod181: 新增 4 种剧情小游戏模板（2026-11-24）=====
+   剧本原稿里常写、以前只能退化成三选一的玩法，现在有自己的模板（后台小游戏编辑框里直接用 tpl 名）：
+     m111_classify 分类  bins:[[中,英],…]  items:[[[中,英], 正确的组序号], …]          每项点一下选组，全部对才算赢
+     m111_pair     比对  items:[[中,英],…]  pair:[i, j]                                  选出真正一致的两项
+     m111_spot     找不同 items:[[中,英]或 "🔑",…]  ans: 序号  (cols: 每行几格，默认 3)   直接点那一格
+     m111_align    对齐  target: 0–100  tol: 允许误差（默认 6） marks:[[左端中,英],[右端中,英]]  拖动滑块对准再核对
+   都沿用 mod168 的外观（.m168）、倒计时和两次机会；输了或跳过剧情照常继续。 */
+(function () {
+  "use strict";
+  if (typeof MG_T === "undefined") return;
+  const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+  const t2 = (zh, a, b) => (zh ? a : b);
+  const L = (x, zh) => (Array.isArray(x) ? x[zh ? 0 : 1] : x);
+  const sh = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function shell(A, G, sub, done, T, zh, instr) {
+    A.className = "mgarea m168"; A.innerHTML = "";
+    sub.textContent = instr;
+    if (G.img) { const im = el("img"); im.src = G.img; im.alt = ""; im.style.cssText = "width:100%;max-height:170px;object-fit:cover;border-radius:12px;display:block"; A.append(im); }
+    A.append(el("p", "pr", zh ? G.pz : G.pe));
+    const tb = el("div", "tb"), bar = el("i"); tb.append(bar); A.append(tb);
+    const secs = G.seconds || 35; let over = false, tries = 0;
+    requestAnimationFrame(() => { bar.style.transitionDuration = secs + "s"; bar.style.width = "0%"; });
+    T.push(setTimeout(() => { if (!over) { over = true; done("lose"); } }, secs * 1000));
+    const body = el("div", "m168b"); body.style.cssText = "display:flex;flex-direction:column;gap:8px"; A.append(body);
+    const hint = el("p", "hint");
+    const submit = ok => { if (over) return; if (ok) { over = true; done("win"); } else if (tries++ < 1) hint.textContent = t2(zh, "还差一点，再核对一次。", "Not quite. Check once more."); else { over = true; done("lose"); } };
+    return { body, hint, submit };
+  }
+
+  /* 分类：每项在几个组之间切换 */
+  MG_T.m111_classify = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "给每一项选对它属于哪一组，再点核对。", "Put each item in the right group, then check."));
+    const bins = G.bins || [], items = (G.items || []).map((x, i) => ({ i, label: x[0], ans: x[1] })), pick = {};
+    const order = sh(items);
+    const draw = () => {
+      c.body.innerHTML = "";
+      order.forEach(it => {
+        const r = el("div", "row"); r.style.flexWrap = "wrap"; r.append(el("span", "", L(it.label, zh)));
+        const g = el("div"); g.style.cssText = "display:flex;gap:6px;flex-wrap:wrap";
+        bins.forEach((b, k) => { const x = el("button", "k" + (pick[it.i] === k ? " on" : ""), L(b, zh)); x.onclick = () => { pick[it.i] = k; draw(); }; g.append(x); });
+        r.append(g); c.body.append(r);
+      });
+      const go = el("button", "go", t2(zh, "核对分类", "Check")); go.disabled = items.some(it => pick[it.i] == null);
+      go.onclick = () => c.submit(items.every(it => pick[it.i] === it.ans));
+      c.body.append(go, c.hint);
+    };
+    draw();
+  };
+
+  /* 比对：选出一致的两项 */
+  MG_T.m111_pair = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "选出真正一致的两项。", "Pick the two that truly match."));
+    const want = (G.pair || [0, 1]).slice().sort().join(","), sel = new Set(), order = sh((G.items || []).map((_, i) => i));
+    const draw = () => {
+      c.body.innerHTML = "";
+      const g = el("div", "grid");
+      order.forEach(i => { const b = el("button", "k" + (sel.has(i) ? " on" : ""), L(G.items[i], zh)); b.style.textAlign = "left"; b.onclick = () => { if (sel.has(i)) sel.delete(i); else { if (sel.size >= 2) sel.delete(sel.values().next().value); sel.add(i); } draw(); }; g.append(b); });
+      const go = el("button", "go", t2(zh, "确认这两项", "Confirm these two")); go.disabled = sel.size !== 2;
+      go.onclick = () => c.submit([...sel].sort().join(",") === want);
+      c.body.append(g, go, c.hint);
+    };
+    draw();
+  };
+
+  /* 找不同：直接点那一格 */
+  MG_T.m111_spot = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, L(G.ask, zh) || t2(zh, "找出不一样的那一个。", "Find the one that's different."));
+    const g = el("div"); g.style.cssText = "display:grid;gap:8px;grid-template-columns:repeat(" + (G.cols || 3) + ",1fr)";
+    (G.items || []).forEach((x, i) => {
+      const b = el("button", "k", L(x, zh)); b.style.cssText = "min-height:64px;font-size:" + (String(L(x, zh)).length <= 2 ? "26px" : "14px");
+      b.onclick = () => { if (i === G.ans) { b.classList.add("on"); c.submit(true); } else { b.disabled = true; c.submit(false); } };
+      g.append(b);
+    });
+    c.body.append(g, c.hint);
+  };
+
+  /* 对齐：拖动滑块，让活动线对准目标线 */
+  MG_T.m111_align = function (A, G, sub, done, T, zh) {
+    const c = shell(A, G, sub, done, T, zh, t2(zh, "拖动滑块，让粉色线对准虚线，再点核对。", "Drag the slider until the pink line meets the dashed one, then check."));
+    const target = Math.max(5, Math.min(95, Number(G.target) || 62)), tol = Number(G.tol) || 6;
+    let v = target > 50 ? 12 : 88;
+    const box = el("div"); box.style.cssText = "position:relative;height:96px;border-radius:12px;background:#15112a;border:1px solid #4b3d73;overflow:hidden";
+    const tline = el("i"); tline.style.cssText = "position:absolute;top:8px;bottom:8px;width:0;border-left:2px dashed #9c8cc9;left:" + target + "%";
+    const mline = el("i"); mline.style.cssText = "position:absolute;top:8px;bottom:8px;width:3px;margin-left:-1px;border-radius:2px;background:#ff5fa2";
+    box.append(tline, mline);
+    const m = G.marks || [];
+    const lab = el("div"); lab.style.cssText = "display:flex;justify-content:space-between;font-size:12px;color:#9c8cc9"; lab.append(el("span", "", L(m[0], zh) || ""), el("span", "", L(m[1], zh) || ""));
+    const rg = el("input"); rg.type = "range"; rg.min = 0; rg.max = 100; rg.step = 1; rg.value = v; rg.style.width = "100%"; rg.setAttribute("aria-label", t2(zh, "位置", "Position"));
+    const paint = () => { mline.style.left = v + "%"; };
+    rg.oninput = () => { v = Number(rg.value); paint(); };
+    paint();
+    const go = el("button", "go", t2(zh, "核对", "Check")); go.onclick = () => c.submit(Math.abs(v - target) <= tol);
+    c.body.append(box, lab, rg, go, c.hint);
+  };
+  window.MG181 = ["m111_classify", "m111_pair", "m111_spot", "m111_align"];
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
