@@ -96,6 +96,9 @@ PKREG.add('song:queues',function(th,b,next){
  if(b[1]==='wtsrEnd'){th.pk.q.shift();th.pk.st='end';th.pk.end=b[2].id;packSt(th.wid).end=packSt(th.wid).end||{};packSt(th.wid).end[b[2].id]=1;th.pk.after=null;appendMsg(th,{who:'sys',k:'card',title:R.ending_titles[b[2].id],txt:'',at:Date.now()});save();return true;}
  return next(th,b);
 });
+// The shared dispatcher is installed before late story adapters load. Rebuild its
+// chain so this story's queue directives are actually executable in the browser.
+if(PKREG.installed)PKREG.install();
 function options(th){const s=state(th);let list=[...(E.choices[s.scene]||[]),...E.global];return list.filter(o=>{
  if(o.id==='eri_disclosure')return th.present?.includes(cid(th,'艾琳'));
  const k=/^(kiss|touch_no)_(viv|eri)$/.exec(o.id);if(k)return th.present?.includes(cid(th,person(k[2])));

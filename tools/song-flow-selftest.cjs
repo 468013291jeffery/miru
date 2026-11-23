@@ -15,10 +15,10 @@ const c={console,window:{},S:{mine:{worlds,chars},art:{},threads},OFF94:{cur:nul
  authoredMatch:async()=>c.window.WTSR_RUNTIME.options(threads.flow).findIndex(o=>o.id===actionId)};
 // Persist one ending registry, just as packSt does in the real app.
 const endings={end:{}};c.packSt=()=>endings;
-vm.createContext(c);for(const f of ['app159_song_data.js','wtsr_state.js','app159_song.js'])vm.runInContext(fs.readFileSync('source/src/'+f,'utf8'),c);
+c.window=c;vm.createContext(c);vm.runInContext(fs.readFileSync('source/src/app110_pkreg.js','utf8'),c);c.PKREG.install();assert(c.PKREG.installed);for(const f of ['app159_song_data.js','wtsr_state.js','app159_song.js'])vm.runInContext(fs.readFileSync('source/src/'+f,'utf8'),c);
 R.cast.forEach(x=>chars[x.name]={n:x.name,n94:{zh:x.name}});
 worlds.song={community:R.work_id,cast:R.cast.map(x=>x.name),pack:{chapters:R.chapters.map(x=>({n:x.n,beats:{zh:[]}}))}};
-function drain(th){let count=0;while(th.pk.q.length){assert(++count<300,'finite queue');const b=th.pk.q[0];if(b[0]==='sys'&&b[1]==='line'){th.pk.stop=b;return;}if(handlers['song:queues'](th,b,()=>false))continue;th.pk.q.shift();if(b[0]==='sys'&&b[1]==='mg')th.pk.q.unshift(...c.mgResult(th,b[2],'skip'));else if(b[0]!=='sys')th.msgs.push({who:b[0],k:b[1],txt:b[2]});}th.pk.stop=null;}
+function drain(th){let count=0;while(th.pk.q.length){assert(++count<300,'finite queue');const b=th.pk.q[0];if(b[0]==='sys'&&b[1]==='line'){th.pk.stop=b;return;}if(c.pkDirective(th,b))continue;th.pk.q.shift();if(b[0]==='sys'&&b[1]==='mg')th.pk.q.unshift(...c.mgResult(th,b[2],'skip'));else if(b[0]!=='sys')th.msgs.push({who:b[0],k:b[1],txt:b[2]});}th.pk.stop=null;}
 async function choose(th,id){actionId=id;const opts=c.window.WTSR_RUNTIME.options(th),o=opts.find(x=>x.id===id);assert(o,th.pk.wtsr.scene+' has action '+id);th.msgs.push({who:'me',k:'say',txt:o.intent});await c.reply(th,{kind:'user',txt:o.intent,mode:'say'});drain(th);}
 async function next(th){await choose(th,'next');}
 async function run(route,lead,ending){
@@ -37,7 +37,7 @@ async function run(route,lead,ending){
   }
   assert(th.pk.wtsr.goals[chapter.n],chapter.n+' completed by actual intent');
  }
- assert.equal(th.pk.wtsr.ending,ending);assert.equal(th.pk.st,'end');assert.equal(th.pk.q.length,0);
+ assert.equal(c.PKREG.errors,0);assert.equal(th.pk.wtsr.ending,ending);assert.equal(th.pk.st,'end');assert.equal(th.pk.q.length,0);
  assert(!th.msgs.some(m=>/隐藏分支|回应空间|player_intent|ROUTE_STAGE/.test(m.txt||'')));
  assert(th.msgs.some(m=>m.who==='me'));
  const saved=JSON.parse(JSON.stringify(th));assert.deepEqual(saved.pk.wtsr,JSON.parse(JSON.stringify(th.pk.wtsr)));

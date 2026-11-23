@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="bcd1c83558a1 2026-11-23T03:15Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="342ec4113ff9 2026-11-23T06:17Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29923,6 +29923,9 @@ PKREG.add('song:queues',function(th,b,next){
  if(b[1]==='wtsrEnd'){th.pk.q.shift();th.pk.st='end';th.pk.end=b[2].id;packSt(th.wid).end=packSt(th.wid).end||{};packSt(th.wid).end[b[2].id]=1;th.pk.after=null;appendMsg(th,{who:'sys',k:'card',title:R.ending_titles[b[2].id],txt:'',at:Date.now()});save();return true;}
  return next(th,b);
 });
+// The shared dispatcher is installed before late story adapters load. Rebuild its
+// chain so this story's queue directives are actually executable in the browser.
+if(PKREG.installed)PKREG.install();
 function options(th){const s=state(th);let list=[...(E.choices[s.scene]||[]),...E.global];return list.filter(o=>{
  if(o.id==='eri_disclosure')return th.present?.includes(cid(th,'艾琳'));
  const k=/^(kiss|touch_no)_(viv|eri)$/.exec(o.id);if(k)return th.present?.includes(cid(th,person(k[2])));

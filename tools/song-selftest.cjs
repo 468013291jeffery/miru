@@ -2,6 +2,9 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert/strict'),crypto=r
 const E=require('../source/src/wtsr_state');
 const R=JSON.parse(fs.readFileSync('content/official/when-song-returns-v1/release.json'));
 const script=fs.readFileSync('content/official/when-song-returns-v1/script.md','utf8');
+const published=JSON.parse(fs.readFileSync('content/official/when-song-returns-v1/admin-import.json'));assert.equal(published.patch.config.leads.length,2);assert(published.patch.config.leads.every(c=>c.key&&c.n.zh&&c.g==='f'&&c.art));
+for(const line of script.split('\n'))if(line.startsWith('⟦CHAR|')){const a=line.slice(6,-1).split('|').map(decodeURIComponent);assert.equal(a.length,6);assert(!/本包|此前|char_c|中文统一/.test(a[5]));}
+
 const qa=require('../api/_dslqa').dslQA(script);assert.deepEqual(qa.err,[]);assert.equal(qa.stats.chapters,12);assert.equal(qa.stats.scenes,48);assert.equal(R.games.length,24);
 assert.deepEqual(require('../api/_lib').safety([script]),[]);
 assert(!/回应空间|隐藏分支|运行卡|player_intent|effects：|条件正文|ROUTE_STAGE|后台设定/.test(script));
