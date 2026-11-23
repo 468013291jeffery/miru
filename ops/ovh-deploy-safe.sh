@@ -85,9 +85,10 @@ PY
 if [ -d "$APP/shared/overrides" ]; then cp -a "$APP/shared/overrides/." "$NEW/"; fi
 mkdir -p "$NEW/deploy"
 for f in "$CUR"/deploy/*; do [ ! -f "$f" ] || [ -e "$NEW/deploy/$(basename "$f")" ] || cp -a "$f" "$NEW/deploy/"; done
-# Media added outside Git is retained. Conflicting edits to an existing release are rejected above.
+# Retained media is immutable across releases: link missing files without duplicating bytes.
+# Conflicting repository media stays independent; production drift is rejected above.
 for d in art audio video scripts; do
-  if [ -d "$CUR/$d" ]; then mkdir -p "$NEW/$d"; cp -an "$CUR/$d/." "$NEW/$d/"; fi
+  if [ -d "$CUR/$d" ]; then mkdir -p "$NEW/$d"; cp -aln "$CUR/$d/." "$NEW/$d/"; fi
 done
 if [ -d "$CUR/node_modules" ] && cmp -s "$CUR/package.json" "$NEW/package.json"; then cp -a "$CUR/node_modules" "$NEW/";
 else (cd "$NEW" && npm install --omit=dev --no-audit --no-fund); fi

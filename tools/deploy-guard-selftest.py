@@ -30,3 +30,17 @@ with tempfile.TemporaryDirectory() as td:
   assert run()==75,'Concurrent deployment was accepted'
  assert (app/'current').resolve()==cur,'A preflight test changed production pointer'
 print('Deployment guards: stale baseline, explicit adoption, file drift and concurrency passed.')
+
+# Execute the production retention loop against isolated media directories.
+with tempfile.TemporaryDirectory() as td:
+ old=pathlib.Path(td)/'old';new=pathlib.Path(td)/'new'
+ (old/'art').mkdir(parents=True);(new/'art').mkdir(parents=True)
+ (old/'art/retained.jpg').write_bytes(b'immutable media')
+ (old/'art/replaced.jpg').write_bytes(b'old media')
+ (new/'art/replaced.jpg').write_bytes(b'new media')
+ text=script.read_text();start=text.index('for d in art audio video scripts; do');end=text.index('\ndone',start)+len('\ndone')
+ subprocess.run(['bash','-eu','-c',text[start:end]],env=dict(os.environ,CUR=str(old),NEW=str(new)),check=True)
+ assert (new/'art/replaced.jpg').read_bytes()==b'new media','New repository media was overwritten'
+ assert (old/'art/replaced.jpg').read_bytes()==b'old media','Previous release media was modified'
+ assert (new/'art/retained.jpg').stat().st_ino==(old/'art/retained.jpg').stat().st_ino,'Unchanged media was duplicated on disk'
+print('Retained media: shared immutable bytes, fresh media preserved, previous release unchanged.')
