@@ -1,0 +1,757 @@
+{
+  "note": "Files are not in the repo yet. Paths are the IDs the player will request. A missing file falls back to a labeled placeholder.",
+  "images": {
+    "COVER_M121": {
+      "type": "COVER",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/COVER_M121.webp",
+      "present": false
+    },
+    "CHAR_SEB": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_SEB.webp",
+      "present": false
+    },
+    "CHAR_RYA": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_RYA.webp",
+      "present": false
+    },
+    "CHAR_JUL": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_JUL.webp",
+      "present": false
+    },
+    "CHAR_LUC": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_LUC.webp",
+      "present": false
+    },
+    "CHAR_NAO": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_NAO.webp",
+      "present": false
+    },
+    "CHAR_QUI": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_QUI.webp",
+      "present": false
+    },
+    "CHAR_ADA": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_ADA.webp",
+      "present": false
+    },
+    "CHAR_MIL": {
+      "type": "CHAR",
+      "scene_id": null,
+      "path": "art/official/m121-off-camera/images/CHAR_MIL.webp",
+      "present": false
+    },
+    "BG_C01_S01": {
+      "type": "BG",
+      "scene_id": "C01_S01",
+      "path": "art/official/m121-off-camera/images/BG_C01_S01.webp",
+      "present": false
+    },
+    "BG_C01_S02": {
+      "type": "BG",
+      "scene_id": "C01_S02",
+      "path": "art/official/m121-off-camera/images/BG_C01_S02.webp",
+      "present": false
+    },
+    "BG_C01_S03": {
+      "type": "BG",
+      "scene_id": "C01_S03",
+      "path": "art/official/m121-off-camera/images/BG_C01_S03.webp",
+      "present": false
+    },
+    "BG_C01_S04": {
+      "type": "BG",
+      "scene_id": "C01_S04",
+      "path": "art/official/m121-off-camera/images/BG_C01_S04.webp",
+      "present": false
+    },
+    "BG_C02_S01": {
+      "type": "BG",
+      "scene_id": "C02_S01",
+      "path": "art/official/m121-off-camera/images/BG_C02_S01.webp",
+      "present": false
+    },
+    "BG_C02_S02": {
+      "type": "BG",
+      "scene_id": "C02_S02",
+      "path": "art/official/m121-off-camera/images/BG_C02_S02.webp",
+      "present": false
+    },
+    "BG_C02_S03": {
+      "type": "BG",
+      "scene_id": "C02_S03",
+      "path": "art/official/m121-off-camera/images/BG_C02_S03.webp",
+      "present": false
+    },
+    "BG_C02_S04": {
+      "type": "BG",
+      "scene_id": "C02_S04",
+      "path": "art/official/m121-off-camera/images/BG_C02_S04.webp",
+      "present": false
+    },
+    "BG_C03_S01": {
+      "type": "BG",
+      "scene_id": "C03_S01",
+      "path": "art/official/m121-off-camera/images/BG_C03_S01.webp",
+      "present": false
+    },
+    "BG_C03_S02": {
+      "type": "BG",
+      "scene_id": "C03_S02",
+      "path": "art/official/m121-off-camera/images/BG_C03_S02.webp",
+      "present": false
+    },
+    "BG_C03_S03": {
+      "type": "BG",
+      "scene_id": "C03_S03",
+      "path": "art/official/m121-off-camera/images/BG_C03_S03.webp",
+      "present": false
+    },
+    "BG_C03_S04": {
+      "type": "BG",
+      "scene_id": "C03_S04",
+      "path": "art/official/m121-off-camera/images/BG_C03_S04.webp",
+      "present": false
+    },
+    "BG_C04_S01": {
+      "type": "BG",
+      "scene_id": "C04_S01",
+      "path": "art/official/m121-off-camera/images/BG_C04_S01.webp",
+      "present": false
+    },
+    "BG_C04_S02": {
+      "type": "BG",
+      "scene_id": "C04_S02",
+      "path": "art/official/m121-off-camera/images/BG_C04_S02.webp",
+      "present": false
+    },
+    "BG_C04_S03": {
+      "type": "BG",
+      "scene_id": "C04_S03",
+      "path": "art/official/m121-off-camera/images/BG_C04_S03.webp",
+      "present": false
+    },
+    "BG_C04_S04": {
+      "type": "BG",
+      "scene_id": "C04_S04",
+      "path": "art/official/m121-off-camera/images/BG_C04_S04.webp",
+      "present": false
+    },
+    "BG_C05_S01": {
+      "type": "BG",
+      "scene_id": "C05_S01",
+      "path": "art/official/m121-off-camera/images/BG_C05_S01.webp",
+      "present": false
+    },
+    "BG_C05_S02": {
+      "type": "BG",
+      "scene_id": "C05_S02",
+      "path": "art/official/m121-off-camera/images/BG_C05_S02.webp",
+      "present": false
+    },
+    "BG_C05_S03": {
+      "type": "BG",
+      "scene_id": "C05_S03",
+      "path": "art/official/m121-off-camera/images/BG_C05_S03.webp",
+      "present": false
+    },
+    "BG_C05_S04": {
+      "type": "BG",
+      "scene_id": "C05_S04",
+      "path": "art/official/m121-off-camera/images/BG_C05_S04.webp",
+      "present": false
+    },
+    "BG_C06_S01": {
+      "type": "BG",
+      "scene_id": "C06_S01",
+      "path": "art/official/m121-off-camera/images/BG_C06_S01.webp",
+      "present": false
+    },
+    "BG_C06_S02": {
+      "type": "BG",
+      "scene_id": "C06_S02",
+      "path": "art/official/m121-off-camera/images/BG_C06_S02.webp",
+      "present": false
+    },
+    "BG_C06_S03": {
+      "type": "BG",
+      "scene_id": "C06_S03",
+      "path": "art/official/m121-off-camera/images/BG_C06_S03.webp",
+      "present": false
+    },
+    "BG_C06_S04": {
+      "type": "BG",
+      "scene_id": "C06_S04",
+      "path": "art/official/m121-off-camera/images/BG_C06_S04.webp",
+      "present": false
+    },
+    "BG_C07_S01": {
+      "type": "BG",
+      "scene_id": "C07_S01",
+      "path": "art/official/m121-off-camera/images/BG_C07_S01.webp",
+      "present": false
+    },
+    "BG_C07_S02": {
+      "type": "BG",
+      "scene_id": "C07_S02",
+      "path": "art/official/m121-off-camera/images/BG_C07_S02.webp",
+      "present": false
+    },
+    "BG_C07_S03": {
+      "type": "BG",
+      "scene_id": "C07_S03",
+      "path": "art/official/m121-off-camera/images/BG_C07_S03.webp",
+      "present": false
+    },
+    "BG_C07_S04": {
+      "type": "BG",
+      "scene_id": "C07_S04",
+      "path": "art/official/m121-off-camera/images/BG_C07_S04.webp",
+      "present": false
+    },
+    "BG_C08_S01": {
+      "type": "BG",
+      "scene_id": "C08_S01",
+      "path": "art/official/m121-off-camera/images/BG_C08_S01.webp",
+      "present": false
+    },
+    "BG_C08_S02": {
+      "type": "BG",
+      "scene_id": "C08_S02",
+      "path": "art/official/m121-off-camera/images/BG_C08_S02.webp",
+      "present": false
+    },
+    "BG_C08_S03": {
+      "type": "BG",
+      "scene_id": "C08_S03",
+      "path": "art/official/m121-off-camera/images/BG_C08_S03.webp",
+      "present": false
+    },
+    "BG_C08_S04": {
+      "type": "BG",
+      "scene_id": "C08_S04",
+      "path": "art/official/m121-off-camera/images/BG_C08_S04.webp",
+      "present": false
+    },
+    "BG_C09_S01": {
+      "type": "BG",
+      "scene_id": "C09_S01",
+      "path": "art/official/m121-off-camera/images/BG_C09_S01.webp",
+      "present": false
+    },
+    "BG_C09_S02": {
+      "type": "BG",
+      "scene_id": "C09_S02",
+      "path": "art/official/m121-off-camera/images/BG_C09_S02.webp",
+      "present": false
+    },
+    "BG_C09_S03": {
+      "type": "BG",
+      "scene_id": "C09_S03",
+      "path": "art/official/m121-off-camera/images/BG_C09_S03.webp",
+      "present": false
+    },
+    "BG_C09_S04": {
+      "type": "BG",
+      "scene_id": "C09_S04",
+      "path": "art/official/m121-off-camera/images/BG_C09_S04.webp",
+      "present": false
+    },
+    "BG_C10_S01": {
+      "type": "BG",
+      "scene_id": "C10_S01",
+      "path": "art/official/m121-off-camera/images/BG_C10_S01.webp",
+      "present": false
+    },
+    "BG_C10_S02": {
+      "type": "BG",
+      "scene_id": "C10_S02",
+      "path": "art/official/m121-off-camera/images/BG_C10_S02.webp",
+      "present": false
+    },
+    "BG_C10_S03": {
+      "type": "BG",
+      "scene_id": "C10_S03",
+      "path": "art/official/m121-off-camera/images/BG_C10_S03.webp",
+      "present": false
+    },
+    "BG_C10_S04": {
+      "type": "BG",
+      "scene_id": "C10_S04",
+      "path": "art/official/m121-off-camera/images/BG_C10_S04.webp",
+      "present": false
+    },
+    "BG_C11_S01": {
+      "type": "BG",
+      "scene_id": "C11_S01",
+      "path": "art/official/m121-off-camera/images/BG_C11_S01.webp",
+      "present": false
+    },
+    "BG_C11_S02": {
+      "type": "BG",
+      "scene_id": "C11_S02",
+      "path": "art/official/m121-off-camera/images/BG_C11_S02.webp",
+      "present": false
+    },
+    "BG_C11_S03": {
+      "type": "BG",
+      "scene_id": "C11_S03",
+      "path": "art/official/m121-off-camera/images/BG_C11_S03.webp",
+      "present": false
+    },
+    "BG_C11_S04": {
+      "type": "BG",
+      "scene_id": "C11_S04",
+      "path": "art/official/m121-off-camera/images/BG_C11_S04.webp",
+      "present": false
+    },
+    "BG_C12_S01": {
+      "type": "BG",
+      "scene_id": "C12_S01",
+      "path": "art/official/m121-off-camera/images/BG_C12_S01.webp",
+      "present": false
+    },
+    "BG_C12_S02": {
+      "type": "BG",
+      "scene_id": "C12_S02",
+      "path": "art/official/m121-off-camera/images/BG_C12_S02.webp",
+      "present": false
+    },
+    "BG_C12_S03": {
+      "type": "BG",
+      "scene_id": "C12_S03",
+      "path": "art/official/m121-off-camera/images/BG_C12_S03.webp",
+      "present": false
+    },
+    "BG_C12_S04": {
+      "type": "BG",
+      "scene_id": "C12_S04",
+      "path": "art/official/m121-off-camera/images/BG_C12_S04.webp",
+      "present": false
+    },
+    "CG_M121_001": {
+      "type": "CG",
+      "scene_id": "C01_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_001.webp",
+      "present": false
+    },
+    "CG_M121_002": {
+      "type": "CG",
+      "scene_id": "C02_S02",
+      "path": "art/official/m121-off-camera/images/CG_M121_002.webp",
+      "present": false
+    },
+    "CG_M121_003": {
+      "type": "CG",
+      "scene_id": "C02_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_003.webp",
+      "present": false
+    },
+    "CG_M121_004": {
+      "type": "CG",
+      "scene_id": "C03_S01",
+      "path": "art/official/m121-off-camera/images/CG_M121_004.webp",
+      "present": false
+    },
+    "CG_M121_005": {
+      "type": "CG",
+      "scene_id": "C03_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_005.webp",
+      "present": false
+    },
+    "CG_M121_006": {
+      "type": "CG",
+      "scene_id": "C04_S01",
+      "path": "art/official/m121-off-camera/images/CG_M121_006.webp",
+      "present": false
+    },
+    "CG_M121_007": {
+      "type": "CG",
+      "scene_id": "C04_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_007.webp",
+      "present": false
+    },
+    "CG_M121_008": {
+      "type": "CG",
+      "scene_id": "C05_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_008.webp",
+      "present": false
+    },
+    "CG_M121_009": {
+      "type": "CG",
+      "scene_id": "C05_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_009.webp",
+      "present": false
+    },
+    "CG_M121_010": {
+      "type": "CG",
+      "scene_id": "C06_S01",
+      "path": "art/official/m121-off-camera/images/CG_M121_010.webp",
+      "present": false
+    },
+    "CG_M121_011": {
+      "type": "CG",
+      "scene_id": "C06_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_011.webp",
+      "present": false
+    },
+    "CG_M121_012": {
+      "type": "CG",
+      "scene_id": "C07_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_012.webp",
+      "present": false
+    },
+    "CG_M121_013": {
+      "type": "CG",
+      "scene_id": "C08_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_013.webp",
+      "present": false
+    },
+    "CG_M121_014": {
+      "type": "CG",
+      "scene_id": "C07_H_LUC",
+      "path": "art/official/m121-off-camera/images/CG_M121_014.webp",
+      "present": false
+    },
+    "CG_M121_015": {
+      "type": "CG",
+      "scene_id": "C09_H_SEB",
+      "path": "art/official/m121-off-camera/images/CG_M121_015.webp",
+      "present": false
+    },
+    "CG_M121_016": {
+      "type": "CG",
+      "scene_id": "C10_S01",
+      "path": "art/official/m121-off-camera/images/CG_M121_016.webp",
+      "present": false
+    },
+    "CG_M121_017": {
+      "type": "CG",
+      "scene_id": "C08_H_JUL",
+      "path": "art/official/m121-off-camera/images/CG_M121_017.webp",
+      "present": false
+    },
+    "CG_M121_018": {
+      "type": "CG",
+      "scene_id": "C11_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_018.webp",
+      "present": false
+    },
+    "CG_M121_019": {
+      "type": "CG",
+      "scene_id": "C12_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_019.webp",
+      "present": false
+    },
+    "CG_M121_020": {
+      "type": "CG",
+      "scene_id": "C12_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_020.webp",
+      "present": false
+    },
+    "CG_M121_021": {
+      "type": "CG",
+      "scene_id": "C01_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_021.webp",
+      "present": false
+    },
+    "CG_M121_022": {
+      "type": "CG",
+      "scene_id": "C02_H_RYA",
+      "path": "art/official/m121-off-camera/images/CG_M121_022.webp",
+      "present": false
+    },
+    "CG_M121_023": {
+      "type": "CG",
+      "scene_id": "C02_H_SEB",
+      "path": "art/official/m121-off-camera/images/CG_M121_023.webp",
+      "present": false
+    },
+    "CG_M121_024": {
+      "type": "CG",
+      "scene_id": "C03_H_LUC",
+      "path": "art/official/m121-off-camera/images/CG_M121_024.webp",
+      "present": false
+    },
+    "CG_M121_025": {
+      "type": "CG",
+      "scene_id": "C04_H_JUL",
+      "path": "art/official/m121-off-camera/images/CG_M121_025.webp",
+      "present": false
+    },
+    "CG_M121_026": {
+      "type": "CG",
+      "scene_id": "C04_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_026.webp",
+      "present": false
+    },
+    "CG_M121_027": {
+      "type": "CG",
+      "scene_id": "C05_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_027.webp",
+      "present": false
+    },
+    "CG_M121_028": {
+      "type": "CG",
+      "scene_id": "C06_S01",
+      "path": "art/official/m121-off-camera/images/CG_M121_028.webp",
+      "present": false
+    },
+    "CG_M121_029": {
+      "type": "CG",
+      "scene_id": "C06_H_RYA",
+      "path": "art/official/m121-off-camera/images/CG_M121_029.webp",
+      "present": false
+    },
+    "CG_M121_030": {
+      "type": "CG",
+      "scene_id": "C07_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_030.webp",
+      "present": false
+    },
+    "CG_M121_031": {
+      "type": "CG",
+      "scene_id": "C08_H_RYA",
+      "path": "art/official/m121-off-camera/images/CG_M121_031.webp",
+      "present": false
+    },
+    "CG_M121_032": {
+      "type": "CG",
+      "scene_id": "C10_H_LUC",
+      "path": "art/official/m121-off-camera/images/CG_M121_032.webp",
+      "present": false
+    },
+    "CG_M121_033": {
+      "type": "CG",
+      "scene_id": "C09_S04",
+      "path": "art/official/m121-off-camera/images/CG_M121_033.webp",
+      "present": false
+    },
+    "CG_M121_034": {
+      "type": "CG",
+      "scene_id": "C10_H_JUL",
+      "path": "art/official/m121-off-camera/images/CG_M121_034.webp",
+      "present": false
+    },
+    "CG_M121_035": {
+      "type": "CG",
+      "scene_id": "C11_S03",
+      "path": "art/official/m121-off-camera/images/CG_M121_035.webp",
+      "present": false
+    },
+    "CG_M121_036": {
+      "type": "CG",
+      "scene_id": "C12_H_LUC",
+      "path": "art/official/m121-off-camera/images/CG_M121_036.webp",
+      "present": false
+    },
+    "CG_M121_037": {
+      "type": "CG",
+      "scene_id": "C05_H_SEB",
+      "path": "art/official/m121-off-camera/images/CG_M121_037.webp",
+      "present": false
+    },
+    "CG_M121_038": {
+      "type": "CG",
+      "scene_id": "C07_H_JUL",
+      "path": "art/official/m121-off-camera/images/CG_M121_038.webp",
+      "present": false
+    },
+    "CG_M121_039": {
+      "type": "CG",
+      "scene_id": "C11_H_RYA",
+      "path": "art/official/m121-off-camera/images/CG_M121_039.webp",
+      "present": false
+    },
+    "CG_M121_040": {
+      "type": "CG",
+      "scene_id": "C11_H_SEB",
+      "path": "art/official/m121-off-camera/images/CG_M121_040.webp",
+      "present": false
+    },
+    "CG_M121_041": {
+      "type": "CG",
+      "scene_id": "END_SEB",
+      "path": "art/official/m121-off-camera/images/CG_M121_041.webp",
+      "present": false
+    },
+    "CG_M121_042": {
+      "type": "CG",
+      "scene_id": "END_RYA",
+      "path": "art/official/m121-off-camera/images/CG_M121_042.webp",
+      "present": false
+    },
+    "CG_M121_043": {
+      "type": "CG",
+      "scene_id": "END_JUL",
+      "path": "art/official/m121-off-camera/images/CG_M121_043.webp",
+      "present": false
+    },
+    "CG_M121_044": {
+      "type": "CG",
+      "scene_id": "END_LUC",
+      "path": "art/official/m121-off-camera/images/CG_M121_044.webp",
+      "present": false
+    },
+    "PROP_M121_C01": {
+      "type": "PROP",
+      "scene_id": "C01_S03",
+      "path": "art/official/m121-off-camera/images/PROP_M121_C01.webp",
+      "present": false
+    },
+    "PROP_M121_C03": {
+      "type": "PROP",
+      "scene_id": "C03_S03",
+      "path": "art/official/m121-off-camera/images/PROP_M121_C03.webp",
+      "present": false
+    },
+    "PROP_M121_C06": {
+      "type": "PROP",
+      "scene_id": "C06_S03",
+      "path": "art/official/m121-off-camera/images/PROP_M121_C06.webp",
+      "present": false
+    },
+    "PROP_M121_C12": {
+      "type": "PROP",
+      "scene_id": "C12_S03",
+      "path": "art/official/m121-off-camera/images/PROP_M121_C12.webp",
+      "present": false
+    },
+    "STATE_M121_C01_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C01_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C01_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C02_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C02_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C02_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C03_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C03_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C03_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C04_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C04_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C04_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C05_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C05_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C05_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C06_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C06_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C06_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C08_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C08_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C08_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_C09_BOUNDARY": {
+      "type": "STATE",
+      "scene_id": "C09_S04",
+      "path": "art/official/m121-off-camera/images/STATE_M121_C09_BOUNDARY.webp",
+      "present": false
+    },
+    "STATE_M121_HEAT_JUL": {
+      "type": "STATE",
+      "scene_id": "JUL_HEAT_ALL",
+      "path": "art/official/m121-off-camera/images/STATE_M121_HEAT_JUL.webp",
+      "present": false
+    },
+    "STATE_M121_HEAT_LUC": {
+      "type": "STATE",
+      "scene_id": "LUC_HEAT_ALL",
+      "path": "art/official/m121-off-camera/images/STATE_M121_HEAT_LUC.webp",
+      "present": false
+    },
+    "STATE_M121_HEAT_RYA": {
+      "type": "STATE",
+      "scene_id": "RYA_HEAT_ALL",
+      "path": "art/official/m121-off-camera/images/STATE_M121_HEAT_RYA.webp",
+      "present": false
+    },
+    "STATE_M121_HEAT_SEB": {
+      "type": "STATE",
+      "scene_id": "SEB_HEAT_ALL",
+      "path": "art/official/m121-off-camera/images/STATE_M121_HEAT_SEB.webp",
+      "present": false
+    }
+  },
+  "audio": {
+    "BGM_M121_C01": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C01.mp3",
+      "present": false
+    },
+    "BGM_M121_C02": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C02.mp3",
+      "present": false
+    },
+    "BGM_M121_C03": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C03.mp3",
+      "present": false
+    },
+    "BGM_M121_C04": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C04.mp3",
+      "present": false
+    },
+    "BGM_M121_C05": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C05.mp3",
+      "present": false
+    },
+    "BGM_M121_C06": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C06.mp3",
+      "present": false
+    },
+    "BGM_M121_C07": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C07.mp3",
+      "present": false
+    },
+    "BGM_M121_C08": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C08.mp3",
+      "present": false
+    },
+    "BGM_M121_C09": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C09.mp3",
+      "present": false
+    },
+    "BGM_M121_C10": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C10.mp3",
+      "present": false
+    },
+    "BGM_M121_C11": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C11.mp3",
+      "present": false
+    },
+    "BGM_M121_C12": {
+      "path": "art/official/m121-off-camera/audio/BGM_M121_C12.mp3",
+      "present": false
+    }
+  }
+}

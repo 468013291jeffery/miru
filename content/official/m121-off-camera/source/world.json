@@ -1,0 +1,147 @@
+{
+  "schema_version": "M121_V2_HEAT",
+  "relationships": {
+    "SEB": {
+      "attraction": 25,
+      "trust": 25,
+      "respect": 25,
+      "known": []
+    },
+    "RYA": {
+      "attraction": 25,
+      "trust": 25,
+      "respect": 25,
+      "known": []
+    },
+    "JUL": {
+      "attraction": 25,
+      "trust": 25,
+      "respect": 25,
+      "known": []
+    },
+    "LUC": {
+      "attraction": 25,
+      "trust": 25,
+      "respect": 25,
+      "known": []
+    }
+  },
+  "story": {
+    "current_scene": "C01_S01",
+    "relationship_commitment": "none",
+    "cast_adults": true,
+    "phone_world": true,
+    "consent_scope": null
+  },
+  "fact_flags": [
+    "consent_scope_asked",
+    "first_attention_recorded",
+    "safety_log_requested",
+    "private_choice_respected",
+    "ryan_rehab_shared",
+    "no_competition_rule",
+    "ryan_release_amended",
+    "date_consent_rules",
+    "luca_kitchen_memory",
+    "collaboration_preference",
+    "julian_publicity_trail",
+    "lease_issue_open",
+    "scene_consent_boundary",
+    "julian_vulnerability_seen",
+    "julian_pr_disclosure",
+    "julian_boundary_test",
+    "seb_conflict_known",
+    "independent_review_complete",
+    "seb_repair_attempt",
+    "invites_no_pressure",
+    "invites_received",
+    "ranking_rejected",
+    "pause_edit_flagged",
+    "group_boundary_commitment",
+    "storm_safety_checked",
+    "backup_log_preserved",
+    "storm_closeness_chosen",
+    "legal_response_path",
+    "misleading_frame_identified",
+    "scene_truth_verified",
+    "privacy_response_chosen",
+    "trust_after_leak",
+    "luca_lease_plan",
+    "ryan_public_truth",
+    "seb_recusal_signed",
+    "julian_no_stunt",
+    "letters_arrived",
+    "shared_care_memory",
+    "apologies_heard",
+    "edit_chain_complete",
+    "live_script_revised",
+    "mic_control_verified",
+    "relationship_window_open",
+    "public_boundary_set",
+    "departed_on_own_terms",
+    "future_plans_known",
+    "relationship_finalized",
+    "epilogue_reached"
+  ],
+  "minigame_win_flags": [
+    "mg_M121_C01_MG01_win",
+    "mg_M121_C01_MG02_win",
+    "mg_M121_C02_MG01_win",
+    "mg_M121_C02_MG02_win",
+    "mg_M121_C03_MG01_win",
+    "mg_M121_C03_MG02_win",
+    "mg_M121_C04_MG01_win",
+    "mg_M121_C04_MG02_win",
+    "mg_M121_C05_MG01_win",
+    "mg_M121_C05_MG02_win",
+    "mg_M121_C06_MG01_win",
+    "mg_M121_C06_MG02_win",
+    "mg_M121_C07_MG01_win",
+    "mg_M121_C07_MG02_win",
+    "mg_M121_C08_MG01_win",
+    "mg_M121_C08_MG02_win",
+    "mg_M121_C09_MG01_win",
+    "mg_M121_C09_MG02_win",
+    "mg_M121_C10_MG01_win",
+    "mg_M121_C10_MG02_win",
+    "mg_M121_C11_MG01_win",
+    "mg_M121_C11_MG02_win",
+    "mg_M121_C12_MG01_win",
+    "mg_M121_C12_MG02_win"
+  ],
+  "ending_ids": [
+    "END_SEB",
+    "END_RYA",
+    "END_JUL",
+    "END_LUC",
+    "END_SOLO",
+    "END_OPEN"
+  ],
+  "heat_flags": {
+    "SEB": [
+      "seb_heat_1",
+      "seb_heat_2_first_night",
+      "seb_heat_3_after_recusal",
+      "seb_heat_4_live_eve"
+    ],
+    "RYA": [
+      "rya_heat_1",
+      "rya_heat_2",
+      "rya_heat_3_first_night",
+      "rya_heat_4_live_eve"
+    ],
+    "JUL": [
+      "jul_heat_1",
+      "jul_heat_2_first_night",
+      "jul_heat_3_mirror",
+      "jul_heat_4_ghost_light"
+    ],
+    "LUC": [
+      "luc_heat_1",
+      "luc_heat_2_first_night",
+      "luc_heat_3_greenhouse",
+      "luc_heat_4_last_morning"
+    ]
+  },
+  "heat_consent_rule": "heat consent scope = {scene_id, partner_id, action: heat_full|heat_limited, revocable:true}; expires on scene exit; BOUNDARY at any beat revokes and loads STATE_M121_HEAT_<partner>; never persisted as standing consent; exclusivity commitment hides other partners' heat scenes"
+}

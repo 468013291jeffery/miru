@@ -1,0 +1,329 @@
+[
+ {
+  "chapter_id": "C01",
+  "title_zh": "关机以后",
+  "title_en": "OFF MEANS OFF",
+  "goal_zh": "确认节目私下录音规则",
+  "arc": "establish",
+  "truth_step": "耳返红灯仍亮，存在合法排查的技术疑点",
+  "romance_beat": "四人第一次以不一样的方式在乎你的反应",
+  "exit_flag": "C01_completed",
+  "world_impact": "要求制作方现场说明录音边界",
+  "scene_ids": [
+   "C01_S01",
+   "C01_S02",
+   "C01_S03",
+   "C01_S04"
+  ],
+  "minigames": [
+   "M121_C01_MG01",
+   "M121_C01_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C02",
+  "title_zh": "海水、心跳与醋意",
+  "title_en": "SALTWATER JEALOUSY",
+  "goal_zh": "在两场约会中确认自己的节奏",
+  "arc": "establish",
+  "truth_step": "Ryan的代言拍摄权条款过宽",
+  "romance_beat": "Sebastian第一次被你的拒绝打乱节奏",
+  "exit_flag": "C02_completed",
+  "world_impact": "确立私下约会无需表演的原则",
+  "scene_ids": [
+   "C02_S01",
+   "C02_S02",
+   "C02_S03",
+   "C02_S04"
+  ],
+  "minigames": [
+   "M121_C02_MG01",
+   "M121_C02_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C02_H_SEB",
+   "C02_H_RYA"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C03",
+  "title_zh": "半夜的厨房不撒谎",
+  "title_en": "MIDNIGHT DOES NOT LIE",
+  "goal_zh": "了解Luca的餐厅与Julian的真实动机",
+  "arc": "establish",
+  "truth_step": "节目赞助者与Luca租约有关",
+  "romance_beat": "Luca的照顾、Julian的坦白形成两种心动",
+  "exit_flag": "C03_completed",
+  "world_impact": "保留足以核对的两份合同条款",
+  "scene_ids": [
+   "C03_S01",
+   "C03_S02",
+   "C03_S03",
+   "C03_S04"
+  ],
+  "minigames": [
+   "M121_C03_MG01",
+   "M121_C03_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C03_H_LUC"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C04",
+  "title_zh": "吻戏不是吻",
+  "title_en": "THE KISS IS NOT THE SCENE",
+  "goal_zh": "明确镜头前表演与真实亲密边界",
+  "arc": "deepening",
+  "truth_step": "Julian的经纪人想重演一次公关恋情",
+  "romance_beat": "第一次由你选择的亲密机会而非被安排的吻",
+  "exit_flag": "C04_completed",
+  "world_impact": "停止未经确认的吻戏排练",
+  "scene_ids": [
+   "C04_S01",
+   "C04_S02",
+   "C04_S03",
+   "C04_S04"
+  ],
+  "minigames": [
+   "M121_C04_MG01",
+   "M121_C04_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C04_H_JUL"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C05",
+  "title_zh": "那个男人持有这座岛",
+  "title_en": "HE OWNS PART OF THIS",
+  "goal_zh": "查清Sebastian是否存在利益冲突",
+  "arc": "deepening",
+  "truth_step": "Sebastian持有度假村少数股权",
+  "romance_beat": "真诚的坦白与过去的控制习惯发生碰撞",
+  "exit_flag": "C05_completed",
+  "world_impact": "拿到独立法律披露和重签选择权",
+  "scene_ids": [
+   "C05_S01",
+   "C05_S02",
+   "C05_S03",
+   "C05_S04"
+  ],
+  "minigames": [
+   "M121_C05_MG01",
+   "M121_C05_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C05_H_SEB"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C06",
+  "title_zh": "四张约会卡",
+  "title_en": "FOUR INVITATIONS",
+  "goal_zh": "在公开邀约和私下真实意愿之间做选择",
+  "arc": "deepening",
+  "truth_step": "节目算法偏向最具话题性的配对",
+  "romance_beat": "四位男主不再把你的时间视为比赛奖品",
+  "exit_flag": "C06_completed",
+  "world_impact": "定下任何人都可退出的约会规则",
+  "scene_ids": [
+   "C06_S01",
+   "C06_S02",
+   "C06_S03",
+   "C06_S04"
+  ],
+  "minigames": [
+   "M121_C06_MG01",
+   "M121_C06_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C06_H_RYA"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C07",
+  "title_zh": "停电那夜",
+  "title_en": "THE NIGHT THE LIGHTS WENT OUT",
+  "goal_zh": "保证风暴停电时全员安全",
+  "arc": "deepening",
+  "truth_step": "备用录音设备曾在断电前保存非播出片段",
+  "romance_beat": "克制的靠近比被迫同房更有吸引力",
+  "exit_flag": "C07_completed",
+  "world_impact": "保存设备日志并由律师介入",
+  "scene_ids": [
+   "C07_S01",
+   "C07_S02",
+   "C07_S03",
+   "C07_S04"
+  ],
+  "minigames": [
+   "M121_C07_MG01",
+   "M121_C07_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C07_H_JUL",
+   "C07_H_LUC"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C08",
+  "title_zh": "被剪出来的吻",
+  "title_en": "THE KISS THEY INVENTED",
+  "goal_zh": "核实并回应一段遭恶意拼接的画面",
+  "arc": "crisis",
+  "truth_step": "原片显示玩家曾清楚拒绝某段剪辑设定",
+  "romance_beat": "真正的信任是尊重你自己公开或不公开",
+  "exit_flag": "C08_completed",
+  "world_impact": "发布自主声明或选择不参与炒作",
+  "scene_ids": [
+   "C08_S01",
+   "C08_S02",
+   "C08_S03",
+   "C08_S04"
+  ],
+  "minigames": [
+   "M121_C08_MG01",
+   "M121_C08_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C08_H_RYA",
+   "C08_H_JUL"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C09",
+  "title_zh": "他为你付出的代价",
+  "title_en": "WHAT THEY STAND TO LOSE",
+  "goal_zh": "分辨四份帮助是否带隐性条件",
+  "arc": "crisis",
+  "truth_step": "四人各自面临现实职业和经济压力",
+  "romance_beat": "爱情并非牺牲竞赛，每人仍有独立生活",
+  "exit_flag": "C09_completed",
+  "world_impact": "让每位男主做出无需你交换亲密的决定",
+  "scene_ids": [
+   "C09_S01",
+   "C09_S02",
+   "C09_S03",
+   "C09_S04"
+  ],
+  "minigames": [
+   "M121_C09_MG01",
+   "M121_C09_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C09_H_SEB"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C10",
+  "title_zh": "关机后的四封信",
+  "title_en": "LETTERS WITH NO AUDIENCE",
+  "goal_zh": "听完不同人的私人承诺",
+  "arc": "crisis",
+  "truth_step": "Quinn提供可以核验的剪辑流程证据",
+  "romance_beat": "四条关系以不同语言实现一次真诚回应",
+  "exit_flag": "C10_completed",
+  "world_impact": "告知制作方自己不接受强制配对",
+  "scene_ids": [
+   "C10_S01",
+   "C10_S02",
+   "C10_S03",
+   "C10_S04"
+  ],
+  "minigames": [
+   "M121_C10_MG01",
+   "M121_C10_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C10_H_JUL",
+   "C10_H_LUC"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C11",
+  "title_zh": "现场直播前一分钟",
+  "title_en": "ONE MINUTE TO LIVE",
+  "goal_zh": "决定是否在直播中公开剪辑争议",
+  "arc": "resolution",
+  "truth_step": "赞助商想用最终配对转移私下录音责任",
+  "romance_beat": "真心关系与公众承诺不再被捆绑",
+  "exit_flag": "C11_completed",
+  "world_impact": "完成边界声明或退出直播",
+  "scene_ids": [
+   "C11_S01",
+   "C11_S02",
+   "C11_S03",
+   "C11_S04"
+  ],
+  "minigames": [
+   "M121_C11_MG01",
+   "M121_C11_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C11_H_SEB",
+   "C11_H_RYA"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ },
+ {
+  "chapter_id": "C12",
+  "title_zh": "镜头之外，是真实的你",
+  "title_en": "OFF CAMERA, STILL REAL",
+  "goal_zh": "以你选定的方式结束节目和关系",
+  "arc": "resolution",
+  "truth_step": "节目仍可在你退出后按合约依法播完",
+  "romance_beat": "四种恋爱、一种独身和一种开放式约会分支",
+  "exit_flag": "C12_completed",
+  "world_impact": "在一个月后检查承诺是否兑现",
+  "scene_ids": [
+   "C12_S01",
+   "C12_S02",
+   "C12_S03",
+   "C12_S04"
+  ],
+  "minigames": [
+   "M121_C12_MG01",
+   "M121_C12_MG02"
+  ],
+  "suggested_content_expansion_min": 120,
+  "duration_status": "proposed, not playable/verified",
+  "heat_scene_ids": [
+   "C12_H_LUC"
+  ],
+  "heat_scene_note": "可选加肉场，由玩家明确同意进入，未进入不影响主线"
+ }
+]

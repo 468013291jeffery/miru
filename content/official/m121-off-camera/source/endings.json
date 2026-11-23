@@ -1,0 +1,80 @@
+[
+  {
+    "ending_id": "END_SEB",
+    "partner_id": "SEB",
+    "distinct_epilogue_en": "Sebastian returns your independence rather than using money to close distance.",
+    "required_story_flag": "seb_recusal_signed",
+    "requires_explicit_final_intent": true,
+    "requires_fresh_partner_consent": true,
+    "requires_all_relevant_parties_aware": false,
+    "v2_heat_epilogue": {
+      "asset": "CG_M121_041",
+      "requires_explicit_epilogue_invitation_accept": true,
+      "fallback": "original clothed epilogue",
+      "consent_scope_fresh": true
+    }
+  },
+  {
+    "ending_id": "END_RYA",
+    "partner_id": "RYA",
+    "distinct_epilogue_en": "Ryan chooses an ordinary date after rehab, away from sponsor cameras.",
+    "required_story_flag": "ryan_public_truth",
+    "requires_explicit_final_intent": true,
+    "requires_fresh_partner_consent": true,
+    "requires_all_relevant_parties_aware": false,
+    "v2_heat_epilogue": {
+      "asset": "CG_M121_042",
+      "requires_explicit_epilogue_invitation_accept": true,
+      "fallback": "original clothed epilogue",
+      "consent_scope_fresh": true
+    }
+  },
+  {
+    "ending_id": "END_JUL",
+    "partner_id": "JUL",
+    "distinct_epilogue_en": "Julian meets you in a neighborhood cinema with no press agreement.",
+    "required_story_flag": "julian_no_stunt",
+    "requires_explicit_final_intent": true,
+    "requires_fresh_partner_consent": true,
+    "requires_all_relevant_parties_aware": false,
+    "v2_heat_epilogue": {
+      "asset": "CG_M121_043",
+      "requires_explicit_epilogue_invitation_accept": true,
+      "fallback": "original clothed epilogue",
+      "consent_scope_fresh": true
+    }
+  },
+  {
+    "ending_id": "END_LUC",
+    "partner_id": "LUC",
+    "distinct_epilogue_en": "Luca cooks with you after service, while the restaurant stays his own.",
+    "required_story_flag": "luca_lease_plan",
+    "requires_explicit_final_intent": true,
+    "requires_fresh_partner_consent": true,
+    "requires_all_relevant_parties_aware": false,
+    "v2_heat_epilogue": {
+      "asset": "CG_M121_044",
+      "requires_explicit_epilogue_invitation_accept": true,
+      "fallback": "original clothed epilogue",
+      "consent_scope_fresh": true
+    }
+  },
+  {
+    "ending_id": "END_SOLO",
+    "partner_id": null,
+    "distinct_epilogue_en": "You return to the city with your voice and privacy intact, no partner required.",
+    "required_story_flag": "epilogue_reached",
+    "requires_explicit_final_intent": false,
+    "requires_fresh_partner_consent": false,
+    "requires_all_relevant_parties_aware": false
+  },
+  {
+    "ending_id": "END_OPEN",
+    "partner_id": null,
+    "distinct_epilogue_en": "You state that no exclusive commitment has been made, and everyone consents to ongoing dates without a hidden promise.",
+    "required_story_flag": "epilogue_reached",
+    "requires_explicit_final_intent": true,
+    "requires_fresh_partner_consent": false,
+    "requires_all_relevant_parties_aware": true
+  }
+]
