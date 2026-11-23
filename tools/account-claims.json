@@ -97,8 +97,8 @@
     {
       "row": "重复提交只算一次（幂等）",
       "our": "⚠️ **只有一半**",
-      "file": "api/wallet.js",
-      "pattern": "ON CONFLICT \\(key\\)|idempotent by key"
+      "file": "api/_wallet.js",
+      "pattern": "ON CONFLICT\\(key\\) DO NOTHING"
     },
     {
       "row": "多设备冲突拦截",

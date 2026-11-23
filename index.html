@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="b00e49d6443e 2026-11-23T11:59Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="e41ef4398f9e 2026-11-23T12:42Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -21909,7 +21909,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
    const m=th.m102,r=await Promise.race([capi('/state?r=m102'+(action?'':'&session='+encodeURIComponent(m.session)),action?{json:{session:m.session,ver:m.ver,action}}:undefined),new Promise((resolve,reject)=>{timeout=setTimeout(()=>reject(Error('进度读取超时，请点重试')),15000);})]);
    if(!r.ok){if(r.j&&r.j.state){m.state=r.j.state;m.ver=r.j.ver;save();}throw Error(r.status===401?'请先登录，再保存这部剧的进度':(r.j&&r.j.error)||'网络连接失败');}
    m.state=r.j.state;m.ver=r.j.ver;th.pk.picks=copy(m.state.choices);
-   th.love=th.love||{};for(const k of roles)th.love['m102_'+k]=m.state.relations[k].affection;
+   for(const k of roles)loveWrite(th,'m102_'+k,0,'m102:sync',{absolute:m.state.relations[k].affection});
    save();return m.state;
   }finally{clearTimeout(timeout);requestsInFlight.delete(th);th._m102Busy=false;}
  }
@@ -21942,7 +21942,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
    else if(absent.length){const names=absent.map(k=>D.chars['m102_'+k].n.split('·')[0]);beats=beats.filter(b=>!absent.some(k=>b[0]==='m102_'+k)&&!(b[0]==='n'&&typeof b[2]==='string'&&names.some(nm=>b[2].includes(nm))));}
    th.present=D.world.cast.filter(cid=>cid!=='m102_you'&&!absent.includes(cid.slice(5)));
    const old=c.beats,oldPresent=c.present;c.beats={zh:beats,en:beats};c.present=th.present.slice();try{const result=_open.call(this,th,n,instant);if(curT===th.id)renderChat();return result;}finally{c.beats=old;c.present=oldPresent;}
-  }catch(e){sayError(e);th.pk.st='busy';th.pk.m102Resume=n;save();packRefresh(th);}
+  }catch(e){sayError(e);pkGo(th,'busy','m102:retry');th.pk.m102Resume=n;save();packRefresh(th);}
  };
  const _pick=packPick;packPick=async function(k,target){
   const th=S.threads[curT];if(!is(th))return _pick.apply(this,arguments);
@@ -26701,7 +26701,7 @@ pico.instantiate_detection_memory = function(size)
       for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; }
       f.empress_hidden = E.hidden(s) ? 1 : 0;
       const map = Object.fromEntries((th.cast || []).map(id => [I.actor(ch(id)) === "PLAYER" ? "你" : I.actor(ch(id)), id]));
-      for (const [k, c] of Object.entries(s.characters)) if (map[k]) th.love[map[k]] = c.affection;
+      for (const [k, c] of Object.entries(s.characters)) if (map[k]) loveWrite(th, map[k], 0, "empress:sync", { absolute: c.affection });
     } catch (e) { console.warn("[c151] sync", e); }
   }
   function castId(th, actor) { try { const I = window.EMPRESS_I18N147; return (th.cast || []).find(id => I.actor(ch(id)) === actor) || null; } catch (_) { return null; } }
@@ -26868,7 +26868,7 @@ pico.instantiate_detection_memory = function(size)
       const rec = res.record, ids = rec.selected_ids || rec.participants || [rec.target_id || args.target].filter(Boolean);
       appendMsg(th, { who: "n", k: "act", txt: I().t(rec.action), at: Date.now() });
       ids.slice(0, 2).forEach(actor => { const cid = castId(th, actor), c = I().data().characters.find(c => c.id === actor); if (cid && c) appendMsg(th, { who: cid, k: "say", txt: c.voice, at: Date.now() }); });
-      try { const f = th.pk.flags || (th.pk.flags = {}), E = X().engine; for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; } f.empress_hidden = E.hidden(s) ? 1 : 0; for (const [k, c] of Object.entries(s.characters)) { const cid = castId(th, k); if (cid) th.love[cid] = c.affection; } } catch (_) {}
+      try { const f = th.pk.flags || (th.pk.flags = {}), E = X().engine; for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; } f.empress_hidden = E.hidden(s) ? 1 : 0; for (const [k, c] of Object.entries(s.characters)) { const cid = castId(th, k); if (cid) loveWrite(th, cid, 0, "empress:sync", { absolute: c.affection }); } } catch (_) {}
       save(); if (curT === th.id) renderChat();
     } catch (e) { console.warn("[court152] judge", e); }
   }

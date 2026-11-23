@@ -23,7 +23,7 @@
    const m=th.m102,r=await Promise.race([capi('/state?r=m102'+(action?'':'&session='+encodeURIComponent(m.session)),action?{json:{session:m.session,ver:m.ver,action}}:undefined),new Promise((resolve,reject)=>{timeout=setTimeout(()=>reject(Error('进度读取超时，请点重试')),15000);})]);
    if(!r.ok){if(r.j&&r.j.state){m.state=r.j.state;m.ver=r.j.ver;save();}throw Error(r.status===401?'请先登录，再保存这部剧的进度':(r.j&&r.j.error)||'网络连接失败');}
    m.state=r.j.state;m.ver=r.j.ver;th.pk.picks=copy(m.state.choices);
-   th.love=th.love||{};for(const k of roles)th.love['m102_'+k]=m.state.relations[k].affection;
+   for(const k of roles)loveWrite(th,'m102_'+k,0,'m102:sync',{absolute:m.state.relations[k].affection});
    save();return m.state;
   }finally{clearTimeout(timeout);requestsInFlight.delete(th);th._m102Busy=false;}
  }
@@ -56,7 +56,7 @@
    else if(absent.length){const names=absent.map(k=>D.chars['m102_'+k].n.split('·')[0]);beats=beats.filter(b=>!absent.some(k=>b[0]==='m102_'+k)&&!(b[0]==='n'&&typeof b[2]==='string'&&names.some(nm=>b[2].includes(nm))));}
    th.present=D.world.cast.filter(cid=>cid!=='m102_you'&&!absent.includes(cid.slice(5)));
    const old=c.beats,oldPresent=c.present;c.beats={zh:beats,en:beats};c.present=th.present.slice();try{const result=_open.call(this,th,n,instant);if(curT===th.id)renderChat();return result;}finally{c.beats=old;c.present=oldPresent;}
-  }catch(e){sayError(e);th.pk.st='busy';th.pk.m102Resume=n;save();packRefresh(th);}
+  }catch(e){sayError(e);pkGo(th,'busy','m102:retry');th.pk.m102Resume=n;save();packRefresh(th);}
  };
  const _pick=packPick;packPick=async function(k,target){
   const th=S.threads[curT];if(!is(th))return _pick.apply(this,arguments);

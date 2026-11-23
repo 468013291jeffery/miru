@@ -25,7 +25,7 @@ def key_pem(key):
     ).decode()
 
 
-def make(name, issuer_cert=None, issuer_key=None, not_before=None, days=365):
+def make(name, issuer_cert=None, issuer_key=None, not_before=None, days=365, is_ca=None, ext_oid=None):
     key = ec.generate_private_key(ec.SECP256R1())
     subject = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, name)])
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -39,10 +39,15 @@ def make(name, issuer_cert=None, issuer_key=None, not_before=None, days=365):
         .not_valid_before(nb)
         .not_valid_after(nb + datetime.timedelta(days=days))
         .add_extension(
-            x509.BasicConstraints(ca=(issuer_cert is None), path_length=None),
+            x509.BasicConstraints(ca=((issuer_cert is None) if is_ca is None else is_ca), path_length=None),
             critical=True,
         )
     )
+    if ext_oid:
+        builder = builder.add_extension(
+            x509.UnrecognizedExtension(x509.ObjectIdentifier(ext_oid), b"\x05\x00"),
+            critical=False,
+        )
     cert = builder.sign(issuer_key or key, hashes.SHA256())
     return key, cert
 
@@ -50,18 +55,21 @@ def make(name, issuer_cert=None, issuer_key=None, not_before=None, days=365):
 now = datetime.datetime.now(datetime.timezone.utc)
 
 root_key, root = make("Test Root CA - IAP selftest")
-leaf_key, leaf = make("Test Leaf - IAP selftest", issuer_cert=root, issuer_key=root_key)
+inter_key, inter = make("Test Intermediate CA - IAP selftest", issuer_cert=root, issuer_key=root_key, is_ca=True, ext_oid="1.2.840.113635.100.6.2.1")
+leaf_key, leaf = make("Test Leaf - IAP selftest", issuer_cert=inter, issuer_key=inter_key, ext_oid="1.2.840.113635.100.6.11.1")
 # 过期叶子：签发日往前推 400 天，有效期 30 天 ⇒ 现在已过期
 exp_key, exp_leaf = make(
     "Expired Leaf - IAP selftest",
-    issuer_cert=root,
-    issuer_key=root_key,
+    issuer_cert=inter,
+    issuer_key=inter_key,
     not_before=now - datetime.timedelta(days=400),
     days=30,
+    ext_oid="1.2.840.113635.100.6.11.1",
 )
 
 print(json.dumps({
     "rootDerB64": der_b64(root),
+    "interDerB64": der_b64(inter),
     "leafDerB64": der_b64(leaf),
     "leafKeyPem": key_pem(leaf_key),
     "expiredLeafDerB64": der_b64(exp_leaf),

@@ -18,7 +18,7 @@ import { spawnSync } from 'node:child_process';
 
 const PORT = process.env.MIRU_PORT || 8131;
 const PAGE = 'http://127.0.0.1:' + PORT + '/tools/style-inject-census.html';
-const EDGE = process.env.MIRU_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const EDGE = process.env.MIRU_EDGE || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
 /* ⚠️ 别把这个常量叫 `URL` —— 它会把全局 URL 构造函数遮住，`new URL(import.meta.url)` 直接
    `TypeError: URL is not a constructor`（第一版就这么撞的，报错位置还指向下一行）。 */
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');

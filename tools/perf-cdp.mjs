@@ -28,7 +28,7 @@ const CHAPTERS = Number(opt('chapters', 0));
 const OUT = opt('out', 'reports/perf-cdp.json');
 const CPU = Number(opt('cpu', 0));            // CPU 降频倍数（模拟手机：4~6）
 const NET = opt('net', '');                    // 形如 1.6/150 = 1.6 Mbps 下行 / 150ms RTT
-const EDGE = opt('edge', 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
+const EDGE = opt('edge', process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const say = (...a) => console.log(...a);

@@ -19,13 +19,17 @@ import { spawnSync } from 'node:child_process';
 
 const PORT = process.env.MIRU_PORT || 8131;
 const URL = 'http://127.0.0.1:' + PORT + '/tools/render-snapshot.html';
-const EDGE = process.env.MIRU_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const EDGE = process.env.MIRU_EDGE || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
 
 /* 期望表。fires = 这一层必须真的改动 HTML；silent = 这一层此刻确实动不了东西（必须写原因）。
    `contains`：一个字符串或数组；`!xxx` = **必须不出现**（唯一一个「靠删除干活」的层要它）。
    第 6 格 opts：目前只有 `allow`（对照探针允许被哪些层动 —— 那条层是设计上每行都动的）。
    ⚠️ 这张表是**判据**，不是现状抄写：改代码后它变绿/变红都要回来改这里。 */
 const EXPECT = [
+  ['独立旁白标签', 'app135_narration.js', 'fires', 'narrative135-label', '独立旁白明确显示标签'],
+  ['剧情旁白 v2', 'app145_narration.js', 'fires', 'narrative145', '第二版旁白保留独立样式'],
+  ['SEVENFOLD 章节目标', 'svf:chapter-goals', 'fires', 'svf-chapter-goals', '仅本剧章节附加目标'],
+  ['ONLY ME 章节目标', 'onlyme:chapter-goals', 'fires', 'onlyme-chapter-goals', '仅本剧章节附加目标'],
   ['对照：普通一句台词', '*', 'silent', '', '普通一句台词没触发任何条件层',
     { allow: ['app16_story2.js#mquick'] }],
   ['去快捷按钮 · 普通台词', 'app16_story2.js#mquick', 'fires', '!mquick',

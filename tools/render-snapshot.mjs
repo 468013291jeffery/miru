@@ -15,7 +15,7 @@ import { spawnSync } from 'node:child_process';
 const PORT = process.env.MIRU_PORT || 8131;
 const URL = 'http://127.0.0.1:' + PORT + '/tools/render-snapshot.html';
 const BASE = 'tools/render-baseline.json';
-const EDGE = process.env.MIRU_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const EDGE = process.env.MIRU_EDGE || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
 
 function snapshot() {
   const r = spawnSync(EDGE, [

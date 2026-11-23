@@ -1368,7 +1368,7 @@ pico.instantiate_detection_memory = function(size)
       for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; }
       f.empress_hidden = E.hidden(s) ? 1 : 0;
       const map = Object.fromEntries((th.cast || []).map(id => [I.actor(ch(id)) === "PLAYER" ? "你" : I.actor(ch(id)), id]));
-      for (const [k, c] of Object.entries(s.characters)) if (map[k]) th.love[map[k]] = c.affection;
+      for (const [k, c] of Object.entries(s.characters)) if (map[k]) loveWrite(th, map[k], 0, "empress:sync", { absolute: c.affection });
     } catch (e) { console.warn("[c151] sync", e); }
   }
   function castId(th, actor) { try { const I = window.EMPRESS_I18N147; return (th.cast || []).find(id => I.actor(ch(id)) === actor) || null; } catch (_) { return null; } }
@@ -1535,7 +1535,7 @@ pico.instantiate_detection_memory = function(size)
       const rec = res.record, ids = rec.selected_ids || rec.participants || [rec.target_id || args.target].filter(Boolean);
       appendMsg(th, { who: "n", k: "act", txt: I().t(rec.action), at: Date.now() });
       ids.slice(0, 2).forEach(actor => { const cid = castId(th, actor), c = I().data().characters.find(c => c.id === actor); if (cid && c) appendMsg(th, { who: cid, k: "say", txt: c.voice, at: Date.now() }); });
-      try { const f = th.pk.flags || (th.pk.flags = {}), E = X().engine; for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; } f.empress_hidden = E.hidden(s) ? 1 : 0; for (const [k, c] of Object.entries(s.characters)) { const cid = castId(th, k); if (cid) th.love[cid] = c.affection; } } catch (_) {}
+      try { const f = th.pk.flags || (th.pk.flags = {}), E = X().engine; for (const p of "ABCD") { f["empress_ready_" + p] = E.ready(s, p) ? 1 : 0; f["empress_path_" + p] = s.path === p ? 1 : 0; } f.empress_hidden = E.hidden(s) ? 1 : 0; for (const [k, c] of Object.entries(s.characters)) { const cid = castId(th, k); if (cid) loveWrite(th, cid, 0, "empress:sync", { absolute: c.affection }); } } catch (_) {}
       save(); if (curT === th.id) renderChat();
     } catch (e) { console.warn("[court152] judge", e); }
   }

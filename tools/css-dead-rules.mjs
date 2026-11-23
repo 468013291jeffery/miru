@@ -19,7 +19,7 @@ import { spawnSync } from 'node:child_process';
 
 const PORT = process.env.MIRU_PORT || 8131;
 const PAGE = 'http://127.0.0.1:' + PORT + '/tools/css-dead-rules.html';
-const EDGE = process.env.MIRU_EDGE || 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+const EDGE = process.env.MIRU_EDGE || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe');
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')), '..');
 
 /* 2026-10-30：这个闸今天**稳定红**，红的全是第三方样式（`.nsm7Bb-HzV7m-LgbsSe` / `.qJTHM` 那一类

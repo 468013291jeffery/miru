@@ -11,6 +11,8 @@
 //   NOT-YET   —— 机制还不存在，写明缺什么、指向对账的哪一条
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
 import { spawnSync } from 'node:child_process';
 
 const html = fs.readFileSync('index.html', 'utf8');
@@ -164,38 +166,26 @@ try {
 } catch (e) { add('T12', '角色错误信念 → 不把猜测说成客观事实', 'FAIL', e.message); }
 
 try {
-  const wsrc = fs.readFileSync('api/wallet.js', 'utf8');
-  const a0 = wsrc.indexOf('async function apply(');
-  let d0 = 0, j0 = wsrc.indexOf('{', a0);
-  for (; j0 < wsrc.length; j0++) { if (wsrc[j0] === '{') d0++; else if (wsrc[j0] === '}') { d0--; if (!d0) break; } }
-  const applySrc = wsrc.slice(a0, j0 + 1);
-  // 假库：内存里一张 wallet + 一张 ledger，行为按 apply 里那几条 SQL 的语义对齐
-  const db = { gems: {}, ledger: {} };
-  const fakeSql = async (q, args) => {
-    if (/SELECT balance FROM ledger WHERE key/.test(q)) { const v = db.ledger[args[0]]; return v == null ? [] : [{ balance: v }]; }
-    if (/INSERT INTO wallet/.test(q)) { if (db.gems[args[0]] == null) db.gems[args[0]] = 0; return []; }
-    if (/UPDATE wallet SET gems/.test(q)) {
-      const next = (db.gems[args[0]] || 0) + args[1];
-      if (next < 0) return [];
-      db.gems[args[0]] = next; return [{ gems: next }];
-    }
-    if (/INSERT INTO ledger/.test(q)) {
-      const [uid, delta, reason, key, balance] = args;
-      if (key == null) { db.ledger['auto' + Math.random()] = balance; return []; }
-      if (db.ledger[key] == null) db.ledger[key] = balance;
-      return [];
-    }
-    return [];
-  };
-  const apply = new Function('return ' + applySrc + ';')();
+  const { PGlite } = require('@electric-sql/pglite');
+  const wallet = require('../api/_wallet.js');
+  const pg = new PGlite();
+  try {
+  const fakeSql = async (q, args = []) => (await pg.query(q, args)).rows;
+  for (const q of [
+    'CREATE TABLE wallet(user_id text PRIMARY KEY,gems int,updated_at timestamptz)',
+    'CREATE TABLE ledger(id bigserial PRIMARY KEY,user_id text,delta int,reason text,key text UNIQUE,balance int)',
+    wallet.INSTALL,
+  ]) await fakeSql(q);
+  const apply = wallet.apply;
   const uid = 'u1';
   const r1 = await apply(fakeSql, uid, 100, 'sku', 'order-42');
-  const after1 = db.gems[uid];
+  const after1 = (await fakeSql('SELECT gems FROM wallet WHERE user_id=$1',[uid]))[0].gems;
   const r2 = await apply(fakeSql, uid, 100, 'sku', 'order-42');   // 同一回执再来一次
-  const after2 = db.gems[uid];
+  const after2 = (await fakeSql('SELECT gems FROM wallet WHERE user_id=$1',[uid]))[0].gems;
   const ok = r1 && r1.gems === 100 && after1 === 100 && r2 && r2.dup === true && after2 === 100;
   add('T22', '两次同一支付回执不重复扣费/加分', ok ? 'PASS' : 'FAIL',
     `第一次余额 ${after1} · 第二次 ${after2} · 第二次判为重复 ${!!(r2 && r2.dup)}`);
+  } finally { await pg.close(); }
 } catch (e) { add('T22', '两次同一支付回执不重复扣费/加分', 'FAIL', e.message); }
 
 try {

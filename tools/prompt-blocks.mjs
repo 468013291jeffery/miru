@@ -139,18 +139,18 @@ console.log('H. suggest 是玩家的选项，不是角色台词（2026-10-28 有
 {
   ok('说明里点名 PLAYER', /3 items the PLAYER could tap/.test(html), '');
   ok('明确禁止角色台词', /never a line, a decision, or anything only a character could do/.test(html), '');
-  ok('三种力度都点名（说/做/不吭声）', /Punctuation alone carries the type/.test(html) && /starting with \*/.test(html) && /parentheses/.test(html), '');
-  ok('禁止贴类型标签（模型曾输出「台词：」「动作：」）', /Do NOT label them/.test(html), '');
+  ok('三种力度都点名（说/做/不吭声）', /Use typed objects with mode and text/.test(html) && /say is the actual words/.test(html) && /act is a visible player action/.test(html) && /think is a private thought/.test(html), '');
+  ok('禁止贴类型标签（模型曾输出「台词：」「动作：」）', /Never a name prefix/.test(html), '');
   ok('schema 里有 reaction（看得见的反馈）', /"reaction"/.test(html), '');
   ok('tune 默认 reaction=true', /reaction:\s*true/.test(html), (html.match(/reaction:\s*\w+/) || [''])[0]);
 }
 
 console.log('I. 失败必须说话（2026-10-27 Ann 试玩：AI 挂了界面一个字都不说）');
 {
-  ok('AI 失败会留一行可见提示', /AI 没接通/.test(html), '');
+  ok('AI 失败会留一行可见提示', /回复暂时失败，你的话已保留/.test(html) && /data-reply-retry/.test(html), '');
   ok('失败原因被记录（不是空 catch）', /LLMERR=e\|\|/.test(html), '');
   ok('忙着的时候点选项进队列（不静默丢）', /SENDQ\.push/.test(html), '');
-  ok('队列会出水', /SENDQ\.shift\(\)/.test(html), '');
+  ok('队列会出水', /SENDQ\.findIndex\(q=>q.threadId===curT\)/.test(html) && /SENDQ\.splice\(i,1\)/.test(html), '');
   ok('reaction 是硬要求', /REQUIRED on every single reply/.test(html), '');
   ok('角色气泡带色条属性', /data-wc/.test(html), '');
   ok('点过的选项会反色', /\.suggest button\.sel/.test(html), '');

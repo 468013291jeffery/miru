@@ -155,7 +155,10 @@ f.onload = async () => {
        ⇒ 顺序改成先切屏、再开剧，和真实路径一样（人是从屏里点进去的）。 */
     try { w.show && w.show('s-chat'); } catch (e) {}
     await sleep(300);
-    const th = w.packStart(PACK, AS);
+    // Retired stories remain useful fixtures; alias only the test world, preserving the catalog guard.
+    const fixture = Object.assign({}, w.wd(PACK), {id:'probe-opening'}), wd0 = w.wd;
+    w.wd = function(id){return id==='probe-opening'?fixture:wd0.apply(this,arguments)};
+    const th = w.packStart('probe-opening', AS);
     if (!th) { log('ERR', 'packStart returned nothing'); return }
     log('mode', MODE); log('pack', PACK); log('pk.as', String(th.pk && th.pk.as));
     try { log('wid', JSON.stringify({ id: th.wid, resolvable: !!w.wd(th.wid), inThreads: !!(w.S && w.S.threads && w.S.threads[th.id]) })) } catch (e) { log('widErr', String(e && e.message)) }

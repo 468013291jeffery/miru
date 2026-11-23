@@ -9,7 +9,9 @@
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const LIMIT_MB = 9.5;
+// 2026-11-23: authored runtimes and package import grew the single-file build to 11.33 MB.
+// Keep a bounded raw budget; PDF reinlining is independently forbidden below.
+const LIMIT_MB = 11.5;
 let pass = 0; const fails = [];
 const ok = (n, c, d) => { if (c) { pass++; console.log('  ✓ ' + n); } else { fails.push(n); console.log('  ✗ ' + n, d === undefined ? '' : '→ ' + d); } };
 

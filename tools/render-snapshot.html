@@ -81,6 +81,11 @@ setTimeout(function () {
        世界补丁 = 临时改写 wd() 的返回值（app94 的换人称要 w.you94 才动得起来），
        用完立刻还原，**绝不改全局桩** —— 一改，19 种对拍的基线就作废了。 */
     var PROBES = [
+      ['独立旁白标签', 'app135_narration.js', {who:'n',k:'act',txt:'门外响起脚步。',narrative135:1}, {}],
+      ['剧情旁白 v2', 'app145_narration.js', {who:'n',k:'act',txt:'门外响起脚步。',narrative135:1,narrative145:1}, {}],
+      ['SEVENFOLD 章节目标', 'svf:chapter-goals', {who:'sys',k:'chap',n:1,title:'第一章'}, {}, {community:w.SVF_RELEASE.work_id}],
+      ['ONLY ME 章节目标', 'onlyme:chapter-goals', {who:'sys',k:'chap',n:1,title:'第一章'}, {}, {community:w.ONLYME_RELEASE.work_id}],
+
       ['对照：普通一句台词', null, { who: 'c', k: 'say', txt: '普通一句话。' }, {}],
       /* ⚠️ 说话人必须是**别人**（c2），不能用 c —— c 正好等于 th.pk.as，会走 app3_chat 的
          「你扮演这个人」分支（L181），那条分支根本不发 `.mquick`，于是「去按钮」永远命中 0。
@@ -114,7 +119,8 @@ setTimeout(function () {
       ['遗产金额 · 已解锁（交给内层）', 'app23_heir.js', { who: 'sys', k: 'xmoney', from: '$1.1B', to: '$4.2B', label: '今天', open: 1 }, {}],
       ['遗产金额 · 未解锁封口', 'app24_gl.js', { who: 'sys', k: 'xmoney', from: '$1.1B', to: '$4.2B', label: '今天' }, {}],
       ['旁白换人称（扮演别人）', 'app94_official2.js', { who: 'n', k: 'say', txt: '你推开门。' }, {}, { you94: 'c2' }],
-      ['捡到东西（item101）', 'app101_you.js', { who: 'sys', k: 'item101', n: '旧钥匙', d: '铜的，很旧', ic: '🗝' }, {}],
+      ['捡到东西（item101）', 'app101_you.js', { who: 'sys', k: 'item101', n: '旧钥匙', d: '铜的，很旧', ic: '🗝' }, {}]
+,
       ['存档点 · 从这一步重来', 'app119_branch.js', { who: 'c', k: 'say', txt: '一句普通台词。' }, {}],
       ['剧本台词换说法 · ‹ 2/3 ›', 'app123_alt.js', { who: 'c2', k: 'say', txt: '换过的说法。', alt: ['剧本原句。', '换过的说法。'], altI: 1 }, {}],
       ['章节开场卡（chap · 带简介）', 'app124_experience.js', { who: 'sys', k: 'chap', n: 1, title: '第一章', brief124: { time: '夜', place: '庄园客厅', cast: ['朱利安'], background: '背景一句。' } }, {}],
