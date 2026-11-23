@@ -17,7 +17,8 @@ async function bodyOf(req) {
   const chunks = []; let size = 0;
   for await (const chunk of req) {
     size += chunk.length;
-    if (size > 5 * 1024 * 1024) throw Object.assign(new Error('request too large'), { status: 413 });
+    /* 后台素材上传（/api/admin?r=script_upload）允许到 80MB，和 nginx 一致；其余接口仍是 5MB */
+    if (size > (/[?&]r=script_upload(&|$)/.test(req.url || '') ? 80 : 5) * 1024 * 1024) throw Object.assign(new Error('request too large'), { status: 413 });
     chunks.push(chunk);
   }
   return Buffer.concat(chunks);
