@@ -447,14 +447,39 @@ module.exports = L.wrap(async (req, res) => {
   }
 
   /* ---------- 剧本生产 · 5-step workbench (选题素材 → 生成 → 自动检查 → 编剧审改 → 上线) ---------- */
+  /* ---------- 2026-11-24 · 作者账号（role=writer）：只看、只改自己的剧本；上传素材进文件存储；上线由 owner / admin / reviewer 点 ----------
+     scripts.owner_id = 创建它的后台账号 id（老剧本为空 = 只有非作者账号能看）。 */
+  const WR = A.role === 'writer';
+  if ((r === 'scripts' || r === 'script' || r === 'script_upload') && !global.__scOwnerCol) { try { await sql('ALTER TABLE scripts ADD COLUMN IF NOT EXISTS owner_id text'); global.__scOwnerCol = 1; } catch (_) {} }
   if (r === 'scripts') {
     if (!need('scripts')) return;
-    return L.send(res, 200, { rows: await sql("SELECT id, title, orient, lang, stage, status, work_id, created_by, updated_by, created_at, updated_at, published_at, jsonb_array_length(COALESCE(chapters,'[]'::jsonb))::int AS chapters FROM scripts ORDER BY updated_at DESC LIMIT 200") });
+    return L.send(res, 200, { rows: await sql("SELECT id, title, orient, lang, stage, status, work_id, owner_id, created_by, updated_by, created_at, updated_at, published_at, jsonb_array_length(COALESCE(chapters,'[]'::jsonb))::int AS chapters FROM scripts" + (WR ? " WHERE owner_id=$1" : "") + " ORDER BY updated_at DESC LIMIT 200", WR ? [A.id] : []) });
+  }
+  /* 素材上传：PUT /api/admin?r=script_upload&id=<剧本>&slot=<槽位>&name=<文件名>，body = 文件本身 → 文件存储 → 写进 config.assets[槽位] */
+  if (r === 'script_upload') {
+    if (!need('scripts')) return;
+    if (req.method !== 'PUT') return L.bad(res, '请用 PUT 上传');
+    if (!L.hasBlob()) return L.bad(res, '文件存储没有配置', 503);
+    const s = (await sql('SELECT id, owner_id FROM scripts WHERE id=$1', [String(q.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+    if (WR && s.owner_id !== A.id) return deny(res);
+    const mime = String(req.headers['content-type'] || '').split(';')[0].toLowerCase();
+    const cls = /^image\//.test(mime) ? 'image' : /^video\//.test(mime) ? 'video' : /^audio\//.test(mime) ? 'audio' : null;
+    if (!cls) return L.bad(res, '只能上传图片、视频或音频');
+    const slot = String(q.slot || '').toLowerCase().replace(/[^a-z0-9_]/g, '_').slice(0, 80); if (!slot) return L.bad(res, '缺少槽位名');
+    const buf = await L.readBody(req); if (!buf.length) return L.bad(res, '空文件');
+    const LIM = { image: 12, video: 60, audio: 15 }; if (buf.length > LIM[cls] * 1048576) return L.bad(res, '文件太大（最大 ' + LIM[cls] + 'MB）', 413);
+    const ext = ((String(q.name || '').match(/\.([a-z0-9]{2,5})$/i) || [])[1] || mime.split('/')[1] || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5);
+    const url = await L.blobPut('works/' + s.id + '/' + slot + '.' + ext, buf, mime);
+    const add = { [slot]: url }; if (slot === 'home_video') Object.assign(add, { vid_open: url, opening_video: url });
+    await sql("UPDATE scripts SET config = jsonb_set(COALESCE(config,'{}'::jsonb), '{assets}', COALESCE(config->'assets','{}'::jsonb) || $2::jsonb), updated_by=$3, updated_at=now() WHERE id=$1", [s.id, JSON.stringify(add), A.name || A.username]);
+    await log('script_upload', 'script', s.id, { slot, size: buf.length, mime });
+    return L.send(res, 200, { ok: true, slot, url });
   }
   if (r === 'script') {
     if (!need('scripts')) return;
     if (req.method === 'GET') {
       const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(q.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+      if (WR && s.owner_id !== A.id) return deny(res);
       if (q.versions) return L.send(res, 200, { rows: await sql('SELECT id, stage, note, by_name, at FROM script_versions WHERE script_id=$1 ORDER BY id DESC LIMIT 100', [s.id]) });
       if (q.version) { const v = (await sql('SELECT * FROM script_versions WHERE script_id=$1 AND id=$2', [s.id, Number(q.version)]))[0]; return L.send(res, 200, { version: v || null }); }
       return L.send(res, 200, { script: s });
@@ -470,10 +495,11 @@ module.exports = L.wrap(async (req, res) => {
     if (op === 'create') {
       const title = String(b.title || '').trim().slice(0, 80); if (!title) return L.bad(res, '标题必填');
       const id = L.newId('sc_');
-      await sql('INSERT INTO scripts (id, title, orient, lang, config, research, brief, created_by, updated_by) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,$8,$8)', [id, title, String(b.orient || 'bl').slice(0, 4), String(b.lang || 'zh').slice(0, 5), JSON.stringify(b.config || {}), b.research ? JSON.stringify(b.research) : null, b.brief ? String(b.brief).slice(0, 60000) : null, who]);
+      await sql('INSERT INTO scripts (id, title, orient, lang, config, research, brief, created_by, updated_by, owner_id) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,$8,$8,$9)', [id, title, String(b.orient || 'bl').slice(0, 4), String(b.lang || 'zh').slice(0, 5), JSON.stringify(b.config || {}), b.research ? JSON.stringify(b.research) : null, b.brief ? String(b.brief).slice(0, 60000) : null, who, A.id]);
       await log('script_create', 'script', id, { title }); return L.send(res, 200, { id });
     }
     const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(b.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+    if (WR && s.owner_id !== A.id) return deny(res);
     /* ---------- 自动审查（D先生）----------
        2026-10-28：官方剧的 publish 原来只查「有章节」+「有人点了审改通过」，
        而「这份文本能不能播」没有任何东西看。这一步就是那个看的人：
@@ -517,7 +543,7 @@ module.exports = L.wrap(async (req, res) => {
       if ('title' in f) put('title', String(f.title || s.title).slice(0, 80));
       if ('orient' in f) put('orient', String(f.orient || 'bl').slice(0, 4));
       if ('lang' in f) put('lang', String(f.lang || 'zh').slice(0, 5));
-      if ('config' in f) put('config', f.config || {}, true);
+      if ('config' in f) { const c = Object.assign({}, f.config || {}); if (!c.assets && s.config && s.config.assets) c.assets = s.config.assets; /* 素材表只由上传接口写，别被旧的页面数据盖掉 */ put('config', c, true); }
       if ('research' in f) put('research', f.research || null, true);
       if ('brief' in f) put('brief', String(f.brief || '').slice(0, 60000));
       if ('outline' in f) put('outline', String(f.outline || '').slice(0, 120000));
@@ -537,7 +563,13 @@ module.exports = L.wrap(async (req, res) => {
       const up = (await sql('UPDATE scripts SET outline=$2, chapters=$3::jsonb, updated_by=$4, updated_at=now() WHERE id=$1 RETURNING *', [s.id, d.outline || null, JSON.stringify(d.chapters || []), who]))[0];
       await log('script_restore', 'script', s.id, { version: v.id }); return L.send(res, 200, { script: up });
     }
+    if (op === 'submit') {
+      if (!(s.chapters || []).length) return L.bad(res, '还没有章节');
+      await sql("UPDATE scripts SET status=CASE WHEN status='live' THEN 'live' ELSE 'review' END, updated_by=$2, updated_at=now() WHERE id=$1", [s.id, who]);
+      await log('script_submit', 'script', s.id, { title: s.title }); return L.send(res, 200, { ok: true });
+    }
     if (op === 'publish') {
+      if (WR) return L.bad(res, '作者账号不能直接上线：请点「提交审核」，由管理员检查后上线');
       const ch = s.chapters || []; if (!ch.length) return L.bad(res, '还没有章节');
       if (!(s.review && s.review.approved)) return L.bad(res, '第 4 步「编剧审改」还没有标记通过，不能上线');
       if (s.qa && Array.isArray(s.qa.err) && s.qa.err.length && !b.force) return L.bad(res, '自动检查还有 ' + s.qa.err.length + ' 个错误，请先修改（或由超级管理员强制上线）');
@@ -550,12 +582,14 @@ module.exports = L.wrap(async (req, res) => {
          实测代价：5 部上线时 hook 全空，公开列表里只有标题、一行介绍都没有。 */
       if (!String(cfg.hook || '').trim() && !b.force) return L.bad(res, '还没有一句话简介（hook）—— 发现页上会是一张空卡。先填「一句话卖点」再上线（或由超级管理员强制上线）');
       /* 2026-11-15 · 人物卡（发现 → 角色）跟作品一起上线；第一次上线必须有（后台第⑤步会自动生成，编剧确认） */
-      const leads = Array.isArray(cfg.leads) ? cfg.leads.filter(x => x && x.key && x.n).slice(0, 24) : [];
+      const AS = (cfg.assets && typeof cfg.assets === 'object') ? cfg.assets : {};
+      const leads = (Array.isArray(cfg.leads) ? cfg.leads.filter(x => x && x.key && x.n).slice(0, 24) : []).map(x => x.art || !AS['char_' + x.key] ? x : Object.assign({}, x, { art: AS['char_' + x.key] }));
+      if (!cfg.cover && (AS.cover || AS.poster)) cfg.cover = AS.cover || AS.poster;
       if (!s.work_id && !leads.length && !b.force) return L.bad(res, '还没有人物卡——每个能和玩家互动的主要角色都要有一张（会出现在 App「发现 → 角色」）。在第⑤步点「自动生成人物卡」，检查保存后再上线');
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
-      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads }, official: true, rules: b.rulesVersion || null };
+      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads, disc: cfg.disc || null }, assets: Object.keys(AS).length ? AS : null, games: Array.isArray(cfg.games) ? cfg.games.slice(0, 80) : null, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,
@@ -565,12 +599,14 @@ module.exports = L.wrap(async (req, res) => {
       await log('script_publish', 'script', s.id, { work: id, chapters: ch.length }); return L.send(res, 200, { ok: true, work_id: id });
     }
     if (op === 'unpublish') {
+      if (WR) return deny(res);
       if (s.work_id) await sql("UPDATE works SET status='takedown', reject_reason='官方剧本下线' WHERE id=$1", [s.work_id]);
       await sql("UPDATE scripts SET status='offline', updated_by=$2, updated_at=now() WHERE id=$1", [s.id, who]);
       await log('script_unpublish', 'script', s.id, { work: s.work_id }); return L.send(res, 200, { ok: true });
     }
     if (op === 'delete') {
       if (s.status === 'live') return L.bad(res, '请先下线再删除');
+      if (WR && s.work_id) return L.bad(res, '上过线的剧本不能由作者删除，请联系管理员');
       await sql('DELETE FROM script_versions WHERE script_id=$1', [s.id]); await sql('DELETE FROM scripts WHERE id=$1', [s.id]);
       await log('script_delete', 'script', s.id, { title: s.title }); return L.send(res, 200, { ok: true });
     }
