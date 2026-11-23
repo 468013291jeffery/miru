@@ -3742,12 +3742,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!d || !D.list) { load().then(() => { if (S.lastTab === "discover" && document.querySelector(".d179")) renderTab("discover"); }); }
     let h = '<div class="d179"><div class="seg dor d179or" id="orSeg">' + ORS.map(([k, l]) => '<button data-orf="' + k + '" class="' + (S.or === k ? "on" : "") + '">' + t(l) + '</button>').join("") + '</div>';
     if (d) {
-      h += '<div class="d179h"><b>' + T2("挑一个幻想", "Pick your fantasy") + '</b></div><div class="d179fan">' +
-        d.home.map(k => { const x = d.dict.identity[k]; return '<button data-d179q="identity|' + k + '" class="' + (s.identity.includes(k) ? "on" : "") + '"><i>' + x.icon + '</i><span>' + esc(lab("identity", k)) + '</span></button>'; }).join("") + '</div>';
-      h += '<div class="d179h"><b>' + T2("你喜欢的类型", "What's your type?") + '</b></div><div class="d179chips">' +
-        Object.keys(d.dict.persona).map(k => '<button data-d179q="persona|' + k + '" class="chip' + (s.persona.includes(k) ? " on" : "") + '">' + esc(lab("persona", k)) + '</button>').join("") + '</div>';
-      h += '<div class="d179bar"><button class="d179fbtn" data-d179open="1">⚙︎ ' + T2("筛选", "Filters") + (n ? ' <i>' + n + '</i>' : '') + '</button>' +
-        (n ? '<div class="d179sel">' + chipsOf(s) + '<button class="chip" data-d179clr="1">' + T2("清空", "Clear") + '</button></div>' : '') + '</div>';
+      /* 2026-11-24 用户反馈「很占地方」：默认折叠成一行（筛选按钮 + 横滑的幻想小标签），点「展开」才显示大图标和性格 */
+      const open = !!S.d179open;
+      h += '<div class="d179bar">' + '<button class="d179fbtn" data-d179open="1">⚙︎ ' + T2("筛选", "Filters") + (n ? ' <i>' + n + '</i>' : '') + '</button>' +
+        (open ? '' : '<div class="d179mini">' + d.home.map(k => '<button data-d179q="identity|' + k + '" class="chip' + (s.identity.includes(k) ? " on" : "") + '">' + d.dict.identity[k].icon + ' ' + esc(lab("identity", k)) + '</button>').join("") + '</div>') +
+        '<button class="d179fold" data-d179fold="1" aria-label="' + (open ? T2("收起", "Collapse") : T2("展开", "Expand")) + '">' + (open ? "▴" : "▾") + '</button></div>';
+      if (open) {
+        h += '<div class="d179h"><b>' + T2("挑一个幻想", "Pick your fantasy") + '</b></div><div class="d179fan">' +
+          d.home.map(k => { const x = d.dict.identity[k]; return '<button data-d179q="identity|' + k + '" class="' + (s.identity.includes(k) ? "on" : "") + '"><i>' + x.icon + '</i><span>' + esc(lab("identity", k)) + '</span></button>'; }).join("") + '</div>';
+        h += '<div class="d179h"><b>' + T2("你喜欢的类型", "What's your type?") + '</b></div><div class="d179chips">' +
+          Object.keys(d.dict.persona).map(k => '<button data-d179q="persona|' + k + '" class="chip' + (s.persona.includes(k) ? " on" : "") + '">' + esc(lab("persona", k)) + '</button>').join("") + '</div>';
+      }
+      if (n) h += '<div class="d179sel">' + chipsOf(s) + '<button class="chip" data-d179clr="1">' + T2("清空", "Clear") + '</button></div>';
     }
     h += '<div id="d179res">' + (n ? resHTML(s) : '') + '</div></div><div id="discRes"></div>';
     return h;
@@ -3816,6 +3822,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if ((x = e.target.closest("[data-d179q]"))) { const [g, k] = x.dataset.d179q.split("|"); toggle(sel(), g, k); track2("disc_tag", { g, k }); rerender(); return; }
     if ((x = e.target.closest("[data-d179int]"))) { sel().intensity = ""; rerender(); return; }
     if (e.target.closest("[data-d179clr]")) { disc.s179 = null; rerender(); return; }
+    if (e.target.closest("[data-d179fold]")) { S.d179open = !S.d179open; try { save(); } catch (_) {} rerender(); return; }
     if (e.target.closest("[data-d179open]")) { load().then(() => { if (D.data) openSheet(); }); return; }
     if (e.target.closest("[data-d179close]")) { closeSheet(); return; }
     if ((x = e.target.closest("[data-d179s]"))) { const [g, k] = x.dataset.d179s.split("|"); toggle(D.sheet, g, k); paintSheet(); return; }
@@ -3831,15 +3838,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     ".comm68{display:none!important}.shelf:has([data-dchip=community]),.shelf:has([data-cre=remix]){display:none!important}",
     /* 旧的结果列表（app2_pages 的 #discRes）在新筛选下不再显示；搜索页的 #discRes 不受影响 */
     ".d179+#discRes{display:none!important}",
-    ".d179{padding:4px 16px 0}.d179or{margin:2px 0 14px}",
+    ".d179{padding:4px 16px 0}.d179or{margin:2px 0 10px}",
     ".d179h{margin:14px 0 8px}.d179h b{font-size:15px;letter-spacing:.02em}",
     ".d179fan{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}",
     ".d179fan button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 4px 10px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:inherit;min-width:0}",
     ".d179fan button i{font-style:normal;font-size:26px;line-height:1}.d179fan button span{font-size:12px;line-height:1.25;text-align:center;opacity:.9}",
     ".d179fan button.on{border-color:var(--pink,#ff5c9d);background:rgba(255,92,157,.14)}",
     ".d179chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.d179chips::-webkit-scrollbar{display:none}.d179chips .chip{flex:none}",
-    ".d179bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:16px 0 4px}",
-    ".d179fbtn{padding:9px 16px;border-radius:999px;border:1px solid var(--pink,#ff5c9d);background:transparent;color:inherit;font-weight:700}.d179fbtn i{font-style:normal;background:var(--pink,#ff5c9d);color:#fff;border-radius:999px;padding:0 7px;margin-left:4px;font-size:12px}",
+    ".d179bar{display:flex;align-items:center;gap:8px;margin:4px 0 6px}.d179bar .d179fbtn{flex:none}",
+    ".d179mini{flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}.d179mini::-webkit-scrollbar{display:none}.d179mini .chip{flex:none}",
+    ".d179fold{flex:none;margin-left:auto;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:inherit}",
+    ".d179sel{margin:6px 0 2px}",
+    ".d179fbtn{padding:7px 14px;border-radius:999px;border:1px solid var(--pink,#ff5c9d);background:transparent;color:inherit;font-weight:700}.d179fbtn i{font-style:normal;background:var(--pink,#ff5c9d);color:#fff;border-radius:999px;padding:0 7px;margin-left:4px;font-size:12px}",
     ".d179sel{display:flex;flex-wrap:wrap;gap:6px}",
     ".d179cnt{font-size:13px;opacity:.75;margin:14px 0 10px}#d179res .grid2{padding-left:0;padding-right:0}",
     ".d179zero{margin:16px 0;padding:16px;border-radius:16px;background:rgba(255,255,255,.04);display:flex;flex-direction:column;gap:8px;align-items:flex-start}.d179zero p{margin:0;font-size:13px;opacity:.75}",
