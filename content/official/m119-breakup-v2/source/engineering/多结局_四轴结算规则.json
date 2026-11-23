@@ -1,0 +1,87 @@
+{
+  "event_families": [
+    {
+      "id": "EVIDENCE_PUBLIC",
+      "conditions": [
+        "evidence_integrity>=8",
+        "agency_ethics>=6"
+      ],
+      "result": "独立审查公开推进，员工基金临时保全；未宣称最终刑事定罪"
+    },
+    {
+      "id": "EVIDENCE_PRIVATE",
+      "conditions": [
+        "evidence_integrity>=5",
+        "consent_respect>=4"
+      ],
+      "result": "密封证据与行政纠错先行，避免曝光幸存者个人信息"
+    },
+    {
+      "id": "TRUST_PROTECTED",
+      "conditions": [
+        "clients_trust>=6"
+      ],
+      "result": "先为Vivian稳住信托和安全退出协议，再由外部机构继续事故调查"
+    },
+    {
+      "id": "PARTIAL_ACCOUNTABILITY",
+      "conditions": [
+        "fallback_true"
+      ],
+      "result": "材料不足仍维持客户权利，后续调查开放，不武断定罪"
+    }
+  ],
+  "relationship_families": [
+    {
+      "id": "GABRIEL_RECONCILE",
+      "conditions": [
+        "explicit_player_consent",
+        "Gabriel_accountability>=3",
+        "Gabriel trust>=4",
+        "no_unresolved_major_breach"
+      ],
+      "result": "自愿从重新约会开始，不自动当场再婚"
+    },
+    {
+      "id": "THEO_NEW_START",
+      "conditions": [
+        "explicit_player_consent",
+        "Theo trust>=4",
+        "conflict_review_passed"
+      ],
+      "result": "工作之外平等开始，保留公益职业边界"
+    },
+    {
+      "id": "FRIENDSHIP",
+      "conditions": [
+        "player_declines_romance"
+      ],
+      "result": "友谊与互相尊重，不给主线失败惩罚"
+    },
+    {
+      "id": "INDEPENDENT",
+      "conditions": [
+        "fallback_true"
+      ],
+      "result": "独立经营事业、重新定义自我，不强制配对"
+    }
+  ],
+  "agency_families": [
+    {
+      "id": "PARTNER_EXPAND",
+      "conditions": [
+        "Olivia_partnership_approved",
+        "budget_feasible"
+      ],
+      "result": "Olivia进入真实合伙决策层，新季开放"
+    },
+    {
+      "id": "BOUTIQUE_STUDIO",
+      "conditions": [
+        "fallback_true"
+      ],
+      "result": "维持高质量小团队和公益配额"
+    }
+  ],
+  "resolution_logic": "先结算事件结果，再读取已确认的玩家爱情意愿与人物自主条件，最后结算机构结构。不同轴不能互相买通；缺少好感只能影响个人路线，不能阻止事件完成。"
+}

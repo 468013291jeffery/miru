@@ -1,0 +1,968 @@
+{
+  "items": [
+    {
+      "id": "g_m119_ch01_a",
+      "sourceId": "CH01_A",
+      "zh": "百万美元的来源",
+      "en": "Source of the Million",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "对三条资金记录按可受理性分类",
+        "en": "Classify the proposed source of funds."
+      },
+      "options": {
+        "zh": [
+          "有当事人授权的托管转账",
+          "未知匿名加密付款",
+          "附保密威胁的现金"
+        ],
+        "en": [
+          "Authorized escrow transfer",
+          "Unknown anonymous cryptocurrency",
+          "Cash tied to a threat"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch01_b",
+      "sourceId": "CH01_B",
+      "zh": "结婚照时间线",
+      "en": "Wedding Timeline",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "sequence",
+      "rule": {
+        "zh": "为三张已核验照片按时间排序",
+        "en": "Order the verified dates, earliest first."
+      },
+      "options": {
+        "zh": [
+          "码头火灾三年前",
+          "正式登记结婚18个月前",
+          "今日委托"
+        ],
+        "en": [
+          "Pier fire: three years ago",
+          "Marriage registration: eighteen months ago",
+          "Today’s request"
+        ]
+      },
+      "answer": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "g_m119_ch02_a",
+      "sourceId": "CH02_A",
+      "zh": "保密范围",
+      "en": "Privacy Firewall",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "privacy",
+      "rule": {
+        "zh": "将三类资料分给对应授权范围，不跨客户共享",
+        "en": "Assign each record to the people authorized to see it."
+      },
+      "options": {
+        "zh": [
+          "客户婚姻材料",
+          "公众报道",
+          "玩家健康记录"
+        ],
+        "en": [
+          "Client’s marriage file",
+          "Public reporting",
+          "Your health records"
+        ]
+      },
+      "answer": [
+        "client",
+        "public",
+        "player"
+      ]
+    },
+    {
+      "id": "g_m119_ch02_b",
+      "sourceId": "CH02_B",
+      "zh": "照片脱敏",
+      "en": "Redact the Shot",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "multi",
+      "rule": {
+        "zh": "找出泄漏照片中需模糊的信息",
+        "en": "Select information that must be redacted before sharing."
+      },
+      "options": {
+        "zh": [
+          "住址门牌",
+          "公共舞台",
+          "已授权人物"
+        ],
+        "en": [
+          "Home address",
+          "Public stage",
+          "Person who authorized this use"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch03_a",
+      "sourceId": "CH03_A",
+      "zh": "档案对号",
+      "en": "Archive Index",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "两种目录中的事故编号配对",
+        "en": "Match the incident number to the public index: P47-0604."
+      },
+      "options": {
+        "zh": [
+          "P47-0604",
+          "P47-0640",
+          "R47-0604"
+        ],
+        "en": [
+          "P47-0604",
+          "P47-0640",
+          "R47-0604"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch03_b",
+      "sourceId": "CH03_B",
+      "zh": "错位的印章",
+      "en": "Stamped Twice",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "副本甲的签收号为218，副本乙为281，其余相同。找出差异字段",
+        "en": "Copy A: receipt 218. Copy B: receipt 281. Other fields match. Which field differs?"
+      },
+      "options": {
+        "zh": [
+          "签收号",
+          "纸张颜色",
+          "装订方式"
+        ],
+        "en": [
+          "Receipt number",
+          "Paper color",
+          "Binding"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch04_a",
+      "sourceId": "CH04_A",
+      "zh": "信托与戒指",
+      "en": "Trust or Jewelry",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "分辨个人婚姻财产和独立员工信托",
+        "en": "Which item belongs to the independent employee trust?"
+      },
+      "options": {
+        "zh": [
+          "戒指",
+          "受益人福利",
+          "夫妻合照"
+        ],
+        "en": [
+          "Ring",
+          "Beneficiary welfare",
+          "Wedding photograph"
+        ]
+      },
+      "answer": [
+        1
+      ]
+    },
+    {
+      "id": "g_m119_ch04_b",
+      "sourceId": "CH04_B",
+      "zh": "投票代理审查",
+      "en": "Proxy Review",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "找到一份已经过期的代理授权",
+        "en": "A proxy expired yesterday. Which field determines whether it is usable today?"
+      },
+      "options": {
+        "zh": [
+          "签署时间",
+          "有效期",
+          "收件人昵称"
+        ],
+        "en": [
+          "Signature date",
+          "Expiry date",
+          "Recipient’s nickname"
+        ]
+      },
+      "answer": [
+        1
+      ]
+    },
+    {
+      "id": "g_m119_ch05_a",
+      "sourceId": "CH05_A",
+      "zh": "逃生门方向",
+      "en": "Exit Route",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "在旧平面图中选择合规疏散路径",
+        "en": "Choose the usable evacuation route on the old plan."
+      },
+      "options": {
+        "zh": [
+          "朝外推的消防出口",
+          "锁死仓储门",
+          "绕回货梯"
+        ],
+        "en": [
+          "Outward-opening fire exit",
+          "Locked storage door",
+          "Return to freight elevator"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch05_b",
+      "sourceId": "CH05_B",
+      "zh": "签署责任拆分",
+      "en": "Signature Split",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "multi",
+      "rule": {
+        "zh": "按直接证据与待核查线索分类",
+        "en": "Select the fact already admitted by Gabriel. The other claims remain unverified."
+      },
+      "options": {
+        "zh": [
+          "加布里埃尔确认签署延期",
+          "匿名锁门命令",
+          "网络传言"
+        ],
+        "en": [
+          "Gabriel signed the repair delay",
+          "Anonymous order to lock the door",
+          "Online rumor"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch06_a",
+      "sourceId": "CH06_A",
+      "zh": "营销真伪",
+      "en": "Truthful PR",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "识别需当事人同意的营销语句",
+        "en": "Which proposed publicity must not be published as a verified update?"
+      },
+      "options": {
+        "zh": [
+          "真实工作更新",
+          "虚构分手公告",
+          "公开演出日期"
+        ],
+        "en": [
+          "Accurate work update",
+          "Invented breakup announcement",
+          "Public performance date"
+        ]
+      },
+      "answer": [
+        1
+      ]
+    },
+    {
+      "id": "g_m119_ch06_b",
+      "sourceId": "CH06_B",
+      "zh": "元数据线索",
+      "en": "Metadata Trail",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "比对合法取得的附件元数据",
+        "en": "Which attachment marker can connect a legitimately obtained file to its supplier?"
+      },
+      "options": {
+        "zh": [
+          "格雷布里奇供应商水印",
+          "随机页码",
+          "拍摄天气"
+        ],
+        "en": [
+          "Greybridge supplier watermark",
+          "Random page number",
+          "Weather in the photograph"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch07_a",
+      "sourceId": "CH07_A",
+      "zh": "两份幸存者名单",
+      "en": "Two Lists",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "两份记录的转运号相同，但患者状态不同。找出实质矛盾",
+        "en": "The two records share a transfer ID but list different patient status. Identify the substantive discrepancy."
+      },
+      "options": {
+        "zh": [
+          "转运号匹配但状态不同",
+          "字体不同",
+          "纸张厚度"
+        ],
+        "en": [
+          "Matching transfer ID, conflicting status",
+          "Different font",
+          "Paper thickness"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch07_b",
+      "sourceId": "CH07_B",
+      "zh": "救护转运流程",
+      "en": "Transfer Steps",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "sequence",
+      "rule": {
+        "zh": "按合理顺序还原当夜转运记录",
+        "en": "Reconstruct the transfer stages in chronological order."
+      },
+      "options": {
+        "zh": [
+          "现场接诊",
+          "身份待核",
+          "转院收治",
+          "后续康复"
+        ],
+        "en": [
+          "On-site treatment",
+          "Identity pending",
+          "Hospital transfer",
+          "Later rehabilitation"
+        ]
+      },
+      "answer": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "g_m119_ch08_a",
+      "sourceId": "CH08_A",
+      "zh": "信托签署权限",
+      "en": "Trust Authority",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "按文件授予的权限识别谁可代表信托",
+        "en": "The trust document delegates authority to its trustee. Who may represent it?"
+      },
+      "options": {
+        "zh": [
+          "受托人",
+          "婚姻配偶",
+          "公关顾问"
+        ],
+        "en": [
+          "Named trustee",
+          "A spouse automatically",
+          "PR adviser"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch08_b",
+      "sourceId": "CH08_B",
+      "zh": "福利资金流向",
+      "en": "Fund Trail",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "对照两个季度的受益人拨款明细",
+        "en": "Compare the grant history. Which entry requires investigation?"
+      },
+      "options": {
+        "zh": [
+          "连续拨款",
+          "未经同意的中断",
+          "正常账目说明"
+        ],
+        "en": [
+          "Continuing grants",
+          "Interruption without authorization",
+          "Routine account explanation"
+        ]
+      },
+      "answer": [
+        1
+      ]
+    },
+    {
+      "id": "g_m119_ch09_a",
+      "sourceId": "CH09_A",
+      "zh": "门闩照片比对",
+      "en": "Latch Evidence",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "把两张独立照片的同一门把位置对齐",
+        "en": "Align the two door photographs using the hinge and handle. What changed?"
+      },
+      "options": {
+        "zh": [
+          "门外新增锁扣",
+          "墙体颜色",
+          "灯光明暗"
+        ],
+        "en": [
+          "New latch outside the door",
+          "Wall color",
+          "Lighting"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch09_b",
+      "sourceId": "CH09_B",
+      "zh": "证人公开边界",
+      "en": "Witness Consent",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "multi",
+      "rule": {
+        "zh": "判断采访资料可否公开",
+        "en": "Choose only material cleared for publication."
+      },
+      "options": {
+        "zh": [
+          "同意公开的描述",
+          "未同意的电话",
+          "未核验姓名"
+        ],
+        "en": [
+          "Description with publication consent",
+          "Phone number without consent",
+          "Unverified name"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch10_a",
+      "sourceId": "CH10_A",
+      "zh": "电子签名来源",
+      "en": "Digital Signatures",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "multi",
+      "rule": {
+        "zh": "配对签名记录与账号权限",
+        "en": "Choose the attribution supported by the record. Shared logins do not identify a person."
+      },
+      "options": {
+        "zh": [
+          "本人确认的签署",
+          "共享账号登录",
+          "未验证附件"
+        ],
+        "en": [
+          "Signature confirmed by its signer",
+          "Shared account login",
+          "Unverified attachment"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch10_b",
+      "sourceId": "CH10_B",
+      "zh": "负责与免责",
+      "en": "Responsibility Split",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "multi",
+      "rule": {
+        "zh": "区分已确认的过错和仍待证明的命令",
+        "en": "Select the admitted failures. The locking order still needs separate proof."
+      },
+      "options": {
+        "zh": [
+          "延期整改",
+          "出口封锁",
+          "事故后沉默"
+        ],
+        "en": [
+          "Delayed repairs",
+          "Order to seal the exit",
+          "Silence after the incident"
+        ]
+      },
+      "answer": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "g_m119_ch11_a",
+      "sourceId": "CH11_A",
+      "zh": "身份记录更正",
+      "en": "Record Correction",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "找出行政更正需要的基本合法材料",
+        "en": "Which package supports a lawful request to correct an identity record?"
+      },
+      "options": {
+        "zh": [
+          "本人身份证明+认证收治记录",
+          "网络截图",
+          "采访转述"
+        ],
+        "en": [
+          "Your ID and certified hospital record",
+          "Online screenshot",
+          "Retold interview"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch11_b",
+      "sourceId": "CH11_B",
+      "zh": "公关付款链",
+      "en": "Payment Trail",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "sequence",
+      "rule": {
+        "zh": "按日期将服务合同、发票、拨款排序",
+        "en": "Order the procurement records by their documented stages."
+      },
+      "options": {
+        "zh": [
+          "采购合同",
+          "付款申请",
+          "实际转账"
+        ],
+        "en": [
+          "Procurement contract",
+          "Payment request",
+          "Completed transfer"
+        ]
+      },
+      "answer": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "id": "g_m119_ch12_a",
+      "sourceId": "CH12_A",
+      "zh": "宠物照护表",
+      "en": "Pet Care Plan",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "为老年犬匹配真正可执行的照护时间",
+        "en": "Choose the care arrangement that meets the elderly dog’s daily needs."
+      },
+      "options": {
+        "zh": [
+          "每日给药并有稳定住址",
+          "只有口头承诺",
+          "只按谁更伤心"
+        ],
+        "en": [
+          "Daily medication and stable home",
+          "Verbal promise only",
+          "Who feels most hurt"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    },
+    {
+      "id": "g_m119_ch12_b",
+      "sourceId": "CH12_B",
+      "zh": "合伙人预算",
+      "en": "Partner Budget",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "budget",
+      "rule": {
+        "zh": "使运营预算不超支并保留员工工资",
+        "en": "Allocate 100 units while preserving at least 45 for wages."
+      },
+      "options": {
+        "zh": [
+          "工资",
+          "法务",
+          "公益名额",
+          "备用金"
+        ],
+        "en": [
+          "Wages",
+          "Legal work",
+          "Community places",
+          "Reserve"
+        ]
+      },
+      "answer": [
+        45,
+        25,
+        15,
+        15
+      ]
+    },
+    {
+      "id": "g_m119_ch13_a",
+      "sourceId": "CH13_A",
+      "zh": "红线条款",
+      "en": "Redline the Clause",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "识别不合理的全面封口条款",
+        "en": "Which clause improperly obstructs independent accountability?"
+      },
+      "options": {
+        "zh": [
+          "限制披露个人住址",
+          "阻止向监管机构作证",
+          "保密未公开交易价"
+        ],
+        "en": [
+          "Protecting a home address",
+          "Preventing testimony to regulators",
+          "Confidential transaction price"
+        ]
+      },
+      "answer": [
+        1
+      ]
+    },
+    {
+      "id": "g_m119_ch13_b",
+      "sourceId": "CH13_B",
+      "zh": "员工基金应急",
+      "en": "Fund Continuity",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "sequence",
+      "rule": {
+        "zh": "排列不会中断员工福利的转移方案",
+        "en": "Arrange a lawful transition that preserves employee benefits."
+      },
+      "options": {
+        "zh": [
+          "独立托管",
+          "通知受益人",
+          "过渡拨款",
+          "事后审计"
+        ],
+        "en": [
+          "Establish transition escrow",
+          "Notify beneficiaries",
+          "Continue interim grants",
+          "Audit the transition"
+        ]
+      },
+      "answer": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "g_m119_ch14_a",
+      "sourceId": "CH14_A",
+      "zh": "证据链封存",
+      "en": "Chain of Custody",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "sequence",
+      "rule": {
+        "zh": "给认证副本匹配封存环节",
+        "en": "Arrange the certified copy’s chain of custody."
+      },
+      "options": {
+        "zh": [
+          "来源凭证",
+          "授权",
+          "封存编号",
+          "交接记录"
+        ],
+        "en": [
+          "Source record",
+          "Authorization",
+          "Seal number",
+          "Handover record"
+        ]
+      },
+      "answer": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "id": "g_m119_ch14_b",
+      "sourceId": "CH14_B",
+      "zh": "双层披露",
+      "en": "Two-Level Disclosure",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "privacy",
+      "rule": {
+        "zh": "区分公开事实和保密健康信息",
+        "en": "Assign public facts and private medical information separately."
+      },
+      "options": {
+        "zh": [
+          "采购日期",
+          "当事人医疗细节",
+          "授权证词"
+        ],
+        "en": [
+          "Procurement date",
+          "Personal medical details",
+          "Testimony authorized for release"
+        ]
+      },
+      "answer": [
+        "public",
+        "sealed",
+        "public"
+      ]
+    },
+    {
+      "id": "g_m119_ch15_a",
+      "sourceId": "CH15_A",
+      "zh": "听证证据分类",
+      "en": "Hearing Evidence",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "multi",
+      "rule": {
+        "zh": "区分第一手原件和只能佐证的材料",
+        "en": "Choose materials that directly support the submission. A social post remains a lead."
+      },
+      "options": {
+        "zh": [
+          "认证采购单",
+          "不具名社媒帖子",
+          "证人原始记录"
+        ],
+        "en": [
+          "Certified purchase order",
+          "Anonymous social post",
+          "Original witness record"
+        ]
+      },
+      "answer": [
+        0,
+        2
+      ]
+    },
+    {
+      "id": "g_m119_ch15_b",
+      "sourceId": "CH15_B",
+      "zh": "离婚方案审读",
+      "en": "Divorce Exit",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "privacy",
+      "rule": {
+        "zh": "将三份文件分别交给对应的独立审查，不用一份签名代替全部授权",
+        "en": "Route each document to a separate review; no signature binds the other files."
+      },
+      "options": {
+        "zh": [
+          "离婚意向",
+          "信托受托人变更",
+          "媒体声明"
+        ],
+        "en": [
+          "Divorce intention",
+          "Change of trustee",
+          "Media statement"
+        ]
+      },
+      "answer": [
+        "divorce",
+        "trust",
+        "media"
+      ]
+    },
+    {
+      "id": "g_m119_ch16_a",
+      "sourceId": "CH16_A",
+      "zh": "新季预算表",
+      "en": "New Season Budget",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "budget",
+      "rule": {
+        "zh": "给公益名额与运营成本安排全年预算",
+        "en": "Allocate 100 units while keeping at least 55 for operating costs."
+      },
+      "options": {
+        "zh": [
+          "运营",
+          "法务",
+          "公益名额",
+          "备用金"
+        ],
+        "en": [
+          "Operations",
+          "Legal work",
+          "Community places",
+          "Reserve"
+        ]
+      },
+      "answer": [
+        55,
+        20,
+        15,
+        10
+      ]
+    },
+    {
+      "id": "g_m119_ch16_b",
+      "sourceId": "CH16_B",
+      "zh": "未来边界卡",
+      "en": "Future Boundaries",
+      "tpl": "m119",
+      "kw": [],
+      "mode": "single",
+      "rule": {
+        "zh": "选择更适合当前自愿关系的明确沟通方式",
+        "en": "Choose a communication method that respects both people’s present wishes."
+      },
+      "options": {
+        "zh": [
+          "说清期待与距离",
+          "默认复合",
+          "沉默当同意"
+        ],
+        "en": [
+          "State expectations and distance clearly",
+          "Assume reconciliation",
+          "Treat silence as agreement"
+        ]
+      },
+      "answer": [
+        0
+      ]
+    }
+  ],
+  "ui": {
+    "privacy": {
+      "zh": [
+        "客户本人及独立代理",
+        "公开范围",
+        "玩家本人授权范围",
+        "封存，不公开",
+        "离婚独立审查",
+        "信托独立审查",
+        "媒体独立审查"
+      ],
+      "en": [
+        "Client and independent representative",
+        "Public scope",
+        "Player-authorized scope",
+        "Sealed, not public",
+        "Separate divorce review",
+        "Separate trust review",
+        "Separate media review"
+      ],
+      "keys": [
+        "client",
+        "public",
+        "player",
+        "sealed",
+        "divorce",
+        "trust",
+        "media"
+      ]
+    }
+  }
+}

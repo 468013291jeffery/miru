@@ -1,0 +1,22 @@
+{
+  "games": 192,
+  "actions": 176,
+  "ai": "stubbed for deterministic navigation",
+  "route": {
+    "scenes": 64,
+    "games": 32,
+    "state": "end"
+  },
+  "englishTail": [
+    "A quiet knock reaches the office. Olivia looks up from the appointment book.",
+    "The appointment book still has an open slot. The next client’s story is theirs to tell.",
+    "We've got another call.",
+    "Ready when you are.",
+    "The appointment book remains open. You may finish the available cases or refer them to someone else.",
+    "……",
+    "The client’s records remain separate. Further action still requires their permission.",
+    ""
+  ],
+  "pkErrors": 0,
+  "saveRestored": true
+}
