@@ -21,6 +21,9 @@ async function grant(sql, uid, n, reason) {
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res, 'GET, POST, OPTIONS')) return;
   const sql = await L.db(); const q = req.query || {}; const r = String(q.r || ''); const b = req.method === 'POST' ? L.jsonBody(req) : {};
+  /* 2026-11-24 · 初始密码：管理员批量设的密码只能用来第一次登录，登录后必须先改密码才能用后台（名单存 config.admin_must_change） */
+  const mustList = async () => { try { const v = (await sql("SELECT value FROM config WHERE key='admin_must_change'"))[0]; return Array.isArray(v && v.value) ? v.value : []; } catch (_) { return []; } };
+  const setMust = async (ids, on) => { const cur = new Set(await mustList()); ids.forEach(i => on ? cur.add(i) : cur.delete(i)); await sql("INSERT INTO config (key, value, updated_by, updated_at) VALUES ('admin_must_change', $1::jsonb, 'system', now()) ON CONFLICT (key) DO UPDATE SET value=EXCLUDED.value, updated_at=now()", [JSON.stringify([...cur])]); };
 
   /* ---------- sign in ---------- */
   if (r === 'login') {
@@ -36,21 +39,25 @@ module.exports = L.wrap(async (req, res) => {
     if (a.status !== 'active') return L.bad(res, '该管理员账号已停用', 403);
     await sql('UPDATE admins SET last_login=now() WHERE id=$1', [a.id]);
     await L.audit(sql, a, 'login', 'admin', a.id, {}, req);
-    return L.send(res, 200, { token: L.adminToken(a), admin: { id: a.id, username: a.username, name: a.name, role: a.role }, perms: L.ROLES[a.role] });
+    return L.send(res, 200, { token: L.adminToken(a), admin: { id: a.id, username: a.username, name: a.name, role: a.role }, perms: L.ROLES[a.role], must_change: (await mustList()).includes(a.id) });
   }
 
   const A = await L.whoAdmin(req);
   if (!A) return L.bad(res, '请先登录后台', 401);
   const need = p => { if (!L.can(A.role, p)) { deny(res); return false; } return true; };
   const log = (action, kind, id, detail) => L.audit(sql, A, action, kind, id, detail, req);
+  const MUST = (await mustList()).includes(A.id);
+  if (MUST && r !== 'me' && r !== 'password') return L.bad(res, '请先修改初始密码 / change your initial password first', 403);
 
-  if (r === 'me') return L.send(res, 200, { admin: { id: A.id, username: A.username, name: A.name, role: A.role }, perms: L.ROLES[A.role] });
+  if (r === 'me') return L.send(res, 200, { admin: { id: A.id, username: A.username, name: A.name, role: A.role }, perms: L.ROLES[A.role], must_change: MUST });
   if (r === 'password') {
     if (A.id === 'key') return L.bad(res, 'ADMIN_KEY 不能在这里改');
     const a = (await sql('SELECT * FROM admins WHERE id=$1', [A.id]))[0];
     if (!L.checkPass(String(b.old || ''), a.pass)) return L.bad(res, '原密码不正确', 401);
     if (String(b.password || '').length < 8) return L.bad(res, '新密码至少 8 位');
+    if (String(b.password) === String(b.old || '')) return L.bad(res, '新密码不能和原密码一样');
     const up = await sql('UPDATE admins SET pass=$2, tv=COALESCE(tv,0)+1 WHERE id=$1 RETURNING *', [A.id, L.hashPass(String(b.password))]);
+    await setMust([A.id], false);
     await log('change_password', 'admin', A.id);
     return L.send(res, 200, { token: L.adminToken(up[0]) });
   }
@@ -412,7 +419,7 @@ module.exports = L.wrap(async (req, res) => {
   /* ---------- console accounts ---------- */
   if (r === 'admins') {
     if (!need('admins')) return;
-    if (req.method === 'GET') return L.send(res, 200, { rows: await sql('SELECT id, username, name, role, status, created_by, created_at, last_login FROM admins ORDER BY created_at'), roles: Object.keys(L.ROLES) });
+    if (req.method === 'GET') { const ml = await mustList(); return L.send(res, 200, { rows: (await sql('SELECT id, username, name, role, status, created_by, created_at, last_login FROM admins ORDER BY created_at')).map(x => Object.assign(x, { must_change: ml.includes(x.id) })), roles: Object.keys(L.ROLES) }); }
     const op = b.op;
     if (op === 'create') {
       const username = String(b.username || '').trim().toLowerCase(), pw = String(b.password || ''), role = String(b.role || '');
@@ -421,11 +428,19 @@ module.exports = L.wrap(async (req, res) => {
       const id = L.newId('ad_'); await sql('INSERT INTO admins (id, username, pass, name, role, created_by) VALUES ($1,$2,$3,$4,$5,$6)', [id, username, L.hashPass(pw), String(b.name || username).slice(0, 30), role, A.name || A.username]);
       await log('admin_create', 'admin', id, { username, role }); return L.send(res, 200, { ok: true, id });
     }
+    if (op === 'bulkpw') {
+      const pw = String(b.password || ''); if (pw.length < 6) return L.bad(res, '初始密码至少 6 位');
+      const ids = (Array.isArray(b.ids) ? b.ids : []).map(String).filter(x => x && x !== A.id).slice(0, 200); if (!ids.length) return L.bad(res, '请先勾选账号');
+      const rows = await sql('UPDATE admins SET pass=$2, tv=COALESCE(tv,0)+1 WHERE id = ANY($1::text[]) AND role <> $3 RETURNING id, username', [ids, L.hashPass(pw), 'owner']);
+      await setMust(rows.map(x => x.id), true);
+      await log('admin_bulk_password', 'admin', '', { n: rows.length, users: rows.map(x => x.username) });
+      return L.send(res, 200, { ok: true, n: rows.length });
+    }
     const t = (await sql('SELECT * FROM admins WHERE id=$1', [String(b.id || '')]))[0]; if (!t) return L.bad(res, '账号不存在', 404);
     if (t.id === A.id && op !== 'update') return L.bad(res, '不能对自己执行这个操作');
     if (op === 'update') { const role = L.ROLES[b.role] ? b.role : t.role; if (t.id === A.id && role !== t.role) return L.bad(res, '不能修改自己的角色'); await sql('UPDATE admins SET name=$2, role=$3 WHERE id=$1', [t.id, String(b.name || t.name).slice(0, 30), role]); await log('admin_update', 'admin', t.id, { name: b.name, role }); return L.send(res, 200, { ok: true }); }
     if (op === 'disable' || op === 'enable') { await sql('UPDATE admins SET status=$2, tv=COALESCE(tv,0)+1 WHERE id=$1', [t.id, op === 'disable' ? 'disabled' : 'active']); await log('admin_' + op, 'admin', t.id); return L.send(res, 200, { ok: true }); }
-    if (op === 'resetpw') { const pw = 'Miru-' + L.crypto.randomBytes(5).toString('hex'); await sql('UPDATE admins SET pass=$2, tv=COALESCE(tv,0)+1 WHERE id=$1', [t.id, L.hashPass(pw)]); await log('admin_reset_password', 'admin', t.id); return L.send(res, 200, { password: pw }); }
+    if (op === 'resetpw') { const pw = 'Miru-' + L.crypto.randomBytes(5).toString('hex'); await sql('UPDATE admins SET pass=$2, tv=COALESCE(tv,0)+1 WHERE id=$1', [t.id, L.hashPass(pw)]); await setMust([t.id], true); await log('admin_reset_password', 'admin', t.id); return L.send(res, 200, { password: pw }); }
     if (op === 'delete') { await sql('DELETE FROM admins WHERE id=$1', [t.id]); await log('admin_delete', 'admin', t.id, { username: t.username }); return L.send(res, 200, { ok: true }); }
     return L.bad(res, 'unknown op');
   }
