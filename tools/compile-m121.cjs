@@ -156,6 +156,7 @@ for (const node of nodes) {
   push('⟦TIME|第' + Number(node.chapter_id.slice(1)) + '天⟧');
   push('⟦BGM|BGM_M121_' + node.chapter_id + '|本章⟧');
   push('⟦SET|m121_scene~' + node.scene_id + '⟧');
+  if (node.scene_id === 'C01_S01') push('⟦VIDEO|m121_v01|WHO DO YOU GO TO TONIGHT?⟧');
   for (const para of narrations(node, false)) push('旁白：' + para);
   for (const line of node.spoken_lines || []) {
     const said = say(line);
@@ -258,6 +259,9 @@ const map = {};
 for (const a of assets) map[a.asset_id] = IMG + a.asset_id + '.webp';
 for (const [id, meta] of Object.entries(CAST)) map['char_' + meta.zh] = map[castSrc.find(c => c.id === id).reference_asset_id];
 for (const b of audio.bgm) map[b.id] = AUD + b.id + '.mp3';
+const OPENING = 'video/official/m121-off-camera/V01_opening.mp4';
+map.m121_v01 = OPENING;
+map.vid_open = OPENING;
 
 const runtimeNodes = nodes.map(n => ({
   scene_id: n.scene_id,
@@ -325,7 +329,8 @@ const payload = {
 fs.writeFileSync(path.join(dir, 'script.md'), script);
 fs.writeFileSync(path.join(dir, 'release.json'), JSON.stringify(release));
 fs.writeFileSync(path.join(dir, 'assets.json'), JSON.stringify({
-  note: 'Image paths are art/official/m121-off-camera/images/<ID>.webp. present is true when that file is in the repo. A missing file, including CG_M121_024, falls back to a labeled placeholder. Audio is not in the repo yet.',
+  note: 'One video only: video/official/m121-off-camera/V01_opening.mp4 is the chapter-1 opening (slot m121_v01) and the card preview (vid_open). There are no per-lead trailers. All 117 images are at art/official/m121-off-camera/images/<ID>.webp. Music files are not in the repo yet.',
+  opening: { slot: 'm121_v01', path: OPENING, caption: 'WHO DO YOU GO TO TONIGHT?', captionFromSec: 8.7, present: fs.existsSync(path.join(root, OPENING)) },
   images: Object.fromEntries(assets.map(a => [a.asset_id, { type: a.type, scene_id: a.scene_id, path: map[a.asset_id], present: fs.existsSync(path.join(root, map[a.asset_id])) }])),
   audio: Object.fromEntries(audio.bgm.map(b => [b.id, { path: map[b.id], present: fs.existsSync(path.join(root, map[b.id])) }]))
 }, null, 2) + '\n');

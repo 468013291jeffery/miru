@@ -1,6 +1,6 @@
 # M121 image and audio drop folder
 
-116 webp stills are in `images/`, named by asset id. `CG_M121_024.webp` is not here yet; playback shows a placeholder card for that id.
+All 117 webp stills are in `images/`, named by asset id, including `CG_M121_024.webp`.
 
 Put any later file here using the asset id as the filename:
 

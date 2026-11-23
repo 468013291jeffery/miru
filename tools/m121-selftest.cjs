@@ -26,6 +26,12 @@ for (const board of games.boards) {
   assert.equal(games.grade(board, wrong(board)), 'lose', board.id);
 }
 assert(!script.includes('小游戏可跳过'));
+assert(script.includes('⟦VIDEO|m121_v01|WHO DO YOU GO TO TONIGHT?⟧'));
+assert(!/V0[2-5]/.test(script + JSON.stringify(release)));
+assert.equal(release.assets.m121_v01, 'video/official/m121-off-camera/V01_opening.mp4');
+assert.equal(release.assets.vid_open, release.assets.m121_v01);
+const opening = fs.readFileSync(path.join(root, release.assets.m121_v01));
+assert(opening.slice(4, 8).toString() === 'ftyp' && opening.includes(Buffer.from('moov')));
 const qa = dslQA(script);
 assert.deepEqual(qa.err, [], qa.err.join('\n'));
 const sf = safety(script);
@@ -90,22 +96,18 @@ E.note(rich, 'm121_epi_stop');
 assert.equal(rich.cg.EPI_SEB, undefined);
 assert.equal(rich.consent.revoked, true);
 
-const ph = E.placeholder('CG_M121_024');
-assert(ph.startsWith('data:image/svg+xml'));
-assert(decodeURIComponent(ph).includes('CG_M121_024'));
-assert.equal(E.assetUrl('CHAR_SEB'), 'art/official/m121-off-camera/images/CHAR_SEB.webp');
+assert.equal(E.assetUrl('CG_M121_024'), 'art/official/m121-off-camera/images/CG_M121_024.webp');
 const manifest = JSON.parse(fs.readFileSync(path.join(dir, 'assets.json'), 'utf8'));
 const imgDir = path.join(root, 'art/official/m121-off-camera/images');
 const onDisk = new Set(fs.readdirSync(imgDir).filter(n => n.endsWith('.webp')).map(n => n.slice(0, -5)));
 const referenced = [...script.matchAll(/⟦(?:BG|CG)\|([^|⟧]+)/g)].map(m => m[1]);
-const unresolved = [...new Set(referenced)].filter(id => !onDisk.has(id)).sort();
-assert.deepEqual(unresolved, ['CG_M121_024']);
+assert.deepEqual([...new Set(referenced)].filter(id => !onDisk.has(id)), []);
+assert.equal(Object.keys(manifest.images).length, 117);
+assert.equal(onDisk.size, 117);
 assert.deepEqual([...onDisk].filter(id => !manifest.images[id]), []);
 for (const [id, row] of Object.entries(manifest.images)) {
   const file = path.join(root, row.path);
-  const exists = fs.existsSync(file);
-  if (id === 'CG_M121_024') { assert.equal(exists, false); assert.equal(row.present, false); continue; }
-  assert.equal(exists, true, id);
+  assert.equal(fs.existsSync(file), true, id);
   assert.equal(row.present, true, id);
   assert.equal(onDisk.has(id), true, id);
   const b = fs.readFileSync(file);

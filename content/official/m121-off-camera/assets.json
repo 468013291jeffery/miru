@@ -1,5 +1,12 @@
 {
-  "note": "Image paths are art/official/m121-off-camera/images/<ID>.webp. present is true when that file is in the repo. A missing file, including CG_M121_024, falls back to a labeled placeholder. Audio is not in the repo yet.",
+  "note": "One video only: video/official/m121-off-camera/V01_opening.mp4 is the chapter-1 opening (slot m121_v01) and the card preview (vid_open). There are no per-lead trailers. All 117 images are at art/official/m121-off-camera/images/<ID>.webp. Music files are not in the repo yet.",
+  "opening": {
+    "slot": "m121_v01",
+    "path": "video/official/m121-off-camera/V01_opening.mp4",
+    "caption": "WHO DO YOU GO TO TONIGHT?",
+    "captionFromSec": 8.7,
+    "present": true
+  },
   "images": {
     "COVER_M121": {
       "type": "COVER",
@@ -485,7 +492,7 @@
       "type": "CG",
       "scene_id": "C03_H_LUC",
       "path": "art/official/m121-off-camera/images/CG_M121_024.webp",
-      "present": false
+      "present": true
     },
     "CG_M121_025": {
       "type": "CG",
