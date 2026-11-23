@@ -1,0 +1,698 @@
+[
+  {
+    "id": "M121_C01_MG01",
+    "chapter_id": "C01",
+    "scene_id": "C01_S02",
+    "name_zh": "四人的小动作",
+    "name_en": "Read the Room",
+    "type": "配对",
+    "instruction": "观察每个人对别人的细微帮助，将毛巾/座位/幽默/餐盘匹配对应人",
+    "correct_answer": "把毛巾连Luca、座位连Sebastian、幽默连Julian、姓名卡连Ryan",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C01_MG01_win",
+      "result": "观察命中三项以上",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C01_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C01_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "记住每个人的方式",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C01_MG02",
+    "chapter_id": "C01",
+    "scene_id": "C01_S03",
+    "name_zh": "收音频道核对",
+    "name_en": "Check the Mic Channels",
+    "type": "比对",
+    "instruction": "对照安全频道清单与接收机颜色，标出需要二次核验的通道",
+    "correct_answer": "选择红灯频道并请求登记册，不点击删除日志",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C01_MG02_win",
+      "result": "定位疑点但不指控",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C01_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C01_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "把异常交给正式核验",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C02_MG01",
+    "chapter_id": "C02",
+    "scene_id": "C02_S02",
+    "name_zh": "海上路线",
+    "name_en": "Safe Paddle Route",
+    "type": "排序",
+    "instruction": "按潮线、浮标和体力限制排列三步划艇路线",
+    "correct_answer": "先检查潮线→避开红浮标→返回码头",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C02_MG01_win",
+      "result": "安全到达不竞速",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C02_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C02_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "尊重个人节奏",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C02_MG02",
+    "chapter_id": "C02",
+    "scene_id": "C02_S03",
+    "name_zh": "赞助授权拆分",
+    "name_en": "Separate the Release",
+    "type": "分类",
+    "instruction": "把康复影像与情感节目授权拖到不同合同框",
+    "correct_answer": "康复训练放运动授权、私下约会放未经授权区",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C02_MG02_win",
+      "result": "把两种权利拆开",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C02_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C02_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "确认授权文本",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C03_MG01",
+    "chapter_id": "C03",
+    "scene_id": "C03_S02",
+    "name_zh": "香草与味道",
+    "name_en": "Choose the Herbs",
+    "type": "配对",
+    "instruction": "闻香草标签，把柠檬百里香、罗勒、薄荷放入合适菜谱",
+    "correct_answer": "柠檬百里香配烤鱼、罗勒配意面、薄荷配饮品",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C03_MG01_win",
+      "result": "完成不强迫味觉选择",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C03_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C03_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "一场共同做饭",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C03_MG02",
+    "chapter_id": "C03",
+    "scene_id": "C03_S03",
+    "name_zh": "提前印好的日期",
+    "name_en": "Dates in the Dark",
+    "type": "时间轴",
+    "instruction": "重新排列三张联系印样与节目宣传规划日期",
+    "correct_answer": "底片拍摄→宣传计划→节目邀约",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C03_MG02_win",
+      "result": "发现不合理提前安排",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C03_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C03_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "保留时间线",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C04_MG01",
+    "chapter_id": "C04",
+    "scene_id": "C04_S02",
+    "name_zh": "别针安全盒",
+    "name_en": "Pin the Loose Needles",
+    "type": "拖动",
+    "instruction": "把散落别针收回磁性安全盒并标记未回收的缺口",
+    "correct_answer": "先用磁盒捡针再点检数量，不徒手抓锐端",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C04_MG01_win",
+      "result": "清理试衣区",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C04_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C04_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "避免伤人",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C04_MG02",
+    "chapter_id": "C04",
+    "scene_id": "C04_S03",
+    "name_zh": "剧照与宣传图比对",
+    "name_en": "Spot the Publicity Crop",
+    "type": "找不同",
+    "instruction": "在原照片和印刷宣传版上找出被裁掉的赞助板",
+    "correct_answer": "标出原片左侧的公关logo区域",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C04_MG02_win",
+      "result": "辨别人为造势",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C04_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C04_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "记录宣传线索",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C05_MG01",
+    "chapter_id": "C05",
+    "scene_id": "C05_S02",
+    "name_zh": "利益冲突标注",
+    "name_en": "Conflict-of-Interest Map",
+    "type": "关系连线",
+    "instruction": "标注持股、节目控制与律师审核三种不同责任",
+    "correct_answer": "Sebastian→度假村少数股权、Naomi→节目制作、Ada→独立法律",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C05_MG01_win",
+      "result": "责任不混淆",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C05_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C05_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "要求披露",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C05_MG02",
+    "chapter_id": "C05",
+    "scene_id": "C05_S03",
+    "name_zh": "距离与许可",
+    "name_en": "Distance Without Pressure",
+    "type": "互动站位",
+    "instruction": "按你允许的距离排列对话位置，选择暂停位置",
+    "correct_answer": "保持臂长→询问→等待玩家答复",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C05_MG02_win",
+      "result": "学会不把靠近当同意",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C05_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C05_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "镜头距离反馈",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C06_MG01",
+    "chapter_id": "C06",
+    "scene_id": "C06_S02",
+    "name_zh": "约会安排表",
+    "name_en": "Rewrite the Date Planner",
+    "type": "日程编辑",
+    "instruction": "清除节目预设的淘汰名次，再为私人时段保留空白",
+    "correct_answer": "移除名次标签并保留自选空位",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C06_MG01_win",
+      "result": "让约会不竞赛",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C06_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C06_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "写入边界",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C06_MG02",
+    "chapter_id": "C06",
+    "scene_id": "C06_S03",
+    "name_zh": "被剪掉的停顿",
+    "name_en": "Restore the Pause",
+    "type": "声轨比对",
+    "instruction": "比较两段声波，找回被删除的停顿并标为待审",
+    "correct_answer": "选择原始声轨中完整的停顿区段",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C06_MG02_win",
+      "result": "保留剪辑疑点",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C06_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C06_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "保全母版",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C07_MG01",
+    "chapter_id": "C07",
+    "scene_id": "C07_S02",
+    "name_zh": "安全频道封存",
+    "name_en": "Seal the Backup Log",
+    "type": "步骤排序",
+    "instruction": "依次执行静音、封存、签字和时间码记录",
+    "correct_answer": "停止收音→记录设备时间→双人封签",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C07_MG01_win",
+      "result": "建立可靠证据链",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C07_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C07_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "不泄露音频",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C07_MG02",
+    "chapter_id": "C07",
+    "scene_id": "C07_S03",
+    "name_zh": "客厅安全区",
+    "name_en": "Lantern Placement",
+    "type": "空间拖动",
+    "instruction": "把一盏应急灯放在潮湿地板外的可达位置",
+    "correct_answer": "灯放在干燥的公共区域，不遮挡出口",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C07_MG02_win",
+      "result": "安全但不强制共享空间",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C07_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C07_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "照顾边界",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C08_MG01",
+    "chapter_id": "C08",
+    "scene_id": "C08_S02",
+    "name_zh": "重建镜头角度",
+    "name_en": "Rebuild the Camera Angle",
+    "type": "角度复原",
+    "instruction": "用摄影机位置和人物站位重建错误截帧",
+    "correct_answer": "原机位+完整画幅+保留标记板",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C08_MG01_win",
+      "result": "找出裁剪导致的误读",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C08_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C08_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "请求更正",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C08_MG02",
+    "chapter_id": "C08",
+    "scene_id": "C08_S03",
+    "name_zh": "我的回应范围",
+    "name_en": "My Statement, My Choice",
+    "type": "隐私分类",
+    "instruction": "选择可公开的事实并把私人情感细节移入不公开栏",
+    "correct_answer": "公开节目更正事实，不公开未经许可的亲密详情",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C08_MG02_win",
+      "result": "控制公开程度",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C08_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C08_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "留下最小公开范围",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C09_MG01",
+    "chapter_id": "C09",
+    "scene_id": "C09_S02",
+    "name_zh": "训练计划卡",
+    "name_en": "Recovery Schedule",
+    "type": "日程规划",
+    "instruction": "将训练、理疗、休息排列到不冲突的日程",
+    "correct_answer": "强度训练后安排理疗与休息，避免连续高负载",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C09_MG01_win",
+      "result": "理解他真实的生活",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C09_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C09_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "尊重伤情",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C09_MG02",
+    "chapter_id": "C09",
+    "scene_id": "C09_S03",
+    "name_zh": "股权条款核验",
+    "name_en": "Verify the Disclosure",
+    "type": "文件核验",
+    "instruction": "对照备案股权表与回避声明找不一致之处",
+    "correct_answer": "核对Sebastian持股栏和回避节目投票栏",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C09_MG02_win",
+      "result": "监督责任落地",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C09_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C09_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "记录回避",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C10_MG01",
+    "chapter_id": "C10",
+    "scene_id": "C10_S02",
+    "name_zh": "菜单里的偏好",
+    "name_en": "Remember the Preference",
+    "type": "配料拼盘",
+    "instruction": "给餐盘匹配不过敏且口味温和的配料",
+    "correct_answer": "辣酱单独盛放，先询问是否有过敏",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C10_MG01_win",
+      "result": "照顾不等于替人决定",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C10_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C10_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "记下真正偏好",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C10_MG02",
+    "chapter_id": "C10",
+    "scene_id": "C10_S03",
+    "name_zh": "无条件的道歉",
+    "name_en": "An Apology Without Demands",
+    "type": "语句排序",
+    "instruction": "将三张道歉句按承责、行动、尊重回应排列",
+    "correct_answer": "我错在哪里→我会怎么做→你不必原谅",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C10_MG02_win",
+      "result": "避免用告白换宽恕",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C10_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C10_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "听懂修复",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C11_MG01",
+    "chapter_id": "C11",
+    "scene_id": "C11_S02",
+    "name_zh": "耳返实体静音",
+    "name_en": "Physical Mute Check",
+    "type": "点击测试",
+    "instruction": "独立检查耳返是否真正处于静音状态",
+    "correct_answer": "把物理开关拨到静音并确认指示灯关闭",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C11_MG01_win",
+      "result": "保障控制权",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C11_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C11_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "减少干扰",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C11_MG02",
+    "chapter_id": "C11",
+    "scene_id": "C11_S03",
+    "name_zh": "承诺与交换",
+    "name_en": "Promise or Bargain",
+    "type": "意图辨认",
+    "instruction": "把四句告白区分为自主邀请或带交换的压力",
+    "correct_answer": "愿意不要求立即答复=自主；用公开选择换曝光=压力",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C11_MG02_win",
+      "result": "识别尊重和控制",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C11_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C11_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "维护自由选择",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C12_MG01",
+    "chapter_id": "C12",
+    "scene_id": "C12_S02",
+    "name_zh": "最后的钥匙",
+    "name_en": "Return the Keys",
+    "type": "整理配对",
+    "instruction": "按照归属把度假村钥匙、餐厅围裙、摄影道具归还",
+    "correct_answer": "钥匙归物业、围裙归Luca、道具归摄制组",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C12_MG01_win",
+      "result": "清点离岛物品",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C12_MG01_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C12_MG01_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "进入真实生活",
+    "ui_template": "existing_template_to_verify",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  },
+  {
+    "id": "M121_C12_MG02",
+    "chapter_id": "C12",
+    "scene_id": "C12_S03",
+    "name_zh": "真实约会协议",
+    "name_en": "Dating on Your Terms",
+    "type": "协商卡片",
+    "instruction": "设定联络节奏、是否排他、可撤回边界，不选择对象也可完成",
+    "correct_answer": "明确是否排他/联系频率/边界/可重新协商；或选择独身",
+    "estimated_duration_sec": 35,
+    "win": {
+      "flag": "mg_M121_C12_MG02_win",
+      "result": "完成明示承诺或明确单身",
+      "next": "continue_story"
+    },
+    "lose": {
+      "flag": "mg_M121_C12_MG02_lose",
+      "result": "角色协助完成该步骤，记下未完成之处；主线继续",
+      "next": "continue_story"
+    },
+    "skip": {
+      "flag": "mg_M121_C12_MG02_skip",
+      "result": "由NPC或系统完成操作，不获得额外理解奖励；主线继续",
+      "next": "continue_story"
+    },
+    "narrative_effect": "保证一个月后状态一致",
+    "ui_template": "requires_new_template",
+    "resource_fallback": "text-only tutorial + non-blocking skip"
+  }
+]

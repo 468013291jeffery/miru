@@ -46,6 +46,7 @@ parts.extend(["app159_song_data.js", "wtsr_state.js", "app159_song.js"])
 # 2026-11-21 性能：首页列表请求合并 + 媒体按需加载。必须排在所有包装 off94Feed 的模块之后（见文件头说明）。
 parts.extend(["app157_perf.js"])
 parts.extend(["app153_m119.js"])
+parts.extend(["app160_m121_data.js", "app160_m121_engine.js", "app160_m121.js"])
 # 阅读节奏最后接管等待，兼容主线新剧及性能模块。
 parts.extend(["app157_reply_pace.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)

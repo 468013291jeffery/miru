@@ -1,0 +1,167 @@
+[
+  {
+    "id": "SEB",
+    "name": "Sebastian Vale",
+    "age": 33,
+    "adult": true,
+    "role": "romanceable male",
+    "relationship_tags": [
+      "CEO",
+      "Dominant",
+      "Possessive",
+      "Protective"
+    ],
+    "reference_asset_id": "CHAR_SEB",
+    "wardrobe_primary_id": "SEB_OUTFIT_01",
+    "wardrobe_secondary_id": "SEB_OUTFIT_02",
+    "wardrobe_heat_ids": {
+      "SEB_OUTFIT_03": "black tailored swim shorts and an unbuttoned white linen shirt, bare chest visible, barefoot (pool/beach)",
+      "SEB_OUTFIT_04": "ivory dress shirt fully unbuttoned or sliding off, charcoal suit trousers, sleeves rolled, no watch, barefoot (private night)",
+      "SEB_OUTFIT_05": "bare-chested; white hotel towel at the waist or bedsheet draped low (bath/bed)"
+    },
+    "heat_boundary_state": "STATE_M121_HEAT_SEB",
+    "heat_scenes": [
+      "C02_H_SEB",
+      "C05_H_SEB",
+      "C09_H_SEB",
+      "C11_H_SEB"
+    ]
+  },
+  {
+    "id": "RYA",
+    "name": "Ryan Cole",
+    "age": 29,
+    "adult": true,
+    "role": "romanceable male",
+    "relationship_tags": [
+      "Athlete",
+      "Protective",
+      "Flirty",
+      "Loyal"
+    ],
+    "reference_asset_id": "CHAR_RYA",
+    "wardrobe_primary_id": "RYA_OUTFIT_01",
+    "wardrobe_secondary_id": "RYA_OUTFIT_02",
+    "wardrobe_heat_ids": {
+      "RYA_OUTFIT_03": "navy swim trunks, bare-chested, wrist tape, optional black knee brace (swim)",
+      "RYA_OUTFIT_04": "gray athletic shorts, bare-chested and sweaty, wrist tape (training)",
+      "RYA_OUTFIT_05": "bare-chested; white towel at the waist or bedsheet draped low (shower/bed)"
+    },
+    "heat_boundary_state": "STATE_M121_HEAT_RYA",
+    "heat_scenes": [
+      "C02_H_RYA",
+      "C06_H_RYA",
+      "C08_H_RYA",
+      "C11_H_RYA"
+    ]
+  },
+  {
+    "id": "JUL",
+    "name": "Julian Cross",
+    "age": 31,
+    "adult": true,
+    "role": "romanceable male",
+    "relationship_tags": [
+      "Celebrity",
+      "Flirty",
+      "Secret Crush",
+      "Loyal"
+    ],
+    "reference_asset_id": "CHAR_JUL",
+    "wardrobe_primary_id": "JUL_OUTFIT_01",
+    "wardrobe_secondary_id": "JUL_OUTFIT_02",
+    "wardrobe_heat_ids": {
+      "JUL_OUTFIT_03": "black swim shorts and an open sand silk shirt, bare chest (pool)",
+      "JUL_OUTFIT_04": "sand silk shirt fully unbuttoned, dark tailored trousers, stage makeup half removed (private night)",
+      "JUL_OUTFIT_05": "bare-chested; bedsheet, wool blanket or velvet stage curtain draped low (bed)"
+    },
+    "heat_boundary_state": "STATE_M121_HEAT_JUL",
+    "heat_scenes": [
+      "C04_H_JUL",
+      "C07_H_JUL",
+      "C08_H_JUL",
+      "C10_H_JUL"
+    ]
+  },
+  {
+    "id": "LUC",
+    "name": "Luca Moretti",
+    "age": 30,
+    "adult": true,
+    "role": "romanceable male",
+    "relationship_tags": [
+      "Delinquent",
+      "Loyal",
+      "Flirty",
+      "Protective"
+    ],
+    "reference_asset_id": "CHAR_LUC",
+    "wardrobe_primary_id": "LUC_OUTFIT_01",
+    "wardrobe_secondary_id": "LUC_OUTFIT_02",
+    "wardrobe_heat_ids": {
+      "LUC_OUTFIT_03": "olive swim shorts, bare-chested, faint forearm tattoos (pool)",
+      "LUC_OUTFIT_04": "tight charcoal tee damp with kitchen steam, sleeves pushed up, cream apron untied and hanging low, flour on forearms (late-night kitchen)",
+      "LUC_OUTFIT_05": "bare-chested; bedsheet draped low (bed)"
+    },
+    "heat_boundary_state": "STATE_M121_HEAT_LUC",
+    "heat_scenes": [
+      "C03_H_LUC",
+      "C07_H_LUC",
+      "C10_H_LUC",
+      "C12_H_LUC"
+    ]
+  },
+  {
+    "id": "NAO",
+    "name": "Naomi Chen",
+    "age": 38,
+    "adult": true,
+    "role": "showrunner",
+    "reference_asset_id": "CHAR_NAO",
+    "wardrobe_primary_id": "NAO_OUTFIT_01"
+  },
+  {
+    "id": "QUI",
+    "name": "Quinn Hart",
+    "age": 27,
+    "adult": true,
+    "role": "assistant editor",
+    "reference_asset_id": "CHAR_QUI",
+    "wardrobe_primary_id": "QUI_OUTFIT_01"
+  },
+  {
+    "id": "ADA",
+    "name": "Ada Brooks",
+    "age": 41,
+    "adult": true,
+    "role": "independent contestant attorney",
+    "reference_asset_id": "CHAR_ADA",
+    "wardrobe_primary_id": "ADA_OUTFIT_01"
+  },
+  {
+    "id": "MIL",
+    "name": "Miles Voss",
+    "age": 48,
+    "adult": true,
+    "role": "sponsor executive",
+    "reference_asset_id": "CHAR_MIL",
+    "wardrobe_primary_id": "MIL_OUTFIT_01"
+  },
+  {
+    "id": "PLAYER",
+    "name": "Player (self-insert)",
+    "age": 28,
+    "adult": true,
+    "role": "self-insert female contestant",
+    "reference_asset_id": null,
+    "visual_rule": "never a fixed face or skin tone; shown as hands, shoulders, back, hair or legs only",
+    "wardrobe_ids": {
+      "PLAYER_OUTFIT_SWIM": "simple solid-color swimsuit with tie strings; body shown only as shoulders, back, hands or legs, skin tone not fixed",
+      "PLAYER_OUTFIT_DRESS": "champagne evening dress with thin straps and a back zipper; shown from behind or as shoulders/hands only",
+      "PLAYER_OUTFIT_SLIP": "silk slip nightgown with thin straps; shown as shoulders, back, hands or legs only",
+      "PLAYER_OUTFIT_TOWEL": "white bath towel wrapped around the body; shoulders/back only",
+      "PLAYER_OUTFIT_SHIRT": "the male lead's oversized unbuttoned shirt worn as the only garment; from behind or cropped",
+      "PLAYER_OUTFIT_SHEET": "white bedsheet only, draped to cover; shoulder/back/wrist visible"
+    }
+  }
+]
