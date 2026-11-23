@@ -448,20 +448,20 @@ module.exports = L.wrap(async (req, res) => {
 
   /* ---------- 剧本生产 · 5-step workbench (选题素材 → 生成 → 自动检查 → 编剧审改 → 上线) ---------- */
   /* ---------- 2026-11-24 · 作者账号（role=writer）：只看、只改自己的剧本；上传素材进文件存储；上线由 owner / admin / reviewer 点 ----------
-     scripts.owner_id = 创建它的后台账号 id（老剧本为空 = 只有非作者账号能看）。 */
+     归属记在 config.owner_id（创建它的后台账号 id；老剧本没有 = 只有非作者账号能看）。不改表结构，数据库账号没有 ALTER 权限也能用。 */
   const WR = A.role === 'writer';
-  if ((r === 'scripts' || r === 'script' || r === 'script_upload') && !global.__scOwnerCol) { try { await sql('ALTER TABLE scripts ADD COLUMN IF NOT EXISTS owner_id text'); global.__scOwnerCol = 1; } catch (_) {} }
+  const ownerOf = s => (s && s.config && s.config.owner_id) || '';
   if (r === 'scripts') {
     if (!need('scripts')) return;
-    return L.send(res, 200, { rows: await sql("SELECT id, title, orient, lang, stage, status, work_id, owner_id, created_by, updated_by, created_at, updated_at, published_at, jsonb_array_length(COALESCE(chapters,'[]'::jsonb))::int AS chapters FROM scripts" + (WR ? " WHERE owner_id=$1" : "") + " ORDER BY updated_at DESC LIMIT 200", WR ? [A.id] : []) });
+    return L.send(res, 200, { rows: await sql("SELECT id, title, orient, lang, stage, status, work_id, config->>'owner_id' AS owner_id, created_by, updated_by, created_at, updated_at, published_at, jsonb_array_length(COALESCE(chapters,'[]'::jsonb))::int AS chapters FROM scripts" + (WR ? " WHERE config->>'owner_id'=$1" : "") + " ORDER BY updated_at DESC LIMIT 200", WR ? [A.id] : []) });
   }
   /* 素材上传：PUT /api/admin?r=script_upload&id=<剧本>&slot=<槽位>&name=<文件名>，body = 文件本身 → 文件存储 → 写进 config.assets[槽位] */
   if (r === 'script_upload') {
     if (!need('scripts')) return;
     if (req.method !== 'PUT') return L.bad(res, '请用 PUT 上传');
     if (!L.hasBlob()) return L.bad(res, '文件存储没有配置', 503);
-    const s = (await sql('SELECT id, owner_id FROM scripts WHERE id=$1', [String(q.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
-    if (WR && s.owner_id !== A.id) return deny(res);
+    const s = (await sql('SELECT id, config FROM scripts WHERE id=$1', [String(q.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
+    if (WR && ownerOf(s) !== A.id) return deny(res);
     const mime = String(req.headers['content-type'] || '').split(';')[0].toLowerCase();
     const cls = /^image\//.test(mime) ? 'image' : /^video\//.test(mime) ? 'video' : /^audio\//.test(mime) ? 'audio' : null;
     if (!cls) return L.bad(res, '只能上传图片、视频或音频');
@@ -479,7 +479,7 @@ module.exports = L.wrap(async (req, res) => {
     if (!need('scripts')) return;
     if (req.method === 'GET') {
       const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(q.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
-      if (WR && s.owner_id !== A.id) return deny(res);
+      if (WR && ownerOf(s) !== A.id) return deny(res);
       if (q.versions) return L.send(res, 200, { rows: await sql('SELECT id, stage, note, by_name, at FROM script_versions WHERE script_id=$1 ORDER BY id DESC LIMIT 100', [s.id]) });
       if (q.version) { const v = (await sql('SELECT * FROM script_versions WHERE script_id=$1 AND id=$2', [s.id, Number(q.version)]))[0]; return L.send(res, 200, { version: v || null }); }
       return L.send(res, 200, { script: s });
@@ -495,11 +495,11 @@ module.exports = L.wrap(async (req, res) => {
     if (op === 'create') {
       const title = String(b.title || '').trim().slice(0, 80); if (!title) return L.bad(res, '标题必填');
       const id = L.newId('sc_');
-      await sql('INSERT INTO scripts (id, title, orient, lang, config, research, brief, created_by, updated_by, owner_id) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,$8,$8,$9)', [id, title, String(b.orient || 'bl').slice(0, 4), String(b.lang || 'zh').slice(0, 5), JSON.stringify(b.config || {}), b.research ? JSON.stringify(b.research) : null, b.brief ? String(b.brief).slice(0, 60000) : null, who, A.id]);
+      await sql('INSERT INTO scripts (id, title, orient, lang, config, research, brief, created_by, updated_by) VALUES ($1,$2,$3,$4,$5::jsonb,$6::jsonb,$7,$8,$8)', [id, title, String(b.orient || 'bl').slice(0, 4), String(b.lang || 'zh').slice(0, 5), JSON.stringify(Object.assign({}, b.config || {}, { owner_id: A.id })), b.research ? JSON.stringify(b.research) : null, b.brief ? String(b.brief).slice(0, 60000) : null, who]);
       await log('script_create', 'script', id, { title }); return L.send(res, 200, { id });
     }
     const s = (await sql('SELECT * FROM scripts WHERE id=$1', [String(b.id || '')]))[0]; if (!s) return L.bad(res, '剧本不存在', 404);
-    if (WR && s.owner_id !== A.id) return deny(res);
+    if (WR && ownerOf(s) !== A.id) return deny(res);
     /* ---------- 自动审查（D先生）----------
        2026-10-28：官方剧的 publish 原来只查「有章节」+「有人点了审改通过」，
        而「这份文本能不能播」没有任何东西看。这一步就是那个看的人：
@@ -543,7 +543,7 @@ module.exports = L.wrap(async (req, res) => {
       if ('title' in f) put('title', String(f.title || s.title).slice(0, 80));
       if ('orient' in f) put('orient', String(f.orient || 'bl').slice(0, 4));
       if ('lang' in f) put('lang', String(f.lang || 'zh').slice(0, 5));
-      if ('config' in f) { const c = Object.assign({}, f.config || {}); if (!c.assets && s.config && s.config.assets) c.assets = s.config.assets; /* 素材表只由上传接口写，别被旧的页面数据盖掉 */ put('config', c, true); }
+      if ('config' in f) { const c = Object.assign({}, f.config || {}); if (!c.assets && s.config && s.config.assets) c.assets = s.config.assets; /* 素材表只由上传接口写，别被旧的页面数据盖掉 */ if (ownerOf(s)) c.owner_id = ownerOf(s); else delete c.owner_id; /* 归属不能从页面改 */ put('config', c, true); }
       if ('research' in f) put('research', f.research || null, true);
       if ('brief' in f) put('brief', String(f.brief || '').slice(0, 60000));
       if ('outline' in f) put('outline', String(f.outline || '').slice(0, 120000));
