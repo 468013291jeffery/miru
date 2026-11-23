@@ -46,17 +46,7 @@
 朱利安：“I would like a second take.”
 卢卡：“Here. You look cold.”
 塞巴斯蒂安：“Choose your own seat.”
-# CHOICE｜小游戏可跳过：四人的小动作
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C01_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C01_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C01_MG01_skip⟧
-# ·
+⟦MG|g_M121_C01_MG01|四人的小动作⟧
 # CHOICE｜你愿意和谁先聊，还是想先观察四个人？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -82,17 +72,7 @@
 莱恩：“Let's not guess.”
 娜奥米：“I'll show you the log.”
 奎因：“Don't touch the receiver yet.”
-# CHOICE｜小游戏可跳过：收音频道核对
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C01_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C01_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C01_MG02_skip⟧
-# ·
+⟦MG|g_M121_C01_MG02|收音频道核对⟧
 # CHOICE｜你要看通道编号，还是请Naomi解释？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -178,17 +158,7 @@
 塞巴斯蒂安：“Agreed. Your call.”
 莱恩：“I like when you tell me what you want.”
 莱恩：“Even if it is just dry land.”
-# CHOICE｜小游戏可跳过：海上路线
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C02_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C02_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C02_MG01_skip⟧
-# ·
+⟦MG|g_M121_C02_MG01|海上路线⟧
 # CHOICE｜你要试划、请他们合作，还是结束这项活动？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -251,17 +221,7 @@
 娜奥米：“We can separate the release.”
 莱恩：“I need it in writing.”
 娜奥米：“You'll have it.”
-# CHOICE｜小游戏可跳过：赞助授权拆分
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C02_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C02_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C02_MG02_skip⟧
-# ·
+⟦MG|g_M121_C02_MG02|赞助授权拆分⟧
 # CHOICE｜你想帮他标记条款，还是给他空间自己处理？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -410,17 +370,7 @@
 卢卡：“At least admit it smells good.”
 朱利安：“You decide.”
 卢卡：“No hard feelings.”
-# CHOICE｜小游戏可跳过：香草与味道
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C03_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C03_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C03_MG01_skip⟧
-# ·
+⟦MG|g_M121_C03_MG01|香草与味道⟧
 # CHOICE｜你要帮谁安排菜单，还是提出折中做法？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -448,17 +398,7 @@
 朱利安：“Please check them with me.”
 朱利安：“That almost felt scripted.”
 朱利安：“Except it was real.”
-# CHOICE｜小游戏可跳过：提前印好的日期
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C03_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C03_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C03_MG02_skip⟧
-# ·
+⟦MG|g_M121_C03_MG02|提前印好的日期⟧
 # CHOICE｜你想核对拍摄日期，还是先问Julian的经历？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -540,17 +480,7 @@
 莱恩：“Then don't act.”
 朱利安：“Good advice, annoyingly.”
 莱恩：“You're welcome.”
-# CHOICE｜小游戏可跳过：别针安全盒
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C04_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C04_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C04_MG01_skip⟧
-# ·
+⟦MG|g_M121_C04_MG01|别针安全盒⟧
 # CHOICE｜你想陪Julian练呼吸，还是让排练暂停？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -576,17 +506,7 @@
 朱利安：“It cost me a real friendship.”
 奎因：“Original metadata is here.”
 朱利安：“I want this one to be honest.”
-# CHOICE｜小游戏可跳过：剧照与宣传图比对
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C04_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C04_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C04_MG02_skip⟧
-# ·
+⟦MG|g_M121_C04_MG02|剧照与宣传图比对⟧
 # CHOICE｜你愿意听他解释，还是先验证素材来源？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -704,17 +624,7 @@
 艾达：“Then let the paper say so.”
 塞巴斯蒂安：“Agreed.”
 艾达：“We'll make it explicit.”
-# CHOICE｜小游戏可跳过：利益冲突标注
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C05_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C05_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C05_MG01_skip⟧
-# ·
+⟦MG|g_M121_C05_MG01|利益冲突标注⟧
 # CHOICE｜你想让律师阅读、要求退出条款，还是暂不回复？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -741,17 +651,7 @@
 塞巴斯蒂安：“I still want to see you.”
 塞巴斯蒂安：“Only if you choose to.”
 塞巴斯蒂安：“I wanted to lead. I should have listened.”
-# CHOICE｜小游戏可跳过：距离与许可
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C05_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C05_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C05_MG02_skip⟧
-# ·
+⟦MG|g_M121_C05_MG02|距离与许可⟧
 # CHOICE｜你想听他的告白、问清边界，还是结束独处？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -906,17 +806,7 @@
 卢卡：“She isn't a prize.”
 娜奥米：“We can revise the format.”
 卢卡：“Good. Do that.”
-# CHOICE｜小游戏可跳过：约会安排表
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C06_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C06_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C06_MG01_skip⟧
-# ·
+⟦MG|g_M121_C06_MG01|约会安排表⟧
 # CHOICE｜你想自己安排时间，还是要求完全取消排名？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -942,17 +832,7 @@
 朱利安：“That's not consent.”
 奎因：“The master file can confirm it.”
 朱利安：“Then preserve the master.”
-# CHOICE｜小游戏可跳过：被剪掉的停顿
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C06_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C06_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C06_MG02_skip⟧
-# ·
+⟦MG|g_M121_C06_MG02|被剪掉的停顿⟧
 # CHOICE｜你想核验原文件，还是提出保全要求？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1067,17 +947,7 @@
 娜奥米：“Power it down and seal it.”
 奎因：“Timestamp is intact.”
 娜奥米：“No one listens alone.”
-# CHOICE｜小游戏可跳过：安全频道封存
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C07_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C07_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C07_MG01_skip⟧
-# ·
+⟦MG|g_M121_C07_MG01|安全频道封存⟧
 # CHOICE｜你想封存设备、请律师到场，还是先核对安全频道？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1104,17 +974,7 @@
 塞巴斯蒂安：“That would be novel.”
 朱利安：“And very brave.”
 朱利安：“We can sit together and still keep our own space.”
-# CHOICE｜小游戏可跳过：客厅安全区
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C07_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C07_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C07_MG02_skip⟧
-# ·
+⟦MG|g_M121_C07_MG02|客厅安全区⟧
 # CHOICE｜你想和谁聊，还是说今晚需要安静？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1229,17 +1089,7 @@
 娜奥米：“The camera angle made it look close.”
 朱利安：“Then say so.”
 娜奥米：“I will.”
-# CHOICE｜小游戏可跳过：重建镜头角度
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C08_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C08_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C08_MG01_skip⟧
-# ·
+⟦MG|g_M121_C08_MG01|重建镜头角度⟧
 # CHOICE｜你愿意让他作证，还是选择由文件独立回应？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1297,17 +1147,7 @@
 塞巴斯蒂安：“I can fund counsel, no strings.”
 艾达：“She chooses the response.”
 塞巴斯蒂安：“Absolutely.”
-# CHOICE｜小游戏可跳过：我的回应范围
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C08_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C08_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C08_MG02_skip⟧
-# ·
+⟦MG|g_M121_C08_MG02|我的回应范围⟧
 # CHOICE｜你想公开声明、私下维权，还是暂时不发声？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1424,17 +1264,7 @@
 莱恩：“I'm not that clip anymore.”
 莱恩：“You can care without fixing me.”
 莱恩：“I like that about us.”
-# CHOICE｜小游戏可跳过：训练计划卡
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C09_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C09_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C09_MG01_skip⟧
-# ·
+⟦MG|g_M121_C09_MG01|训练计划卡⟧
 # CHOICE｜你想鼓励他的决定，还是听他自己说明？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1460,17 +1290,7 @@
 艾达：“The document reflects that.”
 塞巴斯蒂安：“You are not an acquisition.”
 艾达：“Let's keep it that way.”
-# CHOICE｜小游戏可跳过：股权条款核验
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C09_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C09_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C09_MG02_skip⟧
-# ·
+⟦MG|g_M121_C09_MG02|股权条款核验⟧
 # CHOICE｜你想了解回避范围，还是暂时不谈关系？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1587,17 +1407,7 @@
 莱恩：“I remembered you said mild.”
 卢卡：“Miracles happen.”
 莱恩：“Not competing. Cooking.”
-# CHOICE｜小游戏可跳过：菜单里的偏好
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C10_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C10_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C10_MG01_skip⟧
-# ·
+⟦MG|g_M121_C10_MG01|菜单里的偏好⟧
 # CHOICE｜你想帮他们掌勺，还是讲讲自己的偏好？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1655,17 +1465,7 @@
 塞巴斯蒂安：“That's difficult. And necessary.”
 朱利安：“We're learning.”
 塞巴斯蒂安：“Clearly.”
-# CHOICE｜小游戏可跳过：无条件的道歉
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C10_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C10_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C10_MG02_skip⟧
-# ·
+⟦MG|g_M121_C10_MG02|无条件的道歉⟧
 # CHOICE｜你想回应哪个道歉，还是暂时都不接纳？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1778,17 +1578,7 @@
 莱恩：“And it stays yours.”
 奎因：“No hidden feed.”
 莱恩：“That's how it should be.”
-# CHOICE｜小游戏可跳过：耳返实体静音
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C11_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C11_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C11_MG01_skip⟧
-# ·
+⟦MG|g_M121_C11_MG01|耳返实体静音⟧
 # CHOICE｜你愿意测试静音、要求无耳返，还是请求独立监听？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1848,17 +1638,7 @@
 朱利安：“No scripts.”
 卢卡：“I'll be cooking either way.”
 卢卡：“I will be there. And I will understand if you change your mind.”
-# CHOICE｜小游戏可跳过：承诺与交换
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C11_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C11_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C11_MG02_skip⟧
-# ·
+⟦MG|g_M121_C11_MG02|承诺与交换⟧
 # CHOICE｜你想向谁提出未来约会，还是声明需要时间？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -1972,17 +1752,7 @@
 塞巴斯蒂安：“My calendar isn't an offer.”
 卢卡：“Mine involves pasta.”
 塞巴斯蒂安：“And a fresh start.”
-# CHOICE｜小游戏可跳过：最后的钥匙
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C12_MG01_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C12_MG01_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C12_MG01_skip⟧
-# ·
+⟦MG|g_M121_C12_MG01|最后的钥匙⟧
 # CHOICE｜你想询问未来安排，还是感谢他们然后离开？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密
@@ -2042,17 +1812,7 @@
 朱利安：“My answer is real.”
 卢卡：“No one wins you. You choose.”
 莱恩：“No cameras. No rankings. Just your choice.”
-# CHOICE｜小游戏可跳过：真实约会协议
-#### A｜我来完成
-旁白：你自己做完了这一步。结果记下来，故事继续。
-⟦OPT|A|set:m121_mg_M121_C12_MG02_win⟧
-#### B｜请他们补完
-旁白：在场的人帮你补完。没有惩罚，故事继续。
-⟦OPT|B|set:m121_mg_M121_C12_MG02_lose⟧
-#### C｜跳过
-旁白：这一步跳过了。没有额外标记，故事继续。
-⟦OPT|C|set:m121_mg_M121_C12_MG02_skip⟧
-# ·
+⟦MG|g_M121_C12_MG02|真实约会协议⟧
 # CHOICE｜你想和谁认真发展关系、保持慢慢约会，还是不开始恋爱？
 #### A｜先问清楚
 旁白：镜头靠近线索与说话人，随后拉回保持双方关系；不假设自动亲密

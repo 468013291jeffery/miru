@@ -4,7 +4,7 @@ V2 design package, converted into the MIRU script the official importer already 
 
 Intimate scenes are not separate chapter stops. They open only from the consent choice on the preceding scene, and only when the story flags, the earlier consent step and a clear boundary allow it. Stop clears that scene's consent. A later exclusive ending hides the other men's intimate scenes. The six endings are chosen by name at chapter 12. The highest affection score does not pick anyone.
 
-The twenty-four mini-games are recorded as skippable win / help / skip choices so the story can continue. Their drag, sort and audio widgets are not built: the shared library does not have templates for those specs (`existing_template_to_verify`, and seven marked as needing a new template).
+The twenty-four mini-games are playable widgets in `source/src/app160_m121_games.js`, opened from `⟦MG|g_…⟧`. Win, a wrong answer, help, and skip all continue the story.
 
 Rebuild the script after editing `source/`:
 

@@ -162,19 +162,7 @@ for (const node of nodes) {
     if (said) push(said);
   }
   const game = gameByScene.get(node.scene_id);
-  if (game) {
-    push('# CHOICE｜小游戏可跳过：' + game.name_zh);
-    push('#### A｜我来完成');
-    push('旁白：你自己做完了这一步。结果记下来，故事继续。');
-    push('⟦OPT|A|set:m121_mg_' + game.id + '_win⟧');
-    push('#### B｜请他们补完');
-    push('旁白：在场的人帮你补完。没有惩罚，故事继续。');
-    push('⟦OPT|B|set:m121_mg_' + game.id + '_lose⟧');
-    push('#### C｜跳过');
-    push('旁白：这一步跳过了。没有额外标记，故事继续。');
-    push('⟦OPT|C|set:m121_mg_' + game.id + '_skip⟧');
-    push('# ·');
-  }
+  if (game) push('⟦MG|g_' + game.id + '|' + game.name_zh + '⟧');
   const intents = node.hidden_intents || [];
   push('# CHOICE｜' + (safeText(node.player_prompt).slice(0, 42) || '你想怎么做？'));
   const labels = { CLARIFY: '先问清楚', ENGAGE: '我愿意试试', BOUNDARY: '先保持距离', CONSENT: '我明确同意', OTHER: '我还没想好' };
@@ -310,8 +298,8 @@ const release = {
   })),
   relations: world.relationships,
   games: games.map(g => ({
-    id: g.id, scene_id: g.scene_id, type: g.type, ui_template: g.ui_template,
-    name_zh: g.name_zh, name_en: g.name_en, implemented: false
+    id: g.id, scene_id: g.scene_id, type: g.type, ui_template: 'm121',
+    name_zh: g.name_zh, name_en: g.name_en, implemented: true
   })),
   assets: map
 };

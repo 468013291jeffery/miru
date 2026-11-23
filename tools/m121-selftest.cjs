@@ -16,7 +16,16 @@ assert.equal((script.match(/^# SCENE/gm) || []).length, 48);
 assert.equal(release.heatRules.length, 16);
 assert.equal(release.nodes.length, 64);
 assert.equal(release.games.length, 24);
-assert.equal(release.games.every(g => g.implemented === false), true);
+assert.equal(release.games.every(g => g.implemented === true && g.ui_template === 'm121'), true);
+const games = require('../source/src/app160_m121_games.js');
+assert.equal(games.boards.length, 24);
+for (const w of ['match', 'pick', 'order', 'sort', 'link', 'place', 'audio', 'schedule', 'cards']) assert(new Set(games.boards.map(b => b.widget)).has(w), w);
+for (const board of games.boards) {
+  assert(script.includes('⟦MG|g_' + board.id + '|'), board.id);
+  assert.equal(games.grade(board, right(board)), 'win', board.id);
+  assert.equal(games.grade(board, wrong(board)), 'lose', board.id);
+}
+assert(!script.includes('小游戏可跳过'));
 const qa = dslQA(script);
 assert.deepEqual(qa.err, [], qa.err.join('\n'));
 const sf = safety(script);
@@ -103,8 +112,31 @@ for (const [id, row] of Object.entries(manifest.images)) {
   assert(b.length > 1000 && b.slice(0, 4).toString() === 'RIFF' && b.slice(8, 12).toString() === 'WEBP', id);
 }
 
+function right(board) {
+  if (board.widget === 'match' || board.widget === 'link') return { pairs: board.pairs.map(p => p.slice()) };
+  if (board.widget === 'order') return { order: board.steps.slice() };
+  if (board.widget === 'pick') return { picks: board.correct.slice() };
+  if (board.widget === 'sort') return { buckets: Object.fromEntries(board.cards.map(c => [c.label, c.bucket])) };
+  if (board.sequence) return { order: board.sequence.slice() };
+  if (board.widget === 'place') return { zone: board.correct };
+  if (board.widget === 'audio') return { track: board.correct };
+  if (board.widget === 'schedule') return { removed: [board.remove, board.ban], kept: [board.keep] };
+  return { solo: true };
+}
+function wrong(board) {
+  if (board.widget === 'match' || board.widget === 'link') return { pairs: [[board.pairs[0][0], board.pairs[1][1]]] };
+  if (board.widget === 'order') return { order: board.steps.slice().reverse() };
+  if (board.widget === 'pick') return { picks: [] };
+  if (board.widget === 'sort') return { buckets: {} };
+  if (board.sequence) return { order: board.sequence.slice().reverse() };
+  if (board.widget === 'place') return { zone: 'nope' };
+  if (board.widget === 'audio') return { track: 'nope' };
+  if (board.widget === 'schedule') return { removed: [], kept: [] };
+  return { solo: false, on: {} };
+}
 const built = fs.readFileSync(path.join(root, 'source/build.py'), 'utf8');
 assert(built.includes('app160_m121_data.js'));
 assert(built.includes('app160_m121_engine.js'));
 assert(built.includes('app160_m121.js'));
+assert(built.includes('app160_m121_games.js'));
 console.log('M121 selftest passed: 12 chapters, 48 scenes, 16 consent branches, 6 endings, missing assets stay referenced.');
