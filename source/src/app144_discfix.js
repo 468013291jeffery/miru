@@ -3762,7 +3762,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!D.list) return '<p class="empty">' + T2("加载中…", "Loading…") + '</p>';
     const L = results(s);
     if (L.length) return '<div class="d179cnt">' + T2("找到 " + L.length + " 部", L.length + (L.length === 1 ? " story" : " stories")) + '</div><div class="grid2" style="padding-bottom:20px">' + L.map(card).join("") + '</div>';
-    const near = (D.list || []).map(w => [score(w, s), w]).filter(x => x[0] > 0).sort((a, b) => b[0] - a[0] || (b[1].plays || 0) - (a[1].plays || 0)).slice(0, 6).map(x => x[1]);
+    let near = (D.list || []).map(w => [score(w, s), w]).filter(x => x[0] > 0).sort((a, b) => b[0] - a[0] || (b[1].plays || 0) - (a[1].plays || 0)).slice(0, 6).map(x => x[1]);
+    if (!near.length) near = (D.list || []).filter(orFit).sort((a, b) => (b.plays || 0) - (a.plays || 0)).slice(0, 6); /* 一个条件都对不上时，至少给同一恋爱类型的作品 */
     return '<div class="d179zero"><b>' + T2("还没有完全符合的作品", "Nothing matches all of that yet") + '</b><p>' + T2("试试去掉一两个条件。下面是最接近的：", "Try removing a filter or two. Closest matches:") + '</p><button class="chip" data-d179clr="1">' + T2("清空筛选", "Clear filters") + '</button></div>' +
       (near.length ? '<div class="grid2" style="padding-bottom:20px">' + near.map(card).join("") + '</div>' : '');
   }
@@ -3828,6 +3829,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   st.textContent = [
     /* 社区新作那一排、发现页底部的社区书架先不显示 */
     ".comm68{display:none!important}.shelf:has([data-dchip=community]),.shelf:has([data-cre=remix]){display:none!important}",
+    /* 旧的结果列表（app2_pages 的 #discRes）在新筛选下不再显示；搜索页的 #discRes 不受影响 */
+    ".d179+#discRes{display:none!important}",
     ".d179{padding:4px 16px 0}.d179or{margin:2px 0 14px}",
     ".d179h{margin:14px 0 8px}.d179h b{font-size:15px;letter-spacing:.02em}",
     ".d179fan{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}",
