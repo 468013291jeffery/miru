@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.0",
+  "story_id": "M119",
+  "save_version": 1,
+  "roles": {
+    "player": "28yo adult woman, agency founder; self-insert; no forced name/face",
+    "npc_knowledge": "knowledge scope based"
+  },
+  "state": {
+    "plot": {
+      "case_progress": 0,
+      "evidence_integrity": 0,
+      "identity_status": "disputed",
+      "hearing_stage": "not_started",
+      "vivian_divorce": "consulting",
+      "fund_status": "at_risk"
+    },
+    "relation": {
+      "Gabriel": {
+        "trust": 0,
+        "romance": "undecided",
+        "consent": false
+      },
+      "Theo": {
+        "trust": 0,
+        "romance": "undecided",
+        "consent": false
+      },
+      "Vivian": {
+        "trust": 0,
+        "agency_client": true
+      },
+      "Olivia": {
+        "trust": 0,
+        "partnership": "undecided"
+      },
+      "Lena": {
+        "trust": 0
+      }
+    },
+    "character_arc": {
+      "Gabriel_accountability": 0,
+      "Vivian_autonomy": 0,
+      "Theo_boundaries": 0,
+      "Olivia_leadership": 0,
+      "player_self_agency": 0
+    },
+    "resource": {
+      "cash_available": 25000,
+      "escrow_million_not_income": 1000000,
+      "client_load": 2,
+      "legal_hours": 12,
+      "public_interest_slots": 1
+    },
+    "world": {
+      "employee_fund": "at_risk",
+      "records_verified": [],
+      "permissions": [],
+      "public_story": "private"
+    },
+    "commitment": [],
+    "unresolved_conflict": [],
+    "knowledge": {
+      "Gabriel": [
+        "falsified_private_notice"
+      ],
+      "Vivian": [
+        "player_may_be_alive"
+      ],
+      "Theo": [
+        "authorized_documents"
+      ],
+      "Olivia": [
+        "agency_conflict"
+      ]
+    },
+    "memory": [],
+    "time": {
+      "story_day": 1,
+      "real_offline_not_penalized": true
+    },
+    "flags": {},
+    "metrics": {
+      "agency_ethics": 0,
+      "clients_trust": 0,
+      "consent_respect": 0,
+      "verification_cost": 0
+    }
+  },
+  "limits": {
+    "min": -100,
+    "max": 100,
+    "per_scene_max_relation_change": 2,
+    "no_repeated_gain_from_same_node": true,
+    "paid_items_required_for_core_truth": false
+  },
+  "effect_aliases": {
+    "Gabriel_trust": "state.relation.Gabriel.trust",
+    "Theo_trust": "state.relation.Theo.trust",
+    "self_agency": "state.character_arc.player_self_agency",
+    "Gabriel_accountability": "state.character_arc.Gabriel_accountability",
+    "Vivian_autonomy": "state.character_arc.Vivian_autonomy",
+    "Theo_boundaries": "state.character_arc.Theo_boundaries",
+    "Olivia_leadership": "state.character_arc.Olivia_leadership",
+    "agency_ethics": "state.metrics.agency_ethics",
+    "clients_trust": "state.metrics.clients_trust",
+    "consent_respect": "state.metrics.consent_respect",
+    "evidence_integrity": "state.plot.evidence_integrity",
+    "case_progress": "state.plot.case_progress",
+    "verification_cost": "state.metrics.verification_cost"
+  }
+}

@@ -42,13 +42,14 @@ async function install98(id) {
   if (A.cover || A.poster) S.art[wid] = A.cover || A.poster;
   S.off76 = S.off76 || {}; S.off76[id] = Object.assign(S.off76[id] || {}, { wid, b98: 1 }); save();
   // Story-bible installs bypass the legacy installer that records plays.
-  try {
+  // Reporting must not hold the installed story behind another network round trip.
+  (async () => { try {
     const play = await capi("/works?id=" + encodeURIComponent(id) + "&play=1");
     if (play && play.ok) {
       OFF89.at = 0; OFFF94.at = 0;
     }
     if (typeof OFF94 !== "undefined" && OFF94.play) delete OFF94.play[id];
-  } catch (_) {} // A statistics outage must not prevent playing an installed story.
+  } catch (_) {} })(); // A statistics outage must not prevent playing an installed story.
   return wid;
 }
 { const _iw = installWork; installWork = async function (id) { try { const b = await bible98(id); if (b) return await install98(id); } catch (e) { try { console.warn("[b98]", e); } catch (_) {} } return _iw.apply(this, arguments); }; }
@@ -388,6 +389,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "玩家：" : "Player: ") + yn98(th) + gx98(th) + "（" + LZ98((A.as === b.player.key ? b.player : cardOf98(w, A.you) || {}).role) + "）" + (A.profile.length ? (zh ? "；玩家自己表现出的样子：" : "; how the player has shown themselves: ") + A.profile.slice(-6).join("；") : "") +
     "\n" + (zh ? "角色（只有这些 id 能开口）：\n" : "Cast (only these ids may speak):\n") + castL +
     "\n" + (zh ? "他们对玩家的好感：" : "Their feeling toward the player: ") + rel +
+    (serial98(b) ? "\n" + (zh ? "本作正在连载，当前只开放" + b.chapters.length + "章。只演当前场景，不生成后续未发布章节，不揭露大纲，不宣布全剧结局。最后一场只收束眼前事件并保留悬念，ending 必须为 null。" : "This story is ongoing. Only " + b.chapters.length + " chapters are published. Stay in the current scene, do not invent unpublished chapters or a final ending. Close the current event on a cliffhanger; ending must be null.") : "") +
     "\n\n" + (zh ? "第 " + A.ch + " / " + b.chapters.length + " 章「" + LZ98(c.title) + "」目标：" : "Chapter " + A.ch + " / " + b.chapters.length + " “" + LZ98(c.title) + "” goal: ") + (c.goal || "") +
     "\n" + (zh ? "本章场景（▶ 当前）：\n" : "Scenes (▶ current):\n") + sceneL +
     "\n" + (zh ? "当前场景在场：" : "Present now: ") + (here98(th, s).map(id => first(ch(id).n) + "(" + id + ")").join("、") || "—") +
@@ -402,7 +404,7 @@ async function director98(th, mode, act) {
     "\n\n" + (zh ? "任务：" : "Task: ") + task +
     "\n" + (zh ? "旁白只写画面和动作，绝不包含任何人说的话（旁白里不能出现引号和对白）；自由对话和选择后的旁白最多 1 句，收束旁白最多 1 句。人名一律用上面角色表里的中文名。所有文字用简体中文（专有名词可保留英文）。" : "Narration is only what can be seen — never anyone's spoken words (no quotes or dialogue in narration); in talk/choice/exit modes at most one sentence. ") + (zh ? "绝不替玩家说话、做动作、做决定；" + (policy && policy.focus === "player" ? "主角们的本场注意力围绕用户的最新表达，各有自己的方式；不互聊支线，不强迫争宠，不要求用户安抚；" : "不让所有人都围着玩家转；") + "不安排剧本没有的电话；不剧透后面的事。options：玩家下一步可以说或做的 3 件事（各不超过 14 字，态度不同）。player_obs：玩家这一轮明确表现出的偏好或态度（没有就空）。state：本轮按作者规则的状态变化（如 Ember +2），没有就空。"
            : "Never write the player's words, actions or decisions; " + (policy && policy.focus === "player" ? "the leads focus on the player in distinct ways, without side conversations or demanding reassurance;" : "not everyone revolves around the player;") + " no calls the script doesn't have; no spoilers. options: 3 different things the player could say or do next (under 8 words). player_obs: a preference or attitude the player clearly showed this turn (or empty). state: state changes per the author's rules (e.g. Ember +2), or empty.") +
-    (last && mode === "exit" ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
+    (last && mode === "exit" && !serial98(b) ? "\n" + (zh ? "这是全书最后一场。根据玩家一路的言行和下面的结局条件，选出结局 ending（填结局 id）并写 endingText（≤4 句）。\n" : "This is the final scene. From the player's whole run and the ending conditions below, choose `ending` (an id) and write endingText (≤4 sentences).\n") + (b.endings || []).map(e => e.id + " " + LZ98(e.name) + "：" + e.condition).join("\n") + "\n" + (zh ? "一路的状态：" : "State so far: ") + A.flags.slice(-30).join("，") : "") +
     heat98(th, zh, "director") + (senseOK98(th, mode) ? senseAsk98(th, zh) : "") +
     (mode === "exit" ? withAsk98(th, s, zh) : presence98(th, s, zh)) +
     (mode === "talk" || mode === "more" ? photoAsk98(th, act, zh) : "") +
@@ -476,7 +478,9 @@ function senseClean98(v) {
 }
 /* ---------- one beat ---------- */
 async function beat98(th, mode, act) {
-  const A = th.b98; if (A.ended) return; if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
+  const A = th.b98; if (A.ended) return;
+  if (serialWaiting98(th)) { serialSheet98(th); return false; }
+  if (!liveOn()) { toast(L98("这个模式需要 AI 在线", "This mode needs the AI online")); return; }
   if (busy) return; busy = true; if (act && window.EXPERIENCE124) EXPERIENCE124.positions.delete(th.id); typing(true); if (experience98(th)) dock98(); const before = {}; th.cast.forEach(c => before[c] = th.love[c] || 0);
   try {
     const { s } = scene98(th), pres = here98(th, s), start = th.msgs.length;
@@ -544,7 +548,7 @@ async function beat98(th, mode, act) {
     useUnits(aiCost() * (mode === "talk" || mode === "more" ? 1 : 2));
     const items = []; th.cast.forEach(c => { const dd = Math.round((th.love[c] || 0) - (before[c] || 0)); if (dd) items.push([dd > 0 ? "💗" : "💔", L98(first(ch(c).n) + " 好感", first(ch(c).n) + " affection"), (dd > 0 ? "+" : "") + dd]); });
     if (items.length && typeof chg96 === "function") chg96(items);
-    if (d.ending && mode === "exit") { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
+    if (d.ending && mode === "exit" && !serial98(bOf98(wd(th.wid)))) { A.ended = true; A.end = String(d.ending); const e = (bOf98(wd(th.wid)).endings || []).find(x => x.id === A.end);
       appendMsg(th, { who: "sys", k: "card", title: "🎬 " + L98("结局", "Ending") + " · " + (e ? LZ98(e.name) : A.end), txt: String(d.endingText || (e && e.text) || "").slice(0, 500), at: Date.now() }); }
     turn98(th, start, pre, mode, act);
     th.at = Date.now(); save();
@@ -573,8 +577,11 @@ async function enter98(th) {
   if (s.call && callsOK97(th)) { const cid = byKey98(th, s.call.who); if (ch(cid)) appendMsg(th, { who: "sys", k: "card", title: "📞 " + L98(first(ch(cid).n) + " 来电", first(ch(cid).n) + " is calling"), txt: "", call98: cid, at: Date.now() }); }
   dock98();
 }
+
 async function next98(th) {
   const { b, c, s } = scene98(th), A = th.b98; if (busy || A.ended) return;
+  if (serialWaiting98(th)) { serialSheet98(th); return; }
+  if (A.serialPaused98) delete A.serialPaused98;
   if (!(experience98(th) && experience98(th).allowFreeContinue) && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) { A.phase = "choice"; save(); dock98(); return; }
   if(!goalMayAdvance98(th))return;
   if(A.pendingEnding98&&A.sc>=c.scenes.length-1){const id=A.pendingEnding98;delete A.pendingEnding98;finishExperience98(th,id);return;}
@@ -585,7 +592,7 @@ async function next98(th) {
   else if (!lastCh) { appendMsg(th, { who: "sys", k: "card", title: L98("第 " + A.ch + " 章 · 完", "Chapter " + A.ch + " · end"), txt: "", at: Date.now() });
     const ev = L98("第 " + A.ch + " 章结束，玩家这一章：", "Chapter " + A.ch + " ended. The player: ") + A.sum.slice(-3).join("；"); if (typeof gen96 === "function") gen96(th, ev).then(m => m && chg96(m)).catch(() => {});
     A.ch++; A.sc = 0; }
-  else { A.ended = true; save(); dock98(); return; }
+  else { if (serial98(b)) { A.serialPaused98 = true; A.phase = "talk"; save(); dock98(); serialSheet98(th); return; } A.ended = true; save(); dock98(); return; }
   save(); await enter98(th);
 }
 async function pick98(th, i, echoed) {
@@ -914,7 +921,7 @@ document.addEventListener("click", e => {
 });
 function nextLabel98(th) {
   const { b, c } = scene98(th), A = th.b98;
-  return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : L98("走向结局", "To the ending");
+  return A.sc < c.scenes.length - 1 ? L98("继续", "Continue") : A.ch < b.chapters.length ? L98("下一章", "Next chapter") : serial98(b) ? L98("本次更新已读完", "Finish available chapters") : L98("走向结局", "To the ending");
 }
 /* sending a message in a b98 thread = free talk inside the current scene */
 { const _rp = reply; reply = function (th, ctx, silent) {
@@ -948,7 +955,8 @@ function dock98() {
   const th = S.threads[curT]; const old = $("#dk98"); goalDock98(th); if (!th || !th.b98) { if (old) old.remove(); return; }
   const comp = $("#s-chat .composer"); if (!comp) return; const A = th.b98, { s } = scene98(th);
   let h = '';
-  if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
+  if (serialWaiting98(th)) h = '<div class="dk98r"><button data-serial-open98="1">' + esc(L98("后续剧情持续更新 · 查看", "More chapters coming · View")) + '</button></div>';
+  else if (A.ended) h = '<div class="dk98r"><span class="dk98t">🎬 ' + (experience98(th) ? L98("故事已收束，可重新开始。", "The story has ended. You can start again.") : L98("故事完结。可以继续和他们聊天。", "The story is complete. You can keep talking with them.")) + '</span></div>';
   else if (hiddenChoice98(th) && !(s.id in A.picked) && A.phase !== 'enter') h = '<p class="dk98h">'+esc(L98('直接说出你想怎么做；也可以继续询问或暂缓决定。','Say what you want to do, ask a question, or take your time.'))+'</p>';
   else if (experience98(th) && A.phase !== 'enter' && s && s.choice && experience98(th).choiceDock === 'always') {
     const picked = s.id in A.picked;
@@ -957,9 +965,9 @@ function dock98() {
   else if (A.phase === "choice" && s && s.choice) h = '<div class="dk98q">' + esc(cq98(s.choice.q) || L98("你怎么做？", "What do you do?")) + '</div><div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '">' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join("") + '</div><p class="dk98h">' + L98("也可以直接在下面打字说你想怎么做", "Or type what you'd do below") + '</p>';
   else if (A.phase === "talk" && s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked)) h = '<div class="dk98o">' + s.choice.options.map((o, i) => '<button data-b98pick="' + i + '"' + (busy ? ' disabled' : '') + '>' + esc(playerMark146(cq98(o.t),'act')) + '</button>').join("") + '</div>';
   const mustPick98 = s && s.choice && s.choice.options && s.choice.options.length && !(s.id in A.picked) && !(experience98(th) && experience98(th).allowFreeContinue);
-  if (!A.ended && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
+  if (!A.ended && !serialWaiting98(th) && !busy && A.phase === 'talk' && !mustPick98 && A.ready98 === A.ch + ":" + A.sc) h += '<div class="dk98r"><button data-b98next="1">' + esc(nextLabel98(th)) + ' ›</button></div>';
   /* 点屏继续的提示：前三次用过就不再出现 */
-  if (!A.ended && !busy && A.phase === 'talk' && (S.tap98n || 0) < 3 && th.msgs.some(m => m.ai && m.who !== 'me')) h += '<p class="tap98">' + L98('轻点空白处，让他们接着说', 'Tap the empty space to let them keep talking') + '</p>';
+  if (!A.ended && !serialWaiting98(th) && !busy && A.phase === 'talk' && (S.tap98n || 0) < 3 && th.msgs.some(m => m.ai && m.who !== 'me')) h += '<p class="tap98">' + L98('轻点空白处，让他们接着说', 'Tap the empty space to let them keep talking') + '</p>';
   if (old) old.outerHTML = h ? '<div id="dk98">' + h + '</div>' : ''; else if (h) comp.insertAdjacentHTML("beforebegin", '<div id="dk98">' + h + '</div>');
 }
 { /* 2026-10-27：从「包 renderChat」搬成钩子（收尾批次）。逻辑原样。 */
@@ -967,6 +975,10 @@ const __body_story98 = function () { try { dock98(); const th = S.threads[curT];
 if (window.UI && typeof window.UI.add === "function") window.UI.add("story98", __body_story98);
 else { const _rc = renderChat; renderChat = function () { const r = _rc.apply(this, arguments); __body_story98(); return r; }; }; }
 document.addEventListener("click", e => { let x; const th = S.threads[curT];
+  if (e.target.closest("[data-serial-open98]")) { if (th && serialWaiting98(th)) serialSheet98(th); return; }
+  const detail98 = e.target.closest("[data-serial-detail98]");
+  if (detail98) { closeSheet(); openStory(detail98.dataset.serialDetail98); return; }
+  if (e.target.closest("[data-serial-discover98]")) { closeSheet(); show("s-main"); renderTab("discover"); return; }
   if (e.target.closest("[data-b98next]")) { if (th && th.b98) next98(th); return; }
   if ((x = e.target.closest("[data-b98pick]"))) { if (th && th.b98) pick98(th, +x.dataset.b98pick); return; }
   if ((x = e.target.closest("[data-call98]"))) { e.stopPropagation(); try { startCall(x.dataset.call98); } catch (_) {} return; }
@@ -1320,6 +1332,20 @@ async function hiddenChoiceReply98(th,ctx) {
   return index>=0?pick98(th,index,true):beat98(th,'talk',act);
 }
 
+/* Ongoing story boundary. */
+function serial98(b) { return !!(b && b.publication && b.publication.status === 'ongoing'); }
+function serialWaiting98(th) {
+  if (!th || !th.b98 || !th.b98.serialPaused98) return false;
+  const { b } = scene98(th);
+  return serial98(b) && th.b98.ch >= b.chapters.length;
+}
+function serialSheet98(th) {
+  const { b } = scene98(th), w = wd(th.wid), assets = OFF94.assets[w.community] || {}, cover = assets.cover || assets.poster;
+  sheet('<div style="text-align:center;padding:8px 4px 20px">' +
+    (cover ? '<img src="' + esc(cover) + '" alt="" style="width:104px;height:148px;object-fit:cover;border-radius:14px;margin:0 auto 20px;display:block;box-shadow:0 12px 36px #0005">' : '') +
+    '<p class="xs faint" style="letter-spacing:.18em">' + esc(LZ98(b.title)) + '</p><h2 style="margin:14px 0">' + L98('故事未完，敬请期待', 'The story continues') + '</h2><p style="color:var(--gold);margin:0 0 16px">' + esc(L98('已更新至第 ' + b.chapters.length + ' 章', 'Updated through chapter ' + b.chapters.length)) + '</p><p class="sm" style="line-height:1.9">' + L98('后续剧情持续更新。<br>下一次选择，等你回来。', 'More chapters are on the way.<br>Your next choice awaits.') + '</p><p class="xs faint" style="margin:18px 0 24px">' + L98('本次进度已保存', 'Your progress has been saved') + '</p><button class="btn btn-p btn-block" data-serial-detail98="' + esc(th.wid) + '">' + L98('返回剧本详情', 'Story details') + '</button><button class="btn btn-g btn-block" data-serial-discover98="1">' + L98('发现更多剧本', 'Discover more stories') + '</button></div>');
+}
+/* End ongoing story boundary. */
 /* End authored protagonist and chapter objectives. */
 document.addEventListener('click',e=>{
   if(e.target.closest('[data-goal-check98]')){e.preventDefault();e.stopPropagation();const th=S.threads[curT];if(!th||!objectives98(th)||busy||GOAL98_JUDGING.has(th))return;goalJudge98(th,'check',null).then(()=>{const {c}=scene98(th),a=th.b98;if(a.sc===c.scenes.length-1)a.ready98=goalLocked98(th)?null:a.ch+':'+a.sc;save();if(S.threads[curT]===th)dock98();});dock98();return;}

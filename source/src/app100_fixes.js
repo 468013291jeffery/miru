@@ -13,7 +13,8 @@
     off94Feed = async function () {
       const before = JSON.stringify((OFFF94.list || []).map(w => w.id));
       const L = await _f.apply(this, arguments);
-      try { localStorage.setItem(OKEY, JSON.stringify({ at: Date.now(), L })); } catch (_) {}
+      /* 2026-11-21 性能：列表（约 300 KB）没变就不重写 localStorage —— 首页每分钟刷新一次，以前每次都同步写一遍。 */
+      try { const body = JSON.stringify(L || []); if (body !== OFFF94.saved100) { localStorage.setItem(OKEY, '{"at":' + Date.now() + ',"L":' + body + '}'); OFFF94.saved100 = body; } } catch (_) {}
       try { if (JSON.stringify((L || []).map(w => w.id)) !== before && S.lastTab === "home" && $("#feed")) { const f = $("#feed"); f.querySelectorAll(".off94").forEach(x => x.remove()); renderHome($("#tabv")); } } catch (_) {}
       return L;
     };

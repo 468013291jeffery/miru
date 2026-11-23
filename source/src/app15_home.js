@@ -4,7 +4,7 @@
    The catalog is the 36 official story packs (+ community worlds in Discover). */
 const FEED_TABS=[["foryou",T("For You","为你推荐")],["hot",T("Hot","热门")],["sweet",T("Sweet","甜宠")],["rivals",T("Rivals","宿敌")],["dark",T("Dark","暗黑")],
  ["fantasy",T("Fantasy","奇幻")],["slow",T("Slow Burn","慢热")],["second",T("Second Chance","破镜重圆")],["ensemble",T("Ensemble","群像")]];
-let feedTab="foryou",feedObs=null,feedSound=true;
+let feedTab="foryou",feedObs=null,feedNear=null,feedSound=true,feedCurrent=null,feedPlaySeq=0,feedWireSeq=0;
 function packWorlds(){return W.filter(w=>w.pack)}
 function hotRank(){return packWorlds().slice().sort((a,b)=>b.stats[0]-a.stats[0]).map(w=>w.id)}
 function heatFit(w){const o=["fluff","slow","steamy","mature"];return 3-Math.abs(o.indexOf(w.heat)-o.indexOf(S.heat))}
@@ -16,10 +16,11 @@ function feedList(k){const all=packWorlds();let ws=all.filter(orOK);
  return L.sort((a,b)=>recScore(b)-recScore(a))}
 function lastRun(wid){return Object.values(S.threads).filter(th=>th.wid===wid&&th.pk).sort((a,b)=>b.at-a.at)[0]}
 function orPill(w){return w.kind==="ensemble"?'<span class="fp or ens">'+t("st.ensemble")+'</span>':'<span class="fp or '+w.or+'">'+(w.or==="bl"?"BL":w.or==="gl"?"GL":"M/F")+'</span>'}
+function feedRetryHTML(){return '<button class="btn btn-g" data-feed-play="1" hidden style="position:absolute;z-index:4;top:42%;left:50%;transform:translateX(-50%)">▶ '+(CL()==='zh'?'点击播放':'Tap to play')+'</button>'}
 function fCard(w,i,top){const cl=CLIPS[w.id+":1"],c0=cl&&cl[Object.keys(cl)[0]],run=lastRun(w.id),fav=(S.favs||{})[w.id],rk=top.indexOf(w.id);
  const bg=c0?'<video class="fvid" loop playsinline preload="none" poster="'+artSrc(w.cover?w.id:w.cast[0])+'" data-src="'+vidSrc(c0.src)+'"></video>':
   '<img class="fimg'+(w.cover?"":" duo")+'" src="'+artSrc(w.cover?w.id:w.cast[0])+'" alt="">'+(!w.cover&&w.cast[1]?'<img class="fimg2" src="'+artSrc(w.cast[1])+'" alt="">':"");
- return '<section class="fcard" data-fw="'+w.id+'">'+bg+'<div class="fveil"></div>'+
+ return '<section class="fcard" data-fw="'+w.id+'">'+bg+(c0?feedRetryHTML():"")+'<div class="fveil"></div>'+
   '<div class="fside">'+(SHORTS[w.id]?'<button data-short="'+w.id+'" aria-label="hook"><i>▶</i><small>'+t("hf.hook")+'</small></button>':'')+
    '<button data-remix="'+w.id+'" aria-label="remix"><i>⑂</i><small>'+t("hf.remix")+'</small></button><button data-fshare="'+w.id+'" aria-label="share"><i>⇪</i><small>'+t("hf.share")+'</small></button></div>'+
   '<div class="finfo fmin"><div class="frow"><button class="ftitle" data-story="'+w.id+'">'+esc(Lz(w.title))+'<small>'+(w.kind==="ensemble"?"":w.or==="bl"?" · BL":w.or==="gl"?" · GL":"")+' ›</small></button><button class="fheart'+(fav?" on":"")+'" data-fav="'+w.id+'" aria-label="save">'+(fav?"♥":"♡")+'</button></div></div></section>'}
@@ -31,12 +32,35 @@ function renderHome(v){
   '<div class="feed" id="feed">'+homeShowcaseHTML()+(ws.length?ws.map((w,i)=>fCard(w,i,top)).join(""):'<p class="empty" style="padding-top:120px">'+t("disc.none")+'</p>')+'</div></div>';
  const on=$('[data-ftab].on');if(on)on.scrollIntoView({inline:"center",block:"nearest"});
  feedWire()}
-function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();
- feedObs=new IntersectionObserver(es=>es.forEach(en=>{const v=en.target.querySelector("video");if(!v)return;
-  if(en.isIntersecting&&en.intersectionRatio>.6){if(!v.src)v.src=v.dataset.src;v.muted=!feedSound;const p=v.play();p&&p.catch&&p.catch(()=>{v.muted=true;v.play().catch(()=>{})})}else v.pause()}),{root:feed,threshold:[0,.6,1]});
- feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c))}
+function feedStopVideo(v){if(!v)return;if(feedCurrent===v){feedCurrent=null;feedPlaySeq++}
+ try{v.pause();if(v.getAttribute("src")){v.removeAttribute("src");v.load()}}catch(_){}
+ const retry=v.closest(".fcard")?.querySelector("[data-feed-play]");if(retry)retry.hidden=true;}
+function feedPlayVideo(v){if(!v||feedCurrent===v||document.hidden||v.closest(".screen[hidden]"))return;
+ if(feedCurrent)feedStopVideo(feedCurrent);feedCurrent=v;const seq=++feedPlaySeq;
+ const current=()=>feedCurrent===v&&feedPlaySeq===seq&&v.isConnected&&!document.hidden&&!v.closest(".screen[hidden]");
+ const retry=v.closest(".fcard")?.querySelector("[data-feed-play]");v.onplaying=()=>{if(retry)retry.hidden=true};
+ const failed=()=>{if(current()&&retry)retry.hidden=false};
+ try{if(!v.getAttribute("src"))v.setAttribute("src",v.dataset.src);v.muted=!feedSound;
+  const p=v.play();if(p&&p.catch)p.catch(e=>{if(!current()||e?.name==="AbortError")return;
+   if(e?.name!=="NotAllowedError"){failed();return}v.muted=true;try{v.play().catch(failed)}catch(_){failed()}});
+ }catch(_){failed()}}
+function feedWire(){const feed=$("#feed");if(!feed)return;if(feedObs)feedObs.disconnect();const wire=++feedWireSeq;
+ if(feedCurrent&&!feed.contains(feedCurrent))feedStopVideo(feedCurrent);
+ feedObs=new IntersectionObserver(es=>{if(wire!==feedWireSeq)return;es.forEach(en=>{const v=en.target.querySelector("video");if(!v)return;
+  if(en.isIntersecting&&en.intersectionRatio>=.6)feedPlayVideo(v);else feedStopVideo(v)})},{root:feed,threshold:[0,.6,1]});
+ feed.querySelectorAll(".fcard").forEach(c=>feedObs.observe(c));
+ /* 2026-11-21 性能：封面按需加载 —— 只给当前这张卡和上下各一张卡加载封面（data-poster / data-src → poster / src）。
+    以前所有卡的封面一进首页就全下，官方剧封面每张 2–3 MB，几十张把连接占满。老浏览器没有 IntersectionObserver 时照旧全部加载。 */
+ const hyd=c=>{c.querySelectorAll("video[data-poster]").forEach(v=>{if(!v.getAttribute("poster"))v.setAttribute("poster",v.dataset.poster)});
+  c.querySelectorAll("img[data-src]").forEach(i=>{if(!i.getAttribute("src")&&i.dataset.src)i.setAttribute("src",i.dataset.src)})};
+ if(feedNear){feedNear.disconnect();feedNear=null}
+ if(typeof IntersectionObserver==="function"){
+  feedNear=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){hyd(en.target);feedNear&&feedNear.unobserve(en.target)}}),{root:feed,rootMargin:"100% 0px 100% 0px",threshold:0});
+  feed.querySelectorAll(".fcard").forEach(c=>feedNear.observe(c))}
+ else feed.querySelectorAll(".fcard").forEach(hyd)}
 document.addEventListener("click",e=>{let x;
- if(x=e.target.closest("[data-fsound]")){feedSound=!feedSound;x.textContent=feedSound?"🔊":"🔇";$$(".fvid").forEach(v=>v.muted=!feedSound);return}
+ if(x=e.target.closest("[data-feed-play]")){e.preventDefault();e.stopImmediatePropagation();const v=x.closest(".fcard")?.querySelector("video");if(v){feedStopVideo(v);feedPlayVideo(v);x.hidden=true}return}
+ if(x=e.target.closest("[data-fsound]")){feedSound=!feedSound;x.textContent=feedSound?"🔊":"🔇";if(feedCurrent){feedCurrent.muted=!feedSound;if(feedCurrent.paused){const v=feedCurrent;feedCurrent=null;feedPlayVideo(v)}}return}
  if(feedSound&&e.target.closest(".fcard")){$$(".fvid").forEach(v=>{if(v.muted&&!v.paused)v.muted=false})}
  if(x=e.target.closest("[data-ftab]")){feedTab=x.dataset.ftab;renderHome($("#tabv"));return}
  if(x=e.target.closest("[data-fav]")){const id=x.dataset.fav;S.favs=S.favs||{};S.favs[id]=!S.favs[id];if(!S.favs[id])delete S.favs[id];save();x.classList.toggle("on",!!S.favs[id]);x.textContent=S.favs[id]?"♥":"♡";toast(S.favs[id]?t("hf.saved"):t("hf.unsaved"));return}

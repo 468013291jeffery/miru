@@ -1,0 +1,91 @@
+{
+  "script_id": "sc_mws43jxc757c857838",
+  "english_script_id": "sc_mws43ira8ed53459c0",
+  "work_id": "w_scmws43jxc757c857838",
+  "source_key": "m119-breakup-v2",
+  "backend_review": {
+    "zh": {
+      "ok": true,
+      "err": [],
+      "warn": [],
+      "stats": {
+        "chapters": 16,
+        "scenes": 64,
+        "choices": 65,
+        "options": 258,
+        "dots": 65,
+        "you": 0,
+        "casts": 12,
+        "lines": 646,
+        "callsOpen": 0,
+        "callsClose": 0,
+        "ifs": 13,
+        "ifEnds": 13,
+        "unknown": [],
+        "assets": {
+          "bg": 64,
+          "cg": 0,
+          "video": 0,
+          "photo": 0,
+          "item": 0,
+          "total": 64
+        },
+        "lore": 0,
+        "orient": {
+          "declared": "bg",
+          "inferred": "bg",
+          "final": "bg"
+        }
+      }
+    },
+    "en": {
+      "ok": true,
+      "err": [],
+      "warn": [
+        "样式：第 1 章 标题：26 字，建议不超过 16 字",
+        "样式：第 2 章 标题：24 字，建议不超过 16 字",
+        "样式：第 3 章 标题：25 字，建议不超过 16 字",
+        "样式：第 4 章 标题：19 字，建议不超过 16 字",
+        "样式：第 6 章 标题：30 字，建议不超过 16 字",
+        "样式：第 7 章 标题：27 字，建议不超过 16 字",
+        "样式：第 8 章 标题：17 字，建议不超过 16 字",
+        "样式：第 9 章 标题：24 字，建议不超过 16 字",
+        "样式：第 10 章 标题：30 字，建议不超过 16 字",
+        "样式：第 12 章 标题：19 字，建议不超过 16 字",
+        "样式：第 13 章 标题：31 字，建议不超过 16 字",
+        "样式：第 14 章 标题：18 字，建议不超过 16 字",
+        "样式：第 15 章 标题：26 字，建议不超过 16 字",
+        "样式：第 16 章 标题：24 字，建议不超过 16 字"
+      ],
+      "stats": {
+        "chapters": 16,
+        "scenes": 64,
+        "choices": 65,
+        "options": 258,
+        "dots": 65,
+        "you": 0,
+        "casts": 12,
+        "lines": 646,
+        "callsOpen": 0,
+        "callsClose": 0,
+        "ifs": 13,
+        "ifEnds": 13,
+        "unknown": [],
+        "assets": {
+          "bg": 64,
+          "cg": 0,
+          "video": 0,
+          "photo": 0,
+          "item": 0,
+          "total": 64
+        },
+        "lore": 0,
+        "orient": {
+          "declared": "bg",
+          "inferred": "bg",
+          "final": "bg"
+        }
+      }
+    }
+  }
+}

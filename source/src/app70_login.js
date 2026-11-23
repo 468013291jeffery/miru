@@ -34,6 +34,7 @@ const AUT = {
   net: { zh: "网络不稳定，请稍后再试", en: "Network problem — try again", ja: "通信エラーです。もう一度お試しください", ko: "네트워크 오류예요. 다시 시도해 주세요", es: "Error de red, inténtalo de nuevo" },
   welcomeBack: { zh: "欢迎回来，进度已恢复", en: "Welcome back — progress restored", ja: "おかえりなさい。進行状況を復元しました", ko: "다시 오신 걸 환영해요. 진행 상황을 복원했어요", es: "¡Bienvenido de nuevo! Progreso restaurado" },
   hi: { zh: "登录成功", en: "You're signed in", ja: "ログインしました", ko: "로그인했어요", es: "Sesión iniciada" },
+  syncing: { zh: "登录成功，正在同步你的进度…", en: "Signed in — syncing your progress…", ja: "ログインしました。進行状況を同期中…", ko: "로그인했어요. 진행 상황을 동기화하는 중…", es: "Sesión iniciada. Sincronizando tu progreso…" },
   banned: { zh: "账号已被封禁", en: "This account is suspended", ja: "このアカウントは停止されています", ko: "이 계정은 정지되었어요", es: "Esta cuenta está suspendida" },
   until: { zh: "解封时间", en: "Until", ja: "解除日時", ko: "해제 시각", es: "Hasta" },
   forever: { zh: "永久", en: "Permanent", ja: "無期限", ko: "영구", es: "Permanente" },
@@ -183,6 +184,8 @@ async function au70Done(j, method) {
   track("login", { method, restored: !!j.restored });
   closeSheet();
   if (j.restored && !sameUser) {
+    /* 2026-11-21：登录框关掉之后还要从服务器取存档和钻石（网慢时要好几秒），以前这段时间页面上什么提示都没有，像卡死了。先说一声。 */
+    try { toast(au("syncing")); } catch (_) {}
     let had = false; try { had = await cloudPull(); } catch (_) {}
     const cc = cloudInfo(); cc.token = j.token; cc.uid = j.user.id; cc.email = j.user.email; cc.provider = j.user.provider;
     S.authChoice = method; save0(); await walletPull().catch(() => {});

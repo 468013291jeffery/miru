@@ -14,11 +14,18 @@ const OFF94 = { cur: null, assets: {} };
 const dec94 = s => { try { return decodeURIComponent(s); } catch (_) { return s; } };
 function mk94(txt) { const m = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/.exec(String(txt || "").trim()); if (!m) return null; return { k: m[1], a: m[2] ? m[2].slice(1).split("|").map(dec94) : [] }; }
 async function off94Assets(id) {
-  const at=Date.now(); OFF94.assetAt=OFF94.assetAt||{};
+  const at=Date.now(); OFF94.assetAt=OFF94.assetAt||{}; OFF94.assetBusy=OFF94.assetBusy||{};
   if (OFF94.assets[id] && at-(OFF94.assetAt[id]||0)<120000) return OFF94.assets[id];
-  let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Date.now(), {cache:"no-store"}); if (r.ok) map = await r.json(); } catch (_) {}
-  if (!Object.keys(map||{}).length && OFF94.assets[id]) return OFF94.assets[id];
-  OFF94.assets[id] = map || {}; OFF94.assetAt[id]=at; return OFF94.assets[id];
+  /* 2026-11-21 性能：同一部剧的素材表同时只取一次（以前首页、发现页、挑战页各取各的，同一个文件同时下两三遍）。
+     取法本身不变：仍然带时间戳 + no-store，新发布的预告片照样立刻生效（tools/homepage-assets-selftest.cjs 守着这一条）。 */
+  if (OFF94.assetBusy[id]) return OFF94.assetBusy[id];
+  const job = (async () => {
+    let map = {}; try { const r = await fetch("art/official/" + encodeURIComponent(id) + ".json?v=" + Date.now(), {cache:"no-store"}); if (r.ok) map = await r.json(); } catch (_) {}
+    if (!Object.keys(map||{}).length && OFF94.assets[id]) return OFF94.assets[id];
+    OFF94.assets[id] = map || {}; OFF94.assetAt[id]=at; return OFF94.assets[id];
+  })();
+  OFF94.assetBusy[id] = job;
+  try { return await job; } finally { if (OFF94.assetBusy[id] === job) delete OFF94.assetBusy[id]; }
 }
 /* ---- parse: lift directives out of the narration ---- */
 function off94Parse(next, text) {
@@ -328,10 +335,10 @@ function off94Cards(root) {
   (root || document).querySelectorAll("[data-cwork] .off89ph").forEach(ph => {
     const id = ph.closest("[data-cwork]").dataset.cwork; if (ph.dataset.h94) return; ph.dataset.h94 = 1;
     off94Assets(id).then(A => { if (!ph.isConnected) return; const art = ph.parentNode;
-      if (A.cover) { ph.outerHTML = '<img src="' + esc(A.cover) + '" alt="">'; return; }
-      if (A.vid_open) { ph.outerHTML = '<video class="v94" src="' + esc(A.vid_open) + '"' + (A.poster ? ' poster="' + esc(A.poster) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>';
-        const v = art.querySelector("video.v94"); if (v) { v.muted = true; v.play().catch(() => {}); } return; }
-      if (A.poster) ph.outerHTML = '<img src="' + esc(A.poster) + '" alt="">'; });
+      /* 2026-11-21 性能：同上，搜索结果里的封面 / 预告片也滚到眼前才加载（data-lz，见 app157_perf.js） */
+      if (A.cover) { ph.outerHTML = '<img data-lz="1" data-src="' + esc(A.cover) + '" alt="">'; return; }
+      if (A.vid_open) { ph.outerHTML = '<video class="v94" data-lz="1" data-src="' + esc(A.vid_open) + '"' + (A.poster ? ' data-poster="' + esc(A.poster) + '"' : '') + ' muted loop playsinline preload="none"></video>'; return; }
+      if (A.poster) ph.outerHTML = '<img data-lz="1" data-src="' + esc(A.poster) + '" alt="">'; });
   });
 }
 new MutationObserver(() => { try { if (document.querySelector("[data-cwork] .off89ph:not([data-h94])")) off94Cards(); } catch (_) {} }).observe(document.body, { childList: true, subtree: true });
@@ -342,8 +349,13 @@ async function off94Feed() {
   if (OFFF94.list && Date.now() - OFFF94.at < 120000) return OFFF94.list;
   let L = []; try { L = await off89Load(); } catch (_) {}
   if (!L || !L.length) { try { const r = await capi("/works?feed=featured&limit=50"); L = ((r && r.j && r.j.works) || []).filter(w => w.featured); } catch (_) {} }
+  /* 2026-11-21 性能：素材表 6 路并发取，顺序不变。
+     以前是一部一部排队等（40 多部 × 每次一个跨洋往返 ≈ 10 多秒），首页的官方新剧要等全部取完才出来。 */
+  const rows = L || [], maps = new Array(rows.length); let next = 0;
+  const worker = async () => { while (next < rows.length) { const i = next++; try { maps[i] = await off94Assets(rows[i].id); } catch (_) { maps[i] = null; } } };
+  await Promise.all(Array.from({ length: Math.min(6, rows.length) }, worker));
   const out = [];
-  for (const w of (L || [])) { try { const A = await off94Assets(w.id); if (A.vid_open || A.cover || A.poster) out.push(Object.assign({}, w, { A })); } catch (_) {} }
+  rows.forEach((w, i) => { const A = maps[i]; if (A && (A.vid_open || A.cover || A.poster)) out.push(Object.assign({}, w, { A })); });
   OFFF94.list = out; OFFF94.at = Date.now(); return out;
 }
 /* a Chinese title must not carry its English name ("冰场之外 Off the Ice" → "冰场之外") */
@@ -362,8 +374,10 @@ function off94PreviewSrc(w) {
 }
 function off94FCard(w) {
   const A = w.A, homeVideo = off94PreviewSrc(w), pos = A.cover || A.poster || "";
-  const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg" src="' + esc(pos) + '" alt="">';
-  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + '<div class="fveil"></div>' +
+  /* 2026-11-21 性能：封面不再一进首页就全下（38 张、每张 2–3 MB ≈ 38 MB，把连接全占满，别的请求都排在后面）。
+     先写在 data-poster / data-src 上，feedWire 只给当前这张和上下各一张卡加载（见 app15_home.js）。 */
+  const bg = homeVideo ? '<video class="fvid" loop playsinline preload="none"' + (pos ? ' data-poster="' + esc(pos) + '"' : '') + ' data-src="' + esc(homeVideo) + '"></video>' : '<img class="fimg"' + (pos ? ' data-src="' + esc(pos) + '"' : '') + ' alt="">';
+  return '<section class="fcard off94" data-off94="' + esc(w.id) + '">' + bg + (homeVideo ? feedRetryHTML() : '') + '<div class="fveil"></div>' +
     '<div class="finfo fmin"><span class="fp or ' + esc(w.orient || "bg") + '">' + (CL() === "zh" ? (w.orient === "bl" ? "男男" : w.orient === "gl" ? "女女" : "男女") : (w.orient === "bl" ? "BL" : w.orient === "gl" ? "GL" : "M/F")) + '</span> <span class="fp new94">✦ MIRU ' + (CL() === "zh" ? "新剧" : "New") + '</span>' +
     '<div class="frow"><button class="ftitle" data-off94="' + esc(w.id) + '">' + esc(off94Title(w)) + '<small> ›</small></button></div><p class="fhook94">' + esc(off94Hook(w)) + '</p>' +
     '<button class="btn btn-p btn-sm fplay94" data-off94="' + esc(w.id) + '">▶ ' + (CL() === "zh" ? "开始看" : "Play") + '</button></div></section>';
@@ -384,7 +398,9 @@ renderHome = function (v) {
 };
 function off94RCard(w) {
   const A = w.A, previewVideo = off94PreviewSrc(w), pos = A.cover || A.poster || "";
-  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (previewVideo ? '<video src="' + esc(previewVideo) + '"' + (pos ? ' poster="' + esc(pos) + '"' : '') + ' muted autoplay loop playsinline preload="metadata"></video>' : '<img src="' + esc(pos) + '" alt="">') +
+  /* 2026-11-21 性能：发现页每排的卡片以前全是 autoplay 视频（一部剧出现在几排就是几个），一打开几十上百个视频同时下载。
+     现在标 data-lz：滚到眼前才加载封面，预告片同一时间最多放 2 个（见 app157_perf.js）。 */
+  return '<button class="rcard" data-off94="' + esc(w.id) + '"><div class="rart">' + (previewVideo ? '<video data-lz="1" data-src="' + esc(previewVideo) + '"' + (pos ? ' data-poster="' + esc(pos) + '"' : '') + ' muted loop playsinline preload="none"></video>' : '<img data-lz="1"' + (pos ? ' data-src="' + esc(pos) + '"' : '') + ' alt="">') +
     '<span class="rbadge">✦ ' + (CL() === "zh" ? "新剧" : "New") + '</span></div><b>' + esc(off94Title(w)) + '</b><span>' + esc(off94Hook(w)).slice(0, 40) + '</span></button>';
 }
 const _discMain94 = discMain;
@@ -397,8 +413,10 @@ discMain = function () {
   return h;
 };
 document.addEventListener("click", async e => {
-  const x = e.target.closest("[data-off94]"); if (!x) return; e.preventDefault(); e.stopPropagation();
+  const x = e.target.closest("[data-off94]"); if (!x || e.target.closest("[data-feed-play]")) return; e.preventDefault(); e.stopPropagation();
   if (x.dataset.busy) return; x.dataset.busy = 1;
+  if (window.PERF157) PERF157.stopAll();
+  toast(CL() === "zh" ? "正在打开剧本…" : "Opening story…");
   try { const wid = await installWork(x.dataset.off94); if (wid) { try { if (typeof openStory === "function") openStory(wid); else startSheet(wid); } catch (_) { try { startSheet(wid); } catch (__) {} } } } finally { delete x.dataset.busy; }
 }, true);
 (function () { const st = document.createElement("style"); st.textContent = `.fcard.off94 .fimg{object-fit:cover}.fp.new94{background:var(--gold,#F0B77E);color:#241a10}.fhook94{margin:6px 0 10px;font-size:13.5px;line-height:1.5;color:#fffd;max-width:88%;text-shadow:0 1px 6px #000a}.fplay94{pointer-events:auto}

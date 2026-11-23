@@ -1,0 +1,1096 @@
+{
+  "schema_version": "1.0",
+  "items": [
+    {
+      "id": "CH01_A",
+      "chapter_id": "CH01",
+      "scene_id": "CH01_S02",
+      "zh_name": "百万美元的来源",
+      "en_name": "Source of the Million",
+      "rule_zh": "对三条资金记录按可受理性分类",
+      "options": [
+        "有当事人授权的托管转账",
+        "未知匿名加密付款",
+        "附保密威胁的现金"
+      ],
+      "correct_answer": "有当事人授权的托管转账",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch01_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch01_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch01_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH01_B",
+      "chapter_id": "CH01",
+      "scene_id": "CH01_S03",
+      "zh_name": "结婚照时间线",
+      "en_name": "Wedding Timeline",
+      "rule_zh": "为三张已核验照片按时间排序",
+      "options": [
+        "码头火灾三年前",
+        "正式登记结婚18个月前",
+        "今日委托"
+      ],
+      "correct_answer": "火灾→结婚→今日",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch01_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch01_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch01_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH02_A",
+      "chapter_id": "CH02",
+      "scene_id": "CH02_S02",
+      "zh_name": "保密范围",
+      "en_name": "Privacy Firewall",
+      "rule_zh": "将五类资料分给对应授权人员",
+      "options": [
+        "客户婚姻材料",
+        "公众报道",
+        "玩家健康记录"
+      ],
+      "correct_answer": "各归原主体;不得跨客户共享",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch02_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch02_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch02_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH02_B",
+      "chapter_id": "CH02",
+      "scene_id": "CH02_S03",
+      "zh_name": "照片脱敏",
+      "en_name": "Redact the Shot",
+      "rule_zh": "找出泄漏照片中需模糊的信息",
+      "options": [
+        "住址门牌",
+        "公共舞台",
+        "已授权人物"
+      ],
+      "correct_answer": "遮住住址门牌",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch02_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch02_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch02_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH03_A",
+      "chapter_id": "CH03",
+      "scene_id": "CH03_S02",
+      "zh_name": "档案对号",
+      "en_name": "Archive Index",
+      "rule_zh": "两种目录中的事故编号配对",
+      "options": [
+        "P47-0604",
+        "P47-0640",
+        "R47-0604"
+      ],
+      "correct_answer": "P47-0604与事故公开目录匹配",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch03_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch03_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch03_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH03_B",
+      "chapter_id": "CH03",
+      "scene_id": "CH03_S03",
+      "zh_name": "错位的印章",
+      "en_name": "Stamped Twice",
+      "rule_zh": "比对两份文件中唯一不相同的登记字段",
+      "options": [
+        "签收号",
+        "纸张颜色",
+        "装订方式"
+      ],
+      "correct_answer": "签收号",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch03_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch03_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch03_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH04_A",
+      "chapter_id": "CH04",
+      "scene_id": "CH04_S02",
+      "zh_name": "信托与戒指",
+      "en_name": "Trust or Jewelry",
+      "rule_zh": "分辨个人婚姻财产和独立员工信托",
+      "options": [
+        "戒指",
+        "受益人福利",
+        "夫妻合照"
+      ],
+      "correct_answer": "受益人福利属于独立信托事务",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch04_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch04_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch04_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH04_B",
+      "chapter_id": "CH04",
+      "scene_id": "CH04_S03",
+      "zh_name": "投票代理审查",
+      "en_name": "Proxy Review",
+      "rule_zh": "找到一份已经过期的代理授权",
+      "options": [
+        "签署时间",
+        "有效期",
+        "收件人昵称"
+      ],
+      "correct_answer": "有效期已届满的文件",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch04_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch04_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch04_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH05_A",
+      "chapter_id": "CH05",
+      "scene_id": "CH05_S02",
+      "zh_name": "逃生门方向",
+      "en_name": "Exit Route",
+      "rule_zh": "在旧平面图中选择合规疏散路径",
+      "options": [
+        "朝外推的消防出口",
+        "锁死仓储门",
+        "绕回货梯"
+      ],
+      "correct_answer": "朝外推的消防出口",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch05_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch05_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch05_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH05_B",
+      "chapter_id": "CH05",
+      "scene_id": "CH05_S03",
+      "zh_name": "签署责任拆分",
+      "en_name": "Signature Split",
+      "rule_zh": "按直接证据与待核查线索分类",
+      "options": [
+        "Gabriel确认签署延期",
+        "匿名锁门命令",
+        "网络传言"
+      ],
+      "correct_answer": "签署延期为已确认，其余待核验",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch05_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch05_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch05_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH06_A",
+      "chapter_id": "CH06",
+      "scene_id": "CH06_S02",
+      "zh_name": "营销真伪",
+      "en_name": "Truthful PR",
+      "rule_zh": "识别需当事人同意的营销语句",
+      "options": [
+        "真实工作更新",
+        "虚构分手公告",
+        "公开演出日期"
+      ],
+      "correct_answer": "虚构分手公告不可未经同意发布",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch06_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch06_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch06_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH06_B",
+      "chapter_id": "CH06",
+      "scene_id": "CH06_S03",
+      "zh_name": "元数据线索",
+      "en_name": "Metadata Trail",
+      "rule_zh": "比对合法取得的附件元数据",
+      "options": [
+        "Greybridge供应商水印",
+        "随机页码",
+        "拍摄天气"
+      ],
+      "correct_answer": "Greybridge供应商水印",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch06_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch06_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch06_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH07_A",
+      "chapter_id": "CH07",
+      "scene_id": "CH07_S02",
+      "zh_name": "两份幸存者名单",
+      "en_name": "Two Lists",
+      "rule_zh": "定位医院转运与企业伤亡名单的矛盾",
+      "options": [
+        "转运号匹配但状态不同",
+        "字体不同",
+        "纸张厚度"
+      ],
+      "correct_answer": "转运号匹配但状态不同",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch07_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch07_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch07_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH07_B",
+      "chapter_id": "CH07",
+      "scene_id": "CH07_S03",
+      "zh_name": "救护转运流程",
+      "en_name": "Transfer Steps",
+      "rule_zh": "按合理顺序还原当夜转运记录",
+      "options": [
+        "现场接诊",
+        "身份待核",
+        "转院收治",
+        "后续康复"
+      ],
+      "correct_answer": "现场接诊→身份待核→转院收治→后续康复",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch07_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch07_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch07_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH08_A",
+      "chapter_id": "CH08",
+      "scene_id": "CH08_S02",
+      "zh_name": "信托签署权限",
+      "en_name": "Trust Authority",
+      "rule_zh": "按文件授予的权限识别谁可代表信托",
+      "options": [
+        "受托人",
+        "婚姻配偶",
+        "公关顾问"
+      ],
+      "correct_answer": "依文件受托人，而非自动配偶",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch08_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch08_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch08_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH08_B",
+      "chapter_id": "CH08",
+      "scene_id": "CH08_S03",
+      "zh_name": "福利资金流向",
+      "en_name": "Fund Trail",
+      "rule_zh": "对照两个季度的受益人拨款明细",
+      "options": [
+        "连续拨款",
+        "未经同意的中断",
+        "正常账目说明"
+      ],
+      "correct_answer": "未经同意的中断为异常",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch08_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch08_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch08_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH09_A",
+      "chapter_id": "CH09",
+      "scene_id": "CH09_S02",
+      "zh_name": "门闩照片比对",
+      "en_name": "Latch Evidence",
+      "rule_zh": "把两张独立照片的同一门把位置对齐",
+      "options": [
+        "门外新增锁扣",
+        "墙体颜色",
+        "灯光明暗"
+      ],
+      "correct_answer": "门外新增锁扣",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch09_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch09_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch09_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH09_B",
+      "chapter_id": "CH09",
+      "scene_id": "CH09_S03",
+      "zh_name": "证人公开边界",
+      "en_name": "Witness Consent",
+      "rule_zh": "判断采访资料可否公开",
+      "options": [
+        "同意公开的描述",
+        "未同意的电话",
+        "未核验姓名"
+      ],
+      "correct_answer": "仅同意公开的描述",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch09_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch09_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch09_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH10_A",
+      "chapter_id": "CH10",
+      "scene_id": "CH10_S02",
+      "zh_name": "电子签名来源",
+      "en_name": "Digital Signatures",
+      "rule_zh": "配对签名记录与账号权限",
+      "options": [
+        "本人确认的签署",
+        "共享账号登录",
+        "未验证附件"
+      ],
+      "correct_answer": "本人确认的签署可归本人，其余待证",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch10_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch10_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch10_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH10_B",
+      "chapter_id": "CH10",
+      "scene_id": "CH10_S03",
+      "zh_name": "负责与免责",
+      "en_name": "Responsibility Split",
+      "rule_zh": "区分已确认的过错和仍待证明的命令",
+      "options": [
+        "延期整改",
+        "出口封锁",
+        "事故后沉默"
+      ],
+      "correct_answer": "延期整改及沉默可核验，锁门命令待查",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch10_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch10_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch10_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH11_A",
+      "chapter_id": "CH11",
+      "scene_id": "CH11_S02",
+      "zh_name": "身份记录更正",
+      "en_name": "Record Correction",
+      "rule_zh": "找出行政更正需要的基本合法材料",
+      "options": [
+        "本人身份证明+认证收治记录",
+        "网络截图",
+        "采访转述"
+      ],
+      "correct_answer": "身份证明+认证收治记录",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch11_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch11_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch11_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH11_B",
+      "chapter_id": "CH11",
+      "scene_id": "CH11_S03",
+      "zh_name": "公关付款链",
+      "en_name": "Payment Trail",
+      "rule_zh": "按日期将服务合同、发票、拨款排序",
+      "options": [
+        "采购合同",
+        "付款申请",
+        "实际转账"
+      ],
+      "correct_answer": "采购合同→付款申请→转账",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch11_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch11_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch11_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH12_A",
+      "chapter_id": "CH12",
+      "scene_id": "CH12_S02",
+      "zh_name": "宠物照护表",
+      "en_name": "Pet Care Plan",
+      "rule_zh": "为老年犬匹配真正可执行的照护时间",
+      "options": [
+        "每日给药+稳定住址",
+        "只有口头承诺",
+        "只按谁更伤心"
+      ],
+      "correct_answer": "每日给药+稳定住址",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch12_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch12_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch12_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH12_B",
+      "chapter_id": "CH12",
+      "scene_id": "CH12_S03",
+      "zh_name": "合伙人预算",
+      "en_name": "Partner Budget",
+      "rule_zh": "使运营预算不超支并保留员工工资",
+      "options": [
+        "收入100:工资45法务25公益15备用15",
+        "工资80广告50",
+        "公益100"
+      ],
+      "correct_answer": "45+25+15+15=100",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch12_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch12_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch12_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH13_A",
+      "chapter_id": "CH13",
+      "scene_id": "CH13_S02",
+      "zh_name": "红线条款",
+      "en_name": "Redline the Clause",
+      "rule_zh": "识别不合理的全面封口条款",
+      "options": [
+        "限制披露个人住址",
+        "阻止向监管机构作证",
+        "保密未公开交易价"
+      ],
+      "correct_answer": "阻止向监管机构作证",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch13_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch13_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch13_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH13_B",
+      "chapter_id": "CH13",
+      "scene_id": "CH13_S03",
+      "zh_name": "员工基金应急",
+      "en_name": "Fund Continuity",
+      "rule_zh": "排列不会中断员工福利的转移方案",
+      "options": [
+        "独立托管",
+        "通知受益人",
+        "过渡拨款",
+        "事后审计"
+      ],
+      "correct_answer": "先建立合法过渡托管并通知",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch13_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch13_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch13_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH14_A",
+      "chapter_id": "CH14",
+      "scene_id": "CH14_S02",
+      "zh_name": "证据链封存",
+      "en_name": "Chain of Custody",
+      "rule_zh": "给认证副本匹配封存环节",
+      "options": [
+        "来源凭证",
+        "授权",
+        "封存编号",
+        "交接记录"
+      ],
+      "correct_answer": "来源→授权→封存→交接",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch14_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch14_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch14_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH14_B",
+      "chapter_id": "CH14",
+      "scene_id": "CH14_S03",
+      "zh_name": "双层披露",
+      "en_name": "Two-Level Disclosure",
+      "rule_zh": "区分公开事实和保密健康信息",
+      "options": [
+        "采购日期",
+        "当事人医疗细节",
+        "授权证词"
+      ],
+      "correct_answer": "采购日期和授权证词可公开;医疗细节封存",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch14_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch14_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch14_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH15_A",
+      "chapter_id": "CH15",
+      "scene_id": "CH15_S02",
+      "zh_name": "听证证据分类",
+      "en_name": "Hearing Evidence",
+      "rule_zh": "区分第一手原件和只能佐证的材料",
+      "options": [
+        "认证采购单",
+        "不具名社媒帖子",
+        "证人原始记录"
+      ],
+      "correct_answer": "认证采购单与原始记录可直接支持，帖子仅线索",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch15_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch15_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch15_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH15_B",
+      "chapter_id": "CH15",
+      "scene_id": "CH15_S03",
+      "zh_name": "离婚方案审读",
+      "en_name": "Divorce Exit",
+      "rule_zh": "核查离婚与信托变更是否分开签署",
+      "options": [
+        "离婚意向",
+        "信托受托人变更",
+        "媒体声明"
+      ],
+      "correct_answer": "三个分别签署并审查",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch15_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch15_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch15_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH16_A",
+      "chapter_id": "CH16",
+      "scene_id": "CH16_S02",
+      "zh_name": "新季预算表",
+      "en_name": "New Season Budget",
+      "rule_zh": "给公益名额与运营成本安排全年预算",
+      "options": [
+        "运营55法务20公益15备用10",
+        "运营70推广50",
+        "全部公益100"
+      ],
+      "correct_answer": "55+20+15+10=100",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch16_a_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch16_a_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch16_a_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    },
+    {
+      "id": "CH16_B",
+      "chapter_id": "CH16",
+      "scene_id": "CH16_S03",
+      "zh_name": "未来边界卡",
+      "en_name": "Future Boundaries",
+      "rule_zh": "选择更适合当前自愿关系的明确沟通方式",
+      "options": [
+        "说清期待与距离",
+        "默认复合",
+        "沉默当同意"
+      ],
+      "correct_answer": "说清期待与距离",
+      "duration_seconds_target": 35,
+      "win_flag": "mg_ch16_b_win",
+      "outcomes": {
+        "win": "获得可核验线索，设置 `mg_ch16_b_win=true`；证据完整度 +1，后续对应场景认可这一努力。",
+        "lose": "当场发现判断存在漏洞，相关角色补充一项公开或已授权的事实；记录额外核验成本，剧情继续。",
+        "skip": "由事务所同事按照保守流程完成必要步骤；不给胜利旗标，但保持主线可达。"
+      },
+      "template": "document_sort / compare / sequence / schedule",
+      "ui": "小游戏嵌于剧情场景，不出现独立强制入口，不参与可略过",
+      "require_new_template": false,
+      "win_effects": {
+        "evidence_integrity": 1,
+        "set_flag": "mg_ch16_b_win"
+      },
+      "lose_effects": {
+        "verification_cost": 1
+      },
+      "skip_effects": {
+        "assisted_resolution": true
+      }
+    }
+  ]
+}

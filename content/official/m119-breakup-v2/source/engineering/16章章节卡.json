@@ -1,0 +1,324 @@
+{
+  "chapters": [
+    {
+      "chapter_id": "CH01",
+      "title": "一百万美元的分手",
+      "goal": "确认神秘委托是否合法，同时决定是否调查照片中的前未婚夫",
+      "case_of_week": "匿名豪门婚姻撤离",
+      "reveal": "委托人 Vivian 正是 Gabriel 的合法妻子；她相信 Gabriel 以为玩家已死",
+      "world": "纽约高端私密委托圈，绝不以高额费用换取违法行为",
+      "scene_ids": [
+        "CH01_S01",
+        "CH01_S02",
+        "CH01_S03",
+        "CH01_S04"
+      ],
+      "minigames": [
+        "CH01_A",
+        "CH01_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH02",
+      "title": "不出售别人的秘密",
+      "goal": "建立事务所受理规则，保护委托人，同时找到第一次可核验的线索",
+      "case_of_week": "主播分手照片泄漏",
+      "reveal": "Gabriel 家族的投票日期就在七天后，Vivian 的婚姻条款涉有代理投票",
+      "world": "私人协议不能凌驾于同意与隐私；转介律师才能给出法律建议",
+      "scene_ids": [
+        "CH02_S01",
+        "CH02_S02",
+        "CH02_S03",
+        "CH02_S04"
+      ],
+      "minigames": [
+        "CH02_A",
+        "CH02_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH03",
+      "title": "一份写错的死亡证明",
+      "goal": "找到死者登记与医院收治记录之间的冲突",
+      "case_of_week": "医院登记纠错与隐私",
+      "reveal": "火灾当晚确有一名未识别的女性幸存者被送到州外康复机构",
+      "world": "行政登记、医疗收治、警方结论是不同记录，不能互相替代",
+      "scene_ids": [
+        "CH03_S01",
+        "CH03_S02",
+        "CH03_S03",
+        "CH03_S04"
+      ],
+      "minigames": [
+        "CH03_A",
+        "CH03_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH04",
+      "title": "一场没有爱情的婚礼",
+      "goal": "厘清 Vivian 与 Gabriel 的婚姻真实结构，而不替双方决定离婚",
+      "case_of_week": "契约婚姻解除",
+      "reveal": "Vivian 结婚是为了保护亡母留下的员工福利信托，而非谋夺 Gabriel",
+      "world": "公司章程、私人婚姻与个人权利各有边界；离婚不可由第三方直接替代当事人决定",
+      "scene_ids": [
+        "CH04_S01",
+        "CH04_S02",
+        "CH04_S03",
+        "CH04_S04"
+      ],
+      "minigames": [
+        "CH04_A",
+        "CH04_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH05",
+      "title": "码头上锁的门",
+      "goal": "发现旧火灾中真正的安全漏洞并确认 Gabriel 的责任范围",
+      "case_of_week": "公共安全事件调查",
+      "reveal": "Gabriel 曾在事故前签下延期维修文件；但消防出口锁闭指令由另一账户发出",
+      "world": "现场照片是证据线索，身份与动机必须分别核实",
+      "scene_ids": [
+        "CH05_S01",
+        "CH05_S02",
+        "CH05_S03",
+        "CH05_S04"
+      ],
+      "minigames": [
+        "CH05_A",
+        "CH05_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH06",
+      "title": "爆红的假分手",
+      "goal": "处理一个公关操控委托，识别与三年前同源的资料泄漏",
+      "case_of_week": "明星假分手营销",
+      "reveal": "旧火灾文件与今日明星偷拍视频来自同一家危机公关数据供应商",
+      "world": "商业委托须真实披露，不能伪造未同意当事人的分手",
+      "scene_ids": [
+        "CH06_S01",
+        "CH06_S02",
+        "CH06_S03",
+        "CH06_S04"
+      ],
+      "minigames": [
+        "CH06_A",
+        "CH06_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH07",
+      "title": "被删除的幸存者",
+      "goal": "验证玩家过去三年的身份与死亡登记为何不一致",
+      "case_of_week": "身份与生存证据恢复",
+      "reveal": "玩家的幸存记录首次获得正式的医疗与行政交叉印证，确认企业曾提交伪造死亡材料",
+      "world": "事实、行政记录和公众认知不一致；私人证人有退出权",
+      "scene_ids": [
+        "CH07_S01",
+        "CH07_S02",
+        "CH07_S03",
+        "CH07_S04"
+      ],
+      "minigames": [
+        "CH07_A",
+        "CH07_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH08",
+      "title": "她不是你的敌人",
+      "goal": "使 Vivian 获得独立的谈判与安全选择，并保护员工信托",
+      "case_of_week": "员工福利信托与配偶代理",
+      "reveal": "Vivian 从一开始就是事故善后账目受害者，正利用离婚切断公司控制",
+      "world": "女客户不是竞争者；她有自己的代理律师和拒绝权",
+      "scene_ids": [
+        "CH08_S01",
+        "CH08_S02",
+        "CH08_S03",
+        "CH08_S04"
+      ],
+      "minigames": [
+        "CH08_A",
+        "CH08_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH09",
+      "title": "一个员工的证词",
+      "goal": "让码头事故受害者有自主发声的机会，而不是把他们当作剧情工具",
+      "case_of_week": "码头工人权益与慰问",
+      "reveal": "锁闭出口的指令来自财务控制部门，Greybridge 负责对外统一口径",
+      "world": "事故幸存者证言应以自愿、可核验、可撤回为原则",
+      "scene_ids": [
+        "CH09_S01",
+        "CH09_S02",
+        "CH09_S03",
+        "CH09_S04"
+      ],
+      "minigames": [
+        "CH09_A",
+        "CH09_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH10",
+      "title": "他签了字，但不是那份",
+      "goal": "拆分 Gabriel 的过失与他未实施的行为，让情感选择不替代证据",
+      "case_of_week": "事故责任与公司合规",
+      "reveal": "Gabriel签署过延期整改但拒签出口封锁，事后却沉默，确实有责任",
+      "world": "知情过失、直接实施和事后掩盖应分别归责",
+      "scene_ids": [
+        "CH10_S01",
+        "CH10_S02",
+        "CH10_S03",
+        "CH10_S04"
+      ],
+      "minigames": [
+        "CH10_A",
+        "CH10_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH11",
+      "title": "用真名走进房间",
+      "goal": "决定是否恢复旧身份记录，保护自己对公开叙事的控制",
+      "case_of_week": "更正身份与公共披露",
+      "reveal": "Greybridge负责人 Martin Hale 掩盖死亡登记是为避免事故赔偿及公司监管，而非只为拆散恋人",
+      "world": "更正行政记录与主动公开私人遭遇是不同决定",
+      "scene_ids": [
+        "CH11_S01",
+        "CH11_S02",
+        "CH11_S03",
+        "CH11_S04"
+      ],
+      "minigames": [
+        "CH11_A",
+        "CH11_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH12",
+      "title": "不是每段关系都要修好",
+      "goal": "解决客户的两宗普通委托，验证事务所理念与个人成长",
+      "case_of_week": "分手后宠物与共同品牌归属",
+      "reveal": "Olivia 获得机会成为事务所合伙人，但前提是规则透明、不能为豪门案破例",
+      "world": "经营线要在主线高潮前兑现，避免事务所变成侦探壳子",
+      "scene_ids": [
+        "CH12_S01",
+        "CH12_S02",
+        "CH12_S03",
+        "CH12_S04"
+      ],
+      "minigames": [
+        "CH12_A",
+        "CH12_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH13",
+      "title": "我们不签这份和解",
+      "goal": "完成双方均知情的谈判方案，拒绝以封口换取胜利",
+      "case_of_week": "Vivian 离婚与员工信托方案",
+      "reveal": "Martin向 Vivian 施压，以医疗信托资金为要挟换取掩盖火灾",
+      "world": "调解需各方自主同意，非法封口与合法保密必须区别",
+      "scene_ids": [
+        "CH13_S01",
+        "CH13_S02",
+        "CH13_S03",
+        "CH13_S04"
+      ],
+      "minigames": [
+        "CH13_A",
+        "CH13_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH14",
+      "title": "今晚由你决定说多少",
+      "goal": "把证据交给独立机构，确保当事人不被替代发声",
+      "case_of_week": "独立调查与受害者证言",
+      "reveal": "Martin 的采购账号下达了锁闭出口和重写伤亡名单的两项指令",
+      "world": "重大揭露不能靠非法闯入或私人勒索；提供私密与公开两种合规路径",
+      "scene_ids": [
+        "CH14_S01",
+        "CH14_S02",
+        "CH14_S03",
+        "CH14_S04"
+      ],
+      "minigames": [
+        "CH14_A",
+        "CH14_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH15",
+      "title": "比一百万更贵的真相",
+      "goal": "完成独立听证并使婚姻、员工信托和事故问责各自得到结论",
+      "case_of_week": "企业责任、证据披露和离婚和解",
+      "reveal": "Martin 承认指挥数据供应商篡改名单，企业董事会授权的维修延期亦有独立责任",
+      "world": "听证不等于刑事终审判决；结果分阶段、允许上诉与继续调查",
+      "scene_ids": [
+        "CH15_S01",
+        "CH15_S02",
+        "CH15_S03",
+        "CH15_S04"
+      ],
+      "minigames": [
+        "CH15_A",
+        "CH15_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    },
+    {
+      "chapter_id": "CH16",
+      "title": "最后一通客户电话",
+      "goal": "结算事务所未来、个人身份与恋爱意愿，留下可以持续经营的世界",
+      "case_of_week": "新客户季与后日谈",
+      "reveal": "主案先获独立审查与信托保全，调查继续；恋爱结局与事业结局互不捆绑",
+      "world": "每宗个案有结局，事务所仍可接新客户；现实离线不扣关系",
+      "scene_ids": [
+        "CH16_S01",
+        "CH16_S02",
+        "CH16_S03",
+        "CH16_S04"
+      ],
+      "minigames": [
+        "CH16_A",
+        "CH16_B"
+      ],
+      "duration_target_min": 90,
+      "duration_status": "proposed, NOT implemented or measured"
+    }
+  ]
+}

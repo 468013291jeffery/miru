@@ -41,7 +41,12 @@ parts.extend(["app153_fantasy_v6.js"])
 parts.extend(["app154_dream_v2.js"])
 parts.extend(["app155_moonlit_v2.js"])
 parts.extend(["app156_dangerous_v2.js"])
-# 阅读节奏：必须排在 app116（点一下才走）与 app144（旧的自动计时器已撤）之后，才能接管 R.wait
+parts.extend(["app158_story_copy.js"])
+parts.extend(["app159_song_data.js", "wtsr_state.js", "app159_song.js"])
+# 2026-11-21 性能：首页列表请求合并 + 媒体按需加载。必须排在所有包装 off94Feed 的模块之后（见文件头说明）。
+parts.extend(["app157_perf.js"])
+parts.extend(["app153_m119.js"])
+# 阅读节奏最后接管等待，兼容主线新剧及性能模块。
 parts.extend(["app157_reply_pace.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
@@ -57,13 +62,24 @@ def _key(base, f):
     return os.path.splitext(f[len(base):])[0].replace(os.sep, "/")
 def _url(f):
     return os.path.relpath(f, ROOT).replace(os.sep, "/")
+# Sparse checkouts omit media bytes, but their tracked URLs must remain in the bundle.
+# Only skip-worktree entries are restored here; intentional local deletions stay deleted.
+import subprocess, fnmatch
+_sparse_art=[]
+try:
+    _entries=subprocess.check_output(["git","ls-files","-t","-z","--","art/scenes","art/bgm","art/cut"],cwd=ROOT).decode("utf-8").split("\0")
+    _sparse_art=[os.path.join(ROOT,x[2:].replace("/",os.sep)) for x in _entries if x.startswith("S ")]
+except (OSError, subprocess.CalledProcessError):
+    pass
+def _media_glob(pattern, recursive=False):
+    return sorted(set(glob.glob(pattern,recursive=recursive)) | {f for f in _sparse_art if fnmatch.fnmatch(f,pattern)})
 _sf={}
-for f in sorted(glob.glob(ART+"scenes/**/*.*",recursive=True)):
+for f in sorted(_media_glob(ART+"scenes/**/*.*",recursive=True)):
     k=_key(ART+"scenes/", f)
     if f.endswith(".mp4") or k not in _sf:_sf[k]=_url(f)
-_bf={_key(ART+"bgm/", f):_url(f) for f in sorted(glob.glob(ART+"bgm/**/*.*",recursive=True)) if f.endswith((".mp3",".m4a",".ogg"))}
+_bf={_key(ART+"bgm/", f):_url(f) for f in sorted(_media_glob(ART+"bgm/**/*.*",recursive=True)) if f.endswith((".mp3",".m4a",".ogg"))}
 import glob as _g
-_cf=sorted(os.path.splitext(os.path.basename(x))[0] for x in _g.glob(ART+"cut/*.webp"))
+_cf=sorted(os.path.splitext(os.path.basename(x))[0] for x in _media_glob(ART+"cut/*.webp"))
 assets=("window.CUT_FILES="+_j.dumps(_cf)+";\n"+"window.SCENE_FILES="+_j.dumps(_sf)+
         ";\nwindow.BGM_FILES="+_j.dumps(_bf)+";\n")
 shell=open("src/shell.html", encoding="utf8").read()

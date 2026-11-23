@@ -671,10 +671,10 @@ _check\make-scriptdir.py                       ← 从线上已发布作品重�
 > 截至本日收盘的全部读数：
 
 ```
-猴补丁      202 个函数 / 551 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层
+猴补丁      208 个函数 / 587 处   （当天起点 382 ⇒ −54；2026-10-27 语音那 5 层 `const _speakNN=speak` 已换成 VOICE 注册表，减 3；2026-10-29 剧本解析那 4 层也换成 PARSE 注册表，再减 2 函数 / 8 处）；2026-11-03 入口三条（我自己/主角/导演）在 app114 加了 packAsName/packStart/newThread 三层
 ；2026-11-05 官方剧男主角色卡在 app126 给 allWorlds 加一层（把只为角色卡服务的壳作品从列表里滤掉）
-空 catch    759 处 / 107 个文件    （当天起点 616 ⇒ −51）
-on* 绑定    硬类 0 处 · 软类 123 处 · addEventListener 399 处
+空 catch    761 处 / 109 个文件    （当天起点 616 ⇒ −51）
+on* 绑定    硬类 0 处 · 软类 129 处 · addEventListener 514 处
 剧本指令    26 层注册 · 21 个类型 · 1 处已声明死代码
 消息渲染    27 层 = kind 13 / post 12 / wrap 2（`say` 收口后从 20 层减 2；2026-11-03 第十八批加 app119 的「⑂ 从这一步重来」post 层；同日加 app122 的表情回应、app123 的剧本台词换说法 post 层）· 17 个类型
             **1 个类型**被两层认领（xmoney，顺序接力不是抢）· **2 层已知死**（37 条探针，25/27 层被证活着）
@@ -922,7 +922,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 
 <!-- BEGIN module-index（由 tools/module-index.mjs 生成，别手改） -->
 
-共 **190 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
+共 **196 个模块**；「是什么」那一列**取自各文件自己的头注释**，不是手写的。
 加一个文件、改一句头注释，这张表就该跟着变 —— `tools/module-index.mjs --check` 会红。
 
 | 模块 | 是什么 | 行数 |
@@ -941,7 +941,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app12_beats.js` | STORY BEATS — the reply-rhythm pay schedule (see doc: BL 剧情进展线 × 付费节奏) Re… | 58 |
 | `app13_rel.js` | RELATIONSHIP ENGINE v1 — multi-dimension state · Watch mode · point-and-c… | 97 |
 | `app14_pack.js` | STORY PACKS — chapters, choices, endings, Story Pack purchase, AI turns W… | 627 |
-| `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 203 |
+| `app15_home.js` | HOME (vertical short-drama feed) · DISCOVER · STORY PAGE · ONBOARDING PIC… | 227 |
 | `app16_story2.js` | STORY v2 — clear intro, merged narration boxes, choices inside the chat, … | 339 |
 | `app17_custom.js` | the detail rides along with whichever path the original director uses (no… | 149 |
 | `app18_promo.js` | NEW-USER WELCOME · 24h FIRST-PURCHASE 20% OFF · OPENING-LINE VOICE · STIC… | 200 |
@@ -996,7 +996,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app67_i18n.js` | ONE LANGUAGE AT A TIME 1) Taste tags: every name exists in all five app l… | 112 |
 | `app68_cloud.js` | CLOUD — the front end talks to the MIRU backend (/api on Vercel) Everythi… | 134 |
 | `app69_acct.js` | ACCOUNT ENTRY POINTS · Welcome screen: 「已有账号？登录」 under the start button (… | 21 |
-| `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 352 |
+| `app70_login.js` | SIGN-IN FIRST New install: language → welcome (18+) → 【登录页】 → taste → hoo… | 355 |
 | `app71_narrative.js` | MIRU 互动剧本规则 v1.0 — runtime side The creator side carries the full rule se… | 165 |
 | `app72_zhpure.js` | 中文版只显示中文 Audit (every onboarding step, tabs, store, taste sheet, a story)… | 36 |
 | `app73_features.js` | 亲密度 · 心声 · 重新生成/编辑 · 指定对象说话 1) Affinity: a 💗 chip in every chat header (… | 386 |
@@ -1022,7 +1022,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app92_mustlogin.js` | SIGN-IN REQUIRED The live app can no longer be used as a guest: the "先逛逛 … | 14 |
 | `app93_agegate.js` | 年龄门（T08）· 首启一次确认 开关：MIRU_TUNE.tools.ageGate（默认 true） | 44 |
 | `app93_doubao.js` | DOUBAO END-TO-END REALTIME VOICE CALLS When the relay is configured (Verc… | 97 |
-| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 611 |
+| `app94_official2.js` | OFFICIAL SCRIPTS, FULLY DRESSED Official scripts can carry ⟦…⟧ directives… | 629 |
 | `app94_replyguard.js` | 台词守门（他们 v8.2.3 的「角色台词检查」） 玩家最痛的一条是「角色全知」：角色说出了本章他还不该知道的事 | 153 |
 | `app95_safety.js` | App Store 1.2 (user-generated content): report · block · terms · contact … | 120 |
 | `app95_status.js` | 状态写入层 v1（唯一写入口） 规格 v7.11 §04.6「状态投影的唯一写入点」： 模型和剧情都只能"提议"，真正的写入只在这里发生 | 134 |
@@ -1031,11 +1031,11 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app97_agents.js` | 自由模式（角色智能体）+ 电话开关 自由模式（先在《王不见王》试点）： · 每个角色是一个独立的智能体：自己的角色卡（性格、说话方式、想要什么、秘… | 229 |
 | `app97_card.js` | 角色卡 · 每章一份快照（v2） 设计见 CHARACTER-CARD.md。v2 改了一处关键结构：**补丁按角色分开存** | 201 |
 | `app98_emotion.js` | 情绪合同（文档 §14.1 T01–T04） 「heat」与「情绪标签」在代码里原本各说各的：heat 是包上的一个字符串（fluff/slow/… | 93 |
-| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 1334 |
+| `app98_story.js` | 故事圣经驱动的自由模式（剧情智能体 + 角色智能体） 作品资料 = 故事圣经（art/official/<作品ID>.bible.json）：世界… | 1360 |
 | `app99_boot.js` | BOOT (keep last) | 20 |
 | `app99_plan.js` | 场景计划层（文档 §05 Plot98 的最小可用部分） 文档 01.2 的两条路径里，Slow Path 是「新场景无计划 / 重大变化 / 真… | 112 |
 | `app100_dialogue.js` | Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance | 188 |
-| `app100_fixes.js` | 体验修复（ 用户反馈 8 条中的 1/3/4/7/8） 1 首页：官方新剧列表本地缓存，进入 App 立刻显示，不再先闪 2–3 秒旧剧单；首次没… | 109 |
+| `app100_fixes.js` | 体验修复（ 用户反馈 8 条中的 1/3/4/7/8） 1 首页：官方新剧列表本地缓存，进入 App 立刻显示，不再先闪 2–3 秒旧剧单；首次没… | 110 |
 | `app101_you.js` | 用户反馈第二轮 1 所有指向玩家的称呼一律显示为「你」：你扮演的角色的名字（全名、名、中文名）在剧情、气泡标签、旁白、地点、介绍里都替换成「你」 | 254 |
 | `app102_pipeline.js` | 对话流：一道缝（ · 设计见 DIALOGUE-PIPELINE.md） Ann：「应该把这些统一起来，做成接口，现在到处乱改乱错，就是这个原因吧… | 132 |
 | `app103_turn.js` | 回合状态机 v0.1（ · Ann 定的第二件事） Ann：「这是解耦之后应该做的第二件事，统一接口之类的，没有这个谈不上代码质量。」 ## 病 … | 92 |
@@ -1062,7 +1062,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app123_alt.js` | 剧本台词「换个说法」（） 玩家：希望剧本台词也能滑出别的说法 —— 剧本原句永远是第 1 版，往左滑让 AI 用同样的意思换一种说法，剧情走向不变 | 110 |
 | `app124_experience.js` | Scene-aware interaction and a continuous, readable conversation | 98 |
 | `app125_fresh.js` | 自动用上新版本（） 玩家：上新了，手机上还是旧样子（iPhone Safari 会把页面一直留在内存里，不刷新就一直是旧版） | 25 |
-| `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 72 |
+| `app126_leads.js` | 官方剧男主角色卡（） 玩家：每个剧本的主角人物，都生成角色卡，让用户可以单独去玩 | 75 |
 | `app127_play.js` | 安卓 App（Google Play）专用：Play 内购 + 隐藏成人作品（） 安卓 App 是一个「可信网页壳」（TWA）：打开的就是线上的 … | 118 |
 | `app128_adsense.js` | 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（） 以前 watchAd 是 15 … | 57 |
 | `app128_fxlib.js` | 特效基础层：特效库 · 统一入口 · 开关（） 玩家：特效要跟着剧情走，不是看到字就放。原来有 4 套特效各自触发，主要靠关键词匹配 ⇒ 「今晚不… | 249 |
@@ -1084,21 +1084,26 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `app142_authored.js` | Authored content contract: refresh exposition without replaying events; k… | 63 |
 | `app142_m109.js` | 数值 | 111 |
 | `app143_m110.js` | 数值 + 2 · 结局判定 | 92 |
-| `app144_discfix.js` | 发现页整理（） 用户反馈：「点击角色后页面真的混乱」 | 3581 |
+| `app144_discfix.js` | 发现页整理（） 用户反馈：「点击角色后页面真的混乱」 | 3627 |
 | `app145_narration.js` | 剧情旁白 v2：按桥段释放作者线索，叙述与角色表演衔接，事实和氛围分别记忆 | 148 |
 | `app147_empress.js` | Isolated from the unrelated island drama also named M110 | 142 |
 | `app148_authored_contract.js` | Shared authored-option contract | 50 |
 | `app148_svf.js` | The source's final choice precedes three conditional epilogues | 44 |
 | `app149_native_v2.js` | Native v2 metadata/media compatibility | 140 |
-| `app150_catalogrefresh.js` | Keep an already-open homepage current when official stories or their trai… | 83 |
+| `app150_catalogrefresh.js` | Keep an already-open homepage current when official stories or their trai… | 84 |
 | `app151_hockey_v2.js` | M110 hockey work data and bindings | 38 |
 | `app151_onlyme.js` | The source's final choice precedes four conditional epilogues | 42 |
 | `app152_readability.js` | Subtle contrast for chapter objectives and character dialogue only | 19 |
 | `app153_fantasy_v6.js` | No raw source metadata is rendered; preserve full character art while fra… | 24 |
-| `app154_dream_v2.js` | （文件头没有说明 —— 该补一句） | 13 |
-| `app155_moonlit_v2.js` | （文件头没有说明 —— 该补一句） | 13 |
-| `app156_dangerous_v2.js` | （文件头没有说明 —— 该补一句） | 14 |
+| `app153_m119.js` | Generated by tools/assemble-m119.cjs; edit the scoped source files | 99 |
+| `app154_dream_v2.js` | （文件头没有说明 —— 该补一句） | 14 |
+| `app155_moonlit_v2.js` | （文件头没有说明 —— 该补一句） | 14 |
+| `app156_dangerous_v2.js` | （文件头没有说明 —— 该补一句） | 15 |
+| `app157_perf.js` | off94Feed：同一时间只跑一趟 | 87 |
 | `app157_reply_pace.js` | app157 · 阅读节奏（） 玩家：「剧本的文字回复太快，而且太乱，来不及阅读。」 先把「快多少」量出来（本仓库 536 条台词 / 209 段… | 317 |
+| `app158_story_copy.js` | （文件头没有说明 —— 该补一句） | 16 |
+| `app159_song_data.js` | Generated from reviewed author inputs; hidden notes never become beats | 3 |
+| `app159_song.js` | WHEN THE SONG RETURNS: scoped authored queues, free-input intent and media | 178 |
 | `content_36.js` | STORY PACKS (generated by gen_content.py — do not edit by hand) Each stor… | 31 |
 | `content_chars.js` | CHARACTERS Every lead is 21+ | 320 |
 | `content_extra.js` | SHORTS (60-second vertical episodes) | 153 |
@@ -1117,6 +1122,7 @@ xmoney   app23_heir   · app24_gl         ← 顺序接力：未解锁由外层 
 | `tr_ja.js` | （文件头没有说明 —— 该补一句） | 81 |
 | `tr_ko.js` | （文件头没有说明 —— 该补一句） | 81 |
 | `tr_merge.js` | CONTENT TRANSLATIONS (ja · ko · es) Each language pack mirrors the Englis… | 23 |
+| `wtsr_state.js` | Pure, save-local authored state | 109 |
 
 <!-- END module-index -->
 
@@ -1193,6 +1199,12 @@ App：`app76_official.js` 收到 451 给出对应提示；成人作品解析时�
 - T22 对实际 `_wallet.js` 存储过程使用 PGlite，验证同回执第二次不再入账。结构账引用同步到共享钱包。
 - 渲染新增旁白 135/145 与 SEVENFOLD、ONLY ME 章节目标四条探针。下线剧目只通过测试别名作固定夹具，目录保护不变。
 - `css-dead-rules` 继续检查新增死样式；弹层快照、消息快照及样式生效值继续对拍。
-- 原 9.5 MB 体积上限建立于旧功能集。当前单文件约 11.33 MB，预算明确调整为 11.5 MB；PDF.js 不得内联的独立断言仍保留。这是预算重设，不是体积优化。
+- 原 9.5 MB 体积上限建立于旧功能集。当前单文件约 11.86 MB，预算明确调整为 12 MB；PDF.js 不得内联的独立断言仍保留。这是预算重设，不是体积优化。
 - 轮询按用途登记于 timers-baseline；元素 on* 赋值、空 catch 和函数包装基线同步当前存量。这些是未消除的技术债，不表示已重构。定时器仍可能在后台空转；空 catch 仍可能隐藏故障。
 - 历史文档遗漏：610a64ba/32bc3041/81bbf5a4/59ba8219 增加 Secret Rules、M117、M115、M114 小游戏；9899da02/3ce90366 更新玩法用语；4abb0ecb 披露胶囊概率并均匀抽样；ff62ba95/a11c4d99/0f96d339 接入危险距离、月光誓约、梦中重逢的章节、游戏及媒体；8469b6b2 接入目录和预告加载。对应运行时均列于构建清单，专项 selftest 由发布契约执行。doc-freshness 基线登记这些历史遗漏，后续提交仍要求同步架构文档。
+
+合并当前主线时保留 app158_story_copy、Song 数据/状态/调度器、app157_perf、app153_m119；阅读节奏模块最后加载。保留主线上线的剧目与媒体资源。
+
+生产 api/works.js 旧 override 与 e346284 仓库文件 SHA256 完全一致（6275d220…）。部署前将这份冗余 override 备份移出 overrides，使文件包发布改动使用仓库版本；当前 release 与可回滚副本不改。
+
+Song 的 wtsrEnd 通过 pkGo 写入结局状态；song-flow-selftest 加载实际 PKST 并断言结局迁移被计数，避免直接赋值回潮。

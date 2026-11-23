@@ -1,0 +1,635 @@
+[
+  {
+    "id": "COVER_001",
+    "type": "cover",
+    "linked_scene": null,
+    "zh": "第一章封面：Vivian在午夜事务所把百万美元支票推向玩家，Olivia在后方关门，Gabriel仅出现在桌上的结婚照片中，绝无真人提前到场。",
+    "en": "Opening cover: Vivian slides a million-dollar check across the midnight agency desk while Olivia closes the door; Gabriel appears ONLY in the wedding photo on the table, never physically in the agency.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "CHAR_01_GABRIEL",
+    "type": "portrait",
+    "linked_scene": null,
+    "zh": "律师见证室中Gabriel把三年前签署的风险回执展开，指节压住纸边，望着玩家等待回答。",
+    "en": "Gabriel unfolds a three-year-old signed notice at a lawyer-supervised meeting, tense hand on the paper, waiting for the viewer to respond.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "CHAR_02_VIVIAN",
+    "type": "portrait",
+    "linked_scene": null,
+    "zh": "Vivian摘下婚戒，戒指悬在员工信托文件上方，望向窗外。",
+    "en": "Vivian removes a wedding ring, holding it over an employee trust document while looking toward the rainy window.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "CHAR_03_THEO",
+    "type": "portrait",
+    "linked_scene": null,
+    "zh": "Theo遮住文件中机密姓名，并向玩家递交获授权的公开版本。",
+    "en": "Theo covers confidential names and extends only the authorized public version toward the viewer.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "CHAR_04_OLIVIA",
+    "type": "portrait",
+    "linked_scene": null,
+    "zh": "Olivia核对预约表的同时拉开玻璃门，接待刚到的客户。",
+    "en": "Olivia checks an appointment book as she opens the agency glass door to a new client.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "CHAR_05_LENA",
+    "type": "portrait",
+    "linked_scene": null,
+    "zh": "Lena获许可后放下相机，把公开来源证据夹递向玩家，夹克还带雨珠。",
+    "en": "Lena lowers her camera after consent and extends a public-source evidence folder to the viewer, raindrops on her jacket.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH01_01",
+    "type": "scene",
+    "linked_scene": "CH01_S01",
+    "zh": "真实地点： 事务所夜间接待室。画面瞬间：前景：支票刚滑过木桌，水珠和皮手套留下痕迹；中景Vivian探身推支票，后景Olivia侧身关门，形成三角对峙",
+    "en": "Exact location:  after-hours intake room of a Manhattan relationship-exit agency, rain-streaked windows and a half-open service door. Decisive moment: Foreground: a large check still sliding over a wooden desk beside wet leather gloves. Vivian leans in from middle ground; Olivia closes the door behind her, creating a tense visual triangle.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH01_02",
+    "type": "scene",
+    "linked_scene": "CH01_S02",
+    "zh": "真实地点： 事务所证物桌。画面瞬间：镜头贴近刚被翻正的相框，Gabriel只存在于婚礼照片中；Vivian手还停在相框边，Olivia猛地转向冲突登记表",
+    "en": "Exact location:  private evidence table in the same Manhattan agency, a single lamp illuminating the desktop. Decisive moment: Freeze the instant a wedding picture flips upright close to the viewer; Gabriel exists ONLY inside this photograph. Vivian's hand remains against the frame as Olivia pivots toward the conflict-of-interest paperwork.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH01_03",
+    "type": "scene",
+    "linked_scene": "CH01_S03",
+    "zh": "真实地点： 窗边私密会谈区。画面瞬间：Vivian摘下戒指时手指微微发抖，戒指悬在水杯边缘；Olivia把保密界线画到一半，笔尖停住等候回应",
+    "en": "Exact location:  private window-side consultation alcove inside the Manhattan agency, rainy city lights beyond the glass. Decisive moment: At the instant Vivian's wedding band leaves her finger, suspend it over the table beside a water glass; Olivia's marker pauses midway through drawing a privacy boundary.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH01_04",
+    "type": "scene",
+    "linked_scene": "CH01_S04",
+    "zh": "真实地点： 事务所后门连廊。画面瞬间：手电光束斜切黑暗，照亮泛黄消防名单上的印章；Olivia半蹲举手电，Vivian扶住门框为玩家让出路",
+    "en": "Exact location:  dim rear service corridor of the Manhattan agency, rain-lit exit and old metal utility doors. Decisive moment: A narrow flashlight beam cuts across the old fire record. Olivia bends to angle the torch while Vivian holds the rear door ajar, leaving a clear passage for the viewer.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH02_01",
+    "type": "scene",
+    "linked_scene": "CH02_S01",
+    "zh": "真实地点： 事务所公共办公区。画面瞬间：Olivia正在合上保险柜，金属门尚未碰到锁扣；Lena推门入内，手中公开资料朝玩家倾斜",
+    "en": "Exact location:  agency's lived-in shared workroom, daylight leaking through Manhattan windows, metal safe beneath the counter. Decisive moment: Capture Olivia midway through shutting a safe on the unopened check as Lena pushes through the opposite office door and holds out the public-source case image.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH02_02",
+    "type": "scene",
+    "linked_scene": "CH02_S02",
+    "zh": "真实地点： 会议桌。画面瞬间：Theo一手盖住合同里的私人姓名一手递笔，Vivian将手机斜转给玩家，Olivia在侧边观察双方是否同意",
+    "en": "Exact location:  agency meeting table with partitions, active desk lamps and three chairs set for a client consultation. Decisive moment: Theo pins a sticky note over confidential names with one hand and offers a pen with the other; Vivian angles her phone toward the viewer, Olivia watches the exchange.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH02_03",
+    "type": "scene",
+    "linked_scene": "CH02_S03",
+    "zh": "真实地点： 小型咨询室。画面瞬间：Lena把公开合照推到桌左、隐私照片推到桌右，Olivia正伸手用不透明纸遮住识别细节",
+    "en": "Exact location:  small confidential consultation room, blackout roller shade and narrow working table. Decisive moment: Two photos are being slid to opposite sides of a table by Lena; Olivia's hand is halfway over the unauthorized image with an opaque privacy cover, preventing its details from being shown.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH02_04",
+    "type": "scene",
+    "linked_scene": "CH02_S04",
+    "zh": "真实地点： 事务所天台通道。画面瞬间：Theo侧身走向天台门，同时把手机上的公告举到Vivian眼前；Vivian抓住门把却停步，玩家站在两人身侧",
+    "en": "Exact location:  narrow rooftop access passage of the Manhattan agency, steel fire door, concrete steps and cold overcast light. Decisive moment: Theo walks past the rooftop stairwell and raises a phone toward Vivian; she halts with her palm still gripping the steel rooftop door handle. Capture the interruption of forward motion.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH03_01",
+    "type": "scene",
+    "linked_scene": "CH03_S01",
+    "zh": "真实地点： 市政公共记录阅览室。画面瞬间：Theo从纸盒抽起火灾目录，Olivia两手稳住卷曲纸页；低机位让目录、手、眼神落在同一条视觉线上",
+    "en": "Exact location:  municipal public records reading room with archival box stacks, desk lamps and a long wooden reading table. Decisive moment: Theo lifts an archived fire index from a heavy box while Olivia holds its curling pages flat; frame hands, paper and exchanged glances in a single diagonal.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH03_02",
+    "type": "scene",
+    "linked_scene": "CH03_S02",
+    "zh": "真实地点： 公益医疗法援办公室。画面瞬间：退休护士Mara把获授权转运页递到桌中间，Theo用手指比出可阅读范围，玩家的位置留在桌另一侧",
+    "en": "Exact location:  nonprofit medical legal-aid office, wheelchair-accessible interview table and frosted windows. Decisive moment: Retired nurse Mara slides an authorized patient-transfer sheet halfway across a legal-aid table; Theo holds a finger at the permitted section without grabbing it.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH03_03",
+    "type": "scene",
+    "linked_scene": "CH03_S03",
+    "zh": "真实地点： 档案馆扫描台。画面瞬间：Olivia正把两张印章影印件重叠到灯箱，Theo把放大镜悬在刚显出的差异上；冷光反映在两人脸颊",
+    "en": "Exact location:  city archive scanning station with flat lightbox, archival sleeves and a metal magnifier. Decisive moment: Olivia overlays two seal impressions against a glowing archival lightbox while Theo hovers a magnifier over the misalignment; cold light catches both faces.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH03_04",
+    "type": "scene",
+    "linked_scene": "CH03_S04",
+    "zh": "真实地点： 法院楼梯间。画面瞬间：Gabriel结束通话后朝玩家走半步，脚尖刚越过地砖接缝；Theo从侧面转身停在中间，保持礼貌距离",
+    "en": "Exact location:  stone stairwell inside a Manhattan courthouse, worn brass railings and daylight through tall windows. Decisive moment: Gabriel lowers his phone and starts one tentative step toward the viewer; Theo rotates smoothly into the space between them on the courthouse stairs without threatening contact.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH04_01",
+    "type": "scene",
+    "linked_scene": "CH04_S01",
+    "zh": "真实地点： Vivian 的公寓放映间。画面瞬间：Vivian刚按下暂停键，投影画面定格在婚礼时彼此隔开的手；Theo把音量旋钮转低，Vivian望着屏幕不转身",
+    "en": "Exact location:  Vivian's apartment screening room, soft projector beam, leather chairs, muted city rain beyond window. Decisive moment: Vivian freezes a wedding video at the precise moment two hands separate; Theo reaches for the volume dial, and Vivian remains turned toward the projection rather than posing.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH04_02",
+    "type": "scene",
+    "linked_scene": "CH04_S02",
+    "zh": "真实地点： 公寓餐桌。画面瞬间：婚戒在员工信托页旁轻轻滚动，Vivian手刚放开它；Olivia用两枚硬币压住争议条款防止纸张翘起",
+    "en": "Exact location:  private dining room of Vivian's Manhattan apartment, understated home furnishings and evening table light. Decisive moment: A wedding ring has just been released onto an employee-trust sheet; Olivia places two coins over conflicting clauses while Vivian steadies herself across the dining table.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH04_03",
+    "type": "scene",
+    "linked_scene": "CH04_S03",
+    "zh": "真实地点： 社区法律援助大厅。画面瞬间：Theo刚合上法援资料册，把笔头朝Vivian递回；Vivian伸手接笔却停顿半秒，焦点落在这次信任交接",
+    "en": "Exact location:  community legal assistance lobby with folding chairs, public resource shelf and glass entry doors. Decisive moment: Theo closes a community legal guide and offers Vivian her pen back; capture her hand pausing a breath before accepting, against the busy but discreet public lobby.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH04_04",
+    "type": "scene",
+    "linked_scene": "CH04_S04",
+    "zh": "真实地点： 老酒店宴会厅外廊。画面瞬间：Gabriel与Vivian在宴会厅两侧擦肩前停下，对视一秒后分别转向不同出口，前景半开的门制造分离感",
+    "en": "Exact location:  hotel ballroom exterior passage, velvet-lined entrance and two distinct exit corridors. Decisive moment: At a ballroom passage fork, Gabriel and Vivian turn away in opposite directions immediately after a brief glance; the partly open door splits the composition without implying reconciliation.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH05_01",
+    "type": "scene",
+    "linked_scene": "CH05_S01",
+    "zh": "真实地点： 旧码头外沿。画面瞬间：Theo蹲在生锈的旧出口位置，手指比对门框高度；Lena把泛黄新闻照片举在同一视线上，海风掀动纸角",
+    "en": "Exact location:  rain-damp old Pier 47 waterfront, industrial safety fence and traces of the former loading doors. Decisive moment: Theo crouches by the corroded exit threshold and compares its height to the photo Lena holds beside it; wind bends the newspaper edge over the damp pier.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH05_02",
+    "type": "scene",
+    "linked_scene": "CH05_S02",
+    "zh": "真实地点： 历史建筑资料室。画面瞬间：Olivia把旧消防平面图压在新审批记录上，Theo沿路线移动透明尺，尺的一端正指向被改动的出口",
+    "en": "Exact location:  historic building documentation office with plan drawers, drafting board and overhead task lights. Decisive moment: Olivia holds an old floor plan against newer fire-approval sheets on a drafting board while Theo draws a clear ruler along the displaced escape path.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH05_03",
+    "type": "scene",
+    "linked_scene": "CH05_S03",
+    "zh": "真实地点： 律师见证室。画面瞬间：Gabriel翻开自己签字的延期页，紧绷手背压住纸角；Theo坐在他对面等待回答，镜头不替玩家表现原谅",
+    "en": "Exact location:  attorney-supervised witness conference room, discreet recorder, legal folders and soft midday light. Decisive moment: Gabriel turns an old signed postponement notice open and keeps his tense palm on its corner; Theo sits opposite, watching him rather than the camera.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH05_04",
+    "type": "scene",
+    "linked_scene": "CH05_S04",
+    "zh": "真实地点： 码头纪念墙。画面瞬间：Lena俯身把一束花放在墙脚，Theo主动退开两步，前景空出玩家悼念的位置，衣摆被风吹起",
+    "en": "Exact location:  Pier 47 memorial wall under gray skies with small flowers, weathered engraved plaques and river wind. Decisive moment: Lena bends to place a bouquet beside a worn memorial plaque; Theo steps aside, letting the viewer approach the wall without another person blocking it.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH06_01",
+    "type": "scene",
+    "linked_scene": "CH06_S01",
+    "zh": "真实地点： 颁奖典礼后台化妆区。画面瞬间：艺人Harper刚摘下一只耳环，另一手把两版声明递给Olivia；Lena在门边侧身观察走廊动静",
+    "en": "Exact location:  awards gala backstage makeup room, lit vanity mirrors, cables, garment racks and narrow service door. Decisive moment: Harper removes one earring while passing two conflicting PR scripts to Olivia; Lena keeps the backstage doorway clear and checks the corridor for interruption.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH06_02",
+    "type": "scene",
+    "linked_scene": "CH06_S02",
+    "zh": "真实地点： 事务所资料室。画面瞬间：Lena把两张泄露照片投到墙上，Olivia滚动已获许可的元数据对照表，投影光同时扫过两人紧张表情",
+    "en": "Exact location:  agency evidence research room with wall projector, two laptops and curtained Manhattan windows. Decisive moment: Lena points at two projected public-source image timelines while Olivia scrolls through authorized metadata on a laptop; projected light falls across their tense reactions.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH06_03",
+    "type": "scene",
+    "linked_scene": "CH06_S03",
+    "zh": "真实地点： 小型记者会入口。画面瞬间：Harper正把预备的假声明折起收入包里，Lena扶住帘边为她让出路，前景麦克风模糊伸向发言席",
+    "en": "Exact location:  small press briefing entrance, portable microphones, visible stage curtain and backstage exit sign without readable lettering. Decisive moment: Harper folds a prepared false statement and slips it into her bag; Lena holds the briefing curtain aside as out-of-focus microphones frame the path forward.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH06_04",
+    "type": "scene",
+    "linked_scene": "CH06_S04",
+    "zh": "真实地点： 事务所收件室。画面瞬间：Olivia从打印机接住刚吐出的预约回执，Theo用一次性手套核对信封和交付凭据，拒绝碰未授权材料",
+    "en": "Exact location:  agency mail and secure document processing room with a small printer, sealed cabinets and task lights. Decisive moment: Olivia catches a freshly printed appointment receipt as it leaves the printer; Theo compares authorized delivery information on a sealed envelope while leaving unrelated documents untouched.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH07_01",
+    "type": "scene",
+    "linked_scene": "CH07_S01",
+    "zh": "真实地点： 旧火车站咖啡馆。画面瞬间：Mara从旧钱包慢慢抽出未用车票；Theo没有抢过，只把手心向上示意等待她自愿递交，列车穿过窗外",
+    "en": "Exact location:  old train station cafe, tall windows, departure hall visible through glass and worn wooden booths. Decisive moment: Mara draws an unused train stub from her weathered purse; Theo offers an open palm but waits for consent, with a passing train blurred behind the cafe window.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH07_02",
+    "type": "scene",
+    "linked_scene": "CH07_S02",
+    "zh": "真实地点： 档案室灯箱台。画面瞬间：Olivia把医院记录移到企业事故名单上方，叠影中出现涂改缺口；Theo在旁用指尖固定透明套，眼睛跟着缺口移动",
+    "en": "Exact location:  archive records light table, shallow cabinets, translucent sheets and white inspection light. Decisive moment: Olivia slides a hospital form over a corporate casualty list on a lightbox; Theo holds down a transparent sleeve as a covered name begins to show through.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH07_03",
+    "type": "scene",
+    "linked_scene": "CH07_S03",
+    "zh": "真实地点： 州外康复中心访客室。画面瞬间：Mara掀开三年前的病房照片册，Theo轻轻把椅子拉近玩家但不触碰，照片只有模糊环境、无可读病历",
+    "en": "Exact location:  out-of-state rehabilitation facility visiting room, understated institutional furniture and a private authorized photo album. Decisive moment: Mara opens a permitted rehabilitation-room photo album; Theo quietly draws an empty chair nearer to the viewer, keeping the album and privacy of patients in focus.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH07_04",
+    "type": "scene",
+    "linked_scene": "CH07_S04",
+    "zh": "真实地点： Gabriel 旧公寓门厅。画面瞬间：Gabriel跪下打开三年未拆的慰问卡箱，指尖停在第一封上；Theo倚在远处门边而非代玩家靠近",
+    "en": "Exact location:  entryway of Gabriel's old Manhattan apartment, unopened condolence cards in a storage box and dusk at the door. Decisive moment: Gabriel kneels by a box of three-year-old unopened condolence cards and hesitates over its top envelope; Theo waits quietly by the doorway, leaving the viewer space.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH08_01",
+    "type": "scene",
+    "linked_scene": "CH08_S01",
+    "zh": "真实地点： Vivian 私人书房。画面瞬间：Vivian从旧相册下抽出母亲留下的信托册和合影；Theo把无关文件推向画面外，避免掩盖她的选择",
+    "en": "Exact location:  Vivian's private book-lined study, family photographs, locked cabinet and warm sidelight. Decisive moment: Vivian lifts her late mother's trust ledger and a family photograph from an old album; Theo slides an unrelated folder away to give the records clear space.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH08_02",
+    "type": "scene",
+    "linked_scene": "CH08_S02",
+    "zh": "真实地点： 事务所谈判桌。画面瞬间：Vivian双手摊开四份不同授权期限的文件，Olivia逐一贴上无字颜色标签；让桌面上的间距表达权力边界",
+    "en": "Exact location:  agency negotiation room with long white desk, divider folders and a Manhattan skyline beyond glass. Decisive moment: Vivian spreads four differently authorized documents into a fan across the table; Olivia places blank colored tabs at the edge of each permission category.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH08_03",
+    "type": "scene",
+    "linked_scene": "CH08_S03",
+    "zh": "真实地点： 员工公益晚宴后台。画面瞬间：Vivian正在取下被安排的官方身份胸牌，替换成自己的发言卡；身后演讲台灯亮起，她转身走向帷幕",
+    "en": "Exact location:  employee-benefit charity dinner backstage, clothing rack, sound equipment and closed presentation curtains. Decisive moment: Vivian removes an imposed spouse-title badge and replaces it with her own speaker pass, turning toward the lit backstage curtain at the exact moment she reclaims agency.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH08_04",
+    "type": "scene",
+    "linked_scene": "CH08_S04",
+    "zh": "真实地点： 宴会厅侧门。画面瞬间：Gabriel扶住沉重的侧门，Vivian在跨出门槛前递给他最后一页谈判边界；两人不触碰，空间距离清楚",
+    "en": "Exact location:  side exit of a New York banquet hall, bright event interior behind and cool empty service corridor ahead. Decisive moment: Gabriel holds a heavy side door open as Vivian pauses on the threshold and offers her final separation terms; no touching, only an unmistakable distance between their hands.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH09_01",
+    "type": "scene",
+    "linked_scene": "CH09_S01",
+    "zh": "真实地点： 社区工会厨房。画面瞬间：工人Jonas正修好旧保温壶的把手，Lena把录音机仍留在包里；一只工作手套在前景说明劳作生活",
+    "en": "Exact location:  community union kitchen, patched cabinets, steel kettle and fluorescent task light. Decisive moment: Jonas tightens the handle of an old thermos while Lena keeps her recorder in her bag and waits for permission; a worn work glove grounds the union kitchen in daily life.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH09_02",
+    "type": "scene",
+    "linked_scene": "CH09_S02",
+    "zh": "真实地点： 工会社区资料桌。画面瞬间：Jonas用笔尖在旧仓库地图上画逃生方向，Theo正在把对应现场照片移动到路线尽头，彼此确认不抢话",
+    "en": "Exact location:  union meeting room documentation table, worn wall maps, chairs and a photo evidence board. Decisive moment: Jonas traces an escape path on a warehouse map as Theo slides a relevant photo to the end of the line, both looking down at the same detail.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH09_03",
+    "type": "scene",
+    "linked_scene": "CH09_S03",
+    "zh": "真实地点： 事务所会议室。画面瞬间：Theo接听法律联络人电话并开扬声器给已授权者，Olivia侧身记录时间；镜头保留Gabriel缺席的空椅",
+    "en": "Exact location:  agency closed-door conference room, cordless desk phone and a notepad beside a window. Decisive moment: Theo takes an authorized legal contact's call while Olivia records the time and permissions; Gabriel's conspicuously unoccupied chair stays visible but he is NOT physically present.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH09_04",
+    "type": "scene",
+    "linked_scene": "CH09_S04",
+    "zh": "真实地点： 工会会场门口。画面瞬间：Jonas一手拉紧外套从会场快步走出，Lena迎上两步递出名片，手停在对方决定接不接的位置",
+    "en": "Exact location:  union hall front doors at dusk, wet pavement, work posters without readable text and a broad staircase. Decisive moment: Jonas pulls his jacket closed as he exits the union hall; Lena steps toward him and offers a card without forcing it into his hand.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH10_01",
+    "type": "scene",
+    "linked_scene": "CH10_S01",
+    "zh": "真实地点： 独立笔迹鉴定会议室。画面瞬间：鉴定师离开后Theo并排铺开三份授权文件，Olivia斜举笔灯照过签名笔画；光束像刀口切过纸张",
+    "en": "Exact location:  independent handwriting examiner conference room, inspection lamp and approved sample documents. Decisive moment: After the examiner leaves, Theo fans out three permitted signature samples; Olivia angles a penlight across the strokes, the grazing light revealing their texture.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH10_02",
+    "type": "scene",
+    "linked_scene": "CH10_S02",
+    "zh": "真实地点： 公司历史档案室。画面瞬间：Gabriel沿着旧纪要抽出缺页文件，Vivian迅速用指尖按住缺席投票栏，两人因证据不得不靠近但不相拥",
+    "en": "Exact location:  corporate historical archive room, high file shelves, conference minutes in labeled but unreadable binders. Decisive moment: Gabriel pulls an old meeting record from a binder as Vivian abruptly points to a missing vote entry; their sudden proximity comes from the shared clue, not romantic posing.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH10_03",
+    "type": "scene",
+    "linked_scene": "CH10_S03",
+    "zh": "真实地点： 事务所夜间会议室。画面瞬间：Gabriel把自己的书面责任声明推到玩家面前，手指仍压在尾页；Theo刻意不插话，把沉默留给玩家",
+    "en": "Exact location:  agency night meeting room, warm desk pool of light and rain streaking the dark glass. Decisive moment: Gabriel slides his written admission of responsibility toward the viewer with fingers lingering on the final page; Theo stays silent at the table edge.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH10_04",
+    "type": "scene",
+    "linked_scene": "CH10_S04",
+    "zh": "真实地点： 旧公寓客厅。画面瞬间：Gabriel从抽屉拿出没寄出的旧信时指尖停顿，Olivia把独立封套向前递出，让玩家决定是否接收",
+    "en": "Exact location:  modest living room of Gabriel's old apartment, unopened drawers, one lit floor lamp and weathered letters. Decisive moment: Gabriel lifts an unsent letter from a drawer and freezes for a breath; Olivia holds out a separate protective envelope rather than pushing the letter into the viewer's hands.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH11_01",
+    "type": "scene",
+    "linked_scene": "CH11_S01",
+    "zh": "真实地点： 法律援助办公室。画面瞬间：Theo把旧姓登记与新身份证明摆在桌上，Olivia正在将多余影印件收回不透明文件袋，避免镜头看清姓名",
+    "en": "Exact location:  legal-aid office with private identity review station, two chairs, locked filing cabinet and daylight. Decisive moment: Theo presents a prior-name record beside authorized identity proof while Olivia sweeps surplus photocopies into an opaque privacy folder, without showing legible names.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH11_02",
+    "type": "scene",
+    "linked_scene": "CH11_S02",
+    "zh": "真实地点： 审计师工作间。画面瞬间：Lena把合法披露的付款记录摊在桌上，Theo按顺序点着灰桥付款日期；两人视线交汇在一笔可疑账目",
+    "en": "Exact location:  independent audit workspace filled with invoice folders, calculator and a wide review table. Decisive moment: Lena lays out authorized procurement receipts while Theo tracks successive Greybridge payments with his finger; their attention converges on one suspicious gap.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH11_03",
+    "type": "scene",
+    "linked_scene": "CH11_S03",
+    "zh": "真实地点： 旧医院外墙下。画面瞬间：Mara停在旧救护车入口的雨棚边抬手指向一只新装门铃，Olivia把录音设备放回包里；画面必须在室外",
+    "en": "Exact location:  exterior wall below the former hospital's ambulance entrance, old masonry, replaced doorbell and overgrown curb. Decisive moment: Mara stops beneath the weathered ambulance entrance canopy and points to a recently replaced doorbell; Olivia closes her recorder bag, clearly OUTSIDE the old hospital.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH11_04",
+    "type": "scene",
+    "linked_scene": "CH11_S04",
+    "zh": "真实地点： 事务所私密电话间。画面瞬间：Gabriel只在手机通话界面出现为音声，不生成他的实体；Theo坐在一旁对照事先授权的通话记录",
+    "en": "Exact location:  private agency telephone booth, soundproof glass, phone and consent log laid on small shelf. Decisive moment: Gabriel is present ONLY as a phone call, not a physical person or portrait; Theo sits beside the viewer and points at a consent log as the phone speaker glows.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH12_01",
+    "type": "scene",
+    "linked_scene": "CH12_S01",
+    "zh": "真实地点： 社区宠物咖啡馆。画面瞬间：老年救助犬从两名前伴侣中间缓慢穿过，Olivia跪下把医疗照护排班夹平放在低桌上，两人本能让路",
+    "en": "Exact location:  neighborhood animal rescue cafe, scuffed wooden floor, water bowl and softly lit bench seating. Decisive moment: An elderly rescue dog moves calmly between two former partners; Olivia kneels to set down the pet care schedule as both adults step aside to let the dog pass.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH12_02",
+    "type": "scene",
+    "linked_scene": "CH12_S02",
+    "zh": "真实地点： 创意品牌工作室。画面瞬间：两位创业前任分别抱着纸箱站在工作台两侧，Theo正把商标注册资料放在双方都能看到的中间空位",
+    "en": "Exact location:  creative branding startup studio, half-packed product boxes, pinboards and prototype shelves. Decisive moment: Two former partners carry packaging boxes from opposite sides of a cluttered design studio; Theo places the trademark filing in the clear space between them.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH12_03",
+    "type": "scene",
+    "linked_scene": "CH12_S03",
+    "zh": "真实地点： 事务所前台。画面瞬间：Olivia把备用钥匙轻轻落在玩家面前，Lena正翻开合伙协议；钥匙刚触桌的瞬间形成职业归属感",
+    "en": "Exact location:  agency reception desk, key tray, office lease copy and bright late-afternoon window. Decisive moment: Olivia lowers a spare office key toward the viewer's side of the reception desk while Lena opens the partnership terms; freeze just before the key touches wood.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH12_04",
+    "type": "scene",
+    "linked_scene": "CH12_S04",
+    "zh": "真实地点： 街角小餐馆靠窗位。画面瞬间：Theo把最后一份甜点往旁边挪，留出玩家主动谈话的空间；基础图绝不出现Gabriel，可由分支另出图",
+    "en": "Exact location:  corner diner window booth in Manhattan, warm pendant lights and afternoon traffic sliding beyond glass. Decisive moment: Theo gently moves a shared dessert aside, leaving a clear place for the viewer to respond in a window-side diner booth. Base image: Gabriel is NOT present; alternate routes require separate assets.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md",
+    "conditional_cast": "use route-specific file for any optional character; never merge romance outcomes"
+  },
+  {
+    "id": "BG_CH13_01",
+    "type": "scene",
+    "linked_scene": "CH13_S01",
+    "zh": "真实地点： 律师事务所调解室。画面瞬间：Vivian将员工信托条款推到桌中线，Gabriel把签署页推回给她；Theo用指尖指向要删除的封口条款",
+    "en": "Exact location:  neutral attorney mediation suite, long meeting table, water pitchers and closed privacy blinds. Decisive moment: Vivian slides employee-trust terms to the middle of the mediation table while Gabriel moves his signature page toward her; Theo's pen hovers over an overbroad gag clause.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH13_02",
+    "type": "scene",
+    "linked_scene": "CH13_S02",
+    "zh": "真实地点： 调解室侧桌。画面瞬间：Theo正用红笔划掉宽泛条款，Olivia侧身将删改内容解释给Vivian，后者的手离婚戒盒越来越远",
+    "en": "Exact location:  smaller side table beside a legal mediation room, fresh red pen and marked draft agreement. Decisive moment: Theo strikes through a sweeping non-disparagement clause with a red pen; Olivia turns the amended draft toward Vivian, whose hand relaxes away from her ring box.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH13_03",
+    "type": "scene",
+    "linked_scene": "CH13_S03",
+    "zh": "真实地点： 员工信托委员会走廊。画面瞬间：Vivian停在会议室门边守候，Lena快步走来将受益人会议通知递给她；门框把镜头分出内外两个利益空间",
+    "en": "Exact location:  corridor of an employee trust committee office, locked doors, public notice board without readable text. Decisive moment: Vivian waits beside the committee door as Lena arrives briskly and hands her a beneficiary meeting notice; the doorframe divides public and private stakes.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH13_04",
+    "type": "scene",
+    "linked_scene": "CH13_S04",
+    "zh": "真实地点： 夜晚事务所办公室。画面瞬间：Gabriel刚把旧订婚戒盒放回自己口袋，Theo正走向窗边背过身，不制造逼迫或接吻，镜头保留玩家可回应空间",
+    "en": "Exact location:  agency office at night, city lights across wet windows and a desk lamp left on. Decisive moment: Gabriel puts an old engagement-ring box back into his own pocket instead of offering it; Theo turns toward the window, giving the viewer room to respond without pressure.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH14_01",
+    "type": "scene",
+    "linked_scene": "CH14_S01",
+    "zh": "真实地点： 审查机构接件处。画面瞬间：Theo将封存证据袋滑至接收台，Olivia在旁比对封口编号；接件工作人员的手从窗口伸出来接收",
+    "en": "Exact location:  official review-agency evidence intake counter, protective screen, tamper bags and queue barriers. Decisive moment: Theo slides a sealed evidence bag toward an official intake window while Olivia checks the tamper number; an authorized clerk's hand reaches out from behind the partition.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH14_02",
+    "type": "scene",
+    "linked_scene": "CH14_S02",
+    "zh": "真实地点： 委员会准备室。画面瞬间：Vivian把公开版和密封版陈述分别放上两把椅子，Lena主动放下相机；从玩家视角可见两条不同披露路径",
+    "en": "Exact location:  committee preparation room with stacked chairs, two drafts and restrained overhead fluorescent lighting. Decisive moment: Vivian places a public statement and a sealed private version on separate chairs; Lena lowers her camera deliberately as the viewer considers the two paths.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH14_03",
+    "type": "scene",
+    "linked_scene": "CH14_S03",
+    "zh": "真实地点： 公司合规听证外厅。画面瞬间：Gabriel扯下父亲公司的胸牌，手还握着挂绳；Theo接过他递出的文件，不接受替他消除责任",
+    "en": "Exact location:  corporate compliance hearing antechamber, official doors, queue rails and coat hooks. Decisive moment: Gabriel removes his inherited company badge in one firm movement, its lanyard still in his hand; Theo receives the document he offers without absolving him.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH14_04",
+    "type": "scene",
+    "linked_scene": "CH14_S04",
+    "zh": "真实地点： 听证会议厅门前。画面瞬间：Jonas和Mara互相点头后分头走向不同证人入口，两人的脚步朝相反方向，镜头保留各自独立证词的尊重",
+    "en": "Exact location:  corridor just outside a hearing chamber, two separate courtroom doors and skylight reflection. Decisive moment: Jonas and Mara exchange a brief nod and walk toward separate witness doors, their paths diverging under the corridor skylight to emphasize independent testimony.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH15_01",
+    "type": "scene",
+    "linked_scene": "CH15_S01",
+    "zh": "真实地点： 公开听证大厅。画面瞬间：Vivian把前排座椅让给员工代表，Gabriel在后排翻开证词，Theo站在侧道最后确认授权；前中后景都有动作",
+    "en": "Exact location:  public New York hearing chamber, packed but grounded seating, clerk's table and witness row. Decisive moment: Vivian steps aside so an employee representative can take the front row; Gabriel opens his testimony in the back while Theo checks permission in the aisle, three active depth planes.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH15_02",
+    "type": "scene",
+    "linked_scene": "CH15_S02",
+    "zh": "真实地点： 听证证据展示台。画面瞬间：Theo用指示器划过投影时间线，Lena迅速对照引用来源；投影在脸上形成明暗交替，镜头绝不要求可读小字",
+    "en": "Exact location:  official hearing evidence presentation desk, wall projection, microphone stands and labeled but unreadable evidence folders. Decisive moment: Theo traces an evidence timeline with a pointer while Lena rapidly checks its source folder; projected light crosses their faces, with no generated legible small print.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH15_03",
+    "type": "scene",
+    "linked_scene": "CH15_S03",
+    "zh": "真实地点： 证人席旁的走廊。画面瞬间：Gabriel在签字桌完成正式陈述，Vivian把钢笔盖扣好后收回，眼神冷静而非鼓掌；墨水尚未干",
+    "en": "Exact location:  side corridor beside the hearing witness stand, wooden bench, quiet service door and muted court lighting. Decisive moment: Gabriel finishes signing the formal statement as Vivian calmly snaps the pen cap shut and withdraws her hand; their focused expressions differ without a celebratory embrace.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH15_04",
+    "type": "scene",
+    "linked_scene": "CH15_S04",
+    "zh": "真实地点： 听证厅外的夜景露台。画面瞬间：Vivian将婚戒放进小盒的同时，把员工信托保全通知交给Olivia；两条人生决定在同一帧完成",
+    "en": "Exact location:  night terrace outside a public hearing venue, skyline lights, stone balustrade and cooling city wind. Decisive moment: Vivian places her wedding ring into a small box while handing an employee-trust preservation notice to Olivia; two independent decisions share the same cinematic instant.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH16_01",
+    "type": "scene",
+    "linked_scene": "CH16_S01",
+    "zh": "真实地点： 事务所阳光前台。画面瞬间：Olivia一手把新的营业标记挂上门内、一手扶稳玻璃门，Lena把昨日新闻剪报放进档案盒，表明工作仍继续",
+    "en": "Exact location:  sunlit reception of the Manhattan agency after the hearing, freshly organized desks and clients arriving. Decisive moment: Olivia hangs the newly approved office marker inside the glass door while holding it open; Lena files yesterday's clippings into a cabinet instead of displaying a victory trophy.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH16_02",
+    "type": "scene",
+    "linked_scene": "CH16_S02",
+    "zh": "真实地点： 事务所私人会议室。画面瞬间：Olivia正递出公益、精品、合伙三套经营计划，Theo在旁用笔分别标出预算差异，玩家的座位正对他们",
+    "en": "Exact location:  agency's private planning room, sunlight over a budget spreadsheet, blank wall calendar and three draft folders. Decisive moment: Olivia fans out three distinct business plans toward the viewer; Theo marks cost differences on blank-tab folders, letting the player's open seat frame the decision.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md"
+  },
+  {
+    "id": "BG_CH16_03",
+    "type": "scene",
+    "linked_scene": "CH16_S03",
+    "zh": "真实地点： 布鲁克林街角餐馆。画面瞬间：基础图：服务员将热咖啡送向玩家空位，Theo或Gabriel均不出现；其他恋爱结局必须调用专用分支图",
+    "en": "Exact location:  Brooklyn neighborhood restaurant window booth, warm daylight, street trees and distant passing pedestrians. Decisive moment: BASE PLATE ONLY: a cafe server places fresh coffee at the empty viewer-side seat. Neither Gabriel nor Theo appears. Romantic outcomes MUST use separate branch-specific images.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md",
+    "conditional_cast": "use route-specific file for any optional character; never merge romance outcomes"
+  },
+  {
+    "id": "BG_CH16_04",
+    "type": "scene",
+    "linked_scene": "CH16_S04",
+    "zh": "真实地点： 事务所办公室门口。画面瞬间：新客户正轻轻推开门，Olivia从柜台回头应答；Vivian只有满足分支条件才可在画面里，基础图不出现她",
+    "en": "Exact location:  agency office doorway in late afternoon, corridor light, desk clutter and a fresh client arriving. Decisive moment: A new client is gently pushing the office door inward as Olivia turns to answer from the desk. Vivian is NOT in the base image and requires a branch-specific asset.",
+    "prompt_version": "V2",
+    "prompt_file": "assets/70张_真人电影感_沉浸动作交互_中英文独立提示词_V2.md",
+    "conditional_cast": "use route-specific file for any optional character; never merge romance outcomes"
+  }
+]
