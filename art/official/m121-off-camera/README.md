@@ -1,6 +1,8 @@
 # M121 image and audio drop folder
 
-Put finished files here using the asset id as the filename:
+116 webp stills are in `images/`, named by asset id. `CG_M121_024.webp` is not here yet; playback shows a placeholder card for that id.
+
+Put any later file here using the asset id as the filename:
 
 - `images/CHAR_SEB.webp`, `images/BG_C01_S01.webp`, `images/CG_M121_022.webp`, `images/STATE_M121_HEAT_SEB.webp`
 - `audio/BGM_M121_C01.mp3`
