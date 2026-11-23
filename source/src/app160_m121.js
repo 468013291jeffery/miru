@@ -55,6 +55,28 @@
       return r;
     };
   }
+  if (typeof off94Show === 'function') {
+    const show = off94Show;
+    off94Show = function (d, vid) {
+      show.apply(this, arguments);
+      if (!vid || !d || d.slot !== 'm121_v01') return;
+      const box = document.querySelector('.cg94');
+      if (!box) return;
+      box.classList.add('m121open');
+      const cap = box.querySelector('p');
+      const video = box.querySelector('video');
+      if (cap) cap.hidden = true;
+      if (!video || !cap) return;
+      const reveal = function () { if (video.currentTime >= 8.7) cap.hidden = false; };
+      video.addEventListener('timeupdate', reveal);
+    };
+    if (!document.getElementById('m121-open-css')) {
+      const st = document.createElement('style');
+      st.id = 'm121-open-css';
+      st.textContent = '.cg94.m121open video{width:100%;height:100%;max-height:100%;object-fit:cover;border-radius:0}.cg94.m121open p{position:absolute;left:8%;right:8%;bottom:14%;font-size:22px;font-weight:700;letter-spacing:.06em;text-shadow:0 2px 18px #000;z-index:2}.cg94.m121open p[hidden]{display:none}';
+      document.head.appendChild(st);
+    }
+  }
   document.addEventListener('error', function (ev) {
     const el = ev.target;
     if (!el || !el.dataset || el.dataset.m121ph) return;

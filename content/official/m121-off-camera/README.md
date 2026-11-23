@@ -1,6 +1,6 @@
 # M121 OFF CAMERA / 《镜头关掉后，他们都想吻我》
 
-V2 design package, converted into the MIRU script the official importer already plays. Twelve chapters, forty-eight scenes, sixteen optional intimate scenes. 116 of the 117 images are in `art/official/m121-off-camera/images/<ID>.webp`. `CG_M121_024` is the one missing file and still uses the labeled placeholder. Audio and trailers are not in the repo yet. Each audio id points at `audio/BGM_M121_Cxx.mp3`.
+V2 design package, converted into the MIRU script the official importer already plays. Twelve chapters, forty-eight scenes, sixteen optional intimate scenes. 116 of the 117 images are in `art/official/m121-off-camera/images/<ID>.webp`. `CG_M121_024` is still a placeholder. The only video is `video/official/m121-off-camera/V01_opening.mp4`, played at the start of chapter 1. There are no other trailers. Music files are not in the repo yet.
 
 Intimate scenes are not separate chapter stops. They open only from the consent choice on the preceding scene, and only when the story flags, the earlier consent step and a clear boundary allow it. Stop clears that scene's consent. A later exclusive ending hides the other men's intimate scenes. The six endings are chosen by name at chapter 12. The highest affection score does not pick anyone.
 

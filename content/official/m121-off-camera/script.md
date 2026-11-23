@@ -16,6 +16,7 @@
 ⟦TIME|第1天⟧
 ⟦BGM|BGM_M121_C01|本章⟧
 ⟦SET|m121_scene~C01_S01⟧
+⟦VIDEO|m121_v01|WHO DO YOU GO TO TONIGHT?⟧
 旁白：你站在别墅入口，Naomi把最后一页协议翻到“OFF AIR”段落，Sebastian顺手替你挡开摄影机轨道，却没有替你签字。
 娜奥米：“We film dates. Not your private decisions.”
 塞巴斯蒂安：“Read the last page first.”
