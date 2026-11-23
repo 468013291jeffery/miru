@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="e9c5de9d0930 2026-11-23T19:06Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="c409c0b65176 2026-11-23T19:30Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -29101,8 +29101,14 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     ]).then(([d, j]) => {
       if (d && d.works) D.data = d;
       const L = (j && (j.works || j.rows)) || [];
-      D.list = L.filter(w => (w.status === "live" || !w.status) && D.data && D.data.works[w.id])
-        .map(w => Object.assign({}, w, { d: D.data.works[w.id], or: w.orient || D.data.works[w.id].rel }));
+      /* discover.json 里没有的作品（作者后台新上线的）：用作品包里的 pack.meta.disc（mod180 记在本机，没有就读一次） */
+      const norm = (w, d) => Object.assign({}, w, { d: Object.assign({ rel: w.orient || "bg", cast: "multi", identity: [], persona: [], trope: [], mood: [], intensity: "steamy" }, d), or: w.orient || d.rel });
+      D.list = [];
+      L.filter(w => w.status === "live" || !w.status).forEach(w => {
+        const d = (D.data && D.data.works[w.id]) || (window.PK180 && PK180.store[w.id] && PK180.store[w.id].d);
+        if (d) { D.list.push(norm(w, d)); return; }
+        if (window.PK180 && /^w_/.test(w.id)) PK180.packOf(w.id).then(e => { if (e && e.d && D.list && !D.list.some(x => x.id === w.id)) { D.list.push(norm(w, e.d)); if (S.lastTab === "discover" && document.querySelector(".d179")) rerender(); } });
+      });
     }).finally(() => { D.busy = null; });
     return D.busy;
   }
@@ -29274,6 +29280,72 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   ].join("");
   document.head.appendChild(st);
   window.D179 = D;
+})();
+
+/* ===== mod180: 作者后台上线的剧——素材、小游戏、发现页标签都跟着作品包走，不再需要 GitHub / 部署（2026-11-24）=====
+   后台（admin.html 第⑤步）上传的图片 / 视频存进文件存储，槽位表写在剧本 config.assets；小游戏写在 config.games；
+   发现页标签写在 config.disc。上线时一起进 pack（pack.assets / pack.games / pack.meta.disc）。
+   App 这边：
+     1 · 打开作品时（/works?id=…）把 pack.games 里的 m111_* / m112_* 模板游戏注册进游戏库（MG168.reg），并记在本机，下次启动直接有；
+     2 · pack.assets 记在本机；art/official/<id>.json 不存在时用它（首页卡片、背景、CG、开场视频都读得到）；
+     3 · 发现页（mod179）：discover.json 里没有的作品，读 pack.meta.disc 补进筛选。 */
+(function () {
+  "use strict";
+  const KEY = "miru_pk180";
+  let store = {};
+  try { store = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (_) { store = {}; }
+  const keep = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (_) {} };
+  const isTplGame = g => g && g.id && /^m11[12]_/.test(String(g.tpl || ""));
+  function regGames(list) {
+    const L = (list || []).filter(isTplGame);
+    if (!L.length || !window.MG168) return;
+    try { window.MG168.reg(L); } catch (e) { console.warn("[mod180] games", e); }
+  }
+  function remember(id, P) {
+    if (!id || !P) return;
+    const e = store[id] || {};
+    if (P.assets && typeof P.assets === "object" && Object.keys(P.assets).length) e.a = P.assets;
+    if (Array.isArray(P.games)) { const g = P.games.filter(isTplGame); if (g.length) e.g = g; }
+    if (P.meta && P.meta.disc) e.d = P.meta.disc;
+    e.at = Date.now(); store[id] = e; keep();
+    regGames(e.g);
+    if (e.a && typeof OFF94 !== "undefined") { OFF94.assets[id] = Object.assign({}, e.a, OFF94.assets[id] || {}); }
+  }
+  /* 1 · 截住作品包：capi("/works?id=…") */
+  if (typeof capi === "function") {
+    const C0 = capi;
+    capi = async function (path) {
+      const r = await C0.apply(this, arguments);
+      try {
+        const m = /^\/works\?id=([^&]+)/.exec(String(path || ""));
+        if (m && r && r.ok && r.j && r.j.pack) remember(decodeURIComponent(m[1]), r.j.pack);
+      } catch (_) {}
+      return r;
+    };
+  }
+  /* 启动时把记下来的游戏和素材放回去 */
+  Object.keys(store).forEach(id => { const e = store[id]; regGames(e.g); if (e.a && typeof OFF94 !== "undefined") OFF94.assets[id] = Object.assign({}, e.a, OFF94.assets[id] || {}); });
+
+  /* 2 · 素材表：官方文件优先，没有就用作品包里的 */
+  const fetching = {};
+  function packOf(id) { /* 还没打开过的作品（首页卡片要开场视频 / 封面）：读一次作品包 */
+    if (fetching[id]) return fetching[id];
+    fetching[id] = fetch("/api/works?id=" + encodeURIComponent(id)).then(r => r.ok ? r.json() : null).then(j => { const P = j && (j.pack || (j.work && j.work.pack)); if (P) remember(id, P); return store[id] || null; }).catch(() => null);
+    return fetching[id];
+  }
+  if (typeof off94Assets === "function") {
+    const A0 = off94Assets;
+    off94Assets = async function (id) {
+      let map = await A0.apply(this, arguments);
+      if (!/^w_/.test(String(id || ""))) return map;
+      if (!map || !Object.keys(map).length) {
+        const e = store[id] || (await packOf(id));
+        if (e && e.a) { map = Object.assign({}, e.a); OFF94.assets[id] = map; }
+      } else if (store[id] && store[id].a) { map = Object.assign({}, store[id].a, map); OFF94.assets[id] = map; }
+      return map;
+    };
+  }
+  window.PK180 = { store, packOf, remember };
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
