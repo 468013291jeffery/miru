@@ -93,7 +93,7 @@ module.exports=L.wrap(async(req,res)=>{
    const mapped=gemsForSku(String(b.sku||''),cfg);if(!mapped)return L.bad(res,'unknown product');
    const cents=Number((((cfg.skus||{})[mapped.sku])||{}).usd)||0;if(!(cents>=50))return L.bad(res,'product has no price');
    const r=await fetch(PP_API+'/v2/checkout/orders',{method:'POST',headers:H,body:JSON.stringify({intent:'CAPTURE',purchase_units:[{reference_id:mapped.sku,custom_id:u.uid,description:'MIRU '+mapped.gems+' diamonds',amount:{currency_code:'USD',value:(cents/100).toFixed(2)}}],application_context:{brand_name:'MIRU',shipping_preference:'NO_SHIPPING',user_action:'PAY_NOW'}})});
-   const j=await r.json().catch(()=>({}));if(!r.ok||!j.id)return L.send(res,502,{error:'paypal create failed',detail:String(j.message||j.name||'').slice(0,120)});
+   const j=await r.json().catch(()=>({}));if(!r.ok||!j.id)return L.send(res,502,{error:'paypal create failed',detail:String((j.details&&j.details[0]&&(j.details[0].issue+' '+(j.details[0].description||'')))||j.message||j.name||'').slice(0,240)});
    return L.send(res,200,{id:j.id});
   }
   const oid=String(b.orderId||'').replace(/[^A-Za-z0-9]/g,'').slice(0,40);if(!oid)return L.bad(res,'orderId required');
