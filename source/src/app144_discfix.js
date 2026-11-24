@@ -4947,7 +4947,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     const x = e.target && e.target.closest && e.target.closest(".packs84 [data-buy],.packs [data-buy]"); if (!x) return;
     if (inApp()) return;
     e.preventDefault(); e.stopImmediatePropagation();
-    const n = +x.dataset.buy; pay("gems_" + n, "💎 " + n);
+    const n = +x.dataset.buy;
+    /* 2026-11-25 PayPal 账户被停用：新支付接通前先提示，不再弹出会报错的窗口。接通后由 window.__webpay 接管。 */
+    if (typeof window.__webpay === "function") { window.__webpay("gems_" + n, n); return; }
+    toast(zh() ? "网页充值即将开放，现在可以看广告免费领钻石" : "Web top-up is coming soon. Watch an ad to earn free diamonds."); void pay;
   }, true);
   window.__pp192 = () => ({ inApp: inApp(), sdk: !!(window.paypal && window.paypal.Buttons) });
 })();
