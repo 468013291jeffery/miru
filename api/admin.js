@@ -385,6 +385,84 @@ module.exports = L.wrap(async (req, res) => {
   /* ---------- operations config ---------- */
   /* 2026-11-24 后台保存密钥（目前只有 Unity S2S 回调密钥）。存在 config 表的 secret_* 键里（配置接口读取时会剔除，不会被带出去）；
      读取只返回「是否已设置」，不回传值；审计日志不记录值。 */
+  /* 2026-11-25 · 在线作品英文版补齐（pack.script_en）。在线作品必须有英文版：没有 script_en、或英文版里还夹着中文的，
+     用服务器上的模型按行翻译剧本——⟦指令⟧ 的结构和参数原样保留，只翻人能看到的文字；人名先统一译好，全剧一致。
+     后台任务在服务器进程里跑（POST op:start），GET 看进度。成功后写回 pack.script_en，并保证 pack.meta.langs 含 en。 */
+  if (r === 'en_backfill') {
+    if (!need('config')) return;
+    const ST = global.__enfill || (global.__enfill = { running: false, at: null, cur: null, done: [], fail: [], log: [] });
+    const HAN = /[一-鿿]/, hanN = s => (String(s || '').match(/[一-鿿]/g) || []).length;
+    if (req.method === 'GET') {
+      const rows = await sql("SELECT id, title, length(pack->>'script') AS zh, length(pack->>'script_en') AS en FROM works WHERE status='live' ORDER BY created_at");
+      return L.send(res, 200, { state: ST, works: rows });
+    }
+    if (b.op !== 'start') return L.bad(res, 'unknown op');
+    if (ST.running) return L.send(res, 200, { ok: true, already: true, state: ST });
+    const say = m => { ST.log.push(new Date().toISOString().slice(11, 19) + ' ' + m); if (ST.log.length > 200) ST.log.splice(0, ST.log.length - 200); };
+    const SYS = (gloss) => 'You translate an interactive romance-drama script from Simplified Chinese into natural, vivid American English for an English-language app. ' +
+      'You receive a JSON array of script lines and must return ONLY a JSON array of the same length, one translated line per input line, same order. Rules: ' +
+      '(1) Keep every markup token exactly: lines may start with "#", "####", or contain ⟦...⟧ commands. Inside ⟦CMD|a|b|...⟧ keep the command word and the number and order of "|" fields; translate only fields that are human-readable Chinese text (names, descriptions, scene labels); never translate ids, codes, numbers, flags or variable names. ' +
+      '(2) Heading keywords stay as they are (CHAPTER, SCENE, CHOICE, ENDING, option letters like "A｜"); keep the full-width "｜" separator. ' +
+      '(3) Dialogue lines look like "名字：“台词”" → write "Name: “line”" (English colon + space, keep curly quotes). "旁白：" → "Narrator: ". The player character "你" → "You". ' +
+      '(4) Keep tone (flirty, tense, dramatic), keep second person ("you") for the player, no added notes, no explanations, no quotes around the whole line. ' +
+      (gloss ? '(5) Use these character names consistently: ' + gloss + '.' : '');
+    const llmArr = async (lines, gloss, depth) => {
+      let arr = null;
+      try {
+        const txt = await L.llm([{ role: 'system', content: SYS(gloss) }, { role: 'user', content: JSON.stringify(lines) }], Math.min(7000, 400 + lines.join('').length * 4), 120000);
+        arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1));
+      } catch (_) { arr = null; }
+      if (Array.isArray(arr) && arr.length === lines.length) return arr.map(x => String(x == null ? '' : x));
+      if (lines.length > 1 && (depth || 0) < 4) { const m = Math.ceil(lines.length / 2); return (await llmArr(lines.slice(0, m), gloss, (depth || 0) + 1)).concat(await llmArr(lines.slice(m), gloss, (depth || 0) + 1)); }
+      return null;
+    };
+    const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
+    const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(dst) <= 1;
+    const translateLines = async (lines, gloss) => {   /* lines: 只含要翻的行；返回同长数组（失败的行为 null） */
+      const out = new Array(lines.length).fill(null), CH = 36, jobs = [];
+      for (let i = 0; i < lines.length; i += CH) jobs.push(i);
+      let k = 0;
+      const worker = async () => { while (k < jobs.length) { const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (okLine(part[j], d)) out[i + j] = d; }); } };
+      await Promise.all([worker(), worker(), worker()]);
+      /* 没过校验的行单独再试一次 */
+      for (let i = 0; i < lines.length; i++) if (out[i] == null) { const res = await llmArr([lines[i]], gloss, 9); if (res && okLine(lines[i], res[0])) out[i] = res[0]; }
+      return out;
+    };
+    const run = async () => {
+      const rows = await sql("SELECT id, title, pack FROM works WHERE status='live' ORDER BY created_at");
+      const todo = rows.filter(w => { const p = w.pack || {}; if (Array.isArray(b.ids) && b.ids.length && !b.ids.includes(w.id)) return false; const zh = typeof p.script === 'string' ? p.script : ''; const en = typeof p.script_en === 'string' ? p.script_en : '';
+        if (!zh.trim()) return false; return b.force === true || !en.trim() || hanN(en) > 0; });
+      say('待处理 ' + todo.length + ' 部');
+      for (const w of todo) {
+        ST.cur = w.title;
+        try {
+          const fresh = (await sql('SELECT pack FROM works WHERE id=$1', [w.id]))[0]; const p = (fresh && fresh.pack) || w.pack;
+          const zh = p.script, oldEn = typeof p.script_en === 'string' && p.script_en.trim() && b.force !== true ? p.script_en : '';
+          /* 修补模式：英文版已存在，只重翻里面还带中文的行；否则从中文稿整篇翻 */
+          const base = oldEn ? oldEn.split('\n') : zh.split('\n');
+          const zhChars = zh.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim()));
+          let gloss = '';
+          if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; return a && e && !HAN.test(e) ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
+          else if (zhChars.length) { const t = await translateLines(zhChars, ''); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = t[i] && t[i].split('|')[1]; return a && e ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
+          const idx = []; base.forEach((l, i) => { if (HAN.test(l)) idx.push(i); });
+          const tr = await translateLines(idx.map(i => base[i]), gloss);
+          const outL = base.slice(); let bad = 0; idx.forEach((i, j) => { if (tr[j] != null) outL[i] = tr[j]; else bad++; });
+          const en = outL.join('\n'), left = hanN(en);
+          if (bad > Math.max(3, idx.length * 0.02)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
+          const np = Object.assign({}, p, { script_en: en });
+          np.meta = Object.assign({}, p.meta || {}); const langs = new Set([].concat(np.meta.langs || [], ['en'])); np.meta.langs = Array.from(langs);
+          await sql('UPDATE works SET pack=$2::jsonb, updated_at=now() WHERE id=$1', [w.id, JSON.stringify(np)]);
+          ST.done.push({ id: w.id, title: w.title, lines: idx.length, bad, han_left: left });
+          say('✓ ' + w.title + '（' + idx.length + ' 行，残留中文 ' + left + ' 字，未过校验 ' + bad + ' 行）');
+        } catch (e) { ST.fail.push({ id: w.id, title: w.title, error: String(e.message || e).slice(0, 200) }); say('✗ ' + w.title + '：' + String(e.message || e).slice(0, 160)); }
+      }
+      ST.cur = null; say('全部结束');
+    };
+    ST.running = true; ST.at = new Date().toISOString(); ST.done = []; ST.fail = []; ST.log = [];
+    run().catch(e => say('fatal ' + String(e.message || e))).finally(() => { ST.running = false; });
+    await log('en_backfill', 'works', '', { force: b.force === true, ids: b.ids || null });
+    return L.send(res, 200, { ok: true, state: ST });
+  }
   if (r === 'secret') {
     if (!need('config')) return;
     const NAMES = { unity_s2s: 'secret_unity_s2s', google_sa: 'secret_google_sa', paypal: 'secret_paypal', xsolla_api: 'secret_xsolla_api', xsolla_wh: 'secret_xsolla_wh', xsolla_mode: 'secret_xsolla_mode' };
