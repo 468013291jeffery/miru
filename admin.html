@@ -1305,8 +1305,8 @@ const Studio = {
         '批量导入 .md', { dangerouslyUseHTMLString: true, confirmButtonText: '知道了' });
     }
     /* 2026-11-24 · 编剧看自己剧的数据（/api/admin?r=mystats：编剧只拿到自己名下已上线的剧，管理员看全部） */
-    const ms = reactive({ days: 30, rows: [], loading: false, cpg: 0 });
-    async function loadMs() { ms.loading = true; try { const j = await api('mystats', { query: { days: ms.days } }); ms.rows = (j && j.works) || []; ms.cpg = (j && j.centsPerGem) || 0; } catch (_) {} finally { ms.loading = false; } }
+    const ms = reactive({ days: 30, rows: [], loading: false, cpg: 0, pro: [], cfg: null });
+    async function loadMs() { ms.loading = true; try { const j = await api('mystats', { query: { days: ms.days } }); ms.rows = (j && j.works) || []; ms.cpg = (j && j.centsPerGem) || 0; ms.pro = (j && j.promoters) || []; ms.cfg = (j && j.cfg) || null; } catch (_) {} finally { ms.loading = false; } }
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', review: '待审核', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(() => { load(); loadMs(); });
@@ -1332,12 +1332,23 @@ const Studio = {
         <el-table-column label="折合收入" width="100"><template #default="{row}">{{'$'+(row.gem_cents/100).toFixed(2)}}</template></el-table-column>
         <el-table-column label="直接充值" width="100"><template #default="{row}">{{'$'+(row.pay_cents/100).toFixed(2)}}</template></el-table-column>
         <el-table-column label="合计（估算）" width="110"><template #default="{row}">{{'$'+((row.gem_cents+row.pay_cents)/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column prop="clicks" label="推广点击" width="90" />
+        <el-table-column label="推广带来充值" width="110"><template #default="{row}">{{'$'+(row.promo_cents/100).toFixed(2)}}</template></el-table-column>
+      </el-table>
+      <h3 style="margin:16px 0 6px">推广人（推广我的剧的人）</h3>
+      <p class="muted" v-if="ms.cfg">分佣规则：玩家通过推广链接进来、绑定后 {{ms.cfg.days}} 天内的每笔正式充值，推广人得充值金额的 {{Math.round((ms.cfg.rate||0)*100)}}%，以钻石发放（$1 = {{ms.cfg.gemsPerUsd}} 钻），由平台承担{{ms.cfg.on===false?'（目前已暂停）':''}}。</p>
+      <el-table :data="ms.pro" size="small" empty-text="所选时间段里还没有人推广你的剧">
+        <el-table-column prop="title" label="剧" min-width="160" />
+        <el-table-column label="推广人" min-width="120"><template #default="{row}">{{row.name || '玩家'}}<span class="muted" v-if="row.code"> · {{row.code}}</span></template></el-table-column>
+        <el-table-column prop="clicks" label="点击" width="70" /><el-table-column prop="users" label="带来新用户" width="100" /><el-table-column prop="payers" label="付费人数" width="90" />
+        <el-table-column label="带来充值" width="100"><template #default="{row}">{{'$'+(row.sales/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column label="推广人佣金" width="100"><template #default="{row}">{{'$'+(row.comm/100).toFixed(2)}}</template></el-table-column>
       </el-table>
     </div>
     <el-dialog v-model="nf.show" title="新建剧本" width="760px"><el-form label-width="80px">
       <el-form-item label="标题"><el-input v-model="nf.title" placeholder="如：The Honor Code｜荣誉法则" /></el-form-item>
       <el-form-item label="类型"><el-radio-group v-model="nf.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group></el-form-item>
-      <el-form-item label="语言"><el-radio-group v-model="nf.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
+      <el-form-item label="语言"><el-radio-group v-model="nf.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button><el-radio-button value="ja">日语</el-radio-button><el-radio-button value="ko">韩语</el-radio-button><el-radio-button value="es">西班牙语</el-radio-button></el-radio-group></el-form-item>
 <el-form-item label="发现页标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和 App「发现」页的筛选、推荐是同一套新标签：玩家按这些找剧，也用于搜索。同组可多选；恋爱对象、亲密强度单选。</div><div v-if="DISC"><div v-for="G in DISC_GROUPS" :key="G[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{G[1]}}<template v-if="G[2]"><br><small>单选 · 必选</small></template></span><div style="flex:1;min-width:0"><el-check-tag v-for="(v,k) in DISC[G[0]]" :key="k" :checked="G[0]==='cast'||G[0]==='intensity' ? nf.disc[G[0]]===k : (nf.disc[G[0]]||[]).includes(k)" @change="nfDiscToggle(G[0],k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag></div></div></div><p class="muted" v-else>正在读取标签字典…</p></div></el-form-item>
       <el-form-item label="素材"><el-select v-model="nf.seed" placeholder="空白开始" clearable style="width:100%"><el-option label="载入《荣誉法则》素材研究（35 张来源卡 + 12 张母题卡 + 审稿简报）" value="honor" /></el-select></el-form-item>
     </el-form><template #footer><el-button @click="nf.show=false">取消</el-button><el-button type="primary" @click="create">创建</el-button></template></el-dialog>
@@ -1353,7 +1364,7 @@ const Studio = {
     <div class="panel" v-show="step===0"><h3>① 选题与素材研究</h3>
       <el-form label-width="110px">
         <el-form-item label="标题"><el-input v-model="sel.title" /></el-form-item>
-        <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
+        <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button><el-radio-button value="ja">日语</el-radio-button><el-radio-button value="ko">韩语</el-radio-button><el-radio-button value="es">西班牙语</el-radio-button></el-radio-group></el-form-item>
 <el-form-item label="发现页标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和 App「发现」页的筛选、推荐是同一套新标签；点「保存」时一起保存。同组可多选；恋爱对象、亲密强度单选。</div><div v-if="DISC && sel.config.disc"><div v-for="G in DISC_GROUPS" :key="G[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{G[1]}}<template v-if="G[2]"><br><small>单选 · 必选</small></template></span><div style="flex:1;min-width:0"><el-check-tag v-for="(v,k) in DISC[G[0]]" :key="k" :checked="G[0]==='cast'||G[0]==='intensity' ? sel.config.disc[G[0]]===k : (sel.config.disc[G[0]]||[]).includes(k)" @change="discToggle(G[0],k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag></div></div></div><p class="muted" v-else>正在读取标签字典…</p></div></el-form-item>
         <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
         <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>

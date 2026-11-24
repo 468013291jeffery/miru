@@ -4612,3 +4612,130 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   }
   sync(); setInterval(sync, 1500);
 })();
+
+/* ===== mod187 · 2026-11-24 新用户选完口味后黑屏 =====
+   原因：36 部内置故事包都已下线（retired 名单），hookPicks() 永远返回 0 部，
+   选完口味进入的「为你挑了 0 部 · 左右滑」页面里一张卡都没有，整屏只剩黑底。
+   修法：内置故事包选不出时，改从线上官方新剧（off94Feed，和「MIRU 新剧」同一份）里挑最多 6 部，
+   按类型（男男 / 男女 / 女女）优先，用封面卡展示；点卡片直接进剧；一部都拿不到就直接进首页，绝不留黑屏。 */
+(function () {
+  "use strict";
+  if (typeof renderHook !== "function" || typeof hookPicks !== "function") return;
+  const st = document.createElement("style");
+  st.textContent = ".ob187{position:absolute;inset:0;overflow-y:auto;padding:calc(env(safe-area-inset-top,0px) + 14px) 16px calc(env(safe-area-inset-bottom,0px) + 24px);background:#0b0a10;color:#fff;-webkit-overflow-scrolling:touch}"
+    + ".ob187 .t{display:flex;justify-content:flex-end;gap:8px}.ob187 .t button{background:rgba(255,255,255,.12);color:#fff;border:0;border-radius:999px;padding:7px 14px;font-size:13px}"
+    + ".ob187 h2{margin:14px 0 4px;font-size:24px}.ob187 .s{margin:0 0 16px;opacity:.72;font-size:13px;line-height:1.5}"
+    + ".ob187 .g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}"
+    + ".ob187 .c{display:block;text-align:left;background:none;border:0;padding:0;color:#fff;min-width:0}"
+    + ".ob187 .c i{display:block;aspect-ratio:3/4;border-radius:14px;background:#1d1a26 center/cover no-repeat}"
+    + ".ob187 .c b{display:block;margin-top:8px;font-size:15px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
+    + ".ob187 .c span{display:block;margin-top:2px;font-size:12px;opacity:.65;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}"
+    + ".ob187 .sp{margin:40px auto;width:28px;height:28px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:#EE6F97;animation:ob187 1s linear infinite}@keyframes ob187{to{transform:rotate(360deg)}}";
+  document.head.appendChild(st);
+  const esc187 = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  function shell() {
+    const z = zh();
+    return '<div class="ob187"><div class="t"><button data-pfopen="1">⚙︎ ' + (z ? "口味" : "Taste") + '</button><button data-obskip="1">' + (z ? "先逛逛" : "Browse") + ' ›</button></div>'
+      + '<h2>' + (z ? "为你推荐" : "Picked for you") + '</h2><p class="s">' + (z ? "正在按你的口味挑剧…" : "Finding stories for you…") + '</p><div class="g"><div class="sp"></div></div></div>';
+  }
+  async function fill() {
+    const host = document.querySelector("#s-ob .ob187"); if (!host) return;
+    let L = []; try { L = (await off94Feed()) || []; } catch (_) {}
+    const or = S.or && S.or !== "all" ? S.or : null;
+    let pick = L.filter(w => !or || !w.orient || w.orient === or); if (pick.length < 2) pick = L;
+    pick = pick.slice(0, 6);
+    if (!pick.length) { S.ob = true; save(); startApp(); return; }
+    const z = zh();
+    host.querySelector(".s").textContent = z ? ("已为你挑了 " + pick.length + " 部 · 点开就能玩，前两章免费") : (pick.length + " stories for you · tap to start, chapters 1–2 free");
+    host.querySelector(".g").innerHTML = pick.map(w => {
+      const A = w.A || {}, img = A.cover || A.poster || w.cover || "";
+      const title = typeof off94Title === "function" ? off94Title(w) : w.title, hook = typeof off94Hook === "function" ? off94Hook(w) : (w.hook || "");
+      return '<button class="c" data-ob187="' + esc187(w.id) + '"><i style="background-image:url(\'' + esc187(img) + '\')"></i><b>' + esc187(title) + '</b><span>' + esc187(hook) + '</span></button>';
+    }).join("");
+  }
+  const _rh = renderHook;
+  renderHook = function () {
+    let n = 0; try { n = hookPicks().length; } catch (_) {}
+    if (n) return _rh.apply(this, arguments);
+    screen("s-ob", shell()); show("s-ob"); fill();
+  };
+  document.addEventListener("click", e => {
+    const x = e.target.closest("[data-ob187]"); if (!x) return;
+    e.preventDefault(); e.stopPropagation();
+    const id = x.dataset.ob187;
+    S.ob = true; save(); startApp();
+    setTimeout(() => { const b = document.createElement("button"); b.dataset.off94 = id; b.style.display = "none"; document.body.appendChild(b); b.click(); setTimeout(() => b.remove(), 2000); }, 80);
+  }, true);
+  /* 新用户还在选口味时就先把官方新剧清单取好，选完口味不用再等 */
+  try { if (!S.ob) setTimeout(() => { off94Feed().catch(() => {}); }, 1200); } catch (_) {}
+})();
+
+/* ===== mod188 · 2026-11-24 首页顶部分类 + 发现页分组改用新标签 =====
+   昨天标签大整改后，首页顶部还是「甜宠 / 宫廷奇幻 / 群像 / 宿敌」这套按关键词猜的旧分类，发现页下面的分组也还按旧标签。
+   现在统一读 art/official/discover.json（和发现页筛选、后台新建剧本同一套 dict）；作者后台上线、discover.json 里还没有的剧，用作品包里的 pack.meta.disc（PK180 记在本机）。
+   顶部：为你推荐 · 热门 · 新剧 · 甜宠治愈 · 暗黑 · 奇幻（没有剧的分类不显示）。
+   发现页分组：黑帮 · 总裁·富豪 · 吸血鬼·狼人 · 明星·娱乐圈 · 运动员 · 校园 · 虐心 · 悬疑（少于 2 部的分组不显示）。 */
+(function () {
+  "use strict";
+  const DM = { data: null };
+  const any = (a, b) => (a || []).some(x => b.includes(x));
+  const discOf = w => { if (!w) return null; const W = DM.data && DM.data.works && DM.data.works[w.id]; if (W) return W; const s = window.PK180 && PK180.store && PK180.store[w.id]; return (s && s.d) || null; };
+  const TAB_RULE = {
+    new: (w, d, i) => i < 6,
+    sweet: (w, d) => !!d && (any(d.mood, ["sweet"]) || d.intensity === "sweet"),
+    dark: (w, d) => !!d && any(d.mood, ["dark", "angst"]),
+    fantasy: (w, d) => !!d && (any(d.mood, ["fantasy"]) || any(d.identity, ["vampire", "werewolf", "mythic", "royalty"]))
+  };
+  const TABS = [["foryou", "For You", "为你推荐"], ["hot", "Hot", "热门"], ["new", "New", "新剧"], ["sweet", "Sweet & Cozy", "甜宠治愈"], ["dark", "Dark", "暗黑"], ["fantasy", "Fantasy", "奇幻"]];
+  const SHELF = [
+    ["🖤", "黑帮", "Mafia", d => any(d.identity, ["mafia"])],
+    ["💼", "总裁·富豪", "CEO & Billionaire", d => any(d.identity, ["ceo"])],
+    ["🩸", "吸血鬼·狼人", "Vampires & Wolves", d => any(d.identity, ["vampire", "werewolf"])],
+    ["✨", "明星·娱乐圈", "Celebrity", d => any(d.identity, ["showbiz"])],
+    ["🏒", "运动员", "Athletes", d => any(d.identity, ["athlete"])],
+    ["🎓", "校园", "College", d => any(d.identity, ["college"])],
+    ["💔", "虐心", "Angst", d => any(d.mood, ["angst"])],
+    ["🔍", "悬疑", "Mystery", d => any(d.mood, ["mystery"])]
+  ];
+  function oldTags(w) { const T = window.TAGS157; if (!T || typeof T.tagsOf !== "function") return []; const M = T.MAP; T.MAP = null; try { return T.tagsOf(w) || []; } catch (_) { return []; } finally { T.MAP = M; } }
+  function build() {
+    const L = (typeof OFFF94 !== "undefined" && OFFF94.list) || []; if (!L.length) return;
+    const MAP = {};
+    L.forEach((w, i) => {
+      const d = discOf(w);
+      let out = Object.keys(TAB_RULE).filter(k => TAB_RULE[k](w, d, i));
+      if (!d) out = out.concat(oldTags(w).filter(k => ["sweet", "dark", "fantasy"].includes(k)));
+      MAP[w.id] = [...new Set(out)];
+    });
+    window.TAGS157 = window.TAGS157 || {}; window.TAGS157.MAP = MAP;
+  }
+  try { if (typeof FEED_TABS !== "undefined" && typeof T === "function") { FEED_TABS.length = 0; TABS.forEach(([k, en, zh]) => FEED_TABS.push([k, T(en, zh)])); if (typeof feedTab !== "undefined" && !TABS.some(x => x[0] === feedTab)) feedTab = "foryou"; } } catch (_) {}
+  const ready = fetch("art/official/discover.json?v=" + Math.floor(Date.now() / 6e5)).then(r => (r.ok ? r.json() : null)).then(d => { if (d && d.works) DM.data = d; build(); }).catch(() => {});
+  if (typeof off94Feed === "function") {
+    const f = off94Feed;
+    off94Feed = async function () { const L = await f.apply(this, arguments); try { await ready; build(); } catch (_) {} return L; };
+  }
+  if (typeof discMain === "function" && typeof off94RCard === "function") {
+    const dm = discMain;
+    discMain = function () {
+      let h = dm.apply(this, arguments);
+      try {
+        const L = (typeof OFFF94 !== "undefined" && OFFF94.list) || [];
+        if (!L.length || !DM.data) return h;
+        const tpl = document.createElement("template"); tpl.innerHTML = h;
+        const nw = tpl.content.querySelector(".s144new"); if (!nw) return h;
+        tpl.content.querySelectorAll(".shelf.s144:not(.s144new)").forEach(n => n.remove());
+        const z = typeof CL === "function" ? CL() === "zh" : true;
+        let add = "";
+        SHELF.forEach(([ic, zt, et, fn]) => {
+          const ws = L.filter(w => { const d = discOf(w); return d && fn(d); });
+          if (ws.length >= 2) add += '<div class="shelf off94s s188"><div class="shd"><h3>' + ic + " " + (z ? zt : et) + '</h3></div><div class="rail2">' + ws.map(w => off94RCard(w).replace(/<span class="rbadge">[^<]*<\/span>/, "")).join("") + "</div></div>";
+        });
+        nw.insertAdjacentHTML("afterend", add);
+        h = tpl.innerHTML;
+      } catch (_) {}
+      return h;
+    };
+  }
+})();
