@@ -2358,7 +2358,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
-  const KEY = "miru_leads165";
+  const KEY = "miru_leads165b";
   const bi = v => (v && typeof v === "object" ? { zh: String(v.zh || v.en || ""), en: String(v.en || v.zh || "") } : { zh: String(v || ""), en: String(v || "") });
   function cache() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } }
   function keep(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (_) {} }
@@ -2397,7 +2397,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
         let ent = c[row.id];
         if (!ent || Date.now() - (ent.at || 0) > 6 * 3600e3) {
           ent = { at: Date.now(), leads: [], art: null, title: row.title, orient: row.orient };
-          try { const p = await fetch("/api/works?id=" + encodeURIComponent(row.id)); if (p.ok) { const pj = await p.json(); const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
+          try { const p = typeof capi === "function" ? await capi("/works?id=" + encodeURIComponent(row.id)) : { ok: false }; if (p.ok && p.j) { const pj = p.j; /* 2026-11-24 带登录凭证：成人剧的人物卡以前被 adult_gate 挡住，永远进不了角色页 */ const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
           if (ent.leads.length) { try { const a = await fetch("art/official/" + row.id + ".json"); if (a.ok) ent.art = await a.json(); } catch (_) {} }
           c[row.id] = ent;
         }
