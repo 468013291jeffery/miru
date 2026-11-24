@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="c001d5cd3b92 2026-11-24T10:55Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="2abb4db05c6a 2026-11-24T11:41Z";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -30147,6 +30147,64 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       return h;
     };
   }
+})();
+
+/* ===== mod189 · 2026-11-24 安卓 App 里的激励视频改用 Unity Ads（原生），奖励以 Unity 服务器回调为准 =====
+   安卓壳（TWA）第一次打开网页时 referrer 是 android-app://com.miru.plus.app，记下来，之后就知道「在 App 里」。
+   在 App 里点「看广告」：跳 miru-ad://rewarded?u=<用户ID>.<本次编号>，原生页面放 Unity 激励视频；
+   Unity 看完后直接通知我们服务器（/api/wallet?r=unity），服务器发钻、流水原因记成 ad_unity:<本次编号>。
+   回到网页后查钱包流水：找到这条就算到账（不在本地再加钻，避免和服务器重复）；找不到就提示没拿到奖励。
+   网页版（浏览器里）照旧走 AdSense（app128），Unity 没有网页版广告。 */
+(function () {
+  "use strict";
+  const KEY = "miru_twa189";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  try { if (/^android-app:\/\/com\.miru\.plus\.app/.test(document.referrer || "")) localStorage.setItem(KEY, "1"); } catch (_) {}
+  const inApp = () => { try { return localStorage.getItem(KEY) === "1"; } catch (_) { return false; } };
+  window.__unity189 = () => ({ inApp: inApp(), pending: !!pend });
+  if (typeof watchAd !== "function" || typeof capi !== "function") return;
+  let pend = null, granted = false;
+  const W0 = watchAd;
+  watchAd = function (done) {
+    if (!inApp()) return W0.apply(this, arguments);
+    const c = typeof cloudInfo === "function" ? cloudInfo() : {};
+    if (!c.uid) return W0.apply(this, arguments);
+    if (!adLeft()) { toast(t("ad.none")); return; }
+    if (typeof closeSheet === "function") closeSheet();
+    const n = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    pend = { n, done, at: Date.now() };
+    try { if (typeof track === "function") track("ad_unity_start", {}); } catch (_) {}
+    location.href = "miru-ad://rewarded?u=" + encodeURIComponent(c.uid + "." + n) + "&n=" + n;
+  };
+  if (typeof adGrant === "function") {
+    const G0 = adGrant;
+    adGrant = function (kind) {
+      if (granted) { granted = false; if (kind === "gem") return; }  /* 钻石已经由服务器发了，这里只处理投票、解锁这类本地效果 */
+      return G0.apply(this, arguments);
+    };
+  }
+  let checking = false;
+  async function check() {
+    if (!pend || checking) return; checking = true; const p = pend;
+    try {
+      for (let i = 0; i < 8 && pend === p; i++) {
+        await new Promise(r => setTimeout(r, i ? 1500 : 800));
+        let r; try { r = await capi("/wallet"); } catch (_) { continue; }
+        if (!r || !r.ok) continue;
+        const hit = (r.j.recent || []).find(x => x && x.reason === "ad_unity:" + p.n);
+        if (!hit) continue;
+        pend = null;
+        const cc = cloudInfo(); cc.known = r.j.gems; S.keys = r.j.gems;
+        const st = adState(); st.n++; save();
+        if (typeof keysChip === "function") keysChip();
+        toast((zh() ? "看完广告 +" : "Ad watched +") + (hit.delta || 1) + " 💎");
+        granted = true; try { if (p.done) p.done(); } finally { granted = false; }
+        return;
+      }
+      if (pend === p) { pend = null; toast(zh() ? "这次没有拿到奖励（广告没看完，或暂时没有可播的广告）" : "No reward this time (ad not finished or none available)"); }
+    } finally { checking = false; }
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && pend && Date.now() - pend.at > 1200) check(); });
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
