@@ -4,6 +4,10 @@
    minSdk 24：Google Play「自动保护」要求最低 24。 */
 plugins { id 'com.android.application' }
 def vcode = (System.getenv('VERSION_CODE') ?: '1').toInteger()
+/* AppLovin MAX（聚合：AppLovin + Unity Ads）。三个值都放 GitHub Secrets，没填就整个广告功能关闭，App 照常可用。 */
+def alKey = System.getenv('APPLOVIN_SDK_KEY') ?: ''
+def alRewarded = System.getenv('APPLOVIN_REWARDED_ID') ?: ''
+def alAppOpen = System.getenv('APPLOVIN_APPOPEN_ID') ?: ''
 android {
     namespace 'com.miru.plus.app'
     compileSdk 36
@@ -13,7 +17,11 @@ android {
         targetSdk 36
         versionCode vcode
         versionName "1.0.${vcode}"
+        buildConfigField "String", "APPLOVIN_SDK_KEY", "\"${alKey}\""
+        buildConfigField "String", "AL_REWARDED", "\"${alRewarded}\""
+        buildConfigField "String", "AL_APPOPEN", "\"${alAppOpen}\""
     }
+    buildFeatures { buildConfig true }
     signingConfigs {
         release {
             def ks = System.getenv('KEYSTORE_PATH')
@@ -28,4 +36,7 @@ android {
 dependencies {
     implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
     implementation 'com.google.androidbrowserhelper:billing:1.2.0'   // Play 结算库 8.x（Play 要求 ≥ 8.0.0）
+    implementation 'com.applovin:applovin-sdk:13.6.4'                // AppLovin MAX
+    implementation 'com.applovin.mediation:unityads-adapter:4.21.0.1' // Unity Ads（经 MAX 聚合）
+    implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
 }
