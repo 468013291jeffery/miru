@@ -1305,6 +1305,1591 @@ const Studio = {
         '批量导入 .md', { dangerouslyUseHTMLString: true, confirmButtonText: '知道了' });
     }
     /* 2026-11-24 · 编剧看自己剧的数据（/api/admin?r=mystats：编剧只拿到自己名下已上线的剧，管理员看全部） */
+    const ms = reactive({ days: 30, rows: [], loading: false, cpg: 0, pro: [], cfg: null });
+    async function loadMs() { ms.loading = true; try { const j = await api('mystats', { query: { days: ms.days } }); ms.rows = (j && j.works) || []; ms.cpg = (j && j.centsPerGem) || 0; ms.pro = (j && j.promoters) || []; ms.cfg = (j && j.cfg) || null; } catch (_) {} finally { ms.loading = false; } }
+    const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
+    const stLabel = s => ({ draft: '制作中', review: '待审核', live: '已上线', offline: '已下线' }[s] || s);
+    onMounted(() => { load(); loadMs(); });
+    return { ms, loadMs, upBusy, uploadFiles, delAsset, gamesText, saveGames, gameSample, DISC, DISC_GROUPS, nfDiscToggle, discToggle, saveDisc, missingSlots, isWriter, submit, leadsText, genLeads, saveLeads, msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+  },
+  template: `<div>
+  <div class="panel" v-if="!sel">
+    <div class="toolbar"><el-button type="primary" @click="nf.show=true">新建剧本</el-button><el-button @click="pickMdMany" style="margin-left:8px">批量导入 .md</el-button><span class="muted">五步流程：选题与素材 → 按终版规则生成 → 自动检查 → 编剧审改 → 一键上线。规则版本：{{R.version||'未加载'}}</span></div>
+    <el-table :data="list" stripe @row-click="r=>open(r.id)" style="cursor:pointer">
+      <el-table-column prop="title" label="剧本" min-width="200" /><el-table-column label="进度" width="160"><template #default="{row}"><el-progress :percentage="row.stage*20" :format="()=>'第 '+row.stage+' 步'" /></template></el-table-column>
+      <el-table-column prop="chapters" label="章数" width="70" /><el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.status==='live'?'success':row.status==='offline'?'info':'warning'">{{stLabel(row.status)}}</el-tag></template></el-table-column>
+      <el-table-column prop="updated_by" label="最后修改" width="110" /><el-table-column label="更新时间" width="170" :formatter="r=>fmt(r.updated_at)" />
+      <el-table-column label="" width="80"><template #default="{row}"><el-button size="small" type="danger" text @click.stop="del(row)">删除</el-button></template></el-table-column>
+    </el-table>
+    <div style="margin-top:22px">
+      <h3 style="margin:0 0 6px">我的剧数据</h3>
+      <div class="toolbar"><el-radio-group v-model="ms.days" size="small" @change="loadMs"><el-radio-button :value="7">近 7 天</el-radio-button><el-radio-button :value="30">近 30 天</el-radio-button><el-radio-button :value="90">近 90 天</el-radio-button><el-radio-button :value="3650">全部</el-radio-button></el-radio-group><el-button size="small" @click="loadMs" style="margin-left:8px">刷新</el-button><span class="muted">播放、点赞是累计数；钻石和充值按所选时间段统计。折合收入 = 玩家在这部剧里花的钻 × 一颗钻平均 {{ms.cpg}} 美分（估算）；直接充值 = 在这部剧里打开充值页后 60 分钟内的正式充值。</span></div>
+      <el-table :data="ms.rows" size="small" v-loading="ms.loading" empty-text="还没有上线的剧">
+        <el-table-column prop="title" label="剧" min-width="180" />
+        <el-table-column label="状态" width="80"><template #default="{row}"><el-tag size="small" :type="row.status==='live'?'success':'info'">{{row.status==='live'?'上线中':'已下线'}}</el-tag></template></el-table-column>
+        <el-table-column prop="plays" label="播放" width="80" /><el-table-column prop="likes" label="点赞" width="70" />
+        <el-table-column prop="spenders" label="花钻人数" width="90" /><el-table-column prop="gems" label="钻石消耗" width="90" />
+        <el-table-column label="折合收入" width="100"><template #default="{row}">{{'$'+(row.gem_cents/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column label="直接充值" width="100"><template #default="{row}">{{'$'+(row.pay_cents/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column label="合计（估算）" width="110"><template #default="{row}">{{'$'+((row.gem_cents+row.pay_cents)/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column prop="clicks" label="推广点击" width="90" />
+        <el-table-column label="推广带来充值" width="110"><template #default="{row}">{{'$'+(row.promo_cents/100).toFixed(2)}}</template></el-table-column>
+      </el-table>
+      <h3 style="margin:16px 0 6px">推广人（推广我的剧的人）</h3>
+      <p class="muted" v-if="ms.cfg">分佣规则：玩家通过推广链接进来、绑定后 {{ms.cfg.days}} 天内的每笔正式充值，推广人得充值金额的 {{Math.round((ms.cfg.rate||0)*100)}}%，以钻石发放（$1 = {{ms.cfg.gemsPerUsd}} 钻），由平台承担{{ms.cfg.on===false?'（目前已暂停）':''}}。</p>
+      <el-table :data="ms.pro" size="small" empty-text="所选时间段里还没有人推广你的剧">
+        <el-table-column prop="title" label="剧" min-width="160" />
+        <el-table-column label="推广人" min-width="120"><template #default="{row}">{{row.name || '玩家'}}<span class="muted" v-if="row.code"> · {{row.code}}</span></template></el-table-column>
+        <el-table-column prop="clicks" label="点击" width="70" /><el-table-column prop="users" label="带来新用户" width="100" /><el-table-column prop="payers" label="付费人数" width="90" />
+        <el-table-column label="带来充值" width="100"><template #default="{row}">{{'$'+(row.sales/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column label="推广人佣金" width="100"><template #default="{row}">{{'$'+(row.comm/100).toFixed(2)}}</template></el-table-column>
+      </el-table>
+    </div>
+    <el-dialog v-model="nf.show" title="新建剧本" width="760px"><el-form label-width="80px">
+      <el-form-item label="标题"><el-input v-model="nf.title" placeholder="如：The Honor Code｜荣誉法则" /></el-form-item>
+      <el-form-item label="类型"><el-radio-group v-model="nf.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group></el-form-item>
+      <el-form-item label="语言"><el-radio-group v-model="nf.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button><el-radio-button value="ja">日语</el-radio-button><el-radio-button value="ko">韩语</el-radio-button><el-radio-button value="es">西班牙语</el-radio-button></el-radio-group></el-form-item>
+<el-form-item label="发现页标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和 App「发现」页的筛选、推荐是同一套新标签：玩家按这些找剧，也用于搜索。同组可多选；恋爱对象、亲密强度单选。</div><div v-if="DISC"><div v-for="G in DISC_GROUPS" :key="G[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{G[1]}}<template v-if="G[2]"><br><small>单选 · 必选</small></template></span><div style="flex:1;min-width:0"><el-check-tag v-for="(v,k) in DISC[G[0]]" :key="k" :checked="G[0]==='cast'||G[0]==='intensity' ? nf.disc[G[0]]===k : (nf.disc[G[0]]||[]).includes(k)" @change="nfDiscToggle(G[0],k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag></div></div></div><p class="muted" v-else>正在读取标签字典…</p></div></el-form-item>
+      <el-form-item label="素材"><el-select v-model="nf.seed" placeholder="空白开始" clearable style="width:100%"><el-option label="载入《荣誉法则》素材研究（35 张来源卡 + 12 张母题卡 + 审稿简报）" value="honor" /></el-select></el-form-item>
+    </el-form><template #footer><el-button @click="nf.show=false">取消</el-button><el-button type="primary" @click="create">创建</el-button></template></el-dialog>
+  </div>
+
+  <div v-else>
+    <div class="panel">
+      <div class="toolbar"><el-button @click="sel=null;load()">← 返回列表</el-button><b style="font-size:16px">{{sel.title}}</b><el-tag size="small" :type="sel.status==='live'?'success':sel.status==='offline'?'info':'warning'">{{stLabel(sel.status)}}</el-tag><span class="muted">更新：{{fmt(sel.updated_at)}} · {{sel.updated_by}}</span><el-upload :auto-upload="false" :show-file-list="false" :on-change="importMd" accept=".md,.txt" style="display:inline-block;margin-left:auto"><el-button size="small">导入 .md</el-button></el-upload><el-button size="small" @click="download">下载剧本 .md</el-button></div>
+      <el-steps :active="step" finish-status="success" simple style="margin-top:10px"><el-step v-for="(t,i) in steps" :key="i" :title="(i+1)+' '+t" @click="step=i" style="cursor:pointer" /></el-steps>
+    </div>
+
+    <!-- 1 选题与素材 -->
+    <div class="panel" v-show="step===0"><h3>① 选题与素材研究</h3>
+      <el-form label-width="110px">
+        <el-form-item label="标题"><el-input v-model="sel.title" /></el-form-item>
+        <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button><el-radio-button value="ja">日语</el-radio-button><el-radio-button value="ko">韩语</el-radio-button><el-radio-button value="es">西班牙语</el-radio-button></el-radio-group></el-form-item>
+<el-form-item label="发现页标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和 App「发现」页的筛选、推荐是同一套新标签；点「保存」时一起保存。同组可多选；恋爱对象、亲密强度单选。</div><div v-if="DISC && sel.config.disc"><div v-for="G in DISC_GROUPS" :key="G[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{G[1]}}<template v-if="G[2]"><br><small>单选 · 必选</small></template></span><div style="flex:1;min-width:0"><el-check-tag v-for="(v,k) in DISC[G[0]]" :key="k" :checked="G[0]==='cast'||G[0]==='intensity' ? sel.config.disc[G[0]]===k : (sel.config.disc[G[0]]||[]).includes(k)" @change="discToggle(G[0],k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag></div></div></div><p class="muted" v-else>正在读取标签字典…</p></div></el-form-item>
+        <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
+        <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>
+        <el-form-item label="玩家身份"><el-input v-model="sel.config.player" placeholder="不填 = 待定（AI 不会替你定）" /></el-form-item>
+        <el-form-item label="主要人物"><el-input v-model="sel.config.cast" type="textarea" :rows="2" placeholder="角色名（英文）、年龄（成年）、吸引点、底线…" /></el-form-item>
+        <el-form-item label="故事配置"><el-select v-model="sel.config.story_mode" style="width:120px"><el-option v-for="x in STU.modes" :key="x" :value="x" /></el-select>&nbsp;<el-select v-model="sel.config.story_form" style="width:180px"><el-option v-for="x in STU.forms" :key="x" :value="x" /></el-select>&nbsp;<el-select v-model="sel.config.interaction_mode" style="width:110px"><el-option v-for="x in STU.inter" :key="x" :value="x" /></el-select>&nbsp;反转<el-select v-model="sel.config.twist_density" style="width:80px"><el-option v-for="x in STU.twist" :key="x" :value="x" /></el-select>&nbsp;章数 <el-input-number v-model="sel.config.chapters_target" :min="1" :max="40" size="small" />&nbsp;<el-switch v-model="sel.config.monetization" active-text="含付费道具" /></el-form-item>
+        <el-form-item label="内容边界"><el-input v-model="sel.config.boundaries" type="textarea" :rows="2" /></el-form-item>
+        <el-form-item label="素材研究 JSON"><div style="width:100%"><div class="toolbar"><el-button size="small" :loading="busy==='research'" @click="aiResearch">AI 生成机制卡（idea 级，不联网）</el-button><span class="muted" v-if="rsum">来源卡 {{rsum.sources}}（verified {{rsum.verified}}）· 待补 {{rsum.pending}} · 趋势 {{rsum.trends}} · 原创风险 {{rsum.risks}} · 母题卡 {{rsum.motifs}}</span></div><el-input v-model="researchText" type="textarea" :rows="8" class="mono" placeholder="粘贴素材研究 AI 的 JSON（source_cards / trends / originality_risks / motif_cards）" /></div></el-form-item>
+        <el-form-item label="选用母题" v-if="motifs.length"><el-checkbox-group v-model="sel.config.motifs"><div v-for="m in motifs" :key="m.motif_id" style="line-height:1.6;margin-bottom:6px"><el-checkbox :value="m.motif_id"><b>{{m.motif_id}}</b> <span class="muted">[{{m.source_type}}]</span> {{String(m.premise).slice(0,90)}}</el-checkbox></div></el-checkbox-group></el-form-item>
+        <el-form-item label="审稿简报"><el-input v-model="sel.brief" type="textarea" :rows="8" placeholder="素材研究的中文审稿简报" /></el-form-item>
+      </el-form>
+      <el-button type="primary" @click="saveStep1">保存，进入第 ② 步</el-button>
+    </div>
+
+    <!-- 2 生成 -->
+    <div class="panel" v-show="step===1"><h3>② 按终版规则生成</h3>
+      <p class="muted">AI 读取的是终版规则全文 + 生成 Skill 调试规则 v1.0 + 剧本与角色编写规范 v7.12 + 规则框架 V2.1 + 角色卡规范 V1.3（与 App 同一份），先出架构，编剧确认后再逐章写正文。每次生成都会自动存一个版本。</p>
+      <div class="toolbar"><el-button type="primary" :loading="busy==='outline'" :disabled="!!busy&&busy!=='outline'" @click="genOutline">{{outline?'重新生成架构':'生成架构'}}</el-button><el-button @click="saveOutline" :disabled="!!busy">保存架构修改</el-button></div>
+      <el-input v-model="outline" type="textarea" :rows="14" placeholder="架构：体验承诺、世界边界、人物核心、四轴结局方向、每章目标与结尾选择…（可直接手写）" />
+      <h3 style="margin-top:18px">角色卡（角色卡规范 V1.3 · 七大模块 + CV 声音 + 每章章节卡）</h3>
+      <p class="muted">架构确认后生成。每个主要人物一张基础卡（身份生活 / 经历知识 / 人格表达 / POV 认知 / 关系 / 记忆成长）+ 每章的章节卡（这一章他知道什么、相信什么、想要什么、说话怎么变、因为哪件事变）。写正文和 App 运行时都会读取它。</p>
+      <div class="toolbar"><el-button type="primary" :loading="busy==='cards'" :disabled="!!busy&&busy!=='cards'" @click="genCards">{{cardsText?'重新生成角色卡':'生成角色卡'}}</el-button><el-button @click="saveCards" :disabled="!!busy">保存角色卡修改</el-button></div>
+      <el-input v-model="cardsText" type="textarea" :rows="10" placeholder="角色卡 JSON（可直接编辑）" />
+      <h3 style="margin-top:18px">逐章正文（目标 {{sel.config.chapters_target}} 章）</h3>
+      <div class="toolbar"><el-button type="primary" :loading="busy==='batch'" :disabled="!!busy&&busy!=='batch'" @click="genRest">按顺序写完剩余章节</el-button><el-button v-if="busy==='batch'" @click="stop=true">停止</el-button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px"><el-button v-for="n in Number(sel.config.chapters_target)" :key="n" size="small" :type="(sel.chapters||[]).some(c=>c.n===n)?'success':'default'" :loading="busy==='ch'+n" :disabled="!!busy&&busy!=='ch'+n" @click="genOne(n)">第 {{n}} 章{{(sel.chapters||[]).some(c=>c.n===n)?' ✓ 重写':''}}</el-button></div>
+      <div class="mono" style="margin-top:12px;max-height:180px;overflow:auto;font-size:12px;background:#f7f7f9;padding:8px;border-radius:6px" v-if="log.length"><div v-for="(l,i) in log" :key="i">{{l}}</div></div>
+    </div>
+
+    <!-- 3 检查 -->
+    <div class="panel" v-show="step===2"><h3>③ 自动检查</h3>
+      <div class="toolbar"><el-button type="primary" @click="runCheck">运行规则检查</el-button><el-button :loading="busy==='review'" :disabled="!!busy&&busy!=='review'" @click="aiReview">AI 审稿（逐条对照规则）</el-button><span class="muted" v-if="sel.qa&&sel.qa.at">上次检查：{{fmt(sel.qa.at)}} · {{sel.qa.rules}}</span></div>
+      <template v-if="sel.qa">
+        <el-alert v-for="(x,i) in sel.qa.err||[]" :key="'e'+i" :title="x" type="error" :closable="false" show-icon style="margin-bottom:6px" />
+        <el-alert v-for="(x,i) in sel.qa.warn||[]" :key="'w'+i" :title="x" type="warning" :closable="false" show-icon style="margin-bottom:6px" />
+        <el-alert v-for="(x,i) in (sel.qa.ok||[]).concat(sel.qa.info||[])" :key="'o'+i" :title="x" type="success" :closable="false" style="margin-bottom:6px" />
+        <div v-if="sel.qa.estimate" class="muted" style="margin:8px 0">时长估算（estimated）：单路线约 {{sel.qa.estimate.route_minutes}} 分钟 · {{(sel.qa.estimate.assumptions||[]).join('；')}}</div>
+        <h3 v-if="sel.qa.ai" style="margin-top:14px">AI 审稿意见（{{sel.qa.ai.length}} 条）</h3>
+        <el-table v-if="sel.qa.ai" :data="sel.qa.ai" size="small" stripe><el-table-column prop="chapter" label="章" width="50" /><el-table-column prop="rule" label="规则" width="110" /><el-table-column prop="where" label="位置" min-width="140" /><el-table-column prop="problem" label="问题" min-width="200" /><el-table-column prop="fix" label="改法" min-width="220" /><el-table-column label="级别" width="70"><template #default="{row}"><el-tag size="small" :type="row.level==='error'?'danger':'warning'">{{row.level==='error'?'错误':'提醒'}}</el-tag></template></el-table-column></el-table>
+      </template>
+      <h3 style="margin-top:16px">问题 → 该调哪条规则（调试规则 第 15 节）</h3>
+      <el-table :data="debugTable" size="small"><el-table-column prop="k" label="生成偏差" /><el-table-column prop="v" label="优先调整" width="260" /></el-table>
+    </div>
+
+    <!-- 4 审改 -->
+    <div class="panel" v-show="step===3"><h3>④ 编剧人工审改</h3>
+      <div class="toolbar"><el-select v-model="curCh" style="width:280px"><el-option v-for="c in sel.chapters" :key="c.n" :value="c.n" :label="'第 '+c.n+' 章 · '+c.t" /></el-select><el-button @click="addCh">＋ 新章节</el-button><el-button type="danger" text @click="delCh" v-if="chObj">删除本章</el-button><span class="muted" v-if="chObj">{{chObj.md.length}} 字 · 最后由 {{chObj.by}} 修改</span></div>
+      <el-input v-if="chObj" v-model="chObj.md" type="textarea" :rows="22" class="mono" />
+      <div class="toolbar" style="margin-top:8px"><el-button type="primary" @click="saveCh" :disabled="!chObj">保存本章（存版本）</el-button></div>
+      <h3>审稿清单</h3>
+      <el-checkbox-group v-model="review.checks.list"><div v-for="d in debugTable" :key="d.k"><el-checkbox :value="d.k">没有「{{d.k}}」（{{d.v}}）</el-checkbox></div></el-checkbox-group>
+      <el-input v-model="review.notes" type="textarea" :rows="4" placeholder="审稿意见（会记录审稿人和时间）" style="margin-top:10px" />
+      <div class="toolbar" style="margin-top:10px"><el-button type="success" @click="autoReview" :loading="busy==='auto'">🤖 D先生审查（结构 + 受限词 + 样式）</el-button><span class="muted">跑一遍：章/场景/选择/收尾/指令闭包/未知指令/受限词/章节标题样式；绿了才自动标记通过</span></div>
+      <div class="toolbar" v-if="autoOut"><pre class="json" style="max-height:220px">{{autoOut}}</pre></div>
+      <h3>识别编剧中文稿</h3>
+      <el-input v-model="msText" type="textarea" :rows="6" placeholder="把按《剧本编写规范》模板写的中文稿整份粘贴到这里" />
+      <div class="toolbar" style="margin-top:10px"><el-button type="primary" @click="msCheck" :loading="busy==='ms'">识别</el-button><el-button v-if="msBible" @click="msDownload">下载故事圣经</el-button><span class="muted">只识别，不会上线；下载的文件放进 art/official/ 后才生效</span></div>
+      <div class="toolbar" v-if="msOut"><pre class="json" style="max-height:320px">{{msOut}}</pre></div>
+      <div class="toolbar" style="margin-top:10px"><el-switch v-model="review.approved" active-text="审核通过，可以上线" /><el-button type="primary" @click="saveReview">保存审稿</el-button><span class="muted" v-if="sel.review&&sel.review.by">上次审稿：{{sel.review.by}} · {{fmt(sel.review.at)}}</span></div>
+      <h3>版本记录</h3>
+      <el-table :data="vers" size="small" max-height="260"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="note" label="说明" /><el-table-column prop="by_name" label="操作人" width="110" /><el-table-column width="90"><template #default="{row}"><el-button size="small" text @click="restore(row)">恢复</el-button></template></el-table-column></el-table>
+    </div>
+
+    <!-- 5 上线 -->
+    <div class="panel" v-show="step===4"><h3>⑤ 上线到 App</h3>
+      <el-descriptions :column="2" border size="small">
+        <el-descriptions-item label="章节">{{(sel.chapters||[]).length}} 章</el-descriptions-item>
+        <el-descriptions-item label="自动检查">{{sel.qa?((sel.qa.err||[]).length+' 错误 / '+(sel.qa.warn||[]).length+' 提醒'):'还没检查'}}</el-descriptions-item>
+        <el-descriptions-item label="编剧审核">{{sel.review&&sel.review.approved?('✓ 通过 · '+sel.review.by):'未通过'}}</el-descriptions-item>
+        <el-descriptions-item label="App 作品 ID">{{sel.work_id||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="上线时间">{{fmt(sel.published_at)}}</el-descriptions-item>
+        <el-descriptions-item label="规则版本">{{R.version}}</el-descriptions-item>
+      </el-descriptions>
+      <p class="muted">上线后：App「发现」页社区区置顶显示（作者 MIRU 官方）。玩家第一次打开时，App 会按同一套规则自动生成故事页、人物资料，并配好音乐、特效和小游戏。再次上线会覆盖为新版本。</p>
+      <h3 style="margin-top:14px">素材（图片 / 视频 / 音频）</h3>
+      <p class="muted">直接在这里上传，不用 GitHub。文件名就是槽位名：bg_c01s01.webp（第 1 章第 1 场背景）、cg_xxx.webp（剧本里 ⟦CG|cg_xxx⟧）、cover.webp（封面）、char_人物卡key.webp（人物卡头像）、home_video.mp4（开场视频）。M120_C01_S01_BG… 这种命名也会自动识别。图片 ≤12MB，视频 ≤60MB。</p>
+      <div class="toolbar"><input type="file" multiple accept="image/*,video/*,audio/*" @change="uploadFiles" :disabled="!!upBusy" /><span class="muted">{{upBusy || ('已上传 ' + Object.keys(sel.config.assets||{}).length + ' 个')}}</span></div>
+      <p class="muted" v-if="missingSlots.length">剧本里还没有素材的槽位（{{missingSlots.length}}）：{{missingSlots.slice(0,30).join('、')}}{{missingSlots.length>30?' …':''}}</p>
+      <el-table v-if="Object.keys(sel.config.assets||{}).length" :data="Object.entries(sel.config.assets||{}).map(([k,v])=>({k,v}))" size="small" max-height="220" style="margin-bottom:12px"><el-table-column prop="k" label="槽位" width="280" /><el-table-column label="文件"><template #default="{row}"><a :href="row.v" target="_blank">{{String(row.v).split('/').pop()}}</a></template></el-table-column><el-table-column width="70"><template #default="{row}"><el-button size="small" text type="danger" @click="delAsset(row.k)">删除</el-button></template></el-table-column></el-table>
+      <h3 style="margin-top:14px">小游戏</h3>
+      <p class="muted">剧本里写 ⟦MG|游戏id⟧，这里写同一个 id 的题目。剧本写的是什么动作，小游戏就用对应玩法，不用三选一。模板：m111_order 排序（items 按正确顺序写）、m111_classify 分类（bins + items:[[项, 组序号]]）、m111_mark 圈出所有符合的（items + ans:[序号…]）、m111_match 配对、m111_pair 选出一致的两项（items + pair:[i,j]）、m111_spot 点位置（items + ans + cols）、m111_seq 按顺序点位置（points:[[名称,x%,y%]…]）、m111_align 拖动对准（target + tol + marks）、m111_find 手电找东西（target + decoy）、m111_hold 按住稳住（need 秒）、m111_morse 敲击码（code:"...-"）、m111_route 路线（points + hazards）、m111_collect 收集（n + item + tool）、m111_diff 找不同（img + cols/rows + ans）、m111_wave 声轨（segs + ans）、m111_space 摆放位置（cols/rows + cells + ok）、m111_plan 排日程（slots + chips，可加 remove）、m111_rotate 复原角度（img）、m111_doc 文件核验（cols + rows + ans）、m111_device 实体开关（controls）、m111_deal 协商卡（groups，无标准答案）、m111_place 摆放、m111_beat 节拍、m112_free 无标准答案的自由选择。上线后直接可玩，不用部署。</p>
+      <div class="toolbar"><el-button @click="gameSample">插入示例</el-button><el-button type="primary" @click="saveGames" :disabled="!!busy">保存小游戏</el-button><span class="muted">已保存 {{(sel.config.games||[]).length}} 个</span></div>
+      <el-input v-model="gamesText" type="textarea" :rows="8" placeholder="小游戏 JSON 数组" style="margin-bottom:12px" />
+      <h3 style="margin-top:14px">发现页标签</h3>
+      <p class="muted">玩家在「发现」页按这些筛选。同组可多选；恋爱对象、亲密强度单选。</p>
+      <div v-if="DISC && sel.config.disc">
+        <div v-for="g in ['cast','identity','persona','trope','mood','intensity']" :key="g" style="margin:6px 0">
+          <b style="display:inline-block;width:80px">{{({cast:'恋爱对象',identity:'人物身份',persona:'性格',trope:'套路',mood:'氛围',intensity:'亲密强度'})[g]}}</b>
+          <el-check-tag v-for="(v,k) in DISC[g]" :key="k" :checked="g==='cast'||g==='intensity' ? sel.config.disc[g]===k : (sel.config.disc[g]||[]).includes(k)" @change="discToggle(g,k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag>
+        </div>
+        <div class="toolbar" style="margin-top:8px"><el-button type="primary" @click="saveDisc">保存发现页标签</el-button></div>
+      </div>
+      <p class="muted" v-else>正在读取标签字典…</p>
+      <h3 style="margin-top:14px">人物卡（会出现在 App「发现 → 角色」，玩家可以一对一聊天）</h3>
+      <p class="muted">每个能和玩家互动的主要角色一张（玩家本人不算）。还没有人物卡时，点上线会先自动生成，你检查保存后再上线。</p>
+      <div class="toolbar"><el-button type="primary" :loading="busy==='leads'" :disabled="!!busy&&busy!=='leads'" @click="genLeads(false)">{{leadsText?'重新生成人物卡':'自动生成人物卡'}}</el-button><el-button @click="saveLeads" :disabled="!!busy">保存人物卡修改</el-button></div>
+      <el-input v-model="leadsText" type="textarea" :rows="10" placeholder="人物卡 JSON（可直接编辑）" style="margin-bottom:12px" />
+      <div class="toolbar" v-if="isWriter()"><el-button type="primary" @click="submit" :disabled="!(sel.chapters||[]).length">提交审核</el-button><span class="muted">作者账号不能直接上线：提交后由管理员检查上线{{sel.status==='review'?' · 已提交，等待审核':''}}</span></div><div class="toolbar" v-else><el-button type="primary" @click="publish(false)" :disabled="!(sel.review&&sel.review.approved)">{{sel.status==='live'?'更新线上版本':'一键上线'}}</el-button><el-button v-if="S.me.role==='owner'" type="warning" plain @click="publish(true)" :disabled="!(sel.review&&sel.review.approved)">强制上线（忽略自动检查错误）</el-button><el-button v-if="sel.status==='live'" type="danger" plain @click="unpublish">下线</el-button></div>
+    </div>
+    <div class="panel stunav" style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <el-button :disabled="step===0" @click="step=Math.max(0,step-1)">← 上一步{{step>0?'：'+steps[step-1]:''}}</el-button>
+      <span class="muted">第 {{step+1}} / 5 步 · {{steps[step]}}</span>
+      <el-button type="primary" :disabled="step===4" @click="step=Math.min(4,step+1)">{{step<4?'下一步：'+steps[step+1]:'已是最后一步'}} →</el-button>
+    </div>
+  </div></div>`,
+};
+
+/* ================= app shell ================= */
+/* 2026-11-16：推广分佣 + 单剧收入（/api/admin?r=promo → api/promo.js） */
+const Promo = {
+  setup() {
+    const st = reactive({ loading: false, d: null, days: 30, tab: 'works', q: '' });
+    const fm = reactive({ rate: 10, days: 30, gemsPerUsd: 5, newDays: 7, on: true });
+    async function load() {
+      st.loading = true;
+      try { const d = await api('promo', { query: { days: st.days } }); st.d = d; Object.assign(fm, { rate: Math.round(d.cfg.rate * 1000) / 10, days: d.cfg.days, gemsPerUsd: d.cfg.gemsPerUsd, newDays: d.cfg.newDays, on: d.cfg.on }); }
+      catch (_) {} finally { st.loading = false; }
+    }
+    async function save() {
+      await api('promo', { body: { values: { rate: Number(fm.rate) / 100, days: fm.days, gemsPerUsd: fm.gemsPerUsd, newDays: fm.newDays, on: fm.on } } });
+      ElMessage.success('已保存，新规则对之后的充值生效'); load();
+    }
+    const works = computed(() => { const d = st.d; if (!d) return []; const q = st.q.trim().toLowerCase();
+      return d.works.map(w => Object.assign({}, w, { total: Number(w.pay_cents) + Number(w.gem_cents) })).filter(w => !q || String(w.title || '').toLowerCase().includes(q) || String(w.wid).toLowerCase().includes(q)); });
+    const name = w => w.title || (w.wid.startsWith('ldw_') ? '（官方剧）' + w.wid.slice(4) : w.wid);
+    onMounted(load);
+    return { st, fm, load, save, works, name, money, fmt, can };
+  },
+  template: `<div v-loading="st.loading">
+    <div class="toolbar">
+      <el-radio-group v-model="st.days" @change="load"><el-radio-button :value="7">近 7 天</el-radio-button><el-radio-button :value="30">近 30 天</el-radio-button><el-radio-button :value="90">近 90 天</el-radio-button><el-radio-button :value="3650">全部</el-radio-button></el-radio-group>
+      <el-button @click="load">刷新</el-button>
+    </div>
+    <div class="kpis" v-if="st.d">
+      <div class="kpi"><div class="l">期间正式充值</div><div class="v">{{money(st.d.totals.revenue)}}</div><div class="s">一颗钻平均 {{money(st.d.centsPerGem)}}</div></div>
+      <div class="kpi"><div class="l">推广链接点击</div><div class="v">{{st.d.totals.clicks}}</div><div class="s">带来新用户 {{st.d.totals.users}}</div></div>
+      <div class="kpi"><div class="l">推广带来的充值</div><div class="v">{{money(st.d.totals.sales)}}</div><div class="s">应付佣金 {{money(st.d.totals.comm)}}</div></div>
+      <div class="kpi"><div class="l">已发佣金（累计）</div><div class="v">💎 {{st.d.totals.gems_all}}</div><div class="s">按 $1 = {{st.d.cfg.gemsPerUsd}} 钻发放</div></div>
+    </div>
+    <el-tabs v-model="st.tab">
+      <el-tab-pane label="单剧收入" name="works">
+        <div class="panel">
+          <el-alert type="info" :closable="false" style="margin-bottom:12px" title="怎么算的" description="直接充值：玩家在这部剧里打开充值页后 60 分钟内完成的正式充值。钻石消耗：玩家在这部剧里花掉的钻石，折合收入 = 钻石数 × 一颗钻的平均价格（含赠送和免费钻，是估算）。推广带来：通过这部剧的推广链接进来的用户的充值。数据从本功能上线后开始累计。" />
+          <div class="toolbar"><el-input v-model="st.q" placeholder="搜剧名或 ID" clearable style="width:240px" /><span class="muted">共 {{works.length}} 部</span></div>
+          <el-table :data="works" stripe :default-sort="{prop:'total',order:'descending'}">
+            <el-table-column label="剧" min-width="220"><template #default="{row}"><b>{{name(row)}}</b><div class="muted mono">{{row.wid}}<span v-if="row.author_name"> · {{row.author_name}}</span></div></template></el-table-column>
+            <el-table-column prop="total" label="合计（估算）" width="130" sortable :formatter="r=>money(r.total)" />
+            <el-table-column prop="pay_cents" label="直接充值" width="110" sortable :formatter="r=>money(r.pay_cents)" />
+            <el-table-column prop="orders" label="充值单数" width="95" sortable />
+            <el-table-column prop="gems" label="钻石消耗" width="100" sortable />
+            <el-table-column prop="gem_cents" label="折合收入" width="100" sortable :formatter="r=>money(r.gem_cents)" />
+            <el-table-column prop="spenders" label="花钻人数" width="95" sortable />
+            <el-table-column prop="promo_cents" label="推广带来" width="100" sortable :formatter="r=>money(r.promo_cents)" />
+            <el-table-column prop="clicks" label="推广点击" width="95" sortable />
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="推广人" name="promoters">
+        <div class="panel">
+          <el-table :data="st.d ? st.d.promoters : []" stripe>
+            <el-table-column label="推广人" min-width="200"><template #default="{row}">{{row.name || row.email || '游客'}}<div class="muted mono">{{row.user_id}} · 码 {{row.code}}</div></template></el-table-column>
+            <el-table-column prop="clicks" label="点击" width="80" sortable /><el-table-column prop="users" label="新用户" width="85" sortable /><el-table-column prop="payers" label="付费人数" width="95" sortable />
+            <el-table-column prop="sales" label="带来充值" width="110" sortable :formatter="r=>money(r.sales)" />
+            <el-table-column prop="comm" label="佣金" width="100" sortable :formatter="r=>money(r.comm)" />
+            <el-table-column prop="gems" label="已发钻石（累计）" width="140" sortable />
+          </el-table>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="分佣规则" name="cfg">
+        <div class="panel" style="max-width:560px">
+          <el-form label-width="150px">
+            <el-form-item label="推广分佣"><el-switch v-model="fm.on" active-text="开启" inactive-text="关闭" /></el-form-item>
+            <el-form-item label="分佣比例"><el-input-number v-model="fm.rate" :min="0" :max="50" :step="1" /> <span class="muted" style="margin-left:8px">% · 被推广用户每笔正式充值</span></el-form-item>
+            <el-form-item label="归属天数"><el-input-number v-model="fm.days" :min="1" :max="3650" /> <span class="muted" style="margin-left:8px">天 · 从绑定那天算</span></el-form-item>
+            <el-form-item label="钻石换算"><el-input-number v-model="fm.gemsPerUsd" :min="1" :max="100" /> <span class="muted" style="margin-left:8px">钻 = 1 美元佣金</span></el-form-item>
+            <el-form-item label="只认新用户"><el-input-number v-model="fm.newDays" :min="0" :max="365" /> <span class="muted" style="margin-left:8px">天内注册、且没充过值的才能绑定（0 = 不限）</span></el-form-item>
+            <el-form-item><el-button type="primary" @click="save" :disabled="!can('config')">保存</el-button><span class="muted" style="margin-left:10px" v-if="!can('config')">需要「系统配置」权限</span></el-form-item>
+          </el-form>
+          <el-alert type="warning" :closable="false" title="佣金由平台出，原作者不额外分成。只算正式订单（测试单不算）；佣金按累计金额折成钻石自动发到推广人的钱包，不足 1 钻的零头留到下次。已发的佣金在订单退款后不会自动扣回。" />
+        </div>
+      </el-tab-pane>
+    </el-tabs>
+  </div>`,
+};
+
+const app = createApp({
+  template: '#root-tpl',
+  setup() {
+    const route = ref((location.hash || '#dashboard').slice(1)), collapsed = ref(window.innerWidth < 900), busy = ref(false), reloadKey = ref(0);
+    const lf = reactive({ username: '', password: '' }), pwDlg = ref(false), mustPw = ref(false), pw = reactive({ old: '', password: '' }), badge = reactive({ works: 0, assets: 0, reports: 0 });
+    const payTest = ref(false); window.__payTest = payTest;
+    const titles = { dashboard: '数据看板', studio: '剧本生产 · 5 步工作台', api: 'API 接口目录', users: '用户管理', works: '作品审核', assets: '素材审核', reports: '举报处理', orders: '充值订单', ledger: '钻石流水', promo: '推广与单剧收入', notices: '公告管理', events: '行为数据', i18n: '多语言词条', config: '系统配置', admins: '管理员与权限', audit: '操作日志' };
+    function go(k) { route.value = k; location.hash = k; }
+    window.addEventListener('hashchange', () => { route.value = (location.hash || '#dashboard').slice(1); });
+    async function login() {
+      busy.value = true;
+      try { const j = await api('login', { body: { username: lf.username, password: lf.password } }); S.token = j.token; S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); lf.password = ''; ElMessage.success('欢迎，' + (j.admin.name || j.admin.username)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); if (j.must_change) needPw(j); else refreshBadges(); }
+      catch (_) {} finally { busy.value = false; }
+    }
+    const permOf = r => ({ studio: 'scripts', api: 'config', dashboard: 'dashboard', users: 'users', works: 'works', assets: 'assets', reports: 'reports', orders: 'orders', ledger: 'ledger', promo: 'orders', notices: 'notices', events: 'events', i18n: 'i18n', config: 'config', admins: 'admins', audit: 'audit' }[r]);
+    const firstPage = () => Object.keys(titles).find(k => can(permOf(k))) || 'dashboard';
+    async function refreshBadges() { try { if (!can('dashboard')) return; const j = await api('dashboard'); badge.works = j.kpi.works_pending; badge.assets = j.kpi.assets_review; badge.reports = j.kpi.reports_open; payTest.value = j.payTest; } catch (_) {} }
+    window.__refreshBadges = refreshBadges;
+    async function changePw() { const j = await api('password', { body: pw }); S.token = j.token; localStorage.setItem('miru_admin_tok', j.token); pwDlg.value = false; pw.old = pw.password = ''; ElMessage.success('密码已修改'); if (mustPw.value) { mustPw.value = false; reloadKey.value++; refreshBadges(); } }
+    function needPw(j) { if (j && j.must_change) { mustPw.value = true; pwDlg.value = true; ElMessage.warning('请先修改初始密码'); } }
+    function cmd(c) { if (c === 'pw') pwDlg.value = true; if (c === 'out') { logout(); ElMessage.success('已退出'); } }
+    onMounted(async () => { if (S.token) { try { const j = await api('me'); needPw(j); S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); } catch (_) {} } });
+    return { token: computed(() => S.token), me: computed(() => S.me), route, collapsed, busy, lf, login, go, titles, can, roleName: L.role, pwDlg, mustPw, pw, changePw, cmd, badge, payTest, reloadKey };
+  },
+});
+app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
+for (const [k, c] of Object.entries(ElementPlusIconsVue)) app.component(k, c);
+Object.entries({ studio: Studio, api: ApiCatalog, dashboard: Dashboard, users: Users, works: Works, assets: Assets, reports: Reports, orders: Orders, ledger: Ledger, promo: Promo, notices: Notices, i18n: I18n, config: Config, admins: Admins, audit: Audit, events: Events }).forEach(([k, c]) => app.component('p-' + k, c));
+app.mount('#app');
+</script>
+</body>
+</html>
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIRU 运营后台</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/index.css">
+<script src="https://cdn.jsdelivr.net/npm/vue@3.4.38/dist/vue.global.prod.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/index.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-plus@2.8.4/dist/locale/zh-cn.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<script src="./miru_rules.js"></script>
+<style>
+:root{--side:#14121a;--brand:#EE6F97}
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Helvetica Neue",sans-serif;background:#f4f5f7;color:#1f2329}
+[v-cloak]{display:none}
+.login-wrap{min-height:100%;display:grid;place-items:center;background:radial-gradient(60% 50% at 20% 0%,#ffe1ea,transparent 70%),radial-gradient(50% 50% at 100% 100%,#e9e2ff,transparent 70%),#f7f7fa}
+.login-card{width:380px;max-width:92vw}.login-card h1{margin:0 0 4px;font-size:22px}.brand{font-weight:800;letter-spacing:4px}.brand b{color:var(--brand)}
+.layout{height:100vh}
+.aside{background:var(--side);color:#cfcbd8;overflow-y:auto;transition:width .2s}
+.aside .logo{height:56px;display:flex;align-items:center;gap:8px;padding:0 20px;color:#fff;font-size:18px;white-space:nowrap;overflow:hidden}
+.aside .el-menu{border-right:0;background:transparent}.aside .el-menu-item,.aside .el-sub-menu__title{color:#cfcbd8}
+.aside .el-menu-item.is-active{color:#fff;background:#2a2533}.aside .el-menu-item:hover,.aside .el-sub-menu__title:hover{background:#221e2a}
+.aside .el-sub-menu .el-menu{background:#100e15}
+.header{background:#fff;border-bottom:1px solid #e8e9ec;display:flex;align-items:center;gap:12px;height:56px}
+.header .title{font-size:16px;font-weight:600;flex:1}
+.main{padding:16px;overflow-y:auto}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:12px}
+.kpi{background:#fff;border-radius:10px;padding:14px 16px;border:1px solid #eceef1}.kpi .l{font-size:12px;color:#8a8f99}.kpi .v{font-size:24px;font-weight:700;margin-top:4px}.kpi .s{font-size:12px;color:#8a8f99;margin-top:2px}
+.kpi.warn .v{color:#e6a23c}.kpi.alert .v{color:#f56c6c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.panel{background:#fff;border-radius:10px;border:1px solid #eceef1;padding:14px 16px;margin-bottom:12px}.panel h3{margin:0 0 10px;font-size:15px}
+.chart{height:280px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.pager{display:flex;justify-content:flex-end;margin-top:12px}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px}
+.muted{color:#8a8f99;font-size:12px}
+.asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.asset{background:#fff;border:1px solid #eceef1;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.asset .pv{height:150px;background:#111;display:grid;place-items:center}.asset .pv img,.asset .pv video{max-width:100%;max-height:150px}
+.asset .bd{padding:10px;font-size:13px;flex:1}.asset .ft{padding:8px 10px;border-top:1px solid #f0f0f2;display:flex;gap:6px;flex-wrap:wrap}
+.el-menu-item .el-badge{margin-left:8px;line-height:1}.el-menu-item .el-badge__content.is-fixed{position:static;transform:none}
+.chap{border-left:3px solid #f0b77e;padding:6px 10px;margin:8px 0;background:#fafafa;border-radius:4px}
+.beat{font-size:12px;color:#555;margin:2px 0}
+pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto;background:#f6f7f9;padding:8px;border-radius:6px;font-size:12px;margin:0}
+.el-descriptions__label{width:110px}
+.el-checkbox-button.is-checked .el-checkbox-button__inner{background:#409eff!important;border-color:#409eff!important;color:#fff!important;box-shadow:none!important}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script type="text/x-template" id="root-tpl"><div>
+  <!-- ========== sign in ========== -->
+  <div v-if="!token" class="login-wrap">
+    <el-card class="login-card" shadow="always">
+      <h1><span class="brand">MI<b>RU</b></span> 运营后台</h1>
+      <p class="muted" style="margin:0 0 18px">管理员登录</p>
+      <el-form @submit.prevent="login" label-position="top">
+        <el-form-item label="用户名"><el-input v-model="lf.username" autocomplete="username" placeholder="admin" /></el-form-item>
+        <el-form-item label="密码"><el-input v-model="lf.password" type="password" show-password autocomplete="current-password" @keyup.enter="login" /></el-form-item>
+        <el-button type="primary" style="width:100%" :loading="busy" @click="login">登录</el-button>
+      </el-form>
+      <p class="muted" style="margin-top:14px">首次使用：用户名 <b>admin</b>，密码为部署时设置的 ADMIN_KEY。登录后请立即在右上角修改密码，并为同事创建各自的账号。</p>
+    </el-card>
+  </div>
+
+  <!-- ========== console ========== -->
+  <el-container v-else class="layout">
+    <el-aside :width="collapsed?'64px':'220px'" class="aside">
+      <div class="logo"><span class="brand">MI<b>RU</b></span><span v-if="!collapsed" style="font-size:13px;color:#9a93a8">运营后台</span></div>
+      <el-menu :default-active="route" :collapse="collapsed" @select="go" :default-openeds="['content','money','ops','sys']">
+        <el-menu-item index="dashboard" v-if="can('dashboard')"><el-icon><DataAnalysis /></el-icon><template #title>数据看板</template></el-menu-item>
+        <el-menu-item index="studio" v-if="can('scripts')"><el-icon><EditPen /></el-icon><template #title>剧本生产</template></el-menu-item>
+        <el-menu-item index="users" v-if="can('users')"><el-icon><User /></el-icon><template #title>用户管理</template></el-menu-item>
+        <el-sub-menu index="content" v-if="can('works')||can('assets')||can('reports')">
+          <template #title><el-icon><Checked /></el-icon><span>内容审核</span></template>
+          <el-menu-item index="works" v-if="can('works')">作品审核 <el-badge v-if="badge.works" :value="badge.works" class="ml" /></el-menu-item>
+          <el-menu-item index="assets" v-if="can('assets')">素材审核 <el-badge v-if="badge.assets" :value="badge.assets" /></el-menu-item>
+          <el-menu-item index="reports" v-if="can('reports')">举报处理 <el-badge v-if="badge.reports" :value="badge.reports" /></el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="money" v-if="can('orders')||can('ledger')">
+          <template #title><el-icon><Wallet /></el-icon><span>订单与钻石</span></template>
+          <el-menu-item index="orders" v-if="can('orders')">充值订单</el-menu-item>
+          <el-menu-item index="ledger" v-if="can('ledger')">钻石流水</el-menu-item>
+          <el-menu-item index="promo" v-if="can('orders')">推广与单剧收入</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="ops" v-if="can('notices')||can('i18n')||can('config')||can('events')">
+          <template #title><el-icon><Promotion /></el-icon><span>运营工具</span></template>
+          <el-menu-item index="notices" v-if="can('notices')">公告管理</el-menu-item>
+          <el-menu-item index="events" v-if="can('events')">行为数据</el-menu-item>
+          <el-menu-item index="api" v-if="can('config')">API 接口目录</el-menu-item><el-menu-item index="i18n" v-if="can('i18n')">多语言词条</el-menu-item>
+          <el-menu-item index="config" v-if="can('config')">系统配置</el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="sys" v-if="can('admins')||can('audit')">
+          <template #title><el-icon><Setting /></el-icon><span>系统管理</span></template>
+          <el-menu-item index="admins" v-if="can('admins')">管理员与权限</el-menu-item>
+          <el-menu-item index="audit" v-if="can('audit')">操作日志</el-menu-item>
+        </el-sub-menu>
+      </el-menu>
+    </el-aside>
+    <el-container>
+      <el-header class="header">
+        <el-button text @click="collapsed=!collapsed"><el-icon size="18"><Fold v-if="!collapsed"/><Expand v-else/></el-icon></el-button>
+        <div class="title">{{ titles[route] || '' }}</div>
+        <el-tag v-if="payTest" type="warning" effect="plain">支付为测试模式</el-tag>
+        <el-dropdown @command="cmd">
+          <span style="cursor:pointer;display:flex;align-items:center;gap:6px"><el-avatar :size="28" style="background:#EE6F97">{{ (me.name||me.username||'?').slice(0,1) }}</el-avatar>{{ me.name || me.username }} <el-tag size="small">{{ roleName[me.role] }}</el-tag></span>
+          <template #dropdown><el-dropdown-menu><el-dropdown-item command="pw">修改密码</el-dropdown-item><el-dropdown-item command="out" divided>退出登录</el-dropdown-item></el-dropdown-menu></template>
+        </el-dropdown>
+      </el-header>
+      <el-main class="main">
+        <component v-if="!mustPw" :is="'p-'+route" :key="route+'-'+reloadKey" /><el-empty v-else description="请先修改初始密码" />
+      </el-main>
+    </el-container>
+  </el-container>
+
+  <el-dialog v-model="pwDlg" :title="mustPw ? '第一次登录：请先设置你自己的密码' : '修改密码'" width="400px" :close-on-click-modal="!mustPw" :close-on-press-escape="!mustPw" :show-close="!mustPw">
+    <p v-if="mustPw" class="muted" style="margin:0 0 12px">你现在用的是管理员发给你的初始密码。设置一个只有你知道的新密码（至少 8 位）后才能开始使用后台。</p>
+    <el-form label-width="80px"><el-form-item label="原密码"><el-input v-model="pw.old" type="password" show-password /></el-form-item><el-form-item label="新密码"><el-input v-model="pw.password" type="password" show-password placeholder="至少 8 位" /></el-form-item></el-form>
+    <template #footer><el-button v-if="!mustPw" @click="pwDlg=false">取消</el-button><el-button v-else @click="cmd('out')">退出登录</el-button><el-button type="primary" @click="changePw">保存</el-button></template>
+  </el-dialog>
+</div></script>
+<script>
+// GitHub Pages hosts the admin UI only; API routes run on the production Vercel backend.
+const ADMIN_API_BASE = location.hostname === '468013291jeffery.github.io' ? 'https://miru-kk-396c.vercel.app' : '';
+const { createApp, reactive, ref, computed, onMounted, nextTick, watch, h } = Vue;
+const { ElMessage, ElMessageBox } = ElementPlus;
+const S = reactive({ token: localStorage.getItem('miru_admin_tok') || '', me: JSON.parse(localStorage.getItem('miru_admin_me') || '{}'), perms: JSON.parse(localStorage.getItem('miru_admin_perms') || '[]') });
+async function api(r, opt) {
+  opt = opt || {}; const qs = new URLSearchParams(Object.assign({ r }, Object.fromEntries(Object.entries(opt.query || {}).filter(([, v]) => v !== '' && v != null)))).toString();
+  const res = await fetch(ADMIN_API_BASE + '/api/admin?' + qs, { method: opt.body ? 'POST' : 'GET', headers: Object.assign({ 'Content-Type': 'application/json' }, S.token ? { Authorization: 'Bearer ' + S.token } : {}), body: opt.body ? JSON.stringify(opt.body) : undefined });
+  let j = {}; try { j = await res.json(); } catch (_) {}
+  if (res.status === 401 && r !== 'login' && r !== 'password') { logout(); ElMessage.error('登录已过期，请重新登录'); throw new Error('401'); }
+  if (!res.ok) { ElMessage.error(j.error || ('请求失败 ' + res.status)); throw new Error(j.error || res.status); }
+  return j;
+}
+function logout() { S.token = ''; localStorage.removeItem('miru_admin_tok'); }
+const can = p => S.perms.includes('*') || S.perms.includes(p);
+const fmt = t => t ? new Date(t).toLocaleString('zh-CN', { hour12: false }) : '—';
+const fmtD = t => t ? new Date(t).toLocaleDateString('zh-CN') : '—';
+const money = c => '$' + ((c || 0) / 100).toFixed(2);
+const size = b => !b ? '—' : b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB';
+const L = {
+  role: { owner: '超级管理员', admin: '管理员', reviewer: '审核员', writer: '编剧', support: '客服', analyst: '数据分析' },
+  roleDesc: { owner: '全部权限，含管理员账号管理', admin: '除管理员账号外的全部权限', reviewer: '作品 / 素材审核、举报处理', support: '用户管理、补发钻石（单次 ±500）、订单', analyst: '只读：数据看板、行为数据、订单', writer: '剧本生产工作台（生成、审改；上线需审核通过）' },
+  provider: { guest: '游客', email: '邮箱', google: 'Google', apple: 'Apple' },
+  ustatus: { active: '正常', banned: '已封禁', deleted: '已注销' },
+  wstatus: { pending: '待审核', live: '已上线', rejected: '已驳回', takedown: '已下架', removed: '作者已删除' },
+  astatus: { review: '待审核', public: '已公开', private: '仅作者', rejected: '已驳回', removed: '已删除' },
+  rstatus: { open: '待处理', resolved: '已处理', dismissed: '已驳回' },
+  kind: { bgm: '背景音乐', sfx: '音效', fx: '特效', mg: '小游戏' },
+  ostatus: { paid: '已支付', refunded: '已退款' },
+  action: { login: '登录后台', change_password: '修改密码', gems_grant: '补发钻石', gems_deduct: '扣除钻石', user_ban: '封禁用户', user_unban: '解封用户', user_reset_password: '重置用户密码', user_force_logout: '强制下线', user_note: '修改备注', user_rename: '修改昵称', user_email: '修改邮箱', work_approve: '作品通过', work_reject: '作品驳回', work_takedown: '作品下架', work_restore: '作品恢复', work_feature: '设为推荐', work_unfeature: '取消推荐', work_delete: '删除作品', asset_approve: '素材公开', asset_reject: '素材驳回', asset_private: '素材设为私有', asset_delete: '删除素材', report_resolve: '处理举报', report_dismiss: '驳回举报', order_refund: '订单退款', i18n_edit: '修改词条', i18n_delete: '删除词条', i18n_add: '新增词条', config_update: '修改配置', notice_create: '新建公告', notice_update: '修改公告', notice_delete: '删除公告', admin_create: '新建管理员', admin_update: '修改管理员', admin_enable: '启用管理员', admin_disable: '停用管理员', admin_reset_password: '重置管理员密码', admin_delete: '删除管理员', script_create: '新建剧本', script_save: '保存剧本', script_restore: '恢复剧本版本', script_publish: '剧本上线', script_unpublish: '剧本下线', script_delete: '删除剧本' },
+  event: { app_open: '打开 App', auth_view: '看到登录页', login: '登录 / 注册', taste_done: '完成口味选择', hook_play: '播放引子短剧', story_start: '开始故事', chapter_done: '完成一章', talk: '自由对话', store_open: '打开商店', purchase: '充值', publish: '发布作品', register: '注册', upload: '上传素材', community_open: '打开社区' },
+};
+const tagType = s => ({ active: 'success', live: 'success', public: 'success', paid: 'success', resolved: 'success', pending: 'warning', review: 'warning', open: 'warning', banned: 'danger', rejected: 'danger', takedown: 'danger', refunded: 'info', deleted: 'info', private: 'info', dismissed: 'info', removed: 'info' }[s] || 'primary');
+
+/* ---------- reusable: paged list ---------- */
+function usePaged(route, filters, after) {
+  const st = reactive({ rows: [], total: 0, page: 1, size: 20, loading: false, extra: {} });
+  async function load(p) { if (p) st.page = p; st.loading = true; try { const j = await api(route, { query: Object.assign({ page: st.page, size: st.size }, filters) }); st.rows = j.rows || []; st.total = j.total || 0; st.extra = j; after && after(j); } finally { st.loading = false; } }
+  return { st, load };
+}
+async function promptText(title, label, opt) { const { value } = await ElMessageBox.prompt(label, title, Object.assign({ confirmButtonText: '确定', cancelButtonText: '取消', inputValidator: v => !!(v && v.trim()) || '必填' }, opt || {})); return value.trim(); }
+function chart(el, option) { if (!el) return; const c = echarts.getInstanceByDom(el) || echarts.init(el); c.setOption(option, true); window.addEventListener('resize', () => c.resize()); }
+
+/* ================= pages ================= */
+const Dashboard = {
+  setup() {
+    const d = ref(null), c1 = ref(), c2 = ref(), c3 = ref(), c4 = ref();
+    async function load() {
+      /* 2026-10-31：没有看板权限的角色（writer）在默认 hash 下会先挂上这个页面试着取数，
+         结果每次登录都闪一条「没有权限 / forbidden」。这里先拦住；这一页本来就不在他的菜单里。 */
+      if (!(S.perms.includes('*') || S.perms.includes('dashboard'))) return;      d.value = await api('dashboard'); window.__payTest.value = d.value.payTest; await nextTick();
+      const s = d.value.series, days = s.map(x => fmtD(x.day).slice(5));
+      chart(c1.value, { tooltip: { trigger: 'axis' }, legend: { data: ['新增用户', '日活 DAU'] }, grid: { left: 40, right: 20, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: { type: 'value', minInterval: 1 }, series: [{ name: '新增用户', type: 'line', smooth: true, data: s.map(x => x.new_users), color: '#EE6F97' }, { name: '日活 DAU', type: 'line', smooth: true, data: s.map(x => x.dau), color: '#7b6ad8' }] });
+      chart(c2.value, { tooltip: { trigger: 'axis' }, legend: { data: ['钻石消耗', '收入 (USD)'] }, grid: { left: 50, right: 50, top: 40, bottom: 30 }, xAxis: { type: 'category', data: days }, yAxis: [{ type: 'value', name: '💎' }, { type: 'value', name: '$' }], series: [{ name: '钻石消耗', type: 'bar', data: s.map(x => (x.gems_spent || 0)), color: '#F0B77E' }, { name: '收入 (USD)', type: 'line', yAxisIndex: 1, data: s.map(x => (x.revenue || 0) / 100), color: '#67c23a' }] });
+      const f = d.value.funnel.filter(x => x.users > 0 || ['app_open', 'login', 'story_start', 'purchase'].includes(x.name));
+      chart(c3.value, { tooltip: { formatter: p => p.name + '：' + p.value + ' 人' }, series: [{ type: 'funnel', sort: 'none', left: 20, right: 20, top: 10, bottom: 10, minSize: '8%', label: { formatter: p => p.name + '  ' + p.value }, data: f.map(x => ({ name: L.event[x.name] || x.name, value: x.users })) }], color: ['#EE6F97', '#F0B77E', '#7b6ad8', '#67c23a', '#409eff', '#e6a23c', '#909399', '#f56c6c', '#36cfc9', '#9254de', '#73d13d'] });
+      chart(c4.value, { tooltip: { trigger: 'item' }, legend: { bottom: 0 }, series: [{ type: 'pie', radius: ['40%', '68%'], data: d.value.providers.map(x => ({ name: L.provider[x.provider] || x.provider, value: x.n })) }], color: ['#c0c4cc', '#409eff', '#EE6F97', '#1f2329'] });
+    }
+    onMounted(load);
+    const pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '—';
+    return { d, c1, c2, c3, c4, money, pct, fmtD, load, can };  /* 2026-11-24：模板里用了 can()（收入、钻石卡片按权限显示），没导出导致整页空白 */
+  },
+  template: `<div v-if="d">
+    <div class="kpis">
+      <div class="kpi"><div class="l">总用户</div><div class="v">{{d.kpi.users}}</div><div class="s">已注册 {{d.kpi.registered}} · 封禁 {{d.kpi.banned}}</div></div>
+      <div class="kpi"><div class="l">今日新增</div><div class="v">{{d.kpi.new_today}}</div><div class="s">昨日 {{d.kpi.new_yesterday}}</div></div>
+      <div class="kpi"><div class="l">日活 DAU</div><div class="v">{{d.kpi.dau}}</div><div class="s">昨日 {{d.kpi.dau_yesterday}}</div></div>
+      <div class="kpi"><div class="l">周活 / 月活</div><div class="v">{{d.kpi.wau}} / {{d.kpi.mau}}</div></div>
+      <div class="kpi" v-if="can('orders')"><div class="l">今日收入</div><div class="v">{{money(d.kpi.revenue_today)}}</div><div class="s">30 天 {{money(d.kpi.revenue_30d)}} · {{d.kpi.orders_30d}} 单</div></div>
+      <div class="kpi" v-if="can('orders')"><div class="l">付费用户</div><div class="v">{{d.kpi.payers}}</div><div class="s">付费率 {{pct(d.kpi.payers, d.kpi.users)}}<span v-if="d.kpi.test_orders"> · 含测试单 {{d.kpi.test_orders}}</span></div></div>
+      <div class="kpi" v-if="can('gems')"><div class="l">今日钻石消耗</div><div class="v">{{d.kpi.gems_spent_today}}</div><div class="s">用户钻石存量 {{d.kpi.gems_outstanding}}</div></div>
+      <div class="kpi"><div class="l">社区作品</div><div class="v">{{d.kpi.works_live}}</div><div class="s">已上线</div></div>
+      <div class="kpi" :class="{warn:d.kpi.works_pending}"><div class="l">待审作品</div><div class="v">{{d.kpi.works_pending}}</div></div>
+      <div class="kpi" :class="{warn:d.kpi.assets_review}"><div class="l">待审素材</div><div class="v">{{d.kpi.assets_review}}</div></div>
+      <div class="kpi" :class="{alert:d.kpi.reports_open}"><div class="l">未处理举报</div><div class="v">{{d.kpi.reports_open}}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>新增与日活（14 天）</h3><div ref="c1" class="chart"></div></div>
+      <div class="panel" v-if="can('orders') || can('gems')"><h3>钻石消耗与收入（14 天）</h3><div ref="c2" class="chart"></div></div>
+      <div class="panel"><h3>转化漏斗（近 7 天，按人数）</h3><div ref="c3" class="chart"></div></div>
+      <div class="panel"><h3>登录方式分布</h3><div ref="c4" class="chart"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="panel"><h3>新用户留存</h3>
+        <el-table :data="d.retention.slice().reverse()" size="small" max-height="320"><el-table-column label="注册日" :formatter="r=>fmtD(r.day)" /><el-table-column prop="cohort" label="新增" width="70" /><el-table-column label="次日留存" :formatter="r=>r.cohort?pct(r.d1,r.cohort)+' ('+r.d1+')':'—'" /><el-table-column label="7 日留存" :formatter="r=>r.cohort?pct(r.d7,r.cohort)+' ('+r.d7+')':'—'" /></el-table></div>
+      <div class="panel"><h3>热门社区作品</h3>
+        <el-table :data="d.topWorks" size="small" empty-text="还没有上线的社区作品"><el-table-column prop="title" label="作品" /><el-table-column prop="author_name" label="作者" width="120" /><el-table-column prop="plays" label="播放" width="70" /><el-table-column prop="likes" label="点赞" width="70" /></el-table></div>
+    </div>
+  </div><el-skeleton v-else :rows="8" animated />`,
+};
+
+const Users = {
+  setup() {
+    const f = reactive({ q: '', status: '', provider: '', sort: 'created' });
+    const { st, load } = usePaged('users', f);
+    const det = ref(null), drawer = ref(false), tab = ref('ledger');
+    const play = ref(null), txN = ref(200), txBusy = ref(false);
+    const gd = reactive({ show: false, amount: 10, reason: '' }), bd = reactive({ show: false, reason: '', days: 0, hideWorks: false });
+    async function open(id) { det.value = await api('user', { query: { id } }); drawer.value = true; play.value = null; if (tab.value === 'play') loadPlay(); }
+    // ---- one player's gameplay ledger (funnel / choice mix / chapter duration) ----
+    async function loadPlay() {
+      if (!det.value) return;
+      try { play.value = await api('user_ledger', { query: { id: det.value.user.id, days: 90 } }); }
+      catch (_) { play.value = { works: [], rows: 0, days: 90 }; }
+    }
+    function tabChanged(name) { if (name === 'play' && !play.value) loadPlay(); }
+    function chRows(w) {
+      return Object.keys(w.chapters || {}).sort((a, b) => Number(a) - Number(b)).map(ch => {
+        const c = w.chapters[ch] || {}, ks = Object.keys(c.choices || {});
+        return { ch, opened: c.opened, done: c.done, done_rate: c.done_rate, median_ms: c.median_ms, choices: ks.length ? ks.map(k => k + ':' + c.choices[k].n).join('  ') : '—' };
+      });
+    }
+    const msfmt = v => { if (v == null) return '—'; const s = Math.round(v / 1000); return s < 60 ? s + ' 秒' : Math.floor(s / 60) + ' 分 ' + (s % 60) + ' 秒'; };
+    // ---- dialogue export: server renders the txt, we just download it ----
+    async function dlTx() {
+      const id = det.value.user.id;
+      txBusy.value = true;
+      try {
+        const qs = new URLSearchParams({ r: 'user_transcript', id, limit: String(txN.value) }).toString();
+        const res = await fetch(ADMIN_API_BASE + '/api/admin?' + qs, { headers: S.token ? { Authorization: 'Bearer ' + S.token } : {} });
+        if (!res.ok) { let j = {}; try { j = await res.json(); } catch (_) {} ElMessage.error(j.error || ('导出失败 ' + res.status)); return; }
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'miru-' + id + '-' + txN.value + 'lines.txt';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+        ElMessage.success('已导出（最多 ' + txN.value + ' 条）');
+      } finally { txBusy.value = false; }
+    }
+    async function act(op, extra) { const id = det.value.user.id; const j = await api('user', { body: Object.assign({ id, op }, extra || {}) }); await open(id); load(); return j; }
+    async function gems() { if (!gd.reason.trim()) return ElMessage.warning('请填写原因'); const j = await act('gems', { amount: gd.amount, reason: gd.reason }); gd.show = false; ElMessage.success('完成，当前余额 ' + j.gems); }
+    async function ban() { if (!bd.reason.trim()) return ElMessage.warning('请填写封禁原因'); await act('ban', { reason: bd.reason, days: bd.days, hideWorks: bd.hideWorks }); bd.show = false; ElMessage.success('已封禁'); }
+    async function unban() { await act('unban'); ElMessage.success('已解封'); }
+    async function adultVerify() { const m = await promptText('标记已年龄验证', '核验方式（必填，如：证件核验 + 核验单号）', { inputValue: '' }); if (!m || !String(m).trim()) return; await act('adult_verify', { method: m }); ElMessage.success('已标记，该账号在白名单地区可看到成人作品'); }
+    async function adultUnverify() { await act('adult_unverify'); ElMessage.success('已撤销'); }
+    async function resetpw() { await ElMessageBox.confirm('将生成一个新密码，该用户所有设备会被强制下线。', '重置密码', { type: 'warning' }); const j = await act('resetpw'); ElMessageBox.alert('新密码：<b class="mono">' + j.password + '</b><br>请通过客服渠道告知用户，并提醒其登录后修改。', '已重置', { dangerouslyUseHTMLString: true }); }
+    async function logoutAll() { await act('logout'); ElMessage.success('已强制下线'); }
+    async function note() { const v = await promptText('备注', '仅后台可见', { inputValue: det.value.user.note || '', inputValidator: null }); await act('note', { note: v }); }
+    async function rename() { const v = await promptText('修改昵称', '新昵称', { inputValue: det.value.user.name || '' }); await act('rename', { name: v }); }
+    async function email() { const v = await promptText('修改邮箱', '新邮箱（用户将用它登录）', { inputValue: det.value.user.email || '' }); await act('email', { email: v }); }
+    onMounted(() => load());
+    return { f, st, load, det, drawer, tab, open, gd, bd, gems, ban, unban, adultVerify, adultUnverify, resetpw, logoutAll, note, rename, email, play, txN, txBusy, loadPlay, tabChanged, chRows, msfmt, dlTx, L, fmt, tagType, money, size, can };
+  },
+  template: `<div class="panel">
+    <div class="toolbar">
+      <el-input v-model="f.q" placeholder="ID / 邮箱 / 昵称" clearable style="width:240px" @keyup.enter="load(1)" @clear="load(1)"><template #prefix><el-icon><Search/></el-icon></template></el-input>
+      <el-select v-model="f.status" placeholder="状态" clearable style="width:120px" @change="load(1)"><el-option v-for="(v,k) in L.ustatus" :key="k" :label="v" :value="k" /></el-select>
+      <el-select v-model="f.provider" placeholder="登录方式" clearable style="width:120px" @change="load(1)"><el-option v-for="(v,k) in L.provider" :key="k" :label="v" :value="k" /></el-select>
+      <el-select v-model="f.sort" style="width:140px" @change="load(1)"><el-option label="按注册时间" value="created" /><el-option label="按最近活跃" value="last_seen" /><el-option label="按钻石余额" value="gems" /></el-select>
+      <el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 人</span>
+    </div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe @row-click="r=>open(r.id)" style="cursor:pointer">
+      <el-table-column label="用户" min-width="200"><template #default="{row}"><div><b>{{row.name||'未设置昵称'}}</b></div><div class="muted mono">{{row.id}}</div></template></el-table-column>
+      <el-table-column prop="email" label="邮箱" min-width="180" />
+      <el-table-column label="登录方式" width="100"><template #default="{row}"><el-tag size="small" :type="row.provider==='guest'?'info':'primary'">{{L.provider[row.provider]||row.provider}}</el-tag></template></el-table-column>
+      <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ustatus[row.status]||row.status}}</el-tag></template></el-table-column>
+      <el-table-column prop="gems" label="钻石" width="80" />
+      <el-table-column prop="works" label="作品" width="70" />
+      <el-table-column prop="lang" label="语言" width="70" />
+      <el-table-column label="注册时间" width="170" :formatter="r=>fmt(r.created_at)" />
+      <el-table-column label="最近活跃" width="170" :formatter="r=>fmt(r.last_seen)" />
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, sizes, prev, pager, next" :total="st.total" v-model:current-page="st.page" v-model:page-size="st.size" @current-change="load()" @size-change="load(1)" /></div>
+  </div>
+  <el-drawer v-model="drawer" size="62%" :title="det&&('用户详情 · '+(det.user.name||det.user.email||det.user.id))">
+    <template v-if="det">
+      <div class="toolbar">
+        <el-button v-if="can('gems')" type="primary" @click="gd.show=true">补发 / 扣除钻石</el-button>
+        <template v-if="can('users.write')">
+          <el-button v-if="det.user.status!=='banned'" type="danger" plain @click="bd.show=true">封禁</el-button>
+          <el-button v-else type="success" plain @click="unban">解封</el-button>
+          <el-button v-if="!det.user.adult_verified_at" @click="adultVerify">标记已年龄验证</el-button>
+          <el-button v-else type="warning" plain @click="adultUnverify">撤销年龄验证（{{ (det.user.adult_verified_by||'').slice(0,24) }}）</el-button>
+          <el-button @click="resetpw" :disabled="!det.user.email">重置密码</el-button>
+          <el-button @click="logoutAll">强制下线</el-button>
+          <el-dropdown><el-button>更多 <el-icon><ArrowDown/></el-icon></el-button><template #dropdown><el-dropdown-menu><el-dropdown-item @click="rename">修改昵称</el-dropdown-item><el-dropdown-item @click="email">修改邮箱</el-dropdown-item><el-dropdown-item @click="note">编辑备注</el-dropdown-item></el-dropdown-menu></template></el-dropdown>
+        </template>
+      </div>
+      <el-descriptions :column="2" border size="small">
+        <el-descriptions-item label="用户 ID"><span class="mono">{{det.user.id}}</span></el-descriptions-item>
+        <el-descriptions-item label="状态"><el-tag size="small" :type="tagType(det.user.status)">{{L.ustatus[det.user.status]}}</el-tag><span v-if="det.user.ban_reason" class="muted"> {{det.user.ban_reason}}{{det.user.ban_until?'（至 '+fmt(det.user.ban_until)+'）':'（永久）'}}</span></el-descriptions-item>
+        <el-descriptions-item label="昵称">{{det.user.name||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="邮箱">{{det.user.email||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="登录方式">{{L.provider[det.user.provider]}}<span v-if="det.user.google"> · 已绑 Google</span><span v-if="det.user.apple"> · 已绑 Apple</span></el-descriptions-item>
+        <el-descriptions-item label="钻石余额"><b>{{det.user.gems}}</b><span v-if="det.user.plus_until" class="muted"> · 会员至 {{fmt(det.user.plus_until)}}</span></el-descriptions-item>
+        <el-descriptions-item label="注册时间">{{fmt(det.user.created_at)}}</el-descriptions-item>
+        <el-descriptions-item label="最近活跃">{{fmt(det.user.last_seen)}} · 活跃 {{det.user.active_days}} 天</el-descriptions-item>
+        <el-descriptions-item label="语言 / 平台">{{det.user.lang||'—'}} / {{det.user.platform||'—'}}</el-descriptions-item>
+        <el-descriptions-item label="云存档">{{det.state?('v'+det.state.ver+' · '+size(det.state.bytes)+' · '+fmt(det.state.updated_at)):'无'}}</el-descriptions-item>
+        <el-descriptions-item label="后台备注" :span="2">{{det.user.note||'—'}}</el-descriptions-item>
+      </el-descriptions>
+      <el-tabs v-model="tab" style="margin-top:12px" @tab-change="tabChanged">
+        <el-tab-pane :label="'玩法数据'+(play?(' · '+play.rows+' 条'):'')" name="play">
+          <div class="toolbar" style="margin-bottom:10px">
+            <el-button size="small" @click="loadPlay" :loading="txBusy">刷新</el-button>
+            <el-select v-model="txN" size="small" style="width:140px">
+              <el-option v-for="n in [50,200,500,1000,5000]" :key="n" :label="'最近 ' + n + ' 条'" :value="n" />
+            </el-select>
+            <el-button size="small" type="primary" :loading="txBusy" @click="dlTx">下载对话 txt</el-button>
+            <span class="muted">导出会记进后台审计日志</span>
+          </div>
+          <template v-if="play">
+            <div v-if="!play.works || !play.works.length" class="muted">这个账号还没有玩法事件（事件表里没有带 wid 的记录）</div>
+            <div v-for="w in play.works" :key="w.work" style="margin-bottom:14px">
+              <div style="margin-bottom:4px"><b>{{w.work}}</b> <span class="muted">{{w.sessions}} 个会话 · {{w.events}} 条事件</span></div>
+              <el-table :data="chRows(w)" size="small" max-height="260">
+                <el-table-column prop="ch" label="章" width="60" />
+                <el-table-column prop="opened" label="进章" width="70" />
+                <el-table-column prop="done" label="完成" width="70" />
+                <el-table-column label="完成率" width="90"><template #default="{row}">{{row.done_rate==null?'—':Math.round(row.done_rate*100)+'%'}}</template></el-table-column>
+                <el-table-column label="中位时长" width="110"><template #default="{row}">{{msfmt(row.median_ms)}}</template></el-table-column>
+                <el-table-column prop="choices" label="选项分布（次数）" />
+              </el-table>
+            </div>
+            <div class="muted" style="margin-top:8px">窗口 {{play.days}} 天 · 共 {{play.rows}} 条事件</div>
+          </template>
+        </el-tab-pane>
+        <el-tab-pane :label="'钻石流水 ('+det.ledger.length+')'" name="ledger"><el-table :data="det.ledger" size="small" max-height="380"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="变动" width="80"><template #default="{row}"><span :style="{color:row.delta>0?'#67c23a':'#f56c6c'}">{{row.delta>0?'+':''}}{{row.delta}}</span></template></el-table-column><el-table-column prop="reason" label="原因" /><el-table-column prop="balance" label="余额" width="80" /></el-table></el-tab-pane>
+        <el-tab-pane :label="'订单 ('+det.orders.length+')'" name="orders"><el-table :data="det.orders" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="sku" label="商品" /><el-table-column prop="gems" label="钻石" width="70" /><el-table-column label="金额" width="90" :formatter="r=>money(r.price_cents)" /><el-table-column label="状态" width="120"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ostatus[row.status]||row.status}}</el-tag> <el-tag v-if="row.test" size="small" type="warning">测试</el-tag></template></el-table-column></el-table></el-tab-pane>
+        <el-tab-pane :label="'作品 ('+det.works.length+')'" name="works"><el-table :data="det.works" size="small"><el-table-column prop="title" label="标题" /><el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.wstatus[row.status]||row.status}}</el-tag></template></el-table-column><el-table-column prop="plays" label="播放" width="70" /><el-table-column prop="reports" label="举报" width="70" /><el-table-column label="创建" width="170" :formatter="r=>fmt(r.created_at)" /></el-table></el-tab-pane>
+        <el-tab-pane :label="'素材 ('+det.assets.length+')'" name="assets"><el-table :data="det.assets" size="small"><el-table-column prop="name" label="名称" /><el-table-column label="类型" width="90" :formatter="r=>L.kind[r.kind]||r.kind" /><el-table-column label="大小" width="90" :formatter="r=>size(r.size)" /><el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.astatus[row.status]||row.status}}</el-tag></template></el-table-column><el-table-column label="文件" width="80"><template #default="{row}"><el-link v-if="row.url" :href="row.url" target="_blank">查看</el-link></template></el-table-column></el-table></el-tab-pane>
+        <el-tab-pane :label="'TA 发起的举报 ('+det.reportsBy.length+')'" name="rep"><el-table :data="det.reportsBy" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="target_id" label="对象" /><el-table-column prop="reason" label="原因" /></el-table></el-tab-pane>
+      </el-tabs>
+    </template>
+  </el-drawer>
+  <el-dialog v-model="gd.show" title="补发 / 扣除钻石" width="420px">
+    <el-form label-width="70px"><el-form-item label="数量"><el-input-number v-model="gd.amount" :min="-100000" :max="100000" /><div class="muted" style="width:100%">正数为补发，负数为扣除</div></el-form-item><el-form-item label="原因"><el-input v-model="gd.reason" placeholder="如：充值未到账补偿 / 活动奖励" /></el-form-item></el-form>
+    <template #footer><el-button @click="gd.show=false">取消</el-button><el-button type="primary" @click="gems">确定</el-button></template>
+  </el-dialog>
+  <el-dialog v-model="bd.show" title="封禁用户" width="440px">
+    <el-form label-width="80px"><el-form-item label="原因"><el-input v-model="bd.reason" type="textarea" placeholder="会展示给用户" /></el-form-item>
+      <el-form-item label="时长"><el-radio-group v-model="bd.days"><el-radio :value="1">1 天</el-radio><el-radio :value="7">7 天</el-radio><el-radio :value="30">30 天</el-radio><el-radio :value="0">永久</el-radio></el-radio-group></el-form-item>
+      <el-form-item label=""><el-checkbox v-model="bd.hideWorks">同时下架 TA 的全部已上线作品</el-checkbox></el-form-item></el-form>
+    <template #footer><el-button @click="bd.show=false">取消</el-button><el-button type="danger" @click="ban">封禁</el-button></template>
+  </el-dialog>`,
+};
+
+const Works = {
+  setup() {
+    const f = reactive({ status: 'pending', q: '', reported: '' });
+    const { st, load } = usePaged('works', f);
+    const det = ref(null), drawer = ref(false);
+    async function open(id) { det.value = await api('work', { query: { id } }); drawer.value = true; }
+    async function act(op, id, needReason) { id = id || det.value.work.id; let reason = ''; if (needReason) reason = await promptText(op === 'reject' ? '驳回作品' : op === 'takedown' ? '下架作品' : '删除作品', '原因（会展示给作者）'); else if (op === 'delete') await ElMessageBox.confirm('删除后无法恢复，确定？', '删除作品', { type: 'error' }); await api('work', { body: { id, op, reason } }); ElMessage.success('已完成'); if (drawer.value && op !== 'delete') await open(id); else drawer.value = false; load(); window.__refreshBadges && window.__refreshBadges(); }
+    function setTab(s) { f.status = s === 'reported' ? '' : s; f.reported = s === 'reported' ? '1' : ''; load(1); }
+    const tabv = ref('pending');
+    const chapters = computed(() => { const p = det.value && det.value.work.pack; if (!p || !Array.isArray(p.chapters)) return []; return p.chapters.map((c, i) => { const t = c.t ? (c.t.zh || c.t.en || c.t) : (c.title || ''); const beats = (c.beats && (c.beats.zh || c.beats.en || c.beats)) || []; return { i: i + 1, t: typeof t === 'string' ? t : JSON.stringify(t), n: Array.isArray(beats) ? beats.length : 0, lines: (Array.isArray(beats) ? beats : []).slice(0, 6).map(b => typeof b === 'string' ? b : Array.isArray(b) ? b.join(' ') : JSON.stringify(b)).map(s => s.slice(0, 120)), choices: (c.choices || []).map(x => x.t ? (x.t.zh || x.t.en || x.t) : x.k) }; }); });
+    onMounted(() => load());
+    return { f, st, load, det, drawer, open, act, setTab, tabv, chapters, L, fmt, tagType, size };
+  },
+  template: `<div class="panel">
+    <el-tabs v-model="tabv" @tab-change="setTab"><el-tab-pane label="待审核" name="pending" /><el-tab-pane label="已上线" name="live" /><el-tab-pane label="被举报" name="reported" /><el-tab-pane label="已驳回" name="rejected" /><el-tab-pane label="已下架" name="takedown" /><el-tab-pane label="全部" name="" /></el-tabs>
+    <div class="toolbar"><el-input v-model="f.q" placeholder="标题 / 作者 / ID" clearable style="width:260px" @keyup.enter="load(1)" @clear="load(1)" /><el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 部</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe>
+      <el-table-column label="作品" min-width="240"><template #default="{row}"><div><b>{{row.title||'(无标题)'}}</b> <el-tag v-if="row.featured" size="small" type="warning">推荐</el-tag></div><div class="muted">{{row.hook}}</div></template></el-table-column>
+      <el-table-column prop="author_name" label="作者" width="120" />
+      <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.wstatus[row.status]||row.status}}</el-tag></template></el-table-column>
+      <el-table-column label="自动检查" width="150"><template #default="{row}"><span v-if="row.qa&&row.qa.err&&row.qa.err.length" style="color:#f56c6c">{{row.qa.err.length}} 个问题</span><span v-else-if="row.qa&&row.qa.warn&&row.qa.warn.length" style="color:#e6a23c">{{row.qa.warn.length}} 个提醒</span><span v-else style="color:#67c23a">通过</span></template></el-table-column>
+      <el-table-column label="数据" width="150"><template #default="{row}">▶ {{row.plays}} · ♥ {{row.likes}} · <span :style="{color:row.reports?'#f56c6c':''}">⚑ {{row.reports}}</span></template></el-table-column>
+      <el-table-column label="更新时间" width="170" :formatter="r=>fmt(r.updated_at)" />
+      <el-table-column label="操作" width="230" fixed="right"><template #default="{row}">
+        <el-button size="small" @click="open(row.id)">查看</el-button>
+        <el-button v-if="row.status!=='live'" size="small" type="success" @click="act('approve',row.id)">通过</el-button>
+        <el-button v-if="row.status==='pending'" size="small" type="danger" plain @click="act('reject',row.id,1)">驳回</el-button>
+        <el-button v-if="row.status==='live'" size="small" type="danger" plain @click="act('takedown',row.id,1)">下架</el-button>
+      </template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>
+  <el-drawer v-model="drawer" size="60%" :title="det&&det.work.title">
+    <template v-if="det">
+      <div class="toolbar">
+        <el-button v-if="det.work.status!=='live'" type="success" @click="act('approve')">审核通过</el-button>
+        <el-button v-if="det.work.status==='pending'" type="danger" plain @click="act('reject',null,1)">驳回</el-button>
+        <el-button v-if="det.work.status==='live'" type="danger" plain @click="act('takedown',null,1)">下架</el-button>
+        <el-button v-if="det.work.status==='live'&&!det.work.featured" @click="act('feature')">设为推荐</el-button>
+        <el-button v-if="det.work.featured" @click="act('unfeature')">取消推荐</el-button>
+        <el-button type="danger" text @click="act('delete')">删除</el-button>
+      </div>
+      <el-alert v-if="det.safety.length" type="error" :closable="false" :title="'安全检查命中：'+det.safety.join('；')" style="margin-bottom:10px" />
+      <el-alert v-if="det.work.qa&&det.work.qa.err&&det.work.qa.err.length" type="warning" :closable="false" :title="'结构问题：'+det.work.qa.err.join('；')" style="margin-bottom:10px" />
+      <el-descriptions :column="2" border size="small">
+        <el-descriptions-item label="作品 ID"><span class="mono">{{det.work.id}}</span></el-descriptions-item>
+        <el-descriptions-item label="状态"><el-tag size="small" :type="tagType(det.work.status)">{{L.wstatus[det.work.status]}}</el-tag><span v-if="det.work.reject_reason" class="muted"> 原因：{{det.work.reject_reason}}</span></el-descriptions-item>
+        <el-descriptions-item label="作者">{{det.work.author_name}} <span class="muted mono">{{det.work.author}}</span></el-descriptions-item>
+        <el-descriptions-item label="语言 / 取向">{{det.work.lang}} / {{det.work.orient}}</el-descriptions-item>
+        <el-descriptions-item label="标签" :span="2"><el-tag v-for="t in (det.work.tags||[])" :key="t" size="small" style="margin-right:4px">{{t}}</el-tag></el-descriptions-item>
+        <el-descriptions-item label="简介" :span="2">{{det.work.hook}}</el-descriptions-item>
+        <el-descriptions-item label="审核人">{{det.work.reviewed_by||'—'}} {{det.work.reviewed_at?fmt(det.work.reviewed_at):''}}</el-descriptions-item>
+        <el-descriptions-item label="数据">播放 {{det.work.plays}} · 点赞 {{det.work.likes}} · 举报 {{det.work.reports}}</el-descriptions-item>
+      </el-descriptions>
+      <h4>章节内容（{{chapters.length}} 章）</h4>
+      <div v-for="c in chapters" :key="c.i" class="chap"><b>第 {{c.i}} 章 · {{c.t}}</b> <span class="muted">{{c.n}} 段</span>
+        <div v-for="(l,k) in c.lines" :key="k" class="beat">{{l}}</div><div v-if="c.n>6" class="muted">……</div>
+        <div v-if="c.choices.length" class="muted">选项：{{c.choices.join(' / ')}}</div></div>
+      <el-empty v-if="!chapters.length" description="没有可读的章节" :image-size="60" />
+      <h4 v-if="det.reports.length">举报记录</h4>
+      <el-table v-if="det.reports.length" :data="det.reports" size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="reason" label="原因" /><el-table-column label="状态" width="90" :formatter="r=>L.rstatus[r.status||'open']" /></el-table>
+      <el-collapse style="margin-top:12px"><el-collapse-item title="原始数据 (JSON)"><pre class="json">{{JSON.stringify(det.work.pack,null,1).slice(0,20000)}}</pre></el-collapse-item></el-collapse>
+    </template>
+  </el-drawer>`,
+};
+
+const Assets = {
+  setup() {
+    const f = reactive({ status: 'review', kind: '', q: '' }); const { st, load } = usePaged('assets', f); f.size = 40;
+    const isImg = a => /^image\//.test(a.mime || ''), isVid = a => /^video\//.test(a.mime || ''), isAud = a => /^audio\//.test(a.mime || '');
+    async function act(a, op) { let reason = ''; if (op === 'reject') reason = await promptText('驳回素材', '原因'); if (op === 'delete') await ElMessageBox.confirm('将删除文件，无法恢复。', '删除素材', { type: 'error' }); await api('asset', { body: { id: a.id, op, reason } }); ElMessage.success('已完成'); load(); window.__refreshBadges && window.__refreshBadges(); }
+    onMounted(() => load());
+    return { f, st, load, act, isImg, isVid, isAud, L, fmt, tagType, size };
+  },
+  template: `<div class="panel">
+    <div class="toolbar">
+      <el-radio-group v-model="f.status" @change="load(1)"><el-radio-button value="review">待审核</el-radio-button><el-radio-button value="public">已公开</el-radio-button><el-radio-button value="private">仅作者</el-radio-button><el-radio-button value="rejected">已驳回</el-radio-button><el-radio-button value="">全部</el-radio-button></el-radio-group>
+      <el-select v-model="f.kind" placeholder="类型" clearable style="width:120px" @change="load(1)"><el-option v-for="(v,k) in L.kind" :key="k" :label="v" :value="k" /></el-select>
+      <el-input v-model="f.q" placeholder="名称 / 上传者 ID" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" /><span class="muted">共 {{st.total}} 个</span>
+    </div>
+    <div class="asset-grid" v-loading="st.loading">
+      <div v-for="a in st.rows" :key="a.id" class="asset">
+        <div class="pv"><img v-if="isImg(a)" :src="a.url" loading="lazy"><video v-else-if="isVid(a)" :src="a.url" controls preload="metadata"></video><audio v-else-if="isAud(a)" :src="a.url" controls style="width:90%"></audio><div v-else style="color:#ddd;font-size:13px;padding:10px">🎮 {{a.meta&&a.meta.tpl}}<br><span style="font-size:12px;color:#aaa">{{a.meta&&a.meta.a}}</span></div></div>
+        <div class="bd"><b>{{a.name}}</b> <el-tag size="small">{{L.kind[a.kind]||a.kind}}</el-tag> <el-tag size="small" :type="tagType(a.status)">{{L.astatus[a.status]||a.status}}</el-tag>
+          <div class="muted">关键词：{{(a.kw||[]).join('、')||'—'}}</div><div class="muted">{{size(a.size)}} · {{fmt(a.created_at)}}</div><div class="muted">上传者：{{a.owner_name||a.owner_email||a.owner}}</div><div v-if="a.reject_reason" class="muted" style="color:#f56c6c">驳回：{{a.reject_reason}}</div></div>
+        <div class="ft"><el-button v-if="a.status!=='public'" size="small" type="success" @click="act(a,'approve')">公开到素材库</el-button><el-button v-if="a.status==='review'" size="small" type="danger" plain @click="act(a,'reject')">驳回</el-button><el-button v-if="a.status==='public'" size="small" @click="act(a,'private')">撤回公开</el-button><el-button size="small" type="danger" text @click="act(a,'delete')">删除</el-button></div>
+      </div>
+    </div>
+    <el-empty v-if="!st.loading&&!st.rows.length" description="暂无素材" />
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Reports = {
+  setup() {
+    const f = reactive({ status: 'open' }); const { st, load } = usePaged('reports', f);
+    async function act(r, op) { const note = await promptText(op === 'resolve' ? '标记已处理' : '驳回举报', '处理说明', { inputValidator: null }).catch(() => null); if (note === null) return; await api('report', { body: { id: r.id, op, note } }); ElMessage.success('已完成'); load(); window.__refreshBadges && window.__refreshBadges(); }
+    async function takedown(r) { const reason = await promptText('下架作品', '原因（会展示给作者）'); await api('work', { body: { id: r.target_id, op: 'takedown', reason } }); ElMessage.success('作品已下架，相关举报已处理'); load(); }
+    onMounted(() => load());
+    return { f, st, load, act, takedown, L, fmt, tagType };
+  },
+  template: `<div class="panel">
+    <div class="toolbar"><el-radio-group v-model="f.status" @change="load(1)"><el-radio-button value="open">待处理</el-radio-button><el-radio-button value="resolved">已处理</el-radio-button><el-radio-button value="dismissed">已驳回</el-radio-button><el-radio-button value="">全部</el-radio-button></el-radio-group><span class="muted">共 {{st.total}} 条</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe>
+      <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" />
+      <el-table-column label="被举报对象" min-width="200"><template #default="{row}"><b>{{row.work_title||row.target_id}}</b><div class="muted">作品状态：{{L.wstatus[row.work_status]||row.work_status||'—'}}</div></template></el-table-column>
+      <el-table-column prop="reason" label="举报原因" min-width="200" />
+      <el-table-column label="举报人" width="180"><template #default="{row}"><span class="muted">{{row.reporter_email||row.user_id}}</span></template></el-table-column>
+      <el-table-column label="状态" width="100"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.rstatus[row.status]}}</el-tag></template></el-table-column>
+      <el-table-column label="处理" width="160"><template #default="{row}"><span class="muted">{{row.handled_by}} {{row.note}}</span></template></el-table-column>
+      <el-table-column label="操作" width="230" fixed="right"><template #default="{row}"><template v-if="row.status==='open'"><el-button size="small" type="danger" @click="takedown(row)" v-if="row.target_kind==='work'&&row.work_status==='live'">下架作品</el-button><el-button size="small" type="success" plain @click="act(row,'resolve')">已处理</el-button><el-button size="small" @click="act(row,'dismiss')">驳回</el-button></template></template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Orders = {
+  setup() {
+    const f = reactive({ user: '', status: '', test: '' }); const { st, load } = usePaged('orders', f);
+    async function refund(o) { const reason = await promptText('订单退款', '退款原因（会从用户余额扣回 ' + o.gems + ' 钻石）'); await api('order', { body: { id: o.id, op: 'refund', reason } }); ElMessage.success('已退款'); load(); }
+    onMounted(() => load());
+    return { f, st, load, refund, L, fmt, tagType, money, can };
+  },
+  template: `<div class="panel">
+    <el-alert type="info" :closable="false" style="margin-bottom:12px" title="目前是测试支付：接入 App Store / Google Play 正式收款后，真实订单会显示在这里（标记为非测试）。" />
+    <div class="toolbar"><el-input v-model="f.user" placeholder="用户 ID" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" />
+      <el-select v-model="f.status" placeholder="状态" clearable style="width:120px" @change="load(1)"><el-option label="已支付" value="paid" /><el-option label="已退款" value="refunded" /></el-select>
+      <el-select v-model="f.test" placeholder="测试 / 正式" clearable style="width:130px" @change="load(1)"><el-option label="仅正式订单" value="0" /><el-option label="仅测试订单" value="1" /></el-select>
+      <span class="muted">共 {{st.total}} 单 · 合计 {{money(st.extra.cents)}}</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe>
+      <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="订单号" width="200"><template #default="{row}"><span class="mono">{{row.id}}</span></template></el-table-column>
+      <el-table-column label="用户" min-width="180"><template #default="{row}">{{row.email||'游客'}}<div class="muted mono">{{row.user_id}}</div></template></el-table-column>
+      <el-table-column prop="sku" label="商品" width="120" /><el-table-column prop="gems" label="钻石" width="70" /><el-table-column label="金额" width="90" :formatter="r=>money(r.price_cents)" /><el-table-column prop="platform" label="渠道" width="80" />
+      <el-table-column label="状态" width="130"><template #default="{row}"><el-tag size="small" :type="tagType(row.status)">{{L.ostatus[row.status]||row.status}}</el-tag> <el-tag v-if="row.test" size="small" type="warning">测试</el-tag></template></el-table-column>
+      <el-table-column label="操作" width="90"><template #default="{row}"><el-button v-if="row.status==='paid'&&can('gems')" size="small" type="danger" text @click="refund(row)">退款</el-button></template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Ledger = {
+  setup() {
+    const f = reactive({ user: '', reason: '', dir: '' }); const { st, load } = usePaged('ledger', f);
+    const kindName = k => ({ welcome: '新人礼', daily: '每日签到', earn: '免费领取', spend: '消费', 'upload': '上传素材', admin_grant: '后台补发', admin_deduct: '后台扣除', refund: '退款扣回', gems_5: '充值', gems_16: '充值', gems_28: '充值', gems_60: '充值', gems_125: '充值', gems_330: '充值', gems_700: '充值', gems_10: '充值', gems_150: '充值', gems_400: '充值' }[k] || k);
+    onMounted(() => load());
+    return { f, st, load, fmt, kindName };
+  },
+  template: `<div class="panel" v-if="st.extra.summary"><h3>近 30 天钻石来源与去向</h3><el-table :data="st.extra.summary" size="small"><el-table-column label="类型" :formatter="r=>kindName(r.kind)" /><el-table-column prop="kind" label="原始标识" /><el-table-column prop="n" label="笔数" width="90" /><el-table-column label="合计" width="120"><template #default="{row}"><span :style="{color:row.gems>0?'#67c23a':'#f56c6c'}">{{row.gems>0?'+':''}}{{row.gems}}</span></template></el-table-column></el-table></div>
+  <div class="panel">
+    <div class="toolbar"><el-input v-model="f.user" placeholder="用户 ID" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" /><el-input v-model="f.reason" placeholder="原因关键词，如 upload / admin" clearable style="width:220px" @keyup.enter="load(1)" @clear="load(1)" />
+      <el-select v-model="f.dir" placeholder="收支" clearable style="width:110px" @change="load(1)"><el-option label="收入" value="in" /><el-option label="支出" value="out" /></el-select><el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 笔</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe size="small">
+      <el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column label="用户" min-width="200"><template #default="{row}">{{row.email||'游客'}} <span class="muted mono">{{row.user_id}}</span></template></el-table-column>
+      <el-table-column label="变动" width="90"><template #default="{row}"><span :style="{color:row.delta>0?'#67c23a':'#f56c6c'}">{{row.delta>0?'+':''}}{{row.delta}}</span></template></el-table-column>
+      <el-table-column prop="reason" label="原因" min-width="180" /><el-table-column prop="balance" label="余额" width="90" />
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div>
+  </div>`,
+};
+
+const Notices = {
+  setup() {
+    const rows = ref([]), dlg = ref(false), n = reactive({});
+    async function load() { rows.value = (await api('notices')).rows; }
+    function edit(x) { Object.keys(n).forEach(k => delete n[k]); Object.assign(n, { lang: 'all', kind: 'banner', active: true }, x || {}); dlg.value = true; }
+    async function save() { await api('notices', { body: { notice: n } }); dlg.value = false; ElMessage.success('已保存，App 内 1 分钟内生效'); load(); }
+    async function del(x) { await ElMessageBox.confirm('删除这条公告？', '确认', { type: 'warning' }); await api('notices', { body: { op: 'delete', id: x.id } }); load(); }
+    onMounted(load);
+    return { rows, dlg, n, edit, save, del, fmt };
+  },
+  template: `<div class="panel"><div class="toolbar"><el-button type="primary" @click="edit()">新建公告</el-button><span class="muted">公告会在 App 首页顶部显示（横幅）或打开 App 时弹出（弹窗）。</span></div>
+    <el-table :data="rows" stripe><el-table-column prop="title" label="标题" min-width="160" /><el-table-column prop="body" label="内容" min-width="240" show-overflow-tooltip />
+      <el-table-column label="语言" width="80" :formatter="r=>r.lang==='all'?'全部':r.lang" /><el-table-column label="形式" width="80" :formatter="r=>r.kind==='popup'?'弹窗':'横幅'" />
+      <el-table-column label="状态" width="80"><template #default="{row}"><el-tag size="small" :type="row.active?'success':'info'">{{row.active?'启用':'停用'}}</el-tag></template></el-table-column>
+      <el-table-column label="有效期" width="300" :formatter="r=>(r.starts_at?fmt(r.starts_at):'立即')+' → '+(r.ends_at?fmt(r.ends_at):'长期')" />
+      <el-table-column label="操作" width="140"><template #default="{row}"><el-button size="small" @click="edit(row)">编辑</el-button><el-button size="small" type="danger" text @click="del(row)">删除</el-button></template></el-table-column></el-table></div>
+    <el-dialog v-model="dlg" :title="n.id?'编辑公告':'新建公告'" width="540px"><el-form label-width="80px">
+      <el-form-item label="标题"><el-input v-model="n.title" maxlength="80" show-word-limit /></el-form-item>
+      <el-form-item label="内容"><el-input v-model="n.body" type="textarea" :rows="4" maxlength="1000" show-word-limit /></el-form-item>
+      <el-form-item label="语言"><el-select v-model="n.lang"><el-option label="全部语言" value="all" /><el-option label="中文" value="zh" /><el-option label="English" value="en" /><el-option label="日本語" value="ja" /><el-option label="한국어" value="ko" /><el-option label="Español" value="es" /></el-select></el-form-item>
+      <el-form-item label="形式"><el-radio-group v-model="n.kind"><el-radio value="banner">首页横幅</el-radio><el-radio value="popup">打开时弹窗</el-radio></el-radio-group></el-form-item>
+      <el-form-item label="开始"><el-date-picker v-model="n.starts_at" type="datetime" placeholder="立即" /></el-form-item>
+      <el-form-item label="结束"><el-date-picker v-model="n.ends_at" type="datetime" placeholder="长期" /></el-form-item>
+      <el-form-item label="启用"><el-switch v-model="n.active" /></el-form-item></el-form>
+      <template #footer><el-button @click="dlg=false">取消</el-button><el-button type="primary" @click="save">保存</el-button></template></el-dialog>`,
+};
+
+/* ================= API 台 · 创作中心的 5 个 AI 步骤 =================
+   prompt 住在 config 表（key=studio），执行在 api/studio.js —— 改完不用重建 9 MB 产物。 */
+const ApiConsole = {
+  setup() {
+    const cfg = reactive({ sys: '', order: '', max_tokens: 1200, temp: 0.7 });
+    const tasks = ref([]), dlg = ref(false), cur = reactive({}), dirty = ref(false);
+    const IDS = ['guide-turn', 'plan', 'options', 'rewrite', 'step-suggest'];
+    function hydrate(studio) {
+      cfg.sys = studio.sys || ''; cfg.order = studio.order || ''; cfg.max_tokens = Number(studio.max_tokens) || 1200; cfg.temp = studio.temp == null ? 0.7 : Number(studio.temp);
+      const ts = studio.tasks || {};
+      tasks.value = IDS.map(id => {
+        const t = ts[id] || {};
+        return { id, name: t.name || id, on: t.on !== false, role: t.role || '', prompt: t.prompt || '' };
+      });
+    }
+    async function load() { const j = await api('config'); hydrate(j.values.studio || {}); dirty.value = false; }
+    function edit(row) { Object.keys(cur).forEach(k => delete cur[k]); Object.assign(cur, row); dlg.value = true; }
+    function apply() { dirty.value = true; dlg.value = false; }
+    async function save() {
+      const studio = { sys: cfg.sys, order: cfg.order, max_tokens: Number(cfg.max_tokens) || 1200, temp: cfg.temp == null ? 0.7 : Number(cfg.temp), tasks: {} };
+      tasks.value.forEach(t => { studio.tasks[t.id] = { name: t.name, on: !!t.on, role: t.role, prompt: t.prompt }; });
+      await api('config', { body: { values: { studio } } });
+      dirty.value = false; ElMessage.success('已保存 —— 最多 30 秒生效（服务端配置缓存 30 秒）');
+    }
+    /* 试跑：改完 prompt 不用进游戏也能看见效果 —— 走 admin token，所以服务器那边也给了这一道门 */
+    const trial = reactive({ open: false, id: '', busy: false, out: '', ms: 0 });
+    const SAMPLE = {
+      'guide-turn': { step: 1, answers: ['我喜欢慢热的悬疑，男主是个医生'], project: '{"title":"测试"}' },
+      'plan': { answers: ['慢热悬疑，男主是医生，秘密是他已经喜欢我很久'], project: '{"title":"测试"}' },
+      'options': { question: '下一步你怎么做？', current: ['A 留下', 'B 离开'], previous: '他在门口等你。' },
+      'rewrite': { genre: '悬疑', context: '深夜的医院走廊', text: '他看了你一眼。' },
+      'step-suggest': { question: '你怎么回答他？', previous: '他说：我送你回去。', options: ['好', '不用'], mode: 'A' },
+    };
+    async function trialRun(id) {
+      trial.id = id; trial.open = true; trial.busy = true; trial.out = '';
+      const t0 = Date.now();
+      try {
+        const r = await fetch('/api/studio?r=' + encodeURIComponent(id), {
+          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + S.token },
+          body: JSON.stringify({ payload: SAMPLE[id] || {} }),
+        });
+        const j = await r.json().catch(() => ({}));
+        trial.ms = Date.now() - t0;
+        trial.out = r.ok ? JSON.stringify(j.json || j.raw || j, null, 1) : ('HTTP ' + r.status + ' — ' + JSON.stringify(j));
+      } catch (e) { trial.ms = Date.now() - t0; trial.out = '请求失败: ' + e; }
+      trial.busy = false;
+    }
+    onMounted(load);
+    return { cfg, tasks, dlg, cur, dirty, load, edit, apply, save, trial, trialRun };
+  },
+  template: `<div class="panel">
+    <div class="toolbar"><el-button type="primary" @click="save">保存</el-button><el-button @click="load">重新读取</el-button>
+      <el-tag v-if="dirty" type="warning" size="small">有未保存的改动</el-tag>
+      <span class="muted">这些步骤跑在服务端 <span class="mono">/api/studio</span>，prompt 存在数据库 —— 改完不用重建 9 MB 产物。</span></div>
+    <el-form label-width="110px">
+      <el-form-item label="系统提示"><el-input v-model="cfg.sys" type="textarea" :rows="3" maxlength="4000" show-word-limit @input="dirty=true" /></el-form-item>
+      <el-form-item label="模型顺序"><el-input v-model="cfg.order" placeholder="留空 = 全局 LLM_ORDER（deepseek,scnet,longcat,glm）" @input="dirty=true" /></el-form-item>
+      <el-form-item label="最大输出"><el-input-number v-model="cfg.max_tokens" :min="200" :max="8000" :step="100" @change="dirty=true" /></el-form-item>
+      <el-form-item label="温度"><el-input-number v-model="cfg.temp" :min="0" :max="1.5" :step="0.1" :precision="1" @change="dirty=true" /><span class="muted" style="margin-left:8px">0 = 稳定，1.0+ = 发散。创作类建议 0.7–0.9</span></el-form-item>
+    </el-form>
+    <el-divider content-position="left">五个步骤</el-divider>
+    <el-table :data="tasks" stripe size="small">
+      <el-table-column prop="name" label="步骤" width="170" />
+      <el-table-column prop="id" label="路由" width="160"><template #default="{row}"><span class="mono">?r={{ row.id }}</span></template></el-table-column>
+      <el-table-column prop="role" label="角色" width="100" />
+      <el-table-column prop="prompt" label="prompt" min-width="360" show-overflow-tooltip />
+      <el-table-column label="启用" width="80"><template #default="{row}"><el-switch v-model="row.on" @change="dirty=true" /></template></el-table-column>
+      <el-table-column label="操作" width="150"><template #default="{row}"><el-button size="small" @click="edit(row)">编辑</el-button><el-button size="small" type="primary" text @click="trialRun(row.id)">试跑</el-button></template></el-table-column>
+    </el-table>
+    <el-dialog v-model="trial.open" :title="'试跑 · ' + trial.id" width="720px">
+      <div class="muted" style="font-size:12px;margin-bottom:8px">用一组示例输入调一次真模型（会花 token）。改完 prompt 先「保存」，再试跑。</div>
+      <el-alert v-if="trial.busy" type="info" :closable="false" title="正在跑…" />
+      <pre v-else class="mono" style="max-height:420px;overflow:auto;white-space:pre-wrap;font-size:12px">{{ trial.out }}</pre>
+      <div class="muted" style="font-size:12px;margin-top:6px" v-if="trial.ms">耗时 {{ trial.ms }} ms</div>
+      <template #footer><el-button @click="trial.open=false">关闭</el-button><el-button type="primary" @click="trialRun(trial.id)">再跑一次</el-button></template>
+    </el-dialog>
+    <el-dialog v-model="dlg" :title="'编辑 · ' + (cur.name || cur.id || '')" width="760px">
+      <el-form label-width="70px">
+        <el-form-item label="名称"><el-input v-model="cur.name" /></el-form-item>
+        <el-form-item label="角色"><el-input v-model="cur.role" placeholder="architect / scene" /></el-form-item>
+        <el-form-item label="prompt"><el-input v-model="cur.prompt" type="textarea" :rows="14" /></el-form-item>
+      </el-form>
+      <div class="muted" style="font-size:12px">可用变量：step · answers · project · question · current · previous · genre · context · text · optionsText（写法 <span class="mono" v-pre>{{变量}}</span>，取不到就是空串）</div>
+      <template #footer><el-button @click="dlg=false">取消</el-button><el-button type="primary" @click="apply">应用</el-button></template>
+    </el-dialog>
+  </div>`,
+};
+
+/* ================= API · 接口目录 =================
+   数据来自 r=api_index，而那份数据是 tools/api-index.mjs 从 api/*.js 里提出来的 —— 不是手抄的清单，
+   所以不会「加了接口但这一页还停在去年」。这一页只做两件事：看得见、点得通。 */
+const ApiCatalog = {
+  setup() {
+    const rows = ref([]), busy = ref(false), q = ref('');
+    const open = ref({});
+    async function load() {
+      try {
+        const j = await api('api_index');
+        rows.value = (j.endpoints || []).map(x => Object.assign({}, x, { code: null, ms: null, state: 'idle' }));
+      } catch (e) { ElMessage.error('读接口目录失败：' + ((e && e.message) || e)); }
+    }
+    const shown = computed(() => {
+      const k = String(q.value || '').trim().toLowerCase();
+      if (!k) return rows.value;
+      return rows.value.filter(x => (x.path + ' ' + x.desc + ' ' + x.routes.map(r => r.name).join(' ')).toLowerCase().indexOf(k) >= 0);
+    });
+    /* 只用 GET 探一次：这一页回答的是「这个函数在不在、快不快」，不发任何写请求，所以可以放心全测。 */
+    async function hit(x) {
+      x.state = 'running'; x.code = null; x.ms = null;
+      const t0 = Date.now();
+      try {
+        const r = await fetch(x.path, { method: 'GET', headers: { Authorization: 'Bearer ' + S.token }, cache: 'no-store' });
+        x.ms = Date.now() - t0; x.code = r.status; x.state = (r.status < 500) ? 'ok' : 'bad';
+      } catch (e) { x.ms = Date.now() - t0; x.code = 0; x.state = 'bad'; }
+    }
+    /* 串行：并发会把「耗时」这一列变成互相排队的时间，读数就没意义了。 */
+    async function probeAll() { busy.value = true; for (const x of rows.value) await hit(x); busy.value = false; }
+    const toggle = id => { open.value = Object.assign({}, open.value, { [id]: !open.value[id] }); };
+    onMounted(load);
+    return { rows: shown, all: rows, busy, q, probeAll, hit, open, toggle };
+  },
+  template: `<div class="panel">
+    <div class="toolbar">
+      <el-input v-model="q" placeholder="搜端点 / 说明 / 路由（打 ?r=users 这种也行）" style="width:360px" clearable />
+      <el-button type="primary" :loading="busy" @click="probeAll">全部测一遍</el-button>
+      <span class="muted">共 {{ all.length }} 个端点 · {{ all.reduce((a,x)=>a+x.routes.length,0) }} 条路由。判据：有响应就算通（2xx / 4xx 都算 —— 401 说明函数在、只是要登录），只有 5xx / 超时 / 连不上记不通。</span>
+    </div>
+    <el-table :data="rows" stripe size="small" row-key="id">
+      <el-table-column type="expand">
+        <template #default="{row}">
+          <div style="padding:4px 16px 10px 48px">
+            <div v-if="!row.routes.length" class="muted">这个文件没有可枚举的子路由（或者它只有一条主路径）。</div>
+            <div v-for="r in row.routes" :key="r.name" style="margin:2px 0">
+              <span class="mono">{{ row.path }}{{ r.name[0] === '?' ? r.name : '' }}</span>
+              <span v-if="r.name[0] !== '?'" class="mono" style="margin-left:6px">{{ r.name }}</span>
+              <span v-if="r.desc" class="muted" style="margin-left:10px">{{ r.desc }}</span>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="端点" width="180"><template #default="{row}"><span class="mono">{{ row.path }}</span></template></el-table-column>
+      <el-table-column label="方法" width="150"><template #default="{row}"><span class="mono">{{ row.methods }}</span></template></el-table-column>
+      <el-table-column prop="desc" label="说明" min-width="300" show-overflow-tooltip />
+      <el-table-column label="路由" width="80"><template #default="{row}">{{ row.routes.length }}</template></el-table-column>
+      <el-table-column label="状态" width="110"><template #default="{row}">
+        <el-tag v-if="row.state==='idle'" size="small" type="info">未测</el-tag>
+        <el-tag v-else-if="row.state==='running'" size="small">测试中…</el-tag>
+        <el-tag v-else-if="row.state==='ok'" size="small" type="success">通 {{ row.code }}</el-tag>
+        <el-tag v-else size="small" type="danger">不通 {{ row.code || '超时' }}</el-tag>
+      </template></el-table-column>
+      <el-table-column label="耗时" width="90"><template #default="{row}"><span class="mono">{{ row.ms == null ? '—' : row.ms + ' ms' }}</span></template></el-table-column>
+      <el-table-column label="操作" width="140"><template #default="{row}">
+        <el-button size="small" @click="hit(row)">测</el-button>
+        <el-button size="small" text @click="toggle(row.id)">路由</el-button>
+      </template></el-table-column>
+    </el-table>
+    <p class="muted" style="margin-top:10px">目录是生成物：改了 <span class="mono">api/*.js</span> 之后跑 <span class="mono">node tools/api-index.mjs --write</span>，这一页下次打开就是新的。</p>
+  </div>`,
+};
+
+const I18n = {
+  setup() {
+    const f = reactive({ lang: 'ja', q: '' }); const { st, load } = usePaged('i18n', f); const add = reactive({ show: false, lang: 'ja', src: '', dst: '' });
+    async function save(r) { await api('i18n', { body: { op: 'edit', h: r.h, dst: r.dst } }); ElMessage.success('已保存'); }
+    async function del(r) { await ElMessageBox.confirm('删除后会在用户下次看到时重新机器翻译。', '删除词条', { type: 'warning' }); await api('i18n', { body: { op: 'delete', h: r.h } }); load(); }
+    async function doAdd() { await api('i18n', { body: Object.assign({ op: 'add' }, add) }); add.show = false; ElMessage.success('已添加'); load(1); }
+    onMounted(() => load());
+    return { f, st, load, save, del, add, doAdd, fmt };
+  },
+  template: `<div class="panel"><div class="toolbar">
+      <el-radio-group v-model="f.lang" @change="load(1)"><el-radio-button value="ja">日本語</el-radio-button><el-radio-button value="ko">한국어</el-radio-button><el-radio-button value="es">Español</el-radio-button><el-radio-button value="en">English</el-radio-button><el-radio-button value="zh">中文</el-radio-button></el-radio-group>
+      <el-input v-model="f.q" placeholder="搜索原文或译文" clearable style="width:240px" @keyup.enter="load(1)" @clear="load(1)" /><el-button @click="add.show=true">新增词条</el-button>
+      <span class="muted">共 {{st.total}} 条 · <span v-for="l in (st.extra.langs||[])" :key="l.lang">{{l.lang}} {{l.n}}　</span></span></div>
+    <el-alert type="info" :closable="false" style="margin-bottom:10px" title="这里是界面与剧情的机器翻译缓存，所有用户共用。直接改「译文」后点保存，App 端约 10 分钟内生效。" />
+    <el-table :data="st.rows" v-loading="st.loading" stripe size="small">
+      <el-table-column prop="src" label="原文（英文）" min-width="260" />
+      <el-table-column label="译文" min-width="300"><template #default="{row}"><el-input v-model="row.dst" type="textarea" autosize size="small" /></template></el-table-column>
+      <el-table-column label="更新" width="160" :formatter="r=>fmt(r.at)" />
+      <el-table-column label="操作" width="130"><template #default="{row}"><el-button size="small" type="primary" @click="save(row)">保存</el-button><el-button size="small" type="danger" text @click="del(row)">删除</el-button></template></el-table-column>
+    </el-table>
+    <div class="pager"><el-pagination background layout="total, sizes, prev, pager, next" :total="st.total" v-model:current-page="st.page" v-model:page-size="st.size" @current-change="load()" @size-change="load(1)" /></div></div>
+    <el-dialog v-model="add.show" title="新增词条" width="480px"><el-form label-width="60px"><el-form-item label="语言"><el-select v-model="add.lang"><el-option v-for="l in ['ja','ko','es','en','zh']" :key="l" :label="l" :value="l" /></el-select></el-form-item><el-form-item label="原文"><el-input v-model="add.src" type="textarea" /></el-form-item><el-form-item label="译文"><el-input v-model="add.dst" type="textarea" /></el-form-item></el-form>
+      <template #footer><el-button @click="add.show=false">取消</el-button><el-button type="primary" @click="doAdd">添加</el-button></template></el-dialog>`,
+};
+
+const Config = {
+  setup() {
+    const v = ref(null), meta = ref([]);
+    async function load() { const j = await api('config'); v.value = JSON.parse(JSON.stringify(j.values)); meta.value = j.meta; }
+    async function save() { await ElMessageBox.confirm('保存后立即对所有用户生效。', '确认修改配置', { type: 'warning' }); const j = await api('config', { body: { values: v.value } }); ElMessage.success('已保存 ' + Object.keys(j.changed).length + ' 项'); load(); }
+    const skuRows = computed(() => v.value ? Object.entries(v.value.skus || {}).map(([k, x]) => ({ k, x })) : []);
+    const llm = ref(null), probing = ref(false);
+    const emb = ref(null);
+    async function probeEmbed() { try { const r = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true, embed: true }) }); emb.value = (await r.json()).embed; } catch (e) { ElMessage.error('测试失败：' + e.message); } }
+    async function probe() { probing.value = true; try { const r = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ probe: true }) }); llm.value = await r.json(); } catch (e) { ElMessage.error('测试失败：' + e.message); } finally { probing.value = false; } }
+    const qw = ref(null);
+    /* ---- 语音 API：地址 / 密钥 / 协议 / 测通路（存在 config 表，改完不用去动 Vercel 环境变量） ---- */
+    const tts = reactive({ protocol: 'openai', url: '', key: '', model: '', voice: '', text: '', hasKey: false, envUrl: '', busy: false, result: null });
+    async function loadTts() {
+      try {
+        const j = await api('tts_config');
+        tts.protocol = j.protocol || 'openai'; tts.url = j.url || ''; tts.model = j.model || ''; tts.voice = j.voice || '';
+        tts.hasKey = !!j.hasKey; tts.key = ''; tts.envUrl = (j.env && j.env.url) || '';
+      } catch (_) {}
+    }
+    async function saveTts() {
+      const j = await api('tts_config', { body: { protocol: tts.protocol, url: tts.url, model: tts.model, voice: tts.voice, key: tts.key } });
+      tts.hasKey = !!j.hasKey; tts.key = '';
+      ElMessage.success('已保存 —— 下一次发声就用它（配置缓存 30 秒）');
+    }
+    async function probeTts() {
+      tts.busy = true; tts.result = null;
+      try { tts.result = await api('tts_probe', { body: { text: tts.text, voice: tts.voice } }); }
+      catch (e) { tts.result = { ok: false, error: String((e && e.message) || e) }; }
+      finally { tts.busy = false; }
+    }
+    async function probeQwen() { qw.value = { busy: true }; try { const [a, b, c] = await Promise.all([fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=zh').then(r => r.json()), fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=en&v=f1').then(r => r.json()), (async () => { const t0 = Date.now(); const r = await fetch(ADMIN_API_BASE + '/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ omni: { voice: 'm2', sys: '你在打电话，用一句话回答。', msgs: [{ role: 'user', text: '你好，在吗？' }], max: 60 } }) }); if (!r.ok) { const j = await r.json().catch(() => ({})); return { qwen: { ok: false, error: { message: (j.error && j.error.message || r.status) + ' ' + JSON.stringify(j.error && j.error.trace || '') } } }; } const txt = await r.text(); const n = (txt.match(/"data":"/g) || []).length; return { qwen: { ok: n > 0, ms: Date.now() - t0, provider: r.headers.get('X-MIRU-Provider'), said: (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('') } }; })()]); qw.value = { zh: a, en: b, call: c.qwen || c }; } catch (e) { qw.value = null; ElMessage.error('测试失败：' + e.message); } }
+    onMounted(() => { load(); loadTts(); });
+    return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed, qw, probeQwen, tts, saveTts, probeTts };
+  },
+  template: `<div v-if="v">
+    <div class="panel"><h3>AI 模型（自动切换）</h3>
+      <p class="muted">按顺序使用：第一个出错、超时（22 秒内没开始回复）就自动换下一个，玩家只会感觉稍慢。顺序由 Vercel 环境变量 LLM_ORDER 决定（默认 longcat,scnet,glm）；密钥只在服务器环境变量里（LONGCAT_API_KEY / SCNET_API_KEY + SCNET_MODEL / GLM_API_KEY + GLM_MODEL）。</p>
+      <div class="toolbar"><el-button type="primary" :loading="probing" @click="probe">测试所有模型</el-button><el-button @click="probeEmbed">测试向量接口（记忆召回）</el-button><el-button @click="probeQwen">测试千问配音 / 语音通话</el-button><span class="muted" v-if="llm&&llm.order">当前顺序：{{llm.order.join(' → ')}}</span></div>
+      <el-table v-if="llm&&llm.providers" :data="llm.providers" size="small"><el-table-column prop="name" label="模型服务" width="120" /><el-table-column prop="model" label="模型" width="200" />
+        <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.ok?'success':'danger'">{{row.ok?'可用':'不可用'}}</el-tag></template></el-table-column>
+        <el-table-column label="首字耗时" width="110" :formatter="r=>r.ms+' ms'" /><el-table-column prop="error" label="错误信息" min-width="240" show-overflow-tooltip /></el-table>
+      <el-alert v-if="llm&&llm.error" :title="llm.error.message" type="error" :closable="false" />
+      <el-table v-if="emb" :data="emb" size="small" style="margin-top:10px"><el-table-column prop="id" label="向量服务" width="100" /><el-table-column prop="model" label="模型" width="220" /><el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.ok?'success':'info'">{{row.ok?'可用':'不可用'}}</el-tag></template></el-table-column><el-table-column prop="dims" label="维度" width="80" /><el-table-column prop="error" label="说明" min-width="220" show-overflow-tooltip /></el-table>
+      <div v-if="qw" style="margin-top:10px"><p v-if="qw.busy" class="muted">测试中…</p><template v-else><p>中文配音：<el-tag size="small" :type="qw.zh.ok?'success':'danger'">{{qw.zh.ok?('可用 · '+qw.zh.ms+'ms'):'不可用'}}</el-tag> <span class="muted">{{qw.zh.error||qw.zh.site}}</span></p><p>英文配音：<el-tag size="small" :type="qw.en.ok?'success':'danger'">{{qw.en.ok?('可用 · '+qw.en.ms+'ms'):'不可用'}}</el-tag> <span class="muted">{{qw.en.error}}</span></p><p>语音通话（Qwen-Omni）：<el-tag size="small" :type="qw.call.ok?'success':'danger'">{{qw.call.ok?('可用 · '+qw.call.ms+'ms'):'不可用'}}</el-tag> <span class="muted">{{qw.call.provider||''}} {{qw.call.said||''}} {{qw.call.error&&qw.call.error.message||qw.call.head||''}}</span></p></template></div>
+      <p class="muted" v-if="emb">记忆召回优先使用第一个可用的向量服务（默认 OpenAI → SCNet → 智谱）；都不可用时由免费模型按意思挑选。</p>
+    </div>
+    <div class="panel"><h3>语音 API</h3>
+      <p class="muted">游戏里每一句台词都用这里配的服务合成。协议目前只认 OpenAI 兼容的一种形状：<span class="mono">POST 地址 + /v1/audio/speech</span>（官方 OpenAI、CosyVoice、IndexTTS、GPT-SoVITS 都是这个样子）。
+        填了这里就用这里的；留空则回到服务器环境变量（TTS_URL → HF Space 兜底）。密钥只存服务器，页面不会回显。</p>
+      <el-form label-width="110px" style="max-width:760px">
+        <el-form-item label="协议"><el-select v-model="tts.protocol" style="width:300px"><el-option label="OpenAI 兼容（/v1/audio/speech）" value="openai" /></el-select></el-form-item>
+        <el-form-item label="地址"><el-input v-model="tts.url" placeholder="https://api.openai.com/v1 或 http://你的服务器:8000" /></el-form-item>
+        <el-form-item label="密钥"><el-input v-model="tts.key" type="password" show-password :placeholder="tts.hasKey ? '已保存（留空 = 不修改）' : 'sk-…'" /></el-form-item>
+        <el-form-item label="模型"><el-input v-model="tts.model" placeholder="tts-1 / cosyvoice-v1 …（留空 = 服务端默认）" /></el-form-item>
+        <el-form-item label="默认音色"><el-input v-model="tts.voice" placeholder="alloy / nova …（游戏里的 m1 / f1 先按映射试，失败再用这个）" /></el-form-item>
+        <el-form-item label="测试文本"><el-input v-model="tts.text" placeholder="你好，这是语音通路测试。" /></el-form-item>
+      </el-form>
+      <div class="toolbar"><el-button type="primary" @click="saveTts">保存</el-button><el-button :loading="tts.busy" @click="probeTts">测试通路</el-button>
+        <span class="muted" v-if="tts.envUrl">环境变量里已有的地址：<span class="mono">{{ tts.envUrl }}</span></span></div>
+      <el-alert v-if="tts.result" :type="tts.result.ok?'success':'error'" :closable="false" style="margin-top:10px"
+        :title="tts.result.ok ? ('通 · ' + tts.result.ms + ' ms · ' + tts.result.bytes + ' 字节 · ' + (tts.result.type||'') + ' · ' + (tts.result.model||'')) : ('不通 · ' + (tts.result.error || ('HTTP ' + tts.result.status)))" />
+    </div>
+    <div class="panel"><h3>新用户与钻石</h3><el-form label-width="160px" style="max-width:640px">
+      <el-form-item label="新人礼（钻石）"><el-input-number v-model="v.welcome_gems" :min="0" /></el-form-item>
+      <el-form-item label="每日签到（钻石）"><el-input-number v-model="v.daily_gems" :min="0" /></el-form-item>
+      <el-form-item label="每日免费领取上限"><el-input-number v-model="v.earn_cap" :min="0" /><span class="muted">　任务、广告等免费来源每人每天最多</span></el-form-item>
+      <el-form-item label="首充双倍"><el-switch v-model="v.first_purchase_double" /></el-form-item>
+      <el-form-item label="允许游客试玩"><el-switch v-model="v.guest_allowed" /><span class="muted">　关闭后必须登录才能进入（App Store 审核一般建议保留游客）</span></el-form-item></el-form></div>
+      <el-form-item label="成人露骨作品"><el-switch v-model="v.adult_enabled" /><span class="muted">　总开关。关闭时所有标了「成人露骨」的作品对所有人隐藏</span></el-form-item>
+      <el-form-item label="成人内容开放地区"><el-select v-model="v.adult_regions" multiple filterable allow-create default-first-option placeholder="* = 不限地区（测试）；正式：FR 或 US-CA，由法务确定" style="width:420px" /><span class="muted">　填 * = 所有地区都开放（测试阶段用）；不在名单里的地区看不到；名单为空 = 哪里都不开放</span></el-form-item>
+      <el-form-item label="允许用户自行确认年龄"><el-switch v-model="v.adult_self_verify" /><span class="muted">　测试用：用户打开成人作品时填出生日期、确认年满 18 岁即可观看。正式上线前请关掉，改用第三方年龄验证</span></el-form-item>
+    <div class="panel"><h3>上传素材收费（钻石 / 个）</h3><el-form label-width="160px" :inline="true">
+      <el-form-item label="音频"><el-input-number v-model="v.upload_price.audio" :min="0" /></el-form-item><el-form-item label="图片"><el-input-number v-model="v.upload_price.image" :min="0" /></el-form-item>
+      <el-form-item label="视频"><el-input-number v-model="v.upload_price.video" :min="0" /></el-form-item><el-form-item label="小游戏"><el-input-number v-model="v.upload_price.game" :min="0" /></el-form-item>
+      <el-form-item label="每人每天上传上限"><el-input-number v-model="v.upload_daily_limit" :min="0" /></el-form-item></el-form></div>
+    <div class="panel"><h3>AI 帮我想 · 换一个</h3><el-form label-width="160px" :inline="true"><el-form-item label="免费次数"><el-input-number v-model="v.reroll_free" :min="0" /></el-form-item><el-form-item label="之后每次（钻石）"><el-input-number v-model="v.reroll_price" :min="0" /></el-form-item></el-form></div>
+    <div class="panel"><h3>社区</h3><el-form label-width="160px" style="max-width:640px">
+      <el-form-item label="发布后自动上线"><el-switch v-model="v.community_auto_live" /><span class="muted">　关闭后所有新作品都要人工审核</span></el-form-item>
+      <el-form-item label="举报自动下线阈值"><el-input-number v-model="v.report_threshold" :min="1" /><span class="muted">　被举报达到该次数自动转为待审核</span></el-form-item>
+      <el-form-item label="每人每天发布上限"><el-input-number v-model="v.publish_daily_limit" :min="0" /></el-form-item></el-form></div>
+    <div class="panel"><h3>充值商品</h3><el-table :data="skuRows" size="small" style="max-width:640px"><el-table-column prop="k" label="商品 ID" /><el-table-column label="钻石"><template #default="{row}"><el-input-number v-model="row.x.gems" :min="0" size="small" /></template></el-table-column><el-table-column label="价格（美分）"><template #default="{row}"><el-input-number v-model="row.x.usd" :min="0" size="small" /></template></el-table-column></el-table>
+      <p class="muted">价格需与 App Store / Google Play 后台的商品价格保持一致。</p></div>
+    <div class="panel"><h3>维护提示</h3><el-input v-model="v.maintenance" placeholder="填写后 App 顶部会显示这条提示；留空则不显示" /></div>
+    <div class="panel" style="display:flex;gap:10px;align-items:center"><el-button type="primary" size="large" @click="save">保存全部配置</el-button><el-button @click="load">撤销修改</el-button>
+      <span class="muted">最近修改：<span v-for="m in meta" :key="m.key">{{m.key}}（{{m.updated_by}} {{fmt(m.updated_at)}}）　</span></span></div>
+  </div><el-skeleton v-else :rows="8" animated />`,
+};
+
+const Admins = {
+  setup() {
+    const rows = ref([]), dlg = reactive({ show: false, username: '', name: '', role: 'reviewer', password: '' });
+    async function load() { rows.value = (await api('admins')).rows; }
+    async function create() { await api('admins', { body: Object.assign({ op: 'create' }, dlg) }); dlg.show = false; ElMessage.success('已创建，请把用户名和初始密码交给同事，并提醒其登录后修改密码'); load(); }
+    const picked = ref([]);
+    async function bulkPw() {
+      if (!picked.value.length) return ElMessage.warning('先在表格左边勾选账号');
+      const r = await ElMessageBox.prompt('给勾选的 ' + picked.value.length + ' 个账号设同一个初始密码（至少 6 位）。他们第一次登录后必须先改成自己的密码，才能使用后台。', '批量设置初始密码', { inputType: 'password', inputPattern: /^.{6,}$/, inputErrorMessage: '至少 6 位', confirmButtonText: '设置' });
+      const j = await api('admins', { body: { op: 'bulkpw', ids: picked.value.map(x => x.id), password: r.value } });
+      ElMessage.success('已设置 ' + j.n + ' 个账号'); load();
+    }
+    async function op(a, o, extra) { if (o === 'delete') await ElMessageBox.confirm('删除管理员 ' + a.username + '？', '确认', { type: 'error' }); const j = await api('admins', { body: Object.assign({ op: o, id: a.id }, extra || {}) }); if (j.password) ElMessageBox.alert('新密码：<b class="mono">' + j.password + '</b>', '已重置', { dangerouslyUseHTMLString: true }); else ElMessage.success('已完成'); load(); }
+    onMounted(load);
+    return { rows, dlg, create, op, L, fmt, me: S.me, picked, bulkPw };
+  },
+  template: `<div class="panel"><div class="toolbar"><el-button type="primary" @click="dlg.show=true">新建管理员</el-button><el-button @click="bulkPw" :disabled="!picked.length">批量设置初始密码{{picked.length?'（'+picked.length+'）':''}}</el-button><span class="muted">勾选账号后可一次设同一个初始密码；对方第一次登录必须先改密码</span></div>
+    <el-table :data="rows" stripe @selection-change="v=>picked=v"><el-table-column type="selection" width="40" :selectable="r=>r.id!==me.id&&r.role!=='owner'" /><el-table-column prop="username" label="用户名" width="140" /><el-table-column prop="name" label="姓名" width="140" />
+      <el-table-column label="角色" width="170"><template #default="{row}"><el-select :model-value="row.role" size="small" :disabled="row.id===me.id" @change="v=>op(row,'update',{role:v,name:row.name})"><el-option v-for="(v,k) in L.role" :key="k" :label="v" :value="k" /></el-select></template></el-table-column>
+      <el-table-column label="状态" width="90"><template #default="{row}"><el-tag size="small" :type="row.status==='active'?'success':'info'">{{row.status==='active'?'启用':'停用'}}</el-tag> <el-tag v-if="row.must_change" size="small" type="warning">待改密</el-tag></template></el-table-column>
+      <el-table-column label="最近登录" width="170" :formatter="r=>fmt(r.last_login)" /><el-table-column label="创建" width="200" :formatter="r=>fmt(r.created_at)+' · '+(r.created_by||'')" />
+      <el-table-column label="操作" min-width="230"><template #default="{row}"><template v-if="row.id!==me.id"><el-button size="small" @click="op(row,'resetpw')">重置密码</el-button><el-button size="small" v-if="row.status==='active'" @click="op(row,'disable')">停用</el-button><el-button size="small" v-else type="success" plain @click="op(row,'enable')">启用</el-button><el-button size="small" type="danger" text @click="op(row,'delete')">删除</el-button></template><span v-else class="muted">（当前账号）</span></template></el-table-column></el-table></div>
+    <div class="panel"><h3>角色说明</h3><el-table :data="Object.keys(L.role).map(k=>({k,n:L.role[k],d:L.roleDesc[k]}))" size="small"><el-table-column prop="n" label="角色" width="140" /><el-table-column prop="d" label="可以做什么" /></el-table></div>
+    <el-dialog v-model="dlg.show" title="新建管理员" width="440px"><el-form label-width="80px">
+      <el-form-item label="用户名"><el-input v-model="dlg.username" placeholder="字母数字，登录用" /></el-form-item><el-form-item label="姓名"><el-input v-model="dlg.name" /></el-form-item>
+      <el-form-item label="角色"><el-select v-model="dlg.role"><el-option v-for="(v,k) in L.role" :key="k" :label="v+' — '+L.roleDesc[k]" :value="k" /></el-select></el-form-item>
+      <el-form-item label="初始密码"><el-input v-model="dlg.password" type="password" show-password placeholder="至少 8 位" /></el-form-item></el-form>
+      <template #footer><el-button @click="dlg.show=false">取消</el-button><el-button type="primary" @click="create">创建</el-button></template></el-dialog>`,
+};
+
+const Audit = {
+  setup() { const f = reactive({ admin: '', action: '', target: '' }); const { st, load } = usePaged('audit', f); f.size = 50; onMounted(() => load()); return { f, st, load, fmt, L }; },
+  template: `<div class="panel"><div class="toolbar"><el-input v-model="f.admin" placeholder="操作人" clearable style="width:160px" @keyup.enter="load(1)" @clear="load(1)" />
+      <el-select v-model="f.action" placeholder="操作类型" clearable filterable style="width:180px" @change="load(1)"><el-option v-for="(v,k) in L.action" :key="k" :label="v" :value="k" /></el-select>
+      <el-input v-model="f.target" placeholder="对象 ID（用户 / 作品…）" clearable style="width:240px" @keyup.enter="load(1)" @clear="load(1)" /><el-button type="primary" @click="load(1)">查询</el-button><span class="muted">共 {{st.total}} 条</span></div>
+    <el-table :data="st.rows" v-loading="st.loading" stripe size="small"><el-table-column label="时间" width="170" :formatter="r=>fmt(r.at)" /><el-table-column prop="admin_name" label="操作人" width="120" />
+      <el-table-column label="操作" width="140" :formatter="r=>L.action[r.action]||r.action" /><el-table-column label="对象" width="230"><template #default="{row}"><span class="muted">{{row.target_kind}}</span> <span class="mono">{{row.target_id}}</span></template></el-table-column>
+      <el-table-column label="详情" min-width="240"><template #default="{row}"><span class="mono">{{JSON.stringify(row.detail)==='{}'?'':JSON.stringify(row.detail)}}</span></template></el-table-column><el-table-column prop="ip" label="IP" width="130" /></el-table>
+    <div class="pager"><el-pagination background layout="total, prev, pager, next" :total="st.total" v-model:current-page="st.page" :page-size="st.size" @current-change="load()" /></div></div>`,
+};
+
+const Events = {
+  setup() {
+    const days = ref(14), d = ref(null), el = ref();
+    async function load() { d.value = await api('events', { query: { days: days.value } }); await nextTick(); const names = [...new Set(d.value.rows.map(x => x.name))], ds = [...new Set(d.value.rows.map(x => fmtD(x.day)))]; chart(el.value, { tooltip: { trigger: 'axis' }, legend: { type: 'scroll', data: names.map(n => L.event[n] || n) }, grid: { left: 40, right: 20, top: 50, bottom: 30 }, xAxis: { type: 'category', data: ds }, yAxis: { type: 'value' }, series: names.map(n => ({ name: L.event[n] || n, type: 'line', smooth: true, data: ds.map(dd => (d.value.rows.find(x => x.name === n && fmtD(x.day) === dd) || {}).users || 0) })) }); }
+    onMounted(load); return { days, d, el, load, L };
+  },
+  template: `<div class="panel"><div class="toolbar"><el-radio-group v-model="days" @change="load"><el-radio-button :value="7">7 天</el-radio-button><el-radio-button :value="14">14 天</el-radio-button><el-radio-button :value="30">30 天</el-radio-button><el-radio-button :value="90">90 天</el-radio-button></el-radio-group></div>
+    <h3>每日人数（按事件）</h3><div ref="el" class="chart" style="height:340px"></div></div>
+    <div class="panel" v-if="d"><h3>事件汇总</h3><el-table :data="d.totals" size="small"><el-table-column label="事件" :formatter="r=>L.event[r.name]||r.name" /><el-table-column prop="name" label="标识" /><el-table-column prop="users" label="人数" width="100" /><el-table-column prop="n" label="次数" width="100" /></el-table></div>`,
+};
+
+/* ================= 剧本生产 · 5 步工作台 =================
+   1 选题与素材研究 → 2 按终版规则生成（架构 + 逐章）→ 3 自动检查（规则检查 + AI 审稿）→ 4 编剧人工审改 → 5 一键上线到 App
+   AI 调用走 /api/longcat（密钥只在服务器）；规则来自 /miru_rules.js（终版规则 + 生成 Skill 调试规则 v1.0，与 App 同一份）。 */
+const STU = {
+  modes: ['强剧情', '混合', '日常陪伴'], forms: ['有限主线', '有限主线加持续陪伴', '持续陪伴'], inter: ['按钮', '自由输入', '混合'], twist: ['低', '中', '高'],
+  fmt: `【输出格式 · MIRU 标准剧本 v2（按《MIRU 互动剧本写作规范 v2》，App 会按这个格式自动转成可玩的剧）】
+## CHAPTER {n}｜章节标题
+⟦GOAL|这一章要立什么（一句话）|English⟧
+⟦DONE|say|玩家要说出或做出的一个意图（不是具体台词）|4–8 字短名|推进句：旁白：…… 或 名字：“……”⟧
+⟦DONE|flag|旗子名|4–8 字短名|推进句⟧      ← 每章 1–3 个完成条件，至少一个 say；flag 要在正文对应处写 ⟦SET|旗子名⟧，每条路线都能打到
+# SCENE｜地点
+⟦BG|bg_c{章号两位}s{场号两位}|地点 · 画面说明（写清在场角色和他的动作：背景图必须带人物）⟧
+⟦TIME|时间⟧
+旁白直接写成段落（不加任何前缀），只写看得见的动作、环境和细节。每场 4–8 句：第一句是落地句（到了哪、过了多久、气氛），最后一句是离场句（接下来去哪 / 做什么）。
+名字：“台词”            ← 每句对白单独一行、一个人一行，名字用角色英文名，一句不超过 40 字
+【心理】
+“玩家角色此刻没说出口的话”   ← 内心独白，只写玩家扮演的角色，不替玩家决定感受
+# CHOICE｜章内分支点：写成让玩家有话可说的情境（可选）
+#### A｜玩家意图（例：直接问他钱的去向）——不是现成台词，各条意图要一读就区分得开
+（选 A 之后的后果 1–3 行：旁白、动作、事件。不要写角色对玩家这句话的固定回答，App 会按玩家原话现场回应）
+⟦OPT|A|set:英文旗子;love:2⟧
+#### B｜……
+# ·
+章末顺序固定：关键事件（无论玩家聊什么都会发生）→ # CHOICE｜本章结尾的关键问题 → #### A/B/C 意图 + 后果 + ⟦OPT⟧ → # · → 章尾钩子 1 句
+下一章第一场的前两句是承接句：交代过了多久、人在哪，并用 ⟦IF|旗子⟧……⟦ELSE⟧……⟦/IF⟧ 按上一章的选择写不同的一句。
+硬要求：玩家看不到选项，分支只按玩家原话判定，不写「轮到你了」「请选择」；地点或时间变了就开新的 # SCENE；古代、奇幻等没有手机的世界不写电话、短信、撤回，对方在场时也不打电话、不发消息；特效 ⟦FX|id⟧ 一章 2–3 个、只用特效表里的 id；小游戏 ⟦MG|id⟧ 一章最多 1 个，赢和输都写后果；只输出剧本正文，不要解释、不要 markdown 代码块；露骨性描写不写；所有角色都是成年人。`,
+};
+function stuLLM(system, user, max) {
+  const body = { model: 'LongCat-2.0', max_tokens: max || 6000, temperature: 0.8, messages: [{ role: 'system', content: system }, { role: 'user', content: user }] };
+  const once = async (mt) => { const res = await fetch(ADMIN_API_BASE + '/api/longcat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.assign({}, body, { max_tokens: mt })) }); const t = await res.text(); let j = {}; try { j = JSON.parse(t); } catch (_) { throw new Error('AI 返回格式错误'); } if (j.error) throw new Error(j.error.message || j.error.code || 'AI 出错'); return String(((j.choices || [])[0] || {}).message && j.choices[0].message.content || '').trim(); };
+  return once(max || 6000).catch(e => { if (/max_tokens|length|token/i.test(e.message)) return once(4000); throw e; });
+}
+function stuJSON(t) { t = String(t || '').replace(/^```(json)?/i, '').replace(/```\s*$/, '').trim(); const a = t.indexOf('{'), b = t.lastIndexOf('}'); const a2 = t.indexOf('['), b2 = t.lastIndexOf(']'); try { return JSON.parse(t); } catch (_) {} try { return JSON.parse(t.slice(a, b + 1)); } catch (_) {} try { return JSON.parse(t.slice(a2, b2 + 1)); } catch (_) {} return null; }
+/* MIRU 标准剧本 → 检查用的 pack（与 App 导入器同一套写法的简化版） */
+function stuPack(chapters) {
+  const out = [];
+  (chapters || []).slice().sort((x, y) => x.n - y.n).forEach(c => {
+    const beats = [], choices = []; let ch = null, think = false, inChoice = null, opt = null;
+    String(c.md || '').replace(/\r/g, '').split('\n').forEach(raw => {
+      const l = raw.trim(); if (!l || /^[=\-*_~]{3,}$/.test(l)) return;
+      if (/^##\s*CHAPTER/i.test(l)) return;
+      if (/^#\s*SCENE/i.test(l)) { beats.push(['sys', 'scene', { place: l.replace(/^#\s*SCENE\s*[｜|:：]?\s*/i, '') }]); inChoice = null; return; }
+      if (/^#\s*CHOICE/i.test(l)) { inChoice = { q: l.replace(/^#\s*CHOICE\s*[｜|:：]?\s*/i, ''), opts: [] }; choices.push(inChoice); opt = null; return; }
+      let m = l.match(/^####\s*([A-E])\s*[｜|]\s*(.*)$/); if (m && inChoice) { opt = { k: m[1], t: m[2].replace(/^[“"]|[”"]$/g, ''), then: [] }; inChoice.opts.push(opt); return; }
+      if (/^####\s*入口/.test(l)) { inChoice = null; opt = null; return; }
+      if (/^【(心理|内心|心声|独白)】/.test(l)) { think = true; const rest = l.replace(/^【[^】]+】\s*/, ''); if (rest) { beats.push(['@pov', 'think', rest]); think = false; } return; }
+      m = l.match(/^([A-Za-z][A-Za-z .'-]{0,20}|[一-鿿]{1,6})\s*[：:]\s*[“"「](.+?)[”"」]?$/);
+      const sink = opt ? opt.then : beats;
+      if (m) { sink.push([m[1].trim(), 'say', m[2]]); think = false; return; }
+      if (think && /^[“"「]/.test(l)) { sink.push(['@pov', 'think', l.replace(/^[“"「]|[”"」]$/g, '')]); think = false; return; }
+      think = false; sink.push(['n', 'act', l]);
+    });
+    const end = choices.length ? choices[choices.length - 1] : null;
+    out.push({ t: c.t || ('第 ' + c.n + ' 章'), goal: end ? end.q : '', ask: end ? end.q : '', beats: { zh: beats }, choices: end ? end.opts.map(o => ({ k: o.k, t: o.t, mem: o.then.map(b => b[2]).join(' ').slice(0, 80) })) : [] });
+  });
+  return { chapters: out };
+}
+/* 用户第一次进 App 选口味（带照片的那一页）用的是同一套分层标签：世界 / 关系桥段 / 他是什么样的人 / 情绪 + 尺度。
+   这里直接照搬 App 的 TAX（src/app64_entry.js），保证后台选的和用户选的能对上；每个口味会展开成故事标签，推荐和搜索都靠它。 */
+const STU_TAX={
+ trope:{t:["Tropes","你爱的桥段"],max:4,items:[["e2l","Enemies to Lovers","宿敌变恋人",["Enemies to Lovers","Rivals to Lovers"]],["r2l","Rivals to Lovers","对手变恋人",["Rivals to Lovers"]],["second","Second Chance","破镜重圆",["Second Chance"]],
+  ["fake","Fake Dating","假戏真做",["Fake Dating"]],["arranged","Arranged Marriage","先婚后爱",["Arranged Marriage"]],["prox","Forced Proximity","被迫同处",["Forced Proximity","Roommates","Neighbors","Storm Night"]],["bed","Only One Bed","只有一张床",["Forced Proximity","Storm Night"]],
+  ["slow","Slow Burn","慢热",["Slow Burn"]],["pine","Mutual Pining","双向暗恋",["Mutual Pining","Secret Admirer"]],["f2l","Friends to Lovers","朋友变恋人",["Friends to Lovers"]],["forbid","Forbidden Love","禁忌之恋",["Forbidden"]],
+  ["guard","Bodyguard Romance","保镖",["Bodyguard","Protective"]],["tdie","Touch Him and Die","碰他者死",["Protective","Bodyguard"]],["hc","Hurt/Comfort","伤痛与治愈",["Hurt/Comfort"]],["ff","Found Family","找到家人",["Found Family"]],["ld","Long Distance","异地",["Long Distance"]],["office","Office Romance","职场恋爱",["Coworkers"]]]},
+ him:{t:["His Type","他是什么样的人"],max:2,items:[["gr","Golden Retriever","阳光忠犬",["Golden Retriever"]],["gs","Grumpy x Sunshine","暴躁×阳光",["Grumpy x Sunshine"]],["cold","Ice Prince","冰山",["Cold Prince"]],["mg","Morally Grey","灰色地带",["Morally Grey","Mafia","Bratva"]],
+  ["soft","Soft Giant","温柔大块头",["Soft Giant"]],["prot","Protector","守护型",["Protective","Bodyguard"]],["bil","Billionaire","亿万富翁",["Billionaire","Secret Heir"]],["genius","Genius","天才",["Genius"]],["bad","Bad Boy","坏男孩",["Morally Grey","Mafia"]]]},
+ vibe:{t:["Vibes","情绪"],max:2,items:[["cozy","Sweet & Cozy","甜 · 治愈",["Cozy","Slice of Life","Rom-Com"]],["romcom","Rom-Com","轻松搞笑",["Rom-Com"]],["angst","Angst","虐",["Bittersweet","Hurt/Comfort","Drama"]],["dark","Dark Romance","暗黑",["Dark Romance","Mafia","Bratva"]],["thrill","Suspense","悬疑刺激",["Mystery","Dark Romance"]]]},
+ world:{t:["Setting","世界"],max:2,items:[["contemp","Contemporary","都市",["Coworkers","Small Town","Apartment Life","Hospital","Radio","Broadway","Kitchen","Bakery","Jazz Club","Billionaire"]],["college","College","校园",["Campus","College Football","Military Academy","Roommates"]],
+  ["sports","Sports Romance","体育",["Hockey","F1","Esports","Roller Derby","College Football"]],["fantasy","Romantasy & Paranormal","奇幻 · 超自然",["Romantasy","Fae","Vampires","Werewolves","Dragons","Ghosts","Castle Life"]],["mafia","Mafia & Crime","黑帮",["Mafia","Bratva","Secret Heir"]],["scifi","Sci-Fi","科幻",["Sci-Fi","Space Station","Androids"]]]}};
+const STU_LAYERS = [['world', '世界', 2], ['trope', '关系桥段', 4], ['him', '他是什么样的人', 2], ['vibe', '情绪', 2]];
+const STU_HEATS = [['fluff', '清水 · 不越界'], ['slow', '暧昧 · 有张力'], ['steamy', '微辣'], ['explicit', '成人露骨 · 需打开「成人露骨」']];
+/* 具体元素（职业、种族、运动……）是故事事实，不在口味页，只用于搜索 */
+const STU_FACTS = { 'Hockey': '冰球', 'F1': 'F1赛车', 'College Football': '大学橄榄球', 'Esports': '电竞', 'Mafia': '黑手党', 'Bratva': '俄罗斯黑帮', 'Vampires': '吸血鬼', 'Fae': '妖精', 'Werewolves': '狼人', 'Small Town': '小镇', 'Hospital': '医院', 'Broadway': '百老汇', 'Wedding': '婚礼', 'Roommates': '室友', 'Campus': '校园', 'Billionaire': '亿万富翁', 'Secret Heir': '隐藏继承人', 'Coworkers': '同事', '单人': '单人' };
+const stuTaxTags = taste => { const out = new Set(); Object.entries(STU_TAX).forEach(([g, G]) => G.items.forEach(([k, , , tags]) => { if (((taste || {})[g] || []).includes(k)) tags.forEach(t => out.add(t)); })); return [...out]; };
+const stuTagsOf = c => [...new Set(stuTaxTags(c.taste).concat(c.facts || []))];
+const STU_TAG_ZH = Object.assign({}, STU_FACTS, ...Object.values(STU_TAX).map(G => Object.fromEntries(G.items.map(i => [i[1], i[2]]))));
+const stuTasteText = c => { const T = c.taste || {}; return STU_LAYERS.map(([g, nm]) => nm + '：' + ((T[g] || []).map(k => { const it = STU_TAX[g].items.find(i => i[0] === k); return it ? it[2] + '（' + it[1] + '）' : k; }).join('、') || '未选')).join('；') + '；尺度：' + ((STU_HEATS.find(h => h[0] === c.heat) || [, '未选'])[1]) + (c.facts && c.facts.length ? '；具体元素：' + c.facts.map(x => STU_FACTS[x] || x).join('、') : ''); };
+function stuCharter(c = {}) {
+  const show = v => typeof v === 'string' ? v : JSON.stringify(v);
+  const lines = [];
+  if (c.emotion_charter) lines.push('已确认情绪约定：' + show(c.emotion_charter));
+  if (c.core_promise) lines.push('核心体验：' + show(c.core_promise));
+  if (c.player_freedom) lines.push('玩家行动自由：' + show(c.player_freedom));
+  lines.push('情绪变化须由实际行动与人物回应产生；不得凭章节自动升级关系。');
+  lines.push('拒绝、暂缓和离开应有真实回应与可继续路径，不以强制亲密推进。');
+  return '【情绪与互动约定】\\n' + lines.join('\\n');
+}
+
+const Studio = {
+  setup() {
+    const list = ref([]), sel = ref(null), step = ref(0), busy = ref(''), log = ref([]), vers = ref([]), curCh = ref(1), stop = ref(false);
+    const R = window.MIRU_RULES || {};
+    const steps = ['选题与素材', '按规则生成', '自动检查', '编剧审改', '上线'];
+    const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], as: '' });
+    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], disc: { cast: '', identity: [], persona: [], trope: [], mood: [], intensity: '' } });
+    const leadsText = ref('');
+
+    /* ---------- 2026-11-24 · 素材 / 小游戏 / 发现页标签：都存进剧本 config，上线时跟作品包一起走，不需要 GitHub 和部署 ---------- */
+    const upBusy = ref(''), gamesText = ref(''), DISC = ref(null);
+    const isWriter = () => (S.me && S.me.role) === 'writer';
+    watch(() => sel.value && sel.value.id, () => { const c = sel.value && sel.value.config; gamesText.value = c && Array.isArray(c.games) && c.games.length ? JSON.stringify(c.games, null, 1) : ''; if (c && !c.disc) c.disc = { cast: '', identity: [], persona: [], trope: [], mood: [], intensity: '' }; });
+    fetch('art/official/discover.json?v=' + Date.now()).then(r => r.ok ? r.json() : null).then(j => { if (j) DISC.value = j.dict; }).catch(() => {});
+    function slotOf(name) {
+      const base = String(name).replace(/\.[^.]+$/, '');
+      let m = /C(\d{2})[_-]?S(\d{2})[_-]?BG/i.exec(base); if (m) return 'bg_c' + m[1] + 's' + m[2];
+      m = /^bg_?c(\d{2})_?s(\d{2})$/i.exec(base); if (m) return 'bg_c' + m[1] + 's' + m[2];
+      m = /^M\d+_(C\d{2})_(S\d{2})_(CG_.+)$/i.exec(base); if (m) return ('cg_' + m[1] + m[2] + '_' + m[3]).toLowerCase();
+      if (/^(home_video|opening|trailer|vid_open)$/i.test(base)) return 'home_video';
+      return base.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+    }
+    async function uploadFiles(ev) {
+      const files = [...((ev.target && ev.target.files) || [])]; if (ev.target) ev.target.value = ''; if (!files.length) return;
+      let ok = 0;
+      for (const f of files) {
+        const slot = slotOf(f.name); upBusy.value = '上传中 ' + (ok + 1) + ' / ' + files.length + '：' + f.name;
+        try {
+          const r = await fetch('/api/admin?r=script_upload&id=' + encodeURIComponent(sel.value.id) + '&slot=' + encodeURIComponent(slot) + '&name=' + encodeURIComponent(f.name), { method: 'PUT', headers: { Authorization: 'Bearer ' + S.token, 'Content-Type': f.type || 'application/octet-stream' }, body: f });
+          const j = await r.json().catch(() => ({}));
+          if (!r.ok) { ElMessage.error(f.name + '：' + (j.error || ('HTTP ' + r.status))); continue; }
+          sel.value.config.assets = Object.assign({}, sel.value.config.assets || {}, { [j.slot]: j.url });
+          if (j.slot === 'home_video') Object.assign(sel.value.config.assets, { vid_open: j.url, opening_video: j.url });
+          ok++;
+        } catch (e) { ElMessage.error(f.name + '：' + ((e && e.message) || e)); }
+      }
+      upBusy.value = '';
+      if (sel.value.config.assets && sel.value.config.assets.home_video) await save({ config: sel.value.config });
+      ElMessage.success('上传完成 ' + ok + ' / ' + files.length);
+    }
+    async function delAsset(k) { const a = Object.assign({}, sel.value.config.assets || {}); delete a[k]; sel.value.config.assets = a; await save({ config: Object.assign({}, sel.value.config, { assets: a }) }, '删除素材 ' + k); }
+    const missingSlots = computed(() => {
+      const s = sel.value; if (!s) return [];
+      const md = (s.chapters || []).map(c => c.md || '').join('\n'), have = (s.config && s.config.assets) || {}, need = new Set();
+      for (const m of md.matchAll(/⟦(?:BG|CG|VIDEO)\|([^|⟧]+)/g)) need.add(m[1].trim());
+      return [...need].filter(k => !have[k]);
+    });
+    const GAME_SAMPLE = [{ id: 'm121_g01', zh: '游戏名', en: 'Game Name', tpl: 'm111_mark', seconds: 40, pz: '中文题面：一句话说清要做什么动作', pe: 'English prompt', ask: ['把符合的全部圈出来', 'Mark every one that fits'], items: [['符合的一项', 'A fitting item'], ['不符合的一项', 'A non-fitting item'], ['符合的另一项', 'Another fitting item'], ['不符合的另一项', 'Another non-fitting item']], ans: [0, 2] }, { id: 'm121_g02', zh: '排序示例', en: 'Order Example', tpl: 'm111_order', seconds: 40, pz: '按发生顺序排好', pe: 'Put them in order', items: [['第一步', 'Step one'], ['第二步', 'Step two'], ['第三步', 'Step three']] }];
+    function gameSample() { gamesText.value = JSON.stringify(GAME_SAMPLE, null, 1); }
+    async function saveGames() {
+      let v = []; try { v = JSON.parse(gamesText.value || '[]'); } catch (e) { return ElMessage.error('小游戏 JSON 格式有误：' + e.message); }
+      if (!Array.isArray(v)) return ElMessage.error('最外层要是 [ ... ] 数组');
+      const bad = v.filter(g => !g || !g.id || !/^m11[12]_/.test(String(g.tpl || '')));
+      if (bad.length) return ElMessage.error('每个游戏都要有 id，tpl 要用下面说明里列出的模板名');
+      const pick = v.filter(g => g.tpl === 'm111_pick');
+      if (pick.length) return ElMessage.error('不再使用三选一（m111_pick）：' + pick.map(g => g.id).join('、') + '。请按剧本里的动作换成排序、分类、圈选、比对、找位置等玩法');
+      const md = (sel.value.chapters || []).map(c => c.md || '').join('\n'), used = [...md.matchAll(/⟦MG\|([^|⟧]+)/g)].map(m => m[1].trim()), ids = new Set(v.map(g => g.id));
+      const lack = [...new Set(used)].filter(x => !ids.has(x));
+      await save({ config: Object.assign({}, sel.value.config, { games: v }) }, '保存小游戏（' + v.length + ' 个）');
+      sel.value.config.games = v;
+      ElMessage[lack.length ? 'warning' : 'success'](lack.length ? '已保存。剧本里还有 ' + lack.length + ' 个 ⟦MG⟧ 没有定义：' + lack.slice(0, 5).join('、') : '小游戏已保存（' + v.length + ' 个）');
+    }
+    function discToggle(g, k) { const d = sel.value.config.disc; if (g === 'cast' || g === 'intensity') { d[g] = d[g] === k ? '' : k; return; } d[g] = d[g].includes(k) ? d[g].filter(x => x !== k) : d[g].concat(k); }
+    const DISC_GROUPS = [['cast', '恋爱对象', 1], ['identity', '人物身份', 0], ['persona', '性格', 0], ['trope', '套路', 0], ['mood', '氛围', 0], ['intensity', '亲密强度', 1]];
+    function nfDiscToggle(g, k) { const d = nf.disc; if (g === 'cast' || g === 'intensity') { d[g] = d[g] === k ? '' : k; return; } d[g] = d[g].includes(k) ? d[g].filter(x => x !== k) : d[g].concat(k); }
+    /* 搜索用的中文标签：取发现页标签的中文名；老剧本没有 disc 时仍用旧口味标签 */
+    function discTags(c) { const d = (c && c.disc) || {}, D = DISC.value || {}, out = []; ['identity', 'persona', 'trope', 'mood'].forEach(g => (d[g] || []).forEach(k => { const v = D[g] && D[g][k]; if (v) out.push(v.zh); })); return out.length ? [...new Set(out)] : stuTagsOf(c); }
+    async function saveDisc() { const d = sel.value.config.disc; if (!d.intensity) return ElMessage.warning('请选亲密强度'); await save({ config: Object.assign({}, sel.value.config, { disc: d }) }, '保存发现页标签'); ElMessage.success('发现页标签已保存，上线后生效'); }
+    async function submit() { await api('script', { body: { op: 'submit', id: sel.value.id } }); ElMessage.success('已提交审核，管理员检查后会上线'); open(sel.value.id); load(); }
+    const researchText = ref(''), outline = ref(''), cardsText = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
+    async function load() { list.value = (await api('scripts')).rows; }
+    async function open(id) { const j = await api('script', { query: { id } }); sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), sel.value.config || {}); { const c = sel.value.config; c.taste = Object.assign({ world: [], trope: [], him: [], vibe: [] }, c.taste || {}); if (!Array.isArray(c.facts)) c.facts = (c.tags || []).filter(t => STU_FACTS[t]); } researchText.value = sel.value.research ? JSON.stringify(sel.value.research, null, 2) : ''; outline.value = sel.value.outline || ''; cardsText.value = sel.value.config.cards98 ? JSON.stringify(sel.value.config.cards98, null, 1) : ''; leadsText.value = Array.isArray(sel.value.config.leads) && sel.value.config.leads.length ? JSON.stringify(sel.value.config.leads, null, 1) : ''; Object.assign(review, { notes: '', approved: false, checks: {} }, sel.value.review || {}); if (!review.checks || !Array.isArray(review.checks.list)) review.checks = { list: [] }; step.value = Math.min(4, Math.max(0, (sel.value.stage || 1) - 1)); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; loadVers(); }
+    async function loadVers() { if (!sel.value) return; vers.value = (await api('script', { query: { id: sel.value.id, versions: 1 } })).rows; }
+    async function create() {
+      if (!nf.title.trim()) return ElMessage.warning('请填写标题');
+      let research = null, brief = null, config = cfgDefault();
+      if (nf.seed === 'honor') {
+        try { research = await (await fetch('/research/honor_code.json')).json(); brief = await (await fetch('/research/honor_code_brief.md')).text(); } catch (_) { ElMessage.error('示例研究文件读取失败'); }
+        Object.assign(config, { hook: '迎新派对那晚，你被人按在冰冷的墙上，而他看见了——他是唯一的证人，也是你最不想欠的人。', premise: 'Marlowe University（美国东北部虚构大学）。新生派对上你被欺负，签署荣誉誓约的当晚，宿敌成了唯一的目击者。看见违规必须举报，保护一个人却意味着包庇。宿敌变恋人 · 三角关系 · 校园暴力 · 嫉妒 · 病娇（有代价、有问责）。', taste: { world: ['college'], trope: ['e2l', 'forbid'], him: ['mg'], vibe: ['angst', 'thrill'] }, heat: 'slow', facts: ['Campus'], tags: [], cast: '待定：宿敌（继承人/荣誉委员会成员）、执念型第三者（病娇，结局须先承担后果）。年龄全部 19+。' });
+      }
+      /* 2026-11-24 · 新建剧本改用发现页那套新标签（art/official/discover.json 的 dict），存进 config.disc，上线时随作品包走 */ const nd = JSON.parse(JSON.stringify(nf.disc)); if (!nd.cast) return ElMessage.warning('请选「恋爱对象」：一位还是多位'); if (!(nd.identity.length || nd.trope.length)) return ElMessage.warning('请至少选 1 个「人物身份」或「套路」（发现页筛选和推荐靠这些）'); if (!nd.intensity) return ElMessage.warning('请选「亲密强度」'); config.disc = nd; config.heat = ({ sweet: 'fluff', steamy: 'slow', spicy: 'steamy' })[nd.intensity] || 'slow'; config.tags = discTags(config);
+      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; Object.assign(nf, { taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], disc: { cast: '', identity: [], persona: [], trope: [], mood: [], intensity: '' } }); await load(); open(j.id);
+    }
+    async function save(patch, snapshot) { const j = await api('script', { body: { op: 'save', id: sel.value.id, patch, snapshot } }); const cfg = sel.value.config; sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), j.script.config || cfg); if (snapshot) loadVers(); return j.script; }
+    function say(s) { log.value.unshift(new Date().toLocaleTimeString('zh-CN', { hour12: false }) + '  ' + s); }
+    const rulesSys = (scope) => '你是 MIRU 互动剧本生成器。严格遵守下面两份规则（终版规则为准，调试规则为执行细则）。当前任务层级：' + scope + '。\n\n【MIRU 终版规则】\n' + (R.full || R.gen || '') + '\n\n【MIRU 剧本生成 Skill 调试规则 v1.0】\n' + (R.skill || '') + (R.ws712 ? '\n\n【MIRU 剧本与角色编写规范 v7.12（编剧交付合同）】\n' + R.ws712 : '') + (R.v21 ? '\n\n【MIRU V2.1 互动剧本与人物生成规则】\n' + R.v21 : '');
+    const projectText = () => { const s = sel.value, c = s.config; const mot = (s.research && s.research.motif_cards || []).filter(m => (c.motifs || []).includes(m.motif_id)); return ['【项目】' + s.title + '（' + ({ bl: '男男', bg: '男女', gl: '女女' }[s.orient] || s.orient) + '，语言：' + (s.lang === 'en' ? '英文' : '中文') + '）', '口味定位（必须体现，这是推给哪类用户的依据）：' + stuTasteText(c), '一句话钩子：' + (c.hook || '待定'), '设定：' + (c.premise || '待定'), '玩家身份：' + (c.player || '待定（保持 pending）'), '人物：' + (c.cast || '待定'), '配置：story_mode=' + c.story_mode + ' / story_form=' + c.story_form + ' / interaction_mode=' + c.interaction_mode + ' / twist_density=' + c.twist_density + ' / 章数目标=' + c.chapters_target + ' / monetization_enabled=' + !!c.monetization, '玩家可决定的事（行动自由度）：' + (c.player_freedom || '待定'), '本作承诺的核心体验：' + (c.core_promise || '待定（要具体，如“外冷内热的竞技明星在逐渐信任玩家的过程中学会表达脆弱”，不要写“甜虐交织”）'), '总主线问题（玩家最终要面对的选择）：' + (c.main_question || '待定'), 'canon 不可改规则：' + (c.canon_rules || '待定'), '内容排除：' + (c.content_exclusions || '无'), '主线结束后续写：' + (c.continuation_allowed === false ? '不允许' : '允许（须有 canon 禁改清单与续写支线池）'), stuCharter(c), '内容边界：' + c.boundaries, mot.length ? '【选用的素材研究母题卡（研究阶段的提案，不是已确认设定）】\n' + mot.map(m => m.motif_id + '：' + m.premise + '｜原创转化：' + (m.original_transformation || '') + '｜边界：' + (m.boundaries || '')).join('\n') : '', s.brief ? '【审稿简报摘要】\n' + String(s.brief).slice(0, 5000) : ''].filter(Boolean).join('\n'); };
+    /* ---------- step 1 ---------- */
+    async function saveStep1() { sel.value.config.tags = discTags(sel.value.config); let research = null; if (researchText.value.trim()) { research = stuJSON(researchText.value); if (!research) return ElMessage.error('素材研究 JSON 格式不对'); } await save({ title: sel.value.title, orient: sel.value.orient, lang: sel.value.lang, config: sel.value.config, research, brief: sel.value.brief, stage: Math.max(sel.value.stage, 2) }); ElMessage.success('已保存'); step.value = 1; }
+    async function aiResearch() {
+      busy.value = 'research'; say('素材研究 AI：按研究规则生成 idea 级机制卡（LongCat 不能联网检索，所有卡片标记为 idea）…');
+      try { const t = await stuLLM((R.research || '') + '\n\n注意：本次没有联网检索能力，不得编造任何来源；source_cards 只允许 user/idea 类型，pending_sources 写出建议人工去查的资料。', projectText() + '\n\n请输出合法 JSON（schema_version, story_id, setting_status, assumptions, missing_inputs, source_cards, trends, originality_risks, motif_cards, pending_sources），motif_cards 6–10 张。只输出 JSON。', 6000);
+        const j = stuJSON(t); if (!j) throw new Error('没有得到合法 JSON'); researchText.value = JSON.stringify(j, null, 2); sel.value.research = j; say('完成：' + (j.motif_cards || []).length + ' 张母题卡（idea）'); } catch (e) { ElMessage.error(e.message); say('失败：' + e.message); } finally { busy.value = ''; }
+    }
+    const motifs = computed(() => { const j = stuJSON(researchText.value); return (j && j.motif_cards) || []; });
+    const rsum = computed(() => { const j = stuJSON(researchText.value); if (!j) return null; const sc = j.source_cards || []; return { sources: sc.length, verified: sc.filter(x => x.verification_status === 'verified').length, pending: (j.pending_sources || []).length, trends: (j.trends || []).length, risks: (j.originality_risks || []).length, motifs: (j.motif_cards || []).length }; });
+    /* ---------- step 2 ---------- */
+    async function genOutline() {
+      busy.value = 'outline'; say('生成架构（generation_scope=架构）…');
+      try { const t = await stuLLM(rulesSys('架构'), projectText() + '\n\n请按调试规则第 14 节「架构」交付：输入摘要与假设、体验承诺、世界边界、人物核心（每个主要人物：吸引点、画像、底线、矛盾、变化方向；全部成年）、四轴结局方向、阶段与分支地图（按 ' + sel.value.config.chapters_target + ' 章列出每章：章节标题｜本章目标/核心问题｜关键事件｜结尾选择及各选项后果与后文读取点）、节奏与反转配置。另外按《角色卡生成规范 V1.0》§10 与架构 v7.9.6 的 Scene Pack，每章再写四项：open_loops（本章新增或推进的 Hook：来源｜当前状态｜相关人物｜已展示线索｜推进条件）、allowed_reveals（本章允许揭露的事实；其余后台真相不得进入角色认知）、exit_conditions（本章什么情况算自然收束）、人物认知变化（每个主要人物本章开始时知道 / 相信 / 想要什么，变化由前面哪件事引起）；角色卡（人物是谁）、当前场景、剧情状态三者分开写，不要把未来剧情写进人物设定；结尾关键选择的后果写成可执行效果（好感 / 信任 / 标记 / 记忆）。区分「已确认 / 生成提案 / 待确定」。最后按《剧本与角色编写规范 v7.12》补齐（只补缺的，不重复）：A 作品总卡（logline、玩家身份与行动自由度、本作承诺的核心体验、总主线问题、canon_rules、内容排除、first_scene）；B 故事圣经（世界法则、事件时间线、作者秘密台账：每条 secret_id / objective_truth / knows_initially / discoverable_via / reveal_conditions / prohibited_before / resolution_scene；伏笔台账：伏笔ID｜首次出现｜线索载体｜揭露条件｜回收场景；结局四轴；续写边界）；每章按 §05 加：主/辅情绪与节奏位置（吸引/缓和/冲突/反转/回报）、冲突因果（真相与误解分开）、required_events / optional_events / forbidden_reveals（大写英文 ID）、玩家不推进时如何继续对话（不得自动硬跳）；每个关键场景按 §06 加：在场与可互动、玩家入口（至少一个可回应或拒绝的问题）、可聊话题池、1–3 个软引导（触发原因｜主导角色｜方式｜可用线索｜不能透露｜玩家 2–3 种回应方向｜完成条件｜失效条件）、一个可选择的亲近机会（如“如果你愿意，我想坐近一点”→ 靠近 / 保持距离 / 换个话题）和一个价值交付点。工具只用 ask/gift/game/photo/voice/call，剧情不靠工具也成立，核心真相不得只放在付费照片后。' + (/持续陪伴/.test(sel.value.config.story_form) && sel.value.config.continuation_allowed !== false ? '最后写 G 续写素材：canon 禁改清单、每位主要角色至少 3 类续写支线、互动钩子（不用假紧急/嫉妒威胁/内疚催促）、禁止重复列表。' : '') + '再按《MIRU 规则框架 V2.1》补齐：①开局设计（0–30 秒直接进入冲突或吸引场景、3 分钟内玩家第一次表态、10 分钟内第一次关系或情绪变化，形成 初始冲突→玩家参与→人物反应→变化→新问题 闭环）；②冰山秘密台账（SECRET 编号、级别 A 主线必要 / B 关系增强 / C 世界深层 / D 专属秘密、客观事实、表象、知情者、可见痕迹、线索、可能误解、发现渠道与条件、揭露方式、未发现时如何推进；A 类必须可得）；③每章标三阶段归属（强吸引与快速卷入 / 关系深化与认知动摇 / 真相及选择兑现）、情绪兑现点，每 2–3 章一次大高潮；④分支标 S 即时 / M 短期 / L 长期 / E 结局，写清同一真相被主动坦白、第三方转述、自行调查发现的不同关系后果；⑤结局由剧情、关系、关键行为、秘密、道具联合判定并写清因果；⑥道具（ITEM 编号）各写使用与未使用两种结果，付费内容不得剥夺主线必要因果；⑦陪伴互动四类入口（交流入口 / 日常话题 / 剧情切入点 / 特殊互动）与话题库（TOPIC 编号）。用中文 Markdown 输出。', 9000);
+        outline.value = t; await save({ outline: t, stage: Math.max(sel.value.stage, 2) }, 'AI 生成架构'); say('架构完成，' + t.length + ' 字'); } catch (e) { ElMessage.error(e.message); say('失败：' + e.message); } finally { busy.value = ''; }
+    }
+    /* ---------- v8.1 · 角色卡（角色卡生成规范 V1.0）：架构之后、正文之前 ---------- */
+    const cardSys = () => '你是 MIRU 角色卡生成器。严格遵守《MIRU AI陪伴角色卡生成与运行规范 V1.3（纯角色卡版）》与《剧本与角色编写规范 v7.12》§04，并与终版规则一致。目标是一个有外貌、有生活、有过去、有个人欲望、有认知边界、有声音辨识度的独立人物，不是围绕玩家迎合的聊天模板。\n\n【角色卡规范 V1.3】\n' + (R.card || '') + (R.ws712 ? '\n\n【剧本与角色编写规范 v7.12】\n' + R.ws712 : '');
+    /* v8.3 · 角色卡规范 V1.3（纯角色卡版）：七大模块 + 字段更新级别 + 信息状态 + CV 声音；基础卡与章节卡分两次生成，避免超长被截断 */
+    const CARD_SCHEMA = '{"spec":"V1.3","character_id":"CHAR_英文大写","key":"英文小写id","name":"姓名","tier":"lead|main|support","romanceable":true,"entry_condition":"",'
+      + '"identity":{"name":"","aliases":[],"age":0,"gender":"","nationality":"","cultural_background":"","occupation":"","social_role":"","residence_context":"","public_image":""},'
+      + '"appearance":{"anchor":{"height_cm":0,"build":"","posture":"","face":"","eyes":"","hair":"","skin":"","marks":[],"first_impression":"","usual_expression":""},"wardrobe":{"work":"","formal":"","daily":"","home":"","date":"","signature_colors":[],"materials":"","accessories":[],"scent":"","why":""},"grooming":"","mutable":[],"physical_state":"","visual_constraints":[]},'
+      + '"life_history":{"family":"","childhood":"","education":"","work":"","culture":"","friendship_and_love":"","turning_points":[],"key_experiences":[{"id":"exp_1","fact":"客观发生了什么","subjective_meaning":"他当时怎么理解","influences":["影响到的偏好/信念/习惯"],"strength":"","exceptions":""}]},'
+      + '"knowledge":{"expert":[],"proficient":[],"familiar":[],"heard_of":[],"unknown":[],"consumed_works":{"read":[],"watched":[],"plan_to":[],"only_heard_of":[]}},'
+      + '"preferences":{"items":[{"id":"FOOD_X","category":"food.fruit","item":"","stance":"like|dislike|neutral|mixed","intensity":"low|medium|high","origin_type":"experience|culture|social|ordinary_taste|unknown","origin_ref":null,"known_exceptions":[],"behavior_expression":[],"change_status":"stable"}],"food_risks":{"allergies":[],"taboos":[],"status":"未设定|已确认|无"},"colors":{"like":[],"dislike":[]},"food":{"like":[],"dislike":[],"taste":""},"fruits_drinks":{"like":[],"dislike":[],"coffee_tea":""},"reading":{"genres":[],"authors":[],"habit":""},"films":{"genres":[],"habit":""},"music_art":[],"games_sports":[],"lifestyle":{"stay_in_or_go_out":"","sleep":"","tidiness":"","home_style":""},"outings_travel":"","social_pets":"","spending_collecting":"","sensory_habits":[]},'
+      + '"core_personality":{"dominant_drives":[],"core_fears":[{"fear":"","trigger":""}],"values_and_moral_boundaries":[],"self_image":"","defense_mechanisms":[],"self_deception":"","blind_spots":[],"vulnerabilities":[],"contradictions":[],"growth_capacity":"","speaking_style":{"sentence":"","wording":"","tone":"","humor":"","catchphrases":[],"silence":""},"body_habits":[]},'
+      + '"behavior_patterns":{"praised":{"trigger":"","first_impulse":"","outward_behavior":"","hidden_motive":"只用于解释，不是台词","exceptions":"","repair_path":""},"ignored":{},"attracted":{},"jealous":{},"accused":{},"fight":{},"apology":{},"fear_of_loss":{},"public_vs_private":{},"stress":{}},'
+      + '"romance":{"attachment_pattern":"","love_expression":[],"jealousy_pattern":"","competition_style":"","conflict_repair_style":"","personal_boundaries":[],"preference_for_partner":"","favoritism":"对玩家的偏爱如何从他原有性格里长出来","flirt_signature":{"approach":["",""],"emotional_desire":["",""],"physical_attraction_non_explicit":["",""],"rejection_response":["尊重、转移话题、保留体面",""],"forbidden_lines":[""]}},'
+      + '"personal_agency":{"life_goal":"","current_personal_goal":"","unresolved_personal_issues":[],"private_secrets":[],"internal_conflicts":[],"typical_initiatives":[]},'
+      + '"relationships":{"PLAYER":{"initial_role":"","impression":"","affection":null,"attraction":null,"trust":null,"respect":null,"intimacy":null,"dependency":null,"possessiveness":null,"jealousy":null,"suspicion":null,"guilt":null,"fear_of_loss":null,"power_balance":"","shared_history":"只写已共同经历的事实","boundaries":[]},"其他角色key":{"objective_role":"","impression":"","shared_history":"","misunderstandings":[],"competition_view":""}},'
+      + '"pov":{"knowledge":["事实（来源）"],"observations":[],"beliefs":["判断（确信度）"],"misbeliefs":[],"unknowns":[],"blind_spots":[]},'
+      + '"memory":{"important":[{"memory_id":"MEM_1","subject":"","fact_summary":"","source":"firsthand|told_by|system_inferred","certainty":"known|inferred","importance":"low|medium|high","emotional_valence":""}],"promises":[]},'
+      + '"current_state":{"location":"","mood":"","physical_condition":"","current_focus":"","communication_goal":""},'
+      + '"voice":{"cv_type":"真人|授权合成|pending","cv_name_or_cast_id":"pending","voice_asset_id":"","provider_voice_id":"configured_separately","language_support":[],"sample_refs":[],"identity":{"perceived_age":"","register":"","brightness":"","thickness":"","texture":"","resonance":"","articulation":"","base_pace":"","accent_origin":"按成长与语言经历","signature_sounds":""},"identity_constraints":[],"performance":{"calm":{"tone":"","pace":"","volume":"","pause_pattern":"","breathiness":"","articulation":"","intensity_limit":"","disallowed_style":""},"happy":{},"shy":{},"anxious":{},"down":{},"restrained_anger":{},"jealous":{},"after_fight":{},"sincere_affection":{},"work":{},"public":{},"private":{},"intimate":{},"phone":{}},"voice_id":"VOICE_X_01","performance_matrix":{"daily":{"trigger":"","acoustic":"","habit":"","test_line":"","forbidden":""},"work_social":{},"flirt":{},"conflict":{},"vulnerable":{},"reconcile":{}},"relationship_stage":{"stranger":"","familiar":"","ambiguous":"","intimate":"","conflict":"","reconciled":""},"social_mask_vs_true":"","tts":{"engine":"","preset":"","params":{},"emotion_tags":[],"version":"v1"},"pronunciation_lexicon":[],"rights_scope":"授权确认前不得发布","production_status":"pending"},'
+      + '"growth_arc":{"initial_pattern":"","trigger_event_ids":[],"evidence":"","new_behavior":"","validation":"","regression_conditions":[]},'
+      + '"field_levels":{"fixed":["identity","life_history","appearance.anchor","voice.identity"],"slow":["core_personality","romance","preferences"],"dynamic":["relationships","current_state","appearance.mutable"],"retrieval":["knowledge.consumed_works","memory","preferences.items"]},'
+      + '"class":"R|N（R 可攻略 / N 非攻略）","chat_knowledge":{"daily_topics":[],"private_stories":[],"sensitive_topics":[],"avoidance":"","event_entries":[]},"outfits":[{"outfit_id":"OUTFIT_X_01","name":"","scenes":["日常|职业正式|居家|私下外出|剧情"],"season":"","details":"","colors":{"main":[],"accent":[],"forbidden":[]},"anchors_kept":["不可漂移的外貌锚点"],"looks":[{"look_id":"LOOK_X_01_pristine","state":"pristine","condition":"什么情境下出现"},{"look_id":"","state":"casual","condition":""},{"look_id":"","state":"disheveled","condition":""},{"look_id":"","state":"wet","condition":""}],"enter_exit":"进入/退出条件","habit_moves":[],"feedback_rule":"玩家评价后他是否/何时会回应","art":{"ref":"待生产","prompt_pos":"","prompt_neg":"","version":"v1"},"rights":"待确认"}],"field_status":{"字段路径":"known|inferred|unknown|disputed"},"pending":["待确认项"]}';
+    const CH_SCHEMA = '{"1":{"knows":["事实（来源）"],"unknown":[],"beliefs":["判断（确信度）"],"misbeliefs":[],"relation":"他此刻如何看待玩家","goal":"本章他自己想要什么","speech":"本章说话方式的变化","mood":"","growth":["因第N章的哪件事而变"]}}';
+    async function genCards() {
+      if (!String(outline.value || '').trim()) return ElMessage.warning('先生成或填写架构'); busy.value = 'cards';
+      try {
+        const N = Number(sel.value.config.chapters_target || 12);
+        say('角色卡：识别主要人物…');
+        const lt = await stuLLM(cardSys(), projectText() + '\n\n【已确认架构】\n' + String(outline.value).slice(0, 20000) + '\n\n列出需要完整角色卡的主要人物（可互动、可恋爱或推动主线的人；背景人物不要），只输出 JSON：[{"key":"英文小写id","name":"姓名","tier":"lead|main"}]，最多 4 人。', 800);
+        const people = (stuJSON(lt) || []).filter(p => p && p.name).slice(0, 4); if (!people.length) throw new Error('没有识别出主要人物');
+        const out = [];
+        for (const p of people) {
+          say('角色卡：' + p.name + '（V1.3 七大模块）…');
+          const t = await stuLLM(cardSys(), projectText() + '\n\n【已确认架构】\n' + String(outline.value).slice(0, 16000) + '\n\n按《角色卡规范 V1.3》§10.1 的创建顺序（身份与家庭教育 → 经历与知识边界 → 外貌穿衣与生活资源 → 有来源的重点偏好 + 足量普通日常偏好 → 欲望底线防御与个人矛盾 → 情境行为、语言与亲密方式 → 与其他人物的初始关系与认知 → CV 声线与演绎 → 一致性复核），为「' + p.name + '」生成单人基础角色卡。要求：\n- 七大模块写全；外貌用可描绘可复现的形态，不用“高级感”之类主观词；穿衣覆盖工作/正式/日常/居家/约会\n- 经历区分客观事实和他的理解；知识按 expert/proficient/familiar/heard_of/unknown 分级，读过看过与只听说分开\n- 偏好：普通生活细节占合理比例，不要每项都有创伤来源；过敏与“不喜欢”分开，未知写「未设定」；不因玩家喜欢什么就让他也喜欢\n- 情境行为 10 种全写，每条 trigger / first_impulse / outward_behavior / hidden_motive / exceptions / repair_path；偏爱从他原有性格里长出来，不是统一的“宝宝、想你、抱抱”\n- 他有自己的人生目标、当前私人诉求、未解决的问题和日常主动行为，不是专为玩家存在；不规定他一定选择玩家\n- 关系各维度 value 一律 null（量表由项目配置），只写文字；对其他人物各自独立，不默认都围着玩家竞争\n- POV 分 knowledge / observations / beliefs / misbeliefs / unknowns / blind_spots；作者秘密和他不知道的事不能进入 knowledge\n- CV：未选角写 pending；声音身份按成长与语言经历写口音，不按国籍推断；演绎覆盖 9 种情绪 + 5 种场合；rights_scope 写“授权确认前不得发布”；不得指定模仿任何真实配音演员\n- 按编写规范 v7.12 §04：romanceable=true 时 flirt_signature 四项各 2 条行为示例 + 1 条禁止的失真台词，rejection_response 必须尊重、转移话题、保留体面；romanceable=false 不写恋爱推进；growth_arc 写 起点→触发事件ID→证据→新行为→验证→回退\n- 按《规则框架 V2.1》：标 class（R 可攻略 / N 非攻略）；R 类补 K 聊天知识、M CV（voice_id、六类表演矩阵每类一句测试台词、关系阶段声线表、社交面具与真实声线）、N 服装（outfit_id、基础衣橱、LOOK 变体 pristine/casual/disheveled/wet 各写触发情境、美术提示词标“待生产”）\n- 每个不确定的字段在 field_status 里标 inferred / unknown，写进 pending，不要编成事实\n只输出一个 JSON 对象（不要 chapters），结构如下（字段可按需扩充，不可删减）：\n' + CARD_SCHEMA, 8000);
+          const c = stuJSON(t); if (!c || !(c.identity || c.core_personality)) { say(p.name + ' 的角色卡格式不对，已跳过（可重试）'); continue; } c.key = c.key || p.key; c.tier = c.tier || p.tier; c.spec = 'V1.3';
+          say('角色卡：' + p.name + '（第 1–' + N + ' 章章节卡）…');
+          try { const t2 = await stuLLM(cardSys(), projectText() + '\n\n【已确认架构】\n' + String(outline.value).slice(0, 16000) + '\n\n【' + p.name + ' 的基础卡（不可改写）】\n' + JSON.stringify({ core_personality: c.core_personality, pov: c.pov, personal_agency: c.personal_agency, relationships: c.relationships }).slice(0, 6000) + '\n\n写「' + p.name + '」第 1–' + N + ' 章的章节卡：每章他此刻知道什么（带来源）、不知道什么、相信什么（带确信度）、错信什么、怎么看玩家、他自己这一章想要什么、说话方式的变化、心情，以及由第几章哪件事引起的变化（第 1 章 growth 为空）。人格核心不随章节改写；变化必须有事件证据；作者秘密不进入 knows。只输出 JSON：' + CH_SCHEMA, 6000);
+            const ch = stuJSON(t2); c.chapters = (ch && typeof ch === 'object' && !Array.isArray(ch)) ? (ch.chapters || ch) : {}; } catch (e) { c.chapters = {}; say(p.name + ' 的章节卡失败：' + e.message + '（可重试）'); }
+          out.push(c);
+        }
+        const cards = { spec: 'MIRU 角色卡生成与运行规范 V1.3', at: Date.now(), characters: out };
+        cardsText.value = JSON.stringify(cards, null, 1);
+        await save({ config: Object.assign({}, sel.value.config, { cards98: cards }), stage: Math.max(sel.value.stage, 2) }, 'AI 生成角色卡（V1.3）');
+        say('角色卡完成：' + out.map(c => c.name).join('、'));
+      } catch (e) { ElMessage.error(e.message); say('角色卡失败：' + e.message); } finally { busy.value = ''; }
+    }
+    /* 2026-11-15 · 人物卡（发现 → 角色）：每个能和玩家互动的主要角色一张，跟作品一起上线（pack.meta.leads）。规范见《MIRU 互动剧本写作规范 v2》第二节 ② */
+    async function genLeads(silent) {
+      if (busy.value) return null; busy.value = 'leads';
+      try {
+        const s = sel.value, c = s.config || {};
+        const md = (s.chapters || []).slice().sort((x, y) => x.n - y.n).map(x => x.md || '').join('\n\n');
+        const cards = (c.cards98 && c.cards98.characters) || [];
+        const sys = '你是 MIRU 互动剧的编辑，按《MIRU 互动剧本写作规范 v2》第二节「② 详细人物卡」为每个主要角色写人物卡。人物卡会出现在 App「发现 → 角色」里，玩家可以和这个角色一对一聊天。所有角色都是虚构成年人；不剧透真凶、反转和结局；不写露骨内容；外貌写可复现的固定特征。';
+        const user = '【作品】' + s.title + '\n【一句话卖点】' + (c.hook || '') + '\n【简介】' + (c.premise || '') + '\n【玩家扮演】' + (c.you || '') + (cards.length ? '\n【已有角色卡（摘要）】\n' + JSON.stringify(cards.map(x => ({ key: x.key, name: x.name, identity: x.identity, appearance: x.appearance, core_personality: x.core_personality }))).slice(0, 12000) : '') + '\n【剧本正文（节选）】\n' + md.slice(0, 24000) + '\n\n列出剧里有台词、能和玩家互动的主要角色（玩家本人「你」不算；只出场一两句的路人不算；最多 8 个），每人一张人物卡。只输出 JSON 数组：[{"key":"英文小写id，和剧本 ⟦CHAR⟧ / 立绘文件名一致","n":{"zh":"中文名","en":"英文名"},"g":"m 或 f","age":数字,"h":"身高，如 186cm","role":{"zh":"一句话身份","en":"..."},"looks":{"zh":"外貌固定特征：发型、眼睛、疤痕、常穿什么","en":"..."},"vibe":{"zh":"性格：外在怎样、内里怎样、怕什么","en":"..."},"pitch":{"zh":"角色页上吸引玩家点进来的一句话","en":"..."},"solo":{"zh":"一对一聊天时他说的第一句，带一个用 *星号* 包起来的动作","en":"..."},"likes":{"zh":"三两件具体的喜好","en":"..."},"boundary":{"zh":"他不会做的事","en":"..."}}]';
+        const t = await stuLLM(sys, user, 6000);
+        const arr = stuJSON(t);
+        if (!Array.isArray(arr) || !arr.length) throw new Error('没有生成出人物卡（可重试）');
+        const leads = arr.filter(x => x && x.key && x.n).slice(0, 8);
+        leadsText.value = JSON.stringify(leads, null, 1);
+        await save({ config: Object.assign({}, sel.value.config, { leads }) }, 'AI 生成人物卡（' + leads.length + ' 人）');
+        if (!silent) ElMessage.success('人物卡已生成：' + leads.map(x => (x.n && (x.n.zh || x.n.en)) || x.key).join('、') + '，请检查后保存');
+        return leads;
+      } catch (e) { ElMessage.error(e.message); return null; } finally { busy.value = ''; }
+    }
+    async function saveLeads() { let v = []; try { v = JSON.parse(leadsText.value || '[]'); } catch (e) { return ElMessage.error('人物卡 JSON 格式有误：' + e.message); } if (!Array.isArray(v)) return ElMessage.error('人物卡要是一个数组 [ ... ]'); await save({ config: Object.assign({}, sel.value.config, { leads: v }) }, '修改人物卡'); ElMessage.success('人物卡已保存'); }
+    async function saveCards() { let c = null; try { c = JSON.parse(cardsText.value || '{}'); } catch (e) { return ElMessage.error('角色卡 JSON 格式有误：' + e.message); } await save({ config: Object.assign({}, sel.value.config, { cards98: c }) }, '修改角色卡'); ElMessage.success('角色卡已保存'); }
+    const cardsFor = n => { const L = (sel.value.config.cards98 && sel.value.config.cards98.characters) || []; if (!L.length) return ''; const J = x => Array.isArray(x) ? x.map(v => typeof v === 'object' ? Object.values(v).filter(Boolean).join('：') : v).join('；') : (x && typeof x === 'object' ? Object.values(x).filter(Boolean).join('；') : String(x || ''));
+      return '\n\n【角色卡（V1.3）· 第 ' + n + ' 章时的人物状态——台词与行为必须符合；不得让角色说出他不知道的事；内在动机只用于一致性，不直接写成台词】\n' + L.map(c => { const ch = (c.chapters || {})[n] || {};
+        if (c.spec === 'V1.3' || c.core_personality) { const cp = c.core_personality || {}, ag = c.personal_agency || {}, ro = c.romance || {}, bp = c.behavior_patterns || {};
+          return '◆ ' + c.name + '（' + J([c.identity && c.identity.age, c.identity && c.identity.occupation]) + '）\n- 不变的核心：驱动 ' + J(cp.dominant_drives) + '；恐惧 ' + J(cp.core_fears) + '；底线 ' + J(cp.values_and_moral_boundaries) + '\n- 说话：' + J(cp.speaking_style).slice(0, 220) + '；身体习惯 ' + J(cp.body_habits).slice(0, 100) + '\n- 他自己的生活：人生目标 ' + (ag.life_goal || '') + '；当前诉求 ' + (ag.current_personal_goal || '') + '；未解决 ' + J(ag.unresolved_personal_issues) + '\n- 情境反应：被夸 ' + J(bp.praised && bp.praised.outward_behavior) + '｜吃醋 ' + J(bp.jealous && bp.jealous.outward_behavior) + '｜被误会 ' + J(bp.accused && bp.accused.outward_behavior) + '｜和解 ' + J(bp.apology && bp.apology.outward_behavior) + '\n- 偏爱方式：' + (ro.favoritism || J(ro.love_expression)) + '\n- 本章：知道 ' + J(ch.knows) + '｜不知道 ' + J(ch.unknown) + '｜相信 ' + J(ch.beliefs) + '｜错信 ' + J(ch.misbeliefs) + '｜对玩家 ' + (ch.relation || '') + '｜他想要 ' + (ch.goal || '') + '｜说话变化 ' + (ch.speech || '') + '｜变化来由 ' + J(ch.growth); }
+        const b = c.base || {}, co = b.core || {}, pt = b.patterns || {}; return '◆ ' + c.name + '\n- 不变的核心：价值观 ' + (co.values || []).join('/') + '；恐惧 ' + (co.fear || '') + '；底线 ' + (co.boundaries || []).join('；') + '\n- 说话：' + JSON.stringify(pt.speech || {}).slice(0, 300) + '\n- 防御：' + (pt.defense || '') + '；恋爱方式：' + (pt.romance || '') + '\n- 本章：知道 ' + (ch.knows || []).join('；') + '｜不知道 ' + (ch.unknown || []).join('；') + '｜相信 ' + (ch.beliefs || []).join('；') + '｜对玩家 ' + (ch.relation || '') + '｜目标 ' + (ch.goal || '') + '｜说话变化 ' + (ch.speech || '') + '｜变化来由 ' + (ch.growth || []).join('；'); }).join('\n'); };
+    async function saveOutline() { await save({ outline: outline.value }, '修改架构'); ElMessage.success('架构已保存'); }
+    async function genChapter(n) {
+      const s = sel.value, chs = s.chapters || [], prev = chs.filter(c => c.n < n).sort((a, b) => a.n - b.n);
+      const tail = prev.length ? String(prev[prev.length - 1].md).slice(-2500) : '';
+      const t = await stuLLM(rulesSys('逐场正文'), projectText() + '\n\n【已确认架构】\n' + String(outline.value || s.outline || '').slice(0, 30000) + (tail ? '\n\n【上一章结尾（保持连续，读取上一章选择的后果）】\n' + tail : '') + cardsFor(n) + '\n\n现在写第 ' + n + ' 章的完整正文（约 4000–7000 字，2–4 个场景，至少 1 个场景中小选择，结尾 1 个关键选择 2–3 个选项；【玩家台词铁律】绝对不要替玩家写台词，正文里不得出现「你：“……”」这样的玩家对白——玩家每次要开口的地方，一律写成「# CHOICE｜（轮到你说）一句情境提示」+ 2–3 个「#### A｜“玩家可能说的话”」，每个选项下面写对方针对这句话的不同回应（App 里玩家也可以不选、自己打字或说话）；每个场景至少 2 个这样的玩家回合，对方连续说话不超过 6 句就要把话轮交给玩家；【编写规范 v7.12】每个场景至少一个价值交付点和一个可选择的亲近机会（角色想靠近时先问，选项里要有“保持距离 / 换个话题”，玩家没确认之前不写成已经发生）；玩家拒绝、离题或在问正事时，角色先回应和支持、体面地退一步，不施压，并留一条回到主线的路；不让角色说出本章 forbidden_reveals 和他不知道的事；玩家的动作和心理可以用叙述/【心理】写，但不替玩家做关键决定；' + (n > 1 ? '开头用「#### 入口A｜…」等写出读取上一章结尾选择的差异段落；' : '【V2.1 开局】前 30 秒（约前 300 字）直接进入冲突或吸引场景，禁止长篇设定旁白；前 3 分钟（约前 2000 字）至少一位关键角色明确回应玩家并给玩家第一次表态的 CHOICE；本章内完成 初始冲突→玩家参与→人物反应→情绪或关系变化→新问题 的闭环；不要连续介绍角色而不建立关系；开篇先见人：用具体行为呈现他的吸引力、对玩家的态度和玩家能做什么；') + '）。\n\n' + STU.fmt.replace('{n}', n), 8000);
+      const md = t.replace(/^```\w*\n?|```\s*$/g, '').trim(); const m = md.match(/##\s*CHAPTER\s*\d+\s*[｜|]\s*(.+)/i);
+      const ch = { n, t: m ? m[1].trim() : '第 ' + n + ' 章', md, at: Date.now(), by: 'AI' };
+      const next = chs.filter(c => c.n !== n).concat([ch]).sort((a, b) => a.n - b.n); await save({ chapters: next, stage: Math.max(s.stage, 2) }, 'AI 生成第 ' + n + ' 章'); return ch;
+    }
+    async function genOne(n) { busy.value = 'ch' + n; say('写第 ' + n + ' 章…'); try { const c = await genChapter(n); say('第 ' + n + ' 章完成：' + c.t + '（' + c.md.length + ' 字）'); curCh.value = n; } catch (e) { ElMessage.error(e.message); say('第 ' + n + ' 章失败：' + e.message); } finally { busy.value = ''; } }
+    async function genRest() {
+      if (!String(outline.value || '').trim()) return ElMessage.warning('先生成或填写架构'); stop.value = false; busy.value = 'batch';
+      try { for (let n = 1; n <= Number(sel.value.config.chapters_target || 12); n++) { if (stop.value) { say('已停止'); break; } if ((sel.value.chapters || []).some(c => c.n === n)) continue; say('写第 ' + n + ' 章…'); try { const c = await genChapter(n); say('第 ' + n + ' 章完成：' + c.t); } catch (e) { say('第 ' + n + ' 章失败：' + e.message + '（可单独重试）'); } } } finally { busy.value = ''; }
+    }
+    /* ---------- step 3 ---------- */
+    async function runCheck() {
+      const pack = stuPack(sel.value.chapters); const c = sel.value.config;
+      const q = R.check ? R.check({ pack: Object.assign(pack, { story_mode: c.story_mode }) }, { longform: Number(c.chapters_target) >= 15 }) : { err: ['规则模块没有加载'], warn: [], ok: [], info: [] };
+      if (R.checkCards) { const cq = R.checkCards(sel.value.config.cards98, sel.value.chapters); q.err = q.err.concat(cq.err); q.warn = q.warn.concat(cq.warn); } if (R.checkV21) { const vq = R.checkV21(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(vq.err); q.warn = q.warn.concat(vq.warn); } if (R.checkStandards) { const sq = R.checkStandards(c, sel.value.config.cards98, sel.value.chapters, outline.value); q.err = q.err.concat(sq.err); q.warn = q.warn.concat(sq.warn); } (sel.value.chapters || []).forEach(ch => { const n = (String(ch.md || '').match(/^\s*(你|您|You)\s*[:：]/gm) || []).length; if (n) q.warn.push('第 ' + ch.n + ' 章：有 ' + n + ' 句「你：…」。App 会把它转成「轮到你说」的停顿点（读者可点这句、也可自己说），这是**支持的写法**；但整章一句都没有时，系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）—— 建议每章保留 1–3 句'); });
+      const qa = Object.assign({}, sel.value.qa || {}, { err: q.err, warn: q.warn, ok: q.ok, info: q.info, estimate: q.estimate, rules: R.version, at: Date.now() });
+      await save({ qa, stage: Math.max(sel.value.stage, 3) }); ElMessage.success('规则检查完成：' + q.err.length + ' 个错误，' + q.warn.length + ' 个提醒');
+    }
+    async function aiReview() {
+      busy.value = 'review'; say('AI 审稿（按终版规则 + 调试规则第 15 节定位上游规则）…');
+      try { const all = (sel.value.chapters || []).map(c => c.md).join('\n\n'); const t = await stuLLM(rulesSys('局部修订（审稿，不改写）'), '【架构】\n' + String(outline.value || '').slice(0, 12000) + '\n\n【剧本正文】\n' + all.slice(0, 60000) + '\n\n请逐条找出违反规则的地方。只输出 JSON 数组：[{"chapter":章号,"where":"原文片段（≤30字）","rule":"规则编号，如 终版07 / 调试R22","problem":"问题","fix":"具体怎么改（指出要改的上游规则层级）","level":"error|warn"}]，最多 30 条；没有问题输出 []。', 5000);
+        const arr = stuJSON(t); if (!Array.isArray(arr)) throw new Error('AI 审稿没有返回合法 JSON'); await save({ qa: Object.assign({}, sel.value.qa || {}, { ai: arr, ai_at: Date.now() }) }); say('AI 审稿完成：' + arr.length + ' 条'); } catch (e) { ElMessage.error(e.message); say('失败：' + e.message); } finally { busy.value = ''; }
+    }
+    /* ---------- step 4 ---------- */
+    const chObj = computed(() => (sel.value && sel.value.chapters || []).find(c => c.n === curCh.value) || null);
+    async function saveCh() { const ch = chObj.value; if (!ch) return; const m = ch.md.match(/##\s*CHAPTER\s*\d+\s*[｜|]\s*(.+)/i); ch.t = m ? m[1].trim() : ch.t; ch.by = S.me.name || S.me.username; ch.at = Date.now(); await save({ chapters: sel.value.chapters, stage: Math.max(sel.value.stage, 4) }, '编剧修改第 ' + ch.n + ' 章'); ElMessage.success('第 ' + ch.n + ' 章已保存（已存版本）'); }
+    function addCh() { const n = Math.max(0, ...(sel.value.chapters || []).map(c => c.n)) + 1; sel.value.chapters.push({ n, t: '第 ' + n + ' 章', md: '## CHAPTER ' + n + '｜\n# SCENE｜\n', at: Date.now(), by: S.me.name || '' }); curCh.value = n; }
+    async function delCh() { await ElMessageBox.confirm('删除第 ' + curCh.value + ' 章？（可从版本记录恢复）', '删除章节', { type: 'warning' }); await save({ chapters: sel.value.chapters.filter(c => c.n !== curCh.value) }, '删除第 ' + curCh.value + ' 章'); curCh.value = (sel.value.chapters[0] || { n: 1 }).n; }
+    async function saveReview() { if (review.approved && (sel.value.qa && (sel.value.qa.err || []).length)) await ElMessageBox.confirm('自动检查还有 ' + sel.value.qa.err.length + ' 个错误，确定标记审核通过？', '确认', { type: 'warning' }); await save({ review: { notes: review.notes, approved: review.approved, checks: review.checks }, stage: review.approved ? 5 : Math.max(sel.value.stage, 4) }, review.approved ? '编剧审核通过' : '编剧审稿意见'); ElMessage.success(review.approved ? '已标记审核通过，可以上线' : '审稿意见已保存'); if (review.approved) step.value = 4; }
+    /* 自动审查（D先生）：服务端跑 api/_dslqa.js 的结构检查 + api/_lib.js 的受限词，绿了才盖 review.approved */
+    const autoOut = ref('');
+    const msText = ref(''), msOut = ref(''), msBible = ref(null);
+    async function msCheck() {
+      busy.value = 'ms'; msOut.value = '识别中…'; msBible.value = null;
+      try {
+        const j = await api('script', { body: { op: 'manuscript', text: msText.value } });
+        const L = [j.ok ? '✅ 识别通过' : '❌ 有 ' + j.err.length + ' 处要改'];
+        if (j.stats) L.push('人物 ' + j.stats.people + ' · 章 ' + j.stats.chapters + ' · 场 ' + j.stats.scenes + ' · 选项 ' + j.stats.options + ' · 结局 ' + j.stats.endings + ' · 图片 ' + j.stats.images + ' · 编剧写的特效 ' + j.stats.authoredFx);
+        (j.err || []).forEach(e => L.push('✗ ' + e)); (j.warn || []).forEach(w => L.push('⚠ ' + w));
+        if (j.images && j.images.length) { L.push('', '—— 要做的图 ——'); j.images.forEach(i => L.push(i.slot + ' · ' + i.kind + ' · ' + (i.name || '') + (i.when ? ' · 条件：' + i.when : '') + ' · ' + (i.desc || ''))); }
+        msOut.value = L.join('\n');
+        if (j.ok) msBible.value = j.bible;
+      } catch (e) { msOut.value = '失败：' + ((e && e.message) || e); }
+      finally { busy.value = ''; }
+    }
+    function msDownload() { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(msBible.value, null, 2)], { type: 'application/json' })); a.download = 'story.bible.json'; a.click(); URL.revokeObjectURL(a.href); }
+    async function autoReview() {
+      busy.value = 'auto'; autoOut.value = '跑中…';
+      try {
+        const j = await api('script', { body: { op: 'autoreview', id: sel.value.id } });
+        const L = [];
+        L.push(j.ok ? '✅ 结构 + 受限词 + 样式都通过（已自动标记「审核通过」）' : '❌ 有 ' + j.err.length + ' 个硬错，不能上线');
+        if (j.receipt) { L.push(''); L.push('—— 回执（可直接复制给药方/编剧）——'); L.push(j.receipt); L.push(''); }
+        L.push('章 ' + j.stats.chapters + ' · 场景 ' + j.stats.scenes + ' · 选择 ' + j.stats.choices + ' · 选项 ' + j.stats.options + ' · 收尾 ' + j.stats.dots + ' · 「你：」' + j.stats.you + ' · 角色卡 ' + j.stats.casts);
+        (j.perCh || []).forEach(c => L.push('  第 ' + c.n + ' 章：场景 ' + c.scenes + ' · 选择 ' + c.choices + ' · 收尾 ' + c.dots + ' · 正文 ' + c.lines + ' 行'));
+        (j.err || []).forEach(e => L.push('✗ ' + e));
+        (j.warn || []).forEach(w => L.push('⚠ ' + w));
+        autoOut.value = L.join('\n');
+        await open(sel.value.id);
+        ElMessage[j.ok ? 'success' : 'error'](j.ok ? '审查通过' : '有 ' + j.err.length + ' 个硬错');
+      } catch (e) { autoOut.value = '失败：' + ((e && e.message) || e); ElMessage.error((e && e.message) || String(e)); }
+      finally { busy.value = ''; }
+    }
+    async function restore(v) { await ElMessageBox.confirm('用这个版本的架构和章节覆盖当前内容？（当前内容会先自动存一个版本）', '恢复版本', { type: 'warning' }); await save({ outline: sel.value.outline, chapters: sel.value.chapters }, '恢复前自动备份'); const j = await api('script', { body: { op: 'restore', id: sel.value.id, version: v.id } }); sel.value = Object.assign(j.script, { config: Object.assign(cfgDefault(), j.script.config || {}) }); outline.value = sel.value.outline || ''; loadVers(); ElMessage.success('已恢复'); }
+    /* ---------- step 5 ---------- */
+    /* 上线后再核一次资产映射：剧本声明了 41 个槽位，但映射文件不存在的话，玩家看到的是纯文字。
+       判据只读文件存在 + 非 null 的键数，不猜「应该有人给」。 */
+    async function assetCheck(workId) {
+      try {
+        const r = await fetch('art/official/' + workId + '.json', { cache: 'no-store' });
+        if (!r.ok) return '资产映射：**不存在**（art/official/' + workId + '.json 404）—— 所有背景/CG 槽位会静默无图';
+        const m = await r.json(); const keys = Object.keys(m || {}); const got = keys.filter(k => m[k]);
+        return '资产映射：' + got.length + ' / ' + keys.length + ' 个槽位有图' + (got.length < keys.length ? '（还缺 ' + (keys.length - got.length) + ' 个）' : '（齐了）');
+      } catch (e) { return '资产映射：检查失败（' + ((e && e.message) || e) + '）'; }
+    }
+    async function publish(force) { if (!force && !(Array.isArray(sel.value.config.leads) && sel.value.config.leads.length)) { const g = await genLeads(true); if (g) await ElMessageBox.alert('已从剧本自动生成 ' + g.length + ' 张人物卡（' + g.map(x => (x.n && (x.n.zh || x.n.en)) || x.key).join('、') + '）。请在下方「人物卡」里检查、修改并保存，然后再点上线。', '先确认人物卡', { type: 'info' }); return; } await ElMessageBox.confirm('上线后 App「发现」页的社区区会置顶显示（作者：MIRU 官方），所有用户都能玩。', '确认上线', { type: 'warning' }); const j = await api('script', { body: { op: 'publish', id: sel.value.id, force: !!force, rulesVersion: R.version } }); ElMessage.success('已上线：' + j.work_id);
+      try { ElMessage.info(await assetCheck(j.work_id), { duration: 8000 }) } catch (_) {} open(sel.value.id); load(); }
+    async function unpublish() { await ElMessageBox.confirm('下线后 App 里将看不到这部剧（已在玩的用户本地副本不受影响）。', '确认下线', { type: 'warning' }); await api('script', { body: { op: 'unpublish', id: sel.value.id } }); ElMessage.success('已下线'); open(sel.value.id); load(); }
+    async function del(row) { await ElMessageBox.confirm('删除剧本「' + row.title + '」及全部版本？', '删除', { type: 'error' }); await api('script', { body: { op: 'delete', id: row.id } }); load(); }
+    function download() { const s = sel.value; const md = '# ' + s.title + '\n\n' + (s.chapters || []).map(c => c.md).join('\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([md], { type: 'text/markdown' })); a.download = s.title + '.md'; a.click(); }
+    /* ---------- 导入 .md（2026-10-28）----------
+       编剧交上来的是「正文 + 后台设计」一整份；解析器不区分这两层，后台设计会被当成旁白播出去
+       （实测：一份 2.9 万字的稿子多出 363 条旁白）。这里切两刀：
+         ① 起点：第一章前面的 ⟦CHAR⟧ 角色卡要带上（它们必须早于第 1 章）
+         ② 终点：第一章之后第一个「# 二、后台内容」这类编号标题 = 后台设计开始，整段丢弃
+       切完仍然是普通章节 md，之后照旧走「自动检查 → 审改 → 上线」。 */
+    const RE_CHAP = /^#+\s*CHAPTER\s+(\d+)\s*[｜|:：]?\s*(.*)$/i;
+    function splitScript(raw) {
+      const text = String(raw || '').replace(/\r\n?/g, '\n').replace(/^\uFEFF/, '');
+      const L = text.split('\n');
+      const iChap = L.findIndex(l => RE_CHAP.test(l.trim()));
+      if (iChap < 0) return { error: '没找到「# CHAPTER 1｜…」这样的章节标记 —— 先确认这是剧本，不是设计稿' };
+      let iStart = iChap;
+      for (let j = iChap - 1; j >= 0; j--) { const t = L[j].trim(); if (!t) continue; if (/^⟦/.test(t)) { iStart = j; continue; } break; }
+      let iEnd = L.length;
+      for (let j = iChap + 1; j < L.length; j++) { const t = L[j].trim(); if (/^#\s*[一二三四五六七八九十]+\s*、/.test(t) || /^#{1,2}\s*(附录|附：)/.test(t)) { iEnd = j; break; } }
+      const head = L.slice(iStart, iChap).join('\n').trim();
+      const chapters = []; let cur = null;
+      for (const line of L.slice(iChap, iEnd)) {
+        const m = line.trim().match(RE_CHAP);
+        if (m) { if (cur) chapters.push(cur); cur = { n: Number(m[1]) || chapters.length + 1, t: String(m[2] || '').trim(), md: line.replace(/^#+\s*/, '# ') + '\n' }; continue; }
+        if (cur) cur.md += line + '\n';
+      }
+      if (cur) chapters.push(cur);
+      if (!chapters.length) return { error: '切出 0 章' };
+      if (head) chapters[0].md = head + '\n\n' + chapters[0].md;
+      /* 服务端的硬上限（api/admin.js 的 op=save：最多 40 章、单章 20 万字符、整体 3.5 MB）
+         —— 在这里先拦，免得读者走到「保存」才吃一个 413 */
+      const tooMany = chapters.length > 40;
+      const tooLong = chapters.filter(c => c.md.length > 200000);
+      const total = chapters.reduce((n, c) => n + c.md.length, 0);
+      if (tooMany) return { error: '切出 ' + chapters.length + ' 章，超过服务端上限 40 章 —— 请拆分文件' };
+      if (tooLong.length) return { error: '第 ' + tooLong.map(c => c.n).join('、') + ' 章超过单章上限 20 万字符' };
+      if (total > 3500000) return { error: '合计 ' + total + ' 字符，超过 3.5 MB 上限' };
+      const joined = chapters.map(c => c.md).join('\n\n');
+      return { chapters, report: { chapters: chapters.length, tail: L.slice(iEnd).join('\n').length, you: (joined.match(/^\s*(你|您|You)\s*[:：]/gm) || []).length, choices: (joined.match(/^#\s*CHOICE/gm) || []).length, dots: (joined.match(/^#\s*·\s*$/gm) || []).length } };
+    }
+    async function importMd(file) {
+      const f = file && (file.raw || file); if (!f || typeof f.text !== 'function') return;
+      try {
+        const r = splitScript(await f.text());
+        if (r.error) { ElMessage.error(r.error); return; }
+        if ((sel.value.chapters || []).length) await ElMessageBox.confirm('当前已有 ' + sel.value.chapters.length + ' 章，导入会整体替换（旧内容先存一个版本，可恢复）。继续？', '导入 .md', { type: 'warning' });
+        sel.value.chapters = r.chapters; curCh.value = r.chapters[0].n;
+        await save({ chapters: r.chapters, stage: Math.max(sel.value.stage || 1, 4) }, '导入 .md：' + r.report.chapters + ' 章');
+        ElMessage.success('导入 ' + r.report.chapters + ' 章 · 丢掉后台设计 ' + r.report.tail + ' 字符 · 「你：」' + r.report.you + ' 句 · 选择题 ' + r.report.choices + ' 道（收尾 ' + r.report.dots + ' 个 # ·）');
+      } catch (e) { if (e !== 'cancel' && e !== 'close') ElMessage.error((e && e.message) || String(e)); }
+    }
+    /* ---------- 批量导入（2026-10-28）----------
+       一次选 N 个 .md，每份 = 一部剧：读标题/取向/尺度 → 建草稿 → 灌章（stage 4）。
+       口味标签不猜（猜错会推给错的人）—— 结果是"草稿，待补标签"，上线前要人工过一遍。 */
+    function readMeta(raw, fname) {
+      const L = String(raw || '').replace(/\r\n?/g, '\n').split('\n');
+      let title = '';
+      for (const l of L) { const m = l.match(/^#\s+(?!CHAPTER|SCENE|CHOICE)(.+)$/); if (m) { title = m[1].trim(); break } }
+      title = title.replace(/[（(][^）)]{0,30}[）)]\s*$/, '').replace(/^M\d{3}\s*[｜|]?\s*/, '').trim() || String(fname || '').replace(/\.(md|txt)$/i, '');
+      const o = raw.match(/orientation\s*[:：｜|]?\s*(bl|bg|gl)/i);
+      const h = raw.match(/heat\s*[:：=｜|]?\s*(fluff|slow|steamy|mature)/i);
+      return { title: title.slice(0, 80), orient: o ? o[1].toLowerCase() : 'bl', heat: h ? h[1].toLowerCase() : 'slow' };
+    }
+    function pickMdMany() {
+      const inp = document.createElement('input');
+      inp.type = 'file'; inp.accept = '.md,.txt'; inp.multiple = true;
+      inp.onchange = () => { const fs = [].slice.call(inp.files || []); if (fs.length) batchImport(fs); };
+      inp.click();
+    }
+    async function batchImport(files) {
+      const ok = [], bad = [];
+      for (const f of files) {
+        try {
+          const raw = await f.text();
+          const meta = readMeta(raw, f.name);
+          const r = splitScript(raw);
+          if (r.error) { bad.push(f.name + ' → ' + r.error); continue; }
+          const j = await api('script', { body: { op: 'create', title: meta.title, orient: meta.orient, lang: 'zh', config: { heat: meta.heat } } });
+          await api('script', { body: { op: 'save', id: j.id, patch: { chapters: r.chapters, stage: 4 }, snapshot: '批量导入：' + r.chapters.length + ' 章' } });
+          ok.push(meta.title + '（' + r.chapters.length + ' 章 · ' + (r.report.you) + ' 句你： · ' + r.report.choices + ' 道选择）');
+        } catch (e) { bad.push(f.name + ' → ' + ((e && e.message) || e)); }
+      }
+      await load();
+      ElMessageBox.alert(
+        '<b>成功 ' + ok.length + ' 部</b>' + (ok.length ? '<br>' + ok.map(x => '· ' + x).join('<br>') : '') +
+        (bad.length ? '<br><br><b style="color:#f56c6c">失败 ' + bad.length + ' 部</b><br>' + bad.map(x => '· ' + x).join('<br>') : '') +
+        '<br><br><span style="color:#909399">导入的是草稿：口味标签还没选（推荐和搜索靠它），逐部打开补完再点检查/上线。</span>',
+        '批量导入 .md', { dangerouslyUseHTMLString: true, confirmButtonText: '知道了' });
+    }
+    /* 2026-11-24 · 编剧看自己剧的数据（/api/admin?r=mystats：编剧只拿到自己名下已上线的剧，管理员看全部） */
     const ms = reactive({ days: 30, rows: [], loading: false, cpg: 0 });
     async function loadMs() { ms.loading = true; try { const j = await api('mystats', { query: { days: ms.days } }); ms.rows = (j && j.works) || []; ms.cpg = (j && j.centsPerGem) || 0; } catch (_) {} finally { ms.loading = false; } }
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
