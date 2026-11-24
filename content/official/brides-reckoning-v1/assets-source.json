@@ -1,0 +1,625 @@
+{
+  "story_id": "the_brides_reckoning",
+  "version": "assets_1.0",
+  "slots": {
+    "bg_c01s01": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "庄园临时修复室，录像监视器与档案箱",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c01s02": {
+      "file": "backgrounds/bg_foyer.jpg",
+      "description": "门厅迎宾桌，邀请函与座位卡",
+      "detail_slots": [
+        "item_invitation",
+        "item_seatcard"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c01s03": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "工作台上的婚礼录像时间轴与备份盘",
+      "detail_slots": [
+        "item_original"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c01s04": {
+      "file": "backgrounds/bg_foyer.jpg",
+      "description": "门厅楼梯，扶手下垂着一角白纱",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c02s01": {
+      "file": "backgrounds/bg_banquet.jpg",
+      "description": "私人宴会厅，六个活人位置与盖布人偶席",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c02s02": {
+      "file": "backgrounds/bg_corridor.jpg",
+      "description": "通向门厅的回廊，重复出现的落地灯",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c02s03": {
+      "file": "backgrounds/bg_banquet.jpg",
+      "description": "宴会厅边缘，座位图与可见同伴",
+      "detail_slots": [
+        "item_seatcard"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c02s04": {
+      "file": "backgrounds/bg_headtable.jpg",
+      "description": "空主位，两副未使用的餐具",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c03s01": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "修复室内与门上磨砂玻璃",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c03s02": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "音轨文字记录与暂停的播放器",
+      "detail_slots": [
+        "item_original"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c03s03": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "修复室门口，灯光照到同伴站位",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c03s04": {
+      "file": "backgrounds/bg_corridor.jpg",
+      "description": "修复室外走廊，远处白纱垂在转角",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c04s01": {
+      "file": "backgrounds/bg_bridal_now.jpg",
+      "description": "更衣套间外，穿衣镜与旧婚服箱",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c04s02": {
+      "file": "backgrounds/bg_sewing_now.jpg",
+      "description": "婚服工作台，袖口与缝线细节",
+      "detail_slots": [
+        "item_dress"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c04s03": {
+      "file": "backgrounds/bg_sewing_now.jpg",
+      "description": "婚纱内衬与一张折好的车票",
+      "detail_slots": [
+        "item_dress",
+        "item_tickets"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c04s04": {
+      "file": "backgrounds/bg_kitchen_past.jpg",
+      "description": "记忆版本的普通厨房，未加糖霜的蛋糕",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c05s01": {
+      "file": "backgrounds/bg_banquet_reversed.jpg",
+      "description": "宴会厅，所有盖布人偶背向桌面",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c05s02": {
+      "file": "backgrounds/bg_register_table.jpg",
+      "description": "纪念架结扣示意与被遮住的名册",
+      "detail_slots": [
+        "item_ribbon",
+        "item_register"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c05s03": {
+      "file": "backgrounds/bg_register_table.jpg",
+      "description": "婚礼见证册，覆页边缘露出原字",
+      "detail_slots": [
+        "item_register"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c05s04": {
+      "file": "backgrounds/bg_banquet_reversed.jpg",
+      "description": "宴会厅门外，面向墙的人偶排成一线",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c06s01": {
+      "file": "backgrounds/bg_workers_side.jpg",
+      "description": "宴会厅侧室，一张摆着六个工作杯的桌子",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c06s02": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "旧工坊档案，整改通知与不同日期的合影",
+      "detail_slots": [
+        "item_workshop"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c06s03": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "私信底稿与寄送记录",
+      "detail_slots": [
+        "item_statement"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c06s04": {
+      "file": "backgrounds/bg_bridal_past.jpg",
+      "description": "2014年婚房回声，婚纱尚完整",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c07s01": {
+      "file": "backgrounds/bg_study.jpg",
+      "description": "庄园书房壁炉，茶杯与旧羊毛围巾",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c07s02": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "旧照片与服务记录并排的书桌",
+      "detail_slots": [
+        "item_workshop"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c07s03": {
+      "file": "backgrounds/bg_door_lock.jpg",
+      "description": "新郎手写日程与婚房走廊钟",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c07s04": {
+      "file": "backgrounds/bg_sewing_past.jpg",
+      "description": "2012年裁缝工作间回声，一盏晚灯",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c08s01": {
+      "file": "backgrounds/bg_sewing_now.jpg",
+      "description": "旧缝纫间，布尺与闭合的剪刀盒",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c08s02": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "两份证词及覆页边缘",
+      "detail_slots": [
+        "item_statement"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c08s03": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "缝纫间记录桌，三张证词分类卡",
+      "detail_slots": [
+        "item_statement"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c08s04": {
+      "file": "backgrounds/bg_bridal_past.jpg",
+      "description": "婚服箱边的过去回声",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c09s01": {
+      "file": "backgrounds/bg_guestroom.jpg",
+      "description": "楼上客房，票据与未封口信封",
+      "detail_slots": [
+        "item_tickets"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c09s02": {
+      "file": "backgrounds/bg_ticket_table.jpg",
+      "description": "两段行程的纸面路线图",
+      "detail_slots": [
+        "item_tickets"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c09s03": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "信纸与她的工作本，纸张无血迹",
+      "detail_slots": [
+        "item_statement"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c09s04": {
+      "file": "backgrounds/bg_guestroom.jpg",
+      "description": "客房门前的旧行李箱，向走廊方向打开",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c10s01": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "修复室档案架，同规格母带与工作副本",
+      "detail_slots": [
+        "item_original"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c10s02": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "播放器、原音记录与不确定词空格",
+      "detail_slots": [
+        "item_original"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c10s03": {
+      "file": "backgrounds/bg_door_lock.jpg",
+      "description": "门锁位置示意与影像帧",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c10s04": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "修复室灯下，敞开的门与旧新郎",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c11s01": {
+      "file": "backgrounds/bg_service_corridor.jpg",
+      "description": "封闭服务区外，旧暖气井与金属门",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c11s02": {
+      "file": "backgrounds/bg_service_desk.jpg",
+      "description": "服务记录与旧维修签收表",
+      "detail_slots": [
+        "item_location"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c11s03": {
+      "file": "backgrounds/bg_service_desk.jpg",
+      "description": "资料盒与可见出口，管家停在柜边",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c11s04": {
+      "file": "backgrounds/bg_service_corridor.jpg",
+      "description": "服务走廊口，比阿特丽斯放下托盘",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c12s01": {
+      "file": "backgrounds/bg_headtable_veil.jpg",
+      "description": "宴会厅空主位，盖着面纱的椅背",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c12s02": {
+      "file": "backgrounds/bg_register_table.jpg",
+      "description": "名册原页与比阿特丽斯的手写补页",
+      "detail_slots": [
+        "item_register",
+        "item_ribbon"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c12s03": {
+      "file": "backgrounds/bg_route_table.jpg",
+      "description": "礼堂、修复室与门厅的路线草图",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c12s04": {
+      "file": "backgrounds/bg_chapel_entry.jpg",
+      "description": "礼堂入口，白纱停在门槛前",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c13s01": {
+      "file": "backgrounds/bg_chapel.jpg",
+      "description": "私人礼堂旧纪念台，木地板与仪式架",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c13s02": {
+      "file": "backgrounds/bg_memorial_panel.jpg",
+      "description": "纪念台维护记录与封板边缘",
+      "detail_slots": [
+        "item_location"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c13s03": {
+      "file": "backgrounds/bg_memorial_panel.jpg",
+      "description": "部分打开的外层检修板，旧婚纱布料与行李牌",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c13s04": {
+      "file": "backgrounds/bg_chapel.jpg",
+      "description": "纪念台前的白纱身影与未动过的空腔",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c14s01": {
+      "file": "backgrounds/bg_restore.jpg",
+      "description": "修复室，邀请底稿与复位的钟舌记录",
+      "detail_slots": [
+        "item_invitation",
+        "item_clapper"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c14s02": {
+      "file": "backgrounds/bg_records_table.jpg",
+      "description": "邀请记录、公开拍摄流程与真实异象记录",
+      "detail_slots": [
+        "item_invitation"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c14s03": {
+      "file": "backgrounds/bg_chapel_entry.jpg",
+      "description": "礼堂入口，旧名册与三条方法卡",
+      "detail_slots": [
+        "item_register"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c14s04": {
+      "file": "backgrounds/bg_chapel_entry.jpg",
+      "description": "礼堂门边，艾莲娜自己握住面纱边缘",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c15s01": {
+      "file": "backgrounds/bg_chapel.jpg",
+      "description": "礼堂通道、安全退路与纪念架",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c15s02": {
+      "file": "backgrounds/bg_archive_safe.jpg",
+      "description": "备份盘、原件封袋与分开的资料清单",
+      "detail_slots": [
+        "item_original"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c15s03": {
+      "file": "backgrounds/bg_route_table.jpg",
+      "description": "见证册原页、纪念架双结与通道图",
+      "detail_slots": [
+        "item_register",
+        "item_ribbon"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c15s04": {
+      "file": "backgrounds/bg_chapel.jpg",
+      "description": "礼堂主位、纪念台与落下的红缎带",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。",
+      "variants": {
+        "after_resolution": "backgrounds/bg_chapel_after.jpg"
+      }
+    },
+    "bg_c16s01": {
+      "file": "backgrounds/bg_exterior_dawn.jpg",
+      "description": "庄园外清晨，打开的大门与湿石阶",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c16s02": {
+      "file": "backgrounds/bg_archive_safe.jpg",
+      "description": "临时安全处，原件封袋、资料清单与电话",
+      "detail_slots": [
+        "item_original"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c16s03": {
+      "file": "backgrounds/bg_name_desk.jpg",
+      "description": "待确认的记录卡，Elena Ward姓名栏与空白说明",
+      "detail_slots": [
+        "item_name"
+      ],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。"
+    },
+    "bg_c16s04": {
+      "file": "backgrounds/bg_exterior_dawn.jpg",
+      "description": "不同结局的清晨门口／安全资料室／空礼堂",
+      "detail_slots": [],
+      "mode": "共享空间底图；角色由人物槽位叠加；证据细节按detail_slots打开道具图。",
+      "variants": {
+        "name": "highlights/hl_c16s04_name.jpg",
+        "gate": "backgrounds/bg_exterior_dawn.jpg",
+        "wait": "highlights/hl_c16s04_wait.jpg",
+        "safe_archive": "backgrounds/bg_archive_safe.jpg"
+      }
+    },
+    "char_c01": {
+      "file": "characters/char_c01.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c02": {
+      "file": "characters/char_c02.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c03": {
+      "file": "characters/char_c03.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c03_past": {
+      "file": "characters/char_c03_past.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c04": {
+      "file": "characters/char_c04.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c05": {
+      "file": "characters/char_c05.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c06": {
+      "file": "characters/char_c06.jpg",
+      "mode": "独立正式图"
+    },
+    "char_c07": {
+      "file": "characters/char_c07.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c01s01_1": {
+      "file": "highlights/hl_c01s01_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c02s04_1": {
+      "file": "highlights/hl_c02s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c03s04_1": {
+      "file": "highlights/hl_c03s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c04s04_1": {
+      "file": "highlights/hl_c04s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c06s04_1": {
+      "file": "highlights/hl_c06s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c07s04_1": {
+      "file": "highlights/hl_c07s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c08s04_1": {
+      "file": "highlights/hl_c08s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c09s04_1": {
+      "file": "highlights/hl_c09s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c10s04_1": {
+      "file": "highlights/hl_c10s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c11s04_1": {
+      "file": "highlights/hl_c11s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c12s04_1": {
+      "file": "highlights/hl_c12s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c14s04_1": {
+      "file": "highlights/hl_c14s04_1.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c15s04_gate": {
+      "file": "highlights/hl_c15s04_gate.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c15s04_reckoning": {
+      "file": "highlights/hl_c15s04_reckoning.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c15s04_witness": {
+      "file": "highlights/hl_c15s04_witness.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c16s04_name": {
+      "file": "highlights/hl_c16s04_name.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c16s04_wait": {
+      "file": "highlights/hl_c16s04_wait.jpg",
+      "mode": "独立正式图"
+    },
+    "item_clapper": {
+      "file": "items/item_clapper.jpg",
+      "mode": "独立正式图"
+    },
+    "item_dress": {
+      "file": "items/item_dress.jpg",
+      "mode": "独立正式图"
+    },
+    "item_invitation": {
+      "file": "items/item_invitation.jpg",
+      "mode": "独立正式图"
+    },
+    "item_location": {
+      "file": "items/item_location.jpg",
+      "mode": "独立正式图"
+    },
+    "item_name": {
+      "file": "items/item_name.jpg",
+      "mode": "独立正式图"
+    },
+    "item_original": {
+      "file": "items/item_original.jpg",
+      "mode": "独立正式图"
+    },
+    "item_register": {
+      "file": "items/item_register.jpg",
+      "mode": "独立正式图"
+    },
+    "item_ribbon": {
+      "file": "items/item_ribbon.jpg",
+      "mode": "独立正式图"
+    },
+    "item_seatcard": {
+      "file": "items/item_seatcard.jpg",
+      "mode": "独立正式图"
+    },
+    "item_statement": {
+      "file": "items/item_statement.jpg",
+      "mode": "独立正式图"
+    },
+    "item_tickets": {
+      "file": "items/item_tickets.jpg",
+      "mode": "独立正式图"
+    },
+    "item_workshop": {
+      "file": "items/item_workshop.jpg",
+      "mode": "独立正式图"
+    },
+    "cover": {
+      "file": "cover/cover.jpg",
+      "mode": "独立正式图"
+    },
+    "hl_c05s01_1": {
+      "file": "backgrounds/bg_banquet_reversed.jpg",
+      "mode": "明确复用同一画面，不重复计独立图数量"
+    },
+    "hl_c13s03_1": {
+      "file": "backgrounds/bg_memorial_panel.jpg",
+      "mode": "明确复用同一画面，不重复计独立图数量"
+    },
+    "hl_c16s04_gate": {
+      "file": "backgrounds/bg_exterior_dawn.jpg",
+      "mode": "明确复用同一画面，不重复计独立图数量"
+    }
+  }
+}

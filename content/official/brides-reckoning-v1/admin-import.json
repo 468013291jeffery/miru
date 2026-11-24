@@ -1,0 +1,1013 @@
+{
+  "id": "sc_mwuemo8t809efd7ea4",
+  "patch": {
+    "title": "复仇的新娘",
+    "orient": "bg",
+    "lang": "zh",
+    "config": {
+      "source_key": "brides-reckoning-v1",
+      "hook": "你来修复一段婚礼录像，却发现十二年前死去的新娘，正在录像里等你回答。",
+      "premise": "布莱克索恩庄园准备拍卖。你受邀来到这里，修复一段十二年前的婚礼录像。你的工作很简单：让断掉的画面重新接上，把东西交出去，然后离开。\n\n那场婚礼的新娘叫艾莲娜。她没有走出庄园。当地人说，她穿着婚纱逃进海雾里，从此失踪。\n\n今晚，庄园要重现当年的婚宴。旧新郎、他的母亲、管家，还有一位从未收到过告别信的妹妹，都到了场。\n\n迎宾桌上有一张写着你名字的座位卡。可是邀请函上，明明没有安排你参加晚宴。\n\n你可以拒绝入席，核对邀请人，也可以先检查录像。管家只提醒了一句：“如果有人隔着门叫你，先看清门外站着谁。”\n\n楼上的婚房传来拖动椅子的声音。与此同时，你面前的录像停在同一扇门外。门里，一个女人问：“这一次，有人听见我吗？”",
+      "you": "你是成年影像档案修复工作者，受米里亚姆委托来到庄园。姓名、性别和外貌由你决定；你可以核查原件、询问人物、选择合作范围，也可降低恐怖强度、暂停或结束体验。你不是被预定的新娘、转世或替身。",
+      "adult": false,
+      "cover": "https://miru.plus/art/official/brides-reckoning-v1/cover/cover.jpg",
+      "tags": [
+        "Mystery",
+        "Revenge",
+        "Gothic Horror",
+        "悬疑反转"
+      ],
+      "leads": [
+        {
+          "key": "bride",
+          "n": {
+            "zh": "艾莲娜",
+            "en": "Elena Ward"
+          },
+          "g": "f",
+          "age": 26,
+          "voice": "f2",
+          "art": "/art/official/brides-reckoning-v1/characters/char_c02.jpg",
+          "role": {
+            "zh": "已经死亡的新娘；职业裁缝；非恋爱角色",
+            "en": "已经死亡的新娘；职业裁缝"
+          },
+          "looks": {
+            "zh": "深棕长发、灰蓝眼，象牙白婚纱有不对称袖口。白纱遮着面孔，裙内缝着她的本名。",
+            "en": "深棕长发、灰蓝眼，象牙白婚纱有不对称袖口。白纱遮着面孔，裙内缝着她的本名。"
+          },
+          "vibe": {
+            "zh": "十二年前失踪的新娘，也是一位为自己的作品骄傲的裁缝。她的声音从旧录像里传来，问这一回是否有人听见。",
+            "en": "十二年前失踪的新娘，也是一位为自己的作品骄傲的裁缝。她的声音从旧录像里传来，问这一回是否有人听见。"
+          },
+          "pitch": {
+            "zh": "已经死亡的新娘；职业裁缝",
+            "en": "已经死亡的新娘；职业裁缝"
+          },
+          "romanceable": false,
+          "boundary": {
+            "zh": "不设强制恋爱；人物知情与证据来源分别核对。",
+            "en": "No forced romance."
+          }
+        },
+        {
+          "key": "groom",
+          "n": {
+            "zh": "阿德里安",
+            "en": "Adrian Blackthorne"
+          },
+          "g": "m",
+          "age": 42,
+          "voice": "m2",
+          "art": "/art/official/brides-reckoning-v1/characters/char_c03.jpg",
+          "role": {
+            "zh": "旧新郎；非恋爱角色",
+            "en": "旧新郎"
+          },
+          "looks": {
+            "zh": "42岁，黑发两鬓有灰，深色礼服，左手留着戒痕。",
+            "en": "42岁，黑发两鬓有灰，深色礼服，左手留着戒痕。"
+          },
+          "vibe": {
+            "zh": "当年的新郎，记得她对糖霜的嫌弃和叠围巾的习惯。面对那一晚的问题，他常先说起温柔的旧事。",
+            "en": "当年的新郎，记得她对糖霜的嫌弃和叠围巾的习惯。面对那一晚的问题，他常先说起温柔的旧事。"
+          },
+          "pitch": {
+            "zh": "旧新郎",
+            "en": "旧新郎"
+          },
+          "romanceable": false,
+          "boundary": {
+            "zh": "不设强制恋爱；人物知情与证据来源分别核对。",
+            "en": "No forced romance."
+          }
+        },
+        {
+          "key": "mother",
+          "n": {
+            "zh": "比阿特丽斯",
+            "en": "Beatrice Blackthorne"
+          },
+          "g": "f",
+          "age": 64,
+          "voice": "f2",
+          "art": "/art/official/brides-reckoning-v1/characters/char_c04.jpg",
+          "role": {
+            "zh": "家族掌权者；非恋爱角色",
+            "en": "家族掌权者"
+          },
+          "looks": {
+            "zh": "64岁，银发，深酒红礼服，珍珠胸针。",
+            "en": "64岁，银发，深酒红礼服，珍珠胸针。"
+          },
+          "vibe": {
+            "zh": "庄园的家族掌权者，坚持重现当年的座次。她越感到危险，说话越讲礼节。",
+            "en": "庄园的家族掌权者，坚持重现当年的座次。她越感到危险，说话越讲礼节。"
+          },
+          "pitch": {
+            "zh": "家族掌权者",
+            "en": "家族掌权者"
+          },
+          "romanceable": false,
+          "boundary": {
+            "zh": "不设强制恋爱；人物知情与证据来源分别核对。",
+            "en": "No forced romance."
+          }
+        },
+        {
+          "key": "sister",
+          "n": {
+            "zh": "米里亚姆",
+            "en": "Miriam Ward"
+          },
+          "g": "f",
+          "age": 36,
+          "voice": "f2",
+          "art": "/art/official/brides-reckoning-v1/characters/char_c05.jpg",
+          "role": {
+            "zh": "新娘妹妹、旧物整理人；非恋爱角色",
+            "en": "新娘妹妹、旧物整理人"
+          },
+          "looks": {
+            "zh": "36岁，短棕发，深绿色外套，手边总有一只档案袋。",
+            "en": "36岁，短棕发，深绿色外套，手边总有一只档案袋。"
+          },
+          "vibe": {
+            "zh": "新娘的妹妹，也是这次修复委托的邀请人。她不再相信姐姐只是离开，想从旧录像里找到答案。",
+            "en": "新娘的妹妹，也是这次修复委托的邀请人。她不再相信姐姐只是离开，想从旧录像里找到答案。"
+          },
+          "pitch": {
+            "zh": "新娘妹妹、旧物整理人",
+            "en": "新娘妹妹、旧物整理人"
+          },
+          "romanceable": false,
+          "boundary": {
+            "zh": "不设强制恋爱；人物知情与证据来源分别核对。",
+            "en": "No forced romance."
+          }
+        },
+        {
+          "key": "seamstress",
+          "n": {
+            "zh": "鲁思",
+            "en": "Ruth Bell"
+          },
+          "g": "f",
+          "age": 53,
+          "voice": "f2",
+          "art": "/art/official/brides-reckoning-v1/characters/char_c06.jpg",
+          "role": {
+            "zh": "婚服裁缝、当年证人；非恋爱角色",
+            "en": "婚服裁缝、当年证人"
+          },
+          "looks": {
+            "zh": "53岁，灰棕发髻，黑色针织外套，旧眼镜和布尺。",
+            "en": "53岁，灰棕发髻，黑色针织外套，旧眼镜和布尺。"
+          },
+          "vibe": {
+            "zh": "曾为艾莲娜缝制婚服的裁缝。她能认出每一处针脚，却对当年的一份记录欲言又止。",
+            "en": "曾为艾莲娜缝制婚服的裁缝。她能认出每一处针脚，却对当年的一份记录欲言又止。"
+          },
+          "pitch": {
+            "zh": "婚服裁缝、当年证人",
+            "en": "婚服裁缝、当年证人"
+          },
+          "romanceable": false,
+          "boundary": {
+            "zh": "不设强制恋爱；人物知情与证据来源分别核对。",
+            "en": "No forced romance."
+          }
+        },
+        {
+          "key": "keeper",
+          "n": {
+            "zh": "贾尔斯",
+            "en": "Giles Pike"
+          },
+          "g": "m",
+          "age": 52,
+          "voice": "m2",
+          "art": "/art/official/brides-reckoning-v1/characters/char_c07.jpg",
+          "role": {
+            "zh": "庄园管家、当年保安；非恋爱角色",
+            "en": "庄园管家、当年保安"
+          },
+          "looks": {
+            "zh": "52岁，粗呢外套，旧钥匙盘，手背有旧烫痕。",
+            "en": "52岁，粗呢外套，旧钥匙盘，手背有旧烫痕。"
+          },
+          "vibe": {
+            "zh": "熟悉庄园走廊与服务间的管家。他能指出真正有用的安全路线，对某些旧门却始终不愿多谈。",
+            "en": "熟悉庄园走廊与服务间的管家。他能指出真正有用的安全路线，对某些旧门却始终不愿多谈。"
+          },
+          "pitch": {
+            "zh": "庄园管家、当年保安",
+            "en": "庄园管家、当年保安"
+          },
+          "romanceable": false,
+          "boundary": {
+            "zh": "不设强制恋爱；人物知情与证据来源分别核对。",
+            "en": "No forced romance."
+          }
+        }
+      ],
+      "assets": {
+        "bg_c01s01": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c01s02": "/art/official/brides-reckoning-v1/backgrounds/bg_foyer.jpg",
+        "bg_c01s03": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c01s04": "/art/official/brides-reckoning-v1/backgrounds/bg_foyer.jpg",
+        "bg_c02s01": "/art/official/brides-reckoning-v1/backgrounds/bg_banquet.jpg",
+        "bg_c02s02": "/art/official/brides-reckoning-v1/backgrounds/bg_corridor.jpg",
+        "bg_c02s03": "/art/official/brides-reckoning-v1/backgrounds/bg_banquet.jpg",
+        "bg_c02s04": "/art/official/brides-reckoning-v1/backgrounds/bg_headtable.jpg",
+        "bg_c03s01": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c03s02": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c03s03": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c03s04": "/art/official/brides-reckoning-v1/backgrounds/bg_corridor.jpg",
+        "bg_c04s01": "/art/official/brides-reckoning-v1/backgrounds/bg_bridal_now.jpg",
+        "bg_c04s02": "/art/official/brides-reckoning-v1/backgrounds/bg_sewing_now.jpg",
+        "bg_c04s03": "/art/official/brides-reckoning-v1/backgrounds/bg_sewing_now.jpg",
+        "bg_c04s04": "/art/official/brides-reckoning-v1/backgrounds/bg_kitchen_past.jpg",
+        "bg_c05s01": "/art/official/brides-reckoning-v1/backgrounds/bg_banquet_reversed.jpg",
+        "bg_c05s02": "/art/official/brides-reckoning-v1/backgrounds/bg_register_table.jpg",
+        "bg_c05s03": "/art/official/brides-reckoning-v1/backgrounds/bg_register_table.jpg",
+        "bg_c05s04": "/art/official/brides-reckoning-v1/backgrounds/bg_banquet_reversed.jpg",
+        "bg_c06s01": "/art/official/brides-reckoning-v1/backgrounds/bg_workers_side.jpg",
+        "bg_c06s02": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c06s03": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c06s04": "/art/official/brides-reckoning-v1/backgrounds/bg_bridal_past.jpg",
+        "bg_c07s01": "/art/official/brides-reckoning-v1/backgrounds/bg_study.jpg",
+        "bg_c07s02": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c07s03": "/art/official/brides-reckoning-v1/backgrounds/bg_door_lock.jpg",
+        "bg_c07s04": "/art/official/brides-reckoning-v1/backgrounds/bg_sewing_past.jpg",
+        "bg_c08s01": "/art/official/brides-reckoning-v1/backgrounds/bg_sewing_now.jpg",
+        "bg_c08s02": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c08s03": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c08s04": "/art/official/brides-reckoning-v1/backgrounds/bg_bridal_past.jpg",
+        "bg_c09s01": "/art/official/brides-reckoning-v1/backgrounds/bg_guestroom.jpg",
+        "bg_c09s02": "/art/official/brides-reckoning-v1/backgrounds/bg_ticket_table.jpg",
+        "bg_c09s03": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c09s04": "/art/official/brides-reckoning-v1/backgrounds/bg_guestroom.jpg",
+        "bg_c10s01": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c10s02": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c10s03": "/art/official/brides-reckoning-v1/backgrounds/bg_door_lock.jpg",
+        "bg_c10s04": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c11s01": "/art/official/brides-reckoning-v1/backgrounds/bg_service_corridor.jpg",
+        "bg_c11s02": "/art/official/brides-reckoning-v1/backgrounds/bg_service_desk.jpg",
+        "bg_c11s03": "/art/official/brides-reckoning-v1/backgrounds/bg_service_desk.jpg",
+        "bg_c11s04": "/art/official/brides-reckoning-v1/backgrounds/bg_service_corridor.jpg",
+        "bg_c12s01": "/art/official/brides-reckoning-v1/backgrounds/bg_headtable_veil.jpg",
+        "bg_c12s02": "/art/official/brides-reckoning-v1/backgrounds/bg_register_table.jpg",
+        "bg_c12s03": "/art/official/brides-reckoning-v1/backgrounds/bg_route_table.jpg",
+        "bg_c12s04": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel_entry.jpg",
+        "bg_c13s01": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel.jpg",
+        "bg_c13s02": "/art/official/brides-reckoning-v1/backgrounds/bg_memorial_panel.jpg",
+        "bg_c13s03": "/art/official/brides-reckoning-v1/backgrounds/bg_memorial_panel.jpg",
+        "bg_c13s04": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel.jpg",
+        "bg_c14s01": "/art/official/brides-reckoning-v1/backgrounds/bg_restore.jpg",
+        "bg_c14s02": "/art/official/brides-reckoning-v1/backgrounds/bg_records_table.jpg",
+        "bg_c14s03": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel_entry.jpg",
+        "bg_c14s04": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel_entry.jpg",
+        "bg_c15s01": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel.jpg",
+        "bg_c15s02": "/art/official/brides-reckoning-v1/backgrounds/bg_archive_safe.jpg",
+        "bg_c15s03": "/art/official/brides-reckoning-v1/backgrounds/bg_route_table.jpg",
+        "bg_c15s04": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel.jpg",
+        "bg_c16s01": "/art/official/brides-reckoning-v1/backgrounds/bg_exterior_dawn.jpg",
+        "bg_c16s02": "/art/official/brides-reckoning-v1/backgrounds/bg_archive_safe.jpg",
+        "bg_c16s03": "/art/official/brides-reckoning-v1/backgrounds/bg_name_desk.jpg",
+        "bg_c16s04": "/art/official/brides-reckoning-v1/backgrounds/bg_exterior_dawn.jpg",
+        "char_c01": "/art/official/brides-reckoning-v1/characters/char_c01.jpg",
+        "char_c02": "/art/official/brides-reckoning-v1/characters/char_c02.jpg",
+        "char_c03": "/art/official/brides-reckoning-v1/characters/char_c03.jpg",
+        "char_c03_past": "/art/official/brides-reckoning-v1/characters/char_c03_past.jpg",
+        "char_c04": "/art/official/brides-reckoning-v1/characters/char_c04.jpg",
+        "char_c05": "/art/official/brides-reckoning-v1/characters/char_c05.jpg",
+        "char_c06": "/art/official/brides-reckoning-v1/characters/char_c06.jpg",
+        "char_c07": "/art/official/brides-reckoning-v1/characters/char_c07.jpg",
+        "hl_c01s01_1": "/art/official/brides-reckoning-v1/highlights/hl_c01s01_1.jpg",
+        "hl_c02s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c02s04_1.jpg",
+        "hl_c03s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c03s04_1.jpg",
+        "hl_c04s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c04s04_1.jpg",
+        "hl_c06s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c06s04_1.jpg",
+        "hl_c07s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c07s04_1.jpg",
+        "hl_c08s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c08s04_1.jpg",
+        "hl_c09s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c09s04_1.jpg",
+        "hl_c10s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c10s04_1.jpg",
+        "hl_c11s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c11s04_1.jpg",
+        "hl_c12s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c12s04_1.jpg",
+        "hl_c14s04_1": "/art/official/brides-reckoning-v1/highlights/hl_c14s04_1.jpg",
+        "hl_c15s04_gate": "/art/official/brides-reckoning-v1/highlights/hl_c15s04_gate.jpg",
+        "hl_c15s04_reckoning": "/art/official/brides-reckoning-v1/highlights/hl_c15s04_reckoning.jpg",
+        "hl_c15s04_witness": "/art/official/brides-reckoning-v1/highlights/hl_c15s04_witness.jpg",
+        "hl_c16s04_name": "/art/official/brides-reckoning-v1/highlights/hl_c16s04_name.jpg",
+        "hl_c16s04_wait": "/art/official/brides-reckoning-v1/highlights/hl_c16s04_wait.jpg",
+        "item_clapper": "/art/official/brides-reckoning-v1/items/item_clapper.jpg",
+        "item_dress": "/art/official/brides-reckoning-v1/items/item_dress.jpg",
+        "item_invitation": "/art/official/brides-reckoning-v1/items/item_invitation.jpg",
+        "item_location": "/art/official/brides-reckoning-v1/items/item_location.jpg",
+        "item_name": "/art/official/brides-reckoning-v1/items/item_name.jpg",
+        "item_original": "/art/official/brides-reckoning-v1/items/item_original.jpg",
+        "item_register": "/art/official/brides-reckoning-v1/items/item_register.jpg",
+        "item_ribbon": "/art/official/brides-reckoning-v1/items/item_ribbon.jpg",
+        "item_seatcard": "/art/official/brides-reckoning-v1/items/item_seatcard.jpg",
+        "item_statement": "/art/official/brides-reckoning-v1/items/item_statement.jpg",
+        "item_tickets": "/art/official/brides-reckoning-v1/items/item_tickets.jpg",
+        "item_workshop": "/art/official/brides-reckoning-v1/items/item_workshop.jpg",
+        "cover": "/art/official/brides-reckoning-v1/cover/cover.jpg",
+        "hl_c05s01_1": "/art/official/brides-reckoning-v1/backgrounds/bg_banquet_reversed.jpg",
+        "hl_c13s03_1": "/art/official/brides-reckoning-v1/backgrounds/bg_memorial_panel.jpg",
+        "hl_c16s04_gate": "/art/official/brides-reckoning-v1/backgrounds/bg_exterior_dawn.jpg",
+        "poster": "/art/official/brides-reckoning-v1/cover/cover.jpg",
+        "leads": [
+          "艾莲娜",
+          "阿德里安",
+          "比阿特丽斯",
+          "米里亚姆",
+          "鲁思",
+          "贾尔斯"
+        ],
+        "char_艾莲娜": "/art/official/brides-reckoning-v1/characters/char_c02.jpg",
+        "char_阿德里安": "/art/official/brides-reckoning-v1/characters/char_c03.jpg",
+        "char_比阿特丽斯": "/art/official/brides-reckoning-v1/characters/char_c04.jpg",
+        "char_米里亚姆": "/art/official/brides-reckoning-v1/characters/char_c05.jpg",
+        "char_鲁思": "/art/official/brides-reckoning-v1/characters/char_c06.jpg",
+        "char_贾尔斯": "/art/official/brides-reckoning-v1/characters/char_c07.jpg",
+        "variant_slots": {
+          "bg_c15s04": {
+            "after_resolution": "/art/official/brides-reckoning-v1/backgrounds/bg_chapel_after.jpg"
+          },
+          "bg_c16s04": {
+            "name": "/art/official/brides-reckoning-v1/highlights/hl_c16s04_name.jpg",
+            "gate": "/art/official/brides-reckoning-v1/backgrounds/bg_exterior_dawn.jpg",
+            "wait": "/art/official/brides-reckoning-v1/highlights/hl_c16s04_wait.jpg",
+            "safe_archive": "/art/official/brides-reckoning-v1/backgrounds/bg_archive_safe.jpg"
+          }
+        },
+        "cast_all": true
+      },
+      "games": [
+        {
+          "id": "g_br_c01_a",
+          "zh": "被加进去的晚宴 / The Added Dinner",
+          "en": "被加进去的晚宴 / The Added Dinner",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c01_a",
+            "title": "被加进去的晚宴 / The Added Dinner",
+            "question": "哪一项不在原工作邀请里？",
+            "options": "A 修复录像；B 核对工作副本；C 签婚礼见证册。",
+            "answer": "C",
+            "fact": [
+              "invitation",
+              "document",
+              "邀请人是米里亚姆；原工作邀请没有签婚礼见证册的要求。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c01_b",
+          "zh": "断掉的那一帧 / The Missing Frame",
+          "en": "断掉的那一帧 / The Missing Frame",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c01_b",
+            "title": "断掉的那一帧 / The Missing Frame",
+            "question": "以下哪一组顺序保留了实际连续性？",
+            "options": "A 走廊空→袖口进入→画面中断；B 袖口出现就证明新娘逃走；C 中断后随意补一段。",
+            "answer": "A",
+            "fact": [
+              "sleeve_frame",
+              "recording",
+              "工作副本在白色袖口进入画面后中断，日志没有说明这次剪辑。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c02_a",
+          "zh": "同一盏灯 / The Same Lamp",
+          "en": "同一盏灯 / The Same Lamp",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c02_a",
+            "title": "同一盏灯 / The Same Lamp",
+            "question": "哪两项一起能支持走廊回到同一位置？",
+            "options": "A 同色墙纸而已；B 相同灯罩裂口和桌角划痕；C 一个人说熟悉。",
+            "answer": "B",
+            "fact": [
+              "loop",
+              "observation",
+              "灯罩裂口和桌角划痕都相同，出口确实回到同一门厅。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c02_b",
+          "zh": "真正来的人 / Those Who Are Here",
+          "en": "真正来的人 / Those Who Are Here",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c02_b",
+            "title": "真正来的人 / Those Who Are Here",
+            "question": "现场可确认的活人有阿德里安、比阿特丽斯、米里亚姆、鲁思、贾尔斯和你，共几人？",
+            "options": "A 五；B 六；C 加所有人偶才算。",
+            "answer": "B",
+            "fact": [
+              "living_list",
+              "observation",
+              "当前可核对的活人是五位来客和你共六人，人偶不算活人。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c03_a",
+          "zh": "同一口气 / The Repeated Breath",
+          "en": "同一口气 / The Repeated Breath",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c03_a",
+            "title": "同一口气 / The Repeated Breath",
+            "question": "哪项支持门外是重放片段，而非另一位妹妹？",
+            "options": "A 吸气、停顿与旧片段完全重复，妹妹又可见在室内；B 声音温柔；C 房间很冷。",
+            "answer": "A",
+            "fact": [
+              "voice_replay",
+              "recording",
+              "门外话语的吸气和停顿与旧片段相同，米里亚姆同时可见在室内。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c03_b",
+          "zh": "先核对人 / Verify the Person",
+          "en": "先核对人 / Verify the Person",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c03_b",
+            "title": "先核对人 / Verify the Person",
+            "question": "哪项最适合当前隔门核验？",
+            "options": "A 只要声音像就开；B 用现实亲人隐私提问；C 核对可见站位与刚约定的现场事项。",
+            "answer": "C",
+            "fact": [
+              "voice_rule",
+              "observation",
+              "应核对本人位置和当下能确认的信息，约定话语只是辅助。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c04_a",
+          "zh": "少掉的珍珠扣 / The Missing Button",
+          "en": "少掉的珍珠扣 / The Missing Button",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c04_a",
+            "title": "少掉的珍珠扣 / The Missing Button",
+            "question": "录像里右袖少一扣，哪件婚服更值得核对？",
+            "options": "A 右袖同位置缺扣且内缝符合鲁思记录；B 颜色最红的一件；C 任意新婚纱。",
+            "answer": "A",
+            "fact": [
+              "dress_identity",
+              "object",
+              "婚纱的右袖、缺扣与针脚可相互核对，身份线索来自物件。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c04_b",
+          "zh": "不要掀开她 / Without Lifting the Veil",
+          "en": "不要掀开她 / Without Lifting the Veil",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c04_b",
+            "title": "不要掀开她 / Without Lifting the Veil",
+            "question": "目前哪项能核对身份而不强掀面纱？",
+            "options": "A 直接扯掉；B 在允许范围查看内缝和暗袋；C 用玩家名字替她签字。",
+            "answer": "B",
+            "fact": [
+              "dress_name",
+              "object",
+              "裙内缝有Elena Ward本名；身份核验不需要掀开面纱。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c05_a",
+          "zh": "两种结 / Two Kinds of Knot",
+          "en": "两种结 / Two Kinds of Knot",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c05_a",
+            "title": "两种结 / Two Kinds of Knot",
+            "question": "按鲁思现场演示配对：单结与双结分别是什么？",
+            "options": "1 单结；2 名册下双结；A 普通见证装饰；B 覆页封缄。",
+            "answer": "1-A，2-B",
+            "fact": [
+              "ribbon_types",
+              "object",
+              "普通单结是纪念装饰；双结固定名册覆页，两者不能混为一谈。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c05_b",
+          "zh": "纸下的字 / Words Under the Page",
+          "en": "纸下的字 / Words Under the Page",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c05_b",
+            "title": "纸下的字 / Words Under the Page",
+            "question": "怀疑覆页时先做哪件事？",
+            "options": "A 撕碎原册；B 让任何人带走；C 记录现状，在允许范围对照原页边缘。",
+            "answer": "C",
+            "fact": [
+              "register_false",
+              "document",
+              "覆页写着亲眼见她离开，下面原文却只到最后看见她在某处，纸页经过覆盖。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c06_a",
+          "zh": "火灾以前 / Before the Fire",
+          "en": "火灾以前 / Before the Fire",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c06_a",
+            "title": "火灾以前 / Before the Fire",
+            "question": "哪份材料对婚礼前已存在安全争议最有帮助？",
+            "options": "A 婚礼后流言；B 标有旧案前日期且来源可核的整改材料；C 无出处的新纸。",
+            "answer": "B",
+            "fact": [
+              "workshop",
+              "document",
+              "婚礼前已有锁闭逃生门与安全整改材料；六名遇难雇员都是成年人。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c06_b",
+          "zh": "不是情书收件人 / The Actual Recipient",
+          "en": "不是情书收件人 / The Actual Recipient",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c06_b",
+            "title": "不是情书收件人 / The Actual Recipient",
+            "question": "收件栏与记者工作信箱一致，支持什么？",
+            "options": "A 她必有情人；B 记者已替她报案成功；C 这封信与工作取材或材料交付有关，具体内容继续核对。",
+            "answer": "C",
+            "fact": [
+              "journalist_contact",
+              "document",
+              "收件信息是记者的工作信箱，联络材料不是存在另一个情人的证据。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c07_a",
+          "zh": "他离开过 / He Left the Room",
+          "en": "他离开过 / He Left the Room",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c07_a",
+            "title": "他离开过 / He Left the Room",
+            "question": "新郎说始终在宾客旁，服务记录显示他到楼上，怎样记？",
+            "options": "A 两项存在冲突，继续核验；B 他一定已亲口认罪；C 自动相信最动人的话。",
+            "answer": "A",
+            "fact": [
+              "groom_left",
+              "document",
+              "服务记录和影像显示阿德里安离席，与他声称一直在宾客前不符。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c07_b",
+          "zh": "十分钟放在哪里 / Where Ten Minutes Fits",
+          "en": "十分钟放在哪里 / Where Ten Minutes Fits",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c07_b",
+            "title": "十分钟放在哪里 / Where Ten Minutes Fits",
+            "question": "排列确定节点：相爱、工坊旧案、锁门、22:17死亡。",
+            "options": "1 2012相爱；2 2014年7月旧案；3 婚夜21:40锁门；4 同夜22:17死亡。",
+            "answer": "1→2→3→4",
+            "fact": [
+              "ten_minutes",
+              "testimony",
+              "十分钟是阿德里安的说法，需要和当夜位置及记录一起核对。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c08_a",
+          "zh": "她签过的那一页 / What She Signed",
+          "en": "她签过的那一页 / What She Signed",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c08_a",
+            "title": "她签过的那一页 / What She Signed",
+            "question": "哪组对照能支持证词曾被改写？",
+            "options": "A 她现在难过；B 原页残句、覆页全文及签署记录；C 仅新郎回忆。",
+            "answer": "B",
+            "fact": [
+              "false_statement",
+              "testimony",
+              "鲁思承认签了见她离开的证词，却没有亲眼看到她离开。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c08_b",
+          "zh": "她到底看见了什么 / What Ruth Witnessed",
+          "en": "她到底看见了什么 / What Ruth Witnessed",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c08_b",
+            "title": "她到底看见了什么 / What Ruth Witnessed",
+            "question": "鲁思听到呼救却没见点火，哪句准确？",
+            "options": "A 我亲眼见点火；B 听到呼救，点火者需另查；C 谁都没有呼救。",
+            "answer": "B",
+            "fact": [
+              "ruth_scope",
+              "testimony",
+              "鲁思见过争执，听见要求开门；她没看见点火者，也不知道安置位置。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c09_a",
+          "zh": "两段车程 / Two Connections",
+          "en": "两段车程 / Two Connections",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c09_a",
+            "title": "两段车程 / Two Connections",
+            "question": "两张票都是Elena Ward，一张到城里一张转乘，支持哪种理解？",
+            "options": "A 必须有两人同行；B 两段属于一个人的行程；C 她已经抵达终点。",
+            "answer": "B",
+            "fact": [
+              "tickets",
+              "object",
+              "两张票是同一个人的两段换乘，不能据此认定有第二位同行者。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c09_b",
+          "zh": "想走和已经走 / Intention Is Not Departure",
+          "en": "想走和已经走 / Intention Is Not Departure",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c09_b",
+            "title": "想走和已经走 / Intention Is Not Departure",
+            "question": "车票与告别底稿能证明什么？",
+            "options": "A 她计划离开；B 她已安全离开庄园；C 新郎没有锁门。",
+            "answer": "A",
+            "fact": [
+              "departure_plan",
+              "document",
+              "票据和底稿支持她计划独自离开，不能证明她已经平安走出庄园。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c10_a",
+          "zh": "听不清的就空着 / Leave Unclear Words Blank",
+          "en": "听不清的就空着 / Leave Unclear Words Blank",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c10_a",
+            "title": "听不清的就空着 / Leave Unclear Words Blank",
+            "question": "残缺片段怎样记录？",
+            "options": "A 用剧情需要补全；B 清楚部分转录，不确定处留空并标记；C 把灵异回声混入母带。",
+            "answer": "B",
+            "fact": [
+              "original_provenance",
+              "recording",
+              "可辨原句、听不清的片段与修复者推测分栏记录，不生成缺失的语音。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c10_b",
+          "zh": "钥匙在谁那边 / Who Had the Key",
+          "en": "钥匙在谁那边 / Who Had the Key",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c10_b",
+            "title": "钥匙在谁那边 / Who Had the Key",
+            "question": "哪组能支持外部反锁的判断？",
+            "options": "A 新郎说爱她；B 所有人沉默；C 原音钥匙对话、门锁外侧动作影像及相关记录相符。",
+            "answer": "C",
+            "fact": [
+              "lock_record",
+              "recording",
+              "经许可核验的原音里，她问为什么拿走钥匙，随后明确叫阿德里安开门。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c11_a",
+          "zh": "命令和实施 / Order and Action",
+          "en": "命令和实施 / Order and Action",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c11_a",
+            "title": "命令和实施 / Order and Action",
+            "question": "按已查到范围配对。",
+            "options": "1 母亲；2 管家；3 新郎；A 命令毁档；B 实施点火阻救；C 锁门并未及时放人。",
+            "answer": "1-A，2-B，3-C",
+            "fact": [
+              "fire_records",
+              "document",
+              "毁档命令、服务间职责和门的记录分别留有线索；命令与实施不能互相抵消。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c11_b",
+          "zh": "不要把所有东西交给他 / Do Not Hand Him Everything",
+          "en": "不要把所有东西交给他 / Do Not Hand Him Everything",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c11_b",
+            "title": "不要把所有东西交给他 / Do Not Hand Him Everything",
+            "question": "管家要取走资料，哪项更能保护现有记录？",
+            "options": "A 只交原件且不记录；B 在可见安全处保留副本、记录接触人和原件位置；C 独自追进封闭服务井。",
+            "answer": "B",
+            "fact": [
+              "preservation_plan",
+              "observation",
+              "资料保护可分开原件、副本和来源记录，解题不等于已经制服任何人。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c12_a",
+          "zh": "新加的那句话 / The Added Instruction",
+          "en": "新加的那句话 / The Added Instruction",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c12_a",
+            "title": "新加的那句话 / The Added Instruction",
+            "question": "替身要求只出现在新补页，原册要求更正证词，能得出什么？",
+            "options": "A 替身是已确认规则；B 外来者必须献祭；C 代位说法缺乏原文支持且与原册冲突。",
+            "answer": "C",
+            "fact": [
+              "substitute_false",
+              "document",
+              "替新人坐下的要求来自新补页，原册要求见证者更正自己的说法。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c12_b",
+          "zh": "方法与代价 / Methods and Costs",
+          "en": "方法与代价 / Methods and Costs",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c12_b",
+            "title": "方法与代价 / Methods and Costs",
+            "question": "配对三个方法。",
+            "options": "1 见证；2 限定复仇；3 离开；A 公开证据不保证她停止；B 有致命伤害风险；C 可脱离但旧案可能未完。",
+            "answer": "1-A，2-B，3-C",
+            "fact": [
+              "methods_known",
+              "document",
+              "见证、限定复仇和结束重演是不同方法；限定复仇有人命风险，任何方法都不要求代嫁。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c13_a",
+          "zh": "那块封板 / The Sealed Panel",
+          "en": "那块封板 / The Sealed Panel",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c13_a",
+            "title": "那块封板 / The Sealed Panel",
+            "question": "哪项只支持继续核实封板，而非立即宣布身份鉴定完成？",
+            "options": "A 封闭维护时间与失踪后相符；B 房间漂亮；C 想让故事结束。",
+            "answer": "A",
+            "fact": [
+              "panel_history",
+              "document",
+              "封板记录与失踪后的时间相符，原设计空腔后来被封闭。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c13_b",
+          "zh": "先把位置留下 / Preserve the Location",
+          "en": "先把位置留下 / Preserve the Location",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c13_b",
+            "title": "先把位置留下 / Preserve the Location",
+            "question": "看到疑似遗存后优先怎样做？",
+            "options": "A 徒手把所有东西搬散；B 把具体位置、可见物和已做操作记下，保护现场；C 用一块布代替全部证据。",
+            "answer": "B",
+            "fact": [
+              "location",
+              "object",
+              "检修口的布料、缺扣和行李牌能定位疑似安置处；专业身份鉴定尚未完成。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c14_a",
+          "zh": "她安排了哪些 / What Miriam Arranged",
+          "en": "她安排了哪些 / What Miriam Arranged",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c14_a",
+            "title": "她安排了哪些 / What Miriam Arranged",
+            "question": "哪组是妹妹可核实的安排，而非她制造所有异象的证明？",
+            "options": "A 发邀请、复位钟舌、陈列旧物；B 读玩家现实心声；C 创造全部循环空间。",
+            "answer": "A",
+            "fact": [
+              "sister_plan",
+              "testimony",
+              "米里亚姆安排邀约和钟舌复位；走廊循环、人偶移动不在她的布置中。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c14_b",
+          "zh": "帮忙不等于代替 / Helping Is Not Substitution",
+          "en": "帮忙不等于代替 / Helping Is Not Substitution",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c14_b",
+            "title": "帮忙不等于代替 / Helping Is Not Substitution",
+            "question": "哪种参与不会自动成为新娘？",
+            "options": "A 用他人名字签誓词；B 声明自己只作当前调查见证；C 不知情地被替人安排座位。",
+            "answer": "B",
+            "fact": [
+              "method_boundaries",
+              "document",
+              "帮助她不等于替她结婚；须分别确认材料、保护范围和当前参与。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c15_a",
+          "zh": "原件和副本 / Original and Copy",
+          "en": "原件和副本 / Original and Copy",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c15_a",
+            "title": "原件和副本 / Original and Copy",
+            "question": "排列基础保全顺序。",
+            "options": "1 记录原件现状；2 在允许范围做工作副本；3 区分来源与修改；4 保存交付清单。",
+            "answer": "1→2→3→4",
+            "fact": [
+              "copy_options",
+              "document",
+              "原件、工作副本与来源记录分开，真正完成的保存动作才记为完成。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c15_b",
+          "zh": "谁不需要留下 / Who Is Free to Leave",
+          "en": "谁不需要留下 / Who Is Free to Leave",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c15_b",
+            "title": "谁不需要留下 / Who Is Free to Leave",
+            "question": "哪项可以作为针对某人责任的依据？",
+            "options": "A 只是姓氏相同；B 被写入晚宴名单；C 与具体行为相连且可交叉核验的资料。",
+            "answer": "C",
+            "fact": [
+              "people_rights",
+              "document",
+              "无辜者和责任者都保有离开危险区域的权利，不得把活人作为祭品。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c16_a",
+          "zh": "三种记录 / Three Kinds of Record",
+          "en": "三种记录 / Three Kinds of Record",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c16_a",
+            "title": "三种记录 / Three Kinds of Record",
+            "question": "配对交付记录。",
+            "options": "1 原件画面；2 新郎的解释；3 玩家见到的空间循环；A 可检查资料；B 人物自述；C 灵异观察。",
+            "answer": "1-A，2-B，3-C",
+            "fact": [
+              "handover_scope",
+              "document",
+              "物证、活人口供与灵异观察分别交付，后续接收和司法结论还需实际回执。"
+            ]
+          }
+        },
+        {
+          "id": "g_br_c16_b",
+          "zh": "写回她的名字 / Her Own Name",
+          "en": "写回她的名字 / Her Own Name",
+          "tpl": "bride_cards",
+          "spec": {
+            "id": "br_c16_b",
+            "title": "写回她的名字 / Her Own Name",
+            "question": "哪种写法准确且尊重本作已确认身份？",
+            "options": "A 只写失控的新娘；B Elena Ward，注明已核实事实与仍待查事项；C 为完整而补写没看见的死因细节。",
+            "answer": "B",
+            "fact": [
+              "elena_name",
+              "document",
+              "记录她的本名Elena Ward与可证实经历，不以婚姻称谓替代她，也不公开全部私信。"
+            ]
+          }
+        }
+      ],
+      "content_warning": "成人角色；失踪、火灾、死亡、操控与灵异恐怖。可随时暂停、退出或降低恐怖强度。",
+      "as": "你"
+    },
+    "chapters": [
+      {
+        "n": 1,
+        "t": "多出来的座位",
+        "md": "# CHAPTER 01｜多出来的座位\n⟦ORIENT|bg⟧\n⟦CHAR|%E4%BD%A0|u|21|f2|%E6%89%AE%E6%BC%94%E6%88%91%E8%87%AA%E5%B7%B1|%E4%BD%A0%E6%98%AF%E6%88%90%E5%B9%B4%E5%BD%B1%E5%83%8F%E6%A1%A3%E6%A1%88%E4%BF%AE%E5%A4%8D%E5%B7%A5%E4%BD%9C%E8%80%85%EF%BC%8C%E5%8F%97%E7%B1%B3%E9%87%8C%E4%BA%9A%E5%A7%86%E5%A7%94%E6%89%98%E6%9D%A5%E5%88%B0%E5%BA%84%E5%9B%AD%E3%80%82%E5%A7%93%E5%90%8D%E3%80%81%E6%80%A7%E5%88%AB%E5%92%8C%E5%A4%96%E8%B2%8C%E7%94%B1%E4%BD%A0%E5%86%B3%E5%AE%9A%EF%BC%9B%E4%BD%A0%E5%8F%AF%E4%BB%A5%E6%A0%B8%E6%9F%A5%E5%8E%9F%E4%BB%B6%E3%80%81%E8%AF%A2%E9%97%AE%E4%BA%BA%E7%89%A9%E3%80%81%E9%80%89%E6%8B%A9%E5%90%88%E4%BD%9C%E8%8C%83%E5%9B%B4%EF%BC%8C%E4%B9%9F%E5%8F%AF%E9%99%8D%E4%BD%8E%E6%81%90%E6%80%96%E5%BC%BA%E5%BA%A6%E3%80%81%E6%9A%82%E5%81%9C%E6%88%96%E7%BB%93%E6%9D%9F%E4%BD%93%E9%AA%8C%E3%80%82%E4%BD%A0%E4%B8%8D%E6%98%AF%E8%A2%AB%E9%A2%84%E5%AE%9A%E7%9A%84%E6%96%B0%E5%A8%98%E3%80%81%E8%BD%AC%E4%B8%96%E6%88%96%E6%9B%BF%E8%BA%AB%E3%80%82⟧\n⟦CHAR|%E8%89%BE%E8%8E%B2%E5%A8%9C|f|26|f2|%E5%B7%B2%E7%BB%8F%E6%AD%BB%E4%BA%A1%E7%9A%84%E6%96%B0%E5%A8%98%EF%BC%9B%E8%81%8C%E4%B8%9A%E8%A3%81%E7%BC%9D%EF%BC%9B%E9%9D%9E%E6%81%8B%E7%88%B1%E8%A7%92%E8%89%B2|%E6%B7%B1%E6%A3%95%E9%95%BF%E5%8F%91%E3%80%81%E7%81%B0%E8%93%9D%E7%9C%BC%EF%BC%8C%E8%B1%A1%E7%89%99%E7%99%BD%E5%A9%9A%E7%BA%B1%E6%9C%89%E4%B8%8D%E5%AF%B9%E7%A7%B0%E8%A2%96%E5%8F%A3%E3%80%82%E7%99%BD%E7%BA%B1%E9%81%AE%E7%9D%80%E9%9D%A2%E5%AD%94%EF%BC%8C%E8%A3%99%E5%86%85%E7%BC%9D%E7%9D%80%E5%A5%B9%E7%9A%84%E6%9C%AC%E5%90%8D%E3%80%82⟧\n⟦CHAR|%E9%98%BF%E5%BE%B7%E9%87%8C%E5%AE%89|m|42|m2|%E6%97%A7%E6%96%B0%E9%83%8E%EF%BC%9B%E9%9D%9E%E6%81%8B%E7%88%B1%E8%A7%92%E8%89%B2|42%E5%B2%81%EF%BC%8C%E9%BB%91%E5%8F%91%E4%B8%A4%E9%AC%93%E6%9C%89%E7%81%B0%EF%BC%8C%E6%B7%B1%E8%89%B2%E7%A4%BC%E6%9C%8D%EF%BC%8C%E5%B7%A6%E6%89%8B%E7%95%99%E7%9D%80%E6%88%92%E7%97%95%E3%80%82⟧\n⟦CHAR|%E6%AF%94%E9%98%BF%E7%89%B9%E4%B8%BD%E6%96%AF|f|64|f2|%E5%AE%B6%E6%97%8F%E6%8E%8C%E6%9D%83%E8%80%85%EF%BC%9B%E9%9D%9E%E6%81%8B%E7%88%B1%E8%A7%92%E8%89%B2|64%E5%B2%81%EF%BC%8C%E9%93%B6%E5%8F%91%EF%BC%8C%E6%B7%B1%E9%85%92%E7%BA%A2%E7%A4%BC%E6%9C%8D%EF%BC%8C%E7%8F%8D%E7%8F%A0%E8%83%B8%E9%92%88%E3%80%82⟧\n⟦CHAR|%E7%B1%B3%E9%87%8C%E4%BA%9A%E5%A7%86|f|36|f2|%E6%96%B0%E5%A8%98%E5%A6%B9%E5%A6%B9%E3%80%81%E6%97%A7%E7%89%A9%E6%95%B4%E7%90%86%E4%BA%BA%EF%BC%9B%E9%9D%9E%E6%81%8B%E7%88%B1%E8%A7%92%E8%89%B2|36%E5%B2%81%EF%BC%8C%E7%9F%AD%E6%A3%95%E5%8F%91%EF%BC%8C%E6%B7%B1%E7%BB%BF%E8%89%B2%E5%A4%96%E5%A5%97%EF%BC%8C%E6%89%8B%E8%BE%B9%E6%80%BB%E6%9C%89%E4%B8%80%E5%8F%AA%E6%A1%A3%E6%A1%88%E8%A2%8B%E3%80%82⟧\n⟦CHAR|%E9%B2%81%E6%80%9D|f|53|f2|%E5%A9%9A%E6%9C%8D%E8%A3%81%E7%BC%9D%E3%80%81%E5%BD%93%E5%B9%B4%E8%AF%81%E4%BA%BA%EF%BC%9B%E9%9D%9E%E6%81%8B%E7%88%B1%E8%A7%92%E8%89%B2|53%E5%B2%81%EF%BC%8C%E7%81%B0%E6%A3%95%E5%8F%91%E9%AB%BB%EF%BC%8C%E9%BB%91%E8%89%B2%E9%92%88%E7%BB%87%E5%A4%96%E5%A5%97%EF%BC%8C%E6%97%A7%E7%9C%BC%E9%95%9C%E5%92%8C%E5%B8%83%E5%B0%BA%E3%80%82⟧\n⟦CHAR|%E8%B4%BE%E5%B0%94%E6%96%AF|m|52|m2|%E5%BA%84%E5%9B%AD%E7%AE%A1%E5%AE%B6%E3%80%81%E5%BD%93%E5%B9%B4%E4%BF%9D%E5%AE%89%EF%BC%9B%E9%9D%9E%E6%81%8B%E7%88%B1%E8%A7%92%E8%89%B2|52%E5%B2%81%EF%BC%8C%E7%B2%97%E5%91%A2%E5%A4%96%E5%A5%97%EF%BC%8C%E6%97%A7%E9%92%A5%E5%8C%99%E7%9B%98%EF%BC%8C%E6%89%8B%E8%83%8C%E6%9C%89%E6%97%A7%E7%83%AB%E7%97%95%E3%80%82⟧\n⟦SET|native_v2,authored~bride,cast_all⟧\n⟦GOAL|核实邀请和录像异常，决定是否继续这份工作。|Verify the invitation and recording anomaly, then decide whether to continue.⟧\n⟦DONE|say|说明继续查看、暂缓或结束工作的意愿|确认工作范围|米里亚姆：你可以先问清楚，我不会替你答应晚宴。⟧\n⟦DONE|flag|br_c01_scope|记录参与范围|米里亚姆：我把你允许做的和不愿做的分开记。⟧\n\n# SCENE｜修复台\n⟦BG|bg_c01s01|%E5%BA%84%E5%9B%AD%E4%B8%B4%E6%97%B6%E4%BF%AE%E5%A4%8D%E5%AE%A4%EF%BC%8C%E5%BD%95%E5%83%8F%E7%9B%91%E8%A7%86%E5%99%A8%E4%B8%8E%E6%A1%A3%E6%A1%88%E7%AE%B1⟧\n⟦TIME|%E5%BD%93%E6%99%9A19%3A20⟧\n旁白：扬声器停了。楼上的椅脚又刮了一下地面，比录像里慢了一拍。\n米里亚姆：“你也听见了，对吗？”\n她把手从电源开关旁移开。\n米里亚姆：“你想断电，就断。原件没有接在这里，桌上是工作副本。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜邀请函\n⟦BG|bg_c01s02|%E9%97%A8%E5%8E%85%E8%BF%8E%E5%AE%BE%E6%A1%8C%EF%BC%8C%E9%82%80%E8%AF%B7%E5%87%BD%E4%B8%8E%E5%BA%A7%E4%BD%8D%E5%8D%A1⟧\n⟦TIME|19%3A35⟧\n鲁思站在桌边，目光停在你名字下面的一条红线。\n鲁思：“工作邀请和晚宴名单不该混在一起。”\n米里亚姆：“名单是庄园准备的。我以为只是礼节。”\n⟦MG|br_c01_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜第一个断口\n⟦BG|bg_c01s03|%E5%B7%A5%E4%BD%9C%E5%8F%B0%E4%B8%8A%E7%9A%84%E5%A9%9A%E7%A4%BC%E5%BD%95%E5%83%8F%E6%97%B6%E9%97%B4%E8%BD%B4%E4%B8%8E%E5%A4%87%E4%BB%BD%E7%9B%98⟧\n⟦TIME|19%3A50⟧\n米里亚姆：“画面少了一段，原来的日志却没有写剪过。”\n⟦MG|br_c01_b⟧\n旁白：核对结束，屏幕显示一只袖口。白色布料上少了一枚珍珠扣。\n鲁思：“那枚扣子，是我最后一个给她缝的。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜楼梯上的裙摆\n⟦BG|bg_c01s04|%E9%97%A8%E5%8E%85%E6%A5%BC%E6%A2%AF%EF%BC%8C%E6%89%B6%E6%89%8B%E4%B8%8B%E5%9E%82%E7%9D%80%E4%B8%80%E8%A7%92%E7%99%BD%E7%BA%B1⟧\n⟦TIME|20%3A00%E5%89%8D⟧\n旁白：楼梯上挂着一角白纱。楼梯下，一只闭合的人偶箱开始轻响。\n阿德里安走进门厅，看见布料，停在原地。\n阿德里安：“这些东西不是都收走了吗？”\n楼上传来女人的声音：“你以前也这么问。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 2,
+        "t": "没有人的婚宴",
+        "md": "# CHAPTER 02｜没有人的婚宴\n⟦GOAL|确认晚宴参与者与空间变化，找到可以暂时停留的位置。|Identify who is present and find a place to pause after the house changes.⟧\n⟦DONE|say|提出核对出口、结伴或暂留安全处的具体安排|确定暂留位置|鲁思：先确认谁和你在一起。别只跟着声音走。⟧\n⟦DONE|flag|br_c02_safe_place|记下可停留处|鲁思：修复室门口的灯还在，回去的人能被看见。⟧\n\n# SCENE｜按原来的座次\n⟦BG|bg_c02s01|%E7%A7%81%E4%BA%BA%E5%AE%B4%E4%BC%9A%E5%8E%85%EF%BC%8C%E5%85%AD%E4%B8%AA%E6%B4%BB%E4%BA%BA%E4%BD%8D%E7%BD%AE%E4%B8%8E%E7%9B%96%E5%B8%83%E4%BA%BA%E5%81%B6%E5%B8%AD⟧\n⟦TIME|20%3A05⟧\n比阿特丽斯：“只是一段纪念拍摄。按原来的位置坐，比较好看。”\n米里亚姆：“你没说还要打开纪念架。”\n旁白：比阿特丽斯揭开架上的布。红缎带垂到地上，楼上的钟响了一声。\n一排盖着白布的婚礼人偶，椅背同时轻轻后移。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜重新经过同一扇门\n⟦BG|bg_c02s02|%E9%80%9A%E5%90%91%E9%97%A8%E5%8E%85%E7%9A%84%E5%9B%9E%E5%BB%8A%EF%BC%8C%E9%87%8D%E5%A4%8D%E5%87%BA%E7%8E%B0%E7%9A%84%E8%90%BD%E5%9C%B0%E7%81%AF⟧\n⟦TIME|%E9%87%8D%E6%BC%94%E5%90%AF%E5%8A%A8%E5%90%8E⟧\n贾尔斯：“这条路原来通院子。”\n旁白：走廊尽头的门打开后，仍是同一张迎宾桌。桌上的座位卡多了一道折痕。\n⟦MG|br_c02_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜谁坐在里面\n⟦BG|bg_c02s03|%E5%AE%B4%E4%BC%9A%E5%8E%85%E8%BE%B9%E7%BC%98%EF%BC%8C%E5%BA%A7%E4%BD%8D%E5%9B%BE%E4%B8%8E%E5%8F%AF%E8%A7%81%E5%90%8C%E4%BC%B4⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n鲁思：“现在真正在这里的，是我们这些人。别把人偶也算进去。”\n⟦MG|br_c02_b⟧\n旁白：点清人数后，一只人偶的盖布下面传来呼吸声。与此同时，旁边一位活人的呼吸停了一拍，又恢复了。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜不该响的餐具\n⟦BG|bg_c02s04|%E7%A9%BA%E4%B8%BB%E4%BD%8D%EF%BC%8C%E4%B8%A4%E5%89%AF%E6%9C%AA%E4%BD%BF%E7%94%A8%E7%9A%84%E9%A4%90%E5%85%B7⟧\n⟦TIME|%E5%87%86%E5%A4%87%E6%9A%82%E7%A6%BB%E5%AE%B4%E4%BC%9A%E5%8E%85%E6%97%B6⟧\n旁白：主位空着。一把餐刀慢慢转到盘子正中，像有人把它摆好。\n白纱下的声音：“他们都说我走了。”\n阿德里安：“艾莲娜？”\n声音停了片刻。\n回声：“你现在肯叫我了。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 3,
+        "t": "隔着门叫你的人",
+        "md": "# CHAPTER 03｜隔着门叫你的人\n⟦GOAL|识别一次假声音，确认如何与同伴互相核对。|Identify a replayed voice and agree on a way to verify your companions.⟧\n⟦DONE|say|提出位置核对或应答规则|约定核对方法|米里亚姆：你说一个现在能确认的办法，别靠声音像不像。⟧\n⟦DONE|flag|br_c03_voice_rule|建立应答约定|米里亚姆：我会照约定做，不突然换一句来考你。⟧\n\n# SCENE｜两个米里亚姆\n⟦BG|bg_c03s01|%E4%BF%AE%E5%A4%8D%E5%AE%A4%E5%86%85%E4%B8%8E%E9%97%A8%E4%B8%8A%E7%A3%A8%E7%A0%82%E7%8E%BB%E7%92%83⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n米里亚姆正在桌边找备份，门外却传来她的声音：“打开门，我拿到东西了。”\n她把手里的档案袋放下。\n米里亚姆：“不是我。我一直在这里。”\n旁白：门外那句话重复了一遍。连吸气的位置都一样。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜重复的吸气\n⟦BG|bg_c03s02|%E9%9F%B3%E8%BD%A8%E6%96%87%E5%AD%97%E8%AE%B0%E5%BD%95%E4%B8%8E%E6%9A%82%E5%81%9C%E7%9A%84%E6%92%AD%E6%94%BE%E5%99%A8⟧\n⟦TIME|%E5%BD%93%E5%89%8D%E5%9C%BA%E6%99%AF%E5%86%85⟧\n⟦MG|br_c03_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜现在才说的一句话\n⟦BG|bg_c03s03|%E4%BF%AE%E5%A4%8D%E5%AE%A4%E9%97%A8%E5%8F%A3%EF%BC%8C%E7%81%AF%E5%85%89%E7%85%A7%E5%88%B0%E5%90%8C%E4%BC%B4%E7%AB%99%E4%BD%8D⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n⟦MG|br_c03_b⟧\n米里亚姆：“我们核对人和位置。约好的话只是辅助，如果我站在你面前，就不用隔门喊。”\n旁白：她走到有灯的位置。门外的影子却没有随着她移动。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜她没有脚步声\n⟦BG|bg_c03s04|%E4%BF%AE%E5%A4%8D%E5%AE%A4%E5%A4%96%E8%B5%B0%E5%BB%8A%EF%BC%8C%E8%BF%9C%E5%A4%84%E7%99%BD%E7%BA%B1%E5%9E%82%E5%9C%A8%E8%BD%AC%E8%A7%92⟧\n⟦TIME|%E7%A1%AE%E8%AE%A4%E9%97%A8%E5%A4%96%E5%8F%AF%E8%A7%82%E5%AF%9F%E6%97%B6⟧\n旁白：远处有一道白纱。裙摆轻轻向前挪，肩膀却还停在转角。\n新娘：“你怕我，也可以听我说话。”\n她没有再靠近。\n艾莲娜：“别让他们替我说。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 4,
+        "t": "婚纱里没有他的名字",
+        "md": "# CHAPTER 04｜婚纱里没有他的名字\n⟦GOAL|核对婚纱的身份，决定是否查看她留下的私人物件。|Verify the dress and decide whether to examine the bride's private belongings.⟧\n⟦DONE|say|说明是否检查暗袋或采用证人描述|选择查看范围|鲁思：不碰她的面纱，也能看见裙内的缝线。⟧\n⟦DONE|flag|br_c04_identity|核实婚纱身份|鲁思：这是她自己做的，不是今晚换上的道具。⟧\n\n# SCENE｜没人照过的镜子\n⟦BG|bg_c04s01|%E6%9B%B4%E8%A1%A3%E5%A5%97%E9%97%B4%E5%A4%96%EF%BC%8C%E7%A9%BF%E8%A1%A3%E9%95%9C%E4%B8%8E%E6%97%A7%E5%A9%9A%E6%9C%8D%E7%AE%B1⟧\n⟦TIME|%E8%BF%9B%E5%85%A5%E6%A5%BC%E4%B8%8A%E5%89%8D%E6%A0%B8%E5%AF%B9%E5%90%8C%E4%BC%B4⟧\n鲁思：“别掀那层纱。刚才贾尔斯碰过，整条走廊都响了。”\n旁白：镜子里映着婚纱，房间中央却只有空的人台。\n鲁思：“可以先看箱子。我知道哪处针脚是她的。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜少一枚珍珠扣\n⟦BG|bg_c04s02|%E5%A9%9A%E6%9C%8D%E5%B7%A5%E4%BD%9C%E5%8F%B0%EF%BC%8C%E8%A2%96%E5%8F%A3%E4%B8%8E%E7%BC%9D%E7%BA%BF%E7%BB%86%E8%8A%82⟧\n⟦TIME|%E8%8E%B7%E5%87%86%E6%9F%A5%E7%9C%8B%E7%89%A9%E4%BB%B6%E5%90%8E⟧\n⟦MG|br_c04_a⟧\n鲁思：“右袖比左袖短一点。她说，伸手抱人的时候才不会勒住。”\n阿德里安在门边低声说：“我当时笑她想得太远。”\n鲁思：“那是她做衣服的习惯，不全是为了你。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜藏在里面的小袋\n⟦BG|bg_c04s03|%E5%A9%9A%E7%BA%B1%E5%86%85%E8%A1%AC%E4%B8%8E%E4%B8%80%E5%BC%A0%E6%8A%98%E5%A5%BD%E7%9A%84%E8%BD%A6%E7%A5%A8⟧\n⟦TIME|%E5%90%8C%E4%B8%80%E6%AE%B5%E8%B0%83%E6%9F%A5%E5%86%85⟧\n⟦MG|br_c04_b⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜原来她笑过\n⟦BG|bg_c04s04|%E8%AE%B0%E5%BF%86%E7%89%88%E6%9C%AC%E7%9A%84%E6%99%AE%E9%80%9A%E5%8E%A8%E6%88%BF%EF%BC%8C%E6%9C%AA%E5%8A%A0%E7%B3%96%E9%9C%9C%E7%9A%84%E8%9B%8B%E7%B3%95⟧\n⟦TIME|2013%E5%B9%B4%E5%9B%9E%E5%A3%B0%EF%BC%9B%E6%98%8E%E7%A1%AE%E4%B8%8E%E5%BD%93%E4%B8%8B%E5%8C%BA%E5%88%86⟧\n旁白：往日回声中，生前艾莲娜：“你就不能买块没这么甜的？”\n旁白：往日回声中，年轻阿德里安：“店里只有这个。下次我记得。”\n她刮掉一半糖霜，把另一把叉子递过去。\n旁白：往日回声中，艾莲娜：“下次不是让我一个人刮。”\n旁白：回声停在他笑着接过叉子的那一秒。现今的门缝里，仍有白纱压着。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 5,
+        "t": "朝墙站着的客人",
+        "md": "# CHAPTER 05｜朝墙站着的客人\n⟦GOAL|找出名册异常与人偶变化的联系，选择安全的调查方式。|Connect the altered guest register with the figures and choose a safe way to investigate.⟧\n⟦DONE|say|说明保留名册、核对座次或先撤出宴会厅的安排|选择核对办法|鲁思：先记位置，不要把每个结都剪开。⟧\n⟦DONE|flag|br_c05_register|保留名册异常|米里亚姆：原来的字还压在下面，先别撕。⟧\n\n# SCENE｜他们都转过去了\n⟦BG|bg_c05s01|%E5%AE%B4%E4%BC%9A%E5%8E%85%EF%BC%8C%E6%89%80%E6%9C%89%E7%9B%96%E5%B8%83%E4%BA%BA%E5%81%B6%E8%83%8C%E5%90%91%E6%A1%8C%E9%9D%A2⟧\n⟦TIME|%E4%BB%8E%E6%A5%BC%E4%B8%8A%E5%9B%9E%E5%88%B0%E5%AE%B4%E4%BC%9A%E5%8E%85⟧\n旁白：刚才面向餐桌的人偶，现在全朝着墙。每把椅背上都系了同一种双结。\n贾尔斯：“拍摄组摆的。”\n米里亚姆：“这里没有拍摄组。你知道。”\n旁白：最靠近出口的人偶，慢慢把头转回桌边。身体没动。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜两种红结\n⟦BG|bg_c05s02|%E7%BA%AA%E5%BF%B5%E6%9E%B6%E7%BB%93%E6%89%A3%E7%A4%BA%E6%84%8F%E4%B8%8E%E8%A2%AB%E9%81%AE%E4%BD%8F%E7%9A%84%E5%90%8D%E5%86%8C⟧\n⟦TIME|%E8%BF%91%E5%A4%84%E6%9C%89%E7%81%AF%E7%9A%84%E6%A1%8C%E8%BE%B9⟧\n⟦MG|br_c05_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜名字下面的名字\n⟦BG|bg_c05s03|%E5%A9%9A%E7%A4%BC%E8%A7%81%E8%AF%81%E5%86%8C%EF%BC%8C%E8%A6%86%E9%A1%B5%E8%BE%B9%E7%BC%98%E9%9C%B2%E5%87%BA%E5%8E%9F%E5%AD%97⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n⟦MG|br_c05_b⟧\n旁白：覆页上写着“亲眼看见她离开”。下面露出的原句，只到“最后看见她在……”\n比阿特丽斯：“旧纸粘坏了。你们把它当成证据，未免太草率。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜谁让他们背过去\n⟦BG|bg_c05s04|%E5%AE%B4%E4%BC%9A%E5%8E%85%E9%97%A8%E5%A4%96%EF%BC%8C%E9%9D%A2%E5%90%91%E5%A2%99%E7%9A%84%E4%BA%BA%E5%81%B6%E6%8E%92%E6%88%90%E4%B8%80%E7%BA%BF⟧\n⟦TIME|%E5%87%86%E5%A4%87%E7%A6%BB%E5%BC%80%E8%B0%83%E6%9F%A5%E6%A1%8C%E6%97%B6⟧\n艾莲娜的声音：“那晚，他们也没看我。”\n阿德里安：“她那时只是想安静。”\n鲁思：“不。她让人开门。”\n旁白：鲁思话音刚落，离她最近的白布下面，有人轻轻吸了一口气。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 6,
+        "t": "六个没有吃上蛋糕的人",
+        "md": "# CHAPTER 06｜六个没有吃上蛋糕的人\n⟦GOAL|核实工坊旧案，分清她要揭发的事与流言。|Verify the workshop case and separate her intended disclosure from rumor.⟧\n⟦DONE|say|决定怎样保存旧案材料与核对来源|保留旧案材料|米里亚姆：影像能带路，名单和原件还得另核对。⟧\n⟦DONE|flag|br_c06_workshop|核实旧案背景|米里亚姆：这六个人不是婚宴上的客人，他们是当时的雇员。⟧\n\n# SCENE｜另一张餐桌\n⟦BG|bg_c06s01|%E5%AE%B4%E4%BC%9A%E5%8E%85%E4%BE%A7%E5%AE%A4%EF%BC%8C%E4%B8%80%E5%BC%A0%E6%91%86%E7%9D%80%E5%85%AD%E4%B8%AA%E5%B7%A5%E4%BD%9C%E6%9D%AF%E7%9A%84%E6%A1%8C%E5%AD%90⟧\n⟦TIME|%E6%A0%B8%E5%AF%B9%E5%90%8D%E5%86%8C%E5%90%8E⟧\n旁白：侧室多了一张窄桌。六只杯子旁，没有喜宴的银色餐具，只有工牌夹。\n比阿特丽斯：“与今晚无关的人，不必扯进来。”\n米里亚姆：“他们死的时候，你也是这么说的吗？”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜被挪走的公告\n⟦BG|bg_c06s02|%E6%97%A7%E5%B7%A5%E5%9D%8A%E6%A1%A3%E6%A1%88%EF%BC%8C%E6%95%B4%E6%94%B9%E9%80%9A%E7%9F%A5%E4%B8%8E%E4%B8%8D%E5%90%8C%E6%97%A5%E6%9C%9F%E7%9A%84%E5%90%88%E5%BD%B1⟧\n⟦TIME|%E4%BE%A7%E5%AE%A4%E5%B7%A5%E4%BD%9C%E5%8F%B0⟧\n⟦MG|br_c06_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜她写给谁\n⟦BG|bg_c06s03|%E7%A7%81%E4%BF%A1%E5%BA%95%E7%A8%BF%E4%B8%8E%E5%AF%84%E9%80%81%E8%AE%B0%E5%BD%95⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n⟦MG|br_c06_b⟧\n米里亚姆：“他们说这封信是写给另一个男人。”\n她把收件信息转过来。\n米里亚姆：“这是记者的工作信箱。姐姐给他寄过材料。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜第一次不再替他解释\n⟦BG|bg_c06s04|2014%E5%B9%B4%E5%A9%9A%E6%88%BF%E5%9B%9E%E5%A3%B0%EF%BC%8C%E5%A9%9A%E7%BA%B1%E5%B0%9A%E5%AE%8C%E6%95%B4⟧\n⟦TIME|%E8%BF%87%E5%8E%BB%E7%9A%84%E5%A9%9A%E7%A4%BC%E4%B8%8B%E5%8D%88⟧\n旁白：往日回声中，艾莲娜：“你说要带我走。那他们怎么办？”\n旁白：往日回声中，年轻阿德里安：“今天别谈这些。我们明天处理。”\n旁白：往日回声中，艾莲娜：“明天，今天就能变成没发生吗？”\n她把手从他的手里抽出，自己把档案夹合上。\n旁白：往日回声中，艾莲娜：“我爱你，不代表我会替你签。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 7,
+        "t": "他还记得她怕冷",
+        "md": "# CHAPTER 07｜他还记得她怕冷\n⟦GOAL|听清新郎的说法，并独立核对他在关键时刻的位置。|Hear the groom's account and independently verify his movements.⟧\n⟦DONE|say|提出一个可核对的问题或说明不接受私人回忆替代事实|追问关键位置|鲁思：问他那时在哪儿，不只问他爱不爱。⟧\n⟦DONE|flag|br_c07_groom_account|保存新郎说法|米里亚姆：他说过的先记成他的说法，等记录对上。⟧\n\n# SCENE｜还热着的茶\n⟦BG|bg_c07s01|%E5%BA%84%E5%9B%AD%E4%B9%A6%E6%88%BF%E5%A3%81%E7%82%89%EF%BC%8C%E8%8C%B6%E6%9D%AF%E4%B8%8E%E6%97%A7%E7%BE%8A%E6%AF%9B%E5%9B%B4%E5%B7%BE⟧\n⟦TIME|%E8%B0%83%E6%9F%A5%E9%97%B4%E9%9A%99⟧\n阿德里安：“她不爱太甜的东西。冷的时候会把手藏在袖子里。”\n旁白：他拿起一条围巾，叠到第二道折痕，停住了。\n阿德里安：“她教我这么叠。箱子里才放得下。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜同一只手表\n⟦BG|bg_c07s02|%E6%97%A7%E7%85%A7%E7%89%87%E4%B8%8E%E6%9C%8D%E5%8A%A1%E8%AE%B0%E5%BD%95%E5%B9%B6%E6%8E%92%E7%9A%84%E4%B9%A6%E6%A1%8C⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n⟦MG|br_c07_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜十分钟\n⟦BG|bg_c07s03|%E6%96%B0%E9%83%8E%E6%89%8B%E5%86%99%E6%97%A5%E7%A8%8B%E4%B8%8E%E5%A9%9A%E6%88%BF%E8%B5%B0%E5%BB%8A%E9%92%9F⟧\n⟦TIME|%E6%A0%B8%E5%AF%B9%E5%BD%93%E6%99%9A%E6%97%B6%E9%97%B4⟧\n⟦MG|br_c07_b⟧\n阿德里安：“我让她等十分钟。”\n鲁思：“等在哪里？”\n他没有立即回答。走廊的门把手，从外面轻轻转了一下。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜留灯的人\n⟦BG|bg_c07s04|2012%E5%B9%B4%E8%A3%81%E7%BC%9D%E5%B7%A5%E4%BD%9C%E9%97%B4%E5%9B%9E%E5%A3%B0%EF%BC%8C%E4%B8%80%E7%9B%8F%E6%99%9A%E7%81%AF⟧\n⟦TIME|%E8%BF%87%E5%8E%BB⟧\n旁白：往日回声中，年轻阿德里安把灯留在她桌上：“晚一点回来，能看见窗子亮着。”\n旁白：往日回声中，艾莲娜：“灯借我，人你自己带回去。我还要做完。”\n两人笑了一下。回声退去，现在的灯突然暗了，只剩灯泡里一小截红。\n艾莲娜的声音：“后来，他把门也留给我了。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 8,
+        "t": "裁缝不敢说的那一针",
+        "md": "# CHAPTER 08｜裁缝不敢说的那一针\n⟦GOAL|查明鲁思签过什么，并决定怎样取得可核对的证词。|Find out what Ruth signed and obtain a statement that can be checked.⟧\n⟦DONE|say|提出记录、核验或暂缓证词的方式|确认取证方式|鲁思：你可以记。我说不清的，就写我没看见。⟧\n⟦DONE|flag|br_c08_ruth_statement|保留证词范围|米里亚姆：她看到的、听说的和猜的，分开。⟧\n\n# SCENE｜剪刀收起来以后\n⟦BG|bg_c08s01|%E6%97%A7%E7%BC%9D%E7%BA%AB%E9%97%B4%EF%BC%8C%E5%B8%83%E5%B0%BA%E4%B8%8E%E9%97%AD%E5%90%88%E7%9A%84%E5%89%AA%E5%88%80%E7%9B%92⟧\n⟦TIME|%E5%BD%93%E5%A4%9C⟧\n鲁思：“我没看见她离开。”\n她把那张证词放到灯下。\n鲁思：“我签了，说看见了。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜签字前后\n⟦BG|bg_c08s02|%E4%B8%A4%E4%BB%BD%E8%AF%81%E8%AF%8D%E5%8F%8A%E8%A6%86%E9%A1%B5%E8%BE%B9%E7%BC%98⟧\n⟦TIME|%E6%9F%A5%E7%9C%8B%E5%8E%9F%E4%BB%B6%E8%AE%B8%E5%8F%AF%E5%90%8E⟧\n⟦MG|br_c08_a⟧\n鲁思：“他们说，不签，工坊的事就会全算在我头上。我怕。”\n米里亚姆：“所以你让所有人以为，她连我也不要了。”\n鲁思：“是。我不能把这个说成没办法。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜她能证明到哪里\n⟦BG|bg_c08s03|%E7%BC%9D%E7%BA%AB%E9%97%B4%E8%AE%B0%E5%BD%95%E6%A1%8C%EF%BC%8C%E4%B8%89%E5%BC%A0%E8%AF%81%E8%AF%8D%E5%88%86%E7%B1%BB%E5%8D%A1⟧\n⟦TIME|%E7%A8%8D%E5%90%8E⟧\n⟦MG|br_c08_b⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜她们当年的最后一句话\n⟦BG|bg_c08s04|%E5%A9%9A%E6%9C%8D%E7%AE%B1%E8%BE%B9%E7%9A%84%E8%BF%87%E5%8E%BB%E5%9B%9E%E5%A3%B0⟧\n⟦TIME|2014%E5%B9%B4%E5%A9%9A%E7%A4%BC%E5%82%8D%E6%99%9A⟧\n旁白：往日回声中，艾莲娜把袖口给鲁思看：“名字我自己缝进去了。以后改衣服的人，知道是谁做的。”\n旁白：往日回声中，鲁思：“以后不都叫布莱克索恩夫人了吗？”\n艾莲娜笑着摇头。\n旁白：往日回声中，艾莲娜：“也还是我。”\n旁白：当下的鲁思低下头。她脚边落下一根红线，没有缠住任何人。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 9,
+        "t": "她准备一个人走",
+        "md": "# CHAPTER 09｜她准备一个人走\n⟦GOAL|核实车票和未寄出的信，分清她当年的离开意愿与实际遭遇。|Verify the tickets and letter, separating her wish to leave from what actually happened.⟧\n⟦DONE|say|说明如何核对或保存她的离开计划|核对离开计划|米里亚姆：想走，不等于已经走了。我们把这两件事分开。⟧\n⟦DONE|flag|br_c09_departure_plan|确认离开意愿|米里亚姆：这说明她在做决定，不说明她已经安全离开。⟧\n\n# SCENE｜两张票不是两个人\n⟦BG|bg_c09s01|%E6%A5%BC%E4%B8%8A%E5%AE%A2%E6%88%BF%EF%BC%8C%E7%A5%A8%E6%8D%AE%E4%B8%8E%E6%9C%AA%E5%B0%81%E5%8F%A3%E4%BF%A1%E5%B0%81⟧\n⟦TIME|%E5%BD%93%E5%A4%9C⟧\n米里亚姆：“我一直以为，两张票，她和他。”\n鲁思把票据摊开：“一张是到城里的车。一张是换乘。都是同一个名字。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜真正的目的地\n⟦BG|bg_c09s02|%E4%B8%A4%E6%AE%B5%E8%A1%8C%E7%A8%8B%E7%9A%84%E7%BA%B8%E9%9D%A2%E8%B7%AF%E7%BA%BF%E5%9B%BE⟧\n⟦TIME|%E6%9F%A5%E7%9C%8B%E7%A5%A8%E6%8D%AE%E5%90%8E⟧\n⟦MG|br_c09_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜那封没寄出的告别\n⟦BG|bg_c09s03|%E4%BF%A1%E7%BA%B8%E4%B8%8E%E5%A5%B9%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%AC%EF%BC%8C%E7%BA%B8%E5%BC%A0%E6%97%A0%E8%A1%80%E8%BF%B9⟧\n⟦TIME|%E5%90%8C%E4%B8%80%E6%AE%B5%E8%B0%83%E6%9F%A5⟧\n⟦MG|br_c09_b⟧\n艾莲娜的原文：“我想过和你一起走。后来发现，我在等你允许我走。明天我不再等了。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜被重新摆好的行李\n⟦BG|bg_c09s04|%E5%AE%A2%E6%88%BF%E9%97%A8%E5%89%8D%E7%9A%84%E6%97%A7%E8%A1%8C%E6%9D%8E%E7%AE%B1%EF%BC%8C%E5%90%91%E8%B5%B0%E5%BB%8A%E6%96%B9%E5%90%91%E6%89%93%E5%BC%80⟧\n⟦TIME|%E5%87%86%E5%A4%87%E7%A6%BB%E5%BC%80%E5%AE%A2%E6%88%BF%E6%97%B6⟧\n旁白：行李箱自己滑到门前。里面没有衣服，只有一层叠好的白纱。\n艾莲娜站在走廊尽头。\n艾莲娜：“我那晚是要走。”\n她低头看着箱子。\n艾莲娜：“可他们没有让我走。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 10,
+        "t": "门是从外面锁上的",
+        "md": "# CHAPTER 10｜门是从外面锁上的\n⟦GOAL|核对未改动的记录，确定谁把她留在了门里。|Check the original record and determine who confined her.⟧\n⟦DONE|say|提出交叉核对或质问锁门者的具体行动|核对锁门责任|米里亚姆：先把我们真正听见的记清楚，听不清的不要补。⟧\n⟦DONE|flag|br_c10_lock_evidence|保存锁门证据|米里亚姆：这段和服务记录能对上，原件要留着。⟧\n\n# SCENE｜标签贴反了\n⟦BG|bg_c10s01|%E4%BF%AE%E5%A4%8D%E5%AE%A4%E6%A1%A3%E6%A1%88%E6%9E%B6%EF%BC%8C%E5%90%8C%E8%A7%84%E6%A0%BC%E6%AF%8D%E5%B8%A6%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%89%AF%E6%9C%AC⟧\n⟦TIME|%E8%BF%94%E5%9B%9E%E4%BF%AE%E5%A4%8D%E5%AE%A4⟧\n米里亚姆：“这盒写着测试声，里面却有那晚完整的环境音。”\n贾尔斯伸手想取走，被工作台挡住。\n贾尔斯：“旧设备会伤带子。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜原音与猜测\n⟦BG|bg_c10s02|%E6%92%AD%E6%94%BE%E5%99%A8%E3%80%81%E5%8E%9F%E9%9F%B3%E8%AE%B0%E5%BD%95%E4%B8%8E%E4%B8%8D%E7%A1%AE%E5%AE%9A%E8%AF%8D%E7%A9%BA%E6%A0%BC⟧\n⟦TIME|%E6%A3%80%E6%9F%A5%E6%9D%90%E6%96%99%E8%AE%B8%E5%8F%AF%E5%90%8E⟧\n⟦MG|br_c10_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜十点以前的门\n⟦BG|bg_c10s03|%E9%97%A8%E9%94%81%E4%BD%8D%E7%BD%AE%E7%A4%BA%E6%84%8F%E4%B8%8E%E5%BD%B1%E5%83%8F%E5%B8%A7⟧\n⟦TIME|%E4%BA%A4%E5%8F%89%E6%A0%B8%E9%AA%8C%E9%98%B6%E6%AE%B5⟧\n⟦MG|br_c10_b⟧\n旁白：往日回声中，年轻阿德里安：“我不是不让你走。十分钟，给我十分钟。”\n旁白：往日回声中，艾莲娜：“那为什么要拿走钥匙？”\n金属转动声后，是她更清楚的一句：“阿德里安，开门。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜他终于不用“我们”\n⟦BG|bg_c10s04|%E4%BF%AE%E5%A4%8D%E5%AE%A4%E7%81%AF%E4%B8%8B%EF%BC%8C%E6%95%9E%E5%BC%80%E7%9A%84%E9%97%A8%E4%B8%8E%E6%97%A7%E6%96%B0%E9%83%8E⟧\n⟦TIME|%E5%AF%B9%E8%B4%A8%E7%AA%97%E5%8F%A3⟧\n阿德里安：“我以为她会冷静下来。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 11,
+        "t": "没有写进账本的火",
+        "md": "# CHAPTER 11｜没有写进账本的火\n⟦GOAL|查清火源与阻救责任，并决定如何保护现有证据。|Investigate the fire and obstruction, then protect the evidence you have.⟧\n⟦DONE|say|明确保留材料、阻止毁证或安全撤出的安排|保护现有证据|鲁思：东西可以留下位置，别为了拿它独自走进暗处。⟧\n⟦DONE|flag|br_c11_fire_account|保存责任线索|米里亚姆：命令、实施、没开门，各自记，谁也别替谁抹掉。⟧\n\n# SCENE｜他先护住的是哪一扇门\n⟦BG|bg_c11s01|%E5%B0%81%E9%97%AD%E6%9C%8D%E5%8A%A1%E5%8C%BA%E5%A4%96%EF%BC%8C%E6%97%A7%E6%9A%96%E6%B0%94%E4%BA%95%E4%B8%8E%E9%87%91%E5%B1%9E%E9%97%A8⟧\n⟦TIME|%E5%BD%93%E5%A4%9C⟧\n贾尔斯：“那里没东西。”\n旁白：回声里，墙后响起一阵急促敲击。贾尔斯却先看向另一侧的柜子。\n鲁思：“我当时来过。是你拦住我。”\n贾尔斯：“我说那边危险。”\n鲁思：“你没让人去开她的门。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜改掉的工作单\n⟦BG|bg_c11s02|%E6%9C%8D%E5%8A%A1%E8%AE%B0%E5%BD%95%E4%B8%8E%E6%97%A7%E7%BB%B4%E4%BF%AE%E7%AD%BE%E6%94%B6%E8%A1%A8⟧\n⟦TIME|%E5%AE%89%E5%85%A8%E5%8C%BA%E7%9A%84%E8%B0%83%E6%9F%A5%E6%A1%8C⟧\n⟦MG|br_c11_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜先备份还是先对质\n⟦BG|bg_c11s03|%E8%B5%84%E6%96%99%E7%9B%92%E4%B8%8E%E5%8F%AF%E8%A7%81%E5%87%BA%E5%8F%A3%EF%BC%8C%E7%AE%A1%E5%AE%B6%E5%81%9C%E5%9C%A8%E6%9F%9C%E8%BE%B9⟧\n⟦TIME|%E8%B4%BE%E5%B0%94%E6%96%AF%E8%AF%95%E5%9B%BE%E6%94%B6%E8%B5%B0%E8%B5%84%E6%96%99%E6%97%B6⟧\n⟦MG|br_c11_b⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜母亲不再端茶\n⟦BG|bg_c11s04|%E6%9C%8D%E5%8A%A1%E8%B5%B0%E5%BB%8A%E5%8F%A3%EF%BC%8C%E6%AF%94%E9%98%BF%E7%89%B9%E4%B8%BD%E6%96%AF%E6%94%BE%E4%B8%8B%E6%89%98%E7%9B%98⟧\n⟦TIME|%E8%B4%A3%E4%BB%BB%E9%93%BE%E4%BA%A4%E5%8F%89%E6%A0%B8%E5%AF%B9%E6%97%B6⟧\n比阿特丽斯：“我说把那些东西处理掉。没让任何人死。”\n比阿特丽斯：“我以为你会把她带出来。”\n白纱沿楼梯向下铺来。没有人踩着它。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 12,
+        "t": "请你替她坐下",
+        "md": "# CHAPTER 12｜请你替她坐下\n⟦GOAL|核实替身说法，拒绝未经同意的代位，并确定最后调查方法。|Test the substitute claim, reject unchosen substitution, and choose the final approach.⟧\n⟦DONE|say|明确不接受代位，或提出要求核实的替代方案|说明见证边界|米里亚姆：帮她，不等于你要变成她。⟧\n⟦DONE|flag|br_c12_substitution_checked|识破替身说法|鲁思：旧页写的是改证词，没有让新人替她坐。⟧\n\n# SCENE｜体面的建议\n⟦BG|bg_c12s01|%E5%AE%B4%E4%BC%9A%E5%8E%85%E7%A9%BA%E4%B8%BB%E4%BD%8D%EF%BC%8C%E7%9B%96%E7%9D%80%E9%9D%A2%E7%BA%B1%E7%9A%84%E6%A4%85%E8%83%8C⟧\n⟦TIME|%E5%BD%93%E5%A4%9C⟧\n比阿特丽斯：“只要有人替她坐完这一晚，其他人就能走。”\n她把你的座位卡推到主位前。\n鲁思：“你从哪里听来的？”\n比阿特丽斯没有拿出任何旧文。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜原页上没有新名字\n⟦BG|bg_c12s02|%E5%90%8D%E5%86%8C%E5%8E%9F%E9%A1%B5%E4%B8%8E%E6%AF%94%E9%98%BF%E7%89%B9%E4%B8%BD%E6%96%AF%E7%9A%84%E6%89%8B%E5%86%99%E8%A1%A5%E9%A1%B5⟧\n⟦TIME|%E5%90%8C%E4%BC%B4%E5%8F%AF%E8%A7%81%E7%9A%84%E6%A1%8C%E8%BE%B9⟧\n⟦MG|br_c12_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜三条不一样的路\n⟦BG|bg_c12s03|%E7%A4%BC%E5%A0%82%E3%80%81%E4%BF%AE%E5%A4%8D%E5%AE%A4%E4%B8%8E%E9%97%A8%E5%8E%85%E7%9A%84%E8%B7%AF%E7%BA%BF%E8%8D%89%E5%9B%BE⟧\n⟦TIME|%E5%86%B3%E5%AE%9A%E6%9C%80%E5%90%8E%E6%96%B9%E6%B3%95%E5%89%8D⟧\n⟦MG|br_c12_b⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜新娘第一次叫你的名字\n⟦BG|bg_c12s04|%E7%A4%BC%E5%A0%82%E5%85%A5%E5%8F%A3%EF%BC%8C%E7%99%BD%E7%BA%B1%E5%81%9C%E5%9C%A8%E9%97%A8%E6%A7%9B%E5%89%8D⟧\n⟦TIME|%E6%96%B9%E6%A1%88%E8%AE%A8%E8%AE%BA%E7%BB%93%E6%9D%9F⟧\n艾莲娜：“你不是我。”\n旁白：她看着主位上那张座位卡，纱下的轮廓往后退了一点。\n艾莲娜：“他们又想让别人坐在那里。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 13,
+        "t": "她一直没有离开礼堂",
+        "md": "# CHAPTER 13｜她一直没有离开礼堂\n⟦GOAL|核实旧纪念台的异常，找到她被隐去的位置并保存现场。|Verify the memorial platform anomaly, locate what was hidden, and preserve the scene.⟧\n⟦DONE|say|提出安全核实与保护现场的方法|保留真实位置|米里亚姆：不用把她搬出来，我们先确认她在这里。⟧\n⟦DONE|flag|br_c13_location|标明真实位置|鲁思：把这处记下来，别再把她说成走失。⟧\n\n# SCENE｜地板下的合唱\n⟦BG|bg_c13s01|%E7%A7%81%E4%BA%BA%E7%A4%BC%E5%A0%82%E6%97%A7%E7%BA%AA%E5%BF%B5%E5%8F%B0%EF%BC%8C%E6%9C%A8%E5%9C%B0%E6%9D%BF%E4%B8%8E%E4%BB%AA%E5%BC%8F%E6%9E%B6⟧\n⟦TIME|%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E8%BF%9B%E5%85%A5%E7%A4%BC%E5%A0%82⟧\n旁白：礼堂里没有人唱歌。合唱声却从纪念台下面传上来，每到新娘的名字就断。\n贾尔斯：“那是旧线路。”\n米里亚姆：“你刚才说，这里早就断电了。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜新旧钉痕\n⟦BG|bg_c13s02|%E7%BA%AA%E5%BF%B5%E5%8F%B0%E7%BB%B4%E6%8A%A4%E8%AE%B0%E5%BD%95%E4%B8%8E%E5%B0%81%E6%9D%BF%E8%BE%B9%E7%BC%98⟧\n⟦TIME|%E5%A4%96%E5%9B%B4%E5%AE%89%E5%85%A8%E8%A7%82%E5%AF%9F⟧\n⟦MG|br_c13_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜没有名字的地方\n⟦BG|bg_c13s03|%E9%83%A8%E5%88%86%E6%89%93%E5%BC%80%E7%9A%84%E5%A4%96%E5%B1%82%E6%A3%80%E4%BF%AE%E6%9D%BF%EF%BC%8C%E6%97%A7%E5%A9%9A%E7%BA%B1%E5%B8%83%E6%96%99%E4%B8%8E%E8%A1%8C%E6%9D%8E%E7%89%8C⟧\n⟦TIME|%E5%8F%AA%E6%89%93%E5%BC%80%E5%8F%AF%E5%AE%89%E5%85%A8%E5%A4%84%E7%90%86%E7%9A%84%E5%A4%96%E5%B1%82%E5%90%8E⟧\n⟦MG|br_c13_b⟧\n旁白：检修口里露出一角布料，袖口的珍珠扣少了一枚。里面还有当年的行李牌。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜不是纪念品\n⟦BG|bg_c13s04|%E7%BA%AA%E5%BF%B5%E5%8F%B0%E5%89%8D%E7%9A%84%E7%99%BD%E7%BA%B1%E8%BA%AB%E5%BD%B1%E4%B8%8E%E6%9C%AA%E5%8A%A8%E8%BF%87%E7%9A%84%E7%A9%BA%E8%85%94⟧\n⟦TIME|%E7%8E%B0%E5%9C%BA%E8%A2%AB%E6%A0%87%E8%AE%B0%E5%90%8E⟧\n艾莲娜：“他们每年在上面摆花。”\n她看着那块木板。\n艾莲娜：“谁问我，他们就说，我不想回来。”\n米里亚姆把手停在木板外，没有伸进去。\n米里亚姆：“我来晚了。”\n艾莲娜：“先别替他们这么说。你不知道我在这里。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 14,
+        "t": "她不是回来结婚的",
+        "md": "# CHAPTER 14｜她不是回来结婚的\n⟦GOAL|核实妹妹重启仪式的经过，并确认新娘真正要表达的意愿。|Verify how Miriam restarted the ritual and hear what the bride actually wants.⟧\n⟦DONE|say|明确最后方法与自己愿意承担的参与范围|确认最后方法|艾莲娜：你可以不站到我这里。把你知道的说清楚就行。⟧\n⟦DONE|flag|br_c14_route|记录最终路径|米里亚姆：这次不替别人决定。你说哪一步，我们先确认。⟧\n\n# SCENE｜请所有人回来的人\n⟦BG|bg_c14s01|%E4%BF%AE%E5%A4%8D%E5%AE%A4%EF%BC%8C%E9%82%80%E8%AF%B7%E5%BA%95%E7%A8%BF%E4%B8%8E%E5%A4%8D%E4%BD%8D%E7%9A%84%E9%92%9F%E8%88%8C%E8%AE%B0%E5%BD%95⟧\n⟦TIME|%E4%BB%AA%E5%BC%8F%E5%81%9C%E5%9C%A8%E7%AC%AC%E5%8D%81%E4%BA%8C%E5%A3%B0%E5%90%8E⟧\n米里亚姆：“钟舌是我放回去的。信也是我寄的。”\n米里亚姆：“我以为旧声音能逼他们说真话。我没告诉你，今晚会重演。”\n她把备份盘放到桌上，而不是塞到你手里。\n米里亚姆：“我没有打算让任何人困在这里。但我把不知道的风险，也算成了你会愿意承担。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜计划与实际发生\n⟦BG|bg_c14s02|%E9%82%80%E8%AF%B7%E8%AE%B0%E5%BD%95%E3%80%81%E5%85%AC%E5%BC%80%E6%8B%8D%E6%91%84%E6%B5%81%E7%A8%8B%E4%B8%8E%E7%9C%9F%E5%AE%9E%E5%BC%82%E8%B1%A1%E8%AE%B0%E5%BD%95⟧\n⟦TIME|%E5%AF%B9%E7%85%A7%E9%98%B6%E6%AE%B5⟧\n⟦MG|br_c14_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜你要的不是这张椅子\n⟦BG|bg_c14s03|%E7%A4%BC%E5%A0%82%E5%85%A5%E5%8F%A3%EF%BC%8C%E6%97%A7%E5%90%8D%E5%86%8C%E4%B8%8E%E4%B8%89%E6%9D%A1%E6%96%B9%E6%B3%95%E5%8D%A1⟧\n⟦TIME|%E6%9C%80%E7%BB%88%E6%96%B9%E6%B3%95%E6%A0%B8%E5%AF%B9⟧\n⟦MG|br_c14_b⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜面纱之后\n⟦BG|bg_c14s04|%E7%A4%BC%E5%A0%82%E9%97%A8%E8%BE%B9%EF%BC%8C%E8%89%BE%E8%8E%B2%E5%A8%9C%E8%87%AA%E5%B7%B1%E6%8F%A1%E4%BD%8F%E9%9D%A2%E7%BA%B1%E8%BE%B9%E7%BC%98⟧\n⟦TIME|%E7%8E%A9%E5%AE%B6%E6%84%BF%E6%84%8F%E7%BB%A7%E7%BB%AD%E7%9B%B4%E6%8E%A5%E4%BA%A4%E6%B5%81%E6%97%B6⟧\n艾莲娜：“他们一直问，我还想不想嫁。”\n艾莲娜：“没人问我，还想不想留在这里。”\n艾莲娜：“我不是回来结婚的。”\n艾莲娜：“我回来，是因为我没能出去。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 15,
+        "t": "第十三声婚钟",
+        "md": "# CHAPTER 15｜第十三声婚钟\n⟦GOAL|按已确认的方法采取最后行动，防止未经同意的伤害扩大。|Carry out the agreed final action and prevent unchosen harm from spreading.⟧\n⟦DONE|say|明确最终见证内容、保护范围或撤离安排|落实最后行动|米里亚姆：你最后说什么，只能由你自己决定。⟧\n⟦DONE|flag|br_c15_resolution|记录实际结果|鲁思：做成什么就记什么，别把没发生的也写进去。⟧\n\n# SCENE｜每个人站在哪里\n⟦BG|bg_c15s01|%E7%A4%BC%E5%A0%82%E9%80%9A%E9%81%93%E3%80%81%E5%AE%89%E5%85%A8%E9%80%80%E8%B7%AF%E4%B8%8E%E7%BA%AA%E5%BF%B5%E6%9E%B6⟧\n⟦TIME|%E6%9C%80%E7%BB%88%E8%A1%8C%E5%8A%A8%E5%89%8D⟧\n比阿特丽斯：“你们听一个死人说，就能决定我们的下场？”\n米里亚姆：“原件在这里。你说过的话，也在。”\n艾莲娜站在主位之后。她没有要求你先走近。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜原件不放在同一只箱子里\n⟦BG|bg_c15s02|%E5%A4%87%E4%BB%BD%E7%9B%98%E3%80%81%E5%8E%9F%E4%BB%B6%E5%B0%81%E8%A2%8B%E4%B8%8E%E5%88%86%E5%BC%80%E7%9A%84%E8%B5%84%E6%96%99%E6%B8%85%E5%8D%95⟧\n⟦TIME|%E6%89%A7%E8%A1%8C%E5%87%86%E5%A4%87⟧\n⟦MG|br_c15_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜先说谁不用留下\n⟦BG|bg_c15s03|%E8%A7%81%E8%AF%81%E5%86%8C%E5%8E%9F%E9%A1%B5%E3%80%81%E7%BA%AA%E5%BF%B5%E6%9E%B6%E5%8F%8C%E7%BB%93%E4%B8%8E%E9%80%9A%E9%81%93%E5%9B%BE⟧\n⟦TIME|%E8%BF%9B%E5%85%A5%E6%A0%B8%E5%BF%83%E5%8C%BA%E5%9F%9F%E4%B9%8B%E5%89%8D⟧\n⟦MG|br_c15_b⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜仪式终于有人回答\n⟦BG|bg_c15s04|%E7%A4%BC%E5%A0%82%E4%B8%BB%E4%BD%8D%E3%80%81%E7%BA%AA%E5%BF%B5%E5%8F%B0%E4%B8%8E%E8%90%BD%E4%B8%8B%E7%9A%84%E7%BA%A2%E7%BC%8E%E5%B8%A6⟧\n⟦TIME|%E6%9C%80%E5%90%8E%E4%B8%80%E9%A1%B9%E8%A7%81%E8%AF%81%E8%A1%8C%E4%B8%BA%E5%8F%91%E7%94%9F%E6%97%B6⟧\n旁白：当前的安排仍待你确认。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      },
+      {
+        "n": 16,
+        "t": "天亮以后，她叫什么",
+        "md": "# CHAPTER 16｜天亮以后，她叫什么\n⟦GOAL|确认实际获救与交付情况，决定如何记录她和结束这段经历。|Confirm who is safe and what can be handed over, then decide how to record her story.⟧\n⟦DONE|say|明确证据交付、私人联系或正式结束的意愿|安排后续交付|米里亚姆：你能确认到哪里，就写到哪里。别为了完整编出后面。⟧\n⟦DONE|flag|br_c16_aftermath|保存最终结果|米里亚姆：她的名字会写对，你不想再回来也可以。⟧\n\n# SCENE｜有人真的开了门\n⟦BG|bg_c16s01|%E5%BA%84%E5%9B%AD%E5%A4%96%E6%B8%85%E6%99%A8%EF%BC%8C%E6%89%93%E5%BC%80%E7%9A%84%E5%A4%A7%E9%97%A8%E4%B8%8E%E6%B9%BF%E7%9F%B3%E9%98%B6⟧\n⟦TIME|%E6%AC%A1%E6%97%A5%E6%B8%85%E6%99%A8⟧\n旁白：门外的风第一次能吹进来。院子不再连回同一条走廊。\n米里亚姆：“我想再进去。”\n她看向你。\n米里亚姆：“你不用跟我。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜说过与证明过\n⟦BG|bg_c16s02|%E4%B8%B4%E6%97%B6%E5%AE%89%E5%85%A8%E5%A4%84%EF%BC%8C%E5%8E%9F%E4%BB%B6%E5%B0%81%E8%A2%8B%E3%80%81%E8%B5%84%E6%96%99%E6%B8%85%E5%8D%95%E4%B8%8E%E7%94%B5%E8%AF%9D⟧\n⟦TIME|%E5%A4%A9%E6%98%8E%E5%90%8E⟧\n⟦MG|br_c16_a⟧\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜不是布莱克索恩夫人\n⟦BG|bg_c16s03|%E5%BE%85%E7%A1%AE%E8%AE%A4%E7%9A%84%E8%AE%B0%E5%BD%95%E5%8D%A1%EF%BC%8CElena%20Ward%E5%A7%93%E5%90%8D%E6%A0%8F%E4%B8%8E%E7%A9%BA%E7%99%BD%E8%AF%B4%E6%98%8E⟧\n⟦TIME|%E5%90%8E%E7%BB%AD%E5%AE%89%E6%8E%92%E9%98%B6%E6%AE%B5⟧\n⟦MG|br_c16_b⟧\n米里亚姆：“以前每一张报道都说，她是谁的新娘。”\n她把那行字划掉，留出本名的位置。\n米里亚姆：“她也会做衣服，也会生气，也买好了车票。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜最后一次裙摆声\n⟦BG|bg_c16s04|%E4%B8%8D%E5%90%8C%E7%BB%93%E5%B1%80%E7%9A%84%E6%B8%85%E6%99%A8%E9%97%A8%E5%8F%A3%EF%BC%8F%E5%AE%89%E5%85%A8%E8%B5%84%E6%96%99%E5%AE%A4%EF%BC%8F%E7%A9%BA%E7%A4%BC%E5%A0%82⟧\n⟦TIME|%E6%8C%89%E7%BB%93%E5%B1%80%E5%AE%9E%E9%99%85%E6%8E%A8%E8%BF%9B⟧\n旁白：当前的安排仍待你确认。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%A0%B8%E5%AF%B9%E7%9C%BC%E5%89%8D%E7%9A%84%E4%BA%8B%E3%80%81%E8%AF%B4%E6%98%8E%E5%8F%82%E4%B8%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%AF%B4%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜确认本章目标后继续\n#### A｜继续下一章\n旁白：已发生的调查和当前参与范围留有记录。\n# ·\n"
+      }
+    ],
+    "brief": "你来修复一段婚礼录像，却发现十二年前死去的新娘，正在录像里等你回答。"
+  }
+}
