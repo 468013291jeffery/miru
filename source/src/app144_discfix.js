@@ -5006,3 +5006,29 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     }
   } catch (_) {}
 })();
+
+/* ===== mod194 · 2026-11-25 作品按语言显示 =====
+   创作者在后台给每部作品选「上线语言」（pack.meta.langs，英文必选）。作品列表接口（/api/works?feed=…）现在带回 langs，
+   这里统一过滤：当前界面语言不在作品语言里的就不显示（首页、发现页、角色卡、挑战等所有读列表的地方都生效）。
+   没有 langs 的老作品照常显示。URL 带 alllang=1 时不过滤。 */
+(function () {
+  "use strict";
+  const cur = () => { try { return (typeof CL === "function" ? CL() : "en") || "en"; } catch (_) { return "en"; } };
+  const ok = w => { const L = w && w.langs; if (!Array.isArray(L) || !L.length) return true; return L.indexOf(cur()) >= 0; };
+  const F = window.fetch;
+  if (typeof F !== "function") return;
+  window.fetch = async function (input) {
+    const res = await F.apply(this, arguments);
+    try {
+      const url = typeof input === "string" ? input : (input && input.url) || "";
+      if (!res.ok || !/\/api\/works\?(?:[^#]*&)?feed=/.test(url) || /[?&]alllang=1/.test(url)) return res;
+      const j = await res.clone().json();
+      const k = Array.isArray(j.works) ? "works" : (Array.isArray(j.rows) ? "rows" : null);
+      if (!k) return res;
+      const n0 = j[k].length; j[k] = j[k].filter(ok);
+      if (j[k].length === n0) return res;
+      return new Response(JSON.stringify(j), { status: res.status, statusText: res.statusText, headers: { "Content-Type": "application/json; charset=utf-8" } });
+    } catch (_) { return res; }
+  };
+  window.__langOK194 = ok;
+})();
