@@ -4591,3 +4591,24 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     libItems = function () { const r = L0.apply(this, arguments); try { if (typeof LIBT !== "undefined" && LIBT === "mg" && typeof CL === "function" && CL() === "zh") r.forEach(x => { if (NAMES[x.sub]) x.sub = NAMES[x.sub]; }); } catch (_) {} return r; };
   }
 })();
+
+
+/* ===== mod186 · 2026-11-24 官方剧本自带配乐：pack.assets 里的 bgm_<cue> 让 ⟦BGM|cue⟧ 直接播放上传的音乐 =====
+   之前 ⟦BGM|BGM_M121_C01⟧ 这类自定义 cue 不在 SC_M / BGM_MOODS 里，播放时被换成默认氛围，上传的文件永远播不到。
+   这里把 BGM_FILES 里新出现的、不带斜杠的 cue 登记进去（和用户上传 BGM 的做法一样），于是 scFile(cue) 能找到文件。 */
+(function () {
+  "use strict";
+  function sync() {
+    try {
+      const F = window.BGM_FILES || {}, X = window.__SC;
+      if (!X || !X.SC_M) return;
+      Object.keys(F).forEach(k => {
+        if (k.indexOf("/") >= 0 || !/^[A-Za-z0-9_-]{3,80}$/.test(k)) return;
+        if (!X.SC_M[k]) X.SC_M[k] = Object.assign({}, X.SC_M.m_slow_burn || X.SC_M.warm);
+        if (typeof BGM_MOODS !== "undefined" && !BGM_MOODS[k]) BGM_MOODS[k] = { bpm: 70, ch: [[48]], arp: [] };
+        if (typeof BGM_NAME !== "undefined" && !BGM_NAME[k]) BGM_NAME[k] = "🎵 " + k;
+      });
+    } catch (_) {}
+  }
+  sync(); setInterval(sync, 1500);
+})();
