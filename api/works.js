@@ -7,7 +7,7 @@
 // DELETE ?id=          remove my work
 const L = require('./_lib');
 const MAXPACK_FALLBACK = 1500 * 1024;   // 真正的上限读 config.max_pack_kb
-const pub = r => ({ id: r.id, adult: r.adult === true, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined });
+const pub = r => ({ id: r.id, adult: r.adult === true, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined, langs: Array.isArray(r.langs) ? r.langs : (r.pack && r.pack.meta && Array.isArray(r.pack.meta.langs) ? r.pack.meta.langs : undefined) });
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db();
@@ -38,7 +38,7 @@ module.exports = L.wrap(async (req, res) => {
     const viewer = L.who(req);
     if (viewer) { args.push(viewer.uid); where += ` AND NOT EXISTS (SELECT 1 FROM user_blocks b WHERE b.user_id=$${args.length} AND b.author_id=works.author)`; }
     if (native || !L.adultRegionOk(req, await L.config())) where += " AND COALESCE(pack->'meta'->>'adult','false') <> 'true'";
-    const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en, pack->'meta'->'adult' AS adult FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
+    const r = await sql(`SELECT id, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, pack->'meta'->'en' AS en, pack->'meta'->'langs' AS langs, pack->'meta'->'adult' AS adult FROM works WHERE ${where} ORDER BY featured DESC, ${hot ? '(likes*3+plays) DESC, created_at DESC' : 'created_at DESC'} LIMIT $1`, args);
     return L.send(res, 200, { works: r.map(pub) });
   }
   const u = await L.needActive(req, res); if (!u) return;
