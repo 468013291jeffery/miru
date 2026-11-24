@@ -4670,3 +4670,72 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   /* 新用户还在选口味时就先把官方新剧清单取好，选完口味不用再等 */
   try { if (!S.ob) setTimeout(() => { off94Feed().catch(() => {}); }, 1200); } catch (_) {}
 })();
+
+/* ===== mod188 · 2026-11-24 首页顶部分类 + 发现页分组改用新标签 =====
+   昨天标签大整改后，首页顶部还是「甜宠 / 宫廷奇幻 / 群像 / 宿敌」这套按关键词猜的旧分类，发现页下面的分组也还按旧标签。
+   现在统一读 art/official/discover.json（和发现页筛选、后台新建剧本同一套 dict）；作者后台上线、discover.json 里还没有的剧，用作品包里的 pack.meta.disc（PK180 记在本机）。
+   顶部：为你推荐 · 热门 · 新剧 · 甜宠治愈 · 暗黑 · 奇幻（没有剧的分类不显示）。
+   发现页分组：黑帮 · 总裁·富豪 · 吸血鬼·狼人 · 明星·娱乐圈 · 运动员 · 校园 · 虐心 · 悬疑（少于 2 部的分组不显示）。 */
+(function () {
+  "use strict";
+  const DM = { data: null };
+  const any = (a, b) => (a || []).some(x => b.includes(x));
+  const discOf = w => { if (!w) return null; const W = DM.data && DM.data.works && DM.data.works[w.id]; if (W) return W; const s = window.PK180 && PK180.store && PK180.store[w.id]; return (s && s.d) || null; };
+  const TAB_RULE = {
+    new: (w, d, i) => i < 6,
+    sweet: (w, d) => !!d && (any(d.mood, ["sweet"]) || d.intensity === "sweet"),
+    dark: (w, d) => !!d && any(d.mood, ["dark", "angst"]),
+    fantasy: (w, d) => !!d && (any(d.mood, ["fantasy"]) || any(d.identity, ["vampire", "werewolf", "mythic", "royalty"]))
+  };
+  const TABS = [["foryou", "For You", "为你推荐"], ["hot", "Hot", "热门"], ["new", "New", "新剧"], ["sweet", "Sweet & Cozy", "甜宠治愈"], ["dark", "Dark", "暗黑"], ["fantasy", "Fantasy", "奇幻"]];
+  const SHELF = [
+    ["🖤", "黑帮", "Mafia", d => any(d.identity, ["mafia"])],
+    ["💼", "总裁·富豪", "CEO & Billionaire", d => any(d.identity, ["ceo"])],
+    ["🩸", "吸血鬼·狼人", "Vampires & Wolves", d => any(d.identity, ["vampire", "werewolf"])],
+    ["✨", "明星·娱乐圈", "Celebrity", d => any(d.identity, ["showbiz"])],
+    ["🏒", "运动员", "Athletes", d => any(d.identity, ["athlete"])],
+    ["🎓", "校园", "College", d => any(d.identity, ["college"])],
+    ["💔", "虐心", "Angst", d => any(d.mood, ["angst"])],
+    ["🔍", "悬疑", "Mystery", d => any(d.mood, ["mystery"])]
+  ];
+  function oldTags(w) { const T = window.TAGS157; if (!T || typeof T.tagsOf !== "function") return []; const M = T.MAP; T.MAP = null; try { return T.tagsOf(w) || []; } catch (_) { return []; } finally { T.MAP = M; } }
+  function build() {
+    const L = (typeof OFFF94 !== "undefined" && OFFF94.list) || []; if (!L.length) return;
+    const MAP = {};
+    L.forEach((w, i) => {
+      const d = discOf(w);
+      let out = Object.keys(TAB_RULE).filter(k => TAB_RULE[k](w, d, i));
+      if (!d) out = out.concat(oldTags(w).filter(k => ["sweet", "dark", "fantasy"].includes(k)));
+      MAP[w.id] = [...new Set(out)];
+    });
+    window.TAGS157 = window.TAGS157 || {}; window.TAGS157.MAP = MAP;
+  }
+  try { if (typeof FEED_TABS !== "undefined" && typeof T === "function") { FEED_TABS.length = 0; TABS.forEach(([k, en, zh]) => FEED_TABS.push([k, T(en, zh)])); if (typeof feedTab !== "undefined" && !TABS.some(x => x[0] === feedTab)) feedTab = "foryou"; } } catch (_) {}
+  const ready = fetch("art/official/discover.json?v=" + Math.floor(Date.now() / 6e5)).then(r => (r.ok ? r.json() : null)).then(d => { if (d && d.works) DM.data = d; build(); }).catch(() => {});
+  if (typeof off94Feed === "function") {
+    const f = off94Feed;
+    off94Feed = async function () { const L = await f.apply(this, arguments); try { await ready; build(); } catch (_) {} return L; };
+  }
+  if (typeof discMain === "function" && typeof off94RCard === "function") {
+    const dm = discMain;
+    discMain = function () {
+      let h = dm.apply(this, arguments);
+      try {
+        const L = (typeof OFFF94 !== "undefined" && OFFF94.list) || [];
+        if (!L.length || !DM.data) return h;
+        const tpl = document.createElement("template"); tpl.innerHTML = h;
+        const nw = tpl.content.querySelector(".s144new"); if (!nw) return h;
+        tpl.content.querySelectorAll(".shelf.s144:not(.s144new)").forEach(n => n.remove());
+        const z = typeof CL === "function" ? CL() === "zh" : true;
+        let add = "";
+        SHELF.forEach(([ic, zt, et, fn]) => {
+          const ws = L.filter(w => { const d = discOf(w); return d && fn(d); });
+          if (ws.length >= 2) add += '<div class="shelf off94s s188"><div class="shd"><h3>' + ic + " " + (z ? zt : et) + '</h3></div><div class="rail2">' + ws.map(w => off94RCard(w).replace(/<span class="rbadge">[^<]*<\/span>/, "")).join("") + "</div></div>";
+        });
+        nw.insertAdjacentHTML("afterend", add);
+        h = tpl.innerHTML;
+      } catch (_) {}
+      return h;
+    };
+  }
+})();
