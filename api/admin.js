@@ -279,6 +279,21 @@ module.exports = L.wrap(async (req, res) => {
     await log('report_' + op, 'report', id, { note: b.note }); return L.send(res, 200, { ok: true });
   }
 
+  /* ---------- 2026-11-24 编剧看自己剧的数据：编剧只拿到自己名下（config.owner_id）已上线的剧，管理员看全部；不返回推广人和分佣设置 ---------- */
+  if (r === 'mystats') {
+    if (!need('scripts')) return;
+    const mine = A.role === 'writer';
+    const own = await sql("SELECT id, title, work_id, status FROM scripts WHERE work_id IS NOT NULL" + (mine ? " AND config->>'owner_id'=$1" : "") + " ORDER BY published_at DESC NULLS LAST LIMIT 300", mine ? [A.id] : []);
+    const ids = own.map(s => s.work_id);
+    if (!ids.length) return L.send(res, 200, { days: Number(q.days) || 30, centsPerGem: 0, works: [] });
+    const P = require('./promo');
+    const ov = await P.adminOverview(sql, q);
+    const byW = Object.fromEntries((ov.works || []).map(w => [w.wid, w]));
+    const meta = Object.fromEntries((await sql('SELECT id, plays, likes, status FROM works WHERE id = ANY($1::text[])', [ids])).map(m => [m.id, m]));
+    const works = own.map(s => { const w = byW[s.work_id] || {}, m = meta[s.work_id] || {}; return { wid: s.work_id, sid: s.id, title: s.title, status: m.status || s.status, plays: Number(m.plays) || 0, likes: Number(m.likes) || 0, gems: Number(w.gems) || 0, spenders: Number(w.spenders) || 0, gem_cents: Number(w.gem_cents) || 0, orders: Number(w.orders) || 0, pay_cents: Number(w.pay_cents) || 0, promo_cents: Number(w.promo_cents) || 0, clicks: Number(w.clicks) || 0 }; });
+    return L.send(res, 200, { days: ov.days, centsPerGem: ov.centsPerGem, works });
+  }
+
   /* ---------- 2026-11-16 推广分佣 + 单剧收入（数据在 api/promo.js） ---------- */
   if (r === 'promo') {
     if (!need('orders')) return;
