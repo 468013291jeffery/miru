@@ -1,6 +1,7 @@
 # 构建 Google Play 上传用的 .aab（2026-11-05）
 # 触发：手动（Actions → Android App → Run workflow），或 android/ 目录有改动时自动跑。
 # 需要的 secret：ANDROID_KEYSTORE_BASE64 / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD（ANDROID_KEYSTORE_PASSWORD 可选，不填就用 KEY_PASSWORD）
+# 广告（可选）：APPLOVIN_SDK_KEY / APPLOVIN_REWARDED_ID / APPLOVIN_APPOPEN_ID —— 不填就构建一个没有广告的版本
 # 跑完在这次运行的页面底部下载 miru-release-aab，里面的 app-release.aab 就是传到 Play Console 的文件。
 name: Android App
 on:
@@ -36,6 +37,9 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD || secrets.ANDROID_KEY_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          APPLOVIN_SDK_KEY: ${{ secrets.APPLOVIN_SDK_KEY }}
+          APPLOVIN_REWARDED_ID: ${{ secrets.APPLOVIN_REWARDED_ID }}
+          APPLOVIN_APPOPEN_ID: ${{ secrets.APPLOVIN_APPOPEN_ID }}
         run: gradle :app:bundleRelease --stacktrace
       - uses: actions/upload-artifact@v5
         with:
