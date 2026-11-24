@@ -46,7 +46,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     req.query = Object.fromEntries(url.searchParams);
-    req.body = await bodyOf(req);
+    req.body = await bodyOf(req); req.rawBody = req.body;
     if (req.body.length && /application\/json/i.test(req.headers['content-type'] || '')) {
       try { req.body = JSON.parse(req.body.toString('utf8')); }
       catch { return res.status(400).json({ error: 'invalid JSON' }); }
