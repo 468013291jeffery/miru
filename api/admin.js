@@ -387,12 +387,15 @@ module.exports = L.wrap(async (req, res) => {
      读取只返回「是否已设置」，不回传值；审计日志不记录值。 */
   if (r === 'secret') {
     if (!need('config')) return;
-    const NAMES = { unity_s2s: 'secret_unity_s2s', google_sa: 'secret_google_sa', paypal: 'secret_paypal' };
-    if (req.method === 'GET') { const rows = await sql("SELECT key, updated_at FROM config WHERE key LIKE 'secret_%'"); const out = {}; for (const [n, k] of Object.entries(NAMES)) { const x = rows.find(r => r.key === k); out[n] = { set: !!x, at: x ? x.updated_at : null }; } return L.send(res, 200, out); }
+    const NAMES = { unity_s2s: 'secret_unity_s2s', google_sa: 'secret_google_sa', paypal: 'secret_paypal', xsolla_api: 'secret_xsolla_api', xsolla_wh: 'secret_xsolla_wh', xsolla_mode: 'secret_xsolla_mode' };
+    if (req.method === 'GET') { const rows = await sql("SELECT key, updated_at, CASE WHEN key='secret_xsolla_mode' THEN value END AS value FROM config WHERE key LIKE 'secret_%'"); const out = {}; for (const [n, k] of Object.entries(NAMES)) { const x = rows.find(r => r.key === k); out[n] = { set: !!x, at: x ? x.updated_at : null }; if (n === 'xsolla_mode' && x) out[n].value = x.value; } return L.send(res, 200, out); }
     const key = NAMES[String(b.name || '')]; if (!key) return L.bad(res, '未知的密钥名');
     const val = String(b.value || '').trim();
     if (key === 'secret_unity_s2s' && !/^[0-9a-fA-F]{16,128}$/.test(val)) return L.bad(res, '密钥格式不对');
     if (key === 'secret_paypal' && !/^[A-Za-z0-9_-]{20,200}$/.test(val)) return L.bad(res, 'PayPal Secret 格式不对');
+    if (key === 'secret_xsolla_api' && !/^[A-Za-z0-9_-]{16,200}$/.test(val)) return L.bad(res, 'Xsolla API Key 格式不对');
+    if (key === 'secret_xsolla_wh' && !/^[\x21-\x7e]{6,200}$/.test(val)) return L.bad(res, 'Webhook 密钥格式不对');
+    if (key === 'secret_xsolla_mode' && !/^(sandbox|live)$/.test(val)) return L.bad(res, '模式只能是 sandbox 或 live');
     if (key === 'secret_google_sa') { let o = null; try { o = JSON.parse(val); } catch (_) {} if (!o || !o.client_email || !o.private_key || val.length > 20000) return L.bad(res, '请粘贴完整的服务账号 JSON（里面要有 client_email 和 private_key）'); }
     await sql('INSERT INTO config (key, value, updated_by, updated_at) VALUES ($1,$2::jsonb,$3,now()) ON CONFLICT (key) DO UPDATE SET value=$2::jsonb, updated_by=$3, updated_at=now()', [key, JSON.stringify(val), A.name || A.username]); L.configReset();
     await log('secret_update', 'secret', key, { set: true });

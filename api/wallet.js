@@ -36,6 +36,46 @@ module.exports=L.wrap(async(req,res)=>{
   try{await W.write(sql,uid,{delta:val,reason:('ad_unity:'+n).slice(0,40),key:'unity:'+oid});}catch(e){if(!/duplicate|unique/i.test(String(e&&e.message)))return txt(500,'wallet error');}
   return txt(200,'1');
  }
+ /* 2026-11-25 网页版充值：Xsolla（艾克索拉）Webhook。Xsolla 服务器 POST 到 /api/wallet?r=xsolla。
+    签名：头 Authorization: Signature <sha1(原始请求体 + Webhook 密钥)>（十六进制）。密钥放环境变量 XSOLLA_WEBHOOK_SECRET，或后台「系统配置」粘贴（config 表 secret_xsolla_wh）。
+    user_validation：确认用户存在；order_paid：按订单里的商品 SKU 发钻（钱包流水 key=xsolla:<订单号>:<sku>:<序号>，同一笔只发一次）。
+    沙盒订单只有后台把模式设成「沙盒」时才发钻（标记为测试单）。成功回 204；签名错 400 INVALID_SIGNATURE；用户不存在 400 INVALID_USER。 */
+ if(req.query&&req.query.r==='xsolla'){
+  const crypto=require('crypto');const sql=await L.db(),cfg=await L.config();
+  const sec=async k=>{try{const r=(await sql('SELECT value FROM config WHERE key=$1',[k]))[0];return r&&typeof r.value==='string'?r.value:'';}catch(_){return '';}};
+  const err=(c,code,msg)=>L.send(res,c,{error:{code,message:msg}});
+  const whs=process.env.XSOLLA_WEBHOOK_SECRET||await sec('secret_xsolla_wh');if(!whs)return err(500,'SERVER_ERROR','not configured');
+  const raw=Buffer.isBuffer(req.rawBody)?req.rawBody.toString('utf8'):(typeof req.body==='string'?req.body:JSON.stringify(req.body||{}));
+  const got=String(req.headers.authorization||'').replace(/^Signature\s+/i,'').trim().toLowerCase();
+  const want=crypto.createHash('sha1').update(raw+whs).digest('hex');
+  if(got.length!==want.length||!crypto.timingSafeEqual(Buffer.from(got),Buffer.from(want)))return err(400,'INVALID_SIGNATURE','Invalid signature');
+  let j={};try{j=JSON.parse(raw);}catch(_){return err(400,'INVALID_PARAMETER','Invalid JSON');}
+  const t=String(j.notification_type||'');
+  const uidOf=x=>{if(!x)return '';const v=x.external_id!=null?x.external_id:(x.id&&typeof x.id==='object'?x.id.value:x.id);return String(v==null?'':v).slice(0,80);};
+  const ok=()=>{res.statusCode=204;res.end();};
+  const uid=uidOf(j.user);
+  if(t==='user_validation'){const r=uid?(await sql('SELECT 1 FROM users WHERE id=$1',[uid]))[0]:null;return r?ok():err(400,'INVALID_USER','Invalid user');}
+  if(t==='order_paid'||t==='payment'){
+   const order=j.order||{},tr=j.transaction||((j.billing||{}).transaction)||{};
+   let items=Array.isArray(j.items)?j.items:[];
+   if(!items.length&&j.purchase&&j.purchase.virtual_items&&Array.isArray(j.purchase.virtual_items.items))items=j.purchase.virtual_items.items;
+   const oid=String(order.id||tr.id||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,60);
+   if(!uid||!oid||!items.length)return err(400,'INVALID_PARAMETER','missing user, order or items');
+   if(!(await sql('SELECT 1 FROM users WHERE id=$1',[uid]))[0])return err(400,'INVALID_USER','Invalid user');
+   const sandbox=order.mode==='sandbox'||!!tr.dry_run;
+   if(sandbox&&(process.env.XSOLLA_MODE||await sec('secret_xsolla_mode'))!=='sandbox')return ok();
+   for(const it of items){
+    const mapped=gemsForSku(String(it.sku||''),cfg);if(!mapped)continue;
+    const n=Math.max(1,Math.min(20,Number(it.quantity||it.amount)||1));
+    for(let i=0;i<n;i++){
+     try{await W.purchase(sql,uid,mapped,cfg,{key:('xsolla:'+oid+':'+mapped.sku+':'+i).slice(0,120),reason:'xsolla',platform:'web',environment:sandbox?'Sandbox':'Production',test:sandbox});}
+     catch(e){if(!/duplicate|unique/i.test(String(e&&e.message)))return err(500,'SERVER_ERROR','wallet error');}
+    }
+   }
+   return ok();
+  }
+  return ok();
+ }
  const u=await L.needActive(req,res);if(!u)return;
  const sql=await L.db(),cfg=await L.config();
  if(req.method==='GET'){
@@ -107,6 +147,25 @@ module.exports=L.wrap(async(req,res)=>{
   if(((cap.amount||{}).currency_code)!=='USD'||paid<cents)return L.send(res,409,{error:'amount mismatch'});
   const r2=await W.purchase(sql,u.uid,mapped,cfg,{key:'paypal:'+String(cap.id||oid).slice(0,60),reason:'paypal',platform:'web',environment:'Production',test:false});
   return L.send(res,r2&&r2.code?r2.code:200,Object.assign({paypal:true,orderId:oid,sku:mapped.sku},r2||{}));
+ }
+ /* 2026-11-25 网页版充值：Xsolla 下单。按商品 SKU（在 Xsolla 后台建好的 gems_5…gems_700，价格在 Xsolla 那边）向 Xsolla 要支付令牌，返回付款页地址。
+    API Key 放环境变量 XSOLLA_API_KEY 或后台「系统配置」（secret_xsolla_api）；模式 sandbox/live（secret_xsolla_mode，默认 live）。到账以 Webhook 为准。 */
+ if(b.op==='xs_create'){
+  const sec=async k=>{try{const r=(await sql('SELECT value FROM config WHERE key=$1',[k]))[0];return r&&typeof r.value==='string'?r.value:'';}catch(_){return '';}};
+  const key=process.env.XSOLLA_API_KEY||await sec('secret_xsolla_api');if(!key)return L.send(res,501,{error:'xsolla not configured'});
+  const mode=(process.env.XSOLLA_MODE||await sec('secret_xsolla_mode'))==='sandbox'?'sandbox':'live';
+  const PID=Number(process.env.XSOLLA_PROJECT_ID)||324046;
+  const mapped=gemsForSku(String(b.sku||''),cfg);if(!mapped)return L.bad(res,'unknown product');
+  const ip=String((typeof L.ip==='function'?L.ip(req):'')||'').split(',')[0].trim();
+  const body={user:{id:{value:String(u.uid)}},purchase:{items:[{sku:mapped.sku,quantity:1}]},settings:{return_url:'https://miru.plus/?xs=done'}};
+  if(/^[a-z]{2}$/.test(String(b.lang||'')))body.settings.language=String(b.lang);
+  if(mode==='sandbox')body.sandbox=true;
+  const H={Authorization:'Basic '+Buffer.from(PID+':'+key).toString('base64'),'Content-Type':'application/json'};
+  if(/^[0-9a-fA-F.:]{3,45}$/.test(ip)&&!/^(127\.|10\.|192\.168\.|::1$)/.test(ip))H['X-User-Ip']=ip;else body.user.country={value:'US'};
+  const r=await fetch('https://store.xsolla.com/api/v3/project/'+PID+'/admin/payment/token',{method:'POST',headers:H,body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||!j.token)return L.send(res,502,{error:'xsolla create failed',detail:String(j.errorMessage||j.message||j.errorCode||r.status).slice(0,240)});
+  return L.send(res,200,{url:(mode==='sandbox'?'https://sandbox-secure.xsolla.com':'https://secure.xsolla.com')+'/paystation4/?token='+encodeURIComponent(j.token),order_id:j.order_id||null,sandbox:mode==='sandbox'});
  }
  if(b.op==='purchase'){
   const sku=String(b.sku||''),SK=Object.assign({},...Object.entries(cfg.skus||{}).map(([k,v])=>({[k]:Number(v.gems)||SKUS[k]||0})));
