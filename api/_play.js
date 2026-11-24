@@ -12,8 +12,10 @@ const crypto = require('crypto');
 const PKG = () => process.env.PLAY_PACKAGE || 'com.miru.plus.app';
 let cached = { token: '', exp: 0 };
 
-function serviceAccount() {
-  const raw = process.env.GOOGLE_SERVICE_ACCOUNT || '';
+/* 2026-11-25 服务账号也可以在后台「系统配置」里粘贴（存在 config 表 secret_google_sa，配置接口读取时会剔除）。环境变量优先。 */
+async function serviceAccount() {
+  let raw = process.env.GOOGLE_SERVICE_ACCOUNT || '';
+  if (!raw) { try { const sql = await require('./_lib').db(); const r = (await sql("SELECT value FROM config WHERE key='secret_google_sa'"))[0]; raw = r && typeof r.value === 'string' ? r.value : ''; } catch (_) {} }
   if (!raw) throw new Error('GOOGLE_SERVICE_ACCOUNT is not set');
   const txt = raw.trim().startsWith('{') ? raw : Buffer.from(raw, 'base64').toString('utf8');
   const sa = JSON.parse(txt);
@@ -25,7 +27,7 @@ const b64u = b => Buffer.from(b).toString('base64').replace(/=+$/, '').replace(/
 async function accessToken() {
   const now = Math.floor(Date.now() / 1000);
   if (cached.token && cached.exp - 60 > now) return cached.token;
-  const sa = serviceAccount();
+  const sa = await serviceAccount();
   const head = b64u(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
   const body = b64u(JSON.stringify({ iss: sa.client_email, scope: 'https://www.googleapis.com/auth/androidpublisher', aud: 'https://oauth2.googleapis.com/token', iat: now, exp: now + 3600 }));
   const sig = crypto.createSign('RSA-SHA256').update(head + '.' + body).sign(sa.private_key);
