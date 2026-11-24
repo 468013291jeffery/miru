@@ -9,19 +9,17 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxError;
-import com.applovin.mediation.MaxReward;
-import com.applovin.mediation.MaxRewardedAdListener;
-import com.applovin.mediation.ads.MaxRewardedAd;
-import com.applovin.sdk.AppLovinSdk;
+import com.unity3d.ads.IUnityAdsLoadListener;
+import com.unity3d.ads.IUnityAdsShowListener;
+import com.unity3d.ads.UnityAds;
+import com.unity3d.ads.UnityAdsShowOptions;
+import com.unity3d.ads.metadata.PlayerMetaData;
 
-/** 激励视频：网页里跳 miru-ad://rewarded?u=<用户ID>&n=<本次编号>，这里放一条广告后回到网页。
- *  发奖励以 AppLovin 服务器回调（S2S）为准，网页回到前台后向自己的服务器查询结果；这里不在本地发任何东西。 */
-public class AdActivity extends Activity implements MaxRewardedAdListener {
+/** 激励视频：网页里跳 miru-ad://rewarded?u=<用户ID>&n=<本次编号>，这里放一条 Unity 激励广告后回到网页。
+ *  用户 ID 通过 PlayerMetaData.setServerId 交给 Unity，用于服务器回调（S2S）发奖励；这里不在本地发任何东西。 */
+public class AdActivity extends Activity implements IUnityAdsLoadListener, IUnityAdsShowListener {
     private static final long TIMEOUT_MS = 15000;
     private final Handler h = new Handler(Looper.getMainLooper());
-    private MaxRewardedAd ad;
     private boolean done;
 
     @Override
@@ -33,16 +31,14 @@ public class AdActivity extends Activity implements MaxRewardedAdListener {
         t.setBackgroundColor(Color.BLACK);
         t.setGravity(Gravity.CENTER);
         setContentView(t);
-        if (!Ads.enabled() || BuildConfig.AL_REWARDED.isEmpty()) { finishAd(); return; }
+        if (!Ads.enabled() || BuildConfig.UNITY_REWARDED.isEmpty()) { finishAd(); return; }
         Uri u = getIntent() != null ? getIntent().getData() : null;
         final String uid = u != null ? u.getQueryParameter("u") : null;
         h.postDelayed(this::finishAd, TIMEOUT_MS);
         Ads.init(this, () -> {
             if (done) return;
-            if (uid != null && !uid.isEmpty()) AppLovinSdk.getInstance(getApplicationContext()).getSettings().setUserIdentifier(uid);
-            ad = MaxRewardedAd.getInstance(BuildConfig.AL_REWARDED, this);
-            ad.setListener(this);
-            if (ad.isReady()) { h.removeCallbacksAndMessages(null); ad.showAd(this); } else ad.loadAd();
+            if (uid != null && !uid.isEmpty()) { PlayerMetaData pm = new PlayerMetaData(getApplicationContext()); pm.setServerId(uid); pm.commit(); }
+            UnityAds.load(BuildConfig.UNITY_REWARDED, this);
         });
     }
 
@@ -54,11 +50,10 @@ public class AdActivity extends Activity implements MaxRewardedAdListener {
         overridePendingTransition(0, 0);
     }
 
-    @Override public void onAdLoaded(MaxAd a) { if (done || ad == null) return; h.removeCallbacksAndMessages(null); ad.showAd(this); }
-    @Override public void onAdDisplayed(MaxAd a) {}
-    @Override public void onAdHidden(MaxAd a) { finishAd(); }
-    @Override public void onAdClicked(MaxAd a) {}
-    @Override public void onAdLoadFailed(String unit, MaxError e) { finishAd(); }
-    @Override public void onAdDisplayFailed(MaxAd a, MaxError e) { finishAd(); }
-    @Override public void onUserRewarded(MaxAd a, MaxReward r) {}
+    @Override public void onUnityAdsAdLoaded(String placementId) { if (done) return; h.removeCallbacksAndMessages(null); UnityAds.show(this, placementId, new UnityAdsShowOptions(), this); }
+    @Override public void onUnityAdsFailedToLoad(String placementId, UnityAds.UnityAdsLoadError e, String msg) { finishAd(); }
+    @Override public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError e, String msg) { finishAd(); }
+    @Override public void onUnityAdsShowStart(String placementId) {}
+    @Override public void onUnityAdsShowClick(String placementId) {}
+    @Override public void onUnityAdsShowComplete(String placementId, UnityAds.UnityAdsShowCompletionState state) { finishAd(); }
 }

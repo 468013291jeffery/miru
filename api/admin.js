@@ -61,6 +61,18 @@ module.exports = L.wrap(async (req, res) => {
     await log('change_password', 'admin', A.id);
     return L.send(res, 200, { token: L.adminToken(up[0]) });
   }
+  /* 2026-11-24 编剧（及所有后台账号）自己改用户名 / 笔名。用户名唯一，改完发新 token。 */
+  if (r === 'profile') {
+    if (A.id === 'key') return L.bad(res, 'ADMIN_KEY 账号不能改');
+    const a = (await sql('SELECT * FROM admins WHERE id=$1', [A.id]))[0]; if (!a) return L.bad(res, '账号不存在', 404);
+    const username = b.username == null ? a.username : String(b.username).trim().toLowerCase(), name = b.name == null ? a.name : String(b.name).trim().slice(0, 30);
+    if (!/^[a-z0-9_.-]{3,30}$/.test(username)) return L.bad(res, '用户名 3–30 位：小写字母、数字、下划线、点、横线');
+    if (!name) return L.bad(res, '笔名不能为空');
+    if (username !== a.username && (await sql('SELECT 1 FROM admins WHERE username=$1 AND id<>$2', [username, a.id]))[0]) return L.bad(res, '这个用户名已经有人用了');
+    const up = await sql('UPDATE admins SET username=$2, name=$3 WHERE id=$1 RETURNING *', [a.id, username, name]);
+    await log('admin_profile', 'admin', a.id, { from: a.username, to: username, name });
+    return L.send(res, 200, { token: L.adminToken(up[0]), admin: { id: up[0].id, username: up[0].username, name: up[0].name, role: up[0].role } });
+  }
 
   /* ---------- dashboard ---------- */
   if (r === 'dashboard') {
@@ -643,11 +655,13 @@ module.exports = L.wrap(async (req, res) => {
       const AS = (cfg.assets && typeof cfg.assets === 'object') ? cfg.assets : {};
       const leads = (Array.isArray(cfg.leads) ? cfg.leads.filter(x => x && x.key && x.n).slice(0, 24) : []).map(x => x.art || !AS['char_' + x.key] ? x : Object.assign({}, x, { art: AS['char_' + x.key] }));
       if (!cfg.cover && (AS.cover || AS.poster)) cfg.cover = AS.cover || AS.poster;
+      /* 2026-11-24 所有在线作品至少要有英文：非英文写的剧，上线前必须有英文标题和一句话简介（config.en）。 */
+      { const EN = cfg.en || {}; if ((s.lang || 'zh') !== 'en' && !(EN.title && EN.hook)) return L.bad(res, '上线前必须有英文版：请先生成或填写英文标题和一句话简介——所有在线作品至少要有英文'); }
       if (!s.work_id && !leads.length && !b.force) return L.bad(res, '还没有人物卡——每个能和玩家互动的主要角色都要有一张（会出现在 App「发现 → 角色」）。在第⑤步点「自动生成人物卡」，检查保存后再上线');
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
-      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads, disc: cfg.disc || null }, assets: Object.keys(AS).length ? AS : null, games: Array.isArray(cfg.games) ? cfg.games.slice(0, 80) : null, official: true, rules: b.rulesVersion || null };
+      const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads, langs: Array.from(new Set([s.lang || 'zh', 'en'].concat(Array.isArray(cfg.langs) ? cfg.langs : ['zh', 'en', 'ja', 'ko', 'es']))).filter(x => /^(zh|en|ja|ko|es)$/.test(x)), disc: cfg.disc || null }, assets: Object.keys(AS).length ? AS : null, games: Array.isArray(cfg.games) ? cfg.games.slice(0, 80) : null, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,

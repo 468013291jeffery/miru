@@ -7,32 +7,26 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.applovin.mediation.MaxAd;
-import com.applovin.mediation.MaxAdListener;
-import com.applovin.mediation.MaxError;
-import com.applovin.mediation.ads.MaxAppOpenAd;
 import com.google.androidbrowserhelper.trusted.LauncherActivity;
+import com.unity3d.ads.IUnityAdsLoadListener;
+import com.unity3d.ads.IUnityAdsShowListener;
+import com.unity3d.ads.UnityAds;
+import com.unity3d.ads.UnityAdsShowOptions;
 
-/** 冷启动入口：最多等 4 秒，有开屏广告就放一次（4 小时内最多一次），然后打开网页壳（TWA）。 */
-public class EntryActivity extends Activity implements MaxAdListener {
+/** 冷启动入口：最多等 4 秒，有插屏广告就放一次（Unity 没有开屏格式，用插屏代替；4 小时内最多一次），然后打开网页壳（TWA）。 */
+public class EntryActivity extends Activity implements IUnityAdsLoadListener, IUnityAdsShowListener {
     private static final long GAP_MS = 4L * 60 * 60 * 1000;
     private static final long WAIT_MS = 4000;
 
     private final Handler h = new Handler(Looper.getMainLooper());
-    private MaxAppOpenAd ad;
     private boolean moved;
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        if (!Ads.enabled() || BuildConfig.AL_APPOPEN.isEmpty() || !due()) { go(); return; }
+        if (!Ads.enabled() || BuildConfig.UNITY_LAUNCH.isEmpty() || !due()) { go(); return; }
         h.postDelayed(this::go, WAIT_MS);
-        Ads.init(this, () -> {
-            if (moved) return;
-            ad = new MaxAppOpenAd(BuildConfig.AL_APPOPEN, this);
-            ad.setListener(this);
-            ad.loadAd();
-        });
+        Ads.init(this, () -> { if (!moved) UnityAds.load(BuildConfig.UNITY_LAUNCH, this); });
     }
 
     private SharedPreferences prefs() { return getSharedPreferences("miru_ads", MODE_PRIVATE); }
@@ -50,15 +44,15 @@ public class EntryActivity extends Activity implements MaxAdListener {
         overridePendingTransition(0, 0);
     }
 
-    @Override public void onAdLoaded(MaxAd a) {
-        if (moved || ad == null || !ad.isReady()) return;
+    @Override public void onUnityAdsAdLoaded(String placementId) {
+        if (moved) return;
         h.removeCallbacksAndMessages(null);
         prefs().edit().putLong("appopen_at", System.currentTimeMillis()).apply();
-        ad.showAd("launch");
+        UnityAds.show(this, placementId, new UnityAdsShowOptions(), this);
     }
-    @Override public void onAdDisplayed(MaxAd a) {}
-    @Override public void onAdHidden(MaxAd a) { go(); }
-    @Override public void onAdClicked(MaxAd a) {}
-    @Override public void onAdLoadFailed(String unit, MaxError e) { go(); }
-    @Override public void onAdDisplayFailed(MaxAd a, MaxError e) { go(); }
+    @Override public void onUnityAdsFailedToLoad(String placementId, UnityAds.UnityAdsLoadError e, String msg) { go(); }
+    @Override public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError e, String msg) { go(); }
+    @Override public void onUnityAdsShowStart(String placementId) {}
+    @Override public void onUnityAdsShowClick(String placementId) {}
+    @Override public void onUnityAdsShowComplete(String placementId, UnityAds.UnityAdsShowCompletionState state) { go(); }
 }

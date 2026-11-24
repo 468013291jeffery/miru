@@ -12,6 +12,30 @@ async function apply(sql,uid,delta,reason,key){return W.apply(sql,uid,delta,reas
 module.exports=L.wrap(async(req,res)=>{
  if(!L.cors(req,res,'GET, POST, OPTIONS'))return;
  if(req.query&&(req.query.r==='rank'||req.query.r==='tasks'))return BOARD.handle(req,res,{apply});
+ /* 2026-11-24 Unity Ads 激励视频·服务器回调（S2S redeem callback）。Unity 服务器直接 GET 这里：
+    /api/wallet?r=unity&sid=<用户ID>.<本次编号>&oid=<Unity 订单号>&hmac=<签名>
+    签名 = HMAC-MD5(除 hmac 外所有参数按字母序 key=value 用逗号连起来, 密钥)。密钥由 Unity 客服发，放服务器环境变量 UNITY_S2S_SECRET。
+    同一个 oid 只发一次（钱包流水 key=unity:<oid>）；每人每天上限 ad_daily_cap 次（默认 5），每次 ad_reward_gems 钻（默认 1）。
+    成功回 200「1」；签名错 403；超上限也回「1」（不让 Unity 反复重试），但不发钻。 */
+ if(req.query&&req.query.r==='unity'){
+  const txt=(code,body)=>{res.statusCode=code;res.setHeader('Content-Type','text/plain; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(body);};
+  const secret=process.env.UNITY_S2S_SECRET||'';if(!secret)return txt(503,'not configured');
+  const q=req.query||{},crypto=require('crypto');
+  const base=Object.keys(q).filter(k=>k!=='hmac').sort().map(k=>k+'='+(q[k]==null?'':(Array.isArray(q[k])?q[k][0]:q[k]))).join(',');
+  const want=crypto.createHmac('md5',secret).update(base).digest('hex'),got=String(q.hmac||'').toLowerCase();
+  if(got.length!==want.length||!crypto.timingSafeEqual(Buffer.from(got),Buffer.from(want)))return txt(403,'bad signature');
+  const oid=String(q.oid||'').slice(0,100),sid=String(q.sid||''),dot=sid.lastIndexOf('.');
+  const uid=dot>0?sid.slice(0,dot):sid,n=dot>0?sid.slice(dot+1).replace(/[^a-z0-9]/gi,'').slice(0,20):'';
+  if(!oid||!/^u_[A-Za-z0-9_-]{4,60}$/.test(uid))return txt(400,'bad sid/oid');
+  const sql=await L.db(),cfg=await L.config();
+  const ok=(await sql('SELECT 1 FROM users WHERE id=$1',[uid]))[0];if(!ok)return txt(400,'unknown user');
+  if((await sql('SELECT 1 FROM ledger WHERE key=$1',['unity:'+oid]))[0])return txt(200,'1');
+  const cap=Number(cfg.ad_daily_cap)>0?Number(cfg.ad_daily_cap):5,val=Number(cfg.ad_reward_gems)>0?Math.floor(Number(cfg.ad_reward_gems)):1;
+  const used=Number((await sql("SELECT count(*)::int AS n FROM ledger WHERE user_id=$1 AND reason LIKE 'ad_unity%' AND at>=CURRENT_DATE",[uid]))[0].n)||0;
+  if(used>=cap){try{await sql("INSERT INTO events(name,user_id,props) VALUES('ad_cap',$1,$2::jsonb)",[uid,JSON.stringify({oid,n})]);}catch(_){}return txt(200,'1');}
+  try{await W.write(sql,uid,{delta:val,reason:('ad_unity:'+n).slice(0,40),key:'unity:'+oid});}catch(e){if(!/duplicate|unique/i.test(String(e&&e.message)))return txt(500,'wallet error');}
+  return txt(200,'1');
+ }
  const u=await L.needActive(req,res);if(!u)return;
  const sql=await L.db(),cfg=await L.config();
  if(req.method==='GET'){

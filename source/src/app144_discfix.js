@@ -2358,7 +2358,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
-  const KEY = "miru_leads165";
+  const KEY = "miru_leads165b";
   const bi = v => (v && typeof v === "object" ? { zh: String(v.zh || v.en || ""), en: String(v.en || v.zh || "") } : { zh: String(v || ""), en: String(v || "") });
   function cache() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } }
   function keep(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (_) {} }
@@ -2397,7 +2397,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
         let ent = c[row.id];
         if (!ent || Date.now() - (ent.at || 0) > 6 * 3600e3) {
           ent = { at: Date.now(), leads: [], art: null, title: row.title, orient: row.orient };
-          try { const p = await fetch("/api/works?id=" + encodeURIComponent(row.id)); if (p.ok) { const pj = await p.json(); const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
+          try { const p = typeof capi === "function" ? await capi("/works?id=" + encodeURIComponent(row.id)) : { ok: false }; if (p.ok && p.j) { const pj = p.j; /* 2026-11-24 带登录凭证：成人剧的人物卡以前被 adult_gate 挡住，永远进不了角色页 */ const m = pj.pack && pj.pack.meta; if (m && Array.isArray(m.leads)) ent.leads = m.leads.slice(0, 24); } } catch (_) {}
           if (ent.leads.length) { try { const a = await fetch("art/official/" + row.id + ".json"); if (a.ok) ent.art = await a.json(); } catch (_) {} }
           c[row.id] = ent;
         }
@@ -4738,4 +4738,112 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       return h;
     };
   }
+})();
+
+/* ===== mod189 · 2026-11-24 安卓 App 里的激励视频改用 Unity Ads（原生），奖励以 Unity 服务器回调为准 =====
+   安卓壳（TWA）第一次打开网页时 referrer 是 android-app://com.miru.plus.app，记下来，之后就知道「在 App 里」。
+   在 App 里点「看广告」：跳 miru-ad://rewarded?u=<用户ID>.<本次编号>，原生页面放 Unity 激励视频；
+   Unity 看完后直接通知我们服务器（/api/wallet?r=unity），服务器发钻、流水原因记成 ad_unity:<本次编号>。
+   回到网页后查钱包流水：找到这条就算到账（不在本地再加钻，避免和服务器重复）；找不到就提示没拿到奖励。
+   网页版（浏览器里）照旧走 AdSense（app128），Unity 没有网页版广告。 */
+(function () {
+  "use strict";
+  const KEY = "miru_twa189";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  try { if (/^android-app:\/\/com\.miru\.plus\.app/.test(document.referrer || "")) localStorage.setItem(KEY, "1"); } catch (_) {}
+  const inApp = () => { try { return localStorage.getItem(KEY) === "1"; } catch (_) { return false; } };
+  window.__unity189 = () => ({ inApp: inApp(), pending: !!pend });
+  if (typeof watchAd !== "function" || typeof capi !== "function") return;
+  let pend = null, granted = false;
+  const W0 = watchAd;
+  watchAd = function (done) {
+    if (!inApp()) return W0.apply(this, arguments);
+    const c = typeof cloudInfo === "function" ? cloudInfo() : {};
+    if (!c.uid) return W0.apply(this, arguments);
+    if (!adLeft()) { toast(t("ad.none")); return; }
+    if (typeof closeSheet === "function") closeSheet();
+    const n = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    pend = { n, done, at: Date.now() };
+    try { if (typeof track === "function") track("ad_unity_start", {}); } catch (_) {}
+    location.href = "miru-ad://rewarded?u=" + encodeURIComponent(c.uid + "." + n) + "&n=" + n;
+  };
+  if (typeof adGrant === "function") {
+    const G0 = adGrant;
+    adGrant = function (kind) {
+      if (granted) { granted = false; if (kind === "gem") return; }  /* 钻石已经由服务器发了，这里只处理投票、解锁这类本地效果 */
+      return G0.apply(this, arguments);
+    };
+  }
+  let checking = false;
+  async function check() {
+    if (!pend || checking) return; checking = true; const p = pend;
+    try {
+      for (let i = 0; i < 8 && pend === p; i++) {
+        await new Promise(r => setTimeout(r, i ? 1500 : 800));
+        let r; try { r = await capi("/wallet"); } catch (_) { continue; }
+        if (!r || !r.ok) continue;
+        const hit = (r.j.recent || []).find(x => x && x.reason === "ad_unity:" + p.n);
+        if (!hit) continue;
+        pend = null;
+        const cc = cloudInfo(); cc.known = r.j.gems; S.keys = r.j.gems;
+        const st = adState(); st.n++; save();
+        if (typeof keysChip === "function") keysChip();
+        toast((zh() ? "看完广告 +" : "Ad watched +") + (hit.delta || 1) + " 💎");
+        granted = true; try { if (p.done) p.done(); } finally { granted = false; }
+        return;
+      }
+      if (pend === p) { pend = null; toast(zh() ? "这次没有拿到奖励（广告没看完，或暂时没有可播的广告）" : "No reward this time (ad not finished or none available)"); }
+    } finally { checking = false; }
+  }
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible" && pend && Date.now() - pend.at > 1200) check(); });
+})();
+
+/* ===== mod190 · 2026-11-24 原创声明：用户发布作品前必须确认原创 =====
+   所有「发布到 MIRU」（导入剧本 app51、创作中心 / 一句话写剧 app68）最后都走 capi("/works",{json:{op:"publish"}})。
+   这里在发出请求前弹一次原创声明，勾选并确认才继续；同一部作品在这台设备上确认过一次，之后更新不再重复弹。
+   确认记录跟作品一起上传：pack.meta.original = { v: 声明版本, at: 时间 }，后台审核和侵权投诉时可查。 */
+(function () {
+  "use strict";
+  if (typeof capi !== "function") return;
+  const V = 1, KEY = "miru_orig190";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const TXT = () => zh()
+    ? "我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。"
+    : "I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.";
+  const done = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } };
+  const mark = id => { try { const d = done(); d[id] = Date.now(); localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
+  function ask() {
+    return new Promise(resolve => {
+      const host = document.querySelector("#dev") || document.body, el = document.createElement("div");
+      el.style.cssText = "position:absolute;inset:0;z-index:9999;background:rgba(8,6,12,.72);display:flex;align-items:center;justify-content:center;padding:18px";
+      el.innerHTML = '<div style="max-width:420px;width:100%;background:#1c1724;color:#f1ecf3;border-radius:16px;padding:20px 18px;box-shadow:0 10px 40px rgba(0,0,0,.5)">' +
+        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "原创声明" : "Originality statement") + '</h3>' +
+        '<p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:#d9d1df">' + TXT() + '</p>' +
+        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并确认以上声明" : "I have read and agree") + '</span></label>' +
+        '<div style="display:flex;gap:10px;justify-content:flex-end"><button id="ogN190" style="padding:9px 16px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">' + (zh() ? "取消" : "Cancel") + '</button>' +
+        '<button id="ogY190" disabled style="padding:9px 16px;border-radius:10px;border:0;background:#EE6F97;color:#fff;opacity:.5">' + (zh() ? "确认并发布" : "Confirm & publish") + '</button></div></div>';
+      host.appendChild(el);
+      const cb = el.querySelector("#og190"), y = el.querySelector("#ogY190");
+      cb.onchange = () => { y.disabled = !cb.checked; y.style.opacity = cb.checked ? "1" : ".5"; };
+      el.querySelector("#ogN190").onclick = () => { el.remove(); resolve(false); };
+      y.onclick = () => { if (!cb.checked) return; el.remove(); resolve(true); };
+    });
+  }
+  const C0 = capi;
+  capi = async function (path, opt) {
+    const j = opt && opt.json;
+    if (String(path || "").split("?")[0] === "/works" && j && j.op === "publish" && j.work) {
+      const id = String(j.work.id || j.work.title || "new");
+      if (!done()[id]) {
+        const ok = await ask();
+        if (!ok) { try { toast(zh() ? "需要确认原创声明才能发布" : "Please confirm the originality statement to publish"); } catch (_) {} return { ok: false, status: 0, j: { error: "original_declined" } }; }
+        mark(id);
+        try { if (typeof track === "function") track("original_confirm", { v: V }); } catch (_) {}
+      }
+      const rec = { v: V, at: new Date().toISOString() };
+      j.work.original = rec;
+      try { if (j.work.pack && typeof j.work.pack === "object") { j.work.pack.meta = j.work.pack.meta || {}; j.work.pack.meta.original = rec; } } catch (_) {}
+    }
+    return C0.apply(this, arguments);
+  };
 })();
