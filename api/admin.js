@@ -61,6 +61,18 @@ module.exports = L.wrap(async (req, res) => {
     await log('change_password', 'admin', A.id);
     return L.send(res, 200, { token: L.adminToken(up[0]) });
   }
+  /* 2026-11-24 编剧（及所有后台账号）自己改用户名 / 笔名。用户名唯一，改完发新 token。 */
+  if (r === 'profile') {
+    if (A.id === 'key') return L.bad(res, 'ADMIN_KEY 账号不能改');
+    const a = (await sql('SELECT * FROM admins WHERE id=$1', [A.id]))[0]; if (!a) return L.bad(res, '账号不存在', 404);
+    const username = b.username == null ? a.username : String(b.username).trim().toLowerCase(), name = b.name == null ? a.name : String(b.name).trim().slice(0, 30);
+    if (!/^[a-z0-9_.-]{3,30}$/.test(username)) return L.bad(res, '用户名 3–30 位：小写字母、数字、下划线、点、横线');
+    if (!name) return L.bad(res, '笔名不能为空');
+    if (username !== a.username && (await sql('SELECT 1 FROM admins WHERE username=$1 AND id<>$2', [username, a.id]))[0]) return L.bad(res, '这个用户名已经有人用了');
+    const up = await sql('UPDATE admins SET username=$2, name=$3 WHERE id=$1 RETURNING *', [a.id, username, name]);
+    await log('admin_profile', 'admin', a.id, { from: a.username, to: username, name });
+    return L.send(res, 200, { token: L.adminToken(up[0]), admin: { id: up[0].id, username: up[0].username, name: up[0].name, role: up[0].role } });
+  }
 
   /* ---------- dashboard ---------- */
   if (r === 'dashboard') {
