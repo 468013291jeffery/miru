@@ -4954,3 +4954,55 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   }, true);
   window.__pp192 = () => ({ inApp: inApp(), sdk: !!(window.paypal && window.paypal.Buttons) });
 })();
+
+/* ===== mod193 · 2026-11-25 网页版充值走 Xsolla（艾克索拉） =====
+   PayPal 商家账户被停用后改用 Xsolla。点钻石包（不在安卓 App 里时，mod192 转到这里）→ 服务器按 SKU 向 Xsolla 要付款页 → 新标签页打开付款；
+   付完 Xsolla 回调服务器发钻（本地不先加钻），这里每 5 秒查一次余额，到账就提示。服务器还没配好密钥时（501）仍提示「即将开放」。 */
+(function () {
+  "use strict";
+  if (typeof capi !== "function") return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  let poll = null;
+  async function sync() {
+    try {
+      const r = await capi("/wallet");
+      if (r && r.ok && r.j && typeof r.j.gems === "number") {
+        const cc = cloudInfo(), before = Number(cc.known);
+        cc.known = r.j.gems; S.keys = r.j.gems; save();
+        if (typeof keysChip === "function") keysChip();
+        if (Number.isFinite(before) && r.j.gems > before) {
+          toast((zh() ? "充值成功 · 💎 " : "Top-up done · 💎 ") + r.j.gems);
+          if (typeof refreshAfterPay === "function") refreshAfterPay();
+          return true;
+        }
+      }
+    } catch (_) {}
+    return false;
+  }
+  function watch() {
+    if (poll) clearInterval(poll);
+    let n = 0;
+    poll = setInterval(async () => { n++; if ((await sync()) || n > 72) { clearInterval(poll); poll = null; } }, 5000);
+  }
+  window.__webpay = async function (sku) {
+    const c = typeof cloudInfo === "function" ? cloudInfo() : {};
+    if (!c.token) { toast(zh() ? "请先登录账号再充值" : "Please sign in to top up"); return; }
+    let w = null; try { w = window.open("", "_blank"); } catch (_) {}
+    toast(zh() ? "正在打开付款页…" : "Opening checkout…");
+    const r = await capi("/wallet", { json: { op: "xs_create", sku, lang: typeof CL === "function" ? CL() : "en" } });
+    if (!r.ok || !r.j || !r.j.url) {
+      try { if (w) w.close(); } catch (_) {}
+      toast(r.status === 501 ? (zh() ? "网页充值即将开放，现在可以看广告免费领钻石" : "Web top-up is coming soon. Watch an ad to earn free diamonds.")
+        : ((zh() ? "下单失败：" : "Checkout failed: ") + ((r.j && (r.j.detail || r.j.error)) || r.status)));
+      return;
+    }
+    try { if (typeof track === "function") track("xs_open", { sku }); } catch (_) {}
+    if (w && !w.closed) { w.location.href = r.j.url; watch(); } else { location.href = r.j.url; }
+  };
+  try {
+    if (/[?&]xs=done/.test(location.search)) {
+      history.replaceState(null, "", location.pathname + location.hash);
+      setTimeout(() => { sync(); watch(); }, 1500);
+    }
+  } catch (_) {}
+})();
