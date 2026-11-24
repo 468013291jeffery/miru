@@ -4847,3 +4847,41 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     return C0.apply(this, arguments);
   };
 })();
+
+/* ===== mod191 · 2026-11-25 网页版激励广告：Monetag Direct Link =====
+   AdSense 还在审核，网页版「看广告」以前只能放 15 秒模拟广告（不产生收入）。
+   现在（不在安卓 App 里时）：点「看广告」→ 新标签页打开 Monetag 广告链接（必须在点击当下打开，否则会被浏览器拦截）；
+   用户在广告页停留满 15 秒再回来，就发奖励（每天次数上限沿用 adLeft，钻石走原来的 earn 同步，服务器有每日免费上限）。
+   安卓 App 里仍然走 Unity（mod189）。AdSense 审核通过后，把 PREFER 改成 "adsense" 即可切回。 */
+(function () {
+  "use strict";
+  if (typeof watchAd !== "function") return;
+  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 15000, PREFER = "monetag";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const inApp = () => { try { return localStorage.getItem("miru_twa189") === "1"; } catch (_) { return false; } };
+  const W1 = watchAd;
+  let pend = null;
+  watchAd = function (done) {
+    if (PREFER !== "monetag" || inApp()) return W1.apply(this, arguments);
+    if (!adLeft()) { toast(t("ad.none")); return; }
+    const w = window.open(LINK, "_blank"); try { if (w) w.opener = null; } catch (_) {}
+    if (!w && !document.hidden) { /* 被拦截了：退回原来的流程 */ return W1.apply(this, arguments); }
+    if (typeof closeSheet === "function") closeSheet();
+    pend = { done, at: Date.now(), away: 0, left: null };
+    toast(zh() ? "广告已在新标签页打开，看 15 秒后回来领奖励" : "Ad opened in a new tab — come back after 15 seconds for your reward");
+    try { if (typeof track === "function") track("ad_monetag_open", {}); } catch (_) {}
+  };
+  function settle() {
+    if (!pend) return;
+    const p = pend, away = p.away + (p.left ? Date.now() - p.left : 0);
+    if (away >= NEED_MS) { pend = null; const st = adState(); st.n++; save(); try { if (typeof track === "function") track("ad_monetag_done", { s: Math.round(away / 1000) }); } catch (_) {} if (p.done) p.done(); }
+    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 15 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (15s)"); }
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (!pend) return;
+    if (document.hidden) { pend.left = Date.now(); }
+    else { if (pend.left) { pend.away += Date.now() - pend.left; pend.left = null; } settle(); }
+  });
+  window.addEventListener("blur", function () { if (pend && !pend.left) pend.left = Date.now(); });
+  window.addEventListener("focus", function () { if (pend && pend.left) { pend.away += Date.now() - pend.left; pend.left = null; settle(); } });
+})();
