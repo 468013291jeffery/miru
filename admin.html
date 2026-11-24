@@ -106,7 +106,7 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
         <el-tag v-if="payTest" type="warning" effect="plain">支付为测试模式</el-tag>
         <el-dropdown @command="cmd">
           <span style="cursor:pointer;display:flex;align-items:center;gap:6px"><el-avatar :size="28" style="background:#EE6F97">{{ (me.name||me.username||'?').slice(0,1) }}</el-avatar>{{ me.name || me.username }} <el-tag size="small">{{ roleName[me.role] }}</el-tag></span>
-          <template #dropdown><el-dropdown-menu><el-dropdown-item command="pw">修改密码</el-dropdown-item><el-dropdown-item command="out" divided>退出登录</el-dropdown-item></el-dropdown-menu></template>
+          <template #dropdown><el-dropdown-menu><el-dropdown-item command="pf">修改用户名 / 笔名</el-dropdown-item><el-dropdown-item command="pw">修改密码</el-dropdown-item><el-dropdown-item command="out" divided>退出登录</el-dropdown-item></el-dropdown-menu></template>
         </el-dropdown>
       </el-header>
       <el-main class="main">
@@ -119,6 +119,11 @@ pre.json{white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:aut
     <p v-if="mustPw" class="muted" style="margin:0 0 12px">你现在用的是管理员发给你的初始密码。设置一个只有你知道的新密码（至少 8 位）后才能开始使用后台。</p>
     <el-form label-width="80px"><el-form-item label="原密码"><el-input v-model="pw.old" type="password" show-password /></el-form-item><el-form-item label="新密码"><el-input v-model="pw.password" type="password" show-password placeholder="至少 8 位" /></el-form-item></el-form>
     <template #footer><el-button v-if="!mustPw" @click="pwDlg=false">取消</el-button><el-button v-else @click="cmd('out')">退出登录</el-button><el-button type="primary" @click="changePw">保存</el-button></template>
+  </el-dialog>
+  <el-dialog v-model="pf.show" title="修改用户名 / 笔名" width="420px">
+    <p class="muted" style="margin:0 0 12px">用户名用来登录后台（3–30 位小写字母、数字、下划线、点、横线）；笔名是在后台和作品里显示的名字。改完用户名，下次登录就用新的用户名。</p>
+    <el-form label-width="80px"><el-form-item label="用户名"><el-input v-model="pf.username" maxlength="30" /></el-form-item><el-form-item label="笔名"><el-input v-model="pf.name" maxlength="30" /></el-form-item></el-form>
+    <template #footer><el-button @click="pf.show=false">取消</el-button><el-button type="primary" @click="saveProfile">保存</el-button></template>
   </el-dialog>
 </div></script>
 <script>
@@ -1570,9 +1575,11 @@ const app = createApp({
     window.__refreshBadges = refreshBadges;
     async function changePw() { const j = await api('password', { body: pw }); S.token = j.token; localStorage.setItem('miru_admin_tok', j.token); pwDlg.value = false; pw.old = pw.password = ''; ElMessage.success('密码已修改'); if (mustPw.value) { mustPw.value = false; reloadKey.value++; refreshBadges(); } }
     function needPw(j) { if (j && j.must_change) { mustPw.value = true; pwDlg.value = true; ElMessage.warning('请先修改初始密码'); } }
-    function cmd(c) { if (c === 'pw') pwDlg.value = true; if (c === 'out') { logout(); ElMessage.success('已退出'); } }
+    const pf = reactive({ show: false, username: '', name: '' });
+    async function saveProfile() { const j = await api('profile', { body: { username: pf.username, name: pf.name } }); S.token = j.token; S.me = j.admin; localStorage.setItem('miru_admin_tok', j.token); localStorage.setItem('miru_admin_me', JSON.stringify(j.admin)); pf.show = false; ElMessage.success('已保存'); }
+    function cmd(c) { if (c === 'pf') { pf.username = S.me.username || ''; pf.name = S.me.name || ''; pf.show = true; } if (c === 'pw') pwDlg.value = true; if (c === 'out') { logout(); ElMessage.success('已退出'); } }
     onMounted(async () => { if (S.token) { try { const j = await api('me'); needPw(j); S.me = j.admin; S.perms = j.perms; localStorage.setItem('miru_admin_perms', JSON.stringify(j.perms)); if (!titles[route.value] || !can(permOf(route.value))) go(firstPage()); refreshBadges(); } catch (_) {} } });
-    return { token: computed(() => S.token), me: computed(() => S.me), route, collapsed, busy, lf, login, go, titles, can, roleName: L.role, pwDlg, mustPw, pw, changePw, cmd, badge, payTest, reloadKey };
+    return { token: computed(() => S.token), me: computed(() => S.me), route, collapsed, busy, lf, login, go, titles, can, roleName: L.role, pwDlg, mustPw, pw, changePw, cmd, badge, payTest, reloadKey, pf, saveProfile };
   },
 });
 app.use(ElementPlus, { locale: ElementPlusLocaleZhCn });
