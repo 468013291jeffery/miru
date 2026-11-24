@@ -1,0 +1,797 @@
+{
+  "schema": 1,
+  "slug": "ashes-of-us-v1",
+  "title": "余烬之吻",
+  "english": "ASHES OF US",
+  "orient": "gl",
+  "adult": false,
+  "lang": "zh",
+  "hook": "十五年前，你们只听完了半句话。十五年后，一场展览让旧爱重新站到面前。",
+  "premise": "十五年前，你和莱娜在纽约的艺术学院相识。你负责策展，她用摄影表达那些不愿公开说出口的事。你们秘密相爱，也一起约定：照片属于创作者，任何人都不能替她出售。\n\n后来，尚未授权的作品出现在商业样张上。一场撤展、一次只听到一半的谈话，以及你在竞争画廊门外看见的身影，让彼此的保护变成了背叛。你们分别离开，十五年没有把那几天的事完整说清。\n\n如今你是35岁的艺术基金合伙人伊芙琳·海斯，莱娜也成了独立的摄影艺术家。纽约摄影双年展上，赞助人再次把你们安排到同一个项目里，还想把旧日恋情变成售票的故事。\n\n你可以谈合作条件、拒绝利用私生活，也可以回看共同的过去，向亲历者逐一询问，把作品授权、会议里的话与分离前后的顺序重新拼起来。过去不会被改写，但今天的回应可以不同。\n\n真相不自动换来原谅。展览如何进行、哪些往事能公开，以及是否重新靠近，都要你与莱娜分别说清。你能争取的是一次把话听完的机会，和一段无需以爱情偿还事业的未来。",
+  "you": "你扮演35岁的女性伊芙琳·海斯，纽约艺术基金合伙人、前策展人。十五年前与莱娜相爱，如今共同面对展览、授权旧案和彼此未说清的误会。往事固定，当下的合作、公开与亲密范围由你表达。",
+  "cast": [
+    {
+      "name": "伊芙琳",
+      "full": "伊芙琳·海斯",
+      "gender": "f",
+      "age": 35,
+      "role": "纽约国际艺术基金合伙人、前策展人",
+      "looks": "深棕短波浪发、冷白西装、黑丝质衬衫；紧张时整理袖扣",
+      "bio": "伊芙琳·海斯\n【常用称呼】伊芙琳\n【性别】女\n【年龄】35\n【人物定位】主角\n【能否发展感情】不能\n【身份】纽约国际艺术基金合伙人、前策展人\n【外貌和习惯】深棕短波浪发、冷白西装、黑丝质衬衫；紧张时整理袖扣\n【说话方式】短句，习惯先问事实；情绪崩溃时语速反而放慢\n【性格】自律、骄傲，擅长保护作品却常把保护当成替人决定\n【想要】完成不伤害莱娜自主性的展览\n【害怕】再次被指控背叛\n【底线】不以投资权力换取感情\n【对玩家的初始态度】十五年前的旧爱；彼此戒备\n【吸引力】在公开场合承担责任，不用甜言蜜语掩盖行动\n【开局认知】知道当年看见莱娜从竞争画廊出来；不知道她去那里是为阻止商业使用\n【样例台词】\n伊芙琳：我不想再替你决定。\n伊芙琳：你可以拒绝。\n伊芙琳：这次我会把话听完。\n伊芙琳：我没有资格要求你原谅。\n伊芙琳：我想留下，但我会尊重你的答案。\n【会怎么变】从自身既有防御方式出发，在事实和尊重中重新调整边界；不能因玩家单次选项立即转变。\n\n",
+      "romanceable": false,
+      "known": "知道当年看见莱娜从竞争画廊出来；不知道她去那里是为阻止商业使用",
+      "art": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg"
+    },
+    {
+      "name": "莱娜",
+      "full": "莱娜·莫罗",
+      "gender": "f",
+      "age": 35,
+      "role": "法裔美籍观念摄影艺术家",
+      "looks": "黑色长直发、酒红丝质上衣、细金耳环；思考时轻触相机背带",
+      "bio": "莱娜·莫罗\n【常用称呼】莱娜\n【性别】女\n【年龄】35\n【人物定位】主角\n【能否发展感情】能\n【身份】法裔美籍观念摄影艺术家\n【外貌和习惯】黑色长直发、酒红丝质上衣、细金耳环；思考时轻触相机背带\n【说话方式】直接、带一点讽刺，难过时忽然礼貌\n【性格】热烈、敏锐，珍惜创作自主；用离开保护自尊，也曾用沉默惩罚别人\n【想要】完成一场不被爱情丑闻定义的展览\n【害怕】再次沦为别人决定中的附属品\n【底线】拒绝商业利用私生活；拒绝未经同意的身体接触\n【对玩家的初始态度】旧爱，仍有情绪但不默认想复合\n【吸引力】敢当面质问，敢承认自己也有错；亲密时有克制的幽默\n【开局认知】知道自己去竞争画廊要求停用作品；曾在门外听见伊芙琳说选展览；不知道会议后半句\n【样例台词】\n莱娜：你别替我记得。\n莱娜：我没有请求被保护。\n莱娜：你想听真相，还是想听一个能原谅自己的版本？\n莱娜：我可以想你，也可以不回来。\n莱娜：今天先别吻我。\n【会怎么变】从自身既有防御方式出发，在事实和尊重中重新调整边界；不能因玩家单次选项立即转变。\n\n",
+      "romanceable": true,
+      "known": "知道自己去竞争画廊要求停用作品；曾在门外听见伊芙琳说选展览；不知道会议后半句",
+      "art": "/art/official/ashes-of-us-v1/char_lena_35.jpg"
+    },
+    {
+      "name": "玛丽安",
+      "full": "玛丽安·沃斯",
+      "gender": "f",
+      "age": 52,
+      "role": "昔日商业合作主管，现独立艺术顾问",
+      "looks": "银灰短发、深色套装，携带皮质文件夹",
+      "bio": "玛丽安·沃斯\n【常用称呼】玛丽安\n【性别】女\n【年龄】52\n【人物定位】次要角色\n【能否发展感情】不能\n【身份】昔日商业合作主管，现独立艺术顾问\n【外貌和习惯】银灰短发、深色套装，携带皮质文件夹\n【说话方式】礼貌、绕弯、喜欢用商业术语淡化责任\n【性格】擅长交易，认为先达成结果再补授权是行业惯例\n【想要】避免当年擅自授权的事实伤害名声\n【害怕】承认自己利用了年轻艺术家\n【底线】面对直接质问时会试图推责，最终必须明确承担行为\n【对玩家的初始态度】曾经的上司与合作方\n【吸引力】对权力结构的熟练让对抗更具重量\n【开局认知】知道自己曾擅自推动商业样张使用；不知道两人各自听到了哪半句话\n【样例台词】\n玛丽安：当时情况很复杂。\n玛丽安：我以为可以补手续。\n玛丽安：我没有征求她的同意。\n玛丽安：你们有权追究。\n玛丽安：我不能要求你们理解。\n【会怎么变】从自身既有防御方式出发，在事实和尊重中重新调整边界；不能因玩家单次选项立即转变。\n\n",
+      "romanceable": false,
+      "known": "知道自己曾擅自推动商业样张使用；不知道两人各自听到了哪半句话",
+      "art": "/art/official/ashes-of-us-v1/char_marianne.jpg"
+    },
+    {
+      "name": "索菲",
+      "full": "索菲·贝内特",
+      "gender": "f",
+      "age": 36,
+      "role": "摄影师，莱娜的长期朋友",
+      "looks": "浅金色短发、皮夹克，常背小型胶片相机",
+      "bio": "索菲·贝内特\n【常用称呼】索菲\n【性别】女\n【年龄】36\n【人物定位】次要角色\n【能否发展感情】不能\n【身份】摄影师，莱娜的长期朋友\n【外貌和习惯】浅金色短发、皮夹克，常背小型胶片相机\n【说话方式】坦率幽默，能识别越界\n【性格】忠诚但不充当爱情裁判\n【想要】帮助莱娜完成展览\n【害怕】莱娜再次被伤害\n【底线】不替莱娜决定是否复合\n【对玩家的初始态度】认识伊芙琳的名字但不熟悉她\n【吸引力】能够为莱娜提供独立关系与生活的真实支撑\n【开局认知】只知道莱娜分离后的生活，不知道当年授权内幕\n【样例台词】\n索菲：我站她这边，但不是替她发言。\n索菲：嫉妒可以承认，不能拿来命令。\n索菲：你可以直接问她。\n索菲：我不替她回答。\n索菲：你们都需要睡一觉。\n【会怎么变】从自身既有防御方式出发，在事实和尊重中重新调整边界；不能因玩家单次选项立即转变。\n\n",
+      "romanceable": false,
+      "known": "只知道莱娜分离后的生活，不知道当年授权内幕",
+      "art": "/art/official/ashes-of-us-v1/char_sophie.jpg"
+    },
+    {
+      "name": "乔纳",
+      "full": "乔纳·里德",
+      "gender": "m",
+      "age": 61,
+      "role": "退休印刷工坊主",
+      "looks": "灰胡子、旧围裙、沾墨的手指",
+      "bio": "乔纳·里德\n【常用称呼】乔纳\n【性别】男\n【年龄】61\n【人物定位】次要角色\n【能否发展感情】不能\n【身份】退休印刷工坊主\n【外貌和习惯】灰胡子、旧围裙、沾墨的手指\n【说话方式】慢条斯理，记时间靠机器故障与工作习惯\n【性格】务实，不喜欢被卷入纠纷\n【想要】说明自己亲眼经历的印刷流程\n【害怕】被要求证明自己不知情的事\n【底线】不猜测委托人动机\n【对玩家的初始态度】十五年前有业务往来\n【吸引力】通过有限而可靠的个人记忆帮助厘清时间\n【开局认知】记得样张印制发生在两人争吵之前；不知谁最终批准商业使用\n【样例台词】\n乔纳：我记得机器坏了。\n乔纳：我只负责印。\n乔纳：谁爱谁我不清楚。\n乔纳：别让我替你们猜。\n乔纳：那天确实是周四。\n【会怎么变】从自身既有防御方式出发，在事实和尊重中重新调整边界；不能因玩家单次选项立即转变。\n\n",
+      "romanceable": false,
+      "known": "记得样张印制发生在两人争吵之前；不知谁最终批准商业使用",
+      "art": "/art/official/ashes-of-us-v1/char_jonah.jpg"
+    }
+  ],
+  "chapters": [
+    {
+      "n": 1,
+      "title": "重逢于展厅",
+      "time": "纽约·冬夜",
+      "goal": "Evelyn必须决定是否接下与Lena的联合展览，而不是替她决定",
+      "scenes": [
+        {
+          "id": "SCN_01_01",
+          "place": "展厅入口",
+          "people": [
+            "莱娜",
+            "玛丽安"
+          ],
+          "dialogue": "Lena：你还是习惯站在离出口最近的地方。 Evelyn：我只是来谈工作。 Lena：那就别盯着我的手看。",
+          "bg": "bg_01_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：你还是习惯站在离出口最近的地方。",
+            "莱娜：那就别盯着我的手看。"
+          ]
+        },
+        {
+          "id": "SCN_01_02",
+          "place": "收藏家晚宴",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：我不是你们用来卖票的悲剧。 Evelyn：合同里不会有这一条。 Lena：你以前也这么说过。",
+          "bg": "bg_01_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：我不是你们用来卖票的悲剧。",
+            "莱娜：你以前也这么说过。"
+          ]
+        },
+        {
+          "id": "SCN_01_03",
+          "place": "消防楼梯",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：不是我先放开的。 Evelyn：我记得的不是这样。 Lena：那就别替我记。",
+          "bg": "bg_01_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：不是我先放开的。",
+            "莱娜：那就别替我记。"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 2,
+      "title": "那年夏天",
+      "time": "十五年前·纽约",
+      "goal": "在可控的回忆中认识当年的竞争与吸引，不改变固定历史",
+      "scenes": [
+        {
+          "id": "SCN_02_01",
+          "place": "学院走廊",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：他们说照片太私人。 Evelyn：我觉得他们怕的是照片太诚实。 Lena：你是在夸我，还是在抢我的展墙？",
+          "bg": "bg_02_01",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，莱娜说：“他们说照片太私人。”",
+            "旁白：往日片段中，伊芙琳说：“我觉得他们怕的是照片太诚实。”",
+            "旁白：往日片段中，莱娜说：“你是在夸我，还是在抢我的展墙？”"
+          ]
+        },
+        {
+          "id": "SCN_02_02",
+          "place": "旧货店",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：你买不起新框？ Lena：我不想让新框假装这张照片没有过去。 Evelyn：那我帮你修旧的。",
+          "bg": "bg_02_02",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，伊芙琳说：“你买不起新框？”",
+            "旁白：往日片段中，莱娜说：“我不想让新框假装这张照片没有过去。”",
+            "旁白：往日片段中，伊芙琳说：“那我帮你修旧的。”"
+          ]
+        },
+        {
+          "id": "SCN_02_03",
+          "place": "学院屋顶",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：你看起来总有备用计划。 Evelyn：这次没有。 Lena：那就别急着逃。",
+          "bg": "bg_02_03",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，莱娜说：“你看起来总有备用计划。”",
+            "旁白：往日片段中，伊芙琳说：“这次没有。”",
+            "旁白：往日片段中，莱娜说：“那就别急着逃。”"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 3,
+      "title": "暗房里的秘密",
+      "time": "十五年前·初秋",
+      "goal": "确认秘密恋情如何开始，并建立两人对作品署名的不同理解",
+      "scenes": [
+        {
+          "id": "SCN_03_01",
+          "place": "红灯暗房",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：这张不能展。 Lena：为什么？ Evelyn：因为我看你的样子太明显。",
+          "bg": "bg_03_01",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，伊芙琳说：“这张不能展。”",
+            "旁白：往日片段中，莱娜说：“为什么？”",
+            "旁白：往日片段中，伊芙琳说：“因为我看你的样子太明显。”"
+          ]
+        },
+        {
+          "id": "SCN_03_02",
+          "place": "画廊后院",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：我可以等你准备好。 Evelyn：我不想让你一直等。 Lena：那就别让我像个秘密。",
+          "bg": "bg_03_02",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，莱娜说：“我可以等你准备好。”",
+            "旁白：往日片段中，伊芙琳说：“我不想让你一直等。”",
+            "旁白：往日片段中，莱娜说：“那就别让我像个秘密。”"
+          ]
+        },
+        {
+          "id": "SCN_03_03",
+          "place": "合租公寓",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：谁也不能替你卖掉这些照片。 Lena：包括你。 Evelyn：包括我。",
+          "bg": "bg_03_03",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，伊芙琳说：“谁也不能替你卖掉这些照片。”",
+            "旁白：往日片段中，莱娜说：“包括你。”",
+            "旁白：往日片段中，伊芙琳说：“包括我。”"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 4,
+      "title": "消失的底片",
+      "time": "十五年前·深秋",
+      "goal": "呈现两人所见的事实与错误推断，不提前宣布真凶",
+      "scenes": [
+        {
+          "id": "SCN_04_01",
+          "place": "印刷工坊",
+          "people": [
+            "莱娜",
+            "乔纳"
+          ],
+          "dialogue": "Lena：这些照片没有授权。 工坊主：我只接到加急单。 Lena：是谁给你的？",
+          "bg": "bg_04_01",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，莱娜说：“这些照片没有授权。”",
+            "旁白：往日片段中，乔纳说：“我只接到加急单。”",
+            "旁白：往日片段中，莱娜说：“是谁给你的？”"
+          ]
+        },
+        {
+          "id": "SCN_04_02",
+          "place": "赞助会议室",
+          "people": [
+            "玛丽安"
+          ],
+          "dialogue": "主管Marianne：你要保她，就得先保住展。 Evelyn：如果只能二选一，我选展览。 Marianne：我会记住这句话。",
+          "bg": "bg_04_02",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，玛丽安说：“你要保她，就得先保住展。”",
+            "旁白：往日片段中，伊芙琳说：“如果只能二选一，我选展览。”",
+            "旁白：往日片段中，玛丽安说：“我会记住这句话。”"
+          ]
+        },
+        {
+          "id": "SCN_04_03",
+          "place": "画廊外街",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：你去找她做什么？ Lena：我在处理我的作品。 Evelyn：我们的展览也算你的作品吗？",
+          "bg": "bg_04_03",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，伊芙琳说：“你去找她做什么？”",
+            "旁白：往日片段中，莱娜说：“我在处理我的作品。”",
+            "旁白：往日片段中，伊芙琳说：“我们的展览也算你的作品吗？”"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 5,
+      "title": "你从未相信我",
+      "time": "十五年前·雪夜",
+      "goal": "亲历分手，但不强迫玩家在回忆中接受错误结论",
+      "scenes": [
+        {
+          "id": "SCN_05_01",
+          "place": "撤展现场",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：你把我的名字从墙上拿掉了。 Evelyn：是他们要撤掉整场。 Lena：你没有先问我。",
+          "bg": "bg_05_01",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，莱娜说：“你把我的名字从墙上拿掉了。”",
+            "旁白：往日片段中，伊芙琳说：“是他们要撤掉整场。”",
+            "旁白：往日片段中，莱娜说：“你没有先问我。”"
+          ]
+        },
+        {
+          "id": "SCN_05_02",
+          "place": "雨夜公寓",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：你可以留下解释。 Lena：你已经判了我有罪。 Evelyn：你也从没告诉我真相。",
+          "bg": "bg_05_02",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，伊芙琳说：“你可以留下解释。”",
+            "旁白：往日片段中，莱娜说：“你已经判了我有罪。”",
+            "旁白：往日片段中，伊芙琳说：“你也从没告诉我真相。”"
+          ]
+        },
+        {
+          "id": "SCN_05_03",
+          "place": "凌晨车站",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：别说你会等我。 Evelyn：我不会。 Lena：你看，你终于说了一句实话。",
+          "bg": "bg_05_03",
+          "past": true,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，莱娜说：“别说你会等我。”",
+            "旁白：往日片段中，伊芙琳说：“我不会。”",
+            "旁白：往日片段中，莱娜说：“你看，你终于说了一句实话。”"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 6,
+      "title": "没有你的十五年",
+      "time": "纽约与巴黎·蒙太奇",
+      "goal": "理解彼此在离开后仍有独立生活与事业",
+      "scenes": [
+        {
+          "id": "SCN_06_01",
+          "place": "纽约办公室",
+          "people": [],
+          "dialogue": "同事：这会损失一笔赞助。 Evelyn：那就损失。 同事：你从什么时候开始这么固执？",
+          "bg": "bg_06_01",
+          "past": false,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，同事说：“这会损失一笔赞助。”",
+            "旁白：往日片段中，伊芙琳说：“那就损失。”",
+            "旁白：往日片段中，同事说：“你从什么时候开始这么固执？”"
+          ]
+        },
+        {
+          "id": "SCN_06_02",
+          "place": "巴黎摄影棚",
+          "people": [],
+          "dialogue": "策展人：观众爱看你的爱情悲剧。 Lena：他们可以买我的作品，买不到我的伤口。",
+          "bg": "bg_06_02",
+          "past": false,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，策展人说：“观众爱看你的爱情悲剧。”",
+            "旁白：往日片段中，莱娜说：“他们可以买我的作品，买不到我的伤口。”"
+          ]
+        },
+        {
+          "id": "SCN_06_03",
+          "place": "跨年街头",
+          "people": [],
+          "dialogue": "Evelyn（自语）：我想问的从来不是你有没有想我。 Evelyn（自语）：是你过得好吗。",
+          "bg": "bg_06_03",
+          "past": false,
+          "memory": true,
+          "baseline": [
+            "旁白：往日片段中，伊芙琳说：“我想问的从来不是你有没有想我。”",
+            "旁白：往日片段中，伊芙琳说：“是你过得好吗。”"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 7,
+      "title": "重新靠近",
+      "time": "纽约·初春",
+      "goal": "建立工作边界，在尊重中产生重新靠近的可能",
+      "scenes": [
+        {
+          "id": "SCN_07_01",
+          "place": "布展仓库",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：你可以问，不可以直接决定。 Evelyn：那我现在问。 Lena：你学得很慢。",
+          "bg": "bg_07_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：你可以问，不可以直接决定。",
+            "莱娜：你学得很慢。"
+          ]
+        },
+        {
+          "id": "SCN_07_02",
+          "place": "空展厅",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：你还记得这盏灯的角度。 Evelyn：我记得你不喜欢正面照。 Lena：我喜欢你记得。",
+          "bg": "bg_07_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：你还记得这盏灯的角度。",
+            "莱娜：我喜欢你记得。"
+          ]
+        },
+        {
+          "id": "SCN_07_03",
+          "place": "咖啡店",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：你幸福过吗？ Evelyn：有过一些好日子。 Lena：那就好。",
+          "bg": "bg_07_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：你幸福过吗？",
+            "莱娜：那就好。"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 8,
+      "title": "嫉妒是一种本能",
+      "time": "纽约·展前十日",
+      "goal": "在嫉妒与职业伦理之间作出独立选择",
+      "scenes": [
+        {
+          "id": "SCN_08_01",
+          "place": "赞助酒会",
+          "people": [
+            "莱娜",
+            "索菲"
+          ],
+          "dialogue": "Sophie：我们是旧朋友。 Lena：你不用向她解释。 Evelyn：我也没资格要求。",
+          "bg": "bg_08_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "索菲：我们是旧朋友。",
+            "莱娜：你不用向她解释。"
+          ]
+        },
+        {
+          "id": "SCN_08_02",
+          "place": "策展会议",
+          "people": [
+            "莱娜",
+            "玛丽安"
+          ],
+          "dialogue": "Marianne：观众需要一个故事。 Lena：我有作品。 Evelyn：作品本身就是故事。",
+          "bg": "bg_08_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "玛丽安：观众需要一个故事。",
+            "莱娜：我有作品。"
+          ]
+        },
+        {
+          "id": "SCN_08_03",
+          "place": "夜间出租车旁",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：我看见你从那间办公室出来。 Lena：原来你看见了。 Evelyn：所以我才一直以为……",
+          "bg": "bg_08_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：原来你看见了。"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 9,
+      "title": "第三种记忆",
+      "time": "纽约·展前一周",
+      "goal": "通过亲历者对话重建时间，而非发现万能文件",
+      "scenes": [
+        {
+          "id": "SCN_09_01",
+          "place": "旧印刷工坊",
+          "people": [
+            "莱娜",
+            "乔纳"
+          ],
+          "dialogue": "工坊主：我记得那天，因为机器坏了。 Lena：所以我去找她之前，照片就已经被用了。 Evelyn：我们把先后顺序记反了。",
+          "bg": "bg_09_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "乔纳：我记得那天，因为机器坏了。",
+            "莱娜：所以我去找她之前，照片就已经被用了。"
+          ]
+        },
+        {
+          "id": "SCN_09_02",
+          "place": "街角长椅",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：我以为你知道。 Evelyn：我只知道你没有告诉我。 Lena：我当时太生气了。",
+          "bg": "bg_09_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：我以为你知道。",
+            "莱娜：我当时太生气了。"
+          ]
+        },
+        {
+          "id": "SCN_09_03",
+          "place": "展厅楼梯",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：我站在门外。 Evelyn：我知道。 Lena：你不知道我听到了什么。",
+          "bg": "bg_09_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：我站在门外。",
+            "莱娜：你不知道我听到了什么。"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 10,
+      "title": "最后四十八小时",
+      "time": "纽约·暴雨夜",
+      "goal": "两人完整讲述各自的最后48小时，并承担自身责任",
+      "scenes": [
+        {
+          "id": "SCN_10_01",
+          "place": "旧暗房",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Evelyn：我以为你把照片卖了。 Lena：我以为你把我卖了。 Evelyn：我们都没问完。",
+          "bg": "bg_10_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：我以为你把我卖了。"
+          ]
+        },
+        {
+          "id": "SCN_10_02",
+          "place": "暗房门口",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：那句话我听了十五年。 Evelyn：我是在保住你的作品。 Lena：可你还是没问我想不想被这样保护。",
+          "bg": "bg_10_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：那句话我听了十五年。",
+            "莱娜：可你还是没问我想不想被这样保护。"
+          ]
+        },
+        {
+          "id": "SCN_10_03",
+          "place": "河边步道",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：我想吻你，也想恨你。 Evelyn：你不必今晚选。 Lena：那你也别替我选。",
+          "bg": "bg_10_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：我想吻你，也想恨你。",
+            "莱娜：那你也别替我选。"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 11,
+      "title": "最后一场展览",
+      "time": "纽约·开幕前夜",
+      "goal": "让当年的主管亲口面对两人，不让第三方承担全部感情责任",
+      "scenes": [
+        {
+          "id": "SCN_11_01",
+          "place": "画廊办公室",
+          "people": [
+            "莱娜",
+            "玛丽安"
+          ],
+          "dialogue": "Marianne：我以为我能先卖出样张再补授权。 Lena：你知道我不同意。 Marianne：我知道。",
+          "bg": "bg_11_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "玛丽安：我以为我能先卖出样张再补授权。",
+            "莱娜：你知道我不同意。",
+            "玛丽安：我知道。"
+          ]
+        },
+        {
+          "id": "SCN_11_02",
+          "place": "媒体预展",
+          "people": [
+            "莱娜",
+            "玛丽安"
+          ],
+          "dialogue": "记者：这场展览是不是你们的和解？ Lena：这是一场展览。 Evelyn：别把她的回答改成我的。",
+          "bg": "bg_11_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：这是一场展览。"
+          ]
+        },
+        {
+          "id": "SCN_11_03",
+          "place": "闭馆后展厅",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：我不是来证明我们可以复合。 Evelyn：我知道。 Lena：那你现在想要什么？",
+          "bg": "bg_11_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：我不是来证明我们可以复合。",
+            "莱娜：那你现在想要什么？"
+          ]
+        }
+      ]
+    },
+    {
+      "n": 12,
+      "title": "余烬之吻",
+      "time": "纽约·春末",
+      "goal": "在事实完整后由玩家自由决定关系，不预设复合",
+      "scenes": [
+        {
+          "id": "SCN_12_01",
+          "place": "空展厅",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：展览结束了。 Evelyn：我们也必须结束吗？ Lena：这次我想听你真正的答案。",
+          "bg": "bg_12_01",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：展览结束了。",
+            "莱娜：这次我想听你真正的答案。"
+          ]
+        },
+        {
+          "id": "SCN_12_02",
+          "place": "河边长椅",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：如果重新开始，我们得学会把话说完。 Evelyn：如果不开始，我也会尊重你。 Lena：我想听的是你自己想要什么。",
+          "bg": "bg_12_02",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：如果重新开始，我们得学会把话说完。",
+            "莱娜：我想听的是你自己想要什么。"
+          ]
+        },
+        {
+          "id": "SCN_12_03",
+          "place": "清晨街口",
+          "people": [
+            "莱娜"
+          ],
+          "dialogue": "Lena：十五年不能重来。 Evelyn：但今天可以由我们决定。 Lena：那就从今天说起。",
+          "bg": "bg_12_03",
+          "past": false,
+          "memory": false,
+          "baseline": [
+            "莱娜：十五年不能重来。",
+            "莱娜：那就从今天说起。"
+          ]
+        }
+      ]
+    }
+  ],
+  "assets": {
+    "bg_01_02": "/art/official/ashes-of-us-v1/bg_01_02.jpg",
+    "char_marianne": "/art/official/ashes-of-us-v1/char_marianne.jpg",
+    "bg_01_03": "/art/official/ashes-of-us-v1/bg_01_03.jpg",
+    "bg_01_01": "/art/official/ashes-of-us-v1/bg_01_01.jpg",
+    "bg_11_01": "/art/official/ashes-of-us-v1/bg_11_01.jpg",
+    "bg_03_01": "/art/official/ashes-of-us-v1/bg_03_01.jpg",
+    "bg_11_02": "/art/official/ashes-of-us-v1/bg_11_02.jpg",
+    "bg_03_02": "/art/official/ashes-of-us-v1/bg_03_02.jpg",
+    "bg_03_03": "/art/official/ashes-of-us-v1/bg_03_03.jpg",
+    "bg_11_03": "/art/official/ashes-of-us-v1/bg_11_03.jpg",
+    "char_evelyn_20": "/art/official/ashes-of-us-v1/char_evelyn_20.jpg",
+    "cg_03_darkroom": "/art/official/ashes-of-us-v1/cg_03_darkroom.jpg",
+    "char_evelyn_35": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg",
+    "bg_07_01": "/art/official/ashes-of-us-v1/bg_07_01.jpg",
+    "bg_07_03": "/art/official/ashes-of-us-v1/bg_07_03.jpg",
+    "bg_07_02": "/art/official/ashes-of-us-v1/bg_07_02.jpg",
+    "bg_05_03": "/art/official/ashes-of-us-v1/bg_05_03.jpg",
+    "cover_ashes_of_us": "/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+    "bg_09_03": "/art/official/ashes-of-us-v1/bg_09_03.jpg",
+    "bg_09_02": "/art/official/ashes-of-us-v1/bg_09_02.jpg",
+    "bg_05_02": "/art/official/ashes-of-us-v1/bg_05_02.jpg",
+    "bg_09_01": "/art/official/ashes-of-us-v1/bg_09_01.jpg",
+    "bg_05_01": "/art/official/ashes-of-us-v1/bg_05_01.jpg",
+    "cg_05_station": "/art/official/ashes-of-us-v1/cg_05_station.jpg",
+    "char_jonah": "/art/official/ashes-of-us-v1/char_jonah.jpg",
+    "bg_12_01": "/art/official/ashes-of-us-v1/bg_12_01.jpg",
+    "bg_12_03": "/art/official/ashes-of-us-v1/bg_12_03.jpg",
+    "bg_12_02": "/art/official/ashes-of-us-v1/bg_12_02.jpg",
+    "bg_02_03": "/art/official/ashes-of-us-v1/bg_02_03.jpg",
+    "bg_10_03": "/art/official/ashes-of-us-v1/bg_10_03.jpg",
+    "bg_10_02": "/art/official/ashes-of-us-v1/bg_10_02.jpg",
+    "bg_02_02": "/art/official/ashes-of-us-v1/bg_02_02.jpg",
+    "cg_12_dawn": "/art/official/ashes-of-us-v1/cg_12_dawn.jpg",
+    "bg_10_01": "/art/official/ashes-of-us-v1/bg_10_01.jpg",
+    "cg_01_reunion": "/art/official/ashes-of-us-v1/cg_01_reunion.jpg",
+    "bg_02_01": "/art/official/ashes-of-us-v1/bg_02_01.jpg",
+    "bg_06_02": "/art/official/ashes-of-us-v1/bg_06_02.jpg",
+    "cg_10_unfinished_touch": "/art/official/ashes-of-us-v1/cg_10_unfinished_touch.jpg",
+    "bg_06_03": "/art/official/ashes-of-us-v1/bg_06_03.jpg",
+    "bg_06_01": "/art/official/ashes-of-us-v1/bg_06_01.jpg",
+    "bg_08_01": "/art/official/ashes-of-us-v1/bg_08_01.jpg",
+    "bg_04_01": "/art/official/ashes-of-us-v1/bg_04_01.jpg",
+    "bg_08_02": "/art/official/ashes-of-us-v1/bg_08_02.jpg",
+    "bg_04_02": "/art/official/ashes-of-us-v1/bg_04_02.jpg",
+    "char_lena_20": "/art/official/ashes-of-us-v1/char_lena_20.jpg",
+    "char_lena_35": "/art/official/ashes-of-us-v1/char_lena_35.jpg",
+    "bg_04_03": "/art/official/ashes-of-us-v1/bg_04_03.jpg",
+    "char_sophie": "/art/official/ashes-of-us-v1/char_sophie.jpg",
+    "bg_08_03": "/art/official/ashes-of-us-v1/bg_08_03.jpg",
+    "cg_07_light": "/art/official/ashes-of-us-v1/cg_07_light.jpg",
+    "cover": "/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+    "poster": "/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+    "leads": [
+      "莱娜",
+      "玛丽安",
+      "索菲",
+      "乔纳"
+    ],
+    "cast_all": true,
+    "char_莱娜": "/art/official/ashes-of-us-v1/char_lena_35.jpg",
+    "char_玛丽安": "/art/official/ashes-of-us-v1/char_marianne.jpg",
+    "char_索菲": "/art/official/ashes-of-us-v1/char_sophie.jpg",
+    "char_乔纳": "/art/official/ashes-of-us-v1/char_jonah.jpg",
+    "char_伊芙琳": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg"
+  },
+  "opening": [
+    "旁白：纽约摄影双年展的开幕夜，展厅里响着低低的交谈声。莱娜的照片占据整面墙，十五年前熟悉的布光落在她肩上。",
+    "旁白：玛丽安把联合展览的项目单放在你们之间，赞助人的名字印在最上方。",
+    "莱娜：你还是习惯站在离出口最近的地方。",
+    "旁白：她没有接那张项目单，先看向你。"
+  ],
+  "video": null
+}

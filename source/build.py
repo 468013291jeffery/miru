@@ -48,6 +48,7 @@ parts.extend(["app157_perf.js"])
 parts.extend(["app153_m119.js"])
 parts.extend(["app160_m121_data.js", "app160_m121_engine.js", "app160_m121.js"])
 parts.extend(["app161_bride_state.js", "app161_bride_data.js", "app161_bride.js"])
+parts.extend(["app162_ashes_state.js", "app162_ashes_data.js", "app162_ashes.js"])
 # 阅读节奏最后接管等待，兼容主线新剧及性能模块。
 parts.extend(["app157_reply_pace.js"])
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)

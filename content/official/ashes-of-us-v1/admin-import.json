@@ -1,0 +1,596 @@
+{
+  "id": "sc_mwuutryzc60fb1c7b9",
+  "patch": {
+    "title": "余烬之吻",
+    "orient": "gl",
+    "lang": "zh",
+    "config": {
+      "source_key": "ashes-of-us-v1",
+      "hook": "十五年前，你们只听完了半句话。十五年后，一场展览让旧爱重新站到面前。",
+      "premise": "十五年前，你和莱娜在纽约的艺术学院相识。你负责策展，她用摄影表达那些不愿公开说出口的事。你们秘密相爱，也一起约定：照片属于创作者，任何人都不能替她出售。\n\n后来，尚未授权的作品出现在商业样张上。一场撤展、一次只听到一半的谈话，以及你在竞争画廊门外看见的身影，让彼此的保护变成了背叛。你们分别离开，十五年没有把那几天的事完整说清。\n\n如今你是35岁的艺术基金合伙人伊芙琳·海斯，莱娜也成了独立的摄影艺术家。纽约摄影双年展上，赞助人再次把你们安排到同一个项目里，还想把旧日恋情变成售票的故事。\n\n你可以谈合作条件、拒绝利用私生活，也可以回看共同的过去，向亲历者逐一询问，把作品授权、会议里的话与分离前后的顺序重新拼起来。过去不会被改写，但今天的回应可以不同。\n\n真相不自动换来原谅。展览如何进行、哪些往事能公开，以及是否重新靠近，都要你与莱娜分别说清。你能争取的是一次把话听完的机会，和一段无需以爱情偿还事业的未来。",
+      "you": "你扮演35岁的女性伊芙琳·海斯，纽约艺术基金合伙人、前策展人。十五年前与莱娜相爱，如今共同面对展览、授权旧案和彼此未说清的误会。往事固定，当下的合作、公开与亲密范围由你表达。",
+      "adult": false,
+      "cover": "https://miru.plus/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+      "tags": [
+        "Romance",
+        "Second Chance",
+        "Art",
+        "女性恋爱"
+      ],
+      "leads": [
+        {
+          "key": "lena",
+          "n": {
+            "zh": "莱娜",
+            "en": "莱娜·莫罗"
+          },
+          "g": "f",
+          "age": 35,
+          "art": "/art/official/ashes-of-us-v1/char_lena_35.jpg",
+          "role": {
+            "zh": "法裔美籍观念摄影艺术家",
+            "en": "法裔美籍观念摄影艺术家"
+          },
+          "looks": {
+            "zh": "黑色长直发、酒红丝质上衣、细金耳环；思考时轻触相机背带",
+            "en": "黑色长直发、酒红丝质上衣、细金耳环；思考时轻触相机背带"
+          },
+          "romanceable": true
+        },
+        {
+          "key": "marianne",
+          "n": {
+            "zh": "玛丽安",
+            "en": "玛丽安·沃斯"
+          },
+          "g": "f",
+          "age": 52,
+          "art": "/art/official/ashes-of-us-v1/char_marianne.jpg",
+          "role": {
+            "zh": "昔日商业合作主管，现独立艺术顾问",
+            "en": "昔日商业合作主管，现独立艺术顾问"
+          },
+          "looks": {
+            "zh": "银灰短发、深色套装，携带皮质文件夹",
+            "en": "银灰短发、深色套装，携带皮质文件夹"
+          },
+          "romanceable": false
+        },
+        {
+          "key": "sophie",
+          "n": {
+            "zh": "索菲",
+            "en": "索菲·贝内特"
+          },
+          "g": "f",
+          "age": 36,
+          "art": "/art/official/ashes-of-us-v1/char_sophie.jpg",
+          "role": {
+            "zh": "摄影师，莱娜的长期朋友",
+            "en": "摄影师，莱娜的长期朋友"
+          },
+          "looks": {
+            "zh": "浅金色短发、皮夹克，常背小型胶片相机",
+            "en": "浅金色短发、皮夹克，常背小型胶片相机"
+          },
+          "romanceable": false
+        },
+        {
+          "key": "jonah",
+          "n": {
+            "zh": "乔纳",
+            "en": "乔纳·里德"
+          },
+          "g": "m",
+          "age": 61,
+          "art": "/art/official/ashes-of-us-v1/char_jonah.jpg",
+          "role": {
+            "zh": "退休印刷工坊主",
+            "en": "退休印刷工坊主"
+          },
+          "looks": {
+            "zh": "灰胡子、旧围裙、沾墨的手指",
+            "en": "灰胡子、旧围裙、沾墨的手指"
+          },
+          "romanceable": false
+        }
+      ],
+      "assets": {
+        "bg_01_02": "/art/official/ashes-of-us-v1/bg_01_02.jpg",
+        "char_marianne": "/art/official/ashes-of-us-v1/char_marianne.jpg",
+        "bg_01_03": "/art/official/ashes-of-us-v1/bg_01_03.jpg",
+        "bg_01_01": "/art/official/ashes-of-us-v1/bg_01_01.jpg",
+        "bg_11_01": "/art/official/ashes-of-us-v1/bg_11_01.jpg",
+        "bg_03_01": "/art/official/ashes-of-us-v1/bg_03_01.jpg",
+        "bg_11_02": "/art/official/ashes-of-us-v1/bg_11_02.jpg",
+        "bg_03_02": "/art/official/ashes-of-us-v1/bg_03_02.jpg",
+        "bg_03_03": "/art/official/ashes-of-us-v1/bg_03_03.jpg",
+        "bg_11_03": "/art/official/ashes-of-us-v1/bg_11_03.jpg",
+        "char_evelyn_20": "/art/official/ashes-of-us-v1/char_evelyn_20.jpg",
+        "cg_03_darkroom": "/art/official/ashes-of-us-v1/cg_03_darkroom.jpg",
+        "char_evelyn_35": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg",
+        "bg_07_01": "/art/official/ashes-of-us-v1/bg_07_01.jpg",
+        "bg_07_03": "/art/official/ashes-of-us-v1/bg_07_03.jpg",
+        "bg_07_02": "/art/official/ashes-of-us-v1/bg_07_02.jpg",
+        "bg_05_03": "/art/official/ashes-of-us-v1/bg_05_03.jpg",
+        "cover_ashes_of_us": "/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+        "bg_09_03": "/art/official/ashes-of-us-v1/bg_09_03.jpg",
+        "bg_09_02": "/art/official/ashes-of-us-v1/bg_09_02.jpg",
+        "bg_05_02": "/art/official/ashes-of-us-v1/bg_05_02.jpg",
+        "bg_09_01": "/art/official/ashes-of-us-v1/bg_09_01.jpg",
+        "bg_05_01": "/art/official/ashes-of-us-v1/bg_05_01.jpg",
+        "cg_05_station": "/art/official/ashes-of-us-v1/cg_05_station.jpg",
+        "char_jonah": "/art/official/ashes-of-us-v1/char_jonah.jpg",
+        "bg_12_01": "/art/official/ashes-of-us-v1/bg_12_01.jpg",
+        "bg_12_03": "/art/official/ashes-of-us-v1/bg_12_03.jpg",
+        "bg_12_02": "/art/official/ashes-of-us-v1/bg_12_02.jpg",
+        "bg_02_03": "/art/official/ashes-of-us-v1/bg_02_03.jpg",
+        "bg_10_03": "/art/official/ashes-of-us-v1/bg_10_03.jpg",
+        "bg_10_02": "/art/official/ashes-of-us-v1/bg_10_02.jpg",
+        "bg_02_02": "/art/official/ashes-of-us-v1/bg_02_02.jpg",
+        "cg_12_dawn": "/art/official/ashes-of-us-v1/cg_12_dawn.jpg",
+        "bg_10_01": "/art/official/ashes-of-us-v1/bg_10_01.jpg",
+        "cg_01_reunion": "/art/official/ashes-of-us-v1/cg_01_reunion.jpg",
+        "bg_02_01": "/art/official/ashes-of-us-v1/bg_02_01.jpg",
+        "bg_06_02": "/art/official/ashes-of-us-v1/bg_06_02.jpg",
+        "cg_10_unfinished_touch": "/art/official/ashes-of-us-v1/cg_10_unfinished_touch.jpg",
+        "bg_06_03": "/art/official/ashes-of-us-v1/bg_06_03.jpg",
+        "bg_06_01": "/art/official/ashes-of-us-v1/bg_06_01.jpg",
+        "bg_08_01": "/art/official/ashes-of-us-v1/bg_08_01.jpg",
+        "bg_04_01": "/art/official/ashes-of-us-v1/bg_04_01.jpg",
+        "bg_08_02": "/art/official/ashes-of-us-v1/bg_08_02.jpg",
+        "bg_04_02": "/art/official/ashes-of-us-v1/bg_04_02.jpg",
+        "char_lena_20": "/art/official/ashes-of-us-v1/char_lena_20.jpg",
+        "char_lena_35": "/art/official/ashes-of-us-v1/char_lena_35.jpg",
+        "bg_04_03": "/art/official/ashes-of-us-v1/bg_04_03.jpg",
+        "char_sophie": "/art/official/ashes-of-us-v1/char_sophie.jpg",
+        "bg_08_03": "/art/official/ashes-of-us-v1/bg_08_03.jpg",
+        "cg_07_light": "/art/official/ashes-of-us-v1/cg_07_light.jpg",
+        "cover": "/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+        "poster": "/art/official/ashes-of-us-v1/cover_ashes_of_us.jpg",
+        "leads": [
+          "莱娜",
+          "玛丽安",
+          "索菲",
+          "乔纳"
+        ],
+        "cast_all": true,
+        "char_莱娜": "/art/official/ashes-of-us-v1/char_lena_35.jpg",
+        "char_玛丽安": "/art/official/ashes-of-us-v1/char_marianne.jpg",
+        "char_索菲": "/art/official/ashes-of-us-v1/char_sophie.jpg",
+        "char_乔纳": "/art/official/ashes-of-us-v1/char_jonah.jpg",
+        "char_伊芙琳": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg"
+      },
+      "en": {
+        "title": "Ashes of Us",
+        "hook": "Fifteen years ago, you only heard half the story. A new exhibition brings you face to face with the woman you once loved."
+      },
+      "as": "伊芙琳",
+      "games": [
+        {
+          "id": "g_ashes_c01_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c01_2",
+            "scene": "SCN_01_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 工作邀约尚未签定，不能替代私人关系的许可。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "工作邀约尚未签定，不能替代私人关系的许可。"
+          }
+        },
+        {
+          "id": "g_ashes_c01_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c01_3",
+            "scene": "SCN_01_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 宣传使用旧恋情，需要当事人另外同意。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "宣传使用旧恋情，需要当事人另外同意。"
+          }
+        },
+        {
+          "id": "g_ashes_c02_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c02_2",
+            "scene": "SCN_02_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 固定往事可帮助理解今天，不能被改写成从未发生。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "固定往事可帮助理解今天，不能被改写成从未发生。"
+          }
+        },
+        {
+          "id": "g_ashes_c02_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c02_3",
+            "scene": "SCN_02_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 当年的吸引不等于现在同意身体接触。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "当年的吸引不等于现在同意身体接触。"
+          }
+        },
+        {
+          "id": "g_ashes_c03_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c03_2",
+            "scene": "SCN_03_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 作品展示与私生活公开是不同的许可。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "作品展示与私生活公开是不同的许可。"
+          }
+        },
+        {
+          "id": "g_ashes_c03_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c03_3",
+            "scene": "SCN_03_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 作品处分仍须创作者同意，恋爱不能代替授权。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "作品处分仍须创作者同意，恋爱不能代替授权。"
+          }
+        },
+        {
+          "id": "g_ashes_c04_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c04_2",
+            "scene": "SCN_04_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 印制样张与画廊会面是两个待核节点。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "印制样张与画廊会面是两个待核节点。"
+          }
+        },
+        {
+          "id": "g_ashes_c04_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c04_3",
+            "scene": "SCN_04_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 从办公室走出来，只能证明出现过，不能证明出售过照片。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "从办公室走出来，只能证明出现过，不能证明出售过照片。"
+          }
+        },
+        {
+          "id": "g_ashes_c05_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c05_2",
+            "scene": "SCN_05_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 分离已经发生，今天仍可以选择不同的回应。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "分离已经发生，今天仍可以选择不同的回应。"
+          }
+        },
+        {
+          "id": "g_ashes_c05_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c05_3",
+            "scene": "SCN_05_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 承认伤害不等于必须重新交往。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "承认伤害不等于必须重新交往。"
+          }
+        },
+        {
+          "id": "g_ashes_c06_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c06_2",
+            "scene": "SCN_06_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 回忆中的草稿不能被说成对方已收到的信。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "回忆中的草稿不能被说成对方已收到的信。"
+          }
+        },
+        {
+          "id": "g_ashes_c06_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c06_3",
+            "scene": "SCN_06_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 莱娜在巴黎的生活不只围绕旧爱，也不等于伊芙琳已经知道全部。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "莱娜在巴黎的生活不只围绕旧爱，也不等于伊芙琳已经知道全部。"
+          }
+        },
+        {
+          "id": "g_ashes_c07_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c07_2",
+            "scene": "SCN_07_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 记得运输习惯，仍要先问是否按旧方式安排。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "记得运输习惯，仍要先问是否按旧方式安排。"
+          }
+        },
+        {
+          "id": "g_ashes_c07_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c07_3",
+            "scene": "SCN_07_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 个人经历可以有限分享，不必用隐私换取合作。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "个人经历可以有限分享，不必用隐私换取合作。"
+          }
+        },
+        {
+          "id": "g_ashes_c08_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c08_2",
+            "scene": "SCN_08_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 索菲能说明自己的关系，不能替莱娜决定与谁交往。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "索菲能说明自己的关系，不能替莱娜决定与谁交往。"
+          }
+        },
+        {
+          "id": "g_ashes_c08_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c08_3",
+            "scene": "SCN_08_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 宣传合同不自动包含私人恋情授权。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "宣传合同不自动包含私人恋情授权。"
+          }
+        },
+        {
+          "id": "g_ashes_c09_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c09_2",
+            "scene": "SCN_09_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 乔纳能说明印制流程，不能猜测感情动机。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "乔纳能说明印制流程，不能猜测感情动机。"
+          }
+        },
+        {
+          "id": "g_ashes_c09_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c09_3",
+            "scene": "SCN_09_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 当事人对会面目的的自述需要与时间线一起核对。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "当事人对会面目的的自述需要与时间线一起核对。"
+          }
+        },
+        {
+          "id": "g_ashes_c10_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c10_2",
+            "scene": "SCN_10_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 同一时刻双方的打算可以不同，应分别说清。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "同一时刻双方的打算可以不同，应分别说清。"
+          }
+        },
+        {
+          "id": "g_ashes_c10_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c10_3",
+            "scene": "SCN_10_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 好意不能自动抵消未经询问作决定的伤害。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "好意不能自动抵消未经询问作决定的伤害。"
+          }
+        },
+        {
+          "id": "g_ashes_c11_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c11_2",
+            "scene": "SCN_11_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 主管应承担自己的商业行为，不能替两人回答感情问题。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "主管应承担自己的商业行为，不能替两人回答感情问题。"
+          }
+        },
+        {
+          "id": "g_ashes_c11_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c11_3",
+            "scene": "SCN_11_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 作品展出与私人关系声明由各自明确确认。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "作品展出与私人关系声明由各自明确确认。"
+          }
+        },
+        {
+          "id": "g_ashes_c12_2",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c12_2",
+            "scene": "SCN_12_02",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 澄清旧事不自动产生复合义务。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "澄清旧事不自动产生复合义务。"
+          }
+        },
+        {
+          "id": "g_ashes_c12_3",
+          "zh": "线索与边界核对",
+          "en": "线索与边界核对",
+          "tpl": "ashes_cards",
+          "spec": {
+            "id": "ashes_c12_3",
+            "scene": "SCN_12_03",
+            "title": "线索与边界核对",
+            "question": "哪项符合当前情境？",
+            "options": "A. 朋友、暂别与告别都可以是完整结局，不以等待证明爱。 B. 可以直接用猜测、旧关系或职业资源替当事人决定。",
+            "answer": "A",
+            "note": "朋友、暂别与告别都可以是完整结局，不以等待证明爱。"
+          }
+        }
+      ]
+    },
+    "chapters": [
+      {
+        "n": 1,
+        "t": "重逢于展厅",
+        "md": "# CHAPTER 01｜重逢于展厅\n⟦ORIENT|gl⟧\n⟦CHAR|%E4%BC%8A%E8%8A%99%E7%90%B3|f|35|f2|%E7%BA%BD%E7%BA%A6%E5%9B%BD%E9%99%85%E8%89%BA%E6%9C%AF%E5%9F%BA%E9%87%91%E5%90%88%E4%BC%99%E4%BA%BA%E3%80%81%E5%89%8D%E7%AD%96%E5%B1%95%E4%BA%BA|%E6%B7%B1%E6%A3%95%E7%9F%AD%E6%B3%A2%E6%B5%AA%E5%8F%91%E3%80%81%E5%86%B7%E7%99%BD%E8%A5%BF%E8%A3%85%E3%80%81%E9%BB%91%E4%B8%9D%E8%B4%A8%E8%A1%AC%E8%A1%AB%EF%BC%9B%E7%B4%A7%E5%BC%A0%E6%97%B6%E6%95%B4%E7%90%86%E8%A2%96%E6%89%A3⟧\n⟦CHAR|%E8%8E%B1%E5%A8%9C|f|35|f2|%E6%B3%95%E8%A3%94%E7%BE%8E%E7%B1%8D%E8%A7%82%E5%BF%B5%E6%91%84%E5%BD%B1%E8%89%BA%E6%9C%AF%E5%AE%B6|%E9%BB%91%E8%89%B2%E9%95%BF%E7%9B%B4%E5%8F%91%E3%80%81%E9%85%92%E7%BA%A2%E4%B8%9D%E8%B4%A8%E4%B8%8A%E8%A1%A3%E3%80%81%E7%BB%86%E9%87%91%E8%80%B3%E7%8E%AF%EF%BC%9B%E6%80%9D%E8%80%83%E6%97%B6%E8%BD%BB%E8%A7%A6%E7%9B%B8%E6%9C%BA%E8%83%8C%E5%B8%A6⟧\n⟦CHAR|%E7%8E%9B%E4%B8%BD%E5%AE%89|f|52|f2|%E6%98%94%E6%97%A5%E5%95%86%E4%B8%9A%E5%90%88%E4%BD%9C%E4%B8%BB%E7%AE%A1%EF%BC%8C%E7%8E%B0%E7%8B%AC%E7%AB%8B%E8%89%BA%E6%9C%AF%E9%A1%BE%E9%97%AE|%E9%93%B6%E7%81%B0%E7%9F%AD%E5%8F%91%E3%80%81%E6%B7%B1%E8%89%B2%E5%A5%97%E8%A3%85%EF%BC%8C%E6%90%BA%E5%B8%A6%E7%9A%AE%E8%B4%A8%E6%96%87%E4%BB%B6%E5%A4%B9⟧\n⟦CHAR|%E7%B4%A2%E8%8F%B2|f|36|f2|%E6%91%84%E5%BD%B1%E5%B8%88%EF%BC%8C%E8%8E%B1%E5%A8%9C%E7%9A%84%E9%95%BF%E6%9C%9F%E6%9C%8B%E5%8F%8B|%E6%B5%85%E9%87%91%E8%89%B2%E7%9F%AD%E5%8F%91%E3%80%81%E7%9A%AE%E5%A4%B9%E5%85%8B%EF%BC%8C%E5%B8%B8%E8%83%8C%E5%B0%8F%E5%9E%8B%E8%83%B6%E7%89%87%E7%9B%B8%E6%9C%BA⟧\n⟦CHAR|%E4%B9%94%E7%BA%B3|m|61|m2|%E9%80%80%E4%BC%91%E5%8D%B0%E5%88%B7%E5%B7%A5%E5%9D%8A%E4%B8%BB|%E7%81%B0%E8%83%A1%E5%AD%90%E3%80%81%E6%97%A7%E5%9B%B4%E8%A3%99%E3%80%81%E6%B2%BE%E5%A2%A8%E7%9A%84%E6%89%8B%E6%8C%87⟧\n⟦SET|native_v2,authored~ashes,cast_all⟧\n⟦GOAL|明确联合展览的参与条件与个人边界。|明确联合展览的参与条件与个人边界。⟧\n⟦DONE|flag|ashes_c01|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜展厅入口\n⟦BG|bg_01_01|%E5%B1%95%E5%8E%85%E5%85%A5%E5%8F%A3⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%86%AC%E5%A4%9C⟧\n旁白：展厅入口的项目单上列着你的基金与莱娜的名字。你们尚未确认合作条件，玛丽安已经在等答复。\n莱娜：你还是习惯站在离出口最近的地方。\n莱娜：那就别盯着我的手看。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜收藏家晚宴\n⟦BG|bg_01_02|%E6%94%B6%E8%97%8F%E5%AE%B6%E6%99%9A%E5%AE%B4⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%86%AC%E5%A4%9C⟧\n旁白：晚宴上的赞助方提议把旧恋情作为宣传卖点。莱娜把酒杯放下，宣传文案还没有得到她的许可。\n莱娜：我不是你们用来卖票的悲剧。\n莱娜：你以前也这么说过。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜消防楼梯\n⟦BG|bg_01_03|%E6%B6%88%E9%98%B2%E6%A5%BC%E6%A2%AF⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%86%AC%E5%A4%9C⟧\n旁白：消防楼梯隔开了宴会的声音。项目还没签，关于十五年前谁先离开的争执却先到了面前。\n莱娜：不是我先放开的。\n莱娜：那就别替我记。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 2,
+        "t": "那年夏天",
+        "md": "# CHAPTER 02｜那年夏天\n⟦GOAL|认清相识时的吸引与竞争，选择回忆的观看范围。|认清相识时的吸引与竞争，选择回忆的观看范围。⟧\n⟦DONE|flag|ashes_c02|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜学院走廊\n⟦BG|bg_02_01|%E5%AD%A6%E9%99%A2%E8%B5%B0%E5%BB%8A⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E7%BA%BD%E7%BA%A6⟧\n旁白：回忆回到十五年前的学院。莱娜的一张私人照片被撤下，年轻的你也在争取同一面展墙。\n旁白：往日片段中，莱娜说：“他们说照片太私人。”\n旁白：往日片段中，伊芙琳说：“我觉得他们怕的是照片太诚实。”\n旁白：往日片段中，莱娜说：“你是在夸我，还是在抢我的展墙？”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜旧货店\n⟦BG|bg_02_02|%E6%97%A7%E8%B4%A7%E5%BA%97⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E7%BA%BD%E7%BA%A6⟧\n旁白：旧货店里放着待修的镜框。展览经费有限，莱娜不想用崭新的外框抹去照片的旧痕。\n旁白：往日片段中，伊芙琳说：“你买不起新框？”\n旁白：往日片段中，莱娜说：“我不想让新框假装这张照片没有过去。”\n旁白：往日片段中，伊芙琳说：“那我帮你修旧的。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜学院屋顶\n⟦BG|bg_02_03|%E5%AD%A6%E9%99%A2%E5%B1%8B%E9%A1%B6⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E7%BA%BD%E7%BA%A6⟧\n旁白：布展被暴雨打断，屋顶只剩湿透的布与一件外套。那时的吸引已经出现，回忆仍停在靠近之前。\n旁白：往日片段中，莱娜说：“你看起来总有备用计划。”\n旁白：往日片段中，伊芙琳说：“这次没有。”\n旁白：往日片段中，莱娜说：“那就别急着逃。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 3,
+        "t": "暗房里的秘密",
+        "md": "# CHAPTER 03｜暗房里的秘密\n⟦GOAL|区分恋爱公开、照片展示和作品处分三种许可。|区分恋爱公开、照片展示和作品处分三种许可。⟧\n⟦DONE|flag|ashes_c03|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜红灯暗房\n⟦BG|bg_03_01|%E7%BA%A2%E7%81%AF%E6%9A%97%E6%88%BF⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E5%88%9D%E7%A7%8B⟧\n旁白：红灯暗房里，显影盘逐渐浮出年轻伊芙琳的侧脸。观看这段往事，不等于现在同意公开那张照片。\n旁白：往日片段中，伊芙琳说：“这张不能展。”\n旁白：往日片段中，莱娜说：“为什么？”\n旁白：往日片段中，伊芙琳说：“因为我看你的样子太明显。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜画廊后院\n⟦BG|bg_03_02|%E7%94%BB%E5%BB%8A%E5%90%8E%E9%99%A2⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E5%88%9D%E7%A7%8B⟧\n旁白：画廊后院的谈话发生在你们秘密相爱之初。彼此喜欢，并没有消除对公开关系的不同顾虑。\n旁白：往日片段中，莱娜说：“我可以等你准备好。”\n旁白：往日片段中，伊芙琳说：“我不想让你一直等。”\n旁白：往日片段中，莱娜说：“那就别让我像个秘密。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜合租公寓\n⟦BG|bg_03_03|%E5%90%88%E7%A7%9F%E5%85%AC%E5%AF%93⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E5%88%9D%E7%A7%8B⟧\n旁白：公寓墙上贴着共同展览的便签。关于作品归属的约定，后来会成为这场争执无法绕开的部分。\n旁白：往日片段中，伊芙琳说：“谁也不能替你卖掉这些照片。”\n旁白：往日片段中，莱娜说：“包括你。”\n旁白：往日片段中，伊芙琳说：“包括我。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 4,
+        "t": "消失的底片",
+        "md": "# CHAPTER 04｜消失的底片\n⟦GOAL|分开已见事实与当年的推断，列出待问的授权问题。|分开已见事实与当年的推断，列出待问的授权问题。⟧\n⟦DONE|flag|ashes_c04|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜印刷工坊\n⟦BG|bg_04_01|%E5%8D%B0%E5%88%B7%E5%B7%A5%E5%9D%8A⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E6%B7%B1%E7%A7%8B⟧\n旁白：往日的印刷工坊里，莱娜发现自己的未公开作品已被制成商业样张。印制发生过，具体授权仍待后续核对。\n旁白：往日片段中，莱娜说：“这些照片没有授权。”\n旁白：往日片段中，乔纳说：“我只接到加急单。”\n旁白：往日片段中，莱娜说：“是谁给你的？”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜赞助会议室\n⟦BG|bg_04_02|%E8%B5%9E%E5%8A%A9%E4%BC%9A%E8%AE%AE%E5%AE%A4⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E6%B7%B1%E7%A7%8B⟧\n旁白：同一段往事的另一侧，玛丽安把商业压力摆到年轻伊芙琳面前。莱娜后来只听到了门外的一部分谈话。\n旁白：往日片段中，玛丽安说：“你要保她，就得先保住展。”\n旁白：往日片段中，伊芙琳说：“如果只能二选一，我选展览。”\n旁白：往日片段中，玛丽安说：“我会记住这句话。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜画廊外街\n⟦BG|bg_04_03|%E7%94%BB%E5%BB%8A%E5%A4%96%E8%A1%97⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E6%B7%B1%E7%A7%8B⟧\n旁白：画廊外的街上，年轻伊芙琳看见莱娜从竞争方办公室出来。看见一个身影，还不足以说明那次会面的目的。\n旁白：往日片段中，伊芙琳说：“你去找她做什么？”\n旁白：往日片段中，莱娜说：“我在处理我的作品。”\n旁白：往日片段中，伊芙琳说：“我们的展览也算你的作品吗？”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 5,
+        "t": "你从未相信我",
+        "md": "# CHAPTER 05｜你从未相信我\n⟦GOAL|承认分离已经发生，说明今天是否继续核对旧事。|承认分离已经发生，说明今天是否继续核对旧事。⟧\n⟦DONE|flag|ashes_c05|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜撤展现场\n⟦BG|bg_05_01|%E6%92%A4%E5%B1%95%E7%8E%B0%E5%9C%BA⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E9%9B%AA%E5%A4%9C⟧\n旁白：撤展已经发生。伊芙琳试图保留一部分展墙，莱娜却先看见自己的名字消失，双方都没有把打算说清。\n旁白：往日片段中，莱娜说：“你把我的名字从墙上拿掉了。”\n旁白：往日片段中，伊芙琳说：“是他们要撤掉整场。”\n旁白：往日片段中，莱娜说：“你没有先问我。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜雨夜公寓\n⟦BG|bg_05_02|%E9%9B%A8%E5%A4%9C%E5%85%AC%E5%AF%93⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E9%9B%AA%E5%A4%9C⟧\n旁白：雪夜的公寓里，钥匙被放回桌上。争执正在把工作与私人的伤口混到一起。\n旁白：往日片段中，伊芙琳说：“你可以留下解释。”\n旁白：往日片段中，莱娜说：“你已经判了我有罪。”\n旁白：往日片段中，伊芙琳说：“你也从没告诉我真相。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜凌晨车站\n⟦BG|bg_05_03|%E5%87%8C%E6%99%A8%E8%BD%A6%E7%AB%99⟧\n⟦TIME|%E5%8D%81%E4%BA%94%E5%B9%B4%E5%89%8D%C2%B7%E9%9B%AA%E5%A4%9C⟧\n旁白：车站的凌晨没有等来和解。这是固定的分离往事；今天的回应可以改变，已经离开的那一夜不能重写。\n旁白：往日片段中，莱娜说：“别说你会等我。”\n旁白：往日片段中，伊芙琳说：“我不会。”\n旁白：往日片段中，莱娜说：“你看，你终于说了一句实话。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 6,
+        "t": "没有你的十五年",
+        "md": "# CHAPTER 06｜没有你的十五年\n⟦GOAL|确定哪些私人旧事愿意分享，哪些仍留在自己这里。|确定哪些私人旧事愿意分享，哪些仍留在自己这里。⟧\n⟦DONE|flag|ashes_c06|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜纽约办公室\n⟦BG|bg_06_01|%E7%BA%BD%E7%BA%A6%E5%8A%9E%E5%85%AC%E5%AE%A4⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%E4%B8%8E%E5%B7%B4%E9%BB%8E%C2%B7%E8%92%99%E5%A4%AA%E5%A5%87⟧\n旁白：分开后的纽约，伊芙琳逐渐成为基金合伙人。工作中的取舍仍会让她想起那场展览。\n旁白：往日片段中，同事说：“这会损失一笔赞助。”\n旁白：往日片段中，伊芙琳说：“那就损失。”\n旁白：往日片段中，同事说：“你从什么时候开始这么固执？”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜巴黎摄影棚\n⟦BG|bg_06_02|%E5%B7%B4%E9%BB%8E%E6%91%84%E5%BD%B1%E6%A3%9A⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%E4%B8%8E%E5%B7%B4%E9%BB%8E%C2%B7%E8%92%99%E5%A4%AA%E5%A5%87⟧\n旁白：另一段生活在巴黎展开。莱娜已经有了新的创作与朋友，也拒绝让作品只剩旧爱的注脚。\n旁白：往日片段中，策展人说：“观众爱看你的爱情悲剧。”\n旁白：往日片段中，莱娜说：“他们可以买我的作品，买不到我的伤口。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜跨年街头\n⟦BG|bg_06_03|%E8%B7%A8%E5%B9%B4%E8%A1%97%E5%A4%B4⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%E4%B8%8E%E5%B7%B4%E9%BB%8E%C2%B7%E8%92%99%E5%A4%AA%E5%A5%87⟧\n旁白：跨年街灯下，一封未寄出的道歉停在草稿里。现在可以决定是否保留它，却不能据此声称对方早已读过。\n旁白：往日片段中，伊芙琳说：“我想问的从来不是你有没有想我。”\n旁白：往日片段中，伊芙琳说：“是你过得好吗。”\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 7,
+        "t": "重新靠近",
+        "md": "# CHAPTER 07｜重新靠近\n⟦GOAL|先询问作品和运输安排，确定当下的合作范围。|先询问作品和运输安排，确定当下的合作范围。⟧\n⟦DONE|flag|ashes_c07|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜布展仓库\n⟦BG|bg_07_01|%E5%B8%83%E5%B1%95%E4%BB%93%E5%BA%93⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%88%9D%E6%98%A5⟧\n旁白：回到现在的布展仓库，运输和排期等着确认。你有资源，作品与安排的决定权仍属于莱娜。\n莱娜：你可以问，不可以直接决定。\n莱娜：你学得很慢。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜空展厅\n⟦BG|bg_07_02|%E7%A9%BA%E5%B1%95%E5%8E%85⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%88%9D%E6%98%A5⟧\n旁白：空展厅里重新试光。灯的角度很熟悉，熟悉也不等于恢复了过去的关系。\n莱娜：你还记得这盏灯的角度。\n莱娜：我喜欢你记得。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜咖啡店\n⟦BG|bg_07_03|%E5%92%96%E5%95%A1%E5%BA%97⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%88%9D%E6%98%A5⟧\n旁白：咖啡店的杯沿还热着。莱娜问起你这些年的生活，你可以选择分享的范围，也可以只谈眼前。\n莱娜：你幸福过吗？\n莱娜：那就好。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 8,
+        "t": "嫉妒是一种本能",
+        "md": "# CHAPTER 08｜嫉妒是一种本能\n⟦GOAL|分别处理宣传授权、嫉妒与当年的直接疑问。|分别处理宣传授权、嫉妒与当年的直接疑问。⟧\n⟦DONE|flag|ashes_c08|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜赞助酒会\n⟦BG|bg_08_01|%E8%B5%9E%E5%8A%A9%E9%85%92%E4%BC%9A⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%B1%95%E5%89%8D%E5%8D%81%E6%97%A5⟧\n旁白：赞助酒会上，莱娜与老朋友索菲交谈。她们的亲近不是任何人可以命令解释的证据。\n索菲：我们是旧朋友。\n莱娜：你不用向她解释。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜策展会议\n⟦BG|bg_08_02|%E7%AD%96%E5%B1%95%E4%BC%9A%E8%AE%AE⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%B1%95%E5%89%8D%E5%8D%81%E6%97%A5⟧\n旁白：策展会议再次提出以旧事宣传。合同、展览支持与私生活授权必须分别确认。\n玛丽安：观众需要一个故事。\n莱娜：我有作品。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜夜间出租车旁\n⟦BG|bg_08_03|%E5%A4%9C%E9%97%B4%E5%87%BA%E7%A7%9F%E8%BD%A6%E6%97%81⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%B1%95%E5%89%8D%E5%8D%81%E6%97%A5⟧\n旁白：出租车停在路边，关于竞争画廊的问题终于有机会被直接问出。此刻能核对的，是当事人的经历，不是猜测。\n莱娜：原来你看见了。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 9,
+        "t": "第三种记忆",
+        "md": "# CHAPTER 09｜第三种记忆\n⟦GOAL|核对印制与会见的先后，记录各自证词的范围。|核对印制与会见的先后，记录各自证词的范围。⟧\n⟦DONE|flag|ashes_c09|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜旧印刷工坊\n⟦BG|bg_09_01|%E6%97%A7%E5%8D%B0%E5%88%B7%E5%B7%A5%E5%9D%8A⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%B1%95%E5%89%8D%E4%B8%80%E5%91%A8⟧\n旁白：旧工坊的乔纳愿意说明自己亲历的印制流程。他能记得机器故障与加急单，却不知道两个人当时的内心。\n乔纳：我记得那天，因为机器坏了。\n莱娜：所以我去找她之前，照片就已经被用了。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜街角长椅\n⟦BG|bg_09_02|%E8%A1%97%E8%A7%92%E9%95%BF%E6%A4%85⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%B1%95%E5%89%8D%E4%B8%80%E5%91%A8⟧\n旁白：街角长椅上，莱娜解释那次会见是为了要求停止使用照片。这份自述需要与时间顺序核对，不能由旁人代说。\n莱娜：我以为你知道。\n莱娜：我当时太生气了。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜展厅楼梯\n⟦BG|bg_09_03|%E5%B1%95%E5%8E%85%E6%A5%BC%E6%A2%AF⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%B1%95%E5%89%8D%E4%B8%80%E5%91%A8⟧\n旁白：展厅楼梯间，莱娜说起自己当时站在会议室门外。你们听见与看见的版本，开始出现可以逐项对照的差别。\n莱娜：我站在门外。\n莱娜：你不知道我听到了什么。\n莱娜：我只听见你说选展览。我以为，你已经答应了他们。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 10,
+        "t": "最后四十八小时",
+        "md": "# CHAPTER 10｜最后四十八小时\n⟦GOAL|说清当年的打算与造成的伤害，不用好意抵消责任。|说清当年的打算与造成的伤害，不用好意抵消责任。⟧\n⟦DONE|flag|ashes_c10|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜旧暗房\n⟦BG|bg_10_01|%E6%97%A7%E6%9A%97%E6%88%BF⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E6%9A%B4%E9%9B%A8%E5%A4%9C⟧\n旁白：旧暗房里的时间表只写已经核实的节点：印制、会见、会议和撤展。空白处可以继续问，不必靠爱情补齐。\n莱娜：我以为你把我卖了。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜暗房门口\n⟦BG|bg_10_02|%E6%9A%97%E6%88%BF%E9%97%A8%E5%8F%A3⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E6%9A%B4%E9%9B%A8%E5%A4%9C⟧\n旁白：暗房门口，莱娜终于说明自己记了十五年的那半句话。你可以解释自己的打算，也需要面对当年未经询问就作决定的部分。\n莱娜：那句话我听了十五年。\n莱娜：可你还是没问我想不想被这样保护。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜河边步道\n⟦BG|bg_10_03|%E6%B2%B3%E8%BE%B9%E6%AD%A5%E9%81%93⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E6%9A%B4%E9%9B%A8%E5%A4%9C⟧\n旁白：河边步道很安静。她承认感情仍在，却没有把这句话当作拥抱或复合的许可。\n莱娜：我想吻你，也想恨你。\n莱娜：那你也别替我选。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 11,
+        "t": "最后一场展览",
+        "md": "# CHAPTER 11｜最后一场展览\n⟦GOAL|确认责任说明、宣传范围和展出安排，保留莱娜的决定权。|确认责任说明、宣传范围和展出安排，保留莱娜的决定权。⟧\n⟦DONE|flag|ashes_c11|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜画廊办公室\n⟦BG|bg_11_01|%E7%94%BB%E5%BB%8A%E5%8A%9E%E5%85%AC%E5%AE%A4⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%BC%80%E5%B9%95%E5%89%8D%E5%A4%9C⟧\n旁白：画廊办公室里，玛丽安面对具体的授权问题。她需要回答自己的行为，不能替两个人承担全部感情责任。\n玛丽安：我以为我能先卖出样张再补授权。\n莱娜：你知道我不同意。\n玛丽安：我知道。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜媒体预展\n⟦BG|bg_11_02|%E5%AA%92%E4%BD%93%E9%A2%84%E5%B1%95⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%BC%80%E5%B9%95%E5%89%8D%E5%A4%9C⟧\n旁白：媒体预展的提纲正在确认。工作声明与私人关系分开，未经莱娜许可的私事不会自动成为公开内容。\n莱娜：这是一场展览。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜闭馆后展厅\n⟦BG|bg_11_03|%E9%97%AD%E9%A6%86%E5%90%8E%E5%B1%95%E5%8E%85⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E5%BC%80%E5%B9%95%E5%89%8D%E5%A4%9C⟧\n旁白：闭馆后的展厅只剩工作灯。作品是否继续展出由莱娜决定，你可以提出支持、替代安排或结束自己的参与。\n莱娜：我不是来证明我们可以复合。\n莱娜：那你现在想要什么？\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      },
+      {
+        "n": 12,
+        "t": "余烬之吻",
+        "md": "# CHAPTER 12｜余烬之吻\n⟦GOAL|根据双方当前的真实意愿，为关系与工作分别收束。|根据双方当前的真实意愿，为关系与工作分别收束。⟧\n⟦DONE|flag|ashes_c12|确认本章行动|莱娜：先把你真正想说的说清楚。⟧\n\n# SCENE｜空展厅\n⟦BG|bg_12_01|%E7%A9%BA%E5%B1%95%E5%8E%85⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E6%98%A5%E6%9C%AB⟧\n旁白：最后的展务正在收尾。一次展览可以结束，关系还需要你们自己说清，任何答案都不以事业回报为条件。\n莱娜：展览结束了。\n莱娜：这次我想听你真正的答案。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜河边长椅\n⟦BG|bg_12_02|%E6%B2%B3%E8%BE%B9%E9%95%BF%E6%A4%85⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E6%98%A5%E6%9C%AB⟧\n旁白：河边长椅留着足够的距离。可以谈一次约会，也可以选择朋友、暂别或正式告别。\n莱娜：如果重新开始，我们得学会把话说完。\n莱娜：我想听的是你自己想要什么。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# SCENE｜清晨街口\n⟦BG|bg_12_03|%E6%B8%85%E6%99%A8%E8%A1%97%E5%8F%A3⟧\n⟦TIME|%E7%BA%BD%E7%BA%A6%C2%B7%E6%98%A5%E6%9C%AB⟧\n旁白：清晨街口，今天没有媒体和合同夹在中间。已经澄清的事实不会替任何人作出新的承诺。\n莱娜：十五年不能重来。\n莱娜：那就从今天说起。\n⟦FREE|%E5%8F%AF%E4%BB%A5%E6%8F%90%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%81%E8%AF%B4%E6%98%8E%E8%8C%83%E5%9B%B4%EF%BC%8C%E6%88%96%E6%98%8E%E7%A1%AE%E8%BF%9B%E5%85%A5%E4%B8%8B%E4%B8%80%E5%9C%BA%E3%80%82⟧\n\n# CHOICE｜本章安排确认后继续\n#### A｜下一章\n旁白：已确认的事实与参与范围保留。\n# ·\n"
+      }
+    ],
+    "brief": "十五年前，你们只听完了半句话。十五年后，一场展览让旧爱重新站到面前。"
+  }
+}

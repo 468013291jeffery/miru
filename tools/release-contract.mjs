@@ -68,3 +68,5 @@ execFileSync(process.execPath,['tools/three-story-copy-selftest.cjs'],{cwd:root,
 for (const name of ['song-selftest.cjs','song-parse-selftest.cjs','song-flow-selftest.cjs']) execFileSync(process.execPath,['tools/'+name],{cwd:root,stdio:'inherit'});
 
 for(const name of ['bride-state-selftest.cjs','bride-parse-selftest.cjs','bride-flow-selftest.cjs']) execFileSync(process.execPath,['tools/'+name],{cwd:root,stdio:'inherit'});
+
+for(const name of ['ashes-parse-selftest.cjs','ashes-flow-selftest.cjs']) execFileSync(process.execPath,['tools/'+name],{cwd:root,stdio:'inherit'});
