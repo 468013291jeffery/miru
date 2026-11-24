@@ -132,7 +132,7 @@ print(len(html), "chars ->", out, "| split" if SPLIT else "| single file")
 #   · 页面里 w.pack / w.openings 变成「第一次用到才加载」的属性：页面空闲时先后台预取，真用到还没取到就同步取一次，
 #     所以任何读 w.pack 的老代码都照常工作，只是不再拖慢首屏。
 # 先输出 index.lazy.html 线上验证；验证没问题后把 LAZY_DEFAULT 改成 True，index.html 就用这一版。
-LAZY_DEFAULT = False
+LAZY_DEFAULT = True  # 2026-11-24 线上验证通过（首页下载 5.0MB → 2.8MB，启动时不再同步加载老剧），转为默认
 def _lazy36(text):
     import json as _lj, hashlib as _lh
     L = text.split("\n")
