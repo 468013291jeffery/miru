@@ -383,6 +383,19 @@ module.exports = L.wrap(async (req, res) => {
   }
 
   /* ---------- operations config ---------- */
+  /* 2026-11-24 后台保存密钥（目前只有 Unity S2S 回调密钥）。单独存在 secrets 表里（不进 config 表，免得被配置接口带出去）；
+     读取只返回「是否已设置」，不回传值；审计日志不记录值。 */
+  if (r === 'secret') {
+    if (!need('config')) return;
+    await sql('CREATE TABLE IF NOT EXISTS secrets (k text PRIMARY KEY, v text NOT NULL, updated_by text, updated_at timestamptz NOT NULL DEFAULT now())');
+    const NAMES = { unity_s2s: 'unity_s2s' };
+    if (req.method === 'GET') { const rows = await sql('SELECT k, updated_at FROM secrets'); const out = {}; for (const [n, k] of Object.entries(NAMES)) { const x = rows.find(r => r.k === k); out[n] = { set: !!x, at: x ? x.updated_at : null }; } return L.send(res, 200, out); }
+    const key = NAMES[String(b.name || '')]; if (!key) return L.bad(res, '未知的密钥名');
+    const val = String(b.value || '').trim(); if (!/^[0-9a-fA-F]{16,128}$/.test(val)) return L.bad(res, '密钥格式不对');
+    await sql('INSERT INTO secrets (k, v, updated_by, updated_at) VALUES ($1,$2,$3,now()) ON CONFLICT (k) DO UPDATE SET v=$2, updated_by=$3, updated_at=now()', [key, val, A.name || A.username]);
+    await log('secret_update', 'secret', key, { set: true });
+    return L.send(res, 200, { ok: true });
+  }
   if (r === 'config') {
     if (!need('config')) return;
     if (req.method === 'GET') { const c = await L.config(); const rows = await sql('SELECT key, updated_by, updated_at FROM config'); return L.send(res, 200, { values: c, defaults: L.CONFIG_DEFAULTS, meta: rows }); }

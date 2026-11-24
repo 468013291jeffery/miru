@@ -19,7 +19,7 @@ module.exports=L.wrap(async(req,res)=>{
     成功回 200「1」；签名错 403；超上限也回「1」（不让 Unity 反复重试），但不发钻。 */
  if(req.query&&req.query.r==='unity'){
   const txt=(code,body)=>{res.statusCode=code;res.setHeader('Content-Type','text/plain; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(body);};
-  const secret=process.env.UNITY_S2S_SECRET||'';if(!secret)return txt(503,'not configured');
+  const sql=await L.db();let secret=process.env.UNITY_S2S_SECRET||'';if(!secret){try{const r=(await sql("SELECT v FROM secrets WHERE k='unity_s2s'"))[0];secret=r?String(r.v):'';}catch(_){}}if(!secret)return txt(503,'not configured');
   const q=req.query||{},crypto=require('crypto');
   const base=Object.keys(q).filter(k=>k!=='hmac').sort().map(k=>k+'='+(q[k]==null?'':(Array.isArray(q[k])?q[k][0]:q[k]))).join(',');
   const want=crypto.createHmac('md5',secret).update(base).digest('hex'),got=String(q.hmac||'').toLowerCase();
@@ -27,7 +27,7 @@ module.exports=L.wrap(async(req,res)=>{
   const oid=String(q.oid||'').slice(0,100),sid=String(q.sid||''),dot=sid.lastIndexOf('.');
   const uid=dot>0?sid.slice(0,dot):sid,n=dot>0?sid.slice(dot+1).replace(/[^a-z0-9]/gi,'').slice(0,20):'';
   if(!oid||!/^u_[A-Za-z0-9_-]{4,60}$/.test(uid))return txt(400,'bad sid/oid');
-  const sql=await L.db(),cfg=await L.config();
+  const cfg=await L.config();
   const ok=(await sql('SELECT 1 FROM users WHERE id=$1',[uid]))[0];if(!ok)return txt(400,'unknown user');
   if((await sql('SELECT 1 FROM ledger WHERE key=$1',['unity:'+oid]))[0])return txt(200,'1');
   const cap=Number(cfg.ad_daily_cap)>0?Number(cfg.ad_daily_cap):5,val=Number(cfg.ad_reward_gems)>0?Math.floor(Number(cfg.ad_reward_gems)):1;
