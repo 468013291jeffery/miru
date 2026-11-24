@@ -19,7 +19,7 @@ module.exports=L.wrap(async(req,res)=>{
     成功回 200「1」；签名错 403；超上限也回「1」（不让 Unity 反复重试），但不发钻。 */
  if(req.query&&req.query.r==='unity'){
   const txt=(code,body)=>{res.statusCode=code;res.setHeader('Content-Type','text/plain; charset=utf-8');res.setHeader('Cache-Control','no-store');res.end(body);};
-  const sql=await L.db();let secret=process.env.UNITY_S2S_SECRET||'';if(!secret){try{const r=(await sql("SELECT v FROM secrets WHERE k='unity_s2s'"))[0];secret=r?String(r.v):'';}catch(_){}}if(!secret)return txt(503,'not configured');
+  const sql=await L.db();let secret=process.env.UNITY_S2S_SECRET||'';if(!secret){try{const r=(await sql("SELECT value FROM config WHERE key='secret_unity_s2s'"))[0];secret=r&&typeof r.value==='string'?r.value:'';}catch(_){}}if(!secret)return txt(503,'not configured');
   const q=req.query||{},crypto=require('crypto');
   const base=Object.keys(q).filter(k=>k!=='hmac').sort().map(k=>k+'='+(q[k]==null?'':(Array.isArray(q[k])?q[k][0]:q[k]))).join(',');
   const want=crypto.createHmac('md5',secret).update(base).digest('hex'),got=String(q.hmac||'').toLowerCase();
