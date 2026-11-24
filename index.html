@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="4aa088cb11df 2026-11-24T18:00Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="98d6129710ec 2026-11-24T18:44Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -30360,7 +30360,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     const x = e.target && e.target.closest && e.target.closest(".packs84 [data-buy],.packs [data-buy]"); if (!x) return;
     if (inApp()) return;
     e.preventDefault(); e.stopImmediatePropagation();
-    const n = +x.dataset.buy; pay("gems_" + n, "💎 " + n);
+    const n = +x.dataset.buy;
+    /* 2026-11-25 PayPal 账户被停用：新支付接通前先提示，不再弹出会报错的窗口。接通后由 window.__webpay 接管。 */
+    if (typeof window.__webpay === "function") { window.__webpay("gems_" + n, n); return; }
+    toast(zh() ? "网页充值即将开放，现在可以看广告免费领钻石" : "Web top-up is coming soon. Watch an ad to earn free diamonds."); void pay;
   }, true);
   window.__pp192 = () => ({ inApp: inApp(), sdk: !!(window.paypal && window.paypal.Buttons) });
 })();
