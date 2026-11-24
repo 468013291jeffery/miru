@@ -403,7 +403,7 @@ module.exports = L.wrap(async (req, res) => {
       'You receive a JSON array of script lines and must return ONLY a JSON array of the same length, one translated line per input line, same order. Rules: ' +
       '(1) Keep every markup token exactly: lines may start with "#", "####", or contain ⟦...⟧ commands. Inside ⟦CMD|a|b|...⟧ keep the command word and the number and order of "|" fields; translate only fields that are human-readable Chinese text (names, descriptions, scene labels); never translate ids, codes, numbers, flags or variable names. ' +
       '(2) Heading keywords stay as they are (CHAPTER, SCENE, CHOICE, ENDING, option letters like "A｜"); keep the full-width "｜" separator. ' +
-      '(3) Dialogue lines look like "名字：“台词”" → write "Name: “line”" (English colon + space, keep curly quotes). "旁白：" → "Narrator: ". The player character "你" → "You". ' +
+      '(3) Dialogue lines look like "名字：“台词”" → write "Name: “line”" (English colon + space, keep curly quotes). The speaker keys "旁白" (narrator) and "你" (the player) are system keys: keep them exactly as written, e.g. "旁白：“…”" stays "旁白：" + translated text, "你：" stays "你：" + translated text; in ⟦CHAR|你|…⟧ keep the name field "你". Translate every other speaker name. ' +
       '(4) Keep tone (flirty, tense, dramatic), keep second person ("you") for the player, no added notes, no explanations, no quotes around the whole line. ' +
       (gloss ? '(5) Use these character names consistently: ' + gloss + '.' : '');
     const llmArr = async (lines, gloss, depth) => {
@@ -417,7 +417,8 @@ module.exports = L.wrap(async (req, res) => {
       return null;
     };
     const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
-    const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(dst) <= 1;
+    const keyless = s => String(s).replace(/^(\s*)(旁白|你)\s*[：:]/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||');
+    const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(keyless(dst)) <= 1;
     const translateLines = async (lines, gloss) => {   /* lines: 只含要翻的行；返回同长数组（失败的行为 null） */
       const out = new Array(lines.length).fill(null), CH = 36, jobs = [];
       for (let i = 0; i < lines.length; i += CH) jobs.push(i);
@@ -431,7 +432,7 @@ module.exports = L.wrap(async (req, res) => {
     const run = async () => {
       const rows = await sql("SELECT id, title, pack FROM works WHERE status='live' ORDER BY created_at");
       const todo = rows.filter(w => { const p = w.pack || {}; if (Array.isArray(b.ids) && b.ids.length && !b.ids.includes(w.id)) return false; const zh = typeof p.script === 'string' ? p.script : ''; const en = typeof p.script_en === 'string' ? p.script_en : '';
-        if (!zh.trim()) return false; return b.force === true || !en.trim() || hanN(en) > 0; });
+        if (!zh.trim()) return false; return b.force === true || !en.trim(); });
       say('待处理 ' + todo.length + ' 部');
       for (const w of todo) {
         ST.cur = w.title;
@@ -442,12 +443,12 @@ module.exports = L.wrap(async (req, res) => {
           const base = oldEn ? oldEn.split('\n') : zh.split('\n');
           const zhChars = zh.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim()));
           let gloss = '';
-          if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; return a && e && !HAN.test(e) ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
-          else if (zhChars.length) { const t = await translateLines(zhChars, ''); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = t[i] && t[i].split('|')[1]; return a && e ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
-          const idx = []; base.forEach((l, i) => { if (HAN.test(l)) idx.push(i); });
+          if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; return a && e && a !== '你' && !HAN.test(e) ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
+          else if (zhChars.length) { const t = await translateLines(zhChars, ''); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = t[i] && t[i].split('|')[1]; return a && e && a !== '你' ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
+          const idx = []; base.forEach((l, i) => { if (HAN.test(keyless(l))) idx.push(i); });
           const tr = await translateLines(idx.map(i => base[i]), gloss);
           const outL = base.slice(); let bad = 0; idx.forEach((i, j) => { if (tr[j] != null) outL[i] = tr[j]; else bad++; });
-          const en = outL.join('\n'), left = hanN(en);
+          const en = outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
           if (bad > Math.max(3, idx.length * 0.02)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
           const np = Object.assign({}, p, { script_en: en });
           np.meta = Object.assign({}, p.meta || {}); const langs = new Set([].concat(np.meta.langs || [], ['en'])); np.meta.langs = Array.from(langs);
