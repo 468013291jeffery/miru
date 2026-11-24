@@ -291,7 +291,24 @@ module.exports = L.wrap(async (req, res) => {
     const byW = Object.fromEntries((ov.works || []).map(w => [w.wid, w]));
     const meta = Object.fromEntries((await sql('SELECT id, plays, likes, status FROM works WHERE id = ANY($1::text[])', [ids])).map(m => [m.id, m]));
     const works = own.map(s => { const w = byW[s.work_id] || {}, m = meta[s.work_id] || {}; return { wid: s.work_id, sid: s.id, title: s.title, status: m.status || s.status, plays: Number(m.plays) || 0, likes: Number(m.likes) || 0, gems: Number(w.gems) || 0, spenders: Number(w.spenders) || 0, gem_cents: Number(w.gem_cents) || 0, orders: Number(w.orders) || 0, pay_cents: Number(w.pay_cents) || 0, promo_cents: Number(w.promo_cents) || 0, clicks: Number(w.clicks) || 0 }; });
-    return L.send(res, 200, { days: ov.days, centsPerGem: ov.centsPerGem, works });
+    /* 推广我的剧的人（只按自己的剧过滤；不返回推广人的邮箱） */
+    let promoters = [];
+    try {
+      const since = new Date(Date.now() - ov.days * 864e5).toISOString(), titleOf = Object.fromEntries(own.map(s => [s.work_id, s.title]));
+      promoters = (await sql(`WITH k AS (SELECT props->>'promoter' AS promoter, props->>'wid' AS wid, count(*)::int AS n FROM events WHERE name='promo_click' AND at > $1 AND props->>'wid' = ANY($2::text[]) GROUP BY 1, 2),
+        b AS (SELECT props->>'promoter' AS promoter, props->>'wid' AS wid, count(*)::int AS n FROM events WHERE name='promo_bind' AND at > $1 AND props->>'wid' = ANY($2::text[]) GROUP BY 1, 2),
+        m AS (SELECT props->>'promoter' AS promoter, props->>'wid' AS wid, count(DISTINCT user_id)::int AS payers, COALESCE(sum((props->>'cents')::int), 0)::int AS cents, COALESCE(sum((props->>'comm')::float8), 0)::float8 AS comm FROM events WHERE name='promo_comm' AND at > $1 AND props->>'wid' = ANY($2::text[]) GROUP BY 1, 2),
+        ids AS (SELECT promoter, wid FROM k UNION SELECT promoter, wid FROM b UNION SELECT promoter, wid FROM m)
+        SELECT ids.wid, u.name, (SELECT c.props->>'code' FROM events c WHERE c.name='promo_code' AND c.user_id::text = ids.promoter ORDER BY c.id LIMIT 1) AS code,
+          COALESCE(k.n, 0) AS clicks, COALESCE(b.n, 0) AS users, COALESCE(m.payers, 0) AS payers, COALESCE(m.cents, 0) AS sales, COALESCE(m.comm, 0) AS comm
+        FROM ids LEFT JOIN users u ON u.id::text = ids.promoter
+          LEFT JOIN k ON k.promoter IS NOT DISTINCT FROM ids.promoter AND k.wid IS NOT DISTINCT FROM ids.wid
+          LEFT JOIN b ON b.promoter IS NOT DISTINCT FROM ids.promoter AND b.wid IS NOT DISTINCT FROM ids.wid
+          LEFT JOIN m ON m.promoter IS NOT DISTINCT FROM ids.promoter AND m.wid IS NOT DISTINCT FROM ids.wid
+        WHERE ids.promoter IS NOT NULL ORDER BY sales DESC, users DESC, clicks DESC LIMIT 300`, [since, ids])).map(p => ({ wid: p.wid, title: titleOf[p.wid] || p.wid, name: p.name || '', code: p.code || '', clicks: Number(p.clicks) || 0, users: Number(p.users) || 0, payers: Number(p.payers) || 0, sales: Number(p.sales) || 0, comm: Number(p.comm) || 0 }));
+    } catch (e) { promoters = []; }
+    const c = ov.cfg || {};
+    return L.send(res, 200, { days: ov.days, centsPerGem: ov.centsPerGem, cfg: { rate: c.rate, days: c.days, gemsPerUsd: c.gemsPerUsd, on: c.on }, works, promoters });
   }
 
   /* ---------- 2026-11-16 推广分佣 + 单剧收入（数据在 api/promo.js） ---------- */
