@@ -1,0 +1,93 @@
+{
+  "title": "明天寄来的情书",
+  "lang": "zh",
+  "orient": "bg",
+  "config": {
+    "hook": "我收到了七天后自己的分手信。十分钟后，信里的男人推开门。",
+    "premise": "凌晨零点，你从花店门口的旧邮筒里取出一封信。\n寄件人是七天后的你，内容只有一件事：七天后，你会在车站吻一个男人，然后亲口叫他永远别回来。\n男人的名字叫 Evan。你确定自己不认识他。\n十分钟后，花店铃响了。一位被雨淋透的修复师抱着坏掉的工具箱站在门口：“抱歉，我来修邮筒……这束白花被我压坏了。你还要吗？”\n你还没告诉他未来的信。Evan 会为了一句你随口说过的话，绕远路买来喜欢的丝带；会在约会时紧张到洒翻爆米花；也会因为吃醋把一句话说错，然后认真回来道歉。\n偏偏邮筒每晚会送来一封七天后的信。有的预告你们牵手，有的却警告你千万别牵他的手。信一直在变，只有一件事不变：车站的日期越来越近。\n你可以相信预言、拆穿它，或者先不告诉 Evan。恋爱本来就够难了，更何况你已经看到了分手的那一天。\n你会因为害怕告别而错过爱情，还是让未来第一次猜错？",
+    "you": "花店店主",
+    "en": {
+      "title": "Letters From Tomorrow",
+      "hook": "You got a breakup letter from seven days in the future. Then the man it named walked in.",
+      "premise": "At midnight, a letter arrives from you, seven days in the future. It says you'll kiss a man at the train station, then beg him never to come back. You've never met the man. Ten minutes later, a rain-soaked repairman named Evan walks into your flower shop with a crushed white blossom and a shy smile. He remembers the little things you say, gets awkward on dates, and sometimes says the wrong thing when he's jealous. Every night, another future letter arrives, and the predictions keep changing. You know the date of the goodbye. You don't know whether it must happen. Would you risk falling in love anyway?",
+      "you": "Florist"
+    },
+    "disc": {
+      "rel": "bg",
+      "cast": "single",
+      "identity": [],
+      "persona": [
+        "gentle"
+      ],
+      "trope": [
+        "slow_burn",
+        "rebirth"
+      ],
+      "mood": [
+        "sweet",
+        "mystery"
+      ],
+      "intensity": "sweet"
+    },
+    "heat": "slow",
+    "as": "你",
+    "leads": [
+      {
+        "key": "evan",
+        "n": {
+          "zh": "Evan Carter",
+          "en": "Evan Carter"
+        },
+        "g": "m",
+        "age": 31,
+        "role": {
+          "zh": "历史建筑修复师",
+          "en": "Historic restoration craftsman"
+        },
+        "pitch": {
+          "zh": "他记得你喜欢哪条丝带，却不知道你的未来信写了他的名字。",
+          "en": "He remembers your favorite ribbon, unaware that his name is in your letter from the future."
+        }
+      },
+      {
+        "key": "nia",
+        "n": {
+          "zh": "Nia Brooks",
+          "en": "Nia Brooks"
+        },
+        "g": "f",
+        "age": 29,
+        "role": {
+          "zh": "花店搭档",
+          "en": "Florist and confidante"
+        },
+        "pitch": {
+          "zh": "她帮你照看花店，也会问出你一直绕开的那个问题。",
+          "en": "She helps run the shop and will ask the question you’ve been avoiding."
+        }
+      },
+      {
+        "key": "mrs_bell",
+        "n": {
+          "zh": "Mrs. Bell",
+          "en": "Mrs. Bell"
+        },
+        "g": "f",
+        "age": 71,
+        "role": {
+          "zh": "退休邮局员工",
+          "en": "Retired postal clerk"
+        },
+        "pitch": {
+          "zh": "旧邮筒的传闻，她记得比镇上任何人都清楚。",
+          "en": "She remembers the old mailbox’s stories better than anyone in town."
+        }
+      }
+    ],
+    "langs": [
+      "zh",
+      "en"
+    ],
+    "chapters_target": 16
+  }
+}

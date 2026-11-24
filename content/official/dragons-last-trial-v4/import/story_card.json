@@ -1,0 +1,81 @@
+{
+  "title": "恶龙求我判死刑",
+  "lang": "zh",
+  "orient": "bg",
+  "config": {
+    "hook": "恶龙求我判他死刑。另一位男人却说，他会为我毁掉审判。",
+    "premise": "处刑台上，恶龙 Dorian 被铁链锁着，所有人都在等你签字。\n你是王城的证据核验官。按法律，没有你的联署，谁也不能夺走他的心火。可主灯马上要熄，城里的人都在喊：“杀了他，点灯！”\nDorian 却抬头看你，突然笑了。\n“我以前想过很多种死法。”他说，“没想过最后一个看我的人，会是你。”\n你还没来得及答，冷面监察官 Silas 当众撕掉自己的免罪令，露出一页被王廷藏起来的旧法。\n“她有权知道真相。”Silas 对法官说。转向你时，他的声音却低了下来，“还有，我不想再看你一个人承担所有人的怒火。”\n两个本该互为仇敌的男人，竟都在把自己最危险的一面交给你。Dorian 会在暴雪中替你点起一簇火，也会吃醋、嘴硬，夜深时承认他怕死。Silas 会救你脱离权力争斗，却可能必须承认自己曾参与错误的判决。\n你只有三夜，可以找出不用杀人的点灯办法，也可以决定要不要让他们走近。\n如果你能救他们两个，谁会第一个向你要一个吻，而不是一条命？",
+    "you": "王城证据核验官",
+    "en": {
+      "title": "The Dragon's Last Trial",
+      "hook": "The dragon begs for a death sentence. A second man tears up his own protection to stop the trial.",
+      "premise": "The city is freezing. To relight its last great lamp, the court wants to take the heart-fire of the dragon warrior chained before you. But the execution needs your signature. Dorian asks for three days and looks at you as though you're the first person who has truly seen him. The city's perfect magistrate, Silas, tears up his own immunity order to show you a law someone hid. One man is fire; the other has spent his life hiding sparks beneath ice. Neither is as certain as he looks. You can question them, refuse them, fall for one of them, or save their lives without promising your heart. Can you find another way to keep the city warm?",
+      "you": "Court evidence recorder"
+    },
+    "disc": {
+      "rel": "bg",
+      "cast": "multi",
+      "identity": [
+        "mythic",
+        "royalty"
+      ],
+      "persona": [
+        "protective",
+        "cold"
+      ],
+      "trope": [
+        "forbidden",
+        "triangle",
+        "slow_burn"
+      ],
+      "mood": [
+        "fantasy",
+        "angst"
+      ],
+      "intensity": "steamy"
+    },
+    "heat": "slow",
+    "as": "你",
+    "leads": [
+      {
+        "key": "dorian",
+        "n": {
+          "zh": "Dorian Ashvale",
+          "en": "Dorian Ashvale"
+        },
+        "g": "m",
+        "age": 31,
+        "role": {
+          "zh": "龙族战将",
+          "en": "Dragonkin commander"
+        },
+        "pitch": {
+          "zh": "他当着王城请求死刑，却私下问你能不能给他三夜。",
+          "en": "He asked the court to condemn him. Then he quietly asked you for three nights."
+        }
+      },
+      {
+        "key": "silas",
+        "n": {
+          "zh": "Silas Reed",
+          "en": "Silas Reed"
+        },
+        "g": "m",
+        "age": 30,
+        "role": {
+          "zh": "王廷监察官",
+          "en": "Royal inspector"
+        },
+        "pitch": {
+          "zh": "他当众撕掉自己的豁免令，把被藏起来的法条交给你。",
+          "en": "He tore up his own immunity order to hand you the law the court had hidden."
+        }
+      }
+    ],
+    "langs": [
+      "zh",
+      "en"
+    ],
+    "chapters_target": 16
+  }
+}

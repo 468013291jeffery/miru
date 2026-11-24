@@ -1,0 +1,94 @@
+{
+  "title": "假恋爱三十天",
+  "lang": "zh",
+  "orient": "bg",
+  "config": {
+    "hook": "他当众说暗恋我十四个月。三十天后，却要离开。",
+    "premise": "前任在婚礼彩排上拿起话筒，笑着问全场：“两年了，还有谁敢认真爱她？”\n你是这场婚礼的空间设计师，不是供人取笑的节目。正准备回击，后厨突然有人举手。\n“我敢。”主厨 Theo Bennett 穿着沾面粉的围裙走过来。“我喜欢她十四个月了。”\n全场安静。你和他最近三天吵得不可开交，连奶油颜色都没谈拢。你不知道他在开玩笑、替你解围，还是真的憋了十四个月。\nTheo 很快意识到自己越界了。他把麦克风放下，说：“这话是我想说，不代表她答应。要骂就骂我。”\n好友 Naomi 的婚礼还有三十天，Colin 仍在宾客名单上。你可以直接澄清，也可以让大家暂时误会，再慢慢弄清 Theo 到底想要什么。\n从一顿失败的早餐、一次被人偷拍的练舞，到一场吃醋后的道歉，他会主动追你，也会暴露不够漂亮的一面。你能逗他、追问、拒绝，甚至先吻上去。他不会替你写答案。\n而你不知道，Theo 早就收到了纽约的合伙邀请。婚礼后第二天，他必须回复。\n当全世界都以为你们在演戏，最先当真的那个人，会不会先走？",
+    "you": "婚礼空间设计师",
+    "en": {
+      "title": "The Plus-One Pact",
+      "hook": "He said he’d wanted you for fourteen months. Now he might leave in thirty days.",
+      "premise": "At your best friend's wedding rehearsal, your ex grabs the mic: 'Who would ever love you seriously?' Theo Bennett, the chef you've argued with for three days, raises his flour-covered hand. 'I would. I've liked her for fourteen months.' It wasn't a plan. Now the whole room thinks you're together, and the wedding is thirty days away. He can make you laugh over ruined dessert, blush on the dance floor, and admit when jealousy gets the better of him. But the morning after the wedding, Theo must answer a job offer in New York. If everyone else thinks you're pretending, how do you tell whether he means it?",
+      "you": "Wedding designer"
+    },
+    "disc": {
+      "rel": "bg",
+      "cast": "single",
+      "identity": [],
+      "persona": [
+        "gentle",
+        "flirty"
+      ],
+      "trope": [
+        "crush",
+        "workplace"
+      ],
+      "mood": [
+        "sweet",
+        "drama"
+      ],
+      "intensity": "steamy"
+    },
+    "heat": "slow",
+    "as": "你",
+    "leads": [
+      {
+        "key": "theo",
+        "n": {
+          "zh": "Theo Bennett",
+          "en": "Theo Bennett"
+        },
+        "g": "m",
+        "age": 30,
+        "role": {
+          "zh": "婚宴主厨",
+          "en": "Wedding chef"
+        },
+        "pitch": {
+          "zh": "他当众承认喜欢你十四个月，私下却怕被你当成会离开的人。",
+          "en": "He admitted his crush in front of the whole room. Privately, he fears becoming another man who leaves."
+        }
+      },
+      {
+        "key": "naomi",
+        "n": {
+          "zh": "Naomi Brooks",
+          "en": "Naomi Brooks"
+        },
+        "g": "f",
+        "age": 29,
+        "role": {
+          "zh": "新娘与好友",
+          "en": "Bride and best friend"
+        },
+        "pitch": {
+          "zh": "她会听你怎么想，也敢在婚礼彩排上按掉话筒。",
+          "en": "She listens to what you want and knows when to cut the mic."
+        }
+      },
+      {
+        "key": "colin",
+        "n": {
+          "zh": "Colin Ward",
+          "en": "Colin Ward"
+        },
+        "g": "m",
+        "age": 31,
+        "role": {
+          "zh": "你的前任",
+          "en": "Your ex"
+        },
+        "pitch": {
+          "zh": "他擅长在众人面前讲述分手。你有权讲自己的版本。",
+          "en": "He likes telling his version of the breakup. You get to tell yours."
+        }
+      }
+    ],
+    "langs": [
+      "zh",
+      "en"
+    ],
+    "chapters_target": 16
+  }
+}

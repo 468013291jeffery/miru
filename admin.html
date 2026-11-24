@@ -769,8 +769,12 @@ const Config = {
       finally { tts.busy = false; }
     }
     async function probeQwen() { qw.value = { busy: true }; try { const [a, b, c] = await Promise.all([fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=zh').then(r => r.json()), fetch(ADMIN_API_BASE + '/api/tts?ping=qwen&l=en&v=f1').then(r => r.json()), (async () => { const t0 = Date.now(); const r = await fetch(ADMIN_API_BASE + '/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ omni: { voice: 'm2', sys: '你在打电话，用一句话回答。', msgs: [{ role: 'user', text: '你好，在吗？' }], max: 60 } }) }); if (!r.ok) { const j = await r.json().catch(() => ({})); return { qwen: { ok: false, error: { message: (j.error && j.error.message || r.status) + ' ' + JSON.stringify(j.error && j.error.trace || '') } } }; } const txt = await r.text(); const n = (txt.match(/"data":"/g) || []).length; return { qwen: { ok: n > 0, ms: Date.now() - t0, provider: r.headers.get('X-MIRU-Provider'), said: (txt.match(/"transcript":"([^"]*)"/g) || []).map(x => x.slice(14, -1)).join('') } }; })()]); qw.value = { zh: a, en: b, call: c.qwen || c }; } catch (e) { qw.value = null; ElMessage.error('测试失败：' + e.message); } }
-    onMounted(() => { load(); loadTts(); });
-    return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed, qw, probeQwen, tts, saveTts, probeTts };
+    /* 2026-11-24 Unity 激励广告回调密钥：在后台填，服务器从数据库读（不用登服务器改环境变量）。只回传「是否已设置」，不回传密钥本身。 */
+    const sec = reactive({ unity: '', set: false, at: '' });
+    async function loadSec() { try { const j = await api('secret'); sec.set = !!(j.unity_s2s && j.unity_s2s.set); sec.at = (j.unity_s2s && j.unity_s2s.at) || ''; } catch (_) {} }
+    async function saveSec() { const val = String(sec.unity || '').trim(); if (!/^[0-9a-fA-F]{16,128}$/.test(val)) return ElMessage.warning('请粘贴 Unity 邮件里的密钥（一串字母数字）'); await api('secret', { body: { name: 'unity_s2s', value: val } }); sec.unity = ''; ElMessage.success('已保存，Unity 看完广告发钻已启用'); loadSec(); }
+    onMounted(() => { load(); loadTts(); loadSec(); });
+    return { v, meta, save, load, skuRows, fmt, llm, probing, probe, emb, probeEmbed, qw, probeQwen, tts, saveTts, probeTts, sec, saveSec };
   },
   template: `<div v-if="v">
     <div class="panel"><h3>AI 模型（自动切换）</h3>
@@ -800,6 +804,7 @@ const Config = {
       <el-alert v-if="tts.result" :type="tts.result.ok?'success':'error'" :closable="false" style="margin-top:10px"
         :title="tts.result.ok ? ('通 · ' + tts.result.ms + ' ms · ' + tts.result.bytes + ' 字节 · ' + (tts.result.type||'') + ' · ' + (tts.result.model||'')) : ('不通 · ' + (tts.result.error || ('HTTP ' + tts.result.status)))" />
     </div>
+    <div class="panel"><h3>Unity 激励广告（看完广告发钻）</h3><p class="muted" style="margin:0 0 10px">把 Unity 客服邮件里的「秘密 / secret」粘到下面并保存。保存后 Unity 每次确认用户看完广告，服务器会自动给用户发钻（默认 1 钻 / 次，每天最多 5 次）。密钥只存在服务器，页面上不会再显示。</p><el-form :inline="true"><el-form-item label="回调密钥"><el-input v-model="sec.unity" type="password" show-password placeholder="粘贴密钥" style="width:320px" /></el-form-item><el-form-item><el-button type="primary" @click="saveSec">保存</el-button></el-form-item><el-form-item><el-tag :type="sec.set ? 'success' : 'info'">{{ sec.set ? ('已设置' + (sec.at ? ' · ' + fmt(sec.at) : '')) : '未设置' }}</el-tag></el-form-item></el-form></div>
     <div class="panel"><h3>新用户与钻石</h3><el-form label-width="160px" style="max-width:640px">
       <el-form-item label="新人礼（钻石）"><el-input-number v-model="v.welcome_gems" :min="0" /></el-form-item>
       <el-form-item label="每日签到（钻石）"><el-input-number v-model="v.daily_gems" :min="0" /></el-form-item>
