@@ -182,7 +182,7 @@ const Dashboard = {
     }
     onMounted(load);
     const pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '—';
-    return { d, c1, c2, c3, c4, money, pct, fmtD, load };
+    return { d, c1, c2, c3, c4, money, pct, fmtD, load, can };  /* 2026-11-24：模板里用了 can()（收入、钻石卡片按权限显示），没导出导致整页空白 */
   },
   template: `<div v-if="d">
     <div class="kpis">
@@ -967,7 +967,7 @@ const Studio = {
     const R = window.MIRU_RULES || {};
     const steps = ['选题与素材', '按规则生成', '自动检查', '编剧审改', '上线'];
     const cfgDefault = () => ({ story_mode: '混合', story_form: '有限主线加持续陪伴', interaction_mode: '混合', twist_density: '中', chapters_target: 12, player: '', cast: '', hook: '', premise: '', you: '', boundaries: '所有角色均为成年人；无露骨性描写；暴力与执念必须有代价和问责；保留拒绝、求助、离开的完整路径', monetization: false, motifs: [], tags: [], taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], as: '' });
-    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [] });
+    const nf = reactive({ show: false, title: '', orient: 'bl', lang: 'zh', seed: '', taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], disc: { cast: '', identity: [], persona: [], trope: [], mood: [], intensity: '' } });
     const leadsText = ref('');
 
     /* ---------- 2026-11-24 · 素材 / 小游戏 / 发现页标签：都存进剧本 config，上线时跟作品包一起走，不需要 GitHub 和部署 ---------- */
@@ -1024,6 +1024,10 @@ const Studio = {
       ElMessage[lack.length ? 'warning' : 'success'](lack.length ? '已保存。剧本里还有 ' + lack.length + ' 个 ⟦MG⟧ 没有定义：' + lack.slice(0, 5).join('、') : '小游戏已保存（' + v.length + ' 个）');
     }
     function discToggle(g, k) { const d = sel.value.config.disc; if (g === 'cast' || g === 'intensity') { d[g] = d[g] === k ? '' : k; return; } d[g] = d[g].includes(k) ? d[g].filter(x => x !== k) : d[g].concat(k); }
+    const DISC_GROUPS = [['cast', '恋爱对象', 1], ['identity', '人物身份', 0], ['persona', '性格', 0], ['trope', '套路', 0], ['mood', '氛围', 0], ['intensity', '亲密强度', 1]];
+    function nfDiscToggle(g, k) { const d = nf.disc; if (g === 'cast' || g === 'intensity') { d[g] = d[g] === k ? '' : k; return; } d[g] = d[g].includes(k) ? d[g].filter(x => x !== k) : d[g].concat(k); }
+    /* 搜索用的中文标签：取发现页标签的中文名；老剧本没有 disc 时仍用旧口味标签 */
+    function discTags(c) { const d = (c && c.disc) || {}, D = DISC.value || {}, out = []; ['identity', 'persona', 'trope', 'mood'].forEach(g => (d[g] || []).forEach(k => { const v = D[g] && D[g][k]; if (v) out.push(v.zh); })); return out.length ? [...new Set(out)] : stuTagsOf(c); }
     async function saveDisc() { const d = sel.value.config.disc; if (!d.intensity) return ElMessage.warning('请选亲密强度'); await save({ config: Object.assign({}, sel.value.config, { disc: d }) }, '保存发现页标签'); ElMessage.success('发现页标签已保存，上线后生效'); }
     async function submit() { await api('script', { body: { op: 'submit', id: sel.value.id } }); ElMessage.success('已提交审核，管理员检查后会上线'); open(sel.value.id); load(); }
     const researchText = ref(''), outline = ref(''), cardsText = ref(''), review = reactive({ notes: '', approved: false, checks: {} });
@@ -1037,15 +1041,15 @@ const Studio = {
         try { research = await (await fetch('/research/honor_code.json')).json(); brief = await (await fetch('/research/honor_code_brief.md')).text(); } catch (_) { ElMessage.error('示例研究文件读取失败'); }
         Object.assign(config, { hook: '迎新派对那晚，你被人按在冰冷的墙上，而他看见了——他是唯一的证人，也是你最不想欠的人。', premise: 'Marlowe University（美国东北部虚构大学）。新生派对上你被欺负，签署荣誉誓约的当晚，宿敌成了唯一的目击者。看见违规必须举报，保护一个人却意味着包庇。宿敌变恋人 · 三角关系 · 校园暴力 · 嫉妒 · 病娇（有代价、有问责）。', taste: { world: ['college'], trope: ['e2l', 'forbid'], him: ['mg'], vibe: ['angst', 'thrill'] }, heat: 'slow', facts: ['Campus'], tags: [], cast: '待定：宿敌（继承人/荣誉委员会成员）、执念型第三者（病娇，结局须先承担后果）。年龄全部 19+。' });
       }
-      config.taste = JSON.parse(JSON.stringify(nf.taste)); config.heat = nf.heat; config.facts = nf.facts.slice(); if (!(config.taste.world.length && config.taste.trope.length)) return ElMessage.warning('请至少选 1 个「世界」和 1 个「关系桥段」（推荐和搜索靠这些）'); config.tags = stuTagsOf(config);
-      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; Object.assign(nf, { taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [] }); await load(); open(j.id);
+      /* 2026-11-24 · 新建剧本改用发现页那套新标签（art/official/discover.json 的 dict），存进 config.disc，上线时随作品包走 */ const nd = JSON.parse(JSON.stringify(nf.disc)); if (!nd.cast) return ElMessage.warning('请选「恋爱对象」：一位还是多位'); if (!(nd.identity.length || nd.trope.length)) return ElMessage.warning('请至少选 1 个「人物身份」或「套路」（发现页筛选和推荐靠这些）'); if (!nd.intensity) return ElMessage.warning('请选「亲密强度」'); config.disc = nd; config.heat = ({ sweet: 'fluff', steamy: 'slow', spicy: 'steamy' })[nd.intensity] || 'slow'; config.tags = discTags(config);
+      const j = await api('script', { body: { op: 'create', title: nf.title, orient: nf.orient, lang: nf.lang, research, brief, config } }); nf.show = false; Object.assign(nf, { taste: { world: [], trope: [], him: [], vibe: [] }, heat: 'slow', facts: [], disc: { cast: '', identity: [], persona: [], trope: [], mood: [], intensity: '' } }); await load(); open(j.id);
     }
     async function save(patch, snapshot) { const j = await api('script', { body: { op: 'save', id: sel.value.id, patch, snapshot } }); const cfg = sel.value.config; sel.value = j.script; sel.value.config = Object.assign(cfgDefault(), j.script.config || cfg); if (snapshot) loadVers(); return j.script; }
     function say(s) { log.value.unshift(new Date().toLocaleTimeString('zh-CN', { hour12: false }) + '  ' + s); }
     const rulesSys = (scope) => '你是 MIRU 互动剧本生成器。严格遵守下面两份规则（终版规则为准，调试规则为执行细则）。当前任务层级：' + scope + '。\n\n【MIRU 终版规则】\n' + (R.full || R.gen || '') + '\n\n【MIRU 剧本生成 Skill 调试规则 v1.0】\n' + (R.skill || '') + (R.ws712 ? '\n\n【MIRU 剧本与角色编写规范 v7.12（编剧交付合同）】\n' + R.ws712 : '') + (R.v21 ? '\n\n【MIRU V2.1 互动剧本与人物生成规则】\n' + R.v21 : '');
     const projectText = () => { const s = sel.value, c = s.config; const mot = (s.research && s.research.motif_cards || []).filter(m => (c.motifs || []).includes(m.motif_id)); return ['【项目】' + s.title + '（' + ({ bl: '男男', bg: '男女', gl: '女女' }[s.orient] || s.orient) + '，语言：' + (s.lang === 'en' ? '英文' : '中文') + '）', '口味定位（必须体现，这是推给哪类用户的依据）：' + stuTasteText(c), '一句话钩子：' + (c.hook || '待定'), '设定：' + (c.premise || '待定'), '玩家身份：' + (c.player || '待定（保持 pending）'), '人物：' + (c.cast || '待定'), '配置：story_mode=' + c.story_mode + ' / story_form=' + c.story_form + ' / interaction_mode=' + c.interaction_mode + ' / twist_density=' + c.twist_density + ' / 章数目标=' + c.chapters_target + ' / monetization_enabled=' + !!c.monetization, '玩家可决定的事（行动自由度）：' + (c.player_freedom || '待定'), '本作承诺的核心体验：' + (c.core_promise || '待定（要具体，如“外冷内热的竞技明星在逐渐信任玩家的过程中学会表达脆弱”，不要写“甜虐交织”）'), '总主线问题（玩家最终要面对的选择）：' + (c.main_question || '待定'), 'canon 不可改规则：' + (c.canon_rules || '待定'), '内容排除：' + (c.content_exclusions || '无'), '主线结束后续写：' + (c.continuation_allowed === false ? '不允许' : '允许（须有 canon 禁改清单与续写支线池）'), stuCharter(c), '内容边界：' + c.boundaries, mot.length ? '【选用的素材研究母题卡（研究阶段的提案，不是已确认设定）】\n' + mot.map(m => m.motif_id + '：' + m.premise + '｜原创转化：' + (m.original_transformation || '') + '｜边界：' + (m.boundaries || '')).join('\n') : '', s.brief ? '【审稿简报摘要】\n' + String(s.brief).slice(0, 5000) : ''].filter(Boolean).join('\n'); };
     /* ---------- step 1 ---------- */
-    async function saveStep1() { sel.value.config.tags = stuTagsOf(sel.value.config); let research = null; if (researchText.value.trim()) { research = stuJSON(researchText.value); if (!research) return ElMessage.error('素材研究 JSON 格式不对'); } await save({ title: sel.value.title, orient: sel.value.orient, lang: sel.value.lang, config: sel.value.config, research, brief: sel.value.brief, stage: Math.max(sel.value.stage, 2) }); ElMessage.success('已保存'); step.value = 1; }
+    async function saveStep1() { sel.value.config.tags = discTags(sel.value.config); let research = null; if (researchText.value.trim()) { research = stuJSON(researchText.value); if (!research) return ElMessage.error('素材研究 JSON 格式不对'); } await save({ title: sel.value.title, orient: sel.value.orient, lang: sel.value.lang, config: sel.value.config, research, brief: sel.value.brief, stage: Math.max(sel.value.stage, 2) }); ElMessage.success('已保存'); step.value = 1; }
     async function aiResearch() {
       busy.value = 'research'; say('素材研究 AI：按研究规则生成 idea 级机制卡（LongCat 不能联网检索，所有卡片标记为 idea）…');
       try { const t = await stuLLM((R.research || '') + '\n\n注意：本次没有联网检索能力，不得编造任何来源；source_cards 只允许 user/idea 类型，pending_sources 写出建议人工去查的资料。', projectText() + '\n\n请输出合法 JSON（schema_version, story_id, setting_status, assumptions, missing_inputs, source_cards, trends, originality_risks, motif_cards, pending_sources），motif_cards 6–10 张。只输出 JSON。', 6000);
@@ -1300,10 +1304,13 @@ const Studio = {
         '<br><br><span style="color:#909399">导入的是草稿：口味标签还没选（推荐和搜索靠它），逐部打开补完再点检查/上线。</span>',
         '批量导入 .md', { dangerouslyUseHTMLString: true, confirmButtonText: '知道了' });
     }
+    /* 2026-11-24 · 编剧看自己剧的数据（/api/admin?r=mystats：编剧只拿到自己名下已上线的剧，管理员看全部） */
+    const ms = reactive({ days: 30, rows: [], loading: false, cpg: 0 });
+    async function loadMs() { ms.loading = true; try { const j = await api('mystats', { query: { days: ms.days } }); ms.rows = (j && j.works) || []; ms.cpg = (j && j.centsPerGem) || 0; } catch (_) {} finally { ms.loading = false; } }
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', review: '待审核', live: '已上线', offline: '已下线' }[s] || s);
-    onMounted(load);
-    return { upBusy, uploadFiles, delAsset, gamesText, saveGames, gameSample, DISC, discToggle, saveDisc, missingSlots, isWriter, submit, leadsText, genLeads, saveLeads, msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+    onMounted(() => { load(); loadMs(); });
+    return { ms, loadMs, upBusy, uploadFiles, delAsset, gamesText, saveGames, gameSample, DISC, DISC_GROUPS, nfDiscToggle, discToggle, saveDisc, missingSlots, isWriter, submit, leadsText, genLeads, saveLeads, msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -1314,11 +1321,24 @@ const Studio = {
       <el-table-column prop="updated_by" label="最后修改" width="110" /><el-table-column label="更新时间" width="170" :formatter="r=>fmt(r.updated_at)" />
       <el-table-column label="" width="80"><template #default="{row}"><el-button size="small" type="danger" text @click.stop="del(row)">删除</el-button></template></el-table-column>
     </el-table>
+    <div style="margin-top:22px">
+      <h3 style="margin:0 0 6px">我的剧数据</h3>
+      <div class="toolbar"><el-radio-group v-model="ms.days" size="small" @change="loadMs"><el-radio-button :value="7">近 7 天</el-radio-button><el-radio-button :value="30">近 30 天</el-radio-button><el-radio-button :value="90">近 90 天</el-radio-button><el-radio-button :value="3650">全部</el-radio-button></el-radio-group><el-button size="small" @click="loadMs" style="margin-left:8px">刷新</el-button><span class="muted">播放、点赞是累计数；钻石和充值按所选时间段统计。折合收入 = 玩家在这部剧里花的钻 × 一颗钻平均 {{ms.cpg}} 美分（估算）；直接充值 = 在这部剧里打开充值页后 60 分钟内的正式充值。</span></div>
+      <el-table :data="ms.rows" size="small" v-loading="ms.loading" empty-text="还没有上线的剧">
+        <el-table-column prop="title" label="剧" min-width="180" />
+        <el-table-column label="状态" width="80"><template #default="{row}"><el-tag size="small" :type="row.status==='live'?'success':'info'">{{row.status==='live'?'上线中':'已下线'}}</el-tag></template></el-table-column>
+        <el-table-column prop="plays" label="播放" width="80" /><el-table-column prop="likes" label="点赞" width="70" />
+        <el-table-column prop="spenders" label="花钻人数" width="90" /><el-table-column prop="gems" label="钻石消耗" width="90" />
+        <el-table-column label="折合收入" width="100"><template #default="{row}">{{'$'+(row.gem_cents/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column label="直接充值" width="100"><template #default="{row}">{{'$'+(row.pay_cents/100).toFixed(2)}}</template></el-table-column>
+        <el-table-column label="合计（估算）" width="110"><template #default="{row}">{{'$'+((row.gem_cents+row.pay_cents)/100).toFixed(2)}}</template></el-table-column>
+      </el-table>
+    </div>
     <el-dialog v-model="nf.show" title="新建剧本" width="760px"><el-form label-width="80px">
       <el-form-item label="标题"><el-input v-model="nf.title" placeholder="如：The Honor Code｜荣誉法则" /></el-form-item>
       <el-form-item label="类型"><el-radio-group v-model="nf.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group></el-form-item>
       <el-form-item label="语言"><el-radio-group v-model="nf.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
-<el-form-item label="口味标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和用户第一次进 App 选口味（带照片那页）是同一套：选什么，就推给选了这些口味的用户；也用于搜索。</div><div v-for="L in STU_LAYERS" :key="L[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{L[1]}}<br><small>最多 {{L[2]}} 个</small></span><el-checkbox-group v-model="nf.taste[L[0]]" :max="L[2]" size="small"><el-checkbox-button v-for="it in STU_TAX[L[0]].items" :key="it[0]" :value="it[0]">{{it[2]}}</el-checkbox-button></el-checkbox-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">尺度</span><el-radio-group v-model="nf.heat" size="small"><el-radio-button v-for="h in STU_HEATS" :key="h[0]" :value="h[0]">{{h[1]}}</el-radio-button></el-radio-group></div><div style="display:flex;gap:8px;align-items:flex-start"><span class="muted" style="width:92px;flex:none;padding-top:4px">具体元素<br><small>可选 · 搜索用</small></span><el-checkbox-group v-model="nf.facts" size="small"><el-checkbox-button v-for="(zh,k) in STU_FACTS" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div></div></el-form-item>
+<el-form-item label="发现页标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和 App「发现」页的筛选、推荐是同一套新标签：玩家按这些找剧，也用于搜索。同组可多选；恋爱对象、亲密强度单选。</div><div v-if="DISC"><div v-for="G in DISC_GROUPS" :key="G[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{G[1]}}<template v-if="G[2]"><br><small>单选 · 必选</small></template></span><div style="flex:1;min-width:0"><el-check-tag v-for="(v,k) in DISC[G[0]]" :key="k" :checked="G[0]==='cast'||G[0]==='intensity' ? nf.disc[G[0]]===k : (nf.disc[G[0]]||[]).includes(k)" @change="nfDiscToggle(G[0],k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag></div></div></div><p class="muted" v-else>正在读取标签字典…</p></div></el-form-item>
       <el-form-item label="素材"><el-select v-model="nf.seed" placeholder="空白开始" clearable style="width:100%"><el-option label="载入《荣誉法则》素材研究（35 张来源卡 + 12 张母题卡 + 审稿简报）" value="honor" /></el-select></el-form-item>
     </el-form><template #footer><el-button @click="nf.show=false">取消</el-button><el-button type="primary" @click="create">创建</el-button></template></el-dialog>
   </div>
@@ -1334,7 +1354,7 @@ const Studio = {
       <el-form label-width="110px">
         <el-form-item label="标题"><el-input v-model="sel.title" /></el-form-item>
         <el-form-item label="类型 / 语言"><el-radio-group v-model="sel.orient"><el-radio-button value="bl">男男</el-radio-button><el-radio-button value="bg">男女</el-radio-button><el-radio-button value="gl">女女</el-radio-button></el-radio-group>&nbsp;&nbsp;<el-radio-group v-model="sel.lang"><el-radio-button value="zh">中文</el-radio-button><el-radio-button value="en">英文</el-radio-button></el-radio-group></el-form-item>
-<el-form-item label="口味标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和用户第一次进 App 选口味（带照片那页）是同一套：选什么，就推给选了这些口味的用户；也用于搜索。</div><div v-for="L in STU_LAYERS" :key="L[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{L[1]}}<br><small>最多 {{L[2]}} 个</small></span><el-checkbox-group v-model="sel.config.taste[L[0]]" :max="L[2]" size="small"><el-checkbox-button v-for="it in STU_TAX[L[0]].items" :key="it[0]" :value="it[0]">{{it[2]}}</el-checkbox-button></el-checkbox-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">尺度</span><el-radio-group v-model="sel.config.heat" size="small"><el-radio-button v-for="h in STU_HEATS" :key="h[0]" :value="h[0]">{{h[1]}}</el-radio-button></el-radio-group></div><div style="display:flex;gap:8px;align-items:center;margin-bottom:6px"><span class="muted" style="width:92px;flex:none">成人露骨</span><el-switch v-model="sel.config.adult" /><span class="muted" style="font-size:12px">打开后允许完整露骨描写；只对「后台已开启 + 地区在白名单 + 账号已做年龄验证」的用户可见，其他人在发现页看不到、也打不开</span></div><div style="display:flex;gap:8px;align-items:flex-start"><span class="muted" style="width:92px;flex:none;padding-top:4px">具体元素<br><small>可选 · 搜索用</small></span><el-checkbox-group v-model="sel.config.facts" size="small"><el-checkbox-button v-for="(zh,k) in STU_FACTS" :key="k" :value="k">{{zh}}</el-checkbox-button></el-checkbox-group></div></div></el-form-item>
+<el-form-item label="发现页标签"><div style="width:100%"><div class="muted" style="font-size:12px;margin-bottom:6px">和 App「发现」页的筛选、推荐是同一套新标签；点「保存」时一起保存。同组可多选；恋爱对象、亲密强度单选。</div><div v-if="DISC && sel.config.disc"><div v-for="G in DISC_GROUPS" :key="G[0]" style="display:flex;gap:8px;align-items:flex-start;margin-bottom:6px"><span class="muted" style="width:92px;flex:none;padding-top:4px">{{G[1]}}<template v-if="G[2]"><br><small>单选 · 必选</small></template></span><div style="flex:1;min-width:0"><el-check-tag v-for="(v,k) in DISC[G[0]]" :key="k" :checked="G[0]==='cast'||G[0]==='intensity' ? sel.config.disc[G[0]]===k : (sel.config.disc[G[0]]||[]).includes(k)" @change="discToggle(G[0],k)" style="margin:2px 4px 2px 0">{{(v.icon?v.icon+' ':'')+v.zh}}</el-check-tag></div></div></div><p class="muted" v-else>正在读取标签字典…</p></div></el-form-item>
         <el-form-item label="一句话钩子"><el-input v-model="sel.config.hook" /></el-form-item>
         <el-form-item label="设定 / 创意"><el-input v-model="sel.config.premise" type="textarea" :rows="3" /></el-form-item>
         <el-form-item label="玩家身份"><el-input v-model="sel.config.player" placeholder="不填 = 待定（AI 不会替你定）" /></el-form-item>
