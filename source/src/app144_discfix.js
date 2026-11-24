@@ -4885,3 +4885,69 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   window.addEventListener("blur", function () { if (pend && !pend.left) pend.left = Date.now(); });
   window.addEventListener("focus", function () { if (pend && pend.left) { pend.away += Date.now() - pend.left; pend.left = null; settle(); } });
 })();
+
+/* ===== mod192 · 2026-11-25 网页版充值走 PayPal =====
+   以前网页版点钻石包：本地先加钻 + 发一个"测试购买"给服务器（PAY_TEST 关着，服务器拒绝），等于没有真收款。
+   现在（不在安卓 App 里时）：点钻石包 → 弹出 PayPal 付款按钮（PayPal 余额 / 银行卡）；付完由服务器向 PayPal 扣款确认后发钻，
+   本地不先加钻。挂在 window 捕获阶段，抢在 app84 / app68 的旧处理之前。安卓 App 里仍走 Google Play（app127）。 */
+(function () {
+  "use strict";
+  if (typeof capi !== "function") return;
+  const CLIENT = "BAAvWaWCDv9CwcqNlXE7Bmz_C1T6wRH9vfRbThLkKBX6kang-u7J6pKUrCOaQ3HgH4iThKcw5Ci2kugTwg";
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
+  const inApp = () => { try { if (window.__play && window.__play().twa) return true; return localStorage.getItem("miru_twa189") === "1"; } catch (_) { return false; } };
+  let sdk = null;
+  function loadSdk() {
+    if (window.paypal && window.paypal.Buttons) return Promise.resolve(window.paypal);
+    if (sdk) return sdk;
+    sdk = new Promise((ok, bad) => {
+      const s = document.createElement("script");
+      s.src = "https://www.paypal.com/sdk/js?client-id=" + encodeURIComponent(CLIENT) + "&currency=USD&intent=capture&components=buttons&disable-funding=paylater,venmo";
+      s.onload = () => (window.paypal ? ok(window.paypal) : bad(new Error("no paypal")));
+      s.onerror = () => { sdk = null; bad(new Error("load failed")); };
+      document.head.appendChild(s);
+    });
+    return sdk;
+  }
+  function close(el) { try { el.remove(); } catch (_) {} }
+  async function pay(sku, label) {
+    const c = typeof cloudInfo === "function" ? cloudInfo() : {};
+    if (!c.token) { toast(zh() ? "请先登录账号再充值" : "Please sign in to top up"); return; }
+    const host = document.querySelector("#dev") || document.body, el = document.createElement("div");
+    el.style.cssText = "position:absolute;inset:0;z-index:9999;background:rgba(8,6,12,.72);display:flex;align-items:center;justify-content:center;padding:18px";
+    el.innerHTML = '<div style="max-width:380px;width:100%;background:#fff;color:#1f2329;border-radius:16px;padding:18px 16px;box-shadow:0 10px 40px rgba(0,0,0,.5)">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><b style="font-size:16px">' + (zh() ? "充值 " : "Top up ") + label + '</b><button id="ppx192" style="border:0;background:none;font-size:20px;cursor:pointer">✕</button></div>' +
+      '<div id="ppb192" style="min-height:120px;display:flex;align-items:center;justify-content:center;color:#888;font-size:13px">' + (zh() ? "正在加载 PayPal…" : "Loading PayPal…") + '</div>' +
+      '<p style="margin:8px 0 0;font-size:12px;color:#888;line-height:1.5">' + (zh() ? "可用 PayPal 余额或银行卡付款。付款成功后钻石自动到账。" : "Pay with your PayPal balance or a card. Diamonds arrive as soon as the payment clears.") + '</p></div>';
+    host.appendChild(el);
+    el.querySelector("#ppx192").onclick = () => close(el);
+    try { if (typeof track === "function") track("pp_open", { sku }); } catch (_) {}
+    let pp; try { pp = await loadSdk(); } catch (e) { el.querySelector("#ppb192").textContent = zh() ? "PayPal 加载失败，请稍后再试" : "Couldn't load PayPal. Please try again later."; return; }
+    const box = el.querySelector("#ppb192"); box.textContent = "";
+    pp.Buttons({
+      style: { layout: "vertical", shape: "pill", label: "pay" },
+      createOrder: async () => { const r = await capi("/wallet", { json: { op: "pp_create", sku } }); if (!r.ok || !r.j.id) { toast((zh() ? "下单失败：" : "Order failed: ") + ((r.j && r.j.error) || r.status)); throw new Error("create"); } return r.j.id; },
+      onApprove: async (data) => {
+        box.innerHTML = '<span style="color:#888;font-size:13px">' + (zh() ? "正在确认付款…" : "Confirming payment…") + '</span>';
+        const r = await capi("/wallet", { json: { op: "pp_capture", orderId: data.orderID } });
+        if (r.ok && typeof r.j.gems === "number") {
+          const cc = cloudInfo(); cc.known = r.j.gems; S.keys = r.j.gems; S.firstBuy = true; save();
+          if (typeof keysChip === "function") keysChip();
+          close(el); if (typeof closeSheet === "function") closeSheet();
+          toast((zh() ? "充值成功 · 💎 " : "Top-up done · 💎 ") + r.j.gems);
+          try { if (typeof track === "function") track("purchase", { sku, via: "paypal" }); } catch (_) {}
+          if (typeof refreshAfterPay === "function") refreshAfterPay();
+        } else { box.innerHTML = '<span style="color:#c00;font-size:13px">' + (zh() ? "付款没有完成：" : "Payment not completed: ") + ((r.j && r.j.error) || r.status) + '</span>'; }
+      },
+      onCancel: () => { toast(zh() ? "已取消付款" : "Payment cancelled"); },
+      onError: (err) => { console.warn("[pp192]", err); toast(zh() ? "PayPal 出错了，请稍后再试" : "PayPal error, please try again"); }
+    }).render(box).catch(e => { console.warn("[pp192] render", e); box.textContent = zh() ? "PayPal 暂时不可用" : "PayPal is unavailable right now"; });
+  }
+  window.addEventListener("click", function (e) {
+    const x = e.target && e.target.closest && e.target.closest(".packs84 [data-buy],.packs [data-buy]"); if (!x) return;
+    if (inApp()) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    const n = +x.dataset.buy; pay("gems_" + n, "💎 " + n);
+  }, true);
+  window.__pp192 = () => ({ inApp: inApp(), sdk: !!(window.paypal && window.paypal.Buttons) });
+})();
