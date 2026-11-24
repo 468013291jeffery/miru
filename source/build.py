@@ -124,3 +124,61 @@ if _si >= 0:
 out=os.path.join(ROOT,"index.html")
 open(out,"w",encoding="utf8",newline="\n").write(html)
 print(len(html), "chars ->", out, "| split" if SPLIT else "| single file")
+
+# ---- 2026-11-24 · 按需加载：36 部老剧（已全部下架）的完整剧本不再塞进首页 ----------------------------------
+# content_36.js 约 6.5 MB，其中 PACK_W 里每部剧的 pack（全部章节）占了绝大部分。老剧已经不在首页、发现页出现，
+# 只有老用户打开以前玩过的存档才用得到。做法：
+#   · PACK_W 里去掉 pack，另写一个 content36_packs.js（window.PACK36_FULL = {剧id: pack}）放仓库根目录；
+#   · 页面里 w.pack / w.openings 变成「第一次用到才加载」的属性：页面空闲时先后台预取，真用到还没取到就同步取一次，
+#     所以任何读 w.pack 的老代码都照常工作，只是不再拖慢首屏。
+# 先输出 index.lazy.html 线上验证；验证没问题后把 LAZY_DEFAULT 改成 True，index.html 就用这一版。
+LAZY_DEFAULT = False
+def _lazy36(text):
+    import json as _lj, hashlib as _lh
+    L = text.split("\n")
+    i = next(k for k, s in enumerate(L) if s.startswith("const PACK_W="))
+    W = _lj.loads(L[i][len("const PACK_W="):].rstrip().rstrip(";"))
+    full = {}
+    for w in W:
+        p = w.pop("pack", None)
+        if p is None: continue
+        full[w["id"]] = p
+        ch = p.get("chapters") or []
+        w["_q"] = [(c or {}).get("goal") for c in ch[:3]]
+    packs_js = "window.PACK36_FULL=" + _lj.dumps(full, ensure_ascii=False, separators=(",", ":")) + ";\n"
+    rev = _lh.sha256(packs_js.encode("utf-8")).hexdigest()[:10]
+    L[i] = "const PACK_W=" + _lj.dumps(W, ensure_ascii=False, separators=(",", ":")) + ";"
+    loader = ('function PK36(){if(window.PACK36_FULL)return window.PACK36_FULL;'
+              'try{var x=new XMLHttpRequest();x.open("GET","content36_packs.js?v=' + rev + '",false);x.send(null);'
+              'if(x.status===200)(0,eval)(x.responseText);}catch(e){console.warn("[pk36]",e)}'
+              'if(!window.PACK36_FULL)window.PACK36_FULL={};window.__pk36sync=(window.__pk36sync||0)+1;return window.PACK36_FULL}\n'
+              'function PK36lazy(w,key,make){Object.defineProperty(w,key,{configurable:true,enumerable:true,'
+              'get:function(){var v=make();Object.defineProperty(w,key,{value:v,writable:true,configurable:true,enumerable:true});return v},'
+              'set:function(v){Object.defineProperty(w,key,{value:v,writable:true,configurable:true,enumerable:true})}})}\n'
+              '(function(){var go=function(){if(window.PACK36_FULL)return;var s=document.createElement("script");s.src="content36_packs.js?v=' + rev + '";s.async=true;document.head.appendChild(s)};'
+              'var later=function(){(window.requestIdleCallback||setTimeout)(go,{timeout:20000})};'
+              'if(document.readyState==="complete")setTimeout(later,8000);else addEventListener("load",function(){setTimeout(later,8000)})})();')
+    out = "\n".join(L)
+    a = '["or","kind","heat","cast","tags","tabs","title","hook","premise","you","warn","status","rel","pack"].forEach(k=>w[k]=p[k]);'
+    b = '["or","kind","heat","cast","tags","tabs","title","hook","premise","you","warn","status","rel"].forEach(k=>w[k]=p[k]);PK36lazy(w,"pack",()=>PK36()[p.id]);'
+    c = 'w.openings=[{id:"ch1",t:w.pack.chapters[0].t,beats:w.pack.chapters[0].beats}];'
+    d = 'PK36lazy(w,"openings",()=>{const c0=w.pack.chapters[0];return [{id:"ch1",t:c0.t,beats:c0.beats}]});'
+    e = 'if(w.quest){const c=w.pack.chapters,ttl=w.title;w.quest={turns:20,goals:[c[0].goal,c[1].goal],hidden:c[2].goal,'
+    f = 'if(w.quest){const c=(p._q||[]).map(g=>({goal:g})),ttl=w.title;w.quest={turns:20,goals:[c[0].goal,c[1].goal],hidden:c[2].goal,'
+    for x, y in ((a, b), (c, d), (e, f)):
+        if x not in out: raise SystemExit("lazy36: pattern not found: " + x[:60])
+        out = out.replace(x, y, 1)
+    return loader + "\n" + out, packs_js
+
+_c36 = block(["content_36.js"])
+_c36_lazy, _packs_js = _lazy36(_c36)
+open(os.path.join(ROOT, "content36_packs.js"), "w", encoding="utf8", newline="\n").write(_packs_js)
+_js_lazy = js.replace(_c36, _c36_lazy, 1)
+_html_lazy = shell + "\n<script>\n" + assets + _js_lazy + "\n</script>\n"
+_hl = hashlib.sha256(_html_lazy.encode("utf-8")).hexdigest()[:12]
+_si2 = _html_lazy.find("<script>")
+_html_lazy = _html_lazy[:_si2 + 8] + "\n" + 'window.MIRU_BUILD="' + _hl + " " + _ts + ' lazy36";' + _html_lazy[_si2 + 8:]
+open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)
+if LAZY_DEFAULT and not SPLIT:
+    open(out, "w", encoding="utf8", newline="\n").write(_html_lazy)
+print(len(_html_lazy), "chars -> index.lazy.html", "(default)" if LAZY_DEFAULT else "", "| packs", len(_packs_js))
