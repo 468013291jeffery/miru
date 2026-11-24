@@ -77,6 +77,37 @@ module.exports=L.wrap(async(req,res)=>{
   if(!consumed){try{await PLAY.consume(productId,token);consumed=true;}catch(e){console.warn('[play] consume',e.message);}}
   return L.send(res,200,Object.assign({play:true,orderId:p.orderId,sku:mapped.sku,consumed,test:p.purchaseType===0},r||{}));
  }
+ /* 2026-11-25 网页版充值：PayPal（Orders v2）。pp_create 按服务器里的商品价格建单；用户付完款，pp_capture 向 PayPal 扣款确认，
+    确认金额、币种、下单人都对得上才发钻（钱包流水 key=paypal:<captureId>，同一笔只发一次）。
+    Client ID 是公开的；Secret 放环境变量 PAYPAL_SECRET，或在后台「系统配置」里粘贴（config 表 secret_paypal，配置接口读取时会剔除）。 */
+ if(b.op==='pp_create'||b.op==='pp_capture'){
+  const PP_ID=process.env.PAYPAL_CLIENT_ID||'BAAvWaWCDv9CwcqNlXE7Bmz_C1T6wRH9vfRbThLkKBX6kang-u7J6pKUrCOaQ3HgH4iThKcw5Ci2kugTwg';
+  const PP_API=process.env.PAYPAL_API||'https://api-m.paypal.com';
+  let secret=process.env.PAYPAL_SECRET||'';
+  if(!secret){try{const r=(await sql("SELECT value FROM config WHERE key='secret_paypal'"))[0];secret=r&&typeof r.value==='string'?r.value:'';}catch(_){}}
+  if(!secret)return L.send(res,501,{error:'paypal not configured'});
+  const tk=await fetch(PP_API+'/v1/oauth2/token',{method:'POST',headers:{Authorization:'Basic '+Buffer.from(PP_ID+':'+secret).toString('base64'),'Content-Type':'application/x-www-form-urlencoded'},body:'grant_type=client_credentials'});
+  const tj=await tk.json().catch(()=>({}));if(!tk.ok||!tj.access_token)return L.send(res,502,{error:'paypal auth failed'});
+  const H={Authorization:'Bearer '+tj.access_token,'Content-Type':'application/json'};
+  if(b.op==='pp_create'){
+   const mapped=gemsForSku(String(b.sku||''),cfg);if(!mapped)return L.bad(res,'unknown product');
+   const cents=Number((((cfg.skus||{})[mapped.sku])||{}).usd)||0;if(!(cents>=50))return L.bad(res,'product has no price');
+   const r=await fetch(PP_API+'/v2/checkout/orders',{method:'POST',headers:H,body:JSON.stringify({intent:'CAPTURE',purchase_units:[{reference_id:mapped.sku,custom_id:u.uid,description:'MIRU '+mapped.gems+' diamonds',amount:{currency_code:'USD',value:(cents/100).toFixed(2)}}],application_context:{brand_name:'MIRU',shipping_preference:'NO_SHIPPING',user_action:'PAY_NOW'}})});
+   const j=await r.json().catch(()=>({}));if(!r.ok||!j.id)return L.send(res,502,{error:'paypal create failed',detail:String(j.message||j.name||'').slice(0,120)});
+   return L.send(res,200,{id:j.id});
+  }
+  const oid=String(b.orderId||'').replace(/[^A-Za-z0-9]/g,'').slice(0,40);if(!oid)return L.bad(res,'orderId required');
+  let r=await fetch(PP_API+'/v2/checkout/orders/'+oid+'/capture',{method:'POST',headers:H,body:'{}'});let j=await r.json().catch(()=>({}));
+  if(!r.ok&&j&&j.details&&j.details.some(d=>d.issue==='ORDER_ALREADY_CAPTURED')){r=await fetch(PP_API+'/v2/checkout/orders/'+oid,{headers:H});j=await r.json().catch(()=>({}));}
+  const pu=(j.purchase_units||[])[0]||{},cap=(((pu.payments||{}).captures)||[])[0]||{};
+  if(j.status!=='COMPLETED'||cap.status!=='COMPLETED')return L.send(res,402,{error:'payment not completed',status:j.status||null});
+  if(pu.custom_id&&pu.custom_id!==u.uid)return L.send(res,409,{error:'order belongs to another account'});
+  const mapped=gemsForSku(String(pu.reference_id||''),cfg);if(!mapped)return L.bad(res,'unknown product on order');
+  const cents=Number((((cfg.skus||{})[mapped.sku])||{}).usd)||0,paid=Math.round(Number((cap.amount||{}).value||0)*100);
+  if(((cap.amount||{}).currency_code)!=='USD'||paid<cents)return L.send(res,409,{error:'amount mismatch'});
+  const r2=await W.purchase(sql,u.uid,mapped,cfg,{key:'paypal:'+String(cap.id||oid).slice(0,60),reason:'paypal',platform:'web',environment:'Production',test:false});
+  return L.send(res,r2&&r2.code?r2.code:200,Object.assign({paypal:true,orderId:oid,sku:mapped.sku},r2||{}));
+ }
  if(b.op==='purchase'){
   const sku=String(b.sku||''),SK=Object.assign({},...Object.entries(cfg.skus||{}).map(([k,v])=>({[k]:Number(v.gems)||SKUS[k]||0})));
   if(!(sku in SKUS)&&!(sku in SK))return L.bad(res,'unknown sku');
