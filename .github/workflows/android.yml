@@ -3,6 +3,7 @@
 # 需要的 secret：ANDROID_KEYSTORE_BASE64 / ANDROID_KEY_ALIAS / ANDROID_KEY_PASSWORD（ANDROID_KEYSTORE_PASSWORD 可选，不填就用 KEY_PASSWORD）
 # 广告（可选）：APPLOVIN_SDK_KEY / APPLOVIN_REWARDED_ID / APPLOVIN_APPOPEN_ID —— 不填就构建一个没有广告的版本
 # 跑完在这次运行的页面底部下载 miru-release-aab，里面的 app-release.aab 就是传到 Play Console 的文件。
+# builds 分支里还有 miru.apk：可以直接安装的安卓包（Play 上线前给用户侧载）。
 name: Android App
 on:
   workflow_dispatch:
@@ -42,7 +43,7 @@ jobs:
           APPLOVIN_SDK_KEY: ${{ secrets.APPLOVIN_SDK_KEY }}
           APPLOVIN_REWARDED_ID: ${{ secrets.APPLOVIN_REWARDED_ID }}
           APPLOVIN_APPOPEN_ID: ${{ secrets.APPLOVIN_APPOPEN_ID }}
-        run: gradle :app:bundleRelease --stacktrace
+        run: gradle :app:bundleRelease :app:assembleRelease --stacktrace
       - uses: actions/upload-artifact@v5
         with:
           name: miru-release-aab
@@ -51,6 +52,8 @@ jobs:
       - name: Publish AAB to builds branch
         run: |
           mkdir -p "$RUNNER_TEMP/out" && cp android/app/build/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/out/"
+          # 2026-11-26 同时出一个直接安装用的 APK（Play 上线前给用户侧载；和 .aab 同一个签名）
+          APK=$(ls android/app/build/outputs/apk/release/*.apk 2>/dev/null | grep -v unsigned | head -1); [ -n "$APK" ] && cp "$APK" "$RUNNER_TEMP/out/miru.apk" || echo "::warning::没有找到签名的 APK"
           echo "versionCode ${{ github.run_number }}" > "$RUNNER_TEMP/out/VERSION.txt"
           cd "$RUNNER_TEMP/out" && git init -q && git checkout -q -b builds && git add . \
             && git -c user.name='github-actions[bot]' -c user.email='github-actions[bot]@users.noreply.github.com' commit -qm "aab build ${{ github.run_number }}" \
