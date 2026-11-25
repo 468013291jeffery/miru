@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="f0f5a32798a7 2026-11-25T20:06Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="6f8a95d41cba 2026-11-25T20:31Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -30857,7 +30857,7 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
    和 mod197 一样，把代码插进创作向导 iframe 脚本内部（render() 之前）。 */
 (function () {
   "use strict";
-  const CODE = ";(function(){try{\n/* mod199 · 创作向导补全（2026-11-26）：暧昧尺度 / 台词张力 / 台词风格 / 开场视频风格 / 发布语言。\n   选择会写进 p.vibe（生成提示词里的「偏好」）和 p.aiRoleRules 的「本剧写作要求」，让 AI 编剧按专业剧本的标准写台词。 */\nvar AI='✨ 交给 AI 安排（推荐）';\nfunction at(k){for(var i=0;i<steps.length;i++)if(steps[i].key===k)return i;return -1}\nfunction ins(after,st){if(at(st.key)>=0)return;var i=at(after);steps.splice(i>=0?i+1:Math.max(0,steps.length-1),0,st)}\nins('tone',{group:'故事灵感',key:'heat',type:'single',title:'暧昧尺度到哪一步？',desc:'只决定亲密接触写到什么程度。所有人物都是成年人；最高也只到「点到为止」，不写露骨内容。',\n chips:['💓 心动暧昧：眼神、试探、欲言又止','🔥 贴近拉扯：牵手、拥抱、差点接吻','💋 浓烈暧昧：亲吻、贴身耳语，点到为止']});\nins('heat',{group:'故事灵感',key:'tension',type:'single',title:'台词要多有张力？',desc:'张力越强，每场戏的推拉、对峙和心跳时刻越密。',\n chips:['🌙 克制含蓄：靠潜台词和停顿','⚡ 中等拉扯：每章至少一个心跳时刻','❤️‍🔥 强张力：每场都有试探、对峙或反转']});\nins('tension',{group:'故事灵感',key:'speech',type:'multi',title:'他说话是什么味道？',desc:'可多选；不同男主会自动分到不同的说话方式，避免千人一面。',\n chips:['欲言又止','毒舌互怼','直球撩人','温柔低语','危险压迫','美式俏皮','文艺克制',AI]});\nins('style',{group:'素材音视频',key:'videoStyle',type:'single',title:'开场 10 秒视频要什么感觉？',desc:'决定开场视频的分镜、运镜、光线和配乐方向（勾了「10 秒开场视频」才会用到）。',\n chips:['💋 性感暧昧','🕵️ 悬疑惊悚','💗 甜蜜心动','💔 虐心宿命','🐉 奇幻史诗','🔫 危险动作',AI]});\n(function(){var i=at('review');if(at('langs')<0)steps.splice(i>=0?i:steps.length,0,{group:'结局发布',key:'langs',type:'multi',title:'发布哪些语言？',\n desc:'英文版默认就有；多勾的语言会在发布时把整部剧完整翻译（台词、人物、选项都翻），读者按自己的语言看到。',\n chips:['🇺🇸 English（默认）','🇨🇳 中文','🇯🇵 日本語','🇰🇷 한국어','🇪🇸 Español']})})();\nvar HEAT={'心动':'亲密只写到眼神、试探、靠近和欲言又止；不写接吻和身体接触的细节，让心动藏在停顿里。',\n '贴近':'可以写牵手、拥抱、额头相抵、差点接吻；在最关键的一刻被打断或主动收住，把渴望留到下一章。',\n '浓烈':'可以写亲吻、贴身耳语、呼吸交错；镜头在情绪最高点切走，绝不写露骨性描写，始终先征得玩家同意。'};\nvar TEN={'克制':'台词克制含蓄：多用潜台词、停顿、没说完的半句话；情绪靠动作和眼神传达，不直接喊出来。',\n '中等':'每章至少一个心跳时刻：靠近—停顿—一句击中人心的台词；章末留一个让人想点下一章的钩子。',\n '强张力':'每场戏都要有推拉：试探、拒绝、靠近、反转；台词短促有力，有打断、有反问、有动作细节；每章结尾必须留钩子。'};\nvar BASE='台词通用标准：用动作和停顿代替形容词；不说教、不空泛、不复读；每句对白都要推动关系或制造悬念；男主各有辨识度的口头习惯；玩家的选择要立刻得到情绪上的回应。';\nfunction pick(map,raw){for(var k in map)if(String(raw||'').indexOf(k)>=0)return map[k];return ''}\nfunction compose(){if(p.vibeBase==null)p.vibeBase=p.vibe||'';var x=[p.vibeBase];if(p.heat)x.push('暧昧尺度：'+p.heat);if(p.tension)x.push('台词张力：'+p.tension);if(p.voiceStyle)x.push('台词风格：'+p.voiceStyle);\n p.vibe=x.filter(Boolean).join('｜');try{ensureNewFields()}catch(_){}\n var R='【本剧写作要求】'+[pick(HEAT,p.heat),pick(TEN,p.tension),p.voiceStyle&&p.voiceStyle.indexOf('交给 AI')<0?'男主说话的味道：'+p.voiceStyle+'（不同男主分配不同风格）。':'',BASE].filter(Boolean).join(' ');\n if(p.aiRoleRules)['architect','scene','character'].forEach(function(k){var v=String(p.aiRoleRules[k]||'').replace(/\\n?【本剧写作要求】[^\\n]*/g,'');p.aiRoleRules[k]=v+(v?'\\n':'')+R})}\nvar F=fillGuideData;\nfillGuideData=function(step,answer){F(step,answer);var k=step.key,raw=String(answer||'').trim();if(raw==='（暂时跳过）')raw='';\n if(k==='tone'){p.vibeBase=p.vibe||'';compose()}\n if(k==='heat'){p.heat=raw;compose()} if(k==='tension'){p.tension=raw;compose()} if(k==='speech'){p.voiceStyle=raw;compose()}\n if(k==='videoStyle')p.videoStyle=raw;\n if(k==='langs'){var L=['en'];[['中文','zh'],['日本語','ja'],['한국어','ko'],['Español','es']].forEach(function(a){if(raw.indexOf(a[0])>=0)L.push(a[1])});p.langs=L}};\nwindow.__mod199=1;\n}catch(e){console.warn('[mod199]',e)}})();\n";
+  const CODE = ";(function(){try{\n/* mod199 · 创作向导补全（2026-11-26）：暧昧尺度 / 台词张力 / 台词风格 / 开场视频风格 / 发布语言。\n   选择会写进 p.vibe（生成提示词里的「偏好」）和 p.aiRoleRules 的「本剧写作要求」，让 AI 编剧按专业剧本的标准写台词。 */\nvar AI='✨ 交给 AI 安排（推荐）';\nfunction at(k){for(var i=0;i<steps.length;i++)if(steps[i].key===k)return i;return -1}\nfunction ins(after,st){if(at(st.key)>=0)return;var i=at(after);steps.splice(i>=0?i+1:Math.max(0,steps.length-1),0,st)}\nins('tone',{group:'故事灵感',key:'heat',type:'single',title:'暧昧尺度到哪一步？',desc:'只决定亲密接触写到什么程度。所有人物都是成年人；最高也只到「点到为止」，不写露骨内容。',\n chips:['💓 心动暧昧：眼神、试探、欲言又止','🔥 贴近拉扯：牵手、拥抱、差点接吻','💋 浓烈暧昧：亲吻、贴身耳语，点到为止']});\nins('heat',{group:'故事灵感',key:'tension',type:'single',title:'台词要多有张力？',desc:'张力越强，每场戏的推拉、对峙和心跳时刻越密。',\n chips:['🌙 克制含蓄：靠潜台词和停顿','⚡ 中等拉扯：每章至少一个心跳时刻','❤️‍🔥 强张力：每场都有试探、对峙或反转']});\nins('tension',{group:'故事灵感',key:'speech',type:'multi',title:'他说话是什么味道？',desc:'可多选；不同男主会自动分到不同的说话方式，避免千人一面。',\n chips:['欲言又止','毒舌互怼','直球撩人','温柔低语','危险压迫','美式俏皮','文艺克制',AI]});\nins('style',{group:'素材音视频',key:'videoStyle',type:'single',title:'开场 10 秒视频要什么感觉？',desc:'决定开场视频的分镜、运镜、光线和配乐方向（勾了「10 秒开场视频」才会用到）。',\n chips:['💋 性感暧昧','🕵️ 悬疑惊悚','💗 甜蜜心动','💔 虐心宿命','🐉 奇幻史诗','🔫 危险动作',AI]});\n(function(){var i=at('review');if(at('langs')<0)steps.splice(i>=0?i:steps.length,0,{group:'结局发布',key:'langs',type:'multi',title:'发布哪些语言？',\n desc:'英文版默认就有；多勾的语言会在发布时把整部剧完整翻译（台词、人物、选项都翻），读者按自己的语言看到。翻译按语言收费：每种语言 💎（章节数，最少 3），翻好才扣；用中文写的剧会自动加英文版，同样计费。',\n chips:['🇺🇸 English（默认）','🇨🇳 中文','🇯🇵 日本語','🇰🇷 한국어','🇪🇸 Español']})})();\nvar HEAT={'心动':'亲密只写到眼神、试探、靠近和欲言又止；不写接吻和身体接触的细节，让心动藏在停顿里。',\n '贴近':'可以写牵手、拥抱、额头相抵、差点接吻；在最关键的一刻被打断或主动收住，把渴望留到下一章。',\n '浓烈':'可以写亲吻、贴身耳语、呼吸交错；镜头在情绪最高点切走，绝不写露骨性描写，始终先征得玩家同意。'};\nvar TEN={'克制':'台词克制含蓄：多用潜台词、停顿、没说完的半句话；情绪靠动作和眼神传达，不直接喊出来。',\n '中等':'每章至少一个心跳时刻：靠近—停顿—一句击中人心的台词；章末留一个让人想点下一章的钩子。',\n '强张力':'每场戏都要有推拉：试探、拒绝、靠近、反转；台词短促有力，有打断、有反问、有动作细节；每章结尾必须留钩子。'};\nvar BASE='台词通用标准：用动作和停顿代替形容词；不说教、不空泛、不复读；每句对白都要推动关系或制造悬念；男主各有辨识度的口头习惯；玩家的选择要立刻得到情绪上的回应。';\nfunction pick(map,raw){for(var k in map)if(String(raw||'').indexOf(k)>=0)return map[k];return ''}\nfunction compose(){if(p.vibeBase==null)p.vibeBase=p.vibe||'';var x=[p.vibeBase];if(p.heat)x.push('暧昧尺度：'+p.heat);if(p.tension)x.push('台词张力：'+p.tension);if(p.voiceStyle)x.push('台词风格：'+p.voiceStyle);\n p.vibe=x.filter(Boolean).join('｜');try{ensureNewFields()}catch(_){}\n var R='【本剧写作要求】'+[pick(HEAT,p.heat),pick(TEN,p.tension),p.voiceStyle&&p.voiceStyle.indexOf('交给 AI')<0?'男主说话的味道：'+p.voiceStyle+'（不同男主分配不同风格）。':'',BASE].filter(Boolean).join(' ');\n if(p.aiRoleRules)['architect','scene','character'].forEach(function(k){var v=String(p.aiRoleRules[k]||'').replace(/\\n?【本剧写作要求】[^\\n]*/g,'');p.aiRoleRules[k]=v+(v?'\\n':'')+R})}\nvar F=fillGuideData;\nfillGuideData=function(step,answer){F(step,answer);var k=step.key,raw=String(answer||'').trim();if(raw==='（暂时跳过）')raw='';\n if(k==='tone'){p.vibeBase=p.vibe||'';compose()}\n if(k==='heat'){p.heat=raw;compose()} if(k==='tension'){p.tension=raw;compose()} if(k==='speech'){p.voiceStyle=raw;compose()}\n if(k==='videoStyle')p.videoStyle=raw;\n if(k==='langs'){var L=['en'];[['中文','zh'],['日本語','ja'],['한국어','ko'],['Español','es']].forEach(function(a){if(raw.indexOf(a[0])>=0)L.push(a[1])});p.langs=L}};\nwindow.__mod199=1;\n}catch(e){console.warn('[mod199]',e)}})();\n";
   const KEY = "render();window.__cr={";
   const patch = h => { if (typeof h !== "string" || h.indexOf("mod199 · 创作向导补全") >= 0) return h; const i = h.lastIndexOf(KEY); return i > 0 ? h.slice(0, i) + CODE + h.slice(i) : h; };
   const d = Object.getOwnPropertyDescriptor(window, "CREATOR_HTML");
@@ -30911,27 +30911,34 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     if (!targets.length) return;
     /* 人名表 */
     const cast = (w.cast || []).map(id => S.mine.chars[id]).filter(Boolean);
+    /* 2026-11-26 翻译按语言收费：每种语言 💎（章节数，最少 3），翻成功才扣；同一部剧同一种语言只收一次 */
+    const PRICE = Math.max(3, ((w.pack && w.pack.chapters) || []).length || 3), done = []; w.paid200 = w.paid200 || {};
+    const LN = { en: "English", ja: "日本語", ko: "한국어", es: "Español", zh: "中文" };
     for (const LG of targets) {
+      if (!w.paid200[LG] && (S.keys || 0) < PRICE) { toast((ZH() ? "钻石不够，" + LN[LG] + " 版没有翻译（需要 💎" : "Not enough gems — " + LN[LG] + " version skipped (needs 💎") + PRICE + ")"); continue; }
+      let okN = 0;
       let gloss = "";
       const nm = cast.map(c => c.n).filter(Boolean);
       if (nm.length) { const T = await trBatch(nm, LG, ""); cast.forEach((c, i) => { if (!T[i]) return; c.n94 = Object.assign({ zh: src === "zh" ? c.n : (c.n94 && c.n94.zh) || c.n, en: src === "en" ? c.n : (c.n94 && c.n94.en) || c.n }, c.n94 || {}); c.n94[LG] = T[i]; }); gloss = nm.map((n, i) => T[i] ? n + " → " + T[i] : "").filter(Boolean).join("; "); }
       /* 普通文字 */
       const S1 = items.filter(it => it.k === "s" && !it.o[LG + "_200"] && !(LG !== src && it.o[LG] && it.o[LG] !== srcOf(it))), str = S1.map(it => String(srcOf(it) || ""));
-      const T1 = await trBatch(str, LG, gloss); S1.forEach((it, i) => { if (T1[i] && str[i]) { it.o[LG] = T1[i]; try { Object.defineProperty(it.o, LG + "_200", { value: 1, enumerable: false, writable: true }); } catch (_) {} } });
+      const T1 = await trBatch(str, LG, gloss); S1.forEach((it, i) => { if (T1[i] && str[i]) { okN++; it.o[LG] = T1[i]; try { Object.defineProperty(it.o, LG + "_200", { value: 1, enumerable: false, writable: true }); } catch (_) {} } });
       /* 剧情台词：beats 数组里的文字 */
       for (const it of items.filter(x => x.k === "b" && !(Array.isArray(x.o[LG]) && x.o[LG] !== srcOf(x) && JSON.stringify(x.o[LG]) !== JSON.stringify(srcOf(x))))) {
         const B = srcOf(it); if (!Array.isArray(B)) continue; const refs = [];
-        B.forEach((b, j) => { if (!Array.isArray(b)) return; if (typeof b[2] === "string" && b[2].trim()) refs.push([j, 2, null, b[2]]); else if (b[2] && typeof b[2] === "object") ["title", "txt", "text", "t"].forEach(k => { if (typeof b[2][k] === "string" && b[2][k].trim()) refs.push([j, 2, k, b[2][k]]); }); });
+        B.forEach((b, j) => { if (!Array.isArray(b)) return; if (typeof b[2] === "string" && b[2].trim()) refs.push([j, 2, null, b[2]]); else if (b[2] && typeof b[2] === "object") ["title", "txt", "text", "t", "hint"].forEach(k => { if (typeof b[2][k] === "string" && b[2][k].trim()) refs.push([j, 2, k, b[2][k]]); }); });
         if (!refs.length) continue;
         const T = await trBatch(refs.map(r => r[3]), LG, gloss); const NB = JSON.parse(JSON.stringify(B));
         refs.forEach((r, i) => { if (!T[i]) return; if (r[2]) NB[r[0]][2][r[2]] = T[i]; else NB[r[0]][2] = T[i]; });
-        it.o[LG] = NB;
+        it.o[LG] = NB; okN++;
       }
+      if (okN && !w.paid200[LG]) { if (spend(PRICE, "translate")) w.paid200[LG] = 1; }
+      if (okN || w.paid200[LG]) done.push(LG);
       w["l200_" + LG] = Date.now(); try { save(); } catch (_) {}
     }
-    w.langs200 = [src].concat(targets);
+    w.langs200 = [src].concat(done);
     try { save(); } catch (_) {}
-    return targets;
+    return done;
   }
   window.translateWork200 = translateWork;
   const prev = MIRU_BRIDGE.publish;
@@ -30960,6 +30967,67 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   /* 发布时把视频分镜和提示词带进作品包，之后制作开场视频直接用 */
   try { const prev = MIRU_BRIDGE.publish; MIRU_BRIDGE.publish = function (story, proj, sb) { const r = prev.apply(this, arguments); try { const wid = S.crmap && S.crmap[(proj || {}).id], w = wid && wd(wid); if (w && w.pack && proj && proj.videoBrief) { w.pack.videoBrief = proj.videoBrief; save(); } } catch (_) {} return r; }; } catch (_) {}
   window.__mod200b = 1;
+})();
+
+/* ================= mod201 · 用户作品带小游戏（2026-11-26）=================
+   向导「剧情互动 → 游戏和特效」里勾的小游戏，发布时真正放进剧情：每章在后段插一个，和官方剧同一种格式
+   ["角色","game",{k,hint,then,skip}]，玩完有角色反应，跳过也能继续主线（不会卡关）。
+   勾选 → 游戏：找不同/线索搜寻→photo，手机密码破解→phone，聊天默契问答/证据交叉验证→remember，礼物与纪念册→keepsake，转盘与随机事件→order。
+   没勾或选了「不需要小游戏」就不加。插入本身不花钱，不扣钻。 */
+(function () {
+  "use strict";
+  if (typeof MIRU_BRIDGE !== "object") return;
+  const MAP = [[/找不同|线索/, "photo"], [/手机|密码/, "phone"], [/默契|问答|证据|交叉/, "remember"], [/礼物|纪念/, "keepsake"], [/转盘|随机/, "order"]];
+  const CJK = /[㐀-鿿]/;
+  const T = {
+    photo: { en: "Look closely at this moment from \"{C}\". Something in it doesn't belong. Find it.", zh: "仔细看「{C}」里的这一幕——有一样东西不该出现在这里。把它找出来。",
+      ok: { en: "...You saw it too. Then we're in this together.", zh: "……你也看见了。那我们现在是一条船上的人了。" } },
+    phone: { en: "{L}'s phone lights up on the table — locked. The code is something only the two of you would know. Open it.", zh: "{L}的手机在桌上亮了——锁着。密码是只有你们俩才知道的东西。打开它。",
+      ok: { en: "You guessed it. I should be worried about how well you know me.", zh: "你猜对了。我是不是该担心，你这么了解我。" } },
+    remember: { en: "{L} tests you: how much do you really remember about what just happened? Get it right.", zh: "{L}在试探你：刚才发生的事，你到底记住了多少？答对它。",
+      ok: { en: "Every detail. You were paying attention — to me.", zh: "一个细节都没漏。你一直在看我。" } },
+    keepsake: { en: "Three small things {L} kept from your time together are hidden here. Find them.", zh: "{L}偷偷留着三样和你有关的小东西，就藏在这里。找出来。",
+      ok: { en: "...Don't look at me like that. I just never threw them away.", zh: "……别这样看我。我只是一直没舍得扔。" } },
+    order: { en: "The night is scattered into pieces. Put it back in the right order before {L} does.", zh: "这一晚被打乱成了碎片。抢在{L}之前，把它们排回正确的顺序。",
+      ok: { en: "Faster than me. Fine. You win this round.", zh: "比我还快。好吧，这一局算你赢。" } }
+  };
+  const SKIP = { en: "You let it go. {L} notices — and says nothing.", zh: "你没有追究。{L}注意到了，却什么也没说。" };
+  function games(proj) {
+    const g = proj && proj.guided && proj.guided.gameplay; if (!g) return [];
+    const sel = [].concat(g.selections || [], g.answer ? [g.answer] : []).join(" ");
+    const out = []; MAP.forEach(([re, k]) => { if (re.test(sel) && !out.includes(k)) out.push(k); });
+    if (!out.length && /交给 AI/.test(sel)) out.push("photo", "remember", "keepsake");
+    return out;
+  }
+  function addGames(wid, proj) {
+    const w = wd(wid), G = games(proj); if (!w || !w.pack || !Array.isArray(w.pack.chapters) || !G.length) return 0;
+    const lead = (w.cast || [])[0], c0 = lead && ch(lead), L = c0 ? first(c0.n) : "";
+    let n = 0;
+    w.pack.chapters.forEach((c, i) => {
+      if (!c || !c.beats || typeof c.beats !== "object") return;
+      const keys = Object.keys(c.beats).filter(k => Array.isArray(c.beats[k]));
+      if (!keys.length || keys.some(k => c.beats[k].some(b => Array.isArray(b) && b[1] === "game"))) return;
+      const base = c.beats[keys.includes("zh") ? "zh" : keys[0]]; if (base.length < 4) return;
+      const k = G[i % G.length], zh = CJK.test(JSON.stringify(base).slice(0, 2000)), lg = zh ? "zh" : "en";
+      const cap = String((c.t && (c.t[lg] || c.t.en || c.t.zh)) || (typeof c.t === "string" ? c.t : "") || (zh ? "这一章" : "this chapter"));
+      const fill = s => String(s).replace(/\{L\}/g, L || (zh ? "他" : "he")).replace(/\{C\}/g, cap);
+      const beat = [lead || "n", "game", { k, hint: fill(T[k][lg]), then: [[lead || "n", "say", fill(T[k].ok[lg])]], skip: [["n", "act", fill(SKIP[lg])]], auto201: 1 }];
+      const at = Math.max(2, Math.floor(base.length * .7));
+      const done = new Set();
+      keys.forEach(kk => { const arr = c.beats[kk]; if (done.has(arr)) return; done.add(arr); arr.splice(Math.min(at, arr.length), 0, JSON.parse(JSON.stringify(beat))); });
+      n++;
+    });
+    if (n) { w.games201 = G; try { save(); } catch (_) {} }
+    return n;
+  }
+  window.addGames201 = addGames;
+  const prev = MIRU_BRIDGE.publish;
+  MIRU_BRIDGE.publish = function (story, proj, sb) {
+    const r = prev.apply(this, arguments);
+    try { const wid = S.crmap && S.crmap[(proj || {}).id]; if (wid) { setTimeout(() => { try { addGames(wid, proj); } catch (e) { console.warn("[mod201]", e); } }, 2500); setTimeout(() => { try { addGames(wid, proj); } catch (_) {} }, 85000); } } catch (_) {}
+    return r;
+  };
+  window.__mod201 = 1;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
