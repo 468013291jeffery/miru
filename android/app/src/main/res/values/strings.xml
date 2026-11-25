@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">MIRU</string>
-    <string name="launch_url">https://www.miru.plus/index.html?src=twa</string>
-    <string name="asset_statements" translatable="false">[{\"relation\": [\"delegate_permission/common.handle_all_urls\"], \"target\": {\"namespace\": \"web\", \"site\": \"https://www.miru.plus\"}}]</string>
+    <!-- 2026-11-26 白屏修复：www.miru.plus 会 301 跳到 miru.plus。手机上没有支持 TWA 的浏览器时，壳会退回 WebView，
+         而 WebView 只放行启动网址的域名，跳到 miru.plus 就被当成外链拦掉 → 一直白屏。现在直接从 miru.plus 启动，并把两个域名都列为可信。 -->
+    <string name="launch_url">https://miru.plus/?src=twa</string>
+    <string name="asset_statements" translatable="false">[{\"relation\": [\"delegate_permission/common.handle_all_urls\"], \"target\": {\"namespace\": \"web\", \"site\": \"https://miru.plus\"}}, {\"relation\": [\"delegate_permission/common.handle_all_urls\"], \"target\": {\"namespace\": \"web\", \"site\": \"https://www.miru.plus\"}}]</string>
+    <string-array name="additional_trusted_origins">
+        <item>https://www.miru.plus</item>
+    </string-array>
 </resources>
