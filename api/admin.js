@@ -495,8 +495,16 @@ module.exports = L.wrap(async (req, res) => {
           /* 台词里残留的中文人名 → 英文名（长名先换） */
           const nm = Object.entries(nameMap).sort((x, y) => y[0].length - x[0].length);
           idx.forEach(i => { let s = outL[i]; nm.forEach(([a, e]) => { if (s.includes(a) && !(s.trim().startsWith(a + '：'))) s = s.split(a).join(e); }); outL[i] = s; });
+          /* 兜底：拆分翻译后仍带中文的行，整行再交给模型修一遍（行首系统键原样保留，行内的「你」按普通文字翻） */
+          { const rest = []; outL.forEach((l, i) => { if (HAN.test(keyless(l))) rest.push(i); });
+            const FIXSYS = 'You fix partially translated lines of an English interactive-story script. Input: a JSON array of lines. Return ONLY a JSON array of the same length, same order. In each line translate every remaining Chinese character into natural English (place names, labels, notes; the pronoun 你 = you/You). Keep everything else exactly: ⟦CMD|…⟧ markup with the same command word and the same number of "|" fields, "#" headings, backtick code, ids, flags, numbers, curly quotes. Only exception: a line that STARTS with the speaker key "旁白：" or "你：" keeps that key exactly, and "旁白：" right after a "|" inside ⟦…⟧ stays as is; anywhere else "旁白：" becomes "Narrator: ".' + (gloss ? ' Character names: ' + gloss : '');
+            for (let k = 0; k < rest.length; k += 20) { if (Date.now() > (ST.deadline || Infinity)) break; const part = rest.slice(k, k + 20).map(i => outL[i]); let arr = null;
+              try { const txt = await L.llm([{ role: 'system', content: FIXSYS }, { role: 'user', content: JSON.stringify(part) }], Math.min(7000, 400 + part.join('').length * 3), 120000); arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1)); } catch (_) { arr = null; }
+              if (Array.isArray(arr) && arr.length === part.length) arr.forEach((d, j) => { d = fixNames(String(d == null ? '' : d)); if (d.trim() && shape(part[j]) === shape(d) && hanN(keyless(d)) < hanN(keyless(part[j]))) outL[rest[k + j]] = d; });
+              await new Promise(z => setTimeout(z, 1200)); } }
+          const badLeft = idx.filter(i => HAN.test(keyless(outL[i] == null ? '' : outL[i]))).length;
           const en = outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
-          if (bad > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
+          if (badLeft > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + badLeft + '/' + idx.length);
           const np = Object.assign({}, p, { script_en: en });
           np.meta = Object.assign({}, p.meta || {}); const langs = new Set([].concat(np.meta.langs || [], ['en'])); np.meta.langs = Array.from(langs);
           await sql('UPDATE works SET pack=$2::jsonb, updated_at=now() WHERE id=$1', [w.id, JSON.stringify(np)]);
