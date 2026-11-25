@@ -418,6 +418,9 @@ module.exports = L.wrap(async (req, res) => {
       return null;
     };
     const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
+    /* 2026-11-26 剧本里 ⟦CHAR|…⟧ 的字段是 URL 编码的（%E4…），检测和翻译前先解码，否则编码过的中文人名/身份会被当成"已翻好"漏掉 */
+    const decC = s => String(s || '').split('\n').map(l => (/^\s*⟦CHAR\|/.test(l) && /%[0-9A-Fa-f]{2}/.test(l)) ? l.replace(/⟦CHAR\|([^⟧]*)⟧/, (m, x) => '⟦CHAR|' + x.split('|').map(f => { try { return decodeURIComponent(f); } catch (_) { return f; } }).join('|') + '⟧') : l).join('\n');
+    const encC = s => String(s || '').split('\n').map(l => /^\s*⟦CHAR\|/.test(l) ? l.replace(/⟦CHAR\|([^⟧]*)⟧/, (m, x) => '⟦CHAR|' + x.split('|').map(f => encodeURIComponent(f)).join('|') + '⟧') : l).join('\n');
     const keyless = s => String(s).replace(/^(\s*)(?:(?:旁白|你)\s*[：:]\s*)+/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||').replace(/\|(旁白|你)\s*[：:]/g, '|');
     const fixNames = s => { let o = String(s); Object.entries(ST.nameMap || {}).sort((x, y) => y[0].length - x[0].length).forEach(([a, e]) => { if (o.includes(a)) o = o.split(a).join(e); }); return o; };
     const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(keyless(dst)) <= 1;
@@ -434,14 +437,15 @@ module.exports = L.wrap(async (req, res) => {
     const run = async () => {
       const rows = await sql("SELECT id, title, pack FROM works WHERE status='live' ORDER BY created_at");
       const todo = rows.filter(w => { const p = w.pack || {}; if (Array.isArray(b.ids) && b.ids.length && !b.ids.includes(w.id)) return false; const zh = typeof p.script === 'string' ? p.script : ''; const en = typeof p.script_en === 'string' ? p.script_en : '';
-        if (!zh.trim()) return false; return b.force === true || !en.trim() || /^\s*(旁白|你)\s*[：:]\s*(旁白|你)\s*[：:]/m.test(en) || hanN(en.split('\n').map(keyless).join('\n')) > 0; });
+        if (!zh.trim()) return false; return b.force === true || !en.trim() || /^\s*(旁白|你)\s*[：:]\s*(旁白|你)\s*[：:]/m.test(en) || hanN(decC(en).split('\n').map(keyless).join('\n')) > 0; });
       todo.sort((x, y) => ((x.pack && x.pack.meta && x.pack.meta.adult) ? 1 : 0) - ((y.pack && y.pack.meta && y.pack.meta.adult) ? 1 : 0) || String((x.pack || {}).script || '').length - String((y.pack || {}).script || '').length);
       say('待处理 ' + todo.length + ' 部');
       for (const w of todo) {
         ST.cur = w.title; ST.deadline = Date.now() + 15 * 60e3;
         try {
           const fresh = (await sql('SELECT pack FROM works WHERE id=$1', [w.id]))[0]; const p = (fresh && fresh.pack) || w.pack;
-          const zh = p.script, oldEn = typeof p.script_en === 'string' && p.script_en.trim() && b.force !== true ? p.script_en : '';
+          const wasEnc = /⟦CHAR\|[^⟧]*%[0-9A-Fa-f]{2}/.test(String(p.script || ''));
+          const zh = decC(p.script), oldEn = decC(typeof p.script_en === 'string' && p.script_en.trim() && b.force !== true ? p.script_en : '');
           /* 修补模式：英文版已存在，只重翻里面还带中文的行；否则从中文稿整篇翻 */
           const base = (oldEn ? oldEn.split('\n') : zh.split('\n')).map(s => String(s).replace(/^(\s*)(旁白|你)\s*([：:])\s*(?:(?:旁白|你)\s*[：:]\s*)+/, '$1$2$3'));
           let gloss = '';
@@ -503,7 +507,7 @@ module.exports = L.wrap(async (req, res) => {
               if (Array.isArray(arr) && arr.length === part.length) arr.forEach((d, j) => { d = fixNames(String(d == null ? '' : d)); if (d.trim() && shape(part[j]) === shape(d) && hanN(keyless(d)) < hanN(keyless(part[j]))) outL[rest[k + j]] = d; });
               await new Promise(z => setTimeout(z, 1200)); } }
           const badLeft = idx.filter(i => HAN.test(keyless(outL[i] == null ? '' : outL[i]))).length;
-          const en = outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
+          const en = wasEnc ? encC(outL.join('\n')) : outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
           if (badLeft > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + badLeft + '/' + idx.length);
           const np = Object.assign({}, p, { script_en: en });
           np.meta = Object.assign({}, p.meta || {}); const langs = new Set([].concat(np.meta.langs || [], ['en'])); np.meta.langs = Array.from(langs);
