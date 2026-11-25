@@ -870,7 +870,8 @@
     "char_玛丽安": "/art/official/ashes-of-us-v1/char_marianne.jpg",
     "char_索菲": "/art/official/ashes-of-us-v1/char_sophie.jpg",
     "char_乔纳": "/art/official/ashes-of-us-v1/char_jonah.jpg",
-    "char_伊芙琳": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg"
+    "char_伊芙琳": "/art/official/ashes-of-us-v1/char_evelyn_35.jpg",
+    "vid_open": "/video/ashes-of-us/trailer-c1bcf9de4a02.mp4"
   },
   "opening": [
     "旁白：纽约摄影双年展的开幕夜，展厅里响着低低的交谈声。莱娜的照片占据整面墙，十五年前熟悉的布光落在她肩上。",
@@ -878,7 +879,22 @@
     "莱娜：你还是习惯站在离出口最近的地方。",
     "旁白：她没有接那张项目单，先看向你。"
   ],
-  "video": null,
+  "video": {
+    "path": "video/ashes-of-us/trailer-c1bcf9de4a02.mp4",
+    "sha256": "c1bcf9de4a021c905ab7a7c7112ec1d9e149dcbc520bbbfe64f0deea427d9d50",
+    "bytes": 1805761,
+    "container": "mp4",
+    "fast_start": true,
+    "codecs": [
+      "avc1",
+      "mp4a"
+    ],
+    "duration_seconds": 10.055,
+    "coded_dimensions": [
+      720,
+      1280
+    ]
+  },
   "script_id": "sc_mwuutryzc60fb1c7b9",
   "work_id": "w_scmwuutryzc60fb1c7b9",
   "ending_titles": {

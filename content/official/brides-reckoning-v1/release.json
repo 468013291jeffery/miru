@@ -2082,9 +2082,25 @@
         "safe_archive": "/art/official/brides-reckoning-v1/backgrounds/bg_archive_safe.jpg"
       }
     },
-    "cast_all": true
+    "cast_all": true,
+    "vid_open": "/video/brides-reckoning/trailer-992ff323c107.mp4"
   },
-  "video": null,
+  "video": {
+    "path": "video/brides-reckoning/trailer-992ff323c107.mp4",
+    "sha256": "992ff323c10729fb8ce8cf16dd7f54f233c8b7605a89cac74d8cb8f4609dc231",
+    "bytes": 1843567,
+    "container": "mp4",
+    "fast_start": true,
+    "codecs": [
+      "avc1",
+      "mp4a"
+    ],
+    "duration_seconds": 10.055,
+    "coded_dimensions": [
+      720,
+      1280
+    ]
+  },
   "audio": null,
   "script_id": "sc_mwuemo8t809efd7ea4",
   "work_id": "w_scmwuemo8t809efd7ea4",
