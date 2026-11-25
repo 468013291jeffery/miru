@@ -5032,3 +5032,101 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   };
   window.__langOK194 = ok;
 })();
+
+/* ===== mod195 · 2026-11-25 PC 版布局 =====
+   电脑打开（非手机 / 平板的浏览器、鼠标指针、窗口 ≥ 1100 宽）自动切到 PC 版：左边导航栏、中间是 App 本体、右边是全部剧目墙
+   （和首页同一份在线作品，按当前语言过滤，可搜索、按男女 / 男男 / 女女筛选）；手机打开保持原样。窗口缩窄到 1100 以下自动回到手机布局。
+   导航和剧目卡片直接复用 App 原有的 data-tab / data-off94 点击处理，不另写一套逻辑。 */
+(function () {
+  "use strict";
+  const isMobileUA = /Android|iPhone|iPad|iPod|Mobile|Silk|Kindle|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
+  if (isMobileUA) return;
+  const zh = () => (typeof CL === "function" ? CL() === "zh" : false);
+  const T = (z, e) => (zh() ? z : e);
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const L = v => { if (v == null) return ""; if (typeof v === "string") return v; try { return typeof Lz === "function" ? Lz(v) : (v[zh() ? "zh" : "en"] || v.en || v.zh || ""); } catch (_) { return v.en || v.zh || ""; } };
+  const css = `
+html.pc195,html.pc195 body{overflow:hidden}
+html.pc195 .app{position:fixed!important;left:248px!important;top:0!important;bottom:0!important;width:500px!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;transform:none!important}
+html.pc195 #dev{width:468px!important;max-width:468px!important;height:calc(100vh - 28px)!important;max-height:980px!important;border-radius:26px!important}
+#pc-side,#pc-lib{display:none}
+html.pc195 #pc-side{display:flex;position:fixed;left:0;top:0;bottom:0;width:248px;flex-direction:column;gap:6px;padding:26px 18px;border-right:1px solid #ffffff14;background:#0b0a10;z-index:50;font-family:inherit}
+#pc-side .logo{font:800 26px/1 Georgia,serif;letter-spacing:.14em;color:#F1ECF3;margin:4px 10px 4px}
+#pc-side .tag{color:#AAA1B0;font-size:12.5px;margin:0 10px 18px;line-height:1.5}
+#pc-side button,#pc-side a{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;color:#CFC6D6;font-size:15px;padding:11px 12px;border-radius:12px;cursor:pointer;text-decoration:none}
+#pc-side button:hover,#pc-side a:hover{background:#ffffff0d;color:#fff}
+#pc-side button.on{background:linear-gradient(135deg,#F0B77E33,#EE6F9733);color:#fff}
+#pc-side .sep{height:1px;background:#ffffff14;margin:14px 6px}
+#pc-side .foot{margin-top:auto;color:#776e7f;font-size:12px;padding:0 10px;line-height:1.7}
+html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:0;overflow:auto;padding:30px 36px 60px;background:radial-gradient(1200px 600px at 70% -10%,#2a1730 0,#0b0a10 60%);z-index:40;color:#F1ECF3}
+#pc-lib h2{font:700 26px/1.2 Georgia,serif;margin:0 0 6px}
+#pc-lib .sub{color:#AAA1B0;font-size:14px;margin:0 0 18px}
+#pc-lib .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:20px}
+#pc-lib input{flex:1;min-width:220px;background:#16141C;border:1px solid #2A2531;border-radius:999px;color:#F1ECF3;padding:10px 16px;font-size:14px;outline:none}
+#pc-lib .chip{background:#16141C;border:1px solid #2A2531;color:#CFC6D6;border-radius:999px;padding:8px 14px;font-size:13px;cursor:pointer}
+#pc-lib .chip.on{border-color:#F0B77E;color:#F6D3AE}
+#pc-lib .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:18px}
+#pc-lib .card{background:#16141C;border:1px solid #2A2531;border-radius:16px;overflow:hidden;cursor:pointer;text-align:left;color:inherit;padding:0;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+#pc-lib .card:hover{transform:translateY(-3px);border-color:#F0B77E88}
+#pc-lib .card img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#1d1a25;display:block}
+#pc-lib .card b{display:block;font-size:15px;padding:10px 12px 0;line-height:1.35}
+#pc-lib .card small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:#AAA1B0;font-size:12.5px;line-height:1.5;padding:6px 12px 14px}
+#pc-lib .empty{color:#AAA1B0;padding:40px 0}
+@media (max-width:1399px){html.pc195 #pc-lib .grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+`;
+  const NAV = [["home", "首页", "Home", "⌂"], ["discover", "发现", "Discover", "◎"], ["create", "创作", "Create", "✎"], ["chats", "聊天", "Chats", "✉"], ["me", "我的", "Me", "☺"]];
+  let built = false, filter = "all", q = "", comm = [], commAt = 0;
+  function tabsReal() { return [...document.querySelectorAll("#dev .tabbar [data-tab]")].map(b => b.dataset.tab); }
+  function sideHTML() {
+    const real = tabsReal();
+    const items = NAV.map((n, i) => [real[i] || n[0], n[1], n[2], n[3]]);
+    return '<div class="logo">MIRU</div><div class="tag">' + T("互动剧与 AI 角色对话 · 你来做主角", "Interactive romance stories · you are the lead") + '</div>' +
+      items.map(n => '<button data-tab="' + esc(n[0]) + '" data-pcnav="' + esc(n[0]) + '"><span>' + n[3] + '</span>' + esc(T(n[1], n[2])) + '</button>').join("") +
+      '<div class="sep"></div><a href="/stories/" target="_blank" rel="noopener"><span>❏</span>' + esc(T("剧目介绍", "Story guide")) + '</a><a href="/about.html" target="_blank" rel="noopener"><span>ⓘ</span>' + esc(T("关于 MIRU", "About MIRU")) + '</a>' +
+      '<div class="foot">© 2026 MIRU · <a href="/privacy.html" target="_blank" style="display:inline;padding:0;color:inherit">' + esc(T("隐私", "Privacy")) + '</a> · <a href="/terms.html" target="_blank" style="display:inline;padding:0;color:inherit">' + esc(T("条款", "Terms")) + '</a></div>';
+  }
+  function items() {
+    const out = comm.filter(w => filter === "all" || (w.orient || "bg") === filter).map(w => ({ k: "off94", id: w.id, t: (!zh() && w.en && w.en.title) || w.title, h: (!zh() && w.en && w.en.hook) || w.hook, img: w.cover || "" }));
+    const s = q.trim().toLowerCase();
+    return s ? out.filter(x => (x.t + " " + x.h).toLowerCase().includes(s)) : out;
+  }
+  function gridHTML() {
+    const L2 = items();
+    if (!L2.length) return '<div class="empty">' + esc(T("没有找到作品", "No stories found")) + '</div>';
+    return L2.map(x => '<button class="card" data-' + x.k + '="' + esc(x.id) + '">' + (x.img ? '<img src="' + esc(x.img) + '" alt="" loading="lazy">' : '<img alt="">') + '<b>' + esc(x.t) + '</b><small>' + esc(x.h) + '</small></button>').join("");
+  }
+  function libHTML() {
+    return '<h2>' + esc(T("全部剧目", "All stories")) + '</h2><p class="sub">' + esc(T("选一部开始：你说的话和做的选择都会改变结局。", "Pick a story — what you say and choose changes the ending.")) + '</p>' +
+      '<div class="bar"><input type="search" id="pc-q" placeholder="' + esc(T("搜索剧名或关键词", "Search stories")) + '" value="' + esc(q) + '">' +
+      [["all", "全部", "All"], ["bg", "男女", "M/F"], ["bl", "男男", "M/M"], ["gl", "女女", "F/F"]].map(c => '<button class="chip' + (filter === c[0] ? " on" : "") + '" data-pcf="' + c[0] + '">' + esc(T(c[1], c[2])) + '</button>').join("") +
+      '</div><div class="grid" id="pc-grid">' + gridHTML() + '</div>';
+  }
+  async function loadComm() {
+    if (Date.now() - commAt < 120000) return;
+    commAt = Date.now();
+    try { const r = await fetch("/api/works?feed=new&limit=50"); if (r.ok) { const j = await r.json(); comm = (j.works || []).filter(w => !w.adult); } } catch (_) {}
+    const g = document.getElementById("pc-grid"); if (g) g.innerHTML = gridHTML();
+  }
+  function syncNav() {
+    const cur = (document.querySelector("#dev .tabbar [data-tab].on") || {}).dataset;
+    document.querySelectorAll("#pc-side [data-pcnav]").forEach(b => b.classList.toggle("on", !!cur && b.dataset.pcnav === cur.tab));
+  }
+  function build() {
+    if (built) return; built = true;
+    const st = document.createElement("style"); st.id = "pc195css"; st.textContent = css; document.head.appendChild(st);
+    const side = document.createElement("aside"); side.id = "pc-side"; side.setAttribute("data-notr", ""); document.body.appendChild(side);
+    const lib = document.createElement("aside"); lib.id = "pc-lib"; document.body.appendChild(lib);
+    lib.addEventListener("input", e => { if (e.target.id === "pc-q") { q = e.target.value; const g = document.getElementById("pc-grid"); if (g) g.innerHTML = gridHTML(); } });
+    lib.addEventListener("click", e => { const c = e.target.closest("[data-pcf]"); if (c) { filter = c.dataset.pcf; lib.innerHTML = libHTML(); } });
+    document.addEventListener("click", () => setTimeout(syncNav, 60));
+    let lang = null; setInterval(() => { try { const l = typeof CL === "function" ? CL() : ""; if (l !== lang) { lang = l; side.innerHTML = sideHTML(); lib.innerHTML = libHTML(); syncNav(); } } catch (_) {} }, 1500);
+  }
+  function apply() {
+    const on = matchMedia("(pointer:fine)").matches && innerWidth >= 1100;
+    document.documentElement.classList.toggle("pc195", on);
+    if (on) { build(); const side = document.getElementById("pc-side"), lib = document.getElementById("pc-lib"); if (side && !side.innerHTML) side.innerHTML = sideHTML(); if (lib && !lib.innerHTML) lib.innerHTML = libHTML(); syncNav(); loadComm(); }
+  }
+  addEventListener("resize", () => { clearTimeout(apply._t); apply._t = setTimeout(apply, 200); });
+  if (document.readyState === "loading") addEventListener("DOMContentLoaded", () => setTimeout(apply, 300)); else setTimeout(apply, 300);
+  window.__pc195 = () => ({ on: document.documentElement.classList.contains("pc195"), items: items().length });
+})();
