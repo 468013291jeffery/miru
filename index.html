@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="c7864a3a7ddf 2026-11-25T19:08Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="cc1c2a4d3463 2026-11-25T19:25Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -30720,7 +30720,7 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
       else {
         const pg = o.createRadialGradient(ow * .45, ph * .45, 10 * k, ow * .45, ph * .45, ph * .8); pg.addColorStop(0, "#fff"); pg.addColorStop(1, fr.bg[0]); o.fillStyle = pg; o.fillRect(0, 0, ow, ph);
         o.globalAlpha = .55; o.fillStyle = "#fff"; o.beginPath(); o.arc(ow * .45, ph * .4, ph * .15, 0, 7); o.fill(); o.beginPath(); o.ellipse(ow * .45, ph * 1.02, ph * .3, ph * .34, 0, 0, 7); o.fill(); o.globalAlpha = 1;
-        o.fillStyle = fr.fg === "#fff" ? "rgba(90,40,70,.75)" : fr.fg; o.font = "700 " + 20 * k + "px system-ui"; o.textAlign = "center"; o.fillText("♡ " + (ZH() ? "你的自拍" : "your selfie"), ow * .45, ph * .4 + 7 * k);
+        o.fillStyle = fr.fg === "#fff" ? "rgba(90,40,70,.75)" : fr.fg; o.font = "700 " + 20 * k + "px system-ui"; o.textAlign = "center"; o.fillText("♡ your selfie", ow * .45, ph * .4 + 7 * k);
       }
       o.globalCompositeOperation = "destination-in"; const gm = o.createLinearGradient(0, 0, ow, 0); gm.addColorStop(0, "rgba(0,0,0,1)"); gm.addColorStop(.7, "rgba(0,0,0,1)"); gm.addColorStop(1, "rgba(0,0,0,0)"); o.fillStyle = gm; o.fillRect(0, 0, ow, ph);
       x.drawImage(off, px, py);
@@ -30737,11 +30737,11 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
       if (fr.film) { x.fillStyle = "#fff"; for (let j = 0; j < 5; j++) { x.fillRect(12 * k, py + 20 * k + j * 72 * k, 10 * k, 26 * k); x.fillRect(W - 22 * k, py + 20 * k + j * 72 * k, 10 * k, 26 * k); } }
       /* 贴纸 + 手写感的小字 */
       x.font = 44 * k + "px serif"; x.textAlign = "center"; x.fillText(P.st, px + pw * .47, py + ph * .8);
-      const cap = ZH() ? P.zh : P.en; x.font = "italic 800 " + 22 * k + "px system-ui"; x.lineWidth = 5 * k; x.strokeStyle = "rgba(120,20,60,.55)"; x.fillStyle = "#fff";
+      const cap = P.en; /* 拍贴上的字一律英文 */ x.font = "italic 800 " + 22 * k + "px system-ui"; x.lineWidth = 5 * k; x.strokeStyle = "rgba(120,20,60,.55)"; x.fillStyle = "#fff";
       x.save(); x.translate(px + pw - 20 * k, py + ph - 26 * k); x.rotate(-.06); x.textAlign = "right"; x.strokeText(cap, 0, 0); x.fillText(cap, 0, 0); x.restore();
     }
-    x.fillStyle = fr.fg; x.textAlign = "center"; x.font = "700 " + 28 * k + "px system-ui"; x.fillText(first(ch(cid).n) + " ♡ " + (((persona() || {}).name) || (ZH() ? "你" : "you")), W / 2, 1700 * k);
-    x.font = 16 * k + "px system-ui"; x.globalAlpha = .75; x.fillText(new Date().toISOString().slice(0, 10).replace(/-/g, ".") + "  ·  " + (ZH() ? "只属于我们的瞬间" : "just us"), W / 2, 1742 * k); x.globalAlpha = 1; return cv;
+    x.fillStyle = fr.fg; x.textAlign = "center"; x.font = "700 " + 28 * k + "px system-ui"; const cc = ch(cid), en = String((cc.n94 && cc.n94.en) || cc.n), pn = String(((persona() || {}).name) || ""); x.fillText(first(en) + " ♡ " + (pn && !/[\u3400-\u9fff]/.test(pn) ? pn : "you"), W / 2, 1700 * k);
+    x.font = 16 * k + "px system-ui"; x.globalAlpha = .75; x.fillText(new Date().toISOString().slice(0, 10).replace(/-/g, ".") + "  ·  just us", W / 2, 1742 * k); x.globalAlpha = 1; return cv;
   };
 
   /* ---------- 选人：全部可攻略角色 + 搜索 + 男/女 ---------- */
@@ -30753,10 +30753,10 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
     const seen = (typeof myCircle === "function" ? myCircle() : []).filter(id => all.includes(id));
     if (BQ.g == null) BQ.g = (typeof S !== "undefined" && S.or === "gl") ? "f" : "m";
     let L = [...new Set(seen.concat(all))];
-    if (BQ.g !== "all") L = L.filter(id => (ch(id).g || "m") === BQ.g || seen.includes(id));
+    if (BQ.g !== "all") L = L.filter(id => (ch(id).g || "m") === BQ.g);
     const q = BQ.q.trim().toLowerCase();
     if (q) L = L.filter(id => nameAll(ch(id)).includes(q) || wTitle(id).toLowerCase().includes(q));
-    return L.slice(0, q ? 80 : 60);
+    return L.slice(0, 400);
   };
   const _open = boothOpen;
   boothOpen = async function (cid) {
@@ -30774,6 +30774,83 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   Object.assign(I18N.zh, { "bt.tip": "点格子自拍，或者一次选 4 张照片。他已经凑过来了。", "bt.s": "先选和谁拍（可以搜索），再选相框。" });
   Object.assign(I18N.en, { "bt.tip": "Tap a square to take a selfie — or pick 4 photos. He's already leaning in.", "bt.s": "Pick who you're taking it with (search works), then a frame." });
   window.__mod198 = 1;
+})();
+
+/* ================= mod198b · 拍贴机：AI 生成合照 + 男/女筛选修正（2026-11-26）=================
+   ① 「✨ AI 生成合照」：用他的立绘做「同一张脸」改图，生成 4 张拍贴机姿势的双人合照（搂肩 / 亲脸颊 / 对视 / 靠肩），
+      每张成功才扣 💎（PRICES.img），失败不扣。生成的图铺满对应格子，你那一半就不用了。图片接口用的是全站统一的 AIG（/api/tts {img}），
+      以后换新的图片 API 只改服务端，这里不用动。尺度：暧昧、贴近，衣着完整，不露骨，只有成年人。
+   ② 修正：选「男」时，玩过的剧里的女角色也混进来——现在筛选对所有人都生效。 */
+(function () {
+  "use strict";
+  if (!window.__mod198 || typeof boothEdit !== "function") return;
+  const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
+  const PR = () => (typeof PRICES !== "undefined" && PRICES.img) || 2;
+  const AIP = [
+    "standing close together in a photo booth, an arm around the partner's shoulders, both smiling at the camera, soft pink light",
+    "in a photo booth, the character leans in and kisses the partner's cheek while the partner laughs, playful and flirty, warm light",
+    "in a photo booth, the character ignores the camera and gazes at the partner, faces very close, almost touching foreheads, intimate romantic tension",
+    "in a photo booth at night, the partner rests on the character's shoulder, the character smirks at the camera, moody purple neon light"
+  ];
+  const partner = () => { const o = typeof S !== "undefined" ? S.or : ""; return o === "bl" ? "a young man" : "a young woman"; };
+  /* 选人筛选：男/女对"玩过的"也生效 */
+  /* 选人：男/女对"玩过的"也生效；去掉「你 / You」这种玩家自己的角色、没有立绘的、重复的（同一张立绘或同剧同名只留一个） */
+  const SELF = /^(你|我|you|me|player|玩家)$/i;
+  const hasArt = id => { const a = String(artSrc(id) || ""); return !!a && !/^data:image\/svg/.test(a) && !/placeholder|default_avatar|noavatar/i.test(a); };
+  const _bc = boothChars;
+  boothChars = function () {
+    const on = document.querySelector('#s-booth [data-btg].on'); const g = on ? on.dataset.btg : null, seen = new Set(), out = [];
+    for (const id of _bc()) { const c = ch(id); if (!c || SELF.test(String(c.n || "").trim()) || !hasArt(id)) continue; if (g && g !== "all" && (c.g || "m") !== g) continue;
+      const k1 = "a:" + String(artSrc(id)).replace(/^https?:\/\/(www\.)?miru\.plus/, "").replace(/^\//, ""), k2 = "n:" + c.w + "|" + c.n; if (seen.has(k1) || seen.has(k2)) continue; seen.add(k1); seen.add(k2); out.push(id); }
+    return out.slice(0, 80);
+  };
+  /* 换人就清掉上一个人的 AI 合照 */
+  const _open = boothOpen;
+  boothOpen = async function (cid) { if (cid && cid !== BT.cid) BT.ai = null; return _open(cid); };
+  /* 有 AI 合照的格子：整格铺满合照 */
+  const _strip = boothStrip;
+  boothStrip = async function (cid, fr, me, scale) {
+    const cv = await _strip(cid, fr, me, scale); const A = BT.ai; if (!A || BT.aiCid !== cid || !A.some(Boolean)) return cv;
+    const k = scale || 1, x = cv.getContext("2d"), pw = 528 * k, ph = 380 * k, px = 36 * k;
+    for (let i = 0; i < 4; i++) { if (!A[i]) continue; const im = await loadImg(A[i]).catch(() => null); if (!im) continue; const py = (92 + i * 396) * k;
+      const s = Math.max(pw / im.width, ph / im.height), w = im.width * s, h = im.height * s;
+      x.save(); x.beginPath(); x.rect(px, py, pw, ph); x.clip(); x.drawImage(im, px + (pw - w) / 2, py + (ph - h) * .3, w, h);
+      const vg = x.createRadialGradient(px + pw / 2, py + ph / 2, ph * .4, px + pw / 2, py + ph / 2, pw * .75); vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(80,10,40,.25)"); x.fillStyle = vg; x.fillRect(px, py, pw, ph); x.restore();
+      const cap = ["come closer", "stolen kiss", "eyes on me", "all yours tonight"][i]; /* 拍贴上的字一律英文 */
+      x.font = "italic 800 " + 22 * k + "px system-ui"; x.lineWidth = 5 * k; x.strokeStyle = "rgba(120,20,60,.55)"; x.fillStyle = "#fff"; x.textAlign = "right"; x.textBaseline = "middle";
+      x.save(); x.translate(px + pw - 20 * k, py + ph - 26 * k); x.rotate(-.06); x.strokeText(cap, 0, 0); x.fillText(cap, 0, 0); x.restore(); }
+    return cv;
+  };
+  const _edit = boothEdit;
+  boothEdit = async function () {
+    const p = _edit(); setTimeout(() => { const o = document.getElementById("btOut"); if (!o || document.querySelector("[data-btai]")) return;
+      o.insertAdjacentHTML("afterend", '<button class="btn btn-g btn-block" style="margin-top:10px" data-btai="1">✨ ' + (ZH() ? "AI 生成合照（4 张）· 每张 💎" : "AI couple photos (4) · 💎") + PR() + (ZH() ? "，成功才扣" : " each, only if it works") + '</button><p class="xs faint" data-btaimsg="1" style="margin-top:4px;text-align:center"></p>'); }, 0);
+    return p;
+  };
+  let busy = false;
+  document.addEventListener("click", async e => {
+    if (!e.target.closest("[data-btai]") || busy) return; const cid = BT.cid, c = ch(cid), msg = () => document.querySelector("[data-btaimsg]");
+    const ref = typeof aiRefUrl === "function" ? aiRefUrl(cid) : null;
+    if (!ref || typeof AIG === "undefined" || !AIG.mcp) { toast(ZH() ? "这个角色暂时不能生成合照" : "Couple photos aren't available for this character yet"); return; }
+    if (!S.plus && S.keys < PR()) { if (typeof paySheet === "function") paySheet(); else toast(ZH() ? "钻石不够" : "Not enough gems"); return; }
+    busy = true; BT.ai = [null, null, null, null]; BT.aiCid = cid; let ok = 0;
+    const look = String(Lz(c.looks) || "").slice(0, 160);
+    for (let i = 0; i < 4; i++) {
+      const m = msg(); if (m) m.textContent = (ZH() ? "正在生成第 " + (i + 1) + " / 4 张…" : "Making photo " + (i + 1) + " of 4…");
+      if (!S.plus && S.keys < PR()) break;
+      const prompt = "Keep this exact " + (c.g === "f" ? "woman" : "man") + "'s face, hair and build unchanged" + (look ? " (" + look + ")" : "") + ". Photo-booth snapshot of this person with " + partner() + ": " + AIP[i] +
+        ". Both are adults, fully clothed, tasteful and romantic, flirty but not sexual, photoreal, no text, no watermark.";
+      try { const src = aiImgFrom(await AIG.mcp.callTool(AIG.srv, AIG.edit, { input_image: ref, prompt, steps: 20, guidance_scale: 2.5, randomize_seed: true }, { cache: false }));
+        if (src) { BT.ai[i] = /^data:/.test(src) && typeof shrink98 === "function" ? await shrink98(src) : src; ok++; if (!S.plus) spend(PR(), "img"); }
+      } catch (err) { console.warn("[booth] ai", err); if (i === 0) break; }
+    }
+    busy = false;
+    if (!ok) { BT.ai = null; const m = msg(); if (m) m.textContent = ""; toast(ZH() ? "AI 合照暂时生成不了，没有扣钻石，稍后再试" : "Couldn't make couple photos right now — no gems used. Try again later."); return; }
+    toast(ZH() ? "生成了 " + ok + " 张合照" : ok + " couple photos ready");
+    BT.out = await boothStrip(BT.cid, BT.fr, BT.me, .6); const o = document.getElementById("btOut"); if (o) o.innerHTML = '<img src="' + BT.out.toDataURL("image/jpeg", .85) + '" alt="">';
+    const m = msg(); if (m) m.textContent = "";
+  });
+  window.__mod198b = 1;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
