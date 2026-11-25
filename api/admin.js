@@ -424,8 +424,8 @@ module.exports = L.wrap(async (req, res) => {
       const out = new Array(lines.length).fill(null), CH = 36, jobs = [];
       for (let i = 0; i < lines.length; i += CH) jobs.push(i);
       let k = 0;
-      const worker = async () => { while (k < jobs.length) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d != null && okLine(part[j], d)) out[i + j] = d; }); } };
-      await Promise.all([worker(), worker(), worker()]);
+      const worker = async () => { while (k < jobs.length) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d != null && okLine(part[j], d)) out[i + j] = d; }); await new Promise(z => setTimeout(z, 1200)); /* 限速：给线上 AI 聊天让路 */ } };
+      await Promise.all([worker(), worker()]);
       /* 没过校验的行单独再试一次 */
       for (let pass = 0; pass < 3; pass++) for (let i = 0; i < lines.length; i++) if (out[i] == null) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const res = await llmArr([lines[i]], gloss, 9); if (res && res[0] != null && okLine(lines[i], res[0])) out[i] = res[0]; else if (res && res[0] != null && pass === 2) { (ST.badSample || (ST.badSample = [])).length < 40 && ST.badSample.push([lines[i].slice(0, 160), String(res[0]).slice(0, 160)]); } }
       return out;
