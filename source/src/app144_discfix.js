@@ -5229,3 +5229,128 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   try { Object.defineProperty(window, "CREATOR_HTML", { configurable: true, get() { return cur; }, set(v) { cur = patch(v); } }); } catch (_) {}
   window.__mod197 = 1;
 })();
+
+/* ================= mod198 · 拍贴机 2.0（2026-11-26）=================
+   用户反馈：① 只能选 30 个人，好多角色找不到；② 照片太板，只拍到身子看不到脸，四格是同一张图，不够恋爱暧昧。
+   ① 选人：所有可攻略角色都能选（玩过的剧的人排最前），加搜索（名字 / 剧名）和 男 / 女 筛选。
+   ② 四格：按立绘比例找脸的位置做特写裁切（全身立绘取头肩），四格分别是「靠近一点 / 偷亲 / 只看我 / 今晚属于你」
+      不同景别和角度；他和你的那一半用柔边融在一起（不是硬切两半）；暖色漏光、柔焦、飘心、腮红贴纸，像真的情侣大头贴。
+      没上传自拍时，「你」的位置是一块带相框颜色的柔光占位，不再是灰色小人。
+   只换渲染和选人，存相册 / 下载 / 发动态沿用原来的逻辑。 */
+(function () {
+  "use strict";
+  if (typeof boothStrip !== "function" || typeof boothOpen !== "function") return;
+  const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
+  const POSE2 = [
+    { zh: "靠近一点", en: "come closer", st: "💞", z: 1.0, rot: -3, cut: .50, shot: "bust" },
+    { zh: "偷亲一下", en: "stolen kiss", st: "💋", z: 1.0, rot: 4, cut: .46, shot: "face", kiss: 1 },
+    { zh: "只许看我", en: "eyes on me", st: "🫶", z: 1.05, rot: 0, cut: .52, shot: "bust", mir: 1 },
+    { zh: "今晚属于你", en: "all yours tonight", st: "🌙", z: 1.1, rot: -5, cut: .44, shot: "face", glow: 1 }
+  ];
+  /* 找脸：缩成 64px 宽的小图，按肤色找"上方不是皮肤（头发/背景）、自身皮肤最密"的方块，当作脸。结果缓存在图片对象上。
+     跨域图读不了像素就退回按比例估计。 */
+  function faceOf(im) {
+    if (im.__face !== undefined) return im.__face; let f = null;
+    try {
+      const r = im.height / im.width, w = 64, h = Math.max(8, Math.round(w * r)), c = document.createElement("canvas"); c.width = w; c.height = h;
+      const x = c.getContext("2d", { willReadFrequently: true }); x.drawImage(im, 0, 0, w, h); const d = x.getImageData(0, 0, w, h).data, I = new Float32Array((w + 1) * (h + 1));
+      for (let y = 0; y < h; y++) { let row = 0; for (let xx = 0; xx < w; xx++) { const i = (y * w + xx) * 4, R = d[i], G = d[i + 1], B = d[i + 2], Y = .299 * R + .587 * G + .114 * B, Cb = 128 - .168736 * R - .331264 * G + .5 * B, Cr = 128 + .5 * R - .418688 * G - .081312 * B;
+        row += (Y > 55 && Cb >= 77 && Cb <= 130 && Cr >= 134 && Cr <= 176 && R > G && R > B) ? 1 : 0; I[(y + 1) * (w + 1) + xx + 1] = I[y * (w + 1) + xx + 1] + row; } }
+      const sum = (x0, y0, x1, y1) => I[y1 * (w + 1) + x1] - I[y0 * (w + 1) + x1] - I[y1 * (w + 1) + x0] + I[y0 * (w + 1) + x0]; let best = 0;
+      for (const fr of [.14, .2, .28, .38, .5, .62]) { const sw = Math.max(4, Math.round(w * fr)), sh = Math.round(sw * 1.2), ah = Math.max(2, Math.round(sh * .45));
+        for (let y = 0; y + sh <= Math.min(h, Math.round(h * .8)); y += 2) for (let xx = 0; xx + sw <= w; xx += 2) {
+          const dn = sum(xx, y, xx + sw, y + sh) / (sw * sh); if (dn < .45) continue; const y0 = Math.max(0, y - ah), ab = y > 0 ? sum(xx, y0, xx + sw, y) / (sw * (y - y0)) : 0;
+          const cy = (y + sh / 2) / h, cx = (xx + sw / 2) / w, sc = dn * dn * Math.sqrt(fr) * (1 - ab) * (1 - ab) * (1 - .35 * cy) * (1 - .6 * Math.abs(cx - .5));
+          if (sc > best) { best = sc; f = { cx, cy, fw: sw / w }; } } }
+    } catch (_) { f = null; }
+    return im.__face = f;
+  }
+  function focusDraw(x, im, dx, dy, dw, dh, P) {
+    const full = im.height / im.width >= 1.45, f = faceOf(im) || { cx: .5, cy: full ? .15 : .28, fw: full ? .2 : .35 };
+    /* 景别：脸占画面宽度的比例。bust ≈ 头到胸，face ≈ 特写 */
+    let s = dw * (P.shot === "face" ? .34 : .24) * (P.z || 1) / (f.fw * im.width);
+    s = Math.max(s, dw / im.width, dh / im.height) * (1 + Math.abs(P.rot || 0) * .03);
+    const w = im.width * s, h = im.height * s;
+    let sx = dx + dw * .5 - f.cx * w, sy = dy + dh * .42 - f.cy * h;
+    sy = Math.min(dy, Math.max(dy + dh - h, sy)); sx = Math.min(dx, Math.max(dx + dw - w, sx));
+    x.save(); x.beginPath(); x.rect(dx, dy, dw, dh); x.clip();
+    x.translate(dx + dw / 2, dy + dh / 2); x.rotate((P.rot || 0) * Math.PI / 180); if (P.mir) x.scale(-1, 1); x.translate(-(dx + dw / 2), -(dy + dh / 2));
+    x.drawImage(im, sx, sy, w, h); x.restore();
+  }
+  const heart = (x, cx, cy, s) => { x.beginPath(); x.moveTo(cx, cy + s * .35); x.bezierCurveTo(cx - s, cy - s * .4, cx - s * .4, cy - s, cx, cy - s * .35); x.bezierCurveTo(cx + s * .4, cy - s, cx + s, cy - s * .4, cx, cy + s * .35); x.fill(); };
+  const rnd = seed => () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+
+  boothStrip = async function (cid, fr, me, scale) {
+    scale = scale || 1; const k = scale, W = 600 * k, H = 1800 * k, cv = document.createElement("canvas"); cv.width = W; cv.height = H; const x = cv.getContext("2d");
+    const g = x.createLinearGradient(0, 0, 0, H); g.addColorStop(0, fr.bg[0]); g.addColorStop(1, fr.bg[1]); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.fillStyle = fr.fg; x.font = "800 " + 30 * k + "px system-ui,sans-serif"; x.textBaseline = "middle"; x.textAlign = "center"; x.fillText(fr.hd, W / 2, 48 * k);
+    x.font = 40 * k + "px serif"; x.fillText(fr.st[0], 60 * k, 48 * k); x.fillText(fr.st[1], W - 60 * k, 48 * k);
+    const him = await loadImg(artSrc(cid)).catch(() => null), pw = 528 * k, ph = 380 * k, px = 36 * k, R = rnd(String(cid).length * 97 + 13);
+    for (let i = 0; i < 4; i++) {
+      const py = (92 + i * 396) * k, P = POSE2[i];
+      /* 底色：相框色的柔光，而不是灰底 */
+      const bg = x.createLinearGradient(px, py, px + pw, py + ph); bg.addColorStop(0, "#fff4f7"); bg.addColorStop(1, "#ffe1ea"); x.fillStyle = bg; x.fillRect(px, py, pw, ph);
+      /* 他：右侧 60%，按脸的位置特写，稍微歪头靠向你 */
+      const hx = px + pw * (1 - .62), hw = pw * .62;
+      if (him) focusDraw(x, him, hx, py, hw, ph, P);
+      /* 你：左侧，柔边融进他那一侧 */
+      const ow = Math.round(pw * P.cut + pw * .12), off = document.createElement("canvas"); off.width = ow; off.height = ph; const o = off.getContext("2d");
+      if (me[i]) { const mi = await loadImg(me[i]).catch(() => null); if (mi) focusDraw(o, mi, 0, 0, ow, ph, { z: .9, shot: P.shot, rot: -(P.rot || 0) * .5 }); }
+      else {
+        const pg = o.createRadialGradient(ow * .45, ph * .45, 10 * k, ow * .45, ph * .45, ph * .8); pg.addColorStop(0, "#fff"); pg.addColorStop(1, fr.bg[0]); o.fillStyle = pg; o.fillRect(0, 0, ow, ph);
+        o.globalAlpha = .55; o.fillStyle = "#fff"; o.beginPath(); o.arc(ow * .45, ph * .4, ph * .15, 0, 7); o.fill(); o.beginPath(); o.ellipse(ow * .45, ph * 1.02, ph * .3, ph * .34, 0, 0, 7); o.fill(); o.globalAlpha = 1;
+        o.fillStyle = fr.fg === "#fff" ? "rgba(90,40,70,.75)" : fr.fg; o.font = "700 " + 20 * k + "px system-ui"; o.textAlign = "center"; o.fillText("♡ " + (ZH() ? "你的自拍" : "your selfie"), ow * .45, ph * .4 + 7 * k);
+      }
+      o.globalCompositeOperation = "destination-in"; const gm = o.createLinearGradient(0, 0, ow, 0); gm.addColorStop(0, "rgba(0,0,0,1)"); gm.addColorStop(.7, "rgba(0,0,0,1)"); gm.addColorStop(1, "rgba(0,0,0,0)"); o.fillStyle = gm; o.fillRect(0, 0, ow, ph);
+      x.drawImage(off, px, py);
+      /* 氛围：暖色漏光 + 暗角 + 飘心 */
+      x.save(); x.beginPath(); x.rect(px, py, pw, ph); x.clip();
+      x.globalCompositeOperation = "screen";
+      const lk = x.createRadialGradient(px + pw * (i % 2 ? .1 : .9), py + ph * .1, 0, px + pw * (i % 2 ? .1 : .9), py + ph * .1, ph * .9);
+      lk.addColorStop(0, P.glow ? "rgba(255,150,90,.45)" : "rgba(255,140,170,.38)"); lk.addColorStop(1, "rgba(255,140,170,0)"); x.fillStyle = lk; x.fillRect(px, py, pw, ph);
+      x.globalCompositeOperation = "source-over";
+      const vg = x.createRadialGradient(px + pw / 2, py + ph / 2, ph * .35, px + pw / 2, py + ph / 2, pw * .75); vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(80,10,40,.28)"); x.fillStyle = vg; x.fillRect(px, py, pw, ph);
+      for (let j = 0; j < 7; j++) { x.fillStyle = "rgba(255," + (120 + Math.round(R() * 80)) + ",170," + (.35 + R() * .45) + ")"; heart(x, px + pw * (.3 + R() * .65), py + ph * (.08 + R() * .5), (7 + R() * 12) * k); }
+      if (P.kiss) { x.font = 54 * k + "px serif"; x.textAlign = "center"; x.globalAlpha = .9; x.fillText("💋", hx + hw * .3, py + ph * .66); x.globalAlpha = 1; }
+      x.restore();
+      if (fr.film) { x.fillStyle = "#fff"; for (let j = 0; j < 5; j++) { x.fillRect(12 * k, py + 20 * k + j * 72 * k, 10 * k, 26 * k); x.fillRect(W - 22 * k, py + 20 * k + j * 72 * k, 10 * k, 26 * k); } }
+      /* 贴纸 + 手写感的小字 */
+      x.font = 44 * k + "px serif"; x.textAlign = "center"; x.fillText(P.st, px + pw * .47, py + ph * .8);
+      const cap = ZH() ? P.zh : P.en; x.font = "italic 800 " + 22 * k + "px system-ui"; x.lineWidth = 5 * k; x.strokeStyle = "rgba(120,20,60,.55)"; x.fillStyle = "#fff";
+      x.save(); x.translate(px + pw - 20 * k, py + ph - 26 * k); x.rotate(-.06); x.textAlign = "right"; x.strokeText(cap, 0, 0); x.fillText(cap, 0, 0); x.restore();
+    }
+    x.fillStyle = fr.fg; x.textAlign = "center"; x.font = "700 " + 28 * k + "px system-ui"; x.fillText(first(ch(cid).n) + " ♡ " + (((persona() || {}).name) || (ZH() ? "你" : "you")), W / 2, 1700 * k);
+    x.font = 16 * k + "px system-ui"; x.globalAlpha = .75; x.fillText(new Date().toISOString().slice(0, 10).replace(/-/g, ".") + "  ·  " + (ZH() ? "只属于我们的瞬间" : "just us"), W / 2, 1742 * k); x.globalAlpha = 1; return cv;
+  };
+
+  /* ---------- 选人：全部可攻略角色 + 搜索 + 男/女 ---------- */
+  const BQ = { q: "", g: null };
+  const wTitle = id => { try { const w = (typeof W !== "undefined" && W.find) ? W.find(z => z.id === ch(id).w || ("ldw_" + z.id) === ch(id).w) : null; return w ? String(Lz(w.title) || "") : ""; } catch (_) { return ""; } };
+  const nameAll = c => [c.n, c.n94 && c.n94.en, c.n94 && c.n94.zh].filter(Boolean).join(" ").toLowerCase();
+  boothChars = function () {
+    const all = allChars().filter(id => { const c = ch(id); return c && c.romanceable !== false && c.entity !== "narrator"; });
+    const seen = (typeof myCircle === "function" ? myCircle() : []).filter(id => all.includes(id));
+    if (BQ.g == null) BQ.g = (typeof S !== "undefined" && S.or === "gl") ? "f" : "m";
+    let L = [...new Set(seen.concat(all))];
+    if (BQ.g !== "all") L = L.filter(id => (ch(id).g || "m") === BQ.g || seen.includes(id));
+    const q = BQ.q.trim().toLowerCase();
+    if (q) L = L.filter(id => nameAll(ch(id)).includes(q) || wTitle(id).toLowerCase().includes(q));
+    return L.slice(0, q ? 80 : 60);
+  };
+  const _open = boothOpen;
+  boothOpen = async function (cid) {
+    await _open(cid);
+    const box = document.querySelector("#s-booth .btchars"); if (!box) return;
+    if (!document.querySelector("#s-booth .btfind")) box.insertAdjacentHTML("beforebegin",
+      '<div class="btfind" style="display:flex;gap:8px;padding:0 16px 8px;align-items:center"><input class="inp" data-btq="1" placeholder="' + (ZH() ? "搜名字或剧名…" : "Search name or story…") + '" value="' + esc(BQ.q) + '" style="flex:1;min-width:0;height:36px;border-radius:18px;padding:0 14px">' +
+      ["m", "f", "all"].map(g => '<button class="chip' + (BQ.g === g ? " on" : "") + '" data-btg="' + g + '">' + (g === "m" ? (ZH() ? "男" : "Men") : g === "f" ? (ZH() ? "女" : "Women") : (ZH() ? "全部" : "All")) + '</button>').join("") + '</div>');
+    if (!boothChars().length) box.innerHTML = '<p class="xs faint pad">' + (ZH() ? "没找到这个角色，换个名字试试" : "No one found — try another name") + '</p>';
+  };
+  let qt = 0;
+  document.addEventListener("input", e => { const t = e.target; if (!t.dataset || !t.dataset.btq) return; BQ.q = t.value; clearTimeout(qt); qt = setTimeout(() => { const L = boothChars(); const box = document.querySelector("#s-booth .btchars"); if (!box) return;
+    box.innerHTML = L.length ? L.map(id => '<button data-btc="' + id + '" class="' + (id === BT.cid ? "on" : "") + '">' + avatar(id, 48) + '<b>' + esc(first(ch(id).n)) + '</b></button>').join("") : '<p class="xs faint pad">' + (ZH() ? "没找到这个角色，换个名字试试" : "No one found — try another name") + '</p>'; }, 250); });
+  document.addEventListener("click", e => { const b = e.target.closest("[data-btg]"); if (!b) return; BQ.g = b.dataset.btg; boothOpen(BT.cid); });
+  Object.assign(I18N.zh, { "bt.tip": "点格子自拍，或者一次选 4 张照片。他已经凑过来了。", "bt.s": "先选和谁拍（可以搜索），再选相框。" });
+  Object.assign(I18N.en, { "bt.tip": "Tap a square to take a selfie — or pick 4 photos. He's already leaning in.", "bt.s": "Pick who you're taking it with (search works), then a frame." });
+  window.__mod198 = 1;
+})();
