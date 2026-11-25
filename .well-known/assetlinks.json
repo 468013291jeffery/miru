@@ -1,10 +1,14 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.miru.plus.app",
       "sha256_cert_fingerprints": [
+        "39:C8:71:83:2F:DE:DB:D8:CF:DF:33:E0:49:98:86:8E:34:AB:01:0A:2D:91:8A:89:05:70:10:5A:E7:D5:17:3B",
+        "B6:F6:4B:7E:65:2A:AF:61:D8:0B:F3:81:F4:D7:4C:30:4E:6D:D7:B9:11:52:6B:A1:94:78:5E:40:9D:36:30:06",
         "2B:8F:30:2B:9D:12:48:8D:22:69:6B:16:41:BA:59:79:6F:24:D4:3A:EE:8F:64:07:48:69:AB:F8:B1:4C:1D:6C",
         "0A:DA:8E:C7:84:D6:68:4A:0E:30:49:C2:38:71:DC:2B:87:27:C2:3B:FD:CF:87:77:2F:49:74:03:5C:FA:D0:29"
       ]
