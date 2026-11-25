@@ -460,13 +460,30 @@ module.exports = L.wrap(async (req, res) => {
           }
           gloss = Object.entries(nameMap).map(([a, e]) => a + ' → ' + e).join('; ');
           const idx = []; base.forEach((l, i) => { if (HAN.test(keyless(l))) idx.push(i); });
-          const parts = idx.map(i => { const l = base[i], t = l.trim(); if (!/^[⟦#]/.test(t)) { const m = l.match(SPK); if (m) return { pre: m[1], spk: m[2], sep: m[3], text: m[4] }; } return { pre: '', spk: null, sep: '', text: l }; });
-          const need = parts.map(p => HAN.test(p.text) ? p.text : null);
-          const trd = await translateLines(need.filter(x => x != null), gloss);
-          let qi = 0; const outL = base.slice(); let bad = 0;
+          /* 每一行拆成三类：整行指令 ⟦CMD|…⟧（只翻含中文的字段，CHAR 的名字查人名表）/ 说话人台词 / 其余文字（标题、旁白段落） */
+          const parts = idx.map(i => { const l = base[i], t = l.trim();
+            const cm = t.match(/^⟦([A-Z/]+)\|([\s\S]*)⟧$/);
+            if (cm && t.indexOf('⟦', 1) < 0) return { cmd: cm[1], pre: l.slice(0, l.indexOf('⟦')), f: cm[2].split('|') };
+            if (!/^[⟦#]/.test(t)) { const m = l.match(SPK); if (m) return { pre: m[1], spk: m[2], sep: m[3], text: m[4] }; }
+            return { text: l }; });
+          const need = [];
+          parts.forEach(p => {
+            if (p.cmd) { p.slots = []; p.f.forEach((x, k) => { if (!HAN.test(x) || (p.cmd === 'CHAR' && k === 0)) return; p.slots.push([k, need.length]); need.push(x); }); }
+            else if (HAN.test(p.text)) { p.ni = need.length; need.push(p.text); }
+          });
+          const trd = need.length ? await translateLines(need, gloss) : [];
+          const outL = base.slice(); let bad = 0;
           idx.forEach((i, j) => {
-            const p = parts[j]; let text = p.text;
-            if (need[j] != null) { const d = trd[qi++]; if (d == null) { bad++; return; } text = d; }
+            const p = parts[j];
+            if (p.cmd) {
+              const f2 = p.f.slice(); let ok = true;
+              if (p.cmd === 'CHAR' && HAN.test(f2[0]) && f2[0] !== '你') { if (nameMap[f2[0]]) f2[0] = nameMap[f2[0]]; else ok = false; }
+              p.slots.forEach(([k, ni]) => { const d = trd[ni]; if (d == null) ok = false; else f2[k] = String(d).replace(/[|⟦⟧]/g, '/'); });
+              if (!ok) { bad++; return; }
+              outL[i] = p.pre + '⟦' + p.cmd + '|' + f2.join('|') + '⟧'; return;
+            }
+            let text = p.text;
+            if (p.ni != null) { const d = trd[p.ni]; if (d == null) { bad++; return; } text = d; }
             if (!p.spk) { outL[i] = text; return; }
             const sys = p.spk === '旁白' || p.spk === '你';
             const spk = sys ? p.spk : (nameMap[p.spk] || (HAN.test(p.spk) ? null : p.spk));
