@@ -816,6 +816,14 @@ module.exports = L.wrap(async (req, res) => {
       /* 2026-11-25 没有单独的英文剧本时，保留线上已翻好的英文版（中文正文没变才保留；变了就清空，让 en_backfill 整篇重翻） */
       if (!mdEn) { const old = (await sql("SELECT pack->>'script_en' AS e, pack->>'script' AS z FROM works WHERE id=$1", [id]))[0]; if (old && old.e && old.z === md) mdEn = old.e; }
       const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads, langs: Array.from(new Set([s.lang || 'zh', 'en'].concat(Array.isArray(cfg.langs) ? cfg.langs : ['zh', 'en', 'ja', 'ko', 'es']))).filter(x => /^(zh|en|ja|ko|es)$/.test(x)), disc: cfg.disc || null }, assets: Object.keys(AS).length ? AS : null, games: Array.isArray(cfg.games) ? cfg.games.slice(0, 80) : null, official: true, rules: b.rulesVersion || null };
+      /* 2026-11-26 日 / 韩 / 西语：剧本 config.ja_sid / ko_sid / es_sid 指向各语言的独立剧本（同样的章节结构），上线时进 pack.script_ja 等；
+         App（mod196）按当前界面语言把它合进作品，读者看到的是预先翻好的全文，不再边看边翻。没有对应剧本时保留线上已有的那份（中文正文没变才保留）。 */
+      { const oldP = (await sql("SELECT pack FROM works WHERE id=$1", [id]))[0]; const op = (oldP && oldP.pack) || {};
+        for (const LG of ['ja', 'ko', 'es']) { let mdL = null; const sid = cfg[LG + '_sid'];
+          if (sid) { const e = (await sql('SELECT title, chapters FROM scripts WHERE id=$1', [String(sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdL = '# ' + e.title + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
+          if (!mdL && op['script_' + LG] && op.script === md) mdL = op['script_' + LG];
+          if (mdL) pack['script_' + LG] = mdL; }
+        ['ja', 'ko', 'es'].forEach(LG => { if (cfg[LG] && typeof cfg[LG] === 'object') pack.meta[LG] = cfg[LG]; }); }
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
         ON CONFLICT (id) DO UPDATE SET title=$2, hook=$3, lang=$4, orient=$5, tags=$6::jsonb, cover=$7, pack=$8::jsonb, status='live', qa=$9::jsonb, featured=true, reviewed_by=$10, reviewed_at=now(), updated_at=now()`,
