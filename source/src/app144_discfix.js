@@ -5166,3 +5166,47 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", () => setTimeout(apply, 300)); else setTimeout(apply, 300);
   window.__pc195 = () => ({ on: document.documentElement.classList.contains("pc195"), items: items().length });
 })();
+
+/* ===== mod196 · 2026-11-26 日 / 韩 / 西语：读预先翻好的全文 =====
+   作品包里有 pack.script_ja / script_ko / script_es 时（后台剧本 config.ja_sid 等），
+   和英文版一样在装作品时合进去：章节正文 beats[ja|ko|es]、章节标题 / 目标、选项和选项后的剧情。
+   Lz() 本来就按 S.lang 取 o.ja / o.ko / o.es，没有就回落英文——所以有译本的剧直接显示原生译文，没有的照旧。 */
+(function () {
+  "use strict";
+  if (typeof off94MergeEn !== "function" || typeof imParse !== "function") return;
+  const LANGS = ["ja", "ko", "es"];
+  function mergeL(wid, P, LG) {
+    const src = P && P["script_" + LG]; const wz = wd(wid); if (!wz || !src || !wz.pack || !wz.pack.chapters) return;
+    const lang0 = S.lang; let tmp = null;
+    try {
+      S.lang = "en";
+      const doc = imParse(src); if (!doc.chapters.length) return;
+      tmp = imBuild(doc, (P.meta || {}).as || doc.pov); const we = wd(tmp && (tmp.wid || tmp)); if (!we) return;
+      const key = id => { const c = ch(id); return c && c.n94 ? c.n94.zh : c && c.n; };
+      const zid = {}; wz.cast.forEach(id => { zid[key(id)] = id; });
+      let js = JSON.stringify(we.pack.chapters);
+      we.cast.forEach(id => { const z = zid[key(id)]; if (z) js = js.split('"' + id + '"').join('"' + z + '"'); });
+      const ce = JSON.parse(js);
+      if (ce.length !== wz.pack.chapters.length) return;
+      wz.pack.chapters.forEach((c, i) => {
+        const e = ce[i]; c.beats[LG] = e.beats.zh;
+        ["t", "goal", "ask", "place", "time"].forEach(k => { if (c[k] && e[k] && typeof c[k] === "object") c[k][LG] = e[k].zh || e[k].en; });
+        (c.choices || []).forEach((o, j) => { const oe = (e.choices || [])[j]; if (!oe) return;
+          if (o.t && typeof o.t === "object" && oe.t) o.t[LG] = oe.t.zh || oe.t.en;
+          if (o.then && oe.then && !Array.isArray(o.then)) o.then[LG] = oe.then.zh;
+          if (o.mem && oe.mem && typeof o.mem === "object") o.mem[LG] = oe.mem.zh || oe.mem.en; });
+      });
+      const m = (P.meta || {})[LG] || {};
+      ["title", "hook", "premise", "you"].forEach(k => { if (!m[k] || !wz[k]) return; if (typeof wz[k] === "string") wz[k] = { zh: wz[k], en: wz[k] }; wz[k][LG] = m[k]; });
+      wz["l196_" + LG] = 1;
+    } catch (e) { try { console.warn("[mod196]", LG, e); } catch (_) {} }
+    finally {
+      S.lang = lang0;
+      try { if (tmp) { const we = wd(tmp.wid || tmp); if (we) { (we.cast || []).forEach(id => { delete S.mine.chars[id]; delete S.art[id]; }); delete S.mine.worlds[we.id]; } S.works = (S.works || []).filter(x => x.id !== (tmp.wid || tmp)); } } catch (_) {}
+      try { off94Names(); } catch (_) {} try { save(); } catch (_) {}
+    }
+  }
+  const prev = off94MergeEn;
+  off94MergeEn = function (wid, P) { const r = prev.apply(this, arguments); try { LANGS.forEach(LG => mergeL(wid, P, LG)); } catch (_) {} return r; };
+  window.__mod196 = 1;
+})();
