@@ -495,8 +495,16 @@ module.exports = L.wrap(async (req, res) => {
           /* 台词里残留的中文人名 → 英文名（长名先换） */
           const nm = Object.entries(nameMap).sort((x, y) => y[0].length - x[0].length);
           idx.forEach(i => { let s = outL[i]; nm.forEach(([a, e]) => { if (s.includes(a) && !(s.trim().startsWith(a + '：'))) s = s.split(a).join(e); }); outL[i] = s; });
+          /* 兜底：拆分翻译后仍带中文的行，整行再交给模型修一遍（行首系统键原样保留，行内的「你」按普通文字翻） */
+          { const rest = []; outL.forEach((l, i) => { if (HAN.test(keyless(l))) rest.push(i); });
+            const FIXSYS = 'You fix partially translated lines of an English interactive-story script. Input: a JSON array of lines. Return ONLY a JSON array of the same length, same order. In each line translate every remaining Chinese character into natural English (place names, labels, notes; the pronoun 你 = you/You). Keep everything else exactly: ⟦CMD|…⟧ markup with the same command word and the same number of "|" fields, "#" headings, backtick code, ids, flags, numbers, curly quotes. Only exception: a line that STARTS with the speaker key "旁白：" or "你：" keeps that key exactly, and "旁白：" right after a "|" inside ⟦…⟧ stays as is; anywhere else "旁白：" becomes "Narrator: ".' + (gloss ? ' Character names: ' + gloss : '');
+            for (let k = 0; k < rest.length; k += 20) { if (Date.now() > (ST.deadline || Infinity)) break; const part = rest.slice(k, k + 20).map(i => outL[i]); let arr = null;
+              try { const txt = await L.llm([{ role: 'system', content: FIXSYS }, { role: 'user', content: JSON.stringify(part) }], Math.min(7000, 400 + part.join('').length * 3), 120000); arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1)); } catch (_) { arr = null; }
+              if (Array.isArray(arr) && arr.length === part.length) arr.forEach((d, j) => { d = fixNames(String(d == null ? '' : d)); if (d.trim() && shape(part[j]) === shape(d) && hanN(keyless(d)) < hanN(keyless(part[j]))) outL[rest[k + j]] = d; });
+              await new Promise(z => setTimeout(z, 1200)); } }
+          const badLeft = idx.filter(i => HAN.test(keyless(outL[i] == null ? '' : outL[i]))).length;
           const en = outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
-          if (bad > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
+          if (badLeft > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + badLeft + '/' + idx.length);
           const np = Object.assign({}, p, { script_en: en });
           np.meta = Object.assign({}, p.meta || {}); const langs = new Set([].concat(np.meta.langs || [], ['en'])); np.meta.langs = Array.from(langs);
           await sql('UPDATE works SET pack=$2::jsonb, updated_at=now() WHERE id=$1', [w.id, JSON.stringify(np)]);
@@ -805,6 +813,8 @@ module.exports = L.wrap(async (req, res) => {
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
+      /* 2026-11-25 没有单独的英文剧本时，保留线上已翻好的英文版（中文正文没变才保留；变了就清空，让 en_backfill 整篇重翻） */
+      if (!mdEn) { const old = (await sql("SELECT pack->>'script_en' AS e, pack->>'script' AS z FROM works WHERE id=$1", [id]))[0]; if (old && old.e && old.z === md) mdEn = old.e; }
       const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads, langs: Array.from(new Set([s.lang || 'zh', 'en'].concat(Array.isArray(cfg.langs) ? cfg.langs : ['zh', 'en', 'ja', 'ko', 'es']))).filter(x => /^(zh|en|ja|ko|es)$/.test(x)), disc: cfg.disc || null }, assets: Object.keys(AS).length ? AS : null, games: Array.isArray(cfg.games) ? cfg.games.slice(0, 80) : null, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
