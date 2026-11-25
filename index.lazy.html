@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="cb5df3a14fa5 2026-11-25T19:32Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="f0f5a32798a7 2026-11-25T20:06Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -30867,6 +30867,100 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
 })();
 /* 新人礼改成 10 钻后，欢迎卡上「≈ 解锁 10000 句」之类的换算说明一起改掉 */
 try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成他的 AI 照片" }); Object.assign(I18N.en, { "w2.s1": "Enough to unlock key scenes or get AI photos of him" }); } catch (_) {}
+
+/* ================= mod200 · 用户作品多语言（2026-11-26）=================
+   创作向导最后一步选了「发布语言」后（p.langs，mod199），发布时在后台把整部剧翻成这些语言：
+   作品标题 / 钩子 / 简介、人物身份与性格、章节标题 / 目标、选项、已写好的剧情台词。
+   用户用中文写的剧，英文版也会自动翻（之前英文界面看到的是中文原文）。人名先统一译一次，后面所有句子都按同一套名字。
+   翻译走站内统一的模型接口 ask()，免费、不扣钻；翻不完的部分保留原文，不会把剧弄坏。 */
+(function () {
+  "use strict";
+  if (typeof MIRU_BRIDGE !== "object" || typeof ask !== "function") return;
+  const CJK = /[㐀-鿿]/, NAMES = { en: "English", ja: "Japanese", ko: "Korean", es: "Spanish", zh: "Simplified Chinese" };
+  const ZH = () => S.lang === "zh";
+  function collect(root, out, seen, depth) {
+    if (!root || typeof root !== "object" || seen.has(root) || depth > 9) return; seen.add(root);
+    if (!Array.isArray(root) && "zh" in root && "en" in root) { if (typeof root.en === "string" || typeof root.zh === "string") out.push({ o: root, k: "s" }); else if (Array.isArray(root.en) || Array.isArray(root.zh)) out.push({ o: root, k: "b" }); return; }
+    for (const key in root) { const v = root[key]; if (v && typeof v === "object") collect(v, out, seen, depth + 1); }
+  }
+  async function trBatch(list, LG, gloss) {
+    const out = new Array(list.length).fill(null);
+    for (let i = 0; i < list.length; i += 25) {
+      const part = list.slice(i, i + 25);
+      let r = null;
+      for (let t = 0; t < 2 && !r; t++) {
+        try {
+          r = await ask("Translate each string of this interactive romance story into natural, vivid " + NAMES[LG] + ". Keep tone, flirting and tension; keep second person \"you\" for the player; keep markup like ⟦...⟧, emoji and line breaks." +
+            (gloss ? " Use these character names exactly: " + gloss + "." : "") + " Return ONLY JSON {\"t\":[...]} with the same number of items in the same order.\nINPUT: " + JSON.stringify(part), { maxTokens: Math.min(6000, 300 + part.join("").length * 3) });
+          if (!r || !Array.isArray(r.t) || r.t.length !== part.length) r = null;
+        } catch (_) { r = null; }
+      }
+      if (r) r.t.forEach((x, j) => { if (typeof x === "string" && x.trim()) out[i + j] = x; });
+    }
+    return out;
+  }
+  async function translateWork(wid, langs) {
+    const w = wd(wid); if (!w) return;
+    const items = []; collect({ w: { title: w.title, hook: w.hook, premise: w.premise, you: w.you }, pack: w.pack }, items, new Set(), 0);
+    ["title", "hook", "premise", "you"].forEach(k => { if (typeof w[k] === "string") { w[k] = { zh: w[k], en: w[k] }; items.push({ o: w[k], k: "s" }); } });
+    (w.cast || []).forEach(id => { const c = S.mine.chars[id]; if (c) collect(c, items, new Set(items.map(x => x.o)), 0); });
+    const srcOf = it => { const o = it.o; return o.zh != null ? o.zh : o.en; };
+    const sample = items.slice(0, 20).map(it => JSON.stringify(srcOf(it))).join(" ");
+    const src = CJK.test(sample) ? "zh" : "en";
+    const targets = [...new Set(langs.concat(src === "zh" ? ["en"] : []))].filter(L => L !== src && NAMES[L]);
+    if (!targets.length) return;
+    /* 人名表 */
+    const cast = (w.cast || []).map(id => S.mine.chars[id]).filter(Boolean);
+    for (const LG of targets) {
+      let gloss = "";
+      const nm = cast.map(c => c.n).filter(Boolean);
+      if (nm.length) { const T = await trBatch(nm, LG, ""); cast.forEach((c, i) => { if (!T[i]) return; c.n94 = Object.assign({ zh: src === "zh" ? c.n : (c.n94 && c.n94.zh) || c.n, en: src === "en" ? c.n : (c.n94 && c.n94.en) || c.n }, c.n94 || {}); c.n94[LG] = T[i]; }); gloss = nm.map((n, i) => T[i] ? n + " → " + T[i] : "").filter(Boolean).join("; "); }
+      /* 普通文字 */
+      const S1 = items.filter(it => it.k === "s" && !it.o[LG + "_200"] && !(LG !== src && it.o[LG] && it.o[LG] !== srcOf(it))), str = S1.map(it => String(srcOf(it) || ""));
+      const T1 = await trBatch(str, LG, gloss); S1.forEach((it, i) => { if (T1[i] && str[i]) { it.o[LG] = T1[i]; try { Object.defineProperty(it.o, LG + "_200", { value: 1, enumerable: false, writable: true }); } catch (_) {} } });
+      /* 剧情台词：beats 数组里的文字 */
+      for (const it of items.filter(x => x.k === "b" && !(Array.isArray(x.o[LG]) && x.o[LG] !== srcOf(x) && JSON.stringify(x.o[LG]) !== JSON.stringify(srcOf(x))))) {
+        const B = srcOf(it); if (!Array.isArray(B)) continue; const refs = [];
+        B.forEach((b, j) => { if (!Array.isArray(b)) return; if (typeof b[2] === "string" && b[2].trim()) refs.push([j, 2, null, b[2]]); else if (b[2] && typeof b[2] === "object") ["title", "txt", "text", "t"].forEach(k => { if (typeof b[2][k] === "string" && b[2][k].trim()) refs.push([j, 2, k, b[2][k]]); }); });
+        if (!refs.length) continue;
+        const T = await trBatch(refs.map(r => r[3]), LG, gloss); const NB = JSON.parse(JSON.stringify(B));
+        refs.forEach((r, i) => { if (!T[i]) return; if (r[2]) NB[r[0]][2][r[2]] = T[i]; else NB[r[0]][2] = T[i]; });
+        it.o[LG] = NB;
+      }
+      w["l200_" + LG] = Date.now(); try { save(); } catch (_) {}
+    }
+    w.langs200 = [src].concat(targets);
+    try { save(); } catch (_) {}
+    return targets;
+  }
+  window.translateWork200 = translateWork;
+  const prev = MIRU_BRIDGE.publish;
+  MIRU_BRIDGE.publish = function (story, proj, sb) {
+    const r = prev.apply(this, arguments);
+    try {
+      const wid = S.crmap && S.crmap[(proj || {}).id], langs = Array.isArray((proj || {}).langs) ? proj.langs : ["en"];
+      if (wid) setTimeout(() => translateWork(wid, langs).catch(() => {}), 90000); /* 第一幕常在发布后才写好，过一会儿再补一遍 */
+      if (wid) setTimeout(() => { translateWork(wid, langs).then(T => { if (T && T.length) toast((ZH() ? "多语言版已就绪：" : "Translations ready: ") + T.map(L => ({ en: "English", ja: "日本語", ko: "한국어", es: "Español", zh: "中文" })[L]).join(" / ")); }).catch(e => console.warn("[mod200]", e)); }, 4000);
+    } catch (_) {}
+    return r;
+  };
+  window.__mod200 = 1;
+})();
+
+/* ================= mod200b · 创作向导：开场视频分镜按风格生成 + 关键插图按官方剧密度（2026-11-26）=================
+   ① 「看 10 秒开场分镜」不再是固定的三句话：按第 mod199 选的视频风格（性感 / 悬疑 / 甜蜜 / 虐心 / 奇幻 / 动作）出三个镜头，
+      每个镜头有画面、运镜，外加光线和配乐方向，同时生成英文视频提示词（p.videoBrief.prompt），发布后制作视频直接用。
+   ② 关键事件插图从「每两个场景一张」改成「每个场景三张：开场 / 转折 / 心跳」，加上场景背景、人物立绘、封面，一部 6 章的剧约 60–80 张，和官方剧一个量级。 */
+(function () {
+  "use strict";
+  const CODE = ";(function(){try{\n/* mod200c · 创作向导：开场视频按风格出 10 秒分镜 + 视频提示词；关键插图按官方剧密度（每个场景 3 张：开场 / 转折 / 心跳），整部约 60–80 张图 */\nvar VS={\n '性感':{n:'性感暧昧',music:'慢速 R&B 鼓点，低音贝斯，呼吸声',light:'烛光 / 霓虹暖光，浅景深',\n  s:[['0–3s','特写：{L} 的眼睛在暗处抬起，镜头缓慢推近','slow push-in on his eyes in warm candlelight, shallow depth of field'],\n     ['3–7s','两只手几乎碰到——停住；慢动作，呼吸可闻','two hands almost touching in slow motion, soft breath, intimate tension'],\n     ['7–10s','他俯身贴近你耳边说了一句话，画面切黑，片名浮现','he leans in to whisper by your ear, cut to black, title card']]},\n '悬疑':{n:'悬疑惊悚',music:'低频嗡鸣 + 心跳声，最后一下重击',light:'冷色、闪烁灯光、长阴影',\n  s:[['0–3s','大全景：深夜的{W}，一盏灯在闪','wide establishing shot of {W} at night, a flickering light'],\n     ['3–7s','快切：{O}、门缝后的影子、一只停住的手','quick cuts: {O}, a shadow behind a door, a hand freezing'],\n     ['7–10s','{L} 回头看向镜头：“别相信任何人。”硬切片名','he turns to the camera: \"Don\\'t trust anyone.\" hard cut to title']]},\n '甜蜜':{n:'甜蜜心动',music:'轻快钢琴流行，拍手节奏',light:'黄金时刻逆光，柔焦光斑',\n  s:[['0–3s','逆光里 {L} 回头对你笑','golden-hour backlight, he turns back and smiles at you'],\n     ['3–7s','并肩走在{W}，指尖不小心碰到又假装没事','walking side by side in {W}, fingertips brush, both pretend nothing happened'],\n     ['7–10s','他把外套披到你肩上，定格，片名','he drapes his jacket over your shoulders, freeze frame, title']]},\n '虐心':{n:'虐心宿命',music:'大提琴独奏，雨声',light:'阴天冷蓝，雨夜路灯',\n  s:[['0–3s','雨夜，{L} 站在街对面，没有撑伞','rainy night, he stands across the street without an umbrella'],\n     ['3–7s','闪回：曾经的拥抱 / 现在的背影交替','flashback cuts: a past embrace intercut with his back walking away'],\n     ['7–10s','他终于开口，声音被雨盖住，只剩口型，片名','he finally speaks but the rain drowns it, only his lips move, title']]},\n '奇幻':{n:'奇幻史诗',music:'史诗合唱 + 鼓',light:'魔法光效、月光、体积光',\n  s:[['0–3s','航拍掠过{W}，远处有异光','sweeping aerial over {W}, strange light on the horizon'],\n     ['3–7s','{O} 在你手里发光，四周的空气开始震动','{O} glows in your hand, the air begins to tremble'],\n     ['7–10s','{L} 从光里走出来，单膝跪地：“我等了你一千年。”片名','he steps out of the light and kneels: \"I waited a thousand years.\" title']]},\n '动作':{n:'危险动作',music:'重打击乐，引擎轰鸣',light:'夜色、火花、车灯',\n  s:[['0–3s','引擎声，车灯划破{W}的夜色','engine roar, headlights cut through the night in {W}'],\n     ['3–7s','追逐快切：玻璃碎裂、他拉住你的手腕一起跑','fast chase cuts: shattering glass, he grabs your wrist and you run'],\n     ['7–10s','停在暗处，他喘着气看你：“现在你也是目标了。”片名','stopped in the dark, breathing hard, he looks at you: \"Now you\\'re a target too.\" title']]}};\nfunction styleKey(){var v=String(p.videoStyle||'')+' '+String(p.vibe||'');var ks=['性感','悬疑','甜蜜','虐心','奇幻','动作'];for(var i=0;i<ks.length;i++)if(v.indexOf(ks[i])>=0)return ks[i];\n if(/暗黑|危险|惊悚/.test(v))return '悬疑';if(/甜/.test(v))return '甜蜜';if(/虐/.test(v))return '虐心';if(/奇幻|魔法/.test(v))return '奇幻';return '性感'}\nfunction fill(s){return String(s).replace(/\\{L\\}/g,(p.lead&&p.lead.name)||'他').replace(/\\{W\\}/g,p.world||'这座城市').replace(/\\{O\\}/g,p.object||'那件信物')}\nwindow.vb200=function(){var k=styleKey(),T=VS[k];var shots=T.s.map(function(x){return {t:x[0],zh:fill(x[1]),en:fill(x[2])}});\n p.videoBrief={style:T.n,music:T.music,light:T.light,shots:shots,prompt:'10-second vertical cinematic trailer, '+T.light.replace(/[，、]/g,', ')+'. '+shots.map(function(s){return s.t+': '+s.en}).join(' | ')+'. Adults only, tasteful, no text except the final title, photoreal.'};\n return shots.map(function(s,i){return '<div class=\"trailerShot '+['one','two','three'][i]+'\">'+s.t+' · '+esc(s.zh)+'</div>'}).join('')+'<p class=\"subtle\" style=\"margin-top:8px\">风格：'+T.n+' · 光线：'+T.light+' · 配乐：'+T.music+'</p>'};\n/* 关键插图：每个场景 3 张 */\nvar VAR=[['开场','这个场景刚开始时的画面：人物登场、环境氛围'],['转折','这个场景里情绪或局势转折的一刻'],['心跳','这个场景最暧昧、最心跳的一刻（点到为止）']];\nvar _ctx2=mCtx;mCtx=function(kind,id){if(kind==='cg'&&String(id).indexOf('~')>0){var a=String(id).split('~'),r=_ctx2('cg',a[0])||{},v=VAR[+a[1]]||VAR[0];r=Object.assign({},r);r.title=(r.title||'').replace(/ · 关键剧情时刻$/,'')+' · '+v[0];r.text=(r.text||'')+'。'+v[1];return r}return _ctx2(kind,id)};\nvar F2=fillGuideData;fillGuideData=function(step,answer){F2(step,answer);if(step.key==='videoStyle'||step.key==='tone'){try{window.vb200()}catch(_){}}};\nwindow.__mod200c=1;\n}catch(e){console.warn('[mod200c]',e)}})();\n", KEY = "render();window.__cr={", OLD_T = "<div class=\"trailerShot one\">0–3s · 镜头一<br><b>${esc(p.world)}</b></div><div class=\"trailerShot two\">3–7s · 镜头二<br><b>${esc(p.lead.name)} × 你的选择</b></div><div class=\"trailerShot three\">7–10s · 悬念结尾<br><b>${esc(p.hook.slice(0,25))}</b></div>", NEW_T = "${window.vb200?window.vb200():`<div class=\"trailerShot one\">0–3s · 镜头一<br><b>${esc(p.world)}</b></div><div class=\"trailerShot two\">3–7s · 镜头二<br><b>${esc(p.lead.name)} × 你的选择</b></div><div class=\"trailerShot three\">7–10s · 悬念结尾<br><b>${esc(p.hook.slice(0,25))}</b></div>`}", OLD_C = "function cgSlots(){var sc=mScenes();return sc.filter(function(x,i){return i%2===0||i===sc.length-1})}", NEW_C = "function cgSlots(){var V=['开场','转折','心跳'],o=[];mScenes().forEach(function(x){V.forEach(function(v,i){o.push({id:x.id+'~'+i,title:(x.title||'')+' · '+v,text:x.text})})});return o}";
+  const patch = h => { if (typeof h !== "string" || h.indexOf("mod200c · 创作向导") >= 0) return h; const i = h.lastIndexOf(KEY); if (i <= 0) return h; h = h.slice(0, i) + CODE + h.slice(i); return h.split(OLD_T).join(NEW_T).split(OLD_C).join(NEW_C); };
+  const d = Object.getOwnPropertyDescriptor(window, "CREATOR_HTML");
+  if (d && d.get) { try { Object.defineProperty(window, "CREATOR_HTML", { configurable: true, get() { return patch(d.get.call(window)); }, set(v) { d.set ? d.set.call(window, v) : null; } }); } catch (_) {} }
+  /* 发布时把视频分镜和提示词带进作品包，之后制作开场视频直接用 */
+  try { const prev = MIRU_BRIDGE.publish; MIRU_BRIDGE.publish = function (story, proj, sb) { const r = prev.apply(this, arguments); try { const wid = S.crmap && S.crmap[(proj || {}).id], w = wid && wd(wid); if (w && w.pack && proj && proj.videoBrief) { w.pack.videoBrief = proj.videoBrief; save(); } } catch (_) {} return r; }; } catch (_) {}
+  window.__mod200b = 1;
+})();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
 function authoredDialogue142(th,cid){
