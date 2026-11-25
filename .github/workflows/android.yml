@@ -9,6 +9,8 @@ on:
   push:
     branches: [main]
     paths: ['android/**', '.github/workflows/android.yml']
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -45,3 +47,11 @@ jobs:
         with:
           name: miru-release-aab
           path: android/app/build/outputs/bundle/release/app-release.aab
+      # 同一个 .aab 再推到 builds 分支（只放这一个文件，强制覆盖），这样能用固定地址直接取到文件上传 Play Console，不用解压 artifact
+      - name: Publish AAB to builds branch
+        run: |
+          mkdir -p "$RUNNER_TEMP/out" && cp android/app/build/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/out/"
+          echo "versionCode ${{ github.run_number }}" > "$RUNNER_TEMP/out/VERSION.txt"
+          cd "$RUNNER_TEMP/out" && git init -q && git checkout -q -b builds && git add . \
+            && git -c user.name='github-actions[bot]' -c user.email='github-actions[bot]@users.noreply.github.com' commit -qm "aab build ${{ github.run_number }}" \
+            && git push -qf "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" builds
