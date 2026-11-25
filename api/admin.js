@@ -442,13 +442,40 @@ module.exports = L.wrap(async (req, res) => {
           const zh = p.script, oldEn = typeof p.script_en === 'string' && p.script_en.trim() && b.force !== true ? p.script_en : '';
           /* 修补模式：英文版已存在，只重翻里面还带中文的行；否则从中文稿整篇翻 */
           const base = oldEn ? oldEn.split('\n') : zh.split('\n');
-          const zhChars = zh.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim()));
           let gloss = '';
-          if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; return a && e && a !== '你' && !HAN.test(e) ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
-          else if (zhChars.length) { const t = await translateLines(zhChars, ''); gloss = zhChars.map((l, i) => { const a = l.split('|')[1], e = t[i] && t[i].split('|')[1]; return a && e && a !== '你' ? a + ' → ' + e : ''; }).filter(Boolean).join('; '); }
+          /* 说话人单独处理：「名字：台词」只把台词交给模型，名字查人名表换成英文（旁白 / 你 是系统键，原样保留） */
+          const SPK = /^(\s*)([^\s：:“”"⟦#【】\[\]（）()]{1,16})(\s*[：:]\s*)(.*)$/;
+          const names = new Set();
+          zh.split('\n').forEach(l => { const t = l.trim(); if (/^⟦CHAR\|/.test(t)) { const a = t.split('|')[1]; if (a) names.add(a); } else if (!/^[⟦#]/.test(t)) { const m = t.match(SPK); if (m && HAN.test(m[2])) names.add(m[2]); } });
+          names.delete('旁白'); names.delete('你');
+          const nameMap = {};
+          if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); zh.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())).forEach((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; if (a && e && a !== '你' && !HAN.test(e)) nameMap[a] = e; }); }
+          const nl = [...names].filter(n => !nameMap[n]);
+          if (nl.length) {
+            const sysN = 'Give each Chinese character name an English rendering for an American romance-drama app. If it is a transliteration of a Western name (e.g. 卢西恩 → Lucien, 阿德里安 → Adrian), return that Western name; if it is a Chinese name, return it in pinyin with capital letters (e.g. 沈砚 → Shen Yan); titles/roles like 摄政王 → The Regent. Return ONLY a JSON array of strings, same order and length.';
+            for (let tries = 0; tries < 3 && nl.some(n => !nameMap[n]); tries++) {
+              const left = nl.filter(n => !nameMap[n]);
+              try { const txt = await L.llm([{ role: 'system', content: sysN }, { role: 'user', content: JSON.stringify(left) }], 2000, 90000); const arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1)); if (Array.isArray(arr) && arr.length === left.length) left.forEach((n, i) => { const e = String(arr[i] || '').trim(); if (e && !HAN.test(e) && e.length < 40) nameMap[n] = e; }); } catch (_) {}
+            }
+          }
+          gloss = Object.entries(nameMap).map(([a, e]) => a + ' → ' + e).join('; ');
           const idx = []; base.forEach((l, i) => { if (HAN.test(keyless(l))) idx.push(i); });
-          const tr = await translateLines(idx.map(i => base[i]), gloss);
-          const outL = base.slice(); let bad = 0; idx.forEach((i, j) => { if (tr[j] != null) outL[i] = tr[j]; else bad++; });
+          const parts = idx.map(i => { const l = base[i], t = l.trim(); if (!/^[⟦#]/.test(t)) { const m = l.match(SPK); if (m) return { pre: m[1], spk: m[2], sep: m[3], text: m[4] }; } return { pre: '', spk: null, sep: '', text: l }; });
+          const need = parts.map(p => HAN.test(p.text) ? p.text : null);
+          const trd = await translateLines(need.filter(x => x != null), gloss);
+          let qi = 0; const outL = base.slice(); let bad = 0;
+          idx.forEach((i, j) => {
+            const p = parts[j]; let text = p.text;
+            if (need[j] != null) { const d = trd[qi++]; if (d == null) { bad++; return; } text = d; }
+            if (!p.spk) { outL[i] = text; return; }
+            const sys = p.spk === '旁白' || p.spk === '你';
+            const spk = sys ? p.spk : (nameMap[p.spk] || (HAN.test(p.spk) ? null : p.spk));
+            if (!spk) { bad++; return; }
+            outL[i] = p.pre + spk + (sys ? p.sep : ': ') + text;
+          });
+          /* 台词里残留的中文人名 → 英文名（长名先换） */
+          const nm = Object.entries(nameMap).sort((x, y) => y[0].length - x[0].length);
+          idx.forEach(i => { let s = outL[i]; nm.forEach(([a, e]) => { if (s.includes(a) && !(s.trim().startsWith(a + '：'))) s = s.split(a).join(e); }); outL[i] = s; });
           const en = outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
           if (bad > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
           const np = Object.assign({}, p, { script_en: en });
