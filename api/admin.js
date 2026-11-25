@@ -813,6 +813,8 @@ module.exports = L.wrap(async (req, res) => {
       const id = s.work_id || ('w_' + s.id.replace(/[^a-z0-9]/gi, '').toLowerCase());
       let mdEn = null;
       if (cfg.en_sid) { const e = (await sql('SELECT chapters FROM scripts WHERE id=$1', [String(cfg.en_sid)]))[0]; if (e && Array.isArray(e.chapters) && e.chapters.length) mdEn = '# ' + ((cfg.en && cfg.en.title) || s.title) + '\n\n' + e.chapters.slice().sort((x, y) => x.n - y.n).map(c => c.md).join('\n\n'); }
+      /* 2026-11-25 没有单独的英文剧本时，保留线上已翻好的英文版（中文正文没变才保留；变了就清空，让 en_backfill 整篇重翻） */
+      if (!mdEn) { const old = (await sql("SELECT pack->>'script_en' AS e, pack->>'script' AS z FROM works WHERE id=$1", [id]))[0]; if (old && old.e && old.z === md) mdEn = old.e; }
       const pack = { script: md, script_en: mdEn, ver: Date.now(), meta: { title: s.title, hook: cfg.hook || '', premise: cfg.premise || '', you: cfg.you || '', tags: cfg.tags || [], heat: cfg.heat || '', taste: cfg.taste || null, as: cfg.as || '', en: cfg.en || null, adult: cfg.adult === true, leads, langs: Array.from(new Set([s.lang || 'zh', 'en'].concat(Array.isArray(cfg.langs) ? cfg.langs : ['zh', 'en', 'ja', 'ko', 'es']))).filter(x => /^(zh|en|ja|ko|es)$/.test(x)), disc: cfg.disc || null }, assets: Object.keys(AS).length ? AS : null, games: Array.isArray(cfg.games) ? cfg.games.slice(0, 80) : null, official: true, rules: b.rulesVersion || null };
       await sql(`INSERT INTO works (id, author, author_name, title, hook, lang, orient, tags, cover, pack, status, qa, featured, reviewed_by, reviewed_at, updated_at)
         VALUES ($1,'miru','MIRU 官方',$2,$3,$4,$5,$6::jsonb,$7,$8::jsonb,'live',$9::jsonb,true,$10,now(),now())
