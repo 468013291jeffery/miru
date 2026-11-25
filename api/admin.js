@@ -418,7 +418,7 @@ module.exports = L.wrap(async (req, res) => {
       return null;
     };
     const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
-    const keyless = s => String(s).replace(/^(\s*)(旁白|你)\s*[：:]/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||');
+    const keyless = s => String(s).replace(/^(\s*)(?:(?:旁白|你)\s*[：:]\s*)+/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||');
     const fixNames = s => { let o = String(s); Object.entries(ST.nameMap || {}).sort((x, y) => y[0].length - x[0].length).forEach(([a, e]) => { if (o.includes(a)) o = o.split(a).join(e); }); return o; };
     const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(keyless(dst)) <= 1;
     const translateLines = async (lines, gloss) => {   /* lines: 只含要翻的行；返回同长数组（失败的行为 null） */
@@ -434,7 +434,7 @@ module.exports = L.wrap(async (req, res) => {
     const run = async () => {
       const rows = await sql("SELECT id, title, pack FROM works WHERE status='live' ORDER BY created_at");
       const todo = rows.filter(w => { const p = w.pack || {}; if (Array.isArray(b.ids) && b.ids.length && !b.ids.includes(w.id)) return false; const zh = typeof p.script === 'string' ? p.script : ''; const en = typeof p.script_en === 'string' ? p.script_en : '';
-        if (!zh.trim()) return false; return b.force === true || !en.trim() || hanN(en.split('\n').map(keyless).join('\n')) > 0; });
+        if (!zh.trim()) return false; return b.force === true || !en.trim() || /^\s*(旁白|你)\s*[：:]\s*(旁白|你)\s*[：:]/m.test(en) || hanN(en.split('\n').map(keyless).join('\n')) > 0; });
       todo.sort((x, y) => ((x.pack && x.pack.meta && x.pack.meta.adult) ? 1 : 0) - ((y.pack && y.pack.meta && y.pack.meta.adult) ? 1 : 0) || String((x.pack || {}).script || '').length - String((y.pack || {}).script || '').length);
       say('待处理 ' + todo.length + ' 部');
       for (const w of todo) {
@@ -443,7 +443,7 @@ module.exports = L.wrap(async (req, res) => {
           const fresh = (await sql('SELECT pack FROM works WHERE id=$1', [w.id]))[0]; const p = (fresh && fresh.pack) || w.pack;
           const zh = p.script, oldEn = typeof p.script_en === 'string' && p.script_en.trim() && b.force !== true ? p.script_en : '';
           /* 修补模式：英文版已存在，只重翻里面还带中文的行；否则从中文稿整篇翻 */
-          const base = oldEn ? oldEn.split('\n') : zh.split('\n');
+          const base = (oldEn ? oldEn.split('\n') : zh.split('\n')).map(s => String(s).replace(/^(\s*)(旁白|你)\s*([：:])\s*(?:(?:旁白|你)\s*[：:]\s*)+/, '$1$2$3'));
           let gloss = '';
           /* 说话人单独处理：「名字：台词」只把台词交给模型，名字查人名表换成英文（旁白 / 你 是系统键，原样保留） */
           const SPK = /^(\s*)([^\s：:“”"⟦#【】\[\]（）()]{1,16})(\s*[：:]\s*)(.*)$/;
@@ -487,7 +487,7 @@ module.exports = L.wrap(async (req, res) => {
             let text = p.text;
             if (p.ni != null) { const d = trd[p.ni]; if (d == null) { bad++; return; } text = d; }
             if (!p.spk) { outL[i] = text; return; }
-            const sys = p.spk === '旁白' || p.spk === '你';
+            const sys = p.spk === '旁白' || p.spk === '你'; if (sys) text = String(text).replace(/^\s*(?:(?:旁白|你|Narrator|You)\s*[：:]\s*)+/i, '');
             const spk = sys ? p.spk : (nameMap[p.spk] || (HAN.test(p.spk) ? null : p.spk));
             if (!spk) { bad++; return; }
             outL[i] = p.pre + spk + (sys ? p.sep : ': ') + text;
