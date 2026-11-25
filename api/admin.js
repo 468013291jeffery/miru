@@ -418,7 +418,7 @@ module.exports = L.wrap(async (req, res) => {
       return null;
     };
     const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
-    const keyless = s => String(s).replace(/^(\s*)(?:(?:旁白|你)\s*[：:]\s*)+/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||');
+    const keyless = s => String(s).replace(/^(\s*)(?:(?:旁白|你)\s*[：:]\s*)+/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||').replace(/\|(旁白|你)\s*[：:]/g, '|');
     const fixNames = s => { let o = String(s); Object.entries(ST.nameMap || {}).sort((x, y) => y[0].length - x[0].length).forEach(([a, e]) => { if (o.includes(a)) o = o.split(a).join(e); }); return o; };
     const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(keyless(dst)) <= 1;
     const translateLines = async (lines, gloss) => {   /* lines: 只含要翻的行；返回同长数组（失败的行为 null） */
