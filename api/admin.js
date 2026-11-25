@@ -419,15 +419,16 @@ module.exports = L.wrap(async (req, res) => {
     };
     const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
     const keyless = s => String(s).replace(/^(\s*)(旁白|你)\s*[：:]/, '$1').replace(/⟦CHAR\|你\|/g, '⟦CHAR||');
+    const fixNames = s => { let o = String(s); Object.entries(ST.nameMap || {}).sort((x, y) => y[0].length - x[0].length).forEach(([a, e]) => { if (o.includes(a)) o = o.split(a).join(e); }); return o; };
     const okLine = (src, dst) => !!dst.trim() && shape(src) === shape(dst) && hanN(keyless(dst)) <= 1;
     const translateLines = async (lines, gloss) => {   /* lines: 只含要翻的行；返回同长数组（失败的行为 null） */
       const out = new Array(lines.length).fill(null), CH = 36, jobs = [];
       for (let i = 0; i < lines.length; i += CH) jobs.push(i);
       let k = 0;
-      const worker = async () => { while (k < jobs.length) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d != null && okLine(part[j], d)) out[i + j] = d; }); await new Promise(z => setTimeout(z, 1200)); /* 限速：给线上 AI 聊天让路 */ } };
+      const worker = async () => { while (k < jobs.length) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d == null) return; d = fixNames(d); if (okLine(part[j], d)) out[i + j] = d; }); await new Promise(z => setTimeout(z, 1200)); /* 限速：给线上 AI 聊天让路 */ } };
       await Promise.all([worker(), worker()]);
       /* 没过校验的行单独再试一次 */
-      for (let pass = 0; pass < 3; pass++) for (let i = 0; i < lines.length; i++) if (out[i] == null) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const res = await llmArr([lines[i]], gloss, 9); if (res && res[0] != null && okLine(lines[i], res[0])) out[i] = res[0]; else if (res && res[0] != null && pass === 2) { (ST.badSample || (ST.badSample = [])).length < 40 && ST.badSample.push([lines[i].slice(0, 160), String(res[0]).slice(0, 160)]); } }
+      for (let pass = 0; pass < 3; pass++) for (let i = 0; i < lines.length; i++) if (out[i] == null) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const res = await llmArr([lines[i]], gloss, 9); if (res && res[0] != null) res[0] = fixNames(res[0]); if (res && res[0] != null && okLine(lines[i], res[0])) out[i] = res[0]; else if (res && res[0] != null && pass === 2) { (ST.badSample || (ST.badSample = [])).length < 40 && ST.badSample.push([lines[i].slice(0, 160), String(res[0]).slice(0, 160)]); } }
       return out;
     };
     const run = async () => {
@@ -447,7 +448,7 @@ module.exports = L.wrap(async (req, res) => {
           /* 说话人单独处理：「名字：台词」只把台词交给模型，名字查人名表换成英文（旁白 / 你 是系统键，原样保留） */
           const SPK = /^(\s*)([^\s：:“”"⟦#【】\[\]（）()]{1,16})(\s*[：:]\s*)(.*)$/;
           const names = new Set();
-          zh.split('\n').forEach(l => { const t = l.trim(); if (/^⟦CHAR\|/.test(t)) { const a = t.split('|')[1]; if (a) names.add(a); } else if (!/^[⟦#]/.test(t)) { const m = t.match(SPK); if (m && HAN.test(m[2])) names.add(m[2]); } });
+          (zh + '\n' + base.join('\n')).split('\n').forEach(l => { const t = l.trim(); if (/^⟦CHAR\|/.test(t)) { const a = t.split('|')[1]; if (a) names.add(a); } else if (!/^[⟦#]/.test(t)) { const m = t.match(SPK); if (m && HAN.test(m[2])) names.add(m[2]); } });
           names.delete('旁白'); names.delete('你');
           const nameMap = {};
           if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); zh.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())).forEach((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; if (a && e && a !== '你' && !HAN.test(e)) nameMap[a] = e; }); }
@@ -459,7 +460,7 @@ module.exports = L.wrap(async (req, res) => {
               try { const txt = await L.llm([{ role: 'system', content: sysN }, { role: 'user', content: JSON.stringify(left) }], 2000, 90000); const arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1)); if (Array.isArray(arr) && arr.length === left.length) left.forEach((n, i) => { const e = String(arr[i] || '').trim(); if (e && !HAN.test(e) && e.length < 40) nameMap[n] = e; }); } catch (_) {}
             }
           }
-          gloss = Object.entries(nameMap).map(([a, e]) => a + ' → ' + e).join('; ');
+          gloss = Object.entries(nameMap).map(([a, e]) => a + ' → ' + e).join('; '); ST.nameMap = nameMap;
           const idx = []; base.forEach((l, i) => { if (HAN.test(keyless(l))) idx.push(i); });
           /* 每一行拆成三类：整行指令 ⟦CMD|…⟧（只翻含中文的字段，CHAR 的名字查人名表）/ 说话人台词 / 其余文字（标题、旁白段落） */
           const parts = idx.map(i => { const l = base[i], t = l.trim();
