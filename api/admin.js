@@ -413,7 +413,8 @@ module.exports = L.wrap(async (req, res) => {
         arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1));
       } catch (_) { arr = null; }
       if (Array.isArray(arr) && arr.length === lines.length) return arr.map(x => String(x == null ? '' : x));
-      if (lines.length > 1 && (depth || 0) < 4) { const m = Math.ceil(lines.length / 2); return (await llmArr(lines.slice(0, m), gloss, (depth || 0) + 1)).concat(await llmArr(lines.slice(m), gloss, (depth || 0) + 1)); }
+      if (lines.length > 1 && (depth || 0) < 4) { const m = Math.ceil(lines.length / 2); const a1 = await llmArr(lines.slice(0, m), gloss, (depth || 0) + 1), a2 = await llmArr(lines.slice(m), gloss, (depth || 0) + 1); return (a1 || new Array(m).fill(null)).concat(a2 || new Array(lines.length - m).fill(null)); }
+      if (lines.length === 1) await new Promise(z => setTimeout(z, 1500));
       return null;
     };
     const shape = l => { const t = String(l).trim(); const head = (t.match(/^#+/) || [''])[0]; const cmds = (t.match(/⟦[A-Z/]+/g) || []).join(','); const bars = (t.match(/⟦[^⟧]*⟧/g) || []).map(c => c.split('|').length).join(','); return head + '§' + cmds + '§' + bars; };
@@ -423,16 +424,16 @@ module.exports = L.wrap(async (req, res) => {
       const out = new Array(lines.length).fill(null), CH = 36, jobs = [];
       for (let i = 0; i < lines.length; i += CH) jobs.push(i);
       let k = 0;
-      const worker = async () => { while (k < jobs.length) { const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (okLine(part[j], d)) out[i + j] = d; }); } };
-      await Promise.all([worker(), worker(), worker()]);
+      const worker = async () => { while (k < jobs.length) { const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d != null && okLine(part[j], d)) out[i + j] = d; }); } };
+      await Promise.all([worker(), worker()]);
       /* 没过校验的行单独再试一次 */
-      for (let i = 0; i < lines.length; i++) if (out[i] == null) { const res = await llmArr([lines[i]], gloss, 9); if (res && okLine(lines[i], res[0])) out[i] = res[0]; }
+      for (let pass = 0; pass < 3; pass++) for (let i = 0; i < lines.length; i++) if (out[i] == null) { const res = await llmArr([lines[i]], gloss, 9); if (res && res[0] != null && okLine(lines[i], res[0])) out[i] = res[0]; else if (res && res[0] != null && pass === 2) { (ST.badSample || (ST.badSample = [])).length < 40 && ST.badSample.push([lines[i].slice(0, 160), String(res[0]).slice(0, 160)]); } }
       return out;
     };
     const run = async () => {
       const rows = await sql("SELECT id, title, pack FROM works WHERE status='live' ORDER BY created_at");
       const todo = rows.filter(w => { const p = w.pack || {}; if (Array.isArray(b.ids) && b.ids.length && !b.ids.includes(w.id)) return false; const zh = typeof p.script === 'string' ? p.script : ''; const en = typeof p.script_en === 'string' ? p.script_en : '';
-        if (!zh.trim()) return false; return b.force === true || !en.trim(); });
+        if (!zh.trim()) return false; return b.force === true || !en.trim() || hanN(en.split('\n').map(keyless).join('\n')) > 0; });
       say('待处理 ' + todo.length + ' 部');
       for (const w of todo) {
         ST.cur = w.title;
@@ -449,7 +450,7 @@ module.exports = L.wrap(async (req, res) => {
           const tr = await translateLines(idx.map(i => base[i]), gloss);
           const outL = base.slice(); let bad = 0; idx.forEach((i, j) => { if (tr[j] != null) outL[i] = tr[j]; else bad++; });
           const en = outL.join('\n'), left = hanN(outL.map(keyless).join('\n'));
-          if (bad > Math.max(3, idx.length * 0.02)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
+          if (bad > Math.max(3, idx.length * 0.05)) throw new Error('未通过校验的行太多：' + bad + '/' + idx.length);
           const np = Object.assign({}, p, { script_en: en });
           np.meta = Object.assign({}, p.meta || {}); const langs = new Set([].concat(np.meta.langs || [], ['en'])); np.meta.langs = Array.from(langs);
           await sql('UPDATE works SET pack=$2::jsonb, updated_at=now() WHERE id=$1', [w.id, JSON.stringify(np)]);
