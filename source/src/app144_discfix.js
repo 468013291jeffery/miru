@@ -5785,6 +5785,8 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     d.innerHTML = '<iframe title="MIRU Studio Pro" src="/web/dist/index.html?v=' + Date.now() + '#pro" style="border:0;width:100%;height:100%"></iframe>';
     document.body.appendChild(d);
   };
+  /* Studio Pro 在同源 iframe 里通过 parent 读钻石和游戏库：S / MG100 是脚本级常量，不在 window 上，这里挂个只读入口 */
+  try { if (!("S" in window)) Object.defineProperty(window, "S", { get: () => S, configurable: true }); if (!("MG100" in window)) Object.defineProperty(window, "MG100", { get: () => MG100, configurable: true }); } catch (_) {}
   window.closeStudioPro = function () { const d = document.getElementById("prox"); if (d) d.remove(); };
   function inject(doc) {
     try {
