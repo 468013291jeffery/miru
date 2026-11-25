@@ -8,6 +8,43 @@
 const L = require('./_lib');
 const MAXPACK_FALLBACK = 1500 * 1024;   // 真正的上限读 config.max_pack_kb
 const pub = r => ({ id: r.id, adult: r.adult === true, author: r.author_name || 'MIRU creator', title: r.title, hook: r.hook, lang: r.lang, orient: r.orient, tags: r.tags || [], cover: r.cover, plays: r.plays, likes: r.likes, status: r.status, featured: !!r.featured, created_at: r.created_at, en: r.en || undefined, langs: Array.isArray(r.langs) ? r.langs : (r.pack && r.pack.meta && Array.isArray(r.pack.meta.langs) ? r.pack.meta.langs : undefined) });
+/* ---------- 自动补全（2026-11-26）：发现页分类标签 / 人物卡 / 语言 ---------- */
+const AUTO_TAGS = [[/mafia|黑帮|教父|cartel/i, 'Mafia'], [/bratva/i, 'Bratva'], [/billionaire|\bceo\b|总裁|富豪|继承人/i, 'Billionaire'], [/vampire|吸血鬼/i, 'Vampires'], [/werewolf|狼人|\balpha\b/i, 'Werewolves'],
+  [/hockey|冰球/i, 'Hockey'], [/royal|prince|王子|王储|皇室/i, 'Royal Court'], [/college|campus|大学|校园/i, 'Campus'], [/celebrity|idol|明星|偶像|演员/i, 'Celebrity'], [/dragon|巨龙/i, 'Dragons'],
+  [/ghost|鬼魂|幽灵/i, 'Ghosts'], [/\bfae\b|精灵/i, 'Fae'], [/office|上司|职场/i, 'Workplace'], [/wedding|婚礼|新娘/i, 'Wedding'], [/enem(y|ies)|宿敌|死对头/i, 'Enemies to Lovers'],
+  [/second chance|破镜|重逢|前任/i, 'Second Chance'], [/fake dating|假情侣|契约恋/i, 'Fake Dating'], [/arranged|联姻/i, 'Arranged Marriage'], [/slow burn|慢热/i, 'Slow Burn'], [/bodyguard|保镖/i, 'Bodyguard'],
+  [/forbidden|禁忌/i, 'Forbidden'], [/love triangle|三角恋|修罗场/i, 'Love Triangle'], [/revenge|复仇/i, 'Revenge'], [/hidden identity|secret identity|隐藏身份|秘密身份/i, 'Hidden Identity'],
+  [/possessive|占有欲/i, 'Possessive'], [/obsess|偏执/i, 'Obsessive'], [/dark romance|暗黑/i, 'Dark Romance'], [/fantasy|奇幻|魔法/i, 'Romantasy'], [/suspense|悬疑|mystery|谋杀|凶手/i, 'Romantic Suspense']];
+function autoMeta(w) {
+  const pk = w.pack && typeof w.pack === 'object' ? w.pack : null; if (!pk) return;
+  const raw = JSON.stringify(pk).slice(0, 60000), text = [w.title, w.hook, raw.replace(/data:[^"]{50,}/g, '')].join(' ');
+  /* 标签 */
+  const tags = Array.isArray(w.tags) ? w.tags.filter(Boolean).map(String) : [];
+  if (tags.length < 3) {
+    if (w.orient === 'bl' && !tags.includes('MM Romance')) tags.push('MM Romance');
+    if (w.orient === 'gl' && !tags.includes('WLW')) tags.push('WLW');
+    for (const [re, t] of AUTO_TAGS) { if (tags.length >= 8) break; if (!tags.includes(t) && re.test(text)) tags.push(t); }
+    if (!tags.length) tags.push('Romance');
+    w.tags = tags.slice(0, 12);
+  }
+  /* 人物卡：剧本 ⟦CHAR|名字|性别|年龄|…|身份|外貌⟧（字段是 URL 编码的） */
+  pk.meta = pk.meta && typeof pk.meta === 'object' ? pk.meta : {};
+  if (!(Array.isArray(pk.meta.leads) && pk.meta.leads.length) && typeof pk.script === 'string') {
+    const dec = x => { try { return decodeURIComponent(x); } catch (_) { return x; } }, seen = new Set(), leads = [];
+    const en = typeof pk.script_en === 'string' ? pk.script_en : '', enChars = (en.match(/⟦CHAR\|[^⟧]*⟧/g) || []);
+    (pk.script.match(/⟦CHAR\|[^⟧]*⟧/g) || []).forEach((m, i) => {
+      const f = m.slice(6, -1).split('|').map(dec), n = (f[0] || '').trim(); if (!n || /^(你|you|我)$/i.test(n) || seen.has(n) || leads.length >= 8) return; seen.add(n);
+      const fe = enChars[i] ? enChars[i].slice(6, -1).split('|').map(dec) : [];
+      leads.push({ key: 'c' + (leads.length + 1), n: { zh: n, en: fe[0] || n }, g: f[1] || '', age: Number(f[2]) || undefined, role: { zh: f[4] || '', en: fe[4] || f[4] || '' }, vibe: { zh: f[5] || '', en: fe[5] || f[5] || '' }, auto: true });
+    });
+    if (leads.length) pk.meta.leads = leads;
+  }
+  /* 语言：包里有哪种语言的正文，就把它列进 meta.langs */
+  const langs = new Set(Array.isArray(pk.meta.langs) ? pk.meta.langs : []);
+  if (typeof pk.script === 'string' && pk.script.trim()) langs.add(w.lang || 'zh');
+  ['en', 'ja', 'ko', 'es'].forEach(L => { if (typeof pk['script_' + L] === 'string' && pk['script_' + L].trim()) langs.add(L); else if ((raw.match(new RegExp('"' + L + '":[\\["]', 'g')) || []).length >= 5) langs.add(L); });
+  if (langs.size) pk.meta.langs = Array.from(langs);
+}
 module.exports = L.wrap(async (req, res) => {
   if (!L.cors(req, res)) return;
   const sql = await L.db();
@@ -73,6 +110,8 @@ module.exports = L.wrap(async (req, res) => {
         return L.bad(res, 'pack invalid (' + v.errors.length + '): ' + head, 400);
       }
     }
+    /* 2026-11-26 自动补全：发现页分类标签、人物卡、语言列表（作者没填时才补，填了以作者为准） */
+    try { autoMeta(w); } catch (_) {}
     const raw = JSON.stringify(w.pack || null);
     const MAXPACK = (Number(cfg.max_pack_kb) || 1500) * 1024;
     if (raw.length > MAXPACK) return L.bad(res, 'story too large (' + Math.round(raw.length / 1024) + 'KB, limit ' + Math.round(MAXPACK / 1024) + 'KB)', 413);
