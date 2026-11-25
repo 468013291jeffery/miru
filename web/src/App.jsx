@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { api, session } from './api.js';
+import Pro from './Pro.jsx';
 
 /* MIRU Studio（React）：创作者看自己发布的作品——状态、播放、点赞、语言、发布检查结果。
    第一个用 React 写的页面；之后的新页面都放在 web/ 里，和主站老代码分开。 */
@@ -11,7 +12,10 @@ const T = {
 };
 const LANG = { en: 'EN', zh: '中', ja: '日', ko: '한', es: 'ES' };
 
-export default function App() {
+/* #pro → MIRU Studio Pro（官方标准剧本编辑器）；其他 → 我的作品 */
+export default function App() { return /^#pro/.test(location.hash) ? <Pro /> : <Works />; }
+
+function Works() {
   const { token, lang } = session();
   const t = T[lang === 'zh' ? 'zh' : 'en'];
   const [works, setWorks] = useState(null), [gems, setGems] = useState(null), [err, setErr] = useState(''), [tab, setTab] = useState('all');
