@@ -82,12 +82,14 @@ def leads_of(w):
     w["orient"] = W.get("orient") or w.get("orient") or ""
     if not w.get("cover"):
         w["cover"] = G.absu(A.get("cover") or A.get("poster") or "")
-    return [c for c in out if c["n"] and not CJK.search(c["n"]) and c["n"] not in ("You", "你")]
+    for c in out:
+        c["role"], c["vibe"] = en_only(c.get("role")), en_only(c.get("vibe"))
+    return [c for c in out if c["n"] and not CJK.search(c["n"]) and not re.search(r"%[0-9A-Fa-f]{2}", c["n"]) and c["n"] not in ("You", "你")]
 
 CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]")
 def en_only(s):
     s = str(s or "")
-    return "" if CJK.search(s) else s
+    return "" if CJK.search(s) or re.search(r"%[0-9A-Fa-f]{2}", s) else s
 
 def tt(w):
     return (w.get("en") or {}).get("title") or w["title"]
