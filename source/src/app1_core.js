@@ -1,7 +1,7 @@
 /* ================= CORE ================= */
 const KEY="miru_v2";
 const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"p1",name:"",pron:"they",look:""}],pid:"p1",
- threads:{},feedSeen:{},liked:{},follow:{},art:{},album:[],saved:[],keys:10000,plus:false,couples:{},mine:{chars:{},worlds:{}},works:[],
+ threads:{},feedSeen:{},liked:{},follow:{},art:{},album:[],saved:[],keys:10,plus:false,couples:{},mine:{chars:{},worlds:{}},works:[],
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
