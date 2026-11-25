@@ -2,7 +2,7 @@ name: build-index
 on:
   push:
     branches: [main]
-    paths: ['source/**', 'art/**', 'audio/**', 'video/**', 'tools/**', 'ops/**', '.github/workflows/build-index.yml']
+    paths: ['source/**', 'art/**', 'audio/**', 'video/**', 'tools/**', 'ops/**', 'web/**', '.github/workflows/build-index.yml']
   workflow_dispatch:
   schedule:
     - cron: '17 3 * * *'
@@ -39,8 +39,11 @@ jobs:
             python3 tools/deploy-guard-selftest.py
             python3 source/gen_seo.py || true
             python3 source/gen_pseo.py || true
+            # React 页面（web/）：构建到 web/dist，线上地址 /web/dist/。构建失败不影响主站。
+            if [ -f web/package.json ]; then (cd web && npm install --no-audit --no-fund --loglevel=error && npm run build) || echo 'web build failed'; fi
             git add index.html stories about.html contact.html robots.txt sitemap.xml llms.txt llms-full.txt 2>/dev/null || git add index.html
             git add index.lazy.html content36_packs.js art/inline 2>/dev/null || true
+            [ -d web/dist ] && git add -f web/dist
             for p in characters boyfriends romance ai-boyfriend.html bl.html gl.html what-is-miru.html compare.html; do [ -e "$p" ] && git add "$p"; done; true
             if git diff --cached --quiet; then exit 0; fi
             git commit -m 'build: regenerate index from current main'
