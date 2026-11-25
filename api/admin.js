@@ -396,6 +396,17 @@ module.exports = L.wrap(async (req, res) => {
       const rows = await sql("SELECT id, title, length(pack->>'script') AS zh, length(pack->>'script_en') AS en FROM works WHERE status='live' ORDER BY created_at");
       return L.send(res, 200, { state: ST, works: rows });
     }
+    /* 人物卡改名：英文版 ⟦CHAR|名字|…⟧ 和台词里的名字对不上时用（只改 CHAR 行的名字字段，保持原来的编码方式） */
+    if (b.op === 'char_rename') {
+      const id = String(b.id || ''), from = String(b.from || ''), to = String(b.to || '').replace(/[|⟦⟧]/g, ''), key = 'script_' + (/^(en|ja|ko|es)$/.test(b.lang) ? b.lang : 'en');
+      if (!id || !from || !to) return L.bad(res, 'id/from/to 必填');
+      const row = (await sql('SELECT pack FROM works WHERE id=$1', [id]))[0]; if (!row) return L.bad(res, '作品不存在', 404);
+      const p = row.pack || {}; let n = 0;
+      p[key] = String(p[key] || '').split('\n').map(l => /^\s*⟦CHAR\|/.test(l) ? l.replace(/^(\s*⟦CHAR\|)([^|⟧]*)/, (m, a, x) => { let d; try { d = decodeURIComponent(x); } catch (_) { d = x; } if (d !== from) return m; n++; return a + (/%[0-9A-Fa-f]{2}/.test(x) ? encodeURIComponent(to) : to); }) : l).join('\n');
+      if (n) await sql('UPDATE works SET pack=$2::jsonb, updated_at=now() WHERE id=$1', [id, JSON.stringify(p)]);
+      await log('char_rename', 'work', id, { from, to, n, key });
+      return L.send(res, 200, { ok: true, n });
+    }
     if (b.op !== 'start') return L.bad(res, 'unknown op');
     if (ST.running) return L.send(res, 200, { ok: true, already: true, state: ST });
     const say = m => { ST.log.push(new Date().toISOString().slice(11, 19) + ' ' + m); if (ST.log.length > 200) ST.log.splice(0, ST.log.length - 200); };
@@ -456,6 +467,8 @@ module.exports = L.wrap(async (req, res) => {
           names.delete('旁白'); names.delete('你');
           const nameMap = {};
           if (oldEn) { const enChars = oldEn.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())); zh.split('\n').filter(l => /^⟦CHAR\|/.test(l.trim())).forEach((l, i) => { const a = l.split('|')[1], e = enChars[i] && enChars[i].split('|')[1]; if (a && e && a !== '你' && !HAN.test(e)) nameMap[a] = e; }); }
+          /* 修补模式下中英文逐行对齐：用台词行的说话人对照（玛丽安：… ↔ Marianne: …），保证人物卡名字和台词一致 */
+          if (oldEn) { const zl = zh.split('\n'), el = base; if (zl.length === el.length) zl.forEach((l, i) => { const a = l.match(SPK), e = String(el[i] || '').match(SPK); if (a && e && HAN.test(a[2]) && !HAN.test(e[2]) && a[2] !== '旁白' && a[2] !== '你') nameMap[a[2]] = e[2].trim(); }); }
           const nl = [...names].filter(n => !nameMap[n]);
           if (nl.length) {
             const sysN = 'Give each Chinese character name an English rendering for an American romance-drama app. If it is a transliteration of a Western name (e.g. 卢西恩 → Lucien, 阿德里安 → Adrian), return that Western name; if it is a Chinese name, return it in pinyin with capital letters (e.g. 沈砚 → Shen Yan); titles/roles like 摄政王 → The Regent. Return ONLY a JSON array of strings, same order and length.';
