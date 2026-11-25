@@ -424,19 +424,20 @@ module.exports = L.wrap(async (req, res) => {
       const out = new Array(lines.length).fill(null), CH = 36, jobs = [];
       for (let i = 0; i < lines.length; i += CH) jobs.push(i);
       let k = 0;
-      const worker = async () => { while (k < jobs.length) { const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d != null && okLine(part[j], d)) out[i + j] = d; }); } };
-      await Promise.all([worker(), worker()]);
+      const worker = async () => { while (k < jobs.length) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const i = jobs[k++]; const part = lines.slice(i, i + CH); const res = await llmArr(part, gloss, 0); if (res) res.forEach((d, j) => { if (d != null && okLine(part[j], d)) out[i + j] = d; }); } };
+      await Promise.all([worker(), worker(), worker()]);
       /* 没过校验的行单独再试一次 */
-      for (let pass = 0; pass < 3; pass++) for (let i = 0; i < lines.length; i++) if (out[i] == null) { const res = await llmArr([lines[i]], gloss, 9); if (res && res[0] != null && okLine(lines[i], res[0])) out[i] = res[0]; else if (res && res[0] != null && pass === 2) { (ST.badSample || (ST.badSample = [])).length < 40 && ST.badSample.push([lines[i].slice(0, 160), String(res[0]).slice(0, 160)]); } }
+      for (let pass = 0; pass < 3; pass++) for (let i = 0; i < lines.length; i++) if (out[i] == null) { if (Date.now() > (ST.deadline || Infinity)) throw new Error('超时（单部 15 分钟上限），稍后单独处理'); const res = await llmArr([lines[i]], gloss, 9); if (res && res[0] != null && okLine(lines[i], res[0])) out[i] = res[0]; else if (res && res[0] != null && pass === 2) { (ST.badSample || (ST.badSample = [])).length < 40 && ST.badSample.push([lines[i].slice(0, 160), String(res[0]).slice(0, 160)]); } }
       return out;
     };
     const run = async () => {
       const rows = await sql("SELECT id, title, pack FROM works WHERE status='live' ORDER BY created_at");
       const todo = rows.filter(w => { const p = w.pack || {}; if (Array.isArray(b.ids) && b.ids.length && !b.ids.includes(w.id)) return false; const zh = typeof p.script === 'string' ? p.script : ''; const en = typeof p.script_en === 'string' ? p.script_en : '';
         if (!zh.trim()) return false; return b.force === true || !en.trim() || hanN(en.split('\n').map(keyless).join('\n')) > 0; });
+      todo.sort((x, y) => ((x.pack && x.pack.meta && x.pack.meta.adult) ? 1 : 0) - ((y.pack && y.pack.meta && y.pack.meta.adult) ? 1 : 0) || String((x.pack || {}).script || '').length - String((y.pack || {}).script || '').length);
       say('待处理 ' + todo.length + ' 部');
       for (const w of todo) {
-        ST.cur = w.title;
+        ST.cur = w.title; ST.deadline = Date.now() + 15 * 60e3;
         try {
           const fresh = (await sql('SELECT pack FROM works WHERE id=$1', [w.id]))[0]; const p = (fresh && fresh.pack) || w.pack;
           const zh = p.script, oldEn = typeof p.script_en === 'string' && p.script_en.trim() && b.force !== true ? p.script_en : '';
