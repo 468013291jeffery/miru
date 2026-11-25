@@ -1145,6 +1145,34 @@ const Studio = {
       } catch (e) { ElMessage.error(e.message); return null; } finally { busy.value = ''; }
     }
     async function saveLangs() { const c = sel.value.config; c.langs = Array.from(new Set([sel.value.lang || 'zh', 'en'].concat(c.langs || []))); await save({ config: Object.assign({}, c) }, '修改上线语言'); ElMessage.success('上线语言已保存：' + c.langs.join(' / ')); }
+    /* 2026-11-26 · 人物卡立绘：用 /api/tts {img}（阿里云百炼文生图）给没有立绘的人物各画一张竖版半身像，传到 char_<key> 槽位并写回人物卡 art */
+    async function genCharArt(all) {
+      if (busy.value) return; let leads = [];
+      try { leads = JSON.parse(leadsText.value || '[]'); } catch (e) { return ElMessage.error('人物卡 JSON 格式有误：' + e.message); }
+      if (!Array.isArray(leads) || !leads.length) return ElMessage.error('先生成或填写人物卡');
+      const A = (sel.value.config && sel.value.config.assets) || {};
+      const todo = leads.filter(x => x && x.key && (all || !(x.art || A['char_' + x.key])));
+      if (!todo.length) return ElMessage.info('每个人物都已经有立绘了；要全部重画请点「全部重画立绘」');
+      const T = v => v && typeof v === 'object' ? (v.en || v.zh || '') : String(v || '');
+      busy.value = 'art'; let ok = 0; const fails = [];
+      try {
+        for (const x of todo) {
+          const name = T(x.n) || x.key; say('正在画立绘：' + name);
+          const prompt = ['Cinematic vertical character portrait photo of a fictional adult ' + (x.g === 'f' ? 'woman' : x.g === 'm' ? 'man' : 'person') + (x.age ? ', about ' + x.age + ' years old' : ''), T(x.looks || x.look || x.appearance), T(x.role), T(x.vibe)].filter(Boolean).join('. ') + '. Upper body, facing the viewer, natural expression, soft cinematic lighting, shallow depth of field, photorealistic, high detail. Fully clothed, tasteful, no text, no watermark, no logo.';
+          let j = {}, r = null;
+          try { r = await fetch('/api/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ img: { prompt, w: 768, h: 1024 } }) }); j = await r.json().catch(() => ({})); } catch (e) { j = { error: e.message }; }
+          if (!r || !r.ok || !j.data) { const er = String(j.error || (r && r.status) || '失败'); fails.push(name + '：' + (/Arrearage|overdue/i.test(er) ? '图片生成服务欠费（阿里云百炼），请先充值' : er.slice(0, 120))); if (/Arrearage|overdue/i.test(er)) break; continue; }
+          const mime = j.mime || 'image/png', bin = Uint8Array.from(atob(j.data), c => c.charCodeAt(0));
+          const u = await fetch(ADMIN_API_BASE + '/api/admin?' + new URLSearchParams({ r: 'script_upload', id: sel.value.id, slot: 'char_' + x.key, name: 'char_' + x.key + '.' + ((mime.split('/')[1] || 'png').replace('jpeg', 'jpg')) }), { method: 'PUT', headers: { 'Content-Type': mime, Authorization: 'Bearer ' + S.token }, body: bin });
+          const uj = await u.json().catch(() => ({}));
+          if (!u.ok || !uj.url) { fails.push(name + '：上传失败 ' + (uj.error || u.status)); continue; }
+          x.art = uj.url; ok++;
+        }
+        if (ok) { leadsText.value = JSON.stringify(leads, null, 1); const cfg = Object.assign({}, sel.value.config, { leads }); delete cfg.assets; /* 素材表以服务器为准，刚上传的立绘不能被页面上的旧表盖掉 */ await save({ config: cfg }, 'AI 生成人物立绘（' + ok + ' 张）'); }
+        if (fails.length) ElMessage.error('有 ' + fails.length + ' 张没画成：' + fails.join('；')); else ElMessage.success('已生成 ' + ok + ' 张人物立绘，已写进人物卡；点「更新线上版本」后 App 里生效');
+        say('立绘完成 ' + ok + ' 张' + (fails.length ? '，失败：' + fails.join('；') : ''));
+      } finally { busy.value = ''; }
+    }
     async function saveLeads() { let v = []; try { v = JSON.parse(leadsText.value || '[]'); } catch (e) { return ElMessage.error('人物卡 JSON 格式有误：' + e.message); } if (!Array.isArray(v)) return ElMessage.error('人物卡要是一个数组 [ ... ]'); await save({ config: Object.assign({}, sel.value.config, { leads: v }) }, '修改人物卡'); ElMessage.success('人物卡已保存'); }
     async function saveCards() { let c = null; try { c = JSON.parse(cardsText.value || '{}'); } catch (e) { return ElMessage.error('角色卡 JSON 格式有误：' + e.message); } await save({ config: Object.assign({}, sel.value.config, { cards98: c }) }, '修改角色卡'); ElMessage.success('角色卡已保存'); }
     const cardsFor = n => { const L = (sel.value.config.cards98 && sel.value.config.cards98.characters) || []; if (!L.length) return ''; const J = x => Array.isArray(x) ? x.map(v => typeof v === 'object' ? Object.values(v).filter(Boolean).join('：') : v).join('；') : (x && typeof x === 'object' ? Object.values(x).filter(Boolean).join('；') : String(x || ''));
@@ -1341,7 +1369,7 @@ const Studio = {
     const debugTable = (R.debug || []).map(([k, v]) => ({ k, v }));
     const stLabel = s => ({ draft: '制作中', review: '待审核', live: '已上线', offline: '已下线' }[s] || s);
     onMounted(() => { load(); loadMs(); });
-    return { ms, loadMs, upBusy, uploadFiles, delAsset, gamesText, saveGames, gameSample, DISC, DISC_GROUPS, nfDiscToggle, discToggle, saveDisc, missingSlots, isWriter, submit, leadsText, genLeads, saveLeads, saveLangs, msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
+    return { ms, loadMs, upBusy, uploadFiles, delAsset, gamesText, saveGames, gameSample, DISC, DISC_GROUPS, nfDiscToggle, discToggle, saveDisc, missingSlots, isWriter, submit, leadsText, genLeads, genCharArt, saveLeads, saveLangs, msText, msOut, msBible, msCheck, msDownload, cardsText, genCards, saveCards, STU_TAX, STU_LAYERS, STU_HEATS, STU_FACTS, list, sel, step, steps, busy, log, vers, curCh, stop, nf, researchText, outline, review, motifs, rsum, chObj, debugTable, R, STU, open, create, saveStep1, aiResearch, genOutline, saveOutline, genOne, genRest, runCheck, aiReview, saveCh, addCh, delCh, saveReview, autoOut, autoReview, restore, publish, unpublish, del, download, importMd, splitScript, pickMdMany, batchImport, readMeta, load, fmt, stLabel, tagType, can, S };
   },
   template: `<div>
   <div class="panel" v-if="!sel">
@@ -1493,7 +1521,8 @@ const Studio = {
       <p class="muted" v-else>正在读取标签字典…</p>
       <h3 style="margin-top:14px">人物卡（会出现在 App「发现 → 角色」，玩家可以一对一聊天）</h3>
       <p class="muted">每个能和玩家互动的主要角色一张（玩家本人不算）。还没有人物卡时，点上线会先自动生成，你检查保存后再上线。</p>
-      <div class="toolbar"><el-button type="primary" :loading="busy==='leads'" :disabled="!!busy&&busy!=='leads'" @click="genLeads(false)">{{leadsText?'重新生成人物卡':'自动生成人物卡'}}</el-button><el-button @click="saveLeads" :disabled="!!busy">保存人物卡修改</el-button></div>
+      <div class="toolbar"><el-button type="primary" :loading="busy==='leads'" :disabled="!!busy&&busy!=='leads'" @click="genLeads(false)">{{leadsText?'重新生成人物卡':'自动生成人物卡'}}</el-button><el-button @click="saveLeads" :disabled="!!busy">保存人物卡修改</el-button><el-button type="success" plain :loading="busy==='art'" :disabled="!!busy&&busy!=='art'" @click="genCharArt(false)">AI 画缺少的立绘</el-button><el-button plain :disabled="!!busy" @click="genCharArt(true)">全部重画立绘</el-button></div>
+      <div v-if="(()=>{try{return JSON.parse(leadsText||'[]').length}catch(e){return 0}})()" style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px"><div v-for="x in (()=>{try{return JSON.parse(leadsText||'[]')}catch(e){return []}})()" :key="x.key" style="width:92px;text-align:center;font-size:12px"><img v-if="x.art||(sel.config.assets||{})['char_'+x.key]" :src="x.art||(sel.config.assets||{})['char_'+x.key]" style="width:92px;height:122px;object-fit:cover;border-radius:8px;display:block"><div v-else style="width:92px;height:122px;border-radius:8px;background:#f2f2f5;display:flex;align-items:center;justify-content:center;color:#999">无立绘</div>{{(x.n&&(x.n.zh||x.n.en))||x.key}}</div></div>
       <el-input v-model="leadsText" type="textarea" :rows="10" placeholder="人物卡 JSON（可直接编辑）" style="margin-bottom:12px" />
       <div class="toolbar" v-if="isWriter()"><el-button type="primary" @click="submit" :disabled="!(sel.chapters||[]).length">提交审核</el-button><span class="muted">作者账号不能直接上线：提交后由管理员检查上线{{sel.status==='review'?' · 已提交，等待审核':''}}</span></div><div class="toolbar" v-else><el-button type="primary" @click="publish(false)" :disabled="!(sel.review&&sel.review.approved)">{{sel.status==='live'?'更新线上版本':'一键上线'}}</el-button><el-button v-if="S.me.role==='owner'" type="warning" plain @click="publish(true)" :disabled="!(sel.review&&sel.review.approved)">强制上线（忽略自动检查错误）</el-button><el-button v-if="sel.status==='live'" type="danger" plain @click="unpublish">下线</el-button></div>
     </div>
