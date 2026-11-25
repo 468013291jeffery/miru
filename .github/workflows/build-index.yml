@@ -38,8 +38,10 @@ jobs:
             node tools/role-list-selftest.cjs
             python3 tools/deploy-guard-selftest.py
             python3 source/gen_seo.py || true
+            python3 source/gen_pseo.py || true
             git add index.html stories about.html contact.html robots.txt sitemap.xml llms.txt llms-full.txt 2>/dev/null || git add index.html
             git add index.lazy.html content36_packs.js art/inline 2>/dev/null || true
+            for p in characters boyfriends romance ai-boyfriend.html bl.html gl.html what-is-miru.html compare.html; do [ -e "$p" ] && git add "$p"; done; true
             if git diff --cached --quiet; then exit 0; fi
             git commit -m 'build: regenerate index from current main'
             if git push origin HEAD:main; then exit 0; fi
