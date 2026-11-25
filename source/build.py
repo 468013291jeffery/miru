@@ -181,6 +181,29 @@ _c36_lazy, _packs_js = _lazy36(_c36)
 open(os.path.join(ROOT, "content36_packs.js"), "w", encoding="utf8", newline="\n").write(_packs_js)
 _js_lazy = js.replace(_c36, _c36_lazy, 1)
 _html_lazy = shell + "\n<script>\n" + assets + _js_lazy + "\n</script>\n"
+# 2026-11-26 · 内联大图拆出去：脚本里 >3KB 的 base64 图片（剧本工坊素材库、个别老剧立绘）写成 art/inline/<内容哈希>.<扩展名> 静态文件，
+# 页面里只留网址——图片由浏览器单独缓存，首页少下约 330KB。只动后面紧跟引号/括号的完整字符串，SVG 不动。
+def _unb64(text):
+    import base64 as _b, re as _re
+    d = os.path.join(ROOT, "art", "inline"); os.makedirs(d, exist_ok=True)
+    EXT = {"jpeg": "jpg"}
+    n = [0, 0]
+    def rep(m):
+        sub, data = m.group(1), m.group(2)
+        nxt = m.string[m.end():m.end() + 1]
+        if len(data) < 3000 or sub == "svg+xml" or nxt not in ("\"", "'", "`", ")"): return m.group(0)
+        try: raw = _b.b64decode(data, validate=True)
+        except Exception: return m.group(0)
+        fn = hashlib.sha256(raw).hexdigest()[:16] + "." + EXT.get(sub, sub)
+        p = os.path.join(d, fn)
+        if not os.path.exists(p):
+            with open(p, "wb") as f: f.write(raw)
+        n[0] += 1; n[1] += len(m.group(0))
+        return "/art/inline/" + fn
+    out = _re.sub(r"data:image/([a-z0-9+.-]+);base64,([A-Za-z0-9+/=]+)", rep, text)
+    print("unb64:", n[0], "images,", n[1], "chars moved to art/inline/")
+    return out
+_html_lazy = _unb64(_html_lazy)
 _hl = hashlib.sha256(_html_lazy.encode("utf-8")).hexdigest()[:12]
 _si2 = _html_lazy.find("<script>")
 _html_lazy = _html_lazy[:_si2 + 8] + "\n" + 'window.MIRU_BUILD="' + _hl + " " + _ts + ' lazy36";' + _html_lazy[_si2 + 8:]
