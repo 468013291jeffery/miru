@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="cc1c2a4d3463 2026-11-25T19:25Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="b6b4c3d9fe52 2026-11-25T19:28Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -3312,7 +3312,7 @@ const LANGS=[["en","English"],["zh","中文"],["ja","日本語"],["ko","한국�
 /* ================= CORE ================= */
 const KEY="miru_v2";
 const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"p1",name:"",pron:"they",look:""}],pid:"p1",
- threads:{},feedSeen:{},liked:{},follow:{},art:{},album:[],saved:[],keys:10000,plus:false,couples:{},mine:{chars:{},worlds:{}},works:[],
+ threads:{},feedSeen:{},liked:{},follow:{},art:{},album:[],saved:[],keys:10,plus:false,couples:{},mine:{chars:{},worlds:{}},works:[],
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
 /* repair data saved by older versions so one bad record can never blank a page */
@@ -9235,7 +9235,7 @@ Object.assign(I18N.zh,{"rg.h":"人物关系"});Object.assign(I18N.en,{"rg.h":"Wh
    Promo: 24h from S.joinAt, first purchase only (S.firstPaid). Countdown chip on home, top of paySheet, Me tab.
    Moments: the user posts text (+ optional photo). Every character the user has chatted with comments over the next
    minutes, and keeps coming back once a day for 3 days. Live AI writes in-character comments; offline uses templates. */
-const WELCOME_GEMS=10000,PROMO_H=24,PROMO_OFF=.8;
+const WELCOME_GEMS=10,PROMO_H=24,PROMO_OFF=.8;
 const PROMO_PRICE={"1.99":"1.59","9.99":"7.99","19.99":"15.99","49.99":"39.99","79.99":"63.99","6.67":"5.33"};
 function promoLeft(){if(S.firstPaid||!S.joinAt)return 0;return Math.max(0,S.joinAt+PROMO_H*36e5-Date.now())}
 function hms(ms){const s=Math.floor(ms/1e3),p=n=>String(n).padStart(2,"0");return p(Math.floor(s/3600))+":"+p(Math.floor(s/60)%60)+":"+p(s%60)}
