@@ -3,7 +3,7 @@
    Promo: 24h from S.joinAt, first purchase only (S.firstPaid). Countdown chip on home, top of paySheet, Me tab.
    Moments: the user posts text (+ optional photo). Every character the user has chatted with comments over the next
    minutes, and keeps coming back once a day for 3 days. Live AI writes in-character comments; offline uses templates. */
-const WELCOME_GEMS=10000,PROMO_H=24,PROMO_OFF=.8;
+const WELCOME_GEMS=10,PROMO_H=24,PROMO_OFF=.8;
 const PROMO_PRICE={"1.99":"1.59","9.99":"7.99","19.99":"15.99","49.99":"39.99","79.99":"63.99","6.67":"5.33"};
 function promoLeft(){if(S.firstPaid||!S.joinAt)return 0;return Math.max(0,S.joinAt+PROMO_H*36e5-Date.now())}
 function hms(ms){const s=Math.floor(ms/1e3),p=n=>String(n).padStart(2,"0");return p(Math.floor(s/3600))+":"+p(Math.floor(s/60)%60)+":"+p(s%60)}
