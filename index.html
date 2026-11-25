@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="32e0ce4bdd7a 2026-11-25T12:58Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="f9db25e362da 2026-11-25T15:20Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -30435,7 +30435,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   const cur = () => { try { return (typeof CL === "function" ? CL() : "en") || "en"; } catch (_) { return "en"; } };
-  const ok = w => { const L = w && w.langs; if (!Array.isArray(L) || !L.length) return true; return L.indexOf(cur()) >= 0; };
+  const ok = w => { const L = w && w.langs; if (!Array.isArray(L) || !L.length) return true; return L.indexOf(cur()) >= 0 || (w.lang || "zh") === cur(); }; /* 原文语种也算：中文写的剧 langs 只记了 en 时，中文界面也要能看到 */
   const F = window.fetch;
   if (typeof F !== "function") return;
   window.fetch = async function (input) {
@@ -30489,6 +30489,7 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
 #pc-lib .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:18px}
 #pc-lib .card{background:#16141C;border:1px solid #2A2531;border-radius:16px;overflow:hidden;cursor:pointer;text-align:left;color:inherit;padding:0;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
 #pc-lib .card:hover{transform:translateY(-3px);border-color:#F0B77E88}
+#pc-lib .card video{width:100%;aspect-ratio:3/4;object-fit:cover;background:#1d1a25;display:block}
 #pc-lib .card img{width:100%;aspect-ratio:3/4;object-fit:cover;background:#1d1a25;display:block}
 #pc-lib .card b{display:block;font-size:15px;padding:10px 12px 0;line-height:1.35}
 #pc-lib .card small{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;color:#AAA1B0;font-size:12.5px;line-height:1.5;padding:6px 12px 14px}
@@ -30507,14 +30508,14 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
       '<div class="foot">© 2026 MIRU · <a href="/privacy.html" target="_blank" style="display:inline;padding:0;color:inherit">' + esc(T("隐私", "Privacy")) + '</a> · <a href="/terms.html" target="_blank" style="display:inline;padding:0;color:inherit">' + esc(T("条款", "Terms")) + '</a></div>';
   }
   function items() {
-    const out = comm.filter(w => filter === "all" || (w.orient || "bg") === filter).map(w => ({ k: "off94", id: w.id, t: (!zh() && w.en && w.en.title) || w.title, h: (!zh() && w.en && w.en.hook) || w.hook, img: w.cover || "" }));
+    const VM = vidMap(); const out = comm.filter(w => okLang(w) && (filter === "all" || (w.orient || "bg") === filter)).map(w => ({ k: "off94", id: w.id, t: (!zh() && w.en && w.en.title) || w.title, h: (!zh() && w.en && w.en.hook) || w.hook, img: w.cover || "", vid: absU(VM[w.id]) }));
     const s = q.trim().toLowerCase();
     return s ? out.filter(x => (x.t + " " + x.h).toLowerCase().includes(s)) : out;
   }
   function gridHTML() {
     const L2 = items();
     if (!L2.length) return '<div class="empty">' + esc(T("没有找到作品", "No stories found")) + '</div>';
-    return L2.map(x => '<button class="card" data-' + x.k + '="' + esc(x.id) + '">' + (x.img ? '<img src="' + esc(x.img) + '" alt="" loading="lazy">' : '<img alt="">') + '<b>' + esc(x.t) + '</b><small>' + esc(x.h) + '</small></button>').join("");
+    return L2.map((x, i) => '<button class="card" data-' + x.k + '="' + esc(x.id) + '">' + (x.vid ? '<video muted loop playsinline preload="none"' + (x.img ? ' poster="' + esc(x.img) + '"' : '') + ' data-src="' + esc(x.vid) + '"></video>' : x.img ? '<img src="' + esc(x.img) + '" alt="" decoding="async"' + (i < 12 ? '' : ' loading="lazy"') + '>' : '<img alt="">') + '<b>' + esc(x.t) + '</b><small>' + esc(x.h) + '</small></button>').join("");
   }
   function libHTML() {
     return '<h2>' + esc(T("全部剧目", "All stories")) + '</h2><p class="sub">' + esc(T("选一部开始：你说的话和做的选择都会改变结局。", "Pick a story — what you say and choose changes the ending.")) + '</p>' +
@@ -30522,11 +30523,46 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
       [["all", "全部", "All"], ["bg", "男女", "M/F"], ["bl", "男男", "M/M"], ["gl", "女女", "F/F"]].map(c => '<button class="chip' + (filter === c[0] ? " on" : "") + '" data-pcf="' + c[0] + '">' + esc(T(c[1], c[2])) + '</button>').join("") +
       '</div><div class="grid" id="pc-grid">' + gridHTML() + '</div>';
   }
+  const okLang = w => { try { const c = typeof CL === "function" ? CL() : "en"; const L = Array.isArray(w.langs) ? w.langs : []; return !L.length || L.indexOf(c) >= 0 || (w.lang || "zh") === c; } catch (_) { return true; } };
   async function loadComm() {
     if (Date.now() - commAt < 120000) return;
     commAt = Date.now();
-    try { const r = await fetch("/api/works?feed=new&limit=50"); if (r.ok) { const j = await r.json(); comm = (j.works || []).filter(w => !w.adult); } } catch (_) {}
-    const g = document.getElementById("pc-grid"); if (g) g.innerHTML = gridHTML();
+    const seen = new Set(), all = [];
+    for (const f of ["featured", "new"]) {
+      try { const r = await fetch("/api/works?feed=" + f + "&limit=50&alllang=1"); if (r.ok) { const j = await r.json(); (j.works || []).forEach(w => { if (!w.adult && !seen.has(w.id)) { seen.add(w.id); all.push(w); } }); } } catch (_) {}
+    }
+    comm = all;
+    const g = document.getElementById("pc-grid"); if (g) { g.innerHTML = gridHTML(); wire(); }
+  }
+  /* 作品 → 预告视频：首页卡片上的 video[data-src] + 官方剧缓存里的 home_video / vid_open / opening_video */
+  function vidMap() {
+    const m = {};
+    try { const off = JSON.parse(localStorage.getItem("miru_off94_v1") || "{}"); (off.L || []).forEach(w => { const A = w.A || {}; const v = A.home_video || A.vid_open || A.opening_video; if (v) m[w.id] = v; }); } catch (_) {}
+    document.querySelectorAll("#dev video[data-src]").forEach(v => { const c = v.closest("[data-off94]"); if (c && !m[c.dataset.off94]) m[c.dataset.off94] = v.dataset.src; });
+    return m;
+  }
+  const absU = u => !u ? "" : /^https?:/.test(u) ? u : "/" + String(u).replace(/^\/+/, "");
+  let io = null;
+  function wire() {
+    const g = document.getElementById("pc-grid"); if (!g) return;
+    if (!io && "IntersectionObserver" in window) io = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if (e.isIntersecting) { if (!v.src && v.dataset.src) v.src = v.dataset.src; const p = v.play(); if (p && p.catch) p.catch(() => {}); } else { try { v.pause(); } catch (_) {} } }), { root: document.getElementById("pc-lib"), threshold: 0.45 });
+    g.querySelectorAll("video[data-src]").forEach(v => { if (io) io.observe(v); });
+  }
+  /* App 里的作品卡（发现页横排等）：PC 上鼠标移上去就播预告，移开停 */
+  let hv = false;
+  function hoverVid() {
+    if (hv) return; hv = true;
+    document.addEventListener("mouseover", e => {
+      if (!document.documentElement.classList.contains("pc195")) return;
+      const c = e.target.closest && e.target.closest("#dev [data-off94]"); if (!c || c.querySelector("video") || c.__pcv) return;
+      const img = c.querySelector("img"); const u = absU(vidMap()[c.dataset.off94]); if (!img || !u) return;
+      c.__pcv = 1; const box = img.parentElement; if (getComputedStyle(box).position === "static") box.style.position = "relative";
+      const v = document.createElement("video"); v.muted = true; v.loop = true; v.playsInline = true; v.src = u; v.className = "pcv195";
+      v.style.cssText = "position:absolute;left:" + img.offsetLeft + "px;top:" + img.offsetTop + "px;width:" + img.offsetWidth + "px;height:" + img.offsetHeight + "px;object-fit:cover;border-radius:inherit;pointer-events:none;z-index:1";
+      box.appendChild(v); const p = v.play(); if (p && p.catch) p.catch(() => {});
+      const leave = () => { c.removeEventListener("mouseleave", leave); try { v.pause(); } catch (_) {} v.remove(); c.__pcv = 0; };
+      c.addEventListener("mouseleave", leave);
+    });
   }
   function syncNav() {
     const cur = (document.querySelector("#dev .tabbar [data-tab].on") || {}).dataset;
@@ -30537,15 +30573,15 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
     const st = document.createElement("style"); st.id = "pc195css"; st.textContent = css; document.head.appendChild(st);
     const side = document.createElement("aside"); side.id = "pc-side"; side.setAttribute("data-notr", ""); document.body.appendChild(side);
     const lib = document.createElement("aside"); lib.id = "pc-lib"; document.body.appendChild(lib);
-    lib.addEventListener("input", e => { if (e.target.id === "pc-q") { q = e.target.value; const g = document.getElementById("pc-grid"); if (g) g.innerHTML = gridHTML(); } });
-    lib.addEventListener("click", e => { const c = e.target.closest("[data-pcf]"); if (c) { filter = c.dataset.pcf; lib.innerHTML = libHTML(); } });
+    lib.addEventListener("input", e => { if (e.target.id === "pc-q") { q = e.target.value; const g = document.getElementById("pc-grid"); if (g) { g.innerHTML = gridHTML(); wire(); } } });
+    lib.addEventListener("click", e => { const c = e.target.closest("[data-pcf]"); if (c) { filter = c.dataset.pcf; lib.innerHTML = libHTML(); wire(); } });
     document.addEventListener("click", () => setTimeout(syncNav, 60));
-    let lang = null; setInterval(() => { try { const l = typeof CL === "function" ? CL() : ""; if (l !== lang) { lang = l; side.innerHTML = sideHTML(); lib.innerHTML = libHTML(); syncNav(); } } catch (_) {} }, 1500);
+    let lang = null; setInterval(() => { try { const l = typeof CL === "function" ? CL() : ""; if (l !== lang) { lang = l; side.innerHTML = sideHTML(); lib.innerHTML = libHTML(); wire(); syncNav(); } } catch (_) {} }, 1500);
   }
   function apply() {
     const on = matchMedia("(pointer:fine)").matches && innerWidth >= 1100;
     document.documentElement.classList.toggle("pc195", on);
-    if (on) { build(); const side = document.getElementById("pc-side"), lib = document.getElementById("pc-lib"); if (side && !side.innerHTML) side.innerHTML = sideHTML(); if (lib && !lib.innerHTML) lib.innerHTML = libHTML(); syncNav(); loadComm(); }
+    if (on) { build(); const side = document.getElementById("pc-side"), lib = document.getElementById("pc-lib"); if (side && !side.innerHTML) side.innerHTML = sideHTML(); if (lib && !lib.innerHTML) { lib.innerHTML = libHTML(); wire(); } syncNav(); loadComm(); hoverVid(); }
   }
   addEventListener("resize", () => { clearTimeout(apply._t); apply._t = setTimeout(apply, 200); });
   if (document.readyState === "loading") addEventListener("DOMContentLoaded", () => setTimeout(apply, 300)); else setTimeout(apply, 300);
