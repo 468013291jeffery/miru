@@ -70,9 +70,9 @@ def leads_of(w):
     for x in (m.get("leads") or [])[:8]:
         n = x.get("n") or {}
         nm = n.get("en") if isinstance(n, dict) else n
-        if not nm:
+        if not nm or CJK.search(nm):
             continue
-        L = lambda k: (x.get(k) or {}).get("en") if isinstance(x.get(k), dict) else (x.get(k) or "")
+        L = lambda k: en_only((x.get(k) or {}).get("en") if isinstance(x.get(k), dict) else (x.get(k) or ""))
         out.append({"n": nm, "role": L("role"), "vibe": L("vibe") or L("pitch"), "line": L("solo"), "age": x.get("age"), "g": x.get("g"),
                     "img": G.absu(x.get("art") or A.get("char_" + str(x.get("key") or "")) or "")})
     if not out:
@@ -82,7 +82,12 @@ def leads_of(w):
     w["orient"] = W.get("orient") or w.get("orient") or ""
     if not w.get("cover"):
         w["cover"] = G.absu(A.get("cover") or A.get("poster") or "")
-    return [c for c in out if c["n"] and c["n"] not in ("You", "你")]
+    return [c for c in out if c["n"] and not CJK.search(c["n"]) and c["n"] not in ("You", "你")]
+
+CJK = re.compile(r"[\u3040-\u30ff\u3400-\u9fff\uac00-\ud7af]")
+def en_only(s):
+    s = str(s or "")
+    return "" if CJK.search(s) else s
 
 def tt(w):
     return (w.get("en") or {}).get("title") or w["title"]
