@@ -40,13 +40,14 @@ CH_RE = re.compile(r"^#\s*CHAPTER\s*\d+\s*[｜|:：-]\s*(.+)$", re.I | re.M)
 
 
 def chars(script):
+    from urllib.parse import unquote as _uq  # 剧本 CHAR 字段是 URL 编码的（%20、%E4…），要先解码
     out, seen = [], set()
     for m in CHAR_RE.finditer(str(script or "")):
-        n = m.group(1).strip()
+        n = _uq(m.group(1)).strip()
         if not n or n in seen or n in ("你", "You"):
             continue
         seen.add(n)
-        out.append({"n": n, "g": m.group(2), "age": m.group(3), "role": m.group(4).strip(), "look": m.group(5).strip()})
+        out.append({"n": n, "g": m.group(2), "age": m.group(3), "role": _uq(m.group(4)).strip(), "look": _uq(m.group(5)).strip()})
     return out[:8]
 
 
