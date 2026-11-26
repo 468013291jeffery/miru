@@ -211,10 +211,14 @@ _html_lazy = _html_lazy[:_si2 + 8] + "\n" + 'window.MIRU_BUILD="' + _hl + " " + 
 #   · 页面本身只剩几百 KB，手机上马上能画出下面的开屏页，不再长时间黑屏；
 #   · 外部脚本浏览器会单独缓存，Chrome 还会缓存编译结果，第二次起打开明显更快；
 #   · 文件名带哈希，内容一变就是新文件，不会读到旧缓存。旧的 app.*.js 只保留最近 3 个。
-BOOT_SPLASH = ('<div id="boot-splash" style="position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#07060A;color:#F1ECF3;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:.32em;transition:opacity .3s">'
-               '<img src="/icons/icon-192.png" width="88" height="88" alt="" style="border-radius:22px;box-shadow:0 8px 30px rgba(240,183,126,.25)">'
-               '<div>MIRU</div><div style="width:120px;height:3px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden"><i style="display:block;width:40%;height:100%;background:#F0B77E;animation:bootbar 1.1s ease-in-out infinite"></i></div>'
+# 2026-11-27 开屏页换成用户给的海报（icons/splash.webp，900×1600，四周已羽化成 #200217，铺在同色底上看不出边）。
+#   · 竖屏手机上海报横向铺满，上下用同色补齐；电脑上居中显示，文字永远不会被裁掉；
+#   · 先用内嵌的 200 字节模糊小图垫底，海报（约 25KB）下载完立刻替换；<head> 里预加载海报；
+#   · 底部一根细金线表示还在加载；主脚本跑完后淡出（BOOT_DONE）。
+BOOT_SPLASH = ('<div id="boot-splash" style="position:fixed;inset:0;z-index:2147483000;background:url(/icons/splash.webp) center/contain no-repeat,url(data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoSACAAPtFUo0uoJKMhsAgBABoJQBZwBDv71mNCa0tFlKy6aBAAAP71aLI49mmO/Hee9wAxmrxNxjbdQFW7opC+xPIEFyWyooPCjZPfqfk7q7Ui6FL0imLVIfZ2pjG+ZEJlU0t0KhtbrwOS19YRRtExy9TgYcAFxOwXm/deYf5+AA==) center/contain no-repeat,#200217;transition:opacity .3s">'
+               '<div style="position:absolute;left:50%;bottom:calc(6% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:96px;height:2px;border-radius:2px;background:rgba(255,222,190,.14);overflow:hidden"><i style="display:block;width:40%;height:100%;background:linear-gradient(90deg,transparent,#F3C892,transparent);animation:bootbar 1.3s ease-in-out infinite"></i></div>'
                '<style>@keyframes bootbar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}</style></div>')
+BOOT_PRELOAD = '<link rel="preload" as="image" href="/icons/splash.webp" type="image/webp" fetchpriority="high">'
 BOOT_DONE = '<script>(function(){var s=document.getElementById("boot-splash");if(!s)return;s.style.opacity="0";setTimeout(function(){s.remove()},320)})();</script>'
 def _externalize(html):
     b = html.rfind("\n</script>\n")
@@ -232,6 +236,7 @@ def _externalize(html):
     i = page.find('<div class="app"><div class="device" id="dev"></div></div>')
     if i < 0: raise SystemExit("externalize: #dev not found")
     page = page[:i] + BOOT_SPLASH + "\n" + page[i:]
+    page = page.replace("</head>", BOOT_PRELOAD + "\n</head>", 1)
     print("externalize:", name, len(js_body), "chars; page", len(page), "chars")
     return page
 open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)
