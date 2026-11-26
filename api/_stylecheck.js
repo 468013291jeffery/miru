@@ -144,7 +144,7 @@ function checkBible(b) {
   chapters.forEach((c, i) => {
     const tag = '第 ' + (c && c.n != null ? c.n : i + 1) + ' 章';
     const games = [].concat((c && c.game) || []);
-    if (games.length > 1) warn.push(tag + '：小游戏一级台阶最多 1 个，现在 ' + games.length + ' 个');
+    if (games.length !== 2) warn.push(tag + '：小游戏规范是每章 2 个，现在 ' + games.length + ' 个');
     games.forEach(g => { ['win', 'lose', 'skip'].forEach(k => { if (!String((g && g[k]) || '').trim()) err.push(tag + ' 小游戏：缺「' + { win: '赢了', lose: '输了', skip: '不玩' }[k] + '」的后果'); }); if (g && /结束|失败|游戏结束|死/.test(String(g.lose || '')) && String(g.lose).length < 12) warn.push(tag + ' 小游戏：输了的后果像是死路，要另有戏'); });
     if (c && c.bgm && !MOODS.includes(c.bgm)) warn.push(tag + ' 本章音乐：「' + c.bgm + '」不在情绪表里');
     [].concat((c && c.events) || []).forEach(e => { if (!zhOf(e && e.text).trim()) err.push(tag + ' 事件：没有内容'); if (e && e.fx) checkFxId(e.fx, tag + ' 事件特效', err, warn); });

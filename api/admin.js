@@ -752,6 +752,17 @@ module.exports = L.wrap(async (req, res) => {
       const Style = require('./_stylecheck');
       const st = Style.checkDsl(md);
       const err = q.err.concat(sf.length ? ['受限词：' + sf.join('; ')] : [], st.err.map(x => '样式：' + x));
+      /* 2026-11-27 日 / 韩 / 西 / 英 独立剧本一起查：结构硬错算进来；和中文版章节数、行数对不上、或者有大量重复套话，都要拦（规则「日韩西版本」） */
+      { const cf = s.config || {}; const LBL = { en: '英文版', ja: '日文版', ko: '韩文版', es: '西语版' };
+        const zl = md.split('\n').filter(x => x.trim()).length;
+        for (const LG of ['en', 'ja', 'ko', 'es']) { const sid = cf[LG + '_sid']; if (!sid) continue;
+          const e = (await sql('SELECT title, chapters FROM scripts WHERE id=$1', [String(sid)]))[0]; if (!e) { err.push(LBL[LG] + '：关联的剧本不存在'); continue; }
+          const ch2 = (e.chapters || []).slice().sort((x, y) => x.n - y.n); const md2 = '# ' + e.title + '\n\n' + ch2.map(c => c.md).join('\n\n');
+          const q2 = QA.dslQA(md2); q2.err.forEach(x => err.push(LBL[LG] + '：' + x));
+          if (ch2.length !== (s.chapters || []).length) err.push(LBL[LG] + '：章节数 ' + ch2.length + ' 和中文版 ' + (s.chapters || []).length + ' 不一样');
+          const l2 = md2.split('\n').filter(x => x.trim()).length; if (Math.abs(l2 - zl) > 2) err.push(LBL[LG] + '：正文 ' + l2 + ' 行，中文版 ' + zl + ' 行——译文要和中文行行对齐');
+          if ((q2.stats.repeats || 0) > (q.stats.repeats || 0) + 2) err.push(LBL[LG] + '：重复套话 ' + q2.stats.repeats + ' 句，明显多于中文版（' + (q.stats.repeats || 0) + '）——像没翻的占位，按原稿重译');
+          (q2.warn || []).filter(x => /重复了 4 次/.test(x)).forEach(x => q.warn.push(LBL[LG] + '：' + x)); } }
       q.warn = (q.warn || []).concat(st.warn.map(x => '样式：' + x));
       const review = { approved: !err.length, auto: true, by: 'D先生', at: Date.now(), notes: '自动审查：结构' + (q.ok ? '通过' : '不通过') + ' · 受限词 ' + sf.length + ' · 样式硬错 ' + st.err.length, checks: { list: [], stats: q.stats, perCh: q.perCh } };
       /* 回执（2026-10-29 · Ann）：「bl 还是 bg 应该第一时间就能回复」——所以回执是**固定形状的一段话**，

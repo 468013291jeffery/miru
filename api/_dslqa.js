@@ -19,7 +19,7 @@ const RE_DIR = /^⟦([A-Z/]+)((?:\|[^|⟧]*)*)⟧$/;
 function dslQA(md) {
   const text = String(md || '').replace(/\r\n?/g, '\n');
   const L = text.split('\n').map(s => s.trim());
-  const st = { chapters: 0, scenes: 0, choices: 0, options: 0, dots: 0, you: 0, casts: 0, lines: 0, callsOpen: 0, callsClose: 0, ifs: 0, ifEnds: 0, unknown: [] };
+  const st = { chapters: 0, scenes: 0, choices: 0, options: 0, dots: 0, you: 0, casts: 0, lines: 0, callsOpen: 0, callsClose: 0, ifs: 0, ifEnds: 0, unknown: [], mg: 0 };
   /* 取向：⟦ORIENT|bl|gl|bg⟧ 声明，或按角色卡推断（玩家性别 × 对手戏性别）。
      2026-10-29 的真实故障就是这里没有判据：五部女性向的稿子被发布成 bl，取向选女性向的读者看不到。
      判据与 app51_import.js 的 imOrient() 一致；改一处要改另一处。 */
@@ -33,7 +33,7 @@ function dslQA(md) {
   const closeCh = () => { if (cur) perCh.push(cur); };
   for (const raw of L) {
     if (!raw) continue;
-    if (/^#+\s*CHAPTER\s+\d+/i.test(raw)) { closeCh(); cur = { t: raw.replace(/^#+\s*/, '').slice(0, 60), choices: 0, dots: 0, scenes: 0, lines: 0 }; st.chapters++; continue; }
+    if (/^#+\s*CHAPTER\s+\d+/i.test(raw)) { closeCh(); cur = { t: raw.replace(/^#+\s*/, '').slice(0, 60), choices: 0, dots: 0, scenes: 0, lines: 0, mg: 0 }; st.chapters++; continue; }
     if (/^#\s*SCENE/i.test(raw)) { st.scenes++; if (cur) cur.scenes++; continue; }
     if (/^#\s*CHOICE/i.test(raw)) { st.choices++; if (cur) cur.choices++; continue; }
     if (/^#{1,6}\s*[A-E]\s*[｜|]/.test(raw)) { st.options++; continue; }
@@ -45,6 +45,7 @@ function dslQA(md) {
       if (m[1] === 'CALL') st.callsOpen++;
       else if (m[1] === '/CALL') st.callsClose++;
       else if (m[1] === 'CHAR') { st.casts++; const p = raw.replace(/^⟦CHAR\|/, '').replace(/⟧$/, '').split('|'); if (p.length > 1) orChars.push({ n: String(p[0] || '').trim(), x: String(p[1] || '').trim().toLowerCase().charAt(0) }); }
+      else if (m[1] === 'MG') { st.mg++; if (cur) cur.mg++; }
       else if (m[1] === 'IF') st.ifs++;
       else if (m[1] === '/IF') st.ifEnds++;
       else if (m[1] === 'LORE') { st.lore++; const p = raw.replace(/^⟦LORE\|/, '').replace(/⟧$/, '').split('|'); lore.push({ keys: String(p[0] || '').split(/[,，、]/).map(s => s.trim()).filter(Boolean), txt: String(p[1] || '').trim(), raw: raw.slice(0, 30) }); }
@@ -68,6 +69,9 @@ function dslQA(md) {
     if (!c.choices) err.push('第 ' + n + ' 章章末没有 CHOICE —— 这一章结尾只会显示「继续」');
     if (c.dots < c.choices) err.push('第 ' + n + ' 章：CHOICE ' + c.choices + ' 道，却只有 ' + c.dots + ' 个「# ·」收尾（少收尾会让后面的场景算进最后一个选项）');
     if (c.lines < 3) warn.push('第 ' + n + ' 章正文只有 ' + c.lines + ' 行');
+    /* 2026-11-27 产品决定：每章 2 个小游戏（少了拦，多了提醒） */
+    if (c.mg < 2) err.push('第 ' + n + ' 章只有 ' + c.mg + ' 个小游戏 ⟦MG|…⟧：规范要求每章 2 个');
+    else if (c.mg > 2) warn.push('第 ' + n + ' 章有 ' + c.mg + ' 个小游戏：规范是每章 2 个');
   });
   if (!st.you && !orChars.some(c => /^(你|您|you)$/i.test(c.n))) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');
   if (st.options < st.choices * 2) warn.push('选项数 ' + st.options + ' 少于选择道数 ' + st.choices + ' 的两倍 —— 可能有选择题只剩 1 个选项');
@@ -80,6 +84,10 @@ function dslQA(md) {
   const dupK = Object.keys(seenK).filter(k => seenK[k] > 1);
   if (dupK.length) warn.push('设定集里有 ' + dupK.length + ' 个关键词被多条共用（' + dupK.slice(0, 4).join('、') + '）—— 一提到它会同时带出好几条');
   if (!st.casts) warn.push('没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜');
+  /* 2026-11-27 套话占位检查（规则「日韩西版本」）：同一句台词 / 旁白在 4 处以上重复，多半是没翻或占位 */
+  { const cnt = {}; L.forEach(l => { const m = l.match(/^[^⟦#：:]{1,24}[：:](.{8,})$/); if (m) { const k = m[1].trim(); cnt[k] = (cnt[k] || 0) + 1; } });
+    const rep = Object.keys(cnt).filter(k => cnt[k] >= 4); st.repeats = rep.length;
+    if (rep.length) warn.push('有 ' + rep.length + ' 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：' + rep.slice(0, 2).map(k => '「' + k.slice(0, 24) + '」×' + cnt[k]).join('、')); }
 
   /* 取向：显式声明必须合法；与角色卡推断矛盾要拦；没写就给出推断值（warn，不拦）。
      「第一时间就能回复」的那句话就是 st.orient.final —— 上传时直接打给编剧看。 */
@@ -92,7 +100,7 @@ function dslQA(md) {
   else if (!orDecl && !inferred) warn.push('取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的');
   st.orient = { declared: orDecl || '', inferred: inferred || '', final: orDecl || inferred || '' };
 
-  return { ok: !err.length, err, warn, stats: st, perCh: perCh.map((c, i) => ({ n: i + 1, choices: c.choices, dots: c.dots, scenes: c.scenes, lines: c.lines })) };
+  return { ok: !err.length, err, warn, stats: st, perCh: perCh.map((c, i) => ({ n: i + 1, choices: c.choices, dots: c.dots, scenes: c.scenes, lines: c.lines, mg: c.mg })) };
 }
 
 module.exports = { dslQA, KNOWN_DIRECTIVES: KNOWN };
