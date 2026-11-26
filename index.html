@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="89d9f902b6e5 2026-11-26T06:31Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="ee5d0a6bebfc 2026-11-26T07:26Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -31366,6 +31366,139 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     ".cz-txt{position:relative;width:128px;aspect-ratio:3/4;border-radius:12px;padding:12px 10px;background:linear-gradient(160deg,#2a1f33,#17121d);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px;overflow:hidden}.cz-txt b{font-size:14px;font-family:Georgia,'Songti SC',serif}.cz-txt p{margin:0;font-size:11.5px;line-height:1.45;color:var(--dim);display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}";
   document.head.appendChild(st);
   window.__mod207 = 1;
+})();
+
+/* ================= mod208 · 首页「创作者」标签 + 精选两条道 + 没视频作品的标题卡开场（2026-11-26）=================
+   · 首页顶部标签（为你推荐 / 热门 / …）加一个「创作者」：点进去是创作者的整页 ——
+       精选·影视（后台精选过、有视频的用户作品，大卡）→ 精选·插画（精选过、没视频的，海报排）→ 创作者专区（全部 / 影视 / 插画 / 轻读 筛选）。
+   · 「为你推荐」的竖滑流里，每隔几部官方剧插一张「精选·影视」用户作品卡（最多 3 张）—— 只有精选过且有视频的才会进官方流。
+   · 发现页的创作者专区挪到页面最下面：发现页上方还是推官方新剧。
+   · 打开一部没有开场视频的用户作品时，先放 3 秒「标题卡」（封面、剧名、一句钩子、作者），点一下可跳过。 */
+(function () {
+  "use strict";
+  if (typeof renderHome !== "function" || typeof FEED_TABS === "undefined" || typeof capi !== "function") return;
+  const ZH = () => CL() === "zh";
+  const T2 = (a, b) => ZH() ? a : b;
+  if (!FEED_TABS.some(x => x[0] === "creator")) FEED_TABS.splice(Math.min(2, FEED_TABS.length), 0, ["creator", { en: "Creators", zh: "创作者" }]);
+  const cache = {};
+  async function get(q) {
+    const k = q + "|" + (S.or || "all"), c = cache[k];
+    if (c && Date.now() - c.at < 60000) return c.list;
+    const r = await capi(q + "&orient=" + (S.or || "all")); const list = r.ok ? (r.j.works || []) : [];
+    cache[k] = { at: Date.now(), list }; return list;
+  }
+  const fmt = w => w.format === "film" || w.format === "illus" ? w.format : "lite";
+  const bg = w => w.cover ? ' style="background-image:url(' + esc(w.cover) + ')"' : "";
+  function bigCard(w) { return '<button class="cr8-big" data-cwork="' + esc(w.id) + '"><div class="cr8-bimg"' + bg(w) + '><i>▶</i><em>' + T2("精选·影视", "Pick · Cinematic") + '</em></div><b>' + esc(w.title) + '</b><small>' + esc(w.author || "") + ' · ♥ ' + (w.likes || 0) + '</small></button>'; }
+  function poster(w) { return '<button class="cr8-pos" data-cwork="' + esc(w.id) + '"><div class="cr8-pimg"' + bg(w) + '></div><b>' + esc(w.title) + '</b><small>' + esc(w.author || "") + '</small></button>'; }
+  function tile(w) {
+    const f = fmt(w), tag = { film: "🎬", illus: "🖼", lite: "📖" }[f];
+    if (f === "lite") return '<button class="cr8-tile cr8-lite" data-cwork="' + esc(w.id) + '"><div class="cr8-timg"><em>' + tag + '</em><b>' + esc(w.title) + '</b><p>' + esc(String(w.hook || "").slice(0, 80)) + '</p></div><small>' + esc(w.author || "") + ' · ♥ ' + (w.likes || 0) + '</small></button>';
+    return '<button class="cr8-tile cr8-' + f + '" data-cwork="' + esc(w.id) + '"><div class="cr8-timg"' + bg(w) + '><em>' + tag + '</em></div><b>' + esc(w.title) + '</b><small>' + esc(w.author || "") + ' · ♥ ' + (w.likes || 0) + '</small></button>';
+  }
+  let cf = "all";
+  const FL = { all: ["全部", "All"], film: ["🎬 影视", "🎬 Cinematic"], illus: ["🖼 插画", "🖼 Illustrated"], lite: ["📖 轻读", "📖 Quick read"] };
+  async function fillGrid(root) {
+    const g = root.querySelector(".cr8-grid"); if (!g) return;
+    g.innerHTML = '<p class="cr8-empty">' + T2("加载中…", "Loading…") + '</p>';
+    const L = await get("/works?feed=creator&limit=40" + (cf !== "all" ? "&format=" + cf : ""));
+    g.innerHTML = L.length ? L.map(tile).join("") : '<p class="cr8-empty">' + T2("这一类还没有作品——去「创作」写第一部吧", "Nothing here yet — create the first one in Create") + '</p>';
+  }
+  async function renderCreator(v) {
+    const wrap = v.querySelector(".feedwrap"); if (!wrap) return;
+    const feed = wrap.querySelector("#feed, .feed"); if (feed) feed.remove();
+    let p = wrap.querySelector(".cr8"); if (!p) { p = document.createElement("div"); p.className = "cr8"; wrap.appendChild(p); }
+    p.innerHTML = '<p class="cr8-empty">' + T2("加载中…", "Loading…") + '</p>';
+    const fe = await get("/works?feed=creator_featured&limit=30");
+    const films = fe.filter(w => fmt(w) === "film"), others = fe.filter(w => fmt(w) !== "film");
+    p.innerHTML =
+      (films.length ? '<div class="cr8-h">' + T2("精选·影视", "Picks · Cinematic") + '</div><div class="cr8-row">' + films.map(bigCard).join("") + '</div>' : "") +
+      (others.length ? '<div class="cr8-h">' + T2("精选·插画", "Picks · Illustrated") + '</div><div class="cr8-row">' + others.map(poster).join("") + '</div>' : "") +
+      '<div class="cr8-h">' + T2("创作者专区", "Creator stories") + '</div><div class="cr8-chips">' + Object.entries(FL).map(([k, l]) => '<button data-cr8f="' + k + '" class="' + (k === cf ? "on" : "") + '">' + T2(l[0], l[1]) + '</button>').join("") + '</div><div class="cr8-grid"></div>' +
+      '<button class="cr8-cta" data-tab="create">✦ ' + T2("我也要创作", "Create your own story") + '</button>';
+    fillGrid(p);
+  }
+  async function injectFeed(v) {
+    const feed = v.querySelector("#feed, .feed"); if (!feed || feed.querySelector(".cr8-slide")) return;
+    const films = (await get("/works?feed=creator_featured&limit=30")).filter(w => fmt(w) === "film").slice(0, 3); if (!films.length) return;
+    const cards = [...feed.querySelectorAll(".fcard")];
+    films.forEach((w, i) => {
+      const at = cards[(i + 1) * 4 - 1]; if (!at) return;
+      const s = document.createElement("section"); s.className = "cr8-slide";
+      s.innerHTML = '<div class="cr8-sbg"' + bg(w) + '></div><div class="cr8-sveil"></div><div class="cr8-sbody"><em>' + T2("创作者精选 · 影视", "Creator pick · Cinematic") + '</em><b>' + esc(w.title) + '</b><p>' + esc(String(w.hook || "").slice(0, 90)) + '</p><small>' + esc(w.author || "") + ' · ♥ ' + (w.likes || 0) + '</small><button class="btn btn-p btn-sm" data-cwork="' + esc(w.id) + '">▶ ' + T2("开始看", "Play") + '</button></div>';
+      at.insertAdjacentElement("afterend", s);
+    });
+  }
+  const _rh = renderHome;
+  renderHome = function (v) {
+    const r = _rh.apply(this, arguments);
+    try {
+      const fix = () => { const b = document.querySelector('#ftabsc [data-ftab="creator"]'); if (b) b.hidden = false; };
+      fix(); setTimeout(fix, 300); setTimeout(fix, 1500);
+      if (feedTab === "creator") renderCreator(v).catch(() => {});
+      else if (feedTab === "foryou" && CL0.on) setTimeout(() => injectFeed(v).catch(() => {}), 400);
+    } catch (_) {}
+    return r;
+  };
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-cr8f]"); if (!b) return;
+    cf = b.dataset.cr8f; const root = b.closest(".cr8");
+    root.querySelectorAll("[data-cr8f]").forEach(x => x.classList.toggle("on", x === b)); fillGrid(root);
+  });
+  if (typeof renderTab === "function") {
+    const _rt = renderTab;
+    renderTab = function (k) {
+      const r = _rt.apply(this, arguments);
+      if (k === "discover") { const move = () => { const v = document.querySelector("#s-main .scroll") || document.querySelector("#s-main"); const z = v && v.querySelector(".cz207"); if (z && z !== v.lastElementChild) { v.appendChild(z); const h = z.querySelector(".eyebrow"); if (h && !z.querySelector(".cz-more")) h.insertAdjacentHTML("beforeend", ' <button class="cz-more" data-tab="home" data-cr8go="1">' + T2("在首页「创作者」看全部 ›", "See all in Home › Creators") + '</button>'); } }; [200, 800, 2000].forEach(t => setTimeout(move, t)); }
+      return r;
+    };
+  }
+  document.addEventListener("click", e => { if (e.target.closest && e.target.closest("[data-cr8go]")) { try { feedTab = "creator"; } catch (_) {} } }, true);
+  let lastW = null;
+  const _c = capi;
+  capi = async function (path) {
+    const r = await _c.apply(this, arguments);
+    try { if (typeof path === "string" && /^\/works\?id=.*play=1/.test(path) && r && r.ok && r.j) lastW = r.j; } catch (_) {}
+    return r;
+  };
+  if (typeof installWork === "function") {
+    const _iw = installWork;
+    installWork = async function () {
+      const res = await _iw.apply(this, arguments);
+      try {
+        const w = lastW; lastW = null;
+        const P = w && w.pack;
+        const hasVid = P && (P.opening_video || (P.assets && (P.assets.opening_video || P.assets.vid_open)));
+        if (res && w && !w.official && !hasVid) titleCard(w);
+      } catch (_) {}
+      return res;
+    };
+  }
+  function titleCard(w) {
+    const lead = (w.pack && w.pack.meta && Array.isArray(w.pack.meta.leads) && w.pack.meta.leads[0]) || null;
+    const d = document.createElement("div"); d.className = "cr8-tc";
+    d.innerHTML = '<div class="cr8-tcbg"' + bg(w) + '></div><div class="cr8-tcin">' + (w.cover ? '<img src="' + esc(w.cover) + '" alt="">' : '') +
+      '<em>' + T2("创作者作品", "A creator story") + '</em><h2>' + esc(w.title || "") + '</h2>' + (w.hook ? '<p>' + esc(String(w.hook).slice(0, 120)) + '</p>' : '') +
+      '<small>' + esc(w.author || "") + (lead && (lead.name || lead.n) ? ' · ' + esc(lead.name || lead.n) : '') + '</small><span>' + T2("点一下开始", "Tap to begin") + '</span></div>';
+    document.body.appendChild(d);
+    const close = () => { d.classList.add("out"); setTimeout(() => d.remove(), 500); };
+    d.addEventListener("click", close); setTimeout(close, 3500);
+  }
+  const st = document.createElement("style");
+  st.textContent =
+    ".cr8{position:absolute;inset:0;overflow-y:auto;padding:calc(64px + env(safe-area-inset-top,0px)) 14px 90px;background:var(--bg,#0e0b14)}.cr8-h{font-size:15px;font-weight:800;margin:16px 0 8px}.cr8-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}.cr8-empty{color:var(--faint);font-size:13px;padding:14px 0}" +
+    ".cr8-big{flex:none;width:68%;max-width:300px;text-align:left;background:none;border:0;color:var(--text);padding:0;display:flex;flex-direction:column;gap:4px}.cr8-bimg{position:relative;aspect-ratio:9/12;border-radius:16px;background:#241d2e center/cover;box-shadow:0 0 0 1px rgba(240,183,126,.5)}.cr8-bimg i{position:absolute;left:12px;bottom:12px;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;font-style:normal}.cr8-bimg em{position:absolute;top:10px;left:10px;font-style:normal;font-size:11px;background:rgba(0,0,0,.55);border-radius:8px;padding:2px 7px}" +
+    ".cr8-pos{flex:none;width:120px;text-align:left;background:none;border:0;color:var(--text);padding:0;display:flex;flex-direction:column;gap:3px}.cr8-pimg{aspect-ratio:3/4;border-radius:12px;background:#241d2e center/cover;border:3px solid rgba(255,255,255,.08)}" +
+    ".cr8-big b,.cr8-pos b,.cr8-tile b{font-size:13px;line-height:1.3}.cr8-big small,.cr8-pos small,.cr8-tile small{font-size:11px;color:var(--faint)}" +
+    ".cr8-chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}.cr8-chips button{flex:none;border:1px solid var(--line);background:transparent;color:var(--dim);border-radius:99px;padding:5px 12px;font-size:12.5px}.cr8-chips button.on{border-color:var(--gold);color:var(--text)}" +
+    ".cr8-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}.cr8-tile{text-align:left;background:none;border:0;color:var(--text);padding:0;display:flex;flex-direction:column;gap:3px;min-width:0}.cr8-timg{position:relative;aspect-ratio:3/4;border-radius:12px;background:#241d2e center/cover}.cr8-timg em{position:absolute;top:6px;right:6px;font-style:normal;font-size:12px;background:rgba(0,0,0,.5);border-radius:8px;padding:1px 5px}.cr8-film .cr8-timg{box-shadow:0 0 0 1px rgba(240,183,126,.45)}.cr8-illus .cr8-timg{border:3px solid rgba(255,255,255,.08)}" +
+    ".cr8-lite .cr8-timg{padding:12px 10px;background:linear-gradient(160deg,#2a1f33,#17121d);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px;overflow:hidden}.cr8-lite .cr8-timg b{font-size:14px;font-family:Georgia,'Songti SC',serif}.cr8-lite .cr8-timg p{margin:0;font-size:11.5px;line-height:1.45;color:var(--dim)}" +
+    ".cr8-cta{display:block;margin:22px auto 0;border:1px solid var(--gold);color:var(--text);background:transparent;border-radius:99px;padding:10px 20px;font-weight:700}" +
+    ".cr8-slide{position:relative;height:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}.cr8-sbg{position:absolute;inset:0;background:#241d2e center/cover;animation:kb 22s ease-in-out infinite alternate}.cr8-sveil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4),transparent 30%,rgba(5,4,8,.9))}.cr8-sbody{position:relative;padding:0 18px 110px;display:flex;flex-direction:column;gap:6px;align-items:flex-start}.cr8-sbody em{font-style:normal;font-size:12px;color:var(--gold);border:1px solid rgba(240,183,126,.5);border-radius:99px;padding:2px 9px}.cr8-sbody b{font-size:22px}.cr8-sbody p{margin:0;font-size:13.5px;color:rgba(255,255,255,.85)}.cr8-sbody small{color:rgba(255,255,255,.6)}" +
+    ".cz-more{border:0;background:none;color:var(--gold);font-size:12px;margin-left:6px}" +
+    ".cr8-tc{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:#0b0810;transition:opacity .5s}.cr8-tc.out{opacity:0}.cr8-tcbg{position:absolute;inset:-20px;background:center/cover;filter:blur(18px) brightness(.45);animation:kb 8s ease-in-out infinite alternate}.cr8-tcin{position:relative;text-align:center;padding:24px;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:cr8in .9s ease}.cr8-tcin img{width:150px;aspect-ratio:3/4;object-fit:cover;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.6)}.cr8-tcin em{font-style:normal;font-size:12px;letter-spacing:.12em;color:var(--gold)}.cr8-tcin h2{margin:0;font-size:24px}.cr8-tcin p{margin:0;font-size:14px;color:rgba(255,255,255,.8)}.cr8-tcin small{color:rgba(255,255,255,.55)}.cr8-tcin span{margin-top:10px;font-size:12px;color:rgba(255,255,255,.45)}@keyframes cr8in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}";
+  document.head.appendChild(st);
+  window.__mod208 = 1;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
