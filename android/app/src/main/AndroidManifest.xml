@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".MiruApp"
@@ -58,9 +59,20 @@
         <!-- 2026-11-26 没有支持 TWA 的浏览器时，FALLBACK_STRATEGY=webview 会打开这个页面；之前没在这里声明，走到兜底路径就直接闪退 -->
         <activity
             android:name="com.google.androidbrowserhelper.trusted.WebViewFallbackActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
+
+        <!-- 2026-11-27 不让 Unity 广告 SDK 在 App 启动时自动初始化（它挂在 androidx.startup 上，比 Application 还早，
+             联网拉配置出问题时整个 App 一打开就退出，而且崩溃记录还没装上、什么都记不到）。
+             激励视频照常：用户点「看广告」时 AdActivity 里再初始化（Ads.init）。 -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data android:name="com.unity3d.services.core.configuration.AdsSdkInitializer" tools:node="remove" />
+        </provider>
 
         <!-- 网页里的 Digital Goods API（查价格、查未完成的单）走这里 -->
         <service android:name=".DelegationService" android:enabled="true" android:exported="true">
