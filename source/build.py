@@ -207,7 +207,34 @@ _html_lazy = _unb64(_html_lazy)
 _hl = hashlib.sha256(_html_lazy.encode("utf-8")).hexdigest()[:12]
 _si2 = _html_lazy.find("<script>")
 _html_lazy = _html_lazy[:_si2 + 8] + "\n" + 'window.MIRU_BUILD="' + _hl + " " + _ts + ' lazy36";' + _html_lazy[_si2 + 8:]
+# 2026-11-27 · 首屏提速：主脚本（约 5MB）写成带内容哈希的独立文件 app.<哈希>.js，页面里只留一个 <script src>。
+#   · 页面本身只剩几百 KB，手机上马上能画出下面的开屏页，不再长时间黑屏；
+#   · 外部脚本浏览器会单独缓存，Chrome 还会缓存编译结果，第二次起打开明显更快；
+#   · 文件名带哈希，内容一变就是新文件，不会读到旧缓存。旧的 app.*.js 只保留最近 3 个。
+BOOT_SPLASH = ('<div id="boot-splash" style="position:fixed;inset:0;z-index:2147483000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:#07060A;color:#F1ECF3;font:600 13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;letter-spacing:.32em;transition:opacity .3s">'
+               '<img src="/icons/icon-192.png" width="88" height="88" alt="" style="border-radius:22px;box-shadow:0 8px 30px rgba(240,183,126,.25)">'
+               '<div>MIRU</div><div style="width:120px;height:3px;border-radius:2px;background:rgba(255,255,255,.12);overflow:hidden"><i style="display:block;width:40%;height:100%;background:#F0B77E;animation:bootbar 1.1s ease-in-out infinite"></i></div>'
+               '<style>@keyframes bootbar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}</style></div>')
+BOOT_DONE = '<script>(function(){var s=document.getElementById("boot-splash");if(!s)return;s.style.opacity="0";setTimeout(function(){s.remove()},320)})();</script>'
+def _externalize(html):
+    b = html.rfind("\n</script>\n")
+    a = html.rfind("\n<script>\n", 0, b) + 1
+    if a < 0 or b <= a: raise SystemExit("externalize: main script block not found")
+    js_body = html[a + len("<script>\n"):b]
+    tag = hashlib.sha256(js_body.encode("utf-8")).hexdigest()[:12]
+    name = "app." + tag + ".js"
+    open(os.path.join(ROOT, name), "w", encoding="utf8", newline="\n").write(js_body + "\n")
+    olds = sorted((f for f in os.listdir(ROOT) if f.startswith("app.") and f.endswith(".js") and f != name), key=lambda f: os.path.getmtime(os.path.join(ROOT, f)), reverse=True)
+    for f in olds[2:]:
+        try: os.remove(os.path.join(ROOT, f))
+        except OSError: pass
+    page = html[:a] + '<script src="/' + name + '"></script>\n' + BOOT_DONE + html[b + len("\n</script>"):]
+    i = page.find('<div class="app"><div class="device" id="dev"></div></div>')
+    if i < 0: raise SystemExit("externalize: #dev not found")
+    page = page[:i] + BOOT_SPLASH + "\n" + page[i:]
+    print("externalize:", name, len(js_body), "chars; page", len(page), "chars")
+    return page
 open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)
 if LAZY_DEFAULT and not SPLIT:
-    open(out, "w", encoding="utf8", newline="\n").write(_html_lazy)
+    open(out, "w", encoding="utf8", newline="\n").write(_externalize(_html_lazy))
 print(len(_html_lazy), "chars -> index.lazy.html", "(default)" if LAZY_DEFAULT else "", "| packs", len(_packs_js))
