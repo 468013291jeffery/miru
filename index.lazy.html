@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="ef8f0980ad65 2026-11-26T05:39Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="89d9f902b6e5 2026-11-26T06:28Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -31299,6 +31299,73 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   };
   try { if (typeof paySheet === "function" && !window.paySheet) window.paySheet = paySheet; } catch (_) {}
   window.__mod206 = 1;
+})();
+
+/* ================= mod207 · 创作者专区 + 创作者精选（2026-11-26）=================
+   用户作品不再和官方的视频大卡混在一排：
+   · 发现页顶部原来的「社区新作」换成「创作者专区」：全部 / 🎬 影视 / 🖼 插画 / 📖 轻读 筛选，三种卡片样式各不相同；
+     分类是服务器按作品实际挂的素材自动算的（api/works.js autoMeta → pack.meta.format），作者不用选。
+   · 上面一排「创作者精选」：后台「待精选」里运营点了通过的用户作品，影视版排在前面。 */
+(function () {
+  "use strict";
+  if (typeof renderTab !== "function" || typeof capi !== "function") return;
+  const ZH = () => CL() === "zh";
+  const T = (a, b) => ZH() ? a : b;
+  const F = { all: ["全部", "All"], film: ["🎬 影视", "🎬 Cinematic"], illus: ["🖼 插画", "🖼 Illustrated"], lite: ["📖 轻读", "📖 Quick read"] };
+  let cur = "all"; const cache = {};
+  async function feed(kind) {
+    const k = kind + "|" + (S.or || "all"); const c = cache[k];
+    if (c && Date.now() - c.at < 60000) return c.list;
+    const q = kind === "featured" ? "/works?feed=creator_featured&limit=20" : "/works?feed=creator&limit=24" + (kind !== "all" ? "&format=" + kind : "");
+    const r = await capi(q + "&orient=" + (S.or || "all"));
+    const list = r.ok ? (r.j.works || []) : [];
+    cache[k] = { at: Date.now(), list }; return list;
+  }
+  const fmt = w => w.format === "film" || w.format === "illus" ? w.format : "lite";
+  function card(w) {
+    const f = fmt(w), t = esc(w.title || ""), a = esc(w.author || ""), h = esc(String(w.hook || "").slice(0, 70));
+    const likes = '<small class="cz-m">♥ ' + (w.likes || 0) + ' · ▶ ' + (w.plays || 0) + '</small>';
+    if (f === "film") return '<button class="cz-c cz-film" data-cwork="' + esc(w.id) + '"><div class="cz-img"' + (w.cover ? ' style="background-image:url(' + esc(w.cover) + ')"' : '') + '><i class="cz-play">▶</i><em class="cz-tag">🎬</em></div><b>' + t + '</b><small>' + a + '</small>' + likes + '</button>';
+    if (f === "illus") return '<button class="cz-c cz-illus" data-cwork="' + esc(w.id) + '"><div class="cz-img"' + (w.cover ? ' style="background-image:url(' + esc(w.cover) + ')"' : '') + '><em class="cz-tag">🖼</em></div><b>' + t + '</b><small>' + a + '</small>' + likes + '</button>';
+    return '<button class="cz-c cz-lite" data-cwork="' + esc(w.id) + '"><div class="cz-txt"><em class="cz-tag">📖</em><b>' + t + '</b><p>' + h + '</p></div><small>' + a + '</small>' + likes + '</button>';
+  }
+  function chips() { return '<div class="cz-chips">' + Object.entries(F).map(([k, v]) => '<button data-czf="' + k + '" class="' + (k === cur ? "on" : "") + '">' + T(v[0], v[1]) + '</button>').join("") + '</div>'; }
+  async function fill(box) {
+    const row = box.querySelector(".cz-row:not(.cz-feat)"); if (!row) return;
+    row.innerHTML = '<p class="cz-empty">' + T("加载中…", "Loading…") + '</p>';
+    const L = await feed(cur);
+    row.innerHTML = L.length ? L.map(card).join("") : '<p class="cz-empty">' + T("这一类还没有作品——去创作中心写第一部吧", "Nothing here yet — be the first to create one") + '</p>';
+  }
+  async function mount() {
+    if (!CL0.on) return;
+    const v = document.querySelector("#s-main .scroll") || document.querySelector("#s-main"); if (!v) return;
+    v.querySelectorAll(".comm68").forEach(n => n.remove());
+    if (v.querySelector(".cz207")) return;
+    const box = document.createElement("div"); box.className = "cz207";
+    const fe = await feed("featured");
+    if (v.querySelector(".cz207")) return;
+    const feat = fe.slice().sort((a, b) => (fmt(b) === "film") - (fmt(a) === "film"));
+    box.innerHTML = (feat.length ? '<div class="eyebrow">✦ ' + T("创作者精选", "Creator picks") + '</div><div class="cz-row cz-feat">' + feat.map(card).join("") + '</div>' : "") +
+      '<div class="eyebrow" style="margin-top:12px">🌐 ' + T("创作者专区", "Creator stories") + '</div>' + chips() + '<div class="cz-row"></div>';
+    v.insertAdjacentElement("afterbegin", box);
+    fill(box);
+  }
+  const _rt = renderTab;
+  renderTab = function (k) { const r = _rt.apply(this, arguments); try { if (k === "discover") setTimeout(() => mount().catch(() => {}), 50); } catch (_) {} return r; };
+  document.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-czf]"); if (!b) return;
+    cur = b.dataset.czf; const box = b.closest(".cz207");
+    box.querySelectorAll("[data-czf]").forEach(x => x.classList.toggle("on", x === b)); fill(box);
+  });
+  const st = document.createElement("style");
+  st.textContent = ".comm68{display:none!important}.cz207{margin:4px 0 14px}.cz-chips{display:flex;gap:6px;margin:8px 0;overflow-x:auto}.cz-chips button{flex:none;border:1px solid var(--line);background:transparent;color:var(--dim);border-radius:99px;padding:5px 12px;font-size:12.5px}.cz-chips button.on{border-color:var(--gold);color:var(--text)}" +
+    ".cz-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}.cz-empty{font-size:13px;color:var(--faint);padding:10px 0}" +
+    ".cz-c{flex:none;width:128px;text-align:left;background:none;border:0;color:var(--text);padding:0;display:flex;flex-direction:column;gap:3px}.cz-c b{font-size:13px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.cz-c small{font-size:11px;color:var(--faint)}.cz-m{color:var(--dim)!important}" +
+    ".cz-img{position:relative;width:128px;aspect-ratio:3/4;border-radius:12px;background:#241d2e center/cover no-repeat;overflow:hidden}.cz-film .cz-img{aspect-ratio:9/14;box-shadow:0 0 0 1px rgba(240,183,126,.45)}.cz-play{position:absolute;inset:auto auto 8px 8px;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;font-style:normal;font-size:11px}" +
+    ".cz-illus .cz-img{border:3px solid rgba(255,255,255,.08)}.cz-tag{position:absolute;top:6px;right:6px;font-style:normal;font-size:12px;background:rgba(0,0,0,.5);border-radius:8px;padding:1px 5px}" +
+    ".cz-txt{position:relative;width:128px;aspect-ratio:3/4;border-radius:12px;padding:12px 10px;background:linear-gradient(160deg,#2a1f33,#17121d);border:1px solid var(--line);display:flex;flex-direction:column;gap:6px;overflow:hidden}.cz-txt b{font-size:14px;font-family:Georgia,'Songti SC',serif}.cz-txt p{margin:0;font-size:11.5px;line-height:1.45;color:var(--dim);display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden}";
+  document.head.appendChild(st);
+  window.__mod207 = 1;
 })();
 
 /* Authored content contract: refresh exposition without replaying events; keep role voice and sourced facts. */
