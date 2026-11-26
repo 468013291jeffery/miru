@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { assemble, parseScript, dslQA, slotsOf, segments, dirFields, charLine } from './dsl.js';
+import { TPL_NAME, TPL_SPEC, checkGame, libList, libPrompt } from './games.js';
 import './pro.css';
 
 /* MIRU Studio Pro —— 用户端的「官方标准」剧本编辑器。
@@ -74,6 +75,7 @@ function List({ db, setDb, open }) {
         <button className="pbtn" onClick={fromGuide}>⇪ 从 AI 引导创作带入</button>
         <button className="pbtn" onClick={() => fileRef.current.click()}>⇪ 导入剧本 .md</button>
         <input ref={fileRef} type="file" accept=".md,.txt" hidden onChange={importMd} />
+        {P && P.openOldPro && <button className="pbtn ghost" onClick={() => P.openOldPro()}>旧版结构编辑器</button>}
       </div>
       {db.projects.length === 0 ? <p className="note">还没有剧本。新建一部，或把 AI 引导创作里的故事带进来，按官方标准细写。</p> :
         <ul className="plist">{db.projects.map(p => {
@@ -84,7 +86,7 @@ function List({ db, setDb, open }) {
   );
 }
 
-const TABS = [['set', '① 设定'], ['cast', '② 人物卡'], ['write', '③ 剧本'], ['qa', '④ 检查'], ['assets', '⑤ 素材'], ['games', '⑥ 小游戏'], ['pub', '⑦ 语言与发布']];
+const TABS = [['set', '① 设定'], ['cast', '② 人物卡'], ['write', '③ 剧本'], ['qa', '④ 检查'], ['assets', '⑤ 素材'], ['games', '⑥ 小游戏'], ['pub', '⑦ 语言与发布'], ['ver', '⑧ 版本']];
 
 function Editor({ p, upd, back }) {
   const [tab, setTab] = useState('write');
@@ -106,6 +108,7 @@ function Editor({ p, upd, back }) {
       {tab === 'assets' && <Assets p={p} upd={upd} script={script} />}
       {tab === 'games' && <Games p={p} upd={upd} />}
       {tab === 'pub' && <Publish p={p} upd={upd} qa={qa} script={script} />}
+      {tab === 'ver' && <Versions p={p} upd={upd} />}
     </div>
   );
 }
@@ -139,6 +142,7 @@ function Setup({ p, upd }) {
         <F label="写作语言"><select value={p.lang} onChange={e => set('lang', e.target.value)}>{Object.entries(LN).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></F>
       </div>
       <F label="标签" hint="用逗号分开，比如：黑帮, 先婚后爱, 慢热"><input value={(p.tags || []).join(', ')} onChange={e => set('tags', e.target.value.split(/[,，]/).map(s => s.trim()).filter(Boolean).slice(0, 12))} /></F>
+      <Research p={p} upd={upd} />
       <div className="pbox"><b>章节大纲</b><p className="dim">现在 {p.chapters.length} 章。AI 按终版规则排一份大纲（标题 + 本章目标），已经写好的正文不会被覆盖。</p><button className="pbtn primary" disabled={busy} onClick={outline}>{busy ? '生成中…' : '✨ AI 排章节大纲 · 💎' + PRICE.outline}</button></div>
     </div>
   );
@@ -232,6 +236,7 @@ function Write({ p, upd, qa }) {
           {p.chapters.length > 1 && <button className="pbtn ghost" onClick={() => { if (window.confirm ? true : true) { upd(x => (x.chapters.splice(ci, 1), x)); setCi(Math.max(0, ci - 1)); } }}>删除这一章</button>}
         </div>
         {chErr.length > 0 && <ul className="pqa">{chErr.map((s, i) => <li key={i} className={qa.err.includes(s) ? 'r' : 'y'}>{s}</li>)}</ul>}
+        <Draft p={p} upd={upd} />
       </section>
     </div>
   );
@@ -301,44 +306,122 @@ function Assets({ p, upd, script }) {
   );
 }
 
-const TPL_NAME = { m111_pick: '选一个', m111_order: '排顺序', m111_classify: '分类', m111_mark: '圈出可疑处', m111_match: '连线配对', m111_pair: '找相同', m112_free: '心意选择' };
 function Games({ p, upd }) {
   const [q, setQ] = useState(''), [ci, setCi] = useState(0), [busy, setBusy] = useState(false);
-  const lib = useMemo(() => { try { return (P && P.MG100 || []).filter(g => g && g.id && /^g_/.test(g.id) && /^(find|memory|code|rhythm|hold|whack|wires|slide|simon|scratch|dice|order|catch|balance|quiz)$/.test(g.tpl)); } catch (_) { return []; } }, []);
-  const shown = lib.filter(g => !q || (g.zh + g.en + (g.kw || []).join(' ')).toLowerCase().includes(q.toLowerCase())).slice(0, 60);
-  const put = id => upd(x => { const c = x.chapters[ci]; if (/⟦MG\|/.test(c.body)) c.body = c.body.replace(/^⟦MG\|[^⟧]*⟧\s*$/m, '⟦MG|' + id + '⟧'); else { const k = c.body.search(/^#\s*CHOICE/m); c.body = k > 0 ? c.body.slice(0, k) + '⟦MG|' + id + '⟧\n' + c.body.slice(k) : c.body + '\n⟦MG|' + id + '⟧'; } return x; });
+  const lib = useMemo(() => { try { return libList(P && P.MG100); } catch (_) { return []; } }, []);
+  const shown = lib.filter(g => !q || (g.zh + g.en + (g.kw || []).join(' ')).toLowerCase().includes(q.toLowerCase())).slice(0, 80);
+  const place = (x, i, id) => { const c = x.chapters[i]; if (!c) return; if (/⟦MG\|/.test(c.body)) c.body = c.body.replace(/^⟦MG\|[^⟧]*⟧\s*$/m, '⟦MG|' + id + '⟧'); else { const k = c.body.search(/^#\s*CHOICE/m); c.body = k > 0 ? c.body.slice(0, k) + '⟦MG|' + id + '⟧\n' + c.body.slice(k) : c.body + '\n⟦MG|' + id + '⟧'; } };
   const design = async () => {
-    if (!p.chapters.some(c => c.body.trim())) return toast('先写剧本，AI 才能按剧情设计');
+    if (!p.chapters.some(c => c.body.trim())) return toast('先写剧本，AI 才能按剧情配游戏');
     if (!pay(PRICE.games, 'pro_games')) return; setBusy(true);
     try {
       const dig = p.chapters.map((c, i) => '## 第' + (i + 1) + '章 ' + c.t + '\n' + String(c.body).split('\n').filter(l => /[：:]/.test(l)).slice(0, 30).join('\n')).join('\n\n');
-      const r = await ai('给这部互动恋爱剧的每一章设计 1 个小游戏：必须是这一章剧情里「你」正在做的事，题目和选项用这一章的具体人物、物件、台词。tpl 只能用 m111_pick（ans=正确下标）/ m111_order（items 按正确顺序）/ m111_classify（bins 2-3 个，items=[[[中,英],分类下标]]）/ m111_mark（ans=[下标]）/ m111_match（items=[[[左中,左英],[右中,右英]]]）/ m111_pair（pair=[i,j]）/ m112_free（没有标准答案）。整部剧混用不同模板。每段文字写成 [中文, English]；items 3-4 个；zh 标题 ≤8 字；pz/pe 一句说明。只返回 JSON {"games":[{"ch":1,"tpl":"","zh":"","en":"","pz":"","pe":"","ask":["",""],"items":[],"ans":0}]}\n\n' + dig.slice(0, 20000), 7000);
-      const G = (r && r.games || []).filter(g => g && g.tpl && TPL_NAME[g.tpl] && g.zh && Array.isArray(g.items) && g.items.length >= 3);
-      if (!G.length) throw new Error('empty');
+      const r = await ai('给这部互动恋爱剧的每一章配 1 个小游戏，必须是这一章剧情里「你」正在做的事。\n第一步：先看 MIRU 游戏库里有没有贴这一章剧情的现成游戏（下面的清单，编号=名字(触发词)），有就用 {"ch":章,"lib":"编号"}。\n第二步：库里没有贴的，再按剧情定制一个：题目和选项用这一章的具体人物、物件、台词。' + TPL_SPEC + '。每段文字写成 [中文, English]；zh 标题 ≤8 字；pz/pe 是一句游戏说明。整部剧混用不同玩法，别都用同一种。\n只返回 JSON {"games":[{"ch":1,"lib":"g_xxx"},{"ch":2,"tpl":"","zh":"","en":"","pz":"","pe":"", …该模板的字段}]}\n\n【游戏库】' + libPrompt(lib) + '\n\n【剧本】\n' + dig.slice(0, 18000), 8000);
+      const G = (r && r.games) || []; let nLib = 0, nNew = 0;
       upd(x => {
         G.forEach(g => {
-          const i = Number(g.ch) - 1; const c = x.chapters[i]; if (!c) return;
-          const id = 'g_pro_' + x.id.slice(1, 9) + '_c' + (i + 1);
-          const o = { id, tpl: g.tpl, seconds: 40, zh: String(g.zh).slice(0, 16), en: String(g.en || g.zh).slice(0, 40), pz: String(g.pz || ''), pe: String(g.pe || ''), a: '', b: '', kw: [], items: g.items };
-          ['ask', 'ans', 'bins', 'pair'].forEach(k => { if (g[k] != null) o[k] = g[k]; });
-          x.games = (x.games || []).filter(y => y.id !== id).concat([o]);
-          if (/⟦MG\|/.test(c.body)) c.body = c.body.replace(/^⟦MG\|[^⟧]*⟧\s*$/m, '⟦MG|' + id + '⟧'); else { const k = c.body.search(/^#\s*CHOICE/m); c.body = k > 0 ? c.body.slice(0, k) + '⟦MG|' + id + '⟧\n' + c.body.slice(k) : c.body + '\n⟦MG|' + id + '⟧'; }
+          const i = Number(g && g.ch) - 1; if (!x.chapters[i]) return;
+          if (g.lib && lib.some(l => l.id === g.lib)) { place(x, i, g.lib); nLib++; return; }
+          const o = checkGame(g); if (!o) return;
+          o.id = 'g_pro_' + x.id.slice(1, 9) + '_c' + (i + 1);
+          x.games = (x.games || []).filter(y => y.id !== o.id).concat([o]); place(x, i, o.id); nNew++;
         });
         return x;
       });
-      toast('设计好 ' + G.length + ' 个小游戏，已放进各章（每章 1 个，放在章末选择之前，可以在剧本里挪位置）');
-    } catch (_) { toast('这次没设计出来，没扣钻'); try { P && (P.S.keys += PRICE.games, P.save()); } catch (__) {} }
+      if (!nLib && !nNew) throw new Error('empty');
+      toast('配好了：游戏库现成 ' + nLib + ' 个，按剧情定制 ' + nNew + ' 个（每章 1 个，放在章末选择之前，可以在剧本里挪位置）');
+    } catch (_) { toast('这次没配出来，没扣钻'); try { P && (P.S.keys += PRICE.games, P.save()); } catch (__) {} }
     setBusy(false);
   };
   return (
     <div className="ppanel">
-      <p className="dim">规范：每章最多 1 个小游戏，放在剧情里「你」正在做这件事的地方。两种来源：AI 按每章剧情定制（和官方剧同一套模板），或从 MIRU 游戏库挑通用的。小游戏都可以跳过，不会卡住剧情。</p>
-      <div className="pbox"><b>按剧情定制</b><p className="dim">AI 读完每一章，给每章设计一个只属于这一章的小游戏（选一个 / 排顺序 / 分类 / 圈出可疑处 / 连线 / 找相同 / 心意选择），中英双语。</p><button className="pbtn primary" disabled={busy} onClick={design}>{busy ? '设计中…' : '✨ AI 给每章设计小游戏 · 💎' + PRICE.games}</button></div>
-      {(p.games || []).length > 0 && <><h3>已定制（{p.games.length}）</h3><ul className="pqa">{p.games.map(g => <li key={g.id} className="g"><b>{g.zh}</b> · {TPL_NAME[g.tpl]} · <span className="dim">{g.pz}</span> <button className="pbtn ghost sm" onClick={() => upd(x => { x.games = x.games.filter(y => y.id !== g.id); x.chapters.forEach(c => { c.body = c.body.replace(new RegExp('^⟦MG\\|' + g.id + '⟧\\s*$\\n?', 'm'), ''); }); return x; })}>删除</button></li>)}</ul></>}
-      <h3>从游戏库挑（{lib.length} 个通用小游戏）</h3>
+      <p className="dim">规范：每章最多 1 个小游戏，放在剧情里「你」正在做这件事的地方，都可以跳过。MIRU 游戏库一共 912 个、53 种玩法：其中 {lib.length} 个是通用的现成游戏，任何剧都能直接用；其余是官方剧按自己剧情写的题，题面绑定那部剧的人物，不能原样搬，但它们的玩法可以换上你的剧情再用（现在开放 11 种纯文字玩法，找不同、拖拽定位这类要配专门图片的，等生图接口接好再开放）。</p>
+      <div className="pbox"><b>AI 自动配（库里优先，没有合适的再定制）</b><p className="dim">AI 读完每一章：库里有贴剧情的现成游戏就直接用；没有的，用 11 种玩法（选一个 / 排顺序 / 分类 / 圈出可疑处 / 连线 / 找相同 / 心意选择 / 试开关 / 写约定 / 按住稳住 / 敲暗号）按这一章剧情定制，中英双语。</p><button className="pbtn primary" disabled={busy} onClick={design}>{busy ? '配游戏中…' : '✨ AI 给每章配小游戏 · 💎' + PRICE.games}</button></div>
+      {(p.games || []).length > 0 && <><h3>已定制（{p.games.length}）</h3><ul className="pqa">{p.games.map(g => <li key={g.id} className="g"><b>{g.zh}</b> · {TPL_NAME[g.tpl] || g.tpl} · <span className="dim">{g.pz}</span> <button className="pbtn ghost sm" onClick={() => upd(x => { x.games = x.games.filter(y => y.id !== g.id); x.chapters.forEach(c => { c.body = c.body.split('\n').filter(l => l.trim() !== '⟦MG|' + g.id + '⟧').join('\n'); }); return x; })}>删除</button></li>)}</ul></>}
+      <h3>自己从游戏库挑（{lib.length} 个通用游戏）</h3>
       <div className="prow pwr"><F label="放到第几章"><select value={ci} onChange={e => setCi(Number(e.target.value))}>{p.chapters.map((c, i) => <option key={i} value={i}>第 {i + 1} 章 {c.t}</option>)}</select></F><F label="搜索"><input value={q} onChange={e => setQ(e.target.value)} placeholder="戒指、保险箱、心跳…" /></F></div>
       {!lib.length && <p className="note">在 MIRU 里打开才能读到游戏库。</p>}
-      <div className="pglib">{shown.map(g => <button key={g.id} onClick={() => { put(g.id); toast('已放进第 ' + (ci + 1) + ' 章'); }}><b>{g.zh}</b><small>{g.en}</small></button>)}</div>
+      <div className="pglib">{shown.map(g => <button key={g.id} onClick={() => { upd(x => (place(x, ci, g.id), x)); toast('已放进第 ' + (ci + 1) + ' 章'); }}><b>{g.zh}</b><small>{g.en}</small></button>)}</div>
+    </div>
+  );
+}
+
+/* 版本记录：手动存、每次发布自动存，最多留 30 个；可以对比行数、恢复 */
+function snap(x, note) { const v = { at: Date.now(), note, title: x.title, chapters: JSON.parse(JSON.stringify(x.chapters)), cast: JSON.parse(JSON.stringify(x.cast)), games: JSON.parse(JSON.stringify(x.games || [])) }; x.versions = [v].concat(x.versions || []).slice(0, 30); return x; }
+function Versions({ p, upd }) {
+  const [note, setNote] = useState('');
+  const cur = assemble(p).split('\n').length;
+  return (
+    <div className="ppanel">
+      <p className="dim">每次「发布 / 更新」会自动存一个版本；改大段之前也可以手动存一个。恢复会先把现在的样子另存一份，不会丢。</p>
+      <div className="prow pwr"><F label="版本说明"><input value={note} onChange={e => setNote(e.target.value)} placeholder="比如：第 3 章改了结局" /></F><button className="pbtn primary" onClick={() => { upd(x => snap(x, note || '手动保存')); setNote(''); toast('已保存版本'); }}>保存当前版本</button></div>
+      {!(p.versions || []).length && <p className="note">还没有版本记录。</p>}
+      <ul className="plist">{(p.versions || []).map((v, i) => {
+        const n = assemble({ ...p, chapters: v.chapters, cast: v.cast }).split('\n').length;
+        return <li key={v.at} style={{ cursor: 'default' }}><b>{new Date(v.at).toLocaleString()}</b><span className="dim">{v.note} · {v.chapters.length} 章 · {n} 行（现在 {cur} 行，{n === cur ? '一样长' : (cur - n > 0 ? '多了 ' : '少了 ') + Math.abs(cur - n) + ' 行'}）</span><button className="pbtn sm" onClick={() => { upd(x => { snap(x, '恢复前自动保存'); x.chapters = JSON.parse(JSON.stringify(v.chapters)); x.cast = JSON.parse(JSON.stringify(v.cast)); x.games = JSON.parse(JSON.stringify(v.games || [])); return x; }); toast('已恢复到这个版本'); }}>恢复</button></li>;
+      })}</ul>
+    </div>
+  );
+}
+
+/* 识别编剧稿：编剧用自然中文写的稿子（第一幕、人物设定、图片标注……）→ AI 转成 MIRU 标准剧本，一章一章转 */
+const DRAFT_PRICE = n => Math.max(3, Math.ceil(n / 3000) * 2);
+async function convertDraft(text, p, onProg) {
+  const parts = []; const chunks = String(text).split(/\n(?=\s*(?:第\s*[0-9一二三四五六七八九十百]+\s*[章幕回集]|#+\s*CHAPTER|Chapter\s+\d+))/i).filter(s => s.trim());
+  const blocks = chunks.length > 1 ? chunks : String(text).match(/[\s\S]{1,6000}(?=\n|$)/g) || [];
+  for (let i = 0; i < blocks.length; i++) {
+    const r = await ai(RULES().slice(0, 5000) + '\n\n把下面这段编剧稿转成 MIRU 标准剧本的一章（不改剧情、不删台词，只整理成格式；人物设定、执行规则、后台说明不要当成正文）。格式：# SCENE｜地点 + 下一行 ⟦BG|bg_c' + String(i + 1).padStart(2, '0') + 's01|说明⟧；旁白：…；角色名：“台词”；稿子里标了图片的地方写 ⟦CG|cg_c' + String(i + 1).padStart(2, '0') + '_n|画面⟧；章末必须是 # CHOICE｜问题 + #### A｜选项 + ⟦OPT|A|set:flag⟧ + 选项后剧情 … + # ·（稿子里没有选择就按剧情补一道有不同后果的选择）。不要写 # CHAPTER 行和 ⟦CHAR⟧。\n只返回 JSON {"t":"章节标题","goal":"本章目标","body":"整章剧本","cast":[{"name":"","gender":"m","age":"","identity":"","personality":""}]}\n人物（已知）：' + p.cast.map(c => c.name).filter(Boolean).join('、') + '\n\n【稿子】\n' + blocks[i].slice(0, 9000), 8000);
+    if (!r || typeof r.body !== 'string' || r.body.length < 40) return null;
+    parts.push(r); onProg && onProg(Math.round((i + 1) / blocks.length * 100));
+  }
+  return parts;
+}
+function Draft({ p, upd }) {
+  const [txt, setTxt] = useState(''), [busy, setBusy] = useState(false), [prog, setProg] = useState(0);
+  const price = DRAFT_PRICE(txt.length);
+  const run = async () => {
+    if (txt.trim().length < 200) return toast('稿子太短了');
+    if (!pay(price, 'pro_draft')) return; setBusy(true); setProg(0);
+    try {
+      const parts = await convertDraft(txt, p, setProg); if (!parts || !parts.length) throw new Error('fail');
+      upd(x => {
+        snap(x, '识别编剧稿之前');
+        const empty = x.chapters.length === 1 && !x.chapters[0].body.trim();
+        const chs = parts.map(r => ({ t: String(r.t || ''), goal: String(r.goal || ''), body: String(r.body).replace(/^#+\s*CHAPTER.*$/gim, '').replace(/^⟦(CHAR|GOAL)\|.*$/gm, '').trim() }));
+        x.chapters = empty ? chs : x.chapters.concat(chs);
+        parts.forEach(r => (r.cast || []).forEach(c => { if (c && c.name && !x.cast.some(y => y.name === c.name)) { if (x.cast.length === 1 && !x.cast[0].name) x.cast = []; x.cast.push({ ...blank().cast[0], key: 'c' + (x.cast.length + 1), name: String(c.name), gender: String(c.gender || 'm').charAt(0), age: String(c.age || ''), identity: String(c.identity || ''), personality: String(c.personality || '') }); } }));
+        return x;
+      });
+      setTxt(''); toast('识别好了：' + parts.length + ' 章，已加进剧本（之前的样子存在版本记录里）');
+    } catch (_) { toast('这次没识别完，没扣钻'); try { P && (P.S.keys += price, P.save()); } catch (__) {} }
+    setBusy(false);
+  };
+  return (
+    <div className="pbox"><b>识别编剧稿</b><p className="dim">把编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定都可以）粘贴进来，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。按字数计费，约每 3000 字 💎2，最少 💎3，转好才扣。</p>
+      <textarea className="pcode" style={{ minHeight: 160 }} value={txt} onChange={e => setTxt(e.target.value)} placeholder="把编剧稿粘贴到这里…" />
+      <div className="prow"><button className="pbtn primary" disabled={busy || !txt.trim()} onClick={run}>{busy ? '识别中 ' + prog + '%' : '✨ 识别成标准剧本 · 💎' + price}</button><span className="dim">{txt.length} 字</span></div>
+    </div>
+  );
+}
+
+/* 选题与定位（对应后台 ①）：AI 没有联网，这里不编造「参考来源」，只做选题分析和母题卡；真实资料请作者自己补进设定 */
+function Research({ p, upd }) {
+  const [busy, setBusy] = useState(false);
+  const r = p.research;
+  const run = async () => {
+    if (!p.title && !p.premise) return toast('先写剧名或设定');
+    if (!pay(PRICE.outline, 'pro_research')) return; setBusy(true);
+    try {
+      const o = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 的选题编辑，面向英语区女性向互动恋爱读者。分析这个选题，只写能从设定本身推出来的判断，不要编造数据、书名、作者或网址。只返回 JSON {"position":"一句话定位","audience":"目标读者","promise":"体验承诺（玩家会感受到什么）","tropes":["核心母题/梗 3-6 个"],"hooks":["前三章的钩子 3 个"],"twists":["中后段反转方向 2-3 个"],"risks":["容易写崩或踩线的地方 2-4 个"],"motifs":[{"name":"母题卡名","use":"在剧里怎么用"}]}\n剧名：' + p.title + '\n钩子：' + p.hook + '\n设定：' + p.premise + '\n玩家身份：' + p.you + '\n人物：' + p.cast.map(c => c.name + '（' + c.identity + '）').join('；'), 3000);
+      if (!o || !o.position) throw new Error('empty'); upd(x => (x.research = o, x)); toast('选题分析好了');
+    } catch (_) { toast('这次没分析出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
+    setBusy(false);
+  };
+  const L = (k, t) => r && r[k] && (Array.isArray(r[k]) ? r[k].length > 0 : true) ? <p><b>{t}：</b>{Array.isArray(r[k]) ? r[k].map(x => typeof x === 'string' ? x : x.name + '（' + x.use + '）').join('；') : r[k]}</p> : null;
+  return (
+    <div className="pbox"><b>选题与定位</b><p className="dim">对应后台「① 选题与素材研究」：定位、目标读者、体验承诺、母题卡、前三章钩子、反转方向、风险点。AI 不联网，不会编造参考来源；真实资料请自己补进设定。</p>
+      <button className="pbtn primary" disabled={busy} onClick={run}>{busy ? '分析中…' : (r ? '重新分析' : '✨ AI 选题分析') + ' · 💎' + PRICE.outline}</button>
+      {r && <div className="prev" style={{ fontSize: 13 }}>{L('position', '定位')}{L('audience', '读者')}{L('promise', '体验承诺')}{L('tropes', '母题')}{L('hooks', '前三章钩子')}{L('twists', '反转方向')}{L('risks', '风险')}{L('motifs', '母题卡')}</div>}
     </div>
   );
 }
@@ -401,7 +484,7 @@ function Publish({ p, upd, qa, script }) {
       const r = await fetch('/api/works', { method: 'POST', headers: { Authorization: 'Bearer ' + tk, 'Content-Type': 'application/json' }, body: JSON.stringify({ op: 'publish', authorName: author, work: { id: p.cloudId, title: p.title, hook: p.hook, lang: p.lang, orient: p.orient, tags: p.tags, cover: p.cover || null, pack } }) });
       const j = await r.json().catch(() => ({}));
       if (!r.ok) throw new Error(j.error || (j.reasons || []).join(', ') || r.status);
-      upd(x => (x.cloudId = j.id, x)); setRes(j); toast(j.status === 'live' ? '🌐 已上线，所有人都能玩' : '🌐 已提交，审核通过后上线');
+      upd(x => snap(Object.assign(x, { cloudId: j.id }), '发布 · ' + (j.status === 'live' ? '已上线' : '审核中'))); setRes(j); toast(j.status === 'live' ? '🌐 已上线，所有人都能玩' : '🌐 已提交，审核通过后上线');
     } catch (e) { toast('发布没成功：' + (e.message || e)); }
     setBusy('');
   };
