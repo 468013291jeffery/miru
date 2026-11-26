@@ -205,7 +205,7 @@ function Write({ p, upd, qa }) {
     if (!pay(price, 'pro_chapter')) return; setBusy(true);
     try {
       const prev = p.chapters.slice(Math.max(0, ci - 2), ci).map((x, k) => '【第' + (ci - 1 + k) + '章 ' + x.t + '】目标：' + x.goal + '\n' + String(x.body).slice(-1200)).join('\n');
-      const fmt = 'MIRU 标准剧本写法（必须严格遵守，否则播不出来）：\n# SCENE｜地点 （每章 3–5 场）\n⟦BG|bg_c' + String(ci + 1).padStart(2, '0') + 's01|地点和时间⟧ （每个 SCENE 下一行必须是 BG）\n旁白：叙述\n角色名：“台词”\n你：玩家说的话（少用，玩家只扮演自己）\n⟦FREE|提示|建议1|建议2|建议3⟧ （玩家自由回复）\n⟦CG|cg_c' + String(ci + 1).padStart(2, '0') + '_1|画面⟧ 心动名场面插图（每章 2–3 张）\n⟦CALL|角色|提示⟧…⟦/CALL⟧ 来电；⟦PHOTO|标题|说明⟧ 他发来的照片\n⟦SET|flag⟧ 记下选择；⟦IF|flag⟧…⟦ELSE⟧…⟦/IF⟧ 按之前的选择显示不同内容\n章末必须是：\n# CHOICE｜问题\n#### A｜选项\n⟦OPT|A|set:flag⟧\n选项后的 2–4 行剧情\n#### B｜…（至少 2 个，最多 3 个，后果要不一样）\n# ·\n不要写「## 」小标题，不要写 # CHAPTER 行，不要写 ⟦CHAR⟧ 和 ⟦GOAL⟧。';
+      const fmt = 'MIRU 标准剧本写法（必须严格遵守，否则播不出来）：\n# SCENE｜地点 （每章 3–5 场）\n⟦BG|bg_c' + String(ci + 1).padStart(2, '0') + 's01|地点和时间⟧ （每个 SCENE 下一行必须是 BG）\n旁白：叙述\n角色名：“台词”\n你：玩家说的话（少用，玩家只扮演自己）\n⟦FREE|提示|建议1|建议2|建议3⟧ （玩家自由回复）\n⟦CG|cg_c' + String(ci + 1).padStart(2, '0') + '_1|画面⟧ 心动名场面插图（' + ({ light: '这一档每章 1 张背景、插图最多 1 张，同一个地点重复用同一个 BG 槽位名', std: '这一档每章约 2 个不同的 BG 槽位、1 张插图', pro: '这一档每章 3–5 场、2–3 张插图' }[p.tier || 'std']) + '）\n⟦CALL|角色|提示⟧…⟦/CALL⟧ 来电；⟦PHOTO|标题|说明⟧ 他发来的照片\n⟦SET|flag⟧ 记下选择；⟦IF|flag⟧…⟦ELSE⟧…⟦/IF⟧ 按之前的选择显示不同内容\n章末必须是：\n# CHOICE｜问题\n#### A｜选项\n⟦OPT|A|set:flag⟧\n选项后的 2–4 行剧情\n#### B｜…（至少 2 个，最多 3 个，后果要不一样）\n# ·\n不要写「## 」小标题，不要写 # CHAPTER 行，不要写 ⟦CHAR⟧ 和 ⟦GOAL⟧。';
       const ask = mode === 'polish' ? '按终版规则和标准写法，修改下面这一章：保持剧情和选择不变，把对白写得更有张力和暧昧感、补齐缺的背景卡/插图/选项后果，修正格式问题。只返回 JSON {"body":"整章剧本"}\n原文：\n' + c.body
         : '按终版规则和标准写法，写出第 ' + (ci + 1) + ' 章完整剧本（约 60–90 行正文，' + (ci === 0 ? '第 1 章前 10 句主角必须出场，用具体行为展示他对你的态度；' : '') + '结尾留钩子）。只返回 JSON {"body":"整章剧本"}';
       const r = await ai(RULES().slice(0, 7000) + '\n\n' + fmt + '\n\n【作品】' + p.title + '｜钩子：' + p.hook + '\n设定：' + p.premise.slice(0, 1200) + '\n玩家身份：' + (p.you || '待定') + '\n人物：' + p.cast.map(x => x.name + '（' + [x.identity, x.personality, x.speech].filter(Boolean).join('；') + '）').join('\n') + '\n前情：\n' + (prev || '（这是第一章）') + '\n【本章】第 ' + (ci + 1) + ' 章「' + c.t + '」目标：' + (c.goal || '自定') + '\n\n' + ask, 8000);
@@ -266,41 +266,89 @@ function QA({ p, qa, script }) {
   );
 }
 
+/* 素材：三档（轻量 / 标准 / 官方级）+ 每个位置都可以「上传自己的图」或「AI 生成」。
+   AI 生图走主站 studioGenImage（mod206）：接口接好之前按钮会提示先上传；接好后不用改这里。按张收费，成功才扣。 */
+const TIERS = {
+  light: { name: '轻量', per: '每章 1 张背景（同一个地点可以反复用同一张），插图可选', target: n => Math.max(6, n * 1 + 2), tip: '适合先上线试水：封面 + 主角立绘 + 每章一张背景。' },
+  std: { name: '标准', per: '每章约 2 张背景 + 1 张心动插图', target: n => n * 3 + 2, tip: '大多数用户作品推荐这一档。' },
+  pro: { name: '官方级', per: '每章 3–5 张背景 + 2–3 张插图', target: n => Math.max(70, n * 6), tip: '和官方剧一样的量，一部大约 70–80 张。' },
+};
+const SIZE = { bg: [768, 1344], cg: [768, 1344], cover: [768, 1024], char: [768, 1024] };
 function Assets({ p, upd, script }) {
   const S = useMemo(() => slotsOf(script), [script]);
-  const [busy, setBusy] = useState('');
-  const up = async (slot, file) => {
-    if (!file) return; const tk = token(); if (!tk) return toast('请先在 MIRU 登录');
-    if (file.size > 4 * 1048576) return toast('单个文件不能超过 4MB');
-    setBusy(slot);
-    try {
-      const r = await fetch('/api/pkg?work=' + encodeURIComponent(p.id) + '&slot=' + encodeURIComponent(slot) + '&mime=' + encodeURIComponent(file.type) + '&name=' + encodeURIComponent(file.name), { method: 'PUT', headers: { Authorization: 'Bearer ' + tk, 'Content-Type': file.type }, body: file });
-      const j = await r.json().catch(() => ({}));
-      if (!r.ok || !j.url && !(j.asset && j.asset.url)) throw new Error(j.error || r.status);
-      const url = j.url || j.asset.url;
-      upd(x => { if (slot === 'cover') x.cover = url; else x.assets[slot] = url; return x; }); toast('已上传');
-    } catch (e) { toast('上传失败：' + (e.message || e)); }
-    setBusy('');
+  const [busy, setBusy] = useState(''), [prog, setProg] = useState('');
+  const tier = TIERS[p.tier || 'std'];
+  const imgPrice = (() => { try { return (P && P.studioImagePrice && P.studioImagePrice()) || 2; } catch (_) { return 2; } })();
+  const ready = () => { try { return !!(P && P.studioImageReady && P.studioImageReady()); } catch (_) { return false; } };
+  const putFile = async (slot, file) => {
+    const tk = token(); if (!tk) throw new Error('请先在 MIRU 登录');
+    if (file.size > 4 * 1048576) throw new Error('单个文件不能超过 4MB');
+    const r = await fetch('/api/pkg?work=' + encodeURIComponent(p.id) + '&slot=' + encodeURIComponent(slot) + '&mime=' + encodeURIComponent(file.type) + '&name=' + encodeURIComponent(file.name), { method: 'PUT', headers: { Authorization: 'Bearer ' + tk, 'Content-Type': file.type }, body: file });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.url && !(j.asset && j.asset.url)) throw new Error(j.error || r.status);
+    const url = j.url || j.asset.url;
+    upd(x => { if (slot === 'cover') x.cover = url; else x.assets[slot] = url; return x; });
+    return url;
+  };
+  const up = async (slot, file) => { if (!file) return; setBusy(slot); try { await putFile(slot, file); toast('已上传'); } catch (e) { toast('上传失败：' + (e.message || e)); } setBusy(''); };
+  const promptFor = (slot, note, kind) => {
+    const lead = p.cast[0] || {};
+    const base = 'Cinematic romance visual novel art, soft dramatic lighting, rich color, high detail, no text, no watermark, no logo.';
+    if (kind === 'char') { const c = p.cast.find(x => 'char_' + (x.key || x.name) === slot) || lead; return base + ' Character portrait, waist-up, facing viewer, adult (' + (c.age || 25) + '), ' + (c.gender === 'f' ? 'woman' : 'man') + '. ' + [c.looks, c.identity, c.personality].filter(Boolean).join('. ').slice(0, 400); }
+    if (kind === 'cover') return base + ' Story cover poster for "' + p.title + '": ' + (p.hook || p.premise).slice(0, 300) + '. Featuring ' + (lead.looks || lead.identity || 'the male lead') + '.';
+    if (kind === 'cg') return base + ' Romantic key scene illustration: ' + (note || slot) + '. Featuring ' + (lead.looks || lead.identity || 'the lead') + '. Story: ' + p.title + '.';
+    return base + ' Background scenery only, no people: ' + (note || slot) + '. Setting of the story "' + p.title + '".';
+  };
+  const gen = async (slot, note, kind) => {
+    if (!ready()) { toast('AI 生图接口还在接入，接好之后这个按钮直接能用；现在可以先上传自己的图'); return false; }
+    if (!P || (P.S.keys || 0) < imgPrice) { try { P && P.paySheet && P.paySheet('img'); } catch (_) {} toast('钻石不够（每张 💎' + imgPrice + '）'); return false; }
+    const [w, h] = SIZE[kind] || SIZE.bg;
+    let u = await P.studioGenImage({ prompt: promptFor(slot, note, kind), w, h, slot, kind, title: p.title });
+    if (!u) throw new Error('empty');
+    const blob = await (await fetch(u)).blob();
+    await putFile(slot, new File([blob], slot + '.' + ((blob.type.split('/')[1] || 'png').replace('jpeg', 'jpg')), { type: blob.type || 'image/png' }));
+    try { P.spend(imgPrice, 'img'); } catch (_) {}
+    return true;
+  };
+  const genOne = async (slot, note, kind) => { setBusy(slot); try { if (await gen(slot, note, kind)) toast('生成好了'); } catch (e) { toast('这张没生成出来，没扣钻'); } setBusy(''); };
+  const imgSlots = [['cover', '封面', 'cover']].concat(p.cast.filter(c => c.name).map(c => ['char_' + (c.key || c.name), c.name + ' 的立绘', 'char']), S.bg.map(s => [s.slot, s.note, 'bg']), S.cg.map(s => [s.slot, s.note, 'cg']));
+  const missing = imgSlots.filter(([s]) => !(s === 'cover' ? p.cover : p.assets[s]));
+  const genAll = async () => {
+    if (!missing.length) return toast('图片都齐了');
+    if (!ready()) return toast('AI 生图接口还在接入，接好之后这个按钮直接能用；现在可以先上传自己的图');
+    let ok = 0;
+    for (let i = 0; i < missing.length; i++) {
+      const [s, n, k] = missing[i]; setProg((i + 1) + ' / ' + missing.length); setBusy(s);
+      try { if (!(await gen(s, n, k))) break; ok++; } catch (_) {}
+    }
+    setBusy(''); setProg(''); toast('生成了 ' + ok + ' 张' + (ok < missing.length ? '，剩下的没生成出来（没扣钻），可以再点一次或自己上传' : ''));
   };
   const row = (slot, note, kind) => {
-    const url = slot === 'cover' ? p.cover : p.assets[slot]; const acc = kind === 'video' ? 'video/*' : kind === 'bgm' ? 'audio/*' : 'image/*';
+    const url = slot === 'cover' ? p.cover : p.assets[slot]; const isImg = !['video', 'bgm'].includes(kind);
+    const acc = kind === 'video' ? 'video/*' : kind === 'bgm' ? 'audio/*' : 'image/*';
     return <div className="pslot" key={kind + slot}>
       <div className="pthumb">{url ? (kind === 'video' ? <video src={url} muted /> : kind === 'bgm' ? <span>🎵</span> : <img src={url} alt="" />) : <span className="dim">缺</span>}</div>
       <div className="pslotb"><b>{slot}</b><small className="dim">{note}</small></div>
-      <label className="pbtn sm">{busy === slot ? '上传中…' : url ? '替换' : '上传'}<input type="file" accept={acc} hidden onChange={e => up(slot, e.target.files[0])} /></label>
+      <label className="pbtn sm">{busy === slot ? '处理中…' : url ? '换成自己的' : '上传自己的'}<input type="file" accept={acc} hidden onChange={e => up(slot, e.target.files[0])} /></label>
+      {isImg && <button className="pbtn sm" disabled={!!busy} onClick={() => genOne(slot, note, kind)}>{url ? 'AI 重画' : 'AI 生成'} · 💎{imgPrice}</button>}
       {url && <button className="pbtn ghost sm" onClick={() => upd(x => { if (slot === 'cover') x.cover = ''; else delete x.assets[slot]; return x; })}>移除</button>}
     </div>;
   };
-  const total = S.bg.length + S.cg.length + S.video.length, have = [...S.bg, ...S.cg, ...S.video].filter(s => p.assets[s.slot]).length;
+  const n = p.chapters.length, target = tier.target(n), have = imgSlots.length - missing.length;
   return (
     <div className="ppanel">
-      <p className="dim">素材按剧本里的位置挂：剧本写了几个 ⟦BG⟧ ⟦CG⟧ ⟦VIDEO⟧，这里就列几个。已挂 {have} / {total}。官方剧一部大约 70–80 张图：每章 3–5 张背景 + 2–3 张插图。缺的位置不挡发布（播放时跳过或由 AI 兜底），但会影响推荐。按位置上传不扣钻。</p>
+      <div className="pbox"><b>素材档位</b><p className="dim">按剧本里写的位置挂图：剧本里有几个 ⟦BG⟧ ⟦CG⟧，下面就列几个。先选一档，AI 写章时会按这一档安排背景和插图数量。</p>
+        <div className="prow pwr">{Object.entries(TIERS).map(([k, t]) => <button key={k} className={'pbtn' + ((p.tier || 'std') === k ? ' primary' : '')} onClick={() => upd(x => (x.tier = k, x))}>{t.name}</button>)}</div>
+        <p className="dim">{tier.name}：{tier.per}。{tier.tip} 这部 {n} 章，建议约 {target} 张图；现在剧本里有 {imgSlots.length} 个图片位置，已挂 {have} 张。</p>
+      </div>
+      <div className="pbox"><b>每张图两种方式：上传自己的，或 AI 生成</b><p className="dim">上传不扣钻。AI 生成每张 💎{imgPrice}，生成成功才扣；不满意可以「AI 重画」或换成自己的。{ready() ? '' : '（AI 生图接口还在接入，接好之后按钮直接能用。）'}</p>
+        <button className="pbtn primary" disabled={!!busy} onClick={genAll}>{prog ? '生成中 ' + prog : '✨ 一键生成缺少的 ' + missing.length + ' 张 · 💎' + missing.length * imgPrice}</button></div>
       <h3>封面与人物立绘</h3>
-      {row('cover', '发现页和首页卡片，竖版 3:4', 'img')}
-      {p.cast.filter(c => c.name).map(c => row('char_' + (c.key || c.name), c.name + ' 的立绘', 'img'))}
-      <h3>背景（⟦BG⟧ · {S.bg.length}）</h3>{S.bg.map(s => row(s.slot, s.note, 'img'))}
-      <h3>心动插图（⟦CG⟧ · {S.cg.length}）</h3>{S.cg.map(s => row(s.slot, s.note, 'img'))}
-      <h3>视频（⟦VIDEO⟧ · {S.video.length}）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场 10 秒视频（可选）', 'video')}
+      {row('cover', '发现页和首页卡片，竖版 3:4', 'cover')}
+      {p.cast.filter(c => c.name).map(c => row('char_' + (c.key || c.name), c.name + ' 的立绘', 'char'))}
+      <h3>背景（⟦BG⟧ · {S.bg.length}）</h3>{S.bg.map(s => row(s.slot, s.note, 'bg'))}
+      <h3>心动插图（⟦CG⟧ · {S.cg.length}）</h3>{S.cg.map(s => row(s.slot, s.note, 'cg'))}
+      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场 10 秒视频（可选）', 'video')}
       {S.bgm.length > 0 && <><h3>自定义音乐（⟦BGM⟧ · {S.bgm.length}）</h3><p className="dim">MIRU 曲库里已有的提示词（tense / romantic / night…）不用上传。</p>{S.bgm.map(s => row('bgm_' + s.slot, s.slot, 'bgm'))}</>}
     </div>
   );
@@ -379,6 +427,20 @@ async function convertDraft(text, p, onProg) {
 function Draft({ p, upd }) {
   const [txt, setTxt] = useState(''), [busy, setBusy] = useState(false), [prog, setProg] = useState(0);
   const price = DRAFT_PRICE(txt.length);
+  const fileRef = useRef();
+  const load = async e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    const ext = (f.name.split('.').pop() || '').toLowerCase();
+    try {
+      let t = '';
+      if (['txt', 'md', 'markdown'].includes(ext)) t = await f.text();
+      else if (ext === 'docx') { if (!P || typeof P.imDocx !== 'function') throw new Error('na'); t = await P.imDocx(await f.arrayBuffer()); }
+      else if (ext === 'pdf') { if (!P || typeof P.imPdf !== 'function') throw new Error('na'); t = await P.imPdf(await f.arrayBuffer()); }
+      else return toast('支持 .docx / .pdf / .txt / .md；老的 .doc 请先在 Word 里另存为 .docx');
+      t = String(Array.isArray(t) ? t.join('\n') : t || '').trim(); if (!t) throw new Error('empty');
+      setTxt(t); toast('已读入「' + f.name + '」：' + t.length + ' 字，看一眼没问题就点「识别成标准剧本」');
+    } catch (_) { toast(P ? '这个文件读不出来（可能是扫描图片版），换成 .docx 或 .txt 试试' : '请在 MIRU 里打开才能读 Word / PDF'); }
+  };
   const run = async () => {
     if (txt.trim().length < 200) return toast('稿子太短了');
     if (!pay(price, 'pro_draft')) return; setBusy(true); setProg(0);
@@ -397,7 +459,8 @@ function Draft({ p, upd }) {
     setBusy(false);
   };
   return (
-    <div className="pbox"><b>识别编剧稿</b><p className="dim">把编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定都可以）粘贴进来，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。按字数计费，约每 3000 字 💎2，最少 💎3，转好才扣。</p>
+    <div className="pbox"><b>识别编剧稿</b><p className="dim">上传编剧稿（Word .docx / PDF / txt）或直接粘贴，编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定）都可以，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。按字数计费，约每 3000 字 💎2，最少 💎3，转好才扣。</p>
+      <div className="prow pwr"><button className="pbtn" onClick={() => fileRef.current.click()}>⇪ 上传编剧稿（Word / PDF / txt）</button><input ref={fileRef} type="file" accept=".docx,.pdf,.txt,.md,.markdown" hidden onChange={load} /><span className="dim">也可以直接粘贴到下面</span></div>
       <textarea className="pcode" style={{ minHeight: 160 }} value={txt} onChange={e => setTxt(e.target.value)} placeholder="把编剧稿粘贴到这里…" />
       <div className="prow"><button className="pbtn primary" disabled={busy || !txt.trim()} onClick={run}>{busy ? '识别中 ' + prog + '%' : '✨ 识别成标准剧本 · 💎' + price}</button><span className="dim">{txt.length} 字</span></div>
     </div>
