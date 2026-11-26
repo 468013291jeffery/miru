@@ -5646,7 +5646,7 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
 
 /* ================= mod203 · 用户作品小游戏：按剧情定制 + 发布后补传（2026-11-26）=================
    之前（mod201）只有 5 种固定写法的小游戏，每部剧台词都一样。现在：
-   1 · 发布后让 AI 读每一章的剧情，给每章设计一个「只属于这一章」的小游戏，用官方剧同一套模板
+   1 · 发布后让 AI 读每一章的剧情，给每章设计两个「只属于这一章」的小游戏（2026-11-27 起每章 2 个、五种语言），用官方剧同一套模板
        （m111_pick 选一个 / m111_order 排顺序 / m111_classify 分类 / m111_mark 圈出可疑处 / m111_match 连线 /
         m111_pair 找相同 / m112_free 没有标准答案的心意选择），题目、选项都来自这一章发生的事，中英双语；
        插在剧情里正在做这件事的那一句后面，玩完有角色反应，跳过也能继续。
@@ -5661,7 +5661,8 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   const PRICE203 = 2;
   const GENERIC = /^(find|memory|code|rhythm|hold|whack|wires|slide|simon|scratch|dice|order|catch|balance|quiz)$/;
   const S2 = x => String(x == null ? "" : x).trim();
-  const bi = x => Array.isArray(x) && x.length >= 2 && S2(x[0]) && S2(x[1]) ? [S2(x[0]).slice(0, 80), S2(x[1]).slice(0, 120)] : null;
+  /* 2026-11-27 五语言：[中, 英, 日, 韩, 西]，至少中英 */
+  const bi = x => Array.isArray(x) && x.length >= 2 && S2(x[0]) && S2(x[1]) ? x.slice(0, 5).map((v, i) => S2(v).slice(0, i ? 120 : 80)) : null;
   const reg = list => { try { list.forEach(g => { const i = MG100.findIndex(x => x.id === g.id); if (i >= 0) MG100[i] = g; else if (window.MG168 && typeof MG168.reg === "function") MG168.reg([g]); else MG100.push(g); }); } catch (_) {} };
   function regAll() { try { Object.values((S.mine && S.mine.worlds) || {}).forEach(w => { if (w && Array.isArray(w.games203) && w.games203.length) reg(w.games203); }); } catch (_) {} }
   setTimeout(regAll, 1500);
@@ -5682,6 +5683,7 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     const T = g && g.tpl; if (!TPLS.includes(T)) return null;
     const o = { tpl: T, seconds: 40, zh: S2(g.zh).slice(0, 16), en: S2(g.en).slice(0, 40), pz: S2(g.pz).slice(0, 120), pe: S2(g.pe).slice(0, 200), a: "", b: "", kw: [] };
     if (!o.zh || !o.en || !o.pz || !o.pe) return null;
+    ["ja", "ko", "es"].forEach(l => { if (S2(g[l])) o[l] = S2(g[l]).slice(0, 40); }); ["pj", "pk", "ps"].forEach(k => { if (S2(g[k])) o[k] = S2(g[k]).slice(0, 200); });
     const items = (Array.isArray(g.items) ? g.items : []);
     if (T === "m111_pick" || T === "m111_mark" || T === "m112_free") {
       o.ask = bi(g.ask) || [o.pz.slice(0, 40), o.pe.slice(0, 80)]; o.items = items.map(bi).filter(Boolean).slice(0, 4); if (o.items.length < 3) return null;
@@ -5699,15 +5701,15 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   }
   async function design(w) {
     const lead = (w.cast || [])[0], c0 = lead && ch(lead), L = c0 ? first(c0.n) : "";
-    const prompt = "你是 MIRU 互动恋爱剧的小游戏设计师。下面是一部用户写的剧，每章列出了「句号|说话人：台词」。请给每一章设计 1 个小游戏，要求：\n" +
+    const prompt = "你是 MIRU 互动恋爱剧的小游戏设计师。下面是一部用户写的剧，每章列出了「句号|说话人：台词」。请给每一章设计 2 个小游戏（同一章两个玩法不同：第 1 个在这一章前半段，第 2 个在后半段），要求：\n" +
       "1. 游戏必须是这一章剧情里「你」正在做的事（查线索、挑礼物、拼回时间线、判断他话里的真假、选一个心意……），题目和选项都用这一章出现的具体人物、物件、台词，不能是通用题。\n" +
       "2. at = 插在哪一句后面（用句号），选剧情正在做这件事的那一句；第 1 章不要放在前 10 句。\n" +
       "3. 先看 MIRU 游戏库里有没有贴这一章剧情的现成游戏（清单在最后，编号=名字(触发词)），有就只写 {\"ch\":章,\"lib\":\"编号\",\"at\":句号,\"win_zh\":…,\"win_en\":…}。库里没有贴的，再定制：tpl 只能用 m111_pick（选一个，ans=正确下标）、m111_order（items 按正确顺序）、m111_classify（bins 2-3 个，items=[[[中,英],分类下标]]）、m111_mark（圈出可疑处，ans=[下标]）、m111_match（items=[[[左中,左英],[右中,右英]]]）、m111_pair（pair=[i,j]）、m112_free（没有标准答案的心意选择）、m111_device（试开关：controls=[[[中,英],true/false,[反馈中,英]]]，正好一个 true）、m111_deal（写约定：groups=[[[问题中,英],[[选项中,英],…]]]）、m111_hold（按住稳住：label=[中,英]，need=3-6）、m111_morse（敲暗号：label=[中,英]，code 用 . 和 - 写 3-6 位）。整部剧尽量混用不同玩法。\n" +
-      "4. 每个文字都写成 [中文, English] 两种语言；items 3-4 个；zh 标题 ≤8 字，en 标题 ≤5 词；pz/pe 是一句游戏说明（中/英）。\n" +
+      "4. 每个文字都写成 [中文, English, 日本語, 한국어, Español] 五种语言的数组；标题写 zh/en/ja/ko/es，说明写 pz/pe/pj/pk/ps（中/英/日/韩/西）；items 3-4 个；zh 标题 ≤8 字，en 标题 ≤5 词。每章正好 2 条。\n" +
       "5. win_zh / win_en：玩完后 " + (L || "男主") + " 的一句反应台词，贴着这一章的情绪，暧昧、有张力，不超过 30 字。\n" +
-      "只返回 JSON：{\"games\":[{\"ch\":1,\"at\":12,\"tpl\":\"m111_pick\",\"zh\":\"…\",\"en\":\"…\",\"pz\":\"…\",\"pe\":\"…\",\"ask\":[\"…\",\"…\"],\"items\":[[\"…\",\"…\"]],\"ans\":0,\"win_zh\":\"…\",\"win_en\":\"…\"}]}\n\n" + digest(w) + "\n\n【游戏库】" + MG100.filter(g => GENERIC.test(g.tpl) && /^g_/.test(g.id)).map(g => g.id + "=" + g.zh + (g.kw && g.kw.length ? "(" + g.kw.slice(0, 3).join("/") + ")" : "")).join("；");
+      "只返回 JSON：{\"games\":[{\"ch\":1,\"at\":12,\"tpl\":\"m111_pick\",\"zh\":\"…\",\"en\":\"…\",\"ja\":\"…\",\"ko\":\"…\",\"es\":\"…\",\"pz\":\"…\",\"pe\":\"…\",\"pj\":\"…\",\"pk\":\"…\",\"ps\":\"…\",\"ask\":[\"中\",\"EN\",\"日\",\"한\",\"ES\"],\"items\":[[\"中\",\"EN\",\"日\",\"한\",\"ES\"]],\"ans\":0,\"win_zh\":\"…\",\"win_en\":\"…\"}]}\n\n" + digest(w) + "\n\n【游戏库】" + MG100.filter(g => GENERIC.test(g.tpl) && /^g_/.test(g.id)).map(g => g.id + "=" + g.zh + (g.kw && g.kw.length ? "(" + g.kw.slice(0, 3).join("/") + ")" : "")).join("；");
     let r = null;
-    for (let t = 0; t < 2 && !r; t++) { try { r = await ask(prompt, { maxTokens: 7000 }); if (!r || !Array.isArray(r.games)) r = null; } catch (_) { r = null; } }
+    for (let t = 0; t < 2 && !r; t++) { try { r = await ask(prompt, { maxTokens: 14000 }); if (!r || !Array.isArray(r.games)) r = null; } catch (_) { r = null; } }
     return r ? r.games : [];
   }
   function pickGeneric(w, c, used) {
@@ -5719,10 +5721,10 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     let h = 0; for (const ch2 of String(w.id || "") + txt.length) h = (h * 31 + ch2.charCodeAt(0)) >>> 0;
     return pool[h % pool.length];
   }
-  function insert(c, at, beatZh, beatEn) {
+  function insert(c, at, beatZh, beatEn, keep) {
     const done = new Set();
     Object.keys(c.beats).forEach(k => { const arr = c.beats[k]; if (!Array.isArray(arr) || done.has(arr)) return; done.add(arr);
-      for (let i = arr.length - 1; i >= 0; i--) if (Array.isArray(arr[i]) && arr[i][2] && arr[i][2].auto201) arr.splice(i, 1);
+      if (!keep) for (let i = arr.length - 1; i >= 0; i--) if (Array.isArray(arr[i]) && arr[i][2] && arr[i][2].auto201) arr.splice(i, 1);
       arr.splice(Math.min(Math.max(2, at + 1), arr.length), 0, JSON.parse(JSON.stringify(k === "zh" ? beatZh : beatEn))); });
   }
   const has203 = c => Object.values(c.beats).some(a => Array.isArray(a) && a.some(b => Array.isArray(b) && b[1] === "mg" && b[2] && b[2].u203));
@@ -5732,21 +5734,29 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     /* 2026-11-26 AI 配游戏按次收费（💎2，成功才扣）；钻石不够就只用游戏库里现成的（不调 AI，免费） */
     let G = []; const canPay = (S.keys || 0) >= PRICE203; if (canPay) { try { G = await design(w); } catch (_) {} }
     let n = 0, aiN = 0;
+    /* 2026-11-27 每章 2 个：AI 给的这一章前两条（库里现成 / 定制）先用，不够的从游戏库按剧情补；两个都插进剧情，一前一后 */
     CH.forEach((c, i) => {
       if (has203(c)) return; const B = baseOf(c); if (!B || B.length < 4) return;
-      const raw = G.find(g => Number(g && g.ch) === i + 1), g = raw && check(raw);
-      let id, at = Math.floor(B.length * .7), winZh = "", winEn = "";
-      const libHit = raw && raw.lib && MG100.some(x => x.id === raw.lib && GENERIC.test(x.tpl) && !used.has(x.id));
-      if (libHit) { id = raw.lib; const a = Number(raw.at); if (a >= 0 && a < B.length && !(i === 0 && a < 10)) at = a; winZh = S2(raw.win_zh).slice(0, 60); winEn = S2(raw.win_en).slice(0, 140); aiN++; }
-      else if (g) {
-        aiN++; id = "g_u203_" + String(w.cloudId || w.id).replace(/[^\w]/g, "") + "_c" + (i + 1); g.id = id; list.push(g);
-        const a = Number(raw.at); if (a >= 0 && a < B.length && !(i === 0 && a < 10)) at = a;
-        winZh = S2(raw.win_zh).slice(0, 60); winEn = S2(raw.win_en).slice(0, 140);
-      } else { const p = pickGeneric(w, c, used); if (!p) return; id = p.id; }
-      used.add(id);
-      const mk = (win) => ["sys", "mg", Object.assign({ id, u203: 1 }, win ? { win: [[lead, "say", win]] } : {})];
-      insert(c, at, mk(winZh || winEn), mk(winEn || winZh));
-      n++;
+      const raws = G.filter(g => Number(g && g.ch) === i + 1).slice(0, 2), picks = [];
+      for (let k = 0; k < 2; k++) {
+        const raw = raws[k], g = raw && !raw.lib && check(raw);
+        let id, at = Math.floor(B.length * (k ? .72 : .38)), winZh = "", winEn = "";
+        const okAt = a => a >= 0 && a < B.length && !(i === 0 && a < 10);
+        const libHit = raw && raw.lib && MG100.some(x => x.id === raw.lib && GENERIC.test(x.tpl) && !used.has(x.id));
+        if (libHit) { id = raw.lib; if (okAt(Number(raw.at))) at = Number(raw.at); winZh = S2(raw.win_zh).slice(0, 60); winEn = S2(raw.win_en).slice(0, 140); aiN++; }
+        else if (g) {
+          aiN++; id = "g_u203_" + String(w.cloudId || w.id).replace(/[^\w]/g, "") + "_c" + (i + 1) + (k ? "_2" : ""); g.id = id; list.push(g);
+          if (okAt(Number(raw.at))) at = Number(raw.at);
+          winZh = S2(raw.win_zh).slice(0, 60); winEn = S2(raw.win_en).slice(0, 140);
+        } else { const p = pickGeneric(w, c, used); if (!p) continue; id = p.id; }
+        used.add(id); picks.push({ id, at, winZh, winEn });
+      }
+      if (picks.length === 2 && picks[0].at >= picks[1].at) { picks[0].at = Math.floor(B.length * .38); picks[1].at = Math.max(picks[0].at + 2, Math.floor(B.length * .72)); }
+      picks.slice().sort((x, y) => y.at - x.at).forEach((p, j) => {
+        const mk = (win) => ["sys", "mg", Object.assign({ id: p.id, u203: 1 }, win ? { win: [[lead, "say", win]] } : {})];
+        insert(c, p.at, mk(p.winZh || p.winEn), mk(p.winEn || p.winZh), j > 0);
+        n++;
+      });
     });
     if (list.length) { w.games203 = list; reg(list); }
     if (n) { w.g203 = Date.now(); try { save(); } catch (_) {} }
@@ -5852,7 +5862,7 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   if (typeof crOpen === "function") { const _co = crOpen; crOpen = function (tab) { if (tab === "pro" && !oldOnce) { try { openStudioPro(); return; } catch (_) {} } return _co.apply(this, arguments); }; }
   try {
     const OLD = "互动、小游戏、音乐、音效和特效不用你选：AI 会按剧情从 MIRU 素材库自动匹配，放在合适的位置。";
-    const NEW = "互动、音乐、音效和特效不用你选：AI 会按剧情从 MIRU 素材库自动匹配，放在合适的位置。小游戏每章一个：先从 912 个的游戏库里挑贴剧情的现成游戏，没有合适的再按剧情定制（一部剧 💎2，成功才扣；钻石不够就只用库里现成的，免费）。";
+    const NEW = "互动、音乐、音效和特效不用你选：AI 会按剧情从 MIRU 素材库自动匹配，放在合适的位置。小游戏每章两个（中英日韩西五种语言）：先从 912 个的游戏库里挑贴剧情的现成游戏，没有合适的再按剧情定制（一部剧 💎2，成功才扣；钻石不够就只用库里现成的，免费）。";
     const d = Object.getOwnPropertyDescriptor(window, "CREATOR_HTML");
     if (d && d.get) { const g = d.get; Object.defineProperty(window, "CREATOR_HTML", { configurable: true, get() { return String(g.call(window)).split(OLD).join(NEW); } }); }
     else if (typeof window.CREATOR_HTML === "string") window.CREATOR_HTML = window.CREATOR_HTML.split(OLD).join(NEW);
@@ -6080,4 +6090,105 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     ".cr8-tc{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;background:#0b0810;transition:opacity .5s}.cr8-tc.out{opacity:0}.cr8-tcbg{position:absolute;inset:-20px;background:center/cover;filter:blur(18px) brightness(.45);animation:kb 8s ease-in-out infinite alternate}.cr8-tcin{position:relative;text-align:center;padding:24px;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:8px;animation:cr8in .9s ease}.cr8-tcin img{width:150px;aspect-ratio:3/4;object-fit:cover;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.6)}.cr8-tcin em{font-style:normal;font-size:12px;letter-spacing:.12em;color:var(--gold)}.cr8-tcin h2{margin:0;font-size:24px}.cr8-tcin p{margin:0;font-size:14px;color:rgba(255,255,255,.8)}.cr8-tcin small{color:rgba(255,255,255,.55)}.cr8-tcin span{margin-top:10px;font-size:12px;color:rgba(255,255,255,.45)}@keyframes cr8in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}";
   document.head.appendChild(st);
   window.__mod208 = 1;
+})();
+
+/* ================= mod209 · 小游戏五语言（中 / 英 / 日 / 韩 / 西）（2026-11-27）=================
+   产品决定：小游戏要支持中日韩西英。
+   · 数据：游戏里给玩家看的文字可以写成 [中文, English, 日本語, 한국어, Español] 五个元素的数组（原来是 [中, 英] 两个）；
+     标题 zh/en/ja/ko/es，说明 pz/pe/pj/pk/ps。只有中英的老游戏照常玩，日韩西界面下文字退回英文。
+   · 播放：所有模板原来只认「中文 / 非中文」两档。这里在 mgOpen 外面包一层：界面是日韩西时，把游戏数据临时换成
+     [中, 当前语言] 两档的副本交给模板，模板走「非中文」那档就显示日韩西；按钮、提示这些模板自带的英文界面字，
+     在游戏弹窗里按对照表换成当前语言。 */
+(function () {
+  "use strict";
+  if (typeof mgOpen !== "function" || typeof MG100 === "undefined") return;
+  const IDX = { ja: 2, ko: 3, es: 4 }, PK = { ja: "pj", ko: "pk", es: "ps" };
+  const LG = () => { try { const l = typeof CL === "function" ? CL() : (S && S.lang); return IDX[l] ? l : null; } catch (_) { return null; } };
+  function loc(x, i) {
+    if (Array.isArray(x)) { if (x.length === 5 && x.every(v => typeof v === "string")) return [x[0], x[i] || x[1]]; return x.map(v => loc(v, i)); }
+    if (x && typeof x === "object" && x.constructor === Object) { const o = {}; for (const k in x) o[k] = loc(x[k], i); return o; }
+    return x;
+  }
+  /* 模板自带的英文界面字 → 日 / 韩 / 西 */
+  const D = {
+    "Skip": ["スキップ", "건너뛰기", "Saltar"], "You did it!": ["やった！", "성공!", "¡Lo lograste!"], "So close…": ["あと少し……", "아깝다…", "Casi…"],
+    "Back to the story": ["物語に戻る", "이야기로 돌아가기", "Volver a la historia"], "Check": ["確認", "확인", "Comprobar"], "Check order": ["順番を確認", "순서 확인", "Comprobar orden"],
+    "Check the angle": ["角度を確認", "각도 확인", "Comprobar ángulo"], "Choose…": ["選択…", "선택…", "Elige…"], "Confirm": ["決定", "확인", "Confirmar"],
+    "Confirm muted": ["ミュートを確定", "음소거 확정", "Confirmar silencio"], "Confirm plan": ["計画を確定", "계획 확정", "Confirmar plan"], "Confirm these two": ["この2つで決定", "이 두 개로 확정", "Confirmar estos dos"],
+    "Done": ["完了", "완료", "Listo"], "Fragments": ["かけら", "조각", "Fragmentos"], "Photo positions": ["写真の位置", "사진 위치", "Posiciones en la foto"],
+    "HOLD": ["長押し", "누르기", "MANTÉN"], "Hold": ["長押し", "누르기", "Mantén"], "Move": ["移動", "이동", "Mover"], "Play": ["プレイ", "플레이", "Jugar"], "Start": ["スタート", "시작", "Empezar"],
+    "Tap": ["タップ", "탭", "Toca"], "Tap!": ["タップ！", "탭!", "¡Toca!"], "Try again": ["もう一度", "다시 하기", "Otra vez"], "Roll": ["振る", "굴리기", "Tirar"], "Tie — again": ["引き分け、もう一回", "무승부, 다시", "Empate, otra vez"],
+    "You": ["あなた", "당신", "Tú"], "Him": ["彼", "그", "Él"], "Your turn": ["あなたの番", "당신 차례", "Tu turno"], "Scratch it off": ["指でこすって", "손가락으로 긁기", "Rasca para descubrir"],
+    "Mini-game": ["ミニゲーム", "미니게임", "Minijuego"], "Mini-game won": ["ミニゲームクリア", "미니게임 승리", "Minijuego superado"], "Skip, keep reading": ["スキップして読み進める", "건너뛰고 계속 읽기", "Saltar y seguir leyendo"],
+    "Winning changes the scene · skip anytime": ["勝つと場面が変わる · いつでもスキップ可", "이기면 장면이 바뀌어요 · 언제든 건너뛰기 가능", "Ganar cambia la escena · puedes saltarlo"],
+    "Not quite — but the story keeps going.": ["惜しい——でも物語は続く。", "아쉽지만 이야기는 계속돼요.", "Casi, pero la historia sigue."],
+    "Not quite. Check once more.": ["惜しい。もう一度確かめて。", "조금 달라요. 한 번 더 확인해요.", "Casi. Compruébalo otra vez."], "Not quite. One more try.": ["惜しい。もう一回。", "아쉬워요. 한 번 더.", "Casi. Un intento más."],
+    "Not that way.": ["そっちじゃない。", "그쪽이 아니에요.", "Por ahí no."], "Not a good spot.": ["そこじゃない。", "거기가 아니에요.", "Ese no es el sitio."], "Wrong rhythm. Try again.": ["リズムが違う。もう一度。", "리듬이 틀렸어요. 다시.", "Ritmo equivocado. Otra vez."],
+    "Match 6 pairs · max 8 misses": ["6組そろえる · ミスは8回まで", "6쌍 맞추기 · 실수 8번까지", "Encuentra 6 parejas · máximo 8 fallos"], "Order 1–8 · 60s": ["1〜8の順に · 60秒", "1–8 순서대로 · 60초", "Ordena del 1 al 8 · 60 s"],
+    "Tap in order · 2 mistakes allowed": ["順番にタップ · 2回までミス可", "순서대로 탭 · 2번까지 실수 가능", "Toca en orden · 2 errores permitidos"], "2 right to win": ["2問正解で勝ち", "2문제 맞히면 승리", "Acierta 2 para ganar"],
+    "6 tries; each digit tells you higher or lower": ["6回まで。各桁が大きいか小さいか教えてくれる", "6번 기회. 자리마다 큰지 작은지 알려줘요", "6 intentos; cada dígito te dice si es mayor o menor"],
+    "Use ↑ ↓ to reorder, then check.": ["↑ ↓ で並べ替えてから確認。", "↑ ↓ 로 순서를 바꾼 뒤 확인하세요.", "Usa ↑ ↓ para ordenar y luego comprueba."],
+    "Tap a fragment, then tap where it belongs.": ["かけらをタップしてから、正しい位置をタップ。", "조각을 누른 뒤 맞는 위치를 누르세요.", "Toca un fragmento y luego su lugar."],
+    "Match each item to the right one.": ["それぞれ正しい相手を選んで。", "각 항목에 맞는 짝을 고르세요.", "Une cada elemento con el correcto."],
+    "Press Start, then tap on counts 2, 4, 6 and 8.": ["スタートを押して、2・4・6・8拍目でタップ。", "시작을 누르고 2, 4, 6, 8박에 탭하세요.", "Pulsa Empezar y toca en los tiempos 2, 4, 6 y 8."],
+    "Put each item in the right group, then check.": ["それぞれ正しいグループに入れてから確認。", "각 항목을 맞는 그룹에 넣고 확인하세요.", "Pon cada elemento en su grupo y comprueba."],
+    "Pick the two that truly match.": ["本当に同じ2つを選んで。", "정말 같은 두 개를 고르세요.", "Elige los dos que de verdad coinciden."],
+    "Find the one that's different.": ["違うものを一つ見つけて。", "다른 하나를 찾으세요.", "Encuentra el que es diferente."],
+    "Pick one card in each group. No wrong answers.": ["各グループから1枚選んで。正解・不正解はない。", "그룹마다 카드 한 장을 고르세요. 오답은 없어요.", "Elige una carta de cada grupo. No hay respuestas incorrectas."],
+    "Light up every one that fits, then check.": ["当てはまるものを全部点灯させてから確認。", "해당하는 것을 모두 켜고 확인하세요.", "Enciende todos los que encajen y comprueba."],
+    "Find the control that really works, check the lamp, then confirm.": ["本当に効くスイッチを探し、ランプを確かめてから決定。", "진짜 작동하는 스위치를 찾고 램프를 확인한 뒤 확정하세요.", "Encuentra el control que funciona, mira la luz y confirma."],
+    "Hold to keep the needle in the green until the bar fills.": ["長押しで針を緑のゾーンに保ち、バーを満タンに。", "눌러서 바늘을 초록 구역에 유지해 막대를 채우세요.", "Mantén pulsado para dejar la aguja en verde hasta llenar la barra."],
+    "Tap short or hold long to match the code.": ["短くタップ・長く押して暗号を合わせて。", "짧게 탭하거나 길게 눌러 암호를 맞추세요.", "Toca corto o mantén largo para igualar el código."],
+    "Tap the spots in the right order.": ["正しい順番で場所をタップ。", "올바른 순서로 위치를 탭하세요.", "Toca los puntos en el orden correcto."],
+    "Tap the waypoints in order. Avoid the hazards.": ["経由地を順番にタップ。危険は避けて。", "경유지를 순서대로 탭하세요. 위험은 피하세요.", "Toca los puntos de ruta en orden. Evita los peligros."],
+    "Tap a card, then tap the slot it goes in.": ["カードをタップしてから、入れる枠をタップ。", "카드를 누른 뒤 넣을 칸을 누르세요.", "Toca una carta y luego su hueco."], "Tap a cell to place it.": ["マスをタップして置く。", "칸을 눌러 놓으세요.", "Toca una casilla para colocarlo."],
+    "Move the flashlight, find it, tap it.": ["懐中電灯を動かして見つけ、タップ。", "손전등을 움직여 찾아서 탭하세요.", "Mueve la linterna, encuéntralo y tócalo."],
+    "Drag the slider until the pink line meets the dashed one, then check.": ["スライダーを動かしてピンクの線を点線に重ね、確認。", "슬라이더를 움직여 분홍 선을 점선에 맞춘 뒤 확인하세요.", "Mueve el control hasta que la línea rosa toque la discontinua y comprueba."],
+    "Straighten the frame, pull back to the full shot, then check.": ["フレームをまっすぐにして全体が映るまで引き、確認。", "프레임을 바로잡고 전체 샷까지 당긴 뒤 확인하세요.", "Endereza el encuadre, abre al plano completo y comprueba."],
+    "Compare the two documents row by row. Tap the rows that don't match, then check.": ["2つの書類を一行ずつ比べ、合わない行をタップして確認。", "두 문서를 한 줄씩 비교해 다른 줄을 누르고 확인하세요.", "Compara los dos documentos fila a fila. Toca las que no coinciden y comprueba."],
+    "Compare the two images and tap the changed area on the original.": ["2枚を見比べ、元の画像の変わった部分をタップ。", "두 이미지를 비교해 원본에서 바뀐 곳을 누르세요.", "Compara las dos imágenes y toca la zona cambiada en el original."],
+    "Top is the raw track, bottom is the aired cut. Tap the part of the raw track that was cut.": ["上が元の音声、下が放送版。元の音声で切られた部分をタップ。", "위는 원본, 아래는 방송본이에요. 원본에서 잘린 부분을 누르세요.", "Arriba la pista original, abajo la emitida. Toca la parte que se cortó."],
+    "Don't grab it by hand—use the tool.": ["素手でつかまないで、道具を使って。", "맨손으로 잡지 말고 도구를 쓰세요.", "No lo cojas con la mano: usa la herramienta."], "Drag the tool over them. Don't grab them by hand.": ["道具をドラッグして。素手でつかまないで。", "도구를 끌어다 대세요. 맨손으로 잡지 마세요.", "Arrastra la herramienta sobre ellos. No los cojas con la mano."],
+    "Preset tags (tap off the wrong ones):": ["プリセットのタグ（違うものはタップで外す）：", "기본 태그 (틀린 건 눌러서 끄기):", "Etiquetas (toca las incorrectas para quitarlas):"], "Put it in writing": ["書面にする", "문서로 남기기", "Ponerlo por escrito"],
+    "Original": ["元の画像", "원본", "Original"], "Original CCTV": ["元の監視映像", "원본 CCTV", "CCTV original"], "Aired cut": ["放送版", "방송본", "Versión emitida"], "Raw track": ["元の音声", "원본 트랙", "Pista original"],
+    "Leaked clip": ["流出した映像", "유출된 영상", "Clip filtrado"], "Printed version": ["印刷版", "인쇄본", "Versión impresa"], "Angle": ["角度", "각도", "Ángulo"], "Framing": ["フレーミング", "프레이밍", "Encuadre"],
+    "Framing (smaller = fuller)": ["フレーミング（小さいほど全体）", "프레이밍 (작을수록 전체)", "Encuadre (menor = más amplio)"], "Position": ["位置", "위치", "Posición"], "Left base ← → Right base": ["左の土台 ← → 右の土台", "왼쪽 받침 ← → 오른쪽 받침", "Base izquierda ← → Base derecha"],
+  };
+  const P = [
+    [/^Find (.+) · round (\d+)\/(\d+)$/, ["$1 を探して · ラウンド $2/$3", "$1 찾기 · 라운드 $2/$3", "Encuentra $1 · ronda $2/$3"]],
+    [/^Tap (.+), not (.+) · 10 in 20s$/, ["$1 をタップ、$2 は押さない · 20秒で10点", "$1 탭, $2 는 누르지 않기 · 20초에 10점", "Toca $1, no $2 · 10 en 20 s"]],
+    [/^Drag the basket: catch (.+), dodge (.+)$/, ["かごを動かして $1 を受け止め、$2 はよける", "바구니를 움직여 $1 받기, $2 피하기", "Mueve la cesta: atrapa $1, esquiva $2"]],
+    [/^Left (\d+)$/, ["残り $1", "남은 횟수 $1", "Quedan $1"]],
+    [/^(.*) · tap when the ring meets the heart$/, ["$1 · 輪がハートに重なったらタップ", "$1 · 원이 하트에 닿을 때 탭", "$1 · toca cuando el anillo toque el corazón"]],
+    [/^(.*) · hold to keep the needle in the green$/, ["$1 · 長押しで針を緑に保つ", "$1 · 눌러서 바늘을 초록에 유지", "$1 · mantén para dejar la aguja en verde"]],
+    [/^(.*) · watch, then repeat$/, ["$1 · 覚えてから同じようにタップ", "$1 · 보고 따라 하기", "$1 · mira y repite"]],
+    [/^(.*) · tap left\/right to keep it level for (\d+)s$/, ["$1 · 左右をタップして$2秒水平を保つ", "$1 · 좌우를 탭해 $2초 동안 수평 유지", "$1 · toca izquierda/derecha para mantenerlo nivelado $2 s"]],
+    [/^Watch · (.*)$/, ["よく見て · $1", "잘 봐요 · $1", "Mira · $1"]],
+    [/^Clue: not (.+)\. One cut\.$/, ["ヒント：$1 ではない。切れるのは一度だけ。", "단서: $1 은 아니에요. 한 번만 자를 수 있어요.", "Pista: no es $1. Solo un corte."]],
+  ];
+  function tr(root, lg) {
+    const i = IDX[lg] - 2, w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())) {
+      const t = n.nodeValue, s = t.trim(); if (!s || !/[A-Za-z]/.test(s)) continue;
+      if (D[s]) { n.nodeValue = t.replace(s, D[s][i]); continue; }
+      for (const [re, out] of P) if (re.test(s)) { n.nodeValue = t.replace(s, s.replace(re, out[i])); break; }
+    }
+    root.querySelectorAll("[aria-label]").forEach(e => { const a = e.getAttribute("aria-label"); if (D[a]) e.setAttribute("aria-label", D[a][i]); });
+  }
+  const _mo = mgOpen;
+  mgOpen = function (id, cb) {
+    const lg = LG(); if (!lg) return _mo.apply(this, arguments);
+    const k = MG100.findIndex(x => x.id === id); if (k < 0) return _mo.apply(this, arguments);
+    const G = MG100[k]; const five = !!(G.ja || G.pj || G.ko || G.pk || G.es || G.ps); const G2 = Object.assign(five ? loc(G, IDX[lg]) : Object.assign({}, G), { id: G.id });
+    if (G[lg]) G2.en = G[lg]; if (G[PK[lg]]) G2.pe = G[PK[lg]];
+    MG100[k] = G2; let r;
+    try { r = _mo.apply(this, arguments); } finally { MG100[k] = G; }
+    try {
+      const ov = document.querySelector(".mg60:last-of-type") || document.querySelector(".mg60");
+      if (ov) { tr(ov, lg); let busy = false; const mo = new MutationObserver(() => { if (busy) return; busy = true; try { tr(ov, lg); } catch (_) {} busy = false; }); mo.observe(ov, { childList: true, subtree: true, characterData: true }); }
+    } catch (_) {}
+    return r;
+  };
+  window.MIRU_GAME_LANGS = ["zh", "en", "ja", "ko", "es"];
+  window.__mod209 = 1;
 })();
