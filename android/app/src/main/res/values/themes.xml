@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 2026-11-27 打开 App 的第一帧：用开屏海报的深莓色铺底，不再闪白/黑屏；
+         Android 12+ 的系统开屏也会用这个底色（没单独设 windowSplashScreenBackground 时取 windowBackground）。 -->
+    <style name="MiruLaunch" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@color/splash_bg</item>
+        <item name="android:statusBarColor">@color/splash_bg</item>
+        <item name="android:navigationBarColor">@color/splash_bg</item>
+    </style>
+</resources>
