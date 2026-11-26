@@ -358,33 +358,51 @@ function Games({ p, upd }) {
   const [q, setQ] = useState(''), [ci, setCi] = useState(0), [busy, setBusy] = useState(false);
   const lib = useMemo(() => { try { return libList(P && P.MG100); } catch (_) { return []; } }, []);
   const shown = lib.filter(g => !q || (g.zh + g.en + (g.kw || []).join(' ')).toLowerCase().includes(q.toLowerCase())).slice(0, 80);
-  const place = (x, i, id) => { const c = x.chapters[i]; if (!c) return; if (/⟦MG\|/.test(c.body)) c.body = c.body.replace(/^⟦MG\|[^⟧]*⟧\s*$/m, '⟦MG|' + id + '⟧'); else { const k = c.body.search(/^#\s*CHOICE/m); c.body = k > 0 ? c.body.slice(0, k) + '⟦MG|' + id + '⟧\n' + c.body.slice(k) : c.body + '\n⟦MG|' + id + '⟧'; } };
+  /* 2026-11-27 每章 2 个小游戏：第 1 个放在章节前半段（避开选择块），第 2 个放在章末选择之前；已经有 2 个就替换（k=0 换第一个，否则换最后一个） */
+  const place = (x, i, id, k) => {
+    const c = x.chapters[i]; if (!c) return; const L = String(c.body).split('\n'); const line = '⟦MG|' + id + '⟧';
+    const mg = L.map((l, j) => /^⟦MG\|[^⟧]*⟧$/.test(l.trim()) ? j : -1).filter(j => j >= 0);
+    if (mg.length >= 2) { L[mg[k === 0 ? 0 : mg.length - 1]] = line; c.body = L.join('\n'); return; }
+    const lastCh = (() => { for (let j = L.length - 1; j >= 0; j--) if (/^#\s*CHOICE/.test(L[j].trim())) return j; return -1; })();
+    const end = lastCh > 0 ? lastCh : L.length;
+    let at = end;
+    if (k === 0) {
+      at = Math.max(1, Math.floor(end * 0.45));
+      let inCh = false; for (let j = 0; j < at; j++) { const t = L[j].trim(); if (/^#\s*CHOICE/.test(t)) inCh = true; else if (/^#\s*·\s*$/.test(t)) inCh = false; }
+      while (inCh && at < end) { if (/^#\s*·\s*$/.test(L[at].trim())) { inCh = false; at++; break; } at++; }
+      if (mg.length === 1 && mg[0] < at) at = end;
+    }
+    L.splice(at, 0, line); c.body = L.join('\n');
+  };
+  const stripMg = (x, i) => { const c = x.chapters[i]; if (c) c.body = String(c.body).split('\n').filter(l => !/^⟦MG\|[^⟧]*⟧$/.test(l.trim())).join('\n'); };
   const design = async () => {
     if (!p.chapters.some(c => c.body.trim())) return toast('先写剧本，AI 才能按剧情配游戏');
     if (!pay(PRICE.games, 'pro_games')) return; setBusy(true);
     try {
       const dig = p.chapters.map((c, i) => '## 第' + (i + 1) + '章 ' + c.t + '\n' + String(c.body).split('\n').filter(l => /[：:]/.test(l)).slice(0, 30).join('\n')).join('\n\n');
-      const r = await ai('给这部互动恋爱剧的每一章配 1 个小游戏，必须是这一章剧情里「你」正在做的事。\n第一步：先看 MIRU 游戏库里有没有贴这一章剧情的现成游戏（下面的清单，编号=名字(触发词)），有就用 {"ch":章,"lib":"编号"}。\n第二步：库里没有贴的，再按剧情定制一个：题目和选项用这一章的具体人物、物件、台词。' + TPL_SPEC + '。每段文字写成 [中文, English]；zh 标题 ≤8 字；pz/pe 是一句游戏说明。整部剧混用不同玩法，别都用同一种。\n只返回 JSON {"games":[{"ch":1,"lib":"g_xxx"},{"ch":2,"tpl":"","zh":"","en":"","pz":"","pe":"", …该模板的字段}]}\n\n【游戏库】' + libPrompt(lib) + '\n\n【剧本】\n' + dig.slice(0, 18000), 8000);
-      const G = (r && r.games) || []; let nLib = 0, nNew = 0;
+      const r = await ai('给这部互动恋爱剧的每一章配 2 个小游戏（同一章两个玩法不同，一个在前半段、一个在章末前），都必须是这一章剧情里「你」正在做的事。\n第一步：先看 MIRU 游戏库里有没有贴这一章剧情的现成游戏（下面的清单，编号=名字(触发词)），有就用 {"ch":章,"lib":"编号"}。\n第二步：库里没有贴的，再按剧情定制：题目和选项用这一章的具体人物、物件、台词。' + TPL_SPEC + '；zh 标题 ≤8 字；pz/pe/pj/pk/ps 是一句游戏说明（中/英/日/韩/西）。整部剧混用不同玩法，别都用同一种。\n只返回 JSON {"games":[{"ch":1,"lib":"g_xxx"},{"ch":1,"tpl":"","zh":"","en":"","ja":"","ko":"","es":"","pz":"","pe":"","pj":"","pk":"","ps":"", …该模板的字段（文字都是五语言数组）}]}（每章正好 2 条）\n\n【游戏库】' + libPrompt(lib) + '\n\n【剧本】\n' + dig.slice(0, 18000), 14000);
+      const G = (r && r.games) || []; let nLib = 0, nNew = 0; const cnt = {};
       upd(x => {
         G.forEach(g => {
           const i = Number(g && g.ch) - 1; if (!x.chapters[i]) return;
-          if (g.lib && lib.some(l => l.id === g.lib)) { place(x, i, g.lib); nLib++; return; }
-          const o = checkGame(g); if (!o) return;
-          o.id = 'g_pro_' + x.id.slice(1, 9) + '_c' + (i + 1);
-          x.games = (x.games || []).filter(y => y.id !== o.id).concat([o]); place(x, i, o.id); nNew++;
+          const k = cnt[i] || 0; if (k >= 2) return;
+          const isLib = g.lib && lib.some(l => l.id === g.lib); const o = isLib ? null : checkGame(g); if (!isLib && !o) return;
+          if (!k) stripMg(x, i); cnt[i] = k + 1;
+          if (isLib) { place(x, i, g.lib, k); nLib++; return; }
+          o.id = 'g_pro_' + x.id.slice(1, 9) + '_c' + (i + 1) + (k ? '_' + (k + 1) : '');
+          x.games = (x.games || []).filter(y => y.id !== o.id).concat([o]); place(x, i, o.id, k); nNew++;
         });
         return x;
       });
       if (!nLib && !nNew) throw new Error('empty');
-      toast('配好了：游戏库现成 ' + nLib + ' 个，按剧情定制 ' + nNew + ' 个（每章 1 个，放在章末选择之前，可以在剧本里挪位置）');
+      toast('配好了：游戏库现成 ' + nLib + ' 个，按剧情定制 ' + nNew + ' 个（每章 2 个：一个在前半段、一个在章末选择之前，可以在剧本里挪位置）');
     } catch (_) { toast('这次没配出来，没扣钻'); try { P && (P.S.keys += PRICE.games, P.save()); } catch (__) {} }
     setBusy(false);
   };
   return (
     <div className="ppanel">
-      <p className="dim">规范：每章最多 1 个小游戏，放在剧情里「你」正在做这件事的地方，都可以跳过。MIRU 游戏库一共 912 个、53 种玩法：其中 {lib.length} 个是通用的现成游戏，任何剧都能直接用；其余是官方剧按自己剧情写的题，题面绑定那部剧的人物，不能原样搬，但它们的玩法可以换上你的剧情再用（现在开放 11 种纯文字玩法，找不同、拖拽定位这类要配专门图片的，等生图接口接好再开放）。</p>
-      <div className="pbox"><b>AI 自动配（库里优先，没有合适的再定制）</b><p className="dim">AI 读完每一章：库里有贴剧情的现成游戏就直接用；没有的，用 11 种玩法（选一个 / 排顺序 / 分类 / 圈出可疑处 / 连线 / 找相同 / 心意选择 / 试开关 / 写约定 / 按住稳住 / 敲暗号）按这一章剧情定制，中英双语。</p><button className="pbtn primary" disabled={busy} onClick={design}>{busy ? '配游戏中…' : '✨ AI 给每章配小游戏 · 💎' + PRICE.games}</button></div>
+      <p className="dim">规范：每章 2 个小游戏（检查里少于 2 个会拦），放在剧情里「你」正在做这件事的地方，都可以跳过；游戏文字支持中、英、日、韩、西五种语言。MIRU 游戏库一共 912 个、53 种玩法：其中 {lib.length} 个是通用的现成游戏，任何剧都能直接用；其余是官方剧按自己剧情写的题，题面绑定那部剧的人物，不能原样搬，但它们的玩法可以换上你的剧情再用（现在开放 11 种纯文字玩法，找不同、拖拽定位这类要配专门图片的，等生图接口接好再开放）。</p>
+      <div className="pbox"><b>AI 自动配（库里优先，没有合适的再定制）</b><p className="dim">AI 读完每一章：库里有贴剧情的现成游戏就直接用；没有的，用 11 种玩法（选一个 / 排顺序 / 分类 / 圈出可疑处 / 连线 / 找相同 / 心意选择 / 试开关 / 写约定 / 按住稳住 / 敲暗号）按这一章剧情定制，中英日韩西五种语言。</p><button className="pbtn primary" disabled={busy} onClick={design}>{busy ? '配游戏中…' : '✨ AI 给每章配 2 个小游戏 · 💎' + PRICE.games}</button></div>
       {(p.games || []).length > 0 && <><h3>已定制（{p.games.length}）</h3><ul className="pqa">{p.games.map(g => <li key={g.id} className="g"><b>{g.zh}</b> · {TPL_NAME[g.tpl] || g.tpl} · <span className="dim">{g.pz}</span> <button className="pbtn ghost sm" onClick={() => upd(x => { x.games = x.games.filter(y => y.id !== g.id); x.chapters.forEach(c => { c.body = c.body.split('\n').filter(l => l.trim() !== '⟦MG|' + g.id + '⟧').join('\n'); }); return x; })}>删除</button></li>)}</ul></>}
       <h3>自己从游戏库挑（{lib.length} 个通用游戏）</h3>
       <div className="prow pwr"><F label="放到第几章"><select value={ci} onChange={e => setCi(Number(e.target.value))}>{p.chapters.map((c, i) => <option key={i} value={i}>第 {i + 1} 章 {c.t}</option>)}</select></F><F label="搜索"><input value={q} onChange={e => setQ(e.target.value)} placeholder="戒指、保险箱、心跳…" /></F></div>

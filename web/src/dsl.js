@@ -91,7 +91,8 @@ export function dslQA(md) {
     if (!c.choices) err.push('第 ' + n + ' 章章末没有 CHOICE —— 这一章结尾只会显示「继续」');
     if (c.dots < c.choices) err.push('第 ' + n + ' 章：CHOICE ' + c.choices + ' 道，却只有 ' + c.dots + ' 个「# ·」收尾');
     if (c.lines < 3) warn.push('第 ' + n + ' 章正文只有 ' + c.lines + ' 行');
-    if (c.mg > 1) warn.push('第 ' + n + ' 章有 ' + c.mg + ' 个小游戏：规范要求每章最多 1 个');
+    if (c.mg < 2) err.push('第 ' + n + ' 章只有 ' + c.mg + ' 个小游戏：规范要求每章 2 个（「⑥ 小游戏」里 AI 一键配齐）');
+    else if (c.mg > 2) warn.push('第 ' + n + ' 章有 ' + c.mg + ' 个小游戏：规范是每章 2 个');
     if (c.scenes && (c.scenes < 3 || c.scenes > 5)) warn.push('第 ' + n + ' 章有 ' + c.scenes + ' 场：规范建议 3–5 场');
   });
   if (perCh[0] && orChars.length && !perCh[0].first.some(l => orChars.some(nm => nm && l.startsWith(nm + '：')))) warn.push('第 1 章前 10 句主要角色还没有开口：开篇要先让玩家看到他怎么对待你（规则 05）');
