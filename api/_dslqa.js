@@ -69,8 +69,8 @@ function dslQA(md) {
     if (!c.choices) err.push('第 ' + n + ' 章章末没有 CHOICE —— 这一章结尾只会显示「继续」');
     if (c.dots < c.choices) err.push('第 ' + n + ' 章：CHOICE ' + c.choices + ' 道，却只有 ' + c.dots + ' 个「# ·」收尾（少收尾会让后面的场景算进最后一个选项）');
     if (c.lines < 3) warn.push('第 ' + n + ' 章正文只有 ' + c.lines + ' 行');
-    /* 2026-11-27 产品决定：每章 2 个小游戏（少了拦，多了提醒） */
-    if (c.mg < 2) err.push('第 ' + n + ' 章只有 ' + c.mg + ' 个小游戏 ⟦MG|…⟧：规范要求每章 2 个');
+    /* 2026-11-27 产品决定：每章 2 个小游戏。这里只提醒（老的官方稿、自测样本不带 ⟦MG⟧）；后台「自动审查」按 perCh.mg 把「少于 2 个」算硬错 */
+    if (c.mg < 2) warn.push('第 ' + n + ' 章只有 ' + c.mg + ' 个小游戏 ⟦MG|…⟧：规范要求每章 2 个');
     else if (c.mg > 2) warn.push('第 ' + n + ' 章有 ' + c.mg + ' 个小游戏：规范是每章 2 个');
   });
   if (!st.you && !orChars.some(c => /^(你|您|you)$/i.test(c.n))) warn.push('正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）');

@@ -752,6 +752,9 @@ module.exports = L.wrap(async (req, res) => {
       const Style = require('./_stylecheck');
       const st = Style.checkDsl(md);
       const err = q.err.concat(sf.length ? ['受限词：' + sf.join('; ')] : [], st.err.map(x => '样式：' + x));
+      /* 2026-11-27 产品决定：每章 2 个小游戏，少了算硬错（dslQA 本身只给提醒） */
+      (q.perCh || []).forEach(c => { if ((c.mg || 0) < 2) err.push('第 ' + c.n + ' 章只有 ' + (c.mg || 0) + ' 个小游戏 ⟦MG|…⟧：规范要求每章 2 个'); });
+      q.warn = (q.warn || []).filter(x => !/个小游戏 ⟦MG\|…⟧：规范要求每章 2 个/.test(x));
       /* 2026-11-27 日 / 韩 / 西 / 英 独立剧本一起查：结构硬错算进来；和中文版章节数、行数对不上、或者有大量重复套话，都要拦（规则「日韩西版本」） */
       { const cf = s.config || {}; const LBL = { en: '英文版', ja: '日文版', ko: '韩文版', es: '西语版' };
         const zl = md.split('\n').filter(x => x.trim()).length;
