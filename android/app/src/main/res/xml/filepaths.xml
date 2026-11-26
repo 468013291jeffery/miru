@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 可信网页壳开屏图：App 把开屏图片放在 files/twa_splash/ 下，通过 FileProvider 交给 Chrome 显示 -->
+<paths>
+    <files-path path="twa_splash/" name="twa_splash" />
+</paths>
