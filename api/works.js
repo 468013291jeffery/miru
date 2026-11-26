@@ -85,7 +85,8 @@ module.exports = L.wrap(async (req, res) => {
     /* 待精选（2026-11-26，后台用）：每天自动算出够格的用户作品，运营点「通过」才真正进精选。
        门槛：剧本无必改问题（有 AI 审稿分的要 ≥80）/ 图片位置基本挂齐 / 每章有小游戏 / 读者数和点赞率达标。视频只决定进哪条道。 */
     if (q.candidates) {
-      if (!L.isAdmin(req)) return L.bad(res, 'admin only', 403);
+      /* 后台登录（admin.html 的令牌）或服务器 ADMIN_KEY 都可以 */
+      if (!L.isAdmin(req) && !(typeof L.whoAdmin === 'function' && await L.whoAdmin(req))) return L.bad(res, 'admin only', 403);
       const r = await sql("SELECT id, author, author_name, title, hook, lang, orient, tags, cover, plays, likes, status, featured, created_at, qa, pack->'meta'->'format' AS format, pack->'meta'->'media' AS media, pack->'qa'->'score' AS qscore FROM works WHERE status='live' AND author<>'miru' ORDER BY (likes*3+plays) DESC LIMIT 300");
       const rated = r.filter(w => w.plays >= 20).map(w => w.likes / Math.max(1, w.plays));
       const avgRate = rated.length ? rated.reduce((a, b) => a + b, 0) / rated.length : 0;
