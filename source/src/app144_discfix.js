@@ -5959,6 +5959,8 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   const ZH = () => CL() === "zh";
   const T2 = (a, b) => ZH() ? a : b;
   if (!FEED_TABS.some(x => x[0] === "creator")) FEED_TABS.splice(Math.min(2, FEED_TABS.length), 0, ["creator", { en: "Creators", zh: "创作者" }]);
+  /* 首页标签栏会按官方剧标签自动隐藏没有内容的标签，「创作者」不受这个规则影响，一直显示 */
+  try { new MutationObserver(() => { const b = document.querySelector('#ftabsc [data-ftab="creator"]'); if (b && b.hidden) b.hidden = false; }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ["hidden"] }); } catch (_) {}
   const cache = {};
   async function get(q) {
     const k = q + "|" + (S.or || "all"), c = cache[k];
