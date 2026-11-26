@@ -5653,11 +5653,12 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
    2 · AI 没设计出来的章节，从游戏库（900+ 个）按这一章的文字挑最贴的一个通用小游戏，同一部剧不重复。
    3 · 修一个漏洞：翻译（mod200）和小游戏（mod201/203）是在发布之后才做的，之前只存在作者本机，
        读者从社区打开看不到。现在做完后把作品重新传一次（同一个作品 id，覆盖更新）。
-   设计小游戏这一步本身不扣钻（随发布一起，一部剧只做一次）。 */
+   AI 配游戏（库里挑 + 定制）一部剧一次 💎2，成功才扣；钻石不够就只用游戏库里现成的，免费。 */
 (function () {
   "use strict";
   if (typeof MIRU_BRIDGE !== "object" || typeof ask !== "function" || typeof MG100 === "undefined") return;
-  const TPLS = ["m111_pick", "m111_order", "m111_classify", "m111_mark", "m111_match", "m111_pair", "m112_free"];
+  const TPLS = ["m111_pick", "m111_order", "m111_classify", "m111_mark", "m111_match", "m111_pair", "m112_free", "m111_device", "m111_deal", "m111_hold", "m111_morse"];
+  const PRICE203 = 2;
   const GENERIC = /^(find|memory|code|rhythm|hold|whack|wires|slide|simon|scratch|dice|order|catch|balance|quiz)$/;
   const S2 = x => String(x == null ? "" : x).trim();
   const bi = x => Array.isArray(x) && x.length >= 2 && S2(x[0]) && S2(x[1]) ? [S2(x[0]).slice(0, 80), S2(x[1]).slice(0, 120)] : null;
@@ -5690,6 +5691,10 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     else if (T === "m111_pair") { o.items = items.map(bi).filter(Boolean).slice(0, 4); const p = (g.pair || []).map(Number); if (o.items.length < 3 || p.length !== 2 || p[0] === p[1] || p.some(x => !(x >= 0 && x < o.items.length))) return null; o.pair = p; }
     else if (T === "m111_classify") { o.bins = (g.bins || []).map(bi).filter(Boolean).slice(0, 3); if (o.bins.length < 2) return null; o.items = items.map(x => Array.isArray(x) && bi(x[0]) && Number(x[1]) >= 0 && Number(x[1]) < o.bins.length ? [bi(x[0]), Number(x[1])] : null).filter(Boolean).slice(0, 4); if (o.items.length < 3) return null; }
     else if (T === "m111_match") { o.items = items.map(x => Array.isArray(x) && bi(x[0]) && bi(x[1]) ? [bi(x[0]), bi(x[1])] : null).filter(Boolean).slice(0, 4); if (o.items.length < 3) return null; }
+    else if (T === "m111_device") { o.controls = (g.controls || []).map(x => Array.isArray(x) && bi(x[0]) ? [bi(x[0]), x[1] === true || x[1] === "true", bi(x[2]) || ["", ""]] : null).filter(Boolean).slice(0, 4); if (o.controls.length < 3 || o.controls.filter(x => x[1]).length !== 1) return null; }
+    else if (T === "m111_deal") { o.groups = (g.groups || []).map(x => Array.isArray(x) && bi(x[0]) && Array.isArray(x[1]) ? [bi(x[0]), x[1].map(bi).filter(Boolean).slice(0, 4)] : null).filter(x => x && x[1].length).slice(0, 4); if (o.groups.length < 2) return null; o.seconds = 60; }
+    else if (T === "m111_hold") { o.label = bi(g.label) || [o.pz, o.pe]; o.need = Math.max(3, Math.min(6, Number(g.need) || 4)); }
+    else if (T === "m111_morse") { o.label = bi(g.label) || [o.pz, o.pe]; o.code = String(g.code || "").replace(/[^.-]/g, "").slice(0, 6); if (o.code.length < 3) return null; }
     return o;
   }
   async function design(w) {
@@ -5697,10 +5702,10 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     const prompt = "你是 MIRU 互动恋爱剧的小游戏设计师。下面是一部用户写的剧，每章列出了「句号|说话人：台词」。请给每一章设计 1 个小游戏，要求：\n" +
       "1. 游戏必须是这一章剧情里「你」正在做的事（查线索、挑礼物、拼回时间线、判断他话里的真假、选一个心意……），题目和选项都用这一章出现的具体人物、物件、台词，不能是通用题。\n" +
       "2. at = 插在哪一句后面（用句号），选剧情正在做这件事的那一句；第 1 章不要放在前 10 句。\n" +
-      "3. tpl 只能用：m111_pick（选一个，ans=正确项下标）、m111_order（items 按正确顺序给，游戏会打乱）、m111_classify（bins 2-3 个分类，items=[[[中,英],分类下标],…]）、m111_mark（圈出可疑的一处，ans=[下标]）、m111_match（items=[[[左中,左英],[右中,右英]],…] 正确配对）、m111_pair（找出相同的两个，pair=[i,j]）、m112_free（没有标准答案的心意选择，适合甜蜜/告白场景）。整部剧尽量混用不同模板，别都用同一种。\n" +
+      "3. 先看 MIRU 游戏库里有没有贴这一章剧情的现成游戏（清单在最后，编号=名字(触发词)），有就只写 {\"ch\":章,\"lib\":\"编号\",\"at\":句号,\"win_zh\":…,\"win_en\":…}。库里没有贴的，再定制：tpl 只能用 m111_pick（选一个，ans=正确下标）、m111_order（items 按正确顺序）、m111_classify（bins 2-3 个，items=[[[中,英],分类下标]]）、m111_mark（圈出可疑处，ans=[下标]）、m111_match（items=[[[左中,左英],[右中,右英]]]）、m111_pair（pair=[i,j]）、m112_free（没有标准答案的心意选择）、m111_device（试开关：controls=[[[中,英],true/false,[反馈中,英]]]，正好一个 true）、m111_deal（写约定：groups=[[[问题中,英],[[选项中,英],…]]]）、m111_hold（按住稳住：label=[中,英]，need=3-6）、m111_morse（敲暗号：label=[中,英]，code 用 . 和 - 写 3-6 位）。整部剧尽量混用不同玩法。\n" +
       "4. 每个文字都写成 [中文, English] 两种语言；items 3-4 个；zh 标题 ≤8 字，en 标题 ≤5 词；pz/pe 是一句游戏说明（中/英）。\n" +
       "5. win_zh / win_en：玩完后 " + (L || "男主") + " 的一句反应台词，贴着这一章的情绪，暧昧、有张力，不超过 30 字。\n" +
-      "只返回 JSON：{\"games\":[{\"ch\":1,\"at\":12,\"tpl\":\"m111_pick\",\"zh\":\"…\",\"en\":\"…\",\"pz\":\"…\",\"pe\":\"…\",\"ask\":[\"…\",\"…\"],\"items\":[[\"…\",\"…\"]],\"ans\":0,\"win_zh\":\"…\",\"win_en\":\"…\"}]}\n\n" + digest(w);
+      "只返回 JSON：{\"games\":[{\"ch\":1,\"at\":12,\"tpl\":\"m111_pick\",\"zh\":\"…\",\"en\":\"…\",\"pz\":\"…\",\"pe\":\"…\",\"ask\":[\"…\",\"…\"],\"items\":[[\"…\",\"…\"]],\"ans\":0,\"win_zh\":\"…\",\"win_en\":\"…\"}]}\n\n" + digest(w) + "\n\n【游戏库】" + MG100.filter(g => GENERIC.test(g.tpl) && /^g_/.test(g.id)).map(g => g.id + "=" + g.zh + (g.kw && g.kw.length ? "(" + g.kw.slice(0, 3).join("/") + ")" : "")).join("；");
     let r = null;
     for (let t = 0; t < 2 && !r; t++) { try { r = await ask(prompt, { maxTokens: 7000 }); if (!r || !Array.isArray(r.games)) r = null; } catch (_) { r = null; } }
     return r ? r.games : [];
@@ -5724,14 +5729,17 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   async function addGames203(wid) {
     const w = wd(wid); if (!w || w.g203 || !chList(w).length) return 0;
     const lead = (w.cast || [])[0] || "n", CH = chList(w), used = new Set(), list = [];
-    let G = []; try { G = await design(w); } catch (_) {}
-    let n = 0;
+    /* 2026-11-26 AI 配游戏按次收费（💎2，成功才扣）；钻石不够就只用游戏库里现成的（不调 AI，免费） */
+    let G = []; const canPay = (S.keys || 0) >= PRICE203; if (canPay) { try { G = await design(w); } catch (_) {} }
+    let n = 0, aiN = 0;
     CH.forEach((c, i) => {
       if (has203(c)) return; const B = baseOf(c); if (!B || B.length < 4) return;
       const raw = G.find(g => Number(g && g.ch) === i + 1), g = raw && check(raw);
       let id, at = Math.floor(B.length * .7), winZh = "", winEn = "";
-      if (g) {
-        id = "g_u203_" + String(w.cloudId || w.id).replace(/[^\w]/g, "") + "_c" + (i + 1); g.id = id; list.push(g);
+      const libHit = raw && raw.lib && MG100.some(x => x.id === raw.lib && GENERIC.test(x.tpl) && !used.has(x.id));
+      if (libHit) { id = raw.lib; const a = Number(raw.at); if (a >= 0 && a < B.length && !(i === 0 && a < 10)) at = a; winZh = S2(raw.win_zh).slice(0, 60); winEn = S2(raw.win_en).slice(0, 140); aiN++; }
+      else if (g) {
+        aiN++; id = "g_u203_" + String(w.cloudId || w.id).replace(/[^\w]/g, "") + "_c" + (i + 1); g.id = id; list.push(g);
         const a = Number(raw.at); if (a >= 0 && a < B.length && !(i === 0 && a < 10)) at = a;
         winZh = S2(raw.win_zh).slice(0, 60); winEn = S2(raw.win_en).slice(0, 140);
       } else { const p = pickGeneric(w, c, used); if (!p) return; id = p.id; }
@@ -5742,6 +5750,8 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     });
     if (list.length) { w.games203 = list; reg(list); }
     if (n) { w.g203 = Date.now(); try { save(); } catch (_) {} }
+    if (aiN && canPay) { try { spend(PRICE203, "games"); } catch (_) {} }
+    else if (n && !canPay) { try { toast(S.lang === "zh" ? "钻石不够，小游戏先用了游戏库里现成的（免费）" : "Not enough gems — used ready-made library games (free)"); } catch (_) {} }
     return n;
   }
   window.addGames203 = addGames203;
@@ -5792,10 +5802,10 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     try {
       if (!doc || !doc.body || doc.querySelector(".sp204")) return;
       const h = [...doc.querySelectorAll("h1")].find(x => /专业模式/.test(x.textContent)); if (!h) return;
-      const host = h.closest(".panelTop,.pageHead,header,div") || h.parentElement;
+      const host = h.closest(".header") || h.parentElement;
       const b = doc.createElement("div"); b.className = "sp204";
       b.style.cssText = "margin:12px 0;padding:14px 16px;border-radius:14px;background:linear-gradient(135deg,rgba(240,138,174,.18),rgba(240,183,126,.12));border:1px solid rgba(240,138,174,.35);display:flex;gap:12px;align-items:center;flex-wrap:wrap";
-      b.innerHTML = '<div style="flex:1;min-width:200px"><b style="font-size:15px">⌘ MIRU Studio Pro · 官方标准剧本编辑器</b><div style="font-size:12.5px;opacity:.8;margin-top:4px">和官方剧同一套写法和审查：背景卡、心动插图、视频、来电、条件分支、每章定制小游戏、多语言版本、AI 按终版规则写章和审稿。</div></div><button type="button" style="padding:10px 16px;border-radius:10px;border:0;background:#F08AAE;color:#1b0f16;font-weight:800;cursor:pointer">打开 Studio Pro</button>';
+      b.innerHTML = '<div style="flex:1;min-width:200px"><b style="font-size:15px">这是旧版结构编辑器（只管分支结构）</b><div style="font-size:12.5px;opacity:.8;margin-top:4px">正式写剧本、配素材和小游戏、多语言、发布，请用 MIRU Studio Pro（和官方剧同一套写法和审查）。</div></div><button type="button" style="padding:10px 16px;border-radius:10px;border:0;background:#F08AAE;color:#1b0f16;font-weight:800;cursor:pointer">回到 Studio Pro</button>';
       b.querySelector("button").onclick = () => window.openStudioPro();
       host.parentNode.insertBefore(b, host.nextSibling);
     } catch (_) {}
@@ -5819,4 +5829,33 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
     };
   }
   window.__mod204 = 1;
+})();
+
+/* ================= mod205 · 两套专业模式合一（2026-11-26）=================
+   创作中心底部「专业版」/ 侧栏「专业模式」直接打开 MIRU Studio Pro（官方标准剧本编辑器）。
+   旧的结构编辑器（节点地图、分支条件）不删，从 Studio Pro 列表页的「旧版结构编辑器」进入，顶部会提示回到 Studio Pro。
+   另外：AI 引导创作最后一步写清楚小游戏怎么配、要不要钱。 */
+(function () {
+  "use strict";
+  let oldOnce = false;
+  window.openOldPro = function () { oldOnce = true; try { closeStudioPro(); } catch (_) {} try { if (!document.querySelector("#crx")) crOpen("pro"); else { const d = document.querySelector("#crx iframe").contentDocument; const b = d && d.querySelector('[data-nav="pro"]'); if (b) b.click(); } } catch (_) {} setTimeout(() => { oldOnce = false; }, 4000); };
+  function hook(doc) {
+    if (!doc || doc.__sp205) return; doc.__sp205 = 1;
+    doc.addEventListener("click", e => {
+      const b = e.target && e.target.closest && e.target.closest('[data-nav="pro"]');
+      if (!b || oldOnce) return;
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      try { openStudioPro(); } catch (_) {}
+    }, true);
+  }
+  setInterval(() => { try { const f = document.querySelector("#crx iframe"); if (f && f.contentDocument && f.contentDocument.body) hook(f.contentDocument); } catch (_) {} }, 700);
+  if (typeof crOpen === "function") { const _co = crOpen; crOpen = function (tab) { if (tab === "pro" && !oldOnce) { try { openStudioPro(); return; } catch (_) {} } return _co.apply(this, arguments); }; }
+  try {
+    const OLD = "互动、小游戏、音乐、音效和特效不用你选：AI 会按剧情从 MIRU 素材库自动匹配，放在合适的位置。";
+    const NEW = "互动、音乐、音效和特效不用你选：AI 会按剧情从 MIRU 素材库自动匹配，放在合适的位置。小游戏每章一个：先从 912 个的游戏库里挑贴剧情的现成游戏，没有合适的再按剧情定制（一部剧 💎2，成功才扣；钻石不够就只用库里现成的，免费）。";
+    const d = Object.getOwnPropertyDescriptor(window, "CREATOR_HTML");
+    if (d && d.get) { const g = d.get; Object.defineProperty(window, "CREATOR_HTML", { configurable: true, get() { return String(g.call(window)).split(OLD).join(NEW); } }); }
+    else if (typeof window.CREATOR_HTML === "string") window.CREATOR_HTML = window.CREATOR_HTML.split(OLD).join(NEW);
+  } catch (_) {}
+  window.__mod205 = 1;
 })();
