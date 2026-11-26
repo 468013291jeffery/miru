@@ -20,8 +20,12 @@ final class CrashLog {
     private CrashLog() {}
     private static final String PREF = "miru_crash";
 
-    static void install(Context ctx) {
-        final Context app = ctx.getApplicationContext();
+    static void install(Context ctx) { install(ctx, ctx); }
+
+    /** base：attachBaseContext 时 getApplicationContext() 还是 null，用传进来的 base 读写本机记录 */
+    static void install(Context ctx, Context base) {
+        Context ac = null; try { ac = ctx.getApplicationContext(); } catch (Throwable ignore) {}
+        final Context app = ac != null ? ac : base;
         final Thread.UncaughtExceptionHandler prev = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             try {
