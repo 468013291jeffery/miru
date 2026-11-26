@@ -5859,3 +5859,23 @@ try { Object.assign(I18N.zh, { "w2.s1": "可以先解锁关键剧情，或生成
   } catch (_) {}
   window.__mod205 = 1;
 })();
+
+/* ================= mod206 · Studio Pro 素材「AI 一键生图」的接口位（2026-11-26）=================
+   Studio Pro 的素材页每个位置都有「上传自己的」和「AI 生成」两个按钮。AI 生成统一调这里的 studioGenImage：
+   · 新的生图接口接好后，只要在主站定义 window.MIRU_IMAGE_API = async ({prompt, w, h, slot, kind, title}) => 图片地址（https 或 data:），
+     Studio Pro 不用改就能用；
+   · 没有 MIRU_IMAGE_API 时，尝试 Claude 环境里的 flux 生图（AIG.mcp）；都没有就提示用户先上传自己的图。
+   价格用全站同一个 PRICES.img（每张），生成成功并上传后才扣。 */
+(function () {
+  "use strict";
+  window.studioImagePrice = function () { try { return (typeof PRICES !== "undefined" && PRICES.img) || 2; } catch (_) { return 2; } };
+  window.studioImageReady = function () { try { return typeof window.MIRU_IMAGE_API === "function" || (typeof AIG !== "undefined" && !!AIG.mcp); } catch (_) { return false; } };
+  window.studioGenImage = async function (o) {
+    o = o || {};
+    if (typeof window.MIRU_IMAGE_API === "function") return await window.MIRU_IMAGE_API(o);
+    if (typeof AIG !== "undefined" && AIG.mcp) { const r = await AIG.mcp.callTool(AIG.srv, AIG.tool, { prompt: String(o.prompt || "").slice(0, 1500), width: o.w || 768, height: o.h || 1344 }, { cache: false }); const u = typeof aiImgFrom === "function" ? aiImgFrom(r) : null; if (u) return u; throw { code: "tool_error" }; }
+    throw { code: "na" };
+  };
+  try { if (typeof paySheet === "function" && !window.paySheet) window.paySheet = paySheet; } catch (_) {}
+  window.__mod206 = 1;
+})();
