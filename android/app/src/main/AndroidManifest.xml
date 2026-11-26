@@ -44,6 +44,10 @@
             <meta-data android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR" android:resource="@color/bg" />
             <meta-data android:name="android.support.customtabs.trusted.NAVIGATION_BAR_COLOR" android:resource="@color/bg" />
             <meta-data android:name="android.support.customtabs.trusted.SPLASH_SCREEN_BACKGROUND_COLOR" android:resource="@color/bg" />
+            <!-- 2026-11-27 开屏图：第一次打开要下载网页，之前这段时间是纯黑屏；现在显示 MIRU 图标，网页画出来后淡出 -->
+            <meta-data android:name="android.support.customtabs.trusted.SPLASH_IMAGE_DRAWABLE" android:resource="@mipmap/ic_launcher" />
+            <meta-data android:name="android.support.customtabs.trusted.SPLASH_SCREEN_FADE_OUT_DURATION" android:value="300" />
+            <meta-data android:name="android.support.customtabs.trusted.FILE_PROVIDER_AUTHORITY" android:value="com.miru.plus.app.fileprovider" />
             <meta-data android:name="android.support.customtabs.trusted.SCREEN_ORIENTATION" android:value="portrait" />
             <meta-data android:name="android.support.customtabs.trusted.ADDITIONAL_TRUSTED_ORIGINS" android:resource="@array/additional_trusted_origins" />
             <!-- 没有支持 TWA 的浏览器时用 WebView 兜底（白屏问题就出在这条路径上） -->
@@ -63,6 +67,15 @@
             android:theme="@android:style/Theme.Black.NoTitleBar"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false" />
+
+        <!-- 开屏图交给 Chrome 显示用 -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.miru.plus.app.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/filepaths" />
+        </provider>
 
         <!-- 2026-11-27 不让 Unity 广告 SDK 在 App 启动时自动初始化（它挂在 androidx.startup 上，比 Application 还早，
              联网拉配置出问题时整个 App 一打开就退出，而且崩溃记录还没装上、什么都记不到）。
