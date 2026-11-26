@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
+        android:name=".MiruApp"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
@@ -53,6 +54,13 @@
                 <data android:scheme="https" android:host="www.miru.plus" />
             </intent-filter>
         </activity>
+
+        <!-- 2026-11-26 没有支持 TWA 的浏览器时，FALLBACK_STRATEGY=webview 会打开这个页面；之前没在这里声明，走到兜底路径就直接闪退 -->
+        <activity
+            android:name="com.google.androidbrowserhelper.trusted.WebViewFallbackActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false" />
 
         <!-- 网页里的 Digital Goods API（查价格、查未完成的单）走这里 -->
         <service android:name=".DelegationService" android:enabled="true" android:exported="true">
