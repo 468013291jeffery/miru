@@ -669,6 +669,8 @@ module.exports = L.wrap(async (req, res) => {
   }
   if (r === 'events') {
     if (!need('events')) return; const days = Math.min(Number(q.days) || 14, 90);
+    /* 2026-11-27 安卓闪退诊断：?name=android_crash / android_boot 直接列出原始记录（含堆栈、版本、机型） */
+    if (q.name && /^android_[a-z]+$/.test(String(q.name))) { const raw = await sql("SELECT name, props, at FROM events WHERE name=$1 AND at > now() - ($2 || ' days')::interval ORDER BY at DESC LIMIT 100", [String(q.name), String(days)]); return L.send(res, 200, { days, name: q.name, rows: raw }); }
     const rows = await sql(`SELECT name, at::date AS day, count(*)::int AS n, count(DISTINCT user_id)::int AS users FROM events WHERE at > now() - ($1 || ' days')::interval GROUP BY 1, 2 ORDER BY 2, 1`, [String(days)]);
     const totals = await sql(`SELECT name, count(*)::int AS n, count(DISTINCT user_id)::int AS users FROM events WHERE at > now() - ($1 || ' days')::interval GROUP BY 1 ORDER BY 2 DESC`, [String(days)]);
     return L.send(res, 200, { days, rows, totals });

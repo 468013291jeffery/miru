@@ -13,6 +13,8 @@ const LED = require('./_ledger');
 // props is stored as jsonb: never truncate the JSON *string* (that produces invalid json and
 // fails the whole batch). Shrink the payload instead, and say so in the row.
 function propsFor(p) {
+  /* 2026-11-27 闪退堆栈太长时只截堆栈本身，别让整条记录退化成只剩 _trunc */
+  if (p && typeof p.trace === 'string' && JSON.stringify(p).length > 2000) { p = Object.assign({}, p); while (p.trace.length > 200 && JSON.stringify(p).length > 1990) p.trace = p.trace.slice(0, p.trace.length - 100); }
   let s = JSON.stringify(p || {});
   if (s.length <= 2000) return s;
   const keep = {};
