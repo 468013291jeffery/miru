@@ -14,7 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-/** 闪退记录：崩溃时把错误堆栈存到本机；下次打开 App 时在后台发到 https://miru.plus/api/events（事件名 android_crash），发成功就删掉。
+/** 闪退记录：崩溃时把错误堆栈发到 https://miru.plus/api/events（事件名 android_crash）。
+ *  2026-11-27：一打开就崩的情况下，「下次打开再补传」永远传不出去（每次都在发送前又崩了），
+ *  所以改成崩溃当下就发（单独线程，最多等 3 秒），同时也存一份到本机，下次打开再补传一次。
+ *  每次启动还会发一条 android_boot（版本、系统、机型），用来确认用户手上到底是哪个版本。
  *  只记录错误信息、App 版本、系统版本和机型，不含任何用户内容。 */
 final class CrashLog {
     private CrashLog() {}
@@ -22,7 +25,6 @@ final class CrashLog {
 
     static void install(Context ctx) { install(ctx, ctx); }
 
-    /** base：attachBaseContext 时 getApplicationContext() 还是 null，用传进来的 base 读写本机记录 */
     static void install(Context ctx, Context base) {
         Context ac = null; try { ac = ctx.getApplicationContext(); } catch (Throwable ignore) {}
         final Context app = ac != null ? ac : base;
@@ -32,48 +34,61 @@ final class CrashLog {
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
                 String s = sw.toString();
-                if (s.length() > 1400) s = s.substring(0, 1400);
-                app.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit()
-                        .putString("trace", s).putString("thread", t.getName())
-                        .putLong("at", System.currentTimeMillis()).commit();
+                if (s.length() > 1800) s = s.substring(0, 1800);
+                final long at = System.currentTimeMillis();
+                try {
+                    app.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit()
+                            .putString("trace", s).putString("thread", t.getName()).putLong("at", at).commit();
+                } catch (Throwable ignore) {}
+                final String trace = s, thread = t.getName();
+                Thread sender = new Thread(() -> { if (post("android_crash", props(trace, thread, at))) { try { app.getSharedPreferences(PREF, Context.MODE_PRIVATE).edit().clear().commit(); } catch (Throwable ignore) {} } }, "miru-crash-now");
+                sender.start();
+                sender.join(3000);
             } catch (Throwable ignore) {}
             if (prev != null) prev.uncaughtException(t, e);
         });
-        flush(app);
+        new Thread(() -> {
+            try {
+                SharedPreferences sp = app.getSharedPreferences(PREF, Context.MODE_PRIVATE);
+                String trace = sp.getString("trace", null);
+                if (trace != null && post("android_crash", props(trace, sp.getString("thread", ""), sp.getLong("at", 0)))) sp.edit().clear().apply();
+                post("android_boot", props(null, null, System.currentTimeMillis()));
+            } catch (Throwable ignore) {}
+        }, "miru-crash-flush").start();
     }
 
-    private static void flush(final Context app) {
-        final SharedPreferences sp = app.getSharedPreferences(PREF, Context.MODE_PRIVATE);
-        final String trace = sp.getString("trace", null);
-        if (trace == null) return;
-        new Thread(() -> {
-            HttpURLConnection c = null;
-            try {
-                JSONObject props = new JSONObject();
-                props.put("trace", trace);
-                props.put("thread", sp.getString("thread", ""));
-                props.put("crashAt", sp.getLong("at", 0));
-                props.put("ver", BuildConfig.VERSION_NAME);
-                props.put("sdk", Build.VERSION.SDK_INT);
-                props.put("model", Build.MANUFACTURER + " " + Build.MODEL);
-                JSONObject ev = new JSONObject();
-                ev.put("name", "android_crash");
-                ev.put("props", props);
-                JSONObject body = new JSONObject();
-                body.put("events", new JSONArray().put(ev));
-                c = (HttpURLConnection) new URL("https://miru.plus/api/events").openConnection();
-                c.setConnectTimeout(8000);
-                c.setReadTimeout(8000);
-                c.setRequestMethod("POST");
-                c.setDoOutput(true);
-                c.setRequestProperty("Content-Type", "application/json");
-                try (OutputStream os = c.getOutputStream()) { os.write(body.toString().getBytes(StandardCharsets.UTF_8)); }
-                int code = c.getResponseCode();
-                if (code >= 200 && code < 300) sp.edit().clear().apply();
-            } catch (Throwable ignore) {
-            } finally {
-                if (c != null) c.disconnect();
-            }
-        }, "miru-crash-flush").start();
+    private static JSONObject props(String trace, String thread, long at) {
+        JSONObject p = new JSONObject();
+        try {
+            if (trace != null) { p.put("trace", trace); p.put("thread", thread); p.put("crashAt", at); }
+            p.put("ver", BuildConfig.VERSION_NAME);
+            p.put("sdk", Build.VERSION.SDK_INT);
+            p.put("model", Build.MANUFACTURER + " " + Build.MODEL);
+        } catch (Throwable ignore) {}
+        return p;
+    }
+
+    private static boolean post(String name, JSONObject props) {
+        HttpURLConnection c = null;
+        try {
+            JSONObject ev = new JSONObject();
+            ev.put("name", name);
+            ev.put("props", props);
+            JSONObject body = new JSONObject();
+            body.put("events", new JSONArray().put(ev));
+            c = (HttpURLConnection) new URL("https://miru.plus/api/events").openConnection();
+            c.setConnectTimeout(2500);
+            c.setReadTimeout(2500);
+            c.setRequestMethod("POST");
+            c.setDoOutput(true);
+            c.setRequestProperty("Content-Type", "application/json");
+            try (OutputStream os = c.getOutputStream()) { os.write(body.toString().getBytes(StandardCharsets.UTF_8)); }
+            int code = c.getResponseCode();
+            return code >= 200 && code < 300;
+        } catch (Throwable ignore) {
+            return false;
+        } finally {
+            if (c != null) c.disconnect();
+        }
     }
 }
