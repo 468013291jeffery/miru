@@ -11,16 +11,13 @@
 
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
-        <!-- 启动入口：可能先放一次开屏广告（AppLovin MAX），然后打开下面的网页壳 -->
+        <!-- 2026-11-27 不再用 EntryActivity 当桌面入口（开屏广告已关）。它是个透明的跳板页，打开网页壳后立刻关掉自己；
+             荣耀等手机上，网页壳还在后台时再点图标，新开的壳会以为「已经在运行」直接退出，表现就是点了没反应 / 一闪就回桌面。
+             现在桌面图标直接打开下面的 LauncherActivity（标准的可信网页壳入口），已经开着时系统直接切回原来的窗口。 -->
         <activity
             android:name=".EntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false" />
 
         <!-- 激励视频：网页跳 miru-ad://rewarded?u=…&n=… 打开 -->
         <activity
@@ -39,6 +36,10 @@
             android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
             android:label="@string/app_name"
             android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <meta-data android:name="android.support.customtabs.trusted.DEFAULT_URL" android:value="@string/launch_url" />
             <meta-data android:name="android.support.customtabs.trusted.STATUS_BAR_COLOR" android:resource="@color/bg" />
             <meta-data android:name="android.support.customtabs.trusted.NAVIGATION_BAR_COLOR" android:resource="@color/bg" />
