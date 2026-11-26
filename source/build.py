@@ -236,7 +236,11 @@ def _externalize(html):
     i = page.find('<div class="app"><div class="device" id="dev"></div></div>')
     if i < 0: raise SystemExit("externalize: #dev not found")
     page = page[:i] + BOOT_SPLASH + "\n" + page[i:]
-    page = page.replace("</head>", BOOT_PRELOAD + "\n</head>", 1)
+    # 页面没有 </head>，预加载插在 <meta charset> 后面：海报和主脚本在 HTML 还没解析完时就开始下载
+    j = page.find('<meta charset="utf-8">')
+    if j >= 0:
+        j += len('<meta charset="utf-8">')
+        page = page[:j] + "\n" + BOOT_PRELOAD + '\n<link rel="preload" as="script" href="/' + name + '">' + page[j:]
     print("externalize:", name, len(js_body), "chars; page", len(page), "chars")
     return page
 open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)
