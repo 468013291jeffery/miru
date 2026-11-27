@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 2026-11-27 Android 12+ 打开 App 时系统会先强制显示一个「小图标开屏」（App 图标 + 底色），然后才轮到我们的海报开屏。
+         用户反馈先看到小 LOGO 再跳大海报很别扭：这里把系统开屏的图标设成透明，只剩和海报一样的深莓色底，
+         看起来就是直接进海报。 -->
+    <style name="MiruLaunch" parent="@android:style/Theme.Black.NoTitleBar">
+        <item name="android:windowBackground">@color/splash_bg</item>
+        <item name="android:statusBarColor">@color/splash_bg</item>
+        <item name="android:navigationBarColor">@color/splash_bg</item>
+        <item name="android:windowSplashScreenBackground">@color/splash_bg</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/splash_bg</item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+    </style>
+</resources>
