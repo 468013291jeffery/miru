@@ -57,6 +57,19 @@ final class CrashLog {
         }, "miru-crash-flush").start();
     }
 
+    /** 2026-11-28：每次打开记一下用的哪种壳（twa / webview）和接手的浏览器包名，排查「顶部进度条」这类只在某些手机上出现的问题。 */
+    static void shell(String mode, String provider, int launchMode) {
+        new Thread(() -> {
+            try {
+                JSONObject p = props(null, null, 0);
+                p.put("shell", mode);
+                p.put("provider", provider == null ? "" : provider);
+                p.put("launchMode", launchMode);
+                post("android_shell", p);
+            } catch (Throwable ignore) {}
+        }, "miru-shell-log").start();
+    }
+
     private static JSONObject props(String trace, String thread, long at) {
         JSONObject p = new JSONObject();
         try {
