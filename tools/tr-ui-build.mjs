@@ -19,7 +19,8 @@ const HAN = /[\u4e00-\u9fff]/, KANA = /[\u3040-\u30ff]/, HANG = /[\uac00-\ud7af]
 
 const unq = s => { try { return JSON.parse('"' + s.replace(/\n/g, '\\n') + '"'); } catch (_) { return s.replace(/\\(["'\\])/g, '$1'); } };
 const Q2 = '"((?:[^"\\\\\\n]|\\\\.){1,400})"', Q1 = "'((?:[^'\\\\\\n]|\\\\.){1,400})'";
-const FN = '\\b(?:LL|TZ|L98|L4|LZ|L2|ZE|L5z|L)\\(\\s*';
+/* 任意「函数名("中文", "English")」都算（LL / T / T2 / TZ / L98 …各模块叫法不一样） */
+const FN = '\\b[A-Za-z_$][\\w$]{0,10}\\(\\s*';
 const RXS = [
   new RegExp(FN + Q2 + '\\s*,\\s*' + Q2 + '\\s*\\)', 'g'),
   new RegExp(FN + Q1 + '\\s*,\\s*' + Q1 + '\\s*\\)', 'g'),
