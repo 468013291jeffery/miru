@@ -3,7 +3,8 @@ let chatSeg="msgs";
 function renderChats(v){
  /* Chats = messages + the characters' own lives (Instagram DMs + stories). */
  const list=Object.values(S.threads).sort((a,b)=>b.at-a.at);
- const posts=feedPosts(),who=[...new Set(posts.map(p=>p.who))];
+ /* 2026-11-28 角色动态里可能有已下架/已删除的角色（ch() 返回 null），之前直接读 c.n 报错，整个聊天页打不开。先过滤掉找不到的角色。 */
+ const posts=feedPosts().filter(p=>p&&ch(p.who)),who=[...new Set(posts.map(p=>p.who))];
  let h='<div class="topbar"><h1 style="font-size:24px" class="grow">'+t("tab.chats")+'</h1></div><div class="scroll">'+
   '<div class="stories">'+who.map(id=>{const c=ch(id),seen=S.feedSeen[id];return '<button class="story'+(seen?"":" new")+'" data-sv="'+id+'"><span class="ring">'+avatar(id,60)+'</span><b>'+esc(first(c.n))+'</b></button>'}).join("")+'</div>'+
   '<div class="tabs"><button data-cseg="msgs" class="'+(chatSeg==="msgs"?"on":"")+'">'+t("ch.msgs")+'</button><button data-cseg="moments" class="'+(chatSeg==="moments"?"on":"")+'">'+t("ch.moments")+'</button></div>';
