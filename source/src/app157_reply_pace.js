@@ -314,3 +314,43 @@
     stopClock: stopClock, clocks: CLOCKS, startClock: startClock, isCjk: isCjk
   };
 })();
+
+
+/* ===== mod210 · 2026-11-28 自由输入框 =====
+   1) AI 回复生成时，聊天页会整页重画（renderChat），输入框被换成新的空框 —— 用户正在打的字「打不到屏幕上」。
+      现在重画前记下输入框里的字、光标位置和是否在输入，重画后原样放回去。
+   2) 输入框会自己变成两行高：发送后清空了文字，但上次按内容撑开的高度还留着。现在清空 / 发送 / 重画后都按实际内容重算高度。 */
+(function () {
+  "use strict";
+  if (typeof document === "undefined") return;
+  function fit(el) {
+    if (!el) return;
+    el.style.height = "";
+    if (el.value) { el.style.height = "auto"; el.style.height = Math.min(120, el.scrollHeight) + "px"; }
+  }
+  try {
+    if (typeof renderChat === "function") {
+      const rc = renderChat;
+      renderChat = function () {
+        const ta = document.getElementById("cin");
+        let v = "", ss = 0, se = 0, foc = false;
+        if (ta) { v = ta.value; ss = ta.selectionStart || 0; se = ta.selectionEnd || 0; foc = document.activeElement === ta; }
+        const r = rc.apply(this, arguments);
+        try {
+          const nt = document.getElementById("cin");
+          if (nt && nt !== ta && v && !nt.value && !nt.disabled) {
+            nt.value = v;
+            if (foc) { try { nt.focus({ preventScroll: true }); nt.setSelectionRange(ss, se); } catch (_) {} }
+          }
+          fit(nt);
+        } catch (_) {}
+        return r;
+      };
+    }
+  } catch (_) {}
+  const later = () => setTimeout(() => fit(document.getElementById("cin")), 0);
+  document.addEventListener("input", e => { if (e.target && e.target.id === "cin" && !e.target.value) fit(e.target); });
+  document.addEventListener("keydown", e => { if (e.target && e.target.id === "cin" && e.key === "Enter" && !e.shiftKey) later(); });
+  document.addEventListener("click", e => { if (e.target && e.target.closest && e.target.closest("[data-send]")) later(); });
+  window.__mod210 = 1;
+})();

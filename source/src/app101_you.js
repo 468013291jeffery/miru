@@ -188,10 +188,12 @@
     const th = curT && S.threads[curT]; const w = th && wd(th.wid); if (!w) return;
     m.dataset.s101 = 1;
     const secs = [...m.querySelectorAll(".mi-sec")];
-    secs.forEach((s, i) => { if (i > 0) s.style.display = "none"; });
+    /* 2026-11-28 各剧本统一：故事背景卡是实底（不透出后面的场景图），故事背景和「你是谁」全部展开，不再折叠 */
+    m.classList.add("mi-solid");
+    secs.forEach((s, i) => { if (i > 0 && !s.classList.contains("you")) s.style.display = "none"; });
     const first0 = secs[0];
-    if (first0) { const ps = [...first0.querySelectorAll("p")]; ps.forEach((p, i) => { if (i > 0) p.style.display = "none"; });
-      if (ps.length > 1) first0.insertAdjacentHTML("beforeend", '<button class="mi101more" data-mi101more="1">' + (zh() ? "展开全部背景 ⌄" : "Show the full background ⌄") + '</button>'); }
+    if (first0) { const ps = [...first0.querySelectorAll("p")]; first0.classList.add("mi-bg1");
+      if (false) first0.insertAdjacentHTML("beforeend", '<button class="mi101more" data-mi101more="1">' + (zh() ? "展开全部背景 ⌄" : "Show the full background ⌄") + '</button>'); }
     (first0 || m).insertAdjacentHTML("afterend", leadsHTML(w));
   }
   document.addEventListener("click", e => { const x = e.target.closest("[data-mi101more]"); if (!x) return; const s = x.closest(".mi-sec"); if (s) s.querySelectorAll("p").forEach(p => p.style.display = ""); x.remove(); });
@@ -213,7 +215,13 @@
 .ld101c{display:flex;flex-direction:column;align-items:center;gap:6px;width:76px}.ld101c img{width:68px;height:68px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #F0B77E88}
 .ld101c b{font-size:13px;text-align:center}
 .m-intro .ld101{padding:0 14px 12px}
-.mi101more{margin-top:6px;background:none;border:0;color:var(--gold,#F0B77E);font-size:13px;padding:0}`;
+.mi101more{margin-top:6px;background:none;border:0;color:var(--gold,#F0B77E);font-size:13px;padding:0}
+.chatscreen .msgs .m-intro.mi-solid{background:rgb(18,16,24)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:1px solid rgba(240,183,126,.28)}
+.chatscreen .msgs .m-intro.mi-solid .mi-cover{display:none}
+.chatscreen .msgs .m-intro.mi-solid .mi-sec{padding:18px 20px 6px}
+.m-intro .mi-bg1>.eyebrow{display:flex;align-items:center;gap:14px;font:500 28px/1.25 "Noto Serif SC","Songti SC",Georgia,serif;letter-spacing:.22em;color:#F3D9B1;text-transform:none;margin-bottom:10px}
+.m-intro .mi-bg1>.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,183,126,.6),transparent)}
+.m-intro .mi-bg1 p{font-size:15px;line-height:1.75;margin:0 0 10px}`;
   document.head.appendChild(stl);
 })();
 

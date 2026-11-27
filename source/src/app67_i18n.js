@@ -73,11 +73,13 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
 function trKey(){return "miru_tr_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}
+ /* 2026-11-28 提前翻好的界面文字（tr_ui.json，tools/tr-ui-build.mjs 生成）：先铺进来，页面上直接是目标语言，不用再实时翻 */
+ const U0=window.TR_UI&&window.TR_UI[S.lang];if(U0)Object.keys(U0).forEach(k=>{if(TR.map[k]==null)TR.map[k]=U0[k]});
  const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})
  let bad=0;Object.keys(TR.map).forEach(k=>{if(!needsTr(k)||!trFits(TR.map[k])){delete TR.map[k];bad++}});if(bad)trSave()}
 /* a translation must be written in the target language's script */
 function trFits(v){v=String(v||"");const L=S.lang;if(L==="zh")return RX.han.test(v)&&!/[一-鿿][a-z]|[a-z][一-鿿]/.test(v);if(L==="en")return !RX.han.test(v)&&!RX.kana.test(v)&&!RX.hang.test(v);if(L==="ja")return RX.kana.test(v)||RX.han.test(v);if(L==="ko")return RX.hang.test(v);if(L==="es")return !RX.han.test(v);return true}
-function trSave(){try{const keys=Object.keys(TR.map);if(keys.length>6000)keys.slice(0,keys.length-6000).forEach(k=>delete TR.map[k]);localStorage.setItem(trKey(),JSON.stringify(TR.map))}catch(_){}}
+function trSave(){try{const U1=window.TR_UI&&window.TR_UI[S.lang];const keys=Object.keys(TR.map).filter(k=>!(U1&&U1[k]===TR.map[k]));if(keys.length>6000)keys.slice(0,keys.length-6000).forEach(k=>delete TR.map[k]);const keep={};keys.forEach(k=>keep[k]=TR.map[k]);localStorage.setItem(trKey(),JSON.stringify(keep))}catch(_){}}
 const RX={han:/[一-鿿]/,kana:/[぀-ヿ]/,hang:/[가-힯]/,words:/[A-Za-z]{2,}[^\n]*\s+[A-Za-z]{2,}/};
 function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一-鿿]/.test(t))return false;const L=S.lang;
  if(L==="en")return RX.han.test(t)&&!RX.kana.test(t);
@@ -109,3 +111,4 @@ const _toast67=toast;toast=function(msg){try{trLoad();const s=String(msg||"");if
 /* language switches: restore originals, then localize again */
 let LANG67=S.lang;setInterval(()=>{if(S.lang!==LANG67){LANG67=S.lang;trRestore();TR.lang=null;setTimeout(()=>trScan(),200)}},700);
 if(document.body)trStart();else document.addEventListener("DOMContentLoaded",trStart);
+(function(){try{if(typeof fetch!=="function")return;fetch("/tr_ui.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{if(!j||typeof j!=="object")return;window.TR_UI=j;TR.lang=null;if(S.lang!=="zh")setTimeout(()=>{try{trScan()}catch(_){}},0)}).catch(()=>{})}catch(_){}})();
