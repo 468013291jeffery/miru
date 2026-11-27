@@ -70,20 +70,31 @@ const i18nMiss = { ja: [], ko: [], es: [] };
 for (const lg of Object.keys(i18nMiss)) for (const [k, v] of Object.entries(I.en)) if (typeof v === 'string' && I[lg][k] == null && /[A-Za-z]{2}/.test(v)) i18nMiss[lg].push(v);
 const enMiss = Object.entries(I.zh).filter(([k, v]) => typeof v === 'string' && HAN.test(v) && I.en[k] == null).map(([, v]) => v);
 
+/* 2b · 首页 / 发现里的剧本卡片（标题、一句话简介、标签）：来自线上作品列表，不在源码里 */
+const WORKS = process.env.TR_WORKS || 'https://miru.plus/api/works?r=list';
+const cards = new Set();
+try {
+  const j = await (await fetch(WORKS)).json();
+  const walk = (o, d) => { if (!o || d > 6) return; if (Array.isArray(o)) return o.forEach(x => walk(x, d + 1)); if (typeof o !== 'object') return;
+    for (const [k, v] of Object.entries(o)) { if (typeof v === 'string' && /^(title|hook|premise|tagline|logline|genre|tag|tags|sub|desc|summary)$/i.test(k) && v.length >= 2 && v.length <= 400 && /[A-Za-z一-鿿]/.test(v)) cards.add(v); else if (typeof v === 'object') walk(v, d + 1); } };
+  walk(j, 0);
+} catch (_) {}
+const cardsEn = [...cards].filter(t => !HAN.test(t)), cardsZh = [...cards].filter(t => HAN.test(t));
+
 /* 3 · 要翻的清单 */
 let out = { v: 1, at: '', ja: {}, ko: {}, es: {}, en: {} };
 try { out = Object.assign(out, JSON.parse(fs.readFileSync(OUT, 'utf8'))); } catch (_) {}
 const want = {
-  ja: [...new Set([...pairs.keys(), ...i18nMiss.ja])],
-  ko: [...new Set([...pairs.keys(), ...i18nMiss.ko])],
-  es: [...new Set([...pairs.keys(), ...i18nMiss.es])],
-  en: [...new Set([...pairs.values(), ...enMiss])]
+  ja: [...new Set([...pairs.keys(), ...i18nMiss.ja, ...cardsEn, ...cardsZh])],
+  ko: [...new Set([...pairs.keys(), ...i18nMiss.ko, ...cardsEn, ...cardsZh])],
+  es: [...new Set([...pairs.keys(), ...i18nMiss.es, ...cardsEn, ...cardsZh])],
+  en: [...new Set([...pairs.values(), ...enMiss, ...cardsZh])]
 };
 /* 英文用户：中英成对的直接用源码里的英文，不用翻 */
 for (const [en, zh] of pairs) if (!out.en[zh]) out.en[zh] = en;
 const fits = (lg, v) => { v = String(v || ''); if (!v.trim()) return false; if (lg === 'ja') return KANA.test(v) || HAN.test(v); if (lg === 'ko') return HANG.test(v); if (lg === 'es') return !HAN.test(v) && !KANA.test(v) && !HANG.test(v); if (lg === 'en') return !HAN.test(v); return true; };
 const todo = {}; for (const lg of Object.keys(want)) todo[lg] = want[lg].filter(t => t.length >= 2 && !fits(lg, out[lg][t]));
-console.log('pairs', pairs.size, '| i18n en keys', Object.keys(I.en).length, '| to translate:', Object.fromEntries(Object.entries(todo).map(([k, v]) => [k, v.length])));
+console.log('cards', cards.size, '| pairs', pairs.size, '| i18n en keys', Object.keys(I.en).length, '| to translate:', Object.fromEntries(Object.entries(todo).map(([k, v]) => [k, v.length])));
 if (DRY) process.exit(0);
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
