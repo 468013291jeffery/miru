@@ -244,6 +244,13 @@ def _externalize(html):
     if j >= 0:
         j += len('<meta charset="utf-8">')
         page = page[:j] + "\n" + BOOT_CSS + "\n" + BOOT_PRELOAD + '\n<link rel="preload" as="script" href="/' + name + '">' + page[j:]
+    # 2026-11-28 顶部细加载条：页面里的 AdSense 脚本和 Google 字体在国内经常连不上，会一直挂着，
+    # 页面迟迟算不上「加载完成」，浏览器 / App 外壳顶部的加载进度条就一直停在 80% 左右。
+    # 改成整页加载完以后再拉（AdSense 晚 2 秒）；站点验证靠 <meta name="google-adsense-account">，不受影响。
+    _ADS = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1779576119248059" crossorigin="anonymous"></script>'
+    if _ADS in page:
+        page = page.replace(_ADS, '<script>window.__adsDefer=1;addEventListener("load",function(){setTimeout(function(){var s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1779576119248059";document.head.appendChild(s)},2000)});</script>', 1)
+    page = re.sub(r'<link rel="stylesheet" href="(https://fonts\.googleapis\.com/[^"]+)" media="print" onload="this\.media=\'all\'"[^>]*>', lambda m: '<script>addEventListener("load",function(){var l=document.createElement("link");l.rel="stylesheet";l.referrerPolicy="no-referrer";l.href="' + m.group(1).replace("&amp;", "&") + '";document.head.appendChild(l)});</script>', page, count=1)
     print("externalize:", name, len(js_body), "chars; page", len(page), "chars")
     return page
 open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)
