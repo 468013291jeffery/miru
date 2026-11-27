@@ -282,8 +282,18 @@ function Assets({ p, upd, script }) {
   const ready = () => { try { return !!(P && P.studioImageReady && P.studioImageReady()); } catch (_) { return false; } };
   const putFile = async (slot, file) => {
     const tk = token(); if (!tk) throw new Error('请先在 MIRU 登录');
-    if (file.size > 4 * 1048576) throw new Error('单个文件不能超过 4MB');
-    const r = await fetch('/api/pkg?work=' + encodeURIComponent(p.id) + '&slot=' + encodeURIComponent(slot) + '&mime=' + encodeURIComponent(file.type) + '&name=' + encodeURIComponent(file.name), { method: 'PUT', headers: { Authorization: 'Bearer ' + tk, 'Content-Type': file.type }, body: file });
+    /* 2026-11-28 视频最长 1 分钟（40MB 以内）；前 10 秒免费，之后每多 10 秒 💎1。图片 / 音频仍是 4MB。 */
+    const isVid = /^video\//.test(file.type || '');
+    let sec = 0;
+    if (isVid) {
+      if (file.size > 40 * 1048576) throw new Error('视频不能超过 40MB');
+      sec = await new Promise(ok => { const v = document.createElement('video'); v.preload = 'metadata'; v.onloadedmetadata = () => { ok(v.duration || 0); URL.revokeObjectURL(v.src); }; v.onerror = () => ok(0); v.src = URL.createObjectURL(file); });
+      if (!(sec > 0)) throw new Error('读不到视频时长，请换一个 mp4 文件');
+      if (sec > 60.5) throw new Error('视频最长 1 分钟（这段 ' + Math.round(sec) + ' 秒）');
+      const cost = Math.max(0, Math.ceil(sec / 10) - 1);
+      if (cost > 0 && !window.confirm('这段视频 ' + Math.round(sec) + ' 秒：前 10 秒免费，之后每 10 秒 💎1，共 💎' + cost + '。继续上传？')) throw new Error('已取消');
+    } else if (file.size > 4 * 1048576) throw new Error('单个文件不能超过 4MB');
+    const r = await fetch('/api/pkg?work=' + encodeURIComponent(p.id) + '&slot=' + encodeURIComponent(slot) + '&mime=' + encodeURIComponent(file.type) + '&name=' + encodeURIComponent(file.name) + (isVid ? '&sec=' + sec.toFixed(1) : ''), { method: 'PUT', headers: { Authorization: 'Bearer ' + tk, 'Content-Type': file.type }, body: file });
     const j = await r.json().catch(() => ({}));
     if (!r.ok || !j.url && !(j.asset && j.asset.url)) throw new Error(j.error || r.status);
     const url = j.url || j.asset.url;
@@ -348,7 +358,7 @@ function Assets({ p, upd, script }) {
       {p.cast.filter(c => c.name).map(c => row('char_' + (c.key || c.name), c.name + ' 的立绘', 'char'))}
       <h3>背景（⟦BG⟧ · {S.bg.length}）</h3>{S.bg.map(s => row(s.slot, s.note, 'bg'))}
       <h3>心动插图（⟦CG⟧ · {S.cg.length}）</h3>{S.cg.map(s => row(s.slot, s.note, 'cg'))}
-      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场 10 秒视频（可选）', 'video')}
+      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场视频（可选，最长 1 分钟；前 10 秒免费，之后每 10 秒 💎1）', 'video')}
       {S.bgm.length > 0 && <><h3>自定义音乐（⟦BGM⟧ · {S.bgm.length}）</h3><p className="dim">MIRU 曲库里已有的提示词（tense / romantic / night…）不用上传。</p>{S.bgm.map(s => row('bgm_' + s.slot, s.slot, 'bgm'))}</>}
     </div>
   );
