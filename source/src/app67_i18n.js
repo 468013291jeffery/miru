@@ -91,7 +91,16 @@ function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一
 function trSkip(el){return !el||el.closest&&el.closest("[data-notr],textarea,input,script,style,code,.m.me,.mine,.mb-me,[contenteditable]")}
 function trNode(n){const raw=n.nodeValue,t=raw.trim();if(!t||(TR.me&&TR.me.has(t)))return;const o=TR.orig.get(n);const src=o&&o.tr===raw?o.src:t;
  if(TR.map[src]!=null&&needsTr(src)&&trFits(TR.map[src])){const out=raw.replace(t,TR.map[src]);if(out!==raw){TR.orig.set(n,{src,tr:out});n.nodeValue=out}return}
+ {const alt=trAlt(src);if(alt){const out=raw.replace(t,alt);if(out!==raw){TR.orig.set(n,{src,tr:out});n.nodeValue=out}return}}
  if(needsTr(src))TR.q.add(src)}
+/* 2026-11-28 词表对不上的两种情况也直接用提前翻好的：
+   1) 前面带符号的（「⇧ Import card」→ 按「Import card」查）；
+   2) 带数字的（「0 Story Packs owned」→ 按词表里的「{a} Story Packs owned」套模板，把数字填回去）。 */
+let TPL67=null,TPLL67=null;
+function trTpl(){if(TPLL67===S.lang&&TPL67)return TPL67;TPLL67=S.lang;TPL67=[];const U=window.TR_UI&&window.TR_UI[S.lang];
+ if(U)Object.keys(U).forEach(k=>{if(!/\{\w+\}/.test(k)||k.length>200)return;const keys=[];try{const rx=new RegExp("^"+k.replace(/[.*+?^$()|[\]\\]/g,"\\$&").replace(/\{(\w+)\}/g,(_,nm)=>{keys.push(nm);return "(.+?)"})+"$");TPL67.push([rx,keys,U[k]])}catch(_){}});return TPL67}
+function trAlt(s){try{if(!needsTr(s))return null;const m=s.match(/^([^A-Za-z一-鿿]+)([\s\S]+)$/);if(m&&TR.map[m[2]]!=null&&trFits(TR.map[m[2]]))return m[1]+TR.map[m[2]];
+ for(const [rx,keys,dst] of trTpl()){const mm=s.match(rx);if(mm&&trFits(dst)){let o=dst;keys.forEach((k,i)=>{o=o.split("{"+k+"}").join(mm[i+1])});return o}}}catch(_){}return null}
 function trAttr(el,a){const v=el.getAttribute(a);if(!v)return;const o=el["__tro_"+a]||v;if(TR.map[o]!=null&&needsTr(o)&&trFits(TR.map[o])){el["__tro_"+a]=o;el.setAttribute(a,TR.map[o])}else if(needsTr(o))TR.q.add(o)}
 function meTexts(){const th=S.threads&&S.threads[curT];const set=new Set();if(th)(th.msgs||[]).forEach(m=>{if(m.who==="me"&&m.txt)set.add(String(m.txt).trim())});return set}
 function trScan(root){trLoad();TR.me=meTexts();const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>trSkip(n.parentElement)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
