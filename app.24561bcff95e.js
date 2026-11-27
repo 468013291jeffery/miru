@@ -10890,7 +10890,15 @@ function crJSON(prompt){return cAsk(prompt+"\nReply ONLY JSON.",30000)}
 function crSys(p,path){p=p||{};const role={"/api/guide-turn":"architect","/api/plan":"architect","/api/rewrite":"scene","/api/step-suggest":"architect"}[path]||"architect";
  const rr=p.aiRoleRules&&p.aiRoleRules[role],s1=p.system1||{};const parts=[CR_SYS];if(rr)parts.push("Your role rules (follow them): "+String(rr).slice(0,600));
  const keep=["storyRule","gateRule","delayedRule","knowledgeRule","sourceRule"].map(k=>s1[k]).filter(Boolean).join(" / ");if(keep)parts.push("Story rules: "+keep.slice(0,900));return parts.join("\n")}
-const CR_SYS="You are MIRU's story editor, helping an author build an interactive romance drama (all characters are fictional adults 21+, no explicit sexual content, no real people, no copyrighted characters). Write in Simplified Chinese.";
+const CR_SYS="You are MIRU's story editor, helping an author build an interactive romance drama (all characters are fictional adults 21+, no explicit sexual content, no real people, no copyrighted characters). Write in Simplified Chinese. Write as richly as MIRU's official scripts: concrete time and place, sensory detail (light, sound, smell, touch), characters shown through actions and subtext, narration in 2–4 vivid sentences per beat with rhythm — never a flat summary, never padding.";
+/* 2026-11-28 AI 引导创作写出来的故事背景 / 人物介绍太单薄（以前故事背景只拼了地点 + 冲突 + 一句梗概）。
+   规划时让 AI 按官方剧本标准写足：故事背景 ≥220 字、前情提要 ≥120 字、你是谁 ≥60 字、每个人物介绍 ≥80 字；写短了自动重写一次。
+   富文本按作品记在本机，发布成 MIRU 剧本时用来生成开场的「故事背景」卡和人物介绍。 */
+function crRichKey(p){p=p||{};return String(p.id||p.title||"").slice(0,80)}
+function crRichLen(s){return String(s||"").replace(/\s/g,"").length}
+function crRichShort(r){const x=(r&&r.project)||{};return crRichLen(x.background)<200||crRichLen(x.prologue)<100||crRichLen(x.lead&&x.lead.intro)<70}
+function crRichSave(p,r){try{const x=r&&r.project;if(!x)return;S.crRich=S.crRich||{};const v={background:x.background||"",prologue:x.prologue||"",you:x.you||"",lead:x.lead||{},support:x.support||{},at:Date.now()};[crRichKey(p),crRichKey({title:x.title}),crRichKey({title:p&&p.title})].filter(Boolean).forEach(k=>S.crRich[k]=v);save()}catch(_){}}
+function crRichGet(p){const R=S.crRich||{};return R[crRichKey(p)]||R[crRichKey({title:p&&p.title})]||null}
 window.MIRU_BRIDGE={startTab:"guide",fresh:false,
  gems:()=>S.keys,
  price:kind=>kind==="suggest"?(cFreeLeft("line")>0?0:cPrice("line")):cPrice(kind),
@@ -10899,7 +10907,7 @@ window.MIRU_BRIDGE={startTab:"guide",fresh:false,
  async ask(path,pl){if(!liveOn())return null;pl=pl||{};const proj=pl.project?JSON.stringify({title:pl.project.title,premise:pl.project.premise,genre:pl.project.genre,world:pl.project.world,hook:pl.project.hook,conflict:pl.project.conflict,secret:pl.project.secret,lead:pl.project.lead,support:pl.project.support}).slice(0,2400):"";
   try{
    if(path==="/api/guide-turn")return await crJSON(crSys(pl.project,path)+"\nThe author is on step "+(+pl.step+1)+" of a guided setup. Their answers so far: "+JSON.stringify(pl.answers||[]).slice(0,2000)+"\nCurrent project: "+proj+'\nGive ONE short, specific reaction to their latest answer and one concrete idea that would make the story stronger (max 70 Chinese characters, warm, no praise filler). JSON {"feedback":""}');
-   if(path==="/api/plan")return await crJSON(crSys(pl.project,path)+"\nTurn the author's answers into a sharp story plan. Answers: "+JSON.stringify(pl.answers||[]).slice(0,3000)+"\nCurrent draft: "+proj+'\nKeep the author\'s names and choices; make it specific (place, object, secret, stakes). JSON {"project":{"title":"≤14字","premise":"一句话梗概","hook":"开场：用他的一个具体行为展示吸引力和他对你的态度，并给你一个马上能回应的点（冲突按题材安排，不必一开场就吵）","conflict":"","world":"具体地点和时间","vibe":"","ending":"","lead":{"name":"","role":"","personality":"","goal":"","boundary":""}}}');
+   if(path==="/api/plan"){const pq=crSys(pl.project,path)+"\nTurn the author's answers into a sharp story plan. Answers: "+JSON.stringify(pl.answers||[]).slice(0,3000)+"\nCurrent draft: "+proj+'\nKeep the author\'s names and choices; make it specific (place, object, secret, stakes). Write background / prologue / you / intro as richly as MIRU\'s official scripts (second person for the player, concrete scenes, sensory detail, no summary tone). JSON {"project":{"title":"≤14字","premise":"一句话梗概","hook":"开场：用他的一个具体行为展示吸引力和他对你的态度，并给你一个马上能回应的点（冲突按题材安排，不必一开场就吵）","conflict":"","world":"具体地点和时间","vibe":"","ending":"","background":"故事背景，220–380字，分2–4段：时代和地点、你的处境、他是谁以及你们之间的张力、眼前正在发生的危机、留一个悬念钩子","prologue":"前情提要，120–200字：故事开始前已经发生的关键事件","you":"你是谁，60–120字：身份、处境、你藏着的事","lead":{"name":"","role":"","personality":"","goal":"","boundary":"","intro":"人物介绍，80–150字：外貌、身份、性格、秘密、和你的关系"},"support":{"name":"","role":"","intro":"人物介绍，80–150字"}}}';let r=await crJSON(pq);if(r&&crRichShort(r)){const r2=await crJSON(pq+"\n上一次写得太短：故事背景至少220字、前情提要至少120字、每个人物介绍至少80字。保持名字和设定不变，按要求写足。");if(r2&&r2.project)r=r2}crRichSave(pl.project,r);return r}
    if(path==="/api/options")return await crJSON(crSys(pl.project,path)+"\nThe author is answering: "+(pl.question||"")+"\nCurrent options (replace them with a NEW, clearly different set): "+JSON.stringify(pl.current||[])+"\nTheir story so far: "+(pl.previous||"")+'\nGive 6 short options in Simplified Chinese (each under 18 characters), concrete and varied, fitting their story, original (no famous works). JSON {"options":["",...]}');
    if(path==="/api/rewrite")return await crJSON(crSys(pl.project,path)+"\nRewrite this line so it is more vivid and specific, same meaning, same length or shorter. Genre: "+(pl.genre||"")+". Context: "+(pl.context||"")+"\nLine: "+(pl.text||"")+'\nJSON {"text":""}');
    if(path==="/api/step-suggest")return await crJSON(crSys(pl.project,path)+"\nQuestion for the author: "+(pl.question||"")+"\nTheir story so far: "+(pl.previous||"")+"\n"+(pl.options&&pl.options.length?"Options they can pick (mode "+pl.mode+"): "+pl.options.join(" | ")+"\nIf it is a choice question, start with the best option(s) copied exactly, then one sentence why. ":"")+'Otherwise write a ready-to-use answer (max 120 Chinese characters) that fits everything they chose before. JSON {"text":""}')}
@@ -10972,7 +10980,8 @@ function crPublish(story,p,sb){S.crmap=S.crmap||{};let wid=S.crmap[p.id];const t
  w.title=x0(c.title);w.hook=x0(c.hook);w.premise=x0(p.premise||c.con);w.status.place=x0(c.place);
  w.pack.card=c;w.pack.lore=(sb||[]).map(s=>({t:s.title||"",d:s.detail||"",vis:s.visibility||"all"}));w.pack.creator={narration:p.narration||"",rules:{system1:story.system1||p.system1||null,ai:story.aiGuidance||p.aiRoleRules||null,pay:story.payRules||p.payRules||null},endMode:story.endingMode||p.endingMode||"guided",id:p.id,genre:p.genre,vibe:p.vibe,persona:p.playerPersona,role:p.playerRole,interactions:p.interactionIds||[],ver:(w.pack.creator&&w.pack.creator.ver||0)+1};
  const intro=w.pack.intro.zh;intro.bg=[c.place+"。",c.con?c.con+"。":"",p.premise||""].filter(Boolean);if(p.playerRole)intro.you=LL("你的身份：","You: ")+p.playerRole+(p.playerPersona?" · "+p.playerPersona:"")+"。"+LL("你的选择会改变人物对你的信任、吸引和张力。","Your choices change their trust, attraction and tension.");
- intro.cast=w.cast.map(id=>[id,Lz(S.mine.chars[id].role)]);w.pack.intro.en=JSON.parse(JSON.stringify(intro));w.pack.join=[{as:L,t:x0(LL("扮演"+c.lead.name,"Play as "+c.lead.name))},{as:"side",t:x0(LL("以你自己的身份进入","Walk in as yourself"))}];
+ intro.cast=w.cast.map(id=>[id,Lz(S.mine.chars[id].role)]);
+ try{const R=crRichGet(p);if(R){const para=s=>String(s||"").split(/\n+/).map(x=>x.trim()).filter(Boolean);const bg=para(R.background),pr=para(R.prologue);if(bg.length)intro.bg=bg.concat(pr.length?[LL("前情提要：","Previously: ")+pr.join("")]:[]);if(R.you)intro.you=String(R.you);const ci={};if(R.lead&&R.lead.intro&&c.lead.name)ci[c.lead.name]=R.lead.intro;if(R.support&&R.support.intro&&c.sup.name)ci[c.sup.name]=R.support.intro;intro.cast=w.cast.map(id=>{const ch0=S.mine.chars[id]||{},nm=Lz(ch0.n)||ch0.n;return [id,ci[nm]||Lz(ch0.role)]})}}catch(_){}w.pack.intro.en=JSON.parse(JSON.stringify(intro));w.pack.join=[{as:L,t:x0(LL("扮演"+c.lead.name,"Play as "+c.lead.name))},{as:"side",t:x0(LL("以你自己的身份进入","Walk in as yourself"))}];
  const media=p.media||{};const fc=media.faces||{};Object.keys(fc).forEach(k=>{const id=ids[k];if(id&&fc[k])S.art[id]=fc[k]});if(media.cover&&media.cover.src)w.cover=media.cover.src;else if(media.bgs&&media.bgs.start)w.cover=media.bgs.start;else if(media.background&&media.background.src)w.cover=media.background.src;
  const wk=S.works.find(k=>k.id===wid);if(wk)wk.title=c.title;save();return wid}
 /* ---------- one entry on the create page ---------- */
@@ -13028,11 +13037,13 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
 function trKey(){return "miru_tr_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}
+ /* 2026-11-28 提前翻好的界面文字（tr_ui.json，tools/tr-ui-build.mjs 生成）：先铺进来，页面上直接是目标语言，不用再实时翻 */
+ const U0=window.TR_UI&&window.TR_UI[S.lang];if(U0)Object.keys(U0).forEach(k=>{if(TR.map[k]==null)TR.map[k]=U0[k]});
  const i={ja:0,ko:1,es:2}[S.lang];if(i!=null)Object.keys(TRD).forEach(k=>{TR.map[k]=TRD[k][i]})
  let bad=0;Object.keys(TR.map).forEach(k=>{if(!needsTr(k)||!trFits(TR.map[k])){delete TR.map[k];bad++}});if(bad)trSave()}
 /* a translation must be written in the target language's script */
 function trFits(v){v=String(v||"");const L=S.lang;if(L==="zh")return RX.han.test(v)&&!/[一-鿿][a-z]|[a-z][一-鿿]/.test(v);if(L==="en")return !RX.han.test(v)&&!RX.kana.test(v)&&!RX.hang.test(v);if(L==="ja")return RX.kana.test(v)||RX.han.test(v);if(L==="ko")return RX.hang.test(v);if(L==="es")return !RX.han.test(v);return true}
-function trSave(){try{const keys=Object.keys(TR.map);if(keys.length>6000)keys.slice(0,keys.length-6000).forEach(k=>delete TR.map[k]);localStorage.setItem(trKey(),JSON.stringify(TR.map))}catch(_){}}
+function trSave(){try{const U1=window.TR_UI&&window.TR_UI[S.lang];const keys=Object.keys(TR.map).filter(k=>!(U1&&U1[k]===TR.map[k]));if(keys.length>6000)keys.slice(0,keys.length-6000).forEach(k=>delete TR.map[k]);const keep={};keys.forEach(k=>keep[k]=TR.map[k]);localStorage.setItem(trKey(),JSON.stringify(keep))}catch(_){}}
 const RX={han:/[一-鿿]/,kana:/[぀-ヿ]/,hang:/[가-힯]/,words:/[A-Za-z]{2,}[^\n]*\s+[A-Za-z]{2,}/};
 function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一-鿿]/.test(t))return false;const L=S.lang;
  if(L==="en")return RX.han.test(t)&&!RX.kana.test(t);
@@ -13064,6 +13075,7 @@ const _toast67=toast;toast=function(msg){try{trLoad();const s=String(msg||"");if
 /* language switches: restore originals, then localize again */
 let LANG67=S.lang;setInterval(()=>{if(S.lang!==LANG67){LANG67=S.lang;trRestore();TR.lang=null;setTimeout(()=>trScan(),200)}},700);
 if(document.body)trStart();else document.addEventListener("DOMContentLoaded",trStart);
+(function(){try{if(typeof fetch!=="function")return;fetch("/tr_ui.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).then(j=>{if(!j||typeof j!=="object")return;window.TR_UI=j;TR.lang=null;if(S.lang!=="zh")setTimeout(()=>{try{trScan()}catch(_){}},0)}).catch(()=>{})}catch(_){}})();
 
 /* ================= v2.6 · CLOUD — the front end talks to the MIRU backend (/api on Vercel) =================
    Everything degrades gracefully: if the backend (or its database) isn't reachable — e.g. inside the claude.ai preview — the app keeps
@@ -19362,10 +19374,14 @@ document.addEventListener('click',e=>{
     const th = curT && S.threads[curT]; const w = th && wd(th.wid); if (!w) return;
     m.dataset.s101 = 1;
     const secs = [...m.querySelectorAll(".mi-sec")];
-    secs.forEach((s, i) => { if (i > 0) s.style.display = "none"; });
+    /* 2026-11-28 各剧本统一：故事背景卡是实底（不透出后面的场景图），故事背景和「你是谁」全部展开，不再折叠 */
+    m.classList.add("mi-solid");
+    /* 聊天列表顶部有一层渐隐（阅读模式），会把背景卡也盖得半透明：背景卡在屏幕上时关掉这层渐隐，卡片滚出去后恢复 */
+    try { const box = m.closest(".msgs"); if (box && "IntersectionObserver" in window) { const io = new IntersectionObserver(es => es.forEach(e => box.classList.toggle("mi-solid-on", e.isIntersecting)), { root: box, threshold: 0 }); io.observe(m); } } catch (_) {}
+    secs.forEach((s, i) => { if (i > 0 && !s.classList.contains("you")) s.style.display = "none"; });
     const first0 = secs[0];
-    if (first0) { const ps = [...first0.querySelectorAll("p")]; ps.forEach((p, i) => { if (i > 0) p.style.display = "none"; });
-      if (ps.length > 1) first0.insertAdjacentHTML("beforeend", '<button class="mi101more" data-mi101more="1">' + (zh() ? "展开全部背景 ⌄" : "Show the full background ⌄") + '</button>'); }
+    if (first0) { const ps = [...first0.querySelectorAll("p")]; first0.classList.add("mi-bg1");
+      if (false) first0.insertAdjacentHTML("beforeend", '<button class="mi101more" data-mi101more="1">' + (zh() ? "展开全部背景 ⌄" : "Show the full background ⌄") + '</button>'); }
     (first0 || m).insertAdjacentHTML("afterend", leadsHTML(w));
   }
   document.addEventListener("click", e => { const x = e.target.closest("[data-mi101more]"); if (!x) return; const s = x.closest(".mi-sec"); if (s) s.querySelectorAll("p").forEach(p => p.style.display = ""); x.remove(); });
@@ -19387,7 +19403,14 @@ document.addEventListener('click',e=>{
 .ld101c{display:flex;flex-direction:column;align-items:center;gap:6px;width:76px}.ld101c img{width:68px;height:68px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 2px #F0B77E88}
 .ld101c b{font-size:13px;text-align:center}
 .m-intro .ld101{padding:0 14px 12px}
-.mi101more{margin-top:6px;background:none;border:0;color:var(--gold,#F0B77E);font-size:13px;padding:0}`;
+.mi101more{margin-top:6px;background:none;border:0;color:var(--gold,#F0B77E);font-size:13px;padding:0}
+.chatscreen .msgs .m-intro.mi-solid{background:rgb(18,16,24)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;border:1px solid rgba(240,183,126,.28)}
+.chatscreen .msgs .m-intro.mi-solid .mi-cover{display:none}
+.chatscreen .msgs .m-intro.mi-solid .mi-sec{padding:18px 20px 6px}
+.m-intro .mi-bg1>.eyebrow{display:flex;align-items:center;gap:14px;font:500 28px/1.25 "Noto Serif SC","Songti SC",Georgia,serif;letter-spacing:.22em;color:#F3D9B1;text-transform:none;margin-bottom:10px}
+.m-intro .mi-bg1>.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,183,126,.6),transparent)}
+.m-intro .mi-bg1 p{font-size:15px;line-height:1.75;margin:0 0 10px}
+.chatscreen .msgs.mi-solid-on{-webkit-mask-image:none!important;mask-image:none!important}`;
   document.head.appendChild(stl);
 })();
 
@@ -32171,5 +32194,45 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     speakerKey: speakerKey, visibleLen: visibleLen, mode: mode, setMode: setMode,
     stopClock: stopClock, clocks: CLOCKS, startClock: startClock, isCjk: isCjk
   };
+})();
+
+
+/* ===== mod210 · 2026-11-28 自由输入框 =====
+   1) AI 回复生成时，聊天页会整页重画（renderChat），输入框被换成新的空框 —— 用户正在打的字「打不到屏幕上」。
+      现在重画前记下输入框里的字、光标位置和是否在输入，重画后原样放回去。
+   2) 输入框会自己变成两行高：发送后清空了文字，但上次按内容撑开的高度还留着。现在清空 / 发送 / 重画后都按实际内容重算高度。 */
+(function () {
+  "use strict";
+  if (typeof document === "undefined") return;
+  function fit(el) {
+    if (!el) return;
+    el.style.height = "";
+    if (el.value) { el.style.height = "auto"; el.style.height = Math.min(120, el.scrollHeight) + "px"; }
+  }
+  try {
+    if (typeof renderChat === "function") {
+      const rc = renderChat;
+      renderChat = function () {
+        const ta = document.getElementById("cin");
+        let v = "", ss = 0, se = 0, foc = false;
+        if (ta) { v = ta.value; ss = ta.selectionStart || 0; se = ta.selectionEnd || 0; foc = document.activeElement === ta; }
+        const r = rc.apply(this, arguments);
+        try {
+          const nt = document.getElementById("cin");
+          if (nt && nt !== ta && v && !nt.value && !nt.disabled) {
+            nt.value = v;
+            if (foc) { try { nt.focus({ preventScroll: true }); nt.setSelectionRange(ss, se); } catch (_) {} }
+          }
+          fit(nt);
+        } catch (_) {}
+        return r;
+      };
+    }
+  } catch (_) {}
+  const later = () => setTimeout(() => fit(document.getElementById("cin")), 0);
+  document.addEventListener("input", e => { if (e.target && e.target.id === "cin" && !e.target.value) fit(e.target); });
+  document.addEventListener("keydown", e => { if (e.target && e.target.id === "cin" && e.key === "Enter" && !e.shiftKey) later(); });
+  document.addEventListener("click", e => { if (e.target && e.target.closest && e.target.closest("[data-send]")) later(); });
+  window.__mod210 = 1;
 })();
 
