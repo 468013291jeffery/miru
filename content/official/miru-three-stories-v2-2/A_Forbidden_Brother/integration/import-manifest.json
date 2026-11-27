@@ -1,0 +1,290 @@
+{
+  "kind": "derived_import_files",
+  "source_preserved": true,
+  "source_character_bible": "production/character_bible_v2_2.json",
+  "reserved_engine_marker": "cast_all",
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "script": "script.zh-CN.md",
+      "assets": "assets.zh-CN.json",
+      "source": "../locales/zh-CN/script.md",
+      "source_sha256": "445ee94cf857fd15de16aaadf1aaebdf22b5b93147e9d537011aa28c57a731b5",
+      "import_sha256": "2fa1d071ec979e46fe948e0cd45ea0dfa4edea0dcf18fada7540d83739d985b2",
+      "speaker_labels_normalized": 10,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "damian",
+          "name": "达米安",
+          "asset_id": "char_a_damian",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "ethan",
+          "name": "伊森",
+          "asset_id": "char_a_ethan",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "eleanor",
+          "name": "埃莉诺",
+          "asset_id": "char_a_eleanor",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "mia",
+          "name": "米娅",
+          "asset_id": "char_a_mia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "claire",
+          "name": "克莱尔",
+          "asset_id": "char_a_claire",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "zh-TW",
+      "script": "script.zh-TW.md",
+      "assets": "assets.zh-TW.json",
+      "source": "../locales/zh-TW/script.md",
+      "source_sha256": "93f6edf9dda60a98f7340d4a7996803e8324da31163e9b2f0fddcd8f3ea85f29",
+      "import_sha256": "aed44325e00f6a4a02253690080e5b28b7b7056ccefba139a6a13df6968986d4",
+      "speaker_labels_normalized": 10,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "damian",
+          "name": "達米安",
+          "asset_id": "char_a_damian",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "ethan",
+          "name": "伊森",
+          "asset_id": "char_a_ethan",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "eleanor",
+          "name": "埃莉諾",
+          "asset_id": "char_a_eleanor",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "mia",
+          "name": "米婭",
+          "asset_id": "char_a_mia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "claire",
+          "name": "克萊爾",
+          "asset_id": "char_a_claire",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "script": "script.en-US.md",
+      "assets": "assets.en-US.json",
+      "source": "../locales/en-US/script.md",
+      "source_sha256": "cd735170bb50b5ce8d32705e74343bf34b05150489d62992462625517954fdef",
+      "import_sha256": "27e2ad2d91e84381f2be815f09dc81616a50fb55237a554e9043795ce84385e0",
+      "speaker_labels_normalized": 299,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "damian",
+          "name": "Damian",
+          "asset_id": "char_a_damian",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "ethan",
+          "name": "Ethan",
+          "asset_id": "char_a_ethan",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "eleanor",
+          "name": "Eleanor",
+          "asset_id": "char_a_eleanor",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "mia",
+          "name": "Mia",
+          "asset_id": "char_a_mia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "claire",
+          "name": "Claire",
+          "asset_id": "char_a_claire",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "script": "script.ja-JP.md",
+      "assets": "assets.ja-JP.json",
+      "source": "../locales/ja-JP/script.md",
+      "source_sha256": "32b0bd30c41511e1d9795a3cc9653f5fc17516d22b6f268f099e5b990bd524cf",
+      "import_sha256": "dc425e0827cc7c8e0d33c9f7fce97c8e19ce251d7824d0f73979dbdfa3bed6a7",
+      "speaker_labels_normalized": 290,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "damian",
+          "name": "ダミアン",
+          "asset_id": "char_a_damian",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "ethan",
+          "name": "イーサン",
+          "asset_id": "char_a_ethan",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "eleanor",
+          "name": "エレノア",
+          "asset_id": "char_a_eleanor",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "mia",
+          "name": "ミア",
+          "asset_id": "char_a_mia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "claire",
+          "name": "クレア",
+          "asset_id": "char_a_claire",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "ko-KR",
+      "script": "script.ko-KR.md",
+      "assets": "assets.ko-KR.json",
+      "source": "../locales/ko-KR/script.md",
+      "source_sha256": "c70435112887cc763999d358f042c06a4da5ee5f0b66e31048dc0a732c7e8901",
+      "import_sha256": "5cb0e1aa30efdb1d87c8779b2911e9cef145aebee7383fc4ef8072770760a507",
+      "speaker_labels_normalized": 289,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "damian",
+          "name": "데이미언",
+          "asset_id": "char_a_damian",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "ethan",
+          "name": "이선",
+          "asset_id": "char_a_ethan",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "eleanor",
+          "name": "엘리너",
+          "asset_id": "char_a_eleanor",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "mia",
+          "name": "미아",
+          "asset_id": "char_a_mia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "claire",
+          "name": "클레어",
+          "asset_id": "char_a_claire",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "es-ES",
+      "script": "script.es-ES.md",
+      "assets": "assets.es-ES.json",
+      "source": "../locales/es-ES/script.md",
+      "source_sha256": "7eb9fcfcd386d5825e4f662a1b73f56f02697e53ed66a74d53b78accfce83d80",
+      "import_sha256": "cc33800aa3861e8f121516b6439d296e2f5b5fbbf0189db582799a148501299f",
+      "speaker_labels_normalized": 293,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "damian",
+          "name": "Damian",
+          "asset_id": "char_a_damian",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "ethan",
+          "name": "Ethan",
+          "asset_id": "char_a_ethan",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "eleanor",
+          "name": "Eleanor",
+          "asset_id": "char_a_eleanor",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "mia",
+          "name": "Mia",
+          "asset_id": "char_a_mia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "claire",
+          "name": "Claire",
+          "asset_id": "char_a_claire",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    }
+  ]
+}

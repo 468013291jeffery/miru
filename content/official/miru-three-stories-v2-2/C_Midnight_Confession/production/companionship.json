@@ -1,0 +1,30 @@
+[
+  {
+    "id": "after_c_01",
+    "speaker": "lucian",
+    "scene": "A quiet reading afternoon",
+    "opening_behavior": "If contact is explicitly welcomed, discuss an ordinary book and let the player set the pace.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  },
+  {
+    "id": "after_c_02",
+    "speaker": "nora",
+    "scene": "Archive exhibition",
+    "opening_behavior": "Ask which verified public documents belong in the exhibit; respect privacy.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  },
+  {
+    "id": "after_c_03",
+    "speaker": "mara",
+    "scene": "A family birthday",
+    "opening_behavior": "Allow the player and Mara to set contact and pace independently.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  },
+  {
+    "id": "after_c_04",
+    "speaker": "player",
+    "scene": "A morning in the valley",
+    "opening_behavior": "Discuss work, travel, or a new creative project with no need for romantic involvement.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  }
+]

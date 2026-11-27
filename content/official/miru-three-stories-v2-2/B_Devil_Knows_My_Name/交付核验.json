@@ -1,0 +1,81 @@
+{
+  "story": "B_Devil_Knows_My_Name",
+  "title": "杀我哥哥的人，夜夜守在我的门外",
+  "images_expected": 54,
+  "images_present": 54,
+  "audio_present": 6,
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "09dd6a7d6d668d36e1143e4885b82544a4c232d3e2b8e3f0c89eaaf9c5a389fc",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "zh-TW",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "107a33e4f5d9b09b17341a5ebebccff7b4d7966e1d6dcbb9e80d788344c08cb4",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "en-US",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "36ca75717bf1e11bf14d047bebbc729124ba810ef80374e543e29ddb8cacb108",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "ja-JP",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "b8be2d9c476dea48019eaf9d24ee48ab0869fe076b29f448c81ee38770ff59de",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "ko-KR",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "7cf45b2b942e7683788a63d6e8d3056c54bc1209cc18d64ebfaeb910df83c506",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "es-ES",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "7cf26200f44339688eb088b91f0178f5a24f87845b80cf2ed1c8c21b543ff488",
+      "bg_immediate_after_scene": true
+    }
+  ]
+}

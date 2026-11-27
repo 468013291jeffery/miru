@@ -1,0 +1,43 @@
+{
+  "status": "proposed integration contract; not verified parser fields",
+  "state": {
+    "chapter": 1,
+    "scene": 1,
+    "flags": {},
+    "revealed_facts": [],
+    "per_character_knowledge": {},
+    "boundaries": {},
+    "explicit_player_intent": null,
+    "choice_source": null,
+    "done": []
+  },
+  "rules": [
+    "Only explicit player input may set consent or romance commitments.",
+    "Fallback may progress but may not set an explicit romance flag.",
+    "Player manually advances scenes and chapters.",
+    "Character agents receive only own allowed knowledge.",
+    "Use previous branch facts on scene convergence.",
+    "No unverified MG or FX tags in current CN/TW/EN scripts.",
+    "Validate final flags and post-story routing against live engine."
+  ],
+  "final_flags": {
+    "a_c16_a": {
+      "intent": "Explicitly choose to begin dating Damian as equals",
+      "effect": "A first date is possible only with clear consent; accountability continues.",
+      "requires_explicit_input": true,
+      "fallback": "neutral/defer"
+    },
+    "a_c16_b": {
+      "intent": "Explicitly leave open the possibility of rebuilding trust with Ethan",
+      "effect": "Ethan may seek a new introduction through honest conduct, without automatic reconciliation.",
+      "requires_explicit_input": true,
+      "fallback": "neutral/defer"
+    },
+    "a_c16_c": {
+      "intent": "Choose independence or defer all romantic decisions",
+      "effect": "Your future remains complete without a romantic commitment.",
+      "requires_explicit_input": false,
+      "fallback": "neutral/defer"
+    }
+  }
+}

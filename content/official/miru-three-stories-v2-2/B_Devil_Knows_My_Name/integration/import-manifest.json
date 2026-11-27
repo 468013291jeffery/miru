@@ -1,0 +1,248 @@
+{
+  "kind": "derived_import_files",
+  "source_preserved": true,
+  "source_character_bible": "production/character_bible_v2_2.json",
+  "reserved_engine_marker": "cast_all",
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "script": "script.zh-CN.md",
+      "assets": "assets.zh-CN.json",
+      "source": "../locales/zh-CN/script.md",
+      "source_sha256": "09dd6a7d6d668d36e1143e4885b82544a4c232d3e2b8e3f0c89eaaf9c5a389fc",
+      "import_sha256": "1add576f31974c2a06fa846da24e2e9deca8202d0f79d84ed1a3ce09c09783fd",
+      "speaker_labels_normalized": 0,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "roman",
+          "name": "罗曼",
+          "asset_id": "char_b_roman",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "luca",
+          "name": "卢卡",
+          "asset_id": "char_b_luca",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "nadia",
+          "name": "娜迪娅",
+          "asset_id": "char_b_nadia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "lawyer",
+          "name": "独立律师",
+          "asset_id": "char_b_lawyer",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "zh-TW",
+      "script": "script.zh-TW.md",
+      "assets": "assets.zh-TW.json",
+      "source": "../locales/zh-TW/script.md",
+      "source_sha256": "107a33e4f5d9b09b17341a5ebebccff7b4d7966e1d6dcbb9e80d788344c08cb4",
+      "import_sha256": "b15b7d0e85c7af40accb59bfd1ee73d97c87045517903a489dd5eef0450f20e1",
+      "speaker_labels_normalized": 0,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "roman",
+          "name": "羅曼",
+          "asset_id": "char_b_roman",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "luca",
+          "name": "盧卡",
+          "asset_id": "char_b_luca",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "nadia",
+          "name": "娜迪婭",
+          "asset_id": "char_b_nadia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "lawyer",
+          "name": "獨立律師",
+          "asset_id": "char_b_lawyer",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "en-US",
+      "script": "script.en-US.md",
+      "assets": "assets.en-US.json",
+      "source": "../locales/en-US/script.md",
+      "source_sha256": "36ca75717bf1e11bf14d047bebbc729124ba810ef80374e543e29ddb8cacb108",
+      "import_sha256": "ed1c0b45eddc12a449fd5440fd3a7680c1cfefcbff202a288ac7eaec320a48fc",
+      "speaker_labels_normalized": 294,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "roman",
+          "name": "Roman",
+          "asset_id": "char_b_roman",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "luca",
+          "name": "Luca",
+          "asset_id": "char_b_luca",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "nadia",
+          "name": "Nadia",
+          "asset_id": "char_b_nadia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "lawyer",
+          "name": "Lawyer",
+          "asset_id": "char_b_lawyer",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "ja-JP",
+      "script": "script.ja-JP.md",
+      "assets": "assets.ja-JP.json",
+      "source": "../locales/ja-JP/script.md",
+      "source_sha256": "b8be2d9c476dea48019eaf9d24ee48ab0869fe076b29f448c81ee38770ff59de",
+      "import_sha256": "9d4cb28b701f04e1ad248c1ee1c79d17d6549131ee1f2d52395dd0368314c24e",
+      "speaker_labels_normalized": 291,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "roman",
+          "name": "ローマン",
+          "asset_id": "char_b_roman",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "luca",
+          "name": "ルカ",
+          "asset_id": "char_b_luca",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "nadia",
+          "name": "ナディア",
+          "asset_id": "char_b_nadia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "lawyer",
+          "name": "Lawyer",
+          "asset_id": "char_b_lawyer",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "ko-KR",
+      "script": "script.ko-KR.md",
+      "assets": "assets.ko-KR.json",
+      "source": "../locales/ko-KR/script.md",
+      "source_sha256": "7cf45b2b942e7683788a63d6e8d3056c54bc1209cc18d64ebfaeb910df83c506",
+      "import_sha256": "47b44d1428fdd574b6c30091cf69071b4d75ee9a71d3f8fe0a9889432ca3576b",
+      "speaker_labels_normalized": 290,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "roman",
+          "name": "로만",
+          "asset_id": "char_b_roman",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "luca",
+          "name": "루카",
+          "asset_id": "char_b_luca",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "nadia",
+          "name": "나디아",
+          "asset_id": "char_b_nadia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "lawyer",
+          "name": "Lawyer",
+          "asset_id": "char_b_lawyer",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    },
+    {
+      "locale": "es-ES",
+      "script": "script.es-ES.md",
+      "assets": "assets.es-ES.json",
+      "source": "../locales/es-ES/script.md",
+      "source_sha256": "7cf26200f44339688eb088b91f0178f5a24f87845b80cf2ed1c8c21b543ff488",
+      "import_sha256": "4a183ccb99c79beaa7c4c83b111b497d599598255d7f61978178ed9fabddfbea",
+      "speaker_labels_normalized": 296,
+      "chapter_hooks_moved_into_each_route": 16,
+      "characters": [
+        {
+          "key": "roman",
+          "name": "Roman",
+          "asset_id": "char_b_roman",
+          "romanceable": true,
+          "source_type": "B"
+        },
+        {
+          "key": "luca",
+          "name": "Luca",
+          "asset_id": "char_b_luca",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "nadia",
+          "name": "Nadia",
+          "asset_id": "char_b_nadia",
+          "romanceable": false,
+          "source_type": "C"
+        },
+        {
+          "key": "lawyer",
+          "name": "Lawyer",
+          "asset_id": "char_b_lawyer",
+          "romanceable": false,
+          "source_type": "C"
+        }
+      ]
+    }
+  ]
+}

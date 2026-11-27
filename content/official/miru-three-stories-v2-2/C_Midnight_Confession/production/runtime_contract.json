@@ -1,0 +1,43 @@
+{
+  "status": "proposed integration contract; not verified parser fields",
+  "state": {
+    "chapter": 1,
+    "scene": 1,
+    "flags": {},
+    "revealed_facts": [],
+    "per_character_knowledge": {},
+    "boundaries": {},
+    "explicit_player_intent": null,
+    "choice_source": null,
+    "done": []
+  },
+  "rules": [
+    "Only explicit player input may set consent or romance commitments.",
+    "Fallback may progress but may not set an explicit romance flag.",
+    "Player manually advances scenes and chapters.",
+    "Character agents receive only own allowed knowledge.",
+    "Use previous branch facts on scene convergence.",
+    "No unverified MG or FX tags in current CN/TW/EN scripts.",
+    "Validate final flags and post-story routing against live engine."
+  ],
+  "final_flags": {
+    "c_c16_a": {
+      "intent": "Explicitly choose an equal romantic relationship once accountability and boundaries allow it",
+      "effect": "Only a clearly expressed wish can open the romance route; the legal process remains independent.",
+      "requires_explicit_input": true,
+      "fallback": "neutral/defer"
+    },
+    "c_c16_b": {
+      "intent": "Choose friendship and shared archive work",
+      "effect": "The relationship continues without romantic obligations.",
+      "requires_explicit_input": true,
+      "fallback": "neutral/defer"
+    },
+    "c_c16_c": {
+      "intent": "Choose independence or defer private contact",
+      "effect": "Your life proceeds without making love a condition of redemption.",
+      "requires_explicit_input": false,
+      "fallback": "neutral/defer"
+    }
+  }
+}
