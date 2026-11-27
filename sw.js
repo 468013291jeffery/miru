@@ -7,7 +7,7 @@
    · config.js / tune.js / manifest：先网络，失败用缓存；
    · /api/、音频、视频、带 Range 的请求、别的域名：完全不碰，照常走网络。
    不支持 service worker 的浏览器（极少数）注册会直接跳过，网站照常从网络加载，没有任何影响。 */
-const V = "miru-v2";
+const V = "miru-v2";  /* 2026-11-28 tr_ui.json（提前翻好的界面文字）也走「先网络、失败用缓存」 */
 const PAGE = V + "-page", APP = V + "-app", IMG = V + "-img", MISC = V + "-misc";
 const KEEP = [PAGE, APP, IMG, MISC];
 
@@ -87,5 +87,5 @@ self.addEventListener("fetch", e => {
   }
   if (/^\/app\.[0-9a-f]{12}\.js$/.test(p)) { e.respondWith(cacheFirst(req, APP, 3)); return; }
   if (/\.(png|jpe?g|webp|gif|svg|avif)$/i.test(p)) { e.respondWith(staleWhileRevalidate(e, req, IMG, 600)); return; }
-  if (p === "/config.js" || p === "/tune.js" || p === "/manifest.webmanifest") { e.respondWith(networkFirst(req, MISC)); return; }
+  if (p === "/config.js" || p === "/tune.js" || p === "/manifest.webmanifest" || p === "/tr_ui.json") { e.respondWith(networkFirst(req, MISC)); return; }
 });
