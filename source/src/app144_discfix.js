@@ -4858,7 +4858,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   if (typeof watchAd !== "function") return;
-  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 15000, PREFER = "monetag";
+  /* 2026-11-28 Monetag 后台查过：网站只有 Popunder / 推送 / 横幅 / 插页 / Direct Link，没有「看完才回调」的激励格式（那种只给 Telegram 小程序）。
+     所以继续用「离开 MIRU 的时长」计时，从 15 秒提到 30 秒。 */
+  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 30000, PREFER = "monetag";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const inApp = () => { try { return localStorage.getItem("miru_twa189") === "1"; } catch (_) { return false; } };
   const W1 = watchAd;
@@ -4871,14 +4873,14 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
     if (!w && !document.hidden) { /* 被拦截了：退回原来的流程 */ return W1.apply(this, arguments); }
     if (typeof closeSheet === "function") closeSheet();
     pend = { done, at: Date.now(), away: 0, left: null };
-    toast(zh() ? "广告已在新标签页打开，看 15 秒后回来领奖励" : "Ad opened in a new tab — come back after 15 seconds for your reward");
+    toast(zh() ? "广告已在新标签页打开，看满 30 秒后回来领奖励" : "Ad opened in a new tab — come back after 30 seconds for your reward");
     try { if (typeof track === "function") track("ad_monetag_open", {}); } catch (_) {}
   };
   function settle() {
     if (!pend) return;
     const p = pend, away = p.away + (p.left ? Date.now() - p.left : 0);
     if (away >= NEED_MS) { pend = null; const st = adState(); st.n++; save(); try { if (typeof track === "function") track("ad_monetag_done", { s: Math.round(away / 1000) }); } catch (_) {} if (p.done) p.done(); }
-    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 15 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (15s)"); }
+    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 30 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (30s)"); }
   }
   document.addEventListener("visibilitychange", function () {
     if (!pend) return;
