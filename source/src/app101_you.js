@@ -190,6 +190,8 @@
     const secs = [...m.querySelectorAll(".mi-sec")];
     /* 2026-11-28 各剧本统一：故事背景卡是实底（不透出后面的场景图），故事背景和「你是谁」全部展开，不再折叠 */
     m.classList.add("mi-solid");
+    /* 聊天列表顶部有一层渐隐（阅读模式），会把背景卡也盖得半透明：背景卡在屏幕上时关掉这层渐隐，卡片滚出去后恢复 */
+    try { const box = m.closest(".msgs"); if (box && "IntersectionObserver" in window) { const io = new IntersectionObserver(es => es.forEach(e => box.classList.toggle("mi-solid-on", e.isIntersecting)), { root: box, threshold: 0 }); io.observe(m); } } catch (_) {}
     secs.forEach((s, i) => { if (i > 0 && !s.classList.contains("you")) s.style.display = "none"; });
     const first0 = secs[0];
     if (first0) { const ps = [...first0.querySelectorAll("p")]; first0.classList.add("mi-bg1");
@@ -221,7 +223,8 @@
 .chatscreen .msgs .m-intro.mi-solid .mi-sec{padding:18px 20px 6px}
 .m-intro .mi-bg1>.eyebrow{display:flex;align-items:center;gap:14px;font:500 28px/1.25 "Noto Serif SC","Songti SC",Georgia,serif;letter-spacing:.22em;color:#F3D9B1;text-transform:none;margin-bottom:10px}
 .m-intro .mi-bg1>.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,183,126,.6),transparent)}
-.m-intro .mi-bg1 p{font-size:15px;line-height:1.75;margin:0 0 10px}`;
+.m-intro .mi-bg1 p{font-size:15px;line-height:1.75;margin:0 0 10px}
+.chatscreen .msgs.mi-solid-on{-webkit-mask-image:none!important;mask-image:none!important}`;
   document.head.appendChild(stl);
 })();
 
