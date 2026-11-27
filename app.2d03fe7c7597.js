@@ -28643,7 +28643,8 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const W1 = watchAd;
   let pend = null;
   watchAd = function (done) {
-    if (PREFER !== "monetag" || inApp()) return W1.apply(this, arguments);
+    /* 2026-11-28 App 还没上架、Unity 内测包放不出广告：App 里也先用 Monetag（和网页版一样）。上架后想切回 Unity，把这里恢复成 || inApp() 即可。 */
+    if (PREFER !== "monetag") return W1.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
     const w = window.open(LINK, "_blank"); try { if (w) w.opener = null; } catch (_) {}
     if (!w && !document.hidden) { /* 被拦截了：退回原来的流程 */ return W1.apply(this, arguments); }
