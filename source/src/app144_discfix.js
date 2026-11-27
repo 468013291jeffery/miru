@@ -4757,7 +4757,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   let pend = null, granted = false;
   const W0 = watchAd;
   watchAd = function (done) {
-    if (!inApp()) return W0.apply(this, arguments);
+    /* 2026-11-28 App 还没正式上架，Unity 原生激励视频在内测包里一直停在「广告加载中」。
+       先让 App 里也走网页版广告（AdSense，和浏览器里一样）；上架后把 window.MIRU_UNITY_ADS 设成 true 就切回 Unity。 */
+    if (!inApp() || !window.MIRU_UNITY_ADS) return W0.apply(this, arguments);
     const c = typeof cloudInfo === "function" ? cloudInfo() : {};
     if (!c.uid) return W0.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
