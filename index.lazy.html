@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="80da4025bf17 2026-11-27T05:54Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="da9d88c84cff 2026-11-27T06:00Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -3315,6 +3315,8 @@ const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"
  threads:{},feedSeen:{},liked:{},follow:{},art:{},album:[],saved:[],keys:10,plus:false,couples:{},mine:{chars:{},worlds:{}},works:[],
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
+/* 2026-11-28 每次打开 App 都从「首页」开始（以前会回到上次停留的标签，比如聊天页，用户会以为进错了地方） */
+S.lastTab="home";
 /* repair data saved by older versions so one bad record can never blank a page */
 function cleanState(hard){try{/* 云端存档缺默认项时补齐，首页不会因 S.xxx.heir 读空崩溃 */for(const k of Object.keys(DEF)){if(S[k]==null)S[k]=JSON.parse(JSON.stringify(DEF[k]))}S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
@@ -30179,7 +30181,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   let pend = null, granted = false;
   const W0 = watchAd;
   watchAd = function (done) {
-    if (!inApp()) return W0.apply(this, arguments);
+    /* 2026-11-28 App 还没正式上架，Unity 原生激励视频在内测包里一直停在「广告加载中」。
+       先让 App 里也走网页版广告（AdSense，和浏览器里一样）；上架后把 window.MIRU_UNITY_ADS 设成 true 就切回 Unity。 */
+    if (!inApp() || !window.MIRU_UNITY_ADS) return W0.apply(this, arguments);
     const c = typeof cloudInfo === "function" ? cloudInfo() : {};
     if (!c.uid) return W0.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
