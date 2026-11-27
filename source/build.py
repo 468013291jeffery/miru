@@ -219,7 +219,10 @@ BOOT_SPLASH = ('<div id="boot-splash" style="position:fixed;inset:0;z-index:2147
                '<div style="position:absolute;left:50%;bottom:calc(6% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:96px;height:2px;border-radius:2px;background:rgba(255,222,190,.14);overflow:hidden"><i style="display:block;width:40%;height:100%;background:linear-gradient(90deg,transparent,#F3C892,transparent);animation:bootbar 1.3s ease-in-out infinite"></i></div>'
                '<style>@keyframes bootbar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}</style></div>')
 BOOT_PRELOAD = '<link rel="preload" as="image" href="/icons/splash.webp" type="image/webp" fetchpriority="high">'
-BOOT_DONE = '<script>(function(){var s=document.getElementById("boot-splash");if(!s)return;s.style.opacity="0";setTimeout(function(){s.remove()},320)})();</script>'
+# 2026-11-28 安卓 App 里系统开屏结束到网页画出开屏页之间会闪一下白屏（浏览器默认白底）。
+# 页面最顶上先给 html 铺上同一张海报 + 深莓色底，页面任何时候画出来都是海报，不再闪白；主脚本跑完后和开屏层一起移除。
+BOOT_CSS = '<style id="boot-css">html{background:#200217 url(/icons/splash.webp) center/contain no-repeat fixed!important;min-height:100%}body{background:transparent!important}</style>'
+BOOT_DONE = '<script>(function(){var s=document.getElementById("boot-splash"),c=document.getElementById("boot-css");if(!s){if(c)c.remove();return}s.style.opacity="0";setTimeout(function(){s.remove();if(c)c.remove()},320)})();</script>'
 def _externalize(html):
     b = html.rfind("\n</script>\n")
     a = html.rfind("\n<script>\n", 0, b) + 1
@@ -240,7 +243,7 @@ def _externalize(html):
     j = page.find('<meta charset="utf-8">')
     if j >= 0:
         j += len('<meta charset="utf-8">')
-        page = page[:j] + "\n" + BOOT_PRELOAD + '\n<link rel="preload" as="script" href="/' + name + '">' + page[j:]
+        page = page[:j] + "\n" + BOOT_CSS + "\n" + BOOT_PRELOAD + '\n<link rel="preload" as="script" href="/' + name + '">' + page[j:]
     print("externalize:", name, len(js_body), "chars; page", len(page), "chars")
     return page
 open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)
