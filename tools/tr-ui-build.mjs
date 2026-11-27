@@ -71,14 +71,13 @@ for (const lg of Object.keys(i18nMiss)) for (const [k, v] of Object.entries(I.en
 const enMiss = Object.entries(I.zh).filter(([k, v]) => typeof v === 'string' && HAN.test(v) && I.en[k] == null).map(([, v]) => v);
 
 /* 2b · 首页 / 发现里的剧本卡片（标题、一句话简介、标签）：来自线上作品列表，不在源码里 */
-const WORKS = process.env.TR_WORKS || 'https://miru.plus/api/works?r=list';
+const WORKS = (process.env.TR_WORKS || 'https://miru.plus/api/works?r=list,https://miru.plus/api/works?feed=featured&limit=50,https://miru.plus/art/official/catalog.json,https://miru.plus/art/official/discover.json,https://miru.plus/art/official/leads.json').split(',');
 const cards = new Set();
-try {
-  const j = await (await fetch(WORKS)).json();
-  const walk = (o, d) => { if (!o || d > 6) return; if (Array.isArray(o)) return o.forEach(x => walk(x, d + 1)); if (typeof o !== 'object') return;
-    for (const [k, v] of Object.entries(o)) { if (typeof v === 'string' && /^(title|hook|premise|tagline|logline|genre|tag|tags|sub|desc|summary)$/i.test(k) && v.length >= 2 && v.length <= 400 && /[A-Za-z一-鿿]/.test(v)) cards.add(v); else if (typeof v === 'object') walk(v, d + 1); } };
-  walk(j, 0);
-} catch (_) {}
+const KEYS = /^(title|hook|premise|tagline|logline|genre|tags?|sub|subtitle|desc|description|summary|blurb|pitch|label|shelf|en|zh)$/i;
+const take = v => { if (typeof v === 'string' && v.length >= 2 && v.length <= 400 && /[A-Za-z一-鿿]/.test(v) && !/^(https?:|\/|[a-z0-9_.-]+$)/i.test(v)) cards.add(v); };
+const walk = (o, d, k) => { if (o == null || d > 8) return; if (typeof o === 'string') { if (k && KEYS.test(k)) take(o); return; } if (Array.isArray(o)) return o.forEach(x => walk(x, d + 1, k)); if (typeof o !== 'object') return;
+  for (const [kk, v] of Object.entries(o)) walk(v, d + 1, kk); };
+for (const u of WORKS) { try { walk(await (await fetch(u)).json(), 0, ''); } catch (_) {} }
 const cardsEn = [...cards].filter(t => !HAN.test(t)), cardsZh = [...cards].filter(t => HAN.test(t));
 
 /* 3 · 要翻的清单 */
