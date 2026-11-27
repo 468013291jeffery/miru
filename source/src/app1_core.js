@@ -4,6 +4,8 @@ const DEF={v:2,lang:"en",ob:false,or:"all",tropes:[],heat:"slow",personas:[{id:"
  threads:{},feedSeen:{},liked:{},follow:{},art:{},album:[],saved:[],keys:10,plus:false,couples:{},mine:{chars:{},worlds:{}},works:[],
  voice:{auto:true},live:true,tier:"std",lastTab:"home"};
 let S=load();
+/* 2026-11-28 每次打开 App 都从「首页」开始（以前会回到上次停留的标签，比如聊天页，用户会以为进错了地方） */
+S.lastTab="home";
 /* repair data saved by older versions so one bad record can never blank a page */
 function cleanState(hard){try{/* 云端存档缺默认项时补齐，首页不会因 S.xxx.heir 读空崩溃 */for(const k of Object.keys(DEF)){if(S[k]==null)S[k]=JSON.parse(JSON.stringify(DEF[k]))}S.threads=S.threads||{};for(const k of Object.keys(S.threads)){const th=S.threads[k];if(!th||typeof th!=="object"){delete S.threads[k];continue}
   th.cast=(Array.isArray(th.cast)?th.cast:[]).filter(id=>typeof id==="string");th.msgs=Array.isArray(th.msgs)?th.msgs:[];th.mem=Array.isArray(th.mem)?th.mem:[];th.love=th.love||{};th.tasks=th.tasks||{};th.status=th.status||{time:"",place:"",mood:{}};th.at=th.at||0;
