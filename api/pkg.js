@@ -13,7 +13,18 @@
 const L = require('./_lib');
 const PKG = require('./_package');
 
-const MAX = 4 * 1048576;                 // 平台函数体上限；视频大文件应走分片或外部链接
+const MAX = 4 * 1048576;                 // 图片 / 音频上限
+/* 2026-11-28 视频放宽：最长 60 秒、40MB；前 10 秒免费，之后每多 10 秒 💎1（不足 10 秒按 10 秒算，后台 config.pkg_video_price_per10 可改）。
+   以前所有文件都限 4MB，视频实际只能放 10 秒左右，效果不好。 */
+const MAX_VIDEO = 40 * 1048576, VIDEO_SEC = 60;
+async function chargeGems(sql, uid, n, reason, key) {
+  await sql('INSERT INTO wallet (user_id, gems) VALUES ($1, 0) ON CONFLICT DO NOTHING', [uid]);
+  const dup = await sql('SELECT balance FROM ledger WHERE key=$1', [key]); if (dup[0]) return true;
+  const r = await sql('UPDATE wallet SET gems=gems-$2, updated_at=now() WHERE user_id=$1 AND gems>=$2 RETURNING gems', [uid, n]);
+  if (!r[0]) return false;
+  await sql('INSERT INTO ledger (user_id, delta, reason, key, balance) VALUES ($1,$2,$3,$4,$5) ON CONFLICT DO NOTHING', [uid, -n, reason, key, r[0].gems]);
+  return true;
+}
 const WORK_RE = /^[A-Za-z0-9_\-:.]{1,80}$/;
 
 /* 槽位 → 文件类别。规则跟剧本指令同名：BG/CG/封面是图，VIDEO 是视频，BGM 是音频，g_ 是互动游戏。 */
@@ -74,7 +85,15 @@ module.exports = L.wrap(async (req, res) => {
 
   const buf = await L.readBody(req);
   if (!buf.length) return L.bad(res, 'empty file', 400);
-  if (buf.length > MAX) return L.bad(res, 'file too large (max 4MB)', 413);
+  let videoPrice = 0;
+  if (cls === 'video') {
+    if (buf.length > MAX_VIDEO) return L.bad(res, '视频文件太大（最大 40MB）', 413);
+    const sec = Number(q.sec);
+    if (!(sec > 0)) return L.bad(res, '读不到视频时长，请换一个 mp4 文件', 400);
+    if (sec > VIDEO_SEC + 0.5) return L.bad(res, '视频最长 1 分钟', 400);
+    videoPrice = Math.max(0, Math.ceil(sec / 10) - 1) * (Number(cfg.pkg_video_price_per10) || 1);
+    if (videoPrice > 0 && !(await chargeGems(sql, u.uid, videoPrice, 'pkg_video:' + slot, 'pkgvid:' + u.uid + ':' + work + ':' + slot + ':' + buf.length + ':' + Math.round(sec)))) return L.bad(res, '钻石不足（这段视频需要 💎' + videoPrice + '）', 402);
+  } else if (buf.length > MAX) return L.bad(res, 'file too large (max 4MB)', 413);
 
   const id = L.newId('a_');
   const ext = (mime.split('/')[1] || 'bin').replace(/[^a-z0-9]/g, '').slice(0, 5) || 'bin';
@@ -82,5 +101,5 @@ module.exports = L.wrap(async (req, res) => {
   const name = String(q.name || slot).slice(0, 60);
   await sql('INSERT INTO assets (id, owner, kind, name, kw, url, mime, size, meta, status) VALUES ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9::jsonb,$10)',
     [id, u.uid, 'pkg', name, JSON.stringify([]), url, mime, buf.length, JSON.stringify({ slot, work, cls }), 'private']);
-  return L.send(res, 200, { ok: true, asset: { id, slot, work, name, url, mime, size: buf.length, cls }, free: cfg.pkg_free !== false });
+  return L.send(res, 200, { ok: true, asset: { id, slot, work, name, url, mime, size: buf.length, cls }, free: cfg.pkg_free !== false, price: videoPrice });
 });
