@@ -89,7 +89,7 @@ function List({ db, setDb, open }) {
 const TABS = [['set', '① 设定'], ['cast', '② 人物卡'], ['write', '③ 剧本'], ['qa', '④ 检查'], ['assets', '⑤ 素材'], ['games', '⑥ 小游戏'], ['pub', '⑦ 语言与发布'], ['ver', '⑧ 版本']];
 
 function Editor({ p, upd, back }) {
-  const [tab, setTab] = useState('write');
+  const [tab, setTab] = useState('set'); /* 2026-11-28 打开剧本默认停在第一个标签「① 设定」（原来是第三个「③ 剧本」） */
   const script = useMemo(() => assemble(p), [p]);
   const qa = useMemo(() => dslQA(script), [script]);
   const [g, setG] = useState(gems());
