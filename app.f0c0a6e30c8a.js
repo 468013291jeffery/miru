@@ -13033,7 +13033,7 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
  "Character voices":["キャラクターボイス","캐릭터 음성","Voces de personajes"],"Natural":["ナチュラル","자연스러운 목소리","Natural"],"Device":["端末の音声","기기 음성","Del dispositivo"],"Try":["試聴","들어보기","Probar"],
  "Skip":["スキップ","건너뛰기","Omitir"],"Browse":["見て回る","둘러보기","Explorar"],"Taste":["好み","취향","Gustos"],"What happens next is up to you.":["この先は、あなたが演じる。","이다음은 당신이 연기할 차례.","Lo que pasa después depende de ti."],
  "Walk in as yourself":["自分としてこのシーンに入る","나 자신으로 이 장면에 들어가기","Entra como tú"],"Direct it":["演出する","연출하기","Dirígelo"],"Watch the full short first":["先にショートドラマを最後まで見る","먼저 숏드라마 끝까지 보기","Ver primero el corto completo"],
- "Back to the story":["ストーリーに戻る","이야기로 돌아가기","Volver a la historia"],"You did it!":["成功！","성공!","¡Lo lograste!"],"So close…":["あと少し…","아깝다…","Casi…"],"Got it":["OK","확인","Entendido"]};
+ "Back to the story":["ストーリーに戻る","이야기로 돌아가기","Volver a la historia"],"You did it!":["成功！","성공!","¡Lo lograste!"],"So close…":["あと少し…","아깝다…","Casi…"],"Got it":["OK","확인","Entendido"],"MIRU New":["MIRU新作","MIRU 신작","Nuevo en MIRU"],"The Lead":["主人公","주인공","Protagonista"],"Tap to fill in":["タップして入力","눌러서 입력","Toca para completar"]};
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
 function trKey(){return "miru_tr_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}
@@ -13055,7 +13055,16 @@ function needsTr(t){if(!t||t.length<2||t.length>600)return false;if(!/[A-Za-z一
 function trSkip(el){return !el||el.closest&&el.closest("[data-notr],textarea,input,script,style,code,.m.me,.mine,.mb-me,[contenteditable]")}
 function trNode(n){const raw=n.nodeValue,t=raw.trim();if(!t||(TR.me&&TR.me.has(t)))return;const o=TR.orig.get(n);const src=o&&o.tr===raw?o.src:t;
  if(TR.map[src]!=null&&needsTr(src)&&trFits(TR.map[src])){const out=raw.replace(t,TR.map[src]);if(out!==raw){TR.orig.set(n,{src,tr:out});n.nodeValue=out}return}
+ {const alt=trAlt(src);if(alt){const out=raw.replace(t,alt);if(out!==raw){TR.orig.set(n,{src,tr:out});n.nodeValue=out}return}}
  if(needsTr(src))TR.q.add(src)}
+/* 2026-11-28 词表对不上的两种情况也直接用提前翻好的：
+   1) 前面带符号的（「⇧ Import card」→ 按「Import card」查）；
+   2) 带数字的（「0 Story Packs owned」→ 按词表里的「{a} Story Packs owned」套模板，把数字填回去）。 */
+let TPL67=null,TPLL67=null;
+function trTpl(){if(TPLL67===S.lang&&TPL67)return TPL67;TPLL67=S.lang;TPL67=[];const U=window.TR_UI&&window.TR_UI[S.lang];
+ if(U)Object.keys(U).forEach(k=>{if(!/\{\w+\}/.test(k)||k.length>200)return;const keys=[];try{const rx=new RegExp("^"+k.replace(/[.*+?^$()|[\]\\]/g,"\\$&").replace(/\{(\w+)\}/g,(_,nm)=>{keys.push(nm);return "(.+?)"})+"$");TPL67.push([rx,keys,U[k]])}catch(_){}});return TPL67}
+function trAlt(s){try{if(!needsTr(s))return null;const m=s.match(/^([^A-Za-z一-鿿]+)([\s\S]+)$/);if(m&&TR.map[m[2]]!=null&&trFits(TR.map[m[2]]))return m[1]+TR.map[m[2]];
+ for(const [rx,keys,dst] of trTpl()){const mm=s.match(rx);if(mm&&trFits(dst)){let o=dst;keys.forEach((k,i)=>{o=o.split("{"+k+"}").join(mm[i+1])});return o}}}catch(_){}return null}
 function trAttr(el,a){const v=el.getAttribute(a);if(!v)return;const o=el["__tro_"+a]||v;if(TR.map[o]!=null&&needsTr(o)&&trFits(TR.map[o])){el["__tro_"+a]=o;el.setAttribute(a,TR.map[o])}else if(needsTr(o))TR.q.add(o)}
 function meTexts(){const th=S.threads&&S.threads[curT];const set=new Set();if(th)(th.msgs||[]).forEach(m=>{if(m.who==="me"&&m.txt)set.add(String(m.txt).trim())});return set}
 function trScan(root){trLoad();TR.me=meTexts();const w=document.createTreeWalker(root||document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>trSkip(n.parentElement)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
@@ -19376,6 +19385,8 @@ document.addEventListener('click',e=>{
     const secs = [...m.querySelectorAll(".mi-sec")];
     /* 2026-11-28 各剧本统一：故事背景卡是实底（不透出后面的场景图），故事背景和「你是谁」全部展开，不再折叠 */
     m.classList.add("mi-solid");
+    /* 聊天列表顶部有一层渐隐（阅读模式），会把背景卡也盖得半透明：背景卡在屏幕上时关掉这层渐隐，卡片滚出去后恢复 */
+    try { const box = m.closest(".msgs"); if (box && "IntersectionObserver" in window) { const io = new IntersectionObserver(es => es.forEach(e => box.classList.toggle("mi-solid-on", e.isIntersecting)), { root: box, threshold: 0 }); io.observe(m); } } catch (_) {}
     secs.forEach((s, i) => { if (i > 0 && !s.classList.contains("you")) s.style.display = "none"; });
     const first0 = secs[0];
     if (first0) { const ps = [...first0.querySelectorAll("p")]; first0.classList.add("mi-bg1");
@@ -19407,7 +19418,8 @@ document.addEventListener('click',e=>{
 .chatscreen .msgs .m-intro.mi-solid .mi-sec{padding:18px 20px 6px}
 .m-intro .mi-bg1>.eyebrow{display:flex;align-items:center;gap:14px;font:500 28px/1.25 "Noto Serif SC","Songti SC",Georgia,serif;letter-spacing:.22em;color:#F3D9B1;text-transform:none;margin-bottom:10px}
 .m-intro .mi-bg1>.eyebrow::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,183,126,.6),transparent)}
-.m-intro .mi-bg1 p{font-size:15px;line-height:1.75;margin:0 0 10px}`;
+.m-intro .mi-bg1 p{font-size:15px;line-height:1.75;margin:0 0 10px}
+.chatscreen .msgs.mi-solid-on{-webkit-mask-image:none!important;mask-image:none!important}`;
   document.head.appendChild(stl);
 })();
 
@@ -21622,6 +21634,11 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   let busy = false;
   async function buy(sku) {
     if (busy) return; busy = true;
+    /* 2026-11-28 有用户反馈「点充值没反应」：以前失败原因只写在浏览器控制台，后台看不到。
+       现在每次点击、每次失败都记一条事件（play_start / play_fail，带错误名和说明，不含任何付款信息），方便定位；
+       另外 90 秒后自动解除「正在付款」状态，避免 Google 的付款窗口卡住后再点就没反应。 */
+    const lock = setTimeout(() => { busy = false; }, 90000);
+    try { if (typeof track === "function") track("play_start", { sku: sku, dgs: "getDigitalGoodsService" in window, pr: "PaymentRequest" in window }); } catch (e0) { console.debug("[play]", e0); }
     try {
       await service();
       const req = new PaymentRequest([{ supportedMethods: PLAY_METHOD, data: { sku: sku } }], { total: { label: "Total", amount: { currency: "USD", value: "0" } } });
@@ -21643,10 +21660,11 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
       if (typeof refreshAfterPay === "function") refreshAfterPay();
     } catch (e) {
       const m = String((e && e.name) || "") + " " + String((e && e.message) || e);
-      if (/AbortError|cancel/i.test(m)) { /* 玩家自己取消 */ }
+      try { if (typeof track === "function") track("play_fail", { sku: sku, m: m.slice(0, 180), dgs: "getDigitalGoodsService" in window }); } catch (e0) { console.debug("[play]", e0); }
+      if (/AbortError|cancel/i.test(m)) { /* 玩家自己取消，或 Google 的付款窗口被关掉 */ toast(zh() ? "付款已取消，没有扣费" : "Payment cancelled — you weren't charged"); }
       else if (/no-dgs/.test(m)) toast(zh() ? "请从 Google Play 安装的 MIRU App 里充值" : "Please top up in the MIRU app installed from Google Play");
-      else { console.warn("[play] buy", e); toast(zh() ? "这次没有付款成功，没有扣费" : "The purchase didn't go through — you weren't charged"); }
-    } finally { busy = false; }
+      else { console.warn("[play] buy", e); toast(zh() ? "这次没有付款成功，没有扣费。请确认手机上的 Google Play 商店已登录、可以正常付款后再试" : "The purchase didn't go through — you weren't charged. Check that Google Play is signed in and can take payments, then try again"); }
+    } finally { clearTimeout(lock); busy = false; }
   }
   function keepPending(sku, token) { try { const a = JSON.parse(localStorage.getItem("miru_play_pending") || "[]"); a.push({ sku: sku, token: token, at: Date.now() }); localStorage.setItem("miru_play_pending", JSON.stringify(a.slice(-10))); } catch (e) { console.warn("[play] keep", e); } }
   /* 打开 App 时：把上次没确认的单再交一次；以及 Google 那边「已付款但没消耗」的单（比如付款时断网） */
@@ -21693,7 +21711,9 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
 
   try {
     /* 2026-11-12：页面 <head> 里已经静态放了 adsbygoogle.js（审核要求代码在页面源码里），这里就不再插第二份 */
-    if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+    /* 2026-11-28 页面里改成「整页加载完 2 秒后再拉 adsbygoogle」（window.__adsDefer）：国内连不上 Google 时，它会一直挂着，
+       页面迟迟算不上「加载完成」，浏览器顶部的加载进度条就一直停在那。这里也不要再提前插一份。 */
+    if (!window.__adsDefer && !document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script");
     s.async = true;
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(PUB);
@@ -28550,6 +28570,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const KEY = "miru_twa189";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   try { if (/^android-app:\/\/com\.miru\.plus\.app/.test(document.referrer || "")) localStorage.setItem(KEY, "1"); } catch (_) {}
+  /* 2026-11-28 新安装包启动网址带 av=<版本号>：带了就说明这个包里 Unity 广告位已经配好（BP_Rewarded_Android，测试广告），App 里「看广告」走 Unity；
+     旧安装包没有 av，继续走网页广告（Monetag），不会卡在「广告加载中」。App 自带 WebView（大陆手机）里 referrer 不一定带得上，也用 av 判断「在 App 里」。 */
+  try { const av = new URLSearchParams(location.search).get("av"); if (av && /^\d+$/.test(av)) { localStorage.setItem("miru_av", av); localStorage.setItem(KEY, "1"); } } catch (_) {}
+  const appAv = () => { try { return Number(localStorage.getItem("miru_av")) || 0; } catch (_) { return 0; } };
   const inApp = () => { try { return localStorage.getItem(KEY) === "1"; } catch (_) { return false; } };
   window.__unity189 = () => ({ inApp: inApp(), pending: !!pend });
   if (typeof watchAd !== "function" || typeof capi !== "function") return;
@@ -28558,7 +28582,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   watchAd = function (done) {
     /* 2026-11-28 App 还没正式上架，Unity 原生激励视频在内测包里一直停在「广告加载中」。
        先让 App 里也走网页版广告（AdSense，和浏览器里一样）；上架后把 window.MIRU_UNITY_ADS 设成 true 就切回 Unity。 */
-    if (!inApp() || !window.MIRU_UNITY_ADS) return W0.apply(this, arguments);
+    if (!inApp() || !(window.MIRU_UNITY_ADS || appAv() > 0)) return W0.apply(this, arguments);
     const c = typeof cloudInfo === "function" ? cloudInfo() : {};
     if (!c.uid) return W0.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
@@ -28657,27 +28681,31 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   if (typeof watchAd !== "function") return;
-  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 15000, PREFER = "monetag";
+  /* 2026-11-28 Monetag 后台查过：网站只有 Popunder / 推送 / 横幅 / 插页 / Direct Link，没有「看完才回调」的激励格式（那种只给 Telegram 小程序）。
+     所以继续用「离开 MIRU 的时长」计时，从 15 秒提到 30 秒。 */
+  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 30000, PREFER = "monetag";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const inApp = () => { try { return localStorage.getItem("miru_twa189") === "1"; } catch (_) { return false; } };
   const W1 = watchAd;
   let pend = null;
   watchAd = function (done) {
     /* 2026-11-28 App 还没上架、Unity 内测包放不出广告：App 里也先用 Monetag（和网页版一样）。上架后想切回 Unity，把这里恢复成 || inApp() 即可。 */
-    if (PREFER !== "monetag") return W1.apply(this, arguments);
+    /* 2026-11-28 新安装包（启动网址带 av=，Unity 广告位已配好）里交给 mod189 走 Unity 激励视频；网页和旧安装包继续走 Monetag。 */
+    let unityApp = false; try { unityApp = inApp() && Number(localStorage.getItem("miru_av")) > 0; } catch (_) {}
+    if (PREFER !== "monetag" || unityApp) return W1.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
     const w = window.open(LINK, "_blank"); try { if (w) w.opener = null; } catch (_) {}
     if (!w && !document.hidden) { /* 被拦截了：退回原来的流程 */ return W1.apply(this, arguments); }
     if (typeof closeSheet === "function") closeSheet();
     pend = { done, at: Date.now(), away: 0, left: null };
-    toast(zh() ? "广告已在新标签页打开，看 15 秒后回来领奖励" : "Ad opened in a new tab — come back after 15 seconds for your reward");
+    toast(zh() ? "广告已在新标签页打开，看满 30 秒后回来领奖励" : "Ad opened in a new tab — come back after 30 seconds for your reward");
     try { if (typeof track === "function") track("ad_monetag_open", {}); } catch (_) {}
   };
   function settle() {
     if (!pend) return;
     const p = pend, away = p.away + (p.left ? Date.now() - p.left : 0);
     if (away >= NEED_MS) { pend = null; const st = adState(); st.n++; save(); try { if (typeof track === "function") track("ad_monetag_done", { s: Math.round(away / 1000) }); } catch (_) {} if (p.done) p.done(); }
-    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 15 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (15s)"); }
+    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 30 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (30s)"); }
   }
   document.addEventListener("visibilitychange", function () {
     if (!pend) return;
@@ -29167,11 +29195,13 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   if (!window.__mod198 || typeof boothEdit !== "function") return;
   const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
   const PR = () => (typeof PRICES !== "undefined" && PRICES.img) || 2;
+  /* 2026-11-28 老板反馈：拍贴机合照不够暧昧、没有性张力。四个姿势改得更贴近、更有张力（搂腰贴脸 / 抬下巴差一点吻上 / 从身后耳语 / 额头相抵手扶后颈）。
+     尺度不变：成年人、衣着完整、不露骨。 */
   const AIP = [
-    "standing close together in a photo booth, an arm around the partner's shoulders, both smiling at the camera, soft pink light",
-    "in a photo booth, the character leans in and kisses the partner's cheek while the partner laughs, playful and flirty, warm light",
-    "in a photo booth, the character ignores the camera and gazes at the partner, faces very close, almost touching foreheads, intimate romantic tension",
-    "in a photo booth at night, the partner rests on the character's shoulder, the character smirks at the camera, moody purple neon light"
+    "in a photo booth, the character wraps an arm around the partner's waist and pulls them close, cheek pressed to cheek, both looking at the camera with a slow knowing smile, warm dim rose light, intimate couple photo, fully clothed",
+    "in a photo booth, the character tilts the partner's chin up with one hand, lips only a breath apart, eyes half closed, charged romantic tension, the moment just before a kiss, soft red light, fully clothed",
+    "in a photo booth, the character stands behind the partner and whispers into their ear, one hand resting on their shoulder, the partner blushes and bites their lip, heated flirtatious mood, low amber light, fully clothed",
+    "in a photo booth at night, foreheads touching, the character's hand cradles the back of the partner's neck, intense eye contact, slow-burn desire, moody purple neon light, fully clothed"
   ];
   const partner = () => { const o = typeof S !== "undefined" ? S.or : ""; return o === "bl" ? "a young man" : "a young woman"; };
   /* 选人筛选：男/女对"玩过的"也生效 */
@@ -32153,6 +32183,8 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
         b = document.createElement('button');
         b.className = 'ibtn pace157';
         b.setAttribute('data-pace157', '1');
+        /* 2026-11-28 聊天页顶部「⏱ 标准」在窄屏上被挤成两行：不许换行、不许被压缩 */
+        b.style.whiteSpace = 'nowrap'; b.style.flex = '0 0 auto';
         var vt = head.querySelector('.vtog') || head.querySelector('[data-cmenu]');
         if (vt && vt.parentNode) vt.parentNode.insertBefore(b, vt);
         else head.appendChild(b);
@@ -32231,5 +32263,167 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   document.addEventListener("keydown", e => { if (e.target && e.target.id === "cin" && e.key === "Enter" && !e.shiftKey) later(); });
   document.addEventListener("click", e => { if (e.target && e.target.closest && e.target.closest("[data-send]")) later(); });
   window.__mod210 = 1;
+})();
+
+/* ===== app163 · 2026-11-28 中文界面全部显示为繁体 =====
+   需求：目前所有中文（界面文字、剧本正文、AI 回复、卡片标题简介……）全部换成繁体。
+   做法：不改任何数据和源码里的简体字，只在「显示」这一层转换 —— 语言是中文时，
+   按需加载 /opencc-cn2t.js（OpenCC 开源简繁转换词库，台湾字形 cn → tw，约 450KB 压缩后，浏览器会缓存），
+   把页面上已有的文字整页转一遍，再用 MutationObserver 盯住之后新出现 / 变化的文字（新页面、AI 逐字输出等），
+   在浏览器画出来之前就转成繁体。
+   不转：用户正在输入的输入框 / 文本框 / 可编辑区域里的内容、<script> / <style>、带 data-no-hant 的元素。
+   转：普通文字、placeholder、title、aria-label、alt、按钮 value、网页标题。
+   英 / 日 / 韩 / 西语界面完全不受影响（不加载词库）。 */
+(function () {
+  "use strict";
+  const SRC = "/opencc-cn2t.js";
+  const SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, NOSCRIPT: 1, CODE: 1, PRE: 1 };
+  const ATTRS = ["placeholder", "title", "aria-label", "alt"];
+  const HAN = /[\u4e00-\u9fff]/;
+  let conv = null, loading = false, obs = null, on = false, busy = false;
+  /* 2026-11-28 用户反馈「很多地方还不是繁体」：字形已经是繁体，但用词还是大陆说法（登錄 / 郵箱 / 充值 / 視頻…）。
+     在字形转换之后再换一层台湾常用说法。只收界面里常见、放进剧情正文也不会改变意思的词；
+     「文件 / 程序 / 質量 / 支持」这类在故事里另有意思的词不动。长词在前（先匹配「視頻通話」再匹配「視頻」）。 */
+  const TERMS = [
+    ["退出登錄", "登出"], ["註銷賬號", "刪除帳號"], ["登錄方式", "登入方式"], ["電子郵箱", "電子信箱"], ["視頻通話", "視訊通話"],
+    ["人工智能", "人工智慧"], ["充值記錄", "儲值紀錄"], ["互聯網", "網際網路"], ["服務器", "伺服器"], ["二維碼", "QR Code"],
+    ["登錄", "登入"], ["郵箱", "信箱"], ["賬號", "帳號"], ["賬戶", "帳戶"], ["賬單", "帳單"], ["充值", "儲值"], ["視頻", "影片"],
+    ["軟件", "軟體"], ["硬件", "硬體"], ["默認", "預設"], ["加載", "載入"], ["短信", "簡訊"],
+    ["鏈接", "連結"], ["屏幕", "螢幕"], ["搜索", "搜尋"], ["信息", "訊息"], ["反饋", "回饋"], ["網絡", "網路"],
+    ["設備", "裝置"], ["打印", "列印"], ["音頻", "音訊"], ["昵稱", "暱稱"], ["博客", "部落格"],
+    ["截屏", "截圖"], ["粘貼", "貼上"], ["圖標", "圖示"], ["界面", "介面"]
+  ];
+  const TMAP = new Map(TERMS);
+  const TRX = new RegExp(TERMS.map(p => p[0]).sort((x, y) => y.length - x.length).join("|"), "g");
+  /* 这几个词在剧情里另有意思（好消息、保存體力、菜單…），只在短文字（按钮、标签，12 个字以内）里才换 */
+  const UI = new Map([["消息", "訊息"], ["保存", "儲存"], ["在線", "線上"], ["設置", "設定"], ["激活", "啟用"], ["撤銷", "復原"], ["菜單", "選單"]]);
+  const UIRX = /消息|保存|在線|設置|激活|撤銷|菜單/g;
+  const terms = s => { s = s.replace(TRX, m => TMAP.get(m) || m); return s.trim().length <= 12 ? s.replace(UIRX, m => UI.get(m) || m) : s; };
+
+  const isZh = () => { try { return (typeof CL === "function" ? CL() : (window.S && S.lang)) === "zh"; } catch (_) { return false; } };
+
+  function skipEl(el) {
+    for (let e = el; e && e.nodeType === 1; e = e.parentElement) {
+      if (SKIP[e.tagName] || e.isContentEditable || (e.dataset && e.dataset.noHant != null)) return true;
+    }
+    return false;
+  }
+  function cvText(n) {
+    const v = n.nodeValue;
+    if (!v || !HAN.test(v)) return;
+    const p = n.parentElement;
+    if (p && skipEl(p)) return;
+    const w = conv(v);
+    if (w !== v) n.nodeValue = w;
+  }
+  function cvAttrs(el) {
+    if (el.nodeType !== 1 || skipEl(el.tagName === "INPUT" || el.tagName === "TEXTAREA" ? el.parentElement : el)) return;
+    for (const a of ATTRS) {
+      const v = el.getAttribute && el.getAttribute(a);
+      if (v && HAN.test(v)) { const w = conv(v); if (w !== v) el.setAttribute(a, w); }
+    }
+    if (el.tagName === "INPUT" && /^(button|submit|reset)$/i.test(el.type) && HAN.test(el.value)) el.value = conv(el.value);
+  }
+  function walk(root) {
+    if (!root) return;
+    if (root.nodeType === 3) { cvText(root); return; }
+    if (root.nodeType !== 1 && root.nodeType !== 9 && root.nodeType !== 11) return;
+    if (root.nodeType === 1) { if (SKIP[root.tagName] && root.tagName !== "INPUT" && root.tagName !== "TEXTAREA") return; cvAttrs(root); }
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null);
+    let n;
+    while ((n = tw.nextNode())) { if (n.nodeType === 3) cvText(n); else cvAttrs(n); }
+  }
+  function title() { const t = document.title; if (t && HAN.test(t)) { const w = conv(t); if (w !== t) document.title = w; } }
+
+  function start() {
+    if (on || !conv) return;
+    on = true;
+    busy = true; try { walk(document.body); title(); } finally { busy = false; }
+    obs = new MutationObserver(list => {
+      if (!on || busy) return;
+      busy = true;
+      try {
+        for (const m of list) {
+          if (m.type === "characterData") cvText(m.target);
+          else if (m.type === "attributes") cvAttrs(m.target);
+          else for (const n of m.addedNodes) walk(n);
+        }
+        title();
+      } finally { busy = false; }
+    });
+    obs.observe(document.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS });
+  }
+  function stop() { on = false; if (obs) { obs.disconnect(); obs = null; } }
+
+  function load() {
+    if (conv || loading) return;
+    loading = true;
+    const s = document.createElement("script");
+    s.src = SRC; s.async = true;
+    s.onload = () => {
+      try { const cc = window.OpenCC.Converter({ from: "cn", to: "tw" }); conv = x => terms(cc(x)); window.toHant = conv; } catch (e) { console.warn("[hant]", e); }
+      loading = false;
+      if (isZh()) start();
+    };
+    s.onerror = () => { loading = false; };
+    document.head.appendChild(s);
+  }
+
+  /* 语言随时可能切换：每秒看一次，切到中文就开始转，切走就停（已转的文字在切语言时页面会重画） */
+  function tick() { if (isZh()) { if (conv) start(); else load(); } else if (on) stop(); }
+  tick();
+  setInterval(tick, 1000);
+  /* 首屏尽早开始：词库提前下载（只在中文时） */
+  try { if (isZh()) load(); } catch (_) {}
+})();
+
+/* ===== app164 · 2026-11-28 免费额度调整（老板定）=====
+   ① 文字聊天：免费 10 句（原来是 24 个「AI 回合」免费体验，一个账号一次性），用完后要付费：
+      购买 AI 回合（💎，价格见 MIRU_TUNE.pay.topupUnits / topupCost）。不再卖 MIRU+ 会员。
+      老用户手里剩余的免费回合超过 10 的，一次性压到 10；已经花钻石买的回合、会员回合不动。
+   ② AI 生图：非会员不再有「每天 1 张免费」，每张都按 PRICES.img 收 💎。（不再卖会员；历史上已是会员的账号不受影响。）
+   说明：回合数和生图次数目前记在用户自己的存档里（和原来一样），服务器没有另外计数。 */
+(function () {
+  "use strict";
+  const FREE = 10;
+  if (typeof uState === "function" && typeof S !== "undefined") {
+    const U0 = uState;
+    uState = function () {
+      if (!S.units) S.units = { trial: FREE, pack: 0, pm: "", pl: 0, f10: 1 };
+      const u = U0.apply(this, arguments);
+      if (!u.f10) { if (u.trial > FREE) u.trial = FREE; u.f10 = 1; try { save(); } catch (_) {} }
+      return u;
+    };
+    try { uState(); if (typeof unitChip === "function") unitChip(); } catch (_) {}
+  }
+  const noFreeImg = () => {
+    try {
+      if (typeof S === "undefined" || S.plus) return;
+      const d = typeof today === "function" ? today() : new Date().toISOString().slice(0, 10);
+      const n = S.imgDay && S.imgDay.d === d ? (S.imgDay.n || 0) : 0;
+      S.imgDay = { d: d, n: Math.max(1, n) };
+    } catch (_) {}
+  };
+  if (typeof aiGenerate === "function") { const A0 = aiGenerate; aiGenerate = function () { noFreeImg(); return A0.apply(this, arguments); }; }
+  if (typeof rxGenCover === "function") { const R0 = rxGenCover; rxGenCover = function () { noFreeImg(); return R0.apply(this, arguments); }; }
+  try {
+    const p = (typeof PRICES !== "undefined" && PRICES.img) || 2;
+    if (typeof I18N !== "undefined") {
+      Object.assign(I18N.zh, { "pay.imgFree": "AI 生图每张 💎 " + p + "——点 ✨ 生成。", "pay.why.img": "AI 生图每张 💎 " + p, "u.trial": "免费 10 句" });
+      Object.assign(I18N.en, { "pay.imgFree": "AI images are 💎 " + p + " each — tap ✨ to make one.", "pay.why.img": "AI images are 💎 " + p + " each", "u.trial": "10 free messages" });
+    }
+  } catch (_) {}
+  /* 2026-11-28 老板定：不卖会员（MIRU+）了，额度用完就再买。购买面板里的会员入口之前已经隐藏（app84），
+     （11-28 修正：只隐藏 MIRU+ 那一行；它和「钻石 · 充值」在同一张卡片里，之前把整张卡片藏掉，充值按钮也跟着不见了。）
+     这里把剩下的两处也去掉：「我的」页里的 MIRU+ 卡片、AI 回合面板里的「本月会员回合」那一格。 */
+  try {
+    const st = document.createElement("style");
+    st.textContent = '.row:has(>[data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
+    document.head.appendChild(st);
+  } catch (_) {}
+  /* 2026-11-28 老板定：创作者专业版（剧本工具）所有 AI 收费先统一 💎1 —— 专业版里的 AI 生图价格由这里给（其余在 web/src/Pro.jsx 的 PRICE）。
+     App 里聊天时的 AI 生图不受影响，还是 PRICES.img。 */
+  try { window.studioImagePrice = function () { return 1; }; } catch (_) {}
+  window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
 })();
 

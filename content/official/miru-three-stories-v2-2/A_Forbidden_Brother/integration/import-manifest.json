@@ -1,6 +1,7 @@
 {
   "kind": "derived_import_files",
   "source_preserved": true,
+  "canonical_speaker_keys": true,
   "source_character_bible": "production/character_bible_v2_2.json",
   "reserved_engine_marker": "cast_all",
   "locales": [
@@ -9,8 +10,8 @@
       "script": "script.zh-CN.md",
       "assets": "assets.zh-CN.json",
       "source": "../locales/zh-CN/script.md",
-      "source_sha256": "445ee94cf857fd15de16aaadf1aaebdf22b5b93147e9d537011aa28c57a731b5",
-      "import_sha256": "2fa1d071ec979e46fe948e0cd45ea0dfa4edea0dcf18fada7540d83739d985b2",
+      "source_sha256": "e47dc9c299105239a69db3b9b6d06b67cc3734345d6fbd5081d8c24093d65d6f",
+      "import_sha256": "04498eb7ef07344446432c431fdbeb0af587a0230535e4d7301cc7aa833dc7eb",
       "speaker_labels_normalized": 10,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
@@ -19,35 +20,40 @@
           "name": "达米安",
           "asset_id": "char_a_damian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "达米安"
         },
         {
           "key": "ethan",
           "name": "伊森",
           "asset_id": "char_a_ethan",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "伊森"
         },
         {
           "key": "eleanor",
           "name": "埃莉诺",
           "asset_id": "char_a_eleanor",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "埃莉诺"
         },
         {
           "key": "mia",
           "name": "米娅",
           "asset_id": "char_a_mia",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "米娅"
         },
         {
           "key": "claire",
           "name": "克莱尔",
           "asset_id": "char_a_claire",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "克莱尔"
         }
       ]
     },
@@ -56,45 +62,50 @@
       "script": "script.zh-TW.md",
       "assets": "assets.zh-TW.json",
       "source": "../locales/zh-TW/script.md",
-      "source_sha256": "93f6edf9dda60a98f7340d4a7996803e8324da31163e9b2f0fddcd8f3ea85f29",
-      "import_sha256": "aed44325e00f6a4a02253690080e5b28b7b7056ccefba139a6a13df6968986d4",
-      "speaker_labels_normalized": 10,
+      "source_sha256": "a13acc4070eea16664f910df59287612153268cb1ba3864116b485247f7d2975",
+      "import_sha256": "6296ab81e694f3302b9b39ebb7689299c64533b8e1987d0f6324f507e416fd2e",
+      "speaker_labels_normalized": 54,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "damian",
-          "name": "達米安",
+          "name": "达米安",
           "asset_id": "char_a_damian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "達米安"
         },
         {
           "key": "ethan",
           "name": "伊森",
           "asset_id": "char_a_ethan",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "伊森"
         },
         {
           "key": "eleanor",
-          "name": "埃莉諾",
+          "name": "埃莉诺",
           "asset_id": "char_a_eleanor",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "埃莉諾"
         },
         {
           "key": "mia",
-          "name": "米婭",
+          "name": "米娅",
           "asset_id": "char_a_mia",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "米婭"
         },
         {
           "key": "claire",
-          "name": "克萊爾",
+          "name": "克莱尔",
           "asset_id": "char_a_claire",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "克萊爾"
         }
       ]
     },
@@ -103,45 +114,50 @@
       "script": "script.en-US.md",
       "assets": "assets.en-US.json",
       "source": "../locales/en-US/script.md",
-      "source_sha256": "cd735170bb50b5ce8d32705e74343bf34b05150489d62992462625517954fdef",
-      "import_sha256": "27e2ad2d91e84381f2be815f09dc81616a50fb55237a554e9043795ce84385e0",
-      "speaker_labels_normalized": 299,
+      "source_sha256": "32d5bee90dbe3484142b193ea41875f321f99fc3c30c4d04ca87a59696a9b4f2",
+      "import_sha256": "c75f7ffcbe644de1f2eb184f32e46f34bdc758a525f5e9fb33f7491b781abdf7",
+      "speaker_labels_normalized": 368,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "damian",
-          "name": "Damian",
+          "name": "达米安",
           "asset_id": "char_a_damian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "Damian"
         },
         {
           "key": "ethan",
-          "name": "Ethan",
+          "name": "伊森",
           "asset_id": "char_a_ethan",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "Ethan"
         },
         {
           "key": "eleanor",
-          "name": "Eleanor",
+          "name": "埃莉诺",
           "asset_id": "char_a_eleanor",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Eleanor"
         },
         {
           "key": "mia",
-          "name": "Mia",
+          "name": "米娅",
           "asset_id": "char_a_mia",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Mia"
         },
         {
           "key": "claire",
-          "name": "Claire",
+          "name": "克莱尔",
           "asset_id": "char_a_claire",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Claire"
         }
       ]
     },
@@ -150,45 +166,50 @@
       "script": "script.ja-JP.md",
       "assets": "assets.ja-JP.json",
       "source": "../locales/ja-JP/script.md",
-      "source_sha256": "32b0bd30c41511e1d9795a3cc9653f5fc17516d22b6f268f099e5b990bd524cf",
-      "import_sha256": "dc425e0827cc7c8e0d33c9f7fce97c8e19ce251d7824d0f73979dbdfa3bed6a7",
-      "speaker_labels_normalized": 290,
+      "source_sha256": "e5274e722ded38824e27f2f998304de68f826b577a2969856c494ffe7b44da84",
+      "import_sha256": "7a2f94e1bafd71fd917238557ca51d0b03bcf87beccb8ffbb7ba2a49ee9bce5d",
+      "speaker_labels_normalized": 368,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "damian",
-          "name": "ダミアン",
+          "name": "达米安",
           "asset_id": "char_a_damian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "ダミアン"
         },
         {
           "key": "ethan",
-          "name": "イーサン",
+          "name": "伊森",
           "asset_id": "char_a_ethan",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "イーサン"
         },
         {
           "key": "eleanor",
-          "name": "エレノア",
+          "name": "埃莉诺",
           "asset_id": "char_a_eleanor",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "エレノア"
         },
         {
           "key": "mia",
-          "name": "ミア",
+          "name": "米娅",
           "asset_id": "char_a_mia",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "ミア"
         },
         {
           "key": "claire",
-          "name": "クレア",
+          "name": "克莱尔",
           "asset_id": "char_a_claire",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "クレア"
         }
       ]
     },
@@ -197,45 +218,50 @@
       "script": "script.ko-KR.md",
       "assets": "assets.ko-KR.json",
       "source": "../locales/ko-KR/script.md",
-      "source_sha256": "c70435112887cc763999d358f042c06a4da5ee5f0b66e31048dc0a732c7e8901",
-      "import_sha256": "5cb0e1aa30efdb1d87c8779b2911e9cef145aebee7383fc4ef8072770760a507",
-      "speaker_labels_normalized": 289,
+      "source_sha256": "ba36a5d2bc92e3ec77bb7faca50a92451538c1684e6e82a2582fc5709b0c72ce",
+      "import_sha256": "b172c52d0277870687c963eb854ecd3a118b60dfb9c8925b99a1c094237fb9b4",
+      "speaker_labels_normalized": 368,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "damian",
-          "name": "데이미언",
+          "name": "达米安",
           "asset_id": "char_a_damian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "데이미언"
         },
         {
           "key": "ethan",
-          "name": "이선",
+          "name": "伊森",
           "asset_id": "char_a_ethan",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "이선"
         },
         {
           "key": "eleanor",
-          "name": "엘리너",
+          "name": "埃莉诺",
           "asset_id": "char_a_eleanor",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "엘리너"
         },
         {
           "key": "mia",
-          "name": "미아",
+          "name": "米娅",
           "asset_id": "char_a_mia",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "미아"
         },
         {
           "key": "claire",
-          "name": "클레어",
+          "name": "克莱尔",
           "asset_id": "char_a_claire",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "클레어"
         }
       ]
     },
@@ -244,45 +270,50 @@
       "script": "script.es-ES.md",
       "assets": "assets.es-ES.json",
       "source": "../locales/es-ES/script.md",
-      "source_sha256": "7eb9fcfcd386d5825e4f662a1b73f56f02697e53ed66a74d53b78accfce83d80",
-      "import_sha256": "cc33800aa3861e8f121516b6439d296e2f5b5fbbf0189db582799a148501299f",
-      "speaker_labels_normalized": 293,
+      "source_sha256": "1878079d6744db435ec0c2a18ebfa606dd145fded543a33ee5d6d350700e90db",
+      "import_sha256": "a176e5f42cfaac688b1dd11475d860ae35b0841b86c7becbdf17f7393b78b1aa",
+      "speaker_labels_normalized": 368,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "damian",
-          "name": "Damian",
+          "name": "达米安",
           "asset_id": "char_a_damian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "Damian"
         },
         {
           "key": "ethan",
-          "name": "Ethan",
+          "name": "伊森",
           "asset_id": "char_a_ethan",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "Ethan"
         },
         {
           "key": "eleanor",
-          "name": "Eleanor",
+          "name": "埃莉诺",
           "asset_id": "char_a_eleanor",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Eleanor"
         },
         {
           "key": "mia",
-          "name": "Mia",
+          "name": "米娅",
           "asset_id": "char_a_mia",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Mia"
         },
         {
           "key": "claire",
-          "name": "Claire",
+          "name": "克莱尔",
           "asset_id": "char_a_claire",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Claire"
         }
       ]
     }

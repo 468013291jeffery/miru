@@ -11,7 +11,8 @@
 
         <meta-data android:name="asset_statements" android:resource="@string/asset_statements" />
 
-        <!-- 2026-11-27 不再用 EntryActivity 当桌面入口（开屏广告已关）。它是个透明的跳板页，打开网页壳后立刻关掉自己；
+        <!-- 2026-11-28 桌面入口改成 MiruLauncher（继承 LauncherActivity，非 Chrome 手机改用 WebView，去掉顶部进度条）。
+             2026-11-27 不再用 EntryActivity 当桌面入口（开屏广告已关）。它是个透明的跳板页，打开网页壳后立刻关掉自己；
              荣耀等手机上，网页壳还在后台时再点图标，新开的壳会以为「已经在运行」直接退出，表现就是点了没反应 / 一闪就回桌面。
              现在桌面图标直接打开下面的 LauncherActivity（标准的可信网页壳入口），已经开着时系统直接切回原来的窗口。 -->
         <activity
@@ -33,7 +34,7 @@
         </activity>
 
         <activity
-            android:name="com.google.androidbrowserhelper.trusted.LauncherActivity"
+            android:name=".MiruLauncher"
             android:label="@string/app_name"
             android:theme="@style/MiruLaunch"
             android:exported="true">
@@ -64,6 +65,14 @@
         </activity>
 
         <!-- 2026-11-26 没有支持 TWA 的浏览器时，FALLBACK_STRATEGY=webview 会打开这个页面；之前没在这里声明，走到兜底路径就直接闪退 -->
+        <!-- 2026-11-28 非 Chrome 手机直接用 App 自带 WebView 打开（MiruLauncher 决定），没有浏览器工具栏 / 顶部进度条 -->
+        <activity
+            android:name=".MiruWebActivity"
+            android:theme="@style/MiruLaunch"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+
         <activity
             android:name="com.google.androidbrowserhelper.trusted.WebViewFallbackActivity"
             android:theme="@android:style/Theme.Black.NoTitleBar"

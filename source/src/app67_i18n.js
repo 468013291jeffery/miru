@@ -69,7 +69,7 @@ const TRD={/* en → [ja, ko, es]: the UI lines that most often fall back to Eng
  "Character voices":["キャラクターボイス","캐릭터 음성","Voces de personajes"],"Natural":["ナチュラル","자연스러운 목소리","Natural"],"Device":["端末の音声","기기 음성","Del dispositivo"],"Try":["試聴","들어보기","Probar"],
  "Skip":["スキップ","건너뛰기","Omitir"],"Browse":["見て回る","둘러보기","Explorar"],"Taste":["好み","취향","Gustos"],"What happens next is up to you.":["この先は、あなたが演じる。","이다음은 당신이 연기할 차례.","Lo que pasa después depende de ti."],
  "Walk in as yourself":["自分としてこのシーンに入る","나 자신으로 이 장면에 들어가기","Entra como tú"],"Direct it":["演出する","연출하기","Dirígelo"],"Watch the full short first":["先にショートドラマを最後まで見る","먼저 숏드라마 끝까지 보기","Ver primero el corto completo"],
- "Back to the story":["ストーリーに戻る","이야기로 돌아가기","Volver a la historia"],"You did it!":["成功！","성공!","¡Lo lograste!"],"So close…":["あと少し…","아깝다…","Casi…"],"Got it":["OK","확인","Entendido"]};
+ "Back to the story":["ストーリーに戻る","이야기로 돌아가기","Volver a la historia"],"You did it!":["成功！","성공!","¡Lo lograste!"],"So close…":["あと少し…","아깝다…","Casi…"],"Got it":["OK","확인","Entendido"],"MIRU New":["MIRU新作","MIRU 신작","Nuevo en MIRU"],"The Lead":["主人公","주인공","Protagonista"],"Tap to fill in":["タップして入力","눌러서 입력","Toca para completar"]};
 const TR={map:{},q:new Set(),busy:false,lang:null,obs:null,orig:new WeakMap(),fail:0};
 function trKey(){return "miru_tr_"+S.lang}
 function trLoad(){if(TR.lang===S.lang)return;TR.lang=S.lang;TR.map={};try{TR.map=JSON.parse(localStorage.getItem(trKey())||"{}")}catch(_){}

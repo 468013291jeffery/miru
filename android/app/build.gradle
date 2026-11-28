@@ -6,11 +6,14 @@ plugins { id 'com.android.application' }
 def vcode = (System.getenv('VERSION_CODE') ?: '1').toInteger()
 /* 广告：Unity Ads（2026-11-24 改为直接接 Unity；之前的聚合平台不再接受新的发布者账号）。
    Game ID 不是密钥，直接写在这里；广告位用 Unity 后台默认的 Rewarded_Android / Interstitial_Android，可用环境变量覆盖。
-   UNITY_TEST=1 时用测试广告。 */
+   UNITY_TEST=1 时用测试广告。
+   2026-11-28：Unity 后台新建了广告位，ID 是 BP_Rewarded_Android / BP_Interstitial_Android（之前写的默认名在后台根本不存在，所以一直「广告加载中」）。
+   App 还在内测 / 封测，Unity 条款不允许给还没上线的 App 放真实广告（会被判作弊封号），所以默认用测试广告；
+   正式上架后在 GitHub Secrets / 工作流里设 UNITY_TEST=0 切真实广告。 */
 def unityGame = System.getenv('UNITY_GAME_ID') ?: '800450584'
-def unityRewarded = System.getenv('UNITY_REWARDED_ID') ?: 'Rewarded_Android'
-def unityLaunch = System.getenv('UNITY_LAUNCH_ID') ?: 'Interstitial_Android'
-def unityTest = (System.getenv('UNITY_TEST') ?: '') == '1'
+def unityRewarded = System.getenv('UNITY_REWARDED_ID') ?: 'BP_Rewarded_Android'
+def unityLaunch = System.getenv('UNITY_LAUNCH_ID') ?: 'BP_Interstitial_Android'
+def unityTest = (System.getenv('UNITY_TEST') ?: '1') != '0'
 android {
     namespace 'com.miru.plus.app'
     compileSdk 36

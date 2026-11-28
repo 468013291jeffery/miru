@@ -4751,6 +4751,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const KEY = "miru_twa189";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   try { if (/^android-app:\/\/com\.miru\.plus\.app/.test(document.referrer || "")) localStorage.setItem(KEY, "1"); } catch (_) {}
+  /* 2026-11-28 新安装包启动网址带 av=<版本号>：带了就说明这个包里 Unity 广告位已经配好（BP_Rewarded_Android，测试广告），App 里「看广告」走 Unity；
+     旧安装包没有 av，继续走网页广告（Monetag），不会卡在「广告加载中」。App 自带 WebView（大陆手机）里 referrer 不一定带得上，也用 av 判断「在 App 里」。 */
+  try { const av = new URLSearchParams(location.search).get("av"); if (av && /^\d+$/.test(av)) { localStorage.setItem("miru_av", av); localStorage.setItem(KEY, "1"); } } catch (_) {}
+  const appAv = () => { try { return Number(localStorage.getItem("miru_av")) || 0; } catch (_) { return 0; } };
   const inApp = () => { try { return localStorage.getItem(KEY) === "1"; } catch (_) { return false; } };
   window.__unity189 = () => ({ inApp: inApp(), pending: !!pend });
   if (typeof watchAd !== "function" || typeof capi !== "function") return;
@@ -4759,7 +4763,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   watchAd = function (done) {
     /* 2026-11-28 App 还没正式上架，Unity 原生激励视频在内测包里一直停在「广告加载中」。
        先让 App 里也走网页版广告（AdSense，和浏览器里一样）；上架后把 window.MIRU_UNITY_ADS 设成 true 就切回 Unity。 */
-    if (!inApp() || !window.MIRU_UNITY_ADS) return W0.apply(this, arguments);
+    if (!inApp() || !(window.MIRU_UNITY_ADS || appAv() > 0)) return W0.apply(this, arguments);
     const c = typeof cloudInfo === "function" ? cloudInfo() : {};
     if (!c.uid) return W0.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
@@ -4807,11 +4811,13 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   if (typeof capi !== "function") return;
-  const V = 1, KEY = "miru_orig190";
+  const V = 2, KEY = "miru_orig190v2";
+  /* 2026-11-28 升级成「创作者协议 + 原创声明」（V=2，老作品下次更新时要重新确认一次）。
+     协议全文是 /creator-terms.html；在弹窗里用 iframe 打开（不离开发布页，避免丢掉正在发布的内容）。 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const TXT = () => zh()
-    ? "我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。"
-    : "I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.";
+    ? "· 作品的著作权归你；你授权 MIRU 在平台内展示、分发并用于宣传（非独占，你可以随时删除作品）。<br>· 我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。<br>· 所有角色都是虚构的成年人，作品不含露骨色情等违规内容。"
+    : "· You keep the copyright. You give MIRU a non-exclusive licence to show, distribute and promote the work on the platform, and you can delete it at any time.<br>· I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.<br>· All characters are fictional adults and the work contains no sexually explicit or other prohibited content.";
   const done = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } };
   const mark = id => { try { const d = done(); d[id] = Date.now(); localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
   function ask() {
@@ -4819,14 +4825,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       const host = document.querySelector("#dev") || document.body, el = document.createElement("div");
       el.style.cssText = "position:absolute;inset:0;z-index:9999;background:rgba(8,6,12,.72);display:flex;align-items:center;justify-content:center;padding:18px";
       el.innerHTML = '<div style="max-width:420px;width:100%;background:#1c1724;color:#f1ecf3;border-radius:16px;padding:20px 18px;box-shadow:0 10px 40px rgba(0,0,0,.5)">' +
-        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "原创声明" : "Originality statement") + '</h3>' +
+        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "创作者协议与原创声明" : "Creator agreement & originality") + '</h3>' +
         '<p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:#d9d1df">' + TXT() + '</p>' +
-        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并确认以上声明" : "I have read and agree") + '</span></label>' +
+        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并同意" : "I have read and agree to the") + ' <button type="button" id="ogT190" style="background:none;border:0;padding:0;color:#F0B77E;font:inherit;text-decoration:underline">' + (zh() ? "《MIRU 创作者协议》" : "MIRU Creator Agreement") + '</button></span></label>' +
+        '<div id="ogF190" style="position:absolute;inset:10px;z-index:2;background:#0C0B10;border-radius:14px;overflow:hidden;display:none;flex-direction:column"><div style="display:flex;justify-content:flex-end;padding:8px"><button id="ogX190" style="padding:6px 12px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">✕</button></div><iframe title="creator-terms" style="flex:1;border:0;width:100%"></iframe></div>' +
         '<div style="display:flex;gap:10px;justify-content:flex-end"><button id="ogN190" style="padding:9px 16px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">' + (zh() ? "取消" : "Cancel") + '</button>' +
         '<button id="ogY190" disabled style="padding:9px 16px;border-radius:10px;border:0;background:#EE6F97;color:#fff;opacity:.5">' + (zh() ? "确认并发布" : "Confirm & publish") + '</button></div></div>';
       host.appendChild(el);
       const cb = el.querySelector("#og190"), y = el.querySelector("#ogY190");
       cb.onchange = () => { y.disabled = !cb.checked; y.style.opacity = cb.checked ? "1" : ".5"; };
+      const tf = el.querySelector("#ogF190");
+      el.querySelector("#ogT190").onclick = e => { e.preventDefault(); e.stopPropagation(); tf.querySelector("iframe").src = "/creator-terms.html#" + (zh() ? "zh" : "en"); tf.style.display = "flex"; };
+      el.querySelector("#ogX190").onclick = () => { tf.style.display = "none"; };
       el.querySelector("#ogN190").onclick = () => { el.remove(); resolve(false); };
       y.onclick = () => { if (!cb.checked) return; el.remove(); resolve(true); };
     });
@@ -4858,27 +4868,31 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   if (typeof watchAd !== "function") return;
-  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 15000, PREFER = "monetag";
+  /* 2026-11-28 Monetag 后台查过：网站只有 Popunder / 推送 / 横幅 / 插页 / Direct Link，没有「看完才回调」的激励格式（那种只给 Telegram 小程序）。
+     所以继续用「离开 MIRU 的时长」计时，从 15 秒提到 30 秒。 */
+  const LINK = "https://uplcm.com/4/12342633", NEED_MS = 30000, PREFER = "monetag";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const inApp = () => { try { return localStorage.getItem("miru_twa189") === "1"; } catch (_) { return false; } };
   const W1 = watchAd;
   let pend = null;
   watchAd = function (done) {
     /* 2026-11-28 App 还没上架、Unity 内测包放不出广告：App 里也先用 Monetag（和网页版一样）。上架后想切回 Unity，把这里恢复成 || inApp() 即可。 */
-    if (PREFER !== "monetag") return W1.apply(this, arguments);
+    /* 2026-11-28 新安装包（启动网址带 av=，Unity 广告位已配好）里交给 mod189 走 Unity 激励视频；网页和旧安装包继续走 Monetag。 */
+    let unityApp = false; try { unityApp = inApp() && Number(localStorage.getItem("miru_av")) > 0; } catch (_) {}
+    if (PREFER !== "monetag" || unityApp) return W1.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
     const w = window.open(LINK, "_blank"); try { if (w) w.opener = null; } catch (_) {}
     if (!w && !document.hidden) { /* 被拦截了：退回原来的流程 */ return W1.apply(this, arguments); }
     if (typeof closeSheet === "function") closeSheet();
     pend = { done, at: Date.now(), away: 0, left: null };
-    toast(zh() ? "广告已在新标签页打开，看 15 秒后回来领奖励" : "Ad opened in a new tab — come back after 15 seconds for your reward");
+    toast(zh() ? "广告已在新标签页打开，看满 30 秒后回来领奖励" : "Ad opened in a new tab — come back after 30 seconds for your reward");
     try { if (typeof track === "function") track("ad_monetag_open", {}); } catch (_) {}
   };
   function settle() {
     if (!pend) return;
     const p = pend, away = p.away + (p.left ? Date.now() - p.left : 0);
     if (away >= NEED_MS) { pend = null; const st = adState(); st.n++; save(); try { if (typeof track === "function") track("ad_monetag_done", { s: Math.round(away / 1000) }); } catch (_) {} if (p.done) p.done(); }
-    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 15 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (15s)"); }
+    else if (Date.now() - p.at > 1500) { toast(zh() ? "还没看够 30 秒，再去广告页停留一会儿" : "Stay on the ad a little longer (30s)"); }
   }
   document.addEventListener("visibilitychange", function () {
     if (!pend) return;
@@ -5368,11 +5382,13 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   if (!window.__mod198 || typeof boothEdit !== "function") return;
   const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
   const PR = () => (typeof PRICES !== "undefined" && PRICES.img) || 2;
+  /* 2026-11-28 老板反馈：拍贴机合照不够暧昧、没有性张力。四个姿势改得更贴近、更有张力（搂腰贴脸 / 抬下巴差一点吻上 / 从身后耳语 / 额头相抵手扶后颈）。
+     尺度不变：成年人、衣着完整、不露骨。 */
   const AIP = [
-    "standing close together in a photo booth, an arm around the partner's shoulders, both smiling at the camera, soft pink light",
-    "in a photo booth, the character leans in and kisses the partner's cheek while the partner laughs, playful and flirty, warm light",
-    "in a photo booth, the character ignores the camera and gazes at the partner, faces very close, almost touching foreheads, intimate romantic tension",
-    "in a photo booth at night, the partner rests on the character's shoulder, the character smirks at the camera, moody purple neon light"
+    "in a photo booth, the character wraps an arm around the partner's waist and pulls them close, cheek pressed to cheek, both looking at the camera with a slow knowing smile, warm dim rose light, intimate couple photo, fully clothed",
+    "in a photo booth, the character tilts the partner's chin up with one hand, lips only a breath apart, eyes half closed, charged romantic tension, the moment just before a kiss, soft red light, fully clothed",
+    "in a photo booth, the character stands behind the partner and whispers into their ear, one hand resting on their shoulder, the partner blushes and bites their lip, heated flirtatious mood, low amber light, fully clothed",
+    "in a photo booth at night, foreheads touching, the character's hand cradles the back of the partner's neck, intense eye contact, slow-burn desire, moody purple neon light, fully clothed"
   ];
   const partner = () => { const o = typeof S !== "undefined" ? S.or : ""; return o === "bl" ? "a young man" : "a young woman"; };
   /* 选人筛选：男/女对"玩过的"也生效 */

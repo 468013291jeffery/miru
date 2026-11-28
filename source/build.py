@@ -51,6 +51,12 @@ parts.extend(["app161_bride_state.js", "app161_bride_data.js", "app161_bride.js"
 parts.extend(["app162_ashes_state.js", "app162_ashes_data.js", "app162_ashes.js"])
 # 阅读节奏最后接管等待，兼容主线新剧及性能模块。
 parts.extend(["app157_reply_pace.js"])
+parts.extend(["app163_hant.js"])   # 2026-11-28 中文全部显示为繁体（最后加载，转换整页文字）
+parts.extend(["app164_free10.js"])
+# 2026-11-28 新手先导页三屏（名字 → 口味 → 为你选的第一部剧）。去掉这一行即恢复原来的新手流程。
+parts.extend(["app165_ob3.js"])   # 2026-11-28 免费聊天 10 句，之后付费；AI 生图不再每日免费
+parts.extend(["app163_three_stories_v22.js"])
+
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)
@@ -216,6 +222,8 @@ _html_lazy = _html_lazy[:_si2 + 8] + "\n" + 'window.MIRU_BUILD="' + _hl + " " + 
 #   · 先用内嵌的 200 字节模糊小图垫底，海报（约 25KB）下载完立刻替换；<head> 里预加载海报；
 #   · 底部一根细金线表示还在加载；主脚本跑完后淡出（BOOT_DONE）。
 BOOT_SPLASH = ('<div id="boot-splash" style="position:fixed;inset:0;z-index:2147483000;background:url(/icons/splash.webp) center/contain no-repeat,url(data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAABQBACdASoSACAAPtFUo0uoJKMhsAgBABoJQBZwBDv71mNCa0tFlKy6aBAAAP71aLI49mmO/Hee9wAxmrxNxjbdQFW7opC+xPIEFyWyooPCjZPfqfk7q7Ui6FL0imLVIfZ2pjG+ZEJlU0t0KhtbrwOS19YRRtExy9TgYcAFxOwXm/deYf5+AA==) center/contain no-repeat,#200217;transition:opacity .3s">'
+               # 2026-11-28 开屏动效：心跳光晕、扩散光环、斜向流光、上升光点（纯 CSS，叠在海报上；系统「减少动态效果」时不显示）
+               '<div id="boot-fx" style="position:absolute;left:50%;top:50%;width:min(100vw,56.25vh);height:min(100vh,177.78vw);transform:translate(-50%,-50%);pointer-events:none;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(transparent,#000 9%,#000 91%,transparent)"><b class="bg"></b><b class="rg"></b><b class="rg r2"></b><b class="sw"></b><i style="left:14%;--d:0s;--t:5.2s"></i><i style="left:27%;--d:1.4s;--t:6.4s"></i><i style="left:39%;--d:2.6s;--t:4.8s"></i><i style="left:52%;--d:.7s;--t:7s"></i><i style="left:63%;--d:3.1s;--t:5.6s"></i><i style="left:74%;--d:1.9s;--t:6.1s"></i><i style="left:86%;--d:.3s;--t:5s"></i><i style="left:46%;--d:3.8s;--t:6.8s"></i></div><style>#boot-fx b,#boot-fx i{position:absolute;display:block}#boot-fx .bg{left:50%;top:39%;width:86%;aspect-ratio:1;margin:-43% 0 0 -43%;border-radius:50%;background:radial-gradient(circle,rgba(255,120,170,.38),rgba(255,120,170,.12) 42%,transparent 68%);mix-blend-mode:screen;animation:bootbeat 1.6s ease-in-out infinite}#boot-fx .rg{left:50%;top:39%;width:44%;aspect-ratio:1;margin:-22% 0 0 -22%;border-radius:50%;border:1.5px solid rgba(255,190,215,.55);opacity:0;animation:bootring 3.2s cubic-bezier(.2,.6,.3,1) infinite}#boot-fx .r2{animation-delay:1.6s}#boot-fx .sw{left:-60%;top:0;width:45%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,235,220,.16) 45%,rgba(255,255,255,.28) 50%,rgba(255,235,220,.16) 55%,transparent);transform:skewX(-14deg);mix-blend-mode:screen;animation:bootsweep 3.6s ease-in-out .5s infinite}#boot-fx i{bottom:-3%;width:5px;height:5px;border-radius:50%;background:radial-gradient(circle,#fff,#FFC9A8 45%,transparent 72%);box-shadow:0 0 8px 2px rgba(255,170,190,.55);opacity:0;animation:bootrise var(--t) linear var(--d) infinite}@keyframes bootbeat{0%,100%{transform:scale(.9);opacity:.55}14%{transform:scale(1.07);opacity:1}28%{transform:scale(.95);opacity:.7}42%{transform:scale(1.03);opacity:.92}70%{transform:scale(.9);opacity:.55}}@keyframes bootring{0%{transform:scale(.55);opacity:0}12%{opacity:.75}100%{transform:scale(2.5);opacity:0}}@keyframes bootsweep{0%,18%{left:-60%}62%,100%{left:125%}}@keyframes bootrise{0%{transform:translate(0,0) scale(.5);opacity:0}12%{opacity:.95}55%{transform:translate(12px,-52vh) scale(1)}100%{transform:translate(-8px,-104vh) scale(.35);opacity:0}}@media (prefers-reduced-motion:reduce){#boot-fx{display:none}}</style>'
                '<div style="position:absolute;left:50%;bottom:calc(6% + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:96px;height:2px;border-radius:2px;background:rgba(255,222,190,.14);overflow:hidden"><i style="display:block;width:40%;height:100%;background:linear-gradient(90deg,transparent,#F3C892,transparent);animation:bootbar 1.3s ease-in-out infinite"></i></div>'
                '<style>@keyframes bootbar{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}</style></div>')
 BOOT_PRELOAD = '<link rel="preload" as="image" href="/icons/splash.webp" type="image/webp" fetchpriority="high">'
@@ -235,7 +243,14 @@ def _externalize(html):
     for f in olds[2:]:
         try: os.remove(os.path.join(ROOT, f))
         except OSError: pass
-    page = html[:a] + '<script src="/' + name + '"></script>\n' + BOOT_DONE + html[b + len("\n</script>"):]
+    # 2026-11-28 顶部白色加载条：那是 Chrome 在「页面还没加载完」期间画的，我们关不掉，只能让页面尽快算「加载完成」。
+    # 主脚本（5MB 多）以前是页面里的普通 <script src>，下载 + 执行完之前页面一直算加载中，白线就一直挂着。
+    # 现在：页面本身（开屏海报）先加载完 → 浏览器 load 事件触发、白线消失 → 再插入主脚本；
+    # 页面最顶上用 fetch 提前开始下载主脚本（fetch 不算在页面加载里），所以总耗时基本不变。加载中的提示看开屏底部的金色进度条。
+    _done = BOOT_DONE[len("<script>"):-len("</script>")]
+    _loader = ('<script>(function(){function go(){var s=document.createElement("script");s.src="/' + name + '";s.onload=function(){' + _done + '};document.body.appendChild(s)}'
+               'if(document.readyState==="complete")setTimeout(go,0);else addEventListener("load",function(){setTimeout(go,0)})})();</script>')
+    page = html[:a] + _loader + html[b + len("\n</script>"):]
     i = page.find('<div class="app"><div class="device" id="dev"></div></div>')
     if i < 0: raise SystemExit("externalize: #dev not found")
     page = page[:i] + BOOT_SPLASH + "\n" + page[i:]
@@ -243,7 +258,14 @@ def _externalize(html):
     j = page.find('<meta charset="utf-8">')
     if j >= 0:
         j += len('<meta charset="utf-8">')
-        page = page[:j] + "\n" + BOOT_CSS + "\n" + BOOT_PRELOAD + '\n<link rel="preload" as="script" href="/' + name + '">' + page[j:]
+        page = page[:j] + "\n" + BOOT_CSS + "\n" + BOOT_PRELOAD + '\n<script>try{fetch("/' + name + '").catch(function(){})}catch(e){}</script>' + page[j:]
+    # 2026-11-28 顶部细加载条：页面里的 AdSense 脚本和 Google 字体在国内经常连不上，会一直挂着，
+    # 页面迟迟算不上「加载完成」，浏览器 / App 外壳顶部的加载进度条就一直停在 80% 左右。
+    # 改成整页加载完以后再拉（AdSense 晚 2 秒）；站点验证靠 <meta name="google-adsense-account">，不受影响。
+    _ADS = '<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1779576119248059" crossorigin="anonymous"></script>'
+    if _ADS in page:
+        page = page.replace(_ADS, '<script>window.__adsDefer=1;addEventListener("load",function(){setTimeout(function(){var s=document.createElement("script");s.async=true;s.crossOrigin="anonymous";s.src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1779576119248059";document.head.appendChild(s)},2000)});</script>', 1)
+    page = re.sub(r'<link rel="stylesheet" href="(https://fonts\.googleapis\.com/[^"]+)" media="print" onload="this\.media=\'all\'"[^>]*>', lambda m: '<script>addEventListener("load",function(){var l=document.createElement("link");l.rel="stylesheet";l.referrerPolicy="no-referrer";l.href="' + m.group(1).replace("&amp;", "&") + '";document.head.appendChild(l)});</script>', page, count=1)
     print("externalize:", name, len(js_body), "chars; page", len(page), "chars")
     return page
 open(os.path.join(ROOT, "index.lazy.html"), "w", encoding="utf8", newline="\n").write(_html_lazy)

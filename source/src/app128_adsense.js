@@ -14,7 +14,9 @@
 
   try {
     /* 2026-11-12：页面 <head> 里已经静态放了 adsbygoogle.js（审核要求代码在页面源码里），这里就不再插第二份 */
-    if (!document.querySelector('script[src*="adsbygoogle.js"]')) {
+    /* 2026-11-28 页面里改成「整页加载完 2 秒后再拉 adsbygoogle」（window.__adsDefer）：国内连不上 Google 时，它会一直挂着，
+       页面迟迟算不上「加载完成」，浏览器顶部的加载进度条就一直停在那。这里也不要再提前插一份。 */
+    if (!window.__adsDefer && !document.querySelector('script[src*="adsbygoogle.js"]')) {
     const s = document.createElement("script");
     s.async = true;
     s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=" + encodeURIComponent(PUB);

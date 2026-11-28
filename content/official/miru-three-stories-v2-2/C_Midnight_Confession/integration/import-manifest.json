@@ -1,6 +1,7 @@
 {
   "kind": "derived_import_files",
   "source_preserved": true,
+  "canonical_speaker_keys": true,
   "source_character_bible": "production/character_bible_v2_2.json",
   "reserved_engine_marker": "cast_all",
   "locales": [
@@ -9,8 +10,8 @@
       "script": "script.zh-CN.md",
       "assets": "assets.zh-CN.json",
       "source": "../locales/zh-CN/script.md",
-      "source_sha256": "fb7ba30d5971cb83f8a1df619950de768476f69ff2545ac309fe2dfb031813a5",
-      "import_sha256": "fceaa8b659e8329e66f844c4156957bf532dc2b122a950cc2f371dc4994a37fa",
+      "source_sha256": "044b8a58c1e5e8be946d6020c65553a65df3b7c8e6c5c15157d1f6b63569996f",
+      "import_sha256": "18636914bdb94c47bfe01e9052eebeea2b9694847c4922d46cb4ea7bdb246d20",
       "speaker_labels_normalized": 2,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
@@ -19,28 +20,32 @@
           "name": "卢西安",
           "asset_id": "char_c_lucian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "卢西安"
         },
         {
           "key": "agnes",
           "name": "阿格妮丝",
           "asset_id": "char_c_agnes",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "阿格妮丝"
         },
         {
           "key": "nora",
           "name": "诺拉",
           "asset_id": "char_c_nora",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "诺拉"
         },
         {
           "key": "mara",
           "name": "玛拉",
           "asset_id": "char_c_mara",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "玛拉"
         }
       ]
     },
@@ -49,38 +54,42 @@
       "script": "script.zh-TW.md",
       "assets": "assets.zh-TW.json",
       "source": "../locales/zh-TW/script.md",
-      "source_sha256": "306cb67ef857d5edca2bc633793dd2cddfd93303c5b8f19e65f6e9f37acbd6b3",
-      "import_sha256": "900bb5fc75237a7f550c8411e464c22bf4beb74a2b977f34da4882f8aa5a2f14",
-      "speaker_labels_normalized": 2,
+      "source_sha256": "d4acc857e3f7dfbcda5af5b16ac6eb7e53b0aa7f988464ffbbedc326f34ee27e",
+      "import_sha256": "810bfff7101ad4d21ca6780a21fb055e061062c4ef7d5b47195651adef86dcb7",
+      "speaker_labels_normalized": 90,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "lucian",
-          "name": "盧西安",
+          "name": "卢西安",
           "asset_id": "char_c_lucian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "盧西安"
         },
         {
           "key": "agnes",
-          "name": "阿格妮絲",
+          "name": "阿格妮丝",
           "asset_id": "char_c_agnes",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "阿格妮絲"
         },
         {
           "key": "nora",
-          "name": "諾拉",
+          "name": "诺拉",
           "asset_id": "char_c_nora",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "諾拉"
         },
         {
           "key": "mara",
-          "name": "瑪拉",
+          "name": "玛拉",
           "asset_id": "char_c_mara",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "瑪拉"
         }
       ]
     },
@@ -89,38 +98,42 @@
       "script": "script.en-US.md",
       "assets": "assets.en-US.json",
       "source": "../locales/en-US/script.md",
-      "source_sha256": "e4022e0715e6f5eb160e9fb929e2a7a4c06c6e0bdacbe767e92e4f9c10fcafcb",
-      "import_sha256": "8fc7f46230d07afede8938d6373ec4f27abb34fb70efd64755c3dd782301a989",
-      "speaker_labels_normalized": 300,
+      "source_sha256": "849b1a145b96e0dc422f84b321bb0a45d93a4a297ab50e7a602365bb55931fa0",
+      "import_sha256": "91931cc8a616af7f7798e377d6f2359050080086de0cc1b6942af937fa014192",
+      "speaker_labels_normalized": 371,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "lucian",
-          "name": "Lucian",
+          "name": "卢西安",
           "asset_id": "char_c_lucian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "Lucian"
         },
         {
           "key": "agnes",
-          "name": "Agnes",
+          "name": "阿格妮丝",
           "asset_id": "char_c_agnes",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Agnes"
         },
         {
           "key": "nora",
-          "name": "Nora",
+          "name": "诺拉",
           "asset_id": "char_c_nora",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Nora"
         },
         {
           "key": "mara",
-          "name": "Mara",
+          "name": "玛拉",
           "asset_id": "char_c_mara",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Mara"
         }
       ]
     },
@@ -129,38 +142,42 @@
       "script": "script.ja-JP.md",
       "assets": "assets.ja-JP.json",
       "source": "../locales/ja-JP/script.md",
-      "source_sha256": "55340a1d042d9b68c54264fa827c4ba223d8b4829a3cd69a15f712108a4fc152",
-      "import_sha256": "46524e033c9e4695a16cd804c8bf8ea423dfc01be4ec2a5757532aa4c25939fe",
-      "speaker_labels_normalized": 288,
+      "source_sha256": "545c195bf1dff66674f770ad217d69650f37b769cb90d60df3657aed15580b4c",
+      "import_sha256": "25a2d94ec4e5bf823f9d5c8253a320583238723ab12007bb915808257ab69ec5",
+      "speaker_labels_normalized": 373,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "lucian",
-          "name": "ルシアン",
+          "name": "卢西安",
           "asset_id": "char_c_lucian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "ルシアン"
         },
         {
           "key": "agnes",
-          "name": "アグネス",
+          "name": "阿格妮丝",
           "asset_id": "char_c_agnes",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "アグネス"
         },
         {
           "key": "nora",
-          "name": "ノラ",
+          "name": "诺拉",
           "asset_id": "char_c_nora",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "ノラ"
         },
         {
           "key": "mara",
-          "name": "マラ",
+          "name": "玛拉",
           "asset_id": "char_c_mara",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "マラ"
         }
       ]
     },
@@ -169,38 +186,42 @@
       "script": "script.ko-KR.md",
       "assets": "assets.ko-KR.json",
       "source": "../locales/ko-KR/script.md",
-      "source_sha256": "3d040ffa75603e3c52971fb20bd24eb8ca2e943554bb6e6dd13ceadf43ad5420",
-      "import_sha256": "43d025c02330491f33bb62efdab5045dc1ffd9dfa0a138cf56edec064775fa7f",
-      "speaker_labels_normalized": 293,
+      "source_sha256": "b30b82d2b0d87c89088b2f27939c5493ce509bb0ae6211dad9a12ae2ca2810f4",
+      "import_sha256": "cf56d7a3979e957a403cfb04902619a94c3178972239dce817a9ab7c22a82d05",
+      "speaker_labels_normalized": 371,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "lucian",
-          "name": "루시안",
+          "name": "卢西安",
           "asset_id": "char_c_lucian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "루시안"
         },
         {
           "key": "agnes",
-          "name": "아그네스",
+          "name": "阿格妮丝",
           "asset_id": "char_c_agnes",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "아그네스"
         },
         {
           "key": "nora",
-          "name": "노라",
+          "name": "诺拉",
           "asset_id": "char_c_nora",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "노라"
         },
         {
           "key": "mara",
-          "name": "마라",
+          "name": "玛拉",
           "asset_id": "char_c_mara",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "마라"
         }
       ]
     },
@@ -209,38 +230,42 @@
       "script": "script.es-ES.md",
       "assets": "assets.es-ES.json",
       "source": "../locales/es-ES/script.md",
-      "source_sha256": "95618baf7714a2446d713f7c18aa27ec0117c917469ceeab66a3032c809c0ee6",
-      "import_sha256": "3377a5b690a62f900413f58d4ada3fef267e9f6e7d227321d5518406cb5ea0e5",
-      "speaker_labels_normalized": 300,
+      "source_sha256": "382967b0e2fe52872c33f2d21e18df451ea8ac5e8debc71f2d11f94b62cc310f",
+      "import_sha256": "5fe0ab9579b768736fd5812af39af7ad9a81c208224a136aca27122c1665320d",
+      "speaker_labels_normalized": 371,
       "chapter_hooks_moved_into_each_route": 16,
       "characters": [
         {
           "key": "lucian",
-          "name": "Lucian",
+          "name": "卢西安",
           "asset_id": "char_c_lucian",
           "romanceable": true,
-          "source_type": "B"
+          "source_type": "B",
+          "display": "Lucian"
         },
         {
           "key": "agnes",
-          "name": "Agnes",
+          "name": "阿格妮丝",
           "asset_id": "char_c_agnes",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Agnes"
         },
         {
           "key": "nora",
-          "name": "Nora",
+          "name": "诺拉",
           "asset_id": "char_c_nora",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Nora"
         },
         {
           "key": "mara",
-          "name": "Mara",
+          "name": "玛拉",
           "asset_id": "char_c_mara",
           "romanceable": false,
-          "source_type": "C"
+          "source_type": "C",
+          "display": "Mara"
         }
       ]
     }

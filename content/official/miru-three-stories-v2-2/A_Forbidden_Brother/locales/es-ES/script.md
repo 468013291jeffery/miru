@@ -1,911 +1,987 @@
 # CHAPTER 1｜La puerta que no debías abrir
-⟦GOAL|Comprender lo ocurrido en «La puerta que no debías abrir» y decidir el siguiente paso.|La puerta que no debías abrir⟧
-⟦DONE|flag|a_c01_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La puerta que no debías abrir», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿A quién entregas primero la foto de hace tres años?|La puerta que no debías abrir⟧
+⟦DONE|flag|a_c01_event|Observar el cambio clave|Narración: Fuera del despacho se acercan los pasos de Ethan. El pomo gira lentamente.⟧
+⟦DONE|say|¿A quién entregas primero la foto de hace tres años? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Pasillo de la finca de la boda
-⟦BG|bg_a_c01s01|Pasillo de la finca de la boda；Personajes presentes：Tú, Ethan, Claire；Acción：Mientras se proyectan las fotos del compromiso, Ethan besa a una mujer vestida de dorado. Al verte, la estrecha contra él. La mujer deja caer un pendiente con el escudo de la familia.⟧
+⟦BG|bg_a_c01s01|Pasillo de la finca de la boda⟧
 ⟦TIME|22:30⟧
-Narración: La víspera de la boda. Pasillo de la finca de la boda.
-Narración: Mientras se proyectan las fotos del compromiso, Ethan besa a una mujer vestida de dorado.
-Narración: Al verte, la estrecha contra él.
-Narración: La mujer deja caer un pendiente con el escudo de la familia.
-Ethan: “Vas a buscar a mi hermano, ¿verdad?”
+Narración: La noche anterior a la boda — Pasillo de la finca de la boda.
+Narración: Ordenar objetos del pasillo como iconos: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: El proyector muestra vuestras fotos de compromiso, pero Ethan besa a una mujer de vestido dorado fuera del alcance de las cámaras. Al verte, la atrae aún más hacia él.
+Ethan: “¿Incluso al verme así, tu primer impulso es buscarlo a él?”
+Ethan: “¿Quieres saber quién es ella o por qué me aseguré de que lo vieras?”
 ⟦FREE⟧
-Narración: Próxima escena: Habitación de Damian.
+Narración: Al marcharse, la mujer deja caer deliberadamente un pendiente grabado con el escudo familiar.
 
 # SCENE｜Habitación de Damian
-⟦BG|bg_a_c01s02|Habitación de Damian；Personajes presentes：Tú, Damian；Acción：Damian abre la puerta con el botón que le prestaste hace tres años en la mano. Deja la puerta sin echar la llave. Tu nombre aparece marcado con un círculo en el plano de mesas de mañana.⟧
+⟦BG|bg_a_c01s02|Habitación de Damian⟧
 ⟦TIME|22:55⟧
-Narración: Poco después. Habitación de Damian.
-Narración: Damian abre la puerta con el botón que le prestaste hace tres años en la mano.
-Narración: Deja la puerta sin echar la llave.
-Narración: Tu nombre aparece marcado con un círculo en el plano de mesas de mañana.
-Damian: “Me pediste que no usara tu nombre real. Ahora casi no me atrevo a pronunciarlo.”
+Narración: Un poco después — Habitación de Damian.
+Narración: Al final del pasillo, la puerta se abre desde dentro. Damian lleva los puños sueltos y sostiene el viejo botón que le prestaste durante la tormenta de hace tres años. Ve pasar una sombra y cierra sin echar la llave. Al ver tu anillo, te deja libre la salida, aunque no aparta la mirada de tu rostro.
+Damian: “Aquel día dijiste que no usáramos nombres reales. Ahora apenas me atrevo a pronunciar el tuyo.”
+Damian: “¿Has venido a oír la verdad o prefieres insultarme primero?”
 ⟦FREE⟧
-Narración: Próxima escena: Biblioteca familiar.
+Narración: En su escritorio está el plano de asientos para la boda de mañana; tu nombre aparece rodeado en rojo.
 
 # SCENE｜Biblioteca familiar
-⟦BG|bg_a_c01s03|Biblioteca familiar；Personajes presentes：Tú, Damian；Acción：Te muestra una foto de ambos junto a la máquina expendedora del hospital. En el reverso reconoces la letra de Ethan. Se oyen unos pasos que se detienen al otro lado de la puerta.⟧
+⟦BG|bg_a_c01s03|Biblioteca familiar⟧
 ⟦TIME|23:20⟧
-Narración: Poco después. Biblioteca familiar.
-Narración: Te muestra una foto de ambos junto a la máquina expendedora del hospital.
-Narración: En el reverso reconoces la letra de Ethan.
-Narración: Se oyen unos pasos que se detienen al otro lado de la puerta.
-Damian: “¿Quieres ver el original o que te cuente lo de aquella noche?”
+Narración: Un poco después — Biblioteca familiar.
+Narración: Practicar un índice para la foto del despacho: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_memory⟧
+Narración: Damian saca la foto de aquella noche de lluvia: estáis juntos junto a una máquina expendedora del hospital. Detrás aparece la letra de Ethan.
+Damian: “No sé cuándo la tomó. Pero sabe mucho más de lo que crees.”
+Damian: “¿Vas a pedirle explicaciones con esta foto o me dejas terminar de contar aquella noche?”
 ⟦FREE⟧
+Narración: Fuera del despacho se acercan los pasos de Ethan. El pomo gira lentamente.
 ⟦SET|a_c01_event⟧
 
-# CHOICE｜¿Quién convirtió aquella noche en moneda de cambio?
-#### A｜Pedir el original y una explicación
-Narración: Damian deja a tu disposición el álbum y los negativos.
+# CHOICE｜¿A quién entregas primero la foto de hace tres años?
+#### A｜Pedir a Damian explicaciones y el original
+Narración: Deja el álbum y la funda de negativos en el despacho sin seguir ocultando las fechas.
 ⟦OPT|A|set:a_c01_a⟧
-#### B｜Enfrentarse a Ethan con una copia
-Narración: Ethan ya no puede negar que sabía de la existencia de la foto.
+#### B｜Enfrentarte inmediatamente a Ethan con la foto
+Narración: Recibe una copia y al día siguiente no puede fingir que no sabía nada.
 ⟦OPT|B|set:a_c01_b⟧
-#### C｜Guardar la prueba y apartarse
-Narración: No respondes a ninguno de los hermanos y conservas la prueba.
+#### C｜Fotografiar la prueba y alejarte de ambos
+Narración: Ninguno recibe tu respuesta; conservas tú el original.
 ⟦OPT|C|set:a_c01_c⟧
 # ·
-Narración: ¿Quién convirtió aquella noche en moneda de cambio?
+Narración: ¿Quién convirtió primero el secreto de aquella noche en moneda de cambio?
 
 # CHAPTER 2｜La trampa del prometido
-⟦GOAL|Comprender lo ocurrido en «La trampa del prometido» y decidir el siguiente paso.|La trampa del prometido⟧
-⟦DONE|flag|a_c02_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La trampa del prometido», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Qué haces antes de que empiece la ceremonia de hoy?|La trampa del prometido⟧
+⟦DONE|flag|a_c02_event|Observar el cambio clave|Narración: La impresora expulsa automáticamente un anexo de autorización prematrimonial con tu nombre.⟧
+⟦DONE|say|¿Qué haces antes de que empiece la ceremonia de hoy? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Comedor
-⟦BG|bg_a_c02s01|Comedor；Personajes presentes：Tú, Ethan；Acción：Faltan tres horas para la ceremonia. Ethan te acerca un café. Bajo el posavasos está la tarjeta de embarque de la mujer de dorado.⟧
+⟦BG|bg_a_c02s01|Comedor⟧
 ⟦TIME|07:00⟧
-Narración: A la mañana siguiente. Comedor.
+Narración: A primera hora de la mañana de la boda — Comedor.
 ⟦IF|a_c01_a⟧
-Narración: Damian deja a tu disposición el álbum y los negativos.
+Narración: Deja el álbum y la funda de negativos en el despacho sin seguir ocultando las fechas.
 ⟦/IF⟧
 ⟦IF|a_c01_b⟧
-Narración: Ethan ya no puede negar que sabía de la existencia de la foto.
+Narración: Recibe una copia y al día siguiente no puede fingir que no sabía nada.
 ⟦/IF⟧
 ⟦IF|a_c01_c⟧
-Narración: No respondes a ninguno de los hermanos y conservas la prueba.
+Narración: Ninguno recibe tu respuesta; conservas tú el original.
 ⟦/IF⟧
-Narración: Faltan tres horas para la ceremonia.
-Narración: Ethan te acerca un café.
-Narración: Bajo el posavasos está la tarjeta de embarque de la mujer de dorado.
-Ethan: “No dejes que un solo beso decida lo que pasa entre nosotros.”
+Narración: Revisar iconos de documentos tras el desayuno: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_gala⟧
+Narración: Faltan tres horas para la boda. Ethan te acerca un café como si anoche no hubiera pasado nada. Bajo el posavasos está la tarjeta de embarque de la mujer de dorado.
+Ethan: “No conviertas un beso en una sentencia sobre todo nuestro matrimonio.”
+Ethan: “¿La llamo ahora o me dices directamente si debemos detener la boda?”
 ⟦FREE⟧
-Narración: Próxima escena: Terraza de la finca.
+Narración: Un camarero trae los votos. La portada lleva el nombre completo de tu empresa de diseño.
 
 # SCENE｜Terraza de la finca
-⟦BG|bg_a_c02s02|Terraza de la finca；Personajes presentes：Tú, Damian；Acción：Damian deja una caja de anillo en la barandilla. Dentro está el viejo tique del aparcamiento del hospital. Deja su abrigo cerca, sin tocarte.⟧
+⟦BG|bg_a_c02s02|Terraza de la finca⟧
 ⟦TIME|07:25⟧
-Narración: Poco después. Terraza de la finca.
-Narración: Damian deja una caja de anillo en la barandilla.
-Narración: Dentro está el viejo tique del aparcamiento del hospital.
-Narración: Deja su abrigo cerca, sin tocarte.
-Damian: “Recuerdo que se te rompió un tacón y aun así insististe en llevar a aquel hombre a urgencias.”
+Narración: Un poco después — Terraza de la finca.
+Narración: Damian espera en el viento frío con tu estuche del anillo. Sigue cerrado y contiene el antiguo tique de aparcamiento del hospital. Deja su abrigo sobre la baranda y se queda al frío, como esperando una sentencia largamente aplazada.
+Damian: “Recuerdo que se te rompió el tacón y aun así insististe en llevar primero a la persona herida a urgencias.”
+Damian: “¿Quieres que te acompañe a enfrentarte a Ethan o que mantenga la distancia?”
 ⟦FREE⟧
-Narración: Próxima escena: Despacho de la organizadora.
+Narración: Coloca el estuche en la baranda de piedra y deja que decidas si recogerlo.
 
 # SCENE｜Despacho de la organizadora
-⟦BG|bg_a_c02s03|Despacho de la organizadora；Personajes presentes：Tú, Ethan；Acción：Una tableta muestra fugazmente la foto de la noche de lluvia. Ethan apaga la pantalla. La impresora expulsa una autorización prematrimonial con tu nombre.⟧
+⟦BG|bg_a_c02s03|Despacho de la organizadora⟧
 ⟦TIME|07:50⟧
-Narración: Poco después. Despacho de la organizadora.
-Narración: Una tableta muestra fugazmente la foto de la noche de lluvia.
-Narración: Ethan apaga la pantalla.
-Narración: La impresora expulsa una autorización prematrimonial con tu nombre.
-Ethan: “Puedo detener la proyección. ¿Qué quieres que te explique primero?”
+Narración: Un poco después — Despacho de la organizadora.
+Narración: Concentrarte antes de ordenar registros de reproducción: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo.
+⟦MG|g_simon_lights⟧
+Narración: La organizadora revisa en una tableta la proyección sorpresa de esta mañana. Una miniatura muestra la foto de la noche de lluvia de hace tres años. Ethan apaga la pantalla.
+Ethan: “Era para que la vieras tú. No todo el mundo.”
+Ethan: “¿Quieres que borre el material ahora o que llame a la organizadora para que testifique?”
 ⟦FREE⟧
+Narración: La impresora expulsa automáticamente un anexo de autorización prematrimonial con tu nombre.
 ⟦SET|a_c02_event⟧
 
-# CHOICE｜¿Por qué aparece el nombre de tu estudio en un documento de boda?
-#### A｜Exigir que retiren la proyección
-Narración: La organizadora conserva la lista anterior como prueba.
+# CHOICE｜¿Qué haces antes de que empiece la ceremonia de hoy?
+#### A｜Exigir a Ethan que elimine la proyección sorpresa
+Narración: La organizadora sella ante ti la versión anterior de la lista de reproducción.
 ⟦OPT|A|set:a_c02_a⟧
-#### B｜Enviar los documentos a un abogado independiente
-Narración: Los recibe antes de la ceremonia.
+#### B｜Entregar los documentos prematrimoniales a un abogado independiente
+Narración: Los recibe antes de la ceremonia y puede señalar a tiempo el problema de autorización.
 ⟦OPT|B|set:a_c02_b⟧
-#### C｜Suspender el ensayo y avisar a una amiga
-Narración: La amiga presencia la interrupción de los preparativos.
+#### C｜Negarte a seguir ensayando y avisar a una amiga
+Narración: Se queda a tu lado y presencia la suspensión de los preparativos.
 ⟦OPT|C|set:a_c02_c⟧
 # ·
-Narración: ¿Por qué aparece el nombre de tu estudio en un documento de boda?
+Narración: ¿Aún quieres que la boda empiece según lo previsto?
 
 # CHAPTER 3｜Silencio en el altar
-⟦GOAL|Comprender lo ocurrido en «Silencio en el altar» y decidir el siguiente paso.|Silencio en el altar⟧
-⟦DONE|flag|a_c03_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «Silencio en el altar», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Con el contrato al descubierto, ¿cómo detienes la boda?|Silencio en el altar⟧
+⟦DONE|flag|a_c03_event|Observar el cambio clave|Narración: Tu teléfono no deja de sonar: tres proveedores del estudio exigen a la vez liquidar los anticipos.⟧
+⟦DONE|say|Con el contrato al descubierto, ¿cómo detienes la boda? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Salón de bodas
-⟦BG|bg_a_c03s01|Salón de bodas；Personajes presentes：Tú, Ethan；Acción：Los invitados se levantan al sonar las cuerdas. La pantalla presenta tus diseños inéditos como un lanzamiento comercial conjunto. Damian aparece con un grueso contrato.⟧
+⟦BG|bg_a_c03s01|Salón de bodas⟧
 ⟦TIME|10:00⟧
-Narración: A la hora prevista de la ceremonia. Salón de bodas.
+Narración: La mañana de la boda — Salón de bodas.
 ⟦IF|a_c02_a⟧
-Narración: La organizadora conserva la lista anterior como prueba.
+Narración: La organizadora sella ante ti la versión anterior de la lista de reproducción.
 ⟦/IF⟧
 ⟦IF|a_c02_b⟧
-Narración: Los recibe antes de la ceremonia.
+Narración: Los recibe antes de la ceremonia y puede señalar a tiempo el problema de autorización.
 ⟦/IF⟧
 ⟦IF|a_c02_c⟧
-Narración: La amiga presencia la interrupción de los preparativos.
+Narración: Se queda a tu lado y presencia la suspensión de los preparativos.
 ⟦/IF⟧
-Narración: Los invitados se levantan al sonar las cuerdas.
-Narración: La pantalla presenta tus diseños inéditos como un lanzamiento comercial conjunto.
-Narración: Damian aparece con un grueso contrato.
-Ethan: “Eso no debía salir hasta después de los votos.”
+Narración: Preparar el archivo del material de ceremonia: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_gala⟧
+Narración: Los invitados se levantan y suenan las cuerdas, pero la pantalla gigante muestra antes de tiempo los diseños de una colaboración comercial. Son tus originales aún inéditos.
+Ethan: “¿Por qué están esas imágenes ahí? ¡No autoricé esta proyección!”
+Ethan: “¿Detienes la ceremonia ante todos o me dejas apagar primero la pantalla?”
 ⟦FREE⟧
-Narración: Próxima escena: Sala lateral de la capilla.
+Narración: Damian avanza desde la última fila y te pone delante un contrato voluminoso.
+Narración: La tarea real es detener la proyección no consentida y preservar los registros.
 
 # SCENE｜Sala lateral de la capilla
-⟦BG|bg_a_c03s02|Sala lateral de la capilla；Personajes presentes：Tú, Damian；Acción：El contrato transfiere los ingresos por licencias de tu estudio. Damian protege la puerta de las cámaras y se aparta.⟧
+⟦BG|bg_a_c03s02|Sala lateral de la capilla⟧
 ⟦TIME|10:25⟧
-Narración: Poco después. Sala lateral de la capilla.
-Narración: El contrato transfiere los ingresos por licencias de tu estudio.
-Narración: Damian protege la puerta de las cámaras y se aparta.
-Damian: “Puedes marcharte. No tienes por qué fingir ante nadie.”
+Narración: Un poco después — Sala lateral de la capilla.
+Narración: El contrato concede una licencia conjunta de diseño que entra en vigor el día de la boda, pero tu estudio no es el beneficiario. Damian permanece junto a la puerta sin excusarse. Mira tus labios un instante y se obliga a apartar los ojos. Bloquea las cámaras de los invitados, pero baja la mano cuando lo miras para que puedas salir por ti misma.
+Damian: “Lo vi ayer. Debí contarte yo lo de esta página.”
+Damian: “¿Lo reconozco públicamente ahora o entrego primero la página de firmas a tu abogado?”
 ⟦FREE⟧
-Narración: Próxima escena: Sala de reuniones.
+Narración: Cuando Ethan entra tras de ti en la sala lateral, tu abogado confirma por teléfono que nunca firmaste esa licencia.
 
 # SCENE｜Sala de reuniones
-⟦BG|bg_a_c03s03|Sala de reuniones；Personajes presentes：Tú, Eleanor；Acción：La ceremonia queda suspendida. Eleanor anuncia ante ambas familias que congela los pagos de la colaboración, sin perder la sonrisa.⟧
+⟦BG|bg_a_c03s03|Sala de reuniones⟧
 ⟦TIME|10:50⟧
-Narración: Poco después. Sala de reuniones.
-Narración: La ceremonia queda suspendida.
-Narración: Eleanor anuncia ante ambas familias que congela los pagos de la colaboración, sin perder la sonrisa.
-Eleanor: “Una relación comercial exige estabilidad. Seguro que lo entiendes.”
+Narración: Un poco después — Sala de reuniones.
+Narración: Ordenar notas de prensa antes de la reunión: Toca los iconos 📸 y evita 🙂; intenta acertar diez veces en veinte segundos. Puedes saltarlo.
+⟦MG|g_whack_flash⟧
+Narración: La ceremonia debe suspenderse. Ante los parientes de ambas familias, Eleanor anuncia la retención de los pagos de colaboración sin cambiar de sonrisa.
+Eleanor: “Si no quieres formar parte de la familia, también habrá que reconsiderar los negocios.”
+Eleanor: “¿Te explico el fundamento del bloqueo o dejamos que la prensa lo registre?”
 ⟦FREE⟧
+Narración: Tu teléfono no deja de sonar: tres proveedores del estudio exigen a la vez liquidar los anticipos.
 ⟦SET|a_c03_event⟧
 
-# CHOICE｜¿Qué intentará arrebatarte la familia por haberte negado?
-#### A｜Anunciar la suspensión y pedir una investigación
-Narración: Los invitados son testigos y se conservan las pruebas.
+# CHOICE｜Con el contrato al descubierto, ¿cómo detienes la boda?
+#### A｜Anunciar públicamente la suspensión y pedir una investigación
+Narración: La prensa registra tu declaración formal; la familia no puede llamarlo una simple discusión.
 ⟦OPT|A|set:a_c03_a⟧
-#### B｜Entregar los documentos al abogado
-Narración: El original queda custodiado de forma independiente.
+#### B｜Salir con los documentos e ir al abogado
+Narración: Te llevas el anexo sin firmar y el abogado preserva la prueba allí mismo.
 ⟦OPT|B|set:a_c03_b⟧
-#### C｜Exigir explicaciones a Ethan ante los invitados
-Narración: Debe responder públicamente por la proyección.
+#### C｜Exigir a Ethan que explique ante los invitados el origen de las imágenes
+Narración: Su explicación queda grabada para contrastarla después con los registros del sistema.
 ⟦OPT|C|set:a_c03_c⟧
 # ·
-Narración: ¿Qué intentará arrebatarte la familia por haberte negado?
+Narración: ¿Por qué tus diseños proyectados en la boda figuran en una autorización que nunca firmaste?
 
 # CHAPTER 4｜Quién paga el precio
-⟦GOAL|Comprender lo ocurrido en «Quién paga el precio» y decidir el siguiente paso.|Quién paga el precio⟧
-⟦DONE|flag|a_c04_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «Quién paga el precio», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Con los pagos bloqueados, ¿qué proteges primero?|Quién paga el precio⟧
+⟦DONE|flag|a_c04_event|Observar el cambio clave|Narración: Un periodista muestra otra captura recién recibida. La cuenta de origen pertenece al despacho de Eleanor.⟧
+⟦DONE|say|Con los pagos bloqueados, ¿qué proteges primero? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Oficina provisional del estudio
-⟦BG|bg_a_c04s01|Oficina provisional del estudio；Personajes presentes：Tú, Mia；Acción：Hay bocetos en las paredes. El mayor cliente ha cancelado, los fondos están congelados y Mia teme por las nóminas.⟧
+⟦BG|bg_a_c04s01|Oficina provisional del estudio⟧
 ⟦TIME|15:30⟧
-Narración: Esa tarde. Oficina provisional del estudio.
+Narración: La tarde posterior a la suspensión — Oficina provisional del estudio.
 ⟦IF|a_c03_a⟧
-Narración: Los invitados son testigos y se conservan las pruebas.
+Narración: La prensa registra tu declaración formal; la familia no puede llamarlo una simple discusión.
 ⟦/IF⟧
 ⟦IF|a_c03_b⟧
-Narración: El original queda custodiado de forma independiente.
+Narración: Te llevas el anexo sin firmar y el abogado preserva la prueba allí mismo.
 ⟦/IF⟧
 ⟦IF|a_c03_c⟧
-Narración: Debe responder públicamente por la proyección.
+Narración: Su explicación queda grabada para contrastarla después con los registros del sistema.
 ⟦/IF⟧
-Narración: Hay bocetos en las paredes.
-Narración: El mayor cliente ha cancelado, los fondos están congelados y Mia teme por las nóminas.
-Mia: “Podemos seguir trabajando, pero necesitamos un plan para el viernes.”
+Narración: Concentrarte al ordenar contactos de clientes: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: Los bocetos de las prendas siguen en la pared desde la mañana. Tu ayudante llora ante el ordenador al comunicarte que el mayor cliente ha cancelado su pedido.
+Mia: “Dicen que reanudarán los pagos si vuelves y terminas la boda.”
+Mia: “¿Protegemos primero las nóminas o contactamos con los clientes para aclararlo públicamente?”
 ⟦FREE⟧
-Narración: Próxima escena: Bufete independiente.
+Narración: El correo de cancelación se envió cuarenta minutos antes del aviso de suspensión de la ceremonia.
 
 # SCENE｜Bufete independiente
-⟦BG|bg_a_c04s02|Bufete independiente；Personajes presentes：Tú, Damian；Acción：Damian entrega al abogado actas antiguas y registros de pagos. Adjunta sus datos de contacto como parte de las pruebas, no como declaración de amor.⟧
+⟦BG|bg_a_c04s02|Bufete independiente⟧
 ⟦TIME|15:55⟧
-Narración: Poco después. Bufete independiente.
-Narración: Damian entrega al abogado actas antiguas y registros de pagos.
-Narración: Adjunta sus datos de contacto como parte de las pruebas, no como declaración de amor.
-Damian: “Lee cada página. No te fíes solo de mi palabra.”
+Narración: Un poco después — Bufete independiente.
+Narración: Damian extiende antiguas actas del consejo firmadas por él y acerca los justificantes de pago a tu abogado, no a ti. Añade su teléfono junto a la declaración, sin suplicarte que regreses.
+Damian: “Pagaré los honorarios. No estoy comprando tu perdón.”
+Damian: “¿Me quedo como testigo o espero fuera?”
 ⟦FREE⟧
-Narración: Próxima escena: Zona de prensa del hotel.
+Narración: El abogado señala una cifra: la familia había fijado el valor de tu estudio tres años antes.
 
 # SCENE｜Zona de prensa del hotel
-⟦BG|bg_a_c04s03|Zona de prensa del hotel；Personajes presentes：Tú, Mia；Acción：Los periodistas rodean una foto filtrada de los dos. Todavía se distingue la marca de agua del sistema de invitados.⟧
+⟦BG|bg_a_c04s03|Zona de prensa del hotel⟧
 ⟦TIME|16:20⟧
-Narración: Poco después. Zona de prensa del hotel.
-Narración: Los periodistas rodean una foto filtrada de los dos.
-Narración: Todavía se distingue la marca de agua del sistema de invitados.
-Mia: “Han convertido nuestro trabajo en un cotilleo. ¿Cómo respondemos?”
+Narración: Un poco después — Zona de prensa del hotel.
+Narración: Preparar un índice de imágenes de prensa: Toca los iconos 📸 y evita 🙂; intenta acertar diez veces en veinte segundos. Puedes saltarlo.
+⟦MG|g_whack_flash⟧
+Narración: Los periodistas rodean una vieja foto filtrada y preguntan por tu relación con Damian. En la esquina superior derecha sigue la marca de agua del sistema de invitados de la boda.
+Ethan: “No la fotografiéis. Esa foto salió de nuestro sistema.”
+Ethan: “¿Quieres responder tú o exigirme que entregue todos los registros de acceso?”
 ⟦FREE⟧
+Narración: Un periodista muestra otra captura recién recibida. La cuenta de origen pertenece al despacho de Eleanor.
 ⟦SET|a_c04_event⟧
 
-# CHOICE｜¿Quién filtró la foto desde el sistema de la boda?
-#### A｜Proteger las nóminas y los pedidos
-Narración: El equipo recibe un plan de contingencia.
+# CHOICE｜Con los pagos bloqueados, ¿qué proteges primero?
+#### A｜Proteger salarios y pedidos con el equipo
+Narración: Los empleados reciben medidas de emergencia y saben que no son moneda de cambio.
 ⟦OPT|A|set:a_c04_a⟧
-#### B｜Pedir la conservación legal de los registros
-Narración: El abogado prepara medidas ajenas a la familia.
+#### B｜Pedir al abogado la preservación inmediata de las pruebas
+Narración: Los correos originales de colaboración quedan protegidos legalmente contra alteraciones.
 ⟦OPT|B|set:a_c04_b⟧
-#### C｜Hablar con la prensa sin mencionar el romance
-Narración: Tu versión separa el conflicto empresarial de tu vida privada.
+#### C｜Aclararlo personalmente a la prensa sin hablar de romances
+Narración: Las noticias empiezan a tratar la posible infracción, además del escándalo familiar.
 ⟦OPT|C|set:a_c04_c⟧
 # ·
-Narración: ¿Quién filtró la foto desde el sistema de la boda?
+Narración: ¿Quién convirtió vuestro pasado en un arma?
 
 # CHAPTER 5｜La cena prohibida
-⟦GOAL|Comprender lo ocurrido en «La cena prohibida» y decidir el siguiente paso.|La cena prohibida⟧
-⟦DONE|flag|a_c05_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La cena prohibida», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Cómo respondes al beso que casi ocurrió en la terraza?|La cena prohibida⟧
+⟦DONE|flag|a_c05_event|Observar el cambio clave|Narración: Un vehículo de seguridad familiar se aleja lentamente tras las ventanas del corredor.⟧
+⟦DONE|say|¿Cómo respondes al beso que casi ocurrió en la terraza? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Comedor familiar
-⟦BG|bg_a_c05s01|Comedor familiar；Personajes presentes：Tú, Eleanor；Acción：Eleanor pretende que Ethan anuncie que la boda solo se aplazó por una discusión. Damian retira el cartel del heredero y se sienta a tu lado.⟧
+⟦BG|bg_a_c05s01|Comedor familiar⟧
 ⟦TIME|20:00⟧
-Narración: Esa noche. Comedor familiar.
+Narración: El segundo día después de la boda — Comedor familiar.
 ⟦IF|a_c04_a⟧
-Narración: El equipo recibe un plan de contingencia.
+Narración: Los empleados reciben medidas de emergencia y saben que no son moneda de cambio.
 ⟦/IF⟧
 ⟦IF|a_c04_b⟧
-Narración: El abogado prepara medidas ajenas a la familia.
+Narración: Los correos originales de colaboración quedan protegidos legalmente contra alteraciones.
 ⟦/IF⟧
 ⟦IF|a_c04_c⟧
-Narración: Tu versión separa el conflicto empresarial de tu vida privada.
+Narración: Las noticias empiezan a tratar la posible infracción, además del escándalo familiar.
 ⟦/IF⟧
-Narración: Eleanor pretende que Ethan anuncie que la boda solo se aplazó por una discusión.
-Narración: Damian retira el cartel del heredero y se sienta a tu lado.
-Eleanor: “Todos esperan una declaración tranquilizadora.”
+Narración: Reconocer iconos de la cena antes de sentarte: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_gala⟧
+Narración: Eleanor insiste en celebrar la cena y en que Ethan anuncie que solo habéis tenido una pequeña discusión. Damian deja la servilleta y se levanta. Ordena retirar la tarjeta de la cabecera que lo identifica como heredero y, por primera vez, se sienta a tu lado.
+Damian: “Dejad de hablar por ella. No es un activo de esta mesa.”
+Damian: “¿Quieres que vuelva a mi sitio o que lea el acuerdo prematrimonial en voz alta?”
 ⟦FREE⟧
-Narración: Próxima escena: Terraza nocturna.
+Narración: La sala calla. Ethan aprieta su copa hasta agrietarla.
 
 # SCENE｜Terraza nocturna
-⟦BG|bg_a_c05s02|Terraza nocturna；Personajes presentes：Tú, Damian；Acción：Deja unos zapatos planos sobre la mesa, recordando el tacón roto. Su mano descansa abierta sobre la mesa, no sobre la tuya.⟧
+⟦BG|bg_a_c05s02|Terraza nocturna⟧
 ⟦TIME|20:25⟧
-Narración: Poco después. Terraza nocturna.
-Narración: Deja unos zapatos planos sobre la mesa, recordando el tacón roto.
-Narración: Su mano descansa abierta sobre la mesa, no sobre la tuya.
-Damian: “Dijiste que odiabas que te trataran como un trofeo. Debí escucharte antes.”
+Narración: Un poco después — Terraza nocturna.
+Narración: Cuelgas el abrigo en una silla. Damian no te toca; deja ante ti unos zapatos planos como los de aquella tormenta. Solo hay una copa entre vosotros. Su palma abierta descansa en la mesa, sin rozarte. Recuerda que no comías picante y que dijiste odiar que te trataran como un premio.
+Damian: “Aquella noche diste tus zapatos a la chica herida y estuviste media hora descalza.”
+Damian: “Si no me hubiera ido entonces, ¿querrías volver a conocerme?”
 ⟦FREE⟧
-Narración: Próxima escena: Galería acristalada.
+Narración: Ve un destello de cámara detrás de ti, pero no se esconde.
 
 # SCENE｜Galería acristalada
-⟦BG|bg_a_c05s03|Galería acristalada；Personajes presentes：Tú, Damian；Acción：Una cuenta anónima envía una foto tomada hace instantes. Amenaza con publicar a medianoche la historia de una novia robada.⟧
+⟦BG|bg_a_c05s03|Galería acristalada⟧
 ⟦TIME|20:50⟧
-Narración: Poco después. Galería acristalada.
-Narración: Una cuenta anónima envía una foto tomada hace instantes.
-Narración: Amenaza con publicar a medianoche la historia de una novia robada.
-Damian: “No voy a tocar tu móvil. Dime qué quieres hacer con esto.”
+Narración: Un poco después — Galería acristalada.
+Narración: Ordenar antes de guardar mensajes del corredor: Toca los iconos 📵 y evita 💬; intenta acertar diez veces en veinte segundos. Puedes saltarlo.
+⟦MG|g_whack_texts⟧
+Narración: Una cuenta anónima envía la foto recién tomada en la terraza y amenaza con publicar a medianoche que el hermano mayor ha robado a la novia. Damian intenta coger tu móvil y se detiene.
+Damian: “Quiero besarte. Es verdad. Pero no quiero que pagues tú por mi deseo.”
+Damian: “¿Respondemos al remitente anónimo o averiguamos primero quién nos fotografiaba desde abajo?”
 ⟦FREE⟧
+Narración: Un vehículo de seguridad familiar se aleja lentamente tras las ventanas del corredor.
 ⟦SET|a_c05_event⟧
 
-# CHOICE｜¿Quién vigila tus momentos privados?
-#### A｜Hablar de tus sentimientos sin renunciar a la verdad
-Narración: Damian reconoce la atracción sin dar por hecho el perdón.
+# CHOICE｜¿Cómo respondes al beso que casi ocurrió en la terraza?
+#### A｜Conocer mejor a Damian, exigiendo la verdad
+Narración: Promete entregar los antiguos votos; la intimidad no justifica ocultaciones.
 ⟦OPT|A|set:a_c05_a⟧
-#### B｜Investigar primero la filtración
-Narración: Se conserva la imagen y se busca su origen.
+#### B｜Exigir primero el origen de la filtración
+Narración: Detiene su gestión privada de prensa y ayuda a preservar las fotos furtivas.
 ⟦OPT|B|set:a_c05_b⟧
-#### C｜Rechazar la intimidad por ahora
-Narración: Damian mantiene la distancia y habla solo de las pruebas.
+#### C｜No avanzar por ahora en la intimidad
+Narración: Retira su acercamiento y respeta en adelante la distancia que pides.
 ⟦OPT|C|set:a_c05_c⟧
 # ·
-Narración: ¿Quién vigila tus momentos privados?
+Narración: Entre sinceridad y escándalo, ¿en qué puedes confiar?
 
 # CHAPTER 6｜Su voto decisivo
-⟦GOAL|Comprender lo ocurrido en «Su voto decisivo» y decidir el siguiente paso.|Su voto decisivo⟧
-⟦DONE|flag|a_c06_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «Su voto decisivo», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Tras ver el voto de Damian, ¿qué responsabilidad exiges?|Su voto decisivo⟧
+⟦DONE|flag|a_c06_event|Observar el cambio clave|Narración: Te muestra una grabación de vigilancia sin sonido donde Damian está firmando.⟧
+⟦DONE|say|Tras ver el voto de Damian, ¿qué responsabilidad exiges? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Archivo familiar
-⟦BG|bg_a_c06s01|Archivo familiar；Personajes presentes：Tú, Damian；Acción：Un acta de hace tres años detalla el plan para controlar las alianzas de tu estudio. El voto decisivo fue el de Damian.⟧
+⟦BG|bg_a_c06s01|Archivo familiar⟧
 ⟦TIME|21:30⟧
-Narración: El tercer día tras la boda. Archivo familiar.
+Narración: El tercer día después de la boda — Archivo familiar.
 ⟦IF|a_c05_a⟧
-Narración: Damian reconoce la atracción sin dar por hecho el perdón.
+Narración: Promete entregar los antiguos votos; la intimidad no justifica ocultaciones.
 ⟦/IF⟧
 ⟦IF|a_c05_b⟧
-Narración: Se conserva la imagen y se busca su origen.
+Narración: Detiene su gestión privada de prensa y ayuda a preservar las fotos furtivas.
 ⟦/IF⟧
 ⟦IF|a_c05_c⟧
-Narración: Damian mantiene la distancia y habla solo de las pruebas.
+Narración: Retira su acercamiento y respeta en adelante la distancia que pides.
 ⟦/IF⟧
-Narración: Un acta de hace tres años detalla el plan para controlar las alianzas de tu estudio.
-Narración: El voto decisivo fue el de Damian.
-Damian: “Sí. Es mi firma. Sabía lo que significaba aquella propuesta.”
+Narración: Clasificar iconos antes de revisar los votos: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: Junto a la fotocopiadora hay un registro de votación del consejo de hace tres años: desde entonces se controlaría la colaboración de tu estudio. El voto decisivo fue el de Damian.
+Abogado: “No pasó por alto el documento. Votó personalmente a favor.”
+Abogado: “¿Quieres ver primero la grabación de la reunión o llamamos a Damian para que responda?”
 ⟦FREE⟧
-Narración: Próxima escena: Garaje subterráneo.
+Narración: En la puerta, Damian pierde por fin su habitual aplomo.
 
 # SCENE｜Garaje subterráneo
-⟦BG|bg_a_c06s02|Garaje subterráneo；Personajes presentes：Tú, Damian；Acción：La lluvia gotea de su abrigo mientras se quita la insignia del consejo. La deja a tu alcance.⟧
+⟦BG|bg_a_c06s02|Garaje subterráneo⟧
 ⟦TIME|21:55⟧
-Narración: Poco después. Garaje subterráneo.
-Narración: La lluvia gotea de su abrigo mientras se quita la insignia del consejo.
-Narración: La deja a tu alcance.
-Damian: “Creí que conservando mi puesto podría arreglarlo después. Me equivoqué.”
+Narración: Un poco después — Garaje subterráneo.
+Narración: Damian reconoce que el miedo a perder el control le impidió frenar el plan familiar de vincular tu proyecto al compromiso. La lluvia gotea de su caro abrigo. Le tiembla la mano al quitarse la insignia del consejo: una admisión más real que cualquier declaración de amor.
+Damian: “Me gustaste aquella noche. Después fui yo quien te dejó entrar en esta trampa.”
+Damian: “¿Quieres que dimita, que testifique o que no vuelva a buscarte después de esta noche?”
 ⟦FREE⟧
-Narración: Próxima escena: Entrada de la finca.
+Narración: Deja la insignia a tu alcance sin decidir por ti.
 
 # SCENE｜Entrada de la finca
-⟦BG|bg_a_c06s03|Entrada de la finca；Personajes presentes：Tú, Ethan；Acción：Ethan sostiene dos billetes de luna de miel y muestra un vídeo sin sonido de Damian firmando.⟧
+⟦BG|bg_a_c06s03|Entrada de la finca⟧
 ⟦TIME|22:20⟧
-Narración: Poco después. Entrada de la finca.
-Narración: Ethan sostiene dos billetes de luna de miel y muestra un vídeo sin sonido de Damian firmando.
-Ethan: “Lo sabía antes de que te pidiera matrimonio. Pregúntale qué más sabía.”
+Narración: Un poco después — Entrada de la finca.
+Narración: Ordenar registros de viaje junto al acceso: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo.
+⟦MG|g_slide_photo⟧
+Narración: Ethan se apoya en su coche con dos billetes hacia la ciudad prevista para vuestra luna de miel.
+Ethan: “Mi hermano dirá que te quiere. A mí me interesa cuánto valía ese amor para él.”
+Ethan: “¿Escucharás la otra mitad de lo que pasó hace tres años?”
 ⟦FREE⟧
+Narración: Te muestra una grabación de vigilancia sin sonido donde Damian está firmando.
 ⟦SET|a_c06_event⟧
 
-# CHOICE｜¿Fue realmente casual vuestro primer encuentro?
-#### A｜Exigir que Damian abandone su responsabilidad sobre el estudio
-Narración: La renuncia se convierte en una condición de rendición de cuentas.
+# CHOICE｜Tras ver el voto de Damian, ¿qué responsabilidad exiges?
+#### A｜Pedirle que deje el cargo que supervisa tu estudio
+Narración: Solicita apartarse ante el consejo y pierde el poder de intervenir directamente.
 ⟦OPT|A|set:a_c06_a⟧
-#### B｜Pedir una admisión pública
-Narración: Su participación queda documentada.
+#### B｜Hacer que admita públicamente el acuerdo económico de entonces
+Narración: Su admisión escrita llega al abogado y permite verificar la votación.
 ⟦OPT|B|set:a_c06_b⟧
-#### C｜Suspender conversaciones privadas e investigar por tu cuenta
-Narración: La investigación sale del control familiar.
+#### C｜Rechazar conversaciones privadas e investigar los viejos registros por tu cuenta
+Narración: El abogado obtiene todo el material; Damian no puede seleccionar qué mostrarte.
 ⟦OPT|C|set:a_c06_c⟧
 # ·
-Narración: ¿Fue realmente casual vuestro primer encuentro?
+Narración: ¿Cuántas consecuencias siguen ocultas en aquel voto?
 
 # CHAPTER 7｜Un nombre bajo la lluvia
-⟦GOAL|Comprender lo ocurrido en «Un nombre bajo la lluvia» y decidir el siguiente paso.|Un nombre bajo la lluvia⟧
-⟦DONE|flag|a_c07_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «Un nombre bajo la lluvia», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Alguien accedió a la foto de lluvia. ¿Qué pista sigues primero?|Un nombre bajo la lluvia⟧
+⟦DONE|flag|a_c07_event|Observar el cambio clave|Narración: En el monitor aparece fugazmente un pendiente de perla idéntico a los que suele llevar Eleanor.⟧
+⟦DONE|say|Alguien accedió a la foto de lluvia. ¿Qué pista sigues primero? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Vestíbulo del antiguo hotel
-⟦BG|bg_a_c07s01|Vestíbulo del antiguo hotel；Personajes presentes：Tú, Damian；Acción：Aún cuelgan fotos del rescate. El gerente reconoce la imagen de tu tacón roto.⟧
+⟦BG|bg_a_c07s01|Vestíbulo del antiguo hotel⟧
 ⟦TIME|14:00⟧
-Narración: Al día siguiente. Vestíbulo del antiguo hotel.
+Narración: Un día más tarde — Vestíbulo del antiguo hotel.
 ⟦IF|a_c06_a⟧
-Narración: La renuncia se convierte en una condición de rendición de cuentas.
+Narración: Solicita apartarse ante el consejo y pierde el poder de intervenir directamente.
 ⟦/IF⟧
 ⟦IF|a_c06_b⟧
-Narración: Su participación queda documentada.
+Narración: Su admisión escrita llega al abogado y permite verificar la votación.
 ⟦/IF⟧
 ⟦IF|a_c06_c⟧
-Narración: La investigación sale del control familiar.
+Narración: El abogado obtiene todo el material; Damian no puede seleccionar qué mostrarte.
 ⟦/IF⟧
-Narración: Aún cuelgan fotos del rescate.
-Narración: El gerente reconoce la imagen de tu tacón roto.
-Damian: “Aquella noche no estuvo planeada. Lo que vino después, sí.”
+Narración: Preparar un índice para el registro del hotel: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_memory⟧
+Narración: El viejo hotel conserva fotografías del rescate voluntario de aquel año. El responsable de recepción reconoce la foto de tu tacón roto.
+Responsable de recepción: “Aquella noche cediste tu ambulancia a otra persona. Ese hombre te esperó hasta el amanecer.”
+Responsable de recepción: “¿Consultas el registro de entonces o conoces primero al conductor rescatado?”
 ⟦FREE⟧
-Narración: Próxima escena: Escalera del hotel.
+Narración: Del fondo de un armario saca un registro que alguien ya había fotocopiado.
 
 # SCENE｜Escalera del hotel
-⟦BG|bg_a_c07s02|Escalera del hotel；Personajes presentes：Tú, Damian；Acción：Recuerda el bocadillo frío que compartisteis y tu alias, June. Sonríe un instante antes de recordar el voto.⟧
+⟦BG|bg_a_c07s02|Escalera del hotel⟧
 ⟦TIME|14:25⟧
-Narración: Poco después. Escalera del hotel.
-Narración: Recuerda el bocadillo frío que compartisteis y tu alias, June.
-Narración: Sonríe un instante antes de recordar el voto.
-Damian: “Recordé a June mucho después de conocer tu nombre verdadero.”
+Narración: Un poco después — Escalera del hotel.
+Narración: Damian recuerda el sándwich frío compartido en los escalones y tu alias, June. Sonríe medio segundo al recordar la lluvia, luego se contiene al pensar en las decisiones que tomó después.
+Damian: “Pensé en buscarte. Entonces vi las fotos de la pedida de Ethan.”
+Damian: “¿Quieres saber por qué no aparecí o por qué ni siquiera te advertí?”
 ⟦FREE⟧
-Narración: Próxima escena: Sala de vigilancia.
+Narración: Su móvil recibe una petición de ayuda del archivero encargado de la vieja foto que fue retirada.
 
 # SCENE｜Sala de vigilancia
-⟦BG|bg_a_c07s03|Sala de vigilancia；Personajes presentes：Tú, Damian；Acción：El archivo fue exportado una semana antes de la pedida mediante la cuenta administrativa familiar. En el vídeo antiguo brilla un pendiente de perla.⟧
+⟦BG|bg_a_c07s03|Sala de vigilancia⟧
 ⟦TIME|14:50⟧
-Narración: Poco después. Sala de vigilancia.
-Narración: El archivo fue exportado una semana antes de la pedida mediante la cuenta administrativa familiar.
-Narración: En el vídeo antiguo brilla un pendiente de perla.
-Damian: “Alguien nos buscó. Tenemos que averiguar quién.”
+Narración: Un poco después — Sala de vigilancia.
+Narración: Recordar el orden de revisión antes de entrar: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo.
+⟦MG|g_simon_lights⟧
+Narración: El archivero muestra los registros: la foto se exportó una semana antes de la pedida de Ethan mediante la cuenta administrativa familiar.
+Archivero: “Alguien os estaba asignando puestos a los tres desde el principio.”
+Archivero: “¿Te llevas una copia de los registros o pedimos a la policía que preserve primero el disco duro original?”
 ⟦FREE⟧
+Narración: En el monitor aparece fugazmente un pendiente de perla idéntico a los que suele llevar Eleanor.
+Narración: La tarea real es contrastar la hora y el dispositivo de exportación de la foto.
 ⟦SET|a_c07_event⟧
 
-# CHOICE｜¿Quién llevaba los pendientes de perlas?
-#### A｜Localizar al conductor al que ayudaste
-Narración: Se identifica a un testigo del encuentro.
+# CHOICE｜Alguien accedió a la foto de lluvia. ¿Qué pista sigues primero?
+#### A｜Conocer al conductor rescatado
+Narración: Acepta testificar y aclara las circunstancias reales de tu encuentro con Damian.
 ⟦OPT|A|set:a_c07_a⟧
-#### B｜Rastrear la cuenta administrativa
-Narración: Los registros de acceso pasan a ser una pista clave.
+#### B｜Rastrear quién usó la cuenta administrativa familiar
+Narración: El archivero preserva cuenta y dispositivos, conectando la cronología.
 ⟦OPT|B|set:a_c07_b⟧
-#### C｜Pedir todos los registros de Damian
-Narración: Su versión puede contrastarse con pruebas independientes.
+#### C｜Exigir a Damian todos sus registros de contacto de entonces
+Narración: Entrega datos de contacto nunca enviados y facturas del hotel; no bastan recuerdos románticos.
 ⟦OPT|C|set:a_c07_c⟧
 # ·
-Narración: ¿Quién llevaba los pendientes de perlas?
+Narración: ¿Quién empezó a registrar vuestras vidas tan pronto?
 
 # CHAPTER 8｜La infidelidad era un montaje
-⟦GOAL|Comprender lo ocurrido en «La infidelidad era un montaje» y decidir el siguiente paso.|La infidelidad era un montaje⟧
-⟦DONE|flag|a_c08_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La infidelidad era un montaje», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Ethan admite que fingió la infidelidad. ¿Cómo actúas?|La infidelidad era un montaje⟧
+⟦DONE|flag|a_c08_event|Observar el cambio clave|Narración: La ayudante de Eleanor entrega una amenaza: si sigues investigando, publicarán las fotos de la terraza.⟧
+⟦DONE|say|Ethan admite que fingió la infidelidad. ¿Cómo actúas? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Estudio fotográfico privado
-⟦BG|bg_a_c08s01|Estudio fotográfico privado；Personajes presentes：Tú, Claire；Acción：Claire, la mujer de dorado, deja un contrato sobre la mesa. Ethan la contrató para fingir ser su amante. Está furiosa por el uso de las imágenes.⟧
+⟦BG|bg_a_c08s01|Estudio fotográfico privado⟧
 ⟦TIME|16:00⟧
-Narración: Más tarde ese día. Estudio fotográfico privado.
+Narración: El cuarto día — Estudio fotográfico privado.
 ⟦IF|a_c07_a⟧
-Narración: Se identifica a un testigo del encuentro.
+Narración: Acepta testificar y aclara las circunstancias reales de tu encuentro con Damian.
 ⟦/IF⟧
 ⟦IF|a_c07_b⟧
-Narración: Los registros de acceso pasan a ser una pista clave.
+Narración: El archivero preserva cuenta y dispositivos, conectando la cronología.
 ⟦/IF⟧
 ⟦IF|a_c07_c⟧
-Narración: Su versión puede contrastarse con pruebas independientes.
+Narración: Entrega datos de contacto nunca enviados y facturas del hotel; no bastan recuerdos románticos.
 ⟦/IF⟧
-Narración: Claire, la mujer de dorado, deja un contrato sobre la mesa.
-Narración: Ethan la contrató para fingir ser su amante.
-Narración: Está furiosa por el uso de las imágenes.
-Claire: “Me contrataron para actuar, no para destrozarte la vida.”
+Narración: Revisar iconos de rodaje en el plató: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: La mujer de dorado arroja sobre la mesa el contrato de rodaje: Ethan le pagó para fingir ser su amante. No parece satisfecha, sino enfadada.
+Claire: “Creía que era un reality previo a la boda. Nadie me dijo que tú lo verías.”
+Claire: “¿Quieres mi vídeo original o firmamos una declaración que me permita testificar públicamente?”
 ⟦FREE⟧
-Narración: Próxima escena: Despacho de Ethan.
+Narración: En la última página, junto a la firma de Ethan, hay otra de un organizador de la boda.
 
 # SCENE｜Despacho de Ethan
-⟦BG|bg_a_c08s02|Despacho de Ethan；Personajes presentes：Tú, Ethan；Acción：Muestra disculpas sin terminar y el vídeo del voto de su hermano. Intenta alcanzarte la manga, pero se detiene.⟧
+⟦BG|bg_a_c08s02|Despacho de Ethan⟧
 ⟦TIME|16:25⟧
-Narración: Poco después. Despacho de Ethan.
-Narración: Muestra disculpas sin terminar y el vídeo del voto de su hermano.
-Narración: Intenta alcanzarte la manga, pero se detiene.
-Ethan: “Quería que me eligieras. Y acabé provocando lo peor.”
+Narración: Un poco después — Despacho de Ethan.
+Narración: Ethan admite por fin que el beso fue una puesta en escena. No dice que fuera por tu bien: te enseña las disculpas que escribió y borró una y otra vez. Intenta agarrarte la manga, ve tu expresión y finalmente te suelta.
+Ethan: “Quería darte celos. Aposté a que me elegirías y perdí.”
+Ethan: “¿Qué castigo sería justo? Al menos no me dejes volver a definir la justicia por ti.”
 ⟦FREE⟧
-Narración: Próxima escena: Sala de proyección.
+Narración: Abre un archivo cifrado con un fragmento de su hermano participando en el plan familiar.
 
 # SCENE｜Sala de proyección
-⟦BG|bg_a_c08s03|Sala de proyección；Personajes presentes：Tú, Ethan；Acción：El vídeo muestra solo el voto favorable de Damian. Los metadatos revelan que se editó ayer.⟧
+⟦BG|bg_a_c08s03|Sala de proyección⟧
 ⟦TIME|16:50⟧
-Narración: Poco después. Sala de proyección.
-Narración: El vídeo muestra solo el voto favorable de Damian.
-Narración: Los metadatos revelan que se editó ayer.
-Ethan: “La grabación completa sigue aquí. Te la daré.”
+Narración: Un poco después — Sala de proyección.
+Narración: Ordenar números de material en la sala de proyección: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo.
+⟦MG|g_slide_photo⟧
+Narración: El vídeo solo muestra el instante en que Damian votó a favor; lo anterior y lo posterior están cortados. Las propiedades del archivo indican que se modificó ayer.
+Damian: “Firmé. Pero alguien borró mi oposición posterior.”
+Damian: “¿Quieres comprobar el original completo o que lo lleve y responda a las preguntas?”
 ⟦FREE⟧
+Narración: La ayudante de Eleanor entrega una amenaza: si sigues investigando, publicarán las fotos de la terraza.
 ⟦SET|a_c08_event⟧
 
-# CHOICE｜¿Quién editó el vídeo y por qué ahora?
-#### A｜Exigir que Ethan admita públicamente el montaje
-Narración: El contrato de Claire respalda una rectificación.
+# CHOICE｜Ethan admite que fingió la infidelidad. ¿Cómo actúas?
+#### A｜Exigir que reconozca públicamente el montaje
+Narración: Envía una rectificación a los organizadores; el escándalo ya no recae solo sobre ti.
 ⟦OPT|A|set:a_c08_a⟧
-#### B｜Conservar el vídeo sin editar
-Narración: El original queda disponible para una revisión independiente.
+#### B｜Conservar el vídeo completo y sin editar que entrega
+Narración: El abogado obtiene el original íntegro y no solo fragmentos contra Damian.
 ⟦OPT|B|set:a_c08_b⟧
-#### C｜Rechazar otro intento de provocar celos
-Narración: Ethan pierde el montaje como pretexto para verte a solas.
+#### C｜Rechazar que vuelva a acercarse provocando celos
+Narración: Deja los mensajes de coqueteo y la conversación pasa a pruebas y responsabilidades.
 ⟦OPT|C|set:a_c08_c⟧
 # ·
-Narración: ¿Quién editó el vídeo y por qué ahora?
+Narración: Si la infidelidad era teatro, ¿quién convirtió tu vida real en un negocio?
 
 # CHAPTER 9｜El precio de un beso
-⟦GOAL|Comprender lo ocurrido en «El precio de un beso» y decidir el siguiente paso.|El precio de un beso⟧
-⟦DONE|flag|a_c09_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «El precio de un beso», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Cómo respondes al chantaje sobre tu vida privada?|El precio de un beso⟧
+⟦DONE|flag|a_c09_event|Observar el cambio clave|Narración: Un comentario anónimo advierte: «Las perlas recuerdan cada confesión».⟧
+⟦DONE|say|¿Cómo respondes al chantaje sobre tu vida privada? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜estudio fotográfico
-⟦BG|bg_a_c09s01|estudio fotográfico；Personajes presentes：Tú, Ethan；Acción：Circulan fotos de la terraza con un titular que te acusa de casarte por dinero. El equipo protege a los modelos de las cámaras.⟧
+⟦BG|bg_a_c09s01|estudio fotográfico⟧
 ⟦TIME|11:00⟧
-Narración: A la mañana siguiente. estudio fotográfico.
+Narración: El quinto día — estudio fotográfico.
 ⟦IF|a_c08_a⟧
-Narración: El contrato de Claire respalda una rectificación.
+Narración: Envía una rectificación a los organizadores; el escándalo ya no recae solo sobre ti.
 ⟦/IF⟧
 ⟦IF|a_c08_b⟧
-Narración: El original queda disponible para una revisión independiente.
+Narración: El abogado obtiene el original íntegro y no solo fragmentos contra Damian.
 ⟦/IF⟧
 ⟦IF|a_c08_c⟧
-Narración: Ethan pierde el montaje como pretexto para verte a solas.
+Narración: Deja los mensajes de coqueteo y la conversación pasa a pruebas y responsabilidades.
 ⟦/IF⟧
-Narración: Circulan fotos de la terraza con un titular que te acusa de casarte por dinero.
-Narración: El equipo protege a los modelos de las cámaras.
-Ethan: “No pensé que fueran a atacar también a quienes trabajan contigo.”
+Narración: Preparar registros de contactos del estudio: Toca los iconos 📵 y evita 💬; intenta acertar diez veces en veinte segundos. Puedes saltarlo.
+⟦MG|g_whack_texts⟧
+Narración: La foto de la terraza aparece en internet con un titular que te acusa de huir de la boda por dinero. Tus compañeros ponen un maniquí ante la cámara para impedir fotos furtivas. La sonrisa de Ethan se derrumba: ve por primera vez el daño real de su juego.
+Mia: “No están comentando con quién sales. Están destruyendo nuestros pedidos.”
+Mia: “¿Quieres hablar tú o que el estudio publique primero solo los hechos sobre derechos de autor?”
 ⟦FREE⟧
-Narración: Próxima escena: Despacho de Damian.
+Narración: Tu abogado llama: la cuenta anónima utiliza el servidor del sistema de la boda.
+Narración: La tarea real es identificar el origen de publicación de la foto furtiva.
 
 # SCENE｜Despacho de Damian
-⟦BG|bg_a_c09s02|Despacho de Damian；Personajes presentes：Tú, Damian；Acción：Cierra un correo de prensa sin enviar, deja el móvil y entrega sus actas anotadas.⟧
+⟦BG|bg_a_c09s02|Despacho de Damian⟧
 ⟦TIME|11:25⟧
-Narración: Poco después. Despacho de Damian.
-Narración: Cierra un correo de prensa sin enviar, deja el móvil y entrega sus actas anotadas.
-Damian: “Tú decides cómo responder. Aquí tienes el documento original.”
+Narración: Un poco después — Despacho de Damian.
+Narración: Damian prepara una orden a relaciones públicas para silenciar la noticia. Al verte entrar, cierra un correo sin enviar. Deja el teléfono en lugar de llamar por ti y espera tu propia propuesta.
+Damian: “Otra vez quería resolverlo por ti. Casi repito el mismo error.”
+Damian: “¿Quieres que haga público mi voto o que te devuelva las pruebas?”
 ⟦FREE⟧
-Narración: Próxima escena: Estudio de emisión independiente.
+Narración: Te entrega el documento original del consejo con sus anotaciones manuscritas, sin conservar copia.
 
 # SCENE｜Estudio de emisión independiente
-⟦BG|bg_a_c09s03|Estudio de emisión independiente；Personajes presentes：Tú, Mia；Acción：Ningún hermano aparece ante la cámara. Un comentario anónimo menciona perlas y confesiones. El abogado confirma la implicación del servidor nupcial.⟧
+⟦BG|bg_a_c09s03|Estudio de emisión independiente⟧
 ⟦TIME|11:50⟧
-Narración: Poco después. Estudio de emisión independiente.
-Narración: Ningún hermano aparece ante la cámara.
-Narración: Un comentario anónimo menciona perlas y confesiones.
-Narración: El abogado confirma la implicación del servidor nupcial.
-Mia: “Podemos aclarar lo ocurrido sin exponer tu vida privada.”
+Narración: Un poco después — Estudio de emisión independiente.
+Narración: Reconocer iconos de cámara antes de emitir: Toca los iconos 📸 y evita 🙂; intenta acertar diez veces en veinte segundos. Puedes saltarlo.
+⟦MG|g_whack_flash⟧
+Narración: Te colocas ante el fondo vacío de la emisión. Las luces apuntan a la vieja foto utilizada contra ti. Ni Ethan ni Damian se sientan ante la cámara.
+Periodista independiente: “Esta historia es tuya, no de los hermanos.”
+Periodista independiente: “¿Aclaramos primero los rumores sentimentales o hablamos directamente con los documentos del estudio?”
 ⟦FREE⟧
+Narración: Un comentario anónimo advierte: «Las perlas recuerdan cada confesión».
 ⟦SET|a_c09_event⟧
 
-# CHOICE｜¿Quién utilizó el servidor de la boda para atacarte?
-#### A｜Explicar la suspensión con tus propias palabras
-Narración: El público recibe tu versión, no la familiar.
+# CHOICE｜¿Cómo respondes al chantaje sobre tu vida privada?
+#### A｜Publicar desde tu cuenta los hechos de la suspensión
+Narración: Emites tú el comunicado y la prensa tiene una oportunidad menos de definir tu relación.
 ⟦OPT|A|set:a_c09_a⟧
-#### B｜Conservar los registros del servidor y proceder legalmente
-Narración: Las pruebas técnicas quedan a disposición del abogado.
+#### B｜Demandar primero al filtrador y preservar el servidor
+Narración: El abogado independiente protege las pruebas, dificultando que el anónimo las borre o cambie.
 ⟦OPT|B|set:a_c09_b⟧
-#### C｜Hablar solo de los derechos de tu obra
-Narración: Los detalles de la relación siguen siendo privados.
+#### C｜No revelar relaciones privadas y hablar solo de los derechos de tus obras
+Narración: El equipo publica una declaración de titularidad; la intimidad deja de ser condición de negociación.
 ⟦OPT|C|set:a_c09_c⟧
 # ·
-Narración: ¿Quién utilizó el servidor de la boda para atacarte?
+Narración: ¿Por qué el anónimo tiene vigilancia interna?
 
 # CHAPTER 10｜La rivalidad del hermano menor
-⟦GOAL|Comprender lo ocurrido en «La rivalidad del hermano menor» y decidir el siguiente paso.|La rivalidad del hermano menor⟧
-⟦DONE|flag|a_c10_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La rivalidad del hermano menor», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Con los registros de acceso, ¿a quién responsabilizas primero?|La rivalidad del hermano menor⟧
+⟦DONE|flag|a_c10_event|Observar el cambio clave|Narración: Te acerca una pila de contratos cuya portada lleva el nuevo nombre de tu estudio.⟧
+⟦DONE|say|Con los registros de acceso, ¿a quién responsabilizas primero? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Sala de billar
-⟦BG|bg_a_c10s01|Sala de billar；Personajes presentes：Tú, Ethan；Acción：Ethan sostiene el taco al revés y admite que odiaba que lo compararan con su hermano.⟧
+⟦BG|bg_a_c10s01|Sala de billar⟧
 ⟦TIME|15:00⟧
-Narración: El sexto día. Sala de billar.
+Narración: El sexto día — Sala de billar.
 ⟦IF|a_c09_a⟧
-Narración: El público recibe tu versión, no la familiar.
+Narración: Emites tú el comunicado y la prensa tiene una oportunidad menos de definir tu relación.
 ⟦/IF⟧
 ⟦IF|a_c09_b⟧
-Narración: Las pruebas técnicas quedan a disposición del abogado.
+Narración: El abogado independiente protege las pruebas, dificultando que el anónimo las borre o cambie.
 ⟦/IF⟧
 ⟦IF|a_c09_c⟧
-Narración: Los detalles de la relación siguen siendo privados.
+Narración: El equipo publica una declaración de titularidad; la intimidad deja de ser condición de negociación.
 ⟦/IF⟧
-Narración: Ethan sostiene el taco al revés y admite que odiaba que lo compararan con su hermano.
-Ethan: “Quería ganar. Dejé de preguntarme si te haría daño.”
+Narración: Indexar material de administrador en la sala de billar: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: Ethan sostiene el taco al revés, como un niño esperando un castigo. Dice que nunca aceptó vivir a la sombra de su hermano.
+Ethan: “Te quise. También quería ganarle. Ambas cosas son verdad.”
+Ethan: “¿Me escuchas hasta el final o te entrego primero la contraseña de la cuenta?”
 ⟦FREE⟧
-Narración: Próxima escena: Sala de control del sistema nupcial.
+Narración: Deja la credencial de administrador del sistema de invitados sobre la mesa de billar.
 
 # SCENE｜Sala de control del sistema nupcial
-⟦BG|bg_a_c10s02|Sala de control del sistema nupcial；Personajes presentes：Tú, Ethan；Acción：La oficina administrativa familiar subió el vídeo oculto. El dispositivo de exportación pertenece a la secretaria de Eleanor.⟧
+⟦BG|bg_a_c10s02|Sala de control del sistema nupcial⟧
 ⟦TIME|15:25⟧
-Narración: Poco después. Sala de control del sistema nupcial.
-Narración: La oficina administrativa familiar subió el vídeo oculto.
-Narración: El dispositivo de exportación pertenece a la secretaria de Eleanor.
-Ethan: “Esa es la cuenta. No puedo fingir que no contribuí a esto.”
+Narración: Un poco después — Sala de control del sistema nupcial.
+Narración: Ethan abre todos los registros de acceso. Las grabaciones furtivas fueron subidas por la oficina administrativa familiar, disfrazadas de sorpresa de boda. Su broma se apaga en los labios; solo queda una disculpa tardía.
+Administrador del sistema: “La orden de borrado no alcanzó la copia sin conexión. Aquí podemos recuperarla.”
+Administrador del sistema: “¿La conservamos para tu abogado o hacemos que Ethan explique ahora su responsabilidad?”
 ⟦FREE⟧
-Narración: Próxima escena: Salón de té de Eleanor.
+Narración: El número del dispositivo de exportación señala el escritorio de la secretaria privada de Eleanor.
+Narración: La tarea real es recuperar los registros del sistema de invitados.
 
 # SCENE｜Salón de té de Eleanor
-⟦BG|bg_a_c10s03|Salón de té de Eleanor；Personajes presentes：Tú, Eleanor；Acción：Ethan se enfrenta a su madre, que remueve el té con calma ante el registro de exportación.⟧
+⟦BG|bg_a_c10s03|Salón de té de Eleanor⟧
 ⟦TIME|15:50⟧
-Narración: Poco después. Salón de té de Eleanor.
-Narración: Ethan se enfrenta a su madre, que remueve el té con calma ante el registro de exportación.
-Eleanor: “Las familias protegen sus intereses. Tu estudio formaba parte de los nuestros.”
+Narración: Un poco después — Salón de té de Eleanor.
+Narración: Practicar pasos de revisión antes de la reunión del té: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo.
+⟦MG|g_simon_lights⟧
+Narración: Ethan interpela a su madre con la voz temblando. Eleanor solo remueve lentamente el té.
+Eleanor: “Querías vencer a tu hermano y te ayudé. ¿Ahora me culpas?”
+Eleanor: “¿Quieres mi definición del amor o prefieres ver las cuentas de vuestra empresa?”
 ⟦FREE⟧
+Narración: Te acerca una pila de contratos cuya portada lleva el nuevo nombre de tu estudio.
 ⟦SET|a_c10_event⟧
 
-# CHOICE｜¿Qué quería adquirir Eleanor mediante la boda?
-#### A｜Exigir una disculpa formal a ti y al equipo
-Narración: Ethan debe reconocer el daño causado.
+# CHOICE｜Con los registros de acceso, ¿a quién responsabilizas primero?
+#### A｜Exigir a Ethan una disculpa formal ante ti y el equipo
+Narración: Su disculpa entra en el expediente y los empleados oyen admisiones concretas.
 ⟦OPT|A|set:a_c10_a⟧
-#### B｜Encargar una auditoría independiente
-Narración: Los registros se revisan fuera de la familia.
+#### B｜Encargar a una entidad independiente que contraste todos los registros de administrador
+Narración: Los registros preservados muestran que el despacho de Eleanor subió el material furtivo.
 ⟦OPT|B|set:a_c10_b⟧
-#### C｜Enfrentarse a Eleanor con el registro
-Narración: Su versión se conserva para contrastarla con otras pruebas.
+#### C｜Contrastar personalmente con Eleanor los registros de exportación
+Narración: Su explicación queda registrada y no puede negar después que lo sabía.
 ⟦OPT|C|set:a_c10_c⟧
 # ·
-Narración: ¿Qué quería adquirir Eleanor mediante la boda?
+Narración: Los registros conducen a Eleanor. ¿Cuánto te ha quitado?
 
 # CHAPTER 11｜El estudio que te arrebataron
-⟦GOAL|Comprender lo ocurrido en «El estudio que te arrebataron» y decidir el siguiente paso.|El estudio que te arrebataron⟧
-⟦DONE|flag|a_c11_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «El estudio que te arrebataron», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Al descubrir la autorización falsa, ¿qué haces primero?|El estudio que te arrebataron⟧
+⟦DONE|flag|a_c11_event|Observar el cambio clave|Narración: Un correo de un cliente de hace dos años revela que la familia te pidió dejar de buscar contactos externos.⟧
+⟦DONE|say|Al descubrir la autorización falsa, ¿qué haces primero? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Archivador jurídico del estudio
-⟦BG|bg_a_c11s01|Archivador jurídico del estudio；Personajes presentes：Tú, Mia；Acción：Una licencia perpetua escaneada lleva una firma que no es tuya y un sello antiguo destinado a una prueba limitada.⟧
+⟦BG|bg_a_c11s01|Archivador jurídico del estudio⟧
 ⟦TIME|10:00⟧
-Narración: El séptimo día. Archivador jurídico del estudio.
+Narración: El séptimo día — Archivador jurídico del estudio.
 ⟦IF|a_c10_a⟧
-Narración: Ethan debe reconocer el daño causado.
+Narración: Su disculpa entra en el expediente y los empleados oyen admisiones concretas.
 ⟦/IF⟧
 ⟦IF|a_c10_b⟧
-Narración: Los registros se revisan fuera de la familia.
+Narración: Los registros preservados muestran que el despacho de Eleanor subió el material furtivo.
 ⟦/IF⟧
 ⟦IF|a_c10_c⟧
-Narración: Su versión se conserva para contrastarla con otras pruebas.
+Narración: Su explicación queda registrada y no puede negar después que lo sabía.
 ⟦/IF⟧
-Narración: Una licencia perpetua escaneada lleva una firma que no es tuya y un sello antiguo destinado a una prueba limitada.
-Mia: “Ese sello nunca autorizó esto.”
+Narración: Practicar marcadores para documentos jurídicos: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: Encuentras una copia escaneada de una licencia permanente. La firma no es tuya. Sin embargo, abajo a la derecha lleva el antiguo sello que autorizaste para una sola prueba.
+Abogado: “Han convertido una prueba breve en una cesión de propiedad mediante recortes.”
+Abogado: “¿Solicitamos suspender el contrato primero o publicamos el registro completo de creación?”
 ⟦FREE⟧
-Narración: Próxima escena: Despacho del consejo.
+Narración: Detrás de la copia figura el número de un proyecto del holding familiar.
 
 # SCENE｜Despacho del consejo
-⟦BG|bg_a_c11s02|Despacho del consejo；Personajes presentes：Tú, Damian；Acción：Damian presenta una valoración secreta de tu empresa de hace tres años. El precio es insultantemente bajo.⟧
+⟦BG|bg_a_c11s02|Despacho del consejo⟧
 ⟦TIME|10:25⟧
-Narración: Poco después. Despacho del consejo.
-Narración: Damian presenta una valoración secreta de tu empresa de hace tres años.
-Narración: El precio es insultantemente bajo.
-Damian: “Le pusieron precio antes de preguntarte. Dejé que ocurriera.”
+Narración: Un poco después — Despacho del consejo.
+Narración: Damian entrega la valoración secreta de tu empresa de hace tres años, con un precio dolorosamente bajo. Deja el original ante ti y te observa trabajar con admiración tardía, sin afán de posesión.
+Damian: “Calculé el valor de la empresa. No calculé que eso destruiría a una persona.”
+Damian: “¿Explico la valoración a tu equipo o la reconozco primero ante el tribunal?”
 ⟦FREE⟧
-Narración: Próxima escena: Mesas del estudio de madrugada.
+Narración: Sella la contraseña de autorización del consejo en la bolsa de pruebas del abogado, preparándose para dejar de acceder al proyecto.
 
 # SCENE｜Mesas del estudio de madrugada
-⟦BG|bg_a_c11s03|Mesas del estudio de madrugada；Personajes presentes：Tú, Mia；Acción：Los diseñadores ordenan bocetos, correos y prototipos por fecha. Un mensaje antiguo de un cliente evidencia interferencias en tu negocio.⟧
+⟦BG|bg_a_c11s03|Mesas del estudio de madrugada⟧
 ⟦TIME|10:50⟧
-Narración: Poco después. Mesas del estudio de madrugada.
-Narración: Los diseñadores ordenan bocetos, correos y prototipos por fecha.
-Narración: Un mensaje antiguo de un cliente evidencia interferencias en tu negocio.
-Mia: “Estos son nuestros originales. Podemos demostrar quién los creó.”
+Narración: Un poco después — Mesas del estudio de madrugada.
+Narración: Ordenar antes de desplegar el material de diseño: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo.
+⟦MG|g_slide_photo⟧
+Narración: Los diseñadores extienden originales, correos y muestras dibujadas a mano, uno tras otro. La pared se llena de fechas.
+Mia: “No vendimos nuestro trabajo a nadie. Solo confiamos demasiado en ellos.”
+Mia: “¿Empezamos por el primer boceto o buscamos primero la firma original?”
 ⟦FREE⟧
+Narración: Un correo de un cliente de hace dos años revela que la familia te pidió dejar de buscar contactos externos.
 ⟦SET|a_c11_event⟧
 
-# CHOICE｜¿Desde cuándo planeaba la familia apropiarse de tu trabajo?
-#### A｜Solicitar el cese de uso de tus diseños
-Narración: El abogado prepara una reclamación independiente de derechos.
+# CHOICE｜Al descubrir la autorización falsa, ¿qué haces primero?
+#### A｜Pedir al abogado que solicite detener el uso de tus diseños
+Narración: Se exige que los productos familiares dejen de incorporar el material en disputa.
 ⟦OPT|A|set:a_c11_a⟧
-#### B｜Organizar el archivo creativo con el equipo
-Narración: Queda establecida la cronología de creación.
+#### B｜Reunir pruebas de creación con el equipo
+Narración: Se fija la cronología de los originales y la plantilla participa en la reclamación real.
 ⟦OPT|B|set:a_c11_b⟧
-#### C｜Exigir la valoración y el voto
-Narración: La participación de Damian queda registrada, no excusada.
+#### C｜Exigir a Damian que revele la antigua valoración y su voto
+Narración: Ambos pasan al expediente formal; ya no bastan promesas privadas.
 ⟦OPT|C|set:a_c11_c⟧
 # ·
-Narración: ¿Desde cuándo planeaba la familia apropiarse de tu trabajo?
+Narración: ¿Solo te robaron un proyecto?
 
 # CHAPTER 12｜Tus propias pruebas
-⟦GOAL|Comprender lo ocurrido en «Tus propias pruebas» y decidir el siguiente paso.|Tus propias pruebas⟧
-⟦DONE|flag|a_c12_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «Tus propias pruebas», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Cómo respondes al intercambio de matrimonio por acuerdo?|Tus propias pruebas⟧
+⟦DONE|flag|a_c12_event|Observar el cambio clave|Narración: La ventana da al salón donde pronto se celebrará la junta de accionistas.⟧
+⟦DONE|say|¿Cómo respondes al intercambio de matrimonio por acuerdo? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Archivo del estudio
-⟦BG|bg_a_c12s01|Archivo del estudio；Personajes presentes：Tú, Mia；Acción：Los registros originales coinciden con las fechas de la nube. El último testigo es la antigua organizadora de Ethan.⟧
+⟦BG|bg_a_c12s01|Archivo del estudio⟧
 ⟦TIME|18:00⟧
-Narración: El octavo día. Archivo del estudio.
+Narración: El octavo día — Archivo del estudio.
 ⟦IF|a_c11_a⟧
-Narración: El abogado prepara una reclamación independiente de derechos.
+Narración: Se exige que los productos familiares dejen de incorporar el material en disputa.
 ⟦/IF⟧
 ⟦IF|a_c11_b⟧
-Narración: Queda establecida la cronología de creación.
+Narración: Se fija la cronología de los originales y la plantilla participa en la reclamación real.
 ⟦/IF⟧
 ⟦IF|a_c11_c⟧
-Narración: La participación de Damian queda registrada, no excusada.
+Narración: Ambos pasan al expediente formal; ya no bastan promesas privadas.
 ⟦/IF⟧
-Narración: Los registros originales coinciden con las fechas de la nube.
-Narración: El último testigo es la antigua organizadora de Ethan.
-Mia: “Su relato no encaja con nuestros archivos. Esta es la cronología.”
+Narración: Preparar un índice antes de contrastar fechas de la nube: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_memory⟧
+Narración: Los registros originales de diseño coinciden con las horas de envío a la nube. La licencia falsificada no se sostiene técnicamente.
+Abogado independiente: “Esta cadena basta para exigir explicaciones en una investigación formal.”
+Abogado independiente: “¿Testifica toda la plantilla con nombre o la protegemos con declaraciones anónimas?”
 ⟦FREE⟧
-Narración: Próxima escena: Archivo de la empresa de bodas.
+Narración: El último testigo de la lista es el antiguo organizador de boda de Ethan.
+Narración: La tarea real es verificar las fechas de creación de los archivos originales.
 
 # SCENE｜Archivo de la empresa de bodas
-⟦BG|bg_a_c12s02|Archivo de la empresa de bodas；Personajes presentes：Tú, Ethan；Acción：Ethan entrega copias sin conexión. Damian aporta actas antiguas. Un correo ofrece retirar la demanda a cambio de que te cases.⟧
+⟦BG|bg_a_c12s02|Archivo de la empresa de bodas⟧
 ⟦TIME|18:25⟧
-Narración: Poco después. Archivo de la empresa de bodas.
-Narración: Ethan entrega copias sin conexión.
-Narración: Damian aporta actas antiguas.
-Narración: Un correo ofrece retirar la demanda a cambio de que te cases.
-Ethan: “Firmé la autorización para montar aquella escena. No fue un accidente.”
+Narración: Un poco después — Archivo de la empresa de bodas.
+Narración: Ethan entrega personalmente la copia sin conexión del sistema, que incluye su autorización del rodaje fingido. Damian aporta actas antiguas. Empieza a decir que te ayudará y rectifica: pregunta qué declaración necesitas de él.
+Ethan: “Esto demuestra lo estúpido que fui. No volveré a borrarlo.”
+Ethan: “¿Lo presenta todo tu abogado o explicamos cada uno nuestra parte por separado?”
 ⟦FREE⟧
-Narración: Próxima escena: Suite privada de Eleanor.
+Narración: Un correo de la copia propone intercambiar matrimonio por retirada del caso.
 
 # SCENE｜Suite privada de Eleanor
-⟦BG|bg_a_c12s03|Suite privada de Eleanor；Personajes presentes：Tú, Eleanor；Acción：Junto al champán hay un acuerdo: retirar la demanda si reanudas la boda y concedes licencias adicionales.⟧
+⟦BG|bg_a_c12s03|Suite privada de Eleanor⟧
 ⟦TIME|18:50⟧
-Narración: Poco después. Suite privada de Eleanor.
-Narración: Junto al champán hay un acuerdo: retirar la demanda si reanudas la boda y concedes licencias adicionales.
-Eleanor: “Una firma y se acabará todo este disgusto.”
+Narración: Un poco después — Suite privada de Eleanor.
+Narración: Ordenar cláusulas antes de la reunión en la suite: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: Eleanor coloca un acuerdo junto al champán: si vuelves a la boda y firmas una autorización adicional, retirará su demanda. Mantiene el dedo sobre el papel como si el matrimonio fuera un contrato que pudiera volver a tasarse.
+Eleanor: “Quieres amor, respetabilidad y empresa. ¿Quién consigue las tres cosas?”
+Eleanor: “¿Explico aquí cada cláusula o dejamos que tu abogado las fotografíe?”
 ⟦FREE⟧
+Narración: La ventana da al salón donde pronto se celebrará la junta de accionistas.
 ⟦SET|a_c12_event⟧
 
-# CHOICE｜¿Renunciará alguno de los hermanos al poder cuando le cueste algo?
-#### A｜Rechazar la oferta y conservar el acuerdo
-Narración: La propuesta de intercambio se convierte en prueba.
+# CHOICE｜¿Cómo respondes al intercambio de matrimonio por acuerdo?
+#### A｜Rechazarlo de inmediato y conservar el documento
+Narración: Se convierte en prueba de que ella vincula matrimonio y propiedad.
 ⟦OPT|A|set:a_c12_a⟧
-#### B｜Exigir negociaciones formales a través del abogado
-Narración: No se celebra un acuerdo matrimonial privado.
+#### B｜Exigir negociación formal únicamente mediante abogados
+Narración: La presión privada deja de ser una condición y todas las cláusulas quedan registradas.
 ⟦OPT|B|set:a_c12_b⟧
-#### C｜Incluir al equipo en las decisiones
-Narración: Quienes crearon las obras tienen voz.
+#### C｜Incluir a empleados y diseñadores en la decisión
+Narración: El equipo emite una postura conjunta y ya no pueden empujarte sola de vuelta a la boda.
 ⟦OPT|C|set:a_c12_c⟧
 # ·
-Narración: ¿Renunciará alguno de los hermanos al poder cuando le cueste algo?
+Narración: ¿Qué original podría hundir a Eleanor para que quiera cambiar matrimonio por retirada del caso?
 
 # CHAPTER 13｜El hombre que renuncia a la corona
-⟦GOAL|Comprender lo ocurrido en «El hombre que renuncia a la corona» y decidir el siguiente paso.|El hombre que renuncia a la corona⟧
-⟦DONE|flag|a_c13_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «El hombre que renuncia a la corona», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Cómo valoras la dimisión pública de Damian?|El hombre que renuncia a la corona⟧
+⟦DONE|flag|a_c13_event|Observar el cambio clave|Narración: Eleanor se levanta y saca la grabación de vigilancia de la noche de lluvia que escondió durante tres años.⟧
+⟦DONE|say|¿Cómo valoras la dimisión pública de Damian? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Sala de accionistas
-⟦BG|bg_a_c13s01|Sala de accionistas；Personajes presentes：Tú, Damian；Acción：Damian reconoce públicamente su voto decisivo y abandona el puesto del consejo responsable de tu proyecto. Cambia el recuento.⟧
+⟦BG|bg_a_c13s01|Sala de accionistas⟧
 ⟦TIME|11:00⟧
-Narración: El noveno día. Sala de accionistas.
+Narración: El noveno día — Sala de accionistas.
 ⟦IF|a_c12_a⟧
-Narración: La propuesta de intercambio se convierte en prueba.
+Narración: Se convierte en prueba de que ella vincula matrimonio y propiedad.
 ⟦/IF⟧
 ⟦IF|a_c12_b⟧
-Narración: No se celebra un acuerdo matrimonial privado.
+Narración: La presión privada deja de ser una condición y todas las cláusulas quedan registradas.
 ⟦/IF⟧
 ⟦IF|a_c12_c⟧
-Narración: Quienes crearon las obras tienen voz.
+Narración: El equipo emite una postura conjunta y ya no pueden empujarte sola de vuelta a la boda.
 ⟦/IF⟧
-Narración: Damian reconoce públicamente su voto decisivo y abandona el puesto del consejo responsable de tu proyecto.
-Narración: Cambia el recuento.
-Damian: “Voté a favor. No me esconderé detrás del apellido familiar.”
+Narración: Reconocer iconos del recinto antes de la junta: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_gala⟧
+Narración: Damian se acerca al micrófono, reconoce públicamente su voto favorable y renuncia al puesto del consejo responsable de tu proyecto.
+Damian: “Para ganar convertí su nombre en moneda de cambio.”
+Damian: “¿Sigo nombrando a quienes estaban detrás o respondo primero a los accionistas?”
 ⟦FREE⟧
-Narración: Próxima escena: Galería de accionistas.
+Narración: El recuento proyectado cambia de inmediato. Eleanor levanta la voz por primera vez.
 
 # SCENE｜Galería de accionistas
-⟦BG|bg_a_c13s02|Galería de accionistas；Personajes presentes：Tú, Ethan；Acción：Ethan admite ante testigos el beso fingido y la manipulación de la boda. Damian asiente desde lejos.⟧
+⟦BG|bg_a_c13s02|Galería de accionistas⟧
 ⟦TIME|11:25⟧
-Narración: Poco después. Galería de accionistas.
-Narración: Ethan admite ante testigos el beso fingido y la manipulación de la boda.
-Narración: Damian asiente desde lejos.
-Ethan: “Lo hice por celos. Es una explicación, no una excusa.”
+Narración: Un poco después — Galería de accionistas.
+Narración: Ethan reconoce públicamente las fotos fingidas, las grabaciones furtivas y la manipulación de la boda sin mirar a su hermano. Damian te busca entre la gente y solo asiente levemente cuando confirma que lo ves.
+Ethan: “Esta vez no discutiré quién la quiere más. Solo diré lo que hice.”
+Ethan: “¿Entrego todos los archivos originales o elimino antes tu nombre de mi declaración?”
 ⟦FREE⟧
-Narración: Próxima escena: Tribuna.
+Narración: El equipo jurídico custodia ambas declaraciones por separado, sin saldar la responsabilidad de ninguno.
 
 # SCENE｜Tribuna
-⟦BG|bg_a_c13s03|Tribuna；Personajes presentes：Tú, Mia；Acción：El equipo presenta los registros originales de diseño. Los consejeros independientes piden una investigación. Eleanor saca la grabación de la noche de lluvia.⟧
+⟦BG|bg_a_c13s03|Tribuna⟧
 ⟦TIME|11:50⟧
-Narración: Poco después. Tribuna.
-Narración: El equipo presenta los registros originales de diseño.
-Narración: Los consejeros independientes piden una investigación.
-Narración: Eleanor saca la grabación de la noche de lluvia.
-Mia: “Tiene otro vídeo. Veamos el original entero, no su versión.”
+Narración: Un poco después — Tribuna.
+Narración: Practicar el orden del material antes de presentar: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo.
+⟦MG|g_slide_photo⟧
+Narración: Tú y el equipo mostráis los primeros originales y las fechas completas de desarrollo. Los consejeros independientes solicitan una investigación.
+Consejero independiente: “Conservad los originales. Necesitamos pruebas que permitan llegar hasta el final.”
+Consejero independiente: “¿Publicas todo el proceso de diseño o presentas solo lo necesario para acreditar la titularidad?”
 ⟦FREE⟧
+Narración: Eleanor se levanta y saca la grabación de vigilancia de la noche de lluvia que escondió durante tres años.
 ⟦SET|a_c13_event⟧
 
-# CHOICE｜¿Qué ha ocultado Eleanor durante tres años?
-#### A｜Separar la responsabilidad del romance
-Narración: Ninguna admisión equivale al perdón.
+# CHOICE｜¿Cómo valoras la dimisión pública de Damian?
+#### A｜Reconocer que responsabilidad y cambio son distintos
+Narración: Entiende que dimitir es solo el principio y no exige afecto a cambio.
 ⟦OPT|A|set:a_c13_a⟧
-#### B｜Exigir el testimonio completo de Damian
-Narración: Su declaración se incorpora a la investigación.
+#### B｜Exigir que siga compareciendo y relate todos los hechos
+Narración: Entrega testimonio público que hace avanzar la investigación.
 ⟦OPT|B|set:a_c13_b⟧
-#### C｜Mantener el foco en las obras del estudio
-Narración: Las reclamaciones independientes del equipo siguen siendo centrales.
+#### C｜Devolver la atención a tu propia obra
+Narración: La prensa muestra tus originales en lugar de centrarse solo en los celos de los hermanos.
 ⟦OPT|C|set:a_c13_c⟧
 # ·
-Narración: ¿Qué ha ocultado Eleanor durante tres años?
+Narración: Si él lo pierde todo, ¿eso hará que lo ames?
 
 # CHAPTER 14｜La jugada de la matriarca
-⟦GOAL|Comprender lo ocurrido en «La jugada de la matriarca» y decidir el siguiente paso.|La jugada de la matriarca⟧
-⟦DONE|flag|a_c14_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La jugada de la matriarca», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Cómo utilizas la vieja grabación de Eleanor?|La jugada de la matriarca⟧
+⟦DONE|flag|a_c14_event|Observar el cambio clave|Narración: Retiran las luces de boda del jardín y aparecen por primera vez las ramas sin adornos.⟧
+⟦DONE|say|¿Cómo utilizas la vieja grabación de Eleanor? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Despacho de Eleanor
-⟦BG|bg_a_c14s01|Despacho de Eleanor；Personajes presentes：Tú, Eleanor；Acción：Reproduce el vídeo de aquella noche para insinuar un trato impropio. También se te ve esperando en urgencias. Faltan veinte segundos.⟧
+⟦BG|bg_a_c14s01|Despacho de Eleanor⟧
 ⟦TIME|20:00⟧
-Narración: Esa tarde. Despacho de Eleanor.
+Narración: El décimo día — Despacho de Eleanor.
 ⟦IF|a_c13_a⟧
-Narración: Ninguna admisión equivale al perdón.
+Narración: Entiende que dimitir es solo el principio y no exige afecto a cambio.
 ⟦/IF⟧
 ⟦IF|a_c13_b⟧
-Narración: Su declaración se incorpora a la investigación.
+Narración: Entrega testimonio público que hace avanzar la investigación.
 ⟦/IF⟧
 ⟦IF|a_c13_c⟧
-Narración: Las reclamaciones independientes del equipo siguen siendo centrales.
+Narración: La prensa muestra tus originales en lugar de centrarse solo en los celos de los hermanos.
 ⟦/IF⟧
-Narración: Reproduce el vídeo de aquella noche para insinuar un trato impropio.
-Narración: También se te ve esperando en urgencias.
-Narración: Faltan veinte segundos.
-Eleanor: “La gente cree lo que ve.”
+Narración: Concentrarte antes de ver la grabación antigua: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo.
+⟦MG|g_simon_lights⟧
+Narración: Eleanor reproduce la vieja grabación para insinuar tratos indebidos entre Damian y tú. También muestra que esperaste hasta el amanecer fuera de urgencias.
+Eleanor: “Si dejas de perseguir esto, aún puede quedar en familia.”
+Eleanor: “¿Quieres que todos vean el vídeo entero o que el tribunal lo custodie bajo reserva?”
 ⟦FREE⟧
-Narración: Próxima escena: Sala de consultas jurídicas.
+Narración: Tu abogado descubre veinte segundos cortados deliberadamente al final del archivo.
+Narración: La tarea real es comparar la parte recortada de la vieja grabación.
 
 # SCENE｜Sala de consultas jurídicas
-⟦BG|bg_a_c14s02|Sala de consultas jurídicas；Personajes presentes：Tú, Damian；Acción：Damian declara que no impidió las vulneraciones de derechos. Una secretaria entrega los pagos del montaje firmados por Ethan.⟧
+⟦BG|bg_a_c14s02|Sala de consultas jurídicas⟧
 ⟦TIME|20:25⟧
-Narración: Poco después. Sala de consultas jurídicas.
-Narración: Damian declara que no impidió las vulneraciones de derechos.
-Narración: Una secretaria entrega los pagos del montaje firmados por Ethan.
-Damian: “No borres mi nombre de la declaración.”
+Narración: Un poco después — Sala de consultas jurídicas.
+Narración: La carta amenazante de Eleanor llega formalmente. Damian decide presentar su declaración, incluido que no detuvo la infracción entonces. Antes de firmar no te mira, como si entendiera por fin que responsabilizarse no exige público.
+Damian: “Asumiré mi parte. No la cambiaré por un agradecimiento.”
+Damian: “¿Quieres entrar conmigo o que solo coincidamos a través de las declaraciones?”
 ⟦FREE⟧
-Narración: Próxima escena: Pasadizo del jardín.
+Narración: Una secretaria llama y entrega los movimientos de fondos del montaje, firmados por Ethan.
 
 # SCENE｜Pasadizo del jardín
-⟦BG|bg_a_c14s03|Pasadizo del jardín；Personajes presentes：Tú, Ethan；Acción：Ethan te entrega una carpeta transparente con pruebas de su participación. Se ve claramente su firma.⟧
+⟦BG|bg_a_c14s03|Pasadizo del jardín⟧
 ⟦TIME|20:50⟧
-Narración: Poco después. Pasadizo del jardín.
-Narración: Ethan te entrega una carpeta transparente con pruebas de su participación.
-Narración: Se ve claramente su firma.
-Ethan: “No puedo deshacer lo que hice. Puedes usar cada página.”
+Narración: Un poco después — Pasadizo del jardín.
+Narración: Ordenar contactos antes de cruzar el jardín: Toca los iconos 📵 y evita 💬; intenta acertar diez veces en veinte segundos. Puedes saltarlo.
+⟦MG|g_whack_texts⟧
+Narración: Ethan mete en una bolsa transparente todas las pruebas de su participación en los rumores. Su firma se ve claramente.
+Ethan: “Haber perdido tu amor no me da derecho a excusarme.”
+Ethan: “¿Quieres mi última explicación o que me marche en silencio?”
 ⟦FREE⟧
+Narración: Retiran las luces de boda del jardín y aparecen por primera vez las ramas sin adornos.
 ⟦SET|a_c14_event⟧
 
-# CHOICE｜¿Podrá la verdad devolverte tu trabajo sin exigirte el corazón?
-#### A｜Conservar la grabación completa
-Narración: Se contrastan el original y la versión editada.
+# CHOICE｜¿Cómo utilizas la vieja grabación de Eleanor?
+#### A｜Exigir la conservación íntegra del vídeo sin recortes
+Narración: Los veinte segundos ausentes pasan a ser una cuestión probatoria pendiente.
 ⟦OPT|A|set:a_c14_a⟧
-#### B｜Rechazar el matrimonio como condición del acuerdo
-Narración: Eleanor no obtiene el compromiso privado.
+#### B｜Rechazar en persona el intercambio de retirada del caso por matrimonio
+Narración: Su último trato privado fracasa.
 ⟦OPT|B|set:a_c14_b⟧
-#### C｜Exigir declaraciones separadas de ambos hermanos
-Narración: Sus relatos quedan registrados independientemente.
+#### C｜Hacer que Ethan y Damian declaren por separado
+Narración: Sus testimonios independientes quedan fijados; no pueden echarse la culpa mutuamente.
 ⟦OPT|C|set:a_c14_c⟧
 # ·
-Narración: ¿Podrá la verdad devolverte tu trabajo sin exigirte el corazón?
+Narración: ¿Qué nuevos hechos revelarán los veinte segundos que faltan?
 
 # CHAPTER 15｜Nadie responde por ti
-⟦GOAL|Comprender lo ocurrido en «Nadie responde por ti» y decidir el siguiente paso.|Nadie responde por ti⟧
-⟦DONE|flag|a_c15_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «Nadie responde por ti», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|Con la verdad empezando a aclararse, ¿qué reconstruyes primero?|Nadie responde por ti⟧
+⟦DONE|flag|a_c15_event|Observar el cambio clave|Narración: Suena el teléfono del estudio: por fin un cliente que de verdad quiere comprar tus diseños.⟧
+⟦DONE|say|Con la verdad empezando a aclararse, ¿qué reconstruyes primero? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Sala de revisión independiente
-⟦BG|bg_a_c15s01|Sala de revisión independiente；Personajes presentes：Tú, Mia；Acción：La investigación preliminar relaciona las autorizaciones falsificadas con los pagos congelados. Continúan los procedimientos y aparecen nuevos clientes.⟧
+⟦BG|bg_a_c15s01|Sala de revisión independiente⟧
 ⟦TIME|17:00⟧
-Narración: Una semana después. Sala de revisión independiente.
+Narración: Una semana después — Sala de revisión independiente.
 ⟦IF|a_c14_a⟧
-Narración: Se contrastan el original y la versión editada.
+Narración: Los veinte segundos ausentes pasan a ser una cuestión probatoria pendiente.
 ⟦/IF⟧
 ⟦IF|a_c14_b⟧
-Narración: Eleanor no obtiene el compromiso privado.
+Narración: Su último trato privado fracasa.
 ⟦/IF⟧
 ⟦IF|a_c14_c⟧
-Narración: Sus relatos quedan registrados independientemente.
+Narración: Sus testimonios independientes quedan fijados; no pueden echarse la culpa mutuamente.
 ⟦/IF⟧
-Narración: La investigación preliminar relaciona las autorizaciones falsificadas con los pagos congelados.
-Narración: Continúan los procedimientos y aparecen nuevos clientes.
-Mia: “Esta vez los pedidos son reales. Podemos comprobarlos uno a uno.”
+Narración: Practicar con iconos antes de revisar renovaciones: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: La investigación preliminar relaciona la autorización falsa y el bloqueo de pagos, pero el procedimiento judicial aún necesita tiempo. Recibes una carta de intención para renovar contratos del estudio.
+Abogado independiente: “Hemos recuperado capacidad de negociar. Eso no significa que lo demás termine solo.”
+Abogado independiente: “¿Quieres reconstruir el negocio primero o reservar fuerzas para el litigio?”
 ⟦FREE⟧
-Narración: Próxima escena: Cafetería junto al río.
+Narración: El correo incluye las firmas de empleados que deciden volver a quedarse.
 
 # SCENE｜Cafetería junto al río
-⟦BG|bg_a_c15s02|Cafetería junto al río；Personajes presentes：Tú, Damian；Acción：Damian llega sin escoltas ni publicistas. Hay un café y una nota, sin flores ni anillo.⟧
+⟦BG|bg_a_c15s02|Cafetería junto al río⟧
 ⟦TIME|17:25⟧
-Narración: Poco después. Cafetería junto al río.
-Narración: Damian llega sin escoltas ni publicistas.
-Narración: Hay un café y una nota, sin flores ni anillo.
-Damian: “Me gustaría empezar despacio, si algún día te apetece.”
+Narración: Un poco después — Cafetería junto al río.
+Narración: Damian se quita la cara chaqueta y se sienta sencillamente frente a ti, por primera vez sin escoltas ni relaciones públicas. Junto al café no hay flores ni anillo, solo una nota que dice que podéis ir despacio.
+Damian: “Si quieres, podemos empezar de nuevo por nuestros nombres. También puedes negarte.”
+Damian: “¿Termino de contarte el pasado o empezamos por cómo te ha ido hoy?”
 ⟦FREE⟧
-Narración: Próxima escena: Jardín nupcial vacío.
+Narración: Ethan envía una disculpa que no exige respuesta y no vuelve a ponerse en contacto.
 
 # SCENE｜Jardín nupcial vacío
-⟦BG|bg_a_c15s03|Jardín nupcial vacío；Personajes presentes：Tú, Ethan；Acción：Retiran las sillas blancas. La caja del anillo sigue cerrada. El estudio recibe la llamada de un posible cliente.⟧
+⟦BG|bg_a_c15s03|Jardín nupcial vacío⟧
 ⟦TIME|17:50⟧
-Narración: Poco después. Jardín nupcial vacío.
-Narración: Retiran las sillas blancas.
-Narración: La caja del anillo sigue cerrada.
-Narración: El estudio recibe la llamada de un posible cliente.
-Ethan: “No tienes que decirme qué harás con el anillo.”
+Narración: Un poco después — Jardín nupcial vacío.
+Narración: Indexar objetos en el antiguo jardín de boda: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo.
+⟦MG|g_mem_memory⟧
+Narración: Los operarios retiran la última fila de sillas blancas. El estuche que sostienes sigue cerrado; nadie lo lleva por ti. El viento da la vuelta a la última tarjeta de sitio de la mesa.
+Narración: “¿Guardarás el anillo como prueba, lo devolverás o lo apartarás por ahora?”
 ⟦FREE⟧
+Narración: Suena el teléfono del estudio: por fin un cliente que de verdad quiere comprar tus diseños.
 ⟦SET|a_c15_event⟧
 
-# CHOICE｜¿Qué relación elegirías sin la presión de la familia?
-#### A｜Priorizar la reconstrucción del estudio
-Narración: El equipo firma su primer pedido nuevo e independiente.
+# CHOICE｜Con la verdad empezando a aclararse, ¿qué reconstruyes primero?
+#### A｜Dar prioridad a volver a dirigir el estudio
+Narración: Tú y el equipo firmáis vuestro primer pedido nuevo independiente.
 ⟦OPT|A|set:a_c15_a⟧
-#### B｜Permitir un encuentro público con Damian
-Narración: Es posible verse de igual a igual sin prometer romance.
+#### B｜Permitir a Damian conocerte de nuevo en público
+Narración: Recibe una reunión en igualdad, sin promesa romántica.
 ⟦OPT|B|set:a_c15_b⟧
-#### C｜Rechazar el contacto privado con los dos
-Narración: Se respetan los límites y tu vida continúa.
+#### C｜Suspender el contacto privado con ambos hermanos
+Narración: Respetan tu decisión y tu vida sigue siendo completa.
 ⟦OPT|C|set:a_c15_c⟧
 # ·
-Narración: ¿Qué relación elegirías sin la presión de la familia?
+Narración: ¿Qué intimidad deseas de verdad?
 
 # CHAPTER 16｜La vida después de la boda
-⟦GOAL|Comprender lo ocurrido en «La vida después de la boda» y decidir el siguiente paso.|La vida después de la boda⟧
-⟦DONE|flag|a_c16_event|Presenciar el hecho clave|Narración: Puedes detenerte a examinar lo que acaba de ocurrir.⟧
-⟦DONE|say|Decir qué quieres hacer ante lo ocurrido en «La vida después de la boda», o si prefieres negarte o esperar|Expresar tu intención|Narración: Puedes decir qué necesitas o pedir más tiempo.⟧
+⟦GOAL|¿Qué relación eliges para la siguiente página?|La vida después de la boda⟧
+⟦DONE|flag|a_c16_event|Observar el cambio clave|Narración: El río refleja dos sombras que pueden acercarse o separarse.⟧
+⟦DONE|say|¿Qué relación eliges para la siguiente página? Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.|Expresar tu intención|Narración: Puedes preguntar, acercarte, negarte o aplazar; expresar condiciones o pedir ayuda para verificar.⟧
 
 # SCENE｜Exposición del nuevo estudio
-⟦BG|bg_a_c16s01|Exposición del nuevo estudio；Personajes presentes：Tú, Mia；Acción：Seis meses después, tu nombre preside la entrada y tus bocetos llenan las vitrinas. Damian está en la lista, pero espera fuera.⟧
+⟦BG|bg_a_c16s01|Exposición del nuevo estudio⟧
 ⟦TIME|19:00⟧
-Narración: Seis meses después. Exposición del nuevo estudio.
+Narración: Seis meses después — Exposición del nuevo estudio.
 ⟦IF|a_c15_a⟧
-Narración: El equipo firma su primer pedido nuevo e independiente.
+Narración: Tú y el equipo firmáis vuestro primer pedido nuevo independiente.
 ⟦/IF⟧
 ⟦IF|a_c15_b⟧
-Narración: Es posible verse de igual a igual sin prometer romance.
+Narración: Recibe una reunión en igualdad, sin promesa romántica.
 ⟦/IF⟧
 ⟦IF|a_c15_c⟧
-Narración: Se respetan los límites y tu vida continúa.
+Narración: Respetan tu decisión y tu vida sigue siendo completa.
 ⟦/IF⟧
-Narración: Seis meses después, tu nombre preside la entrada y tus bocetos llenan las vitrinas.
-Narración: Damian está en la lista, pero espera fuera.
-Mia: “Ahora podemos revisar todos nuestros contratos.”
+Narración: Revisar el catálogo de imágenes antes de abrir: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo.
+⟦MG|g_slide_photo⟧
+Narración: Seis meses después, tu nombre preside la entrada de tu exposición de originales. Los antiguos bocetos se muestran en vitrinas.
+Mia: “Esta vez hemos leído nosotros todos los contratos.”
+Mia: “¿Recibes primero a los invitados o miras esa carta todavía cerrada?”
 ⟦FREE⟧
-Narración: Próxima escena: Salón de la exposición.
+Narración: Damian figura en la lista de visitas con cita, pero no ha entrado sin permiso.
 
 # SCENE｜Salón de la exposición
-⟦BG|bg_a_c16s02|Salón de la exposición；Personajes presentes：Tú, Damian；Acción：Trae un cuaderno en blanco como el de hace tres años. La disculpa de Ethan llega a través del abogado. Damian espera permiso para sentarse.⟧
+⟦BG|bg_a_c16s02|Salón de la exposición⟧
 ⟦TIME|19:25⟧
-Narración: Poco después. Salón de la exposición.
-Narración: Trae un cuaderno en blanco como el de hace tres años.
-Narración: La disculpa de Ethan llega a través del abogado.
-Narración: Damian espera permiso para sentarse.
-Damian: “No sé qué pasará entre nosotros. Lo que sí sé es que no voy a decidirlo por ti.”
+Narración: Un poco después — Salón de la exposición.
+Narración: Damian trae un cuaderno en blanco como el de hace tres años. La disculpa de Ethan llega a través del abogado, sin exigir una reunión. Damian sostiene el cuaderno sin tenderte la mano y espera que decidas si esta página lo incluye.
+Damian: “No sé adónde llegaremos. Solo sé que no quiero volver a organizar tu vida por ti.”
+Damian: “¿Puedo quedarme a tomar café o prefieres que hoy sea solo un visitante más?”
 ⟦FREE⟧
-Narración: Próxima escena: Paseo junto al río.
+Narración: Fuera de la sala alguien pregunta cómo se llamará tu próxima exposición.
 
 # SCENE｜Paseo junto al río
-⟦BG|bg_a_c16s03|Paseo junto al río；Personajes presentes：Tú, Damian；Acción：Las luces se reflejan en el agua. Damian propone pasear sin dar por hecho que quieras compañía.⟧
+⟦BG|bg_a_c16s03|Paseo junto al río⟧
 ⟦TIME|19:50⟧
-Narración: Poco después. Paseo junto al río.
-Narración: Las luces se reflejan en el agua.
-Narración: Damian propone pasear sin dar por hecho que quieras compañía.
-Damian: “Si te apetece, podemos empezar con un paseo. Si no, lo entiendo.”
+Narración: Un poco después — Paseo junto al río.
+Narración: Ordenar las notas de hoy antes del paseo: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo.
+⟦MG|g_find_letter⟧
+Narración: El viento nocturno levanta tu bufanda. Las luces lejanas de la ciudad siguen brillando. Tu vida ya no la define una boda.
+Damian: “Si quieres, podemos empezar por un paseo sin mentiras.”
+Damian: “¿Con quién quieres seguir adelante o prefieres acompañarte solo a ti esta vez?”
 ⟦FREE⟧
+Narración: El río refleja dos sombras que pueden acercarse o separarse.
 ⟦SET|a_c16_event⟧
 
-# CHOICE｜La siguiente página te pertenece.
-#### A｜Elegir explícitamente una relación igualitaria con Damian
-Narración: Solo el consentimiento claro permite una primera cita; la responsabilidad continúa.
+# CHOICE｜¿Qué relación eliges para la siguiente página?
+#### A｜Expresar que quieres empezar con una cita en igualdad con Damian
+Narración: Solo tu deseo explícito permite una primera cita formal; los procedimientos de responsabilidad continúan.
 ⟦OPT|A|set:a_c16_a⟧
-#### B｜Dejar abierta la posibilidad de reconstruir la confianza con Ethan
-Narración: Puede empezar de nuevo con actos honestos, sin reconciliación automática.
+#### B｜Dejar abierta una reconstrucción gradual con Ethan si sigue cambiando
+Narración: Solo puede volver a conocerte desde la honestidad y el respeto de los límites.
 ⟦OPT|B|set:a_c16_b⟧
-#### C｜Elegir la independencia o aplazar la decisión
-Narración: Tu vida está completa sin ningún compromiso romántico.
+#### C｜Elegir soltería, libertad o aplazar cualquier compromiso romántico
+Narración: Recuperas tu tiempo y la historia termina con independencia y límites completos.
 ⟦OPT|C|set:a_c16_c⟧
 # ·
-Narración: La siguiente página te pertenece.
-
+Narración: Esta vez, la siguiente página de tu vida la escribes tú.

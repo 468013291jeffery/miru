@@ -12,13 +12,16 @@ const P = (() => { try { return window.parent !== window && window.parent.MIRU_B
 const KEY = 'miru_pro_v1';
 const LN = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
 const NAMES = { en: 'English (American)', ja: 'Japanese', ko: 'Korean', es: 'Spanish (Latin American)', zh: 'Simplified Chinese' };
-const PRICE = { chapter: 3, card: 1, review: 2, games: 2, outline: 2 };
+/* 2026-11-28 老板定：专业版所有 AI 收费先统一按 💎1（写一章、角色卡、审稿、小游戏、大纲 / 选题、识别编剧稿、翻译每种语言、AI 生图每张）。 */
+const PRICE = { chapter: 1, card: 1, review: 1, games: 1, outline: 1 };
 const uid = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{"projects":[]}'); } catch (_) { return { projects: [] }; } };
 const persist = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
 const token = () => { try { return (JSON.parse(localStorage.getItem('miru_v2') || '{}').cloud || {}).token || ''; } catch (_) { return ''; } };
 const gems = () => { try { return P ? P.S.keys : null; } catch (_) { return null; } };
-const toast = s => { try { if (P && P.toast) return P.toast(s); } catch (_) {} const t = document.createElement('div'); t.className = 'ptoast'; t.textContent = s; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); };
+/* 2026-11-28 提示以前交给外层 App 显示（被剧本工具这一层盖住，看不见），或者是一个没有样式的 div（落在页面最底下）——
+   用户点了按钮以为「没反应」。现在一律在剧本工具自己这一层的屏幕中下方显示。 */
+const toast = s => { const t = document.createElement('div'); t.className = 'ptoast'; t.textContent = s; t.style.cssText = 'position:fixed;left:50%;bottom:12%;transform:translateX(-50%);z-index:99999;max-width:86%;padding:12px 18px;border-radius:12px;background:rgba(30,24,38,.96);color:#fff;font-size:15px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.14);text-align:center'; document.body.appendChild(t); setTimeout(() => t.remove(), 3200); };
 function pay(n, why) { if (!n) return true; if (!P) { toast('请在 MIRU 里打开（创作中心 → 专业模式）才能用 AI'); return false; } try { return !!P.spend(n, why); } catch (_) { return false; } }
 async function ai(prompt, maxTokens) { if (!P || typeof P.ask !== 'function') throw new Error('no-ai'); return P.ask(prompt, { maxTokens: maxTokens || 4000, timeout: 120000 }); }
 const RULES = () => { try { return (P && P.MIRU_RULES && P.MIRU_RULES.gen) || ''; } catch (_) { return ''; } };
@@ -60,7 +63,9 @@ function List({ db, setDb, open }) {
   const add = p => { setDb(d => ({ ...d, projects: [p, ...d.projects] })); open(p.id); };
   const fromGuide = () => {
     let g = null; try { g = JSON.parse(localStorage.getItem('miru.creator.v2.project') || 'null'); } catch (_) {}
-    if (!g) return toast('没有找到 AI 引导创作里的作品');
+    /* 当前作品没有时，从「我的作品」里取最近改过的一部 */
+    if (!g || !(g.title || g.premise || g.hook)) { try { const shelf = JSON.parse(localStorage.getItem('miru.creator.v2.works') || '{}'); const list = Object.values(shelf).map(w => w && w.project).filter(x => x && (x.title || x.premise || x.hook)).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)); if (list[0]) g = list[0]; } catch (_) {} }
+    if (!g || !(g.title || g.premise || g.hook)) return toast('还没有可以带入的作品：请先在「创作中心 → AI 引导」里写一部，再回来点这里');
     const p = blank(); p.title = g.title || ''; p.hook = g.hook || ''; p.premise = [g.premise, g.world, g.conflict].filter(Boolean).join('\n');
     const lead = g.lead || {}; p.cast[0] = { ...p.cast[0], name: lead.name || '', identity: lead.role || lead.identity || '', personality: lead.personality || lead.desc || '' };
     (Array.isArray(g.support) ? g.support : []).slice(0, 5).forEach((s, i) => p.cast.push({ ...blank().cast[0], key: 'c' + (i + 2), name: s.name || '', identity: s.role || '', personality: s.personality || s.desc || '' }));
@@ -89,7 +94,7 @@ function List({ db, setDb, open }) {
 const TABS = [['set', '① 设定'], ['cast', '② 人物卡'], ['write', '③ 剧本'], ['qa', '④ 检查'], ['assets', '⑤ 素材'], ['games', '⑥ 小游戏'], ['pub', '⑦ 语言与发布'], ['ver', '⑧ 版本']];
 
 function Editor({ p, upd, back }) {
-  const [tab, setTab] = useState('write');
+  const [tab, setTab] = useState('set'); /* 2026-11-28 打开剧本默认停在第一个标签「① 设定」（原来是第三个「③ 剧本」） */
   const script = useMemo(() => assemble(p), [p]);
   const qa = useMemo(() => dslQA(script), [script]);
   const [g, setG] = useState(gems());
@@ -109,6 +114,8 @@ function Editor({ p, upd, back }) {
       {tab === 'games' && <Games p={p} upd={upd} />}
       {tab === 'pub' && <Publish p={p} upd={upd} qa={qa} script={script} />}
       {tab === 'ver' && <Versions p={p} upd={upd} />}
+      {/* 2026-11-28 每一页最下面加「下一步」，按顺序走到下一个标签；最后一页没有 */}
+      {(() => { const i = TABS.findIndex(t => t[0] === tab); const nx = TABS[i + 1]; if (!nx) return null; return <div className="prow" style={{ justifyContent: 'flex-end', margin: '18px 0 28px' }}><button className="pbtn primary" onClick={() => { setTab(nx[0]); try { window.scrollTo(0, 0); document.querySelectorAll('.pro, .pro *').forEach(e => { if (e.scrollTop) e.scrollTop = 0; }); } catch (_) {} }}>下一步：{nx[1].replace(/^\S+\s*/, '')} ›</button></div>; })()}
     </div>
   );
 }
@@ -131,8 +138,29 @@ function Setup({ p, upd }) {
     } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
     setBusy(false);
   };
+  /* 2026-11-28 设定页最上面加「AI 帮我想 / 帮我改」：作者写一句想法，AI 把剧名、钩子、设定、玩家身份、标签一起想出来；
+     已经写了的，「帮我想」不动它只补空的，「帮我改」会把已写的改得更抓人。下面的选题分析、章节大纲再基于这些内容做。 */
+  const [busy2, setBusy2] = useState('');
+  const helpMe = async mode => {
+    const idea = String(p.idea || '').trim();
+    if (!idea && !p.title && !p.premise && !p.hook) return toast('先在上面写一句你想写的故事，比如「黑帮继承人和卧底女警的契约婚姻」');
+    if (mode === 'fix' && !p.title && !p.premise && !p.hook) return toast('还没有写任何内容可以改，先点「AI 帮我想」');
+    if (!pay(PRICE.outline, 'pro_setup')) return; setBusy2(mode);
+    try {
+      const r = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 官方互动恋爱剧的策划。' + (mode === 'fix' ? '把作者已经写的设定改得更抓人、更具体，保持作者的核心想法和人物关系不变。' : '根据作者的一句想法，把这部剧的基础设定想出来；作者已经写了的字段原样保留，只补空的。') + '全员成年。恋爱对象：' + ({ bg: '男女', bl: '男男', gl: '女女' }[p.orient] || '男女') + '。写作语言：' + (LN[p.lang] || '中文') + '。只返回 JSON {"title":"剧名（≤14 字）","hook":"一句话钩子（≤40 字，出现在首页卡片上，要让人想点开）","premise":"设定 / 简介（150–300 字：世界、冲突、主要人物关系、玩家卷进来的原因）","you":"玩家身份（故事给玩家的位置，≤20 字）","tags":["3–6 个标签"]}\n作者的想法：' + (idea || '（没单独写，看下面已有内容）') + '\n已有：' + JSON.stringify({ title: p.title, hook: p.hook, premise: p.premise, you: p.you, tags: p.tags }), 2500);
+      if (!r || typeof r !== 'object') throw new Error('empty');
+      upd(x => { ['title', 'hook', 'premise', 'you'].forEach(k => { if (r[k] && (mode === 'fix' || !String(x[k] || '').trim())) x[k] = String(r[k]); }); if (Array.isArray(r.tags) && r.tags.length && (mode === 'fix' || !(x.tags || []).length)) x.tags = r.tags.map(String).slice(0, 12); return x; });
+      toast(mode === 'fix' ? '改好了，看看下面的内容' : '想好了，看看下面的内容，不满意可以再改');
+    } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
+    setBusy2('');
+  };
   return (
     <div className="ppanel">
+      <div className="pbox"><b>先告诉 AI 你想写什么</b>
+        <F label="一句话想法（可以很随意）" hint="比如：黑帮继承人和卧底女警的契约婚姻；或：我穿进游戏成了反派的未婚妻"><textarea rows={2} value={p.idea || ''} onChange={e => set('idea', e.target.value)} /></F>
+        <div className="prow pwr"><button className="pbtn primary" disabled={!!busy2} onClick={() => helpMe('think')}>{busy2 === 'think' ? 'AI 在想…' : '✨ AI 帮我想 · 💎' + PRICE.outline}</button><button className="pbtn" disabled={!!busy2} onClick={() => helpMe('fix')}>{busy2 === 'fix' ? 'AI 在改…' : '✨ AI 帮我改 · 💎' + PRICE.outline}</button></div>
+        <small className="dim">「帮我想」：把下面空着的剧名、钩子、设定、玩家身份、标签补出来，你写过的不动。「帮我改」：把你已经写的改得更抓人。</small>
+      </div>
       <F label="剧名"><input value={p.title} onChange={e => set('title', e.target.value)} /></F>
       <F label="一句话钩子" hint="出现在首页卡片和发现页"><input value={p.hook} onChange={e => set('hook', e.target.value)} /></F>
       <F label="设定 / 简介"><textarea rows={5} value={p.premise} onChange={e => set('premise', e.target.value)} /></F>
@@ -152,13 +180,15 @@ function Cast({ p, upd }) {
   const [busy, setBusy] = useState(-1);
   const set = (i, k, v) => upd(x => (x.cast[i][k] = v, x));
   const fill = async i => {
-    const c = p.cast[i]; if (!c.name) return toast('先写名字');
+    /* 2026-11-28 AI 要先知道作者想要什么样的角色：卡片最上面加了「你想要什么样的角色」，AI 按这句话 + 剧的设定 + 已有的其他角色来写；
+       名字可以不填，让 AI 起。 */
+    const c = p.cast[i]; if (!c.name && !String(c.want || '').trim()) return toast('先写一句「你想要什么样的角色」，或者先填名字');
     if (!pay(PRICE.card, 'pro_card')) return; setBusy(i);
     try {
       const spec = (P && P.MIRU_CARD_SPEC13) || '';
-      const r = await ai(spec.slice(0, 3000) + '\n\n按 MIRU 角色卡规范，补全这个角色。保留作者已经写的内容，只补空的、把模糊的写具体。全员成年（21+）。只返回 JSON {"identity":"","age":"","looks":"","personality":"性格与反差","speech":"说话方式","boundary":"边界","openingLine":"单聊开场白","sellingPoint":"一句话卖点"}\n剧：' + p.title + '｜' + p.premise.slice(0, 600) + '\n角色：' + JSON.stringify(c), 2500);
+      const r = await ai(spec.slice(0, 3000) + '\n\n按 MIRU 角色卡规范，补全这个角色。最重要的依据是「作者想要的角色」这句话，其次是剧的设定；要和已有的其他角色有明显区别、能互相形成关系。保留作者已经写的内容，只补空的、把模糊的写具体。全员成年（21+）。只返回 JSON {"name":"名字（作者没填才起）","identity":"","age":"","looks":"","personality":"性格与反差","speech":"说话方式","boundary":"边界","openingLine":"单聊开场白","sellingPoint":"一句话卖点"}\n剧：' + p.title + '｜' + p.premise.slice(0, 600) + '\n作者想要的角色：' + (String(c.want || '').trim() || '（没写，按剧的设定和这个位置来定）') + '\n这个位置：' + (i === 0 ? '第一主角（男主 / 女主）' : '配角 / 其他可攻略角色') + '\n已有的其他角色：' + (p.cast.filter((_, k) => k !== i && _.name).map(o => o.name + '（' + (o.identity || '') + '；' + (o.personality || '').slice(0, 40) + '）').join('；') || '无') + '\n角色：' + JSON.stringify(c), 2500);
       if (!r || typeof r !== 'object') throw new Error('empty');
-      upd(x => { const t = x.cast[i]; ['identity', 'age', 'looks', 'personality', 'speech', 'boundary', 'openingLine', 'sellingPoint'].forEach(k => { if (r[k] && !String(t[k] || '').trim()) t[k] = String(r[k]); }); if (Number(t.age) && Number(t.age) < 21) t.age = '21'; return x; });
+      upd(x => { const t = x.cast[i]; ['name', 'identity', 'age', 'looks', 'personality', 'speech', 'boundary', 'openingLine', 'sellingPoint'].forEach(k => { if (r[k] && !String(t[k] || '').trim()) t[k] = String(r[k]); }); if (Number(t.age) && Number(t.age) < 21) t.age = '21'; return x; });
       toast('人物卡补好了');
     } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.card, P.save()); } catch (__) {} }
     setBusy(-1);
@@ -168,8 +198,9 @@ function Cast({ p, upd }) {
       <p className="dim">第一位是男主 / 女主。人物卡会写进剧本（⟦CHAR⟧），也会出现在 App「发现 → 角色」里，玩家可以单独聊天。全员必须成年。</p>
       {p.cast.map((c, i) => (
         <div className="pcard" key={i}>
+          <F label="你想要什么样的角色？（一句话就行，AI 按这个来写）" hint="比如：表面冷淡的黑帮继承人，只对我一个人心软；或：阳光学弟，其实一直在暗中保护我"><textarea rows={2} value={c.want || ''} onChange={e => set(i, 'want', e.target.value)} /></F>
           <div className="prow pwr">
-            <F label={i === 0 ? '主角名字' : '名字'}><input value={c.name} onChange={e => set(i, 'name', e.target.value)} /></F>
+            <F label={i === 0 ? '主角名字（可以留空让 AI 起）' : '名字（可以留空让 AI 起）'}><input value={c.name} onChange={e => set(i, 'name', e.target.value)} /></F>
             <F label="性别"><select value={c.gender} onChange={e => set(i, 'gender', e.target.value)}><option value="m">男</option><option value="f">女</option><option value="x">其他</option></select></F>
             <F label="年龄"><input type="number" min="21" value={c.age} onChange={e => set(i, 'age', e.target.value)} style={{ width: 80 }} /></F>
           </div>
@@ -179,7 +210,7 @@ function Cast({ p, upd }) {
           <F label="边界"><input value={c.boundary || ''} onChange={e => set(i, 'boundary', e.target.value)} /></F>
           <F label="外貌（用于立绘）"><input value={c.looks || ''} onChange={e => set(i, 'looks', e.target.value)} /></F>
           <F label="单聊开场白"><input value={c.openingLine || ''} onChange={e => set(i, 'openingLine', e.target.value)} /></F>
-          <div className="prow"><button className="pbtn" disabled={busy === i} onClick={() => fill(i)}>{busy === i ? '补全中…' : '✨ AI 按角色卡规范补全 · 💎' + PRICE.card}</button>{i > 0 && <button className="pbtn ghost" onClick={() => upd(x => (x.cast.splice(i, 1), x))}>删除</button>}</div>
+          <div className="prow"><button className="pbtn" disabled={busy === i} onClick={() => fill(i)}>{busy === i ? '补全中…' : '✨ AI 按我想要的角色生成 / 补全 · 💎' + PRICE.card}</button>{i > 0 && <button className="pbtn ghost" onClick={() => upd(x => (x.cast.splice(i, 1), x))}>删除</button>}</div>
         </div>
       ))}
       <button className="pbtn" onClick={() => upd(x => (x.cast.push({ ...blank().cast[0], key: 'c' + (x.cast.length + 1), name: '' }), x))}>＋ 添加角色</button>
@@ -233,6 +264,7 @@ function Write({ p, upd, qa }) {
         <div className="prow pwr">
           <button className="pbtn primary" disabled={busy} onClick={() => write('write')}>{busy ? 'AI 写作中…（约 1 分钟）' : (c.body.trim() ? '✨ AI 续写' : '✨ AI 按官方规则写这一章') + ' · 💎' + PRICE.chapter}</button>
           <button className="pbtn" disabled={busy} onClick={() => write('polish')}>✨ AI 按规则改稿 · 💎{PRICE.chapter}</button>
+          <small className="dim" style={{ flexBasis: '100%' }}>两个按钮不一样：「续写」是接着你已经写的往下写新内容（空白时就是写完整一章）；「改稿」不加新剧情，只把你已经写好的这一章按官方规则改规范（格式、背景卡、章末选择等）。</small>
           {p.chapters.length > 1 && <button className="pbtn ghost" onClick={() => { if (window.confirm ? true : true) { upd(x => (x.chapters.splice(ci, 1), x)); setCi(Math.max(0, ci - 1)); } }}>删除这一章</button>}
         </div>
         {chErr.length > 0 && <ul className="pqa">{chErr.map((s, i) => <li key={i} className={qa.err.includes(s) ? 'r' : 'y'}>{s}</li>)}</ul>}
@@ -278,7 +310,7 @@ function Assets({ p, upd, script }) {
   const S = useMemo(() => slotsOf(script), [script]);
   const [busy, setBusy] = useState(''), [prog, setProg] = useState('');
   const tier = TIERS[p.tier || 'std'];
-  const imgPrice = (() => { try { return (P && P.studioImagePrice && P.studioImagePrice()) || 2; } catch (_) { return 2; } })();
+  const imgPrice = (() => { try { return (P && P.studioImagePrice && P.studioImagePrice()) || 1; } catch (_) { return 1; } })();
   const ready = () => { try { return !!(P && P.studioImageReady && P.studioImageReady()); } catch (_) { return false; } };
   const putFile = async (slot, file) => {
     const tk = token(); if (!tk) throw new Error('请先在 MIRU 登录');
@@ -441,7 +473,7 @@ function Versions({ p, upd }) {
 }
 
 /* 识别编剧稿：编剧用自然中文写的稿子（第一幕、人物设定、图片标注……）→ AI 转成 MIRU 标准剧本，一章一章转 */
-const DRAFT_PRICE = n => Math.max(3, Math.ceil(n / 3000) * 2);
+const DRAFT_PRICE = n => 1;
 async function convertDraft(text, p, onProg) {
   const parts = []; const chunks = String(text).split(/\n(?=\s*(?:第\s*[0-9一二三四五六七八九十百]+\s*[章幕回集]|#+\s*CHAPTER|Chapter\s+\d+))/i).filter(s => s.trim());
   const blocks = chunks.length > 1 ? chunks : String(text).match(/[\s\S]{1,6000}(?=\n|$)/g) || [];
@@ -487,7 +519,7 @@ function Draft({ p, upd }) {
     setBusy(false);
   };
   return (
-    <div className="pbox"><b>识别编剧稿</b><p className="dim">上传编剧稿（Word .docx / PDF / txt）或直接粘贴，编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定）都可以，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。按字数计费，约每 3000 字 💎2，最少 💎3，转好才扣。</p>
+    <div className="pbox"><b>识别编剧稿</b><p className="dim">上传编剧稿（Word .docx / PDF / txt）或直接粘贴，编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定）都可以，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。每次 💎1，转好才扣。</p>
       <div className="prow pwr"><button className="pbtn" onClick={() => fileRef.current.click()}>⇪ 上传编剧稿（Word / PDF / txt）</button><input ref={fileRef} type="file" accept=".docx,.pdf,.txt,.md,.markdown" hidden onChange={load} /><span className="dim">也可以直接粘贴到下面</span></div>
       <textarea className="pcode" style={{ minHeight: 160 }} value={txt} onChange={e => setTxt(e.target.value)} placeholder="把编剧稿粘贴到这里…" />
       <div className="prow"><button className="pbtn primary" disabled={busy || !txt.trim()} onClick={run}>{busy ? '识别中 ' + prog + '%' : '✨ 识别成标准剧本 · 💎' + price}</button><span className="dim">{txt.length} 字</span></div>
@@ -553,7 +585,9 @@ async function translateScript(script, cast, LG, onProg) {
 
 function Publish({ p, upd, qa, script }) {
   const [busy, setBusy] = useState(''), [prog, setProg] = useState(0), [res, setRes] = useState(null);
-  const price = Math.max(3, p.chapters.length);
+  /* 2026-11-28 创作者协议：发布前必须勾选同意（协议全文 /creator-terms.html，版本 2）；同意记录跟作品一起上传 pack.meta.original */
+  const [agree, setAgree] = useState(p.agreed === 2), [terms, setTerms] = useState(false);
+  const price = 1;
   const langs = [...new Set(['en'].concat(p.langs || []))].filter(l => l !== p.lang);
   const toggle = l => upd(x => { const s = new Set(x.langs || []); s.has(l) ? s.delete(l) : s.add(l); x.langs = [...s]; return x; });
   const translate = async LG => {
@@ -564,11 +598,12 @@ function Publish({ p, upd, qa, script }) {
   };
   const publish = async () => {
     if (!qa.ok) return toast('还有 ' + qa.err.length + ' 个必须修的问题，先到「④ 检查」里改');
+    if (!agree) return toast('请先勾选同意《MIRU 创作者协议》');
     const tk = token(); if (!tk) return toast('请先在 MIRU 登录');
     const stale = langs.filter(l => !(p.tr && p.tr[l]) || p.tr[l].src !== script.length);
     if (stale.length && !window.__proForce) { window.__proForce = 1; return toast('这些语言版本还没翻译或剧本改过了：' + stale.map(l => LN[l]).join('、') + '。再点一次「发布」就先不带这些版本发布'); }
     window.__proForce = 0; setBusy('pub');
-    const pack = { script, assets: Object.assign({}, p.assets, p.cover ? { cover: p.cover } : {}), characters: p.cast.filter(c => c.name).map((c, i) => ({ key: (c.key && /^[a-z0-9_]+$/.test(c.key) ? c.key : 'c' + (i + 1)), name: c.name, gender: c.gender, age: Number(c.age) || 21, identity: c.identity, looks: c.looks, personality: c.personality, speech: c.speech, boundary: c.boundary, openingLine: c.openingLine, sellingPoint: c.sellingPoint, portrait: p.assets['char_' + (c.key || c.name)] || '' })), games: p.games || [], opening_video: p.assets.opening_video || undefined, ver: Date.now(), meta: { langs: [p.lang].concat(langs.filter(l => p.tr && p.tr[l] && p.tr[l].src === script.length)), premise: p.premise, you: p.you, studio: 'pro' } };
+    const pack = { script, assets: Object.assign({}, p.assets, p.cover ? { cover: p.cover } : {}), characters: p.cast.filter(c => c.name).map((c, i) => ({ key: (c.key && /^[a-z0-9_]+$/.test(c.key) ? c.key : 'c' + (i + 1)), name: c.name, gender: c.gender, age: Number(c.age) || 21, identity: c.identity, looks: c.looks, personality: c.personality, speech: c.speech, boundary: c.boundary, openingLine: c.openingLine, sellingPoint: c.sellingPoint, portrait: p.assets['char_' + (c.key || c.name)] || '' })), games: p.games || [], opening_video: p.assets.opening_video || undefined, ver: Date.now(), meta: { langs: [p.lang].concat(langs.filter(l => p.tr && p.tr[l] && p.tr[l].src === script.length)), premise: p.premise, you: p.you, studio: 'pro', original: { v: 2, at: new Date().toISOString() } } };
     langs.forEach(l => { if (p.tr && p.tr[l] && p.tr[l].src === script.length) pack['script_' + l] = p.tr[l].script; });
     let author = ''; try { author = (P && P.persona && P.persona() || {}).name || ''; } catch (_) {}
     try {
@@ -582,7 +617,7 @@ function Publish({ p, upd, qa, script }) {
   return (
     <div className="ppanel">
       <h3>语言版本</h3>
-      <p className="dim">英文版默认就有。翻译是整部剧逐行翻（台词、选项、场景名、人物卡、小游戏说明），和原文一行对一行，App 按读者的语言显示。每种语言 💎{price}（章节数，最少 3），翻好才扣；剧本改过之后要重翻。</p>
+      <p className="dim">英文版默认就有。翻译是整部剧逐行翻（台词、选项、场景名、人物卡、小游戏说明），和原文一行对一行，App 按读者的语言显示。每种语言 💎{price}，翻好才扣；剧本改过之后要重翻。</p>
       <div className="plangs">{Object.entries(LN).filter(([k]) => k !== p.lang).map(([k, v]) => {
         const on = k === 'en' || (p.langs || []).includes(k); const t = p.tr && p.tr[k]; const fresh = t && t.src === script.length;
         return <div key={k} className="plang"><label><input type="checkbox" checked={on} disabled={k === 'en'} onChange={() => toggle(k)} /> {v}</label><span className={'tag ' + (fresh ? 'ok' : t ? 'warn' : '')}>{fresh ? '已翻译' : t ? '剧本改过，需重翻' : '未翻译'}</span>{on && <button className="pbtn sm" disabled={!!busy} onClick={() => translate(k)}>{busy === 'tr_' + k ? '翻译中 ' + prog + '%' : (t ? '重新翻译' : '翻译') + ' · 💎' + price}</button>}</div>;
@@ -594,6 +629,21 @@ function Publish({ p, upd, qa, script }) {
         <li className={p.cast.some(c => c.name) ? 'g' : 'y'}>{p.cast.filter(c => c.name).length} 张人物卡</li>
         <li className="g">{(p.games || []).length} 个定制小游戏</li>
       </ul>
+      <div style={{ margin: '14px 0 12px', padding: '12px 14px', border: '1px solid rgba(255,255,255,.14)', borderRadius: 12, fontSize: 13.5, lineHeight: 1.7 }}>
+        <b>创作者协议与原创声明</b>
+        <ul style={{ margin: '6px 0 8px', paddingLeft: 18 }}>
+          <li>作品的著作权归你；你授权 MIRU 在平台内展示、分发并用于宣传（非独占，你可以随时删除作品）。</li>
+          <li>你保证作品是你原创或已获得合法授权，没有抄袭、搬运，不侵犯他人权利；如有侵权由你本人承担责任，MIRU 有权下架。</li>
+          <li>所有角色必须是虚构的成年人，不含露骨色情等违规内容。</li>
+        </ul>
+        <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', cursor: 'pointer' }}><input type="checkbox" checked={agree} style={{ marginTop: 4 }} onChange={e => { const v = e.target.checked; setAgree(v); upd(x => { x.agreed = v ? 2 : 0; return x; }); }} /><span>我已阅读并同意 <button type="button" onClick={e => { e.preventDefault(); setTerms(true); }} style={{ background: 'none', border: 0, padding: 0, color: '#F0B77E', font: 'inherit', textDecoration: 'underline', cursor: 'pointer' }}>《MIRU 创作者协议》</button></span></label>
+      </div>
+      {terms && <div style={{ position: 'fixed', inset: 0, zIndex: 99998, background: 'rgba(8,6,12,.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12 }} onClick={() => setTerms(false)}>
+        <div style={{ width: '100%', maxWidth: 720, height: '88vh', background: '#0C0B10', borderRadius: 14, overflow: 'hidden', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: 8 }}><button className="pbtn sm" onClick={() => setTerms(false)}>✕ 关闭</button></div>
+          <iframe title="creator-terms" src="/creator-terms.html#zh" style={{ flex: 1, border: 0, width: '100%' }} />
+        </div>
+      </div>}
       <button className="pbtn primary big" disabled={busy === 'pub'} onClick={publish}>{busy === 'pub' ? '发布中…' : p.cloudId ? '🌐 更新已发布的作品' : '🌐 发布到 MIRU'}</button>
       <div className="prow pwr" style={{ marginTop: 12 }}>
         <button className="pbtn" onClick={() => { const b = new Blob([script], { type: 'text/markdown' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (p.title || 'script') + '.md'; a.click(); }}>⇩ 下载剧本 .md</button>

@@ -1,973 +1,1094 @@
 # CHAPTER 1｜The Door You Shouldn't Open
 ⟦ORIENT|bg⟧
+⟦SET|native_v2⟧
+⟦SET|authored~miru_v22⟧
 ⟦CHAR|你|f|28|f2|Player|28%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E9%BB%98%E8%AE%A4%E8%82%A9%E4%B8%8B%E6%B7%B1%E6%A3%95%E5%8F%91%E3%80%81%E6%A3%95%E7%9C%BC%E3%80%81%E8%87%AA%E7%84%B6%E8%82%A4%E8%B4%A8%E3%80%81%E6%8C%BA%E7%9B%B4%E4%BD%86%E4%B8%8D%E5%A4%B8%E5%BC%A0%E7%9A%84%E4%BD%93%E6%80%81%EF%BC%9B%E5%89%AA%E8%A3%81%E5%88%A9%E8%90%BD%E7%9A%84%E8%B1%A1%E7%89%99%E7%99%BD%E5%A4%96%E5%A5%97%E3%80%81%E6%B7%B1%E8%89%B2%E7%9B%B4%E7%AD%92%E8%A3%A4%EF%BC%8C%E5%A9%9A%E7%A4%BC%E7%A4%BC%E6%9C%8D%E4%BB%85%E5%9C%A8%E5%A9%9A%E7%A4%BC%E5%9C%BA%E6%AC%A1%EF%BC%9B%E5%B0%8F%E5%9E%8B%E8%AE%BE%E8%AE%A1%E7%AC%94%E8%AE%B0%E6%9C%AC%E3%80%81%E5%A9%9A%E6%88%92%E6%88%96%E6%88%92%E7%9B%92%E9%9A%8F%E6%83%85%E8%8A%82%E5%87%BA%E7%8E%B0%E3%80%82%E9%BB%98%E8%AE%A4%E5%BD%A2%E8%B1%A1%E5%8F%AF%E6%9B%BF%E6%8D%A2%EF%BC%9B%E8%83%8C%E6%99%AF%E5%9B%BE%E4%B8%8D%E9%9C%B2%E8%84%B8%E3%80%82⟧
-⟦CHAR|Damian|m|35|m2|Damian|35%E5%B2%81%E6%88%90%E5%B9%B4%E7%94%B7%E6%80%A7%EF%BC%8C%E7%BA%A6188cm%EF%BC%8C%E5%AE%BD%E8%82%A9%E4%BF%AE%E9%95%BF%E3%80%81%E7%95%A5%E6%96%B9%E4%B8%8B%E9%A2%8C%E3%80%81%E7%9F%AD%E6%B7%B1%E6%A3%95%E5%8F%91%E5%90%91%E5%90%8E%E6%A2%B3%E4%BD%86%E9%A2%9D%E5%89%8D%E4%B8%80%E7%BC%95%E6%9D%BE%E5%8F%91%E3%80%81%E7%81%B0%E7%9C%BC%E3%80%81%E7%9C%89%E5%B3%B0%E5%B9%B3%E7%9B%B4%EF%BC%9B%E5%B9%B2%E5%87%80%E5%89%83%E9%9D%A2%EF%BC%8C%E7%82%AD%E7%81%B0%E4%B8%89%E4%BB%B6%E5%A5%97%E3%80%81%E7%99%BD%E8%A1%AC%E8%A1%AB%E3%80%81%E6%B7%B1%E8%89%B2%E9%A2%86%E5%B8%A6%EF%BC%8C%E5%B7%A6%E8%A2%96%E5%8F%A3%E7%BC%BA%E4%B8%80%E6%9E%9A%E8%A2%96%E6%89%A3%EF%BC%8C%E5%8F%B3%E8%A2%96%E6%89%A3%E4%BF%9D%E7%95%99%E3%80%82%E7%A7%81%E4%B8%8B%E5%8F%AF%E8%84%B1%E5%A4%96%E5%A5%97%E8%80%8C%E4%B8%8D%E6%94%B9%E5%8F%98%E5%8F%91%E8%89%B2%E5%92%8C%E8%84%B8%E5%9E%8B%E3%80%82⟧
-⟦CHAR|Ethan|m|32|m2|Ethan|32%E5%B2%81%E6%88%90%E5%B9%B4%E7%94%B7%E6%80%A7%EF%BC%8C%E7%BA%A6183cm%EF%BC%8C%E8%BA%AB%E5%BD%A2%E5%8C%80%E7%A7%B0%E3%80%81%E8%BE%83%E7%AA%84%E4%B8%8B%E9%A2%8C%E4%B8%8E%E6%B4%BB%E8%B7%83%E7%9C%89%E7%9C%BC%E3%80%81%E6%B5%85%E6%A3%95%E4%BE%A7%E5%88%86%E6%B3%A2%E7%BA%B9%E5%8F%91%E3%80%81%E7%90%A5%E7%8F%80%E7%9C%BC%EF%BC%8C%E5%B9%B2%E5%87%80%E5%89%83%E9%9D%A2%EF%BC%9B%E8%B1%A1%E7%89%99%E7%99%BD%E8%A1%AC%E8%A1%AB%E3%80%81%E5%90%88%E4%BD%93%E6%B7%B1%E8%93%9D%E8%A5%BF%E8%A3%85%E3%80%81%E9%93%B6%E8%89%B2%E9%A2%86%E5%B8%A6%E5%A4%B9%E3%80%82%E7%AC%91%E5%AE%B9%E5%B8%B8%E5%85%88%E4%BA%8E%E8%AF%9D%E8%AF%AD%EF%BC%8C%E7%84%A6%E8%99%91%E6%97%B6%E6%8B%A8%E9%A2%86%E5%B8%A6%E5%A4%B9%E3%80%82⟧
-⟦CHAR|Eleanor|f|59|f2|Eleanor|59%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E9%93%B6%E7%81%B0%E9%BD%90%E8%80%B3%E7%9F%AD%E6%B3%A2%E6%B3%A2%E5%A4%B4%E3%80%81%E5%86%B7%E7%81%B0%E7%9C%BC%E3%80%81%E6%B8%85%E6%99%B0%E9%A2%A7%E9%AA%A8%E3%80%81%E8%BA%AB%E5%BD%A2%E6%8C%BA%E6%8B%94%EF%BC%8C%E6%B7%B1%E6%B5%B7%E5%86%9B%E8%93%9D%E6%88%96%E9%BB%91%E8%89%B2%E9%AB%98%E7%BA%A7%E5%A5%97%E8%A3%85%E3%80%81%E5%8D%95%E4%B8%B2%E7%8F%8D%E7%8F%A0%E8%80%B3%E9%A5%B0%E3%80%81%E6%B7%B1%E8%89%B2%E7%9A%AE%E8%B4%A8%E6%89%8B%E5%8C%85%EF%BC%9B%E4%B8%8D%E4%BB%A5%E7%9A%B1%E7%BA%B9%E5%A4%B8%E5%BC%A0%E5%8F%8D%E6%B4%BE%E3%80%82⟧
-⟦CHAR|Mia|f|29|f2|Mia|29%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E7%9F%AD%E6%B7%B1%E6%A3%95%E5%8F%91%E3%80%81%E6%B7%B1%E6%A3%95%E7%9C%BC%E3%80%81%E8%87%AA%E7%84%B6%E9%9B%80%E6%96%91%E5%8F%AF%E8%A7%81%EF%BC%8C%E5%AE%9E%E7%94%A8%E6%B7%B1%E7%81%B0%E5%B7%A5%E4%BD%9C%E8%A1%AB%E3%80%81%E5%8D%B7%E8%A2%96%E3%80%81%E7%B1%B3%E8%89%B2%E5%B8%86%E5%B8%83%E5%9B%B4%E8%A3%99%E7%95%99%E5%B0%91%E9%87%8F%E9%A2%9C%E6%96%99%E7%97%95%EF%BC%8C%E8%82%A9%E8%83%8C%E7%B4%A7%E5%87%91%EF%BC%9B%E5%B8%B8%E5%B8%A6%E6%A0%B7%E6%9D%BF%E5%92%8C%E9%93%85%E7%AC%94%E3%80%82⟧
-⟦CHAR|Claire|f|30|f2|Claire|30%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E9%95%BF%E9%87%91%E5%8F%91%E6%9D%BE%E5%8D%B7%E3%80%81%E8%93%9D%E7%81%B0%E7%9C%BC%E3%80%81%E7%BB%86%E9%95%BF%E7%9C%89%E3%80%81%E4%BF%AE%E9%95%BF%E4%BD%86%E8%87%AA%E7%84%B6%E7%9A%84%E4%BD%93%E6%80%81%EF%BC%9B%E5%BC%80%E5%9C%BA%E9%87%91%E8%89%B2%E7%BC%8E%E9%9D%A2%E7%A4%BC%E6%9C%8D%E5%8F%8A%E5%AE%B6%E5%BE%BD%E5%BD%A2%E8%80%B3%E9%A5%B0%EF%BC%8C%E6%91%84%E5%BD%B1%E6%A3%9A%E8%AF%81%E8%AF%8D%E9%98%B6%E6%AE%B5%E5%8F%AF%E7%A9%BF%E5%90%8C%E7%A4%BC%E6%9C%8D%E6%88%96%E5%A4%96%E6%90%AD%E6%B7%B1%E8%89%B2%E5%A4%96%E5%A5%97%EF%BC%8C%E8%80%B3%E9%A5%B0%E5%8F%AA%E5%9C%A8%E6%8B%A5%E6%9C%89%E6%97%B6%E5%87%BA%E7%8E%B0%E3%80%82⟧
+⟦CHAR|达米安|m|35|m2|Damian|35%E5%B2%81%E6%88%90%E5%B9%B4%E7%94%B7%E6%80%A7%EF%BC%8C%E7%BA%A6188cm%EF%BC%8C%E5%AE%BD%E8%82%A9%E4%BF%AE%E9%95%BF%E3%80%81%E7%95%A5%E6%96%B9%E4%B8%8B%E9%A2%8C%E3%80%81%E7%9F%AD%E6%B7%B1%E6%A3%95%E5%8F%91%E5%90%91%E5%90%8E%E6%A2%B3%E4%BD%86%E9%A2%9D%E5%89%8D%E4%B8%80%E7%BC%95%E6%9D%BE%E5%8F%91%E3%80%81%E7%81%B0%E7%9C%BC%E3%80%81%E7%9C%89%E5%B3%B0%E5%B9%B3%E7%9B%B4%EF%BC%9B%E5%B9%B2%E5%87%80%E5%89%83%E9%9D%A2%EF%BC%8C%E7%82%AD%E7%81%B0%E4%B8%89%E4%BB%B6%E5%A5%97%E3%80%81%E7%99%BD%E8%A1%AC%E8%A1%AB%E3%80%81%E6%B7%B1%E8%89%B2%E9%A2%86%E5%B8%A6%EF%BC%8C%E5%B7%A6%E8%A2%96%E5%8F%A3%E7%BC%BA%E4%B8%80%E6%9E%9A%E8%A2%96%E6%89%A3%EF%BC%8C%E5%8F%B3%E8%A2%96%E6%89%A3%E4%BF%9D%E7%95%99%E3%80%82%E7%A7%81%E4%B8%8B%E5%8F%AF%E8%84%B1%E5%A4%96%E5%A5%97%E8%80%8C%E4%B8%8D%E6%94%B9%E5%8F%98%E5%8F%91%E8%89%B2%E5%92%8C%E8%84%B8%E5%9E%8B%E3%80%82|Damian⟧
+⟦CHAR|伊森|m|32|m2|Ethan|32%E5%B2%81%E6%88%90%E5%B9%B4%E7%94%B7%E6%80%A7%EF%BC%8C%E7%BA%A6183cm%EF%BC%8C%E8%BA%AB%E5%BD%A2%E5%8C%80%E7%A7%B0%E3%80%81%E8%BE%83%E7%AA%84%E4%B8%8B%E9%A2%8C%E4%B8%8E%E6%B4%BB%E8%B7%83%E7%9C%89%E7%9C%BC%E3%80%81%E6%B5%85%E6%A3%95%E4%BE%A7%E5%88%86%E6%B3%A2%E7%BA%B9%E5%8F%91%E3%80%81%E7%90%A5%E7%8F%80%E7%9C%BC%EF%BC%8C%E5%B9%B2%E5%87%80%E5%89%83%E9%9D%A2%EF%BC%9B%E8%B1%A1%E7%89%99%E7%99%BD%E8%A1%AC%E8%A1%AB%E3%80%81%E5%90%88%E4%BD%93%E6%B7%B1%E8%93%9D%E8%A5%BF%E8%A3%85%E3%80%81%E9%93%B6%E8%89%B2%E9%A2%86%E5%B8%A6%E5%A4%B9%E3%80%82%E7%AC%91%E5%AE%B9%E5%B8%B8%E5%85%88%E4%BA%8E%E8%AF%9D%E8%AF%AD%EF%BC%8C%E7%84%A6%E8%99%91%E6%97%B6%E6%8B%A8%E9%A2%86%E5%B8%A6%E5%A4%B9%E3%80%82|Ethan⟧
+⟦CHAR|埃莉诺|f|59|f2|Eleanor|59%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E9%93%B6%E7%81%B0%E9%BD%90%E8%80%B3%E7%9F%AD%E6%B3%A2%E6%B3%A2%E5%A4%B4%E3%80%81%E5%86%B7%E7%81%B0%E7%9C%BC%E3%80%81%E6%B8%85%E6%99%B0%E9%A2%A7%E9%AA%A8%E3%80%81%E8%BA%AB%E5%BD%A2%E6%8C%BA%E6%8B%94%EF%BC%8C%E6%B7%B1%E6%B5%B7%E5%86%9B%E8%93%9D%E6%88%96%E9%BB%91%E8%89%B2%E9%AB%98%E7%BA%A7%E5%A5%97%E8%A3%85%E3%80%81%E5%8D%95%E4%B8%B2%E7%8F%8D%E7%8F%A0%E8%80%B3%E9%A5%B0%E3%80%81%E6%B7%B1%E8%89%B2%E7%9A%AE%E8%B4%A8%E6%89%8B%E5%8C%85%EF%BC%9B%E4%B8%8D%E4%BB%A5%E7%9A%B1%E7%BA%B9%E5%A4%B8%E5%BC%A0%E5%8F%8D%E6%B4%BE%E3%80%82|Eleanor⟧
+⟦CHAR|米娅|f|29|f2|Mia|29%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E7%9F%AD%E6%B7%B1%E6%A3%95%E5%8F%91%E3%80%81%E6%B7%B1%E6%A3%95%E7%9C%BC%E3%80%81%E8%87%AA%E7%84%B6%E9%9B%80%E6%96%91%E5%8F%AF%E8%A7%81%EF%BC%8C%E5%AE%9E%E7%94%A8%E6%B7%B1%E7%81%B0%E5%B7%A5%E4%BD%9C%E8%A1%AB%E3%80%81%E5%8D%B7%E8%A2%96%E3%80%81%E7%B1%B3%E8%89%B2%E5%B8%86%E5%B8%83%E5%9B%B4%E8%A3%99%E7%95%99%E5%B0%91%E9%87%8F%E9%A2%9C%E6%96%99%E7%97%95%EF%BC%8C%E8%82%A9%E8%83%8C%E7%B4%A7%E5%87%91%EF%BC%9B%E5%B8%B8%E5%B8%A6%E6%A0%B7%E6%9D%BF%E5%92%8C%E9%93%85%E7%AC%94%E3%80%82|Mia⟧
+⟦CHAR|克莱尔|f|30|f2|Claire|30%E5%B2%81%E6%88%90%E5%B9%B4%E5%A5%B3%E6%80%A7%EF%BC%8C%E9%95%BF%E9%87%91%E5%8F%91%E6%9D%BE%E5%8D%B7%E3%80%81%E8%93%9D%E7%81%B0%E7%9C%BC%E3%80%81%E7%BB%86%E9%95%BF%E7%9C%89%E3%80%81%E4%BF%AE%E9%95%BF%E4%BD%86%E8%87%AA%E7%84%B6%E7%9A%84%E4%BD%93%E6%80%81%EF%BC%9B%E5%BC%80%E5%9C%BA%E9%87%91%E8%89%B2%E7%BC%8E%E9%9D%A2%E7%A4%BC%E6%9C%8D%E5%8F%8A%E5%AE%B6%E5%BE%BD%E5%BD%A2%E8%80%B3%E9%A5%B0%EF%BC%8C%E6%91%84%E5%BD%B1%E6%A3%9A%E8%AF%81%E8%AF%8D%E9%98%B6%E6%AE%B5%E5%8F%AF%E7%A9%BF%E5%90%8C%E7%A4%BC%E6%9C%8D%E6%88%96%E5%A4%96%E6%90%AD%E6%B7%B1%E8%89%B2%E5%A4%96%E5%A5%97%EF%BC%8C%E8%80%B3%E9%A5%B0%E5%8F%AA%E5%9C%A8%E6%8B%A5%E6%9C%89%E6%97%B6%E5%87%BA%E7%8E%B0%E3%80%82|Claire⟧
 ⟦SET|cast_all⟧
-⟦GOAL|Understand%20the%20Door%20You%20Shouldn't%20Open%20and%20decide%20your%20next%20step.|The%20Door%20You%20Shouldn't%20Open⟧
-⟦DONE|flag|a_c01_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Door You Shouldn't Open|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|Who%20receives%20the%20photograph%20from%20three%20years%20ago%20first%3F|The%20Door%20You%20Shouldn't%20Open⟧
+⟦DONE|flag|a_c01_event|Notice the key change|旁白：Ethan's footsteps approach outside the study. The door handle slowly turns.⟧
+⟦DONE|say|Who receives the photograph from three years ago first? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Wedding estate corridor
-⟦BG|bg_a_c01s01|Wedding%20estate%20corridor%3B%20Player%2C%20Ethan%2C%20Claire%3B%20The%20engagement%20slideshow%20plays%20while%20Ethan%20kisses%20a%20woman%20in%20gold.%20He%20pulls%20her%20closer%20when%20he%20sees%20you.%20She%20leaves%20a%20crest-shaped%20earring%20behind.⟧
+⟦BG|bg_a_c01s01|Wedding%20estate%20corridor⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|22%3A30⟧
-旁白: On the eve of the wedding, at the wedding estate corridor.
-旁白: The engagement slideshow plays while Ethan kisses a woman in gold.
-旁白: He pulls her closer when he sees you.
-旁白: She leaves a crest-shaped earring behind.
-Ethan: “You're looking for my brother, aren't you?”
+旁白: On the eve of the wedding — Wedding estate corridor.
+旁白: Sorting corridor belongings as icons: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: The engagement slideshow is playing, but in a camera blind spot Ethan kisses a woman in a gold dress. Seeing you, he draws her even closer.
+伊森: “Seeing me like this, your first instinct is still to go to him?”
+伊森: “Do you want to know who she is, or why I made sure you would see?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Damian's guest room.
+旁白: As she leaves, the woman deliberately drops an earring engraved with the family crest.
 
 # SCENE｜Damian's guest room
-⟦BG|bg_a_c01s02|Damian's%20guest%20room%3B%20Player%2C%20Damian%3B%20Damian%20opens%20the%20door%20holding%20the%20button%20you%20lent%20him%20three%20years%20ago.%20He%20leaves%20the%20door%20unlocked.%20Your%20name%20is%20circled%20on%20tomorrow's%20seating%20plan.⟧
+⟦BG|bg_a_c01s02|Damian's%20guest%20room⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|22%3A55⟧
-旁白: A little later. Damian's guest room.
-旁白: Damian opens the door holding the button you lent him three years ago.
-旁白: He leaves the door unlocked.
-旁白: Your name is circled on tomorrow's seating plan.
-Damian: “You told me not to use your real name. Now I hardly dare say it.”
+旁白: A little later — Damian's guest room.
+旁白: At the corridor's end, the door opens from inside. Damian's cuffs are loose; he holds the old button you lent him in the storm three years ago. A shadow passes outside; he closes the door without locking it. Seeing your ring, he makes room for you to leave, though his gaze stays on your face.
+达米安: “You told me not to use real names that day. Now I hardly dare say yours.”
+达米安: “Did you come tonight for the truth, or would you rather curse me first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Family study.
+旁白: Tomorrow's wedding seating plan lies on his desk, your name circled in red.
 
 # SCENE｜Family study
-⟦BG|bg_a_c01s03|Family%20study%3B%20Player%2C%20Damian%3B%20He%20shows%20you%20a%20photograph%20of%20you%20together%20by%20a%20hospital%20vending%20machine.%20Ethan's%20handwriting%20is%20on%20the%20back.%20Footsteps%20stop%20outside%20the%20door.⟧
+⟦BG|bg_a_c01s03|Family%20study⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|23%3A20⟧
-旁白: A little later. Family study.
-旁白: He shows you a photograph of you together by a hospital vending machine.
-旁白: Ethan's handwriting is on the back.
-旁白: Footsteps stop outside the door.
-Damian: “Do you want the original, or do you want me to tell you about that night?”
+旁白: A little later — Family study.
+旁白: Practicing an index for the study photograph: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.
+⟦MG|g_mem_memory⟧
+旁白: Damian finds the rain-night photograph: the two of you beside a hospital vending machine. On its back is Ethan's handwriting.
+达米安: “I don't know when he took it. But he knows far more than you think.”
+达米安: “Will you confront him with this photo, or let me finish telling you about that night first?”
 ⟦FREE⟧
+旁白: Ethan's footsteps approach outside the study. The door handle slowly turns.
 ⟦SET|a_c01_event⟧
 
-# CHOICE｜Who turned that night into leverage?
-#### A｜Ask Damian for the original and an explanation
-旁白: Damian leaves the album and negatives available for examination.
-⟦OPT|A|set%3Aa_c01_a⟧
-旁白: Who turned that night into leverage?
-#### B｜Confront Ethan with a copy
-旁白: Ethan receives the copy and cannot deny knowing about the photograph.
-⟦OPT|B|set%3Aa_c01_b⟧
-旁白: Who turned that night into leverage?
-#### C｜Document the evidence and step away
-旁白: Neither brother receives an answer; the evidence stays with you.
-⟦OPT|C|set%3Aa_c01_c⟧
-旁白: Who turned that night into leverage?
+# CHOICE｜Who receives the photograph from three years ago first?
+#### A｜Ask Damian for an explanation and the original
+旁白: Damian leaves the album and negative sleeve in the study, no longer concealing the dates.
+⟦OPT|A|set%3Aa_c01_a%2Cauthored~a_c01_a⟧
+旁白: Who first turned the secret of that night three years ago into leverage?
+#### B｜Confront Ethan with the photograph now
+旁白: Ethan receives a photocopy and cannot pretend ignorance the next day.
+⟦OPT|B|set%3Aa_c01_b%2Cauthored~a_c01_b⟧
+旁白: Who first turned the secret of that night three years ago into leverage?
+#### C｜Photograph the evidence and leave both brothers
+旁白: Neither brother gets your answer; you keep the original yourself.
+⟦OPT|C|set%3Aa_c01_c%2Cauthored~a_c01_c⟧
+旁白: Who first turned the secret of that night three years ago into leverage?
 
 # ·
 
 # CHAPTER 2｜The Fiancé's Test
-⟦GOAL|Understand%20the%20Fianc%C3%A9's%20Test%20and%20decide%20your%20next%20step.|The%20Fianc%C3%A9's%20Test⟧
-⟦DONE|flag|a_c02_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Fiancé's Test|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|What%20will%20you%20do%20before%20today's%20ceremony%20begins%3F|The%20Fianc%C3%A9's%20Test⟧
+⟦DONE|flag|a_c02_event|Notice the key change|旁白：The printer automatically produces a premarital authorization supplement bearing your name.⟧
+⟦DONE|say|What will you do before today's ceremony begins? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Family breakfast room
-⟦BG|bg_a_c02s01|Family%20breakfast%20room%3B%20Player%2C%20Ethan%3B%20Three%20hours%20before%20the%20ceremony%2C%20Ethan%20slides%20a%20coffee%20across%20the%20table.%20The%20gold-dressed%20woman's%20boarding%20pass%20is%20under%20the%20coaster.⟧
+⟦BG|bg_a_c02s01|Family%20breakfast%20room⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|07%3A00⟧
-旁白: The next morning, at the family breakfast room.
+旁白: Early on the wedding morning — Family breakfast room.
 ⟦IF|a_c01_a⟧
-旁白: Damian leaves the album and negatives available for examination.
+旁白: Damian leaves the album and negative sleeve in the study, no longer concealing the dates.
 ⟦/IF⟧
 ⟦IF|a_c01_b⟧
-旁白: Ethan receives the copy and cannot deny knowing about the photograph.
+旁白: Ethan receives a photocopy and cannot pretend ignorance the next day.
 ⟦/IF⟧
 ⟦IF|a_c01_c⟧
-旁白: Neither brother receives an answer; the evidence stays with you.
+旁白: Neither brother gets your answer; you keep the original yourself.
 ⟦/IF⟧
-旁白: Three hours before the ceremony, Ethan slides a coffee across the table.
-旁白: The gold-dressed woman's boarding pass is under the coaster.
-Ethan: “Don't let one kiss decide everything between us.”
+旁白: Checking document icons after breakfast: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.
+⟦MG|g_mem_gala⟧
+旁白: Three hours remain before the wedding. Ethan slides you a coffee as though nothing happened last night. Beneath the coaster is the gold-dressed woman's boarding pass.
+伊森: “Don't turn one kiss into a verdict on our entire marriage.”
+伊森: “Should I call her now, or will you tell me whether to stop the wedding?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Estate terrace.
+旁白: A server brings the wedding vows. Your design company's full name is printed on the cover.
 
 # SCENE｜Estate terrace
-⟦BG|bg_a_c02s02|Estate%20terrace%3B%20Player%2C%20Damian%3B%20Damian%20sets%20a%20ring%20box%20on%20the%20stone%20railing.%20Inside%20is%20the%20old%20hospital%20parking%20ticket.%20He%20places%20his%20coat%20nearby%20rather%20than%20touching%20you.⟧
+⟦BG|bg_a_c02s02|Estate%20terrace⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|07%3A25⟧
-旁白: A little later. Estate terrace.
-旁白: Damian sets a ring box on the stone railing.
-旁白: Inside is the old hospital parking ticket.
-旁白: He places his coat nearby rather than touching you.
-Damian: “I remember you broke a heel and still insisted we get that man to the ER.”
+旁白: A little later — Estate terrace.
+旁白: Damian waits in the cold wind, holding your ring box. It remains closed, with the hospital parking ticket from that year inside. He leaves his coat on the railing and stands in the wind himself, as if awaiting a long-overdue verdict.
+达米安: “I remember your heel broke that night. You still insisted on getting the injured person into the ER first.”
+达米安: “Do you want me beside you when you face Ethan, or farther away?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Wedding planner's office.
+旁白: He places the ring box on the stone railing, leaving you to decide whether to pick it up.
 
 # SCENE｜Wedding planner's office
-⟦BG|bg_a_c02s03|Wedding%20planner's%20office%3B%20Player%2C%20Ethan%3B%20A%20tablet%20preview%20of%20the%20surprise%20slideshow%20flashes%20the%20old%20rain-night%20photo.%20Ethan%20shuts%20off%20the%20screen.%20The%20printer%20produces%20a%20premarital%20authorization%20with%20your%20name%20on%20it.⟧
+⟦BG|bg_a_c02s03|Wedding%20planner's%20office⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|07%3A50⟧
-旁白: A little later. Wedding planner's office.
-旁白: A tablet preview of the surprise slideshow flashes the old rain-night photo.
-旁白: Ethan shuts off the screen.
-旁白: The printer produces a premarital authorization with your name on it.
-Ethan: “I can stop the slideshow. What do you want me to explain first?”
+旁白: A little later — Wedding planner's office.
+旁白: Focusing before arranging the planner's playback records: Watch the four colored lights and repeat their sequence. You may skip.
+⟦MG|g_simon_lights⟧
+旁白: The planner checks this morning's surprise slideshow on a tablet. A thumbnail flashes the rain-night photograph from three years ago. Ethan reaches over and blanks the screen.
+伊森: “That was meant for you. Not for everyone.”
+伊森: “Do you want me to delete the material now, or bring the planner back to testify?”
 ⟦FREE⟧
+旁白: The printer automatically produces a premarital authorization supplement bearing your name.
 ⟦SET|a_c02_event⟧
 
-# CHOICE｜Why does a wedding document carry your studio's name?
-#### A｜Demand removal of the surprise slideshow
-旁白: The planner preserves the previous playlist as evidence.
-⟦OPT|A|set%3Aa_c02_a⟧
-旁白: Why does a wedding document carry your studio's name?
-#### B｜Send the documents to independent counsel
-旁白: The lawyer receives the documents before the ceremony.
-⟦OPT|B|set%3Aa_c02_b⟧
-旁白: Why does a wedding document carry your studio's name?
-#### C｜Stop rehearsing and notify a friend
-旁白: A friend witnesses the pause in wedding preparations.
-⟦OPT|C|set%3Aa_c02_c⟧
-旁白: Why does a wedding document carry your studio's name?
+# CHOICE｜What will you do before today's ceremony begins?
+#### A｜Demand Ethan remove the surprise slideshow
+旁白: The planner seals the old playlist version in front of you.
+⟦OPT|A|set%3Aa_c02_a%2Cauthored~a_c02_a⟧
+旁白: Are you still willing to let the wedding begin as planned?
+#### B｜Give the premarital papers to independent counsel
+旁白: Your lawyer receives them before the ceremony and can identify the authorization problem in time.
+⟦OPT|B|set%3Aa_c02_b%2Cauthored~a_c02_b⟧
+旁白: Are you still willing to let the wedding begin as planned?
+#### C｜Refuse further rehearsal and notify a friend
+旁白: Your friend stays beside you and witnesses the pause in wedding preparations.
+⟦OPT|C|set%3Aa_c02_c%2Cauthored~a_c02_c⟧
+旁白: Are you still willing to let the wedding begin as planned?
 
 # ·
 
 # CHAPTER 3｜Silence at the Altar
-⟦GOAL|Understand%20silence%20at%20the%20Altar%20and%20decide%20your%20next%20step.|Silence%20at%20the%20Altar⟧
-⟦DONE|flag|a_c03_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning Silence at the Altar|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|With%20the%20contract%20exposed%2C%20how%20will%20you%20stop%20the%20wedding%3F|Silence%20at%20the%20Altar⟧
+⟦DONE|flag|a_c03_event|Notice the key change|旁白：Your phone rings repeatedly: three studio suppliers simultaneously demand advance payments be settled.⟧
+⟦DONE|say|With the contract exposed, how will you stop the wedding? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Wedding hall
-⟦BG|bg_a_c03s01|Wedding%20hall%3B%20Player%2C%20Ethan%3B%20Guests%20rise%20as%20strings%20begin%20to%20play.%20The%20screen%20displays%20your%20unreleased%20designs%20as%20a%20joint%20commercial%20launch.%20Damian%20steps%20forward%20with%20a%20thick%20contract.⟧
+⟦BG|bg_a_c03s01|Wedding%20hall⟧
+⟦BGM|a_tension⟧
 ⟦TIME|10%3A00⟧
-旁白: At the scheduled ceremony, at the wedding hall.
+旁白: On the morning of the wedding — Wedding hall.
 ⟦IF|a_c02_a⟧
-旁白: The planner preserves the previous playlist as evidence.
+旁白: The planner seals the old playlist version in front of you.
 ⟦/IF⟧
 ⟦IF|a_c02_b⟧
-旁白: The lawyer receives the documents before the ceremony.
+旁白: Your lawyer receives them before the ceremony and can identify the authorization problem in time.
 ⟦/IF⟧
 ⟦IF|a_c02_c⟧
-旁白: A friend witnesses the pause in wedding preparations.
+旁白: Your friend stays beside you and witnesses the pause in wedding preparations.
 ⟦/IF⟧
-旁白: Guests rise as strings begin to play.
-旁白: The screen displays your unreleased designs as a joint commercial launch.
-旁白: Damian steps forward with a thick contract.
-Ethan: “That wasn't supposed to go up until after the vows.”
+旁白: Preparing to file ceremony materials: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.
+⟦MG|g_mem_gala⟧
+旁白: Guests rise and strings begin, but the giant screen prematurely displays visuals for a joint collaboration. They are your original, unreleased designs.
+伊森: “Why are those images on the screen? I didn't authorize this screening!”
+伊森: “Will you stop the ceremony publicly, or let me turn off the screen first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Chapel side room.
+旁白: Damian comes forward from the back row and puts a thick contract before you.
+旁白: The practical task is to stop the unapproved projection and preserve playback records.
 
 # SCENE｜Chapel side room
-⟦BG|bg_a_c03s02|Chapel%20side%20room%3B%20Player%2C%20Damian%3B%20The%20contract%20transfers%20licensing%20benefits%20away%20from%20your%20studio.%20Damian%20shields%20the%20doorway%20from%20cameras%2C%20then%20steps%20aside.⟧
+⟦BG|bg_a_c03s02|Chapel%20side%20room⟧
+⟦BGM|a_tension⟧
 ⟦TIME|10%3A25⟧
-旁白: A little later. Chapel side room.
-旁白: The contract transfers licensing benefits away from your studio.
-旁白: Damian shields the doorway from cameras, then steps aside.
-Damian: “You can walk out. You don't have to pretend for anyone.”
+旁白: A little later — Chapel side room.
+旁白: The contract grants a joint design license effective on the wedding day, but your studio isn't the beneficiary. Damian stands by the door without excuses. His eyes linger on your lips, then he forces them away. He shields you from guests' cameras, lowering his hand when you look over so you can walk out yourself.
+达米安: “I saw this yesterday. I should have been the one to tell you about this page.”
+达米安: “Do you want me to admit that publicly now, or give the signature page to your lawyer first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Estate meeting room.
+旁白: As Ethan follows you into the side room, your lawyer confirms by phone that you never signed the license.
 
 # SCENE｜Estate meeting room
-⟦BG|bg_a_c03s03|Estate%20meeting%20room%3B%20Player%2C%20Eleanor%3B%20The%20ceremony%20is%20suspended.%20Eleanor%20announces%20a%20freeze%20on%20partnership%20payments%20in%20front%20of%20the%20families.%20Her%20smile%20never%20changes.⟧
+⟦BG|bg_a_c03s03|Estate%20meeting%20room⟧
+⟦BGM|a_tension⟧
 ⟦TIME|10%3A50⟧
-旁白: A little later. Estate meeting room.
-旁白: The ceremony is suspended.
-旁白: Eleanor announces a freeze on partnership payments in front of the families.
-旁白: Her smile never changes.
-Eleanor: “A business relationship requires stability. Surely you understand.”
+旁白: A little later — Estate meeting room.
+旁白: Organizing interview records before entering the meeting room: Tap appearing 📸 icons, avoiding 🙂; aim for ten correct taps in twenty seconds. You may skip.
+⟦MG|g_whack_flash⟧
+旁白: The ceremony is forced to pause. Before relatives from both families, Eleanor announces partnership payments will be withheld. Her smile doesn't change.
+埃莉诺: “If you won't become family, we will have to reconsider the business too.”
+埃莉诺: “Would you like the grounds for the freeze explained, or the press to record them?”
 ⟦FREE⟧
+旁白: Your phone rings repeatedly: three studio suppliers simultaneously demand advance payments be settled.
 ⟦SET|a_c03_event⟧
 
-# CHOICE｜What will the family take from you for refusing?
+# CHOICE｜With the contract exposed, how will you stop the wedding?
 #### A｜Publicly suspend the ceremony and request an investigation
-旁白: Guests witness the suspension and the evidence is preserved.
-⟦OPT|A|set%3Aa_c03_a⟧
-旁白: What will the family take from you for refusing?
-#### B｜Take the papers to a lawyer
-旁白: The original contract is secured independently.
-⟦OPT|B|set%3Aa_c03_b⟧
-旁白: What will the family take from you for refusing?
-#### C｜Demand Ethan explain the projection to guests
-旁白: Ethan must account for the slideshow rather than privately dismissing it.
-⟦OPT|C|set%3Aa_c03_c⟧
-旁白: What will the family take from you for refusing?
+旁白: The press records your formal statement; the family cannot call it an ordinary quarrel.
+⟦OPT|A|set%3Aa_c03_a%2Cauthored~a_c03_a⟧
+旁白: Why do designs shown on your wedding screen appear in an authorization you never signed?
+#### B｜Leave the venue with the papers for your lawyer's office
+旁白: You leave with the unsigned supplement; your lawyer preserves it on the spot.
+⟦OPT|B|set%3Aa_c03_b%2Cauthored~a_c03_b⟧
+旁白: Why do designs shown on your wedding screen appear in an authorization you never signed?
+#### C｜Demand Ethan explain the slideshow to the guests
+旁白: His explanation is recorded for later comparison with the system logs.
+⟦OPT|C|set%3Aa_c03_c%2Cauthored~a_c03_c⟧
+旁白: Why do designs shown on your wedding screen appear in an authorization you never signed?
 
 # ·
 
 # CHAPTER 4｜Who Pays the Price
-⟦GOAL|Understand%20who%20Pays%20the%20Price%20and%20decide%20your%20next%20step.|Who%20Pays%20the%20Price⟧
-⟦DONE|flag|a_c04_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning Who Pays the Price|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|With%20studio%20payments%20frozen%2C%20what%20will%20you%20protect%20first%3F|Who%20Pays%20the%20Price⟧
+⟦DONE|flag|a_c04_event|Notice the key change|旁白：A reporter displays another screenshot just received. Its source account belongs to Eleanor's office.⟧
+⟦DONE|say|With studio payments frozen, what will you protect first? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Studio temporary office
-⟦BG|bg_a_c04s01|Studio%20temporary%20office%3B%20Player%2C%20Mia%3B%20Sketches%20cover%20the%20wall.%20Your%20largest%20client%20has%20canceled%2C%20and%20Mia%20is%20worried%20about%20payroll.%20The%20studio's%20funding%20has%20been%20frozen.⟧
+⟦BG|bg_a_c04s01|Studio%20temporary%20office⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|15%3A30⟧
-旁白: That afternoon, at the studio temporary office.
+旁白: That afternoon after the ceremony was suspended — Studio temporary office.
 ⟦IF|a_c03_a⟧
-旁白: Guests witness the suspension and the evidence is preserved.
+旁白: The press records your formal statement; the family cannot call it an ordinary quarrel.
 ⟦/IF⟧
 ⟦IF|a_c03_b⟧
-旁白: The original contract is secured independently.
+旁白: You leave with the unsigned supplement; your lawyer preserves it on the spot.
 ⟦/IF⟧
 ⟦IF|a_c03_c⟧
-旁白: Ethan must account for the slideshow rather than privately dismissing it.
+旁白: His explanation is recorded for later comparison with the system logs.
 ⟦/IF⟧
-旁白: Sketches cover the wall.
-旁白: Your largest client has canceled, and Mia is worried about payroll.
-旁白: The studio's funding has been frozen.
-Mia: “We can keep working, but the team needs a plan for Friday.”
+旁白: Focusing while organizing client contacts: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: Your sample sketches still hang on the wall from the morning. At the computer, your assistant tearfully reports that your biggest client has canceled.
+米娅: “They say payments will resume as long as you go back and finish the wedding.”
+米娅: “Do we protect payroll first, or contact clients to publicly clarify things?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Independent law office.
+旁白: You discover the cancellation email was sent forty minutes before the ceremony's suspension was announced.
 
 # SCENE｜Independent law office
-⟦BG|bg_a_c04s02|Independent%20law%20office%3B%20Player%2C%20Damian%3B%20Damian%20lays%20down%20old%20board%20minutes%20and%20payment%20records%20for%20your%20lawyer.%20His%20contact%20details%20accompany%20his%20evidence%2C%20not%20a%20plea%20for%20romance.⟧
+⟦BG|bg_a_c04s02|Independent%20law%20office⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|15%3A55⟧
-旁白: A little later. Independent law office.
-旁白: Damian lays down old board minutes and payment records for your lawyer.
-旁白: His contact details accompany his evidence, not a plea for romance.
-Damian: “Read every page. Don't take my word for any of it.”
+旁白: A little later — Independent law office.
+旁白: Damian spreads out old board minutes he signed and pushes payment records toward your lawyer rather than you. Beside his testimony he adds his phone number, without a plea for you to return.
+达米安: “I'll cover the legal fees. I'm not buying your forgiveness.”
+达米安: “Should I stay here as a witness, or wait outside?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Hotel media wall.
+旁白: The lawyer points to a number: the family's valuation of your studio was written down three years ago.
 
 # SCENE｜Hotel media wall
-⟦BG|bg_a_c04s03|Hotel%20media%20wall%3B%20Player%2C%20Mia%3B%20Reporters%20surround%20a%20leaked%20photograph%20of%20you%20with%20Damian.%20The%20wedding%20guest%20system's%20watermark%20is%20still%20visible.⟧
+⟦BG|bg_a_c04s03|Hotel%20media%20wall⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|16%3A20⟧
-旁白: A little later. Hotel media wall.
-旁白: Reporters surround a leaked photograph of you with Damian.
-旁白: The wedding guest system's watermark is still visible.
-Mia: “They've turned your work into a gossip story. How do we want to handle this?”
+旁白: A little later — Hotel media wall.
+旁白: Preparing an index for press images: Tap appearing 📸 icons, avoiding 🙂; aim for ten correct taps in twenty seconds. You may skip.
+⟦MG|g_whack_flash⟧
+旁白: Reporters gather around a leaked old photograph, pressing you about Damian. A wedding guest system watermark remains in its upper-right corner.
+伊森: “Don't photograph her. That image came out of our system.”
+伊森: “Do you want to answer yourself, or demand I hand over the complete access records?”
 ⟦FREE⟧
+旁白: A reporter displays another screenshot just received. Its source account belongs to Eleanor's office.
 ⟦SET|a_c04_event⟧
 
-# CHOICE｜Who leaked the photo from inside the wedding system?
-#### A｜Protect payroll and orders with the team
-旁白: Staff receive a contingency plan and remain involved.
-⟦OPT|A|set%3Aa_c04_a⟧
-旁白: Who leaked the photo from inside the wedding system?
-#### B｜Request legal preservation of the records
-旁白: Counsel prepares evidence preservation independent of the family.
-⟦OPT|B|set%3Aa_c04_b⟧
-旁白: Who leaked the photo from inside the wedding system?
-#### C｜Address the press without discussing romance
-旁白: Your own account separates the studio dispute from private speculation.
-⟦OPT|C|set%3Aa_c04_c⟧
-旁白: Who leaked the photo from inside the wedding system?
+# CHOICE｜With studio payments frozen, what will you protect first?
+#### A｜Protect wages and orders with your employees
+旁白: Staff receive emergency arrangements and know you haven't made them bargaining chips.
+⟦OPT|A|set%3Aa_c04_a%2Cauthored~a_c04_a⟧
+旁白: Who turned your past into a weapon?
+#### B｜Ask counsel to seek immediate evidence preservation
+旁白: The original partnership emails are legally preserved against later alteration.
+⟦OPT|B|set%3Aa_c04_b%2Cauthored~a_c04_b⟧
+旁白: Who turned your past into a weapon?
+#### C｜Personally clarify matters to the press without discussing romance
+旁白: Reporting starts to address suspected infringement rather than only the family scandal.
+⟦OPT|C|set%3Aa_c04_c%2Cauthored~a_c04_c⟧
+旁白: Who turned your past into a weapon?
 
 # ·
 
 # CHAPTER 5｜The Forbidden Dinner
-⟦GOAL|Understand%20the%20Forbidden%20Dinner%20and%20decide%20your%20next%20step.|The%20Forbidden%20Dinner⟧
-⟦DONE|flag|a_c05_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Forbidden Dinner|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|How%20do%20you%20respond%20to%20the%20kiss%20that%20nearly%20happened%20on%20the%20terrace%3F|The%20Forbidden%20Dinner⟧
+⟦DONE|flag|a_c05_event|Notice the key change|旁白：A family security vehicle slowly drives away outside the glass corridor.⟧
+⟦DONE|say|How do you respond to the kiss that nearly happened on the terrace? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Family dining hall
-⟦BG|bg_a_c05s01|Family%20dining%20hall%3B%20Player%2C%20Eleanor%3B%20Eleanor%20wants%20Ethan%20to%20announce%20the%20wedding%20was%20merely%20delayed%20by%20an%20argument.%20Damian%20removes%20the%20heir's%20place%20card%20and%20takes%20a%20seat%20beside%20you.⟧
+⟦BG|bg_a_c05s01|Family%20dining%20hall⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|20%3A00⟧
-旁白: That evening, at the family dining hall.
+旁白: The second day after the wedding — Family dining hall.
 ⟦IF|a_c04_a⟧
-旁白: Staff receive a contingency plan and remain involved.
+旁白: Staff receive emergency arrangements and know you haven't made them bargaining chips.
 ⟦/IF⟧
 ⟦IF|a_c04_b⟧
-旁白: Counsel prepares evidence preservation independent of the family.
+旁白: The original partnership emails are legally preserved against later alteration.
 ⟦/IF⟧
 ⟦IF|a_c04_c⟧
-旁白: Your own account separates the studio dispute from private speculation.
+旁白: Reporting starts to address suspected infringement rather than only the family scandal.
 ⟦/IF⟧
-旁白: Eleanor wants Ethan to announce the wedding was merely delayed by an argument.
-旁白: Damian removes the heir's place card and takes a seat beside you.
-Eleanor: “Everyone is waiting for a reassuring statement.”
+旁白: Recognizing dinner-setting icons before sitting down: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.
+⟦MG|g_mem_gala⟧
+旁白: Eleanor insists on holding dinner and having Ethan announce that you merely had a little quarrel. Damian suddenly sets down his napkin and stands. He asks a server to remove the head-table place card marking him as heir, then sits beside you for the first time.
+达米安: “Stop speaking for her. She isn't an asset on this table.”
+达米安: “Do you want me to move back, or read the premarital agreement aloud?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Night terrace.
+旁白: The room falls silent. Ethan squeezes his wineglass until it cracks.
 
 # SCENE｜Night terrace
-⟦BG|bg_a_c05s02|Night%20terrace%3B%20Player%2C%20Damian%3B%20He%20places%20a%20pair%20of%20flat%20shoes%20on%20the%20table%2C%20remembering%20the%20broken%20heel%20years%20ago.%20His%20open%20hand%20rests%20on%20the%20table%2C%20not%20on%20yours.⟧
+⟦BG|bg_a_c05s02|Night%20terrace⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|20%3A25⟧
-旁白: A little later. Night terrace.
-旁白: He places a pair of flat shoes on the table, remembering the broken heel years ago.
-旁白: His open hand rests on the table, not on yours.
-Damian: “You said you hated being treated like a prize. I should have listened sooner.”
+旁白: A little later — Night terrace.
+旁白: You drape your coat over a chair. Damian doesn't reach for you; he sets down flats like those from the storm three years ago. Only a wineglass stands between you. His open palm rests on the table without touching you. He remembers you wouldn't eat spicy food that night, and how much you hated being treated as a prize.
+达米安: “You gave your shoes to the injured girl that night and stood barefoot for half an hour.”
+达米安: “If I hadn't left then, would you be willing to get to know me again?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Glass passageway.
+旁白: He notices a camera flash behind you and doesn't hide.
 
 # SCENE｜Glass passageway
-⟦BG|bg_a_c05s03|Glass%20passageway%3B%20Player%2C%20Damian%3B%20An%20anonymous%20account%20sends%20a%20photograph%20taken%20moments%20ago%20on%20the%20terrace.%20It%20threatens%20to%20publish%20a%20story%20about%20a%20stolen%20bride%20at%20midnight.⟧
+⟦BG|bg_a_c05s03|Glass%20passageway⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|20%3A50⟧
-旁白: A little later. Glass passageway.
-旁白: An anonymous account sends a photograph taken moments ago on the terrace.
-旁白: It threatens to publish a story about a stolen bride at midnight.
-Damian: “I won't touch your phone. Tell me what you want to do with this.”
+旁白: A little later — Glass passageway.
+旁白: Organizing before saving corridor messages: Tap appearing 📵 icons, avoiding 💬; aim for ten correct taps in twenty seconds. You may skip.
+⟦MG|g_whack_texts⟧
+旁白: An anonymous account sends the terrace photo just taken, threatening a midnight story claiming the older brother stole the bride. Damian reaches for your phone, then stops.
+达米安: “I want to kiss you. That's the truth. But I don't want you paying for my desire.”
+达米安: “Will you push back against the anonymous sender, or find out who was photographing us downstairs first?”
 ⟦FREE⟧
+旁白: A family security vehicle slowly drives away outside the glass corridor.
 ⟦SET|a_c05_event⟧
 
-# CHOICE｜Who is watching your private moments?
-#### A｜Explore feelings for Damian while demanding the truth
-旁白: He acknowledges the attraction without receiving forgiveness.
-⟦OPT|A|set%3Aa_c05_a⟧
-旁白: Who is watching your private moments?
-#### B｜Investigate the leak first
-旁白: The image is preserved and the source becomes the priority.
-⟦OPT|B|set%3Aa_c05_b⟧
-旁白: Who is watching your private moments?
+# CHOICE｜How do you respond to the kiss that nearly happened on the terrace?
+#### A｜Explore getting to know Damian while demanding the truth
+旁白: He agrees to surrender the old vote records; intimacy cannot justify concealment.
+⟦OPT|A|set%3Aa_c05_a%2Cauthored~a_c05_a⟧
+旁白: Between sincerity and scandal, what can you trust?
+#### B｜Demand he explain the photo leak first
+旁白: He stops his private PR effort and helps preserve the covert photographs as evidence.
+⟦OPT|B|set%3Aa_c05_b%2Cauthored~a_c05_b⟧
+旁白: Between sincerity and scandal, what can you trust?
 #### C｜Decline intimacy for now
-旁白: Damian steps back and limits the discussion to the evidence.
-⟦OPT|C|set%3Aa_c05_c⟧
-旁白: Who is watching your private moments?
+旁白: He withdraws his approach and thereafter keeps the distance you request.
+⟦OPT|C|set%3Aa_c05_c%2Cauthored~a_c05_c⟧
+旁白: Between sincerity and scandal, what can you trust?
 
 # ·
 
 # CHAPTER 6｜His Deciding Vote
-⟦GOAL|Understand%20his%20Deciding%20Vote%20and%20decide%20your%20next%20step.|His%20Deciding%20Vote⟧
-⟦DONE|flag|a_c06_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning His Deciding Vote|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|After%20seeing%20Damian's%20vote%2C%20what%20accountability%20do%20you%20demand%3F|His%20Deciding%20Vote⟧
+⟦DONE|flag|a_c06_event|Notice the key change|旁白：He shows you silent surveillance footage of Damian signing.⟧
+⟦DONE|say|After seeing Damian's vote, what accountability do you demand? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Family archive
-⟦BG|bg_a_c06s01|Family%20archive%3B%20Player%2C%20Damian%3B%20A%20board%20voting%20record%20from%20three%20years%20earlier%20sets%20out%20a%20plan%20to%20control%20your%20studio's%20partnerships.%20The%20deciding%20vote%20is%20Damian's.⟧
+⟦BG|bg_a_c06s01|Family%20archive⟧
+⟦BGM|a_tension⟧
 ⟦TIME|21%3A30⟧
-旁白: On the third day after the wedding, at the family archive.
+旁白: The third day after the wedding — Family archive.
 ⟦IF|a_c05_a⟧
-旁白: He acknowledges the attraction without receiving forgiveness.
+旁白: He agrees to surrender the old vote records; intimacy cannot justify concealment.
 ⟦/IF⟧
 ⟦IF|a_c05_b⟧
-旁白: The image is preserved and the source becomes the priority.
+旁白: He stops his private PR effort and helps preserve the covert photographs as evidence.
 ⟦/IF⟧
 ⟦IF|a_c05_c⟧
-旁白: Damian steps back and limits the discussion to the evidence.
+旁白: He withdraws his approach and thereafter keeps the distance you request.
 ⟦/IF⟧
-旁白: A board voting record from three years earlier sets out a plan to control your studio's partnerships.
-旁白: The deciding vote is Damian's.
-Damian: “Yes. That's my signature. I knew what the proposal meant.”
+旁白: Sorting icons before reviewing vote records: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: A board voting record from three years ago lies beside the copier. It authorized control of your studio's partnerships from that year onward. Damian cast the deciding vote.
+Lawyer: “He didn't overlook this document. He personally voted in favor.”
+Lawyer: “Would you like the meeting footage first, or shall we call him in to answer?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Underground garage.
+旁白: In the doorway, Damian finally loses his usual composure.
 
 # SCENE｜Underground garage
-⟦BG|bg_a_c06s02|Underground%20garage%3B%20Player%2C%20Damian%3B%20Rain%20drips%20from%20his%20coat%20as%20he%20removes%20his%20board%20badge.%20He%20puts%20it%20within%20reach%20but%20leaves%20the%20decision%20to%20you.⟧
+⟦BG|bg_a_c06s02|Underground%20garage⟧
+⟦BGM|a_tension⟧
 ⟦TIME|21%3A55⟧
-旁白: A little later. Underground garage.
-旁白: Rain drips from his coat as he removes his board badge.
-旁白: He puts it within reach but leaves the decision to you.
-Damian: “I thought keeping my position would let me fix things later. It didn't.”
+旁白: A little later — Underground garage.
+旁白: Damian admits that fear of losing control kept him from stopping the family binding your project to the engagement. Rain drips from his expensive coat. His hand trembles as he removes his board badge, a more tangible admission than any love speech.
+达米安: “I liked you that night. And later I personally let you walk into this scheme.”
+达米安: “Do you want me to resign, testify, or never contact you again after tonight?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Estate driveway.
+旁白: He places his board badge within your reach without choosing for you.
 
 # SCENE｜Estate driveway
-⟦BG|bg_a_c06s03|Estate%20driveway%3B%20Player%2C%20Ethan%3B%20Ethan%20holds%20two%20tickets%20to%20the%20planned%20honeymoon%20destination.%20He%20shows%20silent%20footage%20of%20Damian%20signing%20the%20document.⟧
+⟦BG|bg_a_c06s03|Estate%20driveway⟧
+⟦BGM|a_tension⟧
 ⟦TIME|22%3A20⟧
-旁白: A little later. Estate driveway.
-旁白: Ethan holds two tickets to the planned honeymoon destination.
-旁白: He shows silent footage of Damian signing the document.
-Ethan: “He knew before I proposed. Ask him what else he knew.”
+旁白: A little later — Estate driveway.
+旁白: Organizing travel records beside the driveway: Slide tiles beside the empty space into order 1–8. You may skip.
+⟦MG|g_slide_photo⟧
+旁白: Ethan leans against his car with two tickets to the city planned for your honeymoon.
+伊森: “My brother will tell you he loves you. I'd rather know what that love was worth to him.”
+伊森: “Will you hear the other half of what happened three years ago?”
 ⟦FREE⟧
+旁白: He shows you silent surveillance footage of Damian signing.
 ⟦SET|a_c06_event⟧
 
-# CHOICE｜Was your first meeting ever really an accident?
-#### A｜Demand Damian resign from responsibility for your studio
-旁白: His position becomes a concrete condition of accountability.
-⟦OPT|A|set%3Aa_c06_a⟧
-旁白: Was your first meeting ever really an accident?
-#### B｜Ask for a public admission of the arrangement
-旁白: His involvement is documented for later disclosure.
-⟦OPT|B|set%3Aa_c06_b⟧
-旁白: Was your first meeting ever really an accident?
-#### C｜Stop private talks and independently investigate the records
-旁白: The inquiry moves outside the family's control.
-⟦OPT|C|set%3Aa_c06_c⟧
-旁白: Was your first meeting ever really an accident?
+# CHOICE｜After seeing Damian's vote, what accountability do you demand?
+#### A｜Demand he leave the role overseeing your studio
+旁白: He submits a recusal request to the board, losing power to intervene directly.
+⟦OPT|A|set%3Aa_c06_a%2Cauthored~a_c06_a⟧
+旁白: How many consequences still lie hidden in the vote Damian cast?
+#### B｜Have him publicly admit the old financial arrangement
+旁白: His written admission goes to your lawyer so the vote can be verified.
+⟦OPT|B|set%3Aa_c06_b%2Cauthored~a_c06_b⟧
+旁白: How many consequences still lie hidden in the vote Damian cast?
+#### C｜Refuse private talks and independently investigate the old records
+旁白: Your lawyer obtains all old materials; Damian cannot filter what you see.
+⟦OPT|C|set%3Aa_c06_c%2Cauthored~a_c06_c⟧
+旁白: How many consequences still lie hidden in the vote Damian cast?
 
 # ·
 
 # CHAPTER 7｜A Name in the Rain
-⟦GOAL|Understand%20a%20Name%20in%20the%20Rain%20and%20decide%20your%20next%20step.|A%20Name%20in%20the%20Rain⟧
-⟦DONE|flag|a_c07_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning A Name in the Rain|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|With%20the%20rain-night%20photograph%20accessed%2C%20which%20lead%20do%20you%20follow%20first%3F|A%20Name%20in%20the%20Rain⟧
+⟦DONE|flag|a_c07_event|Notice the key change|旁白：A pearl earring flashes on the monitor, identical to the style Eleanor habitually wears.⟧
+⟦DONE|say|With the rain-night photograph accessed, which lead do you follow first? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Old hotel lobby
-⟦BG|bg_a_c07s01|Old%20hotel%20lobby%3B%20Player%2C%20Damian%3B%20The%20hotel%20still%20displays%20photographs%20of%20the%20emergency%20rescue.%20The%20manager%20recognizes%20the%20photograph%20of%20your%20broken%20heel.⟧
+⟦BG|bg_a_c07s01|Old%20hotel%20lobby⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|14%3A00⟧
-旁白: The following day, at the old hotel lobby.
+旁白: Another day later — Old hotel lobby.
 ⟦IF|a_c06_a⟧
-旁白: His position becomes a concrete condition of accountability.
+旁白: He submits a recusal request to the board, losing power to intervene directly.
 ⟦/IF⟧
 ⟦IF|a_c06_b⟧
-旁白: His involvement is documented for later disclosure.
+旁白: His written admission goes to your lawyer so the vote can be verified.
 ⟦/IF⟧
 ⟦IF|a_c06_c⟧
-旁白: The inquiry moves outside the family's control.
+旁白: Your lawyer obtains all old materials; Damian cannot filter what you see.
 ⟦/IF⟧
-旁白: The hotel still displays photographs of the emergency rescue.
-旁白: The manager recognizes the photograph of your broken heel.
-Damian: “That night wasn't arranged. But what happened afterward was.”
+旁白: Preparing a search index for the hotel register: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.
+⟦MG|g_mem_memory⟧
+旁白: The old hotel still has photographs of that year's volunteer rescue. The front-desk manager recognizes the picture of your broken heel.
+Front-desk manager: “You gave up your ambulance place for someone else that night. That man waited for you until dawn.”
+Front-desk manager: “Do you want the old registration records, or to meet the rescued driver first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Old hotel stairwell.
+旁白: From the bottom of a cabinet, the manager takes a register someone has already photocopied.
 
 # SCENE｜Old hotel stairwell
-⟦BG|bg_a_c07s02|Old%20hotel%20stairwell%3B%20Player%2C%20Damian%3B%20He%20recalls%20sharing%20a%20cold%20sandwich%20and%20the%20alias%20June.%20He%20smiles%20briefly%2C%20then%20remembers%20the%20vote.⟧
+⟦BG|bg_a_c07s02|Old%20hotel%20stairwell⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|14%3A25⟧
-旁白: A little later. Old hotel stairwell.
-旁白: He recalls sharing a cold sandwich and the alias June.
-旁白: He smiles briefly, then remembers the vote.
-Damian: “I remembered June long after I knew your real name.”
+旁白: A little later — Old hotel stairwell.
+旁白: Damian recalls sharing a cold sandwich on the stairs and the alias you used, June. He smiles for half a second at the rainy memory, then stops, remembering his later choices.
+达米安: “I thought about finding you. Then I saw Ethan's proposal photos.”
+达米安: “Do you want to know why I stayed away, or why I never even warned you?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Hotel surveillance office.
+旁白: His phone receives a plea for help from the archivist responsible for the old photograph that was retrieved.
 
 # SCENE｜Hotel surveillance office
-⟦BG|bg_a_c07s03|Hotel%20surveillance%20office%3B%20Player%2C%20Damian%3B%20The%20archivist%20shows%20the%20photo%20was%20exported%20a%20week%20before%20Ethan%20proposed%20using%20the%20family%20administrative%20account.%20A%20pearl%20earring%20flickers%20on%20old%20footage.⟧
+⟦BG|bg_a_c07s03|Hotel%20surveillance%20office⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|14%3A50⟧
-旁白: A little later. Hotel surveillance office.
-旁白: The archivist shows the photo was exported a week before Ethan proposed using the family administrative account.
-旁白: A pearl earring flickers on old footage.
-Damian: “Someone looked for us. We need to find out who.”
+旁白: A little later — Hotel surveillance office.
+旁白: Remembering the review order before the surveillance office: Watch the four colored lights and repeat their sequence. You may skip.
+⟦MG|g_simon_lights⟧
+旁白: The archivist displays access records: the old photo was exported a week before Ethan proposed, using the family administration account.
+Archivist: “Someone was arranging places for all three of you from the start.”
+Archivist: “Will you take copies of these records, or have the police secure the original hard drive first?”
 ⟦FREE⟧
+旁白: A pearl earring flashes on the monitor, identical to the style Eleanor habitually wears.
+旁白: The practical task is to check the old photo export time and device.
 ⟦SET|a_c07_event⟧
 
-# CHOICE｜Who was wearing the pearl earrings?
-#### A｜Find the driver you helped that night
-旁白: A witness to the original encounter is identified.
-⟦OPT|A|set%3Aa_c07_a⟧
-旁白: Who was wearing the pearl earrings?
-#### B｜Trace the administrative account
-旁白: The access logs become a key line of inquiry.
-⟦OPT|B|set%3Aa_c07_b⟧
-旁白: Who was wearing the pearl earrings?
-#### C｜Request Damian's complete records of that night
-旁白: His account can be compared to independent evidence.
-⟦OPT|C|set%3Aa_c07_c⟧
-旁白: Who was wearing the pearl earrings?
+# CHOICE｜With the rain-night photograph accessed, which lead do you follow first?
+#### A｜Meet the driver rescued that night
+旁白: The driver agrees to testify, establishing the true circumstances of your meeting with Damian.
+⟦OPT|A|set%3Aa_c07_a%2Cauthored~a_c07_a⟧
+旁白: Who began recording your lives so early?
+#### B｜Trace the family administration account's user
+旁白: The archivist preserves account and device records, connecting the timeline.
+⟦OPT|B|set%3Aa_c07_b%2Cauthored~a_c07_b⟧
+旁白: Who began recording your lives so early?
+#### C｜Demand all Damian's contact records from that time
+旁白: He hands over unsent contact details and hotel bills; romantic memories alone no longer suffice.
+⟦OPT|C|set%3Aa_c07_c%2Cauthored~a_c07_c⟧
+旁白: Who began recording your lives so early?
 
 # ·
 
 # CHAPTER 8｜The Affair Was Staged
-⟦GOAL|Understand%20the%20Affair%20Was%20Staged%20and%20decide%20your%20next%20step.|The%20Affair%20Was%20Staged⟧
-⟦DONE|flag|a_c08_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Affair Was Staged|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|How%20will%20you%20deal%20with%20Ethan%20after%20he%20admits%20staging%20the%20affair%3F|The%20Affair%20Was%20Staged⟧
+⟦DONE|flag|a_c08_event|Notice the key change|旁白：Eleanor's assistant delivers a threat: keep investigating and the terrace photos will be published.⟧
+⟦DONE|say|How will you deal with Ethan after he admits staging the affair? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Private photo studio
-⟦BG|bg_a_c08s01|Private%20photo%20studio%3B%20Player%2C%20Claire%3B%20The%20woman%20in%20gold%20drops%20a%20contract%20on%20the%20table.%20Ethan%20paid%20her%20to%20pose%20as%20his%20lover.%20She%20is%20angry%20about%20how%20the%20footage%20was%20used.⟧
+⟦BG|bg_a_c08s01|Private%20photo%20studio⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|16%3A00⟧
-旁白: Later that day, at the private photo studio.
+旁白: On day four — Private photo studio.
 ⟦IF|a_c07_a⟧
-旁白: A witness to the original encounter is identified.
+旁白: The driver agrees to testify, establishing the true circumstances of your meeting with Damian.
 ⟦/IF⟧
 ⟦IF|a_c07_b⟧
-旁白: The access logs become a key line of inquiry.
+旁白: The archivist preserves account and device records, connecting the timeline.
 ⟦/IF⟧
 ⟦IF|a_c07_c⟧
-旁白: His account can be compared to independent evidence.
+旁白: He hands over unsent contact details and hotel bills; romantic memories alone no longer suffice.
 ⟦/IF⟧
-旁白: The woman in gold drops a contract on the table.
-旁白: Ethan paid her to pose as his lover.
-旁白: She is angry about how the footage was used.
-Claire: “I was hired to act. I wasn't hired to ruin your life.”
+旁白: Checking filming-material icons at the studio: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: The woman in gold slams a filming contract onto the table: Ethan paid her to play his lover. She looks irritated, not triumphant.
+克莱尔: “I thought we were filming a premarital reality show. Nobody told me you would see it.”
+克莱尔: “Do you want my original footage, or a signed statement allowing me to testify publicly?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Ethan's study.
+旁白: The final page bears a wedding planner's signature as well as Ethan's.
 
 # SCENE｜Ethan's study
-⟦BG|bg_a_c08s02|Ethan's%20study%3B%20Player%2C%20Ethan%3B%20Ethan%20shows%20unfinished%20apologies%20and%20a%20file%20containing%20footage%20of%20Damian's%20vote.%20He%20starts%20to%20reach%20for%20your%20sleeve%2C%20then%20stops.⟧
+⟦BG|bg_a_c08s02|Ethan's%20study⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|16%3A25⟧
-旁白: A little later. Ethan's study.
-旁白: Ethan shows unfinished apologies and a file containing footage of Damian's vote.
-旁白: He starts to reach for your sleeve, then stops.
-Ethan: “I wanted you to choose me. I made sure the worst possible thing happened instead.”
+旁白: A little later — Ethan's study.
+旁白: Ethan finally admits the kiss was staged. Instead of saying it was for your own good, he shows you apologies repeatedly typed and deleted on his phone. He reaches for your sleeve, sees your expression, and finally lets go.
+伊森: “I wanted to make you jealous. I bet you'd choose me, and I lost.”
+伊森: “What punishment would be fair? At least don't let me define fairness for you again.”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Estate projection room.
+旁白: He opens an encrypted file containing a clip of his brother participating in the family plan.
 
 # SCENE｜Estate projection room
-⟦BG|bg_a_c08s03|Estate%20projection%20room%3B%20Player%2C%20Ethan%3B%20The%20clip%20shows%20only%20Damian's%20approving%20vote.%20Its%20file%20metadata%20shows%20it%20was%20edited%20yesterday.⟧
+⟦BG|bg_a_c08s03|Estate%20projection%20room⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|16%3A50⟧
-旁白: A little later. Estate projection room.
-旁白: The clip shows only Damian's approving vote.
-旁白: Its file metadata shows it was edited yesterday.
-Ethan: “The full recording is still here. I'll give it to you.”
+旁白: A little later — Estate projection room.
+旁白: Organizing material numbers in the projection room: Slide tiles beside the empty space into order 1–8. You may skip.
+⟦MG|g_slide_photo⟧
+旁白: The video shows only Damian voting yes; what came before and after has been cut. In the file properties, you see it was modified yesterday.
+达米安: “I signed. But someone removed my later objection.”
+达米安: “Will you rely on the complete original, or have me bring it and face questioning?”
 ⟦FREE⟧
+旁白: Eleanor's assistant delivers a threat: keep investigating and the terrace photos will be published.
 ⟦SET|a_c08_event⟧
 
-# CHOICE｜Who edited the recording, and why now?
-#### A｜Demand Ethan publicly admit the staged affair
-旁白: Claire's contract supports a documented correction.
-⟦OPT|A|set%3Aa_c08_a⟧
-旁白: Who edited the recording, and why now?
-#### B｜Preserve the unedited footage
-旁白: The full record is available for independent review.
-⟦OPT|B|set%3Aa_c08_b⟧
-旁白: Who edited the recording, and why now?
-#### C｜Reject another attempt to provoke jealousy
-旁白: Ethan loses the ability to use the staged affair to secure a private meeting.
-⟦OPT|C|set%3Aa_c08_c⟧
-旁白: Who edited the recording, and why now?
+# CHOICE｜How will you deal with Ethan after he admits staging the affair?
+#### A｜Demand a public admission of the staged scene
+旁白: He sends the planners a correction; the scandal no longer falls solely on you.
+⟦OPT|A|set%3Aa_c08_a%2Cauthored~a_c08_a⟧
+旁白: If the affair was acting, who made your real life into a business deal?
+#### B｜Keep the complete, unedited footage he supplies
+旁白: Your lawyer obtains the uncut original instead of seeing only clips harmful to Damian.
+⟦OPT|B|set%3Aa_c08_b%2Cauthored~a_c08_b⟧
+旁白: If the affair was acting, who made your real life into a business deal?
+#### C｜Refuse further approaches through jealousy
+旁白: He stops private flirtatious messages; discussion turns to evidence and responsibility.
+⟦OPT|C|set%3Aa_c08_c%2Cauthored~a_c08_c⟧
+旁白: If the affair was acting, who made your real life into a business deal?
 
 # ·
 
 # CHAPTER 9｜A Kiss With a Price Tag
-⟦GOAL|Understand%20a%20Kiss%20With%20a%20Price%20Tag%20and%20decide%20your%20next%20step.|A%20Kiss%20With%20a%20Price%20Tag⟧
-⟦DONE|flag|a_c09_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning A Kiss With a Price Tag|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|How%20will%20you%20respond%20to%20blackmail%20over%20your%20private%20life%3F|A%20Kiss%20With%20a%20Price%20Tag⟧
+⟦DONE|flag|a_c09_event|Notice the key change|旁白：An anonymous livestream comment warns: “Pearls remember every confession.”⟧
+⟦DONE|say|How will you respond to blackmail over your private life? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Studio photo set
-⟦BG|bg_a_c09s01|Studio%20photo%20set%3B%20Player%2C%20Ethan%3B%20Terrace%20photos%20appear%20online%20with%20a%20headline%20accusing%20you%20of%20marrying%20for%20money.%20Staff%20shield%20models%20from%20intrusive%20cameras.⟧
+⟦BG|bg_a_c09s01|Studio%20photo%20set⟧
+⟦BGM|a_tension⟧
 ⟦TIME|11%3A00⟧
-旁白: The following morning, at the studio photo set.
+旁白: On day five — Studio photo set.
 ⟦IF|a_c08_a⟧
-旁白: Claire's contract supports a documented correction.
+旁白: He sends the planners a correction; the scandal no longer falls solely on you.
 ⟦/IF⟧
 ⟦IF|a_c08_b⟧
-旁白: The full record is available for independent review.
+旁白: Your lawyer obtains the uncut original instead of seeing only clips harmful to Damian.
 ⟦/IF⟧
 ⟦IF|a_c08_c⟧
-旁白: Ethan loses the ability to use the staged affair to secure a private meeting.
+旁白: He stops private flirtatious messages; discussion turns to evidence and responsibility.
 ⟦/IF⟧
-旁白: Terrace photos appear online with a headline accusing you of marrying for money.
-旁白: Staff shield models from intrusive cameras.
-Ethan: “I didn't think they'd go after everyone who works for you.”
+旁白: Preparing studio contact records: Tap appearing 📵 icons, avoiding 💬; aim for ten correct taps in twenty seconds. You may skip.
+⟦MG|g_whack_texts⟧
+旁白: The terrace photo leaks online under a headline calling you a woman who fled her wedding for money. Colleagues silently move a dress form in front of the camera to block covert photos. Ethan's smile collapses: for the first time he sees his game hurt real people.
+米娅: “They aren't discussing whom you're dating. They're destroying our orders.”
+米娅: “Do you want to speak yourself, or have the studio publish only the copyright facts first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Damian's office.
+旁白: Your lawyer calls: the anonymous account uses the wedding system's server.
+旁白: The practical task is to identify the source publishing the covert photograph.
 
 # SCENE｜Damian's office
-⟦BG|bg_a_c09s02|Damian's%20office%3B%20Player%2C%20Damian%3B%20Damian%20closes%20an%20unsent%20PR%20email%2C%20sets%20down%20the%20phone%20and%20hands%20over%20his%20annotated%20board%20records.⟧
+⟦BG|bg_a_c09s02|Damian's%20office⟧
+⟦BGM|a_tension⟧
 ⟦TIME|11%3A25⟧
-旁白: A little later. Damian's office.
-旁白: Damian closes an unsent PR email, sets down the phone and hands over his annotated board records.
-Damian: “It's up to you how to respond. Here's the original document.”
+旁白: A little later — Damian's office.
+旁白: Damian is preparing to have his PR team suppress the story. When you enter, he closes an unsent email. He puts down the phone instead of calling PR for you and waits for your own plan.
+达米安: “I wanted to handle everything for you again. I almost repeated the same mistake.”
+达米安: “Would you like me to disclose my vote, or return the evidence to you?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Independent streaming studio.
+旁白: He hands over the original board document with his handwritten notes, keeping no copy himself.
 
 # SCENE｜Independent streaming studio
-⟦BG|bg_a_c09s03|Independent%20streaming%20studio%3B%20Player%2C%20Mia%3B%20Neither%20brother%20sits%20in%20front%20of%20the%20camera.%20An%20anonymous%20comment%20mentions%20pearls%20and%20confessions.%20The%20lawyer%20confirms%20the%20wedding%20server%20is%20involved.⟧
+⟦BG|bg_a_c09s03|Independent%20streaming%20studio⟧
+⟦BGM|a_tension⟧
 ⟦TIME|11%3A50⟧
-旁白: A little later. Independent streaming studio.
-旁白: Neither brother sits in front of the camera.
-旁白: An anonymous comment mentions pearls and confessions.
-旁白: The lawyer confirms the wedding server is involved.
-Mia: “We can set the record straight without putting your private life on display.”
+旁白: A little later — Independent streaming studio.
+旁白: Recognizing camera icons before the livestream: Tap appearing 📸 icons, avoiding 🙂; aim for ten correct taps in twenty seconds. You may skip.
+⟦MG|g_whack_flash⟧
+旁白: You stand before a blank livestream backdrop. The studio lights face the misused old photograph. Neither Ethan nor Damian sits in front of the camera.
+Independent journalist: “This story belongs to you, not the brothers.”
+Independent journalist: “Would you like to address the romance rumors first, or speak directly through the studio documents?”
 ⟦FREE⟧
+旁白: An anonymous livestream comment warns: “Pearls remember every confession.”
 ⟦SET|a_c09_event⟧
 
-# CHOICE｜Who used the wedding server to target you?
-#### A｜Publicly explain the suspension in your own voice
-旁白: The public receives your account rather than a family statement.
-⟦OPT|A|set%3Aa_c09_a⟧
-旁白: Who used the wedding server to target you?
-#### B｜Preserve the server records and pursue the leak legally
-旁白: The technical evidence is retained for counsel.
-⟦OPT|B|set%3Aa_c09_b⟧
-旁白: Who used the wedding server to target you?
-#### C｜Discuss only the rights to your work
-旁白: Private relationship details remain undisclosed.
-⟦OPT|C|set%3Aa_c09_c⟧
-旁白: Who used the wedding server to target you?
+# CHOICE｜How will you respond to blackmail over your private life?
+#### A｜Publish the facts of the ceremony's suspension on your own account
+旁白: You issue the statement yourself, denying the press another chance to define your relationship.
+⟦OPT|A|set%3Aa_c09_a%2Cauthored~a_c09_a⟧
+旁白: Why does the anonymous sender have internal surveillance?
+#### B｜First sue the leaker and preserve the server records
+旁白: Independent counsel secures the server evidence so the anonymous sender cannot easily alter or delete it.
+⟦OPT|B|set%3Aa_c09_b%2Cauthored~a_c09_b⟧
+旁白: Why does the anonymous sender have internal surveillance?
+#### C｜Keep relationships private and address only rights in your work
+旁白: The team publishes an ownership statement; intimacy is no longer a negotiating condition.
+⟦OPT|C|set%3Aa_c09_c%2Cauthored~a_c09_c⟧
+旁白: Why does the anonymous sender have internal surveillance?
 
 # ·
 
 # CHAPTER 10｜The Younger Brother's Rivalry
-⟦GOAL|Understand%20the%20Younger%20Brother's%20Rivalry%20and%20decide%20your%20next%20step.|The%20Younger%20Brother's%20Rivalry⟧
-⟦DONE|flag|a_c10_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Younger Brother's Rivalry|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|With%20the%20access%20logs%20obtained%2C%20whom%20do%20you%20hold%20accountable%20first%3F|The%20Younger%20Brother's%20Rivalry⟧
+⟦DONE|flag|a_c10_event|Notice the key change|旁白：She slides over a stack of contracts whose cover carries your studio's new name.⟧
+⟦DONE|say|With the access logs obtained, whom do you hold accountable first? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Estate billiard room
-⟦BG|bg_a_c10s01|Estate%20billiard%20room%3B%20Player%2C%20Ethan%3B%20Ethan%20grips%20a%20cue%20the%20wrong%20way%20round.%20He%20admits%20he%20hated%20being%20compared%20to%20his%20brother.⟧
+⟦BG|bg_a_c10s01|Estate%20billiard%20room⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|15%3A00⟧
-旁白: On the sixth day, at the estate billiard room.
+旁白: On day six — Estate billiard room.
 ⟦IF|a_c09_a⟧
-旁白: The public receives your account rather than a family statement.
+旁白: You issue the statement yourself, denying the press another chance to define your relationship.
 ⟦/IF⟧
 ⟦IF|a_c09_b⟧
-旁白: The technical evidence is retained for counsel.
+旁白: Independent counsel secures the server evidence so the anonymous sender cannot easily alter or delete it.
 ⟦/IF⟧
 ⟦IF|a_c09_c⟧
-旁白: Private relationship details remain undisclosed.
+旁白: The team publishes an ownership statement; intimacy is no longer a negotiating condition.
 ⟦/IF⟧
-旁白: Ethan grips a cue the wrong way round.
-旁白: He admits he hated being compared to his brother.
-Ethan: “I wanted to win. I stopped asking whether winning would hurt you.”
+旁白: Indexing administrator materials in the billiard room: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: Ethan holds his pool cue upside down like a child waiting to be punished. He says he has never accepted living in his brother's shadow.
+伊森: “I loved you. I also wanted to beat him. Both are true.”
+伊森: “Will you hear me out, or should I hand over the account password first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Wedding system control room.
+旁白: He places the wedding guest system's administrator token on the pool table.
 
 # SCENE｜Wedding system control room
-⟦BG|bg_a_c10s02|Wedding%20system%20control%20room%3B%20Player%2C%20Ethan%3B%20The%20hidden%20footage%20was%20uploaded%20by%20the%20family%20administrative%20office.%20The%20export%20device%20belongs%20to%20Eleanor's%20secretary.⟧
+⟦BG|bg_a_c10s02|Wedding%20system%20control%20room⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|15%3A25⟧
-旁白: A little later. Wedding system control room.
-旁白: The hidden footage was uploaded by the family administrative office.
-旁白: The export device belongs to Eleanor's secretary.
-Ethan: “That's the account. I can't pretend I didn't help make this possible.”
+旁白: A little later — Wedding system control room.
+旁白: Ethan opens the complete access records. You see covert footage uploaded by the family administration office disguised as a wedding surprise. His joke dies on his lips, leaving only a belated apology.
+System administrator: “The deletion command didn't reach the offline backup. We can recover it here.”
+System administrator: “Shall we save it for your lawyer, or have Ethan explain his responsibility himself now?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Eleanor's tea room.
+旁白: The export device number points to Eleanor's private secretary's desk.
+旁白: The practical task is to recover guest-system logs.
 
 # SCENE｜Eleanor's tea room
-⟦BG|bg_a_c10s03|Eleanor's%20tea%20room%3B%20Player%2C%20Eleanor%3B%20Ethan%20confronts%20his%20mother.%20Eleanor%20calmly%20stirs%20tea%20while%20the%20export%20record%20sits%20on%20the%20table.⟧
+⟦BG|bg_a_c10s03|Eleanor's%20tea%20room⟧
+⟦BGM|a_betrayal⟧
 ⟦TIME|15%3A50⟧
-旁白: A little later. Eleanor's tea room.
-旁白: Ethan confronts his mother.
-旁白: Eleanor calmly stirs tea while the export record sits on the table.
-Eleanor: “Families protect their interests. Your studio was part of ours.”
+旁白: A little later — Eleanor's tea room.
+旁白: Practicing record-checking steps before the tea-room meeting: Watch the four colored lights and repeat their sequence. You may skip.
+⟦MG|g_simon_lights⟧
+旁白: Ethan confronts his mother, his voice trembling. Eleanor merely stirs her tea slowly.
+埃莉诺: “You wanted to beat your brother. I helped. Why blame me now?”
+埃莉诺: “Would you like my definition of love, or your company's financial statements?”
 ⟦FREE⟧
+旁白: She slides over a stack of contracts whose cover carries your studio's new name.
 ⟦SET|a_c10_event⟧
 
-# CHOICE｜What did Eleanor intend to acquire through the wedding?
-#### A｜Demand a formal apology to you and staff
-旁白: Ethan must acknowledge the damage to the people affected.
-⟦OPT|A|set%3Aa_c10_a⟧
-旁白: What did Eleanor intend to acquire through the wedding?
-#### B｜Commission an independent audit of the administrator logs
-旁白: The logs are examined outside the family.
-⟦OPT|B|set%3Aa_c10_b⟧
-旁白: What did Eleanor intend to acquire through the wedding?
-#### C｜Confront Eleanor with the export record
-旁白: Her explanation is preserved for comparison with other evidence.
-⟦OPT|C|set%3Aa_c10_c⟧
-旁白: What did Eleanor intend to acquire through the wedding?
+# CHOICE｜With the access logs obtained, whom do you hold accountable first?
+#### A｜Demand Ethan formally apologize to you and the employees
+旁白: His recorded apology enters the case file and staff hear specific admissions.
+⟦OPT|A|set%3Aa_c10_a%2Cauthored~a_c10_a⟧
+旁白: The visitor records lead to Eleanor. How much has she taken from you?
+#### B｜Have an independent agency check all administrator logs
+旁白: Preserved logs show Eleanor's office uploaded the covert footage.
+⟦OPT|B|set%3Aa_c10_b%2Cauthored~a_c10_b⟧
+旁白: The visitor records lead to Eleanor. How much has she taken from you?
+#### C｜Compare the export records with Eleanor in person
+旁白: Her explanation is recorded; she cannot later deny prior knowledge.
+⟦OPT|C|set%3Aa_c10_c%2Cauthored~a_c10_c⟧
+旁白: The visitor records lead to Eleanor. How much has she taken from you?
 
 # ·
 
 # CHAPTER 11｜The Studio They Took
-⟦GOAL|Understand%20the%20Studio%20They%20Took%20and%20decide%20your%20next%20step.|The%20Studio%20They%20Took⟧
-⟦DONE|flag|a_c11_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Studio They Took|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|What%20is%20your%20first%20move%20after%20discovering%20the%20forged%20license%3F|The%20Studio%20They%20Took⟧
+⟦DONE|flag|a_c11_event|Notice the key change|旁白：A client email from two years ago shows the family asked you to stop seeking outside business.⟧
+⟦DONE|say|What is your first move after discovering the forged license? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Studio legal cabinet
-⟦BG|bg_a_c11s01|Studio%20legal%20cabinet%3B%20Player%2C%20Mia%3B%20A%20scanned%20perpetual%20license%20bears%20a%20signature%20that%20is%20not%20yours%20and%20an%20old%20stamp%20used%20for%20a%20limited%20test.⟧
+⟦BG|bg_a_c11s01|Studio%20legal%20cabinet⟧
+⟦BGM|a_tension⟧
 ⟦TIME|10%3A00⟧
-旁白: On the seventh day, at the studio legal cabinet.
+旁白: On day seven — Studio legal cabinet.
 ⟦IF|a_c10_a⟧
-旁白: Ethan must acknowledge the damage to the people affected.
+旁白: His recorded apology enters the case file and staff hear specific admissions.
 ⟦/IF⟧
 ⟦IF|a_c10_b⟧
-旁白: The logs are examined outside the family.
+旁白: Preserved logs show Eleanor's office uploaded the covert footage.
 ⟦/IF⟧
 ⟦IF|a_c10_c⟧
-旁白: Her explanation is preserved for comparison with other evidence.
+旁白: Her explanation is recorded; she cannot later deny prior knowledge.
 ⟦/IF⟧
-旁白: A scanned perpetual license bears a signature that is not yours and an old stamp used for a limited test.
-Mia: “That stamp was never supposed to authorize this.”
+旁白: Practicing search markers for legal files: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: You find a scan of a permanent license. The signature isn't your handwriting. Yet its lower-right corner carries an old stamp you authorized for a single test.
+Lawyer: “They've pieced a short trial into an ownership transfer.”
+Lawyer: “Shall we seek to suspend this contract first, or publish the full creation logs?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Damian's board office.
+旁白: The back of the copy bears a project number belonging to the family holding company.
 
 # SCENE｜Damian's board office
-⟦BG|bg_a_c11s02|Damian's%20board%20office%3B%20Player%2C%20Damian%3B%20He%20produces%20a%20secret%20valuation%20of%20your%20company%20from%20three%20years%20ago.%20The%20price%20is%20painfully%20low.⟧
+⟦BG|bg_a_c11s02|Damian's%20board%20office⟧
+⟦BGM|a_tension⟧
 ⟦TIME|10%3A25⟧
-旁白: A little later. Damian's board office.
-旁白: He produces a secret valuation of your company from three years ago.
-旁白: The price is painfully low.
-Damian: “They priced it before they asked you. I let that happen.”
+旁白: A little later — Damian's board office.
+旁白: Damian hands over a secret valuation of your company made three years ago, its price painfully low. He places the original before you and watches you work with belated respect rather than possession.
+达米安: “I calculated the company's value then. I never calculated how it could ruin a person.”
+达米安: “Should I explain the valuation to your staff, or admit it in court first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Studio late-night desks.
+旁白: He seals the board authorization password in your lawyer's evidence bag, preparing to stop accessing the project.
 
 # SCENE｜Studio late-night desks
-⟦BG|bg_a_c11s03|Studio%20late-night%20desks%3B%20Player%2C%20Mia%3B%20Designers%20arrange%20original%20sketches%2C%20emails%20and%20prototypes%20by%20date.%20A%20client's%20old%20email%20shows%20interference%20with%20your%20independent%20business.⟧
+⟦BG|bg_a_c11s03|Studio%20late-night%20desks⟧
+⟦BGM|a_tension⟧
 ⟦TIME|10%3A50⟧
-旁白: A little later. Studio late-night desks.
-旁白: Designers arrange original sketches, emails and prototypes by date.
-旁白: A client's old email shows interference with your independent business.
-Mia: “These are our originals. We can prove where they came from.”
+旁白: A little later — Studio late-night desks.
+旁白: Organizing before designers lay out their materials: Slide tiles beside the empty space into order 1–8. You may skip.
+⟦MG|g_slide_photo⟧
+旁白: Designers lay out originals, emails and hand-drawn samples one by one. Dates cover the wall.
+米娅: “We never sold our work to anyone. We just trusted them too much.”
+米娅: “Do you want to start with the first sketch, or find the original signature first?”
 ⟦FREE⟧
+旁白: A client email from two years ago shows the family asked you to stop seeking outside business.
 ⟦SET|a_c11_event⟧
 
-# CHOICE｜How far back did the family plan to take your work?
-#### A｜Seek an order stopping use of your designs
-旁白: Counsel prepares an independent rights claim.
-⟦OPT|A|set%3Aa_c11_a⟧
-旁白: How far back did the family plan to take your work?
-#### B｜Let the studio team assemble the creative records
-旁白: The team establishes the creation timeline.
-⟦OPT|B|set%3Aa_c11_b⟧
-旁白: How far back did the family plan to take your work?
-#### C｜Demand disclosure of the valuation and vote
-旁白: Damian's participation is recorded rather than excused.
-⟦OPT|C|set%3Aa_c11_c⟧
-旁白: How far back did the family plan to take your work?
+# CHOICE｜What is your first move after discovering the forged license?
+#### A｜Ask counsel to seek a halt to use of your designs
+旁白: The family's relevant products are required to stop further use of the disputed material.
+⟦OPT|A|set%3Aa_c11_a%2Cauthored~a_c11_a⟧
+旁白: Was a single project all that was stolen?
+#### B｜Have the studio team assemble creation evidence
+旁白: The team establishes the originals' timeline; staff take part in the actual rights claim.
+⟦OPT|B|set%3Aa_c11_b%2Cauthored~a_c11_b⟧
+旁白: Was a single project all that was stolen?
+#### C｜Demand Damian disclose the old valuation and vote
+旁白: Both enter the formal record; private promises are no longer sufficient.
+⟦OPT|C|set%3Aa_c11_c%2Cauthored~a_c11_c⟧
+旁白: Was a single project all that was stolen?
 
 # ·
 
 # CHAPTER 12｜Evidence of Your Own
-⟦GOAL|Understand%20evidence%20of%20Your%20Own%20and%20decide%20your%20next%20step.|Evidence%20of%20Your%20Own⟧
-⟦DONE|flag|a_c12_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning Evidence of Your Own|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|How%20do%20you%20answer%20Eleanor's%20offer%20of%20settlement%20through%20marriage%3F|Evidence%20of%20Your%20Own⟧
+⟦DONE|flag|a_c12_event|Notice the key change|旁白：The suite overlooks the hall where the shareholders will soon meet.⟧
+⟦DONE|say|How do you answer Eleanor's offer of settlement through marriage? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Studio archive
-⟦BG|bg_a_c12s01|Studio%20archive%3B%20Player%2C%20Mia%3B%20Original%20design%20logs%20match%20cloud%20timestamps.%20The%20last%20witness%20is%20Ethan's%20former%20wedding%20planner.⟧
+⟦BG|bg_a_c12s01|Studio%20archive⟧
+⟦BGM|a_tension⟧
 ⟦TIME|18%3A00⟧
-旁白: On the eighth day, at the studio archive.
+旁白: On day eight — Studio archive.
 ⟦IF|a_c11_a⟧
-旁白: Counsel prepares an independent rights claim.
+旁白: The family's relevant products are required to stop further use of the disputed material.
 ⟦/IF⟧
 ⟦IF|a_c11_b⟧
-旁白: The team establishes the creation timeline.
+旁白: The team establishes the originals' timeline; staff take part in the actual rights claim.
 ⟦/IF⟧
 ⟦IF|a_c11_c⟧
-旁白: Damian's participation is recorded rather than excused.
+旁白: Both enter the formal record; private promises are no longer sufficient.
 ⟦/IF⟧
-旁白: Original design logs match cloud timestamps.
-旁白: The last witness is Ethan's former wedding planner.
-Mia: “Their story doesn't match our files. Here's the timeline.”
+旁白: Preparing an index before checking cloud dates: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.
+⟦MG|g_mem_memory⟧
+旁白: The original design logs match cloud transmission times. Technically, the forged license cannot stand.
+Independent lawyer: “This chain is enough to require their explanation in a formal investigation.”
+Independent lawyer: “Will all employees testify by name, or should we protect them with anonymous statements?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Wedding company's records room.
+旁白: The last witness on the list is Ethan's former wedding planner.
+旁白: The practical task is to verify the creation times of the original design files.
 
 # SCENE｜Wedding company's records room
-⟦BG|bg_a_c12s02|Wedding%20company's%20records%20room%3B%20Player%2C%20Ethan%3B%20Ethan%20hands%20over%20offline%20backups.%20Damian%20supplies%20old%20board%20minutes.%20An%20email%20offers%20to%20drop%20the%20suit%20in%20exchange%20for%20marriage.⟧
+⟦BG|bg_a_c12s02|Wedding%20company's%20records%20room⟧
+⟦BGM|a_tension⟧
 ⟦TIME|18%3A25⟧
-旁白: A little later. Wedding company's records room.
-旁白: Ethan hands over offline backups.
-旁白: Damian supplies old board minutes.
-旁白: An email offers to drop the suit in exchange for marriage.
-Ethan: “I signed the staging permission. It wasn't an accident.”
+旁白: A little later — Wedding company's records room.
+旁白: Ethan personally hands over the wedding system's offline backup, including the permission for staged filming he issued. Damian brings the old board minutes. He starts to say he will help, then changes it to asking which testimony you need.
+伊森: “This proves how foolish I was. I won't delete it again.”
+伊森: “Should your lawyer submit everything together, or should we each explain ourselves separately?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Eleanor's private suite.
+旁白: An email in the backup proposes exchanging marriage for withdrawal of the case.
 
 # SCENE｜Eleanor's private suite
-⟦BG|bg_a_c12s03|Eleanor's%20private%20suite%3B%20Player%2C%20Eleanor%3B%20A%20settlement%20sits%20beside%20champagne.%20It%20demands%20a%20renewed%20wedding%20and%20additional%20licensing%20in%20exchange%20for%20dropping%20the%20lawsuit.⟧
+⟦BG|bg_a_c12s03|Eleanor's%20private%20suite⟧
+⟦BGM|a_tension⟧
 ⟦TIME|18%3A50⟧
-旁白: A little later. Eleanor's private suite.
-旁白: A settlement sits beside champagne.
-旁白: It demands a renewed wedding and additional licensing in exchange for dropping the lawsuit.
-Eleanor: “One signature and all of this unpleasantness can end.”
+旁白: A little later — Eleanor's private suite.
+旁白: Organizing written clauses before the suite meeting: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: Eleanor sets a settlement beside the champagne: return to the wedding and sign an additional authorization, and she will withdraw her lawsuit. Her finger stays on it as though marriage were a contract that could be repriced.
+埃莉诺: “You want love, respectability and your company. Who gets all three?”
+埃莉诺: “Shall I explain every clause here, or have your lawyer photograph it?”
 ⟦FREE⟧
+旁白: The suite overlooks the hall where the shareholders will soon meet.
 ⟦SET|a_c12_event⟧
 
-# CHOICE｜Will either brother give up power when it actually costs him something?
-#### A｜Reject the offer and preserve the settlement document
-旁白: The proposed exchange becomes evidence.
-⟦OPT|A|set%3Aa_c12_a⟧
-旁白: Will either brother give up power when it actually costs him something?
-#### B｜Insist on formal negotiations through counsel
-旁白: No private marital agreement is made.
-⟦OPT|B|set%3Aa_c12_b⟧
-旁白: Will either brother give up power when it actually costs him something?
-#### C｜Include the studio team in decisions
-旁白: The people whose work is affected have a voice.
-⟦OPT|C|set%3Aa_c12_c⟧
-旁白: Will either brother give up power when it actually costs him something?
+# CHOICE｜How do you answer Eleanor's offer of settlement through marriage?
+#### A｜Refuse immediately and retain the settlement
+旁白: It becomes evidence of her tying marriage to property.
+⟦OPT|A|set%3Aa_c12_a%2Cauthored~a_c12_a⟧
+旁白: Which original could destroy Eleanor, making her trade marriage for withdrawal of the case?
+#### B｜Require negotiations only through lawyers
+旁白: Private pressure is excluded as a bargaining condition and all terms are recorded.
+⟦OPT|B|set%3Aa_c12_b%2Cauthored~a_c12_b⟧
+旁白: Which original could destroy Eleanor, making her trade marriage for withdrawal of the case?
+#### C｜Let employees and designers participate in the decision
+旁白: The team issues a joint position so you cannot be pushed back into the wedding alone.
+⟦OPT|C|set%3Aa_c12_c%2Cauthored~a_c12_c⟧
+旁白: Which original could destroy Eleanor, making her trade marriage for withdrawal of the case?
 
 # ·
 
 # CHAPTER 13｜He Gives Up the Crown
-⟦GOAL|Understand%20he%20Gives%20Up%20the%20Crown%20and%20decide%20your%20next%20step.|He%20Gives%20Up%20the%20Crown⟧
-⟦DONE|flag|a_c13_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning He Gives Up the Crown|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|How%20do%20you%20judge%20Damian's%20public%20resignation%3F|He%20Gives%20Up%20the%20Crown⟧
+⟦DONE|flag|a_c13_event|Notice the key change|旁白：Eleanor stands and produces the rain-night surveillance she has hidden for three years.⟧
+⟦DONE|say|How do you judge Damian's public resignation? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Shareholder hall
-⟦BG|bg_a_c13s01|Shareholder%20hall%3B%20Player%2C%20Damian%3B%20Damian%20publicly%20acknowledges%20the%20deciding%20vote%20and%20relinquishes%20the%20board%20seat%20responsible%20for%20your%20project.%20The%20tally%20changes.⟧
+⟦BG|bg_a_c13s01|Shareholder%20hall⟧
+⟦BGM|a_tension⟧
 ⟦TIME|11%3A00⟧
-旁白: On the ninth day, at the shareholder hall.
+旁白: On day nine — Shareholder hall.
 ⟦IF|a_c12_a⟧
-旁白: The proposed exchange becomes evidence.
+旁白: It becomes evidence of her tying marriage to property.
 ⟦/IF⟧
 ⟦IF|a_c12_b⟧
-旁白: No private marital agreement is made.
+旁白: Private pressure is excluded as a bargaining condition and all terms are recorded.
 ⟦/IF⟧
 ⟦IF|a_c12_c⟧
-旁白: The people whose work is affected have a voice.
+旁白: The team issues a joint position so you cannot be pushed back into the wedding alone.
 ⟦/IF⟧
-旁白: Damian publicly acknowledges the deciding vote and relinquishes the board seat responsible for your project.
-旁白: The tally changes.
-Damian: “I voted for it. I won't hide behind the family name.”
+旁白: Recognizing venue icons before the shareholders meet: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.
+⟦MG|g_mem_gala⟧
+旁白: Damian walks to the microphone, publicly admits his vote in favor, then gives up the board seat responsible for your project.
+达米安: “To win, I once turned her name into a bargaining chip.”
+达米安: “Should I keep identifying those behind it, or answer the shareholders' questions first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Shareholder gallery.
+旁白: The projected vote count changes at once. Eleanor raises her voice for the first time.
 
 # SCENE｜Shareholder gallery
-⟦BG|bg_a_c13s02|Shareholder%20gallery%3B%20Player%2C%20Ethan%3B%20Ethan%20acknowledges%20the%20staged%20kiss%20and%20wedding%20manipulation%20in%20front%20of%20witnesses.%20Damian%20gives%20a%20brief%20nod%20from%20across%20the%20room.⟧
+⟦BG|bg_a_c13s02|Shareholder%20gallery⟧
+⟦BGM|a_tension⟧
 ⟦TIME|11%3A25⟧
-旁白: A little later. Shareholder gallery.
-旁白: Ethan acknowledges the staged kiss and wedding manipulation in front of witnesses.
-旁白: Damian gives a brief nod from across the room.
-Ethan: “I did it because I was jealous. That's an explanation, not an excuse.”
+旁白: A little later — Shareholder gallery.
+旁白: Ethan publicly admits the staged photos, covert footage and wedding manipulation without meeting his brother's eyes. Damian searches the crowd for you, offering only a small nod once he knows you see him.
+伊森: “This time I won't argue over who loves her more. I'll say only what I did.”
+伊森: “Should I hand over every original file, or remove your name from the statement first?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Presentation platform.
+旁白: Legal staff secure the two testimonies separately; neither man's responsibility is erased.
 
 # SCENE｜Presentation platform
-⟦BG|bg_a_c13s03|Presentation%20platform%3B%20Player%2C%20Mia%3B%20The%20team%20displays%20original%20design%20records.%20Independent%20directors%20call%20for%20an%20inquiry.%20Eleanor%20stands%20and%20produces%20the%20rain-night%20recording.⟧
+⟦BG|bg_a_c13s03|Presentation%20platform⟧
+⟦BGM|a_tension⟧
 ⟦TIME|11%3A50⟧
-旁白: A little later. Presentation platform.
-旁白: The team displays original design records.
-旁白: Independent directors call for an inquiry.
-旁白: Eleanor stands and produces the rain-night recording.
-Mia: “She has another recording. We should see the whole thing, not her version.”
+旁白: A little later — Presentation platform.
+旁白: Practicing material order before the design presentation: Slide tiles beside the empty space into order 1–8. You may skip.
+⟦MG|g_slide_photo⟧
+旁白: You and the design team show the first-generation originals and complete development dates. Independent directors at the meeting request an investigation.
+Independent director: “Preserve the originals. We need evidence we can follow to the end.”
+Independent director: “Will you disclose the entire design process, or submit only enough to establish ownership?”
 ⟦FREE⟧
+旁白: Eleanor stands and produces the rain-night surveillance she has hidden for three years.
 ⟦SET|a_c13_event⟧
 
-# CHOICE｜What has Eleanor been holding back for three years?
-#### A｜Separate accountability from any romantic change
-旁白: Neither man's admission is treated as forgiveness.
-⟦OPT|A|set%3Aa_c13_a⟧
-旁白: What has Eleanor been holding back for three years?
-#### B｜Require Damian's full testimony
-旁白: His statement becomes part of the inquiry.
-⟦OPT|B|set%3Aa_c13_b⟧
-旁白: What has Eleanor been holding back for three years?
-#### C｜Keep attention on the studio's work
-旁白: The team's independent claims remain central.
-⟦OPT|C|set%3Aa_c13_c⟧
-旁白: What has Eleanor been holding back for three years?
+# CHOICE｜How do you judge Damian's public resignation?
+#### A｜Recognize that accountability and change are separate
+旁白: He knows resignation is only a beginning and no longer asks you for affection in return.
+⟦OPT|A|set%3Aa_c13_a%2Cauthored~a_c13_a⟧
+旁白: If he loses everything, would that make you love him?
+#### B｜Require him to testify to all the facts in court
+旁白: He submits public testimony that advances the investigation.
+⟦OPT|B|set%3Aa_c13_b%2Cauthored~a_c13_b⟧
+旁白: If he loses everything, would that make you love him?
+#### C｜Bring attention back to your own work
+旁白: The media show your original designs instead of reporting only the brothers' rivalry.
+⟦OPT|C|set%3Aa_c13_c%2Cauthored~a_c13_c⟧
+旁白: If he loses everything, would that make you love him?
 
 # ·
 
 # CHAPTER 14｜The Mother's Game
-⟦GOAL|Understand%20the%20Mother's%20Game%20and%20decide%20your%20next%20step.|The%20Mother's%20Game⟧
-⟦DONE|flag|a_c14_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning The Mother's Game|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|How%20will%20you%20use%20the%20old%20surveillance%20Eleanor%20reveals%3F|The%20Mother's%20Game⟧
+⟦DONE|flag|a_c14_event|Notice the key change|旁白：The wedding lights come down in the garden, revealing bare branches for the first time.⟧
+⟦DONE|say|How will you use the old surveillance Eleanor reveals? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Eleanor's office
-⟦BG|bg_a_c14s01|Eleanor's%20office%3B%20Player%2C%20Eleanor%3B%20Eleanor%20plays%20the%20old%20rain-night%20footage%20to%20imply%20an%20improper%20arrangement.%20The%20same%20recording%20shows%20you%20waiting%20outside%20the%20emergency%20room.%20Twenty%20seconds%20are%20missing.⟧
+⟦BG|bg_a_c14s01|Eleanor's%20office⟧
+⟦BGM|a_tension⟧
 ⟦TIME|20%3A00⟧
-旁白: That afternoon, at Eleanor's office.
+旁白: On day ten — Eleanor's office.
 ⟦IF|a_c13_a⟧
-旁白: Neither man's admission is treated as forgiveness.
+旁白: He knows resignation is only a beginning and no longer asks you for affection in return.
 ⟦/IF⟧
 ⟦IF|a_c13_b⟧
-旁白: His statement becomes part of the inquiry.
+旁白: He submits public testimony that advances the investigation.
 ⟦/IF⟧
 ⟦IF|a_c13_c⟧
-旁白: The team's independent claims remain central.
+旁白: The media show your original designs instead of reporting only the brothers' rivalry.
 ⟦/IF⟧
-旁白: Eleanor plays the old rain-night footage to imply an improper arrangement.
-旁白: The same recording shows you waiting outside the emergency room.
-旁白: Twenty seconds are missing.
-Eleanor: “People will believe what they see.”
+旁白: Focusing before viewing old footage: Watch the four colored lights and repeat their sequence. You may skip.
+⟦MG|g_simon_lights⟧
+旁白: Eleanor plays old storm-night footage to imply improper dealings between you and Damian. It also records you waiting outside the hospital ER until dawn.
+埃莉诺: “Stop pursuing this and everything can still remain within the family.”
+埃莉诺: “Would you like everyone to see the complete footage, or have the court seal it?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Legal consultation room.
+旁白: Your lawyer discovers twenty seconds deliberately cut from the end of the camera file.
+旁白: The practical task is to compare what was cut from the old surveillance footage.
 
 # SCENE｜Legal consultation room
-⟦BG|bg_a_c14s02|Legal%20consultation%20room%3B%20Player%2C%20Damian%3B%20Damian%20submits%20testimony%20admitting%20he%20failed%20to%20prevent%20the%20rights%20violations.%20A%20secretary%20delivers%20Ethan's%20signed%20staging-payment%20records.⟧
+⟦BG|bg_a_c14s02|Legal%20consultation%20room⟧
+⟦BGM|a_tension⟧
 ⟦TIME|20%3A25⟧
-旁白: A little later. Legal consultation room.
-旁白: Damian submits testimony admitting he failed to prevent the rights violations.
-旁白: A secretary delivers Ethan's signed staging-payment records.
-Damian: “Don't leave my name out of the statement.”
+旁白: A little later — Legal consultation room.
+旁白: Eleanor's threatening letter is formally delivered. Damian decides to submit his testimony, including his failure to stop the infringement then. Before signing, he doesn't look at you, as though finally understanding responsibility needs no audience.
+达米安: “I'll bear my share. I don't expect your thanks in exchange.”
+达米安: “Do you want to go in with me, or have us meet only through our testimony?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Garden passageway.
+旁白: A secretary knocks and brings the staged-filming payment records signed by Ethan himself.
 
 # SCENE｜Garden passageway
-⟦BG|bg_a_c14s03|Garden%20passageway%3B%20Player%2C%20Ethan%3B%20Ethan%20hands%20over%20a%20transparent%20folder%20containing%20the%20evidence%20of%20his%20role.%20His%20signature%20is%20plainly%20visible.⟧
+⟦BG|bg_a_c14s03|Garden%20passageway⟧
+⟦BGM|a_tension⟧
 ⟦TIME|20%3A50⟧
-旁白: A little later. Garden passageway.
-旁白: Ethan hands over a transparent folder containing the evidence of his role.
-旁白: His signature is plainly visible.
-Ethan: “I can't undo what I did. You can use every page.”
+旁白: A little later — Garden passageway.
+旁白: Organizing contact records before crossing the garden: Tap appearing 📵 icons, avoiding 💬; aim for ten correct taps in twenty seconds. You may skip.
+⟦MG|g_whack_texts⟧
+旁白: Ethan puts all evidence of his part in spreading rumors into a transparent document bag. His signature is clearly visible.
+伊森: “Losing you doesn't entitle me to excuses.”
+伊森: “Would you like my final explanation, or should I leave quietly?”
 ⟦FREE⟧
+旁白: The wedding lights come down in the garden, revealing bare branches for the first time.
 ⟦SET|a_c14_event⟧
 
-# CHOICE｜Can the truth restore your work without demanding your heart?
-#### A｜Preserve the complete recording
-旁白: The original footage can be compared with the edited version.
-⟦OPT|A|set%3Aa_c14_a⟧
-旁白: Can the truth restore your work without demanding your heart?
-#### B｜Reject the marriage-for-settlement exchange
-旁白: Eleanor cannot obtain the private agreement.
-⟦OPT|B|set%3Aa_c14_b⟧
-旁白: Can the truth restore your work without demanding your heart?
-#### C｜Require separate testimony from both brothers
-旁白: Their accounts are fixed independently.
-⟦OPT|C|set%3Aa_c14_c⟧
-旁白: Can the truth restore your work without demanding your heart?
+# CHOICE｜How will you use the old surveillance Eleanor reveals?
+#### A｜Demand preservation of the complete, uncut footage
+旁白: The missing twenty seconds become an evidence issue requiring investigation.
+⟦OPT|A|set%3Aa_c14_a%2Cauthored~a_c14_a⟧
+旁白: What new facts will the missing twenty seconds of her footage reveal?
+#### B｜Refuse withdrawal of the case and the marriage bargain in person
+旁白: Eleanor's final private deal fails.
+⟦OPT|B|set%3Aa_c14_b%2Cauthored~a_c14_b⟧
+旁白: What new facts will the missing twenty seconds of her footage reveal?
+#### C｜Have Ethan and Damian give separate testimony
+旁白: Their independent accounts are secured; neither can shift blame to the other.
+⟦OPT|C|set%3Aa_c14_c%2Cauthored~a_c14_c⟧
+旁白: What new facts will the missing twenty seconds of her footage reveal?
 
 # ·
 
 # CHAPTER 15｜No One Answers for You
-⟦GOAL|Understand%20no%20One%20Answers%20for%20You%20and%20decide%20your%20next%20step.|No%20One%20Answers%20for%20You⟧
-⟦DONE|flag|a_c15_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning No One Answers for You|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|With%20the%20truth%20beginning%20to%20emerge%2C%20what%20do%20you%20rebuild%20first%3F|No%20One%20Answers%20for%20You⟧
+⟦DONE|flag|a_c15_event|Notice the key change|旁白：Your studio phone rings: finally, a client who actually wants to buy your designs.⟧
+⟦DONE|say|With the truth beginning to emerge, what do you rebuild first? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜Independent review room
-⟦BG|bg_a_c15s01|Independent%20review%20room%3B%20Player%2C%20Mia%3B%20The%20preliminary%20inquiry%20connects%20forged%20permissions%20to%20the%20frozen%20payments.%20Legal%20proceedings%20continue.%20New%20clients%20express%20interest.⟧
+⟦BG|bg_a_c15s01|Independent%20review%20room⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|17%3A00⟧
-旁白: One week later, at the independent review room.
+旁白: A week later — Independent review room.
 ⟦IF|a_c14_a⟧
-旁白: The original footage can be compared with the edited version.
+旁白: The missing twenty seconds become an evidence issue requiring investigation.
 ⟦/IF⟧
 ⟦IF|a_c14_b⟧
-旁白: Eleanor cannot obtain the private agreement.
+旁白: Eleanor's final private deal fails.
 ⟦/IF⟧
 ⟦IF|a_c14_c⟧
-旁白: Their accounts are fixed independently.
+旁白: Their independent accounts are secured; neither can shift blame to the other.
 ⟦/IF⟧
-旁白: The preliminary inquiry connects forged permissions to the frozen payments.
-旁白: Legal proceedings continue.
-旁白: New clients express interest.
-Mia: “The orders are real this time. We can check each one ourselves.”
+旁白: Practicing icons before reviewing renewal materials: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: The preliminary investigation links the forged authorization to the payment freeze; court proceedings will still take time. You receive a letter of intent to renew the studio's contracts.
+Independent lawyer: “We've regained a negotiating position. That doesn't mean everything ahead ends automatically.”
+Independent lawyer: “Would you rather rebuild the business first, or reserve your energy for the lawsuit?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Riverside café.
+旁白: Attached to the email are signatures from employees choosing to stay again.
 
 # SCENE｜Riverside café
-⟦BG|bg_a_c15s02|Riverside%20caf%C3%A9%3B%20Player%2C%20Damian%3B%20Damian%20arrives%20without%20guards%20or%20publicists.%20A%20coffee%20and%20a%20small%20note%20sit%20on%20the%20table%2C%20no%20flowers%20or%20ring.⟧
+⟦BG|bg_a_c15s02|Riverside%20caf%C3%A9⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|17%3A25⟧
-旁白: A little later. Riverside café.
-旁白: Damian arrives without guards or publicists.
-旁白: A coffee and a small note sit on the table, no flowers or ring.
-Damian: “I would like to start slowly, if you ever want that.”
+旁白: A little later — Riverside café.
+旁白: Damian removes his expensive suit jacket and simply sits across from you, for the first time without bodyguards or PR staff. Beside the coffee are no flowers or ring, only a note saying you can take things slowly.
+达米安: “If you want, we can start again with our names. You can refuse too.”
+达米安: “Should I finish telling you about the past, or start by asking how your day was?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Empty wedding garden.
+旁白: Ethan sends an apology asking for no response, then makes no further contact.
 
 # SCENE｜Empty wedding garden
-⟦BG|bg_a_c15s03|Empty%20wedding%20garden%3B%20Player%2C%20Ethan%3B%20Workers%20remove%20the%20white%20chairs.%20The%20ring%20box%20remains%20unopened.%20The%20studio%20receives%20a%20call%20from%20a%20prospective%20client.⟧
+⟦BG|bg_a_c15s03|Empty%20wedding%20garden⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|17%3A50⟧
-旁白: A little later. Empty wedding garden.
-旁白: Workers remove the white chairs.
-旁白: The ring box remains unopened.
-旁白: The studio receives a call from a prospective client.
-Ethan: “You don't have to tell me what you're doing with the ring.”
+旁白: A little later — Empty wedding garden.
+旁白: Indexing belongings in the former wedding garden: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.
+⟦MG|g_mem_memory⟧
+旁白: Workers carry away the last row of white chairs. The ring box in your hand remains closed; nobody holds it for you. Wind flips the last place card on the table.
+旁白: “Will you keep the ring as evidence, return it, or put it away for now?”
 ⟦FREE⟧
+旁白: Your studio phone rings: finally, a client who actually wants to buy your designs.
 ⟦SET|a_c15_event⟧
 
-# CHOICE｜What kind of relationship would you choose without the family's pressure?
-#### A｜Prioritize rebuilding the studio
-旁白: The team signs its first independent new order.
-⟦OPT|A|set%3Aa_c15_a⟧
-旁白: What kind of relationship would you choose without the family's pressure?
-#### B｜Allow Damian to reconnect in public
-旁白: One equal meeting is possible without a romantic promise.
-⟦OPT|B|set%3Aa_c15_b⟧
-旁白: What kind of relationship would you choose without the family's pressure?
-#### C｜Decline private contact with both brothers for now
-旁白: The brothers respect the boundary and life continues independently.
-⟦OPT|C|set%3Aa_c15_c⟧
-旁白: What kind of relationship would you choose without the family's pressure?
+# CHOICE｜With the truth beginning to emerge, what do you rebuild first?
+#### A｜Prioritize running the studio again
+旁白: You and the employees sign your first independent new order.
+⟦OPT|A|set%3Aa_c15_a%2Cauthored~a_c15_a⟧
+旁白: What kind of intimacy do you truly want?
+#### B｜Allow Damian to get to know you again in public
+旁白: He gets one meeting on equal terms, without a romantic commitment.
+⟦OPT|B|set%3Aa_c15_b%2Cauthored~a_c15_b⟧
+旁白: What kind of intimacy do you truly want?
+#### C｜Suspend private contact with both brothers
+旁白: They respect your decision to cease contact; your life remains complete.
+⟦OPT|C|set%3Aa_c15_c%2Cauthored~a_c15_c⟧
+旁白: What kind of intimacy do you truly want?
 
 # ·
 
 # CHAPTER 16｜Life After the Wedding
-⟦GOAL|Understand%20life%20After%20the%20Wedding%20and%20decide%20your%20next%20step.|Life%20After%20the%20Wedding⟧
-⟦DONE|flag|a_c16_event|Witness key event|Narration: Take a closer look at what just happened.⟧
-⟦DONE|say|Express what you want to investigate, do, refuse, or postpone concerning Life After the Wedding|State your intent|Narration: You can say what you need or ask for more time.⟧
+⟦GOAL|What%20relationship%20would%20you%20choose%20for%20the%20next%20page%3F|Life%20After%20the%20Wedding⟧
+⟦DONE|flag|a_c16_event|Notice the key change|旁白：The river reflects two shadows that can draw together or move apart.⟧
+⟦DONE|say|What relationship would you choose for the next page? You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.|State your intent|旁白：You may question, approach, refuse or postpone; state your conditions or ask a companion to help verify.⟧
 
 # SCENE｜New studio exhibition
-⟦BG|bg_a_c16s01|New%20studio%20exhibition%3B%20Player%2C%20Mia%3B%20Six%20months%20later%2C%20your%20name%20hangs%20over%20the%20entrance%20and%20your%20sketches%20fill%20the%20cases.%20Damian%20is%20on%20the%20visitor%20list%2C%20but%20waits%20outside.⟧
+⟦BG|bg_a_c16s01|New%20studio%20exhibition⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|19%3A00⟧
-旁白: Six months later, at the new studio exhibition.
+旁白: Six months later — New studio exhibition.
 ⟦IF|a_c15_a⟧
-旁白: The team signs its first independent new order.
+旁白: You and the employees sign your first independent new order.
 ⟦/IF⟧
 ⟦IF|a_c15_b⟧
-旁白: One equal meeting is possible without a romantic promise.
+旁白: He gets one meeting on equal terms, without a romantic commitment.
 ⟦/IF⟧
 ⟦IF|a_c15_c⟧
-旁白: The brothers respect the boundary and life continues independently.
+旁白: They respect your decision to cease contact; your life remains complete.
 ⟦/IF⟧
-旁白: Six months later, your name hangs over the entrance and your sketches fill the cases.
-旁白: Damian is on the visitor list, but waits outside.
-Mia: “Every contract is ours to review now.”
+旁白: Checking the image catalog before the exhibition opens: Slide tiles beside the empty space into order 1–8. You may skip.
+⟦MG|g_slide_photo⟧
+旁白: Six months later, your name hangs at the original design exhibition's entrance. Old manuscripts are displayed in glass cases.
+米娅: “This time we read every contract ourselves.”
+米娅: “Would you like to welcome guests first, or look at that unopened letter?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Exhibition lounge.
+旁白: Damian's name is on the visitor appointment list, but he hasn't entered without permission.
 
 # SCENE｜Exhibition lounge
-⟦BG|bg_a_c16s02|Exhibition%20lounge%3B%20Player%2C%20Damian%3B%20He%20brings%20a%20blank%20sketchbook%20like%20the%20one%20from%20three%20years%20ago.%20Ethan's%20apology%20arrives%20through%20counsel.%20Damian%20waits%20for%20permission%20to%20sit.⟧
+⟦BG|bg_a_c16s02|Exhibition%20lounge⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|19%3A25⟧
-旁白: A little later. Exhibition lounge.
-旁白: He brings a blank sketchbook like the one from three years ago.
-旁白: Ethan's apology arrives through counsel.
-旁白: Damian waits for permission to sit.
-Damian: “I don't know where this will lead. But I'm not going to decide for you.”
+旁白: A little later — Exhibition lounge.
+旁白: Damian brings a blank sketchbook like the one from three years ago. Ethan's apology arrives through your lawyer without a demand to meet. Holding the book without reaching for you, Damian waits for you to decide whether this page includes him.
+达米安: “I don't know where we'll end up. I only know I don't want to arrange your life for you anymore.”
+达米安: “May I stay for coffee, or should I be just an ordinary visitor today?”
 ⟦FREE⟧
-旁白: Next, if you want to continue: Riverside walk.
+旁白: Outside the lounge, someone asks what your next exhibition will be called.
 
 # SCENE｜Riverside walk
-⟦BG|bg_a_c16s03|Riverside%20walk%3B%20Player%2C%20Damian%3B%20The%20city%20lights%20reflect%20in%20the%20river.%20Damian%20offers%20a%20walk%20without%20assuming%20you%20want%20company.⟧
+⟦BG|bg_a_c16s03|Riverside%20walk⟧
+⟦BGM|a_tenderness⟧
 ⟦TIME|19%3A50⟧
-旁白: A little later. Riverside walk.
-旁白: The city lights reflect in the river.
-旁白: Damian offers a walk without assuming you want company.
-Damian: “If you'd like, we can start with a walk. If not, I understand.”
+旁白: A little later — Riverside walk.
+旁白: Organizing today's notes before the riverside walk: Find 💌 among the icons in three rounds. You may skip.
+⟦MG|g_find_letter⟧
+旁白: The night wind lifts your scarf. Distant city lights still shine. Your life is no longer defined by a wedding.
+达米安: “If you want, we can begin with one walk without lies.”
+达米安: “Whom do you want to go forward with, or would you rather keep yourself company this time?”
 ⟦FREE⟧
+旁白: The river reflects two shadows that can draw together or move apart.
 ⟦SET|a_c16_event⟧
 
-# CHOICE｜The next page belongs to you.
-#### A｜Explicitly choose to begin dating Damian as equals
-旁白: A first date is possible only with clear consent; accountability continues.
-⟦OPT|A|set%3Aa_c16_a⟧
-旁白: The next page belongs to you.
-#### B｜Explicitly leave open the possibility of rebuilding trust with Ethan
-旁白: Ethan may seek a new introduction through honest conduct, without automatic reconciliation.
-⟦OPT|B|set%3Aa_c16_b⟧
-旁白: The next page belongs to you.
-#### C｜Choose independence or defer all romantic decisions
-旁白: Your future remains complete without a romantic commitment.
-⟦OPT|C|set%3Aa_c16_c⟧
-旁白: The next page belongs to you.
+# CHOICE｜What relationship would you choose for the next page?
+#### A｜Explicitly choose to begin again with an equal date with Damian
+旁白: Only your clear wish to date can begin a formal first date; accountability proceedings continue.
+⟦OPT|A|set%3Aa_c16_a%2Cauthored~a_c16_a⟧
+旁白: This time, you finally write the next page yourself.
+#### B｜Leave open a gradual rebuilding with Ethan if he keeps changing
+旁白: He can seek to know you anew only through honesty and respect for boundaries.
+⟦OPT|B|set%3Aa_c16_b%2Cauthored~a_c16_b⟧
+旁白: This time, you finally write the next page yourself.
+#### C｜Choose single life, freedom or postponement of romantic commitments
+旁白: You reclaim your time; the story closes with complete independence and relationship boundaries.
+⟦OPT|C|set%3Aa_c16_c%2Cauthored~a_c16_c%2Cending_open⟧
+旁白: This time, you finally write the next page yourself.
 
 # ·
 

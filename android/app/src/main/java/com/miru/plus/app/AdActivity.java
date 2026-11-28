@@ -26,7 +26,7 @@ public class AdActivity extends Activity implements IUnityAdsLoadListener, IUnit
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         TextView t = new TextView(this);
-        t.setText("广告加载中…");
+        t.setText("廣告載入中…");
         t.setTextColor(Color.WHITE);
         t.setBackgroundColor(Color.BLACK);
         t.setGravity(Gravity.CENTER);
@@ -34,7 +34,7 @@ public class AdActivity extends Activity implements IUnityAdsLoadListener, IUnit
         if (!Ads.enabled() || BuildConfig.UNITY_REWARDED.isEmpty()) { finishAd(); return; }
         Uri u = getIntent() != null ? getIntent().getData() : null;
         final String uid = u != null ? u.getQueryParameter("u") : null;
-        h.postDelayed(this::finishAd, TIMEOUT_MS);
+        h.postDelayed(() -> { try { CrashLog.ad("timeout", "", "init=" + UnityAds.isInitialized()); } catch (Throwable ignore) {} finishAd(); }, TIMEOUT_MS);
         Ads.init(this, () -> {
             if (done) return;
             if (uid != null && !uid.isEmpty()) { PlayerMetaData pm = new PlayerMetaData(getApplicationContext()); pm.setServerId(uid); pm.commit(); }
@@ -51,9 +51,9 @@ public class AdActivity extends Activity implements IUnityAdsLoadListener, IUnit
     }
 
     @Override public void onUnityAdsAdLoaded(String placementId) { if (done) return; h.removeCallbacksAndMessages(null); UnityAds.show(this, placementId, new UnityAdsShowOptions(), this); }
-    @Override public void onUnityAdsFailedToLoad(String placementId, UnityAds.UnityAdsLoadError e, String msg) { finishAd(); }
-    @Override public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError e, String msg) { finishAd(); }
-    @Override public void onUnityAdsShowStart(String placementId) {}
+    @Override public void onUnityAdsFailedToLoad(String placementId, UnityAds.UnityAdsLoadError e, String msg) { try { CrashLog.ad("load_fail", String.valueOf(e), msg); } catch (Throwable ignore) {} finishAd(); }
+    @Override public void onUnityAdsShowFailure(String placementId, UnityAds.UnityAdsShowError e, String msg) { try { CrashLog.ad("show_fail", String.valueOf(e), msg); } catch (Throwable ignore) {} finishAd(); }
+    @Override public void onUnityAdsShowStart(String placementId) { try { CrashLog.ad("show_start", "", placementId); } catch (Throwable ignore) {} }
     @Override public void onUnityAdsShowClick(String placementId) {}
     @Override public void onUnityAdsShowComplete(String placementId, UnityAds.UnityAdsShowCompletionState state) { finishAd(); }
 }

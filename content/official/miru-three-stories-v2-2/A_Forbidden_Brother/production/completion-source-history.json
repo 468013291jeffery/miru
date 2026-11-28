@@ -1,0 +1,30 @@
+{
+  "captured": "2026-11-27",
+  "purpose": "Pre-completion source checksums. Earlier validation belongs to these inputs and is historical, not current acceptance. Original source remains in repository history; no image or audio files are changed by this completion.",
+  "scripts": {
+    "zh-CN": {
+      "sha256": "445ee94cf857fd15de16aaadf1aaebdf22b5b93147e9d537011aa28c57a731b5",
+      "nonemptyLines": 923
+    },
+    "zh-TW": {
+      "sha256": "93f6edf9dda60a98f7340d4a7996803e8324da31163e9b2f0fddcd8f3ea85f29",
+      "nonemptyLines": 923
+    },
+    "en-US": {
+      "sha256": "cd735170bb50b5ce8d32705e74343bf34b05150489d62992462625517954fdef",
+      "nonemptyLines": 837
+    },
+    "ja-JP": {
+      "sha256": "32b0bd30c41511e1d9795a3cc9653f5fc17516d22b6f268f099e5b990bd524cf",
+      "nonemptyLines": 828
+    },
+    "ko-KR": {
+      "sha256": "c70435112887cc763999d358f042c06a4da5ee5f0b66e31048dc0a732c7e8901",
+      "nonemptyLines": 827
+    },
+    "es-ES": {
+      "sha256": "7eb9fcfcd386d5825e4f662a1b73f56f02697e53ed66a74d53b78accfce83d80",
+      "nonemptyLines": 831
+    }
+  }
+}

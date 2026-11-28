@@ -1,0 +1,1828 @@
+{
+  "method": "Consecutive Chinese short narration lines are grouped without removing story facts. Every scene is aligned as introduction, prior-choice callbacks, optional preparation at scenes 1/3, action paragraph, two NPC prompts (or the garden narration question), FREE, scene hook, retained practical task, event flag. Choices and callbacks are translated from the Chinese originals, not inherited summaries.",
+  "scenes": [
+    {
+      "chapter": 1,
+      "scene": 1,
+      "background": "bg_a_c01s01",
+      "sourceNarration": "婚礼投影正播着你们的订婚照。伊森却在镜头死角亲吻金裙女人；他看见你，反而把人拉得更近。",
+      "sourceDialogue": [
+        "伊森：“看到我这样，你第一反应还是去找他？”",
+        "伊森：“你是想知道她是谁，还是想问我为什么偏要让你看见？”"
+      ],
+      "sourceHook": "金裙女人离开时，故意把一只刻着家族纹章的耳环落在地上。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The engagement slideshow is playing, but in a camera blind spot Ethan kisses a woman in a gold dress. Seeing you, he draws her even closer.",
+          "Seeing me like this, your first instinct is still to go to him?",
+          "Do you want to know who she is, or why I made sure you would see?",
+          "As she leaves, the woman deliberately drops an earring engraved with the family crest."
+        ],
+        "ja-JP": [
+          "婚約写真の映像が流れる一方、カメラの死角でイーサンが金色のドレスの女性にキスしている。あなたを見ると、かえって彼女を強く引き寄せる。",
+          "こんな俺を見ても、真っ先に兄貴のところへ行くのか？",
+          "彼女が誰か知りたい？ それとも、なぜわざと君に見せたのか？",
+          "女性は去り際、家紋が刻まれたイヤリングをわざと床に落とす。"
+        ],
+        "ko-KR": [
+          "약혼 사진 영상이 흐르는 동안, 카메라 사각지대에서 이선이 금빛 드레스를 입은 여자에게 입을 맞춘다. 당신을 보자 오히려 더 가까이 끌어안는다.",
+          "이런 나를 보고도 가장 먼저 형한테 가고 싶어?",
+          "그 여자가 누군지 궁금해, 아니면 왜 일부러 보여 줬는지 궁금해?",
+          "여자는 떠나며 가문의 문장이 새겨진 귀걸이를 일부러 바닥에 떨어뜨린다."
+        ],
+        "es-ES": [
+          "El proyector muestra vuestras fotos de compromiso, pero Ethan besa a una mujer de vestido dorado fuera del alcance de las cámaras. Al verte, la atrae aún más hacia él.",
+          "¿Incluso al verme así, tu primer impulso es buscarlo a él?",
+          "¿Quieres saber quién es ella o por qué me aseguré de que lo vieras?",
+          "Al marcharse, la mujer deja caer deliberadamente un pendiente grabado con el escudo familiar."
+        ]
+      }
+    },
+    {
+      "chapter": 1,
+      "scene": 2,
+      "background": "bg_a_c01s02",
+      "sourceNarration": "你走到走廊尽头，门从里面打开。达米安袖口松着，手里却握着你三年前在暴雨中借他的那枚旧纽扣。达米安看见门外晃过的影子，掩上了门，却没有上锁。达米安看到你手里的戒指，先替你让出门口；他的目光却始终停在你脸上。",
+      "sourceDialogue": [
+        "达米安：“那天你说过，别用真名。现在我连叫你一声都不敢。”",
+        "达米安：“今晚找我，是想听真话，还是想先骂我？”"
+      ],
+      "sourceHook": "他的桌上摆着一份明早婚礼的座位表，你的名字被红笔圈住。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "At the corridor's end, the door opens from inside. Damian's cuffs are loose; he holds the old button you lent him in the storm three years ago. A shadow passes outside; he closes the door without locking it. Seeing your ring, he makes room for you to leave, though his gaze stays on your face.",
+          "You told me not to use real names that day. Now I hardly dare say yours.",
+          "Did you come tonight for the truth, or would you rather curse me first?",
+          "Tomorrow's wedding seating plan lies on his desk, your name circled in red."
+        ],
+        "ja-JP": [
+          "廊下の突き当たりで、扉が内側から開く。袖口を緩めたダミアンの手には、三年前の豪雨であなたが貸した古いボタンがある。外を影が横切ると扉を閉めるが、鍵は掛けない。あなたの指輪を見て、出口を空ける。それでも視線はあなたの顔から離れない。",
+          "あの日、本名は使わないでと言ったね。今は君の名を呼ぶことさえ怖い。",
+          "今夜は真実を聞きに来た？ それとも、まず僕を罵りたい？",
+          "机には明朝の席次表があり、あなたの名前が赤く囲まれている。"
+        ],
+        "ko-KR": [
+          "복도 끝에서 문이 안쪽으로 열린다. 소매를 느슨하게 푼 데이미언은 3년 전 폭우 속에서 당신이 빌려준 낡은 단추를 쥐고 있다. 밖으로 그림자가 스치자 문을 닫지만 잠그지는 않는다. 당신의 반지를 보고 출구를 비켜 주면서도 시선은 얼굴에 머문다.",
+          "그날 본명은 쓰지 말라고 했지. 이제는 네 이름조차 부르기 겁나.",
+          "오늘 밤은 진실을 들으러 왔어, 아니면 먼저 날 욕하고 싶어?",
+          "책상 위 내일 아침 예식 좌석표에는 당신의 이름이 붉게 동그라미 쳐져 있다."
+        ],
+        "es-ES": [
+          "Al final del pasillo, la puerta se abre desde dentro. Damian lleva los puños sueltos y sostiene el viejo botón que le prestaste durante la tormenta de hace tres años. Ve pasar una sombra y cierra sin echar la llave. Al ver tu anillo, te deja libre la salida, aunque no aparta la mirada de tu rostro.",
+          "Aquel día dijiste que no usáramos nombres reales. Ahora apenas me atrevo a pronunciar el tuyo.",
+          "¿Has venido a oír la verdad o prefieres insultarme primero?",
+          "En su escritorio está el plano de asientos para la boda de mañana; tu nombre aparece rodeado en rojo."
+        ]
+      }
+    },
+    {
+      "chapter": 1,
+      "scene": 3,
+      "background": "bg_a_c01s03",
+      "sourceNarration": "达米安翻出雨夜合影；你们并肩站在医院的自动售货机旁。照片背后竟写着伊森的笔迹。",
+      "sourceDialogue": [
+        "达米安：“我不知道他什么时候拍的。但他知道的远比你想象的多。”",
+        "达米安：“你要把这张照片拿去质问他，还是先让我讲完那一晚？”"
+      ],
+      "sourceHook": "书房外传来伊森的脚步，门把手缓缓转动。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian finds the rain-night photograph: the two of you beside a hospital vending machine. On its back is Ethan's handwriting.",
+          "I don't know when he took it. But he knows far more than you think.",
+          "Will you confront him with this photo, or let me finish telling you about that night first?",
+          "Ethan's footsteps approach outside the study. The door handle slowly turns."
+        ],
+        "ja-JP": [
+          "ダミアンは雨の夜の写真を取り出す。病院の自動販売機の前に二人が並んでいる。裏にはイーサンの筆跡がある。",
+          "いつ彼が撮ったのかは知らない。でも、君が思うよりずっと多くを知っている。",
+          "これを持って彼を問い詰める？ それとも先にあの夜の話を最後まで聞く？",
+          "書斎の外からイーサンの足音が近づき、ドアノブがゆっくり回る。"
+        ],
+        "ko-KR": [
+          "데이미언이 비 오던 밤의 사진을 꺼낸다. 병원 자판기 옆에 두 사람이 나란히 서 있다. 뒷면에는 이선의 필체가 있다.",
+          "언제 찍었는지는 몰라. 하지만 네 생각보다 훨씬 많이 알고 있어.",
+          "이 사진으로 그를 추궁할래, 아니면 먼저 그날 밤 이야기를 끝까지 들을래?",
+          "서재 밖에서 이선의 발소리가 다가온다. 문손잡이가 천천히 돌아간다."
+        ],
+        "es-ES": [
+          "Damian saca la foto de aquella noche de lluvia: estáis juntos junto a una máquina expendedora del hospital. Detrás aparece la letra de Ethan.",
+          "No sé cuándo la tomó. Pero sabe mucho más de lo que crees.",
+          "¿Vas a pedirle explicaciones con esta foto o me dejas terminar de contar aquella noche?",
+          "Fuera del despacho se acercan los pasos de Ethan. El pomo gira lentamente."
+        ]
+      }
+    },
+    {
+      "chapter": 2,
+      "scene": 1,
+      "background": "bg_a_c02s01",
+      "sourceNarration": "距婚礼还有三个小时。伊森把一杯咖啡推给你，语气像昨夜什么都没发生；杯垫下却压着金裙女人的登机牌。",
+      "sourceDialogue": [
+        "伊森：“别把一次亲吻当成整段婚姻的判决。”",
+        "伊森：“你想让我现在给她打电话，还是直接告诉我婚礼要不要停？”"
+      ],
+      "sourceHook": "侍应生送来婚礼誓词，封面写着你的设计公司全名。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Three hours remain before the wedding. Ethan slides you a coffee as though nothing happened last night. Beneath the coaster is the gold-dressed woman's boarding pass.",
+          "Don't turn one kiss into a verdict on our entire marriage.",
+          "Should I call her now, or will you tell me whether to stop the wedding?",
+          "A server brings the wedding vows. Your design company's full name is printed on the cover."
+        ],
+        "ja-JP": [
+          "式まで三時間。イーサンは昨夜何もなかったような口調でコーヒーを差し出す。コースターの下には金色のドレスの女性の搭乗券がある。",
+          "一度のキスで、結婚のすべてに判決を下さないでくれ。",
+          "今、彼女に電話しようか？ それとも式を止めるか、君が決めて伝える？",
+          "給仕が誓いの言葉を届ける。表紙にはあなたのデザイン会社の正式名称が記されている。"
+        ],
+        "ko-KR": [
+          "결혼식까지 세 시간. 이선은 어젯밤 아무 일도 없었던 듯 커피를 밀어 준다. 받침 아래에는 금빛 드레스 여자의 탑승권이 깔려 있다.",
+          "한 번의 키스로 우리 결혼 전체에 판결을 내리지 마.",
+          "지금 그녀에게 전화할까, 아니면 결혼식을 멈출지 네가 말해 줄래?",
+          "직원이 서약문을 가져온다. 표지에는 당신 디자인 회사의 정식 명칭이 적혀 있다."
+        ],
+        "es-ES": [
+          "Faltan tres horas para la boda. Ethan te acerca un café como si anoche no hubiera pasado nada. Bajo el posavasos está la tarjeta de embarque de la mujer de dorado.",
+          "No conviertas un beso en una sentencia sobre todo nuestro matrimonio.",
+          "¿La llamo ahora o me dices directamente si debemos detener la boda?",
+          "Un camarero trae los votos. La portada lleva el nombre completo de tu empresa de diseño."
+        ]
+      }
+    },
+    {
+      "chapter": 2,
+      "scene": 2,
+      "background": "bg_a_c02s02",
+      "sourceNarration": "达米安在冷风里等着，手里拿着你的戒指盒。盒子没有打开，里面压着当年医院开出的停车票。他把外套放在栏杆上，自己站进冷风里，像在等一个早该来的判决。",
+      "sourceDialogue": [
+        "达米安：“我记得那晚你鞋跟断了，还坚持先把伤者送进急诊。”",
+        "达米安：“你希望我陪你去面对伊森，还是离你远一点？”"
+      ],
+      "sourceHook": "他把戒指盒放在石栏上，任你自己决定是否拿起。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian waits in the cold wind, holding your ring box. It remains closed, with the hospital parking ticket from that year inside. He leaves his coat on the railing and stands in the wind himself, as if awaiting a long-overdue verdict.",
+          "I remember your heel broke that night. You still insisted on getting the injured person into the ER first.",
+          "Do you want me beside you when you face Ethan, or farther away?",
+          "He places the ring box on the stone railing, leaving you to decide whether to pick it up."
+        ],
+        "ja-JP": [
+          "ダミアンは冷たい風の中、あなたの指輪ケースを持って待つ。ケースは閉じたままで、中には当時の病院の駐車券が挟まれている。彼は上着を手すりに置き、自分は風の中に立つ。遅すぎた裁きを待つかのように。",
+          "あの夜、君はヒールが折れても、まず負傷者を救急へと譲らなかった。",
+          "イーサンに向き合う時、そばにいてほしい？ それとも離れていてほしい？",
+          "彼はケースを石の手すりに置き、手に取るかどうかをあなたに委ねる。"
+        ],
+        "ko-KR": [
+          "데이미언이 찬바람 속에서 당신의 반지 상자를 들고 기다린다. 상자는 닫혀 있고 안에는 당시 병원의 주차권이 들어 있다. 그는 외투를 난간에 놓고 자신은 바람 속에 선다. 너무 늦은 판결을 기다리는 듯하다.",
+          "그날 네 굽이 부러졌는데도 다친 사람부터 응급실에 보내야 한다고 했지.",
+          "이선을 상대할 때 함께 있을까, 아니면 멀리 떨어져 있을까?",
+          "그는 상자를 돌 난간에 놓고 가져갈지는 당신에게 맡긴다."
+        ],
+        "es-ES": [
+          "Damian espera en el viento frío con tu estuche del anillo. Sigue cerrado y contiene el antiguo tique de aparcamiento del hospital. Deja su abrigo sobre la baranda y se queda al frío, como esperando una sentencia largamente aplazada.",
+          "Recuerdo que se te rompió el tacón y aun así insististe en llevar primero a la persona herida a urgencias.",
+          "¿Quieres que te acompañe a enfrentarte a Ethan o que mantenga la distancia?",
+          "Coloca el estuche en la baranda de piedra y deja que decidas si recogerlo."
+        ]
+      }
+    },
+    {
+      "chapter": 2,
+      "scene": 3,
+      "background": "bg_a_c02s03",
+      "sourceNarration": "策划师在平板上确认今晨的‘惊喜投影’，缩略图里闪过三年前的雨夜照片。伊森伸手按灭屏幕。",
+      "sourceDialogue": [
+        "伊森：“那本来是给你看的。不是给所有人。”",
+        "伊森：“你要我立刻删除素材，还是把策划师叫回来作证？”"
+      ],
+      "sourceHook": "打印机自动吐出一张署着你名字的婚前授权附页。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The planner checks this morning's surprise slideshow on a tablet. A thumbnail flashes the rain-night photograph from three years ago. Ethan reaches over and blanks the screen.",
+          "That was meant for you. Not for everyone.",
+          "Do you want me to delete the material now, or bring the planner back to testify?",
+          "The printer automatically produces a premarital authorization supplement bearing your name."
+        ],
+        "ja-JP": [
+          "プランナーがタブレットで今朝のサプライズ映像を確認する。縮小画像に三年前の雨の夜の写真が一瞬映る。イーサンが手を伸ばして画面を消す。",
+          "君に見せるつもりだった。みんなにじゃない。",
+          "今すぐ素材を消してほしい？ それともプランナーを呼び戻して証言させる？",
+          "プリンターが、あなたの名前入りの婚前承諾書の別紙を自動で吐き出す。"
+        ],
+        "ko-KR": [
+          "기획자가 태블릿으로 아침의 깜짝 영상을 확인한다. 섬네일에 3년 전 빗속 사진이 스친다. 이선이 손을 뻗어 화면을 끈다.",
+          "너한테 보여 주려던 거야. 모두에게가 아니라.",
+          "지금 자료를 삭제할까, 아니면 기획자를 다시 불러 증언하게 할까?",
+          "프린터가 당신 이름이 적힌 혼전 권한 위임 부속서를 자동으로 뽑아 낸다."
+        ],
+        "es-ES": [
+          "La organizadora revisa en una tableta la proyección sorpresa de esta mañana. Una miniatura muestra la foto de la noche de lluvia de hace tres años. Ethan apaga la pantalla.",
+          "Era para que la vieras tú. No todo el mundo.",
+          "¿Quieres que borre el material ahora o que llame a la organizadora para que testifique?",
+          "La impresora expulsa automáticamente un anexo de autorización prematrimonial con tu nombre."
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "scene": 1,
+      "background": "bg_a_c03s01",
+      "sourceNarration": "宾客起立，弦乐响起，巨幕却提前亮起‘联名合作’的视觉稿。上面是你尚未公开的原创设计。",
+      "sourceDialogue": [
+        "伊森：“那些图为什么会在屏幕上？我没有批准播放！”",
+        "伊森：“你要当众停下仪式，还是先让我关掉屏幕？”"
+      ],
+      "sourceHook": "达米安从后排走上前，把一份厚合同放在你面前。",
+      "sourcePracticalTask": "眼前的任务是切断未经同意的投影并保存播放记录。",
+      "translations": {
+        "en-US": [
+          "Guests rise and strings begin, but the giant screen prematurely displays visuals for a joint collaboration. They are your original, unreleased designs.",
+          "Why are those images on the screen? I didn't authorize this screening!",
+          "Will you stop the ceremony publicly, or let me turn off the screen first?",
+          "Damian comes forward from the back row and puts a thick contract before you."
+        ],
+        "ja-JP": [
+          "客が立ち上がり弦楽が響く中、大画面に予定より早く共同企画のビジュアルが映る。それはまだ発表していないあなたのオリジナルデザインだ。",
+          "なぜあれが画面に？ 上映は許可していない！",
+          "皆の前で式を止める？ それとも先に画面を消させてくれる？",
+          "ダミアンが後列から進み出て、厚い契約書をあなたの前に置く。"
+        ],
+        "ko-KR": [
+          "하객들이 일어나고 현악이 흐르는데, 대형 화면에 공동 협업 시안이 예정보다 먼저 켜진다. 아직 공개하지 않은 당신의 독창적인 디자인이다.",
+          "저 그림들이 왜 화면에 있어? 난 상영을 승인하지 않았어!",
+          "사람들 앞에서 예식을 멈출래, 아니면 먼저 화면을 끄게 해 줄래?",
+          "데이미언이 뒷줄에서 앞으로 나와 두꺼운 계약서를 당신 앞에 놓는다."
+        ],
+        "es-ES": [
+          "Los invitados se levantan y suenan las cuerdas, pero la pantalla gigante muestra antes de tiempo los diseños de una colaboración comercial. Son tus originales aún inéditos.",
+          "¿Por qué están esas imágenes ahí? ¡No autoricé esta proyección!",
+          "¿Detienes la ceremonia ante todos o me dejas apagar primero la pantalla?",
+          "Damian avanza desde la última fila y te pone delante un contrato voluminoso."
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "scene": 2,
+      "background": "bg_a_c03s02",
+      "sourceNarration": "合同写着婚礼当天生效的‘联合设计许可’，收益人却不是你的工作室。达米安站在门边，没有给自己找借口。达米安的目光在你唇边停了一瞬，又逼自己移开。达米安替你挡住宾客的镜头，却在你看过来时把手放下，任你自己走出去。",
+      "sourceDialogue": [
+        "达米安：“我昨天就看到了。这一页本该由我先告诉你。”",
+        "达米安：“你要我现在公开承认，还是把签字页先交给你的律师？”"
+      ],
+      "sourceHook": "伊森追进侧室时，律师在电话里确认你并未签过该许可。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The contract grants a joint design license effective on the wedding day, but your studio isn't the beneficiary. Damian stands by the door without excuses. His eyes linger on your lips, then he forces them away. He shields you from guests' cameras, lowering his hand when you look over so you can walk out yourself.",
+          "I saw this yesterday. I should have been the one to tell you about this page.",
+          "Do you want me to admit that publicly now, or give the signature page to your lawyer first?",
+          "As Ethan follows you into the side room, your lawyer confirms by phone that you never signed the license."
+        ],
+        "ja-JP": [
+          "契約には式当日に発効する共同デザイン使用許諾とあるが、利益を受けるのはあなたの工房ではない。ダミアンは戸口に立ち、言い訳しない。あなたの唇に一瞬目を留め、無理にそらす。客のカメラを遮るが、あなたが見ると手を下ろし、自分で外へ出られるようにする。",
+          "昨日、見ていた。このページのことは、僕から先に伝えるべきだった。",
+          "今ここで公に認める？ それとも先に署名欄を君の弁護士へ渡す？",
+          "イーサンが側室に追ってきた時、電話口の弁護士が、あなたはその許諾書に署名していないと確認する。"
+        ],
+        "ko-KR": [
+          "계약은 예식 당일 발효되는 공동 디자인 사용 허가다. 그러나 수익자는 당신의 스튜디오가 아니다. 데이미언은 문가에서 변명하지 않는다. 당신 입술을 잠시 보다가 억지로 시선을 돌린다. 하객의 카메라를 막지만 당신이 보자 손을 내려 스스로 나가게 한다.",
+          "어제 봤어. 이 페이지는 내가 먼저 말했어야 해.",
+          "지금 공개적으로 인정할까, 아니면 서명 페이지부터 네 변호사에게 줄까?",
+          "이선이 옆방으로 따라 들어올 때, 변호사가 전화로 당신이 그 허가서에 서명하지 않았다고 확인한다."
+        ],
+        "es-ES": [
+          "El contrato concede una licencia conjunta de diseño que entra en vigor el día de la boda, pero tu estudio no es el beneficiario. Damian permanece junto a la puerta sin excusarse. Mira tus labios un instante y se obliga a apartar los ojos. Bloquea las cámaras de los invitados, pero baja la mano cuando lo miras para que puedas salir por ti misma.",
+          "Lo vi ayer. Debí contarte yo lo de esta página.",
+          "¿Lo reconozco públicamente ahora o entrego primero la página de firmas a tu abogado?",
+          "Cuando Ethan entra tras de ti en la sala lateral, tu abogado confirma por teléfono que nunca firmaste esa licencia."
+        ]
+      }
+    },
+    {
+      "chapter": 3,
+      "scene": 3,
+      "background": "bg_a_c03s03",
+      "sourceNarration": "仪式被迫暂停。埃莉诺当着双方亲属宣布合作款暂缓支付，脸上的笑容没有变化。",
+      "sourceDialogue": [
+        "埃莉诺：“不愿成为一家人，生意也就得重新算。”",
+        "埃莉诺：“你要我解释冻结依据，还是请媒体留下记录？”"
+      ],
+      "sourceHook": "手机接连响起，工作室的三个供应商同时要求你结清预付款。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The ceremony is forced to pause. Before relatives from both families, Eleanor announces partnership payments will be withheld. Her smile doesn't change.",
+          "If you won't become family, we will have to reconsider the business too.",
+          "Would you like the grounds for the freeze explained, or the press to record them?",
+          "Your phone rings repeatedly: three studio suppliers simultaneously demand advance payments be settled."
+        ],
+        "ja-JP": [
+          "式は中断を余儀なくされる。エレノアは両家の親族の前で提携金の支払い保留を告げる。笑顔は変わらない。",
+          "家族になる気がないのなら、商売も考え直さないと。",
+          "凍結の根拠をご説明する？ それとも報道陣に記録してもらう？",
+          "携帯が立て続けに鳴る。工房の三社の仕入先が同時に前払金の精算を求めてくる。"
+        ],
+        "ko-KR": [
+          "예식이 중단된다. 엘리너는 양가 친척들 앞에서 협업 대금 지급 보류를 선언한다. 미소는 그대로다.",
+          "가족이 될 생각이 없다면 사업도 다시 따져야지.",
+          "동결 근거를 설명할까, 아니면 언론이 기록하게 할까?",
+          "전화가 잇달아 울린다. 스튜디오 공급업체 세 곳이 동시에 선급금 정산을 요구한다."
+        ],
+        "es-ES": [
+          "La ceremonia debe suspenderse. Ante los parientes de ambas familias, Eleanor anuncia la retención de los pagos de colaboración sin cambiar de sonrisa.",
+          "Si no quieres formar parte de la familia, también habrá que reconsiderar los negocios.",
+          "¿Te explico el fundamento del bloqueo o dejamos que la prensa lo registre?",
+          "Tu teléfono no deja de sonar: tres proveedores del estudio exigen a la vez liquidar los anticipos."
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "scene": 1,
+      "background": "bg_a_c04s01",
+      "sourceNarration": "清晨的墙上还贴着你的样衣草图。助理在电脑前哭着告诉你，最大客户取消订单。",
+      "sourceDialogue": [
+        "助理米娅：“对方说，只要你肯回去完成婚礼，就会恢复付款。”",
+        "助理米娅：“你先保员工工资，还是先联系客户公开澄清？”"
+      ],
+      "sourceHook": "你发现取消邮件比婚礼暂停通知早发出了四十分钟。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Your sample sketches still hang on the wall from the morning. At the computer, your assistant tearfully reports that your biggest client has canceled.",
+          "They say payments will resume as long as you go back and finish the wedding.",
+          "Do we protect payroll first, or contact clients to publicly clarify things?",
+          "You discover the cancellation email was sent forty minutes before the ceremony's suspension was announced."
+        ],
+        "ja-JP": [
+          "朝から壁に貼られた試作品のスケッチはそのままだ。パソコンの前で助手が涙ながらに、最大の顧客が発注を取り消したと伝える。",
+          "戻って式を最後まで挙げれば、支払いを再開すると言っています。",
+          "まず皆の給料を守りますか？ それとも顧客に連絡して公に説明しますか？",
+          "取消メールは式の中断通知より四十分も早く送信されていた。"
+        ],
+        "ko-KR": [
+          "아침에 붙인 시제품 스케치가 벽에 그대로 있다. 컴퓨터 앞에서 조수가 울며 최대 고객이 주문을 취소했다고 전한다.",
+          "돌아가서 결혼식만 끝내면 지급을 재개하겠대요.",
+          "직원 급여부터 지킬까요, 아니면 고객에게 연락해 공개 해명부터 할까요?",
+          "취소 메일은 예식 중단 통보보다 40분 먼저 발송됐다."
+        ],
+        "es-ES": [
+          "Los bocetos de las prendas siguen en la pared desde la mañana. Tu ayudante llora ante el ordenador al comunicarte que el mayor cliente ha cancelado su pedido.",
+          "Dicen que reanudarán los pagos si vuelves y terminas la boda.",
+          "¿Protegemos primero las nóminas o contactamos con los clientes para aclararlo públicamente?",
+          "El correo de cancelación se envió cuarenta minutos antes del aviso de suspensión de la ceremonia."
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "scene": 2,
+      "background": "bg_a_c04s02",
+      "sourceNarration": "达米安把自己签过的旧董事纪要摊在桌上，并把付款凭证推给你的律师而不是你。他在证词旁添上自己的电话号码，却没有写一句求你回头的话。",
+      "sourceDialogue": [
+        "达米安：“律师费我来付，但我不买你的原谅。”",
+        "达米安：“你要我留在这里当证人，还是出去等你？”"
+      ],
+      "sourceHook": "律师指着一行数字：家族给你工作室估的价，早在三年前就写好了。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian spreads out old board minutes he signed and pushes payment records toward your lawyer rather than you. Beside his testimony he adds his phone number, without a plea for you to return.",
+          "I'll cover the legal fees. I'm not buying your forgiveness.",
+          "Should I stay here as a witness, or wait outside?",
+          "The lawyer points to a number: the family's valuation of your studio was written down three years ago."
+        ],
+        "ja-JP": [
+          "ダミアンは自ら署名した古い取締役会議事録を広げ、支払証憑をあなたではなく弁護士へ押し出す。証言の横に電話番号を添えるが、戻ってほしいとは一言も書かない。",
+          "弁護士費用は僕が出す。でも君の許しを買うつもりはない。",
+          "証人としてここに残る？ それとも外で待っていようか？",
+          "弁護士が数字を指す。一族による工房の評価額は、三年前に既に書かれていた。"
+        ],
+        "ko-KR": [
+          "데이미언은 자신이 서명한 옛 이사회 회의록을 펴고, 지급 증빙을 당신이 아닌 변호사에게 민다. 증언 옆에 전화번호를 쓰지만 돌아와 달라는 말은 없다.",
+          "변호사 비용은 내가 낼게. 네 용서를 사는 건 아니야.",
+          "증인으로 여기 남을까, 아니면 밖에서 기다릴까?",
+          "변호사가 숫자를 가리킨다. 가문이 스튜디오에 매긴 가치는 이미 3년 전에 적혀 있었다."
+        ],
+        "es-ES": [
+          "Damian extiende antiguas actas del consejo firmadas por él y acerca los justificantes de pago a tu abogado, no a ti. Añade su teléfono junto a la declaración, sin suplicarte que regreses.",
+          "Pagaré los honorarios. No estoy comprando tu perdón.",
+          "¿Me quedo como testigo o espero fuera?",
+          "El abogado señala una cifra: la familia había fijado el valor de tu estudio tres años antes."
+        ]
+      }
+    },
+    {
+      "chapter": 4,
+      "scene": 3,
+      "background": "bg_a_c04s03",
+      "sourceNarration": "记者围着一张泄露的旧照片追问你和达米安的关系。屏幕右上角还残留婚礼宾客系统的水印。",
+      "sourceDialogue": [
+        "伊森：“不要拍她。照片是从我们系统出去的。”",
+        "伊森：“你想自己回应，还是要求我交出完整访问记录？”"
+      ],
+      "sourceHook": "记者把另一张刚收到的截图亮出来，来源账号正是埃莉诺办公室。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Reporters gather around a leaked old photograph, pressing you about Damian. A wedding guest system watermark remains in its upper-right corner.",
+          "Don't photograph her. That image came out of our system.",
+          "Do you want to answer yourself, or demand I hand over the complete access records?",
+          "A reporter displays another screenshot just received. Its source account belongs to Eleanor's office."
+        ],
+        "ja-JP": [
+          "記者が流出した古い写真を囲み、ダミアンとの関係を問い詰める。画面右上には婚礼ゲストシステムの透かしが残っている。",
+          "彼女を撮るな。写真は俺たちのシステムから流出した。",
+          "自分で答える？ それとも俺に全アクセス記録を出させる？",
+          "記者が届いたばかりの別の画像を見せる。送信元はエレノアの執務室のアカウントだ。"
+        ],
+        "ko-KR": [
+          "기자들이 유출된 옛 사진을 둘러싸고 데이미언과의 관계를 추궁한다. 화면 오른쪽 위에는 예식 하객 시스템 워터마크가 남아 있다.",
+          "그녀를 찍지 마세요. 사진은 우리 시스템에서 나갔어요.",
+          "직접 답할래, 아니면 내게 전체 접근 기록을 내놓으라고 할래?",
+          "기자가 방금 받은 또 다른 캡처를 보인다. 발신 계정은 엘리너의 사무실이다."
+        ],
+        "es-ES": [
+          "Los periodistas rodean una vieja foto filtrada y preguntan por tu relación con Damian. En la esquina superior derecha sigue la marca de agua del sistema de invitados de la boda.",
+          "No la fotografiéis. Esa foto salió de nuestro sistema.",
+          "¿Quieres responder tú o exigirme que entregue todos los registros de acceso?",
+          "Un periodista muestra otra captura recién recibida. La cuenta de origen pertenece al despacho de Eleanor."
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "scene": 1,
+      "background": "bg_a_c05s01",
+      "sourceNarration": "埃莉诺坚持继续举办晚宴，还让伊森宣布你们‘只是闹了点小别扭’。达米安忽然放下餐巾站起。达米安让服务生撤走象征家族继承人的主位餐牌，第一次坐在了你旁边。",
+      "sourceDialogue": [
+        "达米安：“别再替她说话。她不是这张桌子上的资产。”",
+        "达米安：“你希望我坐回去，还是把婚前协议当众念出来？”"
+      ],
+      "sourceHook": "一屋人安静下来，伊森把酒杯捏出一道裂纹。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Eleanor insists on holding dinner and having Ethan announce that you merely had a little quarrel. Damian suddenly sets down his napkin and stands. He asks a server to remove the head-table place card marking him as heir, then sits beside you for the first time.",
+          "Stop speaking for her. She isn't an asset on this table.",
+          "Do you want me to move back, or read the premarital agreement aloud?",
+          "The room falls silent. Ethan squeezes his wineglass until it cracks."
+        ],
+        "ja-JP": [
+          "エレノアは晩餐の続行を譲らず、ただの小さな喧嘩だったとイーサンに発表させようとする。ダミアンが突然ナプキンを置いて立つ。後継者を示す主賓席の席札を下げさせ、初めてあなたの隣に座る。",
+          "彼女の代わりに話すのはやめてくれ。この食卓の資産じゃない。",
+          "元の席に戻ってほしい？ それとも婚前契約を皆に読み上げようか？",
+          "部屋が静まり返る。イーサンが握り締めたグラスにひびが入る。"
+        ],
+        "ko-KR": [
+          "엘리너는 만찬 강행을 고집하며 이선에게 사소한 말다툼이었다고 발표하라 한다. 데이미언이 갑자기 냅킨을 놓고 일어난다. 후계자를 상징하는 상석 명패를 치우게 한 뒤 처음으로 당신 곁에 앉는다.",
+          "그녀 대신 말하지 마세요. 이 식탁의 자산이 아닙니다.",
+          "원래 자리로 돌아갈까, 아니면 혼전 계약을 모두에게 읽어 줄까?",
+          "방 안이 조용해진다. 이선이 움켜쥔 와인 잔에 금이 간다."
+        ],
+        "es-ES": [
+          "Eleanor insiste en celebrar la cena y en que Ethan anuncie que solo habéis tenido una pequeña discusión. Damian deja la servilleta y se levanta. Ordena retirar la tarjeta de la cabecera que lo identifica como heredero y, por primera vez, se sienta a tu lado.",
+          "Dejad de hablar por ella. No es un activo de esta mesa.",
+          "¿Quieres que vuelva a mi sitio o que lea el acuerdo prematrimonial en voz alta?",
+          "La sala calla. Ethan aprieta su copa hasta agrietarla."
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "scene": 2,
+      "background": "bg_a_c05s02",
+      "sourceNarration": "你把外套搭在椅背上。达米安没有伸手，他只是将一双平底鞋放到你面前，和三年前雨夜同款。你们中间只有一只酒杯，他把手掌摊在桌面，没有碰你。达米安记得你那晚不吃辣，甚至记得你说过最讨厌被人当作奖品。",
+      "sourceDialogue": [
+        "达米安：“那晚你把鞋给了受伤的女孩，自己赤脚站了半小时。”",
+        "达米安：“如果那天我不曾离开，你会愿意重新认识我吗？”"
+      ],
+      "sourceHook": "他看见你身后闪了一次相机灯，却没有躲。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "You drape your coat over a chair. Damian doesn't reach for you; he sets down flats like those from the storm three years ago. Only a wineglass stands between you. His open palm rests on the table without touching you. He remembers you wouldn't eat spicy food that night, and how much you hated being treated as a prize.",
+          "You gave your shoes to the injured girl that night and stood barefoot for half an hour.",
+          "If I hadn't left then, would you be willing to get to know me again?",
+          "He notices a camera flash behind you and doesn't hide."
+        ],
+        "ja-JP": [
+          "あなたは椅子に上着を掛ける。ダミアンは触れず、三年前の雨夜と同じ型の平底靴を置く。間にはグラスが一つ。開いた掌は卓上にあり、あなたには触れない。あの夜、辛い物を食べなかったことも、賞品扱いを何より嫌うと言ったことも覚えている。",
+          "君はあの夜、けがをした少女に靴を渡して、三十分も裸足で立っていた。",
+          "あの日、僕が去らなければ、もう一度僕を知ろうと思ってくれた？",
+          "あなたの後ろで光るフラッシュに気づいても、彼は隠れない。"
+        ],
+        "ko-KR": [
+          "당신은 외투를 의자에 건다. 데이미언은 손대지 않고 3년 전 비 오던 밤과 같은 납작한 구두를 놓는다. 사이에는 잔 하나뿐이다. 펼친 손은 탁자에 있고 당신을 건드리지 않는다. 그는 당신이 매운 것을 먹지 않았던 일과, 상으로 취급받는 게 가장 싫다는 말까지 기억한다.",
+          "그날 넌 다친 소녀에게 신발을 주고 30분이나 맨발로 서 있었어.",
+          "그때 내가 떠나지 않았다면 날 다시 알아보고 싶었을까?",
+          "그는 당신 뒤에서 터진 카메라 플래시를 보고도 숨지 않는다."
+        ],
+        "es-ES": [
+          "Cuelgas el abrigo en una silla. Damian no te toca; deja ante ti unos zapatos planos como los de aquella tormenta. Solo hay una copa entre vosotros. Su palma abierta descansa en la mesa, sin rozarte. Recuerda que no comías picante y que dijiste odiar que te trataran como un premio.",
+          "Aquella noche diste tus zapatos a la chica herida y estuviste media hora descalza.",
+          "Si no me hubiera ido entonces, ¿querrías volver a conocerme?",
+          "Ve un destello de cámara detrás de ti, pero no se esconde."
+        ]
+      }
+    },
+    {
+      "chapter": 5,
+      "scene": 3,
+      "background": "bg_a_c05s03",
+      "sourceNarration": "匿名账号发来刚刚的露台照片，威胁在午夜公开‘哥哥抢走新娘’。达米安伸手想替你拿手机，又停住。",
+      "sourceDialogue": [
+        "达米安：“我想吻你，这是实话。但我不想让你为我的欲望付账。”",
+        "达米安：“你想反击匿名人，还是先弄清是谁站在楼下偷拍？”"
+      ],
+      "sourceHook": "一辆家族安保车从回廊窗外缓缓驶走。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "An anonymous account sends the terrace photo just taken, threatening a midnight story claiming the older brother stole the bride. Damian reaches for your phone, then stops.",
+          "I want to kiss you. That's the truth. But I don't want you paying for my desire.",
+          "Will you push back against the anonymous sender, or find out who was photographing us downstairs first?",
+          "A family security vehicle slowly drives away outside the glass corridor."
+        ],
+        "ja-JP": [
+          "匿名アカウントから今撮られたテラスの写真が届く。真夜中に兄が花嫁を奪ったと公表すると脅している。ダミアンは携帯を取ろうと手を伸ばし、止める。",
+          "キスしたい。それは本当だ。でも僕の欲望の代償を君に払わせたくない。",
+          "匿名の相手に反撃する？ それとも下で盗撮していた人物を先に調べる？",
+          "窓の外を、一族の警備車がゆっくり走り去る。"
+        ],
+        "ko-KR": [
+          "익명 계정이 방금 찍은 테라스 사진을 보내며 자정에 형이 신부를 빼앗았다는 기사를 공개하겠다고 협박한다. 데이미언은 휴대전화를 대신 잡으려다가 멈춘다.",
+          "키스하고 싶어. 그건 사실이야. 하지만 내 욕망의 대가를 네게 치르게 하고 싶진 않아.",
+          "익명 계정에 반격할래, 아니면 아래에서 누가 몰래 찍었는지 먼저 확인할래?",
+          "유리 복도 창밖으로 가문의 경비 차량이 천천히 떠난다."
+        ],
+        "es-ES": [
+          "Una cuenta anónima envía la foto recién tomada en la terraza y amenaza con publicar a medianoche que el hermano mayor ha robado a la novia. Damian intenta coger tu móvil y se detiene.",
+          "Quiero besarte. Es verdad. Pero no quiero que pagues tú por mi deseo.",
+          "¿Respondemos al remitente anónimo o averiguamos primero quién nos fotografiaba desde abajo?",
+          "Un vehículo de seguridad familiar se aleja lentamente tras las ventanas del corredor."
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "scene": 1,
+      "background": "bg_a_c06s01",
+      "sourceNarration": "一份三年前的董事投票记录躺在复印机旁，决定从那一年开始控制你的工作室合作。最后一票是达米安。",
+      "sourceDialogue": [
+        "律师：“这不是他疏忽看漏的文件。他亲手投了赞成。”",
+        "律师：“你要先看会议录像，还是叫他本人来回答？”"
+      ],
+      "sourceHook": "达米安站在门口，表情终于失去一贯的从容。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "A board voting record from three years ago lies beside the copier. It authorized control of your studio's partnerships from that year onward. Damian cast the deciding vote.",
+          "He didn't overlook this document. He personally voted in favor.",
+          "Would you like the meeting footage first, or shall we call him in to answer?",
+          "In the doorway, Damian finally loses his usual composure."
+        ],
+        "ja-JP": [
+          "コピー機の横に三年前の取締役会の投票記録がある。その年から工房の提携を支配する案。決定票を投じたのはダミアンだった。",
+          "見落とした書類ではありません。彼自身が賛成票を投じています。",
+          "先に会議映像を見ますか？ それとも本人を呼んで答えてもらいますか？",
+          "戸口に立つダミアンの顔から、いつもの余裕が消える。"
+        ],
+        "ko-KR": [
+          "복사기 옆에 3년 전 이사회 표결 기록이 있다. 그해부터 스튜디오 협업을 통제하기로 한 안건이다. 결정적인 한 표는 데이미언이었다.",
+          "놓쳐서 못 본 문서가 아닙니다. 직접 찬성표를 던졌어요.",
+          "회의 영상부터 볼까요, 아니면 본인을 불러 답하게 할까요?",
+          "문가에 선 데이미언의 얼굴에서 늘 있던 여유가 사라진다."
+        ],
+        "es-ES": [
+          "Junto a la fotocopiadora hay un registro de votación del consejo de hace tres años: desde entonces se controlaría la colaboración de tu estudio. El voto decisivo fue el de Damian.",
+          "No pasó por alto el documento. Votó personalmente a favor.",
+          "¿Quieres ver primero la grabación de la reunión o llamamos a Damian para que responda?",
+          "En la puerta, Damian pierde por fin su habitual aplomo."
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "scene": 2,
+      "background": "bg_a_c06s02",
+      "sourceNarration": "达米安承认当年怕失去掌控权，没阻止家族借婚约绑定你的项目。雨水顺着他昂贵的外套滴到地上。他卸下董事徽章时手微微发抖，比任何情话都更像一次真实的认错。",
+      "sourceDialogue": [
+        "达米安：“我那晚喜欢过你，后来也亲手让你走进这个局。”",
+        "达米安：“你要我辞职、出庭，还是今晚永远别再找你？”"
+      ],
+      "sourceHook": "他摘下董事徽章放在你能拿到的地方，不替你选。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian admits that fear of losing control kept him from stopping the family binding your project to the engagement. Rain drips from his expensive coat. His hand trembles as he removes his board badge, a more tangible admission than any love speech.",
+          "I liked you that night. And later I personally let you walk into this scheme.",
+          "Do you want me to resign, testify, or never contact you again after tonight?",
+          "He places his board badge within your reach without choosing for you."
+        ],
+        "ja-JP": [
+          "ダミアンは支配力を失うのが怖くて、婚約であなたの企画を縛る一族を止めなかったと認める。高価な上着から雨水が滴る。取締役の徽章を外す手が小さく震え、どんな愛の言葉よりも現実の過ちを物語る。",
+          "あの夜、君を好きになった。その後、自分の手でこの仕組みに踏み込ませた。",
+          "辞任する？ 出廷する？ それとも今夜限りでもう連絡しないでほしい？",
+          "徽章をあなたの手の届く所に置く。選ぶのはあなたのままだ。"
+        ],
+        "ko-KR": [
+          "데이미언은 통제력을 잃을까 두려워 가문이 약혼으로 당신의 사업을 묶는 걸 막지 않았다고 인정한다. 값비싼 외투에서 빗물이 흐른다. 이사 배지를 떼는 손이 떨려 어떤 고백보다 실제 잘못을 드러낸다.",
+          "그날 밤 널 좋아했어. 그 후에는 내 손으로 널 이 판에 들어가게 했고.",
+          "사임할까, 법정에 설까, 아니면 오늘 밤 이후 다시는 연락하지 말까?",
+          "배지를 손 닿는 곳에 놓고 당신 대신 결정하지 않는다."
+        ],
+        "es-ES": [
+          "Damian reconoce que el miedo a perder el control le impidió frenar el plan familiar de vincular tu proyecto al compromiso. La lluvia gotea de su caro abrigo. Le tiembla la mano al quitarse la insignia del consejo: una admisión más real que cualquier declaración de amor.",
+          "Me gustaste aquella noche. Después fui yo quien te dejó entrar en esta trampa.",
+          "¿Quieres que dimita, que testifique o que no vuelva a buscarte después de esta noche?",
+          "Deja la insignia a tu alcance sin decidir por ti."
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "scene": 3,
+      "background": "bg_a_c06s03",
+      "sourceNarration": "伊森靠着自己的车，手里有两张机票，目的地是你们原计划的蜜月城市。",
+      "sourceDialogue": [
+        "伊森：“哥哥会说爱你。我更想知道，他爱你时值多少钱。”",
+        "伊森：“你愿不愿意听我说三年前发生的另一半？”"
+      ],
+      "sourceHook": "他给你看一段没有声音的监控，画面里的达米安正在签字。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan leans against his car with two tickets to the city planned for your honeymoon.",
+          "My brother will tell you he loves you. I'd rather know what that love was worth to him.",
+          "Will you hear the other half of what happened three years ago?",
+          "He shows you silent surveillance footage of Damian signing."
+        ],
+        "ja-JP": [
+          "イーサンは車にもたれ、予定していた新婚旅行先への航空券を二枚持っている。",
+          "兄貴は愛していると言うだろう。俺が知りたいのは、その愛にいくらの値が付いていたかだ。",
+          "三年前の出来事の、もう半分を聞いてくれる？",
+          "彼はダミアンが署名している無音の監視映像を見せる。"
+        ],
+        "ko-KR": [
+          "이선은 차에 기대어 예정했던 신혼여행 도시로 가는 항공권 두 장을 들고 있다.",
+          "형은 널 사랑한다고 하겠지. 난 그 사랑에 얼마가 매겨졌는지 더 궁금해.",
+          "3년 전 일의 나머지 절반도 들어 볼래?",
+          "그는 데이미언이 서명하는 무음 감시 영상을 보여 준다."
+        ],
+        "es-ES": [
+          "Ethan se apoya en su coche con dos billetes hacia la ciudad prevista para vuestra luna de miel.",
+          "Mi hermano dirá que te quiere. A mí me interesa cuánto valía ese amor para él.",
+          "¿Escucharás la otra mitad de lo que pasó hace tres años?",
+          "Te muestra una grabación de vigilancia sin sonido donde Damian está firmando."
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "scene": 1,
+      "background": "bg_a_c07s01",
+      "sourceNarration": "旧酒店仍留着当年的志愿救援照片。前台经理认出了你手里的断鞋跟照片。",
+      "sourceDialogue": [
+        "前台经理：“那晚你把急救车让给了别人。那个男人等你到天亮。”",
+        "前台经理：“你想查当年的登记，还是先见一见那名被救司机？”"
+      ],
+      "sourceHook": "经理从柜底拿出一份早已被人复印过的登记簿。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The old hotel still has photographs of that year's volunteer rescue. The front-desk manager recognizes the picture of your broken heel.",
+          "You gave up your ambulance place for someone else that night. That man waited for you until dawn.",
+          "Do you want the old registration records, or to meet the rescued driver first?",
+          "From the bottom of a cabinet, the manager takes a register someone has already photocopied."
+        ],
+        "ja-JP": [
+          "古いホテルには当時の救援ボランティアの写真が残っている。フロント責任者はあなたの持つ折れたヒールの写真に気づく。",
+          "あの夜、あなたは救急車を他の方に譲った。あの男性は夜明けまであなたを待っていました。",
+          "当時の宿泊記録を調べますか？ それとも救助された運転手に先に会いますか？",
+          "責任者は戸棚の底から、既に誰かがコピーした宿泊台帳を出す。"
+        ],
+        "ko-KR": [
+          "옛 호텔에는 당시 자원 구조 사진이 남아 있다. 프런트 책임자가 당신 손의 부러진 굽 사진을 알아본다.",
+          "그날 구급차를 다른 사람에게 양보하셨죠. 그 남자는 새벽까지 기다렸어요.",
+          "당시 투숙 기록부터 볼까요, 아니면 구조된 운전기사부터 만날까요?",
+          "책임자는 캐비닛 아래에서 누군가 이미 복사한 투숙부를 꺼낸다."
+        ],
+        "es-ES": [
+          "El viejo hotel conserva fotografías del rescate voluntario de aquel año. El responsable de recepción reconoce la foto de tu tacón roto.",
+          "Aquella noche cediste tu ambulancia a otra persona. Ese hombre te esperó hasta el amanecer.",
+          "¿Consultas el registro de entonces o conoces primero al conductor rescatado?",
+          "Del fondo de un armario saca un registro que alguien ya había fotocopiado."
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "scene": 2,
+      "background": "bg_a_c07s02",
+      "sourceNarration": "达米安说起你们在台阶上分享一份冷掉的三明治，他记得你当年用的假名‘June’。他说起旧雨夜时笑了半秒，又因为想到自己后来的选择收住笑容。",
+      "sourceDialogue": [
+        "达米安：“我想过找你。后来我看见了伊森的求婚照片。”",
+        "达米安：“你想知道我为什么没出现，还是为什么连一句提醒都没给你？”"
+      ],
+      "sourceHook": "他的手机响起，是被调走的旧照片的档案员发来的求助短信。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian recalls sharing a cold sandwich on the stairs and the alias you used, June. He smiles for half a second at the rainy memory, then stops, remembering his later choices.",
+          "I thought about finding you. Then I saw Ethan's proposal photos.",
+          "Do you want to know why I stayed away, or why I never even warned you?",
+          "His phone receives a plea for help from the archivist responsible for the old photograph that was retrieved."
+        ],
+        "ja-JP": [
+          "ダミアンは階段で冷めたサンドイッチを分けたことと、あなたの偽名Juneを語る。雨夜の記憶に一瞬笑い、その後の選択を思い出して笑みを収める。",
+          "君を捜そうと思った。その後、イーサンのプロポーズ写真を見た。",
+          "僕が現れなかった理由を聞きたい？ それとも警告さえしなかった理由？",
+          "携帯に、持ち出された古い写真の保管担当者から助けを求めるメッセージが届く。"
+        ],
+        "ko-KR": [
+          "데이미언은 계단에서 나눈 식은 샌드위치와 당시 당신의 가명 June을 이야기한다. 비 오던 밤을 떠올리며 잠깐 웃다가 이후 자신의 선택을 생각하고 웃음을 거둔다.",
+          "찾으려 했어. 그러다 이선의 청혼 사진을 봤지.",
+          "왜 나타나지 않았는지 궁금해, 아니면 왜 경고 한마디 안 했는지 궁금해?",
+          "열람된 옛 사진의 기록 담당자에게서 도움을 청하는 문자가 온다."
+        ],
+        "es-ES": [
+          "Damian recuerda el sándwich frío compartido en los escalones y tu alias, June. Sonríe medio segundo al recordar la lluvia, luego se contiene al pensar en las decisiones que tomó después.",
+          "Pensé en buscarte. Entonces vi las fotos de la pedida de Ethan.",
+          "¿Quieres saber por qué no aparecí o por qué ni siquiera te advertí?",
+          "Su móvil recibe una petición de ayuda del archivero encargado de la vieja foto que fue retirada."
+        ]
+      }
+    },
+    {
+      "chapter": 7,
+      "scene": 3,
+      "background": "bg_a_c07s03",
+      "sourceNarration": "档案员展示调阅记录：旧照片在伊森求婚前一周被导出，使用的却是家族行政账号。",
+      "sourceDialogue": [
+        "档案员：“有人从一开始就在给你们三个人排位置。”",
+        "档案员：“你要把记录复制走，还是让警方先封存原始硬盘？”"
+      ],
+      "sourceHook": "监控屏里闪过一只珍珠耳环，和埃莉诺习惯佩戴的款式一模一样。",
+      "sourcePracticalTask": "眼前的任务是核对旧照片导出时间与设备。",
+      "translations": {
+        "en-US": [
+          "The archivist displays access records: the old photo was exported a week before Ethan proposed, using the family administration account.",
+          "Someone was arranging places for all three of you from the start.",
+          "Will you take copies of these records, or have the police secure the original hard drive first?",
+          "A pearl earring flashes on the monitor, identical to the style Eleanor habitually wears."
+        ],
+        "ja-JP": [
+          "保管担当者が閲覧記録を示す。写真はイーサンの求婚の一週間前、一族の管理アカウントで書き出されていた。",
+          "最初から、三人の位置を決めていた人がいるんです。",
+          "記録をコピーして持ち帰りますか？ それとも警察に原本のハードディスクを先に保全してもらいますか？",
+          "監視画面に真珠のイヤリングが一瞬映る。エレノアの愛用品と全く同じ型だ。"
+        ],
+        "ko-KR": [
+          "기록 담당자는 열람 기록을 보여 준다. 사진은 이선의 청혼 일주일 전 가문 행정 계정으로 반출됐다.",
+          "처음부터 누군가 세 사람의 자리를 정해 놓고 있었어요.",
+          "기록을 복사해 가실래요, 아니면 경찰이 원본 하드디스크부터 보전하게 할까요?",
+          "모니터에 진주 귀걸이가 스친다. 엘리너가 늘 하는 것과 같은 모양이다."
+        ],
+        "es-ES": [
+          "El archivero muestra los registros: la foto se exportó una semana antes de la pedida de Ethan mediante la cuenta administrativa familiar.",
+          "Alguien os estaba asignando puestos a los tres desde el principio.",
+          "¿Te llevas una copia de los registros o pedimos a la policía que preserve primero el disco duro original?",
+          "En el monitor aparece fugazmente un pendiente de perla idéntico a los que suele llevar Eleanor."
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "scene": 1,
+      "background": "bg_a_c08s01",
+      "sourceNarration": "昨夜的金裙女人把拍摄合同摔在桌上：伊森付钱让她假扮情人。她眼里没有得意，只有恼火。",
+      "sourceDialogue": [
+        "女演员克莱尔：“我以为是拍婚前真人秀。没人告诉我你会看见。”",
+        "女演员克莱尔：“你想要我的原始视频，还是签一份允许我公开作证的声明？”"
+      ],
+      "sourceHook": "合同末页除了伊森，还有一名婚礼策划的签名。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The woman in gold slams a filming contract onto the table: Ethan paid her to play his lover. She looks irritated, not triumphant.",
+          "I thought we were filming a premarital reality show. Nobody told me you would see it.",
+          "Do you want my original footage, or a signed statement allowing me to testify publicly?",
+          "The final page bears a wedding planner's signature as well as Ethan's."
+        ],
+        "ja-JP": [
+          "金色のドレスの女性が撮影契約書を卓上に叩きつける。イーサンが金を払い、恋人役を演じさせたのだ。目には優越感でなく怒りがある。",
+          "結婚前のリアリティ番組だと思ってた。あなたが見るなんて聞いてない。",
+          "元映像が欲しい？ それとも私が公に証言できるよう声明に署名する？",
+          "最終ページにはイーサンのほか、婚礼プランナーの署名もある。"
+        ],
+        "ko-KR": [
+          "금빛 드레스의 여자가 촬영 계약서를 탁자에 내던진다. 이선이 돈을 주고 연인 연기를 시킨 것이다. 눈에는 득의가 아니라 분노가 있다.",
+          "결혼 전 리얼리티 쇼인 줄 알았어요. 당신이 볼 거라는 말은 없었어요.",
+          "원본 영상을 드릴까요, 아니면 제가 공개 증언할 수 있게 진술서에 서명할까요?",
+          "마지막 장에는 이선뿐 아니라 예식 기획자의 서명도 있다."
+        ],
+        "es-ES": [
+          "La mujer de dorado arroja sobre la mesa el contrato de rodaje: Ethan le pagó para fingir ser su amante. No parece satisfecha, sino enfadada.",
+          "Creía que era un reality previo a la boda. Nadie me dijo que tú lo verías.",
+          "¿Quieres mi vídeo original o firmamos una declaración que me permita testificar públicamente?",
+          "En la última página, junto a la firma de Ethan, hay otra de un organizador de la boda."
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "scene": 2,
+      "background": "bg_a_c08s02",
+      "sourceNarration": "伊森终于承认那场吻是摆拍。他不说‘为了你好’，反而把手机里一次次打了又删的道歉翻给你看。伊森想捉住你的袖口，看到你的表情后终于学会松手。",
+      "sourceDialogue": [
+        "伊森：“我想让你嫉妒。我赌你会选我，结果我输了。”",
+        "伊森：“你要怎么惩罚我才算公平？至少别再让我替你定义公平。”"
+      ],
+      "sourceHook": "他打开一个加密文件，里面是哥哥参与家族方案的短片。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan finally admits the kiss was staged. Instead of saying it was for your own good, he shows you apologies repeatedly typed and deleted on his phone. He reaches for your sleeve, sees your expression, and finally lets go.",
+          "I wanted to make you jealous. I bet you'd choose me, and I lost.",
+          "What punishment would be fair? At least don't let me define fairness for you again.",
+          "He opens an encrypted file containing a clip of his brother participating in the family plan."
+        ],
+        "ja-JP": [
+          "イーサンはようやくキスが演出だったと認める。君のためとは言わず、携帯で書いては消した謝罪を見せる。あなたの袖をつかもうとして、表情を見てようやく手を放す。",
+          "嫉妬させたかった。俺を選ぶと賭けて、負けた。",
+          "どんな罰が公平なんだろう。せめて公平まで俺に決めさせないでくれ。",
+          "暗号化されたファイルを開く。兄が一族の計画に関わる短い映像が入っている。"
+        ],
+        "ko-KR": [
+          "이선이 마침내 키스가 연출이었다고 인정한다. 당신을 위해서였다는 말 대신, 휴대전화에 썼다 지운 사과들을 보여 준다. 소매를 잡으려다 표정을 보고 마침내 손을 놓는다.",
+          "질투하게 만들고 싶었어. 네가 날 선택할 거라 걸었는데, 내가 졌어.",
+          "어떤 벌이 공정할까? 적어도 공정함까지 내가 대신 정하게 하지는 마.",
+          "그가 암호화 파일을 연다. 형이 가문의 계획에 참여한 짧은 영상이 들어 있다."
+        ],
+        "es-ES": [
+          "Ethan admite por fin que el beso fue una puesta en escena. No dice que fuera por tu bien: te enseña las disculpas que escribió y borró una y otra vez. Intenta agarrarte la manga, ve tu expresión y finalmente te suelta.",
+          "Quería darte celos. Aposté a que me elegirías y perdí.",
+          "¿Qué castigo sería justo? Al menos no me dejes volver a definir la justicia por ti.",
+          "Abre un archivo cifrado con un fragmento de su hermano participando en el plan familiar."
+        ]
+      }
+    },
+    {
+      "chapter": 8,
+      "scene": 3,
+      "background": "bg_a_c08s03",
+      "sourceNarration": "录像只播出达米安投赞成票的一刻，前后都被剪掉。你在文件属性里看见修改时间竟在昨天。",
+      "sourceDialogue": [
+        "达米安：“我签过字。但有人把我后来的反对删掉了。”",
+        "达米安：“你想信完整原件，还是让我带着原件接受质询？”"
+      ],
+      "sourceHook": "埃莉诺的助理递来威胁函：再追查，就公开露台照片。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The video shows only Damian voting yes; what came before and after has been cut. In the file properties, you see it was modified yesterday.",
+          "I signed. But someone removed my later objection.",
+          "Will you rely on the complete original, or have me bring it and face questioning?",
+          "Eleanor's assistant delivers a threat: keep investigating and the terrace photos will be published."
+        ],
+        "ja-JP": [
+          "映像はダミアンの賛成票の瞬間だけ。前後は切られている。ファイルの更新日は昨日だ。",
+          "署名はした。でも、その後の反対意見は誰かに消された。",
+          "完全な原本を確かめる？ それとも僕に原本を持参させて、質疑に答えさせる？",
+          "エレノアの助手が脅迫状を届ける。調査を続ければテラスの写真を公開するという。"
+        ],
+        "ko-KR": [
+          "영상에는 데이미언이 찬성한 순간만 남고 앞뒤가 잘렸다. 파일 속성에는 수정 시각이 어제로 나온다.",
+          "서명했어. 하지만 이후의 반대는 누군가 지웠어.",
+          "완전한 원본을 확인할래, 아니면 내가 원본을 가져와 질문을 받게 할래?",
+          "엘리너의 조수가 협박장을 전달한다. 계속 조사하면 테라스 사진을 공개하겠다는 내용이다."
+        ],
+        "es-ES": [
+          "El vídeo solo muestra el instante en que Damian votó a favor; lo anterior y lo posterior están cortados. Las propiedades del archivo indican que se modificó ayer.",
+          "Firmé. Pero alguien borró mi oposición posterior.",
+          "¿Quieres comprobar el original completo o que lo lleve y responda a las preguntas?",
+          "La ayudante de Eleanor entrega una amenaza: si sigues investigando, publicarán las fotos de la terraza."
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "scene": 1,
+      "background": "bg_a_c09s01",
+      "sourceNarration": "网络上流出露台照，标题把你写成‘为钱逃婚的女人’。同事默默把样衣模特挡在镜头前，阻止偷拍。伊森的笑容碎了；他第一次看见自己的游戏让真正的人受伤。",
+      "sourceDialogue": [
+        "助理米娅：“她们不是在评论你谈谁，是在毁我们的订单。”",
+        "助理米娅：“你想自己发声，还是让工作室先只公布版权事实？”"
+      ],
+      "sourceHook": "律师电话传来消息：匿名账号背后使用的是婚礼系统的服务器。",
+      "sourcePracticalTask": "眼前的任务是识别偷拍照发布源。",
+      "translations": {
+        "en-US": [
+          "The terrace photo leaks online under a headline calling you a woman who fled her wedding for money. Colleagues silently move a dress form in front of the camera to block covert photos. Ethan's smile collapses: for the first time he sees his game hurt real people.",
+          "They aren't discussing whom you're dating. They're destroying our orders.",
+          "Do you want to speak yourself, or have the studio publish only the copyright facts first?",
+          "Your lawyer calls: the anonymous account uses the wedding system's server."
+        ],
+        "ja-JP": [
+          "テラス写真が流出し、金のために式から逃げた女という見出しが付く。同僚は黙ってボディをカメラの前へ動かし盗撮を遮る。イーサンの笑みが崩れる。自分の遊びが現実の人を傷つけたと初めて見る。",
+          "誰と付き合うかの噂じゃない。私たちの注文を潰してるんです。",
+          "自分で発言しますか？ それとも工房から著作権の事実だけ先に出しますか？",
+          "弁護士から電話。匿名アカウントは婚礼システムのサーバーを使っている。"
+        ],
+        "ko-KR": [
+          "테라스 사진이 온라인에 퍼지고 돈 때문에 결혼식에서 도망친 여자라는 제목이 붙는다. 동료들은 말없이 마네킹으로 카메라를 가려 도촬을 막는다. 이선의 웃음이 무너진다. 자신의 장난이 실제 사람을 다치게 했음을 처음 본다.",
+          "누구와 사귀느냐는 얘기가 아니에요. 우리 주문을 망가뜨리고 있어요.",
+          "직접 말할래요, 아니면 스튜디오에서 저작권 사실만 먼저 공개할까요?",
+          "변호사가 전화한다. 익명 계정이 쓰는 서버는 예식 시스템의 것이다."
+        ],
+        "es-ES": [
+          "La foto de la terraza aparece en internet con un titular que te acusa de huir de la boda por dinero. Tus compañeros ponen un maniquí ante la cámara para impedir fotos furtivas. La sonrisa de Ethan se derrumba: ve por primera vez el daño real de su juego.",
+          "No están comentando con quién sales. Están destruyendo nuestros pedidos.",
+          "¿Quieres hablar tú o que el estudio publique primero solo los hechos sobre derechos de autor?",
+          "Tu abogado llama: la cuenta anónima utiliza el servidor del sistema de la boda."
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "scene": 2,
+      "background": "bg_a_c09s02",
+      "sourceNarration": "达米安正在准备让公关团队封掉新闻。他看到你推门进来，把尚未发送的邮件关掉。达米安不再替你拨公关电话，他把电话放下，等你说自己的办法。",
+      "sourceDialogue": [
+        "达米安：“我又想替你处理。差一点又犯同一个错。”",
+        "达米安：“你愿意让我公布我的投票，还是让我把证据交还给你？”"
+      ],
+      "sourceHook": "他递来有亲笔批注的董事原件，自己没有保留复印件。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian is preparing to have his PR team suppress the story. When you enter, he closes an unsent email. He puts down the phone instead of calling PR for you and waits for your own plan.",
+          "I wanted to handle everything for you again. I almost repeated the same mistake.",
+          "Would you like me to disclose my vote, or return the evidence to you?",
+          "He hands over the original board document with his handwritten notes, keeping no copy himself."
+        ],
+        "ja-JP": [
+          "ダミアンは広報に記事を封じさせようとしている。あなたが入ると未送信メールを閉じる。代わりに広報へ電話せず、受話器を置いてあなたの方法を待つ。",
+          "また君の代わりに処理しようとした。同じ過ちを繰り返すところだった。",
+          "僕の投票を公表してほしい？ それとも証拠を君に返してほしい？",
+          "手書きの注記入りの取締役会原本を差し出す。自分にはコピーを残さない。"
+        ],
+        "ko-KR": [
+          "데이미언은 홍보팀으로 기사를 막으려 한다. 당신이 들어오자 보내지 않은 메일을 닫는다. 대신 홍보에 전화하지 않고 수화기를 놓아 당신의 방법을 기다린다.",
+          "또 대신 처리하려 했어. 같은 실수를 할 뻔했어.",
+          "내 표결을 공개할까, 아니면 증거를 네게 돌려줄까?",
+          "직접 주석을 쓴 이사회 원본을 건넨다. 자신은 사본도 남기지 않는다."
+        ],
+        "es-ES": [
+          "Damian prepara una orden a relaciones públicas para silenciar la noticia. Al verte entrar, cierra un correo sin enviar. Deja el teléfono en lugar de llamar por ti y espera tu propia propuesta.",
+          "Otra vez quería resolverlo por ti. Casi repito el mismo error.",
+          "¿Quieres que haga público mi voto o que te devuelva las pruebas?",
+          "Te entrega el documento original del consejo con sus anotaciones manuscritas, sin conservar copia."
+        ]
+      }
+    },
+    {
+      "chapter": 9,
+      "scene": 3,
+      "background": "bg_a_c09s03",
+      "sourceNarration": "你站在空白的直播背景前，摄影灯正对着那张被滥用的旧照。伊森和达米安都没有坐在镜头前。",
+      "sourceDialogue": [
+        "独立记者：“这个故事属于你，不属于兄弟俩。”",
+        "独立记者：“你想先澄清感情传闻，还是直接拿工作室文件说话？”"
+      ],
+      "sourceHook": "直播留言区出现一条匿名警告：“珍珠会记得每一次告白。”",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "You stand before a blank livestream backdrop. The studio lights face the misused old photograph. Neither Ethan nor Damian sits in front of the camera.",
+          "This story belongs to you, not the brothers.",
+          "Would you like to address the romance rumors first, or speak directly through the studio documents?",
+          "An anonymous livestream comment warns: “Pearls remember every confession.”"
+        ],
+        "ja-JP": [
+          "何もない配信背景の前にあなたは立つ。照明は悪用された古い写真に向く。兄弟はどちらもカメラ前に座っていない。",
+          "これはあなたの話です。兄弟のものではありません。",
+          "恋愛の噂から説明しますか？ それとも工房の書類を直接示しますか？",
+          "コメント欄に匿名の警告。「真珠はすべての告白を覚えている」。"
+        ],
+        "ko-KR": [
+          "당신은 빈 방송 배경 앞에 선다. 조명은 악용된 옛 사진을 비춘다. 이선도 데이미언도 카메라 앞에는 앉지 않았다.",
+          "이 이야기는 당신의 것이지 형제의 것이 아닙니다.",
+          "연애 소문부터 해명할까요, 아니면 스튜디오 서류로 바로 이야기할까요?",
+          "댓글에 익명 경고가 뜬다. “진주는 모든 고백을 기억한다.”"
+        ],
+        "es-ES": [
+          "Te colocas ante el fondo vacío de la emisión. Las luces apuntan a la vieja foto utilizada contra ti. Ni Ethan ni Damian se sientan ante la cámara.",
+          "Esta historia es tuya, no de los hermanos.",
+          "¿Aclaramos primero los rumores sentimentales o hablamos directamente con los documentos del estudio?",
+          "Un comentario anónimo advierte: «Las perlas recuerdan cada confesión»."
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "scene": 1,
+      "background": "bg_a_c10s01",
+      "sourceNarration": "伊森把台球杆倒过来握着，像小时候做错事等着受罚。他说自己从不甘心活在哥哥的阴影里。",
+      "sourceDialogue": [
+        "伊森：“我爱过你。可我也想赢他。两件事都是真的。”",
+        "伊森：“你愿意听我说完，还是要我先交出账号密码？”"
+      ],
+      "sourceHook": "他把婚礼访客系统的管理员令牌放在球桌上。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan holds his pool cue upside down like a child waiting to be punished. He says he has never accepted living in his brother's shadow.",
+          "I loved you. I also wanted to beat him. Both are true.",
+          "Will you hear me out, or should I hand over the account password first?",
+          "He places the wedding guest system's administrator token on the pool table."
+        ],
+        "ja-JP": [
+          "イーサンはビリヤードのキューを逆さに握り、叱られる子供のようだ。兄の陰で生きるのがずっと嫌だったと言う。",
+          "君を愛していた。兄貴に勝ちたくもあった。両方とも本当だ。",
+          "最後まで聞く？ それとも先にアカウントのパスワードを渡そうか？",
+          "婚礼ゲストシステムの管理者トークンを台に置く。"
+        ],
+        "ko-KR": [
+          "이선은 어릴 적 벌을 기다리듯 큐대를 거꾸로 쥐고 있다. 형의 그늘에서 사는 게 늘 싫었다고 한다.",
+          "널 사랑했어. 형을 이기고도 싶었어. 둘 다 사실이야.",
+          "끝까지 들어 줄래, 아니면 계정 비밀번호부터 줄까?",
+          "그는 예식 방문객 시스템의 관리자 토큰을 당구대에 놓는다."
+        ],
+        "es-ES": [
+          "Ethan sostiene el taco al revés, como un niño esperando un castigo. Dice que nunca aceptó vivir a la sombra de su hermano.",
+          "Te quise. También quería ganarle. Ambas cosas son verdad.",
+          "¿Me escuchas hasta el final o te entrego primero la contraseña de la cuenta?",
+          "Deja la credencial de administrador del sistema de invitados sobre la mesa de billar."
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "scene": 2,
+      "background": "bg_a_c10s02",
+      "sourceNarration": "伊森开放完整访问记录。你们看见偷拍视频由家族行政办公室上传，伪装成婚礼惊喜。伊森的玩笑停在嘴边，第一次只剩下一句来迟的“对不起”。",
+      "sourceDialogue": [
+        "系统管理员：“删除指令没有覆盖离线备份。这里还能恢复。”",
+        "系统管理员：“你要留给律师，还是现在让伊森亲自说明他的责任？”"
+      ],
+      "sourceHook": "导出任务的设备编号指向埃莉诺的私人秘书台。",
+      "sourcePracticalTask": "眼前的任务是恢复访客系统日志。",
+      "translations": {
+        "en-US": [
+          "Ethan opens the complete access records. You see covert footage uploaded by the family administration office disguised as a wedding surprise. His joke dies on his lips, leaving only a belated apology.",
+          "The deletion command didn't reach the offline backup. We can recover it here.",
+          "Shall we save it for your lawyer, or have Ethan explain his responsibility himself now?",
+          "The export device number points to Eleanor's private secretary's desk."
+        ],
+        "ja-JP": [
+          "イーサンは全アクセス記録を開示する。盗撮映像は一族の管理室からサプライズ映像に偽装して投稿されていた。冗談は口元で止まり、遅すぎた謝罪だけが残る。",
+          "削除命令はオフラインのバックアップまで届いていません。ここから復旧できます。",
+          "弁護士に残しますか？ それとも今イーサン本人に責任を説明させますか？",
+          "書き出し端末の番号は、エレノアの個人秘書の机を指している。"
+        ],
+        "ko-KR": [
+          "이선이 전체 접근 기록을 공개한다. 몰래 찍은 영상은 가문 행정 사무실이 결혼식 깜짝 영상으로 위장해 올렸다. 그의 농담이 멎고 늦은 사과만 남는다.",
+          "삭제 명령은 오프라인 백업까지 덮지 못했어요. 여기서 복원할 수 있습니다.",
+          "변호사에게 남길까요, 아니면 이선이 지금 직접 책임을 설명하게 할까요?",
+          "내보내기 장치 번호는 엘리너 개인 비서의 책상을 가리킨다."
+        ],
+        "es-ES": [
+          "Ethan abre todos los registros de acceso. Las grabaciones furtivas fueron subidas por la oficina administrativa familiar, disfrazadas de sorpresa de boda. Su broma se apaga en los labios; solo queda una disculpa tardía.",
+          "La orden de borrado no alcanzó la copia sin conexión. Aquí podemos recuperarla.",
+          "¿La conservamos para tu abogado o hacemos que Ethan explique ahora su responsabilidad?",
+          "El número del dispositivo de exportación señala el escritorio de la secretaria privada de Eleanor."
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "scene": 3,
+      "background": "bg_a_c10s03",
+      "sourceNarration": "伊森当面质问母亲，声音抖得厉害。埃莉诺只是慢慢搅动茶杯。",
+      "sourceDialogue": [
+        "埃莉诺：“你想赢哥哥，我帮你。现在怎么反倒怪我？”",
+        "埃莉诺：“你想听我怎样定义爱情，还是看看你们公司的财务报表？”"
+      ],
+      "sourceHook": "她推来一叠合同，封面竟印着你工作室的新名字。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan confronts his mother, his voice trembling. Eleanor merely stirs her tea slowly.",
+          "You wanted to beat your brother. I helped. Why blame me now?",
+          "Would you like my definition of love, or your company's financial statements?",
+          "She slides over a stack of contracts whose cover carries your studio's new name."
+        ],
+        "ja-JP": [
+          "イーサンが震える声で母を問い詰める。エレノアはゆっくり紅茶をかき混ぜるだけだ。",
+          "兄に勝ちたいと言うから手伝ったのよ。なぜ今さら私を責めるの？",
+          "私の愛の定義を聞く？ それとも会社の財務諸表を見る？",
+          "差し出された契約書の束。その表紙には工房の新しい名前が印刷されている。"
+        ],
+        "ko-KR": [
+          "이선이 떨리는 목소리로 어머니를 추궁한다. 엘리너는 천천히 차를 저을 뿐이다.",
+          "형을 이기고 싶다기에 도왔지. 이제 와 왜 날 탓하니?",
+          "내가 사랑을 어떻게 정의하는지 들을래, 아니면 회사 재무제표를 볼래?",
+          "그녀가 내민 계약서 묶음의 표지에는 스튜디오의 새 이름이 찍혀 있다."
+        ],
+        "es-ES": [
+          "Ethan interpela a su madre con la voz temblando. Eleanor solo remueve lentamente el té.",
+          "Querías vencer a tu hermano y te ayudé. ¿Ahora me culpas?",
+          "¿Quieres mi definición del amor o prefieres ver las cuentas de vuestra empresa?",
+          "Te acerca una pila de contratos cuya portada lleva el nuevo nombre de tu estudio."
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "scene": 1,
+      "background": "bg_a_c11s01",
+      "sourceNarration": "你找到一份‘永久授权’扫描件，签名处不是你的笔迹。右下角却有你曾授权过一次测试的旧印章。",
+      "sourceDialogue": [
+        "律师：“这是把短期试用拼成了所有权转让。”",
+        "律师：“你要先冻结这份合同，还是公开完整创作日志？”"
+      ],
+      "sourceHook": "复印件背面写着家族控股公司的项目编号。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "You find a scan of a permanent license. The signature isn't your handwriting. Yet its lower-right corner carries an old stamp you authorized for a single test.",
+          "They've pieced a short trial into an ownership transfer.",
+          "Shall we seek to suspend this contract first, or publish the full creation logs?",
+          "The back of the copy bears a project number belonging to the family holding company."
+        ],
+        "ja-JP": [
+          "永久使用許諾のスキャンが見つかる。署名はあなたの字ではない。だが右下には、一度の試験だけに許可した古い印がある。",
+          "短期試用をつなぎ合わせ、所有権の譲渡に見せています。",
+          "まずこの契約の停止を求めますか？ それとも制作記録をすべて公開しますか？",
+          "コピーの裏には一族の持株会社の案件番号がある。"
+        ],
+        "ko-KR": [
+          "영구 사용 허가서 스캔을 찾는다. 서명은 당신 필체가 아니다. 하지만 오른쪽 아래에는 한 차례 시험용으로만 허락했던 옛 도장이 있다.",
+          "단기 시험을 짜깁기해 소유권 양도로 만들었군요.",
+          "이 계약의 중지부터 신청할까요, 아니면 전체 창작 기록을 공개할까요?",
+          "사본 뒷면에는 가문 지주회사의 프로젝트 번호가 있다."
+        ],
+        "es-ES": [
+          "Encuentras una copia escaneada de una licencia permanente. La firma no es tuya. Sin embargo, abajo a la derecha lleva el antiguo sello que autorizaste para una sola prueba.",
+          "Han convertido una prueba breve en una cesión de propiedad mediante recortes.",
+          "¿Solicitamos suspender el contrato primero o publicamos el registro completo de creación?",
+          "Detrás de la copia figura el número de un proyecto del holding familiar."
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "scene": 2,
+      "background": "bg_a_c11s02",
+      "sourceNarration": "达米安交出三年前对你公司所做的秘密估值，价格低得刺眼。达米安把原稿放在你面前，看着你工作的样子，眼里没有占有，只有迟来的敬佩。",
+      "sourceDialogue": [
+        "达米安：“我当年算的是公司的价值。没算过这会毁掉一个人。”",
+        "达米安：“你要我把估值向你员工解释，还是先在法庭承认？”"
+      ],
+      "sourceHook": "他把董事授权密码封入律师证据袋，准备停止接触该项目。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian hands over a secret valuation of your company made three years ago, its price painfully low. He places the original before you and watches you work with belated respect rather than possession.",
+          "I calculated the company's value then. I never calculated how it could ruin a person.",
+          "Should I explain the valuation to your staff, or admit it in court first?",
+          "He seals the board authorization password in your lawyer's evidence bag, preparing to stop accessing the project."
+        ],
+        "ja-JP": [
+          "ダミアンは三年前の秘密の企業評価を渡す。額は目を疑うほど低い。原本をあなたの前に置き、働く姿を見る。その目には所有欲でなく、遅すぎた敬意がある。",
+          "会社の価値は計算した。それが一人の人生を壊すとは計算しなかった。",
+          "従業員に評価額を説明する？ それとも先に法廷で認める？",
+          "取締役権限のパスワードを弁護士の証拠袋に封じ、案件へのアクセスを止める準備をする。"
+        ],
+        "ko-KR": [
+          "데이미언이 3년 전 비밀리에 평가한 회사 가치를 내놓는다. 터무니없이 낮은 가격이다. 원본을 앞에 놓고 일하는 당신을 본다. 소유욕 대신 뒤늦은 존경이 담긴 눈이다.",
+          "그때 회사의 가치는 계산했어. 한 사람을 망가뜨릴 거라는 건 계산하지 않았어.",
+          "직원들에게 평가액을 설명할까, 아니면 법정에서 먼저 인정할까?",
+          "이사 권한 비밀번호를 변호사의 증거 봉투에 봉하고 프로젝트 접근을 중단할 준비를 한다."
+        ],
+        "es-ES": [
+          "Damian entrega la valoración secreta de tu empresa de hace tres años, con un precio dolorosamente bajo. Deja el original ante ti y te observa trabajar con admiración tardía, sin afán de posesión.",
+          "Calculé el valor de la empresa. No calculé que eso destruiría a una persona.",
+          "¿Explico la valoración a tu equipo o la reconozco primero ante el tribunal?",
+          "Sella la contraseña de autorización del consejo en la bolsa de pruebas del abogado, preparándose para dejar de acceder al proyecto."
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "scene": 3,
+      "background": "bg_a_c11s03",
+      "sourceNarration": "设计师们把原稿、邮件和手绘样板一件件摊开，墙上贴满日期。",
+      "sourceDialogue": [
+        "助理米娅：“我们没把作品卖给任何人。我们只是太相信他们。”",
+        "助理米娅：“你想从第一张草图查起，还是先找签名原件？”"
+      ],
+      "sourceHook": "一封两年前的客户邮件显示家族曾要求你停止对外接洽。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Designers lay out originals, emails and hand-drawn samples one by one. Dates cover the wall.",
+          "We never sold our work to anyone. We just trusted them too much.",
+          "Do you want to start with the first sketch, or find the original signature first?",
+          "A client email from two years ago shows the family asked you to stop seeking outside business."
+        ],
+        "ja-JP": [
+          "デザイナーたちが原稿、メール、手描き見本を一つずつ広げる。壁は日付で埋まる。",
+          "誰にも作品を売っていません。ただ、信じすぎたんです。",
+          "最初のスケッチから調べますか？ それとも署名の原本を先に探しますか？",
+          "二年前の顧客メールには、一族が外部との取引をやめるよう求めた記録がある。"
+        ],
+        "ko-KR": [
+          "디자이너들이 원고, 메일, 손으로 그린 샘플을 하나씩 펼친다. 벽은 날짜로 가득하다.",
+          "아무에게도 작품을 판 적 없어요. 너무 믿었을 뿐이죠.",
+          "첫 스케치부터 볼까요, 아니면 서명 원본부터 찾을까요?",
+          "2년 전 고객 메일에는 가문이 외부 거래 접촉 중단을 요구한 사실이 담겨 있다."
+        ],
+        "es-ES": [
+          "Los diseñadores extienden originales, correos y muestras dibujadas a mano, uno tras otro. La pared se llena de fechas.",
+          "No vendimos nuestro trabajo a nadie. Solo confiamos demasiado en ellos.",
+          "¿Empezamos por el primer boceto o buscamos primero la firma original?",
+          "Un correo de un cliente de hace dos años revela que la familia te pidió dejar de buscar contactos externos."
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "scene": 1,
+      "background": "bg_a_c12s01",
+      "sourceNarration": "原始设计日志与云端发送时间对得上，伪造授权在技术上站不住脚。",
+      "sourceDialogue": [
+        "独立律师：“这份链条足够让他们在正式调查里解释。”",
+        "独立律师：“你愿意让所有员工实名作证，还是采用匿名证言保护他们？”"
+      ],
+      "sourceHook": "名单最后一名证人却是伊森曾经的婚礼策划师。",
+      "sourcePracticalTask": "眼前的任务是核对原始设计文件的创建时间。",
+      "translations": {
+        "en-US": [
+          "The original design logs match cloud transmission times. Technically, the forged license cannot stand.",
+          "This chain is enough to require their explanation in a formal investigation.",
+          "Will all employees testify by name, or should we protect them with anonymous statements?",
+          "The last witness on the list is Ethan's former wedding planner."
+        ],
+        "ja-JP": [
+          "元のデザイン記録はクラウド送信時刻と一致する。偽造許諾は技術的にも成り立たない。",
+          "この証拠の連鎖なら、正式調査で説明を求められます。",
+          "従業員全員に実名で証言してもらいますか？ それとも匿名証言で保護しますか？",
+          "証人名簿の最後は、イーサンの元婚礼プランナーだ。"
+        ],
+        "ko-KR": [
+          "원본 디자인 기록과 클라우드 전송 시각이 일치한다. 위조 허가서는 기술적으로 성립하지 않는다.",
+          "이 증거 사슬이면 정식 조사에서 설명을 요구할 수 있어요.",
+          "전 직원이 실명 증언할까요, 아니면 익명 진술로 보호할까요?",
+          "증인 명단의 마지막은 이선의 전 예식 기획자다."
+        ],
+        "es-ES": [
+          "Los registros originales de diseño coinciden con las horas de envío a la nube. La licencia falsificada no se sostiene técnicamente.",
+          "Esta cadena basta para exigir explicaciones en una investigación formal.",
+          "¿Testifica toda la plantilla con nombre o la protegemos con declaraciones anónimas?",
+          "El último testigo de la lista es el antiguo organizador de boda de Ethan."
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "scene": 2,
+      "background": "bg_a_c12s02",
+      "sourceNarration": "伊森当面交出婚礼系统离线备份，里面有他签发摆拍许可的记录。达米安交来早年的董事纪要。他想说“我帮你”，话到嘴边改成“你需要我做哪份证言”。",
+      "sourceDialogue": [
+        "伊森：“这些足以证明我做过多蠢的事。我不再删了。”",
+        "伊森：“你想由律师统一提交，还是让我们分别去说清？”"
+      ],
+      "sourceHook": "备份中一封邮件写着：以婚姻换取撤案。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan personally hands over the wedding system's offline backup, including the permission for staged filming he issued. Damian brings the old board minutes. He starts to say he will help, then changes it to asking which testimony you need.",
+          "This proves how foolish I was. I won't delete it again.",
+          "Should your lawyer submit everything together, or should we each explain ourselves separately?",
+          "An email in the backup proposes exchanging marriage for withdrawal of the case."
+        ],
+        "ja-JP": [
+          "イーサンが婚礼システムのオフラインバックアップを直接渡す。演出撮影を許可した彼の記録もある。ダミアンは古い議事録を持参する。手伝うと言いかけ、必要な証言は何かと聞き直す。",
+          "俺の愚かさを十分証明できる。もう消さない。",
+          "弁護士に一括提出してもらう？ それとも俺たちが別々に説明する？",
+          "バックアップのメールには、婚姻と引き換えに訴えを取り下げるとある。"
+        ],
+        "ko-KR": [
+          "이선은 연출 촬영을 허가한 기록이 포함된 예식 시스템 오프라인 백업을 직접 건넨다. 데이미언은 옛 회의록을 가져온다. 도와주겠다고 하려다 어떤 증언이 필요한지로 말을 고친다.",
+          "내가 얼마나 어리석었는지 충분히 증명해. 더는 지우지 않을게.",
+          "변호사가 모아 제출할까, 아니면 우리가 각자 설명할까?",
+          "백업 메일 하나에는 혼인과 사건 취하를 교환한다는 내용이 있다."
+        ],
+        "es-ES": [
+          "Ethan entrega personalmente la copia sin conexión del sistema, que incluye su autorización del rodaje fingido. Damian aporta actas antiguas. Empieza a decir que te ayudará y rectifica: pregunta qué declaración necesitas de él.",
+          "Esto demuestra lo estúpido que fui. No volveré a borrarlo.",
+          "¿Lo presenta todo tu abogado o explicamos cada uno nuestra parte por separado?",
+          "Un correo de la copia propone intercambiar matrimonio por retirada del caso."
+        ]
+      }
+    },
+    {
+      "chapter": 12,
+      "scene": 3,
+      "background": "bg_a_c12s03",
+      "sourceNarration": "埃莉诺把一份和解书放在香槟旁，条件是你回到婚礼、签署补充授权，她便撤销起诉。埃莉诺的手指仍压在和解书上，仿佛婚姻只是一份可以重新报价的合同。",
+      "sourceDialogue": [
+        "埃莉诺：“你要爱情、体面、公司，世上哪有三全？”",
+        "埃莉诺：“你想让我当场解释每一条，还是请律师把它拍下来？”"
+      ],
+      "sourceHook": "套房窗外正对着即将召开的股东会议厅。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Eleanor sets a settlement beside the champagne: return to the wedding and sign an additional authorization, and she will withdraw her lawsuit. Her finger stays on it as though marriage were a contract that could be repriced.",
+          "You want love, respectability and your company. Who gets all three?",
+          "Shall I explain every clause here, or have your lawyer photograph it?",
+          "The suite overlooks the hall where the shareholders will soon meet."
+        ],
+        "ja-JP": [
+          "エレノアはシャンパンの横に和解書を置く。式へ戻り、追加許諾に署名すれば提訴を取り下げるという条件だ。指を紙に押しつけたまま、婚姻を再見積もりできる契約のように扱う。",
+          "愛も体面も会社も欲しい。三つとも手に入ると思う？",
+          "一条ずつ説明しましょうか？ それとも弁護士に撮影してもらう？",
+          "窓の正面には、まもなく株主総会が開かれるホールがある。"
+        ],
+        "ko-KR": [
+          "엘리너는 샴페인 옆에 합의서를 놓는다. 예식으로 돌아가 추가 허가서에 서명하면 자신의 소송을 취하하겠다는 조건이다. 종이를 누른 손가락은 결혼도 다시 값을 매길 계약인 듯하다.",
+          "사랑, 체면, 회사까지. 셋 다 가질 수 있겠니?",
+          "조항마다 여기서 설명할까, 아니면 변호사에게 찍게 할까?",
+          "창밖에는 곧 주주총회가 열릴 회의장이 마주 보인다."
+        ],
+        "es-ES": [
+          "Eleanor coloca un acuerdo junto al champán: si vuelves a la boda y firmas una autorización adicional, retirará su demanda. Mantiene el dedo sobre el papel como si el matrimonio fuera un contrato que pudiera volver a tasarse.",
+          "Quieres amor, respetabilidad y empresa. ¿Quién consigue las tres cosas?",
+          "¿Explico aquí cada cláusula o dejamos que tu abogado las fotografíe?",
+          "La ventana da al salón donde pronto se celebrará la junta de accionistas."
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "scene": 1,
+      "background": "bg_a_c13s01",
+      "sourceNarration": "达米安走到话筒前，公开自己投过的赞成票，随后交出负责你项目的董事席位。",
+      "sourceDialogue": [
+        "达米安：“我曾经为了赢，把她的名字变成筹码。”",
+        "达米安：“你希望我继续说出幕后的人，还是先回答股东的质问？”"
+      ],
+      "sourceHook": "投影屏上的票数瞬间变了，埃莉诺第一次抬高音量。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian walks to the microphone, publicly admits his vote in favor, then gives up the board seat responsible for your project.",
+          "To win, I once turned her name into a bargaining chip.",
+          "Should I keep identifying those behind it, or answer the shareholders' questions first?",
+          "The projected vote count changes at once. Eleanor raises her voice for the first time."
+        ],
+        "ja-JP": [
+          "ダミアンはマイクへ進み、自分の賛成票を公表する。そしてあなたの案件を担当する取締役の席を返上する。",
+          "勝つために、彼女の名前を取引の札にした。",
+          "背後の人物について続ける？ それとも先に株主の質問に答える？",
+          "スクリーンの票数が一変する。エレノアが初めて声を荒げる。"
+        ],
+        "ko-KR": [
+          "데이미언은 마이크 앞에서 자신의 찬성표를 공개하고 당신의 프로젝트 담당 이사 자리를 반납한다.",
+          "이기려고 그녀의 이름을 흥정 카드로 썼습니다.",
+          "배후를 계속 밝힐까, 아니면 주주의 질문부터 답할까?",
+          "화면의 표수가 즉시 바뀐다. 엘리너가 처음으로 목소리를 높인다."
+        ],
+        "es-ES": [
+          "Damian se acerca al micrófono, reconoce públicamente su voto favorable y renuncia al puesto del consejo responsable de tu proyecto.",
+          "Para ganar convertí su nombre en moneda de cambio.",
+          "¿Sigo nombrando a quienes estaban detrás o respondo primero a los accionistas?",
+          "El recuento proyectado cambia de inmediato. Eleanor levanta la voz por primera vez."
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "scene": 2,
+      "background": "bg_a_c13s02",
+      "sourceNarration": "伊森当众承认摆拍、偷拍视频和婚礼操控，与哥哥没有对视。达米安在人群里找了你一眼，却只在确定你看见时轻轻点头。",
+      "sourceDialogue": [
+        "伊森：“这一次不争谁更爱她。我只说我做过什么。”",
+        "伊森：“你要我交出全部原始文件，还是先把你的名字从声明里删掉？”"
+      ],
+      "sourceHook": "法务人员将两份证言分别封存，没有替任何人消账。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan publicly admits the staged photos, covert footage and wedding manipulation without meeting his brother's eyes. Damian searches the crowd for you, offering only a small nod once he knows you see him.",
+          "This time I won't argue over who loves her more. I'll say only what I did.",
+          "Should I hand over every original file, or remove your name from the statement first?",
+          "Legal staff secure the two testimonies separately; neither man's responsibility is erased."
+        ],
+        "ja-JP": [
+          "イーサンは兄と目を合わせず、演出撮影、盗撮、婚礼操作を公に認める。ダミアンは群衆にあなたを探すが、見えていると分かると小さくうなずくだけだ。",
+          "今回は誰がより愛しているか争わない。自分がしたことだけ話す。",
+          "原本をすべて渡す？ それとも先に声明から君の名前を外す？",
+          "法務担当が二人の証言を別々に保全する。誰の責任も帳消しにはならない。"
+        ],
+        "ko-KR": [
+          "이선은 형과 눈을 마주치지 않은 채 연출 촬영, 도촬, 결혼식 조작을 공개 인정한다. 데이미언은 군중 속에서 당신을 찾다가 당신이 보고 있음을 확인하고 작게 고개만 끄덕인다.",
+          "이번엔 누가 더 사랑하는지 다투지 않겠습니다. 제가 한 일만 말하겠습니다.",
+          "원본 파일을 모두 줄까, 아니면 진술에서 네 이름부터 뺄까?",
+          "법무 담당자는 두 증언을 따로 봉한다. 누구의 책임도 지워 주지 않는다."
+        ],
+        "es-ES": [
+          "Ethan reconoce públicamente las fotos fingidas, las grabaciones furtivas y la manipulación de la boda sin mirar a su hermano. Damian te busca entre la gente y solo asiente levemente cuando confirma que lo ves.",
+          "Esta vez no discutiré quién la quiere más. Solo diré lo que hice.",
+          "¿Entrego todos los archivos originales o elimino antes tu nombre de mi declaración?",
+          "El equipo jurídico custodia ambas declaraciones por separado, sin saldar la responsabilidad de ninguno."
+        ]
+      }
+    },
+    {
+      "chapter": 13,
+      "scene": 3,
+      "background": "bg_a_c13s03",
+      "sourceNarration": "你和设计团队展示第一代原稿以及完整研发日期，现场独立董事要求启动调查。",
+      "sourceDialogue": [
+        "独立董事：“请保留原件。我们需要能查到底的证据。”",
+        "独立董事：“你愿意公开全部设计过程，还是仅提交足以证明权属的部分？”"
+      ],
+      "sourceHook": "埃莉诺站起来，拿出她藏了三年的雨夜监控。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "You and the design team show the first-generation originals and complete development dates. Independent directors at the meeting request an investigation.",
+          "Preserve the originals. We need evidence we can follow to the end.",
+          "Will you disclose the entire design process, or submit only enough to establish ownership?",
+          "Eleanor stands and produces the rain-night surveillance she has hidden for three years."
+        ],
+        "ja-JP": [
+          "あなたと制作チームは第一世代の原稿と全開発日程を示す。独立取締役が調査開始を求める。",
+          "原本を保管してください。最後まで追える証拠が必要です。",
+          "制作過程をすべて公開しますか？ それとも権利を証明する範囲だけ提出しますか？",
+          "エレノアは立ち上がり、三年間隠していた雨夜の監視映像を出す。"
+        ],
+        "ko-KR": [
+          "당신과 디자인팀은 최초 원고와 전체 개발 날짜를 전시한다. 독립 이사들이 조사 개시를 요구한다.",
+          "원본을 보관해 주세요. 끝까지 추적할 증거가 필요합니다.",
+          "제작 과정 전체를 공개할까요, 아니면 권리를 입증할 부분만 제출할까요?",
+          "엘리너가 일어나 3년간 숨겨 온 비 오던 밤의 감시 영상을 꺼낸다."
+        ],
+        "es-ES": [
+          "Tú y el equipo mostráis los primeros originales y las fechas completas de desarrollo. Los consejeros independientes solicitan una investigación.",
+          "Conservad los originales. Necesitamos pruebas que permitan llegar hasta el final.",
+          "¿Publicas todo el proceso de diseño o presentas solo lo necesario para acreditar la titularidad?",
+          "Eleanor se levanta y saca la grabación de vigilancia de la noche de lluvia que escondió durante tres años."
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "scene": 1,
+      "background": "bg_a_c14s01",
+      "sourceNarration": "埃莉诺播放旧雨夜影像，试图暗示你与达米安早有不当交易。影像也记录着你在医院急救室门外等到天亮。",
+      "sourceDialogue": [
+        "埃莉诺：“你只要停止追诉，这一切仍可以留在家里。”",
+        "埃莉诺：“你想让所有人看完影像，还是让法庭封存它？”"
+      ],
+      "sourceHook": "律师发现摄像文件的尾部有一段被人为裁去的二十秒。",
+      "sourcePracticalTask": "眼前的任务是比对旧监控被剪掉的片段。",
+      "translations": {
+        "en-US": [
+          "Eleanor plays old storm-night footage to imply improper dealings between you and Damian. It also records you waiting outside the hospital ER until dawn.",
+          "Stop pursuing this and everything can still remain within the family.",
+          "Would you like everyone to see the complete footage, or have the court seal it?",
+          "Your lawyer discovers twenty seconds deliberately cut from the end of the camera file."
+        ],
+        "ja-JP": [
+          "エレノアは古い雨夜の映像を流し、あなたとダミアンに不正な取引があったと匂わせる。だがそこには、あなたが救急室の外で夜明けまで待つ姿も映る。",
+          "追及をやめれば、まだ家の中に収められるわ。",
+          "皆に映像を最後まで見せる？ それとも裁判所に封印させる？",
+          "弁護士はファイルの末尾から二十秒が意図的に切られていると気づく。"
+        ],
+        "ko-KR": [
+          "엘리너는 당신과 데이미언이 부당 거래를 했다는 인상을 주려고 옛 비 오는 밤 영상을 튼다. 하지만 당신이 응급실 밖에서 새벽까지 기다린 모습도 담겨 있다.",
+          "추궁을 멈추면 아직 집안에서 끝낼 수 있어.",
+          "모두에게 끝까지 보여 줄까, 아니면 법원에 봉인하게 할까?",
+          "변호사는 영상 파일 끝의 20초가 인위적으로 잘렸음을 발견한다."
+        ],
+        "es-ES": [
+          "Eleanor reproduce la vieja grabación para insinuar tratos indebidos entre Damian y tú. También muestra que esperaste hasta el amanecer fuera de urgencias.",
+          "Si dejas de perseguir esto, aún puede quedar en familia.",
+          "¿Quieres que todos vean el vídeo entero o que el tribunal lo custodie bajo reserva?",
+          "Tu abogado descubre veinte segundos cortados deliberadamente al final del archivo."
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "scene": 2,
+      "background": "bg_a_c14s02",
+      "sourceNarration": "埃莉诺的威胁函正式送到。达米安决定提交自己的证词，包括当年没阻止侵权的事实。他签署证词前没有看你，像是终于明白负责不需要观众。",
+      "sourceDialogue": [
+        "达米安：“我会承担我的部分，不换你一句感谢。”",
+        "达米安：“你想陪我进门，还是让我们只在证词里相见？”"
+      ],
+      "sourceHook": "秘书敲门，交来伊森自己签过的摆拍资金流水。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Eleanor's threatening letter is formally delivered. Damian decides to submit his testimony, including his failure to stop the infringement then. Before signing, he doesn't look at you, as though finally understanding responsibility needs no audience.",
+          "I'll bear my share. I don't expect your thanks in exchange.",
+          "Do you want to go in with me, or have us meet only through our testimony?",
+          "A secretary knocks and brings the staged-filming payment records signed by Ethan himself."
+        ],
+        "ja-JP": [
+          "エレノアの脅迫状が正式に届く。ダミアンは、当時侵害を止めなかった事実も含めて証言を提出すると決める。署名前、あなたを見ない。責任には観客が不要だと、ようやく理解したようだ。",
+          "僕の分は引き受ける。お礼と引き換えにはしない。",
+          "一緒に入る？ それとも証言の中でだけ会うことにする？",
+          "秘書がノックし、イーサン自身が署名した演出撮影の資金記録を届ける。"
+        ],
+        "ko-KR": [
+          "엘리너의 협박장이 정식 전달된다. 데이미언은 당시 권리 침해를 막지 않은 사실까지 포함해 증언하기로 한다. 서명 전 당신을 보지 않는다. 책임에 관객은 필요 없다는 것을 이제 이해한 듯하다.",
+          "내 몫은 감당할게. 감사하다는 말과 바꾸지 않아.",
+          "같이 들어갈래, 아니면 증언 안에서만 만날까?",
+          "비서가 노크하고 이선이 직접 서명한 연출 촬영 자금 내역을 전달한다."
+        ],
+        "es-ES": [
+          "La carta amenazante de Eleanor llega formalmente. Damian decide presentar su declaración, incluido que no detuvo la infracción entonces. Antes de firmar no te mira, como si entendiera por fin que responsabilizarse no exige público.",
+          "Asumiré mi parte. No la cambiaré por un agradecimiento.",
+          "¿Quieres entrar conmigo o que solo coincidamos a través de las declaraciones?",
+          "Una secretaria llama y entrega los movimientos de fondos del montaje, firmados por Ethan."
+        ]
+      }
+    },
+    {
+      "chapter": 14,
+      "scene": 3,
+      "background": "bg_a_c14s03",
+      "sourceNarration": "伊森把自己所有参与造谣的证据装进透明文件袋。你能清楚看见他的签名。",
+      "sourceDialogue": [
+        "伊森：“我不配用失去你来为自己开脱。”",
+        "伊森：“你想听我的最后解释，还是让我安静地离开？”"
+      ],
+      "sourceHook": "花园里的婚礼彩灯被拆下，第一次露出没有装饰的树枝。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Ethan puts all evidence of his part in spreading rumors into a transparent document bag. His signature is clearly visible.",
+          "Losing you doesn't entitle me to excuses.",
+          "Would you like my final explanation, or should I leave quietly?",
+          "The wedding lights come down in the garden, revealing bare branches for the first time."
+        ],
+        "ja-JP": [
+          "イーサンは自分が噂を広めた証拠をすべて透明な書類袋へ入れる。署名がはっきり見える。",
+          "君を失ったことを言い訳にはできない。",
+          "最後の説明を聞きたい？ それとも静かに去ろうか？",
+          "庭の婚礼用電飾が外され、飾りのない枝が初めて現れる。"
+        ],
+        "ko-KR": [
+          "이선이 자신이 소문에 가담한 모든 증거를 투명 서류 봉투에 넣는다. 서명이 뚜렷이 보인다.",
+          "널 잃었다고 내 잘못을 변명할 자격은 없어.",
+          "마지막 설명을 들을래, 아니면 조용히 떠날까?",
+          "정원의 결혼식 조명이 철거되어 처음으로 장식 없는 나뭇가지가 드러난다."
+        ],
+        "es-ES": [
+          "Ethan mete en una bolsa transparente todas las pruebas de su participación en los rumores. Su firma se ve claramente.",
+          "Haber perdido tu amor no me da derecho a excusarme.",
+          "¿Quieres mi última explicación o que me marche en silencio?",
+          "Retiran las luces de boda del jardín y aparecen por primera vez las ramas sin adornos."
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "scene": 1,
+      "background": "bg_a_c15s01",
+      "sourceNarration": "调查初步确认伪造授权与款项冻结的关联，法院程序仍需时间。你收到工作室重新签约的意向书。",
+      "sourceDialogue": [
+        "独立律师：“我们赢回了谈判位置，不代表后面的事会自动结束。”",
+        "独立律师：“你想先恢复业务，还是把精力留给诉讼？”"
+      ],
+      "sourceHook": "邮件里附着员工们重新选择留下的签名。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The preliminary investigation links the forged authorization to the payment freeze; court proceedings will still take time. You receive a letter of intent to renew the studio's contracts.",
+          "We've regained a negotiating position. That doesn't mean everything ahead ends automatically.",
+          "Would you rather rebuild the business first, or reserve your energy for the lawsuit?",
+          "Attached to the email are signatures from employees choosing to stay again."
+        ],
+        "ja-JP": [
+          "予備調査で偽造許諾と支払い凍結の関連が確認される。ただし裁判手続きにはまだ時間がかかる。工房の再契約意向書が届く。",
+          "交渉できる立場は取り戻しました。でも、その後が自動的に終わるわけではありません。",
+          "まず業務を再開しますか？ それとも訴訟に力を残しますか？",
+          "メールには、改めて残ることを選んだ従業員の署名が添えられている。"
+        ],
+        "ko-KR": [
+          "예비 조사로 위조 허가와 대금 동결의 관련성이 확인되지만 법원 절차에는 여전히 시간이 필요하다. 스튜디오 재계약 의향서를 받는다.",
+          "협상 위치를 되찾았다고 이후 일이 저절로 끝나는 건 아니에요.",
+          "사업부터 회복할까요, 아니면 소송에 힘을 남겨 둘까요?",
+          "메일에는 다시 남기로 선택한 직원들의 서명이 첨부돼 있다."
+        ],
+        "es-ES": [
+          "La investigación preliminar relaciona la autorización falsa y el bloqueo de pagos, pero el procedimiento judicial aún necesita tiempo. Recibes una carta de intención para renovar contratos del estudio.",
+          "Hemos recuperado capacidad de negociar. Eso no significa que lo demás termine solo.",
+          "¿Quieres reconstruir el negocio primero o reservar fuerzas para el litigio?",
+          "El correo incluye las firmas de empleados que deciden volver a quedarse."
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "scene": 2,
+      "background": "bg_a_c15s02",
+      "sourceNarration": "达米安脱下昂贵的西装外套，简单地坐在你对面，第一次不带保镖或公关。那杯咖啡旁没有鲜花和戒指，只有一张写着“我们可以慢慢来”的纸。",
+      "sourceDialogue": [
+        "达米安：“如果你愿意，我们可以重新从名字开始。你也可以拒绝。”",
+        "达米安：“你希望我把过去说到底，还是从你今天过得怎么样开始？”"
+      ],
+      "sourceHook": "伊森发来一封不要求答复的道歉信，未再联系。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian removes his expensive suit jacket and simply sits across from you, for the first time without bodyguards or PR staff. Beside the coffee are no flowers or ring, only a note saying you can take things slowly.",
+          "If you want, we can start again with our names. You can refuse too.",
+          "Should I finish telling you about the past, or start by asking how your day was?",
+          "Ethan sends an apology asking for no response, then makes no further contact."
+        ],
+        "ja-JP": [
+          "ダミアンは高価な上着を脱ぎ、向かいに座る。初めて護衛も広報もいない。コーヒーの横には花も指輪もなく、ゆっくりでいいと書かれた紙だけがある。",
+          "望むなら、名前からやり直せる。断ってもいい。",
+          "過去を最後まで話す？ それとも、今日どうだったか聞くところから？",
+          "イーサンから返信不要の謝罪状が届く。その後、連絡はない。"
+        ],
+        "ko-KR": [
+          "데이미언은 비싼 재킷을 벗고 맞은편에 앉는다. 처음으로 경호원도 홍보 담당도 없다. 커피 옆에는 꽃도 반지도 없이 천천히 가도 된다는 종이만 있다.",
+          "원하면 이름부터 다시 시작하자. 거절해도 돼.",
+          "과거를 끝까지 말할까, 아니면 오늘 어땠는지 묻는 데서 시작할까?",
+          "이선은 답장을 요구하지 않는 사과 편지를 보내고 더 연락하지 않는다."
+        ],
+        "es-ES": [
+          "Damian se quita la cara chaqueta y se sienta sencillamente frente a ti, por primera vez sin escoltas ni relaciones públicas. Junto al café no hay flores ni anillo, solo una nota que dice que podéis ir despacio.",
+          "Si quieres, podemos empezar de nuevo por nuestros nombres. También puedes negarte.",
+          "¿Termino de contarte el pasado o empezamos por cómo te ha ido hoy?",
+          "Ethan envía una disculpa que no exige respuesta y no vuelve a ponerse en contacto."
+        ]
+      }
+    },
+    {
+      "chapter": 15,
+      "scene": 3,
+      "background": "bg_a_c15s03",
+      "sourceNarration": "拆除工人搬走最后一排白椅。你手里的戒指盒没有打开，也没人替你拿着。风吹得桌上的最后一张席位卡翻了面。",
+      "sourceDialogue": [
+        "旁白：要把这枚戒指留作证据、退回，还是先收起来？"
+      ],
+      "sourceHook": "你的工作室电话响起，终于是一个真正想买设计的客户。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Workers carry away the last row of white chairs. The ring box in your hand remains closed; nobody holds it for you. Wind flips the last place card on the table.",
+          "Will you keep the ring as evidence, return it, or put it away for now?",
+          "",
+          "Your studio phone rings: finally, a client who actually wants to buy your designs."
+        ],
+        "ja-JP": [
+          "作業員が最後の白い椅子の列を運び去る。手の中の指輪ケースは閉じたまま。代わりに持つ人もいない。風が卓上の最後の席札を裏返す。",
+          "指輪を証拠として残す？ 返す？ それとも今はしまっておく？",
+          "",
+          "工房の電話が鳴る。今度は本当にデザインを買いたい顧客だ。"
+        ],
+        "ko-KR": [
+          "철거 인부가 마지막 흰 의자 줄을 옮긴다. 당신 손의 반지 상자는 닫혀 있고 대신 들어 주는 사람도 없다. 바람이 탁자 위 마지막 좌석 카드를 뒤집는다.",
+          "반지를 증거로 남길까, 돌려줄까, 아니면 일단 보관할까?",
+          "",
+          "스튜디오 전화가 울린다. 드디어 진짜 디자인을 사고 싶은 고객이다."
+        ],
+        "es-ES": [
+          "Los operarios retiran la última fila de sillas blancas. El estuche que sostienes sigue cerrado; nadie lo lleva por ti. El viento da la vuelta a la última tarjeta de sitio de la mesa.",
+          "¿Guardarás el anillo como prueba, lo devolverás o lo apartarás por ahora?",
+          "",
+          "Suena el teléfono del estudio: por fin un cliente que de verdad quiere comprar tus diseños."
+        ]
+      }
+    },
+    {
+      "chapter": 16,
+      "scene": 1,
+      "background": "bg_a_c16s01",
+      "sourceNarration": "半年后，原创作品展的入口挂着你的名字，玻璃柜里陈列着旧手稿。",
+      "sourceDialogue": [
+        "助理米娅：“这次所有合同都由我们自己看完。”",
+        "助理米娅：“你想先招呼来宾，还是先看看那封还未拆的信？”"
+      ],
+      "sourceHook": "达米安的名字出现在访客预约名单上，但他没有擅自进门。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Six months later, your name hangs at the original design exhibition's entrance. Old manuscripts are displayed in glass cases.",
+          "This time we read every contract ourselves.",
+          "Would you like to welcome guests first, or look at that unopened letter?",
+          "Damian's name is on the visitor appointment list, but he hasn't entered without permission."
+        ],
+        "ja-JP": [
+          "半年後、オリジナル作品展の入口にはあなたの名前。ガラスケースには昔の原稿が並ぶ。",
+          "今度は契約書を全部、自分たちで読みました。",
+          "先に来客を迎えますか？ それとも未開封の手紙を見ますか？",
+          "予約名簿にはダミアンの名がある。だが勝手には入ってこない。"
+        ],
+        "ko-KR": [
+          "반년 뒤, 독창적인 작품 전시 입구에 당신의 이름이 걸리고 유리 진열장에는 옛 원고가 놓여 있다.",
+          "이번에는 모든 계약을 우리가 직접 다 읽었어요.",
+          "손님부터 맞을까요, 아니면 아직 안 뜯은 편지부터 볼까요?",
+          "데이미언은 방문 예약 명단에 있지만 멋대로 들어오지 않는다."
+        ],
+        "es-ES": [
+          "Seis meses después, tu nombre preside la entrada de tu exposición de originales. Los antiguos bocetos se muestran en vitrinas.",
+          "Esta vez hemos leído nosotros todos los contratos.",
+          "¿Recibes primero a los invitados o miras esa carta todavía cerrada?",
+          "Damian figura en la lista de visitas con cita, pero no ha entrado sin permiso."
+        ]
+      }
+    },
+    {
+      "chapter": 16,
+      "scene": 2,
+      "background": "bg_a_c16s02",
+      "sourceNarration": "达米安带来一本三年前同款空白速写本；伊森的道歉信由律师转交，没有强求见面。达米安握着那本空白速写本，没有向你伸手，等你决定这一页要不要有他。",
+      "sourceDialogue": [
+        "达米安：“我不知道我们会走到哪里。我只知道不想再替你安排。”",
+        "达米安：“你愿意让我留下喝杯咖啡，还是今天只当普通访客？”"
+      ],
+      "sourceHook": "休息室外有人问你：下一场展览会叫什么名字。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "Damian brings a blank sketchbook like the one from three years ago. Ethan's apology arrives through your lawyer without a demand to meet. Holding the book without reaching for you, Damian waits for you to decide whether this page includes him.",
+          "I don't know where we'll end up. I only know I don't want to arrange your life for you anymore.",
+          "May I stay for coffee, or should I be just an ordinary visitor today?",
+          "Outside the lounge, someone asks what your next exhibition will be called."
+        ],
+        "ja-JP": [
+          "ダミアンは三年前と同じ型の白紙のスケッチ帳を持ってくる。イーサンの謝罪状は弁護士経由で、面会を強要しない。彼は帳面を持ち、あなたへ手を伸ばさず、このページに自分を加えるか待っている。",
+          "どこへ行き着くかは分からない。ただ、もう君の人生を勝手に決めたくない。",
+          "コーヒーを飲んでいていい？ それとも今日は普通の来客として帰ろうか？",
+          "休憩室の外で、次の展覧会の題名を誰かが尋ねる。"
+        ],
+        "ko-KR": [
+          "데이미언은 3년 전과 같은 빈 스케치북을 가져온다. 이선의 사과 편지는 변호사를 거쳐 오며 만남을 강요하지 않는다. 데이미언은 책을 들고 손을 뻗지 않은 채 이 페이지에 자신을 넣을지 기다린다.",
+          "어디까지 갈지는 몰라. 다만 더는 네 삶을 대신 정하고 싶지 않아.",
+          "커피를 마시며 남아도 될까, 아니면 오늘은 보통 방문객으로만 있을까?",
+          "휴게실 밖에서 누군가 다음 전시 이름을 묻는다."
+        ],
+        "es-ES": [
+          "Damian trae un cuaderno en blanco como el de hace tres años. La disculpa de Ethan llega a través del abogado, sin exigir una reunión. Damian sostiene el cuaderno sin tenderte la mano y espera que decidas si esta página lo incluye.",
+          "No sé adónde llegaremos. Solo sé que no quiero volver a organizar tu vida por ti.",
+          "¿Puedo quedarme a tomar café o prefieres que hoy sea solo un visitante más?",
+          "Fuera de la sala alguien pregunta cómo se llamará tu próxima exposición."
+        ]
+      }
+    },
+    {
+      "chapter": 16,
+      "scene": 3,
+      "background": "bg_a_c16s03",
+      "sourceNarration": "夜晚的风吹起你的围巾。城市远处的灯还亮着，属于你的生活已经不再由婚礼定义。",
+      "sourceDialogue": [
+        "达米安：“如果你愿意，我们可以从一次没有谎言的散步开始。”",
+        "达米安：“你想与谁继续往前，还是这次只陪自己？”"
+      ],
+      "sourceHook": "河面映出两个人可以靠近、也可以分开的影子。",
+      "sourcePracticalTask": null,
+      "translations": {
+        "en-US": [
+          "The night wind lifts your scarf. Distant city lights still shine. Your life is no longer defined by a wedding.",
+          "If you want, we can begin with one walk without lies.",
+          "Whom do you want to go forward with, or would you rather keep yourself company this time?",
+          "The river reflects two shadows that can draw together or move apart."
+        ],
+        "ja-JP": [
+          "夜風がスカーフを揺らす。遠い街の灯はまだ明るい。あなたの人生は、もう婚礼だけでは決まらない。",
+          "よかったら、嘘のない散歩を一度するところから始めたい。",
+          "誰と歩き続けたい？ それとも今回は自分だけで？",
+          "川面には、近づくことも離れることもできる二つの影が映る。"
+        ],
+        "ko-KR": [
+          "밤바람이 스카프를 들어 올린다. 멀리 도시의 불빛이 아직 빛난다. 당신의 삶은 더 이상 결혼식으로 정의되지 않는다.",
+          "원한다면 거짓말 없는 산책 한 번부터 시작하자.",
+          "누구와 앞으로 갈래, 아니면 이번엔 자신하고만 함께할래?",
+          "강에는 다가갈 수도 멀어질 수도 있는 두 그림자가 비친다."
+        ],
+        "es-ES": [
+          "El viento nocturno levanta tu bufanda. Las luces lejanas de la ciudad siguen brillando. Tu vida ya no la define una boda.",
+          "Si quieres, podemos empezar por un paseo sin mentiras.",
+          "¿Con quién quieres seguir adelante o prefieres acompañarte solo a ti esta vez?",
+          "El río refleja dos sombras que pueden acercarse o separarse."
+        ]
+      }
+    }
+  ]
+}

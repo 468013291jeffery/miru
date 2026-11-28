@@ -1,5 +1,5 @@
 {
-  "status": "proposed integration contract; not verified parser fields",
+  "status": "Bound through shared native_v2 DSL and app163_three_stories_v22.js; see integration/release.json and acceptance reports",
   "state": {
     "chapter": 1,
     "scene": 1,
@@ -17,8 +17,8 @@
     "Player manually advances scenes and chapters.",
     "Character agents receive only own allowed knowledge.",
     "Use previous branch facts on scene convergence.",
-    "No unverified MG or FX tags in current CN/TW/EN scripts.",
-    "Validate final flags and post-story routing against live engine."
+    "Validate final flags and post-story routing against live engine.",
+    "Exactly two registered optional mini-games per chapter. WIN/LOSE/SKIP record only the actual game; no automatic romance, forgiveness or evidence."
   ],
   "final_flags": {
     "b_c16_a": {

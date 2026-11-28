@@ -1,0 +1,844 @@
+{
+  "story": "A_Forbidden_Brother",
+  "completedAt": "2026-11-27",
+  "scope": "Story-local content completion only; no integration rebuild, commits or network deployment by this worker.",
+  "status": "LOCAL_CONTENT_COMPLETE",
+  "locales": {
+    "zh-CN": {
+      "nonemptyLines": 908,
+      "characters": 22121,
+      "sha256": "e47dc9c299105239a69db3b9b6d06b67cc3734345d6fbd5081d8c24093d65d6f",
+      "chapters": 16,
+      "scenes": 48,
+      "games": 32,
+      "choices": 16,
+      "options": 48,
+      "conditionals": 45,
+      "conditionalClosures": 45,
+      "freeResponses": 48
+    },
+    "zh-TW": {
+      "nonemptyLines": 908,
+      "characters": 22217,
+      "sha256": "a13acc4070eea16664f910df59287612153268cb1ba3864116b485247f7d2975",
+      "chapters": 16,
+      "scenes": 48,
+      "games": 32,
+      "choices": 16,
+      "options": 48,
+      "conditionals": 45,
+      "conditionalClosures": 45,
+      "freeResponses": 48
+    },
+    "en-US": {
+      "nonemptyLines": 908,
+      "characters": 58482,
+      "sha256": "32d5bee90dbe3484142b193ea41875f321f99fc3c30c4d04ca87a59696a9b4f2",
+      "chapters": 16,
+      "scenes": 48,
+      "games": 32,
+      "choices": 16,
+      "options": 48,
+      "conditionals": 45,
+      "conditionalClosures": 45,
+      "freeResponses": 48
+    },
+    "ja-JP": {
+      "nonemptyLines": 908,
+      "characters": 26938,
+      "sha256": "e5274e722ded38824e27f2f998304de68f826b577a2969856c494ffe7b44da84",
+      "chapters": 16,
+      "scenes": 48,
+      "games": 32,
+      "choices": 16,
+      "options": 48,
+      "conditionals": 45,
+      "conditionalClosures": 45,
+      "freeResponses": 48
+    },
+    "ko-KR": {
+      "nonemptyLines": 908,
+      "characters": 30289,
+      "sha256": "ba36a5d2bc92e3ec77bb7faca50a92451538c1684e6e82a2582fc5709b0c72ce",
+      "chapters": 16,
+      "scenes": 48,
+      "games": 32,
+      "choices": 16,
+      "options": 48,
+      "conditionals": 45,
+      "conditionalClosures": 45,
+      "freeResponses": 48
+    },
+    "es-ES": {
+      "nonemptyLines": 908,
+      "characters": 59180,
+      "sha256": "1878079d6744db435ec0c2a18ebfa606dd145fded543a33ee5d6d350700e90db",
+      "chapters": 16,
+      "scenes": 48,
+      "games": 32,
+      "choices": 16,
+      "options": 48,
+      "conditionals": 45,
+      "conditionalClosures": 45,
+      "freeResponses": 48
+    }
+  },
+  "storyBibles": {
+    "zh-CN": {
+      "characters": 12580,
+      "sha256": "fff777a0545f5551acafae29f58ee3b3d8f590b093bdb02d2d7bd5ac5c3c8d02",
+      "playerFields": 12,
+      "romanceCharacterFieldsEach": 13,
+      "supportCharacterFieldsEach": 10
+    },
+    "zh-TW": {
+      "characters": 12580,
+      "sha256": "969d80d2b7d19e62b174d77bdeff8909cedfe8e0323fab87dbaba402ccf58b77",
+      "playerFields": 12,
+      "romanceCharacterFieldsEach": 13,
+      "supportCharacterFieldsEach": 10
+    },
+    "en-US": {
+      "characters": 50777,
+      "sha256": "667aa01bb459196f8e7599e1bb9699f2769456c8e7dce2bcd0e2d440bc082bc4",
+      "playerFields": 12,
+      "romanceCharacterFieldsEach": 13,
+      "supportCharacterFieldsEach": 10
+    },
+    "ja-JP": {
+      "characters": 20554,
+      "sha256": "bbba810a6a09bc170e9e4db9d84df7aca75d891fb9c09de788674e47693b6e5b",
+      "playerFields": 12,
+      "romanceCharacterFieldsEach": 13,
+      "supportCharacterFieldsEach": 10
+    },
+    "ko-KR": {
+      "characters": 24421,
+      "sha256": "79c09166be63434905697226936c127d0bd5879b5633f1e8f6cc5c165639cbb0",
+      "playerFields": 12,
+      "romanceCharacterFieldsEach": 13,
+      "supportCharacterFieldsEach": 10
+    },
+    "es-ES": {
+      "characters": 51464,
+      "sha256": "94e4f48a650b3e74a2ff6f4a7a3947c853bc32c4febdebc5abce6944974e6092",
+      "playerFields": 12,
+      "romanceCharacterFieldsEach": 13,
+      "supportCharacterFieldsEach": 10
+    }
+  },
+  "alignmentMethod": {
+    "source": "Original zh-CN script captured by checksum in completion-source-history.json.",
+    "grouping": "Consecutive short narration lines merged into one semantic action paragraph, with introductions, two NPC prompts, real scene hooks and chapter ending hooks retained. No Chinese story fact or NPC line deleted.",
+    "foreignText": "Replaced abbreviated scene summaries in English, Japanese, Korean and Spanish with all 48 full source scenes and all 16 source choices and consequences. Corrected actual speakers and specific motivations; callbacks repeat the corresponding preceding choice consequence.",
+    "proceduralReplacement": "Six old MG-free placeholder tasks retain their actual verification action. Repeated generic assistant-help and continuation filler is expressed through localized permission cues and optional game skip, not preserved as padding.",
+    "traditionalChinese": "Full source character bible restored from the Chinese master; Foundation Simplified-Traditional applied to every zh-TW Markdown file while preserving ASCII IDs.",
+    "lineCounts": "All six scripts have the same nonempty line count and sequence of semantic beat classes and control tags. This verifies correspondence, not translation quality by line count alone.",
+    "evidence": "completion-alignment.json stores every source scene action, original NPC dialogue, hook, practical task and four translated semantic rows for review."
+  },
+  "games": [
+    {
+      "chapter": 1,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "整理侧廊物件的图标练习：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "整理側廊物件的圖標練習：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Sorting corridor belongings as icons: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "廊下の持ち物を絵柄で整理：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "복도 소지품 그림 정리: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar objetos del pasillo como iconos: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 1,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "为书房照片建立顺序索引的练习：翻开卡片，配对六组相同的回忆图标，最多错八次。可以跳过。",
+        "zh-TW": "為書房照片建立順序索引的練習：翻開卡片，配對六組相同的回憶圖示，最多錯八次。可以跳過。",
+        "en-US": "Practicing an index for the study photograph: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.",
+        "ja-JP": "書斎の写真の順序索引を練習：カードをめくり、思い出の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "서재 사진 순서 색인 연습: 카드를 뒤집어 추억 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Practicar un índice para la foto del despacho: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 2,
+      "scene": 1,
+      "id": "g_mem_gala",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "早餐后核对随身文件的练习：翻开卡片，配对六组相同的晚宴图标，最多错八次。可以跳过。",
+        "zh-TW": "早餐後核對隨身文件的練習：翻開卡片，配對六組相同的晚宴圖示，最多錯八次。可以跳過。",
+        "en-US": "Checking document icons after breakfast: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.",
+        "ja-JP": "朝食後に手元の書類を絵柄で確認：カードをめくり、晩餐の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "아침 후 서류 그림 확인: 카드를 뒤집어 만찬 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Revisar iconos de documentos tras el desayuno: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 2,
+      "scene": 3,
+      "id": "g_simon_lights",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "整理策划间播放记录前的专注练习：观察四色灯亮起的顺序，再按同样顺序点击。可以跳过。",
+        "zh-TW": "整理策劃間播放記錄前的專注練習：觀察四色燈亮起的順序，再按同樣順序點擊。可以跳過。",
+        "en-US": "Focusing before arranging the planner's playback records: Watch the four colored lights and repeat their sequence. You may skip.",
+        "ja-JP": "企画室の再生記録を整理する前の集中練習：四色の点灯順を覚えて同じ順で押す。 スキップ可。",
+        "ko-KR": "기획실 재생 기록 정리 전 집중 연습: 네 색 불빛의. 건너뛰어도 됩니다.",
+        "es-ES": "Concentrarte antes de ordenar registros de reproducción: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 3,
+      "scene": 1,
+      "id": "g_mem_gala",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "准备收起典礼资料的桌面练习：翻开卡片，配对六组相同的晚宴图标，最多错八次。可以跳过。",
+        "zh-TW": "准備收起典禮資料的桌面練習：翻開卡片，配對六組相同的晚宴圖示，最多錯八次。可以跳過。",
+        "en-US": "Preparing to file ceremony materials: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.",
+        "ja-JP": "式の資料をしまう準備の練習：カードをめくり、晩餐の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "예식 자료 정리 준비 연습: 카드를 뒤집어 만찬 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Preparar el archivo del material de ceremonia: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 3,
+      "scene": 3,
+      "id": "g_whack_flash",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "进入会议厅前整理采访记录的练习：点击出现的📸，避开🙂；二十秒内争取十次正确点击。可以跳过。",
+        "zh-TW": "進入會議廳前整理採訪記錄的練習：點擊出現的📸，避開🙂；二十秒內爭取十次正確點擊。可以跳過。",
+        "en-US": "Organizing interview records before entering the meeting room: Tap appearing 📸 icons, avoiding 🙂; aim for ten correct taps in twenty seconds. You may skip.",
+        "ja-JP": "会議室に入る前に取材記録を整理：現れる📸を押し、🙂は避ける。二十秒で十回の正解を目指す。 スキップ可。",
+        "ko-KR": "회의실 입장 전 취재 기록 정리: 나타나는 📸를 누르고 🙂는 피하세요. 20초 안에 정답 열 번을 목표로 합니다. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar notas de prensa antes de la reunión: Toca los iconos 📸 y evita 🙂; intenta acertar diez veces en veinte segundos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 4,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "整理客户联络清单的注意力练习：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "整理客戶聯絡清單的注意力練習：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Focusing while organizing client contacts: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "顧客連絡先整理の注意力練習：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "고객 연락처 정리 집중 연습: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Concentrarte al ordenar contactos de clientes: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 4,
+      "scene": 3,
+      "id": "g_whack_flash",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "准备媒体现场图像索引的练习：点击出现的📸，避开🙂；二十秒内争取十次正确点击。可以跳过。",
+        "zh-TW": "准備媒體現場圖像索引的練習：點擊出現的📸，避開🙂；二十秒內爭取十次正確點擊。可以跳過。",
+        "en-US": "Preparing an index for press images: Tap appearing 📸 icons, avoiding 🙂; aim for ten correct taps in twenty seconds. You may skip.",
+        "ja-JP": "報道現場の画像索引の練習：現れる📸を押し、🙂は避ける。二十秒で十回の正解を目指す。 スキップ可。",
+        "ko-KR": "언론 현장 이미지 색인 연습: 나타나는 📸를 누르고 🙂는 피하세요. 20초 안에 정답 열 번을 목표로 합니다. 건너뛰어도 됩니다.",
+        "es-ES": "Preparar un índice de imágenes de prensa: Toca los iconos 📸 y evita 🙂; intenta acertar diez veces en veinte segundos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 5,
+      "scene": 1,
+      "id": "g_mem_gala",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "入座前辨认晚宴摆设图标：翻开卡片，配对六组相同的晚宴图标，最多错八次。可以跳过。",
+        "zh-TW": "入座前辨認晚宴擺設圖標：翻開卡片，配對六組相同的晚宴圖示，最多錯八次。可以跳過。",
+        "en-US": "Recognizing dinner-setting icons before sitting down: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.",
+        "ja-JP": "着席前に晩餐の絵柄を確認：カードをめくり、晩餐の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "착석 전 만찬 그림 확인: 카드를 뒤집어 만찬 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Reconocer iconos de la cena antes de sentarte: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 5,
+      "scene": 3,
+      "id": "g_whack_texts",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "在玻璃回廊保存消息前的整理练习：点击出现的📵，避开💬；二十秒内争取十次正确点击。可以跳过。",
+        "zh-TW": "在玻璃迴廊保存消息前的整理練習：點擊出現的📵，避開💬；二十秒內爭取十次正確點擊。可以跳過。",
+        "en-US": "Organizing before saving corridor messages: Tap appearing 📵 icons, avoiding 💬; aim for ten correct taps in twenty seconds. You may skip.",
+        "ja-JP": "ガラス廊下で連絡を保管する前の整理：現れる📵を押し、💬は避ける。二十秒で十回の正解を目指す。 スキップ可。",
+        "ko-KR": "유리 복도 메시지 보관 전 정리: 나타나는 📵를 누르고 💬는 피하세요. 20초 안에 정답 열 번을 목표로 합니다. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar antes de guardar mensajes del corredor: Toca los iconos 📵 y evita 💬; intenta acertar diez veces en veinte segundos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 6,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "查阅投票文件前做图标分类：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "查閱投票文件前做圖標分類：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Sorting icons before reviewing vote records: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "投票書類を読む前に絵柄を分類：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "표결 문서 열람 전 그림 분류: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Clasificar iconos antes de revisar los votos: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 6,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "车道边整理行程记录的练习：移动空格旁的数字滑块，把带📷图标的方块排成1至8。可以跳过。",
+        "zh-TW": "車道邊整理行程記錄的練習：移動空格旁的數字滑塊，把帶📷圖示的方塊排成1至8。可以跳過。",
+        "en-US": "Organizing travel records beside the driveway: Slide tiles beside the empty space into order 1–8. You may skip.",
+        "ja-JP": "車道脇で旅程記録を整理：空白の隣の数字を動かし、1から8に並べる。 スキップ可。",
+        "ko-KR": "차도 옆 여행 기록 정리: 빈칸 옆 숫자를 움직여 1~8로 정렬하세요. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar registros de viaje junto al acceso: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 7,
+      "scene": 1,
+      "id": "g_mem_memory",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "为酒店登记簿准备检索索引：翻开卡片，配对六组相同的回忆图标，最多错八次。可以跳过。",
+        "zh-TW": "為酒店登記簿准備檢索索引：翻開卡片，配對六組相同的回憶圖示，最多錯八次。可以跳過。",
+        "en-US": "Preparing a search index for the hotel register: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.",
+        "ja-JP": "ホテル台帳の検索索引を準備：カードをめくり、思い出の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "호텔 투숙부 검색 색인 준비: 카드를 뒤집어 추억 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Preparar un índice para el registro del hotel: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 7,
+      "scene": 3,
+      "id": "g_simon_lights",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "进入监控室前记住核对顺序：观察四色灯亮起的顺序，再按同样顺序点击。可以跳过。",
+        "zh-TW": "進入監控室前記住核對順序：觀察四色燈亮起的順序，再按同樣順序點擊。可以跳過。",
+        "en-US": "Remembering the review order before the surveillance office: Watch the four colored lights and repeat their sequence. You may skip.",
+        "ja-JP": "監視室に入る前に確認順を覚える：四色の点灯順を覚えて同じ順で押す。 スキップ可。",
+        "ko-KR": "감시실 입장 전 확인 순서 기억: 네 색 불빛의. 건너뛰어도 됩니다.",
+        "es-ES": "Recordar el orden de revisión antes de entrar: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 8,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "摄影棚核对拍摄材料前的图标练习：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "攝影棚核對拍攝材料前的圖標練習：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Checking filming-material icons at the studio: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "撮影資料の確認前に絵柄で練習：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "촬영 자료 확인 전 그림 연습: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Revisar iconos de rodaje en el plató: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 8,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "播放室里整理素材编号的练习：移动空格旁的数字滑块，把带📷图标的方块排成1至8。可以跳过。",
+        "zh-TW": "播放室裡整理素材編號的練習：移動空格旁的數字滑塊，把帶📷圖示的方塊排成1至8。可以跳過。",
+        "en-US": "Organizing material numbers in the projection room: Slide tiles beside the empty space into order 1–8. You may skip.",
+        "ja-JP": "上映室で素材番号を整理：空白の隣の数字を動かし、1から8に並べる。 スキップ可。",
+        "ko-KR": "상영실 자료 번호 정리: 빈칸 옆 숫자를 움직여 1~8로 정렬하세요. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar números de material en la sala de proyección: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 9,
+      "scene": 1,
+      "id": "g_whack_texts",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "工作室预备联络记录的练习：点击出现的📵，避开💬；二十秒内争取十次正确点击。可以跳过。",
+        "zh-TW": "工作室預備聯絡記錄的練習：點擊出現的📵，避開💬；二十秒內爭取十次正確點擊。可以跳過。",
+        "en-US": "Preparing studio contact records: Tap appearing 📵 icons, avoiding 💬; aim for ten correct taps in twenty seconds. You may skip.",
+        "ja-JP": "工房の連絡記録を準備：現れる📵を押し、💬は避ける。二十秒で十回の正解を目指す。 スキップ可。",
+        "ko-KR": "스튜디오 연락 기록 준비: 나타나는 📵를 누르고 💬는 피하세요. 20초 안에 정답 열 번을 목표로 합니다. 건너뛰어도 됩니다.",
+        "es-ES": "Preparar registros de contactos del estudio: Toca los iconos 📵 y evita 💬; intenta acertar diez veces en veinte segundos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 9,
+      "scene": 3,
+      "id": "g_whack_flash",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "直播前练习辨认镜头图标：点击出现的📸，避开🙂；二十秒内争取十次正确点击。可以跳过。",
+        "zh-TW": "直播前練習辨認鏡頭圖標：點擊出現的📸，避開🙂；二十秒內爭取十次正確點擊。可以跳過。",
+        "en-US": "Recognizing camera icons before the livestream: Tap appearing 📸 icons, avoiding 🙂; aim for ten correct taps in twenty seconds. You may skip.",
+        "ja-JP": "配信前にカメラの絵柄を確認：現れる📸を押し、🙂は避ける。二十秒で十回の正解を目指す。 スキップ可。",
+        "ko-KR": "방송 전 카메라 그림 확인: 나타나는 📸를 누르고 🙂는 피하세요. 20초 안에 정답 열 번을 목표로 합니다. 건너뛰어도 됩니다.",
+        "es-ES": "Reconocer iconos de cámara antes de emitir: Toca los iconos 📸 y evita 🙂; intenta acertar diez veces en veinte segundos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 10,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "球室里暂整管理员资料索引：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "球室裡暫整管理員資料索引：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Indexing administrator materials in the billiard room: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "球戯室で管理者資料の索引を整理：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "당구실 관리자 자료 색인 정리: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Indexar material de administrador en la sala de billar: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 10,
+      "scene": 3,
+      "id": "g_simon_lights",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "茶室会谈前核对记录步骤的练习：观察四色灯亮起的顺序，再按同样顺序点击。可以跳过。",
+        "zh-TW": "茶室會談前核對記錄步驟的練習：觀察四色燈亮起的順序，再按同樣順序點擊。可以跳過。",
+        "en-US": "Practicing record-checking steps before the tea-room meeting: Watch the four colored lights and repeat their sequence. You may skip.",
+        "ja-JP": "茶室の面談前に記録確認の順を練習：四色の点灯順を覚えて同じ順で押す。 スキップ可。",
+        "ko-KR": "다실 면담 전 기록 확인 단계 연습: 네 색 불빛의. 건너뛰어도 됩니다.",
+        "es-ES": "Practicar pasos de revisión antes de la reunión del té: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 11,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "为法务柜文件做检索标记的练习：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "為法務櫃文件做檢索標記的練習：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Practicing search markers for legal files: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "法務書類の検索目印を練習：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "법무 서류 검색 표시 연습: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Practicar marcadores para documentos jurídicos: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 11,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "设计师铺开材料前的整理练习：移动空格旁的数字滑块，把带📷图标的方块排成1至8。可以跳过。",
+        "zh-TW": "設計師鋪開材料前的整理練習：移動空格旁的數字滑塊，把帶📷圖示的方塊排成1至8。可以跳過。",
+        "en-US": "Organizing before designers lay out their materials: Slide tiles beside the empty space into order 1–8. You may skip.",
+        "ja-JP": "制作者が資料を広げる前の整理：空白の隣の数字を動かし、1から8に並べる。 スキップ可。",
+        "ko-KR": "디자이너 자료 전개 전 정리: 빈칸 옆 숫자를 움직여 1~8로 정렬하세요. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar antes de desplegar el material de diseño: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 12,
+      "scene": 1,
+      "id": "g_mem_memory",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "核对云端日期前准备索引：翻开卡片，配对六组相同的回忆图标，最多错八次。可以跳过。",
+        "zh-TW": "核對雲端日期前准備索引：翻開卡片，配對六組相同的回憶圖示，最多錯八次。可以跳過。",
+        "en-US": "Preparing an index before checking cloud dates: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.",
+        "ja-JP": "クラウドの日付照合前に索引を準備：カードをめくり、思い出の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "클라우드 날짜 대조 전 색인 준비: 카드를 뒤집어 추억 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Preparar un índice antes de contrastar fechas de la nube: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 12,
+      "scene": 3,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "套房会谈前练习整理书面条款：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "套房會談前練習整理書面條款：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Organizing written clauses before the suite meeting: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "スイートでの面談前に書面条項を整理：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "스위트 면담 전 서면 조항 정리: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar cláusulas antes de la reunión en la suite: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 13,
+      "scene": 1,
+      "id": "g_mem_gala",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "股东会开始前辨认会场图标：翻开卡片，配对六组相同的晚宴图标，最多错八次。可以跳过。",
+        "zh-TW": "股東會開始前辨認會場圖標：翻開卡片，配對六組相同的晚宴圖示，最多錯八次。可以跳過。",
+        "en-US": "Recognizing venue icons before the shareholders meet: Turn cards to match six pairs of gala icons, with at most eight misses. You may skip.",
+        "ja-JP": "総会開始前に会場の絵柄を確認：カードをめくり、晩餐の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "주주총회 시작 전 회장 그림 확인: 카드를 뒤집어 만찬 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Reconocer iconos del recinto antes de la junta: Voltea cartas y empareja seis parejas de gala, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 13,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "作品展示前练习材料编号排序：移动空格旁的数字滑块，把带📷图标的方块排成1至8。可以跳过。",
+        "zh-TW": "作品展示前練習材料編號排序：移動空格旁的數字滑塊，把帶📷圖示的方塊排成1至8。可以跳過。",
+        "en-US": "Practicing material order before the design presentation: Slide tiles beside the empty space into order 1–8. You may skip.",
+        "ja-JP": "作品発表前に資料番号の順を練習：空白の隣の数字を動かし、1から8に並べる。 スキップ可。",
+        "ko-KR": "작품 발표 전 자료 번호 정렬 연습: 빈칸 옆 숫자를 움직여 1~8로 정렬하세요. 건너뛰어도 됩니다.",
+        "es-ES": "Practicar el orden del material antes de presentar: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 14,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "播放旧影像前做专注练习：观察四色灯亮起的顺序，再按同样顺序点击。可以跳过。",
+        "zh-TW": "播放舊影像前做專注練習：觀察四色燈亮起的順序，再按同樣順序點擊。可以跳過。",
+        "en-US": "Focusing before viewing old footage: Watch the four colored lights and repeat their sequence. You may skip.",
+        "ja-JP": "古い映像の再生前に集中練習：四色の点灯順を覚えて同じ順で押す。 スキップ可。",
+        "ko-KR": "옛 영상 재생 전 집중 연습: 네 색 불빛의. 건너뛰어도 됩니다.",
+        "es-ES": "Concentrarte antes de ver la grabación antigua: Observa las cuatro luces de colores y repite la secuencia. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 14,
+      "scene": 3,
+      "id": "g_whack_texts",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "穿过花园前整理联络记录：点击出现的📵，避开💬；二十秒内争取十次正确点击。可以跳过。",
+        "zh-TW": "穿過花園前整理聯絡記錄：點擊出現的📵，避開💬；二十秒內爭取十次正確點擊。可以跳過。",
+        "en-US": "Organizing contact records before crossing the garden: Tap appearing 📵 icons, avoiding 💬; aim for ten correct taps in twenty seconds. You may skip.",
+        "ja-JP": "庭を通る前に連絡記録を整理：現れる📵を押し、💬は避ける。二十秒で十回の正解を目指す。 スキップ可。",
+        "ko-KR": "정원을 건너기 전 연락 기록 정리: 나타나는 📵를 누르고 💬는 피하세요. 20초 안에 정답 열 번을 목표로 합니다. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar contactos antes de cruzar el jardín: Toca los iconos 📵 y evita 💬; intenta acertar diez veces en veinte segundos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 15,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "复核续约材料前做图标练习：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "複核續約材料前做圖標練習：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Practicing icons before reviewing renewal materials: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "再契約資料の確認前に絵柄で練習：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "재계약 자료 검토 전 그림 연습: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Practicar con iconos antes de revisar renovaciones: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 15,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "旧婚礼花园里整理物件索引：翻开卡片，配对六组相同的回忆图标，最多错八次。可以跳过。",
+        "zh-TW": "舊婚禮花園裡整理物件索引：翻開卡片，配對六組相同的回憶圖示，最多錯八次。可以跳過。",
+        "en-US": "Indexing belongings in the former wedding garden: Turn cards to match six pairs of memory icons, with at most eight misses. You may skip.",
+        "ja-JP": "旧婚礼庭園で持ち物の索引を整理：カードをめくり、思い出の絵柄を六組そろえる。失敗は八回まで。 スキップ可。",
+        "ko-KR": "옛 예식 정원 소지품 색인 정리: 카드를 뒤집어 추억 그림 여섯 쌍을 맞추세요. 실패는 여덟 번까지입니다. 건너뛰어도 됩니다.",
+        "es-ES": "Indexar objetos en el antiguo jardín de boda: Voltea cartas y empareja seis parejas de recuerdos, con un máximo de ocho fallos. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 16,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "展厅开门前复核图像目录的练习：移动空格旁的数字滑块，把带📷图标的方块排成1至8。可以跳过。",
+        "zh-TW": "展廳開門前複核圖像目錄的練習：移動空格旁的數字滑塊，把帶📷圖示的方塊排成1至8。可以跳過。",
+        "en-US": "Checking the image catalog before the exhibition opens: Slide tiles beside the empty space into order 1–8. You may skip.",
+        "ja-JP": "開場前に画像目録を確認する練習：空白の隣の数字を動かし、1から8に並べる。 スキップ可。",
+        "ko-KR": "전시 개장 전 이미지 목록 확인: 빈칸 옆 숫자를 움직여 1~8로 정렬하세요. 건너뛰어도 됩니다.",
+        "es-ES": "Revisar el catálogo de imágenes antes de abrir: Desliza las fichas junto al hueco y ordénalas del 1 al 8. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    },
+    {
+      "chapter": 16,
+      "scene": 3,
+      "id": "g_find_letter",
+      "position": "after scene introduction and prior-choice callbacks; before the next core scene action",
+      "invitation": {
+        "zh-CN": "走向江边前整理今日便笺：在图标中找到💌，连续完成三轮。可以跳过。",
+        "zh-TW": "走向江邊前整理今日便箋：在圖示中找到💌，連續完成三輪。可以跳過。",
+        "en-US": "Organizing today's notes before the riverside walk: Find 💌 among the icons in three rounds. You may skip.",
+        "ja-JP": "川辺へ向かう前に今日のメモを整理：アイコンの中から💌を見つける三ラウンド。 スキップ可。",
+        "ko-KR": "강변으로 가기 전 오늘 메모 정리: 아이콘에서 💌을 세 차례 찾아보세요. 건너뛰어도 됩니다.",
+        "es-ES": "Ordenar las notas de hoy antes del paseo: Busca 💌 entre los iconos durante tres rondas. Puedes saltarlo."
+      },
+      "outcomeRule": {
+        "win": "continue; exercise-only result",
+        "lose": "continue with existing verification route",
+        "skip": "continue without a relationship decision",
+        "evidence": "no factual discovery or authentic password is claimed by the game",
+        "consent": "no trust, intimacy, forgiveness or relationship decision is inferred"
+      }
+    }
+  ],
+  "parserEvidence": {
+    "parser": "source/src/app94_official2.js",
+    "supportedSyntax": "⟦MG|g_ID⟧ maps to [sys,mg,{id:g_ID}]; win/lose branches are not parsed from extra MG arguments.",
+    "catalog": "source/src/app60_games100.js",
+    "checkedTemplates": [
+      "find: three target-icon rounds",
+      "memory: six pairs, UI says max eight misses",
+      "slide: numbered tiles 1–8 with decorative emoji; not a real photo restore",
+      "simon: repeated four-color sequence",
+      "whack: target icon vs distractor, ten hits in twenty seconds"
+    ],
+    "excluded": "No quiz/lie detector, personal trivia, randomized code as a real password, fabricated clue discovery, coercive romance rewards or losses."
+  },
+  "checks": {
+    "perLocale16Chapters48Scenes32Games": true,
+    "twoGamesPerChapter": true,
+    "allGameIdsInRealCatalog": true,
+    "matchingControlTagAndBeatSequence": true,
+    "matchingNonemptyLineCounts": true,
+    "allChineseStoryFactsAndNPCPromptsPreserved": true,
+    "allSixFullCharacterBibles": true,
+    "sixteenChoicesFortyEightOptionsFortyFiveCallbacks": true,
+    "mediaChangedByWorker": false,
+    "integrationChangedByWorker": false,
+    "runtimeTest": "Root publication worker reported the actual multilingual merge tests passing. This report independently asserts only the static checks executed here; final runtime acceptance remains with the root publication workflow."
+  },
+  "history": "Earlier source validation and V2/V2.1 status are retained as history. Checksums identify the pre-completion inputs; old asset-generation and MG-free notes are superseded production state, not current acceptance. No historical pass is represented as a pass of revised deployment.",
+  "remaining": [
+    "Root rebuild of integration and asset/index metadata",
+    "Root deployment and end-to-end acceptance against the published runtime"
+  ]
+}

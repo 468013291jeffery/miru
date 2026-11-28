@@ -1,6 +1,6 @@
 {
   "repository": "468013291jeffery/miru",
-  "baseline_commit": "2747dc58fe9c8483704e47ac4bb1e627cff61eb9",
+  "baseline_commit": "29c4e6f0599f837ca51dcb28aef959333b279f20",
   "checks": {
     "source_package_checksums": true,
     "image_and_audio_paths": true,
@@ -16,25 +16,8 @@
           "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/locales/zh-CN/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
-            "有 2 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：「你可以说说想怎样核实，也可以请同伴帮忙。」×6、「原件已经妥善保存，你可以继续调查。」×6",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
           ],
           "native_chapters": 16,
@@ -71,95 +54,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "445ee94cf857fd15de16aaadf1aaebdf22b5b93147e9d537011aa28c57a731b5",
+          "chapter_game_deficits": [],
+          "sha256": "e47dc9c299105239a69db3b9b6d06b67cc3734345d6fbd5081d8c24093d65d6f",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/integration/script.zh-CN.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -172,25 +78,8 @@
           "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/locales/zh-TW/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
-            "有 2 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：「你可以說說想怎麼查證，也可以請同伴幫忙。」×6、「原件已妥善保存，你可以繼續調查。」×6",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
           ],
           "native_chapters": 16,
@@ -227,95 +116,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "93f6edf9dda60a98f7340d4a7996803e8324da31163e9b2f0fddcd8f3ea85f29",
+          "chapter_game_deficits": [],
+          "sha256": "a13acc4070eea16664f910df59287612153268cb1ba3864116b485247f7d2975",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/integration/script.zh-TW.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -328,22 +140,6 @@
           "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/locales/en-US/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -351,15 +147,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 96,
+          "native_lines": 131,
           "omitted_passages": 0,
           "native_cast": [
             "Damian",
             "Ethan",
+            "Eleanor",
             "Mia",
             "⟦TIME|10",
-            "⟦TIME|20",
-            "⟦TIME|11"
+            "⟦TIME|20"
           ],
           "native_inferred_player": "Damian",
           "inline_character_cards": 0,
@@ -382,95 +178,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "cd735170bb50b5ce8d32705e74343bf34b05150489d62992462625517954fdef",
+          "chapter_game_deficits": [],
+          "sha256": "32d5bee90dbe3484142b193ea41875f321f99fc3c30c4d04ca87a59696a9b4f2",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/integration/script.en-US.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -494,29 +213,13 @@
               "第 16 章 标题：22 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 837
+          "source_nonempty_lines": 908
         },
         {
           "locale": "ja-JP",
           "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/locales/ja-JP/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -524,15 +227,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 386,
+          "native_lines": 434,
           "omitted_passages": 0,
           "native_cast": [
             "ナレーション",
             "ダミアン",
             "イーサン",
+            "エレノア",
             "ミア",
-            "⟦TIME|10",
-            "⟦TIME|20"
+            "⟦TIME|10"
           ],
           "native_inferred_player": "ナレーション",
           "inline_character_cards": 0,
@@ -555,124 +258,31 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "32b0bd30c41511e1d9795a3cc9653f5fc17516d22b6f268f099e5b990bd524cf",
+          "chapter_game_deficits": [],
+          "sha256": "e5274e722ded38824e27f2f998304de68f826b577a2969856c494ffe7b44da84",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/integration/script.ja-JP.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
             "style_errors": [],
             "style_warnings": []
           },
-          "source_nonempty_lines": 828
+          "source_nonempty_lines": 908
         },
         {
           "locale": "ko-KR",
           "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/locales/ko-KR/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -680,15 +290,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 385,
+          "native_lines": 420,
           "omitted_passages": 0,
           "native_cast": [
             "내레이션",
             "데이미언",
             "이선",
+            "엘리너",
             "미아",
-            "⟦TIME|10",
-            "⟦TIME|20"
+            "⟦TIME|10"
           ],
           "native_inferred_player": "내레이션",
           "inline_character_cards": 0,
@@ -711,95 +321,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "c70435112887cc763999d358f042c06a4da5ee5f0b66e31048dc0a732c7e8901",
+          "chapter_game_deficits": [],
+          "sha256": "ba36a5d2bc92e3ec77bb7faca50a92451538c1684e6e82a2582fc5709b0c72ce",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/integration/script.ko-KR.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -808,29 +341,13 @@
               "第 15 章 标题：18 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 827
+          "source_nonempty_lines": 908
         },
         {
           "locale": "es-ES",
           "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/locales/es-ES/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -838,15 +355,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 96,
+          "native_lines": 131,
           "omitted_passages": 0,
           "native_cast": [
             "Damian",
             "Ethan",
+            "Eleanor",
             "Mia",
             "⟦TIME|10",
-            "⟦TIME|20",
-            "⟦TIME|11"
+            "⟦TIME|20"
           ],
           "native_inferred_player": "Damian",
           "inline_character_cards": 0,
@@ -869,95 +386,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "7eb9fcfcd386d5825e4f662a1b73f56f02697e53ed66a74d53b78accfce83d80",
+          "chapter_game_deficits": [],
+          "sha256": "1878079d6744db435ec0c2a18ebfa606dd145fded543a33ee5d6d350700e90db",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/A_Forbidden_Brother/integration/script.es-ES.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -980,10 +420,10 @@
               "第 16 章 标题：26 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 831
+          "source_nonempty_lines": 908
         }
       ],
-      "zh_source_nonempty_lines": 923
+      "zh_source_nonempty_lines": 908
     },
     {
       "story": "B_Devil_Knows_My_Name",
@@ -994,39 +434,22 @@
           "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/locales/zh-CN/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
-            "有 2 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：「你可以说说想怎样核实，也可以请同伴帮忙。」×6、「原件已经妥善保存，你可以继续调查。」×6",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
           ],
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 141,
+          "native_lines": 95,
           "omitted_passages": 0,
           "native_cast": [
             "罗曼",
             "娜迪娅",
-            "卢卡",
             "⟦TIME|11",
-            "独立律师",
-            "⟦TIME|10"
+            "卢卡",
+            "⟦TIME|10",
+            "独立律师"
           ],
           "native_inferred_player": "罗曼",
           "inline_character_cards": 0,
@@ -1049,95 +472,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "09dd6a7d6d668d36e1143e4885b82544a4c232d3e2b8e3f0c89eaaf9c5a389fc",
+          "chapter_game_deficits": [],
+          "sha256": "2829958d8f7a64e245633454b29f6907438f8fcdf24517c121f5df644ed46702",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/integration/script.zh-CN.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -1150,39 +496,22 @@
           "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/locales/zh-TW/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
-            "有 2 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：「你可以說說想怎麼查證，也可以請同伴幫忙。」×6、「原件已妥善保存，你可以繼續調查。」×6",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
           ],
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 141,
+          "native_lines": 95,
           "omitted_passages": 0,
           "native_cast": [
             "羅曼",
             "娜迪婭",
-            "盧卡",
             "⟦TIME|11",
-            "獨立律師",
-            "⟦TIME|10"
+            "盧卡",
+            "⟦TIME|10",
+            "獨立律師"
           ],
           "native_inferred_player": "羅曼",
           "inline_character_cards": 0,
@@ -1205,95 +534,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "107a33e4f5d9b09b17341a5ebebccff7b4d7966e1d6dcbb9e80d788344c08cb4",
+          "chapter_game_deficits": [],
+          "sha256": "d926a51ebde5c2c69acf298210df584823eb703d4fe22fa2b9a476a01705658b",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/integration/script.zh-TW.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -1306,22 +558,6 @@
           "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/locales/en-US/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -1329,7 +565,7 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 94,
+          "native_lines": 89,
           "omitted_passages": 0,
           "native_cast": [
             "Roman",
@@ -1359,95 +595,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "36ca75717bf1e11bf14d047bebbc729124ba810ef80374e543e29ddb8cacb108",
+          "chapter_game_deficits": [],
+          "sha256": "462f69100bb0d46558edec54190cf191c63b979166de33d1335f3c6218a2d201",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/integration/script.en-US.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -1466,29 +625,13 @@
               "第 16 章 标题：17 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 830
+          "source_nonempty_lines": 807
         },
         {
           "locale": "ja-JP",
           "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/locales/ja-JP/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -1496,7 +639,7 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 386,
+          "native_lines": 333,
           "omitted_passages": 0,
           "native_cast": [
             "ナレーション",
@@ -1527,124 +670,31 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "b8be2d9c476dea48019eaf9d24ee48ab0869fe076b29f448c81ee38770ff59de",
+          "chapter_game_deficits": [],
+          "sha256": "73310ba891188ca2f89fe3e67b3eaf806b5f44b8db296fb4e5f07c3fd58b2e0d",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/integration/script.ja-JP.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
             "style_errors": [],
             "style_warnings": []
           },
-          "source_nonempty_lines": 828
+          "source_nonempty_lines": 807
         },
         {
           "locale": "ko-KR",
           "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/locales/ko-KR/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -1652,17 +702,17 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 383,
+          "native_lines": 328,
           "omitted_passages": 0,
           "native_cast": [
-            "내레이션",
+            "나레이션",
             "로만",
             "나디아",
             "⟦TIME|11",
             "루카",
             "⟦TIME|10"
           ],
-          "native_inferred_player": "내레이션",
+          "native_inferred_player": "나레이션",
           "inline_character_cards": 0,
           "inline_orientation": null,
           "done_conditions_per_chapter": [
@@ -1683,124 +733,31 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "7cf45b2b942e7683788a63d6e8d3056c54bc1209cc18d64ebfaeb910df83c506",
+          "chapter_game_deficits": [],
+          "sha256": "a7cfa4873927efa9f0403b3d6c69c3544ed7a66dc1b3eeb0c310c9409c566969",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/integration/script.ko-KR.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
             "style_errors": [],
             "style_warnings": []
           },
-          "source_nonempty_lines": 826
+          "source_nonempty_lines": 807
         },
         {
           "locale": "es-ES",
           "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/locales/es-ES/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -1808,14 +765,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 94,
+          "native_lines": 85,
           "omitted_passages": 0,
           "native_cast": [
             "Roman",
             "Nadia",
             "⟦TIME|11",
             "Luca",
-            "⟦TIME|10"
+            "⟦TIME|10",
+            "⟦TIME|02"
           ],
           "native_inferred_player": "Roman",
           "inline_character_cards": 0,
@@ -1838,95 +796,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "7cf26200f44339688eb088b91f0178f5a24f87845b80cf2ed1c8c21b543ff488",
+          "chapter_game_deficits": [],
+          "sha256": "12118fd1b5e13e5a3cb4f6a668d4c43f68f2850df091bc1b127494796573d57b",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/B_Devil_Knows_My_Name/integration/script.es-ES.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -1949,10 +830,10 @@
               "第 16 章 标题：22 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 832
+          "source_nonempty_lines": 807
         }
       ],
-      "zh_source_nonempty_lines": 912
+      "zh_source_nonempty_lines": 807
     },
     {
       "story": "C_Midnight_Confession",
@@ -1963,25 +844,8 @@
           "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/locales/zh-CN/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
-            "有 2 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：「你可以说说想怎样核实，也可以请同伴帮忙。」×6、「原件已经妥善保存，你可以继续调查。」×6",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
           ],
           "native_chapters": 16,
@@ -2018,95 +882,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "fb7ba30d5971cb83f8a1df619950de768476f69ff2545ac309fe2dfb031813a5",
+          "chapter_game_deficits": [],
+          "sha256": "044b8a58c1e5e8be946d6020c65553a65df3b7c8e6c5c15157d1f6b63569996f",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/integration/script.zh-CN.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -2119,25 +906,8 @@
           "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/locales/zh-TW/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
-            "有 2 句台词 / 旁白各重复了 4 次以上（像占位套话，日韩西版本尤其要查）：「你可以說說想怎麼查證，也可以請同伴幫忙。」×6、「原件已妥善保存，你可以繼續調查。」×6",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
           ],
           "native_chapters": 16,
@@ -2174,95 +944,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "306cb67ef857d5edca2bc633793dd2cddfd93303c5b8f19e65f6e9f37acbd6b3",
+          "chapter_game_deficits": [],
+          "sha256": "d4acc857e3f7dfbcda5af5b16ac6eb7e53b0aa7f988464ffbbedc326f34ee27e",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/integration/script.zh-TW.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -2275,22 +968,6 @@
           "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/locales/en-US/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -2298,15 +975,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 96,
+          "native_lines": 142,
           "omitted_passages": 0,
           "native_cast": [
             "Lucian",
             "Nora",
+            "Mara",
             "⟦TIME|21",
             "⟦TIME|11",
-            "⟦TIME|15",
-            "⟦TIME|09"
+            "⟦TIME|15"
           ],
           "native_inferred_player": "Lucian",
           "inline_character_cards": 0,
@@ -2329,95 +1006,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "e4022e0715e6f5eb160e9fb929e2a7a4c06c6e0bdacbe767e92e4f9c10fcafcb",
+          "chapter_game_deficits": [],
+          "sha256": "849b1a145b96e0dc422f84b321bb0a45d93a4a297ab50e7a602365bb55931fa0",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/integration/script.en-US.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -2439,29 +1039,13 @@
               "第 16 章 标题：27 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 838
+          "source_nonempty_lines": 903
         },
         {
           "locale": "ja-JP",
           "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/locales/ja-JP/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -2469,15 +1053,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 384,
+          "native_lines": 429,
           "omitted_passages": 0,
           "native_cast": [
             "ナレーション",
             "ルシアン",
             "ノラ",
+            "マラ",
             "⟦TIME|21",
-            "⟦TIME|11",
-            "⟦TIME|15"
+            "⟦TIME|11"
           ],
           "native_inferred_player": "ナレーション",
           "inline_character_cards": 0,
@@ -2500,124 +1084,31 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "55340a1d042d9b68c54264fa827c4ba223d8b4829a3cd69a15f712108a4fc152",
+          "chapter_game_deficits": [],
+          "sha256": "545c195bf1dff66674f770ad217d69650f37b769cb90d60df3657aed15580b4c",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/integration/script.ja-JP.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
             "style_errors": [],
             "style_warnings": []
           },
-          "source_nonempty_lines": 826
+          "source_nonempty_lines": 903
         },
         {
           "locale": "ko-KR",
           "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/locales/ko-KR/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -2625,15 +1116,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 389,
+          "native_lines": 427,
           "omitted_passages": 0,
           "native_cast": [
             "내레이션",
             "루시안",
             "노라",
+            "마라",
             "⟦TIME|21",
-            "⟦TIME|11",
-            "⟦TIME|15"
+            "⟦TIME|11"
           ],
           "native_inferred_player": "내레이션",
           "inline_character_cards": 0,
@@ -2656,95 +1147,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "3d040ffa75603e3c52971fb20bd24eb8ca2e943554bb6e6dd13ceadf43ad5420",
+          "chapter_game_deficits": [],
+          "sha256": "b30b82d2b0d87c89088b2f27939c5493ce509bb0ae6211dad9a12ae2ca2810f4",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/integration/script.ko-KR.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -2753,29 +1167,13 @@
               "第 4 章 标题：18 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 831
+          "source_nonempty_lines": 903
         },
         {
           "locale": "es-ES",
           "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/locales/es-ES/script.md",
           "dsl_errors": [],
           "dsl_warnings": [
-            "第 1 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 2 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 3 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 4 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 5 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 6 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 7 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 8 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 9 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 10 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 11 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 12 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 13 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 14 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 15 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
-            "第 16 章只有 0 个小游戏 ⟦MG|…⟧：规范要求每章 2 个",
             "正文里没有「你：…」—— 系统只能把说话最多的角色当成玩家（实测 danger→卢西恩、moon→凯尔）",
             "没有 ⟦CHAR⟧ 角色卡 —— 演员表只能从台词里猜",
             "取向没有声明，也无法从角色卡推断（需要一张「你」的 ⟦CHAR⟧ 卡）—— 发布时会落到默认值，可能不是编剧想要的"
@@ -2783,15 +1181,15 @@
           "native_chapters": 16,
           "native_scenes": 48,
           "native_choices": 16,
-          "native_lines": 96,
+          "native_lines": 142,
           "omitted_passages": 0,
           "native_cast": [
             "Lucian",
             "Nora",
+            "Mara",
             "⟦TIME|21",
             "⟦TIME|11",
-            "⟦TIME|15",
-            "⟦TIME|09"
+            "⟦TIME|15"
           ],
           "native_inferred_player": "Lucian",
           "inline_character_cards": 0,
@@ -2814,95 +1212,18 @@
             2,
             2
           ],
-          "chapter_game_deficits": [
-            {
-              "chapter": 1,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 2,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 3,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 4,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 5,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 6,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 7,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 8,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 9,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 10,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 11,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 12,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 13,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 14,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 15,
-              "games": 0,
-              "required": 2
-            },
-            {
-              "chapter": 16,
-              "games": 0,
-              "required": 2
-            }
-          ],
-          "sha256": "95618baf7714a2446d713f7c18aa27ec0117c917469ceeab66a3032c809c0ee6",
+          "chapter_game_deficits": [],
+          "sha256": "382967b0e2fe52872c33f2d21e18df451ea8ac5e8debc71f2d11f94b62cc310f",
           "import_metadata_binding_required": true,
           "derived_import": {
             "script": "content/official/miru-three-stories-v2-2/C_Midnight_Confession/integration/script.es-ES.md",
             "player": "你",
             "orient": "bg",
             "scenes_with_time_and_bound_image": 48,
+            "built_games": 32,
+            "built_music_cues": 48,
+            "neutral_fallback_ending": true,
+            "orphan_actors": 0,
             "done_per_chapter": 2,
             "chapter_ending_choices": 3,
             "safety_errors": [],
@@ -2926,228 +1247,17 @@
               "第 16 章 标题：33 字，建议不超过 16 字"
             ]
           },
-          "source_nonempty_lines": 838
+          "source_nonempty_lines": 903
         }
       ],
-      "zh_source_nonempty_lines": 918
+      "zh_source_nonempty_lines": 903
     }
   ],
-  "release_blockers": [
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "zh-CN",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "zh-TW",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "en-US",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "en-US",
-      "type": "translation_line_alignment",
-      "chinese_lines": 923,
-      "localized_lines": 837
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "ja-JP",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "ja-JP",
-      "type": "translation_line_alignment",
-      "chinese_lines": 923,
-      "localized_lines": 828
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "ko-KR",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "ko-KR",
-      "type": "translation_line_alignment",
-      "chinese_lines": 923,
-      "localized_lines": 827
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "es-ES",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "A_Forbidden_Brother",
-      "locale": "es-ES",
-      "type": "translation_line_alignment",
-      "chinese_lines": 923,
-      "localized_lines": 831
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "zh-CN",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "zh-TW",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "en-US",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "en-US",
-      "type": "translation_line_alignment",
-      "chinese_lines": 912,
-      "localized_lines": 830
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "ja-JP",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "ja-JP",
-      "type": "translation_line_alignment",
-      "chinese_lines": 912,
-      "localized_lines": 828
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "ko-KR",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "ko-KR",
-      "type": "translation_line_alignment",
-      "chinese_lines": 912,
-      "localized_lines": 826
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "es-ES",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "B_Devil_Knows_My_Name",
-      "locale": "es-ES",
-      "type": "translation_line_alignment",
-      "chinese_lines": 912,
-      "localized_lines": 832
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "zh-CN",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "zh-TW",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "en-US",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "en-US",
-      "type": "translation_line_alignment",
-      "chinese_lines": 918,
-      "localized_lines": 838
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "ja-JP",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "ja-JP",
-      "type": "translation_line_alignment",
-      "chinese_lines": 918,
-      "localized_lines": 826
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "ko-KR",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "ko-KR",
-      "type": "translation_line_alignment",
-      "chinese_lines": 918,
-      "localized_lines": 831
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "es-ES",
-      "type": "chapter_games_missing",
-      "chapters": 16,
-      "tag_instances_missing": 32
-    },
-    {
-      "story": "C_Midnight_Confession",
-      "locale": "es-ES",
-      "type": "translation_line_alignment",
-      "chinese_lines": 918,
-      "localized_lines": 838
-    }
-  ],
+  "release_blockers": [],
   "limits": [
     "This is repository/asset and real-parser acceptance, not a live player or AI conversation test.",
     "The published admin auto-review policy requires two games per chapter as of 2026-11-27.",
-    "Script bodies are preserved; character cards, orientation and self-player metadata are separate authoring files and need the official import binding."
+    "This report validates revised source and derived bindings; live publication has a separate post-release report."
   ],
   "baseline_files": {
     "api/_dslqa.js": "0d015b5244a72051e1bdb2583a472e0d63ef93bda3f760419e0a5648b0636da8",
@@ -3156,7 +1266,7 @@
     "api/admin.js": "b28e856843520f8b5c00f297650a696bac664eb38b73e4b842adc10dcaf90801",
     "source/src/app51_import.js": "9434bca9122f99ed0b69c169bf4e8adfde012d803939bce33853863cf64aa99b",
     "source/src/app94_official2.js": "118a750ebb239f0c355b094142551824dc62aed8584e4b001054ba5ae1af9252",
-    "source/src/app144_discfix.js": "8d1e616751157bb7082d493bbca22a4380ae0c211500e382922c7708a36e5431"
+    "source/src/app144_discfix.js": "6e58342f954bd4239e9794b4b63a63b1c05e93160fe3d2a71835d3bd62e836d2"
   },
   "totals": {
     "images": 163,
@@ -3165,7 +1275,7 @@
     "localized_chapters": 288,
     "localized_scenes": 864
   },
-  "canonical_game_instances_missing": 96,
-  "release_ready": false,
+  "canonical_game_instances_missing": 0,
+  "release_ready": true,
   "repository_asset_checks_passed": true
 }

@@ -1,0 +1,777 @@
+{
+  "story": "B_Devil_Knows_My_Name",
+  "status": "content_complete_pending_parent_integration_and_live_acceptance",
+  "alignmentMethod": "Read all 48 Chinese scenes, merge consecutive narration and same-speaker dialogue into semantic blocks; fully translate each block into en-US/ja-JP/ko-KR/es-ES; retain six-locale chapter/scene/GOAL/DONE/IF/SET/OPT order. All choices, exact consequences and final hooks are translated; IF replays reuse the exact prior choice result. Line equality is structural, not padding.",
+  "changes": [
+    "Replaced four compact foreign adaptations with complete scene translations including both dialogue questions, motives, consent limits and forensic timing.",
+    "Preserved Chinese story facts; combined continuous short narration and same-speaker speech without deleting it.",
+    "Replaced placeholder task-only FREE blocks with 32 real library games and localized instructions, explicitly separating icon practice from actual evidence.",
+    "Fixed two master-speaker inversions at 8.3 and 11.2: Luca now acknowledges the question he must answer instead of speaking the player’s question as his own.",
+    "Marked the dance-floor image during legal-aid testimony as recollection in all six locales; removed one duplicated months-later transition.",
+    "Added full Japanese, Korean and Spanish story bibles derived from final scenes and branches.",
+    "No image/audio/shared runtime/integration modifications.",
+    "Replaced all 32 game invitations with distinct scene-specific waiting/action reasons in all six locales; outcome rules remain production metadata, not repeated narration.",
+    "Converted the complete zh-TW script through Foundation Hans-Hant, then normalized Taiwan vocabulary; verified all final invitations against the script.",
+    "Retained all six specific investigative task prompts from the master (stamp ink, ring childhood code, key-ring intake time, voice comparison, ledger/date cross-check, off-site backup), merged into their corresponding localized scene hook; these are real investigative actions separate from icon-game completion.",
+    "Converted the existing zh-TW story bible as well; normalized locative 裡 and Taiwan 帳/便條 vocabulary in the final traditional script and bible.",
+    "Rebuilt en-US and zh-TW bibles from the final script’s full 48 scenes and 48 exact branches; expanded cast constraints against production/character_bible_v2_2.json. Added precise authoritative ages/New York/visual and independence facts to the three new native bibles.",
+    "Kept both chapter-16 mini-games within gallery preparation, leaving the letter and final morning-street relationship decision uninterrupted by games."
+  ],
+  "parserEvidence": {
+    "file": "source/src/app94_official2.js",
+    "line": 90,
+    "syntax": "⟦MG|g_find_letter⟧",
+    "supported": "mk94 accepts uppercase directive keys, then MG maps its first field to g_ ID; existing g_ prefix retained."
+  },
+  "gameLibrary": "source/src/app60_games100.js MG_SRC (find, memory, slide, simon, whack actual templates)",
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "chapters": 16,
+      "scenes": 48,
+      "nonemptyLines": 807,
+      "miniGames": 32,
+      "goals": 16,
+      "done": 32,
+      "if": 45,
+      "options": 48,
+      "sha256": "2829958d8f7a64e245633454b29f6907438f8fcdf24517c121f5df644ed46702"
+    },
+    {
+      "locale": "zh-TW",
+      "chapters": 16,
+      "scenes": 48,
+      "nonemptyLines": 807,
+      "miniGames": 32,
+      "goals": 16,
+      "done": 32,
+      "if": 45,
+      "options": 48,
+      "sha256": "d926a51ebde5c2c69acf298210df584823eb703d4fe22fa2b9a476a01705658b"
+    },
+    {
+      "locale": "en-US",
+      "chapters": 16,
+      "scenes": 48,
+      "nonemptyLines": 807,
+      "miniGames": 32,
+      "goals": 16,
+      "done": 32,
+      "if": 45,
+      "options": 48,
+      "sha256": "462f69100bb0d46558edec54190cf191c63b979166de33d1335f3c6218a2d201"
+    },
+    {
+      "locale": "ja-JP",
+      "chapters": 16,
+      "scenes": 48,
+      "nonemptyLines": 807,
+      "miniGames": 32,
+      "goals": 16,
+      "done": 32,
+      "if": 45,
+      "options": 48,
+      "sha256": "73310ba891188ca2f89fe3e67b3eaf806b5f44b8db296fb4e5f07c3fd58b2e0d"
+    },
+    {
+      "locale": "ko-KR",
+      "chapters": 16,
+      "scenes": 48,
+      "nonemptyLines": 807,
+      "miniGames": 32,
+      "goals": 16,
+      "done": 32,
+      "if": 45,
+      "options": 48,
+      "sha256": "a7cfa4873927efa9f0403b3d6c69c3544ed7a66dc1b3eeb0c310c9409c566969"
+    },
+    {
+      "locale": "es-ES",
+      "chapters": 16,
+      "scenes": 48,
+      "nonemptyLines": 807,
+      "miniGames": 32,
+      "goals": 16,
+      "done": 32,
+      "if": 45,
+      "options": 48,
+      "sha256": "12118fd1b5e13e5a3cb4f6a668d4c43f68f2850df091bc1b127494796573d57b"
+    }
+  ],
+  "games": [
+    {
+      "chapter": 1,
+      "scene": 2,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "三份命令摆开时，先用纸张图标练习辨认：找到💌，再继续核对。",
+        "zh-TW": "三份命令擺開時，先用紙張圖標練習辨認：找到💌，再繼續核對。",
+        "en-US": "With the three orders laid out, warm up your eye: find 💌 among the paper icons before comparing them.",
+        "ja-JP": "三枚の命令書を見比べる前に、紙のアイコンから💌を探して目を慣らそう。",
+        "ko-KR": "세 명령서를 대조하기 전, 종이 아이콘에서 💌를 찾아 눈을 풀어 보자.",
+        "es-ES": "Antes de comparar las tres órdenes, afina la vista: busca 💌 entre los iconos de papel."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 1,
+      "scene": 3,
+      "id": "g_find_key",
+      "invitation": {
+        "zh-CN": "楼梯灯灭了。离开前可练一下观察，在杂物图标里找到🗝。",
+        "zh-TW": "樓梯燈滅了。離開前可練一下觀察，在雜物圖標裡找到🗝。",
+        "en-US": "The stairwell is dark. Before moving on, try spotting 🗝 among the object icons.",
+        "ja-JP": "階段が暗い。動く前に小物のアイコンから🗝を探す観察練習をしてもいい。",
+        "ko-KR": "계단이 어둡다. 움직이기 전 물건 아이콘에서 🗝를 찾는 관찰 연습을 해도 된다.",
+        "es-ES": "La escalera está oscura. Antes de seguir, practica buscando 🗝 entre los objetos."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 2,
+      "scene": 1,
+      "id": "g_slide_map",
+      "invitation": {
+        "zh-CN": "地图摊在面前。可先移动🗺表情滑块、排好序号，静下心再选住处。",
+        "zh-TW": "地圖攤在面前。可先移動🗺表情滑塊、排好序號，靜下心再選住處。",
+        "en-US": "The map is spread before you. Arrange the numbered 🗺 tiles if you want a pause before choosing a residence.",
+        "ja-JP": "地図が広がる。住まいを選ぶ前の一息に、🗺のタイルを番号順に並べてもいい。",
+        "ko-KR": "지도가 펼쳐져 있다. 거처를 고르기 전 잠시 🗺 조각을 번호순으로 맞춰도 된다.",
+        "es-ES": "El mapa está abierto. Ordena las fichas 🗺 si quieres una pausa antes de elegir vivienda."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 2,
+      "scene": 2,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "先别急着碰封套。等检查安排好时，可以从纸张图标中找出💌。",
+        "zh-TW": "先別急著碰封套。等檢查安排好時，可以從紙張圖標中找出💌。",
+        "en-US": "No need to touch the sleeve yet. While arranging its examination, try finding 💌 among the paper icons.",
+        "ja-JP": "ジャケットに触れるのは急がなくていい。検査の手配を待つ間、紙の中の💌を探してみよう。",
+        "ko-KR": "표지를 서둘러 만질 필요는 없다. 검사를 준비하며 종이 아이콘 속 💌를 찾아보자.",
+        "es-ES": "No hace falta tocar la funda aún. Mientras se organiza el examen, busca 💌 entre los papeles."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 3,
+      "scene": 1,
+      "id": "g_mem_memory",
+      "invitation": {
+        "zh-CN": "鉴定需要时间。等灯下检验时，可翻开相机、胶卷等图标，配成相同的六对。",
+        "zh-TW": "鑒定需要時間。等燈下檢驗時，可翻開相機、膠卷等圖標，配成相同的六對。",
+        "en-US": "Examination takes time. While waiting, turn the camera, film and other cards to match six identical pairs.",
+        "ja-JP": "鑑定には時間がかかる。待つ間、カメラやフィルムなどのカードをめくり、同じ六組をそろえよう。",
+        "ko-KR": "감정에는 시간이 걸린다. 기다리며 카메라와 필름 등 같은 카드 여섯 쌍을 맞춰 보자.",
+        "es-ES": "El peritaje lleva tiempo. Mientras esperas, empareja seis parejas de cámaras, carretes y otros iconos."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 3,
+      "scene": 3,
+      "id": "g_simon_lights",
+      "invitation": {
+        "zh-CN": "通讯备份调取期间，试着按画面亮起的先后顺序点灯，整理注意力。",
+        "zh-TW": "通訊備份調取期間，試著按畫面亮起的先後順序點燈，整理注意力。",
+        "en-US": "While the telecom backup is retrieved, focus by tapping the lights in the order shown.",
+        "ja-JP": "通信のバックアップを待つ間、画面で光った順に灯りを押し、集中を整えよう。",
+        "ko-KR": "통신 백업을 기다리며 화면에 켜진 순서대로 불빛을 눌러 집중해 보자.",
+        "es-ES": "Mientras recuperan la copia telefónica, concéntrate pulsando las luces en el orden mostrado."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 4,
+      "scene": 2,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "把纸条放稳。想停一会儿，可以在纸张图标里找出💌，再问它的来历。",
+        "zh-TW": "把紙條放穩。想停一會兒，可以在紙張圖標裡找出💌，再問它的來歷。",
+        "en-US": "Set the note down safely. If you want a moment, find 💌 among the paper icons before asking about its origin.",
+        "ja-JP": "メモを安全に置く。一息つきたければ紙のアイコンから💌を探し、それから出所を聞こう。",
+        "ko-KR": "쪽지를 안전하게 놓는다. 잠깐 쉬고 싶다면 종이 아이콘 속 💌를 찾은 뒤 출처를 물어보자.",
+        "es-ES": "Deja la nota a salvo. Si quieres una pausa, busca 💌 antes de preguntar por su origen."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 4,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "invitation": {
+        "zh-CN": "照片还在手边。先用📷表情滑块练习排好序号，再继续核对照片日期。",
+        "zh-TW": "照片還在手邊。先用📷表情滑塊練習排好序號，再繼續核對照片日期。",
+        "en-US": "The photograph is at hand. Try arranging the numbered 📷 tiles before returning to its date.",
+        "ja-JP": "写真は手元にある。📷のタイルを番号順に並べる練習の後、日付の確認へ戻ろう。",
+        "ko-KR": "사진은 손에 있다. 📷 조각을 번호순으로 맞춰 본 뒤 날짜 확인을 이어가자.",
+        "es-ES": "La foto sigue a mano. Ordena las fichas 📷 antes de volver a comprobar la fecha."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 5,
+      "scene": 1,
+      "id": "g_find_key",
+      "invitation": {
+        "zh-CN": "先给医护留出位置。等他们准备时，可在杂物图标中找到🗝，不耽误救治。",
+        "zh-TW": "先給醫護留出位置。等他們準備時，可在雜物圖標中找到🗝，不耽誤救治。",
+        "en-US": "Give the medical team room. While they prepare, you can look for 🗝 among the object icons.",
+        "ja-JP": "医療班の場所を空ける。準備を待つ間、小物の中から🗝を探してもいい。",
+        "ko-KR": "의료진 자리를 비켜 준다. 준비를 기다리며 물건 아이콘 속 🗝를 찾아도 된다.",
+        "es-ES": "Deja espacio al personal médico. Mientras prepara todo, puedes buscar 🗝 entre los objetos."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 5,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "invitation": {
+        "zh-CN": "入库扫描等待核验。你可以翻牌配对相机和胶卷等相同图标，稍作停顿。",
+        "zh-TW": "入庫掃描等待核驗。你可以翻牌配對相機和膠卷等相同圖標，稍作停頓。",
+        "en-US": "The intake scan awaits verification. Take a moment to match identical camera, film and other cards.",
+        "ja-JP": "受領スキャンの確認待ち。カメラやフィルムなど同じカードをそろえて一息ついてもいい。",
+        "ko-KR": "입고 스캔 확인을 기다린다. 카메라와 필름 등 같은 카드를 짝지으며 잠깐 쉬어도 된다.",
+        "es-ES": "La entrada de pruebas espera verificación. Haz una pausa emparejando cámaras, carretes y otros iconos."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 6,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "invitation": {
+        "zh-CN": "先不急着拆相框。你可以用📷表情滑块排好序号，等律师到场再处理资料。",
+        "zh-TW": "先不急著拆相框。你可以用📷表情滑塊排好序號，等律師到場再處理資料。",
+        "en-US": "There is no rush to dismantle frames. Arrange the numbered 📷 tiles while waiting for counsel.",
+        "ja-JP": "額を外すのは急がなくていい。弁護士を待つ間、📷のタイルを番号順に並べてもいい。",
+        "ko-KR": "액자를 서둘러 뜯지 않아도 된다. 변호사를 기다리며 📷 조각을 번호순으로 맞춰 보자.",
+        "es-ES": "No hay prisa por desmontar marcos. Ordena las fichas 📷 mientras esperas al abogado."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 6,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "invitation": {
+        "zh-CN": "笔迹还要核对。把注意力放到翻牌上，配齐相同图标后再看照片背面。",
+        "zh-TW": "筆跡還要核對。把注意力放到翻牌上，配齊相同圖標後再看照片背面。",
+        "en-US": "The handwriting still needs checking. Match identical cards, then return to the photograph's reverse.",
+        "ja-JP": "筆跡はまだ確認中。同じカードをそろえてから、写真の裏に目を戻そう。",
+        "ko-KR": "필체 확인이 남아 있다. 같은 카드를 맞춘 뒤 사진 뒷면으로 시선을 돌리자.",
+        "es-ES": "La letra aún debe verificarse. Empareja los iconos y vuelve después al reverso de la foto."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 7,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "invitation": {
+        "zh-CN": "录像暂时停在屏幕上。可先排好📷表情滑块的序号，再细看那张脸。",
+        "zh-TW": "錄像暫時停在屏幕上。可先排好📷表情滑塊的序號，再細看那張臉。",
+        "en-US": "The footage is paused. Arrange the numbered 📷 tiles if you want a breath before studying the face.",
+        "ja-JP": "映像はいったん停止している。顔をよく見る前の一息に、📷の番号を並べてもいい。",
+        "ko-KR": "영상이 멈춰 있다. 얼굴을 자세히 보기 전 📷 조각을 번호순으로 맞춰 숨을 돌려도 된다.",
+        "es-ES": "La grabación está pausada. Ordena las fichas 📷 si necesitas respirar antes de mirar la cara."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 7,
+      "scene": 3,
+      "id": "g_simon_lights",
+      "invitation": {
+        "zh-CN": "等音频逐段比对时，可跟随界面灯光，按刚才的顺序点亮它们。",
+        "zh-TW": "等音頻逐段比對時，可跟隨界面燈光，按剛才的順序點亮它們。",
+        "en-US": "While the audio is compared section by section, repeat the screen's light sequence.",
+        "ja-JP": "音声を区切って照合する間、画面の灯りを直前と同じ順に押してみよう。",
+        "ko-KR": "음성을 구간별로 대조하는 동안 화면 불빛의 순서를 따라 눌러 보자.",
+        "es-ES": "Mientras se contrasta el audio por partes, repite la secuencia de luces de la pantalla."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 8,
+      "scene": 1,
+      "id": "g_mem_memory",
+      "invitation": {
+        "zh-CN": "代币先放在手边。决定开口问什么前，可翻牌配对熟悉的相机、玩偶等图标。",
+        "zh-TW": "代幣先放在手邊。決定開口問什麼前，可翻牌配對熟悉的相機、玩偶等圖標。",
+        "en-US": "Keep the token nearby. Before choosing your question, try pairing camera, toy and other familiar icons.",
+        "ja-JP": "代用硬貨を手元に置く。何を聞くか決める前に、カメラや人形などのカードを組にしてもいい。",
+        "ko-KR": "토큰은 곁에 둔다. 질문을 고르기 전 카메라와 인형 등 같은 아이콘을 짝지어도 된다.",
+        "es-ES": "Deja la ficha cerca. Antes de elegir tu pregunta, empareja cámaras, juguetes y otros iconos."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 8,
+      "scene": 3,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "硬盘暂不接入。留出记录交付的时间，可在纸张图标里找出💌。",
+        "zh-TW": "硬盤暫不接入。留出記錄交付的時間，可在紙張圖標裡找出💌。",
+        "en-US": "Leave the drive disconnected for now. During the handover record, try finding 💌 among paper icons.",
+        "ja-JP": "ドライブはまだつながない。受け渡しの記録を待つ間、紙の中の💌を探してもいい。",
+        "ko-KR": "드라이브는 아직 연결하지 않는다. 인계 기록을 기다리며 종이 속 💌를 찾아도 된다.",
+        "es-ES": "Deja el disco desconectado. Mientras se registra la entrega, busca 💌 entre los papeles."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 9,
+      "scene": 1,
+      "id": "g_slide_map",
+      "invitation": {
+        "zh-CN": "出口已照亮，不必马上上车。先排一组🗺表情滑块，再决定自己的路。",
+        "zh-TW": "出口已照亮，不必馬上上車。先排一組🗺表情滑塊，再決定自己的路。",
+        "en-US": "The exit is lit; there is no rush to get in a car. Arrange the 🗺 tiles, then choose your route.",
+        "ja-JP": "出口は明るい。すぐ車に乗る必要はない。🗺のタイルを並べてから、自分の道を選ぼう。",
+        "ko-KR": "출구가 밝아졌다. 곧바로 차에 탈 필요는 없다. 🗺 조각을 맞춘 뒤 자기 길을 고르자.",
+        "es-ES": "La salida está iluminada; no tienes que subir ya. Ordena las fichas 🗺 y elige tu camino."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 9,
+      "scene": 3,
+      "id": "g_whack_texts",
+      "invitation": {
+        "zh-CN": "通话结束后，做个通知整理练习：点📵，避开💬，再继续谈联系方式。",
+        "zh-TW": "通話結束後，做個通知整理練習：點📵，避開💬，再繼續談聯繫方式。",
+        "en-US": "After the call, try sorting notifications: tap 📵, avoid 💬, then return to contact arrangements.",
+        "ja-JP": "電話が終わったら通知整理の練習。📵を押し💬を避け、それから連絡方法の話へ戻ろう。",
+        "ko-KR": "통화 뒤 알림 정리 연습을 해보자. 📵를 누르고 💬를 피한 뒤 연락 방식을 이야기하자.",
+        "es-ES": "Tras la llamada, practica ordenar avisos: pulsa 📵, evita 💬 y retoma cómo comunicaros."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 10,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "invitation": {
+        "zh-CN": "资料载入后先缓一缓。记住灯光亮起的顺序，再按相同顺序点回去。",
+        "zh-TW": "資料載入後先緩一緩。記住燈光亮起的順序，再按相同順序點回去。",
+        "en-US": "After the files load, take a breath: watch the lights and repeat their sequence.",
+        "ja-JP": "資料が読み込まれたら一息。光った順を覚えて、同じ順に灯りを押そう。",
+        "ko-KR": "자료가 뜨면 잠시 숨을 돌리자. 켜진 불빛 순서를 기억해 그대로 눌러 보자.",
+        "es-ES": "Tras cargar los archivos, respira: observa las luces y repite la secuencia."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 10,
+      "scene": 2,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "包裹先留在门边。登记之前，可从纸张图标里找到💌，给自己片刻考虑。",
+        "zh-TW": "包裹先留在門邊。登記之前，可從紙張圖標裡找到💌，給自己片刻考慮。",
+        "en-US": "Leave the parcel by the door. Before registering it, find 💌 among paper icons if you want a moment to think.",
+        "ja-JP": "荷物は扉のそばに置く。記録の前に紙の中から💌を探し、考える間を取ってもいい。",
+        "ko-KR": "소포는 문 옆에 둔다. 기록 전 종이 아이콘 속 💌를 찾으며 생각할 시간을 가져도 된다.",
+        "es-ES": "Deja el paquete junto a la puerta. Antes de registrarlo, busca 💌 si quieres un momento para pensar."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 11,
+      "scene": 1,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "预约单留在桌上。可先从纸张图标里找出💌，再决定先询问还是取消。",
+        "zh-TW": "預約單留在桌上。可先從紙張圖標裡找出💌，再決定先詢問還是取消。",
+        "en-US": "Leave the booking on the desk. Find 💌 among paper icons if you want a pause before questioning or canceling.",
+        "ja-JP": "予約票は机に置く。質問するか取り消すか決める前に、紙の中から💌を探してもいい。",
+        "ko-KR": "예약서는 책상에 둔다. 질문할지 취소할지 정하기 전 종이 속 💌를 찾아도 된다.",
+        "es-ES": "Deja la reserva en la mesa. Busca 💌 si necesitas una pausa antes de preguntar o cancelar."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 11,
+      "scene": 3,
+      "id": "g_simon_lights",
+      "invitation": {
+        "zh-CN": "备份音频停在一旁。先跟着界面灯光复现顺序，缓一下再决定把录音交给谁。",
+        "zh-TW": "備份音頻停在一旁。先跟著界面燈光復現順序，緩一下再決定把錄音交給誰。",
+        "en-US": "Pause the backup audio. Repeat the screen's light sequence before deciding who receives the recording.",
+        "ja-JP": "音声バックアップを止める。画面の灯りの順を繰り返し、一息ついてから録音の提出先を決めよう。",
+        "ko-KR": "백업 음성을 잠시 멈춘다. 화면 불빛 순서를 따라 누른 뒤 녹음을 누구에게 줄지 정하자.",
+        "es-ES": "Pausa el audio. Repite las luces antes de decidir a quién entregar la grabación."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 12,
+      "scene": 1,
+      "id": "g_slide_map",
+      "invitation": {
+        "zh-CN": "桥边可停留片刻。移动🗺表情滑块排好序号，再选接下来要走的方向。",
+        "zh-TW": "橋邊可停留片刻。移動🗺表情滑塊排好序號，再選接下來要走的方向。",
+        "en-US": "You can pause by the bridge. Arrange the numbered 🗺 tiles, then choose the next direction.",
+        "ja-JP": "橋のそばで少し休める。🗺の番号を並べてから、次に進む方向を選ぼう。",
+        "ko-KR": "다리 옆에서 잠시 쉬어도 된다. 🗺 조각을 번호순으로 맞춘 뒤 다음 방향을 고르자.",
+        "es-ES": "Puedes detenerte junto al puente. Ordena las fichas 🗺 y elige después adónde ir."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 12,
+      "scene": 2,
+      "id": "g_mem_memory",
+      "invitation": {
+        "zh-CN": "账单核验仍在继续。等不同来源对照时，可翻牌找齐六组相同图标。",
+        "zh-TW": "帳單核驗仍在繼續。等不同來源對照時，可翻牌找齊六組相同圖標。",
+        "en-US": "The bill checks continue. While sources are compared, try matching six pairs of identical cards.",
+        "ja-JP": "請求書の検証は続く。出所の照合を待つ間、同じカード六組をそろえてもいい。",
+        "ko-KR": "청구서 검증이 계속된다. 출처 대조를 기다리며 같은 카드 여섯 쌍을 맞춰도 된다.",
+        "es-ES": "Siguen comprobando las facturas. Mientras contrastan fuentes, empareja seis parejas de iconos."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 13,
+      "scene": 1,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "原件已归档，先整理手边。可以从纸张图标中找到💌，再和记者谈公开范围。",
+        "zh-TW": "原件已歸檔，先整理手邊。可以從紙張圖標中找到💌，再和記者談公開範圍。",
+        "en-US": "The originals are filed. Find 💌 among paper icons while settling your desk, before discussing disclosure.",
+        "ja-JP": "原本の整理が済む。手元を整える間、紙の中から💌を探してから記者と公開範囲を話してもいい。",
+        "ko-KR": "원본이 정리됐다. 기자와 공개 범위를 말하기 전 종이 속 💌를 찾으며 자리를 정돈해도 된다.",
+        "es-ES": "Los originales están archivados. Busca 💌 mientras ordenas la mesa, antes de hablar de publicación."
+      },
+      "placement": "archive preparation around journalist interaction",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 13,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "invitation": {
+        "zh-CN": "等多份备份确认的间隙，再做一次灯序练习：看清亮灯顺序后依次点亮。",
+        "zh-TW": "等多份備份確認的間隙，再做一次燈序練習：看清亮燈順序後依次點亮。",
+        "en-US": "While the backup copies are checked, try a light-sequence exercise: watch, then tap in the same order.",
+        "ja-JP": "複数のバックアップ確認を待つ間、灯りの順を見て、同じ順に押してみよう。",
+        "ko-KR": "여러 백업 확인을 기다리며 불빛 순서를 보고 그대로 눌러 보자.",
+        "es-ES": "Mientras comprueban las copias, observa las luces y púlsalas en el mismo orden."
+      },
+      "placement": "archive preparation around journalist interaction",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 14,
+      "scene": 1,
+      "id": "g_whack_flash",
+      "invitation": {
+        "zh-CN": "留在安全位置，别靠近清理现场。等候时可练挡闪光灯：点📸，避开🙂。",
+        "zh-TW": "留在安全位置，別靠近清理現場。等候時可練擋閃光燈：點📸，避開🙂。",
+        "en-US": "Stay safely away from the cleanup. While waiting, practice blocking flashes: tap 📸 and avoid 🙂.",
+        "ja-JP": "処理現場に近づかず安全な場所で待つ。待つ間、📸を押し🙂を避ける練習をしてもいい。",
+        "ko-KR": "정리 현장에 접근하지 말고 안전한 곳에서 기다린다. 📸를 누르고 🙂를 피하는 연습을 해도 된다.",
+        "es-ES": "Espera lejos de la limpieza. Practica bloquear flashes: pulsa 📸 y evita 🙂."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 14,
+      "scene": 2,
+      "id": "g_simon_lights",
+      "invitation": {
+        "zh-CN": "三份备份还在逐项核对。用灯光顺序练习保持专注，按刚才亮起的顺序点击。",
+        "zh-TW": "三份備份還在逐項核對。用燈光順序練習保持專注，按剛才亮起的順序點擊。",
+        "en-US": "Three backups are still being checked. Stay focused by repeating the lights in their displayed order.",
+        "ja-JP": "三つのバックアップは確認中。画面で点いた順に灯りを押して集中を保とう。",
+        "ko-KR": "세 백업을 확인하는 중이다. 켜진 순서대로 불빛을 누르며 집중해 보자.",
+        "es-ES": "Siguen verificando tres copias. Mantén la atención repitiendo las luces en su orden."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 15,
+      "scene": 1,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "等收件手续完成时，可以在纸张图标中找到💌，再看看正式回执。",
+        "zh-TW": "等收件手續完成時，可以在紙張圖標中找到💌，再看看正式回執。",
+        "en-US": "While intake formalities finish, find 💌 among paper icons before looking over the official receipt.",
+        "ja-JP": "受領手続きの間、紙の中から💌を探してもいい。その後、正式な受領証を確かめよう。",
+        "ko-KR": "접수 절차를 기다리며 종이 속 💌를 찾은 뒤 공식 접수증을 살펴보자.",
+        "es-ES": "Mientras termina la recepción, busca 💌 antes de revisar el recibo oficial."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 15,
+      "scene": 3,
+      "id": "g_find_letter",
+      "invitation": {
+        "zh-CN": "信件可以稍后再答。先做一小段图标整理，在纸张里找到💌，留出自己的阅读时间。",
+        "zh-TW": "信件可以稍後再答。先做一小段圖標整理，在紙張裡找到💌，留出自己的閱讀時間。",
+        "en-US": "The letters can wait for an answer. Find 💌 among paper icons and leave yourself time to read.",
+        "ja-JP": "返事は急がなくていい。紙の中から💌を探し、自分の読む時間を取ってもいい。",
+        "ko-KR": "답장은 미뤄도 된다. 종이 속 💌를 찾으며 자기만의 읽을 시간을 가져도 된다.",
+        "es-ES": "La respuesta puede esperar. Busca 💌 entre los papeles y date tiempo para leer."
+      },
+      "placement": "after scene action, before dialogue",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 16,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "invitation": {
+        "zh-CN": "展览开场前，排好一组📷表情滑块的序号，让视线回到自己的作品。",
+        "zh-TW": "展覽開場前，排好一組📷表情滑塊的序號，讓視線回到自己的作品。",
+        "en-US": "Before the exhibition begins, arrange the numbered 📷 tiles and bring your attention back to your work.",
+        "ja-JP": "展示の始まりに、📷のタイルを番号順に並べ、自分の作品へ目を戻そう。",
+        "ko-KR": "전시 시작 전 📷 조각을 번호순으로 맞추고 자신의 작품에 시선을 돌려보자.",
+        "es-ES": "Antes de la exposición, ordena las fichas 📷 y vuelve la atención a tu trabajo."
+      },
+      "placement": "gallery exhibition preparation before owner interaction",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    },
+    {
+      "chapter": 16,
+      "scene": 1,
+      "id": "g_whack_flash",
+      "invitation": {
+        "zh-CN": "展览的拍摄准备还没结束。可先练习点📸、避开🙂，再把注意力交还作品。",
+        "zh-TW": "展覽的拍攝準備還沒結束。可先練習點📸、避開🙂，再把注意力交還作品。",
+        "en-US": "There is still photography preparation for the exhibition. Try tapping 📸 and avoiding 🙂, then return your attention to the work.",
+        "ja-JP": "展示の撮影準備はまだある。📸を押し🙂を避ける練習をしてから、作品へ目を戻してもいい。",
+        "ko-KR": "전시 촬영 준비가 남아 있다. 📸를 누르고 🙂를 피하는 연습 뒤 작품에 다시 집중해도 된다.",
+        "es-ES": "Aún queda preparar las fotos de la exposición. Practica pulsar 📸 y evitar 🙂, y vuelve después a las obras."
+      },
+      "placement": "gallery photography preparation after owner interaction; before the letter and final emotional decisions",
+      "win": "continue; only actual mini-game result flag",
+      "lose": "continue; no loss of story evidence or relationship permission",
+      "skip": "continue; neutral skip flag; no relationship consent",
+      "grantsEvidence": false,
+      "changesRelationshipConsent": false
+    }
+  ],
+  "notPerformed": [
+    "Parent-owned integration rebuild, browser playthrough and release acceptance; no deployment performed by this agent."
+  ],
+  "remainingContentGaps": [],
+  "biblesAdded": [
+    "locales/ja-JP/story_bible.md",
+    "locales/ko-KR/story_bible.md",
+    "locales/es-ES/story_bible.md"
+  ],
+  "bibleCoverage": {
+    "chapters": 16,
+    "scenes": 48,
+    "branches": 48,
+    "endings": 3,
+    "separatedOpeningAndProductionSecrets": true,
+    "allSixPresent": true
+  },
+  "investigativeTaskCoverage": [
+    {
+      "chapter": 3,
+      "scene": 1,
+      "master": "眼前的任务是比较命令上两次印章的墨色。"
+    },
+    {
+      "chapter": 4,
+      "scene": 2,
+      "master": "眼前的任务是还原戒指背后的童年暗号。"
+    },
+    {
+      "chapter": 5,
+      "scene": 3,
+      "master": "眼前的任务是核对钥匙扣的入库时间。"
+    },
+    {
+      "chapter": 7,
+      "scene": 3,
+      "master": "眼前的任务是比对哥哥的新旧语音。"
+    },
+    {
+      "chapter": 12,
+      "scene": 1,
+      "master": "眼前的任务是核对账本与交易日期。"
+    },
+    {
+      "chapter": 14,
+      "scene": 2,
+      "master": "眼前的任务是完成异地证据备份。"
+    }
+  ],
+  "verification": {
+    "static": "passed",
+    "identicalLineSignatures": true,
+    "perChapterGames": 2,
+    "allLibraryIdsExist": true,
+    "allInvitationsMatchReport": true,
+    "nativeBibleScenes": 48,
+    "sixSpecificInvestigationTasksRestored": true,
+    "parserDirectiveGrammar": "passed against mk94 pattern; runtime execution parent-owned",
+    "allSixFinalScriptSignaturesAndHashes": "passed",
+    "reportGameLocationsAndInvitationsMatchFinalScript": true,
+    "allFiveLocalizedBibleSceneCoverage": 48
+  },
+  "biblesUpgraded": [
+    "locales/en-US/story_bible.md",
+    "locales/zh-TW/story_bible.md"
+  ]
+}

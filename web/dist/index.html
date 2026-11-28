@@ -1,14 +1,129 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="robots" content="noindex">
   <title>MIRU Studio</title>
-  <script type="module" crossorigin src="/web/dist/assets/index-DHpFT-aX.js"></script>
+  <script type="module" crossorigin src="/web/dist/assets/index-C3ssUcHQ.js"></script>
   <link rel="stylesheet" crossorigin href="/web/dist/assets/index-8QhlwEv5.css">
 </head>
 <body>
   <div id="root"></div>
+  <!-- 2026-11-28 剧本工具界面也显示成繁体（和 App 主界面同一套转换，源码见 source/src/app163_hant.js）。
+       输入框 / 剧本编辑框里你自己写的内容不会被改。 -->
+  <script>
+/* ===== app163 · 2026-11-28 中文界面全部显示为繁体 =====
+   需求：目前所有中文（界面文字、剧本正文、AI 回复、卡片标题简介……）全部换成繁体。
+   做法：不改任何数据和源码里的简体字，只在「显示」这一层转换 —— 语言是中文时，
+   按需加载 /opencc-cn2t.js（OpenCC 开源简繁转换词库，台湾字形 cn → tw，约 450KB 压缩后，浏览器会缓存），
+   把页面上已有的文字整页转一遍，再用 MutationObserver 盯住之后新出现 / 变化的文字（新页面、AI 逐字输出等），
+   在浏览器画出来之前就转成繁体。
+   不转：用户正在输入的输入框 / 文本框 / 可编辑区域里的内容、<script> / <style>、带 data-no-hant 的元素。
+   转：普通文字、placeholder、title、aria-label、alt、按钮 value、网页标题。
+   英 / 日 / 韩 / 西语界面完全不受影响（不加载词库）。 */
+(function () {
+  "use strict";
+  const SRC = "/opencc-cn2t.js";
+  const SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, NOSCRIPT: 1, CODE: 1, PRE: 1 };
+  const ATTRS = ["placeholder", "title", "aria-label", "alt"];
+  const HAN = /[\u4e00-\u9fff]/;
+  let conv = null, loading = false, obs = null, on = false, busy = false;
+  /* 2026-11-28 用户反馈「很多地方还不是繁体」：字形已经是繁体，但用词还是大陆说法（登錄 / 郵箱 / 充值 / 視頻…）。
+     在字形转换之后再换一层台湾常用说法。只收界面里常见、放进剧情正文也不会改变意思的词；
+     「文件 / 程序 / 質量 / 支持」这类在故事里另有意思的词不动。长词在前（先匹配「視頻通話」再匹配「視頻」）。 */
+  const TERMS = [
+    ["退出登錄", "登出"], ["註銷賬號", "刪除帳號"], ["登錄方式", "登入方式"], ["電子郵箱", "電子信箱"], ["視頻通話", "視訊通話"],
+    ["人工智能", "人工智慧"], ["充值記錄", "儲值紀錄"], ["互聯網", "網際網路"], ["服務器", "伺服器"], ["二維碼", "QR Code"],
+    ["登錄", "登入"], ["郵箱", "信箱"], ["賬號", "帳號"], ["賬戶", "帳戶"], ["賬單", "帳單"], ["充值", "儲值"], ["視頻", "影片"],
+    ["軟件", "軟體"], ["硬件", "硬體"], ["默認", "預設"], ["加載", "載入"], ["短信", "簡訊"],
+    ["鏈接", "連結"], ["屏幕", "螢幕"], ["搜索", "搜尋"], ["信息", "訊息"], ["反饋", "回饋"], ["網絡", "網路"],
+    ["設備", "裝置"], ["打印", "列印"], ["音頻", "音訊"], ["昵稱", "暱稱"], ["博客", "部落格"],
+    ["截屏", "截圖"], ["粘貼", "貼上"], ["圖標", "圖示"], ["界面", "介面"]
+  ];
+  const TMAP = new Map(TERMS);
+  const TRX = new RegExp(TERMS.map(p => p[0]).sort((x, y) => y.length - x.length).join("|"), "g");
+  /* 这几个词在剧情里另有意思（好消息、保存體力、菜單…），只在短文字（按钮、标签，12 个字以内）里才换 */
+  const UI = new Map([["消息", "訊息"], ["保存", "儲存"], ["在線", "線上"], ["設置", "設定"], ["激活", "啟用"], ["撤銷", "復原"], ["菜單", "選單"]]);
+  const UIRX = /消息|保存|在線|設置|激活|撤銷|菜單/g;
+  const terms = s => { s = s.replace(TRX, m => TMAP.get(m) || m); return s.trim().length <= 12 ? s.replace(UIRX, m => UI.get(m) || m) : s; };
+
+  const isZh = () => true; /* 剧本工具只有中文界面：一直转成繁体 */
+
+  function skipEl(el) {
+    for (let e = el; e && e.nodeType === 1; e = e.parentElement) {
+      if (SKIP[e.tagName] || e.isContentEditable || (e.dataset && e.dataset.noHant != null)) return true;
+    }
+    return false;
+  }
+  function cvText(n) {
+    const v = n.nodeValue;
+    if (!v || !HAN.test(v)) return;
+    const p = n.parentElement;
+    if (p && skipEl(p)) return;
+    const w = conv(v);
+    if (w !== v) n.nodeValue = w;
+  }
+  function cvAttrs(el) {
+    if (el.nodeType !== 1 || skipEl(el.tagName === "INPUT" || el.tagName === "TEXTAREA" ? el.parentElement : el)) return;
+    for (const a of ATTRS) {
+      const v = el.getAttribute && el.getAttribute(a);
+      if (v && HAN.test(v)) { const w = conv(v); if (w !== v) el.setAttribute(a, w); }
+    }
+    if (el.tagName === "INPUT" && /^(button|submit|reset)$/i.test(el.type) && HAN.test(el.value)) el.value = conv(el.value);
+  }
+  function walk(root) {
+    if (!root) return;
+    if (root.nodeType === 3) { cvText(root); return; }
+    if (root.nodeType !== 1 && root.nodeType !== 9 && root.nodeType !== 11) return;
+    if (root.nodeType === 1) { if (SKIP[root.tagName] && root.tagName !== "INPUT" && root.tagName !== "TEXTAREA") return; cvAttrs(root); }
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT, null);
+    let n;
+    while ((n = tw.nextNode())) { if (n.nodeType === 3) cvText(n); else cvAttrs(n); }
+  }
+  function title() { const t = document.title; if (t && HAN.test(t)) { const w = conv(t); if (w !== t) document.title = w; } }
+
+  function start() {
+    if (on || !conv) return;
+    on = true;
+    busy = true; try { walk(document.body); title(); } finally { busy = false; }
+    obs = new MutationObserver(list => {
+      if (!on || busy) return;
+      busy = true;
+      try {
+        for (const m of list) {
+          if (m.type === "characterData") cvText(m.target);
+          else if (m.type === "attributes") cvAttrs(m.target);
+          else for (const n of m.addedNodes) walk(n);
+        }
+        title();
+      } finally { busy = false; }
+    });
+    obs.observe(document.documentElement, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ATTRS });
+  }
+  function stop() { on = false; if (obs) { obs.disconnect(); obs = null; } }
+
+  function load() {
+    if (conv || loading) return;
+    loading = true;
+    const s = document.createElement("script");
+    s.src = SRC; s.async = true;
+    s.onload = () => {
+      try { const cc = window.OpenCC.Converter({ from: "cn", to: "tw" }); conv = x => terms(cc(x)); window.toHant = conv; } catch (e) { console.warn("[hant]", e); }
+      loading = false;
+      if (isZh()) start();
+    };
+    s.onerror = () => { loading = false; };
+    document.head.appendChild(s);
+  }
+
+  /* 语言随时可能切换：每秒看一次，切到中文就开始转，切走就停（已转的文字在切语言时页面会重画） */
+  function tick() { if (isZh()) { if (conv) start(); else load(); } else if (on) stop(); }
+  tick();
+  setInterval(tick, 1000);
+  /* 首屏尽早开始：词库提前下载（只在中文时） */
+  try { if (isZh()) load(); } catch (_) {}
+})();
+  </script>
 </body>
 </html>
