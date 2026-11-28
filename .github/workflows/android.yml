@@ -43,17 +43,21 @@ jobs:
           APPLOVIN_SDK_KEY: ${{ secrets.APPLOVIN_SDK_KEY }}
           APPLOVIN_REWARDED_ID: ${{ secrets.APPLOVIN_REWARDED_ID }}
           APPLOVIN_APPOPEN_ID: ${{ secrets.APPLOVIN_APPOPEN_ID }}
-        run: gradle :app:bundleRelease :app:assembleRelease --stacktrace
+          APTOIDE_PUBLIC_KEY: ${{ secrets.APTOIDE_PUBLIC_KEY }}
+        # 2026-11-28 两个渠道包：play（.aab + miru.apk，上传 Google Play）和 aptoide（miru-aptoide.apk，上传 Aptoide / APKPure 等）
+        run: gradle :app:bundlePlayRelease :app:assemblePlayRelease :app:assembleAptoideRelease --stacktrace
       - uses: actions/upload-artifact@v5
         with:
           name: miru-release-aab
-          path: android/app/build/outputs/bundle/release/app-release.aab
+          path: android/app/build/outputs/bundle/playRelease/app-play-release.aab
       # 同一个 .aab 再推到 builds 分支（只放这一个文件，强制覆盖），这样能用固定地址直接取到文件上传 Play Console，不用解压 artifact
       - name: Publish AAB to builds branch
         run: |
-          mkdir -p "$RUNNER_TEMP/out" && cp android/app/build/outputs/bundle/release/app-release.aab "$RUNNER_TEMP/out/"
+          mkdir -p "$RUNNER_TEMP/out" && cp android/app/build/outputs/bundle/playRelease/app-play-release.aab "$RUNNER_TEMP/out/app-release.aab"
           # 2026-11-26 同时出一个直接安装用的 APK（Play 上线前给用户侧载；和 .aab 同一个签名）
-          APK=$(ls android/app/build/outputs/apk/release/*.apk 2>/dev/null | grep -v unsigned | head -1); [ -n "$APK" ] && cp "$APK" "$RUNNER_TEMP/out/miru.apk" || echo "::warning::没有找到签名的 APK"
+          APK=$(ls android/app/build/outputs/apk/play/release/*.apk 2>/dev/null | grep -v unsigned | head -1); [ -n "$APK" ] && cp "$APK" "$RUNNER_TEMP/out/miru.apk" || echo "::warning::没有找到签名的 APK"
+          # Aptoide 渠道包（用 Aptoide 结算，上传 Aptoide；同一个签名）
+          APK2=$(ls android/app/build/outputs/apk/aptoide/release/*.apk 2>/dev/null | grep -v unsigned | head -1); [ -n "$APK2" ] && cp "$APK2" "$RUNNER_TEMP/out/miru-aptoide.apk" || echo "::warning::没有找到 Aptoide 渠道包"
           echo "versionCode ${{ github.run_number }}" > "$RUNNER_TEMP/out/VERSION.txt"
           cd "$RUNNER_TEMP/out" && git init -q && git checkout -q -b builds && git add . \
             && git -c user.name='github-actions[bot]' -c user.email='github-actions[bot]@users.noreply.github.com' commit -qm "aab build ${{ github.run_number }}" \
