@@ -1,0 +1,38 @@
+/* ===== app164 · 2026-11-28 免费额度调整（老板定）=====
+   ① 文字聊天：免费 10 句（原来是 24 个「AI 回合」免费体验，一个账号一次性），用完后要付费：
+      购买 AI 回合（💎，价格见 MIRU_TUNE.pay.topupUnits / topupCost）或开通 MIRU+。
+      老用户手里剩余的免费回合超过 10 的，一次性压到 10；已经花钻石买的回合、会员回合不动。
+   ② AI 生图：非会员不再有「每天 1 张免费」，每张都按 PRICES.img 收 💎。MIRU+ 会员每天的额度不变（那是付费权益）。
+   说明：回合数和生图次数目前记在用户自己的存档里（和原来一样），服务器没有另外计数。 */
+(function () {
+  "use strict";
+  const FREE = 10;
+  if (typeof uState === "function" && typeof S !== "undefined") {
+    const U0 = uState;
+    uState = function () {
+      if (!S.units) S.units = { trial: FREE, pack: 0, pm: "", pl: 0, f10: 1 };
+      const u = U0.apply(this, arguments);
+      if (!u.f10) { if (u.trial > FREE) u.trial = FREE; u.f10 = 1; try { save(); } catch (_) {} }
+      return u;
+    };
+    try { uState(); if (typeof unitChip === "function") unitChip(); } catch (_) {}
+  }
+  const noFreeImg = () => {
+    try {
+      if (typeof S === "undefined" || S.plus) return;
+      const d = typeof today === "function" ? today() : new Date().toISOString().slice(0, 10);
+      const n = S.imgDay && S.imgDay.d === d ? (S.imgDay.n || 0) : 0;
+      S.imgDay = { d: d, n: Math.max(1, n) };
+    } catch (_) {}
+  };
+  if (typeof aiGenerate === "function") { const A0 = aiGenerate; aiGenerate = function () { noFreeImg(); return A0.apply(this, arguments); }; }
+  if (typeof rxGenCover === "function") { const R0 = rxGenCover; rxGenCover = function () { noFreeImg(); return R0.apply(this, arguments); }; }
+  try {
+    const p = (typeof PRICES !== "undefined" && PRICES.img) || 2;
+    if (typeof I18N !== "undefined") {
+      Object.assign(I18N.zh, { "pay.imgFree": "AI 生图每张 💎 " + p + "——点 ✨ 生成。", "pay.why.img": "AI 生图每张 💎 " + p, "u.trial": "免费 10 句" });
+      Object.assign(I18N.en, { "pay.imgFree": "AI images are 💎 " + p + " each — tap ✨ to make one.", "pay.why.img": "AI images are 💎 " + p + " each", "u.trial": "10 free messages" });
+    }
+  } catch (_) {}
+  window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
+})();
