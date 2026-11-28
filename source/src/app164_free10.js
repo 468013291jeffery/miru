@@ -54,6 +54,8 @@
    改成 💎15：按标价约 ¥21（约 4 倍），按最大礼包折后价再扣 15% 商店抽成约 ¥14（约 2.7 倍）。生成失败照旧全额退回。 */
 (function () {
   "use strict";
-  try { if (typeof PRICES === "object") PRICES.video = 15; } catch (_) {}
-  try { if (typeof VID === "object") VID.price = 15; } catch (_) {}
+  /* 2026-11-28 更正：老板确认视频是 10 秒一段（成本约 ¥7）。15 钻按标价只有 3 倍、礼包折后再扣商店抽成只有约 2 倍，
+     所以改成 💎25：按标价约 ¥35（约 5 倍），折后扣抽成约 ¥23（约 3.3 倍），落在「至少 3–5 倍」里。 */
+  try { if (typeof PRICES === "object") PRICES.video = 25; } catch (_) {}
+  try { if (typeof VID === "object") VID.price = 25; } catch (_) {}
 })();
