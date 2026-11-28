@@ -24,7 +24,7 @@ public final class Ads {
         synchronized (waiting) { waiting.add(done); if (starting) return; starting = true; }
         UnityAds.initialize(ctx.getApplicationContext(), BuildConfig.UNITY_GAME_ID, BuildConfig.UNITY_TEST, new IUnityAdsInitializationListener() {
             @Override public void onInitializationComplete() { flush(); }
-            @Override public void onInitializationFailed(UnityAds.UnityAdsInitializationError e, String msg) { flush(); }
+            @Override public void onInitializationFailed(UnityAds.UnityAdsInitializationError e, String msg) { try { CrashLog.ad("init_fail", String.valueOf(e), msg); } catch (Throwable ignore) {} flush(); }
         });
     }
 

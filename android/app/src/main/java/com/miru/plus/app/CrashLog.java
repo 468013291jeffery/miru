@@ -70,6 +70,19 @@ final class CrashLog {
         }, "miru-shell-log").start();
     }
 
+    /** 2026-11-28：广告诊断（Unity 激励视频加载 / 播放失败的原因），只记错误码和说明，不含用户内容。 */
+    static void ad(String what, String code, String msg) {
+        new Thread(() -> {
+            try {
+                JSONObject p = props(null, null, 0);
+                p.put("what", what);
+                p.put("code", code == null ? "" : code);
+                p.put("msg", msg == null ? "" : (msg.length() > 300 ? msg.substring(0, 300) : msg));
+                post("android_ad", p);
+            } catch (Throwable ignore) {}
+        }, "miru-ad-log").start();
+    }
+
     private static JSONObject props(String trace, String thread, long at) {
         JSONObject p = new JSONObject();
         try {
