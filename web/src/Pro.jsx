@@ -585,6 +585,8 @@ async function translateScript(script, cast, LG, onProg) {
 
 function Publish({ p, upd, qa, script }) {
   const [busy, setBusy] = useState(''), [prog, setProg] = useState(0), [res, setRes] = useState(null);
+  /* 2026-11-28 创作者协议：发布前必须勾选同意（协议全文 /creator-terms.html，版本 2）；同意记录跟作品一起上传 pack.meta.original */
+  const [agree, setAgree] = useState(p.agreed === 2), [terms, setTerms] = useState(false);
   const price = 1;
   const langs = [...new Set(['en'].concat(p.langs || []))].filter(l => l !== p.lang);
   const toggle = l => upd(x => { const s = new Set(x.langs || []); s.has(l) ? s.delete(l) : s.add(l); x.langs = [...s]; return x; });
@@ -596,11 +598,12 @@ function Publish({ p, upd, qa, script }) {
   };
   const publish = async () => {
     if (!qa.ok) return toast('还有 ' + qa.err.length + ' 个必须修的问题，先到「④ 检查」里改');
+    if (!agree) return toast('请先勾选同意《MIRU 创作者协议》');
     const tk = token(); if (!tk) return toast('请先在 MIRU 登录');
     const stale = langs.filter(l => !(p.tr && p.tr[l]) || p.tr[l].src !== script.length);
     if (stale.length && !window.__proForce) { window.__proForce = 1; return toast('这些语言版本还没翻译或剧本改过了：' + stale.map(l => LN[l]).join('、') + '。再点一次「发布」就先不带这些版本发布'); }
     window.__proForce = 0; setBusy('pub');
-    const pack = { script, assets: Object.assign({}, p.assets, p.cover ? { cover: p.cover } : {}), characters: p.cast.filter(c => c.name).map((c, i) => ({ key: (c.key && /^[a-z0-9_]+$/.test(c.key) ? c.key : 'c' + (i + 1)), name: c.name, gender: c.gender, age: Number(c.age) || 21, identity: c.identity, looks: c.looks, personality: c.personality, speech: c.speech, boundary: c.boundary, openingLine: c.openingLine, sellingPoint: c.sellingPoint, portrait: p.assets['char_' + (c.key || c.name)] || '' })), games: p.games || [], opening_video: p.assets.opening_video || undefined, ver: Date.now(), meta: { langs: [p.lang].concat(langs.filter(l => p.tr && p.tr[l] && p.tr[l].src === script.length)), premise: p.premise, you: p.you, studio: 'pro' } };
+    const pack = { script, assets: Object.assign({}, p.assets, p.cover ? { cover: p.cover } : {}), characters: p.cast.filter(c => c.name).map((c, i) => ({ key: (c.key && /^[a-z0-9_]+$/.test(c.key) ? c.key : 'c' + (i + 1)), name: c.name, gender: c.gender, age: Number(c.age) || 21, identity: c.identity, looks: c.looks, personality: c.personality, speech: c.speech, boundary: c.boundary, openingLine: c.openingLine, sellingPoint: c.sellingPoint, portrait: p.assets['char_' + (c.key || c.name)] || '' })), games: p.games || [], opening_video: p.assets.opening_video || undefined, ver: Date.now(), meta: { langs: [p.lang].concat(langs.filter(l => p.tr && p.tr[l] && p.tr[l].src === script.length)), premise: p.premise, you: p.you, studio: 'pro', original: { v: 2, at: new Date().toISOString() } } };
     langs.forEach(l => { if (p.tr && p.tr[l] && p.tr[l].src === script.length) pack['script_' + l] = p.tr[l].script; });
     let author = ''; try { author = (P && P.persona && P.persona() || {}).name || ''; } catch (_) {}
     try {
@@ -626,6 +629,21 @@ function Publish({ p, upd, qa, script }) {
         <li className={p.cast.some(c => c.name) ? 'g' : 'y'}>{p.cast.filter(c => c.name).length} 张人物卡</li>
         <li className="g">{(p.games || []).length} 个定制小游戏</li>
       </ul>
+      <div style={{ margin: '14px 0 12px', padding: '12px 14px', border: '1px solid rgba(255,255,255,.14)', borderRadius: 12, fontSize: 13.5, lineHeight: 1.7 }}>
+        <b>创作者协议与原创声明</b>
+        <ul style={{ margin: '6px 0 8px', paddingLeft: 18 }}>
+          <li>作品的著作权归你；你授权 MIRU 在平台内展示、分发并用于宣传（非独占，你可以随时删除作品）。</li>
+          <li>你保证作品是你原创或已获得合法授权，没有抄袭、搬运，不侵犯他人权利；如有侵权由你本人承担责任，MIRU 有权下架。</li>
+          <li>所有角色必须是虚构的成年人，不含露骨色情等违规内容。</li>
+        </ul>
+        <label style={{ display: 'flex', gap: 8, alignItems: 'flex-start', cursor: 'pointer' }}><input type="checkbox" checked={agree} style={{ marginTop: 4 }} onChange={e => { const v = e.target.checked; setAgree(v); upd(x => { x.agreed = v ? 2 : 0; return x; }); }} /><span>我已阅读并同意 <button type="button" onClick={e => { e.preventDefault(); setTerms(true); }} style={{ background: 'none', border: 0, padding: 0, color: '#F0B77E', font: 'inherit', textDecoration: 'underline', cursor: 'pointer' }}>《MIRU 创作者协议》</button></span></label>
+      </div>
+      {terms && <div style={{ position: 'fixed', inset: 0, zIndex: 99998, background: 'rgba(8,6,12,.8)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 12 }} onClick={() => setTerms(false)}>
+        <div style={{ width: '100%', maxWidth: 720, height: '88vh', background: '#0C0B10', borderRadius: 14, overflow: 'hidden', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', padding: 8 }}><button className="pbtn sm" onClick={() => setTerms(false)}>✕ 关闭</button></div>
+          <iframe title="creator-terms" src="/creator-terms.html#zh" style={{ flex: 1, border: 0, width: '100%' }} />
+        </div>
+      </div>}
       <button className="pbtn primary big" disabled={busy === 'pub'} onClick={publish}>{busy === 'pub' ? '发布中…' : p.cloudId ? '🌐 更新已发布的作品' : '🌐 发布到 MIRU'}</button>
       <div className="prow pwr" style={{ marginTop: 12 }}>
         <button className="pbtn" onClick={() => { const b = new Blob([script], { type: 'text/markdown' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = (p.title || 'script') + '.md'; a.click(); }}>⇩ 下载剧本 .md</button>
