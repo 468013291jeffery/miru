@@ -1,8 +1,8 @@
 /* ===== app164 · 2026-11-28 免费额度调整（老板定）=====
    ① 文字聊天：免费 10 句（原来是 24 个「AI 回合」免费体验，一个账号一次性），用完后要付费：
-      购买 AI 回合（💎，价格见 MIRU_TUNE.pay.topupUnits / topupCost）或开通 MIRU+。
+      购买 AI 回合（💎，价格见 MIRU_TUNE.pay.topupUnits / topupCost）。不再卖 MIRU+ 会员。
       老用户手里剩余的免费回合超过 10 的，一次性压到 10；已经花钻石买的回合、会员回合不动。
-   ② AI 生图：非会员不再有「每天 1 张免费」，每张都按 PRICES.img 收 💎。MIRU+ 会员每天的额度不变（那是付费权益）。
+   ② AI 生图：非会员不再有「每天 1 张免费」，每张都按 PRICES.img 收 💎。（不再卖会员；历史上已是会员的账号不受影响。）
    说明：回合数和生图次数目前记在用户自己的存档里（和原来一样），服务器没有另外计数。 */
 (function () {
   "use strict";
@@ -33,6 +33,13 @@
       Object.assign(I18N.zh, { "pay.imgFree": "AI 生图每张 💎 " + p + "——点 ✨ 生成。", "pay.why.img": "AI 生图每张 💎 " + p, "u.trial": "免费 10 句" });
       Object.assign(I18N.en, { "pay.imgFree": "AI images are 💎 " + p + " each — tap ✨ to make one.", "pay.why.img": "AI images are 💎 " + p + " each", "u.trial": "10 free messages" });
     }
+  } catch (_) {}
+  /* 2026-11-28 老板定：不卖会员（MIRU+）了，额度用完就再买。购买面板里的会员入口之前已经隐藏（app84），
+     这里把剩下的两处也去掉：「我的」页里的 MIRU+ 卡片、AI 回合面板里的「本月会员回合」那一格。 */
+  try {
+    const st = document.createElement("style");
+    st.textContent = '.card:has([data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
+    document.head.appendChild(st);
   } catch (_) {}
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
 })();
