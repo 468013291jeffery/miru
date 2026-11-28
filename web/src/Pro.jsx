@@ -13,8 +13,8 @@ const KEY = 'miru_pro_v1';
 const LN = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
 const NAMES = { en: 'English (American)', ja: 'Japanese', ko: 'Korean', es: 'Spanish (Latin American)', zh: 'Simplified Chinese' };
 /* 2026-11-28 老板定：专业版所有 AI 收费先统一按 💎1（写一章、角色卡、审稿、小游戏、大纲 / 选题、识别编剧稿、翻译每种语言、AI 生图每张）。 */
-/* 2026-11-28 fix：AI 审稿后「AI 帮我修这一处」每处 💎1；video：AI 生成一段约 5 秒的视频 💎15（成本约 ¥1/秒，老板定按 3–5 倍收） */
-const PRICE = { chapter: 1, card: 1, review: 1, games: 1, outline: 1, fix: 1, video: 15 };
+/* 2026-11-28 fix：AI 审稿后「AI 帮我修这一处」每处 💎1；video：AI 生成一段约 10 秒的视频 💎25（老板确认是 10 秒一段、成本约 ¥7，按 3–5 倍收） */
+const PRICE = { chapter: 1, card: 1, review: 1, games: 1, outline: 1, fix: 1, video: 25 };
 const uid = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{"projects":[]}'); } catch (_) { return { projects: [] }; } };
 const persist = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
@@ -373,12 +373,12 @@ function Assets({ p, upd, script }) {
     try { P.spend(imgPrice, 'img'); } catch (_) {}
     return true;
   };
-  /* 2026-11-28 视频位置也可以 AI 生成：把一张图（优先封面）变成约 5 秒的动态画面（和主站「让画面动起来」同一个接口），💎15，成功才扣。 */
+  /* 2026-11-28 视频位置也可以 AI 生成：把一张图（优先封面）变成约 10 秒的动态画面（和主站「让画面动起来」同一个接口），💎25，成功才扣。 */
   const [vprog, setVprog] = useState('');
   const genVideo = async (slot, note) => {
     const src = p.cover || p.assets[(S.cg[0] || {}).slot] || p.assets[(S.bg[0] || {}).slot] || Object.keys(p.assets).filter(k => /^char_/.test(k)).map(k => p.assets[k])[0];
     if (!src) return toast('AI 视频是把一张图变成会动的画面：先上传或生成封面（或任意一张插图）');
-    if (!window.confirm('AI 会用' + (p.cover ? '封面' : '已有的一张图') + '生成一段约 5 秒的视频，💎' + PRICE.video + '，生成成功才扣，大约要 1–2 分钟。继续？')) return;
+    if (!window.confirm('AI 会用' + (p.cover ? '封面' : '已有的一张图') + '生成一段约 10 秒的视频，💎' + PRICE.video + '，生成成功才扣，大约要 1–2 分钟。继续？')) return;
     if (!pay(PRICE.video, 'pro_video')) return; setBusy(slot); setVprog('准备中…');
     try {
       const ep = (P && typeof P.MIRU_TTS === 'string' && P.MIRU_TTS) || '/api/tts';
@@ -440,7 +440,7 @@ function Assets({ p, upd, script }) {
       {p.cast.filter(c => c.name).map(c => row('char_' + (c.key || c.name), c.name + ' 的立绘', 'char'))}
       <h3>背景（⟦BG⟧ · {S.bg.length}）</h3>{S.bg.map(s => row(s.slot, s.note, 'bg'))}
       <h3>心动插图（⟦CG⟧ · {S.cg.length}）</h3>{S.cg.map(s => row(s.slot, s.note, 'cg'))}
-      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场视频（可选）：上传自己的（最长 1 分钟，前 10 秒免费，之后每 10 秒 💎1），或让 AI 用封面生成一段约 5 秒的', 'video')}
+      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场视频（可选）：上传自己的（最长 1 分钟，前 10 秒免费，之后每 10 秒 💎1），或让 AI 用封面生成一段约 10 秒的', 'video')}
       {S.bgm.length > 0 && <><h3>自定义音乐（⟦BGM⟧ · {S.bgm.length}）</h3><p className="dim">MIRU 曲库里已有的提示词（tense / romantic / night…）不用上传。</p>{S.bgm.map(s => row('bgm_' + s.slot, s.slot, 'bgm'))}</>}
     </div>
   );
