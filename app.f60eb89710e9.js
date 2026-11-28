@@ -32433,3 +32433,13 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
 })();
 
+/* ===== 2026-11-28 · 视频定价 video15 =====
+   老板：视频生成成本大约 ¥1 / 秒，对用户至少按成本的 3–5 倍收。
+   现在的「让画面动起来」是 5 秒 720p，成本约 ¥5；原价 💎5（按 $0.99 = 5 钻约 ¥7，大礼包折后更低，再扣掉商店抽成基本不赚）。
+   改成 💎15：按标价约 ¥21（约 4 倍），按最大礼包折后价再扣 15% 商店抽成约 ¥14（约 2.7 倍）。生成失败照旧全额退回。 */
+(function () {
+  "use strict";
+  try { if (typeof PRICES === "object") PRICES.video = 15; } catch (_) {}
+  try { if (typeof VID === "object") VID.price = 15; } catch (_) {}
+})();
+
