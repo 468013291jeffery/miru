@@ -18,7 +18,9 @@ const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{"pro
 const persist = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
 const token = () => { try { return (JSON.parse(localStorage.getItem('miru_v2') || '{}').cloud || {}).token || ''; } catch (_) { return ''; } };
 const gems = () => { try { return P ? P.S.keys : null; } catch (_) { return null; } };
-const toast = s => { try { if (P && P.toast) return P.toast(s); } catch (_) {} const t = document.createElement('div'); t.className = 'ptoast'; t.textContent = s; document.body.appendChild(t); setTimeout(() => t.remove(), 2600); };
+/* 2026-11-28 提示以前交给外层 App 显示（被剧本工具这一层盖住，看不见），或者是一个没有样式的 div（落在页面最底下）——
+   用户点了按钮以为「没反应」。现在一律在剧本工具自己这一层的屏幕中下方显示。 */
+const toast = s => { const t = document.createElement('div'); t.className = 'ptoast'; t.textContent = s; t.style.cssText = 'position:fixed;left:50%;bottom:12%;transform:translateX(-50%);z-index:99999;max-width:86%;padding:12px 18px;border-radius:12px;background:rgba(30,24,38,.96);color:#fff;font-size:15px;line-height:1.5;box-shadow:0 8px 30px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.14);text-align:center'; document.body.appendChild(t); setTimeout(() => t.remove(), 3200); };
 function pay(n, why) { if (!n) return true; if (!P) { toast('请在 MIRU 里打开（创作中心 → 专业模式）才能用 AI'); return false; } try { return !!P.spend(n, why); } catch (_) { return false; } }
 async function ai(prompt, maxTokens) { if (!P || typeof P.ask !== 'function') throw new Error('no-ai'); return P.ask(prompt, { maxTokens: maxTokens || 4000, timeout: 120000 }); }
 const RULES = () => { try { return (P && P.MIRU_RULES && P.MIRU_RULES.gen) || ''; } catch (_) { return ''; } };
@@ -60,7 +62,9 @@ function List({ db, setDb, open }) {
   const add = p => { setDb(d => ({ ...d, projects: [p, ...d.projects] })); open(p.id); };
   const fromGuide = () => {
     let g = null; try { g = JSON.parse(localStorage.getItem('miru.creator.v2.project') || 'null'); } catch (_) {}
-    if (!g) return toast('没有找到 AI 引导创作里的作品');
+    /* 当前作品没有时，从「我的作品」里取最近改过的一部 */
+    if (!g || !(g.title || g.premise || g.hook)) { try { const shelf = JSON.parse(localStorage.getItem('miru.creator.v2.works') || '{}'); const list = Object.values(shelf).map(w => w && w.project).filter(x => x && (x.title || x.premise || x.hook)).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0)); if (list[0]) g = list[0]; } catch (_) {} }
+    if (!g || !(g.title || g.premise || g.hook)) return toast('还没有可以带入的作品：请先在「创作中心 → AI 引导」里写一部，再回来点这里');
     const p = blank(); p.title = g.title || ''; p.hook = g.hook || ''; p.premise = [g.premise, g.world, g.conflict].filter(Boolean).join('\n');
     const lead = g.lead || {}; p.cast[0] = { ...p.cast[0], name: lead.name || '', identity: lead.role || lead.identity || '', personality: lead.personality || lead.desc || '' };
     (Array.isArray(g.support) ? g.support : []).slice(0, 5).forEach((s, i) => p.cast.push({ ...blank().cast[0], key: 'c' + (i + 2), name: s.name || '', identity: s.role || '', personality: s.personality || s.desc || '' }));
