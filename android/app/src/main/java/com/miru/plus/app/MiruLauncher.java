@@ -44,8 +44,9 @@ public class MiruLauncher extends LauncherActivity {
         } catch (Throwable ignore) {}
         boolean cn = false;
         try { cn = inMainlandChina(); } catch (Throwable ignore) {}
-        useWebView = cn || !(mode == TwaProviderPicker.LaunchMode.TRUSTED_WEB_ACTIVITY && isChrome(provider));
-        try { CrashLog.shell(useWebView ? (cn ? "webview_cn" : "webview") : "twa", provider, mode); } catch (Throwable ignore) {}
+        /* 2026-11-28 撤回「大陆手机改用 WebView」：WebView 里不能用 Google 登录，代价不接受（用户本人也不在大陆）。cn 只记录，不再改变打开方式。 */
+        useWebView = !(mode == TwaProviderPicker.LaunchMode.TRUSTED_WEB_ACTIVITY && isChrome(provider));
+        try { CrashLog.shell((useWebView ? "webview" : "twa") + (cn ? "_cn" : ""), provider, mode); } catch (Throwable ignore) {}
         super.onCreate(savedInstanceState);
     }
 

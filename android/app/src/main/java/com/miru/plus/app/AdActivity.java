@@ -26,7 +26,7 @@ public class AdActivity extends Activity implements IUnityAdsLoadListener, IUnit
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         TextView t = new TextView(this);
-        t.setText("广告加载中…");
+        t.setText("廣告載入中…");
         t.setTextColor(Color.WHITE);
         t.setBackgroundColor(Color.BLACK);
         t.setGravity(Gravity.CENTER);
