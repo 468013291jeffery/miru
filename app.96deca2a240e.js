@@ -32876,6 +32876,22 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   window.__booth166 = 1;
 })();
 
+/* 2026-11-28 查出拍贴机 AI 合照（以及所有「同一张脸」改图）一直失败的原因：
+   参考立绘先被缩到最长边 560px，竖版立绘（比如 941×1672）短边只剩 315px，
+   阿里云 wan2.5-i2i 要求图片宽高都不小于 384px，直接报「Error validating image resolution」，所以一张都生成不出来。
+   现在：最长边缩到 1024；短边不足 512 时放大到 512（最长边不超过 1600）。 */
+(function () {
+  "use strict";
+  if (typeof qimgShrink !== "function") return;
+  qimgShrink = function (src, max) {
+    return new Promise(ok => {
+      const im = new Image(); im.crossOrigin = "anonymous";
+      im.onload = () => { try { const W = im.naturalWidth, H = im.naturalHeight; let s = Math.min(1, 1024 / Math.max(W, H)); if (Math.min(W, H) * s < 512) s = Math.min(1600 / Math.max(W, H), 512 / Math.min(W, H)); const c = document.createElement("canvas"); c.width = Math.round(W * s); c.height = Math.round(H * s); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", .85)); } catch (_) { ok(src); } };
+      im.onerror = () => ok(src); im.src = src;
+    });
+  };
+})();
+
 /* ===== app167 · 2026-11-28 角色语音：只要发音就收费（点一句 🔊 也算） =====
    老板：「只要是角色有发音就要收费，点一下也要收费；按阿里云成本的 5 倍收。」
    成本：qwen3-tts-flash 新加坡区 ¥0.733924 / 万字符，北京区 ¥0.8 / 万字符（阿里云百炼官方价，2026-11-28 查）。
