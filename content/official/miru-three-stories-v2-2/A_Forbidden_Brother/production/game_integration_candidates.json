@@ -1,0 +1,44 @@
+[
+  {
+    "id": "g_a_projector_cut",
+    "task": "切断未经同意的投影并保存播放记录",
+    "original_block": "旁白：眼前需要切断未经同意的投影并保存播放记录。你可以亲自试试，或请同伴协助。\n⟦MG|g_a_projector_cut⟧\n⟦IF|mg_g_a_projector_cut_win⟧\n旁白：你完成了「切断未经同意的投影并保存播放记录」，取得可复核的记录。\n⟦SET|a_c03_game_win⟧\n⟦ELSE⟧\n旁白：「切断未经同意的投影并保存播放记录」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_a_photo_timestamp",
+    "task": "核对旧照片导出时间与设备",
+    "original_block": "旁白：眼前需要核对旧照片导出时间与设备。你可以亲自试试，或请同伴协助。\n⟦MG|g_a_photo_timestamp⟧\n⟦IF|mg_g_a_photo_timestamp_win⟧\n旁白：你完成了「核对旧照片导出时间与设备」，取得可复核的记录。\n⟦SET|a_c07_game_win⟧\n⟦ELSE⟧\n旁白：「核对旧照片导出时间与设备」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_a_server_trace",
+    "task": "识别偷拍照发布源",
+    "original_block": "旁白：眼前需要识别偷拍照发布源。你可以亲自试试，或请同伴协助。\n⟦MG|g_a_server_trace⟧\n⟦IF|mg_g_a_server_trace_win⟧\n旁白：你完成了「识别偷拍照发布源」，取得可复核的记录。\n⟦SET|a_c09_game_win⟧\n⟦ELSE⟧\n旁白：「识别偷拍照发布源」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_a_access_log",
+    "task": "恢复访客系统日志",
+    "original_block": "旁白：眼前需要恢复访客系统日志。你可以亲自试试，或请同伴协助。\n⟦MG|g_a_access_log⟧\n⟦IF|mg_g_a_access_log_win⟧\n旁白：你完成了「恢复访客系统日志」，取得可复核的记录。\n⟦SET|a_c10_game_win⟧\n⟦ELSE⟧\n旁白：「恢复访客系统日志」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_a_design_proof",
+    "task": "核对原始设计文件的创建时间",
+    "original_block": "旁白：眼前需要核对原始设计文件的创建时间。你可以亲自试试，或请同伴协助。\n⟦MG|g_a_design_proof⟧\n⟦IF|mg_g_a_design_proof_win⟧\n旁白：你完成了「核对原始设计文件的创建时间」，取得可复核的记录。\n⟦SET|a_c12_game_win⟧\n⟦ELSE⟧\n旁白：「核对原始设计文件的创建时间」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_a_video_restore",
+    "task": "比对旧监控被剪掉的片段",
+    "original_block": "旁白：眼前需要比对旧监控被剪掉的片段。你可以亲自试试，或请同伴协助。\n⟦MG|g_a_video_restore⟧\n⟦IF|mg_g_a_video_restore_win⟧\n旁白：你完成了「比对旧监控被剪掉的片段」，取得可复核的记录。\n⟦SET|a_c14_game_win⟧\n⟦ELSE⟧\n旁白：「比对旧监控被剪掉的片段」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  }
+]

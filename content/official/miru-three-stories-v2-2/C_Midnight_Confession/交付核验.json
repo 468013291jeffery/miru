@@ -1,0 +1,81 @@
+{
+  "story": "C_Midnight_Confession",
+  "title": "午夜告解：他为我犯下第一桩罪",
+  "images_expected": 54,
+  "images_present": 54,
+  "audio_present": 6,
+  "locales": [
+    {
+      "locale": "zh-CN",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "fb7ba30d5971cb83f8a1df619950de768476f69ff2545ac309fe2dfb031813a5",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "zh-TW",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "306cb67ef857d5edca2bc633793dd2cddfd93303c5b8f19e65f6e9f37acbd6b3",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "en-US",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "e4022e0715e6f5eb160e9fb929e2a7a4c06c6e0bdacbe767e92e4f9c10fcafcb",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "ja-JP",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "55340a1d042d9b68c54264fa827c4ba223d8b4829a3cd69a15f712108a4fc152",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "ko-KR",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "3d040ffa75603e3c52971fb20bd24eb8ca2e943554bb6e6dd13ceadf43ad5420",
+      "bg_immediate_after_scene": true
+    },
+    {
+      "locale": "es-ES",
+      "chapters": 16,
+      "scenes": 48,
+      "backgrounds": 48,
+      "background_ids_match_manifest": true,
+      "source_bytes_unchanged": true,
+      "choices": 16,
+      "terminators": 16,
+      "sha256": "95618baf7714a2446d713f7c18aa27ec0117c917469ceeab66a3032c809c0ee6",
+      "bg_immediate_after_scene": true
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "g_b_stamp_compare",
+    "task": "比较命令上两次印章的墨色",
+    "original_block": "旁白：眼前需要比较命令上两次印章的墨色。你可以亲自试试，或请同伴协助。\n⟦MG|g_b_stamp_compare⟧\n⟦IF|mg_g_b_stamp_compare_win⟧\n旁白：你完成了「比较命令上两次印章的墨色」，取得可复核的记录。\n⟦SET|b_c03_game_win⟧\n⟦ELSE⟧\n旁白：「比较命令上两次印章的墨色」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_b_ring_code",
+    "task": "还原戒指背后的童年暗号",
+    "original_block": "旁白：眼前需要还原戒指背后的童年暗号。你可以亲自试试，或请同伴协助。\n⟦MG|g_b_ring_code⟧\n⟦IF|mg_g_b_ring_code_win⟧\n旁白：你完成了「还原戒指背后的童年暗号」，取得可复核的记录。\n⟦SET|b_c04_game_win⟧\n⟦ELSE⟧\n旁白：「还原戒指背后的童年暗号」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_b_keychain_check",
+    "task": "核对钥匙扣的入库时间",
+    "original_block": "旁白：眼前需要核对钥匙扣的入库时间。你可以亲自试试，或请同伴协助。\n⟦MG|g_b_keychain_check⟧\n⟦IF|mg_g_b_keychain_check_win⟧\n旁白：你完成了「核对钥匙扣的入库时间」，取得可复核的记录。\n⟦SET|b_c05_game_win⟧\n⟦ELSE⟧\n旁白：「核对钥匙扣的入库时间」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_b_voice_match",
+    "task": "比对哥哥的新旧语音",
+    "original_block": "旁白：眼前需要比对哥哥的新旧语音。你可以亲自试试，或请同伴协助。\n⟦MG|g_b_voice_match⟧\n⟦IF|mg_g_b_voice_match_win⟧\n旁白：你完成了「比对哥哥的新旧语音」，取得可复核的记录。\n⟦SET|b_c07_game_win⟧\n⟦ELSE⟧\n旁白：「比对哥哥的新旧语音」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_b_ledger_trace",
+    "task": "核对账本与交易日期",
+    "original_block": "旁白：眼前需要核对账本与交易日期。你可以亲自试试，或请同伴协助。\n⟦MG|g_b_ledger_trace⟧\n⟦IF|mg_g_b_ledger_trace_win⟧\n旁白：你完成了「核对账本与交易日期」，取得可复核的记录。\n⟦SET|b_c12_game_win⟧\n⟦ELSE⟧\n旁白：「核对账本与交易日期」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_b_backup_relay",
+    "task": "完成异地证据备份",
+    "original_block": "旁白：眼前需要完成异地证据备份。你可以亲自试试，或请同伴协助。\n⟦MG|g_b_backup_relay⟧\n⟦IF|mg_g_b_backup_relay_win⟧\n旁白：你完成了「完成异地证据备份」，取得可复核的记录。\n⟦SET|b_c14_game_win⟧\n⟦ELSE⟧\n旁白：「完成异地证据备份」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  }
+]

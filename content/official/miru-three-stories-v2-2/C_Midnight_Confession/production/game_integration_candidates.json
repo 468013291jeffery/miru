@@ -1,0 +1,44 @@
+[
+  {
+    "id": "g_c_erased_name",
+    "task": "比对被刮掉的登记姓名",
+    "original_block": "旁白：眼前需要比对被刮掉的登记姓名。你可以亲自试试，或请同伴协助。\n⟦MG|g_c_erased_name⟧\n⟦IF|mg_g_c_erased_name_win⟧\n旁白：你完成了「比对被刮掉的登记姓名」，取得可复核的记录。\n⟦SET|c_c02_game_win⟧\n⟦ELSE⟧\n旁白：「比对被刮掉的登记姓名」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_c_frame_match",
+    "task": "逐帧核对当年的监控影像",
+    "original_block": "旁白：眼前需要逐帧核对当年的监控影像。你可以亲自试试，或请同伴协助。\n⟦MG|g_c_frame_match⟧\n⟦IF|mg_g_c_frame_match_win⟧\n旁白：你完成了「逐帧核对当年的监控影像」，取得可复核的记录。\n⟦SET|c_c04_game_win⟧\n⟦ELSE⟧\n旁白：「逐帧核对当年的监控影像」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_c_wax_seal",
+    "task": "比较七封信不同的封蜡",
+    "original_block": "旁白：眼前需要比较七封信不同的封蜡。你可以亲自试试，或请同伴协助。\n⟦MG|g_c_wax_seal⟧\n⟦IF|mg_g_c_wax_seal_win⟧\n旁白：你完成了「比较七封信不同的封蜡」，取得可复核的记录。\n⟦SET|c_c05_game_win⟧\n⟦ELSE⟧\n旁白：「比较七封信不同的封蜡」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_c_audio_source",
+    "task": "核实母亲近期录音中的环境声音",
+    "original_block": "旁白：眼前需要核实母亲近期录音中的环境声音。你可以亲自试试，或请同伴协助。\n⟦MG|g_c_audio_source⟧\n⟦IF|mg_g_c_audio_source_win⟧\n旁白：你完成了「核实母亲近期录音中的环境声音」，取得可复核的记录。\n⟦SET|c_c09_game_win⟧\n⟦ELSE⟧\n旁白：「核实母亲近期录音中的环境声音」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_c_door_lock",
+    "task": "验证病房门锁是单向外锁",
+    "original_block": "旁白：眼前需要验证病房门锁是单向外锁。你可以亲自试试，或请同伴协助。\n⟦MG|g_c_door_lock⟧\n⟦IF|mg_g_c_door_lock_win⟧\n旁白：你完成了「验证病房门锁是单向外锁」，取得可复核的记录。\n⟦SET|c_c11_game_win⟧\n⟦ELSE⟧\n旁白：「验证病房门锁是单向外锁」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  },
+  {
+    "id": "g_c_signature_compare",
+    "task": "比对出院证明的笔迹和修改日期",
+    "original_block": "旁白：眼前需要比对出院证明的笔迹和修改日期。你可以亲自试试，或请同伴协助。\n⟦MG|g_c_signature_compare⟧\n⟦IF|mg_g_c_signature_compare_win⟧\n旁白：你完成了「比对出院证明的笔迹和修改日期」，取得可复核的记录。\n⟦SET|c_c12_game_win⟧\n⟦ELSE⟧\n旁白：「比对出院证明的笔迹和修改日期」暂时未成功；同伴协助保存原件，剧情仍可推进。\n⟦/IF⟧",
+    "status": "needs engine mapping and playtest",
+    "fallback": "同伴协助保存证据，免费主线继续；不自动赋予玩家游戏胜利。"
+  }
+]

@@ -1,0 +1,1610 @@
+[
+  {
+    "id": "cover_c",
+    "kind": "cover",
+    "file": "assets/images/cover_c.webp",
+    "status": "generated",
+    "source": "production/cover_prompt.txt",
+    "master_file": "assets/images/cover_c.jpg",
+    "bytes_jpg": 248025,
+    "sha256_webp": "d5fc14b511c331b41d0006f2bbbf96c2db8b30a9f2b1f0cf7e938616e8d18aaf",
+    "sha256_jpg": "945151d667d91e619bd72e1ff72bc0a52eef56bd50c7a49d6c5a20bf36281db4",
+    "export_size": [
+      1080,
+      1920
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": true
+  },
+  {
+    "id": "char_c_player",
+    "kind": "character",
+    "file": "assets/images/char_c_player.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_c_player.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_c_player.jpg",
+    "bytes_jpg": 254562,
+    "sha256_webp": "addd71faefc1ca277d59315967cc186d9da4522e24c0d6811210d4d4407da493",
+    "sha256_jpg": "fa0bb615bb047e461cb98258f5f266a2440e41554e53d58ae96b2d8ccb87b34f",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_c_lucian",
+    "kind": "character",
+    "file": "assets/images/char_c_lucian.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_c_lucian.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_c_lucian.jpg",
+    "bytes_jpg": 88818,
+    "sha256_webp": "ee4ccc080e90fc735f1b072b3ae98e7a1af182ac4bd08402da600af39f77c09c",
+    "sha256_jpg": "37a8558bd2445610619ef9a2249144cfb50eb1849d5192236b3ab2e7e80f63a7",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_c_agnes",
+    "kind": "character",
+    "file": "assets/images/char_c_agnes.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_c_agnes.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_c_agnes.jpg",
+    "bytes_jpg": 154524,
+    "sha256_webp": "78ed88fd6db8032b44f7f15f1087f75f79135a3fc8bb800ea38ac2fc8ad0a019",
+    "sha256_jpg": "d54c174b295f64dd5ed6110c4fce4ddacda465a492ffded46f79c29fc02b9b86",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_c_nora",
+    "kind": "character",
+    "file": "assets/images/char_c_nora.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_c_nora.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_c_nora.jpg",
+    "bytes_jpg": 223974,
+    "sha256_webp": "a347715da7b179e792adbe1febf5b5f3eb9849c34eb99d83c9707da4bb1c6988",
+    "sha256_jpg": "1bca1f668752e14f561a865c6360b09f115003b6cb8a00add5c2a8995a114275",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "char_c_mara",
+    "kind": "character",
+    "file": "assets/images/char_c_mara.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_c_mara.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_c_mara.jpg",
+    "bytes_jpg": 252269,
+    "sha256_webp": "1c08d11225d4cd31849bacbd56f1671aca5eeb038b4d6a95522273fa831ab41d",
+    "sha256_jpg": "e23c0e7dea540d32862250d6016907b183d1fd8a2f1e67bad1a6fcca8432f621",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c01s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c01s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c01s01.txt",
+    "chapter": 1,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c01s01.jpg",
+    "bytes_jpg": 227584,
+    "sha256_webp": "131f27b700eb6cbafcc8b81753bf788573d32469c36cf7cc8c2c5513e12dc6d1",
+    "sha256_jpg": "703ccca7d88361257769fab740c61ca4f52bf72e7bb55eca242f538ed3d5e529",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c01s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c01s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c01s02.txt",
+    "chapter": 1,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c01s02.jpg",
+    "bytes_jpg": 227290,
+    "sha256_webp": "e849165d070bfae049c0f8e8109b4f66c22fcd35e77c422048458819130ac5cc",
+    "sha256_jpg": "275c5dead8bc014783e632a8d8daedf1bab19560513df4bdbb974df4a217e8f5",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1603
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c01s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c01s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c01s03.txt",
+    "chapter": 1,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c01s03.jpg",
+    "bytes_jpg": 230155,
+    "sha256_webp": "eb7250d56b43623b40c90eb9e834f3e59a96f3910ca15f99f356d39126478c57",
+    "sha256_jpg": "4fb0ecff674721ce4d3a2d6ebd95ccb9d2659b12582c2a2e0d5d97a7192e8ffb",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c02s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c02s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c02s01.txt",
+    "chapter": 2,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c02s01.jpg",
+    "bytes_jpg": 236484,
+    "sha256_webp": "5dbba40e146640289612b3fdd37ee10cb857042b969e2ee54997470791dd9a47",
+    "sha256_jpg": "6064b3442084f87b605cf6b69083d19cb13aa44f60f32793ae0822b22cb91066",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c02s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c02s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c02s02.txt",
+    "chapter": 2,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c02s02.jpg",
+    "bytes_jpg": 206939,
+    "sha256_webp": "ead44571546de88939cff5d5d65390a63cfe0f8c6b07d0c47289d71ed5ee21e4",
+    "sha256_jpg": "511349f3b0669e5bf17e546a36861b16419d3b4677e1f17d80d5c59873c65914",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c02s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c02s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c02s03.txt",
+    "chapter": 2,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c02s03.jpg",
+    "bytes_jpg": 252981,
+    "sha256_webp": "19856c200da4a31f80ec3cad0494e01811d7f622f88cb81638c02a4bcdb87d57",
+    "sha256_jpg": "7e66a85fcadb06e96653c74b316ece8a2bfa4430fdb070a8251742b33cc56fee",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c03s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c03s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c03s01.txt",
+    "chapter": 3,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c03s01.jpg",
+    "bytes_jpg": 242549,
+    "sha256_webp": "8b3305f9aa54b31dfeab88ce44708a3bc50f9a2111038aeacdcce57843e4c31a",
+    "sha256_jpg": "1ca82f4371826ba12aa8b3afc2f6911296349dc449969dedffd20d7cf9fac797",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c03s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c03s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c03s02.txt",
+    "chapter": 3,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c03s02.jpg",
+    "bytes_jpg": 250492,
+    "sha256_webp": "68b784a0ccd1fd1b128adfcb756abb4c3bce20c048f5ac0949eaadf439582a00",
+    "sha256_jpg": "88eff09890bcb809a5839a130b6318a9f091016ac325c1f1b1d70979da4596b8",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c03s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c03s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c03s03.txt",
+    "chapter": 3,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c03s03.jpg",
+    "bytes_jpg": 207024,
+    "sha256_webp": "75694dfd1fc75d5f5500d1bf9afef45c3013161de1554e7335e33890068f4fdc",
+    "sha256_jpg": "e0f1a43b1a568e989cb833a036477d5bceb89a59902606ef1f38b3f249268afb",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c04s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c04s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c04s01.txt",
+    "chapter": 4,
+    "scene": 1,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c04s01.jpg",
+    "bytes_jpg": 208187,
+    "sha256_webp": "2172cd886d2c9a19d7451fc79b40a6814592942abc55bbdc2a26f59f9c2b42ca",
+    "sha256_jpg": "ae589ce11b14573303174644f3bba83a4fca2293a3c72298bc11cf7df582472a",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c04s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c04s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c04s02.txt",
+    "chapter": 4,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c04s02.jpg",
+    "bytes_jpg": 213213,
+    "sha256_webp": "f94402d9939182ac83ba25a61e67e1b1c3c9e73aba0e97315813682e4b044d5f",
+    "sha256_jpg": "0a44264dab9df2b68838c7976b6dbdf0316b61cd85e6cc95510295f5d7e3e57d",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c04s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c04s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c04s03.txt",
+    "chapter": 4,
+    "scene": 3,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c04s03.jpg",
+    "bytes_jpg": 192286,
+    "sha256_webp": "2d6baebee009f1580bd1db2860debe3c26d2ade19fe25e2d67010bd4ac1a8b20",
+    "sha256_jpg": "11ecf751d15e642f53414f8324c7d96ecd4fb2bbb77a6b87319e3b80de55e005",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c05s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c05s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c05s01.txt",
+    "chapter": 5,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c05s01.jpg",
+    "bytes_jpg": 245328,
+    "sha256_webp": "0b705e29bec4a13491b28f37da82cfd9d305d1b90eb447daaa63663fa60c83a2",
+    "sha256_jpg": "27de88adaa3840d450217f76d3f159c332f3d96827469e5725dfeb81f01f95bc",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c05s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c05s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c05s02.txt",
+    "chapter": 5,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c05s02.jpg",
+    "bytes_jpg": 201602,
+    "sha256_webp": "93e2845ff516a434655efb84cc280f9c649de30d8e8c017c2b189bd42b97feca",
+    "sha256_jpg": "208b0c611f7b21684491fe97cb6c10f14088fb07ac5f489d811b3fbc1157ae8e",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c05s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c05s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c05s03.txt",
+    "chapter": 5,
+    "scene": 3,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c05s03.jpg",
+    "bytes_jpg": 240531,
+    "sha256_webp": "3e19f885165c8d981350610fc27269c7253f679b8cd09248bc7e060a371483f8",
+    "sha256_jpg": "c669ea25f919a081ceddde049f75f95f72a698c1708e1a1bc0891daa76e0faa4",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c06s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c06s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c06s01.txt",
+    "chapter": 6,
+    "scene": 1,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c06s01.jpg",
+    "bytes_jpg": 232078,
+    "sha256_webp": "b14fb9ce1a08cd27f63fef77bea332973de5dbc92c5aa580f6131b81db5c9044",
+    "sha256_jpg": "de4e21346b38e2f61071eb4a16484f7774a24cf3fe62ddd454a2d9eb7b142c21",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c06s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c06s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c06s02.txt",
+    "chapter": 6,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c06s02.jpg",
+    "bytes_jpg": 183126,
+    "sha256_webp": "b5cb87628b93f236aa6622d4a3ff3ed9d5c02e03920948d05f9ace1478b2a131",
+    "sha256_jpg": "1b662197a58a175523966479c5971f60c39ec77e866903710457d612ce020fa0",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c06s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c06s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c06s03.txt",
+    "chapter": 6,
+    "scene": 3,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c06s03.jpg",
+    "bytes_jpg": 243707,
+    "sha256_webp": "8d170567acd9b5e6ff1453eaa166c1f9339326a4a81a32d77f685fdd26da9cb9",
+    "sha256_jpg": "808f148cc75c2ca4120d148b7be75a8ab4ed2848583349bcb05e6b4e423a583b",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c07s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c07s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c07s01.txt",
+    "chapter": 7,
+    "scene": 1,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c07s01.jpg",
+    "bytes_jpg": 187777,
+    "sha256_webp": "8a1f32b835927d1870b1e46d83a459fcd160f42f2feb8490c342c2c147f1e74f",
+    "sha256_jpg": "715676b61b84d1e6fd6a1808fc6c11e043ace435eee243c4c6a32534598e7392",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c07s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c07s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c07s02.txt",
+    "chapter": 7,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c07s02.jpg",
+    "bytes_jpg": 158341,
+    "sha256_webp": "c61a7a079ec275b72f4acf8fdf8da5a34d5bc219fdbac82219e0cb7c9ba94b3e",
+    "sha256_jpg": "691f59302270a984d0a97065d317674a37db4da7b33ff07317a44f546293e1a1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c07s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c07s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c07s03.txt",
+    "chapter": 7,
+    "scene": 3,
+    "visual_cast_zh": [
+      "阿格妮丝"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c07s03.jpg",
+    "bytes_jpg": 228892,
+    "sha256_webp": "a8a747ac2c04de9a64f7b67868d8222d664054a6ab9c8011f113aeacc7d389dc",
+    "sha256_jpg": "dc3257ba2acc0f9dfff9dab274398bf859e7b5d368b117a136f5b4fe3847e7fe",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c08s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c08s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c08s01.txt",
+    "chapter": 8,
+    "scene": 1,
+    "visual_cast_zh": [
+      "律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c08s01.jpg",
+    "bytes_jpg": 221653,
+    "sha256_webp": "29465bc6e9b274f2d59a6665cb2ed0c7cdae9488510fa83183108fddc0aabd57",
+    "sha256_jpg": "92ee259c61b447066d0bc785c719a55ee6d592fa8260f0adb22b33cba33addaa",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c08s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c08s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c08s02.txt",
+    "chapter": 8,
+    "scene": 2,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c08s02.jpg",
+    "bytes_jpg": 232779,
+    "sha256_webp": "649b6f221893e6615728727043754ab4e3fc6b321baa873c44ea0c38f2259165",
+    "sha256_jpg": "26ec875519adf51fedefaf325382d7d83fdedea677b69647ef264c057945b0c7",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c08s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c08s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c08s03.txt",
+    "chapter": 8,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c08s03.jpg",
+    "bytes_jpg": 231010,
+    "sha256_webp": "4395a58465ca9c1ba2b1f58cc3652b378512127156e31e3fb0b28dd698e3101c",
+    "sha256_jpg": "e15a4da23f473bb0f60ea3b2baa946797e15084a605f57f3f12a3617215b3763",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      982,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c09s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c09s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c09s01.txt",
+    "chapter": 9,
+    "scene": 1,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c09s01.jpg",
+    "bytes_jpg": 209687,
+    "sha256_webp": "e97a72b91e745f942e17e86a4ab2afcc402399d6c55f10dc9cd074d623e04ce5",
+    "sha256_jpg": "8571dd670852efa6c7a6f26c958f9fc1b195e7905b977db4a3f1a23862b72f50",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c09s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c09s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c09s02.txt",
+    "chapter": 9,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c09s02.jpg",
+    "bytes_jpg": 180415,
+    "sha256_webp": "bd907f04d8341e0817f0a5341f444385baf98f8cccfaf00c1a93b51d0605b353",
+    "sha256_jpg": "931b4905f8a84c53132879af439903389a07f7ea059379bde595c1d625e60c21",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c09s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c09s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c09s03.txt",
+    "chapter": 9,
+    "scene": 3,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c09s03.jpg",
+    "bytes_jpg": 232752,
+    "sha256_webp": "52ecb59fbf3c8727a736e11779e6c0b5b4e4beee9fc5b246364342611cdcf761",
+    "sha256_jpg": "3f1eab6abdc6272fcdd49381e7f2fa7be3a65c6d64b3985fb4942ab911562ab3",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c10s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c10s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c10s01.txt",
+    "chapter": 10,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c10s01.jpg",
+    "bytes_jpg": 237589,
+    "sha256_webp": "6b963d76ad79bc77b024a3cf9b326909b3232264301486e67faf365395008d72",
+    "sha256_jpg": "ad1f755c2e827b3a284e72db414717a5551ef8298c3fd737437a81b437fc0f8a",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c10s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c10s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c10s02.txt",
+    "chapter": 10,
+    "scene": 2,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c10s02.jpg",
+    "bytes_jpg": 234741,
+    "sha256_webp": "5afa996039f57ed17df26f1c0a457f3652f43830f1a7215cbe423a78dc401998",
+    "sha256_jpg": "6e626a8eddfa7bef2b7333dd89120c8c77747f0529780471c5c63377f386b45e",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c10s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c10s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c10s03.txt",
+    "chapter": 10,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c10s03.jpg",
+    "bytes_jpg": 250696,
+    "sha256_webp": "34bc4f45393b965162b568fcd60eca662e04e5f8dd139e807b7fdb82c50fe091",
+    "sha256_jpg": "33572d7cce7d6c6c80f03bab269f89ede1faee6b39d5228b14c1df81bb342949",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c11s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c11s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c11s01.txt",
+    "chapter": 11,
+    "scene": 1,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c11s01.jpg",
+    "bytes_jpg": 232362,
+    "sha256_webp": "65d24b6d8fd18e2e16748acda98d99586b349a329e41cd5a86ef8c5566b5bd2a",
+    "sha256_jpg": "957dd335735b0694d804e172234d400250f3ef2db805489d022c96c01e2f3515",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c11s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c11s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c11s02.txt",
+    "chapter": 11,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安",
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c11s02.jpg",
+    "bytes_jpg": 201816,
+    "sha256_webp": "b42a580d7928c7750133878f7c86c356ac6f40e088004b61079980c831af9561",
+    "sha256_jpg": "ab19e0c30d1c7f654fc8898348b1e14cdc94af5f63b303e540038fabb69840bd",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c11s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c11s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c11s03.txt",
+    "chapter": 11,
+    "scene": 3,
+    "visual_cast_zh": [
+      "诺拉",
+      "阿格妮丝律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c11s03.jpg",
+    "bytes_jpg": 236601,
+    "sha256_webp": "2bb9c9153b5beff0946b7cd21ac9afeb3476db3af91c0e4dd8df185304a541e0",
+    "sha256_jpg": "babf4880a47e9698c060d7464f49e7752b3a5f105f2810c9cd1077f26cf4b31f",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c12s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c12s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c12s01.txt",
+    "chapter": 12,
+    "scene": 1,
+    "visual_cast_zh": [
+      "公证员",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c12s01.jpg",
+    "bytes_jpg": 199425,
+    "sha256_webp": "70ed943e0e2c8ab1633614a11a6024cac8cdebc77dbf9514b127c6692ac08a1a",
+    "sha256_jpg": "3b4a9516f6a8f17f3a93ce1de6e4089ca0372daf73097b06bfe6cc3206feecc3",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c12s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c12s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c12s02.txt",
+    "chapter": 12,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c12s02.jpg",
+    "bytes_jpg": 175257,
+    "sha256_webp": "e55ced84054e8c7cf51b417c9f170a6990f868ae8ba13d5e82c5d2794ad2fd15",
+    "sha256_jpg": "96103a4bc08161def3dcf20f16debd9a63507f1291045967c15a45d0dadefed4",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c12s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c12s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c12s03.txt",
+    "chapter": 12,
+    "scene": 3,
+    "visual_cast_zh": [
+      "诺拉",
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c12s03.jpg",
+    "bytes_jpg": 184961,
+    "sha256_webp": "33bc460dc758c74f18bfc72e176a26853f93264e1125f7285be96828b3f381b6",
+    "sha256_jpg": "93e8d44c46467b286b62127f743813f167b8e0b0f0408853d564643dd35f9b41",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c13s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c13s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c13s01.txt",
+    "chapter": 13,
+    "scene": 1,
+    "visual_cast_zh": [
+      "玛拉",
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c13s01.jpg",
+    "bytes_jpg": 233792,
+    "sha256_webp": "6f58d3dd861bb088f2c865d0392bdb458d221630a433d87a0d70e34f7b057a4c",
+    "sha256_jpg": "3377b80ae8df9eec012d11e156fbfb30cfa4d6d8ef5c11b7487f76c228f9ae16",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c13s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c13s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c13s02.txt",
+    "chapter": 13,
+    "scene": 2,
+    "visual_cast_zh": [
+      "玛拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c13s02.jpg",
+    "bytes_jpg": 233325,
+    "sha256_webp": "e3c1311e7c2d7db20e7bfe7d86b59115621ec02e4bfbadc46c1b12ade220d90f",
+    "sha256_jpg": "f74a0665f5a508147510b36db27d9fef968e17fe35628e7a4b1ffb906a679eba",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c13s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c13s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c13s03.txt",
+    "chapter": 13,
+    "scene": 3,
+    "visual_cast_zh": [
+      "玛拉",
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c13s03.jpg",
+    "bytes_jpg": 248425,
+    "sha256_webp": "d7226367e6f6bbefde59c2e395590945c91170d057996ed818055db5a954623e",
+    "sha256_jpg": "b801f847e4dfaa9a27328938dec2e87a0e4cefa2f24e2254233df85cb73af012",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      982,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c14s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c14s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c14s01.txt",
+    "chapter": 14,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c14s01.jpg",
+    "bytes_jpg": 250097,
+    "sha256_webp": "8c85dae97ff32aa405d722c8c2c5a2e81291ef9be9c0f297545e606d4b718de3",
+    "sha256_jpg": "8a08dd93c4bfccdb1bfa8bce6b4c04544a8fb063347ba758c0f17721e0d3919f",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c14s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c14s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c14s02.txt",
+    "chapter": 14,
+    "scene": 2,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c14s02.jpg",
+    "bytes_jpg": 234830,
+    "sha256_webp": "56ba48505f9b4d830bbe7a6ef824a63eaecd26d4e0f989beb4c8ea01638208df",
+    "sha256_jpg": "670b59c5595687ee4a37a3f99aa3c9c311f1f1e6fe410bbdc0d9290dd755223b",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c14s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c14s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c14s03.txt",
+    "chapter": 14,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c14s03.jpg",
+    "bytes_jpg": 250705,
+    "sha256_webp": "7e2688bdb2178bc2ba262def851d13e947011c3f61604c41a7555e45c9d7b8dc",
+    "sha256_jpg": "03a4d13f666037611ce62f142b85af809ea078e5e23809dc2fa98bb056954b81",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      961,
+      1636
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c15s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c15s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c15s01.txt",
+    "chapter": 15,
+    "scene": 1,
+    "visual_cast_zh": [
+      "律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c15s01.jpg",
+    "bytes_jpg": 224881,
+    "sha256_webp": "b0e6916954387d646e8f440d34fb26b34700be2ea7a2dccb7b920f611ed630bd",
+    "sha256_jpg": "d4b489c1adc80c43bc766e7e72a39106c5399a1b6031833774ab060c07ec6cb1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c15s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c15s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c15s02.txt",
+    "chapter": 15,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安",
+      "新管理员"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c15s02.jpg",
+    "bytes_jpg": 216690,
+    "sha256_webp": "665aa22f0d73c47fb7a5ed3eee10313aa4141c89539a672e0853bbb13dfb7106",
+    "sha256_jpg": "95c3aac47799fed1b59cfd4bdfd53e7fcdf50cf8df2dcc3baac97d6d9774afb8",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c15s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c15s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c15s03.txt",
+    "chapter": 15,
+    "scene": 3,
+    "visual_cast_zh": [
+      "玛拉",
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c15s03.jpg",
+    "bytes_jpg": 243844,
+    "sha256_webp": "3c6c1aa93139354575af0c52e7f518559257354360eff9abf40acb27c1e2d747",
+    "sha256_jpg": "f28e9d01ed1c7afb665725d350c0bb9738c2d4854d78bf69f0ed5025a53970fd",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c16s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c16s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c16s01.txt",
+    "chapter": 16,
+    "scene": 1,
+    "visual_cast_zh": [
+      "诺拉"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c16s01.jpg",
+    "bytes_jpg": 239213,
+    "sha256_webp": "07b6d8c6c1234ee35a8ea9138811855badf99f1ab2b5ca4835d58fbcc53ec004",
+    "sha256_jpg": "b9c4dd9baad5bb1c3b22af41a7e466b538410731baa56135a4e84d9c63f665ae",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c16s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c16s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c16s02.txt",
+    "chapter": 16,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c16s02.jpg",
+    "bytes_jpg": 250703,
+    "sha256_webp": "d1ab9e6c03602d963572a38c3687161bbf80030854f29a85f5e52cac8cdfeb0a",
+    "sha256_jpg": "4e87e6ea3f6c4ee85667e4c307fc85e07e7a867ef2f51274fed332cf522bdb33",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_c_c16s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_c_c16s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_c_c16s03.txt",
+    "chapter": 16,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢西安"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_c_c16s03.jpg",
+    "bytes_jpg": 235033,
+    "sha256_webp": "cfe9d00c82ae7bd06ac8af66e1aac1b061bf5b1757d3f5dbc4701e5403f27901",
+    "sha256_jpg": "8c9e4afa6639d13a9c34a7504b1e2c1bf9ea381571a880493987fef6af5c2d73",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bgm_c_gothic",
+    "kind": "bgm",
+    "file": "assets/audio/bgm_c_gothic.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 24,
+    "source": "original procedural composition; editorial mix pending",
+    "audio_spec": {
+      "file": "bgm_c_gothic.wav",
+      "duration_seconds": 90.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -16.92,
+      "clipped_samples": 0,
+      "sha256": "e6b05b375b2af5032a5f2da56a2e65e900db0f1fc7146fe8cc1a07a9d69622cf",
+      "id": "bgm_c_gothic",
+      "kind": "bgm",
+      "story": "C_Midnight_Confession",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 1.0,
+      "runtime_mp3": "bgm_c_gothic.mp3"
+    },
+    "runtime_mp3": "assets/audio/bgm_c_gothic.mp3"
+  },
+  {
+    "id": "bgm_c_revelation",
+    "kind": "bgm",
+    "file": "assets/audio/bgm_c_revelation.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 24,
+    "source": "original procedural composition; editorial mix pending",
+    "audio_spec": {
+      "file": "bgm_c_revelation.wav",
+      "duration_seconds": 68.5714,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -16.21,
+      "clipped_samples": 0,
+      "sha256": "a7a697b2538c17b20efa68ffaee67210c37d7472b572abb502beaaa613a66d57",
+      "id": "bgm_c_revelation",
+      "kind": "bgm",
+      "story": "C_Midnight_Confession",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 1.0,
+      "runtime_mp3": "bgm_c_revelation.mp3"
+    },
+    "runtime_mp3": "assets/audio/bgm_c_revelation.mp3"
+  },
+  {
+    "id": "bgm_c_morning",
+    "kind": "bgm",
+    "file": "assets/audio/bgm_c_morning.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 24,
+    "source": "original procedural composition; editorial mix pending",
+    "audio_spec": {
+      "file": "bgm_c_morning.wav",
+      "duration_seconds": 80.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -16.17,
+      "clipped_samples": 0,
+      "sha256": "b6435d444fb20ec486f1ea2f7784311a58f0950d8a3145548d7f9bc1d190fd30",
+      "id": "bgm_c_morning",
+      "kind": "bgm",
+      "story": "C_Midnight_Confession",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 1.0,
+      "runtime_mp3": "bgm_c_morning.mp3"
+    },
+    "runtime_mp3": "assets/audio/bgm_c_morning.mp3"
+  },
+  {
+    "id": "sfx_c_bell",
+    "kind": "sfx",
+    "file": "assets/audio/sfx_c_bell.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 1.5,
+    "source": "procedural sound mockup; replace/mix as needed",
+    "audio_spec": {
+      "file": "sfx_c_bell.wav",
+      "duration_seconds": 3.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -15.62,
+      "clipped_samples": 0,
+      "sha256": "8891a6e60aa25baedd6477ae605b032121f7bdcaaed5945c6107ea7e437ff26e",
+      "id": "sfx_c_bell",
+      "kind": "sfx",
+      "story": "C_Midnight_Confession",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 0,
+      "runtime_mp3": "sfx_c_bell.mp3"
+    },
+    "runtime_mp3": "assets/audio/sfx_c_bell.mp3"
+  },
+  {
+    "id": "sfx_c_old_key",
+    "kind": "sfx",
+    "file": "assets/audio/sfx_c_old_key.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 1.0,
+    "source": "procedural sound mockup; replace/mix as needed",
+    "audio_spec": {
+      "file": "sfx_c_old_key.wav",
+      "duration_seconds": 1.7,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -26.31,
+      "clipped_samples": 0,
+      "sha256": "10c64a0d52e53cdb081d07f16d9566381229350300e595e5b6465f05bfabc0d9",
+      "id": "sfx_c_old_key",
+      "kind": "sfx",
+      "story": "C_Midnight_Confession",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 0,
+      "runtime_mp3": "sfx_c_old_key.mp3"
+    },
+    "runtime_mp3": "assets/audio/sfx_c_old_key.mp3"
+  },
+  {
+    "id": "sfx_c_rain_window",
+    "kind": "sfx",
+    "file": "assets/audio/sfx_c_rain_window.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 1.0,
+    "source": "procedural sound mockup; replace/mix as needed",
+    "audio_spec": {
+      "file": "sfx_c_rain_window.wav",
+      "duration_seconds": 6.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -17.58,
+      "clipped_samples": 0,
+      "sha256": "2e024c77262c853489e143a7e7ff0f4dd845584ea378729dec69d4764aa3faff",
+      "id": "sfx_c_rain_window",
+      "kind": "sfx",
+      "story": "C_Midnight_Confession",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 0,
+      "runtime_mp3": "sfx_c_rain_window.mp3"
+    },
+    "runtime_mp3": "assets/audio/sfx_c_rain_window.mp3"
+  }
+]

@@ -1,0 +1,26 @@
+# MIRU V2.2 · 10-second trailer · en-US
+
+Production master: `../../../VIDEO_SCRIPTS/C_Trailer_10s_V2_2.docx`.
+Scene ID: `bg_c_c01s03`
+
+Single continuous shot, 10.0 s, vertical 9:16; no generated captions.
+
+## 角色外观参考 / Visual anchors
+- 玩家（29岁）: 29岁成年女性，默认深栗棕发及深棕眼，发长至肩胛、深色羊毛外套、米灰针织衫、棕皮文件夹、旧照片及录音笔；室内可解外套，背景不露脸；自定义不受此限制。
+- 卢西安·维尔: 36岁成年男性，约185cm，清瘦修长、略深眼窝、黑发中短后梳带一缕垂发、深褐眼、苍白自然肤质；黑高领针织衫和黑长外套，手背淡旧疤，旧记录员徽章；不是现任神职人员，不穿神职领。
+
+## 镜头指令 / Shot plan
+- 0.0–2.0秒｜石桌边念珠滑入暖灯光，旧钥匙紧随放下。女主手持母亲旧照片进入同一构图，镜头抬至她的成年面孔，旧物与照片同框。
+- 2.0–4.0秒｜女主望向卢西安说第一句；镜头缓慢横移保持两人同框。卢西安黑高领、手背旧疤清楚，指尖松开念珠。
+- 4.0–7.5秒｜卢西安抬眼，以轻缓但直接的语气说第二句，身体留在石桌另一侧。镜头稍移，侧后墙上的旧画像露出红围巾轮廓，儿童只作模糊历史道具。
+- 7.5–10.0秒｜在同一空间将焦点由旧画像拉回卢西安的深眼，他沉默，女主握照片而不触碰他。7.5秒后悬念字卡淡入，10.0秒切黑。
+
+## Localized dialogue & captions
+- 2.0–4.0 s | 玩家: That was my mother's.
+- 4.0–7.5 s | 卢西安: I saw them lock her in.
+- Post identity captions: You | Archive editor / Lucian | Former abbey archivist
+- 7.5–10.0 s | What else did he hide?
+
+Audio: 微弱雨声、石桌钥匙轻响、室内自然短混响，远处钟声仅一记，主音轨保留两句对白。
+Visual: 哥特旧石墙、暗木、暖烛光与冷夜蓝；无超自然特效、无神职服；50mm等效，真实肤质，压低环境亮度但脸部可辨。
+Not rendered; timing and lip sync require actual test.

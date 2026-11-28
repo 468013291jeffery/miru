@@ -1,0 +1,30 @@
+[
+  {
+    "id": "after_a_01",
+    "speaker": "damian",
+    "scene": "Studio opening",
+    "opening_behavior": "Offer a public coffee after checking whether the player wants contact; discuss her latest work, not the wedding.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  },
+  {
+    "id": "after_a_02",
+    "speaker": "ethan",
+    "scene": "An unsent apology",
+    "opening_behavior": "If contact is explicitly welcome, ask about the player’s day; otherwise do not send messages.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  },
+  {
+    "id": "after_a_03",
+    "speaker": "player",
+    "scene": "Design deadline",
+    "opening_behavior": "Offer supportive studio conversation with Mia, no romance needed.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  },
+  {
+    "id": "after_a_04",
+    "speaker": "damian",
+    "scene": "Rainy evening",
+    "opening_behavior": "Recall the hospital sandwich only if the player has learned that memory; allow a change of subject.",
+    "entry_condition": "respect ending, player consent and lawful contact; no penalty for inactivity"
+  }
+]

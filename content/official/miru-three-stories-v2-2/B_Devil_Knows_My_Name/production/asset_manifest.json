@@ -1,0 +1,1607 @@
+[
+  {
+    "id": "cover_b",
+    "kind": "cover",
+    "file": "assets/images/cover_b.webp",
+    "status": "generated",
+    "source": "production/cover_prompt.txt",
+    "master_file": "assets/images/cover_b.jpg",
+    "bytes_jpg": 264701,
+    "sha256_webp": "319a32b5cb5a7a7f22f07ce933e2d9c5d30e848f2167ea5fbd7a172c93745557",
+    "sha256_jpg": "c9b170fb78ed9a5f1ddf380d7694d654bbc51b49ddb16490b0ecf6bef98a1e58",
+    "export_size": [
+      1080,
+      1920
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": true
+  },
+  {
+    "id": "char_b_player",
+    "kind": "character",
+    "file": "assets/images/char_b_player.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_b_player.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_b_player.jpg",
+    "bytes_jpg": 172999,
+    "sha256_webp": "51901a46290aabba558806747d573b7aed8caee2908ed0559390543cef76baa6",
+    "sha256_jpg": "a53f7b18d81ae684db02b2f1e130124a5fa0f2993b5ac5fdda81bc856135a428",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_b_roman",
+    "kind": "character",
+    "file": "assets/images/char_b_roman.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_b_roman.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_b_roman.jpg",
+    "bytes_jpg": 98715,
+    "sha256_webp": "19ba18a131c0c725d90e3cc79b2e0e37fec8c2a6e94673aac0022b3a4bcc697e",
+    "sha256_jpg": "51115dc84564e092f62cd578fb3dc47301e6b48c9e1f23878f1c43e7ef23d3ca",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_b_luca",
+    "kind": "character",
+    "file": "assets/images/char_b_luca.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_b_luca.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_b_luca.jpg",
+    "bytes_jpg": 172312,
+    "sha256_webp": "e98c482f88d6a72c1c89865e39c49237c186d13312dded2a579fe53afbdb2990",
+    "sha256_jpg": "1d8fa41534e99b7f9bc97e7fb5b68daec7b70977c7bc5fa77ef3bd6f96473c01",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_b_nadia",
+    "kind": "character",
+    "file": "assets/images/char_b_nadia.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_b_nadia.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_b_nadia.jpg",
+    "bytes_jpg": 198950,
+    "sha256_webp": "2bf54e47be679f6ee6e9d55dc3434bf0b62ad76d772a2738171bbc787f8cc4c7",
+    "sha256_jpg": "3a525cd3892ed8f4078fe7f141adc35d6b23c1f508aed486262d531d2aaa81f1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "char_b_lawyer",
+    "kind": "character",
+    "file": "assets/images/char_b_lawyer.webp",
+    "status": "generated",
+    "source": "production/character_prompts/char_b_lawyer.txt",
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/char_b_lawyer.jpg",
+    "bytes_jpg": 123703,
+    "sha256_webp": "1f031ca5677827e76e5285e27269cb9d729aba0e455f1ef2765209bb89b418b3",
+    "sha256_jpg": "061451915e3e789d47bdc75812e21e26ba26a658502cd24110b0c816641f4f9e",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c01s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c01s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c01s01.txt",
+    "chapter": 1,
+    "scene": 1,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c01s01.jpg",
+    "bytes_jpg": 179523,
+    "sha256_webp": "d998a9fc9943dce7e7f78b41d3d286b933e49f227a0707468817bf73395d4b56",
+    "sha256_jpg": "0603cdfba684827cfd0a33e4403664e3593aaec6974b97ece4675bccb761fc22",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c01s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c01s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c01s02.txt",
+    "chapter": 1,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c01s02.jpg",
+    "bytes_jpg": 120312,
+    "sha256_webp": "899e1337a206c80aaa46fbbb468760671b9bb5d4ebe83b1833a59a970fa8baf4",
+    "sha256_jpg": "a6036e35cb938cac0fea51817ca431826ef20834e00cf68c5e359e4a41621f17",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c01s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c01s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c01s03.txt",
+    "chapter": 1,
+    "scene": 3,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c01s03.jpg",
+    "bytes_jpg": 129590,
+    "sha256_webp": "60b77494b371350bb7681ea581755db35424ab9a983d4913fe870b84628a2464",
+    "sha256_jpg": "332a486530b35d650e2fede7f8b771d72008a5c20e57f20983dc0dc1403a42a8",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c02s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c02s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c02s01.txt",
+    "chapter": 2,
+    "scene": 1,
+    "visual_cast_zh": [
+      "独立律师",
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c02s01.jpg",
+    "bytes_jpg": 216456,
+    "sha256_webp": "ba5cf4ff5bac70ece8fce3257ef53ffba41a2a4b6e342510a6e512e72b4357b7",
+    "sha256_jpg": "b12bdc4e48256f7aa734c981ae47502d66ade74786cb7e843ac479458be928e0",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c02s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c02s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c02s02.txt",
+    "chapter": 2,
+    "scene": 2,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c02s02.jpg",
+    "bytes_jpg": 229273,
+    "sha256_webp": "71271ddcb590e099aa688649fa19c9fc8d8b245b5b3bde8382c4f5e8f919ddc2",
+    "sha256_jpg": "3b3972429e5177a63c9a223cfa2230aff6062169f1ecb91944e70e9c51cc909c",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c02s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c02s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c02s03.txt",
+    "chapter": 2,
+    "scene": 3,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c02s03.jpg",
+    "bytes_jpg": 159246,
+    "sha256_webp": "122531489a135ca157178aeb0f4add51b53e2bd2a09f5f6c971a55203d1b0bb4",
+    "sha256_jpg": "0c1e04fede6050260cd611e5b98b12b782a39ccf574d9fdb05b74229835b00bb",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c03s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c03s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c03s01.txt",
+    "chapter": 3,
+    "scene": 1,
+    "visual_cast_zh": [
+      "娜迪娅",
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c03s01.jpg",
+    "bytes_jpg": 171841,
+    "sha256_webp": "78200cff851ccf3e41c017e3475db58799b77d7c3f13b4b0f42bd0edffe55ea4",
+    "sha256_jpg": "8bf8321693da8acd1c211a3c1282cc3521e231d681a09d95e9b7d602f280337e",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c03s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c03s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c03s02.txt",
+    "chapter": 3,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c03s02.jpg",
+    "bytes_jpg": 152429,
+    "sha256_webp": "638bf44383329592d556af018242ef4d23dc2de25523d97008dd4c337795adc9",
+    "sha256_jpg": "4135f91eaf0b37f9fe94706ef597bc513b1ae03c561ccfd5ee327921c1d09600",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c03s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c03s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c03s03.txt",
+    "chapter": 3,
+    "scene": 3,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c03s03.jpg",
+    "bytes_jpg": 157760,
+    "sha256_webp": "ccfa07076ef0de33b5be6e61bc546ad04ee6055a7bdc47093f3535c718d3ed0a",
+    "sha256_jpg": "ce79768a3ebfdcbc098dc1caefb905419772c4d8d7e4822b656eb9338d1bb359",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c04s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c04s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c04s01.txt",
+    "chapter": 4,
+    "scene": 1,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c04s01.jpg",
+    "bytes_jpg": 143450,
+    "sha256_webp": "30358ec2467b8b40c91f4018db3658415aee1c13b1c5f6acc5c51755c4c83de1",
+    "sha256_jpg": "edbf1aa6e1c6287c0da5cad8c8b93909f1f0684439b3a46fc54addfca08429d5",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c04s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c04s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c04s02.txt",
+    "chapter": 4,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼",
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c04s02.jpg",
+    "bytes_jpg": 191147,
+    "sha256_webp": "718098efc09a5861aa4aee67e5f98ff7b76f17b114a3b13efb35f234f83926bc",
+    "sha256_jpg": "121c4411c89c926656bc685f1e8130eda45401a61d5a2f95c8a071e5bcb05161",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c04s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c04s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c04s03.txt",
+    "chapter": 4,
+    "scene": 3,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c04s03.jpg",
+    "bytes_jpg": 166152,
+    "sha256_webp": "877f8352fd5bc5a8f287062b23a290488be0fdfec2664fd6aed1af05ffb66642",
+    "sha256_jpg": "aaa8a14fde08b5fb9c882a641afcc1eb2a501eec0e21f7c1223b712461720ad9",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c05s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c05s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c05s01.txt",
+    "chapter": 5,
+    "scene": 1,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c05s01.jpg",
+    "bytes_jpg": 116104,
+    "sha256_webp": "134aa1280b15cb346e51377ca4c4c3c1155604474f5002c704450e53b70a4bbf",
+    "sha256_jpg": "b6de54c974a119752f04b9fc86750fb24852bfea1a110a7c896bf318d7455104",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c05s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c05s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c05s02.txt",
+    "chapter": 5,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼",
+      "医生"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c05s02.jpg",
+    "bytes_jpg": 126145,
+    "sha256_webp": "5feb0fbf749623758653d583c409a92d1ff803e2e5a216f40a7c5cf851f8d465",
+    "sha256_jpg": "3d7bd3a642e146522b0e04872537623662933cf133f17f4ab5af92e904682963",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c05s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c05s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c05s03.txt",
+    "chapter": 5,
+    "scene": 3,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c05s03.jpg",
+    "bytes_jpg": 147564,
+    "sha256_webp": "2b1174e13d9060b4cb811efc3f793a24f444a1c27b46238259223258824b37f6",
+    "sha256_jpg": "935fd31347e4e1fab3e0ea8f46a71edbf0089de5cf68cae9d1c4d96a0885c7af",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c06s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c06s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c06s01.txt",
+    "chapter": 6,
+    "scene": 1,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c06s01.jpg",
+    "bytes_jpg": 130866,
+    "sha256_webp": "6f4eb1c8538a431c7c860eaa28782df5e6c37853c378e92b5da2f01985c0f78a",
+    "sha256_jpg": "692b325ae2bb89588265bf55cbad3bbe729380081ccb2f1cf9d6fd45a2e5e955",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c06s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c06s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c06s02.txt",
+    "chapter": 6,
+    "scene": 2,
+    "visual_cast_zh": [
+      "独立律师",
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c06s02.jpg",
+    "bytes_jpg": 173962,
+    "sha256_webp": "abb79efe50bf1d6c3d67e9a7fa81d3cc5996baedd9039d26a5d0b78ca38e6a39",
+    "sha256_jpg": "4c808a9cb2f00bfaab109862913f2f2d874347aa65fc581bd78217e886c40b9b",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c06s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c06s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c06s03.txt",
+    "chapter": 6,
+    "scene": 3,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c06s03.jpg",
+    "bytes_jpg": 223665,
+    "sha256_webp": "97bcbbeefa22a4cc3cc2c3c438eeab7bf863b9b7f11f96465ef0dfb239cc6519",
+    "sha256_jpg": "324c4314cd933c55074c57759c485f280482bb2a0077a4127f1141482676d2f2",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c07s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c07s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c07s01.txt",
+    "chapter": 7,
+    "scene": 1,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c07s01.jpg",
+    "bytes_jpg": 169602,
+    "sha256_webp": "803b1b9ed6b5fb2ece9ef65089978d27f45d292abe03523326cbe183f9b14a1b",
+    "sha256_jpg": "dcd6edcc1d7a16d00015e96a45b647399d2057aff069f22b11dfc97bdf81d8ee",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c07s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c07s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c07s02.txt",
+    "chapter": 7,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼",
+      "独立律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c07s02.jpg",
+    "bytes_jpg": 128235,
+    "sha256_webp": "f9ba7be1e2cbfaf6ef23c531790ef8d405c5d52386f49ea2a4cf37cb35722f3b",
+    "sha256_jpg": "e3e76cf37866a5826381434aced0dbb00debe09538c6dfa616d8390df488820e",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c07s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c07s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c07s03.txt",
+    "chapter": 7,
+    "scene": 3,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c07s03.jpg",
+    "bytes_jpg": 153183,
+    "sha256_webp": "16e9ff5f8d2788824e111f853614504195356ef64cc6541a58c2d46cea0fb46e",
+    "sha256_jpg": "eae377789e6a53b6818b80e7742674716a152bb100f83b54e616b1992f05bbd1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c08s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c08s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c08s01.txt",
+    "chapter": 8,
+    "scene": 1,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c08s01.jpg",
+    "bytes_jpg": 248481,
+    "sha256_webp": "79b538c3dd21e98a2397127ed25bbae8c770187a0729be33eef114a22911c805",
+    "sha256_jpg": "288a73b1b18efacc60268615242ac035c6c14aa2d7cac99d901a9c589ed8cacc",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c08s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c08s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c08s02.txt",
+    "chapter": 8,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c08s02.jpg",
+    "bytes_jpg": 174587,
+    "sha256_webp": "b121ec2f3df1fa43da1bdc2c7d307f2186345fdb1d8b37998bf40547493d9a02",
+    "sha256_jpg": "6477ec2fb83439034b573414c04f7317e4e8d956a3d49f53af961fa0cd104c9c",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1603
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c08s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c08s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c08s03.txt",
+    "chapter": 8,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c08s03.jpg",
+    "bytes_jpg": 180775,
+    "sha256_webp": "d576ff2b838e8328900384ad92cf09a7ed555882079c68dc79d6c1fc0e8dd9c7",
+    "sha256_jpg": "62d1a827246cef6b7dea6c5299c97e33314420599cbe5a7f419b49ce32e440a0",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1603
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c09s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c09s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c09s01.txt",
+    "chapter": 9,
+    "scene": 1,
+    "visual_cast_zh": [
+      "罗曼",
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c09s01.jpg",
+    "bytes_jpg": 237203,
+    "sha256_webp": "9f27846f8ed78d7710c1a65e30e52140dac1b25b5d630daec5a20710da2600e0",
+    "sha256_jpg": "4a165b7e3c454a8597a660258f0f2f3a0af8e282302c792e21829f0002b9e479",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1603
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c09s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c09s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c09s02.txt",
+    "chapter": 9,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c09s02.jpg",
+    "bytes_jpg": 155703,
+    "sha256_webp": "8649e0eb2e935d4b286df98a57f4e80796948f974d5ac322af8cf3c554b66929",
+    "sha256_jpg": "f4bd0d1039a02a54c0f2ef3dc9f2b40b53c23d9df0cac601518f657056d175d5",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c09s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c09s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c09s03.txt",
+    "chapter": 9,
+    "scene": 3,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c09s03.jpg",
+    "bytes_jpg": 157748,
+    "sha256_webp": "3a84eb9ca4149d365601c91d4e775ea848501c2df9c7fdd46353b482dac36da8",
+    "sha256_jpg": "b4b53bf38a6426fbbf3d917a672f4f843741470e8bced1fabc8415738927c07b",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c10s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c10s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c10s01.txt",
+    "chapter": 10,
+    "scene": 1,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c10s01.jpg",
+    "bytes_jpg": 198602,
+    "sha256_webp": "04b0e65e7a14a52fc23b91aaf952768caaff7f25c7f8419e4411ab191ba0131b",
+    "sha256_jpg": "ad10084c253fbdec365a3e50a12708a2df17940f9cc7aa4c528bc83f9f5385a7",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c10s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c10s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c10s02.txt",
+    "chapter": 10,
+    "scene": 2,
+    "visual_cast_zh": [
+      "物业管理员"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c10s02.jpg",
+    "bytes_jpg": 144940,
+    "sha256_webp": "a31ebad242c5a28289fb67aeac3b01271faedcad13f782826b09a7354d456716",
+    "sha256_jpg": "8d1207dd681234d6a055d36382a0043cfda7ac054794759262bf9a7f39c66fe1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c10s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c10s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c10s03.txt",
+    "chapter": 10,
+    "scene": 3,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c10s03.jpg",
+    "bytes_jpg": 156577,
+    "sha256_webp": "0356695068198627337f73fe1a4f439c0dc55a36ab7d72839e108fd6c44d4349",
+    "sha256_jpg": "603b7acab292b691e221189fe91705c2deb6980cb66817128039533fc17bef20",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c11s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c11s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c11s01.txt",
+    "chapter": 11,
+    "scene": 1,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c11s01.jpg",
+    "bytes_jpg": 204080,
+    "sha256_webp": "c4db6d4335125a3a4016ca58d16ad8dc3703e8a02cae201fe93ff249a7d26388",
+    "sha256_jpg": "58f27d149210b9d40afb400442368d272f9442ac22db9668dee3bbc4fe292b74",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c11s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c11s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c11s02.txt",
+    "chapter": 11,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c11s02.jpg",
+    "bytes_jpg": 171361,
+    "sha256_webp": "c9e9da737be294cd20515eb88067de8ed2bc9b3f16732c7f13a3012d5fbb9ae5",
+    "sha256_jpg": "b575c1cff1ce6d928bc32d623e26a6f6fb3d34458af51a18b368414750ebdc41",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      992,
+      1586
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c11s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c11s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c11s03.txt",
+    "chapter": 11,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c11s03.jpg",
+    "bytes_jpg": 184035,
+    "sha256_webp": "e1fc3957846281a4d64c41a3e1c429ec7de2145237619b3df2a4ecd713ed3f40",
+    "sha256_jpg": "55cda20adddf7d1ba0037ec631b1d9aca7a554668388ea279afc6f21e31335f3",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c12s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c12s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c12s01.txt",
+    "chapter": 12,
+    "scene": 1,
+    "visual_cast_zh": [
+      "罗曼",
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c12s01.jpg",
+    "bytes_jpg": 176732,
+    "sha256_webp": "6099ec2912eb748382f80c4fa9b0ea3d54e8b58695afabdb5eb9f88481149abf",
+    "sha256_jpg": "0eb9559f44871ba9d7ecab18354fd33e6a964b2a6ceefd2fe6ac728f107e972f",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1603
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c12s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c12s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c12s02.txt",
+    "chapter": 12,
+    "scene": 2,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c12s02.jpg",
+    "bytes_jpg": 174112,
+    "sha256_webp": "0fe96cef1ec81a7526dec3c989034f2a124db771cbc02c4ba0f578c8bbd02bab",
+    "sha256_jpg": "d501cfd3fc5660b0a8981c894360254f4b00390a9a6c935b4fa415401db85635",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c12s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c12s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c12s03.txt",
+    "chapter": 12,
+    "scene": 3,
+    "visual_cast_zh": [
+      "罗曼",
+      "独立律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c12s03.jpg",
+    "bytes_jpg": 132267,
+    "sha256_webp": "a71930b5589931fc19c3d51bc57ded8056b8c2c44dae9b7a681a98d5aca21294",
+    "sha256_jpg": "fd4b6eb5cb0245181438e421fa3e6458b1e4a72bc9d5de0fb4dadc121275c12e",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c13s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c13s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c13s01.txt",
+    "chapter": 13,
+    "scene": 1,
+    "visual_cast_zh": [
+      "独立记者"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c13s01.jpg",
+    "bytes_jpg": 230198,
+    "sha256_webp": "39541d15088b7e2960722d34669bf4fa3f016812ad9e9c46bb99add95de52972",
+    "sha256_jpg": "8bc3a34a6ca86bcc3d41df65699d47275f470022a98ad940b794eaba0d8b9e27",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c13s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c13s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c13s02.txt",
+    "chapter": 13,
+    "scene": 2,
+    "visual_cast_zh": [
+      "罗曼",
+      "独立律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c13s02.jpg",
+    "bytes_jpg": 232732,
+    "sha256_webp": "aaadfef361a372addf6f749a3ea72677006d1623c37e8b7900f80bb9ffae1405",
+    "sha256_jpg": "05f4369fddffbd6168b6202db9394f542e5065441961b80ce98a200b09222015",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c13s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c13s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c13s03.txt",
+    "chapter": 13,
+    "scene": 3,
+    "visual_cast_zh": [
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c13s03.jpg",
+    "bytes_jpg": 232470,
+    "sha256_webp": "b2405846da83ca635904cc2841477bbdecbdb20edce6f83d63f6bc193e4ce51a",
+    "sha256_jpg": "ff482fbe5d514d807aaad2874c0d8680963eed0e5840fd027f39115a5f03c49a",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      966,
+      1629
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c14s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c14s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c14s01.txt",
+    "chapter": 14,
+    "scene": 1,
+    "visual_cast_zh": [
+      "娜迪娅",
+      "罗曼"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c14s01.jpg",
+    "bytes_jpg": 241173,
+    "sha256_webp": "e7fa79829af4a2233dcba3e5d656cffc7822d098de62abb3835d9715def54179",
+    "sha256_jpg": "1e25b7f0bc42b5bd832dc3a3836f20af2c6895f83feb6c1127734cccf008c086",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c14s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c14s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c14s02.txt",
+    "chapter": 14,
+    "scene": 2,
+    "visual_cast_zh": [
+      "娜迪娅"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c14s02.jpg",
+    "bytes_jpg": 232644,
+    "sha256_webp": "4fd5dcc6c71e17950793f4c19cfae8f4c53019c14a28a22ff0494d2473a394e3",
+    "sha256_jpg": "c05f472a246b687e96edcbd3b62bf56015fcdc44e8dce42333e2df6ee528e599",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c14s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c14s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c14s03.txt",
+    "chapter": 14,
+    "scene": 3,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c14s03.jpg",
+    "bytes_jpg": 232142,
+    "sha256_webp": "5ad785b752c31b35a27890f9af3def10732dbe453d8fd0a2b4b7eaa69abcaba2",
+    "sha256_jpg": "d8870126874878ae68936fc53fd7c05775cb5b85753ec9573fad7b0f10a9dabc",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c15s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c15s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c15s01.txt",
+    "chapter": 15,
+    "scene": 1,
+    "visual_cast_zh": [
+      "调查员"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c15s01.jpg",
+    "bytes_jpg": 244578,
+    "sha256_webp": "1f8172d8a52ba67d11a981b326ffb08e800979f3063e746f0eff192cf2c1c275",
+    "sha256_jpg": "c5a6f5591268c771eefa8bfd5b023eeedee96d0edfab013e214de446437e7a79",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      941,
+      1672
+    ],
+    "resampled": false
+  },
+  {
+    "id": "bg_b_c15s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c15s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c15s02.txt",
+    "chapter": 15,
+    "scene": 2,
+    "visual_cast_zh": [
+      "卢卡"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c15s02.jpg",
+    "bytes_jpg": 231437,
+    "sha256_webp": "1f84c8796a21b015005dec37dc5bb080ab61471f4800bc058093df8a58692a60",
+    "sha256_jpg": "740f8134aa641b9e2b782b11c4c7e817b0bcf4c9a2465331238d78cce2df279b",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c15s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c15s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c15s03.txt",
+    "chapter": 15,
+    "scene": 3,
+    "visual_cast_zh": [
+      "独立律师"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c15s03.jpg",
+    "bytes_jpg": 244928,
+    "sha256_webp": "4a592304c1e436a0560b0b66e38cdc1694d99745b9d9492afd1342401d65c058",
+    "sha256_jpg": "45069bb1694b9c36429623bd9a5d4030829fca71dddc438d30aed707e594d4a1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1604
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c16s01",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c16s01.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c16s01.txt",
+    "chapter": 16,
+    "scene": 1,
+    "visual_cast_zh": [
+      "摄影馆主"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c16s01.jpg",
+    "bytes_jpg": 233830,
+    "sha256_webp": "8c1d853d324ce318368256843c7388ee2aae7270167c53537433946605c681a7",
+    "sha256_jpg": "54a17edfe7c19d72ebce757588a59dd4c8e7166cedaa1e15e0980bac21108754",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c16s02",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c16s02.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c16s02.txt",
+    "chapter": 16,
+    "scene": 2,
+    "visual_cast_zh": [
+      "独处"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c16s02.jpg",
+    "bytes_jpg": 246890,
+    "sha256_webp": "e39c4f328bcc7935cf920193b892cec5bd482a7f7adbc3c3996ce37c8ec027ae",
+    "sha256_jpg": "fe0363b98ccf8bb13739007cc4519e62780721824199624a6c24fecd25929aa1",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bg_b_c16s03",
+    "kind": "scene_bg",
+    "file": "assets/images/bg_b_c16s03.webp",
+    "status": "generated",
+    "source": "production/scene_prompts/bg_b_c16s03.txt",
+    "chapter": 16,
+    "scene": 3,
+    "visual_cast_zh": [
+      "独处"
+    ],
+    "prompt_revision": "2.2",
+    "master_spec": "941x1672 JPG ~230KB",
+    "master_file": "assets/images/bg_b_c16s03.jpg",
+    "bytes_jpg": 243516,
+    "sha256_webp": "4e4a7924eab7716f2707a86659169d29bd59e9dd717b8dd0c617eba79f4dc31e",
+    "sha256_jpg": "4dc50d3e07d71486b415626cfa0ed9c7352e1bc6604f99f4206b3f49112b25fb",
+    "export_size": [
+      941,
+      1672
+    ],
+    "native_size": [
+      981,
+      1602
+    ],
+    "resampled": true
+  },
+  {
+    "id": "bgm_b_noir",
+    "kind": "bgm",
+    "file": "assets/audio/bgm_b_noir.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 24,
+    "source": "original procedural composition; editorial mix pending",
+    "audio_spec": {
+      "file": "bgm_b_noir.wav",
+      "duration_seconds": 82.2857,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -16.79,
+      "clipped_samples": 0,
+      "sha256": "0efe4ad879afea468d4d76e2666ede416473e068e9f260c5398d8a7cbdffb0ca",
+      "id": "bgm_b_noir",
+      "kind": "bgm",
+      "story": "B_Devil_Knows_My_Name",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 1.0,
+      "runtime_mp3": "bgm_b_noir.mp3"
+    },
+    "runtime_mp3": "assets/audio/bgm_b_noir.mp3"
+  },
+  {
+    "id": "bgm_b_pursuit",
+    "kind": "bgm",
+    "file": "assets/audio/bgm_b_pursuit.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 24,
+    "source": "original procedural composition; editorial mix pending",
+    "audio_spec": {
+      "file": "bgm_b_pursuit.wav",
+      "duration_seconds": 60.0,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -16.7,
+      "clipped_samples": 0,
+      "sha256": "0a7226d7f5938302fbf4c7acb9ca4a6fbb3f59c543cf3d8c334147e9f74f9381",
+      "id": "bgm_b_pursuit",
+      "kind": "bgm",
+      "story": "B_Devil_Knows_My_Name",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 1.0,
+      "runtime_mp3": "bgm_b_pursuit.mp3"
+    },
+    "runtime_mp3": "assets/audio/bgm_b_pursuit.mp3"
+  },
+  {
+    "id": "bgm_b_quiet",
+    "kind": "bgm",
+    "file": "assets/audio/bgm_b_quiet.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 24,
+    "source": "original procedural composition; editorial mix pending",
+    "audio_spec": {
+      "file": "bgm_b_quiet.wav",
+      "duration_seconds": 87.2727,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -16.47,
+      "clipped_samples": 0,
+      "sha256": "b6a23d09a5f4ad645dca054aa9757b2c03f2e2eea82a5d4fe87bcaeb88b25b40",
+      "id": "bgm_b_quiet",
+      "kind": "bgm",
+      "story": "B_Devil_Knows_My_Name",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 1.0,
+      "runtime_mp3": "bgm_b_quiet.mp3"
+    },
+    "runtime_mp3": "assets/audio/bgm_b_quiet.mp3"
+  },
+  {
+    "id": "sfx_b_key_slide",
+    "kind": "sfx",
+    "file": "assets/audio/sfx_b_key_slide.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 1.0,
+    "source": "procedural sound mockup; replace/mix as needed",
+    "audio_spec": {
+      "file": "sfx_b_key_slide.wav",
+      "duration_seconds": 1.7,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -25.91,
+      "clipped_samples": 0,
+      "sha256": "c56165b8b949d2ea2ee807c1d16083a829b973c464e2fd51937e6bac31cb9b79",
+      "id": "sfx_b_key_slide",
+      "kind": "sfx",
+      "story": "B_Devil_Knows_My_Name",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 0,
+      "runtime_mp3": "sfx_b_key_slide.mp3"
+    },
+    "runtime_mp3": "assets/audio/sfx_b_key_slide.mp3"
+  },
+  {
+    "id": "sfx_b_door_chime",
+    "kind": "sfx",
+    "file": "assets/audio/sfx_b_door_chime.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 1.0,
+    "source": "procedural sound mockup; replace/mix as needed",
+    "audio_spec": {
+      "file": "sfx_b_door_chime.wav",
+      "duration_seconds": 1.7,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -14.61,
+      "clipped_samples": 0,
+      "sha256": "3775a6810198037067efe1c8caf41c7067022f4cea59289417e4cde540286ce6",
+      "id": "sfx_b_door_chime",
+      "kind": "sfx",
+      "story": "B_Devil_Knows_My_Name",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 0,
+      "runtime_mp3": "sfx_b_door_chime.mp3"
+    },
+    "runtime_mp3": "assets/audio/sfx_b_door_chime.mp3"
+  },
+  {
+    "id": "sfx_b_record_noise",
+    "kind": "sfx",
+    "file": "assets/audio/sfx_b_record_noise.wav",
+    "status": "rendered_technical_checks_passed",
+    "duration_seconds": 1.0,
+    "source": "procedural sound mockup; replace/mix as needed",
+    "audio_spec": {
+      "file": "sfx_b_record_noise.wav",
+      "duration_seconds": 2.5,
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits": 16,
+      "peak_dbfs": -3.1,
+      "rms_dbfs": -22.46,
+      "clipped_samples": 0,
+      "sha256": "958eb3e94f6e07925311fafbd0bd5d88d5d26ea2467c572912305d957f1c1746",
+      "id": "sfx_b_record_noise",
+      "kind": "sfx",
+      "story": "B_Devil_Knows_My_Name",
+      "provenance": "Original procedural composition/synthesis; build_audio.py",
+      "replaces_source_mockup": true,
+      "listening_review": "pending",
+      "loop_crossfade_seconds": 0,
+      "runtime_mp3": "sfx_b_record_noise.mp3"
+    },
+    "runtime_mp3": "assets/audio/sfx_b_record_noise.mp3"
+  }
+]

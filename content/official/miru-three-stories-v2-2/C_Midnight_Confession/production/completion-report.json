@@ -1,0 +1,686 @@
+{
+  "story": "C_Midnight_Confession",
+  "status": "content_completed_pending_shared_integration_rebuild",
+  "locales": [
+    "zh-CN",
+    "zh-TW",
+    "en-US",
+    "ja-JP",
+    "ko-KR",
+    "es-ES"
+  ],
+  "non_empty_lines": {
+    "zh-CN": 903,
+    "zh-TW": 903,
+    "en-US": 903,
+    "ja-JP": 903,
+    "ko-KR": 903,
+    "es-ES": 903
+  },
+  "chapters_per_locale": 16,
+  "scenes_per_locale": 48,
+  "games_per_locale": 32,
+  "games": [
+    {
+      "chapter": 1,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "桌后传来钥匙轻响，等木帘打开时，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "桌後傳來鑰匙輕響，等木簾打開時，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "While the key settles behind the screen, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "仕切りの向こうの鍵の音が収まるまで、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "칸막이 뒤 열쇠 소리가 잦아들기를 기다리며, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Mientras se apaga el tintineo de la llave tras la celosía, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 1,
+      "scene": 2,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "灯移到你面前，辨认木格里的细节前，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "燈移到你面前，辨認木格里的細節前，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "With the lamp before you, before studying the lattice, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "ランプの明かりで格子を見直す前に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "앞에 놓인 등불 아래 격자를 살피기 전에, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Con la lámpara delante, antes de examinar la celosía, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 2,
+      "scene": 1,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "登记簿已摊开，逐项核对前，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "登記簿已攤開，逐項核對前，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "Before comparing the entries in the open register, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "開いた名簿の項目を照合する前に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "펼친 명부의 항목을 대조하기 전에, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de cotejar las entradas del registro abierto, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 2,
+      "scene": 2,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "药物记录与收据需要分别整理，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "藥物記錄與收據需要分別整理，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "While sorting the medication records and receipts separately, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "投薬記録と領収書を分けて整理する合間に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "투약 기록과 영수증을 나누어 정리하는 사이, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al separar los registros de medicación y los recibos, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 3,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "旧病房图纸从书里露出来，移开烛台再读之前，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "舊病房圖紙從書里露出來，移開燭台再讀之前，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "Before moving the candle to read the ward plan peeking from the book, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "本からのぞく病棟図を読むため燭台を動かす前に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "책에서 드러난 병동 도면을 읽으려고 촛대를 옮기기 전에, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de apartar la vela para leer el plano que asoma del libro, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 3,
+      "scene": 2,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "日记需要避开窗边的雨，等纸页放稳时，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "日記需要避開窗邊的雨，等紙頁放穩時，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "While the diary is set safely away from the wet window, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "日記を雨の窓辺から離して落ち着かせる間に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "일기를 비 드는 창가에서 옮겨 안전하게 놓는 동안, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Mientras el diario queda a salvo de la ventana mojada, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 4,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "原片需要保留，回看下一段之前，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "原片需要保留，回看下一段之前，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "Before replaying the next segment of the preserved footage, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "原映像を残し、次の場面を見返す前に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "원본 영상을 보존하고 다음 장면을 다시 보기 전에, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de volver a ver el siguiente tramo de la grabación conservada, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 4,
+      "scene": 2,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "徽章已放入证物袋，核对袋上记录时，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "徽章已放入證物袋，核對袋上記錄時，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "While checking the record on the bag holding the badge, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "徽章を入れた証拠袋の記録を確かめる間に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "배지를 넣은 증거 봉투의 기록을 확인하며, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Al comprobar el registro de la bolsa que guarda la insignia, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 5,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "七封信已经找到，按日期摆开之前，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "七封信已經找到，按日期擺開之前，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "Before laying out the seven letters by date, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "七通の手紙を日付順に広げる前に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "일곱 편지를 날짜순으로 펼치기 전에, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de colocar las siete cartas por fecha, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 5,
+      "scene": 2,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "铁盒底的附件要与信件分开保管，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "鐵盒底的附件要與信件分開保管，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "While separating the attachment at the bottom of the box from the letters, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "箱底の添付書類を手紙と分けて保管する合間に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "철 상자 밑 부속 문서를 편지와 따로 보관하며, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al guardar por separado el anexo del fondo de la caja, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 6,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "诺拉开始比对缺页的纸纤维，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "諾拉開始比對缺頁的紙纖維，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "While Nora compares the fibers of the missing page, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "ノラが欠落頁の繊維を照合する間に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "노라가 빠진 장의 종이 섬유를 대조하는 동안, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Mientras Nora coteja las fibras de la página desprendida, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 6,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "缺页与钟楼信件放在一起，继续记录前，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "缺頁與鐘樓信件放在一起，繼續記錄前，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "With the missing page beside the bell-tower letters, before the next notes, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "欠落頁と鐘楼の手紙を並べ、次の記録を取る前に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "빠진 장과 종탑 편지를 나란히 두고 다음 기록 전에, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Con la página junto a las cartas del campanario, antes de seguir anotando, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 7,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "收据上的付款说明被划掉，先记下可见部分时，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "收據上的付款說明被划掉，先記下可見部分時，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "While noting the visible parts of the redacted payment receipt, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "支払目的を消した領収書の読める部分を控える間に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "지급 사유가 지워진 영수증의 보이는 부분을 적으며, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al anotar las partes visibles del recibo tachado, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 7,
+      "scene": 2,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "现金流水调出后，逐页编号之前，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "現金流水調出後，逐頁編號之前，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "Before numbering the retrieved cash-transaction pages, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "取り寄せた現金記録に頁番号をつける前に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "현금 내역을 가져와 쪽 번호를 매기기 전에, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de numerar las páginas de movimientos de efectivo, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 8,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "律师递来保全申请，整理随附文件时，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "律師遞來保全申請，整理隨附文件時，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "While organizing the documents accompanying the estate-preservation application, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "弁護士から渡された保全申立書の添付資料を整える間に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "변호사가 건넨 보전 신청서의 첨부 자료를 정리하며, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al ordenar los documentos de la solicitud de protección patrimonial, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 8,
+      "scene": 2,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "出城路线已经摊开，等诺拉收好旧记录时，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "出城路線已經攤開，等諾拉收好舊記錄時，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "While Nora puts away the old records beside the route out of town, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "町を出る経路を広げ、ノラが古い記録をしまう間に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "마을 밖 동선을 펼치고 노라가 옛 기록을 챙기는 동안, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Mientras Nora recoge los registros junto a la ruta de salida, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 9,
+      "scene": 1,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "录音可以重放，核对天气广播之前，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "錄音可以重放，核對天氣廣播之前，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "Before replaying the recording to check the weather broadcast, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "録音を再生し直して天気予報を確かめる前に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "녹음을 다시 틀어 날씨 방송을 대조하기 전에, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de repetir la grabación para cotejar el parte meteorológico, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 9,
+      "scene": 2,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "旧电话记录需要归档，留出页边备注时，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "舊電話記錄需要歸檔，留出頁邊備注時，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "While leaving a margin note on the old telephone entry for filing, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "古い電話記録を整理し、余白の注記を用意する間に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "옛 전화 기록을 정리하며 여백에 메모할 때, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al dejar una nota al margen del registro telefónico para archivarlo, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 10,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "合法取档许可到了，等文件整理齐时，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "合法取檔許可到了，等文件整理齊時，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "While gathering the documents after authorization to retrieve the records arrives, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "記録回収の許可が届き、書類を揃える間に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "기록 회수 허가가 도착해 서류를 모으는 동안, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Mientras se reúnen los documentos tras llegar la autorización, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 10,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "雨伞靠在檐边，准备带走许可副本之前，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "雨傘靠在檐邊，準備帶走許可副本之前，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "Before taking a copy of the authorization from beneath the eaves, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "傘を軒に置き、許可の写しを持ち出す前に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "우산을 처마에 두고 허가 사본을 챙기기 전에, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de recoger la copia de la autorización bajo el alero, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 11,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "门锁和墙上刻痕需要分开拍摄，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "門鎖和牆上刻痕需要分開拍攝，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "Before documenting the lock and wall marks separately, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "錠と壁の傷を別々に記録する前に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "자물쇠와 벽 자국을 따로 기록하기 전에, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de documentar por separado la cerradura y las marcas, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 11,
+      "scene": 2,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "名册交给诺拉后，给病历末页编号时，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "名冊交給諾拉後，給病歷末頁編號時，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "While numbering the medical file's last page after Nora receives the register, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "名簿をノラに渡し、病歴の最終頁を番号づける間に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "명부를 노라에게 건넨 뒤 병력 마지막 장에 번호를 매기며, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al numerar la última hoja clínica tras entregar el registro a Nora, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 12,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "原始出院证明要送去鉴定，整理复印件时，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "原始出院證明要送去鑒定，整理復印件時，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "While organizing copies of the original discharge certificate for examination, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "退院証明原本の鑑定に向けて写しを整理する間に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "퇴원 증명 원본의 감정을 위해 사본을 정리하며, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al ordenar las copias del alta original para el peritaje, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 12,
+      "scene": 2,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "完整陈述写好后，等提交材料按顺序排好时，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "完整陳述寫好後，等提交材料按順序排好時，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "While putting the completed statement and submission papers in order, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "完成した陳述と提出資料を順に揃える間に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "완성된 진술과 제출 자료를 순서대로 맞추는 동안, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Mientras se ordenan la declaración completa y los papeles para entregarla, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 13,
+      "scene": 3,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "诺拉收到付款记录，核对移交清单时，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "諾拉收到付款記錄，核對移交清單時，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "While checking the handover list after Nora receives the payment records, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "ノラが支払記録を受け取り、引渡し一覧を確かめる間に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "노라가 지급 기록을 받은 뒤 인계 목록을 확인하며, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Al revisar la lista de entrega tras recibir Nora los pagos, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 13,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "母亲愿意公开的记录还要单独标记，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "母親願意公開的記錄還要單獨標記，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "While marking separately the records your mother permits to be published, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "母が公開を許す記録を分けて印づけする間に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "어머니가 공개를 허락한 기록을 따로 표시하며, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al marcar por separado los registros que tu madre permite publicar, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 14,
+      "scene": 3,
+      "id": "g_mem_memory",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "听证记录需要留存，离开前整理自己的副本时，想翻牌配对相同的回忆图标吗？也可以跳过。",
+        "zh-TW": "聽證記錄需要留存，離開前整理自己的副本時，想翻牌配對相同的回憶圖示嗎？也可以跳過。",
+        "en-US": "While arranging your copies of the hearing record before leaving, would you like to turn cards and match identical memory icons? You can skip.",
+        "ja-JP": "聴聞記録を残し、帰る前に自分の写しを整える間に、カードをめくり、同じ思い出の絵柄を組にしてみる？　スキップしてもいい。",
+        "ko-KR": "떠나기 전 청문 기록 사본을 정리하며, 카드를 뒤집어 같은 추억 아이콘끼리 짝지어 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al ordenar tus copias de la audiencia antes de marcharte, ¿quieres girar cartas y emparejar recuerdos iguales? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 14,
+      "scene": 3,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "正式联系的资料放在长椅一侧，收进文件夹前，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "正式聯繫的資料放在長椅一側，收進文件夾前，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "Before putting the formal-contact papers beside the pew into your folder, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "長椅子脇の正式連絡用の資料をファイルにしまう前に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "긴 의자 옆 공식 연락 자료를 파일에 넣기 전에, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de guardar en la carpeta los papeles de contacto formal junto al banco, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 15,
+      "scene": 1,
+      "id": "g_slide_photo",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "继承文件的条件已确认，收好申请副本时，想移动📷数字滑块，把1—8排好吗？也可以跳过。",
+        "zh-TW": "繼承文件的條件已確認，收好申請副本時，想移動📷數字滑塊，把1—8排好嗎？也可以跳過。",
+        "en-US": "While putting away the application copies after the estate conditions are confirmed, would you like to slide the 📷 number tiles into order 1–8? You can skip.",
+        "ja-JP": "相続条件を確認し、申立書の写しをしまう間に、📷付き数字タイルを滑らせて1〜8を並べてみる？　スキップしてもいい。",
+        "ko-KR": "상속 조건을 확인한 뒤 신청 사본을 챙기며, 📷 숫자 타일을 밀어 1~8 순서로 맞춰 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al guardar las copias de la solicitud tras confirmar las condiciones, ¿quieres deslizar las fichas 📷 para ordenar 1–8? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 15,
+      "scene": 2,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "最后一把钥匙已经交还，清点证据清单时，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "最後一把鑰匙已經交還，清點證據清單時，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "While checking the evidence list after the last key is returned, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "最後の鍵を返し、証拠一覧を点検する間に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "마지막 열쇠를 반환하고 증거 목록을 확인하며, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Al revisar la lista de pruebas tras devolver la última llave, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 16,
+      "scene": 1,
+      "id": "g_simon_lights",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "公开旧记录陈列在档案馆，翻页之前，想观察四色灯，再按亮起的顺序点按吗？也可以跳过。",
+        "zh-TW": "公開舊記錄陳列在檔案館，翻頁之前，想觀察四色燈，再按亮起的順序點按嗎？也可以跳過。",
+        "en-US": "Before turning a page of the old records displayed in the public archive, would you like to watch four colored lights and repeat their sequence? You can skip.",
+        "ja-JP": "資料館に公開された古い記録の頁をめくる前に、四色の点灯を見て、同じ順番でタップしてみる？　スキップしてもいい。",
+        "ko-KR": "기록관에 공개된 옛 기록의 장을 넘기기 전에, 네 색 불빛을 보고 같은 순서로 눌러 볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de pasar una página de los antiguos registros del archivo público, ¿quieres observar las cuatro luces y repetir su secuencia? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    },
+    {
+      "chapter": 16,
+      "scene": 2,
+      "id": "g_find_letter",
+      "position": "after_scene_hook_before_event_flag",
+      "invitation": {
+        "zh-CN": "普通笔记放在长桌上，决定是否阅读前，想从图标中点出💌信封吗？也可以跳过。",
+        "zh-TW": "普通筆記放在長桌上，決定是否閱讀前，想從圖示中點出💌信封嗎？也可以跳過。",
+        "en-US": "Before deciding whether to read the ordinary notebook on the long table, would you like to spot the 💌 envelope among the icons? You can skip.",
+        "ja-JP": "長机に置かれた普通のノートを読むか決める前に、アイコンの中から💌の封筒を探してみる？　スキップしてもいい。",
+        "ko-KR": "긴 탁자의 평범한 공책을 읽을지 정하기 전에, 아이콘 중 💌 봉투를 찾아볼까? 건너뛰어도 된다.",
+        "es-ES": "Antes de decidir si lees el cuaderno corriente de la mesa, ¿quieres buscar el sobre 💌 entre los iconos? Puedes saltarlo."
+      },
+      "win": "Record only actual game win; continue to the same next story beat. No evidence or relationship consent is created.",
+      "lose": "Continue to the same next story beat; all evidence remains available.",
+      "skip": "Neutral continuation to the same next story beat; no relationship penalty."
+    }
+  ],
+  "alignment_method": "Read all 48 Chinese scenes; merge only consecutive narrator lines before dialogue into one semantic paragraph. Rebuild EN/JA/KO/ES with full action, two distinct original-intent NPC dialogue lines, original scene hook; preserve arrival and original chapter/scene/time IDs. Repeat complete prior choice consequences under the same IF flags; replace generic goals and DONE hints with the actual choice question and scene-3 event. Preserve Chinese and traditional Chinese facts and options. Restore complete evidence, motivations, timing, consent conditions, and chapter hooks; no padding.",
+  "changes": [
+    "Replaced abridged foreign scene paraphrases with complete scene translations.",
+    "Restored omitted NPC questions, mother-identification details, duty/payment/admission accountability, safe exit and contact conditions.",
+    "Expanded all 48 branch effects per foreign locale and corresponding next-chapter IF consequences.",
+    "Added two explicit library MG directives per chapter at investigation/administrative pauses; no game inside an intimate exchange or reunion.",
+    "Added localized instructions that match envelope finding, icon memory, numbered emoji sliding, and four-color sequence UI.",
+    "Game outcomes never supply a missing clue, declare a relationship, or require forgiveness.",
+    "Added complete JA/KO/ES story bibles with explicit opening/private knowledge separation.",
+    "No images, audio, shared runtime, acceptance gate, integration bundles, git or deployment changed.",
+    "Removed game implementation rules from player-facing narration; authored 32 distinct scene-specific optional invitations per locale. Outcome rules remain production-only.",
+    "Retained all six distinct investigation tasks (scraped names, frame-by-frame surveillance, wax seals, ambient sound, one-way exterior lock, handwriting/date checks) inside the full scene action paragraphs in all six locales; only generic repeated filler was removed.",
+    "Converted every zh-TW localized text artifact with macOS Foundation Simplified-Traditional, preserving ASCII slot IDs and flags. Updated superseded production notes in existing CN/TW/EN bibles.",
+    "Expanded the pre-existing compact EN and TW bibles into full indexed character/world specifications and complete chapter progression, matching the restored scripts."
+  ],
+  "parser_evidence": {
+    "file": "source/src/app94_official2.js",
+    "mk94": "^⟦([A-Z/]+)((?:\\|[^|⟧]*)*)⟧$",
+    "MG": "MG maps first argument to sys mg id; g_ prefix retained; no arbitrary payload assumed.",
+    "library": "source/src/app60_games100.js: find_letter/find; mem_memory/memory; slide_photo/slide; simon_lights/simon"
+  },
+  "remaining": [
+    "Shared integration rebuild and final runtime/website acceptance belong to parent integration task."
+  ],
+  "source_checksums": {
+    "zh-CN": "fb7ba30d5971cb83f8a1df619950de768476f69ff2545ac309fe2dfb031813a5",
+    "zh-TW": "306cb67ef857d5edca2bc633793dd2cddfd93303c5b8f19e65f6e9f37acbd6b3",
+    "en-US": "e4022e0715e6f5eb160e9fb929e2a7a4c06c6e0bdacbe767e92e4f9c10fcafcb",
+    "ja-JP": "55340a1d042d9b68c54264fa827c4ba223d8b4829a3cd69a15f712108a4fc152",
+    "ko-KR": "3d040ffa75603e3c52971fb20bd24eb8ca2e943554bb6e6dd13ceadf43ad5420",
+    "es-ES": "95618baf7714a2446d713f7c18aa27ec0117c917469ceeab66a3032c809c0ee6"
+  },
+  "verification": {
+    "all_six_line_structure_equal": true,
+    "all_original_zh_CN_story_facts_dialogue_branch_effects_and_six_tasks_retained": true,
+    "removed_only_generic_repeated_task_filler": true,
+    "all_32_invitations_distinct_per_locale": true,
+    "locale_checks": {
+      "zh-CN": {
+        "non_empty_lines": 903,
+        "chapters": 16,
+        "scenes": 48,
+        "games": 32,
+        "choice_flags": 48,
+        "condition_blocks": 45,
+        "free_turns": 48,
+        "script_sha256": "044b8a58c1e5e8be946d6020c65553a65df3b7c8e6c5c15157d1f6b63569996f",
+        "bible_bytes": 29096,
+        "bible_sha256": "9dcd01a0697fea45180397edf8647d31f9d00e6b9e07a40483e850d1992ef8de"
+      },
+      "zh-TW": {
+        "non_empty_lines": 903,
+        "chapters": 16,
+        "scenes": 48,
+        "games": 32,
+        "choice_flags": 48,
+        "condition_blocks": 45,
+        "free_turns": 48,
+        "script_sha256": "d4acc857e3f7dfbcda5af5b16ac6eb7e53b0aa7f988464ffbbedc326f34ee27e",
+        "bible_bytes": 29096,
+        "bible_sha256": "7506fadd7af07b4976c65f33a744bc5797554550b7a4c9a10ae6780afc4224a9"
+      },
+      "en-US": {
+        "non_empty_lines": 903,
+        "chapters": 16,
+        "scenes": 48,
+        "games": 32,
+        "choice_flags": 48,
+        "condition_blocks": 45,
+        "free_turns": 48,
+        "script_sha256": "849b1a145b96e0dc422f84b321bb0a45d93a4a297ab50e7a602365bb55931fa0",
+        "bible_bytes": 47857,
+        "bible_sha256": "611fc40c53c913b7da496e9fb26ca951de7fb8c135cd91a1e45b7737fdaf7597"
+      },
+      "ja-JP": {
+        "non_empty_lines": 903,
+        "chapters": 16,
+        "scenes": 48,
+        "games": 32,
+        "choice_flags": 48,
+        "condition_blocks": 45,
+        "free_turns": 48,
+        "script_sha256": "545c195bf1dff66674f770ad217d69650f37b769cb90d60df3657aed15580b4c",
+        "bible_bytes": 41919,
+        "bible_sha256": "b71ebc812b2c71c9ad8d50b197f6eb37d4ece9c06916f1ccee1198fdfc50d3e4"
+      },
+      "ko-KR": {
+        "non_empty_lines": 903,
+        "chapters": 16,
+        "scenes": 48,
+        "games": 32,
+        "choice_flags": 48,
+        "condition_blocks": 45,
+        "free_turns": 48,
+        "script_sha256": "b30b82d2b0d87c89088b2f27939c5493ce509bb0ae6211dad9a12ae2ca2810f4",
+        "bible_bytes": 41928,
+        "bible_sha256": "47beed33d23d44aa82568325e103b282c688ea24fa53d32ceb31d83120adbdf5"
+      },
+      "es-ES": {
+        "non_empty_lines": 903,
+        "chapters": 16,
+        "scenes": 48,
+        "games": 32,
+        "choice_flags": 48,
+        "condition_blocks": 45,
+        "free_turns": 48,
+        "script_sha256": "382967b0e2fe52872c33f2d21e18df451ea8ac5e8debc71f2d11f94b62cc310f",
+        "bible_bytes": 41077,
+        "bible_sha256": "aad4c9890975dd68cae7e6d6f2981b5867d45fb67342660c80eb23d12dc2ab67"
+      }
+    },
+    "traditional_conversion": "macOS Foundation Simplified-Traditional, whole zh-TW script, story bible, homepage, trailer, story card; IDs and flags unchanged.",
+    "outcome_runtime": "Root agent implemented and tested official-story-specific neutral mgResult; this content task did not modify runtime.",
+    "complete_bibles_all_six_locales": true,
+    "updated_en_tw_bibles": true,
+    "total_nonempty_lines_all_locales": 5418
+  }
+}

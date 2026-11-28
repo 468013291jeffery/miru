@@ -70,3 +70,6 @@ for (const name of ['song-selftest.cjs','song-parse-selftest.cjs','song-flow-sel
 for(const name of ['bride-state-selftest.cjs','bride-parse-selftest.cjs','bride-flow-selftest.cjs']) execFileSync(process.execPath,['tools/'+name],{cwd:root,stdio:'inherit'});
 
 for(const name of ['ashes-parse-selftest.cjs','ashes-flow-selftest.cjs']) execFileSync(process.execPath,['tools/'+name],{cwd:root,stdio:'inherit'});
+
+execFileSync(process.execPath,['tools/three-stories-v22-selftest.cjs'],{cwd:root,stdio:'inherit'});
+execFileSync(process.execPath,['content/official/miru-three-stories-v2-2/acceptance/multilingual-runtime.cjs'],{cwd:root,stdio:'inherit'});
