@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="8ac7b253dd18 2026-11-28T14:40Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="66247e8222ae 2026-11-28T14:54Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -23234,6 +23234,12 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     twa = localStorage.getItem("miru_twa") === "1";
   } catch (e) { console.warn("[play] detect", e); }
   window.MIRU_TWA = twa;
+  /* 2026-11-28 渠道：App 启动地址带 st=play / st=aptoide（见 android 工程 MiruLauncher）。
+     Aptoide 渠道包（Aptoide、APKPure 等商店安装的）充值必须走 Aptoide 结算：点钻石包跳 miru-pay://aptoide，由原生页面付款，
+     服务器按订单里的用户发钻；回到网页时重新拉一次余额。 */
+  let store = "play";
+  try { const q2 = new URLSearchParams(location.search).get("st"); if (q2 === "play" || q2 === "aptoide") localStorage.setItem("miru_store", q2); store = localStorage.getItem("miru_store") || "play"; } catch (e) { console.debug("[play] store", e); }
+  window.MIRU_STORE = store;
   if (!twa) return;
   document.documentElement.classList.add("twa127");
 
@@ -23274,10 +23280,31 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     document.querySelectorAll(".packs84 [data-buy]").forEach(b => { const p = prices["gems_" + b.dataset.buy]; const sp = b.querySelector("span"); if (p && sp) sp.textContent = p; });
   }
   new MutationObserver(() => { if (document.querySelector(".packs84 [data-buy]")) showPrices(); }).observe(document.body, { childList: true, subtree: true });
-  setTimeout(loadPrices, 1500);
+  if (store !== "aptoide") setTimeout(loadPrices, 1500);
 
   let busy = false;
+  let aptPend = 0;
+  function aptoideBuy(sku) {
+    const c = typeof cloudInfo === "function" ? cloudInfo() : (S.cloud || {});
+    if (!c || !c.uid) { toast(zh() ? "請先登入再儲值" : "Please sign in to top up"); return; }
+    try { if (typeof track === "function") track("aptoide_start", { sku: sku }); } catch (e0) { console.debug("[play]", e0); }
+    aptPend = Date.now();
+    location.href = "miru-pay://aptoide?sku=" + encodeURIComponent(sku) + "&u=" + encodeURIComponent(c.uid);
+  }
+  document.addEventListener("visibilitychange", async function () {
+    if (document.visibilityState !== "visible" || !aptPend || Date.now() - aptPend < 1500) return;
+    const t0 = aptPend; aptPend = 0;
+    for (let i = 0; i < 6; i++) {
+      await new Promise(r => setTimeout(r, i ? 2500 : 600));
+      try {
+        const r = await capi("/wallet"); if (!r || !r.ok || typeof r.j.gems !== "number") continue;
+        if (r.j.gems !== S.keys) { S.keys = r.j.gems; S.firstBuy = true; if (typeof save === "function") save(); if (typeof keysChip === "function") keysChip(); if (typeof closeSheet === "function") closeSheet(); if (typeof refreshAfterPay === "function") refreshAfterPay(); return; }
+      } catch (_) {}
+      if (Date.now() - t0 > 120000) return;
+    }
+  });
   async function buy(sku) {
+    if (store === "aptoide") return aptoideBuy(sku);
     if (busy) return; busy = true;
     /* 2026-11-28 有用户反馈「点充值没反应」：以前失败原因只写在浏览器控制台，后台看不到。
        现在每次点击、每次失败都记一条事件（play_start / play_fail，带错误名和说明，不含任何付款信息），方便定位；
@@ -23326,7 +23353,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     try { localStorage.setItem("miru_play_pending", JSON.stringify(left)); } catch (e2) { console.debug("[play]", e2); }
     if (typeof keysChip === "function") keysChip();
   }
-  setTimeout(restore, 4000);
+  if (store !== "aptoide") setTimeout(restore, 4000);
 
   /* 抢在网页版充值逻辑之前：App 里点钻石包一律走 Google Play */
   /* 挂在 window 的捕获阶段：比 document 上的网页版充值处理（app84 / app68）更早，拦下来就不会在本机白送钻石 */
@@ -23337,7 +23364,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   }, true);
 
   try { const st = document.createElement("style"); st.textContent = ".twa127 [data-ccexp]{display:none!important}"; document.head.appendChild(st); } catch (e2) { console.debug("[play]", e2); }
-  window.__play = () => ({ twa: twa, prices: prices, hasDGS: "getDigitalGoodsService" in window });
+  window.__play = () => ({ twa: twa, store: store, prices: prices, hasDGS: "getDigitalGoodsService" in window });
 })();
 
 /* ================= 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（2026-11-05）=================

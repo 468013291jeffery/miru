@@ -21589,6 +21589,12 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     twa = localStorage.getItem("miru_twa") === "1";
   } catch (e) { console.warn("[play] detect", e); }
   window.MIRU_TWA = twa;
+  /* 2026-11-28 渠道：App 启动地址带 st=play / st=aptoide（见 android 工程 MiruLauncher）。
+     Aptoide 渠道包（Aptoide、APKPure 等商店安装的）充值必须走 Aptoide 结算：点钻石包跳 miru-pay://aptoide，由原生页面付款，
+     服务器按订单里的用户发钻；回到网页时重新拉一次余额。 */
+  let store = "play";
+  try { const q2 = new URLSearchParams(location.search).get("st"); if (q2 === "play" || q2 === "aptoide") localStorage.setItem("miru_store", q2); store = localStorage.getItem("miru_store") || "play"; } catch (e) { console.debug("[play] store", e); }
+  window.MIRU_STORE = store;
   if (!twa) return;
   document.documentElement.classList.add("twa127");
 
@@ -21629,10 +21635,31 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     document.querySelectorAll(".packs84 [data-buy]").forEach(b => { const p = prices["gems_" + b.dataset.buy]; const sp = b.querySelector("span"); if (p && sp) sp.textContent = p; });
   }
   new MutationObserver(() => { if (document.querySelector(".packs84 [data-buy]")) showPrices(); }).observe(document.body, { childList: true, subtree: true });
-  setTimeout(loadPrices, 1500);
+  if (store !== "aptoide") setTimeout(loadPrices, 1500);
 
   let busy = false;
+  let aptPend = 0;
+  function aptoideBuy(sku) {
+    const c = typeof cloudInfo === "function" ? cloudInfo() : (S.cloud || {});
+    if (!c || !c.uid) { toast(zh() ? "請先登入再儲值" : "Please sign in to top up"); return; }
+    try { if (typeof track === "function") track("aptoide_start", { sku: sku }); } catch (e0) { console.debug("[play]", e0); }
+    aptPend = Date.now();
+    location.href = "miru-pay://aptoide?sku=" + encodeURIComponent(sku) + "&u=" + encodeURIComponent(c.uid);
+  }
+  document.addEventListener("visibilitychange", async function () {
+    if (document.visibilityState !== "visible" || !aptPend || Date.now() - aptPend < 1500) return;
+    const t0 = aptPend; aptPend = 0;
+    for (let i = 0; i < 6; i++) {
+      await new Promise(r => setTimeout(r, i ? 2500 : 600));
+      try {
+        const r = await capi("/wallet"); if (!r || !r.ok || typeof r.j.gems !== "number") continue;
+        if (r.j.gems !== S.keys) { S.keys = r.j.gems; S.firstBuy = true; if (typeof save === "function") save(); if (typeof keysChip === "function") keysChip(); if (typeof closeSheet === "function") closeSheet(); if (typeof refreshAfterPay === "function") refreshAfterPay(); return; }
+      } catch (_) {}
+      if (Date.now() - t0 > 120000) return;
+    }
+  });
   async function buy(sku) {
+    if (store === "aptoide") return aptoideBuy(sku);
     if (busy) return; busy = true;
     /* 2026-11-28 有用户反馈「点充值没反应」：以前失败原因只写在浏览器控制台，后台看不到。
        现在每次点击、每次失败都记一条事件（play_start / play_fail，带错误名和说明，不含任何付款信息），方便定位；
@@ -21681,7 +21708,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
     try { localStorage.setItem("miru_play_pending", JSON.stringify(left)); } catch (e2) { console.debug("[play]", e2); }
     if (typeof keysChip === "function") keysChip();
   }
-  setTimeout(restore, 4000);
+  if (store !== "aptoide") setTimeout(restore, 4000);
 
   /* 抢在网页版充值逻辑之前：App 里点钻石包一律走 Google Play */
   /* 挂在 window 的捕获阶段：比 document 上的网页版充值处理（app84 / app68）更早，拦下来就不会在本机白送钻石 */
@@ -21692,7 +21719,7 @@ window.M102_DATA={"version":7,"world":{"id":"m102","or":"bg","pal":["#C98A6B","#
   }, true);
 
   try { const st = document.createElement("style"); st.textContent = ".twa127 [data-ccexp]{display:none!important}"; document.head.appendChild(st); } catch (e2) { console.debug("[play]", e2); }
-  window.__play = () => ({ twa: twa, prices: prices, hasDGS: "getDigitalGoodsService" in window });
+  window.__play = () => ({ twa: twa, store: store, prices: prices, hasDGS: "getDigitalGoodsService" in window });
 })();
 
 /* ================= 真广告：Google AdSense 激励广告（H5 Ad Placement API · adBreak）（2026-11-05）=================
@@ -28630,11 +28657,13 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   if (typeof capi !== "function") return;
-  const V = 1, KEY = "miru_orig190";
+  const V = 2, KEY = "miru_orig190v2";
+  /* 2026-11-28 升级成「创作者协议 + 原创声明」（V=2，老作品下次更新时要重新确认一次）。
+     协议全文是 /creator-terms.html；在弹窗里用 iframe 打开（不离开发布页，避免丢掉正在发布的内容）。 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const TXT = () => zh()
-    ? "我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。"
-    : "I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.";
+    ? "· 作品的著作权归你；你授权 MIRU 在平台内展示、分发并用于宣传（非独占，你可以随时删除作品）。<br>· 我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。<br>· 所有角色都是虚构的成年人，作品不含露骨色情等违规内容。"
+    : "· You keep the copyright. You give MIRU a non-exclusive licence to show, distribute and promote the work on the platform, and you can delete it at any time.<br>· I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.<br>· All characters are fictional adults and the work contains no sexually explicit or other prohibited content.";
   const done = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } };
   const mark = id => { try { const d = done(); d[id] = Date.now(); localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
   function ask() {
@@ -28642,14 +28671,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       const host = document.querySelector("#dev") || document.body, el = document.createElement("div");
       el.style.cssText = "position:absolute;inset:0;z-index:9999;background:rgba(8,6,12,.72);display:flex;align-items:center;justify-content:center;padding:18px";
       el.innerHTML = '<div style="max-width:420px;width:100%;background:#1c1724;color:#f1ecf3;border-radius:16px;padding:20px 18px;box-shadow:0 10px 40px rgba(0,0,0,.5)">' +
-        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "原创声明" : "Originality statement") + '</h3>' +
+        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "创作者协议与原创声明" : "Creator agreement & originality") + '</h3>' +
         '<p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:#d9d1df">' + TXT() + '</p>' +
-        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并确认以上声明" : "I have read and agree") + '</span></label>' +
+        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并同意" : "I have read and agree to the") + ' <button type="button" id="ogT190" style="background:none;border:0;padding:0;color:#F0B77E;font:inherit;text-decoration:underline">' + (zh() ? "《MIRU 创作者协议》" : "MIRU Creator Agreement") + '</button></span></label>' +
+        '<div id="ogF190" style="position:absolute;inset:10px;z-index:2;background:#0C0B10;border-radius:14px;overflow:hidden;display:none;flex-direction:column"><div style="display:flex;justify-content:flex-end;padding:8px"><button id="ogX190" style="padding:6px 12px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">✕</button></div><iframe title="creator-terms" style="flex:1;border:0;width:100%"></iframe></div>' +
         '<div style="display:flex;gap:10px;justify-content:flex-end"><button id="ogN190" style="padding:9px 16px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">' + (zh() ? "取消" : "Cancel") + '</button>' +
         '<button id="ogY190" disabled style="padding:9px 16px;border-radius:10px;border:0;background:#EE6F97;color:#fff;opacity:.5">' + (zh() ? "确认并发布" : "Confirm & publish") + '</button></div></div>';
       host.appendChild(el);
       const cb = el.querySelector("#og190"), y = el.querySelector("#ogY190");
       cb.onchange = () => { y.disabled = !cb.checked; y.style.opacity = cb.checked ? "1" : ".5"; };
+      const tf = el.querySelector("#ogF190");
+      el.querySelector("#ogT190").onclick = e => { e.preventDefault(); e.stopPropagation(); tf.querySelector("iframe").src = "/creator-terms.html#" + (zh() ? "zh" : "en"); tf.style.display = "flex"; };
+      el.querySelector("#ogX190").onclick = () => { tf.style.display = "none"; };
       el.querySelector("#ogN190").onclick = () => { el.remove(); resolve(false); };
       y.onclick = () => { if (!cb.checked) return; el.remove(); resolve(true); };
     });
@@ -29249,8 +29282,8 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
     for (let i = 0; i < 4; i++) {
       const m = msg(); if (m) m.textContent = (ZH() ? "正在生成第 " + (i + 1) + " / 4 张…" : "Making photo " + (i + 1) + " of 4…");
       if (!S.plus && S.keys < PR()) break;
-      const prompt = "Keep this exact " + (c.g === "f" ? "woman" : "man") + "'s face, hair and build unchanged" + (look ? " (" + look + ")" : "") + ". Photo-booth snapshot of this person with " + partner() + ": " + AIP[i] +
-        ". Both are adults, fully clothed, tasteful and romantic, flirty but not sexual, photoreal, no text, no watermark.";
+      const prompt = "Keep this exact " + (c.g === "f" ? "woman" : "man") + "'s face, hair and build unchanged" + (look ? " (" + look + ")" : "") + ". A two-person photo-booth snapshot of this " + (c.g === "f" ? "woman" : "man") + " with " + partner() + ", BOTH faces clearly visible in a tight close-up, real couple chemistry: " + AIP[i] +
+        ". Both are adults, fully clothed. Intimate and sensual mood, palpable chemistry and tension between them, bodies close, tasteful and not explicit, photoreal, no text, no watermark.";
       try { const src = aiImgFrom(await AIG.mcp.callTool(AIG.srv, AIG.edit, { input_image: ref, prompt, steps: 20, guidance_scale: 2.5, randomize_seed: true }, { cache: false }));
         if (src) { BT.ai[i] = /^data:/.test(src) && typeof shrink98 === "function" ? await shrink98(src) : src; ok++; if (!S.plus) spend(PR(), "img"); }
       } catch (err) { console.warn("[booth] ai", err); if (i === 0) break; }
@@ -32425,5 +32458,595 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
      App 里聊天时的 AI 生图不受影响，还是 PRICES.img。 */
   try { window.studioImagePrice = function () { return 1; }; } catch (_) {}
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
+})();
+
+/* ===== 2026-11-28 · 视频定价 video15 =====
+   老板：视频生成成本大约 ¥1 / 秒，对用户至少按成本的 3–5 倍收。
+   现在的「让画面动起来」是 5 秒 720p，成本约 ¥5；原价 💎5（按 $0.99 = 5 钻约 ¥7，大礼包折后更低，再扣掉商店抽成基本不赚）。
+   改成 💎15：按标价约 ¥21（约 4 倍），按最大礼包折后价再扣 15% 商店抽成约 ¥14（约 2.7 倍）。生成失败照旧全额退回。 */
+(function () {
+  "use strict";
+  /* 2026-11-28 更正：老板确认视频是 10 秒一段（成本约 ¥7）。15 钻按标价只有 3 倍、礼包折后再扣商店抽成只有约 2 倍，
+     所以改成 💎25：按标价约 ¥35（约 5 倍），折后扣抽成约 ¥23（约 3.3 倍），落在「至少 3–5 倍」里。 */
+  try { if (typeof PRICES === "object") PRICES.video = 25; } catch (_) {}
+  try { if (typeof VID === "object") VID.price = 25; } catch (_) {}
+})();
+
+/* ===== app165 · 2026-11-28 新手先导页重做：三屏（名字 → 口味 → 为你选的第一部剧） =====
+   老板：「你可以做个看看，万一不好我还可以改回来，一定要做得好看、炫酷，符合美国女人的审美。」
+   以前的流程：登录墙 → 欢迎页 + 勾 18 岁 → 选 BL/GL/BG → 一整页标签问卷 → 推荐页。
+   问题：一上来就是登录墙；问卷像填表；最后的推荐页用的是老剧库（packWorlds，现在是空的），新用户看到的是空页。
+   现在（只对还没走完新手流程的新用户生效，S.ob 为真的老用户完全不受影响）：
+     ① 名字：「每个故事都需要一位主角，就是你」——输入名字，角色当场用你的名字跟你说话；勾选 18 岁。
+     ② 口味：8 张带剧照的大卡片（宿敌变恋人 / 危险的男人 / 吸血鬼与狼族 / 王冠与宫廷 …），最多选 3 个；恋爱对象可选。
+     ③ 揭晓：「选角中…」动画 → 整屏剧照揭晓为你选的那部剧（从首页正在展示的官方剧里按口味挑），
+        点「开始第 1 章」→ 没登录就在这一步登录（登录是硬性要求，没改，只是从第一屏挪到最后一步），登录完直接进这部剧。
+   不编造评分、人数、用户评价。首页视频文字样式没有动。
+   预览：已登录的老用户打开 miru.plus/?ob3=1 可以完整走一遍（预览模式不保存任何东西）。
+   关闭：把 build.py 里 app165_ob3.js 那一行去掉即可恢复原流程；或临时在控制台执行 localStorage.miru_ob3_off="1"。 */
+(function () {
+  "use strict";
+  if (typeof renderOB !== "function" || typeof screen !== "function" || typeof off94Feed !== "function") return;
+  const off = () => { try { return localStorage.getItem("miru_ob3_off") === "1"; } catch (_) { return false; } };
+  const zh = () => { try { return CL() === "zh"; } catch (_) { return false; } };
+  const L = (e, z) => (zh() ? z : e);
+  const logged = () => { try { return au70Loggedin(); } catch (_) { return false; } };
+  const tk = (n, p) => { try { if (!ST.dry && typeof track === "function") track(n, p || {}); } catch (_) {} };
+
+  const TASTES = [
+    { k: "enemies", e: "Enemies to Lovers", z: "宿敌变恋人", rx: /enemies|rivals|revenge|villain|reject/i, tag: "Enemies to Lovers" },
+    { k: "dark", e: "Dark & Dangerous", z: "危险的男人", rx: /mafia|dark romance|morally|possessive|touch her|villain|killer|forbidden/i, tag: "Forbidden" },
+    { k: "fang", e: "Vampires & Wolves", z: "吸血鬼与狼族", rx: /vampire|werewol|wolf|fated|dragon|paranormal|gothic|gods/i, tag: "Fated Mates" },
+    { k: "royal", e: "Crowns & Courts", z: "王冠与宫廷", rx: /royal|crown|prince|castle|secret heir|villainess/i, tag: "Arranged Marriage" },
+    { k: "slow", e: "Slow Burn", z: "慢热心动", rx: /slow burn|pining|small town|slice of life|hurt\/comfort/i, tag: "Slow Burn" },
+    { k: "choose", e: "Why Choose?", z: "全都想要", rx: /why choose|triangle/i, tag: "Why Choose" },
+    { k: "secret", e: "Secrets & Suspense", z: "秘密与悬疑", rx: /suspense|mystery|hidden identity|secret/i, tag: "Hidden Identity" },
+    { k: "star", e: "Second Chances", z: "破镜重圆", rx: /second chance|divorce|ex\b|reborn|remember/i, tag: "Second Chance" }
+  ];
+  const ST = { step: 1, name: "", age: false, picks: [], or: "all", pick: "", dry: false, shown: false };
+
+  /* ---------- 剧库：首页正在展示的官方剧（off94Feed，和首页短剧流同一份；有真实封面、英文标题和标签） ----------
+     2026-11-28 第二版：第一版用的 allWorlds() 里大多是没有封面的旧条目，线上图片全是裂的；改成首页同一份剧单。
+     封面图很大（每张 2–3 MB），所以整套先导页只用 8 张（口味卡片那 8 张，第一屏背景复用同一批）。 */
+  let FEED = [], feedP = null;
+  const cjk = x => /[一-鿿]/.test(x || "");
+  function norm(raw) {
+    const A = raw.A || {};
+    const names = Object.keys(A).filter(k => /^char_[a-z]{3,12}$/.test(k)).slice(0, 3).map(k => k.slice(5, 6).toUpperCase() + k.slice(6));
+    return {
+      id: raw.id, raw, or: raw.orient || "bg", tags: raw.tags || [], cover: A.cover || A.poster || "", cast: names,
+      get title() { try { return off94Title(raw) || ""; } catch (_) { return raw.title || ""; } },
+      get hook() { try { return off94Hook(raw) || ""; } catch (_) { return raw.hook || ""; } }
+    };
+  }
+  /* 2026-11-28 老板：口味卡片按平台现有的标签来。改成直接统计首页剧单里用得最多的 8 个标签（不含「Romance / Drama」这种太泛的），
+     名字用平台自己的标签译名（tagName），选中后就按这个标签找剧；剧单没加载出来时才用上面那 8 个备用分类。 */
+  const tn = x => { try { return (typeof tagName === "function" && tagName(x)) || x; } catch (_) { return x; } };
+  const lab = x => (x.tg ? tn(x.tag) : L(x.e, x.z));
+  const hit = (x, w) => (x.tg ? w.tags.some(t => String(t).toLowerCase() === x.tg) : x.rx.test(wtxt(w)));
+  function dynTastes() {
+    const cnt = new Map();
+    FEED.forEach(w => { if (w.or !== "bg") return; new Set(w.tags.map(t => String(t).trim()).filter(Boolean)).forEach(t => { const k = t.toLowerCase(); if (/^(romance|drama)$/.test(k)) return; const o = cnt.get(k) || { tag: t, n: 0 }; o.n++; cnt.set(k, o); }); });
+    const top = [...cnt.entries()].filter(e => e[1].n >= 2).sort((a, b) => b[1].n - a[1].n).slice(0, 8);
+    if (top.length < 6) return;
+    TASTES.splice(0, TASTES.length, ...top.map((e, i) => ({ k: "t" + i, tg: e[0], tag: e[1].tag })));
+    TILE = null; ST.picks = [];
+  }
+  function loadFeed() {
+    if (feedP) return feedP;
+    feedP = (async () => { try { const L0 = await off94Feed(); FEED = (L0 || []).map(norm).filter(w => w.cover); } catch (_) { FEED = []; } try { dynTastes(); } catch (_) {} if (!FEED.length) feedP = null; return FEED; })();
+    return feedP;
+  }
+  const wtxt = w => (w.tags.join(" ") + " " + ((w.raw.en && w.raw.en.title) || "") + " " + (w.raw.title || ""));
+  const hookOf = w => { const h = w.hook; return (!zh() && cjk(h)) ? "" : h; };
+  const cover = w => w.cover || "";
+  /* 封面加载失败（个别剧的封面地址是坏的）：记下来不再用；口味卡片换一张别的封面，其他位置直接去掉这张图 */
+  const BAD = new Set();
+  const pool = () => FEED.filter(w => !BAD.has(w.cover));
+  document.addEventListener("error", e => {
+    const im = e.target; if (!im || im.tagName !== "IMG" || !im.closest || !im.closest(".ob3")) return;
+    const src = im.getAttribute("src") || ""; if (!src || BAD.has(src)) { im.remove(); return; }
+    BAD.add(src);
+    const t = im.closest(".ob3t");
+    if (t && TILE) { const used = Object.values(TILE), alt = pool().find(w => !used.includes(w.cover) && w.or === "bg"); if (alt) { TILE[t.dataset.ob3t] = alt.cover; im.src = alt.cover; return; } }
+    im.remove();
+  }, true);
+  const orFit = w => ST.or === "all" || w.or === ST.or;
+  function ranked() {
+    const P = pool(), sel = TASTES.filter(x => ST.picks.includes(x.k));
+    const seed = (ST.name + "|" + ST.picks.join(",")).split("").reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+    return P.map((w, i) => {
+      const tx = wtxt(w), hits = sel.filter(x => hit(x, w));
+      const sc = hits.length * 30 + (orFit(w) ? 60 : 0) + (ST.or === "all" && w.or === "bg" ? 8 : 0) + (hookOf(w) ? 8 : 0) + (w.raw.A && (w.raw.A.vid_open || w.raw.A.home_video) ? 5 : 0) + ((seed + i * 7919) % 7);
+      return { w, sc, hits };
+    }).sort((a, b) => b.sc - a.sc);
+  }
+  let TILE = null;
+  function tileArt() {
+    if (TILE && Object.keys(TILE).length) return TILE;
+    const P = pool().filter(w => w.or === "bg" || w.or === "all"), used = new Set(), out = {};
+    TASTES.forEach(x => {
+      const c = P.filter(w => hit(x, w));
+      const w = c.find(w => !used.has(w.id)) || P.find(w => !used.has(w.id)) || c[0] || P[0];
+      if (w) { used.add(w.id); out[x.k] = cover(w); }
+    });
+    return (TILE = out);
+  }
+  const castOf = w => w.cast || [];
+  const cname = x => x;
+
+  /* ---------- 画面 ---------- */
+  function bgHTML() {
+    const TA = tileArt(), A = TASTES.map(x => TA[x.k]).filter(Boolean);
+    if (A.length < 3) return '<div class="ob3bg"></div><div class="ob3sp">' + sparks() + '</div>';
+    const col = i => { const c = A.filter((_, j) => j % 3 === i); return '<div class="c">' + c.concat(c).concat(c.length < 3 ? c.concat(c) : []).map(s => '<img src="' + esc(s) + '" alt="">').join("") + '</div>'; };
+    return '<div class="ob3bg">' + col(0) + col(1) + col(2) + '</div><div class="ob3sp">' + sparks() + '</div>';
+  }
+  function sparks() { let h = ""; for (let i = 0; i < 16; i++) h += '<i style="left:' + ((i * 61 + 7) % 100) + '%;top:' + ((i * 37 + 11) % 92) + '%;animation-delay:' + ((i * 0.47) % 4).toFixed(2) + 's"></i>'; return h; }
+  const dots = n => '<div class="ob3dots">' + [1, 2, 3].map(i => '<i class="' + (i === n ? "on" : i < n ? "done" : "") + '"></i>').join("") + '</div>';
+  const nm = () => esc(ST.name || L("you", "你"));
+  function sayText() {
+    return ST.name ? L("“" + esc(ST.name) + ". I’ve been waiting for you.”", "「" + esc(ST.name) + "，我等你很久了。」") : L("“…and you are?”", "「……你是？」");
+  }
+  function s1() {
+    const P = ranked(), w = (P[0] || {}).w, c = w ? castOf(w)[0] : null, av = w ? cover(w) : "";
+    let lang = ""; try { lang = langPicker(); } catch (_) {}
+    return '<div class="ob3 ob3s1">' + bgHTML() + '<div class="ob3in">' +
+      '<div class="ob3top"><div class="ob3brand">MI<b>RU</b></div>' + lang + '</div>' +
+      '<div class="ob3mid"><div class="ob3ey">✦ ' + L("Interactive romance", "互动恋爱剧") + '</div>' +
+      '<h1 class="ob3h">' + L("Every story needs a lead.<br><i>It’s you.</i>", "每个故事都需要一位主角。<br><i>就是你。</i>") + '</h1>' +
+      '<label class="ob3lab" for="ob3name">' + L("What should they call you?", "他们该怎么称呼你？") + '</label>' +
+      '<input id="ob3name" class="ob3name" maxlength="24" autocomplete="given-name" autocapitalize="words" enterkeyhint="next" placeholder="' + L("Your name", "你的名字") + '" value="' + esc(ST.name) + '">' +
+      '<div class="ob3say">' + (av ? '<img src="' + esc(av) + '" alt="">' : '') + '<div class="b">' + (c ? '<small>' + esc(cname(c)) + '</small>' : '') + '<span id="ob3sayT">' + sayText() + '</span></div></div></div>' +
+      '<div class="ob3foot"><button type="button" class="ob3age' + (ST.age ? " on" : "") + '" id="ob3age"><span class="ck">' + (ST.age ? "✓" : "") + '</span><span>' + L("I’m 18 or older. Every character is a fictional adult.", "我已年满 18 岁。所有角色都是虚构的成年人。") + '</span></button>' +
+      '<button type="button" class="ob3cta" id="ob3go1">' + L("That’s me", "就是我") + ' →</button>' + dots(1) +
+      (!ST.dry && !logged() ? '<button type="button" class="ob3lnk" data-acct69="login">' + L("I already have an account", "我已经有账号") + '</button>' : '') + '</div></div></div>';
+  }
+  function s2() {
+    const art = tileArt();
+    const ors = [["all", L("Anyone", "都可以")], ["bg", "M/F"], ["bl", "M/M"], ["gl", "F/F"]];
+    return '<div class="ob3 ob3s2"><div class="ob3glow"></div><div class="ob3in">' +
+      '<div class="ob3top"><button type="button" class="ob3back" data-ob3back="1" aria-label="back">‹</button>' + dots(2) + '<span style="width:36px"></span></div>' +
+      '<h1 class="ob3h sm">' + L("What makes your heart race, <i>" + nm() + "</i>?", "<i>" + nm() + "</i>，什么最让你心动？") + '</h1>' +
+      '<p class="ob3sub">' + L("Pick up to 3. We’ll cast your first story.", "最多选 3 个，我们为你挑第一部剧。") + '</p>' +
+      '<div class="ob3grid">' + TASTES.map((x, i) => '<button type="button" class="ob3t' + (ST.picks.includes(x.k) ? " on" : "") + '" data-ob3t="' + x.k + '" style="animation-delay:' + (0.05 * i).toFixed(2) + 's">' + (art[x.k] ? '<img src="' + esc(art[x.k]) + '" alt="" loading="lazy">' : '') + '<span class="v"></span><span class="ck">✓</span><b>' + esc(lab(x)) + '</b></button>').join("") +
+      '<div class="ob3or"><span>' + L("Love interests", "恋爱对象") + '</span>' + ors.map(o => '<button type="button" data-ob3or="' + o[0] + '" class="' + (ST.or === o[0] ? "on" : "") + '">' + esc(o[1]) + '</button>').join("") + '</div></div>' +
+      '<div class="ob3foot"><button type="button" class="ob3cta' + (ST.picks.length ? "" : " off") + '" id="ob3go2">' + L("Find my story", "为我选剧") + ' ✨</button>' +
+      '<button type="button" class="ob3lnk" id="ob3skip2">' + L("Surprise me", "随便，给我惊喜") + '</button></div></div></div>';
+  }
+  function s3() {
+    const R = ranked(); if (!R.length) return '<div class="ob3 ob3s3"><div class="ob3glow"></div><div class="ob3in" style="justify-content:center;align-items:center;gap:16px"><h1 class="ob3h sm">' + L("You’re in, <i>" + nm() + "</i>.", "欢迎你，<i>" + nm() + "</i>。") + '</h1><button type="button" class="ob3cta" data-ob3fin="">' + L("Enter MIRU", "进入 MIRU") + ' →</button></div></div>';
+    const top = R.find(r => r.w.id === ST.pick) || R[0]; ST.pick = top.w.id;
+    const w = top.w, cs = castOf(w).slice(0, 3), names = cs.map(cname).filter(Boolean), hook = hookOf(w);
+    const wait = names.length ? L(names.length > 1 ? names.slice(0, -1).join(", ") + " & " + names[names.length - 1] + " are waiting for you." : names[0] + " is waiting for you.", names.join("、") + " 在等你。") : "";
+    const hits = top.hits.map(lab);
+    const alts = R.filter(r => r.w.id !== w.id && cover(r.w)).slice(0, 3);
+    return '<div class="ob3 ob3s3"><div class="ob3hero ob3rev"><img src="' + esc(cover(w)) + '" alt=""><span class="v"></span></div><div class="ob3sp">' + sparks() + '</div><div class="ob3in">' +
+      '<div class="ob3top"><button type="button" class="ob3back" data-ob3back="1" aria-label="back">‹</button>' + dots(3) + '<span style="width:36px"></span></div>' +
+      '<div class="ob3fill"></div>' +
+      '<div class="ob3badge">✦ ' + L("Cast for you, " + nm(), nm() + "，这部为你而选") + '</div>' +
+      '<h2 class="ob3title">' + esc(w.title) + '</h2>' +
+      (hook ? '<p class="ob3hook">“' + esc(hook) + '”</p>' : '') +
+      (hits.length ? '<div class="ob3hits">' + hits.map(x => '<em>♥ ' + esc(x) + '</em>').join("") + '</div>' : '') +
+      (cs.length ? '<div class="ob3castrow"><span>♡ ' + esc(wait) + '</span></div>' : '') +
+      '<button type="button" class="ob3cta beat" data-ob3fin="' + esc(w.id) + '">▶ ' + L("Start Chapter 1", "开始第 1 章") + '<small>' + L("Free to start", "免费开始") + '</small></button>' +
+      (alts.length ? '<div class="ob3alts"><span>' + L("Or try", "或者试试") + '</span><div>' + alts.map(r => '<button type="button" data-ob3alt="' + esc(r.w.id) + '"><img src="' + esc(cover(r.w)) + '" alt=""><b>' + esc(r.w.title) + '</b></button>').join("") + '</div></div>' : '') +
+      '<button type="button" class="ob3lnk" data-ob3fin="">' + L("Show me everything", "先逛逛全部") + '</button></div></div>';
+  }
+  function casting() {
+    const A = ranked().slice(0, 3).map(r => cover(r.w)).filter(Boolean);
+    return '<div class="ob3 ob3load"><div class="ob3glow"></div><div class="ob3in" style="justify-content:center;align-items:center"><div class="ob3orb">' + A.map((s, i) => '<img src="' + esc(s) + '" alt="" style="animation-delay:' + (-i * 0.8) + 's">').join("") + '<b>✦</b></div><p class="ob3casting">' + L("Casting your story, " + nm() + "…", "正在为 " + nm() + " 选角……") + '</p></div></div>';
+  }
+  /* 2026-11-28 老板：用户填名字、选口味的这段时间，把后面要用的资源先在后台缓冲好。
+     第一屏起就在拉首页剧单和 8 张封面；到选口味 / 揭晓时，再把当前最匹配那部剧的封面、开场视频预先加载，
+     已登录的话连剧本包也先装好，点「开始第 1 章」就能直接进。 */
+  const WARM = new Set(), WARMV = [];
+  function warm(id) {
+    try {
+      const w = FEED.find(x => x.id === id); if (!w || WARM.has(id)) return; WARM.add(id);
+      const A = w.raw.A || {};
+      if (w.cover) { const im = new Image(); im.src = w.cover; }
+      const v = A.home_video || A.vid_open || A.opening_video;
+      if (v) { const el = document.createElement("video"); el.muted = true; el.preload = "auto"; el.src = v; WARMV.push(el); if (WARMV.length > 2) { const o = WARMV.shift(); o.removeAttribute("src"); try { o.load(); } catch (_) {} } }
+      if (!ST.dry && logged() && typeof installWork === "function") Promise.resolve().then(() => installWork(id)).catch(() => {});
+    } catch (_) {}
+  }
+  let castT = null;
+  function draw(noLoader) {
+    css(); ST.shown = true; clearTimeout(castT);
+    if (ST.step >= 2) { try { const wid = (ST.step === 3 && ST.pick) || ((ranked()[0] || {}).w || {}).id; if (wid) warm(wid); } catch (_) {} }
+    if (!FEED.length) loadFeed().then(F => { try { if (!F.length || !ST.shown || !document.querySelector(".ob3")) return; if (ST.step === 1) { const b = document.querySelector(".ob3s1 .ob3bg"), h = document.createElement("div"); h.innerHTML = bgHTML(); if (b && h.firstChild) b.replaceWith(h.firstChild); const sy = document.querySelector(".ob3s1 .ob3say"); if (sy && !sy.querySelector("img")) { const w = (ranked()[0] || {}).w; if (w) { sy.insertAdjacentHTML("afterbegin", '<img src="' + esc(cover(w)) + '" alt="">'); const c = castOf(w)[0], bb = sy.querySelector(".b"); if (c && bb && !bb.querySelector("small")) bb.insertAdjacentHTML("afterbegin", "<small>" + esc(c) + "</small>"); } } } else if (!document.querySelector(".ob3load")) draw(true); } catch (_) {} });
+    if (ST.step === 3 && !noLoader) {
+      screen("s-ob", casting()); show("s-ob");
+      castT = setTimeout(() => { if (ST.step === 3 && document.querySelector(".ob3load")) draw(true); }, 1700);
+      return;
+    }
+    screen("s-ob", ST.step === 1 ? s1() : ST.step === 2 ? s2() : s3()); show("s-ob");
+    tk("ob3_view", { step: ST.step });
+    if (ST.step === 1) { const i = document.querySelector("#ob3name"); if (i) { i.addEventListener("input", () => { ST.name = i.value.trim().slice(0, 24); const s = document.querySelector("#ob3sayT"); if (s) s.innerHTML = sayText(); }); i.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); i.blur(); go1(); } }); } }
+  }
+  function go1() {
+    const i = document.querySelector("#ob3name"); if (i) ST.name = i.value.trim().slice(0, 24);
+    if (!ST.name) { if (i) { i.focus(); i.classList.remove("shake"); void i.offsetWidth; i.classList.add("shake"); } return; }
+    if (!ST.age) { try { toast(L("Please confirm you’re 18 or older", "请先确认你已年满 18 岁")); } catch (_) {} const a = document.querySelector("#ob3age"); if (a) { a.classList.remove("shake"); void a.offsetWidth; a.classList.add("shake"); } return; }
+    try { obAge = true; } catch (_) {}
+    ST.step = 2; draw();
+  }
+  function authStep() {
+    try { renderAuth70(); } catch (_) { return; }
+    try {
+      const h = document.querySelector("#s-ob h1"), p = h && h.nextElementSibling;
+      if (h) h.innerHTML = L("One last step, " + nm() + ".", nm() + "，最后一步。");
+      if (p) p.textContent = L("Sign in to save your story and start Chapter 1.", "登录后保存你的故事，马上开始第 1 章。");
+    } catch (_) {}
+  }
+  function enter(id) {
+    try { S.ob = true; save(); } catch (_) {}
+    try { startApp(); } catch (_) {}
+    openWork(id);
+  }
+  function openWork(id) {
+    if (!id) return;
+    setTimeout(async () => { try { toast(L("Opening your story…", "正在打开你的剧……")); const wid = await installWork(id); if (wid) { if (typeof openStory === "function") openStory(wid); else startSheet(wid); } } catch (_) {} }, 400);
+  }
+  function finish(id) {
+    clearTimeout(castT);
+    if (ST.dry) { ST.shown = false; try { startApp(); toast(L("Preview only — nothing was saved", "这是预览，没有保存任何内容")); } catch (_) {} return; }
+    try {
+      const p = persona(); if (p && ST.name) p.name = ST.name;
+      S.tropes = TASTES.filter(x => ST.picks.includes(x.k)).map(x => x.tag);
+      S.or = ST.or; S.tasteSet = true; S.langChosen = true;
+      S.ob3 = { pick: id || "", at: Date.now() }; save();
+    } catch (_) {}
+    tk("ob3_done", { picks: ST.picks.join(","), or: ST.or, story: id ? 1 : 0 });
+    if (logged()) { enter(id); return; }
+    authStep();
+  }
+
+  document.addEventListener("click", e => {
+    const el = e.target.closest && e.target.closest(".ob3"); if (!el) return;
+    let x;
+    if (e.target.closest("#ob3age")) { ST.age = !ST.age; const i = document.querySelector("#ob3name"); if (i) ST.name = i.value.trim().slice(0, 24); const a = document.querySelector("#ob3age"); a.classList.toggle("on", ST.age); a.querySelector(".ck").textContent = ST.age ? "✓" : ""; return; }
+    if (e.target.closest("#ob3go1")) { go1(); return; }
+    if (e.target.closest("[data-ob3back]")) { ST.step = Math.max(1, ST.step - 1); draw(true); return; }
+    if ((x = e.target.closest("[data-ob3t]"))) {
+      const k = x.dataset.ob3t, i = ST.picks.indexOf(k);
+      if (i >= 0) ST.picks.splice(i, 1); else { if (ST.picks.length >= 3) { const old = ST.picks.shift(), o = document.querySelector('[data-ob3t="' + old + '"]'); if (o) o.classList.remove("on"); } ST.picks.push(k); }
+      x.classList.toggle("on", ST.picks.includes(k));
+      const b = document.querySelector("#ob3go2"); if (b) b.classList.toggle("off", !ST.picks.length);
+      return;
+    }
+    if ((x = e.target.closest("[data-ob3or]"))) { ST.or = x.dataset.ob3or; document.querySelectorAll("[data-ob3or]").forEach(b => b.classList.toggle("on", b === x)); return; }
+    if (e.target.closest("#ob3go2")) { if (!ST.picks.length) { try { toast(L("Pick at least one — or tap “Surprise me”", "至少选一个，或者点「给我惊喜」")); } catch (_) {} return; } ST.pick = ""; ST.step = 3; draw(); return; }
+    if (e.target.closest("#ob3skip2")) { ST.pick = ""; ST.step = 3; draw(); return; }
+    if ((x = e.target.closest("[data-ob3alt]"))) { ST.pick = x.dataset.ob3alt; draw(true); return; }
+    if ((x = e.target.closest("[data-ob3fin]"))) { finish(x.dataset.ob3fin || ""); return; }
+  });
+  /* 第一屏右上角换语言后，重画这一屏 */
+  document.addEventListener("click", e => { if (!(e.target.closest && e.target.closest("[data-lang],[data-lgpick]"))) return; setTimeout(() => { try { const ob = document.querySelector("#s-ob"); if (ST.shown && ob && !ob.hidden && !S.ob && !(S.ob3 && S.ob3.at)) draw(true); } catch (_) {} }, 60); });
+
+  const R0 = renderOB;
+  renderOB = function () {
+    try {
+      if (off() || S.ob) return R0.apply(this, arguments);
+      if (S.ob3 && S.ob3.at) {
+        if (logged()) { enter(S.ob3.pick || ""); return; }
+        ST.name = ST.name || ((persona() || {}).name || ""); authStep(); return;
+      }
+      if (!ST.name) { try { ST.name = (persona() || {}).name || ""; } catch (_) {} }
+      draw(true); return;
+    } catch (err) { try { console.warn("[ob3]", err); } catch (_) {} return R0.apply(this, arguments); }
+  };
+
+  let cssOn = false;
+  function css() {
+    if (cssOn) return; cssOn = true;
+    const st = document.createElement("style");
+    st.textContent = [
+'.ob3{position:absolute;inset:0;display:flex;flex-direction:column;overflow:hidden;background:#0b0610;color:#fff;-webkit-tap-highlight-color:transparent}',
+'.ob3 button{font-family:inherit;cursor:pointer}',
+'.ob3bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}',
+'.ob3bg .c{position:absolute;top:-6%;width:36%;display:flex;flex-direction:column;gap:10px;animation:ob3up 70s linear infinite;opacity:.6;will-change:transform}',
+'.ob3bg .c:nth-child(1){left:-3%}.ob3bg .c:nth-child(2){left:32%;animation-duration:92s;animation-direction:reverse}.ob3bg .c:nth-child(3){left:67%;animation-duration:80s}',
+'.ob3bg .c img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:14px;display:block}',
+'.ob3bg::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 55% at 50% 0%,rgba(238,111,151,.30),transparent 62%),linear-gradient(180deg,rgba(11,6,16,.30) 0%,rgba(11,6,16,.72) 34%,#0b0610 66%)}',
+'.ob3glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 40% at 50% -6%,rgba(238,111,151,.34),transparent 70%),radial-gradient(70% 36% at 100% 100%,rgba(240,183,126,.14),transparent 70%)}',
+'.ob3sp{position:absolute;inset:0;pointer-events:none}',
+'.ob3sp i{position:absolute;width:3px;height:3px;border-radius:50%;background:#ffe6c8;box-shadow:0 0 8px 2px rgba(240,183,126,.75);opacity:0;animation:ob3tw 4s ease-in-out infinite}',
+'.ob3in{position:relative;z-index:1;flex:1;min-height:0;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 14px) max(20px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 16px) max(20px,env(safe-area-inset-left,0px))}',
+'.ob3in>*{animation:ob3in .7s cubic-bezier(.2,.8,.2,1) both}',
+'.ob3in>*:nth-child(2){animation-delay:.08s}.ob3in>*:nth-child(3){animation-delay:.16s}.ob3in>*:nth-child(4){animation-delay:.24s}.ob3in>*:nth-child(5){animation-delay:.3s}.ob3in>*:nth-child(n+6){animation-delay:.36s}',
+'.ob3top{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:36px;flex:none}',
+'.ob3brand{font-family:Fraunces,Georgia,serif;font-size:24px;font-weight:700;letter-spacing:.18em}.ob3brand b{color:#EE6F97;font-weight:700}',
+'.ob3back{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#fff;font-size:22px;line-height:1;display:grid;place-items:center;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}',
+'.ob3dots{display:flex;gap:6px;justify-content:center;align-items:center}',
+'.ob3dots i{width:6px;height:6px;border-radius:99px;background:rgba(255,255,255,.22);transition:all .3s}.ob3dots i.done{background:rgba(240,183,126,.6)}.ob3dots i.on{width:22px;background:linear-gradient(90deg,#F6C9A0,#EE6F97)}',
+'.ob3mid{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:22px}',
+'.ob3ey{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:#F0B77E;font-weight:600;margin-bottom:12px}',
+'.ob3h{font-family:Fraunces,Georgia,"Songti SC","Noto Serif KR",serif;font-size:36px;line-height:1.08;font-weight:600;letter-spacing:-.01em;margin:0;text-wrap:balance}',
+'.ob3h.sm{font-size:28px;margin-top:16px}',
+'.ob3h i{font-style:italic;background:linear-gradient(100deg,#F6D3AE,#EE6F97 50%,#F6D3AE);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:ob3sh 5s linear infinite;padding-right:.08em}',
+'.ob3sub{margin:8px 0 0;font-size:14px;color:rgba(255,255,255,.66);line-height:1.5}',
+'.ob3lab{display:block;margin-top:26px;font-size:13px;color:rgba(255,255,255,.7)}',
+'.ob3name{width:100%;margin-top:6px;background:transparent;border:0;border-bottom:1.5px solid rgba(255,255,255,.28);border-radius:0;color:#fff;font-family:Fraunces,Georgia,"Songti SC",serif;font-size:28px;padding:6px 0 10px;outline:none;caret-color:#F0B77E;transition:border-color .25s,box-shadow .25s}',
+'.ob3name::placeholder{color:rgba(255,255,255,.3);font-style:italic}',
+'.ob3name:focus{border-bottom-color:#F0B77E;box-shadow:0 12px 18px -14px rgba(240,183,126,.9)}',
+'.ob3say{display:flex;gap:10px;align-items:flex-end;margin-top:20px;min-height:58px}',
+'.ob3say img{width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:50% 18%;flex:none;border:1.5px solid #F0B77E;box-shadow:0 0 0 3px rgba(240,183,126,.18)}',
+'.ob3say .b{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:18px 18px 18px 6px;padding:9px 14px 10px;font-size:15px;line-height:1.4;max-width:84%}',
+'.ob3say .b small{display:block;font-size:11px;color:#F0B77E;letter-spacing:.04em;margin-bottom:2px}',
+'.ob3foot{flex:none;display:flex;flex-direction:column;gap:12px}',
+'.ob3age{display:flex;gap:10px;align-items:center;text-align:left;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:11px 12px;color:rgba(255,255,255,.72);font-size:12.5px;line-height:1.4}',
+'.ob3age .ck{flex:none;width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,.4);display:grid;place-items:center;font-size:13px;font-weight:800;color:#2a0f1c;transition:all .2s}',
+'.ob3age.on{border-color:rgba(240,183,126,.5)}.ob3age.on .ck{background:linear-gradient(135deg,#F6C9A0,#EE6F97);border-color:transparent}',
+'.ob3cta{position:relative;overflow:hidden;flex:none;min-height:56px;width:100%;border-radius:999px;border:0;font-weight:700;font-size:16.5px;letter-spacing:.01em;color:#2a0f1c;background:linear-gradient(95deg,#F6C9A0,#EE6F97);box-shadow:0 12px 32px rgba(238,111,151,.45),inset 0 1px 0 rgba(255,255,255,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;transition:transform .15s,opacity .2s}',
+'.ob3cta small{font-size:11px;font-weight:600;opacity:.72}',
+'.ob3cta::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:34%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:ob3shine 3.6s ease-in-out infinite}',
+'.ob3cta:active{transform:scale(.97)}.ob3cta.off{opacity:.45;box-shadow:none}.ob3cta.off::after{display:none}',
+'.ob3cta.beat{animation:ob3in .7s cubic-bezier(.2,.8,.2,1) both,ob3beat 2.4s ease-in-out 1s infinite}',
+'.ob3lnk{background:none;border:0;color:rgba(255,255,255,.62);font-size:13px;padding:6px;text-decoration:underline;text-underline-offset:3px;align-self:center}',
+'.ob3grid{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:max-content;gap:10px;align-content:start;margin:16px -4px 12px;padding:4px;scrollbar-width:none}.ob3grid::-webkit-scrollbar{display:none}',
+'.ob3t{position:relative;height:132px;border-radius:18px;overflow:hidden;border:1.5px solid rgba(255,255,255,.1);padding:0;background:linear-gradient(135deg,#2a1830,#150d1c);color:#fff;text-align:left;transition:transform .2s,border-color .2s,box-shadow .25s;animation:ob3pop .5s cubic-bezier(.2,.8,.2,1) both}',
+'.ob3t img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 22%;transition:transform .5s}',
+'.ob3t .v{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,6,16,0) 30%,rgba(11,6,16,.86) 100%)}',
+'.ob3t b{position:absolute;left:12px;right:10px;bottom:10px;font-family:Fraunces,Georgia,"Songti SC",serif;font-size:17px;line-height:1.15;font-weight:600;text-shadow:0 1px 8px rgba(0,0,0,.6)}',
+'.ob3t .ck{position:absolute;top:9px;right:9px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;color:#2a0f1c;background:linear-gradient(135deg,#F6C9A0,#EE6F97);transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}',
+'.ob3t.on{border-color:#F0B77E;box-shadow:0 0 0 2px rgba(240,183,126,.35),0 12px 28px rgba(238,111,151,.38)}.ob3t.on img{transform:scale(1.08)}.ob3t.on .ck{transform:scale(1)}',
+'.ob3or{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px;font-size:13px;color:rgba(255,255,255,.66)}',
+'.ob3or span{width:100%}',
+'.ob3or button{border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font-size:13.5px;padding:8px 14px}',
+'.ob3or button.on{border-color:#F0B77E;background:rgba(240,183,126,.16);color:#F6D3AE}',
+'.ob3hero{position:absolute;inset:0;overflow:hidden}',
+'.ob3hero img{width:100%;height:100%;object-fit:cover;object-position:50% 18%;animation:ob3kb 22s ease-in-out infinite alternate}',
+'.ob3hero .v{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,6,16,.5) 0%,rgba(11,6,16,0) 22%,rgba(11,6,16,.2) 42%,rgba(11,6,16,.9) 70%,#0b0610 100%)}',
+'.ob3rev{animation:ob3open 1s cubic-bezier(.2,.8,.2,1) both}',
+'.ob3fill{flex:1;min-height:0}',
+'.ob3badge{align-self:flex-start;font-size:12px;font-weight:700;letter-spacing:.05em;color:#2a0f1c;background:linear-gradient(95deg,#F6D3AE,#F0B77E);border-radius:999px;padding:6px 12px;box-shadow:0 6px 20px rgba(240,183,126,.4)}',
+'.ob3title{font-family:Fraunces,Georgia,"Songti SC","Noto Serif KR",serif;font-size:34px;line-height:1.05;font-weight:600;margin:12px 0 0;text-wrap:balance;text-shadow:0 2px 18px rgba(0,0,0,.6)}',
+'.ob3hook{margin:8px 0 0;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.84);font-style:italic;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}',
+'.ob3hits{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.ob3hits em{font-style:normal;font-size:12px;color:#F6D3AE;border:1px solid rgba(240,183,126,.45);background:rgba(240,183,126,.1);border-radius:999px;padding:4px 10px}',
+'.ob3castrow{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:rgba(255,255,255,.8)}',
+'',
+'.ob3s3 .ob3cta{margin-top:16px}',
+'.ob3alts{margin-top:14px}.ob3alts>span{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}',
+'.ob3alts>div{display:flex;gap:8px;margin-top:8px}',
+'.ob3alts button{flex:1;min-width:0;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px;color:#fff;text-align:left;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}',
+'.ob3alts img{width:34px;height:44px;border-radius:8px;object-fit:cover;flex:none}.ob3alts b{font-size:11.5px;line-height:1.25;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}',
+'.ob3s3 .ob3lnk{margin-top:6px}',
+'.ob3orb{position:relative;width:170px;height:170px;display:grid;place-items:center}',
+'.ob3orb b{font-size:34px;color:#F0B77E;animation:ob3beat 1.2s ease-in-out infinite;text-shadow:0 0 24px rgba(240,183,126,.9)}',
+'.ob3orb img{position:absolute;top:50%;left:50%;width:62px;height:62px;margin:-31px;border-radius:50%;object-fit:cover;object-position:50% 18%;border:2px solid #F0B77E;box-shadow:0 0 24px rgba(238,111,151,.6);animation:ob3orbit 2.4s linear infinite}',
+'.ob3casting{margin-top:26px;font-family:Fraunces,Georgia,"Songti SC",serif;font-style:italic;font-size:19px;color:#F6D3AE;animation:ob3pulse 1.4s ease-in-out infinite}',
+'.ob3 .shake{animation:ob3shake .4s}',
+'@keyframes ob3up{to{transform:translateY(-50%)}}',
+'@keyframes ob3tw{0%,100%{opacity:0;transform:translateY(0) scale(.6)}50%{opacity:.9;transform:translateY(-14px) scale(1)}}',
+'@keyframes ob3in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}',
+'@keyframes ob3pop{from{opacity:0;transform:translateY(14px) scale(.94)}to{opacity:1;transform:none}}',
+'@keyframes ob3sh{to{background-position:-200% 0}}',
+'@keyframes ob3shine{0%,55%{left:-40%}100%{left:130%}}',
+'@keyframes ob3beat{0%,100%{transform:scale(1)}12%{transform:scale(1.035)}24%{transform:scale(1)}36%{transform:scale(1.025)}48%{transform:scale(1)}}',
+'@keyframes ob3kb{from{transform:scale(1.02)}to{transform:scale(1.14) translateY(-1.5%)}}',
+'@keyframes ob3open{from{clip-path:circle(0% at 50% 62%);opacity:.4}to{clip-path:circle(140% at 50% 62%);opacity:1}}',
+'@keyframes ob3orbit{from{transform:rotate(0) translateX(64px) rotate(0)}to{transform:rotate(360deg) translateX(64px) rotate(-360deg)}}',
+'@keyframes ob3pulse{0%,100%{opacity:.55}50%{opacity:1}}',
+'@keyframes ob3shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}',
+'@media (max-height:700px){.ob3h{font-size:30px}.ob3title{font-size:28px}.ob3alts{display:none}.ob3lab{margin-top:16px}}',
+'@media (prefers-reduced-motion:reduce){.ob3 *,.ob3 *::after{animation:none!important;transition:none!important}}'
+].join("");
+    document.head.appendChild(st);
+  }
+
+  /* 预览：?ob3=1（不保存）；?ob3=0 关闭新流程，?ob3=on 重新打开 */
+  let q = ""; try { q = new URLSearchParams(location.search).get("ob3") || ""; } catch (_) {}
+  try { if (q === "0") localStorage.setItem("miru_ob3_off", "1"); if (q === "on") localStorage.removeItem("miru_ob3_off"); } catch (_) {}
+  function preview() { loadFeed(); ST.dry = true; ST.step = 1; ST.picks = []; ST.pick = ""; ST.age = false; ST.name = ""; draw(true); }
+  window.__ob3 = { preview, state: ST };
+  if (q === "1") setTimeout(preview, 1500);
+  try { if (!S.ob && !off()) loadFeed(); } catch (_) {}
+  /* 模块装上之前，新手页可能已经按老流程画出来了：重画一次 */
+  setTimeout(() => { try { const ob = document.querySelector("#s-ob"); if (q !== "1" && !off() && !S.ob && ob && !ob.hidden && !document.querySelector(".ob3") && !document.querySelector(".sheet.on,.sheet.show")) renderOB(); } catch (_) {} }, 0);
+})();
+
+/* ===== app166 · 2026-11-28 拍贴机：排版、选人、把 AI 暧昧合照放到最显眼的位置 =====
+   老板反馈：① 拍贴机的图都不够暧昧、没有性张力，上次说了没改到位；② 最上面那行说明「先选和谁拍（可以搜索），再选相框」和下面的搜索框贴得太近。
+   实际看到的问题：
+   · 选人那一排前面全是没有立绘的角色（系统用名字首字母画的占位图，比如「E」「Mom」「Hospital」），下面六个相框预览自然也全是字母，谈不上暧昧。
+     → 只列有真实立绘的角色；当前选中的人不在筛选结果里（或没有立绘）时，自动换成第一个有立绘的。
+   · 真正暧昧的是「AI 合照」（搂腰贴脸 / 差一点吻上 / 身后耳语 / 额头相抵），但按钮藏在选完相框之后的页面最下面，很多人根本没看到。
+     → 选人下面加一张醒目的入口卡，点了直接进相框并开始生成（每张成功才扣钻，价格写在卡片上）。
+   · 排版：说明文字、搜索行、头像行、相框区之间加了间距。
+   AI 合照的提示词也加强了亲密感（在 app144_discfix.js 的 mod198b 里），尺度不变：成年人、衣着完整、不露骨。 */
+(function () {
+  "use strict";
+  if (!window.__mod198b || typeof boothOpen !== "function" || typeof boothChars !== "function") return;
+  const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
+  const PR = () => (typeof PRICES !== "undefined" && PRICES.img) || 2;
+  const real = id => { try { const a = String(artSrc(id) || ""); return !!a && !/^data:/.test(a); } catch (_) { return false; } };
+  const _bc = boothChars;
+  boothChars = function () { const L = _bc(), R = L.filter(real); return R.length ? R : L; };
+  function card() {
+    const box = document.querySelector("#s-booth .btchars"); if (!box) return;
+    const old = document.querySelector("#s-booth .bt166ai"); if (old) old.remove();
+    const c = ch(BT.cid); if (!c || !real(BT.cid)) return;
+    const nm = esc(first(c.n));
+    box.insertAdjacentHTML("afterend", '<button type="button" class="bt166ai" data-bt166ai="1"><span class="k">✨ ' + (ZH() ? "AI 暧昧合照" : "AI COUPLE SHOTS") + '</span><b>' + (ZH() ? "和 " + nm + " 贴近拍一组" : "Get close with " + nm) + '</b><small>' +
+      (ZH() ? "搂腰贴脸 · 差一点吻上 · 身后耳语 · 额头相抵　｜　4 张，每张 💎" + PR() + "，成功才扣" : "Pulled in by the waist · almost a kiss · a whisper from behind · foreheads touching — 4 shots, 💎" + PR() + " each, only if it works") + '</small></button>');
+  }
+  const _open = boothOpen;
+  boothOpen = async function (cid) {
+    try { const L = boothChars(), cur = cid || BT.cid; if (L.length && (!cur || !L.includes(cur))) cid = L[0]; } catch (_) {}
+    const r = await _open(cid);
+    try { card(); } catch (_) {}
+    return r;
+  };
+  let going = false;
+  document.addEventListener("click", async e => {
+    if (!(e.target.closest && e.target.closest("[data-bt166ai]")) || going) return;
+    going = true;
+    try {
+      const n = document.querySelectorAll("#s-booth [data-btf]").length, f = document.querySelector('#s-booth [data-btf="' + (n > 5 ? 5 : 0) + '"]');
+      if (f) f.click();
+      for (let i = 0; i < 30; i++) { await new Promise(z => setTimeout(z, 120)); const b = document.querySelector("[data-btai]"); if (b) { b.scrollIntoView({ block: "center" }); b.click(); break; } }
+    } catch (_) {}
+    going = false;
+  });
+  const st = document.createElement("style");
+  st.textContent = '#s-booth .scroll>p.pad{padding:12px 16px 12px!important;font-size:13px;line-height:1.5}' +
+    '#s-booth .btfind{padding:0 16px 14px!important}' +
+    '#s-booth .btchars{padding:6px 16px 16px!important}' +
+    '#s-booth .btgrid{margin-top:18px}' +
+    '.bt166ai{display:flex;flex-direction:column;gap:4px;text-align:left;margin:2px 16px 0;width:calc(100% - 32px);padding:14px 16px;border-radius:18px;border:1px solid rgba(240,183,126,.45);background:linear-gradient(120deg,rgba(238,111,151,.30),rgba(120,40,110,.32) 60%,rgba(240,183,126,.20));color:#fff;box-shadow:0 10px 30px rgba(238,111,151,.25);cursor:pointer}' +
+    '.bt166ai .k{font-size:11.5px;letter-spacing:.12em;color:#F6D3AE;font-weight:700}' +
+    '.bt166ai b{font-size:17px;font-family:Fraunces,Georgia,"Songti SC",serif;font-weight:600}' +
+    '.bt166ai small{font-size:12px;color:rgba(255,255,255,.78);line-height:1.5}';
+  document.head.appendChild(st);
+  window.__booth166 = 1;
+})();
+
+/* 2026-11-28 查出拍贴机 AI 合照（以及所有「同一张脸」改图）一直失败的原因：
+   参考立绘先被缩到最长边 560px，竖版立绘（比如 941×1672）短边只剩 315px，
+   阿里云 wan2.5-i2i 要求图片宽高都不小于 384px，直接报「Error validating image resolution」，所以一张都生成不出来。
+   现在：最长边缩到 1024；短边不足 512 时放大到 512（最长边不超过 1600）。 */
+(function () {
+  "use strict";
+  if (typeof qimgShrink !== "function") return;
+  qimgShrink = function (src, max) {
+    return new Promise(ok => {
+      const im = new Image(); im.crossOrigin = "anonymous";
+      im.onload = () => { try { const W = im.naturalWidth, H = im.naturalHeight; let s = Math.min(1, 1024 / Math.max(W, H)); if (Math.min(W, H) * s < 512) s = Math.min(1600 / Math.max(W, H), 512 / Math.min(W, H)); const c = document.createElement("canvas"); c.width = Math.round(W * s); c.height = Math.round(H * s); c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); ok(c.toDataURL("image/jpeg", .85)); } catch (_) { ok(src); } };
+      im.onerror = () => ok(src); im.src = src;
+    });
+  };
+})();
+
+/* ===== app167 · 2026-11-28 角色语音：只要发音就收费（点一句 🔊 也算） =====
+   老板：「只要是角色有发音就要收费，点一下也要收费；按阿里云成本的 5 倍收。」
+   成本：qwen3-tts-flash 新加坡区 ¥0.733924 / 万字符，北京区 ¥0.8 / 万字符（阿里云百炼官方价，2026-11-28 查）。
+   定价：沿用 💎1 = 2000 字（约 60 句）。2000 字成本约 ¥0.15–0.16；
+         1 💎 用户实付最低约 $0.15（最大礼包），扣掉商店 15% 抽成约 ¥0.9 ⇒ 约 5.7–6 倍；按小包算约 8 倍，都不低于 5 倍。
+   以前有两套计费叠在一起：ttsBill（每合成 2500 字扣 1 💎，点读也在里面）和自动朗读的字数额度（每 2000 字扣 1 💎），
+   自动朗读的句子会被两边各扣一次；而界面上又写着「点 🔊 免费」。现在统一成一套：
+     · 所有角色发音（自动朗读、点某一句 🔊）都从同一个字数额度里扣，额度用完时扣 💎1 换 2000 字；
+     · 剧里预先录好的配音不扣；
+     · 宝石不够：不播放，弹出充值。
+   语音通话另有按分钟的价格，不在这里。 */
+(function () {
+  "use strict";
+  if (typeof speak !== "function") return;
+  const CHARS = 2000;
+  const zh = () => { try { return CL() === "zh"; } catch (_) { return false; } };
+  /* 旧的「每合成 2500 字扣 1 💎」停掉，避免重复扣 */
+  try { if (typeof ttsBill === "function") ttsBill = function () {}; } catch (_) {}
+
+  let auto = false;
+  if (typeof voiceCount === "function") { const vc = voiceCount; voiceCount = function () { auto = true; return vc.apply(this, arguments); }; }
+  const len = t => String(t || "").replace(/[*()（）\s]/g, "").replace(/^📞/, "").length;
+  function chip() { try { const k = document.querySelector(".topbar .chip.num"); if (k) k.textContent = "💎 " + S.keys; if (typeof keysChip === "function") keysChip(); } catch (_) {} }
+  function charge(n) {
+    if ((S.vcred157 || 0) >= n) { S.vcred157 -= n; save(); return true; }
+    if ((S.keys || 0) < 1) return false;
+    S.keys -= 1; S.vcred157 = (S.vcred157 || 0) + CHARS - n; if (S.vcred157 < 0) S.vcred157 = 0; save(); chip();
+    try { toast(zh() ? "角色语音 · 💎1（约 60 句）· 剩 " + S.keys : "Character voice · 💎1 (~60 lines) · " + S.keys + " left"); } catch (_) {}
+    try { if (typeof track === "function") track("voice_gem", { n: CHARS }); } catch (_) {}
+    return true;
+  }
+  const sp = speak;
+  speak = function (text, who, onend) {
+    const isAuto = auto; auto = false;
+    if (isAuto) return sp.apply(this, arguments); /* 自动朗读：沿用原来那一层按字数扣（同一个额度） */
+    try {
+      const n = len(text);
+      const rec = typeof recorded === "function" && recorded(text, who);
+      if (n && !rec && !charge(n)) {
+        try { toast(zh() ? "宝石不够了，角色语音要 💎1 ≈ 60 句" : "Out of 💎 — character voice is 💎1 per ~60 lines"); } catch (_) {}
+        try { if (typeof paySheet === "function") paySheet(); } catch (_) {}
+        try { if (onend) onend(); } catch (_) {}
+        return;
+      }
+    } catch (_) {}
+    return sp.apply(this, arguments);
+  };
+  try {
+    Object.assign(I18N.zh, { "vp.note": "角色语音按字数扣宝石：💎1 ≈ 2000 字 ≈ 60 句。自动朗读和单独点某一句的 🔊 都从这里扣；剧里预先录好的配音不扣。" });
+    Object.assign(I18N.en, { "vp.note": "Character voice uses 💎 by length: 💎1 ≈ 60 lines. Auto read-aloud and tapping 🔊 on a line both use it; pre-recorded voice in stories is free." });
+  } catch (_) {}
+  window.__voice167 = 1;
+})();
+
+/* V2.2 official manuscripts use the shared native engine; only these works opt in. */
+(function () {
+  'use strict';
+  const works=new Set(['w_scmwzzyizs9e25d81856','w_scmwzzyj6ic3f89e7bbc','w_scmwzzyjclce837623b6']);
+  const on=w=>!!(w&&works.has(w.community));
+  const assets=w=>OFF94.assets[w.community]||{};
+  const data=w=>assets(w).v22;
+  const role=(w,id)=>{const c=ch(id);return data(w)?.characters.find(x=>x.canonical===(c?.n94?.zh||c?.n));};
+  const language=()=>({zh:'Simplified Chinese',en:'English',ja:'Japanese',ko:'Korean',es:'Spanish'})[CL()]||'English';
+  function configure(w){
+    if(!on(w)||!data(w))return;
+    w.pack.nativeV2=1;w.pack.minRoundsPerChapter=0;
+    const ids=names=>(names||[]).map(n=>w.cast.find(id=>(ch(id)?.n94?.zh||ch(id)?.n)===n)).filter(Boolean);
+    for(const id of w.cast){const c=ch(id),r=role(w,id);if(!r)continue;
+      c.v22Role=r.canonical;c.romanceable=r.romanceable;c.voiceId=r.voice;
+      c.n94={zh:r.canonical,en:r.names.en||r.canonical};
+      c.n=r.names[CL()]||r.names.en||r.canonical;
+    }
+    w.leads=w.cast.filter(id=>role(w,id)?.romanceable);
+    for(const c of w.pack.chapters)for(const beats of Object.values(c.beats||{})){
+      function walk(rows){for(const b of rows||[]){if(!Array.isArray(b))continue;const d=b[2];
+        if(b[0]==='sys'&&b[1]==='scene'&&assets(w).scene_present?.[d.bg94])d.nativePresent=ids(assets(w).scene_present[d.bg94]);
+        if(d&&typeof d==='object'){walk(d.then);walk(d.else);for(const o of d.opts||[])walk(o.then);}
+      }}walk(beats);
+    }
+    for(const [k,u] of Object.entries(assets(w))){
+      if(k.startsWith('bgm_')&&typeof u==='string'){
+        (window.BGM_FILES=window.BGM_FILES||{})[k.slice(4)]=u;
+        if(typeof BGM_MOODS!=='undefined')BGM_MOODS[k.slice(4)]={bpm:72,ch:[[60,64,67]],arp:[]};
+      }
+      if(k.startsWith('sfx_')&&typeof u==='string'&&typeof SFX100!=='undefined'){
+        const id=k.slice(4);if(!SFX100.some(x=>x.id===id))SFX100.push({id,zh:k,en:k,L:[],kw:[]});
+        SFX_FILES[id]=u;
+      }
+    }
+  }
+  PARSE.use('three-stories-v22:bindings',{build(next,doc,as){const r=next(doc,as);configure(wd(r&&(r.wid||r)));return r;}});
+  const merge=off94MergeEn;
+  off94MergeEn=function(wid,P){const r=merge.apply(this,arguments),w=wd(wid);configure(w);
+    if(on(w)&&P){for(const [lang,suffix] of [['zh',''],['en','_en'],['ja','_ja'],['ko','_ko'],['es','_es']]){
+      if(typeof imParse!=='function'||!P['script'+suffix])continue;
+      const doc=imParse(P['script'+suffix]);
+      w.pack.chapters.forEach((c,i)=>{c.done163Locales=c.done163Locales||{};c.done163Locales[lang]=doc.done163?.[i]||[];});
+    }}return r;
+  };
+  const names=off94Names;
+  off94Names=function(){const r=names.apply(this,arguments);for(const w of Object.values(S.mine.worlds||{}))configure(w);return r;};
+  const card=castCardFace;
+  castCardFace=function(th,id){const w=wd(th.wid),r=on(w)&&role(w,id);if(!r)return card.apply(this,arguments);
+    return '- id='+id+' · '+(r.names[CL()]||r.names.en||r.canonical)+'. Role: '+(r.public_role?.[CL()]||r.public_role?.en||'')+'. Appearance: '+r.appearance+
+      '\nVoice, habits and boundaries: '+r.voice_and_boundaries+
+      (r.romanceable?'\nA potential romance route, only with explicit player consent.':'\nThis is not a romance route; no courtship or intimacy progression.')+
+      '\nKnowledge comes only from this person’s own experience and evidence actually disclosed in this save. Never infer undisclosed facts from authoring cards or later chapters. No other person can read their thoughts.';
+  };
+  const prompt=packPrompt;
+  packPrompt=function(th){const s=prompt.apply(this,arguments),w=wd(th.wid);if(!on(w)||!data(w))return s;
+    const f=data(w).player?.fields||{};
+    const endings=Object.entries(data(w).contract?.final_flags||{}).filter(([flag])=>th.pk?.flags?.[flag]).map(([flag,rule])=>({flag,intent:rule.intent,effect:rule.effect}));
+    return s+'\nWORK-SPECIFIC PLAYER IDENTITY: '+[f.A02?.content,f.A03?.content,f.A07?.content].filter(Boolean).join(' ')+
+      '\nOnly present characters may speak. Keep the current scene and wait for the player to advance. A game result proves only the recorded interaction; it cannot create evidence, agreement, forgiveness or a romantic commitment. A refusal, request to pause, or independence remains valid after the ending. No unsolicited contact after a declined invitation.'+
+      '\nCONFIRMED ENDING STATE: '+JSON.stringify(endings)+'. Only these actual saved choices establish post-story intent; an empty list establishes none. Post-story contact requires fresh permission and must respect this ending.'+
+      '\nOUTPUT LANGUAGE OVERRIDE: Use natural '+language()+' only, including narration and suggestions. Use each character’s localized name. Prior generic English-only instructions do not apply to this multilingual work.';
+  };
+  const result=mgResult;
+  mgResult=function(th,d,r){const w=wd(th.wid);if(!on(w))return result.apply(this,arguments);
+    if(!['win','lose','skip'].includes(r))return [];
+    const ledger=th.pk.v22Games=th.pk.v22Games||[];
+    ledger.push({chapter:th.pk.ch,scene:th.pk.nativeScene?.place||th.status?.place||'',game:d.id,result:r,at:Date.now()});
+    if(ledger.length>96)ledger.shift();
+    if(r==='win')pkSet(th,'v22_game_'+th.pk.ch+'_'+(th.pk.mgN||0)+'_win');
+    th.pk.mgN=(th.pk.mgN||0)+1;save();
+    const msg={zh:{win:'互动已完成，继续眼前的事。',lose:'这次没有完成，可以继续剧情。',skip:'已跳过，剧情照常继续。'},en:{win:'Interaction complete. Return to the scene.',lose:'Not completed this time. The story continues.',skip:'Skipped. The story continues.'},ja:{win:'操作が完了しました。場面に戻ります。',lose:'今回は未完了です。物語は続きます。',skip:'スキップしました。物語は続きます。'},ko:{win:'조작을 마쳤습니다. 장면으로 돌아갑니다.',lose:'이번에는 완료하지 못했습니다. 이야기는 계속됩니다.',skip:'건너뛰었습니다. 이야기는 계속됩니다.'},es:{win:'Interacción completada. Vuelve a la escena.',lose:'Esta vez no se completó. La historia continúa.',skip:'Omitido. La historia continúa.'}};
+    return [['n','act',(msg[CL()]||msg.en)[r]]];
+  };
+  if(typeof renderChat==='function'){const render=renderChat;renderChat=function(){const th=S.threads[curT];if(th)configure(wd(th.wid));return render.apply(this,arguments);};}
 })();
 
