@@ -44,3 +44,6 @@ with tempfile.TemporaryDirectory() as td:
  assert (old/'art/replaced.jpg').read_bytes()==b'old media','Previous release media was modified'
  assert (new/'art/retained.jpg').stat().st_ino==(old/'art/retained.jpg').stat().st_ino,'Unchanged media was duplicated on disk'
 print('Retained media: shared immutable bytes, fresh media preserved, previous release unchanged.')
+
+import sys, subprocess
+subprocess.run([sys.executable,str(Path(__file__).with_name('deploy-static-selftest.py'))],check=True)
