@@ -54,7 +54,9 @@ parts.extend(["app157_reply_pace.js"])
 parts.extend(["app163_hant.js"])   # 2026-11-28 中文全部显示为繁体（最后加载，转换整页文字）
 parts.extend(["app164_free10.js"])
 # 2026-11-28 新手先导页三屏（名字 → 口味 → 为你选的第一部剧）。去掉这一行即恢复原来的新手流程。
-parts.extend(["app165_ob3.js"])   # 2026-11-28 免费聊天 10 句，之后付费；AI 生图不再每日免费
+parts.extend(["app165_ob3.js"])
+# 2026-11-28 拍贴机：只列有立绘的角色、AI 暧昧合照入口、排版间距
+parts.extend(["app166_booth.js"])   # 2026-11-28 免费聊天 10 句，之后付费；AI 生图不再每日免费
 parts.extend(["app163_three_stories_v22.js"])
 
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
