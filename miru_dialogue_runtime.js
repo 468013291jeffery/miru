@@ -1,6 +1,8 @@
 /* MIRU dialogue runtime: keeps dialogue integration independent of page rebuilds. */
 (function (legacyCharter) {
   if (window.MIRU_DIALOGUE_RUNTIME_READY) return;
+  // The rebuilt bundle contains the dialogue module; legacy globals may not exist yet.
+  if (typeof talkIntent !== "function" || typeof TALK_FB === "undefined" || typeof talkSugg !== "function") return;
   function installModule() {
 /* Dialogue runtime: v7.11 Reply Charter + v7.12 §06.2 soft guidance.
    Extends Ann's existing engine; suggestions never execute story effects. */
