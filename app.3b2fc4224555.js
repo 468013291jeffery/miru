@@ -32450,14 +32450,14 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
    现在（只对还没走完新手流程的新用户生效，S.ob 为真的老用户完全不受影响）：
      ① 名字：「每个故事都需要一位主角，就是你」——输入名字，角色当场用你的名字跟你说话；勾选 18 岁。
      ② 口味：8 张带剧照的大卡片（宿敌变恋人 / 危险的男人 / 吸血鬼与狼族 / 王冠与宫廷 …），最多选 3 个；恋爱对象可选。
-     ③ 揭晓：「选角中…」动画 → 整屏剧照揭晓为你选的那部剧（从现在线上真正能玩的剧 allWorlds() 里按口味挑），
+     ③ 揭晓：「选角中…」动画 → 整屏剧照揭晓为你选的那部剧（从首页正在展示的官方剧里按口味挑），
         点「开始第 1 章」→ 没登录就在这一步登录（登录是硬性要求，没改，只是从第一屏挪到最后一步），登录完直接进这部剧。
    不编造评分、人数、用户评价。首页视频文字样式没有动。
    预览：已登录的老用户打开 miru.plus/?ob3=1 可以完整走一遍（预览模式不保存任何东西）。
    关闭：把 build.py 里 app165_ob3.js 那一行去掉即可恢复原流程；或临时在控制台执行 localStorage.miru_ob3_off="1"。 */
 (function () {
   "use strict";
-  if (typeof renderOB !== "function" || typeof screen !== "function" || typeof allWorlds !== "function") return;
+  if (typeof renderOB !== "function" || typeof screen !== "function" || typeof off94Feed !== "function") return;
   const off = () => { try { return localStorage.getItem("miru_ob3_off") === "1"; } catch (_) { return false; } };
   const zh = () => { try { return CL() === "zh"; } catch (_) { return false; } };
   const L = (e, z) => (zh() ? z : e);
@@ -32465,59 +32465,67 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   const tk = (n, p) => { try { if (!ST.dry && typeof track === "function") track(n, p || {}); } catch (_) {} };
 
   const TASTES = [
-    { k: "enemies", e: "Enemies to Lovers", z: "宿敌变恋人", rx: /enemies|rivals|frenem|宿敌|对手|死对头/i, tag: "Enemies to Lovers" },
-    { k: "dark", e: "Dark & Dangerous", z: "危险的男人", rx: /mafia|dark|morally|possessive|touch her|黑帮|危险|强势/i, tag: "Forbidden" },
-    { k: "fang", e: "Vampires & Wolves", z: "吸血鬼与狼族", rx: /vampire|吸血鬼|狼|wolf|fated|宿命|命定|romantasy/i, tag: "Fated Mates" },
-    { k: "royal", e: "Crowns & Courts", z: "王冠与宫廷", rx: /royal|crown|prince|castle|贵族|王子|old money/i, tag: "Arranged Marriage" },
-    { k: "slow", e: "Slow Burn", z: "慢热心动", rx: /slow burn|慢热|pining|bittersweet/i, tag: "Slow Burn" },
-    { k: "choose", e: "Why Choose?", z: "全都想要", rx: /why choose|triangle|harem/i, tag: "Why Choose" },
-    { k: "secret", e: "Secrets & Suspense", z: "秘密与悬疑", rx: /suspense|mystery|秘密|谍|spy|hidden|secret/i, tag: "Hidden Identity" },
-    { k: "star", e: "Fame & Spotlight", z: "聚光灯下", rx: /celebrity|sports|hockey|campus|校园|游泳|billionaire/i, tag: "Secret Relationship" }
+    { k: "enemies", e: "Enemies to Lovers", z: "宿敌变恋人", rx: /enemies|rivals|revenge|villain|reject/i, tag: "Enemies to Lovers" },
+    { k: "dark", e: "Dark & Dangerous", z: "危险的男人", rx: /mafia|dark romance|morally|possessive|touch her|villain|killer|forbidden/i, tag: "Forbidden" },
+    { k: "fang", e: "Vampires & Wolves", z: "吸血鬼与狼族", rx: /vampire|werewol|wolf|fated|dragon|paranormal|gothic|gods/i, tag: "Fated Mates" },
+    { k: "royal", e: "Crowns & Courts", z: "王冠与宫廷", rx: /royal|crown|prince|castle|secret heir|villainess/i, tag: "Arranged Marriage" },
+    { k: "slow", e: "Slow Burn", z: "慢热心动", rx: /slow burn|pining|small town|slice of life|hurt\/comfort/i, tag: "Slow Burn" },
+    { k: "choose", e: "Why Choose?", z: "全都想要", rx: /why choose|triangle/i, tag: "Why Choose" },
+    { k: "secret", e: "Secrets & Suspense", z: "秘密与悬疑", rx: /suspense|mystery|hidden identity|secret/i, tag: "Hidden Identity" },
+    { k: "star", e: "Second Chances", z: "破镜重圆", rx: /second chance|divorce|ex\b|reborn|remember/i, tag: "Second Chance" }
   ];
   const ST = { step: 1, name: "", age: false, picks: [], or: "all", pick: "", dry: false, shown: false };
 
-  /* ---------- 剧库：线上真正能玩的剧，按标题去重 ---------- */
-  const wtxt = w => ((w.tags || []).join(" ") + " " + ((w.title && (w.title.en || "")) || "") + " " + ((w.title && (w.title.zh || "")) || ""));
-  const hookOf = w => { let h = ""; try { h = Lz(w.hook) || ""; } catch (_) {} if (!zh() && /[一-鿿]/.test(h)) h = (w.hook && w.hook.en && !/[一-鿿]/.test(w.hook.en)) ? w.hook.en : ""; return h; };
-  const cover = w => { try { return artSrc(w.id) || artSrc(w.cast[0]) || ""; } catch (_) { return ""; } };
-  function pool() {
-    let A = []; try { A = allWorlds() || []; } catch (_) {}
-    const by = new Map();
-    A.forEach(w => {
-      if (!w || !w.id || !w.title) return;
-      const key = String((w.title.en || w.title.zh || w.id)).toLowerCase().replace(/[^a-z0-9一-鿿]+/g, "");
-      const sc = (hookOf(w) ? 2 : 0) + (w.cover ? 1 : 0);
-      const cur = by.get(key);
-      if (!cur || sc >= cur.sc) by.set(key, { w, sc });
-    });
-    return [...by.values()].map(x => x.w);
+  /* ---------- 剧库：首页正在展示的官方剧（off94Feed，和首页短剧流同一份；有真实封面、英文标题和标签） ----------
+     2026-11-28 第二版：第一版用的 allWorlds() 里大多是没有封面的旧条目，线上图片全是裂的；改成首页同一份剧单。
+     封面图很大（每张 2–3 MB），所以整套先导页只用 8 张（口味卡片那 8 张，第一屏背景复用同一批）。 */
+  let FEED = [], feedP = null;
+  const cjk = x => /[一-鿿]/.test(x || "");
+  function norm(raw) {
+    const A = raw.A || {};
+    const names = Object.keys(A).filter(k => /^char_[a-z]{3,12}$/.test(k)).slice(0, 3).map(k => k.slice(5, 6).toUpperCase() + k.slice(6));
+    return {
+      id: raw.id, raw, or: raw.orient || "bg", tags: raw.tags || [], cover: A.cover || A.poster || "", cast: names,
+      get title() { try { return off94Title(raw) || ""; } catch (_) { return raw.title || ""; } },
+      get hook() { try { return off94Hook(raw) || ""; } catch (_) { return raw.hook || ""; } }
+    };
   }
-  const orFit = w => ST.or === "all" || w.or === ST.or || w.or === "all";
+  function loadFeed() {
+    if (feedP) return feedP;
+    feedP = (async () => { try { const L0 = await off94Feed(); FEED = (L0 || []).map(norm).filter(w => w.cover); } catch (_) { FEED = []; } if (!FEED.length) feedP = null; return FEED; })();
+    return feedP;
+  }
+  const wtxt = w => (w.tags.join(" ") + " " + ((w.raw.en && w.raw.en.title) || "") + " " + (w.raw.title || ""));
+  const hookOf = w => { const h = w.hook; return (!zh() && cjk(h)) ? "" : h; };
+  const cover = w => w.cover || "";
+  const pool = () => FEED;
+  const orFit = w => ST.or === "all" || w.or === ST.or;
   function ranked() {
     const P = pool(), sel = TASTES.filter(x => ST.picks.includes(x.k));
     const seed = (ST.name + "|" + ST.picks.join(",")).split("").reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
-    const L0 = P.map((w, i) => {
+    return P.map((w, i) => {
       const tx = wtxt(w), hits = sel.filter(x => x.rx.test(tx));
-      const sc = hits.length * 30 + (orFit(w) ? 40 : 0) + (ST.or === "all" && w.or === "bg" ? 6 : 0) + (hookOf(w) ? 8 : 0) + (w.cover ? 4 : 0) + Math.min(6, (w.cast || []).length) + ((seed + i * 7919) % 5);
+      const sc = hits.length * 30 + (orFit(w) ? 60 : 0) + (ST.or === "all" && w.or === "bg" ? 8 : 0) + (hookOf(w) ? 8 : 0) + (w.raw.A && (w.raw.A.vid_open || w.raw.A.home_video) ? 5 : 0) + ((seed + i * 7919) % 7);
       return { w, sc, hits };
     }).sort((a, b) => b.sc - a.sc);
-    return L0;
   }
+  let TILE = null;
   function tileArt() {
-    const P = pool().filter(w => cover(w)), used = new Set(), out = {};
+    if (TILE && Object.keys(TILE).length) return TILE;
+    const P = pool().filter(w => w.or === "bg" || w.or === "all"), used = new Set(), out = {};
     TASTES.forEach(x => {
       const c = P.filter(w => x.rx.test(wtxt(w)));
-      const w = c.find(w => !used.has(w.id)) || c[0] || P.find(w => !used.has(w.id)) || P[0];
+      const w = c.find(w => !used.has(w.id)) || P.find(w => !used.has(w.id)) || c[0] || P[0];
       if (w) { used.add(w.id); out[x.k] = cover(w); }
     });
-    return out;
+    return (TILE = out);
   }
-  const castOf = w => (w.cast || []).filter(id => { try { return ch(id) && artSrc(id); } catch (_) { return false; } });
-  const cname = id => { try { return first(Lz(ch(id).n) || ch(id).n); } catch (_) { return ""; } };
+  const castOf = w => w.cast || [];
+  const cname = x => x;
 
   /* ---------- 画面 ---------- */
   function bgHTML() {
-    const A = pool().map(cover).filter(Boolean).slice(0, 12);
+    const TA = tileArt(), A = TASTES.map(x => TA[x.k]).filter(Boolean);
     if (A.length < 3) return '<div class="ob3bg"></div><div class="ob3sp">' + sparks() + '</div>';
     const col = i => { const c = A.filter((_, j) => j % 3 === i); return '<div class="c">' + c.concat(c).concat(c.length < 3 ? c.concat(c) : []).map(s => '<img src="' + esc(s) + '" alt="">').join("") + '</div>'; };
     return '<div class="ob3bg">' + col(0) + col(1) + col(2) + '</div><div class="ob3sp">' + sparks() + '</div>';
@@ -32529,7 +32537,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     return ST.name ? L("“" + esc(ST.name) + ". I’ve been waiting for you.”", "「" + esc(ST.name) + "，我等你很久了。」") : L("“…and you are?”", "「……你是？」");
   }
   function s1() {
-    const P = ranked(), w = (P[0] || {}).w, c = w ? castOf(w)[0] : null, av = c ? artSrc(c) : (w ? cover(w) : "");
+    const P = ranked(), w = (P[0] || {}).w, c = w ? castOf(w)[0] : null, av = w ? cover(w) : "";
     let lang = ""; try { lang = langPicker(); } catch (_) {}
     return '<div class="ob3 ob3s1">' + bgHTML() + '<div class="ob3in">' +
       '<div class="ob3top"><div class="ob3brand">MI<b>RU</b></div>' + lang + '</div>' +
@@ -32544,7 +32552,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   }
   function s2() {
     const art = tileArt();
-    const ors = [["all", L("Anyone", "都可以")], ["bg", L("Men · M/F", "男生 · 男女")], ["bl", "M/M"]];
+    const ors = [["all", L("Anyone", "都可以")], ["bg", "M/F"], ["bl", "M/M"], ["gl", "F/F"]];
     return '<div class="ob3 ob3s2"><div class="ob3glow"></div><div class="ob3in">' +
       '<div class="ob3top"><button type="button" class="ob3back" data-ob3back="1" aria-label="back">‹</button>' + dots(2) + '<span style="width:36px"></span></div>' +
       '<h1 class="ob3h sm">' + L("What makes your heart race, <i>" + nm() + "</i>?", "<i>" + nm() + "</i>，什么最让你心动？") + '</h1>' +
@@ -32565,12 +32573,12 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
       '<div class="ob3top"><button type="button" class="ob3back" data-ob3back="1" aria-label="back">‹</button>' + dots(3) + '<span style="width:36px"></span></div>' +
       '<div class="ob3fill"></div>' +
       '<div class="ob3badge">✦ ' + L("Cast for you, " + nm(), nm() + "，这部为你而选") + '</div>' +
-      '<h2 class="ob3title">' + esc(Lz(w.title)) + '</h2>' +
+      '<h2 class="ob3title">' + esc(w.title) + '</h2>' +
       (hook ? '<p class="ob3hook">“' + esc(hook) + '”</p>' : '') +
       (hits.length ? '<div class="ob3hits">' + hits.map(x => '<em>♥ ' + esc(x) + '</em>').join("") + '</div>' : '') +
-      (cs.length ? '<div class="ob3castrow"><span class="avs">' + cs.map(id => '<img src="' + esc(artSrc(id)) + '" alt="">').join("") + '</span><span>' + esc(wait) + '</span></div>' : '') +
+      (cs.length ? '<div class="ob3castrow"><span>♡ ' + esc(wait) + '</span></div>' : '') +
       '<button type="button" class="ob3cta beat" data-ob3fin="' + esc(w.id) + '">▶ ' + L("Start Chapter 1", "开始第 1 章") + '<small>' + L("Free to start", "免费开始") + '</small></button>' +
-      (alts.length ? '<div class="ob3alts"><span>' + L("Or try", "或者试试") + '</span><div>' + alts.map(r => '<button type="button" data-ob3alt="' + esc(r.w.id) + '"><img src="' + esc(cover(r.w)) + '" alt=""><b>' + esc(Lz(r.w.title)) + '</b></button>').join("") + '</div></div>' : '') +
+      (alts.length ? '<div class="ob3alts"><span>' + L("Or try", "或者试试") + '</span><div>' + alts.map(r => '<button type="button" data-ob3alt="' + esc(r.w.id) + '"><img src="' + esc(cover(r.w)) + '" alt=""><b>' + esc(r.w.title) + '</b></button>').join("") + '</div></div>' : '') +
       '<button type="button" class="ob3lnk" data-ob3fin="">' + L("Show me everything", "先逛逛全部") + '</button></div></div>';
   }
   function casting() {
@@ -32580,6 +32588,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   let castT = null;
   function draw(noLoader) {
     css(); ST.shown = true; clearTimeout(castT);
+    if (!FEED.length) loadFeed().then(F => { try { if (!F.length || !ST.shown || !document.querySelector(".ob3")) return; if (ST.step === 1) { const b = document.querySelector(".ob3s1 .ob3bg"), h = document.createElement("div"); h.innerHTML = bgHTML(); if (b && h.firstChild) b.replaceWith(h.firstChild); const sy = document.querySelector(".ob3s1 .ob3say"); if (sy && !sy.querySelector("img")) { const w = (ranked()[0] || {}).w; if (w) { sy.insertAdjacentHTML("afterbegin", '<img src="' + esc(cover(w)) + '" alt="">'); const c = castOf(w)[0], bb = sy.querySelector(".b"); if (c && bb && !bb.querySelector("small")) bb.insertAdjacentHTML("afterbegin", "<small>" + esc(c) + "</small>"); } } } else if (!document.querySelector(".ob3load")) draw(true); } catch (_) {} });
     if (ST.step === 3 && !noLoader) {
       screen("s-ob", casting()); show("s-ob");
       castT = setTimeout(() => { if (ST.step === 3 && document.querySelector(".ob3load")) draw(true); }, 1700);
@@ -32607,11 +32616,15 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   function enter(id) {
     try { S.ob = true; save(); } catch (_) {}
     try { startApp(); } catch (_) {}
-    if (id) setTimeout(() => { try { startSheet(id); } catch (_) {} }, 350);
+    openWork(id);
+  }
+  function openWork(id) {
+    if (!id) return;
+    setTimeout(async () => { try { toast(L("Opening your story…", "正在打开你的剧……")); const wid = await installWork(id); if (wid) { if (typeof openStory === "function") openStory(wid); else startSheet(wid); } } catch (_) {} }, 400);
   }
   function finish(id) {
     clearTimeout(castT);
-    if (ST.dry) { ST.shown = false; try { startApp(); toast(L("Preview only — nothing was saved", "这是预览，没有保存任何内容")); } catch (_) {} if (id) setTimeout(() => { try { startSheet(id); } catch (_) {} }, 350); return; }
+    if (ST.dry) { ST.shown = false; try { startApp(); toast(L("Preview only — nothing was saved", "这是预览，没有保存任何内容")); } catch (_) {} return; }
     try {
       const p = persona(); if (p && ST.name) p.name = ST.name;
       S.tropes = TASTES.filter(x => ST.picks.includes(x.k)).map(x => x.tag);
@@ -32650,7 +32663,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     try {
       if (off() || S.ob) return R0.apply(this, arguments);
       if (S.ob3 && S.ob3.at) {
-        if (logged()) { const id = S.ob3.pick; let ok = false; try { ok = !!id && allWorlds().some(w => w.id === id); } catch (_) {} enter(ok ? id : ""); return; }
+        if (logged()) { enter(S.ob3.pick || ""); return; }
         ST.name = ST.name || ((persona() || {}).name || ""); authStep(); return;
       }
       if (!ST.name) { try { ST.name = (persona() || {}).name || ""; } catch (_) {} }
@@ -32726,7 +32739,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
 '.ob3hook{margin:8px 0 0;font-size:14.5px;line-height:1.5;color:rgba(255,255,255,.84);font-style:italic;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}',
 '.ob3hits{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.ob3hits em{font-style:normal;font-size:12px;color:#F6D3AE;border:1px solid rgba(240,183,126,.45);background:rgba(240,183,126,.1);border-radius:999px;padding:4px 10px}',
 '.ob3castrow{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:13px;color:rgba(255,255,255,.8)}',
-'.ob3castrow .avs{display:flex;flex:none}.ob3castrow img{width:30px;height:30px;border-radius:50%;object-fit:cover;object-position:50% 18%;border:1.5px solid #0b0610;margin-left:-8px;box-shadow:0 0 0 1px rgba(240,183,126,.6)}.ob3castrow img:first-child{margin-left:0}',
+'',
 '.ob3s3 .ob3cta{margin-top:16px}',
 '.ob3alts{margin-top:14px}.ob3alts>span{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}',
 '.ob3alts>div{display:flex;gap:8px;margin-top:8px}',
@@ -32759,9 +32772,10 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   /* 预览：?ob3=1（不保存）；?ob3=0 关闭新流程，?ob3=on 重新打开 */
   let q = ""; try { q = new URLSearchParams(location.search).get("ob3") || ""; } catch (_) {}
   try { if (q === "0") localStorage.setItem("miru_ob3_off", "1"); if (q === "on") localStorage.removeItem("miru_ob3_off"); } catch (_) {}
-  function preview() { ST.dry = true; ST.step = 1; ST.picks = []; ST.pick = ""; ST.age = false; ST.name = ""; draw(true); }
+  function preview() { loadFeed(); ST.dry = true; ST.step = 1; ST.picks = []; ST.pick = ""; ST.age = false; ST.name = ""; draw(true); }
   window.__ob3 = { preview, state: ST };
   if (q === "1") setTimeout(preview, 1500);
+  try { if (!S.ob && !off()) loadFeed(); } catch (_) {}
   /* 模块装上之前，新手页可能已经按老流程画出来了：重画一次 */
   setTimeout(() => { try { const ob = document.querySelector("#s-ob"); if (q !== "1" && !off() && !S.ob && ob && !ob.hidden && !document.querySelector(".ob3") && !document.querySelector(".sheet.on,.sheet.show")) renderOB(); } catch (_) {} }, 0);
 })();
