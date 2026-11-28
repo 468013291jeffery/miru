@@ -159,13 +159,15 @@ function Cast({ p, upd }) {
   const [busy, setBusy] = useState(-1);
   const set = (i, k, v) => upd(x => (x.cast[i][k] = v, x));
   const fill = async i => {
-    const c = p.cast[i]; if (!c.name) return toast('先写名字');
+    /* 2026-11-28 AI 要先知道作者想要什么样的角色：卡片最上面加了「你想要什么样的角色」，AI 按这句话 + 剧的设定 + 已有的其他角色来写；
+       名字可以不填，让 AI 起。 */
+    const c = p.cast[i]; if (!c.name && !String(c.want || '').trim()) return toast('先写一句「你想要什么样的角色」，或者先填名字');
     if (!pay(PRICE.card, 'pro_card')) return; setBusy(i);
     try {
       const spec = (P && P.MIRU_CARD_SPEC13) || '';
-      const r = await ai(spec.slice(0, 3000) + '\n\n按 MIRU 角色卡规范，补全这个角色。保留作者已经写的内容，只补空的、把模糊的写具体。全员成年（21+）。只返回 JSON {"identity":"","age":"","looks":"","personality":"性格与反差","speech":"说话方式","boundary":"边界","openingLine":"单聊开场白","sellingPoint":"一句话卖点"}\n剧：' + p.title + '｜' + p.premise.slice(0, 600) + '\n角色：' + JSON.stringify(c), 2500);
+      const r = await ai(spec.slice(0, 3000) + '\n\n按 MIRU 角色卡规范，补全这个角色。最重要的依据是「作者想要的角色」这句话，其次是剧的设定；要和已有的其他角色有明显区别、能互相形成关系。保留作者已经写的内容，只补空的、把模糊的写具体。全员成年（21+）。只返回 JSON {"name":"名字（作者没填才起）","identity":"","age":"","looks":"","personality":"性格与反差","speech":"说话方式","boundary":"边界","openingLine":"单聊开场白","sellingPoint":"一句话卖点"}\n剧：' + p.title + '｜' + p.premise.slice(0, 600) + '\n作者想要的角色：' + (String(c.want || '').trim() || '（没写，按剧的设定和这个位置来定）') + '\n这个位置：' + (i === 0 ? '第一主角（男主 / 女主）' : '配角 / 其他可攻略角色') + '\n已有的其他角色：' + (p.cast.filter((_, k) => k !== i && _.name).map(o => o.name + '（' + (o.identity || '') + '；' + (o.personality || '').slice(0, 40) + '）').join('；') || '无') + '\n角色：' + JSON.stringify(c), 2500);
       if (!r || typeof r !== 'object') throw new Error('empty');
-      upd(x => { const t = x.cast[i]; ['identity', 'age', 'looks', 'personality', 'speech', 'boundary', 'openingLine', 'sellingPoint'].forEach(k => { if (r[k] && !String(t[k] || '').trim()) t[k] = String(r[k]); }); if (Number(t.age) && Number(t.age) < 21) t.age = '21'; return x; });
+      upd(x => { const t = x.cast[i]; ['name', 'identity', 'age', 'looks', 'personality', 'speech', 'boundary', 'openingLine', 'sellingPoint'].forEach(k => { if (r[k] && !String(t[k] || '').trim()) t[k] = String(r[k]); }); if (Number(t.age) && Number(t.age) < 21) t.age = '21'; return x; });
       toast('人物卡补好了');
     } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.card, P.save()); } catch (__) {} }
     setBusy(-1);
@@ -175,8 +177,9 @@ function Cast({ p, upd }) {
       <p className="dim">第一位是男主 / 女主。人物卡会写进剧本（⟦CHAR⟧），也会出现在 App「发现 → 角色」里，玩家可以单独聊天。全员必须成年。</p>
       {p.cast.map((c, i) => (
         <div className="pcard" key={i}>
+          <F label="你想要什么样的角色？（一句话就行，AI 按这个来写）" hint="比如：表面冷淡的黑帮继承人，只对我一个人心软；或：阳光学弟，其实一直在暗中保护我"><textarea rows={2} value={c.want || ''} onChange={e => set(i, 'want', e.target.value)} /></F>
           <div className="prow pwr">
-            <F label={i === 0 ? '主角名字' : '名字'}><input value={c.name} onChange={e => set(i, 'name', e.target.value)} /></F>
+            <F label={i === 0 ? '主角名字（可以留空让 AI 起）' : '名字（可以留空让 AI 起）'}><input value={c.name} onChange={e => set(i, 'name', e.target.value)} /></F>
             <F label="性别"><select value={c.gender} onChange={e => set(i, 'gender', e.target.value)}><option value="m">男</option><option value="f">女</option><option value="x">其他</option></select></F>
             <F label="年龄"><input type="number" min="21" value={c.age} onChange={e => set(i, 'age', e.target.value)} style={{ width: 80 }} /></F>
           </div>
@@ -186,7 +189,7 @@ function Cast({ p, upd }) {
           <F label="边界"><input value={c.boundary || ''} onChange={e => set(i, 'boundary', e.target.value)} /></F>
           <F label="外貌（用于立绘）"><input value={c.looks || ''} onChange={e => set(i, 'looks', e.target.value)} /></F>
           <F label="单聊开场白"><input value={c.openingLine || ''} onChange={e => set(i, 'openingLine', e.target.value)} /></F>
-          <div className="prow"><button className="pbtn" disabled={busy === i} onClick={() => fill(i)}>{busy === i ? '补全中…' : '✨ AI 按角色卡规范补全 · 💎' + PRICE.card}</button>{i > 0 && <button className="pbtn ghost" onClick={() => upd(x => (x.cast.splice(i, 1), x))}>删除</button>}</div>
+          <div className="prow"><button className="pbtn" disabled={busy === i} onClick={() => fill(i)}>{busy === i ? '补全中…' : '✨ AI 按我想要的角色生成 / 补全 · 💎' + PRICE.card}</button>{i > 0 && <button className="pbtn ghost" onClick={() => upd(x => (x.cast.splice(i, 1), x))}>删除</button>}</div>
         </div>
       ))}
       <button className="pbtn" onClick={() => upd(x => (x.cast.push({ ...blank().cast[0], key: 'c' + (x.cast.length + 1), name: '' }), x))}>＋ 添加角色</button>
