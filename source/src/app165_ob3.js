@@ -163,9 +163,24 @@
     const A = ranked().slice(0, 3).map(r => cover(r.w)).filter(Boolean);
     return '<div class="ob3 ob3load"><div class="ob3glow"></div><div class="ob3in" style="justify-content:center;align-items:center"><div class="ob3orb">' + A.map((s, i) => '<img src="' + esc(s) + '" alt="" style="animation-delay:' + (-i * 0.8) + 's">').join("") + '<b>✦</b></div><p class="ob3casting">' + L("Casting your story, " + nm() + "…", "正在为 " + nm() + " 选角……") + '</p></div></div>';
   }
+  /* 2026-11-28 老板：用户填名字、选口味的这段时间，把后面要用的资源先在后台缓冲好。
+     第一屏起就在拉首页剧单和 8 张封面；到选口味 / 揭晓时，再把当前最匹配那部剧的封面、开场视频预先加载，
+     已登录的话连剧本包也先装好，点「开始第 1 章」就能直接进。 */
+  const WARM = new Set(), WARMV = [];
+  function warm(id) {
+    try {
+      const w = FEED.find(x => x.id === id); if (!w || WARM.has(id)) return; WARM.add(id);
+      const A = w.raw.A || {};
+      if (w.cover) { const im = new Image(); im.src = w.cover; }
+      const v = A.home_video || A.vid_open || A.opening_video;
+      if (v) { const el = document.createElement("video"); el.muted = true; el.preload = "auto"; el.src = v; WARMV.push(el); if (WARMV.length > 2) { const o = WARMV.shift(); o.removeAttribute("src"); try { o.load(); } catch (_) {} } }
+      if (!ST.dry && logged() && typeof installWork === "function") Promise.resolve().then(() => installWork(id)).catch(() => {});
+    } catch (_) {}
+  }
   let castT = null;
   function draw(noLoader) {
     css(); ST.shown = true; clearTimeout(castT);
+    if (ST.step >= 2) { try { const wid = (ST.step === 3 && ST.pick) || ((ranked()[0] || {}).w || {}).id; if (wid) warm(wid); } catch (_) {} }
     if (!FEED.length) loadFeed().then(F => { try { if (!F.length || !ST.shown || !document.querySelector(".ob3")) return; if (ST.step === 1) { const b = document.querySelector(".ob3s1 .ob3bg"), h = document.createElement("div"); h.innerHTML = bgHTML(); if (b && h.firstChild) b.replaceWith(h.firstChild); const sy = document.querySelector(".ob3s1 .ob3say"); if (sy && !sy.querySelector("img")) { const w = (ranked()[0] || {}).w; if (w) { sy.insertAdjacentHTML("afterbegin", '<img src="' + esc(cover(w)) + '" alt="">'); const c = castOf(w)[0], bb = sy.querySelector(".b"); if (c && bb && !bb.querySelector("small")) bb.insertAdjacentHTML("afterbegin", "<small>" + esc(c) + "</small>"); } } } else if (!document.querySelector(".ob3load")) draw(true); } catch (_) {} });
     if (ST.step === 3 && !noLoader) {
       screen("s-ob", casting()); show("s-ob");
