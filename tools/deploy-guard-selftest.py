@@ -46,4 +46,4 @@ with tempfile.TemporaryDirectory() as td:
 print('Retained media: shared immutable bytes, fresh media preserved, previous release unchanged.')
 
 import sys, subprocess
-subprocess.run([sys.executable,str(Path(__file__).with_name('deploy-static-selftest.py'))],check=True)
+subprocess.run([sys.executable,str(pathlib.Path(__file__).with_name('deploy-static-selftest.py'))],check=True)
