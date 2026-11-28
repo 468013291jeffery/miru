@@ -32406,10 +32406,11 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     }
   } catch (_) {}
   /* 2026-11-28 老板定：不卖会员（MIRU+）了，额度用完就再买。购买面板里的会员入口之前已经隐藏（app84），
+     （11-28 修正：只隐藏 MIRU+ 那一行；它和「钻石 · 充值」在同一张卡片里，之前把整张卡片藏掉，充值按钮也跟着不见了。）
      这里把剩下的两处也去掉：「我的」页里的 MIRU+ 卡片、AI 回合面板里的「本月会员回合」那一格。 */
   try {
     const st = document.createElement("style");
-    st.textContent = '.card:has([data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
+    st.textContent = '.row:has(>[data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
     document.head.appendChild(st);
   } catch (_) {}
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
