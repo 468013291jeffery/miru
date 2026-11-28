@@ -13,7 +13,8 @@ const KEY = 'miru_pro_v1';
 const LN = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
 const NAMES = { en: 'English (American)', ja: 'Japanese', ko: 'Korean', es: 'Spanish (Latin American)', zh: 'Simplified Chinese' };
 /* 2026-11-28 老板定：专业版所有 AI 收费先统一按 💎1（写一章、角色卡、审稿、小游戏、大纲 / 选题、识别编剧稿、翻译每种语言、AI 生图每张）。 */
-const PRICE = { chapter: 1, card: 1, review: 1, games: 1, outline: 1 };
+/* 2026-11-28 fix：AI 审稿后「AI 帮我修这一处」每处 💎1；video：AI 生成一段约 5 秒的视频 💎15（成本约 ¥1/秒，老板定按 3–5 倍收） */
+const PRICE = { chapter: 1, card: 1, review: 1, games: 1, outline: 1, fix: 1, video: 15 };
 const uid = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{"projects":[]}'); } catch (_) { return { projects: [] }; } };
 const persist = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
@@ -109,7 +110,7 @@ function Editor({ p, upd, back }) {
       {tab === 'set' && <Setup p={p} upd={upd} />}
       {tab === 'cast' && <Cast p={p} upd={upd} />}
       {tab === 'write' && <Write p={p} upd={upd} qa={qa} />}
-      {tab === 'qa' && <QA p={p} qa={qa} script={script} />}
+      {tab === 'qa' && <QA p={p} qa={qa} script={script} upd={upd} />}
       {tab === 'assets' && <Assets p={p} upd={upd} script={script} />}
       {tab === 'games' && <Games p={p} upd={upd} />}
       {tab === 'pub' && <Publish p={p} upd={upd} qa={qa} script={script} />}
@@ -130,7 +131,7 @@ function Setup({ p, upd }) {
     const n = Math.max(1, Math.min(20, Number(prompt('要几章？官方标准 15–20 章，短篇也可以', String(p.chapters.length > 1 ? p.chapters.length : 15))) || 0)); if (!n) return;
     if (!pay(PRICE.outline, 'pro_outline')) return; setBusy(true);
     try {
-      const r = await ai(RULES().slice(0, 6000) + '\n\n你是 MIRU 官方剧的总编剧。按上面的终版规则，给这部互动恋爱剧写 ' + n + ' 章的章节大纲。每章：标题 t（≤14 字）、本章目标 goal（这一章玩家要经历和决定什么，一句话）。只返回 JSON {"chapters":[{"t":"","goal":""}]}\n标题：' + p.title + '\n钩子：' + p.hook + '\n设定：' + p.premise + '\n玩家身份：' + p.you + '\n人物：' + p.cast.map(c => c.name + '（' + c.identity + '，' + c.personality + '）').join('；'), 4000);
+      const r = await ai(RULES().slice(0, 6000) + '\n\n你是 MIRU 官方剧的总编剧。按上面的终版规则，给这部互动恋爱剧写 ' + n + ' 章的章节大纲。每章：标题 t（≤14 字）、本章目标 goal（这一章玩家要经历和决定什么，一句话）。只返回 JSON {"chapters":[{"t":"","goal":""}]}\n标题：' + p.title + '\n钩子：' + p.hook + '\n设定：' + p.premise + '\n玩家身份：' + p.you + (p.idea ? '\n作者原始想法（最高优先：人物数量、身份和核心关系必须与它一致）：' + String(p.idea).slice(0, 300) : '') + '\n人物：' + p.cast.map(c => c.name + '（' + c.identity + '，' + c.personality + '）').join('；'), 4000);
       const C = (r && r.chapters || []).filter(c => c && c.t).slice(0, n);
       if (!C.length) throw new Error('empty');
       upd(x => { x.chapters = C.map((c, i) => ({ t: String(c.t), goal: String(c.goal || ''), body: (x.chapters[i] && x.chapters[i].body) || '' })); return x; });
@@ -145,11 +146,14 @@ function Setup({ p, upd }) {
     const idea = String(p.idea || '').trim();
     if (!idea && !p.title && !p.premise && !p.hook) return toast('先在上面写一句你想写的故事，比如「黑帮继承人和卧底女警的契约婚姻」');
     if (mode === 'fix' && !p.title && !p.premise && !p.hook) return toast('还没有写任何内容可以改，先点「AI 帮我想」');
+    /* 2026-11-28 老板反馈：写了「我和 8 个吸血鬼的故事」，AI 没按这个想。原因：下面已经有内容时「帮我想」只补空的，等于没用上这句想法。
+       现在：有想法、下面又已有内容时先问一句要不要按想法全部重想；提示词里要求人物数量、身份、关系必须和想法一致；还没有人物卡时顺手把主要角色建成人物卡。 */
+    const over = mode === 'think' && !!idea && !!(p.title || p.premise || p.hook) && window.confirm('下面已经有剧名 / 钩子 / 设定了。\n\n确定：按这句想法全部重新想（会覆盖下面已写的内容）\n取消：只补空着的');
     if (!pay(PRICE.outline, 'pro_setup')) return; setBusy2(mode);
     try {
-      const r = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 官方互动恋爱剧的策划。' + (mode === 'fix' ? '把作者已经写的设定改得更抓人、更具体，保持作者的核心想法和人物关系不变。' : '根据作者的一句想法，把这部剧的基础设定想出来；作者已经写了的字段原样保留，只补空的。') + '全员成年。恋爱对象：' + ({ bg: '男女', bl: '男男', gl: '女女' }[p.orient] || '男女') + '。写作语言：' + (LN[p.lang] || '中文') + '。只返回 JSON {"title":"剧名（≤14 字）","hook":"一句话钩子（≤40 字，出现在首页卡片上，要让人想点开）","premise":"设定 / 简介（150–300 字：世界、冲突、主要人物关系、玩家卷进来的原因）","you":"玩家身份（故事给玩家的位置，≤20 字）","tags":["3–6 个标签"]}\n作者的想法：' + (idea || '（没单独写，看下面已有内容）') + '\n已有：' + JSON.stringify({ title: p.title, hook: p.hook, premise: p.premise, you: p.you, tags: p.tags }), 2500);
+      const r = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 官方互动恋爱剧的策划。' + (mode === 'fix' ? '把作者已经写的设定改得更抓人、更具体，保持作者的核心想法和人物关系不变。' : '根据作者的一句想法，把这部剧的基础设定想出来。必须严格围绕作者的想法：想法里写明的人物数量、身份、种族、关系和题材一个都不能改、不能少（比如「我和 8 个吸血鬼」就必须是玩家和 8 个吸血鬼）。' + (over ? '下面的已有内容只作参考，全部按想法重写。' : '作者已经写了的字段原样保留，只补空的。')) + '全员成年。恋爱对象：' + ({ bg: '男女', bl: '男男', gl: '女女' }[p.orient] || '男女') + '。写作语言：' + (LN[p.lang] || '中文') + '。只返回 JSON {"title":"剧名（≤14 字）","hook":"一句话钩子（≤40 字，出现在首页卡片上，要让人想点开）","premise":"设定 / 简介（150–300 字：世界、冲突、主要人物关系、玩家卷进来的原因）","you":"玩家身份（故事给玩家的位置，≤20 字）","tags":["3–6 个标签"],"cast":[{"name":"名字","identity":"身份","personality":"性格与反差"}]}\ncast 是主要可攻略角色，数量必须和想法一致，最多 10 个。\n作者的想法：' + (idea || '（没单独写，看下面已有内容）') + '\n已有：' + JSON.stringify({ title: p.title, hook: p.hook, premise: p.premise, you: p.you, tags: p.tags }), 2500);
       if (!r || typeof r !== 'object') throw new Error('empty');
-      upd(x => { ['title', 'hook', 'premise', 'you'].forEach(k => { if (r[k] && (mode === 'fix' || !String(x[k] || '').trim())) x[k] = String(r[k]); }); if (Array.isArray(r.tags) && r.tags.length && (mode === 'fix' || !(x.tags || []).length)) x.tags = r.tags.map(String).slice(0, 12); return x; });
+      upd(x => { ['title', 'hook', 'premise', 'you'].forEach(k => { if (r[k] && (mode === 'fix' || over || !String(x[k] || '').trim())) x[k] = String(r[k]); }); if (Array.isArray(r.tags) && r.tags.length && (mode === 'fix' || over || !(x.tags || []).length)) x.tags = r.tags.map(String).slice(0, 12); if (mode === 'think' && Array.isArray(r.cast) && r.cast.length && !x.cast.some(c => c.name)) x.cast = r.cast.filter(c => c && c.name).slice(0, 10).map((c, i) => ({ ...blank().cast[0], key: 'c' + (i + 1), name: String(c.name), identity: String(c.identity || ''), personality: String(c.personality || '') })); return x; });
       toast(mode === 'fix' ? '改好了，看看下面的内容' : '想好了，看看下面的内容，不满意可以再改');
     } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
     setBusy2('');
@@ -239,7 +243,7 @@ function Write({ p, upd, qa }) {
       const fmt = 'MIRU 标准剧本写法（必须严格遵守，否则播不出来）：\n# SCENE｜地点 （每章 3–5 场）\n⟦BG|bg_c' + String(ci + 1).padStart(2, '0') + 's01|地点和时间⟧ （每个 SCENE 下一行必须是 BG）\n旁白：叙述\n角色名：“台词”\n你：玩家说的话（少用，玩家只扮演自己）\n⟦FREE|提示|建议1|建议2|建议3⟧ （玩家自由回复）\n⟦CG|cg_c' + String(ci + 1).padStart(2, '0') + '_1|画面⟧ 心动名场面插图（' + ({ light: '这一档每章 1 张背景、插图最多 1 张，同一个地点重复用同一个 BG 槽位名', std: '这一档每章约 2 个不同的 BG 槽位、1 张插图', pro: '这一档每章 3–5 场、2–3 张插图' }[p.tier || 'std']) + '）\n⟦CALL|角色|提示⟧…⟦/CALL⟧ 来电；⟦PHOTO|标题|说明⟧ 他发来的照片\n⟦SET|flag⟧ 记下选择；⟦IF|flag⟧…⟦ELSE⟧…⟦/IF⟧ 按之前的选择显示不同内容\n章末必须是：\n# CHOICE｜问题\n#### A｜选项\n⟦OPT|A|set:flag⟧\n选项后的 2–4 行剧情\n#### B｜…（至少 2 个，最多 3 个，后果要不一样）\n# ·\n不要写「## 」小标题，不要写 # CHAPTER 行，不要写 ⟦CHAR⟧ 和 ⟦GOAL⟧。';
       const ask = mode === 'polish' ? '按终版规则和标准写法，修改下面这一章：保持剧情和选择不变，把对白写得更有张力和暧昧感、补齐缺的背景卡/插图/选项后果，修正格式问题。只返回 JSON {"body":"整章剧本"}\n原文：\n' + c.body
         : '按终版规则和标准写法，写出第 ' + (ci + 1) + ' 章完整剧本（约 60–90 行正文，' + (ci === 0 ? '第 1 章前 10 句主角必须出场，用具体行为展示他对你的态度；' : '') + '结尾留钩子）。只返回 JSON {"body":"整章剧本"}';
-      const r = await ai(RULES().slice(0, 7000) + '\n\n' + fmt + '\n\n【作品】' + p.title + '｜钩子：' + p.hook + '\n设定：' + p.premise.slice(0, 1200) + '\n玩家身份：' + (p.you || '待定') + '\n人物：' + p.cast.map(x => x.name + '（' + [x.identity, x.personality, x.speech].filter(Boolean).join('；') + '）').join('\n') + '\n前情：\n' + (prev || '（这是第一章）') + '\n【本章】第 ' + (ci + 1) + ' 章「' + c.t + '」目标：' + (c.goal || '自定') + '\n\n' + ask, 8000);
+      const r = await ai(RULES().slice(0, 7000) + '\n\n' + fmt + '\n\n【作品】' + p.title + '｜钩子：' + p.hook + '\n设定：' + p.premise.slice(0, 1200) + '\n玩家身份：' + (p.you || '待定') + (p.idea ? '\n作者原始想法（最高优先：人物数量、身份和核心关系必须与它和设定一致，不得擅自增减或改写）：' + String(p.idea).slice(0, 300) : '') + '\n人物：' + p.cast.map(x => x.name + '（' + [x.identity, x.personality, x.speech].filter(Boolean).join('；') + '）').join('\n') + '\n前情：\n' + (prev || '（这是第一章）') + '\n【本章】第 ' + (ci + 1) + ' 章「' + c.t + '」目标：' + (c.goal || '自定') + '\n\n' + ask, 8000);
       const body = r && typeof r.body === 'string' ? r.body.replace(/^#+\s*CHAPTER.*$/gim, '').replace(/^⟦(CHAR|GOAL)\|.*$/gm, '').trim() : '';
       if (body.length < 80) throw new Error('short');
       setC('body', mode === 'polish' || !c.body.trim() ? body : c.body + '\n\n' + body);
@@ -255,6 +259,7 @@ function Write({ p, upd, qa }) {
         <button className="add" onClick={() => { upd(x => (x.chapters.push({ t: '', goal: '', body: '' }), x)); setCi(p.chapters.length); }}>＋ 加一章</button>
       </aside>
       <section className="ped">
+        <p className="dim" style={{ margin: '0 0 10px' }}>这里写的是每一章的正文。AI 写章时依据的是「① 设定」（剧名、钩子、设定、玩家身份）和「② 人物卡」：那两页是整部剧的总纲，这里是按总纲写出来的戏。想换故事方向或人物，先回 ①② 改，再回来重写这一章。{p.title ? ' 当前：《' + p.title + '》' + (p.cast.filter(k => k.name).length ? ' · ' + p.cast.filter(k => k.name).length + ' 个角色' : ' · 还没有人物卡') : ' 当前还没有填设定。'}</p>
         <div className="prow pwr">
           <F label={'第 ' + (ci + 1) + ' 章标题'}><input value={c.t} onChange={e => setC('t', e.target.value)} /></F>
           <F label="本章目标（⟦GOAL⟧，App 用它判断这一章什么时候算完成）"><input value={c.goal} onChange={e => setC('goal', e.target.value)} /></F>
@@ -274,8 +279,24 @@ function Write({ p, upd, qa }) {
   );
 }
 
-function QA({ p, qa, script }) {
+function QA({ p, qa, script, upd }) {
   const [rev, setRev] = useState(null), [busy, setBusy] = useState(false);
+  /* 2026-11-28 AI 审稿的每一条后面加「AI 帮我修这一处」：只改这一个问题，别的不动；修之前自动存一个版本，可以在「⑧ 版本」里恢复。每处 💎1，修成才扣。 */
+  const [fixing, setFixing] = useState(-1), [fixed, setFixed] = useState({});
+  const fixOne = async (x, i) => {
+    const ci = Math.max(1, Number(x.ch) || 1) - 1, c = p.chapters[ci];
+    if (!c || !String(c.body || '').trim()) return toast('第 ' + (ci + 1) + ' 章还没有正文，没法修');
+    if (!upd) return;
+    if (!pay(PRICE.fix, 'pro_fix')) return; setFixing(i);
+    try {
+      const r = await ai(RULES().slice(0, 6000) + '\n\n你是 MIRU 官方剧的改稿编辑。只修下面这一个问题，其余剧情、选择、格式标记（# SCENE、⟦BG|…⟧、⟦CG|…⟧、# CHOICE、⟦OPT|…⟧、⟦SET|…⟧、⟦IF|…⟧ 等）和槽位名一律保持不变，不要删减篇幅。只返回 JSON {"body":"修改后的整章剧本"}\n【作品】' + p.title + '｜设定：' + String(p.premise || '').slice(0, 800) + '\n人物：' + p.cast.filter(k => k.name).map(k => k.name + '（' + [k.identity, k.personality].filter(Boolean).join('；') + '）').join('；') + '\n【要修的问题】规则 ' + x.rule + '：' + x.issue + '\n【建议改法】' + x.fix + '\n【第 ' + (ci + 1) + ' 章原文】\n' + c.body, 8000);
+      const body = r && typeof r.body === 'string' ? r.body.trim() : '';
+      if (body.length < Math.min(200, c.body.length * 0.5)) throw new Error('short');
+      upd(y => { snap(y, 'AI 修复前 · 第 ' + (ci + 1) + ' 章'); y.chapters[ci].body = body; return y; });
+      setFixed(f => Object.assign({}, f, { [i]: 1 })); toast('第 ' + (ci + 1) + ' 章这一处修好了（修改前的样子存在「⑧ 版本」里）');
+    } catch (_) { toast('这一处没修成，没扣钻'); try { P && (P.S.keys += PRICE.fix, P.save()); } catch (__) {} }
+    setFixing(-1);
+  };
   const st = qa.stats;
   const review = async () => {
     if (!pay(PRICE.review, 'pro_review')) return; setBusy(true);
@@ -293,7 +314,7 @@ function QA({ p, qa, script }) {
       <ul className="pqa">{qa.err.map((s, i) => <li key={'e' + i} className="r">⛔ {s}</li>)}{qa.warn.map((s, i) => <li key={'w' + i} className="y">△ {s}</li>)}</ul>
       <h3>AI 审稿（按终版规则逐条看内容）</h3>
       <button className="pbtn primary" disabled={busy} onClick={review}>{busy ? '审稿中…' : '✨ AI 审稿 · 💎' + PRICE.review}</button>
-      {rev && <div className="prev"><p><b>得分 {rev.score}</b></p><ul className="pqa">{rev.items.map((x, i) => <li key={i} className="y"><b>第 {x.ch} 章 · 规则 {x.rule}</b>：{x.issue}<br /><span className="dim">改法：{x.fix}</span></li>)}</ul></div>}
+      {rev && <div className="prev"><p><b>得分 {rev.score}</b></p><ul className="pqa">{rev.items.map((x, i) => <li key={i} className="y"><b>第 {x.ch} 章 · 规则 {x.rule}</b>：{x.issue}<br /><span className="dim">改法：{x.fix}</span><br /><button className="pbtn sm" style={{ marginTop: 6 }} disabled={fixing >= 0 || !!fixed[i]} onClick={() => fixOne(x, i)}>{fixed[i] ? '✓ 已修复' : fixing === i ? 'AI 修复中…（约 1 分钟）' : '✨ AI 帮我修这一处 · 💎' + PRICE.fix}</button></li>)}</ul></div>}
     </div>
   );
 }
@@ -352,6 +373,34 @@ function Assets({ p, upd, script }) {
     try { P.spend(imgPrice, 'img'); } catch (_) {}
     return true;
   };
+  /* 2026-11-28 视频位置也可以 AI 生成：把一张图（优先封面）变成约 5 秒的动态画面（和主站「让画面动起来」同一个接口），💎15，成功才扣。 */
+  const [vprog, setVprog] = useState('');
+  const genVideo = async (slot, note) => {
+    const src = p.cover || p.assets[(S.cg[0] || {}).slot] || p.assets[(S.bg[0] || {}).slot] || Object.keys(p.assets).filter(k => /^char_/.test(k)).map(k => p.assets[k])[0];
+    if (!src) return toast('AI 视频是把一张图变成会动的画面：先上传或生成封面（或任意一张插图）');
+    if (!window.confirm('AI 会用' + (p.cover ? '封面' : '已有的一张图') + '生成一段约 5 秒的视频，💎' + PRICE.video + '，生成成功才扣，大约要 1–2 分钟。继续？')) return;
+    if (!pay(PRICE.video, 'pro_video')) return; setBusy(slot); setVprog('准备中…');
+    try {
+      const ep = (P && typeof P.MIRU_TTS === 'string' && P.MIRU_TTS) || '/api/tts';
+      const blob0 = await (await fetch(src)).blob();
+      const image = await new Promise((ok, no) => { const im = new Image(); im.onload = () => { try { const k = Math.min(1, 640 / Math.max(im.naturalWidth, im.naturalHeight)), cv = document.createElement('canvas'); cv.width = Math.round(im.naturalWidth * k); cv.height = Math.round(im.naturalHeight * k); cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height); ok(cv.toDataURL('image/jpeg', .84)); } catch (e) { no(e); } }; im.onerror = no; im.src = URL.createObjectURL(blob0); });
+      const prompt = ('Cinematic romance drama shot' + (slot === 'opening_video' ? ', opening scene of the story "' + p.title + '"' : '') + ': ' + String(note && slot !== 'opening_video' ? note : (p.hook || p.premise || '')).slice(0, 240) + '. Subtle natural motion: breathing, a blink, hair moving slightly, a slow turn toward the camera; slow gentle camera push-in. Moody practical lighting, film look, keep the faces identical. No text.').replace(/\s+/g, ' ');
+      const r = await fetch(ep, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ vid: { image, prompt } }) });
+      const j = await r.json().catch(() => ({}));
+      if (!r.ok || !j.id) throw new Error(j.error || r.status);
+      let url = '';
+      for (let i = 0; i < 72 && !url; i++) {
+        await new Promise(z => setTimeout(z, 5000)); setVprog('生成中 ' + Math.min(99, Math.round((i + 1) / 24 * 100)) + '%');
+        let st = null; try { st = await (await fetch(ep + '?vid=' + encodeURIComponent(j.id))).json(); } catch (_) { continue; }
+        if (st.state === 'success' && st.url) url = st.url; else if (st.state === 'failed') throw new Error('failed');
+      }
+      if (!url) throw new Error('timeout');
+      try { const vb = await (await fetch(url)).blob(); await putFile(slot, new File([vb], slot + '.mp4', { type: 'video/mp4' })); }
+      catch (_) { upd(x => { x.assets[slot] = url; return x; }); }
+      toast('视频生成好了');
+    } catch (e) { try { P && (P.S.keys += PRICE.video, P.save()); } catch (_) {} toast('视频没生成出来，没扣钻'); }
+    setBusy(''); setVprog('');
+  };
   const genOne = async (slot, note, kind) => { setBusy(slot); try { if (await gen(slot, note, kind)) toast('生成好了'); } catch (e) { toast('这张没生成出来，没扣钻'); } setBusy(''); };
   const imgSlots = [['cover', '封面', 'cover']].concat(p.cast.filter(c => c.name).map(c => ['char_' + (c.key || c.name), c.name + ' 的立绘', 'char']), S.bg.map(s => [s.slot, s.note, 'bg']), S.cg.map(s => [s.slot, s.note, 'cg']));
   const missing = imgSlots.filter(([s]) => !(s === 'cover' ? p.cover : p.assets[s]));
@@ -373,6 +422,7 @@ function Assets({ p, upd, script }) {
       <div className="pslotb"><b>{slot}</b><small className="dim">{note}</small></div>
       <label className="pbtn sm">{busy === slot ? '处理中…' : url ? '换成自己的' : '上传自己的'}<input type="file" accept={acc} hidden onChange={e => up(slot, e.target.files[0])} /></label>
       {isImg && <button className="pbtn sm" disabled={!!busy} onClick={() => genOne(slot, note, kind)}>{url ? 'AI 重画' : 'AI 生成'} · 💎{imgPrice}</button>}
+      {kind === 'video' && <button className="pbtn sm" disabled={!!busy} onClick={() => genVideo(slot, note)}>{busy === slot && vprog ? vprog : (url ? 'AI 重新生成' : 'AI 生成') + ' · 💎' + PRICE.video}</button>}
       {url && <button className="pbtn ghost sm" onClick={() => upd(x => { if (slot === 'cover') x.cover = ''; else delete x.assets[slot]; return x; })}>移除</button>}
     </div>;
   };
@@ -390,7 +440,7 @@ function Assets({ p, upd, script }) {
       {p.cast.filter(c => c.name).map(c => row('char_' + (c.key || c.name), c.name + ' 的立绘', 'char'))}
       <h3>背景（⟦BG⟧ · {S.bg.length}）</h3>{S.bg.map(s => row(s.slot, s.note, 'bg'))}
       <h3>心动插图（⟦CG⟧ · {S.cg.length}）</h3>{S.cg.map(s => row(s.slot, s.note, 'cg'))}
-      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场视频（可选，最长 1 分钟；前 10 秒免费，之后每 10 秒 💎1）', 'video')}
+      <h3>视频（⟦VIDEO⟧ · {S.video.length}，可选）</h3>{S.video.map(s => row(s.slot, s.note, 'video'))}{row('opening_video', '开场视频（可选）：上传自己的（最长 1 分钟，前 10 秒免费，之后每 10 秒 💎1），或让 AI 用封面生成一段约 5 秒的', 'video')}
       {S.bgm.length > 0 && <><h3>自定义音乐（⟦BGM⟧ · {S.bgm.length}）</h3><p className="dim">MIRU 曲库里已有的提示词（tense / romantic / night…）不用上传。</p>{S.bgm.map(s => row('bgm_' + s.slot, s.slot, 'bgm'))}</>}
     </div>
   );
@@ -535,7 +585,7 @@ function Research({ p, upd }) {
     if (!p.title && !p.premise) return toast('先写剧名或设定');
     if (!pay(PRICE.outline, 'pro_research')) return; setBusy(true);
     try {
-      const o = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 的选题编辑，面向英语区女性向互动恋爱读者。分析这个选题，只写能从设定本身推出来的判断，不要编造数据、书名、作者或网址。只返回 JSON {"position":"一句话定位","audience":"目标读者","promise":"体验承诺（玩家会感受到什么）","tropes":["核心母题/梗 3-6 个"],"hooks":["前三章的钩子 3 个"],"twists":["中后段反转方向 2-3 个"],"risks":["容易写崩或踩线的地方 2-4 个"],"motifs":[{"name":"母题卡名","use":"在剧里怎么用"}]}\n剧名：' + p.title + '\n钩子：' + p.hook + '\n设定：' + p.premise + '\n玩家身份：' + p.you + '\n人物：' + p.cast.map(c => c.name + '（' + c.identity + '）').join('；'), 3000);
+      const o = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 的选题编辑，面向英语区女性向互动恋爱读者。分析这个选题，只写能从设定本身推出来的判断，不要编造数据、书名、作者或网址。只返回 JSON {"position":"一句话定位","audience":"目标读者","promise":"体验承诺（玩家会感受到什么）","tropes":["核心母题/梗 3-6 个"],"hooks":["前三章的钩子 3 个"],"twists":["中后段反转方向 2-3 个"],"risks":["容易写崩或踩线的地方 2-4 个"],"motifs":[{"name":"母题卡名","use":"在剧里怎么用"}]}\n剧名：' + p.title + '\n钩子：' + p.hook + '\n设定：' + p.premise + '\n玩家身份：' + p.you + (p.idea ? '\n作者原始想法（最高优先：人物数量、身份和核心关系必须与它一致）：' + String(p.idea).slice(0, 300) : '') + '\n人物：' + p.cast.map(c => c.name + '（' + c.identity + '）').join('；'), 3000);
       if (!o || !o.position) throw new Error('empty'); upd(x => (x.research = o, x)); toast('选题分析好了');
     } catch (_) { toast('这次没分析出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
     setBusy(false);
