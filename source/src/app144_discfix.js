@@ -5436,7 +5436,7 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
     for (let i = 0; i < 4; i++) {
       const m = msg(); if (m) m.textContent = (ZH() ? "正在生成第 " + (i + 1) + " / 4 张…" : "Making photo " + (i + 1) + " of 4…");
       if (!S.plus && S.keys < PR()) break;
-      const prompt = "Keep this exact " + (c.g === "f" ? "woman" : "man") + "'s face, hair and build unchanged" + (look ? " (" + look + ")" : "") + ". Photo-booth snapshot of this person with " + partner() + ": " + AIP[i] +
+      const prompt = "Keep this exact " + (c.g === "f" ? "woman" : "man") + "'s face, hair and build unchanged" + (look ? " (" + look + ")" : "") + ". A two-person photo-booth snapshot of this " + (c.g === "f" ? "woman" : "man") + " with " + partner() + ", BOTH faces clearly visible in a tight close-up, real couple chemistry: " + AIP[i] +
         ". Both are adults, fully clothed. Intimate and sensual mood, palpable chemistry and tension between them, bodies close, tasteful and not explicit, photoreal, no text, no watermark.";
       try { const src = aiImgFrom(await AIG.mcp.callTool(AIG.srv, AIG.edit, { input_image: ref, prompt, steps: 20, guidance_scale: 2.5, randomize_seed: true }, { cache: false }));
         if (src) { BT.ai[i] = /^data:/.test(src) && typeof shrink98 === "function" ? await shrink98(src) : src; ok++; if (!S.plus) spend(PR(), "img"); }
