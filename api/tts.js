@@ -217,7 +217,7 @@ async function editPoll(tid) {
 
 /* ---------- Vidu image-to-video (POST /api/tts {vid:{image, prompt}} → {id}; GET /api/tts?vid=<id> → {state, url, cover}) ----------
    VIDU_API_KEY (Authorization: Token …). VIDU_BASE_URL (default https://api.vidu.com, then https://api.vidu.cn for China accounts).
-   VIDU_MODEL (default viduq2-pro-fast — the cheapest 720p clip, then viduq2-turbo), VIDU_RES (720p), VIDU_DUR (5). */
+   VIDU_MODEL (default viduq2-pro-fast — the cheapest 720p clip, then viduq2-turbo), VIDU_RES (720p), VIDU_DUR (10 — 2026-11-28 老板确认「让画面动起来」统一 10 秒一段，前端按 💎25 收). */
 const VID_HITS = new Map();
 function vidAllowed(req) { const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'x', now = Date.now();
   const a = (VID_HITS.get(ip) || []).filter(t => now - t < 600e3); if (a.length >= 8) return false; a.push(now); VID_HITS.set(ip, a); return true; }
@@ -231,7 +231,7 @@ async function viduStart(o) {
   const bases = viduBases();
   for (let bi = 0; bi < bases.length; bi++) for (const model of models) {
     const r = await fetch(bases[bi] + '/ent/v2/img2video', { method: 'POST', headers: viduH(), body: JSON.stringify({ model, images: [image], prompt: String(o.prompt || '').slice(0, 1500),
-      duration: +(process.env.VIDU_DUR || 5), resolution: process.env.VIDU_RES || '720p', movement_amplitude: 'auto', ...(/^viduq[34]/.test(model) ? { audio: false } : {}) }) });
+      duration: +(process.env.VIDU_DUR || 10), resolution: process.env.VIDU_RES || '720p', movement_amplitude: 'auto', ...(/^viduq[34]/.test(model) ? { audio: false } : {}) }) });
     const j = await r.json().catch(() => ({}));
     if (r.ok && j.task_id) return { id: bi + '.' + j.task_id, model, credits: j.credits };
     last = bases[bi].slice(8) + ' ' + model + ' ' + r.status + ' ' + JSON.stringify(j).slice(0, 200);
