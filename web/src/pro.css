@@ -72,3 +72,16 @@
   .pchs button { flex: none; }
   .pcode { min-height: 50vh; font-size: 13px; }
 }
+
+/* 2026-11-28 老板截图：手机上顶部「x 个问题 · x 条建议」和 💎 叠在一起，💎 还压在标签栏上，太挤。
+   手机上：剧名一行；问题和 💎 另起一行左对齐、可换行；和标签栏之间留出间距。 */
+.phead .prow { flex-wrap: wrap; row-gap: 8px; }
+.phead .tag { cursor: pointer; white-space: nowrap; }
+.ptabs { margin-top: 4px; }
+@media (max-width: 720px) {
+  .phead { flex-direction: column; align-items: stretch; gap: 10px; margin-bottom: 16px; }
+  .phead > .prow { width: 100%; min-width: 0; }
+  .phead .ptitle { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ptabs { margin-top: 0; padding-top: 2px; }
+  .ppanel h3 { margin-top: 22px; }
+}
