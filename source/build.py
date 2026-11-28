@@ -238,7 +238,14 @@ def _externalize(html):
     for f in olds[2:]:
         try: os.remove(os.path.join(ROOT, f))
         except OSError: pass
-    page = html[:a] + '<script src="/' + name + '"></script>\n' + BOOT_DONE + html[b + len("\n</script>"):]
+    # 2026-11-28 顶部白色加载条：那是 Chrome 在「页面还没加载完」期间画的，我们关不掉，只能让页面尽快算「加载完成」。
+    # 主脚本（5MB 多）以前是页面里的普通 <script src>，下载 + 执行完之前页面一直算加载中，白线就一直挂着。
+    # 现在：页面本身（开屏海报）先加载完 → 浏览器 load 事件触发、白线消失 → 再插入主脚本；
+    # 页面最顶上用 fetch 提前开始下载主脚本（fetch 不算在页面加载里），所以总耗时基本不变。加载中的提示看开屏底部的金色进度条。
+    _done = BOOT_DONE[len("<script>"):-len("</script>")]
+    _loader = ('<script>(function(){function go(){var s=document.createElement("script");s.src="/' + name + '";s.onload=function(){' + _done + '};document.body.appendChild(s)}'
+               'if(document.readyState==="complete")setTimeout(go,0);else addEventListener("load",function(){setTimeout(go,0)})})();</script>')
+    page = html[:a] + _loader + html[b + len("\n</script>"):]
     i = page.find('<div class="app"><div class="device" id="dev"></div></div>')
     if i < 0: raise SystemExit("externalize: #dev not found")
     page = page[:i] + BOOT_SPLASH + "\n" + page[i:]
@@ -246,7 +253,7 @@ def _externalize(html):
     j = page.find('<meta charset="utf-8">')
     if j >= 0:
         j += len('<meta charset="utf-8">')
-        page = page[:j] + "\n" + BOOT_CSS + "\n" + BOOT_PRELOAD + '\n<link rel="preload" as="script" href="/' + name + '">' + page[j:]
+        page = page[:j] + "\n" + BOOT_CSS + "\n" + BOOT_PRELOAD + '\n<script>try{fetch("/' + name + '").catch(function(){})}catch(e){}</script>' + page[j:]
     # 2026-11-28 顶部细加载条：页面里的 AdSense 脚本和 Google 字体在国内经常连不上，会一直挂着，
     # 页面迟迟算不上「加载完成」，浏览器 / App 外壳顶部的加载进度条就一直停在 80% 左右。
     # 改成整页加载完以后再拉（AdSense 晚 2 秒）；站点验证靠 <meta name="google-adsense-account">，不受影响。
