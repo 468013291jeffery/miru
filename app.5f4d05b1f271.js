@@ -32439,8 +32439,10 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
    改成 💎15：按标价约 ¥21（约 4 倍），按最大礼包折后价再扣 15% 商店抽成约 ¥14（约 2.7 倍）。生成失败照旧全额退回。 */
 (function () {
   "use strict";
-  try { if (typeof PRICES === "object") PRICES.video = 15; } catch (_) {}
-  try { if (typeof VID === "object") VID.price = 15; } catch (_) {}
+  /* 2026-11-28 更正：老板确认视频是 10 秒一段（成本约 ¥7）。15 钻按标价只有 3 倍、礼包折后再扣商店抽成只有约 2 倍，
+     所以改成 💎25：按标价约 ¥35（约 5 倍），折后扣抽成约 ¥23（约 3.3 倍），落在「至少 3–5 倍」里。 */
+  try { if (typeof PRICES === "object") PRICES.video = 25; } catch (_) {}
+  try { if (typeof VID === "object") VID.price = 25; } catch (_) {}
 })();
 
 /* ===== app165 · 2026-11-28 新手先导页重做：三屏（名字 → 口味 → 为你选的第一部剧） =====
@@ -32490,9 +32492,22 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
       get hook() { try { return off94Hook(raw) || ""; } catch (_) { return raw.hook || ""; } }
     };
   }
+  /* 2026-11-28 老板：口味卡片按平台现有的标签来。改成直接统计首页剧单里用得最多的 8 个标签（不含「Romance / Drama」这种太泛的），
+     名字用平台自己的标签译名（tagName），选中后就按这个标签找剧；剧单没加载出来时才用上面那 8 个备用分类。 */
+  const tn = x => { try { return (typeof tagName === "function" && tagName(x)) || x; } catch (_) { return x; } };
+  const lab = x => (x.tg ? tn(x.tag) : L(x.e, x.z));
+  const hit = (x, w) => (x.tg ? w.tags.some(t => String(t).toLowerCase() === x.tg) : x.rx.test(wtxt(w)));
+  function dynTastes() {
+    const cnt = new Map();
+    FEED.forEach(w => { if (w.or !== "bg") return; new Set(w.tags.map(t => String(t).trim()).filter(Boolean)).forEach(t => { const k = t.toLowerCase(); if (/^(romance|drama)$/.test(k)) return; const o = cnt.get(k) || { tag: t, n: 0 }; o.n++; cnt.set(k, o); }); });
+    const top = [...cnt.entries()].filter(e => e[1].n >= 2).sort((a, b) => b[1].n - a[1].n).slice(0, 8);
+    if (top.length < 6) return;
+    TASTES.splice(0, TASTES.length, ...top.map((e, i) => ({ k: "t" + i, tg: e[0], tag: e[1].tag })));
+    TILE = null; ST.picks = [];
+  }
   function loadFeed() {
     if (feedP) return feedP;
-    feedP = (async () => { try { const L0 = await off94Feed(); FEED = (L0 || []).map(norm).filter(w => w.cover); } catch (_) { FEED = []; } if (!FEED.length) feedP = null; return FEED; })();
+    feedP = (async () => { try { const L0 = await off94Feed(); FEED = (L0 || []).map(norm).filter(w => w.cover); } catch (_) { FEED = []; } try { dynTastes(); } catch (_) {} if (!FEED.length) feedP = null; return FEED; })();
     return feedP;
   }
   const wtxt = w => (w.tags.join(" ") + " " + ((w.raw.en && w.raw.en.title) || "") + " " + (w.raw.title || ""));
@@ -32514,7 +32529,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     const P = pool(), sel = TASTES.filter(x => ST.picks.includes(x.k));
     const seed = (ST.name + "|" + ST.picks.join(",")).split("").reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
     return P.map((w, i) => {
-      const tx = wtxt(w), hits = sel.filter(x => x.rx.test(tx));
+      const tx = wtxt(w), hits = sel.filter(x => hit(x, w));
       const sc = hits.length * 30 + (orFit(w) ? 60 : 0) + (ST.or === "all" && w.or === "bg" ? 8 : 0) + (hookOf(w) ? 8 : 0) + (w.raw.A && (w.raw.A.vid_open || w.raw.A.home_video) ? 5 : 0) + ((seed + i * 7919) % 7);
       return { w, sc, hits };
     }).sort((a, b) => b.sc - a.sc);
@@ -32524,7 +32539,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     if (TILE && Object.keys(TILE).length) return TILE;
     const P = pool().filter(w => w.or === "bg" || w.or === "all"), used = new Set(), out = {};
     TASTES.forEach(x => {
-      const c = P.filter(w => x.rx.test(wtxt(w)));
+      const c = P.filter(w => hit(x, w));
       const w = c.find(w => !used.has(w.id)) || P.find(w => !used.has(w.id)) || c[0] || P[0];
       if (w) { used.add(w.id); out[x.k] = cover(w); }
     });
@@ -32567,7 +32582,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
       '<div class="ob3top"><button type="button" class="ob3back" data-ob3back="1" aria-label="back">‹</button>' + dots(2) + '<span style="width:36px"></span></div>' +
       '<h1 class="ob3h sm">' + L("What makes your heart race, <i>" + nm() + "</i>?", "<i>" + nm() + "</i>，什么最让你心动？") + '</h1>' +
       '<p class="ob3sub">' + L("Pick up to 3. We’ll cast your first story.", "最多选 3 个，我们为你挑第一部剧。") + '</p>' +
-      '<div class="ob3grid">' + TASTES.map((x, i) => '<button type="button" class="ob3t' + (ST.picks.includes(x.k) ? " on" : "") + '" data-ob3t="' + x.k + '" style="animation-delay:' + (0.05 * i).toFixed(2) + 's">' + (art[x.k] ? '<img src="' + esc(art[x.k]) + '" alt="" loading="lazy">' : '') + '<span class="v"></span><span class="ck">✓</span><b>' + esc(L(x.e, x.z)) + '</b></button>').join("") +
+      '<div class="ob3grid">' + TASTES.map((x, i) => '<button type="button" class="ob3t' + (ST.picks.includes(x.k) ? " on" : "") + '" data-ob3t="' + x.k + '" style="animation-delay:' + (0.05 * i).toFixed(2) + 's">' + (art[x.k] ? '<img src="' + esc(art[x.k]) + '" alt="" loading="lazy">' : '') + '<span class="v"></span><span class="ck">✓</span><b>' + esc(lab(x)) + '</b></button>').join("") +
       '<div class="ob3or"><span>' + L("Love interests", "恋爱对象") + '</span>' + ors.map(o => '<button type="button" data-ob3or="' + o[0] + '" class="' + (ST.or === o[0] ? "on" : "") + '">' + esc(o[1]) + '</button>').join("") + '</div></div>' +
       '<div class="ob3foot"><button type="button" class="ob3cta' + (ST.picks.length ? "" : " off") + '" id="ob3go2">' + L("Find my story", "为我选剧") + ' ✨</button>' +
       '<button type="button" class="ob3lnk" id="ob3skip2">' + L("Surprise me", "随便，给我惊喜") + '</button></div></div></div>';
@@ -32577,7 +32592,7 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     const top = R.find(r => r.w.id === ST.pick) || R[0]; ST.pick = top.w.id;
     const w = top.w, cs = castOf(w).slice(0, 3), names = cs.map(cname).filter(Boolean), hook = hookOf(w);
     const wait = names.length ? L(names.length > 1 ? names.slice(0, -1).join(", ") + " & " + names[names.length - 1] + " are waiting for you." : names[0] + " is waiting for you.", names.join("、") + " 在等你。") : "";
-    const hits = top.hits.map(x => L(x.e, x.z));
+    const hits = top.hits.map(lab);
     const alts = R.filter(r => r.w.id !== w.id && cover(r.w)).slice(0, 3);
     return '<div class="ob3 ob3s3"><div class="ob3hero ob3rev"><img src="' + esc(cover(w)) + '" alt=""><span class="v"></span></div><div class="ob3sp">' + sparks() + '</div><div class="ob3in">' +
       '<div class="ob3top"><button type="button" class="ob3back" data-ob3back="1" aria-label="back">‹</button>' + dots(3) + '<span style="width:36px"></span></div>' +
@@ -32595,9 +32610,24 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     const A = ranked().slice(0, 3).map(r => cover(r.w)).filter(Boolean);
     return '<div class="ob3 ob3load"><div class="ob3glow"></div><div class="ob3in" style="justify-content:center;align-items:center"><div class="ob3orb">' + A.map((s, i) => '<img src="' + esc(s) + '" alt="" style="animation-delay:' + (-i * 0.8) + 's">').join("") + '<b>✦</b></div><p class="ob3casting">' + L("Casting your story, " + nm() + "…", "正在为 " + nm() + " 选角……") + '</p></div></div>';
   }
+  /* 2026-11-28 老板：用户填名字、选口味的这段时间，把后面要用的资源先在后台缓冲好。
+     第一屏起就在拉首页剧单和 8 张封面；到选口味 / 揭晓时，再把当前最匹配那部剧的封面、开场视频预先加载，
+     已登录的话连剧本包也先装好，点「开始第 1 章」就能直接进。 */
+  const WARM = new Set(), WARMV = [];
+  function warm(id) {
+    try {
+      const w = FEED.find(x => x.id === id); if (!w || WARM.has(id)) return; WARM.add(id);
+      const A = w.raw.A || {};
+      if (w.cover) { const im = new Image(); im.src = w.cover; }
+      const v = A.home_video || A.vid_open || A.opening_video;
+      if (v) { const el = document.createElement("video"); el.muted = true; el.preload = "auto"; el.src = v; WARMV.push(el); if (WARMV.length > 2) { const o = WARMV.shift(); o.removeAttribute("src"); try { o.load(); } catch (_) {} } }
+      if (!ST.dry && logged() && typeof installWork === "function") Promise.resolve().then(() => installWork(id)).catch(() => {});
+    } catch (_) {}
+  }
   let castT = null;
   function draw(noLoader) {
     css(); ST.shown = true; clearTimeout(castT);
+    if (ST.step >= 2) { try { const wid = (ST.step === 3 && ST.pick) || ((ranked()[0] || {}).w || {}).id; if (wid) warm(wid); } catch (_) {} }
     if (!FEED.length) loadFeed().then(F => { try { if (!F.length || !ST.shown || !document.querySelector(".ob3")) return; if (ST.step === 1) { const b = document.querySelector(".ob3s1 .ob3bg"), h = document.createElement("div"); h.innerHTML = bgHTML(); if (b && h.firstChild) b.replaceWith(h.firstChild); const sy = document.querySelector(".ob3s1 .ob3say"); if (sy && !sy.querySelector("img")) { const w = (ranked()[0] || {}).w; if (w) { sy.insertAdjacentHTML("afterbegin", '<img src="' + esc(cover(w)) + '" alt="">'); const c = castOf(w)[0], bb = sy.querySelector(".b"); if (c && bb && !bb.querySelector("small")) bb.insertAdjacentHTML("afterbegin", "<small>" + esc(c) + "</small>"); } } } else if (!document.querySelector(".ob3load")) draw(true); } catch (_) {} });
     if (ST.step === 3 && !noLoader) {
       screen("s-ob", casting()); show("s-ob");
