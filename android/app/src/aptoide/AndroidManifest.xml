@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 2026-11-28 只合并进 aptoide 渠道包：Aptoide 结算需要的权限、能找到 Aptoide 钱包 App，以及钻石购买页 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="com.appcoins.BILLING" />
+    <queries>
+        <package android:name="com.appcoins.wallet" />
+        <package android:name="com.appcoins.wallet.dev" />
+    </queries>
+    <application>
+        <!-- 网页里点钻石包：跳 miru-pay://aptoide?sku=gems_60&u=<用户ID> -->
+        <activity
+            android:name=".AptoidePayActivity"
+            android:theme="@android:style/Theme.Black.NoTitleBar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="miru-pay" android:host="aptoide" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
