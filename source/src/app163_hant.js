@@ -14,6 +14,24 @@
   const ATTRS = ["placeholder", "title", "aria-label", "alt"];
   const HAN = /[\u4e00-\u9fff]/;
   let conv = null, loading = false, obs = null, on = false, busy = false;
+  /* 2026-11-28 用户反馈「很多地方还不是繁体」：字形已经是繁体，但用词还是大陆说法（登錄 / 郵箱 / 充值 / 視頻…）。
+     在字形转换之后再换一层台湾常用说法。只收界面里常见、放进剧情正文也不会改变意思的词；
+     「文件 / 程序 / 質量 / 支持」这类在故事里另有意思的词不动。长词在前（先匹配「視頻通話」再匹配「視頻」）。 */
+  const TERMS = [
+    ["退出登錄", "登出"], ["註銷賬號", "刪除帳號"], ["登錄方式", "登入方式"], ["電子郵箱", "電子信箱"], ["視頻通話", "視訊通話"],
+    ["人工智能", "人工智慧"], ["充值記錄", "儲值紀錄"], ["互聯網", "網際網路"], ["服務器", "伺服器"], ["二維碼", "QR Code"],
+    ["登錄", "登入"], ["郵箱", "信箱"], ["賬號", "帳號"], ["賬戶", "帳戶"], ["賬單", "帳單"], ["充值", "儲值"], ["視頻", "影片"],
+    ["軟件", "軟體"], ["硬件", "硬體"], ["默認", "預設"], ["加載", "載入"], ["短信", "簡訊"],
+    ["鏈接", "連結"], ["屏幕", "螢幕"], ["搜索", "搜尋"], ["信息", "訊息"], ["反饋", "回饋"], ["網絡", "網路"],
+    ["設備", "裝置"], ["打印", "列印"], ["音頻", "音訊"], ["昵稱", "暱稱"], ["博客", "部落格"],
+    ["截屏", "截圖"], ["粘貼", "貼上"], ["圖標", "圖示"], ["界面", "介面"]
+  ];
+  const TMAP = new Map(TERMS);
+  const TRX = new RegExp(TERMS.map(p => p[0]).sort((x, y) => y.length - x.length).join("|"), "g");
+  /* 这几个词在剧情里另有意思（好消息、保存體力、菜單…），只在短文字（按钮、标签，12 个字以内）里才换 */
+  const UI = new Map([["消息", "訊息"], ["保存", "儲存"], ["在線", "線上"], ["設置", "設定"], ["激活", "啟用"], ["撤銷", "復原"], ["菜單", "選單"]]);
+  const UIRX = /消息|保存|在線|設置|激活|撤銷|菜單/g;
+  const terms = s => { s = s.replace(TRX, m => TMAP.get(m) || m); return s.trim().length <= 12 ? s.replace(UIRX, m => UI.get(m) || m) : s; };
 
   const isZh = () => { try { return (typeof CL === "function" ? CL() : (window.S && S.lang)) === "zh"; } catch (_) { return false; } };
 
@@ -76,7 +94,7 @@
     const s = document.createElement("script");
     s.src = SRC; s.async = true;
     s.onload = () => {
-      try { conv = window.OpenCC.Converter({ from: "cn", to: "tw" }); window.toHant = conv; } catch (e) { console.warn("[hant]", e); }
+      try { const cc = window.OpenCC.Converter({ from: "cn", to: "tw" }); conv = x => terms(cc(x)); window.toHant = conv; } catch (e) { console.warn("[hant]", e); }
       loading = false;
       if (isZh()) start();
     };
