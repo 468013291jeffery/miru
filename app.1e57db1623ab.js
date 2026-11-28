@@ -28630,11 +28630,13 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
 (function () {
   "use strict";
   if (typeof capi !== "function") return;
-  const V = 1, KEY = "miru_orig190";
+  const V = 2, KEY = "miru_orig190v2";
+  /* 2026-11-28 升级成「创作者协议 + 原创声明」（V=2，老作品下次更新时要重新确认一次）。
+     协议全文是 /creator-terms.html；在弹窗里用 iframe 打开（不离开发布页，避免丢掉正在发布的内容）。 */
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   const TXT = () => zh()
-    ? "我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。"
-    : "I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.";
+    ? "· 作品的著作权归你；你授权 MIRU 在平台内展示、分发并用于宣传（非独占，你可以随时删除作品）。<br>· 我确认本作品（故事、人物、文字，以及我上传的图片、音频等素材）是我本人原创，或我已获得合法授权；没有抄袭、搬运他人作品，不侵犯他人的著作权、肖像权等权利。如有侵权，由我本人承担责任，MIRU 有权下架作品。<br>· 所有角色都是虚构的成年人，作品不含露骨色情等违规内容。"
+    : "· You keep the copyright. You give MIRU a non-exclusive licence to show, distribute and promote the work on the platform, and you can delete it at any time.<br>· I confirm this work (story, characters, text and any images or audio I upload) is my own original creation, or I have the rights to use it. It does not copy or repost anyone else's work or infringe copyright, likeness or other rights. I am responsible for any infringement, and MIRU may remove the work.<br>· All characters are fictional adults and the work contains no sexually explicit or other prohibited content.";
   const done = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (_) { return {}; } };
   const mark = id => { try { const d = done(); d[id] = Date.now(); localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
   function ask() {
@@ -28642,14 +28644,18 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
       const host = document.querySelector("#dev") || document.body, el = document.createElement("div");
       el.style.cssText = "position:absolute;inset:0;z-index:9999;background:rgba(8,6,12,.72);display:flex;align-items:center;justify-content:center;padding:18px";
       el.innerHTML = '<div style="max-width:420px;width:100%;background:#1c1724;color:#f1ecf3;border-radius:16px;padding:20px 18px;box-shadow:0 10px 40px rgba(0,0,0,.5)">' +
-        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "原创声明" : "Originality statement") + '</h3>' +
+        '<h3 style="margin:0 0 10px;font-size:18px">' + (zh() ? "创作者协议与原创声明" : "Creator agreement & originality") + '</h3>' +
         '<p style="margin:0 0 14px;font-size:14px;line-height:1.65;color:#d9d1df">' + TXT() + '</p>' +
-        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并确认以上声明" : "I have read and agree") + '</span></label>' +
+        '<label style="display:flex;gap:8px;align-items:flex-start;font-size:14px;margin-bottom:16px;cursor:pointer"><input type="checkbox" id="og190" style="margin-top:3px"> <span>' + (zh() ? "我已阅读并同意" : "I have read and agree to the") + ' <button type="button" id="ogT190" style="background:none;border:0;padding:0;color:#F0B77E;font:inherit;text-decoration:underline">' + (zh() ? "《MIRU 创作者协议》" : "MIRU Creator Agreement") + '</button></span></label>' +
+        '<div id="ogF190" style="position:absolute;inset:10px;z-index:2;background:#0C0B10;border-radius:14px;overflow:hidden;display:none;flex-direction:column"><div style="display:flex;justify-content:flex-end;padding:8px"><button id="ogX190" style="padding:6px 12px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">✕</button></div><iframe title="creator-terms" style="flex:1;border:0;width:100%"></iframe></div>' +
         '<div style="display:flex;gap:10px;justify-content:flex-end"><button id="ogN190" style="padding:9px 16px;border-radius:10px;border:1px solid #4a4055;background:transparent;color:#f1ecf3">' + (zh() ? "取消" : "Cancel") + '</button>' +
         '<button id="ogY190" disabled style="padding:9px 16px;border-radius:10px;border:0;background:#EE6F97;color:#fff;opacity:.5">' + (zh() ? "确认并发布" : "Confirm & publish") + '</button></div></div>';
       host.appendChild(el);
       const cb = el.querySelector("#og190"), y = el.querySelector("#ogY190");
       cb.onchange = () => { y.disabled = !cb.checked; y.style.opacity = cb.checked ? "1" : ".5"; };
+      const tf = el.querySelector("#ogF190");
+      el.querySelector("#ogT190").onclick = e => { e.preventDefault(); e.stopPropagation(); tf.querySelector("iframe").src = "/creator-terms.html#" + (zh() ? "zh" : "en"); tf.style.display = "flex"; };
+      el.querySelector("#ogX190").onclick = () => { tf.style.display = "none"; };
       el.querySelector("#ogN190").onclick = () => { el.remove(); resolve(false); };
       y.onclick = () => { if (!cb.checked) return; el.remove(); resolve(true); };
     });
@@ -29195,11 +29201,13 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   if (!window.__mod198 || typeof boothEdit !== "function") return;
   const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
   const PR = () => (typeof PRICES !== "undefined" && PRICES.img) || 2;
+  /* 2026-11-28 老板反馈：拍贴机合照不够暧昧、没有性张力。四个姿势改得更贴近、更有张力（搂腰贴脸 / 抬下巴差一点吻上 / 从身后耳语 / 额头相抵手扶后颈）。
+     尺度不变：成年人、衣着完整、不露骨。 */
   const AIP = [
-    "standing close together in a photo booth, an arm around the partner's shoulders, both smiling at the camera, soft pink light",
-    "in a photo booth, the character leans in and kisses the partner's cheek while the partner laughs, playful and flirty, warm light",
-    "in a photo booth, the character ignores the camera and gazes at the partner, faces very close, almost touching foreheads, intimate romantic tension",
-    "in a photo booth at night, the partner rests on the character's shoulder, the character smirks at the camera, moody purple neon light"
+    "in a photo booth, the character wraps an arm around the partner's waist and pulls them close, cheek pressed to cheek, both looking at the camera with a slow knowing smile, warm dim rose light, intimate couple photo, fully clothed",
+    "in a photo booth, the character tilts the partner's chin up with one hand, lips only a breath apart, eyes half closed, charged romantic tension, the moment just before a kiss, soft red light, fully clothed",
+    "in a photo booth, the character stands behind the partner and whispers into their ear, one hand resting on their shoulder, the partner blushes and bites their lip, heated flirtatious mood, low amber light, fully clothed",
+    "in a photo booth at night, foreheads touching, the character's hand cradles the back of the partner's neck, intense eye contact, slow-burn desire, moody purple neon light, fully clothed"
   ];
   const partner = () => { const o = typeof S !== "undefined" ? S.or : ""; return o === "bl" ? "a young man" : "a young woman"; };
   /* 选人筛选：男/女对"玩过的"也生效 */
@@ -32419,6 +32427,9 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     st.textContent = '.row:has(>[data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
     document.head.appendChild(st);
   } catch (_) {}
+  /* 2026-11-28 老板定：创作者专业版（剧本工具）所有 AI 收费先统一 💎1 —— 专业版里的 AI 生图价格由这里给（其余在 web/src/Pro.jsx 的 PRICE）。
+     App 里聊天时的 AI 生图不受影响，还是 PRICES.img。 */
+  try { window.studioImagePrice = function () { return 1; }; } catch (_) {}
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
 })();
 
