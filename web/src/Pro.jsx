@@ -243,6 +243,7 @@ function Write({ p, upd, qa }) {
         <div className="prow pwr">
           <button className="pbtn primary" disabled={busy} onClick={() => write('write')}>{busy ? 'AI 写作中…（约 1 分钟）' : (c.body.trim() ? '✨ AI 续写' : '✨ AI 按官方规则写这一章') + ' · 💎' + PRICE.chapter}</button>
           <button className="pbtn" disabled={busy} onClick={() => write('polish')}>✨ AI 按规则改稿 · 💎{PRICE.chapter}</button>
+          <small className="dim" style={{ flexBasis: '100%' }}>两个按钮不一样：「续写」是接着你已经写的往下写新内容（空白时就是写完整一章）；「改稿」不加新剧情，只把你已经写好的这一章按官方规则改规范（格式、背景卡、章末选择等）。</small>
           {p.chapters.length > 1 && <button className="pbtn ghost" onClick={() => { if (window.confirm ? true : true) { upd(x => (x.chapters.splice(ci, 1), x)); setCi(Math.max(0, ci - 1)); } }}>删除这一章</button>}
         </div>
         {chErr.length > 0 && <ul className="pqa">{chErr.map((s, i) => <li key={i} className={qa.err.includes(s) ? 'r' : 'y'}>{s}</li>)}</ul>}
@@ -497,7 +498,7 @@ function Draft({ p, upd }) {
     setBusy(false);
   };
   return (
-    <div className="pbox"><b>识别编剧稿</b><p className="dim">上传编剧稿（Word .docx / PDF / txt）或直接粘贴，编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定）都可以，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。按字数计费，约每 3000 字 💎2，最少 💎3，转好才扣。</p>
+    <div className="pbox"><b>识别编剧稿</b><p className="dim">上传编剧稿（Word .docx / PDF / txt）或直接粘贴，编剧用自然中文写的稿子（第一幕、第二幕、图片标注、人物设定）都可以，AI 按章转成 MIRU 标准剧本：不改剧情、不删台词，只整理格式、补背景卡和章末选择。每次 💎1，转好才扣。</p>
       <div className="prow pwr"><button className="pbtn" onClick={() => fileRef.current.click()}>⇪ 上传编剧稿（Word / PDF / txt）</button><input ref={fileRef} type="file" accept=".docx,.pdf,.txt,.md,.markdown" hidden onChange={load} /><span className="dim">也可以直接粘贴到下面</span></div>
       <textarea className="pcode" style={{ minHeight: 160 }} value={txt} onChange={e => setTxt(e.target.value)} placeholder="把编剧稿粘贴到这里…" />
       <div className="prow"><button className="pbtn primary" disabled={busy || !txt.trim()} onClick={run}>{busy ? '识别中 ' + prog + '%' : '✨ 识别成标准剧本 · 💎' + price}</button><span className="dim">{txt.length} 字</span></div>
@@ -592,7 +593,7 @@ function Publish({ p, upd, qa, script }) {
   return (
     <div className="ppanel">
       <h3>语言版本</h3>
-      <p className="dim">英文版默认就有。翻译是整部剧逐行翻（台词、选项、场景名、人物卡、小游戏说明），和原文一行对一行，App 按读者的语言显示。每种语言 💎{price}（章节数，最少 3），翻好才扣；剧本改过之后要重翻。</p>
+      <p className="dim">英文版默认就有。翻译是整部剧逐行翻（台词、选项、场景名、人物卡、小游戏说明），和原文一行对一行，App 按读者的语言显示。每种语言 💎{price}，翻好才扣；剧本改过之后要重翻。</p>
       <div className="plangs">{Object.entries(LN).filter(([k]) => k !== p.lang).map(([k, v]) => {
         const on = k === 'en' || (p.langs || []).includes(k); const t = p.tr && p.tr[k]; const fresh = t && t.src === script.length;
         return <div key={k} className="plang"><label><input type="checkbox" checked={on} disabled={k === 'en'} onChange={() => toggle(k)} /> {v}</label><span className={'tag ' + (fresh ? 'ok' : t ? 'warn' : '')}>{fresh ? '已翻译' : t ? '剧本改过，需重翻' : '未翻译'}</span>{on && <button className="pbtn sm" disabled={!!busy} onClick={() => translate(k)}>{busy === 'tr_' + k ? '翻译中 ' + prog + '%' : (t ? '重新翻译' : '翻译') + ' · 💎' + price}</button>}</div>;
