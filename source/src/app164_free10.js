@@ -42,5 +42,8 @@
     st.textContent = '.row:has(>[data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
     document.head.appendChild(st);
   } catch (_) {}
+  /* 2026-11-28 老板定：创作者专业版（剧本工具）所有 AI 收费先统一 💎1 —— 专业版里的 AI 生图价格由这里给（其余在 web/src/Pro.jsx 的 PRICE）。
+     App 里聊天时的 AI 生图不受影响，还是 PRICES.img。 */
+  try { window.studioImagePrice = function () { return 1; }; } catch (_) {}
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
 })();
