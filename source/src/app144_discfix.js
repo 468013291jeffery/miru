@@ -5376,11 +5376,13 @@ html.pc195 #pc-lib{display:block;position:fixed;left:748px;right:0;top:0;bottom:
   if (!window.__mod198 || typeof boothEdit !== "function") return;
   const ZH = () => (typeof S !== "undefined" && S.lang === "zh");
   const PR = () => (typeof PRICES !== "undefined" && PRICES.img) || 2;
+  /* 2026-11-28 老板反馈：拍贴机合照不够暧昧、没有性张力。四个姿势改得更贴近、更有张力（搂腰贴脸 / 抬下巴差一点吻上 / 从身后耳语 / 额头相抵手扶后颈）。
+     尺度不变：成年人、衣着完整、不露骨。 */
   const AIP = [
-    "standing close together in a photo booth, an arm around the partner's shoulders, both smiling at the camera, soft pink light",
-    "in a photo booth, the character leans in and kisses the partner's cheek while the partner laughs, playful and flirty, warm light",
-    "in a photo booth, the character ignores the camera and gazes at the partner, faces very close, almost touching foreheads, intimate romantic tension",
-    "in a photo booth at night, the partner rests on the character's shoulder, the character smirks at the camera, moody purple neon light"
+    "in a photo booth, the character wraps an arm around the partner's waist and pulls them close, cheek pressed to cheek, both looking at the camera with a slow knowing smile, warm dim rose light, intimate couple photo, fully clothed",
+    "in a photo booth, the character tilts the partner's chin up with one hand, lips only a breath apart, eyes half closed, charged romantic tension, the moment just before a kiss, soft red light, fully clothed",
+    "in a photo booth, the character stands behind the partner and whispers into their ear, one hand resting on their shoulder, the partner blushes and bites their lip, heated flirtatious mood, low amber light, fully clothed",
+    "in a photo booth at night, foreheads touching, the character's hand cradles the back of the partner's neck, intense eye contact, slow-burn desire, moody purple neon light, fully clothed"
   ];
   const partner = () => { const o = typeof S !== "undefined" ? S.or : ""; return o === "bl" ? "a young man" : "a young woman"; };
   /* 选人筛选：男/女对"玩过的"也生效 */
