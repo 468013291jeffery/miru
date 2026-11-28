@@ -67,6 +67,16 @@ public class MiruLauncher extends LauncherActivity {
         }
     }
 
+    /** 网址后面带上 App 版本号（av=），网页据此判断这个安装包里的原生功能（比如 Unity 激励视频）能不能用。 */
+    @Override
+    protected Uri getLaunchingUrl() {
+        Uri u = super.getLaunchingUrl();
+        try {
+            if (u != null && u.getQueryParameter("av") == null) u = u.buildUpon().appendQueryParameter("av", String.valueOf(BuildConfig.VERSION_CODE)).build();
+        } catch (Throwable ignore) {}
+        return u;
+    }
+
     private boolean inMainlandChina() {
         try {
             TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
