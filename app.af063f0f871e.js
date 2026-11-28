@@ -32498,7 +32498,17 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
   const wtxt = w => (w.tags.join(" ") + " " + ((w.raw.en && w.raw.en.title) || "") + " " + (w.raw.title || ""));
   const hookOf = w => { const h = w.hook; return (!zh() && cjk(h)) ? "" : h; };
   const cover = w => w.cover || "";
-  const pool = () => FEED;
+  /* 封面加载失败（个别剧的封面地址是坏的）：记下来不再用；口味卡片换一张别的封面，其他位置直接去掉这张图 */
+  const BAD = new Set();
+  const pool = () => FEED.filter(w => !BAD.has(w.cover));
+  document.addEventListener("error", e => {
+    const im = e.target; if (!im || im.tagName !== "IMG" || !im.closest || !im.closest(".ob3")) return;
+    const src = im.getAttribute("src") || ""; if (!src || BAD.has(src)) { im.remove(); return; }
+    BAD.add(src);
+    const t = im.closest(".ob3t");
+    if (t && TILE) { const used = Object.values(TILE), alt = pool().find(w => !used.includes(w.cover) && w.or === "bg"); if (alt) { TILE[t.dataset.ob3t] = alt.cover; im.src = alt.cover; return; } }
+    im.remove();
+  }, true);
   const orFit = w => ST.or === "all" || w.or === ST.or;
   function ranked() {
     const P = pool(), sel = TASTES.filter(x => ST.picks.includes(x.k));
