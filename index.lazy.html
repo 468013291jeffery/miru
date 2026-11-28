@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="ba509b01c38a 2026-11-28T10:43Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="a2f2159b60f9 2026-11-28T11:12Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -34064,6 +34064,9 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
     st.textContent = '.row:has(>[data-plusset]),[data-plusset]{display:none!important}.ubreak>div:nth-child(3){display:none!important}';
     document.head.appendChild(st);
   } catch (_) {}
+  /* 2026-11-28 老板定：创作者专业版（剧本工具）所有 AI 收费先统一 💎1 —— 专业版里的 AI 生图价格由这里给（其余在 web/src/Pro.jsx 的 PRICE）。
+     App 里聊天时的 AI 生图不受影响，还是 PRICES.img。 */
+  try { window.studioImagePrice = function () { return 1; }; } catch (_) {}
   window.__free10 = () => ({ units: (typeof S !== "undefined" && S.units) || null, img: (typeof S !== "undefined" && S.imgDay) || null });
 })();
 
