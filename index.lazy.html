@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="6dd4b56d0c13 2026-11-27T17:57Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="39e972b8b50a 2026-11-28T07:44Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -30209,6 +30209,10 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   const KEY = "miru_twa189";
   const zh = () => (typeof CL === "function" ? CL() === "zh" : true);
   try { if (/^android-app:\/\/com\.miru\.plus\.app/.test(document.referrer || "")) localStorage.setItem(KEY, "1"); } catch (_) {}
+  /* 2026-11-28 新安装包启动网址带 av=<版本号>：带了就说明这个包里 Unity 广告位已经配好（BP_Rewarded_Android，测试广告），App 里「看广告」走 Unity；
+     旧安装包没有 av，继续走网页广告（Monetag），不会卡在「广告加载中」。App 自带 WebView（大陆手机）里 referrer 不一定带得上，也用 av 判断「在 App 里」。 */
+  try { const av = new URLSearchParams(location.search).get("av"); if (av && /^\d+$/.test(av)) { localStorage.setItem("miru_av", av); localStorage.setItem(KEY, "1"); } } catch (_) {}
+  const appAv = () => { try { return Number(localStorage.getItem("miru_av")) || 0; } catch (_) { return 0; } };
   const inApp = () => { try { return localStorage.getItem(KEY) === "1"; } catch (_) { return false; } };
   window.__unity189 = () => ({ inApp: inApp(), pending: !!pend });
   if (typeof watchAd !== "function" || typeof capi !== "function") return;
@@ -30217,7 +30221,7 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   watchAd = function (done) {
     /* 2026-11-28 App 还没正式上架，Unity 原生激励视频在内测包里一直停在「广告加载中」。
        先让 App 里也走网页版广告（AdSense，和浏览器里一样）；上架后把 window.MIRU_UNITY_ADS 设成 true 就切回 Unity。 */
-    if (!inApp() || !window.MIRU_UNITY_ADS) return W0.apply(this, arguments);
+    if (!inApp() || !(window.MIRU_UNITY_ADS || appAv() > 0)) return W0.apply(this, arguments);
     const c = typeof cloudInfo === "function" ? cloudInfo() : {};
     if (!c.uid) return W0.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
@@ -30325,7 +30329,9 @@ try { Object.assign(I18N.zh, { "vp.unl": "", "vp.plus": "" }); Object.assign(I18
   let pend = null;
   watchAd = function (done) {
     /* 2026-11-28 App 还没上架、Unity 内测包放不出广告：App 里也先用 Monetag（和网页版一样）。上架后想切回 Unity，把这里恢复成 || inApp() 即可。 */
-    if (PREFER !== "monetag") return W1.apply(this, arguments);
+    /* 2026-11-28 新安装包（启动网址带 av=，Unity 广告位已配好）里交给 mod189 走 Unity 激励视频；网页和旧安装包继续走 Monetag。 */
+    let unityApp = false; try { unityApp = inApp() && Number(localStorage.getItem("miru_av")) > 0; } catch (_) {}
+    if (PREFER !== "monetag" || unityApp) return W1.apply(this, arguments);
     if (!adLeft()) { toast(t("ad.none")); return; }
     const w = window.open(LINK, "_blank"); try { if (w) w.opener = null; } catch (_) {}
     if (!w && !document.hidden) { /* 被拦截了：退回原来的流程 */ return W1.apply(this, arguments); }
