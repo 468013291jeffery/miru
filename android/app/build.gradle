@@ -14,6 +14,10 @@ def unityGame = System.getenv('UNITY_GAME_ID') ?: '800450584'
 def unityRewarded = System.getenv('UNITY_REWARDED_ID') ?: 'BP_Rewarded_Android'
 def unityLaunch = System.getenv('UNITY_LAUNCH_ID') ?: 'BP_Interstitial_Android'
 def unityTest = (System.getenv('UNITY_TEST') ?: '1') != '0'
+/* 2026-11-28 渠道包：play（上传 Google Play，用 Play 结算）和 aptoide（上传 Aptoide，以及它分发到的 APKPure 等渠道；Aptoide 规定内购必须用它的结算 SDK）。
+   aptoide 包多一个 AptoidePayActivity 和 Aptoide 结算 SDK；play 包里完全没有 Aptoide 的代码。
+   Aptoide 公钥不是密钥（Aptoide 后台「Public Key」，本来就是放进 App 里的），可以用环境变量 APTOIDE_PUBLIC_KEY 覆盖。 */
+def aptoideKey = System.getenv('APTOIDE_PUBLIC_KEY') ?: ''
 android {
     namespace 'com.miru.plus.app'
     compileSdk 36
@@ -29,6 +33,11 @@ android {
         buildConfigField "boolean", "UNITY_TEST", "${unityTest}"
     }
     buildFeatures { buildConfig true }
+    flavorDimensions 'store'
+    productFlavors {
+        play { dimension 'store'; buildConfigField "String", "STORE", '"play"' }
+        aptoide { dimension 'store'; buildConfigField "String", "STORE", '"aptoide"'; buildConfigField "String", "APTOIDE_PUBLIC_KEY", "\"${aptoideKey}\"" }
+    }
     signingConfigs {
         release {
             def ks = System.getenv('KEYSTORE_PATH')
@@ -45,4 +54,5 @@ dependencies {
     implementation 'com.google.androidbrowserhelper:billing:1.2.0'   // Play 结算库 8.x（Play 要求 ≥ 8.0.0）
     implementation 'com.unity3d.ads:unity-ads:4.16.1'                 // Unity Ads
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'
+    aptoideImplementation 'com.aptoide:android-aptoide-billing:1.5.0'  // Aptoide 结算 SDK（只进 aptoide 渠道包）
 }
