@@ -74,6 +74,8 @@ public class MiruLauncher extends LauncherActivity {
         Uri u = super.getLaunchingUrl();
         try {
             if (u != null && u.getQueryParameter("av") == null) u = u.buildUpon().appendQueryParameter("av", String.valueOf(BuildConfig.VERSION_CODE)).build();
+            /* 2026-11-28 渠道：play / aptoide。网页按这个决定充值走 Google Play 还是 Aptoide 结算 */
+            if (u != null && u.getQueryParameter("st") == null) u = u.buildUpon().appendQueryParameter("st", BuildConfig.STORE).build();
         } catch (Throwable ignore) {}
         return u;
     }

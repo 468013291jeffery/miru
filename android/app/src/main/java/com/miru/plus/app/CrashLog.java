@@ -83,6 +83,19 @@ final class CrashLog {
         }, "miru-ad-log").start();
     }
 
+    /** 2026-11-28：渠道包（Aptoide）付款失败原因，事件 android_pay，方便排查 */
+    static void pay(String what, String msg) {
+        new Thread(() -> {
+            try {
+                JSONObject p = props(null, null, 0);
+                p.put("what", what);
+                p.put("msg", msg == null ? "" : (msg.length() > 300 ? msg.substring(0, 300) : msg));
+                p.put("store", BuildConfig.STORE);
+                post("android_pay", p);
+            } catch (Throwable ignore) {}
+        }, "miru-pay-log").start();
+    }
+
     private static JSONObject props(String trace, String thread, long at) {
         JSONObject p = new JSONObject();
         try {
