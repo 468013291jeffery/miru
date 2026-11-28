@@ -12,7 +12,8 @@ const P = (() => { try { return window.parent !== window && window.parent.MIRU_B
 const KEY = 'miru_pro_v1';
 const LN = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', es: 'Español' };
 const NAMES = { en: 'English (American)', ja: 'Japanese', ko: 'Korean', es: 'Spanish (Latin American)', zh: 'Simplified Chinese' };
-const PRICE = { chapter: 3, card: 1, review: 2, games: 2, outline: 2 };
+/* 2026-11-28 老板定：专业版所有 AI 收费先统一按 💎1（写一章、角色卡、审稿、小游戏、大纲 / 选题、识别编剧稿、翻译每种语言、AI 生图每张）。 */
+const PRICE = { chapter: 1, card: 1, review: 1, games: 1, outline: 1 };
 const uid = () => 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{"projects":[]}'); } catch (_) { return { projects: [] }; } };
 const persist = d => { try { localStorage.setItem(KEY, JSON.stringify(d)); } catch (_) {} };
@@ -113,6 +114,8 @@ function Editor({ p, upd, back }) {
       {tab === 'games' && <Games p={p} upd={upd} />}
       {tab === 'pub' && <Publish p={p} upd={upd} qa={qa} script={script} />}
       {tab === 'ver' && <Versions p={p} upd={upd} />}
+      {/* 2026-11-28 每一页最下面加「下一步」，按顺序走到下一个标签；最后一页没有 */}
+      {(() => { const i = TABS.findIndex(t => t[0] === tab); const nx = TABS[i + 1]; if (!nx) return null; return <div className="prow" style={{ justifyContent: 'flex-end', margin: '18px 0 28px' }}><button className="pbtn primary" onClick={() => { setTab(nx[0]); try { window.scrollTo(0, 0); document.querySelectorAll('.pro, .pro *').forEach(e => { if (e.scrollTop) e.scrollTop = 0; }); } catch (_) {} }}>下一步：{nx[1].replace(/^\S+\s*/, '')} ›</button></div>; })()}
     </div>
   );
 }
@@ -282,7 +285,7 @@ function Assets({ p, upd, script }) {
   const S = useMemo(() => slotsOf(script), [script]);
   const [busy, setBusy] = useState(''), [prog, setProg] = useState('');
   const tier = TIERS[p.tier || 'std'];
-  const imgPrice = (() => { try { return (P && P.studioImagePrice && P.studioImagePrice()) || 2; } catch (_) { return 2; } })();
+  const imgPrice = (() => { try { return (P && P.studioImagePrice && P.studioImagePrice()) || 1; } catch (_) { return 1; } })();
   const ready = () => { try { return !!(P && P.studioImageReady && P.studioImageReady()); } catch (_) { return false; } };
   const putFile = async (slot, file) => {
     const tk = token(); if (!tk) throw new Error('请先在 MIRU 登录');
@@ -445,7 +448,7 @@ function Versions({ p, upd }) {
 }
 
 /* 识别编剧稿：编剧用自然中文写的稿子（第一幕、人物设定、图片标注……）→ AI 转成 MIRU 标准剧本，一章一章转 */
-const DRAFT_PRICE = n => Math.max(3, Math.ceil(n / 3000) * 2);
+const DRAFT_PRICE = n => 1;
 async function convertDraft(text, p, onProg) {
   const parts = []; const chunks = String(text).split(/\n(?=\s*(?:第\s*[0-9一二三四五六七八九十百]+\s*[章幕回集]|#+\s*CHAPTER|Chapter\s+\d+))/i).filter(s => s.trim());
   const blocks = chunks.length > 1 ? chunks : String(text).match(/[\s\S]{1,6000}(?=\n|$)/g) || [];
@@ -557,7 +560,7 @@ async function translateScript(script, cast, LG, onProg) {
 
 function Publish({ p, upd, qa, script }) {
   const [busy, setBusy] = useState(''), [prog, setProg] = useState(0), [res, setRes] = useState(null);
-  const price = Math.max(3, p.chapters.length);
+  const price = 1;
   const langs = [...new Set(['en'].concat(p.langs || []))].filter(l => l !== p.lang);
   const toggle = l => upd(x => { const s = new Set(x.langs || []); s.has(l) ? s.delete(l) : s.add(l); x.langs = [...s]; return x; });
   const translate = async LG => {
