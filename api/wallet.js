@@ -76,6 +76,33 @@ module.exports=L.wrap(async(req,res)=>{
   }
   return ok();
  }
+ /* 2026-11-28 Aptoide 渠道包的钻石购买（AptoidePayActivity 付款成功后 POST 到 /api/wallet?r=aptoide，body {sku, token}）。
+    不需要登录：向 Aptoide 官方验单接口（无需鉴权）查这笔订单，只有 purchaseState===0（已付款）、商品对得上才算数；
+    发给谁看订单里的 developerPayload（App 下单时写入「miru:<用户ID>」，Aptoide 验单接口原样返回，客户端改不了已付款订单的内容）。
+    同一笔订单只发一次（钱包流水 key=aptoide:<orderId>），重复提交返回 ok 不重复发。返回 ok 后 App 才去「消耗」订单；
+    没消耗的订单 Aptoide 两天后自动退款，所以服务器没发钻时用户的钱不会白扣。 */
+ if(req.query&&req.query.r==='aptoide'){
+  if(req.method!=='POST')return L.send(res,405,{ok:false,error:'POST only'});
+  const sql=await L.db(),cfg=await L.config(),b=L.jsonBody(req);
+  const sku=String(b.sku||'').slice(0,60),token=String(b.token||'').slice(0,300),pkg=process.env.APTOIDE_PACKAGE||'com.miru.plus.app';
+  const mapped=gemsForSku(sku,cfg);if(!mapped||!token)return L.send(res,400,{ok:false,error:'bad sku/token'});
+  let j;
+  try{const r=await fetch('https://api.catappult.io/productv2/8.20250505/google/inapp/v3/applications/'+encodeURIComponent(pkg)+'/purchases/products/'+encodeURIComponent(sku)+'/tokens/'+encodeURIComponent(token));
+   j=await r.json().catch(()=>null);if(!r.ok||!j)return L.send(res,r.status>=500?502:400,{ok:false,error:'aptoide verify '+r.status});}
+  catch(e){return L.send(res,502,{ok:false,error:'aptoide verify: '+String(e.message||e).slice(0,100)});}
+  if(j.purchaseState!==0)return L.send(res,400,{ok:false,error:'not paid (state '+j.purchaseState+')'});
+  if(j.productId&&j.productId!==sku)return L.send(res,400,{ok:false,error:'product mismatch'});
+  const m=/^miru:(u_[A-Za-z0-9_-]{4,60})$/.exec(String(j.developerPayload||''));if(!m)return L.send(res,400,{ok:false,error:'no user in payload'});
+  const uid=m[1];if(!(await sql('SELECT 1 FROM users WHERE id=$1',[uid]))[0])return L.send(res,400,{ok:false,error:'unknown user'});
+  const oid=String(j.orderId||token).replace(/[^A-Za-z0-9._-]/g,'').slice(0,100);
+  try{
+   const done=(await sql('SELECT 1 FROM ledger WHERE key=$1',['aptoide:'+oid]))[0];
+   if(!done){const r=await W.purchase(sql,uid,mapped,cfg,{key:'aptoide:'+oid,reason:'aptoide',platform:'android',environment:'Production',test:false});if(r&&r.code&&r.code>=400)return L.send(res,r.code,Object.assign({ok:false},r));}
+  }catch(e){if(!/duplicate|unique/i.test(String(e&&e.message)))return L.send(res,500,{ok:false,error:'wallet error'});}
+  const w=(await sql('SELECT gems FROM wallet WHERE user_id=$1',[uid]))[0];
+  try{await sql("INSERT INTO events(name,user_id,props) VALUES('aptoide_purchase',$1,$2::jsonb)",[uid,JSON.stringify({sku,oid,cur:j.currency||'',region:j.regionCode||''})]);}catch(_){}
+  return L.send(res,200,{ok:true,sku:mapped.sku,gems:w?w.gems:null,orderId:oid});
+ }
  const u=await L.needActive(req,res);if(!u)return;
  const sql=await L.db(),cfg=await L.config();
  if(req.method==='GET'){
