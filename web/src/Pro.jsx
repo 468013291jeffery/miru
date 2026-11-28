@@ -138,8 +138,29 @@ function Setup({ p, upd }) {
     } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
     setBusy(false);
   };
+  /* 2026-11-28 设定页最上面加「AI 帮我想 / 帮我改」：作者写一句想法，AI 把剧名、钩子、设定、玩家身份、标签一起想出来；
+     已经写了的，「帮我想」不动它只补空的，「帮我改」会把已写的改得更抓人。下面的选题分析、章节大纲再基于这些内容做。 */
+  const [busy2, setBusy2] = useState('');
+  const helpMe = async mode => {
+    const idea = String(p.idea || '').trim();
+    if (!idea && !p.title && !p.premise && !p.hook) return toast('先在上面写一句你想写的故事，比如「黑帮继承人和卧底女警的契约婚姻」');
+    if (mode === 'fix' && !p.title && !p.premise && !p.hook) return toast('还没有写任何内容可以改，先点「AI 帮我想」');
+    if (!pay(PRICE.outline, 'pro_setup')) return; setBusy2(mode);
+    try {
+      const r = await ai(RULES().slice(0, 4000) + '\n\n你是 MIRU 官方互动恋爱剧的策划。' + (mode === 'fix' ? '把作者已经写的设定改得更抓人、更具体，保持作者的核心想法和人物关系不变。' : '根据作者的一句想法，把这部剧的基础设定想出来；作者已经写了的字段原样保留，只补空的。') + '全员成年。恋爱对象：' + ({ bg: '男女', bl: '男男', gl: '女女' }[p.orient] || '男女') + '。写作语言：' + (LN[p.lang] || '中文') + '。只返回 JSON {"title":"剧名（≤14 字）","hook":"一句话钩子（≤40 字，出现在首页卡片上，要让人想点开）","premise":"设定 / 简介（150–300 字：世界、冲突、主要人物关系、玩家卷进来的原因）","you":"玩家身份（故事给玩家的位置，≤20 字）","tags":["3–6 个标签"]}\n作者的想法：' + (idea || '（没单独写，看下面已有内容）') + '\n已有：' + JSON.stringify({ title: p.title, hook: p.hook, premise: p.premise, you: p.you, tags: p.tags }), 2500);
+      if (!r || typeof r !== 'object') throw new Error('empty');
+      upd(x => { ['title', 'hook', 'premise', 'you'].forEach(k => { if (r[k] && (mode === 'fix' || !String(x[k] || '').trim())) x[k] = String(r[k]); }); if (Array.isArray(r.tags) && r.tags.length && (mode === 'fix' || !(x.tags || []).length)) x.tags = r.tags.map(String).slice(0, 12); return x; });
+      toast(mode === 'fix' ? '改好了，看看下面的内容' : '想好了，看看下面的内容，不满意可以再改');
+    } catch (_) { toast('这次没生成出来，没扣钻'); try { P && (P.S.keys += PRICE.outline, P.save()); } catch (__) {} }
+    setBusy2('');
+  };
   return (
     <div className="ppanel">
+      <div className="pbox"><b>先告诉 AI 你想写什么</b>
+        <F label="一句话想法（可以很随意）" hint="比如：黑帮继承人和卧底女警的契约婚姻；或：我穿进游戏成了反派的未婚妻"><textarea rows={2} value={p.idea || ''} onChange={e => set('idea', e.target.value)} /></F>
+        <div className="prow pwr"><button className="pbtn primary" disabled={!!busy2} onClick={() => helpMe('think')}>{busy2 === 'think' ? 'AI 在想…' : '✨ AI 帮我想 · 💎' + PRICE.outline}</button><button className="pbtn" disabled={!!busy2} onClick={() => helpMe('fix')}>{busy2 === 'fix' ? 'AI 在改…' : '✨ AI 帮我改 · 💎' + PRICE.outline}</button></div>
+        <small className="dim">「帮我想」：把下面空着的剧名、钩子、设定、玩家身份、标签补出来，你写过的不动。「帮我改」：把你已经写的改得更抓人。</small>
+      </div>
       <F label="剧名"><input value={p.title} onChange={e => set('title', e.target.value)} /></F>
       <F label="一句话钩子" hint="出现在首页卡片和发现页"><input value={p.hook} onChange={e => set('hook', e.target.value)} /></F>
       <F label="设定 / 简介"><textarea rows={5} value={p.premise} onChange={e => set('premise', e.target.value)} /></F>
