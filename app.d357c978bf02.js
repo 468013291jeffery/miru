@@ -32175,6 +32175,8 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
         b = document.createElement('button');
         b.className = 'ibtn pace157';
         b.setAttribute('data-pace157', '1');
+        /* 2026-11-28 聊天页顶部「⏱ 标准」在窄屏上被挤成两行：不许换行、不许被压缩 */
+        b.style.whiteSpace = 'nowrap'; b.style.flex = '0 0 auto';
         var vt = head.querySelector('.vtog') || head.querySelector('[data-cmenu]');
         if (vt && vt.parentNode) vt.parentNode.insertBefore(b, vt);
         else head.appendChild(b);

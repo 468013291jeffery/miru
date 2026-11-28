@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <script>
-window.MIRU_BUILD="1041f9198a6e 2026-11-28T09:20Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
+window.MIRU_BUILD="56f2c6213c8a 2026-11-28T09:48Z lazy36";try{if(/^www\./i.test(location.hostname)||(location.protocol==="http:"&&/miru\.plus$/i.test(location.hostname)))location.replace("https://miru.plus"+location.pathname+location.search+location.hash)}catch(e){}</script>
 <meta name="monetag" content="4b92eac1f37adbcaa7586473a0f27d29">
 <meta name="google" content="notranslate">
 <meta name="google-adsense-account" content="ca-pub-1779576119248059">
@@ -33820,6 +33820,8 @@ window.ASHES_RUNTIME={render,canAdvance,options,configure};
         b = document.createElement('button');
         b.className = 'ibtn pace157';
         b.setAttribute('data-pace157', '1');
+        /* 2026-11-28 聊天页顶部「⏱ 标准」在窄屏上被挤成两行：不许换行、不许被压缩 */
+        b.style.whiteSpace = 'nowrap'; b.style.flex = '0 0 auto';
         var vt = head.querySelector('.vtog') || head.querySelector('[data-cmenu]');
         if (vt && vt.parentNode) vt.parentNode.insertBefore(b, vt);
         else head.appendChild(b);
