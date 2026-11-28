@@ -61,6 +61,11 @@
   let busy = false;
   async function buy(sku) {
     if (busy) return; busy = true;
+    /* 2026-11-28 有用户反馈「点充值没反应」：以前失败原因只写在浏览器控制台，后台看不到。
+       现在每次点击、每次失败都记一条事件（play_start / play_fail，带错误名和说明，不含任何付款信息），方便定位；
+       另外 90 秒后自动解除「正在付款」状态，避免 Google 的付款窗口卡住后再点就没反应。 */
+    const lock = setTimeout(() => { busy = false; }, 90000);
+    try { if (typeof track === "function") track("play_start", { sku: sku, dgs: "getDigitalGoodsService" in window, pr: "PaymentRequest" in window }); } catch (e0) { console.debug("[play]", e0); }
     try {
       await service();
       const req = new PaymentRequest([{ supportedMethods: PLAY_METHOD, data: { sku: sku } }], { total: { label: "Total", amount: { currency: "USD", value: "0" } } });
@@ -82,10 +87,11 @@
       if (typeof refreshAfterPay === "function") refreshAfterPay();
     } catch (e) {
       const m = String((e && e.name) || "") + " " + String((e && e.message) || e);
-      if (/AbortError|cancel/i.test(m)) { /* 玩家自己取消 */ }
+      try { if (typeof track === "function") track("play_fail", { sku: sku, m: m.slice(0, 180), dgs: "getDigitalGoodsService" in window }); } catch (e0) { console.debug("[play]", e0); }
+      if (/AbortError|cancel/i.test(m)) { /* 玩家自己取消，或 Google 的付款窗口被关掉 */ toast(zh() ? "付款已取消，没有扣费" : "Payment cancelled — you weren't charged"); }
       else if (/no-dgs/.test(m)) toast(zh() ? "请从 Google Play 安装的 MIRU App 里充值" : "Please top up in the MIRU app installed from Google Play");
-      else { console.warn("[play] buy", e); toast(zh() ? "这次没有付款成功，没有扣费" : "The purchase didn't go through — you weren't charged"); }
-    } finally { busy = false; }
+      else { console.warn("[play] buy", e); toast(zh() ? "这次没有付款成功，没有扣费。请确认手机上的 Google Play 商店已登录、可以正常付款后再试" : "The purchase didn't go through — you weren't charged. Check that Google Play is signed in and can take payments, then try again"); }
+    } finally { clearTimeout(lock); busy = false; }
   }
   function keepPending(sku, token) { try { const a = JSON.parse(localStorage.getItem("miru_play_pending") || "[]"); a.push({ sku: sku, token: token, at: Date.now() }); localStorage.setItem("miru_play_pending", JSON.stringify(a.slice(-10))); } catch (e) { console.warn("[play] keep", e); } }
   /* 打开 App 时：把上次没确认的单再交一次；以及 Google 那边「已付款但没消耗」的单（比如付款时断网） */
