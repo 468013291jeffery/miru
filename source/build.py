@@ -51,6 +51,7 @@ parts.extend(["app161_bride_state.js", "app161_bride_data.js", "app161_bride.js"
 parts.extend(["app162_ashes_state.js", "app162_ashes_data.js", "app162_ashes.js"])
 # 阅读节奏最后接管等待，兼容主线新剧及性能模块。
 parts.extend(["app157_reply_pace.js"])
+parts.extend(["app163_hant.js"])   # 2026-11-28 中文全部显示为繁体（最后加载，转换整页文字）
 def block(names): return "\n".join(open("src/"+p, encoding="utf8").read() for p in names)
 js=block(parts)
 open("all.js","w",encoding="utf8",newline="\n").write(js)
